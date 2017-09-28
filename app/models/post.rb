@@ -1,4 +1,3 @@
-require_dependency 'jobs/base'
 require_dependency 'pretty_text'
 require_dependency 'rate_limiter'
 require_dependency 'post_revisor'
@@ -7,6 +6,7 @@ require_dependency 'post_analyzer'
 require_dependency 'validators/post_validator'
 require_dependency 'plugin/filter'
 require_dependency 'email_cook'
+require_dependency 'multisite_class_var'
 
 require 'archetype'
 require 'digest/sha1'
@@ -17,9 +17,9 @@ class Post < ActiveRecord::Base
   include Searchable
   include HasCustomFields
   include LimitedEdit
+  include MultisiteClassVar
 
-  cattr_accessor :permitted_create_params
-  self.permitted_create_params = Set.new
+  multisite_class_var(:permitted_create_params) { Set.new }
 
   # increase this number to force a system wide post rebake
   BAKED_VERSION = 1
@@ -86,7 +86,7 @@ class Post < ActiveRecord::Base
   scope :for_mailing_list, ->(user, since) {
     q = created_since(since)
       .joins(:topic)
-      .where(topic: Topic.for_digest(user, 100.years.ago)) # we want all topics with new content, regardless when they were created
+      .where(topic: Topic.for_digest(user, Time.at(0))) # we want all topics with new content, regardless when they were created
 
     q = q.where.not(post_type: Post.types[:whisper]) unless user.staff?
 
@@ -200,7 +200,7 @@ class Post < ActiveRecord::Base
   end
 
   def self.white_listed_image_classes
-    @white_listed_image_classes ||= ['avatar', 'favicon', 'thumbnail']
+    @white_listed_image_classes ||= ['avatar', 'favicon', 'thumbnail', 'emoji']
   end
 
   def post_analyzer
@@ -318,7 +318,7 @@ class Post < ActiveRecord::Base
   end
 
   def archetype
-    topic.archetype
+    topic&.archetype
   end
 
   def self.regular_order
@@ -563,7 +563,7 @@ class Post < ActiveRecord::Base
   before_save do
     self.last_editor_id ||= user_id
 
-    if !new_record? && raw_changed?
+    if !new_record? && will_save_change_to_raw?
       self.cooked = cook(raw, topic_id: topic_id)
     end
 

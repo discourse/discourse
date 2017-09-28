@@ -1,0 +1,7 @@
+{{#link-to 'adminUser' response.user.id response.user.username class="response-avatar"}}
+  {{avatar response.user imageSize="small"}}
+{{/link-to}}
+<div class='excerpt'>{{{response.excerpt}}}</div>
+{{#if hasMore}}
+  <a href={{permalink}} class="has-more">{{i18n 'admin.flags.more'}}</a>
+{{/if}}

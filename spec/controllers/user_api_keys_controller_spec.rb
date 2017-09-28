@@ -3,34 +3,34 @@ require 'rails_helper'
 describe UserApiKeysController do
 
   let :public_key do
-    <<TXT
------BEGIN PUBLIC KEY-----
-MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDh7BS7Ey8hfbNhlNAW/47pqT7w
-IhBz3UyBYzin8JurEQ2pY9jWWlY8CH147KyIZf1fpcsi7ZNxGHeDhVsbtUKZxnFV
-p16Op3CHLJnnJKKBMNdXMy0yDfCAHZtqxeBOTcCo1Vt/bHpIgiK5kmaekyXIaD0n
-w0z/BYpOgZ8QwnI5ZwIDAQAB
------END PUBLIC KEY-----
-TXT
+    <<~TXT
+    -----BEGIN PUBLIC KEY-----
+    MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDh7BS7Ey8hfbNhlNAW/47pqT7w
+    IhBz3UyBYzin8JurEQ2pY9jWWlY8CH147KyIZf1fpcsi7ZNxGHeDhVsbtUKZxnFV
+    p16Op3CHLJnnJKKBMNdXMy0yDfCAHZtqxeBOTcCo1Vt/bHpIgiK5kmaekyXIaD0n
+    w0z/BYpOgZ8QwnI5ZwIDAQAB
+    -----END PUBLIC KEY-----
+    TXT
   end
 
   let :private_key do
-    <<TXT
------BEGIN RSA PRIVATE KEY-----
-MIICWwIBAAKBgQDh7BS7Ey8hfbNhlNAW/47pqT7wIhBz3UyBYzin8JurEQ2pY9jW
-WlY8CH147KyIZf1fpcsi7ZNxGHeDhVsbtUKZxnFVp16Op3CHLJnnJKKBMNdXMy0y
-DfCAHZtqxeBOTcCo1Vt/bHpIgiK5kmaekyXIaD0nw0z/BYpOgZ8QwnI5ZwIDAQAB
-AoGAeHesbjzCivc+KbBybXEEQbBPsThY0Y+VdgD0ewif2U4UnNhzDYnKJeTZExwQ
-vAK2YsRDV3KbhljnkagQduvmgJyCKuV/CxZvbJddwyIs3+U2D4XysQp3e1YZ7ROr
-YlOIoekHCx1CNm6A4iImqGxB0aJ7Owdk3+QSIaMtGQWaPTECQQDz2UjJ+bomguNs
-zdcv3ZP7W3U5RG+TpInSHiJXpt2JdNGfHItozGJCxfzDhuKHK5Cb23bgldkvB9Xc
-p/tngTtNAkEA7S4cqUezA82xS7aYPehpRkKEmqzMwR3e9WeL7nZ2cdjZAHgXe49l
-3mBhidEyRmtPqbXo1Xix8LDuqik0IdnlgwJAQeYTnLnHS8cNjQbnw4C/ECu8Nzi+
-aokJ0eXg5A0tS4ttZvGA31Z0q5Tz5SdbqqnkT6p0qub0JZiZfCNNdsBe9QJAaGT5
-fJDwfGYW+YpfLDCV1bUFhMc2QHITZtSyxL0jmSynJwu02k/duKmXhP+tL02gfMRy
-vTMorxZRllgYeCXeXQJAEGRXR8/26jwqPtKKJzC7i9BuOYEagqj0nLG2YYfffCMc
-d3JGCf7DMaUlaUE8bJ08PtHRJFSGkNfDJLhLKSjpbw==
------END RSA PRIVATE KEY-----
-TXT
+    <<~TXT
+    -----BEGIN RSA PRIVATE KEY-----
+    MIICWwIBAAKBgQDh7BS7Ey8hfbNhlNAW/47pqT7wIhBz3UyBYzin8JurEQ2pY9jW
+    WlY8CH147KyIZf1fpcsi7ZNxGHeDhVsbtUKZxnFVp16Op3CHLJnnJKKBMNdXMy0y
+    DfCAHZtqxeBOTcCo1Vt/bHpIgiK5kmaekyXIaD0nw0z/BYpOgZ8QwnI5ZwIDAQAB
+    AoGAeHesbjzCivc+KbBybXEEQbBPsThY0Y+VdgD0ewif2U4UnNhzDYnKJeTZExwQ
+    vAK2YsRDV3KbhljnkagQduvmgJyCKuV/CxZvbJddwyIs3+U2D4XysQp3e1YZ7ROr
+    YlOIoekHCx1CNm6A4iImqGxB0aJ7Owdk3+QSIaMtGQWaPTECQQDz2UjJ+bomguNs
+    zdcv3ZP7W3U5RG+TpInSHiJXpt2JdNGfHItozGJCxfzDhuKHK5Cb23bgldkvB9Xc
+    p/tngTtNAkEA7S4cqUezA82xS7aYPehpRkKEmqzMwR3e9WeL7nZ2cdjZAHgXe49l
+    3mBhidEyRmtPqbXo1Xix8LDuqik0IdnlgwJAQeYTnLnHS8cNjQbnw4C/ECu8Nzi+
+    aokJ0eXg5A0tS4ttZvGA31Z0q5Tz5SdbqqnkT6p0qub0JZiZfCNNdsBe9QJAaGT5
+    fJDwfGYW+YpfLDCV1bUFhMc2QHITZtSyxL0jmSynJwu02k/duKmXhP+tL02gfMRy
+    vTMorxZRllgYeCXeXQJAEGRXR8/26jwqPtKKJzC7i9BuOYEagqj0nLG2YYfffCMc
+    d3JGCf7DMaUlaUE8bJ08PtHRJFSGkNfDJLhLKSjpbw==
+    -----END RSA PRIVATE KEY-----
+    TXT
   end
 
   let :args do
@@ -56,13 +56,13 @@ TXT
 
     it "does not allow anon" do
       expect {
-        post :create, args
+        post :create, params: args, format: :json
       }.to raise_error(Discourse::NotLoggedIn)
     end
 
     it "refuses to redirect to disallowed place" do
       log_in_user(Fabricate(:user))
-      post :create, args
+      post :create, params: args, format: :json
       expect(response.code).to eq("403")
     end
 
@@ -74,7 +74,7 @@ TXT
 
       log_in_user(user)
 
-      post :create, args
+      post :create, params: args, format: :json
       expect(response.code).to eq("302")
     end
 
@@ -86,7 +86,7 @@ TXT
 
       log_in_user(user)
 
-      post :create, args
+      post :create, params: args, format: :json
       expect(response.code).to eq("403")
 
     end
@@ -101,7 +101,7 @@ TXT
 
       log_in_user(user)
 
-      post :create, args
+      post :create, params: args, format: :json
       expect(response.code).to eq("403")
 
     end
@@ -109,7 +109,7 @@ TXT
     it "allows for a revoke with no id" do
       key = Fabricate(:readonly_user_api_key)
       request.env['HTTP_USER_API_KEY'] = key.key
-      post :revoke
+      post :revoke, format: :json
 
       expect(response.status).to eq(200)
 
@@ -122,7 +122,7 @@ TXT
       key2 = Fabricate(:readonly_user_api_key)
 
       request.env['HTTP_USER_API_KEY'] = key1.key
-      post :revoke, id: key2.id
+      post :revoke, params: { id: key2.id }, format: :json
 
       expect(response.status).to eq(403)
     end
@@ -130,7 +130,7 @@ TXT
     it "will allow readonly api keys to revoke self" do
       key = Fabricate(:readonly_user_api_key)
       request.env['HTTP_USER_API_KEY'] = key.key
-      post :revoke, id: key.id
+      post :revoke, params: { id: key.id }, format: :json
 
       expect(response.status).to eq(200)
 
@@ -149,7 +149,7 @@ TXT
 
       log_in_user(user)
 
-      post :create, args
+      post :create, params: args, format: :json
       expect(response.code).to eq("302")
 
       uri = URI.parse(response.redirect_url)
@@ -184,7 +184,7 @@ TXT
 
       log_in_user(user)
 
-      post :create, args
+      post :create, params: args, format: :json
       expect(response.code).to eq("302")
 
       uri = URI.parse(response.redirect_url)
@@ -211,7 +211,7 @@ TXT
 
       # should overwrite if needed
       args["access"] = "pr"
-      post :create, args
+      post :create, params: args, format: :json
 
       expect(response.code).to eq("302")
     end

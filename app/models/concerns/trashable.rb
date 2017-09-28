@@ -16,7 +16,7 @@ module Trashable
       #
       scope = self.all
 
-      scope.where_values.delete(with_deleted_scope_sql)
+      scope.where_clause.send(:predicates).delete(with_deleted_scope_sql)
       scope
     end
 

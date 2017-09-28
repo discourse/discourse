@@ -1,4 +1,4 @@
-class CreateCsvExportLogs < ActiveRecord::Migration
+class CreateCsvExportLogs < ActiveRecord::Migration[4.2]
   def change
     create_table :csv_export_logs do |t|
       t.string :export_type, null: false

@@ -6,7 +6,6 @@ import { includeAttributes } from 'discourse/lib/transform-post';
 import { addToolbarCallback } from 'discourse/components/d-editor';
 import { addWidgetCleanCallback } from 'discourse/components/mount-widget';
 import { createWidget, reopenWidget, decorateWidget, changeSetting } from 'discourse/widgets/widget';
-import { onPageChange } from 'discourse/lib/page-tracker';
 import { preventCloak } from 'discourse/widgets/post-stream';
 import { h } from 'virtual-dom';
 import { addFlagProperty } from 'discourse/components/site-header';
@@ -24,7 +23,7 @@ import { addNavItem } from 'discourse/models/nav-item';
 
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = '0.8.10';
+const PLUGIN_API_VERSION = '0.8.11';
 
 class PluginApi {
   constructor(version, container) {
@@ -54,12 +53,21 @@ class PluginApi {
    * });
    * ```
    **/
-  modifyClass(resolverName, changes) {
+  modifyClass(resolverName, changes, opts) {
+    opts = opts || {};
+
     if (this.container.cache[resolverName]) {
       console.warn(`"${resolverName}" was already cached in the container. Changes won't be applied.`);
     }
 
     const klass = this.container.factoryFor(resolverName);
+    if (!klass) {
+      if (!opts.ignoreMissing) {
+        console.warn(`"${resolverName}" was not found by modifyClass`);
+      }
+      return;
+    }
+
     klass.class.reopen(changes);
     return klass;
   }
@@ -341,7 +349,8 @@ class PluginApi {
     ```
   **/
   onPageChange(fn) {
-    onPageChange(fn);
+    let appEvents = this.container.lookup('app-events:main');
+    appEvents.on('page:changed', data => fn(data.url, data.title));
   }
 
   /**

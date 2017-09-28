@@ -1,4 +1,4 @@
-class AddUnstarredAtToTopicUsers < ActiveRecord::Migration
+class AddUnstarredAtToTopicUsers < ActiveRecord::Migration[4.2]
   def change
     add_column :topic_users, :unstarred_at, :datetime
   end

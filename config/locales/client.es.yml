@@ -1020,6 +1020,7 @@ es:
       ctrl: 'Ctrl'
       alt: 'Alt'
     select_box:
+      default_header_text: Seleccionar...
       filter_placeholder: Buscar...
     emoji_picker:
       filter_placeholder: Buscar emoji
@@ -1132,6 +1133,11 @@ es:
       empty: "No se han encontrado notificaciones."
       more: "ver notificaciones antiguas"
       total_flagged: "total de posts reportados"
+      topic_reminder: "<span>{{username}}</span> {{description}}"
+      watching_first_post: "<span>Nuevo tema</span> {{description}}"
+      group_message_summary:
+        one: "{{count}} mensaje en tu bandeja de entrada de {{group_name}}"
+        other: "{{count}} mensajes en tu bandeja de entrada de {{group_name}}"
       alt:
         mentioned: "Mencionado por"
         quoted: "Citado por"

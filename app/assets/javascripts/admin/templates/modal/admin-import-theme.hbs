@@ -23,5 +23,5 @@
 
 <div class="modal-footer">
   {{d-button action="importTheme" disabled=loading class='btn btn-primary' icon='upload' label='admin.customize.import'}}
-  <a href {{action "closeModal"}}>{{i18n 'cancel'}}</a>
+  {{d-modal-cancel close=(action "closeModal")}}
 </div>

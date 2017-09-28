@@ -138,11 +138,6 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
       });
     },
 
-    deleteSpammer(user) {
-      this.send('closeModal');
-      user.deleteAsSpammer(function() { window.location.reload(); });
-    },
-
     checkEmail(user) {
       user.checkEmail();
     },

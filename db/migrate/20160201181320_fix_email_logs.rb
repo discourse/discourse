@@ -1,4 +1,4 @@
-class FixEmailLogs < ActiveRecord::Migration
+class FixEmailLogs < ActiveRecord::Migration[4.2]
   def up
     execute <<-SQL
       UPDATE email_logs

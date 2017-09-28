@@ -127,7 +127,6 @@ describe Notification do
     end
 
     context 'destroy' do
-
       let!(:notification) { Fabricate(:notification) }
 
       it 'updates the notification count on destroy' do

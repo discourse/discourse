@@ -1,6 +1,6 @@
 class SafeModeController < ApplicationController
   layout 'no_ember'
-  skip_before_filter :preload_json, :check_xhr
+  skip_before_action :preload_json, :check_xhr
 
   def index
   end

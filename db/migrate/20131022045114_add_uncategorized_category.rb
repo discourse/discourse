@@ -1,4 +1,4 @@
-class AddUncategorizedCategory < ActiveRecord::Migration
+class AddUncategorizedCategory < ActiveRecord::Migration[4.2]
   def up
 
     result = execute "SELECT 1 FROM categories WHERE lower(name) = 'uncategorized'"

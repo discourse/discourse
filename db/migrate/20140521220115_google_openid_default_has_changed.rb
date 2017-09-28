@@ -1,4 +1,4 @@
-class GoogleOpenidDefaultHasChanged < ActiveRecord::Migration
+class GoogleOpenidDefaultHasChanged < ActiveRecord::Migration[4.2]
   def up
     users_count_query = User.exec_sql("SELECT count(*) FROM users")
     if users_count_query[0]['count'].to_i > 1

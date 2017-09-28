@@ -6,6 +6,7 @@ import { popupAjaxError } from 'discourse/lib/ajax-error';
 import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend(CanCheckEmails, {
+  adminTools: Ember.inject.service(),
   editingUsername: false,
   editingName: false,
   editingTitle: false,
@@ -57,12 +58,19 @@ export default Ember.Controller.extend(CanCheckEmails, {
     saveTrustLevel() { return this.get("model").saveTrustLevel(); },
     restoreTrustLevel() { return this.get("model").restoreTrustLevel(); },
     lockTrustLevel(locked) { return this.get("model").lockTrustLevel(locked); },
-    unsuspend() { return this.get("model").unsuspend(); },
     unblock() { return this.get("model").unblock(); },
     block() { return this.get("model").block(); },
     deleteAllPosts() { return this.get("model").deleteAllPosts(); },
     anonymize() { return this.get('model').anonymize(); },
     destroy() { return this.get('model').destroy(); },
+
+    showSuspendModal() {
+      this.get('adminTools').showSuspendModal(this.get('model'));
+    },
+    unsuspend() {
+      this.get("model").unsuspend().catch(popupAjaxError);
+    },
+
 
     toggleUsernameEdit() {
       this.set('userUsernameValue', this.get('model.username'));

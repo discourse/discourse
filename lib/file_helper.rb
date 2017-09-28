@@ -4,8 +4,19 @@ require "open-uri"
 
 class FileHelper
 
+  def self.log(log_level, message)
+    Rails.logger.public_send(
+      log_level,
+      "#{RailsMultisite::ConnectionManagement.current_db}: #{message}"
+    )
+  end
+
   def self.is_image?(filename)
     filename =~ images_regexp
+  end
+
+  class FakeIO
+    attr_accessor :status
   end
 
   def self.download(url,
@@ -13,17 +24,37 @@ class FileHelper
                     tmp_file_name:,
                     follow_redirect: false,
                     read_timeout: 5,
-                    skip_rate_limit: false)
+                    skip_rate_limit: false,
+                    verbose: nil)
+
+    # verbose logging is default while debugging onebox
+    verbose = verbose.nil? ? true : verbose
 
     url = "https:" + url if url.start_with?("//")
     raise Discourse::InvalidParameters.new(:url) unless url =~ /^https?:\/\//
 
-    uri = FinalDestination.new(
+    uri =
+
+    dest = FinalDestination.new(
       url,
       max_redirects: follow_redirect ? 5 : 1,
       skip_rate_limit: skip_rate_limit
-    ).resolve
-    return unless uri.present?
+    )
+    uri = dest.resolve
+
+    if !uri && dest.status_code.to_i >= 400
+      # attempt error API compatability
+      io = FakeIO.new
+      io.status = [dest.status_code.to_s, ""]
+
+      # TODO perhaps translate and add Discourse::DownloadError
+      raise OpenURI::HTTPError.new("#{dest.status_code} Error", io)
+    end
+
+    unless uri
+      log(:error, "FinalDestination did not work for: #{url}") if verbose
+      return
+    end
 
     downloaded = uri.open("rb", read_timeout: read_timeout)
 

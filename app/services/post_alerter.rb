@@ -1,4 +1,5 @@
 require_dependency 'distributed_mutex'
+require_dependency 'user_action_creator'
 
 class PostAlerter
   def self.post_created(post, opts = {})
@@ -37,6 +38,10 @@ class PostAlerter
     allowed_group_users(post)
   end
 
+  def notify_about_reply?(post)
+    post.post_type == Post.types[:regular] || post.post_type == Post.types[:whisper]
+  end
+
   def after_save_post(post, new_record = false)
     notified = [post.user]
 
@@ -65,7 +70,7 @@ class PostAlerter
     # replies
     reply_to_user = post.reply_notification_target
 
-    if new_record && reply_to_user && !notified.include?(reply_to_user) && post.post_type == Post.types[:regular]
+    if new_record && reply_to_user && !notified.include?(reply_to_user) && notify_about_reply?(post)
       notify_non_pm_users(reply_to_user, :replied, post)
       notified += [reply_to_user]
     end
@@ -468,7 +473,7 @@ class PostAlerter
     post.topic_links.where(reflection: false).map do |link|
       linked_post = link.link_post
       if !linked_post && topic = link.link_topic
-        linked_post = topic.posts(post_number: 1).first
+        linked_post = topic.posts.find_by(post_number: 1)
       end
       (linked_post && post.user_id != linked_post.user_id && linked_post.user) || nil
     end.compact

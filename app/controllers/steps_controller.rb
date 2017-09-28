@@ -4,9 +4,9 @@ require_dependency 'wizard/step_updater'
 
 class StepsController < ApplicationController
 
-  before_filter :ensure_wizard_enabled
-  before_filter :ensure_logged_in
-  before_filter :ensure_admin
+  before_action :ensure_wizard_enabled
+  before_action :ensure_logged_in
+  before_action :ensure_admin
 
   def update
     wizard = Wizard::Builder.new(current_user).build

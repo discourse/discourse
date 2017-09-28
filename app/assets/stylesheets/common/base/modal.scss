@@ -227,6 +227,12 @@
 
 .reply-where-modal {
   .modal-footer {
+    a {
+      display: block;
+    }
+    .d-modal-cancel {
+      margin-top: 1em;
+    }
     .btn {
       text-align: left;
       font-size: 1.286em;
@@ -241,18 +247,17 @@
         font-weight: normal;
       }
       &.btn-reply-here {
-        background: $primary-low; 
+        background: $primary-low;
         text-shadow: none;
         color: $primary;
       }
     }
-    .cancel {
-      float: right;
-      margin-right: 5px;
-    }
   }
 }
-
+.d-modal-cancel {
+  margin-left: 5px;
+  color: $primary-medium;
+}
 
 .delete-user-modal {
   .modal-footer {
@@ -265,15 +270,7 @@
       display: inline-block;
       margin-left: 0;
     }
-    .cancel {
-      display: block;
-      margin-right: 5px;
-    }
   }
-}
-
-.modal-footer .cancel-inline {
-  margin-left: 10px;
 }
 
 .invite-modal {
@@ -307,7 +304,7 @@
 }
 
 .edit-category-modal {
-  .auto-update-input, .num-featured-topics-fields, .position-fields {
+  .future-date-input, .num-featured-topics-fields, .position-fields {
     input[type=text] {
       width: 50px;
     }

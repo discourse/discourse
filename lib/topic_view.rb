@@ -2,8 +2,10 @@ require_dependency 'guardian'
 require_dependency 'topic_query'
 require_dependency 'filter_best_posts'
 require_dependency 'gaps'
+require_dependency 'multisite_class_var'
 
 class TopicView
+  include MultisiteClassVar
 
   attr_reader :topic, :posts, :guardian, :filtered_posts, :chunk_size, :print, :message_bus_last_id
   attr_accessor :draft, :draft_key, :draft_sequence, :user_custom_fields, :post_custom_fields
@@ -24,9 +26,7 @@ class TopicView
     @default_post_custom_fields ||= ["action_code_who"]
   end
 
-  def self.post_custom_fields_whitelisters
-    @post_custom_fields_whitelisters ||= Set.new
-  end
+  multisite_class_var(:post_custom_fields_whitelisters) { Set.new }
 
   def self.add_post_custom_fields_whitelister(&block)
     post_custom_fields_whitelisters << block
@@ -278,12 +278,18 @@ class TopicView
   def post_counts_by_user
     @post_counts_by_user ||= begin
       return {} if @posts.blank?
-      Post.where(id: @posts.pluck(:id))
-        .where("user_id IS NOT NULL")
-        .group(:user_id)
-        .order("count_all DESC")
-        .limit(24)
-        .count
+
+      sql = <<~SQL
+      SELECT user_id, count(*) AS count_all
+      FROM posts
+      WHERE id IN (:post_ids)
+      AND user_id IS NOT NULL
+      GROUP BY user_id
+      ORDER BY count_all DESC
+      LIMIT 24
+      SQL
+
+      Hash[Post.exec_sql(sql, post_ids: @posts.pluck(:id)).values]
     end
   end
 

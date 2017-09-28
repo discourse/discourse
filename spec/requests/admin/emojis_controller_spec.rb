@@ -12,10 +12,10 @@ RSpec.describe Admin::EmojisController do
     describe 'when upload is invalid' do
       it 'should publish the right error' do
         message = MessageBus.track_publish do
-          post("/admin/customize/emojis.json",
+          post "/admin/customize/emojis.json", params: {
             name: 'test',
             file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/fake.jpg")
-          )
+          }
         end.find { |m| m.channel == "/uploads/emoji" }
 
         expect(message.channel).to eq("/uploads/emoji")
@@ -28,10 +28,10 @@ RSpec.describe Admin::EmojisController do
         CustomEmoji.create!(name: 'test', upload: upload)
 
         message = MessageBus.track_publish do
-          post("/admin/customize/emojis.json",
+          post "/admin/customize/emojis.json", params: {
             name: 'test',
             file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/logo.png")
-          )
+          }
         end.find { |m| m.channel == "/uploads/emoji" }
 
         expect(message.channel).to eq("/uploads/emoji")
@@ -46,10 +46,10 @@ RSpec.describe Admin::EmojisController do
       Emoji.expects(:clear_cache)
 
         message = MessageBus.track_publish do
-          post("/admin/customize/emojis.json",
+          post "/admin/customize/emojis.json", params: {
             name: 'test',
             file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/logo.png")
-          )
+          }
         end.find { |m| m.channel == "/uploads/emoji" }
 
         custom_emoji = CustomEmoji.last
@@ -68,9 +68,10 @@ RSpec.describe Admin::EmojisController do
       custom_emoji = CustomEmoji.create!(name: 'test', upload: upload)
       Emoji.clear_cache
 
-      expect { delete "/admin/customize/emojis/#{custom_emoji.name}.json", name: 'test' }
-        .to change { Upload.count }.by(-1)
-        .and change { CustomEmoji.count }.by(-1)
+      expect do
+        delete "/admin/customize/emojis/#{custom_emoji.name}.json",
+          params: { name: 'test' }
+      end.to change { Upload.count }.by(-1).and change { CustomEmoji.count }.by(-1)
     end
   end
 end

@@ -6,7 +6,7 @@
 
     <div>
       {{#if showTimeOnly}}
-        {{auto-update-input
+        {{future-date-input
             input=updateTime
             statusType=selection
             basedOnLastPost=false}}
@@ -18,13 +18,13 @@
             excludeCategoryId=excludeCategoryId}}
         </div>
 
-        {{auto-update-input
+        {{future-date-input
             input=updateTime
             statusType=selection
             categoryId=topicTimer.category_id
             basedOnLastPost=false}}
       {{else if autoClose}}
-        {{auto-update-input
+        {{future-date-input
             input=updateTime
             statusType=selection
             basedOnLastPost=topicTimer.based_on_last_post
@@ -39,7 +39,7 @@
         label="topic.topic_status_update.save"
         action="saveTimer"}}
 
-    <a {{action "closeModal"}}>{{i18n 'cancel'}}</a>
+    {{d-modal-cancel close=(action "closeModal")}}
     {{conditional-loading-spinner size="small" condition=loading}}
 
     {{#if topicTimer.execute_at}}

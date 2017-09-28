@@ -1,4 +1,4 @@
-class ChangeSupressToSuppress < ActiveRecord::Migration
+class ChangeSupressToSuppress < ActiveRecord::Migration[4.2]
   def up
     SiteSetting.where(name: "suppress_reply_directly_below").update_all(name: "supress_reply_directly_below")
   end

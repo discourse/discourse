@@ -59,10 +59,12 @@ module Jobs
         LEFT OUTER JOIN post_actions AS pa ON
           pa.post_id = p.id AND pa.post_action_type_id = :like
         LEFT OUTER JOIN users AS liked_by ON liked_by.id = pa.user_id
+        LEFT OUTER JOIN topics AS t ON t.id = p.topic_id
         WHERE u.active AND
           u.id > 0 AND
           NOT(u.admin) AND
           NOT(u.moderator) AND
+          t.archetype <> '#{Archetype.private_message}' AND
           u.created_at >= CURRENT_TIMESTAMP - '1 month'::INTERVAL AND
           u.id NOT IN (#{current_owners.join(',')})
         GROUP BY u.id
@@ -73,8 +75,11 @@ module Jobs
         LIMIT :max_awarded
       SQL
 
-      User.exec_sql(sql,         like: PostActionType.types[:like],
-                                 max_awarded: MAX_AWARDED).each do |row|
+      User.exec_sql(
+        sql,
+        like: PostActionType.types[:like],
+        max_awarded: MAX_AWARDED
+      ).each do |row|
         scores[row['id'].to_i] = row['score'].to_f
       end
       scores

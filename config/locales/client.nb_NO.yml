@@ -1148,6 +1148,29 @@ nb_NO:
       empty: "Ingen varsler funnet."
       more: "se gamle varsler"
       total_flagged: "totalt rapporterte innlegg"
+      mentioned: "<span>{{username}}</span> {{description}}"
+      group_mentioned: "<span>{{username}}</span> {{description}}"
+      quoted: "<span>{{username}}</span> {{description}}"
+      replied: "<span>{{username}}</span> {{description}}"
+      posted: "<span>{{username}}</span> {{description}}"
+      edited: "<span>{{username}}</span> {{description}}"
+      liked: "<span>{{username}}</span> {{description}}"
+      liked_2: "<span>{{username}}, {{username2}}</span> {{description}}"
+      liked_many:
+        one: "<span>{{username}}, {{username2}} og én annen</span> {{description}}"
+        other: "<span>{{username}}, {{username2}} og {{count}} andre</span> {{description}}"
+      private_message: "<span>{{username}}</span> {{description}}"
+      invited_to_private_message: "<p><span>{{username}}</span> {{description}}"
+      invited_to_topic: "<span>{{username}}</span> {{description}}"
+      invitee_accepted: "<span>{{username}}</span> godtok din invitasjon"
+      moved_post: "<span>{{username}}</span> flyttet {{description}}"
+      linked: "<span>{{username}}</span> {{description}}"
+      granted_badge: "Gjorde seg fortjent til '{{description}}'"
+      topic_reminder: "<span>{{username}}</span> {{description}}"
+      watching_first_post: "<span>Nytt emne</span> {{description}}"
+      group_message_summary:
+        one: "{{count}} melding i din {{group_name}} innboks"
+        other: "{{count}} meldinger i din {{group_name}} innboks"
       alt:
         mentioned: "Nevnt av"
         quoted: "Sitert av"
@@ -2346,8 +2369,9 @@ nb_NO:
         by: "av"
       flags:
         title: "Rapporteringer"
-        old: "Gamle"
-        active: "Aktive"
+        active_posts: "Rapporterte innlegg"
+        old_posts: "Gamle rapporterte innlegg"
+        topics: "Rapporterte innlegg"
         agree: "Godta"
         agree_title: "Bekreft at denne rapporteringen er gyldig og korrekt"
         agree_flag_modal_title: "Godta og…"
@@ -2375,6 +2399,8 @@ nb_NO:
         clear_topic_flags: "Ferdig"
         clear_topic_flags_title: "Emnet har blitt undersøkt og problemer har blitt løst. Klikk Ferdig for å fjerne rapporteringene."
         more: "(flere svar…)"
+        suspend_user: "Bannlys bruker"
+        suspend_user_title: "Bannlys bruker for dette innlegget"
         dispositions:
           agreed: "enig"
           disagreed: "uenig"
@@ -2385,11 +2411,18 @@ nb_NO:
         system: "System"
         error: "Noe gikk galt"
         reply_message: "Svar"
-        no_results: "Det er ingen rapporteringer."
+        no_results: "Det er ingen rapporterte innlegg."
         topic_flagged: "Dette emnet har blitt rapportert."
+        show_full: "vis hele innlegget"
         visit_topic: "Besøk emnet for å utføre handling"
         was_edited: "Innlegget ble redigert etter første rapportering"
         previous_flags_count: "Dette innlegget har allerede blitt rapportert {{count}} ganger."
+        show_details: "Vis rapportdetaljer"
+        flagged_topics:
+          topic: "Emne"
+          type: "Type"
+          users: "Brukere"
+          last_flagged: "Sist rapporter"
         summary:
           action_type_3:
             one: "irrelevant"
@@ -2927,6 +2960,7 @@ nb_NO:
         form:
           label: 'Nytt ord:'
           placeholder: 'helt ord eller * som jokertegn'
+          placeholder_regexp: "regulært uttrykk"
           add: 'Legg til'
           success: 'Suksess'
           upload: "Last opp"
@@ -2988,10 +3022,15 @@ nb_NO:
         suspend_failed: "Noe gikk galt ved bannlysing av denne brukeren {{error}}"
         unsuspend_failed: "Noe gikk galt ved gjeninnsetting av denne brukeren {{error}}"
         suspend_duration: "Hvor lenge vil du bannlyse denne brukeren? (dager)"
-        suspend_duration_units: "(dager)"
         suspend_reason_label: "Hvorfor vil du bannlyse? Denne teksten <b>vil være synlig for alle</b> på denne brukerens profilside, og blir vist til brukeren om de skulle forsøke å logge inn. Fatt deg i korthet."
+        suspend_reason_hidden_label: "Hvorfor vil du bannlyse? Denne teksten vil bli vist til brukeren når vedkommende prøver å logge inn. Fatt deg i korthet."
         suspend_reason: "Begrunnelse"
+        suspend_reason_placeholder: "Bannlysningsgrunn"
+        suspend_message: "E-postmelding"
+        suspend_message_placeholder: "Alternativt, kan du detaljere bannlysningen og det vil bli sendt per e-post til brukeren."
         suspended_by: "Bannlyst av"
+        suspended_until: "(til %{until})"
+        cant_suspend: "Brukeren kan ikke bannlyses."
         delete_all_posts: "Slett alle innlegg"
         delete_all_posts_confirm_MF: "Du er i ferd med å slette {INNLEGG, flertall, ett {ett innlegg} andre {# innlegg}} og {INNLEGG, flertall, ett {ett emne} andre {# emner}}. Er du sikker?"
         suspend: "Bannlyst"

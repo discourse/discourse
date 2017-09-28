@@ -1,24 +1,21 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
+import DeleteSpammerModal from 'admin/mixins/delete-spammer-modal';
 
-export default Ember.Controller.extend(ModalFunctionality, {
-  adminFlagsList: Ember.inject.controller(),
-
-  _agreeFlag: function (actionOnPost) {
-    const adminFlagController = this.get("adminFlagsList");
-    const post = this.get("content");
-
-    return post.agreeFlags(actionOnPost).then(() => {
-      adminFlagController.get('model').removeObject(post);
-      this.send("closeModal");
-    }, function () {
-      bootbox.alert(I18n.t("admin.flags.error"));
-    });
-  },
+export default Ember.Controller.extend(ModalFunctionality, DeleteSpammerModal, {
+  removeAfter: null,
 
   actions: {
-    agreeFlagHidePost: function () { return this._agreeFlag("hide"); },
-    agreeFlagKeepPost: function () { return this._agreeFlag("keep"); },
-    agreeFlagRestorePost: function () { return this._agreeFlag("restore"); }
-  }
+    agreeDeleteSpammer(user) {
+      return this.removeAfter(user.deleteAsSpammer()).then(() => {
+        this.send('closeModal');
+      });
+    },
 
+    perform(action) {
+      let flaggedPost = this.get('model');
+      return this.removeAfter(flaggedPost.agreeFlags(action)).then(() => {
+        this.send('closeModal');
+      });
+    },
+  }
 });

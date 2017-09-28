@@ -7,7 +7,10 @@ require_dependency 'text_cleaner'
 require_dependency 'archetype'
 require_dependency 'html_prettify'
 require_dependency 'discourse_tagging'
-require_dependency 'search'
+require_dependency 'search_indexer'
+require_dependency 'list_controller'
+require_dependency 'topic_posters_summary'
+require_dependency 'topic_featured_users'
 
 class Topic < ActiveRecord::Base
   class UserExists < StandardError; end
@@ -83,7 +86,8 @@ class Topic < ActiveRecord::Base
 
   validates :featured_link, allow_nil: true, format: URI::regexp(%w(http https))
   validate if: :featured_link do
-    errors.add(:featured_link, :invalid_category) unless !featured_link_changed? || Guardian.new.can_edit_featured_link?(category_id)
+    errors.add(:featured_link, :invalid_category) unless !featured_link_changed? ||
+      Guardian.new.can_edit_featured_link?(category_id)
   end
 
   before_validation do
@@ -101,8 +105,8 @@ class Topic < ActiveRecord::Base
   has_many :group_archived_messages, dependent: :destroy
   has_many :user_archived_messages, dependent: :destroy
 
-  has_many :allowed_group_users, through: :allowed_groups, source: :users
   has_many :allowed_groups, through: :topic_allowed_groups, source: :group
+  has_many :allowed_group_users, through: :allowed_groups, source: :users
   has_many :allowed_users, through: :topic_allowed_users, source: :user
   has_many :queued_posts
 
@@ -125,7 +129,7 @@ class Topic < ActiveRecord::Base
   has_many :topic_timers, dependent: :destroy
 
   has_one :user_warning
-  has_one :first_post, -> { where post_number: 1 }, class_name: Post
+  has_one :first_post, -> { where post_number: 1 }, class_name: 'Post'
   has_one :topic_search_data
   has_one :topic_embed, dependent: :destroy
 
@@ -196,7 +200,7 @@ class Topic < ActiveRecord::Base
   after_save do
     banner = "banner".freeze
 
-    if archetype_was == banner || archetype == banner
+    if archetype_before_last_save == banner || archetype == banner
       ApplicationController.banner_json_cache.clear
     end
 
@@ -268,7 +272,7 @@ class Topic < ActiveRecord::Base
   end
 
   def has_flags?
-    FlagQuery.flagged_post_actions("active")
+    FlagQuery.flagged_post_actions(filter: "active")
       .where("topics.id" => id)
       .exists?
   end
@@ -436,42 +440,46 @@ class Topic < ActiveRecord::Base
     archetype == Archetype.private_message
   end
 
-  MAX_SIMILAR_BODY_LENGTH = 200
-  # Search for similar topics
-  def self.similar_to(title, raw, user = nil)
-    return [] unless title.present?
-    return [] unless raw.present?
+  MAX_SIMILAR_BODY_LENGTH ||= 200
 
-    filter_words = Search.prepare_data(title + " " + raw[0...MAX_SIMILAR_BODY_LENGTH]);
+  def self.similar_to(title, raw, user = nil)
+    return [] if title.blank?
+    raw = raw.presence || ""
+
+    search_data = "#{title} #{raw[0...MAX_SIMILAR_BODY_LENGTH]}".strip
+    filter_words = Search.prepare_data(search_data)
     ts_query = Search.ts_query(filter_words, nil, "|")
 
-    # Exclude category definitions from similar topic suggestions
-
-    candidates = Topic.visible
-      .secured(Guardian.new(user))
+    candidates = Topic
+      .visible
       .listable_topics
-      .joins('JOIN topic_search_data s ON topics.id = s.topic_id')
+      .secured(Guardian.new(user))
+      .joins("JOIN topic_search_data s ON topics.id = s.topic_id")
+      .joins("LEFT JOIN categories c ON topics.id = c.topic_id")
       .where("search_data @@ #{ts_query}")
+      .where("c.topic_id IS NULL")
       .order("ts_rank(search_data, #{ts_query}) DESC")
       .limit(SiteSetting.max_similar_results * 3)
 
-    exclude_topic_ids = Category.pluck(:topic_id).compact!
-    if exclude_topic_ids.present?
-      candidates = candidates.where("topics.id NOT IN (?)", exclude_topic_ids)
-    end
-
     candidate_ids = candidates.pluck(:id)
 
-    return [] unless candidate_ids.present?
+    return [] if candidate_ids.blank?
 
-    similar = Topic.select(sanitize_sql_array(["topics.*, similarity(topics.title, :title) + similarity(topics.title, :raw) AS similarity, p.cooked as blurb", title: title, raw: raw]))
+    similars = Topic
       .joins("JOIN posts AS p ON p.topic_id = topics.id AND p.post_number = 1")
-      .limit(SiteSetting.max_similar_results)
       .where("topics.id IN (?)", candidate_ids)
-      .where("similarity(topics.title, :title) + similarity(topics.title, :raw) > 0.2", raw: raw, title: title)
-      .order('similarity desc')
+      .order("similarity DESC")
+      .limit(SiteSetting.max_similar_results)
 
-    similar
+    if raw.present?
+      similars
+        .select(sanitize_sql_array(["topics.*, similarity(topics.title, :title) + similarity(p.raw, :raw) AS similarity, p.cooked AS blurb", title: title, raw: raw]))
+        .where("similarity(topics.title, :title) + similarity(p.raw, :raw) > 0.2", title: title, raw: raw)
+    else
+      similars
+        .select(sanitize_sql_array(["topics.*, similarity(topics.title, :title) AS similarity, p.cooked AS blurb", title: title]))
+        .where("similarity(topics.title, :title) > 0.2", title: title)
+    end
   end
 
   def update_status(status, enabled, user, opts = {})
@@ -481,7 +489,7 @@ class Topic < ActiveRecord::Base
 
   # Atomically creates the next post number
   def self.next_post_number(topic_id, reply = false, whisper = false)
-    highest = exec_sql("select coalesce(max(post_number),0) as max from posts where topic_id = ?", topic_id).first['max'].to_i
+    highest = exec_sql("SELECT coalesce(max(post_number),0) AS max FROM posts WHERE topic_id = ?", topic_id).first['max'].to_i
 
     if whisper
 

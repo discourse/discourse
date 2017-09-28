@@ -131,7 +131,7 @@ http://b.com/#{'a' * 500}
         expect(topic.topic_links.first.url).to eq(url)
 
         linked_post.revise(post.user, raw: "no more linkies https://eviltrout.com")
-        expect(other_topic.topic_links.where(link_post_id: linked_post.id)).to be_blank
+        expect(other_topic.reload.topic_links.where(link_post_id: linked_post.id)).to be_blank
       end
     end
 
@@ -323,7 +323,7 @@ http://b.com/#{'a' * 500}
 
         array = TopicLink.topic_map(Guardian.new, post.topic_id)
         expect(array.length).to eq(6)
-        expect(array[0]["clicks"]).to eq("1")
+        expect(array[0]["clicks"]).to eq(1)
       end
 
       it 'secures internal links correctly' do

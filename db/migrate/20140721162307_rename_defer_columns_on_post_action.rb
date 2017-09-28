@@ -1,4 +1,4 @@
-class RenameDeferColumnsOnPostAction < ActiveRecord::Migration
+class RenameDeferColumnsOnPostAction < ActiveRecord::Migration[4.2]
   def up
     rename_column :post_actions, :defer_by, :defered_by_id
 

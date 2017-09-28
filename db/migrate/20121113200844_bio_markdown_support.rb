@@ -1,4 +1,4 @@
-class BioMarkdownSupport < ActiveRecord::Migration
+class BioMarkdownSupport < ActiveRecord::Migration[4.2]
   def up
     rename_column :users, :bio, :bio_raw
     add_column :users, :bio_cooked, :text, null: true

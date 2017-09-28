@@ -5,14 +5,14 @@ describe EmailController do
   context '.preferences_redirect' do
 
     it 'requires you to be logged in' do
-      expect { get :preferences_redirect }.to raise_error(Discourse::NotLoggedIn)
+      expect { get :preferences_redirect, format: :json }.to raise_error(Discourse::NotLoggedIn)
     end
 
     context 'when logged in' do
       let!(:user) { log_in }
 
       it 'redirects to your user preferences' do
-        get :preferences_redirect
+        get :preferences_redirect, format: :json
         expect(response).to redirect_to("/u/#{user.username}/preferences")
       end
     end
@@ -21,7 +21,7 @@ describe EmailController do
 
   context '.perform unsubscribe' do
     it 'raises not found on invalid key' do
-      post :perform_unsubscribe, key: "123"
+      post :perform_unsubscribe, params: { key: "123" }, format: :json
       expect(response.status).to eq(404)
     end
 
@@ -34,7 +34,10 @@ describe EmailController do
                                       email_direct: true,
                                       email_private_messages: true)
 
-      post :perform_unsubscribe, key: key, unsubscribe_all: "1"
+      post :perform_unsubscribe,
+        params: { key: key, unsubscribe_all: "1" },
+        format: :json
+
       expect(response.status).to eq(302)
 
       user.user_option.reload
@@ -52,7 +55,10 @@ describe EmailController do
 
       user.user_option.update_columns(mailing_list_mode: true)
 
-      post :perform_unsubscribe, key: key, disable_mailing_list: "1"
+      post :perform_unsubscribe,
+        params: { key: key, disable_mailing_list: "1" },
+        format: :json
+
       expect(response.status).to eq(302)
 
       user.user_option.reload
@@ -66,7 +72,10 @@ describe EmailController do
 
       user.user_option.update_columns(email_digests: true)
 
-      post :perform_unsubscribe, key: key, disable_digest_emails: "1"
+      post :perform_unsubscribe,
+        params: { key: key, disable_digest_emails: "1" },
+        format: :json
+
       expect(response.status).to eq(302)
 
       user.user_option.reload
@@ -79,7 +88,11 @@ describe EmailController do
       key = UnsubscribeKey.create_key_for(p.user, p)
 
       TopicUser.change(p.user_id, p.topic_id, notification_level: TopicUser.notification_levels[:watching])
-      post :perform_unsubscribe, key: key, unwatch_topic: "1"
+
+      post :perform_unsubscribe,
+        params: { key: key, unwatch_topic: "1" },
+        format: :json
+
       expect(response.status).to eq(302)
 
       expect(TopicUser.get(p.topic, p.user).notification_level).to eq(TopicUser.notification_levels[:tracking])
@@ -90,7 +103,11 @@ describe EmailController do
       key = UnsubscribeKey.create_key_for(p.user, p)
 
       TopicUser.change(p.user_id, p.topic_id, notification_level: TopicUser.notification_levels[:watching])
-      post :perform_unsubscribe, key: key, mute_topic: "1"
+
+      post :perform_unsubscribe,
+        params: { key: key, mute_topic: "1" },
+        format: :json
+
       expect(response.status).to eq(302)
 
       expect(TopicUser.get(p.topic, p.user).notification_level).to eq(TopicUser.notification_levels[:muted])
@@ -104,7 +121,10 @@ describe EmailController do
                                 category_id: p.topic.category_id,
                                 notification_level: CategoryUser.notification_levels[:watching])
 
-      post :perform_unsubscribe, key: key, unwatch_category: "1"
+      post :perform_unsubscribe,
+        params: { key: key, unwatch_category: "1" },
+        format: :json
+
       expect(response.status).to eq(302)
 
       expect(CategoryUser.find_by(id: cu.id)).to eq(nil)
@@ -118,7 +138,10 @@ describe EmailController do
                                 category_id: p.topic.category_id,
                                 notification_level: CategoryUser.notification_levels[:watching_first_post])
 
-      post :perform_unsubscribe, key: key, unwatch_category: "1"
+      post :perform_unsubscribe,
+        params: { key: key, unwatch_category: "1" },
+        format: :json
+
       expect(response.status).to eq(302)
 
       expect(CategoryUser.find_by(id: cu.id)).to eq(nil)
@@ -134,14 +157,14 @@ describe EmailController do
       user = Fabricate(:user)
       key = UnsubscribeKey.create_key_for(user, "digest")
 
-      get :unsubscribe, key: key
+      get :unsubscribe, params: { key: key }
 
       expect(response.body).to include(I18n.t("unsubscribe.log_out"))
       expect(response.body).to include(I18n.t("unsubscribe.different_user_description"))
     end
 
     it 'displays not found if key is not found' do
-      get :unsubscribe, key: SecureRandom.hex
+      get :unsubscribe, params: { key: SecureRandom.hex }
       expect(response.body).to include(CGI.escapeHTML(I18n.t("unsubscribe.not_found_description")))
     end
 
@@ -152,18 +175,18 @@ describe EmailController do
 
       user.user_option.update_columns(mailing_list_mode: true)
 
-      get :unsubscribe, key: key
+      get :unsubscribe, params: { key: key }
       expect(response.body).to include(I18n.t("unsubscribe.mailing_list_mode"))
 
       SiteSetting.disable_mailing_list_mode = true
 
-      get :unsubscribe, key: key
+      get :unsubscribe, params: { key: key }
       expect(response.body).not_to include(I18n.t("unsubscribe.mailing_list_mode"))
 
       user.user_option.update_columns(mailing_list_mode: false)
       SiteSetting.disable_mailing_list_mode = false
 
-      get :unsubscribe, key: key
+      get :unsubscribe, params: { key: key }
       expect(response.body).not_to include(I18n.t("unsubscribe.mailing_list_mode"))
 
     end
@@ -175,7 +198,7 @@ describe EmailController do
       key = UnsubscribeKey.create_key_for(user, "digest")
 
       # because we are type digest we will always show digest and it will be selected
-      get :unsubscribe, key: key
+      get :unsubscribe, params: { key: key }
       expect(response.body).to include(I18n.t("unsubscribe.disable_digest_emails"))
 
       source = Nokogiri::HTML::fragment(response.body)
@@ -183,13 +206,13 @@ describe EmailController do
 
       SiteSetting.disable_digest_emails = true
 
-      get :unsubscribe, key: key
+      get :unsubscribe, params: { key: key }
       expect(response.body).not_to include(I18n.t("unsubscribe.disable_digest_emails"))
 
       SiteSetting.disable_digest_emails = false
       key = UnsubscribeKey.create_key_for(user, "not_digest")
 
-      get :unsubscribe, key: key
+      get :unsubscribe, params: { key: key }
       expect(response.body).to include(I18n.t("unsubscribe.disable_digest_emails"))
     end
 
@@ -201,12 +224,12 @@ describe EmailController do
                                 notification_level: CategoryUser.notification_levels[:watching])
 
       key = UnsubscribeKey.create_key_for(user, post)
-      get :unsubscribe, key: key
+      get :unsubscribe, params: { key: key }
       expect(response.body).to include("unwatch_category")
 
       cu.destroy!
 
-      get :unsubscribe, key: key
+      get :unsubscribe, params: { key: key }
       expect(response.body).not_to include("unwatch_category")
 
     end
@@ -219,12 +242,12 @@ describe EmailController do
                                 notification_level: CategoryUser.notification_levels[:watching_first_post])
 
       key = UnsubscribeKey.create_key_for(user, post)
-      get :unsubscribe, key: key
+      get :unsubscribe, params: { key: key }
       expect(response.body).to include("unwatch_category")
 
       cu.destroy!
 
-      get :unsubscribe, key: key
+      get :unsubscribe, params: { key: key }
       expect(response.body).not_to include("unwatch_category")
 
     end

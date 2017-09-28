@@ -7,25 +7,15 @@ describe SimilarTopicsController do
     let(:raw) { 'this body is long enough to search for' }
 
     it "requires a title" do
-      expect { xhr :get, :index, raw: raw }.to raise_error(ActionController::ParameterMissing)
-    end
-
-    it "requires a raw body" do
-      expect { xhr :get, :index, title: title }.to raise_error(ActionController::ParameterMissing)
+      expect do
+        get :index, params: { raw: raw }, format: :json
+      end.to raise_error(ActionController::ParameterMissing)
     end
 
     it "returns no results if the title length is below the minimum" do
       Topic.expects(:similar_to).never
       SiteSetting.min_title_similar_length = 100
-      xhr :get, :index, title: title, raw: raw
-      json = ::JSON.parse(response.body)
-      expect(json["similar_topics"].size).to eq(0)
-    end
-
-    it "returns no results if the body length is below the minimum" do
-      Topic.expects(:similar_to).never
-      SiteSetting.min_body_similar_length = 100
-      xhr :get, :index, title: title, raw: raw
+      get :index, params: { title: title, raw: raw }, format: :json
       json = ::JSON.parse(response.body)
       expect(json["similar_topics"].size).to eq(0)
     end
@@ -37,7 +27,7 @@ describe SimilarTopicsController do
       end
 
       after do
-        xhr :get, :index, title: title, raw: raw
+        get :index, params: { title: title, raw: raw }, format: :json
       end
 
       describe "With enough topics" do

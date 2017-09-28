@@ -1016,7 +1016,7 @@ pl_PL:
     trust_level: 'Poziom zaufania'
     search_hint: 'nazwa użytkownika, email lub IP'
     create_account:
-      disclaimer: "Rejestrując się zgadzasz się z <a href='{{privacy_link}}'>polityką prywatności</a> i <a href='{{tos_link}}'>warunkami świadczenia usług /a>."
+      disclaimer: "Rejestrując się zgadzasz się z <a href='{{privacy_link}}'>polityką prywatności</a> i <a href='{{tos_link}}'>warunkami świadczenia usług</a>."
       title: "Utwórz konto"
       failed: "Coś poszło nie tak, możliwe, że wybrany adres email jest już zarejestrowany, spróbuj użyć odnośnika przypomnienia hasła"
     forgot_password:

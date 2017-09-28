@@ -1,8 +1,3 @@
-import deprecated from 'discourse-common/lib/deprecated';
-
-const PageTracker = Ember.Object.extend(Ember.Evented);
-let _pageTracker = PageTracker.create();
-
 let _started = false;
 
 const cache = {};
@@ -16,7 +11,7 @@ export function getTransient(key) {
   return cache[key];
 }
 
-export function startPageTracking(router) {
+export function startPageTracking(router, appEvents) {
   if (_started) { return; }
 
   router.on('didTransition', function() {
@@ -25,7 +20,14 @@ export function startPageTracking(router) {
 
     // Refreshing the title is debounced, so we need to trigger this in the
     // next runloop to have the correct title.
-    Em.run.next(() => _pageTracker.trigger('change', url, Discourse.get('_docTitle')));
+    Ember.run.next(() => {
+      let title = Discourse.get('_docTitle');
+      appEvents.trigger('page:changed', {
+        url,
+        title,
+        currentRouteName: router.get('currentRouteName')
+      });
+    });
 
     transitionCount++;
     _.each(cache, (v,k) => {
@@ -36,18 +38,3 @@ export function startPageTracking(router) {
   });
   _started = true;
 }
-
-export function onPageChange(fn) {
-  _pageTracker.on('change', fn);
-}
-
-// backwards compatibility
-const BackwardsCompat = {
-  current() {
-    deprecated(`Using PageTracker.current() is deprecated. Your plugin should use the PluginAPI`);
-    return _pageTracker;
-  }
-};
-
-Discourse.PageTracker = BackwardsCompat;
-export default BackwardsCompat;

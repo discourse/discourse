@@ -1,5 +1,6 @@
 import storePretender from 'helpers/store-pretender';
 import fixturePretender from 'helpers/fixture-pretender';
+import flagPretender from 'helpers/flag-pretender';
 
 export function parsePostData(query) {
   const result = {};
@@ -41,6 +42,7 @@ export default function() {
 
   const server = new Pretender(function() {
     storePretender.call(this, helpers);
+    flagPretender.call(this, helpers);
     const fixturesByUrl = fixturePretender.call(this, helpers);
 
     this.get('/admin/plugins', () => response({ plugins: [] }));
@@ -66,7 +68,7 @@ export default function() {
       }] });
     });
 
-    this.get(`/u/eviltrout/emails.json`, () => {
+    this.get(`/u/:username/emails.json`, () => {
       return response({ email: 'eviltrout@example.com' });
     });
 
@@ -269,6 +271,10 @@ export default function() {
       return response(200, fixturesByUrl['/groups.json']);
     });
 
+    this.get("groups/search.json", () => {
+      return response(200, []);
+    });
+
     this.get("/groups/discourse/topics.json", () => {
       return response(200, fixturesByUrl['/groups/discourse/posts.json']);
     });
@@ -343,8 +349,25 @@ export default function() {
     });
 
     this.get('/tag_groups', () => response(200, {tag_groups: []}));
+
+    this.get('/admin/users/1234.json', () => {
+      return response(200, {
+        id: 1234,
+        username: 'regular',
+      });
+    });
+
+    this.get('/admin/users/2.json', () => {
+      return response(200, {
+        id: 2,
+        username: 'sam',
+        admin: true
+      });
+    });
+
     this.post('/admin/users/:user_id/generate_api_key', success);
     this.delete('/admin/users/:user_id/revoke_api_key', success);
+    this.delete('/admin/users/:user_id.json', () => response(200, { deleted: true }));
     this.post('/admin/badges', success);
     this.delete('/admin/badges/:id', success);
 

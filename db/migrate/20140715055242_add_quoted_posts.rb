@@ -1,4 +1,4 @@
-class AddQuotedPosts < ActiveRecord::Migration
+class AddQuotedPosts < ActiveRecord::Migration[4.2]
   def change
     create_table :quoted_posts do |t|
       t.integer :post_id, null: false

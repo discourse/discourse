@@ -1,4 +1,4 @@
-class RemoveNullableDates < ActiveRecord::Migration
+class RemoveNullableDates < ActiveRecord::Migration[4.2]
   def up
 
     # must drop so we can muck with the column

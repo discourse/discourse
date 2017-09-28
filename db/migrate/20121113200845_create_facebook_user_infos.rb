@@ -1,4 +1,4 @@
-class CreateFacebookUserInfos < ActiveRecord::Migration
+class CreateFacebookUserInfos < ActiveRecord::Migration[4.2]
   def change
     create_table :facebook_user_infos do |t|
       t.integer :user_id, null: false

@@ -90,8 +90,10 @@ describe AdminUserIndexQuery do
 
   describe 'with a suspected user' do
     let(:user) { Fabricate(:active_user, created_at: 1.day.ago) }
+    let(:bot) { Fabricate(:active_user, id: -10, created_at: 1.day.ago) }
 
     it 'finds the suspected user' do
+      bot
       user
       query = AdminUserIndexQuery.new(query: 'suspect')
       expect(query.find_users).to eq([user])

@@ -3,9 +3,9 @@ require_dependency 'topic_list_responder'
 class ListController < ApplicationController
   include TopicListResponder
 
-  skip_before_filter :check_xhr
+  skip_before_action :check_xhr
 
-  before_filter :set_category, only: [
+  before_action :set_category, only: [
     :category_default,
     # filtered topics lists
     Discourse.filters.map { |f| :"category_#{f}" },
@@ -24,7 +24,7 @@ class ListController < ApplicationController
     :category_feed,
   ].flatten
 
-  before_filter :ensure_logged_in, except: [
+  before_action :ensure_logged_in, except: [
     :topics_by,
     # anonymous filters
     Discourse.anonymous_filters,

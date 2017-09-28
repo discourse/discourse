@@ -30,12 +30,12 @@ describe TopicsController do
       user = log_in
       user.user_option.update_columns(theme_key: theme.key)
 
-      get :show, id: 666
+      get :show, params: { id: 666 }
       expect(controller.theme_key).to eq(theme.key)
 
       theme.update_columns(user_selectable: false)
 
-      get :show, id: 666
+      get :show, params: { id: 666 }
       expect(controller.theme_key).not_to eq(theme.key)
     end
 
@@ -45,7 +45,7 @@ describe TopicsController do
 
       cookies['theme_key'] = "#{theme2.key},#{user.user_option.theme_key_seq}"
 
-      get :show, id: 666
+      get :show, params: { id: 666 }
       expect(controller.theme_key).to eq(theme2.key)
 
     end
@@ -55,20 +55,23 @@ describe TopicsController do
       user.user_option.update_columns(theme_key: theme.key)
       cookies['theme_key'] = "#{theme2.key},#{user.user_option.theme_key_seq - 1}"
 
-      get :show, id: 666
+      get :show, params: { id: 666 }
       expect(controller.theme_key).to eq(theme.key)
     end
   end
 
   it "doesn't store an incoming link when there's no referer" do
     expect {
-      get :show, id: topic.id
+      get :show, params: { id: topic.id }, format: :json
     }.not_to change(IncomingLink, :count)
   end
 
   it "doesn't raise an error on a very long link" do
     set_referer("http://#{'a' * 2000}.com")
-    expect { get :show, id: topic.id }.not_to raise_error
+
+    expect do
+      get :show, params: { id: topic.id }, format: :json
+    end.not_to raise_error
   end
 
   describe "has_escaped_fragment?" do
@@ -78,9 +81,17 @@ describe TopicsController do
 
       it "uses the application layout even with an escaped fragment param" do
         SiteSetting.enable_escaped_fragments = false
-        get :show, 'topic_id' => topic.id, 'slug' => topic.slug, '_escaped_fragment_' => 'true'
-        expect(response).to render_template(layout: 'application')
-        assert_select "meta[name=fragment]", false, "it doesn't have the meta tag"
+
+        get :show, params: {
+          'topic_id' => topic.id,
+          'slug' => topic.slug,
+          '_escaped_fragment_' => 'true'
+        }
+
+        body = response.body
+
+        expect(body).to have_tag(:script, with: { src: '/assets/application.js' })
+        expect(body).to_not have_tag(:meta, with: { name: 'fragment' })
       end
 
     end
@@ -91,15 +102,25 @@ describe TopicsController do
       end
 
       it "uses the application layout when there's no param" do
-        get :show, topic_id: topic.id, slug: topic.slug
-        expect(response).to render_template(layout: 'application')
-        assert_select "meta[name=fragment]", true, "it has the meta tag"
+        get :show, params: { topic_id: topic.id, slug: topic.slug }
+
+        body = response.body
+
+        expect(body).to have_tag(:script, with: { src: '/assets/application.js' })
+        expect(body).to have_tag(:meta, with: { name: 'fragment' })
       end
 
       it "uses the crawler layout when there's an _escaped_fragment_ param" do
-        get :show, topic_id: topic.id, slug: topic.slug, _escaped_fragment_: 'true'
-        expect(response).to render_template(layout: 'crawler')
-        assert_select "meta[name=fragment]", false, "it doesn't have the meta tag"
+        get :show, params: {
+          topic_id: topic.id,
+          slug: topic.slug,
+          _escaped_fragment_: 'true'
+        }
+
+        body = response.body
+
+        expect(body).to have_tag(:body, with: { class: 'crawler' })
+        expect(body).to_not have_tag(:meta, with: { name: 'fragment' })
       end
     end
   end
@@ -109,18 +130,24 @@ describe TopicsController do
 
     context "when not a crawler" do
       it "renders with the application layout" do
-        get :show, topic_id: topic.id, slug: topic.slug
-        expect(response).to render_template(layout: 'application')
-        assert_select "meta[name=fragment]", true, "it has the meta tag"
+        get :show, params: { topic_id: topic.id, slug: topic.slug }
+
+        body = response.body
+
+        expect(body).to have_tag(:script, with: { src: '/assets/application.js' })
+        expect(body).to have_tag(:meta, with: { name: 'fragment' })
       end
     end
 
     context "when a crawler" do
       it "renders with the crawler layout" do
         request.env["HTTP_USER_AGENT"] = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
-        get :show, topic_id: topic.id, slug: topic.slug
-        expect(response).to render_template(layout: 'crawler')
-        assert_select "meta[name=fragment]", false, "it doesn't have the meta tag"
+        get :show, params: { topic_id: topic.id, slug: topic.slug }
+
+        body = response.body
+
+        expect(body).to have_tag(:body, with: { class: 'crawler' })
+        expect(body).to_not have_tag(:meta, with: { name: 'fragment' })
       end
     end
 
@@ -131,15 +158,21 @@ describe TopicsController do
 
     context "when the SiteSetting is enabled" do
       it "uses the application layout when there's no param" do
-        get :show, topic_id: topic.id, slug: topic.slug
-        expect(response).to render_template(layout: 'application')
-        assert_select "meta[name=fragment]", true, "it has the meta tag"
+        get :show, params: { topic_id: topic.id, slug: topic.slug }
+
+        body = response.body
+
+        expect(body).to have_tag(:script, src: '/assets/application.js')
+        expect(body).to have_tag(:meta, with: { name: 'fragment' })
       end
 
       it "uses the crawler layout when there's an print param" do
-        get :show, topic_id: topic.id, slug: topic.slug, print: 'true'
-        expect(response).to render_template(layout: 'crawler')
-        assert_select "meta[name=fragment]", false, "it doesn't have the meta tag"
+        get :show, params: { topic_id: topic.id, slug: topic.slug, print: 'true' }
+
+        body = response.body
+
+        expect(body).to have_tag(:body, class: 'crawler')
+        expect(body).to_not have_tag(:meta, with: { name: 'fragment' })
       end
     end
   end
@@ -151,7 +184,7 @@ describe TopicsController do
 
       request.cookies['cn'] = "2828,100,#{notification.id}"
 
-      get :show, topic_id: 100
+      get :show, params: { topic_id: 100, format: :json }
 
       expect(response.cookies['cn']).to eq nil
 
@@ -166,7 +199,7 @@ describe TopicsController do
 
       request.headers['Discourse-Clear-Notifications'] = "2828,100,#{notification.id}"
 
-      get :show, topic_id: 100
+      get :show, params: { topic_id: 100, format: :json }
 
       notification.reload
       expect(notification.read).to eq true
@@ -184,7 +217,7 @@ describe TopicsController do
 
         context "with an anonymous user" do
           it "uses the default locale" do
-            get :show, topic_id: topic.id
+            get :show, params: { topic_id: topic.id, format: :json }
 
             expect(I18n.locale).to eq(:en)
           end
@@ -195,7 +228,7 @@ describe TopicsController do
             user = Fabricate(:user, locale: :fr)
             log_in_user(user)
 
-            get :show, topic_id: topic.id
+            get :show, params: { topic_id: topic.id, format: :json }
 
             expect(I18n.locale).to eq(:en)
           end
@@ -214,7 +247,7 @@ describe TopicsController do
 
         context "with an anonymous user" do
           it "uses the locale from the headers" do
-            get :show, topic_id: topic.id
+            get :show, params: { topic_id: topic.id, format: :json }
 
             expect(I18n.locale).to eq(:fr)
           end
@@ -225,7 +258,7 @@ describe TopicsController do
             user = Fabricate(:user, locale: :fr)
             log_in_user(user)
 
-            get :show, topic_id: topic.id
+            get :show, params: { topic_id: topic.id, format: :json }
 
             expect(I18n.locale).to eq(:fr)
           end
@@ -239,7 +272,7 @@ describe TopicsController do
           SiteSetting.default_locale = "en"
           set_accept_language("zh-CN")
 
-          get :show, topic_id: topic.id
+          get :show, params: { topic_id: topic.id, format: :json }
 
           expect(I18n.locale).to eq(:zh_CN)
         end
@@ -251,7 +284,7 @@ describe TopicsController do
           SiteSetting.default_locale = 'en'
           set_accept_language('')
 
-          get :show, topic_id: topic.id
+          get :show, params: { topic_id: topic.id, format: :json }
 
           expect(I18n.locale).to eq(:en)
         end
@@ -261,13 +294,13 @@ describe TopicsController do
 
   describe "read only header" do
     it "returns no read only header by default" do
-      get :show, topic_id: topic.id
+      get :show, params: { topic_id: topic.id, format: :json }
       expect(response.headers['Discourse-Readonly']).to eq(nil)
     end
 
     it "returns a readonly header if the site is read only" do
       Discourse.received_readonly!
-      get :show, topic_id: topic.id
+      get :show, params: { topic_id: topic.id, format: :json }
       expect(response.headers['Discourse-Readonly']).to eq('true')
     end
   end
@@ -298,31 +331,65 @@ describe 'api' do
     # choosing an arbitrarily easy to mock trusted activity
     it 'allows users with api key to bookmark posts' do
       PostAction.expects(:act).with(user, post, PostActionType.types[:bookmark]).once
-      put :bookmark, bookmarked: "true", post_id: post.id, api_key: api_key.key, format: :json
+
+      put :bookmark, params: {
+        bookmarked: "true",
+        post_id: post.id,
+        api_key: api_key.key
+      }, format: :json
+
       expect(response).to be_success
     end
 
     it 'raises an error with a user key that does not match an optionally specified username' do
       PostAction.expects(:act).with(user, post, PostActionType.types[:bookmark]).never
-      put :bookmark, bookmarked: "true", post_id: post.id, api_key: api_key.key, api_username: 'made_up', format: :json
+
+      put :bookmark, params: {
+        bookmarked: "true",
+        post_id: post.id,
+        api_key: api_key.key,
+        api_username: 'made_up'
+      }, format: :json
+
       expect(response).not_to be_success
     end
 
     it 'allows users with a master api key to bookmark posts' do
       PostAction.expects(:act).with(user, post, PostActionType.types[:bookmark]).once
-      put :bookmark, bookmarked: "true", post_id: post.id, api_key: master_key.key, api_username: user.username, format: :json
+
+      put :bookmark, params: {
+        bookmarked: "true",
+        post_id: post.id,
+        api_key: master_key.key,
+        api_username: user.username
+      }, format: :json
+
       expect(response).to be_success
     end
 
     it 'disallows phonies to bookmark posts' do
       PostAction.expects(:act).with(user, post, PostActionType.types[:bookmark]).never
-      put :bookmark, bookmarked: "true", post_id: post.id, api_key: SecureRandom.hex(32), api_username: user.username, format: :json
+
+      put :bookmark, params: {
+        bookmarked: "true",
+        post_id: post.id,
+        api_key: SecureRandom.hex(32),
+        api_username: user.username
+      }, format: :json
+
       expect(response.code.to_i).to eq(403)
     end
 
     it 'disallows blank api' do
       PostAction.expects(:act).with(user, post, PostActionType.types[:bookmark]).never
-      put :bookmark, bookmarked: "true", post_id: post.id, api_key: "", api_username: user.username, format: :json
+
+      put :bookmark, params: {
+        bookmarked: "true",
+        post_id: post.id,
+        api_key: "",
+        api_username: user.username
+      }, format: :json
+
       expect(response.code.to_i).to eq(403)
     end
   end

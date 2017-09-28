@@ -9,7 +9,7 @@ describe TagsController do
     let(:tag) { Fabricate(:tag, name: 'test') }
 
     it "should return the right response" do
-      get "/tags/check.json", tag_values: [tag.name]
+      get "/tags/check.json", params: { tag_values: [tag.name] }
 
       expect(response).to be_success
 

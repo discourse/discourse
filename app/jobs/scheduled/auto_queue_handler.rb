@@ -11,7 +11,7 @@ module Jobs
       guardian = Guardian.new(Discourse.system_user)
 
       # Flags
-      flags = FlagQuery.flagged_post_actions('active')
+      flags = FlagQuery.flagged_post_actions(filter: 'active')
         .where('post_actions.created_at < ?', SiteSetting.auto_handle_queued_age.to_i.days.ago)
 
       Post.where(id: flags.pluck(:post_id).uniq).each do |post|

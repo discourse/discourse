@@ -2,7 +2,7 @@ require_dependency 'embedding'
 
 class Admin::EmbeddingController < Admin::AdminController
 
-  before_filter :ensure_logged_in, :ensure_staff, :fetch_embedding
+  before_action :ensure_logged_in, :ensure_staff, :fetch_embedding
 
   def show
     render_serialized(@embedding, EmbeddingSerializer, root: 'embedding', rest_serializer: true)

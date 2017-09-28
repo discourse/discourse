@@ -1,6 +1,5 @@
 import DiscourseURL from 'discourse/lib/url';
 import KeyValueStore from 'discourse/lib/key-value-store';
-import { onPageChange } from 'discourse/lib/page-tracker';
 
 let primaryTab = false;
 let liveEnabled = false;
@@ -15,7 +14,7 @@ const context = "discourse_desktop_notifications_";
 const keyValueStore = new KeyValueStore(context);
 
 // Called from an initializer
-function init(messageBus) {
+function init(messageBus, appEvents) {
   liveEnabled = false;
   mbClientId = messageBus.clientId;
 
@@ -49,14 +48,14 @@ function init(messageBus) {
   liveEnabled = true;
   try {
     // Preliminary checks passed, continue with setup
-    setupNotifications();
+    setupNotifications(appEvents);
   } catch (e) {
     Em.Logger.error(e);
   }
 }
 
 // This function is only called if permission was granted
-function setupNotifications() {
+function setupNotifications(appEvents) {
 
   window.addEventListener("storage", function(e) {
     // note: This event only fires when other tabs setItem()
@@ -85,7 +84,7 @@ function setupNotifications() {
     document.addEventListener("scroll", resetIdle);
   }
 
-  onPageChange(resetIdle);
+  appEvents.on('page:changed', resetIdle);
 }
 
 function resetIdle() {

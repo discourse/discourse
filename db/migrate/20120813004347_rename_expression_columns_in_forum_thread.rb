@@ -1,4 +1,4 @@
-class RenameExpressionColumnsInForumThread < ActiveRecord::Migration
+class RenameExpressionColumnsInForumThread < ActiveRecord::Migration[4.2]
   def change
     rename_column 'forum_threads', 'expression1_count', 'off_topic_count'
     rename_column 'forum_threads', 'expression2_count', 'offensive_count'

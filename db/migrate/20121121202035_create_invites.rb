@@ -1,4 +1,4 @@
-class CreateInvites < ActiveRecord::Migration
+class CreateInvites < ActiveRecord::Migration[4.2]
   def change
     create_table :invites do |t|
       t.string :invite_key, null: false, limit: 32

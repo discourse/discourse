@@ -1,4 +1,4 @@
-class AddBadgeGroupings < ActiveRecord::Migration
+class AddBadgeGroupings < ActiveRecord::Migration[4.2]
   def change
     create_table :badge_groupings do |t|
       t.string :name, null: false

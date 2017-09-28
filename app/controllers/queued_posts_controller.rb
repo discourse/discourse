@@ -2,7 +2,7 @@ require_dependency 'queued_post_serializer'
 
 class QueuedPostsController < ApplicationController
 
-  before_filter :ensure_staff
+  before_action :ensure_staff
 
   def index
     state = QueuedPost.states[(params[:state] || 'new').to_sym]

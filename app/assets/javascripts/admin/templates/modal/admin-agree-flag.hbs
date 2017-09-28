@@ -1,13 +1,35 @@
 {{#d-modal-body title="admin.flags.agree_flag_modal_title"}}
   {{#if model.user_deleted}}
-  <button title={{i18n 'admin.flags.agree_flag_restore_post_title'}} {{action "agreeFlagRestorePost"}} class="btn">{{d-icon "thumbs-o-up"}}{{d-icon "eye"}}{{i18n 'admin.flags.agree_flag_restore_post'}}</button>
+    {{d-button
+      title="admin.flags.agree_flag_restore_post_title"
+      class="confirm-agree-restore"
+      action=(action "perform" "restore")
+      icon="eye"
+      label="admin.flags.agree_flag_restore_post"}}
   {{else}}
     {{#unless model.postHidden}}
-    <button title="{{i18n 'admin.flags.agree_flag_hide_post_title'}}" {{action "agreeFlagHidePost"}} class="btn">{{d-icon "thumbs-o-up"}}{{d-icon "eye-slash"}}{{i18n 'admin.flags.agree_flag_hide_post'}}</button>
+      {{d-button
+        title="admin.flags.agree_flag_hide_post_title"
+        action=(action "perform" "hide")
+        class="confirm-agree-hide"
+        icon="eye-slash"
+        label="admin.flags.agree_flag_hide_post"}}
     {{/unless}}
   {{/if}}
-  <button title="{{i18n 'admin.flags.agree_flag_title'}}" {{action "agreeFlagKeepPost"}} class="btn">{{d-icon "thumbs-o-up"}}{{i18n 'admin.flags.agree_flag'}}</button>
-  {{#if model.canDeleteAsSpammer}}
-  <button title="{{i18n 'admin.flags.delete_spammer_title'}}" {{action "deleteSpammer" model.user}} class="btn btn-danger">{{d-icon "exclamation-triangle"}}{{i18n 'admin.flags.delete_spammer'}}</button>
+
+  {{d-button
+    title="admin.flags.agree_flag_title"
+    action=(action "perform" "keep")
+    class="confirm-agree-keep"
+    icon="thumbs-o-up"
+    label="admin.flags.agree_flag"}}
+
+  {{#if canDeleteSpammer}}
+    {{d-button
+      title="admin.flags.delete_spammer_title"
+      action="deleteSpammer"
+      class="btn-danger delete-spammer"
+      icon="exclamation-triangle"
+      label="admin.flags.delete_spammer"}}
   {{/if}}
 {{/d-modal-body}}

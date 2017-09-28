@@ -1,4 +1,4 @@
-class CreateColorSchemeColors < ActiveRecord::Migration
+class CreateColorSchemeColors < ActiveRecord::Migration[4.2]
   def change
     create_table :color_scheme_colors do |t|
       t.string  :name,            null: false

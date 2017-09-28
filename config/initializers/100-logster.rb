@@ -8,11 +8,6 @@ if Rails.env.production?
     /^ActionController::UnknownFormat/,
     /^ActionController::UnknownHttpMethod/,
     /^AbstractController::ActionNotFound/,
-
-    # alihack is really annoying, nothing really we can do about this
-    # (795: unexpected token at 'alihack<%eval request("alihack.com")%> '):
-    /^ActionDispatch::ParamsParser::ParseError/,
-
     # ignore any empty JS errors that contain blanks or zeros for line and column fields
     #
     # Line:
@@ -25,7 +20,7 @@ if Rails.env.production?
 
     # CSRF errors are not providing enough data
     # suppress unconditionally for now
-    /^Can't verify CSRF token authenticity$/,
+    /^Can't verify CSRF token authenticity.$/,
 
     # Yandex bot triggers this JS error a lot
     /^Uncaught ReferenceError: I18n is not defined/,

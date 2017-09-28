@@ -111,7 +111,7 @@ RSpec.describe ColumnDropper do
 
       expect(
         ActiveRecord::Base.exec_sql("SELECT * FROM #{table_name};").values
-      ).to include(["2", "something@email.com"])
+      ).to include([2, "something@email.com"])
     end
 
     it 'should prevent insertions to the readonly column' do
@@ -134,7 +134,7 @@ RSpec.describe ColumnDropper do
 
       expect(
         ActiveRecord::Base.exec_sql("SELECT * FROM #{table_name} WHERE topic_id = 2;").values
-      ).to include(["2", nil])
+      ).to include([2, nil])
     end
   end
 end

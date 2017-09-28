@@ -5,6 +5,7 @@ export default Ember.Controller.extend({
   filtered: false,
   showWords: false,
   disableShowWords: Ember.computed.alias('filtered'),
+  regularExpressions: null,
 
   filterContentNow() {
 

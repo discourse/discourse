@@ -1,4 +1,4 @@
-class MoveProfileBackgroundToUserProfiles < ActiveRecord::Migration
+class MoveProfileBackgroundToUserProfiles < ActiveRecord::Migration[4.2]
   def up
     add_column :user_profiles, :profile_background, :string, limit: 255
 

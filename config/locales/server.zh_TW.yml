@@ -106,6 +106,7 @@ zh_TW:
       s3_upload_bucket_is_required: "你沒有填寫“s3_upload_bucket”，不能開啟上傳至 S3。"
   invite:
     not_found: "您的邀請碼無效。請聯絡管理人員。"
+    user_exists: "無需邀請 <b>%{email}</b>，他 <a href='/u/%{username}/summary'>已經有帳號了</a>！"
   bulk_invite:
     file_should_be_csv: "上傳的檔案必須是 CSV 格式。"
     error: "上傳檔案有錯誤，請再試一次。"
@@ -142,19 +143,20 @@ zh_TW:
       other: "%{count} 個回覆"
   no_mentions_allowed: "抱歉，您無法提及其他用戶。"
   too_many_mentions:
-    other: "抱歉，您的貼文中只能提及 %{count} 位用戶。"
+    other: "抱歉，您的文章中只能提及 %{count} 位用戶。"
   no_mentions_allowed_newuser: "抱歉，新用戶不能提及其他用戶。"
   too_many_mentions_newuser:
-    other: "抱歉，新用戶只能在貼文中提及 %{count} 位用戶。"
+    other: "抱歉，新使用者在文章中只能提及 %{count} 位用戶。"
   no_images_allowed: "抱歉，新用戶不能在貼文中放置圖片。"
   too_many_images:
-    other: "抱歉，新者用者只能在貼文中放置 %{count} 張圖片。"
+    other: "抱歉，新使用者只能在文章中放置 %{count} 張圖片。"
   no_attachments_allowed: "抱歉，新用戶不能在貼文中放置附件。"
   too_many_attachments:
-    other: "抱歉，新用戶只能在貼文中放置 %{count} 個附件。"
+    other: "抱歉，新使用者只能在文章中放置 %{count} 個附件。"
   no_links_allowed: "抱歉，新用戶不能在貼文中放置連結。"
   too_many_links:
-    other: "抱歉，新用戶只能在貼文中放置 %{count} 個連結。"
+    other: "抱歉，新使用者只能在文章中放置 %{count} 個連結。"
+  contains_blocked_words: "你的文章包含禁用的字詞"
   spamming_host: "抱歉，你不能張貼該網站之連結。"
   user_is_suspended: "被停權的用戶無法張貼文章。"
   topic_not_found: "出現問題。也許這個話題被關閉或刪除。"
@@ -255,12 +257,20 @@ zh_TW:
       這篇主題真的對你很重要 &ndash; 你在這個討論中已回覆多於 %{percent}% 的回應。
 
       你有沒有提供其他人充足的時間，以便表達意見呢？
+    get_a_room: |
+      ### 考慮回應更多參與者
+
+      你已經在這個特定主題中，回應了 @%{reply_username} %{count} 次。
+
+      你有考慮回應討論中的 *其他人* 嗎？一個好的討論，需要納入更多人的觀點與意見。
+
+      如果你還是想要與他繼續討論，請考慮透過[個人訊息](/u/%{reply_username})來進行。
     too_many_replies: |
-      ### 你發表的回應數量已經達到主題的回覆上限
+      ### 你的回應數量已經達到本主題的回覆上限
 
-      非常抱歉，新用戶有臨時限制，只能回覆同一主題 %{newuser_max_replies_per_topic} 次。
+      非常抱歉，新使用者有只能回覆同一話題 %{newuser_max_replies_per_topic} 次的臨時限制。
 
-      除了繼續回覆外，可以考慮修改你先前的回應，或參與其他主題。
+      除了繼續回覆外，請考慮修改你先前的回應，或參與其他話題。
     reviving_old_topic: |
       ### 討論串考古？
 
@@ -284,7 +294,7 @@ zh_TW:
           attributes:
             base:
               warning_requires_pm: "你只能附加警告於私人訊息。"
-              too_many_users: "你只能同時傳送警告給一位用戶。"
+              too_many_users: "你只能同時傳送警告給一位使用者。"
               cant_send_pm: "抱歉，你不能向該用戶發送私人訊息。"
               no_user_selected: "你必須選擇有效用戶。"
             featured_link:
@@ -314,6 +324,7 @@ zh_TW:
               taken: 已被其他表情符號使用
       <<: *errors
   user_profile:
+    no_info_me: "<div class='missing-profile'>你的個人檔案中，「關於我」的部分目前還沒有內容，<a href='/u/%{username_lower}/preferences/about-me'>不如來自我介紹一下吧？</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} 尚未在他/她自我簡介中的“關於我”部分填寫任何資訊</div>"
   vip_category_name: "貴賓室"
   vip_category_description: "信任等級高於 3 的用戶討論的分類"
@@ -322,6 +333,7 @@ zh_TW:
   staff_category_name: "管理員"
   staff_category_description: "讓工作人員進行討論的私人分類。此分類下的討論話題只有管理員與板主才看得到。"
   assets_topic_title: "站點設計資料"
+  assets_topic_body: "這個主題僅限管理人員可見，用來儲存討論區使用的圖片和檔案。請不要刪除它！\n\n如何使用：\n\n\n1. 回覆這個主題。\n2. 上傳你想要用作網站圖示、favicon 與其他所有圖片。（使用文章編輯器內的上傳按鈕，或者拖曳或貼上圖片。）\n3. 發佈你的文章回應。\n4. 在你的新回應裡按右鍵點擊圖片，複製已上傳圖片的連結，或者點擊編輯按鈕來編輯回應，以獲得到圖片的相對位址。複製這些圖片網址。\n5. 將這些圖片的網址張貼到[設定](/admin/site_settings/category/required)中。\n\n\n如果你需要上傳額外的檔案類型，在[檔案設定](/admin/site_settings/category/files)中編輯 `authorized_extensions`。"
   discourse_welcome_topic:
     title: "歡迎來到 Discourse"
     body: |2
@@ -405,6 +417,7 @@ zh_TW:
       pms_per_day: "您今天發表的訊息數已經達到上限。請等待 %{time_left} 後再行嘗試。"
       create_like: "您今天給予讚的次數已經達到上限。請等待 %{time_left} 再行嘗試。"
       create_bookmark: "您今天加入書籤的數目已經達到上限。請等待 %{time_left} 再行嘗試。"
+      edit_post: "您已達到單日編輯次數上限。請等待 %{time_left} 後再行嘗試。"
       live_post_counts: "您要求的即時文章計數過於快速。請等待 %{time_left} 再行嘗試。"
       unsubscribe_via_email: "你已經達到了今日用郵件解除訂閲的最大數量限制。請等待%{time_left}之後再試。"
       topic_invitations_per_day: "你已經達到了今日主題邀請的最大數量限制。請等待%{time_left}之後再試。"
@@ -489,13 +502,17 @@ zh_TW:
     welcome_to: "歡迎來到%{site_name}！"
     approval_required: "你的論壇帳號需要由板主手動審核後才可使用。當你的帳號獲得批准，你將收到電子郵件通知。"
     missing_session: "無法確認你是否註冊了帳戶，請確定你已經啟用了 cookie。"
+    activated: "抱歉，這個帳號已被啟用。"
   post_action_types:
     off_topic:
       title: '離題內容'
       description: '此帖與該主題標題和第一帖而言所討論的主題無關，可能需要被移動。'
+      short_description: '與討論無關'
       long_form: '投訴為離題內容'
     spam:
       title: '垃圾內容'
+      description: '這篇文章是廣告或破壞。他與現行主題無關或無用。'
+      short_description: '這是廣告或破壞。'
       long_form: '投訴為垃圾內容'
       email_title: '“%{title}”被標記為垃圾'
       email_body: "%{link}\n\n%{message}"
@@ -561,10 +578,11 @@ zh_TW:
         make: "本主題現在是橫幅主題。它將出現在每頁的頂部，除非用戶將其標記已讀。"
         remove: "本主題已經不再是橫幅主題。它將不在每個頁面的頂部顯示。"
   unsubscribed:
-    title: "退訂！"
+    title: "取消訂閱"
+    description: "你已經退訂 <b>%{email}</b>。想要變更你的郵件設定，請訪問你的<a href='%{url}'>使用者偏好設定</a>頁面。"
     topic_description: "點擊連結 %{link} 重新訂閲，或是使用主題底部或右側的通知控制。"
   unsubscribe:
-    title: "退訂"
+    title: "取消訂閱"
     stop_watching_topic: "停止關注這個討論話題，%{link}"
     mute_topic: "關閉此主題的所有通知，%{link}"
     unwatch_category: "停止監看%{category}分類中的所有主題"
@@ -795,9 +813,11 @@ zh_TW:
     post_excerpt_maxlength: "文章摘要的最大文字長度"
     show_pinned_excerpt_mobile: "在行動版置頂主題顯示摘要。"
     show_pinned_excerpt_desktop: "在桌面版置頂主題顯示摘要。"
-    post_onebox_maxlength: "Onebox 處理後的 Discourse 帖子的最大字符長度"
-    onebox_domains_blacklist: "不會被 Onebox 的域名列表。"
-    max_oneboxes_per_post: "帖子中最多的 Onebox 數量。"
+    post_onebox_maxlength: "展開連結預覽後的 Discourse 文章最大字數限制。"
+    onebox_domains_blacklist: "不會展開成連結預覽的網域列表。"
+    inline_onebox_domains_whitelist: "如果連結未包含 title，會被展開成連結預覽的網域白名單。"
+    enable_inline_onebox_on_all_domains: "忽略 inline_onebox_domain_whitelist 網站設定，允許所有網域的連結預覽。"
+    max_oneboxes_per_post: "文章中允許的連結預覽數量上限。"
     logo_url: "在你站點左上角出現的小號標誌圖片，應為一個長方形。如果留空，將顯示站點標題文字。"
     digest_logo_url: "郵件摘要中使用的標誌圖像。應為長方形。不能使用 SVG 圖片。如果留空，將使用 `logo_url`。"
     logo_small_url: "在你站點左上角的小號標誌圖片，應為正方形，當滾動時才可見。如果留空，將顯示主頁表徵圖。"
@@ -965,7 +985,7 @@ zh_TW:
     default_opengraph_image_url: "opengraph圖像的預設URL。"
     twitter_summary_large_image_url: "預設 Twitter summary 卡片的 URL（需要至少寬 280px 和高 150px）。"
     allow_all_attachments_for_group_messages: "允許群組消息中包含任何郵件附件。"
-    enable_flash_video_onebox: "在 Onebox 啟用嵌入 swf 和 flv (Adobe Flash) 的鏈接。警告：可能增加安全風險。"
+    enable_flash_video_onebox: "在連結預覽中啟用 swf 和 flv (Adobe Flash) 嵌入。警告：可能增加安全風險。"
     default_invitee_trust_level: "預設的受邀用戶等級 (0-4)"
     default_trust_level: "所有新用戶的預設信任等級（0-4）。警告！改變此項將提高廣告氾濫的風險。"
     tl1_requires_topics_entered: "新用戶升級到信任等級1所需要進入的主題數量。"
@@ -1365,11 +1385,43 @@ zh_TW:
 
       如果你想要繼續接收郵件更新，你可以直接忽略這封郵件。
   invite_mailer:
-    title: "邀請 Mailer"
-    subject_template: "%{invitee_name} 邀請你參與在 %{site_domain_name} 討論的話題 '%{topic_title}'"
+    title: "邀請郵件"
+    subject_template: "%{invitee_name} 在 %{site_domain_name} 邀請你參與「%{topic_title}」"
+    text_body_template: |
+      %{invitee_name} 邀請你參與
+
+      > %{site_title}－%{site_description}
+
+      的以下討論
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      如果你有興趣，請點擊下面的連結：
+
+      %{invite_link}
   custom_invite_mailer:
-    title: "客製邀請 Mailer"
-    subject_template: "%{invitee_name}邀請你'%{topic_title}'在%{site_domain_name}"
+    title: "客製邀請郵件"
+    subject_template: "%{invitee_name} 在 %{site_domain_name} 邀請你參與「%{topic_title}」"
+    text_body_template: |
+      %{invitee_name} 留下以下留言
+
+      > %{user_custom_message}
+
+      邀請你參與
+
+      > %{site_title}—%{site_description}
+
+      的討論
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      如果你有興趣，請點擊下面的連結：
+
+      %{invite_link}
   invite_forum_mailer:
     title: "邀請論壇 Mailer"
     subject_template: "%{invitee_name} 邀請你加入 %{site_domain_name}"
@@ -1384,7 +1436,8 @@ zh_TW:
 
       %{invite_link}
   custom_invite_forum_mailer:
-    subject_template: "%{invitee_name}邀請你加入%{site_domain_name}"
+    title: "客製討論區邀請郵件"
+    subject_template: "%{invitee_name} 邀請你加入 %{site_domain_name}"
     text_body_template: |
       %{invitee_name} 留下以下留言
 
@@ -1402,8 +1455,20 @@ zh_TW:
   invite_password_instructions:
     title: "邀請密碼的說明"
     subject_template: "為 %{site_name} 的帳戶設置密碼"
+    text_body_template: |
+      感謝你接受來自 %{site_name} 的邀請，歡迎！
+
+      點擊下面的連結，立即設定你的密碼：
+      %{base_url}/u/password-reset/%{email_token}
+
+      (如果連結已經過期，到登入頁面以你的 email 登入 ，再選擇「我忘了我的密碼」即可)
+  download_backup_mailer:
+    subject_template: "[%{email_prefix}] 下載網站備份"
+  admin_confirmation_mailer:
+    subject_template: "[%{email_prefix}] 確認新的管理員帳號"
   test_mailer:
     title: "測試 Mailer"
+    subject_template: "[%{email_prefix}] 電子郵件發送測試"
     text_body_template: |
       這是一封測試電子郵件，發自：
 
@@ -1447,6 +1512,7 @@ zh_TW:
       [mt]: http://www.mail-tester.com/
   new_version_mailer:
     title: "新版本 Mailer"
+    subject_template: "[%{email_prefix}] 有可用的 Discourse 更新"
     text_body_template: |
       哇哦，有新版本的 [Discourse](http://www.discourse.org) 可以升級！
 
@@ -1460,6 +1526,7 @@ zh_TW:
       - 訪問 [meta.discourse.org（英文）](https://meta.discourse.org) 獲取 Discourse 的最新資訊、討論和支持。也可訪問 [meta.discoursecn.org 非官方的中文支持論壇](https://meta.discoursecn.org) 獲得支持。
   new_version_mailer_with_notes:
     title: "包含提醒的新版本 Mailer"
+    subject_template: "[%{email_prefix}] 有得更新了"
     text_body_template: |
       哇哦，有新版本的 [Discourse](http://www.discourse.org) 可以升級！
 
@@ -1486,16 +1553,52 @@ zh_TW:
     disagreed: "感謝你讓我們知道。我們正在調查。"
     deferred: "感謝你讓我們知道。我們正在調查。"
     deferred_and_deleted: "感謝通知我們。我們已經刪除了帖子。"
+  temporarily_closed_due_to_flags:
+    other: "這個話題因為大量的社群投訴暫時關閉 %{count} 小時。"
   system_messages:
     post_hidden:
       title: "文章已隱藏"
       subject_template: "帖子因社群標記隱藏"
+      text_body_template: |
+        你好
+
+        這是 %{site_name} 自動發出的郵件，通知你下列文章已被隱藏：
+
+        %{base_url}%{url}
+
+        %{flag_reason}
+
+        有多位社群成員投訴此文章，導致文章被自動隱藏。請考慮他們的回饋並重新修改文章。**你可以在 %{edit_delay} 分鐘後重新編輯文章，以自動解除文章隱藏。**
+
+        然而，如果文章再次受到社群投訴，他將會恢復隱藏狀態，並等候管理員手動處理。
+
+        想了解更多指引，請查看我們的[社群準則](%{base_url}/guidelines)。
     welcome_user:
       title: "歡迎使用者"
       subject_template: "歡迎來到 %{site_name}！"
+      text_body_template: |
+        感謝你加入%{site_name}，歡迎！
+
+        %{new_user_tips}
+
+        我們始終相信[文明的社群行為](%{base_url}/guidelines) 。
+
+        好好享受你在論壇的時光！
     welcome_invite:
       title: "歡迎邀請"
       subject_template: "歡迎來到 %{site_name}！"
+      text_body_template: |
+        感謝你接受邀請加入 %{site_name} — 歡迎！
+
+        - 我們已為你建立 **%{username}** 帳號。請到 [偏好設定][prefs] 頁面修改帳號名稱或密碼。
+
+        - 請使用與你的邀請信件 **相同的 email 信箱登入**，不然我們就不知道你來了！
+
+        %{new_user_tips}
+
+        我們始終相信[文明的社群行為](%{base_url}/guidelines) 。好好享受你在論壇的時光！
+
+        [prefs]: %{user_preferences_url}
     backup_succeeded:
       title: "備份成功"
       subject_template: "備份成功完成"
@@ -1545,10 +1648,18 @@ zh_TW:
     bulk_invite_succeeded:
       title: "批量邀請成功"
       subject_template: "批次用戶邀請已完成處理"
-      text_body_template: "你的批量邀請用戶已經完成，發送了 %{sent} 個邀請。"
+      text_body_template: "你的批次使用者邀請已經完成，寄出 %{sent} 封邀請郵件。"
     bulk_invite_failed:
       title: "批量邀請失敗"
       subject_template: "批次使用者邀請處理已經完成，發生了些錯誤"
+      text_body_template: |
+        你的批次使用者邀請已結束，發出 %{sent} 個邀請、共有 %{failed} 個錯誤。
+
+        查看紀錄：
+
+        ```text
+        %{logs}
+        ```
     csv_export_succeeded:
       title: "CSV 檔匯出成功"
       subject_template: "資料匯出完成"
@@ -1635,6 +1746,8 @@ zh_TW:
       title: "電子郵件拒絕 討論話題已關閉"
     email_reject_auto_generated:
       title: "電子郵件拒絕 自動生成"
+    email_reject_unrecognized_error:
+      title: "電子郵件拒絕 未知錯誤"
     email_error_notification:
       title: "電子郵件錯誤通知"
       text_body_template: |
@@ -1645,68 +1758,71 @@ zh_TW:
         如果 POP 郵件賬號有圖形界面，你可以登錄後查看郵箱設置。
     too_many_spam_flags:
       title: "過多垃圾文章投訴"
-      subject_template: "新賬戶被暫時封禁"
+      subject_template: "新帳號被暫時停用"
       text_body_template: |
         你好，
 
-        這是%{site_name}自動發出的郵件。你的帖子因社群標記而被臨時隱藏。
+        這是 %{site_name} 自動發出的郵件。你的文章因社群投訴而被臨時隱藏。
 
-        出於謹慎的考慮，在管理人員審核通過前，你的新賬戶不能再發表新的回覆或者主題。我們對此帶來的不便表示歉意。
+        出於謹慎的考慮，在管理人員審核通過前，你的新帳號不能再回覆或者發表文章。我們對此帶來的不便表示歉意。
 
-        要查看更多指引，請參考我們的[社群指引](%{base_url}/guidelines)。
+        要查看更多指引，請參考我們的[社群準則](%{base_url}/guidelines)。
     too_many_tl3_flags:
       title: "過多 TL3 投訴"
-      subject_template: "新賬戶被暫時封禁"
-      text_body_template: |
+      subject_template: "新帳號被暫時停用"
+      text_body_template: |+
         你好，
 
-        這是%{site_name}自動發出的郵件。你的帳戶因大量社群標記而被暫停使用。
+        這是 %{site_name} 自動發出的郵件。你的帳號因大量社群投訴，而被暫時停用。
 
-        出於謹慎的考慮，在管理人員審核通過前，你的新賬戶不能再發表新的回覆或者主題。我們對此帶來的不便表示歉意。
+        出於謹慎的考慮，在管理人員審核通過前，你的新帳號不能再回覆或者發表文章。我們對此帶來的不便表示歉意。
 
-        要查看更多指引，請參考我們的[社群指引](%{base_url}/guidelines)。
+        要查看更多指引，請參考我們的[社群準則](%{base_url}/guidelines)。
+
     blocked_by_staff:
       title: "被管理員封鎖"
-      subject_template: "賬戶被暫時封禁"
+      subject_template: "帳號已暫時停用"
       text_body_template: |
         你好，
 
-        這是%{site_name}自動發出的郵件。出於謹慎的考慮，你的帳戶臨時暫停使用。
+        這是%{site_name}自動發出的郵件。出於謹慎的考慮，你的帳號已被暫時停用。
 
-        請繼續瀏覽，但在管理人員審核通過前，你的賬戶不能再發表新的回覆或者主題。我們對此帶來的不便表示歉意。
+        請繼續瀏覽，但在[管理成員](/about)審核前，你將無法回應或發表文章。我們對帶來的不便表示歉意。
 
-        要查看更多指引，請參考我們的[社群指引](%{base_url}/guidelines)。
+        要查看更多指引，請參考我們的[社群準則](%{base_url}/guidelines)。
     user_automatically_blocked:
       title: "用戶自動封鎖"
-      subject_template: "新用戶%{username}因社群標記而被封禁"
+      subject_template: "新使用者 %{username} 因社群投訴而被阻擋"
       text_body_template: |
-        這是自動發出的郵件。
+        這是自動發出的訊息。
 
-        因多位用戶標記%{username}的帖子，新用戶[%{username}](%{base_url}%{user_url})已被自動封禁。
+        因多位使用者投訴 %{username} 的文章，新使用者 [%{username}](%{base_url}) 已被自動阻擋。
 
-        請[查看這些標記](%{base_url}/admin/flags)。如果%{username}被意外禁用了編輯功能，點擊[該用戶管理頁面](%{base_url}%{user_url})內的解封按鈕。
+        請[查看這些投訴](%{base_url}/admin/flags)。如果 %{username} 被不合理地阻止貼文，點擊[該用戶管理頁面](%{base_url}%{user_url})內的解除封鎖按鈕。
 
-        該閾值可以通過站點設置中的 `block_new_user` 更改。
+        您可以調整網站設定中的 `block_new_user` 以變更封鎖門檻值。
     spam_post_blocked:
       title: "因垃圾貼文而被封鎖"
       subject_template: "新用戶 %{username} 由於重複貼連結，文章已被封鎖"
       text_body_template: |
-        這是自動發出的郵件。
+        這是自動發出的訊息。
 
-        新用戶[%{username}](%{base_url}%{user_url})試圖創建多個連結至 %{domains} 的帖子，但這些帖子因為反垃圾策略而被阻擋了。用戶仍能夠發表不包含到 %{domains} 的帖子。
+        新使用者 [%{username}](%{base_url}%{user_url}) 試圖張貼多重文章連結至 %{domains}，但這些文章因為反垃圾策略而被阻擋了。使用者仍能夠發表不包含 %{domains} 連結的新文章。
 
-        請[審核該用戶](%{base_url}%{user_url})。
+        請[審核該使用者](%{base_url}%{user_url})。
 
         該閾值可以通過站點設置中的 `newuser_spam_host_threshold` 和 `white_listed_spam_host_domains` 更改。
+
+        您可以調整網站設定中的 `newuser_spam_host_threshold` 和 `white_listed_spam_host_domains` 以變更封鎖門檻值。
     unblocked:
       title: "解除封鎖"
-      subject_template: "賬戶已解除封禁"
+      subject_template: "帳號已解除封鎖"
       text_body_template: |
         你好，
 
-        這是%{site_name}自動發出的郵件。管理人員審核你的帳戶後，你的帳戶不再受到限制。
+        這是 %{site_name} 自動發出的郵件。經管理成員審核後，你的帳號已恢復正常狀態。
 
-        你現在可以創建新回覆和主題了。感謝你的耐心等待。
+        你現在可以發表新文章與回覆討論了。感謝你的耐心等待。
     pending_users_reminder:
       title: "待審用戶提醒"
       subject_template:
@@ -1726,6 +1842,15 @@ zh_TW:
         系統在管理員面板中報告了發現的問題。
 
         [請檢查並修復他們](%{base_url}/admin)。
+    new_user_of_the_month:
+      title: "你是本月最佳新人！"
+      subject_template: "你是本月最佳新人！"
+      text_body_template: |
+        恭喜，你贏得了**%{month_year} 最佳新人獎**！ :trophy:
+
+        每個月我們會頒發給兩位新使用者，獎章會一直呈現在[你的使用者頁面](%{base_url}/my/badges)上。
+
+        你迅速地成為社群不可或缺的一份子了。感謝加入，繼續保持好表現！
   unsubscribe_link: |
     要退訂這些郵件，[請點擊這裡](%{unsubscribe_url})。
   unsubscribe_link_and_mail: |
@@ -1738,18 +1863,34 @@ zh_TW:
   subject_pm: "[私訊]"
   user_notifications:
     previous_discussion: "之前的回覆"
+    reached_limit:
+      other: "注意：你達到了每日郵件限額（%{count}），到網站看看哪些訊息可能被延遲了。BTW，感謝你經營的這麼熱絡！"
     in_reply_to: "回覆給"
     unsubscribe:
       title: "取消訂閱"
-      description: "不再對這些郵件感興趣？沒問題！點擊下面按鈕來立即取消訂閱："
+      description: "不再對這些郵件感興趣？沒問題！點擊以立即取消訂閱："
     reply_by_email: "[訪問主題](%{base_url}%{url})或者發郵件回覆。"
     reply_by_email_pm: "[訪問消息](%{base_url}%{url})或者發郵件回覆。"
     only_reply_by_email: "發郵件回覆。"
     visit_link_to_respond: "[訪問主題](%{base_url}%{url})以回覆。"
     visit_link_to_respond_pm: "[訪問\"私訊\"](%{base_url}%{url})以回覆。"
     posted_by: "由 %{username} 張貼於 %{post_date}"
+    invited_to_topic_body: |
+      %{username}邀請你參與
+
+      > %{site_title}－%{site_description}
+
+      的討論話題
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+    user_invited_to_private_message_pm_group:
+      title: "用戶邀請群組至私人訊息"
+      subject_template: "[%{email_prefix}] %{username} 邀請 @%{group_name} 參與討論「%{topic_title}」"
     user_invited_to_private_message_pm:
       title: "用戶被邀請至私人訊息"
+      subject_template: "[%{email_prefix}] %{username} 邀請你參與討論「%{topic_title}」"
       text_body_template: |
         %{header_instructions}
 
@@ -1758,6 +1899,7 @@ zh_TW:
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
       title: "用戶被邀請至私人訊息狀態"
+      subject_template: "[%{email_prefix}] %{username} 邀請你參與私訊討論「%{topic_title}」"
       text_body_template: |
         %{header_instructions}
 
@@ -1766,6 +1908,7 @@ zh_TW:
         %{respond_instructions}
     user_invited_to_topic:
       title: "用戶被邀請至討論話題"
+      subject_template: "[%{email_prefix}] %{username} 邀請你參與「%{topic_title}」"
       text_body_template: |
         %{header_instructions}
 
@@ -1774,6 +1917,7 @@ zh_TW:
         %{respond_instructions}
     user_replied:
       title: "用戶回覆"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1784,6 +1928,7 @@ zh_TW:
         %{respond_instructions}
     user_replied_pm:
       title: "用戶回復私人訊息"
+      subject_template: "[%{email_prefix}] [私訊] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1794,6 +1939,7 @@ zh_TW:
         %{respond_instructions}
     user_quoted:
       title: "用戶引述"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1804,6 +1950,7 @@ zh_TW:
         %{respond_instructions}
     user_linked:
       title: "用戶連結"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1814,6 +1961,7 @@ zh_TW:
         %{respond_instructions}
     user_mentioned:
       title: "用戶提及"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1824,6 +1972,7 @@ zh_TW:
         %{respond_instructions}
     user_group_mentioned:
       title: "用戶群組提及"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1834,6 +1983,7 @@ zh_TW:
         %{respond_instructions}
     user_posted:
       title: "用戶貼文"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1844,6 +1994,7 @@ zh_TW:
         %{respond_instructions}
     user_watching_first_post:
       title: "用戶觀看第一個主題"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1854,6 +2005,7 @@ zh_TW:
         %{respond_instructions}
     user_posted_pm:
       title: "用戶發表私人訊息"
+      subject_template: "[%{email_prefix}] [私訊] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1882,35 +2034,97 @@ zh_TW:
       join_the_discussion: "閲讀更多"
       popular_posts: "熱門貼文"
       more_new: "新內容與你分享"
+      subject_template: "[%{email_prefix}] 摘要"
+      unsubscribe: "因為你有一段時間沒有來 %{site_link}，因此為你送上摘要郵件。如需取消訂閱，請至 <a href='%{email_settings_url}'>你的郵件設定</a> 或點擊 %{unsubscribe_link}。"
       click_here: "點擊此處"
       from: "%{site_name}的摘要"
       preheader: "在你上次於%{last_seen_at}訪問後的新內容摘要"
     forgot_password:
       title: "忘記密碼"
+      subject_template: "[%{email_prefix}] 重設密碼"
+      text_body_template: |
+        有人請求重設你在 [%{site_name}](%{base_url}) 的密碼。
+
+        如果那不是你，你可以直接忽略本郵件。
+
+        點擊下面的連結以建立新密碼：
+        %{base_url}/u/password-reset/%{email_token}
     set_password:
       title: "設定密碼"
+      subject_template: "[%{email_prefix}] 設定密碼"
+      text_body_template: |
+        有人要求為你在 [%{site_name}](%{base_url}) 的帳號新增密碼。你也可以直接透過任何與此郵件信箱關聯的線上服務登入（例如 Google、Facebook 等）。
+
+        如果你沒有做此請求，你可以直接忽略本郵件。
+
+        點擊下面的連結以建立新密碼：
+        %{base_url}/u/password-reset/%{email_token}
     admin_login:
       title: "管理員登入"
+      subject_template: "[%{email_prefix}] 登入"
+      text_body_template: |+
+        有人要求登入你在 [%{site_name}](%{base_url}) 的帳號。
+
+        如果你沒有做此請求，你可以直接忽略本郵件。
+
+        點擊下面的連結以登入：
+        %{base_url}/u/admin-login/%{email_token}
+
     account_created:
       title: "建立用戶"
-    confirm_new_email:
-      title: "確認新郵件"
-    confirm_old_email:
-      title: "確認舊郵件"
-    notify_old_email:
-      title: "通知舊的郵件"
+      subject_template: "[%{email_prefix}] 你的新帳號"
       text_body_template: |
-        這是%{site_name}自動發出的郵件，以告知你的郵箱地址已經被修改了。如果這是一個錯誤，請聯繫站點管理人員。
+        你在 %{site_name} 的新帳號已準備好。
 
-        你的郵箱地址被修改為：
+        請點擊以下連結來為新帳號設定密碼：
+        %{base_url}/u/password-reset/%{email_token}
+    confirm_new_email:
+      title: "確認新郵件地址"
+      subject_template: "[%{email_prefix}] 確認你的新郵件地址"
+      text_body_template: |
+        點擊以下連結，確認你 %{site_name} 的新郵件地址：
+
+        %{base_url}/u/authorize-email/%{email_token}
+    confirm_old_email:
+      title: "確認原郵件地址"
+      subject_template: "[%{email_prefix}] 確認你的現行郵件地址"
+      text_body_template: |
+        在我們修改你的郵件地址前，我們需要你確認你擁有當前的郵件帳號。
+        完成此步驟後，我們將請你確認新的郵件地址。
+
+        點擊下面的連結，以確認你當前在 %{site_name} 的郵件地址：
+
+        %{base_url}/u/authorize-email/%{email_token}
+    notify_old_email:
+      title: "通知原郵件地址"
+      subject_template: "[%{email_prefix}] 已變更你的郵件地址"
+      text_body_template: |
+        這是 %{site_name} 自動發出的郵件，在此通知你已變更郵件地址。如果這是一個錯誤，請聯繫網站管理人員。
+
+        你的郵件地址已變更為：
 
         %{new_email}
     signup_after_approval:
       title: "在同意之後註冊"
       subject_template: "你已受到 %{site_name} 的認可！"
+      text_body_template: |
+        歡迎加入 %{site_name}！
+
+        管理員已通過你的帳號申請。
+
+        請點擊以下連結，以確認啟用你的新帳號：
+        %{base_url}/u/activate-account/%{email_token}
+
+        如果上面的連結無法點擊，請複製該連結，並貼到瀏覽器中開啟。
+
+        %{new_user_tips}
+
+        我們永遠相信[文明的社群行為](%{base_url}/guidelines)。
+
+        好好享受您在此的時光吧！
     signup:
       title: "註冊"
-      subject_template: "[%{site_name}] 確認你的新賬戶"
+      subject_template: "[%{email_prefix}] 確認你的新帳號"
       text_body_template: |
         歡迎來到 %{site_name}！
 
@@ -1925,6 +2139,10 @@ zh_TW:
     see_more: "更多"
     search_title: "搜尋該網頁"
     search_google: "Google"
+  login_required:
+    welcome_message: |
+      ## [歡迎來到 %{title}](#welcome)
+      你需要一個帳號。請創設一個帳號，或者登入以繼續。
   terms_of_service:
     title: "服務條款"
     signup_form_message: '我已閱讀並接受 <a href="/tos" target="_blank">服務條款</a>'
@@ -1978,6 +2196,104 @@ zh_TW:
     編輯本主題的第一帖以改變 %{page_name} 頁面的內容。
   guidelines_topic:
     title: "FAQ / 使用守則"
+    body: |
+      <a name="civilized"></a>
+
+      ## [這是一個文明討論的公共場所](#civilized)
+
+      在論壇上請表現得像在公共公園一樣得體。我們一群人共享着這個社群資源 &mdash; 一個透過不斷對話，以分享技能、知識和興趣的地方。
+
+      這些都不是草率決定的死規矩，而是一些幫助社群的人們來判斷的指引。以保持乾淨和充滿靈感的文明公開論壇。
+
+      <a name="improve"></a>
+
+      ## [改善討論](#improve)
+
+      幫助我們讓這個地方變成交流的好地方。由小處開始一點一滴的協助改善討論方向。如果不確定你的文章能益於討論，請再想一想你要表達的意思，然後稍後再試一次。
+
+      這裡討論的主題對我們很重要，我們希望你也認真看待它。尊重主題以及參與討論的人們，特別是當你不同意某些意見的時候。
+
+      改善討論的其中一個方法，是先了解已經發生過的事。請在發表新文章或回應前，先花一些時間瀏覽這些主題，你會更容易遇見和你有共同愛好的人。
+
+      <a name="agreeable"></a>
+
+      ## [即使你不同意他人意見，也請保持和善](#agreeable)
+
+      你可能想表達對某些觀點的反對。這沒問題。但是，記住_評論觀點，而非對象_。請避免：
+
+      *   指名道姓。
+      *   人身攻擊。
+      *   回覆無關於內文，僅評判態度的內容。
+      *   針鋒相對的反駁。
+
+      相反的，提供具事實基礎的陳述以增進對話。
+
+      <a name="participate"></a>
+
+      ## [你的參與很重要](#participate)
+
+      我們在此的討論都會是新訪客的榜樣，請幫助我們一起影響社群的未來：選擇有意思的主題參與討論—並略過那些負面的。
+
+      Discourse 提供了一些工具，讓社群共同鑒別最棒（或最差）的貢獻：書籤、贊、投訴標記、回覆和編輯等等。使用這些工具不僅能改善你自己的體驗，也能增進他人的體驗。
+
+      讓我們創造一個比你加入前更美好的社群。
+
+      <a name="flag-problems"></a>
+
+      ## [如果你發現問題，標記投訴它](#flag-problems)
+
+      版主有特別的權力，他們對論壇負責；但是你也有責任。有了你的幫助，版主才能成為社群協助者，而非守衛或者警察。
+
+      當你見到不合適的行為時，請不要回覆。這種作法變相鼓勵了不合適的行為，浪費了你的精力，並且浪費每一個人的時間。_只要標記它_。如果收到了足夠的標記，將會自動的、或由版主介入做出相應的處理。
+
+      為了維護我們的社群，版主保留在任何時間、任何理由下刪除任何內容和任何使用者帳號的權力。新文章未經版主預先審核，版主和網站維護人員對社群發表的任何內容均不負責任。
+
+      <a name="be-civil"></a>
+
+      ## [永遠保持文明](#be-civil)
+
+      無禮的態度破壞良好的溝通至甚：
+
+      *   維持文明。不要發表任何理智的人會感覺被冒犯、污辱或仇恨的言論。
+      *   保持乾淨。不要發表任何淫穢或性暗示的東西。
+      *   尊重他人。不要騷擾或者讓別人難過，戲仿他人，或暴露其他人的個人資訊。
+      *   尊重我們的論壇。不要發表廣告或者其他垃圾訊息。
+
+      以上不是精確的法律條文 &mdash; 但也請別打擦邊球挑戰底線。如果你不確定是否適合，請問問自己當你的文章出現在紐約時報頭版頭條時，你會有什麼感受。
+
+      這是一個公開論壇，且搜索引擎會索引這些討論。請注意你的發言內容、連結和圖片，不要張貼任何家人和朋友的資訊。
+
+      <a name="keep-tidy"></a>
+
+      ## [維護整潔](#keep-tidy)
+
+      努力讓東西出現在正確的位置，我們就能投注更多的時間在討論上，不須費時打掃。因此：
+
+      *   不要在錯誤的分類裡發表文章。
+      *   不要在多重主題上回覆相同的內容。
+      *   不要發佈沒有內容的回覆。
+      *   不要歪樓，在中途改變主題。
+      *   不需在你的內容中署名 &mdash; 每一篇文章都已附有你的個人資訊。
+
+      比起發表「+1」或者「卡」，請使用贊按鈕。比起將討論帶向一個截然不同的方向，請使用「分享 > 新討論話題」以關聯主題的形式回覆。
+
+      <a name="stealing"></a>
+
+      ## [只發表你自己的東西](#stealing)
+
+      你不能在沒有他人授權的情況下，發佈任何屬於他人的數位資產。你或許不能發表竊自他人智慧財產（軟體、影片、聲音和圖片）或其他任何違反法律的事物的介紹、連結或竊取方法。
+
+      <a name="power"></a>
+
+      ## [由你參與](#power)
+
+      這個網站由[一群友善的管理人員](/about)和 *你* 一同運營。如果你對站上的事情有任何建議，請至[網站回饋](/c/site-feedback)分類新建一個主題，與我們一同討論！如果遇到了重大或緊急的事情，且不適合用站務主題或標記解決，請到[管理人員頁面](/about)聯繫我們。
+
+      <a name="tos"></a>
+
+      ## [服務條款](#tos)
+
+      是的，法律條文很無聊，但是我們必須保護自己 &ndash; 以及你與你的資料 &ndash; 面對那些不友善的傢伙。我們的[服務條款](/tos)描述你（以及我們）在內容、隱私和法律上的行為和權利。想要使用我們的服務，你必須同意並遵守[服務條款](/tos)。
   tos_topic:
     title: "服務條款"
     body: |
@@ -2406,13 +2722,18 @@ zh_TW:
       name: 首次提及
       long_description: 該徽章授予給第一次在帖子中@別人的你。每個提及都將通知對方，讓他們知道你發了貼。輸入 @ 提及任何用戶，如果可以的話，也可以提及群組——這是個獲得他們注意的好辦法。
     first_onebox:
-      name: 首個Onebox
-      description: 發佈過 oneboxed 連結
-      long_description: 該徽章授予給第一次在空行中發錶鏈接的你，連結將被展開成 onebox。其中有連結摘要、標題和（如果有）圖片。
+      name: 首個連結預覽
+      description: 張貼過具連結預覽的連結
+      long_description: 該徽章授予給第一次發表單行連結的你。連結將被展開成連結預覽，包還摘要、標題和圖片（如果有的話）。
     first_reply_by_email:
       name: 首次郵件回覆
       long_description: |
         該徽章授予給第一次通過郵件回覆的你 :e-mail:。
+    new_user_of_the_month:
+      name: "每月最佳新人"
+      description: 在第一個月表現傑出
+      long_description: |
+        這個徽章每個月授與兩位新使用者，以表揚他們的傑出貢獻。衡量的標準在發表的文章獲得喜歡的頻率、與喜愛者的身份。
   admin_login:
     success: "已發送郵件"
     error: "錯誤"

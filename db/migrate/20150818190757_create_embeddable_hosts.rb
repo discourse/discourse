@@ -1,4 +1,4 @@
-class CreateEmbeddableHosts < ActiveRecord::Migration
+class CreateEmbeddableHosts < ActiveRecord::Migration[4.2]
   def change
     create_table :embeddable_hosts, force: true do |t|
       t.string :host, null: false

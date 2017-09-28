@@ -24,5 +24,5 @@
 
 <div class="modal-footer">
   <button class='btn btn-primary' {{action "saveAll"}} disabled={{submitDisabled}}>{{i18n 'admin.badges.save'}}</button>
-  <a {{action "cancel"}}>{{i18n 'cancel'}}</a>
+  {{d-modal-cancel close=(action "closeModal")}}
 </div>

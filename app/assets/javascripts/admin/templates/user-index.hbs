@@ -223,6 +223,12 @@
     </div>
   </div>
 
+  <div class="display-row">
+    <div class='field'>{{i18n 'admin.user.staged'}}</div>
+    <div class='value'>{{i18n-yes-no model.staged}}</div>
+    <div class='controls'>{{i18n 'admin.user.staged_explanation'}}</div>
+  </div>
+
   {{#if currentUser.admin}}
     <div class='display-row'>
       <div class='field'>{{i18n 'admin.api.key'}}</div>
@@ -296,25 +302,37 @@
     </div>
   </div>
 
-    <div class="display-row {{if model.isSuspended 'highlight-danger'}}">
-    <div class='field'>{{i18n 'admin.user.suspended'}}</div>
-    <div class='value'>{{i18n-yes-no model.isSuspended}}</div>
-    <div class='controls'>
-    {{#if model.isSuspended}}
-      {{d-button class="btn-danger" action="unsuspend" icon="ban" label="admin.user.unsuspend"}}
-      {{suspendDuration}}
-      {{i18n 'admin.user.suspended_explanation'}}
-    {{else}}
-      {{#if model.canSuspend}}
-        {{d-button class="btn-danger" action="showSuspendModal" actionParam=model icon="ban" label="admin.user.suspend"}}
+    <div class="user-suspended display-row {{if model.isSuspended 'highlight-danger'}}">
+      <div class='field'>{{i18n 'admin.user.suspended'}}</div>
+      <div class='value'>
+        {{i18n-yes-no model.isSuspended}}
+        {{#if model.isSuspended}}
+          {{i18n "admin.user.suspended_until" until=model.suspendedTillDate}}
+        {{/if}}
+      </div>
+      <div class='controls'>
+      {{#if model.isSuspended}}
+        {{d-button
+          class="btn-danger unsuspend-user"
+          action=(action "unsuspend")
+          icon="ban"
+          label="admin.user.unsuspend"}}
         {{i18n 'admin.user.suspended_explanation'}}
+      {{else}}
+        {{#if model.canSuspend}}
+          {{d-button
+            class="btn-danger suspend-user"
+            action=(action "showSuspendModal")
+            icon="ban"
+            label="admin.user.suspend"}}
+          {{i18n 'admin.user.suspended_explanation'}}
+        {{/if}}
       {{/if}}
-    {{/if}}
     </div>
   </div>
 
   {{#if model.isSuspended}}
-    <div class='display-row highlight-danger'>
+    <div class='display-row highlight-danger suspension-info'>
       <div class='field'>{{i18n 'admin.user.suspended_by'}}</div>
       <div class='value'>
         {{#link-to 'adminUser' suspendedBy}}{{avatar model.suspendedBy imageSize="tiny"}}{{/link-to}}
@@ -341,12 +359,6 @@
         {{/if}}
       {{/conditional-loading-spinner}}
     </div>
-  </div>
-
-  <div class="display-row">
-    <div class='field'>{{i18n 'admin.user.staged'}}</div>
-    <div class='value'>{{i18n-yes-no model.staged}}</div>
-    <div class='controls'>{{i18n 'admin.user.staged_explanation'}}</div>
   </div>
 </section>
 

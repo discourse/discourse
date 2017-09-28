@@ -13,7 +13,7 @@ describe Admin::SiteTextsController do
 
     context '.index' do
       it 'returns json' do
-        xhr :get, :index, q: 'title'
+        get :index, params: {  q: 'title' }, format: :json
         expect(response).to be_success
         expect(::JSON.parse(response.body)).to be_present
       end
@@ -21,7 +21,7 @@ describe Admin::SiteTextsController do
 
     context '.show' do
       it 'returns a site text for a key that exists' do
-        xhr :get, :show, id: 'title'
+        get :show, params: { id: 'title' }, format: :json
         expect(response).to be_success
 
         json = ::JSON.parse(response.body)
@@ -35,7 +35,7 @@ describe Admin::SiteTextsController do
       end
 
       it 'returns not found for missing keys' do
-        xhr :get, :show, id: 'made_up_no_key_exists'
+        get :show, params: { id: 'made_up_no_key_exists' }, format: :json
         expect(response).not_to be_success
       end
     end
@@ -52,7 +52,9 @@ describe Admin::SiteTextsController do
         end
 
         it 'returns the right error message' do
-          xhr :put, :update, id: 'some_key', site_text: { value: 'hello %{key}' }
+          put :update, params: {
+            id: 'some_key', site_text: { value: 'hello %{key}' }
+          }, format: :json
 
           expect(response.status).to eq(422)
 
@@ -68,7 +70,7 @@ describe Admin::SiteTextsController do
       it 'updates and reverts the key' do
         orig_title = I18n.t(:title)
 
-        xhr :put, :update, id: 'title', site_text: { value: 'hello' }
+        put :update, params: { id: 'title', site_text: { value: 'hello' } }, format: :json
         expect(response).to be_success
 
         json = ::JSON.parse(response.body)
@@ -81,7 +83,7 @@ describe Admin::SiteTextsController do
         expect(site_text['value']).to eq('hello')
 
         # Revert
-        xhr :put, :revert, id: 'title'
+        put :revert, params: { id: 'title' }, format: :json
         expect(response).to be_success
 
         json = ::JSON.parse(response.body)
@@ -95,14 +97,19 @@ describe Admin::SiteTextsController do
       end
 
       it 'returns not found for missing keys' do
-        xhr :put, :update, id: 'made_up_no_key_exists', site_text: { value: 'hello' }
+        put :update, params: {
+          id: 'made_up_no_key_exists', site_text: { value: 'hello' }
+        }, format: :json
+
         expect(response).not_to be_success
       end
 
       it 'logs the change' do
         original_title = I18n.t(:title)
 
-        xhr :put, :update, id: 'title', site_text: { value: 'yay' }
+        put :update, params: {
+          id: 'title', site_text: { value: 'yay' }
+        }, format: :json
 
         log = UserHistory.last
 
@@ -110,7 +117,7 @@ describe Admin::SiteTextsController do
         expect(log.new_value).to eq('yay')
         expect(log.action).to eq(UserHistory.actions[:change_site_text])
 
-        xhr :put, :revert, id: 'title'
+        put :revert, params: { id: 'title' }, format: :json
 
         log = UserHistory.last
 

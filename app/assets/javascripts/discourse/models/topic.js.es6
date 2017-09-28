@@ -99,6 +99,17 @@ const Topic = RestModel.extend({
     return newTags;
   },
 
+  @computed("suggested_topics")
+  suggestedTopics(suggestedTopics) {
+    if (suggestedTopics) {
+      const store = this.store;
+
+      return this.set('suggested_topics', suggestedTopics.map(st => {
+        return store.createRecord('topic', st);
+      }));
+    }
+  },
+
   replyCount: function() {
     return this.get('posts_count') - 1;
   }.property('posts_count'),

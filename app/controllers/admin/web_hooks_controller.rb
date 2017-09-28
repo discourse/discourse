@@ -1,5 +1,5 @@
 class Admin::WebHooksController < Admin::AdminController
-  before_filter :fetch_web_hook, only: %i(show update destroy list_events bulk_events ping)
+  before_action :fetch_web_hook, only: %i(show update destroy list_events bulk_events ping)
 
   def index
     limit = 50

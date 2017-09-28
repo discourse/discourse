@@ -1,4 +1,4 @@
-class MigrateAutoClosePosts < ActiveRecord::Migration
+class MigrateAutoClosePosts < ActiveRecord::Migration[4.2]
   def up
     I18n.overrides_disabled do
       strings = []

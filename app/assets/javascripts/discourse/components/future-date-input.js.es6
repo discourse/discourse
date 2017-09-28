@@ -3,7 +3,7 @@ import {
   FORMAT,
   PICK_DATE_AND_TIME,
   SET_BASED_ON_LAST_POST
-} from "discourse/components/auto-update-input-selector";
+} from "discourse/components/future-date-input-selector";
 
 import { PUBLISH_TO_CATEGORY_STATUS_TYPE } from 'discourse/controllers/edit-topic-timer';
 
@@ -13,6 +13,7 @@ export default Ember.Component.extend({
   time: null,
   isCustom: Ember.computed.equal('selection', PICK_DATE_AND_TIME),
   isBasedOnLastPost: Ember.computed.equal('selection', SET_BASED_ON_LAST_POST),
+  displayLabel: null,
 
   init() {
     this._super();
@@ -62,6 +63,10 @@ export default Ember.Component.extend({
     } else {
       return input;
     }
+  },
+
+  didReceiveAttrs() {
+    this.set('displayLabel', I18n.t(this.get('label') || 'topic.topic_status_update.when'));
   },
 
   @computed("statusType", "input", "isCustom", "date", "time", "willCloseImmediately", "categoryId")

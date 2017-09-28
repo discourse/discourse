@@ -422,6 +422,9 @@ users:
   user_website_domains_whitelist:
     default: ''
     type: list
+  hide_suspension_reasons:
+    default: false
+    client: true
 
 groups:
   enable_group_directory:
@@ -499,12 +502,6 @@ posting:
     locale_default:
       zh_CN: 4
       zh_TW: 4
-  min_body_similar_length:
-    client: true
-    default: 15
-    locale_default:
-      zh_CN: 5
-      zh_TW: 5
   enable_private_messages:
     default: true
     client: true
@@ -628,6 +625,8 @@ posting:
   max_allowed_message_recipients:
     default: 30
     min: 1
+  watched_words_regular_expressions:
+    default: false
 
 email:
   email_time_window_mins:

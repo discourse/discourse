@@ -53,7 +53,11 @@ const Post = RestModel.extend({
   }.property('firstPost', 'deleted_at', 'topic.deleted_at'),
 
   url: function() {
-    return postUrl(this.get('topic.slug') || this.get('topic_slug'), this.get('topic_id'), this.get('post_number'));
+    return postUrl(
+      this.get('topic.slug') || this.get('topic_slug'),
+      this.get('topic_id') || this.get('topic.id'),
+      this.get('post_number')
+    );
   }.property('post_number', 'topic_id', 'topic.slug'),
 
   // Don't drop the /1
@@ -84,15 +88,14 @@ const Post = RestModel.extend({
   }.property('link_counts.@each.internal'),
 
   flagsAvailable: function() {
-    const post = this;
-    return Discourse.Site.currentProp('flagTypes').filter(function(item) {
-      return post.get("actionByName." + item.get('name_key') + ".can_act");
+    return this.site.get('flagTypes').filter(item => {
+      return this.get(`actionByName.${item.get('name_key')}.can_act`);
     });
   }.property('actions_summary.@each.can_act'),
 
   afterUpdate(res) {
     if (res.category) {
-      Discourse.Site.current().updateCategory(res.category);
+      this.site.updateCategory(res.category);
     }
   },
 

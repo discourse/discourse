@@ -2596,8 +2596,9 @@ en:
 
       flags:
         title: "Flags"
-        old: "Old"
-        active: "Active"
+        active_posts: "Flagged Posts"
+        old_posts: "Old Flagged Posts"
+        topics: "Flagged Topics"
 
         agree: "Agree"
         agree_title: "Confirm this flag as valid and correct"
@@ -2626,6 +2627,8 @@ en:
         clear_topic_flags: "Done"
         clear_topic_flags_title: "The topic has been investigated and issues have been resolved. Click Done to remove the flags."
         more: "(more replies...)"
+        suspend_user: "Suspend User"
+        suspend_user_title: "Suspend user for this post"
 
         dispositions:
           agreed: "agreed"
@@ -2638,11 +2641,19 @@ en:
         system: "System"
         error: "Something went wrong"
         reply_message: "Reply"
-        no_results: "There are no flags."
+        no_results: "There are no flagged posts."
         topic_flagged: "This <strong>topic</strong> has been flagged."
+        show_full: "show full post"
         visit_topic: "Visit the topic to take action"
         was_edited: "Post was edited after the first flag"
         previous_flags_count: "This post has already been flagged {{count}} times."
+        show_details: "Show flag details"
+
+        flagged_topics:
+          topic: "Topic"
+          type: "Type"
+          users: "Users"
+          last_flagged: "Last Flagged"
 
         summary:
           action_type_3:
@@ -3192,6 +3203,7 @@ en:
         form:
           label: 'New Word:'
           placeholder: 'full word or * as wildcard'
+          placeholder_regexp: "regular expression"
           add: 'Add'
           success: 'Success'
           upload: "Upload"
@@ -3256,10 +3268,15 @@ en:
         suspend_failed: "Something went wrong suspending this user {{error}}"
         unsuspend_failed: "Something went wrong unsuspending this user {{error}}"
         suspend_duration: "How long will the user be suspended for?"
-        suspend_duration_units: "(days)"
         suspend_reason_label: "Why are you suspending? This text <b>will be visible to everyone</b> on this user's profile page, and will be shown to the user when they try to log in. Keep it short."
+        suspend_reason_hidden_label: "Why are you suspending? This text will be shown to the user when they try to log in. Keep it short."
         suspend_reason: "Reason"
+        suspend_reason_placeholder: "Suspension Reason"
+        suspend_message: "Email Message"
+        suspend_message_placeholder: "Optionally, provide more information about the suspension and it will be emailed to the user."
         suspended_by: "Suspended by"
+        suspended_until: "(until %{until})"
+        cant_suspend: "This user cannot be suspended."
         delete_all_posts: "Delete all posts"
 
         # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details

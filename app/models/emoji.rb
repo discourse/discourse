@@ -9,9 +9,6 @@ class Emoji
   attr_reader :path
   attr_accessor :name, :url
 
-  # whitelist emojis so that new user can post emojis
-  Post::white_listed_image_classes << "emoji"
-
   def initialize(path = nil)
     @path = path
   end

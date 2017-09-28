@@ -38,7 +38,11 @@ describe ::Presence::PresencesController, type: :request do
     it "uses guardian to secure endpoint" do
       # Private message
       private_post = Fabricate(:private_message_post)
-      post '/presence/publish.json', current: { action: 'edit', post_id: private_post.id }
+
+      post '/presence/publish.json', params: {
+        current: { action: 'edit', post_id: private_post.id }
+      }
+
       expect(response.code.to_i).to eq(403)
 
       # Secure category
@@ -46,13 +50,18 @@ describe ::Presence::PresencesController, type: :request do
       category = Fabricate(:private_category, group: group)
       private_topic = Fabricate(:topic, category: category)
 
-      post '/presence/publish.json', current: { action: 'edit', topic_id: private_topic.id }
+      post '/presence/publish.json', params: {
+        current: { action: 'edit', topic_id: private_topic.id }
+      }
+
       expect(response.code.to_i).to eq(403)
     end
 
     it "returns a response when requested" do
       messages = MessageBus.track_publish do
-        post '/presence/publish.json', current: { compose_state: 'open', action: 'edit', post_id: post1.id }, response_needed: true
+        post '/presence/publish.json', params: {
+          current: { compose_state: 'open', action: 'edit', post_id: post1.id }, response_needed: true
+        }
       end
 
       expect(messages.count).to eq (1)
@@ -66,7 +75,9 @@ describe ::Presence::PresencesController, type: :request do
 
     it "doesn't return a response when not requested" do
       messages = MessageBus.track_publish do
-        post '/presence/publish.json', current: { compose_state: 'open', action: 'edit', post_id: post1.id }
+        post '/presence/publish.json', params: {
+          current: { compose_state: 'open', action: 'edit', post_id: post1.id }
+        }
       end
 
       expect(messages.count).to eq (1)
@@ -77,21 +88,34 @@ describe ::Presence::PresencesController, type: :request do
 
     it "doesn't send duplicate messagebus messages" do
       messages = MessageBus.track_publish do
-        post '/presence/publish.json', current: { compose_state: 'open', action: 'edit', post_id: post1.id }
+        post '/presence/publish.json', params: {
+          current: { compose_state: 'open', action: 'edit', post_id: post1.id }
+        }
       end
+
       expect(messages.count).to eq (1)
 
       messages = MessageBus.track_publish do
-        post '/presence/publish.json', current: { compose_state: 'open', action: 'edit', post_id: post1.id }
+        post '/presence/publish.json', params: {
+          current: { compose_state: 'open', action: 'edit', post_id: post1.id }
+        }
       end
+
       expect(messages.count).to eq (0)
     end
 
     it "clears 'previous' state when supplied" do
       messages = MessageBus.track_publish do
-        post '/presence/publish.json', current: { compose_state: 'open', action: 'edit', post_id: post1.id }
-        post '/presence/publish.json', current: { compose_state: 'open', action: 'edit', post_id: post2.id }, previous: { compose_state: 'open', action: 'edit', post_id: post1.id }
+        post '/presence/publish.json', params: {
+          current: { compose_state: 'open', action: 'edit', post_id: post1.id }
+        }
+
+        post '/presence/publish.json', params: {
+          current: { compose_state: 'open', action: 'edit', post_id: post2.id },
+          previous: { compose_state: 'open', action: 'edit', post_id: post1.id }
+        }
       end
+
       expect(messages.count).to eq (3)
     end
 

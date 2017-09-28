@@ -35,7 +35,7 @@ module Jobs
     end
 
     def pending_flag_ids
-      FlagQuery.flagged_post_actions('active')
+      FlagQuery.flagged_post_actions(filter: 'active')
         .where('post_actions.created_at < ?', SiteSetting.notify_about_flags_after.to_i.hours.ago)
         .pluck(:id)
     end

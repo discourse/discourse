@@ -32,5 +32,5 @@
 
 <div class="modal-footer">
   {{d-button action="saveAvatarSelection" class="btn-primary" disabled=uploading label="save"}}
-  <a {{action "closeModal"}}>{{i18n 'cancel'}}</a>
+  {{d-modal-cancel close=(action "closeModal")}}
 </div>

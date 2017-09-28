@@ -1,4 +1,4 @@
-class CreateForumThreadUser < ActiveRecord::Migration
+class CreateForumThreadUser < ActiveRecord::Migration[4.2]
   def up
     create_table :forum_thread_users, id: false do |t|
       t.integer  :user_id, null: false

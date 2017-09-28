@@ -1,6 +1,6 @@
 require 'ipaddr'
 
-class ChangeIpToInetInTopicLinkClicks < ActiveRecord::Migration
+class ChangeIpToInetInTopicLinkClicks < ActiveRecord::Migration[4.2]
   def up
     add_column :topic_link_clicks, :ip_address, :inet
 

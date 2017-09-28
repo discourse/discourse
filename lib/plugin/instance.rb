@@ -103,6 +103,12 @@ class Plugin::Instance
     end
   end
 
+  def add_body_class(class_name)
+    reloadable_patch do |plugin|
+      ::ApplicationHelper.extra_body_classes << class_name if plugin.enabled?
+    end
+  end
+
   # Extend a class but check that the plugin is enabled
   # for class methods use `add_class_method`
   def add_to_class(class_name, attr, &block)
@@ -501,8 +507,8 @@ JS
   end
 
   def reloadable_patch(plugin = self)
-    if Rails.env.development? && defined?(ActionDispatch::Reloader)
-      ActionDispatch::Reloader.to_prepare do
+    if Rails.env.development? && defined?(ActiveSupport::Reloader)
+      ActiveSupport::Reloader.to_prepare do
         # reload the patch
         yield plugin
       end

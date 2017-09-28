@@ -106,6 +106,19 @@ describe Jobs::GrantNewUserOfTheMonthBadges do
       expect(granter.scores.keys).not_to include(user.id)
     end
 
+    it "doesn't count private topics" do
+      user = Fabricate(:user, created_at: 1.week.ago)
+      topic = Fabricate(:private_message_topic)
+      Fabricate(:post, topic: topic, user: user)
+      p = Fabricate(:post, user: user)
+      old_user = Fabricate(:user, created_at: 6.months.ago)
+      PostAction.act(old_user, p, PostActionType.types[:like])
+      old_user = Fabricate(:user, created_at: 6.months.ago)
+      PostAction.act(old_user, p, PostActionType.types[:like])
+
+      expect(granter.scores.keys).not_to include(user.id)
+    end
+
     it "requires at least two likes to be considered" do
       user = Fabricate(:user, created_at: 1.week.ago)
       Fabricate(:post, user: user)

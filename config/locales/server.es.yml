@@ -627,6 +627,8 @@ es:
     no_likes_given:
       self: "No le has dado a \"Me gusta\" en ningún tema."
       others: "No te gusta ningún tema."
+    no_replies:
+      others: "Sin respuestas."
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -2014,6 +2016,10 @@ es:
         Este premio es solo otorgado para usuarios nuevos del mes, y será visible siempre en tu [página de usuario](%{base_url}/my/badges).
 
         Usted se ha convertido rápidamente en un valioso miembro de nuestra comunidad. ¡Gracias por unirse, y mantener el gran trabajo!
+    queued_posts_reminder:
+      subject_template:
+        one: "1 post esperando a ser revisado"
+        other: "%{count} posts esperando a ser revisados"
   unsubscribe_link: |
     Para darte de baja de estos emails, [haz clic aquí](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -2894,6 +2900,18 @@ es:
       description: Contribuciones excepcionales en su primer mes
       long_description: |
         Este distintivo es otorgado para felicitar a dos nuevos usuarios cada mes por sus excelentes colaboraciones, y estadísticas sobre cuán seguido sus posts han sido valorados y por quiénes.
+    enthusiast:
+      name: Entusiasta
+      description: Nos visitó 10 días seguidos
+      long_description: Este distintivo se concede al visitarnos 10 días consecutivos. ¡Gracias por quedarte con nosotros más de una semana!
+    aficionado:
+      name: Aficionado
+      description: Nos visitó 100 días seguidos
+      long_description: Este distintivo se concede al visitarnos durante 100 días consecutivos. ¡Eso es más de tres meses!
+    devotee:
+      name: Devoto
+      description: Nos visitó 365 días seguidos
+      long_description: Este distintivo se concede al visitarnos 365 días consecutivos. ¡¡Un año entero!!
     badge_title_metadata: "%{display_name} distintivo en %{site_title}"
   admin_login:
     success: "Email enviado"

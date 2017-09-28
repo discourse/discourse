@@ -36,6 +36,10 @@ TopicStatusUpdater = Struct.new(:topic, :user) do
       result = false if rc == 0
     end
 
+    if status.manually_closing_topic?
+      DiscourseEvent.trigger(:topic_closed, topic)
+    end
+
     if @topic_status_update
       if status.manually_closing_topic? || status.closing_topic?
         topic.delete_topic_timer(TopicTimer.types[:close])

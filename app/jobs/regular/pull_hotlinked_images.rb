@@ -44,6 +44,9 @@ module Jobs
                   follow_redirect: true
                 )
               rescue Discourse::InvalidParameters
+                log(:error, "InvalidParameters while downloading hotlinked image (#{src}) for post: #{post_id}")
+              rescue => e
+                log(:error, "Failed to download image #{e}")
               end
               if hotlinked
                 if File.size(hotlinked.path) <= @max_size
@@ -53,14 +56,14 @@ module Jobs
                   if upload.persisted?
                     downloaded_urls[src] = upload.url
                   else
-                    log(:info, "Failed to pull hotlinked image for post: #{post_id}: #{src} - #{upload.errors.join("\n")}")
+                    log(:error, "Failed to pull hotlinked image for post: #{post_id}: #{src} - #{upload.errors.join("\n")}")
                   end
                 else
-                  log(:info, "Failed to pull hotlinked image for post: #{post_id}: #{src} - Image is bigger than #{@max_size}")
+                  log(:error, "Failed to pull hotlinked image for post: #{post_id}: #{src} - Image is bigger than #{@max_size}")
                   large_images << original_src
                 end
               else
-                log(:info, "There was an error while downloading '#{src}' locally for post: #{post_id}")
+                log(:error, "There was an error while downloading '#{src}' locally for post: #{post_id}")
                 broken_images << original_src
               end
             end
@@ -87,7 +90,7 @@ module Jobs
               raw.gsub!(/^#{escaped_src}(\s?)$/) { "<img src='#{url}'>#{$1}" }
             end
           rescue => e
-            log(:info, "Failed to pull hotlinked image: #{src} post:#{post_id}\n" + e.message + "\n" + e.backtrace.join("\n"))
+            log(:error, "Failed to pull hotlinked image (#{src}) post: #{post_id}\n" + e.message + "\n" + e.backtrace.join("\n"))
           end
         end
 

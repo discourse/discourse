@@ -1,4 +1,4 @@
-class CreateArchetypeOptions < ActiveRecord::Migration
+class CreateArchetypeOptions < ActiveRecord::Migration[4.2]
   def change
     create_table :archetype_options do |t|
       t.references :archetype, null: false

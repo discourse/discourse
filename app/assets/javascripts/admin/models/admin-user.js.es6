@@ -9,7 +9,7 @@ import TL3Requirements from 'admin/models/tl3-requirements';
 import { userPath } from 'discourse/lib/url';
 
 const AdminUser = Discourse.User.extend({
-
+  adminUserView: true,
   customGroups: Ember.computed.filter("groups", g => !g.automatic && Group.create(g)),
   automaticGroups: Ember.computed.filter("groups", g => g.automatic && Group.create(g)),
 
@@ -106,7 +106,7 @@ const AdminUser = Discourse.User.extend({
           message = I18n.messageFormat('admin.user.delete_all_posts_confirm_MF', { "POSTS": user.get('post_count'), "TOPICS": user.get('topic_count') }),
           buttons = [{
             "label": I18n.t("composer.cancel"),
-            "class": "cancel-inline",
+            "class": "d-modal-cancel",
             "link":  true
           }, {
             "label": `${iconHTML('exclamation-triangle')} ` + I18n.t("admin.user.delete_all_posts"),
@@ -240,22 +240,17 @@ const AdminUser = Discourse.User.extend({
     return suspended_at.format('L') + " - " + suspended_till.format('L');
   }.property('suspended_till', 'suspended_at'),
 
-  suspend(duration, reason) {
-    return ajax("/admin/users/" + this.id + "/suspend", {
+  suspend(data) {
+    return ajax(`/admin/users/${this.id}/suspend`, {
       type: 'PUT',
-      data: { duration: duration, reason: reason }
-    });
+      data
+    }).then(result => this.setProperties(result.suspension));
   },
 
   unsuspend() {
-    return ajax("/admin/users/" + this.id + "/unsuspend", {
+    return ajax(`/admin/users/${this.id}/unsuspend`, {
       type: 'PUT'
-    }).then(function() {
-      window.location.reload();
-    }).catch(function(e) {
-      var error = I18n.t('admin.user.unsuspend_failed', { error: "http: " + e.status + " - " + e.body });
-      bootbox.alert(error);
-    });
+    }).then(result => this.setProperties(result.suspension));
   },
 
   logOut() {
@@ -461,52 +456,6 @@ const AdminUser = Discourse.User.extend({
     }];
 
     bootbox.dialog(message, buttons, { "classes": "delete-user-modal" });
-  },
-
-  deleteAsSpammer(successCallback) {
-    const user = this;
-
-    user.checkEmail().then(function() {
-      const data = {
-        "POSTS": user.get('post_count'),
-        "TOPICS": user.get('topic_count'),
-        email: user.get('email') || I18n.t("flagging.hidden_email_address"),
-        ip_address: user.get('ip_address') || I18n.t("flagging.ip_address_missing")
-        };
-
-      const message = I18n.messageFormat('flagging.delete_confirm_MF', data),
-            buttons = [{
-        "label": I18n.t("composer.cancel"),
-        "class": "cancel-inline",
-        "link":  true
-      }, {
-        "label": `${iconHTML('exclamation-triangle')} ` + I18n.t("flagging.yes_delete_spammer"),
-        "class": "btn btn-danger",
-        "callback": function() {
-          return ajax("/admin/users/" + user.get('id') + '.json', {
-            type: 'DELETE',
-            data: {
-              delete_posts: true,
-              block_email: true,
-              block_urls: true,
-              block_ip: true,
-              delete_as_spammer: true,
-              context: window.location.pathname
-            }
-          }).then(function(result) {
-            if (result.deleted) {
-              if (successCallback) successCallback();
-            } else {
-              bootbox.alert(I18n.t("admin.user.delete_failed"));
-            }
-          }).catch(function() {
-            bootbox.alert(I18n.t("admin.user.delete_failed"));
-          });
-        }
-      }];
-
-      bootbox.dialog(message, buttons, {"classes": "flagging-delete-spammer"});
-    });
   },
 
   loadDetails() {

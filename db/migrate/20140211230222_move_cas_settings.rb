@@ -1,4 +1,4 @@
-class MoveCasSettings < ActiveRecord::Migration
+class MoveCasSettings < ActiveRecord::Migration[4.2]
   def change
     #As part of removing the build in CAS authentication we should
     #convert the data over to be used by the plugin.

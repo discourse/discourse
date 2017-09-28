@@ -1,4 +1,4 @@
-class IncomingLinkNormalization < ActiveRecord::Migration
+class IncomingLinkNormalization < ActiveRecord::Migration[4.2]
   def up
     remove_column :incoming_links, :post_number
     remove_column :incoming_links, :domain

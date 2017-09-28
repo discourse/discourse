@@ -17,12 +17,8 @@ QUnit.test('updateFromJson', assert => {
   var details = buildDetails(1234);
 
   details.updateFromJson({
-    suggested_topics: [{id: 1}, {id: 3}],
     allowed_users: [{username: 'eviltrout'}]
   });
-
-  assert.equal(details.get('suggested_topics.length'), 2, 'it loaded the suggested_topics');
-  assert.containsInstance(details.get('suggested_topics'), Topic);
 
   assert.equal(details.get('allowed_users.length'), 1, 'it loaded the allowed users');
   assert.containsInstance(details.get('allowed_users'), Discourse.User);

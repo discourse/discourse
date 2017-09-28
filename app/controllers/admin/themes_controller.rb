@@ -2,7 +2,7 @@ require_dependency 'upload_creator'
 
 class Admin::ThemesController < Admin::AdminController
 
-  skip_before_filter :check_xhr, only: [:show, :preview]
+  skip_before_action :check_xhr, only: [:show, :preview]
 
   def preview
     @theme = Theme.find(params[:id])
@@ -178,7 +178,7 @@ class Admin::ThemesController < Admin::AdminController
 
     def update_default_theme
       if theme_params.key?(:default)
-        is_default = theme_params[:default]
+        is_default = theme_params[:default].to_s == "true"
         if @theme.key == SiteSetting.default_theme_key && !is_default
           Theme.clear_default!
         elsif is_default
@@ -192,6 +192,7 @@ class Admin::ThemesController < Admin::AdminController
         begin
           # deep munge is a train wreck, work around it for now
           params[:theme][:child_theme_ids] ||= [] if params[:theme].key?(:child_theme_ids)
+
           params.require(:theme).permit(
             :name,
             :color_scheme_id,

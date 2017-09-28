@@ -67,4 +67,9 @@ module UserGuardian
     user && is_staff?
   end
 
+  def can_see_suspension_reason?(user)
+    return true unless SiteSetting.hide_suspension_reasons?
+    user == @user || is_staff?
+  end
+
 end

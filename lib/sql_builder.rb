@@ -77,7 +77,7 @@ class SqlBuilder
     def decode(string, tuple = nil, field = nil)
       if Rails.version >= "4.2.0"
         @caster ||= ActiveRecord::Type::DateTime.new
-        @caster.type_cast_from_database(string)
+        @caster.cast(string)
       else
         ActiveRecord::ConnectionAdapters::Column.string_to_time string
       end

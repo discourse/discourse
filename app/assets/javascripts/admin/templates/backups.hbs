@@ -4,6 +4,7 @@
       <ul class="nav nav-pills">
         {{nav-item route='admin.backups.index' label='admin.backups.menu.backups'}}
         {{nav-item route='admin.backups.logs' label='admin.backups.menu.logs'}}
+        {{plugin-outlet name="downloader" tagName=""}}
       </ul>
     </div>
     <div class="pull-right">

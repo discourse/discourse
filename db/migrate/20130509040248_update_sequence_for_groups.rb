@@ -1,4 +1,4 @@
-class UpdateSequenceForGroups < ActiveRecord::Migration
+class UpdateSequenceForGroups < ActiveRecord::Migration[4.2]
   def up
     # even if you alter a sequence you still need to set the seq
     execute <<SQL

@@ -30,7 +30,7 @@ export default {
     DiscourseURL.appEvents = appEvents;
 
     app.register('store:main', Store);
-    inject(app, 'store', 'route', 'controller');
+    inject(app, 'store', 'route', 'controller', 'service');
 
     const messageBus = window.MessageBus;
     app.register('message-bus:main', messageBus, { instantiate: false });

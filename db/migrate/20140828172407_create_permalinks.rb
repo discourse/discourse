@@ -1,4 +1,4 @@
-class CreatePermalinks < ActiveRecord::Migration
+class CreatePermalinks < ActiveRecord::Migration[4.2]
   def change
     create_table :permalinks do |t|
       t.string :url, null: false

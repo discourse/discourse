@@ -2,14 +2,14 @@ require 'rails_helper'
 
 describe StaticController do
 
-  context 'brotli_asset' do
+  context '#brotli_asset' do
     it 'returns a non brotli encoded 404 if asset is missing' do
 
-      get :brotli_asset, path: 'missing.js'
+      get "/brotli_asset/missing.js"
 
-        expect(response.status).to eq(404)
-        expect(response.headers['Content-Encoding']).not_to eq('br')
-        expect(response.headers["Cache-Control"]).to match(/max-age=1/)
+      expect(response.status).to eq(404)
+      expect(response.headers['Content-Encoding']).not_to eq('br')
+      expect(response.headers["Cache-Control"]).to match(/max-age=1/)
     end
 
     it 'can handle fallback brotli assets' do
@@ -23,7 +23,7 @@ describe StaticController do
         file_path = assets_path.join("test.js.br")
         File.write(file_path, 'fake brotli file')
 
-        get :brotli_asset, path: 'test.js'
+        get "/brotli_asset/test.js"
 
         expect(response.status).to eq(200)
         expect(response.headers["Cache-Control"]).to match(/public/)
@@ -41,7 +41,7 @@ describe StaticController do
         file_path = assets_path.join("test.js.br")
         File.write(file_path, 'fake brotli file')
 
-        get :brotli_asset, path: 'test.js'
+        get "/brotli_asset/test.js"
 
         expect(response.status).to eq(200)
         expect(response.headers["Cache-Control"]).to match(/public/)
@@ -51,7 +51,7 @@ describe StaticController do
     end
   end
 
-  context 'show' do
+  context '#show' do
     before do
       post = create_post
       SiteSetting.tos_topic_id = post.topic.id
@@ -60,37 +60,38 @@ describe StaticController do
     end
 
     context "with a static file that's present" do
+      it "should return the right response" do
+        get "/faq"
 
-      before do
-        xhr :get, :show, id: 'faq'
-      end
-
-      it 'renders the static file if present' do
         expect(response).to be_success
-      end
-
-      it "renders the file" do
-        expect(response).to render_template('static/show')
-        expect(assigns(:page)).to eq('faq')
+        expect(response.body).to include(I18n.t('js.faq'))
       end
     end
 
-    [ ['tos', :tos_url], ['privacy', :privacy_policy_url] ].each do |id, setting_name|
-      context "#{id}" do
-        subject { xhr :get, :show, id: id }
+    [
+      ['tos', :tos_url, I18n.t('terms_of_service.title')],
+      ['privacy', :privacy_policy_url, I18n.t('privacy')]
+    ].each do |id, setting_name, text|
 
+      context "#{id}" do
         context "when #{setting_name} site setting is NOT set" do
           it "renders the #{id} page" do
-            expect(subject).to render_template("static/show")
-            expect(assigns(:page)).to eq(id)
+            get "/#{id}"
+
+            expect(response).to be_success
+            expect(response.body).to include(text)
           end
         end
 
         context "when #{setting_name} site setting is set" do
-          before  { SiteSetting.public_send("#{setting_name}=", 'http://example.com/page') }
+          before do
+            SiteSetting.public_send("#{setting_name}=", 'http://example.com/page')
+          end
 
           it "redirects to the #{setting_name}" do
-            expect(subject).to redirect_to('http://example.com/page')
+            get "/#{id}"
+
+            expect(response).to redirect_to('http://example.com/page')
           end
         end
       end
@@ -98,21 +99,27 @@ describe StaticController do
 
     context "with a missing file" do
       it "should respond 404" do
-        xhr :get, :show, id: 'does-not-exist'
-        expect(response.response_code).to eq(404)
+        get "/static/does-not-exist"
+        expect(response.status).to eq(404)
       end
     end
 
     it 'should redirect to / when logged in and path is /login' do
-      log_in
-      xhr :get, :show, id: 'login'
-      expect(response).to redirect_to '/'
+      sign_in(Fabricate(:user))
+      get "/login"
+      expect(response).to redirect_to('/')
     end
 
     it "should display the login template when login is required" do
       SiteSetting.login_required = true
-      xhr :get, :show, id: 'login'
+
+      get "/login"
+
       expect(response).to be_success
+
+      expect(response.body).to include(PrettyText.cook(I18n.t(
+        'login_required.welcome_message', title: SiteSetting.title
+      )))
     end
 
     context "when login_required is enabled" do
@@ -121,29 +128,31 @@ describe StaticController do
       end
 
       it 'faq page redirects to login page for anon' do
-        xhr :get, :show, id: 'faq'
+        get '/faq'
         expect(response).to redirect_to '/login'
       end
 
       it 'guidelines page redirects to login page for anon' do
-        xhr :get, :show, id: 'guidelines'
+        get '/guidelines'
         expect(response).to redirect_to '/login'
       end
 
       it 'faq page loads for logged in user' do
-        log_in
-        xhr :get, :show, id: 'faq'
+        sign_in(Fabricate(:user))
+
+        get '/faq'
+
         expect(response).to be_success
-        expect(response).to render_template('static/show')
-        expect(assigns(:page)).to eq('faq')
+        expect(response.body).to include(I18n.t('js.faq'))
       end
 
       it 'guidelines page loads for logged in user' do
-        log_in
-        xhr :get, :show, id: 'guidelines'
+        sign_in(Fabricate(:user))
+
+        get '/guidelines'
+
         expect(response).to be_success
-        expect(response).to render_template('static/show')
-        expect(assigns(:page)).to eq('faq')
+        expect(response.body).to include(I18n.t('guidelines'))
       end
     end
   end
@@ -151,50 +160,50 @@ describe StaticController do
   describe '#enter' do
     context 'without a redirect path' do
       it 'redirects to the root url' do
-        xhr :post, :enter
-        expect(response).to redirect_to '/'
+        post "/login.json"
+        expect(response).to redirect_to('/')
       end
     end
 
     context 'with a redirect path' do
       it 'redirects to the redirect path' do
-        xhr :post, :enter, redirect: '/foo'
-        expect(response).to redirect_to '/foo'
+        post "/login.json", params: { redirect: '/foo' }
+        expect(response).to redirect_to('/foo')
       end
     end
 
     context 'with a full url' do
       it 'redirects to the correct path' do
-        xhr :post, :enter, redirect: "#{Discourse.base_url}/foo"
-        expect(response).to redirect_to '/foo'
+        post "/login.json", params: { redirect: "#{Discourse.base_url}/foo" }
+        expect(response).to redirect_to('/foo')
       end
     end
 
     context 'with a period to force a new host' do
       it 'redirects to the root path' do
-        xhr :post, :enter, redirect: ".org/foo"
-        expect(response).to redirect_to '/'
+        post "/login.json", params: { redirect: ".org/foo" }
+        expect(response).to redirect_to('/')
       end
     end
 
     context 'with a full url to someone else' do
       it 'redirects to the root path' do
-        xhr :post, :enter, redirect: "http://eviltrout.com/foo"
-        expect(response).to redirect_to '/'
+        post "/login.json", params: { redirect: "http://eviltrout.com/foo" }
+        expect(response).to redirect_to('/')
       end
     end
 
     context 'with an invalid URL' do
       it "redirects to the root" do
-        xhr :post, :enter, redirect: "javascript:alert('trout')"
-        expect(response).to redirect_to '/'
+        post "/login.json", params: { redirect: "javascript:alert('trout')" }
+        expect(response).to redirect_to('/')
       end
     end
 
     context 'when the redirect path is the login page' do
       it 'redirects to the root url' do
-        xhr :post, :enter, redirect: login_path
-        expect(response).to redirect_to '/'
+        post "/login.json", params: { redirect: login_path }
+        expect(response).to redirect_to('/')
       end
     end
   end

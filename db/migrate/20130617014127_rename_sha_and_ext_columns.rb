@@ -1,4 +1,4 @@
-class RenameShaAndExtColumns < ActiveRecord::Migration
+class RenameShaAndExtColumns < ActiveRecord::Migration[4.2]
   def up
     rename_column :optimized_images, :sha, :sha1
     change_column :optimized_images, :sha1, :string, limit: 40

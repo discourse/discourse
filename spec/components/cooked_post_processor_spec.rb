@@ -75,8 +75,13 @@ describe CookedPostProcessor do
     end
 
     it "cleans the reverse index up for the current post" do
-      PostUpload.expects(:delete_all).with(post_id: post.id)
       cpp.keep_reverse_index_up_to_date
+
+      post_uploads_ids = post.post_uploads.pluck(:id)
+
+      cpp.keep_reverse_index_up_to_date
+
+      expect(post.reload.post_uploads.pluck(:id)).to_not eq(post_uploads_ids)
     end
 
   end

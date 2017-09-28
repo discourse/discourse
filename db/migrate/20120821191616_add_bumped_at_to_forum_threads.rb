@@ -1,4 +1,4 @@
-class AddBumpedAtToForumThreads < ActiveRecord::Migration
+class AddBumpedAtToForumThreads < ActiveRecord::Migration[4.2]
   def change
     add_column :forum_threads, :bumped_at, :datetime
     execute "UPDATE forum_threads SET bumped_at = last_posted_at"

@@ -1,7 +1,24 @@
 {{#d-modal-body title="admin.flags.delete_flag_modal_title"}}
-<button title="{{i18n 'admin.flags.delete_post_defer_flag_title'}}" {{action "deletePostDeferFlag"}} class="btn">{{d-icon "trash-o"}}{{d-icon "external-link"}}{{i18n 'admin.flags.delete_post_defer_flag'}}</button>
-<button title="{{i18n 'admin.flags.delete_post_agree_flag_title'}}" {{action "deletePostAgreeFlag"}} class="btn">{{d-icon "trash-o"}}{{d-icon "thumbs-o-up"}}{{i18n 'admin.flags.delete_post_agree_flag'}}</button>
-  {{#if model.canDeleteAsSpammer}}
-  <button title="{{i18n 'admin.flags.delete_spammer_title'}}" {{action "deleteSpammer" model.user}} class="btn btn-danger">{{d-icon "exclamation-triangle"}}{{i18n 'admin.flags.delete_spammer'}}</button>
+  {{d-button
+    class="delete-defer"
+    title="admin.flags.delete_post_defer_flag_title"
+    action="deletePostDeferFlag"
+    icon="external-link"
+    label="admin.flags.delete_post_defer_flag"}}
+
+  {{d-button
+    class="delete-agree"
+    title="admin.flags.delete_post_agree_flag_title"
+    action="deletePostAgreeFlag"
+    icon="thumbs-o-up"
+    label="admin.flags.delete_post_agree_flag"}}
+
+  {{#if canDeleteSpammer}}
+    {{d-button
+      class="btn-danger delete-spammer"
+      title="admin.flags.delete_spammer_title"
+      action="deleteSpammer"
+      icon="exclamation-triangle"
+      label="admin.flags.delete_spammer"}}
   {{/if}}
 {{/d-modal-body}}
