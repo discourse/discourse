@@ -1,11 +1,30 @@
 function resolve(path) {
   if (path.indexOf('settings') === 0) {
     return `this.${path}`;
-  } else if (path.indexOf('parentState') === 0) {
-    return `attrs._${path}`;
   }
-
   return path;
+}
+
+function sexp(value) {
+  if (value.path.original === "hash") {
+
+    let result = [];
+
+    value.hash.pairs.forEach(p => {
+      result.push(`"${p.key}": ${p.value.original}`);
+    });
+
+    return `{ ${result.join(", ")} }`;
+  }
+}
+
+function argValue(arg) {
+  let value = arg.value;
+  if (value.type === "SubExpression") {
+    return sexp(arg.value);
+  } else if (value.type === "PathExpression") {
+    return value.original;
+  }
 }
 
 function mustacheValue(node, state) {
@@ -13,8 +32,14 @@ function mustacheValue(node, state) {
 
   switch(path) {
     case 'attach':
-      const widgetName = node.hash.pairs.find(p => p.key === "widget").value.value;
-      return `this.attach("${widgetName}", state ? $.extend({}, attrs, { _parentState: state }) : attrs)`;
+      let widgetName = node.hash.pairs.find(p => p.key === "widget").value.value;
+
+      let attrs = node.hash.pairs.find(p => p.key === "attrs");
+      if (attrs) {
+        return `this.attach("${widgetName}", ${argValue(attrs)})`;
+      }
+      return `this.attach("${widgetName}", attrs)`;
+
       break;
     case 'yield':
       return `this.attrs.contents()`;
