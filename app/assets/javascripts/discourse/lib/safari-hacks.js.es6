@@ -17,25 +17,40 @@ function calcHeight() {
   let withoutKeyboard = window.innerHeight - 270;
   const min = 270;
 
-  // iPhone 6/7/8
-  if (window.innerHeight === 553) {
-    withoutKeyboard = 308;
+  // portrait
+  if (window.screen.height > window.screen.width) {
+
+    // iPhone SE
+    if (window.screen.height === 568) {
+      withoutKeyboard = 270;
+    }
+
+    // iPhone 6/7/8
+    if (window.screen.height === 667) {
+      withoutKeyboard = 295;
+    }
+
+    // iPhone 6/7/8 plus
+    if (window.innerHeight === 736) {
+      withoutKeyboard = 360;
+    }
+
+    // iPad can use innerHeight cause it renders nothing in the footer
+    if (window.innerHeight > 920) {
+      withoutKeyboard -= 45;
+    }
+
+  } else {
+    // landscape
+    //
+    // iPad, we have a bigger keyboard
+    if (window.innerWidth > window.innerHeight && window.innerHeight > 665) {
+      withoutKeyboard -= 128;
+    }
   }
 
-  // iPhone 6/7/8 plus
-  if (window.innerHeight === 622) {
-    withoutKeyboard = 360;
-  }
-
-  // iPad landscape, so we have a bigger keyboard
-  if (window.innerWidth > window.innerHeight && window.innerHeight > 665) {
-    withoutKeyboard -= 128;
-  }
 
   // iPad portrait also has a bigger keyboard
-  if (window.innerWidth < window.innerHeight && window.innerHeight > 920) {
-    withoutKeyboard -= 45;
-  }
 
   return Math.max(withoutKeyboard, min);
 }
