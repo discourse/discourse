@@ -12,6 +12,48 @@ describe FileHelper do
   end
 
   describe "download" do
+
+    it "correctly raises an OpenURI HTTP error if it gets a 404 even with redirect" do
+      url = "http://fourohfour.com/404"
+      stub_request(:head, url).to_return(status: 404, body: "404")
+      stub_request(:get, url).to_return(status: 404, body: "404")
+
+      expect do
+        begin
+          FileHelper.download(
+            url,
+            max_file_size: 10000,
+            tmp_file_name: 'trouttmp',
+            follow_redirect: true
+          )
+        rescue => e
+          expect(e.io.status[0]).to eq("404")
+          raise
+        end
+      end.to raise_error(OpenURI::HTTPError)
+    end
+
+    it "correctly raises an OpenURI HTTP error if it gets a 404" do
+      url = "http://fourohfour.com/404"
+
+      stub_request(:head, url).to_return(status: 404, body: "404")
+      stub_request(:get, url).to_return(status: 404, body: "404")
+
+      expect do
+        begin
+          FileHelper.download(
+            url,
+            max_file_size: 10000,
+            tmp_file_name: 'trouttmp',
+            follow_redirect: false
+          )
+        rescue => e
+          expect(e.io.status[0]).to eq("404")
+          raise
+        end
+      end.to raise_error(OpenURI::HTTPError)
+    end
+
     it "returns a file with the image" do
       tmpfile = FileHelper.download(
         url,

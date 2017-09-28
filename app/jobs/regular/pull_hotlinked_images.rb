@@ -45,6 +45,8 @@ module Jobs
                 )
               rescue Discourse::InvalidParameters
                 log(:error, "InvalidParameters while downloading hotlinked image (#{src}) for post: #{post_id}")
+              rescue => e
+                log(:error, "Failed to download image #{e}")
               end
               if hotlinked
                 if File.size(hotlinked.path) <= @max_size

@@ -15,6 +15,10 @@ class FileHelper
     filename =~ images_regexp
   end
 
+  class FakeIO
+    attr_accessor :status
+  end
+
   def self.download(url,
                     max_file_size:,
                     tmp_file_name:,
@@ -29,13 +33,25 @@ class FileHelper
     url = "https:" + url if url.start_with?("//")
     raise Discourse::InvalidParameters.new(:url) unless url =~ /^https?:\/\//
 
-    uri = FinalDestination.new(
+    uri =
+
+    dest = FinalDestination.new(
       url,
       max_redirects: follow_redirect ? 5 : 1,
       skip_rate_limit: skip_rate_limit
-    ).resolve
+    )
+    uri = dest.resolve
 
-    unless uri.present?
+    if !uri && dest.status_code.to_i >= 400
+      # attempt error API compatability
+      io = FakeIO.new
+      io.status = [dest.status_code.to_s, ""]
+
+      # TODO perhaps translate and add Discourse::DownloadError
+      raise OpenURI::HTTPError.new("#{dest.status_code} Error", io)
+    end
+
+    unless uri
       log(:error, "FinalDestination did not work for: #{url}") if verbose
       return
     end

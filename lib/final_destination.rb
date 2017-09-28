@@ -6,8 +6,7 @@ require 'rate_limiter'
 # Determine the final endpoint for a Web URI, following redirects
 class FinalDestination
 
-  attr_reader :status
-  attr_reader :cookie
+  attr_reader :status, :cookie, :status_code
 
   def initialize(url, opts = nil)
     @url = url
@@ -88,6 +87,10 @@ class FinalDestination
     )
 
     location = nil
+    headers = nil
+
+    response_status = response.status.to_i
+
     case response.status
     when 200
       @status = :resolved
@@ -95,25 +98,37 @@ class FinalDestination
     when 405, 409, 501
       get_response = small_get(headers)
 
-      if get_response.code.to_i == 200
+      response_status = get_response.code.to_i
+      if response_status == 200
         @status = :resolved
         return @uri
       end
 
+      headers = {}
       if cookie_val = get_response.get_fields('set-cookie')
-        @cookie = cookie_val.join
+        headers['set-cookie'] = cookie_val.join
       end
 
+      # TODO this is confusing why grap location for anything not
+      # between 300-400 ?
       if location_val = get_response.get_fields('location')
-        location = location_val.join
+        headers['location'] = location_val.join
       end
-    else
+    end
+
+    unless headers
+      headers = {}
       response.headers.each do |k, v|
-        case k.downcase
-        when 'set-cookie' then @cookie = v
-        when 'location' then location = v
-        end
+        headers[k.to_s.downcase] = v
       end
+    end
+
+    if (300..399).include?(response_status)
+      location = headers["location"]
+    end
+
+    if set_cookie = headers["set-cookie"]
+      @cookie = set_cookie
     end
 
     if location
@@ -122,6 +137,10 @@ class FinalDestination
       @limit -= 1
       return resolve
     end
+
+    # this is weird an exception seems better
+    @status = :failure
+    @status_code = response.status
 
     nil
   rescue Excon::Errors::Timeout
