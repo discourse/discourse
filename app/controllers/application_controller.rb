@@ -157,10 +157,16 @@ class ApplicationController < ActionController::Base
     opts ||= {}
     show_json_errors = (request.format && request.format.json?) ||
                        (request.xhr?) ||
-                       ((params[:external_id] || '').ends_with? '.json') ||
-                       !(current_user rescue nil)
+                       ((params[:external_id] || '').ends_with? '.json')
 
-    if show_json_errors
+    invalid_user =
+      begin
+        current_user
+      rescue Discourse::InvalidAccess
+        nil
+      end
+
+    if show_json_errors || invalid_user
       # HACK: do not use render_json_error for topics#show
       if request.params[:controller] == 'topics' && request.params[:action] == 'show'
         return render status: status_code, layout: false, plain: (status_code == 404 || status_code == 410) ? build_not_found_page(status_code) : I18n.t(type)
