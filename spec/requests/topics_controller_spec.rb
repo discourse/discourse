@@ -4,6 +4,21 @@ RSpec.describe TopicsController do
   let(:topic) { Fabricate(:topic) }
   let(:user) { Fabricate(:user) }
 
+  describe '#show' do
+    let(:private_topic) { Fabricate(:private_message_topic) }
+
+    describe 'when topic is not allowed' do
+      it 'should return the right response' do
+        sign_in(user)
+
+        get "/t/#{private_topic.id}.json"
+
+        expect(response.status).to eq(403)
+        expect(response.body).to eq(I18n.t('invalid_access'))
+      end
+    end
+  end
+
   describe '#timings' do
     let(:post_1) { Fabricate(:post, topic: topic) }
 
