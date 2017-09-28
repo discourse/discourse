@@ -18,7 +18,11 @@ module Jobs
       ].map do |url|
         if url.present?
           url = url.dup
-          url.gsub!(s3_cdn_hostname, s3_hostname) if s3_cdn_hostname.present?
+
+          if s3_cdn_hostname.present? && s3_hostname.present?
+            url.gsub!(s3_cdn_hostname, s3_hostname)
+          end
+
           url[base_url] && url[url.index(base_url)..-1]
         else
           nil
