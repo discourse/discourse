@@ -8,12 +8,16 @@ require_dependency 'mobile_detection'
 require_dependency 'category_badge'
 require_dependency 'global_path'
 require_dependency 'emoji'
+require_dependency 'multisite_class_var'
 
 module ApplicationHelper
   include CurrentUser
   include CanonicalURL::Helpers
   include ConfigurableUrls
   include GlobalPath
+  include MultisiteClassVar
+
+  multisite_class_var(:extra_body_classes) { Set.new }
 
   def google_universal_analytics_json(ua_domain_name = nil)
     result = {}
@@ -75,7 +79,7 @@ module ApplicationHelper
   end
 
   def body_classes
-    result = []
+    result = ApplicationHelper.extra_body_classes.to_a
 
     if @category && @category.url.present?
       result << "category-#{@category.url.sub(/^\/c\//, '').gsub(/\//, '-')}"
