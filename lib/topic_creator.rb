@@ -203,18 +203,22 @@ class TopicCreator
   def add_emails(topic, emails)
     return unless emails
 
-    emails = emails.split(',').flatten
-    len = 0
+    begin
+      emails = emails.split(',').flatten
+      len = 0
 
-    emails.each do |email|
-      display_name = email.split("@").first
-      user = find_or_create_user(email, display_name)
-      @added_users << user
-      topic.topic_allowed_users.build(user_id: user.id)
-      len += 1
+      emails.each do |email|
+        display_name = email.split("@").first
+
+        if user = find_or_create_user(email, display_name)
+          @added_users << user
+          topic.topic_allowed_users.build(user_id: user.id)
+          len += 1
+        end
+      end
+    ensure
+      rollback_with!(topic, :target_user_not_found) unless len == emails.length
     end
-
-    rollback_with!(topic, :target_user_not_found) unless len == emails.length
   end
 
   def add_groups(topic, groups)
@@ -239,8 +243,9 @@ class TopicCreator
   def find_or_create_user(email, display_name)
     user = User.find_by_email(email)
 
-    if user.nil? && SiteSetting.enable_staged_users
+    if !user && SiteSetting.enable_staged_users
       username = UserNameSuggester.sanitize_username(display_name) if display_name.present?
+
       user = User.create!(
         email: email,
         username: UserNameSuggester.suggest(username.presence || email),
@@ -250,8 +255,6 @@ class TopicCreator
     end
 
     user
-  rescue
-    rollback_with!(topic, :target_user_not_found)
   end
 
 end
