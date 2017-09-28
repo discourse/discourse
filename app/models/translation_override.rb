@@ -17,21 +17,16 @@ class TranslationOverride < ActiveRecord::Base
 
     translation_override = find_or_initialize_by(params)
     params.merge!(data) if translation_override.new_record?
-    i18n_changed if translation_override.update(data)
+    I18n.reload! if translation_override.update(data)
     translation_override
   end
 
   def self.revert!(locale, *keys)
     TranslationOverride.where(locale: locale, translation_key: keys).delete_all
-    i18n_changed
+    I18n.reload!
   end
 
   private
-
-    def self.i18n_changed
-      I18n.reload!
-      MessageBus.publish('/i18n-flush', refresh: true)
-    end
 
     def check_interpolation_keys
       original_text = I18n.overrides_disabled do
