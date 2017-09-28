@@ -25,4 +25,3 @@ ctx.eval(source)
 js_source = ::JSON.generate(template, quirks_mode: true)
 
 puts ctx.eval("exports.compile(#{js_source})");
-
