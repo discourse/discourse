@@ -592,7 +592,7 @@ class ApplicationController < ActionController::Base
       category_topic_ids = Category.pluck(:topic_id).compact
       @container_class = "wrap not-found-container"
       @top_viewed = TopicQuery.new(nil, except_topic_ids: category_topic_ids).list_top_for("monthly").topics.first(10)
-      @recent = Topic.where.not(id: category_topic_ids).recent(10)
+      @recent = Topic.includes(:category).where.not(id: category_topic_ids).recent(10)
       @slug =  params[:slug].class == String ? params[:slug] : ''
       @slug =  (params[:id].class == String ? params[:id] : '') if @slug.blank?
       @slug.tr!('-', ' ')
