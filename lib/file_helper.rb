@@ -20,7 +20,11 @@ class FileHelper
                     tmp_file_name:,
                     follow_redirect: false,
                     read_timeout: 5,
-                    skip_rate_limit: false)
+                    skip_rate_limit: false,
+                    verbose: nil)
+
+    # verbose logging is default while debugging onebox
+    verbose = verbose.nil? ? true : verbose
 
     url = "https:" + url if url.start_with?("//")
     raise Discourse::InvalidParameters.new(:url) unless url =~ /^https?:\/\//
@@ -32,7 +36,7 @@ class FileHelper
     ).resolve
 
     unless uri.present?
-      log(:error, "FinalDestination did not work for: #{url}")
+      log(:error, "FinalDestination did not work for: #{url}") if verbose
       return
     end
 

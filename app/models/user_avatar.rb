@@ -24,7 +24,8 @@ class UserAvatar < ActiveRecord::Base
           gravatar_url,
           max_file_size: SiteSetting.max_image_size_kb.kilobytes,
           tmp_file_name: "gravatar",
-          skip_rate_limit: true
+          skip_rate_limit: true,
+          verbose: false
         )
         if tempfile
           upload = UploadCreator.new(tempfile, 'gravatar.png', origin: gravatar_url, type: "avatar").create_for(user_id)
