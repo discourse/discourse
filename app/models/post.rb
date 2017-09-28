@@ -86,7 +86,7 @@ class Post < ActiveRecord::Base
   scope :for_mailing_list, ->(user, since) {
     q = created_since(since)
       .joins(:topic)
-      .where(topic: Topic.for_digest(user, 100.years.ago)) # we want all topics with new content, regardless when they were created
+      .where(topic: Topic.for_digest(user, Time.at(0))) # we want all topics with new content, regardless when they were created
 
     q = q.where.not(post_type: Post.types[:whisper]) unless user.staff?
 
