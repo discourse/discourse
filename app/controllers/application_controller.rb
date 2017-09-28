@@ -157,7 +157,8 @@ class ApplicationController < ActionController::Base
     opts ||= {}
     show_json_errors = (request.format && request.format.json?) ||
                        (request.xhr?) ||
-                       ((params[:external_id] || '').ends_with? '.json')
+                       ((params[:external_id] || '').ends_with? '.json') ||
+                       !(current_user rescue nil)
 
     if show_json_errors
       # HACK: do not use render_json_error for topics#show
