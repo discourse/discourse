@@ -8,10 +8,10 @@ function description(attrs) {
   if (daysSince < 30) {
     return I18n.t('dates.later.x_days', {count: daysSince});
   } else if (daysSince < 365) {
-    const gapMonths = Math.ceil(daysSince / 30);
+    const gapMonths = Math.round(daysSince / 30);
     return I18n.t('dates.later.x_months', {count: gapMonths});
   } else {
-    const gapYears = Math.ceil(daysSince / 365);
+    const gapYears = Math.round(daysSince / 365);
     return I18n.t('dates.later.x_years', {count: gapYears});
   }
 }
