@@ -17,22 +17,27 @@ function calcHeight() {
   let withoutKeyboard = window.innerHeight - 270;
   const min = 270;
 
+  // iPhone shrinks header and removes footer controls ( back / forward nav )
+  // at 39px we are at the largest viewport
+  const smallViewport = (window.screen.height - window.innerHeight) > 40;
+
   // portrait
   if (window.screen.height > window.screen.width) {
 
-    // iPhone SE
+    // iPhone SE, it is super small so just
+    // have a bit of crop
     if (window.screen.height === 568) {
       withoutKeyboard = 270;
     }
 
     // iPhone 6/7/8
     if (window.screen.height === 667) {
-      withoutKeyboard = 295;
+      withoutKeyboard = smallViewport ? 295 : 325;
     }
 
     // iPhone 6/7/8 plus
-    if (window.innerHeight === 736) {
-      withoutKeyboard = 360;
+    if (window.screen.height === 736) {
+      withoutKeyboard = smallViewport ? 353 : 383;
     }
 
     // iPad can use innerHeight cause it renders nothing in the footer
