@@ -6,7 +6,6 @@ import { includeAttributes } from 'discourse/lib/transform-post';
 import { addToolbarCallback } from 'discourse/components/d-editor';
 import { addWidgetCleanCallback } from 'discourse/components/mount-widget';
 import { createWidget, reopenWidget, decorateWidget, changeSetting } from 'discourse/widgets/widget';
-import { onPageChange } from 'discourse/lib/page-tracker';
 import { preventCloak } from 'discourse/widgets/post-stream';
 import { h } from 'virtual-dom';
 import { addFlagProperty } from 'discourse/components/site-header';
@@ -350,7 +349,8 @@ class PluginApi {
     ```
   **/
   onPageChange(fn) {
-    onPageChange(fn);
+    let appEvents = this.container.lookup('app-events:main');
+    appEvents.on('page:changed', data => fn(data.url, data.title));
   }
 
   /**
