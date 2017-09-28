@@ -1,5 +1,11 @@
 function resolve(path) {
-  return (path.indexOf('settings') === 0) ? `this.${path}` : path;
+  if (path.indexOf('settings') === 0) {
+    return `this.${path}`;
+  } else if (path.indexOf('parentState') === 0) {
+    return `attrs._${path}`;
+  }
+
+  return path;
 }
 
 function mustacheValue(node, state) {
@@ -8,7 +14,7 @@ function mustacheValue(node, state) {
   switch(path) {
     case 'attach':
       const widgetName = node.hash.pairs.find(p => p.key === "widget").value.value;
-      return `this.attach("${widgetName}", attrs, state)`;
+      return `this.attach("${widgetName}", state ? $.extend({}, attrs, { _parentState: state }) : attrs)`;
       break;
     case 'yield':
       return `this.attrs.contents()`;
