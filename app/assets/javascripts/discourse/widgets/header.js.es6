@@ -206,49 +206,54 @@ export default createWidget('header', {
   },
 
   html(attrs, state) {
-    const panels = [this.attach('header-buttons', attrs),
-                    this.attach('header-icons', { hamburgerVisible: state.hamburgerVisible,
-                                                  userVisible: state.userVisible,
-                                                  searchVisible: state.searchVisible,
-                                                  ringBackdrop: state.ringBackdrop,
-                                                  flagCount: attrs.flagCount,
-                                                  user: this.currentUser })];
 
-    if (state.searchVisible) {
-      const contextType = this.searchContextType();
+    let contents = () => {
+      const panels = [
+        this.attach('header-buttons', attrs),
+        this.attach('header-icons', {
+          hamburgerVisible: state.hamburgerVisible,
+          userVisible: state.userVisible,
+          searchVisible: state.searchVisible,
+          ringBackdrop: state.ringBackdrop,
+          flagCount: attrs.flagCount,
+          user: this.currentUser }
+        )
+      ];
 
-      if (state.searchContextType !== contextType) {
-        state.contextEnabled = undefined;
-        state.searchContextType = contextType;
-      }
+      if (state.searchVisible) {
+        const contextType = this.searchContextType();
 
-      if (state.contextEnabled === undefined) {
-        if (forceContextEnabled.includes(contextType)) {
-          state.contextEnabled = true;
+        if (state.searchContextType !== contextType) {
+          state.contextEnabled = undefined;
+          state.searchContextType = contextType;
         }
+
+        if (state.contextEnabled === undefined) {
+          if (forceContextEnabled.includes(contextType)) {
+            state.contextEnabled = true;
+          }
+        }
+
+        panels.push(this.attach('search-menu', { contextEnabled: state.contextEnabled }));
+      } else if (state.hamburgerVisible) {
+        panels.push(this.attach('hamburger-menu'));
+      } else if (state.userVisible) {
+        panels.push(this.attach('user-menu'));
       }
 
-      panels.push(this.attach('search-menu', { contextEnabled: state.contextEnabled }));
-    } else if (state.hamburgerVisible) {
-      panels.push(this.attach('hamburger-menu'));
-    } else if (state.userVisible) {
-      panels.push(this.attach('user-menu'));
-    }
+      additionalPanels.map((panel) => {
+        if (this.state[panel.toggle]) {
+          panels.push(this.attach(panel.name, panel.transformAttrs.call(this, attrs, state)));
+        }
+      });
 
-    additionalPanels.map((panel) => {
-      if (this.state[panel.toggle]) {
-        panels.push(this.attach(panel.name, panel.transformAttrs.call(this, attrs, state)));
-      }
-    });
+      return panels;
+    };
 
-    const contents = [ this.attach('home-logo', { minimized: !!attrs.topic }),
-                       h('div.panel.clearfix', panels) ];
-
-    if (attrs.topic) {
-      contents.push(this.attach('header-topic-info', attrs));
-    }
-
-    return h('div.wrap', h('div.contents.clearfix', contents));
+    let contentsAttrs = { contents, minimized: !!attrs.topic };
+    return h('div.wrap',
+      this.attach('header-contents', $.extend({}, attrs, contentsAttrs))
+    );
   },
 
   updateHighlight() {
