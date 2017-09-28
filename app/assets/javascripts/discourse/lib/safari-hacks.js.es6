@@ -28,12 +28,12 @@ function calcHeight() {
   }
 
   // iPad landscape, so we have a bigger keyboard
-  if (window.innerWidth > window.innerHeight && window.innerHeight > 690) {
+  if (window.innerWidth > window.innerHeight && window.innerHeight > 665) {
     withoutKeyboard -= 128;
   }
 
   // iPad portrait also has a bigger keyboard
-  if (window.innerWidth < window.innerHeight && window.innerHeight > 950) {
+  if (window.innerWidth < window.innerHeight && window.innerHeight > 920) {
     withoutKeyboard -= 45;
   }
 
