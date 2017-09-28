@@ -127,6 +127,10 @@ export function reopenWidget(name, opts) {
     return;
   }
 
+  if (opts.template) {
+    opts.html = opts.template;
+  }
+
   Object.keys(opts).forEach(k => existing.prototype[k] = opts[k]);
   return existing;
 }
