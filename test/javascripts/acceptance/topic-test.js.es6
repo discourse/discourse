@@ -142,6 +142,26 @@ QUnit.test("Reply as new message", assert => {
   });
 });
 
+QUnit.test("Visit topic routes", assert => {
+  visit("/t/12");
+
+  andThen(() => {
+    assert.equal(
+      find('.fancy-title').text().trim(), 'PM for testing',
+      'it routes to the right topic'
+    );
+  });
+
+  visit("/t/280/20");
+
+  andThen(() => {
+    assert.equal(
+      find('.fancy-title').text().trim(), 'Internationalization / localization',
+      'it routes to the right topic'
+    );
+  });
+});
+
 QUnit.test("Updating the topic title with emojis", assert => {
   visit("/t/internationalization-localization/280");
   click('#topic-title .d-icon-pencil');
