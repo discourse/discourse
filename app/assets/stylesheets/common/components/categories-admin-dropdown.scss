@@ -1,6 +1,10 @@
-.categories-admin-dropdown.categories-admin-dropdown.categories-admin-dropdown {
-  .select-box-body {
+.categories-admin-dropdown {
+  .body {
     min-width: auto;
     width: 250px;
+  }
+
+  .header .d-icon {
+    justify-content: space-between;
   }
 }

@@ -217,7 +217,7 @@ componentTest('supports options to limit size', {
     expandSelectBox();
 
     andThen(() => {
-      const body = find(".select-box-body");
+      const body = find(".body");
       assert.equal(parseInt(body.height()), 20, "it limits the height");
     });
   }

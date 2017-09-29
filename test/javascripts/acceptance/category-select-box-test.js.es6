@@ -11,9 +11,9 @@ QUnit.test("does not display uncategorized if not allowed", assert => {
   visit("/");
   click('#create-topic');
 
-  click(".category-select-box .select-box-header");
+  click(".category-select-box .header");
   andThen(() => {
-    assert.ok(!exists('.category-select-box .select-box-row[title="uncategorized"]'));
+    assert.ok(!exists('.category-select-box .row[title="uncategorized"]'));
   });
 });
 
