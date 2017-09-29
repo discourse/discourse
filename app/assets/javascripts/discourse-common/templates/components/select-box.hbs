@@ -11,8 +11,7 @@
 />
 
 {{component selectBoxHeaderComponent
-  text=generatedHeadertext
-  selectedTitle=selectedTitle
+  text=headerText
   focused=focused
   caretUpIcon=caretUpIcon
   caretDownIcon=caretDownIcon
@@ -20,6 +19,8 @@
   icon=icon
   expanded=expanded
   value=value
+  selectedValues=selectedValues
+  onDeselectContent=(action "onDeselectContent")
 }}
 
 <div class="select-box-body">
@@ -28,6 +29,7 @@
       {{component selectBoxFilterComponent
         onFilterChange=(action "onFilterChange")
         icon=filterIcon
+        filter=filter
         focused=filterFocused
         placeholder=filterPlaceholder
         tabindex=tabindex

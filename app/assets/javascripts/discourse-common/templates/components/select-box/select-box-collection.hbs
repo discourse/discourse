@@ -1,6 +1,6 @@
 <ul class="collection">
   {{#if none}}
-    <li {{action "onClearSelection" on="click"}} class="select-box-row clear-selection">
+    <li data-id="none" {{action "onClearSelection" on="click"}} class="select-box-row clear-selection">
       {{clearSelectionLabel}}
     </li>
   {{/if}}

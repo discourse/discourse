@@ -4,7 +4,13 @@ import { on, observes } from "ember-addons/ember-computed-decorators";
 export default SelectBoxComponent.extend({
   classNames: ['combobox'],
 
-  clearable: true,
+  actions: {
+    onSelectRow(content) {
+      this._super();
+      console.log("selecting row", content)
+      this.set("value", content);
+    }
+  }
 });
 
   // import { bufferedRender } from 'discourse-common/lib/buffered-render';

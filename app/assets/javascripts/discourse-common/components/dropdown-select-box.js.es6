@@ -7,7 +7,7 @@ export default SelectBoxComponent.extend({
   verticalOffset: 3,
   collectionHeight: "auto",
   fullWidthOnMobile: true,
-  selectBoxHeaderComponent: "dropdown-select-box/dropdown-header",
+  selectBoxHeaderComponent: "dropdown-select-box/header",
 
   @computed
   templateForRow: function() {

@@ -1,0 +1,41 @@
+.multi-combobox {
+  width: 300px;
+
+  .select-box-body {
+    width: 100%;
+  }
+
+  .choices {
+    list-style: none;
+    margin: 0;
+    padding: 5px;
+  }
+
+  .selected-value {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 5px;
+    margin: 2px 0;
+    color: $primary;
+    cursor: default;
+    border: 1px solid $primary-medium;
+    border-radius: 3px;
+    box-shadow: 0 0 2px $secondary inset, 0 1px 0 rgba(0,0,0,0.05);
+    background-clip: padding-box;
+    -webkit-touch-callout: none;
+    user-select: none;
+    background-color: $primary-low;
+
+    .d-icon {
+      margin-right: 5px;
+      color: $primary-medium;
+      cursor: pointer;
+      font-size: 12px;
+
+      &:hover {
+        color: $primary;
+      }
+    }
+  }
+}

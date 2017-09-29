@@ -5,7 +5,7 @@ export default Ember.Component.extend({
 
   classNames: ["pinned-button"],
 
-  classNameBindings: ["hidden:is-hidden"],
+  classNameBindings: ["isHidden"],
 
   @computed("topic.pinned_globally", "topic.pinned")
   reasonText(pinnedGlobally, pinned) {
@@ -16,7 +16,7 @@ export default Ember.Component.extend({
   },
 
   @computed("topic.pinned", "topic.deleted", "topic.unpinned")
-  hidden(pinned, deleted, unpinned) {
+  isHidden(pinned, deleted, unpinned) {
     return deleted || (!pinned && !unpinned);
   }
 });
