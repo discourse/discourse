@@ -6,7 +6,6 @@ require_dependency 'post_analyzer'
 require_dependency 'validators/post_validator'
 require_dependency 'plugin/filter'
 require_dependency 'email_cook'
-require_dependency 'multisite_class_var'
 
 require 'archetype'
 require 'digest/sha1'
@@ -17,9 +16,9 @@ class Post < ActiveRecord::Base
   include Searchable
   include HasCustomFields
   include LimitedEdit
-  include MultisiteClassVar
 
-  multisite_class_var(:permitted_create_params) { Set.new }
+  cattr_accessor :permitted_create_params
+  self.permitted_create_params = Set.new
 
   # increase this number to force a system wide post rebake
   BAKED_VERSION = 1

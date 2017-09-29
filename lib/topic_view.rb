@@ -2,10 +2,8 @@ require_dependency 'guardian'
 require_dependency 'topic_query'
 require_dependency 'filter_best_posts'
 require_dependency 'gaps'
-require_dependency 'multisite_class_var'
 
 class TopicView
-  include MultisiteClassVar
 
   attr_reader :topic, :posts, :guardian, :filtered_posts, :chunk_size, :print, :message_bus_last_id
   attr_accessor :draft, :draft_key, :draft_sequence, :user_custom_fields, :post_custom_fields
@@ -26,7 +24,9 @@ class TopicView
     @default_post_custom_fields ||= ["action_code_who"]
   end
 
-  multisite_class_var(:post_custom_fields_whitelisters) { Set.new }
+  def self.post_custom_fields_whitelisters
+    @post_custom_fields_whitelisters ||= Set.new
+  end
 
   def self.add_post_custom_fields_whitelister(&block)
     post_custom_fields_whitelisters << block
