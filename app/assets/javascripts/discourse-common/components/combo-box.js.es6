@@ -3,5 +3,11 @@ import SelectBoxComponent from "discourse/components/select-box";
 export default SelectBoxComponent.extend({
   classNames: ['combobox'],
 
-  clearable: true,
+  actions: {
+    onSelectRow(content) {
+      this._super();
+      console.log("selecting row", content)
+      this.set("value", content);
+    }
+  }
 });

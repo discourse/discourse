@@ -54,13 +54,15 @@ function selectBox(selector) { // eslint-disable-line no-unused-vars
       text: function() { return row.find('.text').text().trim(); },
       icon: function() { return row.find('.d-icon'); },
       title: function() { return row.attr('title'); },
-      el: function() { return row; }
+      el: row
     };
   }
 
   function headerHelper(header) {
     return {
-      text: function() { return header.find('.current-selection').text().trim(); },
+      text: function() {
+        return header.find('.selected-value').text().trim();
+      },
       icon: function() { return header.find('.icon'); },
       title: function() { return header.attr('title'); },
       el: header
@@ -113,6 +115,8 @@ function selectBox(selector) { // eslint-disable-line no-unused-vars
     row: function(id) {
       return rowHelper(find(selector).find('.select-box-row[data-id="' + id + '"]'));
     },
+
+    el: find(selector),
 
     noneRow: rowHelper(find(selector).find('.select-box-row.clear-selection')),
 

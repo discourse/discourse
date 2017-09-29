@@ -13,7 +13,7 @@ componentTest('with objects', {
     andThen(() => {
       assert.equal(selectBox('.combobox').row(1).text(), "hello");
       assert.equal(selectBox('.combobox').row(2).text(), "world");
-    })
+    });
   }
 });
 
@@ -29,7 +29,7 @@ componentTest('with valueAttribute', {
     andThen(() => {
       assert.equal(selectBox('.combobox').row(0).text(), "hello");
       assert.equal(selectBox('.combobox').row(1).text(), "world");
-    })
+    });
   }
 });
 
@@ -45,7 +45,7 @@ componentTest('with nameProperty', {
     andThen(() => {
       assert.equal(selectBox('.combobox').row(0).text(), "hello");
       assert.equal(selectBox('.combobox').row(1).text(), "world");
-    })
+    });
   }
 });
 
@@ -61,45 +61,112 @@ componentTest('with an array as content', {
     andThen(() => {
       assert.equal(selectBox('.combobox').row('evil').text(), "evil");
       assert.equal(selectBox('.combobox').row('trout').text(), "trout");
-    })
+    });
   }
 });
 
-componentTest('with none as string', {
+componentTest('with value and none as a string', {
   template: '{{combo-box content=items none="test.none" value=value}}',
   beforeEach() {
     I18n.translations[I18n.locale].js.test = {none: 'none'};
     this.set('items', ['evil', 'trout', 'hat']);
+    this.set('value', 'trout');
   },
 
   test(assert) {
     expandSelectBox('.combobox');
 
     andThen(() => {
-      assert.equal(selectBox('.combobox').noneRow.el().html().trim(), 'none');
+      assert.equal(selectBox('.combobox').noneRow.el.html().trim(), 'none');
       assert.equal(selectBox('.combobox').row("evil").text(), "evil");
       assert.equal(selectBox('.combobox').row("trout").text(), "trout");
-    })
+      assert.equal(selectBox('.combobox').header.text(), 'trout');
+      assert.equal(this.get('value'), 'trout');
+    });
+
+    selectBoxSelectRow('none', {selector: '.combobox' });
+
+    andThen(() => {
+      assert.equal(this.get('value'), null);
+    });
   }
 });
 
-componentTest('with none as an object', {
-  template: '{{combo-box content=items none=none value=value selected="something"}}',
+componentTest('with value and none as an object', {
+  template: '{{combo-box content=items none=none value=value}}',
   beforeEach() {
     this.set('none', { id: 'something', name: 'none' });
     this.set('items', ['evil', 'trout', 'hat']);
+    this.set('value', 'evil');
   },
 
   test(assert) {
     expandSelectBox('.combobox');
 
     andThen(() => {
-      assert.equal(selectBox('.combobox').noneRow.el().html().trim(), 'none');
+      assert.equal(selectBox('.combobox').noneRow.el.html().trim(), 'none');
       assert.equal(selectBox('.combobox').row("evil").text(), "evil");
       assert.equal(selectBox('.combobox').row("trout").text(), "trout");
-    })
+      assert.equal(selectBox('.combobox').header.text(), 'evil');
+      assert.equal(this.get('value'), 'evil');
+    });
 
+    selectBoxSelectRow('none', {selector: '.combobox' });
 
-    // assert.equal(this.$("select option:eq(0)").val(), 'something');
+    andThen(() => {
+      assert.equal(this.get('value'), null);
+    });
+  }
+});
+
+componentTest('with no value and none as an object', {
+  template: '{{combo-box content=items none=none value=value}}',
+  beforeEach() {
+    I18n.translations[I18n.locale].js.test = {none: 'none'};
+    this.set('none', { id: 'something', name: 'test.none' });
+    this.set('items', ['evil', 'trout', 'hat']);
+    this.set('value', null);
+  },
+
+  test(assert) {
+    expandSelectBox('.combobox');
+
+    andThen(() => {
+      assert.equal(selectBox('.combobox').header.text(), 'none');
+    });
+  }
+});
+
+componentTest('with no value and none string', {
+  template: '{{combo-box content=items none=none value=value}}',
+  beforeEach() {
+    I18n.translations[I18n.locale].js.test = {none: 'none'};
+    this.set('none', 'test.none');
+    this.set('items', ['evil', 'trout', 'hat']);
+    this.set('value', null);
+  },
+
+  test(assert) {
+    expandSelectBox('.combobox');
+
+    andThen(() => {
+      assert.equal(selectBox('.combobox').header.text(), 'none');
+    });
+  }
+});
+
+componentTest('with no value and no none', {
+  template: '{{combo-box content=items value=value}}',
+  beforeEach() {
+    this.set('items', ['evil', 'trout', 'hat']);
+    this.set('value', null);
+  },
+
+  test(assert) {
+    expandSelectBox('.combobox');
+
+    andThen(() => {
+      assert.equal(selectBox('.combobox').header.text(), 'evil', 'it sets the first row as value');
+    });
   }
 });

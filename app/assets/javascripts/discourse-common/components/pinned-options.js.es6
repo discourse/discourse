@@ -49,7 +49,7 @@ export default DropdownSelectBoxComponent.extend({
   },
 
   @computed("topic.pinned", "topic.pinned_globally")
-  generatedHeadertext(pinned, pinnedGlobally) {
+  headerText(pinned, pinnedGlobally) {
     const globally = pinnedGlobally ? "_globally" : "";
     const state = pinned ? `pinned${globally}` : "unpinned";
     const title = I18n.t(`topic_statuses.${state}.title`);

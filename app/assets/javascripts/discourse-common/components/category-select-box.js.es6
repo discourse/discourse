@@ -17,8 +17,6 @@ export default SelectBoxComponent.extend({
 
   castInteger: true,
 
-  clearable: true,
-
   allowUncategorized: null,
 
   init() {

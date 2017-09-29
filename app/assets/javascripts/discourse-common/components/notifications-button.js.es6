@@ -1,4 +1,4 @@
-import DropdownSelectBoxComponent from "discourse/components/dropdown-select-box";
+import DropdownSelectBoxComponent from "discourse-common/components/dropdown-select-box";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import computed from "ember-addons/ember-computed-decorators";
 import { buttonDetails } from "discourse/lib/notification-levels";
@@ -32,7 +32,7 @@ export default DropdownSelectBoxComponent.extend({
   },
 
   @computed("selectedTitle", "showFullTitle")
-  generatedHeadertext(selectedTitle, showFullTitle) {
+  headerText(selectedTitle, showFullTitle) {
     return showFullTitle ? selectedTitle : null;
   },
 

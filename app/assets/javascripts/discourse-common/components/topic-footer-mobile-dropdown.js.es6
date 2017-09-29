@@ -1,22 +1,12 @@
 import { observes } from 'ember-addons/ember-computed-decorators';
-import SelectBoxComponent from "discourse-common/components/select-box";
+import computed from 'ember-addons/ember-computed-decorators';
+import ComboBoxComponent from "discourse-common/components/combo-box";
 
-export default SelectBoxComponent.extend({
-  nameProperty: "name",
-
+export default ComboBoxComponent.extend({
   headerText: I18n.t("topic.controls"),
 
-  dynamicHeaderText: false,
-
-  collectionHeight: 300,
-
-  init() {
-    this._super();
-
-    this._createContent();
-  },
-
-  _createContent() {
+  @computed
+  content() {
     const content = [];
     const topic = this.get('topic');
     const details = topic.get('details');
@@ -37,7 +27,7 @@ export default SelectBoxComponent.extend({
       content.push({ id: 'flag', icon: 'flag', name: I18n.t('topic.flag_topic.title') });
     }
 
-    this.set('content', content);
+    return content;
   },
 
   @observes('value')

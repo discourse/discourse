@@ -21,6 +21,6 @@ QUnit.test("prefill category when category_id is set", assert => {
   visit("/new-topic?category_id=1");
 
   andThen(() => {
-    assert.equal(find('.category-select-box .current-selection').html().trim(), "bug");
+    assert.equal(find('.category-select-box .selected-value').html().trim(), "bug");
   });
 });

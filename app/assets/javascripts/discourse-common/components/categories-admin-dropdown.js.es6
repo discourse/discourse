@@ -1,4 +1,4 @@
-import DropdownSelectBoxComponent from "discourse/components/dropdown-select-box";
+import DropdownSelectBoxComponent from "discourse-common/components/dropdown-select-box";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import computed from "ember-addons/ember-computed-decorators";
 
@@ -7,14 +7,14 @@ export default DropdownSelectBoxComponent.extend({
 
   icon: `${iconHTML('bars')}${iconHTML('caret-down')}`.htmlSafe(),
 
-  generatedHeadertext: null,
+  headerText: null,
 
   @computed
   content() {
     const items = [
       {
         id: "create",
-        text: I18n.t("category.create"),
+        name: I18n.t("category.create"),
         description: I18n.t("category.create_long"),
         icon: "plus"
       }
@@ -24,7 +24,7 @@ export default DropdownSelectBoxComponent.extend({
     if (includeReorder) {
       items.push({
         id: "reorder",
-        text: I18n.t("categories.reorder.title"),
+        name: I18n.t("categories.reorder.title"),
         description: I18n.t("categories.reorder.title_long"),
         icon: "random"
       });

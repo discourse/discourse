@@ -29,7 +29,7 @@ export default NotificationOptionsComponent.extend({
   },
 
   @computed("value", "showFullTitle")
-  generatedHeadertext(value, showFullTitle) {
+  headerText(value, showFullTitle) {
     if (showFullTitle) {
       const details = buttonDetails(value);
       return I18n.t(`topic.notifications.${details.key}.title`);
