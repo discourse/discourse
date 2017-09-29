@@ -1,5 +1,7 @@
 template = <<~HBS
   {{attach widget="widget-name" attrs=attrs}}
+  {{a}}
+  {{{htmlValue}}}
   {{#if state.category}}
     {{attach widget="category-display" attrs=(hash category=state.category)}}
   {{/if}}
