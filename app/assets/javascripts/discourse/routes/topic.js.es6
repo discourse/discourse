@@ -1,4 +1,5 @@
 import DiscourseURL from 'discourse/lib/url';
+import { ID_CONSTRAINT } from 'discourse/models/topic';
 
 let isTransitioning = false,
     scheduledReplace = null,
@@ -157,6 +158,10 @@ const TopicRoute = Discourse.Route.extend({
   },
 
   model(params, transition) {
+    if (params.slug.match(ID_CONSTRAINT)) {
+      return DiscourseURL.routeTo(`/t/topic/${params.slug}/${params.id}`, { replaceURL: true });
+    };
+
     const queryParams = transition.queryParams;
 
     let topic = this.modelFor('topic');

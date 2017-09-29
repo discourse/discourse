@@ -9,7 +9,8 @@ export default function() {
     this.route('fromParams', { path: '/' });
     this.route('fromParamsNear', { path: '/:nearPost' });
   });
-  this.route('topicBySlug', { path: '/t/:slug', resetNamespace: true });
+
+  this.route('topicBySlugOrId', { path: '/t/:slugOrId', resetNamespace: true });
   this.route('topicUnsubscribe', { path: '/t/:slug/:id/unsubscribe' });
 
   this.route('discovery', { path: '/', resetNamespace: true }, function() {
