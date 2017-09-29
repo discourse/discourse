@@ -12,12 +12,12 @@ componentTest('the header has a title', {
 
   test(assert) {
     andThen(() => {
-      assert.equal(find(".select-box-header .btn").attr("title"), "apple", "it has the correct title");
+      assert.equal(find(".header .btn").attr("title"), "apple", "it has the correct title");
     });
 
     andThen(() => {
       this.set("value", 2);
-      assert.equal(find(".select-box-header .btn").attr("title"), "peach", "it correctly changes the title");
+      assert.equal(find(".header .btn").attr("title"), "peach", "it correctly changes the title");
     });
   }
 });

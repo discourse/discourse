@@ -1,17 +1,16 @@
-.dropdown-select-box.dropdown-select-box {
+.dropdown-select-box {
   display: inline-flex;
   height: 30px;
   min-width: auto;
 
   &.is-expanded {
     .collection,
-    .select-box-collection,
-    .select-box-body {
+    .body {
       border-radius: 0;
     }
   }
 
-  .select-box-body {
+  .body {
     border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
     background-clip: padding-box;
     box-shadow: 0 1px 5px rgba(0,0,0,0.4);
@@ -19,7 +18,7 @@
     width: 300px;
   }
 
-  .select-box-row {
+  .row {
     margin: 0;
     padding: 10px 5px;
 
@@ -76,11 +75,11 @@
     }
   }
 
-  .select-box-collection {
+  .collection {
     padding: 0;
   }
 
-  .dropdown-header {
+  .dropdown-select-box-header {
     padding: 0;
     border: 0;
     outline: 0;

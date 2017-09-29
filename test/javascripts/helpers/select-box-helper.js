@@ -15,7 +15,7 @@ Ember.Test.registerAsyncHelper('expandSelectBox', function(app, selectBoxSelecto
 
   checkSelectBoxIsNotExpanded(selectBoxSelector);
 
-  click(selectBoxSelector + ' .select-box-header');
+  click(selectBoxSelector + ' .header');
 });
 
 Ember.Test.registerAsyncHelper('collapseSelectBox', function(app, selectBoxSelector) {
@@ -23,7 +23,7 @@ Ember.Test.registerAsyncHelper('collapseSelectBox', function(app, selectBoxSelec
 
   checkSelectBoxIsNotCollapsed(selectBoxSelector);
 
-  click(selectBoxSelector + ' .select-box-header');
+  click(selectBoxSelector + ' .header');
 });
 
 Ember.Test.registerAsyncHelper('selectBoxSelectRow', function(app, rowId, options) {
@@ -32,12 +32,12 @@ Ember.Test.registerAsyncHelper('selectBoxSelectRow', function(app, rowId, option
 
   checkSelectBoxIsNotCollapsed(options.selector);
 
-  click(options.selector + " .select-box-row[data-id='" + rowId + "']");
+  click(options.selector + " .row[data-id='" + rowId + "']");
 });
 
 Ember.Test.registerAsyncHelper('selectBoxFillInFilter', function(app, filter, options) {
   options = options || {};
-  options.selector = options.selector || '.select-box';
+  options.selector = options.selector || '.select-box-kit';
 
   checkSelectBoxIsNotCollapsed(options.selector);
 
@@ -106,22 +106,22 @@ function selectBox(selector) { // eslint-disable-line no-unused-vars
 
     isHidden: find(selector).hasClass('is-hidden'),
 
-    header: headerHelper(find(selector).find('.select-box-header')),
+    header: headerHelper(find(selector).find('.header')),
 
-    filter: filterHelper(find(selector).find('.select-box-filter')),
+    filter: filterHelper(find(selector).find('.filter')),
 
-    rows: find(selector).find('.select-box-row'),
+    rows: find(selector).find('.row'),
 
     row: function(id) {
-      return rowHelper(find(selector).find('.select-box-row[data-id="' + id + '"]'));
+      return rowHelper(find(selector).find('.row[data-id="' + id + '"]'));
     },
 
     el: find(selector),
 
-    noneRow: rowHelper(find(selector).find('.select-box-row.clear-selection')),
+    noneRow: rowHelper(find(selector).find('.row.clear-selection')),
 
-    selectedRow: rowHelper(find(selector).find('.select-box-row.is-selected')),
+    selectedRow: rowHelper(find(selector).find('.row.is-selected')),
 
-    highlightedRow: rowHelper(find(selector).find('.select-box-row.is-highlighted'))
+    highlightedRow: rowHelper(find(selector).find('.row.is-highlighted'))
   };
 }

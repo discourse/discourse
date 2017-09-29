@@ -1,0 +1,26 @@
+{{#if none}}
+  <li data-id="none" {{action "onClearSelection" on="click"}} class="row clear-selection">
+    {{clearSelectionLabel}}
+  </li>
+{{/if}}
+
+{{#each filteredContent as |content|}}
+  {{component rowComponent
+    content=content
+    templateForRow=templateForRow
+    idForRow=idForRow
+    titleForRow=titleForRow
+    shouldHighlightRow=shouldHighlightRow
+    shouldSelectRow=shouldSelectRow
+    highlightedValue=highlightedValue
+    onSelect=onSelectRow
+    onHover=onHoverRow
+    value=value
+  }}
+{{else}}
+  {{#if noContentLabel}}
+    <li class="row no-content">
+      {{noContentLabel}}
+    </li>
+  {{/if}}
+{{/each}}

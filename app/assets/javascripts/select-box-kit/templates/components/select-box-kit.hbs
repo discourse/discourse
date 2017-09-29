@@ -1,0 +1,59 @@
+<input
+  class="offscreen"
+  type="text"
+  aria-haspopup="true"
+  role="button"
+  aria-labelledby="select-box-kit-input-{{componentId}}"
+  tabindex={{tabindex}}
+  name={{name}}
+  id={{id}}
+  value={{value}}
+/>
+
+{{component headerComponent
+  text=headerText
+  isFocused=isFocused
+  caretUpIcon=caretUpIcon
+  caretDownIcon=caretDownIcon
+  onToggle=(action "onToggle")
+  icon=icon
+  isExpanded=isExpanded
+  value=value
+  selectedValues=selectedValues
+  onDeselectContent=(action "onDeselectContent")
+}}
+
+<div class="body">
+  {{#if renderBody}}
+    {{#if filterable}}
+      {{component filterComponent
+        onFilterChange=(action "onFilterChange")
+        icon=filterIcon
+        filter=filter
+        focused=filterFocused
+        placeholder=filterPlaceholder
+        tabindex=tabindex
+      }}
+    {{/if}}
+
+    {{component collectionComponent
+      none=none
+      clearSelectionLabel=clearSelectionLabel
+      filteredContent=filteredContent
+      rowComponent=rowComponent
+      templateForRow=templateForRow
+      shouldHighlightRow=shouldHighlightRow
+      shouldSelectRow=shouldSelectRow
+      titleForRow=titleForRow
+      idForRow=idForRow
+      onSelectRow=(action "onSelectRow")
+      onHoverRow=(action "onHoverRow")
+      onClearSelection=(action "onClearSelection")
+      noContentLabel=noContentLabel
+      highlightedValue=highlightedValue
+      value=value
+    }}
+  {{/if}}
+</div>
+
+<div class="wrapper"></div>
