@@ -64,7 +64,12 @@ function mustacheValue(node, state) {
       return `__iN("${icon}")`;
       break;
     default:
-      return `${resolve(path)}`;
+      if (node.escaped) {
+        return `${resolve(path)}`;
+      } else {
+        state.helpersUsed.rawHtml = true;
+        return `new __rH({ html: '<span>' + ${resolve(path)} + '</span>'})`;
+      }
       break;
   }
 }
@@ -180,7 +185,10 @@ function compile(template) {
 
   let imports = '';
   if (compiler.state.helpersUsed.iconNode) {
-    imports = "var __iN = Discourse.__widget_helpers.iconNode; ";
+    imports += "var __iN = Discourse.__widget_helpers.iconNode; ";
+  }
+  if (compiler.state.helpersUsed.rawHtml) {
+    imports += "var __rH = Discourse.__widget_helpers.rawHtml; ";
   }
 
   return `function(attrs, state) { ${imports}var _r = [];\n${code}\nreturn _r; }`;
