@@ -167,6 +167,12 @@ class ApplicationController < ActionController::Base
 
       render_json_error I18n.t(opts[:custom_message] || type), type: type, status: status_code
     else
+      begin
+        current_user
+      rescue Discourse::InvalidAccess
+        return render plain: I18n.t(type), status: status_code
+      end
+
       render html: build_not_found_page(status_code, opts[:include_ember] ? 'application' : 'no_ember')
     end
   end
