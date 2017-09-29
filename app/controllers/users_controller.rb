@@ -864,12 +864,12 @@ class UsersController < ApplicationController
         :website,
         :dismissed_banner_key,
         :profile_background,
-        :card_background,
-        :muted_category_ids,
-        :watched_category_ids,
-        :tracked_category_ids,
-        :watched_first_post_category_ids
-      ] + UserUpdater::OPTION_ATTR
+        :card_background
+      ]
+
+      permitted.concat UserUpdater::OPTION_ATTR
+      permitted.concat UserUpdater::CATEGORY_IDS.keys.map { |k| { k => [] } }
+      permitted.concat UserUpdater::TAG_NAMES.keys.map { |k| { k => [] } }
 
       result = params
         .permit(permitted)
