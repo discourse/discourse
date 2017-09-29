@@ -14,7 +14,6 @@ module ApplicationHelper
   include CanonicalURL::Helpers
   include ConfigurableUrls
   include GlobalPath
-  include MultisiteClassVar
 
   def self.extra_body_classes
     @extra_body_classes ||= Set.new
