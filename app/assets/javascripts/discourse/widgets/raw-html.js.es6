@@ -4,7 +4,7 @@ export default class RawHtml {
   }
 
   init() {
-    const $html = $.parseHTML(this.html);
+    const $html = $(this.html);
     this.decorate($html);
     return $html[0];
   }
