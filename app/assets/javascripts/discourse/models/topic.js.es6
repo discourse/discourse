@@ -29,6 +29,8 @@ export function loadTopicView(topic, args) {
   });
 }
 
+export const ID_CONSTRAINT = /^\d+$/;
+
 const Topic = RestModel.extend({
   message: null,
   errorLoading: false,
