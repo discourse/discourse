@@ -8,7 +8,6 @@ require_dependency 'mobile_detection'
 require_dependency 'category_badge'
 require_dependency 'global_path'
 require_dependency 'emoji'
-require_dependency 'multisite_class_var'
 
 module ApplicationHelper
   include CurrentUser
@@ -17,7 +16,9 @@ module ApplicationHelper
   include GlobalPath
   include MultisiteClassVar
 
-  multisite_class_var(:extra_body_classes) { Set.new }
+  def self.extra_body_classes
+    @extra_body_classes ||= Set.new
+  end
 
   def google_universal_analytics_json(ua_domain_name = nil)
     result = {}

@@ -1,24 +1,29 @@
 require_dependency 'avatar_lookup'
 require_dependency 'primary_group_lookup'
-require_dependency 'multisite_class_var'
 
 class TopicList
   include ActiveModel::Serialization
-  include MultisiteClassVar
 
-  multisite_class_var(:preloaded_custom_fields) { Set.new }
-  multisite_class_var(:preload_callbacks) { Set.new }
+  cattr_accessor :preloaded_custom_fields
+  self.preloaded_custom_fields = Set.new
 
   def self.on_preload(&blk)
-    preload_callbacks << blk
+    (@preload ||= Set.new) << blk
   end
 
   def self.cancel_preload(&blk)
-    preload_callbacks.delete(blk)
+    if @preload
+      @preload.delete blk
+      if @preload.length == 0
+        @preload = nil
+      end
+    end
   end
 
   def self.preload(topics, object)
-    preload_callbacks.each { |p| p.call(topics, object) }
+    if @preload
+      @preload.each { |preload| preload.call(topics, object) }
+    end
   end
 
   attr_accessor :more_topics_url,
@@ -112,8 +117,8 @@ class TopicList
       ft.topic_list = self
     end
 
-    if self.class.preloaded_custom_fields.present?
-      Topic.preload_custom_fields(@topics, self.class.preloaded_custom_fields)
+    if preloaded_custom_fields.present?
+      Topic.preload_custom_fields(@topics, preloaded_custom_fields)
     end
 
     TopicList.preload(@topics, self)
