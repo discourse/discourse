@@ -71,7 +71,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
         type: 'POST'
       }).then(function (result) {
         // Successful login
-        if (result.error) {
+        if (result && result.error) {
           self.set('loggingIn', false);
           if (result.reason === 'not_activated') {
             self.send('showNotActivated', {
