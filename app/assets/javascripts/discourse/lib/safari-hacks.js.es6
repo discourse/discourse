@@ -19,10 +19,10 @@ function calcHeight() {
 
   // iPhone shrinks header and removes footer controls ( back / forward nav )
   // at 39px we are at the largest viewport
-  const smallViewport = (window.screen.height - window.innerHeight) > 40;
+  const portrait = window.innerHeight > window.innerWidth;
+  const smallViewport = ((portrait ? window.screen.height : window.screen.width) - window.innerHeight) > 40;
 
-  // portrait
-  if (window.screen.height > window.screen.width) {
+  if (portrait) {
 
     // iPhone SE, it is super small so just
     // have a bit of crop
@@ -39,24 +39,22 @@ function calcHeight() {
     if (window.screen.height === 736) {
       withoutKeyboard = smallViewport ? 353 : 383;
     }
-
     // iPad can use innerHeight cause it renders nothing in the footer
     if (window.innerHeight > 920) {
       withoutKeyboard -= 45;
     }
 
   } else {
+
     // landscape
-    //
     // iPad, we have a bigger keyboard
-    if (window.innerWidth > window.innerHeight && window.innerHeight > 665) {
+    if (window.innerHeight > 665) {
       withoutKeyboard -= 128;
     }
   }
 
 
   // iPad portrait also has a bigger keyboard
-
   return Math.max(withoutKeyboard, min);
 }
 

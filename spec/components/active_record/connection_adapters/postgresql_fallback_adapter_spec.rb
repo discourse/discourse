@@ -93,7 +93,7 @@ describe ActiveRecord::ConnectionHandling do
         expect(Discourse.readonly_mode?).to eq(false)
         expect(postgresql_fallback_handler.master_down?).to eq(nil)
         expect(ActiveRecord::Base.connection_pool.connections.count).to eq(0)
-
+        
         print Thread.list
 
         expect(ActiveRecord::Base.connection)

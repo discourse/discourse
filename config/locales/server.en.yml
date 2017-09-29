@@ -1063,6 +1063,7 @@ en:
     gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCDEF"
     enable_escaped_fragments: "Fall back to Google's Ajax-Crawling API if no webcrawler is detected. See https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
     allow_moderators_to_create_categories: "Allow moderators to create new categories"
+    crawler_user_agents: "List of user agents that are considered crawlers and served static HTML instead of JavaScript payload"
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
     use_admin_ip_whitelist: "Admins can only log in if they are at an IP address defined in the Screened IPs list (Admin > Logs > Screened Ips)."
     blacklist_ip_blocks: "A list of private IP blocks that should never be crawled by Discourse"

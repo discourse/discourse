@@ -308,6 +308,7 @@ class Group < ActiveRecord::Base
   def self.ensure_consistency!
     reset_all_counters!
     refresh_automatic_groups!
+    refresh_has_messages!
   end
 
   def self.reset_all_counters!
@@ -329,6 +330,18 @@ class Group < ActiveRecord::Base
   def self.refresh_automatic_groups!(*args)
     args = AUTO_GROUPS.keys if args.empty?
     args.each { |group| refresh_automatic_group!(group) }
+  end
+
+  def self.refresh_has_messages!
+    exec_sql <<-SQL
+      UPDATE groups g SET has_messages = false
+      WHERE NOT EXISTS (SELECT tg.id
+                          FROM topic_allowed_groups tg
+                    INNER JOIN topics t ON t.id = tg.topic_id
+                         WHERE tg.group_id = g.id
+                           AND t.deleted_at IS NULL)
+      AND g.has_messages = true
+    SQL
   end
 
   def self.ensure_automatic_groups!
