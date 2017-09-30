@@ -100,8 +100,11 @@ class TagsController < ::ApplicationController
   def destroy
     guardian.ensure_can_admin_tags!
     tag_name = params[:tag_id]
+    tag = Tag.find_by_name(tag_name)
+    raise Discourse::NotFound if tag.nil?
+
     TopicCustomField.transaction do
-      Tag.find_by_name(tag_name).destroy
+      tag.destroy
       StaffActionLogger.new(current_user).log_custom('deleted_tag', subject: tag_name)
     end
     render json: success_json
