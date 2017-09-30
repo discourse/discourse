@@ -190,4 +190,30 @@ describe TagsController do
       end
     end
   end
+
+  describe 'destroy' do
+    context 'tagging enabled' do
+      before do
+        log_in(:admin)
+        SiteSetting.tagging_enabled = true
+      end
+
+      context 'with an existent tag name' do
+        it 'deletes the tag' do
+          tag = Fabricate(:tag)
+          delete :destroy, params: { tag_id: tag.name }, format: :json
+          expect(response).to be_success
+        end
+      end
+
+      context 'with a nonexistent tag name' do
+        it 'returns a tag not found message' do
+          delete :destroy, params: { tag_id: 'idontexist' }, format: :json
+          expect(response).not_to be_success
+          json = ::JSON.parse(response.body)
+          expect(json['error_type']).to eq('not_found')
+        end
+      end
+    end
+  end
 end
