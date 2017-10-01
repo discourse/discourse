@@ -1435,7 +1435,7 @@ user_api:
     default: ''
     hidden: true
   min_trust_level_for_user_api_key:
-    default: 1
+    default: 0
     enum: 'TrustLevelSetting'
   allowed_user_api_push_urls:
     default: ''
