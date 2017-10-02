@@ -164,7 +164,7 @@ describe UploadsController do
             for_private_message: "true",
             format: :json
           }
-        end.first
+        end.find { |m| m.channel = '/uploads/composer' }
 
         expect(response).to be_success
         expect(message.data["id"]).to be
