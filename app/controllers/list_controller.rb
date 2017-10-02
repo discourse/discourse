@@ -331,6 +331,8 @@ class ListController < ApplicationController
 
   def build_topic_list_options
     options = {}
+    params[:page] = params[:page].to_i rescue 1
+
     TopicQuery.public_valid_options.each do |key|
       options[key] = params[key]
     end
