@@ -604,6 +604,7 @@ en:
       admin_tooltip: "This user is an admin"
       blocked_tooltip: "This user is blocked"
       suspended_notice: "This user is suspended until {{date}}."
+      suspended_permanently: "This user is suspended."
       suspended_reason: "Reason: "
       github_profile: "Github"
       email_activity_summary: "Activity Summary"
@@ -1568,6 +1569,7 @@ en:
         this_weekend: "This weekend"
         next_week: "Next week"
         next_month: "Next month"
+        forever: "Forever"
         pick_date_and_time: "Pick date and time"
         set_based_on_last_post: "Close based on last post"
       publish_to_category:
