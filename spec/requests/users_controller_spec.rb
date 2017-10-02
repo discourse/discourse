@@ -85,4 +85,136 @@ RSpec.describe UsersController do
       end
     end
   end
+
+  describe "search_users" do
+    let(:topic) { Fabricate :topic }
+    let(:user)  { Fabricate :user, username: "joecabot", name: "Lawrence Tierney" }
+    let(:post1) { Fabricate(:post, user: user, topic: topic) }
+
+    before do
+      SearchIndexer.enable
+      post1
+    end
+
+    it "searches when provided the term only" do
+      get "/u/search/users.json", params: { term: user.name.split(" ").last }
+      expect(response).to be_success
+      json = JSON.parse(response.body)
+      expect(json["users"].map { |u| u["username"] }).to include(user.username)
+    end
+
+    it "searches when provided the topic only" do
+      get "/u/search/users.json", params: { topic_id: topic.id }
+      expect(response).to be_success
+      json = JSON.parse(response.body)
+      expect(json["users"].map { |u| u["username"] }).to include(user.username)
+    end
+
+    it "searches when provided the term and topic" do
+      get "/u/search/users.json", params: {
+        term: user.name.split(" ").last, topic_id: topic.id
+      }
+
+      expect(response).to be_success
+      json = JSON.parse(response.body)
+      expect(json["users"].map { |u| u["username"] }).to include(user.username)
+    end
+
+    it "searches only for users who have access to private topic" do
+      privileged_user = Fabricate(:user, trust_level: 4, username: "joecabit", name: "Lawrence Tierney")
+      privileged_group = Fabricate(:group)
+      privileged_group.add(privileged_user)
+      privileged_group.save
+
+      category = Fabricate(:category)
+      category.set_permissions(privileged_group => :readonly)
+      category.save
+
+      private_topic = Fabricate(:topic, category: category)
+
+      get "/u/search/users.json", params: {
+        term: user.name.split(" ").last, topic_id: private_topic.id, topic_allowed_users: "true"
+      }
+
+      expect(response).to be_success
+      json = JSON.parse(response.body)
+      expect(json["users"].map { |u| u["username"] }).to_not include(user.username)
+      expect(json["users"].map { |u| u["username"] }).to include(privileged_user.username)
+    end
+
+    context "when `enable_names` is true" do
+      before do
+        SiteSetting.enable_names = true
+      end
+
+      it "returns names" do
+        get "/u/search/users.json", params: { term: user.name }
+        json = JSON.parse(response.body)
+        expect(json["users"].map { |u| u["name"] }).to include(user.name)
+      end
+    end
+
+    context "when `enable_names` is false" do
+      before do
+        SiteSetting.enable_names = false
+      end
+
+      it "returns names" do
+        get "/u/search/users.json", params: { term: user.name }
+        json = JSON.parse(response.body)
+        expect(json["users"].map { |u| u["name"] }).not_to include(user.name)
+      end
+    end
+
+    context 'groups' do
+      let!(:mentionable_group) { Fabricate(:group, mentionable_level: 99, messageable_level: 0) }
+      let!(:messageable_group) { Fabricate(:group, mentionable_level: 0, messageable_level: 99) }
+
+      describe 'when signed in' do
+        before do
+          sign_in(user)
+        end
+
+        it "searches for messageable groups" do
+          get "/u/search/users.json", params: {
+            include_mentionable_groups: 'false',
+            include_messageable_groups: 'true'
+          }
+
+          expect(response).to be_success
+          expect(JSON.parse(response.body)["groups"].first['name']).to eq(messageable_group.name)
+        end
+
+        it 'searches for mentionable groups' do
+          get "/u/search/users.json", params: {
+            include_messageable_groups: 'false',
+            include_mentionable_groups: 'true'
+          }
+
+          expect(response).to be_success
+          expect(JSON.parse(response.body)["groups"].first['name']).to eq(mentionable_group.name)
+        end
+      end
+
+      describe 'when not signed in' do
+        it 'should not include mentionable/messageable groups' do
+          get "/u/search/users.json", params: {
+            include_mentionable_groups: 'false',
+            include_messageable_groups: 'true'
+          }
+
+          expect(response).to be_success
+          expect(JSON.parse(response.body)["groups"]).to eq(nil)
+
+          get "/u/search/users.json", params: {
+            include_messageable_groups: 'false',
+            include_mentionable_groups: 'true'
+          }
+
+          expect(response).to be_success
+          expect(JSON.parse(response.body)["groups"]).to eq(nil)
+        end
+      end
+    end
+  end
 end
