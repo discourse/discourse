@@ -157,14 +157,12 @@ after_initialize do
 
             messagebus_channel = Presence::PresenceManager.get_messagebus_channel(type, id)
 
-            {
+            payload = {
               messagebus_channel: messagebus_channel,
               messagebus_id: MessageBus.last_id(messagebus_channel),
               users: serialized_users
             }
           end
-        else
-          {}
         end
       end
 
