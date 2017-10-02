@@ -194,21 +194,9 @@
 
 .mobile-view {
   .flagged-posts {
-    .flagged-post-details {
-      flex-wrap: wrap;
-      justify-content: flex-start;
-
-      .flagged-post-avatar {
-        margin-right: 10px;
-      }
-
-      .flagged-post-excerpt {
-        width: 70%;
-      }
-
-      .flaggers {
-        margin-left: 4em;
-        margin-bottom: 1em;
+    .flagged-post {
+      .flag-user-lists {
+        display: block;
       }
     }
   }
