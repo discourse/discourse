@@ -8,6 +8,7 @@ const TOMORROW = 'tomorrow';
 const LATER_THIS_WEEK = 'later_this_week';
 const THIS_WEEKEND = 'this_weekend';
 const NEXT_WEEK = 'next_week';
+const TWO_WEEKS = 'two_weeks';
 const NEXT_MONTH = 'next_month';
 const FOREVER = 'forever';
 
@@ -46,13 +47,12 @@ export default Combobox.extend({
       });
     }
 
-    if (day < 5) {
+    if (day < 5 && this.get('includeWeekend')) {
       selections.push({
         id: THIS_WEEKEND,
         name: I18n.t('topic.auto_update_input.this_weekend')
       });
     }
-
 
     if (day !== 7)  {
       selections.push({
@@ -60,6 +60,11 @@ export default Combobox.extend({
         name: I18n.t('topic.auto_update_input.next_week')
       });
     }
+
+    selections.push({
+      id: TWO_WEEKS,
+      name: I18n.t('topic.auto_update_input.two_weeks')
+    });
 
     if (moment().endOf('month').date() !== now.date()) {
       selections.push({
@@ -127,7 +132,7 @@ export default Combobox.extend({
     if (time) {
       if (state.id === LATER_TODAY) {
         time = time.format('h a');
-      } else if (state.id === NEXT_MONTH) {
+      } else if (state.id === NEXT_MONTH || state.id === TWO_WEEKS) {
         time = time.format('MMM D');
       } else {
         time = time.format('ddd, h a');
@@ -173,6 +178,10 @@ export default Combobox.extend({
         break;
       case NEXT_WEEK:
         time = time.add(1, 'week').day(1).hour(timeOfDay).minute(0);
+        icon = 'briefcase';
+        break;
+      case TWO_WEEKS:
+        time = time.add(2, 'week').hour(timeOfDay).minute(0);
         icon = 'briefcase';
         break;
       case NEXT_MONTH:
