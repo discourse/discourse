@@ -63,7 +63,9 @@ module TopicGuardian
   end
 
   def can_convert_topic?(topic)
+    return false if topic.blank?
     return false if topic && topic.trashed?
+    return false if Category.where("topic_id = ?", topic.id).exists?
     return true if is_admin?
     is_moderator? && can_create_post?(topic)
   end
