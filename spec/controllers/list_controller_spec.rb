@@ -28,11 +28,6 @@ describe ListController do
       parsed = JSON.parse(response.body)
       expect(parsed["topic_list"]["topics"].length).to eq(1)
     end
-
-    it "doesn't throw an error with a negative page" do
-      get :top, params: { page: -1024 }
-      expect(response).to be_success
-    end
   end
 
   describe 'RSS feeds' do
