@@ -184,10 +184,13 @@ describe DiscourseRedis do
 
       it 'should fallback to the master server once it is up' do
         fallback_handler.master = false
-        Redis::Client.any_instance.expects(:call).with([:info]).returns(DiscourseRedis::FallbackHandler::MASTER_LINK_STATUS)
+        redis_connection = DiscourseRedis.raw_connection.client
+        Redis::Client.expects(:new).with(DiscourseRedis.slave_config).returns(redis_connection)
+
+        redis_connection.expects(:call).with([:info]).returns(DiscourseRedis::FallbackHandler::MASTER_LINK_STATUS)
 
         DiscourseRedis::FallbackHandler::CONNECTION_TYPES.each do |connection_type|
-          Redis::Client.any_instance.expects(:call).with([:client, [:kill, 'type', connection_type]])
+          redis_connection.expects(:call).with([:client, [:kill, 'type', connection_type]])
         end
 
         expect(fallback_handler.initiate_fallback_to_master).to eq(true)
