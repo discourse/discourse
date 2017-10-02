@@ -109,6 +109,12 @@ class Plugin::Instance
     end
   end
 
+  def rescue_from(exception, &block)
+    reloadable_patch do |plugin|
+      ::ApplicationController.rescue_from(exception, &block)
+    end
+  end
+
   # Extend a class but check that the plugin is enabled
   # for class methods use `add_class_method`
   def add_to_class(class_name, attr, &block)
