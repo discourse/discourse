@@ -100,71 +100,75 @@ after_initialize do
     before_action :ensure_logged_in
 
     def publish
-      data = params.permit(:response_needed,
-              current: [:action, :topic_id, :post_id],
-              previous: [:action, :topic_id, :post_id]
-              )
+      data = params.permit(
+        :response_needed,
+        current: [:action, :topic_id, :post_id],
+        previous: [:action, :topic_id, :post_id]
+      )
 
-      if data[:previous] &&
-          data[:previous][:action].in?(['edit', 'reply'])
+      payload = {}
 
+      if data[:previous] && data[:previous][:action].in?(['edit', 'reply'])
         type = data[:previous][:post_id] ? 'post' : 'topic'
         id = data[:previous][:post_id] ? data[:previous][:post_id] : data[:previous][:topic_id]
 
         topic =
           if type == 'post'
-            Post.find_by(id: id).topic
+            Post.find_by(id: id)&.topic
           else
             Topic.find_by(id: id)
           end
 
-        guardian.ensure_can_see!(topic)
+        if topic
+          guardian.ensure_can_see!(topic)
 
-        any_changes = false
-        any_changes ||= Presence::PresenceManager.remove(type, id, current_user.id)
-        any_changes ||= Presence::PresenceManager.cleanup(type, id)
+          any_changes = false
+          any_changes ||= Presence::PresenceManager.remove(type, id, current_user.id)
+          any_changes ||= Presence::PresenceManager.cleanup(type, id)
 
-        users = Presence::PresenceManager.publish(type, id) if any_changes
+          users = Presence::PresenceManager.publish(type, id) if any_changes
+        end
       end
 
-      if data[:current] &&
-          data[:current][:action].in?(['edit', 'reply'])
-
+      if data[:current] && data[:current][:action].in?(['edit', 'reply'])
         type = data[:current][:post_id] ? 'post' : 'topic'
         id = data[:current][:post_id] ? data[:current][:post_id] : data[:current][:topic_id]
 
         topic =
           if type == 'post'
-            Post.find_by!(id: id).topic
+            Post.find_by(id: id)&.topic
           else
-            Topic.find_by!(id: id)
+            Topic.find_by(id: id)
           end
 
-        guardian.ensure_can_see!(topic)
+        if topic
+          guardian.ensure_can_see!(topic)
 
-        any_changes = false
-        any_changes ||= Presence::PresenceManager.add(type, id, current_user.id)
-        any_changes ||= Presence::PresenceManager.cleanup(type, id)
+          any_changes = false
+          any_changes ||= Presence::PresenceManager.add(type, id, current_user.id)
+          any_changes ||= Presence::PresenceManager.cleanup(type, id)
 
-        users = Presence::PresenceManager.publish(type, id) if any_changes
+          users = Presence::PresenceManager.publish(type, id) if any_changes
 
-        if data[:response_needed]
-          users ||= Presence::PresenceManager.get_users(type, id)
+          if data[:response_needed]
+            users ||= Presence::PresenceManager.get_users(type, id)
 
-          serialized_users = users.map { |u| BasicUserSerializer.new(u, root: false) }
+            serialized_users = users.map { |u| BasicUserSerializer.new(u, root: false) }
 
-          messagebus_channel = Presence::PresenceManager.get_messagebus_channel(type, id)
+            messagebus_channel = Presence::PresenceManager.get_messagebus_channel(type, id)
 
-          render json: {
-            messagebus_channel: messagebus_channel,
-            messagebus_id: MessageBus.last_id(messagebus_channel),
-            users: serialized_users
-          }
-          return
+            {
+              messagebus_channel: messagebus_channel,
+              messagebus_id: MessageBus.last_id(messagebus_channel),
+              users: serialized_users
+            }
+          end
+        else
+          {}
         end
       end
 
-      render json: {}
+      render json: payload
     end
 
   end
