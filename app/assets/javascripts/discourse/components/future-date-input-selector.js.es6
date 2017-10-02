@@ -9,6 +9,8 @@ const LATER_THIS_WEEK = 'later_this_week';
 const THIS_WEEKEND = 'this_weekend';
 const NEXT_WEEK = 'next_week';
 const NEXT_MONTH = 'next_month';
+const FOREVER = 'forever';
+
 export const PICK_DATE_AND_TIME = 'pick_date_and_time';
 export const SET_BASED_ON_LAST_POST = 'set_based_on_last_post';
 
@@ -63,6 +65,13 @@ export default Combobox.extend({
       selections.push({
         id: NEXT_MONTH,
         name: I18n.t('topic.auto_update_input.next_month')
+      });
+    }
+
+    if (this.get('includeForever')) {
+      selections.push({
+        id: FOREVER,
+        name: I18n.t('topic.auto_update_input.forever')
       });
     }
 
@@ -133,7 +142,7 @@ export default Combobox.extend({
 
     output += `<span>${state.text}</span>`;
 
-    if (time) {
+    if (time && state.id !== FOREVER) {
       output += `<span class='future-date-input-selector-datetime'>${time}</span>`;
     }
 
@@ -169,6 +178,10 @@ export default Combobox.extend({
       case NEXT_MONTH:
         time = time.add(1, 'month').startOf('month').hour(timeOfDay).minute(0);
         icon = 'briefcase';
+        break;
+      case FOREVER:
+        time = time.add(1000, 'year').hour(timeOfDay).minute(0);
+        icon = 'gavel';
         break;
       case PICK_DATE_AND_TIME:
         time = null;

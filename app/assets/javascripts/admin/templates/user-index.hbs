@@ -307,7 +307,9 @@
       <div class='value'>
         {{i18n-yes-no model.isSuspended}}
         {{#if model.isSuspended}}
-          {{i18n "admin.user.suspended_until" until=model.suspendedTillDate}}
+          {{#unless model.suspendedForever}}
+            {{i18n "admin.user.suspended_until" until=model.suspendedTillDate}}
+          {{/unless}}
         {{/if}}
       </div>
       <div class='controls'>

@@ -179,6 +179,11 @@ const User = RestModel.extend({
   },
 
   @computed("suspended_till")
+  suspendedForever(suspendedTill) {
+    return moment().diff(suspendedTill, 'years') < -500;
+  },
+
+  @computed("suspended_till")
   suspendedTillDate(suspendedTill) {
     return longDate(suspendedTill);
   },
