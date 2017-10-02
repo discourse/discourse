@@ -8,7 +8,7 @@ module Jobs
       end
 
       web_hook = WebHook.find_by(id: args[:web_hook_id])
-      raise Discourse::InvalidParameters(:web_hook_id) if web_hook.blank?
+      raise Discourse::InvalidParameters.new(:web_hook_id) if web_hook.blank?
 
       unless ping_event?(args[:event_type])
         return unless web_hook.active?
