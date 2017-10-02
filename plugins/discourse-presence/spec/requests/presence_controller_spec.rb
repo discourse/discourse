@@ -1,7 +1,6 @@
 require 'rails_helper'
 
-describe ::Presence::PresencesController, type: :request do
-
+describe ::Presence::PresencesController do
   before do
     SiteSetting.presence_enabled = true
   end
@@ -13,7 +12,7 @@ describe ::Presence::PresencesController, type: :request do
   let(:post1) { Fabricate(:post) }
   let(:post2) { Fabricate(:post) }
 
-  after(:each) do
+  after do
     $redis.del("presence:topic:#{post1.topic.id}")
     $redis.del("presence:topic:#{post2.topic.id}")
     $redis.del("presence:post:#{post1.id}")
@@ -36,7 +35,6 @@ describe ::Presence::PresencesController, type: :request do
     end
 
     it "uses guardian to secure endpoint" do
-      # Private message
       private_post = Fabricate(:private_message_post)
 
       post '/presence/publish.json', params: {
@@ -45,7 +43,6 @@ describe ::Presence::PresencesController, type: :request do
 
       expect(response.code.to_i).to eq(403)
 
-      # Secure category
       group = Fabricate(:group)
       category = Fabricate(:private_category, group: group)
       private_topic = Fabricate(:topic, category: category)
@@ -64,7 +61,7 @@ describe ::Presence::PresencesController, type: :request do
         }
       end
 
-      expect(messages.count).to eq (1)
+      expect(messages.count).to eq(1)
 
       data = JSON.parse(response.body)
 
@@ -80,7 +77,7 @@ describe ::Presence::PresencesController, type: :request do
         }
       end
 
-      expect(messages.count).to eq (1)
+      expect(messages.count).to eq(1)
 
       data = JSON.parse(response.body)
       expect(data).to eq({})
@@ -93,7 +90,7 @@ describe ::Presence::PresencesController, type: :request do
         }
       end
 
-      expect(messages.count).to eq (1)
+      expect(messages.count).to eq(1)
 
       messages = MessageBus.track_publish do
         post '/presence/publish.json', params: {
@@ -101,7 +98,7 @@ describe ::Presence::PresencesController, type: :request do
         }
       end
 
-      expect(messages.count).to eq (0)
+      expect(messages.count).to eq(0)
     end
 
     it "clears 'previous' state when supplied" do
@@ -116,7 +113,28 @@ describe ::Presence::PresencesController, type: :request do
         }
       end
 
-      expect(messages.count).to eq (3)
+      expect(messages.count).to eq(3)
+    end
+
+    describe 'when post has been deleted' do
+      it 'should return an empty response' do
+        post1.destroy!
+
+        post '/presence/publish.json', params: {
+          current: { compose_state: 'open', action: 'edit', post_id: post1.id }
+        }
+
+        expect(response.status).to eq(200)
+        expect(JSON.parse(response.body)).to eq({})
+
+        post '/presence/publish.json', params: {
+          current: { compose_state: 'open', action: 'edit', post_id: post2.id },
+          previous: { compose_state: 'open', action: 'edit', post_id: post1.id }
+        }
+
+        expect(response.status).to eq(200)
+        expect(JSON.parse(response.body)).to eq({})
+      end
     end
 
   end
