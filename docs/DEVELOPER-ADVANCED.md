@@ -65,7 +65,7 @@ Create an admin account with:
 
 Discourse does a lot of stuff async, so it's better to run sidekiq even on development mode:
 
-    ruby $(mailcatcher) # open http://localhost:1080 to see the emails, stop with pkill -f mailcatcher
+    mailcatcher # open http://localhost:1080 to see the emails, stop with pkill -f mailcatcher
     bundle exec sidekiq # open http://localhost:3000/sidekiq to see queues
     bundle exec rails server
 
