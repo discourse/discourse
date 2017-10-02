@@ -47,11 +47,9 @@ class Admin::EmailTemplatesController < Admin::AdminController
 
     error_messages = []
     if subject_result[:error_messages].present?
-      TranslationOverride.upsert!(I18n.locale, "#{key}.subject_template", subject_result[:old_value])
       error_messages << format_error_message(subject_result, "subject")
     end
     if body_result[:error_messages].present?
-      TranslationOverride.upsert!(I18n.locale, "#{key}.text_body_template", body_result[:old_value])
       error_messages << format_error_message(body_result, "body")
     end
 
@@ -61,6 +59,9 @@ class Admin::EmailTemplatesController < Admin::AdminController
 
       render_serialized(key, AdminEmailTemplateSerializer, root: 'email_template', rest_serializer: true)
     else
+      TranslationOverride.upsert!(I18n.locale, "#{key}.subject_template", subject_result[:old_value])
+      TranslationOverride.upsert!(I18n.locale, "#{key}.text_body_template", body_result[:old_value])
+
       render_json_error(error_messages)
     end
   end
