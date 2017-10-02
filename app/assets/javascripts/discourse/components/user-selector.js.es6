@@ -21,6 +21,7 @@ export default TextField.extend({
         groups = [],
         currentUser = this.currentUser,
         includeMentionableGroups = this.get('includeMentionableGroups') === 'true',
+        includeMessageableGroups = this.get('includeMessageableGroups') === 'true',
         includeGroups = this.get('includeGroups') === 'true',
         allowedUsers = this.get('allowedUsers') === 'true';
 
@@ -52,6 +53,7 @@ export default TextField.extend({
           includeGroups,
           allowedUsers,
           includeMentionableGroups,
+          includeMessageableGroups,
           group: self.get("group")
         });
 
