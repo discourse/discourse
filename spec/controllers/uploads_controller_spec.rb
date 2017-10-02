@@ -52,13 +52,11 @@ describe UploadsController do
       it 'is successful with an image' do
         Jobs.expects(:enqueue).with(:create_avatar_thumbnails, anything)
 
-        message = MessageBus.track_publish do
+        message = MessageBus.track_publish('/uploads/avatar') do
           post :create, params: { file: logo, type: "avatar", format: :json }
-        end.find { |m| m.channel == "/uploads/avatar" }
+        end.first
 
         expect(response.status).to eq 200
-
-        expect(message.channel).to eq("/uploads/avatar")
         expect(message.data["id"]).to be
       end
 
@@ -67,12 +65,11 @@ describe UploadsController do
 
         Jobs.expects(:enqueue).never
 
-        message = MessageBus.track_publish do
+        message = MessageBus.track_publish('/uploads/composer') do
           post :create, params: { file: text_file, type: "composer", format: :json }
-        end.find { |m| m.channel == "/uploads/composer" }
+        end.first
 
         expect(response.status).to eq 200
-        expect(message.channel).to eq("/uploads/composer")
         expect(message.data["id"]).to be
       end
 
@@ -103,7 +100,7 @@ describe UploadsController do
         log_in :admin
         Jobs.expects(:enqueue).with(:create_avatar_thumbnails, anything).never
 
-        message = MessageBus.track_publish do
+        message = MessageBus.track_publish('/uploads/profile_background') do
           post :create, params: {
             file: logo,
             retain_hours: 100,
@@ -119,7 +116,7 @@ describe UploadsController do
       it 'requires a file' do
         Jobs.expects(:enqueue).never
 
-        message = MessageBus.track_publish do
+        message = MessageBus.track_publish('/uploads/composer') do
           post :create, params: { type: "composer", format: :json }
         end.first
 
@@ -157,14 +154,14 @@ describe UploadsController do
         SiteSetting.allow_staff_to_upload_any_file_in_pm = true
         @user.update_columns(moderator: true)
 
-        message = MessageBus.track_publish do
+        message = MessageBus.track_publish('/uploads/composer') do
           post :create, params: {
             file: text_file,
             type: "composer",
             for_private_message: "true",
             format: :json
           }
-        end.find { |m| m.channel = '/uploads/composer' }
+        end.first
 
         expect(response).to be_success
         expect(message.data["id"]).to be
@@ -173,13 +170,11 @@ describe UploadsController do
       it 'returns an error when it could not determine the dimensions of an image' do
         Jobs.expects(:enqueue).with(:create_avatar_thumbnails, anything).never
 
-        message = MessageBus.track_publish do
+        message = MessageBus.track_publish('/uploads/composer') do
           post :create, params: { file: fake_jpg, type: "composer", format: :json }
-        end.find { |m| m.channel == '/uploads/composer' }
+        end.first
 
         expect(response.status).to eq 200
-
-        expect(message.channel).to eq("/uploads/composer")
         expect(message.data["errors"]).to contain_exactly(I18n.t("upload.images.size_not_found"))
       end
 

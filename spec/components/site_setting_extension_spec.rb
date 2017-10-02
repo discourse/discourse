@@ -145,11 +145,11 @@ describe SiteSettingExtension do
         settings.setting("test_setting", 100)
         settings.setting("test_setting", nil, client: true)
 
-        messages = MessageBus.track_publish do
+        message = MessageBus.track_publish('/client_settings') do
           settings.test_setting = 88
-        end
+        end.first
 
-        expect(messages.map(&:channel).include?('/client_settings')).to eq(true)
+        expect(message).to be_present
       end
     end
   end

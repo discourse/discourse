@@ -382,11 +382,10 @@ describe PostRevisor do
       it "should publish topic changes to clients" do
         revisor = described_class.new(topic.ordered_posts.first, topic)
 
-        messages = MessageBus.track_publish do
+        message = MessageBus.track_publish("/topic/#{topic.id}") do
           revisor.revise!(newuser, title: 'this is a test topic')
-        end
+        end.first
 
-        message = messages.find { |m| m.channel == "/topic/#{topic.id}" }
         payload = message.data
         expect(payload[:reload_topic]).to eq(true)
       end

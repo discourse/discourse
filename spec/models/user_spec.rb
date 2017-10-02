@@ -1420,9 +1420,8 @@ describe User do
     let(:user) { Fabricate(:user) }
 
     it 'should publish the right message' do
-      message = MessageBus.track_publish { user.logged_out }.find { |m| m.channel == '/logout' }
+      message = MessageBus.track_publish('/logout') { user.logged_out }.first
 
-      expect(message.channel).to eq('/logout')
       expect(message.data).to eq(user.id)
     end
   end
@@ -1527,9 +1526,9 @@ describe User do
       notification = Fabricate(:notification, user: user)
       notification2 = Fabricate(:notification, user: user, read: true)
 
-      message = MessageBus.track_publish do
+      message = MessageBus.track_publish("/notification/#{user.id}") do
         user.publish_notifications_state
-      end.find { |m| m.channel = "/notification/#{user.id}" }
+      end.first
 
       expect(message.data[:recent]).to eq([
         [notification2.id, true], [notification.id, false]
