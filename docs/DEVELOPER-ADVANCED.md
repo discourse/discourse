@@ -59,13 +59,9 @@ If everything goes alright, let's clone Discourse and start hacking:
     # launch discourse
     bundle exec rails s -b 0.0.0.0 # open browser on http://localhost:3000 and you should see Discourse
 
-Create a test account, and enable it with:
+Create an admin account with:
 
-    bundle exec rails c
-    u = User.find(1)
-    u.activate
-    u.grant_admin!
-    exit
+    bundle exec rake admin:create
 
 Discourse does a lot of stuff async, so it's better to run sidekiq even on development mode:
 
