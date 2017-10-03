@@ -34,7 +34,8 @@ export default createWidget('hamburger-menu', {
   tagName: 'div.hamburger-panel',
 
   settings: {
-    showCategories: true
+    showCategories: true,
+    maxWidth: 300
   },
 
   adminLinks() {
@@ -192,7 +193,10 @@ export default createWidget('hamburger-menu', {
   },
 
   html() {
-    return this.attach('menu-panel', { contents: () => this.panelContents() });
+    return this.attach('menu-panel', {
+      contents: () => this.panelContents(),
+      maxWidth: this.settings.maxWidth,
+    });
   },
 
   clickOutside() {
