@@ -1,7 +1,5 @@
 import { ajax } from 'discourse/lib/ajax';
 import { findRawTemplate } from 'discourse/lib/raw-templates';
-import { TAG_HASHTAG_POSTFIX } from 'discourse/lib/tag-hashtags';
-import { SEPARATOR } from 'discourse/lib/category-hashtags';
 import Category from 'discourse/models/category';
 import { search as searchCategoryTag  } from 'discourse/lib/category-tag-search';
 import userSearch from 'discourse/lib/user-search';
@@ -148,11 +146,7 @@ export function applySearchAutocomplete($input, siteSettings, appEvents, options
     width: '100%',
     treatAsTextarea: true,
     transformComplete(obj) {
-      if (obj.model) {
-        return Category.slugFor(obj.model, SEPARATOR);
-      } else {
-        return `${obj.text}${TAG_HASHTAG_POSTFIX}`;
-      }
+      return obj.text;
     },
     dataSource(term) {
       return searchCategoryTag(term, siteSettings);
