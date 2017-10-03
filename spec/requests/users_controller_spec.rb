@@ -215,7 +215,7 @@ RSpec.describe UsersController do
 
           expect(response).to be_success
           expect(JSON.parse(response.body)).not_to have_key(:groups)
-          
+
           get "/u/search/users.json", params: {
             include_mentionable_groups: 'false',
             include_messageable_groups: 'true'
