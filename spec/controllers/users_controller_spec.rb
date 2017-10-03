@@ -621,6 +621,28 @@ describe UsersController do
           expect(session[SessionController::ACTIVATE_USER_KEY]).to be_present
         end
       end
+
+      context 'users already exists with given email' do
+        let!(:existing) { Fabricate(:user, email: post_user_params[:email]) }
+
+        it 'returns an error if forgot_password_strict is disabled' do
+          SiteSetting.forgot_password_strict = false
+          post_user
+          json = JSON.parse(response.body)
+          expect(json['success']).to eq(false)
+          expect(json['message']).to be_present
+        end
+
+        it 'returns success if forgot_password_strict is enabled' do
+          SiteSetting.forgot_password_strict = true
+          expect {
+            post_user
+          }.to_not change { User.count }
+          json = JSON.parse(response.body)
+          expect(json['active']).to be_falsey
+          expect(session["user_created_message"]).to be_present
+        end
+      end
     end
 
     context "creating as active" do
