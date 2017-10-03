@@ -67,7 +67,7 @@ def upload_asset(helper, path, recurse: true, content_type: nil, fullpath: nil, 
 end
 
 def assets
-  cached = Rails.application.assets.cached
+  cached = Rails.application.assets&.cached
   manifest = Sprockets::Manifest.new(cached, Rails.root + 'public/assets', Rails.application.config.assets.manifest)
 
   raise Discourse::SiteSettingMissing.new("s3_upload_bucket") if SiteSetting.s3_upload_bucket.blank?
