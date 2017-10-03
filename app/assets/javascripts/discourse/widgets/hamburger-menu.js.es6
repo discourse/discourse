@@ -33,6 +33,10 @@ createWidget('priority-faq-link', {
 export default createWidget('hamburger-menu', {
   tagName: 'div.hamburger-panel',
 
+  settings: {
+    showCategories: true
+  },
+
   adminLinks() {
     const { currentUser } = this;
 
@@ -176,8 +180,12 @@ export default createWidget('hamburger-menu', {
     }
 
     results.push(this.attach('menu-links', {name: 'general-links', contents: () => this.generalLinks() }));
-    results.push(this.listCategories());
-    results.push(h('hr'));
+
+    if (this.settings.showCategories) {
+      results.push(this.listCategories());
+      results.push(h('hr'));
+    }
+
     results.push(this.attach('menu-links', {name: 'footer-links', omitRule: true, contents: () => this.footerLinks(prioritizeFaq, faqUrl) }));
 
     return results;
