@@ -247,7 +247,7 @@ class SessionController < ApplicationController
     end
 
     json = { result: "ok" }
-    unless SiteSetting.forgot_password_strict
+    unless SiteSetting.hide_email_address_taken
       json[:user_found] = user_presence
     end
 
