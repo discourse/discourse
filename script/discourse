@@ -87,11 +87,17 @@ class DiscourseCLI < Thor
   desc "restore", "Restore a Discourse backup"
   def restore(filename = nil)
 
+    if File.exist?('/usr/local/bin/discourse')
+      discourse = 'discourse'
+    else
+      discourse = './script/discourse'
+    end
+
     if !filename
       puts "You must provide a filename to restore. Did you mean one of the following?\n\n"
 
       Dir["public/backups/default/*"].each do |f|
-        puts "discourse restore #{File.basename(f)}"
+        puts "#{discourse} restore #{File.basename(f)}"
       end
 
       return
@@ -110,7 +116,8 @@ class DiscourseCLI < Thor
       puts '', 'The filename argument was missing.', ''
       usage
     rescue BackupRestore::RestoreDisabledError
-      puts '', 'Restores are not allowed.', 'An admin needs to set allow_restore to true in the site settings before restores can be run.', ''
+      puts '', 'Restores are not allowed.', 'An admin needs to set allow_restore to true in the site settings before restores can be run.'
+      puts "Enable now with", '', "#{discourse} enable_restore", ''
       puts 'Restore cancelled.', ''
     end
 
