@@ -706,8 +706,10 @@ class UsersController < ApplicationController
           Group.messageable(current_user)
         end
 
-      to_render[:groups] = groups.where("name ILIKE :term_like", term_like: "#{term}%")
-        .map { |m| { name: m.name, full_name: m.full_name } }
+      if groups
+        to_render[:groups] = groups.where("name ILIKE :term_like", term_like: "#{term}%")
+          .map { |m| { name: m.name, full_name: m.full_name } }
+      end
     end
 
     render json: to_render

@@ -175,6 +175,16 @@ RSpec.describe UsersController do
           sign_in(user)
         end
 
+        it "doesn't search for groups" do
+          get "/u/search/users.json", params: {
+            include_mentionable_groups: 'false',
+            include_messageable_groups: 'false'
+          }
+
+          expect(response).to be_success
+          expect(JSON.parse(response.body)).not_to have_key(:groups)
+        end
+
         it "searches for messageable groups" do
           get "/u/search/users.json", params: {
             include_mentionable_groups: 'false',
@@ -200,11 +210,19 @@ RSpec.describe UsersController do
         it 'should not include mentionable/messageable groups' do
           get "/u/search/users.json", params: {
             include_mentionable_groups: 'false',
+            include_messageable_groups: 'false'
+          }
+
+          expect(response).to be_success
+          expect(JSON.parse(response.body)).not_to have_key(:groups)
+          
+          get "/u/search/users.json", params: {
+            include_mentionable_groups: 'false',
             include_messageable_groups: 'true'
           }
 
           expect(response).to be_success
-          expect(JSON.parse(response.body)["groups"]).to eq(nil)
+          expect(JSON.parse(response.body)).not_to have_key(:groups)
 
           get "/u/search/users.json", params: {
             include_messageable_groups: 'false',
@@ -212,7 +230,7 @@ RSpec.describe UsersController do
           }
 
           expect(response).to be_success
-          expect(JSON.parse(response.body)["groups"]).to eq(nil)
+          expect(JSON.parse(response.body)).not_to have_key(:groups)
         end
       end
     end
