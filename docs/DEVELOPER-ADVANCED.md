@@ -26,13 +26,9 @@ To get your Ubuntu 16.04 LTS install up and running to develop Discourse and Dis
     gem install bundler mailcatcher
 
     # Postgresql
-    sudo su postgres
-    createuser --createdb --superuser -Upostgres $(cat /tmp/username)
+    sudo -u postgres -i
+    createuser --superuser -Upostgres $(cat /tmp/username)
     psql -c "ALTER USER $(cat /tmp/username) WITH PASSWORD 'password';"
-    psql -c "create database discourse_development owner $(cat /tmp/username) encoding 'UTF8' TEMPLATE template0;"
-    psql -c "create database discourse_test        owner $(cat /tmp/username) encoding 'UTF8' TEMPLATE template0;"
-    psql -d discourse_development -c "CREATE EXTENSION hstore;"
-    psql -d discourse_development -c "CREATE EXTENSION pg_trgm;"
     exit
 
     # Node
@@ -50,8 +46,14 @@ If everything goes alright, let's clone Discourse and start hacking:
     git clone https://github.com/discourse/discourse.git ~/discourse
     cd ~/discourse
     bundle install
-    bundle exec rake db:migrate
-    RAILS_ENV=test bundle exec rake db:migrate
+
+    # run this if there was a pre-existing database
+    bundle exec rake db:drop
+    RAILS_ENV=test bundle exec rake db:drop
+
+    # time to create the database and run migrations
+    bundle exec rake db:create db:migrate
+    RAILS_ENV=test bundle exec rake db:create db:migrate
     
     # run the specs (optional)
     bundle exec rake autospec # CTRL + C to stop
@@ -62,6 +64,12 @@ If everything goes alright, let's clone Discourse and start hacking:
 Create an admin account with:
 
     bundle exec rake admin:create
+
+If you ever need to recreate your database:
+
+    bundle exec rake db:drop db:create db:migrate
+    bundle exec rake admin:create
+    RAILS_ENV=test bundle exec rake db:drop db:create db:migrate
 
 Discourse does a lot of stuff async, so it's better to run sidekiq even on development mode:
 
