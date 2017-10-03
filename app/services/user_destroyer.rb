@@ -80,7 +80,10 @@ class UserDestroyer
             end
           end
 
-          StaffActionLogger.new(@actor == user ? Discourse.system_user : @actor).log_user_deletion(user, opts.slice(:context))
+          unless opts[:quiet]
+            StaffActionLogger.new(@actor == user ? Discourse.system_user : @actor).log_user_deletion(user, opts.slice(:context))
+          end
+
           MessageBus.publish "/file-change", ["refresh"], user_ids: [u.id]
         end
       end
