@@ -101,7 +101,9 @@ module Jobs
       end
 
       def content
-        @article_rss_item.content.try(:force_encoding, "UTF-8").try(:scrub) || @article_rss_item.description.try(:force_encoding, "UTF-8").try(:scrub)
+        @article_rss_item.content_encoded&.force_encoding("UTF-8")&.scrub ||
+          @article_rss_item.content&.force_encoding("UTF-8")&.scrub ||
+          @article_rss_item.description&.force_encoding("UTF-8")&.scrub
       end
 
       def title
