@@ -30,6 +30,7 @@ module Email
     class TopicClosedError             < ProcessingError; end
     class InvalidPost                  < ProcessingError; end
     class InvalidPostAction            < ProcessingError; end
+    class UnsubscribeNotAllowed        < ProcessingError; end
 
     attr_reader :incoming_email
     attr_reader :raw_email
@@ -38,7 +39,7 @@ module Email
 
     def initialize(mail_string)
       raise EmptyEmailError if mail_string.blank?
-      @staged_users_created = 0
+      @staged_users = []
       @raw_email = try_to_encode(mail_string, "UTF-8") || try_to_encode(mail_string, "ISO-8859-1") || mail_string
       @mail = Mail.new(@raw_email)
       @message_id = @mail.message_id.presence || Digest::MD5.hexdigest(mail_string)
@@ -82,14 +83,13 @@ module Email
       raise NoSenderDetectedError if @from_email.blank?
       raise ScreenedEmailError if ScreenedEmail.should_block?(@from_email)
 
-      user = find_or_create_user(@from_email, @from_display_name)
+      user = find_user(@from_email)
 
-      raise UserNotFoundError if user.nil?
-
-      @incoming_email.update_columns(user_id: user.id)
-
-      raise InactiveUserError if !user.active && !user.staged
-      raise BlockedUserError  if user.blocked
+      if user.present?
+        process_user(user)
+      else
+        raise UserNotFoundError unless SiteSetting.enable_staged_users
+      end
 
       body, elided = select_body
       body ||= ""
@@ -102,9 +102,17 @@ module Email
       end
 
       if action = subscription_action_for(body, subject)
-        message = SubscriptionMailer.send(action, user)
-        Email::Sender.new(message, :subscription).send
-      elsif post = find_related_post
+        raise UnsubscribeNotAllowed if user.nil?
+        send_subscription_mail(action, user)
+        return
+      end
+
+      # Lets create a staged user if there isn't one yet. We will try to
+      # delete staged users in process!() if something bad happens.
+      user = find_or_create_user(@from_email, @from_display_name) if user.nil?
+      process_user(user)
+
+      if post = find_related_post
         create_reply(user: user,
                      raw: body,
                      elided: elided,
@@ -126,6 +134,13 @@ module Email
 
         raise first_exception || BadDestinationAddress
       end
+    end
+
+    def process_user(user)
+      @incoming_email.update_columns(user_id: user.id)
+
+      raise InactiveUserError if !user.active && !user.staged
+      raise BlockedUserError  if user.blocked
     end
 
     def is_bounce?
@@ -310,6 +325,10 @@ module Email
       @suject ||= @mail.subject.presence || I18n.t("emails.incoming.default_subject", email: @from_email)
     end
 
+    def find_user(email)
+      User.find_by_email(email)
+    end
+
     def find_or_create_user(email, display_name)
       user = nil
 
@@ -325,7 +344,7 @@ module Email
               name: display_name.presence || User.suggest_name(email),
               staged: true
             )
-            @staged_users_created += 1
+            @staged_users << user
           end
         rescue
           user = nil
@@ -693,7 +712,7 @@ module Email
                   topic.add_small_action(sender, "invited_user", user.username)
                 end
                 # cap number of staged users created per email
-                if @staged_users_created > SiteSetting.maximum_staged_users_per_email
+                if @staged_users.count > SiteSetting.maximum_staged_users_per_email
                   topic.add_moderator_post(sender, I18n.t("emails.incoming.maximum_staged_user_per_email_reached"))
                   return
                 end
@@ -717,6 +736,10 @@ module Email
       !topic.topic_allowed_groups.where("group_id IN (SELECT group_id FROM group_users WHERE user_id = ?)", user.id).exists?
     end
 
+    def send_subscription_mail(action, user)
+      message = SubscriptionMailer.send(action, user)
+      Email::Sender.new(message, :subscription).send
+    end
   end
 
 end
