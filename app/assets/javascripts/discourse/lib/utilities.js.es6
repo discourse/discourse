@@ -100,6 +100,17 @@ export function selectedText() {
   $div.find(".clicks").remove();
   // replace emojis
   $div.find("img.emoji").replaceWith(function() { return this.title; });
+
+  // new lines around brs should be removed
+  $div.find('p')
+    .contents()
+    .filter(function() {
+      return this.nodeType === Node.TEXT_NODE;
+    })
+    .each((_, el) => {
+      el.textContent = el.textContent.replace(/^[\n\r]+|[\n\r]+$/g, '');
+    });
+
   // replace br with newlines
   $div.find("br").replaceWith(() => "\n");
   // enforce newline at the end of paragraphs
