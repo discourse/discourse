@@ -23,6 +23,16 @@ describe Email::Receiver do
     expect { process(:screened_email) }.to raise_error(Email::Receiver::ScreenedEmailError)
   end
 
+  it "raises EmailNotAllowed when email address is not on whitelist" do
+    SiteSetting.email_domains_whitelist = "example.com|bar.com"
+    expect { process(:blacklist_whitelist_email) }.to raise_error(Email::Receiver::EmailNotAllowed)
+  end
+
+  it "raises EmailNotAllowed when email address is on blacklist" do
+    SiteSetting.email_domains_blacklist = "email.com|mail.com"
+    expect { process(:blacklist_whitelist_email) }.to raise_error(Email::Receiver::EmailNotAllowed)
+  end
+
   it "raises an UserNotFoundError when staged users are disabled" do
     SiteSetting.enable_staged_users = false
     expect { process(:user_not_found) }.to raise_error(Email::Receiver::UserNotFoundError)
@@ -665,6 +675,23 @@ describe Email::Receiver do
     context "when unsubscribe via email is not allowed" do
       include_examples "no staged users", :unsubscribe_new_user
     end
+
+    context "when email address is not on whitelist" do
+      before do
+        SiteSetting.email_domains_whitelist = "example.com|bar.com"
+      end
+
+      include_examples "no staged users", :blacklist_whitelist_email
+    end
+
+    context "when email address is on blacklist" do
+      before do
+        SiteSetting.email_domains_blacklist = "email.com|mail.com"
+      end
+
+      include_examples "no staged users", :blacklist_whitelist_email
+    end
+
   end
 
 end

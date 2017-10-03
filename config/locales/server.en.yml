@@ -80,6 +80,7 @@ en:
         bounced_email_error: "Email is a bounced email report."
         screened_email_error: "Happens when the sender's email address was already screened."
         unsubscribe_not_allowed: "Happens when unsubscribing via email is not allowed for this user."
+        email_not_allowed: "Happens when the email address is not on the whitelist or is on the blacklist."
       unrecognized_error: "Unrecognized Error"
 
   errors: &errors
@@ -2145,6 +2146,14 @@ en:
 
     email_reject_screened_email:
       title: "Email Reject Screened Email"
+      subject_template: "[%{email_prefix}] Email issue -- Blocked Email"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        Your reply was sent from a blocked email address. Try sending from another email address, or [contact a staff member](%{base_url}/about).
+
+    email_reject_not_allowed_email:
+      title: "Email Reject Not Allowed Email"
       subject_template: "[%{email_prefix}] Email issue -- Blocked Email"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
