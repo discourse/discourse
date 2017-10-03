@@ -31,6 +31,7 @@ module Email
     class InvalidPost                  < ProcessingError; end
     class InvalidPostAction            < ProcessingError; end
     class UnsubscribeNotAllowed        < ProcessingError; end
+    class EmailNotAllowed              < ProcessingError; end
 
     attr_reader :incoming_email
     attr_reader :raw_email
@@ -86,7 +87,7 @@ module Email
       user = find_user(@from_email)
 
       if user.present?
-        process_user(user)
+        log_and_validate_user(user)
       else
         raise UserNotFoundError unless SiteSetting.enable_staged_users
       end
@@ -109,8 +110,10 @@ module Email
 
       # Lets create a staged user if there isn't one yet. We will try to
       # delete staged users in process!() if something bad happens.
-      user = find_or_create_user(@from_email, @from_display_name) if user.nil?
-      process_user(user)
+      if user.nil?
+        user = find_or_create_user(@from_email, @from_display_name)
+        log_and_validate_user(user)
+      end
 
       if post = find_related_post
         create_reply(user: user,
@@ -136,11 +139,11 @@ module Email
       end
     end
 
-    def process_user(user)
+    def log_and_validate_user(user)
       @incoming_email.update_columns(user_id: user.id)
 
       raise InactiveUserError if !user.active && !user.staged
-      raise BlockedUserError  if user.blocked
+      raise BlockedUserError if user.blocked
     end
 
     def is_bounce?
@@ -333,10 +336,12 @@ module Email
       user = nil
 
       User.transaction do
-        begin
-          user = User.find_by_email(email)
+        user = User.find_by_email(email)
 
-          if user.nil? && SiteSetting.enable_staged_users
+        if user.nil? && SiteSetting.enable_staged_users
+          raise EmailNotAllowed unless EmailValidator.allowed?(email)
+
+          begin
             username = UserNameSuggester.sanitize_username(display_name) if display_name.present?
             user = User.create!(
               email: email,
@@ -345,9 +350,9 @@ module Email
               staged: true
             )
             @staged_users << user
+          rescue
+            user = nil
           end
-        rescue
-          user = nil
         end
       end
 
@@ -717,8 +722,8 @@ module Email
                   return
                 end
               end
-            rescue ActiveRecord::RecordInvalid
-              # don't care if user already allowed
+            rescue ActiveRecord::RecordInvalid, EmailNotAllowed
+              # don't care if user already allowed or the user's email address is not allowed
             end
           end
         end
