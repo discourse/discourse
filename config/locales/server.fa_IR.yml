@@ -929,7 +929,7 @@ fa_IR:
     allow_index_in_robots_txt: "در robots.txt که به این سایت اجازه دهید که در موتور‌های جستجو ایندکس شود."
     email_domains_blacklist: "لیست pipe-delimit دامنه های ایمیل که کاربران اجازه ندارند با آن حساب کاربری ثبت‌نام کنند. برای مثال:  mailinator.com|trashmail.net"
     email_domains_whitelist: "لیست pipe-delimit دامنه های ایمیل که کاربران اجازه باید با آن حساب کاربری ثبت نام کنند. اخطار: کاربرانی با دامنه‌های ایمیلی به غیر از آن‌هایی که در لیست هستند اجازه ندارند. "
-    forgot_password_strict: "آگاه نکردن کاربران از وجود حساب کاربری در صفحه فراموشی روز عبور"
+    hide_email_address_taken: "آگاه نکردن کاربران از وجود حساب کاربری در صفحه فراموشی روز عبور"
     log_out_strict: "وقتی از سیستم خارج می شود، کاربر را از تمام session‌ها بر روی تمام دستگاه‌ها خارج کن "
     version_checks: "Discourse Hub را پینگ کن برای  نسخه بروزرسانی و پیام نسخه جدید را صفحه آمار ادمین نشان بده."
     new_version_emails: "ارسال ایمیل به contact_email address وقتی نسخه جدید  Discourse موجود است. "

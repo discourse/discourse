@@ -372,7 +372,7 @@ class UsersController < ApplicationController
         message: activation.message,
         user_id: user.id
       }
-    elsif SiteSetting.forgot_password_strict && user.errors[:primary_email]&.include?(I18n.t('errors.messages.taken'))
+    elsif SiteSetting.hide_email_address_taken && user.errors[:primary_email]&.include?(I18n.t('errors.messages.taken'))
       session["user_created_message"] = activation.success_message
 
       if existing_user = User.find_by_email(user.primary_email&.email)

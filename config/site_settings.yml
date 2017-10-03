@@ -321,7 +321,7 @@ login:
   email_domains_whitelist:
     default: ''
     type: list
-  forgot_password_strict: false
+  hide_email_address_taken: false
   log_out_strict: true
   pending_users_reminder_delay:
     min: -1

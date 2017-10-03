@@ -625,16 +625,16 @@ describe UsersController do
       context 'users already exists with given email' do
         let!(:existing) { Fabricate(:user, email: post_user_params[:email]) }
 
-        it 'returns an error if forgot_password_strict is disabled' do
-          SiteSetting.forgot_password_strict = false
+        it 'returns an error if hide_email_address_taken is disabled' do
+          SiteSetting.hide_email_address_taken = false
           post_user
           json = JSON.parse(response.body)
           expect(json['success']).to eq(false)
           expect(json['message']).to be_present
         end
 
-        it 'returns success if forgot_password_strict is enabled' do
-          SiteSetting.forgot_password_strict = true
+        it 'returns success if hide_email_address_taken is enabled' do
+          SiteSetting.hide_email_address_taken = true
           expect {
             post_user
           }.to_not change { User.count }
