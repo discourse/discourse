@@ -3,6 +3,7 @@
 module Slug
 
   CHAR_FILTER_REGEXP = /[:\/\?#\[\]@!\$&'\(\)\*\+,;=_\.~%\\`^\s|\{\}"<>]+/ # :/?#[]@!$&'()*+,;=_.~%\`^|{}"<>
+  MAX_SLUG_LENGTH = 255
 
   def self.for(string, default = 'topic')
     slug =
@@ -13,11 +14,12 @@ module Slug
       end
     # Reject slugs that only contain numbers, because they would be indistinguishable from id's.
     slug = (slug =~ /[^\d]/ ? slug : '')
+    slug = slug.length >= MAX_SLUG_LENGTH ? '' : slug
     slug.blank? ? default : slug
   end
 
   def self.sanitize(string)
-    self.encoded_generator(string)
+    self.encoded_generator(string, downcase: false)
   end
 
   private
@@ -28,15 +30,16 @@ module Slug
       .tr("_", "-")
   end
 
-  def self.encoded_generator(string)
+  def self.encoded_generator(string, downcase: true)
     # This generator will sanitize almost all special characters,
     # including reserved characters from RFC3986.
     # See also URI::REGEXP::PATTERN.
-    string.strip
+    string = string.strip
       .gsub(/\s+/, '-')
       .gsub(CHAR_FILTER_REGEXP, '')
-      .gsub(/\A-+|-+\z/, '') # remove possible trailing and preceding dashes
       .squeeze('-') # squeeze continuous dashes to prettify slug
+      .gsub(/\A-+|-+\z/, '') # remove possible trailing and preceding dashes
+    downcase ? string.downcase : string
   end
 
   def self.none_generator(string)
