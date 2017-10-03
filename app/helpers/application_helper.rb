@@ -60,6 +60,8 @@ module ApplicationHelper
         ENV["COMPRESS_BROTLI"] == "1" &&
         request.env["HTTP_ACCEPT_ENCODING"] =~ /br/
       path.gsub!("#{GlobalSetting.cdn_url}/assets/", "#{GlobalSetting.cdn_url}/brotli_asset/")
+    elsif GlobalSetting.cdn_url
+      path.gsub!("#{GlobalSetting.cdn_url}/assets/", "#{GlobalSetting.cdn_url}/cdn_asset/")
     end
 "<link rel='preload' href='#{path}' as='script'/>
 <script src='#{path}'></script>".html_safe
