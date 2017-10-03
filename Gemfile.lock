@@ -44,12 +44,19 @@ GEM
     ansi (1.5.0)
     arel (8.0.0)
     ast (2.3.0)
-    aws-sdk (2.5.3)
-      aws-sdk-resources (= 2.5.3)
-    aws-sdk-core (2.5.3)
+    aws-partitions (1.24.0)
+    aws-sdk-core (3.6.0)
+      aws-partitions (~> 1.0)
+      aws-sigv4 (~> 1.0)
       jmespath (~> 1.0)
-    aws-sdk-resources (2.5.3)
-      aws-sdk-core (= 2.5.3)
+    aws-sdk-kms (1.2.0)
+      aws-sdk-core (~> 3)
+      aws-sigv4 (~> 1.0)
+    aws-sdk-s3 (1.4.0)
+      aws-sdk-core (~> 3)
+      aws-sdk-kms (~> 1)
+      aws-sigv4 (~> 1.0)
+    aws-sigv4 (1.0.2)
     barber (0.11.2)
       ember-source (>= 1.0, < 3)
       execjs (>= 1.2, < 3)
@@ -393,7 +400,7 @@ DEPENDENCIES
   activerecord (~> 5.1)
   activesupport (~> 5.1)
   annotate
-  aws-sdk
+  aws-sdk-s3
   barber
   better_errors
   binding_of_caller
