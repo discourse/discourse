@@ -717,16 +717,22 @@ describe PrettyText do
     expect(cooked).to eq(n expected)
   end
 
-  it "produces tag links" do
+  it "produces hashtag links" do
+    category = Fabricate(:category, name: 'testing')
+    category2 = Fabricate(:category, name: 'known')
     Fabricate(:topic, tags: [Fabricate(:tag, name: 'known')])
 
-    cooked = PrettyText.cook(" #unknown::tag #known::tag")
+    cooked = PrettyText.cook(" #unknown::tag #known #known::tag #testing")
 
-    html = <<~HTML
-      <p><span class=\"hashtag\">#unknown::tag</span> <a class=\"hashtag\" href=\"http://test.localhost/tags/known\">#<span>known</span></a></p>
-    HTML
+    [
+      "<span class=\"hashtag\">#unknown::tag</span>",
+      "<a class=\"hashtag\" href=\"#{category2.url_with_id}\">#<span>known</span></a>",
+      "<a class=\"hashtag\" href=\"http://test.localhost/tags/known\">#<span>known</span></a>",
+      "<a class=\"hashtag\" href=\"#{category.url_with_id}\">#<span>testing</span></a>"
+    ].each do |element|
 
-    expect(cooked).to eq(html.strip)
+      expect(cooked).to include(element)
+    end
 
     cooked = PrettyText.cook("[`a` #known::tag here](http://somesite.com)")
 

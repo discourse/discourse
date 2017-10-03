@@ -1,10 +1,7 @@
 /*global Mousetrap:true */
 import { default as computed, on, observes } from 'ember-addons/ember-computed-decorators';
-import Category from 'discourse/models/category';
 import { categoryHashtagTriggerRule } from 'discourse/lib/category-hashtags';
-import { TAG_HASHTAG_POSTFIX } from 'discourse/lib/tag-hashtags';
 import { search as searchCategoryTag  } from 'discourse/lib/category-tag-search';
-import { SEPARATOR } from 'discourse/lib/category-hashtags';
 import { cookAsync } from 'discourse/lib/text';
 import { translations } from 'pretty-text/emoji/data';
 import { emojiSearch, isSkinTonableEmoji } from 'pretty-text/emoji';
@@ -322,11 +319,7 @@ export default Ember.Component.extend({
       template: findRawTemplate('category-tag-autocomplete'),
       key: '#',
       transformComplete(obj) {
-        if (obj.model) {
-          return Category.slugFor(obj.model, SEPARATOR);
-        } else {
-          return `${obj.text}${TAG_HASHTAG_POSTFIX}`;
-        }
+        return obj.text;
       },
       dataSource(term) {
         return searchCategoryTag(term, siteSettings);
