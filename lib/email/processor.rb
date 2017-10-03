@@ -50,7 +50,7 @@ module Email
                          when Email::Receiver::ReplyUserNotMatchingError   then :email_reject_reply_user_not_matching
                          when Email::Receiver::TopicNotFoundError          then :email_reject_topic_not_found
                          when Email::Receiver::TopicClosedError            then :email_reject_topic_closed
-                         when Email::Receiver::InvalidPost                 then :email_reject_invalid_pos
+                         when Email::Receiver::InvalidPost                 then :email_reject_invalid_post
                          when Email::Receiver::UnsubscribeNotAllowed       then :email_reject_invalid_post
                          when ActiveRecord::Rollback                       then :email_reject_invalid_post
                          when Email::Receiver::InvalidPostAction           then :email_reject_invalid_post_action
