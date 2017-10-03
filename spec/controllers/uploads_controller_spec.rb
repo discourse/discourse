@@ -129,7 +129,7 @@ describe UploadsController do
 
         Jobs.expects(:enqueue).never
 
-        message = MessageBus.track_publish do
+        message = MessageBus.track_publish("/uploads/avatar") do
           post :create, params: { file: text_file, type: "avatar", format: :json }
         end.first
 
