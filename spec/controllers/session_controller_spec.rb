@@ -884,27 +884,23 @@ describe SessionController do
 
     context 'missing token' do
       before do
-        get :email_login_page, token: ''
+        get :email_login_page, params: { token: '' }
       end
 
       it 'shows the error page' do
-        expect(assigns[:error]).to be_present
         expect(session[:current_user_id]).to be_blank
         expect(response).to be_success
-        expect(response).to render_template(layout: 'no_ember')
       end
     end
 
     context 'invalid token' do
       before do
-        get :email_login_page, token: "evil_trout!"
+        get :email_login_page, params: { token: "evil_trout!" }
       end
 
       it 'disallows login' do
-        expect(assigns[:error]).to be_present
         expect(session[:current_user_id]).to be_blank
         expect(response).to be_success
-        expect(response).to render_template(layout: 'no_ember')
       end
     end
 
@@ -914,16 +910,15 @@ describe SessionController do
         render_views
 
         it 'renders referrer never on get requests' do
-          get :email_login_page, token: token
+          get :email_login_page, params: { token: token }
 
           expect(response.body).to include('<meta name="referrer" content="never">')
         end
       end
 
       it 'returns success' do
-        get :email_login_page, token: token
+        get :email_login_page, params: { token: token }
         expect(response).to be_success
-        expect(assigns[:error]).to be_blank
       end
     end
   end
@@ -933,7 +928,7 @@ describe SessionController do
 
     it 'fails when local logins disabled' do
       SiteSetting.enable_local_logins = false
-      xhr :put, :email_login, token: SecureRandom.hex
+      put :email_login, params: { token: SecureRandom.hex }, format: :json
       expect(response.status.to_i).to eq(500)
     end
 
@@ -942,13 +937,12 @@ describe SessionController do
 
       it "doesn't log in the user when not approved" do
         SiteSetting.must_approve_users = true
-        xhr :put, :email_login, token: token
-
+        put :email_login, params: { token: token }, format: :json
         expect(session[:current_user_id]).to be_blank
       end
 
       it 'logs in the user' do
-        xhr :put, :email_login, token: token
+        put :email_login, params: { token: token }, format: :json
         expect(response).to be_success
         expect(session[:current_user_id]).to eq(user.id)
       end
