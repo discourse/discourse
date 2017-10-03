@@ -300,6 +300,12 @@ describe Email::Receiver do
           expect(before_deliveries).to eq ActionMailer::Base.deliveries.count
         end
       end
+
+      it "raises an UnsubscribeNotAllowed and does not send an unsubscribe email" do
+        before_deliveries = ActionMailer::Base.deliveries.count
+        expect { process(:unsubscribe_new_user) }.to raise_error { Email::Receiver::UnsubscribeNotAllowed }
+        expect(before_deliveries).to eq ActionMailer::Base.deliveries.count
+      end
     end
 
     it "handles inline reply" do
@@ -620,6 +626,44 @@ describe Email::Receiver do
         expect(dest[:type]).to eq(:reply)
         expect(dest[:obj]).to be_present
       end
+    end
+  end
+
+  context "no staged users on error" do
+    before do
+      SiteSetting.enable_staged_users = true
+    end
+
+    shared_examples "no staged users" do |email_name|
+      it "does not create staged users" do
+        staged_user_count = User.where(staged: true).count
+        process(email_name) rescue nil
+        expect(User.where(staged: true).count).to eq(staged_user_count)
+      end
+    end
+
+    context "when email address is screened" do
+      before do
+        ScreenedEmail.expects(:should_block?).with("screened@mail.com").returns(true)
+      end
+
+      include_examples "no staged users", :screened_email
+    end
+
+    context "when the mail is auto generated" do
+      include_examples "no staged users", :auto_generated_header
+    end
+
+    context "when email is a bounced email" do
+      include_examples "no staged users", :bounced_email
+    end
+
+    context "when the body is blank" do
+      include_examples "no staged users", :no_body
+    end
+
+    context "when unsubscribe via email is not allowed" do
+      include_examples "no staged users", :unsubscribe_new_user
     end
   end
 
