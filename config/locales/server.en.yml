@@ -79,6 +79,7 @@ en:
         topic_closed_error: "Happens when a reply came in but the related topic has been closed."
         bounced_email_error: "Email is a bounced email report."
         screened_email_error: "Happens when the sender's email address was already screened."
+        unsubscribe_not_allowed: "Happens when unsubscribing via email is not allowed for this user."
       unrecognized_error: "Unrecognized Error"
 
   errors: &errors
