@@ -30,6 +30,14 @@ describe EmailValidator do
       expect(blocks?('sam@e-mail.com')).to eq(true)
       expect(blocks?('sam@googlemail.com')).to eq(false)
     end
+
+    it "blocks based on email_domains_whitelist" do
+      SiteSetting.email_domains_whitelist = "googlemail.com|email.com"
+      expect(blocks?('sam@email.com')).to eq(false)
+      expect(blocks?('sam@bob.email.com')).to eq(false)
+      expect(blocks?('sam@e-mail.com')).to eq(true)
+      expect(blocks?('sam@googlemail.com')).to eq(false)
+    end
   end
 
   context '.email_regex' do
