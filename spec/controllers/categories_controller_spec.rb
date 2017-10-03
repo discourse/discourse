@@ -338,7 +338,7 @@ describe CategoriesController do
         expect(@category.reload.slug).to eq('valid-slug')
       end
 
-      it 'accepts and sanitize custom slug when the slug generation method is not english' do
+      it 'accepts and sanitize custom slug when the slug generation method is not ascii' do
         SiteSetting.slug_generation_method = 'none'
         put :update_slug,
           params: { category_id: @category.id, slug: ' another !_ slug @' },
