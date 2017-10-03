@@ -13,6 +13,8 @@ class PostgreSQLFallbackHandler
   def verify_master
     synchronize { return if @thread && @thread.alive? }
 
+    @thread.kill if @thread
+
     @thread = Thread.new do
       while true do
         begin
