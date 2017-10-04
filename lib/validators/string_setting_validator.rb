@@ -1,8 +1,10 @@
 class StringSettingValidator
+
+  include RegexSettingValidation
+
   def initialize(opts = {})
     @opts = opts
-    @regex = Regexp.new(opts[:regex]) if opts[:regex]
-    @regex_error = opts[:regex_error] || 'site_settings.errors.regex_mismatch'
+    initialize_regex_opts(opts)
   end
 
   def valid_value?(val)
@@ -13,12 +15,7 @@ class StringSettingValidator
       return false
     end
 
-    if @regex && !(val =~ @regex)
-      @regex_fail = true
-      return false
-    end
-
-    true
+    regex_match?(val)
   end
 
   def error_message
