@@ -5,7 +5,7 @@ module Slug
   CHAR_FILTER_REGEXP = /[:\/\?#\[\]@!\$&'\(\)\*\+,;=_\.~%\\`^\s|\{\}"<>]+/ # :/?#[]@!$&'()*+,;=_.~%\`^|{}"<>
   MAX_SLUG_LENGTH = 255
 
-  def self.for(string, default = 'topic')
+  def self.for(string, default = 'topic', max_length = MAX_SLUG_LENGTH)
     slug =
       case (SiteSetting.slug_generation_method || :ascii).to_sym
       when :ascii then self.ascii_generator(string)
@@ -14,20 +14,27 @@ module Slug
       end
     # Reject slugs that only contain numbers, because they would be indistinguishable from id's.
     slug = (slug =~ /[^\d]/ ? slug : '')
-    slug = slug.length >= MAX_SLUG_LENGTH ? '' : slug
+    slug = self.prettify_slug(slug, max_length: max_length)
     slug.blank? ? default : slug
   end
 
-  def self.sanitize(string)
-    self.encoded_generator(string, downcase: false)
+  def self.sanitize(string, downcase: false, max_length: MAX_SLUG_LENGTH)
+    slug = self.encoded_generator(string, downcase: downcase)
+    self.prettify_slug(slug, max_length: max_length)
   end
 
   private
 
-  def self.ascii_generator(string)
-    string.tr("'", "")
-      .parameterize
+  def self.prettify_slug(slug, max_length:)
+    slug
       .tr("_", "-")
+      .truncate(max_length, omission: '')
+      .squeeze('-') # squeeze continuous dashes to prettify slug
+      .gsub(/\A-+|-+\z/, '') # remove possible trailing and preceding dashes
+  end
+
+  def self.ascii_generator(string)
+    string.tr("'", "").parameterize
   end
 
   def self.encoded_generator(string, downcase: true)
@@ -37,8 +44,6 @@ module Slug
     string = string.strip
       .gsub(/\s+/, '-')
       .gsub(CHAR_FILTER_REGEXP, '')
-      .squeeze('-') # squeeze continuous dashes to prettify slug
-      .gsub(/\A-+|-+\z/, '') # remove possible trailing and preceding dashes
     downcase ? string.downcase : string
   end
 

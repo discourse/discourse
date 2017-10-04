@@ -17,6 +17,10 @@ describe Slug do
       expect(Slug.for('', 'king')).to eq 'king'
     end
 
+    it 'replaces the underscore' do
+      expect(Slug.for("o_o_o")).to eq("o-o-o")
+    end
+
     context 'ascii generator' do
       before { SiteSetting.slug_generation_method = 'ascii' }
 
@@ -43,6 +47,7 @@ describe Slug do
 
       it 'generates the slug' do
         expect(Slug.for("熱帶風暴畫眉")).to eq('熱帶風暴畫眉')
+        expect(Slug.for("Jeff hate's !~-_|,=#this")).to eq("jeff-hates-this")
       end
 
       it 'generates default slug when nothing' do
@@ -51,6 +56,14 @@ describe Slug do
 
       it "doesn't generate slugs that are just numbers" do
         expect(Slug.for('123')).to eq(default_slug)
+      end
+
+      it "handles the special characters" do
+        expect(Slug.for(" - English and Chinese title with special characters / 中文标题 !@:?\\:'`#^& $%&*()` -- ")).to eq("english-and-chinese-title-with-special-characters-中文标题")
+      end
+
+      it "kills the trailing dash" do
+        expect(Slug.for("2- -this!~-_|,we-#-=^-")).to eq('2-this-we')
       end
     end
 
@@ -104,10 +117,6 @@ describe Slug do
       expect(Slug.ascii_generator(from)).to eq(to)
     end
 
-    it 'replaces underscores' do
-      expect(Slug.ascii_generator("o_o_o")).to eq("o-o-o")
-    end
-
     it "doesn't keep single quotes within word" do
       expect(Slug.ascii_generator("Jeff hate's this")).to eq("jeff-hates-this")
     end
@@ -126,15 +135,13 @@ describe Slug do
     after { SiteSetting.slug_generation_method = 'ascii' }
 
     it 'generates precentage encoded string' do
-      expect(Slug.encoded_generator("Jeff hate's !~-_|,=#this")).to eq("jeff-hates-this")
       expect(Slug.encoded_generator("뉴스피드")).to eq("뉴스피드")
       expect(Slug.encoded_generator("آموزش اضافه کردن لینک اختیاری به هدر")).to eq("آموزش-اضافه-کردن-لینک-اختیاری-به-هدر")
       expect(Slug.encoded_generator("熱帶風暴畫眉")).to eq("熱帶風暴畫眉")
     end
 
     it 'reject RFC 3986 reserved character and blank' do
-      expect(Slug.encoded_generator(":/?#[]@!$ &'()*+,;=% -_`~.")).to eq("")
-      expect(Slug.encoded_generator(" - English and Chinese title with special characters / 中文标题 !@:?\\:'`#^& $%&*()` -- ")).to eq("english-and-chinese-title-with-special-characters-中文标题")
+      expect(Slug.encoded_generator(":/?#[]@!$ &'()*+,;=% -_`~.")).to eq("---") # will be clear by #for
     end
 
     it 'generates null when nothing' do
@@ -143,10 +150,6 @@ describe Slug do
 
     it "keeps number unchanged" do
       expect(Slug.encoded_generator('123')).to eq('123')
-    end
-
-    it "kills trailing dash" do
-      expect(Slug.encoded_generator("2- -this!~-_|,we-#-=^-")).to eq('2-this-we')
     end
 
     it 'downcase the string' do
