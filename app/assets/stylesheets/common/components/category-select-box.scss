@@ -1,5 +1,5 @@
-.category-select-box {
-  .row {
+.combobox.category-select-box {
+  .select-box-kit-row {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -11,7 +11,7 @@
         -ms-flex-direction: column;
             flex-direction: column;
 
-    &.is-uncategorized {
+    &.none {
       .topic-count {
         display: none;
       }

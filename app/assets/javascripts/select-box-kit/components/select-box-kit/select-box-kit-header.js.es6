@@ -1,26 +1,19 @@
+import computed from 'ember-addons/ember-computed-decorators';
+
 export default Ember.Component.extend({
   layoutName: "select-box-kit/templates/components/select-box-kit/select-box-kit-header",
 
-  classNames: "header",
+  classNames: "select-box-kit-header",
 
-  classNameBindings: ["isDocused"],
+  classNameBindings: ["isFocused"],
 
-  didReceiveAttrs() {
-    this._super();
-
-    this._setCaretIcon();
+  @computed("selectBoxIsExpanded", "caretUpIcon", "caretDownIcon")
+  caretIcon(selectBoxIsExpanded, caretUpIcon, caretDownIcon) {
+    return selectBoxIsExpanded === true ? caretUpIcon : caretDownIcon;
   },
 
   click(event) {
     this.sendAction("onToggle");
     event.stopPropagation();
-  },
-
-  _setCaretIcon() {
-    if(this.get("isExpanded") === true) {
-      this.set("caretIcon", this.get("caretUpIcon"));
-    } else {
-      this.set("caretIcon", this.get("caretDownIcon"));
-    }
   }
 });

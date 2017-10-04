@@ -4,13 +4,13 @@
   min-width: auto;
 
   &.is-expanded {
-    .collection,
-    .body {
+    .select-box-kit-collection,
+    .select-box-kit-body {
       border-radius: 0;
     }
   }
 
-  .body {
+  .select-box-kit-body {
     border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
     background-clip: padding-box;
     box-shadow: 0 1px 5px rgba(0,0,0,0.4);
@@ -18,7 +18,7 @@
     width: 300px;
   }
 
-  .row {
+  .select-box-kit-row {
     margin: 0;
     padding: 10px 5px;
 
@@ -75,7 +75,7 @@
     }
   }
 
-  .collection {
+  .select-box-kit-collection {
     padding: 0;
   }
 

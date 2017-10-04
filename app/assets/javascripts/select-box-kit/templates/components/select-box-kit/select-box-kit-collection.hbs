@@ -1,25 +1,34 @@
 {{#if none}}
-  <li data-id="none" {{action "onClearSelection" on="click"}} class="row clear-selection">
-    {{clearSelectionLabel}}
-  </li>
+  {{#if selectedContents}}
+    {{select-box-kit/select-box-kit-none-row
+      content=none
+      templateForRow=templateForNoneRow
+      titleForRow=titleForRow
+      shouldHighlightRow=shouldHighlightRow
+      shouldSelectRow=shouldSelectRow
+      highlightedValue=highlightedValue
+      onSelectNone=onSelectNone
+      onHover=onHoverRow
+      value=value
+    }}
+  {{/if}}
 {{/if}}
 
 {{#each filteredContent as |content|}}
   {{component rowComponent
     content=content
     templateForRow=templateForRow
-    idForRow=idForRow
     titleForRow=titleForRow
     shouldHighlightRow=shouldHighlightRow
     shouldSelectRow=shouldSelectRow
     highlightedValue=highlightedValue
-    onSelect=onSelectRow
+    onSelect=onSelect
     onHover=onHoverRow
     value=value
   }}
 {{else}}
   {{#if noContentLabel}}
-    <li class="row no-content">
+    <li class="select-box-kit-row no-content">
       {{noContentLabel}}
     </li>
   {{/if}}

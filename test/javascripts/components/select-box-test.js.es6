@@ -285,7 +285,7 @@ componentTest('dynamic headerText', {
 });
 
 componentTest('static headerText', {
-  template: '{{select-box value=1 content=content dynamicHeaderText=false headerText=headerText}}',
+  template: '{{select-box value=1 content=content headerText=headerText}}',
 
   beforeEach() {
     this.set("content", [{ id: 1, text: "robin" }, { id: 2, text: "regis" }]);

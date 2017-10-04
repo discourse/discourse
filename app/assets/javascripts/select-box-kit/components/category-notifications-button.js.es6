@@ -3,26 +3,26 @@ import computed from "ember-addons/ember-computed-decorators";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
 export default NotificationOptionsComponent.extend({
-  classNames: ["category-notifications-button"],
+  classNames: "category-notifications-button",
 
   isHidden: Ember.computed.or("category.deleted", "site.isMobileDevice"),
 
   i18nPrefix: "category.notifications",
 
-  value: Em.computed.alias("category.notification_level"),
+  value: Ember.computed.alias("category.notification_level"),
 
   @computed("value")
-  icon() {
-    return `${this._super()}${iconHTML("caret-down")}`.htmlSafe();
+  headerIcon(value) {
+    return `${this._super(value)}${iconHTML("caret-down")}`.htmlSafe();
   },
 
-  headertext: null,
+  headerText: null,
 
   actions: {
-    onSelectRow(content) {
-      this._super(content);
+    onSelect(content) {
+      this.defaultOnSelect();
 
-      this.get("category").setNotification(this.get("value"));
+      this.get("category").setNotification(this.valueForContent(content));
     }
   }
 });

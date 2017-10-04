@@ -3,9 +3,9 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 import computed from "ember-addons/ember-computed-decorators";
 
 export default DropdownSelectBoxComponent.extend({
-  classNames: ["categories-admin-dropdown"],
+  classNames: "categories-admin-dropdown",
 
-  icon: `${iconHTML('bars')}${iconHTML('caret-down')}`.htmlSafe(),
+  headerIcon: `${iconHTML('bars')}${iconHTML('caret-down')}`.htmlSafe(),
 
   headerText: null,
 
@@ -39,10 +39,10 @@ export default DropdownSelectBoxComponent.extend({
   },
 
   actions: {
-    onSelectRow(content) {
-      this._super(content);
+    onSelect(value) {
+      this.defaultOnSelect();
 
-      this.sendAction(`actionNames.${this.get("value")}`);
+      this.sendAction(`actionNames.${value}`);
       this.set("value", null);
     }
   }

@@ -23,7 +23,7 @@
   &.is-expanded {
     z-index: 999;
 
-    .body {
+    .select-box-kit-body {
       display: -webkit-box;
       display: -ms-flexbox;
       display: flex;
@@ -36,18 +36,18 @@
       top: 0;
     }
 
-    .collection, {
+    .select-box-kit-collection, {
       border-radius: inherit;
     }
   }
 
   &.is-above {
-    .body {
+    .select-box-kit-body {
       bottom: 0;
       top: auto;
     }
 
-    .wrapper {
+    .select-box-kit-wrapper {
       bottom: 0;
       top: auto;
     }
@@ -57,7 +57,7 @@
     opacity: 0.7;
   }
 
-  .header {
+  .select-box-kit-header {
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
     cursor: pointer;
@@ -108,14 +108,14 @@
     }
   }
 
-  .body {
+  .select-box-kit-body {
     display: none;
     background: $secondary;
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
   }
 
-  .row {
+  .select-box-kit-row {
     cursor: pointer;
     outline: none;
     display: -webkit-box;
@@ -145,34 +145,25 @@
     &.is-selected.is-highlighted {
       background: $tertiary-low;
     }
+
+    &.none:not(.is-highlighted) {
+      background: $primary-low;
+    }
   }
 
-  .collection {
-    -webkit-box-sizing: border-box;
-            box-sizing: border-box;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-flex: 0;
-        -ms-flex: 0 1 auto;
-            flex: 0 1 auto;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-            flex-direction: column;
+  .select-box-kit-collection {
     background: $secondary;
     overflow-x: hidden;
     overflow-y: auto;
     border-radius: inherit;
-    margin: 0;
-    padding: 0;
     -webkit-overflow-scrolling: touch;
+    margin: 0;
 
-    .collection {
+    .select-box-kit-collection {
       padding: 0;
       margin: 0;
 
-      &:hover .row.is-highlighted:hover {
+      &:hover .select-box-kit-row.is-highlighted:hover {
         background: $tertiary-low;
       }
     }
@@ -194,7 +185,7 @@
     }
   }
 
-  .filter {
+  .select-box-kit-filter {
     border-bottom: 1px solid $primary-low;
     background: $secondary;
     display: -webkit-box;
@@ -223,7 +214,7 @@
     }
   }
 
-  .wrapper {
+  .select-box-kit-wrapper {
     position: absolute;
     top: 0;
     left: 0;
@@ -235,7 +226,7 @@
     border: 1px solid transparent;
   }
 
-  .offscreen, .select-box .offscreen:focus {
+  .offscreen, .select-box-kit .offscreen:focus {
     clip: rect(0 0 0 0);
     width: 1px;
     height: 1px;

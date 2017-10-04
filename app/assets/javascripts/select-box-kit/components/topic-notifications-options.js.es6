@@ -4,7 +4,7 @@ import computed from "ember-addons/ember-computed-decorators";
 import { topicLevels, buttonDetails } from "discourse/lib/notification-levels";
 
 export default NotificationOptionsComponent.extend({
-  classNames: ["topic-notifications-options"],
+  classNames: "topic-notifications-options",
 
   content: topicLevels,
 
@@ -39,7 +39,7 @@ export default NotificationOptionsComponent.extend({
   },
 
   actions: {
-    onSelectRow(content) {
+    onSelect(content) {
       const notificationLevelId = this.valueForContent(content);
 
       if (notificationLevelId !== this.get("value")) {

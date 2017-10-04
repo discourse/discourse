@@ -3,7 +3,7 @@ import computed from "ember-addons/ember-computed-decorators";
 export default Ember.Component.extend({
   descriptionKey: "help",
 
-  classNames: ["pinned-button"],
+  classNames: "pinned-button",
 
   classNameBindings: ["isHidden"],
 

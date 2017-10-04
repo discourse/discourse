@@ -2,11 +2,20 @@ import computed from "ember-addons/ember-computed-decorators";
 import SelectBoxKitComponent from "select-box-kit/components/select-box-kit";
 
 export default SelectBoxKitComponent.extend({
-  classNames: ["dropdown-select-box"],
+  classNames: "dropdown-select-box",
+
   verticalOffset: 3,
-  collectionHeight: "auto",
+
   fullWidthOnMobile: true,
+
   headerComponent: "dropdown-select-box/dropdown-select-box-header",
+
+  init() {
+    this._super();
+
+    const value = this.get("value") || Ember.get(this.get("content"), "firstObject.value");
+    this.set("value", value);
+  },
 
   @computed
   templateForRow() {
@@ -19,13 +28,13 @@ export default SelectBoxKitComponent.extend({
         template += `<div class="icons">${icon}</div>`;
       }
 
-      const title = Ember.get(content, this.get("nameProperty"));
-      const desc = Ember.get(content, "description");
+      const title = Handlebars.escapeExpression(Ember.get(content, "name"));
+      const desc = Handlebars.escapeExpression(Ember.get(content, "originalContent.description"));
 
       template += `
         <div class="texts">
-          <span class="title">${Handlebars.escapeExpression(title)}</span>
-          <span class="desc">${Handlebars.escapeExpression(desc)}</span>
+          <span class="title">${title}</span>
+          <span class="desc">${desc}</span>
         </div>
       `;
 
@@ -34,10 +43,10 @@ export default SelectBoxKitComponent.extend({
   },
 
   actions: {
-    onSelectRow(content) {
-      this._super();
+    onSelect(value) {
+      this.defaultOnSelect();
 
-      this.set("value", content);
+      this.set("value", value);
     }
   },
 });

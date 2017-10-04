@@ -12,25 +12,24 @@
 
 {{component headerComponent
   text=headerText
+  icon=headerIcon
+  caretUpIcon=headerCaretUpIcon
+  caretDownIcon=headerCaretDownIcon
   isFocused=isFocused
-  caretUpIcon=caretUpIcon
-  caretDownIcon=caretDownIcon
+  selectBoxIsExpanded=isExpanded
+  selectedContents=selectedContents
+  onDeselect=(action "onDeselect")
   onToggle=(action "onToggle")
-  icon=icon
-  isExpanded=isExpanded
-  value=value
-  selectedValues=selectedValues
-  onDeselectContent=(action "onDeselectContent")
 }}
 
-<div class="body">
+<div class="select-box-kit-body">
   {{#if renderBody}}
     {{#if filterable}}
       {{component filterComponent
         onFilterChange=(action "onFilterChange")
         icon=filterIcon
         filter=filter
-        focused=filterFocused
+        isFocused=filterFocused
         placeholder=filterPlaceholder
         tabindex=tabindex
       }}
@@ -38,17 +37,17 @@
 
     {{component collectionComponent
       none=none
-      clearSelectionLabel=clearSelectionLabel
+      selectedContents=selectedContents
       filteredContent=filteredContent
       rowComponent=rowComponent
       templateForRow=templateForRow
+      templateForNoneRow=templateForNoneRow
       shouldHighlightRow=shouldHighlightRow
       shouldSelectRow=shouldSelectRow
       titleForRow=titleForRow
-      idForRow=idForRow
-      onSelectRow=(action "onSelectRow")
+      onSelectNone=(action "onSelectNone")
+      onSelect=(action "onSelect")
       onHoverRow=(action "onHoverRow")
-      onClearSelection=(action "onClearSelection")
       noContentLabel=noContentLabel
       highlightedValue=highlightedValue
       value=value
@@ -56,4 +55,4 @@
   {{/if}}
 </div>
 
-<div class="wrapper"></div>
+<div class="select-box-kit-wrapper"></div>

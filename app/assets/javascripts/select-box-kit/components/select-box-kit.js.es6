@@ -17,48 +17,24 @@ export default Ember.Component.extend({
   isDisabled: false,
   isExpanded: false,
   isFocused: false,
-  filterFocused: false,
-  renderBody: false,
   isHidden: false,
+  renderBody: false,
   tabindex: 0,
   scrollableParentSelector: ".modal-body",
 
-  caretUpIcon: "caret-up",
-  caretDownIcon: "caret-down",
-  headerPlacerholder: "select_box.default_header_text",
-  dynamicHeader: true,
-  icon: null,
-
-  @computed("selectedContents")
-  headerText(selectedContents) {
-    if (!Ember.isNone(this.get("none")) && Ember.isEmpty(selectedContents)) {
-      return this._localizeNone(this.get("none"));
-    } else {
-      return this.textForContent(selectedContents[0]);
-    }
-  },
-
-  _localizeNone(none) {
-    switch (typeof none){
-    case "string":
-      return I18n.t(none);
-    default:
-      return I18n.t(this.textForContent(none));
-    }
-  },
+  headerCaretUpIcon: "caret-up",
+  headerCaretDownIcon: "caret-down",
+  headerIcon: null,
 
   value: null,
-  valueIds: [],
   highlightedValue: null,
-  selectedContent: null,
   noContentLabel: I18n.t("select_box.no_content"),
-  none: null,
 
   valueAttribute: "id",
   nameProperty: "name",
-  iconKey: "icon",
 
   filterable: false,
+  filterFocused: false,
   filter: "",
   filterPlaceholder: I18n.t("select_box.filter_placeholder"),
   filterIcon: "search",
@@ -79,73 +55,41 @@ export default Ember.Component.extend({
     event.stopPropagation();
   },
 
-  @computed("selectedContents")
-  selectedContentsIds(selectedContents) {
-    return selectedContents.map((v) => this.valueForContent(v) );
-  },
-
-  @observes("value")
-  @on("didReceiveAttrs")
-  _valueChanged() {
-    const content = this.get("content");
-    const value = this.get("value");
-    const none = this.get("none");
-
-    if (!Ember.isNone(none) && Ember.isNone(value)) {
-      this.set("selectedContents", []);
-      return;
-    }
-
-    if (Ember.isNone(value) && !Ember.isEmpty(content)) {
-      this.set("selectedContents", [ content[0] ]);
-      return;
-    }
-
-    this.set("selectedContents", [ value ]);
-  },
-
   filterFunction: function(content) {
     return (selectBox) => {
       const filter = selectBox.get("filter").toLowerCase();
       return _.filter(content, (c) => {
-        return this.textForContent(c, selectBox.get("nameProperty"))
+        return this.nameForContent(c, selectBox.get("nameProperty"))
                    .toLowerCase()
                    .indexOf(filter) > -1;
       });
     };
   },
 
-  @computed("nameProperty")
-  titleForRow(nameProperty) {
-    return (rowComponent) => {
-      return this.textForContent(rowComponent.get("content"), nameProperty);
-    };
-  },
-
-  @computed("valueAttribute")
-  idForRow(valueAttribute) {
-    return (rowComponent) => {
-      return this.valueForContent(rowComponent.get("content"), valueAttribute);
-    };
-  },
-
   @computed
-  shouldHighlightRow: function() {
+  titleForRow() {
     return (rowComponent) => {
-      const id = this.valueForContent(rowComponent.get("content"));
-      return id === this.get("highlightedValue");
+      return this.nameForContent(rowComponent.get("content"));
     };
   },
 
-  @computed("value", "valueAttribute")
-  shouldSelectRow(value, valueAttribute) {
+  @computed("highlightedValue")
+  shouldHighlightRow(highlightedValue) {
     return (rowComponent) => {
-      const id = this.valueForContent(rowComponent.get("content"), valueAttribute);
+      const id = rowComponent.get("content.value");
+      return id === highlightedValue;
+    };
+  },
+
+  @computed("value")
+  shouldSelectRow(value) {
+    return (rowComponent) => {
+      const id = rowComponent.get("content.value");
       return id === value;
     };
   },
 
-  textForContent(content, nameProperty) {
+  nameForContent(content, nameProperty) {
     if (Ember.isNone(content)) {
       return null;
     }
@@ -160,11 +104,10 @@ export default Ember.Component.extend({
     }
   },
 
-
   valueForContent(content, valueAttribute) {
     valueAttribute = valueAttribute || this.get("valueAttribute");
 
-    switch (typeof content){
+    switch (typeof content) {
     case "string":
       return this._castInteger(content);
     default:
@@ -174,26 +117,37 @@ export default Ember.Component.extend({
 
   @computed
   templateForRow() {
+    return this._baseRowTemplate();
+  },
+
+  @computed
+  templateForNoneRow() {
+    return this._baseRowTemplate();
+  },
+
+  _baseRowTemplate() {
     return (rowComponent) => {
       let template = "";
 
-      const icon = rowComponent.icon();
-      if (icon) {
-        template += icon;
-      }
+      // const icon = rowComponent.icon();
+      // if (icon) {
+      //   template += icon;
+      // }
 
-      const text = this.textForContent(rowComponent.get("content"));
-      template += `<p class="text">${Handlebars.escapeExpression(text)}</p>`;
+      console.log(rowComponent, rowComponent.get("content"));
+
+      const name = rowComponent.get("content.name");
+      template += `<p class="text">${Handlebars.escapeExpression(name)}</p>`;
 
       return template;
     };
   },
 
   applyDirection() {
-    let options = { left: "auto", bottom: "auto", left: "auto", top: "auto" };
-    const headerHeight = this.$(".header").outerHeight(false);
-    const filterHeight = this.$(".filter").outerHeight(false);
-    const bodyHeight = this.$(".body").outerHeight(false);
+    let options = { left: "auto", bottom: "auto", top: "auto" };
+    const headerHeight = this.$(".select-box-kit-header").outerHeight(false);
+    const filterHeight = this.$(".select-box-kit-filter").outerHeight(false);
+    const bodyHeight = this.$(".select-box-kit-body").outerHeight(false);
     const windowWidth = $(window).width();
     const windowHeight = $(window).height();
     const boundingRect = this.$()[0].getBoundingClientRect();
@@ -207,7 +161,7 @@ export default Ember.Component.extend({
       options.maxWidth = options.minWidth = "unset";
     } else {
       const offsetLeft = boundingRect.left;
-      const bodyWidth = this.$(".body").outerWidth(false);
+      const bodyWidth = this.$(".select-box-kit-body").outerWidth(false);
       const hasRightSpace = (windowWidth - (this.get("horizontalOffset") + offsetLeft + filterHeight + bodyWidth) > 0);
 
       if (hasRightSpace) {
@@ -229,7 +183,17 @@ export default Ember.Component.extend({
       options.bottom = headerHeight + this.get("verticalOffset");
     }
 
-    this.$(".body").css(options);
+    this.$(".select-box-kit-body").css(options);
+  },
+
+  @computed("value", "content.[]")
+  selectedContents(value, content) {
+    return [ content.findBy("value", value) ];
+  },
+
+  @computed("selectedContents.[]")
+  headerText(selectedContents) {
+    return Ember.get(selectedContents, "firstObject.name");
   },
 
   init() {
@@ -240,8 +204,18 @@ export default Ember.Component.extend({
     }
 
     this.setProperties({
-      content: this.getWithDefault("content", []),
-      componentId: this.elementId
+      content: this.formatContent(this.getWithDefault("content", Ember.A())),
+      componentId: this.elemendId
+    });
+  },
+
+  formatContent(content) {
+    return content.map((c) => {
+      return {
+        value: this.valueForContent(c),
+        name: this.nameForContent(c),
+        originalContent: c
+      };
     });
   },
 
@@ -253,7 +227,7 @@ export default Ember.Component.extend({
 
   @on("willDestroyElement")
   _unbindEvents() {
-    this.$(".offscreen").off(
+    this.$(".select-box-kit-offscreen").off(
       "focusin.select-box-kit",
       "focusout.select-box-kit",
       "keydown.select-box-kit"
@@ -275,7 +249,7 @@ export default Ember.Component.extend({
         this._applyFixedPosition(computedWidth, computedHeight);
       }
 
-      this.$(".collection").css("max-height", this.get("collectionHeight"));
+      this.$(".select-box-kit-collection").css("max-height", this.get("collectionHeight"));
 
       Ember.run.schedule("afterRender", () => {
         this.applyDirection();
@@ -290,7 +264,7 @@ export default Ember.Component.extend({
     if (this.get("isExpanded")) {
       if ((keyCode === 13 || keyCode === 9) && Ember.isPresent(this.get("highlightedValue"))) {
         event.preventDefault();
-        this.send("onSelectRow", this.get("highlightedContent"));
+        this.send("onSelect", this.get("highlightedContent.value"));
       }
 
       if (keyCode === 9) {
@@ -333,7 +307,7 @@ export default Ember.Component.extend({
 
   @on("didInsertElement")
   _bindEvents() {
-    this.$(".offscreen")
+    this.$(".select-box-kit-offscreen")
       .on("focusin.select-box-kit", () => this.set("isFocused", true) )
       .on("focusout.select-box-kit", () => this.set("isFocused", false) );
 
@@ -341,7 +315,7 @@ export default Ember.Component.extend({
       .on("focusin.select-box-kit", () => this.set("filterFocused", true) )
       .on("focusout.select-box-kit", () => this.set("filterFocused", false) );
 
-    this.$(".offscreen").on("keydown.select-box-kit", (event) => {
+    this.$(".select-box-kit-offscreen").on("keydown.select-box-kit", (event) => {
       const keyCode = event.keyCode || event.which;
 
       if (keyCode === 13 || keyCode === 40) {
@@ -369,44 +343,19 @@ export default Ember.Component.extend({
     };
   },
 
-  @computed("value", "content.[]", "valueAttribute")
-  selectedContent(value, contents, valueAttribute) {
-    if (Ember.isNone(value)) {
-      return null;
-    }
-
-    return contents.find((content) => {
-      return this.valueForContent(content, valueAttribute) === value;
-    });
-  },
-
-  @computed("highlightedValue", "content.[]", "valueAttribute")
-  highlightedContent(highlightedValue, contents, valueAttribute) {
+  @computed("highlightedValue", "content.[]")
+  highlightedContent(highlightedValue, content) {
     if (Ember.isNone(highlightedValue)) {
       return null;
     }
 
-    return contents.find((content) => {
-      return this.valueForContent(content, valueAttribute) === highlightedValue;
+    return content.find((c) => {
+      return Ember.get(c, "value") === highlightedValue;
     });
   },
 
-  @computed("none")
-  clearSelectionLabel(none) {
-    if(Ember.isNone(none)) {
-      return null;
-    }
-
-    switch (typeof none){
-    case "string":
-      return I18n.t(none);
-    default:
-      return this.textForContent(none);
-    }
-  },
-
-  @computed("content.[]", "filter", "valueAttribute")
-  filteredContent(content, filter, valueAttribute) {
+  @computed("content.[]", "filter")
+  filteredContent(content, filter) {
     let filteredContent;
 
     if (Ember.isEmpty(filter)) {
@@ -415,7 +364,7 @@ export default Ember.Component.extend({
       filteredContent = this.filterFunction(content)(this);
 
       if (!Ember.isEmpty(filteredContent)) {
-        this.set("highlightedValue", filteredContent[0][valueAttribute]);
+        this.set("highlightedValue", filteredContent.get("firstObject.value"));
       }
     }
 
@@ -436,28 +385,21 @@ export default Ember.Component.extend({
       this.set("filter", filter);
     },
 
-    onHoverRow(content) {
-      const id = this.valueForContent(content);
-      this.set("highlightedValue", id);
+    onHoverRow(value) {
+      this.set("highlightedValue", value);
     },
 
-    onSelectRow() {
-      this.setProperties({ isExpanded: false, filter: "" });
-    },
-
-    onDeselectContent() {},
-
-    onClearSelection() {
-      this.setProperties({ value: null, isExpanded: false });
-    }
+    onSelectNone() {},
+    onSelect() {},
+    onDeselect() {}
   },
 
   _positionSelectBoxWrapper() {
-    const headerHeight = this.$(".header").outerHeight(false);
+    const headerHeight = this.$(".select-box-kit-header").outerHeight(false);
 
-    this.$(".wrapper").css({
+    this.$(".select-box-kit-wrapper").css({
       width: this.$().width(),
-      height: headerHeight + this.$(".body").outerHeight(false)
+      height: headerHeight + this.$(".select-box-kit-body").outerHeight(false)
     });
   },
 
@@ -470,7 +412,7 @@ export default Ember.Component.extend({
   },
 
   _applyFixedPosition(width, height) {
-    const $placeholder = $(`<div class='select-box-fixed-placeholder-${this.get("componentId")}' style='vertical-align: middle; height: ${height}px; width: ${width}px; line-height: ${height}px;display:inline-block'></div>`);
+    const $placeholder = $(`<div class='select-box-kit-fixed-placeholder-${this.get("componentId")}' style='vertical-align: middle; height: ${height}px; width: ${width}px; line-height: ${height}px;display:inline-block'></div>`);
 
     this.$()
       .before($placeholder)
@@ -485,7 +427,7 @@ export default Ember.Component.extend({
   },
 
   _removeFixedPosition() {
-    $(`.fixed-placeholder-${this.get("componentId")}`).remove();
+    $(`.select-box-kit-fixed-placeholder-${this.get("componentId")}`).remove();
     this.$().css({
       top: "auto",
       left: "auto",
@@ -507,33 +449,37 @@ export default Ember.Component.extend({
 
   _handleArrow(direction) {
     const content = this.get("filteredContent");
-    const valueAttribute = this.get("valueAttribute");
-    const selectedContent = content.findBy(valueAttribute, this.get("highlightedValue"));
-    const currentIndex = content.indexOf(selectedContent);
+    const highlightedContent = content.findBy("value", this.get("highlightedValue"));
+    const currentIndex = content.indexOf(highlightedContent);
 
     if (direction === "down") {
       if (currentIndex < 0) {
-        this.set("highlightedValue", this._castInteger(Ember.get(content[0], valueAttribute)));
+        this.set("highlightedValue", Ember.get(content, "firstObject.value"));
       } else if(currentIndex + 1 < content.length) {
-        this.set("highlightedValue", this._castInteger(Ember.get(content[currentIndex + 1], valueAttribute)));
+        this.set("highlightedValue", Ember.get(content, `${currentIndex+1}.value`));
       }
     } else {
       if (currentIndex <= 0) {
-        this.set("highlightedValue", this._castInteger(Ember.get(content[0], valueAttribute)));
+        this.set("highlightedValue", Ember.get(content, "firstObject.value"));
       } else if(currentIndex - 1 < content.length) {
-        this.set("highlightedValue", this._castInteger(Ember.get(content[currentIndex - 1], valueAttribute)));
+        this.set("highlightedValue", Ember.get(content, `${currentIndex-1}.value`));
       }
     }
 
     Ember.run.schedule("afterRender", () => {
-      const $highlightedRow = this.$(".row.is-highlighted");
+      const $highlightedRow = this.$(".select-box-kit-row.is-highlighted");
 
       if ($highlightedRow.length === 0) { return; }
 
-      const $collection = this.$(".collection");
+      const $collection = this.$(".select-box-kit-collection");
       const rowOffset = $highlightedRow.offset();
       const bodyOffset = $collection.offset();
       $collection.scrollTop(rowOffset.top - bodyOffset.top);
     });
+  },
+
+
+  defaultOnSelect() {
+    this.setProperties({ isExpanded: false, filter: "" });
   }
 });
