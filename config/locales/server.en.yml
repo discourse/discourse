@@ -2660,11 +2660,11 @@ en:
       title: "Account already exists"
       subject_template: "[%{email_prefix}] Account already exists"
       text_body_template: |
-        You just tried to create an account at %{site_name}. However, an account already exists for %{email}.
+        You just tried to create an account at %{site_name}, or tried to change the email of an account to %{email}. However, an account already exists for %{email}.
 
         If you forgot your password, [reset it now](%{base_url}/password-reset).
 
-        If you didn’t try to create an account for %{email}, don’t worry – you can safely ignore this message.
+        If you didn’t try to create an account for %{email} or change your email address, don’t worry – you can safely ignore this message.
 
         If you have any questions, [contact our friendly staff](%{base_url}/about).
 
