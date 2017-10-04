@@ -64,4 +64,30 @@ describe Stylesheet::Manager do
     # our theme better have a name with the theme_id as part of it
     expect(new_link).to include("/stylesheets/desktop_theme_#{theme.id}_")
   end
+
+  describe 'color_scheme_digest' do
+    it "changes with category background image" do
+      theme = Theme.new(
+        name: 'parent',
+        user_id: -1
+      )
+      category1 = Fabricate(:category, uploaded_background_id: 123, updated_at: 1.week.ago)
+      category2 = Fabricate(:category, uploaded_background_id: 456, updated_at: 2.days.ago)
+
+      manager = Stylesheet::Manager.new(:desktop_theme, theme.key)
+
+      digest1 = manager.color_scheme_digest
+
+      category2.update_attributes(uploaded_background_id: 789, updated_at: 1.day.ago)
+
+      digest2 = manager.color_scheme_digest
+      expect(digest2).to_not eq(digest1)
+
+      category1.update_attributes(uploaded_background_id: nil, updated_at: 5.minutes.ago)
+
+      digest3 = manager.color_scheme_digest
+      expect(digest3).to_not eq(digest2)
+      expect(digest3).to_not eq(digest1)
+    end
+  end
 end
