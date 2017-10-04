@@ -85,6 +85,11 @@ before_fork do |server, worker|
       end
     end
 
+    # preload discourse version
+    Discourse.git_version
+    Discourse.git_branch
+    Discourse.full_version
+
     # get rid of rubbish so we don't share it
     GC.start
 

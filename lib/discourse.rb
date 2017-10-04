@@ -327,42 +327,50 @@ module Discourse
     end
   end
 
-  def self.git_version
-    return $git_version if $git_version
+  def self.ensure_version_file_loaded
+    unless @version_file_loaded
+      version_file = "#{Rails.root}/config/version.rb"
+      require version_file if File.exists?(version_file)
+      @version_file_loaded = true
+    end
+  end
 
-    git_cmd = 'git rev-parse HEAD'
-    self.load_version_or_git(git_cmd, Discourse::VERSION::STRING) { $git_version }
+  def self.git_version
+    ensure_version_file_loaded
+    $git_version ||=
+      begin
+        git_cmd = 'git rev-parse HEAD'
+        self.try_git(git_cmd, Discourse::VERSION::STRING)
+      end
   end
 
   def self.git_branch
-    return $git_branch if $git_branch
-    git_cmd = 'git rev-parse --abbrev-ref HEAD'
-    self.load_version_or_git(git_cmd, 'unknown') { $git_branch }
+    ensure_version_file_loaded
+    $git_branch ||=
+      begin
+        git_cmd = 'git rev-parse --abbrev-ref HEAD'
+        self.try_git(git_cmd, 'unknown')
+      end
   end
 
   def self.full_version
-    return $full_version if $full_version
-    git_cmd = 'git describe --dirty --match "v[0-9]*"'
-    self.load_version_or_git(git_cmd, 'unknown') { $full_version }
+    ensure_version_file_loaded
+    $full_version ||=
+      begin
+        git_cmd = 'git describe --dirty --match "v[0-9]*"'
+        self.try_git(git_cmd, 'unknown')
+      end
   end
 
-  def self.load_version_or_git(git_cmd, default_value)
-    version_file  = "#{Rails.root}/config/version.rb"
+  def self.try_git(git_cmd, default_value)
     version_value = false
 
-    if File.exists?(version_file)
-      require version_file
-      version_value = yield
+    begin
+      version_value = `#{git_cmd}`.strip
+    rescue
+      version_value = default_value
     end
 
-    # file does not exist or does not define the expected global variable
-    unless version_value
-      begin
-        version_value = `#{git_cmd}`.strip
-      rescue
-        version_value = default_value
-      end
-    end
     if version_value.empty?
       version_value = default_value
     end
