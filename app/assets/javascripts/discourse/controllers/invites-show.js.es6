@@ -61,7 +61,7 @@ export default Ember.Controller.extend(PasswordValidation, UsernameValidation, N
           username: this.get('accountUsername'),
           name: this.get('accountName'),
           password: this.get('accountPassword'),
-          userCustomFields
+          user_custom_fields: userCustomFields
         }
       }).then(result => {
         if (result.success) {
