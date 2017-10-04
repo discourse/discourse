@@ -11,7 +11,12 @@ function sexp(value) {
     let result = [];
 
     value.hash.pairs.forEach(p => {
-      result.push(`"${p.key}": ${p.value.original}`);
+      let pValue = p.value.original;
+      if (p.value.type === "StringLiteral") {
+        pValue = JSON.stringify(pValue);
+      }
+
+      result.push(`"${p.key}": ${pValue}`);
     });
 
     return `{ ${result.join(", ")} }`;

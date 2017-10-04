@@ -3,7 +3,7 @@ template = <<~HBS
   {{a}}
   {{{htmlValue}}}
   {{#if state.category}}
-    {{attach widget="category-display" attrs=(hash category=state.category)}}
+    {{attach widget="category-display" attrs=(hash category=state.category someNumber=123 someString="wat")}}
   {{/if}}
 HBS
 
