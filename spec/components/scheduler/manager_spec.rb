@@ -70,7 +70,6 @@ describe Scheduler::Manager do
     manager.remove(Testing::SuperLongJob)
     manager.remove(Testing::PerHostJob)
     $redis.flushall
-    expect(ActiveRecord::Base.connection_pool.connections.reject { |c| !c.in_use? }.length).to eq(1)
 
     # connections that are not in use must be removed
     # otherwise active record gets super confused
