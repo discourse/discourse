@@ -35,9 +35,10 @@ registerButton('like', attrs => {
 
   const button = {
     action: 'like',
-    icon: 'heart',
+    icon: attrs.liked ? 'd-liked' : 'd-unliked',
     className
   };
+
 
   if (attrs.canToggleLike) {
     button.title = attrs.liked ? 'post.controls.undo_like' : 'post.controls.like';
@@ -368,7 +369,7 @@ export default createWidget('post-menu', {
       return this.sendWidgetAction('toggleLike');
     }
 
-    const $heart = $(`[data-post-id=${attrs.id}] .d-icon-heart`);
+    const $heart = $(`[data-post-id=${attrs.id}] .toggle-like .d-icon`);
     $heart.closest('button').addClass('has-like');
 
     if (!Ember.testing) {
