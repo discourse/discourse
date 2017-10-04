@@ -77,7 +77,7 @@ class UserOption < ActiveRecord::Base
     $redis.expire(key, delay)
 
     # delay the update
-    Jobs.enqueue_in(delay / 2, :update_top_redirection, user_id: self.id, redirected_at: Time.zone.now)
+    Jobs.enqueue_in(delay / 2, :update_top_redirection, user_id: self.user_id, redirected_at: Time.zone.now)
   end
 
   def should_be_redirected_to_top
@@ -92,10 +92,10 @@ class UserOption < ActiveRecord::Base
     return if user.trust_level > 0 && user.last_seen_at && user.last_seen_at > 1.month.ago
 
     # top must be in the top_menu
-    return unless SiteSetting.top_menu =~ /(^|\|)top(\||$)/i
+    return unless SiteSetting.top_menu[/\btop\b/i]
 
     # not enough topics
-    return unless period = SiteSetting.min_redirected_to_top_period(1.days.ago)
+    return unless period = SiteSetting.min_redirected_to_top_period(1.day.ago)
 
     if !user.seen_before? || (user.trust_level == 0 && !redirected_to_top_yet?)
       update_last_redirected_to_top!
