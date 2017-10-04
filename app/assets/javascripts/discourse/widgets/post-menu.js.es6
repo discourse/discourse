@@ -217,7 +217,7 @@ registerButton('delete', attrs => {
   } else if (attrs.canRecover) {
     return { id: 'recover', action: 'recoverPost', title: 'post.controls.undelete', icon: 'undo', className: 'recover' };
   } else if (attrs.canDelete) {
-    return { action: 'delete', title: 'post.controls.delete', icon: 'trash-o', className: 'delete' };
+    return { id: 'delete', action: 'deletePost', title: 'post.controls.delete', icon: 'trash-o', className: 'delete' };
   }
 });
 
