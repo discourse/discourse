@@ -1333,6 +1333,14 @@ describe Topic do
         }.to change { TopicTimer.count }.by(1)
       end
 
+      it 'should not be override when setting a public topic timer' do
+        reminder
+
+        expect do
+          topic.set_or_create_timer(TopicTimer.types[:close], 3, by_user: reminder.user)
+        end.to change { TopicTimer.count }.by(1)
+      end
+
       it "can update a user's existing record" do
         freeze_time now
 
