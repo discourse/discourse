@@ -42,23 +42,18 @@ end
 
 desc 'Rebake all posts matching string/regex and optionally delay the loop'
 task 'posts:rebake_match', [:pattern, :type, :delay] => [:environment] do |_, args|
+  args.with_defaults(type: 'string')
   pattern = args[:pattern]
-  type = args[:type]
-  type = type.downcase if type
-  delay = args[:delay].to_i if args[:delay]
+  type = args[:type]&.downcase
+  delay = args[:delay]&.to_i
+
   if !pattern
     puts "ERROR: Expecting rake posts:rebake_match[pattern,type,delay]"
     exit 1
   elsif delay && delay < 1
     puts "ERROR: delay parameter should be an integer and greater than 0"
     exit 1
-  end
-
-  if type == "regex"
-    search = Post.where("raw ~ ?", pattern)
-  elsif type == "string" || !type
-    search = Post.where("raw ILIKE ?", "%#{pattern}%")
-  else
+  elsif type != 'string' && type != 'regex'
     puts "ERROR: Expecting rake posts:rebake_match[pattern,type] where type is string or regex"
     exit 1
   end
@@ -66,7 +61,7 @@ task 'posts:rebake_match', [:pattern, :type, :delay] => [:environment] do |_, ar
   rebaked = 0
   total = search.count
 
-  search.find_each do |post|
+  Post.raw_match(pattern, type).find_each do |post|
     rebake_post(post)
     print_status(rebaked += 1, total)
     sleep(delay) if delay
@@ -130,11 +125,15 @@ task 'posts:normalize_code' => :environment do
   puts "#{i} posts normalized!"
 end
 
-def remap_posts(find, replace = "")
+def remap_posts(find, type, replace = "")
   i = 0
-  Post.where("raw LIKE ?", "%#{find}%").each do |p|
-    new_raw = p.raw.dup
-    new_raw = new_raw.gsub!(/#{Regexp.escape(find)}/, replace) || new_raw
+
+  Post.raw_match(find, type).find_each do |p|
+    new_raw =
+      case type
+      when 'string' then p.raw.gsub(/#{Regexp.escape(find)}/, replace)
+      when 'regex' then p.raw.gsub(/#{find}/, replace)
+      end
 
     if new_raw != p.raw
       p.revise(Discourse.system_user, { raw: new_raw }, bypass_bump: true, skip_revision: true)
@@ -142,42 +141,59 @@ def remap_posts(find, replace = "")
       i += 1
     end
   end
+
   i
 end
 
 desc 'Remap all posts matching specific string'
-task 'posts:remap', [:find, :replace] => [:environment] do |_, args|
+task 'posts:remap', [:find, :replace, :type] => [:environment] do |_, args|
+  require 'highline/import'
 
+  args.with_defaults(type: 'string')
   find = args[:find]
   replace = args[:replace]
+  type = args[:type]&.downcase
+
   if !find
     puts "ERROR: Expecting rake posts:remap['find','replace']"
     exit 1
   elsif !replace
     puts "ERROR: Expecting rake posts:remap['find','replace']. Want to delete a word/string instead? Try rake posts:delete_word['word-to-delete']"
     exit 1
+  elsif type != 'string' && type != 'regex'
+    puts "ERROR: Expecting rake posts:delete_word[pattern, type] where type is string or regex"
+    exit 1
+  else
+    confirm_replace = ask("Are you sure you want to replace all #{type} occurrences of '#{find}' with '#{replace}'? (Y/n)")
+    exit 1 unless (confirm_replace == "" || confirm_replace.downcase == 'y')
   end
 
   puts "Remapping"
-  total = remap_posts(find, replace)
+  total = remap_posts(find, type, replace)
   puts "", "#{total} posts remapped!", ""
 end
 
 desc 'Delete occurrence of a word/string'
-task 'posts:delete_word', [:find] => [:environment] do |_, args|
+task 'posts:delete_word', [:find, :type] => [:environment] do |_, args|
   require 'highline/import'
 
+  args.with_defaults(type: 'string')
   find = args[:find]
+  type = args[:type]&.downcase
+
   if !find
     puts "ERROR: Expecting rake posts:delete_word['word-to-delete']"
     exit 1
+  elsif type != 'string' && type != 'regex'
+    puts "ERROR: Expecting rake posts:delete_word[pattern, type] where type is string or regex"
+    exit 1
   else
-    confirm_replace = ask("Are you sure you want to remove all occurrences of '#{find}'? (Y/n)  ")
-    exit 1 unless (confirm_replace == "" || confirm_replace.downcase == 'y')
+    confirm_delete = ask("Are you sure you want to remove all #{type} occurrences of '#{find}'? (Y/n)")
+    exit 1 unless (confirm_delete == "" || confirm_delete.downcase == 'y')
   end
 
   puts "Processing"
-  total = remap_posts(find)
+  total = remap_posts(find, type)
   puts "", "#{total} posts updated!", ""
 end
 
