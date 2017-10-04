@@ -106,6 +106,4 @@
   <% content_for :title do %><%= @category.name %> - <%= SiteSetting.title %><% end %>
 <% elsif params[:page].to_i > 1 %>
   <% content_for :title do %><%=t 'page_num', num: params[:page].to_i + 1 %> - <%= SiteSetting.title %><% end %>
-<% else %>
-  <% content_for :title do %><%= SiteSetting.title %><% end %>
 <% end %>
