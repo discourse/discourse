@@ -4,7 +4,7 @@ import { observes } from "ember-addons/ember-computed-decorators";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
 export default DropdownSelectBoxComponent.extend({
-  classNames: ["pinned-options"],
+  classNames: "pinned-options",
 
   @computed("topic.pinned")
   value(pinned) {
@@ -12,7 +12,7 @@ export default DropdownSelectBoxComponent.extend({
   },
 
   @observes("topic.pinned")
-  _pinnedChanged() {
+  _pinStateChanged() {
     this.set("value", this.get("topic.pinned") ? "pinned" : "unpinned");
   },
 
@@ -23,13 +23,13 @@ export default DropdownSelectBoxComponent.extend({
     return [
       {
         id: "pinned",
-        text: I18n.t("topic_statuses.pinned" + globally + ".title"),
+        name: I18n.t("topic_statuses.pinned" + globally + ".title"),
         description: I18n.t('topic_statuses.pinned' + globally + '.help'),
         icon: "thumb-tack"
       },
       {
         id: "unpinned",
-        text: I18n.t("topic_statuses.unpinned.title"),
+        name: I18n.t("topic_statuses.unpinned.title"),
         icon: "thumb-tack",
         description: I18n.t('topic_statuses.unpinned.help'),
         iconClass: "unpinned"
@@ -38,7 +38,7 @@ export default DropdownSelectBoxComponent.extend({
   },
 
   @computed("topic.pinned", "topic.pinned_globally")
-  icon(pinned, pinnedGlobally) {
+  headerIcon(pinned, pinnedGlobally) {
     const globally = pinnedGlobally ? "_globally" : "";
     const state = pinned ? `pinned${globally}` : "unpinned";
 
@@ -58,12 +58,12 @@ export default DropdownSelectBoxComponent.extend({
   },
 
   actions: {
-    onSelectRow(content) {
-      this._super(content);
+    onSelect(value) {
+      this.defaultOnSelect();
 
       const topic = this.get("topic");
 
-      if (this.get("value") === "unpinned") {
+      if (value === "unpinned") {
         topic.clearPin();
       } else {
         topic.rePin();

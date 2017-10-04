@@ -1,18 +1,17 @@
 import MultiComboBoxComponent from "select-box-kit/components/multi-combo-box";
-import { on, observes } from "ember-addons/ember-computed-decorators";
 
 export default MultiComboBoxComponent.extend({
-  classNames: ["new-admin-group-selector"],
+  classNames: "new-admin-group-selector",
 
   actions: {
-    onSelectRow(content) {
-      this._super();
+    onSelect(content) {
+      this.defaultOnSelect();
 
       this.triggerAction({ action: "groupAdded", actionContext: content });
     },
 
-    onDeselectContent(content) {
-      this._super();
+    onDeselect(content) {
+      this.defaultOnSelect();
 
       this.triggerAction({
         action: "groupRemoved",

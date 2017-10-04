@@ -5,7 +5,7 @@ import { buttonDetails } from "discourse/lib/notification-levels";
 import { allLevels } from "discourse/lib/notification-levels";
 
 export default DropdownSelectBoxComponent.extend({
-  classNames: ["notifications-button"],
+  classNames: "notifications-button",
 
   i18nPrefix: "",
   i18nPostfix: "",
@@ -14,10 +14,12 @@ export default DropdownSelectBoxComponent.extend({
   fullWidthOnMobile: true,
   content: allLevels,
 
+  collectionHeight: "auto",
+
   value: Em.computed.alias("notificationLevel"),
 
   @computed("selectedDetails")
-  icon(details) {
+  headerIcon(details) {
     return iconHTML(details.icon, {class: details.key}).htmlSafe();
   },
 
@@ -39,28 +41,30 @@ export default DropdownSelectBoxComponent.extend({
   @computed
   titleForRow: function() {
     return (rowComponent) => {
-      const notificationLevel = rowComponent.get(`content.${this.get("idKey")}`);
+      const notificationLevel = rowComponent.get("content.value");
       const details = buttonDetails(notificationLevel);
       return I18n.t(`${this.get("i18nPrefix")}.${details.key}.title`);
     };
   },
 
   @computed
-  templateForRow: function() {
+  templateForRow() {
     return (rowComponent) => {
       const content = rowComponent.get("content");
-      const start = `${this.get("i18nPrefix")}.${content.key}${this.get("i18nPostfix")}`;
-      const title = I18n.t(`${start}.title`);
-      const description = I18n.t(`${start}.description`);
+      const name = Ember.get(content, "name");
+      const start = `${this.get("i18nPrefix")}.${name}${this.get("i18nPostfix")}`;
+      const title = Handlebars.escapeExpression(I18n.t(`${start}.title`));
+      const description = Handlebars.escapeExpression(I18n.t(`${start}.description`));
+      const icon = Ember.get(content, "originalContent.icon");
 
       return `
         <div class="icons">
           <span class="selection-indicator"></span>
-          ${iconHTML(content.icon, { class: content.key.dasherize() })}
+          ${iconHTML(icon, { class: name.dasherize() })}
         </div>
         <div class="texts">
-          <span class="title">${Handlebars.escapeExpression(title)}</span>
-          <span class="desc">${Handlebars.escapeExpression(description)}</span>
+          <span class="title">${title}</span>
+          <span class="desc">${description}</span>
         </div>
       `;
     };

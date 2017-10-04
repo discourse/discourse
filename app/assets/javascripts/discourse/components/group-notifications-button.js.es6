@@ -8,7 +8,7 @@ export default NotificationOptionsComponent.extend({
   i18nPrefix: "groups.notifications",
 
   actions: {
-    onSelectRow(content) {
+    onSelect(content) {
       this._super(content);
 
       this.get("group").setNotification(this.get("value"), this.get("user.id"));

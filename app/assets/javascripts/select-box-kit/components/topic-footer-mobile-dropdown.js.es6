@@ -1,9 +1,9 @@
 import { observes } from 'ember-addons/ember-computed-decorators';
 import computed from 'ember-addons/ember-computed-decorators';
-import ComboBoxComponent from "select-box-kit/components/combo-box";
+import ComboBoxComponent from 'select-box-kit/components/combo-box';
 
 export default ComboBoxComponent.extend({
-  headerText: I18n.t("topic.controls"),
+  headerText: I18n.t('topic.controls'),
 
   @computed
   content() {
@@ -43,7 +43,7 @@ export default ComboBoxComponent.extend({
     }
 
     const refresh = () => {
-      this._createContent();
+      // this._createContent();
       this.set('value', null);
     };
 

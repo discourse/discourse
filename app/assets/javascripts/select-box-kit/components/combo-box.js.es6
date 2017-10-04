@@ -1,18 +1,69 @@
 import SelectBoxKitComponent from "select-box-kit/components/select-box-kit";
+import computed from "ember-addons/ember-computed-decorators";
 
 export default SelectBoxKitComponent.extend({
-  classNames: ['combobox'],
+  classNames: "combobox",
+
+  none: null,
+
+  @computed("value", "content.[]", "none")
+  selectedContents(value, content, none) {
+    const selectedContent = content.findBy("value", value);
+
+    if (Ember.isNone(selectedContent)) {
+      if (Ember.isNone(none)) {
+        return [];
+      } else {
+        switch (typeof none) {
+        case "string":
+          return [];
+        default:
+          return [ none ];
+        }
+      }
+    } else {
+      return [ selectedContent ];
+    }
+  },
+
+  @computed("selectedContents", "none", "value", "filteredContent")
+  headerText(selectedContents, none, value, filteredContent) {
+    console.log("header text", value, none)
+    if (Ember.isNone(value) && !Ember.isNone(none)) {
+      return this._localizeNone(none).htmlSafe();
+    }
+
+    if (!Ember.isEmpty(selectedContents)) {
+      return selectedContents.get("firstObject.name");
+    } else {
+      return filteredContent.get("firstObject.name");
+    }
+  },
+
+  _localizeNone(none) {
+    console.log(none)
+    switch (typeof none){
+    case "string":
+      return I18n.t(none);
+    default:
+      return none.get("name");
+    }
+  },
 
   actions: {
-    onSelectRow(content) {
-      this._super();
+    onSelectNone() {
+      this.defaultOnSelect();
+      this.set("value", null);
+    },
 
-      this.set("value", content);
+    onSelect(value) {
+      this.defaultOnSelect();
+      this.set("value", value);
     }
   }
 });
 
-  // import { bufferedRender } from 'select-box-kit/lib/buffered-render';
+// import { bufferedRender } from 'select-box-kit/lib/buffered-render';
 // import { on, observes } from 'ember-addons/ember-computed-decorators';
 // import { iconHTML } from 'select-box-kit/lib/icon-library';
 //

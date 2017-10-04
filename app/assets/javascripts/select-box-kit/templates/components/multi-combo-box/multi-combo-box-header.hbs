@@ -1,8 +1,16 @@
 <ul class="choices">
-  {{#each selectedValues as |selectedValue|}}
+  {{#each selectedContents as |selectedContent|}}
     <li class="selected-value">
-      <span {{action onDeselectContent selectedValue bubbles=false}}>{{d-icon "times"}}</span>
-      <span>{{selectedValue.name}}</span>
+      <span class="delete-icon" {{action onDeselect selectedContent.value bubbles=false}}>
+        {{d-icon "times"}}
+      </span>
+      <span class="name">
+        {{selectedContent.name}}
+      </span>
+    </li>
+  {{else}}
+    <li class="choice-placeholder">
+      {{i18n text}}
     </li>
   {{/each}}
 </ul>
