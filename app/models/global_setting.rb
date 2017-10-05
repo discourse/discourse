@@ -118,13 +118,6 @@ class GlobalSetting
         c[:db] = redis_db if redis_db != 0
         c[:db] = 1 if Rails.env == "test"
 
-        if redis_sentinels.present?
-          c[:sentinels] = redis_sentinels.split(",").map do |address|
-            host, port = address.split(":")
-            { host: host, port: port }
-          end.to_a
-        end
-
         c.freeze
       end
   end
