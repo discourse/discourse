@@ -140,9 +140,13 @@ class Compiler {
         }
         break;
       case "BlockStatement":
+        let negate = '';
+
         switch(node.path.original) {
+          case 'unless':
+            negate = '!';
           case 'if':
-            instructions.push(`if (${node.params[0].original}) {`);
+            instructions.push(`if (${negate}${node.params[0].original}) {`);
             node.program.body.forEach(child => {
               instructions = instructions.concat(this.processNode(parentAcc, child));
             });
