@@ -249,6 +249,11 @@ export default createWidget('post-menu', {
     }
   },
 
+  menuItems() {
+    let result = this.siteSettings.post_menu.split('|');
+    return result;
+  },
+
   html(attrs, state) {
     const { siteSettings } = this;
 
@@ -260,7 +265,7 @@ export default createWidget('post-menu', {
     const allButtons = [];
     let visibleButtons = [];
 
-    const orderedButtons = siteSettings.post_menu.split('|');
+    const orderedButtons = this.menuItems();
 
     // If the post is a wiki, make Edit more prominent
     if (attrs.wiki) {
