@@ -96,7 +96,7 @@ class DiscourseCLI < Thor
     if !filename
       puts "You must provide a filename to restore. Did you mean one of the following?\n\n"
 
-      Dir["public/backups/default/*"].each do |f|
+      Dir["public/backups/default/*"].sort_by { |filename| File.mtime(filename) }.reverse.each do |f|
         puts "#{discourse} restore #{File.basename(f)}"
       end
 
