@@ -5,7 +5,13 @@ template = <<~HBS
   {{#if state.category}}
     {{attach widget="category-display" attrs=(hash category=state.category someNumber=123 someString="wat")}}
   {{/if}}
-  {{#unless state.hello}}
+  {{#each transformed.something as |s|}}
+    {{s.wat}}
+  {{/each}}
+
+  {{attach widget=settings.widgetName}}
+
+  {{#unless settings.hello}}
     XYZ
   {{/unless}}
 HBS
