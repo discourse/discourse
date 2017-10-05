@@ -1,5 +1,5 @@
 function resolve(path) {
-  if (path.indexOf('settings') === 0) {
+  if (path.indexOf('settings') === 0 || path.indexOf('transformed') === 0) {
     return `this.${path}`;
   }
   return path;
@@ -29,6 +29,8 @@ function argValue(arg) {
     return sexp(arg.value);
   } else if (value.type === "PathExpression") {
     return value.original;
+  } else if (value.type === "StringLiteral") {
+    return JSON.stringify(value.value);
   }
 }
 
@@ -37,13 +39,13 @@ function mustacheValue(node, state) {
 
   switch(path) {
     case 'attach':
-      let widgetName = node.hash.pairs.find(p => p.key === "widget").value.value;
+      let widgetName = argValue(node.hash.pairs.find(p => p.key === "widget"));
 
       let attrs = node.hash.pairs.find(p => p.key === "attrs");
       if (attrs) {
-        return `this.attach("${widgetName}", ${argValue(attrs)})`;
+        return `this.attach(${widgetName}, ${argValue(attrs)})`;
       }
-      return `this.attach("${widgetName}", attrs)`;
+      return `this.attach(${widgetName}, attrs)`;
 
       break;
     case 'yield':
@@ -54,7 +56,7 @@ function mustacheValue(node, state) {
       if (node.params[0].type === "StringLiteral") {
         value = `"${node.params[0].value}"`;
       } else if (node.params[0].type === "PathExpression") {
-        value = node.params[0].original;
+        value = resolve(node.params[0].original);
       }
 
       if (value) {
@@ -146,7 +148,7 @@ class Compiler {
           case 'unless':
             negate = '!';
           case 'if':
-            instructions.push(`if (${negate}${node.params[0].original}) {`);
+            instructions.push(`if (${negate}${resolve(node.params[0].original)}) {`);
             node.program.body.forEach(child => {
               instructions = instructions.concat(this.processNode(parentAcc, child));
             });
@@ -160,7 +162,7 @@ class Compiler {
             instructions.push(`}`);
             break;
           case 'each':
-            const collection = node.params[0].original;
+            const collection = resolve(node.params[0].original);
             instructions.push(`if (${collection} && ${collection}.length) {`);
             instructions.push(`  ${collection}.forEach(${node.program.blockParams[0]} => {`);
             node.program.body.forEach(child => {

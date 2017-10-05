@@ -91,6 +91,8 @@ function drawWidget(builder, attrs, state) {
     }
   }
 
+  this.transformed = this.transform();
+
   let contents = this.html(attrs, state);
   if (this.name) {
     const beforeContents = applyDecorators(this, 'before', attrs, state) || [];
@@ -171,6 +173,10 @@ export default class Widget {
         Object.keys(custom).forEach(k => this.settings[k] = custom[k]);
       }
     }
+  }
+
+  transform() {
+    return {};
   }
 
   defaultState() {
