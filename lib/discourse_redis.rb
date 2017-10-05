@@ -2,6 +2,7 @@
 #  A wrapper around redis that namespaces keys with the current site id
 #
 require_dependency 'cache'
+
 class DiscourseRedis
   class FallbackHandler
     include Singleton
@@ -14,16 +15,24 @@ class DiscourseRedis
       @running = false
       @mutex = Mutex.new
       @slave_config = DiscourseRedis.slave_config
-      @timer_task = init_timer_task
       @message_bus_keepalive_interval = MessageBus.keepalive_interval
     end
 
     def verify_master
-      synchronize do
-        return if @timer_task.running?
-      end
+      synchronize { return if @thread && @thread.alive? }
 
-      @timer_task.execute
+      @thread = Thread.new do
+        loop do
+          begin
+            thread = Thread.new { initiate_fallback_to_master }
+            thread.join
+            break if synchronize { @master }
+            sleep 10
+          ensure
+            thread.kill
+          end
+        end
+      end
     end
 
     def initiate_fallback_to_master
@@ -31,10 +40,10 @@ class DiscourseRedis
 
       begin
         slave_client = ::Redis::Client.new(@slave_config)
-        logger.info "#{log_prefix}: Checking connection to master server..."
+        logger.warn "#{log_prefix}: Checking connection to master server..."
 
         if slave_client.call([:info]).split("\r\n").include?(MASTER_LINK_STATUS)
-          logger.info "#{log_prefix}: Master server is active, killing all connections to slave..."
+          logger.warn "#{log_prefix}: Master server is active, killing all connections to slave..."
 
           self.master = true
 
@@ -67,17 +76,7 @@ class DiscourseRedis
       end
     end
 
-    def running?
-      @timer_task.running?
-    end
-
     private
-
-    def init_timer_task
-      Concurrent::TimerTask.new(execution_interval: 10) do |task|
-        task.shutdown if initiate_fallback_to_master
-      end
-    end
 
     def synchronize
       @mutex.synchronize { yield }
@@ -101,7 +100,7 @@ class DiscourseRedis
 
     def resolve(client = nil)
       if !@fallback_handler.master
-        @fallback_handler.verify_master unless @fallback_handler.running?
+        @fallback_handler.verify_master
         return @slave_options
       end
 
@@ -114,7 +113,7 @@ class DiscourseRedis
       rescue Redis::ConnectionError, Redis::CannotConnectError, RuntimeError => ex
         raise ex if ex.class == RuntimeError && ex.message != "Name or service not known"
         @fallback_handler.master = false
-        @fallback_handler.verify_master unless @fallback_handler.running?
+        @fallback_handler.verify_master
         raise ex
       ensure
         client.disconnect
@@ -182,7 +181,7 @@ class DiscourseRedis
    :msetnx, :persist, :pexpire, :pexpireat, :psetex, :pttl, :rename, :renamenx, :rpop, :rpoplpush, :rpush, :rpushx, :sadd, :scard,
    :sdiff, :set, :setbit, :setex, :setnx, :setrange, :sinter, :sismember, :smembers, :sort, :spop, :srandmember, :srem, :strlen,
    :sunion, :ttl, :type, :watch, :zadd, :zcard, :zcount, :zincrby, :zrange, :zrangebyscore, :zrank, :zrem, :zremrangebyrank,
-   :zremrangebyscore, :zrevrange, :zrevrangebyscore, :zrevrank, :zrangebyscore].each do |m|
+   :zremrangebyscore, :zrevrange, :zrevrangebyscore, :zrevrank, :zrangebyscore, :evalsha, :eval].each do |m|
     define_method m do |*args|
       args[0] = "#{namespace}:#{args[0]}" if @namespace
       DiscourseRedis.ignore_readonly { @redis.send(m, *args) }
