@@ -54,6 +54,7 @@ const TopicRoute = Discourse.Route.extend({
     showTopicStatusUpdate() {
       const model = this.modelFor('topic');
       model.set('topic_timer', Ember.Object.create(model.get('topic_timer')));
+      model.set('private_topic_timer', Ember.Object.create(model.get('private_topic_timer')));
       showModal('edit-topic-timer', { model });
       this.controllerFor('modal').set('modalClass', 'edit-topic-timer-modal');
     },

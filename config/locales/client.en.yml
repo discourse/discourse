@@ -1555,12 +1555,14 @@ en:
       deleted: "The topic has been deleted"
 
       topic_status_update:
-        title: "Set Topic Timer"
+        title: "Topic Timer"
         save: "Set Timer"
         num_of_hours: "Number of hours:"
         remove: "Remove Timer"
         publish_to: "Publish To:"
         when: "When:"
+        public_timer_types: Topic Timers
+        private_timer_types: User Topic Timers
       auto_update_input:
         none: ""
         later_today: "Later today"

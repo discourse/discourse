@@ -61,6 +61,7 @@ class TopicViewSerializer < ApplicationSerializer
              :message_archived,
              :tags,
              :topic_timer,
+             :private_topic_timer,
              :unicode_title,
              :message_bus_last_id,
              :participant_count
@@ -240,6 +241,15 @@ class TopicViewSerializer < ApplicationSerializer
 
   def topic_timer
     TopicTimerSerializer.new(object.topic.public_topic_timer, root: false)
+  end
+
+  def include_private_topic_timer?
+    scope.user
+  end
+
+  def private_topic_timer
+    timer = object.topic.private_topic_timer(scope.user)
+    TopicTimerSerializer.new(timer, root: false)
   end
 
   def tags

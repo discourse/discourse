@@ -8,8 +8,18 @@
     text-align: left;
   }
 
+  .radios {
+    margin-bottom: 10px;
+  }
+
   label {
+    vertical-align: middle;
     display: inline-block;
+    padding-right: 5px;
+
+    input {
+      vertical-align: middle;
+    }
   }
 
   .btn.pull-right {
