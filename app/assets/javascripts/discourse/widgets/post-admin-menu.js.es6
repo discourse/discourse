@@ -58,7 +58,7 @@ export function buildManageButtons(attrs, currentUser) {
     });
   }
 
-  if (attrs.canWiki) {
+  if (attrs.canManage || attrs.canWiki) {
     if (attrs.wiki) {
       contents.push({
         action: 'toggleWiki',
