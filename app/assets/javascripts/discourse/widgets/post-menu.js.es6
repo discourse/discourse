@@ -1,4 +1,4 @@
-import { createWidget } from 'discourse/widgets/widget';
+import { applyDecorators, createWidget } from 'discourse/widgets/widget';
 import { avatarAtts } from 'discourse/widgets/actions-summary';
 import { h } from 'virtual-dom';
 
@@ -340,7 +340,8 @@ export default createWidget('post-menu', {
       postControls.push(repliesButton);
     }
 
-    postControls.push(h('div.actions', visibleButtons));
+    let extraControls = applyDecorators(this, 'extra-controls', attrs, state);
+    postControls.push(h('div.actions', visibleButtons.concat(extraControls)));
     if (state.adminVisible) {
       postControls.push(this.attach('post-admin-menu', attrs));
     }
