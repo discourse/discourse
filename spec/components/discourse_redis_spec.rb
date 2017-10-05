@@ -135,14 +135,13 @@ describe DiscourseRedis do
         error = RuntimeError.new('Name or service not known')
 
         expect { connector.resolve(BrokenRedis.new(error)) }.to raise_error(error)
-        fallback_handler.instance_variable_get(:@timer_task).shutdown
-        expect(fallback_handler.running?).to eq(false)
+        expect(fallback_handler.master).to eq(false)
 
         config = connector.resolve
 
         expect(config[:host]).to eq(slave_host)
         expect(config[:port]).to eq(slave_port)
-        expect(fallback_handler.running?).to eq(true)
+        expect(fallback_handler.master).to eq(false)
       ensure
         fallback_handler.master = true
       end
