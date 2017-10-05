@@ -10,9 +10,7 @@ createWidget('post-admin-menu-button', jQuery.extend(ButtonClass, {
   }
 }));
 
-export function buildManageButtons(widget) {
-  let { attrs, currentUser } = widget;
-
+export function buildManageButtons(attrs, currentUser) {
   if (!currentUser) {
     return [];
   }
@@ -60,20 +58,22 @@ export function buildManageButtons(widget) {
     });
   }
 
-  if (attrs.wiki) {
-    contents.push({
-      action: 'toggleWiki',
-      label: 'post.controls.unwiki',
-      icon: 'pencil-square-o',
-      className: 'wiki wikied'
-    });
-  } else {
-    contents.push({
-      action: 'toggleWiki',
-      label: 'post.controls.wiki',
-      icon: 'pencil-square-o',
-      className: 'wiki'
-    });
+  if (attrs.canWiki) {
+    if (attrs.wiki) {
+      contents.push({
+        action: 'toggleWiki',
+        label: 'post.controls.unwiki',
+        icon: 'pencil-square-o',
+        className: 'wiki wikied'
+      });
+    } else {
+      contents.push({
+        action: 'toggleWiki',
+        label: 'post.controls.wiki',
+        icon: 'pencil-square-o',
+        className: 'wiki'
+      });
+    }
   }
 
   return contents;
@@ -86,7 +86,7 @@ export default createWidget('post-admin-menu', {
     const contents = [];
     contents.push(h('h3', I18n.t('admin_title')));
 
-    buildManageButtons(this).forEach(b => {
+    buildManageButtons(this.attrs, this.currentUser).forEach(b => {
       contents.push(this.attach('post-admin-menu-button', b));
     });
 

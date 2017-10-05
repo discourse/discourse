@@ -91,7 +91,7 @@ function drawWidget(builder, attrs, state) {
     }
   }
 
-  this.transformed = this.transform();
+  this.transformed = this.transform(this.attrs, this.state);
 
   let contents = this.html(attrs, state);
   if (this.name) {
