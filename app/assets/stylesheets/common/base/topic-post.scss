@@ -87,7 +87,7 @@ aside.quote {
   }
 }
 
-.quote-controls {
+.quote-controls, .quote-controls .d-icon {
   color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%));
 }
 
@@ -114,8 +114,9 @@ aside.quote {
 
 .quote-controls {
   float: right;
-  a {
-    margin: 0;
+  display: flex;
+  .d-icon {
+    margin-left: 0.2em;
   }
 }
 
