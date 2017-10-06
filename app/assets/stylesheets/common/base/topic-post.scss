@@ -129,9 +129,8 @@ aside.quote {
   z-index: 401;
   opacity: 0.9;
 
-  &:before {
-    font-family: "FontAwesome";
-    content: "\f10d\00a0\00a0";
+  .d-icon {
+    display: inline-block;
   }
 
   &:hover {
