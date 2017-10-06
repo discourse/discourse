@@ -6,12 +6,12 @@ class S3Helper
 
   attr_reader :s3_bucket_name
 
-  def initialize(s3_upload_bucket, tombstone_prefix = '', options = {})
+  def initialize(s3_bucket_name, tombstone_prefix = '', options = {})
     @s3_options = default_s3_options.merge(options)
 
     @s3_bucket_name, @s3_bucket_folder_path = begin
-      raise Discourse::InvalidParameters.new("s3_bucket") if s3_upload_bucket.blank?
-      s3_upload_bucket.downcase.split("/".freeze, 2)
+      raise Discourse::InvalidParameters.new("s3_bucket_name") if s3_bucket_name.blank?
+      s3_bucket_name.downcase.split("/".freeze, 2)
     end
 
     @tombstone_prefix =
@@ -20,8 +20,6 @@ class S3Helper
       else
         tombstone_prefix
       end
-
-    check_missing_options
   end
 
   def upload(file, path, options = {})
@@ -80,8 +78,8 @@ class S3Helper
     update_lifecycle("purge_tombstone", grace_period, prefix: @tombstone_prefix)
   end
 
-  def list
-    s3_bucket.objects(prefix: @s3_bucket_folder_path)
+  def list(prefix = "")
+    s3_bucket.objects(prefix: @s3_bucket_folder_path.to_s + prefix)
   end
 
   def tag_file(key, tags)
@@ -99,22 +97,34 @@ class S3Helper
     )
   end
 
+  def self.s3_options(obj)
+    opts = { region: obj.s3_region }
+
+    unless obj.s3_use_iam_profile
+      opts[:access_key_id] = obj.s3_access_key_id
+      opts[:secret_access_key] = obj.s3_secret_access_key
+    end
+
+    opts
+  end
+
   private
+
+  def default_s3_options
+    if SiteSetting.enable_s3_uploads?
+      options = self.class.s3_options(SiteSetting)
+      check_missing_site_options
+      options
+    elsif GlobalSetting.use_s3?
+      self.class.s3_options(GlobalSetting)
+    else
+      {}
+    end
+  end
 
   def get_path_for_s3_upload(path)
     path = File.join(@s3_bucket_folder_path, path) if @s3_bucket_folder_path
     path
-  end
-
-  def default_s3_options
-    opts = { region: SiteSetting.s3_region }
-
-    unless SiteSetting.s3_use_iam_profile
-      opts[:access_key_id] = SiteSetting.s3_access_key_id
-      opts[:secret_access_key] = SiteSetting.s3_secret_access_key
-    end
-
-    opts
   end
 
   def s3_resource
@@ -127,10 +137,10 @@ class S3Helper
     bucket
   end
 
-  def check_missing_options
+  def check_missing_site_options
     unless SiteSetting.s3_use_iam_profile
-      raise SettingMissing.new("access_key_id") if @s3_options[:access_key_id].blank?
-      raise SettingMissing.new("secret_access_key") if @s3_options[:secret_access_key].blank?
+      raise SettingMissing.new("access_key_id") if SiteSetting.s3_access_key_id.blank?
+      raise SettingMissing.new("secret_access_key") if SiteSetting.s3_secret_access_key.blank?
     end
   end
 end

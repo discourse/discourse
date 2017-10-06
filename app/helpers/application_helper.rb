@@ -52,15 +52,29 @@ module ApplicationHelper
     end
   end
 
+  def is_brotli_req?
+    ENV["COMPRESS_BROTLI"] == "1" &&
+    request.env["HTTP_ACCEPT_ENCODING"] =~ /br/
+  end
+
   def preload_script(script)
     path = asset_path("#{script}.js")
 
-    if  GlobalSetting.cdn_url &&
-        GlobalSetting.cdn_url.start_with?("https") &&
-        ENV["COMPRESS_BROTLI"] == "1" &&
-        request.env["HTTP_ACCEPT_ENCODING"] =~ /br/
+    if GlobalSetting.use_s3? && GlobalSetting.s3_cdn_url
+      if GlobalSetting.cdn_url
+        path.gsub!(GlobalSetting.cdn_url, GlobalSetting.s3_cdn_url)
+      else
+        path = "#{GlobalSetting.s3_cdn_url}#{path}"
+      end
+
+      if is_brotli_req?
+        path.gsub!(/\.([^.]+)$/, '.br.\1')
+      end
+
+    elsif GlobalSetting.cdn_url&.start_with?("https") && is_brotli_req?
       path.gsub!("#{GlobalSetting.cdn_url}/assets/", "#{GlobalSetting.cdn_url}/brotli_asset/")
     end
+
 "<link rel='preload' href='#{path}' as='script'/>
 <script src='#{path}'></script>".html_safe
   end
