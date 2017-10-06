@@ -93,7 +93,7 @@ class PostAlerter
         DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
         users.each do |user|
           notification_level = TopicUser.get(post.topic, user).try(:notification_level)
-          if notified.include?(user) || notification_level == TopicUser.notification_levels[:watching]
+          if notified.include?(user) || notification_level == TopicUser.notification_levels[:watching] || user.staged?
             create_notification(user, Notification.types[:private_message], post)
           end
         end
