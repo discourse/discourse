@@ -1,15 +1,13 @@
-import { observes } from 'ember-addons/ember-computed-decorators';
 import computed from 'ember-addons/ember-computed-decorators';
 import ComboBoxComponent from 'select-box-kit/components/combo-box';
 
 export default ComboBoxComponent.extend({
   headerText: I18n.t('topic.controls'),
+  classNames: "topic-footer-mobile-dropdown",
 
-  @computed
-  content() {
+  @computed("topic", "topic.details", "value")
+  content(topic, details) {
     const content = [];
-    const topic = this.get('topic');
-    const details = topic.get('details');
 
     if (details.get('can_invite_to')) {
       content.push({ id: 'invite', icon: 'users', name: I18n.t('topic.invite_reply.title') });
@@ -30,39 +28,36 @@ export default ComboBoxComponent.extend({
     return content;
   },
 
-  @observes('value')
-  _valueChanged() {
-    this._super();
+  actions: {
+    onSelect(value) {
+      this.defaultOnSelect();
 
-    const value = this.get('value');
-    const topic = this.get('topic');
+      const topic = this.get('topic');
 
-    // In case it's not a valid topic
-    if (!topic.get('id')) {
-      return;
-    }
+      // In case it's not a valid topic
+      if (!topic.get('id')) {
+        return;
+      }
 
-    const refresh = () => {
-      // this._createContent();
-      this.set('value', null);
-    };
+      const refresh = () => this.set('value', null);
 
-    switch(value) {
-      case 'invite':
-        this.attrs.showInvite();
-        refresh();
-        break;
-      case 'bookmark':
-        topic.toggleBookmark().then(() => refresh());
-        break;
-      case 'share':
-        this.appEvents.trigger('share:url', topic.get('shareUrl'), $('#topic-footer-buttons'));
-        refresh();
-        break;
-      case 'flag':
-        this.attrs.showFlagTopic();
-        refresh();
-        break;
+      switch(value) {
+        case 'invite':
+          this.attrs.showInvite();
+          refresh();
+          break;
+        case 'bookmark':
+          topic.toggleBookmark().then(() => refresh());
+          break;
+        case 'share':
+          this.appEvents.trigger('share:url', topic.get('shareUrl'), $('#topic-footer-buttons'));
+          refresh();
+          break;
+        case 'flag':
+          this.attrs.showFlagTopic();
+          refresh();
+          break;
+      }
     }
   }
 });

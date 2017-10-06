@@ -24,7 +24,7 @@
       <span class="edit-title">
         {{text-field value=buffered.title maxlength=siteSettings.max_topic_title_length}}
       </span>
-      {{category-select-box value=buffered.category_id}}
+      {{category-chooser value=buffered.category_id}}
     {{else}}
       <span class='post-title'>
         {{i18n "queue.topic"}}

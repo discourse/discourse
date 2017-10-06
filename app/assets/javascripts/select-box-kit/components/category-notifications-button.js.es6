@@ -19,10 +19,10 @@ export default NotificationOptionsComponent.extend({
   headerText: null,
 
   actions: {
-    onSelect(content) {
+    onSelect(value) {
       this.defaultOnSelect();
 
-      this.get("category").setNotification(this.valueForContent(content));
+      this.get("category").setNotification(value);
     }
   }
 });

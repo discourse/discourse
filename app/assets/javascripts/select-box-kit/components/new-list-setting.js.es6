@@ -14,7 +14,7 @@ export default MultiComboBoxComponent.extend({
   init() {
     this._super();
 
-    this.set("content", this.getWithDefault("choices", Ember.A()));
+    this.set("content", this.getWithDefault("choices", []));
     this.set("value", this.get("settingValue").split(this.get("tokenSeparator")));
   }
 });

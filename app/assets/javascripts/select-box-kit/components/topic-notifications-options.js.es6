@@ -5,11 +5,8 @@ import { topicLevels, buttonDetails } from "discourse/lib/notification-levels";
 
 export default NotificationOptionsComponent.extend({
   classNames: "topic-notifications-options",
-
   content: topicLevels,
-
   i18nPrefix: "topic.notifications",
-
   value: Ember.computed.alias("topic.details.notification_level"),
 
   @on("didInsertElement")
@@ -39,14 +36,12 @@ export default NotificationOptionsComponent.extend({
   },
 
   actions: {
-    onSelect(content) {
-      const notificationLevelId = this.valueForContent(content);
-
-      if (notificationLevelId !== this.get("value")) {
-        this.get("topic.details").updateNotifications(notificationLevelId);
+    onSelect(value) {
+      if (value !== this.get("value")) {
+        this.get("topic.details").updateNotifications(value);
       }
 
-      this._super(content);
+      this._super(value);
     }
   }
 });

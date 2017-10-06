@@ -46,6 +46,7 @@
     "expandSelectBox":true,
     "collapseSelectBox":true,
     "selectBoxSelectRow":true,
+    "selectBoxSelectNoneRow":true,
     "selectBoxFillInFilter":true,
     "asyncTestDiscourse":true,
     "fixture":true,

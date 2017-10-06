@@ -1,5 +1,6 @@
 import { on, observes } from "ember-addons/ember-computed-decorators";
 import computed from "ember-addons/ember-computed-decorators";
+import { iconHTML } from "discourse-common/lib/icon-library";
 
 export default Ember.Component.extend({
   layoutName: "select-box-kit/templates/components/select-box-kit",
@@ -13,7 +14,6 @@ export default Ember.Component.extend({
     "isLeftAligned",
     "isRightAligned"
   ],
-
   isDisabled: false,
   isExpanded: false,
   isFocused: false,
@@ -21,120 +21,130 @@ export default Ember.Component.extend({
   renderBody: false,
   tabindex: 0,
   scrollableParentSelector: ".modal-body",
-
   headerCaretUpIcon: "caret-up",
   headerCaretDownIcon: "caret-down",
   headerIcon: null,
-
   value: null,
+  none: null,
   highlightedValue: null,
-  noContentLabel: I18n.t("select_box.no_content"),
-
+  noContentLabel: "select_box.no_content",
   valueAttribute: "id",
   nameProperty: "name",
-
   filterable: false,
   filterFocused: false,
   filter: "",
   filterPlaceholder: I18n.t("select_box.filter_placeholder"),
   filterIcon: "search",
-
   rowComponent: "select-box-kit/select-box-kit-row",
   filterComponent: "select-box-kit/select-box-kit-filter",
   headerComponent: "select-box-kit/select-box-kit-header",
   collectionComponent: "select-box-kit/select-box-kit-collection",
-
   collectionHeight: 200,
   verticalOffset: 0,
   horizontalOffset: 0,
   fullWidthOnMobile: false,
-
   castInteger: false,
+
+  init() {
+    this._super();
+
+    if ($(window).outerWidth(false) <= 420) {
+      this.set("filterable", false);
+    }
+
+    this.setProperties({ componentId: this.elemendId });
+
+    if (Ember.isNone(this.get("value")) && Ember.isNone(this.get("none"))) {
+      this.set("value", this.get("computedContent.firstObject.value"));
+    }
+  },
+
+  @computed("content.[]")
+  computedContent(content) {
+    console.log("computedContent", content);
+    return this.formatContents(content || []);
+  },
+
+  @computed("selectedContents.firstObject.name")
+  headerText(name) {
+    return Ember.isNone(name) ? "select_box.default_header_text" : name;
+  },
 
   click(event) {
     event.stopPropagation();
   },
 
-  filterFunction: function(content) {
+  filterFunction(content) {
     return (selectBox) => {
       const filter = selectBox.get("filter").toLowerCase();
       return _.filter(content, (c) => {
-        return this.nameForContent(c, selectBox.get("nameProperty"))
-                   .toLowerCase()
-                   .indexOf(filter) > -1;
+        return Ember.get(c, "name").toLowerCase().indexOf(filter) > -1;
       });
     };
   },
 
   @computed
   titleForRow() {
-    return (rowComponent) => {
-      return this.nameForContent(rowComponent.get("content"));
-    };
+    return rowComponent => rowComponent.get("content.name");
   },
 
   @computed("highlightedValue")
   shouldHighlightRow(highlightedValue) {
-    return (rowComponent) => {
-      const id = rowComponent.get("content.value");
-      return id === highlightedValue;
+    return rowComponent => highlightedValue === rowComponent.get("content.value");
+  },
+
+  @computed
+  iconForRow() {
+    return rowComponent => {
+      const content = rowComponent.get("content");
+      if (Ember.get(content, "originalContent.icon")) {
+        const iconName = Ember.get(content, "originalContent.icon");
+        const iconClass = Ember.get(content, "originalContent.iconClass");
+        return iconHTML(iconName, { class: iconClass });
+      }
+
+      return null;
     };
   },
 
   @computed("value")
   shouldSelectRow(value) {
-    return (rowComponent) => {
-      const id = rowComponent.get("content.value");
-      return id === value;
-    };
+    return rowComponent => value === rowComponent.get("content.value");
   },
 
-  nameForContent(content, nameProperty) {
+  nameForContent(content) {
     if (Ember.isNone(content)) {
       return null;
     }
 
-    nameProperty = nameProperty || this.get("nameProperty");
-
-    switch (typeof content) {
-    case "string":
-      return content;
-    default:
-      return Ember.get(content, nameProperty);
+    if (typeof content === "object") {
+      return Ember.get(content, this.get("nameProperty"));
     }
+
+    return content;
   },
 
-  valueForContent(content, valueAttribute) {
-    valueAttribute = valueAttribute || this.get("valueAttribute");
-
+  valueForContent(content) {
     switch (typeof content) {
     case "string":
       return this._castInteger(content);
     default:
-      return this._castInteger(Ember.get(content, valueAttribute));
+      return this._castInteger(Ember.get(content, this.get("valueAttribute")));
     }
   },
 
   @computed
-  templateForRow() {
-    return this._baseRowTemplate();
-  },
+  templateForRow() { return this._baseRowTemplate(); },
 
   @computed
-  templateForNoneRow() {
-    return this._baseRowTemplate();
-  },
+  templateForNoneRow() { return this._baseRowTemplate(); },
 
   _baseRowTemplate() {
     return (rowComponent) => {
       let template = "";
 
-      // const icon = rowComponent.icon();
-      // if (icon) {
-      //   template += icon;
-      // }
-
-      console.log(rowComponent, rowComponent.get("content"));
+      const icon = rowComponent.get("icon");
+      if (icon) { template += icon; }
 
       const name = rowComponent.get("content.name");
       template += `<p class="text">${Handlebars.escapeExpression(name)}</p>`;
@@ -186,37 +196,39 @@ export default Ember.Component.extend({
     this.$(".select-box-kit-body").css(options);
   },
 
-  @computed("value", "content.[]")
-  selectedContents(value, content) {
-    return [ content.findBy("value", value) ];
-  },
-
-  @computed("selectedContents.[]")
-  headerText(selectedContents) {
-    return Ember.get(selectedContents, "firstObject.name");
-  },
-
-  init() {
-    this._super();
-
-    if ($(window).outerWidth(false) <= 420) {
-      this.set("filterable", false);
+  @computed("none")
+  computedNone(none) {
+    if (Ember.isNone(none)) {
+      return null;
     }
 
-    this.setProperties({
-      content: this.formatContent(this.getWithDefault("content", Ember.A())),
-      componentId: this.elemendId
-    });
+    switch (typeof none) {
+    case "string":
+      return Ember.Object.create({ name: I18n.t(none), value: "none" });
+    default:
+      return this.formatContent(none);
+    }
+  },
+
+  @computed("value", "computedContent.[]")
+  selectedContents(value, computedContent) {
+    if (Ember.isNone(value)) {
+      return [];
+    }
+
+    return [ computedContent.findBy("value", value) ];
   },
 
   formatContent(content) {
-    return content.map((c) => {
-      return {
-        value: this.valueForContent(c),
-        name: this.nameForContent(c),
-        originalContent: c
-      };
-    });
+    return {
+      value: this.valueForContent(content),
+      name: this.nameForContent(content),
+      originalContent: content
+    };
+  },
+
+  formatContents(contents) {
+    return contents.map(content => this.formatContent(content));
   },
 
   @on("willDestroyElement")
@@ -334,34 +346,31 @@ export default Ember.Component.extend({
 
   @observes("isExpanded")
   _isExpandedChanged() {
-    if (this.get("isExpanded")) {
+    if (this.get("isExpanded") === true) {
       this.setProperties({ highlightedValue: null, renderBody: true, focused: false });
 
-      if (this.get("filterable")) {
+      if (this.get("filterable") === true) {
         Ember.run.schedule("afterRender", () => this.$(".filter-query").focus());
       }
     };
   },
 
-  @computed("highlightedValue", "content.[]")
-  highlightedContent(highlightedValue, content) {
+  @computed("highlightedValue", "computedContent.[]")
+  highlightedContent(highlightedValue, computedContent) {
     if (Ember.isNone(highlightedValue)) {
       return null;
     }
 
-    return content.find((c) => {
-      return Ember.get(c, "value") === highlightedValue;
-    });
+    return computedContent.find(c => Ember.get(c, "value") === highlightedValue );
   },
 
-  @computed("content.[]", "filter")
-  filteredContent(content, filter) {
-    let filteredContent;
+  @computed("filter", "computedContent.[]")
+  filteredContent(filter, computedContent) {
+    console.log("filte", computedContent)
+    let filteredContent = computedContent;
 
-    if (Ember.isEmpty(filter)) {
-      filteredContent = content;
-    } else {
-      filteredContent = this.filterFunction(content)(this);
+    if (!Ember.isEmpty(filter)) {
+      filteredContent = this.filterFunction(filteredContent)(this);
 
       if (!Ember.isEmpty(filteredContent)) {
         this.set("highlightedValue", filteredContent.get("firstObject.value"));
@@ -389,9 +398,19 @@ export default Ember.Component.extend({
       this.set("highlightedValue", value);
     },
 
-    onSelectNone() {},
-    onSelect() {},
-    onDeselect() {}
+    onClearSelection() {
+      this.defaultOnSelect();
+      this.set("value", null);
+    },
+
+    onSelect(value) {
+      this.defaultOnSelect();
+      this.set("value", value);
+    },
+
+    onDeselect() {
+      this.set("value", null);
+    }
   },
 
   _positionSelectBoxWrapper() {
@@ -403,12 +422,12 @@ export default Ember.Component.extend({
     });
   },
 
-  _castInteger(id) {
-    if (this.get("castInteger") === true && Ember.isPresent(id)) {
-      return parseInt(id, 10);
+  _castInteger(value) {
+    if (this.get("castInteger") === true && Ember.isPresent(value)) {
+      return parseInt(value, 10);
     }
 
-    return id;
+    return value;
   },
 
   _applyFixedPosition(width, height) {
@@ -477,7 +496,6 @@ export default Ember.Component.extend({
       $collection.scrollTop(rowOffset.top - bodyOffset.top);
     });
   },
-
 
   defaultOnSelect() {
     this.setProperties({ isExpanded: false, filter: "" });

@@ -20,7 +20,7 @@ QUnit.test("For topics: body of post, title, category and tags are all editbale"
   andThen(() => {
     assert.ok(exists(".d-editor-container"), "the body should be editable");
     assert.ok(exists(".edit-title .ember-text-field"), "the title should be editable");
-    assert.ok(exists(".category-select-box"), "category should be editbale");
+    assert.ok(exists(".category-chooser"), "category should be editbale");
     assert.ok(exists(".tag-chooser"), "tags should be editable");
   });
 });
@@ -41,7 +41,7 @@ QUnit.test("For replies: only the body of post is editbale", assert => {
   andThen(() => {
     assert.ok(exists(".d-editor-container"), "the body should be editable");
     assert.notOk(exists(".edit-title .ember-text-field"), "title should not be editbale");
-    assert.notOk(exists(".category-select-box"), "category should not be editable");
+    assert.notOk(exists(".category-chooser"), "category should not be editable");
     assert.notOk(exists("div.tag-chooser"), "tags should not be editable");
   });
 });

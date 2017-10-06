@@ -1,6 +1,13 @@
+<<<<<<< HEAD
 <<<<<<< HEAD:app/assets/javascripts/discourse-common/components/combo-box.js.es6
 import SelectBoxComponent from "discourse/components/select-box";
 =======
+=======
+//TODO
+//       minimumResultsForSearch,
+//       allowClear: true
+
+>>>>>>> wip
 import SelectBoxKitComponent from "select-box-kit/components/select-box-kit";
 <<<<<<< HEAD
 >>>>>>> wip:app/assets/javascripts/select-box-kit/components/combo-box.js.es6
@@ -11,64 +18,20 @@ import computed from "ember-addons/ember-computed-decorators";
 export default SelectBoxKitComponent.extend({
   classNames: "combobox",
 
-  none: null,
-
-  @computed("value", "content.[]", "none")
-  selectedContents(value, content, none) {
-    const selectedContent = content.findBy("value", value);
-
-    if (Ember.isNone(selectedContent)) {
-      if (Ember.isNone(none)) {
-        return [];
+  @computed("selectedContents.firstObject.name", "computedNone.name")
+  headerText(selectedName, noneName) {
+    if (Ember.isNone(selectedName)) {
+      if (Ember.isNone(noneName)) {
+        return this._super();
       } else {
-        switch (typeof none) {
-        case "string":
-          return [];
-        default:
-          return [ none ];
-        }
+        return noneName;
       }
     } else {
-      return [ selectedContent ];
-    }
-  },
-
-  @computed("selectedContents", "none", "value", "filteredContent")
-  headerText(selectedContents, none, value, filteredContent) {
-    console.log("header text", value, none)
-    if (Ember.isNone(value) && !Ember.isNone(none)) {
-      return this._localizeNone(none).htmlSafe();
-    }
-
-    if (!Ember.isEmpty(selectedContents)) {
-      return selectedContents.get("firstObject.name");
-    } else {
-      return filteredContent.get("firstObject.name");
-    }
-  },
-
-  _localizeNone(none) {
-    console.log(none)
-    switch (typeof none){
-    case "string":
-      return I18n.t(none);
-    default:
-      return none.get("name");
-    }
-  },
-
-  actions: {
-    onSelectNone() {
-      this.defaultOnSelect();
-      this.set("value", null);
-    },
-
-    onSelect(value) {
-      this.defaultOnSelect();
-      this.set("value", value);
+      return selectedName;
     }
   }
 });
+<<<<<<< HEAD
 <<<<<<< HEAD:app/assets/javascripts/discourse-common/components/combo-box.js.es6
 =======
 
@@ -219,3 +182,5 @@ export default SelectBoxKitComponent.extend({
 //
 // }));
 >>>>>>> wip:app/assets/javascripts/select-box-kit/components/combo-box.js.es6
+=======
+>>>>>>> wip
