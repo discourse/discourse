@@ -692,7 +692,7 @@ module Email
       if result.post
         @incoming_email.update_columns(topic_id: result.post.topic_id, post_id: result.post.id)
         if result.post.topic && result.post.topic.private_message?
-          add_other_addresses(result.post.topic, user)
+          add_other_addresses(result.post, user)
         end
       end
 
@@ -707,7 +707,7 @@ module Email
       html
     end
 
-    def add_other_addresses(topic, sender)
+    def add_other_addresses(post, sender)
       %i(to cc bcc).each do |d|
         if @mail[d] && @mail[d].address_list && @mail[d].address_list.addresses
           @mail[d].address_list.addresses.each do |address_field|
@@ -718,13 +718,14 @@ module Email
               next unless email["@"]
               if should_invite?(email)
                 user = find_or_create_user(email, display_name)
-                if user && can_invite?(topic, user)
-                  topic.topic_allowed_users.create!(user_id: user.id)
-                  topic.add_small_action(sender, "invited_user", user.username)
+                if user && can_invite?(post.topic, user)
+                  post.topic.topic_allowed_users.create!(user_id: user.id)
+                  TopicUser.auto_notification_for_staging(user.id, post.topic_id, TopicUser.notification_reasons[:auto_watch])
+                  post.topic.add_small_action(sender, "invited_user", user.username)
                 end
                 # cap number of staged users created per email
                 if @staged_users.count > SiteSetting.maximum_staged_users_per_email
-                  topic.add_moderator_post(sender, I18n.t("emails.incoming.maximum_staged_user_per_email_reached"))
+                  post.topic.add_moderator_post(sender, I18n.t("emails.incoming.maximum_staged_user_per_email_reached"))
                   return
                 end
               end
