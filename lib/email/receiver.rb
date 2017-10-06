@@ -30,6 +30,8 @@ module Email
     class TopicClosedError             < ProcessingError; end
     class InvalidPost                  < ProcessingError; end
     class InvalidPostAction            < ProcessingError; end
+    class UnsubscribeNotAllowed        < ProcessingError; end
+    class EmailNotAllowed              < ProcessingError; end
 
     attr_reader :incoming_email
     attr_reader :raw_email
@@ -38,7 +40,7 @@ module Email
 
     def initialize(mail_string)
       raise EmptyEmailError if mail_string.blank?
-      @staged_users_created = 0
+      @staged_users = []
       @raw_email = try_to_encode(mail_string, "UTF-8") || try_to_encode(mail_string, "ISO-8859-1") || mail_string
       @mail = Mail.new(@raw_email)
       @message_id = @mail.message_id.presence || Digest::MD5.hexdigest(mail_string)
@@ -82,14 +84,13 @@ module Email
       raise NoSenderDetectedError if @from_email.blank?
       raise ScreenedEmailError if ScreenedEmail.should_block?(@from_email)
 
-      user = find_or_create_user(@from_email, @from_display_name)
+      user = find_user(@from_email)
 
-      raise UserNotFoundError if user.nil?
-
-      @incoming_email.update_columns(user_id: user.id)
-
-      raise InactiveUserError if !user.active && !user.staged
-      raise BlockedUserError  if user.blocked
+      if user.present?
+        log_and_validate_user(user)
+      else
+        raise UserNotFoundError unless SiteSetting.enable_staged_users
+      end
 
       body, elided = select_body
       body ||= ""
@@ -102,9 +103,19 @@ module Email
       end
 
       if action = subscription_action_for(body, subject)
-        message = SubscriptionMailer.send(action, user)
-        Email::Sender.new(message, :subscription).send
-      elsif post = find_related_post
+        raise UnsubscribeNotAllowed if user.nil?
+        send_subscription_mail(action, user)
+        return
+      end
+
+      # Lets create a staged user if there isn't one yet. We will try to
+      # delete staged users in process!() if something bad happens.
+      if user.nil?
+        user = find_or_create_user(@from_email, @from_display_name)
+        log_and_validate_user(user)
+      end
+
+      if post = find_related_post
         create_reply(user: user,
                      raw: body,
                      elided: elided,
@@ -126,6 +137,13 @@ module Email
 
         raise first_exception || BadDestinationAddress
       end
+    end
+
+    def log_and_validate_user(user)
+      @incoming_email.update_columns(user_id: user.id)
+
+      raise InactiveUserError if !user.active && !user.staged
+      raise BlockedUserError if user.blocked
     end
 
     def is_bounce?
@@ -310,14 +328,20 @@ module Email
       @suject ||= @mail.subject.presence || I18n.t("emails.incoming.default_subject", email: @from_email)
     end
 
+    def find_user(email)
+      User.find_by_email(email)
+    end
+
     def find_or_create_user(email, display_name)
       user = nil
 
       User.transaction do
-        begin
-          user = User.find_by_email(email)
+        user = User.find_by_email(email)
 
-          if user.nil? && SiteSetting.enable_staged_users
+        if user.nil? && SiteSetting.enable_staged_users
+          raise EmailNotAllowed unless EmailValidator.allowed?(email)
+
+          begin
             username = UserNameSuggester.sanitize_username(display_name) if display_name.present?
             user = User.create!(
               email: email,
@@ -325,10 +349,10 @@ module Email
               name: display_name.presence || User.suggest_name(email),
               staged: true
             )
-            @staged_users_created += 1
+            @staged_users << user
+          rescue
+            user = nil
           end
-        rescue
-          user = nil
         end
       end
 
@@ -596,6 +620,12 @@ module Email
 
     def create_post_with_attachments(options = {})
       # deal with attachments
+      options[:raw] = add_attachments(options[:raw], options[:user].id, options)
+
+      create_post(options)
+    end
+
+    def add_attachments(raw, user_id, options = {})
       attachments.each do |attachment|
         tmp = Tempfile.new(["discourse-email-attachment", File.extname(attachment.filename)])
         begin
@@ -603,19 +633,19 @@ module Email
           File.open(tmp.path, "w+b") { |f| f.write attachment.body.decoded }
           # create the upload for the user
           opts = { for_group_message: options[:is_group_message] }
-          upload = UploadCreator.new(tmp, attachment.filename, opts).create_for(options[:user].id)
+          upload = UploadCreator.new(tmp, attachment.filename, opts).create_for(user_id)
           if upload && upload.errors.empty?
             # try to inline images
-            if attachment.content_type.start_with?("image/")
-              if options[:raw][attachment.url]
-                options[:raw].sub!(attachment.url, upload.url)
-              elsif options[:raw][/\[image:.*?\d+[^\]]*\]/i]
-                options[:raw].sub!(/\[image:.*?\d+[^\]]*\]/i, attachment_markdown(upload))
+            if attachment.content_type&.start_with?("image/")
+              if raw[attachment.url]
+                raw.sub!(attachment.url, upload.url)
+              elsif raw[/\[image:.*?\d+[^\]]*\]/i]
+                raw.sub!(/\[image:.*?\d+[^\]]*\]/i, attachment_markdown(upload))
               else
-                options[:raw] << "\n\n#{attachment_markdown(upload)}\n\n"
+                raw << "\n\n#{attachment_markdown(upload)}\n\n"
               end
             else
-              options[:raw] << "\n\n#{attachment_markdown(upload)}\n\n"
+              raw << "\n\n#{attachment_markdown(upload)}\n\n"
             end
           end
         ensure
@@ -623,7 +653,7 @@ module Email
         end
       end
 
-      create_post(options)
+      raw
     end
 
     def attachment_markdown(upload)
@@ -662,7 +692,7 @@ module Email
       if result.post
         @incoming_email.update_columns(topic_id: result.post.topic_id, post_id: result.post.id)
         if result.post.topic && result.post.topic.private_message?
-          add_other_addresses(result.post.topic, user)
+          add_other_addresses(result.post, user)
         end
       end
 
@@ -677,7 +707,7 @@ module Email
       html
     end
 
-    def add_other_addresses(topic, sender)
+    def add_other_addresses(post, sender)
       %i(to cc bcc).each do |d|
         if @mail[d] && @mail[d].address_list && @mail[d].address_list.addresses
           @mail[d].address_list.addresses.each do |address_field|
@@ -688,18 +718,19 @@ module Email
               next unless email["@"]
               if should_invite?(email)
                 user = find_or_create_user(email, display_name)
-                if user && can_invite?(topic, user)
-                  topic.topic_allowed_users.create!(user_id: user.id)
-                  topic.add_small_action(sender, "invited_user", user.username)
+                if user && can_invite?(post.topic, user)
+                  post.topic.topic_allowed_users.create!(user_id: user.id)
+                  TopicUser.auto_notification_for_staging(user.id, post.topic_id, TopicUser.notification_reasons[:auto_watch])
+                  post.topic.add_small_action(sender, "invited_user", user.username)
                 end
                 # cap number of staged users created per email
-                if @staged_users_created > SiteSetting.maximum_staged_users_per_email
-                  topic.add_moderator_post(sender, I18n.t("emails.incoming.maximum_staged_user_per_email_reached"))
+                if @staged_users.count > SiteSetting.maximum_staged_users_per_email
+                  post.topic.add_moderator_post(sender, I18n.t("emails.incoming.maximum_staged_user_per_email_reached"))
                   return
                 end
               end
-            rescue ActiveRecord::RecordInvalid
-              # don't care if user already allowed
+            rescue ActiveRecord::RecordInvalid, EmailNotAllowed
+              # don't care if user already allowed or the user's email address is not allowed
             end
           end
         end
@@ -717,6 +748,10 @@ module Email
       !topic.topic_allowed_groups.where("group_id IN (SELECT group_id FROM group_users WHERE user_id = ?)", user.id).exists?
     end
 
+    def send_subscription_mail(action, user)
+      message = SubscriptionMailer.send(action, user)
+      Email::Sender.new(message, :subscription).send
+    end
   end
 
 end

@@ -890,7 +890,7 @@ zh_TW:
     allow_index_in_robots_txt: "在 robots.txt 中記錄這個網站允許被搜尋引擎索引的部分"
     email_domains_blacklist: "用管道符“|”分隔的郵箱域名黑名單列表，其中的域名將不能用來註冊賬戶，例如：mailinator.com|trashmail.net"
     email_domains_whitelist: "用管道符“|”分隔的電子郵箱域名的列表，用戶必須使用這些郵箱域名註冊。警告：用戶使用不包含在這個列表裡的郵箱域名，將無法成功註冊。"
-    forgot_password_strict: "用戶找回密碼時不提示帳戶是否存在。"
+    hide_email_address_taken: "用戶找回密碼時不提示帳戶是否存在。"
     log_out_strict: "登出時，登出用戶所有設備上的所有時段"
     version_checks: "訪問 Discourse Hub 來檢查版本更新，並在管理面板 /admin 顯示新版本訊息"
     new_version_emails: "當新版本發佈時，將會發送一封新的 EMail 至 contact_email 設定的位址"

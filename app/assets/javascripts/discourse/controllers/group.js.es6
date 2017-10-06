@@ -48,9 +48,9 @@ export default Ember.Controller.extend({
     };
   },
 
-  @computed("model.mentionable")
-  displayGroupMessageButton(mentionable) {
-    return this.currentUser && mentionable;
+  @computed("model.messageable")
+  displayGroupMessageButton(messageable) {
+    return this.currentUser && messageable;
   },
 
   @observes('model.user_count')

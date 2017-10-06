@@ -33,6 +33,11 @@ createWidget('priority-faq-link', {
 export default createWidget('hamburger-menu', {
   tagName: 'div.hamburger-panel',
 
+  settings: {
+    showCategories: true,
+    maxWidth: 300
+  },
+
   adminLinks() {
     const { currentUser } = this;
 
@@ -176,15 +181,22 @@ export default createWidget('hamburger-menu', {
     }
 
     results.push(this.attach('menu-links', {name: 'general-links', contents: () => this.generalLinks() }));
-    results.push(this.listCategories());
-    results.push(h('hr'));
+
+    if (this.settings.showCategories) {
+      results.push(this.listCategories());
+      results.push(h('hr'));
+    }
+
     results.push(this.attach('menu-links', {name: 'footer-links', omitRule: true, contents: () => this.footerLinks(prioritizeFaq, faqUrl) }));
 
     return results;
   },
 
   html() {
-    return this.attach('menu-panel', { contents: () => this.panelContents() });
+    return this.attach('menu-panel', {
+      contents: () => this.panelContents(),
+      maxWidth: this.settings.maxWidth,
+    });
   },
 
   clickOutside() {

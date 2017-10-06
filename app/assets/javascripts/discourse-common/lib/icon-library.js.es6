@@ -9,6 +9,8 @@ const REPLACEMENTS = {
   'd-watching-first': 'dot-circle-o',
   'd-drop-expanded': 'caret-down',
   'd-drop-collapsed': 'caret-right',
+  'd-unliked': 'heart',
+  'd-liked': 'heart',
   'notification.mentioned': "at",
   'notification.group_mentioned': "at",
   'notification.quoted': "quote-right",
@@ -40,7 +42,7 @@ export function renderIcon(renderType, id, params) {
     let rendererForType = renderer[renderType];
 
     if (rendererForType) {
-      let result = rendererForType(id, params || {});
+      let result = rendererForType(REPLACEMENTS[id] || id, params || {});
       if (result) {
         return result;
       }
@@ -80,8 +82,6 @@ registerIconRenderer({
   name: 'font-awesome',
 
   string(id, params) {
-    id = REPLACEMENTS[id] || id;
-
     let tagName = params.tagName || 'i';
     let html = `<${tagName} class='${faClasses(id, params)}'`;
     if (params.title) { html += ` title='${I18n.t(params.title)}'`; }
@@ -94,8 +94,6 @@ registerIconRenderer({
   },
 
   node(id, params) {
-    id = REPLACEMENTS[id] || id;
-
     let tagName = params.tagName || 'i';
 
     const properties = {

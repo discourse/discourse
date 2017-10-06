@@ -11,14 +11,13 @@ RSpec.describe Admin::EmojisController do
   describe "#create" do
     describe 'when upload is invalid' do
       it 'should publish the right error' do
-        message = MessageBus.track_publish do
+        message = MessageBus.track_publish("/uploads/emoji") do
           post "/admin/customize/emojis.json", params: {
             name: 'test',
             file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/fake.jpg")
           }
-        end.find { |m| m.channel == "/uploads/emoji" }
+        end.first
 
-        expect(message.channel).to eq("/uploads/emoji")
         expect(message.data["errors"]).to eq([I18n.t('upload.images.size_not_found')])
       end
     end
@@ -27,14 +26,12 @@ RSpec.describe Admin::EmojisController do
       it 'should publish the right error' do
         CustomEmoji.create!(name: 'test', upload: upload)
 
-        message = MessageBus.track_publish do
+        message = MessageBus.track_publish("/uploads/emoji") do
           post "/admin/customize/emojis.json", params: {
             name: 'test',
             file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/logo.png")
           }
-        end.find { |m| m.channel == "/uploads/emoji" }
-
-        expect(message.channel).to eq("/uploads/emoji")
+        end.first
 
         expect(message.data["errors"]).to eq([
           "Name #{I18n.t('activerecord.errors.models.custom_emoji.attributes.name.taken')}"
@@ -45,18 +42,17 @@ RSpec.describe Admin::EmojisController do
     it 'should allow an admin to add a custom emoji' do
       Emoji.expects(:clear_cache)
 
-        message = MessageBus.track_publish do
+        message = MessageBus.track_publish("/uploads/emoji") do
           post "/admin/customize/emojis.json", params: {
             name: 'test',
             file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/logo.png")
           }
-        end.find { |m| m.channel == "/uploads/emoji" }
+        end.first
 
         custom_emoji = CustomEmoji.last
         upload = custom_emoji.upload
 
         expect(upload.original_filename).to eq('logo.png')
-        expect(message.channel).to eq("/uploads/emoji")
         expect(message.data["errors"]).to eq(nil)
         expect(message.data["name"]).to eq(custom_emoji.name)
         expect(message.data["url"]).to eq(upload.url)

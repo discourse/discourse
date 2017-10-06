@@ -7,7 +7,7 @@ var cache = {},
     currentTerm,
     oldSearch;
 
-function performSearch(term, topicId, includeGroups, includeMentionableGroups, allowedUsers, group, resultsFn) {
+function performSearch(term, topicId, includeGroups, includeMentionableGroups, includeMessageableGroups, allowedUsers, group, resultsFn) {
   var cached = cache[term];
   if (cached) {
     resultsFn(cached);
@@ -20,6 +20,7 @@ function performSearch(term, topicId, includeGroups, includeMentionableGroups, a
             topic_id: topicId,
             include_groups: includeGroups,
             include_mentionable_groups: includeMentionableGroups,
+            include_messageable_groups: includeMessageableGroups,
             group: group,
             topic_allowed_users: allowedUsers }
   });
@@ -88,6 +89,7 @@ export default function userSearch(options) {
   var term = options.term || "",
       includeGroups = options.includeGroups,
       includeMentionableGroups = options.includeMentionableGroups,
+      includeMessageableGroups = options.includeMessageableGroups,
       allowedUsers = options.allowedUsers,
       topicId = options.topicId,
       group = options.group;
@@ -120,6 +122,7 @@ export default function userSearch(options) {
         topicId,
         includeGroups,
         includeMentionableGroups,
+        includeMessageableGroups,
         allowedUsers,
         group,
         function(r) {

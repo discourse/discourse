@@ -85,7 +85,11 @@ export default Ember.Component.extend({
     const $input = this.$('.d-editor-input');
     $input.autocomplete({
       template: findRawTemplate('user-selector-autocomplete'),
-      dataSource: term => userSearch({ term, topicId, includeGroups: true }),
+      dataSource: term => userSearch({
+        term,
+        topicId,
+        includeMentionableGroups: true
+      }),
       key: "@",
       transformComplete: v => v.username || v.name
     });

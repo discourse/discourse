@@ -27,12 +27,16 @@ class EmailUpdater
     EmailValidator.new(attributes: :email).validate_each(self, :email, email)
 
     if existing_user = User.find_by_email(email)
-      error_message = 'change_email.error'
-      error_message << '_staged' if existing_user.staged?
-      errors.add(:base, I18n.t(error_message))
+      if SiteSetting.hide_email_address_taken
+        Jobs.enqueue(:critical_user_email, type: :account_exists, user_id: existing_user.id)
+      else
+        error_message = 'change_email.error'
+        error_message << '_staged' if existing_user.staged?
+        errors.add(:base, I18n.t(error_message))
+      end
     end
 
-    if errors.blank?
+    if errors.blank? && existing_user.nil?
       args = {
         old_email: @user.email,
         new_email: email,

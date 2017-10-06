@@ -257,7 +257,7 @@ class Stylesheet::Manager
   def color_scheme_digest
 
     cs = theme&.color_scheme
-    category_updated = Category.where("uploaded_background_id IS NOT NULL").last_updated_at
+    category_updated = Category.where("uploaded_background_id IS NOT NULL").pluck(:updated_at).map(&:to_i).sum
 
     if cs || category_updated > 0
       Digest::SHA1.hexdigest "#{RailsMultisite::ConnectionManagement.current_db}-#{cs&.id}-#{cs&.version}-#{Stylesheet::Manager.last_file_updated}-#{category_updated}"

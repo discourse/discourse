@@ -89,6 +89,10 @@ createWidget('user-menu-links', {
 export default createWidget('user-menu', {
   tagName: 'div.user-menu',
 
+  settings: {
+    maxWidth: 300
+  },
+
   panelContents() {
     const path = this.currentUser.get('path');
 
@@ -104,7 +108,10 @@ export default createWidget('user-menu', {
   },
 
   html() {
-    return this.attach('menu-panel', { contents: () => this.panelContents() });
+    return this.attach('menu-panel', {
+      maxWidth: this.settings.maxWidth,
+      contents: () => this.panelContents()
+    });
   },
 
   clickOutside() {

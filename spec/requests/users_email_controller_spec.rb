@@ -96,20 +96,40 @@ describe UsersEmailController do
       context 'when the new email address is taken' do
         let!(:other_user) { Fabricate(:coding_horror) }
 
-        it 'raises an error' do
-          put "/u/#{user.username}/preferences/email.json", params: {
-            email: other_user.email
-          }
+        context 'hide_email_address_taken is disabled' do
+          before do
+            SiteSetting.hide_email_address_taken = false
+          end
 
-          expect(response).to_not be_success
+          it 'raises an error' do
+            put "/u/#{user.username}/preferences/email.json", params: {
+              email: other_user.email
+            }
+
+            expect(response).to_not be_success
+          end
+
+          it 'raises an error if there is whitespace too' do
+            put "/u/#{user.username}/preferences/email.json", params: {
+              email: "#{other_user.email} "
+            }
+
+            expect(response).to_not be_success
+          end
         end
 
-        it 'raises an error if there is whitespace too' do
-          put "/u/#{user.username}/preferences/email.json", params: {
-            email: "#{other_user.email} "
-          }
+        context 'hide_email_address_taken is enabled' do
+          before do
+            SiteSetting.hide_email_address_taken = true
+          end
 
-          expect(response).to_not be_success
+          it 'responds with success' do
+            put "/u/#{user.username}/preferences/email.json", params: {
+              email: other_user.email
+            }
+
+            expect(response).to be_success
+          end
         end
       end
 

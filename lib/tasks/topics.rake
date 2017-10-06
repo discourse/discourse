@@ -1,4 +1,4 @@
-def print_status(label, current, max)
+def print_status_with_label(label, current, max)
   print "\r%s%9d / %d (%5.1f%%)" % [label, current, max, ((current.to_f / max.to_f) * 100).round(1)]
 end
 
@@ -21,7 +21,7 @@ def close_old_topics(category)
 
   topics.find_each do |topic|
     topic.update_status("closed", true, Discourse.system_user)
-    print_status("    closing old topics: ", topics_closed += 1, total)
+    print_status_with_label("    closing old topics: ", topics_closed += 1, total)
   end
 end
 
@@ -47,7 +47,7 @@ def apply_auto_close(category)
 
   topics.find_each do |topic|
     topic.inherit_auto_close_from_category
-    print_status("    applying auto-close to topics: ", topics_closed += 1, total)
+    print_status_with_label("    applying auto-close to topics: ", topics_closed += 1, total)
   end
 end
 

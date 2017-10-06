@@ -38,26 +38,19 @@ class TopicUser < ActiveRecord::Base
     end
 
     def auto_notification(user_id, topic_id, reason, notification_level)
-      if TopicUser.where("user_id = :user_id AND topic_id = :topic_id AND (notifications_reason_id IS NULL OR
-        (notification_level < :notification_level AND notification_level > :normal_notification_level))",
-                           user_id: user_id, topic_id: topic_id, notification_level: notification_level,
-                           normal_notification_level: notification_levels[:regular]).exists?
-        change(user_id, topic_id,
-          notification_level: notification_level,
-          notifications_reason_id: reason
-        )
-      end
+      should_change = TopicUser
+        .where(user_id: user_id, topic_id: topic_id)
+        .where("notifications_reason_id IS NULL OR (notification_level < :min AND notification_level > :max)", min: notification_level, max: notification_levels[:regular])
+        .exists?
+
+      change(user_id, topic_id, notification_level: notification_level, notifications_reason_id: reason) if should_change
     end
 
-    def auto_notification_for_staging(user_id, topic_id, reason)
-      topic_user = TopicUser.find_or_initialize_by(user_id: user_id, topic_id: topic_id)
-      topic_user.notification_level = notification_levels[:watching]
-      topic_user.notifications_reason_id = reason
-      topic_user.save
+    def auto_notification_for_staging(user_id, topic_id, reason, notification_level = notification_levels[:watching])
+      change(user_id, topic_id, notification_level: notification_level, notifications_reason_id: reason)
     end
 
     def unwatch_categories!(user, category_ids)
-
       track_threshold = user.user_option.auto_track_topics_after_msecs
 
       sql = <<SQL

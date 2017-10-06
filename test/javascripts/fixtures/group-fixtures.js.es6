@@ -12,7 +12,8 @@ export default {
       "public_exit":true,
       "flair_url": 'fa-adjust',
       "is_group_owner":true,
-      "mentionable":true
+      "mentionable":true,
+      "messageable":true
     }
   },
   "/groups/discourse/counts.json":{

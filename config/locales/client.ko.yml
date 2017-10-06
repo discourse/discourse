@@ -345,6 +345,11 @@ ko:
       closed_group: 닫힌 그룹
       is_group_user: "당신은 이 그룹의 구성원입니다."
       allow_membership_requests: "사용자가 그룹 소유자에게 가입신청을 할 수 있도록 허용합니다"
+      membership_request_template: "가입 요청을 전송할 때 사용자에게 표시할 커스텀 템플릿"
+      membership_request:
+        submit: "요청 보내기"
+        title: "@%{group_name}에 가입 요청하기"
+        reason: "그룹 소유자에게 왜 이 그룹에 속해야하는지 알립니다."
       membership: "회원제"
       name: "이름"
       user_count: "멤버 수"
@@ -506,7 +511,8 @@ ko:
       admin_tooltip: "이 회원은 관리자입니다."
       blocked_tooltip: "이 회원은 차단되었습니다"
       suspended_notice: "이 회원은 {{date}}까지 접근 금지 되었습니다."
-      suspended_reason: "이유: "
+      suspended_permanently: "이 회원은 일시정지되었습니다."
+      suspended_reason: "사유: "
       github_profile: "Github"
       email_activity_summary: "활동 요약"
       mailing_list_mode:
@@ -990,6 +996,7 @@ ko:
       alt: 'Alt'
     select_box:
       default_header_text: 선택...
+      no_content: 검색 결과가 없습니다
       filter_placeholder: 검색...
     emoji_picker:
       filter_placeholder: 이모지 찾기
@@ -1154,6 +1161,8 @@ ko:
       searching: "검색중..."
       post_format: "#{{post_number}} by {{username}}"
       results_page: "검색 결과"
+      search_google_button: "Google"
+      search_google_title: "이 사이트 검색"
       context:
         user: "@{{username}}의 글 검색"
         category: "#{{category}} 카테고리에서 검색"
@@ -1185,6 +1194,7 @@ ko:
           seen: 읽은 것
           unseen: 읽지 않은 것
           wiki: 은(는) 위키입니다.
+          images: 이미지 포함
           all_tags: 모든 태그를 포함
         statuses:
           label: 토픽 조건
@@ -2220,8 +2230,7 @@ ko:
         by: "에 의해"
       flags:
         title: "신고"
-        old: "지난"
-        active: "활성화된"
+        active_posts: "신고된 포스트"
         agree: "동의"
         agree_title: "이 신고가 올바르고 타당함을 확인합니다"
         agree_flag_modal_title: "동의 및 ..."
@@ -2249,6 +2258,7 @@ ko:
         clear_topic_flags: "완료"
         clear_topic_flags_title: "주제 조사를 끝냈고 이슈를 해결했습니다. 신고를 지우기 위해 완료를 클릭하세요"
         more: "(더 많은 답글...)"
+        suspend_user: "정지된 사용자"
         dispositions:
           agreed: "동의"
           disagreed: "반대"

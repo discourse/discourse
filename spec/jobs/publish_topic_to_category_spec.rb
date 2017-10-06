@@ -50,7 +50,9 @@ RSpec.describe Jobs::PublishTopicToCategory do
 
     message = MessageBus.track_publish do
       described_class.new.execute(topic_timer_id: topic.public_topic_timer.id)
-    end.first
+    end.find do |m|
+      Hash === m.data && m.data.key?(:reload_topic)
+    end
 
     topic.reload
     expect(topic.category).to eq(another_category)

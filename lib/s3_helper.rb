@@ -1,4 +1,4 @@
-require "aws-sdk"
+require "aws-sdk-s3"
 
 class S3Helper
 
@@ -46,21 +46,57 @@ class S3Helper
   rescue Aws::S3::Errors::NoSuchKey
   end
 
-  def update_tombstone_lifecycle(grace_period)
-    return if @tombstone_prefix.blank?
+  def update_lifecycle(id, days, prefix: nil)
 
     # cf. http://docs.aws.amazon.com/AmazonS3/latest/dev/object-lifecycle-mgmt.html
+    rule = {
+      id: id,
+      status: "Enabled",
+      expiration: { days: days }
+    }
+
+    if prefix
+      rule[:prefix] = prefix
+    end
+
+    rules = s3_resource.client.get_bucket_lifecycle_configuration(bucket: @s3_bucket_name).rules
+
+    rules.delete_if do |r|
+      r.id == id
+    end
+
+    rules.map! { |r| r.to_h }
+
+    rules << rule
+
     s3_resource.client.put_bucket_lifecycle(bucket: @s3_bucket_name,
                                             lifecycle_configuration: {
-        rules: [
-          {
-            id: "purge-tombstone",
-            status: "Enabled",
-            expiration: { days: grace_period },
-            prefix: @tombstone_prefix
-          }
-        ]
-      })
+        rules: rules
+    })
+  end
+
+  def update_tombstone_lifecycle(grace_period)
+    return if @tombstone_prefix.blank?
+    update_lifecycle("purge_tombstone", grace_period, prefix: @tombstone_prefix)
+  end
+
+  def list
+    s3_bucket.objects(prefix: @s3_bucket_folder_path)
+  end
+
+  def tag_file(key, tags)
+    tag_array = []
+    tags.each do |k, v|
+      tag_array << { key: k.to_s, value: v.to_s }
+    end
+
+    s3_resource.client.put_object_tagging(
+      bucket: @s3_bucket_name,
+      key: key,
+      tagging: {
+        tag_set: tag_array
+      }
+    )
   end
 
   private

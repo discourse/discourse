@@ -1,3 +1,5 @@
+require_dependency 'post'
+
 module Jobs
 
   class NotifyMailingListSubscribers < Jobs::Base

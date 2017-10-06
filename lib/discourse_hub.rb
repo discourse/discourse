@@ -1,4 +1,5 @@
 require_dependency 'version'
+require_dependency 'site_setting'
 
 module DiscourseHub
 

@@ -19,14 +19,6 @@ describe Category do
     expect(cats.errors[:name]).to be_present
   end
 
-  describe "last_updated_at" do
-    it "returns a number value of when the category was last updated" do
-      last = Category.last_updated_at
-      expect(last).to be_present
-      expect(last.to_i).to eq(last)
-    end
-  end
-
   describe "resolve_permissions" do
     it "can determine read_restricted" do
       read_restricted, resolved = Category.resolve_permissions(everyone: :full)

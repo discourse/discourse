@@ -277,19 +277,21 @@ class TopicView
 
   def post_counts_by_user
     @post_counts_by_user ||= begin
-      return {} if @posts.blank?
+      post_ids = unfiltered_posts.pluck(:id)
+
+      return {} if post_ids.blank?
 
       sql = <<~SQL
-      SELECT user_id, count(*) AS count_all
-      FROM posts
-      WHERE id IN (:post_ids)
-      AND user_id IS NOT NULL
+        SELECT user_id, count(*) AS count_all
+          FROM posts
+         WHERE id IN (:post_ids)
+           AND user_id IS NOT NULL
       GROUP BY user_id
       ORDER BY count_all DESC
-      LIMIT 24
+         LIMIT 24
       SQL
 
-      Hash[Post.exec_sql(sql, post_ids: @posts.pluck(:id)).values]
+      Hash[Post.exec_sql(sql, post_ids: post_ids).values]
     end
   end
 

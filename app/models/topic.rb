@@ -411,6 +411,7 @@ class Topic < ActiveRecord::Base
   def reload(options = nil)
     @post_numbers = nil
     @public_topic_timer = nil
+    @private_topic_timer = nil
     super(options)
   end
 
@@ -1002,6 +1003,10 @@ SQL
     @public_topic_timer ||= topic_timers.find_by(deleted_at: nil, public_type: true)
   end
 
+  def private_topic_timer(user)
+    @private_topic_Timer ||= topic_timers.find_by(deleted_at: nil, public_type: false, user_id: user.id)
+  end
+
   def delete_topic_timer(status_type, by_user: Discourse.system_user)
     options = { status_type: status_type }
     options.merge!(user: by_user) unless TopicTimer.public_types[status_type]
@@ -1022,8 +1027,9 @@ SQL
   def set_or_create_timer(status_type, time, by_user: nil, timezone_offset: 0, based_on_last_post: false, category_id: SiteSetting.uncategorized_category_id)
     return delete_topic_timer(status_type, by_user: by_user) if time.blank?
 
-    topic_timer_options = { topic: self }
-    topic_timer_options.merge!(user: by_user) unless TopicTimer.public_types[status_type]
+    public_topic_timer = !!TopicTimer.public_types[status_type]
+    topic_timer_options = { topic: self, public_type: public_topic_timer }
+    topic_timer_options.merge!(user: by_user) unless public_topic_timer
     topic_timer = TopicTimer.find_or_initialize_by(topic_timer_options)
     topic_timer.status_type = status_type
 
@@ -1330,6 +1336,7 @@ end
 #  index_topics_on_bumped_at               (bumped_at)
 #  index_topics_on_created_at_and_visible  (created_at,visible)
 #  index_topics_on_id_and_deleted_at       (id,deleted_at)
+#  index_topics_on_lower_title             (lower((title)::text))
 #  index_topics_on_pinned_at               (pinned_at)
 #  index_topics_on_pinned_globally         (pinned_globally)
 #

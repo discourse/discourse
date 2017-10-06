@@ -135,14 +135,13 @@ describe DiscourseRedis do
         error = RuntimeError.new('Name or service not known')
 
         expect { connector.resolve(BrokenRedis.new(error)) }.to raise_error(error)
-        fallback_handler.instance_variable_get(:@timer_task).shutdown
-        expect(fallback_handler.running?).to eq(false)
+        expect(fallback_handler.master).to eq(false)
 
         config = connector.resolve
 
         expect(config[:host]).to eq(slave_host)
         expect(config[:port]).to eq(slave_port)
-        expect(fallback_handler.running?).to eq(true)
+        expect(fallback_handler.master).to eq(false)
       ensure
         fallback_handler.master = true
       end
@@ -184,10 +183,13 @@ describe DiscourseRedis do
 
       it 'should fallback to the master server once it is up' do
         fallback_handler.master = false
-        Redis::Client.any_instance.expects(:call).with([:info]).returns(DiscourseRedis::FallbackHandler::MASTER_LINK_STATUS)
+        redis_connection = DiscourseRedis.raw_connection.client
+        Redis::Client.expects(:new).with(DiscourseRedis.slave_config).returns(redis_connection)
+
+        redis_connection.expects(:call).with([:info]).returns(DiscourseRedis::FallbackHandler::MASTER_LINK_STATUS)
 
         DiscourseRedis::FallbackHandler::CONNECTION_TYPES.each do |connection_type|
-          Redis::Client.any_instance.expects(:call).with([:client, [:kill, 'type', connection_type]])
+          redis_connection.expects(:call).with([:client, [:kill, 'type', connection_type]])
         end
 
         expect(fallback_handler.initiate_fallback_to_master).to eq(true)

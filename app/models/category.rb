@@ -108,10 +108,6 @@ class Category < ActiveRecord::Base
     Category.reset_topic_ids_cache
   end
 
-  def self.last_updated_at
-    order('updated_at desc').limit(1).pluck(:updated_at).first.to_i
-  end
-
   def self.scoped_to_permissions(guardian, permission_types)
     if guardian.try(:is_admin?)
       all
@@ -564,5 +560,5 @@ end
 #
 #  index_categories_on_email_in     (email_in) UNIQUE
 #  index_categories_on_topic_count  (topic_count)
-#  unique_index_categories_on_name  (name) UNIQUE
+#  unique_index_categories_on_name  ((COALESCE(parent_category_id, '-1'::integer)), name) UNIQUE
 #

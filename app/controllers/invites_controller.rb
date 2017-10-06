@@ -31,7 +31,7 @@ class InvitesController < ApplicationController
 
   def perform_accept_invitation
     params.require(:id)
-    params.permit(:username, :name, :password, :user_custom_fields)
+    params.permit(:username, :name, :password, user_custom_fields: {})
     invite = Invite.find_by(invite_key: params[:id])
 
     if invite.present?

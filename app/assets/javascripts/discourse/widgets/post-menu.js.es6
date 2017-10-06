@@ -1,4 +1,4 @@
-import { createWidget } from 'discourse/widgets/widget';
+import { applyDecorators, createWidget } from 'discourse/widgets/widget';
 import { avatarAtts } from 'discourse/widgets/actions-summary';
 import { h } from 'virtual-dom';
 
@@ -29,15 +29,28 @@ function registerButton(name, builder) {
   _builders[name] = builder;
 }
 
+export function buildButton(name, widget) {
+  let { attrs, state, siteSettings } = widget;
+  let builder = _builders[name];
+  if (builder) {
+    let button = builder(attrs, state, siteSettings);
+    if (button && !button.id) {
+      button.id = name;
+    }
+    return button;
+  }
+}
+
 registerButton('like', attrs => {
   if (!attrs.showLike) { return; }
   const className = attrs.liked ? 'toggle-like has-like fade-out' : 'toggle-like like';
 
   const button = {
     action: 'like',
-    icon: 'heart',
+    icon: attrs.liked ? 'd-liked' : 'd-unliked',
     className
   };
+
 
   if (attrs.canToggleLike) {
     button.title = attrs.liked ? 'post.controls.undo_like' : 'post.controls.like';
@@ -180,6 +193,7 @@ registerButton('bookmark', attrs => {
   }
 
   return {
+    id: attrs.bookmarked ? 'bookmark' : 'unbookmark',
     action: 'toggleBookmark',
     title: attrs.bookmarked ? "bookmarks.created" : "bookmarks.not_bookmarked",
     className,
@@ -197,13 +211,13 @@ registerButton('admin', attrs => {
 
 registerButton('delete', attrs => {
   if (attrs.canRecoverTopic) {
-    return { action: 'recoverPost', title: 'topic.actions.recover', icon: 'undo', className: 'recover' };
+    return { id: 'recover_topic', action: 'recoverPost', title: 'topic.actions.recover', icon: 'undo', className: 'recover' };
   } else if (attrs.canDeleteTopic) {
-    return { action: 'deletePost', title: 'topic.actions.delete', icon: 'trash-o', className: 'delete' };
+    return { id: 'delete_topic', action: 'deletePost', title: 'topic.actions.delete', icon: 'trash-o', className: 'delete' };
   } else if (attrs.canRecover) {
-    return { action: 'recoverPost', title: 'post.controls.undelete', icon: 'undo', className: 'recover' };
+    return { id: 'recover', action: 'recoverPost', title: 'post.controls.undelete', icon: 'undo', className: 'recover' };
   } else if (attrs.canDelete) {
-    return { action: 'deletePost', title: 'post.controls.delete', icon: 'trash-o', className: 'delete' };
+    return { id: 'delete', action: 'deletePost', title: 'post.controls.delete', icon: 'trash-o', className: 'delete' };
   }
 });
 
@@ -228,14 +242,16 @@ export default createWidget('post-menu', {
 
   buildKey: attrs => `post-menu-${attrs.id}`,
 
-  attachButton(name, attrs) {
-    const builder = _builders[name];
-    if (builder) {
-      const buttonAtts = builder(attrs, this.state, this.siteSettings);
-      if (buttonAtts) {
-        return this.attach(this.settings.buttonType, buttonAtts);
-      }
+  attachButton(name) {
+    let buttonAtts = buildButton(name, this);
+    if (buttonAtts) {
+      return this.attach(this.settings.buttonType, buttonAtts);
     }
+  },
+
+  menuItems() {
+    let result = this.siteSettings.post_menu.split('|');
+    return result;
   },
 
   html(attrs, state) {
@@ -249,7 +265,7 @@ export default createWidget('post-menu', {
     const allButtons = [];
     let visibleButtons = [];
 
-    const orderedButtons = siteSettings.post_menu.split('|');
+    const orderedButtons = this.menuItems();
 
     // If the post is a wiki, make Edit more prominent
     if (attrs.wiki) {
@@ -329,7 +345,8 @@ export default createWidget('post-menu', {
       postControls.push(repliesButton);
     }
 
-    postControls.push(h('div.actions', visibleButtons));
+    let extraControls = applyDecorators(this, 'extra-controls', attrs, state);
+    postControls.push(h('div.actions', visibleButtons.concat(extraControls)));
     if (state.adminVisible) {
       postControls.push(this.attach('post-admin-menu', attrs));
     }
@@ -368,7 +385,7 @@ export default createWidget('post-menu', {
       return this.sendWidgetAction('toggleLike');
     }
 
-    const $heart = $(`[data-post-id=${attrs.id}] .d-icon-heart`);
+    const $heart = $(`[data-post-id=${attrs.id}] .toggle-like .d-icon`);
     $heart.closest('button').addClass('has-like');
 
     if (!Ember.testing) {

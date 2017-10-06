@@ -177,7 +177,7 @@ export default createWidget('topic-admin-menu', {
                    icon: visible ? 'eye-slash' : 'eye',
                    label: visible ? 'actions.invisible' : 'actions.visible' });
 
-    if (this.currentUser.get('staff')) {
+    if (details.get('can_convert_topic')) {
       buttons.push({ className: 'topic-admin-convert',
                      action: isPrivateMessage ? 'convertToPublicTopic' : 'convertToPrivateMessage',
                      icon: isPrivateMessage ? 'comment' : 'envelope',

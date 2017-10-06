@@ -23,6 +23,16 @@ describe Email::Receiver do
     expect { process(:screened_email) }.to raise_error(Email::Receiver::ScreenedEmailError)
   end
 
+  it "raises EmailNotAllowed when email address is not on whitelist" do
+    SiteSetting.email_domains_whitelist = "example.com|bar.com"
+    expect { process(:blacklist_whitelist_email) }.to raise_error(Email::Receiver::EmailNotAllowed)
+  end
+
+  it "raises EmailNotAllowed when email address is on blacklist" do
+    SiteSetting.email_domains_blacklist = "email.com|mail.com"
+    expect { process(:blacklist_whitelist_email) }.to raise_error(Email::Receiver::EmailNotAllowed)
+  end
+
   it "raises an UserNotFoundError when staged users are disabled" do
     SiteSetting.enable_staged_users = false
     expect { process(:user_not_found) }.to raise_error(Email::Receiver::UserNotFoundError)
@@ -300,6 +310,12 @@ describe Email::Receiver do
           expect(before_deliveries).to eq ActionMailer::Base.deliveries.count
         end
       end
+
+      it "raises an UnsubscribeNotAllowed and does not send an unsubscribe email" do
+        before_deliveries = ActionMailer::Base.deliveries.count
+        expect { process(:unsubscribe_new_user) }.to raise_error { Email::Receiver::UnsubscribeNotAllowed }
+        expect(before_deliveries).to eq ActionMailer::Base.deliveries.count
+      end
     end
 
     it "handles inline reply" do
@@ -403,9 +419,13 @@ describe Email::Receiver do
 
     it "invites everyone in the chain but emails configured as 'incoming' (via reply, group or category)" do
       expect { process(:cc) }.to change(Topic, :count)
-      emails = Topic.last.allowed_users.joins(:user_emails).pluck(:"user_emails.email")
-      expect(emails.size).to eq(3)
-      expect(emails).to include("someone@else.com", "discourse@bar.com", "wat@bar.com")
+
+      topic = Topic.last
+
+      emails = topic.allowed_users.joins(:user_emails).pluck(:"user_emails.email")
+      expect(emails).to contain_exactly("someone@else.com", "discourse@bar.com", "wat@bar.com")
+
+      expect(topic.topic_users.count).to eq(3)
     end
 
     it "cap the number of staged users created per email" do
@@ -621,6 +641,61 @@ describe Email::Receiver do
         expect(dest[:obj]).to be_present
       end
     end
+  end
+
+  context "no staged users on error" do
+    before do
+      SiteSetting.enable_staged_users = true
+    end
+
+    shared_examples "no staged users" do |email_name|
+      it "does not create staged users" do
+        staged_user_count = User.where(staged: true).count
+        process(email_name) rescue nil
+        expect(User.where(staged: true).count).to eq(staged_user_count)
+      end
+    end
+
+    context "when email address is screened" do
+      before do
+        ScreenedEmail.expects(:should_block?).with("screened@mail.com").returns(true)
+      end
+
+      include_examples "no staged users", :screened_email
+    end
+
+    context "when the mail is auto generated" do
+      include_examples "no staged users", :auto_generated_header
+    end
+
+    context "when email is a bounced email" do
+      include_examples "no staged users", :bounced_email
+    end
+
+    context "when the body is blank" do
+      include_examples "no staged users", :no_body
+    end
+
+    context "when unsubscribe via email is not allowed" do
+      include_examples "no staged users", :unsubscribe_new_user
+    end
+
+    context "when email address is not on whitelist" do
+      before do
+        SiteSetting.email_domains_whitelist = "example.com|bar.com"
+      end
+
+      include_examples "no staged users", :blacklist_whitelist_email
+    end
+
+    context "when email address is on blacklist" do
+      before do
+        SiteSetting.email_domains_blacklist = "email.com|mail.com"
+      end
+
+      include_examples "no staged users", :blacklist_whitelist_email
+    end
+
   end
 
 end

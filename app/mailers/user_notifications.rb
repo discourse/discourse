@@ -83,6 +83,15 @@ class UserNotifications < ActionMailer::Base
     )
   end
 
+  def account_exists(user, opts = {})
+    build_email(
+      user.email,
+      template: 'user_notifications.account_exists',
+      locale: user_locale(user),
+      email: user.email
+    )
+  end
+
   def short_date(dt)
     if dt.year == Time.now.year
       I18n.l(dt, format: :short_no_year)

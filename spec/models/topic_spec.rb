@@ -1167,6 +1167,22 @@ describe Topic do
     end
   end
 
+  describe '#private_topic_timer' do
+    let(:user) { Fabricate(:user) }
+
+    let(:topic_timer) do
+      Fabricate(:topic_timer,
+        public_type: false,
+        user: user,
+        status_type: TopicTimer.private_types[:reminder]
+      )
+    end
+
+    it 'should return the right record' do
+      expect(topic_timer.topic.private_topic_timer(user)).to eq(topic_timer)
+    end
+  end
+
   describe '#set_or_create_timer' do
     let(:topic) { Fabricate.build(:topic) }
 
@@ -1331,6 +1347,14 @@ describe Topic do
         expect {
           topic.set_or_create_timer(TopicTimer.types[:reminder], 2, by_user: other_admin)
         }.to change { TopicTimer.count }.by(1)
+      end
+
+      it 'should not be override when setting a public topic timer' do
+        reminder
+
+        expect do
+          topic.set_or_create_timer(TopicTimer.types[:close], 3, by_user: reminder.user)
+        end.to change { TopicTimer.count }.by(1)
       end
 
       it "can update a user's existing record" do

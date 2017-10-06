@@ -91,6 +91,16 @@ class Post < ActiveRecord::Base
 
     q.order('posts.created_at ASC')
   }
+  scope :raw_match, -> (pattern, type = 'string') {
+    type = type&.downcase
+
+    case type
+    when 'string'
+      where('raw ILIKE ?', "%#{pattern}%")
+    when 'regex'
+      where('raw ~ ?', pattern)
+    end
+  }
 
   delegate :username, to: :user
 

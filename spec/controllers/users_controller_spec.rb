@@ -621,6 +621,28 @@ describe UsersController do
           expect(session[SessionController::ACTIVATE_USER_KEY]).to be_present
         end
       end
+
+      context 'users already exists with given email' do
+        let!(:existing) { Fabricate(:user, email: post_user_params[:email]) }
+
+        it 'returns an error if hide_email_address_taken is disabled' do
+          SiteSetting.hide_email_address_taken = false
+          post_user
+          json = JSON.parse(response.body)
+          expect(json['success']).to eq(false)
+          expect(json['message']).to be_present
+        end
+
+        it 'returns success if hide_email_address_taken is enabled' do
+          SiteSetting.hide_email_address_taken = true
+          expect {
+            post_user
+          }.to_not change { User.count }
+          json = JSON.parse(response.body)
+          expect(json['active']).to be_falsey
+          expect(session["user_created_message"]).to be_present
+        end
+      end
     end
 
     context "creating as active" do
@@ -1599,88 +1621,6 @@ describe UsersController do
       expect(user.user_profile.badge_granted_title).to eq(false)
 
     end
-  end
-
-  describe "search_users" do
-
-    let(:topic) { Fabricate :topic }
-    let(:user)  { Fabricate :user, username: "joecabot", name: "Lawrence Tierney" }
-
-    before do
-      SearchIndexer.enable
-      Fabricate :post, user: user, topic: topic
-    end
-
-    it "searches when provided the term only" do
-      post :search_users, params: { term: user.name.split(" ").last }, format: :json
-      expect(response).to be_success
-      json = JSON.parse(response.body)
-      expect(json["users"].map { |u| u["username"] }).to include(user.username)
-    end
-
-    it "searches when provided the topic only" do
-      post :search_users, params: { topic_id: topic.id }, format: :json
-      expect(response).to be_success
-      json = JSON.parse(response.body)
-      expect(json["users"].map { |u| u["username"] }).to include(user.username)
-    end
-
-    it "searches when provided the term and topic" do
-      post :search_users, params: {
-        term: user.name.split(" ").last, topic_id: topic.id
-      }, format: :json
-
-      expect(response).to be_success
-      json = JSON.parse(response.body)
-      expect(json["users"].map { |u| u["username"] }).to include(user.username)
-    end
-
-    it "searches only for users who have access to private topic" do
-      privileged_user = Fabricate(:user, trust_level: 4, username: "joecabit", name: "Lawrence Tierney")
-      privileged_group = Fabricate(:group)
-      privileged_group.add(privileged_user)
-      privileged_group.save
-
-      category = Fabricate(:category)
-      category.set_permissions(privileged_group => :readonly)
-      category.save
-
-      private_topic = Fabricate(:topic, category: category)
-
-      post :search_users, params: {
-        term: user.name.split(" ").last, topic_id: private_topic.id, topic_allowed_users: "true"
-      }, format: :json
-
-      expect(response).to be_success
-      json = JSON.parse(response.body)
-      expect(json["users"].map { |u| u["username"] }).to_not include(user.username)
-      expect(json["users"].map { |u| u["username"] }).to include(privileged_user.username)
-    end
-
-    context "when `enable_names` is true" do
-      before do
-        SiteSetting.enable_names = true
-      end
-
-      it "returns names" do
-        post :search_users, params: { term: user.name }, format: :json
-        json = JSON.parse(response.body)
-        expect(json["users"].map { |u| u["name"] }).to include(user.name)
-      end
-    end
-
-    context "when `enable_names` is false" do
-      before do
-        SiteSetting.enable_names = false
-      end
-
-      it "returns names" do
-        post :search_users, params: { term: user.name }, format: :json
-        json = JSON.parse(response.body)
-        expect(json["users"].map { |u| u["name"] }).not_to include(user.name)
-      end
-    end
-
   end
 
   describe 'send_activation_email' do

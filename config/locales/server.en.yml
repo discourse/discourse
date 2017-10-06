@@ -79,6 +79,8 @@ en:
         topic_closed_error: "Happens when a reply came in but the related topic has been closed."
         bounced_email_error: "Email is a bounced email report."
         screened_email_error: "Happens when the sender's email address was already screened."
+        unsubscribe_not_allowed: "Happens when unsubscribing via email is not allowed for this user."
+        email_not_allowed: "Happens when the email address is not on the whitelist or is on the blacklist."
       unrecognized_error: "Unrecognized Error"
 
   errors: &errors
@@ -1063,6 +1065,7 @@ en:
     gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCDEF"
     enable_escaped_fragments: "Fall back to Google's Ajax-Crawling API if no webcrawler is detected. See https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
     allow_moderators_to_create_categories: "Allow moderators to create new categories"
+    crawler_user_agents: "List of user agents that are considered crawlers and served static HTML instead of JavaScript payload"
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
     use_admin_ip_whitelist: "Admins can only log in if they are at an IP address defined in the Screened IPs list (Admin > Logs > Screened Ips)."
     blacklist_ip_blocks: "A list of private IP blocks that should never be crawled by Discourse"
@@ -1094,7 +1097,7 @@ en:
     allow_index_in_robots_txt: "Specify in robots.txt that this site is allowed to be indexed by web search engines."
     email_domains_blacklist: "A pipe-delimited list of email domains that users are not allowed to register accounts with. Example: mailinator.com|trashmail.net"
     email_domains_whitelist: "A pipe-delimited list of email domains that users MUST register accounts with. WARNING: Users with email domains other than those listed will not be allowed!"
-    forgot_password_strict: "Don't inform users of an account's existence when they use the forgot password dialog."
+    hide_email_address_taken: "Don't inform users that an account exists with a given email address during signup and from the forgot password form."
     log_out_strict: "When logging out, log out ALL sessions for the user on all devices"
     version_checks: "Ping the Discourse Hub for version updates and show new version messages on the /admin dashboard"
     new_version_emails: "Send an email to the contact_email address when a new version of Discourse is available."
@@ -2149,6 +2152,14 @@ en:
 
         Your reply was sent from a blocked email address. Try sending from another email address, or [contact a staff member](%{base_url}/about).
 
+    email_reject_not_allowed_email:
+      title: "Email Reject Not Allowed Email"
+      subject_template: "[%{email_prefix}] Email issue -- Blocked Email"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        Your reply was sent from a blocked email address. Try sending from another email address, or [contact a staff member](%{base_url}/about).
+
     email_reject_inactive_user:
       title: "Email Reject Inactive User"
       subject_template: "[%{email_prefix}] Email issue -- Inactive User"
@@ -2644,6 +2655,19 @@ en:
         %{reason}
 
         %{message}
+
+    account_exists:
+      title: "Account already exists"
+      subject_template: "[%{email_prefix}] Account already exists"
+      text_body_template: |
+        You just tried to create an account at %{site_name}, or tried to change the email of an account to %{email}. However, an account already exists for %{email}.
+
+        If you forgot your password, [reset it now](%{base_url}/password-reset).
+
+        If you didn’t try to create an account for %{email} or change your email address, don’t worry – you can safely ignore this message.
+
+        If you have any questions, [contact our friendly staff](%{base_url}/about).
+
 
 
     digest:

@@ -604,6 +604,7 @@ en:
       admin_tooltip: "This user is an admin"
       blocked_tooltip: "This user is blocked"
       suspended_notice: "This user is suspended until {{date}}."
+      suspended_permanently: "This user is suspended."
       suspended_reason: "Reason: "
       github_profile: "Github"
       email_activity_summary: "Activity Summary"
@@ -1554,12 +1555,14 @@ en:
       deleted: "The topic has been deleted"
 
       topic_status_update:
-        title: "Set Topic Timer"
+        title: "Topic Timer"
         save: "Set Timer"
         num_of_hours: "Number of hours:"
         remove: "Remove Timer"
         publish_to: "Publish To:"
         when: "When:"
+        public_timer_types: Topic Timers
+        private_timer_types: User Topic Timers
       auto_update_input:
         none: ""
         later_today: "Later today"
@@ -1567,7 +1570,9 @@ en:
         later_this_week: "Later this week"
         this_weekend: "This weekend"
         next_week: "Next week"
+        two_weeks: "Two Weeks"
         next_month: "Next month"
+        forever: "Forever"
         pick_date_and_time: "Pick date and time"
         set_based_on_last_post: "Close based on last post"
       publish_to_category:

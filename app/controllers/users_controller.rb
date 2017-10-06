@@ -372,6 +372,19 @@ class UsersController < ApplicationController
         message: activation.message,
         user_id: user.id
       }
+    elsif SiteSetting.hide_email_address_taken && user.errors[:primary_email]&.include?(I18n.t('errors.messages.taken'))
+      session["user_created_message"] = activation.success_message
+
+      if existing_user = User.find_by_email(user.primary_email&.email)
+        Jobs.enqueue(:critical_user_email, type: :account_exists, user_id: existing_user.id)
+      end
+
+      render json: {
+        success: true,
+        active: user.active?,
+        message: activation.success_message,
+        user_id: user.id
+      }
     else
       errors = user.errors.to_hash
       errors[:email] = errors.delete(:primary_email) if errors[:primary_email]
@@ -698,11 +711,17 @@ class UsersController < ApplicationController
       end
     end
 
-    if params[:include_mentionable_groups] == "true" && current_user
-      to_render[:groups] = Group.mentionable(current_user)
-        .where("name ILIKE :term_like", term_like: "#{term}%")
-        .map do |m|
-        { name: m.name, full_name: m.full_name }
+    if current_user
+      groups =
+        if params[:include_mentionable_groups] == 'true'
+          Group.mentionable(current_user)
+        elsif params[:include_messageable_groups] == 'true'
+          Group.messageable(current_user)
+        end
+
+      if groups
+        to_render[:groups] = groups.where("name ILIKE :term_like", term_like: "#{term}%")
+          .map { |m| { name: m.name, full_name: m.full_name } }
       end
     end
 

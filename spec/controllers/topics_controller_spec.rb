@@ -1059,12 +1059,14 @@ describe TopicsController do
         end
 
         it 'returns 403 for an invalid key' do
-          get :show, params: {
-            topic_id: topic.id, slug: topic.slug, api_key: "bad"
-          }, format: :json
+          [:json, :html].each do |format|
+            get :show, params: {
+              topic_id: topic.id, slug: topic.slug, api_key: "bad"
+            }, format: format
 
-          expect(response.code.to_i).to be(403)
-          expect(response.body).to eq(I18n.t("invalid_access"))
+            expect(response.code.to_i).to be(403)
+            expect(response.body).to eq(I18n.t("invalid_access"))
+          end
         end
       end
     end

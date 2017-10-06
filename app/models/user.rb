@@ -1124,6 +1124,7 @@ end
 #  name                    :string
 #  seen_notification_id    :integer          default(0), not null
 #  last_posted_at          :datetime
+#  email                   :string(513)
 #  password_hash           :string(64)
 #  salt                    :string(32)
 #  active                  :boolean          default(FALSE), not null
@@ -1157,6 +1158,7 @@ end
 #
 #  idx_users_admin                    (id)
 #  idx_users_moderator                (id)
+#  index_users_on_email               (lower((email)::text)) UNIQUE
 #  index_users_on_last_posted_at      (last_posted_at)
 #  index_users_on_last_seen_at        (last_seen_at)
 #  index_users_on_uploaded_avatar_id  (uploaded_avatar_id)
