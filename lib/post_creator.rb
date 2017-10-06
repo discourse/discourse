@@ -92,21 +92,27 @@ class PostCreator
       return false
     end
 
-    # Make sure max_allowed_message_recipients setting is respected
     if @opts[:target_usernames].present? && !skip_validations? && !@user.staff?
-      errors[:base] << I18n.t(:max_pm_recepients, recipients_limit: SiteSetting.max_allowed_message_recipients) if @opts[:target_usernames].split(',').length > SiteSetting.max_allowed_message_recipients
-      return false if errors[:base].present?
-    end
+      names = @opts[:target_usernames].split(',')
 
-    # Make sure none of the users have muted the creator
-    names = @opts[:target_usernames]
-    if names.present? && !skip_validations? && !@user.staff?
-      users = User.where(username: names.split(',').flatten).pluck(:id, :username).to_h
+      # Make sure max_allowed_message_recipients setting is respected
+      max_allowed_message_recipients = SiteSetting.max_allowed_message_recipients
+
+      if names.length > max_allowed_message_recipients
+        errors[:base] << I18n.t(:max_pm_recepients,
+          recipients_limit: max_allowed_message_recipients
+        )
+
+        return false
+      end
+
+      # Make sure none of the users have muted the creator
+      users = User.where(username: names).pluck(:id, :username).to_h
 
       MutedUser.where(user_id: users.keys, muted_user_id: @user.id).pluck(:user_id).each do |m|
         errors[:base] << I18n.t(:not_accepting_pms, username: users[m])
+        return false
       end
-      return false if errors[:base].present?
     end
 
     if new_topic?
