@@ -183,7 +183,9 @@ describe GroupsController do
       )
     end
 
-    let(:group) { Fabricate(:group, users: [user1, user2, user3]) }
+    let(:bot) { Fabricate(:user, id: -999) }
+
+    let(:group) { Fabricate(:group, users: [user1, user2, user3, bot]) }
 
     it "should allow members to be sorted by" do
       get "/groups/#{group.name}/members.json", params: {
