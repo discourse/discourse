@@ -22,13 +22,7 @@ module PrettyText
       return "" unless user.present?
 
       # TODO: Add support for ES6 and call `avatar-template` directly
-      if !user.uploaded_avatar_id
-        avatar_template = User.default_template(username)
-      else
-        avatar_template = user.avatar_template
-      end
-
-      UrlHelper.schemaless UrlHelper.absolute avatar_template
+      UrlHelper.schemaless(UrlHelper.absolute(user.avatar_template))
     end
 
     def mention_lookup(name)
