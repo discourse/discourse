@@ -7,7 +7,7 @@
 
 tr_TR:
   site_settings:
-    discourse_narrative_bot_enabled: 'Botu etkinleştir'
+    discourse_narrative_bot_enabled: 'Discourse anlatı botunu etkinleştir'
   badges:
     certified:
       name: Sertifikalı

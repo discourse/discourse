@@ -57,6 +57,8 @@ it:
         topic_closed_error: "Succede quando arriva una risposta ma l'argomento relativo è stato chiuso."
         bounced_email_error: "L'email rappresenta un rapporto di email tornata indietro."
         screened_email_error: "Succede quando l'indirizzo email del mittente era stato già vagliato."
+        unsubscribe_not_allowed: "Accade quando annullare l'iscrizione tramite email non è consentito per questo utente."
+        email_not_allowed: "Accade quando l'indirizzo email non è in whitelist o è nella blacklist."
       unrecognized_error: "Errore Non Riconosciuto"
   errors: &errors
     format: '%{attribute} %{message}'
@@ -972,6 +974,7 @@ it:
     gtm_container_id: "Container id di Google Tag Manager. Es: GTM-ABCDEF"
     enable_escaped_fragments: "Usa le Ajax-Crawling API di Google se non viene rilevato un webcrawler. Vedi https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
     allow_moderators_to_create_categories: "Permetti ai moderatori di creare nuove categorie"
+    crawler_user_agents: "Elenco degli user agent che sono considerati crawler e hanno servito l'HTML statico anziché il payload di JavaScript"
     cors_origins: "Origini permesse per richieste cross-origin (CORS). Ogni origine deve includere http:// o https://. La variabile d'ambiente DISCOURSE_ENABLE_CORS deve essere impostata come true per abilitare CORS."
     use_admin_ip_whitelist: "Gli amministratori possono connettersi soltanto se hanno un indirizzo IP definito nell'elenco degli IP scansionati (Amministrazione > Log > IP scansionati). "
     blacklist_ip_blocks: "Un elenco di blocchi di IP privati che non dovrebbero mai essere scansionati da Discourse"
@@ -1000,7 +1003,7 @@ it:
     allow_index_in_robots_txt: "Specifica nel file robots.txt che questo sito permette l'indicizzazione da parte dei motori di ricerca."
     email_domains_blacklist: "Una lista di domini email separati dal carattere pipe \"|\" con cui gli utenti non possono registrare un account. Ad esempio: mailinator.com/trashmail.net"
     email_domains_whitelist: "Una lista di domini email delimitati da carattere pipe (|) che gli utenti DEVONO usare per poter registrare i propri account. ATTENZIONE: gli utenti con domini email differenti da questi non saranno accettati!"
-    hide_email_address_taken: "Non informare gli utenti dell'esistenza o meno dell'account quando richiamano la funzione per la password dimenticata."
+    hide_email_address_taken: "Durante l'iscrizione e nel modulo per la password dimenticata, non informare gli utenti che già esiste un account con un dato indirizzo email."
     log_out_strict: "Quando ci si disconnette, esci da TUTTE le sessioni dell'utente su tutti i dispositivi"
     version_checks: "Verifica su Discourse Hub l'esistenza di aggiornamenti e mostra i messaggi per le nuove versioni nel cruscotto /admin"
     new_version_emails: "Invia un'email all'indirizzo contact_email quando è disponibile una nuova versione di Discourse."
@@ -1243,7 +1246,7 @@ it:
     email_site_title: "Il titolo del sito utilizzato come mittente delle email dal sito. Impostazione di default a 'titolo' se non impostata. Se il tuo 'titolo' contiene caratteri non consentiti nelle stringhe del mittente email, utilizza questa impostazione."
     find_related_post_with_key: "Utilizza solo la 'reply key' per trovare il messaggio inviato. ATTENZIONE: la disattivazione di questa funzione consente di impersonare l'utente in base all'indirizzo email."
     minimum_topics_similar: "Quanti argomenti devono esistere prima di presentare argomenti simili quando si creano nuovi argomenti."
-    relative_date_duration: "Dopo quanti giorni dalla pubblicazione le date verranno mostrate in termini relativi (7g) anziché assoluti (20 feb)."
+    relative_date_duration: "Dopo quanti giorni dalla pubblicazione le date verranno mostrate in termini assoluti (20 feb) anziché relativi (7g)."
     delete_user_max_post_age: "Non permettere di cancellare utenti il cui primo messaggio è più vecchio di (x) giorni."
     delete_all_posts_max: "Numero massimo di messaggi che possono essere eliminati contemporaneamente con il pulsante Cancella Tutti. Se un utente ha un numero maggiore di tali messaggi, questi non possono essere eliminati contemporaneamente e l'utente non può essere cancellato."
     username_change_period: "Numero di giorni dall'iscrizione dopo i quali è possibile modificare il nome utente (imposta a 0 per non permettere il cambio del nome utente)."
@@ -1323,6 +1326,7 @@ it:
     auto_close_topics_post_count: "Numero massimo di messaggi consentiti in un argomento prima di essere automaticamente chiuso (0 per disabilitare)"
     code_formatting_style: "Il pulsante del testo preformattato nel composer verrà predefinito a questo stile di formattazione del codice"
     max_allowed_message_recipients: "Numero massimo di destinatari consentiti in un messaggio privato."
+    watched_words_regular_expressions: "Le parole osservate sono espressioni regolari."
     default_email_digest_frequency: "Con quale frequenza gli utenti ricevono email riepilogative di default."
     default_include_tl0_in_digests: "Per impostazione predefinita, includi i messaggi dei nuovi utenti nelle email riepilogative. Gli utenti possono modificare questa impostazione nelle loro preferenze"
     default_email_private_messages: " Invia una email quando qualcuno scrive un messaggio ad un utente di default."
@@ -1896,6 +1900,13 @@ it:
         Spiacenti, ma il tuo messaggio email per %{destination} (intitolato %{former_title}) non ha funzionato.
 
         La tua risposta è stata inviata da un indirizzo email bloccato. Prova a rispondere da un altro indirizzo email, o [contatta un membro dello staff](%{base_url}/about).
+    email_reject_not_allowed_email:
+      title: "Email Rifiuta Email Non Consentita"
+      subject_template: "[%{email_prefix}] Problema email -- Email Bloccata"
+      text_body_template: |
+        Spiacenti, ma il tuo messaggio email per %{destination} (intitolato %{former_title}) non ha funzionato.
+
+        La tua risposta è stata inviata da un indirizzo email bloccato. Prova a rispondere da un altro indirizzo email, o [contatta un membro dello staff](%{base_url}/about).
     email_reject_inactive_user:
       title: "Email Rifiutata Utente Inattivo"
       subject_template: "[%{email_prefix}] Problema email -- Utente Inattivo"
@@ -2337,6 +2348,17 @@ it:
         %{reason}
 
         %{message}
+    account_exists:
+      title: "L'account esiste già"
+      subject_template: "[%{email_prefix}] L'account esiste già"
+      text_body_template: |
+        Hai appena cercato di creare un account su %{site_name}, o hai tentato di cambiare l'email di un account su %{email}. Tuttavia, un account esiste già per %{email}.
+
+        Se hai dimenticato la tua password, [reimpostala adesso](%{base_url}/password-reset).
+
+        Se non hai cercato di creare un account per %{email} o di cambiare il tuo indirizzo email, non ti preoccupare – puoi tranquillamente ignorare questo messaggio.
+
+        Se hai delle domande, [contatta il nostro amichevole staff](%{base_url}/about).
     digest:
       why: "Un breve sommario di %{site_link} dalla tua ultima visita il %{last_seen_at}"
       since_last_visit: "Dalla tua ultima visita"

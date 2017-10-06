@@ -2369,8 +2369,9 @@ fr:
         by: "par"
       flags:
         title: "Signalements"
-        old: "Anciens"
-        active: "Actifs"
+        active_posts: "Messages signalés"
+        old_posts: "Anciens messages signalés"
+        topics: "Sujets signalés"
         agree: "Accepter"
         agree_title: "Confirmer que le signalement est valide et correcte"
         agree_flag_modal_title: "Accepter et…"
@@ -2398,6 +2399,8 @@ fr:
         clear_topic_flags: "Terminer"
         clear_topic_flags_title: "Ce sujet a été étudié et les problèmes ont été résolus. Cliquez sur Terminer pour enlever les signalements."
         more: "(plus de réponses…)"
+        suspend_user: "Suspendre l'utilisateur"
+        suspend_user_title: "Suspendre l'utilisateur pour ce message"
         dispositions:
           agreed: "accepté"
           disagreed: "refusé"
@@ -2408,11 +2411,18 @@ fr:
         system: "Système"
         error: "Quelque chose s'est mal passé"
         reply_message: "Répondre"
-        no_results: "Il n'y a aucun signalement."
+        no_results: "Il n'y a pas de messages signalés."
         topic_flagged: "Ce <strong>sujet</strong> a été signalé."
+        show_full: "afficher le message complet"
         visit_topic: "Consulter le sujet pour intervenir"
         was_edited: "Le message a été modifié après le premier signalement"
         previous_flags_count: "Ce message a déjà été signalé {{count}} fois."
+        show_details: "Afficher les détails du signalement"
+        flagged_topics:
+          topic: "Sujet"
+          type: "Type"
+          users: "Utilisateurs"
+          last_flagged: "Dernier signalés"
         summary:
           action_type_3:
             one: "hors sujet"
@@ -2950,6 +2960,7 @@ fr:
         form:
           label: 'Nouveau mot :'
           placeholder: 'mot complet ou * comme signe générique'
+          placeholder_regexp: "expression régulière"
           add: 'Ajouter'
           success: 'Succès'
           upload: "Envoyer"
@@ -3011,10 +3022,15 @@ fr:
         suspend_failed: "Il y a eu un problème pendant la suspension de cet utilisateur {{error}}"
         unsuspend_failed: "Il y a eu un problème pendant le retrait de la suspension de cet utilisateur {{error}}"
         suspend_duration: "Combien de temps l'utilisateur sera suspendu ?"
-        suspend_duration_units: "(jours)"
         suspend_reason_label: "Pourquoi suspendez-vous ? Ce texte <b>sera visible par tout le monde</ b> sur la page du profil de cet utilisateur, et sera affiché à l'utilisateur quand ils essaient de se connecter. Soyez bref."
+        suspend_reason_hidden_label: "Pourquoi le suspendez-vous ? Ce texte sera affiché à l'utilisateur quand il essaie de se connecter. Soyez bref."
         suspend_reason: "Raison"
+        suspend_reason_placeholder: "Raison de la suspension"
+        suspend_message: "Message courriel"
+        suspend_message_placeholder: "Donner plus d'informations au sujet de la suspension qui seront envoyées à l'utilisateur par courriel."
         suspended_by: "Suspendu par"
+        suspended_until: "(jusqu'à %{until})"
+        cant_suspend: "Cet utilisateur ne peut pas être suspendu."
         delete_all_posts: "Supprimer tous les messages"
         delete_all_posts_confirm_MF: "Vous êtes sur le point de supprimer {POSTS, plural, one {1 message} other {# messages}} et {TOPICS, plural, one {1 sujet} other {# sujets}}. Êtes-vous sûr ?"
         suspend: "Suspendre"

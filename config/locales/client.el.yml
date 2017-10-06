@@ -540,6 +540,7 @@ el:
       admin_tooltip: "Αυτός ο χρήστης είναι διαχειριστής"
       blocked_tooltip: "Ο χρήστης είναι μπλοκαρισμένος"
       suspended_notice: "Αυτός ο χρήστης είναι σε αποβολή μέχρι τις {{date}}."
+      suspended_permanently: "Ο χρήστης είναι αποβλημένος."
       suspended_reason: "Αιτιολογία:"
       github_profile: "Github"
       email_activity_summary: "Περίληψη Ενεργειών"
@@ -1415,7 +1416,9 @@ el:
         later_this_week: "Αργότερα αυτή την εβδομάδα"
         this_weekend: "Αυτό το Σαββατοκύριακο"
         next_week: "Την άλλη εβδομάδα"
+        two_weeks: "Δύο Εβδομάδες"
         next_month: "Τον άλλο μήνα"
+        forever: "Για Πάντα"
         pick_date_and_time: "Επίλεξε ημερομηνία και ώρα"
         set_based_on_last_post: "Κλείσε ανάλογα με την τελευταία ανάρτηση"
       publish_to_category:

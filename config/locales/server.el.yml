@@ -57,6 +57,8 @@ el:
         topic_closed_error: "Συμβαίνει όταν καταχωρηθεί μία απάντηση για θέμα που έχει κλείσει. "
         bounced_email_error: "Το email είναι αναφορά αποτυχίας παράδοσης. "
         screened_email_error: "Συμβαίνει όταν η διεύθυνση email του αποστολέα ήταν ήδη ελεγχόμενη"
+        unsubscribe_not_allowed: "Συμβαίνει όταν η απεγγραφή μέσω email δεν επιτρέπεται για αυτόν τον χρήστη."
+        email_not_allowed: "Συμβαίνει όταν η διεύθυνση email δεν βρίσκεται στην λευκή ή βρίσκεται στην μαύρη λίστα."
       unrecognized_error: "Άγνωστο Σφάλμα"
   errors: &errors
     format: '%{attribute} %{message}'
@@ -979,6 +981,7 @@ el:
     gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCDEF"
     enable_escaped_fragments: "Επιλογή του Ajax-Crawling API της Google, αν δεν βρεθεί κάποιο πρόγραμμα ανίχνευσης του Ιστού. Βλέπε https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
     allow_moderators_to_create_categories: "Να επιτρέπεται στους συντονιστές να δημιουργούν νέες κατηγορίες"
+    crawler_user_agents: "Λίστα από user agents τα οποία θεωρούνται crawlers και τους παρέχεται static HTML αντί για JavaScript payload"
     cors_origins: "Επιτρεπόμενες πηγές για αιτήσεις πολλαπλής προέλευσης (cross-origin requests, CORS). Η κάθε προέλευση πρέπει να περιέχει http:// or https://. Η env μεταβλητή DISCOURSE_ENABLE_CORS πρέπει να οριστεί σε αληθινή για να ενεργοποιηθεί το CORS."
     use_admin_ip_whitelist: "Οι διαχειριστές μπορούν να συνδέονται μόνο αν βρίσκονται σε μια διευθυνση IP καθορισμένη στη λίστα Screened IPs (Admin > Logs > Screened Ips)."
     blacklist_ip_blocks: "Μια λίστα από private IP blocks η οποία ποτέ δεν θα ανιχνεύεται από το Discourse"
@@ -1007,7 +1010,7 @@ el:
     allow_index_in_robots_txt: "Καθόρισε στο robots.txt ότι για αυτή την ιστοσελίδα επιτρέπεται να δημιουργείται κατάλογος περιεχομένων από τις μηχανές αναζήτησης."
     email_domains_blacklist: "Μία λίστα με διευθύνσεις email τις οποίες οι χρήστες δεν μπορούν να χρησιμοποιήσουν για να δημιουργήσουν λογαριασμό. Πχ: mailinator.com|trashmail.net"
     email_domains_whitelist: "Μία λίστα με διευθύνσεις email τις οποίες οι χρήστες ΘΑ ΠΡΕΠΕΙ να χρησιμοποιήσουν για να δημιουργήσουν λογαριασμό. ΠΡΟΣΟΧΗ: οι χρήστες  με διευθύνσεις email οι οποίες δεν βρίσκονται σε αυτή τη λίστα δεν θα μπορούν να δημιουργήσουν λογαριασμό."
-    hide_email_address_taken: "Να μην ενημερώνονται οι χρήστες για την ύπαρξη ενός λογαριασμού όταν χρησιμοποιούν την λειτουργία ανάκτησης κωδικού πρόσβασης."
+    hide_email_address_taken: "Μην ενημερώνεις του χρήστες ότι υπάρχει λογαριασμός χρήστη με αυτήν την διεύθυνση email κατά την εγγραφή και στην φόρμα επαναφοράς κωδικού."
     log_out_strict: "Όταν αποσυνδεθείτε, ΟΛΕΣ οι δραστηριότητες σας σε ΟΛΕΣ τις συσκευές θα αποσυνδεθούν"
     version_checks: "Έλεγξε το Hub του Discourse για αναβαθμίσεις και δείξε μηνύματα για νέες ενημερώσεις στην σελίδα διαχείρισης.  "
     new_version_emails: "Αποστολή email στην contact_email διεύθυνση όταν μια νέα έκδοση του Discourse είναι διαθέσιμη."
@@ -1905,6 +1908,13 @@ el:
         Λυπούμαστε, αλλά το email σας προς %{destination} (με τίτλο %{former_title}) απέτυχε.
 
         Η απάντησή σας στάλθηκε από μία αποκλεισμένη διεύθυνση email. Δοκιμάστε να στείλετε από κάποια άλλη διεύθυνση email ή [επικοινωνήστε με την διαχείριση](%{base_url}/about).
+    email_reject_not_allowed_email:
+      title: "Email Απερρίφθη Μη Επιτρεπτό Email"
+      subject_template: "[%{email_prefix}] Πρόβλημα Email -- Αποκλεισμένο Email"
+      text_body_template: |
+        Λυπούμαστε, αλλά το email προς %{destination} (με τίτλο %{former_title}) δεν λειτούργησε.
+
+        Η απάντησή σας στάλθηκε από μία αποκλεισμένη διεύθυνση email. Δοκιμάστε να στείλετε ξανά από κάποια άλλη διεύθυνση email ή [επικοινωνήστε με συνεργάτη](%{base_url}/about).
     email_reject_inactive_user:
       title: "Απόρριψη email Μη ενεργός χρήστης"
       subject_template: "[%{email_prefix}] Πρόβλημα Email -- Ανενεργός Χρήστης"
@@ -2350,6 +2360,9 @@ el:
         %{reason}
 
         %{message}
+    account_exists:
+      title: "Ο λογαριασμός υπάρχει ήδη"
+      subject_template: "[%{email_prefix}] Ο λογαριασμός υπάρχει ήδη"
     digest:
       why: "Μια σύντομη σύνοψη του %{site_link} από την τελευταία σου επίσκεψη στις %{last_seen_at}"
       since_last_visit: "Από την τελευταία σου επίσκεψη"

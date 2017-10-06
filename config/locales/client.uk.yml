@@ -1446,6 +1446,8 @@ uk:
             change_trust_level: "зміна рівня довіри"
             change_username: "зміна імені користувача"
             change_site_setting: "зміна налаштування сайта"
+            change_theme: "змінити тему"
+            delete_theme: "видалити тему"
             change_site_text: "змінити текст сайту"
             suspend_user: "призупинення користувача"
             unsuspend_user: "скасування призупинення"
@@ -1489,6 +1491,15 @@ uk:
             ip_address: "IP-адреса"
             add: "Додати"
             filter: "Пошук"
+      watched_words:
+        search: "Пошук"
+        clear_filter: "Очистити"
+        actions:
+          block: 'Заблокувати'
+        form:
+          add: 'Додати'
+          success: 'Успіх'
+          upload: "Вивантажити"
       impersonate:
         not_found: "Цього користувача не вдалося знайти."
       users:
@@ -1496,6 +1507,7 @@ uk:
         create: 'Додати адміністратора'
         last_emailed: "Останній ел. лист"
         not_found: "Даруйте, такого імені користувача немає в нашій системі."
+        id_not_found: "Даруйте, користувача за таким номером немає в нашій системі."
         active: "Активний(а)"
         show_emails: "Показати електронну пошту"
         nav:
