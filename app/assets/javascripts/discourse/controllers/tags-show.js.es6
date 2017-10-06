@@ -115,7 +115,8 @@ export default Ember.Controller.extend(BulkTopicSelection, {
 
     deleteTag() {
       const self = this;
-      bootbox.confirm(I18n.t("tagging.delete_confirm"), function(result) {
+      const topicsLength = this.get('list.topic_list.topics.length');
+      bootbox.confirm(I18n.t("tagging.delete_confirm", {count: topicsLength}), function(result) {
         if (!result) { return; }
 
         self.get("tag").destroyRecord().then(function() {
