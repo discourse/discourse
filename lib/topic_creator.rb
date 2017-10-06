@@ -190,7 +190,7 @@ class TopicCreator
     names = usernames.split(',').flatten
     len = 0
 
-    User.where(username: names).each do |user|
+    User.includes(:user_option).where(username: names).find_each do |user|
       check_can_send_permission!(topic, user)
       @added_users << user
       topic.topic_allowed_users.build(user_id: user.id)

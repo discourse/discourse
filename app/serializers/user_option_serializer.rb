@@ -20,7 +20,8 @@ class UserOptionSerializer < ApplicationSerializer
              :like_notification_frequency,
              :include_tl0_in_digests,
              :theme_key,
-             :theme_key_seq
+             :theme_key_seq,
+             :allow_private_messages,
 
   def auto_track_topics_after_msecs
     object.auto_track_topics_after_msecs || SiteSetting.default_other_auto_track_topics_after_msecs
