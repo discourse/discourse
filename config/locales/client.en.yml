@@ -2457,7 +2457,7 @@ en:
       delete_confirm:
         one: "Are you sure you want to delete this tag and remove it from 1 topic it is assigned to?"
         other: "Are you sure you want to delete this tag and remove it from {{count}} topics it is assigned to?"
-        no_topics: "Are you sure you want to delete this tag?"
+      delete_confirm_no_topics: "Are you sure you want to delete this tag?"
       rename_tag: "Rename Tag"
       rename_instructions: "Choose a new name for the tag:"
       sort_by: "Sort by:"
