@@ -21,7 +21,7 @@ QUnit.module("lib:click-track-edit-history", {
          <div class="row">
            <div class="span8">
              <a href="http://www.google.com">google.com</a>
-             <a class="lightbox back quote-other-topic" href="http://www.google.com">google.com</a>
+             <a class="lightbox back" href="http://www.google.com">google.com</a>
              <div class="onebox-result">
                <a id="inside-onebox" href="http://www.google.com">google.com<span class="badge">1</span></a>
                <a id="inside-onebox-forced" class="track-link" href="http://www.google.com">google.com<span class="badge">1</span></a>
@@ -33,7 +33,7 @@ QUnit.module("lib:click-track-edit-history", {
            </div>
            <div class="span8 offset1">
              <a href="http://www.google.com">google.com</a>
-             <a class="lightbox back quote-other-topic" href="http://www.google.com">google.com</a>
+             <a class="lightbox back" href="http://www.google.com">google.com</a>
              <div class="onebox-result">
                <a id="inside-onebox" href="http://www.google.com">google.com<span class="badge">1</span></a>
                <a id="inside-onebox-forced" class="track-link" href="http://www.google.com">google.com<span class="badge">1</span></a>
@@ -76,10 +76,6 @@ QUnit.test("does not track clicks when forcibly disabled", assert => {
 
 QUnit.test("does not track clicks on back buttons", assert => {
   assert.ok(track(generateClickEventOn('.back')));
-});
-
-QUnit.test("does not track clicks on quote buttons", assert => {
-  assert.ok(track(generateClickEventOn('.quote-other-topic')));
 });
 
 QUnit.test("does not track clicks on category badges", assert => {

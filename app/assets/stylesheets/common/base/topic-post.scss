@@ -87,7 +87,7 @@ aside.quote {
   }
 }
 
-.quote-controls, .quote-controls .back:before, .quote-controls .quote-other-topic:before {
+.quote-controls {
   color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%));
 }
 
@@ -116,21 +116,6 @@ aside.quote {
   float: right;
   a {
     margin: 0;
-  }
-
-  .back:before, .quote-other-topic:before
-  {
-    display: inline-block;
-    margin-left: 8px;
-    font-family: "FontAwesome";
-    position: relative;
-    z-index: 20;
-    content: "\f062";
-  }
-
-  .quote-other-topic:before
-  {
-    content: "\f061";
   }
 }
 

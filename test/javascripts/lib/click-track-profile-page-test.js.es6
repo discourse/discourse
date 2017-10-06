@@ -17,7 +17,7 @@ QUnit.module("lib:click-track-profile-page", {
     fixture().html(
       `<p class="excerpt first" data-post-id="42" data-topic-id="1337" data-user-id="3141">
         <a href="http://www.google.com">google.com</a>
-        <a class="lightbox back quote-other-topic" href="http://www.google.com">google.com</a>
+        <a class="lightbox back" href="http://www.google.com">google.com</a>
         <div class="onebox-result">
           <a id="inside-onebox" href="http://www.google.com">google.com<span class="badge">1</span></a>
           <a id="inside-onebox-forced" class="track-link" href="http://www.google.com">google.com<span class="badge">1</span></a>
@@ -29,7 +29,7 @@ QUnit.module("lib:click-track-profile-page", {
       </p>
       <p class="excerpt second" data-post-id="24" data-topic-id="7331" data-user-id="1413">
         <a href="http://www.google.com">google.com</a>
-        <a class="lightbox back quote-other-topic" href="http://www.google.com">google.com</a>
+        <a class="lightbox back" href="http://www.google.com">google.com</a>
         <div class="onebox-result">
           <a id="inside-onebox" href="http://www.google.com">google.com<span class="badge">1</span></a>
           <a id="inside-onebox-forced" class="track-link" href="http://www.google.com">google.com<span class="badge">1</span></a>
@@ -70,10 +70,6 @@ QUnit.test("does not track clicks when forcibly disabled", assert => {
 
 QUnit.test("does not track clicks on back buttons", assert => {
   assert.ok(track(generateClickEventOn('.back')));
-});
-
-QUnit.test("does not track clicks on quote buttons", assert => {
-  assert.ok(track(generateClickEventOn('.quote-other-topic')));
 });
 
 QUnit.test("does not track clicks on category badges", assert => {
