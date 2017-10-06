@@ -163,7 +163,8 @@ export default class PostCooked {
 
     // If we have a post reference
     if (postNumber) {
-      navLink = `<a href='${this._urlForPostNumber(postNumber)}' title='${quoteTitle}' class='back'></a>`;
+      let icon = iconHTML('arrow-up');
+      navLink = `<a href='${this._urlForPostNumber(postNumber)}' title='${quoteTitle}' class='back'>${icon}</a>`;
     }
 
     // Only add the expand/contract control if it's not a full post
@@ -188,7 +189,8 @@ export default class PostCooked {
         // Unless it's a full quote, allow click to expand
         if (!($aside.data('full') || $title.data('has-quote-controls'))) {
           $title.on('click', e2 => {
-            if ($(e2.target).is('a')) return true;
+            let $target = $(e2.target);
+            if ($target.closest('a').length) { return true; }
             this._toggleQuote($aside);
           });
           $title.data('has-quote-controls', true);
