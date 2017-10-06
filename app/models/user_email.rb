@@ -42,6 +42,7 @@ end
 #
 # Indexes
 #
+#  index_user_emails_on_email                (lower((email)::text)) UNIQUE
 #  index_user_emails_on_user_id              (user_id)
 #  index_user_emails_on_user_id_and_primary  (user_id,primary) UNIQUE
 #
