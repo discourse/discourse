@@ -44,17 +44,17 @@ ja:
         less_than_x_seconds:
           other: "%{count}秒未満"
         x_seconds:
-          other: "%{count}秒前"
+          other: "%{count}秒"
         x_minutes:
-          other: "%{count}分前"
+          other: "%{count}分"
         about_x_hours:
-          other: "%{count}時間前"
+          other: "%{count}時間"
         x_days:
-          other: "%{count}日前"
+          other: "%{count}日"
         about_x_years:
-          other: "%{count}年前"
+          other: "%{count}年"
         over_x_years:
-          other: "%{count}年以上前"
+          other: "%{count}年以上"
         almost_x_years:
           other: "約%{count}年"
         date_month: "MMM Do"
@@ -1630,6 +1630,8 @@ ja:
         yes_value: "はい"
       via_email: "メールで投稿されました。"
       whisper: "この投稿はモデレーターへのプライベートメッセージです"
+      wiki:
+        about: "この投稿はWiki形式です"
       archetypes:
         save: '保存オプション'
       controls:
@@ -2160,6 +2162,8 @@ ja:
         clear_topic_flags: "完了"
         clear_topic_flags_title: "このトピックについての問題が解決されました。「完了」をクリックして通報の対応を完了します。"
         more: "(more replies...)"
+        suspend_user: "ユーザを凍結"
+        suspend_user_title: "この投稿においてユーザを凍結"
         dispositions:
           agreed: "賛成しました。"
           disagreed: "反対する"
@@ -2170,7 +2174,7 @@ ja:
         system: "システム"
         error: "何らかの理由でうまくいきませんでした"
         reply_message: "返信する"
-        no_results: "通報はありません。"
+        no_results: "通報された投稿はありません。"
         topic_flagged: "この <strong>トピック</strong> は通報されました。"
         visit_topic: "トピックを確認"
         was_edited: "最初の通報後に編集された投稿"
@@ -2284,6 +2288,8 @@ ja:
             without_uploads: "はい(ファイルは含まない)"
           download:
             label: "ダウンロード"
+            title: "ダウンロードリンクをメールで送る"
+            alert: "バックアップのダウンロードリンクがメールで送られました。"
           destroy:
             title: "バックアップを削除"
             confirm: "このバックアップを削除しますか？"
@@ -2329,8 +2335,25 @@ ja:
           subject: "件名"
           multiple_subjects: "このメールのテンプレートは複数の件名があります。"
           none_selected: "編集するメールテンプレートを選択してください。"
+          revert: "変更を元に戻す"
+        theme:
+          edit: "編集"
+          desktop: "デスクトップ"
+          mobile: "モバイル"
+          preview: "プレビュー"
+          upload: "アップロード"
+          license: "ライセンス"
+          check_for_updates: "アップデートを確認"
+          updating: "アップデート中..."
+          scss:
+            text: "CSS"
+          head_tag:
+            text: "</head>"
+          body_tag:
+            text: "</body>"
         colors:
           title: "カラー"
+          edit: "カラースキームの編集"
           long_title: "カラースキーム"
           new_name: "カラースキームを作成"
           copy_name_prefix: "のコピー"
@@ -2416,6 +2439,9 @@ ja:
             subject: "件名"
             body: "本文"
           filters:
+            from_placeholder: "from@example.com"
+            to_placeholder: "to@example.com"
+            cc_placeholder: "cc@example.com"
             subject_placeholder: "件名..."
             error_placeholder: "エラー"
         logs:
@@ -2488,7 +2514,12 @@ ja:
             revoke_admin: "管理者権限を剥奪"
             grant_moderation: "モデレータ権限を付与"
             revoke_moderation: "モデレータ権限を剥奪"
+            backup_create: "バックアップを生成"
+            deleted_tag: "タグを削除"
+            renamed_tag: "タグ名変更"
             change_readonly_mode: "閲覧専用モードに変更する"
+            backup_download: "バックアップをダウンロード"
+            backup_destroy: "バックアップを消去"
         screened_emails:
           title: "ブロック対象アドレス"
           description: "新規アカウント作成時、次のメールアドレスからの登録をブロックする。"
@@ -2529,6 +2560,7 @@ ja:
           flag: 'これらの言葉を含む投稿を許可しますが、仲裁者がこれをレビューできるよう、不適切であると通報されます。'
         form:
           label: '新しい単語:'
+          placeholder_regexp: "正規表現"
           add: '追加'
           success: '成功'
           upload: "アップロード"
@@ -2586,9 +2618,9 @@ ja:
         suspend_failed: "ユーザの凍結に失敗しました: {{error}}"
         unsuspend_failed: "ユーザの凍結解除に失敗しました: {{error}}"
         suspend_duration: "ユーザを何日間凍結しますか?"
-        suspend_duration_units: "(日)"
         suspend_reason_label: "アカウントを凍結する理由を説明してください。ここに書いた理由は、このユーザのプロファイルページにおいて<b>全員が閲覧可能な状態</b>で公開されます。またこのユーザがログインを試みた際にも表示されます。"
         suspend_reason: "理由"
+        suspend_reason_placeholder: "凍結理由"
         suspended_by: "凍結したユーザ"
         delete_all_posts: "全ての投稿を削除"
         suspend: "凍結"

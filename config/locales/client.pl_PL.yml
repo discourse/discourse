@@ -2578,8 +2578,9 @@ pl_PL:
         by: "przez"
       flags:
         title: "Flagi"
-        old: "Stare"
-        active: "Aktywność"
+        active_posts: "Ofllagowane wpisy"
+        old_posts: "Stare oflagowane wpisy"
+        topics: "Oflagowane tematy"
         agree: "Potwierdź"
         agree_title: "Potwierdź to zgłoszenie jako uzasadnione i poprawne"
         agree_flag_modal_title: "Potwierdź i…"
@@ -2607,6 +2608,8 @@ pl_PL:
         clear_topic_flags: "Zrobione"
         clear_topic_flags_title: "Ten temat został sprawdzony i związane z nim problemy zostały rozwiązane. Kliknij Zrobione, aby usunąć flagi."
         more: "(więcej odpowiedzi…)"
+        suspend_user: "Zawieszony użytkownik"
+        suspend_user_title: "Zawieś użytkownika za ten wpis"
         dispositions:
           agreed: "potwierdzono"
           disagreed: "wycofano"
@@ -2617,11 +2620,18 @@ pl_PL:
         system: "System"
         error: "Coś poszło nie tak"
         reply_message: "Odpowiedz"
-        no_results: "Nie ma flag."
+        no_results: "Nie ma żadnych oflagowanych wpisów."
         topic_flagged: "Ten <strong>temat</strong> został oflagowany."
+        show_full: "pokaż cały wpis"
         visit_topic: "Odwiedź temat by podjąć działania."
         was_edited: "Wpis został zmieniony po pierwszej fladze"
         previous_flags_count: "Ten wpis został do tej pory oznaczony flagą {{count}} razy."
+        show_details: "Pokaż szczegóły oflagowania"
+        flagged_topics:
+          topic: "Temat"
+          type: "Typ"
+          users: "Użytkownicy"
+          last_flagged: "Ostatnio Oflagowane"
         summary:
           action_type_3:
             one: "nie-na-temat"
@@ -3177,6 +3187,7 @@ pl_PL:
         form:
           label: 'Nowe słowo:'
           placeholder: 'pełne słowo lub jako dzika karta'
+          placeholder_regexp: "wyrażenie regularne"
           add: 'Dodaj'
           success: 'Sukces'
           upload: "Prześlij"
@@ -3246,10 +3257,15 @@ pl_PL:
         suspend_failed: "Coś poszło nie tak podczas zawieszania użytkownika {{error}}"
         unsuspend_failed: "Coś poszło nie tak podczas odwieszania użytkownika {{error}}"
         suspend_duration: "Jak długo użytkownik ma być zawieszony?"
-        suspend_duration_units: "(dni)"
         suspend_reason_label: "Dlaczego zawieszasz? Ten tekst <b>będzie widoczny dla wszystkich</b> na stronie profilu użytkownika i będzie wyświetlany użytkownikowi gdy ten będzie próbował się zalogować. Zachowaj zwięzłość."
+        suspend_reason_hidden_label: "Dlaczego zawieszasz użytkownika? Ten krótki tekst zostanie wyświetlony, gdy zawieszony użytkownik spróbuje się zalogować. "
         suspend_reason: "Powód"
+        suspend_reason_placeholder: "Powód zawieszenia"
+        suspend_message: "Wiadomość Email"
+        suspend_message_placeholder: "Ewentualnie podaj więcej informacji o zawieszeniu użytkownika, a zostaną wysłane do niego poprzez email."
         suspended_by: "Zawieszony przez"
+        suspended_until: "(do %{until})"
+        cant_suspend: "Nie można zawiesić tego użytkownika."
         delete_all_posts: "Usuń wszystkie wpisy"
         delete_all_posts_confirm_MF: "Zamierzasz usunąć {POSTS, plural, one {1 post} few {# posty} many {# postów} other {# postów}} i {TOPICS, plural, one {1 temat} few {# tematy} many {# tematów} other {# tematów}}. Czy jesteś pewien?"
         suspend: "Zawieś"

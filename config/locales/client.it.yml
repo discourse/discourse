@@ -540,6 +540,7 @@ it:
       admin_tooltip: "Questo utente è un amministratore"
       blocked_tooltip: "Questo utente è bloccato"
       suspended_notice: "Questo utente è sospeso fino al {{date}}."
+      suspended_permanently: "Questo utente è sospeso."
       suspended_reason: "Motivo: "
       github_profile: "Github"
       email_activity_summary: "Riassunto Attività"
@@ -1415,7 +1416,9 @@ it:
         later_this_week: "Più tardi questa settimana"
         this_weekend: "Questo fine settimana"
         next_week: "La prossima settimana"
+        two_weeks: "Due Settimane"
         next_month: "Il prossimo mese"
+        forever: "Per sempre"
         pick_date_and_time: "Scegli la data e l'ora"
         set_based_on_last_post: "Chiudi in base all'ultimo messaggio"
       publish_to_category:
@@ -2956,6 +2959,7 @@ it:
         form:
           label: 'Nuova Parola:'
           placeholder: 'parola completa o * come carattere jolly'
+          placeholder_regexp: "espressione regolare"
           add: 'Aggiungi'
           success: 'Successo'
           upload: "Carica"

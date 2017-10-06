@@ -540,6 +540,7 @@ fi:
       admin_tooltip: "Tämä käyttäjä on ylläpitäjä"
       blocked_tooltip: "Tämä käyttäjä on estetty"
       suspended_notice: "Tämä käyttäjätili on hyllytetty {{date}} asti."
+      suspended_permanently: "Käyttäjä on hyllytetty."
       suspended_reason: "Syy:"
       github_profile: "GitHub"
       email_activity_summary: "Kooste tapahtumista"
@@ -1416,7 +1417,9 @@ fi:
         later_this_week: "Myöhemmin tällä viikolla"
         this_weekend: "Viikonloppuna"
         next_week: "Ensi viikolla"
+        two_weeks: "Kahden viikon kuluttua"
         next_month: "Ensi kuussa"
+        forever: "Ikuisesti"
         pick_date_and_time: "Valitse päivämäärä ja kellonaika"
         set_based_on_last_post: "Sulje viimeisimmän viestin mukaan"
       publish_to_category:
@@ -2959,6 +2962,7 @@ fi:
         form:
           label: 'Uusi sana:'
           placeholder: 'kokonainen sana tai * jokerimerkkinä'
+          placeholder_regexp: "säännöllinen lauseke"
           add: 'Lisä'
           success: 'Onnistui'
           upload: "Lataa"
@@ -3037,7 +3041,7 @@ fi:
         moderator: "Valvoja?"
         admin: "Ylläpitäjä?"
         blocked: "Estetty?"
-        staged: "Luotu?"
+        staged: "Esikäyttäjä?"
         show_admin_profile: "Ylläpito"
         refresh_browsers: "Pakota sivun uudelleen lataus"
         refresh_browsers_message: "Sanoma lähetettiin kaikille päätelaitteille!"
@@ -3112,7 +3116,7 @@ fi:
         deactivate_explanation: "Käytöstä poistetun käyttäjän täytyy uudelleen vahvistaa sähköpostiosoitteensa."
         suspended_explanation: "Hyllytetty käyttäjä ei voi kirjautua sisään."
         block_explanation: "Estetty käyttäjä ei voi luoda viestejä tai ketjuja."
-        staged_explanation: "Automaattisesti luotu käyttäjä voi kirjoittaa vain tiettyihin ketjuihin sähköpostin välityksellä."
+        staged_explanation: "Esikäyttäjä voi kirjoittaa vain tiettyihin ketjuihin sähköpostin välityksellä."
         bounce_score_explanation:
           none: "Tästä sähköpostiosoitteesta ei ole tullut palautuksia viime aikoina"
           some: "Tästä sähköpostiosoitteesta on tullut joitakin palautuksia viime aikoina"

@@ -540,6 +540,7 @@ nb_NO:
       admin_tooltip: "Denne brukeren er en administrator"
       blocked_tooltip: "Denne brukeren er blokkert"
       suspended_notice: "Denne brukeren er bannlyst til {{date}}."
+      suspended_permanently: "Brukeren er bannlyst."
       suspended_reason: "Begrunnelse:"
       github_profile: "Github"
       email_activity_summary: "Oppsummering av aktivitet"
@@ -1409,13 +1410,17 @@ nb_NO:
         remove: "Fjern utløp"
         publish_to: "Publiser til:"
         when: "Når:"
+        public_timer_types: Emneutløp
+        private_timer_types: Brukerstyrte emneutløp
       auto_update_input:
         later_today: "Senere i dag"
         tomorrow: "I morgen"
         later_this_week: "Senere denne uken"
         this_weekend: "Denne uken"
         next_week: "Neste uke"
+        two_weeks: "To uker"
         next_month: "Neste måned"
+        forever: "For alltid"
         pick_date_and_time: "Velg dato og tid"
         set_based_on_last_post: "Lukk basert på siste post"
       publish_to_category:

@@ -703,12 +703,16 @@ pl_PL:
       short_description: 'Zagłosuj na ten wpis'
       long_form: 'zagłosowano za tym wpisem'
   user_activity:
+    no_default:
+      others: "Brak aktywności"
     no_bookmarks:
       self: "Nie masz postów dodanych do zakładek, posty w zakładkach pozwalają ci na łatwiejszy dostęp do nich w późniejszym czasie."
       others: "Brak zakładek."
     no_likes_given:
       self: "Nie masz lajkowanych postów."
       others: "Brak lajkowanych postów."
+    no_replies:
+      others: "Brak odpowiedzi."
   topic_flag_types:
     spam:
       title: 'Spam'
