@@ -84,7 +84,7 @@ export default {
     e.preventDefault();
 
     // We don't track clicks on quote back buttons
-    if ($link.hasClass('back') || $link.hasClass('quote-other-topic')) { return true; }
+    if ($link.hasClass('back')) { return true; }
 
     // Remove the href, put it as a data attribute
     if (!$link.data('href')) {

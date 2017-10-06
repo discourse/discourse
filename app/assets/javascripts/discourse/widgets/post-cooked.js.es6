@@ -161,21 +161,11 @@ export default class PostCooked {
     const quoteTitle = I18n.t("post.follow_quote");
     const postNumber = $aside.data('post');
 
+    // If we have a post reference
     if (postNumber) {
-
-      // If we have a topic reference
-      const asideTopicId = parseInt($aside.data('topic'));
-
-      if (asideTopicId) {
-        // If it's the same topic as ours, build the URL from the topic object
-        if (this.attrs.topicId === asideTopicId) {
-          navLink = `<a href='${this._urlForPostNumber(postNumber)}' title='${quoteTitle}' class='back'></a>`;
-        }
-      } else {
-        // assume the same topic
-        navLink = `<a href='${this._urlForPostNumber(postNumber)}' title='${quoteTitle}' class='back'></a>`;
-      }
+      navLink = `<a href='${this._urlForPostNumber(postNumber)}' title='${quoteTitle}' class='back'></a>`;
     }
+
     // Only add the expand/contract control if it's not a full post
     let expandContract = "";
     if (!$aside.data('full')) {

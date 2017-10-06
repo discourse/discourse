@@ -19,7 +19,7 @@ QUnit.module("lib:click-track", {
       `<div id="topic" data-topic-id="1337">
         <article data-post-id="42" data-user-id="3141">
           <a href="http://www.google.com">google.com</a>
-          <a class="lightbox back quote-other-topic" href="http://www.google.fr">google.fr</a>
+          <a class="lightbox back" href="http://www.google.fr">google.fr</a>
           <a id="with-badge" data-user-id="314" href="http://www.google.de">google.de<span class="badge">1</span></a>
           <a id="with-badge-but-not-mine" href="http://www.google.es">google.es<span class="badge">1</span></a>
           <div class="onebox-result">
@@ -71,10 +71,6 @@ QUnit.test("does not track clicks on back buttons", function(assert) {
 
 QUnit.test("does not track clicks in quotes", function(assert) {
   assert.ok(track(generateClickEventOn('.inside-quote')));
-});
-
-QUnit.test("does not track clicks on quote buttons", function(assert) {
-  assert.ok(track(generateClickEventOn('.quote-other-topic')));
 });
 
 QUnit.test("does not track clicks on category badges", assert => {
