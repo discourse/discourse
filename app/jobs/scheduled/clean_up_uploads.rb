@@ -7,7 +7,7 @@ module Jobs
 
       base_url = Discourse.store.internal? ? Discourse.store.relative_base_url : Discourse.store.absolute_base_url
       s3_hostname = URI.parse(base_url).hostname
-      s3_cdn_hostname = URI.parse(SiteSetting.s3_cdn_url || "").hostname
+      s3_cdn_hostname = URI.parse(SiteSetting.Upload.s3_cdn_url || "").hostname
 
       # Any URLs in site settings are fair game
       ignore_urls = [

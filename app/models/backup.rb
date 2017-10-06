@@ -46,7 +46,7 @@ class Backup
 
   def s3
     require "s3_helper" unless defined? S3Helper
-    @s3_helper ||= S3Helper.new(s3_bucket)
+    @s3_helper ||= S3Helper.new(s3_bucket, '', S3Helper.s3_options(SiteSetting))
   end
 
   def upload_to_s3

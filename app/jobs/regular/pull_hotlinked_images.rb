@@ -166,7 +166,7 @@ module Jobs
 
       # we don't want to pull images hosted on the CDN (if we use one)
       return false if Discourse.asset_host.present? && URI.parse(Discourse.asset_host).hostname == hostname
-      return false if SiteSetting.s3_cdn_url.present? && URI.parse(SiteSetting.s3_cdn_url).hostname == hostname
+      return false if SiteSetting.Upload.s3_cdn_url.present? && URI.parse(SiteSetting.Upload.s3_cdn_url).hostname == hostname
       # we don't want to pull images hosted on the main domain
       return false if URI.parse(Discourse.base_url_no_prefix).hostname == hostname
       # check the domains blacklist

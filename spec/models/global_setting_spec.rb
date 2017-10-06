@@ -9,6 +9,21 @@ end
 
 describe GlobalSetting do
 
+  describe '.use_s3_assets?' do
+    it 'returns false by default' do
+      expect(GlobalSetting.use_s3?).to eq(false)
+    end
+
+    it 'returns true once set' do
+      global_setting :s3_bucket, 'test_bucket'
+      global_setting :s3_region, 'ap-australia'
+      global_setting :s3_access_key_id, '123'
+      global_setting :s3_secret_access_key, '123'
+
+      expect(GlobalSetting.use_s3?).to eq(true)
+    end
+  end
+
   describe '.safe_secret_key_base' do
     it 'sets redis token if it is somehow flushed after 30 seconds' do
 

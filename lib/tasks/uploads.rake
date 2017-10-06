@@ -114,13 +114,13 @@ def migrate_from_s3
   require "file_store/s3_store"
 
   # make sure S3 is disabled
-  if SiteSetting.enable_s3_uploads
+  if SiteSetting.Uploads.enable_s3_uploads
     puts "You must disable S3 uploads before running that task."
     return
   end
 
   # make sure S3 bucket is set
-  if SiteSetting.s3_upload_bucket.blank?
+  if SiteSetting.Upload.s3_upload_bucket.blank?
     puts "The S3 upload bucket must be set before running that task."
     return
   end
@@ -188,14 +188,14 @@ end
 
 def migrate_to_s3
   # make sure s3 is enabled
-  if !SiteSetting.enable_s3_uploads
+  if !SiteSetting.Upload.enable_s3_uploads
     puts "You must enable s3 uploads before running that task"
     return
   end
 
   db = RailsMultisite::ConnectionManagement.current_db
 
-  puts "Migrating uploads to S3 (#{SiteSetting.s3_upload_bucket}) for '#{db}'..."
+  puts "Migrating uploads to S3 (#{SiteSetting.Upload.s3_upload_bucket}) for '#{db}'..."
 
   # will throw an exception if the bucket is missing
   s3 = FileStore::S3Store.new
