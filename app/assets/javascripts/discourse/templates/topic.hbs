@@ -206,14 +206,12 @@
                     duration=model.private_topic_timer.duration}}
               {{/if}}
 
-              {{#if model.topic_timer.execute_at}}
-                {{topic-timer-info
-                    statusType=model.topic_timer.status_type
-                    executeAt=model.topic_timer.execute_at
-                    basedOnLastPost=model.topic_timer.based_on_last_post
-                    duration=model.topic_timer.duration
-                    categoryId=model.topic_timer.category_id}}
-              {{/if}}
+              {{topic-timer-info
+                  statusType=model.topic_timer.status_type
+                  executeAt=model.topic_timer.execute_at
+                  basedOnLastPost=model.topic_timer.based_on_last_post
+                  duration=model.topic_timer.duration
+                  categoryId=model.topic_timer.category_id}}
 
               {{#if session.showSignupCta}}
                 {{! replace "Log In to Reply" with the infobox }}
