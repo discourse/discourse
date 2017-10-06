@@ -10,20 +10,13 @@ export default SelectBoxKitComponent.extend({
 
   headerComponent: "dropdown-select-box/dropdown-select-box-header",
 
-  init() {
-    this._super();
-
-    const value = this.get("value") || Ember.get(this.get("content"), "firstObject.value");
-    this.set("value", value);
-  },
-
   @computed
   templateForRow() {
     return (rowComponent) => {
       let template = "";
       const content = rowComponent.get("content");
 
-      const icon = rowComponent.icon();
+      const icon = rowComponent.get("icon");
       if (icon) {
         template += `<div class="icons">${icon}</div>`;
       }

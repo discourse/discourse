@@ -9,7 +9,7 @@ export default SelectBoxKitComponent.extend({
 
   headerText: "select_values",
 
-  value: Ember.A(),
+  value: [],
 
   @on("init")
   _localizeNone() {
@@ -18,12 +18,12 @@ export default SelectBoxKitComponent.extend({
     }
   },
 
-  @computed("value.[]", "content.[]")
-  selectedContents(value, content) {
-    const contents = Ember.A();
+  @computed("value.[]", "computedContent.[]")
+  selectedContents(value, computedContent) {
+    const contents = [];
 
     value.forEach((v) => {
-      const c = content.findBy("value", v);
+      const c = computedContent.findBy("value", v);
       contents.push(c);
     });
 
@@ -41,13 +41,15 @@ export default SelectBoxKitComponent.extend({
   },
 
   actions: {
-    onSelectNone() {
+    onClearSelection() {
       this.defaultOnSelect();
-      this.set("value", Ember.A());
+
+      this.set("value", []);
     },
 
     onSelect(value) {
       this.defaultOnSelect();
+
       this.get("value").pushObject(value);
     },
 

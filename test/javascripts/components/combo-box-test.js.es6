@@ -1,8 +1,8 @@
 import componentTest from 'helpers/component-test';
 moduleForComponent('combo-box', {integration: true});
 
-componentTest('with objects', {
-  template: '{{combo-box content=items value=value}}',
+componentTest('default', {
+  template: '{{combo-box content=items}}',
   beforeEach() {
     this.set('items', [{id: 1, name: 'hello'}, {id: 2, name: 'world'}]);
   },
@@ -11,8 +11,9 @@ componentTest('with objects', {
     expandSelectBox('.combobox');
 
     andThen(() => {
-      assert.equal(selectBox('.combobox').row(1).text(), "hello");
-      assert.equal(selectBox('.combobox').row(2).text(), "world");
+      assert.equal(selectBox('.combobox').header.name(), "hello");
+      assert.equal(selectBox('.combobox').rowByValue(1).name(), "hello");
+      assert.equal(selectBox('.combobox').rowByValue(2).name(), "world");
     });
   }
 });
@@ -27,8 +28,8 @@ componentTest('with valueAttribute', {
     expandSelectBox('.combobox');
 
     andThen(() => {
-      assert.equal(selectBox('.combobox').row(0).text(), "hello");
-      assert.equal(selectBox('.combobox').row(1).text(), "world");
+      assert.equal(selectBox('.combobox').rowByValue(0).name(), "hello");
+      assert.equal(selectBox('.combobox').rowByValue(1).name(), "world");
     });
   }
 });
@@ -43,8 +44,8 @@ componentTest('with nameProperty', {
     expandSelectBox('.combobox');
 
     andThen(() => {
-      assert.equal(selectBox('.combobox').row(0).text(), "hello");
-      assert.equal(selectBox('.combobox').row(1).text(), "world");
+      assert.equal(selectBox('.combobox').rowByValue(0).name(), "hello");
+      assert.equal(selectBox('.combobox').rowByValue(1).name(), "world");
     });
   }
 });
@@ -59,8 +60,8 @@ componentTest('with an array as content', {
     expandSelectBox('.combobox');
 
     andThen(() => {
-      assert.equal(selectBox('.combobox').row('evil').text(), "evil");
-      assert.equal(selectBox('.combobox').row('trout').text(), "trout");
+      assert.equal(selectBox('.combobox').rowByValue('evil').name(), "evil");
+      assert.equal(selectBox('.combobox').rowByValue('trout').name(), "trout");
     });
   }
 });
@@ -77,10 +78,10 @@ componentTest('with value and none as a string', {
     expandSelectBox('.combobox');
 
     andThen(() => {
-      assert.equal(selectBox('.combobox').noneRow.el.html().trim(), 'none');
-      assert.equal(selectBox('.combobox').row("evil").text(), "evil");
-      assert.equal(selectBox('.combobox').row("trout").text(), "trout");
-      assert.equal(selectBox('.combobox').header.text(), 'trout');
+      assert.equal(selectBox('.combobox').noneRow.name(), 'none');
+      assert.equal(selectBox('.combobox').rowByValue("evil").name(), "evil");
+      assert.equal(selectBox('.combobox').rowByValue("trout").name(), "trout");
+      assert.equal(selectBox('.combobox').header.name(), 'trout');
       assert.equal(this.get('value'), 'trout');
     });
 
@@ -104,14 +105,14 @@ componentTest('with value and none as an object', {
     expandSelectBox('.combobox');
 
     andThen(() => {
-      assert.equal(selectBox('.combobox').noneRow.el.html().trim(), 'none');
-      assert.equal(selectBox('.combobox').row("evil").text(), "evil");
-      assert.equal(selectBox('.combobox').row("trout").text(), "trout");
-      assert.equal(selectBox('.combobox').header.text(), 'evil');
+      assert.equal(selectBox('.combobox').noneRow.name(), 'none');
+      assert.equal(selectBox('.combobox').rowByValue("evil").name(), "evil");
+      assert.equal(selectBox('.combobox').rowByValue("trout").name(), "trout");
+      assert.equal(selectBox('.combobox').header.name(), 'evil');
       assert.equal(this.get('value'), 'evil');
     });
 
-    selectBoxSelectRow('none', {selector: '.combobox' });
+    selectBoxSelectNoneRow({ selector: '.combobox' });
 
     andThen(() => {
       assert.equal(this.get('value'), null);
@@ -123,7 +124,7 @@ componentTest('with no value and none as an object', {
   template: '{{combo-box content=items none=none value=value}}',
   beforeEach() {
     I18n.translations[I18n.locale].js.test = {none: 'none'};
-    this.set('none', { id: 'something', name: 'test.none' });
+    this.set('none', { id: 'something', name: 'none' });
     this.set('items', ['evil', 'trout', 'hat']);
     this.set('value', null);
   },
@@ -132,7 +133,7 @@ componentTest('with no value and none as an object', {
     expandSelectBox('.combobox');
 
     andThen(() => {
-      assert.equal(selectBox('.combobox').header.text(), 'none');
+      assert.equal(selectBox('.combobox').header.name(), 'none');
     });
   }
 });
@@ -150,7 +151,7 @@ componentTest('with no value and none string', {
     expandSelectBox('.combobox');
 
     andThen(() => {
-      assert.equal(selectBox('.combobox').header.text(), 'none');
+      assert.equal(selectBox('.combobox').header.name(), 'none');
     });
   }
 });
@@ -166,7 +167,7 @@ componentTest('with no value and no none', {
     expandSelectBox('.combobox');
 
     andThen(() => {
-      assert.equal(selectBox('.combobox').header.text(), 'evil', 'it sets the first row as value');
+      assert.equal(selectBox('.combobox').header.name(), 'evil', 'it sets the first row as value');
     });
   }
 });

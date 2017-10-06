@@ -4,10 +4,11 @@
       content=none
       templateForRow=templateForNoneRow
       titleForRow=titleForRow
+      iconForRow=iconForRow
       shouldHighlightRow=shouldHighlightRow
       shouldSelectRow=shouldSelectRow
       highlightedValue=highlightedValue
-      onSelectNone=onSelectNone
+      onClearSelection=onClearSelection
       onHover=onHoverRow
       value=value
     }}
@@ -19,6 +20,7 @@
     content=content
     templateForRow=templateForRow
     titleForRow=titleForRow
+    iconForRow=iconForRow
     shouldHighlightRow=shouldHighlightRow
     shouldSelectRow=shouldSelectRow
     highlightedValue=highlightedValue
@@ -29,7 +31,7 @@
 {{else}}
   {{#if noContentLabel}}
     <li class="select-box-kit-row no-content">
-      {{noContentLabel}}
+      {{i18n noContentLabel}}
     </li>
   {{/if}}
 {{/each}}

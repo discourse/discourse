@@ -1,15 +1,14 @@
 import computed from 'ember-addons/ember-computed-decorators';
-import { iconHTML } from "discourse-common/lib/icon-library";
 
 export default Ember.Component.extend({
   layoutName: "select-box-kit/templates/components/select-box-kit/select-box-kit-row",
-
   classNames: "select-box-kit-row",
-
   tagName: "li",
-
-  attributeBindings: ["title", "id:data-id"],
-
+  attributeBindings: [
+    "title",
+    "content.value:data-value",
+    "content.name:data-name"
+  ],
   classNameBindings: ["isHighlighted", "isSelected"],
 
   @computed("titleForRow")
@@ -24,25 +23,18 @@ export default Ember.Component.extend({
   @computed("shouldSelectRow", "value")
   isSelected(shouldSelectRow) { return shouldSelectRow(this); },
 
-  icon() {
-    if (this.get("content.originalContent.icon")) {
-      const iconName = this.get("content.originalContent.icon");
-      const iconClass = this.get("content.originalContent.iconClass");
-      return iconHTML(iconName, { class: iconClass });
-    }
-
-    return null;
-  },
-
-  sendOnHoverAction() {
-    this.sendAction("onHover", this.get("content.value"));
-  },
+  @computed("iconForRow", "content.[]")
+  icon(iconForRow) { return iconForRow(this); },
 
   mouseEnter() {
-    Ember.run.debounce(this, this.sendOnHoverAction, 32);
+    Ember.run.debounce(this, this._sendOnHoverAction, 32);
   },
 
   click() {
     this.sendAction("onSelect", this.get("content.value"));
-  }
+  },
+
+  _sendOnHoverAction() {
+    this.sendAction("onHover", this.get("content.value"));
+  },
 });

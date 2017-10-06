@@ -2,9 +2,7 @@ import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Component.extend({
   descriptionKey: "help",
-
   classNames: "pinned-button",
-
   classNameBindings: ["isHidden"],
 
   @computed("topic.pinned_globally", "topic.pinned")

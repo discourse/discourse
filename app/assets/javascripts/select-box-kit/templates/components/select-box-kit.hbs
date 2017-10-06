@@ -36,16 +36,17 @@
     {{/if}}
 
     {{component collectionComponent
-      none=none
+      none=computedNone
       selectedContents=selectedContents
       filteredContent=filteredContent
       rowComponent=rowComponent
+      iconForRow=iconForRow
       templateForRow=templateForRow
       templateForNoneRow=templateForNoneRow
       shouldHighlightRow=shouldHighlightRow
       shouldSelectRow=shouldSelectRow
       titleForRow=titleForRow
-      onSelectNone=(action "onSelectNone")
+      onClearSelection=(action "onClearSelection")
       onSelect=(action "onSelect")
       onHoverRow=(action "onHoverRow")
       noContentLabel=noContentLabel
