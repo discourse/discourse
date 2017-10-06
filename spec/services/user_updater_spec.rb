@@ -76,8 +76,9 @@ describe UserUpdater do
                            notification_level_when_replying: 3,
                            email_in_reply_to: false,
                            date_of_birth: date_of_birth,
-                           theme_key: theme.key
-                    )
+                           theme_key: theme.key,
+                           allow_private_messages: false)
+
       expect(val).to be_truthy
 
       user.reload
@@ -92,6 +93,7 @@ describe UserUpdater do
       expect(user.user_option.email_in_reply_to).to eq false
       expect(user.user_option.theme_key).to eq theme.key
       expect(user.user_option.theme_key_seq).to eq(seq + 1)
+      expect(user.user_option.allow_private_messages).to eq(false)
       expect(user.date_of_birth).to eq(date_of_birth.to_date)
     end
 

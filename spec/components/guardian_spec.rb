@@ -233,6 +233,27 @@ describe Guardian do
         end
       end
     end
+
+    context 'target user has private message disabled' do
+      before do
+        another_user.user_option.update!(allow_private_messages: false)
+      end
+
+      context 'for a normal user' do
+        it 'should return false' do
+          expect(Guardian.new(user).can_send_private_message?(another_user)).to eq(false)
+        end
+      end
+
+      context 'for a staff user' do
+        it 'should return true' do
+          [admin, moderator].each do |staff_user|
+            expect(Guardian.new(staff_user).can_send_private_message?(another_user))
+              .to eq(true)
+          end
+        end
+      end
+    end
   end
 
   describe 'can_reply_as_new_topic' do
