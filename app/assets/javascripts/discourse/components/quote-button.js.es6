@@ -1,11 +1,5 @@
 import { selectedText } from 'discourse/lib/utilities';
 
-// we don't want to deselect when we click on buttons that use it
-function willQuote(e) {
-  const $target = $(e.target);
-  return $target.hasClass('quote-button') || $target.closest('.create, .share, .reply-new').length;
-}
-
 export default Ember.Component.extend({
   classNames: ['quote-button'],
   classNameBindings: ['visible'],
@@ -109,7 +103,7 @@ export default Ember.Component.extend({
     $(document).on("mousedown.quote-button", e => {
       this._isMouseDown = true;
       this._reselected = false;
-      if (!willQuote(e)) {
+      if ($(e.target).closest('.quote-button, .create, .share, .reply-new').length === 0) {
         this._hideButton();
       }
     }).on("mouseup.quote-button", () => {
