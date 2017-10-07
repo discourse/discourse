@@ -16,6 +16,10 @@ class PostActionUsersController < ApplicationController
       .includes(:user)
       .order('post_actions.created_at asc')
 
+    if post_action_type_id == PostActionType.types[:like] && params[:limit].present?
+      post_actions = post_actions.limit(params[:limit].to_i)
+    end
+
     if !guardian.can_see_post_actors?(post.topic, post_action_type_id)
       if !current_user
         raise Discourse::InvalidAccess

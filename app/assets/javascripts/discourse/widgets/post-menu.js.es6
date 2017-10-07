@@ -3,6 +3,7 @@ import { avatarAtts } from 'discourse/widgets/actions-summary';
 import { h } from 'virtual-dom';
 
 const LIKE_ACTION = 2;
+const MAX_LIKES_COUNT = 25;
 
 function animateHeart($elem, start, end, complete) {
   if (Ember.testing) { return Ember.run(this, complete); }
@@ -336,11 +337,21 @@ export default createWidget('post-menu', {
 
     const contents = [ h('nav.post-controls.clearfix', postControls) ];
     if (state.likedUsers.length) {
+      const users = state.likedUsers;
+      const currentUser = this.currentUser;
+      if (attrs.liked && !users.some(u => u.username === currentUser.username) && users.length < MAX_LIKES_COUNT) {
+        users.push(avatarAtts(currentUser));
+      }
+      const remainingLikesCount = attrs.likeCount - users.length;
+      const description = remainingLikesCount > 0 ?
+                          'post.actions.people.likes_capped' :
+                          'post.actions.people.like';
+
       contents.push(this.attach('small-user-list', {
-        users: state.likedUsers,
-        addSelf: attrs.liked,
+        users,
         listClassName: 'who-liked',
-        description: 'post.actions.people.like'
+        description,
+        count: remainingLikesCount
       }));
     }
 
@@ -394,7 +405,7 @@ export default createWidget('post-menu', {
   getWhoLiked() {
     const { attrs, state } = this;
 
-    return this.store.find('post-action-user', { id: attrs.id, post_action_type_id: LIKE_ACTION }).then(users => {
+    return this.store.find('post-action-user', { id: attrs.id, post_action_type_id: LIKE_ACTION, limit: MAX_LIKES_COUNT }).then(users => {
       state.likedUsers = users.map(avatarAtts);
     });
   },

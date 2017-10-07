@@ -22,15 +22,10 @@ createWidget('small-user-list', {
   html(atts) {
     let users = atts.users;
     if (users) {
-      const currentUser = this.currentUser;
-      if (atts.addSelf && !users.some(u => u.username === currentUser.username)) {
-        users = users.concat(avatarAtts(currentUser));
-      }
-
       let description = null;
 
       if (atts.description) {
-        description = I18n.t(atts.description, { icons: '' });
+        description = I18n.t(atts.description, { count: atts.count });
       }
 
       // oddly post_url is on the user

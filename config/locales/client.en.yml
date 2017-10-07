@@ -1947,6 +1947,9 @@ en:
           notify_user: "sent a message"
           bookmark: "bookmarked this"
           like: "liked this"
+          likes_capped:
+            one: "and {{count}} other liked this"
+            other: "and {{count}} others liked this"
           vote: "voted for this"
         by_you:
           off_topic: "You flagged this as off-topic"
