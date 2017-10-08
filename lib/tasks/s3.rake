@@ -71,28 +71,8 @@ def assets
   results
 end
 
-def in_manifest
-  found = []
-  assets.each do |_, path|
-    fullpath = (Rails.root + "public/assets/#{path}").to_s
-
-    asset_path = "assets/#{path}"
-    found << asset_path
-
-    if File.exist?(fullpath + '.br')
-      found << brotli_s3_path(asset_path)
-    end
-
-    if File.exist?(fullpath + '.gz')
-      found << gzip_s3_path(asset_path)
-    end
-
-    if File.exist?(fullpath + '.map')
-      found << asset_path + '.map'
-    end
-
-  end
-  Set.new(found)
+def asset_paths
+  Set.new(assets.map { |_, asset_path| asset_path })
 end
 
 def ensure_s3_configured!
@@ -104,6 +84,7 @@ end
 
 task 's3:upload_assets' => :environment do
   ensure_s3_configured!
+  helper.ensure_cors!
 
   assets.each do |asset|
     upload(*asset)
@@ -112,25 +93,27 @@ end
 
 task 's3:expire_missing_assets' => :environment do
   ensure_s3_configured!
-  keep = in_manifest
 
   count = 0
+  keep = 0
+
+  in_manifest = asset_paths
+
   puts "Ensuring AWS assets are tagged correctly for removal"
-  helper.list.each do |f|
-    if keep.include?(f.key)
+  helper.list('assets/').each do |f|
+    if !in_manifest.include?(f.key)
       helper.tag_file(f.key, old: true)
       count += 1
     else
       # ensure we do not delete this by mistake
       helper.tag_file(f.key, {})
+      keep += 1
     end
   end
 
-  puts "#{count} assets were flagged for removal in 10 days"
+  puts "#{count} assets were flagged for removal in 10 days (#{keep} assets will be retained)"
 
   puts "Ensuring AWS rule exists for purging old assets"
-  #helper.update_lifecycle("delete_old_assets", 10, prefix: 'old=true')
-
-  puts "Waiting on https://github.com/aws/aws-sdk-ruby/issues/1623"
+  helper.update_lifecycle("delete_old_assets", 10, tag: { key: 'old', value: 'true' })
 
 end

@@ -44,31 +44,71 @@ class S3Helper
   rescue Aws::S3::Errors::NoSuchKey
   end
 
-  def update_lifecycle(id, days, prefix: nil)
+  # make sure we have a cors config for assets
+  # otherwise we will have no fonts
+  def ensure_cors!
+    rule = nil
+
+    begin
+      rule = s3_resource.client.get_bucket_cors(
+        bucket: @s3_bucket_name
+      ).cors_rules&.first
+    rescue Aws::S3::Errors::NoSuchCORSConfiguration
+      # no rule
+    end
+
+    unless rule
+      puts "installing CORS rule"
+
+      s3_resource.client.put_bucket_cors(
+        bucket: @s3_bucket_name,
+        cors_configuration: {
+          cors_rules: [{
+            allowed_headers: ["Authorization"],
+            allowed_methods: ["GET", "HEAD"],
+            allowed_origins: ["*"],
+            max_age_seconds: 3000
+          }]
+        }
+      )
+    end
+  end
+
+  def update_lifecycle(id, days, prefix: nil, tag: nil)
+
+    filter = {}
+
+    if prefix
+      filter[:prefix] = prefix
+    elsif tag
+      filter[:tag] = tag
+    end
 
     # cf. http://docs.aws.amazon.com/AmazonS3/latest/dev/object-lifecycle-mgmt.html
     rule = {
       id: id,
       status: "Enabled",
-      expiration: { days: days }
+      expiration: { days: days },
+      filter: filter
     }
 
-    if prefix
-      rule[:prefix] = prefix
-    end
+    rules = []
 
-    rules = s3_resource.client.get_bucket_lifecycle_configuration(bucket: @s3_bucket_name).rules
+    begin
+      rules = s3_resource.client.get_bucket_lifecycle_configuration(bucket: @s3_bucket_name).rules
+    rescue Aws::S3::Errors::NoSuchLifecycleConfiguration
+      # skip trying to merge
+    end
 
     rules.delete_if do |r|
       r.id == id
     end
 
-    rules.map! { |r| r.to_h }
-
     rules << rule
 
-    s3_resource.client.put_bucket_lifecycle(bucket: @s3_bucket_name,
-                                            lifecycle_configuration: {
+    s3_resource.client.put_bucket_lifecycle_configuration(
+      bucket: @s3_bucket_name,
+      lifecycle_configuration: {
         rules: rules
     })
   end
