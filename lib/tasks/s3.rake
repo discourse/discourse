@@ -11,15 +11,12 @@ def gzip_s3_path(path)
 end
 
 def should_skip?(path)
-  return true if ENV['FORCE_S3_UPLOADS']
-  @existing_assets ||= Set.new(helper.list.map(&:key))
-  @existing_assets.include?('assets/' + path)
+  return false if ENV['FORCE_S3_UPLOADS']
+  @existing_assets ||= Set.new(helper.list("assets/").map(&:key))
+  @existing_assets.include?(path)
 end
 
-def upload_asset(helper, path, recurse: true, content_type: nil, fullpath: nil, content_encoding: nil)
-  fullpath ||= (Rails.root + "public/assets/#{path}").to_s
-
-  content_type ||= MiniMime.lookup_by_filename(path).content_type
+def upload(path, remote_path, content_type, content_encoding = nil)
 
   options = {
     cache_control: 'max-age=31556952, public, immutable',
@@ -32,102 +29,91 @@ def upload_asset(helper, path, recurse: true, content_type: nil, fullpath: nil, 
     options[:content_encoding] = content_encoding
   end
 
-  if should_skip?(path)
-    puts "Skipping: #{path}"
+  if should_skip?(remote_path)
+    puts "Skipping: #{remote_path}"
   else
-    puts "Uploading: #{path}"
-    helper.upload(fullpath, path, options)
+    puts "Uploading: #{remote_path}"
+    helper.upload(path, remote_path, options)
   end
+end
 
-  if recurse
-    if File.exist?(fullpath + ".br")
-      brotli_path = brotli_s3_path(path)
-      upload_asset(helper, brotli_path,
-        fullpath: fullpath + ".br",
-        recurse: false,
-        content_type: content_type,
-        content_encoding: 'br'
-      )
-    end
-
-    if File.exist?(fullpath + ".gz")
-      gzip_path = gzip_s3_path(path)
-      upload_asset(helper, gzip_path,
-        fullpath: fullpath + ".gz",
-        recurse: false,
-        content_type: content_type,
-        content_encoding: 'gzip'
-      )
-    end
-
-    if File.exist?(fullpath + ".map")
-      upload_asset(helper, path + ".map", recurse: false, content_type: 'application/json')
-    end
-  end
+def helper
+  @helper ||= S3Helper.new(GlobalSetting.s3_bucket.downcase, '', S3Helper.s3_options(GlobalSetting))
 end
 
 def assets
   cached = Rails.application.assets&.cached
   manifest = Sprockets::Manifest.new(cached, Rails.root + 'public/assets', Rails.application.config.assets.manifest)
 
-  raise Discourse::SiteSettingMissing.new("s3_upload_bucket") if SiteSetting.s3_upload_bucket.blank?
-  manifest.assets
-end
+  results = []
 
-def helper
-  @helper ||= S3Helper.new(SiteSetting.s3_upload_bucket.downcase + '/assets')
-end
-
-def in_manifest
-  found = []
-  assets.each do |_, path|
+  manifest.assets.each do |_, path|
     fullpath = (Rails.root + "public/assets/#{path}").to_s
 
+    content_type = MiniMime.lookup_by_filename(fullpath).content_type
+
     asset_path = "assets/#{path}"
-    found << asset_path
+    results << [fullpath, asset_path, content_type]
 
     if File.exist?(fullpath + '.br')
-      found << brotli_s3_path(asset_path)
+      results << [fullpath + '.br', brotli_s3_path(asset_path), content_type, 'br']
     end
 
     if File.exist?(fullpath + '.gz')
-      found << gzip_s3_path(asset_path)
+      results << [fullpath + '.gz', gzip_s3_path(asset_path), content_type, 'gzip']
     end
 
     if File.exist?(fullpath + '.map')
-      found << asset_path + '.map'
+      results << [fullpath + '.map', asset_path + '.map', 'application/json']
     end
-
   end
-  Set.new(found)
+
+  results
+end
+
+def asset_paths
+  Set.new(assets.map { |_, asset_path| asset_path })
+end
+
+def ensure_s3_configured!
+  unless GlobalSetting.use_s3?
+    STDERR.puts "ERROR: Ensure S3 is configured in config/discourse.conf of environment vars"
+    exit 1
+  end
 end
 
 task 's3:upload_assets' => :environment do
-  assets.each do |name, fingerprint|
-    upload_asset(helper, fingerprint)
+  ensure_s3_configured!
+  helper.ensure_cors!
+
+  assets.each do |asset|
+    upload(*asset)
   end
 end
 
 task 's3:expire_missing_assets' => :environment do
-  keep = in_manifest
+  ensure_s3_configured!
 
   count = 0
+  keep = 0
+
+  in_manifest = asset_paths
+
   puts "Ensuring AWS assets are tagged correctly for removal"
-  helper.list.each do |f|
-    if keep.include?(f.key)
+  helper.list('assets/').each do |f|
+    if !in_manifest.include?(f.key)
       helper.tag_file(f.key, old: true)
       count += 1
     else
       # ensure we do not delete this by mistake
       helper.tag_file(f.key, {})
+      keep += 1
     end
   end
 
-  puts "#{count} assets were flagged for removal in 10 days"
+  puts "#{count} assets were flagged for removal in 10 days (#{keep} assets will be retained)"
 
   puts "Ensuring AWS rule exists for purging old assets"
-  #helper.update_lifecycle("delete_old_assets", 10, prefix: 'old=true')
-
-  puts "Waiting on https://github.com/aws/aws-sdk-ruby/issues/1623"
+  helper.update_lifecycle("delete_old_assets", 10, tag: { key: 'old', value: 'true' })
 
 end

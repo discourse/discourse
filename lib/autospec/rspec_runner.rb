@@ -28,10 +28,10 @@ module Autospec
     def self.reload(pattern); RELOADERS << pattern; end
     def reloaders; RELOADERS; end
 
-    # We need to reload the whole app when changing any of these files
-    reload("spec/rails_helper.rb")
-    reload(%r{config/.+\.rb})
-    reload(%r{app/helpers/.+\.rb})
+    # we are using a simple runner at the moment, whole idea of using a reloader is no longer needed
+    watch("spec/rails_helper.rb")
+    watch(%r{config/.+\.rb})
+    #reload(%r{app/helpers/.+\.rb})
 
     def failed_specs
       specs = []

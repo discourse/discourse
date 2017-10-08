@@ -16,6 +16,7 @@ describe FileStore::S3Store do
     SiteSetting.s3_upload_bucket = "s3-upload-bucket"
     SiteSetting.s3_access_key_id = "s3-access-key-id"
     SiteSetting.s3_secret_access_key = "s3-secret-access-key"
+    SiteSetting.enable_s3_uploads = true
   end
 
   shared_context 's3 helpers' do
