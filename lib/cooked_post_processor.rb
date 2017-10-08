@@ -337,7 +337,7 @@ class CookedPostProcessor
       end
     end
 
-    use_s3_cdn = SiteSetting.enable_s3_uploads && SiteSetting.s3_cdn_url.present?
+    use_s3_cdn = SiteSetting.Upload.enable_s3_uploads && SiteSetting.Upload.s3_cdn_url.present?
 
     %w{href data-download-href}.each do |selector|
       @doc.css("a[#{selector}]").each do |a|
