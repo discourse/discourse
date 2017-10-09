@@ -141,6 +141,7 @@ describe Invite do
     let(:inviter) { group_private_topic.user }
 
     before do
+      group.add_owner(inviter)
       @invite = group_private_topic.invite_by_email(inviter, iceking)
     end
 
@@ -153,6 +154,13 @@ describe Invite do
         expect(group_private_topic.invite_by_email(inviter, iceking)).to eq(@invite)
         expect(@invite.groups).to eq([group])
       end
+    end
+
+    it 'verifies that inviter is authorized to invite user to a topic' do
+      tl2_user = Fabricate(:user, trust_level: 2)
+
+      invite = group_private_topic.invite_by_email(tl2_user, 'foo@bar.com')
+      expect(invite.groups.count).to eq(0)
     end
   end
 
