@@ -5,6 +5,7 @@ export default SelectBoxKitComponent.extend({
   classNames: "dropdown-select-box",
   verticalOffset: 3,
   fullWidthOnMobile: true,
+  filterable: false,
   headerComponent: "dropdown-select-box/dropdown-select-box-header",
 
   @computed

@@ -30,7 +30,7 @@ export default Ember.Component.extend({
   noContentLabel: "select_box.no_content",
   valueAttribute: "id",
   nameProperty: "name",
-  filterable: false,
+  filterable: true,
   filterFocused: false,
   filter: "",
   filterPlaceholder: I18n.t("select_box.filter_placeholder"),
@@ -74,14 +74,10 @@ export default Ember.Component.extend({
     return Ember.isNone(name) ? "select_box.default_header_text" : name;
   },
 
-  click(event) {
-    event.stopPropagation();
-  },
-
   filterFunction(content) {
-    return (selectBox) => {
+    return selectBox => {
       const filter = selectBox.get("filter").toLowerCase();
-      return _.filter(content, (c) => {
+      return _.filter(content, c => {
         return Ember.get(c, "name").toLowerCase().indexOf(filter) > -1;
       });
     };
@@ -274,38 +270,6 @@ export default Ember.Component.extend({
     }
   },
 
-  keyDown(event) {
-    const keyCode = event.keyCode || event.which;
-
-    if (this.get("isExpanded")) {
-      if ((keyCode === 13 || keyCode === 9) && Ember.isPresent(this.get("highlightedValue"))) {
-        event.preventDefault();
-        this.send("onSelect", this.get("highlightedContent.value"));
-      }
-
-      if (keyCode === 9) {
-        this.set("isExpanded", false);
-      }
-
-      if (keyCode === 27) {
-        this.set("isExpanded", false);
-        event.stopPropagation();
-      }
-
-      if (keyCode === 38) {
-        event.preventDefault();
-        const self = this;
-        Ember.run.throttle(self, this._handleUpArrow, 50);
-      }
-
-      if (keyCode === 40) {
-        event.preventDefault();
-        const self = this;
-        Ember.run.throttle(self, this._handleDownArrow, 50);
-      }
-    }
-  },
-
   @on("didRender")
   _setupDocumentListeners: function() {
     $(document)
@@ -333,11 +297,6 @@ export default Ember.Component.extend({
 
     this.$(".select-box-kit-offscreen").on("keydown.select-box-kit", (event) => {
       const keyCode = event.keyCode || event.which;
-
-      if (keyCode === 13 || keyCode === 40) {
-        this.setProperties({ isExpanded: true, focused: false });
-        event.stopPropagation();
-      }
 
       if (keyCode >= 65 && keyCode <= 90) {
         this.setProperties({ isExpanded: true, focused: false });
@@ -461,46 +420,99 @@ export default Ember.Component.extend({
     this.get("scrollableParent").off("scroll.select-box-kit");
   },
 
+  defaultOnSelect() {
+    this.setProperties({ isExpanded: false, filter: "" });
+  },
+
+  keyDown(event) {
+    if (this.get("isExpanded") !== true) { return; }
+
+    const keyCode = event.keyCode || event.which;
+
+    if (keyCode === 9) {
+      this.set("isExpanded", false);
+    }
+
+    if (keyCode === 27) {
+      event.stopPropagation();
+      this.set("isExpanded", false);
+    }
+
+    if (keyCode === 38 || keyCode === 40) {
+      event.preventDefault();
+      this._handleArrowKey(keyCode);
+    }
+
+    const oneRowIsHighlighted = Ember.isPresent(this.get("highlightedValue"));
+    if ((keyCode === 13 || keyCode === 9) && oneRowIsHighlighted) {
+      event.preventDefault();
+      this.send("onSelect", this.get("highlightedContent.value"));
+    }
+  },
+
+  _handleArrowKey(keyCode) {
+    switch (keyCode) {
+      case 38:
+        Ember.run.throttle(this, this._handleUpArrow, 32);
+        break;
+      default:
+        Ember.run.throttle(this, this._handleDownArrow, 32);
+    }
+  },
+
   _handleDownArrow() {
-    this._handleArrow("down");
+    const $rows = this.$(".select-box-kit-row");
+    const $highlightedRrow = this.$(".select-box-kit-row.is-highlighted");
+    const currentIndex = $rows.index($highlightedRrow);
+
+    let nextIndex;
+
+    if (currentIndex < 0) {
+      nextIndex = 0;
+    } else if (currentIndex + 1 < $rows.length) {
+      nextIndex = currentIndex + 1;
+    }
+
+    this._rowSelection(nextIndex);
   },
 
   _handleUpArrow() {
-    this._handleArrow("up");
-  },
+    const $rows = this.$(".select-box-kit-row");
+    const $highlightedRrow = this.$(".select-box-kit-row.is-highlighted");
+    const currentIndex = $rows.index($highlightedRrow);
 
-  _handleArrow(direction) {
-    const content = this.get("filteredContent");
-    const highlightedContent = content.findBy("value", this.get("highlightedValue"));
-    const currentIndex = content.indexOf(highlightedContent);
+    let nextIndex;
 
-    if (direction === "down") {
-      if (currentIndex < 0) {
-        this.set("highlightedValue", Ember.get(content, "firstObject.value"));
-      } else if(currentIndex + 1 < content.length) {
-        this.set("highlightedValue", Ember.get(content, `${currentIndex+1}.value`));
-      }
-    } else {
-      if (currentIndex <= 0) {
-        this.set("highlightedValue", Ember.get(content, "firstObject.value"));
-      } else if(currentIndex - 1 < content.length) {
-        this.set("highlightedValue", Ember.get(content, `${currentIndex-1}.value`));
-      }
+    if (currentIndex <= 0) {
+      nextIndex = 0;
+    } else if (currentIndex - 1 < $rows.length) {
+      nextIndex = currentIndex - 1;
     }
 
-    Ember.run.schedule("afterRender", () => {
-      const $highlightedRow = this.$(".select-box-kit-row.is-highlighted");
-
-      if ($highlightedRow.length === 0) { return; }
-
-      const $collection = this.$(".select-box-kit-collection");
-      const rowOffset = $highlightedRow.offset();
-      const bodyOffset = $collection.offset();
-      $collection.scrollTop(rowOffset.top - bodyOffset.top);
-    });
+    this._rowSelection(nextIndex);
   },
 
-  defaultOnSelect() {
-    this.setProperties({ isExpanded: false, filter: "" });
+  _rowSelection(nextIndex) {
+    const $rows = this.$(".select-box-kit-row");
+    const highlightableValue = $rows.eq(nextIndex).attr("data-value");
+    const $highlightableRow = this.$(`.select-box-kit-row[data-value='${highlightableValue}']`);
+    $highlightableRow.trigger("mouseover");
+
+    Ember.run.schedule("afterRender", () => {
+      if ($highlightableRow.length === 0) { return; }
+
+      const $collection = this.$(".select-box-kit-collection");
+      const currentOffset = $collection.offset().top +
+                            $collection.outerHeight(false);
+      const nextBottom = $highlightableRow.offset().top +
+                         $highlightableRow.outerHeight(false);
+      const nextOffset = $collection.scrollTop() + nextBottom - currentOffset;
+
+      if (nextIndex === 0) {
+        $collection.scrollTop(0);
+      } else if (nextBottom > currentOffset) {
+        $collection.scrollTop(nextOffset);
+      }
+    });
   }
 });
