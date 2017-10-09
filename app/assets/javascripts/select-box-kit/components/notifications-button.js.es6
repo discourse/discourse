@@ -25,9 +25,9 @@ export default DropdownSelectBoxComponent.extend({
     return I18n.t(`${prefix}.${key}.title`);
   },
 
-  @computed("value")
-  selectedDetails(value) {
-    return buttonDetails(value);
+  @computed("computedValue")
+  selectedDetails(computedValue) {
+    return buttonDetails(computedValue);
   },
 
   @computed("selectedTitle", "showFullTitle")

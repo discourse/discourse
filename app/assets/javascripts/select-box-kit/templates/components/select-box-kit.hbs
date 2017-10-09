@@ -7,7 +7,7 @@
   tabindex={{tabindex}}
   name={{name}}
   id={{id}}
-  value={{value}}
+  value={{computedValue}}
 />
 
 {{component headerComponent
@@ -51,7 +51,6 @@
       onHoverRow=(action "onHoverRow")
       noContentLabel=noContentLabel
       highlightedValue=highlightedValue
-      value=value
     }}
   {{/if}}
 </div>

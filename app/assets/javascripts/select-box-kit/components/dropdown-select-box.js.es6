@@ -3,11 +3,8 @@ import SelectBoxKitComponent from "select-box-kit/components/select-box-kit";
 
 export default SelectBoxKitComponent.extend({
   classNames: "dropdown-select-box",
-
   verticalOffset: 3,
-
   fullWidthOnMobile: true,
-
   headerComponent: "dropdown-select-box/dropdown-select-box-header",
 
   @computed

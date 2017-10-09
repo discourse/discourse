@@ -1,20 +1,19 @@
+import computed from "ember-addons/ember-computed-decorators";
 import MultiComboBoxComponent from "select-box-kit/components/multi-combo-box";
 
 export default MultiComboBoxComponent.extend({
   tokenSeparator: "|",
 
-
-  // settingValue=value choices=setting.choices settingName=setting.setting
-
   classNames: "new-list-setting",
 
+  @computed("choices.[]")
+  computedContent(choices) {
+    return this.formatContents(choices.split(this.get("tokenSeparator")));
+  },
 
-  content: Ember.computed.alias("choices"),
-
-  init() {
-    this._super();
-
-    this.set("content", this.getWithDefault("choices", []));
-    this.set("value", this.get("settingValue").split(this.get("tokenSeparator")));
+  @computed("settingValue")
+  computedValue(settingValue) {
+    console.log("settingValue", settingValue)
+    return settingValue.split(this.get("tokenSeparator"));
   }
 });
