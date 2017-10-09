@@ -649,7 +649,7 @@ en:
       muted_topics_link: "Show muted topics"
       watched_topics_link: "Show watched topics"
       tracked_topics_link: "Show tracked topics"
-      automatically_unpin_topics: "Automatically unpin topics when I reach the bottom."
+      automatically_unpin_topics: "Automatically unpin topics when I reach the bottom (except topics I'm watching)."
       apps: "Apps"
       revoke_access: "Revoke Access"
       undo_revoke_access: "Undo Revoke Access"
