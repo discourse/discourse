@@ -14,7 +14,7 @@ class PostgreSQLFallbackHandler
     synchronize { return if @thread && @thread.alive? }
 
     @thread = Thread.new do
-      while true do
+      loop do
         begin
           thread = Thread.new { initiate_fallback_to_master }
           thread.join
@@ -45,9 +45,10 @@ class PostgreSQLFallbackHandler
         begin
           logger.warn "#{log_prefix}: Checking master server..."
           connection = ActiveRecord::Base.postgresql_connection(config)
+          is_connection_active = connection.active?
+          connection.disconnect!
 
-          if connection.active?
-            connection.disconnect!
+          if is_connection_active
             ActiveRecord::Base.clear_all_connections!
             logger.warn "#{log_prefix}: Master server is active. Reconnecting..."
 
