@@ -6,7 +6,8 @@
               toggleMobileView=(route-action "toggleMobileView")
               toggleAnonymous=(route-action "toggleAnonymous")
               logout=(route-action "logout")}}
-{{plugin-outlet name="below-site-header"}}
+
+{{plugin-outlet name="below-site-header" args=(hash currentPath=currentPath)}}
 
 <div id="main-outlet" class="wrap">
   <div class="container">
