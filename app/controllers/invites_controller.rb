@@ -96,6 +96,7 @@ class InvitesController < ApplicationController
 
     guardian.ensure_can_invite_to_forum!(groups)
     topic = Topic.find_by(id: params[:topic_id])
+    guardian.ensure_can_see_topic?(topic)
     group_ids = groups.map(&:id)
 
     invite_exists = Invite.where(email: params[:email], invited_by_id: current_user.id).first
