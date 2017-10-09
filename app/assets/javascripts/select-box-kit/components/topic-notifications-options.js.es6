@@ -13,7 +13,7 @@ export default NotificationOptionsComponent.extend({
   _bindGlobalLevelChanged() {
     this.appEvents.on("topic-notifications-button:changed", (msg) => {
       if (msg.type === "notification") {
-        if (this.get("value") !== msg.id) {
+        if (this.get("computedValue") !== msg.id) {
           this.get("topic.details").updateNotifications(msg.id);
         }
       }
@@ -25,10 +25,10 @@ export default NotificationOptionsComponent.extend({
     this.appEvents.off("topic-notifications-button:changed");
   },
 
-  @computed("value", "showFullTitle")
-  headerText(value, showFullTitle) {
+  @computed("computedValue", "showFullTitle")
+  headerText(computedValue, showFullTitle) {
     if (showFullTitle) {
-      const details = buttonDetails(value);
+      const details = buttonDetails(computedValue);
       return I18n.t(`topic.notifications.${details.key}.title`);
     } else {
       return null;
@@ -37,7 +37,7 @@ export default NotificationOptionsComponent.extend({
 
   actions: {
     onSelect(value) {
-      if (value !== this.get("value")) {
+      if (value !== this.get("computedValue")) {
         this.get("topic.details").updateNotifications(value);
       }
 

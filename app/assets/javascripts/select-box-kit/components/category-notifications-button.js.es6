@@ -11,9 +11,9 @@ export default NotificationOptionsComponent.extend({
 
   value: Ember.computed.alias("category.notification_level"),
 
-  @computed("value")
-  headerIcon(value) {
-    return `${this._super(value)}${iconHTML("caret-down")}`.htmlSafe();
+  @computed("computedValue")
+  headerIcon(computedValue) {
+    return `${this._super(computedValue)}${iconHTML("caret-down")}`.htmlSafe();
   },
 
   headerText: null,

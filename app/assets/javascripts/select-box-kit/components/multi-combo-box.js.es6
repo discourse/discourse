@@ -1,30 +1,27 @@
 import SelectBoxKitComponent from "select-box-kit/components/select-box-kit";
-import { on } from "ember-addons/ember-computed-decorators";
 import computed from "ember-addons/ember-computed-decorators";
 
 export default SelectBoxKitComponent.extend({
   classNames: "multi-combobox",
-
   headerComponent: "multi-combo-box/multi-combo-box-header",
-
   headerText: "select_values",
-
   value: [],
+  computedValue: Ember.computed.alias("value"),
 
-  @on("init")
-  _localizeNone() {
-    if (!Ember.isNone(this.get("none"))) {
-      this.set("none", {name: I18n.t(this.get("none")), value: "none"});
+  @computed("none")
+  computedNone(none) {
+    if (!Ember.isNone(none)) {
+      this.set("none", {name: I18n.t(none), value: "none"});
     }
   },
 
-  @computed("value.[]", "computedContent.[]")
-  selectedContents(value, computedContent) {
+  @computed("computedValue.[]", "computedContent.[]")
+  selectedContents(computedValue, computedContent) {
     const contents = [];
 
-    value.forEach((v) => {
-      const c = computedContent.findBy("value", v);
-      contents.push(c);
+    computedValue.forEach(cv => {
+      const content = computedContent.findBy("value", cv);
+      contents.push(content);
     });
 
     return contents;
@@ -33,9 +30,9 @@ export default SelectBoxKitComponent.extend({
   @computed("content.[]", "selectedContents.[]", "filter")
   filteredContent(content, selectedContents) {
     const filteredContent = this._super();
-    const selectedContentsIds = selectedContents.map((c) => Ember.get(c, "value") );
+    const selectedContentsIds = selectedContents.map(c => Ember.get(c, "value") );
 
-    return filteredContent.filter((c) => {
+    return filteredContent.filter(c => {
       return !selectedContentsIds.includes(Ember.get(c, "value"));
     });
   },

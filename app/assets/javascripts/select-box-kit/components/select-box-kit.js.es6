@@ -52,17 +52,21 @@ export default Ember.Component.extend({
       this.set("filterable", false);
     }
 
-    this.setProperties({ componentId: this.elemendId });
-
-    if (Ember.isNone(this.get("value")) && Ember.isNone(this.get("none"))) {
-      this.set("value", this.get("computedContent.firstObject.value"));
-    }
+    this.set("componentId", this.elemendId);
   },
 
   @computed("content.[]")
   computedContent(content) {
-    console.log("computedContent", content);
     return this.formatContents(content || []);
+  },
+
+  @computed("value", "none", "computedContent.firstObject.value")
+  computedValue(value, none, firstContentValue) {
+    if (Ember.isNone(value) && Ember.isNone(none)) {
+      return firstContentValue;
+    }
+
+    return value;
   },
 
   @computed("selectedContents.firstObject.name")
@@ -107,9 +111,9 @@ export default Ember.Component.extend({
     };
   },
 
-  @computed("value")
-  shouldSelectRow(value) {
-    return rowComponent => value === rowComponent.get("content.value");
+  @computed("computedValue")
+  shouldSelectRow(computedValue) {
+    return rowComponent => computedValue === rowComponent.get("content.value");
   },
 
   nameForContent(content) {
@@ -210,13 +214,13 @@ export default Ember.Component.extend({
     }
   },
 
-  @computed("value", "computedContent.[]")
-  selectedContents(value, computedContent) {
-    if (Ember.isNone(value)) {
+  @computed("computedValue", "computedContent.[]")
+  selectedContents(computedValue, computedContent) {
+    if (Ember.isNone(computedValue)) {
       return [];
     }
 
-    return [ computedContent.findBy("value", value) ];
+    return [ computedContent.findBy("value", computedValue) ];
   },
 
   formatContent(content) {
@@ -366,7 +370,6 @@ export default Ember.Component.extend({
 
   @computed("filter", "computedContent.[]")
   filteredContent(filter, computedContent) {
-    console.log("filte", computedContent)
     let filteredContent = computedContent;
 
     if (!Ember.isEmpty(filter)) {
