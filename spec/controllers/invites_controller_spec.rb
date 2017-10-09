@@ -164,6 +164,19 @@ describe InvitesController do
         expect(response).not_to be_success
       end
 
+      it "verifies that inviter is authorized to invite new user to a group-private topic" do
+        group = Fabricate(:group)
+        private_category = Fabricate(:private_category, group: group)
+        group_private_topic = Fabricate(:topic, category: private_category)
+        log_in(:trust_level_4)
+
+        post :create_invite_link, params: {
+          email: email, topic_id: group_private_topic.id
+        }, format: :json
+
+        expect(response).not_to be_success
+      end
+
       it "allows admins to invite to groups" do
         group = Fabricate(:group)
         log_in(:admin)
