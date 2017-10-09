@@ -1471,7 +1471,7 @@ en:
 
     disable_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
 
-    automatically_unpin_topics: "Automatically unpin topics when the user reaches the bottom."
+    automatically_unpin_topics: "Automatically unpin topics when the user reaches the bottom  (except watched topics)."
 
     read_time_word_count: "Word count per minute for calculating estimated reading time."
 
@@ -1548,7 +1548,7 @@ en:
 
     default_other_like_notification_frequency: "Notify users on likes by default"
 
-    default_topics_automatic_unpin: "Automatically unpin topics when the user reaches the bottom by default."
+    default_topics_automatic_unpin: "Automatically unpin topics when the user reaches the bottom by default (except user's watched topics)."
 
     default_categories_watching: "List of categories that are watched by default."
     default_categories_tracking: "List of categories that are tracked by default."

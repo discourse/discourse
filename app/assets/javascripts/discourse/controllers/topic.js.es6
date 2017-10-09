@@ -12,6 +12,8 @@ import debounce from 'discourse/lib/debounce';
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import QuoteState from 'discourse/lib/quote-state';
 import { userPath } from 'discourse/lib/url';
+import { NotificationLevels } from 'discourse/lib/notification-levels';
+
 
 export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   composer: Ember.inject.controller(),
@@ -951,9 +953,10 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
         }
       });
 
-      if (this.siteSettings.automatically_unpin_topics &&
-          this.currentUser &&
-          this.currentUser.automatically_unpin_topics) {
+      if ((this.siteSettings.automatically_unpin_topics &&
+           this.currentUser &&
+           this.currentUser.automatically_unpin_topics) &&
+          topic.get('details.notification_level') !== NotificationLevels.WATCHING) {
 
         // automatically unpin topics when the user reaches the bottom
         const max = _.max(postNumbers);
