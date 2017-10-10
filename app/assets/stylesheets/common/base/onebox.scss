@@ -97,7 +97,7 @@ aside.onebox {
   header {
     margin-bottom: 8px;
     a[href] {
-      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      color: dark-light-choose($primary-medium, $secondary-medium);
       text-decoration: none;
     }
   }
@@ -123,12 +123,12 @@ aside.onebox {
     }
 
     a[href] {
-      color: dark-light-choose(scale-color($tertiary, $lightness: -20%), $tertiary);
+      color: dark-light-choose($tertiary, $tertiary);
       text-decoration: none;
     }
 
     a[href]:visited {
-      color: dark-light-choose(scale-color($tertiary, $lightness: -20%), $tertiary);
+      color: dark-light-choose($tertiary, $tertiary);
     }
 
     img {
@@ -364,7 +364,7 @@ aside.onebox.stackexchange .onebox-body {
 }
 
 .onebox-metadata {
-  color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+  color: dark-light-choose($primary-medium, $secondary-medium);
 }
 
 .onebox.xkcd .onebox-body {

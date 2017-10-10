@@ -23,17 +23,17 @@
 
     .username a {
       font-weight: bold;
-      color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
+      color: dark-light-choose($primary-high, $secondary-low);
     }
 
     .name {
       margin-left: 5px;
-      color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
+      color: dark-light-choose($primary-high, $secondary-low);
     }
 
     .title {
       margin-top: 3px;
-      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      color: dark-light-choose($primary-medium, $secondary-medium);
     }
   }
 
@@ -56,7 +56,7 @@
       min-height: 80px;
 
       .granted-on {
-        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+        color: dark-light-choose($primary-medium, $secondary-medium);
       }
 
       .post-link {

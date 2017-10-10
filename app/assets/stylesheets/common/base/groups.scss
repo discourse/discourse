@@ -8,7 +8,7 @@
   width: 100%;
 
   th {
-    border-bottom: 1px solid $primary-low; 
+    border-bottom: 1px solid $primary-low;
     padding: 5px 0px;
     text-align: left;
   }
@@ -30,16 +30,16 @@
     .groups-info-name {
       font-weight: bold;
       color: $primary;
-      color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
+      color: dark-light-choose($primary-high, $secondary-low);
     }
 
     .groups-info-full-name {
-      color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
+      color: dark-light-choose($primary-high, $secondary-low);
     }
 
     .groups-info-title {
       font-size: 0.9em;
-      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      color: dark-light-choose($primary-medium, $secondary-medium);
     }
 
     span {

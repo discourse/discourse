@@ -37,7 +37,7 @@
         align-self: center;
         margin-right: 0;
         opacity: 1;
-        color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
+        color: dark-light-choose($primary-high, $secondary-medium);
       }
     }
 
@@ -62,7 +62,7 @@
         flex: 1;
         font-size: 0.857em;
         font-weight: normal;
-        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));;
+        color: dark-light-choose($primary-medium, $secondary-medium);;
         white-space: normal;
       }
     }

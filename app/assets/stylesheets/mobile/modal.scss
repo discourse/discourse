@@ -105,7 +105,7 @@
 
 .custom-message-length {
   margin: -4px 0 10px 20px;
-  color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
+  color: dark-light-choose($primary-high, $secondary-low);
   font-size: 85%;
 }
 
@@ -164,7 +164,7 @@
 .alert {
   padding: 5px;
   &.alert-success {
-    background-color:  scale-color($success, $lightness: 90%);
+    background-color: $success-low;
     color: $success;
   }
 }

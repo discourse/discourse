@@ -512,7 +512,7 @@ $mobile-breakpoint: 700px;
     }
 
     .desc {
-      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      color: dark-light-choose($primary-medium, $secondary-medium);
     }
 
     h3 {
@@ -545,7 +545,7 @@ section.details {
 }
 
 #selected-controls {
-  background-color: scale-color($tertiary, $lightness: 75%);
+  background-color: $tertiary-low;
   padding: 8px;
   min-height: 27px;
   position: fixed;
@@ -581,7 +581,7 @@ section.details {
     border-top: 0;
   }
   &.highlight-danger {
-    background-color: scale-color($danger, $lightness: 50%);
+    background-color: $danger-low;
   }
   border-top: 1px solid $primary-low;
   &:before, &:after {
@@ -651,7 +651,7 @@ section.details {
       font-weight: normal;
       padding: 0 6px;
       color: $secondary;
-      background-color: scale-color($tertiary, $lightness: 50%);
+      background-color: $tertiary-medium;
       border-radius: 3px;
     }
   }
@@ -661,7 +661,7 @@ section.details {
 
     p.help {
       margin: 0;
-      color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
+      color: dark-light-choose($primary-medium, $secondary-medium);
       font-size: 0.9em;
     }
   }
@@ -679,7 +679,7 @@ section.details {
   .current-badge-actions {
     margin: 10px;
     padding: 10px;
-    border-top: 1px solid dark-light-choose(scale-color($primary, $lightness: 80%), scale-color($secondary, $lightness: 20%));
+    border-top: 1px solid dark-light-choose($primary-low, $secondary-high);
   }
 
   .buttons {
@@ -732,7 +732,7 @@ section.details {
 .groups {
   .ac-wrap {
     width: 100% !important;
-    border-color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
+    border-color: dark-light-choose($primary-low-mid, $secondary-high);
     .item {
       margin-right: 10px;
     }
@@ -754,7 +754,7 @@ section.details {
   }
   .select2-choices {
     width: 100%;
-    border-color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
+    border-color: dark-light-choose($primary-low-mid, $secondary-high);
   }
 
   .content-list {
@@ -1250,7 +1250,7 @@ table.api-keys {
   margin: 0 0 20px 6px;
   a.filter {
     display: inline-block;
-    background-color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
+    background-color: dark-light-choose($primary-low-mid, $secondary-high);
     padding: 3px 10px;
     border-radius: 3px;
 
@@ -1283,7 +1283,7 @@ table.api-keys {
 
 .staff-actions, .screened-emails, .screened-urls, .screened-ip-addresses, .permalinks, .web-hook-events {
 
-  border-bottom: dotted 1px dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
+  border-bottom: dotted 1px dark-light-choose($primary-low-mid, $secondary);
 
   .heading-container {
     width: 100%;
@@ -1607,7 +1607,7 @@ table#user-badges {
   }
 
   p.description {
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    color: dark-light-choose($primary-medium, $secondary-medium);
     margin-bottom: 1em;
     max-width: 700px;
   }
@@ -1629,7 +1629,7 @@ table#user-badges {
   .reply-key {
     display: block;
     font-size: 12px;
-    color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 40%));
+    color: dark-light-choose($primary-medium, $secondary-high);
   }
   .username div {
     max-width: 180px;

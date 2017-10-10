@@ -17,7 +17,7 @@
 
   .notification {
     &.unread {
-      background-color: dark-light-choose(scale-color($tertiary, $lightness: 85%), srgb-scale($tertiary, $secondary, 15%));
+      background-color: dark-light-choose($tertiary-low, srgb-scale($tertiary, $secondary, 15%));
     }
   }
 
