@@ -48,6 +48,7 @@ const icons = {
   'split_topic': 'sign-out',
   'invited_user': 'plus-circle',
   'invited_group': 'plus-circle',
+  'user_left': 'minus-circle',
   'removed_user': 'minus-circle',
   'removed_group': 'minus-circle',
   'public_topic': 'comment',

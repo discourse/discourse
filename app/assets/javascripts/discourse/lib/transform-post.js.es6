@@ -127,6 +127,7 @@ export default function transformPost(currentUser, site, post, prevPost, nextPos
     postAtts.allowedGroups = details.allowed_groups;
     postAtts.allowedUsers = details.allowed_users;
     postAtts.canRemoveAllowedUsers = details.can_remove_allowed_users;
+    postAtts.canRemoveSelfId = details.can_remove_self_id;
     postAtts.canInvite = details.can_invite_to;
   }
 
