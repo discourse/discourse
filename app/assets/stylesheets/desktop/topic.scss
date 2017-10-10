@@ -45,7 +45,7 @@
 }
 
 .private-message-glyph {
-  color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
+  color: dark-light-choose($primary-low-mid, $secondary-high);
   float: left;
   margin: 0 5px 0 0;
 }
@@ -188,7 +188,7 @@
 
 
 #topic-filter {
-  background-color: scale-color($highlight, $lightness: 25%);
+  background-color: $highlight-medium;
   padding: 8px;
   bottom: 0;
   position: fixed;

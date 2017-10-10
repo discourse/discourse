@@ -16,7 +16,7 @@
 
 #login-form {
   a {
-    color: dark-light-choose(scale-color($primary, $lightness: 35%), scale-color($secondary, $lightness: 65%));
+    color: dark-light-choose($primary-high, $secondary-low);
   }
   label { float: left; display: block; }
   textarea, input, select {
@@ -59,7 +59,7 @@ $input-width: 184px;
 
   tr.instructions {
     label {
-      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      color: dark-light-choose($primary-medium, $secondary-medium);
     }
   }
 

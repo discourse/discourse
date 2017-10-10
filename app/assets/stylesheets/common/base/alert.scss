@@ -1,6 +1,6 @@
 .alert {
   padding: 8px 35px 8px 14px;
-  background-color: scale-color($danger, $lightness: 75%);
+  background-color: $danger-low;
   color: #c09853;
 
   .close {
@@ -30,7 +30,7 @@
     -webkit-appearance: none;
   }
   &.alert-success {
-    background-color:  $success-low;
+    background-color:  $success-medium;
     color: $primary;
   }
   &.alert-error {

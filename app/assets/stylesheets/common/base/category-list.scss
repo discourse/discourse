@@ -76,7 +76,7 @@
     padding: 0 1em 1em 1em;
     text-align: center;
     font-size: 1.05em;
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));
+    color: dark-light-choose($primary-medium, $secondary-high);
     .overflow {
       max-height: 6em;
       overflow: hidden;

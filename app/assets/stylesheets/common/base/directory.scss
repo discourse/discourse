@@ -36,10 +36,10 @@
 
     tr.me {
       td {
-        background-color: $highlight-low;
+        background-color: dark-light-choose($highlight-low, $highlight-medium);
 
         .username a, .name, .title, .number, .time-read {
-          color: dark-light-choose(scale-color($highlight, $lightness: -50%), scale-color($highlight, $lightness: 50%));
+          color: dark-light-choose(scale-color($highlight, $lightness: -50%), $highlight-medium);
         }
       }
     }

@@ -54,7 +54,7 @@
     }
 
     a {
-      color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 40%));
+      color: dark-light-choose($primary-medium, $secondary-high);
 
       &.active {
         color: $primary;
@@ -99,7 +99,7 @@
     text-align: left;
     border-bottom: 3px solid $primary-low;
     padding: 0 0 10px 0;
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    color: dark-light-choose($primary-medium, $secondary-medium);
     font-weight: normal;
   }
 
@@ -140,10 +140,10 @@
       }
     }
 
-    .secondary {
-      background: scale-color($secondary, $lightness: -5%);
-      border-top: 1px solid $primary-low;
-      border-bottom: 1px solid $primary-low;
+  .secondary {
+    background: $secondary;
+    border-top: 1px solid $primary-low;
+    border-bottom: 1px solid $primary-low;
 
       dl {
         padding: 8px 10px;

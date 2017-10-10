@@ -15,7 +15,7 @@
 
   .group-info-full-name {
     font-size: 1.2em;
-    color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
+    color: dark-light-choose($primary-high, $secondary-low);
   }
 
   span {
@@ -93,7 +93,7 @@ table.group-members {
     border-bottom: 3px solid $primary-low;
     text-align: center;
     padding: 5px 0px 5px 5px;
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    color: dark-light-choose($primary-medium, $secondary-medium);
     font-weight: normal;
   }
 

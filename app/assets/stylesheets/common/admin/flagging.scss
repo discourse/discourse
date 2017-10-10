@@ -6,7 +6,7 @@
 
 .flagged-post.deleted {
   .flagged-post-excerpt, .flagged-post-avatar {
-    background-color: scale-color($danger, $lightness: 70%);
+    background-color: $danger-low;
   }
 }
 
@@ -122,7 +122,7 @@
     }
 
     &:hover {
-      background-color: $highlight-low;
+      background-color: dark-light-choose($highlight-low, $highlight-medium);
     }
   }
 

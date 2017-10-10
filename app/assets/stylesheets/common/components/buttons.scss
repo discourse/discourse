@@ -56,7 +56,7 @@
   }
   &[disabled], &.disabled {
     background: $primary-low; 
-    &:hover { color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%)); }
+    &:hover { color: dark-light-choose($primary-low-mid, $secondary-high); }
     cursor: not-allowed;
   }
 
@@ -74,7 +74,7 @@
 .btn-primary {
   border: none;
   font-weight: normal;
-  color: dark-light-choose(#fff, scale-color($primary, $lightness: 60%));
+  color: dark-light-choose(#fff, $primary-medium);
   background: $tertiary;
 
   &[href] {
@@ -82,10 +82,10 @@
   }
   &:hover, &.btn-hover {
     color: #fff;
-    background: dark-light-choose(scale-color($tertiary, $lightness: -20%), scale-color($tertiary, $lightness: -20%));
+    background: dark-light-choose($tertiary, $tertiary);
   }
   &:active, &.btn-active {
-    @include linear-gradient(scale-color($tertiary, $lightness: -20%), scale-color($tertiary, $lightness: -10%));
+    @include linear-gradient($tertiary, $tertiary);
     color: $secondary;
   }
   &[disabled], &.disabled {
