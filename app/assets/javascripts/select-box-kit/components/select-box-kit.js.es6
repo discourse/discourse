@@ -3,7 +3,6 @@ import computed from "ember-addons/ember-computed-decorators";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
 export default Ember.Component.extend({
-  attributeBindings: ["computedId:id"],
   layoutName: "select-box-kit/templates/components/select-box-kit",
   classNames: "select-box-kit",
   classNameBindings: [
