@@ -54,7 +54,7 @@
 
   <div>
     <label for="visiblity">{{i18n 'groups.visibility_levels.title'}}</label>
-    {{combo-box data-done="true" name="alias"
+    {{combo-box name="alias"
         valueAttribute="value"
         value=model.visibility_level
         content=visibilityLevelOptions
@@ -112,12 +112,12 @@
 
   <div>
     <label for="alias">{{i18n 'groups.alias_levels.mentionable'}}</label>
-    {{combo-box data-done="true" name="alias" valueAttribute="value" value=model.mentionable_level content=aliasLevelOptions}}
+    {{combo-box name="alias" valueAttribute="value" value=model.mentionable_level content=aliasLevelOptions}}
   </div>
 
   <div>
     <label for="alias">{{i18n 'groups.alias_levels.messageable'}}</label>
-    {{combo-box data-done="true" name="alias" valueAttribute="value" value=model.messageable_level content=aliasLevelOptions}}
+    {{combo-box name="alias" valueAttribute="value" value=model.messageable_level content=aliasLevelOptions}}
   </div>
 
   <div>

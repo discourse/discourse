@@ -15,9 +15,9 @@ export default DropdownSelectBoxComponent.extend({
   collectionHeight: "auto",
   value: Em.computed.alias("notificationLevel"),
 
-  @computed("selectedDetails")
-  headerIcon(details) {
-    return iconHTML(details.icon, {class: details.key}).htmlSafe();
+  @computed("selectedDetails.icon", "selectedDetails.key")
+  headerIcon(icon, key) {
+    return iconHTML(icon, {class: key}).htmlSafe();
   },
 
   @computed("selectedDetails.key", "i18nPrefix")
@@ -36,7 +36,7 @@ export default DropdownSelectBoxComponent.extend({
   },
 
   @computed
-  titleForRow: function() {
+  titleForRow() {
     return (rowComponent) => {
       const notificationLevel = rowComponent.get("content.value");
       const details = buttonDetails(notificationLevel);

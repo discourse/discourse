@@ -10,7 +10,7 @@ componentTest('with objects and values', {
 
   test(assert) {
     andThen(() => {
-      assert.propEqual(selectBox(".multi-combobox").header.texts(), ['hello', 'world']);
+      assert.propEqual(selectBox(".multi-combobox").header.name(), ['hello', 'world']);
     });
   }
 });

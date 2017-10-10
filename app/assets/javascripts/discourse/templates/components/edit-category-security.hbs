@@ -17,8 +17,8 @@
   {{#if editingPermissions}}
   {{log category.availableGroups}}
   {{log category.availablePermissions}}
-    {{combo-box data-done="true" content=category.availableGroups value=selectedGroup}}
-    {{combo-box data-done="true" class="permission-selector"
+    {{combo-box content=category.availableGroups value=selectedGroup}}
+    {{combo-box class="permission-selector"
                 nameProperty="description"
                 content=category.availablePermissions
                 value=selectedPermission}}

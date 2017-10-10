@@ -39,7 +39,7 @@
   <section class="field subcategory-list-style-field">
     <label>
       {{i18n "category.subcategory_list_style"}}
-      {{combo-box data-done="true" valueAttribute="value" content=availableSubcategoryListStyles value=category.subcategory_list_style}}
+      {{combo-box valueAttribute="value" content=availableSubcategoryListStyles value=category.subcategory_list_style}}
     </label>
   </section>
 {{/if}}
@@ -47,23 +47,23 @@
 <section class="field default-view-field">
   <label>
     {{i18n "category.default_view"}}
-    {{combo-box data-done="true" valueAttribute="value" content=availableViews value=category.default_view}}
+    {{combo-box valueAttribute="value" content=availableViews value=category.default_view}}
   </label>
 </section>
 
 <section class="field default-top-period-field">
   <label>
     {{i18n "category.default_top_period"}}
-    {{combo-box data-done="true" valueAttribute="value" content=availableTopPeriods value=category.default_top_period}}
+    {{combo-box valueAttribute="value" content=availableTopPeriods value=category.default_top_period}}
   </label>
 </section>
 
 <section class="field">
   <label>
     {{i18n "category.sort_order"}}
-    {{combo-box data-done="true" valueAttribute="value" content=availableSorts value=category.sort_order none="category.sort_options.default"}}
+    {{combo-box valueAttribute="value" content=availableSorts value=category.sort_order none="category.sort_options.default"}}
     {{#unless isDefaultSortOrder}}
-      {{combo-box data-done="true" valueAttribute="value" content=sortAscendingOptions value=category.sort_ascending none="category.sort_options.default"}}
+      {{combo-box valueAttribute="value" content=sortAscendingOptions value=category.sort_ascending none="category.sort_options.default"}}
     {{/unless}}
   </label>
 </section>

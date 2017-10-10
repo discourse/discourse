@@ -1,7 +1,3 @@
-//TODO
-//       minimumResultsForSearch,
-//       allowClear: true
-
 import SelectBoxKitComponent from "select-box-kit/components/select-box-kit";
 import computed from "ember-addons/ember-computed-decorators";
 
