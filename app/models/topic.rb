@@ -709,14 +709,21 @@ SQL
   end
 
   def remove_allowed_user(removed_by, username)
-    if user = User.find_by(username: username)
+    user = username.is_a?(User) ? username : User.find_by(username: username)
+
+    if user
       topic_user = topic_allowed_users.find_by(user_id: user.id)
+
       if topic_user
         topic_user.destroy
-        # we can not remove ourselves cause then we will end up adding
-        # ourselves in add_small_action
-        removed_by = Discourse.system_user if user.id == removed_by&.id
-        add_small_action(removed_by, "removed_user", user.username)
+
+        if user.id == removed_by&.id
+          removed_by = Discourse.system_user
+          add_small_action(removed_by, "user_left", user.username)
+        else
+          add_small_action(removed_by, "removed_user", user.username)
+        end
+
         return true
       end
     end

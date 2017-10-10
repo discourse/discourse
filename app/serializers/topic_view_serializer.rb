@@ -114,6 +114,7 @@ class TopicViewSerializer < ApplicationSerializer
     result[:can_delete] = true if scope.can_delete?(object.topic)
     result[:can_recover] = true if scope.can_recover_topic?(object.topic)
     result[:can_remove_allowed_users] = true if scope.can_remove_allowed_users?(object.topic)
+    result[:can_remove_self_id] = scope.user.id if scope.can_remove_allowed_users?(object.topic, scope.user)
     result[:can_invite_to] = true if scope.can_invite_to?(object.topic)
     result[:can_invite_via_email] = true if scope.can_invite_via_email?(object.topic)
     result[:can_create_post] = true if scope.can_create?(Post, object.topic)
