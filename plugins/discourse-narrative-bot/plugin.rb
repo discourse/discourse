@@ -6,16 +6,6 @@
 
 enabled_site_setting :discourse_narrative_bot_enabled
 
-if Rails.env.development?
-  Rails.application.config.before_initialize do |app|
-    app.middleware.insert_before(
-      ::ActionDispatch::Static,
-      ::ActionDispatch::Static,
-      Rails.root.join("plugins/discourse-narrative-bot/public").to_s
-    )
-  end
-end
-
 require_relative 'lib/discourse_narrative_bot/welcome_post_type_site_setting.rb'
 
 after_initialize do
@@ -52,13 +42,6 @@ after_initialize do
     class Engine < ::Rails::Engine
       engine_name PLUGIN_NAME
       isolate_namespace DiscourseNarrativeBot
-
-      if Rails.env.production?
-        Dir[Rails.root.join("plugins/discourse-narrative-bot/public/images/*")].each do |src|
-          dest = Rails.root.join("public/images/#{File.basename(src)}")
-          File.symlink(src, dest) if !File.exists?(dest)
-        end
-      end
     end
 
     class Store

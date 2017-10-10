@@ -162,12 +162,12 @@ he:
           - https://en.wikipedia.org/wiki/Death_by_coconut
           - https://en.wikipedia.org/wiki/Calculator_spelling
         reply: |-
-          מגניב! זה יעבוד בשביל רוב <img src="%{base_uri}/images/font-awesome-link.png" width="16" height="16"> הקישורים. זיכרו, זה חייב להיות בשורה _בפני עצמו_, בלי שום דבר לפני ואחרי.
+          מגניב! זה יעבוד בשביל רוב <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> הקישורים. זיכרו, זה חייב להיות בשורה _בפני עצמו_, בלי שום דבר לפני ואחרי.
       images:
         instructions: |-
           הנה תמונה של חד-קרן:
 
-          <img src="%{base_uri}/images/unicorn.png" width="520" height="520">
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
 
           אם אתם אוהבים אותה (ומי לא!) ליחצו על כפתור :heart: הלייק מתחת לפוסט זה כדי שאדע על כך.
 
@@ -224,15 +224,15 @@ he:
       title: ':arrow_up: יכולות משתמשים מתקדמים'
       delete:
         not_found: |-
-          אני עדיין לא רואה פוסטים שנמחקו? זיכרו <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> הצג עוד יחשוף <img src="%{base_uri}/images/font-awesome-trash.png" width="16" height="16"> מחיקה.
+          אני עדיין לא רואה פוסטים שנמחקו? זיכרו <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> הצג עוד יחשוף <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> מחיקה.
       recover:
         deleted_post_raw: 'מדוע @%{discobot_username} מחק/ה את הפוסט שלי? :anguished:'
         instructions: |-
           הו לא! נראה שבטעות מחקתי פוסט חדש שרק יצרתי עבורכם.
 
-          תוכלו לעזור לי <img src="%{base_uri}/images/font-awesome-rotate-left.png" width="16" height="16"> **להשיב** אותו?
+          תוכלו לעזור לי <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **להשיב** אותו?
         not_found: |-
-          מתקשים? זיכרו <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> הצגת עוד תחשוף <img src="%{base_uri}/images/font-awesome-rotate-left.png" width="16" height="16"> אחזור.
+          מתקשים? זיכרו <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> הצגת עוד תחשוף <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> אחזור.
       category_hashtag:
         reply: |-
           מצויין! זיכרו שזה עובד בשביל קטגוריות _וגם_ תגיות, אם תגיות מאופשרות.

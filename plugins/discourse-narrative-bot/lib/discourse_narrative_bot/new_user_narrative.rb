@@ -328,7 +328,7 @@ module DiscourseNarrativeBot
       else
         raw = I18n.t(
           "#{I18N_KEY}.images.not_found",
-          i18n_post_args(image_url: "#{Discourse.base_url}/images/dog-walk.gif")
+          i18n_post_args(image_url: "#{Discourse.base_url}/plugins/discourse-narrative-bot/images/dog-walk.gif")
         )
 
         transition = false

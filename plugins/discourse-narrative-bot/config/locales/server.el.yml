@@ -162,7 +162,7 @@ el:
           - https://en.wikipedia.org/wiki/Death_by_coconut
           - https://en.wikipedia.org/wiki/Calculator_spelling
         reply: |-
-          Τέλεια! Αυτό θα λειτουργήσει με τους περισσοτερους <img src="%{base_uri}/images/font-awesome-link.png" width="16" height="16"> συνδέσμους. Να θυμάσαι, ο σύνδεσμος πρέπει να είναι σε μια γραμμή _μόνος του_, χωρίς κάτι άλλο από εμπρός ή στο τέλος.
+          Τέλεια! Αυτό θα λειτουργήσει με τους περισσοτερους <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> συνδέσμους. Να θυμάσαι, ο σύνδεσμος πρέπει να είναι σε μια γραμμή _μόνος του_, χωρίς κάτι άλλο από εμπρός ή στο τέλος.
         not_found: |-
           Λυπάμαι, αλλά δεν μπόρεσα να βρω τον σύνδεσμο στην απάντησή σου! :cry:
 
@@ -173,7 +173,7 @@ el:
         instructions: |-
           Ορίστε η φωτογραφία ενός μονόκερου:
 
-          <img src="%{base_uri}/images/unicorn.png" width="520" height="520">
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
 
           Αν σου αρέσει (και σε ποιον δεν θα άρεζε) προχώρα και πάτα το κουμπί "Μου αρέσει" :heart: κάτω ακριβώς από την ανάρτηση για να το μάθω και εγώ.
 
@@ -222,11 +222,11 @@ el:
           Επιλέγοντας ένα τμήμα από το κείμενο της ανάρτησής μου, εμφανίζεται το κουμπί <kbd>**Παράθεση**</kbd>. Επίσης πατώντας **Απάντηση** έχωντας πρώτα επιλέξει ένα τμήμα του κειμένου, είναι το ίδιο! Μπορείς να δοκιμάσεις ξανά;
       bookmark:
         instructions: |-
-          Αν θέλεις να μάθεις περισσότερα, διάλεξε <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> παρακάτω και <img src="%{base_uri}/images/font-awesome-bookmark.png" width="16" height="16"> **πρόσθεσε σελιδοδείκτη στο ΠΜ**.  Αν το κάνεις, θα λάβεις ένα :gift: σύντομα!
+          Αν θέλεις να μάθεις περισσότερα, διάλεξε <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> παρακάτω και <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **πρόσθεσε σελιδοδείκτη στο ΠΜ**.  Αν το κάνεις, θα λάβεις ένα :gift: σύντομα!
         reply: |-
           Καταπληκτικά! Τώρα μπορείς εύκολα να επιστρέψεις στην συνομιλία μας όποτε θελήσεις, απευθείας από [την καρτέλα σελιδοδεικτών του προφίλ σου](%{profile_page_url}/activity/bookmarks). Απλά κάνε κλικ στην εικόνα προφίλ σου στην πάνω δεξιά πλευρά &#8599;
         not_found: |-
-          Ωχ, δεν βλέπω να έχουν προστεθεί σελιδοδείκτες σε αυτό το νήμα. Βλέπεις το κουμπί σελιδοδείκτη κάτω από κάθε ανάρτηση; Πάτα στο περισσότερα <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> για να εμφανιστούν οι επιπλέον λειτουργίες.
+          Ωχ, δεν βλέπω να έχουν προστεθεί σελιδοδείκτες σε αυτό το νήμα. Βλέπεις το κουμπί σελιδοδείκτη κάτω από κάθε ανάρτηση; Πάτα στο περισσότερα <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> για να εμφανιστούν οι επιπλέον λειτουργίες.
       emoji:
         instructions: |-
           Πιθανώς με έχεις ήδη δει να χρησιμοποιώ μικρές εικόνες στις απαντήσεις μου :blue_car::dash: αυτά λέγονται [emoji](https://en.wikipedia.org/wiki/Emoji). Μπορείς να **προσθέσεις ένα emoji** σε μια απάντησή σου; Οποιοδήποτε από αυτά μου κάνει:
@@ -235,7 +235,7 @@ el:
 
           - Πάτησε άνω κάτω τελεία <kbd>:</kbd> και κατόπιν συμπλήρωσε το όνομα του emoji `:tada:`
 
-          - Πάτησε το ειδικό πλήκτρο των emoji <img src="%{base_uri}/images/font-awesome-smile.png" width="16" height="16"> στην γραμμή εργαλείων του editor ή στο πληκτρολόγιο της φορητής σου συσκευής.
+          - Πάτησε το ειδικό πλήκτρο των emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> στην γραμμή εργαλείων του editor ή στο πληκτρολόγιο της φορητής σου συσκευής.
         reply: |-
           Αυτό είναι :sparkles: _emojiτέλειο!_ :sparkles:
         not_found: |-
@@ -243,7 +243,7 @@ el:
 
           Γράψε μια άνω κάτω τελεία <kbd>:</kbd> για να εμφανιστεί ο επιλογέας των emoji και στην συνέχεια πληκτρολόγησε τα πρώτα γράμματα από αυτό που θέλεις να εμφανιστεί, όπως `:bird:`
 
-          Ή πάτα το πλήκτρο των emoji <img src="%{base_uri}/images/font-awesome-smile.png" width="16" height="16"> στον editor.
+          Ή πάτα το πλήκτρο των emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> στον editor.
 
           (Αν είσαι σε φορητή συσκευή, μπορείς να βάλεις Emoji απευθείας από το πληκτρολόγιό σου.)
       mention:
@@ -261,20 +261,20 @@ el:
 
           >  :imp: Εδώ γράφω κάτι πολύ κακό!
 
-          Φαντάζομαι ξέρεις τι πρέπει να κάνεις. Ξεκίνα και **επισήμανε αυτή την ανάρτηση** <img src="%{base_uri}/images/font-awesome-flag.png" width="16" height="16"> ως ανάρμοστη!
+          Φαντάζομαι ξέρεις τι πρέπει να κάνεις. Ξεκίνα και **επισήμανε αυτή την ανάρτηση** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> ως ανάρμοστη!
         reply: |-
           [Οι συνεργάτες μας](/groups/staff) θα ενημερωθούν ιδιωτικά για την επισήμανσή σου. Αν αρκετά μέλη της κοινότητας επισημάνουν μια ανάρτηση, τότε αυτή κρύβεται αυτόματα για λόγους ασφαλείας. (Επειδή στην πραγματικότητα δεν έγραψα κάτι κακό :angel:, πήρα την πρωτοβουλία και αφαίρεσα για την ώρα την επισήμανση που μου έκανες.)
         not_found: |-
-          Ω όχι, η κακόβουλη ανάρτησή μου δεν έχει ακόμα επισημανθεί. :worried: Μπορείς να την επισημάνεις ώς ανάρμοστη πατώντας στην **σημαία** <img src="%{base_uri}/images/font-awesome-flag.png" width="16" height="16">; Μην ξεχάσεις να κάνεις πρώτα κλικ στο πλήκτρο "περισσότερα" <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> για να εμφανιστούν οι επιπλέον επιλογές για την ανάρτηση.
+          Ω όχι, η κακόβουλη ανάρτησή μου δεν έχει ακόμα επισημανθεί. :worried: Μπορείς να την επισημάνεις ώς ανάρμοστη πατώντας στην **σημαία** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">; Μην ξεχάσεις να κάνεις πρώτα κλικ στο πλήκτρο "περισσότερα" <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> για να εμφανιστούν οι επιπλέον επιλογές για την ανάρτηση.
       search:
         instructions: |-
-          _ψιτ_ … Έχω κρύψει μια έκπληξη σε αυτό το νήμα. Αν είσαι μέσα και σε τρώει η περιέργεια, **πάτα το εικονίδιο αναζήτησης** <img src="%{base_uri}/images/font-awesome-search.png" width="16" height="16"> επάνω δεξιά &#8599; για να την ψάξεις.
+          _ψιτ_ … Έχω κρύψει μια έκπληξη σε αυτό το νήμα. Αν είσαι μέσα και σε τρώει η περιέργεια, **πάτα το εικονίδιο αναζήτησης** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> επάνω δεξιά &#8599; για να την ψάξεις.
 
           Δοκίμασε να ψάξεις για τον όρο "capy&#8203;bara" σε αυτό το νήμα
         hidden_message: |-
           Πως αλήθεια σου ξέφυγε αυτός ο υδρόχειρος (capybara); :wink:
 
-          <img src="%{base_uri}/images/capybara-eating.gif"/>
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
           Συνειδητοποίησες ότι έχεις επιστρέψει πίσω στην αρχή; Τάισε τον φτωχό και πεινασμένο υδρόχειρο **απαντώντας με το `:herb:` emoji** και αυτόματα θα μεταφερθείς στο τέλος.
         reply: |-
@@ -286,7 +286,7 @@ el:
 
           - Αν έχεις κανονικό :πληκτρολόγιο:, πάτα <kbd>?</kbd> για να δεις τις βολικές μας συντομεύσεις πληκτρολογίου.
         not_found: |-
-          Χμμμ… μοιάζει να έχεις πρόβλημα και λυπάμαι για αυτό. Αναζήτησες <img src="%{base_uri}/images/font-awesome-search.png" width="16" height="16"> τον όρο **capy&#8203;bara**;
+          Χμμμ… μοιάζει να έχεις πρόβλημα και λυπάμαι για αυτό. Αναζήτησες <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> τον όρο **capy&#8203;bara**;
       end:
         message: |-
           Ευχαριστώ που έμεινες μαζί μου @%{username}! Έφτιαξα αυτό για σένα και πιστεύω ότι σου αξίζει:
@@ -315,7 +315,7 @@ el:
         not_found: |-
           Δείχνει να μην έχεις επεξεργαστεί ακόμα την [ανάρτηση](%{url}) που έφτιαξα για σένα. Μπορείς να δοκιμάσεις ξανά;
 
-          Πάτα το εικονίδιο <img src="%{base_uri}/images/font-awesome-pencil.png" width="16" height="16"> για να ενεργοποιήσεις τον editor.
+          Πάτα το εικονίδιο <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16"> για να ενεργοποιήσεις τον editor.
         reply: |-
           Άψογη δουλειά!
 
@@ -324,9 +324,9 @@ el:
         instructions: |-
           Αν θέλεις να αποσύρεις μια ανάρτηση που έκανες, μπορείς να την διαγράψεις.
 
-          Προχώρα και **διέγραψε** οποιαδήποτε από τις παραπάνω αναρτήσεις σου πατώντας το κουμπί <img src="%{base_uri}/images/font-awesome-trash.png" width="16" height="16"> **διαγραφή**. Μην διαγράψεις καλύτερα την πρώτη ανάρτηση!
+          Προχώρα και **διέγραψε** οποιαδήποτε από τις παραπάνω αναρτήσεις σου πατώντας το κουμπί <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> **διαγραφή**. Μην διαγράψεις καλύτερα την πρώτη ανάρτηση!
         not_found: |-
-          Δεν βλέπω να έχεις διαγράψει ακόμα κάποα ανάρτηση. Θυμήσου το <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> περισσότερα θα εμφανίσει την επιλογή <img src="%{base_uri}/images/font-awesome-trash.png" width="16" height="16"> διαγραφής.
+          Δεν βλέπω να έχεις διαγράψει ακόμα κάποα ανάρτηση. Θυμήσου το <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> περισσότερα θα εμφανίσει την επιλογή <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> διαγραφής.
         reply: |-
           Γουάου! :boom:
 
@@ -336,9 +336,9 @@ el:
         instructions: |-
           Ω όχι! Μάλλον κατά λάθος διέγραψα μια ανάρτηση που μόλις έφτιαξα για σένα.
 
-          Μπορείς να μου κάνεις την χάρη και να την <img src="%{base_uri}/images/font-awesome-rotate-left.png" width="16" height="16"> **επαναφέρεις**;
+          Μπορείς να μου κάνεις την χάρη και να την <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **επαναφέρεις**;
         not_found: |-
-          Έχεις πρόβλημα; Θυμήσου το <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> περισσότερα θα εμφανίσει την επιλογή <img src="%{base_uri}/images/font-awesome-rotate-left.png" width="16" height="16"> επαναφοράς.
+          Έχεις πρόβλημα; Θυμήσου το <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> περισσότερα θα εμφανίσει την επιλογή <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> επαναφοράς.
         reply: |-
           Ουφ, αυτό πέρασε ξυστά! Ευχαριστώ που το έφτιαξες :wink:
 
@@ -371,11 +371,11 @@ el:
           Να θυμάσαι ότι όταν απαντάς σε ένα μήνυμα ή το διαβάζεις για περισσότερο από μερικά λεπτά, τότε αυτό μπαίνει αυτόματα σε επίπεδο ειδοποιήσεων 'παρακολουθείται'. Αυτό μπορείς αν θέλεις να το αλλάξεις [στην σελίδα επιλογών σου](/my/preferences).
       poll:
         instructions: |-
-          Ήξερες ότι μπορείς να προσθέσεις μια δημοσκόπηση σε κάθε ανάρτηση; Δοκίμασε να πατήσεις το <img src="%{base_uri}/images/font-awesome-gear.png" width="16" height="16"> γρανάζι στον editor για να **φτιάξεις μια δημοσκόπηση**.
+          Ήξερες ότι μπορείς να προσθέσεις μια δημοσκόπηση σε κάθε ανάρτηση; Δοκίμασε να πατήσεις το <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> γρανάζι στον editor για να **φτιάξεις μια δημοσκόπηση**.
         not_found: |-
           Ουπς! Δεν βρήκα δημοσκόπηση στην απάντησή σου.
 
-          Πάτα το <img src="%{base_uri}/images/font-awesome-gear.png" width="16" height="16"> γρανάζι στον editor ή κάνε copy και paste την παρακάτω δημοσκόπηση στην απάντησή σου:
+          Πάτα το <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> γρανάζι στον editor ή κάνε copy και paste την παρακάτω δημοσκόπηση στην απάντησή σου:
 
           ```text
           [poll]
@@ -399,12 +399,12 @@ el:
           - Όταν η ανάρτησή σου περιλαμβάνει πολλές προεραιτικές πληροφορίες οι οποίες θα είναι πιθανώς κουραστικές αν διαβαστούν με την μία.
 
           [details=Πάτα εδώ για να δεις πως λειτουργεί!]
-          1. Διάλεξε το <img src="%{base_uri}/images/font-awesome-gear.png" width="16" height="16"> γρανάζι στον editor.
+          1. Διάλεξε το <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> γρανάζι στον editor.
           2. Επίλεξε "κρυφό τμήμα".
           3. Επεξεργάσου τον τίτλο των λεπτομερειών και πρόσθεσε το περιεχόμενό σου.
           [/details]
 
-          Μπορείς να πατήσεις το <img src="%{base_uri}/images/font-awesome-gear.png" width="16" height="16"> γρανάζι στον editor και να προσθέσεις ένα κρυφό τμήμα στην επόμενη απάντησή σου;
+          Μπορείς να πατήσεις το <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> γρανάζι στον editor και να προσθέσεις ένα κρυφό τμήμα στην επόμενη απάντησή σου;
         not_found: |-
           Έχεις πρόβλημα να προσθέσεις ένα κρυφό τμήμα στην απάντησή σου; Προσπάθησε να συμπεριλάβεις τα παρακάτω στην απάντησή σου:
 
