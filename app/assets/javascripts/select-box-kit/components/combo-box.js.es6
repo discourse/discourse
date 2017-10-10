@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< HEAD:app/assets/javascripts/discourse-common/components/combo-box.js.es6
 import SelectBoxComponent from "discourse/components/select-box";
 =======
@@ -7,6 +8,8 @@ import SelectBoxComponent from "discourse/components/select-box";
 //       minimumResultsForSearch,
 //       allowClear: true
 
+>>>>>>> wip
+=======
 >>>>>>> wip
 import SelectBoxKitComponent from "select-box-kit/components/select-box-kit";
 <<<<<<< HEAD

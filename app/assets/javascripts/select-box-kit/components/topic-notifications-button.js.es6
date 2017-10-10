@@ -1,5 +1,5 @@
 export default Ember.Component.extend({
-  layoutName: "components/topic-notifications-button",
+  layoutName: "select-box-kit/templates/components/topic-notifications-button",
   classNames: "topic-notifications-button",
   showFullTitle: true,
   appendReason: true

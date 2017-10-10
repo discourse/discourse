@@ -56,10 +56,6 @@ export default ComboBoxComponent.extend({
 
   @computed("scopedCategoryId", "content.[]")
   computedContent(scopedCategoryId, categories) {
-    if (Ember.isNone(categories)) {
-      return;
-    }
-
     // Always scope to the parent of a category, if present
     if (scopedCategoryId) {
       const scopedCat = Category.findById(scopedCategoryId);

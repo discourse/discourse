@@ -13,7 +13,6 @@ export default MultiComboBoxComponent.extend({
 
   @computed("settingValue")
   computedValue(settingValue) {
-    console.log("settingValue", settingValue)
     return settingValue.split(this.get("tokenSeparator"));
   }
 });

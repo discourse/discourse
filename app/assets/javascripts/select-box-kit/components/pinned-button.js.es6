@@ -4,6 +4,7 @@ export default Ember.Component.extend({
   descriptionKey: "help",
   classNames: "pinned-button",
   classNameBindings: ["isHidden"],
+  layoutName: "select-box-kit/templates/components/pinned-button",
 
   @computed("topic.pinned_globally", "topic.pinned")
   reasonText(pinnedGlobally, pinned) {

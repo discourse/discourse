@@ -1,6 +1,5 @@
 .dropdown-select-box {
   display: inline-flex;
-  height: 30px;
   min-width: auto;
 
   &.is-expanded {
@@ -88,9 +87,17 @@
 
     .d-icon + .d-icon {
       margin-left: 5px;
+      font-size: 1.143em;
+      line-height: 18px;
+    }
+
+    .d-button-label {
+      font-size: 1.143em;
+      line-height: 18px;
     }
 
     .btn {
+      zoom: 1;
       align-items: center;
       justify-content: space-between;
       flex-direction: row;

@@ -1,4 +1,4 @@
-import NotificationOptionsComponent from "discourse/components/notifications-button";
+import NotificationOptionsComponent from "select-box-kit/components/notifications-button";
 import { on } from "ember-addons/ember-computed-decorators";
 import computed from "ember-addons/ember-computed-decorators";
 import { topicLevels, buttonDetails } from "discourse/lib/notification-levels";
@@ -41,7 +41,9 @@ export default NotificationOptionsComponent.extend({
         this.get("topic.details").updateNotifications(value);
       }
 
-      this._super(value);
+      this.set("value", value);
+
+      this.defaultOnSelect();
     }
   }
 });

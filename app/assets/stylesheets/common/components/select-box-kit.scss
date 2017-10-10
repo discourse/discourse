@@ -226,7 +226,7 @@
     border: 1px solid transparent;
   }
 
-  .offscreen, .select-box-kit .offscreen:focus {
+  .select-box-kit-offscreen, .select-box-kit-offscreen:focus {
     clip: rect(0 0 0 0);
     width: 1px;
     height: 1px;

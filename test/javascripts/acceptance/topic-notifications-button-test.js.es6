@@ -28,8 +28,8 @@ QUnit.test("Updating topic notification level", assert => {
     );
   });
 
-  click(`${notificationOptions} .tracking`);
-  click(`${notificationOptions} .collection .row[title=Tracking]`);
+  expandSelectBox(`${notificationOptions} .tracking`);
+  selectBoxSelectRow("Tracking", { selector: `${notificationOptions} .tracking`});
 
   andThen(() => {
     assert.ok(

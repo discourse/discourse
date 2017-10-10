@@ -125,15 +125,6 @@ componentTest('custom search icon', {
   }
 });
 
-componentTest('not filterable by default', {
-  template: '{{select-box-kit}}',
-  test(assert) {
-    expandSelectBox();
-
-    andThen(() => assert.notOk(selectBox().filter.exists()) );
-  }
-});
-
 componentTest('select-box is expandable', {
   template: '{{select-box-kit}}',
   test(assert) {
@@ -217,7 +208,7 @@ componentTest('supports options to limit size', {
     expandSelectBox();
 
     andThen(() => {
-      const height = find(".select-box-kit-body").height();
+      const height = find(".select-box-kit-collection").height();
       assert.equal(parseInt(height, 10), 20, "it limits the height");
     });
   }

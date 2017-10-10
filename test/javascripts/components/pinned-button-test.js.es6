@@ -25,11 +25,11 @@ componentTest('updating the content refreshes the list', {
 
     expandSelectBox();
 
-    andThen(() => assert.equal(selectBox().selectedRow.el().find(".title").text(), "Pinned") );
+    andThen(() => assert.equal(selectBox().selectedRow.name(), "Pinned") );
 
     andThen(() => {
       this.set("topic.pinned", false);
-      assert.equal(selectBox().selectedRow.el().find(".title").text(), "Unpinned");
+      assert.equal(selectBox().selectedRow.name(), "Unpinned");
     });
 
     andThen(() => {
