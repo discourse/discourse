@@ -13,7 +13,7 @@
 
 .input-hint-text {
   margin-left: 0.5em;
-  color: $secondary-medium;
+  color: $secondary-high;
 }
 
 .modal-header {
@@ -327,8 +327,8 @@
 
     .cannot_delete_reason {
       position: absolute;
-      background: dark-light-choose(scale-color($primary, $lightness: 10%), scale-color($secondary, $lightness: 10%));
-      color: dark-light-choose(scale-color($primary, $lightness: 100%), scale-color($secondary, $lightness: 0%));
+      background: dark-light-choose($primary, $secondary);
+      color: dark-light-choose($secondary, $secondary);
       text-align: center;
       border-radius: 2px;
       padding: 12px 8px;
@@ -339,7 +339,7 @@
         border: solid transparent;
         content: " ";
         position: absolute;
-        border-top-color: dark-light-choose(scale-color($primary, $lightness: 10%), scale-color($secondary, $lightness: 10%));
+        border-top-color: dark-light-choose($primary, $secondary);
         border-width: 8px;
       }
     }

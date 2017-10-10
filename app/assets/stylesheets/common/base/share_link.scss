@@ -55,7 +55,7 @@
     float: right;
     font-size: 1.429em;
     a {
-      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      color: dark-light-choose($primary-medium, $secondary-medium);
     }
   }
 
@@ -67,7 +67,7 @@
   .date {
     float: right;
     margin: 5px;
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    color: dark-light-choose($primary-medium, $secondary-medium);
   }
 
   input[type=text] {

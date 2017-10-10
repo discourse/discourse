@@ -1,6 +1,6 @@
 .notifications-button.notifications-button.notifications-button {
   .d-icon.regular, .d-icon.muted, .d-icon.watching-first-post {
-    color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
+    color: dark-light-choose($primary-medium, $secondary-medium);
   }
   .d-icon.tracking, .d-icon.watching {
     color: $tertiary;

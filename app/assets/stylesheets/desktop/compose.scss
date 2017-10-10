@@ -100,7 +100,7 @@
   }
 
   .posts-count {
-    background-color: dark-light-choose(scale-color($tertiary, $lightness: -40%), scale-color($tertiary, $lightness: 40%));
+    background-color: dark-light-choose($tertiary, $tertiary-medium);
   }
 
   ul {
@@ -110,7 +110,7 @@
   }
   .search-link {
     .fa, .blurb {
-      color: dark-light-choose(scale-color($primary, $lightness: 45%), scale-color($secondary, $lightness: 55%));
+      color: dark-light-choose($primary-high, $secondary-medium);
     }
   }
   .badge-wrapper {
@@ -155,7 +155,7 @@
     right: 1px;
     position: absolute;
     i { font-size: 1.1em; }
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    color: dark-light-choose($primary-medium, $secondary-medium);
     padding: 0 10px 5px 10px;
   }
   a.cancel {
@@ -191,7 +191,7 @@
       display: block;
 
       i {
-        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+        color: dark-light-choose($primary-medium, $secondary-medium);
       }
     }
   }
@@ -353,7 +353,7 @@
   }
 
   i {
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    color: dark-light-choose($primary-medium, $secondary-medium);
   }
 }
 
@@ -437,7 +437,7 @@
   .d-editor-button-bar {
     top: 0;
     position: absolute;
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    color: dark-light-choose($primary-medium, $secondary-medium);
     background-color: $secondary;
     z-index: 100;
     overflow: hidden;
@@ -447,7 +447,7 @@
     box-sizing: border-box;
 
     button {
-      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      color: dark-light-choose($primary-high, $secondary-high);
     }
   }
 }

@@ -196,7 +196,7 @@
 
 .badge-groups {
   margin: 20px 0;
-  color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
+  color: dark-light-choose($primary-medium, $secondary-medium);
   h3 {
     margin-bottom: 1.0em;
   }
@@ -222,7 +222,7 @@
   }
   .grant-info-item {
     margin-bottom: 1em;
-    color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
+    color: dark-light-choose($primary-medium, $secondary-medium);
   }
 
   .badge-title .form-horizontal .controls {

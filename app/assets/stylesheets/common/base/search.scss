@@ -10,7 +10,7 @@
   }
 
   .like-count {
-    color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
+    color: dark-light-choose($primary-medium, $secondary-medium);
     .fa { color: $love; font-size: 12px; }
   }
 
@@ -32,7 +32,7 @@
     margin-right: 14px;
   }
   a.search-link:visited .topic-title {
-    color: scale-color($tertiary, $lightness: 15%);
+    color: $tertiary-high;
   }
   .search-link {
     .topic-statuses, .topic-title {
@@ -43,7 +43,7 @@
     .topic-statuses {
       float: none;
       display: inline-block;
-      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      color: dark-light-choose($primary-medium, $secondary-medium);
       font-size: 1.0em;
     }
   }
@@ -52,13 +52,13 @@
     line-height: 20px;
     word-wrap: break-word;
     max-width: 640px;
-    color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
+    color: dark-light-choose($primary-medium, $secondary-medium);
     .date {
-      color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%));
+      color: dark-light-choose($primary-medium, $secondary-high);
     }
 
     .search-highlight {
-      color: dark-light-choose(scale-color($primary, $lightness: 10%), scale-color($secondary, $lightness: 90%));
+      color: dark-light-choose($primary, $secondary-low);
     }
   }
 

@@ -26,7 +26,7 @@
     position: relative;
   }
   .nav-pills .drop {
-    border: 1px solid $primary-low; 
+    border: 1px solid $primary-low;
     position: absolute;
     z-index: 1000;
     background-color: $secondary;
@@ -82,7 +82,7 @@
   th,
   td {
     padding: 7px 0;
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    color: dark-light-choose($primary-medium, $secondary-medium);
     max-width: 300px;
   }
 
@@ -119,7 +119,7 @@
       max-width: 160px;
     }
     .num .fa, a, a:visited {
-      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      color: dark-light-choose($primary-medium, $secondary-medium);
     }
   }
 
@@ -129,7 +129,7 @@
     a {
       // let's make all ages dim on mobile so we're not
       // overwhelming people with info about each topic
-      color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%)) !important;
+      color: dark-light-choose($primary-low-mid, $secondary-high) !important;
     }
   }
 }
@@ -142,7 +142,7 @@
 
   td {
     padding: 12px 5px;
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));
+    color: dark-light-choose($primary-medium, $secondary-high);
     vertical-align: top;
   }
 
@@ -212,7 +212,7 @@ tr.category-topic-link {
     .featured-topic {
       margin: 8px 0;
       a.last-posted-at, a.last-posted-at:visited {
-        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+        color: dark-light-choose($primary-medium, $secondary-medium);
       }
     }
   }
@@ -291,7 +291,7 @@ tr.category-topic-link {
     figure {
       float: left;
       margin: 3px 7px 0 0;
-      color: dark-light-choose(scale-color($primary, $lightness: 10%), scale-color($secondary, $lightness: 90%));
+      color: dark-light-choose($primary, $secondary-low);
       font-weight: bold;
       font-size: 0.857em;
     }
@@ -359,7 +359,7 @@ tr.category-topic-link {
   padding: 4px 0;
   list-style: none;
   background-color: $secondary;
-  border: 1px solid dark-light-choose(rgba(0, 0, 0, 0.2), scale-color($primary, $lightness: -60%));
+  border: 1px solid dark-light-choose(rgba(0, 0, 0, 0.2), $primary);
   border-radius: 5px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   background-clip: padding-box;
@@ -379,7 +379,7 @@ tr.category-topic-link {
 .dropdown-menu .active > a:hover {
   color: $tertiary;
   text-decoration: none;
-  background-color: scale-color($tertiary, $lightness: 75%);
+  background-color: $tertiary-low;
 }
 .open > .dropdown-menu {
   display: block;

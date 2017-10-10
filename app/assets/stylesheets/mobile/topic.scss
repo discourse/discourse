@@ -31,7 +31,7 @@
   .private-message-glyph { display: none; }
 }
 
-.private-message-glyph { color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%)); }
+.private-message-glyph { color: dark-light-choose($primary-low-mid, $secondary-high); }
 .private_message #topic-title .private-message-glyph { display: inline; }
 
 
@@ -172,9 +172,9 @@
 
 .topic-post:last-of-type {padding-bottom: 40px;}
 
-.heatmap-high {color: scale-color($danger, $lightness: -25%) !important;}
-.heatmap-med {color: $danger !important;}
-.heatmap-low {color: scale-color($danger, $lightness: 25%) !important;}
+.heatmap-high {color: $danger !important;}
+.heatmap-med {color: $danger-medium !important;}
+.heatmap-low {color: $danger-low !important;}
 
 sup sup, sub sup, sup sub, sub sub { top: 0; }
 

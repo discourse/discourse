@@ -35,7 +35,7 @@
   .select2-chosen, .color-schemes li {
     .fa {
       margin-right: 6px;
-      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      color: dark-light-choose($primary-medium, $secondary-medium);
     }
   }
   .show-current-style {
@@ -173,7 +173,7 @@
     td.actions     { width: 200px; }
     .hex-input     { width: 80px; margin-bottom: 0; }
     .hex           { text-align: center; }
-    .description   { color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%)); }
+    .description   { color: dark-light-choose($primary-medium, $secondary-medium); }
 
     .invalid .hex input {
       background-color: white;

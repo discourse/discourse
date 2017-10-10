@@ -3,7 +3,7 @@
     float: left;
 
     a, i {
-      color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 40%));
+      color: dark-light-choose($primary-medium, $secondary-high);
     }
 
     .active {

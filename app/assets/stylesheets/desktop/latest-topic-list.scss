@@ -3,7 +3,7 @@
 
   .table-heading {
     padding: 12px 5px;
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));
+    color: dark-light-choose($primary-medium, $secondary-high);
   }
 
   .no-topics, .more-topics {
@@ -32,10 +32,10 @@
   .topic-stats {
     flex: 1;
     text-align: right;
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));
+    color: dark-light-choose($primary-medium, $secondary-high);
   }
 
   .topic-last-activity a {
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));
+    color: dark-light-choose($primary-medium, $secondary-high);
   }
 }

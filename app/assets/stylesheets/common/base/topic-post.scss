@@ -30,16 +30,16 @@
    overflow: hidden;
    text-overflow: ellipsis;
    a {
-     color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
+     color: dark-light-choose($primary-high, $secondary-low);
    }
  }
  .fa {
    font-size: 11px;
    margin-left: 3px;
-   color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
+   color: dark-light-choose($primary-medium, $secondary-medium);
  }
   .new_user a, .user-title, .user-title a {
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    color: dark-light-choose($primary-medium, $secondary-medium);
  }
 }
 
@@ -49,8 +49,8 @@
   h1, h2, h3, h4, h5, h6 { margin: 30px 0 10px; }
   h1 { line-height: 1em; } /* normalize.css sets h1 font size but not line height */
   a { word-wrap: break-word; }
-  ins { background-color: dark-light-choose(scale-color($success, $lightness: 90%), scale-color($success, $lightness: -60%)); }
-  del { background-color: dark-light-choose(scale-color($danger, $lightness: 90%), scale-color($danger, $lightness: -60%)); }
+  ins { background-color: dark-light-choose($success-low, scale-color($success, $lightness: -60%)); }
+  del { background-color: dark-light-choose($danger-low, scale-color($danger, $lightness: -60%)); }
 }
 
 
@@ -72,7 +72,7 @@ aside.quote {
   .title {
     @include post-aside;
 
-    color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
+    color: dark-light-choose($primary-high, $secondary-low);
     // IE will screw up the blockquote underneath if bottom padding is 0px
     padding: 12px 12px 1px 12px;
     // blockquote is underneath this and has top margin
@@ -88,7 +88,7 @@ aside.quote {
 }
 
 .quote-controls, .quote-controls .d-icon {
-  color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%));
+  color: dark-light-choose($primary-low-mid, $secondary-high);
 }
 
 .cooked .highlight {
@@ -238,7 +238,7 @@ aside.quote {
   }
 
   &.via-email {
-    color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%));
+    color: dark-light-choose($primary-low-mid, $secondary-high);
   }
   &.raw-email {
     cursor: pointer;
@@ -287,7 +287,7 @@ blockquote > *:last-child {
 
 .gap {
   padding: 0.25em 0 0.5em 4.3em;
-  color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%));
+  color: dark-light-choose($primary-medium, $secondary-high);
   cursor: pointer;
   text-transform: uppercase;
   font-weight: bold;
@@ -329,12 +329,12 @@ blockquote > *:last-child {
       font-size: 35px;
       width: 45px;
       text-align: center;
-      color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
+      color: dark-light-choose($primary-low-mid, $secondary-high);
     }
   }
 
   .small-action-desc.timegap {
-      color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%));
+      color: dark-light-choose($primary-medium, $secondary-high);
   }
   .small-action-desc {
     padding: 0.25em 0 0.5em 4.3em;
@@ -342,7 +342,7 @@ blockquote > *:last-child {
     text-transform: uppercase;
     font-weight: bold;
     font-size: 0.9em;
-    color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
+    color: dark-light-choose($primary-low-mid, $secondary-high);
 
     .custom-message {
       text-transform: none;
@@ -388,7 +388,7 @@ blockquote > *:last-child {
 
 a.mention, a.mention-group {
   padding: 2px 4px;
-  color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
+  color: dark-light-choose($primary-high, $secondary-low);
   background: $primary-low;
   border-radius: 8px;
   font-weight: bold;
@@ -408,7 +408,7 @@ a.mention, a.mention-group {
 }
 
 .broken-image, .large-image {
-  color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%));
+  color: dark-light-choose($primary-low-mid, $secondary-high);
   border: 1px solid $primary-low;
   font-size: 32px;
   padding: 16px;

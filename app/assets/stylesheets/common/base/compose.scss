@@ -35,7 +35,7 @@
           background-color: $tertiary-low;
         }
         @include hover {
-          background-color: $highlight-low;
+          background-color: dark-light-choose($highlight-low, $highlight-medium);
           text-decoration: none;
         }
       }
@@ -92,8 +92,8 @@ div.ac-wrap div.item a.remove, .remove-link {
   display: inline-block;
   border: 1px solid $primary-low; 
   &:hover {
-    background-color: scale-color($danger, $lightness: 75%);
-    border: 1px solid scale-color($danger, $lightness: 30%);
+    background-color: $danger-low;
+    border: 1px solid $danger-medium;
     text-decoration: none;
     color: $danger;
   }
@@ -162,7 +162,7 @@ div.ac-wrap {
 }
 
 #draft-status, #file-uploading {
-  color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+  color: dark-light-choose($primary-medium, $secondary-medium);
 }
 
 .composer-bottom-right {

@@ -132,7 +132,7 @@ input {
   }
 
   &.invalid {
-    background-color: dark-light-choose(scale-color($danger, $lightness: 80%), scale-color($danger, $lightness: -60%));
+    background-color: dark-light-choose($danger-low, scale-color($danger, $lightness: -60%));
   }
 
   .radio &[type="radio"],
@@ -191,19 +191,19 @@ input {
 }
 
 // the default for table cells in topic list
-// is scale-color($primary, $lightness: 50%)
+// is $primary-medium
 // numbers get dimmer as they get colder
 .coldmap {
   &-high {
-    color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%)) !important;
+  color: dark-light-choose($primary-low-mid, $secondary-high) !important;
   }
 
   &-med {
-    color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%)) !important;
+    color: dark-light-choose($primary-medium, $secondary-high) !important;
   }
 
   &-low {
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%)) !important;
+    color: dark-light-choose($primary-medium, $secondary-medium) !important;
   }
 }
 

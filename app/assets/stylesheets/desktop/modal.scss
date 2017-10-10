@@ -62,7 +62,7 @@
 .close {
   font-size: 1.429em;
   text-decoration: none;
-  color: dark-light-choose(scale-color($primary, $lightness: 35%), scale-color($secondary, $lightness: 65%));
+  color: dark-light-choose($primary-high, $secondary-low);
   cursor: pointer;
   &:hover {
     color: $primary;
@@ -93,7 +93,7 @@
 
 .custom-message-length {
   margin: -10px 0 10px 20px;
-  color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%));
+  color: dark-light-choose($primary-low-mid, $secondary-high);
   font-size: 85%;
 }
 
@@ -116,11 +116,11 @@
       li {
         margin: 0 4px 8px 0;
         a {
-          color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+          color: dark-light-choose($primary-medium, $secondary-medium);
           cursor: pointer;
         }
         a:hover {
-          color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
+          color: dark-light-choose($primary-medium, $secondary-medium);
         }
       }
     }
