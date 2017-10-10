@@ -111,6 +111,8 @@ export default Ember.Component.extend({
 
   @computed("value", "none", "computedContent.firstObject.value")
   computedValue(value, none, firstContentValue) {
+
+    console.log("---computedValue", typeof value, value, none, firstContentValue)
     if (Ember.isNone(value) && Ember.isNone(none)) {
       return firstContentValue;
     }
@@ -178,6 +180,8 @@ export default Ember.Component.extend({
       return [];
     }
 
+    console.log(typeof computedValue, typeof this.get("value"), computedContent.map(x => typeof x.value))
+
     return [ computedContent.findBy("value", computedValue) ];
   },
 
@@ -239,12 +243,12 @@ export default Ember.Component.extend({
   @on("didInsertElement")
   _bindEvents() {
     this.$(".select-box-kit-offscreen")
-      .on("focusin.select-box-kit", () => this.set("isFocused", true) )
-      .on("focusout.select-box-kit", () => this.set("isFocused", false) );
+        .on("focusin.select-box-kit", () => this.set("isFocused", true) )
+        .on("focusout.select-box-kit", () => this.set("isFocused", false) );
 
     this.$(".filter-query")
-      .on("focusin.select-box-kit", () => this.set("filterFocused", true) )
-      .on("focusout.select-box-kit", () => this.set("filterFocused", false) );
+        .on("focusin.select-box-kit", () => this.set("filterFocused", true) )
+        .on("focusout.select-box-kit", () => this.set("filterFocused", false) );
 
     this.$(".select-box-kit-offscreen").on("keydown.select-box-kit", event => {
       const keyCode = event.keyCode || event.which;
@@ -533,5 +537,5 @@ export default Ember.Component.extend({
     });
 
     this.get("scrollableParent").off("scroll.select-box-kit");
-  },
+  }
 });
