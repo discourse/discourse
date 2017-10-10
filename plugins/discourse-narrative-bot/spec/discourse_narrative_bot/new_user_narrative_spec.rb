@@ -395,7 +395,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
           expect(Post.last.raw).to eq(I18n.t(
             'discourse_narrative_bot.new_user_narrative.images.not_found',
-            image_url: "#{Discourse.base_url}/images/dog-walk.gif", base_uri: ''
+            image_url: "#{Discourse.base_url}/plugins/discourse-narrative-bot/images/dog-walk.gif", base_uri: ''
           ))
 
           described_class.any_instance.expects(:enqueue_timeout_job).with(user)
@@ -436,7 +436,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
         expect(Post.last.raw).to eq(I18n.t(
           'discourse_narrative_bot.new_user_narrative.images.not_found',
-          image_url: "#{Discourse.base_url}/images/dog-walk.gif",
+          image_url: "#{Discourse.base_url}/plugins/discourse-narrative-bot/images/dog-walk.gif",
           base_uri: ''
         ))
 
@@ -602,7 +602,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
             new_post = Post.last
 
-            expect(new_post.raw).to include("/forum/images")
+            expect(new_post.raw).to include("/forum/plugins/discourse-narrative-bot/images")
           end
         end
 

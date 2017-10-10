@@ -168,7 +168,7 @@ en:
           - https://en.wikipedia.org/wiki/Death_by_coconut
           - https://en.wikipedia.org/wiki/Calculator_spelling
         reply: |-
-          Cool! This will work for most <img src="%{base_uri}/images/font-awesome-link.png" width="16" height="16"> links. Remember, it must be on a line _all by itself_, with nothing else in front, or behind.
+          Cool! This will work for most <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> links. Remember, it must be on a line _all by itself_, with nothing else in front, or behind.
         not_found: |-
           Sorry, I couldn’t find the link in your reply! :cry:
 
@@ -180,7 +180,7 @@ en:
         instructions: |-
           Here’s a picture of a unicorn:
 
-          <img src="%{base_uri}/images/unicorn.png" width="520" height="520">
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
 
           If you like it (and who wouldn’t!) go ahead and press the like :heart: button below this post to let me know.
 
@@ -233,11 +233,11 @@ en:
 
       bookmark:
         instructions: |-
-          If you’d like to learn more, select <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> below  and <img src="%{base_uri}/images/font-awesome-bookmark.png" width="16" height="16"> **bookmark this private message**.  If you do, there may be a :gift: in your future!
+          If you’d like to learn more, select <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> below  and <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **bookmark this private message**.  If you do, there may be a :gift: in your future!
         reply: |-
           Excellent! Now you can easily find your way back to our private conversation any time, right from [the bookmarks tab on your profile](%{profile_page_url}/activity/bookmarks). Just select your profile picture at the upper right &#8599;
         not_found: |-
-          Uh oh, I don’t see any bookmarks in this topic. Did you find the bookmark under each post?  Use the show more <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> to reveal additional actions if needed.
+          Uh oh, I don’t see any bookmarks in this topic. Did you find the bookmark under each post?  Use the show more <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> to reveal additional actions if needed.
 
       emoji:
         instructions: |-
@@ -247,7 +247,7 @@ en:
 
           - Type colon <kbd>:</kbd> then complete the emoji name `:tada:`
 
-          - Press the emoji button <img src="%{base_uri}/images/font-awesome-smile.png" width="16" height="16"> in the editor, or on your mobile keyboard
+          - Press the emoji button <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> in the editor, or on your mobile keyboard
         reply: |-
           That’s :sparkles: _emojitastic!_ :sparkles:
         not_found: |-
@@ -255,7 +255,7 @@ en:
 
           Try typing a colon <kbd>:</kbd> to bring up the emoji picker, then type the first few letters of what you want, such as `:bird:`
 
-          Or, press the emoji button <img src="%{base_uri}/images/font-awesome-smile.png" width="16" height="16"> in the editor.
+          Or, press the emoji button <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> in the editor.
 
           (If you are on a mobile device, you can also enter Emoji directly from your keyboard, too.)
 
@@ -277,21 +277,21 @@ en:
 
           >  :imp: I wrote something nasty here
 
-          I guess you know what to do. Go ahead and **flag this post** <img src="%{base_uri}/images/font-awesome-flag.png" width="16" height="16"> as inappropriate!
+          I guess you know what to do. Go ahead and **flag this post** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> as inappropriate!
         reply: |-
           [Our staff](/groups/staff) will be privately notified about your flag. If enough community members flag a post, it will also be automatically hidden as a precaution. (Since I didn’t actually write a nasty post :angel:, I’ve gone ahead and removed the flag for now.)
         not_found: |-
-          Oh no, my nasty post hasn’t been flagged yet. :worried: Can you flag it as inappropriate using the **flag** <img src="%{base_uri}/images/font-awesome-flag.png" width="16" height="16">? Don’t forget to use the show more button <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> to reveal more actions for each post.
+          Oh no, my nasty post hasn’t been flagged yet. :worried: Can you flag it as inappropriate using the **flag** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Don’t forget to use the show more button <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> to reveal more actions for each post.
 
       search:
         instructions: |-
-          _psst_ … I’ve hidden a surprise in this topic. If you’re up for the challenge, **select the search icon** <img src="%{base_uri}/images/font-awesome-search.png" width="16" height="16"> at the top right &#8599; to search for it.
+          _psst_ … I’ve hidden a surprise in this topic. If you’re up for the challenge, **select the search icon** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> at the top right &#8599; to search for it.
 
           Try searching for the term "capy&#8203;bara" in this topic
         hidden_message: |-
           How did you miss this capybara? :wink:
 
-          <img src="%{base_uri}/images/capybara-eating.gif"/>
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
           Did you notice you’re now back at the beginning? Feed this poor hungry capybara by **replying with the `:herb:` emoji** and you’ll be automatically taken to the end.
         reply: |-
@@ -303,7 +303,7 @@ en:
 
           - If you have a physical :keyboard:, press <kbd>?</kbd> to view our handy keyboard shortcuts.
         not_found: |-
-          Hmm… looks like you might be having trouble. Sorry about that. Did you search <img src="%{base_uri}/images/font-awesome-search.png" width="16" height="16"> for the term **capy&#8203;bara**?
+          Hmm… looks like you might be having trouble. Sorry about that. Did you search <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> for the term **capy&#8203;bara**?
 
       end:
         message: |-
@@ -336,7 +336,7 @@ en:
         not_found: |-
           It looks like you’ve yet to edit the [post](%{url}) I created for you. Can you try again?
 
-          Use the <img src="%{base_uri}/images/font-awesome-pencil.png" width="16" height="16"> icon to bring up the editor.
+          Use the <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16"> icon to bring up the editor.
         reply: |-
           Great work!
 
@@ -346,9 +346,9 @@ en:
         instructions: |-
           If you’d like to withdraw a post you made, you can delete it.
 
-          Go ahead and **delete** any of your posts above by using the <img src="%{base_uri}/images/font-awesome-trash.png" width="16" height="16"> **delete** action. Don’t delete the first post, though!
+          Go ahead and **delete** any of your posts above by using the <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> **delete** action. Don’t delete the first post, though!
         not_found: |-
-          I don’t see any deleted posts yet? Remember <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> show more will reveal <img src="%{base_uri}/images/font-awesome-trash.png" width="16" height="16"> delete.
+          I don’t see any deleted posts yet? Remember <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> show more will reveal <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> delete.
         reply: |-
           Whoa! :boom:
 
@@ -359,9 +359,9 @@ en:
         instructions: |-
           Oh no! It looks like I accidentally deleted a new post that I just created for you.
 
-          Can you do me a favor and <img src="%{base_uri}/images/font-awesome-rotate-left.png" width="16" height="16"> **undelete** it?
+          Can you do me a favor and <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **undelete** it?
         not_found: |-
-          Having trouble? Remember <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> show more will reveal <img src="%{base_uri}/images/font-awesome-rotate-left.png" width="16" height="16"> undelete.
+          Having trouble? Remember <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> show more will reveal <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> undelete.
         reply: |-
           Phew, that was a close one! Thanks for fixing that :wink:
 
@@ -397,11 +397,11 @@ en:
 
       poll:
         instructions: |-
-          Did you know you can add a poll to any post? Try using the <img src="%{base_uri}/images/font-awesome-gear.png" width="16" height="16"> gear in the editor to **build a poll**.
+          Did you know you can add a poll to any post? Try using the <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> gear in the editor to **build a poll**.
         not_found: |-
           Whoops! There wasn’t any poll in your reply.
 
-          Use the <img src="%{base_uri}/images/font-awesome-gear.png" width="16" height="16"> gear icon in the editor, or copy and paste this poll in your next reply:
+          Use the <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> gear icon in the editor, or copy and paste this poll in your next reply:
 
           ```text
           [poll]
@@ -425,12 +425,12 @@ en:
           - When your post needs lots of optional details that may be overwhelming when read all at once.
 
           [details=Select this to see how it works!]
-          1. Select the <img src="%{base_uri}/images/font-awesome-gear.png" width="16" height="16"> gear in the editor.
+          1. Select the <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> gear in the editor.
           2. Select "Hide Details".
           3. Edit the details summary and add your content.
           [/details]
 
-          Can you use the <img src="%{base_uri}/images/font-awesome-gear.png" width="16" height="16"> gear in the editor to add a details section to your next reply?
+          Can you use the <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> gear in the editor to add a details section to your next reply?
         not_found: |-
           Having trouble creating a details widget? Try including the following in your next reply:
 

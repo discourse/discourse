@@ -162,12 +162,12 @@ ko:
           - https://en.wikipedia.org/wiki/Death_by_coconut
           - https://en.wikipedia.org/wiki/Calculator_spelling
         reply: |-
-          대단해! 이 기능은 가장 <img src="%{base_uri}/images/font-awesome-link.png" width="16" height="16">한 링크에 작동해. 잊지마. 줄 하나 당  링크 하나씩이야. 주소 앞이나 뒤에 무언가가 있으면 작동하지 않아.
+          대단해! 이 기능은 가장 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16">한 링크에 작동해. 잊지마. 줄 하나 당  링크 하나씩이야. 주소 앞이나 뒤에 무언가가 있으면 작동하지 않아.
       images:
         instructions: |-
           유니콘 사진이야.
 
-          <img src="%{base_uri}/images/unicorn.png" width="520" height="520">
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
 
           (당연히 그렇겠지만) 맘에 들면 이 포스트 아래에 있는 '좋아요'버튼을 눌러봐.
 
@@ -216,11 +216,11 @@ ko:
           내 포스트에서 아무 글이나 선택해도 <kbd>**인용하기**</kbd> 버튼이 뜰거야. 글을 선택하고 **답글쓰기** 를 눌러도 돼! 다시 한 번 해 볼래?
       bookmark:
         instructions: |-
-          더 알고 싶다면 아래에 있는 이걸<img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> 선택한 다음 <img src="%{base_uri}/images/font-awesome-bookmark.png" width="16" height="16"> **이 개인메시지 북마크**를 하렴.  너의 미래에 보내는 좋은 선물:gift:이 되겠지!
+          더 알고 싶다면 아래에 있는 이걸<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 선택한 다음 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **이 개인메시지 북마크**를 하렴.  너의 미래에 보내는 좋은 선물:gift:이 되겠지!
         reply: |-
           대단해! 이제는 [프로필의 북마크 탭](%{profile_page_url}/activity/bookmarks)만 눌러도 우리의 개인적인 대화를 손쉽게 뒤돌아 볼 수 있어. 우측 상단에 있는 프로필 사진만 선택하면 돼. &#8599;
         not_found: |-
-          어라, 이 토픽에는 북마크가 없는데? 포스트 별로 있는 북마크 버튼을 찾았니? 더 보기<img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> 를 눌러서 필요한 추가 기능이 있는지 살펴 봐.
+          어라, 이 토픽에는 북마크가 없는데? 포스트 별로 있는 북마크 버튼을 찾았니? 더 보기<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 를 눌러서 필요한 추가 기능이 있는지 살펴 봐.
       emoji:
         instructions: |-
           내가 답글에서 조그마한 그림을 쓰는 걸 봤겠지?:blue_car::dash: 이런 걸 [이모지 (emoji)](https://en.wikipedia.org/wiki/Emoji)라고 해. 너도 답글에 **이모지를 추가**해 볼래? 아래 중에서 아무거나 해도 돼.
@@ -229,7 +229,7 @@ ko:
 
           - 콜론<kbd>:</kbd>을 입력하고 이모지 이름 `:tada:`를 완성해봐.
 
-          - 에디터에서 <img src="%{base_uri}/images/font-awesome-smile.png" width="16" height="16"> 이모지 버튼을 누르거나, 모바일 키보드를 사용해봐.
+          - 에디터에서 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> 이모지 버튼을 누르거나, 모바일 키보드를 사용해봐.
         reply: |-
           그거 정말 :sparkles: _이모지스럽네!_ :sparkles:
         not_found: |-
@@ -237,7 +237,7 @@ ko:
 
           콜론 <kbd>:</kbd> 을 입력하면 이모지 선택기를 띄울 수 있어. 그럼 몇자만 입력해도 원하는 이모지를 찾을 수 있지. 예를 들어 ':bird:'라고 입력하면 돼.
 
-          아니면, 편집기에서 이모지 버튼 <img src="%{base_uri}/images/font-awesome-smile.png" width="16" height="16"> 을 눌러도 상관없어.
+          아니면, 편집기에서 이모지 버튼 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> 을 눌러도 상관없어.
 
           (모바일 기기를 가지고 있으면, 키보드에서 이모지를 바로 입력할 수도 있어.)
       mention:
@@ -257,20 +257,20 @@ ko:
 
           > :imp: 어쩌고 저쩌고 나쁜 글
 
-          뭘 할지 잘 알고 있지? **이 포스트 신고하기** <img src="%{base_uri}/images/font-awesome-flag.png" width="16" height="16"> 를 눌러서 부적절하다고 알려줘!
+          뭘 할지 잘 알고 있지? **이 포스트 신고하기** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> 를 눌러서 부적절하다고 알려줘!
         reply: |-
           [우리의 운영진](/groups/staff)은 니가 한 신고내용을 개인 메시지로 알림받게 될 거야. 충분한 커뮤니티 회원들이 신고를 하면, 포스트의 내용이 숨겨지고 사전경고가 걸리게 돼.(난 실제로 나쁜 글을 쓴 건 아니니까:angel:, 이제 신고를 지울게.)
         not_found: |-
-          아이고, 나의 나쁜 포스트가 아직 신고가 안됐네. :worried: 부적절한 게시물로 **신고** 해주겠니 <img src="%{base_uri}/images/font-awesome-flag.png" width="16" height="16">? 더 보기 버튼을 누르면 <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> 포스트에 수행할 기능을 더 볼 수 있다는 걸 잊지마.
+          아이고, 나의 나쁜 포스트가 아직 신고가 안됐네. :worried: 부적절한 게시물로 **신고** 해주겠니 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? 더 보기 버튼을 누르면 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 포스트에 수행할 기능을 더 볼 수 있다는 걸 잊지마.
       search:
         instructions: |-
-          이봐, 내가 이 토픽에 놀라운 걸 숨겼다구. 찾아보고 싶다면, 우측 상단에 있는 **검색 아이콘을** <img src="%{base_uri}/images/font-awesome-search.png" width="16" height="16">  선택해서 &#8599; 찾아봐.
+          이봐, 내가 이 토픽에 놀라운 걸 숨겼다구. 찾아보고 싶다면, 우측 상단에 있는 **검색 아이콘을** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16">  선택해서 &#8599; 찾아봐.
 
           이 토픽에서  "capy&#8203;bara"를 찾으면 돼.
         hidden_message: |-
           어떻게 이 capybara를 놓칠 수 있어? :wink:
 
-          <img src="%{base_uri}/images/capybara-eating.gif"/>
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
           다시 처음으로 온 걸 눈치챘어? 이 배고픈 불쌍한 capybara에게 **`:herb:` emoji로 답을 해서** 먹이를 주렴. 그러면 자동으로 끝으로 가게 될거야.
         reply: |-
@@ -282,7 +282,7 @@ ko:
 
           - 진짜 실물 :keyboard:가 있다면, <kbd>?</kbd>를 눌러서 간편한 단축키가 뭐가 있는지 알아봐.
         not_found: |-
-          흠.... 아무래도 문제가 있어 보이네. 미안해. 검색<img src="%{base_uri}/images/font-awesome-search.png" width="16" height="16">을 눌러서 **capy&#8203;bara**를 찾아봤어?
+          흠.... 아무래도 문제가 있어 보이네. 미안해. 검색<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16">을 눌러서 **capy&#8203;bara**를 찾아봤어?
       certificate:
         alt: '목표달성 인증'
     advanced_user_narrative:
