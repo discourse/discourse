@@ -65,7 +65,7 @@ module Scheduler
       db, job, desc = @queue.deq(non_block)
       db ||= RailsMultisite::ConnectionManagement::DEFAULT
 
-      RailsMultisite::ConnectionManagement.with_connection(db: db) do
+      RailsMultisite::ConnectionManagement.with_connection(db) do
         begin
           job.call
         rescue => ex

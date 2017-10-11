@@ -126,7 +126,7 @@ module Jobs
         begin
           exception = {}
 
-          RailsMultisite::ConnectionManagement.with_connection(db: db) do
+          RailsMultisite::ConnectionManagement.with_connection(db) do
             begin
               I18n.locale = SiteSetting.default_locale || "en"
               I18n.ensure_all_loaded!

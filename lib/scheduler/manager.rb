@@ -77,7 +77,7 @@ module Scheduler
           @mutex.synchronize { info.write! }
 
           if @manager.enable_stats
-            RailsMultisite::ConnectionManagement.with_connection(db: "default") do
+            RailsMultisite::ConnectionManagement.with_connection("default") do
               stat = SchedulerStat.create!(
                 name: klass.to_s,
                 hostname: hostname,
@@ -102,7 +102,7 @@ module Scheduler
         info.prev_result = failed ? "FAILED" : "OK"
         info.current_owner = nil
         if stat
-          RailsMultisite::ConnectionManagement.with_connection(db: "default") do
+          RailsMultisite::ConnectionManagement.with_connection("default") do
             stat.update!(
               duration_ms: duration,
               live_slots_finish: GC.stat[:heap_live_slots],
