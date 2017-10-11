@@ -106,12 +106,17 @@ module Scheduler
         info.prev_result = failed ? "FAILED" : "OK"
         info.current_owner = nil
         if stat
-          stat.update!(
-            duration_ms: duration,
-            live_slots_finish: GC.stat[:heap_live_slots],
-            success: !failed,
-            error: error
-          )
+          begin
+            RailsMultisite::ConnectionManagement.establish_connection(db: "default")
+            stat.update!(
+              duration_ms: duration,
+              live_slots_finish: GC.stat[:heap_live_slots],
+              success: !failed,
+              error: error
+            )
+          ensure
+            ActiveRecord::Base.connection_handler.clear_active_connections!
+          end
         end
         attempts(3) do
           @mutex.synchronize { info.write! }
