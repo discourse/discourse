@@ -50,7 +50,9 @@ module Jobs
 
       extract_images_from(post.cooked).each do |image|
         src = original_src = image['src']
-        src = "http:#{src}" if src.start_with?("//")
+        if src.start_with?("//")
+          src = "#{SiteSetting.force_https ? "https" : "http"}:#{src}"
+        end
 
         if is_valid_image_url(src)
           begin
