@@ -1,10 +1,11 @@
 import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Object.extend({
+  showDefault: null,
 
-  @computed
-  renderDiv() {
-    return this.get('statuses').length > 0 && !this.noDiv;
+  @computed('defaultIcon')
+  renderDiv(defaultIcon) {
+    return (defaultIcon || this.get('statuses').length > 0) && !this.noDiv;
   },
 
   @computed
@@ -60,6 +61,11 @@ export default Ember.Object.extend({
         result.closeTag = 'span';
       }
     });
+
+    let defaultIcon = this.get('defaultIcon');
+    if (results.length === 0 && defaultIcon) {
+      this.set('showDefault', defaultIcon);
+    }
 
     return results;
   }
