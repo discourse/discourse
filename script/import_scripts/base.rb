@@ -297,7 +297,6 @@ class ImportScripts::Base
 
     unless opts[:email].match(EmailValidator.email_regex)
       opts[:email] = "invalid#{SecureRandom.hex}@no-email.invalid"
-      opts[:ban_reason] = "Invalid import email address"
       puts "Invalid email #{original_email} for #{opts[:username]}. Using: #{opts[:email]}"
     end
 
@@ -344,27 +343,13 @@ class ImportScripts::Base
       end
     end
 
-    suspend_user(u, opts, true) if u.custom_fields['import_email']
-    post_create_action.try(:call, u) if u.persisted?
-
-    u # If there was an error creating the user, u.errors has the messages
-  end
-
-  def suspend_user(user, row, disable_email = false)
-    if row[:user_inactive_reason] == Constants::INACTIVE_MANUAL
-      user.suspended_at = Time.now
-      user.suspended_till = 200.years.from_now
-      ban_reason = row[:ban_reason].blank? ? 'Account deactivated by administrator' : row[:ban_reason] # TODO i18n
-    elsif row[:ban_start].present?
-      user.suspended_at = Time.zone.at(row[:ban_start])
-      user.suspended_till = row[:ban_end] > 0 ? Time.zone.at(row[:ban_end]) : 200.years.from_now
-      ban_reason = row[:ban_reason]
-    else
-      return
-    end
-
-    if disable_email
-      user_option = user.user_option
+    if u.custom_fields['import_email']
+      u.suspended_at = Time.zone.at(Time.now)
+      u.suspended_till = 200.years.from_now
+      u.active=false
+      u.save!
+      ban_reason = 'Invalid email address on import'
+      user_option = u.user_option
       user_option.email_digests = false
       user_option.email_private_messages = false
       user_option.email_direct = false
@@ -372,11 +357,9 @@ class ImportScripts::Base
       user_option.save!
     end
 
-    if user.save
-      StaffActionLogger.new(Discourse.system_user).log_user_suspend(user, ban_reason)
-    else
-      Rails.logger.error("Failed to suspend user #{user.username}. #{user.errors.try(:full_messages).try(:inspect)}")
-    end
+    post_create_action.try(:call, u) if u.persisted?
+
+    u # If there was an error creating the user, u.errors has the messages
   end
 
   def created_category(category)
