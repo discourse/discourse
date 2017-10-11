@@ -181,7 +181,7 @@ class DiscourseRedis
    :msetnx, :persist, :pexpire, :pexpireat, :psetex, :pttl, :rename, :renamenx, :rpop, :rpoplpush, :rpush, :rpushx, :sadd, :scard,
    :sdiff, :set, :setbit, :setex, :setnx, :setrange, :sinter, :sismember, :smembers, :sort, :spop, :srandmember, :srem, :strlen,
    :sunion, :ttl, :type, :watch, :zadd, :zcard, :zcount, :zincrby, :zrange, :zrangebyscore, :zrank, :zrem, :zremrangebyrank,
-   :zremrangebyscore, :zrevrange, :zrevrangebyscore, :zrevrank, :zrangebyscore, :evalsha, :eval].each do |m|
+   :zremrangebyscore, :zrevrange, :zrevrangebyscore, :zrevrank, :zrangebyscore ].each do |m|
     define_method m do |*args|
       args[0] = "#{namespace}:#{args[0]}" if @namespace
       DiscourseRedis.ignore_readonly { @redis.send(m, *args) }
