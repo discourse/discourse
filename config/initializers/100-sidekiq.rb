@@ -25,7 +25,7 @@ if Sidekiq.server?
 
     if !scheduler_hostname || scheduler_hostname.split(',').include?(`hostname`.strip)
       require 'scheduler/scheduler'
-      manager = Scheduler::Manager.new
+      manager = Scheduler::Manager.new($redis.without_namespace)
       Scheduler::Manager.discover_schedules.each do |schedule|
         manager.ensure_schedule!(schedule)
       end
