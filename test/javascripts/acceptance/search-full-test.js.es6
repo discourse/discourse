@@ -257,7 +257,6 @@ QUnit.test("update in filter through advanced search ui", assert => {
   fillIn('.search input.full-page-search', 'none');
   click('.search-advanced-btn');
 
-  console.log(find(".select-box-kit").html())
   expandSelectBox('.search-advanced-options .select-box-kit#in');
   selectBoxSelectRow('bookmarks', { selector: '.search-advanced-options .select-box-kit#in' });
   fillIn('.search-advanced-options .select-box-kit#in', 'bookmarks');
