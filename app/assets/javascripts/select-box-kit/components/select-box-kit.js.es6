@@ -165,8 +165,6 @@ export default Ember.Component.extend({
 
   @computed("computedValue", "computedContent.[]")
   selectedContent(computedValue, computedContent) {
-
-    console.log("selectedContent", computedValue)
     if (Ember.isNone(computedValue)) {
       return [];
     }
