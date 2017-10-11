@@ -1,5 +1,6 @@
 import SelectBoxKitComponent from "select-box-kit/components/select-box-kit";
 import computed from "ember-addons/ember-computed-decorators";
+const { get, isNone } = Ember;
 
 export default SelectBoxKitComponent.extend({
   classNames: "multi-combobox",
@@ -42,7 +43,7 @@ export default SelectBoxKitComponent.extend({
 
   @computed("none")
   computedNone(none) {
-    if (!Ember.isNone(none)) {
+    if (!isNone(none)) {
       this.set("none", { name: I18n.t(none), value: "none" });
     }
   },
@@ -65,8 +66,8 @@ export default SelectBoxKitComponent.extend({
     return (selectBox, computedValue) => {
       const filter = selectBox.get("filter").toLowerCase();
       return _.filter(content, c => {
-        return !computedValue.includes(Ember.get(c, "value")) &&
-          Ember.get(c, "name").toLowerCase().indexOf(filter) > -1;
+        return !computedValue.includes(get(c, "value")) &&
+          get(c, "name").toLowerCase().indexOf(filter) > -1;
       });
     };
   },

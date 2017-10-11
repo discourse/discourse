@@ -6,6 +6,7 @@ export default DropdownSelectBoxComponent.extend({
   classNames: "categories-admin-dropdown",
   headerIcon: `${iconHTML('bars')}${iconHTML('caret-down')}`.htmlSafe(),
   headerText: null,
+  actionNames: { create: "createCategory", reorder: "reorderCategories" },
 
   @computed
   content() {
@@ -29,11 +30,6 @@ export default DropdownSelectBoxComponent.extend({
     }
 
     return items;
-  },
-
-  actionNames: {
-    create: "createCategory",
-    reorder: "reorderCategories"
   },
 
   actions: {

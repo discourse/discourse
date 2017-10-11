@@ -3,6 +3,7 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 import computed from "ember-addons/ember-computed-decorators";
 import { buttonDetails } from "discourse/lib/notification-levels";
 import { allLevels } from "discourse/lib/notification-levels";
+const { get } = Ember;
 
 export default DropdownSelectBoxComponent.extend({
   classNames: "notifications-button",
@@ -13,7 +14,7 @@ export default DropdownSelectBoxComponent.extend({
   fullWidthOnMobile: true,
   content: allLevels,
   collectionHeight: "auto",
-  value: Em.computed.alias("notificationLevel"),
+  value: Ember.computed.alias("notificationLevel"),
   castInteger: true,
 
   @computed("selectedDetails.icon", "selectedDetails.key")
@@ -49,11 +50,11 @@ export default DropdownSelectBoxComponent.extend({
   templateForRow() {
     return (rowComponent) => {
       const content = rowComponent.get("content");
-      const name = Ember.get(content, "name");
+      const name = get(content, "name");
       const start = `${this.get("i18nPrefix")}.${name}${this.get("i18nPostfix")}`;
       const title = Handlebars.escapeExpression(I18n.t(`${start}.title`));
       const description = Handlebars.escapeExpression(I18n.t(`${start}.description`));
-      const icon = Ember.get(content, "originalContent.icon");
+      const icon = get(content, "originalContent.icon");
 
       return `
         <div class="icons">

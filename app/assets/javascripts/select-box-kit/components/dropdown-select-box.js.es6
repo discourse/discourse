@@ -1,5 +1,6 @@
 import computed from "ember-addons/ember-computed-decorators";
 import SelectBoxKitComponent from "select-box-kit/components/select-box-kit";
+const { get } = Ember;
 
 export default SelectBoxKitComponent.extend({
   classNames: "dropdown-select-box",
@@ -19,8 +20,8 @@ export default SelectBoxKitComponent.extend({
         template += `<div class="icons">${icon}</div>`;
       }
 
-      const title = Handlebars.escapeExpression(Ember.get(content, "name"));
-      const desc = Handlebars.escapeExpression(Ember.get(content, "originalContent.description"));
+      const title = Handlebars.escapeExpression(get(content, "name"));
+      const desc = Handlebars.escapeExpression(get(content, "originalContent.description"));
 
       template += `
         <div class="texts">

@@ -4,6 +4,7 @@ import { on } from "ember-addons/ember-computed-decorators";
 import computed from "ember-addons/ember-computed-decorators";
 import PermissionType from "discourse/models/permission-type";
 import Category from "discourse/models/category";
+const { get, isNone } = Ember;
 
 export default ComboBoxComponent.extend({
   classNames: "category-chooser",
@@ -19,8 +20,8 @@ export default ComboBoxComponent.extend({
     return (selectBox) => {
       const filter = selectBox.get("filter").toLowerCase();
       return _.filter(computedContent, c => {
-        const category = Category.findById(Ember.get(c, "value"));
-        const text = Ember.get(c, "name");
+        const category = Category.findById(get(c, "value"));
+        const text = get(c, "name");
         if (category && category.get("parentCategory")) {
           const categoryName = category.get("parentCategory.name");
           return _matchFunction(filter, text) || _matchFunction(filter, categoryName);
@@ -34,7 +35,7 @@ export default ComboBoxComponent.extend({
   @computed("rootNone", "rootNoneLabel")
   none(rootNone, rootNoneLabel) {
     if (this.siteSettings.allow_uncategorized_topics || this.get("allowUncategorized")) {
-      if (!Ember.isNone(rootNone)) {
+      if (!isNone(rootNone)) {
         return rootNoneLabel || "category.none";
       } else {
         return Category.findUncategorized();
@@ -65,14 +66,14 @@ export default ComboBoxComponent.extend({
     const excludeCategoryId = this.get("excludeCategoryId");
 
     return categories.filter(c => {
-      const categoryId = Ember.get(c, "value");
-      if (scopedCategoryId && categoryId !== scopedCategoryId && Ember.get(c, "originalContent.parent_category_id") !== scopedCategoryId) {
+      const categoryId = get(c, "value");
+      if (scopedCategoryId && categoryId !== scopedCategoryId && get(c, "originalContent.parent_category_id") !== scopedCategoryId) {
         return false;
       }
-      if (Ember.get(c, 'originalContent.isUncategorizedCategory') || excludeCategoryId === categoryId) {
+      if (get(c, 'originalContent.isUncategorizedCategory') || excludeCategoryId === categoryId) {
         return false;
       }
-      return Ember.get(c, 'originalContent.permission') === PermissionType.FULL;
+      return get(c, 'originalContent.permission') === PermissionType.FULL;
     });
   },
 
@@ -98,16 +99,16 @@ export default ComboBoxComponent.extend({
     let category;
 
     // If we have no id, but text with the uncategorized name, we can use that badge.
-    if (Ember.isEmpty(Ember.get(content, "value"))) {
+    if (Ember.isEmpty(get(content, "value"))) {
       const uncat = Category.findUncategorized();
-      if (uncat && uncat.get("name") === Ember.get(content, "name")) {
+      if (uncat && uncat.get("name") === get(content, "name")) {
         category = uncat;
       }
     } else {
-      category = Category.findById(parseInt(Ember.get(content, "value"), 10));
+      category = Category.findById(parseInt(get(content, "value"), 10));
     }
 
-    if (!category) return Ember.get(content, "name");
+    if (!category) return get(content, "name");
     let result = categoryBadgeHTML(category, {link: false, allowUncategorized: true, hideParent: true});
     const parentCategoryId = category.get("parent_category_id");
 

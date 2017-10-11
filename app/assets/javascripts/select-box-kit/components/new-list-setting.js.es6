@@ -6,13 +6,13 @@ export default MultiComboBoxComponent.extend({
 
   classNames: "new-list-setting",
 
-  @computed("choices.[]")
-  computedContent(choices) {
-    return this.formatContents(choices.split(this.get("tokenSeparator")));
+  @computed("choices.[]", "tokenSeparator")
+  computedContent(choices, tokenSeparator) {
+    return this.formatContents(choices.split(tokenSeparator));
   },
 
-  @computed("settingValue")
-  computedValue(settingValue) {
-    return settingValue.split(this.get("tokenSeparator"));
+  @computed("settingValue", "tokenSeparator")
+  computedValue(settingValue, tokenSeparator) {
+    return settingValue.split(tokenSeparator);
   }
 });

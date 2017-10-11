@@ -1,4 +1,6 @@
+import { on } from 'ember-addons/ember-computed-decorators';
 import computed from 'ember-addons/ember-computed-decorators';
+const { run } = Ember;
 
 export default Ember.Component.extend({
   layoutName: "select-box-kit/templates/components/select-box-kit/select-box-kit-row",
@@ -30,8 +32,17 @@ export default Ember.Component.extend({
   @computed("iconForRow", "content.[]")
   icon(iconForRow) { return iconForRow(this); },
 
+  @on("willDestroyElement")
+  _clearDebounce() {
+    const hoverDebounce = this.get("hoverDebounce");
+
+    if (Ember.isPresent(hoverDebounce)) {
+      run.cancel(hoverDebounce);
+    }
+  },
+
   mouseEnter() {
-    Ember.run.debounce(this, this._sendOnHoverAction, 32);
+    this.set("hoverDebounce", run.debounce(this, this._sendOnHoverAction, 32));
   },
 
   click() {
@@ -40,5 +51,5 @@ export default Ember.Component.extend({
 
   _sendOnHoverAction() {
     this.sendAction("onHover", this.get("content.value"));
-  },
+  }
 });

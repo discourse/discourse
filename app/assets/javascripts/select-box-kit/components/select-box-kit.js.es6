@@ -1,3 +1,4 @@
+const { get, isNone } = Ember;
 import { on, observes } from "ember-addons/ember-computed-decorators";
 import computed from "ember-addons/ember-computed-decorators";
 import { iconHTML } from "discourse-common/lib/icon-library";
@@ -57,18 +58,18 @@ export default Ember.Component.extend({
     return selectBox => {
       const filter = selectBox.get("filter").toLowerCase();
       return _.filter(content, c => {
-        return Ember.get(c, "name").toLowerCase().indexOf(filter) > -1;
+        return get(c, "name").toLowerCase().indexOf(filter) > -1;
       });
     };
   },
 
   nameForContent(content) {
-    if (Ember.isNone(content)) {
+    if (isNone(content)) {
       return null;
     }
 
     if (typeof content === "object") {
-      return Ember.get(content, this.get("nameProperty"));
+      return get(content, this.get("nameProperty"));
     }
 
     return content;
@@ -79,7 +80,7 @@ export default Ember.Component.extend({
     case "string":
       return this._castInteger(content);
     default:
-      return this._castInteger(Ember.get(content, this.get("valueAttribute")));
+      return this._castInteger(get(content, this.get("valueAttribute")));
     }
   },
 
@@ -102,7 +103,7 @@ export default Ember.Component.extend({
 
   @computed("value", "none", "computedContent.firstObject.value")
   computedValue(value, none, firstContentValue) {
-    if (Ember.isNone(value) && Ember.isNone(none)) {
+    if (isNone(value) && isNone(none)) {
       return this._castInteger(firstContentValue);
     }
 
@@ -111,7 +112,7 @@ export default Ember.Component.extend({
 
   @computed("selectedContent.firstObject.name")
   headerText(name) {
-    return Ember.isNone(name) ? I18n.t("select_box.default_header_text") : name;
+    return isNone(name) ? I18n.t("select_box.default_header_text") : name;
   },
 
   @computed
@@ -128,9 +129,9 @@ export default Ember.Component.extend({
   iconForRow() {
     return rowComponent => {
       const content = rowComponent.get("content");
-      if (Ember.get(content, "originalContent.icon")) {
-        const iconName = Ember.get(content, "originalContent.icon");
-        const iconClass = Ember.get(content, "originalContent.iconClass");
+      if (get(content, "originalContent.icon")) {
+        const iconName = get(content, "originalContent.icon");
+        const iconClass = get(content, "originalContent.iconClass");
         return iconHTML(iconName, { class: iconClass });
       }
 
@@ -151,7 +152,7 @@ export default Ember.Component.extend({
 
   @computed("none")
   computedNone(none) {
-    if (Ember.isNone(none)) {
+    if (isNone(none)) {
       return null;
     }
 
@@ -165,7 +166,7 @@ export default Ember.Component.extend({
 
   @computed("computedValue", "computedContent.[]")
   selectedContent(computedValue, computedContent) {
-    if (Ember.isNone(computedValue)) {
+    if (isNone(computedValue)) {
       return [];
     }
 
@@ -262,11 +263,11 @@ export default Ember.Component.extend({
 
   @computed("highlightedValue", "computedContent.[]")
   highlightedContent(highlightedValue, computedContent) {
-    if (Ember.isNone(highlightedValue)) {
+    if (isNone(highlightedValue)) {
       return null;
     }
 
-    return computedContent.find(c => Ember.get(c, "value") === highlightedValue );
+    return computedContent.find(c => get(c, "value") === highlightedValue );
   },
 
   @computed("filter", "computedContent.[]", "computedValue.[]")
@@ -331,7 +332,7 @@ export default Ember.Component.extend({
       return parseInt(value, 10);
     }
 
-    return Ember.isNone(value) ? value : value.toString();
+    return isNone(value) ? value : value.toString();
   },
 
   _applyFixedPosition(width, height) {
