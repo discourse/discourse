@@ -346,15 +346,22 @@ class ImportScripts::Base
     if u.custom_fields['import_email']
       u.suspended_at = Time.zone.at(Time.now)
       u.suspended_till = 200.years.from_now
+      ban_reason = 'Invalid email address on import'
       u.active=false
       u.save!
-      ban_reason = 'Invalid email address on import'
+
       user_option = u.user_option
       user_option.email_digests = false
       user_option.email_private_messages = false
       user_option.email_direct = false
       user_option.email_always = false
       user_option.save!
+      if u.save
+        StaffActionLogger.new(Discourse.system_user).log_user_suspend(u, ban_reason)
+      else
+        Rails.logger.error("Failed to suspend user #{u.username}. #{u.errors.try(:full_messages).try(:inspect)}")
+      end
+
     end
 
     post_create_action.try(:call, u) if u.persisted?
