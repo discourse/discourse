@@ -32,24 +32,23 @@
   {{/if}}
 
   {{#if hasTopics}}
-      {{topic-list
-          highlightLastVisited=true
-          top=top
-          showTopicPostBadges=showTopicPostBadges
-          showPosters=true
-          currentUser=currentUser
-          canBulkSelect=canBulkSelect
-          changeSort="changeSort"
-          toggleBulkSelect="toggleBulkSelect"
-          hideCategory=model.hideCategory
-          order=order
-          ascending=ascending
-          bulkSelectEnabled=bulkSelectEnabled
-          selected=selected
-          expandGloballyPinned=expandGloballyPinned
-          expandAllPinned=expandAllPinned
-          category=category
-          topics=model.topics}}
+    {{topic-list
+      highlightLastVisited=true
+      top=top
+      showTopicPostBadges=showTopicPostBadges
+      showPosters=true
+      canBulkSelect=canBulkSelect
+      changeSort="changeSort"
+      toggleBulkSelect="toggleBulkSelect"
+      hideCategory=model.hideCategory
+      order=order
+      ascending=ascending
+      bulkSelectEnabled=bulkSelectEnabled
+      selected=selected
+      expandGloballyPinned=expandGloballyPinned
+      expandAllPinned=expandAllPinned
+      category=category
+      topics=model.topics}}
   {{/if}}
 {{/discovery-topics-list}}
 

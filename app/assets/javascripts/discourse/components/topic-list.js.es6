@@ -69,7 +69,7 @@ export default Ember.Component.extend({
       return;
     }
 
-    let user = Discourse.User.current();
+    let user = this.currentUser;
     if (!user || !user.previous_visit_at) {
       return;
     }
