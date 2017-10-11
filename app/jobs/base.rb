@@ -126,23 +126,23 @@ module Jobs
         begin
           exception = {}
 
-          begin
-            RailsMultisite::ConnectionManagement.establish_connection(db: db)
-            I18n.locale = SiteSetting.default_locale || "en"
-            I18n.ensure_all_loaded!
+          RailsMultisite::ConnectionManagement.with_connection(db: db) do
             begin
-              execute(opts)
+              I18n.locale = SiteSetting.default_locale || "en"
+              I18n.ensure_all_loaded!
+              begin
+                execute(opts)
+              rescue => e
+                exception[:ex] = e
+                exception[:other] = { problem_db: db }
+              end
             rescue => e
               exception[:ex] = e
+              exception[:message] = "While establishing database connection to #{db}"
               exception[:other] = { problem_db: db }
+            ensure
+              total_db_time += Instrumenter.stats.duration_ms
             end
-          rescue => e
-            exception[:ex] = e
-            exception[:message] = "While establishing database connection to #{db}"
-            exception[:other] = { problem_db: db }
-          ensure
-            ActiveRecord::Base.connection_handler.clear_active_connections!
-            total_db_time += Instrumenter.stats.duration_ms
           end
 
           exceptions << exception unless exception.empty?
