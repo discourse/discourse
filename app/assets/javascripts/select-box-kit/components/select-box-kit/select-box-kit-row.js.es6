@@ -18,10 +18,14 @@ export default Ember.Component.extend({
   template(templateForRow) { return templateForRow(this); },
 
   @computed("shouldHighlightRow", "highlightedValue")
-  isHighlighted(shouldHighlightRow) { return shouldHighlightRow(this); },
+  isHighlighted(shouldHighlightRow) {
+    return shouldHighlightRow(this);
+  },
 
-  @computed("shouldSelectRow", "value")
-  isSelected(shouldSelectRow) { return shouldSelectRow(this); },
+  @computed("shouldSelectRow", "computedValue.[]")
+  isSelected(shouldSelectRow) {
+    return shouldSelectRow(this);
+  },
 
   @computed("iconForRow", "content.[]")
   icon(iconForRow) { return iconForRow(this); },

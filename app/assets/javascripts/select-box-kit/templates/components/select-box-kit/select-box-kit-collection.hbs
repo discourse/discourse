@@ -1,5 +1,5 @@
 {{#if none}}
-  {{#if selectedContents}}
+  {{#if selectedContent}}
     {{select-box-kit/select-box-kit-none-row
       content=none
       templateForRow=templateForNoneRow
@@ -10,7 +10,7 @@
       highlightedValue=highlightedValue
       onClearSelection=onClearSelection
       onHover=onHoverRow
-      value=value
+      value=computedValue
     }}
   {{/if}}
 {{/if}}
@@ -26,7 +26,7 @@
     highlightedValue=highlightedValue
     onSelect=onSelect
     onHover=onHoverRow
-    value=value
+    value=computedValue
   }}
 {{else}}
   {{#if noContentLabel}}

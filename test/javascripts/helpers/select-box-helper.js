@@ -71,7 +71,7 @@ function selectBox(selector) { // eslint-disable-line no-unused-vars
   function headerHelper(header) {
     return {
       name: function() {
-        return header.find('.name').text().trim();
+        return header.attr('data-name');
       },
       icon: function() { return header.find('.icon'); },
       title: function() { return header.attr('title'); },

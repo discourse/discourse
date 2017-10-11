@@ -21,7 +21,7 @@ import computed from "ember-addons/ember-computed-decorators";
 export default SelectBoxKitComponent.extend({
   classNames: "combobox",
 
-  @computed("selectedContents.firstObject.name", "computedNone.name")
+  @computed("selectedContent.firstObject.name", "computedNone.name")
   headerText(selectedName, noneName) {
     if (Ember.isNone(selectedName)) {
       if (Ember.isNone(noneName)) {

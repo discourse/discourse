@@ -14,6 +14,7 @@ export default DropdownSelectBoxComponent.extend({
   content: allLevels,
   collectionHeight: "auto",
   value: Em.computed.alias("notificationLevel"),
+  castInteger: true,
 
   @computed("selectedDetails.icon", "selectedDetails.key")
   headerIcon(icon, key) {

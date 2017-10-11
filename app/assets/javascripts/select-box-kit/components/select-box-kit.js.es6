@@ -53,15 +53,6 @@ export default Ember.Component.extend({
     }
   },
 
-  @computed("id")
-  computedId(id) {
-    if (Ember.isNone(id)) {
-      return false;
-    }
-
-    return `select-box-kit-id_${id}`;
-  },
-
   filterFunction(content) {
     return selectBox => {
       const filter = selectBox.get("filter").toLowerCase();
@@ -111,16 +102,14 @@ export default Ember.Component.extend({
 
   @computed("value", "none", "computedContent.firstObject.value")
   computedValue(value, none, firstContentValue) {
-
-    console.log("---computedValue", typeof value, value, none, firstContentValue)
     if (Ember.isNone(value) && Ember.isNone(none)) {
-      return firstContentValue;
+      return this._castInteger(firstContentValue);
     }
 
-    return value;
+    return this._castInteger(value);
   },
 
-  @computed("selectedContents.firstObject.name")
+  @computed("selectedContent.firstObject.name")
   headerText(name) {
     return Ember.isNone(name) ? I18n.t("select_box.default_header_text") : name;
   },
@@ -175,14 +164,14 @@ export default Ember.Component.extend({
   },
 
   @computed("computedValue", "computedContent.[]")
-  selectedContents(computedValue, computedContent) {
+  selectedContent(computedValue, computedContent) {
+
+    console.log("selectedContent", computedValue)
     if (Ember.isNone(computedValue)) {
       return [];
     }
 
-    console.log(typeof computedValue, typeof this.get("value"), computedContent.map(x => typeof x.value))
-
-    return [ computedContent.findBy("value", computedValue) ];
+    return [ computedContent.findBy("value", this._castInteger(computedValue)) ];
   },
 
   @on("willDestroyElement")
@@ -282,12 +271,12 @@ export default Ember.Component.extend({
     return computedContent.find(c => Ember.get(c, "value") === highlightedValue );
   },
 
-  @computed("filter", "computedContent.[]")
-  filteredContent(filter, computedContent) {
+  @computed("filter", "computedContent.[]", "computedValue.[]")
+  filteredContent(filter, computedContent, computedValue) {
     let filteredContent = computedContent;
 
     if (!Ember.isEmpty(filter)) {
-      filteredContent = this.filterFunction(filteredContent)(this);
+      filteredContent = this.filterFunction(filteredContent)(this, computedValue);
 
       if (!Ember.isEmpty(filteredContent)) {
         this.set("highlightedValue", filteredContent.get("firstObject.value"));
@@ -344,7 +333,7 @@ export default Ember.Component.extend({
       return parseInt(value, 10);
     }
 
-    return value;
+    return Ember.isNone(value) ? value : value.toString();
   },
 
   _applyFixedPosition(width, height) {
@@ -364,7 +353,7 @@ export default Ember.Component.extend({
   },
 
   defaultOnSelect() {
-    this.setProperties({ isExpanded: false, filter: "" });
+    this.setProperties({ highlightedValue: null, isExpanded: false, filter: "" });
   },
 
   keyDown(event) {

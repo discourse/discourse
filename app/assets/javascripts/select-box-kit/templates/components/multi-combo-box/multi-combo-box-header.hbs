@@ -1,6 +1,6 @@
 <ul class="choices">
-  {{#each selectedContents as |selectedContent|}}
-    <li class="selected-value">
+  {{#each selectedContent as |selectedContent|}}
+    <li tabindex="-1" data-value={{selectedContent.value}} data-name={{selectedContent.name}} class="selected-value">
       <span class="delete-icon" {{action onDeselect selectedContent.value bubbles=false}}>
         {{d-icon "times"}}
       </span>
@@ -13,4 +13,16 @@
       {{i18n text}}
     </li>
   {{/each}}
+
+  <li class="filter">
+    {{input
+      class="filter-query"
+      key-up=onFilterChange
+      autocomplete="off"
+      autocorrect="off"
+      autocapitalize="off"
+      spellcheck=false
+      value=filter
+    }}
+  </li>
 </ul>
