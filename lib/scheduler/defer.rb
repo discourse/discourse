@@ -63,17 +63,14 @@ module Scheduler
     # using non_block to match Ruby #deq
     def do_work(non_block = false)
       db, job, desc = @queue.deq(non_block)
+      db ||= RailsMultisite::ConnectionManagement::DEFAULT
 
-      begin
-        if db
-          RailsMultisite::ConnectionManagement.with_connection(db: db) do
-            job.call
-          end
-        else
+      RailsMultisite::ConnectionManagement.with_connection(db: db) do
+        begin
           job.call
+        rescue => ex
+          Discourse.handle_job_exception(ex, message: "Running deferred code '#{desc}'")
         end
-      rescue => ex
-        Discourse.handle_job_exception(ex, message: "Running deferred code '#{desc}'")
       end
     rescue => ex
       Discourse.handle_job_exception(ex, message: "Processing deferred code queue")
