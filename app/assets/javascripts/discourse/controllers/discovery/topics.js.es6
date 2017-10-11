@@ -25,6 +25,9 @@ const controllerOpts = {
     this.setProperties({ order: "default", ascending: false });
   },
 
+  // Overwrite this to perform client side filtering of topics, if desired
+  filteredTopics: Ember.computed.alias('model.topics'),
+
   actions: {
 
     changeSort(sortBy) {
