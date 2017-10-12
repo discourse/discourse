@@ -18,7 +18,7 @@ module ImportExport
 
     def import_users
       @export_data[:users].each do |u|
-        existing = User.with_email(email: u[:email]).first
+        existing = User.with_email(u[:email]).first
         if existing
           if existing.custom_fields["import_id"] != u[:id]
             existing.custom_fields["import_id"] = u[:id]
