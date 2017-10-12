@@ -52,7 +52,8 @@ export default Ember.Component.extend(bufferedRender({
       classes.push('has-excerpt');
     }
 
-    _.each(['liked', 'archived', 'bookmarked'],function(name) {
+
+    ['liked', 'archived', 'bookmarked', 'pinned'].forEach(name => {
       if (topic.get(name)) {
         classes.push(name);
       }

@@ -5,6 +5,9 @@ export default Ember.Component.extend({
   classNames: ['topic-list'],
   showTopicPostBadges: true,
 
+  // Overwrite this to perform client side filtering of topics, if desired
+  filteredTopics: Ember.computed.alias('topics'),
+
   _init: function(){
     this.addObserver('hideCategory', this.rerender);
     this.addObserver('order', this.rerender);

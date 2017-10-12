@@ -32,12 +32,6 @@
   {{/if}}
 
   {{#if hasTopics}}
-
-    {{plugin-outlet
-      name="discovery-before-topic-list"
-      tagName=""
-      args=(hash model=model category=category)}}
-
     {{topic-list
       highlightLastVisited=true
       top=top
@@ -54,7 +48,8 @@
       expandGloballyPinned=expandGloballyPinned
       expandAllPinned=expandAllPinned
       category=category
-      topics=filteredTopics}}
+      topics=model.topics
+      discoveryList=true}}
   {{/if}}
 {{/discovery-topics-list}}
 
