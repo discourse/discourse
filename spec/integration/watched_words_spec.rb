@@ -169,5 +169,13 @@ describe WatchedWord do
       }.to change { PostAction.count }.by(1)
       expect(PostAction.where(post_id: post.id, post_action_type_id: PostActionType.types[:inappropriate]).exists?).to eq(true)
     end
+
+    it "should not flag on rebake" do
+      post = Fabricate(:post, topic: Fabricate(:topic, user: tl2_user), user: tl2_user, raw: "I have coupon codes. Message me.")
+      Fabricate(:watched_word, action: WatchedWord.actions[:flag], word: "coupon")
+      expect {
+        post.rebake!
+      }.to_not change { PostAction.count }
+    end
   end
 end
