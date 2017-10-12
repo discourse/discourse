@@ -295,11 +295,11 @@ module SiteSettingExtension
     clean_name = name.to_s.sub("?", "").to_sym
 
     define_singleton_method clean_name do
-      if (c = @containers[provider.current_site])
-        c[name]
-      else
+      if (c = current[name]).nil?
         refresh!
         current[name]
+      else
+        c
       end
     end
 
