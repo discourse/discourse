@@ -3,7 +3,6 @@ require 'column_dropper'
 # fix any bust caches post initial migration
 ActiveRecord::Base.send(:subclasses).each { |m| m.reset_column_information }
 
-SiteSetting.refresh!
 uncat_id = SiteSetting.uncategorized_category_id
 uncat_id = -1 unless Numeric === uncat_id
 
