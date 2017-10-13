@@ -378,6 +378,9 @@ es:
       index:
         title: "Grupos"
         empty: "No hay grupos visibles."
+      title:
+        one: "Grupo"
+        other: "Grupos"
       activity: "Actividad"
       members: "Miembros"
       topics: "Temas"
@@ -527,6 +530,7 @@ es:
       admin_tooltip: "Este usuario es un administrador"
       blocked_tooltip: "El usuario está bloqueado"
       suspended_notice: "Este usuario ha sido suspendido hasta {{date}}."
+      suspended_permanently: "Este usuario está suspendido."
       suspended_reason: "Causa: "
       github_profile: "Github"
       email_activity_summary: "Resumen de actividad"
@@ -1021,6 +1025,7 @@ es:
       alt: 'Alt'
     select_box:
       default_header_text: Seleccionar...
+      no_content: Ningún resultado
       filter_placeholder: Buscar...
     emoji_picker:
       filter_placeholder: Buscar emoji
@@ -1382,7 +1387,9 @@ es:
         later_this_week: "Esta misma semana"
         this_weekend: "Este fin de semana"
         next_week: "Semana próxima"
+        two_weeks: "Dos semanas"
         next_month: "Próximo mes"
+        forever: "Siempre"
         pick_date_and_time: "Selecciona fecha y horario"
         set_based_on_last_post: "Cerrar basándose en el último post"
       publish_to_category:
@@ -2335,8 +2342,9 @@ es:
         by: "por"
       flags:
         title: "Reportes"
-        old: "Antiguo"
-        active: "Activo"
+        active_posts: "Posts reportados"
+        old_posts: "Posts reportados antiguos"
+        topics: "Temas reportados"
         agree: "De acuerdo"
         agree_title: "Confirmar esta indicación como válido y correcto."
         agree_flag_modal_title: "Estar de acuerdo y..."
@@ -2364,6 +2372,8 @@ es:
         clear_topic_flags: "Hecho"
         clear_topic_flags_title: "Este tema ha sido investigado y los problemas han sido resueltos. Haz clic en Hecho para eliminar los reportes."
         more: "(más respuestas...)"
+        suspend_user: "Suspender usuario"
+        suspend_user_title: "Suspender usuario por este post"
         dispositions:
           agreed: "coincidió"
           disagreed: "no coincidió"
@@ -2374,11 +2384,18 @@ es:
         system: "Sistema"
         error: "Algo salió mal"
         reply_message: "Responder"
-        no_results: "No hay reportes."
+        no_results: "No hay posts reportados."
         topic_flagged: "Este <strong>tema</strong> ha sido reportado."
+        show_full: "mostrar post completo"
         visit_topic: "Visita el tema para tomar medidas"
         was_edited: "El post fue editado después del primer reporte"
         previous_flags_count: "Este post ya fue marcado {{count}} veces."
+        show_details: "Mostrar detalles del reporte"
+        flagged_topics:
+          topic: "Tema"
+          type: "Tip"
+          users: "Usuarios"
+          last_flagged: "Última vez reportado"
         summary:
           action_type_3:
             one: "fuera de tema"
@@ -2916,6 +2933,7 @@ es:
         form:
           label: 'Nueva palabra:'
           placeholder: 'palabra completa o * como comodín'
+          placeholder_regexp: "expresión regular"
           add: 'Añadir'
           success: 'Añadida correctamente'
           upload: "Subir"
@@ -2977,10 +2995,14 @@ es:
         suspend_failed: "Algo salió mal baneando este usuario {{error}}"
         unsuspend_failed: "Algo salió mal quitando ban a este usuario {{error}}"
         suspend_duration: "¿Cuánto tiempo le gustaría aplicar ban al usuario? (days)"
-        suspend_duration_units: "(días)"
         suspend_reason_label: "¿Por qué lo suspendes? Este texto <b>será visible para todos</b> en la página de perfil del usuario y se mostrará al usuario cuando intente iniciar sesión. Sé conciso."
+        suspend_reason_hidden_label: "¿Por qué estás suspendiendo? Este texto será mostrado al usuario cuando intente iniciar sesión. Mantener corto."
         suspend_reason: "Causa"
+        suspend_reason_placeholder: "Motivo de la suspensión"
+        suspend_message: "Mensaje de email"
+        suspend_message_placeholder: "Opcionalmente, provee más información acerca de la suspensión y será enviada al usuario."
         suspended_by: "Suspendido por"
+        cant_suspend: "Este usuario no puede ser suspendido."
         delete_all_posts: "Eliminar todos los posts"
         delete_all_posts_confirm_MF: "Estás a punto de eliminar {POSTS, plural, one {1 post} other {# posts}} y {TOPICS, plural, one {1 topic} other {# topics}}. ¿Seguro?"
         suspend: "Suspender"

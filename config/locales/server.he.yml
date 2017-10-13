@@ -624,6 +624,8 @@ he:
       short_description: 'הצביעו עבור פוסט זה'
       long_form: 'הצבעתם לפוסט זה'
   user_activity:
+    no_default:
+      others: "אין פעילות."
     no_bookmarks:
       self: "אין לכם פוסטים שסומנו בסימניה, סימון פוסטים מאפשר לכם לגשת אליהם בקלות בהמשך."
       others: "אין סימניות."
@@ -2228,6 +2230,10 @@ he:
     see_more: "עוד"
     search_title: "חיפוש באתר זה"
     search_google: "גוגל"
+  login_required:
+    welcome_message: |
+      ## [ברוך בואך אל %{title}](#welcome)
+      נדרש חשבון. נא ליצור חשבון או להיכנס כדי להמשיך.
   terms_of_service:
     title: "תנאי השימוש"
     signup_form_message: 'קראתי את ואני מסכים/מה עם <a href="/tos" target="_blank">תנאי השירות</a>.'
@@ -2736,6 +2742,7 @@ he:
       long_description: |
         עיטור זה מוענק כדי לברך שני משתמשים חדשים בכל חודש בעבור תרומות מצטיינות שלהם, שנמדדות לפי תדירות הלייקים לפוסטים שלכם, וממי הם ניתנו.
     enthusiast:
+      name: נלהב
       description: ביקרו 10 ימים
     aficionado:
       description: ביקרו 100 ימים

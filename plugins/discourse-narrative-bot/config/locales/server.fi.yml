@@ -222,7 +222,7 @@ fi:
           <kbd>**Lainaa**</kbd>-painike ilmestyy, kun maalaat viestini tekstiä. **Vastaa**-painike käy yhtä hyvin, jos sinulla on tekstiä maalattuna. Kokeilisitko uudelleen?
       bookmark:
         instructions: |-
-          Jos haluat oppia lisää, valitse <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> tämän alta ja <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **lisää tämä yksityisviestiketju kirjanmerkkeihisi**.  Jos teet niin, sinua voi odottaa :gift: tulevaisuudessa!
+          Jos haluat oppia lisää, valitse <iimg src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> tämän alta ja <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **lisää tämä yksityisviestiketju kirjanmerkkeihisi**.  Jos teet niin, sinua voi odottaa :gift: tulevaisuudessa!
         reply: |-
           Erinomaista! Löydät yksityiskeskustelumme nyt helposti koska vain [profiilisi kirjanmerkkivälilehdeltä](%{profile_page_url}/activity/bookmarks). Klikkaat vain profiilikuvaasi oikeassa yläkulmasssa &#8599;
         not_found: |-
