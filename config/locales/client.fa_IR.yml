@@ -141,6 +141,7 @@ fa_IR:
         eu_west_2: "اروپا (لندن)"
         sa_east_1: "آمریکای جنوبی (سائوپائولو)"
         us_east_1: "شرق ایالات متحده (ویرجینیا شمالی)"
+        us_east_2: "شرق ایالات متحده (اوهایو)"
         us_gov_west_1: "AWS GovCloud (ایالات متحده)"
         us_west_1: "غرب ایالات متحده (کالیفرنیا شمالی)"
         us_west_2: "غرب ایالات متحده  (اورگان)"
@@ -337,10 +338,14 @@ fa_IR:
       join: "پیوستن به گروه"
       leave: "ترک گروه"
       request: "درخواست پیوستن به گروه"
+      message: "پیام"
       automatic_group: گروه خودکار
       closed_group: گروه بسته شده
       is_group_user: "شما عضو این گروه هستید"
       allow_membership_requests: "اجازه ارسال درخواست عضویت در گروه به کاربران"
+      membership_request:
+        submit: "ارسال درخواست"
+        title: "درخواست پیوستن به @%{group_name}"
       membership: "عضویت"
       name: "نام"
       user_count: "تعداد اعضا"
@@ -350,6 +355,8 @@ fa_IR:
       index:
         title: "گروه‌ها"
         empty: "هیچ گروه قابل نمایشی وجود ندارد."
+      title:
+        other: "گروه ها"
       activity: "فعالیت"
       members: "اعضا"
       topics: "موضوعات"
@@ -361,7 +368,7 @@ fa_IR:
         title: "چه کسی می‌تواند این گروه را ببیند؟"
         public: "همه"
         members: "صاحبان گروه، اعضا، و مدیران"
-        staff: "صاحبان گروه، و کارکنان"
+        staff: "صاحبان گروه و کارکنان"
         owners: "صاحبان گروه و مدیران"
       alias_levels:
         nobody: "هیچ‌کس"
@@ -497,6 +504,7 @@ fa_IR:
       admin_tooltip: "این کاربر یک ادمین است"
       blocked_tooltip: "این کاربر مسدود شده است"
       suspended_notice: "این کاربر تا {{date}} در وضعیت معلق است."
+      suspended_permanently: "این کاربر معلق شده."
       suspended_reason: "دلیل: "
       github_profile: "Github"
       email_activity_summary: "چکیده‌ی فعالیت"
@@ -974,12 +982,26 @@ fa_IR:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    select_box:
+      default_header_text: انتخاب...
+      no_content: چیزی یافت نشد.
+      filter_placeholder: جستجو...
+    emoji_picker:
+      people: مردم
+      nature: طبیعت
+      food: غذا
+      activity: فعالیت
+      travel: سفر
+      objects: اشیا
+      celebration: جشن
+      recent: اخیرا استفاده شده
     composer:
       emoji: "شکلک :)"
       more_emoji: "بیشتر..."
       options: "گزینه‌ها"
       whisper: "زمزمه"
       unlist: "از فهرست  پاک شده"
+      blockquote_text: "نقل‌قول"
       add_warning: "این یک هشدار رسمی است."
       toggle_whisper: "تغییر وضعیت زمزمه"
       toggle_unlisted: "تغییر وضعیت از لیست خارج شده"

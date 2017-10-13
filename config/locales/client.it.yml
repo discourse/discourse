@@ -1404,12 +1404,14 @@ it:
       jump_reply_down: passa a una risposta successiva
       deleted: "L'argomento è stato cancellato"
       topic_status_update:
-        title: "Imposta Timer Argomento"
+        title: "Timer Argomento"
         save: "Imposta Timer"
         num_of_hours: "Numero di ore:"
         remove: "Rimuovi Timer"
         publish_to: "Pubblica Su:"
         when: "Quando:"
+        public_timer_types: Timer Argomento
+        private_timer_types: Timer Argomento per Utente
       auto_update_input:
         later_today: "Più tardi oggi"
         tomorrow: "Domani"
@@ -2240,7 +2242,10 @@ it:
       tags: "Etichette"
       choose_for_topic: "scegli delle etichette opzionali per questo argomento"
       delete_tag: "Cancella Etichetta"
-      delete_confirm: "Sicuro di voler cancellare questa etichetta?"
+      delete_confirm:
+        one: "Sei sicuro di voler eliminare questa etichetta e rimuoverla da {{count}} argomenti a cui è assegnata?"
+        other: "Sei sicuro di voler eliminare questa etichetta e rimuoverla da {{count}} argomenti a cui è assegnata?"
+      delete_confirm_no_topics: "Sei sicuro di voler eliminare questa etichetta?"
       rename_tag: "Rinomina Etichetta"
       rename_instructions: "Scegli un altro nome per l'etichetta:"
       sort_by: "Ordina per:"

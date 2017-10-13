@@ -2153,8 +2153,45 @@ fi:
     visit_link_to_respond: "[Vieraile ketjussa](%{base_url}%{url}) vastataksesi."
     visit_link_to_respond_pm: "[Vieraile ketjussa](%{base_url}%{url}) vastataksesi."
     posted_by: "Käyttäjältä %{username} %{post_date}"
+    invited_group_to_private_message_body: |
+      %{username} kutsui ryhmän @%{group_name} yksityiskeskusteluun
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      sivustolla
+
+      > %{site_title} -- %{site_description}
+    invited_to_private_message_body: |
+      %{username} kutsui sinut yksityiskeskusteluun
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      sivustolla
+
+      > %{site_title} -- %{site_description}
+    invited_to_topic_body: |
+      %{username} kustui sinut keskusteluun
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      sivustolla
+
+      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm_group:
       title: "Ryhmä kutsuttiin yksityiskeskusteluun"
+      subject_template: "[%{email_prefix}] %{username} kutsui ryhmän %{group_name} yksityiskeskusteluun '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
     user_invited_to_private_message_pm:
       title: "Käyttäjä kutsuttiin yksityiskeskusteluun"
       subject_template: "[%{email_prefix}] %{username} kutsui sinut yksityiskeskusteluun '%{topic_title}'"

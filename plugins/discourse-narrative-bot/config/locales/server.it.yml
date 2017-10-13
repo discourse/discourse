@@ -162,7 +162,7 @@ it:
           - https://it.wikipedia.org/wiki/Pagina_principale
           - https://it.wikipedia.org/wiki/Traduzione
         reply: |-
-          Fantastico! Questo funzionerà per la maggior parte dei <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> collegamenti. Ricorda, deve essere su una riga _da solo_, con niente davanti o dietro.
+          Fantastico! Questo funzionerà per la maggior parte dei  <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> collegamenti. Ricorda, deve essere su una riga _da solo_, con niente davanti o dietro.
         not_found: |-
           Mi dispiace, non riesco a trovare il collegamento nella tua risposta! :cry:
 
@@ -235,7 +235,7 @@ it:
 
           - Digita due punti <kbd>:</kbd> poi completa il nome della emoji `:tada:`
 
-          - Premi il pulsante emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> nell'editor, oppure sulla tastiera del tuo dispositivo mobile
+          - Premi il pulsante emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16">  nell'editor, oppure sulla tastiera del tuo dispositivo mobile
         reply: |-
           Questo è :sparkles: _emojitastico!_ :sparkles:
         not_found: |-
@@ -270,7 +270,7 @@ it:
           Oh no, il mio brutto messaggio non è ancora stato segnalato. :worried: Puoi segnalarlo come inappropriato usando il pulsante **segnala** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Non dimenticare di usare il pulsante mostra altro <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> per rivelare gli altri pulsanti.
       search:
         instructions: |-
-          _psst_ … Ho nascosto una sorpresa in questo argomento. Se sei pronto alla sfida, **seleziona l'icona cerca** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> in alto a destra &#8599; per cercarla.
+          _psst_ … Ho nascosto una sorpresa in questo argomento. Se sei pronto alla sfida, **seleziona l'icona cerca** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> in alto a destra &#8599; per trovarla.
 
           Prova a cercare il termine "capi&#8203;bara" in questo argomento
         hidden_message: |-
@@ -315,7 +315,7 @@ it:
 
           Puoi iniziare **modificando** il messaggio che ho appena creato al tuo posto?
         not_found: |-
-          Sembra che tu non abbia ancora editato il [messaggio](%{url}) che ho creato per te. Puoi provare di nuovo?
+          Sembra che tu non abbia ancora modificato il [messaggio](%{url}) che ho creato per te. Puoi provare di nuovo?
 
           Usa il  pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16"> per far apparire l'editor.
         reply: |-

@@ -27,6 +27,7 @@ nb_NO:
   topics: "Emner"
   posts: "innlegg"
   loading: "Laster"
+  powered_by_html: 'Drives av <a href="https://www.discourse.org">Discourse</a>, og ser best ut med JavaScript aktivert'
   log_in: "Logg inn"
   purge_reason: "Automatisk slettet som som forlatt, uaktivert konto"
   disable_remote_images_download_reason: "Nedlasting av bilder ble deaktivert grunnet mangel på tilgjengelig diskplass."
@@ -39,9 +40,11 @@ nb_NO:
       default_subject: "Emnet trenger en tittel"
       show_trimmed_content: "Vis beskåret innhold"
       errors:
+        empty_email_error: "Skjer når den rå e-posten vi mottok var blank."
         no_message_id_error: "Skjer når en e-post ikke har noen «Message-Id»-header."
         auto_generated_email_error: "Skjer når «Precedence»-headeren er satt til list, junk, bulk eller auto_reply eller når en annen header innholder auto-submitted, auto-replied eller auto-generated."
         no_body_detected_error: "Skjer når vi ikke kunne trekke ut meldingskroppen eller det ikke var noen vedlegg."
+        no_sender_detected_error: "Skjer når vi ikke kunne finne en gyldig adresse i Fra-feltet"
         inactive_user_error: "Skjer når senderen ikke er aktiv."
         blocked_user_error: "Skjer når avsenderen har blitt blokkert."
         bad_destination_address: "Skjer når ingen av adressene i To-, Cc- eller Bcc-feltene passer med en konfigurert innkommende e-postadresse."

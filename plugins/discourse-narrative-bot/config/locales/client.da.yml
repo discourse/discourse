@@ -5,4 +5,9 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-da: {}
+da:
+  js:
+    discourse_narrative_bot:
+      welcome_post_type:
+        new_user_track: "Start opstartsvejledningen for alle nye brugere"
+        welcome_message: "Send en velkomstbesked til alle nye brugere med en opstartsguide"

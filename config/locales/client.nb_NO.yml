@@ -2246,7 +2246,10 @@ nb_NO:
       tags: "Stikkord"
       choose_for_topic: "velg alternative stikkord for dette emnet"
       delete_tag: "Slett stikkord"
-      delete_confirm: "Er du sikker på at du vil slette det stikkordet?"
+      delete_confirm:
+        one: "Er du sikker på at du ønsker å slette dette stikkordet og fjerne det fra emnet det er tilknyttet?"
+        other: "Er du sikker på at du ønsker å slette dette stikkordet og fjerne det fra {{count}} emner det er tilknyttet?"
+      delete_confirm_no_topics: "Er du sikker på at du ønsker å slette dette stikkordet?"
       rename_tag: "Gi stikkord nytt navn"
       rename_instructions: "Velg et nytt navn for dette stikkordet:"
       sort_by: "Sorter etter:"
