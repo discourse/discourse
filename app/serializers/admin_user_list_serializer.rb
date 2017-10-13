@@ -44,6 +44,14 @@ class AdminUserListSerializer < BasicUserSerializer
     object.suspended?
   end
 
+  def include_suspended_at?
+    object.suspended?
+  end
+
+  def include_suspended_till?
+    object.suspended?
+  end
+
   def can_impersonate
     scope.can_impersonate?(object)
   end
