@@ -655,7 +655,7 @@ class User < ActiveRecord::Base
   end
 
   def suspended?
-    suspended_till && suspended_till > DateTime.now
+    !!(suspended_till && suspended_till > DateTime.now)
   end
 
   def suspend_record
