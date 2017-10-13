@@ -159,10 +159,11 @@ export default class PostCooked {
   _updateQuoteElements($aside, desc) {
     let navLink = "";
     const quoteTitle = I18n.t("post.follow_quote");
-    const postNumber = $aside.data('post');
+    let postNumber = $aside.data('post');
+    let topicNumber = $aside.data('topic');
 
     // If we have a post reference
-    if (postNumber) {
+    if (topicNumber && topicNumber === this.attrs.topicId && postNumber) {
       let icon = iconHTML('arrow-up');
       navLink = `<a href='${this._urlForPostNumber(postNumber)}' title='${quoteTitle}' class='back'>${icon}</a>`;
     }
