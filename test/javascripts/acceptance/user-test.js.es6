@@ -31,3 +31,16 @@ QUnit.test("Root URL - Viewing Self", assert => {
     assert.ok(exists('.container.viewing-self'), "has the viewing-self class");
   });
 });
+
+QUnit.test("Viewing Summary", assert => {
+  visit("/u/eviltrout/summary");
+  andThen(() => {
+    assert.ok(exists('.replies-section li a'), 'replies');
+    assert.ok(exists('.topics-section li a'), 'topics');
+    assert.ok(exists('.links-section li a'), 'links');
+    assert.ok(exists('.replied-section .user-info'), 'liked by');
+    assert.ok(exists('.liked-by-section .user-info'), 'liked by');
+    assert.ok(exists('.liked-section .user-info'), 'liked');
+    assert.ok(exists('.badges-section .badge-card'), 'badges');
+  });
+});
