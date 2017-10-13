@@ -87,7 +87,7 @@ aside.quote {
   }
 }
 
-.quote-controls, .quote-controls .back:before, .quote-controls .quote-other-topic:before {
+.quote-controls, .quote-controls .d-icon {
   color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%));
 }
 
@@ -114,23 +114,9 @@ aside.quote {
 
 .quote-controls {
   float: right;
-  a {
-    margin: 0;
-  }
-
-  .back:before, .quote-other-topic:before
-  {
-    display: inline-block;
-    margin-left: 8px;
-    font-family: "FontAwesome";
-    position: relative;
-    z-index: 20;
-    content: "\f062";
-  }
-
-  .quote-other-topic:before
-  {
-    content: "\f061";
+  display: flex;
+  .d-icon {
+    margin-left: 0.2em;
   }
 }
 
@@ -143,9 +129,8 @@ aside.quote {
   z-index: 401;
   opacity: 0.9;
 
-  &:before {
-    font-family: "FontAwesome";
-    content: "\f10d\00a0\00a0";
+  .d-icon {
+    display: inline-block;
   }
 
   &:hover {

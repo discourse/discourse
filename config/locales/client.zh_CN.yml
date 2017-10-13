@@ -1033,7 +1033,7 @@ zh_CN:
       group_mentioned:
         other: "提及 {{group}} 时，你将通知 <a href='{{group_link}}'>{{count}} 人</a> － 确定吗？"
       cannot_see_mention:
-        category: "你提到了{{userrname}}，然而他们不能访问该分类，所以他们不会被通知。你需要把他们加入到能访问该分类的群组中。"
+        category: "你提到了 {{username}} ，然而他们不能访问该分类，所以他们不会被通知。你需要把他们加入到能访问该分类的群组中。"
         private: "你提到了{{userrname}}，然而他们不能访问该私信，所以他们不会被通知。你需要邀请他们至私信中。"
       duplicate_link: "好像<b>@{{username}}</b>在<a href='{{post_url}}'>{{ago}}</a>中前的回复中已经发了你的链接 <b>{{domain}}</b> － 你想再次发表链接吗？"
       error:

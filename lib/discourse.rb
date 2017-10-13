@@ -391,7 +391,7 @@ module Discourse
   end
 
   def self.store
-    if SiteSetting.enable_s3_uploads?
+    if SiteSetting.Upload.enable_s3_uploads
       @s3_store_loaded ||= require 'file_store/s3_store'
       FileStore::S3Store.new
     else

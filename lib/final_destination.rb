@@ -170,7 +170,7 @@ class FinalDestination
     return false unless @uri && @uri.host
 
     # Whitelisted hosts
-    return true if hostname_matches?(SiteSetting.s3_cdn_url) ||
+    return true if hostname_matches?(SiteSetting.Upload.s3_cdn_url) ||
       hostname_matches?(GlobalSetting.try(:cdn_url)) ||
       hostname_matches?(Discourse.base_url_no_prefix)
 

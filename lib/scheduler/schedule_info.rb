@@ -12,7 +12,7 @@ module Scheduler
 
       data = nil
 
-      if data = $redis.get(key)
+      if data = @manager.redis.get(key)
         data = JSON.parse(data)
       end
 
@@ -100,7 +100,7 @@ module Scheduler
         current_owner: @current_owner
       }.to_json
 
-      redis.zadd queue_key, @next_run , @klass
+      redis.zadd queue_key, @next_run, @klass if @next_run
     end
 
     def del!

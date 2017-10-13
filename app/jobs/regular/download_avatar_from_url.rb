@@ -14,7 +14,7 @@ module Jobs
 
       begin
         UserAvatar.import_url_for_user(
-          '/assets/vorablesen/placeholder-user-ed74bdf68223d030da1b7ddc44f59faf9c5a184388c94aff91632d5bf166a9e5.png',
+          url,
           user,
           override_gravatar: args[:override_gravatar]
         )

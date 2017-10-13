@@ -292,6 +292,7 @@ describe FinalDestination do
     end
 
     it "returns true for the S3 CDN url" do
+      SiteSetting.enable_s3_uploads = true
       SiteSetting.s3_cdn_url = "https://s3.example.com"
       expect(fd("https://s3.example.com/some/thing").is_dest_valid?).to eq(true)
     end

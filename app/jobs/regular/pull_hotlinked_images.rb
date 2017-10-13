@@ -9,8 +9,29 @@ module Jobs
     sidekiq_options queue: 'low'
 
     def initialize
-      # maximum size of the file in bytes
       @max_size = SiteSetting.max_image_size_kb.kilobytes
+    end
+
+    def download(src)
+      downloaded = nil
+
+      begin
+        retries ||= 3
+
+        downloaded = FileHelper.download(
+          src,
+          max_file_size: @max_size,
+          tmp_file_name: "discourse-hotlinked",
+          follow_redirect: true
+        )
+      rescue
+        if (retries -= 1) > 0
+          sleep 1
+          retry
+        end
+      end
+
+      downloaded
     end
 
     def execute(args)
@@ -29,26 +50,15 @@ module Jobs
 
       extract_images_from(post.cooked).each do |image|
         src = original_src = image['src']
-        src = "http:#{src}" if src.start_with?("//")
+        if src.start_with?("//")
+          src = "#{SiteSetting.force_https ? "https" : "http"}:#{src}"
+        end
 
         if is_valid_image_url(src)
-          hotlinked = nil
           begin
             # have we already downloaded that file?
             unless downloaded_urls.include?(src)
-              begin
-                hotlinked = FileHelper.download(
-                  src,
-                  max_file_size: @max_size,
-                  tmp_file_name: "discourse-hotlinked",
-                  follow_redirect: true
-                )
-              rescue Discourse::InvalidParameters
-                log(:error, "InvalidParameters while downloading hotlinked image (#{src}) for post: #{post_id}")
-              rescue => e
-                log(:error, "Failed to download image #{e}")
-              end
-              if hotlinked
+              if hotlinked = download(src)
                 if File.size(hotlinked.path) <= @max_size
                   filename = File.basename(URI.parse(src).path)
                   filename << File.extname(hotlinked.path) unless filename["."]
@@ -56,14 +66,12 @@ module Jobs
                   if upload.persisted?
                     downloaded_urls[src] = upload.url
                   else
-                    log(:error, "Failed to pull hotlinked image for post: #{post_id}: #{src} - #{upload.errors.join("\n")}")
+                    log(:info, "Failed to pull hotlinked image for post: #{post_id}: #{src} - #{upload.errors.join("\n")}")
                   end
                 else
-                  log(:error, "Failed to pull hotlinked image for post: #{post_id}: #{src} - Image is bigger than #{@max_size}")
                   large_images << original_src
                 end
               else
-                log(:error, "There was an error while downloading '#{src}' locally for post: #{post_id}")
                 broken_images << original_src
               end
             end
@@ -166,7 +174,7 @@ module Jobs
 
       # we don't want to pull images hosted on the CDN (if we use one)
       return false if Discourse.asset_host.present? && URI.parse(Discourse.asset_host).hostname == hostname
-      return false if SiteSetting.s3_cdn_url.present? && URI.parse(SiteSetting.s3_cdn_url).hostname == hostname
+      return false if SiteSetting.Upload.s3_cdn_url.present? && URI.parse(SiteSetting.Upload.s3_cdn_url).hostname == hostname
       # we don't want to pull images hosted on the main domain
       return false if URI.parse(Discourse.base_url_no_prefix).hostname == hostname
       # check the domains blacklist

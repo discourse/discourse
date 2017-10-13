@@ -124,6 +124,11 @@ RSpec.configure do |config|
     Sidekiq::Worker.clear_all
 
     I18n.locale = :en
+
+    if $test_cleanup_callbacks
+      $test_cleanup_callbacks.reverse_each(&:call)
+      $test_cleanup_callbacks = nil
+    end
   end
 
   class TestCurrentUserProvider < Auth::DefaultCurrentUserProvider
@@ -143,6 +148,45 @@ end
 class TrackTimeStub
   def self.stubbed
     false
+  end
+end
+
+def before_next_spec(&callback)
+  ($test_cleanup_callbacks ||= []) << callback
+end
+
+def global_setting(name, value)
+  GlobalSetting.reset_s3_cache!
+
+  GlobalSetting.stubs(name).returns(value)
+
+  before_next_spec do
+    GlobalSetting.reset_s3_cache!
+  end
+end
+
+def set_env(var, value)
+  old = ENV.fetch var, :missing
+
+  ENV[var] = value
+
+  before_next_spec do
+    if old == :missing
+      ENV.delete var
+    else
+      ENV[var] = old
+    end
+  end
+end
+
+def set_cdn_url(cdn_url)
+  global_setting :cdn_url, cdn_url
+  Rails.configuration.action_controller.asset_host = cdn_url
+  ActionController::Base.asset_host = cdn_url
+
+  before_next_spec do
+    Rails.configuration.action_controller.asset_host = nil
+    ActionController::Base.asset_host = nil
   end
 end
 

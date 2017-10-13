@@ -77,9 +77,7 @@ module Scheduler
           @mutex.synchronize { info.write! }
 
           if @manager.enable_stats
-            begin
-              RailsMultisite::ConnectionManagement.establish_connection(db: "default")
-
+            RailsMultisite::ConnectionManagement.with_connection("default") do
               stat = SchedulerStat.create!(
                 name: klass.to_s,
                 hostname: hostname,
@@ -87,8 +85,6 @@ module Scheduler
                 started_at: Time.zone.now,
                 live_slots_start: GC.stat[:heap_live_slots]
               )
-            ensure
-              ActiveRecord::Base.connection_handler.clear_active_connections!
             end
           end
 
@@ -106,12 +102,14 @@ module Scheduler
         info.prev_result = failed ? "FAILED" : "OK"
         info.current_owner = nil
         if stat
-          stat.update!(
-            duration_ms: duration,
-            live_slots_finish: GC.stat[:heap_live_slots],
-            success: !failed,
-            error: error
-          )
+          RailsMultisite::ConnectionManagement.with_connection("default") do
+            stat.update!(
+              duration_ms: duration,
+              live_slots_finish: GC.stat[:heap_live_slots],
+              success: !failed,
+              error: error
+            )
+          end
         end
         attempts(3) do
           @mutex.synchronize { info.write! }

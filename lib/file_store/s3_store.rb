@@ -56,22 +56,17 @@ module FileStore
       base_hostname = URI.parse(absolute_base_url).hostname
       return true if url[base_hostname]
 
-      return false if SiteSetting.s3_cdn_url.blank?
-      cdn_hostname = URI.parse(SiteSetting.s3_cdn_url || "").hostname
+      return false if SiteSetting.Upload.s3_cdn_url.blank?
+      cdn_hostname = URI.parse(SiteSetting.Upload.s3_cdn_url || "").hostname
       cdn_hostname.presence && url[cdn_hostname]
     end
 
-    def absolute_base_url
-      bucket = @s3_helper.s3_bucket_name
+    def s3_bucket_name
+      @s3_helper.s3_bucket_name
+    end
 
-      # cf. http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
-      @absolute_base_url ||= if SiteSetting.s3_region == "us-east-1"
-        "//#{bucket}.s3.amazonaws.com"
-      elsif SiteSetting.s3_region == 'cn-north-1'
-        "//#{bucket}.s3.cn-north-1.amazonaws.com.cn"
-      else
-        "//#{bucket}.s3-#{SiteSetting.s3_region}.amazonaws.com"
-      end
+    def absolute_base_url
+      @absolute_base_url ||= SiteSetting.Upload.absolute_base_url
     end
 
     def external?
@@ -88,9 +83,9 @@ module FileStore
     end
 
     def cdn_url(url)
-      return url if SiteSetting.s3_cdn_url.blank?
+      return url if SiteSetting.Upload.s3_cdn_url.blank?
       schema = url[/^(https?:)?\/\//, 1]
-      url.sub("#{schema}#{absolute_base_url}", SiteSetting.s3_cdn_url)
+      url.sub("#{schema}#{absolute_base_url}", SiteSetting.Upload.s3_cdn_url)
     end
 
     def cache_avatar(avatar, user_id)
@@ -104,8 +99,8 @@ module FileStore
     end
 
     def s3_bucket
-      raise Discourse::SiteSettingMissing.new("s3_upload_bucket") if SiteSetting.s3_upload_bucket.blank?
-      SiteSetting.s3_upload_bucket.downcase
+      raise Discourse::SiteSettingMissing.new("s3_upload_bucket") if SiteSetting.Upload.s3_upload_bucket.blank?
+      SiteSetting.Upload.s3_upload_bucket.downcase
     end
   end
 end

@@ -44,8 +44,8 @@ class TopicLinkClick < ActiveRecord::Base
         end
       end
 
-      if SiteSetting.s3_cdn_url.present?
-        cdn_uri = URI.parse(SiteSetting.s3_cdn_url) rescue nil
+      if SiteSetting.Upload.s3_cdn_url.present?
+        cdn_uri = URI.parse(SiteSetting.Upload.s3_cdn_url) rescue nil
         if cdn_uri && cdn_uri.hostname == uri.hostname && uri.path.starts_with?(cdn_uri.path)
           is_cdn_link = true
           path = uri.path[cdn_uri.path.length..-1]

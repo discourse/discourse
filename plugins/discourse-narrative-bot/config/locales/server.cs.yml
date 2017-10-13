@@ -92,6 +92,6 @@ cs:
         title: ":robot: Zdravím!"
       search:
         not_found: |-
-          Hmm…vypadá to, že máš potíže. To mě mrzí. Hledal jsi <img src="%{base_uri}/images/font-awesome-search.png" width="16" height="16"> pro výraz **capy&#8203;bara**?
+          Hmm…vypadá to, že máš potíže. To mě mrzí. Hledal jsi <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> pro výraz **capy&#8203;bara**?
     advanced_user_narrative:
       reset_trigger: 'pokročilý uživatel'

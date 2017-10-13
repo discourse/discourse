@@ -27,11 +27,6 @@ class SiteSetting < ActiveRecord::Base
     end
   end
 
-  # `current` hash is not populated everytime when load a site setting
-  # in order to support locale default. Instead, we simply `refresh!` once.
-  # This should only affects the spec in which you should populate `current`
-  refresh!
-
   client_settings << :available_locales
 
   def self.available_locales
@@ -118,6 +113,43 @@ class SiteSetting < ActiveRecord::Base
   def self.attachment_filename_blacklist_regex
     @attachment_filename_blacklist_regex ||= Regexp.union(SiteSetting.attachment_filename_blacklist.split("|"))
   end
+
+  # helpers for getting s3 settings that fallback to global
+  class Upload
+    def self.s3_cdn_url
+      SiteSetting.enable_s3_uploads ? SiteSetting.s3_cdn_url : GlobalSetting.s3_cdn_url
+    end
+
+    def self.s3_region
+      SiteSetting.enable_s3_uploads ? SiteSetting.s3_region : GlobalSetting.s3_region
+    end
+
+    def self.s3_upload_bucket
+      SiteSetting.enable_s3_uploads ? SiteSetting.s3_upload_bucket : GlobalSetting.s3_bucket
+    end
+
+    def self.enable_s3_uploads
+      SiteSetting.enable_s3_uploads || GlobalSetting.use_s3?
+    end
+
+    def self.absolute_base_url
+      bucket = SiteSetting.enable_s3_uploads ? Discourse.store.s3_bucket_name : GlobalSetting.s3_bucket
+
+      # cf. http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
+      if SiteSetting.Upload.s3_region == "us-east-1"
+        "//#{bucket}.s3.amazonaws.com"
+      elsif SiteSetting.Upload.s3_region == 'cn-north-1'
+        "//#{bucket}.s3.cn-north-1.amazonaws.com.cn"
+      else
+        "//#{bucket}.s3-#{SiteSetting.Upload.s3_region}.amazonaws.com"
+      end
+    end
+  end
+
+  def self.Upload
+    SiteSetting::Upload
+  end
+
 end
 
 # == Schema Information

@@ -2429,7 +2429,7 @@ fi:
           last_flagged: "Viimeksi liputettu"
         summary:
           action_type_3:
-            one: "asiaankuulumaton"
+            one: "eksyy aiheesta"
             other: "eksyy aiheesta x{{count}}"
           action_type_4:
             one: "sopimaton"

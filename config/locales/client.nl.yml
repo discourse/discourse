@@ -353,6 +353,8 @@ nl:
         add_members: "Leden toevoegen"
         delete_member_confirm: "'%{username}' uit de groep '%{group}' verwijderen?"
       name_placeholder: "Groepsnaam, geen spaties, hetzelfde als gebruikersnaamregel"
+      public_admission: "Gebruikers toestaan om vrij aan de groep deel te nemen (Groep moet hiervoor zichtbaar zijn)"
+      public_exit: "Gebruikers toestaan om vrij de groep te verlaten"
       empty:
         posts: "Er zijn geen berichten van leden van deze groep."
         members: "Er zijn geen leden in deze groep."
@@ -369,9 +371,11 @@ nl:
       closed_group: Besloten groep
       is_group_user: "U bent een lid van deze groep"
       allow_membership_requests: "Gebruikers toestaan om lidmaatschapsverzoeken naar groepseigenaren te sturen"
+      membership_request_template: "Aangepaste template om aan gebruikers te laten zien bij het sturen van een lidmaatschap verzoek"
       membership_request:
         submit: "Verstuur Aanvraag"
         title: "Verzoek voor deelname aan @%{group_name}"
+        reason: "Laat de groepbeheerders weten waarom je in deze groep hoort"
       membership: "Lidmaatschap"
       name: "Naam"
       user_count: "Aantal leden"
@@ -381,6 +385,9 @@ nl:
       index:
         title: "Groepen"
         empty: "Er zijn geen zichtbare groepen."
+      title:
+        one: "Groep"
+        other: "Groepen"
       activity: "Activiteit"
       members: "Leden"
       topics: "Topics"
@@ -533,6 +540,7 @@ nl:
       admin_tooltip: "Deze gebruiker is een beheerder"
       blocked_tooltip: "Deze gebruiker is geblokkeerd"
       suspended_notice: "Deze gebruiker is geschorst tot {{date}}."
+      suspended_permanently: "Deze gebruiker is geschorst."
       suspended_reason: "Reden: "
       github_profile: "Github"
       email_activity_summary: "Activiteitsamenvatting"
@@ -944,6 +952,7 @@ nl:
       complete_email_found: "We hebben een account gevonden met het e-mailadres <b>%{email}<b/>. U zou spoedig een e-mail moeten ontvangen met instructies om uw wachtwoord opnieuw in te stellen."
       complete_username_not_found: "Geen account met de gebruikersnaam <b>%{username}</b> gevonden"
       complete_email_not_found: "Geen account met het e-mailadres <b>%{email}</b> gevonden"
+      help: "Komt de e-mail niet aan? Controleer eerst je spam map.<p>Weet je niet zeker welk e-mailadres je gebruikt hebt? Voer een e-mailadres in en we laten je weten of het hier bestaat.</p><p>Als je niet langer toegang hebt tot het e-mailadres van je account, neem alsjeblieft contact op met <a href='/about'>onze hulpvolle staf.</a></p>"
       button_ok: "OK"
       button_help: "Help"
     login:
@@ -1040,6 +1049,12 @@ nl:
       celebration: Viering
       custom: Eigen emojis
       recent: Recent gebruikt
+      default_tone: Geen huidskleur
+      light_tone: Lichte huidskleur
+      medium_light_tone: Licht gemiddelde huidskleur
+      medium_tone: Gemiddilde huidskleur
+      medium_dark_tone: Donker gemiddelde huidskleur
+      dark_tone: Donkere huidskleur
     composer:
       emoji: "Emoji :)"
       more_emoji: "meer..."
@@ -1134,6 +1149,29 @@ nl:
       empty: "Geen meldingen gevonden."
       more: "oudere meldingen bekijken"
       total_flagged: "aantal gemarkeerde berichten"
+      mentioned: "<span>{{username}}</span> {{description}}"
+      group_mentioned: "<span>{{username}}</span> {{description}}"
+      quoted: "<span>{{username}}</span> {{description}}"
+      replied: "<span>{{username}}</span> {{description}}"
+      posted: "<span>{{username}}</span> {{description}}"
+      edited: "<span>{{username}}</span> {{description}}"
+      liked: "<span>{{username}}</span> {{description}}"
+      liked_2: "<span>{{username}}, {{username2}}</span> {{description}}"
+      liked_many:
+        one: "<span>{{username}}, {{username2}} en 1 anderen</span> {{description}}"
+        other: "<span>{{username}}, {{username2}} en {{count}} anderen</span> {{description}}"
+      private_message: "<span>{{username}}</span> {{description}}"
+      invited_to_private_message: "<p><span>{{username}}</span> {{description}}"
+      invited_to_topic: "<span>{{username}}</span> {{description}}"
+      invitee_accepted: "<span>{{username}}</span> heeft je uitnodiging geaccepteerd"
+      moved_post: "<span>{{username}}</span> heeft {{description}} verplaatst"
+      linked: "<span>{{username}}</span> {{description}}"
+      granted_badge: "'{{description}}' ontvangen"
+      topic_reminder: "<span>{{username}}</span> {{description}}"
+      watching_first_post: "<span>Nieuw Topic</span> {{description}}"
+      group_message_summary:
+        one: "{{count}} bericht in je Postvak IN voor {{group_name}}"
+        other: "{{count}} berichten in je Postvak IN voor {{group_name}}"
       alt:
         mentioned: "Genoemd door"
         quoted: "Geciteerd door"
@@ -1181,6 +1219,9 @@ nl:
       select_all: "Alles selecteren"
       clear_all: "Alles wissen"
       too_short: "Uw zoekterm is te kort."
+      result_count:
+        one: "1 resultaat voor <span class='term'>{{term}}</span>"
+        other: "{{count}} resultaten voor <span class='term'>{{term}}</span>"
       title: "zoeken naar topics, berichten, gebruikers of categorieën"
       no_results: "Geen resultaten gevonden."
       no_more_results: "Geen resultaten meer gevonden."
@@ -1190,6 +1231,8 @@ nl:
       more_results: "Er zijn meer resultaten. Verfijn je zoek criteria."
       cant_find: "Kun je niet vinden wat je zoekt?"
       start_new_topic: "Misschien een nieuw topic starten?"
+      or_search_google: "Of probeer in plaats hiervan te zoeken met Google:"
+      search_google: "Probeer in plaats hiervan te zoeken met Google:"
       search_google_button: "Google"
       search_google_title: "Zoeken op deze website"
       context:
@@ -1223,6 +1266,7 @@ nl:
           seen: die ik heb gelezen
           unseen: die ik niet heb gelezen
           wiki: die een wiki zijn
+          images: inclusief afbeelding(en)
           all_tags: Bevat alle tags
         statuses:
           label: Waarin topics
@@ -1360,19 +1404,23 @@ nl:
       jump_reply_down: naar later antwoord springen
       deleted: "Het topic is verwijderd"
       topic_status_update:
-        title: "Topictimer instellen"
+        title: "Topic Timer"
         save: "Timer instellen"
         num_of_hours: "Aantal uren:"
         remove: "Timer verwijderen"
         publish_to: "Publiceren naar:"
         when: "Wanneer:"
+        public_timer_types: Topic Timers
+        private_timer_types: Gebruiker Topic Timers
       auto_update_input:
         later_today: "Later vandaag"
         tomorrow: "Morgen"
         later_this_week: "Later deze week"
         this_weekend: "Dit weekend"
         next_week: "Volgende week"
+        two_weeks: "Twee Weken"
         next_month: "Volgende maand"
+        forever: "Voor altijd"
         pick_date_and_time: "Kies datum en tijd"
         set_based_on_last_post: "Sluiten op basis van laatste bericht"
       publish_to_category:
@@ -1776,6 +1824,10 @@ nl:
         confirm:
           one: "Weet u zeker dat u dat bericht wilt verwijderen?"
           other: "Weet u zeker dat u al die berichten wilt verwijderen?"
+      merge:
+        confirm:
+          one: "Weet je zeker dat je die berichten wilt samenvoegen?"
+          other: "Weet je zeker dat je die {{count}} berichten wilt samenvoegen?"
       revisions:
         controls:
           first: "Eerste revisie"
@@ -1822,6 +1874,7 @@ nl:
       topic_template: "Topic-sjabloon"
       tags: "Tags"
       tags_allowed_tags: "Tags die in deze categorie kunnen worden gebruikt:"
+      tags_allowed_tag_groups: "Alleen tags uit deze groepen zijn toegestaan om gebruikt te worden in deze categorie:"
       tags_placeholder: "(Optioneel) lijst van toegestane tags"
       tag_groups_placeholder: "(Optioneel) lijst van toegestane tag-groepen"
       topic_featured_link_allowed: "Aanbevolen koppelingen in deze categorie toestaan"
@@ -2193,7 +2246,10 @@ nl:
       tags: "Tags"
       choose_for_topic: "Kies optionele tags voor dit topic"
       delete_tag: "Tag verwijderen"
-      delete_confirm: "Weet u zeker dat u die tag wilt verwijderen?"
+      delete_confirm:
+        one: "Weet je zeker dat je deze tag wilt verwijderen en loskoppelen van 1 topic waar het aan toegewezen is?"
+        other: "Weet je zeker dat je deze tag wilt verwijderen en loskoppelen van {{count}} topics waar het aan toegewezen is?"
+      delete_confirm_no_topics: "Weet je zeker dat je deze tag wilt verwijderen?"
       rename_tag: "Tag hernoemen"
       rename_instructions: "Kies een nieuwe naam voor de tag:"
       sort_by: "Sorteren op:"
@@ -2321,8 +2377,9 @@ nl:
         by: "door"
       flags:
         title: "Meldingen"
-        old: "Oud"
-        active: "Actief"
+        active_posts: "Germarkeerde berichten"
+        old_posts: "Oude gemarkeerde berichten"
+        topics: "Gemarkeerde Topics"
         agree: "Akkoord"
         agree_title: "Bevestig dat deze melding geldig en correct is"
         agree_flag_modal_title: "Akkoord en ..."
@@ -2350,6 +2407,8 @@ nl:
         clear_topic_flags: "Gereed"
         clear_topic_flags_title: "Het topic is onderzocht en problemen zijn opgelost. Klik op Gereed om de meldingen te verwijderen."
         more: "(meer antwoorden...)"
+        suspend_user: "Schors gebruiker"
+        suspend_user_title: "Schors gebruiker voor dit bericht"
         dispositions:
           agreed: "akkoord"
           disagreed: "niet akkoord"
@@ -2360,11 +2419,18 @@ nl:
         system: "Systeem"
         error: "Er is iets misgegaan"
         reply_message: "Antwoorden"
-        no_results: "Er zijn geen markeringen."
+        no_results: "Er zijn geen gemarkeerde berichten"
         topic_flagged: "Dit <strong>topic</strong> is gemarkeerd."
+        show_full: "volledige berichten tonen"
         visit_topic: "Bezoek het topic om actie te ondernemen"
         was_edited: "Bericht is na de eerste melding bewerkt"
         previous_flags_count: "Dit bericht is al {{count}} keer gemarkeerd."
+        show_details: "Bekijk markering details"
+        flagged_topics:
+          topic: "Topic"
+          type: "Type"
+          users: "Gebruikers"
+          last_flagged: "Laatst gemarkeerd"
         summary:
           action_type_3:
             one: "off-topic"
@@ -2643,6 +2709,9 @@ nl:
           updating: "Bijwerken..."
           up_to_date: "Thema is up-to-date, laatst gecontroleerd:"
           add: "Toevoegen"
+          commits_behind:
+            one: "Thema loopt 1 commit achter!"
+            other: "Thema loopt {{count}} commits achter!"
           scss:
             text: "CSS"
             title: "Voer aangepaste CSS in; we accepteren alle geldige CSS- en SCSS-stijlen"
@@ -2844,6 +2913,8 @@ nl:
             change_readonly_mode: "alleen-lezenmodus wijzigen"
             backup_download: "back-up downloaden"
             backup_destroy: "back-up verwijderen"
+            reviewed_post: "beoordeeld bericht"
+            custom_staff: "aangepaste plugin actie"
         screened_emails:
           title: "Gecontroleerde e-mails"
           description: "Als iemand een nieuwe account probeert aan te maken, worden de volgende e-mailadressen gecontroleerd en de registratie geblokkeerd, of een andere actie uitgevoerd."
@@ -2888,12 +2959,19 @@ nl:
           censor: 'Censuur'
           require_approval: 'Heeft goedkeuring nodig'
           flag: 'Markeren'
+        action_descriptions:
+          block: 'Voorkom het plaatsen van berichten die deze woorden bevatten. De gebruiker ziet een foutmelding wanneer ze hun bericht versturen.'
+          censor: 'Sta berichten toe met deze woorden, maar vervang ze met karakters die de gecensureerde woorden verbergen.'
+          require_approval: 'Berichten die deze woorden bevatten vereisen goedkeuring door personeel voordat ze gezien kunnen worden.'
+          flag: 'Sta berichten toe met deze woorden, maar markeer ze als ongepast zodat moderator ze kunnen beoordelen.'
         form:
           label: 'Nieuw Woord:'
           placeholder: 'Volledig woord of * als wildcard'
+          placeholder_regexp: "reguliere expressie"
           add: 'Toevoegen'
           success: 'succes'
           upload: "Upload"
+          upload_successful: "Upload geslaagd. Woorden zijn toegevoegd."
       impersonate:
         title: "Aanmelden als gebruiker"
         help: "Gebruik dit hulpmiddel om een gebruikersaccount voor debugdoeleinden te imiteren. U moet zich afmelden als u klaar bent."
@@ -2951,10 +3029,15 @@ nl:
         suspend_failed: "Er is iets misgegaan bij het schorsen van deze gebruiker: {{error}}"
         unsuspend_failed: "Er is iets misgegaan bij het opheffen van de schorsing van deze gebruiker: {{error}}"
         suspend_duration: "Hoe lang wilt u deze gebruiker schorsen?"
-        suspend_duration_units: "(dagen)"
         suspend_reason_label: "Waarom schorst u deze gebruiker? Deze tekst <b>zal voor iedereen zichtbaar zijn</b> op de profielpagina van deze gebruiker, en zal aan de gebruiker worden getoond als deze zich probeert aan te melden. Houd het kort."
+        suspend_reason_hidden_label: "Waarom schors je deze gebruiker? Deze tekst zal zichtbaar zijn voor de gebruiker wanneer deze zich probeert aan te melden. Hou het kort."
         suspend_reason: "Reden"
+        suspend_reason_placeholder: "Reden van schorsing"
+        suspend_message: "E-mail bericht"
+        suspend_message_placeholder: "Vrijblijvend kun je meer informatie geven over de schorsing. Dit zal worden gemaild naar de gebruiker."
         suspended_by: "Geschorst door"
+        suspended_until: "(tot %{until})"
+        cant_suspend: "Deze gebruiker kan niet worden geschorst."
         delete_all_posts: "Alle berichten verwijderen"
         delete_all_posts_confirm_MF: "U gaat {POSTS, plural, one {1 bericht} other {# berichten}} en {TOPICS, plural, one {1 topic} other {# topics}} verwijderen. Weet u het zeker?"
         suspend: "Schorsen"
@@ -3291,6 +3374,9 @@ nl:
       upload: "Uploaden"
       uploading: "Uploaden..."
       quit: "Misschien later"
+      staff_count:
+        one: "Jouw community heeft 1 personeelslids (jij)."
+        other: "Jouw community heeft %{count} personeelsleden, inclusief jij."
       invites:
         add_user: "toevoegen"
         none_added: "Je hebt geen stafleden uitgenodigd. Weet je zeker dat je verder wilt gaan?"

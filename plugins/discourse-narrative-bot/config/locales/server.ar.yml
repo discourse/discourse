@@ -160,7 +160,7 @@ ar:
           - https://en.wikipedia.org/wiki/Death_by_coconut
           - https://en.wikipedia.org/wiki/Calculator_spelling
         reply: |-
-          رائع! هذا سوف يعمل مع معظم <img src="%{base_uri}/images/font-awesome-link.png" width="16" height="16"> الروابط. تذكر, يجب ان يكون الرابط منفردا بالسطر بدون اي شئ قبلة او بعدة
+          رائع! هذا سوف يعمل مع معظم <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> الروابط. تذكر, يجب ان يكون الرابط منفردا بالسطر بدون اي شئ قبلة او بعدة
         not_found: |-
           عذرا, انا لم اجد الرابط في ردك! :cry:
 
@@ -172,7 +172,7 @@ ar:
         instructions: |-
           ها هي صورة الحصان احادي القرن:
 
-          <img src="%{base_uri}/images/unicorn.png" width="520" height="520">
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
 
           إذا اعجبتك قم بالضغط علي زر اعجبني :heart: اسفل هذا المنشور لتسعدني!
 
@@ -221,11 +221,11 @@ ar:
           اختيار اي نص في المنشور سوف يظهر زر <kbd>**اقتبس**</kbd>, و الضغط علي زر **رد** عندما يكون النص محدد سوف يقتبس هذا الجزء ايضاً في الرد! هل يمكنك المحاولة مرة اخري؟
       bookmark:
         instructions: |-
-          إذا اردت تعلم المزيد, اختر <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> من الاسفل و <img src="%{base_uri}/images/font-awesome-bookmark.png" width="16" height="16"> **قم بوضع علامة مرجعية علي الرسالة**. إذا فعلت ذلك قد يكون هناك هدية :gift: في المستقبل!
+          إذا اردت تعلم المزيد, اختر <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> من الاسفل و <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **قم بوضع علامة مرجعية علي الرسالة**. إذا فعلت ذلك قد يكون هناك هدية :gift: في المستقبل!
         reply: |-
           رائع!  الان يمكنك الرجوع بسهولة لمحادثتنا في اي وقت من خلال [ تبويب العلامات المرجعية بملفك الشخصي ](%{profile_page_url}/activity/bookmarks). او بالقائمة المنبثقة من الضغط علي صورتك الشخصية &#8598;
         not_found: |-
-          عذرا, انا لم اجد اي علامة مرجعية في هذا الموضوع. هل تري زر العلامة المرجعية اسفل كل منشور؟ اذا لم تجده اضغط علي زر <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> لإظهارالازرار المخفية.
+          عذرا, انا لم اجد اي علامة مرجعية في هذا الموضوع. هل تري زر العلامة المرجعية اسفل كل منشور؟ اذا لم تجده اضغط علي زر <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> لإظهارالازرار المخفية.
       emoji:
         instructions: |-
           ربما رايتني استخدم صور صغيرة بين الكلمات :blue_car: :dash: هذه تسمي [الرموز التعبيرية](https://en.wikipedia.org/wiki/Emoji). هل يمكنك **اضافة رمز تعبيري** في ردك؟ اي من هذه الطرق سوف تعمل:
@@ -234,7 +234,7 @@ ar:
 
           - او ضع نقطتان <kbd>:</kbd> ثم اكتب اسم الرمز التعبيري `:tada:`
 
-          - او اضغط علي زر الرموز التعبيرية <img src="%{base_uri}/images/font-awesome-smile.png" width="16" height="16"> في محرر النصوص او في لوحة المفاتيح الخاصة بالهاتف
+          - او اضغط علي زر الرموز التعبيرية <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> في محرر النصوص او في لوحة المفاتيح الخاصة بالهاتف
         reply: |-
           هذا مثال علي :sparkles: _الرموز التعبيرية_ :sparkles:
         not_found: |-
@@ -264,16 +264,16 @@ ar:
         reply: |-
           سيتم إعلام [طاقم العمل](/groups/staff) عن بلاغك بشكل سري. إذا قام عدد من اعضاء المجتمع بالإبلاغ عن نفس المنشور, سيتم اخفائة بشكل آلي كإجراء إحترازي. ( و بما اني لم اقم فعليا بكتابة منشور مخالف فقد قمت بإذالة البلاغ عن منشوري)
         not_found: |-
-          عذرا, منشوري لم يتم الابلاغ عنة حتي الان. :worried: هل يمكنك الإبلاغ عنة كمنشور غير ملائم باستخدام زر **الإبلاغ** <img src="%{base_uri}/images/font-awesome-flag.png" width="16" height="16">؟ لا تنسي الضغط علي زر <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> لإظهار الازرار المخفية.
+          عذرا, منشوري لم يتم الابلاغ عنة حتي الان. :worried: هل يمكنك الإبلاغ عنة كمنشور غير ملائم باستخدام زر **الإبلاغ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">؟ لا تنسي الضغط علي زر <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> لإظهار الازرار المخفية.
       search:
         instructions: |-
-          _بسس_ ...لقد قمت بإخفاء هدية في هذا الموضوع. اذا كنت مستعد للتحدي, **اضغط علي علامة البحث** <img src="%{base_uri}/images/font-awesome-search.png" width="16" height="16"> في اعلي يسار الصفحة &#8598; للبحث عن الهدية.
+          _بسس_ ...لقد قمت بإخفاء هدية في هذا الموضوع. اذا كنت مستعد للتحدي, **اضغط علي علامة البحث** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> في اعلي يسار الصفحة &#8598; للبحث عن الهدية.
 
           حاول البحث عن المصطلح "capy&#8203;bara" في هذا الموضوع
         hidden_message: |-
           كيف امكنك ألا تلاحظ هذة الكابيبارا؟ :wink:
 
-          <img src="%{base_uri}/images/capybara-eating.gif"/>
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
           هل لاحظت انك الان عدت إلي اول منشور؟ اطعم هذة الكابيبارا الجائعة عن طريق **إرسال رد به `:herb:` عشب** كرمز تعبيري و سوف تاخذ مباشرتا إلي اخر منشور.
         reply: |-
@@ -285,7 +285,7 @@ ar:
 
           اذا كان لديك لوحة مفاتيح حقيقية, اضغط علي <kbd>؟</kbd> لفتح قائمة مفاتيح الاختصار.
         not_found: |-
-          اوو... يبدو ان لديك بعض العقبات. اعتذر عن هذا. قم بالبحث <img src="%{base_uri}/images/font-awesome-search.png" width="16" height="16"> عن المصطلح **capy&#8203;bara**؟
+          اوو... يبدو ان لديك بعض العقبات. اعتذر عن هذا. قم بالبحث <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> عن المصطلح **capy&#8203;bara**؟
       end:
         message: |-
           شكراً لبقائك معي @%{username}! قمت بصنع هذا لأجلك, اعتقد انك تستحقه:
@@ -314,7 +314,7 @@ ar:
         not_found: |-
           يبدو انك لم تقم بعد بتعديل [المنشور](%{url}) الذي نشرتة لك. حاول مرة اخري من فضلك؟
 
-          استخدم زر <img src="%{base_uri}/images/font-awesome-pencil.png" width="16" height="16"> لفتح محرر النصور.
+          استخدم زر <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16"> لفتح محرر النصور.
         reply: |-
           رائع!
 
@@ -323,11 +323,11 @@ ar:
         instructions: |-
           إذا اردت التراجع عن منشور قمت بنشرة, يمكنك حذف هذا المنشور.
 
-          هيا قم **بحذف** اي من منشوراتك السابقة بهذة المحادثة بإستخدام زر <img src="%{base_uri}/images/font-awesome-trash.png" width="16" height="16"> **أحذف**.
+          هيا قم **بحذف** اي من منشوراتك السابقة بهذة المحادثة بإستخدام زر <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> **أحذف**.
 
           لا تقم بحذف اول منشور بهذة المحادثة!!
         not_found: |-
-          انا لا اري اي منشورات محذوفة حتي الان؟ تذكر زر <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16"> **اظهر المزيد** سوف يظهر زر<img src="%{base_uri}/images/font-awesome-trash.png" width="16" height="16"> **الحذف**
+          انا لا اري اي منشورات محذوفة حتي الان؟ تذكر زر <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> **اظهر المزيد** سوف يظهر زر<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> **الحذف**
         reply: |-
           اوو... :boom:
 
@@ -337,9 +337,9 @@ ar:
         instructions: |-
           اوو... يبدو اننا قمت بحفذ المنشور الجديد الذي نشرته باسمك.
 
-          هل تعمل لي معروفا و تلغي امر <img src="%{base_uri}/images/font-awesome-rotate-left.png" width="16" height="16"> الحذف؟
+          هل تعمل لي معروفا و تلغي امر <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> الحذف؟
         not_found: |-
-          لا تجد الزر؟  تذكر زر <img src="%{base_uri}/images/font-awesome-ellipsis.png" width="16" height="16">اظهر المزيد سوف يظهر زر <img src="%{base_uri}/images/font-awesome-rotate-left.png" width="16" height="16">إلغاء الحذف.
+          لا تجد الزر؟  تذكر زر <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">اظهر المزيد سوف يظهر زر <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16">إلغاء الحذف.
         reply: |-
           اه, ذلك كان وشيكاً! شكراً لاصلاح ذلك :wink:
 
@@ -370,11 +370,11 @@ ar:
           لاحظ انه عندما تقوم بالرد علي احد الموضوعات او قراءة الموضوع لعدة دقائق سيتحول مستوي اشعارات الموضوع إلي **متابع** تقائياً. يمكنك تعديل هذا السلوك من [ صفحة الإعدادات ](/my/preferences).
       poll:
         instructions: |-
-          هل تعلم إنك تستطيع عمل تصويت في اي منشور؟ قم باستخدام زر <img src="%{base_uri}/images/font-awesome-gear.png" width="16" height="16"> الترس في محرر النصوص **لإنشاء تصويت جديد**.
+          هل تعلم إنك تستطيع عمل تصويت في اي منشور؟ قم باستخدام زر <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> الترس في محرر النصوص **لإنشاء تصويت جديد**.
         not_found: |-
           عذرا, لم اجد اي تصويت في ردك
 
-          اضغط علي زر <img src="%{base_uri}/images/font-awesome-gear.png" width="16" height="16">الترس في محرر النصوص, او انسخ النص التالي
+          اضغط علي زر <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16">الترس في محرر النصوص, او انسخ النص التالي
           ```
           اي الحيوانات تحب ان تربي
           [poll type=regular]

@@ -58,6 +58,7 @@ module Email
           error = e.to_s
           error = e.class.name if error.blank?
           @incoming_email.update_columns(error: error) if @incoming_email
+          delete_staged_users
           raise
         end
       end
@@ -751,6 +752,12 @@ module Email
     def send_subscription_mail(action, user)
       message = SubscriptionMailer.send(action, user)
       Email::Sender.new(message, :subscription).send
+    end
+
+    def delete_staged_users
+      @staged_users.each do |user|
+        UserDestroyer.new(Discourse.system_user).destroy(user, quiet: true) if user.posts.count == 0
+      end
     end
   end
 

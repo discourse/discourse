@@ -7,23 +7,27 @@ function renderRaw(ctx, container, template, templateName, params) {
   params = jQuery.extend({}, params);
   params.parent = params.parent || ctx;
 
-  if (!params.view) {
-    if (!_injections) {
-      _injections = {
-        siteSettings: container.lookup('site-settings:main'),
-        currentUser: container.lookup('currentUser:main'),
-        site: container.lookup('site:main'),
-        session: container.lookup('session:main'),
-        topicTrackingState: container.lookup('topic-tracking-state:main')
-      };
-    }
+  if (!_injections) {
+    _injections = {
+      siteSettings: container.lookup('site-settings:main'),
+      currentUser: container.lookup('current-user:main'),
+      site: container.lookup('site:main'),
+      session: container.lookup('session:main'),
+      topicTrackingState: container.lookup('topic-tracking-state:main')
+    };
+  }
 
+  if (!params.view) {
     const module = `discourse/raw-views/${templateName}`;
     if (requirejs.entries[module]) {
       const viewClass = requirejs(module, null, null, true);
       if (viewClass && viewClass.default) {
         params.view = viewClass.default.create(params, _injections);
       }
+    }
+
+    if (!params.view) {
+      params = jQuery.extend({}, params, _injections);
     }
   }
 

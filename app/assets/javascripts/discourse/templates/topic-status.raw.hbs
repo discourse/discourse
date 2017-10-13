@@ -8,6 +8,7 @@
 <{{status.openTag}} title='{{status.title}}' class='topic-status'>{{d-icon status.icon}}</{{status.closeTag}}>
 {{~/if ~}}
 {{~/each}}
+{{~#if view.showDefault~}}{{d-icon view.showDefault}}{{~/if ~}}
 {{~#if view.renderDiv ~}}
 </div>
 {{/if ~}}

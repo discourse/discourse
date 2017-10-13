@@ -50,7 +50,7 @@ module Scheduler
         RailsMultisite::ConnectionManagement.with_connection("default") do
           klass = name.constantize
           info = klass.schedule_info
-          info.next_run = Time.now.to_f
+          info.next_run = Time.now.to_i
           info.write!
 
           redirect "#{root_path}scheduler"

@@ -344,6 +344,10 @@ fa_IR:
           attributes:
             execute_at:
               in_the_past: "باید در آینده باشد."
+        watched_word:
+          attributes:
+            word:
+              too_many: "برای چنین کاری کلمات زیادی است"
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>فیلد درباره من نمایه شما خالی است, <a href='/u/%{username_lower}/preferences/about-me'>قصد نوشتن دارید؟</a></div>"
@@ -557,7 +561,7 @@ fa_IR:
       description: 'من می‌خواهم با این شخص به صورت مستقیم و محرمانه درباره نوشته‌اش صحبت کنم.'
       short_description: 'می‌خواهم با این شخص به صورت خصوصی درباره‌ی نوشته‌اش صحبت کنم.'
       long_form: 'به کاربر پیام داده شد'
-      email_title: 'نوشته ی شما در "{title}%"'
+      email_title: 'نوشته ی شما در " %{title} "'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "یک چیز دیگر"
@@ -829,6 +833,8 @@ fa_IR:
     search_tokenize_chinese_japanese_korean: "اجبار جستجو برای tokenize کردن چینی/ژاپنی/کره‌ای حتی در سایت هایی که از این زبان‌ها استفاده نمی‌کنند"
     search_prefer_recent_posts: "اگر سرعت جستجوی انجمن پایین است، این گزینه آخرین نوشته‌ها را در ابتدا ایندکس گذاری می‌کند."
     search_recent_posts_size: "تعداد نوشته‌های اخیر در صفحه‌ی اصلی"
+    log_search_queries: "کارنامه جستجوهای انجام شده توسط کاربران"
+    search_query_log_max_size: "حداکثر مقدار جستجوهای انجام شده برای نگهداری"
     allow_uncategorized_topics: "اجازه ایجاد موضوعات فاقد دسته‌بندی را بده. هشدار: درصورتی که موضوعات فاقد دسته‌بندی وجود داشته باشد، بایستی قبل از غیر‌فعال کردن این قابلیت آن‌ها را دسته‌بندی کنید."
     allow_duplicate_topic_titles: "به موضوعات اجازه داشتن عنوان مشابه، تکراری را بده."
     unique_posts_mins: "چند دقیقه قبل از اینکه کاربر بتواند دوباره نوشته‌ای با محتویات یکسان را بگذارد."
@@ -1031,6 +1037,7 @@ fa_IR:
     allow_all_attachments_for_group_messages: "اجازه‌ی ضمیمه فایل در ایمیل پیام‌های گروهی."
     png_to_jpg_quality: "کیفیت تبدیل فایل‌های JPG (1 کمترین کیفیت، 99 بالاترین کیفیت، 100 برای غیر‌فعال)"
     allow_staff_to_upload_any_file_in_pm: "به مدیران اجازه بده که هر فایلی در پیغام خصوصی آپلود کنند."
+    strip_image_metadata: "فراداده های عکس را حذف کن."
     enable_flash_video_onebox: "بکارگیری جاسازی لینک های  swf و flv (ادوبی فلاش Adobe Flash) در oneboxes. اخطار: شاید باعث ایجاد خطرات امنیتی شود."
     default_invitee_trust_level: "سطح اعتماد پیشفرض (0-4) برای دعوت کاربران"
     default_trust_level: "سطح اعتماد پیشفرض(0-4) برای تمام کاربران جدید. اخطار! تغییر این ممکن است شما را در معرض خطر جدی هرزنامه قرار دهد."
@@ -1778,6 +1785,8 @@ fa_IR:
     email_reject_auto_generated:
       title: "ایمیل رد شده به صورت خودکار ایجاد شده"
       subject_template: "[%{email_prefix}] مشکل ایمیل -- پاسخ ایجاد شده خودکار"
+    email_reject_unrecognized_error:
+      title: "رایانامه رد شده خطای ناشناخته"
     email_error_notification:
       title: "اعلان خطای ایمیل"
       subject_template: "[%{site_name}] مشکل ایمیل  -- ایراد احراز هویت POP "
@@ -1871,6 +1880,10 @@ fa_IR:
     new_user_of_the_month:
       title: "شما کاربر جدید ماه هستید!"
       subject_template: "شما کاربر جدید ماه هستید!"
+    queued_posts_reminder:
+      title: "یادآور نوشته‌های زمانبندی شده"
+      subject_template:
+        other: "%{count} نوشته منتظر بررسی است"
   unsubscribe_link: |
     برای لغو اشتراک از این ایمیل‌ها،  [کلیک کنید](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -1895,6 +1908,8 @@ fa_IR:
     visit_link_to_respond: "[موضوع را](%{base_url}%{url}) برای ارسال پاسخ ببینید."
     visit_link_to_respond_pm: "[پیام را](%{base_url}%{url}) برای ارسال پاسخ ببینید."
     posted_by: "نوشته شده توسط {username}% در تاریخ {post_date}%"
+    user_invited_to_private_message_pm_group:
+      title: "کاربر دعوت شده به پیام خصوصی"
     user_invited_to_private_message_pm:
       title: "کاربر دعوت شده به پیام خصوصی"
       subject_template: "[%{email_prefix}] %{username} شما را به پیام '%{topic_title}' دعوت کرده"
@@ -2027,6 +2042,18 @@ fa_IR:
       text_body_template: |2
 
         %{message}
+    account_suspended:
+      title: "حساب کاربری معلق شد"
+      subject_template: "[%{email_prefix}] حساب کاربری شما معلق شده است"
+      text_body_template: |
+        شما از انجمن گفتگو معلق شده اید تا %{suspended_till}.
+
+        %{reason}
+
+        %{message}
+    account_exists:
+      title: "حساب کاربری وحود دارد"
+      subject_template: "[%{email_prefix}] حساب کاربری وحود دارد"
     digest:
       why: "یک گزارش کوتاه از %{site_link}  از آخرین باری که بازدید کردید در %{last_seen_at}"
       since_last_visit: "از آخرین بازدید شما"
@@ -2148,6 +2175,10 @@ fa_IR:
     see_more: "بیشتر"
     search_title: "جستجو در سایت"
     search_google: "گوگل"
+  login_required:
+    welcome_message: |
+      ## [خوش آمدید به %{title}](#welcome)
+      داشتن حساب کاربری الزامی است. لطفا یک حساب کاربری بسازید یا وارد شوید.
   terms_of_service:
     title: "شرایط استفاده از خدمات"
     signup_form_message: 'من  <a href="/tos" target="_blank">شرایط استفاده از خدمات</a> را خواندم و قبول می‌کنم.'

@@ -124,49 +124,28 @@ module Jobs
       exceptions = []
       dbs.each do |db|
         begin
-          thread_exception = {}
-          # NOTE: This looks odd, in fact it looks crazy but there is a reason
-          #  A bug in therubyracer means that under certain conditions running in a fiber
-          #  can cause the whole v8 context to corrupt so much that it will hang sidekiq
-          #
-          #  If you are brave and want to try to fix this either in celluloid or therubyracer, the repro is:
-          #
-          #  1. Create a big Discourse db: (you can start from script/profile_db_generator.rb)
-          #  2. Queue a ton of jobs, eg: User.pluck(:id).each{|id| Jobs.enqueue(:user_email, type: :digest, user_id: id)};
-          #  3. Run sidekiq
-          #
-          #  The issue only happens in Ruby 2.0 for some reason, you start getting V8::Error with no context
-          #
-          #  See: https://github.com/cowboyd/therubyracer/issues/206
-          #
-          #  The restricted stack space of fibers opens a bunch of risks up, by avoiding them altogether
-          #   we can mitigate giving up a very marginal amount of throughput
-          #
-          #  Ideally we could just tell sidekiq to avoid fibers
+          exception = {}
 
-          t = Thread.new do
+          RailsMultisite::ConnectionManagement.with_connection(db) do
             begin
-              RailsMultisite::ConnectionManagement.establish_connection(db: db)
               I18n.locale = SiteSetting.default_locale || "en"
               I18n.ensure_all_loaded!
               begin
                 execute(opts)
               rescue => e
-                thread_exception[:ex] = e
-                thread_exception[:other] = { problem_db: db }
+                exception[:ex] = e
+                exception[:other] = { problem_db: db }
               end
             rescue => e
-              thread_exception[:ex] = e
-              thread_exception[:message] = "While establishing database connection to #{db}"
-              thread_exception[:other] = { problem_db: db }
+              exception[:ex] = e
+              exception[:message] = "While establishing database connection to #{db}"
+              exception[:other] = { problem_db: db }
             ensure
-              ActiveRecord::Base.connection_handler.clear_active_connections!
               total_db_time += Instrumenter.stats.duration_ms
             end
           end
-          t.join
 
-          exceptions << thread_exception unless thread_exception.empty?
+          exceptions << exception unless exception.empty?
         end
       end
 
