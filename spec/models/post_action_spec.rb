@@ -42,62 +42,88 @@ describe PostAction do
       expect { PostAction.act(admin, post, PostActionType.types[:notify_user], message: "WAT") }.not_to raise_error
     end
 
-    it "notify moderators integration test" do
-      post = create_post
-      mod = moderator
-      Group.refresh_automatic_groups!
+    context "notify moderators integration test" do
+      let!(:mod)  { moderator }
 
-      action = PostAction.act(codinghorror, post, PostActionType.types[:notify_moderators], message: "this is my special long message")
+      before { Group.refresh_automatic_groups! }
 
-      posts = Post.joins(:topic)
-        .select('posts.id, topics.subtype, posts.topic_id')
-        .where('topics.archetype' => Archetype.private_message)
-        .to_a
+      it "flag from TL1 user" do
+        post = create_post
 
-      expect(posts.count).to eq(1)
-      expect(action.related_post_id).to eq(posts[0].id.to_i)
-      expect(posts[0].subtype).to eq(TopicSubtype.notify_moderators)
+        action = PostAction.act(codinghorror, post, PostActionType.types[:notify_moderators], message: "this is my special long message")
 
-      topic = posts[0].topic
+        posts = Post.joins(:topic)
+          .select('posts.id, topics.subtype, posts.topic_id')
+          .where('topics.archetype' => Archetype.private_message)
+          .to_a
 
-      # Moderators should be invited to the private topic, otherwise they're not permitted to see it
-      topic_user_ids = topic.reload.topic_users.map { |x| x.user_id }
-      expect(topic_user_ids).to include(codinghorror.id)
-      expect(topic_user_ids).to include(mod.id)
+        expect(posts.count).to eq(1)
+        expect(action.related_post_id).to eq(posts[0].id.to_i)
+        expect(posts[0].subtype).to eq(TopicSubtype.notify_moderators)
 
-      expect(topic.topic_users.where(user_id: mod.id)
-              .pluck(:notification_level).first).to eq(TopicUser.notification_levels[:tracking])
+        topic = posts[0].topic
 
-      expect(topic.topic_users.where(user_id: codinghorror.id)
-              .pluck(:notification_level).first).to eq(TopicUser.notification_levels[:watching])
+        # Moderators should be invited to the private topic, otherwise they're not permitted to see it
+        topic_user_ids = topic.reload.topic_users.map { |x| x.user_id }
+        expect(topic_user_ids).to include(codinghorror.id)
+        expect(topic_user_ids).to include(mod.id)
 
-      # reply to PM should not clear flag
-      PostCreator.new(mod, topic_id: posts[0].topic_id, raw: "This is my test reply to the user, it should clear flags").create
-      action.reload
-      expect(action.deleted_at).to eq(nil)
+        expect(topic.topic_users.where(user_id: mod.id)
+                .pluck(:notification_level).first).to eq(TopicUser.notification_levels[:tracking])
 
-      # Acting on the flag should not post an automated status message (since a moderator already replied)
-      expect(topic.posts.count).to eq(2)
-      PostAction.agree_flags!(post, admin)
-      topic.reload
-      expect(topic.posts.count).to eq(2)
+        expect(topic.topic_users.where(user_id: codinghorror.id)
+                .pluck(:notification_level).first).to eq(TopicUser.notification_levels[:watching])
 
-      # Clearing the flags should not post an automated status message
-      PostAction.act(mod, post, PostActionType.types[:notify_moderators], message: "another special message")
-      PostAction.clear_flags!(post, admin)
-      topic.reload
-      expect(topic.posts.count).to eq(2)
+        # reply to PM should not clear flag
+        PostCreator.new(mod, topic_id: posts[0].topic_id, raw: "This is my test reply to the user, it should clear flags").create
+        action.reload
+        expect(action.deleted_at).to eq(nil)
 
-      # Acting on the flag should post an automated status message
-      another_post = create_post
-      action = PostAction.act(codinghorror, another_post, PostActionType.types[:notify_moderators], message: "foobar")
-      topic = action.related_post.topic
+        # Acting on the flag should not post an automated status message (since a moderator already replied)
+        expect(topic.posts.count).to eq(2)
+        PostAction.agree_flags!(post, admin)
+        topic.reload
+        expect(topic.posts.count).to eq(2)
 
-      expect(topic.posts.count).to eq(1)
-      PostAction.agree_flags!(another_post, admin)
-      topic.reload
-      expect(topic.posts.count).to eq(2)
-      expect(topic.posts.last.post_type).to eq(Post.types[:moderator_action])
+        # Clearing the flags should not post an automated status message
+        PostAction.act(mod, post, PostActionType.types[:notify_moderators], message: "another special message")
+        PostAction.clear_flags!(post, admin)
+        topic.reload
+        expect(topic.posts.count).to eq(2)
+
+        # Acting on the flag should post an automated status message
+        another_post = create_post
+        action = PostAction.act(codinghorror, another_post, PostActionType.types[:notify_moderators], message: "foobar")
+        topic = action.related_post.topic
+
+        expect(topic.posts.count).to eq(1)
+        PostAction.agree_flags!(another_post, admin)
+        topic.reload
+        expect(topic.posts.count).to eq(2)
+        expect(topic.posts.last.post_type).to eq(Post.types[:moderator_action])
+      end
+
+      it "flag from TL0 user" do
+        tl0_user = Fabricate(:user, trust_level: 0)
+        first_post = Fabricate(:post, user: Fabricate(:user, trust_level: 1))
+
+        pm_topic = Fabricate(:private_message_topic,
+          first_post: first_post,
+          topic_allowed_users: [
+            Fabricate.build(:topic_allowed_user, user: first_post.user),
+            Fabricate.build(:topic_allowed_user, user: tl0_user),
+          ]
+        )
+
+        action = PostAction.act(tl0_user, first_post, PostActionType.types[:notify_moderators], message: 'my special message')
+
+        expect(action.related_post_id).to be_present
+
+        notify_moderators_post = action.related_post
+
+        expect(notify_moderators_post.topic&.subtype).to eq(TopicSubtype.notify_moderators)
+        expect(notify_moderators_post.raw).to include('my special message')
+      end
     end
 
     describe 'notify_moderators' do
