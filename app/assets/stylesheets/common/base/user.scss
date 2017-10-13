@@ -397,6 +397,12 @@
   }
 
   .label {
+    // TODO: Remove once all languages have been translated to remove icons from
+    // their user-stat labels
+    .fa:nth-of-type(2) {
+      display: none;
+    }
+
     color: blend-primary-secondary(50%);
   }
 }
@@ -439,7 +445,7 @@
   }
 }
 
-.likes-section {
+.summary-user-list {
   li {
     height: 40px;
   }

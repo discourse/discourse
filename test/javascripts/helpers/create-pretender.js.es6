@@ -81,12 +81,20 @@ export default function() {
     this.get('/u/eviltrout/summary.json', () => {
       return response({
         user_summary: {
-          topics: [],
-          topic_ids: [],
-          replies: [],
-          links: []
+          topic_ids: [1234],
+          replies: [{ topic_id: 1234 }],
+          links: [{ topic_id: 1234, url: 'https://eviltrout.com' }],
+          most_replied_to_users: [ { id: 333 } ],
+          most_liked_by_users: [ { id: 333 } ],
+          most_liked_users: [ { id: 333 } ],
+          badges: [ { badge_id: 444 } ]
         },
-        topics: [],
+        badges: [
+          { id: 444, count: 1 }
+        ],
+        topics: [
+          { id: 1234, title: 'cool title', url: '/t/1234/cool-title' }
+        ],
       });
     });
 

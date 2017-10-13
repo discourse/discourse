@@ -11,7 +11,6 @@ import UserBadge from 'discourse/models/user-badge';
 import UserActionStat from 'discourse/models/user-action-stat';
 import UserAction from 'discourse/models/user-action';
 import Group from 'discourse/models/group';
-import Topic from 'discourse/models/topic';
 import { emojiUnescape } from 'discourse/lib/text';
 import PreloadStore from 'preload-store';
 import { defaultHomepage } from 'discourse/lib/utilities';
@@ -492,38 +491,39 @@ const User = RestModel.extend({
   },
 
   summary() {
-    return ajax(userPath(`${this.get("username_lower")}/summary.json`))
-           .then(json => {
-              const summary = json["user_summary"];
-              const topicMap = {};
-              const badgeMap = {};
+    let { store } = this;
 
-              json.topics.forEach(t => topicMap[t.id] = Topic.create(t));
-              Badge.createFromJson(json).forEach(b => badgeMap[b.id] = b );
+    return ajax(userPath(`${this.get("username_lower")}/summary.json`)).then(json => {
+      const summary = json.user_summary;
+      const topicMap = {};
+      const badgeMap = {};
 
-              summary.topics = summary.topic_ids.map(id => topicMap[id]);
+      json.topics.forEach(t => topicMap[t.id] = store.createRecord('topic', t));
+      Badge.createFromJson(json).forEach(b => badgeMap[b.id] = b );
 
-              summary.replies.forEach(r => {
-                r.topic = topicMap[r.topic_id];
-                r.url = r.topic.urlForPostNumber(r.post_number);
-                r.createdAt = new Date(r.created_at);
-              });
+      summary.topics = summary.topic_ids.map(id => topicMap[id]);
 
-              summary.links.forEach(l => {
-                l.topic = topicMap[l.topic_id];
-                l.post_url = l.topic.urlForPostNumber(l.post_number);
-              });
+      summary.replies.forEach(r => {
+        r.topic = topicMap[r.topic_id];
+        r.url = r.topic.urlForPostNumber(r.post_number);
+        r.createdAt = new Date(r.created_at);
+      });
 
-              if (summary.badges) {
-                summary.badges = summary.badges.map(ub => {
-                  const badge = badgeMap[ub.badge_id];
-                  badge.count = ub.count;
-                  return badge;
-                });
-              }
+      summary.links.forEach(l => {
+        l.topic = topicMap[l.topic_id];
+        l.post_url = l.topic.urlForPostNumber(l.post_number);
+      });
 
-              return summary;
-           });
+      if (summary.badges) {
+        summary.badges = summary.badges.map(ub => {
+          const badge = badgeMap[ub.badge_id];
+          badge.count = ub.count;
+          return badge;
+        });
+      }
+
+      return summary;
+    });
   },
 
   canManageGroup(group) {

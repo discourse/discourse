@@ -895,11 +895,11 @@ en:
           one: "post created"
           other: "posts created"
         likes_given:
-          one: "<i class='fa fa-heart'></i> given"
-          other: "<i class='fa fa-heart'></i> given"
+          one: "given"
+          other: "given"
         likes_received:
-          one: "<i class='fa fa-heart'></i> received"
-          other: "<i class='fa fa-heart'></i> received"
+          one: "received"
+          other: "received"
         days_visited:
           one: "day visited"
           other: "days visited"
