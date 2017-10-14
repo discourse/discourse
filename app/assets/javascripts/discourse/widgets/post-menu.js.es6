@@ -353,11 +353,13 @@ export default createWidget('post-menu', {
 
     const contents = [ h('nav.post-controls.clearfix', postControls) ];
     if (state.likedUsers.length) {
+      const remaining = state.total - state.likedUsers.length;
       contents.push(this.attach('small-user-list', {
         users: state.likedUsers,
-        addSelf: attrs.liked,
+        addSelf: attrs.liked && remaining === 0,
         listClassName: 'who-liked',
-        description: 'post.actions.people.like'
+        description: remaining > 0 ? 'post.actions.people.like_capped' : 'post.actions.people.like',
+        count: remaining
       }));
     }
 
@@ -413,6 +415,7 @@ export default createWidget('post-menu', {
 
     return this.store.find('post-action-user', { id: attrs.id, post_action_type_id: LIKE_ACTION }).then(users => {
       state.likedUsers = users.map(avatarAtts);
+      state.total = users.totalRows;
     });
   },
 
