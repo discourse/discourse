@@ -156,7 +156,6 @@ const DEFAULT_LIST = [
   'iframe[marginwidth]',
   'iframe[width]',
   'img[alt]',
-  'img[class]',
   'img[height]',
   'img[title]',
   'img[width]',
