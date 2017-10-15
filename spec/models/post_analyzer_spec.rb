@@ -113,21 +113,25 @@ describe PostAnalyzer do
 
     it "doesn't count avatars as images" do
       post_analyzer = PostAnalyzer.new(raw_post_with_avatars, default_topic_id)
+      PrettyText.stubs(:cook).returns(raw_post_with_avatars)
       expect(post_analyzer.image_count).to eq(0)
     end
 
     it "doesn't count favicons as images" do
       post_analyzer = PostAnalyzer.new(raw_post_with_favicon, default_topic_id)
+      PrettyText.stubs(:cook).returns(raw_post_with_favicon)
       expect(post_analyzer.image_count).to eq(0)
     end
 
     it "doesn't count thumbnails as images" do
       post_analyzer = PostAnalyzer.new(raw_post_with_thumbnail, default_topic_id)
+      PrettyText.stubs(:cook).returns(raw_post_with_thumbnail)
       expect(post_analyzer.image_count).to eq(0)
     end
 
     it "doesn't count whitelisted images" do
       Post.stubs(:white_listed_image_classes).returns(["classy"])
+      PrettyText.stubs(:cook).returns(raw_post_with_two_classy_images)
       post_analyzer = PostAnalyzer.new(raw_post_with_two_classy_images, default_topic_id)
       expect(post_analyzer.image_count).to eq(0)
     end

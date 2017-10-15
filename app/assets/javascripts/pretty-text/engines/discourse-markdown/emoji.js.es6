@@ -241,5 +241,5 @@ export function setup(helper) {
     );
   });
 
-  helper.whiteList(['img[class=emoji]']);
+  helper.whiteList(['img[class=emoji]','img[class=emoji emoji-custom]']);
 }
