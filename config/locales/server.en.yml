@@ -1749,7 +1749,7 @@ en:
     username:
       short: "must be at least %{min} characters"
       long: "must be no more than %{max} characters"
-      characters: "must only include numbers, letters, hyphens, and underscores"
+      characters: "must only include numbers, letters, dashes, and underscores"
       unique: "must be unique"
       blank: "must be present"
       must_begin_with_alphanumeric_or_underscore: "must begin with a letter, a number or an underscore"
