@@ -6,8 +6,8 @@ const bindings = {
   '!':               {postAction: 'showFlags'},
   '#':               {handler: 'goToPost', anonymous: true},
   '/':               {handler: 'toggleSearch', anonymous: true},
-  'ctrl+shift+s':    {handler: 'toggleSearch', anonymous: true},
-  'command+shift+s': {handler: 'toggleSearch', anonymous: true},
+  'ctrl+alt+s':      {handler: 'toggleSearch', anonymous: true},
+  'command+alt+s':   {handler: 'toggleSearch', anonymous: true},
   '=':               {handler: 'toggleHamburgerMenu', anonymous: true},
   '?':               {handler: 'showHelpModal', anonymous: true},
   '.':               {click: '.alert.alert-info.clickable', anonymous: true}, // show incoming/updated topics

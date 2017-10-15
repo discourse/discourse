@@ -233,7 +233,7 @@ export default Ember.Component.extend({
     const shortcuts = this.get('toolbar.shortcuts');
 
     // for some reason I am having trouble bubbling this so hack it in
-    mouseTrap.bind(['ctrl+shift+s','command+shift+s'], (event) =>{
+    mouseTrap.bind(['ctrl+alt+s','command+alt+s'], (event) =>{
       this.appEvents.trigger('header:keyboard-trigger', {type: 'search', event});
       return true;
     });
