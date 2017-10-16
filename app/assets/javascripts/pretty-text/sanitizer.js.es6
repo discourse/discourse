@@ -98,6 +98,14 @@ export function sanitize(text, whiteLister) {
           return "-STRIP-";
         }
 
+        // Heading ids must begin with `heading--`
+        if (
+          ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].indexOf(tag) !== -1 &&
+          value.match(/^heading\-\-[a-zA-Z0-9\-\_]+$/)
+        ) {
+          return attr(name, value);
+        }
+
         const custom = whiteLister.getCustom();
         for (let i=0; i<custom.length; i++) {
           const fn = custom[i];
