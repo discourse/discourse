@@ -351,6 +351,11 @@ class UsersController < ApplicationController
 
     authentication.start
 
+    if authentication.email_valid? && !authentication.authenticated?
+      # posted email is different that the already validated one?
+      return fail_with('login.incorrect_username_email_or_password')
+    end
+
     activation = UserActivator.new(user, request, session, cookies)
     activation.start
 
