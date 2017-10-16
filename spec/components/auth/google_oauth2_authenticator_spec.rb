@@ -85,15 +85,30 @@ describe Auth::GoogleOAuth2Authenticator do
   context 'after_create_account' do
     it 'confirms email' do
       authenticator = Auth::GoogleOAuth2Authenticator.new
-      user = Fabricate(:user)
+      user = Fabricate(:user, email: 'realgoogleuser@gmail.com')
       session = {
         email_valid: "true",
         extra_data: {
-          google_user_id: 1
+          google_user_id: 1,
+          email: 'realgoogleuser@gmail.com'
         }
       }
       authenticator.after_create_account(user, session)
       expect(user.email_confirmed?).to eq(true)
+    end
+
+    it "doesn't confirm email if it was changed" do
+      authenticator = Auth::GoogleOAuth2Authenticator.new
+      user = Fabricate(:user, email: 'changed@gmail.com')
+      session = {
+        email_valid: "true",
+        extra_data: {
+          google_user_id: 1,
+          email: 'realgoogleuser@gmail.com'
+        }
+      }
+      authenticator.after_create_account(user, session)
+      expect(user.email_confirmed?).to eq(false)
     end
   end
 
