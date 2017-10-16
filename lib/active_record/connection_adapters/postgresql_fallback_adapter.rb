@@ -32,7 +32,10 @@ class PostgreSQLFallbackHandler
   end
 
   def master_down=(args)
-    synchronize { @masters_down[namespace] = args }
+    synchronize do
+      @masters_down[namespace] = args
+      Sidekiq.pause! if args
+    end
   end
 
   def master_up(namespace)
@@ -53,6 +56,7 @@ class PostgreSQLFallbackHandler
 
             self.master_up(key)
             Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
+            Sidekiq.unpause!
           end
         rescue => e
           logger.warn "#{log_prefix}: Connection to master PostgreSQL server failed with '#{e.message}'"
