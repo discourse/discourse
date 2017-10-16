@@ -809,6 +809,24 @@ describe UsersController do
           expect(TwitterUserInfo.count).to eq(1)
         end
       end
+
+      it "returns an error when email has been changed from the validated email address" do
+        auth = session[:authentication] = {}
+        auth[:email_valid] = 'true'
+        auth[:email] = 'therealone@gmail.com'
+        post_user
+        json = JSON.parse(response.body)
+        expect(json['success']).to eq(false)
+        expect(json['message']).to be_present
+      end
+
+      it "will create the user successfully if email validation is required" do
+        auth = session[:authentication] = {}
+        auth[:email] = post_user_params[:email]
+        post_user
+        json = JSON.parse(response.body)
+        expect(json['success']).to eq(true)
+      end
     end
 
     context 'after success' do

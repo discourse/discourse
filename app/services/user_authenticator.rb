@@ -25,11 +25,15 @@ class UserAuthenticator
     @session = nil
   end
 
-  private
+  def email_valid?
+    @session && @session[:email_valid]
+  end
 
   def authenticated?
     @session && @session[:email] == @user.email && @session[:email_valid]
   end
+
+  private
 
   def authenticator
     if authenticator_name
