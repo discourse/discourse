@@ -96,7 +96,6 @@ describe ActiveRecord::ConnectionHandling do
         expect(Sidekiq.paused?).to eq(false)
         expect(ActiveRecord::Base.connection_pool.connections.count).to eq(0)
 
-        skip("Figuring out why the following keeps failing to obtain a connection on Travis")
         expect(ActiveRecord::Base.connection)
           .to be_an_instance_of(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
       end
