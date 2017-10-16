@@ -11,6 +11,13 @@
       -ms-flex-direction: column;
           flex-direction: column;
   position: relative;
+  vertical-align: middle;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+   -khtml-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 
   &.is-hidden {
     display: none;
@@ -58,8 +65,6 @@
   }
 
   .select-box-kit-header {
-    -webkit-box-sizing: border-box;
-            box-sizing: border-box;
     cursor: pointer;
     outline: none;
     display: flex;
@@ -128,6 +133,8 @@
 
     .text {
       margin: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .d-icon {
@@ -186,8 +193,6 @@
   }
 
   .select-box-kit-filter {
-    border-bottom: 1px solid $primary-low;
-    background: $secondary;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -197,20 +202,34 @@
     -webkit-box-pack: justify;
         -ms-flex-pack: justify;
             justify-content: space-between;
-    padding: 0 10px;
 
-    .filter-query, .filter-query:focus, .filter-query:active {
+    .select-box-kit-filter-input, .select-box-kit-filter-input:focus, .select-box-kit-filter-input:active {
       background: none;
       margin: 0;
+      padding: 0;
       -webkit-box-flex: 1;
           -ms-flex: 1;
               flex: 1;
       outline: none;
       border: 0;
+      border-radius: 0;
       -webkit-box-shadow: none;
               box-shadow: none;
       width: 100%;
-      padding: 5px 0;
+    }
+
+    &.is-hidden {
+      clip: rect(0 0 0 0);
+      width: 1px;
+      height: 1px;
+      border: 0;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      position: fixed;
+      outline: 0;
+      left: 0px;
+      top: 0px;
     }
   }
 
@@ -234,9 +253,26 @@
     margin: 0;
     padding: 0;
     overflow: hidden;
-    position: absolute;
+    position: fixed;
     outline: 0;
     left: 0px;
     top: 0px;
   }
+}
+
+.select-box-kit-click-capture-mask {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  position: fixed;
+  left: 0;
+  top: 0;
+  min-height: 100%;
+  min-width: 100%;
+  height: auto;
+  width: auto;
+  opacity: 0;
+  z-index: 998;
+  background-color: #fff;
+  filter: alpha(opacity=0);
 }

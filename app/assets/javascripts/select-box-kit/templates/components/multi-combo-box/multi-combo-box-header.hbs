@@ -9,9 +9,11 @@
       </span>
     </li>
   {{else}}
-    <li class="choice-placeholder">
-      {{i18n text}}
-    </li>
+    {{#if shouldDisplayFilterPlaceholder}}
+      <li class="choice-placeholder">
+        {{text}}
+      </li>
+    {{/if}}
   {{/each}}
 
   <li class="filter">

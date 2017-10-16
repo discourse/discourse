@@ -4,9 +4,10 @@ const { isNone } = Ember;
 
 export default SelectBoxKitComponent.extend({
   classNames: "combobox",
+  autoFilterable: true,
 
   @computed("selectedContent.firstObject.name", "computedNone.name")
-  headerText(selectedName, noneName) {
+  computedHeaderText(selectedName, noneName) {
     if (isNone(selectedName)) {
       if (isNone(noneName)) {
         return this._super();

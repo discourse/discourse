@@ -6,8 +6,16 @@ export default SelectBoxKitComponent.extend({
   classNames: "multi-combobox",
   headerComponent: "multi-combo-box/multi-combo-box-header",
   filterComponent: null,
-  headerText: "select_values",
+  headerText: "select_box.default_header_text",
   value: [],
+  allowAny: true,
+
+  @computed("filter")
+  templateForCreateRow() {
+    return (rowComponent) => {
+      return `Create: ${rowComponent.get("content.name")}`;
+    };
+  },
 
   keyDown(event) {
     const keyCode = event.keyCode || event.which;
@@ -17,7 +25,7 @@ export default SelectBoxKitComponent.extend({
       let $lastSelectedValue = $(this.$(".choices .selected-value").last());
 
       if ($lastSelectedValue.is(":focus") || $(document.activeElement).is($lastSelectedValue)) {
-        this.send("onDeselect", $lastSelectedValue.attr("data-value"));
+        this.send("onDeselect", $lastSelectedValue.data("value"));
         $filterQuery.focus();
         return;
       }
@@ -79,12 +87,12 @@ export default SelectBoxKitComponent.extend({
     },
 
     onSelect(value) {
-      this.set("filter", "");
-      this.set("highlightedValue", null);
+      this.setProperties({ filter: "", highlightedValue: null });
       this.get("value").pushObject(value);
     },
 
     onDeselect(value) {
+      this.defaultOnDeselect(value);
       this.get("value").removeObject(value);
     }
   }

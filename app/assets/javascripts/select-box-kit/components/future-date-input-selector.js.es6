@@ -1,6 +1,6 @@
 import { iconHTML } from 'discourse-common/lib/icon-library';
 import { default as computed, observes } from "ember-addons/ember-computed-decorators";
-import Combobox from 'discourse-common/components/combo-box';
+import ComboBoxComponent from "select-box-kit/components/combo-box";
 import { CLOSE_STATUS_TYPE } from 'discourse/controllers/edit-topic-timer';
 
 const LATER_TODAY = 'later_today';
@@ -17,7 +17,7 @@ export const SET_BASED_ON_LAST_POST = 'set_based_on_last_post';
 
 export const FORMAT = 'YYYY-MM-DD HH:mm';
 
-export default Combobox.extend({
+export default ComboBoxComponent.extend({
   classNames: ['future-date-input-selector'],
   isCustom: Ember.computed.equal("value", PICK_DATE_AND_TIME),
 

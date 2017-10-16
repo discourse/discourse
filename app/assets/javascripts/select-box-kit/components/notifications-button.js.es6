@@ -16,6 +16,8 @@ export default DropdownSelectBoxComponent.extend({
   collectionHeight: "auto",
   value: Ember.computed.alias("notificationLevel"),
   castInteger: true,
+  autofilterable: false,
+  filterable: false,
 
   @computed("selectedDetails.icon", "selectedDetails.key")
   headerIcon(icon, key) {
@@ -33,7 +35,7 @@ export default DropdownSelectBoxComponent.extend({
   },
 
   @computed("selectedTitle", "showFullTitle")
-  headerText(selectedTitle, showFullTitle) {
+  computedHeaderText(selectedTitle, showFullTitle) {
     return showFullTitle ? selectedTitle : null;
   },
 

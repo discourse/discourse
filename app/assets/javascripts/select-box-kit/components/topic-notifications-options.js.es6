@@ -26,7 +26,7 @@ export default NotificationOptionsComponent.extend({
   },
 
   @computed("computedValue", "showFullTitle")
-  headerText(computedValue, showFullTitle) {
+  computedHeaderText(computedValue, showFullTitle) {
     if (showFullTitle) {
       const details = buttonDetails(computedValue);
       return I18n.t(`topic.notifications.${details.key}.title`);

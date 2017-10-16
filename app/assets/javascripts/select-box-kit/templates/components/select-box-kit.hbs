@@ -3,14 +3,14 @@
   type="text"
   aria-haspopup="true"
   role="button"
-  aria-labelledby="select-box-kit-input-{{elementId}}"
+  aria-labelledby="select-box-kit-offscreen-{{elementId}}"
   tabindex={{tabindex}}
   name={{name}}
   value={{computedValue}}
 />
 
 {{component headerComponent
-  text=headerText
+  text=computedHeaderText
   icon=headerIcon
   caretUpIcon=headerCaretUpIcon
   caretDownIcon=headerCaretDownIcon
@@ -24,32 +24,37 @@
 }}
 
 <div class="select-box-kit-body">
-  {{#if renderBody}}
-    {{#if filterable}}
-      {{component filterComponent
-        onFilterChange=(action "onFilterChange")
-        icon=filterIcon
-        filter=filter
-        isFocused=filterFocused
-        placeholder=filterPlaceholder
-        tabindex=tabindex
-      }}
-    {{/if}}
+  {{component filterComponent
+    onFilterChange=(action "onFilterChange")
+    icon=filterIcon
+    filter=filter
+    isHidden=filterIsHidden
+    isFocused=isFocused
+    placeholder=(i18n filterPlaceholder)
+    tabindex=tabindex
+  }}
 
+  {{#if renderBody}}
     {{component collectionComponent
+      shouldDisplayCreateRow=shouldDisplayCreateRow
       none=computedNone
+      createRowContent=createRowContent
       selectedContent=selectedContent
       filteredContent=filteredContent
       rowComponent=rowComponent
+      noneRowComponent=noneRowComponent
+      createRowComponent=createRowComponent
       iconForRow=iconForRow
       templateForRow=templateForRow
       templateForNoneRow=templateForNoneRow
+      templateForCreateRow=templateForCreateRow
       shouldHighlightRow=shouldHighlightRow
       shouldSelectRow=shouldSelectRow
       titleForRow=titleForRow
       onClearSelection=(action "onClearSelection")
       onSelect=(action "onSelect")
-      onHoverRow=(action "onHoverRow")
+      onHighlight=(action "onHighlight")
+      onCreateContent=(action "onCreateContent")
       noContentLabel=noContentLabel
       highlightedValue=highlightedValue
       computedValue=computedValue

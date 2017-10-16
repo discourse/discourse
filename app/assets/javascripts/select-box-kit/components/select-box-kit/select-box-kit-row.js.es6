@@ -1,6 +1,6 @@
 import { on } from 'ember-addons/ember-computed-decorators';
 import computed from 'ember-addons/ember-computed-decorators';
-const { run } = Ember;
+const { run, isPresent } = Ember;
 
 export default Ember.Component.extend({
   layoutName: "select-box-kit/templates/components/select-box-kit/select-box-kit-row",
@@ -36,20 +36,20 @@ export default Ember.Component.extend({
   _clearDebounce() {
     const hoverDebounce = this.get("hoverDebounce");
 
-    if (Ember.isPresent(hoverDebounce)) {
+    if (isPresent(hoverDebounce)) {
       run.cancel(hoverDebounce);
     }
   },
 
   mouseEnter() {
-    this.set("hoverDebounce", run.debounce(this, this._sendOnHoverAction, 32));
+    this.set("hoverDebounce", run.debounce(this, this._sendOnHighlightAction, 32));
   },
 
   click() {
     this.sendAction("onSelect", this.get("content.value"));
   },
 
-  _sendOnHoverAction() {
-    this.sendAction("onHover", this.get("content.value"));
+  _sendOnHighlightAction() {
+    this.sendAction("onHighlight", this.get("content.value"));
   }
 });

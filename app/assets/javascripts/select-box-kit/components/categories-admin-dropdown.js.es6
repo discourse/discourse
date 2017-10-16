@@ -5,7 +5,7 @@ import computed from "ember-addons/ember-computed-decorators";
 export default DropdownSelectBoxComponent.extend({
   classNames: "categories-admin-dropdown",
   headerIcon: `${iconHTML('bars')}${iconHTML('caret-down')}`.htmlSafe(),
-  headerText: null,
+  computedHeaderText: null,
   actionNames: { create: "createCategory", reorder: "reorderCategories" },
 
   @computed

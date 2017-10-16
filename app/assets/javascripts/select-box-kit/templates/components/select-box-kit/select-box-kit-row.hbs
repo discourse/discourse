@@ -1,1 +1,9 @@
-{{{template}}}
+{{#if template}}
+  {{{template}}}
+{{else}}
+  {{#if icon}}
+    {{{icon}}}
+  {{/if}}
+
+  <p class="text">{{content.name}}</p>
+{{/if}}

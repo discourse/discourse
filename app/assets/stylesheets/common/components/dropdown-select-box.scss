@@ -84,6 +84,12 @@
     outline: 0;
     justify-content: flex-start;
     background: none;
+    border: 1px solid transparent;
+
+    &.is-focused {
+      border: 1px solid $tertiary;
+      box-shadow: $tertiary 0px 0px 6px 0px;
+    }
 
     .d-icon + .d-icon {
       margin-left: 5px;

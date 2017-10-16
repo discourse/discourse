@@ -1,21 +1,20 @@
 import MultiComboBoxComponent from "select-box-kit/components/multi-combo-box";
 
 export default MultiComboBoxComponent.extend({
-  classNames: "new-admin-group-selector",
+  classNames: "admin-group-selector",
 
   actions: {
-    onSelect(content) {
+    onSelect(value) {
       this.defaultOnSelect();
-
-      this.triggerAction({ action: "groupAdded", actionContext: content });
+      this.triggerAction({ action: "groupAdded", actionContext: value });
     },
 
-    onDeselect(content) {
-      this.defaultOnSelect();
+    onDeselect(value) {
+      this.defaultOnDeselect();
 
       this.triggerAction({
         action: "groupRemoved",
-        actionContext: this.valueForContent(content)
+        actionContext: value
       });
     }
   }

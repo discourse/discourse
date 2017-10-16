@@ -4,14 +4,14 @@ export default Ember.Component.extend({
   layoutName: "select-box-kit/templates/components/select-box-kit/select-box-kit-header",
   classNames: "select-box-kit-header",
   classNameBindings: ["isFocused"],
-  attributeBindings: ["selectedContent.firstObject.name:data-name"],
+  attributeBindings: ["text:data-name"],
 
   @computed("selectBoxIsExpanded", "caretUpIcon", "caretDownIcon")
   caretIcon(selectBoxIsExpanded, caretUpIcon, caretDownIcon) {
     return selectBoxIsExpanded === true ? caretUpIcon : caretDownIcon;
   },
 
-  click(event) {
+  click() {
     this.sendAction("onToggle");
     event.stopPropagation();
   }

@@ -51,7 +51,7 @@ componentTest('with allowUncategorized=null', {
     expandSelectBox('.category-chooser');
 
     andThen(() => {
-      assert.equal(selectBox('.category-chooser').header.name(), "Select a category…");
+      assert.equal(selectBox('.category-chooser').header.name(), "Select a category&hellip;");
     });
   }
 });
@@ -67,7 +67,7 @@ componentTest('with allowUncategorized=null rootNone=true', {
     expandSelectBox('.category-chooser');
 
     andThen(() => {
-      assert.equal(selectBox('.category-chooser').header.name(), "Select a category…");
+      assert.equal(selectBox('.category-chooser').header.name(), "Select a category&hellip;");
     });
   }
 });
@@ -84,7 +84,7 @@ componentTest('with disallowed uncategorized, rootNone and rootNoneLabel', {
     expandSelectBox('.category-chooser');
 
     andThen(() => {
-      assert.equal(selectBox('.category-chooser').header.name(), "Select a category…");
+      assert.equal(selectBox('.category-chooser').header.name(), "Select a category&hellip;");
     });
   }
 });

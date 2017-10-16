@@ -211,6 +211,14 @@ $mobile-breakpoint: 700px;
 
 .admin-container {
   margin-top: 20px;
+
+  .select-box-kit {
+    width: 350px;
+  }
+
+  .select-box-kit-header {
+    height: 28px;
+  }
 }
 
 .admin-container .controls {

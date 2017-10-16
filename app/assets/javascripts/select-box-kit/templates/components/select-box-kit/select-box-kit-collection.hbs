@@ -1,6 +1,6 @@
 {{#if none}}
   {{#if selectedContent}}
-    {{select-box-kit/select-box-kit-none-row
+    {{component noneRowComponent
       content=none
       templateForRow=templateForNoneRow
       titleForRow=titleForRow
@@ -9,10 +9,25 @@
       shouldSelectRow=shouldSelectRow
       highlightedValue=highlightedValue
       onClearSelection=onClearSelection
-      onHover=onHoverRow
+      onHighlight=onHighlight
       value=computedValue
     }}
   {{/if}}
+{{/if}}
+
+{{#if shouldDisplayCreateRow}}
+  {{component createRowComponent
+    content=createRowContent
+    templateForRow=templateForCreateRow
+    titleForRow=titleForRow
+    iconForRow=iconForRow
+    shouldHighlightRow=shouldHighlightRow
+    shouldSelectRow=shouldSelectRow
+    highlightedValue=highlightedValue
+    onHighlight=onHighlight
+    onCreateContent=onCreateContent
+    value=computedValue
+  }}
 {{/if}}
 
 {{#each filteredContent as |content|}}
@@ -25,7 +40,7 @@
     shouldSelectRow=shouldSelectRow
     highlightedValue=highlightedValue
     onSelect=onSelect
-    onHover=onHoverRow
+    onHighlight=onHighlight
     value=computedValue
   }}
 {{else}}

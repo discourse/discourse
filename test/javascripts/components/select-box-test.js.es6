@@ -275,29 +275,6 @@ componentTest('supports converting select value to integer', {
   }
 });
 
-componentTest('static headerText', {
-  template: '{{select-box-kit value=1 content=content headerText=headerText}}',
-
-  beforeEach() {
-    this.set("content", [{ id: 1, name: "robin" }, { id: 2, name: "regis" }]);
-    this.set("headerText", "Choose...");
-  },
-
-  test(assert) {
-    expandSelectBox();
-
-    andThen(() => {
-      assert.equal(selectBox().header.name(), "Choose...");
-    });
-
-    selectBoxSelectRow(2);
-
-    andThen(() => {
-      assert.equal(selectBox().header.name(), "Choose...", "it doesn’t change header text");
-    });
-  }
-});
-
 componentTest('supports custom row title', {
   template: '{{select-box-kit content=content titleForRow=titleForRow}}',
 

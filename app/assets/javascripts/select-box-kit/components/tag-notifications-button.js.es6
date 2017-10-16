@@ -5,12 +5,11 @@ export default NotificationOptionsComponent.extend({
   classNames: "tag-notifications-button",
   i18nPrefix: "tagging.notifications",
   headerIcon: `${this._super()}${iconHTML("caret-down")}`.htmlSafe(),
-  headerText: null,
+  computedHeaderText: null,
 
   actions: {
     onSelect(value) {
       this.defaultOnSelect();
-
       this.sendAction("action", value);
     }
   }

@@ -1,0 +1,14 @@
+{{#if template}}
+  {{{template}}}
+{{else}}
+  {{#if icon}}
+    <div class="icons">
+      {{{icon}}}
+    </div>
+  {{/if}}
+
+  <div class="texts">
+    <span class="title">{{content.name}}</span>
+    <span class="desc">{{content.originalContent.description}}</span>
+  </div>
+{{/if}}
