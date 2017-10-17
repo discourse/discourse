@@ -27,17 +27,19 @@ LONG_COOKED
     expect(EmailCook.new(long).cook).to eq(long_cooked.strip)
   end
 
-  it 'autolinks' do
-    stub_request(:get, "https://www.eviltrout.com").to_return(body: "")
-    stub_request(:head, "https://www.eviltrout.com").to_return(body: "")
-    expect(EmailCook.new("https://www.eviltrout.com").cook).to eq("<a href='https://www.eviltrout.com'>https://www.eviltrout.com</a><br>")
+  it 'creates oneboxed link when the line contains only a link' do
+    expect(EmailCook.new("https://www.eviltrout.com").cook).to eq('<a href="https://www.eviltrout.com" class="onebox" target="_blank">https://www.eviltrout.com</a><br>')
   end
 
   it 'autolinks without the beginning of a line' do
-    expect(EmailCook.new("my site: https://www.eviltrout.com").cook).to eq("my site: <a href='https://www.eviltrout.com'>https://www.eviltrout.com</a><br>")
+    expect(EmailCook.new("my site: https://www.eviltrout.com").cook).to eq('my site: <a href="https://www.eviltrout.com">https://www.eviltrout.com</a><br>')
+  end
+
+  it 'autolinks without the end of a line' do
+    expect(EmailCook.new("https://www.eviltrout.com is my site").cook).to eq('<a href="https://www.eviltrout.com">https://www.eviltrout.com</a> is my site<br>')
   end
 
   it 'links even within a quote' do
-    expect(EmailCook.new("> https://www.eviltrout.com").cook).to eq("<blockquote><a href='https://www.eviltrout.com'>https://www.eviltrout.com</a><br></blockquote>")
+    expect(EmailCook.new("> https://www.eviltrout.com").cook).to eq('<blockquote><a href="https://www.eviltrout.com">https://www.eviltrout.com</a><br></blockquote>')
   end
 end
