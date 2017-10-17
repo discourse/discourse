@@ -184,7 +184,7 @@ after_initialize do
     if self.user.enqueue_narrative_bot_job?
       input =
         case self.post_action_type_id
-        when *PostActionType.flag_types.values
+        when *PostActionType.flag_types_without_custom.values
           :flag
         when PostActionType.types[:like]
           :like

@@ -411,11 +411,11 @@ class Post < ActiveRecord::Base
   end
 
   def is_flagged?
-    post_actions.where(post_action_type_id: PostActionType.flag_types.values, deleted_at: nil).count != 0
+    post_actions.where(post_action_type_id: PostActionType.flag_types_without_custom.values, deleted_at: nil).count != 0
   end
 
   def has_active_flag?
-    post_actions.active.where(post_action_type_id: PostActionType.flag_types.values).count != 0
+    post_actions.active.where(post_action_type_id: PostActionType.flag_types_without_custom.values).count != 0
   end
 
   def unhide!

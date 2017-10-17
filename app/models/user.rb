@@ -615,7 +615,7 @@ class User < ActiveRecord::Base
   end
 
   def flags_given_count
-    PostAction.where(user_id: id, post_action_type_id: PostActionType.flag_types.values).count
+    PostAction.where(user_id: id, post_action_type_id: PostActionType.flag_types_without_custom.values).count
   end
 
   def warnings_received_count
@@ -623,7 +623,7 @@ class User < ActiveRecord::Base
   end
 
   def flags_received_count
-    posts.includes(:post_actions).where('post_actions.post_action_type_id' => PostActionType.flag_types.values).count
+    posts.includes(:post_actions).where('post_actions.post_action_type_id' => PostActionType.flag_types_without_custom.values).count
   end
 
   def private_topics_count

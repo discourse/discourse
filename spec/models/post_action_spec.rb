@@ -532,7 +532,7 @@ describe PostAction do
 
   it "prevents user to act twice at the same time" do
     # flags are already being tested
-    all_types_except_flags = PostActionType.types.except(PostActionType.flag_types)
+    all_types_except_flags = PostActionType.types.except(PostActionType.flag_types_without_custom)
     all_types_except_flags.values.each do |action|
       expect do
         PostAction.act(eviltrout, post, action)

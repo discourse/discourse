@@ -316,7 +316,7 @@ class PostRevisor
 
   def remove_flags_and_unhide_post
     return unless editing_a_flagged_and_hidden_post?
-    @post.post_actions.where(post_action_type_id: PostActionType.flag_types.values).each do |action|
+    @post.post_actions.where(post_action_type_id: PostActionType.flag_types_without_custom.values).each do |action|
       action.remove_act!(Discourse.system_user)
     end
     @post.unhide!

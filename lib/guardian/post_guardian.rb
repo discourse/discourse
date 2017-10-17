@@ -10,13 +10,14 @@ module PostGuardian
     return false if (action_key == :notify_user && !is_staff? && opts[:is_warning].present? && opts[:is_warning] == 'true')
 
     taken = opts[:taken_actions].try(:keys).to_a
-    is_flag = PostActionType.is_flag?(action_key)
+    is_flag = PostActionType.flag_types_without_custom[action_key]
     already_taken_this_action = taken.any? && taken.include?(PostActionType.types[action_key])
-    already_did_flagging      = taken.any? && (taken & PostActionType.flag_types.values).any?
+    already_did_flagging      = taken.any? && (taken & PostActionType.flag_types_without_custom.values).any?
 
     result = if authenticated? && post && !@user.anonymous?
 
-      return false if action_key == :notify_moderators && !SiteSetting.enable_private_messages
+      return false if [:notify_user, :notify_moderators].include?(action_key) &&
+        !SiteSetting.enable_private_messages?
 
       # we allow flagging for trust level 1 and higher
       # always allowed for private messages
@@ -36,9 +37,6 @@ module PostGuardian
 
       # new users can't notify_user because they are not allowed to send private messages
       not(action_key == :notify_user && !@user.has_trust_level?(SiteSetting.min_trust_to_send_messages)) &&
-
-      # can't send private messages if they're disabled globally
-      not(action_key == :notify_user && !SiteSetting.enable_private_messages) &&
 
       # no voting more than once on single vote topics
       not(action_key == :vote && opts[:voted_in_topic] && post.topic.has_meta_data_boolean?(:single_vote))

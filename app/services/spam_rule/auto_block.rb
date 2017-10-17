@@ -66,7 +66,7 @@ class SpamRule::AutoBlock
 
   def flagged_post_ids
     Post.where(user_id: @user.id)
-      .where('spam_count > ? OR off_topic_count > ? OR inappropriate_count > ?', 0, 0, 0)
+      .where('spam_count > 0 OR off_topic_count > 0 OR inappropriate_count > 0')
       .pluck(:id)
   end
 
