@@ -20,6 +20,7 @@ class CookedPostProcessor
     @cooking_options[:topic_id] = post.topic_id
     @cooking_options = @cooking_options.symbolize_keys
     @cooking_options[:omit_nofollow] = true if post.omit_nofollow?
+    @cooking_options[:cook_method] = post.cook_method
 
     analyzer = post.post_analyzer
     @doc = Nokogiri::HTML::fragment(analyzer.cook(post.raw, @cooking_options))
