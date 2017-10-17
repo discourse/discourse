@@ -15,7 +15,7 @@ class FlaggedTopicSummarySerializer < ActiveModel::Serializer
 
   def flag_counts
     object.flag_counts.map do |k, v|
-      { flag_type_id: k, count: v }
+      { post_action_type_id: k, count: v, name_key: PostActionType.types[k] }
     end
   end
 

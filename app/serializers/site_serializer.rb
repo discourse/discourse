@@ -52,13 +52,14 @@ class SiteSerializer < ApplicationSerializer
 
   def post_action_types
     cache_fragment("post_action_types_#{I18n.locale}") do
-      ActiveModel::ArraySerializer.new(PostActionType.ordered).as_json
+      types = PostActionType.types.values.map { |id| PostActionType.new(id: id) }
+      ActiveModel::ArraySerializer.new(types).as_json
     end
   end
 
   def topic_flag_types
     cache_fragment("post_action_flag_types_#{I18n.locale}") do
-      flags = PostActionType.ordered.where(name_key: ['inappropriate', 'spam', 'notify_moderators'])
+      flags = PostActionType.ordered.where(id: PostActionType.topic_flag_types.values)
       ActiveModel::ArraySerializer.new(flags, each_serializer: TopicFlagTypeSerializer).as_json
     end
 

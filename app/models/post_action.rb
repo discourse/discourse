@@ -44,7 +44,7 @@ class PostAction < ActiveRecord::Base
 
   def self.flag_count_by_date(start_date, end_date, category_id = nil)
     result = where('post_actions.created_at >= ? AND post_actions.created_at <= ?', start_date, end_date)
-    result = result.where(post_action_type_id: PostActionType.flag_types.values)
+    result = result.where(post_action_type_id: PostActionType.flag_types_without_custom.values)
     result = result.joins(post: :topic).where("topics.category_id = ?", category_id) if category_id
     result.group('date(post_actions.created_at)')
       .order('date(post_actions.created_at)')
@@ -164,7 +164,7 @@ SQL
       if moderator.id == Discourse::SYSTEM_USER_ID
         PostActionType.auto_action_flag_types.values
       else
-        PostActionType.flag_types.values
+        PostActionType.flag_types_without_custom.values
       end
 
     actions = PostAction.where(post_id: post.id)
@@ -179,8 +179,13 @@ SQL
     end
 
     # reset all cached counters
-    f = action_type_ids.map { |t| ["#{PostActionType.types[t]}_count", 0] }
-    Post.with_deleted.where(id: post.id).update_all(Hash[*f.flatten])
+    cached = {}
+    action_type_ids.each do |atid|
+      column = "#{PostActionType.types[atid]}_count"
+      cached[column] = 0 if ActiveRecord::Base.connection.column_exists?(:posts, column)
+    end
+
+    Post.with_deleted.where(id: post.id).update_all(cached)
 
     update_flagged_posts_count
   end
@@ -188,7 +193,7 @@ SQL
   def self.defer_flags!(post, moderator, delete_post = false)
     actions = PostAction.active
       .where(post_id: post.id)
-      .where(post_action_type_id: PostActionType.flag_types.values)
+      .where(post_action_type_id: PostActionType.flag_types_without_custom.values)
 
     actions.each do |action|
       action.deferred_at = Time.zone.now
@@ -355,7 +360,7 @@ SQL
   end
 
   def is_flag?
-    PostActionType.flag_types.values.include?(post_action_type_id)
+    !!PostActionType.flag_types[post_action_type_id]
   end
 
   def is_private_message?
@@ -387,7 +392,7 @@ SQL
   end
 
   before_create do
-    post_action_type_ids = is_flag? ? PostActionType.flag_types.values : post_action_type_id
+    post_action_type_ids = is_flag? ? PostActionType.flag_types_without_custom.values : post_action_type_id
     raise AlreadyActed if PostAction.where(user_id: user_id)
         .where(post_id: post_id)
         .where(post_action_type_id: post_action_type_ids)
@@ -445,7 +450,9 @@ SQL
         .sum("CASE WHEN users.moderator OR users.admin THEN #{SiteSetting.staff_like_weight} ELSE 1 END")
       Post.where(id: post_id).update_all ["like_count = :count, like_score = :score", count: count, score: score]
     else
-      Post.where(id: post_id).update_all ["#{column} = ?", count]
+      if ActiveRecord::Base.connection.column_exists?(:posts, column)
+        Post.where(id: post_id).update_all ["#{column} = ?", count]
+      end
     end
 
     topic_id = Post.with_deleted.where(id: post_id).pluck(:topic_id).first
@@ -583,7 +590,7 @@ SQL
   end
 
   def self.post_action_type_for_post(post_id)
-    post_action = PostAction.find_by(deferred_at: nil, post_id: post_id, post_action_type_id: PostActionType.flag_types.values, deleted_at: nil)
+    post_action = PostAction.find_by(deferred_at: nil, post_id: post_id, post_action_type_id: PostActionType.flag_types_without_custom.values, deleted_at: nil)
     PostActionType.types[post_action.post_action_type_id]
   end
 

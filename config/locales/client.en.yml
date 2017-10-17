@@ -2666,22 +2666,12 @@ en:
           users: "Users"
           last_flagged: "Last Flagged"
 
-        summary:
-          action_type_3:
-            one: "off-topic"
-            other: "off-topic x{{count}}"
-          action_type_4:
-            one: "inappropriate"
-            other: "inappropriate x{{count}}"
-          action_type_6:
-            one: "custom"
-            other: "custom x{{count}}"
-          action_type_7:
-            one: "custom"
-            other: "custom x{{count}}"
-          action_type_8:
-            one: "spam"
-            other: "spam x{{count}}"
+        short_names:
+          off_topic: "off-topic"
+          inappropriate: "inappropriate"
+          spam: "spam"
+          notify_user: "custom"
+          notify_moderators: "custom"
 
       groups:
         primary: "Primary Group"

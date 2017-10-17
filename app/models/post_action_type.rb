@@ -1,5 +1,6 @@
 require_dependency 'enum'
 require_dependency 'distributed_cache'
+require_dependency 'flag_settings'
 
 class PostActionType < ActiveRecord::Base
   after_save :expire_cache
@@ -14,23 +15,72 @@ class PostActionType < ActiveRecord::Base
 
   class << self
 
+    def flag_settings
+      unless @flag_settings
+        @flag_settings = FlagSettings.new
+        @flag_settings.add(
+          3,
+          :off_topic,
+          notify_type: true,
+          auto_action_type: true
+        )
+        @flag_settings.add(
+          4,
+          :inappropriate,
+          topic_type: true,
+          notify_type: true,
+          auto_action_type: true
+        )
+        @flag_settings.add(
+          8,
+          :spam,
+          topic_type: true,
+          notify_type: true,
+          auto_action_type: true
+        )
+        @flag_settings.add(
+          6,
+          :notify_user,
+          topic_type: true,
+          notify_type: true,
+          custom_type: true
+        )
+        @flag_settings.add(
+          7,
+          :notify_moderators,
+          topic_type: true,
+          notify_type: true,
+          custom_type: true
+        )
+      end
+
+      @flag_settings
+    end
+
+    def replace_flag_settings(settings)
+      @flag_settings = settings
+      @types = nil
+    end
+
     def ordered
       order('position asc')
     end
 
     def types
-      @types ||= Enum.new(bookmark: 1,
-                          like: 2,
-                          off_topic: 3,
-                          inappropriate: 4,
-                          vote: 5,
-                          notify_user: 6,
-                          notify_moderators: 7,
-                          spam: 8)
+      unless @types
+        @types = Enum.new(
+          bookmark: 1,
+          like: 2,
+          vote: 5
+        )
+        @types.merge!(flag_settings.flag_types)
+      end
+
+      @types
     end
 
     def auto_action_flag_types
-      @auto_action_flag_types ||= flag_types.except(:notify_user, :notify_moderators)
+      flag_settings.auto_action_types
     end
 
     def public_types
@@ -41,17 +91,29 @@ class PostActionType < ActiveRecord::Base
       @public_type_ids ||= public_types.values
     end
 
+    def flag_types_without_custom
+      flag_settings.without_custom_types
+    end
+
     def flag_types
-      @flag_types ||= types.only(:off_topic, :spam, :inappropriate, :notify_moderators)
+      flag_settings.flag_types
     end
 
     # flags resulting in mod notifications
     def notify_flag_type_ids
-      @notify_flag_type_ids ||= types.only(:off_topic, :spam, :inappropriate, :notify_moderators).values
+      notify_flag_types.values
+    end
+
+    def notify_flag_types
+      flag_settings.notify_types
     end
 
     def topic_flag_types
-      @topic_flag_types ||= types.only(:spam, :inappropriate, :notify_moderators)
+      flag_settings.topic_flag_types
+    end
+
+    def custom_types
+      flag_settings.custom_types
     end
 
     def is_flag?(sym)

@@ -90,6 +90,15 @@ class Plugin::Instance
     end
   end
 
+  def replace_flags
+    settings = ::FlagSettings.new
+    yield settings
+
+    reloadable_patch do |plugin|
+      ::PostActionType.replace_flag_settings(settings) if plugin.enabled?
+    end
+  end
+
   def whitelist_staff_user_custom_field(field)
     reloadable_patch do |plugin|
       ::User.register_plugin_staff_custom_field(field, plugin) if plugin.enabled?
