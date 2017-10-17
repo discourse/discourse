@@ -29,6 +29,7 @@ class CookedPostProcessor
 
   def post_process(bypass_bump = false)
     DistributedMutex.synchronize("post_process_#{@post.id}") do
+      DiscourseEvent.trigger(:before_post_process_cooked, @doc, @post)
       keep_reverse_index_up_to_date
       post_process_images
       post_process_oneboxes
@@ -193,7 +194,14 @@ class CookedPostProcessor
     return unless src.present?
 
     width, height = img["width"].to_i, img["height"].to_i
-    original_width, original_height = get_size(src)
+    upload = Upload.get_from_url(src)
+
+    original_width, original_height =
+      if upload
+        [upload.width, upload.height]
+      else
+        get_size(src)
+      end
 
     # can't reach the image...
     if original_width.nil? ||
@@ -217,7 +225,7 @@ class CookedPostProcessor
       img["height"] = height
     end
 
-    if upload = Upload.get_from_url(src)
+    if upload
       upload.create_thumbnail!(width, height, crop)
     end
 

@@ -150,7 +150,7 @@ describe CookedPostProcessor do
 
     context "with large images" do
 
-      let(:upload) { Fabricate(:upload) }
+      let(:upload) { Fabricate(:upload, width: 1750, height: 2000) }
       let(:post) { Fabricate(:post_with_large_image) }
       let(:cpp) { CookedPostProcessor.new(post) }
 
@@ -179,7 +179,7 @@ describe CookedPostProcessor do
 
     context "with large images when using subfolders" do
 
-      let(:upload) { Fabricate(:upload) }
+      let(:upload) { Fabricate(:upload, width: 1750, height: 2000) }
       let(:post) { Fabricate(:post_with_large_image_on_subfolder) }
       let(:cpp) { CookedPostProcessor.new(post) }
       let(:base_url) { "http://test.localhost/subfolder" }
@@ -220,7 +220,7 @@ describe CookedPostProcessor do
 
     context "with title" do
 
-      let(:upload) { Fabricate(:upload) }
+      let(:upload) { Fabricate(:upload, width: 1750, height: 2000) }
       let(:post) { Fabricate(:post_with_large_image_and_title) }
       let(:cpp) { CookedPostProcessor.new(post) }
 
