@@ -21,12 +21,11 @@ class EmailCook
     str.scan(EmailCook.url_regexp).each do |m|
       url = m[0]
 
-      val = "<a href='#{url}'>#{url}</a>"
-
-      # Onebox consideration
       if str.strip == url
-        oneboxed = Oneboxer.onebox(url)
-        val = oneboxed if oneboxed.present?
+        # this could be oneboxed
+        val = %|<a href="#{url}" class="onebox" target="_blank">#{url}</a>|
+      else
+        val = %|<a href="#{url}">#{url}</a>|
       end
 
       str.gsub!(url, val)
