@@ -7,7 +7,13 @@ The following are template configurations for email service providers who offer 
 **Please note that in any email provider, you _must_ verify and use the subdomain, e.g. `discourse.example.com`. If you verify the domain only, e.g. `example.com`, mail will not be configured correctly.**
 
 Enter these values when prompted by `./discourse-setup` per the [install guide](https://github.com/discourse/discourse/blob/master/docs/INSTALL-cloud.md#edit-discourse-configuration):
-  
+
+#### [Mailgun][gun] &mdash; 10k emails/month (with credit card)
+
+    SMTP server address? smtp.mailgun.org
+    SMTP user name?      [SMTP credentials for your domain under domains tab]
+    SMTP password?       [SMTP credentials for your domain under domains tab]
+
 #### [Elastic Email][ee] &mdash; 150k emails/month
 
     SMTP server address? smtp.elasticemail.com
@@ -22,12 +28,6 @@ Enter these values when prompted by `./discourse-setup` per the [install guide](
     SMTP password?       [SendGrid API Key]
 
 We recommend creating an [API Key][sg2] instead of using your SendGrid username and password.
-
-#### [Mailgun][gun] &mdash; 10k emails/month (with credit card)
-
-    SMTP server address? smtp.mailgun.org
-    SMTP user name?      [SMTP credentials for your domain under domains tab]
-    SMTP password?       [SMTP credentials for your domain under domains tab]
 
 #### [Mailjet][jet] &mdash; 6k emails/month
 
