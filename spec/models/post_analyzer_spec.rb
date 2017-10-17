@@ -10,19 +10,18 @@ describe PostAnalyzer do
 
     let(:raw) { "Here's a tweet:\n#{url}" }
     let(:options) { {} }
-    let(:args) { [raw, options] }
 
     before { Oneboxer.stubs(:onebox) }
 
     it 'fetches the cached onebox for any urls in the post' do
       Oneboxer.expects(:cached_onebox).with url
-      post_analyzer.cook(*args)
+      post_analyzer.cook(raw, options)
       expect(post_analyzer.found_oneboxes?).to be(true)
     end
 
     it 'does not invalidate the onebox cache' do
       Oneboxer.expects(:invalidate).with(url).never
-      post_analyzer.cook(*args)
+      post_analyzer.cook(raw, options)
     end
 
     context 'when invalidating oneboxes' do
@@ -30,8 +29,28 @@ describe PostAnalyzer do
 
       it 'invalidates the oneboxes for urls in the post' do
         Oneboxer.expects(:invalidate).with url
-        post_analyzer.cook(*args)
+        post_analyzer.cook(raw, options)
       end
+    end
+
+    it "does nothing when the cook_method is 'raw_html'" do
+      cooked = post_analyzer.cook('Hello <div/> world', cook_method: Post.cook_methods[:raw_html])
+      expect(cooked).to eq('Hello <div/> world')
+    end
+
+    it "does not interpret Markdown when cook_method is 'email'" do
+      cooked = post_analyzer.cook('*this is not italic* and here is a link: https://www.example.com', cook_method: Post.cook_methods[:email])
+      expect(cooked).to eq('*this is not italic* and here is a link: <a href="https://www.example.com">https://www.example.com</a>')
+    end
+
+    it "does interpret Markdown when cook_method is 'regular'" do
+      cooked = post_analyzer.cook('*this is italic*', cook_method: Post.cook_methods[:regular])
+      expect(cooked).to eq('<p><em>this is italic</em></p>')
+    end
+
+    it "does interpret Markdown when not cook_method is set" do
+      cooked = post_analyzer.cook('*this is italic*')
+      expect(cooked).to eq('<p><em>this is italic</em></p>')
     end
   end
 

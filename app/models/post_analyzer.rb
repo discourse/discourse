@@ -1,4 +1,5 @@
 require_dependency 'oneboxer'
+require_dependency 'email_cook'
 
 class PostAnalyzer
 
@@ -13,12 +14,19 @@ class PostAnalyzer
   end
 
   # What we use to cook posts
-  def cook(*args)
-    cooked = PrettyText.cook(*args)
+  def cook(raw, opts = {})
+    cook_method = opts[:cook_method]
+    return raw if cook_method == Post.cook_methods[:raw_html]
+
+    if cook_method == Post.cook_methods[:email]
+      cooked = EmailCook.new(raw).cook
+    else
+      cooked = PrettyText.cook(raw, opts)
+    end
 
     result = Oneboxer.apply(cooked, topic_id: @topic_id) do |url, _|
       @found_oneboxes = true
-      Oneboxer.invalidate(url) if args.last[:invalidate_oneboxes]
+      Oneboxer.invalidate(url) if opts[:invalidate_oneboxes]
       Oneboxer.cached_onebox(url)
     end
 
