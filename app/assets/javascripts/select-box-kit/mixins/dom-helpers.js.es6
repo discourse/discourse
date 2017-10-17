@@ -2,7 +2,7 @@ export default Ember.Mixin.create({
   init() {
     this._super();
 
-    this.offscreenSelector = ".select-box-kit-offscreen";
+    this.offscreenInputSelector = ".select-box-kit-offscreen";
     this.filterInputSelector = ".select-box-kit-filter-input";
     this.rowSelector = ".select-box-kit-row";
     this.collectionSelector = ".select-box-kit-collection";
@@ -39,10 +39,15 @@ export default Ember.Mixin.create({
   },
 
   $offscreenInput() {
-    return this.$(this.offscreenSelector);
+    return this.$(this.offscreenInputSelector);
   },
 
   $filterInput() {
     return this.$(this.filterInputSelector);
+  },
+
+  _killEvent(event) {
+    event.preventDefault();
+    event.stopPropagation();
   }
 });

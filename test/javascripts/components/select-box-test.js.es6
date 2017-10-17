@@ -56,7 +56,7 @@ componentTest('select-box can be filtered', {
   test(assert) {
     expandSelectBox();
 
-    andThen(() => assert.equal(find(".filter-query").length, 1, "it has a search input"));
+    andThen(() => assert.equal(find(".select-box-kit-filter-input").length, 1, "it has a search input"));
 
     selectBoxFillInFilter("regis");
 
@@ -303,7 +303,7 @@ componentTest('supports keyboard events', {
     selectBox().keyboard.down();
 
     andThen(() => {
-      assert.equal(selectBox().highlightedRow.title(), "robin", "it highlights the first row");
+      assert.equal(selectBox().highlightedRow.title(), "robin", "the first row is highlighted");
     });
 
     selectBox().keyboard.down();
@@ -315,19 +315,19 @@ componentTest('supports keyboard events', {
     selectBox().keyboard.down();
 
     andThen(() => {
-      assert.equal(selectBox().highlightedRow.title(), "regis", "it keeps highlighting the last row when reaching the end");
+      assert.equal(selectBox().highlightedRow.title(), "robin", "it returns to the first row");
     });
 
     selectBox().keyboard.up();
 
     andThen(() => {
-      assert.equal(selectBox().highlightedRow.title(), "robin", "it highlights the previous row");
+      assert.equal(selectBox().highlightedRow.title(), "regis", "it highlights the last row");
     });
 
     selectBox().keyboard.enter();
 
     andThen(() => {
-      assert.equal(selectBox().selectedRow.title(), "robin", "it selects the row when pressing enter");
+      assert.equal(selectBox().selectedRow.title(), "regis", "it selects the row when pressing enter");
       assert.notOk(selectBox().isExpanded, "it collapses the select box when selecting a row");
     });
 

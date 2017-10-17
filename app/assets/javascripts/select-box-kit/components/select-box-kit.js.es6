@@ -4,9 +4,8 @@ import computed from "ember-addons/ember-computed-decorators";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import DomHelpersMixin from "select-box-kit/mixins/dom-helpers";
 import KeyboardMixin from "select-box-kit/mixins/keyboard";
-import ClickCaptureMixin from "select-box-kit/mixins/click-capture";
 
-export default Ember.Component.extend(DomHelpersMixin, ClickCaptureMixin, KeyboardMixin, {
+export default Ember.Component.extend(DomHelpersMixin, KeyboardMixin, {
   layoutName: "select-box-kit/templates/components/select-box-kit",
   classNames: "select-box-kit",
   classNameBindings: [
@@ -53,25 +52,43 @@ export default Ember.Component.extend(DomHelpersMixin, ClickCaptureMixin, Keyboa
   castInteger: false,
   allowAny: false,
 
+  focusOutFromOffscreen(event) {
+    if (this.get("isExpanded") === false && this.get("isFocused") === true) {
+      this.close();
+    }
+  },
+
+  clickOutside(event) {
+    if (this.get("isExpanded") === true) {
+      this.set("isExpanded", false);
+    } else {
+      this.close();
+    }
+  },
+
+  focusOutFromFilterInput(event) {
+    setTimeout(() => {
+      const focusedOutOfComponent = document.activeElement !== this.$offscreenInput()[0];
+      if (focusedOutOfComponent) {
+
+        if (this.get("isExpanded") === true) {
+          this.set("isExpanded", false);
+          this.$offscreenInput().focus();
+        }
+      }
+    }, 10);
+  },
+
   init() {
     this._super();
 
     if ($(window).outerWidth(false) <= 420) {
-      this.set("filterable", false);
+      this.setProperties({ filterable: false, autoFilterable: false });
     }
   },
 
-  @computed("filter", "filterable", "autoFilterable")
-  filterIsHidden(filter, filterable, autoFilterable) {
-    if (filterable === true) {
-      return false;
-    }
-
-    if (filter.length > 0 && autoFilterable === true) {
-      return false;
-    }
-
-    return true;
+  close() {
+    this.setProperties({ isExpanded: false, isFocused: false });
   },
 
   createFunction(input) {
@@ -127,9 +144,22 @@ export default Ember.Component.extend(DomHelpersMixin, ClickCaptureMixin, Keyboa
     return contents.map(content => this.formatContent(content));
   },
 
-  @computed("filterable", "filter", "allowAny")
-  shouldDisplayCreateRow(filterable, filter, allow) {
-    return filterable === true && filter.length > 0 && allow === true;
+  @computed("filter", "filterable", "autoFilterable")
+  computedFilterable(filter, filterable, autoFilterable) {
+    if (filterable === true) {
+      return true;
+    }
+
+    if (filter.length > 0 && autoFilterable === true) {
+      return true;
+    }
+
+    return false;
+  },
+
+  @computed("computedFilterable", "filter", "allowAny")
+  shouldDisplayCreateRow(computedFilterable, filter, allow) {
+    return computedFilterable === true && filter.length > 0 && allow === true;
   },
 
   @computed("filter", "allowAny")
@@ -227,7 +257,7 @@ export default Ember.Component.extend(DomHelpersMixin, ClickCaptureMixin, Keyboa
       this._removeFixedPosition();
     }
 
-    if (this.get("isExpanded")) {
+    if (this.get("isExpanded") === true) {
       if (this.get("scrollableParent").length === 1) {
         this._applyFixedPosition(
           this.$().outerWidth(false),
@@ -235,9 +265,8 @@ export default Ember.Component.extend(DomHelpersMixin, ClickCaptureMixin, Keyboa
         );
       }
 
-      this.$collection().css("max-height", this.get("collectionHeight"));
-
       Ember.run.schedule("afterRender", () => {
+        this.$collection().css("max-height", this.get("collectionHeight"));
         this._applyDirection();
         this._positionSelectBoxWrapper();
       });
@@ -247,6 +276,11 @@ export default Ember.Component.extend(DomHelpersMixin, ClickCaptureMixin, Keyboa
   @on("willDestroyElement")
   _removeResizeListener() {
     $(window).off(`resize.${this.elementId}`);
+  },
+
+  @on("willDestroyElement")
+  _removeResizeListener() {
+    this._removeFixedPosition();
   },
 
   @on("didInsertElement")
@@ -282,30 +316,10 @@ export default Ember.Component.extend(DomHelpersMixin, ClickCaptureMixin, Keyboa
     }
   },
 
-  close() {
-    this.setProperties({ isExpanded: false, isFocused: false });
-    this.destroyClickCaptureMask();
-  },
-
   @observes("isExpanded")
   _isExpandedChanged() {
     if (this.get("isExpanded") === true) {
       this.setProperties({ highlightedValue: null, renderBody: true, isFocused: true });
-    } else {
-      if (this.get("autoFilterable") === true) {
-        this.setProperties({ filterable: false, filter: "" });
-      }
-    }
-  },
-
-  onFocusOffscreenInput() {
-    this.setupClickCaptureMask();
-    this.set("isFocused", true);
-  },
-
-  click(event) {
-    if (event.target.id !== this.$filterInput().attr("id")) {
-      this.$offscreenInput().focus();
     }
   },
 
@@ -318,9 +332,9 @@ export default Ember.Component.extend(DomHelpersMixin, ClickCaptureMixin, Keyboa
     return computedContent.find(c => get(c, "value") === highlightedValue );
   },
 
-  @computed("filter", "filterIsHidden", "computedContent.[]", "computedValue.[]")
-  filteredContent(filter, filterIsHidden, computedContent, computedValue) {
-    if (filterIsHidden === true) {
+  @computed("filter", "computedFilterable", "computedContent.[]", "computedValue.[]")
+  filteredContent(filter, computedFilterable, computedContent, computedValue) {
+    if (computedFilterable === false) {
       return computedContent;
     }
 
@@ -335,6 +349,10 @@ export default Ember.Component.extend(DomHelpersMixin, ClickCaptureMixin, Keyboa
   actions: {
     onToggle() {
       this.toggleProperty("isExpanded");
+
+      if (this.get("isExpanded") === true) {
+        this.$offscreenInput().focus();
+      }
     },
 
     onCreateContent(input) {
@@ -404,7 +422,15 @@ export default Ember.Component.extend(DomHelpersMixin, ClickCaptureMixin, Keyboa
   },
 
   defaultOnSelect() {
-    this.setProperties({ highlightedValue: null, isExpanded: false, filter: "" });
+    this.setProperties({
+      highlightedValue: null,
+      isExpanded: false,
+      filter: ""
+    });
+
+    Ember.run.schedule("afterRender", () => {
+      this.$offscreenInput().focus();
+    });
   },
 
   defaultOnDeselect(value) {

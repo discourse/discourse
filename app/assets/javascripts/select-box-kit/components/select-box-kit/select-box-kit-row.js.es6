@@ -46,6 +46,7 @@ export default Ember.Component.extend({
   },
 
   click() {
+    console.log("clicking row")
     this.sendAction("onSelect", this.get("content.value"));
   },
 

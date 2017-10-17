@@ -34,7 +34,8 @@
     &.is-focused {
       border: 1px solid $tertiary;
       border-radius: 3px;
-      box-shadow: $tertiary 0px 0px 6px 0px;
+      -webkit-box-shadow: $tertiary 0px 0px 6px 0px;
+              box-shadow: $tertiary 0px 0px 6px 0px;
     }
   }
 
@@ -48,7 +49,8 @@
   &.is-highlighted {
     .select-box-kit-header {
       border: 1px solid $tertiary;
-      box-shadow: $tertiary 0px 0px 6px 0px;
+      -webkit-box-shadow: $tertiary 0px 0px 6px 0px;
+              box-shadow: $tertiary 0px 0px 6px 0px;
     }
   }
 
@@ -57,13 +59,15 @@
       display: block;
       border: 1px solid $tertiary;
       border-radius: 3px;
-      box-shadow: $tertiary 0px 0px 6px 0px;
+      -webkit-box-shadow: $tertiary 0px 0px 6px 0px;
+              box-shadow: $tertiary 0px 0px 6px 0px;
     }
 
     .select-box-kit-header {
       border-radius: 3px 3px 0 0;
       border-color: transparent;
-      box-shadow: none;
+      -webkit-box-shadow: none;
+              box-shadow: none;
     }
 
     .select-box-kit-body {

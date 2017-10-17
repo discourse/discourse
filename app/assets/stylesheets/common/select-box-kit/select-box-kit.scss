@@ -3,6 +3,7 @@
 }
 
 .select-box-kit {
+  min-width: 220px;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   display: inline-block;
@@ -14,7 +15,6 @@
   vertical-align: middle;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
-   -khtml-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
@@ -65,8 +65,13 @@
   }
 
   .select-box-kit-header {
+    -webkit-transition: all .25s;
+    -o-transition: all .25s;
+    transition: all .25s;
     cursor: pointer;
     outline: none;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
     -webkit-box-align: center;
         -ms-flex-align: center;
@@ -85,7 +90,8 @@
       -webkit-box-flex: 1;
           -ms-flex: 1;
               flex: 1;
-      text-overflow: ellipsis;
+      -o-text-overflow: ellipsis;
+         text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
       color: inherit;
@@ -101,8 +107,12 @@
     }
 
     .d-button-label {
+      display: -webkit-box;
+      display: -ms-flexbox;
       display: flex;
-      align-items: center;
+      -webkit-box-align: center;
+          -ms-flex-align: center;
+              align-items: center;
       white-space: nowrap;
       overflow: hidden;
 
@@ -126,7 +136,9 @@
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    align-items: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
     -webkit-box-pack: start;
         -ms-flex-pack: start;
             justify-content: flex-start;
@@ -134,7 +146,8 @@
     .text {
       margin: 0;
       overflow: hidden;
-      text-overflow: ellipsis;
+      -o-text-overflow: ellipsis;
+         text-overflow: ellipsis;
     }
 
     .d-icon {
@@ -257,6 +270,13 @@
     outline: 0;
     left: 0px;
     top: 0px;
+  }
+
+  .select-box-kit-offscreen:focus {
+    background: red;
+
+    width: 200px;
+    width: 200px;
   }
 }
 

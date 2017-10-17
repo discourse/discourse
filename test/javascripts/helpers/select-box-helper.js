@@ -50,7 +50,7 @@ Ember.Test.registerAsyncHelper('selectBoxFillInFilter', function(app, filter, op
 
   checkSelectBoxIsNotCollapsed(options.selector);
 
-  var filterQuerySelector = options.selector + ' .filter-query';
+  var filterQuerySelector = options.selector + ' .select-box-kit-filter-input';
   fillIn(filterQuerySelector, filter);
   triggerEvent(filterQuerySelector, 'keyup');
 });
@@ -89,9 +89,8 @@ function selectBox(selector) { // eslint-disable-line no-unused-vars
 
   function keyboardHelper() {
     function createEvent(target, keyCode) {
-      if (typeof target !== 'undefined') {
-        selector = find(selector).find(target);
-      }
+      target = target || ".select-box-kit-filter-input";
+      selector = find(selector).find(target);
 
       andThen(function() {
         var event = jQuery.Event('keydown');

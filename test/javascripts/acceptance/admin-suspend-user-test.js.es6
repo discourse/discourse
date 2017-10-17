@@ -63,4 +63,3 @@ QUnit.test("suspend, then unsuspend a user", assert => {
     assert.ok(!exists('.suspension-info'));
   });
 });
-

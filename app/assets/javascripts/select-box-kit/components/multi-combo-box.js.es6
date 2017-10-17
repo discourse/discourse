@@ -1,3 +1,4 @@
+// Experimental
 import SelectBoxKitComponent from "select-box-kit/components/select-box-kit";
 import computed from "ember-addons/ember-computed-decorators";
 const { get, isNone } = Ember;
@@ -19,19 +20,19 @@ export default SelectBoxKitComponent.extend({
 
   keyDown(event) {
     const keyCode = event.keyCode || event.which;
-    const $filterQuery = this.$(".filter-query");
+    const $filterInput = this.$filterInput();
 
     if (keyCode === 8) {
       let $lastSelectedValue = $(this.$(".choices .selected-value").last());
 
       if ($lastSelectedValue.is(":focus") || $(document.activeElement).is($lastSelectedValue)) {
         this.send("onDeselect", $lastSelectedValue.data("value"));
-        $filterQuery.focus();
+        $filterInput.focus();
         return;
       }
 
-      if ($filterQuery.val() === "") {
-        if ($filterQuery.is(":focus")) {
+      if ($filterInput.val() === "") {
+        if ($filterInput.is(":focus")) {
           if ($lastSelectedValue.length > 0) {
             $lastSelectedValue.focus();
           }
@@ -39,12 +40,12 @@ export default SelectBoxKitComponent.extend({
           if ($lastSelectedValue.length > 0) {
             $lastSelectedValue.focus();
           } else {
-            $filterQuery.focus();
+            $filterInput.focus();
           }
         }
       }
     } else {
-      $filterQuery.focus();
+      $filterInput.focus();
       this._super(event);
     }
   },
