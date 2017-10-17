@@ -78,7 +78,7 @@ class SingleSignOn
   end
 
   def payload
-    payload = Base64.encode64(unsigned_payload)
+    payload = Base64.strict_encode64(unsigned_payload)
     "sso=#{CGI::escape(payload)}&sig=#{sign(payload)}"
   end
 
