@@ -37,6 +37,10 @@ class Topic < ActiveRecord::Base
     @max_sort_order ||= (2**31) - 1
   end
 
+  def self.max_fancy_title_length
+    400
+  end
+
   def featured_users
     @featured_users ||= TopicFeaturedUsers.new(self)
   end
@@ -304,7 +308,8 @@ class Topic < ActiveRecord::Base
   def self.fancy_title(title)
     escaped = ERB::Util.html_escape(title)
     return unless escaped
-    Emoji.unicode_unescape(HtmlPrettify.render(escaped))
+    fancy_title = Emoji.unicode_unescape(HtmlPrettify.render(escaped))
+    fancy_title.length > Topic.max_fancy_title_length ? title : fancy_title
   end
 
   def fancy_title

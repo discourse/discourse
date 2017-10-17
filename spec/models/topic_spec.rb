@@ -329,6 +329,14 @@ describe Topic do
         expect(topic.fancy_title).to eq("this is another edge case")
       end
 
+      it "works with long title that results in lots of entities" do
+        long_title = "NEW STOCK PICK: PRCT - LAST PICK UP 233%, NNCO.................................................................................................................................................................. ofoum"
+        topic.title = long_title
+
+        expect { topic.save! }.to_not raise_error
+        expect(topic.fancy_title).to eq(long_title)
+      end
+
       context 'readonly mode' do
         before do
           Discourse.enable_readonly_mode
