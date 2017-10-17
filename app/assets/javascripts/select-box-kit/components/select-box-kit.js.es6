@@ -52,31 +52,12 @@ export default Ember.Component.extend(DomHelpersMixin, KeyboardMixin, {
   castInteger: false,
   allowAny: false,
 
-  focusOutFromOffscreen(event) {
-    if (this.get("isExpanded") === false && this.get("isFocused") === true) {
-      this.close();
-    }
-  },
-
-  clickOutside(event) {
+  clickOutside() {
     if (this.get("isExpanded") === true) {
       this.set("isExpanded", false);
     } else {
       this.close();
     }
-  },
-
-  focusOutFromFilterInput(event) {
-    setTimeout(() => {
-      const focusedOutOfComponent = document.activeElement !== this.$offscreenInput()[0];
-      if (focusedOutOfComponent) {
-
-        if (this.get("isExpanded") === true) {
-          this.set("isExpanded", false);
-          this.$offscreenInput().focus();
-        }
-      }
-    }, 10);
   },
 
   init() {

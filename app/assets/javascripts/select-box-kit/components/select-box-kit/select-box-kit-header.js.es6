@@ -13,7 +13,6 @@ export default Ember.Component.extend({
 
   click() {
     this.sendAction("onToggle");
-    console.log("ontoggle")
     event.stopPropagation();
   }
 });

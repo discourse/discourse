@@ -17,7 +17,8 @@ export default Ember.Mixin.create({
       PAGE_UP: 33,
       PAGE_DOWN: 34,
       HOME: 36,
-      END: 35
+      END: 35,
+      BACKSPACE: 8
     };
   },
 
@@ -31,11 +32,7 @@ export default Ember.Mixin.create({
       .off(`blur.${this.elementId}`)
       .off(`keydown.${this.elementId}`);
 
-    this.$filterInput()
-      .off(
-        `blur.${this.elementId}`,
-        `keydown.${this.elementId}`
-      );
+    this.$filterInput().off(`keydown.${this.elementId}`);
   },
 
   selectHighlightedRow(event) {
@@ -61,8 +58,10 @@ export default Ember.Mixin.create({
     });
 
     this.$offscreenInput()
-      .on(`blur.${this.elementId}`, (event) => {
-        this.focusOutFromOffscreen(event);
+      .on(`blur.${this.elementId}`, () => {
+        if (this.get("isExpanded") === false && this.get("isFocused") === true) {
+          this.close();
+        }
       })
       .on(`focus.${this.elementId}`, () => {
         this.set("isFocused", true);
@@ -77,7 +76,7 @@ export default Ember.Mixin.create({
               this.set("isExpanded", true);
             }
 
-            Ember.run.schedule("afterRender", () => {
+            Ember.run.schedule("actions", () => {
               this._handleArrowKey(keyCode);
             });
 
@@ -105,9 +104,12 @@ export default Ember.Mixin.create({
             this.close();
             this._killEvent(event);
             return;
+          case this.specialKeys.BACKSPACE:
+            this._killEvent(event);
+            return;
         }
 
-        if (this._isSpecialKey(keyCode) === false) {
+        if (this._isSpecialKey(keyCode) === false && event.metaKey === false) {
           this.setProperties({
             isExpanded: true,
             filter: String.fromCharCode(keyCode)
@@ -118,34 +120,34 @@ export default Ember.Mixin.create({
       });
 
     this.$filterInput()
-      .on(`blur.${this.elementId}`, (event) => this.focusOutFromFilterInput(event) )
       .on(`keydown.${this.elementId}`, (event) => {
         const keyCode = event.keyCode || event.which;
+
+        if ([
+            this.specialKeys.RIGHT,
+            this.specialKeys.LEFT,
+            this.specialKeys.BACKSPACE
+          ].includes(keyCode) || event.metaKey === true) {
+          return true;
+        }
+
         if (this._isSpecialKey(keyCode) === true) {
           this.$offscreenInput().focus().trigger(event);
         }
+
+        return true;
       });
   },
 
   _handleArrowKey(keyCode) {
     Ember.run.schedule("afterRender", () => {
-      if (this.$highlightedRow().length === 0) {
-        if (this.$selectedRow().length === 0) {
-          this.$rows().eq(0).trigger("mouseover");
-        } else {
-          this.$selectedRow().trigger("mouseover");
-        }
+      switch (keyCode) {
+        case 38:
+          Ember.run.throttle(this, this._handleUpArrow, 32);
+          break;
+        default:
+          Ember.run.throttle(this, this._handleDownArrow, 32);
       }
-
-      Ember.run.schedule("afterRender", () => {
-        switch (keyCode) {
-          case 38:
-            Ember.run.throttle(this, this._handleUpArrow, 32);
-            break;
-          default:
-            Ember.run.throttle(this, this._handleDownArrow, 32);
-        }
-      });
     });
   },
 
@@ -171,7 +173,7 @@ export default Ember.Mixin.create({
   _rowSelection($rows, nextIndex) {
     const highlightableValue = $rows.eq(nextIndex).data("value");
     const $highlightableRow = this.$findRowByValue(highlightableValue);
-    this.send("onSelect", $highlightableRow.data("value"));
+    this.send("onHighlight", $highlightableRow.data("value"));
 
     Ember.run.schedule("afterRender", () => {
       const $collection = this.$collection();
