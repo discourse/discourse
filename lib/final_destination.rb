@@ -1,10 +1,29 @@
-require "socket"
-require "ipaddr"
+require 'socket'
+require 'ipaddr'
 require 'excon'
 require 'rate_limiter'
 
 # Determine the final endpoint for a Web URI, following redirects
 class FinalDestination
+
+  def self.clear_https_cache!(domain)
+    key = redis_https_key(domain)
+    $redis.without_namespace.del(key)
+  end
+
+  def self.cache_https_domain(domain)
+    key = redis_https_key(domain)
+    $redis.without_namespace.setex(key, "1", 1.day.to_i).present?
+  end
+
+  def self.is_https_domain?(domain)
+    key = redis_https_key(domain)
+    $redis.without_namespace.get(key).present?
+  end
+
+  def self.redis_https_key(domain)
+    "HTTPS_DOMAIN_#{domain}"
+  end
 
   attr_reader :status, :cookie, :status_code
 
@@ -31,6 +50,7 @@ class FinalDestination
     @status = :ready
     @http_verb = @force_get_hosts.any? { |host| hostname_matches?(host) } ? :get : :head
     @cookie = nil
+    @limited_ips = []
   end
 
   def self.connection_timeout
@@ -66,6 +86,11 @@ class FinalDestination
   end
 
   def resolve
+    if @uri && @uri.port == 80 && FinalDestination.is_https_domain?(@uri.hostname)
+      @uri.scheme = "https"
+      @uri = URI(@uri.to_s)
+    end
+
     if @limit < 0
       @status = :too_many_redirects
       return nil
@@ -132,9 +157,17 @@ class FinalDestination
     end
 
     if location
+      old_port = @uri.port
+
       location = "#{@uri.scheme}://#{@uri.host}#{location}" if location[0] == "/"
       @uri = URI(location) rescue nil
       @limit -= 1
+
+      # https redirect, so just cache that whole new domain is https
+      if old_port == 80 && @uri.port == 443 && (URI::HTTPS === @uri)
+        FinalDestination.cache_https_domain(@uri.hostname)
+      end
+
       return resolve
     end
 
@@ -191,8 +224,9 @@ class FinalDestination
     end
 
     # Rate limit how often this IP can be crawled
-    unless @opts[:skip_rate_limit]
-      RateLimiter.new(nil, "crawl-destination-ip:#{address_s}", 100, 1.hour).performed!
+    if !@opts[:skip_rate_limit] && !@limited_ips.include?(address)
+      @limited_ips << address
+      RateLimiter.new(nil, "crawl-destination-ip:#{address_s}", 1000, 1.hour).performed!
     end
 
     true
