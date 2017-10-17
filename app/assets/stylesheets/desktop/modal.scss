@@ -92,14 +92,13 @@
 }
 
 .custom-message-length {
-  margin: -10px 0 10px 20px;
   color: dark-light-choose($primary-low-mid, $secondary-high);
   font-size: 85%;
 }
 
 .flag-message {
-  margin-left: 20px;
   width: 95% !important;
+  margin: 0;
 }
 
 .edit-category-modal {
