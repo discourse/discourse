@@ -20,6 +20,7 @@ describe FinalDestination do
         when 'internal-ipv6.com' then '2001:abc:de:01:3:3d0:6a65:c2bf'
         when 'ignore-me.com' then '53.84.143.152'
         when 'force.get.com' then '22.102.29.40'
+        when 'wikipedia.com' then '1.2.3.4'
         else
           as_ip = IPAddr.new(host) rescue nil
           raise "couldn't lookup #{host}" if as_ip.nil?
@@ -305,6 +306,27 @@ describe FinalDestination do
     it 'supports whitelisting via a site setting' do
       SiteSetting.whitelist_internal_hosts = 'private-host.com'
       expect(fd("https://private-host.com/some/url").is_dest_valid?).to eq(true)
+    end
+  end
+
+  describe "https cache" do
+    it 'will cache https lookups' do
+
+      FinalDestination.clear_https_cache!("wikipedia.com")
+
+      stub_request(:head, "http://wikipedia.com/image.png")
+        .to_return(status: 302, body: "", headers: { location: 'https://wikipedia.com/image.png' })
+      stub_request(:head, "https://wikipedia.com/image.png")
+        .to_return(status: 200, body: "", headers: [])
+      stub_request(:get, "https://wikipedia.com/image.png").to_return(status: 200, body: "", headers: {})
+
+      fd('http://wikipedia.com/image.png').resolve
+
+      stub_request(:head, "https://wikipedia.com/image2.png")
+        .to_return(status: 200, body: "", headers: [])
+      stub_request(:get, "https://wikipedia.com/image2.png").to_return(status: 200, body: "", headers: {})
+
+      fd('http://wikipedia.com/image2.png').resolve
     end
   end
 
