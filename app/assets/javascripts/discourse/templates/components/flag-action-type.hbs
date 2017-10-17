@@ -26,11 +26,11 @@
         {{#if showDescription}}
           <div class='description'>{{{description}}}</div>
         {{/if}}
+        {{#if showMessageInput}}
+          {{textarea name="message" class="flag-message" placeholder=customPlaceholder value=message}}
+          <div class="custom-message-length {{customMessageLengthClasses}}">{{customMessageLength}}</div>
+        {{/if}}
       </div>
     </label>
-    {{#if showMessageInput}}
-      {{textarea name="message" class="flag-message" placeholder=customPlaceholder value=message}}
-      <div class="custom-message-length {{customMessageLengthClasses}}">{{customMessageLength}}</div>
-    {{/if}}
   </div>
 {{/if}}
