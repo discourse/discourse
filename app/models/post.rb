@@ -5,7 +5,6 @@ require_dependency 'enum'
 require_dependency 'post_analyzer'
 require_dependency 'validators/post_validator'
 require_dependency 'plugin/filter'
-require_dependency 'email_cook'
 
 require 'archetype'
 require 'digest/sha1'
@@ -231,37 +230,32 @@ class Post < ActiveRecord::Base
     !add_nofollow?
   end
 
-  def cook(*args)
+  def cook(raw, opts = {})
     # For some posts, for example those imported via RSS, we support raw HTML. In that
     # case we can skip the rendering pipeline.
     return raw if cook_method == Post.cook_methods[:raw_html]
 
-    cooked =
-      if cook_method == Post.cook_methods[:email]
-        EmailCook.new(raw).cook
-      else
-        cloned = args.dup
-        cloned[1] ||= {}
+    options = opts.dup
+    options[:cook_method] = cook_method
 
-        post_user = self.user
-        cloned[1][:user_id] = post_user.id if post_user
+    post_user = self.user
+    options[:user_id] = post_user.id if post_user
 
-        if add_nofollow?
-          post_analyzer.cook(*args)
-        else
-          # At trust level 3, we don't apply nofollow to links
-          cloned[1][:omit_nofollow] = true
-          post_analyzer.cook(*cloned)
-        end
-      end
+    if add_nofollow?
+      cooked = post_analyzer.cook(raw, options)
+    else
+      # At trust level 3, we don't apply nofollow to links
+      options[:omit_nofollow] = true
+      cooked = post_analyzer.cook(raw, options)
+    end
 
     new_cooked = Plugin::Filter.apply(:after_post_cook, self, cooked)
 
     if post_type == Post.types[:regular]
       if new_cooked != cooked && new_cooked.blank?
-        Rails.logger.debug("Plugin is blanking out post: #{self.url}\nraw: #{self.raw}")
+        Rails.logger.debug("Plugin is blanking out post: #{self.url}\nraw: #{raw}")
       elsif new_cooked.blank?
-        Rails.logger.debug("Blank post detected post: #{self.url}\nraw: #{self.raw}")
+        Rails.logger.debug("Blank post detected post: #{self.url}\nraw: #{raw}")
       end
     end
 
