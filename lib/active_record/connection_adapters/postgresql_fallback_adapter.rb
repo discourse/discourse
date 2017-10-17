@@ -1,6 +1,7 @@
 require 'active_record/connection_adapters/abstract_adapter'
 require 'active_record/connection_adapters/postgresql_adapter'
 require 'discourse'
+require 'sidekiq/pausable'
 
 class PostgreSQLFallbackHandler
   include Singleton
@@ -48,14 +49,15 @@ class PostgreSQLFallbackHandler
         begin
           logger.warn "#{log_prefix}: Checking master server..."
           connection = ActiveRecord::Base.postgresql_connection(config)
+          is_connection_active = connection.active?
+          connection.disconnect!
 
-          if connection.active?
-            connection.disconnect!
-            ActiveRecord::Base.clear_all_connections!
+          if is_connection_active
             logger.warn "#{log_prefix}: Master server is active. Reconnecting..."
-
+            ActiveRecord::Base.clear_active_connections!
+            ActiveRecord::Base.clear_all_connections!
             self.master_up(key)
-            Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
+            disable_readonly_mode
             Sidekiq.unpause!
           end
         rescue => e
@@ -68,9 +70,14 @@ class PostgreSQLFallbackHandler
   # Use for testing
   def setup!
     @masters_down = {}
+    disable_readonly_mode
   end
 
   private
+
+  def disable_readonly_mode
+    Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
+  end
 
   def config
     ActiveRecord::Base.connection_config
@@ -100,19 +107,30 @@ module ActiveRecord
       config = config.symbolize_keys
 
       if fallback_handler.master_down?
+        Discourse.enable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
         fallback_handler.verify_master
 
-        connection = postgresql_connection(config.dup.merge(host: config[:replica_host], port: config[:replica_port]))
+        connection = postgresql_connection(config.dup.merge(
+          host: config[:replica_host],
+          port: config[:replica_port]
+        ))
 
         verify_replica(connection)
-        Discourse.enable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
       else
         begin
+          now = Time.zone.now
           connection = postgresql_connection(config)
+          fallback_handler.master_down = false
         rescue PG::ConnectionBad => e
+          on_boot = fallback_handler.master_down?.nil?
           fallback_handler.master_down = true
           fallback_handler.verify_master
-          raise e
+
+          if on_boot
+            return postgresql_fallback_connection(config)
+          else
+            raise e
+          end
         end
       end
 
