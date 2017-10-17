@@ -110,8 +110,16 @@ class CookedPostProcessor
   end
 
   def oneboxed_image_uploads
-    urls = oneboxed_images.map { |img| img["src"] }
-    Upload.where(origin: urls)
+    urls = Set.new
+
+    oneboxed_images.each do |img|
+      url = img["src"].sub(/^https?:/i, "")
+      urls << url
+      urls << "http:#{url}"
+      urls << "https:#{url}"
+    end
+
+    Upload.where(origin: urls.to_a)
   end
 
   def limit_size!(img)
@@ -323,7 +331,8 @@ class CookedPostProcessor
 
     uploads = oneboxed_image_uploads.select(:url, :origin)
     oneboxed_images.each do |img|
-      upload = uploads.detect { |u| u.origin == img["src"] }
+      url = img["src"].sub(/^https?:/i, "")
+      upload = uploads.find { |u| u.origin.sub(/^https?:/i, "") == url }
       next unless upload.present?
       img["src"] = upload.url
       # make sure we grab dimensions for oneboxed images
