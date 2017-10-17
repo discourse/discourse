@@ -1,4 +1,3 @@
-import { iconHTML } from 'discourse-common/lib/icon-library';
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import ActionSummary from 'discourse/models/action-summary';
 import { MAX_MESSAGE_LENGTH } from 'discourse/models/post-action-type';
@@ -97,13 +96,18 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return !flagTopic && !isCustomFlag && this.currentUser.get('staff');
   },
 
-  submitText: function(){
-    if (this.get('selected.is_custom_flag')) {
-      return iconHTML('envelope') + (I18n.t(this.get('flagTopic') ? "flagging_topic.notify_action" : "flagging.notify_action"));
-    } else {
-      return iconHTML('flag') + (I18n.t(this.get('flagTopic') ? "flagging_topic.action" : "flagging.action"));
+  @computed('selected.is_custom_flag')
+  submitIcon(isCustomFlag) {
+    return isCustomFlag ? "envelope" : "flag";
+  },
+
+  @computed('selected.is_custom_flag', 'flagTopic')
+  submitLabel(isCustomFlag, flagTopic) {
+    if (isCustomFlag) {
+      return flagTopic ? "flagging_topic.notify_action" : "flagging.notify_action";
     }
-  }.property('selected.is_custom_flag'),
+    return flagTopic ? "flagging_topic.action" : "flagging.action";
+  },
 
   actions: {
     deleteSpammer() {
