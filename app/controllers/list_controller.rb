@@ -187,7 +187,7 @@ class ListController < ApplicationController
     @link = "#{Discourse.base_url}#{@category.url}"
     @atom_link = "#{Discourse.base_url}#{@category.url}.rss"
     @description = "#{I18n.t('topics_in_category', category: @category.name)} #{@category.description}"
-    @topic_list = TopicQuery.new.list_new_in_category(@category)
+    @topic_list = TopicQuery.new(current_user).list_new_in_category(@category)
 
     render 'list', formats: [:rss]
   end
