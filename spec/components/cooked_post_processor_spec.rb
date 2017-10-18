@@ -90,9 +90,7 @@ describe CookedPostProcessor do
 
     shared_examples "leave dimensions alone" do
       it "doesn't use them" do
-        # adds the width from the image sizes provided when no dimension is provided
         expect(cpp.html).to match(/src="http:\/\/foo.bar\/image.png" width="" height=""/)
-        # adds the width from the image sizes provided
         expect(cpp.html).to match(/src="http:\/\/domain.com\/picture.jpg" width="50" height="42"/)
         expect(cpp).to be_dirty
       end
@@ -108,10 +106,7 @@ describe CookedPostProcessor do
         let(:image_sizes) { { "http://foo.bar/image.png" => { "width" => 111, "height" => 222 } } }
 
         it "uses them" do
-
-          # adds the width from the image sizes provided when no dimension is provided
           expect(cpp.html).to match(/src="http:\/\/foo.bar\/image.png" width="111" height="222"/)
-          # adds the width from the image sizes provided
           expect(cpp.html).to match(/src="http:\/\/domain.com\/picture.jpg" width="50" height="42"/)
           expect(cpp).to be_dirty
         end
@@ -150,7 +145,7 @@ describe CookedPostProcessor do
 
     context "with large images" do
 
-      let(:upload) { Fabricate(:upload, width: 1750, height: 2000) }
+      let(:upload) { Fabricate(:upload) }
       let(:post) { Fabricate(:post_with_large_image) }
       let(:cpp) { CookedPostProcessor.new(post) }
 
@@ -159,9 +154,7 @@ describe CookedPostProcessor do
         SiteSetting.create_thumbnails = true
 
         Upload.expects(:get_from_url).returns(upload)
-        FastImage.stubs(:size).returns([1750, 2000])
-
-        # hmmm this should be done in a cleaner way
+        FastImage.expects(:size).returns([1750, 2000])
         OptimizedImage.expects(:resize).returns(true)
 
         FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
@@ -179,7 +172,7 @@ describe CookedPostProcessor do
 
     context "with large images when using subfolders" do
 
-      let(:upload) { Fabricate(:upload, width: 1750, height: 2000) }
+      let(:upload) { Fabricate(:upload) }
       let(:post) { Fabricate(:post_with_large_image_on_subfolder) }
       let(:cpp) { CookedPostProcessor.new(post) }
       let(:base_url) { "http://test.localhost/subfolder" }
@@ -192,9 +185,7 @@ describe CookedPostProcessor do
         Discourse.stubs(:base_uri).returns(base_uri)
 
         Upload.expects(:get_from_url).returns(upload)
-        FastImage.stubs(:size).returns([1750, 2000])
-
-        # hmmm this should be done in a cleaner way
+        FastImage.expects(:size).returns([1750, 2000])
         OptimizedImage.expects(:resize).returns(true)
 
         FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
@@ -220,7 +211,7 @@ describe CookedPostProcessor do
 
     context "with title" do
 
-      let(:upload) { Fabricate(:upload, width: 1750, height: 2000) }
+      let(:upload) { Fabricate(:upload) }
       let(:post) { Fabricate(:post_with_large_image_and_title) }
       let(:cpp) { CookedPostProcessor.new(post) }
 
@@ -229,10 +220,9 @@ describe CookedPostProcessor do
         SiteSetting.create_thumbnails = true
 
         Upload.expects(:get_from_url).returns(upload)
-        FastImage.stubs(:size).returns([1750, 2000])
-
-        # hmmm this should be done in a cleaner way
+        FastImage.expects(:size).returns([1750, 2000])
         OptimizedImage.expects(:resize).returns(true)
+
         FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
       end
 
