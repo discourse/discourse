@@ -318,13 +318,11 @@ describe FinalDestination do
         .to_return(status: 302, body: "", headers: { location: 'https://wikipedia.com/image.png' })
       stub_request(:head, "https://wikipedia.com/image.png")
         .to_return(status: 200, body: "", headers: [])
-      stub_request(:get, "https://wikipedia.com/image.png").to_return(status: 200, body: "", headers: {})
 
       fd('http://wikipedia.com/image.png').resolve
 
       stub_request(:head, "https://wikipedia.com/image2.png")
         .to_return(status: 200, body: "", headers: [])
-      stub_request(:get, "https://wikipedia.com/image2.png").to_return(status: 200, body: "", headers: {})
 
       fd('http://wikipedia.com/image2.png').resolve
     end
