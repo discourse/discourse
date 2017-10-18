@@ -183,7 +183,7 @@ class CookedPostProcessor
     # we can *always* crawl our own images
     return unless SiteSetting.crawl_images? || Discourse.store.has_been_uploaded?(url)
 
-    @size_cache[url] ||= FastImage.size(absolute_url)
+    @size_cache[url] = FastImage.size(absolute_url)
   rescue Zlib::BufError # FastImage.size raises BufError for some gifs
   end
 
@@ -199,30 +199,21 @@ class CookedPostProcessor
 
   def convert_to_link!(img)
     src = img["src"]
-    return unless src.present?
+    return if src.blank?
 
     width, height = img["width"].to_i, img["height"].to_i
-    upload = Upload.get_from_url(src)
-
-    original_width, original_height =
-      if upload
-        [upload.width, upload.height]
-      else
-        get_size(src)
-      end
+    # TODO: even though get_size is cached, a better solution is to store
+    #       both original and "cropped" dimensions on the uploads table
+    original_width, original_height = (get_size(src) || [0, 0]).map(&:to_i)
 
     # can't reach the image...
-    if original_width.nil? ||
-       original_height.nil? ||
-       original_width == 0 ||
-       original_height == 0
+    if original_width == 0 || original_height == 0
       Rails.logger.info "Can't reach '#{src}' to get its dimension."
       return
     end
 
-    return if original_width.to_i <= width && original_height.to_i <= height
-    return if original_width.to_i <= SiteSetting.max_image_width && original_height.to_i <= SiteSetting.max_image_height
-
+    return if original_width <= width && original_height <= height
+    return if original_width <= SiteSetting.max_image_width && original_height <= SiteSetting.max_image_height
     return if is_a_hyperlink?(img)
 
     crop = false
@@ -233,7 +224,7 @@ class CookedPostProcessor
       img["height"] = height
     end
 
-    if upload
+    if upload = Upload.get_from_url(src)
       upload.create_thumbnail!(width, height, crop)
     end
 
