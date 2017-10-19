@@ -231,7 +231,11 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     },
 
     removeAllowedUser(user) {
-      return this.get('model.details').removeAllowedUser(user);
+      return this.get('model.details').removeAllowedUser(user).then(() => {
+        if (this.currentUser.id === user.id) {
+          this.transitionToRoute("userPrivateMessages", user);
+        }
+      });
     },
 
     removeAllowedGroup(group) {

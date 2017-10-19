@@ -954,6 +954,30 @@ describe PostCreator do
     end
   end
 
+  context 'private message to a user that has disabled private messages' do
+    let(:another_user) { Fabricate(:user) }
+
+    before do
+      another_user.user_option.update!(allow_private_messages: false)
+    end
+
+    it 'should not be valid' do
+      post_creator = PostCreator.new(
+        user,
+        title: 'this message is to someone who muted me!',
+        raw: "you will have to see this even if you muted me!",
+        archetype: Archetype.private_message,
+        target_usernames: "#{another_user.username}"
+      )
+
+      expect(post_creator).to_not be_valid
+
+      expect(post_creator.errors.full_messages).to include(I18n.t(
+        "not_accepting_pms", username: another_user.username
+      ))
+    end
+  end
+
   context "private message to a muted user" do
     let(:muted_me) { Fabricate(:evil_trout) }
 

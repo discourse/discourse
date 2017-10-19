@@ -6,6 +6,7 @@ require_dependency 'post_destroyer'
 describe Topic do
   let(:now) { Time.zone.local(2013, 11, 20, 8, 0) }
   let(:user) { Fabricate(:user) }
+  let(:topic) { Fabricate(:topic) }
 
   context 'validations' do
     let(:topic) { Fabricate.build(:topic) }
@@ -2058,6 +2059,25 @@ describe Topic do
         topic.convert_to_public_topic(Fabricate(:admin))
 
         expect(topic.pm_with_non_human_user?).to be(false)
+      end
+    end
+  end
+
+  describe '#remove_allowed_user' do
+    let(:another_user) { Fabricate(:user) }
+
+    describe 'removing oneself' do
+      it 'should remove onself' do
+        topic.allowed_users << another_user
+
+        expect(topic.remove_allowed_user(another_user, another_user)).to eq(true)
+        expect(topic.allowed_users.include?(another_user)).to eq(false)
+
+        post = Post.last
+
+        expect(post.user).to eq(Discourse.system_user)
+        expect(post.post_type).to eq(Post.types[:small_action])
+        expect(post.action_code).to eq('user_left')
       end
     end
   end
