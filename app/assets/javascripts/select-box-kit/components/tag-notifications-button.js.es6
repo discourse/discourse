@@ -10,6 +10,7 @@ export default NotificationOptionsComponent.extend({
     onSelect(value) {
       value = this.defaultOnSelect(value);
       this.sendAction("action", value);
+      this.blur();
     }
   }
 });

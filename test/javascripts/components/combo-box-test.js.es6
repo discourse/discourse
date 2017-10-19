@@ -171,3 +171,54 @@ componentTest('with no value and no none', {
     });
   }
 });
+
+// componentTest('can be filtered', {
+//   template: '{{combo-box filterable=true value=1 content=content}}',
+//
+//   beforeEach() {
+//     this.set("content", [{ id: 1, name: "robin"}, { id: 2, name: "regis" }]);
+//   },
+//
+//   test(assert) {
+//     expandSelectBox();
+//
+//     andThen(() => assert.equal(find(".select-box-kit-filter-input").length, 1, "it has a search input"));
+//
+//     selectBoxFillInFilter("regis");
+//
+//     andThen(() => assert.equal(selectBox().rows.length, 1, "it filters results"));
+//
+//     selectBoxFillInFilter("");
+//
+//     andThen(() => {
+//       assert.equal(
+//         selectBox().rows.length, 2,
+//         "it returns to original content when filter is empty"
+//       );
+//     });
+//   }
+// });
+
+// componentTest('persists filter state when expanding/collapsing', {
+//   template: '{{combo-box value=1 content=content filterable=true}}',
+//
+//   beforeEach() {
+//     this.set("content", [{ id: 1, name: "robin" }, { id: 2, name: "régis" }]);
+//   },
+//
+//   test(assert) {
+//     expandSelectBox();
+//
+//     selectBoxFillInFilter("rob");
+//
+//     andThen(() => assert.equal(selectBox().rows.length, 1) );
+//
+//     collapseSelectBox();
+//
+//     andThen(() => assert.notOk(selectBox().isExpanded) );
+//
+//     expandSelectBox();
+//
+//     andThen(() => assert.equal(selectBox().rows.length, 1) );
+//   }
+// });
