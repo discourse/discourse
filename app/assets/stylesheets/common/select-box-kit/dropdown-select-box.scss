@@ -1,0 +1,153 @@
+.select-box-kit {
+  &.dropdown-select-box {
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    min-width: auto;
+
+    &.is-expanded {
+      .select-box-kit-collection,
+      .select-box-kit-body {
+        border-radius: 0;
+      }
+    }
+
+    .select-box-kit-body {
+      border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+      background-clip: padding-box;
+      -webkit-box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+              box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+      max-width: 300px;
+      width: 300px;
+    }
+
+    .select-box-kit-row {
+      margin: 0;
+      padding: 10px 5px;
+
+      .icons {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-align: start;
+            -ms-flex-align: start;
+                align-items: flex-start;
+        -webkit-box-pack: center;
+            -ms-flex-pack: center;
+                justify-content: center;
+        -ms-flex-item-align: start;
+            align-self: flex-start;
+        margin-right: 10px;
+        margin-top: 2px;
+        width: 30px;
+
+        .d-icon {
+          font-size: 1.286em;
+          -ms-flex-item-align: center;
+              align-self: center;
+          margin-right: 0;
+          opacity: 1;
+          color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
+        }
+      }
+
+      .texts {
+        line-height: 18px;
+        -webkit-box-flex: 1;
+            -ms-flex: 1;
+                flex: 1;
+        -webkit-box-align: start;
+            -ms-flex-align: start;
+                align-items: flex-start;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+                flex-direction: column;
+
+        .name {
+          -webkit-box-flex: 1;
+              -ms-flex: 1;
+                  flex: 1;
+          font-weight: bold;
+          font-size: 1em;
+          color: $primary;
+          padding: 0;
+        }
+
+        .desc {
+          -webkit-box-flex: 1;
+              -ms-flex: 1;
+                  flex: 1;
+          font-size: 0.857em;
+          font-weight: normal;
+          color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));;
+          white-space: normal;
+        }
+      }
+
+      &.is-highlighted {
+        background: $tertiary-low;
+      }
+
+      &:hover {
+        background: $highlight-medium;
+      }
+    }
+
+    .select-box-kit-collection {
+      padding: 0;
+    }
+
+    .dropdown-select-box-header {
+      -webkit-box-sizing: border-box;
+         -moz-box-sizing: border-box;
+              box-sizing: border-box;
+      padding: 0;
+      border: 0;
+      outline: 0;
+      -webkit-box-pack: start;
+          -ms-flex-pack: start;
+              justify-content: flex-start;
+      background: none;
+      height: 30px;
+
+      &.is-focused {
+        .btn {
+          border: 1px solid $tertiary;
+          -webkit-box-shadow: $tertiary 0px 0px 6px 0px;
+                  box-shadow: $tertiary 0px 0px 6px 0px;
+        }
+      }
+
+      .d-icon + .d-icon {
+        margin-left: 5px;
+        font-size: 1.143em;
+        line-height: 18px;
+      }
+
+      .btn {
+        -webkit-box-align: center;
+            -ms-flex-align: center;
+                align-items: center;
+        -webkit-box-pack: justify;
+            -ms-flex-pack: justify;
+                justify-content: space-between;
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: row;
+                flex-direction: row;
+        display: -webkit-inline-box;
+        display: -ms-inline-flexbox;
+        display: inline-flex;
+        height: 100%;
+        margin: 0;
+        border: 1px solid transparent
+      }
+    }
+  }
+}

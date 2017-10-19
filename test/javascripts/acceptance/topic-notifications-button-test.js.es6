@@ -23,17 +23,18 @@ QUnit.test("Updating topic notification level", assert => {
 
   andThen(() => {
     assert.ok(
-      exists(`${notificationOptions} .tracking`),
+      exists(`${notificationOptions}`),
       "it should display the notification options button in the topic's footer"
     );
   });
 
-  click(`${notificationOptions} .tracking`);
-  click(`${notificationOptions} .select-box-collection .select-box-row[title=Tracking]`);
+  expandSelectBox(notificationOptions);
+  selectBoxSelectRow("3", { selector: notificationOptions});
 
   andThen(() => {
-    assert.ok(
-      exists(`${notificationOptions} .watching`),
+    assert.equal(
+      selectBox(notificationOptions).selectedRow.name(),
+      "watching",
       "it should display the right notification level"
     );
 

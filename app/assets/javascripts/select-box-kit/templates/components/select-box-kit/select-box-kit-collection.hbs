@@ -1,0 +1,49 @@
+{{#if none}}
+  {{#if selectedContent}}
+    {{component noneRowComponent
+      content=none
+      templateForRow=templateForNoneRow
+      titleForRow=titleForRow
+      iconForRow=iconForRow
+      highlightedValue=highlightedValue
+      onClearSelection=onClearSelection
+      onHighlight=onHighlight
+      value=computedValue
+      options=rowComponentOptions
+    }}
+  {{/if}}
+{{/if}}
+
+{{#if shouldDisplayCreateRow}}
+  {{component createRowComponent
+    content=createRowContent
+    templateForRow=templateForCreateRow
+    titleForRow=titleForRow
+    iconForRow=iconForRow
+    highlightedValue=highlightedValue
+    onHighlight=onHighlight
+    onCreateContent=onCreateContent
+    value=computedValue
+    options=rowComponentOptions
+  }}
+{{/if}}
+
+{{#each filteredContent as |content|}}
+  {{component rowComponent
+    content=content
+    templateForRow=templateForRow
+    titleForRow=titleForRow
+    iconForRow=iconForRow
+    highlightedValue=highlightedValue
+    onSelect=onSelect
+    onHighlight=onHighlight
+    value=computedValue
+    options=rowComponentOptions
+  }}
+{{else}}
+  {{#if noContentLabel}}
+    <li class="select-box-kit-row no-content">
+      {{i18n noContentLabel}}
+    </li>
+  {{/if}}
+{{/each}}

@@ -1,0 +1,281 @@
+.mobile-view .select-box-kit.is-expanded {
+  z-index: 1000;
+}
+
+.select-box-kit {
+  min-width: 220px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  display: inline-block;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  position: relative;
+  vertical-align: middle;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+
+  &.is-hidden {
+    display: none;
+  }
+
+  &.is-disabled {
+    pointer-events: none;
+  }
+
+  &.is-expanded {
+    z-index: 999;
+
+    .select-box-kit-body {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-orient: vertical;
+      -webkit-box-direction: normal;
+          -ms-flex-direction: column;
+              flex-direction: column;
+      left: 0;
+      position: absolute;
+      top: 0;
+    }
+
+    .select-box-kit-collection, {
+      border-radius: inherit;
+    }
+  }
+
+  &.is-above {
+    .select-box-kit-body {
+      bottom: 0;
+      top: auto;
+    }
+
+    .select-box-kit-wrapper {
+      bottom: 0;
+      top: auto;
+    }
+  }
+
+  .d-icon {
+    opacity: 0.7;
+  }
+
+  .select-box-kit-header {
+    -webkit-transition: all .25s;
+    -o-transition: all .25s;
+    transition: all .25s;
+    cursor: pointer;
+    outline: none;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    justify-content: space-between;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+
+    .selected-name {
+      text-align: left;
+      -webkit-box-flex: 10;
+          -ms-flex: 10;
+              flex: 10;
+      -o-text-overflow: ellipsis;
+         text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      color: inherit;
+    }
+
+    .btn-clear {
+      padding: 0px 10px;
+      border: 0;
+      background: none;
+    }
+
+    .icon {
+      margin-right: 5px;
+    }
+
+    .caret-icon {
+      margin-left: 5px;
+      pointer-events: none;
+    }
+
+    .d-button-label {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-align: center;
+          -ms-flex-align: center;
+              align-items: center;
+      white-space: nowrap;
+      overflow: hidden;
+
+      .d-icon {
+        margin-left: 5px;
+        margin-right: 0;
+      }
+    }
+  }
+
+  .select-box-kit-body {
+    display: none;
+    background: $secondary;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+  }
+
+  .select-box-kit-row {
+    cursor: pointer;
+    outline: none;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: start;
+        -ms-flex-pack: start;
+            justify-content: flex-start;
+
+    .name {
+      margin: 0;
+      overflow: hidden;
+      -o-text-overflow: ellipsis;
+         text-overflow: ellipsis;
+      flex: 10;
+    }
+
+    .d-icon {
+      margin-right: 5px;
+    }
+
+    &.is-highlighted {
+      background: $tertiary-low;
+    }
+
+    &.is-selected {
+      background: $highlight-medium;
+    }
+
+    &.is-selected.is-highlighted {
+      background: $tertiary-low;
+    }
+
+    &.none:not(.is-highlighted) {
+      background: $primary-low;
+    }
+  }
+
+  .select-box-kit-collection {
+    background: $secondary;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-radius: inherit;
+    -webkit-overflow-scrolling: touch;
+    margin: 0;
+
+    .select-box-kit-collection {
+      padding: 0;
+      margin: 0;
+
+      &:hover .select-box-kit-row.is-highlighted:hover {
+        background: $tertiary-low;
+      }
+    }
+
+    &::-webkit-scrollbar {
+      -webkit-appearance: none;
+      width: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      cursor: pointer;
+      border-radius: 5px;
+      background: dark-light-choose($primary-medium, $secondary-medium);
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+      border-radius: 0;
+    }
+  }
+
+  .select-box-kit-filter {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+
+    .select-box-kit-filter-input, .select-box-kit-filter-input:focus, .select-box-kit-filter-input:active {
+      background: none;
+      margin: 0;
+      padding: 0;
+      -webkit-box-flex: 1;
+          -ms-flex: 1;
+              flex: 1;
+      outline: none;
+      border: 0;
+      border-radius: 0;
+      -webkit-box-shadow: none;
+              box-shadow: none;
+      width: 100%;
+    }
+
+    &.is-hidden {
+      clip: rect(0 0 0 0);
+      width: 1px;
+      height: 1px;
+      border: 0;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      position: fixed;
+      outline: 0;
+      left: 0px;
+      top: 0px;
+    }
+  }
+
+  .select-box-kit-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: none;
+    display: none;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+    pointer-events: none;
+    border: 1px solid transparent;
+  }
+
+  .select-box-kit-offscreen, .select-box-kit-offscreen:focus {
+    clip: rect(0 0 0 0);
+    width: 1px;
+    height: 1px;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    position: fixed;
+    outline: 0;
+    left: 0px;
+    top: 0px;
+  }
+}

@@ -1,0 +1,23 @@
+{{#if icon}}
+  <div class="future-date-input-selector-icons">
+    {{{icon}}}
+  </div>
+{{/if}}
+
+<span class="selected-name" title={{selectedName}}>
+  {{{selectedName}}}
+</span>
+
+{{#if datetime}}
+  <span class="future-date-input-selector-datetime">
+    {{datetime}}
+  </span>
+{{/if}}
+
+{{#if shouldDisplayClearableButton}}
+  <button class="btn-clear" {{action onClearSelection bubbles=false}}>
+    {{d-icon 'times'}}
+  </button>
+{{/if}}
+
+{{d-icon caretIcon class="caret-icon"}}
