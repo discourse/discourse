@@ -178,7 +178,11 @@ var runTests = function() {
     return $("#user-card .names").length;
   });
 
-  if (!system.env["SKIP_WRITE_TESTS"]) {
+  if (system.env["READONLY_TESTS"]) {
+    test("readonly alert is present", function() {
+      return $(".alert-read-only").length;
+    });
+  } else {
     exec("open login modal", function() {
       $(".login-button").click();
     });
