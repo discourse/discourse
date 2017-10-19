@@ -53,19 +53,17 @@ export default Ember.Controller.extend(ModalFunctionality, {
       return flagsAvailable;
     } else {
       // flagging topic
-      const self = this,
-          lookup = Em.Object.create();
-
-      _.each(this.get("model.actions_summary"),function(a) {
-        a.flagTopic = self.get('model');
-        a.actionType = self.site.topicFlagTypeById(a.id);
-        const actionSummary = ActionSummary.create(a);
-        lookup.set(a.actionType.get('name_key'), actionSummary);
+      let lookup = Em.Object.create();
+      let model = this.get('model');
+      model.get('actions_summary').forEach(a => {
+        a.flagTopic = model;
+        a.actionType = this.site.topicFlagTypeById(a.id);
+        lookup.set(a.actionType.get('name_key'), ActionSummary.create(a));
       });
       this.set('topicActionByName', lookup);
 
-      return this.site.get('topic_flag_types').filter(function(item) {
-        return _.any(self.get("model.actions_summary"), function(a) {
+      return this.site.get('topic_flag_types').filter(item => {
+        return _.any(this.get("model.actions_summary"), a => {
           return (a.id === item.get('id') && a.can_act);
         });
       });
