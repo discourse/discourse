@@ -1,4 +1,4 @@
-import { componentTest } from 'wizard/test/helpers/component-test';
+// import { componentTest } from 'wizard/test/helpers/component-test';
 moduleForComponent('invite-list', { integration: true });
 
 QUnit.skip('can add users', {
