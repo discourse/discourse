@@ -6,8 +6,9 @@ require 'sidekiq/pausable'
 class PostgreSQLFallbackHandler
   include Singleton
 
+  @@masters_down = DistributedCache.new('masters_down')
+
   def initialize
-    @masters_down = DistributedCache.new('masters_down')
     @mutex = Mutex.new
   end
 
@@ -19,7 +20,7 @@ class PostgreSQLFallbackHandler
         begin
           thread = Thread.new { initiate_fallback_to_master }
           thread.join
-          break if synchronize { @masters_down.empty? }
+          break if synchronize { @@masters_down.empty? }
           sleep 10
         ensure
           thread.kill
@@ -29,22 +30,22 @@ class PostgreSQLFallbackHandler
   end
 
   def master_down?
-    synchronize { @masters_down[namespace] }
+    synchronize { @@masters_down[namespace] }
   end
 
   def master_down=(args)
     synchronize do
-      @masters_down[namespace] = args
+      @@masters_down[namespace] = args
       Sidekiq.pause! if args
     end
   end
 
   def master_up(namespace)
-    synchronize { @masters_down.delete(namespace) }
+    synchronize { @@masters_down.delete(namespace) }
   end
 
   def initiate_fallback_to_master
-    @masters_down.keys.each do |key|
+    @@masters_down.keys.each do |key|
       RailsMultisite::ConnectionManagement.with_connection(key) do
         begin
           logger.warn "#{log_prefix}: Checking master server..."
@@ -69,7 +70,7 @@ class PostgreSQLFallbackHandler
 
   # Use for testing
   def setup!
-    @masters_down = {}
+    @@masters_down = {}
     disable_readonly_mode
   end
 
