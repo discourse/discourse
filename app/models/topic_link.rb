@@ -161,7 +161,7 @@ SQL
           added_urls << url
 
           unless TopicLink.exists?(topic_id: post.topic_id, post_id: post.id, url: url)
-            file_extension = File.extname(parsed.path)[1..10].downcase unless File.extname(parsed.path).empty?
+            file_extension = File.extname(parsed.path)[1..10].downcase unless parsed.path.nil? || File.extname(parsed.path).empty?
             begin
               TopicLink.create!(post_id: post.id,
                                 user_id: post.user_id,
