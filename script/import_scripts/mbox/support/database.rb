@@ -163,7 +163,7 @@ module ImportScripts::Mbox
     private
 
     def configure_database
-      @db.execute 'PRAGMA journal_mode = TRUNCATE'
+      @db.execute 'PRAGMA journal_mode = OFF'
     end
 
     def upgrade_schema_version
