@@ -3,7 +3,7 @@ import {
   FORMAT,
   PICK_DATE_AND_TIME,
   SET_BASED_ON_LAST_POST
-} from "discourse/components/future-date-input-selector";
+} from "select-box-kit/components/future-date-input-selector";
 
 import { PUBLISH_TO_CATEGORY_STATUS_TYPE } from 'discourse/controllers/edit-topic-timer';
 

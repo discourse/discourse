@@ -16,7 +16,7 @@
     <form class="form-horizontal">
       <div>
       <label>{{i18n 'admin.badges.badge'}}</label>
-      {{combo-box valueAttribute="id" value=selectedBadgeId content=grantableBadges nameProperty="name"}}
+      {{combo-box filterable=true value=selectedBadgeId content=grantableBadges}}
       </div>
       <label>
       <label>{{i18n 'admin.badges.reason'}}</label>

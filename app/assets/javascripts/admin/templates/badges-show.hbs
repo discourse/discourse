@@ -26,9 +26,7 @@
       {{combo-box name="badge_type_id"
                   value=buffered.badge_type_id
                   content=badgeTypes
-                  optionValuePath="content.id"
-                  optionLabelPath="content.name"
-                  disabled=readOnly}}
+                  isDisabled=readOnly}}
     </div>
 
     <div>
@@ -36,8 +34,7 @@
       {{combo-box name="badge_grouping_id"
                   value=buffered.badge_grouping_id
                   content=badgeGroupings
-                  optionValuePath="content.id"
-                  optionLabelPath="content.displayName"}}
+                  nameProperty="name"}}
       &nbsp;<button {{action "editGroupings"}} class='btn'>{{d-icon 'pencil'}}</button>
     </div>
 

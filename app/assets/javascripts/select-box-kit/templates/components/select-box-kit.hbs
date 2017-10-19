@@ -1,0 +1,65 @@
+<input
+  class="select-box-kit-offscreen"
+  type="text"
+  aria-haspopup="true"
+  role="button"
+  aria-labelledby="select-box-kit-offscreen-{{elementId}}"
+  tabindex={{tabindex}}
+  name={{name}}
+  value={{computedValue}}
+  readonly=true
+/>
+
+{{component headerComponent
+  none=computedNone
+  isFocused=isFocused
+  isExpanded=isExpanded
+  selectedContent=selectedContent
+  onDeselect=(action "onDeselect")
+  onToggle=(action "onToggle")
+  onFilterChange=(action "onFilterChange")
+  onClearSelection=(action "onClearSelection")
+  options=headerComponentOptions
+}}
+
+<div class="select-box-kit-body">
+  {{component filterComponent
+    onFilterChange=(action "onFilterChange")
+    icon=filterIcon
+    filter=filter
+    filterable=computedFilterable
+    isFocused=isFocused
+    placeholder=(i18n filterPlaceholder)
+    tabindex=tabindex
+  }}
+
+  {{#if renderBody}}
+    {{component collectionComponent
+      shouldDisplayCreateRow=shouldDisplayCreateRow
+      none=computedNone
+      createRowContent=createRowContent
+      selectedContent=selectedContent
+      filteredContent=filteredContent
+      rowComponent=rowComponent
+      noneRowComponent=noneRowComponent
+      createRowComponent=createRowComponent
+      iconForRow=iconForRow
+      templateForRow=templateForRow
+      templateForNoneRow=templateForNoneRow
+      templateForCreateRow=templateForCreateRow
+      shouldHighlightRow=shouldHighlightRow
+      shouldSelectRow=shouldSelectRow
+      titleForRow=titleForRow
+      onClearSelection=(action "onClearSelection")
+      onSelect=(action "onSelect")
+      onHighlight=(action "onHighlight")
+      onCreateContent=(action "onCreateContent")
+      noContentLabel=noContentLabel
+      highlightedValue=highlightedValue
+      computedValue=computedValue
+      rowComponentOptions=rowComponentOptions
+    }}
+  {{/if}}
+</div>
+
+<div class="select-box-kit-wrapper"></div>

@@ -3,6 +3,7 @@
 //= require ./ember-addons/macro-alias
 //= require ./ember-addons/ember-computed-decorators
 //= require_tree ./discourse-common
+//= require_tree ./select-box-kit
 //= require wizard/router
 //= require wizard/wizard
 //= require_tree ./wizard/templates

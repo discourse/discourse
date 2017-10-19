@@ -1,5 +1,4 @@
 <section class="details {{unless model.active 'not-activated'}}">
-
   <div class='user-controls'>
     {{#if model.canViewProfile}}
       {{#link-to 'user' model class="btn"}}
@@ -379,7 +378,7 @@
         <div class='controls'>
           {{#if model.customGroups}}
             {{i18n 'admin.groups.primary'}}
-            {{combo-box content=model.customGroups value=model.primary_group_id nameProperty="name" none="admin.groups.no_primary"}}
+            {{combo-box content=model.customGroups value=model.primary_group_id none="admin.groups.no_primary"}}
           {{/if}}
           {{#if primaryGroupDirty}}
             {{d-button icon="check" class="ok" action="savePrimaryGroup"}}

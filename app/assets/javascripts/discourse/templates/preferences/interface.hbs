@@ -2,7 +2,7 @@
 <div class="control-group theme">
   <label class="control-label">{{i18n 'user.theme'}}</label>
   <div class="controls">
-    {{select-box textKey="name" content=userSelectableThemes value=themeKey}}
+    {{combo-box content=userSelectableThemes value=themeKey}}
   </div>
   <div class="controls">
     {{preference-checkbox labelKey="user.theme_default_on_all_devices" checked=makeThemeDefault}}
@@ -24,7 +24,7 @@
   <div class="control-group pref-locale">
     <label class="control-label">{{i18n 'user.locale.title'}}</label>
     <div class="controls">
-      {{combo-box valueAttribute="value" content=availableLocales value=model.locale none="user.locale.default"}}
+      {{combo-box filterable=true valueAttribute="value" content=availableLocales value=model.locale none="user.locale.default"}}
     </div>
     <div class='instructions'>
       {{i18n 'user.locale.instructions'}}

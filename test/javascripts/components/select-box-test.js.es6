@@ -1,31 +1,31 @@
 import componentTest from 'helpers/component-test';
 
-moduleForComponent('select-box', { integration: true });
+moduleForComponent('select-box-kit', { integration: true });
 
 componentTest('updating the content refreshes the list', {
-  template: '{{select-box value=1 content=content}}',
+  template: '{{select-box-kit value=1 content=content}}',
 
   beforeEach() {
-    this.set("content", [{ id: 1, text: "robin" }]);
+    this.set("content", [{ id: 1, name: "robin" }]);
   },
 
   test(assert) {
     expandSelectBox();
 
     andThen(() => {
-      assert.equal(selectBox().row(1).text(), "robin");
-      this.set("content", [{ id: 1, text: "regis" }]);
-      assert.equal(selectBox().row(1).text(), "regis");
+      assert.equal(selectBox().rowByValue(1).name(), "robin");
+      this.set("content", [{ id: 1, name: "regis" }]);
+      assert.equal(selectBox().rowByValue(1).name(), "regis");
     });
   }
 });
 
 componentTest('accepts a value by reference', {
-  template: '{{select-box value=value content=content}}',
+  template: '{{select-box-kit value=value content=content}}',
 
   beforeEach() {
     this.set("value", 1);
-    this.set("content", [{ id: 1, text: "robin" }, { id: 2, text: "regis" }]);
+    this.set("content", [{ id: 1, name: "robin" }, { id: 2, name: "regis" }]);
   },
 
   test(assert) {
@@ -33,7 +33,7 @@ componentTest('accepts a value by reference', {
 
     andThen(() => {
       assert.equal(
-        selectBox().selectedRow.text(), "robin",
+        selectBox().selectedRow.name(), "robin",
         "it highlights the row corresponding to the value"
       );
     });
@@ -47,16 +47,16 @@ componentTest('accepts a value by reference', {
 });
 
 componentTest('select-box can be filtered', {
-  template: '{{select-box filterable=true value=1 content=content}}',
+  template: '{{select-box-kit filterable=true value=1 content=content}}',
 
   beforeEach() {
-    this.set("content", [{ id: 1, text: "robin"}, { id: 2, text: "regis" }]);
+    this.set("content", [{ id: 1, name: "robin"}, { id: 2, name: "regis" }]);
   },
 
   test(assert) {
     expandSelectBox();
 
-    andThen(() => assert.equal(find(".filter-query").length, 1, "it has a search input"));
+    andThen(() => assert.equal(find(".select-box-kit-filter-input").length, 1, "it has a search input"));
 
     selectBoxFillInFilter("regis");
 
@@ -74,35 +74,27 @@ componentTest('select-box can be filtered', {
 });
 
 componentTest('no default icon', {
-  template: '{{select-box}}',
+  template: '{{select-box-kit}}',
 
   test(assert) {
     assert.equal(selectBox().header.icon().length, 0, "it doesn’t have an icon if not specified");
   }
 });
 
-componentTest('customisable icon', {
-  template: '{{select-box icon="shower"}}',
-
-  test(assert) {
-    assert.ok(selectBox().header.icon().hasClass("d-icon-shower"), "it has a the correct icon");
-  }
-});
-
 componentTest('default search icon', {
-  template: '{{select-box filterable=true}}',
+  template: '{{select-box-kit filterable=true}}',
 
   test(assert) {
     expandSelectBox();
 
     andThen(() => {
-      assert.ok(selectBox().filter.icon().hasClass("d-icon-search"), "it has a the correct icon");
+      assert.ok(exists(selectBox().filter.icon), "it has a the correct icon");
     });
   }
 });
 
 componentTest('with no search icon', {
-  template: '{{select-box filterable=true filterIcon=null}}',
+  template: '{{select-box-kit filterable=true filterIcon=null}}',
 
   test(assert) {
     expandSelectBox();
@@ -114,7 +106,7 @@ componentTest('with no search icon', {
 });
 
 componentTest('custom search icon', {
-  template: '{{select-box filterable=true filterIcon="shower"}}',
+  template: '{{select-box-kit filterable=true filterIcon="shower"}}',
 
   test(assert) {
     expandSelectBox();
@@ -125,17 +117,8 @@ componentTest('custom search icon', {
   }
 });
 
-componentTest('not filterable by default', {
-  template: '{{select-box}}',
-  test(assert) {
-    expandSelectBox();
-
-    andThen(() => assert.notOk(selectBox().filter.exists()) );
-  }
-});
-
 componentTest('select-box is expandable', {
-  template: '{{select-box}}',
+  template: '{{select-box-kit}}',
   test(assert) {
     expandSelectBox();
 
@@ -147,46 +130,46 @@ componentTest('select-box is expandable', {
   }
 });
 
-componentTest('accepts custom id/text keys', {
-  template: '{{select-box value=value content=content idKey="identifier" textKey="name"}}',
+componentTest('accepts custom value/name keys', {
+  template: '{{select-box-kit value=value nameProperty="item" content=content valueAttribute="identifier"}}',
 
   beforeEach() {
     this.set("value", 1);
-    this.set("content", [{ identifier: 1, name: "robin" }]);
+    this.set("content", [{ identifier: 1, item: "robin" }]);
   },
 
   test(assert) {
     expandSelectBox();
 
     andThen(() => {
-      assert.equal(selectBox().selectedRow.text(), "robin");
+      assert.equal(selectBox().selectedRow.name(), "robin");
     });
   }
 });
 
 componentTest('doesn’t render collection content before first expand', {
-  template: '{{select-box value=1 content=content idKey="identifier" textKey="name"}}',
+  template: '{{select-box-kit value=1 content=content}}',
 
   beforeEach() {
-    this.set("content", [{ identifier: 1, name: "robin" }]);
+    this.set("content", [{ value: 1, name: "robin" }]);
   },
 
   test(assert) {
-    assert.notOk(exists(find(".collection")));
+    assert.notOk(exists(find(".select-box-kit-collection")));
 
     expandSelectBox();
 
     andThen(() => {
-      assert.ok(exists(find(".collection")));
+      assert.ok(exists(find(".select-box-kit-collection")));
     });
   }
 });
 
-componentTest('persists filter state when expandind/collapsing', {
-  template: '{{select-box value=1 content=content filterable=true}}',
+componentTest('persists filter state when expanding/collapsing', {
+  template: '{{select-box-kit value=1 content=content filterable=true}}',
 
   beforeEach() {
-    this.set("content", [{id:1, text:"robin"}, {id:2, text:"régis"}]);
+    this.set("content", [{ id: 1, name: "robin" }, { id: 2, name: "régis" }]);
   },
 
   test(assert) {
@@ -207,126 +190,88 @@ componentTest('persists filter state when expandind/collapsing', {
 });
 
 componentTest('supports options to limit size', {
-  template: '{{select-box collectionHeight=20 content=content}}',
+  template: '{{select-box-kit collectionHeight=20 content=content}}',
 
   beforeEach() {
-    this.set("content", [{ id: 1, text: "robin" }]);
+    this.set("content", [{ id: 1, name: "robin" }]);
   },
 
   test(assert) {
     expandSelectBox();
 
     andThen(() => {
-      const body = find(".select-box-body");
-      assert.equal(parseInt(body.height()), 20, "it limits the height");
-    });
-  }
-});
-
-componentTest('supports custom row template', {
-  template: '{{select-box content=content templateForRow=templateForRow}}',
-
-  beforeEach() {
-    this.set("content", [{ id: 1, text: "robin" }]);
-    this.set("templateForRow", (rowComponent) => {
-      return `<b>${rowComponent.get("content.text")}</b>`;
-    });
-  },
-
-  test(assert) {
-    expandSelectBox();
-
-    andThen(() => assert.equal(selectBox().row(1).el().html().trim(), "<b>robin</b>") );
-  }
-});
-
-componentTest('supports converting select value to integer', {
-  template: '{{select-box value=value content=content castInteger=true}}',
-
-  beforeEach() {
-    this.set("value", 2);
-    this.set("content", [{ id: "1", text: "robin"}, {id: "2", text: "régis" }]);
-  },
-
-  test(assert) {
-    expandSelectBox();
-
-    andThen(() => assert.equal(selectBox().selectedRow.text(), "régis") );
-
-    andThen(() => {
-      this.set("value", 3);
-      this.set("content", [{ id: "3", text: "jeff" }]);
-    });
-
-    andThen(() => {
-      assert.equal(selectBox().selectedRow.text(), "jeff", "it works with dynamic content");
+      const height = find(".select-box-kit-collection").height();
+      assert.equal(parseInt(height, 10), 20, "it limits the height");
     });
   }
 });
 
 componentTest('dynamic headerText', {
-  template: '{{select-box value=1 content=content}}',
+  template: '{{select-box-kit value=1 content=content}}',
 
   beforeEach() {
-    this.set("content", [{ id: 1, text: "robin" }, { id: 2, text: "regis" }]);
+    this.set("content", [{ id: 1, name: "robin" }, { id: 2, name: "regis" }]);
   },
 
   test(assert) {
     expandSelectBox();
 
-    andThen(() => assert.equal(selectBox().header.text(), "robin") );
+    andThen(() => assert.equal(selectBox().header.name(), "robin") );
 
     selectBoxSelectRow(2);
 
     andThen(() => {
-      assert.equal(selectBox().header.text(), "regis", "it changes header text");
+      assert.equal(selectBox().header.name(), "regis", "it changes header text");
     });
   }
 });
 
-componentTest('static headerText', {
-  template: '{{select-box value=1 content=content dynamicHeaderText=false headerText=headerText}}',
+componentTest('supports custom row template', {
+  template: '{{select-box-kit content=content templateForRow=templateForRow}}',
 
   beforeEach() {
-    this.set("content", [{ id: 1, text: "robin" }, { id: 2, text: "regis" }]);
-    this.set("headerText", "Choose...");
+    this.set("content", [{ id: 1, name: "robin" }]);
+    this.set("templateForRow", rowComponent => {
+      return `<b>${rowComponent.get("content.name")}</b>`;
+    });
   },
 
   test(assert) {
     expandSelectBox();
 
-    andThen(() => {
-      assert.equal(selectBox().header.text(), "Choose...");
-    });
-
-    selectBoxSelectRow(2);
-
-    andThen(() => {
-      assert.equal(selectBox().header.text(), "Choose...", "it doesn’t change header text");
-    });
+    andThen(() => assert.equal(selectBox().rowByValue(1).el.html().trim(), "<b>robin</b>") );
   }
 });
 
-componentTest('supports custom row title', {
-  template: '{{select-box content=content titleForRow=titleForRow}}',
+componentTest('supports converting select value to integer', {
+  template: '{{select-box-kit value=value content=content castInteger=true}}',
 
   beforeEach() {
-    this.set("content", [{ id: 1, text: "robin" }]);
-    this.set("titleForRow", () => "sam" );
+    this.set("value", 2);
+    this.set("content", [{ id: "1", name: "robin"}, {id: "2", name: "régis" }]);
   },
 
   test(assert) {
     expandSelectBox();
 
-    andThen(() => assert.equal(selectBox().row(1).title(), "sam") );
+    andThen(() => assert.equal(selectBox().selectedRow.name(), "régis") );
+
+    andThen(() => {
+      this.set("value", 3);
+      this.set("content", [{ id: "3", name: "jeff" }]);
+    });
+
+    andThen(() => {
+      assert.equal(selectBox().selectedRow.name(), "jeff", "it works with dynamic content");
+    });
   }
 });
 
 componentTest('supports keyboard events', {
-  template: '{{select-box content=content filterable=true}}',
+  template: '{{select-box-kit content=content filterable=true}}',
 
   beforeEach() {
-    this.set("content", [{ id: 1, text: "robin" }, { id: 2, text: "regis" }]);
+    this.set("content", [{ id: 1, name: "robin" }, { id: 2, name: "regis" }]);
   },
 
   test(assert) {
@@ -335,31 +280,25 @@ componentTest('supports keyboard events', {
     selectBox().keyboard.down();
 
     andThen(() => {
-      assert.equal(selectBox().highlightedRow.title(), "robin", "it highlights the first row");
+      assert.equal(selectBox().highlightedRow.title(), "regis", "the next row is highlighted");
     });
 
     selectBox().keyboard.down();
 
     andThen(() => {
-      assert.equal(selectBox().highlightedRow.title(), "regis", "it highlights the next row");
-    });
-
-    selectBox().keyboard.down();
-
-    andThen(() => {
-      assert.equal(selectBox().highlightedRow.title(), "regis", "it keeps highlighting the last row when reaching the end");
+      assert.equal(selectBox().highlightedRow.title(), "robin", "it returns to the first row");
     });
 
     selectBox().keyboard.up();
 
     andThen(() => {
-      assert.equal(selectBox().highlightedRow.title(), "robin", "it highlights the previous row");
+      assert.equal(selectBox().highlightedRow.title(), "regis", "it highlights the last row");
     });
 
     selectBox().keyboard.enter();
 
     andThen(() => {
-      assert.equal(selectBox().selectedRow.title(), "robin", "it selects the row when pressing enter");
+      assert.equal(selectBox().selectedRow.title(), "regis", "it selects the row when pressing enter");
       assert.notOk(selectBox().isExpanded, "it collapses the select box when selecting a row");
     });
 
