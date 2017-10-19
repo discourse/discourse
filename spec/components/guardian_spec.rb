@@ -233,6 +233,27 @@ describe Guardian do
         end
       end
     end
+
+    context 'target user has private message disabled' do
+      before do
+        another_user.user_option.update!(allow_private_messages: false)
+      end
+
+      context 'for a normal user' do
+        it 'should return false' do
+          expect(Guardian.new(user).can_send_private_message?(another_user)).to eq(false)
+        end
+      end
+
+      context 'for a staff user' do
+        it 'should return true' do
+          [admin, moderator].each do |staff_user|
+            expect(Guardian.new(staff_user).can_send_private_message?(another_user))
+              .to eq(true)
+          end
+        end
+      end
+    end
   end
 
   describe 'can_reply_as_new_topic' do
@@ -2589,6 +2610,62 @@ describe Guardian do
 
       it "staff can see suspensions" do
         expect(Guardian.new(moderator).can_see_suspension_reason?(user)).to eq(true)
+      end
+    end
+  end
+
+  describe '#can_remove_allowed_users?' do
+    context 'staff users' do
+      it 'should be true' do
+        expect(Guardian.new(moderator).can_remove_allowed_users?(topic))
+          .to eq(true)
+      end
+    end
+
+    context 'normal user' do
+      let(:topic) { Fabricate(:topic, user: Fabricate(:user)) }
+      let(:another_user) { Fabricate(:user) }
+
+      before do
+        topic.allowed_users << user
+        topic.allowed_users << another_user
+      end
+
+      it 'should be false' do
+        expect(Guardian.new(user).can_remove_allowed_users?(topic))
+          .to eq(false)
+      end
+
+      describe 'target_user is the user' do
+        describe 'when user is in a pm with another user' do
+          it 'should return true' do
+            expect(Guardian.new(user).can_remove_allowed_users?(topic, user))
+              .to eq(true)
+          end
+        end
+
+        describe 'when user is the creator of the topic' do
+          it 'should return false' do
+            expect(Guardian.new(topic.user).can_remove_allowed_users?(topic, topic.user))
+              .to eq(false)
+          end
+        end
+
+        describe 'when user is the only user in the topic' do
+          it 'should return false' do
+            topic.remove_allowed_user(Discourse.system_user, another_user.username)
+
+            expect(Guardian.new(user).can_remove_allowed_users?(topic, user))
+              .to eq(false)
+          end
+        end
+      end
+
+      describe 'target_user is not the user' do
+        it 'should return false' do
+          expect(Guardian.new(user).can_remove_allowed_users?(topic, moderator))
+            .to eq(false)
+        end
       end
     end
   end

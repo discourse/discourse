@@ -143,6 +143,7 @@ en:
       split_topic: "split this topic %{when}"
       invited_user: "invited %{who} %{when}"
       invited_group: "invited %{who} %{when}"
+      user_left: "%{who} left this message %{when}"
       removed_user: "removed %{who} %{when}"
       removed_group: "removed %{who} %{when}"
       autoclosed:
@@ -595,6 +596,7 @@ en:
       disable_jump_reply: "Don't jump to my post after I reply"
       dynamic_favicon: "Show new / updated topic count on browser icon"
       theme_default_on_all_devices: "Make this my default theme on all my devices"
+      allow_private_messages: "Allow other users to send me private messages"
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
       change: "change"
@@ -1029,6 +1031,7 @@ en:
     private_message_info:
       title: "Message"
       invite: "Invite Others..."
+      leave_message: "Do you really want to leave this message?"
       remove_allowed_user: "Do you really want to remove {{name}} from this message?"
       remove_allowed_group: "Do you really want to remove {{name}} from this message?"
 

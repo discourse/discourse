@@ -34,7 +34,8 @@ class UserUpdater
     :email_in_reply_to,
     :like_notification_frequency,
     :include_tl0_in_digests,
-    :theme_key
+    :theme_key,
+    :allow_private_messages,
   ]
 
   def initialize(actor, user)

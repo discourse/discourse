@@ -439,9 +439,10 @@ class TopicsController < ApplicationController
   def remove_allowed_user
     params.require(:username)
     topic = Topic.find_by(id: params[:topic_id])
-    guardian.ensure_can_remove_allowed_users!(topic)
+    user = User.find_by(username: params[:username])
+    guardian.ensure_can_remove_allowed_users!(topic, user)
 
-    if topic.remove_allowed_user(current_user, params[:username])
+    if topic.remove_allowed_user(current_user, user)
       render json: success_json
     else
       render json: failed_json, status: 422
