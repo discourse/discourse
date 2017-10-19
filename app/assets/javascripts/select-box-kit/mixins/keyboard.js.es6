@@ -28,7 +28,6 @@ export default Ember.Mixin.create({
     this._super();
 
     $(document)
-      .off("click.select-box-kit")
       .off("mousedown.select-box-kit")
       .off("touchstart.select-box-kit");
 
@@ -44,7 +43,8 @@ export default Ember.Mixin.create({
   didInsertElement() {
     this._super();
 
-    $(document).on("click.select-box-kit", event => {
+    $(document)
+      .on("mousedown.select-box-kit, touchstart.select-box-kit", event => {
         if (Ember.isNone(this.get("element"))) {
           return;
         }
@@ -54,20 +54,20 @@ export default Ember.Mixin.create({
     });
 
     this.$offscreenInput()
-      .on(`blur.select-box-kit`, () => {
+      .on("blur.select-box-kit", () => {
         if (this.get("isExpanded") === false && this.get("isFocused") === true) {
           this.close();
         }
       })
-      .on(`focus.select-box-kit`, (event) => {
+      .on("focus.select-box-kit", (event) => {
         this.set("isFocused", true);
         this._killEvent(event);
       })
-      .on(`focusin.select-box-kit`, (event) => {
+      .on("focusin.select-box-kit", (event) => {
         this.set("isFocused", true);
         this._killEvent(event);
       })
-      .on(`keydown.select-box-kit`, (event) => {
+      .on("keydown.select-box-kit", (event) => {
         const keyCode = event.keyCode || event.which;
 
         switch (keyCode) {
