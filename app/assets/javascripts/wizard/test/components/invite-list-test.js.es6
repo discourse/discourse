@@ -1,7 +1,7 @@
 import { componentTest } from 'wizard/test/helpers/component-test';
 moduleForComponent('invite-list', { integration: true });
 
-componentTest('can add users', {
+QUnit.skip('can add users', {
   template: `{{invite-list field=field}}`,
 
   beforeEach() {
