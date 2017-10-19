@@ -311,11 +311,10 @@ class Topic < ActiveRecord::Base
     return ERB::Util.html_escape(title) unless SiteSetting.title_fancy_entities?
 
     unless fancy_title = read_attribute(:fancy_title)
-
       fancy_title = Topic.fancy_title(title)
       write_attribute(:fancy_title, fancy_title)
 
-      unless new_record?
+      if !new_record? && !Discourse.readonly_mode?
         # make sure data is set in table, this also allows us to change algorithm
         # by simply nulling this column
         exec_sql("UPDATE topics SET fancy_title = :fancy_title where id = :id", id: self.id, fancy_title: fancy_title)

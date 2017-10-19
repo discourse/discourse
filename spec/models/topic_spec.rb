@@ -327,6 +327,27 @@ describe Topic do
         topic.title = "this is another edge case"
         expect(topic.fancy_title).to eq("this is another edge case")
       end
+
+      context 'readonly mode' do
+        before do
+          Discourse.enable_readonly_mode
+        end
+
+        after do
+          Discourse.disable_readonly_mode
+        end
+
+        it 'should not attempt to update `fancy_title`' do
+          topic.save!
+          expect(topic.fancy_title).to eq('&ldquo;this topic&rdquo; &ndash; has &ldquo;fancy stuff&rdquo;')
+
+          topic.title = "This is a test testing testing"
+          expect(topic.fancy_title).to eq("This is a test testing testing")
+
+          expect(topic.reload.read_attribute(:fancy_title))
+            .to eq('&ldquo;this topic&rdquo; &ndash; has &ldquo;fancy stuff&rdquo;')
+        end
+      end
     end
   end
 
