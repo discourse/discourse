@@ -4,15 +4,25 @@ export default Ember.Component.extend({
   layoutName: "select-box-kit/templates/components/select-box-kit/select-box-kit-header",
   classNames: "select-box-kit-header",
   classNameBindings: ["isFocused"],
-  attributeBindings: ["text:data-name"],
+  attributeBindings: ["selectedName:data-name"],
+  shouldDisplaySelectedName: true,
 
-  @computed("selectBoxIsExpanded", "caretUpIcon", "caretDownIcon")
-  caretIcon(selectBoxIsExpanded, caretUpIcon, caretDownIcon) {
-    return selectBoxIsExpanded === true ? caretUpIcon : caretDownIcon;
+  @computed("options.shouldDisplaySelectedName")
+  shouldDisplaySelectedName(should) {
+    if (Ember.isNone(should)) { return true; }
+    return should;
   },
 
-  click() {
-    this.sendAction("onToggle");
-    event.stopPropagation();
-  }
+  @computed("options.selectedName", "selectedContent.firstObject.name")
+  selectedName(optionsSelectedName, firstSelectedContentName) {
+    if (Ember.isNone(optionsSelectedName)) {
+      return firstSelectedContentName;
+    }
+    return optionsSelectedName;
+  },
+
+  @computed("options.icon")
+  icon(optionsIcon) { return optionsIcon; },
+
+  click() { this.sendAction("onToggle"); }
 });

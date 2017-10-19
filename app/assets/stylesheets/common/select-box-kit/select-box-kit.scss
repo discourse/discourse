@@ -85,16 +85,22 @@
         -ms-flex-pack: justify;
             justify-content: space-between;
 
-    .selected-value {
+    .selected-name {
       text-align: left;
-      -webkit-box-flex: 1;
-          -ms-flex: 1;
-              flex: 1;
+      -webkit-box-flex: 10;
+          -ms-flex: 10;
+              flex: 10;
       -o-text-overflow: ellipsis;
          text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
       color: inherit;
+    }
+
+    .btn-clear {
+      padding: 0px 10px;
+      border: 0;
+      background: none;
     }
 
     .icon {
@@ -143,11 +149,12 @@
         -ms-flex-pack: start;
             justify-content: flex-start;
 
-    .text {
+    .name {
       margin: 0;
       overflow: hidden;
       -o-text-overflow: ellipsis;
          text-overflow: ellipsis;
+      flex: 10;
     }
 
     .d-icon {
@@ -271,28 +278,4 @@
     left: 0px;
     top: 0px;
   }
-
-  .select-box-kit-offscreen:focus {
-    background: red;
-
-    width: 200px;
-    width: 200px;
-  }
-}
-
-.select-box-kit-click-capture-mask {
-  border: 0;
-  margin: 0;
-  padding: 0;
-  position: fixed;
-  left: 0;
-  top: 0;
-  min-height: 100%;
-  min-width: 100%;
-  height: auto;
-  width: auto;
-  opacity: 0;
-  z-index: 998;
-  background-color: #fff;
-  filter: alpha(opacity=0);
 }

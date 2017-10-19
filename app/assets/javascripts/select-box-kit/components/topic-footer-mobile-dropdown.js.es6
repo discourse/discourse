@@ -1,5 +1,6 @@
 import computed from "ember-addons/ember-computed-decorators";
 import ComboBoxComponent from "select-box-kit/components/combo-box";
+import { on } from "ember-addons/ember-computed-decorators";
 
 export default ComboBoxComponent.extend({
   headerText: "topic.controls",
@@ -7,9 +8,11 @@ export default ComboBoxComponent.extend({
   filterable: false,
   autoFilterable: false,
 
-  @computed("headerText")
-  computedHeaderText(headerText) {
-    return I18n.t(headerText);
+  @on("didReceiveAttrs")
+  _setComponentOptions() {
+    this.set("headerComponentOptions", Ember.Object.create({
+      selectedName: I18n.t(this.get("headerText"))
+    }));
   },
 
   @computed("topic", "topic.details", "value")
@@ -37,7 +40,7 @@ export default ComboBoxComponent.extend({
 
   actions: {
     onSelect(value) {
-      this.defaultOnSelect();
+      value = this.defaultOnSelect(value);
 
       const topic = this.get("topic");
 
@@ -45,6 +48,8 @@ export default ComboBoxComponent.extend({
       if (!topic.get("id")) {
         return;
       }
+
+      this.set("value", value);
 
       const refresh = () => this.set("value", null);
 
@@ -54,7 +59,7 @@ export default ComboBoxComponent.extend({
           refresh();
           break;
         case "bookmark":
-          topic.toggleBookmark().then(() => refresh());
+          topic.toggleBookmark().then(() => refresh() );
           break;
         case "share":
           this.appEvents.trigger("share:url", topic.get("shareUrl"), $("#topic-footer-buttons"));

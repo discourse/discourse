@@ -5,12 +5,11 @@
       templateForRow=templateForNoneRow
       titleForRow=titleForRow
       iconForRow=iconForRow
-      shouldHighlightRow=shouldHighlightRow
-      shouldSelectRow=shouldSelectRow
       highlightedValue=highlightedValue
       onClearSelection=onClearSelection
       onHighlight=onHighlight
       value=computedValue
+      options=rowComponentOptions
     }}
   {{/if}}
 {{/if}}
@@ -21,12 +20,11 @@
     templateForRow=templateForCreateRow
     titleForRow=titleForRow
     iconForRow=iconForRow
-    shouldHighlightRow=shouldHighlightRow
-    shouldSelectRow=shouldSelectRow
     highlightedValue=highlightedValue
     onHighlight=onHighlight
     onCreateContent=onCreateContent
     value=computedValue
+    options=rowComponentOptions
   }}
 {{/if}}
 
@@ -36,12 +34,11 @@
     templateForRow=templateForRow
     titleForRow=titleForRow
     iconForRow=iconForRow
-    shouldHighlightRow=shouldHighlightRow
-    shouldSelectRow=shouldSelectRow
     highlightedValue=highlightedValue
     onSelect=onSelect
     onHighlight=onHighlight
     value=computedValue
+    options=rowComponentOptions
   }}
 {{else}}
   {{#if noContentLabel}}

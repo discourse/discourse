@@ -1,8 +1,10 @@
+const { isEmpty } = Ember;
+
 export default Ember.Mixin.create({
   init() {
     this._super();
 
-    this.specialKeys = {
+    this.keys = {
       TAB: 9,
       ENTER: 13,
       ESC: 27,
@@ -25,53 +27,45 @@ export default Ember.Mixin.create({
   willDestroyElement() {
     this._super();
 
-    $(document).off(`click.select-box-kit-${this.elementId}`);
+    $(document).off(
+      "click.select-box-kit mousedown.select-box-kit touchstart.select-box-kit"
+    );
 
     this.$offscreenInput()
-      .off(`focus.${this.elementId}`)
-      .off(`blur.${this.elementId}`)
-      .off(`keydown.${this.elementId}`);
+      .off("focus.select-box-kit focusin.select-box-kit blur.select-box-kit keydown.select-box-kit");
 
-    this.$filterInput().off(`keydown.${this.elementId}`);
-  },
-
-  selectHighlightedRow(event) {
-    const $highlightedRow = this.$highlightedRow();
-
-    if ($highlightedRow.length === 1) {
-      this.$highlightedRow().trigger("click");
-      this.$offscreenInput().focus();
-      event.preventDefault();
-    }
+    this.$filterInput().off(`keydown.select-box-kit`);
   },
 
   didInsertElement() {
     this._super();
 
-    $(document).on(`click.select-box-kit-${this.elementId}`, e => {
-      const node = e.target;
-      const $outside = $(`.select-box-kit#${this.elementId}`);
-      $outside.each((i, outNode) => {
-        if (outNode.contains(node)) { return; }
+    $(document).on(
+      "click.select-box-kit mousedown.select-box-kit touchstart.select-box-kit", event => {
+        if (this.$()[0].contains(event.target)) { return; }
         this.clickOutside(event);
-      });
     });
 
     this.$offscreenInput()
-      .on(`blur.${this.elementId}`, () => {
+      .on(`blur.select-box-kit`, () => {
         if (this.get("isExpanded") === false && this.get("isFocused") === true) {
           this.close();
         }
       })
-      .on(`focus.${this.elementId}`, () => {
+      .on(`focus.select-box-kit`, (event) => {
         this.set("isFocused", true);
+        this._killEvent(event);
       })
-      .on(`keydown.${this.elementId}`, (event) => {
+      .on(`focusin.select-box-kit`, (event) => {
+        this.set("isFocused", true);
+        this._killEvent(event);
+      })
+      .on(`keydown.select-box-kit`, (event) => {
         const keyCode = event.keyCode || event.which;
 
         switch (keyCode) {
-          case this.specialKeys.UP:
-          case this.specialKeys.DOWN:
+          case this.keys.UP:
+          case this.keys.DOWN:
             if (this.get("isExpanded") === false) {
               this.set("isExpanded", true);
             }
@@ -83,7 +77,7 @@ export default Ember.Mixin.create({
             this._killEvent(event);
 
             return;
-          case this.specialKeys.ENTER:
+          case this.keys.ENTER:
             if (this.get("isExpanded") === false) {
               this.set("isExpanded", true);
             } else {
@@ -93,18 +87,18 @@ export default Ember.Mixin.create({
             this._killEvent(event);
 
             return;
-          case this.specialKeys.TAB:
+          case this.keys.TAB:
             if (this.get("isExpanded") === false) {
               return true;
             } else {
               this.send("onSelect", this.$highlightedRow().data("value"));
               return;
             }
-          case this.specialKeys.ESC:
+          case this.keys.ESC:
             this.close();
             this._killEvent(event);
             return;
-          case this.specialKeys.BACKSPACE:
+          case this.keys.BACKSPACE:
             this._killEvent(event);
             return;
         }
@@ -120,13 +114,14 @@ export default Ember.Mixin.create({
       });
 
     this.$filterInput()
-      .on(`keydown.${this.elementId}`, (event) => {
+      .on(`keydown.select-box-kit`, (event) => {
         const keyCode = event.keyCode || event.which;
 
         if ([
-            this.specialKeys.RIGHT,
-            this.specialKeys.LEFT,
-            this.specialKeys.BACKSPACE
+            this.keys.RIGHT,
+            this.keys.LEFT,
+            this.keys.BACKSPACE,
+            this.keys.SPACE,
           ].includes(keyCode) || event.metaKey === true) {
           return true;
         }
@@ -140,6 +135,10 @@ export default Ember.Mixin.create({
   },
 
   _handleArrowKey(keyCode) {
+    if (isEmpty(this.get("filteredContent"))) {
+      return;
+    }
+
     Ember.run.schedule("afterRender", () => {
       switch (keyCode) {
         case 38:
@@ -173,7 +172,7 @@ export default Ember.Mixin.create({
   _rowSelection($rows, nextIndex) {
     const highlightableValue = $rows.eq(nextIndex).data("value");
     const $highlightableRow = this.$findRowByValue(highlightableValue);
-    this.send("onHighlight", $highlightableRow.data("value"));
+    this.send("onHighlight", highlightableValue);
 
     Ember.run.schedule("afterRender", () => {
       const $collection = this.$collection();
@@ -192,6 +191,6 @@ export default Ember.Mixin.create({
   },
 
   _isSpecialKey(keyCode) {
-    return Object.values(this.specialKeys).includes(keyCode);
+    return Object.values(this.keys).includes(keyCode);
   },
 });

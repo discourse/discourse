@@ -23,7 +23,7 @@ export default SelectBoxKitComponent.extend({
     const $filterInput = this.$filterInput();
 
     if (keyCode === 8) {
-      let $lastSelectedValue = $(this.$(".choices .selected-value").last());
+      let $lastSelectedValue = $(this.$(".choices .selected-name").last());
 
       if ($lastSelectedValue.is(":focus") || $(document.activeElement).is($lastSelectedValue)) {
         this.send("onDeselect", $lastSelectedValue.data("value"));
@@ -53,7 +53,7 @@ export default SelectBoxKitComponent.extend({
   @computed("none")
   computedNone(none) {
     if (!isNone(none)) {
-      this.set("none", { name: I18n.t(none), value: "none" });
+      this.set("none", { name: I18n.t(none), value: "" });
     }
   },
 
@@ -83,8 +83,7 @@ export default SelectBoxKitComponent.extend({
 
   actions: {
     onClearSelection() {
-      this.defaultOnSelect();
-      this.set("value", []);
+      this.send("onSelect", []);
     },
 
     onSelect(value) {

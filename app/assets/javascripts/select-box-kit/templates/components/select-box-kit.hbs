@@ -7,20 +7,19 @@
   tabindex={{tabindex}}
   name={{name}}
   value={{computedValue}}
+  readonly=true
 />
 
 {{component headerComponent
-  text=computedHeaderText
-  icon=headerIcon
-  caretUpIcon=headerCaretUpIcon
-  caretDownIcon=headerCaretDownIcon
+  none=computedNone
   isFocused=isFocused
-  selectBoxIsExpanded=isExpanded
+  isExpanded=isExpanded
   selectedContent=selectedContent
   onDeselect=(action "onDeselect")
   onToggle=(action "onToggle")
   onFilterChange=(action "onFilterChange")
-  filter=filter
+  onClearSelection=(action "onClearSelection")
+  options=headerComponentOptions
 }}
 
 <div class="select-box-kit-body">
@@ -58,6 +57,7 @@
       noContentLabel=noContentLabel
       highlightedValue=highlightedValue
       computedValue=computedValue
+      rowComponentOptions=rowComponentOptions
     }}
   {{/if}}
 </div>

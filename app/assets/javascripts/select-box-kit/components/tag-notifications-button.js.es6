@@ -1,15 +1,14 @@
 import NotificationOptionsComponent from "select-box-kit/components/notifications-button";
-import { iconHTML } from "discourse-common/lib/icon-library";
 
 export default NotificationOptionsComponent.extend({
   classNames: "tag-notifications-button",
   i18nPrefix: "tagging.notifications",
-  headerIcon: `${this._super()}${iconHTML("caret-down")}`.htmlSafe(),
-  computedHeaderText: null,
+  showFullTitle: false,
+  headerComponent: "tag-notifications-button/tag-notifications-button-header",
 
   actions: {
     onSelect(value) {
-      this.defaultOnSelect();
+      value = this.defaultOnSelect(value);
       this.sendAction("action", value);
     }
   }

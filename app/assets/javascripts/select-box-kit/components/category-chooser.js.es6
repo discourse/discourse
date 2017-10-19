@@ -4,7 +4,7 @@ import { on } from "ember-addons/ember-computed-decorators";
 import computed from "ember-addons/ember-computed-decorators";
 import PermissionType from "discourse/models/permission-type";
 import Category from "discourse/models/category";
-const { get, isNone } = Ember;
+const { get, isNone, isEmpty } = Ember;
 
 export default ComboBoxComponent.extend({
   classNames: "category-chooser",
@@ -99,7 +99,7 @@ export default ComboBoxComponent.extend({
     let category;
 
     // If we have no id, but text with the uncategorized name, we can use that badge.
-    if (Ember.isEmpty(get(content, "value"))) {
+    if (isEmpty(get(content, "value"))) {
       const uncat = Category.findUncategorized();
       if (uncat && uncat.get("name") === get(content, "name")) {
         category = uncat;

@@ -85,7 +85,7 @@ componentTest('with value and none as a string', {
       assert.equal(this.get('value'), 'trout');
     });
 
-    selectBoxSelectRow('none', {selector: '.combobox' });
+    selectBoxSelectRow('', {selector: '.combobox' });
 
     andThen(() => {
       assert.equal(this.get('value'), null);

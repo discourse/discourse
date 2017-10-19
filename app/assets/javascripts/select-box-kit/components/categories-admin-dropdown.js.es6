@@ -1,12 +1,19 @@
 import DropdownSelectBoxComponent from "select-box-kit/components/dropdown-select-box";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import computed from "ember-addons/ember-computed-decorators";
+import { on } from "ember-addons/ember-computed-decorators";
 
 export default DropdownSelectBoxComponent.extend({
   classNames: "categories-admin-dropdown",
-  headerIcon: `${iconHTML('bars')}${iconHTML('caret-down')}`.htmlSafe(),
-  computedHeaderText: null,
   actionNames: { create: "createCategory", reorder: "reorderCategories" },
+
+  @on("didReceiveAttrs")
+  _setComponentOptions() {
+    this.set("headerComponentOptions", Ember.Object.create({
+      shouldDisplaySelectedName: false,
+      icon: `${iconHTML('bars')}${iconHTML('caret-down')}`.htmlSafe(),
+    }));
+  },
 
   @computed
   content() {
@@ -34,7 +41,7 @@ export default DropdownSelectBoxComponent.extend({
 
   actions: {
     onSelect(value) {
-      this.defaultOnSelect();
+      value = this.defaultOnSelect(value);
 
       this.sendAction(`actionNames.${value}`);
       this.set("value", null);

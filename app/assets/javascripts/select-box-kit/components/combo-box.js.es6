@@ -1,21 +1,21 @@
 import SelectBoxKitComponent from "select-box-kit/components/select-box-kit";
-import computed from "ember-addons/ember-computed-decorators";
-const { isNone } = Ember;
+import { on } from "ember-addons/ember-computed-decorators";
 
 export default SelectBoxKitComponent.extend({
-  classNames: "combobox",
+  classNames: "combobox combo-box",
   autoFilterable: true,
+  headerComponent: "combo-box/combo-box-header",
 
-  @computed("selectedContent.firstObject.name", "computedNone.name")
-  computedHeaderText(selectedName, noneName) {
-    if (isNone(selectedName)) {
-      if (isNone(noneName)) {
-        return this._super();
-      } else {
-        return noneName;
-      }
-    } else {
-      return selectedName;
-    }
+  caretUpIcon: "caret-up",
+  caretDownIcon: "caret-down",
+  clearable: false,
+
+  @on("didReceiveAttrs")
+  _setComponentOptions() {
+    this.set("headerComponentOptions", Ember.Object.create({
+      caretUpIcon: this.get("caretUpIcon"),
+      caretDownIcon: this.get("caretDownIcon"),
+      clearable: this.get("clearable"),
+    }));
   }
 });

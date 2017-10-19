@@ -81,14 +81,6 @@ componentTest('no default icon', {
   }
 });
 
-componentTest('customisable icon', {
-  template: '{{select-box-kit headerIcon="shower"}}',
-
-  test(assert) {
-    assert.ok(exists(selectBox().header.el.find(".d-icon-shower")), "it has a the correct icon");
-  }
-});
-
 componentTest('default search icon', {
   template: '{{select-box-kit filterable=true}}',
 
@@ -275,21 +267,6 @@ componentTest('supports converting select value to integer', {
   }
 });
 
-componentTest('supports custom row title', {
-  template: '{{select-box-kit content=content titleForRow=titleForRow}}',
-
-  beforeEach() {
-    this.set("content", [{ id: 1, name: "robin" }]);
-    this.set("titleForRow", () => "sam" );
-  },
-
-  test(assert) {
-    expandSelectBox();
-
-    andThen(() => assert.equal(selectBox().rowByValue(1).title(), "sam") );
-  }
-});
-
 componentTest('supports keyboard events', {
   template: '{{select-box-kit content=content filterable=true}}',
 
@@ -303,13 +280,7 @@ componentTest('supports keyboard events', {
     selectBox().keyboard.down();
 
     andThen(() => {
-      assert.equal(selectBox().highlightedRow.title(), "robin", "the first row is highlighted");
-    });
-
-    selectBox().keyboard.down();
-
-    andThen(() => {
-      assert.equal(selectBox().highlightedRow.title(), "regis", "it highlights the next row");
+      assert.equal(selectBox().highlightedRow.title(), "regis", "the next row is highlighted");
     });
 
     selectBox().keyboard.down();

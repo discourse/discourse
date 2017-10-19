@@ -1,8 +1,10 @@
+import { iconHTML } from 'discourse-common/lib/icon-library';
 import { on } from 'ember-addons/ember-computed-decorators';
 import computed from 'ember-addons/ember-computed-decorators';
 const { run, isPresent } = Ember;
+import UtilsMixin from "select-box-kit/mixins/utils";
 
-export default Ember.Component.extend({
+export default Ember.Component.extend(UtilsMixin, {
   layoutName: "select-box-kit/templates/components/select-box-kit/select-box-kit-row",
   classNames: "select-box-kit-row",
   tagName: "li",
@@ -13,24 +15,17 @@ export default Ember.Component.extend({
   ],
   classNameBindings: ["isHighlighted", "isSelected"],
 
-  @computed("titleForRow")
-  title(titleForRow) { return titleForRow(this); },
+  title: Ember.computed.alias("content.name"),
 
   @computed("templateForRow")
   template(templateForRow) { return templateForRow(this); },
 
-  @computed("shouldHighlightRow", "highlightedValue")
-  isHighlighted(shouldHighlightRow) {
-    return shouldHighlightRow(this);
+  @on("didReceiveAttrs", "didUpdateAttrs")
+  _setSelectionState() {
+    const contentValue = this.get("content.value");
+    this.set("isSelected", this.get("value") === contentValue);
+    this.set("isHighlighted", this._castInteger(this.get("highlightedValue")) === this._castInteger(contentValue));
   },
-
-  @computed("shouldSelectRow", "computedValue.[]")
-  isSelected(shouldSelectRow) {
-    return shouldSelectRow(this);
-  },
-
-  @computed("iconForRow", "content.[]")
-  icon(iconForRow) { return iconForRow(this); },
 
   @on("willDestroyElement")
   _clearDebounce() {
@@ -41,12 +36,20 @@ export default Ember.Component.extend({
     }
   },
 
+  @computed("content.originalContent.icon", "content.originalContent.iconClass")
+  icon(icon, cssClass) {
+    if (icon) {
+      return iconHTML(icon, { class: cssClass });
+    }
+
+    return null;
+  },
+
   mouseEnter() {
     this.set("hoverDebounce", run.debounce(this, this._sendOnHighlightAction, 32));
   },
 
   click() {
-    console.log("clicking row")
     this.sendAction("onSelect", this.get("content.value"));
   },
 

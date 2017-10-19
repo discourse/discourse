@@ -1,16 +1,11 @@
 import DropdownSelectBoxComponent from "select-box-kit/components/dropdown-select-box";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import computed from "ember-addons/ember-computed-decorators";
+import { default as computed, on } from "ember-addons/ember-computed-decorators";
 import { buttonDetails } from "discourse/lib/notification-levels";
 import { allLevels } from "discourse/lib/notification-levels";
-const { get } = Ember;
 
 export default DropdownSelectBoxComponent.extend({
   classNames: "notifications-button",
-  i18nPrefix: "",
-  i18nPostfix: "",
   nameProperty: "key",
-  showFullTitle: true,
   fullWidthOnMobile: true,
   content: allLevels,
   collectionHeight: "auto",
@@ -18,56 +13,28 @@ export default DropdownSelectBoxComponent.extend({
   castInteger: true,
   autofilterable: false,
   filterable: false,
+  rowComponent: "notifications-button/notifications-button-row",
+  headerComponent: "notifications-button/notifications-button-header",
 
-  @computed("selectedDetails.icon", "selectedDetails.key")
-  headerIcon(icon, key) {
-    return iconHTML(icon, {class: key}).htmlSafe();
-  },
+  i18nPrefix: "",
+  i18nPostfix: "",
+  showFullTitle: true,
 
-  @computed("selectedDetails.key", "i18nPrefix")
-  selectedTitle(key, prefix) {
-    return I18n.t(`${prefix}.${key}.title`);
+  @on("didReceiveAttrs", "didUpdateAttrs")
+  _setComponentOptions() {
+    this.set("headerComponentOptions", Ember.Object.create({
+      i18nPrefix: this.get("i18nPrefix"),
+      showFullTitle: this.get("showFullTitle"),
+    }));
+
+    this.set("rowComponentOptions", Ember.Object.create({
+      i18nPrefix: this.get("i18nPrefix"),
+      i18nPostfix: this.get("i18nPostfix")
+    }));
   },
 
   @computed("computedValue")
   selectedDetails(computedValue) {
     return buttonDetails(computedValue);
-  },
-
-  @computed("selectedTitle", "showFullTitle")
-  computedHeaderText(selectedTitle, showFullTitle) {
-    return showFullTitle ? selectedTitle : null;
-  },
-
-  @computed
-  titleForRow() {
-    return (rowComponent) => {
-      const notificationLevel = rowComponent.get("content.value");
-      const details = buttonDetails(notificationLevel);
-      return I18n.t(`${this.get("i18nPrefix")}.${details.key}.title`);
-    };
-  },
-
-  @computed
-  templateForRow() {
-    return (rowComponent) => {
-      const content = rowComponent.get("content");
-      const name = get(content, "name");
-      const start = `${this.get("i18nPrefix")}.${name}${this.get("i18nPostfix")}`;
-      const title = Handlebars.escapeExpression(I18n.t(`${start}.title`));
-      const description = Handlebars.escapeExpression(I18n.t(`${start}.description`));
-      const icon = get(content, "originalContent.icon");
-
-      return `
-        <div class="icons">
-          <span class="selection-indicator"></span>
-          ${iconHTML(icon, { class: name.dasherize() })}
-        </div>
-        <div class="texts">
-          <span class="title">${title}</span>
-          <span class="desc">${description}</span>
-        </div>
-      `;
-    };
   }
 });

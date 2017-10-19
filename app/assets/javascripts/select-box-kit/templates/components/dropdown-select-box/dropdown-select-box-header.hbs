@@ -1,15 +1,17 @@
 <button
-  class="btn {{if text 'btn-icon-text' 'no-text btn-icon'}}"
-  aria-label="{{selectedTitle}}"
+  class="btn {{if shouldDisplaySelectedName 'btn-icon-text' 'no-text btn-icon'}}"
+  aria-label="{{selectedName}}"
   type="button"
   tabindex="-1"
-  title="{{selectedTitle}}">
+  title="{{selectedName}}">
 
-  {{{icon}}}
+  {{#if icon}}
+    {{{icon}}}
+  {{/if}}
 
-  {{#if text}}
-    <span class="d-button-label name">
-      {{text}}
+  {{#if shouldDisplaySelectedName}}
+    <span class="d-button-label selected-name">
+      {{selectedName}}
     </span>
   {{/if}}
 </button>

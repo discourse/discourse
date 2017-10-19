@@ -1,10 +1,20 @@
 import DropdownSelectBoxComponent from "select-box-kit/components/dropdown-select-box";
 import computed from "ember-addons/ember-computed-decorators";
 import { observes } from "ember-addons/ember-computed-decorators";
-import { iconHTML } from "discourse-common/lib/icon-library";
+import { on } from "ember-addons/ember-computed-decorators";
 
 export default DropdownSelectBoxComponent.extend({
   classNames: "pinned-options",
+
+  headerComponent: "pinned-options/pinned-options-header",
+
+  @on("didReceiveAttrs")
+  _setComponentOptions() {
+    this.set("headerComponentOptions", Ember.Object.create({
+      pinned: this.get("topic.pinned"),
+      pinnedGlobally: this.get("topic.pinned_globally")
+    }));
+  },
 
   @computed("topic.pinned")
   value(pinned) {
@@ -14,6 +24,7 @@ export default DropdownSelectBoxComponent.extend({
   @observes("topic.pinned")
   _pinStateChanged() {
     this.set("value", this.get("topic.pinned") ? "pinned" : "unpinned");
+    this._setComponentOptions();
   },
 
   @computed("topic.pinned_globally")
@@ -37,29 +48,9 @@ export default DropdownSelectBoxComponent.extend({
     ];
   },
 
-  @computed("topic.pinned", "topic.pinned_globally")
-  headerIcon(pinned, pinnedGlobally) {
-    const globally = pinnedGlobally ? "_globally" : "";
-    const state = pinned ? `pinned${globally}` : "unpinned";
-
-    return iconHTML(
-      "thumb-tack",
-      { class: (state === "unpinned" ? "unpinned" : null) }
-    );
-  },
-
-  @computed("topic.pinned", "topic.pinned_globally")
-  computedHeaderText(pinned, pinnedGlobally) {
-    const globally = pinnedGlobally ? "_globally" : "";
-    const state = pinned ? `pinned${globally}` : "unpinned";
-    const title = I18n.t(`topic_statuses.${state}.title`);
-
-    return `${title}${iconHTML("caret-down")}`.htmlSafe();
-  },
-
   actions: {
     onSelect(value) {
-      this.defaultOnSelect();
+      value = this.defaultOnSelect(value);
 
       const topic = this.get("topic");
 

@@ -1,7 +1,6 @@
 import NotificationOptionsComponent from "select-box-kit/components/notifications-button";
 import { on } from "ember-addons/ember-computed-decorators";
-import computed from "ember-addons/ember-computed-decorators";
-import { topicLevels, buttonDetails } from "discourse/lib/notification-levels";
+import { topicLevels } from "discourse/lib/notification-levels";
 
 export default NotificationOptionsComponent.extend({
   classNames: "topic-notifications-options",
@@ -25,16 +24,6 @@ export default NotificationOptionsComponent.extend({
     this.appEvents.off("topic-notifications-button:changed");
   },
 
-  @computed("computedValue", "showFullTitle")
-  computedHeaderText(computedValue, showFullTitle) {
-    if (showFullTitle) {
-      const details = buttonDetails(computedValue);
-      return I18n.t(`topic.notifications.${details.key}.title`);
-    } else {
-      return null;
-    }
-  },
-
   actions: {
     onSelect(value) {
       if (value !== this.get("computedValue")) {
@@ -43,7 +32,9 @@ export default NotificationOptionsComponent.extend({
 
       this.set("value", value);
 
-      this.defaultOnSelect();
+      this.defaultOnSelect(value);
+
+      this.blur();
     }
   }
 });

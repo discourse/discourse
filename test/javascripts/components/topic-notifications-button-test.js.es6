@@ -23,12 +23,12 @@ componentTest('the header has a localized title', {
 
   test(assert) {
     andThen(() => {
-      assert.equal(find(".select-box-kit-header .name").html().trim(), "Normal", "it has the correct title");
+      assert.equal(selectBox().header.name(), "Normal", "it has the correct title");
     });
 
     andThen(() => {
       this.set("topic.details.notification_level", 2);
-      assert.equal(find(".select-box-kit-header .name").html().trim(), "Tracking", "it correctly changes the title");
+      assert.equal(selectBox().header.name(), "Tracking", "it correctly changes the title");
     });
   }
 });

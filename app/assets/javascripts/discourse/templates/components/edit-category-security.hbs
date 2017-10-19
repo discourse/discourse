@@ -15,8 +15,6 @@
     {{/each}}
   </ul>
   {{#if editingPermissions}}
-  {{log category.availableGroups}}
-  {{log category.availablePermissions}}
     {{combo-box content=category.availableGroups value=selectedGroup}}
     {{combo-box class="permission-selector"
                 nameProperty="description"

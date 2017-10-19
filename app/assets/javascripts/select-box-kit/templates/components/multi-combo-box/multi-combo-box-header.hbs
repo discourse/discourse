@@ -1,6 +1,6 @@
 <ul class="choices">
   {{#each selectedContent as |selectedContent|}}
-    <li tabindex="-1" data-value={{selectedContent.value}} data-name={{selectedContent.name}} class="selected-value">
+    <li tabindex="-1" data-value={{selectedContent.value}} data-name={{selectedContent.name}} class="selected-name">
       <span class="delete-icon" {{action onDeselect selectedContent.value bubbles=false}}>
         {{d-icon "times"}}
       </span>
