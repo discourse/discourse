@@ -1,0 +1,15 @@
+{{#if icon}}
+  {{{icon}}}
+{{/if}}
+
+<span class="selected-name" title={{selectedName}}>
+  {{{selectedName}}}
+</span>
+
+{{#if shouldDisplayClearableButton}}
+  <button class="btn-clear" {{action onClearSelection bubbles=false}}>
+    {{d-icon 'times'}}
+  </button>
+{{/if}}
+
+{{d-icon caretIcon class="caret-icon"}}

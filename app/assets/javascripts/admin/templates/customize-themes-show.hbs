@@ -36,8 +36,7 @@
 
   <h3>{{i18n "admin.customize.theme.color_scheme"}}</h3>
   <p>{{i18n "admin.customize.theme.color_scheme_select"}}</p>
-  <p>{{select-box content=colorSchemes
-                  textKey="name"
+  <p>{{combo-box content=colorSchemes
                   filterable=true
                   value=colorSchemeId
                   icon="paint-brush"}}
@@ -123,11 +122,8 @@
     </ul>
     {{/unless}}
     {{#if selectableChildThemes}}
-      <p>{{combo-box content=selectableChildThemes
-                   nameProperty="name"
-                   value=selectedChildThemeId
-                   valueAttribute="id"}}
-
+      <p>
+        {{combo-box content=selectableChildThemes value=selectedChildThemeId}}
         {{#d-button action="addChildTheme" icon="plus"}}{{i18n "admin.customize.theme.add"}}{{/d-button}}
       </p>
     {{/if}}

@@ -1,0 +1,30 @@
+<ul class="choices">
+  {{#each selectedContent as |selectedContent|}}
+    <li tabindex="-1" data-value={{selectedContent.value}} data-name={{selectedContent.name}} class="selected-name">
+      <span class="delete-icon" {{action onDeselect selectedContent.value bubbles=false}}>
+        {{d-icon "times"}}
+      </span>
+      <span class="name">
+        {{selectedContent.name}}
+      </span>
+    </li>
+  {{else}}
+    {{#if shouldDisplayFilterPlaceholder}}
+      <li class="choice-placeholder">
+        {{text}}
+      </li>
+    {{/if}}
+  {{/each}}
+
+  <li class="filter">
+    {{input
+      class="select-box-kit-filter-input"
+      key-up=onFilterChange
+      autocomplete="off"
+      autocorrect="off"
+      autocapitalize="off"
+      spellcheck=false
+      value=filter
+    }}
+  </li>
+</ul>

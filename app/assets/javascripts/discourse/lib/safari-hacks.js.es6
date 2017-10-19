@@ -147,7 +147,7 @@ function positioningWorkaround($fixedElement) {
 
     fixedElement.style.top = '0px';
 
-    composingTopic = $('#reply-control .category-select-box').length > 0;
+    composingTopic = $('#reply-control .category-chooser').length > 0;
 
     const height = calcHeight(composingTopic);
     fixedElement.style.height = height + "px";

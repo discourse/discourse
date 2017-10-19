@@ -53,7 +53,7 @@
     }
   }
 
-  .select-box {
+  .select-box-kit {
     &.categories-admin-dropdown, &.category-notifications-button, &.tag-notifications-button {
       margin-top: 5px;
     }
@@ -152,9 +152,9 @@
 
   tbody {
     tr {
-      border-bottom: 1px solid $primary-low; 
+      border-bottom: 1px solid $primary-low;
       &:first-of-type {
-        border-top: 3px solid $primary-low; 
+        border-top: 3px solid $primary-low;
       }
     }
     .category {

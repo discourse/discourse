@@ -1,0 +1,12 @@
+.select-box-kit {
+  &.categories-admin-dropdown {
+    .select-box-kit-select-box-kit-body {
+      min-width: auto;
+      width: 250px;
+    }
+
+    .select-box-kit-header .d-icon {
+      justify-content: space-between;
+    }
+  }
+}

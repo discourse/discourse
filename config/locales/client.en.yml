@@ -1567,7 +1567,7 @@ en:
         public_timer_types: Topic Timers
         private_timer_types: User Topic Timers
       auto_update_input:
-        none: ""
+        none: "Select a timeframe"
         later_today: "Later today"
         tomorrow: "Tomorrow"
         later_this_week: "Later this week"
