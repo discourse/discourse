@@ -41,7 +41,7 @@ class PostActionType < ActiveRecord::Base
         @flag_settings.add(
           6,
           :notify_user,
-          topic_type: true,
+          topic_type: false,
           notify_type: true,
           custom_type: true
         )
