@@ -118,7 +118,7 @@ module ImportScripts::Mbox
     def map_first_post(row)
       mapped = map_post(row)
       mapped[:category] = category_id_from_imported_category_id(row['category'])
-      mapped[:title] = CGI.escapeHTML(row['subject'].strip)[0...255]
+      mapped[:title] = row['subject'].strip[0...255]
       mapped
     end
 
