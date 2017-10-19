@@ -7,7 +7,7 @@ class PostgreSQLFallbackHandler
   include Singleton
 
   def initialize
-    @masters_down = {}
+    @masters_down = DistributedCache.new('masters_down')
     @mutex = Mutex.new
   end
 
