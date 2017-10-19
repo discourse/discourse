@@ -220,13 +220,13 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
 
   @on("willDestroyElement")
   _cleanHandlers() {
-    $(window).off(`resize.${this.elementId}`);
+    $(window).off("resize.select-box-kit");
     this._removeFixedPosition();
   },
 
   @on("didInsertElement")
   _setupResizeListener() {
-    $(window).on(`resize.${this.elementId}`, () => this.set("isExpanded", false) );
+    $(window).on("resize.select-box-kit", () => this.set("isExpanded", false) );
   },
 
   @observes("filter", "filteredContent.[]", "shouldDisplayCreateRow")
@@ -344,7 +344,7 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
     const bodyHeight = this.$body().outerHeight(false);
     const windowWidth = $(window).width();
     const windowHeight = $(window).height();
-    const boundingRect = this.$()[0].getBoundingClientRect();
+    const boundingRect = this.get("element").getBoundingClientRect();
     const offsetTop = boundingRect.top;
 
     if (this.get("fullWidthOnMobile") && windowWidth <= 420) {

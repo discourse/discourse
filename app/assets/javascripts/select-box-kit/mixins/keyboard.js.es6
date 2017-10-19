@@ -27,22 +27,29 @@ export default Ember.Mixin.create({
   willDestroyElement() {
     this._super();
 
-    $(document).off(
-      "click.select-box-kit mousedown.select-box-kit touchstart.select-box-kit"
-    );
+    $(document)
+      .off("click.select-box-kit")
+      .off("mousedown.select-box-kit")
+      .off("touchstart.select-box-kit");
 
     this.$offscreenInput()
-      .off("focus.select-box-kit focusin.select-box-kit blur.select-box-kit keydown.select-box-kit");
+      .off("focus.select-box-kit")
+      .off("focusin.select-box-kit")
+      .off("blur.select-box-kit")
+      .off("keydown.select-box-kit");
 
-    this.$filterInput().off(`keydown.select-box-kit`);
+    this.$filterInput().off("keydown.select-box-kit");
   },
 
   didInsertElement() {
     this._super();
 
-    $(document).on(
-      "click.select-box-kit mousedown.select-box-kit touchstart.select-box-kit", event => {
-        if (this.$()[0].contains(event.target)) { return; }
+    $(document).on("click.select-box-kit", event => {
+        if (Ember.isNone(this.get("element"))) {
+          return;
+        }
+
+        if (this.get("element").contains(event.target)) { return; }
         this.clickOutside(event);
     });
 
@@ -191,6 +198,6 @@ export default Ember.Mixin.create({
   },
 
   _isSpecialKey(keyCode) {
-    return Object.values(this.keys).includes(keyCode);
+    return _.values(this.keys).includes(keyCode);
   },
 });
