@@ -5,6 +5,8 @@ class ActiveRecord::Base
     conn = ActiveRecord::Base.connection
     sql = ActiveRecord::Base.send(:sanitize_sql_array, args)
     conn.raw_connection.exec(sql)
+  rescue PG::ReadOnlySqlTransaction
+    Rails.logger.warn("WARN: PostgreSQL is in a readonly state. Performed a noop")
   end
 
   def self.exec_sql_row_count(*args)
