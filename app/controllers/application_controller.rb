@@ -171,7 +171,7 @@ class ApplicationController < ActionController::Base
       begin
         current_user
       rescue Discourse::InvalidAccess
-        return render plain: I18n.t(type), status: status_code
+        return render plain: I18n.t(opts[:custom_message] || type), status: status_code
       end
 
       render html: build_not_found_page(status_code, opts[:include_ember] ? 'application' : 'no_ember')
