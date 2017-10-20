@@ -19,7 +19,7 @@ describe Auth::DefaultCurrentUserProvider do
   it "raises errors for incorrect api_key" do
     expect {
       provider("/?api_key=INCORRECT").current_user
-    }.to raise_error(Discourse::InvalidAccess)
+    }.to raise_error(Discourse::InvalidAccess, /API username or key is invalid/)
   end
 
   it "finds a user for a correct per-user api key" do

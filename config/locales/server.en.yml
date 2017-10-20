@@ -164,6 +164,7 @@ en:
   not_logged_in: "You need to be logged in to do that."
   not_found: "The requested URL or resource could not be found."
   invalid_access: "You are not permitted to view the requested resource."
+  invalid_api_credentials: "You are not permitted to view the requested resource. The API username or key is invalid."
   read_only_mode_enabled: "The site is in read only mode. Interactions are disabled."
 
   reading_time: "Reading time"
