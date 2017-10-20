@@ -222,3 +222,20 @@ componentTest('with no value and no none', {
 //     andThen(() => assert.equal(selectBox().rows.length, 1) );
 //   }
 // });
+
+
+componentTest('with empty string as value', {
+  template: '{{combo-box content=items value=value}}',
+  beforeEach() {
+    this.set('items', ['evil', 'trout', 'hat']);
+    this.set('value', '');
+  },
+
+  test(assert) {
+    expandSelectBox('.combobox');
+
+    andThen(() => {
+      assert.equal(selectBox('.combobox').header.name(), 'evil', 'it sets the first row as value');
+    });
+  }
+});

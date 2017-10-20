@@ -56,6 +56,13 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
       this.setProperties({ filterable: false, autoFilterable: false });
     }
 
+    if (isNone(this.get("none")) && isEmpty(this.get("value")) && !isEmpty(this.get("content"))) {
+      Ember.run.scheduleOnce("sync", () => {
+        const firstValue = this.get(`content.0.${this.get("valueAttribute")}`);
+        this.set("value", firstValue);
+      });
+    }
+
     this._previousScrollParentOverflow = "auto";
   },
 
