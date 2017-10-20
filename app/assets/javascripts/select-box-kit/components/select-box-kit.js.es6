@@ -340,7 +340,9 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
 
   _applyDirection() {
     let options = { left: "auto", bottom: "auto", top: "auto" };
-    const discourseHeaderHeight = $(".d-header").outerHeight(false);
+
+    const dHeaderBounds = $(".d-header")[0].getBoundingClientRect();
+    const dHeaderHeight = dHeaderBounds.top + dHeaderBounds.height;
     const headerHeight = this.$header().outerHeight(false);
     const headerWidth = this.$header().outerWidth(false);
     const bodyHeight = this.$body().outerHeight(false);
@@ -384,7 +386,7 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
 
     const componentHeight = this.get("verticalOffset") + bodyHeight + headerHeight;
     const hasBelowSpace = windowHeight - offsetBottom - componentHeight > 0;
-    const hasAboveSpace = offsetTop - componentHeight - discourseHeaderHeight > 0;
+    const hasAboveSpace = offsetTop - componentHeight - dHeaderHeight > 0;
     if (hasBelowSpace || (!hasBelowSpace && !hasAboveSpace)) {
       this.setProperties({ isBelow: true, isAbove: false });
       options.top = headerHeight + this.get("verticalOffset");
