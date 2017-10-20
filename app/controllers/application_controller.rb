@@ -66,7 +66,7 @@ class ApplicationController < ActionController::Base
   end
 
   def perform_refresh_session
-    refresh_session(current_user)
+    refresh_session(current_user) unless @readonly_mode
   end
 
   def immutable_for(duration)
@@ -108,6 +108,7 @@ class ApplicationController < ActionController::Base
 
   rescue_from PG::ReadOnlySqlTransaction do |e|
     Discourse.received_readonly!
+    Rails.logger.error("#{e.class} #{e.message}: #{e.backtrace.join("\n")}")
     raise Discourse::ReadOnly
   end
 
