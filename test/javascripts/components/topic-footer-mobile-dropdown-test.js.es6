@@ -23,6 +23,13 @@ componentTest('default', {
       assert.equal(selectBox().header.name(), "Topic Controls");
       assert.equal(selectBox().rowByIndex(0).name(), "Bookmark");
       assert.equal(selectBox().rowByIndex(1).name(), "Share");
+      assert.equal(selectBox().selectedRow.el.length, 0, "it doesn’t preselect first row");
+    });
+
+    selectBoxSelectRow("share");
+
+    andThen(() => {
+      assert.equal(this.get("value"), null, "it resets the value");
     });
   }
 });

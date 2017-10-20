@@ -7,6 +7,8 @@ export default ComboBoxComponent.extend({
   classNames: "topic-footer-mobile-dropdown",
   filterable: false,
   autoFilterable: false,
+  allowValueMutation: false,
+  autoSelectFirst: false,
 
   @on("didReceiveAttrs")
   _setTopicFooterMobileDropdownOptions() {
