@@ -540,7 +540,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     },
 
     expandHidden(post) {
-      post.expandHidden();
+      return post.expandHidden();
     },
 
     toggleVisibility() {
