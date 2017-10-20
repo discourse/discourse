@@ -20,7 +20,7 @@ export default Ember.Component.extend(UtilsMixin, {
   @computed("templateForRow")
   template(templateForRow) { return templateForRow(this); },
 
-  @on("didReceiveAttrs", "didUpdateAttrs")
+  @on("didReceiveAttrs")
   _setSelectionState() {
     const contentValue = this.get("content.value");
     this.set("isSelected", this.get("value") === contentValue);
