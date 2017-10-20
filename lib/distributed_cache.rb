@@ -128,9 +128,9 @@ class DistributedCache
     hash[k]
   end
 
-  def delete(k)
+  def delete(k, publish: true)
     k = k.to_s if Symbol === k
-    @manager.delete(self, k)
+    @manager.delete(self, k) if publish
     hash.delete(k)
   end
 
