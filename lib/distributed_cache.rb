@@ -10,6 +10,7 @@ require 'base64'
 class DistributedCache
 
   class Manager
+    CHANNEL_NAME ||= '/distributed_hash'.freeze
 
     def initialize(message_bus = nil)
       @subscribers = []
@@ -31,7 +32,7 @@ class DistributedCache
         begin
           current = @subscribers[i]
 
-          next if payload["origin"] == current.identity
+          next if payload["origin"] == current.identity && !Rails.env.test?
           next if current.key != payload["hash_key"]
           next if payload["discourse_version"] != Discourse.git_version
 
@@ -51,15 +52,11 @@ class DistributedCache
       end
     end
 
-    def channel_name
-      "/distributed_hash".freeze
-    end
-
     def ensure_subscribe!
       return if @subscribed
       @lock.synchronize do
         return if @subscribed
-        @message_bus.subscribe(channel_name) do |message|
+        @message_bus.subscribe(CHANNEL_NAME) do |message|
           @lock.synchronize do
             process_message(message)
           end
@@ -72,7 +69,7 @@ class DistributedCache
       message[:origin] = hash.identity
       message[:hash_key] = hash.key
       message[:discourse_version] = Discourse.git_version
-      @message_bus.publish(channel_name, message, user_ids: [-1])
+      @message_bus.publish(CHANNEL_NAME, message, user_ids: [-1])
     end
 
     def set(hash, key, value)
@@ -143,13 +140,12 @@ class DistributedCache
   end
 
   def hash(db = nil)
-    db ||= begin
+    db =
       if @namespace
-        RailsMultisite::ConnectionManagement.current_db
+        db || RailsMultisite::ConnectionManagement.current_db
       else
         RailsMultisite::ConnectionManagement::DEFAULT
       end
-    end
 
     @data[db] ||= ThreadSafe::Hash.new
   end
