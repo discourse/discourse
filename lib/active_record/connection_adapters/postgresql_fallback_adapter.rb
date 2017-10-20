@@ -7,10 +7,12 @@ class PostgreSQLFallbackHandler
   include Singleton
 
   attr_reader :masters_down
+  attr_accessor :initialized
 
   def initialize
-    @masters_down = DistributedCache.new('masters_down')
+    @masters_down = DistributedCache.new('masters_down', namespace: false)
     @mutex = Mutex.new
+    @initialized = false
   end
 
   def verify_master
@@ -126,13 +128,12 @@ module ActiveRecord
       else
         begin
           connection = postgresql_connection(config)
-          fallback_handler.master_down = false
+          fallback_handler.initialized ||= true
         rescue PG::ConnectionBad => e
-          on_boot = fallback_handler.master_down?.nil?
           fallback_handler.master_down = true
           fallback_handler.verify_master
 
-          if on_boot
+          if !fallback_handler.initialized
             return postgresql_fallback_connection(config)
           else
             raise e

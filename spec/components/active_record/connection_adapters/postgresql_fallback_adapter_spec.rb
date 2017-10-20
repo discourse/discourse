@@ -62,6 +62,7 @@ describe ActiveRecord::ConnectionHandling do
 
       it 'should failover to a replica server' do
         RailsMultisite::ConnectionManagement.stubs(:all_dbs).returns(['default', multisite_db])
+        postgresql_fallback_handler.expects(:verify_master).at_least(3)
 
         [config, multisite_config].each do |configuration|
           ActiveRecord::Base.expects(:postgresql_connection).with(configuration).raises(PG::ConnectionBad)
@@ -113,12 +114,14 @@ describe ActiveRecord::ConnectionHandling do
 
     context 'when both master and replica server is down' do
       it 'should raise the right error' do
-        ActiveRecord::Base.expects(:postgresql_connection).with(config).raises(PG::ConnectionBad).once
+        ActiveRecord::Base.expects(:postgresql_connection).with(config).raises(PG::ConnectionBad)
 
         ActiveRecord::Base.expects(:postgresql_connection).with(config.dup.merge(
           host: replica_host,
           port: replica_port
         )).raises(PG::ConnectionBad).once
+
+        postgresql_fallback_handler.expects(:verify_master).twice
 
         2.times do
           expect { ActiveRecord::Base.postgresql_fallback_connection(config) }
