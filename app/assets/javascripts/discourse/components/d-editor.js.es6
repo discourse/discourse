@@ -101,24 +101,6 @@ class Toolbar {
       perform: e => e.applyList(i => !i ? "1. " : `${parseInt(i) + 1}. `, 'list_item')
     });
 
-    this.addButton({
-      id: 'heading',
-      group: 'extras',
-      icon: 'header',
-      label: getButtonLabel('composer.heading_label', 'H'),
-      shortcut: 'Alt+1',
-      perform: e => e.applyList('## ', 'heading_text')
-    });
-
-    this.addButton({
-      id: 'rule',
-      group: 'extras',
-      icon: 'minus',
-      shortcut: 'Alt+R',
-      title: 'composer.hr_title',
-      perform: e => e.addText("\n\n----------\n")
-    });
-
     if (site.mobileView) {
       this.groups.push({group: 'mobileExtras', buttons: []});
     }
