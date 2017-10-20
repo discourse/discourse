@@ -997,6 +997,9 @@ spam:
   auto_block_fast_typers_on_first_post: true
   auto_block_fast_typers_max_trust_level: 0
   auto_block_first_post_regex: ""
+  flags_default_topics:
+    default: false
+    client: true
 
 rate_limits:
   unique_posts_mins: 5

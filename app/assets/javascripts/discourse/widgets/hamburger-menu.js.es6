@@ -39,16 +39,21 @@ export default createWidget('hamburger-menu', {
   },
 
   adminLinks() {
-    const { currentUser } = this;
+    const { currentUser, siteSettings } = this;
+    let flagsPath = siteSettings.flags_default_topics ? 'topics' : 'active';
 
-    const links = [{ route: 'admin', className: 'admin-link', icon: 'wrench', label: 'admin_title' },
-                   { href: '/admin/flags/active',
-                     className: 'flagged-posts-link',
-                     icon: 'flag',
-                     label: 'flags_title',
-                     badgeClass: 'flagged-posts',
-                     badgeTitle: 'notifications.total_flagged',
-                     badgeCount: 'site_flagged_posts_count' }];
+    const links = [
+      { route: 'admin', className: 'admin-link', icon: 'wrench', label: 'admin_title' },
+      {
+        href: `/admin/flags/${flagsPath}`,
+        className: 'flagged-posts-link',
+        icon: 'flag',
+        label: 'flags_title',
+        badgeClass: 'flagged-posts',
+        badgeTitle: 'notifications.total_flagged',
+        badgeCount: 'site_flagged_posts_count'
+      }
+    ];
 
     if (currentUser.show_queued_posts) {
       links.push({ route: 'queued-posts',
