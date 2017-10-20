@@ -46,7 +46,7 @@ class PostgreSQLFallbackHandler
   end
 
   def master_up(namespace)
-    synchronize { @masters_down.delete(namespace) }
+    synchronize { @masters_down.delete(namespace, publish: false) }
   end
 
   def initiate_fallback_to_master
