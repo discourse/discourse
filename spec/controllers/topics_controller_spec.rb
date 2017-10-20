@@ -1065,7 +1065,7 @@ describe TopicsController do
             }, format: format
 
             expect(response.code.to_i).to be(403)
-            expect(response.body).to eq(I18n.t("invalid_api_credentials"))
+            expect(response.body).to include(I18n.t("invalid_access"))
           end
         end
       end

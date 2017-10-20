@@ -7,7 +7,7 @@ describe UsersEmailController do
       get "/u/authorize-email/asdfasdf"
 
       expect(response).to be_success
-      expect(response.body).to include(I18n.t('change_email.error'))
+      expect(response.body).to include(I18n.t('change_email.already_done'))
     end
 
     context 'valid old address token' do
