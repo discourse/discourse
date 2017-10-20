@@ -193,7 +193,7 @@ SQL
   def self.defer_flags!(post, moderator, delete_post = false)
     actions = PostAction.active
       .where(post_id: post.id)
-      .where(post_action_type_id: PostActionType.flag_types_without_custom.values)
+      .where(post_action_type_id: PostActionType.notify_flag_type_ids)
 
     actions.each do |action|
       action.deferred_at = Time.zone.now
