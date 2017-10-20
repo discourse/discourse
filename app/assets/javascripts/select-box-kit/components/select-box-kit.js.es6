@@ -64,6 +64,7 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
     }
 
     this._previousScrollParentOverflow = "auto";
+    this._previousCSSContext = {};
   },
 
   close() {
@@ -346,13 +347,15 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
 
   _applyDirection() {
     let options = { left: "auto", bottom: "auto", top: "auto" };
+    const discourseHeaderHeight = $(".d-header").outerHeight(false);
     const headerHeight = this.$header().outerHeight(false);
-    const filterHeight = this.$(".select-box-kit-filter").outerHeight(false);
+    const headerWidth = this.$header().outerWidth(false);
     const bodyHeight = this.$body().outerHeight(false);
     const windowWidth = $(window).width();
     const windowHeight = $(window).height();
     const boundingRect = this.get("element").getBoundingClientRect();
     const offsetTop = boundingRect.top;
+    const offsetBottom = boundingRect.bottom;
 
     if (this.get("fullWidthOnMobile") && windowWidth <= 420) {
       const margin = 10;
@@ -361,22 +364,35 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
       options.width = windowWidth - margin * 2;
       options.maxWidth = options.minWidth = "unset";
     } else {
-      const offsetLeft = boundingRect.left;
       const bodyWidth = this.$body().outerWidth(false);
-      const hasRightSpace = (windowWidth - (this.get("horizontalOffset") + offsetLeft + filterHeight + bodyWidth) > 0);
 
-      if (hasRightSpace) {
-        this.setProperties({ isLeftAligned: true, isRightAligned: false });
-        options.left = this.get("horizontalOffset");
+      if ($("html").css("direction") === "rtl") {
+        const horizontalSpacing = boundingRect.right;
+        const hasHorizontalSpace = horizontalSpacing - (this.get("horizontalOffset") + bodyWidth) > 0;
+        if (hasHorizontalSpace) {
+          this.setProperties({ isLeftAligned: true, isRightAligned: false });
+          options.left = bodyWidth + this.get("horizontalOffset");
+        } else {
+          this.setProperties({ isLeftAligned: false, isRightAligned: true });
+          options.right = - (bodyWidth - headerWidth + this.get("horizontalOffset"));
+        }
       } else {
-        this.setProperties({ isLeftAligned: false, isRightAligned: true });
-        options.right = this.get("horizontalOffset");
+        const horizontalSpacing = boundingRect.left;
+        const hasHorizontalSpace = (windowWidth - (this.get("horizontalOffset") + horizontalSpacing + bodyWidth) > 0);
+        if (hasHorizontalSpace) {
+          this.setProperties({ isLeftAligned: true, isRightAligned: false });
+          options.left = this.get("horizontalOffset");
+        } else {
+          this.setProperties({ isLeftAligned: false, isRightAligned: true });
+          options.right = this.get("horizontalOffset");
+        }
       }
     }
 
     const componentHeight = this.get("verticalOffset") + bodyHeight + headerHeight;
-    const hasBelowSpace = windowHeight - offsetTop - componentHeight > 0;
-    if (hasBelowSpace) {
+    const hasBelowSpace = windowHeight - offsetBottom - componentHeight > 0;
+    const hasAboveSpace = offsetTop - componentHeight - discourseHeaderHeight > 0;
+    if (hasBelowSpace || (!hasBelowSpace && !hasAboveSpace)) {
       this.setProperties({ isBelow: true, isAbove: false });
       options.top = headerHeight + this.get("verticalOffset");
     } else {
@@ -398,6 +414,10 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
     const $placeholder = $(`<div class='select-box-kit-fixed-placeholder-${this.elementId}'></div>`);
 
     this._previousScrollParentOverflow = this.get("scrollableParent").css("overflow");
+    this._previousCSSContext = {
+      minWidth: this.$().css("min-width"),
+      maxWidth: this.$().css("max-width")
+    };
     this.get("scrollableParent").css({ overflow: "hidden" });
 
     this.$()
@@ -408,11 +428,13 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
         "vertical-align": "middle"
       }))
       .css({
-        width,
         direction: $("html").css("direction"),
         position: "fixed",
         "margin-top": -this.get("scrollableParent").scrollTop(),
-        "margin-left": -width
+        "margin-left": -width,
+        width,
+        minWidth: "unset",
+        maxWidth: "unset"
       });
   },
 
@@ -423,13 +445,17 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
 
     $(`.select-box-kit-fixed-placeholder-${this.elementId}`).remove();
 
-    this.$().css({
-      top: "auto",
-      left: "auto",
-      "margin-left": "auto",
-      "margin-top": "auto",
-      position: "relative"
-    });
+    const css = _.extend(
+      this._previousCSSContext,
+      {
+        top: "auto",
+        left: "auto",
+        "margin-left": "auto",
+        "margin-top": "auto",
+        position: "relative"
+      }
+    );
+    this.$().css(css);
 
     this.get("scrollableParent").css({
       overflow: this._previousScrollParentOverflow
