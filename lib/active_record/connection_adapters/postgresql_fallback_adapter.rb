@@ -6,9 +6,10 @@ require 'sidekiq/pausable'
 class PostgreSQLFallbackHandler
   include Singleton
 
-  @@masters_down = DistributedCache.new('masters_down')
+  attr_reader :masters_down
 
   def initialize
+    @masters_down = DistributedCache.new('masters_down')
     @mutex = Mutex.new
   end
 
@@ -20,38 +21,43 @@ class PostgreSQLFallbackHandler
         begin
           thread = Thread.new { initiate_fallback_to_master }
           thread.join
-          break if synchronize { @@masters_down.empty? }
+          break if synchronize { @masters_down.hash.empty? }
           sleep 10
         ensure
           thread.kill
         end
       end
     end
+
+    @thread.abort_on_exception = true
   end
 
   def master_down?
-    synchronize { @@masters_down[namespace] }
+    synchronize { @masters_down[namespace] }
   end
 
   def master_down=(args)
     synchronize do
-      @@masters_down[namespace] = args
-      Sidekiq.pause! if args
+      @masters_down[namespace] = args
+      Sidekiq.pause! if args && !Sidekiq.paused?
     end
   end
 
   def master_up(namespace)
-    synchronize { @@masters_down.delete(namespace) }
+    synchronize { @masters_down.delete(namespace) }
   end
 
   def initiate_fallback_to_master
-    @@masters_down.keys.each do |key|
+    @masters_down.hash.keys.each do |key|
       RailsMultisite::ConnectionManagement.with_connection(key) do
         begin
           logger.warn "#{log_prefix}: Checking master server..."
-          connection = ActiveRecord::Base.postgresql_connection(config)
-          is_connection_active = connection.active?
-          connection.disconnect!
+          begin
+            connection = ActiveRecord::Base.postgresql_connection(config)
+            is_connection_active = connection.active?
+          ensure
+            connection.disconnect!
+          end
 
           if is_connection_active
             logger.warn "#{log_prefix}: Master server is active. Reconnecting..."
@@ -70,7 +76,7 @@ class PostgreSQLFallbackHandler
 
   # Use for testing
   def setup!
-    @@masters_down = {}
+    @masters_down.clear
     disable_readonly_mode
   end
 
@@ -119,7 +125,6 @@ module ActiveRecord
         verify_replica(connection)
       else
         begin
-          now = Time.zone.now
           connection = postgresql_connection(config)
           fallback_handler.master_down = false
         rescue PG::ConnectionBad => e
