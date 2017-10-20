@@ -56,7 +56,7 @@ class PostgreSQLFallbackHandler
             connection = ActiveRecord::Base.postgresql_connection(config)
             is_connection_active = connection.active?
           ensure
-            connection.disconnect!
+            connection.disconnect! if connection
           end
 
           if is_connection_active
