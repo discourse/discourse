@@ -48,19 +48,14 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
   fullWidthOnMobile: false,
   castInteger: false,
   allowAny: false,
+  allowValueMutation: true,
+  autoSelectFirst: true,
 
   init() {
     this._super();
 
     if ($(window).outerWidth(false) <= 420) {
       this.setProperties({ filterable: false, autoFilterable: false });
-    }
-
-    if (isNone(this.get("none")) && isEmpty(this.get("value")) && !isEmpty(this.get("content"))) {
-      Ember.run.scheduleOnce("sync", () => {
-        const firstValue = this.get(`content.0.${this.get("valueAttribute")}`);
-        this.set("value", firstValue);
-      });
     }
 
     this._previousScrollParentOverflow = "auto";
@@ -171,12 +166,13 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
 
   @computed("content.[]")
   computedContent(content) {
+    this._mutateValue();
     return this.formatContents(content || []);
   },
 
   @computed("value", "none", "computedContent.firstObject.value")
   computedValue(value, none, firstContentValue) {
-    if (isNone(value) && isNone(none)) {
+    if (isNone(value) && isNone(none) && this.get("autoSelectFirst") === true) {
       return this._castInteger(firstContentValue);
     }
 
@@ -276,10 +272,7 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
 
   @computed("filter", "computedFilterable", "computedContent.[]", "computedValue.[]")
   filteredContent(filter, computedFilterable, computedContent, computedValue) {
-    if (computedFilterable === false) {
-      return computedContent;
-    }
-
+    if (computedFilterable === false) { return computedContent; }
     return this.filterFunction(computedContent)(this, computedValue);
   },
 
@@ -470,5 +463,23 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
       width: this.$().width(),
       height: headerHeight + this.$body().outerHeight(false)
     });
+  },
+
+  @on("didReceiveAttrs")
+  _mutateValue() {
+    if (this.get("allowValueMutation") !== true) {
+      return;
+    }
+
+    const none = isNone(this.get("none"));
+    const emptyValue = isEmpty(this.get("value"));
+    const notEmptyContent = !isEmpty(this.get("content"));
+
+    if (none && emptyValue && notEmptyContent) {
+      Ember.run.scheduleOnce("sync", () => {
+        const firstValue = this.get(`content.0.${this.get("valueAttribute")}`);
+        this.set("value", firstValue);
+      });
+    }
   }
 });
