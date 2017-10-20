@@ -105,10 +105,11 @@ class DistributedCache
 
   attr_reader :key
 
-  def initialize(key, manager = nil)
+  def initialize(key, manager: nil, namespace: true)
     @key = key
     @data = {}
     @manager = manager || DistributedCache.default_manager
+    @namespace = namespace
 
     @manager.ensure_subscribe!
     @manager.register(self)
@@ -142,7 +143,14 @@ class DistributedCache
   end
 
   def hash(db = nil)
-    db ||= RailsMultisite::ConnectionManagement.current_db
+    db ||= begin
+      if @namespace
+        RailsMultisite::ConnectionManagement.current_db
+      else
+        RailsMultisite::ConnectionManagement::DEFAULT
+      end
+    end
+
     @data[db] ||= ThreadSafe::Hash.new
   end
 

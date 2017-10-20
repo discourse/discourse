@@ -14,7 +14,7 @@ describe DistributedCache do
   end
 
   def cache(name)
-    DistributedCache.new(name, @manager)
+    DistributedCache.new(name, manager: @manager)
   end
 
   let! :cache1 do
