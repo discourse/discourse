@@ -407,35 +407,35 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
     const width = this.$().outerWidth(false);
     const height = this.$header().outerHeight(false);
 
-    if (this.get("scrollableParent").length === 0) {
-      return;
-    }
+    if (this.get("scrollableParent").length === 0) { return; }
 
     const $placeholder = $(`<div class='select-box-kit-fixed-placeholder-${this.elementId}'></div>`);
 
     this._previousScrollParentOverflow = this.get("scrollableParent").css("overflow");
+    this.get("scrollableParent").css({ overflow: "hidden" });
+
     this._previousCSSContext = {
       minWidth: this.$().css("min-width"),
       maxWidth: this.$().css("max-width")
     };
-    this.get("scrollableParent").css({ overflow: "hidden" });
 
-    this.$()
-      .before($placeholder.css({
-        display: "inline-block",
-        width,
-        height,
-        "vertical-align": "middle"
-      }))
-      .css({
-        direction: $("html").css("direction"),
-        position: "fixed",
-        "margin-top": -this.get("scrollableParent").scrollTop(),
-        "margin-left": -width,
-        width,
-        minWidth: "unset",
-        maxWidth: "unset"
-      });
+    const componentStyles = {
+      position: "fixed",
+      "margin-top": -this.get("scrollableParent").scrollTop(),
+      width,
+      minWidth: "unset",
+      maxWidth: "unset"
+    };
+
+    if ($("html").css("direction") === "rtl") {
+      componentStyles.marginRight = -width;
+    } else {
+      componentStyles.marginLeft = -width;
+    }
+
+    $placeholder.css({ display: "inline-block", width, height, "vertical-align": "middle" });
+
+    this.$().before($placeholder).css(componentStyles);
   },
 
   _removeFixedPosition() {
@@ -451,6 +451,7 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
         top: "auto",
         left: "auto",
         "margin-left": "auto",
+        "margin-right": "auto",
         "margin-top": "auto",
         position: "relative"
       }
