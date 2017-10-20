@@ -275,3 +275,19 @@ componentTest('supports keyboard events', {
     });
   }
 });
+
+
+componentTest('supports mutating value when no value given', {
+  template: '{{select-box-kit value=value content=content}}',
+
+  beforeEach() {
+    this.set("value", "");
+    this.set("content", [{ id: "1", name: "robin"}, {id: "2", name: "régis" }]);
+  },
+
+  test(assert) {
+    andThen(() => {
+      assert.equal(this.get("value"), "1");
+    });
+  }
+});

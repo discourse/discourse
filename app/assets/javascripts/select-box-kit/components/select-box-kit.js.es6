@@ -48,6 +48,8 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
   fullWidthOnMobile: false,
   castInteger: false,
   allowAny: false,
+  allowValueMutation: true,
+  autoSelectFirst: true,
 
   init() {
     this._super();
@@ -55,8 +57,6 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
     if ($(window).outerWidth(false) <= 420) {
       this.setProperties({ filterable: false, autoFilterable: false });
     }
-
-    this._mutateValue();
 
     this._previousScrollParentOverflow = "auto";
     this._previousCSSContext = {};
@@ -172,7 +172,7 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
 
   @computed("value", "none", "computedContent.firstObject.value")
   computedValue(value, none, firstContentValue) {
-    if (isNone(value) && isNone(none)) {
+    if (isNone(value) && isNone(none) && this.get("autoSelectFirst") === true) {
       return this._castInteger(firstContentValue);
     }
 
@@ -272,10 +272,7 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
 
   @computed("filter", "computedFilterable", "computedContent.[]", "computedValue.[]")
   filteredContent(filter, computedFilterable, computedContent, computedValue) {
-    if (computedFilterable === false) {
-      return computedContent;
-    }
-
+    if (computedFilterable === false) { return computedContent; }
     return this.filterFunction(computedContent)(this, computedValue);
   },
 
@@ -468,7 +465,12 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
     });
   },
 
+  @on("didReceiveAttrs")
   _mutateValue() {
+    if (this.get("allowValueMutation") !== true) {
+      return;
+    }
+
     const none = isNone(this.get("none"));
     const emptyValue = isEmpty(this.get("value"));
     const notEmptyContent = !isEmpty(this.get("content"));
