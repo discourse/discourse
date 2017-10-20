@@ -155,9 +155,11 @@
     flex-wrap: wrap;
 
     .btn {
-      width: 22%;
+      flex: 1 1 0;
       margin-bottom: 1em;
       margin-right: 1em;
+      white-space: nowrap;
+      max-width: 23%;
     }
   }
 
