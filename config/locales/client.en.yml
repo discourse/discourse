@@ -1349,6 +1349,7 @@ en:
         one: "1 result for <span class='term'>{{term}}</span>"
         other: "{{count}} results for <span class='term'>{{term}}</span>"
       title: "search topics, posts, users, or categories"
+      link_title: "search result for '{{term}}'"
       no_results: "No results found."
       no_more_results: "No more results found."
       searching: "Searching ..."

@@ -33,7 +33,7 @@ export default createWidget('link', {
   buildAttributes(attrs) {
     return {
       href: this.href(attrs),
-      title: attrs.title ? I18n.t(attrs.title) : this.label(attrs)
+      title: attrs.title ? I18n.t(attrs.title, attrs.titleOptions) : this.label(attrs)
     };
   },
 
