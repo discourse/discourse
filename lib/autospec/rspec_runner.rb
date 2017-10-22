@@ -23,6 +23,7 @@ module Autospec
     watch(%r{^plugins/.*/discourse-markdown/.*\.js\.es6$}) { "spec/components/pretty_text_spec.rb" }
 
     watch(%r{^plugins/.*/spec/.*\.rb})
+    watch(%r{^(plugins/.*)/lib/(.*)\.rb}) { |m| "#{m[1]}/spec/lib/#{m[2]}_spec.rb" }
 
     RELOADERS = Set.new
     def self.reload(pattern); RELOADERS << pattern; end
