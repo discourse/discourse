@@ -5,6 +5,7 @@ import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
 import { iconNode } from 'discourse-common/lib/icon-library';
 import highlightText from 'discourse/lib/highlight-text';
+import { escapeExpression } from 'discourse/lib/utilities';
 
 class Highlighted extends RawHtml {
   constructor(html, term) {
@@ -30,6 +31,8 @@ function createSearchResult({ type, linkField, builder }) {
           href: r.get(linkField),
           contents: () => builder.call(this, r, attrs.term),
           className: 'search-link',
+          title: 'search.link_title',
+          titleOptions: { term: escapeExpression(attrs.term) },
           searchResultId,
           searchResultType: type,
           searchContextEnabled: attrs.searchContextEnabled,
@@ -95,7 +98,7 @@ createSearchResult({
   type: 'tag',
   linkField: 'url',
   builder(t) {
-    const tag = Handlebars.Utils.escapeExpression(t.get('id'));
+    const tag = escapeExpression(t.get('id'));
     return h('a', { attributes: { href: t.get('url') }, className: `tag-${tag} discourse-tag ${Discourse.SiteSettings.tag_style}`}, tag);
   }
 });
