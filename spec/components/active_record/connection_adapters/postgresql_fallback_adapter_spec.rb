@@ -27,6 +27,8 @@ describe ActiveRecord::ConnectionHandling do
   let(:postgresql_fallback_handler) { PostgreSQLFallbackHandler.instance }
 
   before do
+    postgresql_fallback_handler.initialized = true
+
     ['default', multisite_db].each do |db|
       with_multisite_db(db) do
         postgresql_fallback_handler.master_down = false
