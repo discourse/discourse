@@ -178,7 +178,7 @@ class ImportScripts::Base
     opts[:name] = UserNameSuggester.suggest(import_name)
 
     existing = Group.where(name: opts[:name]).first
-    return existing if existing && existing.custom_fields["import_id"].to_i == (import_id.to_i)
+    return existing if existing && existing.custom_fields["import_id"].to_s == (import_id.to_s)
     g = existing || Group.new(opts)
     g.custom_fields["import_id"] = import_id
     g.custom_fields["import_name"] = import_name
@@ -270,7 +270,7 @@ class ImportScripts::Base
     post_create_action = opts.delete(:post_create_action)
 
     existing = User.joins(:user_emails).where("user_emails.email = ? OR username = ?", opts[:email].downcase, opts[:username]).first
-    return existing if existing && (merge || existing.custom_fields["import_id"].to_i == import_id.to_i)
+    return existing if existing && (merge || existing.custom_fields["import_id"].to_s == import_id.to_s)
 
     bio_raw = opts.delete(:bio_raw)
     website = opts.delete(:website)
