@@ -91,15 +91,12 @@ describe User do
       user.approve(admin)
     end
 
-    it 'triggers extensibility events' do
+    it 'triggers a extensibility event' do
       user && admin # bypass the user_created event
-      user_updated_event, user_approved_event = DiscourseEvent.track_events { user.approve(admin) }
+      event = DiscourseEvent.track_events { user.approve(admin) }.first
 
-      expect(user_updated_event[:event_name]).to eq(:user_updated)
-      expect(user_updated_event[:params].first).to eq(user)
-
-      expect(user_approved_event[:event_name]).to eq(:user_approved)
-      expect(user_approved_event[:params].first).to eq(user)
+      expect(event[:event_name]).to eq(:user_approved)
+      expect(event[:params].first).to eq(user)
     end
 
     context 'after approval' do
