@@ -341,7 +341,8 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
   _applyDirection() {
     let options = { left: "auto", bottom: "auto", top: "auto" };
 
-    const dHeaderBounds = $(".d-header")[0].getBoundingClientRect();
+    const dHeader = $(".d-header")[0];
+    const dHeaderBounds = dHeader ? dHeader.getBoundingClientRect() : {top: 0, height: 0};
     const dHeaderHeight = dHeaderBounds.top + dHeaderBounds.height;
     const headerHeight = this.$header().outerHeight(false);
     const headerWidth = this.$header().outerWidth(false);
