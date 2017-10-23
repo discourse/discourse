@@ -39,14 +39,15 @@ module ImportExport
 
     def import_categories
       id = @export_data[:category].delete(:id)
+      import_id = "#{id}#{import_source}"
 
-      parent = CategoryCustomField.where(name: 'import_id', value: id.to_s).first.try(:category)
+      parent = CategoryCustomField.where(name: 'import_id', value: import_id).first.try(:category)
 
       unless parent
         permissions = @export_data[:category].delete(:permissions_params)
         parent = Category.new(@export_data[:category])
         parent.user_id = @topic_importer.new_user_id(@export_data[:category][:user_id]) # imported user's new id
-        parent.custom_fields["import_id"] = id
+        parent.custom_fields["import_id"] = import_id
         parent.permissions = permissions.present? ? permissions : { "everyone" => CategoryGroup.permission_types[:full] }
         parent.save!
         set_category_description(parent, @export_data[:category][:description])
@@ -54,14 +55,15 @@ module ImportExport
 
       @export_data[:subcategories].each do |cat_attrs|
         id = cat_attrs.delete(:id)
-        existing = CategoryCustomField.where(name: 'import_id', value: id.to_s).first.try(:category)
+        import_id = "#{id}#{import_source}"
+        existing = CategoryCustomField.where(name: 'import_id', value: import_id).first.try(:category)
 
         unless existing
           permissions = cat_attrs.delete(:permissions_params)
           subcategory = Category.new(cat_attrs)
           subcategory.parent_category_id = parent.id
           subcategory.user_id = @topic_importer.new_user_id(cat_attrs[:user_id])
-          subcategory.custom_fields["import_id"] = id
+          subcategory.custom_fields["import_id"] = import_id
           subcategory.permissions = permissions.present? ? permissions : { "everyone" => CategoryGroup.permission_types[:full] }
           subcategory.save!
           set_category_description(subcategory, cat_attrs[:description])
@@ -78,6 +80,10 @@ module ImportExport
 
     def import_topics
       @topic_importer.import_topics
+    end
+
+    def import_source
+      @_import_source ||= "#{ENV['IMPORT_SOURCE'] || ''}"
     end
   end
 end
