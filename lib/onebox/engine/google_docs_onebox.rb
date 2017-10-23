@@ -26,7 +26,7 @@ module Onebox
         og_data = get_og_data
         result = { link: link,
                    title: og_data[:title] || "Google #{shorttype.to_s.capitalize}",
-                   description: og_data[:description] || "This #{shorttype.to_s.chop.capitalize} is private",
+                   description: Sanitize.fragment(Onebox::Helpers.truncate(og_data[:description], 250)) || "This #{shorttype.to_s.chop.capitalize} is private",
                    type: shorttype
                  }
         result
