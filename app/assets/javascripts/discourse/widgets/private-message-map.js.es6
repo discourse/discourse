@@ -18,17 +18,17 @@ createWidget('pm-remove-group-link', {
 createWidget('pm-map-user-group', {
   tagName: 'div.user.group',
 
-  html(attrs) {
-    const link = h('a', { attributes: { href: Discourse.getURL(`/groups/${attrs.group.name}`) } }, attrs.group.name);
-    const result = [iconNode('users'), ' ', link];
+  transform(attrs) {
+    return { href: Discourse.getURL(`/groups/${attrs.group.name}`) };
+  },
 
-    if (attrs.canRemoveAllowedUsers) {
-      result.push(' ');
-      result.push(this.attach('pm-remove-group-link', attrs.group));
-    }
-
-    return result;
-  }
+  template: hbs`
+    {{fa-icon 'users'}}
+    <a href={{transformed.href}}>{{attrs.group.name}}</a>
+    {{#if attrs.canRemoveAllowedUsers}}
+      {{attach widget="pm-remove-group-link" attrs=attrs.group}}
+    {{/if}}
+  `
 });
 
 createWidget('pm-remove-link', {
@@ -72,9 +72,9 @@ export default createWidget('private-message-map', {
     const participants = [];
 
     if (attrs.allowedGroups.length) {
-      participants.push(attrs.allowedGroups.map(ag => {
-        this.attach('pm-map-user-group', {
-          group: ag,
+      participants.push(attrs.allowedGroups.map(group => {
+        return this.attach('pm-map-user-group', {
+          group,
           canRemoveAllowedUsers: attrs.canRemoveAllowedUsers
         });
       }));
