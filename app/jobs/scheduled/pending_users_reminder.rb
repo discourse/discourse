@@ -19,12 +19,16 @@ module Jobs
         count = query.count
 
         if count > 0
-          target_usernames = Group[:moderators].users.map do |u|
-            u.id > 0 && u.notifications.joins(:topic)
-              .where("notifications.id > ?", u.seen_notification_id)
+          target_usernames = Group[:moderators].users.map do |user|
+            next if user.id < 0
+
+            count = user.notifications.joins(:topic)
+              .where("notifications.id > ?", user.seen_notification_id)
               .where("notifications.read = false")
-              .where("topics.subtype = '#{TopicSubtype.pending_users_reminder}'")
-              .count == 0 ? u.username : nil
+              .where("topics.subtype = ?", TopicSubtype.pending_users_reminder)
+              .count
+
+            count == 0 ? user.username : nil
           end.compact
 
           unless target_usernames.empty?
