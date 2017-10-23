@@ -347,7 +347,7 @@ class ImportScripts::Base
       u.suspended_at = Time.zone.at(Time.now)
       u.suspended_till = 200.years.from_now
       ban_reason = 'Invalid email address on import'
-      u.active=false
+      u.active = false
       u.save!
 
       user_option = u.user_option
