@@ -35,6 +35,8 @@ class CookedPostProcessor
       post_process_images
       post_process_oneboxes
       optimize_urls
+      update_post_image
+      enforce_no_follow
       pull_hotlinked_images(bypass_bump)
       grant_badges
       DiscourseEvent.trigger(:post_process_cooked, @doc, @post)
@@ -312,26 +314,16 @@ class CookedPostProcessor
       @has_oneboxes = true
       Oneboxer.onebox(url, args)
     end
-
-    update_post_image
-
-    # make sure we grab dimensions for oneboxed images
-    oneboxed_images.each { |img| limit_size!(img) }
-
+    
     uploads = oneboxed_image_uploads.select(:url, :origin)
     oneboxed_images.each do |img|
       url = img["src"].sub(/^https?:/i, "")
       upload = uploads.find { |u| u.origin.sub(/^https?:/i, "") == url }
-      next unless upload.present?
-      img["src"] = upload.url
-      # make sure we grab dimensions for oneboxed images
-      limit_size!(img)
+      img["src"] = upload.url if upload.present?
     end
-
-    # respect nofollow admin settings
-    if !@cooking_options[:omit_nofollow] && SiteSetting.add_rel_nofollow_to_user_content
-      PrettyText.add_rel_nofollow_to_user_content(@doc)
-    end
+    
+    # make sure we grab dimensions for oneboxed images
+    oneboxed_images.each { |img| limit_size!(img) }
   end
 
   def optimize_urls
@@ -357,6 +349,12 @@ class CookedPostProcessor
       src = img["src"].to_s
       img["src"] = UrlHelper.schemaless UrlHelper.absolute(src) if UrlHelper.is_local(src)
       img["src"] = Discourse.store.cdn_url(img["src"]) if use_s3_cdn
+    end
+  end
+  
+  def enforce_nofollow
+    if !@cooking_options[:omit_nofollow] && SiteSetting.add_rel_nofollow_to_user_content
+      PrettyText.add_rel_nofollow_to_user_content(@doc)
     end
   end
 
