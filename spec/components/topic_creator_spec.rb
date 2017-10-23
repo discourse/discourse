@@ -3,12 +3,11 @@ require 'rails_helper'
 describe TopicCreator do
 
   let(:user)      { Fabricate(:user, trust_level: TrustLevel[2]) }
-  let(:user2)      { Fabricate(:user, trust_level: TrustLevel[2]) }
   let(:moderator) { Fabricate(:moderator) }
   let(:admin)     { Fabricate(:admin) }
 
   let(:valid_attrs) { Fabricate.attributes_for(:topic) }
-  let(:pm_valid_attrs)  { { raw: 'this is a new post', title: 'this is a new title', archetype: Archetype.private_message, target_usernames: user2.username } }
+  let(:pm_valid_attrs)  { { raw: 'this is a new post', title: 'this is a new title', archetype: Archetype.private_message, target_usernames: moderator.username } }
 
   let(:pm_to_email_valid_attrs) do
     {
