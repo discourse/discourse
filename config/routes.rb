@@ -21,6 +21,7 @@ Discourse::Application.routes.draw do
     namespace :annotator_store, path: 'annotator' do
       resources :tags
       resources :collections
+      resources :annotations, only: [:index], constraints: { format: 'json' }
     end
 
     root to: 'annotator_store/tags#index'
