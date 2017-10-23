@@ -28,7 +28,7 @@ describe CategoryHashtag do
       child_category.update_attributes!(slug: "OraNGE")
 
       expect(Category.query_from_hashtag_slug("apple")).to eq(nil)
-      expect(Category.query_from_hashtag_slug("apple:orange")).to eq(nil)
+      expect(Category.query_from_hashtag_slug("apple#{CategoryHashtag::SEPARATOR}orange")).to eq(nil)
     end
   end
 end
