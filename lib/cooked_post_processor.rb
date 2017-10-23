@@ -200,11 +200,10 @@ class CookedPostProcessor
 
   def convert_to_link!(img)
     src = img["src"]
-    return if src.blank?
+    return if src.blank? || is_a_hyperlink?(img)
 
     width, height = img["width"].to_i, img["height"].to_i
-    # TODO: even though get_size is cached, a better solution is to store
-    #       both original and "cropped" dimensions on the uploads table
+    # TODO: store original dimentions in db
     original_width, original_height = (get_size(src) || [0, 0]).map(&:to_i)
 
     # can't reach the image...
@@ -215,7 +214,6 @@ class CookedPostProcessor
 
     return if original_width <= width && original_height <= height
     return if original_width <= SiteSetting.max_image_width && original_height <= SiteSetting.max_image_height
-    return if is_a_hyperlink?(img)
 
     crop = false
     if original_width.to_f / original_height.to_f < MIN_RATIO_TO_CROP
@@ -236,8 +234,7 @@ class CookedPostProcessor
     parent = img.parent
     while parent
       return true if parent.name == "a"
-      break unless parent.respond_to? :parent
-      parent = parent.parent
+      parent = parent.parent if parent.respond_to?(:parent)
     end
     false
   end
