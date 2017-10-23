@@ -292,10 +292,8 @@ class Guardian
     (is_group || is_user) &&
     # User is authenticated
     authenticated? &&
-    # Have to be a basic level at least, or are contacting moderators
-    (@user.has_trust_level?(SiteSetting.min_trust_to_send_messages) ||
-      (target.is_a?(User) && target.moderator?) ||
-      (target.name == Group[:moderators].name)) &&
+    # Have to be a basic level at least
+    @user.has_trust_level?(SiteSetting.min_trust_to_send_messages) &&
     # User disabled private message
     (is_staff? || is_group || target.user_option.allow_private_messages) &&
     # PMs are enabled

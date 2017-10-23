@@ -154,22 +154,9 @@ describe Guardian do
       expect(Guardian.new(user).can_send_private_message?(user)).to be_truthy
     end
 
-    context "when user is untrusted " do
-      before do
-        user.trust_level = TrustLevel[0]
-      end
-
-      it "returns false to another user" do
-        expect(Guardian.new(user).can_send_private_message?(another_user)).to be_falsey
-      end
-
-      it "returns true to moderator user" do
-        expect(Guardian.new(user).can_send_private_message?(moderator)).to be_truthy
-      end
-
-      it "returns true to moderator group" do
-        expect(Guardian.new(user).can_send_private_message?(Group[:moderators])).to be_truthy
-      end
+    it "returns false when you are untrusted" do
+      user.trust_level = TrustLevel[0]
+      expect(Guardian.new(user).can_send_private_message?(another_user)).to be_falsey
     end
 
     it "returns true to another user" do
@@ -192,10 +179,6 @@ describe Guardian do
       it "returns true for staff member" do
         expect(Guardian.new(moderator).can_send_private_message?(another_user)).to be_truthy
         expect(Guardian.new(admin).can_send_private_message?(another_user)).to be_truthy
-      end
-
-      it "returns false even to a moderator" do
-        expect(Guardian.new(trust_level_4).can_send_private_message?(moderator)).to be_falsey
       end
     end
 
