@@ -30,6 +30,13 @@ export default Ember.Component.extend(KeyEnterEscape, {
   movePanels(sizePx) {
     $('#main-outlet').css('padding-bottom', sizePx);
 
+    const height = parseInt(sizePx) -
+      $('.grippie').outerHeight(true) -
+      $('.composer-fields').outerHeight(true) -
+      $('.submit-panel').outerHeight(true);
+
+    $('.d-editor-container').css('height', height - 10);
+
     // signal the progress bar it should move!
     this.appEvents.trigger("composer:resized");
   },
@@ -41,19 +48,6 @@ export default Ember.Component.extend(KeyEnterEscape, {
 
       const h = $('#reply-control').height() || 0;
       this.movePanels(h + "px");
-
-      // Figure out the size of the fields
-      const $fields = this.$('.composer-fields');
-      const fieldPos = $fields.position();
-      if (fieldPos) {
-        this.$('.wmd-controls').css('top', $fields.height() + fieldPos.top + 5);
-      }
-
-      // get the submit panel height
-      const submitPos = this.$('.submit-panel').position();
-      if (submitPos) {
-        this.$('.wmd-controls').css('bottom', h - submitPos.top + 7);
-      }
     });
   },
 
