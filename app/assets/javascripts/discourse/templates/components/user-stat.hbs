@@ -1,5 +1,9 @@
 <span class='value'>
-  {{number value}}
+  {{#if isNumber}}
+    {{number value}}
+  {{else}}
+    {{value}}
+  {{/if}}
 </span>
 <span class='label'>
   {{#if icon}}{{d-icon icon}}{{/if}}
