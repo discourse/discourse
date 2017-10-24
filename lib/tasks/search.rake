@@ -42,6 +42,15 @@ def reindex_search(db = RailsMultisite::ConnectionManagement.current_db)
     id = c["id"]
     name = c["name"]
     SearchIndexer.update_categories_index(id, name)
+
+    putc '.'
+  end
+
+  puts '', 'Tags'
+
+  Tag.exec_sql('select id, name from tags').each do |t|
+    SearchIndexer.update_tags_index(t['id'], t['name'])
+    putc '.'
   end
 
   puts
