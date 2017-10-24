@@ -14,7 +14,7 @@ class Plugin::Metadata
     "discourse-details",
     "discourse-nginx-performance-report",
     "discourse-push-notifications",
-    "discourse-slack-official",
+    "discourse-chat-integration",
     "discourse-solved",
     "Spoiler Alert!",
     "staff-notes",
