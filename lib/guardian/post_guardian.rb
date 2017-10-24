@@ -35,8 +35,9 @@ module PostGuardian
       # don't like your own stuff
       not(action_key == :like && is_my_own?(post)) &&
 
-      # new users can't notify_user because they are not allowed to send private messages
-      not(action_key == :notify_user && !@user.has_trust_level?(SiteSetting.min_trust_to_send_messages)) &&
+      # new users can't notify_user or notify_moderators because they are not allowed to send private messages
+      not((action_key == :notify_user || action_key == :notify_moderators) &&
+        !@user.has_trust_level?(SiteSetting.min_trust_to_send_messages)) &&
 
       # no voting more than once on single vote topics
       not(action_key == :vote && opts[:voted_in_topic] && post.topic.has_meta_data_boolean?(:single_vote))
