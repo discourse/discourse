@@ -178,8 +178,10 @@
     }
 
     a {
-      display: block;
-      padding: 5px;
+      &:not(.discourse-tag) {
+        display: block;
+        padding: 5px;
+      }
       transition: all linear .15s;
 
       .user-results {
