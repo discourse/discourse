@@ -7,7 +7,6 @@
   transition: height 250ms ease;
   width: 100%;
   z-index: 999;
-  padding-bottom: 5px;
 
   .toggler,
   .toggle-toolbar {
@@ -89,7 +88,7 @@
   .title-and-category {
     display: flex;
     align-items: center;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
   }
 
   .add-warning {
@@ -106,12 +105,20 @@
     margin: 0;
   }
 
+  .wmd-controls {
+    margin-bottom: 10px;
+  }
+
   .d-editor-button-bar .btn {
     padding: 0 6px;
   }
 
   .save-or-cancel {
     margin-top: 5px;
+  }
+
+  .create {
+    margin-right: 5px;
   }
 
   .composer-bottom-right {
