@@ -34,6 +34,8 @@ describe ApplicationRequest do
 
       # flush will be deferred no error raised
       inc(:http_total, autoflush: 3)
+      ApplicationRequest.write_cache!
+
       $redis.slaveof("no", "one")
 
       inc(:http_total, autoflush: 3)
