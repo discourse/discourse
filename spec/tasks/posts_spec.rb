@@ -3,6 +3,9 @@ require 'highline/import'
 require 'highline/simulate'
 
 RSpec.describe "Post rake tasks" do
+  let!(:post) { Fabricate(:post, raw: 'The quick brown fox jumps over the lazy dog') }
+  let!(:tricky_post) { Fabricate(:post, raw: 'Today ^Today') }
+
   before do
     Rake::Task.clear
     Discourse::Application.load_tasks
@@ -10,11 +13,7 @@ RSpec.describe "Post rake tasks" do
   end
 
   describe 'remap' do
-    let!(:tricky_post) { Fabricate(:post, raw: 'Today ^Today') }
-
     it 'should remap posts' do
-      post = Fabricate(:post, raw: "The quick brown fox jumps over the lazy dog")
-
       HighLine::Simulate.with('y') do
         Rake::Task['posts:remap'].invoke("brown", "red")
       end
@@ -41,6 +40,18 @@ RSpec.describe "Post rake tasks" do
 
         expect(tricky_post.reload.raw).to eq('Yesterday ^Today')
       end
+    end
+  end
+
+  describe 'rebake_match' do
+    it 'rebakes matched posts' do
+      post.update_attributes(cooked: '')
+
+      HighLine::Simulate.with('y') do
+        Rake::Task['posts:rebake_match'].invoke('brown')
+      end
+
+      expect(post.reload.cooked).to eq('<p>The quick brown fox jumps over the lazy dog</p>')
     end
   end
 end
