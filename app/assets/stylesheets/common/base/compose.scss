@@ -126,6 +126,10 @@
   }
 }
 
+.cooked > *:first-child {
+  margin-top: 0;
+}
+
 .autocomplete {
   z-index: 999999;
   position: absolute;
