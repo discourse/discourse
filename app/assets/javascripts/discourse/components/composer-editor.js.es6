@@ -18,7 +18,6 @@ import { lookupCachedUploadUrl,
          cacheShortUploadUrl } from 'pretty-text/image-short-url';
 
 export default Ember.Component.extend({
-  classNames: ['wmd-controls'],
   classNameBindings: ['showToolbar:toolbar-visible', ':wmd-controls', 'showPreview', 'showPreview::hide-preview'],
 
   uploadProgress: 0,

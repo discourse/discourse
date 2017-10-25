@@ -79,6 +79,11 @@
   padding: 7px;
 }
 
+.composing-whisper .d-editor-preview {
+  font-style: italic;
+  color: $primary-medium !important;
+}
+
 .d-editor-preview > *:first-child {
   margin-top: 0;
 }
