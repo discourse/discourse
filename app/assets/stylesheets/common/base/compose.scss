@@ -7,6 +7,7 @@
   transition: height 250ms ease;
   width: 100%;
   z-index: 999;
+  padding-bottom: 5px;
 
   .toggler,
   .toggle-toolbar {
@@ -101,38 +102,19 @@
     margin: 0 10px 0 0;
   }
 
-  .select2-container {
-    width: 400px;
-  }
-
-  .category-combobox {
-    width: 430px;
-    @include medium-width { width: 285px; }
-    @include small-width { width: 220px; }
-    .select2-drop {
-      left: -9000px;
-      width: 428px;
-      @include medium-width { width: 283px; }
-      @include small-width { width: 218px; }
-    }
-    .select2-search input {
-      width: 378px;
-      @include medium-width { width: 233px; }
-      @include small-width { width: 168px; }
-    }
-  }
-
-  .select2-container-multi {
-    .select2-choices {
-      border: 0;
-    }
-  }
-
   .tag-chooser {
     margin: 0;
   }
 
+  .d-editor-button-bar .btn {
+    padding: 0 6px;
+  }
+
   .save-or-cancel {
+    margin-top: 5px;
+  }
+
+  .composer-bottom-right {
     margin-top: 5px;
   }
 }
