@@ -62,6 +62,10 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
     this._previousCSSContext = {};
   },
 
+  click(event) {
+    event.stopPropagation();
+  },
+
   close() {
     this.setProperties({ isExpanded: false, isFocused: false });
   },
