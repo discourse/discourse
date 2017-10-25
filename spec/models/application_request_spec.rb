@@ -20,23 +20,21 @@ describe ApplicationRequest do
   end
 
   context "readonly test" do
-    after do
-      $redis.slaveof("no", "one")
-    end
-
     it 'works even if redis is in readonly' do
       disable_date_flush!
 
       inc(:http_total)
       inc(:http_total)
 
-      $redis.slaveof("127.0.0.1", 666)
+      $redis.without_namespace.stubs(:incr).raises(Redis::CommandError.new("READONLY"))
+      $redis.without_namespace.stubs(:eval).raises(Redis::CommandError.new("READONLY"))
 
       # flush will be deferred no error raised
       inc(:http_total, autoflush: 3)
       ApplicationRequest.write_cache!
 
-      $redis.slaveof("no", "one")
+      $redis.without_namespace.unstub(:incr)
+      $redis.without_namespace.unstub(:eval)
 
       inc(:http_total, autoflush: 3)
       expect(ApplicationRequest.http_total.first.count).to eq(3)
