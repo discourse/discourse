@@ -23,6 +23,10 @@ class ApplicationRequest < ActiveRecord::Base
   def self.increment!(type, opts = nil)
     key = redis_key(type)
     val = $redis.incr(key).to_i
+
+    # readonly mode it is going to be 0, skip
+    return if val == 0
+
     # 3.days, see: https://github.com/rails/rails/issues/21296
     $redis.expire(key, 259200)
 
@@ -60,12 +64,15 @@ class ApplicationRequest < ActiveRecord::Base
       key = redis_key(req_type, date)
 
       namespaced_key = $redis.namespace_key(key)
-      val = $redis.eval(GET_AND_RESET, keys: [namespaced_key]).to_i
+      val = $redis.without_namespace.eval(GET_AND_RESET, keys: [namespaced_key]).to_i
       next if val == 0
 
       id = req_id(date, req_type)
       where(id: id).update_all(["count = count + ?", val])
     end
+  rescue Redis::CommandError => e
+    raise unless e.message =~ /READONLY/
+    nil
   end
 
   def self.clear_cache!(date = nil)
