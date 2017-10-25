@@ -19,20 +19,26 @@ describe ApplicationRequest do
     ApplicationRequest.last_flush = Time.now.utc
   end
 
-  it 'works even if redis is in readonly' do
-    disable_date_flush!
+  context "readonly test" do
+    after do
+      $redis.slaveof("no", "one")
+    end
 
-    inc(:http_total)
-    inc(:http_total)
+    it 'works even if redis is in readonly' do
+      disable_date_flush!
 
-    $redis.slaveof("127.0.0.1", 666)
+      inc(:http_total)
+      inc(:http_total)
 
-    # flush will be deferred no error raised
-    inc(:http_total, autoflush: 3)
-    $redis.slaveof("no", "one")
+      $redis.slaveof("127.0.0.1", 666)
 
-    inc(:http_total, autoflush: 3)
-    expect(ApplicationRequest.http_total.first.count).to eq(3)
+      # flush will be deferred no error raised
+      inc(:http_total, autoflush: 3)
+      $redis.slaveof("no", "one")
+
+      inc(:http_total, autoflush: 3)
+      expect(ApplicationRequest.http_total.first.count).to eq(3)
+    end
   end
 
   it 'logs nothing for an unflushed increment' do
