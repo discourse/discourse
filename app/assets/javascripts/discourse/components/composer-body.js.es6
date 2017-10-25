@@ -33,9 +33,9 @@ export default Ember.Component.extend(KeyEnterEscape, {
     const height = parseInt(sizePx) -
       $('.grippie').outerHeight(true) -
       $('.composer-fields').outerHeight(true) -
-      $('.submit-panel').outerHeight(true) - 30;
+      $('.submit-panel').outerHeight(true);
 
-    $('.d-editor-container').css('height', height);
+    $('.d-editor-container').css('height', height - 20);
 
     // signal the progress bar it should move!
     this.appEvents.trigger("composer:resized");
