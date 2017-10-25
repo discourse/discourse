@@ -359,29 +359,25 @@ export default Ember.Component.extend({
   },
 
   _optionsLocation() {
-    // long term we want some smart positioning algorithm in popup-menu
-    // the problem is that positioning in a fixed panel is a nightmare
-    // cause offsetParent can end up returning a fixed element and then
-    // using offset() is not going to work, so you end up needing special logic
-    // especially since we allow for negative .top, provided there is room on screen
-    const myPos = this.$().position();
-    const buttonPos = this.$('.options').position();
+    let { left, top } = $(".d-editor-button-bar .options").position();
+    top += 10;
 
-    const popupHeight = $('#reply-control .popup-menu').height();
-    const popupWidth = $('#reply-control .popup-menu').width();
+    const headerHeight = $(".d-header").outerHeight();
 
-    var top = myPos.top + buttonPos.top - 15;
-    var left = myPos.left + buttonPos.left - (popupWidth/2);
+    const composer = $("#reply-control");
+    const composerPosition = composer.position();
+    const composerWidth = composer.width();
 
-    const composerPos = $('#reply-control').position();
+    const popupMenu = $("#reply-control .popup-menu");
+    const width = popupMenu.width();
+    const height = popupMenu.height();
 
-    if (composerPos.top + top - popupHeight < 0) {
-      top = top + popupHeight + this.$('.options').height() + 50;
+    if (top + composerPosition.top - headerHeight - height < 0) {
+      top += height;
     }
 
-    var replyWidth = $('#reply-control').width();
-    if (left + popupWidth > replyWidth) {
-      left = replyWidth - popupWidth - 40;
+    if (left + width > composerWidth) {
+      left -= width;
     }
 
     return { position: "absolute", left, top };
