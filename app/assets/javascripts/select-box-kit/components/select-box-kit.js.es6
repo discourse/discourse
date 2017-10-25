@@ -120,6 +120,7 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
   valueForContent(content) {
     switch (typeof content) {
     case "string":
+    case "number":
       return this._castInteger(content);
     default:
       return this._castInteger(get(content, this.get("valueAttribute")));
