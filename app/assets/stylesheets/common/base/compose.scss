@@ -63,10 +63,6 @@
     border: 0;
   }
 
-  .composer-fields {
-    overflow: auto;
-  }
-
   .reply-to {
     color: $tertiary;
     margin-bottom: 10px;
@@ -106,7 +102,7 @@
   }
 
   .tag-chooser {
-    margin: 0 0 10px 0;
+    margin: 0;
   }
 
   .wmd-controls {
@@ -116,6 +112,10 @@
 
   .d-editor-button-bar .btn {
     padding: 0 6px;
+  }
+
+  .save-or-cancel {
+    margin-top: 5px;
   }
 
   .create {
