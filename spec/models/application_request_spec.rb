@@ -2,6 +2,7 @@ require 'rails_helper'
 
 describe ApplicationRequest do
   before do
+    ApplicationRequest.last_flush = Time.now.utc
     ApplicationRequest.clear_cache!
   end
 
@@ -13,19 +14,46 @@ describe ApplicationRequest do
     ApplicationRequest.increment!(key, opts)
   end
 
+  def disable_date_flush!
+    freeze_time(Time.now)
+    ApplicationRequest.last_flush = Time.now.utc
+  end
+
+  it 'works even if redis is in readonly' do
+    disable_date_flush!
+
+    inc(:http_total)
+    inc(:http_total)
+
+    $redis.slaveof("127.0.0.1", 666)
+
+    # flush will be deferred no error raised
+    inc(:http_total, autoflush: 3)
+    $redis.slaveof("no", "one")
+
+    inc(:http_total, autoflush: 3)
+    expect(ApplicationRequest.http_total.first.count).to eq(3)
+  end
+
   it 'logs nothing for an unflushed increment' do
     ApplicationRequest.increment!(:anon)
     expect(ApplicationRequest.count).to eq(0)
   end
 
   it 'can automatically flush' do
-    t1 = Time.now.utc.at_midnight
-    freeze_time(t1)
+    disable_date_flush!
+
     inc(:http_total)
     inc(:http_total)
     inc(:http_total, autoflush: 3)
 
     expect(ApplicationRequest.http_total.first.count).to eq(3)
+
+    inc(:http_total)
+    inc(:http_total)
+    inc(:http_total, autoflush: 3)
+
+    expect(ApplicationRequest.http_total.first.count).to eq(6)
   end
 
   it 'can flush based on time' do

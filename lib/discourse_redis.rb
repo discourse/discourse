@@ -159,6 +159,7 @@ class DiscourseRedis
 
       fallback_handler.verify_master if !fallback_handler.master
       Discourse.received_readonly!
+      nil
     else
       raise ex
     end
@@ -229,6 +230,14 @@ class DiscourseRedis
 
   def reconnect
     @redis.client.reconnect
+  end
+
+  def namespace_key(key)
+    if @namespace
+      "#{namespace}:#{key}"
+    else
+      key
+    end
   end
 
   def namespace
