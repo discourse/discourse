@@ -2,6 +2,34 @@
   display: flex;
 }
 
+.d-editor-overlay {
+  position: absolute;
+  background-color: black;
+  opacity: 0.8;
+  z-index: 1000;
+}
+
+.d-editor-modals {
+  position: absolute;
+  z-index: 1001;
+}
+
+.d-editor .d-editor-modal {
+  min-width: 400px;
+  position: absolute;
+  background-color: $secondary;
+  border: 1px solid $primary-low;
+  padding: 1em;
+  top: 25px;
+
+  input {
+    width: 98%;
+  }
+  h3 {
+    margin-bottom: 0.5em;
+  }
+}
+
 .d-editor-textarea-wrapper,
 .d-editor-preview-wrapper {
   flex: 1;
