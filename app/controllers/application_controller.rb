@@ -308,7 +308,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_homepage
-    current_user ? SiteSetting.homepage : SiteSetting.anonymous_homepage
+    current_user&.user_option&.homepage || SiteSetting.anonymous_homepage
   end
 
   def serialize_data(obj, serializer, opts = nil)

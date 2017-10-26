@@ -127,6 +127,17 @@ class UserOption < ActiveRecord::Base
 
     times.max
   end
+  
+  def homepage
+    case user_home
+    when 1 then "latest"
+    when 2 then "categories"
+    when 3 then "unread"
+    when 4 then "new"
+    when 5 then "top"
+    else SiteSetting.homepage
+    end
+  end
 
   private
 

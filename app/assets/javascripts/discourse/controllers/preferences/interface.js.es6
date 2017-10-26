@@ -1,4 +1,5 @@
 import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
+import { setDefaultHomepage } from "discourse/lib/utilities";
 import { default as computed, observes } from "ember-addons/ember-computed-decorators";
 import { currentThemeKey, listThemes, previewTheme, setLocalTheme } from 'discourse/lib/theme-selector';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
@@ -52,6 +53,18 @@ export default Ember.Controller.extend(PreferencesTabController, {
     let key = this.get("themeKey");
     previewTheme(key);
   },
+  
+  homeChanged() {
+    let home = Discourse.SiteSettings.top_menu.split("|")[0].split(",")[0];
+    switch (Number(this.get('model.user_option.user_home'))) {
+      case 1: home = "latest"; break;
+      case 2: home = "categories"; break;
+      case 3: home = "unread"; break;
+      case 4: home = "new"; break;
+      case 5: home = "top"; break;
+    }
+    setDefaultHomepage(home);
+  },
 
   userSelectableHome: [
     { name: I18n.t('filters.latest.title'), value: 1 },
@@ -75,6 +88,8 @@ export default Ember.Controller.extend(PreferencesTabController, {
         if (!makeThemeDefault) {
           setLocalTheme(this.get('themeKey'), this.get('model.user_option.theme_key_seq'));
         }
+        
+        this.homeChanged();
 
       }).catch(popupAjaxError);
     }
