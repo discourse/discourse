@@ -1,7 +1,6 @@
 class UserSerializer < BasicUserSerializer
 
-  attr_accessor :omit_stats,
-                :topic_post_count
+  attr_accessor :topic_post_count
 
   def self.staff_attributes(*attrs)
     attributes(*attrs)
@@ -228,10 +227,6 @@ class UserSerializer < BasicUserSerializer
     scope.can_edit_name?(object)
   end
 
-  def include_stats?
-    !omit_stats == true
-  end
-
   def stats
     UserAction.stats(object.id, scope)
   end
@@ -330,7 +325,7 @@ class UserSerializer < BasicUserSerializer
   end
 
   def include_private_messages_stats?
-    can_edit && !(omit_stats == true)
+    can_edit
   end
 
   def private_messages_stats
