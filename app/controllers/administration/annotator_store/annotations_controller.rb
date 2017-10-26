@@ -5,10 +5,21 @@ class Administration::AnnotatorStore::AnnotationsController < Administration::Ap
 
   def index
     scope = scoped_resource
-    scope = scope.where(post_id: ::Topic.find(params[:topic_id]).post_ids) if params[:topic_id].present?
+    scope = scope.where(post_id: ::Topic.find(params[:topic_id]).try(:post_ids)) if params[:topic_id].present?
     scope = scope.where(post_id: params[:post_id]) if params[:post_id].present?
     scope = scope.where(creator_id: params[:creator_id]) if params[:creator_id].present?
-    scope = scope.where(tag_id: params[:tag_id]) if params[:tag_id].present?
+
+    # Only annotations where the posts topics are tagged with the given discourse tag.
+    if params[:discourse_tag].present?
+      if (tag = ::Tag.find_by(name: params[:discourse_tag]))
+        scope = scope.where(post_id: Post.where(topic_id: tag.topic_ids).ids)
+      else
+        scope = scope.none
+      end
+    end
+
+    # Only annotations that are tagged with the given Open Ethnographer tag.
+    scope = scope.where(tag_id: params[:annotator_tag_id]) if params[:annotator_tag_id].present?
 
     search_term = params[:search].to_s.strip
     resources = Administrate::Search.new(scope, dashboard_class, search_term).run
