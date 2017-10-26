@@ -89,7 +89,7 @@ class User < ActiveRecord::Base
 
   after_initialize :add_trust_level
 
-  before_validation :set_should_validate_email
+  before_validation :set_skip_validate_email
 
   after_create :create_email_token
   after_create :create_user_stat
@@ -1097,9 +1097,9 @@ class User < ActiveRecord::Base
     true
   end
 
-  def set_should_validate_email
+  def set_skip_validate_email
     if self.primary_email
-      self.primary_email.should_validate_email = should_validate_email_address?
+      self.primary_email.skip_validate_email = !should_validate_email_address?
     end
 
     true
