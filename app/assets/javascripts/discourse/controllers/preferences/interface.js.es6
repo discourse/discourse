@@ -14,7 +14,6 @@ export default Ember.Controller.extend(PreferencesTabController, {
       'enable_quoting',
       'disable_jump_reply',
       'automatically_unpin_topics',
-      'allow_private_messages',
     ];
 
     if (makeDefault) {
