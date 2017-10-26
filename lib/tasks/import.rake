@@ -500,3 +500,11 @@ task "import:create_vbulletin_permalinks" => :environment do
 
   log "Done!"
 end
+
+desc 'Import existing exported file'
+task 'import:file', [:file_name] => [:environment] do |_, args|
+  require "import_export/import_export"
+
+  ImportExport.import(args[:file_name])
+  puts "", "Done", ""
+end
