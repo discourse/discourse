@@ -89,22 +89,24 @@ describe ActiveRecord::ConnectionHandling do
         expect(Sidekiq.paused?).to eq(true)
 
         with_multisite_db(multisite_db) do
-          expect(postgresql_fallback_handler.master_down?).to eq(nil)
+          begin
+            expect(postgresql_fallback_handler.master_down?).to eq(nil)
 
-          message = MessageBus.track_publish(PostgreSQLFallbackHandler::DATABASE_DOWN_CHANNEL) do
+            message = MessageBus.track_publish(PostgreSQLFallbackHandler::DATABASE_DOWN_CHANNEL) do
+              expect { ActiveRecord::Base.postgresql_fallback_connection(multisite_config) }
+                .to raise_error(PG::ConnectionBad)
+            end.first
+
+            expect(message.data[:db]).to eq(multisite_db)
+
             expect { ActiveRecord::Base.postgresql_fallback_connection(multisite_config) }
-              .to raise_error(PG::ConnectionBad)
-          end.first
+              .to change { Discourse.readonly_mode? }.from(false).to(true)
 
-          expect(message.data[:db]).to eq(multisite_db)
-
-          expect { ActiveRecord::Base.postgresql_fallback_connection(multisite_config) }
-            .to change { Discourse.readonly_mode? }.from(false).to(true)
-
-          expect(postgresql_fallback_handler.master_down?).to eq(true)
+            expect(postgresql_fallback_handler.master_down?).to eq(true)
+          ensure
+            postgresql_fallback_handler.master_up(multisite_db)
+          end
         end
-
-        postgresql_fallback_handler.master_up(multisite_db)
 
         ActiveRecord::Base.unstub(:postgresql_connection)
 
