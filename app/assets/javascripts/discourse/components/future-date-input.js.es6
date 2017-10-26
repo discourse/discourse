@@ -1,8 +1,6 @@
 import { default as computed, observes } from "ember-addons/ember-computed-decorators";
 import {
   FORMAT,
-  PICK_DATE_AND_TIME,
-  SET_BASED_ON_LAST_POST
 } from "select-box-kit/components/future-date-input-selector";
 
 import { PUBLISH_TO_CATEGORY_STATUS_TYPE } from 'discourse/controllers/edit-topic-timer';
@@ -11,8 +9,8 @@ export default Ember.Component.extend({
   selection: null,
   date: null,
   time: null,
-  isCustom: Ember.computed.equal('selection', PICK_DATE_AND_TIME),
-  isBasedOnLastPost: Ember.computed.equal('selection', SET_BASED_ON_LAST_POST),
+  isCustom: Ember.computed.equal('selection', 'pick_date_and_time'),
+  isBasedOnLastPost: Ember.computed.equal('selection', 'set_based_on_last_post'),
   displayLabel: null,
 
   init() {
@@ -22,9 +20,9 @@ export default Ember.Component.extend({
 
     if (input) {
       if (this.get('basedOnLastPost')) {
-        this.set('selection', SET_BASED_ON_LAST_POST);
+        this.set('selection', 'set_based_on_last_post');
       } else {
-        this.set('selection', PICK_DATE_AND_TIME);
+        this.set('selection', 'pick_date_and_time');
         const datetime = moment(input);
         this.set('date', datetime.toDate());
         this.set('time', datetime.format("HH:mm"));
