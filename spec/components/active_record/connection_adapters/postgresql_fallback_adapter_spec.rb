@@ -105,21 +105,18 @@ describe ActiveRecord::ConnectionHandling do
             expect(postgresql_fallback_handler.master_down?).to eq(true)
           ensure
             postgresql_fallback_handler.master_up(multisite_db)
+            expect(postgresql_fallback_handler.master_down?).to eq(nil)
           end
         end
-
-        expect(postgresql_fallback_handler.masters_down.hash).to eq(
-          "default" => true
-        )
 
         ActiveRecord::Base.unstub(:postgresql_connection)
 
         postgresql_fallback_handler.initiate_fallback_to_master
 
         expect(Discourse.readonly_mode?).to eq(false)
-        expect(postgresql_fallback_handler.masters_down.hash).to eq({})
         expect(Sidekiq.paused?).to eq(false)
         expect(ActiveRecord::Base.connection_pool.connections.count).to eq(0)
+        expect(postgresql_fallback_handler.master_down?).to eq(nil)
 
         expect(ActiveRecord::Base.connection)
           .to be_an_instance_of(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
