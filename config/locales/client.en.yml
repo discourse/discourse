@@ -1932,8 +1932,8 @@ en:
       actions:
         flag: 'Flag'
         defer_flags:
-          one: "Defer flag"
-          other: "Defer flags"
+          one: "Ignore flag"
+          other: "Ignore flags"
         undo:
           off_topic: "Undo flag"
           spam: "Undo flag"
@@ -2617,11 +2617,11 @@ en:
         agree_flag_restore_post_title: "Restore this post"
         agree_flag: "Agree with flag"
         agree_flag_title: "Agree with flag and keep the post unchanged"
-        defer_flag: "Defer"
+        defer_flag: "Ignore"
         defer_flag_title: "Remove this flag; it requires no action at this time."
         delete: "Delete"
         delete_title: "Delete the post this flag refers to."
-        delete_post_defer_flag: "Delete post and Defer flag"
+        delete_post_defer_flag: "Delete post and Ignore flag"
         delete_post_defer_flag_title: "Delete post; if the first post, delete the topic"
         delete_post_agree_flag: "Delete post and Agree with flag"
         delete_post_agree_flag_title: "Delete post; if the first post, delete the topic"
@@ -2641,7 +2641,7 @@ en:
         dispositions:
           agreed: "agreed"
           disagreed: "disagreed"
-          deferred: "deferred"
+          deferred: "ignored"
 
         flagged_by: "Flagged by"
         resolved_by: "Resolved by"
