@@ -108,6 +108,10 @@ describe ActiveRecord::ConnectionHandling do
           end
         end
 
+        expect(postgresql_fallback_handler.masters_down.hash).to eq(
+          "default" => true
+        )
+
         ActiveRecord::Base.unstub(:postgresql_connection)
 
         postgresql_fallback_handler.initiate_fallback_to_master
