@@ -26,6 +26,16 @@
   <div class="instructions">{{i18n 'user.desktop_notifications.each_browser_note'}}</div>
 </div>
 
+<div class="control-group private-messages">
+  <label class="control-label">{{i18n 'user.private_messages'}}</label>
+
+  <div class="controls">
+    {{preference-checkbox
+        labelKey="user.allow_private_messages"
+        checked=model.user_option.allow_private_messages}}
+  </div>
+</div>
+
 <div class="control-group muting">
   <label class="control-label">{{i18n 'user.users'}}</label>
   <div class="controls category-controls">
