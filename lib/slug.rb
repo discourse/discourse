@@ -33,8 +33,7 @@ module Slug
   end
 
   def self.ascii_generator(string)
-    string.tr!("'", "")
-    string.parameterize
+    string.tr("'", "").parameterize
   end
 
   def self.encoded_generator(string, downcase: true)
