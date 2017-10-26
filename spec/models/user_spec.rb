@@ -67,7 +67,7 @@ describe User do
     end
 
     it "doesn't enqueue the system message when the site settings disable it" do
-      SiteSetting.expects(:send_welcome_message?).returns(false)
+      SiteSetting.send_welcome_message = false
       Jobs.expects(:enqueue).with(:send_system_message, user_id: user.id, message_type: 'welcome_user').never
       user.enqueue_welcome_message('welcome_user')
     end

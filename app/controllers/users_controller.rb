@@ -641,7 +641,7 @@ class UsersController < ApplicationController
       primary_email = @user.primary_email
 
       primary_email.email = params[:email]
-      primary_email.should_validate_email = true
+      primary_email.skip_validate_email = false
 
       if primary_email.save
         @user.email_tokens.create(email: @user.email)
