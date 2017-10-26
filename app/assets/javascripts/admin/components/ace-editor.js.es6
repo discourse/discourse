@@ -1,7 +1,7 @@
 import loadScript from 'discourse/lib/load-script';
 import { observes } from 'ember-addons/ember-computed-decorators';
 
-const LOAD_ASYNC = !Ember.Test;
+const LOAD_ASYNC = !Ember.testing;
 
 export default Ember.Component.extend({
   mode: 'css',
