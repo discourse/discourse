@@ -165,6 +165,7 @@ end
 #  theme_key                        :string
 #  theme_key_seq                    :integer          default(0), not null
 #  allow_private_messages           :boolean          default(TRUE), not null
+#  user_home                        :integer          default(0), not null
 #
 # Indexes
 #

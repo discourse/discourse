@@ -14,6 +14,8 @@ export default Ember.Controller.extend(PreferencesTabController, {
       'enable_quoting',
       'disable_jump_reply',
       'automatically_unpin_topics',
+      'allow_private_messages',
+      'user_home',
     ];
 
     if (makeDefault) {
@@ -50,6 +52,14 @@ export default Ember.Controller.extend(PreferencesTabController, {
     let key = this.get("themeKey");
     previewTheme(key);
   },
+
+  userSelectableHome: [
+    { name: I18n.t('filters.latest.title'), value: 1 },
+    { name: I18n.t('filters.categories.title'), value: 2 },
+    { name: I18n.t('filters.unread.title'), value: 3 },
+    { name: I18n.t('filters.new.title'), value: 4 },
+    { name: I18n.t('filters.top.title'), value: 5 },
+  ],
 
   actions: {
     save() {

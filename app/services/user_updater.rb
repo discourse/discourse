@@ -36,6 +36,7 @@ class UserUpdater
     :include_tl0_in_digests,
     :theme_key,
     :allow_private_messages,
+    :user_home,
   ]
 
   def initialize(actor, user)
