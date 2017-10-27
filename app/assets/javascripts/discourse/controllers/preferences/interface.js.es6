@@ -4,6 +4,8 @@ import { default as computed, observes } from "ember-addons/ember-computed-decor
 import { currentThemeKey, listThemes, previewTheme, setLocalTheme } from 'discourse/lib/theme-selector';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 
+const USER_HOMES = { 1: "latest", 2: "categories", 3: "unread", 4: "new", 5: "top" };
+
 export default Ember.Controller.extend(PreferencesTabController, {
 
   @computed("makeThemeDefault")
@@ -53,26 +55,19 @@ export default Ember.Controller.extend(PreferencesTabController, {
     let key = this.get("themeKey");
     previewTheme(key);
   },
-  
+ 
   homeChanged() {
-    let home = Discourse.SiteSettings.top_menu.split("|")[0].split(",")[0];
-    switch (Number(this.get('model.user_option.user_home'))) {
-      case 1: home = "latest"; break;
-      case 2: home = "categories"; break;
-      case 3: home = "unread"; break;
-      case 4: home = "new"; break;
-      case 5: home = "top"; break;
-    }
-    setDefaultHomepage(home);
+    const siteHome = Discourse.SiteSettings.top_menu.split("|")[0].split(",")[0];
+    const userHome = USER_HOMES[this.get('model.user_option.user_home')];
+    setDefaultHomepage(userHome || siteHome);
   },
 
-  userSelectableHome: [
-    { name: I18n.t('filters.latest.title'), value: 1 },
-    { name: I18n.t('filters.categories.title'), value: 2 },
-    { name: I18n.t('filters.unread.title'), value: 3 },
-    { name: I18n.t('filters.new.title'), value: 4 },
-    { name: I18n.t('filters.top.title'), value: 5 },
-  ],
+  @computed()
+  userSelectableHome() {
+    return _.map(USER_HOMES, (name, num) => {
+      return {name: I18n.t('filters.' + name + '.title'), value: num};
+    });
+  },
 
   actions: {
     save() {
