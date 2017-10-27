@@ -94,7 +94,7 @@ Site.reopenClass(Singleton, {
 
   // The current singleton will retrieve its attributes from the `PreloadStore`.
   createCurrent() {
-    const store = Discourse.__container__.lookup('store:main');
+    const store = Discourse.__container__.lookup('service:store');
     return store.createRecord('site', PreloadStore.get('site'));
   },
 

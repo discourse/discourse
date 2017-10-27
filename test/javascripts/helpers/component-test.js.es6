@@ -33,7 +33,7 @@ export default function(name, opts) {
                               { instantiate: false });
     }
 
-    this.registry.register('store:main', store, { instantiate: false });
+    this.registry.register('service:store', store, { instantiate: false });
 
     if (opts.beforeEach) {
       opts.beforeEach.call(this, store);

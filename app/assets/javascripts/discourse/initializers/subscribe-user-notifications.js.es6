@@ -33,7 +33,7 @@ export default {
       }
 
       bus.subscribe(`/notification/${user.get('id')}`, data => {
-        const store = container.lookup('store:main');
+        const store = container.lookup('service:store');
 
         const oldUnread = user.get('unread_notifications');
         const oldPM = user.get('unread_private_messages');

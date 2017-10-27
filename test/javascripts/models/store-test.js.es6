@@ -1,4 +1,4 @@
-QUnit.module('store:main');
+QUnit.module('service:store');
 
 import createStore from 'helpers/create-store';
 

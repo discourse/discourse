@@ -140,7 +140,7 @@ TopicList.reopenClass({
   },
 
   find(filter, params) {
-    const store = Discourse.__container__.lookup('store:main');
+    const store = Discourse.__container__.lookup('service:store');
     return store.findFiltered('topicList', {filter, params});
   },
 

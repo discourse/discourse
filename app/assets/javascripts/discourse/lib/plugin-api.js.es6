@@ -441,7 +441,7 @@ class PluginApi {
    * will issue a request to `/mice.json`
    **/
   addStorePluralization(thing, plural) {
-    this.container.lookup("store:main").addPluralization(thing, plural);
+    this.container.lookup("service:store").addPluralization(thing, plural);
   }
 
   /**

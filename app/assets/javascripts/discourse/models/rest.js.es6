@@ -84,7 +84,7 @@ RestModel.reopenClass({
     if (!args.store) {
       const container = Discourse.__container__;
       // Ember.warn('Use `store.createRecord` to create records instead of `.create()`');
-      args.store = container.lookup('store:main');
+      args.store = container.lookup('service:store');
     }
 
     args.__munge = this.munge;
