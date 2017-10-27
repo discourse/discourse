@@ -127,7 +127,7 @@ class UserOption < ActiveRecord::Base
 
     times.max
   end
-  
+
   def homepage
     case user_home
     when 1 then "latest"
