@@ -1,1 +1,1 @@
-<% content_for :title do %><%= t 'js.search.results_page' %> - <%= SiteSetting.title %><% end %>
+<% content_for :title do %><%= I18n.t('search.results_page', term: @search_term) %> - <%= SiteSetting.title %><% end %>
