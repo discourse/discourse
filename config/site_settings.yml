@@ -468,12 +468,14 @@ posting:
   min_topic_title_length:
     client: true
     default: 15
+    min: 1
     locale_default:
       zh_CN: 6
       zh_TW: 6
   max_topic_title_length:
     client: true
     default: 255
+    min: 5
     max: 255
   title_min_entropy:
     default: 10
