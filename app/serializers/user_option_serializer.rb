@@ -39,5 +39,5 @@ class UserOptionSerializer < ApplicationSerializer
   def theme_key
     object.theme_key || SiteSetting.default_theme_key
   end
-  
+
 end
