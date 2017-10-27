@@ -150,6 +150,11 @@ GEM
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
       ruby_dep (~> 1.2)
+    lograge (0.7.1)
+      actionpack (>= 4, < 5.2)
+      activesupport (>= 4, < 5.2)
+      railties (>= 4, < 5.2)
+      request_store (~> 1.0)
     logster (1.2.8)
     loofah (2.1.1)
       crass (~> 1.0.2)
@@ -290,6 +295,7 @@ GEM
     redis (3.3.5)
     redis-namespace (1.5.3)
       redis (~> 3.0, >= 3.0.4)
+    request_store (1.3.2)
     rinku (2.0.2)
     rspec (3.6.0)
       rspec-core (~> 3.6.0)
@@ -431,6 +437,7 @@ DEPENDENCIES
   htmlentities
   http_accept_language (~> 2.0.5)
   listen
+  lograge
   logster
   lru_redux
   mail

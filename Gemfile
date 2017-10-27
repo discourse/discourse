@@ -172,6 +172,7 @@ gem 'memory_profiler', require: false, platform: :mri
 
 gem 'cppjieba_rb', require: false
 
+gem 'lograge'
 gem 'logster'
 
 gem 'sassc', require: false

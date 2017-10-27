@@ -1098,6 +1098,13 @@ developer:
   bypass_wizard_check:
     default: false
     hidden: true
+  logging_provider:
+    hidden: true
+    default: 'default'
+    type: 'list'
+    choices:
+      - 'default'
+      - 'lograge'
 
 embedding:
   feed_polling_enabled:
