@@ -4,7 +4,7 @@ if (Rails.env.production? && SiteSetting.logging_provider == 'lograge') || ENV["
   Rails.application.configure do
     config.lograge.enabled = true
 
-    logstash_uri = ENV["LOGSTASH_URI"].present?
+    logstash_uri = ENV["LOGSTASH_URI"]
 
     config.lograge.custom_options = lambda do |event|
       exceptions = %w(controller action format id)
@@ -22,11 +22,7 @@ if (Rails.env.production? && SiteSetting.logging_provider == 'lograge') || ENV["
       require 'logstash-logger'
 
       config.lograge.formatter = Lograge::Formatters::Logstash.new
-
-      config.lograge.logger = LogStashLogger.new(
-        type: :tcp,
-        uri: logstash_uri
-      )
+      config.lograge.logger = LogStashLogger.new(uri: logstash_uri)
     end
   end
 end
