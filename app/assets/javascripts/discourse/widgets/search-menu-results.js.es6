@@ -31,8 +31,6 @@ function createSearchResult({ type, linkField, builder }) {
           href: r.get(linkField),
           contents: () => builder.call(this, r, attrs.term),
           className: 'search-link',
-          title: 'search.link_title',
-          titleOptions: { term: escapeExpression(attrs.term) },
           searchResultId,
           searchResultType: type,
           searchContextEnabled: attrs.searchContextEnabled,

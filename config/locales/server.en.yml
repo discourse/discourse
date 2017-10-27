@@ -1618,6 +1618,7 @@ en:
       category: 'Categories'
       topic: 'Results'
       user: 'Users'
+    results_page: "Search results for '%{term}'"
 
   sso:
     login_error: "Login Error"

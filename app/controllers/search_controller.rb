@@ -29,7 +29,8 @@ class SearchController < ApplicationController
     search_args[:ip_address] = request.remote_ip
     search_args[:user_id] = current_user.id if current_user.present?
 
-    search = Search.new(params[:q], search_args)
+    @search_term = params[:q]
+    search = Search.new(@search_term, search_args)
     result = search.execute
 
     result.find_user_data(guardian) if result
