@@ -472,6 +472,7 @@ describe SiteSettingExtension do
       it "should return default cause nothing is set" do
         expect(settings.nada).to eq('nothing')
       end
+
     end
 
     context "with a false override" do
@@ -483,6 +484,14 @@ describe SiteSettingExtension do
 
       it "should return default cause nothing is set" do
         expect(settings.bool).to eq(false)
+      end
+
+      it "should not trigger any message bus work if you try to set it" do
+        m = MessageBus.track_publish('/site_settings') do
+          settings.bool = true
+          expect(settings.bool).to eq(false)
+        end
+        expect(m.length).to eq(0)
       end
     end
 
