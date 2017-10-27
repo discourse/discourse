@@ -8,6 +8,7 @@ export default Ember.Component.extend({
   classNames: ['ace-wrapper'],
   _editor: null,
   _skipContentChangeEvent: null,
+  disabled: false,
 
   @observes('editorId')
   editorIdChanged() {
@@ -27,6 +28,24 @@ export default Ember.Component.extend({
   modeChanged() {
     if (LOAD_ASYNC && this._editor && !this._skipContentChangeEvent) {
       this._editor.getSession().setMode("ace/mode/" + this.get('mode'));
+    }
+  },
+
+  @observes('disabled')
+  disabledStateChanged() {
+    this.changeDisabledState();
+  },
+
+  changeDisabledState() {
+    const editor = this._editor;
+    if (editor) {
+      const disabled = this.get('disabled');
+      editor.setOptions({
+        readOnly: disabled,
+        highlightActiveLine: !disabled,
+        highlightGutterLine: !disabled
+      });
+      editor.container.setAttribute("disabled", disabled);
     }
   },
 
@@ -76,6 +95,7 @@ export default Ember.Component.extend({
 
         this.$().data('editor', editor);
         this._editor = editor;
+        this.changeDisabledState();
 
         $(window).off('ace:resize').on('ace:resize', ()=>{
           this.appEvents.trigger('ace:resize');

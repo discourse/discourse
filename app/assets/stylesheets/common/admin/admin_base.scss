@@ -685,6 +685,16 @@ section.details {
           border-right: 1px solid #e9e9e9;
           background: #f4f4f4;
         }
+        
+        &[disabled="true"] {
+          opacity: 0.5;
+          cursor: not-allowed;
+          pointer-events: none;
+
+          .ace_cursor {
+            visibility: hidden;
+          }
+        }
       }
     }
     .delete-link {
