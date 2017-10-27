@@ -11,7 +11,8 @@ if (Rails.env.production? && SiteSetting.logging_provider == 'lograge') || ENV["
 
       output = {
         params: event.payload[:params].except(*exceptions),
-        database: RailsMultisite::ConnectionManagement.current_db
+        database: RailsMultisite::ConnectionManagement.current_db,
+        time: event.time,
       }
 
       output[:type] = :rails if logstash_uri
