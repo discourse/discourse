@@ -345,6 +345,9 @@ export function defaultHomepage() {
   if (elem) {
     homepage = elem.content;
   }
+  if (!homepage) {
+    homepage = Discourse.SiteSettings.top_menu.split("|")[0].split(",")[0];
+  }
   return homepage;
 }
 

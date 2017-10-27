@@ -10,6 +10,7 @@ import {
   getRawSize,
   avatarImg,
   defaultHomepage,
+  setDefaultHomepage,
   validateUploadedFiles,
   getUploadMarkdown,
   caretRowCol,
@@ -204,6 +205,22 @@ QUnit.test("allowsAttachments", assert => {
 QUnit.test("defaultHomepage", assert => {
   Discourse.SiteSettings.top_menu = "latest|top|hot";
   assert.equal(defaultHomepage(), "latest", "default homepage is the first item in the top_menu site setting");
+  var meta = document.createElement("meta");
+  meta.name = "discourse_current_homepage";
+  meta.content = "hot";
+  document.body.appendChild(meta);
+  assert.equal(defaultHomepage(), "hot", "default homepage is pulled from <meta name=discourse_current_homepage>");
+  document.body.removeChild(meta);
+});
+
+QUnit.test("setDefaultHomepage", assert => {
+  var meta = document.createElement("meta");
+  meta.name = "discourse_current_homepage";
+  meta.content = "hot";
+  document.body.appendChild(meta);
+  setDefaultHomepage("top");
+  assert.equal(meta.content, "top", "default homepage set by setDefaultHomepage");
+  document.body.removeChild(meta);
 });
 
 QUnit.test("caretRowCol", assert => {
