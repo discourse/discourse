@@ -22,7 +22,14 @@ if (Rails.env.production? && SiteSetting.logging_provider == 'lograge') || ENV["
       require 'logstash-logger'
 
       config.lograge.formatter = Lograge::Formatters::Logstash.new
-      config.lograge.logger = LogStashLogger.new(uri: logstash_uri)
+
+      config.lograge.logger = LogStashLogger.new(
+        type: :multi_delegator,
+        outputs: [
+          { uri: logstash_uri },
+          { type: :file, path: "#{Rails.root}/log/#{Rails.env}.log" }
+        ]
+      )
     end
   end
 end
