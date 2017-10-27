@@ -25,11 +25,12 @@ module Slug
 
   private
 
-  def self.prettify_slug(slug, max_length: MAX_LENGTH)
-    slug.tr!("_", "-")
-    slug = slug.squeeze('-') # squeeze continuous dashes to prettify slug
-    slug.gsub!(/\A-+|-+\z/, '') # remove possible trailing and preceding dashes
-    slug.truncate(max_length, omission: '')
+  def self.prettify_slug(slug, max_length:)
+    slug
+      .tr("_", "-")
+      .truncate(max_length, omission: '')
+      .squeeze('-') # squeeze continuous dashes to prettify slug
+      .gsub(/\A-+|-+\z/, '') # remove possible trailing and preceding dashes
   end
 
   def self.ascii_generator(string)
@@ -40,11 +41,11 @@ module Slug
     # This generator will sanitize almost all special characters,
     # including reserved characters from RFC3986.
     # See also URI::REGEXP::PATTERN.
-    string.strip!
-    string.gsub!(/\s+/, '-')
-    string.gsub!(CHAR_FILTER_REGEXP, '')
-    string.downcase! if downcase
-    string
+    string = string.strip
+      .gsub(/\s+/, '-')
+      .gsub(CHAR_FILTER_REGEXP, '')
+
+    downcase ? string.downcase : string
   end
 
   def self.none_generator(string)
