@@ -544,7 +544,7 @@ User.reopenClass(Singleton, {
   createCurrent() {
     const userJson = PreloadStore.get('currentUser');
     if (userJson) {
-      const store = Discourse.__container__.lookup('store:main');
+      const store = Discourse.__container__.lookup('service:store');
       return store.createRecord('user', userJson);
     }
     return null;
