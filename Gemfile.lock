@@ -155,6 +155,9 @@ GEM
       activesupport (>= 4, < 5.2)
       railties (>= 4, < 5.2)
       request_store (~> 1.0)
+    logstash-event (1.2.02)
+    logstash-logger (0.25.1)
+      logstash-event (~> 1.2)
     logster (1.2.8)
     loofah (2.1.1)
       crass (~> 1.0.2)
@@ -438,6 +441,7 @@ DEPENDENCIES
   http_accept_language (~> 2.0.5)
   listen
   lograge
+  logstash-logger
   logster
   lru_redux
   mail
