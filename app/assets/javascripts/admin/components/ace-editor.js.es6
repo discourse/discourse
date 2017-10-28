@@ -45,7 +45,7 @@ export default Ember.Component.extend({
         highlightActiveLine: !disabled,
         highlightGutterLine: !disabled
       });
-      editor.container.parentNode.setAttribute("disabled", disabled);
+      editor.container.parentNode.setAttribute("data-disabled", disabled);
     }
   },
 
