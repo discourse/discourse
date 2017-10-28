@@ -55,7 +55,7 @@ export default Ember.Controller.extend(PreferencesTabController, {
     let key = this.get("themeKey");
     previewTheme(key);
   },
- 
+
   homeChanged() {
     const siteHome = Discourse.SiteSettings.top_menu.split("|")[0].split(",")[0];
     const userHome = USER_HOMES[this.get('model.user_option.user_home')];
@@ -83,7 +83,7 @@ export default Ember.Controller.extend(PreferencesTabController, {
         if (!makeThemeDefault) {
           setLocalTheme(this.get('themeKey'), this.get('model.user_option.theme_key_seq'));
         }
-        
+
         this.homeChanged();
 
       }).catch(popupAjaxError);
