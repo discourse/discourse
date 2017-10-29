@@ -1,0 +1,10 @@
+en:
+  js:
+    category:
+      topic_list_social: "Apply social feed arrangement to selected lists in this category."
+      topic_list_thumbnail: "Show topic preview thumbnails in selected lists in this category."
+      topic_list_excerpt: "Show topic excerpts in selected lists in this category."
+      topic_list_action: "Show like and bookmark buttons in selected lists in this category."
+      topic_list_category_badge_move: "Show category badge under topic title in selected lists in this category."
+      topic_list_default_thumbnail: "Image URL for thumbnail shown if topic in this category has no preview thumbnail set."
+      topic_list_default_thumbnail_placeholder: "Default thumbnail URL"

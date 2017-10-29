@@ -1,0 +1,41 @@
+<div class='topic-intro'>
+  <div class="topic-poster-avatars inline">
+    {{#each topic.posters as |poster|}}
+      <a href="{{poster.user.path}}" data-user-card="{{poster.user.username}}" class="{{poster.extras}}">
+        {{avatar poster avatarTemplatePath="user.avatar_template" usernamePath="user.username" imageSize="medium"}}
+      </a>
+    {{/each}}
+  </div>
+  <div class="topic-intro-details inline">
+    <div class="topic-intro-details-wrapper">
+      <div class="topic-poster-names inline">
+        {{{posterNames}}}
+      </div>
+      <div class='topic-category inline'>
+        {{category-link topic.category}}
+      </div>
+      {{#if topic.tags}}
+        <div class='discourse-tags inline'>
+        {{#each topic.visibleListTags as |tag|}}
+          {{discourse-tag tag}}
+        {{/each}}
+        </div>
+      {{/if}}
+    </div>
+    <div class="topic-intro-details-wrapper">
+      <div class="topic-views {{topic.viewsHeat}} inline sub">
+        {{number topic.views numberKey="views_long"}}
+        {{i18n 'views_lowercase' count=topic.views}}
+      </div>
+      <span class="middot inline sub"></span>
+      <div class='topic-replies posts-map {{likesHeat}} inline sub' title='{{title}}'>
+        <a href class='posts-map badge-posts {{likesHeat}}'>{{number topic.replyCount}}</a>
+        {{i18n 'replies_lowercase' count=topic.replyCount}}
+      </div>
+      <span class="middot inline sub"></span>
+      <div class="{{class}} {{cold-age-class topic.createdAt startDate=topic.bumpedAt class=""}} activity inline sub" title="{{{topic.bumpedAtTitle}}}">
+        <a href="{{topic.lastPostUrl}}">{{format-date topic.bumpedAt format="medium-with-ago" noTitle="true"}}</a>
+      </div>
+    </div>
+  </div>
+</div>

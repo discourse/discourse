@@ -1,0 +1,16 @@
+en:
+  site_settings:
+    topic_list_social: "Apply social feed arrangement to selected lists."
+    topic_list_thumbnail: "Show topic preview thumbnails in selected lists."
+    topic_list_excerpt: "Show topic excerpts in selected lists."
+    topic_list_action: "Show the like and bookmark buttons in selected lists."
+    topic_list_category_badge_move: "Show the category badge under the topic title in selected lists."
+    topic_list_set_category_defaults: "Set site topic list display settings as defaults for category topic lists."
+    topic_list_show_like_on_current_users_posts: "Show an inactive like button in topic list items previewing a post created by the current user (non-default Discourse behavior)."
+    topic_list_excerpt_length: "Character length of topic excerpts."
+    topic_list_default_thumbnail: "Image URL for thumbnail shown if topic has no preview thumbnail set."
+    topic_list_thumbnail_width: "Width of topic preview thumbnail."
+    topic_list_thumbnail_height: "Height of topic preview thumbnail."
+    topic_list_hotlink_thumbnails: "Use topic image_url in thumbnails directly, rather than generated thumbnails. Warning: this means each full sized topic image will be loaded when the topic list loads and will affect performance."
+    topic_list_thumbnail_first_x_rows: "Show thumbnail only for first X rows. Enter 0 to show on all rows."
+    topic_list_previews_enabled: "Enable Topic List Previews plugin."

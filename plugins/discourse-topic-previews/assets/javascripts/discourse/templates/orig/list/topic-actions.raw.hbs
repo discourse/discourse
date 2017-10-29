@@ -1,0 +1,8 @@
+<div class="topic-actions">
+  {{#if likeCountDisplay}}
+    <div class="like-count">{{likeCountDisplay}}</div>
+  {{/if}}
+  {{#each topicActions as |action|}}
+    {{list-button action}}
+  {{/each}}
+</div>

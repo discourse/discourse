@@ -1,0 +1,16 @@
+<div class="topic-title">
+  <span class='link-top-line'>
+    {{raw-plugin-outlet name="topic-list-before-status"}}
+    {{raw "topic-status" topic=topic}}
+    {{topic-link topic}}
+    {{#if topic.featured_link}}
+      {{topic-featured-link topic}}
+    {{/if}}
+    {{raw-plugin-outlet name="topic-list-after-title"}}
+    {{#if showTopicPostBadges}}
+      {{#unless mobileView}}
+        {{raw "topic-post-badges" unread=topic.unread newPosts=topic.displayNewPosts unseen=topic.unseen url=topic.lastUnreadUrl}}
+      {{/unless}}
+    {{/if}}
+  </span>
+</div>

@@ -1,0 +1,9 @@
+it:
+  js:
+    category:
+      topic_list_thumbnail: "Mostra l'anteprima delle miniature nell'elenco degli argomenti di questa categoria."
+      topic_list_excerpt: "Mostra gli estratti dei topic nell'elenco degli argomenti di questa categoria."
+      topic_list_action: "Mostra i pulsanti Mi piace e Segnalibro nell'elenco degli argomenti di questa categoria"
+      topic_list_category_badge_move: "Mostra l'etichetta della categoria sotto al titolo nell'elenco degli argomenti di questa categoria."
+      topic_list_default_thumbnail: "URL dell'immagine per l'anteprima mostrata se l'argomento in questa categoria non ha nessuna anteprima di miniatura configurata."
+      topic_list_default_thumbnail_placeholder: "URL predefinito per la miniatura"

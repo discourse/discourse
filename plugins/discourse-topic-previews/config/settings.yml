@@ -1,0 +1,93 @@
+plugins:
+  topic_list_social:
+    client: true
+    type: list
+    default: ''
+    choices:
+     - latest
+     - new
+     - unread
+     - top
+     - latest-mobile
+     - new-mobile
+     - unread-mobile
+     - top-mobile
+  topic_list_thumbnail:
+    client: true
+    type: list
+    default: ''
+    choices:
+     - latest
+     - new
+     - unread
+     - top
+     - latest-mobile
+     - new-mobile
+     - unread-mobile
+     - top-mobile
+  topic_list_excerpt:
+    client: true
+    type: list
+    default: ''
+    choices:
+     - latest
+     - new
+     - unread
+     - top
+     - latest-mobile
+     - new-mobile
+     - unread-mobile
+     - top-mobile
+  topic_list_action:
+    client: true
+    type: list
+    default: ''
+    choices:
+     - latest
+     - new
+     - unread
+     - top
+     - latest-mobile
+     - new-mobile
+     - unread-mobile
+     - top-mobile
+  topic_list_category_badge_move:
+    client: true
+    type: list
+    default: ''
+    choices:
+     - latest
+     - new
+     - unread
+     - top
+     - latest-mobile
+     - new-mobile
+     - unread-mobile
+     - top-mobile
+  topic_list_set_category_defaults:
+    default: false
+    client: true
+  topic_list_show_like_on_current_users_posts:
+    default: false
+    client: true
+  topic_list_excerpt_length:
+    default: 200
+    client: true
+  topic_list_default_thumbnail:
+    default: ''
+    client: true
+  topic_list_thumbnail_width:
+    default: 100
+    client: true
+  topic_list_thumbnail_height:
+    default: 100
+    client: true
+  topic_list_hotlink_thumbnails:
+    default: false
+    client: true
+  topic_list_thumbnail_first_x_rows:
+    default: 0
+    client: true
+  topic_list_previews_enabled:
+    default: true
+    client: true

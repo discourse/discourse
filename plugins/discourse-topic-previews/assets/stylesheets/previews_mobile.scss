@@ -1,0 +1,121 @@
+.mobile-view .topic-list {
+  .topic-thumbnail {
+    padding: 0;
+  }
+  .topic-details {
+    max-height: initial;
+    position: relative;
+  }
+  div + .topic-details {
+    padding-left: 10px;
+    min-height: 45px;
+  }
+  .topic-excerpt {
+    margin-top: 5px;
+    max-height: initial;
+    width: 100%;
+  }
+  .topic-category {
+    margin-top: 6px;
+    display: inline-block;
+  }
+  .topic-actions {
+    margin-top: 7px;
+  }
+  .list-button {
+    font-size: 1.2em;
+    height: 18px;
+    padding: 0 12px 0 0px;
+  }
+  .like-count {
+    font-size: 1em;
+    float: left;
+    margin-right: 8px;
+  }
+  .list-button i {
+    vertical-align: top;
+  }
+  .num.activity {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+  }
+  img.thumbnail {
+    max-width:80px;
+    max-height:80px;
+  }
+  .discourse-tags {
+    float: initial;
+    clear: initial;
+  }
+}
+
+.mobile-view #list-area.social-style {
+  td a.title {
+    font-size: 18px;
+  }
+  .topic-intro {
+    margin: 8px 0;
+    font-size: 1em;
+    img {
+      width: 40px;
+      height: 40px;
+    }
+    div.inline, span.inline {
+      float: none;
+      display: inline-block;
+      vertical-align: top;
+      padding: 0 5px 0 0;
+      margin: 0;
+      width: auto;
+    }
+    div.sub, span.sub {
+      padding: 0;
+      font-size: 1em;
+    }
+    .middot:after {
+      content: '\00B7';
+    }
+  }
+  .topic-details {
+    padding: 0;
+    float: none;
+    overflow: initial;
+    clear: both;
+    min-height: initial;
+  }
+  .topic-details:before {
+    display: none;
+  }
+  .main-link {
+    width: 100%;
+  }
+  .topic-statuses {
+    display: initial;
+    float: left;
+  }
+  .topic-excerpt {
+    font-size: 1em;
+    float: none;
+    display: inline-block;
+    padding: 0;
+    width: 100%;
+    margin-top: 5px;
+    max-height: initial;
+  }
+  .topic-actions {
+    font-size: 1em;
+  }
+  .topic-thumbnail {
+    width:100%;
+    a {
+      display: block;
+    }
+    img.thumbnail {
+      width:100%;
+      max-width:100%;
+      max-height:200px;
+      object-fit:cover;
+    }
+  }
+}

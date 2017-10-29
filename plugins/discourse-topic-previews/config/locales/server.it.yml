@@ -1,0 +1,12 @@
+it:
+  site_settings:
+    topic_list_thumbnail: "Mostra l'anteprima della miniatura in tutti gli elenchi degli argomenti."
+    topic_list_excerpt: "Mostra gli estratti degli argomenti in tutti gli elenchi degli argomenti."
+    topic_list_action: "Mostra i pulsanti Mi piace e Segnalibro in tutti gli elenchi degli argomenti."
+    topic_list_category_badge_move: "Mostra l'etichetta della categoria sotto al titolo in tutti gli elenchi degli argomenti."
+    topic_list_show_like_on_current_users_posts: "Mostra un pulsante inattivo Mi piace in tutti gli elenchi degli argomenti mostrando l'anteprima del messaggio creato dall'utente corrente (comportamento di Discourse non predefinito)."
+    topic_list_excerpt_length: "Lunghezza in caratteri degli estratti degli argomenti."
+    topic_list_default_thumbnail: "URL dell'immagine per la miniatura da mostrare se l'argomento non ha una miniatura configurata."
+    topic_list_thumbnail_width: "Larghezza dell'anteprima della miniatura sull'argomento."
+    topic_list_thumbnail_height: "Altezza dell'anteprima della miniatura sull'argomento."
+    topic_list_hotlink_thumbnails: "Usa l' image_url dell'argomento direttamente nelle miniature, anzichè le miniature generate. Attenzione: questo significa che ogni immagine 'full size' verrà caricata quando viene caricato l'elenco degli argomenti e influirà sulle prestazioni."
