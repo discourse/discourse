@@ -283,6 +283,13 @@ class TagsController < ::ApplicationController
         options[:match_all_tags] = true
       end
 
+      # damingo (Github ID), 2017-10-28, #blog
+      # Sort topics in the blog view (https://edgeryders.eu/tags/blogposts) by creation date.
+      if params[:tag_id] == 'blog' && params[:category].blank?
+        options[:order] = 'created'
+        options[:ascending] = false
+      end
+
       options
     end
 
