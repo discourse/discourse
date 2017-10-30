@@ -1,6 +1,7 @@
 import { iconNode } from 'discourse-common/lib/icon-library';
 import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
+import { formatUsername } from 'discourse/lib/utilities';
 
 function sanitizeName(name){
   return name.toLowerCase().replace(/[\s_-]/g,'');
@@ -17,10 +18,11 @@ export default createWidget('poster-name', {
   },
 
   userLink(attrs, text) {
-    return h('a', { attributes: {
-      href: attrs.usernameUrl,
-      'data-user-card': attrs.username
-    } }, text);
+    return h(
+      'a',
+      { attributes: { href: attrs.usernameUrl, 'data-user-card': attrs.username } },
+      formatUsername(text)
+    );
   },
 
   html(attrs) {

@@ -3,6 +3,7 @@ import { performEmojiUnescape, buildEmojiUrl } from 'pretty-text/emoji';
 import WhiteLister from 'pretty-text/white-lister';
 import { sanitize as textSanitize } from 'pretty-text/sanitizer';
 import loadScript from 'discourse/lib/load-script';
+import { formatUsername } from 'discourse/lib/utilities';
 
 function getOpts(opts) {
   const siteSettings = Discourse.__container__.lookup('site-settings:main'),
@@ -12,7 +13,8 @@ function getOpts(opts) {
     getURL: Discourse.getURLWithCDN,
     currentUser: Discourse.__container__.lookup('current-user:main'),
     censoredWords: site.censored_words,
-    siteSettings
+    siteSettings,
+    formatUsername
   }, opts);
 
   return buildOptions(opts);

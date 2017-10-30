@@ -24,7 +24,8 @@ export function buildOptions(state) {
     lookupImageUrls,
     previewing,
     linkify,
-    censoredWords
+    censoredWords,
+    mentionLookup
   } = state;
 
   let features = {
@@ -56,7 +57,7 @@ export function buildOptions(state) {
     getCurrentUser,
     currentUser,
     lookupAvatarByPostNumber,
-    mentionLookup: state.mentionLookup,
+    mentionLookup,
     emojiUnicodeReplacer,
     lookupInlineOnebox,
     lookupImageUrls,
