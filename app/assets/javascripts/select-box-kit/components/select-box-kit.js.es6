@@ -481,12 +481,13 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
 
     const none = isNone(this.get("none"));
     const emptyValue = isEmpty(this.get("value"));
-    const notEmptyContent = !isEmpty(this.get("content"));
 
-    if (none && emptyValue && notEmptyContent) {
+    if (none && emptyValue) {
       Ember.run.scheduleOnce("sync", () => {
-        const firstValue = this.get(`content.0.${this.get("valueAttribute")}`);
-        this.set("value", firstValue);
+        if (!isEmpty(this.get("computedContent"))) {
+          const firstValue = this.get("computedContent.firstObject.value");
+          this.set("value", firstValue);
+        }
       });
     }
   }
