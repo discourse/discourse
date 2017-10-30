@@ -6,11 +6,6 @@ export default buildCategoryPanel('security', {
   selectedGroup: null,
   selectedPermission: null,
 
-  init() {
-    this._super();
-    this.set('selectedGroup', this.get('category.availableGroups.firstObject'));
-  },
-
   actions: {
     editPermissions() {
       if (!this.get('category.is_special')) {
@@ -25,8 +20,6 @@ export default buildCategoryPanel('security', {
           permission: PermissionType.create({ id: parseInt(id) })
         });
       }
-
-      this.set('selectedGroup', this.get('category.availableGroups.firstObject'));
     },
 
     removePermission(permission) {
