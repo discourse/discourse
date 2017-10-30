@@ -39,8 +39,8 @@
 
         window.onload = function() {
           var state = "loading";
-          if (document.querySelectorAll("a.replies").length > 0) {
-              var state = "loaded";
+          if (document.querySelectorAll("span.replies").length > 0) {
+              state = "loaded";
           }
           // Send a post message with our loaded height and state
           postUp({type: 'discourse-resize', height: document['body'].offsetHeight, state: state});
