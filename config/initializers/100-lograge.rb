@@ -28,7 +28,7 @@ if (Rails.env.production? && SiteSetting.logging_provider == 'lograge') || ENV["
         type: :multi_delegator,
         outputs: [
           { uri: logstash_uri },
-          { type: :file, path: "#{Rails.root}/log/#{Rails.env}.log" }
+          { type: :file, path: "#{Rails.root}/log/#{Rails.env}.log", sync: true }
         ]
       )
     end
