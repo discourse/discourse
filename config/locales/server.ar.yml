@@ -1455,19 +1455,19 @@ ar:
   flags_reminder:
     subject_template:
       zero: "لا يوجد تبليغات تنتظر التعامل معها"
-      one: "تبليغ 1 ينتظر التعامل معها"
-      two: "تبليغان ينتظران التعامل معها"
-      few: "%{count} تبليغات تنتظر التعامل معها"
-      many: "%{count} تبليغات تنتظر التعامل معها"
-      other: "%{count} تبليغات تنتظر التعامل معها"
+      one: "بلاغ واحد ينتظر التعامل معه"
+      two: "بلاغان ينتظران التعامل معهما"
+      few: "%{count} بلاغات تنتظر التعامل معها"
+      many: "%{count} بلاغات تنتظر التعامل معها"
+      other: "%{count} بلاغات تنتظر التعامل معها"
   unsubscribe_mailer:
     subject_template: "أكّد عدم رغبتك بعد الآن باستقبال تحديثات %{site_title} على البريد"
   invite_mailer:
-    subject_template: "دعاك %{invitee_name} إلى ’%{topic_title}‘ على {site_domain_name}"
+    subject_template: "دعاك %{invitee_name} إلى ’%{topic_title}‘ على %{site_domain_name}"
   custom_invite_mailer:
-    subject_template: "دعاك %{invitee_name} إلى ’%{topic_title}‘ على {site_domain_name}"
+    subject_template: "دعاك %{invitee_name} إلى ’%{topic_title}‘ على %{site_domain_name}"
   invite_forum_mailer:
-    subject_template: "دعاك %{invitee_name} للانضمام إلى {site_domain_name}"
+    subject_template: "%{invitee_name} قام بدعوتك للإنضمام إلى %{site_domain_name}"
   custom_invite_forum_mailer:
     subject_template: "دعاك %{invitee_name} للانضمام إلى %{site_domain_name}"
   invite_password_instructions:
@@ -1632,6 +1632,10 @@ ar:
     see_more: "المزيد"
     search_title: "البحث في الموقع"
     search_google: "غوغل"
+  login_required:
+    welcome_message: |
+      ## اهلا بك في %{title}
+      من فضلك قم بتسجيل الدخول او انشاء حساب جديد للمتابعة.
   terms_of_service:
     title: "شروط الخدمة"
     signup_form_message: 'لقد قرأت و أوافق على <a href="/tos" target="_blank">بنود الخدمة</a>.'
@@ -1679,7 +1683,7 @@ ar:
   static_topic_first_reply: |
     تعديل محتويات المنشور الاول في هذا الموضوع  %{page_name} page.
   guidelines_topic:
-    title: "الأسئلة الشّائعة/توجيهات"
+    title: "الأسئلة الشائعة/القواعد العامة"
   tos_topic:
     title: "شروط الخدمة"
   privacy_topic:

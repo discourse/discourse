@@ -243,7 +243,7 @@ fi:
 
           Saat emojivalitsimen esiin näppäilemällä kaksoispisteen <kbd>:</kbd>. Ala kirjoittaa sen perään englanniksi millaisen emojin haluat - esimerkiksi lintu on `:bird:`
 
-          Voit myös painaa editorin emojikuvaketta <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16">.
+          Voit myös painaa editorin emojikuvaketta  <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16">.
 
           (Mobiililaitteella voit lisätä emojin suoraan näppäimistöltäsikin.)
       mention:
@@ -267,12 +267,12 @@ fi:
         reply: |-
           [Henkilökuntamme](/groups/staff) saa ei-julkisen ilmoituksen lipusta. Jos riittävän moni yhteisön jäsen liputtaa viestin, sekin riittää viestin automaattiseen piilottamiseen varotoimena. (Koska en oikeasti kirjoittanut mitään tuhmaa :angel:, menin ja poistin liputuksesi.)
         not_found: |-
-          Oi voi, tuhmaa viestiäni ei ole vielä liputettu. :worried: Voitko liputtaa sen sopimattomaksi **lippupainikkeen** avulla <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Don’t forget to use the show more button <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> to reveal more actions for each post.
+          Oh no, my nasty post hasn’t been flagged yet. :worried: Can you flag it as inappropriate using the **flag** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Don’t forget to use the show more button <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> to reveal more actions for each post.
       search:
         instructions: |-
-          _psst_ … Tein pienen jekun tähän ketjuun. Jos olet valmis ottamaan haasteen vastaan, oikealla ylhäällä &#8599; on **hakukuvake** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16">, jolla voit yrittää löytää sen.
+          _psst_ … I’ve hidden a surprise in this topic. If you’re up for the challenge, **select the search icon** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> at the top right &#8599; to search for it.
 
-          Etsi hakusanaa "kapy&#8203;bara" tästä ketjusta
+          Try searching for the term "capy&#8203;bara" in this topic
         hidden_message: |-
           Miten sinulta jäi tämä kapybara huomaamatta? :wink:
 
@@ -328,7 +328,7 @@ fi:
 
           Anna mennä ja **poista** yltä mikä tahansa viestisi <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> poista-toiminnon avulla. Älä kuitenkaan erehdy poistamaan ketjun ensimmäistä viestiä!
         not_found: |-
-          Minusta viestejä ei vielä poistettu? Muista, että <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> näytä lisää -kuvake paljastaa <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> poista-kuvakkeen.
+          Minusta viestejä ei vielä poistettu? Muista, että <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> näytä lisää -kuvake paljastaa <img src="%{base_uri}/images/font-awesome-trash.png" width="16" height="16"> poista-kuvakkeen.
         reply: |-
           Vau! :boom:
 

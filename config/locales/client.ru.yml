@@ -192,6 +192,7 @@ ru:
         eu_west_2: "EU (London)"
         sa_east_1: "South America (Sao Paulo)"
         us_east_1: "US East (N. Virginia)"
+        us_east_2: "US East (Ohio)"
         us_gov_west_1: "AWS GovCloud (US)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
@@ -578,6 +579,7 @@ ru:
       admin_tooltip: "{{user}} - админ"
       blocked_tooltip: "Этот пользователь заблокирован"
       suspended_notice: "Пользователь заморожен до {{date}}."
+      suspended_permanently: "Этот пользователь заморожен."
       suspended_reason: "Причина:"
       github_profile: "Github"
       email_activity_summary: "Сводка Активности"
@@ -1179,10 +1181,6 @@ ru:
       olist_title: "Нумерованный список"
       ulist_title: "Ненумерованный список"
       list_item: "Пункт первый"
-      heading_label: "А"
-      heading_title: "Заголовок"
-      heading_text: "Заголовок"
-      hr_title: "Горизонтальный разделитель"
       help: "Справка по форматированию (Markdown)"
       toggler: "Закрыть / открыть панель редактирования"
       modal_ok: "OK"
@@ -1533,6 +1531,7 @@ ru:
         open: "Открыть тему"
         close: "Закрыть тему"
         multi_select: "Выбрать сообщения..."
+        timed_update: "Действие по таймеру..."
         pin: "Закрепить тему..."
         unpin: "Открепить тему..."
         unarchive: "Разархивировать тему"
@@ -2444,7 +2443,7 @@ ru:
         moderators: 'Модераторы:'
         admins: 'Администраторы:'
         blocked: 'Заблокированы:'
-        suspended: 'Заморожены:'
+        suspended: 'Заморожен:'
         private_messages_short: "Сообщ."
         private_messages_title: "Сообщений"
         mobile_title: "Мобильный"
@@ -3107,11 +3106,11 @@ ru:
       user:
         suspend_failed: "Ошибка заморозки пользователя {{error}}"
         unsuspend_failed: "Ошибка разморозки пользователя {{error}}"
-        suspend_duration: "На сколько времени вы хотите заморозить пользователя?"
-        suspend_duration_units: "(дней)"
+        suspend_duration: "На сколько времени заморозить пользователя?"
         suspend_reason_label: "Причина заморозки? Данный текст <b>будет виден всем</b> на странице профиля пользователя и будет отображаться, когда пользователь пытается войти. Введите краткое описание."
         suspend_reason: "Причина"
-        suspended_by: "Заморожен"
+        suspended_by: "Заморожен (кем)"
+        cant_suspend: "Этого пользователя нельзя заморозить."
         delete_all_posts: "Удалить все сообщения"
         delete_all_posts_confirm_MF: "Вы собираетесь удалить {POSTS, plural, one {1 сообщение} other {# сообщений}} и {TOPICS, plural, one {1 тему} other {# тем}}. Вы уверены?"
         suspend: "Заморозить"
@@ -3198,7 +3197,7 @@ ru:
           label: "Сбросить"
           title: "сбросить карму к 0"
         deactivate_explanation: "Дезактивированные пользователи должны заново подтвердить свой e-mail."
-        suspended_explanation: "Замороженный пользователь не может войти."
+        suspended_explanation: "Замороженный пользователь не может войти (авторизоваться)."
         block_explanation: "Заблокированный не может отвечать и создавать новые темы."
         staged_explanation: "Имитированный пользователь может отправлять сообщения только по эл.почте в определённые темы."
         bounce_score_explanation:

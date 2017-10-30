@@ -614,6 +614,7 @@ ru:
     like:
       title: 'Нравится'
       description: 'Мне нравится это сообщение'
+      short_description: 'Мне нравится'
       long_form: 'понравилось это'
     vote:
       title: 'Проголосовать'

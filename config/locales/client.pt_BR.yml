@@ -352,6 +352,8 @@ pt_BR:
         add_members: "Adicionar Membros"
         delete_member_confirm: "Remover '%{username}' do grupo '%{group}'?"
       name_placeholder: "Nome do grupo, sem espaços, regras iguais ao nome de usuário"
+      public_admission: "Permitir que os usuários se juntem ao grupo livremente (Requer grupo visível ao público)"
+      public_exit: "Permitir que os usuários deixem o grupo livremente"
       empty:
         posts: "Não há publicações de membros deste grupo."
         members: "Não há membros neste grupo."
@@ -363,10 +365,14 @@ pt_BR:
       join: "Entrar no Grupo"
       leave: "Sair do Grupo"
       request: "Pedir para Entrar no Grupo"
+      message: "Mensagem"
       automatic_group: Grupo Automático
       closed_group: Grupo Fechado
       is_group_user: "Você é membro deste grupo"
       allow_membership_requests: "Permitir usuários enviar pedidos de adesão a proprietários de grupos"
+      membership_request:
+        submit: "Enviar Pedido"
+        title: "Pedir para entrar no grupo @%{group_name}"
       membership: "Adesão"
       name: "Nom"
       user_count: "Número de Membros"
@@ -1068,10 +1074,6 @@ pt_BR:
       olist_title: "Lista numerada"
       ulist_title: "Lista de itens"
       list_item: "Item da lista"
-      heading_label: "H"
-      heading_title: "Título"
-      heading_text: "Título"
-      hr_title: "Barra horizontal"
       help: "Ajuda da edição Markdown"
       toggler: "esconder ou exibir o painel de composição"
       modal_ok: "OK"

@@ -116,6 +116,7 @@ nb_NO:
       split_topic: "splittet dette emnet %{when}"
       invited_user: "inviterte %{who} %{when}"
       invited_group: "inviterte %{who} %{when}"
+      user_left: "%{who} la igjen denne meldingen %{when}"
       removed_user: "fjernet %{who} %{when}"
       removed_group: "fjernet %{who} %{when}"
       autoclosed:
@@ -531,6 +532,7 @@ nb_NO:
       disable_jump_reply: "Ikke hopp til ditt nye innlegg etter svar"
       dynamic_favicon: "Vis antall nye / oppdaterte emner på nettleser ikonet"
       theme_default_on_all_devices: "Gjør dette til forvalgt drakt på alle mine enheter"
+      allow_private_messages: "Tillat andre brukere å sende meg private meldinger"
       external_links_in_new_tab: "Åpne alle eksterne lenker i ny fane"
       enable_quoting: "Aktiver svar med sitat for uthevet tekst"
       change: "Endre"
@@ -806,11 +808,11 @@ nb_NO:
           one: "innlegg skrevet"
           other: "innlegg skrevet"
         likes_given:
-          one: "<i class='fa fa-heart'></i> gitt"
-          other: "<i class='fa fa-heart'></i> gitt"
+          one: "gitt"
+          other: "gitt"
         likes_received:
-          one: "<i class='fa fa-heart'></i> mottatt"
-          other: "<i class='fa fa-heart'></i> mottatt"
+          one: "mottatt"
+          other: "mottatt"
         days_visited:
           one: "dag besøkt"
           other: "dager besøkt"
@@ -928,6 +930,7 @@ nb_NO:
     private_message_info:
       title: "Send"
       invite: "Inviter andre…"
+      leave_message: "Ønsker du virkelig å legge igjen denne meldingen?"
       remove_allowed_user: "Er du sikker på at du vil fjerne {{name}} fra denne meldingen?"
       remove_allowed_group: "Vil du virkelig fjerne {{name}} fra denne meldingen?"
     email: 'E-post'
@@ -1130,10 +1133,6 @@ nb_NO:
       olist_title: "Nummerert liste"
       ulist_title: "Kulepunktliste"
       list_item: "Listeelement"
-      heading_label: "O"
-      heading_title: "Overskrift"
-      heading_text: "Overskrift"
-      hr_title: "Horisontalt skille"
       help: "Hjelp for redigering i Markdown"
       toggler: "gjem eller vis redigeringspanelet"
       modal_ok: "OK"
@@ -1413,6 +1412,7 @@ nb_NO:
         public_timer_types: Emneutløp
         private_timer_types: Brukerstyrte emneutløp
       auto_update_input:
+        none: "Velg et tidsrom"
         later_today: "Senere i dag"
         tomorrow: "I morgen"
         later_this_week: "Senere denne uken"
@@ -2173,7 +2173,7 @@ nb_NO:
         hamburger_menu: '<b>=</b> Åpne hamburgermeny'
         user_profile_menu: '<b>p</b> Åpne brukermenyen'
         show_incoming_updated_topics: '<b>.</b> Vis oppdaterte emner'
-        search: '<b>/</b> eller <b>ctrl</b>+<b>shift</b>+<b>s</b> Søk'
+        search: '<b>/</b> eller <b>Ctrl</b>+<b>Alt</b>+<b>f</b> Søk'
         help: '<b>?</b> Åpne tastaturhjelp'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Avvis Nye/Innlegg'
         dismiss_topics: '<b>x</b>, <b>t</b> Avvis emner'
@@ -2431,22 +2431,12 @@ nb_NO:
           type: "Type"
           users: "Brukere"
           last_flagged: "Sist rapporter"
-        summary:
-          action_type_3:
-            one: "irrelevant"
-            other: "irrelevant x{{count}}"
-          action_type_4:
-            one: "upassende"
-            other: "upassende x{{count}}"
-          action_type_6:
-            one: "tilpasset"
-            other: "tilpasset x{{count}}"
-          action_type_7:
-            one: "tilpasset"
-            other: "tilpasset x{{count}}"
-          action_type_8:
-            one: "nettsøppel"
-            other: "nettsøppel x{{count}}"
+        short_names:
+          off_topic: "urelatert"
+          inappropriate: "upassende"
+          spam: "spam"
+          notify_user: "egendefinert"
+          notify_moderators: "egendefinert"
       groups:
         primary: "Primærgruppe"
         no_primary: "(ingen primærgruppe)"

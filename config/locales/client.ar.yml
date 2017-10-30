@@ -314,7 +314,7 @@ ar:
         unbookmark: "انقر لإزالة كلّ العلامات المرجعية في هذا الموضوع"
     bookmarks:
       not_logged_in: "عذرا، عليك تسجيل الدخول لتضع علامات مرجعية علي المنشورات"
-      created: "لقد وضعت علامة مرعجية علي هذا المنشور"
+      created: "لقد وضعت علامة مرجعية علي هذا المنشور"
       not_bookmarked: "لقد قرأت هذا المنشور، انقر لوضع علامة مرجعية علية"
       last_read: "هذا آخر منشور قرأته، انقر لوضع علامة مرجعية علية"
       remove: "أزل العلامة المرجعية"
@@ -670,13 +670,13 @@ ar:
         individual_no_echo: "أرسل رسالة لكل منشور جديد عدا منشوراتي"
         many_per_day: "أرسل لي رسالة لكل منشور جديد (تقريبا {{dailyEmailEstimate}} يوميا)"
         few_per_day: "أرسل لي رسالة لكل منشور جديد (تقريبا إثنتان يوميا)"
-      tag_settings: "الوسوم"
+      tag_settings: "الأوسمة"
       watched_tags: "مراقب"
-      watched_tags_instructions: "ستراقب آليا كل الموضوعات التي تستخدم هذه الوسوم. ستصلك إشعارات بالمنشورات والمواضيع الجديدة، وسيظهر أيضا عدّاد للمنشورات الجديدة بجانب كل موضوع."
+      watched_tags_instructions: "ستراقب آليا كل الموضوعات التي تستخدم هذه الأوسمة. ستصلك إشعارات بالمنشورات و الموضوعات الجديدة، وسيظهر أيضا عدّاد للمنشورات الجديدة بجانب كل موضوع."
       tracked_tags: "متابع"
-      tracked_tags_instructions: "ستتابع آليا كل الموضوعات التي تستخدم هذه الوسوم. وسيظهر أيضا عدّاد للمنشورات الجديدة بجانب كل موضوع."
+      tracked_tags_instructions: "ستتابع آليا كل الموضوعات التي تستخدم هذه الأوسمة. وسيظهر أيضا عدّاد للمنشورات الجديدة بجانب كل موضوع."
       muted_tags: "مكتوم"
-      muted_tags_instructions: "لن يتم إشعارك بأي جديد بالموضوعات التي تستخدم هذه الوسوم، ولن تظهر موضوعات هذه الوسوم في قائمة الموضوعات المنشورة مؤخراً."
+      muted_tags_instructions: "لن يتم إشعارك بأي جديد بالموضوعات التي تستخدم هذه الأوسمة، ولن تظهر موضوعات هذه الوسوم في قائمة الموضوعات المنشورة مؤخراً."
       watched_categories: "مراقب"
       watched_categories_instructions: "ستراقب آليا كل موضوعات هذا القسم. ستصلك إشعارات بالمنشورات و الموضوعات الجديدة، وسيظهر أيضا عدّاد للمنشورات الجديدة بجانب كل موضوع."
       tracked_categories: "متابع"
@@ -684,7 +684,7 @@ ar:
       watched_first_post_categories: "مراقبة أول منشور"
       watched_first_post_categories_instructions: "سيصلك إشعار بأول منشور في كل موضوع بهذا القسم."
       watched_first_post_tags: "مراقبة أول منشور"
-      watched_first_post_tags_instructions: "سيصلك إشعار بأول منشور في كل موضوع يستخدم هذة الوسوم."
+      watched_first_post_tags_instructions: "سيصلك إشعار بأول منشور في كل موضوع يستخدم هذة الأوسمة."
       muted_categories: "مكتوم"
       muted_categories_instructions: "لن يتم إشعارك بأي جديد عن الموضوعات الجديدة في هذا القسم، ولن تظهر موضوعات هذا القسم في قائمة الموضوعات المنشورة مؤخراً."
       no_category_access: "كمشرف لديك صلاحيات وصول محدودة للأقسام, الحفظ معطل"
@@ -729,7 +729,7 @@ ar:
         emails: "البريد الإلكتروني"
         notifications: "التنبيهات"
         categories: "الأقسام"
-        tags: "الوسوم"
+        tags: "الأوسمة"
         interface: "واجهة المستخدم"
         apps: "التطبيقات"
       change_password:
@@ -794,7 +794,7 @@ ar:
         ok: "يبدو اسمك جيدا"
       username:
         title: "اسم المستخدم"
-        instructions: "فريد و دون مسافات و قصير"
+        instructions: "باللغة الإنجليزية و دون مسافات و قصير و غير مكرر"
         short_instructions: "يمكن للغير الإشارة إليك ب‍@{{username}}"
         available: "اسم المستخدم متاح"
         not_available: "غير متاح. جرّب {{suggestion}} ؟"
@@ -1334,7 +1334,7 @@ ar:
       invitee_accepted: "<span>{{username}}</span> قبل دعوتك"
       moved_post: "<span>{{username}}</span> نقل {{description}}"
       linked: "<span>{{username}}</span>{{description}} "
-      granted_badge: "حصلت علي '{{description}}'"
+      granted_badge: "تم منحك شارة '{{description}}'"
       topic_reminder: "<span>{{username}}</span>{{description}} "
       watching_first_post: "<span>موضوع جديد</span> {{description}}"
       group_message_summary:
@@ -1443,7 +1443,7 @@ ar:
           unseen: لم أقرأها
           wiki: من النوع wiki
           images: تحتوي صوراً !!
-          all_tags: تحتوي علي كل الوسوم
+          all_tags: تحتوي علي كل الأوسمة
         statuses:
           label: بشرط أن تكون المواضيع
           open: مفتوحة
@@ -1492,11 +1492,11 @@ ar:
           few: "حددت <b>{{count}}</b> مواضيع."
           many: "حددت <b>{{count}}</b> موضوعا."
           other: "حددت <b>{{count}}</b> موضوع."
-        change_tags: "غيّر الوسوم"
-        append_tags: "اضف وسوم"
-        choose_new_tags: "اختر وسوم جديدة لهذه الموضوعات:"
-        choose_append_tags: "اختر وسوم جديدة لإضافتها لهذة الموضوعات"
-        changed_tags: "تغيرت وسوم هذه الموضوعات."
+        change_tags: "غيّر الأوسمة"
+        append_tags: "اضف الأوسمة"
+        choose_new_tags: "اختر أوسمة جديدة لهذه الموضوعات:"
+        choose_append_tags: "اختر أوسمة جديدة لإضافتها لهذة الموضوعات"
+        changed_tags: "تغيرت أوسمة هذه الموضوعات."
       none:
         unread: "ليست هناك مواضيع غير مقروءة."
         new: "ليست هناك مواضيع جديدة."
@@ -2212,11 +2212,11 @@ ar:
       general: 'عام'
       settings: 'اعدادات'
       topic_template: "إطار الموضوع"
-      tags: "الوسوم"
-      tags_allowed_tags: "اسمح فقط لهذة الوسمة بالاستخدام في هذا القسم."
-      tags_allowed_tag_groups: "اسمح فقط للأوسمة من هذة المجموعات بالاستخدام في هذا القسم."
-      tags_placeholder: "(اختياري) قائمة الاوسمة المسموح بها"
-      tag_groups_placeholder: "(اختياريّ) قائمة مجموعات الوسوم المسموح بها"
+      tags: "الأوسمة"
+      tags_allowed_tags: "اسمح فقط بإستخدام هذة الأوسمة في هذا القسم."
+      tags_allowed_tag_groups: "اسمح فقط بإستخدام مجموعات الأوسمة هذة في هذا القسم."
+      tags_placeholder: "(اختياري) قائمة الأوسمة المسموح بها"
+      tag_groups_placeholder: "(اختياريّ) قائمة مجموعات الأوسمة المسموح بها"
       topic_featured_link_allowed: "اسمح بالروابط المُميزة بهذا القسم."
       delete: 'احذف القسم'
       create: 'قسم جديد'
@@ -2425,14 +2425,14 @@ ar:
       many: "اﻹعجابات"
       other: "اﻹعجابات"
     likes_long: "هناك {{number}} اعجابات في هذا الموضوع"
-    users: "المستخدمون"
+    users: "الأعضاء"
     users_lowercase:
-      zero: "المستخدمون"
-      one: "المستخدمون"
-      two: "المستخدمون"
-      few: "المستخدمون"
-      many: "المستخدمون"
-      other: "المستخدمون"
+      zero: "عضو"
+      one: "عضو واحد"
+      two: "عضوين"
+      few: "الأعضاء"
+      many: "الأعضاء"
+      other: "الأعضاء"
     category_title: "قسم"
     history: "تاريخ"
     changed_by: "الكاتب {{author}}"
@@ -2655,21 +2655,28 @@ ar:
       </form>
       </p>
     tagging:
-      all_tags: "كل الوسوم"
-      selector_all_tags: "كل الوسوم"
-      selector_no_tags: "لا وسوم"
-      changed: "الوسوم المعدلة:"
-      tags: "الوسوم"
+      all_tags: "كل الأوسمة"
+      selector_all_tags: "كل الأوسمة"
+      selector_no_tags: "لا أوسمة"
+      changed: "الأوسمة المعدلة:"
+      tags: "الأوسمة"
       choose_for_topic: "اختر (إن أردت) وسوما لهذا الموضوع"
       delete_tag: "احذف الوسم"
-      delete_confirm: "أمتأكد من حذف هذا الوسم؟"
+      delete_confirm:
+        zero: "هل أنت متاكد انك تريد حذف هذا الوسم و إذالتة من {{count}} موضوع؟"
+        one: "هل أنت متاكد انك تريد حذف هذا الوسم و إذالتة من موضوع واحد؟"
+        two: "هل أنت متاكد انك تريد حذف هذا الوسم و إذالتة من {{count}} موضوع؟"
+        few: "هل أنت متاكد انك تريد حذف هذا الوسم و إذالتة من {{count}} موضوع؟"
+        many: "هل أنت متاكد انك تريد حذف هذا الوسم و إذالتة من {{count}} موضوع؟"
+        other: "هل أنت متاكد انك تريد حذف هذا الوسم و إذالتة من {{count}} موضوع؟"
+      delete_confirm_no_topics: "هل أنت متاكد انك تريد حذف هذا الوسم؟"
       rename_tag: "أعد تسمية الوسم"
       rename_instructions: "اختر اسما جديدا للوسم:"
       sort_by: "افرز ب‍:"
       sort_by_count: "العدد"
       sort_by_name: "الاسم"
-      manage_groups: "أدر مجموعات الوسوم"
-      manage_groups_description: "انشئ مجموعات لتنظيم الوسوم"
+      manage_groups: "أدرج مجموعات الأوسمة"
+      manage_groups_description: "أنشئ مجموعات لتنظيم الأوسمة"
       filters:
         without_category: "مواضيع %{tag} %{filter}"
         with_category: "موضوعات %{filter}%{tag}  في %{category}"
@@ -2678,7 +2685,7 @@ ar:
       notifications:
         watching:
           title: "مُراقب"
-          description: "ستتابع بشكل تلقائي جديد هذه التصنيفات. سيتم إشعارك بكل مشاركة او موضوع، بالإضافة لذلك سيتم عرض عدد  المشاركات الغير مقروءة و الجديدة بجانب الموضوع."
+          description: "ستتابع بشكل تلقائي جديد هذه الأقسام. سيتم إشعارك بكل منشور او موضوع، بالإضافة لذلك سيتم عرض عدد  المنشورات الغير مقروءة و الجديدة بجانب الموضوع."
         watching_first_post:
           title: "يُراقب فيه أول مشاركة"
           description: "ستستقبل إشعارًا لأوّل مشاركة في كلّ موضوع في هذا الوسم."
@@ -2692,15 +2699,15 @@ ar:
           title: "مكتوم"
           description: "لن تستقبل أيّ إشعار لأيّ موضوع جديد في هذا الوسم، ولن تظهر هذه المواضيع في لسان المواضيع غير المقروءة."
       groups:
-        title: "مجموعات الوسوم"
-        about: "أضف وسوما للمجموعات ليسهل عليك إدارتها."
+        title: "مجموعات الأوسمة"
+        about: "ضع الأوسمة في مجموعات ليسهل عليك إدارتها."
         new: "مجموعة جديدة"
-        tags_label: "الوسوم في هذه المجموعة:"
+        tags_label: "الأوسمة في هذه المجموعة:"
         parent_tag_label: "التصنيف الأب"
         parent_tag_placeholder: "اختياري"
-        parent_tag_description: "لا يمكن استخدام الوسوم في هذه المجموعة ما لم يوجد الوسم الأب."
-        one_per_topic_label: "اختر علامة وصفية واحدة لكل موضوع من هذه المجموعة"
-        new_name: "مجموعة وسوم جديدة"
+        parent_tag_description: "لا يمكن استخدام الأوسمة في هذه المجموعة ما لم يوجد الوسم الأب."
+        one_per_topic_label: "السماح بوسم واحد فقط من هذة المجموعة لكل موضوع"
+        new_name: "مجموعة أوسمة جديدة"
         save: "حفظ"
         delete: "حذف"
         confirm_delete: "أمتأكد من حذف مجموعة الوسوم هذه؟"
@@ -3310,8 +3317,8 @@ ar:
             grant_moderation: "عين كمشرف"
             revoke_moderation: "سحب صلاحيات المشرف"
             backup_create: "أنشئ نسخة احتياطية"
-            deleted_tag: "علامة وصفية محذوفة"
-            renamed_tag: "اعادة تسمية العلامة الوصفية"
+            deleted_tag: "وسم محذوف"
+            renamed_tag: "إعادة تسمية الوسم"
             revoke_email: "حذف البريد الالكتروني"
             lock_trust_level: "قفل مستوى الثقة"
             unlock_trust_level: "فتح مستوى الثقة "
@@ -3378,11 +3385,11 @@ ar:
         not_found: "تعذر إيجاد المستخدم."
         invalid: "عذراً , لايمكنك تمثل شخصية ذلك العضو."
       users:
-        title: 'المستخدمون'
+        title: 'الأعضاء'
         create: 'اضافة مدير'
         last_emailed: "آخر بريد الكتروني"
-        not_found: "آسفون، اسم هذا المستخدم غير موجود في النظام."
-        id_not_found: "آسفون، معرّف هذا المستخدم غير موجود في النظام."
+        not_found: "عذرا، اسم المستخدم غير موجود في النظام."
+        id_not_found: "عذرا، هذا الرقم التعريفي غير موجود في النظام."
         active: "نشط"
         show_emails: "عرض الرسائل"
         nav:
@@ -3409,8 +3416,8 @@ ar:
           many: "رفض المستخدمين ({{count}})"
           other: "رفض المستخدمين ({{count}})"
         titles:
-          active: 'المستخدمون النشطون'
-          new: 'المستخدمون الجدد'
+          active: 'الأعضاء النشطون'
+          new: 'الأعضاء الجدد'
           pending: 'أعضاء بانتظار المراجعة'
           newuser: 'أعضاء في مستوى الثقة 0 (عضو جديد)'
           basic: 'أعضاء في مستوى الثقة 1 (عضو أساسي)'
@@ -3418,25 +3425,25 @@ ar:
           regular: 'الاعضاء في مستوى الثقة رقم 3 (عاديين)'
           leader: 'الاعضاء في مستوى الثقة رقم 4 (قادة)'
           staff: "الطاقم"
-          admins: 'المستخدمون المدراء'
+          admins: 'الأعضاء المدراء'
           moderators: 'المشرفون'
-          blocked: 'مستخدمين محظورين:'
+          blocked: 'الأعضاء المحظورين'
           suspended: 'أعضاء موقوفين'
-          suspect: 'المستخدمون المريبون'
+          suspect: 'الأعضاء المريبون'
         reject_successful:
-          zero: "رفض بنجاح 1 مستخدم"
-          one: "رفض بنجاح 1 مستخدم"
-          two: "رفض بنجاح %{count} مستخدمين."
-          few: "رفض بنجاح %{count} مستخدمين."
-          many: "رفض بنجاح %{count} مستخدمين."
-          other: "رفض بنجاح %{count} مستخدمين."
+          zero: "رفض بنجاح 1 عضو"
+          one: "رفض بنجاح 1 عضو"
+          two: "رفض بنجاح %{count} عضو."
+          few: "رفض بنجاح %{count} عضو."
+          many: "رفض بنجاح %{count} عضو."
+          other: "رفض بنجاح %{count} عضو."
         reject_failures:
-          zero: "فشل لرفض 1 مستخدم."
-          one: "فشل لرفض 1 مستخدم."
-          two: "فشل لرفض %{count} مستخدمين."
-          few: "فشل لرفض %{count} مستخدمين."
-          many: "فشل لرفض %{count} مستخدمين."
-          other: "فشل لرفض %{count} مستخدمين."
+          zero: "فشل لرفض 1 عضو."
+          one: "فشل لرفض 1 عضو."
+          two: "فشل لرفض %{count} عضو."
+          few: "فشل لرفض %{count} عضو."
+          many: "فشل لرفض %{count} عضو."
+          other: "فشل لرفض %{count} عضو."
         not_verified: "لم يتم التحقق"
         check_email:
           title: "اكشف عنوان البريد الإلكتروني لهذا العضو"
@@ -3573,11 +3580,11 @@ ar:
           posts_read: "المنشورات المقروءة"
           posts_read_all_time: "المشاركات المقروءة (جميع الاوقات)"
           flagged_posts: "المشاركات المبلغ عنها "
-          flagged_by_users: "المستخدمين الذين بلغوا"
+          flagged_by_users: "الأعضاء الذين بلغوا"
           likes_given: "الإعجابات المعطاة"
           likes_received: "الإعجابات المستلمة"
           likes_received_days: "الإعجابات المستلمة : الايام الغير عادية"
-          likes_received_users: "الإعجابات المستلمة : المستخدمين المميزين"
+          likes_received_users: "الإعجابات المستلمة : الأعضاء المميزين"
           qualifies: "مستوى الثقة الممنوحة للمستوى "
           does_not_qualify: "غير مستحق للمستوى"
           will_be_promoted: "سيتم الترقية عنه قريبا"
@@ -3668,7 +3675,7 @@ ar:
           login: "تسجيل الدخول"
           plugins: "الإضافات "
           user_preferences: "تفضيلات العضو"
-          tags: "الوسوم"
+          tags: "الأوسمة"
           search: "البحث"
           groups: "المجموعات"
       badges:
