@@ -133,7 +133,21 @@ export function reopenWidget(name, opts) {
     opts.html = opts.template;
   }
 
-  Object.keys(opts).forEach(k => existing.prototype[k] = opts[k]);
+  Object.keys(opts).forEach(k => {
+    let old = existing.prototype[k];
+
+    if (old) {
+      // Add support for `this._super()` to reopened widgets if the prototype exists in the
+      // base object
+      existing.prototype[k] = function(...args) {
+        let ctx = Object.create(this);
+        ctx._super = (...superArgs) => old.apply(this, superArgs);
+        return opts[k].apply(ctx, args);
+      };
+    } else {
+      existing.prototype[k] = opts[k];
+    }
+  });
   return existing;
 }
 
