@@ -25,9 +25,9 @@ export default Ember.Controller.extend(BadgeSelectController, {
     return username ? userCount : modelCount;
   },
 
-  @computed("model.has_title_badges")
-  canSelectTitle(hasTitleBadges) {
-    return this.siteSettings.enable_badges && hasTitleBadges;
+  @computed("model.allow_title", "model.has_badge", "model")
+  canSelectTitle(hasTitleBadges, hasBadge) {
+    return this.siteSettings.enable_badges && hasTitleBadges && hasBadge;
   },
 
   actions: {

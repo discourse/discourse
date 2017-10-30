@@ -65,6 +65,9 @@ class Badge < ActiveRecord::Base
   # other consts
   AutobiographerMinBioLength = 10
 
+  # used by serializer
+  attr_accessor :has_badge
+
   def self.trigger_hash
     Hash[*(
       Badge::Trigger.constants.map { |k|
