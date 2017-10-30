@@ -1,7 +1,7 @@
 import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Component.extend({
-  classNameBindings: ['containerClass', 'condition:visible'],
+  classNameBindings: [':loading-container', 'containerClass', 'condition:visible'],
 
   @computed('size')
   containerClass(size) {
