@@ -2828,6 +2828,10 @@ en:
     search_title: "Search this site"
     search_google: "Google"
 
+  offline:
+    title: "Cannot load app"
+    offline_page_message: "It looks like you are offline! Please check your network connection and try again."
+
   login_required:
     welcome_message: |
       ## [Welcome to %{title}](#welcome)
