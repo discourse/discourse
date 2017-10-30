@@ -164,7 +164,7 @@ SQL
       if moderator.id == Discourse::SYSTEM_USER_ID
         PostActionType.auto_action_flag_types.values
       else
-        PostActionType.flag_types_without_custom.values
+        PostActionType.notify_flag_type_ids
       end
 
     actions = PostAction.where(post_id: post.id)
