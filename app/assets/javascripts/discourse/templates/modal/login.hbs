@@ -1,8 +1,8 @@
 {{#login-modal screenX=lastX screenY=lastY loginName=loginName loginPassword=loginPassword action="login"}}
-  <form id='login-form' method='post'>
-    {{#d-modal-body title="login.title" class="login-modal"}}
-      {{login-buttons action="externalLogin"}}
-      {{#if canLoginLocal}}
+  {{#d-modal-body title="login.title" class="login-modal"}}
+    {{login-buttons action="externalLogin"}}
+    {{#if canLoginLocal}}
+      <form id='login-form' method='post'>
         <div>
           <table>
             <tr>
@@ -32,30 +32,32 @@
             </tr>
           </table>
         </div>
-      {{/if}}
-      {{authMessage}}
-      <div id='login-alert' class={{alertClass}}>{{alert}}</div>
-    {{/d-modal-body}}
+      </form>
+    {{/if}}
+    {{authMessage}}
+    <div id='login-alert' class={{alertClass}}>{{alert}}</div>
+  {{/d-modal-body}}
 
-    <div class="modal-footer">
-      {{#if canLoginLocal}}
-        <button class="btn btn-large btn-primary" type="submit" disabled={{loginDisabled}} {{action "login"}}>
-            {{d-icon "unlock"}} &nbsp;{{loginButtonText}}
+  <div class="modal-footer">
+    {{#if canLoginLocal}}
+      <button class="btn btn-large btn-primary"
+        disabled={{loginDisabled}}
+        {{action "login"}}>
+          {{d-icon "unlock"}} &nbsp;{{loginButtonText}}
+      </button>
+
+      {{#if showSignupLink}}
+        &nbsp;
+        <button class="btn btn-large" id="new-account-link" {{action "createAccount"}}>
+          {{i18n 'create_account.title'}}
         </button>
-
-        {{#if showSignupLink}}
-          &nbsp;
-          <button class="btn btn-large" id="new-account-link" {{action "createAccount"}}>
-            {{i18n 'create_account.title'}}
-          </button>
-        {{/if}}
       {{/if}}
+    {{/if}}
 
-      {{#if authenticate}}
-        &nbsp; {{i18n 'login.authenticating'}}
-      {{/if}}
+    {{#if authenticate}}
+      &nbsp; {{i18n 'login.authenticating'}}
+    {{/if}}
 
-      {{conditional-loading-spinner condition=showSpinner size="small"}}
-    </div>
-  </form>
+    {{conditional-loading-spinner condition=showSpinner size="small"}}
+  </div>
 {{/login-modal}}
