@@ -20,6 +20,8 @@ export default buildCategoryPanel('security', {
           permission: PermissionType.create({ id: parseInt(id) })
         });
       }
+
+      this.set('selectedGroup', this.get('category.availableGroups.firstObject'));
     },
 
     removePermission(permission) {
