@@ -47,6 +47,9 @@ class BadgesController < ApplicationController
       if user_badge && user_badge.notification
         user_badge.notification.update_attributes read: true
       end
+      if user_badge
+        @badge.has_badge = true
+      end
     end
 
     serialized = MultiJson.dump(serialize_data(@badge, BadgeSerializer, root: "badge", include_long_description: true))
