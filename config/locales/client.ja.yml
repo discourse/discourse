@@ -122,7 +122,7 @@ ja:
         enabled: 'この広告%{when}を作成して下さい。ユーザーが拒否するまで各ページの上部に表示されます。'
         disabled: 'このバナー%{when}を削除すると、各ページの最上部に表示しません。'
     topic_admin_menu: "トピックの管理"
-    wizard_required: "ディスコースへようこそ!さあ<a href='%{url}' data-auto-route='true'>セットアップウィザード</a>から始めましょう"
+    wizard_required: "Discourseへようこそ！ さあ<a href='%{url}' data-auto-route='true'>セットアップウィザード</a>から始めましょう"
     emails_are_disabled: "メールアドレスの送信は管理者によって無効化されています。全てのメール通知は行われません"
     bootstrap_mode_enabled: "かんたんにサイトを立ち上げられるようにするため、ブートストラップモードが有効になっています。新しいユーザーは全員、トラストレベル1を付与し、毎日更新がメールで届けられます。これらの機能は総ユーザー数が%{min_users}を超えた時にオフになります。"
     bootstrap_mode_disabled: "ブートストラップモードは24時間後に無効化されます。"
@@ -454,7 +454,7 @@ ja:
       location_not_found: （不明）
       organisation: 組織
       phone: 電話
-      other_accounts: "同じIPアドレスを持つアカウント"
+      other_accounts: "同じIPアドレスを持つアカウント:"
       delete_other_accounts: "%{count}件削除"
       username: "ユーザー名"
       trust_level: "トラストレベル"
@@ -626,7 +626,7 @@ ja:
         instructions: "背景画像は、幅590pxで中央揃えになります"
       email:
         title: "メールアドレス"
-        instructions: "外部には公開しない"
+        instructions: "外部には公開されません"
         ok: "確認用メールを送信します"
         invalid: "正しいメールアドレスを入力してください"
         authenticated: "あなたのメールアドレスは {{provider}} によって認証されています"
@@ -641,7 +641,7 @@ ja:
         ok: "問題ありません"
       username:
         title: "ユーザー名"
-        instructions: "スペースを含まない、短く、ユニークなもの"
+        instructions: "被らず、空白を含まず、短い名前を入力してください。"
         short_instructions: "@{{username}} であなたにメンションを送ることができます"
         available: "ユーザ名は利用可能です"
         not_available: "利用できない名前です。 {{suggestion}} などはどうでしょうか？"
@@ -942,10 +942,10 @@ ja:
       forgot: "アカウントの詳細を忘れてしまった"
       not_approved: "あなたのアカウントはまだ承認されていません。ログイン可能になった際にメールで通知いたします。"
       google:
-        title: "Googleで"
+        title: "Google"
         message: "Google による認証 (ポップアップがブロックされていないことを確認してください)"
       google_oauth2:
-        title: "Googleで"
+        title: "Google"
         message: "Googleによる認証 (ポップアップがブロックされていないことを確認してください)"
       twitter:
         title: "Twitter"
@@ -954,13 +954,13 @@ ja:
         title: "Instagram"
         message: "Instagram による認証 (ポップアップがブロックされていないことを確認してください)"
       facebook:
-        title: "Facebookで"
+        title: "Facebook"
         message: "Facebook による認証 (ポップアップがブロックされていないことを確認してください)"
       yahoo:
-        title: "with Yahoo"
+        title: "Yahoo"
         message: "Yahoo による認証 (ポップアップがブロックされていないことを確認してください)"
       github:
-        title: "with GitHub"
+        title: "GitHub"
         message: "Github による認証 (ポップアップがブロックされていないことを確認してください)"
     invites:
       accept_title: "招待"
@@ -1086,10 +1086,6 @@ ja:
       olist_title: "番号付きリスト"
       ulist_title: "箇条書き"
       list_item: "リストアイテム"
-      heading_label: "H"
-      heading_title: "見出し"
-      heading_text: "見出し"
-      hr_title: "水平線"
       help: "Markdown 編集のヘルプ"
       toggler: "編集パネルの表示/非表示"
       modal_ok: "OK"

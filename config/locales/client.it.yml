@@ -116,6 +116,7 @@ it:
       split_topic: "ha separato questo argomento %{when}"
       invited_user: "Invitato %{who} %{when}"
       invited_group: "invitato %{who} %{when}"
+      user_left: "%{who} ha abbandonato questo messaggio %{when}"
       removed_user: "rimosso %{who} %{when}"
       removed_group: "cancellato %{who} %{when}"
       autoclosed:
@@ -531,6 +532,7 @@ it:
       disable_jump_reply: "Non saltare al mio messaggio dopo la mia risposta"
       dynamic_favicon: "Visualizza il conteggio degli argomenti nuovi / aggiornati sull'icona del browser"
       theme_default_on_all_devices: "Rendi questo il mio tema di default su tutti i miei dispositivi"
+      allow_private_messages: "Consenti agli altri utenti di inviarmi messaggi privati"
       external_links_in_new_tab: "Apri tutti i link esterni in nuove schede"
       enable_quoting: "Abilita \"rispondi quotando\" per il testo evidenziato"
       change: "cambia"
@@ -806,11 +808,11 @@ it:
           one: "messaggio creato"
           other: "messaggi creati"
         likes_given:
-          one: "<i class='fa fa-heart'></i> assegnato"
-          other: "<i class='fa fa-heart'></i> assegnati"
+          one: "assegnati"
+          other: "assegnati"
         likes_received:
-          one: "<i class='fa fa-heart'></i> ricevuto"
-          other: "<i class='fa fa-heart'></i> ricevuti"
+          one: "ricevuti"
+          other: "ricevuti"
         days_visited:
           one: "giorno di frequenza"
           other: "giorni di frequenza"
@@ -928,6 +930,7 @@ it:
     private_message_info:
       title: "Messaggio"
       invite: "Invita altri utenti..."
+      leave_message: "Vuoi veramente abbandonare questo messaggio?"
       remove_allowed_user: "Davvero vuoi rimuovere {{name}} da questo messaggio?"
       remove_allowed_group: "Vuoi veramente rimuovere {{name}} da questo messaggio?"
     email: 'Email'
@@ -1008,7 +1011,7 @@ it:
     invites:
       accept_title: "Invito"
       welcome_to: "Benvenuto su %{site_name}!"
-      invited_by: "Sei stao invitato da:"
+      invited_by: "Sei stato invitato da:"
       social_login_available: "Sarai anche in grado di accedere con qualsiasi login social usando questa email."
       your_email: "L'indirizzo email del tuo account è <b>%{email}</b>."
       accept_invite: "Accetta Invito"
@@ -1130,10 +1133,6 @@ it:
       olist_title: "Elenco Numerato"
       ulist_title: "Elenco Puntato"
       list_item: "Elemento lista"
-      heading_label: "T"
-      heading_title: "Titolo"
-      heading_text: "Titolo"
-      hr_title: "Linea Orizzontale"
       help: "Aiuto Inserimento Markdown"
       toggler: "nascondi o mostra il pannello di editing"
       modal_ok: "OK"
@@ -1413,6 +1412,7 @@ it:
         public_timer_types: Timer Argomento
         private_timer_types: Timer Argomento per Utente
       auto_update_input:
+        none: "Seleziona un lasso di tempo"
         later_today: "Più tardi oggi"
         tomorrow: "Domani"
         later_this_week: "Più tardi questa settimana"
@@ -2169,7 +2169,7 @@ it:
         hamburger_menu: '<b>=</b> Apri il menu hamburger'
         user_profile_menu: '<b>p</b> Apri menu utente'
         show_incoming_updated_topics: '<b>.</b> Mostra argomenti aggiornati'
-        search: '<b>/</b> o <b>ctrl</b>+<b>shift</b>+<b>s</b> Cerca'
+        search: '<b>/</b> o <b>ctrl</b>+<b>alt</b>+<b>f</b> Cerca'
         help: '<b>?</b> Apri la legenda tasti'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Chiudi Nuovi Messaggi'
         dismiss_topics: '<b>x</b>, <b>t</b> Chiudi Argomenti'
@@ -2427,22 +2427,10 @@ it:
           type: "Tipo"
           users: "Utenti"
           last_flagged: "Ultima Segnalazione"
-        summary:
-          action_type_3:
-            one: "off-topic "
-            other: "fuori tema x{{count}}"
-          action_type_4:
-            one: "inappropriato"
-            other: "inappropriati x{{count}}"
-          action_type_6:
-            one: "personalizzato"
-            other: "personalizzati x{{count}}"
-          action_type_7:
-            one: "personalizzato"
-            other: "personalizzati x{{count}}"
-          action_type_8:
-            one: "spam"
-            other: "spam x{{count}}"
+        short_names:
+          off_topic: "fuori tema"
+          inappropriate: "inappropriato"
+          spam: "spam"
       groups:
         primary: "Gruppo Primario"
         no_primary: "(nessun gruppo primario)"
@@ -2693,7 +2681,7 @@ it:
           child_themes_check: "Il tema include altri temi figli"
           css_html: "CSS/HTML personalizzato"
           edit_css_html: "Modifica CSS/HTML"
-          edit_css_html_help: "Non hai mofificato nessun CSS o HTML"
+          edit_css_html_help: "Non hai modificato nessun CSS o HTML"
           delete_upload_confirm: "Elimina questo caricamento? (Il CSS del tema potrebbe non funzionare!)"
           import_web_tip: "Repository contenente il tema"
           import_file_tip: "Il file .dcstyle.json contenente il tema"

@@ -60,6 +60,7 @@ fr:
       unrecognized_error: "Erreur non reconnue"
   errors: &errors
     format: '%{attribute} %{message}'
+    format_with_full_message: '<b>%{attribute}</b> : %{message}'
     messages:
       too_long_validation: "est limité à %{max} caractères maximum ; il y en a %{length}."
       invalid_boolean: "Vrai/Faux invalide."
@@ -612,8 +613,8 @@ fr:
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Autre chose"
-      description: 'Ce message demande l''attention des responsables pour une autre raison..'
-      short_description: 'Requière l''attention du staff pour une autre raison'
+      description: 'Ce message demande l''attention des responsables pour une autre raison.'
+      short_description: 'Nécessite l''attention du staff pour une autre raison'
       long_form: 'signalé aux responsables'
       email_title: 'Un message dans « %{title} » nécessite l''attention des responsables'
       email_body: "%{link}\n\n%{message}"
@@ -633,6 +634,9 @@ fr:
       short_description: 'Voter pour ce message'
       long_form: 'a voté pour ce message'
   user_activity:
+    no_default:
+      self: "Vous n'avez aucune activité pour le moment."
+      others: "Aucune activité."
     no_bookmarks:
       self: "Vous n'avez mis de signets à aucun message ; mettre des signets vous permet de facilement les retrouver par la suite."
       others: "Aucun signet."
@@ -1083,6 +1087,7 @@ fr:
     twitter_summary_large_image_url: "URL de l'image par défaut de la carte de résumé Twitter (devrait au moins mesurer 280px en largeur et 150px en hauteur). "
     allow_all_attachments_for_group_messages: "Autorise toutes les pièces-jointes pour les messages de groupes."
     png_to_jpg_quality: "Qualité du fichier JPEG converti (1 est la plus faible, 99 est la meilleure, 100 pour désactiver)."
+    allow_staff_to_upload_any_file_in_pm: "Autoriser les responsables à envoyer n'importe quel fichier dans les messages privés."
     strip_image_metadata: "Enlever les métadonnées de l'image."
     enable_flash_video_onebox: "Activer l'utilisation de swf et flv (Adobe Flash) dans les boites imbriquées. ATTENTION : cela pourrait introduire un risque de sécurité."
     default_invitee_trust_level: "Niveau de confiance par défaut (0-4) pour les invités."
@@ -1252,6 +1257,7 @@ fr:
     anonymous_posting_min_trust_level: "Le niveau de confiance minimum pour passer en mode anonyme."
     anonymous_account_duration_minutes: "Pour protéger l'anonymat, créer un nouveau compte anonyme tous les N minutes pour chaque utilisateur. Exemple: si 600 est choisi, dès 600 minutes après le dernier message ET que l'utilisateur passe en mode anonyme, un nouveau compte anonyme lui sera crée."
     hide_user_profiles_from_public: "Cacher les cartes, les profils et le répertoire d'utilisateurs aux visiteurs."
+    hide_suspension_reasons: "Ne pas afficher les raisons d'une suspension sur les profils utilisateurs."
     user_website_domains_whitelist: "Les sites Web des utilisateurs vont être vérifiés contre ces domaines. Liste délimitée par des pipes (|)."
     allow_profile_backgrounds: "Autoriser les utilisateurs à envoyer des arrières-plans de profil."
     sequential_replies_threshold: "Nombre de messages successifs qu'un utilisateur peut poster dans un sujet avant d'être averti d'avoir posté un nombre excessif de réponses qui se suivent."
@@ -2600,6 +2606,18 @@ fr:
       description: Contributions remarquables durant leur premier mois
       long_description: |
         Ce badge est accordé pour féliciter deux nouveaux utilisateurs chaque mois pour leur excellente contribution mesurée par la fréquence à laquelle leurs messages reçoivent des J'aime et par qui.
+    enthusiast:
+      name: Passionné
+      description: A visité 10 jours
+      long_description: Ce badge est décerné pour avoir visiter 10 jours consécutifs. Merci d'être resté avec nous pendant plus d'une semaine !
+    aficionado:
+      name: Aficionado
+      description: A visité 100 jours
+      long_description: Ce badge est décerné pour avoir visiter 100 jours consécutifs. C'est plus de trois mois !
+    devotee:
+      name: Adepte
+      description: A visité 365 jours
+      long_description: Ce badge est décerné pour avoir visiter 365 jours consécutifs. Waouh, une année entière !
     badge_title_metadata: "%{display_name} badge sur %{site_title}"
   admin_login:
     success: "Courriel envoyé"

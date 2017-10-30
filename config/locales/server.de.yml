@@ -46,6 +46,7 @@ de:
         no_message_id_error: "Passiert wenn in der E-Mail die Kopfzeile 'Message-Id' fehlt."
         auto_generated_email_error: "Passiert wenn die Kopfzeile 'precedence' folgendes enthält: list, junk, bulk oder auto_reply, oder eine der anderen Kopfzeilen enthält: auto-submitted, auto-replied oder auto-generated."
         no_body_detected_error: "Passiert, wenn wir keinen Textkörper extrahieren konnten und keine Anhänge gefunden wurden."
+        no_sender_detected_error: "Kommt vor, wenn wir keine gültige E-Mail-Adresse im From-Header finden konnten."
         inactive_user_error: "Passiert wenn der Sender nicht aktiv ist."
         blocked_user_error: "Passiert wenn der Sender geblockt wurde."
         bad_destination_address: "Passiert wenn keine der E-Mail Adressen in den Feldern To/Cc/Bcc zu einer konfigurierten Eingangs-E-Mail-Adresse passt."
@@ -56,9 +57,12 @@ de:
         topic_closed_error: "Passiert wenn eine Antwort eintraf aber das verbundene Thema geschlossen wurde."
         bounced_email_error: "E-Mail ist ein zurückgekommener Zustellungsbericht."
         screened_email_error: "Passiert, wenn die Absenderadresse schon einmal gefiltert wurde."
+        unsubscribe_not_allowed: "Kommt vor, wenn die Abbestellung per E-Mail für diesen Benutzer nicht erlaubt ist."
+        email_not_allowed: "Kommt vor, wenn die E-Mail-Adresse nicht auf der Positivliste oder auf der Negativliste ist."
       unrecognized_error: "Unbekannter Fehler"
   errors: &errors
     format: '%{attribute} %{message}'
+    format_with_full_message: '<b>%{attribute}</b>: %{message}'
     messages:
       too_long_validation: "darf höchstens %{max} Zeichen lang sein; du hast %{length} eingegeben."
       invalid_boolean: "Ungültiger boolescher Wert."
@@ -128,6 +132,7 @@ de:
   not_logged_in: "Dazu musst du angemeldet sein."
   not_found: "Die angeforderte URL oder Ressource konnte nicht gefunden werden."
   invalid_access: "Du hast nicht die Erlaubnis, die angeforderte Ressource zu betrachten."
+  invalid_api_credentials: "Du bist nicht berechtigt, die angeforderte Ressource anzuzeigen. Der API-Benutzername oder -Schlüssel ist ungültig."
   read_only_mode_enabled: "Die Seite befindet sich im Nur-Lesen Modus. Änderungen sind deaktiviert."
   reading_time: "Lesezeit"
   likes: "Likes"
@@ -632,6 +637,9 @@ de:
       short_description: 'Für diesen Beitrag abstimmen'
       long_form: 'für diesen Beitrag gestimmt'
   user_activity:
+    no_default:
+      self: "Du hast noch keine Aktivität."
+      others: "Keine Aktivität."
     no_bookmarks:
       self: "Du hast keine Beiträge mit Lesezeichen, Lesezeichen ermöglichen es dir, diese später einfach zu finden."
       others: "Keine Lesezeichen."
@@ -964,6 +972,7 @@ de:
     gtm_container_id: "Google Tag Manager Container-ID, z.B.: GTM-ABCDEF"
     enable_escaped_fragments: "Als Fallback die Ajax-Crawling-API von Google verwenden, wenn keine Suchmaschine deaktiviert wurde. Siehe https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
     allow_moderators_to_create_categories: "Erlaube Moderatoren neue Kategorien zu erstellen"
+    crawler_user_agents: "Liste der Browserkennungen, die als Crawler betrachtet werden und an die statische HTML-Seiten statt JavaScript-Inhalt ausgeliefert wird"
     cors_origins: "Erlaubte Adressen für Cross-Origin-Requests (CORS). Jede Adresse muss http:// oder https:// enthalten. Die Umgebungsvariable DISCOURSE_ENABLE_CORS muss gesetzt sein, um CORS zu aktivieren."
     use_admin_ip_whitelist: "Administratoren können sich nur anmelden, wenn sie von einer IP-Adresse aus zugreifen, welcher unter den vertrauenswürden IP-Adressen gelistet ist (Admin > Logs > Screened Ips)."
     blacklist_ip_blocks: "Eine Liste von privaten IP-Blöcken, die nie von Discourse indiziert werden sollen"
@@ -992,7 +1001,7 @@ de:
     allow_index_in_robots_txt: "Suchmaschinen mittels der robots.txt Datei erlauben, die Site zu indizieren."
     email_domains_blacklist: "Eine durch senkrechte Striche getrennte Liste von E-Mail-Domains, die für die Registrierung neuer Konten nicht verwendet werden dürfen. Beispiel: mailinator.com|trashmail.net"
     email_domains_whitelist: "Eine durch senkrechte Striche getrennte Liste von E-Mail-Domains, die für die Registrierung neuer Konten verwendet werden können. ACHTUNG: Benutzer mit E-Mail-Adressen anderer Domains werden nicht zugelassen!"
-    hide_email_address_taken: "Benutzer nicht informieren, ob ein Konto existiert, wenn sie den Passwort vergessen-Dialog verwenden."
+    hide_email_address_taken: "Teile Benutzer während der Registrierung und beim „Passwort vergessen“-Formular nicht mit, wenn ein Konto mit der angegebenen E-Mail-Adresse existiert."
     log_out_strict: "Beim Abmelden ALLE Sitzungen des Benutzers auf allen Geräten beenden"
     version_checks: "Kontaktiere den Discourse Hub zur Überprüfung auf neue Versionen und zeige Benachrichtigungen über neue Versionen auf der Administratorkonsole an."
     new_version_emails: "Sende eine E-Mail an die contact_email Adresse wenn eine neue Version von Discourse verfügbar ist."
@@ -1191,6 +1200,7 @@ de:
     auto_block_fast_typers_on_first_post: "Blockiere Benutzer automatisch, welche unterhalb der min_first_post_typing_time liegen."
     auto_block_fast_typers_max_trust_level: "Maximale Vertrauensstufe um \"Schnelltipper\" automatisch zu blockieren."
     auto_block_first_post_regex: "Regulärer Ausdruck der dafür sorgt dass passende erste Beiträge von Benutzern genehmigt werden müssen. Groß- und Kleinschreibung wird nicht beachtet.\nBeispiel: raging|a[bc]a blockiert alle ersten Beiträge, die raging, aba oder aca beinhalten. Wird nur auf den ersten Beitrag angewendet."
+    flags_default_topics: "Zeige gemeldete Themen standardmäßig im Administrationsbereich"
     reply_by_email_enabled: "Aktviere das Antworten auf Themen via E-Mail."
     reply_by_email_address: "Vorlage für die Antwort einer per E-Mail eingehender E-Mail-Adresse, zum Beispiel: %{reply_key}@reply.example.com oder replies+%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Liste alternativer Vorlagen für eingehende E-Mail-Adressen für das Antworten per E-Mail. Beispiel: %{reply_key}@antwort.example.com|antworten+%{reply_key}@example.com"
@@ -1253,7 +1263,7 @@ de:
     suppress_digest_email_after_days: "Unterdrücke E-Mail-Zusammenfassungen für Benutzer, die länger als (n) Tage nicht auf der Seite gesehen wurden."
     digest_suppress_categories: "Unterdrücke diese Kategorien in E-Mail-Zusammenfassungen."
     disable_digest_emails: "Deaktiviere E-Mail-Zusammenfassungen für alle Benutzer."
-    email_accent_bg_color: "Die Hervorhebungsfarbe, die als Hintergrund mancher Elemente in HTML-E-Mails verwendet wird. Gib’ einen Namen ('red') oder einen Hex-Wert ('#FF000') der Farbe an."
+    email_accent_bg_color: "Die Hervorhebungsfarbe, die als Hintergrundfarbe bestimmter Elemente in HTML-Mails verwendet wird. Gib einen Farbnamen an (z.B. 'red' für rot) oder einen Hex-Wert ('#FF0000')."
     email_accent_fg_color: "Gib’ einen Namen ('white') oder einen Hex-Wert ('#FFFFFF') der Farbe an."
     email_link_color: "Die Farbe von Links in HTML-Mails. Gib’ einen Namen ('blue') oder einen Hex-Wert ('#0000FF') der Farbe an."
     detect_custom_avatars: "Aktiviere diese Option, um zu überprüfen, ob Benutzer eigene Profilbilder hochgeladen haben."
@@ -1266,6 +1276,7 @@ de:
     anonymous_posting_min_trust_level: "Vertrauensstufe, ab der das Schreiben anonymer Beiträge erlaubt ist"
     anonymous_account_duration_minutes: "Erzeuge alle (n) Minuten ein neues anonymes Konto je Benutzer, um die Anonymität der virtuellen anonymen Benutzer zu gewährleisten. Beispiel: Ein Wert von 600 sorgt dafür, dass ein neues anonymes Konto erzeugt wird, wenn ein Benutzer in den anonymen Modus wechselt UND mindestens 600 Minuten seit der letzten anonymen Nachricht dieses Benutzers vergangen sind."
     hide_user_profiles_from_public: "Deaktiviert Benutzerkarten, Benutzerprofile und das Benutzerverzeichnis für anonyme Benutzer."
+    hide_suspension_reasons: "Zeige Sperrgründe nicht öffentlich auf Benutzerprofilen an."
     user_website_domains_whitelist: "Benutzer-Webseiten werden mit diesen Domains abgeglichen. Mehrere Domains können mit einem Pipe-Symbol „|“ getrennt angegeben werden."
     allow_profile_backgrounds: "Erlaubt es Benutzern, Profilhintergründe hochzuladen."
     sequential_replies_threshold: "Anzahl an Beiträgen die ein Benutzer machen muss, um benachrichtigt zu werden, dass er zu viele aufeinanderfolgende Antworten schreibt."
@@ -1282,7 +1293,7 @@ de:
     topic_page_title_includes_category: "Name des Themas enthält den Namen der Kategorie."
     native_app_install_banner: "Wiederkehrende Benutzer dazu einladen, die native Discourse-App herunterzuladen."
     share_anonymized_statistics: "Anonymisierte Nutzungsdaten teilen."
-    auto_handle_queued_age: "Automatische Behandlung von Einträgen, die auf Überprüfung warten, nach dieser Anzahl an Tagen. Meldungen werden aufgeschoben. Anstehende Beiträge und Benutzer werden abgelehnt. Setze sie auf 0, um diese Funktion zu deaktivieren."
+    auto_handle_queued_age: "Bearbeite Einträge automatisch, die so viele Tage auf Überprüfung warten. Meldungen werden ignorieren. Beiträge und Benutzer in der Warteschlange werden zurückgewiesen. Setze den Wert auf 0, um diese Funktion zu deaktivieren."
     max_prints_per_hour_per_user: "Maximale Anzahl von Aufrufen der Druckansicht pro Nutzer pro Stunde (0 zum deaktivieren)"
     full_name_required: "Der voller Name wird für das Benutzerprofil benötigt."
     enable_names: "Zeigt den vollen Namen eines Benutzers auf dem Profil, der Benutzerkarte und in E-Mails an. Wenn deaktiviert wird der volle Name überall ausgeblendet."
@@ -1314,6 +1325,7 @@ de:
     auto_close_topics_post_count: "Maximale Anzahl von Beiträgen, die in einem Thema erlaubt sind, bevor es automatisch geschlossen wird (0 = ausgeschaltet)"
     code_formatting_style: "Code-Schaltfläche im Editor wird standardmäßig diesen Formatierungsstil anwenden"
     max_allowed_message_recipients: "Maximale Anzahl von Empfängern in einer Nachricht."
+    watched_words_regular_expressions: "Beobachtete Wörter sind reguläre Ausdrücke."
     default_email_digest_frequency: "Wie häufig sollen Benutzer standardmäßig E-Mail-Zusammenfassungen erhalten?"
     default_include_tl0_in_digests: "Beiträge von neuen Benutzern in E-Mail-Zusammenfassungen standardmäßig anzeigen. Benutzer können dies in ihren Einstelllungen ändern."
     default_email_private_messages: "Sende einem Benutzer standardmäßig eine E-Mail, wenn dieser eine Nachricht von einem anderen Benutzer erhält."
@@ -1394,6 +1406,7 @@ de:
       category: 'Kategorien'
       topic: 'Ergebnisse'
       user: 'Benutzer'
+    results_page: "Suchergebnisse für '%{term}'"
   sso:
     login_error: "Fehler bei der Anmeldung"
     not_found: "Dein Konto wurde nicht erkannt. Bitte kontaktiere den Administrator dieser Site."
@@ -1516,7 +1529,7 @@ de:
     username:
       short: "muss mindestens %{min} Zeichen lang sein"
       long: "darf nicht länger als %{max} Zeichen sein"
-      characters: "darf nur aus Zahlen und Buchstaben bestehen"
+      characters: "darf nur Zahlen, Buchstaben, Bindestriche und Unterstriche enthalten"
       unique: "muss eindeutig sein"
       blank: "muss angegeben werden"
       must_begin_with_alphanumeric_or_underscore: "muss mit einem Buchstaben, einer Zahl oder einem Unterstrich beginnen"
@@ -1887,6 +1900,13 @@ de:
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (Betreff: %{former_title}) hat nicht funktioniert.
 
         Deine Antwort wurde von einer blockierten E-Mail-Adresse gesendet. Probiere eine andere Absende-Adresse oder [kontaktiere ein Team-Mitglied](%{base_url}/about).
+    email_reject_not_allowed_email:
+      title: "E-Mail abgelehnt weil E-Mail-Adresse nicht erlaubt"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- E-Mail blockiert"
+      text_body_template: |
+        Tut uns leid, aber deine E-Mail-Nachricht an %{destination} (mit dem Betreff %{former_title}) hat nicht funktioniert.
+
+        Deine Antwort wurde von einer blockierten E-Mail-Adresse gesendet. Versuche, von einer anderen E-Mail-Adresse zu schicken, oder [kontaktiere ein Team-Mitglied](%{base_url}/about).
     email_reject_inactive_user:
       title: "E-Mail abgelehnt weil Benutzer inaktiv"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Benutzer inaktiv"
@@ -2319,6 +2339,26 @@ de:
       text_body_template: |2
 
         %{message}
+    account_suspended:
+      title: "Konto gesperrt"
+      subject_template: "[%{email_prefix}] Dein Konto wurde gesperrt"
+      text_body_template: |
+        Du wurdest vom Forum gesperrt bis %{suspended_till}.
+
+        %{reason}
+
+        %{message}
+    account_exists:
+      title: "Konto existiert bereits"
+      subject_template: "[%{email_prefix}] Konto existiert bereits"
+      text_body_template: |
+        Du hast gerade versuchst, ein Konto auf %{site_name} zu erstellen oder die E-Mail-Adresse eines Kontos zu %{email} zu ändern. Allerdings gibt es schon ein Konto für %{email}.
+
+        Wenn du dein Passwort vergessen hast, [setze es jetzt zurück](%{base_url}/password-reset).
+
+        Wenn du nicht versucht hast, ein Konto für %{email} zu erstellen oder deine E-Mail-Adresse zu ändern, mach’ dir keine Sorgen – du kannst diese Nachricht getrost ignorieren.
+
+        Wenn du Fragen hast, [kontaktiere unser freundliches Team](%{base_url}/about).
     digest:
       why: "Eine kurze Zusammenfassung von %{site_link} seit deinem letzten Besuch am %{last_seen_at}"
       since_last_visit: "Seit deinem letzten Besuch"

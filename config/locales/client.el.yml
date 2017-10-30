@@ -116,6 +116,7 @@ el:
       split_topic: "διαχώρισε αυτό το νήμα %{when}"
       invited_user: "προσκάλεσε τον χρήστη %{who} στις %{when}"
       invited_group: "προσκάλεσε την ομάδα %{who} στις %{when}"
+      user_left: "%{who} άφησε αυτό το μήνυμα στις %{when}"
       removed_user: "αφαίρεσε τον χρήστη %{who} στις %{when}"
       removed_group: "αφαίρεσε την ομάδα %{who} στις %{when}"
       autoclosed:
@@ -531,6 +532,7 @@ el:
       disable_jump_reply: "Να μην εστιάζεται η ανάρτηση μου αφού απαντήσω"
       dynamic_favicon: "Δείξε τον αριθμό νέων/ενημερωμένων νημάτων στο εικονίδιο του προγράμματος περιήγησης"
       theme_default_on_all_devices: "Αυτό να γίνει το προεπιλεγμένο θέμα σε όλες μου τις συσκευές"
+      allow_private_messages: "Επίτρεψε στους χρήστες να μου στέλνουν προσωπικά μηνύματα"
       external_links_in_new_tab: "Άνοιγε όλους τους εξωτερικούς συνδέσμους σε νέα καρτέλα"
       enable_quoting: "Το κείμενο που επισημαίνεται να παρατίθεται στην απάντηση "
       change: "αλλαγή"
@@ -806,11 +808,11 @@ el:
           one: "δημιουργημένη ανάρτηση"
           other: "δημιουργημένες αναρτήσεις"
         likes_given:
-          one: "<i class='fa fa-heart'></i> δεδομένο"
-          other: "<i class='fa fa-heart'></i> δόθηκαν"
+          one: "δόθηκε"
+          other: "δόθηκαν"
         likes_received:
-          one: "<i class='fa fa-heart'></i> ελήφθη"
-          other: "<i class='fa fa-heart'></i> ελήφθησαν"
+          one: "ελήφθη"
+          other: "ελήφθησαν"
         days_visited:
           one: "ημέρα επίσκεψης"
           other: "ημέρες επίσκεψης"
@@ -928,6 +930,7 @@ el:
     private_message_info:
       title: "Μήνυμα"
       invite: "Προσκάλεσε άλλους..."
+      leave_message: "Σίγουρα θελετε να αφήσετε αυτό το μήνυμα;"
       remove_allowed_user: "Θέλεις σίγουρα να αφαιρέσεις τον/την {{name}} από αυτή τη συζήτηση;"
       remove_allowed_group: "Θέλεις σίγουρα να αφαιρέσεις τον/την {{name}} από αυτό το μήνυμα;"
     email: 'Email'
@@ -1130,10 +1133,6 @@ el:
       olist_title: "Αριθμημένη λίστα"
       ulist_title: "Κουκίδες"
       list_item: "Στοιχείο Λίστας"
-      heading_label: "H"
-      heading_title: "Επικεφαλίδα"
-      heading_text: "Επικεφαλίδα"
-      hr_title: "Οριζόντια γραμμή"
       help: "Βοήθεια Επεξεργασίας Markdown"
       toggler: "εμφάνιση ή απόκρυψη του παραθύρου σύνθεσης"
       modal_ok: "OK"
@@ -1227,7 +1226,7 @@ el:
       no_more_results: "Δε βρέθηκαν άλλα αποτελέσματα"
       searching: "Ψάχνω ..."
       post_format: "#{{post_number}} από {{username}}"
-      results_page: "Αποτελέσματα Αναζήτησης"
+      results_page: "Αποτελέσματα αναζήτησης για '{{term}}'"
       more_results: "Υπάρχουν περισσότερα αποτελέσματα. Παρακαλούμε περιορίστε την αναζήτησή σας."
       cant_find: "Δεν μπορείτε να βρείτε αυτό που ψάχνετε;"
       start_new_topic: "Ίσως να ξεκινούσατε ένα νέο νήμα;"
@@ -1413,6 +1412,7 @@ el:
         public_timer_types: Χρονοδιακόπτες Νημάτων
         private_timer_types: Χρονοδιακόπτες Νημάτων Χρήστη
       auto_update_input:
+        none: "Επιλέξτε χρονικό περιθώριο"
         later_today: "Αργότερα σήμερα"
         tomorrow: "Αύριο"
         later_this_week: "Αργότερα αυτή την εβδομάδα"
@@ -1420,6 +1420,9 @@ el:
         next_week: "Την άλλη εβδομάδα"
         two_weeks: "Δύο Εβδομάδες"
         next_month: "Τον άλλο μήνα"
+        three_months: "Τρεις Μήνες"
+        six_months: "Έξη Μήνες"
+        one_year: "Ένα Έτος"
         forever: "Για Πάντα"
         pick_date_and_time: "Επίλεξε ημερομηνία και ώρα"
         set_based_on_last_post: "Κλείσε ανάλογα με την τελευταία ανάρτηση"
@@ -1743,8 +1746,8 @@ el:
       actions:
         flag: 'Επισήμανση'
         defer_flags:
-          one: "Αγνόησε την επισήμανση"
-          other: "Αγνόησε τις επισημάνσεις"
+          one: "Αγνόηση επισήμανσης"
+          other: "Αγνόηση επισημάνσεων"
         undo:
           off_topic: "Αναίρεση σήμανσης"
           spam: "Αναίρεση σήμανσης"
@@ -2173,7 +2176,7 @@ el:
         hamburger_menu: '<b>=</b>''Ανοιξε μενού χάμπουρκερ'
         user_profile_menu: '<b>p</b> Άνοιγμα μενού χρήστη'
         show_incoming_updated_topics: '<b>.</b> Εμφάνιση ενημερωμένων νημάτων'
-        search: '<b>/</b> ή <b>ctrl</b>+<b>shift</b>+<b>s</b> Αναζήτηση'
+        search: '<b>/</b> or <b>ctrl</b>+<b>alt</b>+<b>f</b> Αναζήτηση'
         help: '<b>?</b> Εμφάνισε βοήθειας πληκτρολογίου'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Απόρριψη Νέων/Αναρτήσεων'
         dismiss_topics: '<b>x</b>, <b>t</b> Απόρριψη Νημάτων'
@@ -2389,11 +2392,11 @@ el:
         agree_flag_restore_post_title: "Επανάφερε την ανάρτηση"
         agree_flag: "Συμφωνώ με την επισήμανση "
         agree_flag_title: "Συμφωνώ με την επισήμανση και κρατάω την ανάρτηση αμετάβλητη"
-        defer_flag: "Αναβολή"
+        defer_flag: "Αγνόηση"
         defer_flag_title: "Αφαίρεσε αυτή την επισήμανση. Δεν χρειάζεται να γίνει κάποια ενέργεια αυτή τη στιγμή"
         delete: "Διαγραφή"
         delete_title: "Διέγραψε την ανάρτηση στην οποία αναφέρεται αυτή η επισήμανση."
-        delete_post_defer_flag: "Διέγραψε την ανάρτηση και ανέβαλε την επισήμανση"
+        delete_post_defer_flag: "Διέγραψε την ανάρτηση και αγνόησε την επισήμανση"
         delete_post_defer_flag_title: "Διέγραψε την ανάρτηση. Αν είναι η πρώτη στο νήμα, διέγραψε και αυτό"
         delete_post_agree_flag: "Διέγραψε την ανάρτηση και συμφώνησε με την επισήμανση"
         delete_post_agree_flag_title: "Διέγραψε την ανάρτηση. Αν είναι η πρώτη στο νήμα, διέγραψε και αυτό"
@@ -2412,7 +2415,7 @@ el:
         dispositions:
           agreed: "συμφώνησε"
           disagreed: "διαφώνησε"
-          deferred: "ανέβαλε"
+          deferred: "Αγνοήθηκε"
         flagged_by: "Επισημάνθηκε από"
         resolved_by: "Επιλύθηκε από"
         took_action: "Ενήργησε"
@@ -2431,22 +2434,12 @@ el:
           type: "Τύπος"
           users: "Χρήστες"
           last_flagged: "Τελευταίες Επισημάνσεις"
-        summary:
-          action_type_3:
-            one: "εκτός θέματος"
-            other: "εκτός θέματος x{{count}}"
-          action_type_4:
-            one: "ανάρμοστο"
-            other: "ανάρμοστο x{{count}}"
-          action_type_6:
-            one: "προσπαρμοσμένο"
-            other: "προσαρμοσμένο x{{count}}"
-          action_type_7:
-            one: "προσαρμοσμένο"
-            other: "προσαρμοσμένο x{{count}}"
-          action_type_8:
-            one: "ανεπιθύμητο"
-            other: "ανεπιθύμητο x{{count}}"
+        short_names:
+          off_topic: "εκτός θέματος"
+          inappropriate: "ακατάλληλο"
+          spam: "spam"
+          notify_user: "προσαρμοσμένο"
+          notify_moderators: "προσαρμοσμένο"
       groups:
         primary: "Κύρια ομάδα"
         no_primary: "(χωρίς κύρια ομάδα)"

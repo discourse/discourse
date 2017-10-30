@@ -162,12 +162,18 @@ ko:
           - https://en.wikipedia.org/wiki/Death_by_coconut
           - https://en.wikipedia.org/wiki/Calculator_spelling
         reply: |-
-          대단해! 이 기능은 가장 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16">한 링크에 작동해. 잊지마. 줄 하나 당  링크 하나씩이야. 주소 앞이나 뒤에 무언가가 있으면 작동하지 않아.
+          좋았어! 이건 대부분의 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> 링크에 대해서 작동해.  딱 링크로만 된 한줄이어야만 한다는 걸 명심해. 앞이나 뒤에 다른게 있어서는 안돼.
+        not_found: |-
+          미안해. 답글에서 링크를 찾지 못했어! :cry:
+
+          아래 링크 한줄을 복사해서 다음 답글에 넣어볼래?
+
+          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
       images:
         instructions: |-
           유니콘 사진이야.
 
-          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+          <img src="/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">%{base_uri}/images/unicorn.png" width="520" height="520">
 
           (당연히 그렇겠지만) 맘에 들면 이 포스트 아래에 있는 '좋아요'버튼을 눌러봐.
 
@@ -216,14 +222,14 @@ ko:
           내 포스트에서 아무 글이나 선택해도 <kbd>**인용하기**</kbd> 버튼이 뜰거야. 글을 선택하고 **답글쓰기** 를 눌러도 돼! 다시 한 번 해 볼래?
       bookmark:
         instructions: |-
-          더 알고 싶다면 아래에 있는 이걸<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 선택한 다음 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **이 개인메시지 북마크**를 하렴.  너의 미래에 보내는 좋은 선물:gift:이 되겠지!
+          더 알고 싶다면 아래에 있는 이걸 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 선택한 다음 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **이 개인메시지 북마크**를 하렴.  미래의 너에게 보내는 좋은 선물:gift:이 되겠지!
         reply: |-
           대단해! 이제는 [프로필의 북마크 탭](%{profile_page_url}/activity/bookmarks)만 눌러도 우리의 개인적인 대화를 손쉽게 뒤돌아 볼 수 있어. 우측 상단에 있는 프로필 사진만 선택하면 돼. &#8599;
         not_found: |-
-          어라, 이 토픽에는 북마크가 없는데? 포스트 별로 있는 북마크 버튼을 찾았니? 더 보기<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 를 눌러서 필요한 추가 기능이 있는지 살펴 봐.
+          어라, 이 토픽에는 북마크가 없는데? 포스트 별로 있는 북마크 버튼을 찾았니? 더 보기 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 를 눌러서 필요한 추가 기능이 있는지 살펴 봐.
       emoji:
         instructions: |-
-          내가 답글에서 조그마한 그림을 쓰는 걸 봤겠지?:blue_car::dash: 이런 걸 [이모지 (emoji)](https://en.wikipedia.org/wiki/Emoji)라고 해. 너도 답글에 **이모지를 추가**해 볼래? 아래 중에서 아무거나 해도 돼.
+          내가 답글에서 조그마한 그림을 쓰는 걸 봤겠지?:blue_car::dash: 이런 걸 [이모지](https://en.wikipedia.org/wiki/Emoji)라고 해. 너도 답글에 **이모지를 추가**해 볼래? 아래 중에서 아무거나 해도 돼.
 
           - `:) ;) :D :P :O` 라고 입력하기
 
@@ -261,14 +267,14 @@ ko:
         reply: |-
           [우리의 운영진](/groups/staff)은 니가 한 신고내용을 개인 메시지로 알림받게 될 거야. 충분한 커뮤니티 회원들이 신고를 하면, 포스트의 내용이 숨겨지고 사전경고가 걸리게 돼.(난 실제로 나쁜 글을 쓴 건 아니니까:angel:, 이제 신고를 지울게.)
         not_found: |-
-          아이고, 나의 나쁜 포스트가 아직 신고가 안됐네. :worried: 부적절한 게시물로 **신고** 해주겠니 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? 더 보기 버튼을 누르면 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 포스트에 수행할 기능을 더 볼 수 있다는 걸 잊지마.
+          이런 내가 쓴 나쁜 포스트가 아직 신고가 안됐네. :worried:  부적절한 게시물로 **신고** 해주겠니 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? 더 보기 버튼을 누르면 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 포스트에 수행할 기능을 더 볼 수 있다는 걸 잊지마.
       search:
         instructions: |-
-          이봐, 내가 이 토픽에 놀라운 걸 숨겼다구. 찾아보고 싶다면, 우측 상단에 있는 **검색 아이콘을** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16">  선택해서 &#8599; 찾아봐.
+          이봐, 내가 이 토픽에 놀라운 걸 숨겼다구. 찾아보고 싶다면, 우측 상단에 있는 **검색 아이콘을** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> 선택해서 &#8599; 찾아봐.
 
-          이 토픽에서  "capy&#8203;bara"를 찾으면 돼.
+          이 토픽에서 "capy&#8203;bara"를 찾으면 돼.
         hidden_message: |-
-          어떻게 이 capybara를 놓칠 수 있어? :wink:
+          어떻게 이 capybara를 잊을 수 있어? :wink:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
@@ -283,19 +289,66 @@ ko:
           - 진짜 실물 :keyboard:가 있다면, <kbd>?</kbd>를 눌러서 간편한 단축키가 뭐가 있는지 알아봐.
         not_found: |-
           흠.... 아무래도 문제가 있어 보이네. 미안해. 검색<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16">을 눌러서 **capy&#8203;bara**를 찾아봤어?
+      end:
+        message: |-
+          @%{username}! 나와 함께 해줘서 고마워! 널 위해 이 뱃지를 준비했어.
+
+          %{certificate}
+
+          이제 다 됐어! [**최근 논의되는 토픽**](/latest)이나 [**카테고리**](/categories) 를 확인해봐. :sunglasses:
+
+          (또 다른 걸 알고싶으면, `@%{discobot_username}`으로 메시지를 보내거나 멘션을 걸어줘!)
       certificate:
         alt: '목표달성 인증'
     advanced_user_narrative:
       reset_trigger: '고급 사용자'
       cert_title: "고급 사용자 튜토리얼을 훌륭하게 완료한 것에 대한 보상으로"
       title: ':arrow_up: 고급 사용자 기능'
+      start_message: |-
+        @%{username}! _고급_ 사용자로서, [설정 페이지](/my/preferences) 를 가본적 있니? 다크 테마, 라이트 테마 선택같은 사용자 경험을 개인화할 수 있는 많은 옵션이 있어.
+
+        사설이 길었네, 시작하자!
       edit:
         bot_created_post_raw: "@%{discobot_username}는 내가 아는 한, 현존하는 가장 쿨한 봇이지:wink:"
         instructions: |-
           누구나 실수해. 걱정마, 편집을 하면 그 실수를 언제든지 바로잡을 수 있거든!
 
           내가 너 대신 만든 이 포스트를 **편집**하는 걸로 시작해 볼래 ?
+        not_found: |-
+          내가 만들어준 [post](%{url}) 편집이 다 안끝난 것 같네. 다시 해볼래?
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16"> 아이콘을 눌러서 에디터를 띄워보렴.
+        reply: |-
+          아주 잘했어!
+
+          편집된 글은 5분뒤에 수정본으로 공개되고, 우측 상단에 작은 연필 아이콘과 함께 수정 횟수가 뜬다는 걸 기억하렴.
+      delete:
+        instructions: |-
+          작성한 포스트를 없애고 싶으면, 삭제를 하면 돼.
+
+          위에 있는 포스트 중에서 어떤 것이든 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> **삭제하기** 기능으로  **삭제**해보렴. 그래도 첫번째 포스트는 삭제하지마!
+        not_found: |-
+          삭제된 포스트가 없는 것 같은데? <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 더보기를 통해서 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> 삭제하기를 볼 수 있어.
+        reply: |-
+          우와! :boom:
+
+          토론이 잘 진행될 수 있도록, 곧장 삭제되지는 않아. 어느 정도 시간이 지나면 포스트가 없어질거야.
       recover:
         deleted_post_raw: '왜 @%{discobot_username}가 내 포스트를 지웠지? :anguished:'
+        instructions: |-
+          오 이런! 너한테 만들어 준 새 포스트를 실수로 삭제해버린 것 같아.
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **삭제 취소하기**를 부탁해도 될까?
+        not_found: |-
+          잘 안되니? <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 더 보기를 누르면 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> 삭제 취소하기가 보일거야.
+        reply: |-
+          휴, 큰일날 뻔 했네! 바로 잡아줘서 고마워 :wink:
+
+          삭제 취소하기는 24시간 내에만 가능하다는 거 기억해 둬.
+      category_hashtag:
+        instructions: |-
+          포스트에 카테고리나 태그를 언급할 수 있다는 거 알고 있어? 예를 들어, %{category} 카테고리가 보이니?
+
+          문장 중간에 `#`을 넣고 어떤 카테고리나 태그든 선택해봐.
       certificate:
         alt: '고급 사용자 추적 인증'

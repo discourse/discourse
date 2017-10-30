@@ -621,6 +621,8 @@ es:
       short_description: 'Vota por este post'
       long_form: 'Votado para este post'
   user_activity:
+    no_default:
+      others: "Sin actividad."
     no_bookmarks:
       self: "No tienes temas en marcadores, añadir temas a marcadores te permite acceder a ellos más tarde fácilmente."
       others: "Sin marcadores."
@@ -628,6 +630,7 @@ es:
       self: "No le has dado a \"Me gusta\" en ningún tema."
       others: "No te gusta ningún tema."
     no_replies:
+      self: "No has respondido a ningún post."
       others: "Sin respuestas."
   topic_flag_types:
     spam:
@@ -703,7 +706,7 @@ es:
       xaxis: "Día"
       yaxis: "Número de topics nuevos"
     posts:
-      title: "Nuevos posts"
+      title: "Posts"
       xaxis: "día"
       yaxis: "Número de posts nuevos"
     likes:
@@ -2184,7 +2187,7 @@ es:
       unread_messages: "Mensajes no leídos"
       unread_notifications: "Notificaciones no leídas"
       liked_received: "Me gusta recibidos"
-      new_posts: "Nuevos temas"
+      new_posts: "Nuevos posts"
       new_users: "Nuevos usuarios"
       popular_topics: "Temas populares"
       follow_topic: "Seguir este tema"

@@ -1210,10 +1210,6 @@ pl_PL:
       olist_title: "Lista numerowana"
       ulist_title: "Lista wypunktowana"
       list_item: "Element listy"
-      heading_label: "Nagłówek"
-      heading_title: "Nagłówek"
-      heading_text: "Nagłówek"
-      hr_title: "Pozioma linia"
       help: "Pomoc formatowania Markdown"
       toggler: "ukryj lub pokaż panel kompozytora tekstu"
       modal_ok: "OK"
@@ -2369,7 +2365,7 @@ pl_PL:
         hamburger_menu: '<b>=</b> Otwórz menu'
         user_profile_menu: '<b>p</b> Otwórz menu użytkownika'
         show_incoming_updated_topics: '<b>.</b> Pokaż zaktualizowane tematy'
-        search: '<b>/</b> lub <b>ctrl</b>+<b>shift</b>+<b>s</b> Wyszukaj'
+        search: '<b>/</b> lub <b>ctrl</b>+<b>alt</b>+<b>f</b> Wyszukaj'
         help: '<b>?</b> Pokaż skróty klawiszowe'
         dismiss_new_posts: '<b>x</b>, <b>r</b> wyczyść listę wpisów'
         dismiss_topics: '<b>x</b>, <b>t</b> wyczyść listę tematów'

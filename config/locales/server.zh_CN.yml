@@ -57,9 +57,12 @@ zh_CN:
         topic_closed_error: "回复到已经锁定的主题。"
         bounced_email_error: "邮件是投递失败的错误报告。"
         screened_email_error: "发件人邮箱已经被封禁。"
+        unsubscribe_not_allowed: "当用户不能通过邮件退订时发生。"
+        email_not_allowed: "当用户邮件不在白名单或在黑名单时发生。"
       unrecognized_error: "无法识别的错误"
   errors: &errors
     format: '%{attribute}%{message}'
+    format_with_full_message: '<b>%{attribute}</b>：%{message}'
     messages:
       too_long_validation: "最多只能有 %{max} 个字；你已经输入了 %{length} 个字。"
       invalid_boolean: "无效布尔值。"

@@ -53,6 +53,7 @@ nb_NO:
         reply_user_not_matching_error: "Skjer når et innkommende svar kommer fra en annen e-postadresse enn varselet var sendt til."
         topic_not_found_error: "Skjer når et svar blir mottatt, men det tilhørene emnet er slettet."
         topic_closed_error: "Skjer når et svar blir mottatt, men det tilhørene emnet er stengt."
+      unrecognized_error: "Ukjent feil"
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -73,6 +74,7 @@ nb_NO:
       inclusion: er ikke inkludert i listen
       invalid: er ugyldig
       is_invalid: "virker uklart, er det en komplett setning?"
+      contains_censored_words: "inneholder følgende sensurerte ord: %{censored_words}"
       less_than: må være mindre enn %{count}
       less_than_or_equal_to: må være lik eller mindre enn %{count}
       not_a_number: er ikke et nummer
@@ -195,6 +197,7 @@ nb_NO:
     delete_reason: "Slettet via køen for innleggmoderering"
   groups:
     errors:
+      can_not_modify_automatic: "Du kan ikke modifisere en automatisk gruppe"
       member_already_exist: "'%{username}' er allerede medlem av denne gruppen."
       invalid_domain: "'%{domain}' er ikke et gyldig domene."
       invalid_incoming_email: "'%{email}' er ikke en gyldig e-postadresse."

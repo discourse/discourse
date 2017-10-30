@@ -116,6 +116,7 @@ de:
       split_topic: "Thema aufgeteilt, %{when}"
       invited_user: "%{who} eingeladen, %{when}"
       invited_group: "%{who} eingeladen, %{when}"
+      user_left: "%{who} hat diese Nachricht %{when} hinterlassen"
       removed_user: "%{who} entfernt, %{when}"
       removed_group: "%{who} entfernt, %{when}"
       autoclosed:
@@ -531,6 +532,7 @@ de:
       disable_jump_reply: "Springe nicht zu meinem Beitrag, nachdem ich geantwortet habe"
       dynamic_favicon: "Zeige die Anzahl der neuen und geänderten Themen im Browser-Symbol an"
       theme_default_on_all_devices: "Übernehme dieses Theme für alle meine Geräte."
+      allow_private_messages: "Erlaube anderen Benutzern, mir Nachrichten zu schicken"
       external_links_in_new_tab: "Öffne alle externen Links in einem neuen Tab"
       enable_quoting: "Aktiviere Zitatantwort mit dem hervorgehobenen Text"
       change: "ändern"
@@ -540,6 +542,7 @@ de:
       admin_tooltip: "Dieser Benutzer ist ein Administrator"
       blocked_tooltip: "Dieser Benutzer wird blockiert."
       suspended_notice: "Dieser Benutzer ist bis zum {{date}} gesperrt."
+      suspended_permanently: "Der Benutzer ist gesperrt."
       suspended_reason: "Grund: "
       github_profile: "Github"
       email_activity_summary: "Aktivitäts-Übersicht"
@@ -805,11 +808,11 @@ de:
           one: "Beitrag erstellt"
           other: "Beiträge erstellt"
         likes_given:
-          one: "<i class='fa fa-heart'></i> gegeben"
-          other: "<i class='fa fa-heart'></i> gegeben"
+          one: "gegeben"
+          other: "gegeben"
         likes_received:
-          one: "<i class='fa fa-heart'></i> erhalten"
-          other: "<i class='fa fa-heart'></i> erhalten"
+          one: "vergeben"
+          other: "vergeben"
         days_visited:
           one: "Tag vorbeigekommen"
           other: "Tage vorbeigekommen"
@@ -927,6 +930,7 @@ de:
     private_message_info:
       title: "Nachricht"
       invite: "Andere einladen…"
+      leave_message: "Möchtest du diese Nachricht wirklich verlassen?"
       remove_allowed_user: "Willst du {{name}} wirklich aus dieser Unterhaltung entfernen?"
       remove_allowed_group: "Willst du {{name}} wirklich aus dieser Unterhaltung entfernen?"
     email: 'E-Mail-Adresse'
@@ -1129,10 +1133,6 @@ de:
       olist_title: "Nummerierte Liste"
       ulist_title: "Liste mit Aufzählungszeichen"
       list_item: "Listenelement"
-      heading_label: "Ü"
-      heading_title: "Überschrift"
-      heading_text: "Überschrift"
-      hr_title: "Horizontale Linie"
       help: "Hilfe zur Markdown-Formatierung"
       toggler: "Eingabebereich aus- oder einblenden"
       modal_ok: "OK"
@@ -1226,7 +1226,7 @@ de:
       no_more_results: "Es wurde keine weiteren Ergebnisse gefunden."
       searching: "Suche …"
       post_format: "#{{post_number}} von {{username}}"
-      results_page: "Suchergebnisse"
+      results_page: "Suchergebnisse für '{{term}}'"
       more_results: "Es gibt mehr Ergebnisse. Bitte grenze deine Suchkriterien weiter ein."
       cant_find: "Nicht gefunden, wonach du suchst?"
       start_new_topic: "Wie wär’s mit einem neuen Thema?"
@@ -1403,19 +1403,27 @@ de:
       jump_reply_down: zur nachfolgenden Antwort springen
       deleted: "Das Thema wurde gelöscht"
       topic_status_update:
-        title: "Setzte die Themen-Stoppuhr"
+        title: "Themen-Zeitschaltuhr"
         save: "Stoppuhr setzen"
         num_of_hours: "Stunden:"
         remove: "Stoppuhr löschen"
         publish_to: "Veröffentlichen in:"
         when: "Wann:"
+        public_timer_types: Themen-Zeitschaltuhren
+        private_timer_types: Benutzer-Themen-Zeitschaltuhren
       auto_update_input:
+        none: "Wähle einen Zeitbereich aus"
         later_today: "Im Laufe des Tages"
         tomorrow: "Morgen"
         later_this_week: "Später in dieser Woche"
         this_weekend: "Dieses Wochenende"
         next_week: "Nächste Woche"
+        two_weeks: "Zwei Wochen"
         next_month: "Nächster Monat"
+        three_months: "Drei Monate"
+        six_months: "Sechs Monate"
+        one_year: "Ein Jahr"
+        forever: "Für immer"
         pick_date_and_time: "Datum und Zeit wählen"
         set_based_on_last_post: "Schließen basierend auf dem letzten Beitrag"
       publish_to_category:
@@ -2164,7 +2172,7 @@ de:
         hamburger_menu: '<b>=</b> „Hamburger“-Menü öffnen'
         user_profile_menu: '<b>p</b> Benutzermenü öffnen'
         show_incoming_updated_topics: '<b>.</b> Aktualisierte Themen anzeigen'
-        search: '<b>/</b> oder <b>Strg</b>+<b>Shift</b>+<b>s</b> Suche'
+        search: '<b>/</b> oder <b>Strg</b>+<b>Alt</b>+<b>f</b> Suche'
         help: '<b>?</b> Tastaturhilfe öffnen'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Neue/ausgewählte Beiträge ausblenden'
         dismiss_topics: '<b>x</b>, <b>t</b> Themen ausblenden'
@@ -2237,7 +2245,10 @@ de:
       tags: "Schlagwörter"
       choose_for_topic: "Optionale Schlagwörter für dieses Thema wählen"
       delete_tag: "Schlagwört löschen"
-      delete_confirm: "Möchtest du wirklich dieses Schlagwort löschen?"
+      delete_confirm:
+        one: "Bist du sicher, dass du dieses Schlagwort löschen und von einem zugeordneten Thema entfernen möchtest?"
+        other: "Bist du sicher, dass du dieses Schlagwort löschen und von {{count}} zugeordneten Themen entfernen möchtest?"
+      delete_confirm_no_topics: "Bist du sicher, dass du dieses Schlagwort löschen möchtest?"
       rename_tag: "Schlagwort umbenennen"
       rename_instructions: "Neuen Namen für das Schlagwort wählen:"
       sort_by: "Sortieren nach:"
@@ -2365,8 +2376,9 @@ de:
         by: "von"
       flags:
         title: "Meldungen"
-        old: "Alt"
-        active: "Aktiv"
+        active_posts: "Gemeldete Beiträge"
+        old_posts: "Alte gemeldete Beiträge"
+        topics: "Gemeldete Themen"
         agree: "Zustimmen"
         agree_title: "Meldung bestätigen, weil diese gültig und richtig ist"
         agree_flag_modal_title: "Zustimmen und…"
@@ -2394,6 +2406,8 @@ de:
         clear_topic_flags: "Erledigt"
         clear_topic_flags_title: "Das Thema wurde untersucht und Probleme wurden beseitigt. Klicke auf „Erledigt“, um die Meldungen zu entfernen."
         more: "(weitere Antworten…)"
+        suspend_user: "Benutzer sperren"
+        suspend_user_title: "Benutzer für diesen Beitrag sperren"
         dispositions:
           agreed: "zugestimmt"
           disagreed: "abgelehnt"
@@ -2404,27 +2418,24 @@ de:
         system: "System"
         error: "Etwas ist schief gelaufen"
         reply_message: "Antworten"
-        no_results: "Es gibt keine Meldungen."
+        no_results: "Es gibt keine gemeldeten Beiträge."
         topic_flagged: "Dieses <strong>Thema</strong> wurde gemeldet."
+        show_full: "zeige vollständigen Beitrag"
         visit_topic: "Besuche das Thema, um zu reagieren"
         was_edited: "Beitrag wurde nach der ersten Meldung bearbeitet"
         previous_flags_count: "Dieses Thema wurde bereits {{count}} mal gemeldet."
-        summary:
-          action_type_3:
-            one: "„am Thema vorbei“"
-            other: "„am Thema vorbei“ x{{count}}"
-          action_type_4:
-            one: "unangemessen"
-            other: "unangemessen x{{count}}"
-          action_type_6:
-            one: "benutzerdefiniert"
-            other: "benutzerdefiniert x{{count}}"
-          action_type_7:
-            one: "benutzerdefiniert"
-            other: "benutzerdefiniert x{{count}}"
-          action_type_8:
-            one: "Spam"
-            other: "Spam x{{count}}"
+        show_details: "Zeige Meldungsdetails"
+        flagged_topics:
+          topic: "Thema"
+          type: "Art"
+          users: "Benutzer"
+          last_flagged: "Zuletzt gemeldet"
+        short_names:
+          off_topic: "off-topic"
+          inappropriate: "unangemessen"
+          spam: "spam"
+          notify_user: "benutzerdefiniert"
+          notify_moderators: "benutzerdefiniert"
       groups:
         primary: "Hauptgruppe"
         no_primary: "(keine Hauptgruppe)"
@@ -2946,6 +2957,7 @@ de:
         form:
           label: 'Neues Wort:'
           placeholder: 'vollständiges Wort oder * als Platzhalter'
+          placeholder_regexp: "regulärer Ausdruck"
           add: 'Hinzufügen'
           success: 'Erfolg'
           upload: "Hochladen"
@@ -3007,10 +3019,15 @@ de:
         suspend_failed: "Beim Sperren dieses Benutzers ist etwas schief gegangen {{error}}"
         unsuspend_failed: "Beim Entsperren dieses Benutzers ist etwas schief gegangen {{error}}"
         suspend_duration: "Wie lange soll dieser Benutzer gesperrt werden?"
-        suspend_duration_units: "(Tage)"
         suspend_reason_label: "Warum sperrst du? Dieser Text ist auf der Profilseite des Benutzers <b>für jeden sichtbar</b> und wird dem Benutzer angezeigt, wenn sich dieser anmelden will. Bitte kurz halten."
+        suspend_reason_hidden_label: "Warum sperrst du? Dieser Text wird dem Benutzer angezeigt, wenn er versucht, sich anzumelden. Fasse dich kurz."
         suspend_reason: "Grund"
+        suspend_reason_placeholder: "Grund der Sperre"
+        suspend_message: "E-Mail-Nachricht"
+        suspend_message_placeholder: "Optional: Gib weitere Informationen über deine Sperrung an und sie wird dem Benutzer per E-Mail geschickt."
         suspended_by: "Gesperrt von"
+        suspended_until: "(bis %{until})"
+        cant_suspend: "Der Benutzer kann nicht gesperrt werden."
         delete_all_posts: "Lösche alle Beiträge"
         delete_all_posts_confirm_MF: "Du wirst {POSTS, plural, one {einen Beitrag} other {# Beiträge}} und {TOPICS, plural, one {ein Thema} other {# Themen}} löschen. Bist du dir sicher?"
         suspend: "Sperren"

@@ -531,6 +531,7 @@ fi:
       disable_jump_reply: "Älä siirry uuteen viestiini lähetettyäni sen"
       dynamic_favicon: "Näytä uusien / päivittyneiden ketjujen määrä selaimen ikonissa"
       theme_default_on_all_devices: "Tee tästä oletusteema kaikille laitteilleni"
+      allow_private_messages: "Salli muiden lähettää minulle yksityisviestejä"
       external_links_in_new_tab: "Avaa sivuston ulkopuoliset linkit uudessa välilehdessä"
       enable_quoting: "Ota käyttöön viestin lainaaminen tekstiä valitsemalla"
       change: "vaihda"
@@ -807,11 +808,11 @@ fi:
           one: "kirjoitettu viesti"
           other: "kirjoitettua viestiä"
         likes_given:
-          one: "<i class='fa fa-heart'></i> annettu"
-          other: "<i class='fa fa-heart'></i> annettu"
+          one: "annettu"
+          other: "annettu"
         likes_received:
-          one: "<i class='fa fa-heart'></i> saatu"
-          other: "<i class='fa fa-heart'></i> saatu"
+          one: "saatu"
+          other: "saatu"
         days_visited:
           one: "päivänä vieraillut"
           other: "päivänä vieraillut"
@@ -929,6 +930,7 @@ fi:
     private_message_info:
       title: "Viesti"
       invite: "Kutsu muita..."
+      leave_message: "Haluatko varmasti poistua yksityiskeskustelusta?"
       remove_allowed_user: "Haluatko varmasti poistaa käyttäjän {{name}} tästä keskustelusta?"
       remove_allowed_group: "Haluatko varmasti poistaa käyttäjän {{name}} tästä viestiketjusta?"
     email: 'Sähköposti'
@@ -1131,10 +1133,6 @@ fi:
       olist_title: "Numeroitu lista"
       ulist_title: "Luettelomerkillinen luettelo"
       list_item: "Listan alkio"
-      heading_label: "H"
-      heading_title: "Otsikko"
-      heading_text: "Otsikko"
-      hr_title: "Vaakaviiva"
       help: "Markdown apu"
       toggler: "näytä tai piilota kirjoitusalue"
       modal_ok: "OK"
@@ -1228,7 +1226,7 @@ fi:
       no_more_results: "Enempää tuloksia ei löytynyt."
       searching: "Etsitään ..."
       post_format: "#{{post_number}} käyttäjältä {{username}}"
-      results_page: "Hakutulokset"
+      results_page: "Tulokset hakusanalle '{{term}}'"
       more_results: "Tuloksia olisi enemmänkin. Rajaa hakuasi."
       cant_find: "Etkö löydä etsimääsi?"
       start_new_topic: "Haluaisitko aloittaa uuden ketjun?"
@@ -1405,13 +1403,16 @@ fi:
       jump_reply_down: hyppää myöhempään vastaukseen
       deleted: "Tämä ketju on poistettu"
       topic_status_update:
-        title: "Aseta ajastin ketjulle"
+        title: "Ketjun ajastin"
         save: "Aseta ajastin"
         num_of_hours: "Kuinka monta tuntia:"
         remove: "Poista ajastin"
         publish_to: "Mihin julkaistaan:"
         when: "Milloin:"
+        public_timer_types: Ketjuajastimet
+        private_timer_types: Käyttäjän ketjuajastimet
       auto_update_input:
+        none: "Valitse ajanjakso"
         later_today: "Myöhemmin tänään"
         tomorrow: "Huomenna"
         later_this_week: "Myöhemmin tällä viikolla"
@@ -1419,6 +1420,9 @@ fi:
         next_week: "Ensi viikolla"
         two_weeks: "Kahden viikon kuluttua"
         next_month: "Ensi kuussa"
+        three_months: "Kolme kuukautta"
+        six_months: "Kuusi kuukautta"
+        one_year: "Yksi vuosi"
         forever: "Ikuisesti"
         pick_date_and_time: "Valitse päivämäärä ja kellonaika"
         set_based_on_last_post: "Sulje viimeisimmän viestin mukaan"
@@ -1742,8 +1746,8 @@ fi:
       actions:
         flag: 'Liputa'
         defer_flags:
-          one: "Lykkää lippua"
-          other: "Lykkää lippuja"
+          one: "Sivuuta lippu"
+          other: "Sivuuta liput"
         undo:
           off_topic: "Peru lippu"
           spam: "Peru lippu"
@@ -2172,7 +2176,7 @@ fi:
         hamburger_menu: '<b>=</b> Avaa hampurilaisvalikko'
         user_profile_menu: '<b>p</b> Avaa käyttäjävalikko'
         show_incoming_updated_topics: '<b>.</b> Näytä päivttyneet ketjut'
-        search: '<b>/</b> tai <b>ctrl</b>+<b>shift</b>+<b>s</b> Haku'
+        search: '<b>/</b> or <b>ctrl</b>+<b>alt</b>+<b>f</b> Haku'
         help: '<b>?</b> Näytä näppäimistöoikotiet'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Unohda Uudet/Viestit'
         dismiss_topics: '<b>x</b>, <b>t</b> Unohda ketjut'
@@ -2245,7 +2249,10 @@ fi:
       tags: "Tunnisteet"
       choose_for_topic: "valitse valinnaiset tunnisteet tälle ketjulle"
       delete_tag: "Poista tunniste"
-      delete_confirm: "Oletko varma, että haluat poistaa tunnisteen?"
+      delete_confirm:
+        one: "Haluatko varmasti poistaa tunnisteen, mikä poistaa sen myös yhdeltä ketjulta, jolla tunniste on?"
+        other: "Haluatko varmasti poistaa tunnisteen, mikä poistaa sen myös {{count}} ketjulta, joilla tunniste on?"
+      delete_confirm_no_topics: "Haluatko varmasti poistaa tunnisteen?"
       rename_tag: "Uudelleennimeä tunniste"
       rename_instructions: "Valitse uusi nimi tälle tunnisteelle:"
       sort_by: "Järjestä:"
@@ -2385,11 +2392,11 @@ fi:
         agree_flag_restore_post_title: "Palauta tämä viesti"
         agree_flag: "Ole samaa mieltä lipun kanssa"
         agree_flag_title: "Ole samaa mieltä lipun kanssa ja älä muokkaa viestiä"
-        defer_flag: "Lykkää"
+        defer_flag: "Sivuuta"
         defer_flag_title: "Poista lippu; se ei vaadi toimenpiteitä tällä hetkellä."
         delete: "Poista"
         delete_title: "Poista viesti, johon lippu viittaa."
-        delete_post_defer_flag: "Poista viesti ja lykkää lipun käsittelyä"
+        delete_post_defer_flag: "Poista viesti ja sivuuta lippu"
         delete_post_defer_flag_title: "Poista viesti; jos se on aloitusviesti, niin poista koko ketju"
         delete_post_agree_flag: "Poista viesti ja ole sama mieltä lipun kanssa"
         delete_post_agree_flag_title: "Poista viesti; jos se on aloitusviesti, niin poista koko ketju"
@@ -2408,7 +2415,7 @@ fi:
         dispositions:
           agreed: "samaa mieltä"
           disagreed: "eri mieltä"
-          deferred: "lykätty"
+          deferred: "sivuutettu"
         flagged_by: "Liputtajat"
         resolved_by: "Selvittäjä"
         took_action: "Ryhtyi toimenpiteisiin"
@@ -2427,22 +2434,12 @@ fi:
           type: "Tyyppi"
           users: "Käyttäjät"
           last_flagged: "Viimeksi liputettu"
-        summary:
-          action_type_3:
-            one: "eksyy aiheesta"
-            other: "eksyy aiheesta x{{count}}"
-          action_type_4:
-            one: "sopimaton"
-            other: "sopimaton x{{count}}"
-          action_type_6:
-            one: "mukautettu"
-            other: "mukautettu x{{count}}"
-          action_type_7:
-            one: "mukautettu"
-            other: "mukautettu x{{count}}"
-          action_type_8:
-            one: "roskaposti"
-            other: "roskapostia x {{count}}"
+        short_names:
+          off_topic: "eksyy aiheesta"
+          inappropriate: "sopimaton"
+          spam: "roskaposti"
+          notify_user: "mukautettu"
+          notify_moderators: "mukautettu"
       groups:
         primary: "Ensisijainen ryhmä"
         no_primary: "(ei ensisijaista ryhmää)"
