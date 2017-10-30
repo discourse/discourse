@@ -468,12 +468,14 @@ posting:
   min_topic_title_length:
     client: true
     default: 15
+    min: 1
     locale_default:
       zh_CN: 6
       zh_TW: 6
   max_topic_title_length:
     client: true
     default: 255
+    min: 5
     max: 255
   title_min_entropy:
     default: 10
@@ -927,7 +929,7 @@ security:
   allow_index_in_robots_txt: true
   allow_moderators_to_create_categories: false
   crawler_user_agents:
-    default: 'Googlebot|Mediapartners|AdsBot|curl|HTTrack|Twitterbot|facebookexternalhit|bingbot|Baiduspider|ia_archiver|Wayback Save Page|360Spider|Swiftbot|YandexBot'
+    default: 'Googlebot|Mediapartners|AdsBot|curl|HTTrack|Twitterbot|facebookexternalhit|bingbot|Baiduspider|ia_archiver|archive.org_bot|Wayback Save Page|360Spider|Swiftbot|YandexBot'
     type: list
   cors_origins:
     default: ''
@@ -997,6 +999,9 @@ spam:
   auto_block_fast_typers_on_first_post: true
   auto_block_fast_typers_max_trust_level: 0
   auto_block_first_post_regex: ""
+  flags_default_topics:
+    default: false
+    client: true
 
 rate_limits:
   unique_posts_mins: 5
@@ -1095,6 +1100,13 @@ developer:
   bypass_wizard_check:
     default: false
     hidden: true
+  logging_provider:
+    hidden: true
+    default: 'default'
+    type: 'list'
+    choices:
+      - 'default'
+      - 'lograge'
 
 embedding:
   feed_polling_enabled:

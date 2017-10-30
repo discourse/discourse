@@ -76,7 +76,7 @@ class Auth::DefaultCurrentUserProvider
     # possible we have an api call, impersonate
     if api_key
       current_user = lookup_api_user(api_key, request)
-      raise Discourse::InvalidAccess unless current_user
+      raise Discourse::InvalidAccess.new(I18n.t('invalid_api_credentials'), nil, custom_message: "invalid_api_credentials") unless current_user
       raise Discourse::InvalidAccess if current_user.suspended? || !current_user.active
       @env[API_KEY_ENV] = true
     end

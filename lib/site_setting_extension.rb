@@ -65,6 +65,9 @@ module SiteSettingExtension
 
   def setting(name_arg, default = nil, opts = {})
     name = name_arg.to_sym
+
+    shadowed_val = nil
+
     mutex.synchronize do
       defaults.load_setting(
         name,
@@ -82,6 +85,7 @@ module SiteSettingExtension
         val = GlobalSetting.send(name)
 
         unless val.nil? || (val == ''.freeze)
+          shadowed_val = val
           hidden_settings << name
           shadowed_settings << name
         end
@@ -104,7 +108,11 @@ module SiteSettingExtension
         opts.extract!(*SiteSettings::TypeSupervisor::CONSUMED_OPTS)
       )
 
-      setup_methods(name)
+      if !shadowed_val.nil?
+        setup_shadowed_methods(name, shadowed_val)
+      else
+        setup_methods(name)
+      end
     end
   end
 
@@ -289,6 +297,24 @@ module SiteSettingExtension
     end
 
     [changes, deletions]
+  end
+
+  def setup_shadowed_methods(name, value)
+    clean_name = name.to_s.sub("?", "").to_sym
+
+    define_singleton_method clean_name do
+      value
+    end
+
+    define_singleton_method "#{clean_name}?" do
+      value
+    end
+
+    define_singleton_method "#{clean_name}=" do |val|
+      Rails.logger.warn("An attempt was to change #{clean_name} SiteSetting to #{val} however it is shadowed so this will be ignored!")
+      nil
+    end
+
   end
 
   def setup_methods(name)

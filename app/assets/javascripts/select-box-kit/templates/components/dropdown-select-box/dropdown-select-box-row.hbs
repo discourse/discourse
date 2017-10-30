@@ -1,0 +1,15 @@
+{{#if template}}
+  {{{template}}}
+{{else}}
+  {{#if icon}}
+    <div class="icons">
+      <span class="selection-indicator"></span>
+      {{{icon}}}
+    </div>
+  {{/if}}
+
+  <div class="texts">
+    <span class="name">{{{name}}}</span>
+    <span class="desc">{{{description}}}</span>
+  </div>
+{{/if}}

@@ -18,17 +18,17 @@ createWidget('pm-remove-group-link', {
 createWidget('pm-map-user-group', {
   tagName: 'div.user.group',
 
-  html(attrs) {
-    const link = h('a', { attributes: { href: Discourse.getURL(`/groups/${attrs.group.name}`) } }, attrs.group.name);
-    const result = [iconNode('users'), ' ', link];
+  transform(attrs) {
+    return { href: Discourse.getURL(`/groups/${attrs.group.name}`) };
+  },
 
-    if (attrs.canRemoveAllowedUsers) {
-      result.push(' ');
-      result.push(this.attach('pm-remove-group-link', attrs.group));
-    }
-
-    return result;
-  }
+  template: hbs`
+    {{fa-icon 'users'}}
+    <a href={{transformed.href}}>{{attrs.group.name}}</a>
+    {{#if attrs.canRemoveAllowedUsers}}
+      {{attach widget="pm-remove-group-link" attrs=attrs.group}}
+    {{/if}}
+  `
 });
 
 createWidget('pm-remove-link', {
@@ -36,8 +36,12 @@ createWidget('pm-remove-link', {
   template: hbs`{{d-icon "times"}}`,
 
   click() {
-    bootbox.confirm(I18n.t("private_message_info.remove_allowed_user", {name: this.attrs.username}), (confirmed) => {
-      if (confirmed) { this.sendWidgetAction('removeAllowedUser', this.attrs); }
+    const messageKey = this.attrs.isCurrentUser ? 'leave_message' : 'remove_allowed_user';
+
+    bootbox.confirm(I18n.t(`private_message_info.${messageKey}`, { name: this.attrs.user.username }), confirmed => {
+      if (confirmed) {
+        this.sendWidgetAction('removeAllowedUser', this.attrs.user);
+      }
     });
   }
 });
@@ -49,11 +53,12 @@ createWidget('pm-map-user', {
     const user = attrs.user;
     const avatar = avatarFor('small', { template: user.avatar_template, username: user.username });
     const link = h('a', { attributes: { href: user.get('path') } }, [ avatar, ' ', user.username ]);
-
     const result = [link];
-    if (attrs.canRemoveAllowedUsers) {
+    const isCurrentUser = attrs.canRemoveSelfId === user.get('id');
+
+    if (attrs.canRemoveAllowedUsers || isCurrentUser) {
       result.push(' ');
-      result.push(this.attach('pm-remove-link', user));
+      result.push(this.attach('pm-remove-link', { user, isCurrentUser } ));
     }
 
     return result;
@@ -67,12 +72,23 @@ export default createWidget('private-message-map', {
     const participants = [];
 
     if (attrs.allowedGroups.length) {
-      participants.push(attrs.allowedGroups.map(ag => this.attach('pm-map-user-group', {group: ag, canRemoveAllowedUsers: attrs.canRemoveAllowedUsers})));
+      participants.push(attrs.allowedGroups.map(group => {
+        return this.attach('pm-map-user-group', {
+          group,
+          canRemoveAllowedUsers: attrs.canRemoveAllowedUsers
+        });
+      }));
     }
 
-    if (attrs.allowedUsers.length) {
+    const allowedUsersLength = attrs.allowedUsers.length;
+
+    if (allowedUsersLength) {
       participants.push(attrs.allowedUsers.map(au => {
-        return this.attach('pm-map-user', { user: au, canRemoveAllowedUsers: attrs.canRemoveAllowedUsers });
+        return this.attach('pm-map-user', {
+          user: au,
+          canRemoveAllowedUsers: attrs.canRemoveAllowedUsers,
+          canRemoveSelfId: attrs.canRemoveSelfId
+        });
       }));
     }
 

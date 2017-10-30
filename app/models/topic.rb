@@ -37,6 +37,10 @@ class Topic < ActiveRecord::Base
     @max_sort_order ||= (2**31) - 1
   end
 
+  def self.max_fancy_title_length
+    400
+  end
+
   def featured_users
     @featured_users ||= TopicFeaturedUsers.new(self)
   end
@@ -304,18 +308,18 @@ class Topic < ActiveRecord::Base
   def self.fancy_title(title)
     escaped = ERB::Util.html_escape(title)
     return unless escaped
-    Emoji.unicode_unescape(HtmlPrettify.render(escaped))
+    fancy_title = Emoji.unicode_unescape(HtmlPrettify.render(escaped))
+    fancy_title.length > Topic.max_fancy_title_length ? title : fancy_title
   end
 
   def fancy_title
     return ERB::Util.html_escape(title) unless SiteSetting.title_fancy_entities?
 
     unless fancy_title = read_attribute(:fancy_title)
-
       fancy_title = Topic.fancy_title(title)
       write_attribute(:fancy_title, fancy_title)
 
-      unless new_record?
+      if !new_record? && !Discourse.readonly_mode?
         # make sure data is set in table, this also allows us to change algorithm
         # by simply nulling this column
         exec_sql("UPDATE topics SET fancy_title = :fancy_title where id = :id", id: self.id, fancy_title: fancy_title)
@@ -709,14 +713,21 @@ SQL
   end
 
   def remove_allowed_user(removed_by, username)
-    if user = User.find_by(username: username)
+    user = username.is_a?(User) ? username : User.find_by(username: username)
+
+    if user
       topic_user = topic_allowed_users.find_by(user_id: user.id)
+
       if topic_user
         topic_user.destroy
-        # we can not remove ourselves cause then we will end up adding
-        # ourselves in add_small_action
-        removed_by = Discourse.system_user if user.id == removed_by&.id
-        add_small_action(removed_by, "removed_user", user.username)
+
+        if user.id == removed_by&.id
+          removed_by = Discourse.system_user
+          add_small_action(removed_by, "user_left", user.username)
+        else
+          add_small_action(removed_by, "removed_user", user.username)
+        end
+
         return true
       end
     end

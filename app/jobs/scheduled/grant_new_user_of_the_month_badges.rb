@@ -22,7 +22,11 @@ module Jobs
           user = User.find(user_id)
           if user.badges.where(id: Badge::NewUserOfTheMonth).blank?
             BadgeGranter.grant(badge, user)
-            SystemMessage.new(user).create('new_user_of_the_month',               month_year: Time.now.strftime("%B %Y"))
+
+            SystemMessage.new(user).create('new_user_of_the_month',
+              month_year: Time.now.strftime("%B %Y"),
+              url: "#{Discourse.base_url}/badges"
+            )
           end
         end
       end

@@ -13,11 +13,11 @@
 
 .input-hint-text {
   margin-left: 0.5em;
-  color: $secondary-medium;
+  color: $secondary-high;
 }
 
 .modal-header {
-  border-bottom: 1px solid $primary-low; 
+  border-bottom: 1px solid $primary-low;
 }
 
 .modal-backdrop {
@@ -74,6 +74,10 @@
   margin: 0 auto;
   background-color: $secondary;
   background-clip: padding-box;
+
+  .select-box-kit {
+    width: 220px;
+  }
 }
 
 .create-account.in .modal-inner-container,
@@ -102,7 +106,7 @@
 }
 .modal-footer {
   padding: 14px 15px 15px;
-  border-top: 1px solid $primary-low; 
+  border-top: 1px solid $primary-low;
 }
 .modal-footer:before,
 .modal-footer:after {
@@ -128,7 +132,7 @@
     li > a {
       font-size: 1em;
     }
-    border-bottom: 1px solid $primary-low; 
+    border-bottom: 1px solid $primary-low;
 
   }
 
@@ -327,8 +331,8 @@
 
     .cannot_delete_reason {
       position: absolute;
-      background: dark-light-choose(scale-color($primary, $lightness: 10%), scale-color($secondary, $lightness: 10%));
-      color: dark-light-choose(scale-color($primary, $lightness: 100%), scale-color($secondary, $lightness: 0%));
+      background: dark-light-choose($primary, $secondary);
+      color: dark-light-choose($secondary, $secondary);
       text-align: center;
       border-radius: 2px;
       padding: 12px 8px;
@@ -339,7 +343,7 @@
         border: solid transparent;
         content: " ";
         position: absolute;
-        border-top-color: dark-light-choose(scale-color($primary, $lightness: 10%), scale-color($secondary, $lightness: 10%));
+        border-top-color: dark-light-choose($primary, $secondary);
         border-width: 8px;
       }
     }
@@ -359,7 +363,7 @@
       font-weight: bold;
     }
     &:focus {
-      outline: 2px solid $primary-low; 
+      outline: 2px solid $primary-low;
     }
   }
   .incoming-email-tabs {
@@ -370,7 +374,7 @@
     textarea, .incoming-email-html-part {
       height: 95%;
       border: none;
-      border-top: 1px solid $primary-low; 
+      border-top: 1px solid $primary-low;
       padding-top: 10px;
     }
     textarea {

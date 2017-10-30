@@ -10,7 +10,8 @@ export default Ember.Controller.extend(PreferencesTabController, {
     'new_topic_duration_minutes',
     'auto_track_topics_after_msecs',
     'notification_level_when_replying',
-    'like_notification_frequency'
+    'like_notification_frequency',
+    'allow_private_messages',
   ],
 
   @computed("model.watchedCategories", "model.trackedCategories", "model.mutedCategories")

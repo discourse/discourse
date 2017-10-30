@@ -19,7 +19,10 @@
       </td>
       <td>
         {{#each ft.flag_counts as |fc|}}
-          {{flag-counts details=fc}}
+          <div class='flag-counts'>
+            <span class='type-name'>{{post-action-title fc.post_action_type_id fc.name_key}}</span>
+            <span class='type-count'>x{{fc.count}}</span>
+          </div>
         {{/each}}
       </td>
       <td class='flagged-topic-users'>

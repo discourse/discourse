@@ -97,7 +97,7 @@ module ImportScripts::Mbox
 
     def map_post(row)
       user_id = user_id_from_imported_user_id(row['from_email']) || Discourse::SYSTEM_USER_ID
-      body = row['body'] || ''
+      body = CGI.escapeHTML(row['body'] || '')
       body << map_attachments(row['raw_message'], user_id) if row['attachment_count'].positive?
       body << Email::Receiver.elided_html(row['elided']) if row['elided'].present?
 
@@ -108,7 +108,10 @@ module ImportScripts::Mbox
         raw: body,
         raw_email: row['raw_message'],
         via_email: true,
-        # cook_method: Post.cook_methods[:email] # this is slowing down the import by factor 4
+        cook_method: Post.cook_methods[:email],
+        post_create_action: proc do |post|
+          create_incoming_email(post, row)
+        end
       }
     end
 
@@ -152,6 +155,18 @@ module ImportScripts::Mbox
       end
 
       attachment_markdown
+    end
+
+    def create_incoming_email(post, row)
+      IncomingEmail.create(
+        message_id: row['msg_id'],
+        raw: row['raw_message'],
+        subject: row['subject'],
+        from_address: row['from_email'],
+        user_id: post.user_id,
+        topic_id: post.topic_id,
+        post_id: post.id
+      )
     end
 
     def to_time(datetime)

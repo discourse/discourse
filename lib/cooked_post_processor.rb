@@ -20,6 +20,7 @@ class CookedPostProcessor
     @cooking_options[:topic_id] = post.topic_id
     @cooking_options = @cooking_options.symbolize_keys
     @cooking_options[:omit_nofollow] = true if post.omit_nofollow?
+    @cooking_options[:cook_method] = post.cook_method
 
     analyzer = post.post_analyzer
     @doc = Nokogiri::HTML::fragment(analyzer.cook(post.raw, @cooking_options))
@@ -29,10 +30,13 @@ class CookedPostProcessor
 
   def post_process(bypass_bump = false)
     DistributedMutex.synchronize("post_process_#{@post.id}") do
+      DiscourseEvent.trigger(:before_post_process_cooked, @doc, @post)
       keep_reverse_index_up_to_date
       post_process_images
       post_process_oneboxes
       optimize_urls
+      update_post_image
+      enforce_nofollow
       pull_hotlinked_images(bypass_bump)
       grant_badges
       DiscourseEvent.trigger(:post_process_cooked, @doc, @post)
@@ -109,8 +113,16 @@ class CookedPostProcessor
   end
 
   def oneboxed_image_uploads
-    urls = oneboxed_images.map { |img| img["src"] }
-    Upload.where(origin: urls)
+    urls = Set.new
+
+    oneboxed_images.each do |img|
+      url = img["src"].sub(/^https?:/i, "")
+      urls << url
+      urls << "http:#{url}"
+      urls << "https:#{url}"
+    end
+
+    Upload.where(origin: urls.to_a)
   end
 
   def limit_size!(img)
@@ -174,7 +186,7 @@ class CookedPostProcessor
     # we can *always* crawl our own images
     return unless SiteSetting.crawl_images? || Discourse.store.has_been_uploaded?(url)
 
-    @size_cache[url] ||= FastImage.size(absolute_url)
+    @size_cache[url] = FastImage.size(absolute_url)
   rescue Zlib::BufError # FastImage.size raises BufError for some gifs
   end
 
@@ -190,24 +202,20 @@ class CookedPostProcessor
 
   def convert_to_link!(img)
     src = img["src"]
-    return unless src.present?
+    return if src.blank? || is_a_hyperlink?(img)
 
     width, height = img["width"].to_i, img["height"].to_i
-    original_width, original_height = get_size(src)
+    # TODO: store original dimentions in db
+    original_width, original_height = (get_size(src) || [0, 0]).map(&:to_i)
 
     # can't reach the image...
-    if original_width.nil? ||
-       original_height.nil? ||
-       original_width == 0 ||
-       original_height == 0
+    if original_width == 0 || original_height == 0
       Rails.logger.info "Can't reach '#{src}' to get its dimension."
       return
     end
 
-    return if original_width.to_i <= width && original_height.to_i <= height
-    return if original_width.to_i <= SiteSetting.max_image_width && original_height.to_i <= SiteSetting.max_image_height
-
-    return if is_a_hyperlink?(img)
+    return if original_width <= width && original_height <= height
+    return if original_width <= SiteSetting.max_image_width && original_height <= SiteSetting.max_image_height
 
     crop = false
     if original_width.to_f / original_height.to_f < MIN_RATIO_TO_CROP
@@ -228,8 +236,7 @@ class CookedPostProcessor
     parent = img.parent
     while parent
       return true if parent.name == "a"
-      break unless parent.respond_to? :parent
-      parent = parent.parent
+      parent = parent.parent if parent.respond_to?(:parent)
     end
     false
   end
@@ -308,24 +315,15 @@ class CookedPostProcessor
       Oneboxer.onebox(url, args)
     end
 
-    update_post_image
+    uploads = oneboxed_image_uploads.select(:url, :origin)
+    oneboxed_images.each do |img|
+      url = img["src"].sub(/^https?:/i, "")
+      upload = uploads.find { |u| u.origin.sub(/^https?:/i, "") == url }
+      img["src"] = upload.url if upload.present?
+    end
 
     # make sure we grab dimensions for oneboxed images
     oneboxed_images.each { |img| limit_size!(img) }
-
-    uploads = oneboxed_image_uploads.select(:url, :origin)
-    oneboxed_images.each do |img|
-      upload = uploads.detect { |u| u.origin == img["src"] }
-      next unless upload.present?
-      img["src"] = upload.url
-      # make sure we grab dimensions for oneboxed images
-      limit_size!(img)
-    end
-
-    # respect nofollow admin settings
-    if !@cooking_options[:omit_nofollow] && SiteSetting.add_rel_nofollow_to_user_content
-      PrettyText.add_rel_nofollow_to_user_content(@doc)
-    end
   end
 
   def optimize_urls
@@ -351,6 +349,12 @@ class CookedPostProcessor
       src = img["src"].to_s
       img["src"] = UrlHelper.schemaless UrlHelper.absolute(src) if UrlHelper.is_local(src)
       img["src"] = Discourse.store.cdn_url(img["src"]) if use_s3_cdn
+    end
+  end
+
+  def enforce_nofollow
+    if !@cooking_options[:omit_nofollow] && SiteSetting.add_rel_nofollow_to_user_content
+      PrettyText.add_rel_nofollow_to_user_content(@doc)
     end
   end
 

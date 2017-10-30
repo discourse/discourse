@@ -58,10 +58,12 @@ task 'posts:rebake_match', [:pattern, :type, :delay] => [:environment] do |_, ar
     exit 1
   end
 
+  search = Post.raw_match(pattern, type)
+
   rebaked = 0
   total = search.count
 
-  Post.raw_match(pattern, type).find_each do |post|
+  search.find_each do |post|
     rebake_post(post)
     print_status(rebaked += 1, total)
     sleep(delay) if delay

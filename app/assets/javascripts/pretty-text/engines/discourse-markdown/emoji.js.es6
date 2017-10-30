@@ -240,4 +240,6 @@ export function setup(helper) {
       state, (c,s)=>applyEmoji(c,s,md.options.discourse.emojiUnicodeReplacer))
     );
   });
+
+  helper.whiteList(['img[class=emoji]','img[class=emoji emoji-custom]']);
 }

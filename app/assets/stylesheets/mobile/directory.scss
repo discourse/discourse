@@ -23,7 +23,7 @@
 
 
   &.me {
-    background-color: $highlight-low;
+    background-color: dark-light-choose($highlight-low, $highlight-medium);
 
     .username a, .name, .title, .number, .time-read, .user-stat .label {
       color: scale-color($highlight, $lightness: -50%);

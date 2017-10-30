@@ -210,6 +210,9 @@ module Discourse
       # Load plugins
       Discourse.plugins.each(&:notify_after_initialize)
 
+      # we got to clear the pool in case plugins connect
+      ActiveRecord::Base.connection_handler.clear_active_connections!
+
       # This nasty hack is required for not precompiling QUnit assets
       # in test mode. see: https://github.com/rails/sprockets-rails/issues/299#issuecomment-167701012
       ActiveSupport.on_load(:action_view) do

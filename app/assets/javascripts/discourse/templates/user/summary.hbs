@@ -6,15 +6,14 @@
         {{user-stat value=model.days_visited label="user.summary.days_visited"}}
       </li>
       <li>
-        <span class='value'>{{model.time_read}}</span>
-        <span class='label'>{{{i18n "user.summary.time_read"}}}</span>
+        {{user-stat value=model.time_read label="user.summary.time_read" type="string"}}
       </li>
       <li>
         {{user-stat value=model.posts_read_count label="user.summary.posts_read"}}
       </li>
       <li class="linked-stat">
         {{#link-to 'userActivity.likesGiven'}}
-          {{user-stat value=model.likes_given label="user.summary.likes_given"}}
+          {{user-stat value=model.likes_given icon="heart" label="user.summary.likes_given"}}
         {{/link-to}}
       </li>
       {{#if model.bookmark_count}}
@@ -35,70 +34,36 @@
         {{/link-to}}
       </li>
       <li>
-          {{user-stat value=model.likes_received label="user.summary.likes_received"}}
+        {{user-stat value=model.likes_received icon="heart" label="user.summary.likes_received"}}
       </li>
-      {{plugin-outlet name="user-summary-stat"
-                      connectorTagName="li"
-                      args=(hash model=model)}}
+      {{plugin-outlet name="user-summary-stat" connectorTagName="li" args=(hash model=model)}}
     </ul>
   </div>
 
   <div class='top-section'>
-    <div class='top-sub-section replies-section pull-left'>
-      <h3 class='stats-title'>{{i18n "user.summary.top_replies"}}</h3>
-      {{#if model.replies.length}}
-        <ul>
-          {{#each model.replies as |reply|}}
-            <li>
-              <span class='topic-info'>
-                {{format-date reply.createdAt format="tiny" noTitle="true"}}
-                {{#if reply.like_count}}
-                  &middot;
-                  {{d-icon 'heart'}}&nbsp;<span class='like-count'>{{number reply.like_count}}</span>
-                {{/if}}
-              </span>
-              <br>
-              <a href="{{unbound reply.url}}">{{{reply.topic.fancyTitle}}}</a>
-            </li>
-          {{/each}}
-        </ul>
-        {{#if moreReplies}}
-          <p>{{#link-to "userActivity.replies" user class="more"}}{{i18n "user.summary.more_replies"}}{{/link-to}}</p>
-        {{/if}}
-      {{else}}
-        <p>{{i18n "user.summary.no_replies"}}</p>
-      {{/if}}
-    </div>
-    <div class='top-sub-section topics-section pull-right'>
-      <h3 class='stats-title'>{{i18n "user.summary.top_topics"}}</h3>
-      {{#if model.topics.length}}
-        <ul>
-          {{#each model.topics as |topic|}}
-            <li>
-              <span class='topic-info'>
-                {{format-date topic.createdAt format="tiny" noTitle="true"}}
-                {{#if topic.like_count}}
-                  &middot;
-                  {{d-icon 'heart'}}&nbsp;<span class='like-count'>{{number topic.like_count}}</span>
-                {{/if}}
-              </span>
-              <br>
-              <a href="{{unbound topic.url}}">{{{topic.fancyTitle}}}</a>
-            </li>
-          {{/each}}
-        </ul>
-        {{#if moreTopics}}
-          <p>{{#link-to "userActivity.topics" user class="more"}}{{i18n "user.summary.more_topics"}}{{/link-to}}</p>
-        {{/if}}
-      {{else}}
-        <p>{{i18n "user.summary.no_topics"}}</p>
-      {{/if}}
-    </div>
+    {{#user-summary-section title="top_replies" class="replies-section pull-left"}}
+      {{#user-summary-topics-list type="replies" items=model.replies user=user as |reply|}}
+        {{user-summary-topic
+          createdAt=reply.createdAt
+          topic=reply.topic
+          likes=reply.like_count
+          url=reply.url}}
+      {{/user-summary-topics-list}}
+    {{/user-summary-section}}
+
+    {{#user-summary-section title="top_topics" class="topics-section pull-right"}}
+      {{#user-summary-topics-list type="topics" items=model.topics user=user as |topic|}}
+        {{user-summary-topic
+          createdAt=topic.created_at
+          topic=topic
+          likes=topic.like_count
+          url=topic.url}}
+      {{/user-summary-topics-list}}
+    {{/user-summary-section}}
   </div>
 
   <div class='top-section'>
-    <div class='top-sub-section links-section pull-left'>
-      <h3 class='stats-title'>{{i18n "user.summary.top_links"}}</h3>
+    {{#user-summary-section title="top_links" class="links-section pull-left"}}
       {{#if model.links.length}}
         <ul>
           {{#each model.links as |link|}}
@@ -119,61 +84,27 @@
       {{else}}
         <p>{{i18n "user.summary.no_links"}}</p>
       {{/if}}
-    </div>
-    <div class='top-sub-section likes-section pull-right'>
-    <h3 class='stats-title'>{{i18n "user.summary.most_replied_to_users"}}</h3>
-      {{#if model.most_replied_to_users.length}}
-        <ul>
-          {{#each model.most_replied_to_users as |user|}}
-            <li>
-              {{#user-info user=user}}
-                {{d-icon "reply"}}
-                <span class='replies'>{{number user.count}}</span>
-              {{/user-info}}
-            </li>
-          {{/each}}
-        </ul>
-      {{else}}
-        <p>{{i18n "user.summary.no_replies"}}</p>
-      {{/if}}
-    </div>
+    {{/user-summary-section}}
+
+    {{#user-summary-section title="most_replied_to_users" class="summary-user-list replied-section pull-right"}}
+      {{#user-summary-users-list none="no_replies" users=model.most_replied_to_users as |user|}}
+        {{user-summary-user user=user icon="reply" countClass="replies"}}
+      {{/user-summary-users-list}}
+    {{/user-summary-section}}
   </div>
 
   <div class='top-section most-liked-section'>
-    <div class='top-sub-section likes-section pull-left'>
-      <h3 class='stats-title'>{{i18n "user.summary.most_liked_by"}}</h3>
-      {{#if model.most_liked_by_users.length}}
-        <ul>
-          {{#each model.most_liked_by_users as |user|}}
-            <li>
-              {{#user-info user=user}}
-                {{d-icon "heart"}}
-                <span class='likes'>{{number user.count}}</span>
-              {{/user-info}}
-            </li>
-          {{/each}}
-        </ul>
-      {{else}}
-        <p>{{i18n "user.summary.no_likes"}}</p>
-      {{/if}}
-    </div>
-    <div class='top-sub-section likes-section pull-right'>
-      <h3 class='stats-title'>{{i18n "user.summary.most_liked_users"}}</h3>
-      {{#if model.most_liked_users.length}}
-        <ul>
-          {{#each model.most_liked_users as |user|}}
-            <li>
-              {{#user-info user=user}}
-                {{d-icon "heart"}}
-                <span class='likes'>{{number user.count}}</span>
-              {{/user-info}}
-            </li>
-          {{/each}}
-        </ul>
-      {{else}}
-        <p>{{i18n "user.summary.no_likes"}}</p>
-      {{/if}}
-    </div>
+    {{#user-summary-section title="most_liked_by" class="summary-user-list liked-by-section pull-left"}}
+      {{#user-summary-users-list none="no_likes" users=model.most_liked_by_users as |user|}}
+        {{user-summary-user user=user icon="heart" countClass="likes"}}
+      {{/user-summary-users-list}}
+    {{/user-summary-section}}
+
+    {{#user-summary-section title="most_liked_users" class="summary-user-list liked-section pull-right"}}
+      {{#user-summary-users-list none="no_likes" users=model.most_liked_users as |user|}}
+        {{user-summary-user user=user icon="heart" countClass="likes"}}
+      {{/user-summary-users-list}}
+    {{/user-summary-section}}
   </div>
 
   {{#if siteSettings.enable_badges}}

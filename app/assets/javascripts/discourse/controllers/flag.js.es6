@@ -1,4 +1,3 @@
-import { iconHTML } from 'discourse-common/lib/icon-library';
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import ActionSummary from 'discourse/models/action-summary';
 import { MAX_MESSAGE_LENGTH } from 'discourse/models/post-action-type';
@@ -54,19 +53,17 @@ export default Ember.Controller.extend(ModalFunctionality, {
       return flagsAvailable;
     } else {
       // flagging topic
-      const self = this,
-          lookup = Em.Object.create();
-
-      _.each(this.get("model.actions_summary"),function(a) {
-        a.flagTopic = self.get('model');
-        a.actionType = self.site.topicFlagTypeById(a.id);
-        const actionSummary = ActionSummary.create(a);
-        lookup.set(a.actionType.get('name_key'), actionSummary);
+      let lookup = Em.Object.create();
+      let model = this.get('model');
+      model.get('actions_summary').forEach(a => {
+        a.flagTopic = model;
+        a.actionType = this.site.topicFlagTypeById(a.id);
+        lookup.set(a.actionType.get('name_key'), ActionSummary.create(a));
       });
       this.set('topicActionByName', lookup);
 
-      return this.site.get('topic_flag_types').filter(function(item) {
-        return _.any(self.get("model.actions_summary"), function(a) {
+      return this.site.get('topic_flag_types').filter(item => {
+        return _.any(this.get("model.actions_summary"), a => {
           return (a.id === item.get('id') && a.can_act);
         });
       });
@@ -97,13 +94,18 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return !flagTopic && !isCustomFlag && this.currentUser.get('staff');
   },
 
-  submitText: function(){
-    if (this.get('selected.is_custom_flag')) {
-      return iconHTML('envelope') + (I18n.t(this.get('flagTopic') ? "flagging_topic.notify_action" : "flagging.notify_action"));
-    } else {
-      return iconHTML('flag') + (I18n.t(this.get('flagTopic') ? "flagging_topic.action" : "flagging.action"));
+  @computed('selected.is_custom_flag')
+  submitIcon(isCustomFlag) {
+    return isCustomFlag ? "envelope" : "flag";
+  },
+
+  @computed('selected.is_custom_flag', 'flagTopic')
+  submitLabel(isCustomFlag, flagTopic) {
+    if (isCustomFlag) {
+      return flagTopic ? "flagging_topic.notify_action" : "flagging.notify_action";
     }
-  }.property('selected.is_custom_flag'),
+    return flagTopic ? "flagging_topic.action" : "flagging.action";
+  },
 
   actions: {
     deleteSpammer() {

@@ -230,7 +230,6 @@ http://b.com/#{'a' * 500}
       end
 
     end
-
   end
 
   describe 'internal link from pm' do
@@ -381,6 +380,11 @@ http://b.com/#{'a' * 500}
         result = TopicLink.duplicate_lookup(post.topic)
         expect(result).to eq({})
       end
+    end
+
+    it "works with invalid link target" do
+      post = Fabricate(:post, raw: '<a href="http:geturl">http:geturl</a>', user: user, topic: topic, cook_method: Post.cook_methods[:raw_html])
+      expect { TopicLink.extract_from(post) }.to_not raise_error
     end
   end
 

@@ -1,5 +1,11 @@
 <span class='value'>
-  {{#if icon}}{{d-icon icon}}{{/if}}
-  {{number value}}
+  {{#if isNumber}}
+    {{number value}}
+  {{else}}
+    {{value}}
+  {{/if}}
 </span>
-<span class='label'>{{{i18n label count=value}}}</span>
+<span class='label'>
+  {{#if icon}}{{d-icon icon}}{{/if}}
+  {{{i18n label count=value}}}
+</span>

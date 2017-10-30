@@ -9,8 +9,7 @@ describe PostSerializer do
     let(:admin) { Fabricate(:admin) }
     let(:acted_ids) {
       PostActionType.public_types.values
-        .concat([:notify_user, :spam]
-        .map { |k| PostActionType.types[k] })
+        .concat([:notify_user, :spam].map { |k| PostActionType.types[k] })
     }
 
     def visible_actions_for(user)

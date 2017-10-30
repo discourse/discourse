@@ -72,6 +72,8 @@ class ImportScripts::Base
       min_private_message_title_length: 1,
       allow_duplicate_topic_titles: true,
       disable_emails: true,
+      max_attachment_size_kb: 102400,
+      max_image_size_kb: 102400,
       authorized_extensions: '*'
     }
   end
@@ -144,7 +146,7 @@ class ImportScripts::Base
     created = 0
     skipped = 0
     failed = 0
-    total = opts[:total] || results.size
+    total = opts[:total] || results.count
 
     results.each do |result|
       g = yield(result)
@@ -176,7 +178,7 @@ class ImportScripts::Base
     opts[:name] = UserNameSuggester.suggest(import_name)
 
     existing = Group.where(name: opts[:name]).first
-    return existing if existing && existing.custom_fields["import_id"].to_i == (import_id.to_i)
+    return existing if existing && existing.custom_fields["import_id"].to_s == (import_id.to_s)
     g = existing || Group.new(opts)
     g.custom_fields["import_id"] = import_id
     g.custom_fields["import_name"] = import_name
@@ -220,7 +222,7 @@ class ImportScripts::Base
     created = 0
     skipped = 0
     failed = 0
-    total = opts[:total] || results.size
+    total = opts[:total] || results.count
 
     results.each do |result|
       u = yield(result)
@@ -268,7 +270,7 @@ class ImportScripts::Base
     post_create_action = opts.delete(:post_create_action)
 
     existing = User.joins(:user_emails).where("user_emails.email = ? OR username = ?", opts[:email].downcase, opts[:username]).first
-    return existing if existing && (merge || existing.custom_fields["import_id"].to_i == import_id.to_i)
+    return existing if existing && (merge || existing.custom_fields["import_id"].to_s == import_id.to_s)
 
     bio_raw = opts.delete(:bio_raw)
     website = opts.delete(:website)
@@ -277,6 +279,7 @@ class ImportScripts::Base
 
     original_username = opts[:username]
     original_name = opts[:name]
+    original_email = opts[:email] = opts[:email].downcase
 
     # Allow the || operations to work with empty strings ''
     opts[:username] = nil if opts[:username].blank?
@@ -292,9 +295,13 @@ class ImportScripts::Base
       opts[:username] = UserNameSuggester.suggest(opts[:username] || opts[:name].presence || opts[:email])
     end
 
+    unless opts[:email].match(EmailValidator.email_regex)
+      opts[:email] = "invalid#{SecureRandom.hex}@no-email.invalid"
+      puts "Invalid email #{original_email} for #{opts[:username]}. Using: #{opts[:email]}"
+    end
+
     opts[:name] = original_username if original_name.blank? && opts[:username] != original_username
 
-    opts[:email] = opts[:email].downcase
     opts[:trust_level] = TrustLevel[1] unless opts[:trust_level]
     opts[:active] = opts.fetch(:active, true)
     opts[:import_mode] = true
@@ -306,6 +313,7 @@ class ImportScripts::Base
     u.custom_fields["import_username"] = opts[:username] if original_username.present?
     u.custom_fields["import_avatar_url"] = avatar_url if avatar_url.present?
     u.custom_fields["import_pass"] = opts[:password] if opts[:password].present?
+    u.custom_fields["import_email"] = original_email if original_email != opts[:email]
 
     begin
       User.transaction do
@@ -335,6 +343,27 @@ class ImportScripts::Base
       end
     end
 
+    if u.custom_fields['import_email']
+      u.suspended_at = Time.zone.at(Time.now)
+      u.suspended_till = 200.years.from_now
+      ban_reason = 'Invalid email address on import'
+      u.active = false
+      u.save!
+
+      user_option = u.user_option
+      user_option.email_digests = false
+      user_option.email_private_messages = false
+      user_option.email_direct = false
+      user_option.email_always = false
+      user_option.save!
+      if u.save
+        StaffActionLogger.new(Discourse.system_user).log_user_suspend(u, ban_reason)
+      else
+        Rails.logger.error("Failed to suspend user #{u.username}. #{u.errors.try(:full_messages).try(:inspect)}")
+      end
+
+    end
+
     post_create_action.try(:call, u) if u.persisted?
 
     u # If there was an error creating the user, u.errors has the messages
@@ -353,7 +382,7 @@ class ImportScripts::Base
   def create_categories(results)
     created = 0
     skipped = 0
-    total = results.size
+    total = results.count
 
     results.each do |c|
       params = yield(c)
@@ -425,7 +454,7 @@ class ImportScripts::Base
   def create_posts(results, opts = {})
     skipped = 0
     created = 0
-    total = opts[:total] || results.size
+    total = opts[:total] || results.count
     start_time = get_start_time("posts-#{total}") # the post count should be unique enough to differentiate between posts and PMs
 
     results.each do |r|
@@ -505,7 +534,7 @@ class ImportScripts::Base
   def create_bookmarks(results, opts = {})
     created = 0
     skipped = 0
-    total = opts[:total] || results.size
+    total = opts[:total] || results.count
 
     user = User.new
     post = Post.new

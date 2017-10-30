@@ -1,6 +1,42 @@
+# frozen_string_literal: true
+
 require_dependency 'middleware/anonymous_cache'
 
 class Middleware::RequestTracker
+
+  @@detailed_request_loggers = nil
+
+  # register callbacks for detailed request loggers called on every request
+  # example:
+  #
+  # Middleware::RequestTracker.detailed_request_logger(->|env, data| do
+  #   # do stuff with env and data
+  # end
+  def self.register_detailed_request_logger(callback)
+
+    unless @patched_instrumentation
+      require_dependency "method_profiler"
+      MethodProfiler.patch(PG::Connection, [
+        :exec, :async_exec, :exec_prepared, :send_query_prepared, :query
+      ], :sql)
+
+      MethodProfiler.patch(Redis::Client, [
+        :call, :call_pipeline
+      ], :redis)
+      @patched_instrumentation = true
+    end
+
+    (@@detailed_request_loggers ||= []) << callback
+  end
+
+  def self.unregister_detailed_request_logger(callback)
+    @@detailed_request_loggers.delete callback
+
+    if @@detailed_request_loggers.length == 0
+      @detailed_request_loggers = nil
+    end
+
+  end
 
   def initialize(app, settings = {})
     @app = app
@@ -44,19 +80,17 @@ class Middleware::RequestTracker
 
   end
 
-  TRACK_VIEW = "HTTP_DISCOURSE_TRACK_VIEW".freeze
-  CONTENT_TYPE = "Content-Type".freeze
-  def self.get_data(env, result)
+  def self.get_data(env, result, timing)
     status, headers = result
     status = status.to_i
 
     helper = Middleware::AnonymousCache::Helper.new(env)
     request = Rack::Request.new(env)
 
-    env_track_view = env[TRACK_VIEW]
+    env_track_view = env["HTTP_DISCOURSE_TRACK_VIEW"]
     track_view = status == 200
-    track_view &&= env_track_view != "0".freeze && env_track_view != "false".freeze
-    track_view &&= env_track_view || (request.get? && !request.xhr? && headers[CONTENT_TYPE] =~ /text\/html/)
+    track_view &&= env_track_view != "0" && env_track_view != "false"
+    track_view &&= env_track_view || (request.get? && !request.xhr? && headers["Content-Type"] =~ /text\/html/)
     track_view = !!track_view
 
     {
@@ -65,22 +99,32 @@ class Middleware::RequestTracker
       has_auth_cookie: helper.has_auth_cookie?,
       is_background: request.path =~ /^\/message-bus\// || request.path == /\/topics\/timings/,
       is_mobile: helper.is_mobile?,
-      track_view: track_view
+      track_view: track_view,
+      timing: timing
     }
+
   end
 
   def call(env)
+    MethodProfiler.start if @@detailed_request_loggers
     result = @app.call(env)
+    info = MethodProfiler.stop if @@detailed_request_loggers
+    result
   ensure
 
     # we got to skip this on error ... its just logging
-    data = self.class.get_data(env, result) rescue nil
+    data = self.class.get_data(env, result, info) rescue nil
     host = RailsMultisite::ConnectionManagement.host(env)
 
     if data
       if result && (headers = result[1])
         headers["X-Discourse-TrackView"] = "1" if data[:track_view]
       end
+
+      if @@detailed_request_loggers
+        @@detailed_request_loggers.each { |logger| logger.call(env, data) }
+      end
+
       log_later(data, host)
     end
 

@@ -5,7 +5,7 @@ module Discourse
       MAJOR = 1
       MINOR = 9
       TINY  = 0
-      PRE   = 'beta13'
+      PRE   = 'beta14'
 
       STRING = [MAJOR, MINOR, TINY, PRE].compact.join('.')
     end

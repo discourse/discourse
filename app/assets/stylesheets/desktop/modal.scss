@@ -16,7 +16,7 @@
   height: auto;
   margin: -250px 0 0 -305px;
   background-color: $secondary;
-  border: 1px solid $primary-low; 
+  border: 1px solid $primary-low;
 
   box-shadow: 0 3px 7px rgba(0,0,0, .8);
   background-clip: padding-box;
@@ -62,7 +62,7 @@
 .close {
   font-size: 1.429em;
   text-decoration: none;
-  color: dark-light-choose(scale-color($primary, $lightness: 35%), scale-color($secondary, $lightness: 65%));
+  color: dark-light-choose($primary-high, $secondary-low);
   cursor: pointer;
   &:hover {
     color: $primary;
@@ -70,8 +70,8 @@
 }
 
 .modal {
-  .category-select-box {
-    width: 430px;
+  .category-chooser {
+    width: 50%;
   }
 
   .category-combobox {
@@ -92,14 +92,13 @@
 }
 
 .custom-message-length {
-  margin: -10px 0 10px 20px;
-  color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%));
+  color: dark-light-choose($primary-low-mid, $secondary-high);
   font-size: 85%;
 }
 
 .flag-message {
-  margin-left: 20px;
-  width: 95% !important;
+  width: 95%;
+  margin: 0;
 }
 
 .edit-category-modal {
@@ -116,11 +115,11 @@
       li {
         margin: 0 4px 8px 0;
         a {
-          color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+          color: dark-light-choose($primary-medium, $secondary-medium);
           cursor: pointer;
         }
         a:hover {
-          color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
+          color: dark-light-choose($primary-medium, $secondary-medium);
         }
       }
     }
@@ -156,9 +155,11 @@
     flex-wrap: wrap;
 
     .btn {
-      width: 22%;
+      flex: 1 1 0;
       margin-bottom: 1em;
       margin-right: 1em;
+      white-space: nowrap;
+      max-width: 23%;
     }
   }
 

@@ -70,7 +70,7 @@
   }
 
   .edit-reason {
-    background-color: dark-light-choose(scale-color($highlight, $lightness: 25%), scale-color($highlight, $lightness: -50%));
+    background-color: dark-light-choose($highlight-medium, scale-color($highlight, $lightness: -50%));
     padding: 3px 5px 5px 5px;
   }
 
@@ -100,7 +100,7 @@
 
     // common/base/header.scss
     .fa, .icon {
-      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      color: dark-light-choose($primary-medium, $secondary-medium);
       font-size: 1.714em;
     }
   }
@@ -116,13 +116,13 @@
     .name {
       display: inline-block;
       margin-top: 5px;
-      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      color: dark-light-choose($primary-medium,$secondary-medium);
     }
 
     .title {
       display: inline-block;
       margin-top: 5px;
-      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      color: dark-light-choose($primary-medium, $secondary-medium);
     }
   }
 }

@@ -130,4 +130,6 @@ export function setup(helper) {
   helper.registerPlugin(md=>{
      md.block.bbcode.ruler.push('quotes', rule);
   });
+
+  helper.whiteList(['img[class=avatar]']);
 }

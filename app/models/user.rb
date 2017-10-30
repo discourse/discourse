@@ -89,7 +89,7 @@ class User < ActiveRecord::Base
 
   after_initialize :add_trust_level
 
-  before_validation :set_should_validate_email
+  before_validation :set_skip_validate_email
 
   after_create :create_email_token
   after_create :create_user_stat
@@ -108,7 +108,6 @@ class User < ActiveRecord::Base
   after_save :expire_old_email_tokens
   after_save :index_search
   after_commit :trigger_user_created_event, on: :create
-  after_commit :trigger_user_updated_event, on: :update
 
   before_destroy do
     # These tables don't have primary keys, so destroying them with activerecord is tricky:
@@ -615,7 +614,7 @@ class User < ActiveRecord::Base
   end
 
   def flags_given_count
-    PostAction.where(user_id: id, post_action_type_id: PostActionType.flag_types.values).count
+    PostAction.where(user_id: id, post_action_type_id: PostActionType.flag_types_without_custom.values).count
   end
 
   def warnings_received_count
@@ -623,7 +622,7 @@ class User < ActiveRecord::Base
   end
 
   def flags_received_count
-    posts.includes(:post_actions).where('post_actions.post_action_type_id' => PostActionType.flag_types.values).count
+    posts.includes(:post_actions).where('post_actions.post_action_type_id' => PostActionType.flag_types_without_custom.values).count
   end
 
   def private_topics_count
@@ -655,7 +654,7 @@ class User < ActiveRecord::Base
   end
 
   def suspended?
-    suspended_till && suspended_till > DateTime.now
+    !!(suspended_till && suspended_till > DateTime.now)
   end
 
   def suspend_record
@@ -1098,14 +1097,9 @@ class User < ActiveRecord::Base
     true
   end
 
-  def trigger_user_updated_event
-    DiscourseEvent.trigger(:user_updated, self)
-    true
-  end
-
-  def set_should_validate_email
+  def set_skip_validate_email
     if self.primary_email
-      self.primary_email.should_validate_email = should_validate_email_address?
+      self.primary_email.skip_validate_email = !should_validate_email_address?
     end
 
     true

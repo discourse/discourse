@@ -109,6 +109,7 @@ module Scheduler
               success: !failed,
               error: error
             )
+            DiscourseEvent.trigger(:scheduled_job_ran, stat)
           end
         end
         attempts(3) do

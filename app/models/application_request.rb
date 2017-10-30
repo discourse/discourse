@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class ApplicationRequest < ActiveRecord::Base
   enum req_type: %i(http_total
                     http_2xx
@@ -22,6 +23,10 @@ class ApplicationRequest < ActiveRecord::Base
   def self.increment!(type, opts = nil)
     key = redis_key(type)
     val = $redis.incr(key).to_i
+
+    # readonly mode it is going to be 0, skip
+    return if val == 0
+
     # 3.days, see: https://github.com/rails/rails/issues/21296
     $redis.expire(key, 259200)
 
@@ -35,6 +40,12 @@ class ApplicationRequest < ActiveRecord::Base
       write_cache!
     end
   end
+
+  GET_AND_RESET = <<~LUA
+    local val = redis.call('get', KEYS[1])
+    redis.call('set', KEYS[1], '0')
+    return val
+  LUA
 
   def self.write_cache!(date = nil)
     if date.nil?
@@ -51,22 +62,17 @@ class ApplicationRequest < ActiveRecord::Base
     # for concurrent calls without double counting
     req_types.each do |req_type, _|
       key = redis_key(req_type, date)
-      val = $redis.get(key).to_i
 
+      namespaced_key = $redis.namespace_key(key)
+      val = $redis.without_namespace.eval(GET_AND_RESET, keys: [namespaced_key]).to_i
       next if val == 0
 
-      new_val = $redis.incrby(key, -val).to_i
-
-      if new_val < 0
-        # undo and flush next time
-        $redis.incrby(key, val)
-        next
-      end
-
       id = req_id(date, req_type)
-
       where(id: id).update_all(["count = count + ?", val])
     end
+  rescue Redis::CommandError => e
+    raise unless e.message =~ /READONLY/
+    nil
   end
 
   def self.clear_cache!(date = nil)

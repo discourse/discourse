@@ -66,7 +66,7 @@ module Jobs
                   if upload.persisted?
                     downloaded_urls[src] = upload.url
                   else
-                    log(:info, "Failed to pull hotlinked image for post: #{post_id}: #{src} - #{upload.errors.join("\n")}")
+                    log(:info, "Failed to pull hotlinked image for post: #{post_id}: #{src} - #{upload.errors.full_messages.join("\n")}")
                   end
                 else
                   large_images << original_src

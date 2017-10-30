@@ -32,7 +32,7 @@ after_initialize do
   ].each { |path| load File.expand_path(path, __FILE__) }
 
   # Disable welcome message because that is what the bot is supposed to replace.
-  SiteSetting.send_welcome_message = false
+  SiteSetting.send_welcome_message = false if SiteSetting.send_welcome_message
 
   require_dependency 'plugin_store'
 
@@ -184,7 +184,7 @@ after_initialize do
     if self.user.enqueue_narrative_bot_job?
       input =
         case self.post_action_type_id
-        when *PostActionType.flag_types.values
+        when *PostActionType.flag_types_without_custom.values
           :flag
         when PostActionType.types[:like]
           :like

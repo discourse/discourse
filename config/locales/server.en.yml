@@ -164,6 +164,7 @@ en:
   not_logged_in: "You need to be logged in to do that."
   not_found: "The requested URL or resource could not be found."
   invalid_access: "You are not permitted to view the requested resource."
+  invalid_api_credentials: "You are not permitted to view the requested resource. The API username or key is invalid."
   read_only_mode_enabled: "The site is in read only mode. Interactions are disabled."
 
   reading_time: "Reading time"
@@ -741,7 +742,7 @@ en:
       email_body: "%{link}\n\n%{message}"
 
   flagging:
-    you_must_edit: '<p>Your post was flagged by the community. Please <a href="/my/messages">see your messages</a>.</p>'
+    you_must_edit: '<p>Your post was flagged by the community. Please <a href="%{path}">see your messages</a>.</p>'
     user_must_edit: '<p>This post was flagged by the community and is temporarily hidden.</p>'
 
   archetypes:
@@ -1357,6 +1358,7 @@ en:
     auto_block_fast_typers_on_first_post: "Automatically block users that do not meet min_first_post_typing_time"
     auto_block_fast_typers_max_trust_level: "Maximum trust level to auto block fast typers"
     auto_block_first_post_regex: "Case insensitive regex that if passed will cause first post by user to be blocked and sent to approval queue. Example: raging|a[bc]a , will cause all posts containing raging or aba or aca to be blocked on first. Only applies to first post."
+    flags_default_topics: "Show flagged topics by default in the admin section"
 
     reply_by_email_enabled: "Enable replying to topics via email."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
@@ -1432,7 +1434,7 @@ en:
     suppress_digest_email_after_days: "Suppress summary emails for users not seen on the site for more than (n) days."
     digest_suppress_categories: "Suppress these categories from summary emails."
     disable_digest_emails: "Disable summary emails for all users."
-    email_accent_bg_color: "The accent color to be used as the background of some elements in HTML emails. Enter a color name ('red') or hex value ('#FF000')."
+    email_accent_bg_color: "The accent color to be used as the background of some elements in HTML emails. Enter a color name ('red') or hex value ('#FF0000')."
     email_accent_fg_color: "The color of text rendered on the email bg color in HTML emails. Enter a color name ('white') or hex value ('#FFFFFF')."
     email_link_color: "The color of links in HTML emails. Enter a color name ('blue') or hex value ('#0000FF')."
 
@@ -1481,7 +1483,7 @@ en:
 
     share_anonymized_statistics: "Share anonymized usage statistics."
 
-    auto_handle_queued_age: "Automatically handle records that are waiting to be reviewed after this many days. Flags will be deferred. Queued posts and users will be rejected. Set to 0 to disable this feature."
+    auto_handle_queued_age: "Automatically handle records that are waiting to be reviewed after this many days. Flags will be ignored. Queued posts and users will be rejected. Set to 0 to disable this feature."
 
     max_prints_per_hour_per_user: "Maximum number of /print page impressions (set to 0 to disable)"
 
@@ -1616,6 +1618,7 @@ en:
       category: 'Categories'
       topic: 'Results'
       user: 'Users'
+    results_page: "Search results for '%{term}'"
 
   sso:
     login_error: "Login Error"
@@ -1749,7 +1752,7 @@ en:
     username:
       short: "must be at least %{min} characters"
       long: "must be no more than %{max} characters"
-      characters: "must only include numbers, letters and underscores"
+      characters: "must only include numbers, letters, dashes, and underscores"
       unique: "must be unique"
       blank: "must be present"
       must_begin_with_alphanumeric_or_underscore: "must begin with a letter, a number or an underscore"
@@ -2409,7 +2412,7 @@ en:
       text_body_template: |
         Congratulations, you've earned the **New User of the Month award for %{month_year}**. :trophy:
 
-        This award is only granted to two new users per month, and it will be permanently visible on [your user page](%{base_url}/my/badges).
+        This award is only granted to two new users per month, and it will be permanently visible on [the badges page](%{url}).
 
         You've quickly become a valuable member of our community. Thanks for joining, and keep up the great work!
 

@@ -6,15 +6,13 @@
 {{/if}}
 
 <div class="admin-title">
-  <div class="pull-left">
-    <h2>{{title}}</h2>
-  </div>
+  <h2>{{title}}</h2>
 </div>
 <div class='username controls'>
   {{text-field value=listFilter placeholder=searchHint}}
   {{#unless showEmails}}
     <div class="pull-right">
-      <button {{action "showEmails"}} class="btn">{{i18n 'admin.users.show_emails'}}</button>
+      <button {{action "showEmails"}} class="show-emails btn">{{i18n 'admin.users.show_emails'}}</button>
     </div>
   {{/unless}}
 </div>
@@ -28,7 +26,7 @@
         {{/if}}
         <th>&nbsp;</th>
         <th>{{i18n 'username'}}</th>
-        <th>{{i18n 'email'}}</th>
+        <th class='email-heading'>{{i18n 'email'}}</th>
         <th>{{i18n 'admin.users.last_emailed'}}</th>
         {{admin-directory-toggle field="seen" i18nKey='last_seen' order=order ascending=ascending}}
         {{admin-directory-toggle field="topics_viewed" i18nKey="admin.user.topics_entered" order=order ascending=ascending}}

@@ -10,6 +10,11 @@ describe DiscourseRedis do
 
   let(:fallback_handler) { DiscourseRedis::FallbackHandler.instance }
 
+  it "ignore_readonly returns nil from a pure exception" do
+    result = DiscourseRedis.ignore_readonly { raise Redis::CommandError.new("READONLY") }
+    expect(result).to eq(nil)
+  end
+
   describe 'redis commands' do
     let(:raw_redis) { Redis.new(DiscourseRedis.config) }
 

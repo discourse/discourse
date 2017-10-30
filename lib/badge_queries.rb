@@ -70,7 +70,7 @@ SQL
     SELECT pa.user_id, min(pa.id) id
     FROM post_actions pa
     JOIN badge_posts p on p.id = pa.post_id
-    WHERE post_action_type_id IN (#{PostActionType.flag_types.values.join(",")}) AND
+    WHERE post_action_type_id IN (#{PostActionType.flag_types_without_custom.values.join(",")}) AND
       (:backfill OR pa.post_id IN (:post_ids) )
     GROUP BY pa.user_id
   ) x

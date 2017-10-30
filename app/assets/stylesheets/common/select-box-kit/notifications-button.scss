@@ -1,0 +1,17 @@
+.select-box-kit {
+  &.dropdown-select-box {
+    &.notifications-button {
+      .select-box-kit-body {
+        min-width: 550px;
+        max-width: 550px;
+      }
+
+      .select-box-kit-row {
+        .icons {
+          -ms-flex-item-align: start;
+              align-self: flex-start;
+        }
+      }
+    }
+  }
+}

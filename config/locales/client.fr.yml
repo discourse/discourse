@@ -116,6 +116,7 @@ fr:
       split_topic: "a scindé ce sujet %{when}"
       invited_user: "a invité %{who} %{when}"
       invited_group: "a invité %{who} %{when}"
+      user_left: "%{who}a quitté cette conversation %{when}"
       removed_user: "a retiré %{who} %{when}"
       removed_group: "a retiré %{who} %{when}"
       autoclosed:
@@ -531,6 +532,7 @@ fr:
       disable_jump_reply: "Ne pas aller à mon nouveau message après avoir répondu"
       dynamic_favicon: "Faire apparaître le nombre de sujets récemment créés ou mis à jour sur l'icône navigateur"
       theme_default_on_all_devices: "En faire mon thème par défaut sur tous mes périphériques"
+      allow_private_messages: "Autoriser les autres utilisateurs à m'envoyer des messages privés"
       external_links_in_new_tab: "Ouvrir tous les liens externes dans un nouvel onglet"
       enable_quoting: "Proposer de citer le texte sélectionné"
       change: "modifier"
@@ -540,6 +542,7 @@ fr:
       admin_tooltip: "Cet utilisateur est un administrateur"
       blocked_tooltip: "Cet utilisateur est bloqué"
       suspended_notice: "L'utilisateur est suspendu jusqu'au {{date}}."
+      suspended_permanently: "Cet utilisateur est suspendu."
       suspended_reason: "Raison :"
       github_profile: "GitHub"
       email_activity_summary: "Résumé d'activité"
@@ -805,11 +808,11 @@ fr:
           one: "message créé"
           other: "messages créés"
         likes_given:
-          one: "<i class='fa fa-heart'></i> donné"
-          other: "<i class='fa fa-heart'></i> donnés"
+          one: "donné"
+          other: "donnés"
         likes_received:
-          one: "<i class='fa fa-heart'></i> reçu"
-          other: "<i class='fa fa-heart'></i> reçus"
+          one: "reçu"
+          other: "reçus"
         days_visited:
           one: "jour visité"
           other: "jours visités"
@@ -927,6 +930,7 @@ fr:
     private_message_info:
       title: "Message privé"
       invite: "Inviter d'autres utilisateurs…"
+      leave_message: "Êtes-vous sûr de vouloir quitter cette conversation ?"
       remove_allowed_user: "Êtes-vous sûr de vouloir supprimer {{name}} de ce message privé ?"
       remove_allowed_group: "Êtes-vous sûr de vouloir supprimer {{name}} de ce message privé ?"
     email: 'Courriel'
@@ -1129,10 +1133,6 @@ fr:
       olist_title: "Liste numérotée"
       ulist_title: "Liste à puces"
       list_item: "Élément"
-      heading_label: "T"
-      heading_title: "Titre"
-      heading_text: "Titre"
-      hr_title: "Barre horizontale"
       help: "Aide Markdown"
       toggler: "cacher ou afficher le panneau d'édition"
       modal_ok: "OK"
@@ -1403,19 +1403,24 @@ fr:
       jump_reply_down: allez à des réponses ultérieures
       deleted: "Ce sujet a été supprimé"
       topic_status_update:
-        title: "Planifier une action"
+        title: "Action planifiée du sujet"
         save: "Planifier"
         num_of_hours: "Nombre d'heures :"
         remove: "Supprimer la planification"
         publish_to: "Publier dans :"
         when: "Quand :"
+        public_timer_types: Actions planifiées du sujet
+        private_timer_types: Actions utilisateur planifiées du sujet
       auto_update_input:
+        none: "Sélectionner un intervalle de temps"
         later_today: "Plus tard aujourd'hui"
         tomorrow: "Demain"
         later_this_week: "Plus tard cette semaine"
         this_weekend: "Ce weekend"
         next_week: "Semaine prochaine"
+        two_weeks: "Deux semaines"
         next_month: "Mois prochai"
+        forever: "Toujours"
         pick_date_and_time: "Sélectionner une date et heure"
         set_based_on_last_post: "Fermer par rapport au dernier message"
       publish_to_category:
@@ -2168,7 +2173,7 @@ fr:
         hamburger_menu: '<b>=</b> Ouvrir le menu hamburger'
         user_profile_menu: '<b>p</b>Ouvrir le menu utilisateur'
         show_incoming_updated_topics: '<b>.</b> Montrer les sujets mis à jour récemment'
-        search: '<b>/</b> ou <b>ctrl</b>+<b>MAJ.</b>+<b>s</b> Rechercher'
+        search: '<b>/</b> ou <b>Ctrl</b>+<b>Alt</b>+<b>f</b> Rechercher'
         help: '<b>?</b> Ouvrir l''aide du clavier'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Ignorer les nouveaux messages'
         dismiss_topics: '<b>x</b>, <b>t</b> Ignorer les sujets'
@@ -2241,7 +2246,10 @@ fr:
       tags: "Tags"
       choose_for_topic: "choisir des tags optionnels pour ce sujet"
       delete_tag: "Supprimer le tag"
-      delete_confirm: "Êtes-vous sûr de vouloir supprimer ce tag ?"
+      delete_confirm:
+        one: "Êtes-vous sûr de vouloir supprimer ce tag et l'enlever de 1 sujet auquel il est assigné ?"
+        other: "Êtes-vous sûr de vouloir supprimer ce tag et l'enlever de {{count}} sujets auxquels il est assigné ?"
+      delete_confirm_no_topics: "Êtes-vous sûr de vouloir supprimer ce tag ?"
       rename_tag: "Renommer le tag"
       rename_instructions: "Choisir un nouveau nom pour ce tag :"
       sort_by: "Trier par :"
@@ -2423,22 +2431,10 @@ fr:
           type: "Type"
           users: "Utilisateurs"
           last_flagged: "Dernier signalés"
-        summary:
-          action_type_3:
-            one: "hors sujet"
-            other: "hors sujet x{{count}}"
-          action_type_4:
-            one: "inaproprié"
-            other: "inaproprié x{{count}}"
-          action_type_6:
-            one: "personnalisé"
-            other: "personnalisé x{{count}}"
-          action_type_7:
-            one: "personnalisé"
-            other: "personnalisé x{{count}}"
-          action_type_8:
-            one: "spam"
-            other: "spam x{{count}}"
+        short_names:
+          off_topic: "hors-sujet"
+          inappropriate: "inapproprié"
+          spam: "spam"
       groups:
         primary: "Groupe principal"
         no_primary: "(pas de groupe principal)"

@@ -2,7 +2,7 @@
   <label class="control-label">{{i18n 'user.email_settings'}}</label>
   <div class='controls controls-dropdown'>
     <label>{{i18n 'user.email_previous_replies.title'}}</label>
-    {{select-box idKey="value" textKey="name" content=previousRepliesOptions value=model.user_option.email_previous_replies}}
+    {{combo-box valueAttribute="value" content=previousRepliesOptions value=model.user_option.email_previous_replies}}
   </div>
   {{preference-checkbox labelKey="user.email_in_reply_to" checked=model.user_option.email_in_reply_to}}
   {{preference-checkbox labelKey="user.email_private_messages" checked=model.user_option.email_private_messages}}
@@ -25,7 +25,7 @@
     {{preference-checkbox labelKey="user.email_digests.title" disabled=model.user_option.mailing_list_mode checked=model.user_option.email_digests}}
     {{#if model.user_option.email_digests}}
       <div class='controls controls-dropdown'>
-        {{select-box idKey="value" filterable=true textKey="name" content=digestFrequencies value=model.user_option.digest_after_minutes}}
+        {{combo-box valueAttribute="value" filterable=true content=digestFrequencies value=model.user_option.digest_after_minutes}}
       </div>
       {{preference-checkbox labelKey="user.include_tl0_in_digests" disabled=model.user_option.mailing_list_mode checked=model.user_option.include_tl0_in_digests}}
     {{/if}}

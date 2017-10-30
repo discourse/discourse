@@ -119,7 +119,7 @@ zh_TW:
         disabled: '於 %{when} 除名'
     topic_admin_menu: "版區管理員操作"
     emails_are_disabled: "管理員已經停用了所有外寄郵件功能。通知信件都不會寄出。"
-    bootstrap_mode_enabled: "為方便站點準備發佈，現正處於初始化模式中。所有新用戶將被授予信任等級1，並為他們設置接受每日郵件摘要。初始化模式會在用戶數超過 %{min_users} 個時關閉。"
+    bootstrap_mode_enabled: "為了讓你的新網站更容易上軌道，現正處於初始化模式中。所有新用戶將被授予信任等級1，並為他們設定接受每日郵件摘要。初始化模式將於用戶數超過 %{min_users} 位後關閉。"
     bootstrap_mode_disabled: "初始化模式將會在24小時後關閉。"
     s3:
       regions:
@@ -1013,10 +1013,6 @@ zh_TW:
       olist_title: "編號清單"
       ulist_title: "符號清單"
       list_item: "清單項目"
-      heading_label: "H"
-      heading_title: "標頭"
-      heading_text: "標頭"
-      hr_title: "分隔線"
       help: "Markdown 編輯說明"
       toggler: "隱藏或顯示編輯面板"
       modal_ok: "確定"

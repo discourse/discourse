@@ -34,7 +34,8 @@ class UserUpdater
     :email_in_reply_to,
     :like_notification_frequency,
     :include_tl0_in_digests,
-    :theme_key
+    :theme_key,
+    :allow_private_messages,
   ]
 
   def initialize(actor, user)
@@ -109,18 +110,19 @@ class UserUpdater
         update_muted_users(attributes[:muted_usernames])
       end
 
-      saved = (!save_options || user.user_option.save) && user_profile.save && user.save
+      if (saved = (!save_options || user.user_option.save) && user_profile.save && user.save) &&
+         (attributes[:name].present? && old_user_name.casecmp(attributes.fetch(:name)) != 0) ||
+         (attributes[:name].blank? && old_user_name.present?)
 
-      if saved
-        # log name changes
-        if attributes[:name].present? && old_user_name.downcase != attributes.fetch(:name).downcase
-          StaffActionLogger.new(@actor).log_name_change(user.id, old_user_name, attributes.fetch(:name))
-        elsif attributes[:name].blank? && old_user_name.present?
-          StaffActionLogger.new(@actor).log_name_change(user.id, old_user_name, "")
-        end
+        StaffActionLogger.new(@actor).log_name_change(
+          user.id,
+          old_user_name,
+          attributes.fetch(:name) { '' }
+        )
       end
     end
 
+    DiscourseEvent.trigger(:user_updated, user) if saved
     saved
   end
 

@@ -125,6 +125,7 @@ describe Admin::UsersController do
 
       it "works properly" do
         Fabricate(:api_key, user: user)
+        expect(user).not_to be_suspended
         put(
           :suspend,
           params: {
@@ -137,6 +138,7 @@ describe Admin::UsersController do
         expect(response).to be_success
 
         user.reload
+        expect(user).to be_suspended
         expect(user.suspended_at).to be_present
         expect(user.suspended_till).to be_present
         expect(ApiKey.where(user_id: user.id).count).to eq(0)

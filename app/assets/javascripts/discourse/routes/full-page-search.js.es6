@@ -2,12 +2,13 @@ import { ajax } from 'discourse/lib/ajax';
 import { translateResults, getSearchKey, isValidSearchTerm } from "discourse/lib/search";
 import PreloadStore from 'preload-store';
 import { getTransient, setTransient } from 'discourse/lib/page-tracker';
+import { escapeExpression } from 'discourse/lib/utilities';
 
 export default Discourse.Route.extend({
   queryParams: { q: {}, expanded: false, context_id: {}, context: {}, skip_context: {} },
 
   titleToken() {
-    return I18n.t('search.results_page');
+    return I18n.t('search.results_page', { term: escapeExpression(this.controllerFor("full-page-search").get('searchTerm')) });
   },
 
   model(params) {

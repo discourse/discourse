@@ -178,121 +178,127 @@ var runTests = function() {
     return $("#user-card .names").length;
   });
 
-  exec("open login modal", function() {
-    $(".login-button").click();
-  });
+  if (system.env["READONLY_TESTS"]) {
+    test("readonly alert is present", function() {
+      return $(".alert-read-only").length;
+    });
+  } else {
+    exec("open login modal", function() {
+      $(".login-button").click();
+    });
 
-  test("login modal is open", function() {
-    return $(".login-modal").length;
-  });
+    test("login modal is open", function() {
+      return $(".login-modal").length;
+    });
 
-  exec("type in credentials & log in", function(system) {
-    $("#login-account-name").val(system.env['DISCOURSE_USERNAME'] || 'smoke_user').trigger("change");
-    $("#login-account-password").val(system.env["DISCOURSE_PASSWORD"] || 'P4ssw0rd').trigger("change");
-    $(".login-modal .btn-primary").click();
-  });
+    exec("type in credentials & log in", function(system) {
+      $("#login-account-name").val(system.env['DISCOURSE_USERNAME'] || 'smoke_user').trigger("change");
+      $("#login-account-password").val(system.env["DISCOURSE_PASSWORD"] || 'P4ssw0rd').trigger("change");
+      $(".login-modal .btn-primary").click();
+    });
 
-  test("is logged in", function() {
-    return $(".current-user").length;
-  });
+    test("is logged in", function() {
+      return $(".current-user").length;
+    });
 
-  exec("go home", function() {
-    if ($('#site-logo').length) $('#site-logo').click();
-    if ($('#site-text-logo').length) $('#site-text-logo').click();
-  });
+    exec("go home", function() {
+      if ($('#site-logo').length) $('#site-logo').click();
+      if ($('#site-text-logo').length) $('#site-text-logo').click();
+    });
 
-  test("it shows a topic list", function() {
-    return $(".topic-list").length;
-  });
+    test("it shows a topic list", function() {
+      return $(".topic-list").length;
+    });
 
-  test('we have a create topic button', function() {
-    return $("#create-topic").length;
-  });
+    test('we have a create topic button', function() {
+      return $("#create-topic").length;
+    });
 
-  exec("open composer", function() {
-    $("#create-topic").click();
-  });
+    exec("open composer", function() {
+      $("#create-topic").click();
+    });
 
-  test('the editor is visible', function() {
-    return $(".d-editor").length;
-  });
+    test('the editor is visible', function() {
+      return $(".d-editor").length;
+    });
 
-  exec("compose new topic", function() {
-    var date = " (" + (+new Date()) + ")",
-        title = "This is a new topic" + date,
-        post = "I can write a new topic inside the smoke test!" + date + "\n\n";
+    exec("compose new topic", function() {
+      var date = " (" + (+new Date()) + ")",
+          title = "This is a new topic" + date,
+          post = "I can write a new topic inside the smoke test!" + date + "\n\n";
 
-    $("#reply-title").val(title).trigger("change");
-    $("#reply-control .d-editor-input").val(post).trigger("change");
-    $("#reply-control .d-editor-input").focus()[0].setSelectionRange(post.length, post.length);
-  });
+      $("#reply-title").val(title).trigger("change");
+      $("#reply-control .d-editor-input").val(post).trigger("change");
+      $("#reply-control .d-editor-input").focus()[0].setSelectionRange(post.length, post.length);
+    });
 
-  test("updates preview", function() {
-    return $(".d-editor-preview p").length;
-  });
+    test("updates preview", function() {
+      return $(".d-editor-preview p").length;
+    });
 
-  exec("open upload modal", function() {
-    $(".d-editor-button-bar .upload").click();
-  });
+    exec("open upload modal", function() {
+      $(".d-editor-button-bar .upload").click();
+    });
 
-  test("upload modal is open", function() {
-    return $("#filename-input").length;
-  });
+    test("upload modal is open", function() {
+      return $("#filename-input").length;
+    });
 
-  // TODO: Looks like PhantomJS 2.0.0 has a bug with `uploadFile`
-  // which breaks this code.
+    // TODO: Looks like PhantomJS 2.0.0 has a bug with `uploadFile`
+    // which breaks this code.
 
-  // upload("#filename-input", "spec/fixtures/images/large & unoptimized.png");
-  // test("the file is inserted into the input", function() {
-  //   return document.getElementById('filename-input').files.length
-  // });
-  // screenshot('/tmp/upload-modal.png');
-  //
-  // test("upload modal is open", function() {
-  //   return document.querySelector("#filename-input");
-  // });
-  //
-  // exec("click upload button", function() {
-  //   $(".modal .btn-primary").click();
-  // });
-  //
-  // test("image is uploaded", function() {
-  //   return document.querySelector(".cooked img");
-  // });
+    // upload("#filename-input", "spec/fixtures/images/large & unoptimized.png");
+    // test("the file is inserted into the input", function() {
+    //   return document.getElementById('filename-input').files.length
+    // });
+    // screenshot('/tmp/upload-modal.png');
+    //
+    // test("upload modal is open", function() {
+    //   return document.querySelector("#filename-input");
+    // });
+    //
+    // exec("click upload button", function() {
+    //   $(".modal .btn-primary").click();
+    // });
+    //
+    // test("image is uploaded", function() {
+    //   return document.querySelector(".cooked img");
+    // });
 
-  exec("submit the topic", function() {
-    $("#reply-control .create").click();
-  });
+    exec("submit the topic", function() {
+      $("#reply-control .create").click();
+    });
 
-  test("topic is created", function() {
-    return $(".fancy-title").length;
-  });
+    test("topic is created", function() {
+      return $(".fancy-title").length;
+    });
 
-  exec("click reply button", function() {
-    $(".post-controls:first .create").click();
-  });
+    exec("click reply button", function() {
+      $(".post-controls:first .create").click();
+    });
 
-  test("composer is open", function() {
-    return $("#reply-control .d-editor-input").length;
-  });
+    test("composer is open", function() {
+      return $("#reply-control .d-editor-input").length;
+    });
 
-  exec("compose reply", function() {
-    var post = "I can even write a reply inside the smoke test ;) (" + (+new Date()) + ")";
-    $("#reply-control .d-editor-input").val(post).trigger("change");
-  });
+    exec("compose reply", function() {
+      var post = "I can even write a reply inside the smoke test ;) (" + (+new Date()) + ")";
+      $("#reply-control .d-editor-input").val(post).trigger("change");
+    });
 
-  test("waiting for the preview", function() {
-    return $(".d-editor-preview").text().trim().indexOf("I can even write") === 0;
-  });
+    test("waiting for the preview", function() {
+      return $(".d-editor-preview").text().trim().indexOf("I can even write") === 0;
+    });
 
-  execAsync("submit the reply", 6000, function() {
-    $("#reply-control .create").click();
-  });
+    execAsync("submit the reply", 6000, function() {
+      $("#reply-control .create").click();
+    });
 
-  test("reply is created", function() {
-    return !document.querySelector(".saving-text")
-        && $(".topic-post").length === 2;
-  });
+    test("reply is created", function() {
+      return !document.querySelector(".saving-text")
+          && $(".topic-post").length === 2;
+    });
+  }
 
   run();
 };

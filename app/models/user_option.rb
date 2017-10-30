@@ -59,11 +59,6 @@ class UserOption < ActiveRecord::Base
     super
   end
 
-  def update_tracked_topics
-    return unless saved_change_to_auto_track_topics_after_msecs?
-    TrackedTopicsUpdater.new(id, auto_track_topics_after_msecs).call
-  end
-
   def redirected_to_top_yet?
     last_redirected_to_top_at.present?
   end
@@ -133,6 +128,13 @@ class UserOption < ActiveRecord::Base
     times.max
   end
 
+  private
+
+    def update_tracked_topics
+      return unless saved_change_to_auto_track_topics_after_msecs?
+      TrackedTopicsUpdater.new(id, auto_track_topics_after_msecs).call
+    end
+
 end
 
 # == Schema Information
@@ -162,6 +164,7 @@ end
 #  notification_level_when_replying :integer
 #  theme_key                        :string
 #  theme_key_seq                    :integer          default(0), not null
+#  allow_private_messages           :boolean          default(TRUE), not null
 #
 # Indexes
 #

@@ -48,7 +48,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    border-top: 1px solid dark-light-choose(scale-color($primary, $lightness: 90%), scale-color($secondary, $lightness: 90%));
+    border-top: 1px solid dark-light-choose($primary-low, $secondary-low);
     box-shadow: 0px -2px 4px -1px rgba(0,0,0,.25);
     padding-top: 20px;
     z-index: 100000;
@@ -81,7 +81,7 @@
         -webkit-box-orient: vertical;
       }
       .username {
-        color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
+        color: dark-light-choose($primary-high, $secondary-low);
         word-wrap: break-word;
         font-weight: bold;
       }
@@ -201,14 +201,14 @@
 
     .start-date {
       @include unselectable;
-      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      color: dark-light-choose($primary-medium, $secondary-medium);
     }
 
     .timeline-scrollarea {
       margin-top: 0.5em;
       margin-left: 0.5em;
       border-left: 1px solid;
-      border-color: dark-light-choose(scale-color($tertiary, $lightness: 80%), scale-color($tertiary, $lightness: 20%));
+      border-color: dark-light-choose($tertiary-low, $tertiary-high);
       position: relative;
       -webkit-transform: translate3d(0,0,0);
     }
@@ -224,7 +224,7 @@
     .timeline-handle {
       @include border-radius-all(0.8em);
       width: 0.35em;
-      background-color: dark-light-choose(scale-color($tertiary, $lightness: 80%), scale-color($tertiary, $lightness: 20%));
+      background-color: dark-light-choose($tertiary-low, $tertiary-high);
       height: 100%;
       float: left;
       z-index: 501;
@@ -235,7 +235,7 @@
     }
 
     .timeline-ago {
-      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      color: dark-light-choose($primary-medium, $secondary-medium);
     }
 
     .timeline-scroller {
@@ -273,7 +273,7 @@
     .now-date {
       @include unselectable;
       display: inline-block;
-      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      color: dark-light-choose($primary-medium, $secondary-medium);
       margin-top: 0.5em;
       i {
         margin-left: 0.15em;

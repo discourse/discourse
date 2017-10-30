@@ -27,7 +27,7 @@
   .topics .badge-notification,
   .category .badge-notification {
     background-color: transparent;
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));
+    color: dark-light-choose($primary-medium, $secondary-high);
   }
 
   .topics {
@@ -70,11 +70,11 @@
     a.last-posted-at,
     a.last-posted-at:visited {
       font-size: 0.86em;
-      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));
+      color: dark-light-choose($primary-medium, $secondary-high);
     }
 
     .topic-statuses .fa {
-      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));
+      color: dark-light-choose($primary-medium, $secondary-high);
     }
 
     .topic-post-badges {

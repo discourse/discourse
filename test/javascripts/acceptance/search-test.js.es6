@@ -89,18 +89,20 @@ QUnit.test("Search with context", assert => {
 QUnit.test("Right filters are shown to anonymous users", assert => {
   visit("/search?expanded=true");
 
-  andThen(() => {
-    assert.ok(exists('select#in option[value=first]'));
-    assert.ok(exists('select#in option[value=pinned]'));
-    assert.ok(exists('select#in option[value=unpinned]'));
-    assert.ok(exists('select#in option[value=wiki]'));
-    assert.ok(exists('select#in option[value=images]'));
+  expandSelectBox(".select-box-kit#in");
 
-    assert.notOk(exists('select#in option[value=unseen]'));
-    assert.notOk(exists('select#in option[value=posted]'));
-    assert.notOk(exists('select#in option[value=watching]'));
-    assert.notOk(exists('select#in option[value=tracking]'));
-    assert.notOk(exists('select#in option[value=bookmarks]'));
+  andThen(() => {
+    assert.ok(exists('.select-box-kit#in .select-box-kit-row[data-value=first]'));
+    assert.ok(exists('.select-box-kit#in .select-box-kit-row[data-value=pinned]'));
+    assert.ok(exists('.select-box-kit#in .select-box-kit-row[data-value=unpinned]'));
+    assert.ok(exists('.select-box-kit#in .select-box-kit-row[data-value=wiki]'));
+    assert.ok(exists('.select-box-kit#in .select-box-kit-row[data-value=images]'));
+
+    assert.notOk(exists('.select-box-kit#in .select-box-kit-row[data-value=unseen]'));
+    assert.notOk(exists('.select-box-kit#in .select-box-kit-row[data-value=posted]'));
+    assert.notOk(exists('.select-box-kit#in .select-box-kit-row[data-value=watching]'));
+    assert.notOk(exists('.select-box-kit#in .select-box-kit-row[data-value=tracking]'));
+    assert.notOk(exists('.select-box-kit#in .select-box-kit-row[data-value=bookmarks]'));
 
     assert.notOk(exists('.search-advanced-options .in-likes'));
     assert.notOk(exists('.search-advanced-options .in-private'));
@@ -113,18 +115,20 @@ QUnit.test("Right filters are shown to logged-in users", assert => {
   Discourse.reset();
   visit("/search?expanded=true");
 
-  andThen(() => {
-    assert.ok(exists('select#in option[value=first]'));
-    assert.ok(exists('select#in option[value=pinned]'));
-    assert.ok(exists('select#in option[value=unpinned]'));
-    assert.ok(exists('select#in option[value=wiki]'));
-    assert.ok(exists('select#in option[value=images]'));
+  expandSelectBox(".select-box-kit#in");
 
-    assert.ok(exists('select#in option[value=unseen]'));
-    assert.ok(exists('select#in option[value=posted]'));
-    assert.ok(exists('select#in option[value=watching]'));
-    assert.ok(exists('select#in option[value=tracking]'));
-    assert.ok(exists('select#in option[value=bookmarks]'));
+  andThen(() => {
+    assert.ok(exists('.select-box-kit#in .select-box-kit-row[data-value=first]'));
+    assert.ok(exists('.select-box-kit#in .select-box-kit-row[data-value=pinned]'));
+    assert.ok(exists('.select-box-kit#in .select-box-kit-row[data-value=unpinned]'));
+    assert.ok(exists('.select-box-kit#in .select-box-kit-row[data-value=wiki]'));
+    assert.ok(exists('.select-box-kit#in .select-box-kit-row[data-value=images]'));
+
+    assert.ok(exists('.select-box-kit#in .select-box-kit-row[data-value=unseen]'));
+    assert.ok(exists('.select-box-kit#in .select-box-kit-row[data-value=posted]'));
+    assert.ok(exists('.select-box-kit#in .select-box-kit-row[data-value=watching]'));
+    assert.ok(exists('.select-box-kit#in .select-box-kit-row[data-value=tracking]'));
+    assert.ok(exists('.select-box-kit#in .select-box-kit-row[data-value=bookmarks]'));
 
     assert.ok(exists('.search-advanced-options .in-likes'));
     assert.ok(exists('.search-advanced-options .in-private'));

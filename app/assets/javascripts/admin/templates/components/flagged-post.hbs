@@ -73,7 +73,7 @@
           {{#each flaggedPost.post_actions as |postAction|}}
             {{#flag-user user=postAction.user date=postAction.created_at}}
               <div class='flagger-flag-type'>
-                {{i18n (concat "admin.flags.summary.action_type_" postAction.post_action_type_id) count=1}}
+                {{post-action-title postAction.post_action_type_id postAction.name_key}}
               </div>
             {{/flag-user}}
           {{/each}}

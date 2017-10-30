@@ -65,12 +65,22 @@ QUnit.test("sanitize", assert => {
 QUnit.test("ids on headings", assert => {
   const pt = new PrettyText(buildOptions({ siteSettings: {} }));
   assert.equal(pt.sanitize("<h3>Test Heading</h3>"), "<h3>Test Heading</h3>");
-  assert.equal(pt.sanitize(`<h1 id="test-heading">Test Heading</h1>`), `<h1 id="test-heading">Test Heading</h1>`);
-  assert.equal(pt.sanitize(`<h2 id="test-heading">Test Heading</h2>`), `<h2 id="test-heading">Test Heading</h2>`);
-  assert.equal(pt.sanitize(`<h3 id="test-heading">Test Heading</h3>`), `<h3 id="test-heading">Test Heading</h3>`);
-  assert.equal(pt.sanitize(`<h4 id="test-heading">Test Heading</h4>`), `<h4 id="test-heading">Test Heading</h4>`);
-  assert.equal(pt.sanitize(`<h5 id="test-heading">Test Heading</h5>`), `<h5 id="test-heading">Test Heading</h5>`);
-  assert.equal(pt.sanitize(`<h6 id="test-heading">Test Heading</h6>`), `<h6 id="test-heading">Test Heading</h6>`);
+  assert.equal(pt.sanitize(`<h1 id="heading--test">Test Heading</h1>`), `<h1 id="heading--test">Test Heading</h1>`);
+  assert.equal(pt.sanitize(`<h2 id="heading--cool">Test Heading</h2>`), `<h2 id="heading--cool">Test Heading</h2>`);
+  assert.equal(pt.sanitize(`<h3 id="heading--dashed-name">Test Heading</h3>`), `<h3 id="heading--dashed-name">Test Heading</h3>`);
+  assert.equal(pt.sanitize(`<h4 id="heading--underscored_name">Test Heading</h4>`), `<h4 id="heading--underscored_name">Test Heading</h4>`);
+  assert.equal(pt.sanitize(`<h5 id="heading--trout">Test Heading</h5>`), `<h5 id="heading--trout">Test Heading</h5>`);
+  assert.equal(pt.sanitize(`<h6 id="heading--discourse">Test Heading</h6>`), `<h6 id="heading--discourse">Test Heading</h6>`);
+});
+
+QUnit.test("poorly formed ids on headings", assert => {
+  let pt = new PrettyText(buildOptions({ siteSettings: {} }));
+  assert.equal(pt.sanitize(`<h1 id="evil-trout">Test Heading</h1>`), `<h1>Test Heading</h1>`);
+  assert.equal(pt.sanitize(`<h1 id="heading--">Test Heading</h1>`), `<h1>Test Heading</h1>`);
+  assert.equal(pt.sanitize(`<h1 id="heading--with space">Test Heading</h1>`), `<h1>Test Heading</h1>`);
+  assert.equal(pt.sanitize(`<h1 id="heading--with*char">Test Heading</h1>`), `<h1>Test Heading</h1>`);
+  assert.equal(pt.sanitize(`<h1 id="heading--">Test Heading</h1>`), `<h1>Test Heading</h1>`);
+  assert.equal(pt.sanitize(`<h1 id="test-heading--cool">Test Heading</h1>`), `<h1>Test Heading</h1>`);
 });
 
 QUnit.test("urlAllowed", assert => {

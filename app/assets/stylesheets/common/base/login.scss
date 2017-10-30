@@ -29,7 +29,7 @@ $input-width: 220px;
 
   .disclaimer {
     font-size: 0.9em;
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    color: dark-light-choose($primary-medium, $secondary-medium);
     clear: both;
   }
 
@@ -56,7 +56,7 @@ $input-width: 220px;
         float: auto;
       }
       .instructions {
-        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+        color: dark-light-choose($primary-medium, $secondary-medium);
         margin: 0;
         font-size: 0.929em;
         font-weight: normal;
@@ -70,7 +70,7 @@ $input-width: 220px;
 .password-reset {
   .instructions {
     label {
-      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      color: dark-light-choose($primary-medium, $secondary-medium);
     }
   }
 }
@@ -98,7 +98,7 @@ $input-width: 220px;
       margin-bottom: 10px;
     }
     .instructions {
-      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      color: dark-light-choose($primary-medium, $secondary-medium);
       margin: 0;
       font-size: 0.929em;
       font-weight: normal;
@@ -113,5 +113,5 @@ $input-width: 220px;
 button#login-link, button#new-account-link
 {
   background: transparent;
-  color: dark-light-choose(scale-color($primary, $lightness: 35%), scale-color($secondary, $lightness: 65%));
+  color: dark-light-choose($primary-high, $secondary-low);
 }

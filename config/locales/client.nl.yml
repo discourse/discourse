@@ -806,11 +806,11 @@ nl:
           one: "bericht gemaakt"
           other: "berichten gemaakt"
         likes_given:
-          one: "<i class='fa fa-heart'></i> gegeven"
-          other: "<i class='fa fa-heart'></i> gegeven"
+          one: "gegeven"
+          other: "gegeven"
         likes_received:
-          one: "<i class='fa fa-heart'></i> ontvangen"
-          other: "<i class='fa fa-heart'></i> ontvangen"
+          one: "ontvangen"
+          other: "ontvangen"
         days_visited:
           one: "dag bezocht"
           other: "dagen bezocht"
@@ -1130,10 +1130,6 @@ nl:
       olist_title: "Genummerde lijst"
       ulist_title: "Opsommingslijst"
       list_item: "Lijstitem"
-      heading_label: "H"
-      heading_title: "Kop"
-      heading_text: "Kop"
-      hr_title: "Horizontale lijn"
       help: "Hulp voor Markdown"
       toggler: "editorpaneel verbergen of tonen"
       modal_ok: "OK"

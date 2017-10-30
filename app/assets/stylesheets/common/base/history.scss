@@ -40,11 +40,11 @@
   }
   .diff-ins {
     color: dark-light-choose($primary, $secondary);
-    background: scale-color($success, $lightness: 90%);
+    background: $success-low;
   }
   ins {
     color: $success;
-    background: scale-color($success, $lightness: 90%);
+    background: $success-low;
   }
   del, .diff-del {
     code, img {
@@ -67,11 +67,11 @@
     filter: alpha(opacity=50);
   }
   .diff-del {
-    background: scale-color($danger, $lightness: 60%);
+    background: $danger-low;
   }
   del {
     color: $danger;
-    background: scale-color($danger, $lightness: 60%);
+    background: $danger-low;
   }
   span.date {
     font-weight: bold;

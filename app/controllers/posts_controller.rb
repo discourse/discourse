@@ -663,8 +663,11 @@ class PostsController < ApplicationController
     finder = finder.with_deleted if current_user.try(:staff?)
     post = finder.first
     raise Discourse::NotFound unless post
+
     # load deleted topic
     post.topic = Topic.with_deleted.find(post.topic_id) if current_user.try(:staff?)
+    raise Discourse::NotFound unless post.topic
+
     guardian.ensure_can_see!(post)
     post
   end

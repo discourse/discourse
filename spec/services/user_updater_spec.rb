@@ -76,8 +76,9 @@ describe UserUpdater do
                            notification_level_when_replying: 3,
                            email_in_reply_to: false,
                            date_of_birth: date_of_birth,
-                           theme_key: theme.key
-                    )
+                           theme_key: theme.key,
+                           allow_private_messages: false)
+
       expect(val).to be_truthy
 
       user.reload
@@ -92,6 +93,7 @@ describe UserUpdater do
       expect(user.user_option.email_in_reply_to).to eq false
       expect(user.user_option.theme_key).to eq theme.key
       expect(user.user_option.theme_key_seq).to eq(seq + 1)
+      expect(user.user_option.allow_private_messages).to eq(false)
       expect(user.date_of_birth).to eq(date_of_birth.to_date)
     end
 
@@ -198,10 +200,25 @@ describe UserUpdater do
     it "logs the action" do
       user_without_name = Fabricate(:user, name: nil)
       user = Fabricate(:user, name: 'Billy Bob')
-      expect { UserUpdater.new(acting_user, user).update(name: 'Jim Tom') }.to change { UserHistory.count }.by(1)
-      expect { UserUpdater.new(acting_user, user).update(name: 'Jim Tom') }.to change { UserHistory.count }.by(0) # make sure it does not log a dupe
-      expect { UserUpdater.new(acting_user, user_without_name).update(bio_raw: 'foo bar') }.to change { UserHistory.count }.by(0) # make sure user without name (name = nil) does not raise an error
-      expect { UserUpdater.new(acting_user, user_without_name).update(name: 'Jim Tom') }.to change { UserHistory.count }.by(1)
+      expect do
+        UserUpdater.new(acting_user, user).update(name: 'Jim Tom')
+      end.to change { UserHistory.count }.by(1)
+
+      expect do
+        UserUpdater.new(acting_user, user).update(name: 'JiM TOm')
+      end.to_not change { UserHistory.count }
+
+      expect do
+        UserUpdater.new(acting_user, user_without_name).update(bio_raw: 'foo bar')
+      end.to_not change { UserHistory.count }
+
+      expect do
+        UserUpdater.new(acting_user, user_without_name).update(name: 'Jim Tom')
+      end.to change { UserHistory.count }.by(1)
+
+      expect do
+        UserUpdater.new(acting_user, user).update(name: '')
+      end.to change { UserHistory.count }.by(1)
     end
   end
 end

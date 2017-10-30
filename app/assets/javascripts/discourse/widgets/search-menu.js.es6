@@ -71,6 +71,7 @@ const SearchHelper = {
 
 export default createWidget('search-menu', {
   tagName: 'div.search-menu',
+  searchData,
 
   fullSearchUrl(opts) {
     const contextEnabled = searchData.contextEnabled;

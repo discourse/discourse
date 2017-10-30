@@ -63,7 +63,7 @@ h2 {
 
   .topic-status {
     i {
-      color: $secondary-medium;
+      color: $secondary-high;
     }
   }
 
@@ -100,7 +100,7 @@ h2 {
 
     .fa {
       margin-right: 8px;
-      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      color: dark-light-choose($primary-medium, $secondary-medium);
     }
   }
 

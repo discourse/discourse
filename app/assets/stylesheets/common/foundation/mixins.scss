@@ -88,10 +88,14 @@
 
 // Unselectable (avoids unwanted selections with iPad, touch laptops, etc)
 
+@mixin user-select($mode) {
+  -webkit-user-select: $mode;
+     -moz-user-select: $mode;
+      -ms-user-select: $mode;
+}
+
 @mixin unselectable {
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
+  @include user-select(none);
 }
 
 

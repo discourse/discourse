@@ -122,7 +122,7 @@ NavItem.reopenClass({
       _.merge(args, extra);
     });
 
-    const store = Discourse.__container__.lookup('store:main');
+    const store = Discourse.__container__.lookup('service:store');
     return store.createRecord('nav-item', args);
   },
 

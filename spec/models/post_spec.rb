@@ -189,15 +189,19 @@ describe Post do
     end
 
     it "doesn't count favicons as images" do
+      PrettyText.stubs(:cook).returns(post_with_favicon.raw)
       expect(post_with_favicon.image_count).to eq(0)
     end
 
     it "doesn't count thumbnails as images" do
+      PrettyText.stubs(:cook).returns(post_with_thumbnail.raw)
       expect(post_with_thumbnail.image_count).to eq(0)
     end
 
     it "doesn't count whitelisted images" do
       Post.stubs(:white_listed_image_classes).returns(["classy"])
+      # I dislike this, but passing in a custom whitelist is hard
+      PrettyText.stubs(:cook).returns(post_with_two_classy_images.raw)
       expect(post_with_two_classy_images.image_count).to eq(0)
     end
 
