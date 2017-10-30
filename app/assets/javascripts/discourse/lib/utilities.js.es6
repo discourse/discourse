@@ -21,6 +21,17 @@ export function escapeExpression(string) {
   return escape(string);
 }
 
+let _usernameFormatDelegate = username => username;
+
+export function formatUsername(username) {
+  return _usernameFormatDelegate(username || '');
+}
+
+export function replaceFormatter(fn) {
+  _usernameFormatDelegate = fn;
+}
+
+
 export function avatarUrl(template, size) {
   if (!template) { return ""; }
   const rawSize = getRawSize(translateSize(size));

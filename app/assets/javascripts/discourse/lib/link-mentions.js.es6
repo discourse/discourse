@@ -1,5 +1,6 @@
 import { ajax } from 'discourse/lib/ajax';
 import { userPath } from 'discourse/lib/url';
+import { formatUsername } from 'discourse/lib/utilities';
 
 function replaceSpan($e, username, opts) {
   let extra = "";
@@ -16,7 +17,7 @@ function replaceSpan($e, username, opts) {
       extra = `data-name='${username}'`;
       extraClass = "cannot-see";
     }
-    $e.replaceWith(`<a href='${userPath(username.toLowerCase())}' class='mention ${extraClass}' ${extra}>@${username}</a>`);
+    $e.replaceWith(`<a href='${userPath(username.toLowerCase())}' class='mention ${extraClass}' ${extra}>@${formatUsername(username)}</a>`);
   }
 }
 

@@ -1,5 +1,6 @@
 import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
+import { formatUsername } from 'discourse/lib/utilities';
 
 let extraGlyphs;
 
@@ -50,7 +51,7 @@ createWidget('user-menu-links', {
       model: currentUser,
       className: 'user-activity-link',
       icon: 'user',
-      rawLabel: currentUser.username
+      rawLabel: formatUsername(currentUser.username)
     };
 
     if (currentUser.is_anonymous) {

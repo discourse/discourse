@@ -16,7 +16,7 @@
     <div class="names">
       <span>
         <h1 class="{{staff}} {{new_user}} {{if nameFirst "full-name" "username"}}">
-          <a href={{user.path}} {{action "showUser"}}>{{if nameFirst user.name username}} {{user-status user currentUser=currentUser}}</a>
+          <a href={{user.path}} {{action "showUser"}}>{{if nameFirst user.name (format-username username)}} {{user-status user currentUser=currentUser}}</a>
         </h1>
 
         {{#unless nameFirst}}
