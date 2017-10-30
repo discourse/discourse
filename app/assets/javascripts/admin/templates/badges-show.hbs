@@ -60,7 +60,7 @@
     {{#if siteSettings.enable_badge_sql}}
       <div>
         <label for="query">{{i18n 'admin.badges.query'}}</label>
-        {{textarea name="query" value=buffered.query disabled=readOnly}}
+        {{ace-editor content=buffered.query mode="sql" disabled=readOnly}}
       </div>
 
       {{#if hasQuery}}
