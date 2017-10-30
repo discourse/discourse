@@ -38,8 +38,12 @@
         }
 
         window.onload = function() {
-          // Send a post message with our loaded height
-          postUp({type: 'discourse-resize', height: document['body'].offsetHeight});
+          var state = "loading";
+          if (document.querySelectorAll("a.replies").length > 0) {
+              var state = "loaded";
+          }
+          // Send a post message with our loaded height and state
+          postUp({type: 'discourse-resize', height: document['body'].offsetHeight, state: state});
 
           var postLinks = document.querySelectorAll("a[data-link-to-post]"),
               i;
