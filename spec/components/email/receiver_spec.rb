@@ -760,6 +760,11 @@ describe Email::Receiver do
       end
     end
 
+    it "does not remove the incoming email record when staged users are deleted" do
+      expect { process(:bad_destinations) }.to change { IncomingEmail.count }
+        .and raise_error(Email::Receiver::BadDestinationAddress)
+      expect(IncomingEmail.last.message_id).to eq("9@foo.bar.mail")
+    end
   end
 
 end
