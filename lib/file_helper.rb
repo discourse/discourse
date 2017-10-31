@@ -33,8 +33,6 @@ class FileHelper
     url = "https:" + url if url.start_with?("//")
     raise Discourse::InvalidParameters.new(:url) unless url =~ /^https?:\/\//
 
-    uri =
-
     dest = FinalDestination.new(
       url,
       max_redirects: follow_redirect ? 5 : 1,
