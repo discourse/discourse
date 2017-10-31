@@ -193,10 +193,10 @@ const DiscourseURL = Ember.Object.extend({
     path = path.replace(/(https?\:)?\/\/[^\/]+/, '');
 
     // Rewrite /my/* urls
-    if (path.indexOf('/my/') === 0) {
+    if (path.indexOf(Discourse.BaseUri + '/my/') === 0) {
       const currentUser = Discourse.User.current();
       if (currentUser) {
-        path = path.replace('/my/', userPath(currentUser.get('username_lower') + "/"));
+        path = path.replace(Discourse.BaseUri + '/my/', userPath(currentUser.get('username_lower') + "/"));
       } else {
         document.location.href = "/404";
         return;
