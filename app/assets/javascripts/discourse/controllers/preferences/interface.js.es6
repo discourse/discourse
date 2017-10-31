@@ -18,7 +18,7 @@ export default Ember.Controller.extend(PreferencesTabController, {
       'disable_jump_reply',
       'automatically_unpin_topics',
       'allow_private_messages',
-      'user_home',
+      'homepage_id',
     ];
 
     if (makeDefault) {
@@ -58,7 +58,7 @@ export default Ember.Controller.extend(PreferencesTabController, {
 
   homeChanged() {
     const siteHome = Discourse.SiteSettings.top_menu.split("|")[0].split(",")[0];
-    const userHome = USER_HOMES[this.get('model.user_option.user_home')];
+    const userHome = USER_HOMES[this.get('model.user_option.homepage_id')];
     setDefaultHomepage(userHome || siteHome);
   },
 

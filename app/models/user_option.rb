@@ -129,7 +129,7 @@ class UserOption < ActiveRecord::Base
   end
 
   def homepage
-    case user_home
+    case homepage_id
     when 1 then "latest"
     when 2 then "categories"
     when 3 then "unread"
@@ -176,7 +176,7 @@ end
 #  theme_key                        :string
 #  theme_key_seq                    :integer          default(0), not null
 #  allow_private_messages           :boolean          default(TRUE), not null
-#  user_home                        :integer          default(null)
+#  homepage_id                      :integer          default(null)
 #
 # Indexes
 #
