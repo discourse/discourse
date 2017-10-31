@@ -69,13 +69,19 @@ class GroupsController < ApplicationController
 
   def posts
     group = find_group(:group_id)
-    posts = group.posts_for(guardian, params[:before_post_id]).limit(20)
+    posts = group.posts_for(
+      guardian,
+      params.permit(:before_post_id, :category_id)
+    ).limit(20)
     render_serialized posts.to_a, GroupPostSerializer
   end
 
   def posts_feed
     group = find_group(:group_id)
-    @posts = group.posts_for(guardian).limit(50)
+    @posts = group.posts_for(
+      guardian,
+      params.permit(:before_post_id, :category_id)
+    ).limit(50)
     @title = "#{SiteSetting.title} - #{I18n.t("rss_description.group_posts", group_name: group.name)}"
     @link = Discourse.base_url
     @description = I18n.t("rss_description.group_posts", group_name: group.name)
@@ -84,19 +90,28 @@ class GroupsController < ApplicationController
 
   def topics
     group = find_group(:group_id)
-    posts = group.posts_for(guardian, params[:before_post_id]).where(post_number: 1).limit(20)
+    posts = group.posts_for(
+      guardian,
+      params.permit(:before_post_id, :category_id)
+    ).where(post_number: 1).limit(20)
     render_serialized posts.to_a, GroupPostSerializer
   end
 
   def mentions
     group = find_group(:group_id)
-    posts = group.mentioned_posts_for(guardian, params[:before_post_id]).limit(20)
+    posts = group.mentioned_posts_for(
+      guardian,
+      params.permit(:before_post_id, :category_id)
+    ).limit(20)
     render_serialized posts.to_a, GroupPostSerializer
   end
 
   def mentions_feed
     group = find_group(:group_id)
-    @posts = group.mentioned_posts_for(guardian).limit(50)
+    @posts = group.mentioned_posts_for(
+      guardian,
+      params.permit(:before_post_id, :category_id)
+    ).limit(50)
     @title = "#{SiteSetting.title} - #{I18n.t("rss_description.group_mentions", group_name: group.name)}"
     @link = Discourse.base_url
     @description = I18n.t("rss_description.group_mentions", group_name: group.name)
@@ -106,7 +121,10 @@ class GroupsController < ApplicationController
   def messages
     group = find_group(:group_id)
     posts = if guardian.can_see_group_messages?(group)
-      group.messages_for(guardian, params[:before_post_id]).where(post_number: 1).limit(20).to_a
+      group.messages_for(
+        guardian,
+        params.permit(:before_post_id, :category_id)
+      ).where(post_number: 1).limit(20).to_a
     else
       []
     end

@@ -2,6 +2,7 @@ import { fmt } from 'discourse/lib/computed';
 
 export default Ember.Controller.extend({
   group: Ember.inject.controller(),
+  groupActivity: Ember.inject.controller(),
   loading: false,
   emptyText: fmt('type', 'groups.empty.%@'),
 
@@ -14,7 +15,9 @@ export default Ember.Controller.extend({
         const beforePostId = posts[posts.length-1].get('id');
         const group = this.get('group.model');
 
-        const opts = { beforePostId, type: this.get('type') };
+        let categoryId = this.get('groupActivity.category_id');
+        const opts = { beforePostId, type: this.get('type'), categoryId };
+
         group.findPosts(opts).then(newPosts => {
           posts.addObjects(newPosts);
           this.set('loading', false);
