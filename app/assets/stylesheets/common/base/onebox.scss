@@ -140,6 +140,50 @@ aside.onebox {
       margin-right: 10px;
     }
 
+    [style*="--aspect-ratio"] > :first-child {
+      width: 100%;
+    }
+    [style*="--aspect-ratio"] > img {
+      height: auto;
+    }
+
+    // this allows us to load all onebox images without jiggle
+    // see: http://cssmojo.com/aspect-ratio-using-custom-properties-and-calc/
+    @supports (--custom:property) {
+
+      .aspect-image {
+        max-height: 170px;
+        max-width: 20%;
+        float: left;
+        margin-right: 10px;
+        width: 100%;
+        height: auto;
+
+        img {
+          width: 100%;
+          height: inherit;
+          max-width: initial;
+          max-height: initial;
+          float: none;
+          margin-right: none;
+        }
+      }
+      [style*="--aspect-ratio"] {
+        position: relative;
+      }
+      [style*="--aspect-ratio"]::before {
+        content: "";
+        display: block;
+        padding-bottom: calc(100% / (var(--aspect-ratio)));
+      }
+      [style*="--aspect-ratio"] > :first-child {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+      }
+    }
+
     // tighten bottom margin on last para
     p:last-child {
       margin-bottom: 4px;
