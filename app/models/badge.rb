@@ -197,7 +197,7 @@ class Badge < ActiveRecord::Base
 
   def long_description
     key = "badges.#{i18n_name}.long_description"
-    I18n.t(key, default: self[:long_description] || '')
+    I18n.t(key, default: self[:long_description] || '', base_uri: Discourse.base_uri)
   end
 
   def long_description=(val)
@@ -207,7 +207,7 @@ class Badge < ActiveRecord::Base
 
   def description
     key = "badges.#{i18n_name}.description"
-    I18n.t(key, default: self[:description] || '')
+    I18n.t(key, default: self[:description] || '', base_uri: Discourse.base_uri)
   end
 
   def description=(val)
