@@ -756,7 +756,13 @@ module Email
 
     def delete_staged_users
       @staged_users.each do |user|
-        UserDestroyer.new(Discourse.system_user).destroy(user, quiet: true) if user.posts.count == 0
+        if @incoming_email.user.id == user.id
+          @incoming_email.update_columns(user_id: nil)
+        end
+
+        if user.posts.count == 0
+          UserDestroyer.new(Discourse.system_user).destroy(user, quiet: true)
+        end
       end
     end
   end
