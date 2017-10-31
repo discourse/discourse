@@ -50,8 +50,13 @@
 
   &.draft {
     cursor: pointer;
+    display: flex;
+    align-items: center;
     .draft-text {
       display: block;
+    }
+    .grippie {
+      display: none;
     }
   }
 
