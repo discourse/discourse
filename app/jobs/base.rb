@@ -200,7 +200,13 @@ module Jobs
       # Otherwise execute the job right away
       opts.delete(:delay_for)
       opts[:sync_exec] = true
-      klass.new.perform(opts)
+      if Rails.env == "development"
+        Scheduler::Defer.later("job") do
+          klass.new.perform(opts)
+        end
+      else
+        klass.new.perform(opts)
+      end
     end
 
   end
