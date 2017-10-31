@@ -12,10 +12,6 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
     this.render("discovery/categories", { outlet: "list-container" });
   },
 
-  beforeModel() {
-    this.controllerFor("navigation/categories").set("filterMode", "categories");
-  },
-
   model() {
     const style = !this.site.mobileView && this.siteSettings.desktop_category_page_style;
     const parentCategory = this.get("model.parentCategory");
@@ -81,7 +77,7 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
     controller.set("model", model);
 
     this.controllerFor("navigation/categories").setProperties({
-      canCreateCategory: model.get("can_create_category"),
+      showCategoryAdmin: model.get("can_create_category"),
       canCreateTopic: model.get("can_create_topic"),
     });
 

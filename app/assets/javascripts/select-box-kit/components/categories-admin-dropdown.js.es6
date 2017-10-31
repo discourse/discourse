@@ -5,7 +5,6 @@ import { on } from "ember-addons/ember-computed-decorators";
 
 export default DropdownSelectBoxComponent.extend({
   classNames: "categories-admin-dropdown",
-  actionNames: { create: "createCategory", reorder: "reorderCategories" },
 
   @on("didReceiveAttrs")
   _setComponentOptions() {
@@ -42,8 +41,7 @@ export default DropdownSelectBoxComponent.extend({
   actions: {
     onSelect(value) {
       value = this.defaultOnSelect(value);
-
-      this.sendAction(`actionNames.${value}`);
+      this.get(value)();
       this.set("value", null);
     }
   }
