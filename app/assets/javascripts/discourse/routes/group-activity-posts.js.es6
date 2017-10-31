@@ -6,8 +6,9 @@ export function buildGroupPage(type) {
       return I18n.t(`groups.${type}`);
     },
 
-    model() {
-      return this.modelFor("group").findPosts({ type });
+    model(params, transition) {
+      let categoryId = Ember.get(transition, 'queryParams.category_id');
+      return this.modelFor("group").findPosts({ type, categoryId });
     },
 
     setupController(controller, model) {

@@ -185,7 +185,8 @@ class Group < ActiveRecord::Base
     end
   end
 
-  def posts_for(guardian, before_post_id = nil)
+  def posts_for(guardian, opts = nil)
+    opts ||= {}
     user_ids = group_users.map { |gu| gu.user_id }
     result = Post.includes(:user, :topic, topic: :category)
       .references(:posts, :topics, :category)
@@ -193,24 +194,35 @@ class Group < ActiveRecord::Base
       .where('topics.archetype <> ?', Archetype.private_message)
       .where(post_type: Post.types[:regular])
 
+    if opts[:category_id].present?
+      result = result.where('topics.category_id = ?', opts[:category_id].to_i)
+    end
+
     result = guardian.filter_allowed_categories(result)
-    result = result.where('posts.id < ?', before_post_id) if before_post_id
+    result = result.where('posts.id < ?', opts[:before_post_id].to_i) if opts[:before_post_id]
     result.order('posts.created_at desc')
   end
 
-  def messages_for(guardian, before_post_id = nil)
+  def messages_for(guardian, opts = nil)
+    opts ||= {}
+
     result = Post.includes(:user, :topic, topic: :category)
       .references(:posts, :topics, :category)
       .where('topics.archetype = ?', Archetype.private_message)
       .where(post_type: Post.types[:regular])
       .where('topics.id IN (SELECT topic_id FROM topic_allowed_groups WHERE group_id = ?)', self.id)
 
+    if opts[:category_id].present?
+      result = result.where('topics.category_id = ?', opts[:category_id].to_i)
+    end
+
     result = guardian.filter_allowed_categories(result)
-    result = result.where('posts.id < ?', before_post_id) if before_post_id
+    result = result.where('posts.id < ?', opts[:before_post_id].to_i) if opts[:before_post_id]
     result.order('posts.created_at desc')
   end
 
-  def mentioned_posts_for(guardian, before_post_id = nil)
+  def mentioned_posts_for(guardian, opts = nil)
+    opts ||= {}
     result = Post.joins(:group_mentions)
       .includes(:user, :topic, topic: :category)
       .references(:posts, :topics, :category)
@@ -218,8 +230,12 @@ class Group < ActiveRecord::Base
       .where(post_type: Post.types[:regular])
       .where('group_mentions.group_id = ?', self.id)
 
+    if opts[:category_id].present?
+      result = result.where('topics.category_id = ?', opts[:category_id].to_i)
+    end
+
     result = guardian.filter_allowed_categories(result)
-    result = result.where('posts.id < ?', before_post_id) if before_post_id
+    result = result.where('posts.id < ?', opts[:before_post_id].to_i) if opts[:before_post_id]
     result.order('posts.created_at desc')
   end
 

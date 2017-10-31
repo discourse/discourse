@@ -203,12 +203,13 @@ const Group = RestModel.extend({
   findPosts(opts) {
     opts = opts || {};
 
-    const type = opts['type'] || 'posts';
+    const type = opts.type || 'posts';
 
     var data = {};
     if (opts.beforePostId) { data.before_post_id = opts.beforePostId; }
+    if (opts.categoryId) { data.category_id = parseInt(opts.categoryId); }
 
-    return ajax(`/groups/${this.get('name')}/${type}.json`, { data: data }).then(posts => {
+    return ajax(`/groups/${this.get('name')}/${type}.json`, { data }).then(posts => {
       return posts.map(p => {
         p.user = User.create(p.user);
         p.topic = Topic.create(p.topic);

@@ -1,21 +1,10 @@
 <div class='group-activity container'>
   {{#mobile-nav class='group-activity-nav' desktopClass="pull-left nav nav-stacked" currentPath=application.currentPath}}
-    <li>
-      {{#link-to 'group.activity.posts'}}{{i18n 'groups.posts'}}{{/link-to}}
-    </li>
-
-    <li>
-      {{#link-to 'group.activity.topics'}}{{i18n 'groups.topics'}}{{/link-to}}
-    </li>
-
-    <li>
-      {{#link-to 'group.activity.mentions'}}{{i18n 'groups.mentions'}}{{/link-to}}
-    </li>
-
+    {{group-activity-filter filter="posts" categoryId=category_id}}
+    {{group-activity-filter filter="topics" categoryId=category_id}}
+    {{group-activity-filter filter="mentions" categoryId=category_id}}
     {{#if showGroupMessages}}
-      <li>
-        {{#link-to 'group.activity.messages'}}{{i18n 'groups.messages'}}{{/link-to}}
-      </li>
+      {{group-activity-filter filter="messages"}}
     {{/if}}
   {{/mobile-nav}}
 
