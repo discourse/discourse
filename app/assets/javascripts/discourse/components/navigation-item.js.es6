@@ -16,7 +16,18 @@ export default Ember.Component.extend(bufferedRender({
 
   buildBuffer(buffer) {
     const content = this.get('content');
-    buffer.push("<a href='" + content.get('href') + "'>");
+
+    let href = content.get('href');
+
+    // Include the category id if the option is present
+    if (content.get('includeCategoryId')) {
+      let categoryId = this.get('category.id');
+      if (categoryId) {
+        href += `?category_id=${categoryId}`;
+      }
+    }
+
+    buffer.push(`<a href='${href}'>`);
     if (content.get('hasIcon')) {
       buffer.push("<span class='" + content.get('name') + "'></span>");
     }
