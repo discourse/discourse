@@ -93,6 +93,7 @@ class FinalDestination
 
     if @limit < 0
       @status = :too_many_redirects
+      log(:warn, "FinalDestination could not resolve URL (too many redirects): #{@uri}")
       return nil
     end
 
@@ -103,7 +104,11 @@ class FinalDestination
       end
     end
 
-    return nil unless validate_uri
+    unless validate_uri
+      log(:warn, "FinalDestination could not resolve URL (invalid URI): #{@uri}")
+      return nil
+    end
+
     headers = request_headers
     response = Excon.public_send(@http_verb,
       @uri.to_s,
@@ -175,8 +180,10 @@ class FinalDestination
     @status = :failure
     @status_code = response.status
 
+    log(:warn, "FinalDestination could not resolve URL (status #{response.status}): #{@uri}")
     nil
   rescue Excon::Errors::Timeout
+    log(:warn, "FinalDestination could not resolve URL (timeout): #{@uri}")
     nil
   end
 
@@ -244,6 +251,13 @@ class FinalDestination
   def private_ranges
     FinalDestination.standard_private_ranges +
       SiteSetting.blacklist_ip_blocks.split('|').map { |r| IPAddr.new(r) rescue nil }.compact
+  end
+
+  def log(log_level, message)
+    Rails.logger.public_send(
+      log_level,
+      "#{RailsMultisite::ConnectionManagement.current_db}: #{message}"
+    )
   end
 
   def self.standard_private_ranges
