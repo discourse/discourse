@@ -51,6 +51,7 @@ class FinalDestination
     @http_verb = @force_get_hosts.any? { |host| hostname_matches?(host) } ? :get : :head
     @cookie = nil
     @limited_ips = []
+    @verbose = @opts[:verbose] || false
   end
 
   def self.connection_timeout
@@ -93,7 +94,7 @@ class FinalDestination
 
     if @limit < 0
       @status = :too_many_redirects
-      log(:warn, "FinalDestination could not resolve URL (too many redirects): #{@uri}")
+      log(:warn, "FinalDestination could not resolve URL (too many redirects): #{@uri}") if @verbose
       return nil
     end
 
@@ -105,7 +106,7 @@ class FinalDestination
     end
 
     unless validate_uri
-      log(:warn, "FinalDestination could not resolve URL (invalid URI): #{@uri}")
+      log(:warn, "FinalDestination could not resolve URL (invalid URI): #{@uri}") if @verbose
       return nil
     end
 
@@ -180,10 +181,10 @@ class FinalDestination
     @status = :failure
     @status_code = response.status
 
-    log(:warn, "FinalDestination could not resolve URL (status #{response.status}): #{@uri}")
+    log(:warn, "FinalDestination could not resolve URL (status #{response.status}): #{@uri}") if @verbose
     nil
   rescue Excon::Errors::Timeout
-    log(:warn, "FinalDestination could not resolve URL (timeout): #{@uri}")
+    log(:warn, "FinalDestination could not resolve URL (timeout): #{@uri}") if @verbose
     nil
   end
 

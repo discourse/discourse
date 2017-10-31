@@ -36,7 +36,8 @@ class FileHelper
     dest = FinalDestination.new(
       url,
       max_redirects: follow_redirect ? 5 : 1,
-      skip_rate_limit: skip_rate_limit
+      skip_rate_limit: skip_rate_limit,
+      verbose: verbose
     )
     uri = dest.resolve
 
