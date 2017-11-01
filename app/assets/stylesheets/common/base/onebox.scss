@@ -89,7 +89,7 @@ a.loading-onebox {
 }
 
 aside.onebox {
-  border: 5px solid $primary-low; 
+  border: 5px solid $primary-low;
 
   padding: 12px 25px 12px 12px;
   font-size: 1em;
@@ -430,6 +430,16 @@ aside.onebox.stackexchange .onebox-body {
   }
   .filesize {
     color: gray;
+  }
+}
+
+// whitelistedgeneric twitter labels
+.onebox.whitelistedgeneric {
+  .label1 {
+    float: left;
+  }
+  .label2 {
+    float: right;
   }
 }
 
