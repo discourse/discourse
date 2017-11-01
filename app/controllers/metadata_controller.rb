@@ -13,7 +13,7 @@ class MetadataController < ApplicationController
   private
 
   def default_manifest
-    logo = SiteSetting.mobile_logo_url || SiteSetting.logo_small_url || SiteSetting.apple_touch_icon_url
+    logo = SiteSetting.mobile_logo_url.presence || SiteSetting.logo_small_url.presence || SiteSetting.apple_touch_icon_url.presence
 
     manifest = {
       name: SiteSetting.title,
