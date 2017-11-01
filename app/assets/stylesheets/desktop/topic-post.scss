@@ -284,7 +284,6 @@ a.star {
   background: blend-primary-secondary(5%);
   border: 1px solid $primary-low;
   border-top: none; // would cause double top border
-
   section {
     border-top: 1px solid $primary-low;
   }
@@ -339,7 +338,6 @@ a.star {
   }
 
   .map {
-    .secondary {text-align: center;}
     li {
       float: left;
       padding: 7px 10px;
@@ -347,6 +345,15 @@ a.star {
         border-right: 0;
       }
       &:nth-child(3) { text-align:center; }
+    }
+    .primary, .secondary {
+      padding: 0;
+    }
+    .secondary {
+      text-align: center;
+      i {
+        display: none;
+      }
     }
     a, .number {
       line-height: 20px;
@@ -397,7 +404,7 @@ a.star {
       color: dark-light-choose($primary-medium, $secondary-high);
       background: blend-primary-secondary(5%);
       border-left: 1px solid $primary-low;
-      border-top: 1px solid $primary-low;
+      border-top: 1px solid transparent;
       &:hover {
         color: $primary;
         background: $primary-low;

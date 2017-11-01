@@ -62,8 +62,10 @@ createWidget('topic-map-summary', {
   },
 
   html(attrs, state) {
-    const contents = [];
-    contents.push(h('li',
+    const primary = [];
+    const secondary = [];
+    
+    primary.push(h('li',
       [
         h('h4', I18n.t('created_lowercase')),
         h('div.topic-map-post.created-at', [
@@ -72,7 +74,7 @@ createWidget('topic-map-summary', {
         ])
       ]
     ));
-    contents.push(h('li',
+    primary.push(h('li',
       h('a', { attributes: { href: attrs.lastPostUrl } }, [
         h('h4', I18n.t('last_reply_lowercase')),
         h('div.topic-map-post.last-reply', [
@@ -81,28 +83,33 @@ createWidget('topic-map-summary', {
         ])
       ])
     ));
-    contents.push(h('li', [
+    secondary.push(h('li', [
+      h('i.fa.fa-comment'),      
       numberNode(attrs.topicReplyCount),
       h('h4', I18n.t('replies_lowercase', { count: attrs.topicReplyCount }))
     ]));
-    contents.push(h('li.secondary', [
+    secondary.push(h('li', [
+      h('i.fa.fa-eye'),
       numberNode(attrs.topicViews, { className: attrs.topicViewsHeat }),
       h('h4', I18n.t('views_lowercase', { count: attrs.topicViews }))
     ]));
-    contents.push(h('li.secondary', [
+    secondary.push(h('li', [
+      h('i.fa.fa-user'),
       numberNode(attrs.participantCount),
       h('h4', I18n.t('users_lowercase', { count: attrs.participantCount }))
     ]));
 
     if (attrs.topicLikeCount) {
-      contents.push(h('li.secondary', [
+      secondary.push(h('li', [
+        h('i.fa.fa-heart'),        
         numberNode(attrs.topicLikeCount),
         h('h4', I18n.t('likes_lowercase', { count: attrs.topicLikeCount }))
       ]));
     }
 
     if (attrs.topicLinkLength > 0) {
-      contents.push(h('li.secondary', [
+      secondary.push(h('li', [
+        h('i.fa.fa-link'),              
         numberNode(attrs.topicLinkLength),
         h('h4', I18n.t('links_lowercase', { count: attrs.topicLinkLength }))
       ]));
@@ -110,7 +117,7 @@ createWidget('topic-map-summary', {
 
     if (state.collapsed && attrs.topicPostsCount > 2 && attrs.participants.length > 0) {
       const participants = renderParticipants.call(this, attrs.userFilters, attrs.participants.slice(0, 3));
-      contents.push(h('li.avatars', participants));
+      secondary.push(h('li.avatars', participants));
     }
 
     const nav = h('nav.buttons', this.attach('button', {
@@ -119,8 +126,8 @@ createWidget('topic-map-summary', {
       action: 'toggleMap',
       className: 'btn',
     }));
-
-    return [nav, h('ul.clearfix', contents)];
+    
+    return [nav, h('ul.clearfix', [h('li.primary', primary), h('li.secondary', secondary)])];
   }
 });
 
