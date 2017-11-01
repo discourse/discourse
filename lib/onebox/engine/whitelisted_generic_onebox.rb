@@ -216,6 +216,12 @@ module Onebox
           d[:image] = d[:image_secure_url] || d[:image_url] || d[:thumbnail_url] || d[:image]
           d[:video] = d[:video_secure_url] || d[:video_url] || d[:video]
 
+          # Twitter labels
+          d[:label1] = Sanitize.fragment(Onebox::Helpers.truncate(d[:label1].strip))
+          d[:data1] = Sanitize.fragment(Onebox::Helpers.truncate(d[:data1].strip))
+          d[:label2] = Sanitize.fragment(Onebox::Helpers.truncate(d[:label2].strip))
+          d[:data2] = Sanitize.fragment(Onebox::Helpers.truncate(d[:data2].strip))
+
           d
         end
       end
