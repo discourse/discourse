@@ -326,7 +326,7 @@ class CookedPostProcessor
     # and wrap in a div
     oneboxed_images.each do |img|
       limit_size!(img)
-      if (width = img["width"].to_i) > 0 && (height = img["height"].to_i) > 0
+      if img.parent["class"].include?("onbox-body") && (width = img["width"].to_i) > 0 && (height = img["height"].to_i) > 0
         img.delete('width')
         img.delete('height')
         new_parent = img.add_next_sibling("<div class='aspect-image' style='--aspect-ratio:#{width}/#{height};'/>")
