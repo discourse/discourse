@@ -85,7 +85,7 @@ const Composer = RestModel.extend({
 
   @computed("privateMessage", "archetype.hasOptions")
   showCategoryChooser(isPrivateMessage, hasOptions) {
-    const manyCategories = Discourse.Category.list().length > 1;
+    const manyCategories = this.site.get('categories').length > 1;
     return !isPrivateMessage && (hasOptions || manyCategories);
   },
 
@@ -481,7 +481,7 @@ const Composer = RestModel.extend({
     this.set('categoryId', opts.categoryId || this.get('topic.category.id'));
 
     if (!this.get('categoryId') && this.get('creatingTopic')) {
-      const categories = Discourse.Category.list();
+      const categories = this.site.get('categories');
       if (categories.length === 1) {
         this.set('categoryId', categories[0].get('id'));
       }

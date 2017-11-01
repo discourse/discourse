@@ -54,6 +54,14 @@ const Site = RestModel.extend({
     return result;
   },
 
+  // Returns it in the correct order, by setting
+  @computed
+  categoriesList() {
+    return this.siteSettings.fixed_category_positions ?
+      this.get('categories') :
+      this.get('sortedCategories');
+  },
+
   postActionTypeById(id) {
     return this.get("postActionByIdLookup.action" + id);
   },

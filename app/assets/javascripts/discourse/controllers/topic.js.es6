@@ -752,9 +752,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     return selectedPostsUsername !== undefined;
   },
 
-  categories: function() {
-    return Discourse.Category.list();
-  }.property(),
+  categories: Ember.computed.alias('site.categoriesList'),
 
   canSelectAll: Em.computed.not('allPostsSelected'),
 

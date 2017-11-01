@@ -205,9 +205,7 @@ Category.reopenClass({
   },
 
   list() {
-    return Discourse.SiteSettings.fixed_category_positions ?
-             Discourse.Site.currentProp('categories') :
-             Discourse.Site.currentProp('sortedCategories');
+    return Discourse.Site.currentProp('categoriesList');
   },
 
   listByActivity() {

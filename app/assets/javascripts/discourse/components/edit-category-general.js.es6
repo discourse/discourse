@@ -9,13 +9,13 @@ export default buildCategoryPanel('general', {
 
   // background colors are available as a pipe-separated string
   backgroundColors: function() {
-    const categories = Discourse.Category.list();
+    const categories = this.site.get('categoriesList');
     return this.siteSettings.category_colors.split("|").map(function(i) { return i.toUpperCase(); }).concat(
                 categories.map(function(c) { return c.color.toUpperCase(); }) ).uniq();
   }.property(),
 
   usedBackgroundColors: function() {
-    const categories = Discourse.Category.list();
+    const categories = this.site.get('categoriesList');
     const category = this.get('category');
 
     // If editing a category, don't include its color:
@@ -25,9 +25,7 @@ export default buildCategoryPanel('general', {
   }.property('category.id', 'category.color'),
 
   parentCategories: function() {
-    return Discourse.Category.list().filter(function (c) {
-      return !c.get('parentCategory');
-    });
+    return this.site.get('categoriesList').filter(c => !c.get('parentCategory'));
   }.property(),
 
   categoryBadgePreview: function() {

@@ -10,8 +10,11 @@ export default Ember.Component.extend({
 
   @computed()
   categories() {
-    return Discourse.Category.list();
+    return this.site.get('categoriesList');
   },
+
+  @computed('category.can_edit')
+  showCategoryEdit: canEdit => canEdit,
 
   @computed("filterMode")
   navItems(filterMode) {
