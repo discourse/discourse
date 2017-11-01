@@ -76,23 +76,27 @@ module ImportExport
       @categories.sort_by! { |c| c[:parent_category_id].presence || 0 }
 
       @categories.each do |cat_attrs|
-        id = cat_attrs.delete(:id)
-        permissions = cat_attrs.delete(:permissions_params)
+        begin
+          id = cat_attrs.delete(:id)
+          permissions = cat_attrs.delete(:permissions_params)
 
-        category = Category.new(cat_attrs)
-        category.parent_category_id = new_category_id(cat_attrs[:parent_category_id]) if cat_attrs[:parent_category_id].present?
-        category.user_id = new_user_id(cat_attrs[:user_id])
-        import_id = "#{id}#{import_source}"
-        category.custom_fields["import_id"] = import_id
-        category.permissions = permissions.present? ? permissions : { "everyone" => CategoryGroup.permission_types[:full] }
-        category.save!
-        existing_categories << { category_id: category.id, value: import_id }
+          category = Category.new(cat_attrs)
+          category.parent_category_id = new_category_id(cat_attrs[:parent_category_id]) if cat_attrs[:parent_category_id].present?
+          category.user_id = new_user_id(cat_attrs[:user_id])
+          import_id = "#{id}#{import_source}"
+          category.custom_fields["import_id"] = import_id
+          category.permissions = permissions.present? ? permissions : { "everyone" => CategoryGroup.permission_types[:full] }
+          category.save!
+          existing_categories << { category_id: category.id, value: import_id }
 
-        if cat_attrs[:description].present?
-          post = category.topic.ordered_posts.first
-          post.raw = cat_attrs[:description]
-          post.save!
-          post.rebake!
+          if cat_attrs[:description].present?
+            post = category.topic.ordered_posts.first
+            post.raw = cat_attrs[:description]
+            post.save!
+            post.rebake!
+          end
+        rescue
+          next
         end
       end
 
