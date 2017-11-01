@@ -18,44 +18,14 @@ import { lookupCachedUploadUrl,
          cacheShortUploadUrl } from 'pretty-text/image-short-url';
 
 export default Ember.Component.extend({
-  classNameBindings: ['showToolbar:toolbar-visible', ':wmd-controls', 'showPreview', 'showPreview::hide-preview'],
+  classNameBindings: ['showToolbar:toolbar-visible', ':wmd-controls'],
 
   uploadProgress: 0,
-  showPreview: true,
   _xhr: null,
 
   @computed
   uploadPlaceholder() {
     return `[${I18n.t('uploading')}]() `;
-  },
-
-  @on('init')
-  _setupPreview() {
-    const val = (this.site.mobileView ? false : (this.keyValueStore.get('composer.showPreview') || 'true'));
-    this.set('showPreview', val === 'true');
-
-    this.appEvents.on('composer:show-preview', () => {
-      this.set('showPreview', true);
-    });
-
-    this.appEvents.on('composer:hide-preview', () => {
-      this.set('showPreview', false);
-    });
-  },
-
-  @computed('site.mobileView', 'showPreview')
-  forcePreview(mobileView, showPreview) {
-    return mobileView && showPreview;
-  },
-
-  @computed('showPreview')
-  toggleText: function(showPreview) {
-    return showPreview ? I18n.t('composer.hide_preview') : I18n.t('composer.show_preview');
-  },
-
-  @observes('showPreview')
-  showPreviewChanged() {
-      this.keyValueStore.set({ key: 'composer.showPreview', value: this.get('showPreview') });
   },
 
   @computed
@@ -486,8 +456,6 @@ export default Ember.Component.extend({
   @on('willDestroyElement')
   _composerClosed() {
     this.appEvents.trigger('composer:will-close');
-    this.appEvents.off('composer:show-preview');
-    this.appEvents.off('composer:hide-preview');
     Ember.run.next(() => {
       $('#main-outlet').css('padding-bottom', 0);
       // need to wait a bit for the "slide down" transition of the composer
@@ -525,10 +493,6 @@ export default Ember.Component.extend({
 
     showUploadModal(toolbarEvent) {
       this.sendAction('showUploadSelector', toolbarEvent);
-    },
-
-    togglePreview() {
-      this.toggleProperty('showPreview');
     },
 
     extraButtons(toolbar) {

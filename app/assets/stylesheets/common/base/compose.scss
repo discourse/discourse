@@ -140,13 +140,8 @@
     margin-right: 5px;
   }
 
-  .composer-bottom-right {
-    margin-top: 5px;
-    z-index: 1;
-  }
-
-  .submit-panel {
-    z-index: 2;
+  #draft-status, #file-uploading {
+    color: dark-light-choose($primary-medium, $secondary-medium);
   }
 }
 
