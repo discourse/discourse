@@ -88,21 +88,27 @@
     }
 
     .nav.target {
+      margin-top: 15px;
+
       li {
         position: relative;
+
+        a {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
       }
-      margin-top: 15px;
+
       .fa {
-        margin-left: 3px;
+        margin-left: 8px;
       }
-      li.mobile a {
-        padding-right: 25px;
-      }
+
       .d-icon-mobile {
-        position: absolute;
-        right: 10px;
-        top: 3px;
+        position: relative;
+        top: -3px;
         font-size: 1.5em;
+        max-height: 20px;
       }
     }
 
