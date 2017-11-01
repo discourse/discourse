@@ -53,10 +53,6 @@ module Jobs
     class Feed
       require 'simple-rss'
 
-      if SiteSetting.embed_username_key_from_feed.present?
-        SimpleRSS.item_tags << SiteSetting.embed_username_key_from_feed.to_sym
-      end
-
       def initialize
         @feed_url = SiteSetting.feed_polling_url
         @feed_url = "http://#{@feed_url}" if @feed_url !~ /^https?\:\/\//
@@ -79,6 +75,10 @@ module Jobs
       private
 
       def fetch_rss
+        if SiteSetting.embed_username_key_from_feed.present?
+          SimpleRSS.item_tags |= [SiteSetting.embed_username_key_from_feed.to_sym]
+        end
+
         SimpleRSS.parse open(@feed_url, allow_redirections: :all)
       rescue OpenURI::HTTPError, SimpleRSSError
         nil
