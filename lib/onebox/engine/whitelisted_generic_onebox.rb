@@ -217,10 +217,10 @@ module Onebox
           d[:video] = d[:video_secure_url] || d[:video_url] || d[:video]
 
           # Twitter labels
-          d[:label1] = Sanitize.fragment(Onebox::Helpers.truncate(d[:label1].strip))
-          d[:data1] = Sanitize.fragment(Onebox::Helpers.truncate(d[:data1].strip))
-          d[:label2] = Sanitize.fragment(Onebox::Helpers.truncate(d[:label2].strip))
-          d[:data2] = Sanitize.fragment(Onebox::Helpers.truncate(d[:data2].strip))
+          d[:label1] = Sanitize.fragment(Onebox::Helpers.truncate(d[:label1].strip)) unless Onebox::Helpers.blank?(d[:label1])
+          d[:data1] = Sanitize.fragment(Onebox::Helpers.truncate(d[:data1].strip)) unless Onebox::Helpers.blank?(d[:data1])
+          d[:label2] = Sanitize.fragment(Onebox::Helpers.truncate(d[:label2].strip)) unless Onebox::Helpers.blank?(d[:label2])
+          d[:data2] = Sanitize.fragment(Onebox::Helpers.truncate(d[:data2].strip)) unless Onebox::Helpers.blank?(d[:data2])
 
           d
         end
