@@ -4,6 +4,8 @@
   bottom: 0;
   height: 0;
   position: fixed;
+  display: flex;
+  flex-direction: column;
   transition: height 250ms ease;
   width: 100%;
   z-index: 999;
@@ -45,18 +47,21 @@
 
   &.draft,
   &.saving {
-    height: 40px !important;
+    height: 20px !important;
+    padding: 10px 5px;
   }
 
   &.draft {
     cursor: pointer;
     display: flex;
-    align-items: center;
     .draft-text {
       display: block;
     }
-    .grippie {
+    .grippie, .saving-text {
       display: none;
+    }
+    .toggler {
+      right: 10px;
     }
   }
 
@@ -94,6 +99,12 @@
     display: flex;
     align-items: center;
     margin-bottom: 10px;
+    position: relative;
+  }
+
+  .title-input {
+    position: relative;
+    .popup-tip {margin-top: -30px;}
   }
 
   .add-warning {
@@ -112,7 +123,9 @@
 
   .wmd-controls {
     position: relative;
-    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
   }
 
   .d-editor-button-bar .btn {

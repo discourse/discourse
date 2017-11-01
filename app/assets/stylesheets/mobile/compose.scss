@@ -1,82 +1,91 @@
 #reply-control {
-
-  .reply-area {
-    padding: 0 5px;
-  }
-
-  .reply-to {
-    margin: 5px;
-  }
-
-  .toggle-toolbar,
-  .toggler {
-    top: 5px;
-  }
-
-  .title-input {
-    margin-bottom: 5px;
-  }
-
-  #reply-title {
-    box-sizing: border-box;
-    width: 100% !important;
-  }
-
-  .category-input {
-    margin-bottom: 5px;
-    .category-chooser {
-      width: 100% !important;
+  
+    .reply-area {
+      padding: 0 5px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
     }
-  }
-
-  .d-editor-textarea-wrapper {
-    width: 100%;
-  }
-
-  .d-editor-button-bar {
-    display: none;
-  }
-
-  .toolbar-visible .d-editor-button-bar {
-    display: flex;
-  }
-
-  .d-editor-button-bar .btn {
-    padding: 2px 5px;
-    &.preview {
+  
+    .reply-to {
+      margin: 5px;
+    }
+  
+    .toggle-toolbar,
+    .toggler {
+      top: 5px;
+    }
+  
+    .title-input {
+      margin-bottom: 5px;
+    }
+  
+    #reply-title {
+      width: calc(100% - 20px);
+    }
+  
+    .category-input {
+      margin-bottom: 5px;
+      .category-chooser {
+        width: 100% !important;
+      }
+    }
+  
+    .submit-panel {
+      margin-bottom: 10px;
+      margin-top: -25px;
+    }
+  
+    .d-editor-textarea-wrapper {
+      width: 100%;
+    }
+  
+    .d-editor-button-bar {
+      display: none;
+    }
+  
+    .toolbar-visible .d-editor-button-bar {
+      display: flex;
+    }
+  
+    .d-editor-button-bar .btn {
+      padding: 2px 5px;
+      &.preview {
+        margin: 0;
+      }
+    }
+  
+    #mobile-uploader {
+      display: none;
+    }
+  
+    .title-and-category,
+    .user-selector {
+      flex-direction: column;
       margin: 0;
     }
+  
+    .title-input,
+    .category-input,
+    .users-input,
+    .add-warning {
+      width: 100%;
+    }
+  
+    .add-warning {
+      margin: 5px 0 5px 5px;
+    }
+  
+    .mobile-file-upload,
+    #draft-status {
+      float: right;
+      margin-top: 5px;
+    }
+  
+    #draft-status {
+      margin-right: 10px;
+      color: $primary-medium;
+    }
+  
   }
-
-  #mobile-uploader {
-    display: none;
-  }
-
-  .title-and-category,
-  .user-selector {
-    flex-direction: column;
-    margin: 0;
-  }
-
-  .title-input,
-  .category-input,
-  .users-input,
-  .add-warning {
-    width: 100%;
-  }
-
-  .add-warning {
-    margin: 5px 0 5px 5px;
-  }
-
-  .mobile-file-upload,
-  #draft-status {
-    float: right;
-    margin-top: 5px;
-  }
-
-  #draft-status {
-    margin-right: 10px;
-    color: $primary-medium;
-  }
-}
+  

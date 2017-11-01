@@ -69,6 +69,10 @@
   }
 }
 
+.d-editor-container {
+  max-width: calc(100% - 20px);  
+}
+
 .custom-body {
   background-color: $tertiary-low;
   p {
@@ -111,10 +115,29 @@
   .reply-area {
     max-width: 1500px;
     margin: 0 auto;
-    padding: 0 1em;
+    padding: 0 10px 10px 10px;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
   }
 
   .submit-panel {
     width: 35%;
+    margin-top: -30px;
+  }
+}
+
+.composer-bottom-right {
+  display: flex;
+  text-align: right;
+  max-width: calc(100% - 20px);
+  padding: 5px 0;
+  .toggle-preview {
+    flex-basis: 50%;
+    order: 2;
+  }
+  #draft-status {
+    flex-basis: 50%;
   }
 }
