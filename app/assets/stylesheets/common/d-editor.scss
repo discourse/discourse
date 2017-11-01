@@ -1,5 +1,6 @@
 .d-editor-container {
   display: flex;
+  flex-grow: 1;  
 }
 
 .d-editor-overlay {
@@ -12,6 +13,11 @@
 .d-editor-modals {
   position: absolute;
   z-index: 1001;
+}
+
+.d-editor {
+  display: flex;
+  flex-grow: 1;
 }
 
 .d-editor .d-editor-modal {
@@ -39,11 +45,14 @@
   display: flex;
   flex-direction: column;
   background-color: $secondary;
+  position: relative;
 }
 
 .d-editor-preview-wrapper {
   margin-left: 5px;
   max-width: 50%;
+  display: flex;
+  flex-direction: column;
 }
 
 .d-editor-button-bar {
@@ -120,8 +129,4 @@
 .hide-preview .d-editor-preview-wrapper {
   display: none;
   flex: 0;
-}
-
-.composer-bottom-right {
-  float: right;
 }
