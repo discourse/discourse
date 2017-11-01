@@ -70,7 +70,7 @@
 }
 
 .d-editor-container {
-  max-width: calc(100% - 20px);  
+  max-width: 100%; 
 }
 
 .custom-body {
@@ -116,6 +116,7 @@
     max-width: 1500px;
     margin: 0 auto;
     padding: 0 10px 10px 10px;
+    box-sizing: border-box;
     height: 100%;
     width: 100%;
     display: flex;
@@ -131,7 +132,7 @@
 .composer-bottom-right {
   display: flex;
   text-align: right;
-  max-width: calc(100% - 20px);
+  max-width: 100%;
   padding: 5px 0;
   .toggle-preview {
     flex-basis: 50%;
