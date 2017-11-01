@@ -30,11 +30,6 @@ export default Ember.Component.extend(KeyEnterEscape, {
   movePanels(sizePx) {
     $('#main-outlet').css('padding-bottom', sizePx);
 
-    const height = parseInt(sizePx) -
-      $('.grippie').outerHeight(true) -
-      $('.composer-fields').outerHeight(true) -
-      $('.submit-panel').outerHeight(true) - 30;
-
     // signal the progress bar it should move!
     this.appEvents.trigger("composer:resized");
   },
