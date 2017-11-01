@@ -120,8 +120,6 @@
 
     <%= render :partial => "common/discourse_javascript" %>
 
-    <%= render_google_analytics_code %>
-
     <%- unless customization_disabled? %>
       <%= raw theme_lookup("body_tag") %>
     <%- end %>

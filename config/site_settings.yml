@@ -104,12 +104,6 @@ basic:
   ga_universal_auto_link_domains:
     default: ''
     type: list
-  ga_tracking_code:
-    client: true
-    default: ''
-  ga_domain_name:
-    client: true
-    default: ''
   gtm_container_id:
     client: true
     default: ''

@@ -10,8 +10,6 @@ Discourse.SiteSettingsOriginal = {
   "track_external_right_clicks":false,
   "ga_universal_tracking_code":"",
   "ga_universal_domain_name":"auto",
-  "ga_tracking_code":"UA-33736483-2",
-  "ga_domain_name":"",
   "top_menu":"latest|new|unread|categories|top",
   "post_menu":"like-count|like|share|flag|edit|bookmark|delete|admin|reply",
   "post_menu_hidden_items":"flag|edit|delete|admin",

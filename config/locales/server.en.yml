@@ -1058,8 +1058,6 @@ en:
     must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site. WARNING: enabling this for a live site will revoke access for existing non-staff users!"
     pending_users_reminder_delay: "Notify moderators if new users have been waiting for approval for longer than this many hours. Set to -1 to disable notifications."
     maximum_session_age: "User will remain logged in for n hours since last visit"
-    ga_tracking_code: "OBSOLETE: Google analytics (ga.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
-    ga_domain_name: "OBSOLETE: Google analytics (ga.js) domain name, eg: mysite.com; see http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) domain name, eg: mysite.com; see http://google.com/analytics"
     ga_universal_auto_link_domains: "Enable Google Universal Analytics (analytics.js) cross-domain tracking. Outgoing links to these domains will have the client id added to them. See Google's Cross-Domain Tracking guide."
