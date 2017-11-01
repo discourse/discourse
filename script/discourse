@@ -198,7 +198,7 @@ class DiscourseCLI < Thor
     puts "Starting import from #{filename}..."
     load_rails
     load_import_export
-    ImportExport.import_category(filename)
+    ImportExport.import(filename)
     puts "", "Done", ""
   end
 
@@ -218,7 +218,7 @@ class DiscourseCLI < Thor
     puts "Starting import from #{filename}..."
     load_rails
     load_import_export
-    ImportExport.import_topics(filename)
+    ImportExport.import(filename)
     puts "", "Done", ""
   end
 
