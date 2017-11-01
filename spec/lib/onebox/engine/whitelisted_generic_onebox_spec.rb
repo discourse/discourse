@@ -99,19 +99,21 @@ describe Onebox::Engine::WhitelistedGenericOnebox do
 
   describe 'canonical link' do
     context 'uses canonical link if available' do
-      let(:mobile_url) { "http://m.imdb.com/title/tt0944947" }
-      let(:canonical_url) { "http://www.imdb.com/title/tt0944947/" }
+      let(:mobile_url) { "https://m.etsy.com/in-en/listing/87673424/personalized-word-pillow-case-letter" }
+      let(:canonical_url) { "https://www.etsy.com/in-en/listing/87673424/personalized-word-pillow-case-letter" }
       before do
-        fake(mobile_url, response('imdb_mobile'))
-        fake(canonical_url, response('imdb'))
+        fake(mobile_url, response('etsy_mobile'))
+        fake(canonical_url, response('etsy'))
       end
 
-      it 'fetches opengraph data from canonical link' do
+      it 'fetches opengraph data and twitter labels from canonical link' do
         onebox = described_class.new(mobile_url)
         expect(onebox.to_html).not_to be_nil
-        expect(onebox.to_html).to include("Game of Thrones")
-        expect(onebox.to_html).to include("Nine noble families fight for control over the mythical lands of Westeros")
-        expect(onebox.to_html).to include("https://images-na.ssl-images-amazon.com/images/M/MV5BMjE3NTQ1NDg1Ml5BMl5BanBnXkFtZTgwNzY2NDA0MjI@._V1_UY1200_CR90,0,630,1200_AL_.jpg")
+        expect(onebox.to_html).to include("Personalized Word Pillow Case")
+        expect(onebox.to_html).to include("Allow your personality to shine through your decor; this contemporary and modern accent will help you do just that.")
+        expect(onebox.to_html).to include("https://img1.etsystatic.com/028/1/6088772/il_570xN.613262127_e0zl.jpg")
+        expect(onebox.to_html).to include("CAD: $46.00")
+        expect(onebox.to_html).to include("Available: 4")
       end
     end
 
