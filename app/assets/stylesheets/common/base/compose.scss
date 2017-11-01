@@ -142,6 +142,11 @@
 
   .composer-bottom-right {
     margin-top: 5px;
+    z-index: 1;
+  }
+
+  .submit-panel {
+    z-index: 2;
   }
 }
 
