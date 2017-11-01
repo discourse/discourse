@@ -1,14 +1,11 @@
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 
-var Tab = Em.Object.extend({
-  @computed('name')
-  location(name) {
-    return 'group.' + name;
-  },
-
-  @computed('name', 'i18nKey')
-  message(name, i18nKey) {
-    return I18n.t(`groups.${i18nKey || name}`);
+const Tab = Ember.Object.extend({
+  init() {
+    this._super();
+    let name = this.get('name');
+    this.set('route', this.get('route') || `group.` + name);
+    this.set('message', I18n.t(`groups.${this.get('i18nKey') || name}`));
   }
 });
 
@@ -18,13 +15,13 @@ export default Ember.Controller.extend({
   showing: 'members',
 
   tabs: [
-    Tab.create({ name: 'members', 'location': 'group.index', icon: 'users' }),
+    Tab.create({ name: 'members', route: 'group.index', icon: 'users' }),
     Tab.create({ name: 'activity' }),
     Tab.create({
-      name: 'edit', i18nKey: 'edit.title', icon: 'pencil', requiresGroupAdmin: true
+      name: 'edit', i18nKey: 'edit.title', icon: 'pencil', admin: true
     }),
     Tab.create({
-      name: 'logs', i18nKey: 'logs.title', icon: 'list-alt', requiresGroupAdmin: true
+      name: 'logs', i18nKey: 'logs.title', icon: 'list-alt', admin: true
     })
   ],
 
@@ -56,21 +53,6 @@ export default Ember.Controller.extend({
   @observes('model.user_count')
   _setMembersTabCount() {
     this.get('tabs')[0].set('count', this.get('model.user_count'));
-  },
-
-  @computed('model.is_group_owner', 'model.automatic')
-  getTabs() {
-    return this.get('tabs').filter(t => {
-      let canSee = true;
-
-      if (this.currentUser && t.requiresGroupAdmin) {
-        canSee = this.currentUser.canManageGroup(this.get('model'));
-      } else if (t.requiresGroupAdmin) {
-        canSee = false;
-      }
-
-      return canSee;
-    });
   },
 
   actions: {
