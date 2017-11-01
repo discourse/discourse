@@ -9,6 +9,7 @@
   
     .reply-to {
       margin: 5px;
+      max-width: calc(100% - 60px);
     }
   
     .toggle-toolbar,
@@ -49,7 +50,9 @@
     }
   
     .d-editor-button-bar .btn {
-      padding: 2px 5px;
+      @media all and ( max-width: 350px) {
+        padding: 2px 4px;
+      }
       &.preview {
         margin: 0;
       }
