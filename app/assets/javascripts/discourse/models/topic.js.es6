@@ -135,7 +135,7 @@ const Topic = RestModel.extend({
     const categoryName = this.get('categoryName');
     let category;
     if (categoryName) {
-      category = Discourse.Category.list().findBy('name', categoryName);
+      category = this.site.get('categories').findBy('name', categoryName);
     }
     this.set('category', category);
   }.observes('categoryName'),

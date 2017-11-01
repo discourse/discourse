@@ -65,7 +65,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     saveCategory() {
       const self = this,
           model = this.get('model'),
-          parentCategory = Discourse.Category.list().findBy('id', parseInt(model.get('parent_category_id'), 10));
+          parentCategory = this.site.get('categories').findBy('id', parseInt(model.get('parent_category_id'), 10));
 
       this.set('saving', true);
       model.set('parentCategory', parentCategory);

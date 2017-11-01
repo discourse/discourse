@@ -81,10 +81,11 @@ function dup(obj) {
   return jQuery.extend(true, {}, obj);
 }
 
-function resetSite() {
+function resetSite(siteSettings, extras) {
   var createStore = require('helpers/create-store').default;
-  var siteAttrs = dup(fixtures['site.json'].site);
+  var siteAttrs = $.extend({}, fixtures['site.json'].site, extras || {});
   siteAttrs.store = createStore();
+  siteAttrs.siteSettings = siteSettings;
   Discourse.Site.resetCurrent(Discourse.Site.create(siteAttrs));
 }
 
@@ -105,7 +106,7 @@ QUnit.testStart(function(ctx) {
   Discourse.BaseUrl = "localhost";
   Discourse.Session.resetCurrent();
   Discourse.User.resetCurrent();
-  resetSite();
+  resetSite(Discourse.SiteSettings);
 
   _DiscourseURL.redirectedTo = null;
   _DiscourseURL.redirectTo = function(url) {

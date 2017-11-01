@@ -130,7 +130,7 @@ export default createWidget('hamburger-menu', {
     const hideUncategorized = !this.siteSettings.allow_uncategorized_topics;
     const isStaff = Discourse.User.currentProp('staff');
 
-    const categories = Discourse.Category.list().reject((c) => {
+    const categories = this.site.get('categoriesList').reject((c) => {
       if (c.get('parentCategory.show_subcategory_list')) { return true; }
       if (hideUncategorized && c.get('isUncategorizedCategory') && !isStaff) { return true; }
       return false;
