@@ -1,7 +1,7 @@
-{{#load-more selector=".user-stream .user-stream-item" action=(action "loadMore")}}
-  <div class='user-stream'>
+{{#load-more selector=".group-post" action=(action "loadMore")}}
+  <div class='group-posts'>
     {{#each model as |post|}}
-      {{group-post post=post}}
+      {{group-post post=post class="group-post"}}
     {{else}}
       <div>{{i18n emptyText}}</div>
     {{/each}}
