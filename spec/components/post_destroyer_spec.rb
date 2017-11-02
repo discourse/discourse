@@ -308,6 +308,21 @@ describe PostDestroyer do
           author.reload
         }.to change { author.post_count }.by(-1)
       end
+
+      it "doesn't count whispers" do
+        user_stat = admin.user_stat
+        whisper = PostCreator.new(
+          admin,
+          topic_id: post.topic.id,
+          reply_to_post_number: 1,
+          post_type: Post.types[:whisper],
+          raw: 'this is a whispered reply'
+        ).create
+        expect(user_stat.reload.post_count).to eq(0)
+        expect {
+          PostDestroyer.new(admin, whisper).destroy
+        }.to_not change { user_stat.reload.post_count }
+      end
     end
 
   end
