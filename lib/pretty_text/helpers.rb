@@ -30,7 +30,7 @@ module PrettyText
       user = User.find_by(username_lower: username.downcase)
       return "" unless user.present?
 
-      return user.primary_group.try(:name) || ""
+      user.primary_group.try(:name) || ""
     end
 
     def mention_lookup(name)

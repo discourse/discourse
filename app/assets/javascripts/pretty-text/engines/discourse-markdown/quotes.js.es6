@@ -53,7 +53,7 @@ const rule = {
     let token   = state.push('bbcode_open', 'aside', 1);
     token.attrs = [];
     
-    if (primaryGroupName) {
+    if (primaryGroupName && primaryGroupName.length !== 0) {
       token.attrs.push(['class', `quote group-${primaryGroupName}`]);
     } else {
       token.attrs.push(['class', 'quote']);
@@ -148,10 +148,7 @@ export function setup(helper) {
   helper.whiteList({
     custom(tag, name, value) {
       if (tag === 'aside' && name === 'class') {
-        const m = /^quote group\-(.+)$/.exec(value);
-        if (m) {
-          return true;
-        }
+        return !!/^quote group\-(.+)$/.exec(value);
       }
     }
   });

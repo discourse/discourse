@@ -269,7 +269,7 @@ QUnit.test("Quotes", assert => {
 </aside>`,
          "handles nested quotes properly");
 
-  assert.cookedOptions(`[quote="bob, post:1, topic:1"]\ntest quote\n[/quote]`, { lookupPrimaryUserGroupByPostNumber: function() { return "aUserGroup" } },
+  assert.cookedOptions(`[quote="bob, post:1, topic:1"]\ntest quote\n[/quote]`, { lookupPrimaryUserGroupByPostNumber: () => "aUserGroup" },
       `<aside class="quote group-aUserGroup" data-post="1" data-topic="1">
 <div class="title">
 <div class="quote-controls"></div>
