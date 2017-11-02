@@ -365,7 +365,8 @@ class GroupsController < ApplicationController
       :full_name,
       :public_admission,
       :public_exit,
-      :allow_membership_requests
+      :allow_membership_requests,
+      :membership_request_template,
     )
   end
 
