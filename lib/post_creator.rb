@@ -473,7 +473,7 @@ class PostCreator
     end
 
     unless @post.topic.private_message?
-      @user.user_stat.post_count += 1
+      @user.user_stat.post_count += 1 if @post.post_type == Post.types[:regular]
       @user.user_stat.topic_count += 1 if @post.is_first_post?
     end
 
