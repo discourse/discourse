@@ -52,6 +52,7 @@ class UserStat < ActiveRecord::Base
     ", seen_at: last_seen
   end
 
+  # topic_reply_count is a count of posts in other users' topics
   def update_topic_reply_count
     self.topic_reply_count =
         Topic
