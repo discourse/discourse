@@ -114,8 +114,13 @@ describe PrettyText do
     end
 
     describe "with primary user group" do
+      let(:default_avatar) { "//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/{size}.png" }
       let(:group) { Fabricate(:group) }
       let!(:user) { Fabricate(:user, primary_group: group) }
+
+      before do
+        User.stubs(:default_template).returns(default_avatar)
+      end
 
       it "adds primary group class to referenced users quote" do
 
@@ -124,7 +129,7 @@ describe PrettyText do
           <aside class="quote group-#{group.name}" data-topic="#{topic.id}" data-post="2">
           <div class="title">
             <div class="quote-controls"></div>
-            <img alt class='avatar' height='20' src='//test.localhost/letter_avatar_proxy/v2/letter/b/90ced4/40.png' width='20'><a href='http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2'>This is a test topic</a>
+            <img alt class='avatar' height='20' src='//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png' width='20'><a href='http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2'>This is a test topic</a>
           </div>
           <blockquote>
             <p>ddd</p>
