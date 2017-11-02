@@ -6,6 +6,7 @@
     {{#if showGroupMessages}}
       {{group-activity-filter filter="messages"}}
     {{/if}}
+    {{plugin-outlet name="below-group-activity-nav" tagName='' connectorTagName='li'}}
   {{/mobile-nav}}
 
   <div class="{{if site.mobileView "" "pull-left"}} group-activity-outlet">
