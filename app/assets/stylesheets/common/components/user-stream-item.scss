@@ -111,20 +111,6 @@
     word-wrap: break-word;
     color: $primary;
   }
-
-  .group-member-info {
-    .name {
-      display: inline-block;
-      margin-top: 5px;
-      color: dark-light-choose($primary-medium,$secondary-medium);
-    }
-
-    .title {
-      display: inline-block;
-      margin-top: 5px;
-      color: dark-light-choose($primary-medium, $secondary-medium);
-    }
-  }
 }
 
 .user-stream .child-actions, // DEPRECATED: '.user-stream .child-actions' selector
