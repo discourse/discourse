@@ -76,7 +76,7 @@ export default Ember.Component.extend({
           }
         }
       },
-      
+
       lookupPrimaryUserGroupByPostNumber: (postNumber, topicId) => {
         const topic = this.get('topic');
         if (!topic) { return; }

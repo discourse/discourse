@@ -41,7 +41,7 @@ const rule = {
       // server-side, we need to lookup the avatar from the username
       avatarImg = options.lookupAvatar(username);
     }
-    
+
     if (options.lookupPrimaryUserGroupByPostNumber) {
       // client-side, we can retrieve the primary user group from the post
       primaryGroupName = options.lookupPrimaryUserGroupByPostNumber(postNumber, topicId);
@@ -49,10 +49,10 @@ const rule = {
       // server-side, we need to lookup the primary user group from the username
       primaryGroupName = options.lookupPrimaryUserGroup(username);
     }
-    
+
     let token   = state.push('bbcode_open', 'aside', 1);
     token.attrs = [];
-    
+
     if (primaryGroupName && primaryGroupName.length !== 0) {
       token.attrs.push(['class', `quote group-${primaryGroupName}`]);
     } else {
@@ -70,7 +70,7 @@ const rule = {
     if (full) {
       token.attrs.push(['data-full', 'true']);
     }
-    
+
     if (username) {
       let offTopicQuote = options.topicId &&
                           postNumber &&
