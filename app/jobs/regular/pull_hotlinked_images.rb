@@ -8,6 +8,8 @@ module Jobs
 
     sidekiq_options queue: 'low'
 
+    LARGE_IMAGES = "large_images".freeze
+
     def initialize
       @max_size = SiteSetting.max_image_size_kb.kilobytes
     end
@@ -46,7 +48,8 @@ module Jobs
       raw = post.raw.dup
       start_raw = raw.dup
       downloaded_urls = {}
-      broken_images, large_images = [], []
+      large_images = post.custom_fields[LARGE_IMAGES].presence || []
+      broken_images, new_large_images = [], []
 
       extract_images_from(post.cooked).each do |image|
         src = original_src = image['src']
@@ -57,7 +60,7 @@ module Jobs
         if is_valid_image_url(src)
           begin
             # have we already downloaded that file?
-            unless downloaded_urls.include?(src)
+            unless downloaded_urls.include?(src) || large_images.include?(src) || broken_images.include?(src)
               if hotlinked = download(src)
                 if File.size(hotlinked.path) <= @max_size
                   filename = File.basename(URI.parse(src).path)
@@ -70,6 +73,7 @@ module Jobs
                   end
                 else
                   large_images << original_src
+                  new_large_images << original_src
                 end
               else
                 broken_images << original_src
@@ -104,15 +108,18 @@ module Jobs
 
       end
 
+      post.custom_fields[LARGE_IMAGES] = large_images
+      post.save!
       post.reload
+
       if start_raw == post.raw && raw != post.raw
         changes = { raw: raw, edit_reason: I18n.t("upload.edit_reason") }
         # we never want that job to bump the topic
         options = { bypass_bump: true }
         post.revise(Discourse.system_user, changes, options)
-      elsif downloaded_urls.present?
+      elsif downloaded_urls.present? || new_large_images.present?
         post.trigger_post_process(true)
-      elsif broken_images.present? || large_images.present?
+      elsif broken_images.present?
         start_html = post.cooked
         doc = Nokogiri::HTML::fragment(start_html)
         images = doc.css("img[src]") - doc.css("img.avatar")
@@ -125,21 +132,6 @@ module Jobs
             tag.remove_attribute('src')
             tag.remove_attribute('width')
             tag.remove_attribute('height')
-          elsif large_images.include?(src)
-            tag.name = 'a'
-            tag.set_attribute('href', src)
-            tag.set_attribute('target', '_blank')
-            tag.set_attribute('title', I18n.t('post.image_placeholder.large'))
-            tag.remove_attribute('src')
-            tag.remove_attribute('width')
-            tag.remove_attribute('height')
-            tag.inner_html = '<span class="large-image fa fa-picture-o"></span>'
-            parent = tag.parent
-            if parent.name == 'a'
-              parent.add_next_sibling(tag)
-              parent.add_next_sibling('<br>')
-              parent.content = parent["href"]
-            end
           end
         end
         if start_html == post.cooked && doc.to_html != post.cooked

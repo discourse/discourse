@@ -524,7 +524,6 @@ en:
   post:
     image_placeholder:
       broken: "This image is broken"
-      large: "This image is too large to display here; click to view"
 
   rate_limiter:
     slow_down: "You have performed this action too many times, try again later."
@@ -2856,6 +2855,8 @@ en:
       too_large: "Sorry, the image you are trying to upload is too big (maximum size is %{max_size_kb}KB), please resize it and try again."
       larger_than_x_megapixels: "Sorry, the image you are trying to upload is too large (maximum dimension is %{max_image_megapixels}-megapixels), please resize it and try again."
       size_not_found: "Sorry, but we couldn't determine the size of the image. Maybe your image is corrupted?"
+    placeholders:
+      too_large: "(image larger than %{max_size_kb}KB)"
 
   avatar:
     missing: "Sorry, we can't find any avatar associated with that email address. Can you try uploading it again?"
