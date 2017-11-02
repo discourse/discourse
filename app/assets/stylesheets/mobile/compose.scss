@@ -14,7 +14,14 @@
   
     .toggle-toolbar,
     .toggler {
-      top: 5px;
+      top: 2px;
+    }
+
+    &.draft {
+      .toggle-toolbar,
+      .toggler {
+        top: 8px;
+      }
     }
   
     .title-input {
@@ -33,8 +40,15 @@
     }
   
     .submit-panel {
-      margin-bottom: 10px;
-      margin-top: -25px;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: baseline;
+      .save-or-cancel {
+        flex-basis: 70%;
+      }
+      .composer-bottom-right {
+        flex-basis: 30%;
+      }
     }
   
     .d-editor-textarea-wrapper {
@@ -79,14 +93,7 @@
       margin: 5px 0 5px 5px;
     }
   
-    .mobile-file-upload,
     #draft-status {
-      float: right;
-      margin-top: 5px;
-    }
-  
-    #draft-status {
-      margin-right: 10px;
       color: $primary-medium;
     }
   

@@ -29,7 +29,7 @@
 
       {{#if model.viewOpen}}
 
-        <div class="reply-area">
+        <div class='reply-area {{if canEditTags "with-tags"}}'>
 
           <div class='composer-fields'>
 
@@ -110,7 +110,7 @@
                             showUploadSelector="showUploadSelector"
                             afterRefresh="afterRefresh"}}
 
-          <div class='submit-panel'>
+          <div class='submit-panel {{if canEditTags "with-tags"}}'>
             {{plugin-outlet name="composer-fields-below" args=(hash model=model)}}
 
             {{#if canEditTags}}
@@ -132,18 +132,7 @@
                   </span>
                 {{/if}}
               {{/if}}
-            </div>
 
-            <div class="composer-bottom-right">
-              {{#if site.mobileView}}
-                <a class="mobile-file-upload {{if isUploading 'hidden'}}">{{i18n 'upload'}}</a>
-
-                {{#if showPreview}}
-                  {{d-button action='togglePreview' class='hide-preview' label='composer.hide_preview'}}
-                {{/if}}
-              {{else}}
-                <a href {{action "togglePreview"}} class='toggle-preview'>{{{toggleText}}}</a>
-              {{/if}}
 
               {{#if isUploading}}
                 <div id="file-uploading">
@@ -157,6 +146,19 @@
               <div id='draft-status' class="{{if isUploading 'hidden'}}">
                 {{model.draftStatus}}
               </div>
+            </div>
+
+            <div class="composer-bottom-right">
+              {{#if site.mobileView}}
+                <a class="mobile-file-upload {{if isUploading 'hidden'}}">{{i18n 'upload'}}</a>
+
+                {{#if showPreview}}
+                  {{d-button action='togglePreview' class='hide-preview' label='composer.hide_preview'}}
+                {{/if}}
+              {{else}}
+                <a href {{action "togglePreview"}} class='toggle-preview'>{{{toggleText}}}</a>
+              {{/if}}
+
             </div>
           </div>
         </div>

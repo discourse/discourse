@@ -18,7 +18,6 @@
   overflow-y: auto;
   z-index: 110;
   padding: 10px 10px 35px 10px;
-
   box-shadow: 3px 3px 3px rgba(0,0,0, 0.34);
   background: $highlight-medium;
 
@@ -121,17 +120,11 @@
     width: 100%;
     display: flex;
     flex-direction: column;
+    .submit-panel {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+    }
   }
 }
 
-.composer-bottom-right {
-  display: flex;
-  text-align: right;
-  .toggle-preview {
-    flex-basis: 50%;
-    order: 2;
-  }
-  #draft-status {
-    flex-basis: 50%;
-  }
-}

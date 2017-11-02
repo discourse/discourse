@@ -13,7 +13,6 @@
   .toggler,
   .toggle-toolbar {
     position: absolute;
-    padding-right: 10px;
     color: $primary-medium;
   }
 
@@ -29,6 +28,9 @@
   .draft-text {
     display: none;
     padding-left: 10px;
+    .spinner {
+      margin-left: 5px;
+    }
     i {
       color: $primary-medium;
     }
@@ -47,8 +49,8 @@
 
   &.draft,
   &.saving {
-    height: 20px !important;
-    padding: 10px 5px;
+    height: 40px !important;
+    justify-content: center;
   }
 
   &.draft {
@@ -66,7 +68,7 @@
   }
 
   &.saving .saving-text {
-    display: block;
+    display: flex;
   }
 
   input[type="text"] {
@@ -118,7 +120,8 @@
   }
 
   .tag-chooser {
-    margin: 0;
+    margin: 5px 0 0 0;
+    flex-basis: 30%;
   }
 
   .wmd-controls {
@@ -126,6 +129,7 @@
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+    max-height: calc(100% - 65px);
   }
 
   .d-editor-button-bar .btn {
@@ -134,6 +138,39 @@
 
   .save-or-cancel {
     margin-top: 5px;
+    flex-basis: 50%;
+    display: flex;
+    align-items: center;
+    #draft-status, #file-uploading {
+      margin-left: 25px;
+    }
+    #file-uploading {
+      display: flex;
+      .spinner {
+        margin-right: 5px;
+      }
+    }
+  }
+
+  .composer-bottom-right {
+    flex-basis: 50%;
+    display: flex;
+    flex-direction: row-reverse;
+    .toggle-preview {
+      order: 2;
+    }
+  }
+
+  .with-tags {
+    .wmd-controls {
+      max-height: calc(100% - 145px);      
+    }
+    .composer-bottom-right {
+      flex-basis: 70%;
+    }
+    .save-or-cancel {
+      order: 3;
+    }
   }
 
   .create {
