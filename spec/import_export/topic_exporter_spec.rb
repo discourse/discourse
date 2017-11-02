@@ -3,6 +3,10 @@ require "import_export/topic_exporter"
 
 describe ImportExport::TopicExporter do
 
+  before do
+    STDOUT.stubs(:write)
+  end
+
   let(:user) { Fabricate(:user) }
   let(:topic) { Fabricate(:topic, user: user) }
 

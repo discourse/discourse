@@ -5,6 +5,10 @@ require "import_export/importer"
 
 describe ImportExport::Importer do
 
+  before do
+    STDOUT.stubs(:write)
+  end
+
   let(:import_data) do
     import_file = Rack::Test::UploadedFile.new(file_from_fixtures("import-export.json", "json"))
     data = ActiveSupport::HashWithIndifferentAccess.new(JSON.parse(import_file.read))
