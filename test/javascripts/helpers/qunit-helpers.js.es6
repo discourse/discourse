@@ -90,6 +90,7 @@ export function acceptance(name, options) {
         options.afterEach.call(this);
       }
       flushMap();
+      localStorage.clear();
       Discourse.User.resetCurrent();
       resetSite(Discourse.SiteSettings);
       resetExtraClasses();
