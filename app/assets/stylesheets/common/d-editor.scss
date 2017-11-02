@@ -18,6 +18,7 @@
 .d-editor {
   display: flex;
   flex-grow: 1;
+  min-height: 0;
 }
 
 .d-editor .d-editor-modal {

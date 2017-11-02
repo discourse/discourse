@@ -43,8 +43,9 @@
       margin-bottom: 5px;
       display: flex;
       align-items: baseline;
+      flex-shrink: 0;
       .save-or-cancel {
-        flex-basis: 70%;
+        flex-basis: 69%;
       }
       .composer-bottom-right {
         flex-basis: 30%;
