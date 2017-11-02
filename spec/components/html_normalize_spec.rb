@@ -7,6 +7,10 @@ describe HtmlNormalize do
     HtmlNormalize.normalize(html)
   end
 
+  it "handles attributes without values" do
+    expect(n "<img alt>").to eq("<img alt>")
+  end
+
   it "handles self closing tags" do
 
     source = <<-HTML
