@@ -245,6 +245,16 @@ class PostDestroyer
       author.last_posted_at = author.posts.order('created_at DESC').first.try(:created_at)
       author.save!
     end
+
+    if @post.is_first_post? && @post.topic && !@post.topic.private_message?
+      # Update stats of all people who replied
+      counts = Post.where(post_type: Post.types[:regular]).where(topic_id: @post.topic_id).group(:user_id).count
+      counts.each do |user_id, count|
+        if user_stat = UserStat.where(user_id: user_id).first
+          user_stat.update_attributes(post_count: user_stat.post_count - count)
+        end
+      end
+    end
   end
 
 end

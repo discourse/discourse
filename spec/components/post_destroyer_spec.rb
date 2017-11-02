@@ -207,6 +207,7 @@ describe PostDestroyer do
         DiscourseEvent.on(:topic_destroyed, &topic_destroyed)
 
         @orig = post2.cooked
+        # Guardian.new(post2.user).can_delete_post?(post2) == false
         PostDestroyer.new(post2.user, post2).destroy
         post2.reload
 
@@ -237,6 +238,26 @@ describe PostDestroyer do
         DiscourseEvent.off(:topic_destroyed, &topic_destroyed)
         DiscourseEvent.off(:topic_recovered, &topic_recovered)
       end
+    end
+
+    it "when topic is destroyed, it updates user_stats correctly" do
+      post
+      user1 = post.user
+      user1.reload
+      user2 = Fabricate(:user)
+      reply = create_post(topic_id: post.topic_id, user: user2)
+      reply2 = create_post(topic_id: post.topic_id, user: user1)
+      expect(user1.user_stat.topic_count).to eq(1)
+      expect(user1.user_stat.post_count).to eq(2)
+      expect(user2.user_stat.topic_count).to eq(0)
+      expect(user2.user_stat.post_count).to eq(1)
+      PostDestroyer.new(Fabricate(:admin), post).destroy
+      user1.reload
+      user2.reload
+      expect(user1.user_stat.topic_count).to eq(0)
+      expect(user1.user_stat.post_count).to eq(0)
+      expect(user2.user_stat.topic_count).to eq(0)
+      expect(user2.user_stat.post_count).to eq(0)
     end
 
     it "accepts a delete_removed_posts_after option" do
