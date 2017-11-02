@@ -4,6 +4,8 @@ if (Rails.env.production? && SiteSetting.logging_provider == 'lograge') || ENV["
   Rails.application.configure do
     config.lograge.enabled = true
 
+    logstash_formatter = ENV["LOGSTASH_FORMATTER"]
+
     config.lograge.custom_options = lambda do |event|
       exceptions = %w(controller action format id)
 
@@ -13,11 +15,13 @@ if (Rails.env.production? && SiteSetting.logging_provider == 'lograge') || ENV["
       output = {
         params: params,
         database: RailsMultisite::ConnectionManagement.current_db,
-        time: event.time,
       }
+
+      output[:time] = event.time unless logstash_formatter
+      output
     end
 
-    if ENV["LOGSTASH_FORMATTER"]
+    if logstash_formatter
       config.lograge.formatter = Lograge::Formatters::Logstash.new
     end
   end
