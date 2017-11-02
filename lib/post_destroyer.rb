@@ -231,7 +231,9 @@ class PostDestroyer
       author.user_stat.first_post_created_at = author.posts.order('created_at ASC').first.try(:created_at)
     end
 
-    author.user_stat.post_count -= 1
+    unless @topic.nil? && !@post.is_first_post?
+      author.user_stat.post_count -= 1 # TODO: deleting a regular post
+    end
     author.user_stat.topic_count -= 1 if @post.is_first_post?
 
     # We don't count replies to your own topics

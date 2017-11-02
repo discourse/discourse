@@ -196,6 +196,7 @@ describe PostDestroyer do
     it "as the creator of the post, doesn't delete the post" do
       begin
         post2 = create_post
+        user_stat = post2.user.user_stat
 
         called = 0
         topic_destroyed = -> (topic, user) do
@@ -217,6 +218,7 @@ describe PostDestroyer do
         expect(post2.raw).to eq(I18n.t('js.post.deleted_by_author', count: 24))
         expect(post2.version).to eq(2)
         expect(called).to eq(1)
+        expect(user_stat.reload.post_count).to eq(1)
 
         called = 0
         topic_recovered = -> (topic, user) do
@@ -234,6 +236,7 @@ describe PostDestroyer do
         expect(post2.user_deleted).to eq(false)
         expect(post2.cooked).to eq(@orig)
         expect(called).to eq(1)
+        expect(user_stat.reload.post_count).to eq(1)
       ensure
         DiscourseEvent.off(:topic_destroyed, &topic_destroyed)
         DiscourseEvent.off(:topic_recovered, &topic_recovered)
@@ -351,6 +354,7 @@ describe PostDestroyer do
 
   context "deleting a post belonging to a deleted topic" do
     let!(:topic) { post.topic }
+    let(:author) { post.user }
 
     before do
       topic.trash!(admin)
@@ -365,23 +369,65 @@ describe PostDestroyer do
       it "deletes the post" do
         expect(post.deleted_at).to be_present
         expect(post.deleted_by).to eq(moderator)
+        expect(author.user_stat.post_count).to eq(0)
       end
     end
 
     context "as an admin" do
-      before do
-        PostDestroyer.new(admin, post).destroy
-      end
+      subject { PostDestroyer.new(admin, post).destroy }
 
       it "deletes the post" do
+        subject
         expect(post.deleted_at).to be_present
         expect(post.deleted_by).to eq(admin)
       end
 
       it "creates a new user history entry" do
-        expect {
-          PostDestroyer.new(admin, post).destroy
-        }.to change { UserHistory.count }.by(1)
+        expect { subject }.to change { UserHistory.count }.by(1)
+      end
+    end
+  end
+
+  context "deleting a reply belonging to a deleted topic" do
+    let!(:topic) { post.topic }
+    let!(:reply) { create_post(topic_id: topic.id, user: post.user) }
+    let(:author) { reply.user }
+
+    before do
+      topic.trash!(admin)
+      post.reload
+      reply.reload
+    end
+
+    context "as a moderator" do
+      subject { PostDestroyer.new(moderator, reply).destroy }
+
+      it "deletes the reply" do
+        subject
+        expect(reply.deleted_at).to be_present
+        expect(reply.deleted_by).to eq(moderator)
+      end
+
+      it "doesn't decrement post_count again" do
+        expect { subject }.to_not change { author.user_stat.post_count }
+      end
+    end
+
+    context "as an admin" do
+      subject { PostDestroyer.new(admin, reply).destroy }
+
+      it "deletes the post" do
+        subject
+        expect(reply.deleted_at).to be_present
+        expect(reply.deleted_by).to eq(admin)
+      end
+
+      it "doesn't decrement post_count again" do
+        expect { subject }.to_not change { author.user_stat.post_count }
+      end
+
+      it "creates a new user history entry" do
+        expect { subject }.to change { UserHistory.count }.by(1)
       end
     end
   end
