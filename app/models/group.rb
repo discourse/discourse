@@ -369,10 +369,14 @@ class Group < ActiveRecord::Base
     lookup_group(name) || refresh_automatic_group!(name)
   end
 
-  def self.search_group(name)
-    Group.where(visibility_level: visibility_levels[:public]).where(
-      "name ILIKE :term_like OR full_name ILIKE :term_like", term_like: "#{name}%"
-    )
+  def self.search_groups(name, groups: nil)
+    query = groups || Group
+
+    query
+      .where(visibility_level: visibility_levels[:public])
+      .where(
+        "name ILIKE :term_like OR full_name ILIKE :term_like", term_like: "%#{name}%"
+      )
   end
 
   def self.lookup_group(name)

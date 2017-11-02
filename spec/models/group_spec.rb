@@ -556,17 +556,21 @@ describe Group do
     end
   end
 
-  describe '.search_group' do
-    let(:group) { Fabricate(:group, name: 'tEsT', full_name: 'eSTt') }
+  describe '.search_groups' do
+    let(:group) { Fabricate(:group, name: 'tEsT_more_things', full_name: 'Abc something awesome') }
 
     it 'should return the right groups' do
       group
 
-      expect(Group.search_group('te')).to eq([group])
-      expect(Group.search_group('TE')).to eq([group])
-      expect(Group.search_group('es')).to eq([group])
-      expect(Group.search_group('ES')).to eq([group])
-      expect(Group.search_group('test2')).to eq([])
+      expect(Group.search_groups('te')).to eq([group])
+      expect(Group.search_groups('TE')).to eq([group])
+      expect(Group.search_groups('es')).to eq([group])
+      expect(Group.search_groups('ES')).to eq([group])
+      expect(Group.search_groups('ngs')).to eq([group])
+      expect(Group.search_groups('sOmEthi')).to eq([group])
+      expect(Group.search_groups('abc')).to eq([group])
+      expect(Group.search_groups('sOmEthi')).to eq([group])
+      expect(Group.search_groups('test2')).to eq([])
     end
   end
 
