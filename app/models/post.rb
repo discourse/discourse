@@ -622,6 +622,7 @@ class Post < ActiveRecord::Base
 
   def self.public_posts_count_per_day(start_date, end_date, category_id = nil)
     result = public_posts.where('posts.created_at >= ? AND posts.created_at <= ?', start_date, end_date)
+      .where(post_type: Post.types[:regular])
     result = result.where('topics.category_id = ?', category_id) if category_id
     result.group('date(posts.created_at)').order('date(posts.created_at)').count
   end

@@ -215,6 +215,7 @@ describe Report do
       post.topic.add_small_action(Fabricate(:admin), "invited_group", 'coolkids')
       r = Report.find('posts')
       expect(r.total).to eq(1)
+      expect(r.data[0][:y]).to eq(1)
     end
   end
 end
