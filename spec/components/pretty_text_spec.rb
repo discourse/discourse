@@ -112,7 +112,7 @@ describe PrettyText do
         expect(PrettyText.cook(md)).to eq(html.strip)
       end
     end
-    
+
     describe "with primary user group" do
       let(:group) { Fabricate(:group) }
       let!(:user) { Fabricate(:user, primary_group: group) }
