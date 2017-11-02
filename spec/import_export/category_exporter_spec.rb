@@ -7,6 +7,10 @@ describe ImportExport::CategoryExporter do
   let(:group) { Fabricate(:group) }
   let(:user) { Fabricate(:user) }
 
+  before do
+    STDOUT.stubs(:write)
+  end
+
   context '.perform' do
     it 'raises an error when the category is not found' do
       expect { ImportExport::CategoryExporter.new(100).perform }.to raise_error(ActiveRecord::RecordNotFound)
