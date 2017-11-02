@@ -112,6 +112,29 @@ describe PrettyText do
         expect(PrettyText.cook(md)).to eq(html.strip)
       end
     end
+    
+    describe "with primary user group" do
+      let(:group) { Fabricate(:group) }
+      let!(:user) { Fabricate(:user, primary_group: group) }
+
+      it "adds primary group class to referenced users quote" do
+
+        topic = Fabricate(:topic, title: "this is a test topic")
+        expected = <<~HTML
+          <aside class="quote group-#{group.name}" data-topic="#{topic.id}" data-post="2">
+          <div class="title">
+            <div class="quote-controls"></div>
+            <img alt class='avatar' height='20' src='//test.localhost/letter_avatar_proxy/v2/letter/b/90ced4/40.png' width='20'><a href='http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2'>This is a test topic</a>
+          </div>
+          <blockquote>
+            <p>ddd</p>
+          </blockquote>
+          </aside>
+        HTML
+
+        expect(cook("[quote=\"#{user.username}, post:2, topic:#{topic.id}\"]\nddd\n[/quote]", topic_id: 1)).to eq(n(expected))
+      end
+    end
 
     it "can handle inline block bbcode" do
       cooked = PrettyText.cook("[quote]te **s** t[/quote]")
