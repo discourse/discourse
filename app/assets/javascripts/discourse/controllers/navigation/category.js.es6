@@ -1,4 +1,3 @@
-import computed from "ember-addons/ember-computed-decorators";
 import NavigationDefaultController from 'discourse/controllers/navigation/default';
 
 export default NavigationDefaultController.extend({
