@@ -51,6 +51,13 @@ describe DiscoursePluginRegistry do
       DiscoursePluginRegistry.reset!
       expect(DiscoursePluginRegistry.build_html(:my_html)).to be_blank
     end
+
+    it "can register multiple builders" do
+      DiscoursePluginRegistry.register_html_builder(:my_html) { "one" }
+      DiscoursePluginRegistry.register_html_builder(:my_html) { "two" }
+      expect(DiscoursePluginRegistry.build_html(:my_html)).to eq("one\ntwo")
+      DiscoursePluginRegistry.reset!
+    end
   end
 
   context '.register_css' do

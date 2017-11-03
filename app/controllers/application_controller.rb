@@ -465,9 +465,9 @@ class ApplicationController < ActionController::Base
         data.merge! DiscoursePluginRegistry.custom_html
       end
 
-      DiscoursePluginRegistry.html_builders.each do |name, blk|
+      DiscoursePluginRegistry.html_builders.each do |name, _|
         if name.start_with?("client:")
-          data[name.sub(/^client:/, '')] = blk.call(self)
+          data[name.sub(/^client:/, '')] = DiscoursePluginRegistry.build_html(name, self)
         end
       end
 
