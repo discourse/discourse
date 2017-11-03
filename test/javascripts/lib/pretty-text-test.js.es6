@@ -244,7 +244,6 @@ QUnit.test("Quotes", assert => {
 </aside>`,
                 "works with multiple lines");
 
-
   assert.cookedOptions("[quote=\"bob, post:1\"]\nmy quote\n[/quote]",
                 { topicId: 2, lookupAvatar: function() { } },
     `<aside class=\"quote\" data-post=\"1\">
@@ -270,6 +269,16 @@ QUnit.test("Quotes", assert => {
 </aside>`,
          "handles nested quotes properly");
 
+  assert.cookedOptions(`[quote="bob, post:1, topic:1"]\ntest quote\n[/quote]`, { lookupPrimaryUserGroupByPostNumber: () => "aUserGroup" },
+      `<aside class="quote group-aUserGroup" data-post="1" data-topic="1">
+<div class="title">
+<div class="quote-controls"></div>
+ bob:</div>
+<blockquote>
+<p>test quote</p>
+</blockquote>
+</aside>`,
+  "quote has group class");
 });
 
 QUnit.test("Mentions", assert => {
