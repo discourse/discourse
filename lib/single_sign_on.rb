@@ -8,7 +8,7 @@ class SingleSignOn
   NONCE_EXPIRY_TIME = 10.minutes
 
   attr_accessor(*ACCESSORS)
-  attr_accessor :sso_secret, :sso_url
+  attr_writer :sso_secret, :sso_url
 
   def self.sso_secret
     raise RuntimeError, "sso_secret not implemented on class, be sure to set it on instance"
