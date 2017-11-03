@@ -137,11 +137,13 @@ class DiscoursePluginRegistry
   end
 
   def self.register_html_builder(name, &block)
-    html_builders[name] = block
+    html_builders[name] ||= []
+    html_builders[name] << block
   end
 
   def self.build_html(name, ctx = nil)
-    html_builders[name]&.call(ctx)
+    builders = html_builders[name] || []
+    builders.map { |b| b.call(ctx) }.join("\n")
   end
 
   def javascripts
