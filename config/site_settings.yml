@@ -54,6 +54,8 @@ required:
   mobile_logo_url:
     client: true
     default: ''
+  large_icon_url:
+    default: ''
   favicon_url:
     client: true
     default: '/images/default-favicon.ico'
