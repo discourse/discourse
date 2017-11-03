@@ -25,6 +25,14 @@ module PrettyText
       UrlHelper.schemaless(UrlHelper.absolute(user.avatar_template))
     end
 
+    def lookup_primary_user_group(username)
+      return "" unless username
+      user = User.find_by(username_lower: username.downcase)
+      return "" unless user.present?
+
+      user.primary_group.try(:name) || ""
+    end
+
     def mention_lookup(name)
       return false   if name.blank?
       return "group" if Group.exists?(name: name)

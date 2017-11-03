@@ -75,6 +75,19 @@ export default Ember.Component.extend({
             return tinyAvatar(quotedPost.get('avatar_template'));
           }
         }
+      },
+
+      lookupPrimaryUserGroupByPostNumber: (postNumber, topicId) => {
+        const topic = this.get('topic');
+        if (!topic) { return; }
+
+        const posts = topic.get('postStream.posts');
+        if (posts && topicId === topic.get('id')) {
+          const quotedPost = posts.findBy("post_number", postNumber);
+          if (quotedPost) {
+            return quotedPost.primary_group_name;
+          }
+        }
       }
     };
   },
