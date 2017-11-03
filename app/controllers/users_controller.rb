@@ -719,9 +719,15 @@ class UsersController < ApplicationController
         end
       end
 
-    if groups || params[:include_groups] == "true"
-      to_render[:groups] = Group.search_groups(term, groups: groups)
-        .map { |m| { name: m.name, full_name: m.full_name } }
+    include_groups = params[:include_groups] == "true"
+
+    if include_groups || groups
+      groups = Group.search_groups(term, groups: groups)
+      groups = groups.where(visibility_level: Group.visibility_levels[:public]) if include_groups
+
+      to_render[:groups] = groups.map do |m|
+        { name: m.name, full_name: m.full_name }
+      end
     end
 
     render json: to_render

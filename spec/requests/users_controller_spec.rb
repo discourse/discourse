@@ -167,12 +167,43 @@ RSpec.describe UsersController do
     end
 
     context 'groups' do
-      let!(:mentionable_group) { Fabricate(:group, mentionable_level: 99, messageable_level: 0) }
-      let!(:messageable_group) { Fabricate(:group, mentionable_level: 0, messageable_level: 99) }
+      let!(:mentionable_group) do
+        Fabricate(:group,
+          mentionable_level: 99,
+          messageable_level: 0,
+          visibility_level: 0
+        )
+      end
+
+      let!(:mentionable_group_2) do
+        Fabricate(:group,
+          mentionable_level: 99,
+          messageable_level: 0,
+          visibility_level: 1
+        )
+      end
+
+      let!(:messageable_group) do
+        Fabricate(:group,
+          mentionable_level: 0,
+          messageable_level: 99
+        )
+      end
 
       describe 'when signed in' do
         before do
           sign_in(user)
+        end
+
+        it "only returns visible groups" do
+          get "/u/search/users.json", params: { include_groups: "true" }
+
+          expect(response).to be_success
+
+          groups = JSON.parse(response.body)["groups"]
+
+          expect(groups.map { |group| group['name'] })
+            .to_not include(mentionable_group_2.name)
         end
 
         it "doesn't search for groups" do
@@ -202,7 +233,11 @@ RSpec.describe UsersController do
           }
 
           expect(response).to be_success
-          expect(JSON.parse(response.body)["groups"].first['name']).to eq(mentionable_group.name)
+
+          groups = JSON.parse(response.body)["groups"]
+
+          expect(groups.map { |group| group['name'] })
+            .to eq([mentionable_group.name, mentionable_group_2.name])
         end
       end
 
