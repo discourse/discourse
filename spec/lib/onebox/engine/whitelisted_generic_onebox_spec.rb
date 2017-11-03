@@ -113,7 +113,7 @@ describe Onebox::Engine::WhitelistedGenericOnebox do
         expect(onebox.to_html).to include("Allow your personality to shine through your decor; this contemporary and modern accent will help you do just that.")
         expect(onebox.to_html).to include("https://img1.etsystatic.com/028/1/6088772/il_570xN.613262127_e0zl.jpg")
         expect(onebox.to_html).to include("CAD: $46.00")
-        expect(onebox.to_html).to include("Available: 4")
+        expect(onebox.to_html).not_to include("Available: 4")
       end
     end
 
