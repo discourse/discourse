@@ -116,10 +116,12 @@
 
 .categories-and-latest {
   display: flex;
-  flex-direction: row;
+  flex-flow: row wrap;
 
   div.column {
     flex: 1;
+    flex-direction: row;
+    min-width: 300px;
   }
 
   div.column.categories {
