@@ -23,7 +23,7 @@ class Demon::Sidekiq < Demon::Base
   def after_fork
     Demon::Sidekiq.after_fork&.call
 
-    STDERR.puts "Loading Sidekiq in process id #{Process.pid}"
+    puts "Loading Sidekiq in process id #{Process.pid}"
     require 'sidekiq/cli'
     # CLI will close the logger, if we have one set we can be in big
     # trouble, if STDOUT is closed in our process all sort of weird
