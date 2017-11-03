@@ -257,10 +257,13 @@ bundle install
 
 ### Prepare your database
 ```sh
-rake db:create
-rake db:migrate
-rake db:test:prepare
-rake db:seed_fu
+# run this if there was a pre-existing database
+bundle exec rake db:drop
+RAILS_ENV=test bundle exec rake db:drop
+
+# time to create the database and run migrations
+bundle exec rake db:create db:migrate
+RAILS_ENV=test bundle exec rake db:create db:migrate
 ```
 
 ## Now, test it out!
