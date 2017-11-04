@@ -1,5 +1,3 @@
-const { isEmpty } = Ember;
-
 export default Ember.Mixin.create({
   init() {
     this._super();
@@ -70,8 +68,6 @@ export default Ember.Mixin.create({
       .on("keydown.select-box-kit", (event) => {
         const keyCode = event.keyCode || event.which;
 
-        console.log("KEYDOWN FROM offscreenInput", keyCode)
-
         switch (keyCode) {
           case this.keys.UP:
           case this.keys.DOWN:
@@ -85,7 +81,7 @@ export default Ember.Mixin.create({
             if (this.get("isExpanded") === false) {
               this.set("isExpanded", true);
             } else if (this.$highlightedRow().length === 1) {
-              this.send("onSelect", this.$highlightedRow().attr("data-value"));
+              this.$highlightedRow().click();
             }
 
             this._killEvent(event);
@@ -95,7 +91,7 @@ export default Ember.Mixin.create({
             if (this.get("isExpanded") === false) {
               return true;
             } else if (this.$highlightedRow().length === 1) {
-              this.send("onSelect", this.$highlightedRow().attr("data-value"));
+              this.$highlightedRow().click();
               return;
             }
           case this.keys.ESC:
@@ -120,8 +116,6 @@ export default Ember.Mixin.create({
       .on("keydown.select-box-kit", (event) => {
         const keyCode = event.keyCode || event.which;
 
-        console.log("KEYDOWN FROM filterInput")
-
         if ([
             this.keys.RIGHT,
             this.keys.LEFT,
@@ -141,7 +135,7 @@ export default Ember.Mixin.create({
 
   _handleArrowKey(keyCode) {
     const $rows = this.$rows();
-    if ($rows.length === 0) { return; }
+    if ($rows.length <= 1) { return; }
 
     Ember.run.schedule("afterRender", () => {
       switch (keyCode) {

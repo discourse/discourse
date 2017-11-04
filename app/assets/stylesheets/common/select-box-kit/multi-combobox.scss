@@ -3,6 +3,7 @@
     width: 300px;
     background: $secondary;
     border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    border-radius: 0;
 
     .select-box-kit-body {
       width: 100%;
@@ -21,11 +22,12 @@
 
     .select-box-kit-header {
       background: $secondary;
+      border: 0;
       border-bottom: 1px solid transparent;
 
       &.is-focused {
-        border-bottom: 1px solid $primary-low;
         box-shadow: $tertiary 0px 0px 6px 0px;
+        border-radius: 0;
       }
     }
 
@@ -38,7 +40,8 @@
 
     &.is-highlighted {
       .select-box-kit-header {
-        border: 1px solid $tertiary;
+        border-radius: 0;
+        border-bottom: 1px solid transparent;
         box-shadow: $tertiary 0px 0px 6px 0px;
       }
     }
@@ -48,10 +51,12 @@
         display: block;
         border: 1px solid $tertiary;
         box-shadow: $tertiary 0px 0px 6px 0px;
+        border-radius: 0;
       }
 
       .select-box-kit-header {
-        border-radius: 3px 3px 0 0;
+        border-bottom: 1px solid $primary-low;
+        border-radius: 0;
         box-shadow: none;
       }
 

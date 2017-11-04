@@ -26,13 +26,17 @@ export default SelectBoxKitComponent.extend({
 
   @on("willRender")
   _autoHighlight() {
+    console.log("autoHighlight", this.get("selectedContent"), this.get("highlightedValue"), this.get("filteredContent"), this.get("shouldDisplayCreateRow"))
+
     if (this.get("renderBody") === false) { return; }
     if (!isNone(this.get("highlightedValue"))) { return; }
 
     if (isEmpty(this.get("filteredContent"))) {
-      console.log("---", this.get("shouldDisplayCreateRow"), this.get("filter"))
       if (this.get("shouldDisplayCreateRow") === true) {
         this.send("onHighlight", this.get("filter"));
+      } else if (this.get("none") && !isEmpty(this.get("selectedContent"))) {
+        console.log("should hightlight none");
+        this.send("onHighlight", "__none__");
       }
     } else {
       this.send("onHighlight", this.get("filteredContent.firstObject.value"));
@@ -96,8 +100,8 @@ export default SelectBoxKitComponent.extend({
   },
 
   @computed("value.[]")
-  computedValue() {
-    return [ this._super() ].reject(x => isEmpty(x));
+  computedValue(value) {
+    return value.map(v => this._castInteger(v));
   },
 
   @computed("computedValue.[]", "computedContent.[]")
@@ -120,10 +124,28 @@ export default SelectBoxKitComponent.extend({
     };
   },
 
+  clearFilter() {
+    this.$filterInput().val("");
+    this.setProperties({ filter: "", _filter: "" });
+  },
+
   actions: {
-    onClearSelection() { this.set("value", []); },
+    onClearSelection() {
+      this.set("highlightedValue", null);
+      this.set("value", []);
+    },
 
     onHighlight(value) { this.set("highlightedValue", value); },
+
+    onCreateContent(name) {
+      if (this.get("content").includes(name)) {
+        return;
+      }
+
+      this.get("content").pushObject(name);
+      this.get("value").pushObject(name);
+      this.clearFilter();
+    },
 
     onSelect(value) {
       // if (isNone(value) || isNone(this.contentForValue(value))) {
@@ -132,19 +154,27 @@ export default SelectBoxKitComponent.extend({
       // };
       //
 
+      this.set("highlightedValue", null);
       this.get("value").pushObject(value);
+      this.clearFilter();
     },
 
     onDeselect(value) {
-      this.defaultOnDeselect(value);
+      console.log("deselecting value")
       this.get("value").removeObject(value);
+
+      if (!this.get("_initialValues").includes(value)) {
+        this.get("content").removeObject(this.contentForValue(value));
+      }
+
+      // this.defaultOnDeselect(value);
     },
 
     defaultOnSelect(value) {
-      if (isNone(value) || isNone(this.contentForValue(value))) {
-        this.$filterInput().focus();
-        return;
-      };
+      // if (isNone(value) || isNone(this.contentForValue(value))) {
+      //   this.$filterInput().focus();
+      //   return;
+      // };
 
       // this.setProperties({ filter: "", highlightedValue: null });
 

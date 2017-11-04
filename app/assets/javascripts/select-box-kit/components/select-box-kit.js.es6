@@ -51,6 +51,8 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
   allowAny: false,
   allowValueMutation: true,
   autoSelectFirst: true,
+  content: null,
+  _initialValues: null,
 
   init() {
     this._super();
@@ -61,6 +63,15 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
 
     this._previousScrollParentOverflow = "auto";
     this._previousCSSContext = {};
+
+    this.set("content", this.getWithDefault("content", []));
+  },
+
+  @on("didReceiveAttrs")
+  _setInitialValues() {
+    this.set("_initialValues", this.get("content").map((c) => {
+      return this.valueForContent(c);
+    }));
   },
 
   click(event) {
@@ -94,11 +105,7 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
   },
 
   createFunction(input) {
-    return (selectedBox) => {
-      const formatedContent = selectedBox.formatContent(input);
-      formatedContent.meta.generated = true;
-      return formatedContent;
-    };
+    return (selectedBox) => selectedBox.formatContent(input);
   },
 
   filterFunction(content) {
@@ -133,15 +140,16 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
   },
 
   contentForValue(value) {
-    return this.get("computedContent").findBy("value", value);
+    return this.get("content").find(c => {
+      if (this.valueForContent(c) === value) { return true; }
+    });
   },
 
   formatContent(content) {
     return {
       value: this.valueForContent(content),
       name: this.nameForContent(content),
-      originalContent: content,
-      meta: { generated: false }
+      originalContent: content
     };
   },
 
@@ -206,7 +214,7 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
 
     switch (typeof none) {
     case "string":
-      return Ember.Object.create({ name: I18n.t(none), value: "" });
+      return Ember.Object.create({ name: I18n.t(none), value: "__none__" });
     default:
       return this.formatContent(none);
     }
@@ -300,13 +308,15 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
 
     onCreateContent(input) {
       const content = this.createFunction(input)(this);
-      this.get("computedContent").pushObject(content);
+      this.get("content").pushObject(content);
       this.send("onSelect", content.value);
     },
 
     onFilterChange(_filter) {
-      this.set("highlightedValue", null);
-      this.set("filter", _filter);
+      if (_filter !== this.get("filter")) {
+        this.set("highlightedValue", null);
+        this.set("filter", _filter);
+      }
     },
 
     onHighlight(value) {
@@ -344,7 +354,7 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
 
   defaultOnDeselect(value) {
     const content = this.get("computedContent").findBy("value", value);
-    if (!isNone(content) && get(content, "meta.generated") === true) {
+    if (!isNone(content)) {
       this.get("computedContent").removeObject(content);
     }
   },
