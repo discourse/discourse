@@ -199,7 +199,7 @@
 
 .user-menu {
 
-  .notifications {
+  .bookmarks, .private-messages, .notifications {
     h3 {
       padding: 0 0.4em;
       font-weight: bold;
@@ -257,6 +257,16 @@
     /* as a big ol' click target, don't let text inside be selected */
     @include unselectable;
   }
+
+  .bookmarks, .private-messages {
+    li {
+      background-color: $secondary;
+    }
+  }
+
+  .notifications li {
+    background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
+  }
 }
 
 .notifications .logout {
@@ -279,6 +289,9 @@ div.menu-links-header {
   }
   a {
     padding: 0.5em;
+  }
+  a.selected i {
+    color: $tertiary;
   }
   a.user-activity-link {
     max-width: 150px;

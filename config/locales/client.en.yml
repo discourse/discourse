@@ -571,6 +571,8 @@ en:
       private_message: "Message"
       private_messages: "Messages"
       activity_stream: "Activity"
+      more_bookmarks: "view more bookmarks..."
+      more_pms: "view more messages..."
       preferences: "Preferences"
       expand_profile: "Expand"
       bookmarks: "Bookmarks"
