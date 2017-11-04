@@ -237,7 +237,7 @@ RSpec.describe UsersController do
           groups = JSON.parse(response.body)["groups"]
 
           expect(groups.map { |group| group['name'] })
-            .to eq([mentionable_group.name, mentionable_group_2.name])
+            .to contain_exactly(mentionable_group.name, mentionable_group_2.name)
         end
       end
 
