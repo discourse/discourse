@@ -1,7 +1,7 @@
-<li>
-  <a {{action "toggleDrop"}}>
-  {{selectedNavItem.displayName}}
-  {{d-icon "caret-down"}}
+<li class='navigation-toggle'>
+  <a {{action "toggleDrop"}} class='toggle-link'>
+    {{selectedNavItem.displayName}}
+    {{d-icon "caret-down"}}
   </a>
 </li>
 {{#if expanded}}
