@@ -129,6 +129,9 @@
   {{#unless model.automatic}}
     <div>
       <label for="automatic_membership">{{i18n 'admin.groups.automatic_membership_email_domains'}}</label>
+      DDDDDDDD
+      {{log model.emailDomains}}
+      {{new-list-setting name="automatic_membership" settingValue=model.emailDomains}}
       {{list-setting name="automatic_membership" settingValue=model.emailDomains}}
       <label>
         {{input type="checkbox" checked=model.automatic_membership_retroactive}}

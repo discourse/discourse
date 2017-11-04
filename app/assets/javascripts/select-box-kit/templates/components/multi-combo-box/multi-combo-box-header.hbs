@@ -1,19 +1,6 @@
 <ul class="choices">
   {{#each selectedContent as |selectedContent|}}
-    <li tabindex="-1" data-value={{selectedContent.value}} data-name={{selectedContent.name}} class="selected-name">
-      <span class="delete-icon" {{action onDeselect selectedContent.value bubbles=false}}>
-        {{d-icon "times"}}
-      </span>
-      <span class="name">
-        {{selectedContent.name}}
-      </span>
-    </li>
-  {{else}}
-    {{#if shouldDisplayFilterPlaceholder}}
-      <li class="choice-placeholder">
-        {{text}}
-      </li>
-    {{/if}}
+    {{multi-combo-box/selected-name onDeselect=onDeselect content=selectedContent}}
   {{/each}}
 
   <li class="filter">

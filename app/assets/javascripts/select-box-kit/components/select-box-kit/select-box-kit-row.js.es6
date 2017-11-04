@@ -8,7 +8,9 @@ export default Ember.Component.extend(UtilsMixin, {
   layoutName: "select-box-kit/templates/components/select-box-kit/select-box-kit-row",
   classNames: "select-box-kit-row",
   tagName: "li",
+  tabIndex: -1,
   attributeBindings: [
+    "tabIndex",
     "title",
     "content.value:data-value",
     "content.name:data-name"

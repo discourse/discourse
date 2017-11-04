@@ -14,6 +14,7 @@ export default Ember.Component.extend({
               }.bind(this)
       }).on("change", function(evt) {
         if (evt.added){
+          console.log("adding", evt.added.id, typeof evt.added.id, this.get("available").findBy("id", evt.added.id))
           this.triggerAction({
             action: "groupAdded",
             actionContext: this.get("available").findBy("id", evt.added.id)

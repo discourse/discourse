@@ -15,6 +15,7 @@
   isFocused=isFocused
   isExpanded=isExpanded
   selectedContent=selectedContent
+  onSort=(action "onSort")
   onDeselect=(action "onDeselect")
   onToggle=(action "onToggle")
   onFilterChange=(action "onFilterChange")
@@ -26,7 +27,7 @@
   {{component filterComponent
     onFilterChange=(action "onFilterChange")
     icon=filterIcon
-    filter=filter
+    _filter=_filter
     filterable=computedFilterable
     isFocused=isFocused
     placeholder=(i18n filterPlaceholder)

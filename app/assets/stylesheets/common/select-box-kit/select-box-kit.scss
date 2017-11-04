@@ -3,6 +3,7 @@
 }
 
 .select-box-kit {
+  border: 1px solid transparent;
   min-width: 220px;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
@@ -65,6 +66,9 @@
   }
 
   .select-box-kit-header {
+    border: 1px solid transparent;
+    box-sizing: border-box;
+    overflow: hidden;
     -webkit-transition: all .25s;
     -o-transition: all .25s;
     transition: all .25s;
@@ -142,6 +146,8 @@
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
     -webkit-box-align: center;
         -ms-flex-align: center;
             align-items: center;

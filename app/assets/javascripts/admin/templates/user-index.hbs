@@ -373,6 +373,7 @@
       <div class='display-row'>
         <div class='field'>{{i18n 'admin.groups.custom'}}</div>
         <div class='value'>
+          {{new-admin-group-selector selected=model.customGroups available=availableGroups}}
           {{admin-group-selector selected=model.customGroups available=availableGroups}}
         </div>
         <div class='controls'>

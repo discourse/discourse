@@ -8,6 +8,7 @@ export default Ember.Mixin.create({
     this.collectionSelector = ".select-box-kit-collection";
     this.headerSelector = ".select-box-kit-header";
     this.bodySelector = ".select-box-kit-body";
+    this.wrapperSelector = ".select-box-kit-wrapper";
   },
 
   $findRowByValue(value) {

@@ -70,25 +70,22 @@ export default Ember.Mixin.create({
       .on("keydown.select-box-kit", (event) => {
         const keyCode = event.keyCode || event.which;
 
+        console.log("KEYDOWN FROM offscreenInput", keyCode)
+
         switch (keyCode) {
           case this.keys.UP:
           case this.keys.DOWN:
-            if (this.get("isExpanded") === false) {
-              this.set("isExpanded", true);
-            }
-
-            Ember.run.schedule("actions", () => {
-              this._handleArrowKey(keyCode);
-            });
-
+            if (this.get("isExpanded") === false) { this.set("isExpanded", true); }
+            this._handleArrowKey(keyCode);
             this._killEvent(event);
-
             return;
           case this.keys.ENTER:
+
+
             if (this.get("isExpanded") === false) {
               this.set("isExpanded", true);
-            } else {
-              this.send("onSelect", this.$highlightedRow().data("value"));
+            } else if (this.$highlightedRow().length === 1) {
+              this.send("onSelect", this.$highlightedRow().attr("data-value"));
             }
 
             this._killEvent(event);
@@ -97,8 +94,8 @@ export default Ember.Mixin.create({
           case this.keys.TAB:
             if (this.get("isExpanded") === false) {
               return true;
-            } else {
-              this.send("onSelect", this.$highlightedRow().data("value"));
+            } else if (this.$highlightedRow().length === 1) {
+              this.send("onSelect", this.$highlightedRow().attr("data-value"));
               return;
             }
           case this.keys.ESC:
@@ -106,8 +103,7 @@ export default Ember.Mixin.create({
             this._killEvent(event);
             return;
           case this.keys.BACKSPACE:
-            this._killEvent(event);
-            return;
+            return event;
         }
 
         if (this._isSpecialKey(keyCode) === false && event.metaKey === false) {
@@ -121,8 +117,10 @@ export default Ember.Mixin.create({
       });
 
     this.$filterInput()
-      .on(`keydown.select-box-kit`, (event) => {
+      .on("keydown.select-box-kit", (event) => {
         const keyCode = event.keyCode || event.which;
+
+        console.log("KEYDOWN FROM filterInput")
 
         if ([
             this.keys.RIGHT,
@@ -142,25 +140,22 @@ export default Ember.Mixin.create({
   },
 
   _handleArrowKey(keyCode) {
-    if (isEmpty(this.get("filteredContent"))) {
-      return;
-    }
+    const $rows = this.$rows();
+    if ($rows.length === 0) { return; }
 
     Ember.run.schedule("afterRender", () => {
       switch (keyCode) {
         case 38:
-          Ember.run.throttle(this, this._handleUpArrow, 32);
+          Ember.run.throttle(this, this._moveHighlight, -1, $rows, 32);
           break;
         default:
-          Ember.run.throttle(this, this._handleDownArrow, 32);
+          Ember.run.throttle(this, this._moveHighlight, 1, $rows, 32);
       }
     });
   },
 
-  _moveHighlight(direction) {
-    const $rows = this.$rows();
+  _moveHighlight(direction, $rows) {
     const currentIndex = $rows.index(this.$highlightedRow());
-
     let nextIndex = 0;
 
     if (currentIndex < 0) {
@@ -172,28 +167,14 @@ export default Ember.Mixin.create({
     this._rowSelection($rows, nextIndex);
   },
 
-  _handleDownArrow() { this._moveHighlight(1); },
-
-  _handleUpArrow() { this._moveHighlight(-1); },
-
   _rowSelection($rows, nextIndex) {
-    const highlightableValue = $rows.eq(nextIndex).data("value");
+    const highlightableValue = $rows.eq(nextIndex).attr("data-value");
     const $highlightableRow = this.$findRowByValue(highlightableValue);
     this.send("onHighlight", highlightableValue);
 
     Ember.run.schedule("afterRender", () => {
-      const $collection = this.$collection();
-      const currentOffset = $collection.offset().top +
-                            $collection.outerHeight(false);
-      const nextBottom = $highlightableRow.offset().top +
-                         $highlightableRow.outerHeight(false);
-      const nextOffset = $collection.scrollTop() + nextBottom - currentOffset;
-
-      if (nextIndex === 0) {
-        $collection.scrollTop(0);
-      } else if (nextBottom > currentOffset) {
-        $collection.scrollTop(nextOffset);
-      }
+      $highlightableRow.focus();
+      this.$filterInput().focus();
     });
   },
 
