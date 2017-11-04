@@ -12,8 +12,8 @@
     {"id":15,"name":"Custom Category Import","color":"AB9364","created_at":"2017-10-26T15:32:44.083Z","user_id":2,"slug":"custom-category-import","description":null,"text_color":"FFFFFF","auto_close_hours":null,"parent_category_id":10,"auto_close_based_on_last_post":false,"topic_template":"","suppress_from_homepage":false,"all_topics_wiki":false,"permissions_params":{"custom_group_import":1,"everyone":2}}
   ],
   "users":[
-    {"id":1,"email":"vinothkannan@example.com","username":"example","name":"Example","created_at":"2017-10-07T15:01:24.597Z","trust_level":4,"active":true,"last_emailed_at":null},
-    {"id":2,"email":"vinoth.kannan@discourse.org","username":"vinothkannans","name":"Vinoth Kannan","created_at":"2017-10-07T15:01:24.597Z","trust_level":4,"active":true,"last_emailed_at":null}
+    {"id":1,"email":"email@example.com","username":"example","name":"Example","created_at":"2017-10-07T15:01:24.597Z","trust_level":4,"active":true,"last_emailed_at":null},
+    {"id":2,"email":"foo@bar.com","username":"foo","name":"Foo Bar","created_at":"2017-10-07T15:01:24.597Z","trust_level":4,"active":true,"last_emailed_at":null}
   ],
   "topics":[
     {"id":7,"title":"Assets for the site design","created_at":"2017-10-26T17:15:04.590Z","views":0,"category_id":8,"closed":false,"archived":false,"archetype":"regular",
