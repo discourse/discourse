@@ -6,7 +6,7 @@ componentTest('with value', {
   template: '{{category-chooser value=2}}',
 
   test(assert) {
-    expandSelectBox('.category-chooser');
+    expandSelectBoxKit();
 
     andThen(() => {
       assert.equal(selectBox('.category-chooser').header.name(), "feature");
@@ -18,7 +18,7 @@ componentTest('with excludeCategoryId', {
   template: '{{category-chooser excludeCategoryId=2}}',
 
   test(assert) {
-    expandSelectBox('.category-chooser');
+    expandSelectBoxKit();
 
     andThen(() => {
       assert.equal(selectBox('.category-chooser').rowByValue(2).el.length, 0);
@@ -30,7 +30,7 @@ componentTest('with scopedCategoryId', {
   template: '{{category-chooser scopedCategoryId=2}}',
 
   test(assert) {
-    expandSelectBox('.category-chooser');
+    expandSelectBoxKit();
 
     andThen(() => {
       assert.equal(selectBox('.category-chooser').rowByIndex(0).name(), "feature");
@@ -48,7 +48,7 @@ componentTest('with allowUncategorized=null', {
   },
 
   test(assert) {
-    expandSelectBox('.category-chooser');
+    expandSelectBoxKit();
 
     andThen(() => {
       assert.equal(selectBox('.category-chooser').header.name(), "Select a category&hellip;");
@@ -64,7 +64,7 @@ componentTest('with allowUncategorized=null rootNone=true', {
   },
 
   test(assert) {
-    expandSelectBox('.category-chooser');
+    expandSelectBoxKit();
 
     andThen(() => {
       assert.equal(selectBox('.category-chooser').header.name(), "Select a category&hellip;");
@@ -81,7 +81,7 @@ componentTest('with disallowed uncategorized, rootNone and rootNoneLabel', {
   },
 
   test(assert) {
-    expandSelectBox('.category-chooser');
+    expandSelectBoxKit();
 
     andThen(() => {
       assert.equal(selectBox('.category-chooser').header.name(), "Select a category&hellip;");
@@ -97,7 +97,7 @@ componentTest('with allowed uncategorized', {
   },
 
   test(assert) {
-    expandSelectBox('.category-chooser');
+    expandSelectBoxKit();
 
     andThen(() => {
       assert.equal(selectBox('.category-chooser').header.name(), "uncategorized");
@@ -113,7 +113,7 @@ componentTest('with allowed uncategorized and rootNone', {
   },
 
   test(assert) {
-    expandSelectBox('.category-chooser');
+    expandSelectBoxKit();
 
     andThen(() => {
       assert.equal(selectBox('.category-chooser').header.name(), "(no category)");
@@ -130,7 +130,7 @@ componentTest('with allowed uncategorized rootNone and rootNoneLabel', {
   },
 
   test(assert) {
-    expandSelectBox('.category-chooser');
+    expandSelectBoxKit();
 
     andThen(() => {
       assert.equal(selectBox('.category-chooser').header.name(), "root none label");

@@ -1,9 +1,11 @@
 const { get, isNone, isEmpty, isPresent } = Ember;
-import { on, observes } from "ember-addons/ember-computed-decorators";
+import { on } from "ember-addons/ember-computed-decorators";
 import computed from "ember-addons/ember-computed-decorators";
 import UtilsMixin from "select-box-kit/mixins/utils";
 import DomHelpersMixin from "select-box-kit/mixins/dom-helpers";
 import KeyboardMixin from "select-box-kit/mixins/keyboard";
+
+const NONE_VALUE = "__none__";
 
 export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin, {
   layoutName: "select-box-kit/templates/components/select-box-kit",
@@ -86,6 +88,33 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
     Ember.run.schedule("afterRender", () => this.$offscreenInput().select() );
   },
 
+  expand() {
+    this.setProperties({ isExpanded: true, renderBody: true, isFocused: true });
+  },
+
+  @on("didRender")
+  _ajustPosition() {
+    this._applyFixedPosition();
+    this._applyDirection();
+    this._positionWrapper();
+  },
+
+  collapse() {
+    this.set("isExpanded", false);
+    Ember.run.schedule("afterRender", () => this._removeFixedPosition() );
+  },
+
+  unfocus() {
+    this.set("highlightedValue", null);
+
+    if (this.get("isExpanded") === true) {
+      this.collapse();
+      this.focus();
+    } else {
+      this.close();
+    }
+  },
+
   blur() {
     Ember.run.schedule("afterRender", () => this.$offscreenInput().blur() );
   },
@@ -96,12 +125,7 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
       return;
     }
 
-    if (this.get("isExpanded") === true) {
-      this.set("isExpanded", false);
-      this.focus();
-    } else {
-      this.close();
-    }
+    this.unfocus();
   },
 
   createFunction(input) {
@@ -145,11 +169,28 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
     });
   },
 
+  computedContentForValue(value) {
+    const searchedValue = value.toString();
+    return this.get("computedContent").find(c => {
+      if (c.value.toString() === searchedValue) { return true; }
+    });
+  },
+
   formatContent(content) {
+    let originalContent;
+
+    if (typeof content === "string" || typeof content === "number") {
+      originalContent = {};
+      originalContent[this.get("valueAttribute")] = content;
+      originalContent[this.get("nameProperty")] = content;
+    } else {
+      originalContent = content;
+    }
+
     return {
       value: this.valueForContent(content),
       name: this.nameForContent(content),
-      originalContent: content
+      originalContent
     };
   },
 
@@ -214,7 +255,7 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
 
     switch (typeof none) {
     case "string":
-      return Ember.Object.create({ name: I18n.t(none), value: "__none__" });
+      return Ember.Object.create({ name: I18n.t(none), value: NONE_VALUE });
     default:
       return this.formatContent(none);
     }
@@ -226,17 +267,6 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
     return [ computedContent.findBy("value", this._castInteger(computedValue)) ];
   },
 
-  @on("didRender")
-  _configureSelectBoxDOM() {
-    if (this.get("isExpanded") === true) {
-      Ember.run.schedule("afterRender", () => {
-        this.$collection().css("max-height", this.get("collectionHeight"));
-        this._applyDirection();
-        this._positionWrapper();
-      });
-    }
-  },
-
   @on("willDestroyElement")
   _cleanHandlers() {
     $(window).off("resize.select-box-kit");
@@ -245,7 +275,8 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
 
   @on("didInsertElement")
   _setupResizeListener() {
-    $(window).on("resize.select-box-kit", () => this.set("isExpanded", false) );
+    this.$collection().css("max-height", this.get("collectionHeight"));
+    $(window).on("resize.select-box-kit", () => this.collapse() );
   },
 
   @on("willRender")
@@ -272,21 +303,6 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
     }
   },
 
-  @observes("isExpanded")
-  _isExpandedChanged() {
-    if (this.get("isExpanded") === true) {
-      this._applyFixedPosition();
-
-      this.setProperties({
-        // highlightedValue: this.get("computedValue"),
-        renderBody: true,
-        isFocused: true
-      });
-    } else {
-      this._removeFixedPosition();
-    }
-  },
-
   @computed("filter", "computedFilterable", "computedContent.[]", "computedValue.[]")
   filteredContent(filter, computedFilterable, computedContent, computedValue) {
     return this.filterFunction(computedContent)(this, computedValue);
@@ -301,9 +317,11 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
     onSort() {},
 
     onToggle() {
-      this.toggleProperty("isExpanded");
-
-      if (this.get("isExpanded") === true) { this.focus(); }
+      if (this.get("isExpanded") === true) {
+        this.collapse();
+      } else {
+        this.expand();
+      }
     },
 
     onCreateContent(input) {
@@ -314,6 +332,7 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
 
     onFilterChange(_filter) {
       if (_filter !== this.get("filter")) {
+        this.expand();
         this.set("highlightedValue", null);
         this.set("filter", _filter);
       }
@@ -327,9 +346,9 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
       this.send("onSelect", null);
     },
 
-    onSelect(value) {
-      value = this.defaultOnSelect(value);
-      this.set("value", value);
+    onSelect() {
+      this.clearFilter();
+      this.set("highlightedValue", null);
     },
 
     onDeselect() {
@@ -338,16 +357,32 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
     }
   },
 
+  clearFilter() {
+    this.$filterInput().val("");
+    this.setProperties({ filter: "", _filter: "" });
+  },
+
+  originalValueForValue(value) {
+    if (isNone(value)) { return null; }
+    if (value === NONE_VALUE) { return NONE_VALUE; }
+
+    const computedContent = this.computedContentForValue(value);
+
+    if (isNone(computedContent)) { return value; }
+
+    return get(computedContent.originalContent, this.get("valueAttribute"));
+  },
+
   defaultOnSelect(value) {
     if (value === "") { value = null; }
 
-    this.setProperties({
-      highlightedValue: null,
-      isExpanded: false,
-      filter: ""
-    });
-
-    this.focus();
+    // this.setProperties({
+    //   highlightedValue: null,
+    //   isExpanded: false,
+    //   filter: ""
+    // });
+    //
+    // this.focus();
 
     return value;
   },
@@ -357,136 +392,6 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
     if (!isNone(content)) {
       this.get("computedContent").removeObject(content);
     }
-  },
-
-  _applyDirection() {
-    let options = { left: "auto", bottom: "auto", top: "auto" };
-
-    const dHeader = $(".d-header")[0];
-    const dHeaderBounds = dHeader ? dHeader.getBoundingClientRect() : {top: 0, height: 0};
-    const dHeaderHeight = dHeaderBounds.top + dHeaderBounds.height;
-    const headerHeight = this.$header().outerHeight(false);
-    const headerWidth = this.$header().outerWidth(false);
-    const bodyHeight = this.$body().outerHeight(false);
-    const windowWidth = $(window).width();
-    const windowHeight = $(window).height();
-    const boundingRect = this.get("element").getBoundingClientRect();
-    const offsetTop = boundingRect.top;
-    const offsetBottom = boundingRect.bottom;
-
-    if (this.get("fullWidthOnMobile") && windowWidth <= 420) {
-      const margin = 10;
-      const relativeLeft = this.$().offset().left - $(window).scrollLeft();
-      options.left = margin - relativeLeft;
-      options.width = windowWidth - margin * 2;
-      options.maxWidth = options.minWidth = "unset";
-    } else {
-      const bodyWidth = this.$body().outerWidth(false);
-
-      if ($("html").css("direction") === "rtl") {
-        const horizontalSpacing = boundingRect.right;
-        const hasHorizontalSpace = horizontalSpacing - (this.get("horizontalOffset") + bodyWidth) > 0;
-        if (hasHorizontalSpace) {
-          this.setProperties({ isLeftAligned: true, isRightAligned: false });
-          options.left = bodyWidth + this.get("horizontalOffset");
-        } else {
-          this.setProperties({ isLeftAligned: false, isRightAligned: true });
-          options.right = - (bodyWidth - headerWidth + this.get("horizontalOffset"));
-        }
-      } else {
-        const horizontalSpacing = boundingRect.left;
-        const hasHorizontalSpace = (windowWidth - (this.get("horizontalOffset") + horizontalSpacing + bodyWidth) > 0);
-        if (hasHorizontalSpace) {
-          this.setProperties({ isLeftAligned: true, isRightAligned: false });
-          options.left = this.get("horizontalOffset");
-        } else {
-          this.setProperties({ isLeftAligned: false, isRightAligned: true });
-          options.right = this.get("horizontalOffset");
-        }
-      }
-    }
-
-    const componentHeight = this.get("verticalOffset") + bodyHeight + headerHeight;
-    const hasBelowSpace = windowHeight - offsetBottom - componentHeight > 0;
-    const hasAboveSpace = offsetTop - componentHeight - dHeaderHeight > 0;
-    if (hasBelowSpace || (!hasBelowSpace && !hasAboveSpace)) {
-      this.setProperties({ isBelow: true, isAbove: false });
-      options.top = headerHeight + this.get("verticalOffset");
-    } else {
-      this.setProperties({ isBelow: false, isAbove: true });
-      options.bottom = headerHeight + this.get("verticalOffset");
-    }
-
-    this.$body().css(options);
-  },
-
-  _applyFixedPosition() {
-    const width = this.$().outerWidth(false);
-    const height = this.$header().outerHeight(false);
-
-    if (this.get("scrollableParent").length === 0) { return; }
-
-    const $placeholder = $(`<div class='select-box-kit-fixed-placeholder-${this.elementId}'></div>`);
-
-    this._previousScrollParentOverflow = this.get("scrollableParent").css("overflow");
-    this.get("scrollableParent").css({ overflow: "hidden" });
-
-    this._previousCSSContext = {
-      minWidth: this.$().css("min-width"),
-      maxWidth: this.$().css("max-width")
-    };
-
-    const componentStyles = {
-      position: "fixed",
-      "margin-top": -this.get("scrollableParent").scrollTop(),
-      width,
-      minWidth: "unset",
-      maxWidth: "unset"
-    };
-
-    if ($("html").css("direction") === "rtl") {
-      componentStyles.marginRight = -width;
-    } else {
-      componentStyles.marginLeft = -width;
-    }
-
-    $placeholder.css({ display: "inline-block", width, height, "vertical-align": "middle" });
-
-    this.$().before($placeholder).css(componentStyles);
-  },
-
-  _removeFixedPosition() {
-    if (this.get("scrollableParent").length === 0) {
-      return;
-    }
-
-    $(`.select-box-kit-fixed-placeholder-${this.elementId}`).remove();
-
-    const css = _.extend(
-      this._previousCSSContext,
-      {
-        top: "auto",
-        left: "auto",
-        "margin-left": "auto",
-        "margin-right": "auto",
-        "margin-top": "auto",
-        position: "relative"
-      }
-    );
-    this.$().css(css);
-
-    this.get("scrollableParent").css({
-      overflow: this._previousScrollParentOverflow
-    });
-  },
-
-  _positionWrapper() {
-    const headerHeight = this.$header().outerHeight(false);
-
-    this.$(this.wrapperSelector).css({
-      width: this.$().outerWidth(false),
-      height: headerHeight + this.$body().outerHeight(false)
-    });
   },
 
   @on("didReceiveAttrs")

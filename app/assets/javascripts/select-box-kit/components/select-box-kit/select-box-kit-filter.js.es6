@@ -7,10 +7,6 @@ export default Ember.Component.extend({
   actions: {
     onKeyUp(_filter) {
       Ember.run.debounce(this, this._debouncedFilter, _filter, 150);
-
-      // if (!Ember.isEmpty(_filter)) {
-      //   this.set("isHidden", false);
-      // }
     }
   },
 

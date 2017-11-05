@@ -4,7 +4,7 @@ import { on } from "ember-addons/ember-computed-decorators";
 const { get, isNone, isEmpty } = Ember;
 
 export default SelectBoxKitComponent.extend({
-  classNames: "multi-combobox",
+  classNames: "multi-combo-box",
   headerComponent: "multi-combo-box/multi-combo-box-header",
   filterComponent: null,
   headerText: "select_box.default_header_text",
@@ -24,23 +24,26 @@ export default SelectBoxKitComponent.extend({
     };
   },
 
-  @on("willRender")
+  @on("didRender")
   _autoHighlight() {
-    console.log("autoHighlight", this.get("selectedContent"), this.get("highlightedValue"), this.get("filteredContent"), this.get("shouldDisplayCreateRow"))
-
+    if (this.get("isExpanded") === false) { return; }
     if (this.get("renderBody") === false) { return; }
     if (!isNone(this.get("highlightedValue"))) { return; }
 
     if (isEmpty(this.get("filteredContent"))) {
-      if (this.get("shouldDisplayCreateRow") === true) {
+      if (this.get("shouldDisplayCreateRow") === true && !isEmpty(this.get("filter"))) {
         this.send("onHighlight", this.get("filter"));
       } else if (this.get("none") && !isEmpty(this.get("selectedContent"))) {
-        console.log("should hightlight none");
-        this.send("onHighlight", "__none__");
+        this.send("onHighlight", this.NONE_VALUE);
       }
     } else {
       this.send("onHighlight", this.get("filteredContent.firstObject.value"));
     }
+  },
+
+  click(event) {
+    this.$filterInput().focus();
+    return false;
   },
 
   keyDown(event) {
@@ -54,37 +57,32 @@ export default SelectBoxKitComponent.extend({
     }
 
     // clear selection when multiple
-    if (this.$(".choices .selected-name.is-highlighted").length >= 1) {
-      if (keyCode === 8) {
-        $.each(this.$(".choices .selected-name.is-highlighted"), (index, element) => {
-          this.send("onDeselect", $(element).attr("data-value"));
-        });
-        return;
-      } else {
-        this.$(".choices .selected-name").click();
-      }
+    if (this.$(".selected-name.is-highlighted").length >= 1 && keyCode === 8) {
+      const highlightedValues = [];
+      $.each(this.$(".selected-name.is-highlighted"), (i, el) => {
+        highlightedValues.push($(el).attr("data-value"));
+      });
+
+      console.log(highlightedValues)
+      this.send("onDeselect", highlightedValues);
+      return;
     }
 
     // try to remove last item from the list
     if (keyCode === 8) {
       let $lastSelectedValue = $(this.$(".choices .selected-name").last());
 
-      if ($lastSelectedValue.length === 0) {
-        this.send("onClearSelection");
-        return;
-      }
+      if ($lastSelectedValue.length === 0) { return; }
 
       if ($lastSelectedValue.hasClass("is-highlighted") || $(document.activeElement).is($lastSelectedValue)) {
-        this.send("onDeselect", $lastSelectedValue.attr("data-value"));
+        this.send("onDeselect", this.get("selectedContent.lastObject.value"));
         $filterInput.focus();
         return;
       }
 
       if ($filterInput.val() === "") {
         if ($filterInput.is(":focus")) {
-          if ($lastSelectedValue.length > 0) {
-            $lastSelectedValue.click();
-          }
+          if ($lastSelectedValue.length > 0) { $lastSelectedValue.click(); }
         } else {
           if ($lastSelectedValue.length > 0) {
             $lastSelectedValue.click();
@@ -93,9 +91,6 @@ export default SelectBoxKitComponent.extend({
           }
         }
       }
-    } else {
-      $filterInput.focus();
-      this._super(event);
     }
   },
 
@@ -124,20 +119,23 @@ export default SelectBoxKitComponent.extend({
     };
   },
 
-  clearFilter() {
-    this.$filterInput().val("");
-    this.setProperties({ filter: "", _filter: "" });
-  },
-
   actions: {
     onClearSelection() {
       this.set("highlightedValue", null);
-      this.set("value", []);
+      // this.set("value", []);
+      this.send("onDeselect", this.get("selectedContent").map(c => get(c, "value")));
     },
 
-    onHighlight(value) { this.set("highlightedValue", value); },
+    onHighlight(value) {
+      console.log("beforeh", value)
+      value = this.originalValueForValue(value);
+      console.log("afterh", value)
+      this.set("highlightedValue", value);
+    },
 
     onCreateContent(name) {
+      this.set("highlightedValue", null);
+
       if (this.get("content").includes(name)) {
         return;
       }
@@ -148,39 +146,29 @@ export default SelectBoxKitComponent.extend({
     },
 
     onSelect(value) {
-      // if (isNone(value) || isNone(this.contentForValue(value))) {
-      //   this.$filterInput().focus();
-      //   return;
-      // };
-      //
+      this._super();
+      console.log("before", value)
+      value = this.originalValueForValue(value);
+      console.log("after", value)
 
-      this.set("highlightedValue", null);
+
       this.get("value").pushObject(value);
-      this.clearFilter();
     },
 
-    onDeselect(value) {
-      console.log("deselecting value")
-      this.get("value").removeObject(value);
+    onDeselect(values) {
+      values = Ember.makeArray(values).map(v => this.originalValueForValue(v));
 
-      if (!this.get("_initialValues").includes(value)) {
-        this.get("content").removeObject(this.contentForValue(value));
-      }
-
-      // this.defaultOnDeselect(value);
-    },
-
-    defaultOnSelect(value) {
-      // if (isNone(value) || isNone(this.contentForValue(value))) {
-      //   this.$filterInput().focus();
-      //   return;
-      // };
-
-      // this.setProperties({ filter: "", highlightedValue: null });
-
-      Ember.run.schedule("afterRender", () => {
-        this.$filterInput().val("").focus();
+      console.log("-------values", values)
+      const contentsToRemove = [];
+      values.forEach(v => {
+        if (!this.get("_initialValues").includes(v)) {
+          contentsToRemove.push(this.contentForValue(v));
+        }
       });
+
+      this.get("value").removeObjects(values);
+      this.get("content").removeObjects(contentsToRemove);
+      this.set("highlightedValue", null);
     }
   }
 });

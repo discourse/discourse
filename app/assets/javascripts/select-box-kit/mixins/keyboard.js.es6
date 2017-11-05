@@ -76,8 +76,6 @@ export default Ember.Mixin.create({
             this._killEvent(event);
             return;
           case this.keys.ENTER:
-
-
             if (this.get("isExpanded") === false) {
               this.set("isExpanded", true);
             } else if (this.$highlightedRow().length === 1) {
@@ -89,13 +87,17 @@ export default Ember.Mixin.create({
             return;
           case this.keys.TAB:
             if (this.get("isExpanded") === false) {
+              this.unfocus();
               return true;
             } else if (this.$highlightedRow().length === 1) {
               this.$highlightedRow().click();
-              return;
+              this.$offscreenInput().focus();
+              return true;
+            } else {
+              return event;
             }
           case this.keys.ESC:
-            this.close();
+            this.unfocus();
             this._killEvent(event);
             return;
           case this.keys.BACKSPACE:
@@ -103,12 +105,10 @@ export default Ember.Mixin.create({
         }
 
         if (this._isSpecialKey(keyCode) === false && event.metaKey === false) {
-          this.setProperties({
-            isExpanded: true,
-            filter: String.fromCharCode(keyCode)
+          this.setProperties({filter: String.fromCharCode(keyCode) });
+          Ember.run.schedule("afterRender", () => {
+            this.$filterInput().focus();
           });
-
-          Ember.run.schedule("afterRender", () => this.$filterInput().focus() );
         }
       });
 
@@ -125,8 +125,13 @@ export default Ember.Mixin.create({
           return true;
         }
 
+        if (keyCode === this.keys.TAB && this.get("isExpanded") === false) {
+          return true;
+        }
+
         if (this._isSpecialKey(keyCode) === true) {
           this.$offscreenInput().focus().trigger(event);
+          return false;
         }
 
         return true;

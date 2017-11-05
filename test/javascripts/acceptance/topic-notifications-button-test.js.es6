@@ -28,8 +28,8 @@ QUnit.test("Updating topic notification level", assert => {
     );
   });
 
-  expandSelectBox(notificationOptions);
-  selectBoxSelectRow("3", { selector: notificationOptions});
+  (notificationOptions);
+  selectBoxKitSelectRow("3", { selector: notificationOptions});
 
   andThen(() => {
     assert.equal(
