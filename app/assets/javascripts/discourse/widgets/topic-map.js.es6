@@ -148,7 +148,16 @@ createWidget('topic-map-link', {
       content = `${content.substr(0, truncateLength).trim()}...`;
     }
 
-    return attrs.title ? replaceEmoji(content) : content;
+    let categoriesRegexp = /\/c\/[0-9]*-(.*)/;
+    content = attrs.title ? replaceEmoji(content) : content;
+
+    let matches = categoriesRegexp.exec(content);
+    if(matches) {
+      return content.replace(categoriesRegexp, '$1 Category').replace(/-/g, ' ').replace(/(^| )(\w)/g, function (x) {
+        return x.toUpperCase();
+      });
+    }
+    return content;
   }
 });
 
