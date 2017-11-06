@@ -4,6 +4,6 @@ export default Ember.Mixin.create({
       return parseInt(value, 10);
     }
 
-    return Ember.isNone(value) ? value : value.toString();
+    return value;
   }
 });

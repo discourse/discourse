@@ -4,19 +4,8 @@ import SelectBoxKitHeaderComponent from "select-box-kit/components/select-box-ki
 
 export default SelectBoxKitHeaderComponent.extend({
   attributeBindings: ["names:data-name"],
-  classNames: "multi-combobox-header",
+  classNames: "multi-combo-box-header",
   layoutName: "select-box-kit/templates/components/multi-combo-box/multi-combo-box-header",
-
-  @computed("filter", "selectedContent.[]", "isFocused", "selectBoxIsExpanded")
-  shouldDisplayFilterPlaceholder(filter, selectedContent, isFocused) {
-    if (Ember.isEmpty(selectedContent)) {
-      // if (filter.length > 0) { return false; }
-      if (isFocused === true) { return false; }
-      return true;
-    }
-
-    return false;
-  },
 
   @on("didRender")
   _positionFilter() {

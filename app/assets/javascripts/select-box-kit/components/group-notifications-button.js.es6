@@ -7,7 +7,7 @@ export default NotificationOptionsComponent.extend({
 
   actions: {
     onSelect(value) {
-      value = this.defaultOnSelect(value);
+      value = this.baseOnSelect(value);
       this.get("group").setNotification(value, this.get("user.id"));
     }
   }

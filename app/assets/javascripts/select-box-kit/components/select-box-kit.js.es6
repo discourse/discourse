@@ -5,8 +5,6 @@ import UtilsMixin from "select-box-kit/mixins/utils";
 import DomHelpersMixin from "select-box-kit/mixins/dom-helpers";
 import KeyboardMixin from "select-box-kit/mixins/keyboard";
 
-const NONE_VALUE = "__none__";
-
 export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin, {
   layoutName: "select-box-kit/templates/components/select-box-kit",
   classNames: "select-box-kit",
@@ -59,6 +57,8 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
   init() {
     this._super();
 
+    this.noneValue = "__none__";
+
     if ($(window).outerWidth(false) <= 420) {
       this.setProperties({ filterable: false, autoFilterable: false });
     }
@@ -66,12 +66,12 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
     this._previousScrollParentOverflow = "auto";
     this._previousCSSContext = {};
 
-    this.set("content", this.getWithDefault("content", []));
+    if (isNone(this.get("content"))) { this.set("content", []); }
   },
 
   @on("didReceiveAttrs")
   _setInitialValues() {
-    this.set("_initialValues", this.get("content").map((c) => {
+    this.set("_initialValues", this.getWithDefault("content", []).map((c) => {
       return this.valueForContent(c);
     }));
   },
@@ -81,22 +81,34 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
   },
 
   close() {
-    this.setProperties({ isExpanded: false, isFocused: false });
+    this.collapse();
+    this.setProperties({ isFocused: false });
   },
 
   focus() {
-    Ember.run.schedule("afterRender", () => this.$offscreenInput().select() );
+    Ember.run.schedule("afterRender", () => {
+      this.$offscreenInput().select();
+    });
   },
 
   expand() {
+    if (this.get("isExpanded") === true) { return; }
     this.setProperties({ isExpanded: true, renderBody: true, isFocused: true });
+    this.focus();
   },
 
   @on("didRender")
   _ajustPosition() {
+    $(`.select-box-kit-fixed-placeholder-${this.elementId}`).remove();
+    this.$collection().css("max-height", this.get("collectionHeight"));
     this._applyFixedPosition();
     this._applyDirection();
     this._positionWrapper();
+  },
+
+  @on("willDestroyElement")
+  _clearPlaceolder() {
+    $(`.select-box-kit-fixed-placeholder-${this.elementId}`).remove();
   },
 
   collapse() {
@@ -126,6 +138,7 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
     }
 
     this.unfocus();
+    return false;
   },
 
   createFunction(input) {
@@ -190,6 +203,7 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
     return {
       value: this.valueForContent(content),
       name: this.nameForContent(content),
+      locked: false,
       originalContent
     };
   },
@@ -255,7 +269,7 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
 
     switch (typeof none) {
     case "string":
-      return Ember.Object.create({ name: I18n.t(none), value: NONE_VALUE });
+      return Ember.Object.create({ name: I18n.t(none), value: this.noneValue });
     default:
       return this.formatContent(none);
     }
@@ -270,17 +284,15 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
   @on("willDestroyElement")
   _cleanHandlers() {
     $(window).off("resize.select-box-kit");
-    this._removeFixedPosition();
   },
 
   @on("didInsertElement")
   _setupResizeListener() {
-    this.$collection().css("max-height", this.get("collectionHeight"));
     $(window).on("resize.select-box-kit", () => this.collapse() );
   },
 
   @on("willRender")
-  _autoHighlight() {
+  autoHighlight() {
     if (!isNone(this.get("highlightedValue"))) { return; }
 
     const filteredContent = this.get("filteredContent");
@@ -313,19 +325,38 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
     return this.$().parents(scrollableParentSelector).first();
   },
 
-  actions: {
-    onSort() {},
+  baseOnCreateContent(input) {
+    this.set("highlightedValue", null);
+    this.clearFilter();
+    return this.createFunction(input)(this);
+  },
 
+  baseOnHighlight(value) {
+    value = this.originalValueForValue(value);
+    this.set("highlightedValue", value);
+    return value;
+  },
+
+  baseOnSelect(value) {
+    if (value === "") { value = null; }
+    this.clearFilter();
+    this.set("highlightedValue", null);
+    this.collapse();
+    return this.originalValueForValue(value);
+  },
+
+  baseOnDeselect() {
+    this.set("value", null);
+    return null;
+  },
+
+  actions: {
     onToggle() {
-      if (this.get("isExpanded") === true) {
-        this.collapse();
-      } else {
-        this.expand();
-      }
+      this.get("isExpanded") === true ? this.collapse() : this.expand();
     },
 
     onCreateContent(input) {
-      const content = this.createFunction(input)(this);
+      const content = this.baseOnCreateContent(input);
       this.get("content").pushObject(content);
       this.send("onSelect", content.value);
     },
@@ -338,23 +369,16 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
       }
     },
 
-    onHighlight(value) {
-      this.set("highlightedValue", value);
+    onHighlight(value) { this.baseOnHighlight(value); },
+
+    onClearSelection() { this.baseOnDeselect(); },
+
+    onSelect(value) {
+      value = this.baseOnSelect(value);
+      this.set("value", value);
     },
 
-    onClearSelection() {
-      this.send("onSelect", null);
-    },
-
-    onSelect() {
-      this.clearFilter();
-      this.set("highlightedValue", null);
-    },
-
-    onDeselect() {
-      this.defaultOnDeselect();
-      this.set("value", null);
-    }
+    onDeselect() { this.baseOnDeselect(); }
   },
 
   clearFilter() {
@@ -364,34 +388,13 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
 
   originalValueForValue(value) {
     if (isNone(value)) { return null; }
-    if (value === NONE_VALUE) { return NONE_VALUE; }
+    if (value === this.noneValue) { return this.noneValue; }
 
     const computedContent = this.computedContentForValue(value);
 
     if (isNone(computedContent)) { return value; }
 
     return get(computedContent.originalContent, this.get("valueAttribute"));
-  },
-
-  defaultOnSelect(value) {
-    if (value === "") { value = null; }
-
-    // this.setProperties({
-    //   highlightedValue: null,
-    //   isExpanded: false,
-    //   filter: ""
-    // });
-    //
-    // this.focus();
-
-    return value;
-  },
-
-  defaultOnDeselect(value) {
-    const content = this.get("computedContent").findBy("value", value);
-    if (!isNone(content)) {
-      this.get("computedContent").removeObject(content);
-    }
   },
 
   @on("didReceiveAttrs")

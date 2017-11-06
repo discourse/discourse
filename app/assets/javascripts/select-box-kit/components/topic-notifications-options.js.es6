@@ -26,14 +26,13 @@ export default NotificationOptionsComponent.extend({
 
   actions: {
     onSelect(value) {
-      if (value !== this.get("computedValue")) {
+      value = this.baseOnSelect(value);
+
+      if (value !== this.get("value")) {
         this.get("topic.details").updateNotifications(value);
       }
 
       this.set("value", value);
-
-      this.defaultOnSelect(value);
-
       this.blur();
     }
   }

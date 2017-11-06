@@ -93,7 +93,7 @@ function selectBox(selector) { // eslint-disable-line no-unused-vars
       selector = find(selector).find(target);
 
       andThen(function() {
-        var event = jQuery.Event('keydown');
+        var event = jQuery.Event(options.type);
         event.keyCode = keyCode;
         if (options && options.metaKey === true) { event.metaKey = true; }
         find(selector).trigger(event);
@@ -101,13 +101,13 @@ function selectBox(selector) { // eslint-disable-line no-unused-vars
     }
 
     return {
-      down: function(target) { createEvent(target, 40); },
-      up: function(target) { createEvent(target, 38); },
-      escape: function(target) { createEvent(target, 27); },
-      enter: function(target) { createEvent(target, 13); },
-      tab: function(target) { createEvent(target, 9); },
-      backspace: function(target) { createEvent(target, 8); },
-      selectAll: function(target) { createEvent(target, 65, {metaKey: true}); },
+      down: function(target) { createEvent(target, 40, {type: 'keydown'}); },
+      up: function(target) { createEvent(target, 38, {type: 'keydown'}); },
+      escape: function(target) { createEvent(target, 27, {type: 'keydown'}); },
+      enter: function(target) { createEvent(target, 13, {type: 'keypress'}); },
+      tab: function(target) { createEvent(target, 9, {type: 'keydown'}); },
+      backspace: function(target) { createEvent(target, 8, {type: 'keydown'}); },
+      selectAll: function(target) { createEvent(target, 65, {metaKey: true, type: 'keydown'}); },
     };
   }
 

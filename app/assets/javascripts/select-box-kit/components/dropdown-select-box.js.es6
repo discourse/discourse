@@ -9,15 +9,12 @@ export default SelectBoxKitComponent.extend({
   headerComponent: "dropdown-select-box/dropdown-select-box-header",
   rowComponent: "dropdown-select-box/dropdown-select-box-row",
 
-  clickOutside() {
-    this.close();
-  },
+  clickOutside() { this.close(); },
 
   actions: {
     onSelect(value) {
-      value = this.defaultOnSelect(value);
+      value = this.baseOnSelect(value);
       this.set("value", value);
-
       this.blur();
     }
   }

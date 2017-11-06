@@ -257,7 +257,7 @@ QUnit.test("update in filter through advanced search ui", assert => {
   fillIn('.search input.full-page-search', 'none');
   click('.search-advanced-btn');
 
-  ('.search-advanced-options .select-box-kit#in');
+  expandSelectBoxKit('.search-advanced-options .select-box-kit#in');
   selectBoxKitSelectRow('bookmarks', { selector: '.search-advanced-options .select-box-kit#in' });
   fillIn('.search-advanced-options .select-box-kit#in', 'bookmarks');
 
@@ -271,7 +271,7 @@ QUnit.test("update status through advanced search ui", assert => {
   visit("/search");
   fillIn('.search input.full-page-search', 'none');
   click('.search-advanced-btn');
-  ('.search-advanced-options .select-box-kit#status');
+  expandSelectBoxKit('.search-advanced-options .select-box-kit#status');
   selectBoxKitSelectRow('closed', { selector: '.search-advanced-options .select-box-kit#status' });
   fillIn('.search-advanced-options .select-box-kit#status', 'closed');
 
@@ -286,7 +286,7 @@ QUnit.test("update post time through advanced search ui", assert => {
   fillIn('.search input.full-page-search', 'none');
   click('.search-advanced-btn');
   fillIn('#search-post-date', '2016-10-05');
-  ('.search-advanced-options .select-box-kit#postTime');
+  expandSelectBoxKit('.search-advanced-options .select-box-kit#postTime');
   selectBoxKitSelectRow('after', { selector: '.search-advanced-options .select-box-kit#postTime' });
   fillIn('.search-advanced-options .select-box-kit#postTime', 'after');
 

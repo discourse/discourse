@@ -14,6 +14,7 @@ export default SelectBoxKitComponent.extend({
 
   init() {
     this._super();
+
     if (isNone(this.get("value"))) { this.set("value", []); }
   },
 
@@ -25,7 +26,7 @@ export default SelectBoxKitComponent.extend({
   },
 
   @on("didRender")
-  _autoHighlight() {
+  autoHighlightFunction() {
     if (this.get("isExpanded") === false) { return; }
     if (this.get("renderBody") === false) { return; }
     if (!isNone(this.get("highlightedValue"))) { return; }
@@ -34,16 +35,11 @@ export default SelectBoxKitComponent.extend({
       if (this.get("shouldDisplayCreateRow") === true && !isEmpty(this.get("filter"))) {
         this.send("onHighlight", this.get("filter"));
       } else if (this.get("none") && !isEmpty(this.get("selectedContent"))) {
-        this.send("onHighlight", this.NONE_VALUE);
+        this.send("onHighlight", this.noneValue);
       }
     } else {
       this.send("onHighlight", this.get("filteredContent.firstObject.value"));
     }
-  },
-
-  click(event) {
-    this.$filterInput().focus();
-    return false;
   },
 
   keyDown(event) {
@@ -63,7 +59,6 @@ export default SelectBoxKitComponent.extend({
         highlightedValues.push($(el).attr("data-value"));
       });
 
-      console.log(highlightedValues)
       this.send("onDeselect", highlightedValues);
       return;
     }
@@ -95,9 +90,7 @@ export default SelectBoxKitComponent.extend({
   },
 
   @computed("value.[]")
-  computedValue(value) {
-    return value.map(v => this._castInteger(v));
-  },
+  computedValue(value) { return value.map(v => this._castInteger(v)); },
 
   @computed("computedValue.[]", "computedContent.[]")
   selectedContent(computedValue, computedContent) {
@@ -119,56 +112,68 @@ export default SelectBoxKitComponent.extend({
     };
   },
 
+  baseOnHighlight(value) {
+    value = this.originalValueForValue(value);
+    this.set("highlightedValue", value);
+    return value;
+  },
+
+  baseOnSelect(value) {
+    this.clearFilter();
+    this.set("highlightedValue", null);
+    this.expand();
+    return this.originalValueForValue(value);
+  },
+
+  baseOnCreateContent(input) {
+    this.set("highlightedValue", null);
+    this.clearFilter();
+    return input;
+  },
+
+  baseOnDeselect(values) {
+    values = Ember.makeArray(values)
+                  .map(v => this.originalValueForValue(v))
+                  .filter(v => {
+                    return get(this.computedContentForValue(v), "locked") !== true;
+                  });
+
+    const contentsToRemove = [];
+    values.forEach(v => {
+      if (!this.get("_initialValues").includes(v)) {
+        const content = this.contentForValue(v);
+        if (!isNone(content)) { contentsToRemove.push(content); }
+      }
+    });
+    this.set("highlightedValue", null);
+    return { values, contentsToRemove };
+  },
+
   actions: {
     onClearSelection() {
       this.set("highlightedValue", null);
-      // this.set("value", []);
       this.send("onDeselect", this.get("selectedContent").map(c => get(c, "value")));
     },
 
     onHighlight(value) {
-      console.log("beforeh", value)
-      value = this.originalValueForValue(value);
-      console.log("afterh", value)
-      this.set("highlightedValue", value);
+      this.baseOnHighlight(value);
     },
 
-    onCreateContent(name) {
-      this.set("highlightedValue", null);
-
-      if (this.get("content").includes(name)) {
-        return;
-      }
-
-      this.get("content").pushObject(name);
-      this.get("value").pushObject(name);
-      this.clearFilter();
+    onCreateContent(input) {
+      input = this.baseOnCreateContent(input);
+      this.get("content").pushObject(input);
+      this.get("value").pushObject(input);
     },
 
     onSelect(value) {
-      this._super();
-      console.log("before", value)
-      value = this.originalValueForValue(value);
-      console.log("after", value)
-
-
+      value = this.baseOnSelect(value);
       this.get("value").pushObject(value);
     },
 
     onDeselect(values) {
-      values = Ember.makeArray(values).map(v => this.originalValueForValue(v));
-
-      console.log("-------values", values)
-      const contentsToRemove = [];
-      values.forEach(v => {
-        if (!this.get("_initialValues").includes(v)) {
-          contentsToRemove.push(this.contentForValue(v));
-        }
-      });
-
-      this.get("value").removeObjects(values);
-      this.get("content").removeObjects(contentsToRemove);
-      this.set("highlightedValue", null);
+      const deselectState = this.baseOnDeselect(values);
+      this.get("value").removeObjects(deselectState.values);
+      this.get("content").removeObjects(deselectState.contentsToRemove);
     }
   }
 });

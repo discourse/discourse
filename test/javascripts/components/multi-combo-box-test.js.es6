@@ -17,7 +17,7 @@ componentTest('with objects and values', {
 });
 
 componentTest('interactions', {
-  template: '{{multi-combo-box none=none content=items value=value}}',
+  template: '<input class="before"/>{{multi-combo-box none=none content=items value=value}}<input class="after"/>',
 
   beforeEach() {
     I18n.translations[I18n.locale].js.test = {none: 'none'};
@@ -85,6 +85,25 @@ componentTest('interactions', {
     andThen(() => {
       const $selectedNames = selectBox().header.el.find('.selected-name');
       assert.equal($selectedNames.length, 0, 'it removed all selected content');
+    });
+
+    andThen(() => {
+      assert.ok(this.$(".select-box-kit").hasClass("is-focused"));
+      assert.ok(this.$(".select-box-kit").hasClass("is-expanded"));
+    });
+
+    selectBox().keyboard.escape();
+
+    andThen(() => {
+      assert.ok(this.$(".select-box-kit").hasClass("is-focused"));
+      assert.notOk(this.$(".select-box-kit").hasClass("is-expanded"));
+    });
+
+    selectBox().keyboard.escape();
+
+    andThen(() => {
+      assert.notOk(this.$(".select-box-kit").hasClass("is-focused"));
+      assert.notOk(this.$(".select-box-kit").hasClass("is-expanded"));
     });
   }
 });

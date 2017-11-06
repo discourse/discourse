@@ -28,7 +28,7 @@ QUnit.test("Updating topic notification level", assert => {
     );
   });
 
-  (notificationOptions);
+  expandSelectBoxKit(notificationOptions);
   selectBoxKitSelectRow("3", { selector: notificationOptions});
 
   andThen(() => {

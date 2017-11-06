@@ -6,6 +6,7 @@ export default MultiComboBoxComponent.extend({
   available: null,
   value: Ember.computed.alias("selected"),
   content: Ember.computed.alias("available"),
+  allowAny: false,
 
   init() {
     this._super();
@@ -16,19 +17,28 @@ export default MultiComboBoxComponent.extend({
     });
   },
 
-  actions: {
-    onClearSelection() {},
 
+  formatContent(content) {
+    let formatedContent = this._super(content);
+    formatedContent.locked = content.automatic;
+    return formatedContent;
+  },
+
+  actions: {
     onSelect(value) {
+      value = this.baseOnSelect(value);
+
       this.triggerAction({
         action: "groupAdded",
         actionContext: this.get("content").findBy("id", parseInt(value))
       });
     },
 
-    onDeselect(value) {
-      this.defaultOnDeselect(value);
-      this.triggerAction({ action: "groupRemoved", actionContext: value });
+    onDeselect(values) {
+      const deselectState = this.baseOnDeselect(values);
+      deselectState.values.forEach(value => {
+        this.triggerAction({ action: "groupRemoved", actionContext: value });
+      });
     }
   }
 });

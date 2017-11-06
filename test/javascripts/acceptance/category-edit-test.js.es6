@@ -75,7 +75,7 @@ QUnit.test("Subcategory list settings", assert => {
 
   click('.edit-category-general');
 
-  ('.edit-category-tab-general .category-chooser');
+  expandSelectBoxKit('.edit-category-tab-general .category-chooser');
 
   selectBoxKitSelectRow(3, {selector: '.edit-category-tab-general .category-chooser'});
 

@@ -28,7 +28,7 @@ export default Ember.Mixin.create({
   },
 
   $rows() {
-    return this.$(this.rowSelector);
+    return this.$(`${this.rowSelector}:not(.no-content)`);
   },
 
   $highlightedRow() {
@@ -117,7 +117,7 @@ export default Ember.Mixin.create({
     if (this.get("scrollableParent").length === 0) { return; }
 
     const width = this.$().outerWidth(false);
-    const height = this.$header().outerHeight(false);
+    const height = this.$().outerHeight(false);
     const $placeholder = $(`<div class='select-box-kit-fixed-placeholder-${this.elementId}'></div>`);
 
     this._previousScrollParentOverflow = this.get("scrollableParent").css("overflow");
@@ -148,11 +148,13 @@ export default Ember.Mixin.create({
   },
 
   _removeFixedPosition() {
+    $(`.select-box-kit-fixed-placeholder-${this.elementId}`).remove();
+
     if (this.get("scrollableParent").length === 0) {
       return;
     }
 
-    $(`.select-box-kit-fixed-placeholder-${this.elementId}`).remove();
+    if (!this.element || this.isDestroying || this.isDestroyed) { return; }
 
     const css = _.extend(
       this._previousCSSContext,

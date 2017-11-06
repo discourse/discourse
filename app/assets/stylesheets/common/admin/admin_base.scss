@@ -215,9 +215,8 @@ $mobile-breakpoint: 700px;
   .select-box-kit {
     width: 350px;
   }
-
-  .select-box-kit-header {
-    height: 28px;
+  .select-box-kit.multi-combo-box {
+    width: 500px;
   }
 }
 
@@ -701,7 +700,7 @@ section.details {
 
         .ace_editor {
           pointer-events:none;
-          
+
           .ace_cursor {
             visibility: hidden;
           }

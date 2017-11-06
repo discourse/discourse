@@ -40,7 +40,7 @@ export default DropdownSelectBoxComponent.extend({
 
   actions: {
     onSelect(value) {
-      value = this.defaultOnSelect(value);
+      this.baseOnSelect(value);
       this.get(value)();
       this.set("value", null);
     }

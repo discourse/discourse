@@ -263,14 +263,9 @@ componentTest('supports keyboard events', {
 
     selectBoxKitFillInFilter("regis");
 
-    // andThen(() => {
-      // assert.equal(selectBox().highlightedRow.title(), "regis", "it highlights the first result");
-    // });
-
     selectBox().keyboard.tab();
 
     andThen(() => {
-      // assert.equal(selectBox().selectedRow.title(), "regis", "it selects the row when pressing tab");
       assert.notOk(selectBox().isExpanded, "it collapses the select box when selecting a row");
     });
   }

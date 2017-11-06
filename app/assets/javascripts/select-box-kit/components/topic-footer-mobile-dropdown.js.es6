@@ -41,7 +41,7 @@ export default ComboBoxComponent.extend({
 
   actions: {
     onSelect(value) {
-      value = this.defaultOnSelect(value);
+      value = this.baseOnSelect(value);
 
       const topic = this.get("topic");
 

@@ -9,7 +9,7 @@ export default NotificationOptionsComponent.extend({
 
   actions: {
     onSelect(value) {
-      value = this.defaultOnSelect(value);
+      value = this.baseOnSelect(value);
       this.get("category").setNotification(value);
       this.blur();
     }
