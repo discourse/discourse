@@ -1,5 +1,12 @@
 # See http://unicorn.bogomips.org/Unicorn/Configurator.html
 
+if ENV["UNICORN_JSON_LOG_FORMAT"]
+  unicorn_logger = Logger.new($stderr)
+  require_relative '../lib/unicorn/unicorn_json_log_formatter'
+  unicorn_logger.formatter = UnicornJSONLogFormatter.new
+  logger unicorn_logger
+end
+
 # enable out of band gc out of the box, it is low risk and improves perf a lot
 ENV['UNICORN_ENABLE_OOBGC'] ||= "1"
 
