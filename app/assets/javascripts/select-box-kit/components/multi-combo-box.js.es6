@@ -21,7 +21,7 @@ export default SelectBoxKitComponent.extend({
   @computed("filter")
   templateForCreateRow() {
     return (rowComponent) => {
-      return `Create: ${rowComponent.get("content.name")}`;
+      return I18n.t("select_box.create", { content: rowComponent.get("content.name")});
     };
   },
 
