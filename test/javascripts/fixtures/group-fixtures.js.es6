@@ -9,7 +9,7 @@ export default {
       "alias_level":99,
       "visible":true,
       "public_admission":true,
-      "public_exit":true,
+      "public_exit":false,
       "flair_url": 'fa-adjust',
       "is_group_owner":true,
       "mentionable":true,

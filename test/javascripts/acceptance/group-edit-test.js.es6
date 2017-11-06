@@ -43,6 +43,11 @@ QUnit.test("Editing group", assert => {
       'it should disable group public admission input'
     );
 
+    assert.ok(
+      find('.group-edit-public-exit[disabled]').length === 0,
+      'it should not disable group public exit input'
+    );
+
     assert.equal(
       find('.group-edit-membership-request-template').length, 1,
       'it should display the membership request template field'
