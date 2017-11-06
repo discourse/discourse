@@ -5,7 +5,7 @@ class UnicornJSONLogFormatter < Logger::Formatter
     default = {
       severity: severity,
       datetime: datetime,
-      progname: progname,
+      progname: progname || '',
       pid: $$,
     }
 
