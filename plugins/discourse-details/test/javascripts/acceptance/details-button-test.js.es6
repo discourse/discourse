@@ -90,3 +90,28 @@ test('details button', (assert) => {
     assert.equal(textarea.selectionEnd, 49, 'it should end highlighting at the right position');
   });
 });
+
+test('details button surrounds all selected text in a single details block', (assert) => {
+  const multilineInput = 'first line\n\nsecond line\n\nthird line';
+
+  visit("/");
+  click('#create-topic');
+  fillIn('.d-editor-input', multilineInput);
+
+  andThen(() => {
+    const textarea = findTextarea();
+    textarea.selectionStart = 0;
+    textarea.selectionEnd = textarea.value.length;
+  });
+
+  click('button.options');
+  click('.popup-menu .d-icon-caret-right');
+
+  andThen(() => {
+    assert.equal(
+      find(".d-editor-input").val(),
+      `\n[details="${I18n.t('composer.details_title')}"]\n${multilineInput}\n[/details]\n`,
+      'it should contain the right output'
+    );
+  });
+});
