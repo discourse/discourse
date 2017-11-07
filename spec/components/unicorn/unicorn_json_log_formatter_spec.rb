@@ -11,7 +11,7 @@ RSpec.describe UnicornJSONLogFormatter do
           error = e
 
           output = described_class.new.call(
-            'INFO',
+            'ERROR',
             Time.zone.now,
             '',
             e
@@ -20,7 +20,8 @@ RSpec.describe UnicornJSONLogFormatter do
 
         output = JSON.parse(output)
 
-        expect(output["severity"]).to eq('INFO')
+        expect(output["severity"]).to eq(3)
+        expect(output["severity_name"]).to eq("ERROR")
         expect(output["datetime"]).to be_present
         expect(output["progname"]).to eq('')
         expect(output["pid"]).to be_present
