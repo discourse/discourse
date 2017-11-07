@@ -342,7 +342,7 @@ describe UsersController do
         )
 
         expect(response).to be_success
-        expect(response.body).to include('{"is_developer":false}')
+        expect(response.body).to include('{"is_developer":false,"admin":false}')
 
         user.reload
 

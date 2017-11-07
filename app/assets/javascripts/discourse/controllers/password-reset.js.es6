@@ -7,6 +7,7 @@ import { userPath } from 'discourse/lib/url';
 
 export default Ember.Controller.extend(PasswordValidation, {
   isDeveloper: Ember.computed.alias('model.is_developer'),
+  admin: Ember.computed.alias('model.admin'),
   passwordRequired: true,
   errorMessage: null,
   successMessage: null,
