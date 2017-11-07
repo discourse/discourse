@@ -49,7 +49,7 @@ module ImportScripts::PhpBB3
       #   [url=https&#58;//google&#46;com:1qh1i7ky]click here[/url:1qh1i7ky]
       #   [quote=&quot;cybereality&quot;:b0wtlzex]Some text.[/quote:b0wtlzex]
       text.gsub!(/:(?:\w{8})\]/, ']')
-      
+
       # remove color tags
       text.gsub!(/\[\/?color(=#[a-z0-9]*)?\]/i, "")
     end
@@ -148,7 +148,7 @@ module ImportScripts::PhpBB3
     end
 
     def process_code(text)
-      text.gsub!(/<span class="syntax.*?>(.*?)<\/span>/) {"#{$1}"}
+      text.gsub!(/<span class="syntax.*?>(.*?)<\/span>/) { "#{$1}" }
       text.gsub!(/\[code(=[a-z]*)?\](.*?)\[\/code\]/i) { "[code]#{@he.decode($2)}[/code]" }
       text.gsub!(/<br \/>/, "\n")
       text
