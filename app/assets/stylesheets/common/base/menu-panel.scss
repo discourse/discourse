@@ -210,12 +210,6 @@
     .icon { color: dark-light-choose($primary-high, $secondary-low); }
     li {
       background-color: $tertiary-low;
-      padding: 0.25em 0.5em;
-      i {
-        float: left;
-        margin-right: 5px;
-        padding-top: 2px;
-      }
 
       // This is until other languages remove the HTML from within
       // notifications. It can then be removed
@@ -229,6 +223,14 @@
       p {
         margin: 0;
         overflow: hidden;
+      }
+    }
+    li:not(.show-all) {
+      padding: 0.25em 0.5em;
+      i {
+        float: left;
+        margin-right: 5px;
+        padding-top: 2px;
       }
     }
     .is-warning {
@@ -253,6 +255,16 @@
       height: 20px;
       border-width: 2px;
       margin: 0 auto;
+    }
+    .show-all .btn {
+      width: 100%;
+      padding: 2px 0;
+      color: dark-light-choose($primary-medium, $secondary-high);
+      background: blend-primary-secondary(5%);
+      &:hover {
+        color: $primary;
+        background: dark-light-diff($primary, $secondary, 90%, -80%);
+      }
     }
     /* as a big ol' click target, don't let text inside be selected */
     @include unselectable;
