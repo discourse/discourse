@@ -22,6 +22,8 @@ class ImportScripts::Bbpress < ImportScripts::Base
   def initialize
     super
 
+    @he = HTMLEntities.new
+
     @client = Mysql2::Client.new(
       host: BB_PRESS_HOST,
       username: BB_PRESS_USER,
@@ -242,8 +244,7 @@ class ImportScripts::Bbpress < ImportScripts::Base
         }
 
         if post[:raw].present?
-          post[:raw].gsub!("<pre><code>", "```\n")
-          post[:raw].gsub!("</code></pre>", "\n```")
+          post[:raw].gsub!(/\<pre\>\<code(=[a-z]*)?\>(.*?)\<\/code\>\<\/pre\>/im) { "```\n#{@he.decode($2)}\n```" }
         end
 
         if p["post_type"] == "topic"
