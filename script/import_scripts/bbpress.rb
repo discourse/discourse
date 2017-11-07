@@ -47,9 +47,9 @@ class ImportScripts::Bbpress < ImportScripts::Base
     last_user_id = -1
     total_users = bbpress_query(<<-SQL
       SELECT COUNT(DISTINCT(u.id)) AS cnt
-      FROM #{BB_PRESS_PREFIX}users u 
-      LEFT JOIN #{BB_PRESS_PREFIX}posts p ON p.post_author = u.id 
-      WHERE p.post_type IN ('forum', 'reply', 'topic') 
+      FROM #{BB_PRESS_PREFIX}users u
+      LEFT JOIN #{BB_PRESS_PREFIX}posts p ON p.post_author = u.id
+      WHERE p.post_type IN ('forum', 'reply', 'topic')
         AND user_email LIKE '%@%'
     SQL
     ).first["cnt"]
@@ -58,7 +58,7 @@ class ImportScripts::Bbpress < ImportScripts::Base
       users = bbpress_query(<<-SQL
         SELECT u.id, user_nicename, display_name, user_email, user_registered, user_url, user_pass
           FROM #{BB_PRESS_PREFIX}users u
-          LEFT JOIN #{BB_PRESS_PREFIX}posts p ON p.post_author = u.id 
+          LEFT JOIN #{BB_PRESS_PREFIX}posts p ON p.post_author = u.id
          WHERE user_email LIKE '%@%'
            AND p.post_type IN ('forum', 'reply', 'topic')
            AND u.id > #{last_user_id}
@@ -305,7 +305,7 @@ class ImportScripts::Bbpress < ImportScripts::Base
 
       topics.each do |t|
         topic = topic_lookup_from_imported_post_id(t['id'])
-        Permalink.create( url: URI.parse(t['guid']).path.chomp('/'), topic_id: topic[:topic_id] ) rescue nil
+        Permalink.create(url: URI.parse(t['guid']).path.chomp('/'), topic_id: topic[:topic_id]) rescue nil
       end
       last_topic_id = topics[-1]["id"].to_i
     end
