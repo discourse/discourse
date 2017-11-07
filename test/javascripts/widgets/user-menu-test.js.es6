@@ -11,6 +11,7 @@ widgetTest('basics', {
     assert.ok(this.$('.user-bookmarks-link').length);
     assert.ok(this.$('.user-preferences-link').length);
     assert.ok(this.$('.notifications').length);
+    assert.ok(this.$('.dismiss-link').length);
   }
 });
 

@@ -590,6 +590,7 @@ en:
         enable: "Enable Notifications"
         currently_disabled: ""
         each_browser_note: "Note: You have to change this setting on every browser you use."
+      dismiss: 'Dismiss'
       dismiss_notifications: "Dismiss All"
       dismiss_notifications_tooltip: "Mark all unread notifications as read"
       first_notification: "Your first notification! Select it to begin."
