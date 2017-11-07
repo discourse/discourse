@@ -3,7 +3,7 @@ require 'json'
 class UnicornJSONLogFormatter < Logger::Formatter
   def call(severity, datetime, progname, message)
     default = {
-      severity: "Logger::Severity::#{severity}".constantize,
+      severity: Object.const_get("Logger::Severity::#{severity}"),
       severity_name: severity,
       datetime: DateTime.parse(datetime.to_s).to_s,
       progname: progname || '',
