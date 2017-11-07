@@ -465,7 +465,10 @@ class UsersController < ApplicationController
         if @error
           render layout: 'no_ember'
         else
-          store_preloaded("password_reset", MultiJson.dump(is_developer: UsernameCheckerService.is_developer?(@user.email)))
+          store_preloaded(
+            "password_reset",
+            MultiJson.dump(is_developer: UsernameCheckerService.is_developer?(@user.email), admin: @user.admin?)
+          )
         end
         return redirect_to(wizard_path) if request.put? && Wizard.user_requires_completion?(@user)
       end
@@ -477,7 +480,8 @@ class UsersController < ApplicationController
               success: false,
               message: @error,
               errors: @user&.errors.to_hash,
-              is_developer: UsernameCheckerService.is_developer?(@user.email)
+              is_developer: UsernameCheckerService.is_developer?(@user.email),
+              admin: @user.admin?
             }
           else
             render json: {
@@ -488,7 +492,7 @@ class UsersController < ApplicationController
             }
           end
         else
-          render json: { is_developer: UsernameCheckerService.is_developer?(@user.email) }
+          render json: { is_developer: UsernameCheckerService.is_developer?(@user.email), admin: @user.admin? }
         end
       end
     end
