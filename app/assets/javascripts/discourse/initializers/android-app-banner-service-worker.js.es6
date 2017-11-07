@@ -10,7 +10,7 @@ export default {
     const isSecure = document.location.protocol === 'https:';
 
     if (isSecure && caps.isAndroid && 'serviceWorker' in navigator) {
-        navigator.serviceWorker.register(Discourse.BaseUri + '/service-worker.js', {scope: './'});
+        navigator.serviceWorker.register(Discourse.BaseUri + '/service-worker.js');
     }
   }
 };
