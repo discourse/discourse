@@ -19,6 +19,9 @@ class User < ActiveRecord::Base
   include Roleable
   include HasCustomFields
 
+  # TODO: Remove this after 7th Jan 2018
+  self.ignored_columns = %w{email}
+
   has_many :posts
   has_many :notifications, dependent: :destroy
   has_many :topic_users, dependent: :destroy
