@@ -22,6 +22,8 @@ class ImportScripts::Bbpress < ImportScripts::Base
   def initialize
     super
 
+    @he = HTMLEntities.new
+
     @client = Mysql2::Client.new(
       host: BB_PRESS_HOST,
       username: BB_PRESS_USER,
@@ -36,21 +38,32 @@ class ImportScripts::Bbpress < ImportScripts::Base
     import_categories
     import_topics_and_posts
     import_private_messages
+    create_permalinks
   end
 
   def import_users
     puts "", "importing users..."
 
     last_user_id = -1
-    total_users = bbpress_query("SELECT COUNT(*) count FROM #{BB_PRESS_PREFIX}users WHERE user_email LIKE '%@%'").first["count"]
+    total_users = bbpress_query(<<-SQL
+      SELECT COUNT(DISTINCT(u.id)) AS cnt
+      FROM #{BB_PRESS_PREFIX}users u 
+      LEFT JOIN #{BB_PRESS_PREFIX}posts p ON p.post_author = u.id 
+      WHERE p.post_type IN ('forum', 'reply', 'topic') 
+        AND user_email LIKE '%@%'
+    SQL
+    ).first["cnt"]
 
     batches(BATCH_SIZE) do |offset|
       users = bbpress_query(<<-SQL
-        SELECT id, user_nicename, display_name, user_email, user_registered, user_url
-          FROM #{BB_PRESS_PREFIX}users
+        SELECT u.id, user_nicename, display_name, user_email, user_registered, user_url, user_pass
+          FROM #{BB_PRESS_PREFIX}users u
+          LEFT JOIN #{BB_PRESS_PREFIX}posts p ON p.post_author = u.id 
          WHERE user_email LIKE '%@%'
-           AND id > #{last_user_id}
-      ORDER BY id
+           AND p.post_type IN ('forum', 'reply', 'topic')
+           AND u.id > #{last_user_id}
+      GROUP BY u.id
+      ORDER BY u.id
          LIMIT #{BATCH_SIZE}
       SQL
       ).to_a
@@ -86,6 +99,7 @@ class ImportScripts::Bbpress < ImportScripts::Base
         {
           id: u["id"].to_i,
           username: u["user_nicename"],
+          password: u["user_pass"],
           email: u["user_email"].downcase,
           name: u["display_name"].presence || u['user_nicename'],
           created_at: u["user_registered"],
@@ -242,8 +256,7 @@ class ImportScripts::Bbpress < ImportScripts::Base
         }
 
         if post[:raw].present?
-          post[:raw].gsub!("<pre><code>", "```\n")
-          post[:raw].gsub!("</code></pre>", "\n```")
+          post[:raw].gsub!(/\<pre\>\<code(=[a-z]*)?\>(.*?)\<\/code\>\<\/pre\>/im) { "```\n#{@he.decode($2)}\n```" }
         end
 
         if p["post_type"] == "topic"
@@ -261,6 +274,40 @@ class ImportScripts::Bbpress < ImportScripts::Base
 
         skip ? nil : post
       end
+    end
+  end
+
+  def create_permalinks
+    puts "", "creating permalinks..."
+
+    last_topic_id = -1
+    total_topics = bbpress_query(<<-SQL
+      SELECT COUNT(*) count
+        FROM #{BB_PRESS_PREFIX}posts
+       WHERE post_status <> 'spam'
+         AND post_type IN ('topic')
+    SQL
+    ).first["count"]
+
+    batches(BATCH_SIZE) do |offset|
+      topics = bbpress_query(<<-SQL
+        SELECT id,
+               guid
+          FROM #{BB_PRESS_PREFIX}posts
+         WHERE post_status <> 'spam'
+           AND post_type IN ('topic')
+           AND id > #{last_topic_id}
+      ORDER BY id
+         LIMIT #{BATCH_SIZE}
+      SQL
+      ).to_a
+      break if topics.empty?
+
+      topics.each do |t|
+        topic = topic_lookup_from_imported_post_id(t['id'])
+        Permalink.create( url: URI.parse(t['guid']).path.chomp('/'), topic_id: topic[:topic_id] ) rescue nil
+      end
+      last_topic_id = topics[-1]["id"].to_i
     end
   end
 
