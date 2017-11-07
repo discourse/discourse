@@ -257,6 +257,13 @@
     /* as a big ol' click target, don't let text inside be selected */
     @include unselectable;
   }
+
+  .logout-link, .dismiss-link {
+    display: inline-block;
+  }
+  .dismiss-link {
+    float: right;
+  }
 }
 
 .notifications .logout {

@@ -50,6 +50,9 @@ export default createWidget('user-notifications', {
     }).finally(() => {
       state.loading = false;
       state.loaded = true;
+      if (state.notifications.get('length') > 0) {
+        this.sendWidgetAction('notificationsLoaded');
+      }
       this.scheduleRerender();
     });
   },
