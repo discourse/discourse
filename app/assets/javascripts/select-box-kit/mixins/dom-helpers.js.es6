@@ -63,7 +63,7 @@ export default Ember.Mixin.create({
 
   expand() {
     if (this.get("isExpanded") === true) { return; }
-    this.setProperties({ isExpanded: true, renderBody: true, isFocused: true });
+    this.setProperties({ isExpanded: true, renderedBodyOnce: true, isFocused: true });
     this.focus();
   },
 

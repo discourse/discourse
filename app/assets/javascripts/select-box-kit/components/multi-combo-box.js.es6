@@ -34,7 +34,7 @@ export default SelectBoxKitComponent.extend({
   @on("didRender")
   autoHighlightFunction() {
     if (this.get("isExpanded") === false) { return; }
-    if (this.get("renderBody") === false) { return; }
+    if (this.get("renderedBodyOnce") === false) { return; }
     if (!isNone(this.get("highlightedValue"))) { return; }
 
     if (isEmpty(this.get("filteredContent"))) {
@@ -52,6 +52,11 @@ export default SelectBoxKitComponent.extend({
     const keyCode = event.keyCode || event.which;
     const $filterInput = this.$filterInput();
 
+    if (this.get("isFocused") === true && this.get("isExpanded") === false && keyCode === 8) {
+      this.expand();
+      return;
+    }
+
     // select all choices
     if (event.metaKey === true && keyCode === 65 && isEmpty(this.get("filter"))) {
       this.$(".choices .selected-name").addClass("is-highlighted");
@@ -59,7 +64,7 @@ export default SelectBoxKitComponent.extend({
     }
 
     // clear selection when multiple
-    if (this.$(".selected-name.is-highlighted").length >= 1 && keyCode === 8) {
+    if (Ember.isEmpty(this.get("filter")) && this.$(".selected-name.is-highlighted").length >= 1 && keyCode === 8) {
       const highlightedValues = [];
       $.each(this.$(".selected-name.is-highlighted"), (i, el) => {
         highlightedValues.push($(el).attr("data-value"));
@@ -70,7 +75,7 @@ export default SelectBoxKitComponent.extend({
     }
 
     // try to remove last item from the list
-    if (keyCode === 8) {
+    if (Ember.isEmpty(this.get("filter")) && keyCode === 8) {
       let $lastSelectedValue = $(this.$(".choices .selected-name").last());
 
       if ($lastSelectedValue.length === 0) { return; }
@@ -108,12 +113,12 @@ export default SelectBoxKitComponent.extend({
     return contents;
   },
 
-  filterFunction(content) {
-    return (selectBox, computedValue) => {
-      const filter = selectBox.get("filter").toLowerCase();
+  filterFunction(content, filter) {
+    return (selectBox) => {
+      const lowerFilter = filter.toLowerCase();
       return _.filter(content, c => {
-        return !computedValue.includes(get(c, "value")) &&
-          get(c, "name").toLowerCase().indexOf(filter) > -1;
+        return !selectBox.get("computedValue").includes(get(c, "value")) &&
+          get(c, "name").toLowerCase().indexOf(lowerFilter) > -1;
       });
     };
   },

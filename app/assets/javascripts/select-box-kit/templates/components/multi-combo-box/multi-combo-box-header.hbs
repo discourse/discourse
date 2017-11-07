@@ -3,16 +3,18 @@
     {{component selectedNameComponent onDeselect=onDeselect content=selectedContent}}
   {{/each}}
 
-  <li class="filter">
-    {{input
-      class="select-box-kit-filter-input"
-      key-up=onFilterChange
-      autocomplete="off"
-      autocorrect="off"
-      autocapitalize="off"
-      spellcheck=false
-      value=filter
-      tabindex=-1
-    }}
-  </li>
+  {{#if shouldDisplayFilter}}
+    <li class="filter">
+      {{input
+        class="select-box-kit-filter-input"
+        key-up=onFilterChange
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck=false
+        value=filter
+        tabindex=-1
+      }}
+    </li>
+  {{/if}}
 </ul>

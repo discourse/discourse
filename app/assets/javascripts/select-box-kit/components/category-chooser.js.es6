@@ -12,21 +12,21 @@ export default ComboBoxComponent.extend({
   castInteger: true,
   allowUncategorized: null,
 
-  filterFunction(computedContent) {
-    const _matchFunction = (filter, text) => {
-      return text.toLowerCase().indexOf(filter) > -1;
+  filterFunction(computedContent, filter) {
+    const _matchFunction = (f, text) => {
+      return text.toLowerCase().indexOf(f) > -1;
     };
 
-    return (selectBox) => {
-      const filter = selectBox.get("filter").toLowerCase();
+    return () => {
+      const lowerFilter = filter.toLowerCase();
       return _.filter(computedContent, c => {
         const category = Category.findById(get(c, "value"));
         const text = get(c, "name");
         if (category && category.get("parentCategory")) {
           const categoryName = category.get("parentCategory.name");
-          return _matchFunction(filter, text) || _matchFunction(filter, categoryName);
+          return _matchFunction(lowerFilter, text) || _matchFunction(lowerFilter, categoryName);
         } else {
-          return _matchFunction(filter, text);
+          return _matchFunction(lowerFilter, text);
         }
       });
     };

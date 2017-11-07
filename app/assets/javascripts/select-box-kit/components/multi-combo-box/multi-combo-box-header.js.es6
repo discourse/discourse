@@ -10,6 +10,8 @@ export default SelectBoxKitHeaderComponent.extend({
 
   @on("didRender")
   _positionFilter() {
+    if (this.get("shouldDisplayFilter") === false) { return; }
+
     const $filter = this.$(".filter");
     $filter.width(0);
 

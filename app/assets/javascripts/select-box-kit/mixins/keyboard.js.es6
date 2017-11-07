@@ -37,6 +37,7 @@ export default Ember.Mixin.create({
       .off("keydown.select-box-kit");
 
     this.$filterInput()
+      .off("change.select-box-kit")
       .off("keypress.select-box-kit")
       .off("keydown.select-box-kit");
   },
@@ -76,6 +77,10 @@ export default Ember.Mixin.create({
         if (keyCode === this.keys.UP || keyCode === this.keys.DOWN) {
           this._handleArrowKey(keyCode, event);
         }
+        if (keyCode === this.keys.BACKSPACE) {
+          this.$filterInput().focus().trigger(event).trigger("change");
+          return event;
+        }
 
         return true;
       })
@@ -96,9 +101,11 @@ export default Ember.Mixin.create({
 
         if (this._isSpecialKey(keyCode) === false && event.metaKey === false) {
           this.expand();
-          this.$filterInput()
-              .val(this.$filterInput().val() + String.fromCharCode(keyCode))
-              .focus();
+          Ember.run.schedule("afterRender", () => {
+            this.$filterInput()
+                .focus()
+                .val(this.$filterInput().val() + String.fromCharCode(keyCode));
+          });
         }
       });
 
@@ -152,7 +159,7 @@ export default Ember.Mixin.create({
     } else if (this.$highlightedRow().length === 1) {
       this._killEvent(event);
       this.$highlightedRow().click();
-      this.$offscreenInput().focus();
+      this.focus();
     } else {
       this.unfocus();
       return true;
@@ -172,18 +179,21 @@ export default Ember.Mixin.create({
     }
 
     const direction = keyCode === 38 ? -1 : 1;
+
     Ember.run.throttle(this, this._moveHighlight, direction, $rows, 32);
   },
 
   _moveHighlight(direction, $rows) {
     const currentIndex = $rows.index(this.$highlightedRow());
-    let nextIndex = 0;
+    let nextIndex = currentIndex + direction;
 
-    if (currentIndex < 0) {
+    if (nextIndex < 0) {
+      nextIndex = $rows.length - 1;
+    } else if (nextIndex >= $rows.length) {
       nextIndex = 0;
-    } else if (currentIndex + direction < $rows.length) {
-      nextIndex = currentIndex + direction;
     }
+
+    console.log(this.$highlightedRow(), currentIndex, direction, $rows, nextIndex)
 
     this._rowSelection($rows, nextIndex);
   },
@@ -191,6 +201,8 @@ export default Ember.Mixin.create({
   _rowSelection($rows, nextIndex) {
     const highlightableValue = $rows.eq(nextIndex).attr("data-value");
     const $highlightableRow = this.$findRowByValue(highlightableValue);
+
+    console.log(highlightableValue, $highlightableRow, nextIndex)
     this.send("onHighlight", highlightableValue);
 
     Ember.run.schedule("afterRender", () => {

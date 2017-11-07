@@ -22,7 +22,8 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
   isExpanded: false,
   isFocused: false,
   isHidden: false,
-  renderBody: false,
+  renderedBodyOnce: false,
+  renderedFilterOnce: false,
   tabindex: 0,
   scrollableParentSelector: ".modal-body",
   value: null,
@@ -34,7 +35,6 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
   autoFilterable: false,
   filterable: false,
   filter: "",
-  _filter: "",
   filterPlaceholder: "select_box.filter_placeholder",
   filterIcon: "search",
   rowComponent: "select-box-kit/select-box-kit-row",
@@ -79,11 +79,11 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
 
   createFunction(input) { return () => input; },
 
-  filterFunction(content) {
-    return selectBox => {
-      const filter = selectBox.get("filter").toLowerCase();
-      return _.filter(content, c => {
-        return get(c, "name").toString().toLowerCase().indexOf(filter) > -1;
+  filterFunction(computedContent, filter) {
+    return () => {
+      const lowerFilter = filter.toLowerCase();
+      return _.filter(computedContent, c => {
+        return get(c, "name").toString().toLowerCase().indexOf(lowerFilter) > -1;
       });
     };
   },
@@ -146,21 +146,22 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
     return contents.map(content => this.formatRowContent(content));
   },
 
-  @computed("filter", "filterable", "autoFilterable")
-  computedFilterable(filter, filterable, autoFilterable) {
-    if (filterable === true) { return true; }
+  @computed("filter", "filterable", "autoFilterable", "renderedFilterOnce")
+  shouldDisplayFilter(filter, filterable, autoFilterable, renderedFilterOnce) {
+    if (renderedFilterOnce === true || filterable === true) { return true; }
     if (filter.length > 0 && autoFilterable === true) { return true; }
     return false;
   },
 
-  @computed("computedFilterable", "filter", "allowAny")
-  shouldDisplayCreateRow(computedFilterable, filter, allow) {
-    return computedFilterable === true && filter.length > 0 && allow === true;
+  @computed("filter")
+  shouldDisplayCreateRow(filter) {
+    if (this.get("allowAny") === true && filter.length > 0) { return true; }
+    return false;
   },
 
-  @computed("filter", "allowAny")
-  createRowContent(filter, allow) {
-    if (allow === true) {
+  @computed("filter", "shouldDisplayCreateRow")
+  createRowContent(filter, shouldDisplayCreateRow) {
+    if (shouldDisplayCreateRow === true) {
       return Ember.Object.create({ value: filter, name: filter });
     }
   },
@@ -236,9 +237,9 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
     }
   },
 
-  @computed("filter", "computedFilterable", "computedContent.[]", "computedValue.[]")
-  filteredContent(filter, computedFilterable, computedContent, computedValue) {
-    return this.filterFunction(computedContent)(this, computedValue);
+  @computed("computedContent.[]", "filter")
+  filteredContent(computedContent, filter) {
+    return this.filterFunction(computedContent, filter)(this);
   },
 
   @computed("scrollableParentSelector")
@@ -265,6 +266,7 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
   baseOnDeselect() {},
 
   baseOnClearSelection() {
+    this.clearFilter();
     this.focus();
     return null;
   },
@@ -281,10 +283,15 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
     },
 
     onFilterChange(_filter) {
+      if (this.get("filterable") === false && this.get("autoFilterable") === false) {
+        return;
+      }
+
       if (_filter !== this.get("filter")) {
         this.expand();
         this.set("highlightedValue", null);
         this.set("filter", _filter);
+        this.set("renderedFilterOnce", true);
       }
     },
 
@@ -311,7 +318,7 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
 
   clearFilter() {
     this.$filterInput().val("");
-    this.setProperties({ filter: "", _filter: "" });
+    this.setProperties({ filter: "" });
   },
 
   originalValueForValue(value) {

@@ -63,13 +63,6 @@
       .select-box-kit-body {
         border-radius: 0;
       }
-
-      .choices .filter {
-        display: inline-flex;
-        width: auto;
-        height: auto;
-        overflow: auto;
-      }
     }
 
     .choices {
@@ -95,9 +88,6 @@
         white-space: nowrap;
         min-width: 50px;
         padding: 0;
-        width: 1px;
-        height: 1px;
-        overflow: hidden;
 
         .select-box-kit-filter-input, .select-box-kit-filter-input:focus {
           border: none;
