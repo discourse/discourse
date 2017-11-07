@@ -44,15 +44,25 @@ class ImportScripts::Bbpress < ImportScripts::Base
     puts "", "importing users..."
 
     last_user_id = -1
-    total_users = bbpress_query("SELECT COUNT(*) count FROM #{BB_PRESS_PREFIX}users WHERE user_email LIKE '%@%'").first["count"]
+    total_users = bbpress_query(<<-SQL
+      SELECT COUNT(DISTINCT(u.id)) AS cnt
+      FROM #{BB_PRESS_PREFIX}users u 
+      LEFT JOIN #{BB_PRESS_PREFIX}posts p ON p.post_author = u.id 
+      WHERE p.post_type IN ('forum', 'reply', 'topic') 
+        AND user_email LIKE '%@%'
+    SQL
+    ).first["cnt"]
 
     batches(BATCH_SIZE) do |offset|
       users = bbpress_query(<<-SQL
-        SELECT id, user_nicename, display_name, user_email, user_registered, user_url
-          FROM #{BB_PRESS_PREFIX}users
+        SELECT u.id, user_nicename, display_name, user_email, user_registered, user_url, user_pass
+          FROM #{BB_PRESS_PREFIX}users u
+          LEFT JOIN #{BB_PRESS_PREFIX}posts p ON p.post_author = u.id 
          WHERE user_email LIKE '%@%'
-           AND id > #{last_user_id}
-      ORDER BY id
+           AND p.post_type IN ('forum', 'reply', 'topic')
+           AND u.id > #{last_user_id}
+      GROUP BY u.id
+      ORDER BY u.id
          LIMIT #{BATCH_SIZE}
       SQL
       ).to_a
@@ -88,6 +98,7 @@ class ImportScripts::Bbpress < ImportScripts::Base
         {
           id: u["id"].to_i,
           username: u["user_nicename"],
+          password: u["user_pass"],
           email: u["user_email"].downcase,
           name: u["display_name"].presence || u['user_nicename'],
           created_at: u["user_registered"],
