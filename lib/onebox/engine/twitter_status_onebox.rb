@@ -83,7 +83,12 @@ module Onebox
       end
 
       def avatar
+
+        p raw
+        p twitter_data
+
         if twitter_api_credentials_present?
+          p "HERE"
           access(:user, :profile_image_url_https)
         elsif twitter_data[:image]
           twitter_data[:image].gsub!('400x400', 'normal')
