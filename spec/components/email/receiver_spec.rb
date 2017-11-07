@@ -381,6 +381,10 @@ describe Email::Receiver do
       SiteSetting.authorized_extensions = "txt"
       expect { process(:attached_txt_file) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to match(/text\.txt/)
+
+      SiteSetting.authorized_extensions = "csv"
+      expect { process(:attached_txt_file_2) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to_not match(/text\.txt/)
     end
 
     it "supports liking via email" do
