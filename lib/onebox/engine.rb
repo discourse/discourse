@@ -26,7 +26,6 @@ module Onebox
       @options
     end
 
-
     def initialize(link, cache = nil, timeout = nil)
       @options = DEFAULT
       class_name = self.class.name.split("::").last.to_s
@@ -82,13 +81,13 @@ module Onebox
     end
 
     def link
-      @url.gsub(/['\"&<>]/, {
+      @url.gsub(/['\"&<>]/,
         "'" => '&#39;',
         '&' => '&amp;',
         '"' => '&quot;',
         '<' => '&lt;',
         '>' => '&gt;',
-      })
+      )
     end
 
     def always_https?

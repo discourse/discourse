@@ -23,7 +23,10 @@ module Onebox
       end
 
       def http_params
-        {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 5_0_1 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9A405 Safari/7534.48.3'}
+        {
+          'User-Agent' =>
+          'Mozilla/5.0 (iPhone; CPU iPhone OS 5_0_1 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9A405 Safari/7534.48.3'
+        }
       end
 
       private
@@ -61,7 +64,6 @@ module Onebox
         result[:by_info] = raw.at("#by-line")
         result[:by_info] = Onebox::Helpers.clean(result[:by_info].inner_html) if result[:by_info]
 
-
         # get item price (Amazon markup is inconsistent, deal with it)
         result[:price] =
           if raw.css("#priceblock_ourprice .restOfPrice")[0] && raw.css("#priceblock_ourprice .restOfPrice")[0].inner_text
@@ -73,7 +75,7 @@ module Onebox
           end
 
         summary = raw.at("#productDescription")
-        result[:description] = og[:description] || summary.inner_text
+        result[:description] = og[:description] || (summary && summary.inner_text)
         result
       end
     end

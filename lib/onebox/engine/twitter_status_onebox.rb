@@ -5,7 +5,7 @@ module Onebox
       include LayoutSupport
       include HTML
 
-      matches_regexp /^https?:\/\/(mobile\.|www\.)?twitter\.com\/.+?\/status(es)?\/\d+(\/(video|photo)\/\d?+)?+\/?$/
+      matches_regexp(/^https?:\/\/(mobile\.|www\.)?twitter\.com\/.+?\/status(es)?\/\d+(\/(video|photo)\/\d?+)?+\/?$/)
       always_https
 
       private
@@ -85,8 +85,8 @@ module Onebox
       def avatar
         if twitter_api_credentials_present?
           access(:user, :profile_image_url_https)
-        else
-          twitter_data[:image].gsub!('400x400', 'normal') if twitter_data[:image]
+        elsif twitter_data[:image]
+          twitter_data[:image].gsub!('400x400', 'normal')
         end
       end
 

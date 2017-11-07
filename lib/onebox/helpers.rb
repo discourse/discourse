@@ -6,12 +6,12 @@ module Onebox
     def self.symbolize_keys(hash)
       return {} if hash.nil?
 
-      hash.inject({}){|result, (key, value)|
+      hash.inject({}) do |result, (key, value)|
         new_key = key.is_a?(String) ? key.to_sym : key
         new_value = value.is_a?(Hash) ? symbolize_keys(value) : value
         result[new_key] = new_value
         result
-      }
+      end
     end
 
     def self.clean(html)
@@ -26,7 +26,7 @@ module Onebox
       doc.css('meta').each do |m|
         if (m["property"] && m["property"][/^og:(.+)$/i]) || (m["name"] && m["name"][/^og:(.+)$/i])
           value = (m["content"] || m["value"]).to_s
-          og[$1.tr('-:','_').to_sym] ||= value unless Onebox::Helpers::blank?(value)
+          og[$1.tr('-:', '_').to_sym] ||= value unless Onebox::Helpers::blank?(value)
         end
       end
 
@@ -39,7 +39,7 @@ module Onebox
       og
     end
 
-    def self.fetch_response(location, limit=nil, domain=nil, headers=nil)
+    def self.fetch_response(location, limit = nil, domain = nil, headers = nil)
 
       limit ||= 5
       limit = Onebox.options.redirect_limit if limit > Onebox.options.redirect_limit
@@ -123,18 +123,18 @@ module Onebox
       conv = [ 'B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB' ];
       scale = 1024;
 
-      ndx=1
-      if( size < 2*(scale**ndx)  ) then
-        return "#{(size)} #{conv[ndx-1]}"
+      ndx = 1
+      if (size < 2 * (scale**ndx)) then
+        return "#{(size)} #{conv[ndx - 1]}"
       end
-      size=size.to_f
-      [2,3,4,5,6,7].each do |i|
-        if (size < 2*(scale**i)) then
-          return "#{'%.2f' % (size/(scale**(i-1)))} #{conv[i-1]}"
+      size = size.to_f
+      [2, 3, 4, 5, 6, 7].each do |i|
+        if (size < 2 * (scale**i)) then
+          return "#{'%.2f' % (size / (scale**(i - 1)))} #{conv[i - 1]}"
         end
       end
-      ndx=7
-      return "#{'%.2f' % (size/(scale**(ndx-1)))} #{conv[ndx-1]}"
+      ndx = 7
+      return "#{'%.2f' % (size / (scale**(ndx - 1)))} #{conv[ndx - 1]}"
     end
 
     def self.click_to_scroll_div(width = 690, height = 400)
@@ -150,7 +150,7 @@ module Onebox
     end
 
     def self.truncate(string, length = 50)
-      string.size > length ? string[0...(string.rindex(" ", length)||length)] + "..." : string
+      string.size > length ? string[0...(string.rindex(" ", length) || length)] + "..." : string
     end
 
     def self.title_attr(meta)

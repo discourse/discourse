@@ -39,7 +39,7 @@ describe Onebox::Engine::StackExchangeOnebox do
 
   {
       'long URL' => 'http://stackoverflow.com/questions/17992553/concept-behind-these-four-lines-of-tricky-c-code',
-      'short URL'=> 'http://stackoverflow.com/q/17992553'
+      'short URL' => 'http://stackoverflow.com/q/17992553'
   }.each do |name, url|
     describe "question with #{name}" do
       before(:all) do
@@ -68,7 +68,7 @@ describe Onebox::Engine::StackExchangeOnebox do
 
   {
       'long URL' => 'http://stackoverflow.com/questions/17992553/concept-behind-these-four-lines-of-tricky-c-code/17992906#17992906',
-      'short URL'=> 'http://stackoverflow.com/a/17992906'
+      'short URL' => 'http://stackoverflow.com/a/17992906'
   }.each do |name, url|
     describe "answer with #{name}" do
       before(:all) do

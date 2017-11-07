@@ -20,7 +20,7 @@ YARD::Rake::YardocTask.new do |config|
 end
 
 desc "Default: run tests and generate docs"
-task :default => [ :spec, :yard ]
+task default: [ :spec, :yard ]
 
 task :server do
   require 'onebox/web'

@@ -9,17 +9,16 @@ module Onebox
       EXPAND_NONE = 0b0
 
       DEFAULTS = {
-              :EXPAND_ONE_LINER => EXPAND_AFTER|EXPAND_BEFORE, #set how to expand a one liner. user EXPAND_NONE to disable expand
-              :LINES_BEFORE => 10,
-              :LINES_AFTER => 10,
-              :SHOW_LINE_NUMBER => true,
-              :MAX_LINES => 20,
-              :MAX_CHARS => 5000
+        EXPAND_ONE_LINER: EXPAND_AFTER | EXPAND_BEFORE, #set how to expand a one liner. user EXPAND_NONE to disable expand
+        LINES_BEFORE: 10,
+        LINES_AFTER: 10,
+        SHOW_LINE_NUMBER: true,
+        MAX_LINES: 20,
+        MAX_CHARS: 5000
       }
 
       matches_regexp(/^https?:\/\/(www\.)?github\.com.*\/blob\//)
       always_https
-
 
       def initialize(link, cache = nil, timeout = nil)
         super link, cache , timeout
@@ -31,20 +30,20 @@ module Onebox
 
         # Define constant after merging options set in Onebox.options
         # We can define constant automatically.
-        options.each_pair {|constant_name,value|
+        options.each_pair do |constant_name, value|
           constant_name_u = constant_name.to_s.upcase
-              if constant_name_u == constant_name.to_s
-                #define a constant if not already defined
-                self.class.const_set  constant_name_u.to_sym , options[constant_name_u.to_sym]  unless self.class.const_defined? constant_name_u.to_sym
-              end
-        }
+          if constant_name_u == constant_name.to_s
+            #define a constant if not already defined
+            self.class.const_set constant_name_u.to_sym , options[constant_name_u.to_sym]  unless self.class.const_defined? constant_name_u.to_sym
+          end
+        end
       end
 
       private
-      @selected_lines_array  = nil
+      @selected_lines_array = nil
       @selected_one_liner = 0
-      def calc_range(m,contents_lines_size)
-        #author Lidlanca  09/15/2014
+
+      def calc_range(m, contents_lines_size)
         truncated = false
         from = /\d+/.match(m[:from])             #get numeric should only match a positive interger
         to   = /\d+/.match(m[:to])               #get numeric should only match a positive interger
@@ -66,7 +65,7 @@ module Onebox
           #we can technically return here
         end
 
-        from, to = [from,to].sort                                #enforce valid range.  [from < to]
+        from, to = [from, to].sort                                #enforce valid range.  [from < to]
         from = 1 if from > contents_lines_size                   #if "from" out of TOP bound set to 1st line
         to   = contents_lines_size if to > contents_lines_size   #if "to" is out of TOP bound set to last line.
 
@@ -88,30 +87,31 @@ module Onebox
           end
         end
 
-        if to-from > MAX_LINES && !one_liner  #if exceed the MAX_LINES limit correct unless range was produced by one_liner which it expand setting will allow exceeding the line limit
+        if to - from > MAX_LINES && !one_liner  #if exceed the MAX_LINES limit correct unless range was produced by one_liner which it expand setting will allow exceeding the line limit
           truncated = true
-         to = from + MAX_LINES-1
+         to = from + MAX_LINES - 1
         end
 
-        {:from               => from,                 #calculated from
-         :from_minus_one    => from-1,                #used for getting currect ol>li numbering with css used in template
-         :to                 => to,                   #calculated to
-         :one_liner          => one_liner,            #boolean if a one-liner
-         :selected_one_liner => @selected_one_liner,  #if a one liner is provided we create a reference for it.
-         :range_provided     => range_provided,       #boolean if range provided
-         :truncated          => truncated}
+        {
+          from: from,                               #calculated from
+          from_minus_one: from - 1,                   #used for getting currect ol>li numbering with css used in template
+          to: to,                                   #calculated to
+          one_liner: one_liner,                     #boolean if a one-liner
+          selected_one_liner: @selected_one_liner,  #if a one liner is provided we create a reference for it.
+          range_provided: range_provided,           #boolean if range provided
+          truncated: truncated
+        }
       end
 
       #minimize/compact leading indentation while preserving overall indentation
-      def removeLeadingIndentation  str
-        #author Lidlanca 2014
-        min_space=100
+      def removeLeadingIndentation(str)
+        min_space = 100
         a_lines = str.lines
-        a_lines.each {|l|
+        a_lines.each do |l|
           l = l.chomp("\n")  # remove new line
-          m = l.match /^[ ]*/ # find leading spaces 0 or more
-          unless m.nil? || l.size==m[0].size || m[0].size==0 # no match | only spaces in line | empty line
-            m_str_length  = m[0].size
+          m = l.match(/^[ ]*/) # find leading spaces 0 or more
+          unless m.nil? || l.size == m[0].size || m[0].size == 0 # no match | only spaces in line | empty line
+            m_str_length = m[0].size
             if m_str_length <= 1  # minimum space is 1 or nothing we can break we found our minimum
               min_space = m_str_length
               break #stop iteration
@@ -122,32 +122,29 @@ module Onebox
           else
             next # SKIP no match or line is only spaces
           end
-        }
-        a_lines.each {|l|
+        end
+        a_lines.each do |l|
           re = Regexp.new "^[ ]{#{min_space}}"  #match the minimum spaces of the line
           l.gsub!(re, "")
-        }
+        end
         a_lines.join
       end
 
-      def line_number_helper(lines,start,selected)
-        #author Lidlanca  09/15/2014
+      def line_number_helper(lines, start, selected)
         lines = removeLeadingIndentation(lines.join).lines # A little ineffeicent we could modify  removeLeadingIndentation to accept array and return array, but for now it is only working with a string
-        hash_builder =[]
+        hash_builder = []
         output_builder = []
-        lines.map.with_index { |line,i|
-          lnum = (i.to_i+start)
-          hash_builder.push({:line_number => lnum, :data=> line.gsub("\n",""), :selected=> (selected==lnum)? true: false} )
+        lines.map.with_index { |line, i|
+          lnum = (i.to_i + start)
+          hash_builder.push(line_number: lnum, data: line.gsub("\n", ""), selected: (selected == lnum) ? true : false)
           output_builder.push "#{lnum}: #{line}"
         }
-        {:output=>output_builder.join(), :array=>hash_builder}
+        { output: output_builder.join(), array: hash_builder }
       end
 
-
       def raw
-        options_id = self.class.name.split("::").last.to_s  #get class name without module namespace
-
         return @raw if @raw
+
         m = @url.match(/github\.com\/(?<user>[^\/]+)\/(?<repo>[^\/]+)\/blob\/(?<sha1>[^\/]+)\/(?<file>[^#]+)(#(L(?<from>[^-]*)(-L(?<to>.*))?))?/mi)
 
         if m
@@ -161,26 +158,25 @@ module Onebox
           contents_lines = contents.lines           #get contents lines
           contents_lines_size = contents_lines.size #get number of lines
 
-          cr = calc_range(m,contents_lines_size)    #calculate the range of lines for output
-            selected_one_liner = cr[:selected_one_liner] #if url is a one-liner calc_range will return it
-            # puts "SELECTED LINE" + cr[:selected_one_liner].to_s
-            from           = cr[:from]
-            to             = cr[:to]
-            @truncated     = cr[:truncated]
-            range_provided = cr[:range_provided]
-            one_liner      = cr[:one_liner]
-            @cr_results = cr
+          cr = calc_range(m, contents_lines_size)    #calculate the range of lines for output
+          selected_one_liner = cr[:selected_one_liner] #if url is a one-liner calc_range will return it
+          from           = cr[:from]
+          to             = cr[:to]
+          @truncated     = cr[:truncated]
+          range_provided = cr[:range_provided]
+          @cr_results = cr
+
           if range_provided       #if a range provided (single line or more)
             if SHOW_LINE_NUMBER
-              lines_result = line_number_helper(contents_lines[from-1..to-1], from, selected_one_liner)  #print code with prefix line numbers in case range provided
+              lines_result = line_number_helper(contents_lines[(from - 1)..(to - 1)], from, selected_one_liner)  #print code with prefix line numbers in case range provided
               contents = lines_result[:output]
               @selected_lines_array = lines_result[:array]
             else
-              contents = contents_lines[from-1..to-1].join()
+              contents = contents_lines[(from - 1)..(to - 1)].join()
             end
 
           else
-            contents = contents_lines[from-1..to-1].join()
+            contents = contents_lines[(from - 1)..(to - 1)].join()
           end
 
           if contents.length > MAX_CHARS    #truncate content chars to limits
@@ -193,18 +189,20 @@ module Onebox
       end
 
       def data
-        @data ||= {title: link.sub(/^https?\:\/\/github\.com\//, ''),
-                   link: link,
-                   # IMPORTANT NOTE: All of the other class variables are populated
-                   #     as *side effects* of the `raw` method! They must all appear
-                   #     AFTER the call to `raw`! Don't get bitten by this like I did!
-                   content: raw,
-                   lang: "lang-#{@lang}",
-                   lines:  @selected_lines_array ,
-                   has_lines: !@selected_lines_array.nil?,
-                   selected_one_liner: @selected_one_liner,
-                   cr_results:@cr_results,
-                   truncated: @truncated}
+        @data ||= {
+          title: link.sub(/^https?\:\/\/github\.com\//, ''),
+          link: link,
+          # IMPORTANT NOTE: All of the other class variables are populated
+          #     as *side effects* of the `raw` method! They must all appear
+          #     AFTER the call to `raw`! Don't get bitten by this like I did!
+          content: raw,
+          lang: "lang-#{@lang}",
+          lines:  @selected_lines_array ,
+          has_lines: !@selected_lines_array.nil?,
+          selected_one_liner: @selected_one_liner,
+          cr_results: @cr_results,
+          truncated: @truncated
+        }
       end
 
     end

@@ -7,10 +7,10 @@ module Onebox
 
       def self.domains
         %w(stackexchange.com stackoverflow.com superuser.com serverfault.com askubuntu.com stackapps.com mathoverflow.net)
-            .map { |domain| Regexp.escape(domain) }
+          .map { |domain| Regexp.escape(domain) }
       end
 
-      matches_regexp /^https?:\/\/(?:(?:(?<subsubdomain>\w*)\.)?(?<subdomain>\w*)\.)?(?<domain>#{domains.join('|')})\/((?:questions|q)\/(?<question_id>\d*)(\/.*\/(?<answer_id1>\d*))?|(a\/(?<answer_id2>\d*)))/
+      matches_regexp(/^https?:\/\/(?:(?:(?<subsubdomain>\w*)\.)?(?<subdomain>\w*)\.)?(?<domain>#{domains.join('|')})\/((?:questions|q)\/(?<question_id>\d*)(\/.*\/(?<answer_id1>\d*))?|(a\/(?<answer_id2>\d*)))/)
 
       def always_https?
         uri.host.split('.').length <= 3

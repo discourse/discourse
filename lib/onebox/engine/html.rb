@@ -9,7 +9,7 @@ module Onebox
       end
 
       def raw
-        @raw ||= Nokogiri::HTML(open(url, {read_timeout: timeout}.merge(http_params)).read)
+        @raw ||= Nokogiri::HTML(open(url, { read_timeout: timeout }.merge(http_params)).read)
       end
 
       def html?

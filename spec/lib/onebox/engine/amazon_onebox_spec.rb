@@ -2,7 +2,6 @@ require "spec_helper"
 
 describe Onebox::Engine::AmazonOnebox do
 
-
   context "regular amazon page" do
     before do
       @link = "https://www.amazon.com/Knit-Noro-Accessories-Colorful-Little/dp/193609620X"

@@ -8,21 +8,21 @@ RSpec.describe Onebox::Helpers do
     it { expect(described_class.blank?(["test", "testing"])).to be(false) }
     it { expect(described_class.blank?([])).to be(true) }
     it { expect(described_class.blank?({})).to be(true) }
-    it { expect(described_class.blank?({a: 'test'})).to be(false) }
     it { expect(described_class.blank?(nil)).to be(true) }
     it { expect(described_class.blank?(true)).to be(false) }
     it { expect(described_class.blank?(false)).to be(true) }
+    it { expect(described_class.blank?(a: 'test')).to be(false) }
   end
 
   describe ".truncate" do
     let(:test_string) { "Chops off on spaces" }
     it { expect(described_class.truncate(test_string)).to eq(test_string) }
-    it { expect(described_class.truncate(test_string,5)).to eq("Chops...") }
-    it { expect(described_class.truncate(test_string,7)).to eq("Chops...") }
-    it { expect(described_class.truncate(test_string,9)).to eq("Chops off...") }
-    it { expect(described_class.truncate(test_string,10)).to eq("Chops off...") }
-    it { expect(described_class.truncate(test_string,100)).to eq("Chops off on spaces") }
-    it { expect(described_class.truncate(" #{test_string} ",6)).to eq(" Chops...") }
+    it { expect(described_class.truncate(test_string, 5)).to eq("Chops...") }
+    it { expect(described_class.truncate(test_string, 7)).to eq("Chops...") }
+    it { expect(described_class.truncate(test_string, 9)).to eq("Chops off...") }
+    it { expect(described_class.truncate(test_string, 10)).to eq("Chops off...") }
+    it { expect(described_class.truncate(test_string, 100)).to eq("Chops off on spaces") }
+    it { expect(described_class.truncate(" #{test_string} ", 6)).to eq(" Chops...") }
   end
 
   describe "fetch_response" do
@@ -44,7 +44,7 @@ RSpec.describe Onebox::Helpers do
 
   describe "user_agent" do
     before do
-      fake("http://example.com/some-resource", :body => 'test')
+      fake("http://example.com/some-resource", body: 'test')
     end
 
     context "default" do

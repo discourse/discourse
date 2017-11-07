@@ -17,8 +17,8 @@ module Onebox
         # Detect section Hash in the url and retrive the related paragraphs.  if no hash provided the first few paragraphs will be used
         # Author Lidlanca
         # Date 9/8/2014
-        if ( m_url_hash = @url.match /#([^\/?]+)/ ) #extract url hash
-          m_url_hash_name= m_url_hash[1]
+        if (m_url_hash = @url.match(/#([^\/?]+)/)) #extract url hash
+          m_url_hash_name = m_url_hash[1]
         end
 
         unless m_url_hash.nil?
@@ -35,7 +35,7 @@ module Onebox
             # div tag is commonly used as an assets wraper in an article section. often as the first element holding an image.
             # ul support will imporve the output generated for a section with a list as the main content (for example: an Author Bibliography, A musician Discography, etc)
             first_p_found = nil
-            while ( ((next_sibling = cur_element.next_sibling).name =~ /p|text|div|ul/) || first_p_found.nil? ) do  #from section header get the next sibling until it is a breaker tag
+            while (((next_sibling = cur_element.next_sibling).name =~ /p|text|div|ul/) || first_p_found.nil?) do  #from section header get the next sibling until it is a breaker tag
               cur_element = next_sibling
               if (cur_element.name == "p" || cur_element.name == "ul") #we treat a list as we detect a p to avoid showing
                 first_p_found = true
@@ -53,11 +53,11 @@ module Onebox
             break if cnt >= paras.size
             text << " " unless cnt == 0
 
-            if paras[cnt].name =="ul" #Handle UL tag. Generate a textual ordered list (1.item | 2.item | 3.item). Unfourtently no newline allowed in output
-              li_index=1
+            if paras[cnt].name == "ul" #Handle UL tag. Generate a textual ordered list (1.item | 2.item | 3.item). Unfourtently no newline allowed in output
+              li_index = 1
               list_items = []
-              paras[cnt].children.css("li").each {|li| list_items.push "#{li_index}." + li.inner_text ; li_index+=1}
-              paragraph =  (list_items.join " |\n ")[0..Onebox::LayoutSupport.max_text]
+              paras[cnt].children.css("li").each { |li| list_items.push "#{li_index}." + li.inner_text ; li_index += 1 }
+              paragraph = (list_items.join " |\n ")[0..Onebox::LayoutSupport.max_text]
             else
               paragraph = paras[cnt].inner_text[0..Onebox::LayoutSupport.max_text]
             end

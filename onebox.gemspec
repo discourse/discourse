@@ -1,3 +1,5 @@
+# frozen-string-literal: true
+
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
@@ -40,4 +42,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'sinatra-contrib', '~> 1.4'
   spec.add_development_dependency 'haml', '~> 4.0'
   spec.add_development_dependency 'listen', '~> 2.10.0'
+
+  spec.required_ruby_version = '>=2.2.0'
 end

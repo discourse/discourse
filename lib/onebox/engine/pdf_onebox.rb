@@ -10,7 +10,6 @@ module Onebox
       private
 
       def data
-        html_entities = HTMLEntities.new
         pdf_info = get_pdf_info
         raise "Unable to read pdf file: #{@url}" if pdf_info.nil?
 

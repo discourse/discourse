@@ -105,7 +105,7 @@ module Onebox
         end
 
         def embed_params
-          p = {'feature' => 'oembed', 'wmode' => 'opaque'}
+          p = { 'feature' => 'oembed', 'wmode' => 'opaque' }
 
           p['list'] = list_id if list_id
 

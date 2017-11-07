@@ -6,7 +6,7 @@ module Onebox
       class << self
         def ===(other)
           if other.kind_of? URI
-            @@matchers && @@matchers.any? {|m| other.to_s =~ m[:regexp] }
+            @@matchers && @@matchers.any? { |m| other.to_s =~ m[:regexp] }
           else
             super
           end
@@ -15,7 +15,7 @@ module Onebox
         private
 
         def matches_regexp(key, regexp)
-          (@@matchers ||= []) << {key: key, regexp: regexp}
+          (@@matchers ||= []) << { key: key, regexp: regexp }
         end
       end
 

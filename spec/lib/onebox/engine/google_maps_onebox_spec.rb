@@ -56,7 +56,7 @@ describe Onebox::Engine::GoogleMapsOnebox do
   end
 
   let(:data) { Onebox::Helpers.symbolize_keys(subject.send(:data)) }
-  let(:link) {|example| URLS[example.metadata[:urltype] || :short][:test] }
+  let(:link) { |example| URLS[example.metadata[:urltype] || :short][:test] }
 
   include_context "an engine", urltype: :short
 

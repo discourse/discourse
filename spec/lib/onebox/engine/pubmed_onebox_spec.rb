@@ -76,4 +76,3 @@ describe Onebox::Engine::PubmedOnebox do
     end
   end
 end
-

@@ -165,7 +165,7 @@ module Onebox
       end
 
       def self.host_matches(uri, list)
-        !!list.find {|h| %r((^|\.)#{Regexp.escape(h)}$).match(uri.host) }
+        !!list.find { |h| %r((^|\.)#{Regexp.escape(h)}$).match(uri.host) }
       end
 
       def self.probable_discourse(uri)

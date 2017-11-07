@@ -8,8 +8,8 @@ describe Onebox::Engine::PdfOnebox do
   let(:no_filesize_html) { described_class.new(no_content_length_link).to_html }
 
   before do
-    FakeWeb.register_uri(:head, link, :content_length => "335562")
-    FakeWeb.register_uri(:head, no_content_length_link, :content_length => nil)
+    FakeWeb.register_uri(:head, link, content_length: "335562")
+    FakeWeb.register_uri(:head, no_content_length_link, content_length: nil)
   end
 
   describe "#to_html" do
