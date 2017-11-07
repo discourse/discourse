@@ -38,6 +38,7 @@ class ImportScripts::Bbpress < ImportScripts::Base
     import_categories
     import_topics_and_posts
     import_private_messages
+    create_permalinks
   end
 
   def import_users
@@ -273,6 +274,40 @@ class ImportScripts::Bbpress < ImportScripts::Base
 
         skip ? nil : post
       end
+    end
+  end
+
+  def create_permalinks
+    puts "", "creating permalinks..."
+
+    last_topic_id = -1
+    total_topics = bbpress_query(<<-SQL
+      SELECT COUNT(*) count
+        FROM #{BB_PRESS_PREFIX}posts
+       WHERE post_status <> 'spam'
+         AND post_type IN ('topic')
+    SQL
+    ).first["count"]
+
+    batches(BATCH_SIZE) do |offset|
+      topics = bbpress_query(<<-SQL
+        SELECT id,
+               guid
+          FROM #{BB_PRESS_PREFIX}posts
+         WHERE post_status <> 'spam'
+           AND post_type IN ('topic')
+           AND id > #{last_topic_id}
+      ORDER BY id
+         LIMIT #{BATCH_SIZE}
+      SQL
+      ).to_a
+      break if topics.empty?
+
+      topics.each do |t|
+        topic = topic_lookup_from_imported_post_id(t['id'])
+        Permalink.create( url: URI.parse(t['guid']).path.chomp('/'), topic_id: topic[:topic_id] ) rescue nil
+      end
+      last_topic_id = topics[-1]["id"].to_i
     end
   end
 
