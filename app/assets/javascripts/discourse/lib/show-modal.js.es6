@@ -1,6 +1,36 @@
+import { isAppleDevice } from 'discourse/lib/safari-hacks';
+
 export default function(name, opts) {
   opts = opts || {};
   const container = Discourse.__container__;
+
+
+  // iOS 11 -> 11.1 have broken INPUTs on position fixed
+  // if for any reason there is a body higher than 100% behind them.
+  // What happens is that when INPUTs gets focus they shift the body
+  // which ends up moving the cursor to an invisible spot
+  // this makes the login experience on iOS painful, user thinks it is broken.
+  //
+  // Also, very little value in showing main outlet and header on iOS
+  // anyway, so just hide it.
+  if (isAppleDevice()) {
+    let pos = $(window).scrollTop();
+    $(window)
+      .off('show.bs.modal.ios-hacks')
+      .on('show.bs.modal.ios-hacks', () => {
+        $('#main-outlet, header').hide();
+      });
+
+    $(window)
+      .off('hide.bs.modal.ios-hacks')
+      .on('hide.bs.modal.ios-hacks', () => {
+        $('#main-outlet, header').show();
+        $(window).scrollTop(pos);
+
+        $(window).off('hide.bs.modal.ios-hacks');
+        $(window).off('show.bs.modal.ios-hacks');
+      });
+  }
 
   // We use the container here because modals are like singletons
   // in Discourse. Only one can be shown with a particular state.
