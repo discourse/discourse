@@ -6,6 +6,7 @@ export default SelectBoxKitHeaderComponent.extend({
   attributeBindings: ["names:data-name"],
   classNames: "multi-combo-box-header",
   layoutName: "select-box-kit/templates/components/multi-combo-box/multi-combo-box-header",
+  selectedNameComponent: Ember.computed.alias("options.selectedNameComponent"),
 
   @on("didRender")
   _positionFilter() {
@@ -23,7 +24,5 @@ export default SelectBoxKitHeaderComponent.extend({
   },
 
   @computed("selectedContent.[]")
-  names(selectedContent) {
-    return selectedContent.map(sc => sc.name).join(",");
-  }
+  names(selectedContent) { return selectedContent.map(sc => sc.name).join(","); }
 });

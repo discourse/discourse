@@ -18,7 +18,7 @@ export default MultiComboBoxComponent.extend({
   },
 
 
-  formatContent(content) {
+  formatRowContent(content) {
     let formatedContent = this._super(content);
     formatedContent.locked = content.automatic;
     return formatedContent;

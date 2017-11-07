@@ -1,3 +1,5 @@
+import { on } from "ember-addons/ember-computed-decorators";
+
 export default Ember.Mixin.create({
   init() {
     this._super();
@@ -11,40 +13,91 @@ export default Ember.Mixin.create({
     this.wrapperSelector = ".select-box-kit-wrapper";
   },
 
-  $findRowByValue(value) {
-    return this.$(`${this.rowSelector}[data-value='${value}']`);
+  $findRowByValue(value) { return this.$(`${this.rowSelector}[data-value='${value}']`); },
+
+  $header() { return this.$(this.headerSelector); },
+
+  $body() { return this.$(this.bodySelector); },
+
+  $collection() { return this.$(this.collectionSelector); },
+
+  $rows() { return this.$(`${this.rowSelector}:not(.no-content)`); },
+
+  $highlightedRow() { return this.$rows().filter(".is-highlighted"); },
+
+  $selectedRow() { return this.$rows().filter(".is-selected"); },
+
+  $offscreenInput() { return this.$(this.offscreenInputSelector); },
+
+  $filterInput() { return this.$(this.filterInputSelector); },
+
+  @on("didRender")
+  _ajustPosition() {
+    $(`.select-box-kit-fixed-placeholder-${this.elementId}`).remove();
+    this.$collection().css("max-height", this.get("collectionHeight"));
+    this._applyFixedPosition();
+    this._applyDirection();
+    this._positionWrapper();
   },
 
-  $header() {
-    return this.$(this.headerSelector);
+  @on("willDestroyElement")
+  _clearState() {
+    $(window).off("resize.select-box-kit");
+    $(`.select-box-kit-fixed-placeholder-${this.elementId}`).remove();
   },
 
-  $body() {
-    return this.$(this.bodySelector);
+  // make sure we don’t propagate a click outside component
+  // to avoid closing a modal containing the component for example
+  click(event) { this._killEvent(event); },
+
+  // use to collapse and remove focus
+  close() {
+    this.collapse();
+    this.setProperties({ isFocused: false });
   },
 
-  $collection() {
-    return this.$(this.collectionSelector);
+  // force the component in a known default state
+  focus() {
+    Ember.run.schedule("afterRender", () => this.$offscreenInput().focus() );
   },
 
-  $rows() {
-    return this.$(`${this.rowSelector}:not(.no-content)`);
+  expand() {
+    if (this.get("isExpanded") === true) { return; }
+    this.setProperties({ isExpanded: true, renderBody: true, isFocused: true });
+    this.focus();
   },
 
-  $highlightedRow() {
-    return this.$rows().filter(".is-highlighted");
+  collapse() {
+    this.set("isExpanded", false);
+    Ember.run.schedule("afterRender", () => this._removeFixedPosition() );
   },
 
-  $selectedRow() {
-    return this.$rows().filter(".is-selected");
+  // make sure we close/unfocus the component when clicked outside
+  clickOutside(event) {
+    if ($(event.target).parents(".select-box-kit").length === 1) {
+      this.close();
+      return false;
+    }
+
+    this.unfocus();
+    return;
   },
 
-  $offscreenInput() {
-    return this.$(this.offscreenInputSelector);
+  // lose focus of the component in two steps
+  // first collapase and keep focus and then remove focus
+  unfocus() {
+    this.set("highlightedValue", null);
+
+    if (this.get("isExpanded") === true) {
+      this.collapse();
+      this.focus();
+    } else {
+      this.close();
+    }
   },
 
-  $filterInput() {
-    return this.$(this.filterInputSelector);
+  blur() {
+    Ember.run.schedule("afterRender", () => this.$offscreenInput().blur() );
   },
 
   _killEvent(event) {

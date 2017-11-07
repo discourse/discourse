@@ -33,9 +33,12 @@ export default Ember.Mixin.create({
       .off("focus.select-box-kit")
       .off("focusin.select-box-kit")
       .off("blur.select-box-kit")
-      .off("keypress.select-box-kit");
+      .off("keypress.select-box-kit")
+      .off("keydown.select-box-kit");
 
-    this.$filterInput().off("keypress.select-box-kit");
+    this.$filterInput()
+      .off("keypress.select-box-kit")
+      .off("keydown.select-box-kit");
   },
 
   didInsertElement() {
@@ -73,6 +76,8 @@ export default Ember.Mixin.create({
         if (keyCode === this.keys.UP || keyCode === this.keys.DOWN) {
           this._handleArrowKey(keyCode, event);
         }
+
+        return true;
       })
       .on("keypress.select-box-kit", (event) => {
         const keyCode = event.keyCode || event.which;
@@ -90,11 +95,10 @@ export default Ember.Mixin.create({
         }
 
         if (this._isSpecialKey(keyCode) === false && event.metaKey === false) {
-          Ember.run.schedule("afterRender", () => {
-            this.$filterInput()
-                .val(this.$filterInput().val() + String.fromCharCode(keyCode))
-                .focus();
-          });
+          this.expand();
+          this.$filterInput()
+              .val(this.$filterInput().val() + String.fromCharCode(keyCode))
+              .focus();
         }
       });
 
@@ -107,6 +111,9 @@ export default Ember.Mixin.create({
         if (keyCode === this.keys.UP || keyCode === this.keys.DOWN) {
           this._handleArrowKey(keyCode, event);
         }
+      })
+      .on("change.select-box-kit", () => {
+        this.send("onFilterChange", this.$filterInput().val());
       })
       .on("keypress.select-box-kit", (event) => {
         const keyCode = event.keyCode || event.which;

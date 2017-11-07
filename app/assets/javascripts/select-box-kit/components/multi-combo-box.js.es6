@@ -11,11 +11,17 @@ export default SelectBoxKitComponent.extend({
   allowAny: true,
   allowValueMutation: false,
   autoSelectFirst: false,
+  autoFilterable: true,
+  selectedNameComponent: "multi-combo-box/selected-name",
 
   init() {
     this._super();
 
     if (isNone(this.get("value"))) { this.set("value", []); }
+
+    this.set("headerComponentOptions", Ember.Object.create({
+      selectedNameComponent: this.get("selectedNameComponent")
+    }));
   },
 
   @computed("filter")
@@ -128,7 +134,7 @@ export default SelectBoxKitComponent.extend({
   baseOnCreateContent(input) {
     this.set("highlightedValue", null);
     this.clearFilter();
-    return input;
+    return this.createFunction(input)(this);;
   },
 
   baseOnDeselect(values) {
@@ -160,9 +166,12 @@ export default SelectBoxKitComponent.extend({
     },
 
     onCreateContent(input) {
-      input = this.baseOnCreateContent(input);
-      this.get("content").pushObject(input);
-      this.get("value").pushObject(input);
+      const content = this.baseOnCreateContent(input);
+
+      if (!this.get("content").includes(content)) {
+        this.get("content").pushObject(content);
+        this.get("value").pushObject(content);
+      }
     },
 
     onSelect(value) {

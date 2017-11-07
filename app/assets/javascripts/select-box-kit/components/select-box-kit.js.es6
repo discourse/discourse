@@ -67,83 +67,17 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
     this._previousCSSContext = {};
 
     if (isNone(this.get("content"))) { this.set("content", []); }
+
+    this.setInitialValues();
   },
 
-  @on("didReceiveAttrs")
-  _setInitialValues() {
+  setInitialValues() {
     this.set("_initialValues", this.getWithDefault("content", []).map((c) => {
       return this.valueForContent(c);
     }));
   },
 
-  click(event) {
-    event.stopPropagation();
-  },
-
-  close() {
-    this.collapse();
-    this.setProperties({ isFocused: false });
-  },
-
-  focus() {
-    Ember.run.schedule("afterRender", () => {
-      this.$offscreenInput().select();
-    });
-  },
-
-  expand() {
-    if (this.get("isExpanded") === true) { return; }
-    this.setProperties({ isExpanded: true, renderBody: true, isFocused: true });
-    this.focus();
-  },
-
-  @on("didRender")
-  _ajustPosition() {
-    $(`.select-box-kit-fixed-placeholder-${this.elementId}`).remove();
-    this.$collection().css("max-height", this.get("collectionHeight"));
-    this._applyFixedPosition();
-    this._applyDirection();
-    this._positionWrapper();
-  },
-
-  @on("willDestroyElement")
-  _clearPlaceolder() {
-    $(`.select-box-kit-fixed-placeholder-${this.elementId}`).remove();
-  },
-
-  collapse() {
-    this.set("isExpanded", false);
-    Ember.run.schedule("afterRender", () => this._removeFixedPosition() );
-  },
-
-  unfocus() {
-    this.set("highlightedValue", null);
-
-    if (this.get("isExpanded") === true) {
-      this.collapse();
-      this.focus();
-    } else {
-      this.close();
-    }
-  },
-
-  blur() {
-    Ember.run.schedule("afterRender", () => this.$offscreenInput().blur() );
-  },
-
-  clickOutside(event) {
-    if ($(event.target).parents(".select-box-kit").length === 1) {
-      this.close();
-      return;
-    }
-
-    this.unfocus();
-    return false;
-  },
-
-  createFunction(input) {
-    return (selectedBox) => selectedBox.formatContent(input);
-  },
+  createFunction(input) { return () => input; },
 
   filterFunction(content) {
     return selectBox => {
@@ -189,7 +123,7 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
     });
   },
 
-  formatContent(content) {
+  formatRowContent(content) {
     let originalContent;
 
     if (typeof content === "string" || typeof content === "number") {
@@ -209,25 +143,19 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
   },
 
   formatContents(contents) {
-    return contents.map(content => this.formatContent(content));
+    return contents.map(content => this.formatRowContent(content));
   },
 
   @computed("filter", "filterable", "autoFilterable")
   computedFilterable(filter, filterable, autoFilterable) {
-    if (filterable === true) {
-      return true;
-    }
-
-    if (filter.length > 0 && autoFilterable === true) {
-      return true;
-    }
-
+    if (filterable === true) { return true; }
+    if (filter.length > 0 && autoFilterable === true) { return true; }
     return false;
   },
 
   @computed("computedFilterable", "filter", "allowAny")
   shouldDisplayCreateRow(computedFilterable, filter, allow) {
-    return filter.length > 0 && allow === true;
+    return computedFilterable === true && filter.length > 0 && allow === true;
   },
 
   @computed("filter", "allowAny")
@@ -263,15 +191,13 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
 
   @computed("none")
   computedNone(none) {
-    if (isNone(none)) {
-      return null;
-    }
+    if (isNone(none)) { return null; }
 
     switch (typeof none) {
     case "string":
       return Ember.Object.create({ name: I18n.t(none), value: this.noneValue });
     default:
-      return this.formatContent(none);
+      return this.formatRowContent(none);
     }
   },
 
@@ -279,11 +205,6 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
   selectedContent(computedValue, computedContent) {
     if (isNone(computedValue)) { return []; }
     return [ computedContent.findBy("value", this._castInteger(computedValue)) ];
-  },
-
-  @on("willDestroyElement")
-  _cleanHandlers() {
-    $(window).off("resize.select-box-kit");
   },
 
   @on("didInsertElement")
@@ -331,11 +252,7 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
     return this.createFunction(input)(this);
   },
 
-  baseOnHighlight(value) {
-    value = this.originalValueForValue(value);
-    this.set("highlightedValue", value);
-    return value;
-  },
+  baseOnHighlight(value) { return this.originalValueForValue(value); },
 
   baseOnSelect(value) {
     if (value === "") { value = null; }
@@ -345,8 +262,10 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
     return this.originalValueForValue(value);
   },
 
-  baseOnDeselect() {
-    this.set("value", null);
+  baseOnDeselect() {},
+
+  baseOnClearSelection() {
+    this.focus();
     return null;
   },
 
@@ -369,16 +288,25 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
       }
     },
 
-    onHighlight(value) { this.baseOnHighlight(value); },
+    onHighlight(value) {
+      value = this.baseOnHighlight(value);
+      this.set("highlightedValue", value);
+    },
 
-    onClearSelection() { this.baseOnDeselect(); },
+    onClearSelection() {
+      this.baseOnClearSelection();
+      this.set("value", null);
+    },
 
     onSelect(value) {
       value = this.baseOnSelect(value);
       this.set("value", value);
     },
 
-    onDeselect() { this.baseOnDeselect(); }
+    onDeselect() {
+      this.baseOnDeselect();
+      this.set("value", null);
+    }
   },
 
   clearFilter() {

@@ -52,7 +52,6 @@ Ember.Test.registerAsyncHelper('selectBoxKitFillInFilter', function(app, filter,
 
   var filterQuerySelector = options.selector + ' .select-box-kit-filter-input';
   fillIn(filterQuerySelector, filter);
-  triggerEvent(filterQuerySelector, 'keyup');
 });
 
 function selectBox(selector) { // eslint-disable-line no-unused-vars

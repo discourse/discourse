@@ -1,6 +1,6 @@
 <ul class="choices">
   {{#each selectedContent as |selectedContent|}}
-    {{multi-combo-box/selected-name onDeselect=onDeselect content=selectedContent}}
+    {{component selectedNameComponent onDeselect=onDeselect content=selectedContent}}
   {{/each}}
 
   <li class="filter">

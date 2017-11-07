@@ -1,36 +1,55 @@
 import MultiComboBoxComponent from "select-box-kit/components/multi-combo-box";
-import { on } from "ember-addons/ember-computed-decorators";
+import { observes } from 'ember-addons/ember-computed-decorators';
 
 export default MultiComboBoxComponent.extend({
   classNames: "list-setting",
-  nameProperty: Ember.computed.alias("setting.setting"),
   tokenSeparator: "|",
-  rowComponent: null,
-  noContentLabel: null,
   settingValue: "",
+  choices: null,
+  filterable: true,
 
-  @on("didReceiveAttrs")
-  _setValueFromSettingValue() {
+  init() {
     const valuesFromString = this.get("settingValue").split(this.get("tokenSeparator"));
     this.set("value", valuesFromString.reject(v => Ember.isEmpty(v)));
+
+    if (Ember.isNone(this.get("choices"))) {
+      this.set("content", valuesFromString);
+    }  else {
+      this.set("content", this.get("choices"));
+    }
+
+    if (!Ember.isNone(this.get("settingName"))) {
+      this.set("nameProperty", this.get("settingName"));
+    }
+
+    if (Ember.isEmpty(this.get("content"))) {
+      this.set("rowComponent", null);
+      this.set("noContentLabel", null);
+    }
+
+    this._super();
+
+    if (this.get("nameProperty").indexOf("color") > -1) {
+      this.set("headerComponentOptions", Ember.Object.create({
+        selectedNameComponent: "multi-combo-box/selected-color"
+      }));
+    }
   },
 
-  content: Ember.computed.alias("value"),
+  @observes("value.[]")
+  setSettingValue() {
+    this.set("settingValue", this.get("value").join(this.get("tokenSeparator")));
+  },
 
-  actions: {
-    onCreateContent(input) {
-      if (this.get("content").includes(input)) { return; }
+  @observes("content.[]")
+  setChoices() { this.set("choices", this.get("content")); },
 
-      input = this.baseOnCreateContent(input);
-      const values = this.get("value").concat([input]);
-      this.set("value", values);
-      this.set("settingValue", this.get("value").join(this.get("tokenSeparator")));
-    },
-
-    onDeselect(values) {
-      values = this.baseOnDeselect(values).values;
-      this.get("value").removeObjects(values);
-      this.set("settingValue", this.get("value").join(this.get("tokenSeparator")));
+  _handleTabOnKeyDown(event) {
+    if (this.$highlightedRow().length === 1) {
+      this._super(event);
+    } else {
+      this.close();
+      return false;
     }
   }
 });
