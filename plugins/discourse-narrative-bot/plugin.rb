@@ -19,6 +19,7 @@ after_initialize do
     '../jobs/narrative_init.rb',
     '../jobs/send_default_welcome_message.rb',
     '../jobs/onceoff/grant_badges.rb',
+    '../jobs/onceoff/remap_old_bot_images.rb',
     '../lib/discourse_narrative_bot/actions.rb',
     '../lib/discourse_narrative_bot/base.rb',
     '../lib/discourse_narrative_bot/new_user_narrative.rb',
