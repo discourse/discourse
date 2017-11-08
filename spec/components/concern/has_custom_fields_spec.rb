@@ -193,5 +193,27 @@ describe HasCustomFields do
       expect(fields[item1.id]['not_whitelisted']).to be_blank
       expect(fields[item2.id]['e']).to eq('hallo')
     end
+
+    it "handles interleaving saving properly" do
+      field_type = 'deep-nest-test'
+      CustomFieldsTestItem.register_custom_field_type(field_type, :json)
+      test_item = CustomFieldsTestItem.create!
+
+      test_item.custom_fields[field_type] ||= {}
+      test_item.custom_fields[field_type]['b'] ||= {}
+      test_item.custom_fields[field_type]['b']['c'] = 'd'
+      test_item.save_custom_fields(true)
+
+      db_item = CustomFieldsTestItem.find(test_item.id)
+      db_item.custom_fields[field_type]['b']['e'] = 'f'
+      test_item.custom_fields[field_type]['b']['e'] = 'f'
+      expected = { field_type => { 'b' => { 'c' => 'd', 'e' => 'f' } } }
+
+      db_item.save_custom_fields(true)
+      expect(db_item.reload.custom_fields).to eq(expected)
+
+      test_item.save_custom_fields(true)
+      expect(test_item.reload.custom_fields).to eq(expected)
+    end
   end
 end
