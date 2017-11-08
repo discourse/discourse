@@ -15,6 +15,7 @@ export default Ember.Component.extend(KeyEnterEscape, {
                       'composer.createdPost:created-post',
                       'composer.creatingTopic:topic',
                       'composer.whisper:composing-whisper',
+                      'showPreview:show-preview:hide-preview',
                       'currentUserPrimaryGroupClass'],
 
   @computed("currentUser.primary_group_name")
@@ -41,19 +42,6 @@ export default Ember.Component.extend(KeyEnterEscape, {
 
       const h = $('#reply-control').height() || 0;
       this.movePanels(h + "px");
-
-      // Figure out the size of the fields
-      const $fields = this.$('.composer-fields');
-      const fieldPos = $fields.position();
-      if (fieldPos) {
-        this.$('.wmd-controls').css('top', $fields.height() + fieldPos.top + 5);
-      }
-
-      // get the submit panel height
-      const submitPos = this.$('.submit-panel').position();
-      if (submitPos) {
-        this.$('.wmd-controls').css('bottom', h - submitPos.top + 7);
-      }
     });
   },
 

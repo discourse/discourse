@@ -1,10 +1,3 @@
-// styles that apply to the reply pane that slides up to compose replies
-
-// hack, this needs to be done cleaner
-.private-message input.span8 {
-  width: 47%;
-}
-
 .composer-popup-container {
   display: none !important; // can be removed if inline JS CSS is removed from composer-popup
 }
@@ -13,338 +6,142 @@
   display: none !important; // can be removed if inline JS CSS is removed from composer-popup
 }
 
-input {
-  background: $secondary;
-  color: $primary;
-  padding: 4px;
-  border-radius: 3px;
-  box-shadow: inset 0 1px 1px rgba(0,0,0, .3);
-  border: 1px solid $primary-low;
-}
-
 #reply-control {
-  input[type="text"] {
-    box-shadow: none;
-    -webkit-appearance: none;
-  }
-}
-
-textarea {
-  box-shadow: none;
-  -webkit-appearance: none;
-}
-
-input[type=radio], input[type=checkbox] {
-  box-shadow: none;
-}
-
-#reply-control {
-  &.no-transition {
-    transition: none;
-  }
-}
-
-
-#reply-control {
-  // used for upload link
-  .composer-bottom-right {
-    float: right;
-    line-height: 3em;
-  }
-  #mobile-uploader { display: none; }
-  .mobile-file-upload.hidden { display: none; }
-  #draft-status, #file-uploading, .mobile-file-upload { display: inline-block; }
-  transition: height .4s ease-in-out;
-  width: 100%;
-  z-index: 1039;
-  height: 0;
-  background-color: $primary-low;
-  bottom: 0;
-  font-size: 1em;
-  position: fixed;
-  .toggle-toolbar, .toggler {
-    right: 1px;
-    position: absolute;
-    font-size: 1.071em;
-    color: dark-light-choose($primary-medium, $secondary-medium);
-  }
-
-  .toggle-toolbar {
-    right: 30px;
-  }
-
-  a.cancel {
-    padding-left: 7px;
-    line-height: 30px;
-  }
-  .control-row {
-    margin: 0 5px 0 5px;
-    .reply-to {
-      overflow: hidden;
-      max-width: 80%;
-      white-space: nowrap;
-      i {
-        color: dark-light-choose($primary-medium, $secondary-medium);
-      }
+  z-index: 1002; //d-header is 1001
+    .reply-area {
+      padding: 0 5px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
     }
-  }
-  .saving-text {
-    display: none;
-  }
-  .draft-text {
-    display: none;
-  }
-  .grippie {
-    display: none;
-  }
-  // The various states
-  &.open {
-    max-height: 100%; // ensure no overflow e.g. on small Android
-    height: 270px;
-  }
-  &.closed {
-    height: 0 !important;
-  }
-  &.draft {
-    height: 35px !important;
-    cursor: pointer;
-    border-top: 1px solid $primary-low;
-    .draft-text {
-      display: block;
-      position: absolute;
-      margin-right: 40px;
-      max-width: 80%;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
 
-      i {
-        color: dark-light-choose($primary-medium, $secondary-medium);
-      }
-    }
-  }
-  &.saving {
-    height: 40px !important;
-    border-top: 1px solid $primary-low;
-    .saving-text {
-      display: block;
-    }
-  }
-
-  // if this is a new topic, make room for the category field in the editor on
-  // a small screen mobile device
-  &.edit-title {
     &.open {
-      max-height: 100%; // ensure no overflow e.g. on small Android
       height: 250px;
-    }
-    .contents {
-      input#reply-title {
-        padding: 5px;
-        margin-top: 6px;
-        width: 100%;
-        box-sizing: border-box;
-        border: 1px solid $secondary;
+      &.edit-title {
+        height: 100%;
       }
-      .category-input {
-        margin-top: 3px;
+    }
 
-        .category-chooser {
-          width: 100%;
+    .reply-to {
+      margin: 5px;
+      max-width: calc(100% - 60px);
+    }
+
+    .toggle-toolbar,
+    .toggler {
+      top: 2px;
+    }
+
+    &.draft {
+      .toggle-toolbar,
+      .toggler {
+        top: 8px;
+      }
+    }
+
+    .title-input {
+      margin-bottom: 5px;
+    }
+
+    #reply-title {
+      width: calc(100% - 20px);
+    }
+
+    .category-input {
+      margin-bottom: 5px;
+      .category-chooser {
+        width: 100% !important;
+      }
+    }
+
+    .submit-panel {
+      margin-bottom: 5px;
+      display: flex;
+      align-items: baseline;
+      flex-shrink: 0;
+      .save-or-cancel {
+        flex-basis: 69%;
+      }
+      .composer-bottom-right {
+        flex-basis: 30%;
+      }
+    }
+
+    .d-editor-textarea-wrapper {
+      width: 100%;
+    }
+
+    &.show-preview {
+      .d-editor-preview-wrapper {
+        position: fixed;
+        z-index: 1000000;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: $secondary;
+        max-width: 100%;
+        margin: 0;
+        .d-editor-preview {
+          margin-bottom: 40px;
+          overflow: auto;
         }
       }
-      .wmd-controls {
-        transition: top 0.3s ease;
-        top: 110px;
+      .btn.hide-preview {
+        position: fixed;
+        right: 5px;
+        bottom: 5px;
+        z-index: 1000001;
       }
     }
-  }
-  .contents {
-    padding: 8px 5px 0 5px;
 
-    .edit-reason-input, .display-edit-reason {
+    &.hide-preview {
+      .d-editor-preview-wrapper {
+        display: none;
+      }
+    }
+
+    .d-editor-button-bar {
       display: none;
     }
-    .edit-reason-input {
-      display: inline-block;
-      margin-left: 2px;
-      #edit-reason {
+
+    .toolbar-visible .d-editor-button-bar {
+      display: flex;
+    }
+
+    .d-editor-button-bar .btn {
+      @media all and ( max-width: 350px) {
+        padding: 2px 4px;
+      }
+      &.preview {
         margin: 0;
-        padding: 2px;
       }
     }
-    #reply-title {
-      margin-right: 10px;
-      &:disabled {
-        background-color: dark-light-choose($primary-low-mid, $secondary-high);
-      }
+
+    #mobile-uploader {
+      display: none;
     }
-    .d-editor-input:disabled {
-      background-color: dark-light-choose($primary-low-mid, $secondary-high);
+
+    .title-and-category,
+    .user-selector {
+      flex-direction: column;
+      margin: 0;
     }
-    .d-editor-input {
-      color: dark-light-choose(darken($primary, 40%), blend-primary-secondary(90%));
-      bottom: 35px;
+
+    .title-input,
+    .category-input,
+    .users-input,
+    .add-warning {
       width: 100%;
-      height: 100%;
-      padding: 7px;
-      margin: 0;
-      background-color: $secondary;
-      word-wrap: break-word;
-      box-sizing: border-box;
-      border: 1px solid $secondary;
-    }
-    .submit-panel {
-      // need minimum width that fits, or this'll wrap cancel under submit/create which is super bad
-      width: 180px;
-      position: absolute;
-      display: block;
-      bottom: 0;
-      white-space: nowrap;
-      .btn {
-        max-width: 120px;
-        overflow: hidden;
-        white-space: nowrap;
-      }
-    }
-  }
-  .popup-tip .close {
-    padding: 0 2px 2px 8px; // so my fingers can touch the little x
-  }
-  .title-input .popup-tip {
-    width: 240px;
-    right: 5px;
-  }
-  .category-input .popup-tip {
-    width: 240px;
-    right: 5px;
-  }
-  .d-editor-textarea-wrapper .popup-tip {
-    top: 28px;
-  }
-  button.btn.no-text {
-    margin: 7px 0 0 5px;
-    position: absolute;
-  }
-  .create.btn-primary {
-    margin-bottom: 8px;
-  }
-}
-
-#reply-control.edit-title.private-message {
-  .wmd-controls {
-    transition: top 0.3s ease;
-    top: 120px;
-  }
-}
-
-#reply-control {
-
-  .d-editor {
-    height: 100%;
-  }
-
-  .d-editor-container {
-    height: 100%;
-  }
-
-  .wmd-controls {
-    left: 10px;
-    right: 10px;
-    position: absolute;
-    top: 40px;
-    bottom: 50px;
-    display: block;
-    .d-editor-container {
-      padding: 0;
-    }
-    .d-editor-preview-wrapper {
-      display: none;
     }
 
-    .btn.hide-preview {
-      position: fixed;
-      right: 5px;
-      bottom: 5px;
-      z-index: 1000001;
+    .add-warning {
+      margin: 5px 0 5px 5px;
     }
 
-    .d-editor-preview-wrapper.force-preview {
-      display: block;
-      position: fixed;
-      z-index: 1000000;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background-color: $secondary;
+    #draft-status {
+      color: $primary-medium;
+    }
 
-      .d-editor-preview {
-        height: 90%;
-        height: calc(100% - 60px);
-        border: 0;
-        overflow: auto;
-      }
-    }
-    .d-editor-textarea-wrapper {
-      position: relative;
-      box-sizing: border-box;
-      height: 100%;
-      min-height: 100%;
-      margin: 0;
-      padding: 0;
-      .popup-tip {
-        margin-top: 3px;
-        right: 4px;
-      }
-    }
-  }
-  .d-editor-button-bar {
-    display: none;
   }
 
-
-  .wmd-controls.toolbar-visible .d-editor-input {
-    padding-top: 40px;
-  }
-
-  .wmd-controls.toolbar-visible .d-editor-button-bar {
-
-    .btn.link, .btn.upload, .btn.rule, .btn.bullet, .btn.list, .btn.heading {
-      display: none;
-    }
-
-    display: block;
-    margin: 1px 4px;
-    position: absolute;
-    color: dark-light-choose($primary-medium, $secondary-medium);
-    background-color: $secondary;
-    z-index: 100;
-    overflow: hidden;
-    width: 100%;
-    width: calc(100% - 10px);
-
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-
-    button {
-      color: dark-light-choose($primary-medium, $secondary-medium);
-    }
-    button.btn.no-text {
-      margin: 0 2px;
-      padding: 2px 5px;
-      position: static;
-    }
-  }
-}
-
-// make sure the category selector *NEVER* gets focus by default on mobile anywhere
-.select2-hidden,
-.select2-search,
-.select2-focusser {
-  display:none !important;
-}
-
-#reply-control.edit-title.open {
-  height: 100%;
-}
