@@ -24,5 +24,9 @@
   </div>
 </div>
 <div class='group-post-excerpt'>
-  {{{post.excerpt}}}
+  {{#if post.expandedExcerpt}}
+    {{{post.expandedExcerpt}}}
+  {{else}}
+    {{{post.excerpt}}}
+  {{/if}}
 </div>
