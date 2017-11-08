@@ -241,8 +241,8 @@ aside.onebox {
 aside.onebox .onebox-body .onebox-avatar {
   max-height: none;
   max-width: none;
-  height: 90px;
-  width: 90px;
+  height: 60px;
+  width: 60px;
 }
 
 blockquote {
@@ -358,8 +358,7 @@ aside.onebox.twitterstatus .onebox-body {
   }
   .date {
     clear: left;
-    padding-top: 5px;
-    margin-left: 58px;
+    padding-top: 10px;
   }
 }
 
@@ -397,7 +396,7 @@ aside.onebox.twitterstatus .onebox-body {
 
 // resize stackexchange onebox image
 aside.onebox.stackexchange .onebox-body {
-  img {
+  img:not(.onebox-avatar) {
     max-height: 60%;
     max-width: 10%;
   }
@@ -441,6 +440,14 @@ aside.onebox.stackexchange .onebox-body {
   .label2 {
     float: right;
   }
+}
+
+.onebox.githubcommit {
+   pre.message {
+     clear: left;
+     padding: 0;
+     padding-top: 10px;
+   }
 }
 
 // mobile specific style
