@@ -1003,6 +1003,7 @@ en:
     mute: Mute
     unmute: Unmute
     last_post: Last post
+    time_read: Read time
     last_reply_lowercase: last reply
     replies_lowercase:
       one: reply
