@@ -104,7 +104,8 @@ createWidget('user-menu-dismiss-link', {
             action: 'dismissNotifications',
             className: 'dismiss',
             icon: 'check',
-            label: 'user.dismiss'
+            label: 'user.dismiss',
+            title: 'user.dismiss_notifications_tooltip'
           })
         )
       );
