@@ -28,7 +28,7 @@ describe Onebox::Engine::TwitterStatusOnebox do
     end
 
     it "includes user avatar" do
-      expect(html).to include("732349210264133632/RTNgZLrm_normal.jpg")
+      expect(html).to include("732349210264133632/RTNgZLrm_400x400.jpg")
     end
   end
 
