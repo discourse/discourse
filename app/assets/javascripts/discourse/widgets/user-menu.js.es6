@@ -92,12 +92,8 @@ createWidget('user-menu-dismiss-link', {
   tagName: 'div.dismiss-link',
   buildKey: () => 'user-menu-dismiss-link',
 
-  defaultState() {
-    return { showDismiss: false };
-  },
-
   html() {
-    if (this.state.showDismiss) {
+    if (userNotifications.state.notifications.get('length') > 0) {
       return h('ul.menu-links',
         h('li',
           this.attach('link', {
@@ -112,11 +108,6 @@ createWidget('user-menu-dismiss-link', {
     } else {
       return '';
     }
-  },
-
-  showDismissLink() {
-    this.state.showDismiss = true;
-    this.scheduleRerender();
   },
 
   dismissNotifications() {
@@ -169,9 +160,5 @@ export default createWidget('user-menu', {
 
   clickOutside() {
     this.sendWidgetAction('toggleUserMenu');
-  },
-
-  notificationsLoaded() {
-    dismissLink.showDismissLink();
   }
 });
