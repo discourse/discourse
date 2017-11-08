@@ -1,9 +1,6 @@
-.d-editor {
-  border: 1px solid $primary-low;
-}
-
 .d-editor-container {
-  padding: 0 10px 13px 10px;
+  display: flex;
+  flex-grow: 1;
 }
 
 .d-editor-overlay {
@@ -16,6 +13,12 @@
 .d-editor-modals {
   position: absolute;
   z-index: 1001;
+}
+
+.d-editor {
+  display: flex;
+  flex-grow: 1;
+  min-height: 0;
 }
 
 .d-editor .d-editor-modal {
@@ -34,18 +37,35 @@
   }
 }
 
+.d-editor-textarea-wrapper,
+.d-editor-preview-wrapper {
+  flex: 1;
+}
+
+.d-editor-textarea-wrapper {
+  display: flex;
+  flex-direction: column;
+  background-color: $secondary;
+  position: relative;
+}
+
+.d-editor-preview-wrapper {
+  margin-left: 5px;
+  max-width: 50%;
+  display: flex;
+  flex-direction: column;
+  background: $secondary;
+}
+
 .d-editor-button-bar {
-  margin: 5px;
-  padding: 0;
-  height: 20px;
-  overflow: hidden;
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid $primary-low;
+  min-height: 30px;
 
   button {
     background-color: transparent;
-    padding: 2px 4px;
-    float: left;
-    margin-right: 6px;
-    min-width: 20px;
+    color: $primary-medium;
   }
 
   .btn:not(.no-text) {
@@ -59,61 +79,62 @@
   .btn.italic {
     font-style: italic;
   }
-
-  .btn.heading {
-    font-family: Palatino, Cambria, Georgia, "Times New Roman", serif;
-    font-weight: bold;
-  }
 }
 
 .d-editor-spacer {
   width: 1px;
   height: 20px;
-  margin-right: 8px;
-  margin-left: 5px;
+  margin: 0 5px;
   background-color: $primary-low;
   display: inline-block;
-  float: left;
+}
+
+.d-editor-input,
+.d-editor-preview {
+  box-shadow: none;
+  box-sizing: border-box;
+  height: 100%;
+  margin: 0;
+  min-height: auto;
+  width: 100%;
+  word-wrap: break-word;
+  flex-grow: 1;
+  &:focus {
+    box-shadow: none;
+    border: 0;
+    outline: 0;
+  }
+}
+
+.d-editor-plugin {
+  display: flex;
+  overflow: auto;
 }
 
 .d-editor-input {
-  color: $primary;
-  width: 98%;
-  height: 200px;
-
-  &:disabled {
-    background-color: $primary-low;
-  }
+  border: 0;
+  padding: 7px;
+  overflow-x: hidden;
 }
 
 .d-editor-preview {
-  color: $primary;
   border: 1px dashed $primary-low;
   overflow: auto;
   cursor: default;
-  margin-top: 8px;
-  padding: 8px 8px 0 8px;
-  video {
-    max-width: 100%;
-    max-height: 500px;
-    height: auto;
-  }
-  audio {
-    max-width: 100%;
-  }
-  &.hidden {
-    width: 0;
-    visibility: hidden;
-  }
-
+  background-color: $secondary;
+  padding: 7px;
 }
-.composing-whisper {
-  .d-editor-preview {
-    font-style: italic;
-    color: $primary-medium !important;
-  }
+
+.composing-whisper .d-editor-preview {
+  font-style: italic;
+  color: $primary-medium !important;
 }
 
 .d-editor-preview > *:first-child {
   margin-top: 0;
+}
+
+.hide-preview .d-editor-preview-wrapper {
+  display: none;
+  flex: 0;
 }

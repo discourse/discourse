@@ -1,9 +1,196 @@
+#reply-control {
+  background-color: $primary-low;
+  border-top: 1px solid $primary-low;
+  bottom: 0;
+  height: 0;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  transition: height 250ms ease;
+  width: 100%;
+  z-index: 999;
+
+  .toggler,
+  .toggle-toolbar {
+    position: absolute;
+    color: $primary-medium;
+  }
+
+  .toggler {
+    right: 1px;
+  }
+
+  .toggle-toolbar {
+    right: 30px;
+  }
+
+  .saving-text,
+  .draft-text {
+    display: none;
+    padding-left: 10px;
+    .spinner {
+      margin-left: 5px;
+    }
+    i {
+      color: $primary-medium;
+    }
+  }
+
+  &.open {
+    height: 300px;
+    &.edit-title {
+      height: 400px; // more room when editing the title
+    }
+  }
+
+  &.closed {
+    height: 0 !important;
+  }
+
+  &.draft,
+  &.saving {
+    height: 40px !important;
+    justify-content: center;
+  }
+
+  &.draft {
+    cursor: pointer;
+    display: flex;
+    .draft-text {
+      display: block;
+    }
+    .grippie, .saving-text {
+      display: none;
+    }
+    .toggler {
+      right: 10px;
+    }
+  }
+
+  &.saving .saving-text {
+    display: flex;
+  }
+
+  input[type="text"] {
+    border: 0;
+  }
+
+  .reply-to {
+    color: $tertiary;
+    margin-bottom: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    i {
+      color: $primary-medium;
+    }
+  }
+
+  .whisper,
+  .display-edit-reason {
+    font-style: italic;
+    color: $primary-medium !important;
+  }
+
+  #edit-reason {
+    margin: 4px;
+  }
+
+  .user-selector,
+  .title-and-category {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    position: relative;
+  }
+
+  .title-input {
+    position: relative;
+    .popup-tip {margin-top: -30px;}
+  }
+
+  .add-warning {
+    margin-left: 1em;
+  }
+
+  #reply-title {
+    width: 400px;
+    padding: 6px 10px;
+    margin: 0 10px 0 0;
+  }
+
+  .tag-chooser {
+    margin: 5px 0 0 0;
+    flex-basis: 30%;
+  }
+
+  .wmd-controls {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-height: 0;
+  }
+
+  .d-editor-button-bar .btn {
+    padding: 0 6px;
+  }
+
+  .save-or-cancel {
+    margin-top: 5px;
+    flex-basis: 50%;
+    display: flex;
+    align-items: center;
+    #draft-status,
+    #file-uploading {
+      margin-left: 25px;
+    }
+    #file-uploading {
+      display: flex;
+      .spinner {
+        margin-right: 5px;
+      }
+    }
+  }
+
+  .composer-bottom-right {
+    flex-basis: 50%;
+    display: flex;
+    flex-direction: row-reverse;
+    .toggle-preview {
+      order: 2;
+    }
+  }
+
+  .with-tags {
+    .composer-bottom-right {
+      flex-basis: 60%;
+      margin-left: auto;
+    }
+    .save-or-cancel {
+      order: 3;
+    }
+  }
+
+  .create {
+    margin-right: 5px;
+  }
+
+  #draft-status, #file-uploading {
+    color: dark-light-choose($primary-medium, $secondary-medium);
+  }
+}
+
+.cooked > *:first-child {
+  margin-top: 0;
+}
+
 .autocomplete {
   z-index: 999999;
   position: absolute;
   width: 240px;
   background-color: $secondary;
-  border: 1px solid $primary-low; 
+  border: 1px solid $primary-low;
   ul {
     list-style: none;
     padding: 0;
@@ -15,7 +202,7 @@
         padding: 0 2px;
       }
 
-      border-bottom: 1px solid $primary-low; 
+      border-bottom: 1px solid $primary-low;
 
       a {
         padding: 5px;
@@ -35,42 +222,12 @@
           background-color: $tertiary-low;
         }
         @include hover {
-          background-color: dark-light-choose($highlight-low, $highlight-medium);
+          background-color: $highlight-low;
           text-decoration: none;
         }
       }
     }
   }
-}
-
-#reply-control {
-  .d-editor-textarea-wrapper .spinner {
-    z-index: 1000;
-    margin-top: 5em;
-  }
-
-  .d-editor-button-bar {
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    margin: 0px;
-    padding: 5px;
-    border-bottom: 2px solid $primary-low; 
-    height: 33px;
-    .btn:hover {
-      color: $primary-low; 
-    }
-  }
-
-  textarea {
-    box-shadow: none;
-  }
-}
-
-
-.saving-text .spinner {
-  display: inline-block;
-  left: 5px;
-  top: 4px;
 }
 
 div.ac-wrap.disabled {
@@ -90,7 +247,7 @@ div.ac-wrap div.item a.remove, .remove-link {
   border-radius: 12px;
   width: 10px;
   display: inline-block;
-  border: 1px solid $primary-low; 
+  border: 1px solid $primary-low;
   &:hover {
     background-color: $danger-low;
     border: 1px solid $danger-medium;
@@ -103,7 +260,7 @@ div.ac-wrap {
   overflow: auto;
   max-height: 150px;
   background-color: $secondary;
-  border: 1px solid $primary-low; 
+  border: 1px solid $primary-low;
   padding: 5px 4px 1px 4px;
   div.item {
     float: left;
@@ -139,44 +296,4 @@ div.ac-wrap {
   .examples {
     color: lighten($primary, 40%);
   }
-}
-
-#reply-control {
-  .composer-loading {
-    position: absolute;
-    left: 48%;
-    top: 20%;
-  }
-  .whisper {
-    margin-left: 1em;
-    font-style: italic;
-  }
-}
-
-#reply-control.topic-featured-link-only.open {
-  .wmd-controls { display: none; }
-}
-
-#cancel-file-upload {
-  font-size: 1.6em;
-}
-
-#draft-status, #file-uploading {
-  color: dark-light-choose($primary-medium, $secondary-medium);
-}
-
-.composer-bottom-right {
-  .spinner.small {
-    width: 6px;
-    height: 6px;
-  }
-}
-
-// this removes the topmost margin from the first element in the topic post
-// if we don't do this, all posts would have extra space at the top
-.d-editor-preview > *:first-child {
-  margin-top: 0;
-}
-.cooked > *:first-child {
-  margin-top: 0;
 }
