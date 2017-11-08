@@ -637,9 +637,9 @@ class UsersController < ApplicationController
       @user = User.where(id: user_key.to_i).first
     end
 
-    raise Discourse::InvalidAccess.new unless @user.present?
-    raise Discourse::InvalidAccess.new if @user.active?
-    raise Discourse::InvalidAccess.new if current_user.present?
+    if @user.blank? || @user.active? || current_user.present?
+      raise Discourse::InvalidAccess.new
+    end
 
     User.transaction do
       primary_email = @user.primary_email
@@ -648,7 +648,7 @@ class UsersController < ApplicationController
       primary_email.skip_validate_email = false
 
       if primary_email.save
-        @user.email_tokens.create(email: @user.email)
+        @user.email_tokens.create!(email: @user.email)
         enqueue_activation_email
         render json: success_json
       else
@@ -688,7 +688,7 @@ class UsersController < ApplicationController
   end
 
   def enqueue_activation_email
-    @email_token ||= @user.email_tokens.create(email: @user.email)
+    @email_token ||= @user.email_tokens.create!(email: @user.email)
     Jobs.enqueue(:critical_user_email, type: :signup, user_id: @user.id, email_token: @email_token.token, to_address: @user.email)
   end
 
