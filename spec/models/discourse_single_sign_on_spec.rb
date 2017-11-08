@@ -266,6 +266,23 @@ describe DiscourseSingleSignOn do
       expect(user.active).to eq(false)
     end
 
+    it 'does not deactivate user if email provided is capitalized' do
+      SiteSetting.email_editable = false
+      SiteSetting.sso_overrides_email = true
+      sso.require_activation = true
+
+      user = sso.lookup_or_create_user(ip_address)
+      expect(user.active).to eq(false)
+
+      user.update_columns(active: true)
+      user = sso.lookup_or_create_user(ip_address)
+      expect(user.active).to eq(true)
+
+      sso.email = "Test@example.com"
+      user = sso.lookup_or_create_user(ip_address)
+      expect(user.active).to eq(true)
+    end
+
     it 'deactivates accounts that have updated email address' do
 
       SiteSetting.email_editable = false
