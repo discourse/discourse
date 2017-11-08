@@ -1427,6 +1427,10 @@ user_preferences:
     type: category_list
     default: ''
 
+api:
+  retain_web_hook_events_period_days:
+    default: 30
+
 user_api:
   max_user_api_reqs_per_day:
     default: 2880

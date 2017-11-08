@@ -3485,6 +3485,7 @@ en:
           developer: 'Developer'
           embedding: "Embedding"
           legal: "Legal"
+          api: 'API'
           user_api: 'User API'
           uncategorized: 'Other'
           backups: "Backups"

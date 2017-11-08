@@ -1556,6 +1556,8 @@ en:
     default_categories_muted: "List of categories that are muted by default."
     default_categories_watching_first_post: "List of categories in which first post in each new topic will be watched by default."
 
+    retain_web_hook_events_period_days: "Number of days to retain web hook event records."
+
     max_user_api_reqs_per_day: "Maximum number of user API requests per key per day"
     max_user_api_reqs_per_minute: "Maximum number of user API requests per key per minute"
     allow_user_api_keys: "Allow generation of user API keys"
