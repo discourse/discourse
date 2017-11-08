@@ -13,7 +13,7 @@ if (Rails.env.production? && SiteSetting.logging_provider == 'lograge') || ENV["
       params[:files].map!(&:headers) if params[:files]
 
       output = {
-        params: params,
+        params: params.to_query,
         database: RailsMultisite::ConnectionManagement.current_db,
       }
 
