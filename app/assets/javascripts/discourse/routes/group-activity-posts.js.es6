@@ -12,7 +12,7 @@ export function buildGroupPage(type) {
     },
 
     setupController(controller, model) {
-      this.controllerFor('group-activity-posts').setProperties({ model, type });
+      this.controllerFor('group-activity-posts').setProperties({ model, type, canLoadMore: true });
       this.controllerFor("group").set("showing", type);
     },
 
