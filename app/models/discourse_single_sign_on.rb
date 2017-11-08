@@ -176,7 +176,7 @@ class DiscourseSingleSignOn < SingleSignOn
   end
 
   def change_external_attributes_and_override(sso_record, user)
-    if SiteSetting.sso_overrides_email && user.email != email
+    if SiteSetting.sso_overrides_email && user.email != Email.downcase(email)
       user.email = email
       user.active = false if require_activation
     end
