@@ -66,6 +66,7 @@ class UserSerializer < BasicUserSerializer
              :topic_post_count,
              :pending_count,
              :profile_view_count,
+             :time_read,
              :primary_group_name,
              :primary_group_flair_url,
              :primary_group_flair_bg_color,
@@ -399,6 +400,10 @@ class UserSerializer < BasicUserSerializer
 
   def profile_view_count
     object.user_profile.views
+  end
+
+  def time_read
+    AgeWords.age_words(object.user_stat&.time_read)
   end
 
 end

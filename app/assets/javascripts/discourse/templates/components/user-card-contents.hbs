@@ -118,6 +118,7 @@
           <h3><span class='desc'>{{i18n 'last_post'}}</span> {{format-date user.last_posted_at leaveAgo="true"}}</h3>
         {{/if}}
         <h3><span class='desc'>{{i18n 'joined'}}</span> {{format-date user.created_at leaveAgo="true"}}</h3>
+        <h3><span class='desc'>{{i18n 'time_read'}}</span> {{user.time_read}}</h3>
         {{plugin-outlet name="user-card-metadata" args=(hash user=user)}}
       </div>
     {{/if}}
