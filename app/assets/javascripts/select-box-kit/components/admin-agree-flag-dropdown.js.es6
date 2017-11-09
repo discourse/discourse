@@ -27,7 +27,7 @@ export default DropdownSelectBox.extend({
   content(post, canDeleteSpammer) {
     const content = [];
 
-    if (post.user_deleted) {
+    if (post.user_deleted === true) {
       content.push({
         title:  I18n.t("admin.flags.agree_flag_restore_post_title"),
         icon: "eye",
@@ -36,7 +36,7 @@ export default DropdownSelectBox.extend({
         label:  I18n.t("admin.flags.agree_flag_restore_post"),
       });
     } else {
-      if (post.get("postHidden") === false) {
+      if (post.get("postHidden") !== true) {
         content.push({
           title:  I18n.t("admin.flags.agree_flag_hide_post_title"),
           icon: "eye-slash",
