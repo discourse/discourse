@@ -93,6 +93,10 @@ class UserActionCreator
       created_at: model.created_at
     }
 
+    UserAction.remove_action!(row.merge(
+      action_type: model.archetype == Archetype.private_message ? UserAction::NEW_TOPIC : UserAction::NEW_PRIVATE_MESSAGE
+    ))
+
     rows = [row]
 
     if model.private_message?
