@@ -114,6 +114,10 @@ class AdminUserIndexQuery
   end
 
   def filter_by_search
+    if params[:email].present?
+      return @query.where('user_emails.email = ?', params[:email].downcase)
+    end
+
     filter = params[:filter]
     if filter.present?
       filter.strip!
