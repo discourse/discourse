@@ -552,7 +552,7 @@ User.reopenClass(Singleton, {
   },
 
   checkUsername(username, email, for_user_id) {
-    return ajax(userPath('check_username') + ".json", {
+    return ajax(userPath('check_username'), {
       data: { username, email, for_user_id }
     });
   },
