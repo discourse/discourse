@@ -36,10 +36,8 @@ QUnit.test("flagged posts - agree + hide", assert => {
   });
 
   andThen(() => {
-    console.log(find(".agree-flag").html())
     selectBoxKitSelectRow('confirm-agree-hide', { selector: '.agree-flag'});
   });
-
 
   andThen(() => {
     assert.equal(find('.admin-flags .flagged-post').length, 0, 'post was removed');
