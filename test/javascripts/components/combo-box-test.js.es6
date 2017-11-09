@@ -8,7 +8,7 @@ componentTest('default', {
   },
 
   test(assert) {
-    expandSelectBox('.combobox');
+    expandSelectBoxKit();
 
     andThen(() => {
       assert.equal(selectBox('.combobox').header.name(), "hello");
@@ -25,7 +25,7 @@ componentTest('with valueAttribute', {
   },
 
   test(assert) {
-    expandSelectBox('.combobox');
+    expandSelectBoxKit();
 
     andThen(() => {
       assert.equal(selectBox('.combobox').rowByValue(0).name(), "hello");
@@ -41,7 +41,7 @@ componentTest('with nameProperty', {
   },
 
   test(assert) {
-    expandSelectBox('.combobox');
+    expandSelectBoxKit();
 
     andThen(() => {
       assert.equal(selectBox('.combobox').rowByValue(0).name(), "hello");
@@ -57,7 +57,7 @@ componentTest('with an array as content', {
   },
 
   test(assert) {
-    expandSelectBox('.combobox');
+    expandSelectBoxKit();
 
     andThen(() => {
       assert.equal(selectBox('.combobox').rowByValue('evil').name(), "evil");
@@ -75,7 +75,7 @@ componentTest('with value and none as a string', {
   },
 
   test(assert) {
-    expandSelectBox('.combobox');
+    expandSelectBoxKit();
 
     andThen(() => {
       assert.equal(selectBox('.combobox').noneRow.name(), 'none');
@@ -85,7 +85,7 @@ componentTest('with value and none as a string', {
       assert.equal(this.get('value'), 'trout');
     });
 
-    selectBoxSelectRow('', {selector: '.combobox' });
+    selectBoxKitSelectRow('__none__', {selector: '.combobox' });
 
     andThen(() => {
       assert.equal(this.get('value'), null);
@@ -102,7 +102,7 @@ componentTest('with value and none as an object', {
   },
 
   test(assert) {
-    expandSelectBox('.combobox');
+    expandSelectBoxKit();
 
     andThen(() => {
       assert.equal(selectBox('.combobox').noneRow.name(), 'none');
@@ -112,7 +112,7 @@ componentTest('with value and none as an object', {
       assert.equal(this.get('value'), 'evil');
     });
 
-    selectBoxSelectNoneRow({ selector: '.combobox' });
+    selectBoxKitSelectNoneRow({ selector: '.combobox' });
 
     andThen(() => {
       assert.equal(this.get('value'), null);
@@ -130,7 +130,7 @@ componentTest('with no value and none as an object', {
   },
 
   test(assert) {
-    expandSelectBox('.combobox');
+    expandSelectBoxKit();
 
     andThen(() => {
       assert.equal(selectBox('.combobox').header.name(), 'none');
@@ -148,7 +148,7 @@ componentTest('with no value and none string', {
   },
 
   test(assert) {
-    expandSelectBox('.combobox');
+    expandSelectBoxKit();
 
     andThen(() => {
       assert.equal(selectBox('.combobox').header.name(), 'none');
@@ -164,7 +164,7 @@ componentTest('with no value and no none', {
   },
 
   test(assert) {
-    expandSelectBox('.combobox');
+    expandSelectBoxKit();
 
     andThen(() => {
       assert.equal(selectBox('.combobox').header.name(), 'evil', 'it sets the first row as value');
@@ -180,15 +180,15 @@ componentTest('with no value and no none', {
 //   },
 //
 //   test(assert) {
-//     expandSelectBox();
+//     ();
 //
 //     andThen(() => assert.equal(find(".select-box-kit-filter-input").length, 1, "it has a search input"));
 //
-//     selectBoxFillInFilter("regis");
+//     selectBoxKitFillInFilter("regis");
 //
 //     andThen(() => assert.equal(selectBox().rows.length, 1, "it filters results"));
 //
-//     selectBoxFillInFilter("");
+//     selectBoxKitFillInFilter("");
 //
 //     andThen(() => {
 //       assert.equal(
@@ -207,17 +207,17 @@ componentTest('with no value and no none', {
 //   },
 //
 //   test(assert) {
-//     expandSelectBox();
+//     ();
 //
-//     selectBoxFillInFilter("rob");
+//     selectBoxKitFillInFilter("rob");
 //
 //     andThen(() => assert.equal(selectBox().rows.length, 1) );
 //
-//     collapseSelectBox();
+//     collapseSelectBoxKit();
 //
 //     andThen(() => assert.notOk(selectBox().isExpanded) );
 //
-//     expandSelectBox();
+//     ();
 //
 //     andThen(() => assert.equal(selectBox().rows.length, 1) );
 //   }
@@ -232,7 +232,7 @@ componentTest('with empty string as value', {
   },
 
   test(assert) {
-    expandSelectBox('.combobox');
+    expandSelectBoxKit();
 
     andThen(() => {
       assert.equal(selectBox('.combobox').header.name(), 'evil', 'it sets the first row as value');

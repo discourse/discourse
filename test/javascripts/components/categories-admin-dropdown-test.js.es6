@@ -10,7 +10,7 @@ componentTest('default', {
     assert.equal($selectBox.el.find(".d-icon-bars").length, 1);
     assert.equal($selectBox.el.find(".d-icon-caret-down").length, 1);
 
-    expandSelectBox('.categories-admin-dropdown');
+    expandSelectBoxKit();
 
     andThen(() => {
       assert.equal($selectBox.rowByValue("create").name(), "New Category");
