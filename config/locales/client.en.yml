@@ -2660,6 +2660,7 @@ en:
         was_edited: "Post was edited after the first flag"
         previous_flags_count: "This post has already been flagged {{count}} times."
         show_details: "Show flag details"
+        details: "details"
 
         flagged_topics:
           topic: "Topic"
