@@ -22,6 +22,7 @@ class UserOptionSerializer < ApplicationSerializer
              :theme_key,
              :theme_key_seq,
              :allow_private_messages,
+             :homepage_id,
 
   def auto_track_topics_after_msecs
     object.auto_track_topics_after_msecs || SiteSetting.default_other_auto_track_topics_after_msecs

@@ -23,6 +23,13 @@
 {{/if}}
 
 
+<div class="control-group home">
+  <label class="control-label">{{i18n 'user.home'}}</label>
+  <div class="controls">
+    {{combo-box content=userSelectableHome valueAttribute="value" value=model.user_option.homepage_id}}
+  </div>
+</div>
+
 <div class="control-group other">
   <label class="control-label">{{i18n 'user.other_settings'}}</label>
 

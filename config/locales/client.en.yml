@@ -658,6 +658,7 @@ en:
       undo_revoke_access: "Undo Revoke Access"
       api_approved: "Approved:"
       theme: "Theme"
+      home: "Default Home Page"
 
       staff_counters:
         flags_given: "helpful flags"
