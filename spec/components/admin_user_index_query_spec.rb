@@ -188,6 +188,20 @@ describe AdminUserIndexQuery do
 
         expect(query.to_sql.downcase).not_to include("ilike")
       end
+
+      it "can correctly bypass expensive ilike query" do
+        user = Fabricate(:user, email: 'sam2@Sam.com')
+
+        query = AdminUserIndexQuery.new(email: 'Sam@sam.com').find_users_query
+        expect(query.count).to eq(0)
+        expect(query.to_sql.downcase).not_to include("ilike")
+
+        query = AdminUserIndexQuery.new(email: 'Sam2@sam.com').find_users_query
+        expect(query.first.id).to eq(user.id)
+        expect(query.count).to eq(1)
+        expect(query.to_sql.downcase).not_to include("ilike")
+
+      end
     end
 
     context "by email fragment" do
