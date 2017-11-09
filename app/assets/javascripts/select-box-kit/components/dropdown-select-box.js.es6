@@ -11,11 +11,9 @@ export default SelectBoxKitComponent.extend({
 
   clickOutside() { this.close(); },
 
-  actions: {
-    onSelect(value) {
-      value = this.baseOnSelect(value);
-      this.set("value", value);
-      this.blur();
-    }
+  didSelectValue() {
+    this._super();
+
+    this.blur();
   }
 });

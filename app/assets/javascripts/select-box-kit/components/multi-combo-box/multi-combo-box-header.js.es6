@@ -20,7 +20,7 @@ export default SelectBoxKitHeaderComponent.extend({
     const offset = leftFilterOffset - leftHeaderOffset;
     const width = this.$().outerWidth(false);
     const availableSpace = width - offset;
-    const $choices = $filter.parent();
+    const $choices = $filter.parent(".choices");
     const parentRightPadding = parseInt($choices.css("padding-right") , 10);
     $filter.width(availableSpace - parentRightPadding * 4);
   },

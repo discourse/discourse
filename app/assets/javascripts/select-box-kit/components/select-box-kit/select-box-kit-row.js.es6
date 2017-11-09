@@ -25,17 +25,18 @@ export default Ember.Component.extend(UtilsMixin, {
   @on("didReceiveAttrs")
   _setSelectionState() {
     const contentValue = this.get("content.value");
+
     this.set("isSelected", this.get("value") === contentValue);
-    this.set("isHighlighted", this._castInteger(this.get("highlightedValue")) === this._castInteger(contentValue));
+    this.set("isHighlighted", this.get("highlightedValue") === contentValue);
   },
 
   @on("willDestroyElement")
   _clearDebounce() {
     const hoverDebounce = this.get("hoverDebounce");
+    if (isPresent(hoverDebounce)) { run.cancel(hoverDebounce); }
 
-    if (isPresent(hoverDebounce)) {
-      run.cancel(hoverDebounce);
-    }
+    const clickDebounce = this.get("clickDebounce");
+    if (isPresent(clickDebounce)) { run.cancel(clickDebounce); }
   },
 
   @computed("content.originalContent.icon", "content.originalContent.iconClass")
@@ -52,6 +53,10 @@ export default Ember.Component.extend(UtilsMixin, {
   },
 
   click() {
+    this.set("clickDebounce", run.debounce(this, this._sendOnSelectAction, 200, true));
+  },
+
+  _sendOnSelectAction() {
     this.sendAction("onSelect", this.get("content.value"));
   },
 

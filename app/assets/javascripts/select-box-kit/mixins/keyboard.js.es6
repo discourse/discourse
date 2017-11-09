@@ -78,7 +78,12 @@ export default Ember.Mixin.create({
           this._handleArrowKey(keyCode, event);
         }
         if (keyCode === this.keys.BACKSPACE) {
-          this.$filterInput().focus().trigger(event).trigger("change");
+          this.expand();
+
+          if (this.$filterInput().is(":visible")) {
+            this.$filterInput().focus().trigger(event).trigger("change");
+          }
+
           return event;
         }
 
@@ -118,9 +123,6 @@ export default Ember.Mixin.create({
         if (keyCode === this.keys.UP || keyCode === this.keys.DOWN) {
           this._handleArrowKey(keyCode, event);
         }
-      })
-      .on("change.select-box-kit", () => {
-        this.send("onFilterChange", this.$filterInput().val());
       })
       .on("keypress.select-box-kit", (event) => {
         const keyCode = event.keyCode || event.which;
@@ -193,8 +195,6 @@ export default Ember.Mixin.create({
       nextIndex = 0;
     }
 
-    console.log(this.$highlightedRow(), currentIndex, direction, $rows, nextIndex)
-
     this._rowSelection($rows, nextIndex);
   },
 
@@ -202,12 +202,9 @@ export default Ember.Mixin.create({
     const highlightableValue = $rows.eq(nextIndex).attr("data-value");
     const $highlightableRow = this.$findRowByValue(highlightableValue);
 
-    console.log(highlightableValue, $highlightableRow, nextIndex)
-    this.send("onHighlight", highlightableValue);
-
     Ember.run.schedule("afterRender", () => {
-      $highlightableRow.focus();
-      this.$filterInput().focus();
+      $highlightableRow.trigger("mouseover").focus();
+      this.focus();
     });
   },
 

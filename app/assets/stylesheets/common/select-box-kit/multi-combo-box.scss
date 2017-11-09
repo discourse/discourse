@@ -79,6 +79,8 @@
         padding: 0 5px;
         margin-top: 2px;
         margin-bottom: 2px;
+        margin: 0;
+        padding: 0;
         border: 1px solid transparent;
       }
 
@@ -121,9 +123,11 @@
         cursor: pointer;
         outline: none;
         padding: 0;
+        line-height: normal;
 
         .name {
           padding: 0 5px;
+          line-height: 22px
         }
 
         &.is-highlighted {

@@ -8,10 +8,10 @@ export default DropdownSelectBoxComponent.extend({
 
   @on("didReceiveAttrs")
   _setComponentOptions() {
-    this.set("headerComponentOptions", Ember.Object.create({
+    this.get("headerComponentOptions").setProperties({
       shouldDisplaySelectedName: false,
       icon: `${iconHTML('bars')}${iconHTML('caret-down')}`.htmlSafe(),
-    }));
+    });
   },
 
   @computed
@@ -38,11 +38,8 @@ export default DropdownSelectBoxComponent.extend({
     return items;
   },
 
-  actions: {
-    onSelect(value) {
-      this.baseOnSelect(value);
-      this.get(value)();
-      this.set("value", null);
-    }
+  selectValueFunction(value) {
+    this.get(value)();
+    this.set("value", null);
   }
 });

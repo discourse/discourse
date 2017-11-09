@@ -21,7 +21,14 @@ export default Ember.Mixin.create({
 
   $collection() { return this.$(this.collectionSelector); },
 
-  $rows() { return this.$(`${this.rowSelector}:not(.no-content)`); },
+  $rows(withHidden) {
+
+    if (withHidden === true) {
+      return this.$(`${this.rowSelector}:not(.no-content)`);
+    } else {
+      return this.$(`${this.rowSelector}:not(.no-content):not(.is-hidden)`);
+    }
+  },
 
   $highlightedRow() { return this.$rows().filter(".is-highlighted"); },
 
@@ -209,7 +216,7 @@ export default Ember.Mixin.create({
 
     if (!this.element || this.isDestroying || this.isDestroyed) { return; }
 
-    const css = _.extend(
+    const css = jQuery.extend(
       this._previousCSSContext,
       {
         top: "auto",

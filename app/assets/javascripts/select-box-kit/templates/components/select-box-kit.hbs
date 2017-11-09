@@ -35,7 +35,6 @@
 
   {{#if renderedBodyOnce}}
     {{component collectionComponent
-      shouldDisplayCreateRow=shouldDisplayCreateRow
       none=computedNone
       createRowContent=createRowContent
       selectedContent=selectedContent
@@ -43,13 +42,9 @@
       rowComponent=rowComponent
       noneRowComponent=noneRowComponent
       createRowComponent=createRowComponent
-      iconForRow=iconForRow
       templateForRow=templateForRow
       templateForNoneRow=templateForNoneRow
       templateForCreateRow=templateForCreateRow
-      shouldHighlightRow=shouldHighlightRow
-      shouldSelectRow=shouldSelectRow
-      titleForRow=titleForRow
       onClearSelection=(action "onClearSelection")
       onSelect=(action "onSelect")
       onHighlight=(action "onHighlight")
