@@ -178,6 +178,18 @@ describe AdminUserIndexQuery do
 
   describe "filtering" do
 
+    context "exact email bypass" do
+      it "can correctly bypass expensive ilike query" do
+        user = Fabricate(:user, email: 'sam@Sam.com')
+
+        query = AdminUserIndexQuery.new(filter: 'Sam@sam.com').find_users_query
+        expect(query.count).to eq(1)
+        expect(query.first.id).to eq(user.id)
+
+        expect(query.to_sql.downcase).not_to include("ilike")
+      end
+    end
+
     context "by email fragment" do
 
       before(:each) { Fabricate(:user, email: "test1@example.com") }
