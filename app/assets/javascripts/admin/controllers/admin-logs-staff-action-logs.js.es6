@@ -30,7 +30,7 @@ export default Ember.Controller.extend({
 
   showInstructions: Ember.computed.gt('model.length', 0),
 
-  refresh: function() {
+  _refresh() {
     this.set('loading', true);
 
     var filters = this.get('filters'),
@@ -65,14 +65,18 @@ export default Ember.Controller.extend({
     });
   },
 
+  scheduleRefresh() {
+    Ember.run.scheduleOnce('afterRender', this, this._refresh);
+  },
+
   resetFilters: function() {
     this.set('filters', Ember.Object.create());
-    this.refresh();
+    this.scheduleRefresh();
   }.on('init'),
 
   _changeFilters: function(props) {
     this.get('filters').setProperties(props);
-    this.refresh();
+    this.scheduleRefresh();
   },
 
   actions: {
@@ -91,7 +95,7 @@ export default Ember.Controller.extend({
       this._changeFilters(changed);
     },
 
-    clearAllFilters: function() {
+    clearAllFilters() {
       this.set("filterActionId", null);
       this.resetFilters();
     },
