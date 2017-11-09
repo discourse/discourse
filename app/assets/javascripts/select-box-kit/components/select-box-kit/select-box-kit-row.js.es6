@@ -16,6 +16,7 @@ export default Ember.Component.extend(UtilsMixin, {
     "content.name:data-name"
   ],
   classNameBindings: ["isHighlighted", "isSelected"],
+  clicked: false,
 
   title: Ember.computed.alias("content.name"),
 
@@ -34,9 +35,6 @@ export default Ember.Component.extend(UtilsMixin, {
   _clearDebounce() {
     const hoverDebounce = this.get("hoverDebounce");
     if (isPresent(hoverDebounce)) { run.cancel(hoverDebounce); }
-
-    const clickDebounce = this.get("clickDebounce");
-    if (isPresent(clickDebounce)) { run.cancel(clickDebounce); }
   },
 
   @computed("content.originalContent.icon", "content.originalContent.iconClass")
@@ -53,12 +51,14 @@ export default Ember.Component.extend(UtilsMixin, {
   },
 
   click() {
-    if (!this.element || this.isDestroying || this.isDestroyed) { return; }
-    this.set("clickDebounce", run.debounce(this, this._sendOnSelectAction, 150, true));
+    this._sendOnSelectAction();
   },
 
   _sendOnSelectAction() {
-    this.sendAction("onSelect", this.get("content.value"));
+    if (this.get("clicked") === false) {
+      this.set("clicked", true);
+      this.sendAction("onSelect", this.get("content.value"));
+    }
   },
 
   _sendOnHighlightAction() {
