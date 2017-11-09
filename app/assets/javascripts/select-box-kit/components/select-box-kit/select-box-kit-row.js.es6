@@ -18,7 +18,10 @@ export default Ember.Component.extend(UtilsMixin, {
   classNameBindings: ["isHighlighted", "isSelected"],
   clicked: false,
 
-  title: Ember.computed.alias("content.name"),
+  @computed("content.originalContent.title", "content.name")
+  title(title, name) {
+    return title || name;
+  },
 
   @computed("templateForRow")
   template(templateForRow) { return templateForRow(this); },

@@ -111,13 +111,7 @@
 
     {{#if canAct}}
       <div class='flagged-post-controls'>
-        {{d-button
-          title="admin.flags.agree_title"
-          class="agree-flag"
-          label="admin.flags.agree"
-          icon="thumbs-o-up"
-          action="showAgreeFlagModal"
-          ellipsis=true}}
+        {{admin-agree-flag-dropdown post=flaggedPost onRemoveAfterPromise=(action "onRemoveAfterPromise")}}
 
         {{#if flaggedPost.postHidden}}
           {{d-button
