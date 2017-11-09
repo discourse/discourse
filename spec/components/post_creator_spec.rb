@@ -399,7 +399,7 @@ describe PostCreator do
         raw: 'this is a whispered reply').create
 
       # don't count whispers in user stats
-      expect(user_stat.reload.post_count).to eq(1)
+      expect(user_stat.reload.post_count).to eq(0)
 
       expect(whisper).to be_present
       expect(whisper.post_type).to eq(Post.types[:whisper])
@@ -413,7 +413,7 @@ describe PostCreator do
       expect(whisper_reply).to be_present
       expect(whisper_reply.post_type).to eq(Post.types[:whisper])
 
-      expect(user_stat.reload.post_count).to eq(1)
+      expect(user_stat.reload.post_count).to eq(0)
 
       # date is not precise enough in db
       whisper_reply.reload
