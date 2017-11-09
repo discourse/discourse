@@ -72,6 +72,7 @@ export default Ember.Mixin.create({
     if (this.get("isExpanded") === true) { return; }
     this.setProperties({ isExpanded: true, renderedBodyOnce: true, isFocused: true });
     this.focus();
+    this.autoHighlightFunction();
   },
 
   collapse() {

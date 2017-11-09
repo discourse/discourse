@@ -17,7 +17,7 @@ componentTest('with objects and values', {
 });
 
 componentTest('interactions', {
-  template: '<input class="before"/>{{multi-combo-box none=none content=items value=value}}<input class="after"/>',
+  template: '{{multi-combo-box none=none content=items value=value}}',
 
   beforeEach() {
     I18n.translations[I18n.locale].js.test = {none: 'none'};

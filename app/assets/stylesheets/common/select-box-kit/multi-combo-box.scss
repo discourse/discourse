@@ -17,7 +17,7 @@
     }
 
     .select-box-kit-filter {
-      border-top: 1px solid $primary-low;
+      border: 0;
     }
 
     .multi-combo-box-header {
@@ -77,10 +77,7 @@
         display: inline-flex;
         box-sizing: border-box;
         padding: 0 5px;
-        margin-top: 2px;
-        margin-bottom: 2px;
-        margin: 0;
-        padding: 0;
+        margin-bottom: 4px;
         border: 1px solid transparent;
       }
 

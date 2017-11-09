@@ -34,7 +34,7 @@ export default SelectBoxKitComponent.extend({
     const keyCode = event.keyCode || event.which;
     const $filterInput = this.$filterInput();
 
-    if (this.get("isFocused") === true && this.get("isExpanded") === false && keyCode === 8) {
+    if (this.get("isFocused") === true && this.get("isExpanded") === false && keyCode === this.keys.BACKSPACE) {
       this.expand();
       return;
     }
@@ -46,7 +46,7 @@ export default SelectBoxKitComponent.extend({
     }
 
     // clear selection when multiple
-    if (Ember.isEmpty(this.get("filter")) && this.$(".selected-name.is-highlighted").length >= 1 && keyCode === 8) {
+    if (Ember.isEmpty(this.get("filter")) && this.$(".selected-name.is-highlighted").length >= 1 && keyCode === this.keys.BACKSPACE) {
       const highlightedValues = [];
       $.each(this.$(".selected-name.is-highlighted"), (i, el) => {
         highlightedValues.push($(el).attr("data-value"));
@@ -57,7 +57,7 @@ export default SelectBoxKitComponent.extend({
     }
 
     // try to remove last item from the list
-    if (Ember.isEmpty(this.get("filter")) && keyCode === 8) {
+    if (Ember.isEmpty(this.get("filter")) && keyCode === this.keys.BACKSPACE) {
       let $lastSelectedValue = $(this.$(".choices .selected-name:not(.is-locked)").last());
 
       if ($lastSelectedValue.length === 0) { return; }
@@ -70,7 +70,7 @@ export default SelectBoxKitComponent.extend({
 
       if ($filterInput.not(":visible") && $lastSelectedValue.length > 0) {
         $lastSelectedValue.click();
-        return;
+        return false;
       }
 
       if ($filterInput.val() === "") {
@@ -115,10 +115,12 @@ export default SelectBoxKitComponent.extend({
 
   willCreateContent() {
     this.set("highlightedValue", null);
-    this.clearFilter();
   },
 
-  didCreateContent() {},
+  didCreateContent() {
+    this.clearFilter();
+    this.autoHighlightFunction();
+  },
 
   createContentFunction(input) {
     if (!this.get("content").includes(input)) {
@@ -165,16 +167,7 @@ export default SelectBoxKitComponent.extend({
   didHighlightValue() {},
 
   autoHighlightFunction() {
-    Ember.run.schedule("sync", () => {
-
-      console.log(
-        this.get("isExpanded"),
-        this.get("renderedBodyOnce"),
-        this.get("highlightedValue"),
-        this.get("filteredContent"),
-        this.get("selectedContent"),
-      )
-
+    Ember.run.schedule("afterRender", () => {
       if (this.get("isExpanded") === false) { return; }
       if (this.get("renderedBodyOnce") === false) { return; }
       if (!isNone(this.get("highlightedValue"))) { return; }

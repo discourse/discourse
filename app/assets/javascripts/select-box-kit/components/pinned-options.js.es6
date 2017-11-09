@@ -48,7 +48,6 @@ export default DropdownSelectBoxComponent.extend({
     ];
   },
 
-
   selectValueFunction(value) {
     const topic = this.get("topic");
 

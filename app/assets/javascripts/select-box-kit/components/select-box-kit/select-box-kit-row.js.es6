@@ -53,7 +53,8 @@ export default Ember.Component.extend(UtilsMixin, {
   },
 
   click() {
-    this.set("clickDebounce", run.debounce(this, this._sendOnSelectAction, 200, true));
+    if (!this.element || this.isDestroying || this.isDestroyed) { return; }
+    this.set("clickDebounce", run.debounce(this, this._sendOnSelectAction, 150, true));
   },
 
   _sendOnSelectAction() {

@@ -2,19 +2,12 @@
   {{#each selectedContent as |selectedContent|}}
     {{component selectedNameComponent onDeselect=onDeselect content=selectedContent}}
   {{/each}}
-
-  {{#if shouldDisplayFilter}}
-    <li class="filter">
-      {{input
-        class="select-box-kit-filter-input"
-        key-up=onFilterChange
-        autocomplete="off"
-        autocorrect="off"
-        autocapitalize="off"
-        spellcheck=false
-        value=filter
-        tabindex=-1
-      }}
-    </li>
-  {{/if}}
+  <li class="filter">
+    {{component "select-box-kit/select-box-kit-filter"
+      onFilterChange=onFilterChange
+      shouldDisplayFilter=shouldDisplayFilter
+      isFocused=isFocused
+      filter=filter
+    }}
+  </li>
 </ul>

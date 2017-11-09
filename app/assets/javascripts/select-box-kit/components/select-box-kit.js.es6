@@ -70,6 +70,7 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
     }
 
     if (isNone(this.get("content"))) { this.set("content", []); }
+    this.set("value", this._castInteger(this.get("value")));
 
     this.setInitialValues();
   },
@@ -229,7 +230,10 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
     this.get("content").pushObject(input);
     this.send("onSelect", input);
   },
-  didCreateContent() {},
+  didCreateContent() {
+    this.clearFilter();
+    this.autoHighlightFunction();
+  },
 
   willHighlightValue() {},
   highlightValueFunction(value) {
@@ -262,7 +266,6 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
   actions: {
     onToggle() {
       this.get("isExpanded") === true ? this.collapse() : this.expand();
-      this.autoHighlightFunction();
     },
 
     onClearSelection() {

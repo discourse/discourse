@@ -106,6 +106,11 @@ export default Ember.Mixin.create({
 
         if (this._isSpecialKey(keyCode) === false && event.metaKey === false) {
           this.expand();
+
+          if (this.get("filterable") === true || this.get("autoFilterable")) {
+            this.set("renderedFilterOnce", true);
+          }
+
           Ember.run.schedule("afterRender", () => {
             this.$filterInput()
                 .focus()
@@ -115,6 +120,9 @@ export default Ember.Mixin.create({
       });
 
     this.$filterInput()
+      .on("change.select-box-kit", (event) => {
+        this.send("onFilterChange", $(event.target).val());
+      })
       .on("keydown.select-box-kit", (event) => {
         const keyCode = event.keyCode || event.which;
 

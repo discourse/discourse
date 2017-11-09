@@ -179,10 +179,6 @@
     &.is-selected.is-highlighted {
       background: $tertiary-low;
     }
-
-    &.none:not(.is-highlighted) {
-      background: $primary-low;
-    }
   }
 
   .select-box-kit-collection {

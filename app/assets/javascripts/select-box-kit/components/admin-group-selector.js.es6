@@ -1,16 +1,16 @@
-import computed from "ember-addons/ember-computed-decorators";
 import MultiComboBoxComponent from "select-box-kit/components/multi-combo-box";
 
 export default MultiComboBoxComponent.extend({
   classNames: "admin-group-selector",
   selected: null,
   available: null,
-  content: Ember.computed.alias("available"),
   allowAny: false,
 
-  @computed("selected")
-  value(selected) {
-    return selected.map(s => this._valueForContent(s));
+  didReceiveAttrs() {
+    this._super();
+
+    this.set("value", this.get("selected").map(s => this._valueForContent(s)));
+    this.set("content", this.get("available"));
   },
 
   formatRowContent(content) {

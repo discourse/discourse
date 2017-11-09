@@ -372,9 +372,9 @@
       </div>
       <div class='display-row'>
         <div class='field'>{{i18n 'admin.groups.custom'}}</div>
-        {{!-- <div class='value'> --}}
+        <div class='value'>
           {{admin-group-selector selected=model.customGroups available=availableGroups}}
-        {{!-- </div> --}}
+        </div>
         <div class='controls'>
           {{#if model.customGroups}}
             {{i18n 'admin.groups.primary'}}
