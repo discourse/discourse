@@ -249,6 +249,7 @@ const User = RestModel.extend({
       'include_tl0_in_digests',
       'theme_key',
       'allow_private_messages',
+      'homepage_id',
     ];
 
     if (fields) {

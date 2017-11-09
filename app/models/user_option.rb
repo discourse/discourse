@@ -128,6 +128,17 @@ class UserOption < ActiveRecord::Base
     times.max
   end
 
+  def homepage
+    case homepage_id
+    when 1 then "latest"
+    when 2 then "categories"
+    when 3 then "unread"
+    when 4 then "new"
+    when 5 then "top"
+    else SiteSetting.homepage
+    end
+  end
+
   private
 
     def update_tracked_topics
@@ -165,6 +176,7 @@ end
 #  theme_key                        :string
 #  theme_key_seq                    :integer          default(0), not null
 #  allow_private_messages           :boolean          default(TRUE), not null
+#  homepage_id                      :integer          default(null)
 #
 # Indexes
 #
