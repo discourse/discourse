@@ -462,7 +462,7 @@ const User = RestModel.extend({
 
   "delete": function() {
     if (this.get('can_delete_account')) {
-      return ajax(userPath(this.get('username')), {
+      return ajax(userPath(this.get('username') + ".json"), {
         type: 'DELETE',
         data: {context: window.location.pathname}
       });
@@ -473,7 +473,7 @@ const User = RestModel.extend({
 
   dismissBanner(bannerKey) {
     this.set("dismissed_banner_key", bannerKey);
-    ajax(userPath(this.get('username')), {
+    ajax(userPath(this.get('username') + ".json"), {
       type: 'PUT',
       data: { dismissed_banner_key: bannerKey }
     });
@@ -552,7 +552,7 @@ User.reopenClass(Singleton, {
   },
 
   checkUsername(username, email, for_user_id) {
-    return ajax(userPath('check_username'), {
+    return ajax(userPath('check_username') + ".json", {
       data: { username, email, for_user_id }
     });
   },
