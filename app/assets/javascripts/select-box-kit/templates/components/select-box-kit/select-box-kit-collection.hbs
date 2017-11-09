@@ -3,8 +3,6 @@
     {{component noneRowComponent
       content=none
       templateForRow=templateForNoneRow
-      titleForRow=titleForRow
-      iconForRow=iconForRow
       highlightedValue=highlightedValue
       onClearSelection=onClearSelection
       onHighlight=onHighlight
@@ -14,12 +12,11 @@
   {{/if}}
 {{/if}}
 
-{{#if shouldDisplayCreateRow}}
+{{#if createRowContent}}
   {{component createRowComponent
     content=createRowContent
     templateForRow=templateForCreateRow
     titleForRow=titleForRow
-    iconForRow=iconForRow
     highlightedValue=highlightedValue
     onHighlight=onHighlight
     onCreateContent=onCreateContent
@@ -33,7 +30,6 @@
     content=content
     templateForRow=templateForRow
     titleForRow=titleForRow
-    iconForRow=iconForRow
     highlightedValue=highlightedValue
     onSelect=onSelect
     onHighlight=onHighlight

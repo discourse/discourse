@@ -17,7 +17,7 @@ componentTest('default', {
   },
 
   test(assert) {
-    expandSelectBox();
+    expandSelectBoxKit();
 
     andThen(() => {
       assert.equal(selectBox().header.name(), "Topic Controls");
@@ -26,7 +26,7 @@ componentTest('default', {
       assert.equal(selectBox().selectedRow.el.length, 0, "it doesn’t preselect first row");
     });
 
-    selectBoxSelectRow("share");
+    selectBoxKitSelectRow("share");
 
     andThen(() => {
       assert.equal(this.get("value"), null, "it resets the value");

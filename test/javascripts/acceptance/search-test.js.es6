@@ -89,7 +89,7 @@ QUnit.test("Search with context", assert => {
 QUnit.test("Right filters are shown to anonymous users", assert => {
   visit("/search?expanded=true");
 
-  expandSelectBox(".select-box-kit#in");
+  expandSelectBoxKit(".select-box-kit#in");
 
   andThen(() => {
     assert.ok(exists('.select-box-kit#in .select-box-kit-row[data-value=first]'));
@@ -115,7 +115,7 @@ QUnit.test("Right filters are shown to logged-in users", assert => {
   Discourse.reset();
   visit("/search?expanded=true");
 
-  expandSelectBox(".select-box-kit#in");
+  expandSelectBoxKit(".select-box-kit#in");
 
   andThen(() => {
     assert.ok(exists('.select-box-kit#in .select-box-kit-row[data-value=first]'));

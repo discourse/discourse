@@ -24,17 +24,11 @@ export default NotificationOptionsComponent.extend({
     this.appEvents.off("topic-notifications-button:changed");
   },
 
-  actions: {
-    onSelect(value) {
-      if (value !== this.get("computedValue")) {
-        this.get("topic.details").updateNotifications(value);
-      }
-
-      this.set("value", value);
-
-      this.defaultOnSelect(value);
-
-      this.blur();
+  selectValueFunction(value) {
+    if (value !== this.get("value")) {
+      this.get("topic.details").updateNotifications(value);
     }
+
+    this.set("value", value);
   }
 });

@@ -6,11 +6,7 @@ export default NotificationOptionsComponent.extend({
   showFullTitle: false,
   headerComponent: "tag-notifications-button/tag-notifications-button-header",
 
-  actions: {
-    onSelect(value) {
-      value = this.defaultOnSelect(value);
-      this.sendAction("action", value);
-      this.blur();
-    }
+  selectValueFunction(value) {
+    this.sendAction("action", value);
   }
 });

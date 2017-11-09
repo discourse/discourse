@@ -12,10 +12,10 @@ export default SelectBoxKitComponent.extend({
 
   @on("didReceiveAttrs")
   _setComboBoxOptions() {
-    this.set("headerComponentOptions", Ember.Object.create({
+    this.get("headerComponentOptions").setProperties({
       caretUpIcon: this.get("caretUpIcon"),
       caretDownIcon: this.get("caretDownIcon"),
       clearable: this.get("clearable"),
-    }));
+    });
   }
 });

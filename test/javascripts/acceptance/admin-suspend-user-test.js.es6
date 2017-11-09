@@ -44,8 +44,8 @@ QUnit.test("suspend, then unsuspend a user", assert => {
   andThen(() => {
     assert.equal(find('.perform-suspend[disabled]').length, 1, 'disabled by default');
 
-    expandSelectBox('.suspend-until .combobox');
-    selectBoxSelectRow('tomorrow', { selector: '.suspend-until .combobox'});
+    expandSelectBoxKit('.suspend-until .combobox');
+    selectBoxKitSelectRow('tomorrow', { selector: '.suspend-until .combobox'});
   });
 
   fillIn('.suspend-reason', "for breaking the rules");

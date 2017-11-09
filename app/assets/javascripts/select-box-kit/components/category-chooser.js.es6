@@ -12,24 +12,24 @@ export default ComboBoxComponent.extend({
   castInteger: true,
   allowUncategorized: null,
 
-  filterFunction(computedContent) {
-    const _matchFunction = (filter, text) => {
-      return text.toLowerCase().indexOf(filter) > -1;
-    };
+  filteredContentFunction(computedContent, computedValue, filter) {
+    if (isEmpty(filter)) { return computedContent; }
 
-    return (selectBox) => {
-      const filter = selectBox.get("filter").toLowerCase();
-      return _.filter(computedContent, c => {
-        const category = Category.findById(get(c, "value"));
-        const text = get(c, "name");
-        if (category && category.get("parentCategory")) {
-          const categoryName = category.get("parentCategory.name");
-          return _matchFunction(filter, text) || _matchFunction(filter, categoryName);
-        } else {
-          return _matchFunction(filter, text);
-        }
-      });
+    const _matchFunction = (f, text) => {
+      return text.toLowerCase().indexOf(f) > -1;
     };
+    const lowerFilter = filter.toLowerCase();
+
+    return computedContent.filter(c => {
+      const category = Category.findById(get(c, "value"));
+      const text = get(c, "name");
+      if (category && category.get("parentCategory")) {
+        const categoryName = category.get("parentCategory.name");
+        return _matchFunction(lowerFilter, text) || _matchFunction(lowerFilter, categoryName);
+      } else {
+        return _matchFunction(lowerFilter, text);
+      }
+    });
   },
 
   @computed("rootNone", "rootNoneLabel")

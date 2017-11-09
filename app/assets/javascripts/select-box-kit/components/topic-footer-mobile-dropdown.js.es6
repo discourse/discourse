@@ -39,38 +39,34 @@ export default ComboBoxComponent.extend({
     return content;
   },
 
-  actions: {
-    onSelect(value) {
-      value = this.defaultOnSelect(value);
+  selectValueFunction(value) {
+    const topic = this.get("topic");
 
-      const topic = this.get("topic");
+    // In case it"s not a valid topic
+    if (!topic.get("id")) {
+      return;
+    }
 
-      // In case it"s not a valid topic
-      if (!topic.get("id")) {
-        return;
-      }
+    this.set("value", value);
 
-      this.set("value", value);
+    const refresh = () => this.send("onDeselect", value);
 
-      const refresh = () => this.set("value", null);
-
-      switch(value) {
-        case "invite":
-          this.attrs.showInvite();
-          refresh();
-          break;
-        case "bookmark":
-          topic.toggleBookmark().then(() => refresh() );
-          break;
-        case "share":
-          this.appEvents.trigger("share:url", topic.get("shareUrl"), $("#topic-footer-buttons"));
-          refresh();
-          break;
-        case "flag":
-          this.attrs.showFlagTopic();
-          refresh();
-          break;
-      }
+    switch(value) {
+      case "invite":
+        this.attrs.showInvite();
+        refresh();
+        break;
+      case "bookmark":
+        topic.toggleBookmark().then(() => refresh() );
+        break;
+      case "share":
+        this.appEvents.trigger("share:url", topic.get("shareUrl"), $("#topic-footer-buttons"));
+        refresh();
+        break;
+      case "flag":
+        this.attrs.showFlagTopic();
+        refresh();
+        break;
     }
   }
 });

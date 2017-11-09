@@ -1,0 +1,9 @@
+<span class="name">
+  {{#unless isLocked}}
+    <span class="delete-icon" {{action onDeselect content.value bubbles=false}}>
+      {{d-icon "times"}}
+    </span>
+  {{/unless}}
+
+  {{content.name}}
+</span>

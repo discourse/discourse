@@ -7,11 +7,7 @@ export default NotificationOptionsComponent.extend({
   value: Ember.computed.alias("category.notification_level"),
   headerComponent: "category-notifications-button/category-notifications-button-header",
 
-  actions: {
-    onSelect(value) {
-      value = this.defaultOnSelect(value);
-      this.get("category").setNotification(value);
-      this.blur();
-    }
+  selectValueFunction(value) {
+    this.get("category").setNotification(value);
   }
 });

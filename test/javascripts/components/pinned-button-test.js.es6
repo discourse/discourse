@@ -23,7 +23,7 @@ componentTest('updating the content refreshes the list', {
   test(assert) {
     andThen(() => assert.notOk(selectBox().isHidden) );
 
-    expandSelectBox();
+    expandSelectBoxKit();
 
     andThen(() => assert.equal(selectBox().selectedRow.name(), "Pinned") );
 

@@ -53,9 +53,9 @@ QUnit.test("Updating the topic title and category", assert => {
 
   fillIn('#edit-title', 'this is the new title');
 
-  expandSelectBox('.title-wrapper .category-chooser');
+  expandSelectBoxKit('.title-wrapper .category-chooser');
 
-  selectBoxSelectRow(4, {selector: '.title-wrapper .category-chooser'});
+  selectBoxKitSelectRow(4, {selector: '.title-wrapper .category-chooser'});
 
   click('#topic-title .submit-edit');
 

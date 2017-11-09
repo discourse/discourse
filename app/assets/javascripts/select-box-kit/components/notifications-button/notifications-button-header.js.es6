@@ -11,7 +11,7 @@ export default DropdownSelectBoxHeaderComponent.extend({
 
   @computed("_selectedDetails.icon", "_selectedDetails.key")
   icon(icon, key) {
-    return iconHTML(icon, {class: key}).htmlSafe();
+    return iconHTML(icon, { class: key }).htmlSafe();
   },
 
   @computed("_selectedDetails.key", "i18nPrefix")
@@ -20,5 +20,7 @@ export default DropdownSelectBoxHeaderComponent.extend({
   },
 
   @computed("selectedContent.firstObject.value")
-  _selectedDetails(value) { return buttonDetails(value); }
+  _selectedDetails(value) {
+    return buttonDetails(value);
+  }
 });

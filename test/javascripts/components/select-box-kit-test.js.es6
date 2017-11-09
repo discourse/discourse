@@ -10,7 +10,7 @@ componentTest('updating the content refreshes the list', {
   },
 
   test(assert) {
-    expandSelectBox();
+    expandSelectBoxKit();
 
     andThen(() => {
       assert.equal(selectBox().rowByValue(1).name(), "robin");
@@ -29,7 +29,7 @@ componentTest('accepts a value by reference', {
   },
 
   test(assert) {
-    expandSelectBox();
+    expandSelectBoxKit();
 
     andThen(() => {
       assert.equal(
@@ -38,7 +38,7 @@ componentTest('accepts a value by reference', {
       );
     });
 
-    selectBoxSelectRow(1);
+    selectBoxKitSelectRow(1);
 
     andThen(() => {
       assert.equal(this.get("value"), 1, "it mutates the value");
@@ -58,7 +58,7 @@ componentTest('default search icon', {
   template: '{{select-box-kit filterable=true}}',
 
   test(assert) {
-    expandSelectBox();
+    expandSelectBoxKit();
 
     andThen(() => {
       assert.ok(exists(selectBox().filter.icon), "it has a the correct icon");
@@ -70,7 +70,7 @@ componentTest('with no search icon', {
   template: '{{select-box-kit filterable=true filterIcon=null}}',
 
   test(assert) {
-    expandSelectBox();
+    expandSelectBoxKit();
 
     andThen(() => {
       assert.equal(selectBox().filter.icon().length, 0, "it has no icon");
@@ -82,7 +82,7 @@ componentTest('custom search icon', {
   template: '{{select-box-kit filterable=true filterIcon="shower"}}',
 
   test(assert) {
-    expandSelectBox();
+    expandSelectBoxKit();
 
     andThen(() => {
       assert.ok(selectBox().filter.icon().hasClass("d-icon-shower"), "it has a the correct icon");
@@ -93,11 +93,11 @@ componentTest('custom search icon', {
 componentTest('select-box is expandable', {
   template: '{{select-box-kit}}',
   test(assert) {
-    expandSelectBox();
+    expandSelectBoxKit();
 
     andThen(() => assert.ok(selectBox().isExpanded) );
 
-    collapseSelectBox();
+    collapseSelectBoxKit();
 
     andThen(() => assert.notOk(selectBox().isExpanded) );
   }
@@ -112,7 +112,7 @@ componentTest('accepts custom value/name keys', {
   },
 
   test(assert) {
-    expandSelectBox();
+    expandSelectBoxKit();
 
     andThen(() => {
       assert.equal(selectBox().selectedRow.name(), "robin");
@@ -130,7 +130,7 @@ componentTest('doesn’t render collection content before first expand', {
   test(assert) {
     assert.notOk(exists(find(".select-box-kit-collection")));
 
-    expandSelectBox();
+    expandSelectBoxKit();
 
     andThen(() => {
       assert.ok(exists(find(".select-box-kit-collection")));
@@ -146,7 +146,7 @@ componentTest('supports options to limit size', {
   },
 
   test(assert) {
-    expandSelectBox();
+    expandSelectBoxKit();
 
     andThen(() => {
       const height = find(".select-box-kit-collection").height();
@@ -163,11 +163,11 @@ componentTest('dynamic headerText', {
   },
 
   test(assert) {
-    expandSelectBox();
+    expandSelectBoxKit();
 
     andThen(() => assert.equal(selectBox().header.name(), "robin") );
 
-    selectBoxSelectRow(2);
+    selectBoxKitSelectRow(2);
 
     andThen(() => {
       assert.equal(selectBox().header.name(), "regis", "it changes header text");
@@ -186,7 +186,7 @@ componentTest('supports custom row template', {
   },
 
   test(assert) {
-    expandSelectBox();
+    expandSelectBoxKit();
 
     andThen(() => assert.equal(selectBox().rowByValue(1).el.html().trim(), "<b>robin</b>") );
   }
@@ -201,7 +201,7 @@ componentTest('supports converting select value to integer', {
   },
 
   test(assert) {
-    expandSelectBox();
+    expandSelectBoxKit();
 
     andThen(() => assert.equal(selectBox().selectedRow.name(), "régis") );
 
@@ -224,7 +224,7 @@ componentTest('supports keyboard events', {
   },
 
   test(assert) {
-    expandSelectBox();
+    expandSelectBoxKit();
 
     selectBox().keyboard.down();
 
@@ -251,7 +251,7 @@ componentTest('supports keyboard events', {
       assert.notOk(selectBox().isExpanded, "it collapses the select box when selecting a row");
     });
 
-    expandSelectBox();
+    expandSelectBoxKit();
 
     selectBox().keyboard.escape();
 
@@ -259,18 +259,13 @@ componentTest('supports keyboard events', {
       assert.notOk(selectBox().isExpanded, "it collapses the select box");
     });
 
-    expandSelectBox();
+    expandSelectBoxKit();
 
-    selectBoxFillInFilter("regis");
-
-    // andThen(() => {
-      // assert.equal(selectBox().highlightedRow.title(), "regis", "it highlights the first result");
-    // });
+    selectBoxKitFillInFilter("regis");
 
     selectBox().keyboard.tab();
 
     andThen(() => {
-      // assert.equal(selectBox().selectedRow.title(), "regis", "it selects the row when pressing tab");
       assert.notOk(selectBox().isExpanded, "it collapses the select box when selecting a row");
     });
   }

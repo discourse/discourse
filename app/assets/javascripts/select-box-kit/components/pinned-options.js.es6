@@ -48,17 +48,13 @@ export default DropdownSelectBoxComponent.extend({
     ];
   },
 
-  actions: {
-    onSelect(value) {
-      value = this.defaultOnSelect(value);
+  selectValueFunction(value) {
+    const topic = this.get("topic");
 
-      const topic = this.get("topic");
-
-      if (value === "unpinned") {
-        topic.clearPin();
-      } else {
-        topic.rePin();
-      }
+    if (value === "unpinned") {
+      topic.clearPin();
+    } else {
+      topic.rePin();
     }
   }
 });

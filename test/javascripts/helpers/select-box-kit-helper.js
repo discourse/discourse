@@ -10,7 +10,7 @@ function checkSelectBoxIsNotCollapsed(selectBoxSelector) {
   }
 }
 
-Ember.Test.registerAsyncHelper('expandSelectBox', function(app, selectBoxSelector) {
+Ember.Test.registerAsyncHelper('expandSelectBoxKit', function(app, selectBoxSelector) {
   selectBoxSelector = selectBoxSelector || '.select-box-kit';
 
   checkSelectBoxIsNotExpanded(selectBoxSelector);
@@ -18,7 +18,7 @@ Ember.Test.registerAsyncHelper('expandSelectBox', function(app, selectBoxSelecto
   click(selectBoxSelector + ' .select-box-kit-header');
 });
 
-Ember.Test.registerAsyncHelper('collapseSelectBox', function(app, selectBoxSelector) {
+Ember.Test.registerAsyncHelper('collapseSelectBoxKit', function(app, selectBoxSelector) {
   selectBoxSelector = selectBoxSelector || '.select-box-kit';
 
   checkSelectBoxIsNotCollapsed(selectBoxSelector);
@@ -26,7 +26,7 @@ Ember.Test.registerAsyncHelper('collapseSelectBox', function(app, selectBoxSelec
   click(selectBoxSelector + ' .select-box-kit-header');
 });
 
-Ember.Test.registerAsyncHelper('selectBoxSelectRow', function(app, rowValue, options) {
+Ember.Test.registerAsyncHelper('selectBoxKitSelectRow', function(app, rowValue, options) {
   options = options || {};
   options.selector = options.selector || '.select-box-kit';
 
@@ -35,7 +35,7 @@ Ember.Test.registerAsyncHelper('selectBoxSelectRow', function(app, rowValue, opt
   click(options.selector + " .select-box-kit-row[data-value='" + rowValue + "']");
 });
 
-Ember.Test.registerAsyncHelper('selectBoxSelectNoneRow', function(app, options) {
+Ember.Test.registerAsyncHelper('selectBoxKitSelectNoneRow', function(app, options) {
   options = options || {};
   options.selector = options.selector || '.select-box-kit';
 
@@ -44,7 +44,7 @@ Ember.Test.registerAsyncHelper('selectBoxSelectNoneRow', function(app, options) 
   click(options.selector + " .select-box-kit-row.none");
 });
 
-Ember.Test.registerAsyncHelper('selectBoxFillInFilter', function(app, filter, options) {
+Ember.Test.registerAsyncHelper('selectBoxKitFillInFilter', function(app, filter, options) {
   options = options || {};
   options.selector = options.selector || '.select-box-kit';
 
@@ -52,7 +52,6 @@ Ember.Test.registerAsyncHelper('selectBoxFillInFilter', function(app, filter, op
 
   var filterQuerySelector = options.selector + ' .select-box-kit-filter-input';
   fillIn(filterQuerySelector, filter);
-  triggerEvent(filterQuerySelector, 'keyup');
 });
 
 function selectBox(selector) { // eslint-disable-line no-unused-vars
@@ -88,23 +87,26 @@ function selectBox(selector) { // eslint-disable-line no-unused-vars
   }
 
   function keyboardHelper() {
-    function createEvent(target, keyCode) {
+    function createEvent(target, keyCode, options) {
       target = target || ".select-box-kit-filter-input";
       selector = find(selector).find(target);
 
       andThen(function() {
-        var event = jQuery.Event('keydown');
+        var event = jQuery.Event(options.type);
         event.keyCode = keyCode;
+        if (options && options.metaKey === true) { event.metaKey = true; }
         find(selector).trigger(event);
       });
     }
 
     return {
-      down: function(target) { createEvent(target, 40); },
-      up: function(target) { createEvent(target, 38); },
-      escape: function(target) { createEvent(target, 27); },
-      enter: function(target) { createEvent(target, 13); },
-      tab: function(target) { createEvent(target, 9); }
+      down: function(target) { createEvent(target, 40, {type: 'keydown'}); },
+      up: function(target) { createEvent(target, 38, {type: 'keydown'}); },
+      escape: function(target) { createEvent(target, 27, {type: 'keydown'}); },
+      enter: function(target) { createEvent(target, 13, {type: 'keypress'}); },
+      tab: function(target) { createEvent(target, 9, {type: 'keydown'}); },
+      backspace: function(target) { createEvent(target, 8, {type: 'keydown'}); },
+      selectAll: function(target) { createEvent(target, 65, {metaKey: true, type: 'keydown'}); },
     };
   }
 

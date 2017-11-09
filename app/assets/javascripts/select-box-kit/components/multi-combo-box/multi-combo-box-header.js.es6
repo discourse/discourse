@@ -4,37 +4,27 @@ import SelectBoxKitHeaderComponent from "select-box-kit/components/select-box-ki
 
 export default SelectBoxKitHeaderComponent.extend({
   attributeBindings: ["names:data-name"],
-  classNames: "multi-combobox-header",
+  classNames: "multi-combo-box-header",
   layoutName: "select-box-kit/templates/components/multi-combo-box/multi-combo-box-header",
-
-  @computed("filter", "selectedContent.[]", "isFocused", "selectBoxIsExpanded")
-  shouldDisplayFilterPlaceholder(filter, selectedContent, isFocused) {
-    if (Ember.isEmpty(selectedContent)) {
-      if (filter.length > 0) { return false; }
-      if (isFocused === true) { return false; }
-      return true;
-    }
-
-    return false;
-  },
+  selectedNameComponent: Ember.computed.alias("options.selectedNameComponent"),
 
   @on("didRender")
   _positionFilter() {
-    this.$(".filter").width(0);
+    if (this.get("shouldDisplayFilter") === false) { return; }
+
+    const $filter = this.$(".filter");
+    $filter.width(0);
 
     const leftHeaderOffset = this.$().offset().left;
-    const leftFilterOffset = this.$(".filter").offset().left;
+    const leftFilterOffset = $filter.offset().left;
     const offset = leftFilterOffset - leftHeaderOffset;
     const width = this.$().outerWidth(false);
     const availableSpace = width - offset;
-
-    // TODO: avoid magic number 8
-    // TODO: make sure the filter doesn’t end up being very small
-    this.$(".filter").width(availableSpace - 8);
+    const $choices = $filter.parent(".choices");
+    const parentRightPadding = parseInt($choices.css("padding-right") , 10);
+    $filter.width(availableSpace - parentRightPadding * 4);
   },
 
   @computed("selectedContent.[]")
-  names(selectedContent) {
-    return selectedContent.map(sc => sc.name).join(",");
-  }
+  names(selectedContent) { return selectedContent.map(sc => sc.name).join(","); }
 });
