@@ -46,7 +46,7 @@ gem 'barber'
 
 gem 'message_bus'
 
-gem 'rails_multisite', '~> 1.1.0.rc4'
+gem 'rails_multisite'
 
 gem 'fast_xs'
 
