@@ -17,6 +17,7 @@
         {{d-button action="logOut" icon="power-off" label="admin.user.log_out"}}
       {{/if}}
     {{/if}}
+    {{plugin-outlet name="admin-user-controls-after" args=(hash model=model) tagName="" connectorTagName=""}}
   </div>
 
   <div class='display-row username'>
