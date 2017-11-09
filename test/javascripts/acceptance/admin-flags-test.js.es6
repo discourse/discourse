@@ -8,6 +8,7 @@ QUnit.test("flagged posts", assert => {
     assert.equal(find('.flagged-post .flag-user').length, 1, 'shows who flagged it');
     assert.equal(find('.flagged-post-response').length, 2);
     assert.equal(find('.flagged-post-response:eq(0) img.avatar').length, 1);
+    assert.equal(find('.flagged-post-user-details .username').length, 1, 'shows the flagged username');
   });
 });
 

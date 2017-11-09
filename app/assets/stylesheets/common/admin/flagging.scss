@@ -42,6 +42,14 @@
       width: 100%;
       word-wrap: break-word;
 
+      .flagged-post-user-details {
+        .username {
+          font-weight: bold;
+          color: $primary;
+        }
+        margin-bottom: 0.5em;
+      }
+
       .d-icon {
         display: inline-block;
       }
@@ -202,3 +210,4 @@
     padding-right: 0.25em;
   }
 }
+
