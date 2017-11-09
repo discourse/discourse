@@ -142,7 +142,7 @@ componentTest('supports options to limit size', {
   template: '{{select-box-kit collectionHeight=20 content=content}}',
 
   beforeEach() {
-    this.set("content", [{ id: 1, name: "robin" }]);
+    this.set("content", ["robin", "régis"]);
   },
 
   test(assert) {

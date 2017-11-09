@@ -1,0 +1,10 @@
+.select-box-kit {
+  &.dropdown-select-box {
+    &.admin-agree-flag-dropdown {
+      .select-box-kit-row[data-value="delete-spammer"] .texts .name,
+      .select-box-kit-row[data-value="delete-spammer"] .icons .d-icon {
+        color: $danger;
+      }
+    }
+  }
+}

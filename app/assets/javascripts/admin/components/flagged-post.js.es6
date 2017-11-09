@@ -32,6 +32,10 @@ export default Ember.Component.extend({
   },
 
   actions: {
+    onRemoveAfterPromise(promise) {
+      this.removeAfter(promise);
+    },
+
     showAgreeFlagModal() {
       this._spawnModal('admin-agree-flag', this.get('flaggedPost'), 'agree-flag-modal');
     },

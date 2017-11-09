@@ -14,40 +14,50 @@ QUnit.test("flagged posts", assert => {
 
 QUnit.test("flagged posts - agree", assert => {
   visit("/admin/flags/active");
-  click('.agree-flag');
+
   andThen(() => {
-    assert.equal(find('.agree-flag-modal:visible').length, 1);
+    expandSelectBoxKit('.agree-flag');
   });
-  click('.confirm-agree-keep');
+
   andThen(() => {
-    assert.equal(find('.agree-flag-modal:visible').length, 0, 'modal is closed');
+    selectBoxKitSelectRow('confirm-agree-keep', { selector: '.agree-flag'});
+  });
+
+  andThen(() => {
     assert.equal(find('.admin-flags .flagged-post').length, 0, 'post was removed');
   });
 });
 
 QUnit.test("flagged posts - agree + hide", assert => {
   visit("/admin/flags/active");
-  click('.agree-flag');
+
   andThen(() => {
-    assert.equal(find('.agree-flag-modal:visible').length, 1);
+    expandSelectBoxKit('.agree-flag');
   });
-  click('.confirm-agree-hide');
+
   andThen(() => {
-    assert.equal(find('.agree-flag-modal:visible').length, 0, 'modal is closed');
+    selectBoxKitSelectRow('confirm-agree-hide', { selector: '.agree-flag'});
+  });
+
+  andThen(() => {
     assert.equal(find('.admin-flags .flagged-post').length, 0, 'post was removed');
   });
 });
 
 QUnit.test("flagged posts - agree + deleteSpammer", assert => {
   visit("/admin/flags/active");
-  click('.agree-flag');
+
   andThen(() => {
-    assert.equal(find('.agree-flag-modal:visible').length, 1);
+    expandSelectBoxKit('.agree-flag');
   });
-  click('.delete-spammer');
-  click('.confirm-delete');
+
   andThen(() => {
-    assert.equal(find('.agree-flag-modal:visible').length, 0, 'modal is closed');
+    selectBoxKitSelectRow('delete-spammer', { selector: '.agree-flag'});
+  });
+
+  click('.confirm-delete');
+
+  andThen(() => {
     assert.equal(find('.admin-flags .flagged-post').length, 0, 'post was removed');
   });
 });
