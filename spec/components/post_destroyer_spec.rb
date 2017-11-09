@@ -167,26 +167,45 @@ describe PostDestroyer do
       before do
         post
         @user = post.user
+        @reply = create_post(topic: post.topic, user: @user)
         expect(@user.user_stat.post_count).to eq(1)
       end
 
       context "recovered by user" do
         it "should increment the user's post count" do
-          PostDestroyer.new(@user, post).destroy
+          PostDestroyer.new(@user, @reply).destroy
+          expect(@user.user_stat.topic_count).to eq(1)
           expect(@user.user_stat.post_count).to eq(1)
 
-          PostDestroyer.new(@user, post.reload).recover
+          PostDestroyer.new(@user, @reply.reload).recover
+          expect(@user.user_stat.topic_count).to eq(1)
           expect(@user.reload.user_stat.post_count).to eq(1)
+
+          expect(UserAction.where(target_topic_id: post.topic_id, action_type: UserAction::NEW_TOPIC).count).to eq(1)
+          expect(UserAction.where(target_topic_id: post.topic_id, action_type: UserAction::REPLY).count).to eq(1)
         end
       end
 
       context "recovered by admin" do
         it "should increment the user's post count" do
+          PostDestroyer.new(moderator, @reply).destroy
+          expect(@user.reload.user_stat.topic_count).to eq(1)
+          expect(@user.user_stat.post_count).to eq(0)
+
+          PostDestroyer.new(admin, @reply).recover
+          expect(@user.reload.user_stat.topic_count).to eq(1)
+          expect(@user.user_stat.post_count).to eq(1)
+
           PostDestroyer.new(moderator, post).destroy
+          expect(@user.reload.user_stat.topic_count).to eq(0)
           expect(@user.user_stat.post_count).to eq(0)
 
           PostDestroyer.new(admin, post).recover
-          expect(@user.reload.user_stat.post_count).to eq(1)
+          expect(@user.reload.user_stat.topic_count).to eq(1)
+          expect(@user.user_stat.post_count).to eq(1)
+
+          expect(UserAction.where(target_topic_id: post.topic_id, action_type: UserAction::NEW_TOPIC).count).to eq(1)
+          expect(UserAction.where(target_topic_id: post.topic_id, action_type: UserAction::REPLY).count).to eq(1)
         end
       end
     end
@@ -218,7 +237,8 @@ describe PostDestroyer do
         expect(post2.raw).to eq(I18n.t('js.post.deleted_by_author', count: 24))
         expect(post2.version).to eq(2)
         expect(called).to eq(1)
-        expect(user_stat.reload.post_count).to eq(1)
+        expect(user_stat.reload.post_count).to eq(0)
+        expect(user_stat.reload.topic_count).to eq(1)
 
         called = 0
         topic_recovered = -> (topic, user) do
@@ -236,7 +256,8 @@ describe PostDestroyer do
         expect(post2.user_deleted).to eq(false)
         expect(post2.cooked).to eq(@orig)
         expect(called).to eq(1)
-        expect(user_stat.reload.post_count).to eq(1)
+        expect(user_stat.reload.post_count).to eq(0)
+        expect(user_stat.reload.topic_count).to eq(1)
       ensure
         DiscourseEvent.off(:topic_destroyed, &topic_destroyed)
         DiscourseEvent.off(:topic_recovered, &topic_recovered)
@@ -251,7 +272,7 @@ describe PostDestroyer do
       reply = create_post(topic_id: post.topic_id, user: user2)
       reply2 = create_post(topic_id: post.topic_id, user: user1)
       expect(user1.user_stat.topic_count).to eq(1)
-      expect(user1.user_stat.post_count).to eq(2)
+      expect(user1.user_stat.post_count).to eq(1)
       expect(user2.user_stat.topic_count).to eq(0)
       expect(user2.user_stat.post_count).to eq(1)
       PostDestroyer.new(Fabricate(:admin), post).destroy
@@ -279,14 +300,15 @@ describe PostDestroyer do
     context "as a moderator" do
       it "deletes the post" do
         author = post.user
+        reply = create_post(topic_id: post.topic_id, user: author)
 
         post_count = author.post_count
         history_count = UserHistory.count
 
-        PostDestroyer.new(moderator, post).destroy
+        PostDestroyer.new(moderator, reply).destroy
 
-        expect(post.deleted_at).to be_present
-        expect(post.deleted_by).to eq(moderator)
+        expect(reply.deleted_at).to be_present
+        expect(reply.deleted_by).to eq(moderator)
 
         author.reload
         expect(author.post_count).to eq(post_count - 1)
@@ -301,12 +323,23 @@ describe PostDestroyer do
         expect(post.deleted_by).to eq(admin)
       end
 
-      it "updates the user's post_count" do
+      it "updates the user's topic_count for first post" do
         author = post.user
         expect {
           PostDestroyer.new(admin, post).destroy
           author.reload
+        }.to change { author.topic_count }.by(-1)
+        expect(author.user_stat.post_count).to eq(0)
+      end
+
+      it "updates the user's post_count for reply" do
+        author = post.user
+        reply = create_post(topic: post.topic, user: author)
+        expect {
+          PostDestroyer.new(admin, reply).destroy
+          author.reload
         }.to change { author.post_count }.by(-1)
+        expect(author.user_stat.topic_count).to eq(1)
       end
 
       it "doesn't count whispers" do

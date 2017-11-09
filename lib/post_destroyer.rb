@@ -76,12 +76,26 @@ class PostDestroyer
     @post.recover!
 
     if author = @post.user
-      author.user_stat.post_count += 1
+      if @post.is_first_post?
+        author.user_stat.topic_count += 1
+      else
+        author.user_stat.post_count += 1
+      end
       author.user_stat.save!
     end
 
+    if @post.is_first_post? && @post.topic && !@post.topic.private_message?
+      # Update stats of all people who replied
+      counts = Post.where(post_type: Post.types[:regular], topic_id: @post.topic_id).where('post_number > 1').group(:user_id).count
+      counts.each do |user_id, count|
+        if user_stat = UserStat.where(user_id: user_id).first
+          user_stat.update_attributes(post_count: user_stat.post_count + count)
+        end
+      end
+    end
+
     @post.publish_change_to_clients! :recovered
-    TopicTrackingState.publish_recover(@post.topic) if @post.topic && @post.post_number == 1
+    TopicTrackingState.publish_recover(@post.topic) if @post.topic && @post.is_first_post?
   end
 
   # When a post is properly deleted. Well, it's still soft deleted, but it will no longer
@@ -231,12 +245,12 @@ class PostDestroyer
       author.user_stat.first_post_created_at = author.posts.order('created_at ASC').first.try(:created_at)
     end
 
-    if @post.post_type == Post.types[:regular] && !(@topic.nil? && !@post.is_first_post?)
+    if @post.post_type == Post.types[:regular] && !@post.is_first_post? && !@topic.nil?
       author.user_stat.post_count -= 1
     end
     author.user_stat.topic_count -= 1 if @post.is_first_post?
 
-    # We don't count replies to your own topics
+    # We don't count replies to your own topics in topic_reply_count
     if @topic && author.id != @topic.user_id
       author.user_stat.update_topic_reply_count
     end
@@ -250,7 +264,7 @@ class PostDestroyer
 
     if @post.is_first_post? && @post.topic && !@post.topic.private_message?
       # Update stats of all people who replied
-      counts = Post.where(post_type: Post.types[:regular]).where(topic_id: @post.topic_id).group(:user_id).count
+      counts = Post.where(post_type: Post.types[:regular], topic_id: @post.topic_id).where('post_number > 1').group(:user_id).count
       counts.each do |user_id, count|
         if user_stat = UserStat.where(user_id: user_id).first
           user_stat.update_attributes(post_count: user_stat.post_count - count)

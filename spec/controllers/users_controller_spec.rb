@@ -2148,7 +2148,7 @@ describe UsersController do
       json = JSON.parse(response.body)
 
       expect(json["user_summary"]["topic_count"]).to eq(1)
-      expect(json["user_summary"]["post_count"]).to eq(1)
+      expect(json["user_summary"]["post_count"]).to eq(0)
     end
   end
 
