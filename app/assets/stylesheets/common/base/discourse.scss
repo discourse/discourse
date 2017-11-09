@@ -142,6 +142,87 @@ input {
   }
 }
 
+input,
+select,
+textarea {
+  color: $primary;
+
+  &[class*="span"] {
+    float: none;
+    margin-left: 0;
+  }
+
+  &[disabled],
+  &[readonly] {
+    cursor: not-allowed;
+    background-color: $primary-low;
+    border-color: $primary-low;
+  }
+
+  &:focus:required:invalid {
+    color: $danger;
+    border-color: $danger;
+  }
+
+  &:focus:required:invalid:focus {
+    border-color: $danger;
+    box-shadow: 0 0 6px $danger;
+  }
+}
+
+input {
+  &[type="text"],
+  &[type="password"],
+  &[type="datetime"],
+  &[type="datetime-local"],
+  &[type="date"],
+  &[type="month"],
+  &[type="time"],
+  &[type="week"],
+  &[type="number"],
+  &[type="email"],
+  &[type="url"],
+  &[type="search"],
+  &[type="tel"],
+  &[type="color"] {
+    display: inline-block;
+    height: 18px;
+    padding: 4px;
+    margin-bottom: 9px;
+    font-size: 0.929em;
+    line-height: 18px;
+    color: $primary;
+    background-color: $secondary;
+    border: 1px solid $primary-low;
+    border-radius: 3px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0, .3);
+
+    &:focus {
+      border-color: $tertiary;
+      outline: 0;
+      box-shadow: inset 0 1px 1px rgba(0,0,0, .3), 0 0 8px $tertiary;
+    }
+  }
+}
+
+textarea {
+  height: auto;
+  background-color:$secondary;
+  border: 1px solid $primary-low;
+  border-radius: 3px;
+  box-shadow: inset 0 1px 1px rgba(0,0,0, .3);
+
+  &:focus {
+    border-color: $tertiary;
+    outline: 0;
+    box-shadow: inset 0 1px 1px rgba(0,0,0, .3), 0 0 8px $tertiary;
+  }
+}
+
+select {
+  border: 1px solid $primary-low;  
+}
+
 // Common Classes
 .radio,
 .checkbox {
