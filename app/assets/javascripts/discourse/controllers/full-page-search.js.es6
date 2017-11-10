@@ -159,9 +159,9 @@ export default Ember.Controller.extend({
     return this.currentUser && this.currentUser.staff && hasResults;
   },
 
-  @computed('expanded')
-  canCreateTopic(expanded) {
-    return this.currentUser && !this.site.mobileView && !expanded;
+  @computed('expanded', 'model.grouped_search_result.can_create_topic')
+  canCreateTopic(expanded, userCanCreateTopic) {
+    return this.currentUser && userCanCreateTopic && !this.site.mobileView && !expanded;
   },
 
   @computed('expanded')

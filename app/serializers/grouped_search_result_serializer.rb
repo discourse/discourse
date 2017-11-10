@@ -3,7 +3,7 @@ class GroupedSearchResultSerializer < ApplicationSerializer
   has_many :users, serializer: SearchResultUserSerializer
   has_many :categories, serializer: BasicCategorySerializer
   has_many :tags, serializer: TagSerializer
-  attributes :more_posts, :more_users, :more_categories, :term, :search_log_id, :more_full_page_results
+  attributes :more_posts, :more_users, :more_categories, :term, :search_log_id, :more_full_page_results, :can_create_topic
 
   def search_log_id
     object.search_log_id
@@ -15,6 +15,10 @@ class GroupedSearchResultSerializer < ApplicationSerializer
 
   def include_tags?
     SiteSetting.tagging_enabled
+  end
+
+  def can_create_topic
+    scope.can_create?(Topic)
   end
 
 end
