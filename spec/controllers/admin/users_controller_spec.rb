@@ -583,48 +583,48 @@ describe Admin::UsersController do
       end
     end
 
-    context 'block' do
+    context 'silence' do
       before do
         @reg_user = Fabricate(:user)
       end
 
       it "raises an error when the user doesn't have permission" do
-        Guardian.any_instance.expects(:can_block_user?).with(@reg_user).returns(false)
-        UserBlocker.expects(:block).never
-        put :block, params: { user_id: @reg_user.id }, format: :json
+        Guardian.any_instance.expects(:can_silence_user?).with(@reg_user).returns(false)
+        UserSilencer.expects(:silence).never
+        put :silence, params: { user_id: @reg_user.id }, format: :json
         expect(response).to be_forbidden
       end
 
       it "returns a 403 if the user doesn't exist" do
-        put :block, params: { user_id: 123123 }, format: :json
+        put :silence, params: { user_id: 123123 }, format: :json
         expect(response).to be_forbidden
       end
 
       it "punishes the user for spamming" do
-        UserBlocker.expects(:block).with(@reg_user, @user, anything)
-        put :block, params: { user_id: @reg_user.id }, format: :json
+        UserSilencer.expects(:silence).with(@reg_user, @user, anything)
+        put :silence, params: { user_id: @reg_user.id }, format: :json
       end
     end
 
-    context 'unblock' do
+    context 'unsilence' do
       before do
         @reg_user = Fabricate(:user)
       end
 
       it "raises an error when the user doesn't have permission" do
-        Guardian.any_instance.expects(:can_unblock_user?).with(@reg_user).returns(false)
-        put :unblock, params: { user_id: @reg_user.id }, format: :json
+        Guardian.any_instance.expects(:can_unsilence_user?).with(@reg_user).returns(false)
+        put :unsilence, params: { user_id: @reg_user.id }, format: :json
         expect(response).to be_forbidden
       end
 
       it "returns a 403 if the user doesn't exist" do
-        put :unblock, params: { user_id: 123123 }, format: :json
+        put :unsilence, params: { user_id: 123123 }, format: :json
         expect(response).to be_forbidden
       end
 
       it "punishes the user for spamming" do
-        UserBlocker.expects(:unblock).with(@reg_user, @user, anything)
-        put :unblock, params: { user_id: @reg_user.id }, format: :json
+        UserSilencer.expects(:unsilence).with(@reg_user, @user, anything)
+        put :unsilence, params: { user_id: @reg_user.id }, format: :json
       end
     end
 

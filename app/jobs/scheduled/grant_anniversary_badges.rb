@@ -22,7 +22,7 @@ module Jobs
           ub.badge_id = #{Badge::Anniversary} AND
           ub.granted_at BETWEEN '#{fmt_start_date}' AND '#{fmt_end_date}'
         WHERE u.active AND
-          NOT u.blocked AND
+          NOT u.silenced AND
           NOT p.hidden AND
           p.deleted_at IS NULL AND
           t.visible AND

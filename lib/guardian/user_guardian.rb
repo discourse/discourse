@@ -30,11 +30,11 @@ module UserGuardian
     is_me?(user) || is_admin?
   end
 
-  def can_block_user?(user)
+  def can_silence_user?(user)
     user && is_staff? && not(user.staff?)
   end
 
-  def can_unblock_user?(user)
+  def can_unsilence_user?(user)
     user && is_staff?
   end
 

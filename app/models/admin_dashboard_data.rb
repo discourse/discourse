@@ -147,7 +147,7 @@ class AdminDashboardData
       admins: User.admins.count,
       moderators: User.moderators.count,
       suspended: User.suspended.count,
-      blocked: User.blocked.count,
+      silenced: User.silenced.count,
       top_referrers: IncomingLinksReport.find('top_referrers').as_json,
       top_traffic_sources: IncomingLinksReport.find('top_traffic_sources').as_json,
       top_referred_topics: IncomingLinksReport.find('top_referred_topics').as_json,

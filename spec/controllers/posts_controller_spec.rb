@@ -695,7 +695,7 @@ describe PostsController do
       context "fast typing" do
         before do
           SiteSetting.min_first_post_typing_time = 3000
-          SiteSetting.auto_block_fast_typers_max_trust_level = 1
+          SiteSetting.auto_silence_fast_typers_max_trust_level = 1
         end
 
         it 'queues the post if min_first_post_typing_time is not met' do
@@ -710,7 +710,7 @@ describe PostsController do
           expect(parsed["action"]).to eq("enqueued")
 
           user.reload
-          expect(user.blocked).to eq(true)
+          expect(user.silenced).to eq(true)
 
           qp = QueuedPost.first
 
@@ -718,7 +718,7 @@ describe PostsController do
           qp.approve!(mod)
 
           user.reload
-          expect(user.blocked).to eq(false)
+          expect(user.silenced).to eq(false)
         end
 
         it "doesn't enqueue replies when the topic is closed" do
@@ -749,8 +749,8 @@ describe PostsController do
         end
       end
 
-      it 'blocks correctly based on auto_block_first_post_regex' do
-        SiteSetting.auto_block_first_post_regex = "I love candy|i eat s[1-5]"
+      it 'silences correctly based on auto_silence_first_post_regex' do
+        SiteSetting.auto_silence_first_post_regex = "I love candy|i eat s[1-5]"
 
         post :create, params: {
           raw: 'this is the test content',
@@ -763,7 +763,7 @@ describe PostsController do
         expect(parsed["action"]).to eq("enqueued")
 
         user.reload
-        expect(user.blocked).to eq(true)
+        expect(user.silenced).to eq(true)
       end
 
       it "can send a message to a group" do

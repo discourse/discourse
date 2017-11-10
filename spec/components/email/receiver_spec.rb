@@ -56,9 +56,9 @@ describe Email::Receiver do
     expect { process(:inactive_sender) }.to raise_error(Email::Receiver::InactiveUserError)
   end
 
-  it "raises a BlockedUserError when the sender has been blocked" do
-    Fabricate(:user, email: "blocked@bar.com", blocked: true)
-    expect { process(:blocked_sender) }.to raise_error(Email::Receiver::BlockedUserError)
+  it "raises a SilencedUserError when the sender has been silenced" do
+    Fabricate(:user, email: "silenced@bar.com", silenced: true)
+    expect { process(:silenced_sender) }.to raise_error(Email::Receiver::SilencedUserError)
   end
 
   it "doesn't raise an InactiveUserError when the sender is staged" do

@@ -15,7 +15,7 @@ module Jobs
       return if !post || post.trashed? || post.user_deleted? || !post.topic
 
       users =
-          User.activated.not_blocked.not_suspended.real
+          User.activated.not_silenced.not_suspended.real
             .joins(:user_option)
             .where('user_options.mailing_list_mode AND user_options.mailing_list_mode_frequency > 0')
             .where('NOT EXISTS (

@@ -165,12 +165,12 @@ describe AdminUserIndexQuery do
 
   end
 
-  describe "with a blocked user" do
+  describe "with a silenced user" do
 
-    let!(:user) { Fabricate(:user, blocked: true) }
+    let!(:user) { Fabricate(:user, silenced: true) }
 
-    it "finds the blocked user" do
-      query = ::AdminUserIndexQuery.new(query: 'blocked')
+    it "finds the silenced user" do
+      query = ::AdminUserIndexQuery.new(query: 'silenced')
       expect(query.find_users.count).to eq(1)
     end
 

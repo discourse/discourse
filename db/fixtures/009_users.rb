@@ -61,6 +61,17 @@ ColumnDropper.drop(
   }
 )
 
+ColumnDropper.drop(
+  table: 'users',
+  after_migration: 'RenameBlockedSilence',
+  columns: %w[
+    blocked
+  ],
+  on_drop: ->() {
+    STDERR.puts 'Removing user blocked column!'
+  }
+)
+
 # User for the smoke tests
 if ENV["SMOKE"] == "1"
   UserEmail.seed do |ue|

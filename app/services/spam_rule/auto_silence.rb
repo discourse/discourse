@@ -1,37 +1,37 @@
-class SpamRule::AutoBlock
+class SpamRule::AutoSilence
 
   def initialize(user)
     @user = user
   end
 
-  def self.block?(user)
-    self.new(user).block?
+  def self.silence?(user)
+    self.new(user).silence?
   end
 
   def self.punish!(user)
-    self.new(user).block_user
+    self.new(user).silence_user
   end
 
   def perform
-    block_user if block?
+    silence_user if silence?
   end
 
-  def block?
-    return true if @user.blocked?
+  def silence?
+    return true if @user.silenced?
     return false if @user.staged?
     return false if @user.has_trust_level?(TrustLevel[1])
 
-    if SiteSetting.num_spam_flags_to_block_new_user > (0) &&
-        SiteSetting.num_users_to_block_new_user > (0) &&
-        num_spam_flags_against_user >= (SiteSetting.num_spam_flags_to_block_new_user) &&
-        num_users_who_flagged_spam_against_user >= (SiteSetting.num_users_to_block_new_user)
+    if SiteSetting.num_spam_flags_to_silence_new_user > (0) &&
+        SiteSetting.num_users_to_silence_new_user > (0) &&
+        num_spam_flags_against_user >= (SiteSetting.num_spam_flags_to_silence_new_user) &&
+        num_users_who_flagged_spam_against_user >= (SiteSetting.num_users_to_silence_new_user)
       return true
     end
 
-    if SiteSetting.num_tl3_flags_to_block_new_user > (0) &&
-        SiteSetting.num_tl3_users_to_block_new_user > (0) &&
-        num_tl3_flags_against_user >= (SiteSetting.num_tl3_flags_to_block_new_user) &&
-        num_tl3_users_who_flagged >= (SiteSetting.num_tl3_users_to_block_new_user)
+    if SiteSetting.num_tl3_flags_to_silence_new_user > (0) &&
+        SiteSetting.num_tl3_users_to_silence_new_user > (0) &&
+        num_tl3_flags_against_user >= (SiteSetting.num_tl3_flags_to_silence_new_user) &&
+        num_tl3_users_who_flagged >= (SiteSetting.num_tl3_users_to_silence_new_user)
       return true
     end
 
@@ -70,10 +70,10 @@ class SpamRule::AutoBlock
       .pluck(:id)
   end
 
-  def block_user
+  def silence_user
     Post.transaction do
-      if UserBlocker.block(@user, Discourse.system_user, message: :too_many_spam_flags) && SiteSetting.notify_mods_when_user_blocked
-        GroupMessage.create(Group[:moderators].name, :user_automatically_blocked, user: @user, limit_once_per: false)
+      if UserSilencer.silence(@user, Discourse.system_user, message: :too_many_spam_flags) && SiteSetting.notify_mods_when_user_silenced
+        GroupMessage.create(Group[:moderators].name, :user_automatically_silenced, user: @user, limit_once_per: false)
       end
     end
   end

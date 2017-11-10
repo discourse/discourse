@@ -968,11 +968,11 @@ spam:
   add_rel_nofollow_to_user_content: true
   flags_required_to_hide_post: 3
   cooldown_minutes_after_hiding_posts: 10
-  num_spam_flags_to_block_new_user: 3
-  num_users_to_block_new_user: 3
-  num_tl3_flags_to_block_new_user: 4
-  num_tl3_users_to_block_new_user: 2
-  notify_mods_when_user_blocked: false
+  num_spam_flags_to_silence_new_user: 3
+  num_users_to_silence_new_user: 3
+  num_tl3_flags_to_silence_new_user: 4
+  num_tl3_users_to_silence_new_user: 2
+  notify_mods_when_user_silenced: false
   flag_sockpuppets: false
   newuser_spam_host_threshold: 3
   white_listed_spam_host_domains:
@@ -992,9 +992,9 @@ spam:
     min: 1
   auto_respond_to_flag_actions: true
   min_first_post_typing_time: 3000
-  auto_block_fast_typers_on_first_post: true
-  auto_block_fast_typers_max_trust_level: 0
-  auto_block_first_post_regex: ""
+  auto_silence_fast_typers_on_first_post: true
+  auto_silence_fast_typers_max_trust_level: 0
+  auto_silence_first_post_regex: ""
   flags_default_topics:
     default: false
     client: true

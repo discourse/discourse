@@ -15,8 +15,8 @@ class Admin::UsersController < Admin::AdminController
                                     :approve,
                                     :activate,
                                     :deactivate,
-                                    :block,
-                                    :unblock,
+                                    :silence,
+                                    :unsilence,
                                     :trust_level,
                                     :trust_level_lock,
                                     :add_group,
@@ -272,15 +272,15 @@ class Admin::UsersController < Admin::AdminController
     render body: nil
   end
 
-  def block
-    guardian.ensure_can_block_user! @user
-    UserBlocker.block(@user, current_user, keep_posts: true)
+  def silence
+    guardian.ensure_can_silence_user! @user
+    UserSilencer.silence(@user, current_user, keep_posts: true)
     render body: nil
   end
 
-  def unblock
-    guardian.ensure_can_unblock_user! @user
-    UserBlocker.unblock(@user, current_user)
+  def unsilence
+    guardian.ensure_can_unsilence_user! @user
+    UserSilencer.unsilence(@user, current_user)
     render body: nil
   end
 

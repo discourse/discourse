@@ -21,7 +21,7 @@ module Email
     class NoBodyDetectedError          < ProcessingError; end
     class NoSenderDetectedError        < ProcessingError; end
     class InactiveUserError            < ProcessingError; end
-    class BlockedUserError             < ProcessingError; end
+    class SilencedUserError            < ProcessingError; end
     class BadDestinationAddress        < ProcessingError; end
     class StrangersNotAllowedError     < ProcessingError; end
     class InsufficientTrustLevelError  < ProcessingError; end
@@ -144,7 +144,7 @@ module Email
       @incoming_email.update_columns(user_id: user.id)
 
       raise InactiveUserError if !user.active && !user.staged
-      raise BlockedUserError if user.blocked
+      raise SilencedUserError if user.silenced?
     end
 
     def is_bounce?

@@ -117,8 +117,8 @@ Discourse::Application.routes.draw do
       post "log_out", constraints: AdminConstraint.new
       put "activate"
       put "deactivate"
-      put "block"
-      put "unblock"
+      put "silence"
+      put "unsilence"
       put "trust_level"
       put "trust_level_lock"
       put "primary_group"
