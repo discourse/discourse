@@ -392,13 +392,20 @@ class PostAlerter
       notification_data[:group_name] = group.name
     end
 
+    if original_post.via_email && (incoming_email = original_post.incoming_email)
+      skip_send_email = contains_email_address?(incoming_email.to_addresses, user) ||
+        contains_email_address?(incoming_email.cc_addresses, user)
+    else
+      skip_send_email = opts[:skip_send_email]
+    end
+
     # Create the notification
     user.notifications.create(notification_type: type,
                               topic_id: post.topic_id,
                               post_number: post.post_number,
                               post_action_id: opts[:post_action_id],
                               data: notification_data.to_json,
-                              skip_send_email: opts[:skip_send_email])
+                              skip_send_email: skip_send_email)
 
    if !existing_notification && NOTIFIABLE_TYPES.include?(type) && !user.suspended?
      # we may have an invalid post somehow, dont blow up
@@ -420,6 +427,11 @@ class PostAlerter
      end
    end
 
+  end
+
+  def contains_email_address?(addresses, user)
+    return false if addresses.blank?
+    addresses.split(";").include?(user.email)
   end
 
   def push_notification(user, payload)
