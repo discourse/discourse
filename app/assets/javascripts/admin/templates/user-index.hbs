@@ -347,17 +347,17 @@
     </div>
   {{/if}}
 
-  <div class="display-row {{if model.blocked 'highlight-danger'}}">
-    <div class='field'>{{i18n 'admin.user.blocked'}}</div>
-    <div class='value'>{{i18n-yes-no model.blocked}}</div>
+  <div class="display-row {{if model.silenced 'highlight-danger'}}">
+    <div class='field'>{{i18n 'admin.user.silenced'}}</div>
+    <div class='value'>{{i18n-yes-no model.silenced}}</div>
     <div class='controls'>
-      {{#conditional-loading-spinner size="small" condition=model.blockingUser}}
-        {{#if model.blocked}}
-          {{d-button action="unblock" icon="thumbs-o-up" label="admin.user.unblock"}}
-          {{i18n 'admin.user.block_explanation'}}
+      {{#conditional-loading-spinner size="small" condition=model.silencingUser}}
+        {{#if model.silenced}}
+          {{d-button action="unsilence" icon="thumbs-o-up" label="admin.user.unsilence"}}
+          {{i18n 'admin.user.silence_explanation'}}
         {{else}}
-          {{d-button action="block" icon="ban" label="admin.user.block"}}
-          {{i18n 'admin.user.block_explanation'}}
+          {{d-button action="silence" icon="ban" label="admin.user.silence"}}
+          {{i18n 'admin.user.silence_explanation'}}
         {{/if}}
       {{/conditional-loading-spinner}}
     </div>

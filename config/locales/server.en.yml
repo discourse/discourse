@@ -70,7 +70,7 @@ en:
         no_body_detected_error: "Happens when we couldn't extract a body and there were no attachments."
         no_sender_detected_error: "Happens when we couldn't find a valid email address in the From header."
         inactive_user_error: "Happens when the sender is not active."
-        blocked_user_error: "Happens when the sender has been blocked."
+        silenced_user_error: "Happens when the sender has been silenced."
         bad_destination_address: "Happens when none of the email addresses in To/Cc/Bcc fields matched a configured incoming email address."
         strangers_not_allowed_error: "Happens when a user tried to create a new topic in a category they're not a member of."
         insufficient_trust_level_error: "Happens when a user tried to create a new topic in a category they don't have the required trust level for."
@@ -1046,11 +1046,11 @@ en:
     tl3_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl3 (regular) by multiplying with this number"
     tl4_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl4 (leader) by multiplying with this number"
 
-    num_spam_flags_to_block_new_user: "If a new user's posts get this many spam flags from num_users_to_block_new_user different users, hide all their posts and prevent future posting. 0 to disable."
-    num_users_to_block_new_user: "If a new user's posts get num_spam_flags_to_block_new_user spam flags from this many different users, hide all their posts and prevent future posting. 0 to disable."
-    num_tl3_flags_to_block_new_user: "If a new user's posts get this many flags from num_tl3_users_to_block_new_user different trust level 3 users, hide all their posts and prevent future posting. 0 to disable."
-    num_tl3_users_to_block_new_user: "If a new user's posts get num_tl3_flags_to_block_new_user flags from this many different trust level 3 users, hide all their posts and prevent future posting. 0 to disable."
-    notify_mods_when_user_blocked: "If a user is automatically blocked, send a message to all moderators."
+    num_spam_flags_to_silence_new_user: "If a new user's posts get this many spam flags from num_users_to_silence_new_user different users, hide all their posts and prevent future posting. 0 to disable."
+    num_users_to_silence_new_user: "If a new user's posts get num_spam_flags_to_silence_new_user spam flags from this many different users, hide all their posts and prevent future posting. 0 to disable."
+    num_tl3_flags_to_silence_new_user: "If a new user's posts get this many flags from num_tl3_users_to_silence_new_user different trust level 3 users, hide all their posts and prevent future posting. 0 to disable."
+    num_tl3_users_to_silence_new_user: "If a new user's posts get num_tl3_flags_to_silence_new_user flags from this many different trust level 3 users, hide all their posts and prevent future posting. 0 to disable."
+    notify_mods_when_user_silenced: "If a user is automatically silenced, send a message to all moderators."
     flag_sockpuppets: "If a new user replies to a topic from the same IP address as the new user who started the topic, flag both of their posts as potential spam."
 
     traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak."
@@ -1354,9 +1354,9 @@ en:
 
     auto_respond_to_flag_actions: "Enable automatic reply when disposing a flag."
     min_first_post_typing_time: "Minimum amount of time in milliseconds a user must type during first post, if threshold is not met post will automatically enter the needs approval queue. Set to 0 to disable (not recommended)"
-    auto_block_fast_typers_on_first_post: "Automatically block users that do not meet min_first_post_typing_time"
-    auto_block_fast_typers_max_trust_level: "Maximum trust level to auto block fast typers"
-    auto_block_first_post_regex: "Case insensitive regex that if passed will cause first post by user to be blocked and sent to approval queue. Example: raging|a[bc]a , will cause all posts containing raging or aba or aca to be blocked on first. Only applies to first post."
+    auto_silence_fast_typers_on_first_post: "Automatically silence users that do not meet min_first_post_typing_time"
+    auto_silence_fast_typers_max_trust_level: "Maximum trust level to auto silence fast typers"
+    auto_silence_first_post_regex: "Case insensitive regex that if passed will cause first post by user to be silenced and sent to approval queue. Example: raging|a[bc]a , will cause all posts containing raging or aba or aca to be silenced on first. Only applies to first post."
     flags_default_topics: "Show flagged topics by default in the admin section"
 
     reply_by_email_enabled: "Enable replying to topics via email."
@@ -2172,13 +2172,13 @@ en:
 
         Your account associated with this email address is not activated. Please activate your account before sending emails in.
 
-    email_reject_blocked_user:
-      title: "Email Reject Blocked User"
-      subject_template: "[%{email_prefix}] Email issue -- Blocked User"
+    email_reject_silenced_user:
+      title: "Email Reject Silenced User"
+      subject_template: "[%{email_prefix}] Email issue -- Silenced User"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        Your account associated with this email address has been blocked.
+        Your account associated with this email address has been silenced.
 
     email_reject_reply_user_not_matching:
       title: "Email Reject User Not Matching"
@@ -2324,7 +2324,7 @@ en:
 
         This is an automated message from %{site_name} to let you know that your posts have been temporarily hidden because they were flagged by the community.
 
-        As a precautionary measure, your new account has been blocked from creating new replies or topics until a staff member can review your account. We apologize for the inconvenience.
+        As a precautionary measure, your new account has been silenced from creating new replies or topics until a staff member can review your account. We apologize for the inconvenience.
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
     too_many_tl3_flags:
@@ -2335,11 +2335,11 @@ en:
 
         This is an automated message from %{site_name} to let you know you that your account has been placed on hold due to a large number of community flags.
 
-        As a precautionary measure, your new account has been blocked from creating new replies or topics until a staff member can review your account.  We apologize for the inconvenience.
+        As a precautionary measure, your new account has been silenced from creating new replies or topics until a staff member can review your account.  We apologize for the inconvenience.
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
-    blocked_by_staff:
-      title: "Blocked by Staff"
+    silenced_by_staff:
+      title: "Silenced by Staff"
       subject_template: "Account temporarily on hold"
       text_body_template: |
         Hello,
@@ -2350,32 +2350,32 @@ en:
 
         For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
-    user_automatically_blocked:
-      title: "User Automatically Blocked"
-      subject_template: "New user %{username} blocked by community flags"
+    user_automatically_silenced:
+      title: "User Automatically Silenced"
+      subject_template: "New user %{username} silenced by community flags"
       text_body_template: |
         This is an automated message.
 
-        The new user [%{username}](%{user_url}) was automatically blocked because multiple users flagged %{username}'s post(s).
+        The new user [%{username}](%{user_url}) was automatically silenced because multiple users flagged %{username}'s post(s).
 
-        Please [review the flags](%{base_url}/admin/flags). If %{username} was incorrectly blocked from posting, click the unblock button on [the admin page for this user](%{user_url}).
+        Please [review the flags](%{base_url}/admin/flags). If %{username} was incorrectly silenced from posting, click the unsilence button on [the admin page for this user](%{user_url}).
 
         This threshold can be changed via the `block_new_user` site settings.
 
-    spam_post_blocked:
-      title: "Spam Post Blocked"
-      subject_template: "New user %{username} posts blocked due to repeated links"
+    spam_post_silenced:
+      title: "Spam Post Silenced"
+      subject_template: "New user %{username} posts silenced due to repeated links"
       text_body_template: |
         This is an automated message.
 
-        The new user [%{username}](%{user_url}) tried to create multiple posts with links to %{domains}, but those posts were blocked to avoid spam. The user is still able to create new posts that do not link to %{domains}.
+        The new user [%{username}](%{user_url}) tried to create multiple posts with links to %{domains}, but those posts were silenced to avoid spam. The user is still able to create new posts that do not link to %{domains}.
 
         Please [review the user](%{user_url}).
 
         This can be modified via the `newuser_spam_host_threshold` and `white_listed_spam_host_domains` site settings.
 
-    unblocked:
-      title: "Unblocked"
+    unsilenced:
+      title: "Unsilenced"
       subject_template: "Account no longer on hold"
       text_body_template: |
         Hello,

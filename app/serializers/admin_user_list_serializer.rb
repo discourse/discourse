@@ -22,7 +22,7 @@ class AdminUserListSerializer < BasicUserSerializer
              :suspended_at,
              :suspended_till,
              :suspended,
-             :blocked,
+             :silenced,
              :time_read,
              :staged
 

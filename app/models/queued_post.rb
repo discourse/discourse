@@ -66,7 +66,7 @@ class QueuedPost < ActiveRecord::Base
     QueuedPost.transaction do
       change_to!(:approved, approved_by)
 
-      UserBlocker.unblock(user, approved_by) if user.blocked?
+      UserSilencer.unsilence(user, approved_by) if user.silenced?
 
       created_post = creator.create
 

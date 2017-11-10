@@ -299,32 +299,32 @@ const AdminUser = Discourse.User.extend({
     });
   },
 
-  unblock() {
-    this.set('blockingUser', true);
-    return ajax('/admin/users/' + this.id + '/unblock', {
+  unsilence() {
+    this.set('silencingUser', true);
+    return ajax('/admin/users/' + this.id + '/unsilence', {
       type: 'PUT'
     }).then(function() {
       window.location.reload();
     }).catch(function(e) {
-      var error = I18n.t('admin.user.unblock_failed', { error: "http: " + e.status + " - " + e.body });
+      var error = I18n.t('admin.user.unsilence_failed', { error: "http: " + e.status + " - " + e.body });
       bootbox.alert(error);
     });
   },
 
-  block() {
+  silence() {
     const user = this,
-          message = I18n.t("admin.user.block_confirm");
+          message = I18n.t("admin.user.silence_confirm");
 
-    const performBlock = function() {
-      user.set('blockingUser', true);
-      return ajax('/admin/users/' + user.id + '/block', {
+    const performSilence = function() {
+      user.set('silencingUser', true);
+      return ajax('/admin/users/' + user.id + '/silence', {
         type: 'PUT'
       }).then(function() {
         window.location.reload();
       }).catch(function(e) {
-        var error = I18n.t('admin.user.block_failed', { error: "http: " + e.status + " - " + e.body });
+        var error = I18n.t('admin.user.silence_failed', { error: "http: " + e.status + " - " + e.body });
         bootbox.alert(error);
-        user.set('blockingUser', false);
+        user.set('silencingUser', false);
       });
     };
 
@@ -333,9 +333,9 @@ const AdminUser = Discourse.User.extend({
       "class": "cancel",
       "link":  true
     }, {
-      "label": `${iconHTML('exclamation-triangle')} ` + I18n.t('admin.user.block_accept'),
+      "label": `${iconHTML('exclamation-triangle')} ` + I18n.t('admin.user.silence_accept'),
       "class": "btn btn-danger",
-      "callback": function() { performBlock(); }
+      "callback": function() { performSilence(); }
     }];
 
     bootbox.dialog(message, buttons, { "classes": "delete-user-modal" });

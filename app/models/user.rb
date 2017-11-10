@@ -146,9 +146,9 @@ class User < ActiveRecord::Base
 
   # TODO-PERF: There is no indexes on any of these
   # and NotifyMailingListSubscribers does a select-all-and-loop
-  # may want to create an index on (active, blocked, suspended_till)?
-  scope :blocked, -> { where(blocked: true) }
-  scope :not_blocked, -> { where(blocked: false) }
+  # may want to create an index on (active, silence, suspended_till)?
+  scope :silenced, -> { where(silenced: true) }
+  scope :not_silenced, -> { where(silenced: false) }
   scope :suspended, -> { where('suspended_till IS NOT NULL AND suspended_till > ?', Time.zone.now) }
   scope :not_suspended, -> { where('suspended_till IS NULL OR suspended_till <= ?', Time.zone.now) }
   scope :activated, -> { where(active: true) }
@@ -1141,7 +1141,7 @@ end
 #  flag_level              :integer          default(0), not null
 #  ip_address              :inet
 #  moderator               :boolean          default(FALSE)
-#  blocked                 :boolean          default(FALSE)
+#  silenced                :boolean          default(FALSE)
 #  title                   :string
 #  uploaded_avatar_id      :integer
 #  locale                  :string(10)

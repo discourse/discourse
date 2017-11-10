@@ -677,7 +677,7 @@ describe Topic do
 
     context "when moderator post fails to be created" do
       before do
-        user.toggle!(:blocked)
+        user.toggle!(:silenced)
       end
 
       it "should not increment moderator_posts_count" do

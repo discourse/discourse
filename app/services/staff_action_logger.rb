@@ -273,15 +273,15 @@ class StaffActionLogger
                                     context: category.url))
   end
 
-  def log_block_user(user, opts = {})
+  def log_silence_user(user, opts = {})
     raise Discourse::InvalidParameters.new(:user) unless user
-    UserHistory.create(params(opts).merge(action: UserHistory.actions[:block_user],
+    UserHistory.create(params(opts).merge(action: UserHistory.actions[:silence_user],
                                           target_user_id: user.id))
   end
 
-  def log_unblock_user(user, opts = {})
+  def log_unsilence_user(user, opts = {})
     raise Discourse::InvalidParameters.new(:user) unless user
-    UserHistory.create(params(opts).merge(action: UserHistory.actions[:unblock_user],
+    UserHistory.create(params(opts).merge(action: UserHistory.actions[:unsilence_user],
                                           target_user_id: user.id))
   end
 

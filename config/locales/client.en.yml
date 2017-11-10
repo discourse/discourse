@@ -605,7 +605,7 @@ en:
       admin: "{{user}} is an admin"
       moderator_tooltip: "This user is a moderator"
       admin_tooltip: "This user is an admin"
-      blocked_tooltip: "This user is blocked"
+      silenced_tooltip: "This user is silenced"
       suspended_notice: "This user is suspended until {{date}}."
       suspended_permanently: "This user is suspended."
       suspended_reason: "Reason: "
@@ -2575,7 +2575,7 @@ en:
         no_problems: "No problems were found."
         moderators: 'Moderators:'
         admins: 'Admins:'
-        blocked: 'Blocked:'
+        silenced: 'Silenced:'
         suspended: 'Suspended:'
         private_messages_short: "Msgs"
         private_messages_title: "Messages"
@@ -3136,8 +3136,8 @@ en:
             change_category_settings: "change category settings"
             delete_category: "delete category"
             create_category: "create category"
-            block_user: "block user"
-            unblock_user: "unblock user"
+            silence_user: "silence user"
+            unsilence_user: "unsilence user"
             grant_admin: "grant admin"
             revoke_admin: "revoke admin"
             grant_moderation: "grant moderation"
@@ -3235,7 +3235,7 @@ en:
           pending: "Pending"
           staff: 'Staff'
           suspended: 'Suspended'
-          blocked: 'Blocked'
+          silenced: 'Silenced'
           suspect: 'Suspect'
         approved: "Approved?"
         approved_selected:
@@ -3256,7 +3256,7 @@ en:
           staff: "Staff"
           admins: 'Admin Users'
           moderators: 'Moderators'
-          blocked: 'Blocked Users'
+          silenced: 'Silenced Users'
           suspended: 'Suspended Users'
           suspect: 'Suspect Users'
         reject_successful:
@@ -3287,12 +3287,12 @@ en:
 
         # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
         delete_all_posts_confirm_MF: "You are about to delete {POSTS, plural, one {1 post} other {# posts}} and {TOPICS, plural, one {1 topic} other {# topics}}. Are you sure?"
-        suspend: "Suspend"
-        unsuspend: "Unsuspend"
-        suspended: "Suspended?"
+        silence: "Silence"
+        unsilence: "Unsilence"
+        silenced: "Silenced?"
         moderator: "Moderator?"
         admin: "Admin?"
-        blocked: "Blocked?"
+        suspended: "Suspended?"
         staged: "Staged?"
         show_admin_profile: "Admin"
         refresh_browsers: "Force browser refresh"
@@ -3308,8 +3308,8 @@ en:
         grant_admin_confirm: "We've sent you an email to verify the new administrator. Please open it and follow the instructions."
         revoke_moderation: 'Revoke Moderation'
         grant_moderation: 'Grant Moderation'
-        unblock: 'Unblock'
-        block: 'Block'
+        unsuspend: 'Unsuspend'
+        suspend: 'Suspend'
         reputation: Reputation
         permissions: Permissions
         activity: Activity
@@ -3356,10 +3356,10 @@ en:
         activate_failed: "There was a problem activating the user."
         deactivate_account: "Deactivate Account"
         deactivate_failed: "There was a problem deactivating the user."
-        unblock_failed: 'There was a problem unblocking the user.'
-        block_failed: 'There was a problem blocking the user.'
-        block_confirm: 'Are you sure you want to block this user? They will not be able to create any new topics or posts.'
-        block_accept: 'Yes, block this user'
+        unsilence_failed: 'There was a problem unsilencing the user.'
+        silence_failed: 'There was a problem unsilencing the user.'
+        silence_confirm: 'Are you sure you want to silence this user? They will not be able to create any new topics or posts.'
+        silence_accept: 'Yes, silence this user'
         bounce_score: "Bounce Score"
         reset_bounce_score:
           label: "Reset"
@@ -3368,7 +3368,7 @@ en:
 
         deactivate_explanation: "A deactivated user must re-validate their email."
         suspended_explanation: "A suspended user can't log in."
-        block_explanation: "A blocked user can't post or start topics."
+        silence_explanation: "A silenced user can't post or start topics."
         staged_explanation: "A staged user can only post via email in specific topics."
         bounce_score_explanation:
           none: "No bounces were received recently from that email."

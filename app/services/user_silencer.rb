@@ -1,26 +1,26 @@
-class UserBlocker
+class UserSilencer
 
   def initialize(user, by_user = nil, opts = {})
     @user, @by_user, @opts = user, by_user, opts
   end
 
-  def self.block(user, by_user = nil, opts = {})
-    UserBlocker.new(user, by_user, opts).block
+  def self.silence(user, by_user = nil, opts = {})
+    UserSilencer.new(user, by_user, opts).silence
   end
 
-  def self.unblock(user, by_user = nil, opts = {})
-    UserBlocker.new(user, by_user, opts).unblock
+  def self.unsilence(user, by_user = nil, opts = {})
+    UserSilencer.new(user, by_user, opts).unsilence
   end
 
-  def block
+  def silence
     hide_posts unless @opts[:keep_posts]
-    unless @user.blocked?
-      @user.blocked = true
+    unless @user.silenced?
+      @user.silenced = true
       if @user.save
-        message_type = @opts[:message] || :blocked_by_staff
+        message_type = @opts[:message] || :silenced_by_staff
         post = SystemMessage.create(@user, message_type)
         if post && @by_user
-          StaffActionLogger.new(@by_user).log_block_user(@user, context: "#{message_type}: '#{post.topic&.title rescue ''}' #{@opts[:reason]}")
+          StaffActionLogger.new(@by_user).log_silence_user(@user, context: "#{message_type}: '#{post.topic&.title rescue ''}' #{@opts[:reason]}")
         end
       end
     else
@@ -36,11 +36,11 @@ class UserBlocker
     Topic.where(id: topic_ids).update_all(visible: false) unless topic_ids.empty?
   end
 
-  def unblock
-    @user.blocked = false
+  def unsilence
+    @user.silenced = false
     if @user.save
-      SystemMessage.create(@user, :unblocked)
-      StaffActionLogger.new(@by_user).log_unblock_user(@user) if @by_user
+      SystemMessage.create(@user, :unsilenced)
+      StaffActionLogger.new(@by_user).log_unsilence_user(@user) if @by_user
     end
   end
 

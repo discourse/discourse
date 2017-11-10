@@ -65,8 +65,8 @@ describe Jobs::NotifyMailingListSubscribers do
         include_examples "no emails"
       end
 
-      context "to a blocked user" do
-        before { mailing_list_user.update(blocked: true) }
+      context "to a silenced user" do
+        before { mailing_list_user.update(silenced: true) }
         include_examples "no emails"
       end
 
