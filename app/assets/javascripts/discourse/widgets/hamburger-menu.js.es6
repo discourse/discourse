@@ -35,7 +35,9 @@ export default createWidget('hamburger-menu', {
 
   settings: {
     showCategories: true,
-    maxWidth: 300
+    maxWidth: 300,
+    showFAQ: true,
+    showAbout: true
   },
 
   adminLinks() {
@@ -141,9 +143,11 @@ export default createWidget('hamburger-menu', {
 
   footerLinks(prioritizeFaq, faqUrl) {
     const links = [];
-    links.push({ route: 'about', className: 'about-link', label: 'about.simple_title' });
+    if (this.settings.showAbout) {
+      links.push({ route: 'about', className: 'about-link', label: 'about.simple_title' });
+    }
 
-    if (!prioritizeFaq) {
+    if (this.settings.showFAQ && !prioritizeFaq) {
       links.push({ href: faqUrl, className: 'faq-link', label: 'faq' });
     }
 
@@ -171,7 +175,10 @@ export default createWidget('hamburger-menu', {
       faqUrl = Discourse.getURL('/faq');
     }
 
-    const prioritizeFaq = this.currentUser && !this.currentUser.read_faq;
+    const prioritizeFaq = this.settings.showFAQ &&
+      this.currentUser &&
+      !this.currentUser.read_faq;
+
     if (prioritizeFaq) {
       results.push(this.attach('menu-links', { name: 'faq-link', heading: true, contents: () => {
         return this.attach('priority-faq-link', { href: faqUrl });
