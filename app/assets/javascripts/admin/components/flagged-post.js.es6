@@ -32,7 +32,7 @@ export default Ember.Component.extend({
   },
 
   actions: {
-    onRemoveAfterPromise(promise) {
+    removeAfter(promise) {
       this.removeAfter(promise);
     },
 

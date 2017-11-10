@@ -111,7 +111,9 @@
 
     {{#if canAct}}
       <div class='flagged-post-controls'>
-        {{admin-agree-flag-dropdown post=flaggedPost onRemoveAfterPromise=(action "onRemoveAfterPromise")}}
+        {{admin-agree-flag-dropdown
+          post=flaggedPost
+          removeAfter=(action "removeAfter") }}
 
         {{#if flaggedPost.postHidden}}
           {{d-button
