@@ -46,6 +46,12 @@ const CLOSED = 'closed',
         featuredLink: 'topic.featured_link'
       };
 
+const _saveLabels = {};
+_saveLabels[EDIT] = 'composer.save_edit';
+_saveLabels[REPLY] = 'composer.reply';
+_saveLabels[CREATE_TOPIC] = 'composer.create_topic';
+_saveLabels[PRIVATE_MESSAGE] = 'composer.create_pm';
+
 const Composer = RestModel.extend({
   _categoryId: null,
   unlistTopic: false,
@@ -250,14 +256,9 @@ const Composer = RestModel.extend({
     }
   },
 
-  @computed('action')
-  saveLabel(action) {
-    switch (action) {
-      case EDIT: return 'composer.save_edit';
-      case REPLY: return 'composer.reply';
-      case CREATE_TOPIC: return 'composer.create_topic';
-      case PRIVATE_MESSAGE: return 'composer.create_pm';
-    }
+  @computed('action', 'whisper')
+  saveLabel(action, whisper) {
+    return whisper ? 'composer.create_whisper' : _saveLabels[action];
   },
 
   hasMetaData: function() {
