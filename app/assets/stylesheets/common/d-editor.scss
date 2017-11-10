@@ -138,3 +138,28 @@
   display: none;
   flex: 0;
 }
+
+.user-preferences .bio-composer,
+.edit-category-tab-topic-template {
+  textarea {
+    width: 100%;
+  }
+  .d-editor-container {
+    display: block;
+  }
+  .d-editor-textarea-wrapper {
+    border: 1px solid $primary-low;
+  }
+  .d-editor-preview-wrapper {
+    max-width: 100%;
+    margin: 10px 0 0 0;
+  }
+  .d-editor-preview {
+    background-color: dark-light-diff($primary, $secondary, 97%, -70%);
+  }
+}
+
+.user-preferences .bio-composer {
+  padding: 10px;
+  border: 1px solid $primary-low;
+}
