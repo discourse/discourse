@@ -576,7 +576,7 @@ describe PostAlerter do
     it "sends email notifications only to users not on CC list of incoming email" do
       alice = Fabricate(:user, username: "alice", email: "alice@example.com")
       bob = Fabricate(:user, username: "bob", email: "bob@example.com")
-      carol = Fabricate(:user,username: "carol", email: "carol@example.com", staged: true)
+      carol = Fabricate(:user, username: "carol", email: "carol@example.com", staged: true)
       dave = Fabricate(:user, username: "dave", email: "dave@example.com", staged: true)
       erin = Fabricate(:user, username: "erin", email: "erin@example.com")
 
