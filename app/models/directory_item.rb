@@ -25,10 +25,10 @@ class DirectoryItem < ActiveRecord::Base
     period_types.each_key { |p| refresh_period!(p) }
   end
 
-  def self.refresh_period!(period_type)
+  def self.refresh_period!(period_type, force: false)
 
     # Don't calculate it if the user directory is disabled
-    return unless SiteSetting.enable_user_directory?
+    return unless SiteSetting.enable_user_directory? || force
 
     since =
       case period_type
