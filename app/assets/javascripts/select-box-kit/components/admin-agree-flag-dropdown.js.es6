@@ -75,12 +75,12 @@ export default DropdownSelectBox.extend({
   actions: {
     deleteSpammer() {
       let spammerDetails = this.get("spammerDetails");
-      this.sendAction("onRemoveAfterPromise", spammerDetails.deleteUser());
+      this.attrs.removeAfter(spammerDetails.deleteUser());
     },
 
     perform(action) {
       let flaggedPost = this.get("post");
-      this.sendAction("onRemoveAfterPromise", flaggedPost.agreeFlags(action));
+      this.attrs.removeAfter(flaggedPost.agreeFlags(action));
     },
   }
 });
