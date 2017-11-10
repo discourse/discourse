@@ -660,15 +660,6 @@ $topic-avatar-width: 45px;
   width: calc(#{$topic-avatar-width} + #{$topic-body-width} + 2 * #{$topic-body-width-padding});
 }
 
-.small-action {
-  max-width: 755px;
-  border-top: 1px solid $primary-low;
-}
-
-.small-action.deleted {
-  background-color: dark-light-diff(rgba($danger,.7), $secondary, 50%, -60%);
-}
-
 /* hide the reply border above the time gap notices */
 .time-gap + .topic-post .topic-body,
 .time-gap + .topic-post .topic-avatar {
