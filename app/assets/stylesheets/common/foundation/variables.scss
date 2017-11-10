@@ -82,6 +82,7 @@ $base-font-family: Helvetica, Arial, sans-serif !default;
 // standard color transformations, use these if possible, and add any new dark-light-diffs here
 
 //primary
+$primary-very-low: dark-light-diff($primary, $secondary, 97%, -75%);
 $primary-low: dark-light-diff($primary, $secondary, 90%, -65%);
 $primary-low-mid: dark-light-diff($primary, $secondary, 70%, -45%);
 $primary-medium: dark-light-diff($primary, $secondary, 50%, -20%);
