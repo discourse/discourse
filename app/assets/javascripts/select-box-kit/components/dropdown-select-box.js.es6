@@ -9,7 +9,10 @@ export default SelectBoxKitComponent.extend({
   headerComponent: "dropdown-select-box/dropdown-select-box-header",
   rowComponent: "dropdown-select-box/dropdown-select-box-row",
 
-  clickOutside() { this.close(); },
+  clickOutside() {
+    if (this.get("isExpanded") === false) { return; }
+    this.close();
+  },
 
   didSelectValue() {
     this._super();
