@@ -176,14 +176,16 @@ export default Ember.Mixin.create({
 
   _applyFixedPosition() {
     if (this.get("isExpanded") !== true) { return; }
-    if (this.get("scrollableParent").length === 0) { return; }
+
+    const scrollableParent = this.$().parents(this.get("scrollableParentSelector"));
+    if (scrollableParent.length === 0) { return; }
 
     const width = this.$().outerWidth(false);
     const height = this.$().outerHeight(false);
     const $placeholder = $(`<div class='select-box-kit-fixed-placeholder-${this.elementId}'></div>`);
 
-    this._previousScrollParentOverflow = this._previousScrollParentOverflow || this.get("scrollableParent").css("overflow");
-    this.get("scrollableParent").css({ overflow: "hidden" });
+    this._previousScrollParentOverflow = this._previousScrollParentOverflow || scrollableParent.css("overflow");
+    scrollableParent.css({ overflow: "hidden" });
 
     this._previousCSSContext = {
       minWidth: this.$().css("min-width"),
@@ -192,7 +194,7 @@ export default Ember.Mixin.create({
 
     const componentStyles = {
       position: "fixed",
-      "margin-top": -this.get("scrollableParent").scrollTop(),
+      "margin-top": -scrollableParent.scrollTop(),
       width,
       minWidth: "unset",
       maxWidth: "unset"
@@ -212,11 +214,10 @@ export default Ember.Mixin.create({
   _removeFixedPosition() {
     $(`.select-box-kit-fixed-placeholder-${this.elementId}`).remove();
 
-    if (this.get("scrollableParent").length === 0) {
-      return;
-    }
-
     if (!this.element || this.isDestroying || this.isDestroyed) { return; }
+
+    const scrollableParent = this.$().parents(this.get("scrollableParentSelector"));
+    if (scrollableParent.length === 0) { return; }
 
     const css = jQuery.extend(
       this._previousCSSContext,
@@ -231,9 +232,7 @@ export default Ember.Mixin.create({
     );
     this.$().css(css);
 
-    this.get("scrollableParent").css({
-      overflow: this._previousScrollParentOverflow
-    });
+    scrollableParent.css("overflow", this._previousScrollParentOverflow);
   },
 
   _positionWrapper() {
