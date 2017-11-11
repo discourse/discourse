@@ -181,14 +181,20 @@ class DiscourseCLI < Thor
     puts 'Requests sent. Clients will refresh on next navigation.'
   end
 
-  desc "export_category", "Export a category, all its topics, and all users who posted in those topics"
-  def export_category(category_id, filename = nil)
-    raise "Category id argument is missing!" unless category_id
-
+  desc "export_categories", "Export categories, all its topics, and all users who posted in those topics"
+  def export_categories(*category_ids)
+    puts "Starting export of categories...", ""
     load_rails
     load_import_export
-    ImportExport.export_category(category_id, filename)
+    ImportExport.export_categories(category_ids)
     puts "", "Done", ""
+  end
+
+  desc "export_category", "Export a category, all its topics, and all users who posted in those topics"
+  def export_category(category_id)
+    raise "Category id argument is missing!" unless category_id
+
+    export_categories([category_id])
   end
 
   desc "import_category", "Import a category, its topics and the users from the output of the export_category command"
