@@ -396,6 +396,9 @@ describe Email::Receiver do
       expect(topic.posts.last.created_at).to be_within(1.minute).of(DateTime.now)
     end
 
+    it "accepts emails with wrong reply key if the system knows about the forwareded email" do
+
+    end
   end
 
   context "new message to a group" do
