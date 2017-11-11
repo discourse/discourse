@@ -211,11 +211,6 @@ export default Ember.Component.extend(UtilsMixin, DomHelpersMixin, KeyboardMixin
     });
   },
 
-  @computed("scrollableParentSelector")
-  scrollableParent(scrollableParentSelector) {
-    return this.$().parents(scrollableParentSelector).first();
-  },
-
   willFilterContent() {
     this.expand();
     this.set("highlightedValue", null);
