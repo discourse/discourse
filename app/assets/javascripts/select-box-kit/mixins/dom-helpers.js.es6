@@ -175,13 +175,14 @@ export default Ember.Mixin.create({
   },
 
   _applyFixedPosition() {
+    if (this.get("isExpanded") !== true) { return; }
     if (this.get("scrollableParent").length === 0) { return; }
 
     const width = this.$().outerWidth(false);
     const height = this.$().outerHeight(false);
     const $placeholder = $(`<div class='select-box-kit-fixed-placeholder-${this.elementId}'></div>`);
 
-    this._previousScrollParentOverflow = this.get("scrollableParent").css("overflow");
+    this._previousScrollParentOverflow = this._previousScrollParentOverflow || this.get("scrollableParent").css("overflow");
     this.get("scrollableParent").css({ overflow: "hidden" });
 
     this._previousCSSContext = {
