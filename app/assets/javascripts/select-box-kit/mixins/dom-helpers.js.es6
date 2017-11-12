@@ -47,6 +47,11 @@ export default Ember.Mixin.create({
     this._positionWrapper();
   },
 
+  @on("didInsertElement")
+  _setupResizeListener() {
+    $(window).on("resize.select-box-kit", () => this.collapse() );
+  },
+
   @on("willDestroyElement")
   _clearState() {
     $(window).off("resize.select-box-kit");
@@ -72,7 +77,7 @@ export default Ember.Mixin.create({
     if (this.get("isExpanded") === true) { return; }
     this.setProperties({ isExpanded: true, renderedBodyOnce: true, isFocused: true });
     this.focus();
-    this.autoHighlightFunction();
+    this.autoHighlight();
   },
 
   collapse() {

@@ -14,9 +14,8 @@ export default SelectBoxKitComponent.extend({
     this.close();
   },
 
-  didSelectValue() {
+  didSelect() {
     this._super();
-
     this.blur();
   }
 });

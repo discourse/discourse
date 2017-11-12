@@ -1,5 +1,4 @@
 import MultiComboBoxComponent from "select-box-kit/components/multi-combo-box";
-import { observes } from 'ember-addons/ember-computed-decorators';
 
 export default MultiComboBoxComponent.extend({
   classNames: "list-setting",
@@ -9,25 +8,11 @@ export default MultiComboBoxComponent.extend({
   filterable: true,
 
   init() {
-    const valuesFromString = this.get("settingValue").split(this.get("tokenSeparator"));
-    this.set("value", valuesFromString.reject(v => Ember.isEmpty(v)));
-
-    if (Ember.isNone(this.get("choices"))) {
-      this.set("content", valuesFromString);
-    }  else {
-      this.set("content", this.get("choices"));
-    }
+    this._super();
 
     if (!Ember.isNone(this.get("settingName"))) {
       this.set("nameProperty", this.get("settingName"));
     }
-
-    if (Ember.isEmpty(this.get("content"))) {
-      this.set("rowComponent", null);
-      this.set("noContentLabel", null);
-    }
-
-    this._super();
 
     if (this.get("nameProperty").indexOf("color") > -1) {
       this.set("headerComponentOptions", Ember.Object.create({
@@ -36,13 +21,25 @@ export default MultiComboBoxComponent.extend({
     }
   },
 
-  @observes("value.[]")
-  setSettingValue() {
-    this.set("settingValue", this.get("value").join(this.get("tokenSeparator")));
+  transformInputs() {
+    let content;
+    const values = this.get("settingValue").split(this.get("tokenSeparator"));
+    if (Ember.isNone(this.get("choices"))) {
+      content = values;
+    }  else {
+      content = this.get("choices");
+    }
+
+    console.log("transformInputs", content, Ember.makeArray(content))
+    this.send("onReceiveContent", Ember.makeArray(content));
+    this.send("onReceiveValues", values);
   },
 
-  @observes("content.[]")
-  setChoices() { this.set("choices", this.get("content")); },
+  didLoadContent(content) {
+    if (Ember.isEmpty(content)) {
+      this.setProperties({ rowComponent: null, noContentLabel: null });
+    }
+  },
 
   _handleTabOnKeyDown(event) {
     if (this.$highlightedRow().length === 1) {

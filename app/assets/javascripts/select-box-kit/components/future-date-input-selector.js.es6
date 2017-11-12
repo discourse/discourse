@@ -118,8 +118,7 @@ export default ComboBoxComponent.extend(DatetimeMixin, {
   rowComponent: "future-date-input-selector/future-date-input-selector-row",
   headerComponent: "future-date-input-selector/future-date-input-selector-header",
 
-  @computed
-  content() {
+  computeContent() {
     let now = moment();
     let opts = {
       now,

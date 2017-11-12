@@ -121,7 +121,7 @@ export default Ember.Mixin.create({
 
     this.$filterInput()
       .on("change.select-box-kit", (event) => {
-        this.send("onFilterChange", $(event.target).val());
+        this.send("onFilter", $(event.target).val());
       })
       .on("keydown.select-box-kit", (event) => {
         const keyCode = event.keyCode || event.which;

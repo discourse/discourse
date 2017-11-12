@@ -1,13 +1,13 @@
-{{#if icon}}
-  {{{icon}}}
+{{#if icons}}
+  {{{icons}}}
 {{/if}}
 
-<span class="selected-name" title={{selectedName}}>
-  {{{selectedName}}}
+<span class="selected-name" title={{name}}>
+  {{{name}}}
 </span>
 
 {{#if shouldDisplayClearableButton}}
-  <button class="btn-clear" {{action onClearSelection bubbles=false}}>
+  <button class="btn-clear" {{action onClear bubbles=false}}>
     {{d-icon 'times'}}
   </button>
 {{/if}}

@@ -5,6 +5,6 @@ export default SelectBoxKitRowComponent.extend({
   classNames: "create",
 
   click() {
-    this.sendAction("onCreateContent", this.get("content.name"));
+    this.sendAction("onCreate", this.get("computedContent.name"));
   },
 });

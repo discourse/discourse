@@ -6,9 +6,9 @@ export default SelectBoxKitRowComponent.extend(DatetimeMixin, {
   layoutName: "select-box-kit/templates/components/future-date-input-selector/future-date-input-selector-row",
   classNames: "future-date-input-selector-row",
 
-  @computed("content.value")
+  @computed("computedContent.value")
   datetime(value) { return this._computeDatetimeForValue(value); },
 
-  @computed("content.value")
+  @computed("computedContent.value")
   icon(value) { return this._computeIconForValue(value); }
 });

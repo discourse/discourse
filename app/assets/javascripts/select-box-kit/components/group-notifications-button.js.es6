@@ -2,8 +2,11 @@ import NotificationOptionsComponent from "select-box-kit/components/notification
 
 export default NotificationOptionsComponent.extend({
   classNames: ["group-notifications-button"],
-  value: Ember.computed.alias("group.group_user.notification_level"),
   i18nPrefix: "groups.notifications",
+
+  loadValueFunction() {
+    return this.get("group.group_user.notification_level");
+  },
 
   selectValueFunction(value) {
     this.get("group").setNotification(value, this.get("user.id"));

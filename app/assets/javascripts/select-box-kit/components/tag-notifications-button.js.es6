@@ -6,7 +6,7 @@ export default NotificationOptionsComponent.extend({
   showFullTitle: false,
   headerComponent: "tag-notifications-button/tag-notifications-button-header",
 
-  selectValueFunction(value) {
+  mutateValue(value) {
     this.sendAction("action", value);
   }
 });

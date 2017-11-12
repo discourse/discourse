@@ -23,9 +23,9 @@ export default DropdownSelectBox.extend({
 
   canDeleteSpammer: Ember.computed.and("spammerDetails.canDelete", "post.flaggedForSpam"),
 
-  @computed("post", "canDeleteSpammer")
-  content(post, canDeleteSpammer) {
-    const content = [];
+  loadContentFunction(content) {
+    const post = this.get("post");
+    const canDeleteSpammer = this.get("canDeleteSpammer");
 
     if (post.user_deleted === true) {
       content.push({
@@ -68,8 +68,8 @@ export default DropdownSelectBox.extend({
     return content;
   },
 
-  selectValueFunction(value) {
-    Ember.get(this._contentForValue(value), "action")();
+  selectContentFunction(content) {
+    Ember.get(content, "originalContent.action")();
   },
 
   actions: {

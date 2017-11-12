@@ -9,13 +9,13 @@ export default DropdownSelectBoxRoxComponent.extend({
   i18nPrefix: Ember.computed.alias("options.i18nPrefix"),
   i18nPostfix: Ember.computed.alias("options.i18nPostfix"),
 
-  @computed("content.value", "i18nPrefix")
+  @computed("computedContent.value", "i18nPrefix")
   title(value, prefix) {
     const key = buttonDetails(value).key;
     return I18n.t(`${prefix}.${key}.title`);
   },
 
-  @computed("content.name", "content.originalContent.icon")
+  @computed("computedContent.name", "computedContent.originalContent.icon")
   icon(contentName, icon) {
     return iconHTML(icon, { class: contentName.dasherize() });
   },
@@ -30,7 +30,7 @@ export default DropdownSelectBoxRoxComponent.extend({
     return Handlebars.escapeExpression(I18n.t(`${_start}.title`));
   },
 
-  @computed("i18nPrefix", "i18nPostfix", "content.name")
+  @computed("i18nPrefix", "i18nPostfix", "computedContent.name")
   _start(prefix, postfix, contentName) {
     return `${prefix}.${contentName}${postfix}`;
   },
