@@ -568,11 +568,10 @@ describe Email::Receiver do
       expect { process(:tl4_user) }.to change(Topic, :count)
     end
 
-    it "ignores by title" do
+    it "ignores by case-insensitive title" do
       SiteSetting.ignore_by_title = "foo"
       expect { process(:ignored) }.to_not change(Topic, :count)
     end
-
   end
 
   context "new topic in a category that allows strangers" do

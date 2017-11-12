@@ -66,7 +66,7 @@ module Email
 
     def is_blacklisted?
       return false if SiteSetting.ignore_by_title.blank?
-      Regexp.new(SiteSetting.ignore_by_title) =~ @mail.subject
+      Regexp.new(SiteSetting.ignore_by_title, Regexp::IGNORECASE) =~ @mail.subject
     end
 
     def create_incoming_email
