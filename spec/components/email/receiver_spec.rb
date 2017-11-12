@@ -397,7 +397,29 @@ describe Email::Receiver do
     end
 
     it "accepts emails with wrong reply key if the system knows about the forwareded email" do
+      Fabricate(:incoming_email,
+                raw: <<~RAW,
+                          Return-Path: <discourse@bar.com>
+                          From: Alice <discourse@bar.com>
+                          To: dave@bar.com, reply+4f97315cc828096c9cb34c6f1a0d6fe8@bar.com
+                          CC: carol@bar.com, bob@bar.com
+                          Subject: Hello world
+                          Date: Fri, 15 Jan 2016 00:12:43 +0100
+                          Message-ID: <10@foo.bar.mail>
+                          Mime-Version: 1.0
+                          Content-Type: text/plain; charset=UTF-8
+                          Content-Transfer-Encoding: quoted-printable
 
+                          This post was created by email.
+                RAW
+                from_address: "discourse@bar.com",
+                to_addresses: "dave@bar.com;reply+4f97315cc828096c9cb34c6f1a0d6fe8@bar.com",
+                cc_addresses: "carol@bar.com;bob@bar.com",
+                topic: topic,
+                post: post,
+                user: user)
+
+      expect { process(:reply_user_not_matching_but_known) }.to change { topic.posts.count }
     end
   end
 
