@@ -429,7 +429,7 @@ module Email
       when :reply
         email_log = destination[:obj]
 
-        if email_log.user_id != user.id
+        if email_log.user_id != user.id && !forwareded_reply_key?(email_log, user)
           raise ReplyUserNotMatchingError, "email_log.user_id => #{email_log.user_id.inspect}, user.id => #{user.id.inspect}"
         end
 
@@ -440,6 +440,40 @@ module Email
                      topic: email_log.post.topic,
                      skip_validations: user.staged?)
       end
+    end
+
+    def forwareded_reply_key?(email_log, user)
+      incoming_emails = IncomingEmail
+        .joins(:post)
+        .where('posts.topic_id = ?', email_log.topic_id)
+        .where('incoming_emails.to_addresses ILIKE :email OR incoming_emails.cc_addresses ILIKE :email', email: "%#{email_log.reply_key}%")
+        .where('incoming_emails.to_addresses ILIKE :email OR incoming_emails.cc_addresses ILIKE :email', email: "%#{user.email}%")
+
+      incoming_emails.each do |email|
+        next unless contains_email_address?(email.to_addresses, user.email) ||
+          contains_email_address?(email.cc_addresses, user.email)
+
+        return true if contains_reply_by_email_address(email.to_addresses, email_log.reply_key) ||
+          contains_reply_by_email_address(email.cc_addresses, email_log.reply_key)
+      end
+
+      false
+    end
+
+    def contains_email_address?(addresses, email)
+      return false if addresses.blank?
+      addresses.split(";").include?(email)
+    end
+
+    def contains_reply_by_email_address(addresses, reply_key)
+      return false if addresses.blank?
+
+      addresses.split(";").each do |address|
+        match = Email::Receiver.reply_by_email_address_regex.match(address)
+        return true if match && match.captures&.include?(reply_key)
+      end
+
+      false
     end
 
     def has_been_forwarded?
