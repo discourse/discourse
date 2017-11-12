@@ -21,6 +21,7 @@ import { attachAdditionalPanel } from 'discourse/widgets/header';
 import { registerIconRenderer, replaceIcon } from 'discourse-common/lib/icon-library';
 import { addNavItem } from 'discourse/models/nav-item';
 import { replaceFormatter } from 'discourse/lib/utilities';
+import { selectBoxKit } from "select-box-kit/mixins/plugin-api";
 
 // If you add any methods to the API ensure you bump up this number
 const PLUGIN_API_VERSION = '0.8.12';
@@ -588,6 +589,21 @@ class PluginApi {
    **/
   formatUsername(fn) {
     replaceFormatter(fn);
+  }
+
+  /**
+  *
+  * Access SelectBoxKit plugin api
+  *
+  * Example:
+  *
+  * selectBoxKit("topic-footer-mobile-dropdown").appendContent((component) => [{
+  *   name: "discourse",
+  *   id: 1
+  * }])
+  */
+  selectBoxKit(pluginApiKey) {
+    return selectBoxKit(pluginApiKey);
   }
 }
 

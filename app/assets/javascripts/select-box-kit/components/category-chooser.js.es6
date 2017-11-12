@@ -12,7 +12,7 @@ export default ComboBoxComponent.extend({
   castInteger: true,
   allowUncategorized: null,
 
-  filteredContentFunction(computedContent, computedValue, filter) {
+  filterComputedContent(computedContent, computedValue, filter) {
     if (isEmpty(filter)) { return computedContent; }
 
     const _matchFunction = (f, text) => {
@@ -55,28 +55,6 @@ export default ComboBoxComponent.extend({
     return rowComponent => this._rowContentTemplate(rowComponent.get("content"));
   },
 
-  @computed("scopedCategoryId", "content.[]")
-  computedContent(scopedCategoryId, categories) {
-    // Always scope to the parent of a category, if present
-    if (scopedCategoryId) {
-      const scopedCat = Category.findById(scopedCategoryId);
-      scopedCategoryId = scopedCat.get("parent_category_id") || scopedCat.get("id");
-    }
-
-    const excludeCategoryId = this.get("excludeCategoryId");
-
-    return categories.filter(c => {
-      const categoryId = get(c, "value");
-      if (scopedCategoryId && categoryId !== scopedCategoryId && get(c, "originalContent.parent_category_id") !== scopedCategoryId) {
-        return false;
-      }
-      if (get(c, 'originalContent.isUncategorizedCategory') || excludeCategoryId === categoryId) {
-        return false;
-      }
-      return get(c, 'originalContent.permission') === PermissionType.FULL;
-    });
-  },
-
   @on("didRender")
   _bindComposerResizing() {
     this.appEvents.on("composer:resized", this, this.applyDirection);
@@ -87,12 +65,29 @@ export default ComboBoxComponent.extend({
     this.appEvents.off("composer:resized");
   },
 
-  @computed("site.sortedCategories")
-  content() {
-    const categories =  Discourse.SiteSettings.fixed_category_positions_on_create ?
-                          Category.list() :
-                          Category.listByActivity();
-    return this.formatContents(categories);
+  computeContent() {
+    const categories = Discourse.SiteSettings.fixed_category_positions_on_create ?
+      Category.list() :
+      Category.listByActivity();
+
+    let scopedCategoryId = this.get("scopedCategoryId");
+    if (scopedCategoryId) {
+      const scopedCat = Category.findById(scopedCategoryId);
+      scopedCategoryId = scopedCat.get("parent_category_id") || scopedCat.get("id");
+    }
+
+    const excludeCategoryId = this.get("excludeCategoryId");
+
+    return categories.filter(c => {
+      const categoryId = this._valueForContent(c);
+      if (scopedCategoryId && categoryId !== scopedCategoryId && get(c, "parent_category_id") !== scopedCategoryId) {
+        return false;
+      }
+      if (get(c, "isUncategorizedCategory") || excludeCategoryId === categoryId) {
+        return false;
+      }
+      return get(c, "permission") === PermissionType.FULL;
+    });
   },
 
   _rowContentTemplate(content) {

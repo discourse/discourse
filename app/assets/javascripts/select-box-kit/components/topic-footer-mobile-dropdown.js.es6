@@ -1,4 +1,3 @@
-import computed from "ember-addons/ember-computed-decorators";
 import ComboBoxComponent from "select-box-kit/components/combo-box";
 import { on } from "ember-addons/ember-computed-decorators";
 
@@ -7,7 +6,7 @@ export default ComboBoxComponent.extend({
   classNames: "topic-footer-mobile-dropdown",
   filterable: false,
   autoFilterable: false,
-  allowValueMutation: false,
+  allowInitialValueMutation: false,
   autoSelectFirst: false,
 
   @on("didReceiveAttrs")
@@ -16,9 +15,9 @@ export default ComboBoxComponent.extend({
         .set("selectedName", I18n.t(this.get("headerText")));
   },
 
-  @computed("topic", "topic.details", "value")
-  content(topic, details) {
-    const content = [];
+  computeContent(content) {
+    const topic = this.get("topic");
+    const details = topic.get("details");
 
     if (details.get("can_invite_to")) {
       content.push({ id: "invite", icon: "users", name: I18n.t("topic.invite_reply.title") });
@@ -39,15 +38,14 @@ export default ComboBoxComponent.extend({
     return content;
   },
 
-  selectValueFunction(value) {
+  autoHighlight() {},
+
+  mutateValue(value) {
     const topic = this.get("topic");
 
-    // In case it"s not a valid topic
     if (!topic.get("id")) {
       return;
     }
-
-    this.set("value", value);
 
     const refresh = () => this.send("onDeselect", value);
 

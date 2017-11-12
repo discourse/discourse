@@ -12,13 +12,12 @@ export default Ember.Component.extend(UtilsMixin, {
   attributeBindings: [
     "tabIndex",
     "title",
-    "content.value:data-value",
-    "content.name:data-name"
+    "computedContent.value:data-value",
+    "computedContent.name:data-name"
   ],
   classNameBindings: ["isHighlighted", "isSelected"],
-  clicked: false,
 
-  @computed("content.originalContent.title", "content.name")
+  @computed("computedContent.originalContent.title", "computedContent.name")
   title(title, name) {
     return title || name;
   },
@@ -28,9 +27,9 @@ export default Ember.Component.extend(UtilsMixin, {
 
   @on("didReceiveAttrs")
   _setSelectionState() {
-    const contentValue = this.get("content.value");
+    const contentValue = this.get("computedContent.value");
 
-    this.set("isSelected", this.get("value") === contentValue);
+    this.set("isSelected", this.get("computedValue") === contentValue);
     this.set("isHighlighted", this.get("highlightedValue") === contentValue);
   },
 
@@ -40,7 +39,7 @@ export default Ember.Component.extend(UtilsMixin, {
     if (isPresent(hoverDebounce)) { run.cancel(hoverDebounce); }
   },
 
-  @computed("content.originalContent.icon", "content.originalContent.iconClass")
+  @computed("computedContent.originalContent.icon", "computedContent.originalContent.iconClass")
   icon(icon, cssClass) {
     if (icon) {
       return iconHTML(icon, { class: cssClass });
@@ -54,17 +53,10 @@ export default Ember.Component.extend(UtilsMixin, {
   },
 
   click() {
-    this._sendOnSelectAction();
-  },
-
-  _sendOnSelectAction() {
-    if (this.get("clicked") === false) {
-      this.set("clicked", true);
-      this.sendAction("onSelect", this.get("content.value"));
-    }
+    this.sendAction("onSelect", this.get("computedContent"));
   },
 
   _sendOnHighlightAction() {
-    this.sendAction("onHighlight", this.get("content.value"));
+    this.sendAction("onHighlight", this.get("computedContent"));
   }
 });
