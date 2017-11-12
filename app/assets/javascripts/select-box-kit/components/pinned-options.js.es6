@@ -1,37 +1,45 @@
 import DropdownSelectBoxComponent from "select-box-kit/components/dropdown-select-box";
-import computed from "ember-addons/ember-computed-decorators";
-import { observes } from "ember-addons/ember-computed-decorators";
 import { on } from "ember-addons/ember-computed-decorators";
+import { observes } from "ember-addons/ember-computed-decorators";
+import { iconHTML } from 'discourse-common/lib/icon-library';
 
 export default DropdownSelectBoxComponent.extend({
   classNames: "pinned-options",
 
-  headerComponent: "pinned-options/pinned-options-header",
-
   @on("didReceiveAttrs")
-  _setComponentOptions() {
-    this.set("headerComponentOptions", Ember.Object.create({
-      pinned: this.get("topic.pinned"),
-      pinnedGlobally: this.get("topic.pinned_globally")
-    }));
+  _setPinnedOptionsComponentOptions() {
+    this.get("headerComponentOptions").setProperties({ showFullTitle: true });
   },
 
-  @computed("topic.pinned")
-  value(pinned) {
-    return pinned ? "pinned" : "unpinned";
+  computeValue() {
+    return this.get("topic.pinned") ? "pinned" : "unpinned";
   },
 
-  @observes("topic.pinned")
-  _pinStateChanged() {
-    this.set("value", this.get("topic.pinned") ? "pinned" : "unpinned");
-    this._setComponentOptions();
-  },
-
-  @computed("topic.pinned_globally")
-  content(pinnedGlobally) {
+  computeHeaderContent() {
+    console.log("RECOPUED")
+    let content = this.baseHeaderComputedContent();
+    const pinnedGlobally = this.get("topic.pinned_globally");
+    const pinned = this.get("topic.pinned");
     const globally = pinnedGlobally ? "_globally" : "";
+    const state = pinned ? `pinned${globally}` : "unpinned";
+    const title = I18n.t(`topic_statuses.${state}.title`);
 
-    return [
+    content.name = `${title}${iconHTML("caret-down")}`.htmlSafe();
+
+    content.icons = [
+      iconHTML("thumb-tack", {
+        class: (state === "unpinned" ? "unpinned" : null)
+      }).htmlSafe()
+    ];
+
+    return content;
+  },
+
+  @on("init")
+  _setContent() {
+    const globally = this.get("topic.pinned_globally") ? "_globally" : "";
+
+    this.set("content", [
       {
         id: "pinned",
         name: I18n.t("topic_statuses.pinned" + globally + ".title"),
@@ -45,10 +53,10 @@ export default DropdownSelectBoxComponent.extend({
         description: I18n.t('topic_statuses.unpinned.help'),
         iconClass: "unpinned"
       }
-    ];
+    ]);
   },
 
-  selectValueFunction(value) {
+  mutateValue(value) {
     const topic = this.get("topic");
 
     if (value === "unpinned") {
@@ -56,5 +64,7 @@ export default DropdownSelectBoxComponent.extend({
     } else {
       topic.rePin();
     }
+
+    topic.notifyPropertyChange();
   }
 });

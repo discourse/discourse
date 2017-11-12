@@ -7,7 +7,11 @@ export default NotificationOptionsComponent.extend({
   value: Ember.computed.alias("category.notification_level"),
   headerComponent: "category-notifications-button/category-notifications-button-header",
 
-  selectValueFunction(value) {
+  computeValue() {
+    return this.get("category.notification_level");
+  },
+
+  mutateValue(value) {
     this.get("category").setNotification(value);
   }
 });

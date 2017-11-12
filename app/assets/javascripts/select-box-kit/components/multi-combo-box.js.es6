@@ -8,7 +8,7 @@ export default SelectBoxKitComponent.extend({
   filterComponent: null,
   headerText: "select_box.default_header_text",
   allowAny: true,
-  allowValueMutation: false,
+  allowInitialValueMutation: false,
   autoSelectFirst: false,
   autoFilterable: true,
   selectedNameComponent: "multi-combo-box/selected-name",
@@ -16,11 +16,17 @@ export default SelectBoxKitComponent.extend({
   init() {
     this._super();
 
+    this.set("computedValue", []);
     if (isNone(this.get("value"))) { this.set("value", []); }
 
     this.set("headerComponentOptions", Ember.Object.create({
       selectedNameComponent: this.get("selectedNameComponent")
     }));
+  },
+
+  transformInputs() {
+    this.send("onReceiveContent", Ember.makeArray(this.get("content")));
+    this.send("onReceiveValues", Ember.makeArray(this.get("value")));
   },
 
   @computed("filter")
@@ -87,20 +93,17 @@ export default SelectBoxKitComponent.extend({
     }
   },
 
-  @computed("value.[]")
-  computedValue(value) { return value.map(v => this._castInteger(v)); },
-
-  @computed("value.[]", "computedContent.[]")
-  selectedContent(value, computedContent) {
+  @computed("computedValue.[]", "computedContent.[]")
+  selectedContent(computedValue, computedContent) {
     const contents = [];
-    value.forEach(v => {
-      const content = computedContent.findBy("value", v);
+    computedValue.forEach(cv => {
+      const content = computedContent.findBy("value", cv);
       if (!isNone(content)) { contents.push(content); }
     });
     return contents;
   },
 
-  filteredContentFunction(computedContent, computedValue, filter) {
+  filteredComputedContentFunction(computedContent, computedValue, filter) {
     computedContent = computedContent.filter(c => {
       return !computedValue.includes(get(c, "value"));
     });
@@ -119,39 +122,51 @@ export default SelectBoxKitComponent.extend({
 
   didCreateContent() {
     this.clearFilter();
-    this.autoHighlightFunction();
+    this.autoHighlight();
   },
 
   createContentFunction(input) {
-    if (!this.get("content").includes(input)) {
-      this.get("content").pushObject(input);
-      this.get("value").pushObject(input);
-    }
+    const formatedContent = this.formatContentItem(input);
+    this.get("computedContent").pushObject(formatedContent);
+    this.get("computedValue").pushObject(formatedContent.value);
+    this.setValuesFunction();
+    this.setContentFunction();
   },
 
   deselectValuesFunction(values) {
     const contents = this._computeRemovableContentsForValues(values);
-    this.get("value").removeObjects(values);
-    this.get("content").removeObjects(contents);
+    this.get("computedValue").removeObjects(values);
+    this.set("computedContent", this.get("computedContent").reject((x) => {
+      return values.includes(x.value) && !this.get("_initialValues").includes(x.value)
+    }));
+    this.setValuesFunction();
+    this.setContentFunction();
   },
 
   highlightValueFunction(value) {
     this.set("highlightedValue", value);
   },
 
-  selectValuesFunction(values) {
-    this.get("value").pushObjects(values);
+  setValuesFunction() {
+    this.set("value", this.get("computedValue"));
+  },
+
+  setContentFunction() {
+    this.set("content", this.get("computedContent").map(c => c.originalContent));
   },
 
   willSelectValues() {
     this.expand();
     this.set("highlightedValue", null);
   },
-
+  selectValuesFunction(values) {
+    this.set("computedValue", this.get("computedValue").concat(values));
+    this.setValuesFunction();
+  },
   didSelectValues() {
     this.focus();
     this.clearFilter();
-    this.autoHighlightFunction();
+    this.autoHighlight();
   },
 
   willDeselectValues() {
@@ -159,33 +174,52 @@ export default SelectBoxKitComponent.extend({
   },
 
   didDeselectValues() {
-    this.autoHighlightFunction();
+    this.autoHighlight();
   },
 
   willHighlightValue() {},
 
   didHighlightValue() {},
 
-  autoHighlightFunction() {
+  autoHighlight() {
     Ember.run.schedule("afterRender", () => {
       if (this.get("isExpanded") === false) { return; }
       if (this.get("renderedBodyOnce") === false) { return; }
       if (!isNone(this.get("highlightedValue"))) { return; }
 
-      if (isEmpty(this.get("filteredContent"))) {
+      if (isEmpty(this.get("filteredComputedContent"))) {
         if (!isEmpty(this.get("filter"))) {
-          this.send("onHighlight", this.get("filter"));
+          this.send("onHighlight", this.get("createRowContent"));
         } else if (this.get("none") && !isEmpty(this.get("selectedContent"))) {
-          this.send("onHighlight", this.noneValue);
+          this.send("onHighlight", this.get("noneRowContent"));
         }
       } else {
-        this.send("onHighlight", this.get("filteredContent.firstObject.value"));
+        this.send("onHighlight", this.get("filteredComputedContent.firstObject"));
       }
     });
   },
 
+  _beforeWillLoadValues(values) {
+    return values.map(v => this._castInteger(v === "" ? null : v));
+  },
+  willLoadValues(values) { return values; },
+  loadValuesFunction(values) { return values; },
+  _beforeDidLoadValues(values) {
+    this.setProperties({ computedValue: values });
+    return values;
+  },
+  didLoadValues() {},
+
   actions: {
-    onClearSelection() {
+    onReceiveValues(values) {
+      values = this._beforeWillLoadValues(values);
+      values = this.willLoadValues(values);
+      values = this.loadValuesFunction(values);
+      values = this._beforeDidLoadValues(values);
+      this.didLoadValues(values);
+    },
+
+    onClear() {
       const values = this.get("selectedContent").map(c => get(c, "value"));
       this.send("onDeselect", values);
     },
@@ -198,7 +232,7 @@ export default SelectBoxKitComponent.extend({
       this.didHighlightValue(value);
     },
 
-    onCreateContent(input) {
+    onCreate(input) {
       this.willCreateContent(input);
       this.createContentFunction(input);
       this.didCreateContent(input);
@@ -223,7 +257,7 @@ export default SelectBoxKitComponent.extend({
     const removableContents = [];
     values.forEach(v => {
       if (!this.get("_initialValues").includes(v)) {
-        const content = this._contentForValue(v);
+        const content = this._computedContentForValue(v);
         if (!isNone(content)) { removableContents.push(content); }
       }
     });

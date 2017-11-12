@@ -10,22 +10,22 @@
   readonly=true
 />
 
+{{log headerComputedContent}}
+
 {{component headerComponent
-  none=computedNone
   isFocused=isFocused
   isExpanded=isExpanded
-  selectedContent=selectedContent
+  computedContent=headerComputedContent
   onDeselect=(action "onDeselect")
   onToggle=(action "onToggle")
-  onFilterChange=(action "onFilterChange")
-  onClearSelection=(action "onClearSelection")
-  shouldDisplayFilter=shouldDisplayFilter
+  onFilter=(action "onFilter")
+  onClear=(action "onClear")
   options=headerComponentOptions
 }}
 
 <div class="select-box-kit-body">
   {{component filterComponent
-    onFilterChange=(action "onFilterChange")
+    onFilter=(action "onFilter")
     icon=filterIcon
     shouldDisplayFilter=shouldDisplayFilter
     isFocused=isFocused
@@ -35,20 +35,20 @@
 
   {{#if renderedBodyOnce}}
     {{component collectionComponent
-      none=computedNone
+      none=noneRowContent
       createRowContent=createRowContent
       selectedContent=selectedContent
-      filteredContent=filteredContent
+      filteredComputedContent=filteredComputedContent
       rowComponent=rowComponent
       noneRowComponent=noneRowComponent
       createRowComponent=createRowComponent
       templateForRow=templateForRow
       templateForNoneRow=templateForNoneRow
       templateForCreateRow=templateForCreateRow
-      onClearSelection=(action "onClearSelection")
+      onClear=(action "onClear")
       onSelect=(action "onSelect")
       onHighlight=(action "onHighlight")
-      onCreateContent=(action "onCreateContent")
+      onCreate=(action "onCreate")
       noContentLabel=noContentLabel
       highlightedValue=highlightedValue
       computedValue=computedValue
