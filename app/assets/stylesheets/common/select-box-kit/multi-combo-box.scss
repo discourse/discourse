@@ -105,6 +105,20 @@
         }
       }
 
+      .selected-color {
+        .selected-color-wrapper {
+          display: flex;
+          flex: 1;
+          flex-direction: column;
+        }
+
+        .color-preview {
+          height: 5px;
+          margin: 0 2px 2px 2px;
+          border-radius: 5px;
+        }
+      }
+
       .selected-name {
         align-items: center;
         justify-content: flex-start;
@@ -128,17 +142,23 @@
         }
 
         &.is-highlighted {
-          border-color: $danger;
+          box-shadow: 0 0 2px $danger, 0 1px 0 rgba(0,0,0,0.05);
         }
 
-        .d-icon {
-          margin-right: 5px;
-          color: $primary-medium;
-          cursor: pointer;
-          font-size: 12px;
+        .delete-icon {
+          justify-content: center;
+          align-items: center;
+          width: 21px;
+          height: 21px;
+          display: inline-flex;
+          .d-icon {
+            color: $primary-medium;
+            cursor: pointer;
+            font-size: 14px;
 
-          &:hover {
-            color: $primary;
+            &:hover {
+              color: $primary;
+            }
           }
         }
       }

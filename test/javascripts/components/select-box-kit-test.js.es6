@@ -1,4 +1,6 @@
 import componentTest from 'helpers/component-test';
+import { withPluginApi } from 'discourse/lib/plugin-api';
+import { clearCallbacks } from 'select-box-kit/mixins/plugin-api';
 
 moduleForComponent('select-box-kit', { integration: true });
 
@@ -6,16 +8,22 @@ componentTest('updating the content refreshes the list', {
   template: '{{select-box-kit value=1 content=content}}',
 
   beforeEach() {
-    this.set("content", [{ id: 1, name: "robin" }]);
+    this.set("content", [{ id: 1, name: "BEFORE" }]);
   },
 
   test(assert) {
     expandSelectBoxKit();
 
     andThen(() => {
-      assert.equal(selectBox().rowByValue(1).name(), "robin");
-      this.set("content", [{ id: 1, name: "regis" }]);
-      assert.equal(selectBox().rowByValue(1).name(), "regis");
+      assert.equal(selectBox().rowByValue(1).name(), "BEFORE");
+    });
+
+    andThen(() => {
+      this.set("content", [{ id: 1, name: "AFTER" }]);
+    });
+
+    andThen(() => {
+      assert.equal(selectBox().rowByValue(1).name(), "AFTER");
     });
   }
 });
@@ -284,5 +292,53 @@ componentTest('supports mutating value when no value given', {
     andThen(() => {
       assert.equal(this.get("value"), "1");
     });
+  }
+});
+
+componentTest('support appending content through plugin api', {
+  template: '{{select-box-kit content=content}}',
+
+  beforeEach() {
+    withPluginApi('0.8.11', api => {
+      api.selectBoxKit("select-box-kit")
+         .appendContent([{ id: "2", name: "regis"}]);
+    });
+
+    this.set("content", [{ id: "1", name: "robin"}]);
+  },
+  test(assert) {
+    expandSelectBoxKit();
+
+    andThen(() => {
+      assert.equal(selectBox().rows.length, 2);
+      assert.equal(selectBox().rows.eq(1).data("name"), "regis");
+    });
+
+    clearCallbacks();
+  }
+});
+
+
+componentTest('support prepending content through plugin api', {
+  template: '{{select-box-kit content=content}}',
+
+  beforeEach() {
+    withPluginApi('0.8.11', api => {
+      api.selectBoxKit("select-box-kit")
+         .prependContent([{ id: "2", name: "regis"}]);
+    });
+
+    this.set("content", [{ id: "1", name: "robin"}]);
+  },
+
+  test(assert) {
+    expandSelectBoxKit();
+
+    andThen(() => {
+      assert.equal(selectBox().rows.length, 2);
+      assert.equal(selectBox().rows.eq(0).data("name"), "regis");
+    });
+
+    clearCallbacks();
   }
 });

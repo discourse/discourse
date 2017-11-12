@@ -1,17 +1,17 @@
 <button
-  class="btn {{if shouldDisplaySelectedName 'btn-icon-text' 'no-text btn-icon'}}"
-  aria-label="{{selectedName}}"
+  class="btn {{if options.showFullTitle 'btn-icon-text' 'no-text btn-icon'}}"
+  aria-label="{{name}}"
   type="button"
   tabindex="-1"
-  title="{{selectedName}}">
+  title="{{name}}">
 
-  {{#if icon}}
+  {{#each icons as |icon|}}
     {{{icon}}}
-  {{/if}}
+  {{/each}}
 
-  {{#if shouldDisplaySelectedName}}
+  {{#if options.showFullTitle}}
     <span class="d-button-label selected-name">
-      {{selectedName}}
+      {{name}}
     </span>
   {{/if}}
 

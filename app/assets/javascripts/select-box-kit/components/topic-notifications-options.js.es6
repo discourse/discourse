@@ -6,7 +6,10 @@ export default NotificationOptionsComponent.extend({
   classNames: "topic-notifications-options",
   content: topicLevels,
   i18nPrefix: "topic.notifications",
-  value: Ember.computed.alias("topic.details.notification_level"),
+
+  loadValueFunction() {
+    return this.get("topic.details.notification_level");
+  },
 
   @on("didInsertElement")
   _bindGlobalLevelChanged() {
@@ -24,11 +27,9 @@ export default NotificationOptionsComponent.extend({
     this.appEvents.off("topic-notifications-button:changed");
   },
 
-  selectValueFunction(value) {
+  setValueFunction(value) {
     if (value !== this.get("value")) {
       this.get("topic.details").updateNotifications(value);
     }
-
-    this.set("value", value);
   }
 });

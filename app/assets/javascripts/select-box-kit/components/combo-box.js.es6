@@ -10,6 +10,19 @@ export default SelectBoxKitComponent.extend({
   caretDownIcon: "caret-down",
   clearable: false,
 
+  computeHeaderContent() {
+    let content = this.baseHeaderComputedContent();
+
+    const noneName = this.get("none.name");
+    if (!Ember.isPresent(content.name) && !Ember.isNone(noneName)) {
+      content.name = noneName;
+    }
+
+    content.hasSelection = this.get("selectedComputedContent").length >= 1;
+
+    return content;
+  },
+
   @on("didReceiveAttrs")
   _setComboBoxOptions() {
     this.get("headerComponentOptions").setProperties({
