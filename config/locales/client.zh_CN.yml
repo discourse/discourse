@@ -993,7 +993,7 @@ zh_CN:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
-    select_box:
+    select_kit:
       default_header_text: 选择...
       no_content: 无符合的结果
       filter_placeholder: 搜索……

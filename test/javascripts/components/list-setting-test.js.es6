@@ -11,10 +11,10 @@ componentTest('default', {
   },
 
   test(assert) {
-    expandSelectBoxKit();
+    expandSelectKit();
 
     andThen(() => {
-      assert.propEqual(selectBox().header.name(), 'bold,italic');
+      assert.propEqual(selectKit().header.name(), 'bold,italic');
     });
   }
 });
@@ -27,10 +27,10 @@ componentTest('with only setting value', {
   },
 
   test(assert) {
-    expandSelectBoxKit();
+    expandSelectKit();
 
     andThen(() => {
-      assert.propEqual(selectBox().header.name(), 'bold,italic');
+      assert.propEqual(selectKit().header.name(), 'bold,italic');
     });
   }
 });
@@ -44,28 +44,28 @@ componentTest('interactions', {
   },
 
   test(assert) {
-    expandSelectBoxKit();
+    expandSelectKit();
 
-    selectBoxKitSelectRow('underline');
-
-    andThen(() => {
-      assert.propEqual(selectBox().header.name(), 'bold,italic,underline');
-    });
-
-    selectBoxKitFillInFilter('strike');
+    selectKitSelectRow('underline');
 
     andThen(() => {
-      assert.equal(selectBox().highlightedRow.name(), 'strike');
+      assert.propEqual(selectKit().header.name(), 'bold,italic,underline');
     });
 
-    selectBox().keyboard.enter();
+    selectKitFillInFilter('strike');
 
     andThen(() => {
-      assert.propEqual(selectBox().header.name(), 'bold,italic,underline,strike');
+      assert.equal(selectKit().highlightedRow.name(), 'strike');
     });
 
-    selectBox().keyboard.backspace();
-    selectBox().keyboard.backspace();
+    selectKit().keyboard.enter();
+
+    andThen(() => {
+      assert.propEqual(selectKit().header.name(), 'bold,italic,underline,strike');
+    });
+
+    selectKit().keyboard.backspace();
+    selectKit().keyboard.backspace();
 
     andThen(() => {
       assert.equal(this.get('choices').length, 3, 'it removes the created content from original list');

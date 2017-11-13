@@ -1023,7 +1023,7 @@ es:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
-    select_box:
+    select_kit:
       default_header_text: Seleccionar...
       no_content: Ningún resultado
       filter_placeholder: Buscar...
