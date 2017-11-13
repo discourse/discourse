@@ -100,11 +100,23 @@ class S3Helper
       # skip trying to merge
     end
 
+    # in the past we has a rule that was called purge-tombstone vs purge_tombstone
+    # just go ahead and normalize for our bucket
     rules.delete_if do |r|
-      r.id == id
+      r.id.gsub('_', '-') == id.gsub('_', '-')
     end
 
     rules << rule
+
+    # normalize filter in rules, due to AWS library bug
+    rules = rules.map do |r|
+      r = r.to_h
+      prefix = r.delete(:prefix)
+      if prefix
+        r[:filter] = { prefix: prefix }
+      end
+      r
+    end
 
     s3_resource.client.put_bucket_lifecycle_configuration(
       bucket: @s3_bucket_name,
