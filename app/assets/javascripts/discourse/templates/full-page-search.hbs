@@ -82,7 +82,10 @@
             </a>
 
             <div class='search-category'>
-              {{category-link result.topic.category}}
+              {{#if result.topic.category.parentCategory}}
+              {{category-link result.topic.category.parentCategory}}
+              {{/if}}
+              {{category-link result.topic.category hideParent=true}}
               {{#each result.topic.tags as |tag|}}
                 {{discourse-tag tag}}
               {{/each}}
