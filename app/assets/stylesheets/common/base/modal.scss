@@ -331,8 +331,8 @@
 
     .cannot_delete_reason {
       position: absolute;
-      background: dark-light-choose($primary, $secondary);
-      color: dark-light-choose($secondary, $secondary);
+      background: $primary;
+      color: $secondary;
       text-align: center;
       border-radius: 2px;
       padding: 12px 8px;
@@ -343,13 +343,12 @@
         border: solid transparent;
         content: " ";
         position: absolute;
-        border-top-color: dark-light-choose($primary, $secondary);
+        border-top-color: $primary;
         border-width: 8px;
       }
     }
   }
 }
-
 
 .incoming-email-modal {
   .btn {
