@@ -297,3 +297,7 @@ div.ac-wrap {
     color: lighten($primary, 40%);
   }
 }
+
+.md-table {
+  overflow-y: auto;
+}

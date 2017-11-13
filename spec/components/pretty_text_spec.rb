@@ -965,6 +965,7 @@ HTML
     MD
 
     expected = <<~HTML
+      <div class="md-table">
       <table>
       <thead>
       <tr>
@@ -981,6 +982,7 @@ HTML
       </tr>
       </tbody>
       </table>
+      </div>
     HTML
 
     expect(PrettyText.cook(markdown)).to eq(expected.strip)
