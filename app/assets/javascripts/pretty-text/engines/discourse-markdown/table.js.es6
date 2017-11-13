@@ -1,6 +1,15 @@
 export function setup(helper) {
-  // this is built in now
-  // TODO: sanitizer needs fixing, does not properly support this yet
+
+  helper.registerPlugin(md => {
+
+    md.renderer.rules.table_open = function(){
+      return '<div class="md-table">\n<table>';
+    };
+
+    md.renderer.rules.table_close = function(){
+      return '</table>\n</div>';
+    };
+  });
 
   // we need a custom callback for style handling
   helper.whiteList({
@@ -24,5 +33,6 @@ export function setup(helper) {
       'tr',
       'th',
       'td',
+      'div.md-table'
   ]);
 }
