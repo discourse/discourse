@@ -3,7 +3,7 @@ export function setup(helper) {
   helper.registerPlugin(md => {
 
     md.renderer.rules.table_open = function(){
-      return '<div class="md-table">\n<table>';
+      return '<div class="md-table">\n<table>\n';
     };
 
     md.renderer.rules.table_close = function(){

@@ -812,7 +812,8 @@ QUnit.test("enable/disable features", assert => {
 
   assert.cookedOptions('|a|\n--\n|a|', { features: {table: false} }, '');
   assert.cooked('|a|\n--\n|a|',
-`<table>
+`<div class="md-table">
+<table>
 <thead>
 <tr>
 <th>a</th>
@@ -823,7 +824,8 @@ QUnit.test("enable/disable features", assert => {
 <td>a</td>
 </tr>
 </tbody>
-</table>`);
+</table>
+</div>`);
 });
 
 QUnit.test("emoji", assert => {
