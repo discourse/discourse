@@ -127,12 +127,13 @@ describe Jobs::CleanUpUploads do
 
   it "does not delete uploads in a queued post" do
     upload = fabricate_upload
+    upload2 = fabricate_upload
 
     QueuedPost.create(
       queue: "uploads",
       state: QueuedPost.states[:new],
       user_id: Fabricate(:user).id,
-      raw: upload.sha1,
+      raw: "#{upload.sha1}\n#{upload2.short_url}",
       post_options: {}
     )
 
@@ -140,16 +141,20 @@ describe Jobs::CleanUpUploads do
 
     expect(Upload.find_by(id: @upload.id)).to eq(nil)
     expect(Upload.find_by(id: upload.id)).to eq(upload)
+    expect(Upload.find_by(id: upload2.id)).to eq(upload2)
   end
 
   it "does not delete uploads in a draft" do
     upload = fabricate_upload
-    Draft.set(Fabricate(:user), "test", 0, upload.sha1)
+    upload2 = fabricate_upload
+
+    Draft.set(Fabricate(:user), "test", 0, "#{upload.sha1}\n#{upload2.short_url}")
 
     Jobs::CleanUpUploads.new.execute(nil)
 
     expect(Upload.find_by(id: @upload.id)).to eq(nil)
     expect(Upload.find_by(id: upload.id)).to eq(upload)
+    expect(Upload.find_by(id: upload2.id)).to eq(upload2)
   end
 
   it "does not delete custom emojis" do

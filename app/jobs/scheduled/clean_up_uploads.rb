@@ -50,8 +50,9 @@ module Jobs
       result = result.where("uploads.url NOT IN (?)", ignore_urls) if ignore_urls.present?
 
       result.find_each do |upload|
-        next if QueuedPost.where("raw LIKE '%#{upload.sha1}%'").exists?
-        next if Draft.where("data LIKE '%#{upload.sha1}%'").exists?
+        encoded_sha = Base62.encode(upload.sha1.hex)
+        next if QueuedPost.where("raw LIKE '%#{upload.sha1}%' OR raw LIKE '%#{encoded_sha}%'").exists?
+        next if Draft.where("data LIKE '%#{upload.sha1}%' OR data LIKE '%#{encoded_sha}%'").exists?
         upload.destroy
       end
     end
