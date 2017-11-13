@@ -7,7 +7,7 @@ require_dependency 'pretty_text'
 class CookedPostProcessor
   include ActionView::Helpers::NumberHelper
 
-  attr_reader :cooking_options
+  attr_reader :cooking_options, :doc
 
   def initialize(post, opts = {})
     @dirty = false
@@ -180,7 +180,6 @@ class CookedPostProcessor
 
     # FastImage fails when there's no scheme
     absolute_url = SiteSetting.scheme + ":" + absolute_url if absolute_url.start_with?("//")
-
     return unless is_valid_image_url?(absolute_url)
 
     # we can *always* crawl our own images
@@ -331,6 +330,24 @@ class CookedPostProcessor
 
       parent_class = img.parent && img.parent["class"]
       if parent_class&.include?("onebox-body") && (width = img["width"].to_i) > 0 && (height = img["height"].to_i) > 0
+
+        # special instruction for width == height, assume we are dealing with an avatar
+        if (img["width"].to_i == img["height"].to_i)
+          found = false
+          parent = img
+          while parent = parent.parent
+            if parent["class"].include? "whitelistedgeneric"
+              found = true
+              break
+            end
+          end
+
+          if found
+            img["class"] = img["class"].to_s + " onebox-avatar"
+            next
+          end
+        end
+
         img.delete('width')
         img.delete('height')
         new_parent = img.add_next_sibling("<div class='aspect-image' style='--aspect-ratio:#{width}/#{height};'/>")

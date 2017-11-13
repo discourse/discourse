@@ -431,13 +431,44 @@ describe CookedPostProcessor do
         .returns("<div>GANGNAM STYLE</div>")
       cpp.post_process_oneboxes
     end
-
-    it "is dirty" do
-      expect(cpp).to be_dirty
-    end
-
     it "inserts the onebox without wrapping p" do
+      expect(cpp).to be_dirty
       expect(cpp.html).to match_html "<div>GANGNAM STYLE</div>"
+    end
+  end
+
+  context ".post_process_oneboxes with square image" do
+
+    it "generates a onebox-avatar class" do
+      SiteSetting.crawl_images = true
+
+      url = 'https://square-image.com/onebox'
+
+      body = <<~HTML
+      <html>
+      <head>
+      <meta property='og:title' content="Page awesome">
+      <meta property='og:image' content="https://image.com/avatar.png">
+      <meta property='og:description' content="Page awesome desc">
+      </head>
+      </html>
+      HTML
+
+      stub_request(:head, url).to_return(status: 200)
+      stub_request(:get , url).to_return(status: 200, body: body)
+      FinalDestination.stubs(:lookup_ip).returns('1.2.3.4')
+
+      # not an ideal stub but shipping the whole image to fast image can add
+      # a lot of cost to this test
+      FastImage.stubs(:size).returns([200, 200])
+
+      post = Fabricate.build(:post, raw: url)
+      cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
+
+      cpp.post_process_oneboxes
+
+      expect(cpp.doc.to_s).not_to include('aspect-image')
+      expect(cpp.doc.to_s).to include('onebox-avatar')
     end
 
   end
