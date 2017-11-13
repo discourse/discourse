@@ -509,7 +509,6 @@ ja:
       admin: "{{user}} は管理者です"
       moderator_tooltip: "このユーザーはモデレータです"
       admin_tooltip: "このユーザーは管理者です"
-      blocked_tooltip: "このユーザーはブロックされています"
       suspended_notice: "このユーザーは {{date}} まで凍結状態です。"
       suspended_reason: "理由: "
       github_profile: "Github"
@@ -2099,7 +2098,6 @@ ja:
         no_problems: "問題は見つかりませんでした。"
         moderators: 'モデレータ:'
         admins: '管理者:'
-        blocked: 'ブロック中:'
         suspended: '停止中:'
         private_messages_short: "メッセージ"
         private_messages_title: "メッセージ"
@@ -2504,8 +2502,6 @@ ja:
             change_category_settings: "カテゴリ設定を変更"
             delete_category: "カテゴリを削除する"
             create_category: "カテゴリを作る"
-            block_user: "ユーザをブロック"
-            unblock_user: "ユーザをブロック解除"
             grant_admin: "管理者権限を付与"
             revoke_admin: "管理者権限を剥奪"
             grant_moderation: "モデレータ権限を付与"
@@ -2580,7 +2576,6 @@ ja:
           pending: "保留中"
           staff: 'スタッフ'
           suspended: '凍結中'
-          blocked: 'ブロック中'
           suspect: 'マーク中'
         approved: "承認?"
         approved_selected:
@@ -2599,7 +2594,6 @@ ja:
           staff: "スタッフ"
           admins: '管理者ユーザ'
           moderators: 'モデレータ'
-          blocked: 'ブロック中のユーザ'
           suspended: '凍結中のユーザ'
           suspect: 'マーク中のユーザ'
         reject_successful:
@@ -2619,12 +2613,9 @@ ja:
         suspend_reason_placeholder: "凍結理由"
         suspended_by: "凍結したユーザ"
         delete_all_posts: "全ての投稿を削除"
-        suspend: "凍結"
-        unsuspend: "凍結解除"
-        suspended: "凍結状態"
         moderator: "モデレータ権限の所有"
         admin: "管理者権限の所有"
-        blocked: "ブロック状態"
+        suspended: "凍結状態"
         staged: "ステージドモードの状態"
         show_admin_profile: "アカウントの管理"
         refresh_browsers: "ブラウザを強制更新"
@@ -2639,8 +2630,8 @@ ja:
         grant_admin: '管理者権限を付与'
         revoke_moderation: 'モデレータ権限を剥奪'
         grant_moderation: 'モデレータ権限を付与'
-        unblock: 'ブロック解除'
-        block: 'ブロック'
+        unsuspend: '凍結解除'
+        suspend: '凍結'
         reputation: レピュテーション
         permissions: パーミッション
         activity: アクティビティ
@@ -2684,10 +2675,6 @@ ja:
         activate_failed: "ユーザのアクティベートに失敗しました。"
         deactivate_account: "アカウントのアクティベート解除"
         deactivate_failed: "ユーザのアクティベート解除に失敗しました。"
-        unblock_failed: 'ユーザのブロック解除に失敗しました。'
-        block_failed: 'ユーザのブロックに失敗しました。'
-        block_confirm: 'このユーザをブロックしてもよろしいですか? ユーザは新しくトピックを作成したり、投稿する事ができなくなります。'
-        block_accept: 'はい。このユーザーをブロックします。'
         bounce_score: "バウンススコア"
         reset_bounce_score:
           label: "リセット"
@@ -2695,7 +2682,6 @@ ja:
         visit_profile: "<a href='%{url}'>設定ページ</a>からプロフィールの変更ができます"
         deactivate_explanation: "アクティベート解除されたユーザは、メールで再アクティベートする必要があります。"
         suspended_explanation: "凍結中のユーザはログインできません。"
-        block_explanation: "ブロックされているユーザは投稿およびトピックの作成ができません。"
         staged_explanation: "ステージドユーザは特定のトピック宛に、メールを経由して投稿する事が出来ます。"
         bounce_score_explanation:
           none: "直近ではバウンスメールは受け取っていません。"

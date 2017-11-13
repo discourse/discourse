@@ -492,7 +492,6 @@ sq:
       admin: "{{user}} është admin"
       moderator_tooltip: "Ky anëtar është moderator"
       admin_tooltip: "Ky anëtar është administrator"
-      blocked_tooltip: "Ky anëtar është i bllokuar"
       suspended_notice: "Ky anëtar është përjashtuar deri më {{date}}."
       suspended_reason: "Arsyeja:"
       github_profile: "Github"
@@ -2027,7 +2026,6 @@ sq:
         no_problems: "Nuk u gjet asnjë gabim."
         moderators: 'Moderatorët:'
         admins: 'Administratorët:'
-        blocked: 'Bllokuar:'
         suspended: 'Përjashtuar:'
         private_messages_short: "Msgs"
         private_messages_title: "Mesazhet"
@@ -2361,8 +2359,6 @@ sq:
             change_category_settings: "ndrysho parametrat e kategorisë"
             delete_category: "fshi kategorinë"
             create_category: "krijo një kategori"
-            block_user: "blloko anëtarin"
-            unblock_user: "çblloko anëtarin"
             grant_admin: "jepi rolin admin"
             revoke_admin: "hiq rolin admin"
             grant_moderation: "jepi rolin moderator"
@@ -2412,7 +2408,6 @@ sq:
           pending: "Pezulluar"
           staff: 'Stafi'
           suspended: 'Të pezulluar'
-          blocked: 'Të bllokuar'
           suspect: 'Të dyshimtë'
         approved: "Aprovuar?"
         approved_selected:
@@ -2433,7 +2428,6 @@ sq:
           staff: "Stafi"
           admins: 'Administratorë'
           moderators: 'Moderatorë'
-          blocked: 'Përdorues të Bllokuar'
           suspended: 'Përdorues të Pezulluar'
           suspect: 'Përdorues të Dyshimtë'
         reject_successful:
@@ -2450,17 +2444,13 @@ sq:
         suspend_failed: "Pati një problem gjatë pezullimit të anëtarit. {{error}}"
         unsuspend_failed: "Pati një problem gjatë çpezullimit të anëtarit. {{error}}"
         suspend_duration: "Për sa kohë do të pezullohet anëtari?"
-        suspend_duration_units: "(ditë)"
         suspend_reason_label: "Pse po e pezulloni? Ky tekst <b>do të shfaqet publikisht</b> në profilin e këtij anëtari, dhe do t'i shfaqet vetë anëtarit si mesazh kur ky i fundit do tentojë të futet në faqe. Shkruani shkurt."
         suspend_reason: "Arsye"
         suspended_by: "Përjashtuar nga:"
         delete_all_posts: "Fshi gjithë postimet"
-        suspend: "Pezullo"
-        unsuspend: "Çpezullo"
-        suspended: "Pezulluar?"
         moderator: "Moderator?"
         admin: "Admin?"
-        blocked: "Bllokuar?"
+        suspended: "Pezulluar?"
         staged: "Staged?"
         show_admin_profile: "Admin"
         refresh_browsers: "Forco rifreskimin e shfletuesit"
@@ -2474,8 +2464,8 @@ sq:
         grant_admin: 'Jepi rolin admin'
         revoke_moderation: 'Hiqi rolin moderator'
         grant_moderation: 'Jepi rolin moderator'
-        unblock: 'Çblloko'
-        block: 'Blloko'
+        unsuspend: 'Çpezullo'
+        suspend: 'Pezullo'
         reputation: Reputacioni
         permissions: Të drejtat
         activity: Aktiviteti
@@ -2509,17 +2499,12 @@ sq:
         activate_failed: "Pati një problem gjatë aktivizimit të anëtarit."
         deactivate_account: "Çaktivizo llogarinë"
         deactivate_failed: "Pati një problem gjatë çaktivizimit të anëtarit."
-        unblock_failed: 'Pati një problem gjatë çbllokimit të anëtarit.'
-        block_failed: 'Pati një problem gjatë bllokimit të anëtarit.'
-        block_confirm: 'A jeni të sigurtë që doni të bllokoni këtë anëtar? Anëtari nuk do të ketë më të drejtën të krijojë postime ose tema të reja.'
-        block_accept: 'Po, blloko anëtarin'
         bounce_score: "Rezultati \"bounce\""
         reset_bounce_score:
           label: "Rivendos"
           title: "Rivendos në 0 rezultatin \"bounce\""
         deactivate_explanation: "Një anëtar i çaktivizuar duhet të ri-verifikojë adresën email."
         suspended_explanation: "Një anëtar i pezulluar nuk ka të drejtë të identifikohet. "
-        block_explanation: "Një anëtar i bllokuar nuk mund të përgjigjet apo të hapë tema të reja. "
         staged_explanation: "Një anëtar \"staged\" mund të postojë vetëm me email në tema të caktuara. "
         bounce_score_explanation:
           none: "Nuk ka patur mesazhe email të kthyera për këtë anëtar."

@@ -48,7 +48,7 @@ it:
         no_body_detected_error: "Succede quando non si riesce ad estrapolare il corpo del messaggio e non ci sono allegati. "
         no_sender_detected_error: "Succede quando non abbiamo trovato un indirizzo email valido nell'intestazione From."
         inactive_user_error: "Succede quando il mittente non è attivo."
-        blocked_user_error: "Succede quando il mittente è stato bloccato."
+        silenced_user_error: "Succede quando il mittente è stato silenziato."
         bad_destination_address: "Succede quando nessuno degli indirizzi email presente nei campi A/Cc/Bcc corrisponde ad alcun indirizzo email entrante tra quelli configurati."
         strangers_not_allowed_error: "Succede quando un utente tenta di creare uno nuovo argomento in una categoria della quale non è membro."
         insufficient_trust_level_error: "Succede quando un utente tenta di creare un nuovo argomento in una categoria per la quale non ha il livello di esperienza richiesto."
@@ -668,7 +668,7 @@ it:
       email_title: 'L''argomento "%{title}" richiede l''attenzione di un moderatore'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Il tuo messaggio è stato segnalato dalla comunità. <a href="/my/messages">vedi i tuoi messaggi</a>.</p>'
+    you_must_edit: '<p>Il tuo messaggio è stato segnalato dalla comunità. Per favore  <a href="%{path}">controlla i tuoi messaggi</a>.</p>'
     user_must_edit: '<p>Questo messaggio è stato segnalato dalla comunità ed è stato temporaneamente nascosto.</p>'
   archetypes:
     regular:
@@ -928,7 +928,8 @@ it:
     digest_logo_url: "Il logo alternativo usato in cima alla email di riepilogo. Dovrebbe essere a forma di un ampio rettangolo. Non dovrebbe essere un'immagine SVG. Se lasciato vuoto, sarà utilizzato il campo `logo_url`. "
     logo_small_url: "Il piccolo logo in alto a sinistra del tuo sito, dovrebbe essere a forma di quadrato. Se non impostato, verrà mostrata l'icona di una casa."
     favicon_url: "La favicon del tuo sito, vedi http://it.wikipedia.org/wiki/Favicon, per funzionare correttamente su una CDN deve essere una png"
-    mobile_logo_url: "L'immagine del logo a posizione fissa usata in alto a sinistra del sito mobile. Dovrebbe essere di forma quadrata. Se non impostato, verrà usato `logo_url`. Es: http://example.com/uploads/default/logo.png"
+    mobile_logo_url: "Url del logo personalizzato usato nella versione mobile del tuo sito. Se non impostato verrà usato `logo_url`. Es: http://esempio.com/uploads/default/logo.png "
+    large_icon_url: "Immagine usata come logo/splash su Android. La dimensione consigliata è di 512px per 512px."
     apple_touch_icon_url: "Icona usata per dispositivi touch Apple. La dimensione consigliata è 144 x 144 pixel."
     notification_email: "L'indirizzo presente nel campo from: usato per inviare tutte le email essenziali di sistema. Il dominio indicato deve avere i record SPF, DKIM e reverse PTR impostati correttamente perché l'email arrivi."
     email_custom_headers: "Una lista di intestazioni email personalizzate delimitata da una barra verticale (pipe |)"
@@ -955,11 +956,11 @@ it:
     tl2_additional_likes_per_day_multiplier: "Aumenta il limite di \"Mi piace\" al giorno ammessi per gli utenti con livello di esperienza 2 (Assiduo), moltiplicando per questo numero"
     tl3_additional_likes_per_day_multiplier: "Aumenta il limite di \"Mi piace\" al giorno ammessi per gli utenti con livello di esperienza 3 (Esperto) moltiplicando per questo numero"
     tl4_additional_likes_per_day_multiplier: "Aumenta il limite di \"Mi piace\" al giorno ammessi per gli utenti con livello di esperienza 4 (Veterano), moltiplicando per questo numero"
-    num_spam_flags_to_block_new_user: "Se i messaggi di un nuovo utente ricevono questo numero di segnalazioni spam da num_users_to_block_new_user diversi utenti, nascondi tutti i suoi messaggi ed impediscigli di crearne altri. 0 per disabilitare."
-    num_users_to_block_new_user: "Se i messaggi di un nuovo utente ricevono num_flags_to_block_new_user segnalazioni di spam da così tanti utenti diversi, nascondi tutti i suoi messaggi e impediscigli ulteriori invii. 0 per disabilitare."
-    num_tl3_flags_to_block_new_user: "Se i messaggi di un nuovo utente ricevono questo numero di segnalazioni da num_tl3_users_to_block_new_user differenti utenti a livello di esperienza 3, nascondi tutti i messaggi e previenine la futura pubblicazione. 0 per disabilitare."
-    num_tl3_users_to_block_new_user: "Se i messaggi di un nuovo utente ricevono num_tl3_flags_to_block_new_user segnalazioni da questo numero di utenti a livello di esperienza 3, nascondi tutti i messaggi e previenine la futura pubblicazione. 0 per disabilitare."
-    notify_mods_when_user_blocked: "Se un utente è bloccato automaticamente, manda un messaggio ai moderatori."
+    num_spam_flags_to_silence_new_user: "Se i messaggi di un nuovo utente ricevono segnalazioni di spam da num_users_to_silence_new_user diversi utenti, nascondi tutti i messaggi dell'utente e impediscigli ulteriori invii. 0 per disabilitare questa funzionalità. "
+    num_users_to_silence_new_user: "Se i messaggi di un nuovo utente ricevono num_spam_flags_to_silence_new_user segnalazioni di spam da così tanti utenti diversi, nascondi tutti i suoi messaggi e impediscigli ulteriori invii. 0 per disabilitare. "
+    num_tl3_flags_to_silence_new_user: "Se i messaggi di un nuovo utente ricevono questo numero di segnalazioni da num_tl3_users_to_silence_new_user differenti utenti a livello di esperienza 3, nascondi tutti i messaggi e previenine la futura pubblicazione. 0 per disabilitare. "
+    num_tl3_users_to_silence_new_user: "Se i messaggi di un nuovo utente ricevono num_tl3_flags_to_silence_new_user segnalazioni da questo numero di utenti a livello di esperienza 3, nascondi tutti i messaggi e previenine la futura pubblicazione. 0 per disabilitare."
+    notify_mods_when_user_silenced: "Se un utente è silenziato automaticamente, manda un messaggio ai moderatori."
     flag_sockpuppets: "Se un nuovo utente risponde ad un argomento dallo stesso indirizzo IP dell'utente che ha aperto l'argomento stesso, segnala entrambi i messaggi come potenziale spam."
     traditional_markdown_linebreaks: "Usa l'accapo tradizionale in Markdown, cioè due spazi a fine riga per andare a capo."
     enable_markdown_typographer: "Utilizza regole tipografiche di base per migliorare la leggibilità dei paragrafi di testo, sostituire (c) (tm) ecc, con simboli, ridurre il numero di punti interrogativi e così via"
@@ -967,8 +968,6 @@ it:
     must_approve_users: "Lo staff deve approvare tutti i nuovi account utente prima che essi possano accedere al sito. ATTENZIONE: abilitare l'opzione per un sito live revocherà l'accesso per tutti gli utenti non-staff esistenti!"
     pending_users_reminder_delay: "Notifica i moderatori se nuovi utenti sono in attesa di approvazione per più di queste ore. Imposta a -1 per disabilitare le notifiche."
     maximum_session_age: "L'utente resterà connesso per n ore dall'ultima visita"
-    ga_tracking_code: "OBSOLETO: codice di tracciamento di Google Analitycs (ga.js), es UA-12345678-9; vedi http://google.com/analytics"
-    ga_domain_name: "OBSOLETO: nome del dominio Google analytics (ga.js), esempio: miosito.com; vedi http://google.com/analytics"
     ga_universal_tracking_code: "Codice di tracking Google Universal Analytics (analytics.js), es: UA-12345678-9; vedi http://google.com/analytics"
     ga_universal_domain_name: "Nome di dominio Google Universal Analytics (analytics.js), es: miosito.com; vedi http://google.com/analytics"
     ga_universal_auto_link_domains: "Attiva Il monitoraggio interdominio di Google Universal Analytics (analytics.js). Ai collegamenti in uscita a questi domini verrà aggiunto l'id del client. Vedi la guida di Google Cross-domain Tracking."
@@ -1200,9 +1199,9 @@ it:
     num_hours_to_close_topic: "Numero di ore per mettere in pausa un argomento in attesa dell'intervento di un moderatore."
     auto_respond_to_flag_actions: "Attiva risposta automatica quando viene fatta una segnalazione."
     min_first_post_typing_time: "Quantità minima di tempo in millisecondi che un utente deve impiegare per la digitazione del  primo messaggio, se non viene raggiunta la soglia il messaggio verrà automaticamente inserito nella coda dei messaggi da approvare. Impostare su 0 per disabilitare (non consigliato)"
-    auto_block_fast_typers_on_first_post: "Blocca automaticamente gli utenti che non soddisfano min_first_post_typing_time"
-    auto_block_fast_typers_max_trust_level: "Livello di esperienza massimo per bloccare automaticamente i digitatori veloci"
-    auto_block_first_post_regex: "Regex senza distinzione tra maiuscole e minuscole che, se passato, causerà il blocco del primo messaggio dell'utente e che sarà inviato nella coda dei messaggi da approvare. Esempio: rabbia|a[bc]a, fa in modo che tutti i messaggi contenenti le parole rabbia o aba o aca siano bloccati in un primo momento. Si applica solo al primo messaggio."
+    auto_silence_fast_typers_on_first_post: "Silenzia automaticamente gli utenti che non soddisfano min_first_post_typing_time"
+    auto_silence_fast_typers_max_trust_level: "Livello di esperienza massimo per silenziare automaticamente i digitatori veloci"
+    auto_silence_first_post_regex: "Regex senza distinzione tra maiuscole e minuscole che, se passato, causerà il silenziamento del primo messaggio dell'utente e che sarà inviato nella coda dei messaggi da approvare. Esempio: rabbia|a[bc]a, fa in modo che tutti i messaggi contenenti le parole rabbia o aba o aca siano silenziati in un primo momento. Si applica solo al primo messaggio."
     flags_default_topics: "Di default, mostra gli argomenti segnalati nella sezione di amministrazione"
     reply_by_email_enabled: "Abilita la possibilità di rispondere ai messaggi tramite email."
     reply_by_email_address: "Modello per rispondere via email, per esempio: %{reply_key}@risposta.esempio.com o risposte+%{reply_key}@esempio.com"
@@ -1296,7 +1295,7 @@ it:
     topic_page_title_includes_category: "Il titolo dell'argomento sulla pagina include il nome della categoria."
     native_app_install_banner: "Domanda ai visitatori ricorrenti di installare l'app nativa di Discourse."
     share_anonymized_statistics: "Condividi statistiche anonime di utilizzo."
-    auto_handle_queued_age: "Gestisci automaticamente i record che sono in attesa di essere rivisti dopo tale numero di giorni. Le segnalazioni saranno ignorate. I messaggi in attesa e gli utenti saranno rifiutati. Imposta a 0 per disattivare questa funzionalità."
+    auto_handle_queued_age: "Gestisci automaticamente i record che sono in attesa di essere rivisti dopo tale numero di giorni. Le segnalazioni saranno ignorate. I messaggi in attesa e gli utenti saranno rifiutati. Impostare su 0 per disattivare questa funzionalità."
     max_prints_per_hour_per_user: "Numero massimo di impressioni /pagine di stampa (imposta a 0 per disattivare)"
     full_name_required: "Il nome completo è un campo obbligatorio del profilo utente."
     enable_names: "Mostra il nome completo dell'utente su profilo, scheda utente e email. Disabilita per nascondere il nome completo ovunque."
@@ -1352,6 +1351,7 @@ it:
     default_categories_tracking: "Elenco di categorie seguite per default."
     default_categories_muted: "Elenco di categorie silenziate per default."
     default_categories_watching_first_post: "Elenco di categorie in cui il primo messaggio di ogni nuovo argomento verrà osservato per impostazione predefinita."
+    retain_web_hook_events_period_days: "Numero di giorni per mantenere i record degli eventi di web hook."
     max_user_api_reqs_per_day: "Numero massimo di richieste giornaliere per la chiave API utente "
     max_user_api_reqs_per_minute: "Numero massimo di richieste al minuto per la chiave API utente"
     allow_user_api_keys: "Consenti la generazione di chiavi API utente"
@@ -1409,6 +1409,7 @@ it:
       category: 'Categorie'
       topic: 'Risultati'
       user: 'Utenti'
+    results_page: "Risultati della ricerca per '%{term}'"
   sso:
     login_error: "Errore Login"
     not_found: "Impossibile trovare il tuo account. Si prega di contattare l'amministratore del sito."
@@ -1916,13 +1917,13 @@ it:
         Spiacenti, ma il tuo messaggio email per %{destination} (intitolato %{former_title}) non ha funzionato.
 
         Il tuo account associato a questo indirizzo email non è stato attivato. Attiva il tuo account prima di inviare email.
-    email_reject_blocked_user:
-      title: "Email Rifiutata Utente Bloccato"
-      subject_template: "[%{email_prefix}] Problema email -- Utente Bloccato"
+    email_reject_silenced_user:
+      title: "Email Rifiutata Utente Silenziato"
+      subject_template: "[%{email_prefix}] Problema email -- Utente Silenziato"
       text_body_template: |
         Spiacenti, ma il tuo messaggio email per %{destination} (intitolato %{former_title}) non ha funzionato.
 
-        Il tuo account associato a questo indirizzo email è stato bloccato.
+        Il tuo account associato a questo indirizzo email è stato silenziato.
     email_reject_reply_user_not_matching:
       title: "Email Rifiutata Utente Non Corrispondente"
       subject_template: "[%{email_prefix}] Problema email -- Indirizzo Risposta Imprevisto"
@@ -2047,13 +2048,13 @@ it:
       title: "Troppe Segnalazioni Spam"
       subject_template: "Nuovo account sospeso"
       text_body_template: |
-        Salve,
+        Ciao,
 
-        questo è un messaggio automatico da %{site_name} per informarti che i tuoi messaggi sono stati temporaneamente nascosti perché segnalati dalla comunità.
+        questo è un messaggio automatico da %{site_name} per informarti che il tuo account è stato bloccato a causa di un gran numero di segnalazioni da parte della comunità.
 
-        Come misura precauzionale, il tuo nuovo account non può creare altre risposte o argomenti finché il tuo account non verrà revisionato da un membro dello staff. Ci scusiamo per il disagio.
+        Come misura precauzionale, il tuo nuovo account è stato silenziato e non può creare altre risposte o argomenti finché non verrà revisionato da un membro dello staff.  Ci scusiamo per l'inconveniente
 
-        Per ulteriori informazioni, ti rimandiamo alle [linee guida della comunità](%{base_url}/guidelines).
+        Per maggiori dettagli, fai riferimento alle [linee guida della comunità](%{base_url}/guidelines).
     too_many_tl3_flags:
       title: "Troppe Segnalazioni Da TL3"
       subject_template: "Nuovo account sospeso"
@@ -2062,11 +2063,11 @@ it:
 
         questo è un messaggio automatico da %{site_name} per informarti che il tuo account è stato bloccato a causa di un gran numero di segnalazioni da parte della comunità.
 
-        Come misura precauzionale, il tuo nuovo account non può creare altre risposte o argomenti finché non verrà revisionato da un membro dello staff.  Ci scusiamo per l'inconveniente
+        Come misura precauzionale, il tuo nuovo account è stato silenziato e non può creare altre risposte o argomenti finché non verrà revisionato da un membro dello staff.  Ci scusiamo per l'inconveniente
 
         Per maggiori dettagli, fai riferimento alle [linee guida della comunità](%{base_url}/guidelines).
-    blocked_by_staff:
-      title: "Bloccato dallo Staff"
+    silenced_by_staff:
+      title: "Silenziato dallo Staff"
       subject_template: "Account temporaneamente sospeso"
       text_body_template: |
         Ciao,
@@ -2076,35 +2077,35 @@ it:
         Per favore continua pure a navigare, anche se non potrai rispondere o creare argomenti fino a che un  [membro dello staff](%{base_url}/about) avrà revisionato i tuoi messaggi più recenti. Ci scusiamo per l'inconveniente.
 
         Per maggiori dettagli, fai riferimento alle [linee guida della comunità](%{base_url}/guidelines).
-    user_automatically_blocked:
-      title: "Utente Bloccato Automaticamente"
-      subject_template: "Nuovo utente %{username} bloccato dalle segnalazioni della comunità"
+    user_automatically_silenced:
+      title: "Utente Silenziato Automaticamente"
+      subject_template: "Nuovo utente %{username} silenziato dalle segnalazioni della comunità"
       text_body_template: |
         Questo è un messaggio automatico.
 
-        Il nuovo utente [%{username}](%{user_url}) è stato automaticamente bloccato perché più utenti hanno contrassegnato i messaggi di %{username}.
+        Il nuovo utente [%{username}](%{user_url}) è stato automaticamente silenziato perché più utenti hanno contrassegnato i messaggi di %{username}.
 
-        Per favore [controlla le segnalazioni](%{base_url}/admin/flags). Se %{username} è stato bloccato per errore, clicca sul tasto di sblocco nella [pagina di amministrazione di questo utente](%{user_url}).
+        Per favore [controlla le segnalazioni](%{base_url}/admin/flags). Se %{username} è stato silenziato per errore, clicca sul tasto di sblocco nella [pagina di amministrazione di questo utente](%{user_url}).
 
         Questa impostazione può essere modificata tramite l'impostazione del sito `block_new_user`.
-    spam_post_blocked:
-      title: "Messaggio Spam Bloccato"
-      subject_template: "Il messaggi del nuovo utente %{username} sono stati bloccati a causa dell'invio di ripetuti collegamenti."
+    spam_post_silenced:
+      title: "Messaggio Spam Silenziato"
+      subject_template: "I messaggi del nuovo utente %{username} sono stati silenziati a causa dell'invio di ripetuti collegamenti."
       text_body_template: |
         Questo è un messaggio automatico.
 
-        Il nuovo utente [%{username}](%{user_url}) ha creato diversi messaggi con collegamenti a %{domains}, ma tali messaggi sono stati bloccati per evitare spam. L'utente è ancora abilitato alla creazione di messaggi ma senza collegamenti verso %{domains}.
+        Il nuovo utente [%{username}](%{user_url}) ha creato diversi messaggi con collegamenti a %{domains}, ma tali messaggi sono stati silenziati per evitare spam. L'utente è ancora abilitato alla creazione di messaggi ma senza collegamenti verso %{domains}.
 
         Per favore [controlla questo utente](%{user_url}).
 
         Questa impostazione può essere modificata tramite le impostazioni del sito   `newuser_spam_host_threshold` e `white_listed_spam_host_domains`.
-    unblocked:
-      title: "Sbloccato"
+    unsilenced:
+      title: "Non silenziato"
       subject_template: "Account non più sospeso"
       text_body_template: |
         Ciao,
 
-        questo è un messaggio automatico da %{site_name} per informarti che il tuo account è stato sbloccato a seguito di revisione da parte dello staff.
+        questo è un messaggio automatico da %{site_name} per informarti che il tuo account non è più silenziato a seguito di revisione da parte dello staff.
 
         Ora puoi nuovamente creare argomenti e risposte. Grazie della pazienza.
     pending_users_reminder:
@@ -2133,7 +2134,7 @@ it:
       text_body_template: |
         Congratulazioni, ti sei meritato il premio come **Nuovo Utente del Mese per %{month_year}**. :trophy:
 
-        Questo premio viene assegnato solo a due nuovi utenti al mese e sarà visibile permanentemente sulla [tua pagina utente](%{base_url}/my/badges).
+        Questo premio viene assegnato solo a due nuovi utenti al mese e sarà visibile permanentemente sulla [pagina dei distintivi](%{url}).
 
         Sei diventato velocemente un membro prezioso della nostra comunità. Grazie per l'adesione e continua a fare un buon lavoro!
     queued_posts_reminder:
@@ -2376,7 +2377,8 @@ it:
       popular_posts: "Messaggi di Successo"
       more_new: "Nuovo per te"
       subject_template: "[%{email_prefix}] Riepilogo"
-      unsubscribe: "Questo riepilogo viene inviato da %{site_link} se non ti si vede da un po'. Modifica <a href='%{email_settings_url}'>le tue impostazioni email</a>, o %{unsubscribe_link} annulla l'iscrizione."
+      unsubscribe: "Questo riepilogo viene inviato da %{site_link} se non ti si vede da un po'. Modifica %{email_preferences_link}, o %{unsubscribe_link} per annullare l'iscrizione."
+      your_email_settings: "le tue impostazioni email"
       click_here: "clicca qui"
       from: "%{site_name} riepilogo"
       preheader: "Un breve riepilogo dall'ultima tua visita il %{last_seen_at}"
@@ -2481,6 +2483,9 @@ it:
     see_more: "Altro"
     search_title: "Cerca nel sito"
     search_google: "Google"
+  offline:
+    title: "Impossibile caricare l'app"
+    offline_page_message: "Sembra che tu sia offline! Controlla la tua connessione di rete e riprova."
   login_required:
     welcome_message: |
       ## [Benvenuto su %{title}](#welcome)
@@ -2897,9 +2902,9 @@ it:
         Questo distintivo è assegnato quando ricevi il tuo primo mi piace su un messaggio. Congratulazioni, hai pubblicato qualcosa che i membri della tua comunità hanno trovato interessante, eccezionale o utile!
     autobiographer:
       name: Autobiografo
-      description: Ha compilato le informazioni sul <a href="/my/preferences">profilo</a>
+      description: Ha compilato le informazioni del <a href="%{base_uri}/my/preferences/profile">profilo</a>
       long_description: |
-        Questo distintivo è assegnato per aver compilato <a href="/my/preferences">il tuo profilo utente</a> e selezionato un'immagine del profilo. Lasciare che la comunità sappia di più su chi sei e a cosa sei interessato rende la comunità migliore e più connessa. Unisciti a noi!
+        Questo distintivo è assegnato per aver compilato <a href="%{base_uri}/my/preferences/profile">il tuo profilo utente</a> e selezionato un'immagine per il profilo. Lasciare che gli altri sappiano di più su chi sei e a cosa sei interessato rende la comunità migliore e più connessa. Unisciti a noi!
     anniversary:
       name: Compleanno
       description: Membro attivo per un anno, ha scritto almeno una volta
@@ -2992,9 +2997,9 @@ it:
         Questo distintivo è assegnato la prima volta che citi un messaggio nella tua risposta. Citare le sezioni rilevanti di messaggi precedenti nella tua risposta aiuta a mantenere le discussioni connesse insieme e in argomento. Il modo più semplice per citare è evidenziare una sezione di un messaggio e quindi premere il pulsante rispondi. Cita generosamente!
     read_guidelines:
       name: Linee Guida
-      description: Ha letto le <a href="/guidelines">linee guida della comunità</a>
+      description: Ha letto le <a href="%{base_uri}/guidelines">linee guida della comunità</a>
       long_description: |
-        Questo distintivo è assegnato per <a href="/guidelines">aver letto le linee guida della comunità</a>. Seguendo e condividendo queste semplici linee guida aiuti a costruire una comunità sicura, divertente e sostenibile per tutti. Ricorda sempre che c'è un altro essere umano, molto simile a te, dall'altro lato dello schermo. Sii piacevole!
+        Questo distintivo è assegnato per <a href="%{base_uri}/guidelines">aver letto le linee guida della comunità</a>. Seguendo e condividendo queste semplici linee guida aiuti a costruire una comunità sicura, divertente e sostenibile per tutti. Ricorda sempre che c'è un altro essere umano, molto simile a te, dall'altro lato dello schermo. Sii carino!
     reader:
       name: Lettore
       description: Ha letto ogni risposta in un argomento con più di 100 risposte
@@ -3129,6 +3134,7 @@ it:
     only_official: "Disabilita i plugin non ufficiali"
     no_plugins: "Disabilita tutti i plugin"
     enter: "Avvia Modalità Sicura"
+    must_select: "È necessario selezionare almeno un'opzione per accedere alla modalità sicura."
   wizard:
     title: "Configurazione Discourse"
     step:

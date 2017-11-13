@@ -32,6 +32,9 @@ tr_TR:
   disable_remote_images_download_reason: "Yeterli disk alanı kalmaması sebebiyle uzaktan görüntü indirme devre dışı bırakıldı."
   anonymous: "Anonim"
   remove_posts_deleted_by_author: "Yazar tarafından silindi"
+  themes:
+    bad_color_scheme: "Temayı güncelleyemiyorum, geçersiz renk şeması"
+    other_error: "Temanın güncellenmesi sırasında bir sorun oluştu"
   emails:
     incoming:
       default_subject: "Konuya bir başlık konulmalı"
@@ -40,7 +43,6 @@ tr_TR:
         empty_email_error: "Bize ulaşan ham posta boş olduğunda olur."
         no_message_id_error: "E-postanın 'Message-Id' başlığı olmadığında olur."
         inactive_user_error: "Gönderici etkin olmadığında olur."
-        blocked_user_error: "Gönderici engellendiğinde olur."
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -107,6 +109,7 @@ tr_TR:
   embed:
     start_discussion: "Tartışma Başlat"
     continue: "Tartışmaya Devam Et"
+    referer: "Yönlendiren:"
     more_replies:
       other: "%{count} cevap daha"
     loading: "Tartışma Yükleniyor..."
@@ -151,6 +154,12 @@ tr_TR:
     latest: "En son konular"
     hot: "Sıcak konular"
     top: "En iyi konular"
+    top_all: "Tüm zamanlarda en iyi konular"
+    top_yearly: "Yıllık en iyi konular"
+    top_quarterly: "Üç aylık en iyi konular"
+    top_monthly: "Aylık en iyi konular"
+    top_weekly: "Haftalık en iyi konular"
+    top_daily: "Günlük en iyi konular"
     posts: "Son gönderiler"
     private_posts: "Son özel iletiler"
     group_posts: "%{group_name} tarafından son gönderiler"
@@ -700,15 +709,12 @@ tr_TR:
     tl2_additional_likes_per_day_multiplier: "Güvenlik seviyesi 2 (Üye) olanlar için günlük beğeni limitini bu rakamla çarparak artır"
     tl3_additional_likes_per_day_multiplier: "Güven seviyesi 3 (Müdavim) olanlar için günlük beğeni limitini bu rakamla çarparak artır"
     tl4_additional_likes_per_day_multiplier: "Güvenlik seviyesi 4 (Lider) olanlar için günlük beğeni limitini bu rakamla çarparak artır"
-    notify_mods_when_user_blocked: "Eğer bir kullanıcı otomatik olarak engellendiyse, tüm moderatörlere ileti yolla."
     flag_sockpuppets: "Eğer, yeni kullanıcı konuya, konuyu başlatan yeni kullanıcı ile aynı IP adresinden cevap yazarsa, her iki gönderiyi de potansiyel istenmeyen olarak bildir. "
     traditional_markdown_linebreaks: "Markdown'da, satır sonundan önce yazının sağında iki tane boşluk gerektiren, geleneksel satır sonu metodunu kullan."
     post_undo_action_window_mins: "Bir gönderide yapılan yeni eylemlerin (beğenme, bildirme vb) geri alınabileceği zaman, dakika olarak"
     must_approve_users: "Siteye erişimlerine izin verilmeden önce tüm yeni kullanıcı hesaplarının görevliler tarafından onaylanması gerekir. UYARI: yayındaki bir site için bunu etkinleştirmek görevli olmayan hesapların erişimini iptal edecek."
     pending_users_reminder_delay: "Belirtilen saatten daha uzun bir süredir onay bekleyen yeni kullanıcılar mevcutsa moderatörleri bilgilendir. Bilgilendirmeyi devre dışı bırakmak için -1 girin."
     maximum_session_age: "Kullanıcı son ziyaretinden bu yana n saat boyunca giriş yapmış olarak kalacak"
-    ga_tracking_code: "ESKİ: Google analiz (ga.js) takip kodu, ör:UA-12345678-9; bakınız http://google.com/analytics"
-    ga_domain_name: "ESKİ: Google analiz (ga.js) alan adı, ör: benimsitem.com; bakınız http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) takip kodu, ör: UA-12345678-9; bakınız http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) alan adı, ör: mysite.com; bakınız http://google.com/analytics"
     enable_escaped_fragments: "Eğer bir ağ gezgini tespit edilmezse Google'ın Ajax-Crawling API'sine dönün. Dahası için şuraya bakın : https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
@@ -899,9 +905,6 @@ tr_TR:
     num_flags_to_close_topic: "Bir konunun moderatör müdahalesi için otomatik olarak durdurulmadan önce alması gereken en az etkin bildirim sayısı "
     auto_respond_to_flag_actions: "Bir bildirim kaldırırken otomatik olarak cevaplamayı etkinleştir"
     min_first_post_typing_time: "Milisaniye olarak bir kullanıcının ilk gönderisini yazarken geçmesi gereken en küçük süre, bu süre geçmezse gönderi otomatik olarak onaylanma kuyruğuna girer. Devre dışı bırakmak için 0'a ayarlayın (tavsiye edilmez)."
-    auto_block_fast_typers_on_first_post: "min_first_post_typing_time'ı karşılamayan kullanıcıları otomatik olarak engelle."
-    auto_block_fast_typers_max_trust_level: "Hızlı yazıcıları otomatik engellemek için en büyük güven seviyesi."
-    auto_block_first_post_regex: "Eğer eşleşirse kullanıcının ilk gönderisinin engellenmesi ve onaylanma kuyruğuna gitmesine neden olan harf büyüklüğü duyarsız düzenli ifade. Örnek: reklam|a[bc]a düzenli ifadesi reklam, aba ya da aca içeren ilk gönderilerin engellenmesi ve onaylanma kuyruğuna gitmesine neden olacaktır. Sadece ilk gönderiler için geçerlidir."
     reply_by_email_enabled: "Konulara e-posta üzerinden cevap yazmayı etkinleştir."
     reply_by_email_address: "Email ile cevapla özelliği için gelen e-posta adresi şablonu, örnek: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
     disable_emails: "Discourse'un herhangi bir e-posta göndermesine izin verme"
@@ -1249,30 +1252,8 @@ tr_TR:
         Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermeye çalıştığınız e-posta başırısız oldu. E-postada herhangi bir cevap bulamadık. **Cevabınızın e-posta'nın en üstünde yer aldığından emin olun** -- aralardaki cevapları işleyemiyoruz.
     too_many_spam_flags:
       subject_template: "Yeni hesap askıda"
-      text_body_template: |
-        Merhaba,
-
-        Bu, %{site_name} adresinden size gönderilen, topluluk tarafından bildirildiği için kontrol edilmek üzere gizlenen gönderinizi bildiren otomatik bir iletidir.
-
-        Bir önlem olarak, bir yetkili incelemesine kadar yeni hesabınızdan yeni cevaplar veya konular oluşturmanız engellendi. Bu rahatsızlık için üzgünüz.
-
-        Ek bilgi için, [topluluk yönergelerine](%{base_url}/guidelines) başvurun.
     too_many_tl3_flags:
       subject_template: "Yeni hesap askıda"
-    blocked_by_staff:
-      subject_template: "Hesap geçiçi olarak askıda"
-    user_automatically_blocked:
-      subject_template: "Yeni kullanıcı %{username} topluluk bildirimleri tarafından engellendi"
-    spam_post_blocked:
-      subject_template: "Üst üste aynı bağlantıların paylaşılmasından ötürü %{username} adlı yeni kullanıcının gönderileri engelledi"
-    unblocked:
-      subject_template: "Hesap artık askıda değil"
-      text_body_template: |
-        Merhaba,
-
-        Bu otomatik ileti %{site_name} forumunda, görevli incelemesinin ardından hesabınızın artık askıda olmadığını bilmeniz amacıyla gönderilmiştir.
-
-        Şimdi tekrar gönderi ve konular oluşturabilirsiniz. Sabrınız için teşekkürler.
     pending_users_reminder:
       subject_template:
         other: "%{count} kullanıcı onay bekliyor"

@@ -47,7 +47,6 @@ pl_PL:
         auto_generated_email_error: "Zdarza się, gdy \"pierwszeństwo\" nagłówka jest ustawione na: listę, śmieci, luzem lub auto odpowiedź lub gdy inny nagłówek zawiera: auto-składane, auto-odpowiadanie lub auto-generowane."
         no_body_detected_error: "Zdarza się kiedy nie może rozpakować całości wiadomości, a zawarte są w niej załączniki."
         inactive_user_error: "Zdarza się kiedy nadawca jest nie aktywny."
-        blocked_user_error: "Zdarza się kiedy nadawca jest zablokowany."
         bad_destination_address: "Zdarza się gdy żaden adres email nie pasuje do pól To/Cc/Bcc skonfigurowanych jako przychodzący adres email."
         strangers_not_allowed_error: "Zdarza się, gdy użytkownik próbuje stworzyć temat w kategorii, której nie jest członkiem."
         insufficient_trust_level_error: "Zdarza się, gdy użytkownik próbuje stworzyć temat w kategorii, której nie ma odpowiedniego poziomu zaufania.."
@@ -1016,11 +1015,6 @@ pl_PL:
     tl2_additional_likes_per_day_multiplier: "Zwiększ limit lajków na dzień dla tl2 (członek), mnożąc przez tę liczbę"
     tl3_additional_likes_per_day_multiplier: "Zwiększ limit lajków na dzień dla tl3 (użytkownik stały), mnożąc przez tę liczbę"
     tl4_additional_likes_per_day_multiplier: "Zwiększ limit lajków na dzień dla tl4 (lider), mnożąc przez tę liczbę"
-    num_spam_flags_to_block_new_user: "Jeżeli post nowego użytkownika otrzyma tyle spam flag od num_users_to_block_new_user różnych użytkowników, ukryj ich wszystkie posty i zablokuj możliwość tworzenia kolejnych. 0 żeby wyłączyć."
-    num_users_to_block_new_user: "Jeżeli post nowego użytkownika otrzyma num_spam_flags_to_block_new_user flag spamu od tylu różnych użytkowników, ukryj jego wszystkie posty i zablokuj możliwość pisania nowych. 0 żeby wyłączyć."
-    num_tl3_flags_to_block_new_user: "Jeżeli post nowego użytkownika otrzyma num_tl3_users_to_block_new_user flag od tylu różnych użytkowników poziomu zaufania 3, ukryj jego wszystkie posty i zablokuj możliwość pisania nowych. 0 żeby wyłączyć."
-    num_tl3_users_to_block_new_user: "Jeżeli post nowego użytkownika otrzyma num_tl3_users_to_block_new_user flag spamu od tylu różnych użytkowników poziomu zaufania 3, ukryj jego wszystkie posty i zablokuj możliwość pisania nowych. 0 żeby wyłączyć."
-    notify_mods_when_user_blocked: "If a user is automatically blocked, send a message to all moderators."
     flag_sockpuppets: "Jeśli nowy użytkownik odpowiada na dany temat z tego samego adresu IP co nowy użytkownik, który założył temat, oznacz ich posty jako potencjalny spam."
     traditional_markdown_linebreaks: "Używaj tradycyjnych znaków końca linii w Markdown, to znaczy dwóch spacji na końcu linii."
     enable_markdown_typographer: "Używaj podstawowych zasad typografii, aby poprawić czytelność poszczególnych paragrafów tekstu, zastąpienie (c)(tm) itd, z symbolami, zmniejsza liczbę znaków zapytania itd"
@@ -1028,8 +1022,6 @@ pl_PL:
     must_approve_users: "Zespół musi zaakceptować wszystkie nowe konta zanim uzyskają dostęp do serwisu. UWAGA: włączenie tego dla już udostępnionej strony sprawi, że zostanie odebrany dostęp wszystkim istniejącym użytkownikom spoza zespołu."
     pending_users_reminder_delay: "Powiadomić moderatorów jeżeli nowi użytkownicy czekali na zatwierdzenie dłużej niż his mamy godzin. Ustaw -1 aby wyłączyć powiadomienia. "
     maximum_session_age: "Użytkownik zostanie zalogowany przez n godzin od czasu ostatniej wizyty."
-    ga_tracking_code: "Identyfikator Google Universal Analytics (ga.js) tracking code code, eg: UA-12345678-9; zobacz http://google.com/analytics"
-    ga_domain_name: "Identyfikator Google Analytics (ga.js) nazwa domeny,  eg: UA-12345678-9; zobacz http://google.com/analytics"
     ga_universal_tracking_code: "Identyfikator Google Universal Analytics (analytics.js), np: UA-12345678-9; zobacz http://google.com/analytics"
     ga_universal_domain_name: "Domena dla Google Universal Analytics (analytics.js), np: mysite.com; zobacz http://google.com/analytics"
     ga_universal_auto_link_domains: "Włącz Google Universal Analytics (analytics.js) śledzenie wielu domen. Linki wychodzące do tych domen będą miały dodane id klienta. Zobacz poradnik Google's Cross-Domain Tracking."
@@ -1257,9 +1249,6 @@ pl_PL:
     num_hours_to_close_topic: "Liczba godzin zatrzymanie tematu dla interwencji."
     auto_respond_to_flag_actions: "Włącz automatyczną odpowiedź, w czasie pozbywania się flagi."
     min_first_post_typing_time: "Minimalny czas w milisekundach, w którym użytkownik musi napisać post, jeśli próg nie zostanie osiągnięty post zostanie automatycznie dostosowany w zależności od kolejki zatwierdzania potrzeb. Ustaw 0, aby wyłączyć (nie polecane)"
-    auto_block_fast_typers_on_first_post: "Automatycznie blokuj użytkowników, którzy nie spełniają min_first_post_typing_time"
-    auto_block_fast_typers_max_trust_level: "Maksymalny poziom zaufania do blokowania użytkowników piszących zbyt szybko"
-    auto_block_first_post_regex: "Regex niewrażliwy na wielkość liter, jeśli przejdzie to pierwszy post użytkownika zostanie zablokowany i wysłany do kolejki oczekujących na akceptację. Na przykład: ragingla[bc]a, spowoduje, że wszystkie posty zawierające ranging lub aba lub aca będą blokowane w pierwszej kolejności. Ma zastosowanie tylko do pierwszego posta."
     reply_by_email_enabled: "Włącz możliwość odpowiadania na wpisy poprzez email."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Lista alternatywnych szablonów do odpowiedzi przez adres email. Przykład: %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
@@ -1719,7 +1708,7 @@ pl_PL:
     text_body_template: |
       Proszę potwierdzić dodanie **%{target_username}**  jako administratora do twojego forum.
 
-      [Potwierdź Konto Administratora](2%{admin_confirm_url})
+      [Potwierdź Konto Administratora](%{admin_confirm_url})
   test_mailer:
     title: "Test Powiadomień"
     subject_template: "[%{site_name}] Test dostarczania poczty"
@@ -1970,13 +1959,6 @@ pl_PL:
         Przepraszamy, ale twoja wiadomość email do %{destination}(zatytułowana %{former_title}) nie została wysłana.
 
         Twoja konto powiązane z tym adresem email nie jest aktywne. Proszę aktywować konto przed wysyłaniem emaili.
-    email_reject_blocked_user:
-      title: "Email odrzucony Użytkownik zablokowany"
-      subject_template: "[%{email_prefix}] Problem z pocztą elektroniczną - zablokowany użytkownik"
-      text_body_template: |
-        Przepraszamy, ale twoja wiadomość email do %{destination}(zatytułowana %{former_title}) nie została wysłana.
-
-        Twoje konto połączone z tym adresem email zostało zablokowane.
     email_reject_reply_user_not_matching:
       title: "Email odrzucony Użytkownik nie pasuje"
       subject_template: "[%{email_prefix}] Problem z pocztą - Nieoczekiwany adres odpowiedzi"
@@ -2096,67 +2078,9 @@ pl_PL:
     too_many_spam_flags:
       title: "Zbyt wiele spamowych flag."
       subject_template: "Nowe konto zawieszone"
-      text_body_template: |
-        Witaj,
-
-        Jest to automatyczna wiadomość z forum %{site_name} wysłana by poinformować Cię że Twoje wpisy zostały automatycznie ukryte z powodu oflagowania przez społeczność.
-
-        Jako środek zapobiegawczy, na Twoim nowym koncie zablokowano tworzenie nowych odpowiedzi i tematów do momentu gdy członek zespołu będzie mógł zweryfikować Twoje konto. Przepraszamy za niedogodności.
-
-        Dodatkowe wskazówki możesz znaleźć w naszych [wytycznych dla społeczności](%{base_url}/guidelines).
     too_many_tl3_flags:
       title: "Zbyt wiele flag TL3"
       subject_template: "Nowe konto zawieszone"
-      text_body_template: |
-        Dzień dobry,
-
-        To jest automatyczna wiadomość od%{site_name}, aby cię poinformować, że twoje konto zostało zablokowane ze względu na dużą liczbę oflagowań przez społeczność.
-
-        Jako środek zapobiegawczy, twoje nowe konto zostało zablokowane i nie ma możliwości dodawania odpowiedzi oraz nowych wątków dopóki obsługa przeglądanie twoje konto. Przepraszamy za niedogodności.
-
-        W celu uzyskania dodatkowych wskazówek, proszę przejść do naszych [wskazówek społeczności] %{base_url}/guidelines).
-    blocked_by_staff:
-      title: "Zablokowany prze moderatora"
-      subject_template: "Konto tymczasowo zawieszone"
-      text_body_template: |
-        Dzień dobry,
-
-        To jest automatyczna wiadomość od %{site_name}, aby poinformować cię, że twoje konto zostało tymczasowo zablokowane jako środek zapobiegawczy.
-
-        Możesz kontynuować przeglądanie, ale nie będzie mógł dodawać odpowiedzi lub tworzyć wątków dopóki [członek obsługi](%{base_url}/o nas)  przejrzy twoje ostatnie posty. Przepraszamy za niedogodności.
-
-        W celu uzyskania dodatkowych wskazówek, proszę przejść do naszych [wskazówek społeczności](%{base_url}/about).
-    user_automatically_blocked:
-      title: "Użytkownik Zablokowany Automatycznie"
-      subject_template: "Nowy użytkownik %{username} został zablokowany z powodu oflagowania przez społeczność"
-      text_body_template: |
-        Jest to wiadomość wysłana automatycznie.
-
-        Nowy użytkownik [%{username}](%{base_url}%{user_url}) został automatycznie zablokowany ponieważ wielu użytkowników oflagowało jego posty.
-
-        [Przejrzyj flagi](%{base_url}/admin/flags). Jeśli %{username} został mylnie zablokowany, kliknij na przycisk odblokuj na [administracyjnej stronie tego użytkownika](%{base_url}%{user_url}).
-
-        Próg blokowania może być zmieniony przez ustawienie serwisu `block_new_user`.
-    spam_post_blocked:
-      title: "Spam Zablokowany"
-      subject_template: "Posty nowego użytkownika %{username} zablokowane za powtarzanie linków"
-      text_body_template: |
-        Jest to wiadomość wysłana automatycznie.
-
-        Nowy użytkownik [%{username}](%{base_url}%{user_url}) spróbował utworzyć wiele postów z linkami do %{domains}, lecz posty te zostały zablokowane by uniknąć spamu. Użytkownik nadal może tworzyć nowe posty nie linkujące do %{domains}.
-
-        [Przejrzyj tego użytkownika](%{user_url}).
-
-        Można dokonać modyfikacji poprzez strony ustawień `newuser_spam_host_threshold` i  `white_listed_spam_host_domains'.
-    unblocked:
-      title: "Odblokowany"
-      subject_template: "Konto odblokowane"
-      text_body_template: |
-        Witaj,
-
-        Wysyłamy tę automatyczną wiadomość z %{site_name} aby poinformować Cię, że Twoje konto zostało odblokowane po interwencji zespołu.
-
-        Możesz znowu tworzyć wpisy i tematy. Dziękujemy za cierpliwość.
     pending_users_reminder:
       title: "Oczekujący użytkownicy przypomnienie"
       subject_template:

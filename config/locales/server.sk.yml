@@ -40,7 +40,6 @@ sk:
         empty_email_error: "Nastane, keď prijmeme úplne prázdny mail."
         no_message_id_error: "Nastane, keď v maili chýba hlavička 'Message-Id'."
         inactive_user_error: "Nastane, keď odosielateľ nie je aktívny."
-        blocked_user_error: "Nastane, keď odosielateľ bol zablokovaný."
         insufficient_trust_level_error: "Nastane, keď sa používateľ pokúsi vytvoriť novú tému v kategórii, na ktorú nemajú dostatočný stupeň dôvery."
         topic_closed_error: "Nastane, keď príde odpoveď na uzavretú tému."
   errors: &errors
@@ -755,13 +754,11 @@ sk:
     tl2_additional_likes_per_day_multiplier: "Zvýšiť počet páči sa mi na deň pre úroveň dôvery 2 (člen) vynásobením týmto číslom"
     tl3_additional_likes_per_day_multiplier: "Zvýšiť počet páči sa mi na deň pre úroveň dôvery 3 (bežný) vynásobením týmto číslom"
     tl4_additional_likes_per_day_multiplier: "Zvýšiť počet páči sa mi na deň pre úroveň dôvery 4 (vedúci) vynásobením týmto číslom"
-    notify_mods_when_user_blocked: "Ak je používateľ automaticky zablokovaný, pošli správu všetkým moderátorom."
     flag_sockpuppets: "Ak nový používateľ odpovedá na tému z rovnakej IP adresy, ako nový používateľ, ktorý danú tému vytvoril, označ oba ich príspevky ako potencionálny spam."
     traditional_markdown_linebreaks: "V Markdown použiť tradičné oddeľovače riadkov, čo vyžaduje dve koncové medzery ako oddeľovač riadku."
     post_undo_action_window_mins: "Počet minút počas ktorých môžu používatelia zrušiť poslednú akciu na príspevku (\"Páči sa\", označenie, atď..)."
     must_approve_users: "Obsluha musí povoliť účty všetkým novým používateľom skôr než im bude povolený prístup na stránku. UPOZORNENIE: zapnutie na živej stránke spôsobí zrušenie prístupu pre existujúcich používateľov, okrem obsluhy!"
     pending_users_reminder_delay: "Upozorni moderátora ak nový používateľ čaká na schválenie dlhšie ako tento počet hodín. Nastavte -1 pre vypnutie upozornenia."
-    ga_tracking_code: "ZASTARALÉ: Google analytics (ga.js) sledovací kód, napr.: UA-12345678-9; pozri http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) sledovací kód, napr: UA-12345678-9; pozri http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) názov domény, napr: mysite.com; pozri http://google.com/analytics"
     allow_moderators_to_create_categories: "Povoliť moderátorom vytváranie nových kategórií"
@@ -937,9 +934,6 @@ sk:
     num_flags_to_close_topic: "Minimálny počet aktívnych príznakov potrebný na automatické pozastavenie témy pre intervenciu."
     auto_respond_to_flag_actions: "Zapnúť automatickú odpoveď pri odstránení označenia."
     min_first_post_typing_time: "Minimalny čas písania prvého príspevku v milisekundách, ak je čas kratší ako je limit, príspevok bude automaticky zaradený do fronty na schválenie. Nastav 0 pre vypnutie (Neoporúča sa)"
-    auto_block_fast_typers_on_first_post: "Automaticky blokovať užívateľov, ktorí nesplnili podmienku minimálneho času pre prvý príspevok min_first_post_typing_time"
-    auto_block_fast_typers_max_trust_level: "Maximálny level dôvery pre automatické blokovanie rýchlo-písačov"
-    auto_block_first_post_regex: "Regulárny výraz bez rozlíšenia veľkých a malých písmen, ktorého splnenie zablokuje prvý príspevok užívateľa a pošle ho do fronty na schválenie. Napriklad: raging|a[bc]a , zablokuje príspevky obsahujúce raging alebo aba alebo aca. Aplikuje sa len na prvý príspevok. "
     reply_by_email_enabled: "Povoliť odpoveď na tému prostredníctvom emailu."
     reply_by_email_address: "Šablóna pre príchodziu emailovú adresu emailových odpovedí. Napríklad : %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
     disable_emails: "Zabrániť Discoursu v odosielaní akýchkoľvek e-mailov"
@@ -1203,11 +1197,6 @@ sk:
         Ľutujeme, ale Vaša emailová správa na %{destination} (titled %{former_title}) nefungovala.
 
         Váš účet asociovaný s touto emailovou adresou nie je aktivovaný. Prosím aktivujte svoj účet pred posielaním emailov.
-    email_reject_blocked_user:
-      text_body_template: |
-        Ľutujeme, ale Vaša emailová správa na %{destination} (titled %{former_title}) nefungovala.
-
-        Váš účet asociovaný s touto emailovou adresou bol zablokovaný.
     email_reject_empty:
       text_body_template: |
         Ľutujeme, ale Vaša emailová správa na %{destination} (titled %{former_title}) nefungovala.
@@ -1239,8 +1228,6 @@ sk:
         Ľutujeme, ale Vaša emailová správa na %{destination} (titled %{former_title}) nefungovala.
 
         Akcia uverejnenia nebola rozpoznaná. Prosíme skúste znovu alebo, ak sa chovanie opakuje, uverejnite pomocou webstránky.
-    spam_post_blocked:
-      subject_template: "Nový uživateľ %{username} je zablokovaný kôli opakovaným odkazom"
     pending_users_reminder:
       subject_template:
         one: "1 užívateľ čaká na schválenie"

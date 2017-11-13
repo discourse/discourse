@@ -511,7 +511,6 @@ ko:
       admin: "{{user}}님은 관리자 입니다"
       moderator_tooltip: "이 회원은 운영자 입니다"
       admin_tooltip: "이 회원은 관리자입니다."
-      blocked_tooltip: "이 회원은 차단되었습니다"
       suspended_notice: "이 회원은 {{date}}까지 접근 금지 되었습니다."
       suspended_permanently: "이 회원은 일시정지되었습니다."
       suspended_reason: "사유: "
@@ -2237,7 +2236,6 @@ ko:
         no_problems: "아무런 문제가 발견되지 않았습니다."
         moderators: '운영자:'
         admins: '관리자:'
-        blocked: '블락됨:'
         suspended: '접근금지:'
         private_messages_short: "메시지"
         private_messages_title: "메시지"
@@ -2775,8 +2773,6 @@ ko:
             change_category_settings: "카테고리 설정 변경"
             delete_category: "카테고리 지우기"
             create_category: "카테고리 만들기"
-            block_user: "사용자 차단"
-            unblock_user: "사용자 차단 해제"
             grant_admin: "관리자권한 부여"
             revoke_admin: "관리자권한 회수"
             grant_moderation: "운영자권한 부여"
@@ -2870,7 +2866,6 @@ ko:
           pending: "보류된 사용자"
           staff: '스태프'
           suspended: '접근 금지 사용자'
-          blocked: '블락된 사용자'
           suspect: '의심스러운 사용자'
         approved: "승인?"
         approved_selected:
@@ -2889,7 +2884,6 @@ ko:
           staff: "스태프"
           admins: '관리자'
           moderators: '운영자'
-          blocked: '블락된 사용자들'
           suspended: '접근 금지된 사용자들'
           suspect: '의심스러운 사용자들'
         reject_successful:
@@ -2915,12 +2909,9 @@ ko:
         cant_suspend: "이 사용자는 일시정지할 수 없습니다."
         delete_all_posts: "모든 글을 삭제합니다"
         delete_all_posts_confirm_MF: " {POSTS, plural, one {1개의 포스트} other {#개의 포스트}} 와 {TOPICS, plural, one {1개의 토픽} other {#개의 토픽}}을 삭제하려고 합니다. 정말로 삭제할까요?"
-        suspend: "접근 금지"
-        unsuspend: "접근 허용"
-        suspended: "접근 금지?"
         moderator: "운영자?"
         admin: "관리자?"
-        blocked: "블락"
+        suspended: "접근 금지?"
         staged: "격리조치?"
         show_admin_profile: "관리자"
         refresh_browsers: "브라우저 새로 고침"
@@ -2936,8 +2927,8 @@ ko:
         grant_admin_confirm: "새로운 관리자를 인증하기 위해 메일을 보냈습니다. 메일을 열어서  메일에 적힌 지시에 따라 주세요."
         revoke_moderation: '운영자 권한 회수'
         grant_moderation: '운영자 권한 부여'
-        unblock: '언블락'
-        block: '블락'
+        unsuspend: '접근 허용'
+        suspend: '접근 금지'
         reputation: 평판
         permissions: 권한
         activity: 활동
@@ -2981,10 +2972,6 @@ ko:
         activate_failed: "사용자 활성화에 문제가 있습니다."
         deactivate_account: "계정 비활성화"
         deactivate_failed: "사용자 비활성에 문제가 있습니다."
-        unblock_failed: '사용자 언블락에 문제가 있습니다.'
-        block_failed: '사용자 블락에 문제가 있습니다.'
-        block_confirm: '정말로 이 사용자를 차단하겠습니까? 차단된 사용자는 토픽, 포스트 작성이 금지됩니다.'
-        block_accept: '네, 이 사용자를 차단합니다.'
         bounce_score: "반송 스코어"
         reset_bounce_score:
           label: "리셋"
@@ -2992,7 +2979,6 @@ ko:
         visit_profile: "<a href='%{url}'>사용자 환경설정 페이지</a>로 가서 프로필 수정하기"
         deactivate_explanation: "비활성화 사용자는 이메일 인증을 다시 받아야합니다."
         suspended_explanation: "접근 금지된 유저는 로그인 할 수 없습니다."
-        block_explanation: "차단된 사용자는 글을 작성하거나 토픽을 작성할 수 없습니다."
         staged_explanation: "격리조치된 회원은 특정 토픽에 한해서 이메일로만 글을 쓸 수 있습니다."
         bounce_score_explanation:
           none: "최근 해당 이메일로부터 반송메일을 받은 내역이 없습니다."

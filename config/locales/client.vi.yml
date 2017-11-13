@@ -497,7 +497,6 @@ vi:
       admin: "{{user}} là người điều hành"
       moderator_tooltip: "Thành viên này là MOD"
       admin_tooltip: "Thành viên này là admin"
-      blocked_tooltip: "Tài khoản này bị khóa"
       suspended_notice: "Thành viên này bị đình chỉ cho đến ngày {{date}}. "
       suspended_reason: "Lý do: "
       github_profile: "Github"
@@ -1931,7 +1930,6 @@ vi:
         no_problems: "Không phát hiện vấn đề"
         moderators: 'Điều hành:'
         admins: 'Quản trị:'
-        blocked: 'Đã khóa:'
         suspended: 'Đã tạm khóa:'
         private_messages_short: "Tin nhắn"
         private_messages_title: "Tin nhắn"
@@ -2308,8 +2306,6 @@ vi:
             change_category_settings: "thay đổi cấu hình danh mục"
             delete_category: "xóa danh mục"
             create_category: "tạo danh mục"
-            block_user: "khóa tài khoản"
-            unblock_user: "mở khóa tài khoản"
             grant_admin: "cấp quản trị"
             revoke_admin: "hủy bỏ quản trị"
             grant_moderation: "cấp điều hành"
@@ -2365,7 +2361,6 @@ vi:
           pending: "Đang chờ xử lý"
           staff: 'Nhân viên'
           suspended: 'Đã tạm khóa'
-          blocked: 'Đã khóa'
           suspect: 'Nghi ngờ'
         approved: "Đã duyệt?"
         approved_selected:
@@ -2384,7 +2379,6 @@ vi:
           staff: "Nhân viên"
           admins: 'Tài khoản Quản trị'
           moderators: 'Điều hành viên'
-          blocked: 'Tài khoản Khóa'
           suspended: 'Tài khoản Tạm khóa'
           suspect: 'Tài khoản đáng ngờ'
         reject_successful:
@@ -2399,17 +2393,13 @@ vi:
         suspend_failed: "Có gì đó đã sai khi đình chỉ tài khoản này {{error}}"
         unsuspend_failed: "Có gì đó sai khi gỡ bỏ đình chỉ tài khoản này {{error}}"
         suspend_duration: "Tài khoản này sẽ bị đình chỉ bao lâu?"
-        suspend_duration_units: "(ngày)"
         suspend_reason_label: "Tại sao bạn bị đình chỉ? Dòng chữ <b>hiển thị cho tất cả mọi người</b> sẽ hiển thị trên trang hồ sơ tài khoản của người dùng này, và sẽ hiển thị cho thành viên khi họ đăng nhập, hãy viết ngắn."
         suspend_reason: "Lý do"
         suspended_by: "Tạm khóa bởi"
         delete_all_posts: "Xóa tất cả bài viết"
-        suspend: "Tạm khóa"
-        unsuspend: "Đã mở khóa"
-        suspended: "Đã tạm khóa?"
         moderator: "Mod?"
         admin: "Quản trị?"
-        blocked: "Đã khóa?"
+        suspended: "Đã tạm khóa?"
         staged: "Cấp bậc?"
         show_admin_profile: "Quản trị"
         refresh_browsers: "Bắt buộc làm mới trình duyệt"
@@ -2423,8 +2413,8 @@ vi:
         grant_admin: 'Cấp quản trị'
         revoke_moderation: 'Thu hồi điều hành'
         grant_moderation: 'Cấp điều hành'
-        unblock: 'Mở khóa'
-        block: 'Khóa'
+        unsuspend: 'Đã mở khóa'
+        suspend: 'Tạm khóa'
         reputation: Danh tiếng
         permissions: Quyền
         activity: Hoạt động
@@ -2468,13 +2458,8 @@ vi:
         activate_failed: "Có vấn đề khi kích hoạt thành viên này."
         deactivate_account: "Vô hiệu hóa Tài khoản"
         deactivate_failed: "Có vấn đề khi bỏ kích hoạt thành viên này."
-        unblock_failed: 'Có vẫn đề khi gỡ khóa thành viên này.'
-        block_failed: 'Có vấn đề khi khóa thành viên này.'
-        block_confirm: 'Bạn có chắc chắn muốn chặn người dùng này? Họ sẽ không thể tạo bất kỳ chủ đề hoặc bài viết mới nào.'
-        block_accept: 'Có, chặn người dùng này'
         deactivate_explanation: "Tài khoản chờ kích hoạt phải xác thực email của họ."
         suspended_explanation: "Tài khoản tạm khóa không thể đăng nhập."
-        block_explanation: "Tài khoản bị khóa không thể đăng bài hoặc tạo chủ đề."
         trust_level_change_failed: "Có lỗi xảy ra khi thay đổi mức độ tin tưởng của tài khoản."
         suspend_modal_title: "Tạm khóa Thành viên"
         trust_level_2_users: "Độ tin cậy tài khoản mức 2"

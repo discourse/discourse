@@ -96,6 +96,7 @@ id:
       private_topic: "membuat topik ini pribadi %{when}"
       split_topic: "pisahkan topik ini %{when}"
       invited_user: "mengundang %{who} %{when}"
+      user_left: "%{who}meninggalkan pesan %{when}"
       removed_user: "menghapus %{who} %{when}"
       autoclosed:
         enabled: 'ditutup %{when}'
@@ -191,6 +192,7 @@ id:
       like_count: "Suka"
       topic_count: "Topik"
       post_count: "Pos"
+      user_count: "Pengguna"
       active_user_count: "Pengguna Aktif"
       contact: "Kontak kami"
       contact_info: "Pada kegiatan dari sebuah isu kritikal atau penting terjadi pada situs ini, silahkan kontak kami di %{contact_info}."
@@ -289,13 +291,42 @@ id:
       total_rows:
         other: "%{count} pengguna"
     groups:
+      logs:
+        action: "Aksi"
+        details: "Detil"
+      edit:
+        full_name: 'Nama Lengkap'
+        add_members: "Tambah Anggota"
+        delete_member_confirm: "Hapus '%{username}' dari grup '%{group}'?"
+      name_placeholder: "Nama grup, tidak boleh menggunakan spasi, sama seperti aturan username"
+      empty:
+        members: "Tidak ada anggota dalam kelompok ini."
+        messages: "Tidak ada pesan untuk kelompok ini."
+        topics: "Tidak ada topik oleh anggota kelompok ini."
       add: "Menambahkan"
+      message: "Pesan"
+      automatic_group: Kelompok Otomatis
+      closed_group: Kelompok Tertutup
+      is_group_user: "Anda adalah anggota dari kelompok ini."
+      membership: "Keanggotaan"
+      name: "Nama"
+      user_count: "Jumlah Anggota"
+      bio: "Tentang Kelompok"
       selector_placeholder: "Menambahkan anggota"
       owner: "pemilik"
+      members: "Anggota"
       topics: "Topik-topik"
       mentions: "Balasan-balasan"
       messages: "Pesan-pesan"
+      visibility_levels:
+        title: "Siapa yang bisa melihat kelompok ini?"
+        public: "Semua orang"
+        members: "Pemilik kelompok, anggota, dan admin"
+        staff: "Pemilik kelompok dan staf"
+        owners: "Pemilik grup dan admin"
       alias_levels:
+        messageable: "Siapa yang bisa mengirim pesan pada kelompok ini?"
+        only_admins: "Hanya admin"
         mods_and_admins: "Hanya moderator dan Admin"
         members_mods_and_admins: "Hanya anggota grup, moderator dan admin"
         everyone: "Semua orang"
@@ -374,6 +405,8 @@ id:
       profile: "Profil"
       mute: "Redam"
       edit: "Ubah Preferensi"
+      download_archive:
+        button_text: "Unduh Semua"
       new_private_message: "Pesan Baru"
       private_message: "pesan"
       private_messages: "Messages"
@@ -405,7 +438,6 @@ id:
       admin: "{{user}} adalah admin"
       moderator_tooltip: "Pengguna ini adalah moderator"
       admin_tooltip: "Pengguna ini adalah admin"
-      blocked_tooltip: "Pengguna ini yang diblokir"
       suspended_notice: "Pengguna ini ditangguhkan sampai {{date}}"
       suspended_reason: "Alasan:"
       github_profile: "Github"
@@ -643,10 +675,35 @@ id:
       blank_username_or_password: "Silahkan masukkan email atau nama pengguna dan kata sandi anda"
       reset_password: 'Atur Ulang Kata Sandi'
       or: "atau"
+      submit_new_email: "Perbarui Alamat Email"
+      google:
+        title: "dengan Google"
+        message: "Autentikasi dengan Google (pastikan pop up blockers tidak dinyalakan)"
+      google_oauth2:
+        title: "dengan Google"
+        message: "Autentikasi dengan Google (pastikan pop up blockers tidak dinyalakan)"
       twitter:
         title: "dengan Twitter"
+        message: "Autentikasi dengan Twitter (pastikan pop up blockers tidak dinyalakan)"
+      instagram:
+        title: "dengan Instagram"
+        message: "Autentikasi dengan Instagram (pastikan pop up blockers tidak dinyalakan)"
       facebook:
         title: "dengan Facebook"
+        message: "Autentikasi dengan Facebook (pastikan pop up blockers tidak dinyalakan)"
+      yahoo:
+        title: "dengan Yahoo"
+        message: "Autentikasi dengan Yahoo (pastikan pop up blockers tidak dinyalakan)"
+      github:
+        title: "dengan GitHub"
+        message: "Autentikasi dengan GitHub (pastikan pop up blockers tidak dinyalakan)"
+    invites:
+      accept_title: "Undangan"
+      welcome_to: "Selamat datang di %{site_name}!"
+      invited_by: "Anda telah diundang oleh:"
+      accept_invite: "Terima Undangan"
+      name_label: "Nama"
+      password_label: "Atur Kata Sandi"
     composer:
       reply_here: "Balas Disini"
       reply: "Balas"

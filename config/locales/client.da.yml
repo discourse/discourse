@@ -515,7 +515,6 @@ da:
       admin: "{{user}} er admin"
       moderator_tooltip: "Denne bruger er moderator"
       admin_tooltip: "Denne bruger er administrator"
-      blocked_tooltip: "Brugeren er blokeret"
       suspended_notice: "Denne bruger er suspenderet indtil {{date}}."
       suspended_reason: "Begrundelse: "
       github_profile: "Github"
@@ -2216,7 +2215,6 @@ da:
         no_problems: "Ingen problemer fundet."
         moderators: 'Moderatorer:'
         admins: 'Admins:'
-        blocked: 'Blokeret:'
         suspended: 'Suspenderet:'
         private_messages_short: "Beskeder"
         private_messages_title: "Beskeder"
@@ -2745,8 +2743,6 @@ da:
             change_category_settings: "ret kategori-indstillinger"
             delete_category: "slet kategori"
             create_category: "opret kategori"
-            block_user: "bloker bruger"
-            unblock_user: "fjern blokering af bruger"
             grant_admin: "tildel admin"
             revoke_admin: "fjern admin"
             grant_moderation: "tildel moderation"
@@ -2813,7 +2809,6 @@ da:
           pending: "Afventer"
           staff: 'Personale'
           suspended: 'Suspenderet'
-          blocked: 'Blokeret'
           suspect: 'Mistænkt'
         approved: "Godkendt?"
         approved_selected:
@@ -2834,7 +2829,6 @@ da:
           staff: "Personale"
           admins: 'Admin-brugere'
           moderators: 'Moderatorer'
-          blocked: 'Blokerede brugere'
           suspended: 'Suspenderede brugere'
           suspect: 'Mistænkte brugere'
         reject_successful:
@@ -2851,18 +2845,14 @@ da:
         suspend_failed: "Noget gik galt ved suspenderingen af denne bruger {{error}}"
         unsuspend_failed: "Noget gik galt ved ophævningen af denne brugers suspendering {{error}}"
         suspend_duration: "Hvor lang tid skal brugeren være suspenderet?"
-        suspend_duration_units: "(dage)"
         suspend_reason_label: "Hvorfor suspenderer du? Denne tekst <b>er synlig for alle</b> på brugerens profilside, og vises til brugeren når de prøver at logge ind. Fat dig i korthed."
         suspend_reason: "Begrundelse"
         suspended_by: "Suspenderet af"
         delete_all_posts: "Slet alle indlæg"
         delete_all_posts_confirm_MF: "Du er ved at slette {POSTS, plural, one {1 post} other {# posts}} og {TOPICS, plural, one {1 topic} other {# topics}}. Er du sikker?"
-        suspend: "Suspendér"
-        unsuspend: "Ophæv suspendering"
-        suspended: "Suspenderet?"
         moderator: "Moderator?"
         admin: "Admin?"
-        blocked: "Blokeret?"
+        suspended: "Suspenderet?"
         staged: "Midlertidig?"
         show_admin_profile: "Admin"
         refresh_browsers: "Gennemtving browser refresh"
@@ -2878,8 +2868,8 @@ da:
         grant_admin_confirm: "Vi har sendt dig en e-mail for at bekræfte den ny administrator. Åbn den venligst og følg instrukserne."
         revoke_moderation: 'Fratag moderation'
         grant_moderation: 'Tildel moderation'
-        unblock: 'Ophæv blokering'
-        block: 'Blokér'
+        unsuspend: 'Ophæv suspendering'
+        suspend: 'Suspendér'
         reputation: Omdømme
         permissions: Tilladelser
         activity: Aktivitet
@@ -2926,17 +2916,12 @@ da:
         activate_failed: "Der opstod et problem ved aktivering af brugeren."
         deactivate_account: "Deaktivér konto"
         deactivate_failed: "Der opstod et problem ved deaktivering af brugeren."
-        unblock_failed: 'Der opstod et problem ved ophævelsen af brugerens blokering.'
-        block_failed: 'Der opstod et problem ved blokering af brugeren.'
-        block_confirm: 'Er du sikker på, at du vil blokere brugeren? Bruger kan ikke længere oprette emner eller indlæg.'
-        block_accept: 'Ja, bloker brugeren'
         bounce_score: "Bounce Score"
         reset_bounce_score:
           label: "Nulstil"
           title: "Nulstil \"bounce score\" til 0"
         deactivate_explanation: "En deaktiveret bruger skal genvalidere deres e-mail."
         suspended_explanation: "En suspenderet bruger kan ikke logge ind."
-        block_explanation: "En blokeret bruger kan ikke oprette indlæg eller starte emner."
         staged_explanation: "En midlertidig bruger kan kun svare via email i bestemte emner."
         bounce_score_explanation:
           none: "Ingen \"bounces\" er for nyligt modtaget fra denne email."

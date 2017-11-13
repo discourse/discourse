@@ -526,6 +526,7 @@ el:
         disable: "Απενεργοποίηση Ειδοποιήσεων"
         enable: "Ενεργοποίηση Ειδοποιήσεων"
         each_browser_note: "Σημείωση: Θα πρέπει να αλλάξετε αυτή τη ρύθμιση σε κάθε browser που χρησιμοποιείτε."
+      dismiss: 'Απόρριψη'
       dismiss_notifications: "Απόρριψη Όλων"
       dismiss_notifications_tooltip: "Όλες οι αδιάβαστες ειδοποιήσεις να χαρακτηριστούν διαβασμένες"
       first_notification: "Η πρώτη σου ειδοποίηση! Επίλεξε την για να ξεκινήσεις."
@@ -540,7 +541,7 @@ el:
       admin: "Ο/Η {{user}} είναι διαχειριστής"
       moderator_tooltip: "Αυτός ο χρήστης είναι συντονιστής"
       admin_tooltip: "Αυτός ο χρήστης είναι διαχειριστής"
-      blocked_tooltip: "Ο χρήστης είναι μπλοκαρισμένος"
+      silenced_tooltip: "Χρήστης σε σιγή"
       suspended_notice: "Αυτός ο χρήστης είναι σε αποβολή μέχρι τις {{date}}."
       suspended_permanently: "Ο χρήστης είναι αποβλημένος."
       suspended_reason: "Αιτιολογία:"
@@ -592,6 +593,7 @@ el:
       undo_revoke_access: "Απενεργοποίηση Ανάκλησης Πρόσβασης"
       api_approved: "Εγκεκριμένο:"
       theme: "Θέμα"
+      home: "Προεπιλεγμένη Αρχική Σελίδα"
       staff_counters:
         flags_given: "χρήσιμες σημάνσεις"
         flagged_posts: "επισημασμένες αναρτήσεις"
@@ -904,7 +906,8 @@ el:
     first_post: Πρώτη ανάρτηση
     mute: Σίγαση
     unmute: Αναίρεση σίγασης
-    last_post: Τελευταία ανάρτηση
+    last_post: Αναρτήθηκε
+    time_read: Διαβάστηκε
     last_reply_lowercase: τελευταία απάντηση
     replies_lowercase:
       one: απάντηση
@@ -1041,6 +1044,7 @@ el:
       default_header_text: Επίλεξε...
       no_content: Δεν βρέθηκαν αποτελέσματα
       filter_placeholder: Αναζήτηση...
+      create: "Δημιουργία {{content}}"
     emoji_picker:
       filter_placeholder: Αναζήτηση για emoji
       people: Άνθρωποι
@@ -1096,6 +1100,7 @@ el:
       cancel: "Ακύρωση"
       create_topic: "Δημιουργία Νήματος"
       create_pm: "Μήνυμα"
+      create_whisper: "Ψυθίρισμα"
       title: "Ή πάτα Ctrl+Enter"
       users_placeholder: "Προσθήκη χρήστη"
       title_placeholder: "Τι αφορά αυτή η συζήτησης σε μία σύντομη πρόταση;"
@@ -2347,7 +2352,7 @@ el:
         no_problems: "Δεν βρέθηκε κανένα πρόβλημα."
         moderators: 'Συντονιστές: '
         admins: 'Διαχειριστές:'
-        blocked: 'Αποκλεισμένοι:'
+        silenced: 'Σιγήθηκαν:'
         suspended: 'Αποβλημένοι:'
         private_messages_short: "Μνμτ."
         private_messages_title: "Μηνύματα"
@@ -2429,6 +2434,7 @@ el:
         was_edited: "Η ανάρτηση έχει υποστεί επεξεργασία μετά την πρώτη επισήμανση"
         previous_flags_count: "Αυτό το νήμα έχει επισημανθεί ήδη {{count}} φορές"
         show_details: "Εμφάνιση λεπτομερειών επισήμανσης"
+        details: "λεπτομέρειες"
         flagged_topics:
           topic: "Νήμα"
           type: "Τύπος"
@@ -2889,8 +2895,8 @@ el:
             change_category_settings: "αλλαγή ρυθμίσεων κατηγορίας"
             delete_category: "διαγραφή κατηγορίας"
             create_category: "δημιουργία κατηγορίας"
-            block_user: "αποκλεισμός χρήστη"
-            unblock_user: "κατάργηση αποκλεισμού χρήστη"
+            silence_user: "σίγαση χρήστη"
+            unsilence_user: "αναίρεση σίγασης"
             grant_admin: "χορήγηση διαχειριστή"
             revoke_admin: "ανάκληση διαχειριστή"
             grant_moderation: "χορήγηση συντονιστή"
@@ -2985,7 +2991,7 @@ el:
           pending: "Εκκρεμή"
           staff: 'Συνεργάτες'
           suspended: 'Αποβλημένοι'
-          blocked: 'Αποκλεισμένο'
+          silenced: 'Σιγήθηκαν'
           suspect: 'Ύποπτο'
         approved: "Εγκεκριμένο;"
         approved_selected:
@@ -3006,7 +3012,7 @@ el:
           staff: "Συνεργάτες"
           admins: 'Διαχειριστές'
           moderators: 'Συντονιστές'
-          blocked: 'Αποκλεισμένοι Χρήστες'
+          silenced: 'Σιγημένοι Χρήστες'
           suspended: 'Αποβλημένοι Χρήστες'
           suspect: 'Ύποπτοι χρήστες'
         reject_successful:
@@ -3034,12 +3040,12 @@ el:
         cant_suspend: "Ο χρήστης αυτός δεν μπορεί να αποβληθεί."
         delete_all_posts: "Σβήσε όλες τις αναρτήσεις"
         delete_all_posts_confirm_MF: "Πρόκειται να διαγράψεις {POSTS, plural, one {1 ανάρτηση} other {# αναρτήσεις}} and {TOPICS, plural, one {1 νήμα} other {# νήματα}}. Είσαι σίγουρος;"
-        suspend: "Αποβολή"
-        unsuspend: "Αναίρεση αποβολής"
-        suspended: "Αποβλημένος;"
+        silence: "Σίγαση"
+        unsilence: "Αναίρεση Σίγασης"
+        silenced: "Σε Σιγή;"
         moderator: "Συντονιστής;"
         admin: "Διαχειριστής;"
-        blocked: "Αποκλείστηκε; "
+        suspended: "Αποβλημένος;"
         staged: "Στάδιο Μετάβασης;"
         show_admin_profile: "Διαχείριση"
         refresh_browsers: "Να ανανεωθεί αναγκαστικά η σελίδα"
@@ -3055,8 +3061,8 @@ el:
         grant_admin_confirm: "Έχουμε στείλει ένα email για να επιβεβαιώσουμε τον νέο διαχειριστή. Παρακαλούμε ανοίξτε το και ακολουθήστε τις οδηγίες."
         revoke_moderation: 'Ανάκληση δικαιωμάτων συντονιστή'
         grant_moderation: 'Απόδοση δικαιωμάτων συντονιστή'
-        unblock: 'Αναίρεση αποκλεισμού'
-        block: 'Αποκλεισμός'
+        unsuspend: 'Αναίρεση αποβολής'
+        suspend: 'Αποβολή'
         reputation: Φήμη
         permissions: Δικαιώματα
         activity: Δραστηριότητα
@@ -3103,10 +3109,10 @@ el:
         activate_failed: "Παρουσιάστηκε πρόβλημα κατά την ενεργοποίηση του χρήστη."
         deactivate_account: "Απενεργοποίηση Λογαριασμού"
         deactivate_failed: "Παρουσιάστηκε πρόβλημα κατά την απενεργοποίηση του χρήστη."
-        unblock_failed: 'Παρουσιάστηκε πρόβλημα κατά την άρση αποκλεισμού του χρήστη.'
-        block_failed: 'Παρουσιάστηκε πρόβλημα κατά τον αποκλεισμό του χρήστη.'
-        block_confirm: 'Είσαι βέβαιος πως θέλεις να αποκλείσεις αυτόν τον χρήστη; Δε θα μπορεί να δημιουργήσει καινούρια νήματα ή αναρτήσεις.'
-        block_accept: 'Ναι, αποκλεισμός του χρήστη'
+        unsilence_failed: 'Υπήρξε ένα πρόβλημα κατά την αναίρεση της σίγασης του χρήστη.'
+        silence_failed: 'Υπήρξε ένα πρόβλημα κατά την σίγαση του χρήστη'
+        silence_confirm: 'Θέλετε σίγουρα να σιγήσετε τον χρήστη; Δεν θα μπορεί να δημιουργήσει νέα νήματα ή αναρτήσεις.'
+        silence_accept: 'Ναι, σίγαση του χρήστη'
         bounce_score: "Bounce Score"
         reset_bounce_score:
           label: "Επαναφορά"
@@ -3114,7 +3120,7 @@ el:
         visit_profile: "Επισκεφθείτε <a href='%{url}'>την σελίδα προτιμήσεων του χρήστη</a> για να επεξεργαστείτε το προφίλ του"
         deactivate_explanation: "Ένας απενεργοποιημένος χρήστης πρέπει να επιβεβαιώσει ξανά τη διεύθυνση του ηλεκτρονικού του ταχυδρομείου."
         suspended_explanation: "Ένας χρήστης που έχει αποβληθεί δεν γίνεται να συνδεθεί."
-        block_explanation: "Ένας απενεργοποιημένος χρήστης δεν μπορεί να αναρτήσει ή να δημιουργεί νήματα"
+        silence_explanation: "Ένας χρήστης σε σιγή δεν μπορεί να αναρτήσει ή να ξεκινήσει νήματα."
         staged_explanation: "Ένας χρήστης σε στάδιο μετάβασης μπορεί να κάνει αναρτήσεις μέσω email και σε συγκεκριμένα θέματα. "
         bounce_score_explanation:
           none: "Κανένα επιστρεφόμενο μήνυμα δεν ελήφθη από αυτή τη διεύθυνση email."
@@ -3232,6 +3238,7 @@ el:
           developer: 'Developer'
           embedding: "Ενσωμάτωση"
           legal: "Νομικά"
+          api: 'API'
           user_api: 'User API'
           uncategorized: 'Άλλα'
           backups: "Αντίγραφα ασφαλέιας"

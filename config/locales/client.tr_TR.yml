@@ -98,6 +98,7 @@ tr_TR:
       split_topic: "bu konuyu %{when} ayırdı"
       invited_user: "%{when} %{who} davet edildi"
       invited_group: "%{who} %{when} davet edildi"
+      user_left: "%{who} bu iletiden ayrıldı %{when}"
       removed_user: "%{when} %{who} silindi"
       removed_group: "%{who} %{when} kaldırıldı"
       autoclosed:
@@ -119,6 +120,7 @@ tr_TR:
         enabled: '%{when} listelendi'
         disabled: '%{when} listelenmedi'
     topic_admin_menu: "konuyla alakalı yönetici eylemleri"
+    wizard_required: "Yeni Discourse'unuza hoşgeldiniz!  Hadi kuruluma başlayalım! <a href='%{url}' data-auto-route='true'>Kurulum Sihirbazı</a> ✨"
     emails_are_disabled: "Tüm giden e-postalar yönetici tarafından genel olarak devre dışı bırakıldı. Herhangi bir e-posta bildirimi gönderilmeyecek."
     bootstrap_mode_enabled: "Yeni sitenizi kolayca çalıştırmak için bootstrap modundasınız. Tüm yeni kullanıcılar güven seviyesi 1den başlar ve e-posta uyarıcıları açıksa günlük mail alırlar. Bu özellik kullanıcı sayısı %{min_users} rakamına ulaştığında otomatik kapatılacaktır."
     bootstrap_mode_disabled: "Bootstrap modu önümüzdeki 24 saat içinde edilgen olacaktır."
@@ -134,8 +136,10 @@ tr_TR:
         cn_north_1: "China (Beijing)"
         eu_central_1: "EU (Frankfurt)"
         eu_west_1: "EU (Ireland)"
+        eu_west_2: "AB (Londra)"
         sa_east_1: "South America (Sao Paulo)"
         us_east_1: "US East (N. Virginia)"
+        us_east_2: "ABD Doğu (Ohio)"
         us_gov_west_1: "AWS GovCloud (US)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
@@ -321,6 +325,8 @@ tr_TR:
         add_members: "Üyeleri ekle"
         delete_member_confirm: "'%{username}' adlı kullanıcıyı '%{group}' grubundan çıkart?"
       name_placeholder: "Grup adı, kullanıcı adındaki gibi boşluksuz olmalı"
+      public_admission: "Kullanıcıların gruba özgürce katılmalarına izin ver (Herkese açık olarak görünür grup gerektirir)"
+      public_exit: "Kullanıcıların grubu özgürce terk etmesine izin ver"
       empty:
         posts: "Bu grubun üyelerinden konu yok."
         members: "Bu grupta üye bulunmamaktır."
@@ -336,8 +342,11 @@ tr_TR:
       automatic_group: Otomatik Grup
       closed_group: Kapanmış Grup
       is_group_user: "Bu grubun bir üyesisiniz."
+      allow_membership_requests: "Kullanıcıların grup sahiplerine üyelik talepleri göndermesine izin ver"
       membership_request:
         submit: "İstek Gönderin"
+        title: "@%{group_name}  için Katılma isteği "
+        reason: "Grup sahiplerine bu gruba neden üye olduğunuzu bildirin"
       membership: "Üyelik"
       name: "İsim"
       user_count: "Grup Sayısı"
@@ -347,13 +356,23 @@ tr_TR:
       index:
         title: "Gruplar"
         empty: "Görünen hiç bir grup bulunmamaktadır."
+      title:
+        other: "Gruplar"
       activity: "Etkinlik"
       members: "Üyeler"
       topics: "Konular"
       posts: "Gönderiler"
       mentions: "Bahsetmeler"
       messages: "İletiler"
+      notification_level: "Grup mesajları için varsayılan bildirim düzeyi"
+      visibility_levels:
+        title: "Bu grubu kim görebilir?"
+        public: "Herkes"
+        members: "Grup sahipleri, üyeler ve yöneticiler"
+        staff: "Grup sahipleri ve yetkili"
+        owners: "Grup sahipleri ve yöneticileri"
       alias_levels:
+        messageable: "Bu gruba kimler ileti gönderebilir?"
         nobody: " Hiç Kimse"
         only_admins: "Sadece Yöneticiler"
         mods_and_admins: "Sadece Moderatörler ve Yöneticiler"
@@ -478,6 +497,7 @@ tr_TR:
       disable_jump_reply: "Cevapladıktan sonra gönderime atlama"
       dynamic_favicon: "Tarayıcı simgesinde yeni / güncellenen konu sayısını göster"
       theme_default_on_all_devices: "Seçilen temayı bütün cihazlarımda varsayılan yap"
+      allow_private_messages: "Diğer kullanıcıların bana özel mesaj göndermelerine izin ver"
       external_links_in_new_tab: "Tüm dış bağlantıları yeni sekmede aç"
       enable_quoting: "Vurgulanan yazıyı alıntılayarak cevaplama özelliğini etkinleştir"
       change: "değiştir"
@@ -485,8 +505,8 @@ tr_TR:
       admin: "{{user}} bir yöneticidir"
       moderator_tooltip: "Bu kullanıcı bir moderatör"
       admin_tooltip: "Bu kullanıcı bir yönetici."
-      blocked_tooltip: "Bu kullanıcı engellendi"
       suspended_notice: "Bu kullanıcı {{tarih}} tarihine kadar uzaklaştırıldı."
+      suspended_permanently: "Bu kullanıcı askıya alındı."
       suspended_reason: "Neden:"
       github_profile: "Github"
       email_activity_summary: "Etkinlik özeti"
@@ -517,6 +537,7 @@ tr_TR:
       watched_first_post_tags_instructions: "Bu etiketlerdeki her yeni konudaki ilk gönderi için bildirim alacaksınız."
       muted_categories: "Susturuldu"
       muted_categories_instructions: "Bu kategorilerdeki yeni konular hakkında herhangi bir bildiri almayacaksınız ve en son gönderilerde gözükmeyecekler. "
+      no_category_access: "Bir moderatör olarak kategori erişiminiz sınırlıdır, kaydetme devre dışıdır."
       delete_account: "Hesabımı Sil"
       delete_account_confirm: "Hesabınızı kalıcı olarak silmek istediğinize emin misiniz? Bu eylemi geri alamazsınız!"
       deleted_yourself: "Hesabınız başarıyla silindi."
@@ -528,11 +549,13 @@ tr_TR:
       muted_users_instructions: "Bu kullanıcılardan gelen tüm bildirileri kapa."
       muted_topics_link: "Susturulmuş konuları göster"
       watched_topics_link: "Gözlenen konuları göster"
+      tracked_topics_link: "İzlenen konuları göster"
       automatically_unpin_topics: "En alta ulaşınca otomatik olarak başlıkların tutturulmasını kaldır."
       apps: "Uygulamalar"
       revoke_access: "Erişimi İptal Et"
       undo_revoke_access: "Erişim İptalini Geri Al"
       api_approved: "Onaylanmış:"
+      theme: "Tema"
       staff_counters:
         flags_given: "yardımcı bildirimler"
         flagged_posts: "bildirilen gönderiler"
@@ -552,9 +575,13 @@ tr_TR:
         select_all: "Tümünü seç"
       preferences_nav:
         account: "Hesap"
+        profile: "Profil"
+        emails: "E-postalar"
         notifications: "Bildirimler"
         categories: "Kategoriler"
+        tags: "Etiketler"
         interface: "Arayüz"
+        apps: "Uygulamalar"
       change_password:
         success: "(e-posta gönderildi)"
         in_progress: "(e-posta yollanıyor)"
@@ -703,8 +730,12 @@ tr_TR:
         expired: "Bu davetin süresi doldu."
         rescind: "Kaldır"
         rescinded: "Davet kaldırıldı"
+        rescind_all: "Tüm davetiyeleri kaldır"
+        rescinded_all: "Tüm davetiyeler kaldırıldı!"
+        rescind_all_confirm: "Tüm davetiyeleri kaldırmak istediğinizden emin misiniz?"
         reinvite: "Davetiyeyi Tekrar Yolla"
         reinvite_all: "Tüm davetleri tekrar gönder"
+        reinvite_all_confirm: "Tüm davetiyeleri tekrar göndermek istediğinizden emin misiniz?"
         reinvited: "Davetiye tekrar yollandı"
         reinvited_all: "Tüm davetler tekrar gönderildi!"
         time_read: "Okunma Zamanı"
@@ -736,9 +767,9 @@ tr_TR:
         post_count:
           other: "oluşturulan gönderiler"
         likes_given:
-          other: "<i class='fa fa-heart'></i> verilen"
+          other: "verilen"
         likes_received:
-          other: "<i class='fa fa-heart'></i> alınan "
+          other: "alınan"
         days_visited:
           other: "ziyaret edilen gün"
         posts_read:
@@ -851,6 +882,7 @@ tr_TR:
     private_message_info:
       title: "İleti"
       invite: "Diğerlerini Davet Et..."
+      leave_message: "Bu mesajı gerçekten bırakmak mı istiyorsun?"
       remove_allowed_user: "Bu iletiden {{name}} isimli kullanıcıyı çıkarmak istediğinize emin misiniz?"
       remove_allowed_group: "{{name}} bunu gerçekten iletiden kaldırmak istiyor musunuz?"
     email: 'E-posta'
@@ -875,6 +907,8 @@ tr_TR:
       complete_email_found: "<b>%{email}</b> adresi ile eşleşen bir hesap bulduk, kısa bir süre içerisinde parolanızı nasıl sıfırlayacağınızı açıklayan bir e-posta alacaksınız."
       complete_username_not_found: "Hiçbir hesap kullanıcı adı <b>%{username}</b> ile eşleşmiyor"
       complete_email_not_found: "Hiçbir hesap <b>%{email}</b> adresi ile eşleşmiyor"
+      button_ok: "Tamam"
+      button_help: "Yardım"
     login:
       title: "Giriş Yap"
       username: "Kullanıcı"
@@ -888,6 +922,7 @@ tr_TR:
       logging_in: "Oturum açılıyor..."
       or: "ya da"
       authenticating: "Kimliğiniz doğrulanıyor..."
+      awaiting_activation: "Hesabınız etkinleştirme işlemini bekliyor, başka bir etkinleştirme e-postası göndermek için şifremi unuttum bağlantısını kullanın."
       awaiting_approval: "Hesabınız henüz bir görevli tarafından onaylanmadı. Onaylandığında e-posta ile haberdar edileceksiniz."
       requires_invite: "Üzgünüz, bu foruma sadece davetliler erişebilir."
       not_activated: "Henüz oturum açamazsınız. Hesabınızı etkinleştirmek için lütfen daha önceden <b>{{sentTo}}</b> adresine yollanan etkinleştirme e-postasındaki açıklamaları okuyun."
@@ -896,6 +931,8 @@ tr_TR:
       resend_activation_email: "Etkinleştirme e-postasını tekrar yollamak için buraya tıklayın. "
       resend_title: "Etkinleştirme epostasını tekrar gönder"
       change_email: "Eposta adresini değiştir"
+      provide_new_email: "Yeni bir e posta adresi girerek aktivasyon maili gönderin."
+      submit_new_email: "Eposta adresi güncelle"
       sent_activation_email_again: "<b>{{currentEmail}}</b> adresine yeni bir etkinleştirme e-postası yolladık. Bu e-postanın size ulaşması bir kaç dakika sürebilir; istenmeyen klasörüzü kontrol etmeyi unutmayın."
       to_continue: "Lütfen Giriş Yap"
       preferences: "Tercihlerinizi değiştirebilmek için giriş yapmanız gerekiyor."
@@ -926,8 +963,12 @@ tr_TR:
       accept_title: "Davet"
       welcome_to: "%{site_name} topluluğuna hoş geldiniz!"
       invited_by: "Davet gönderen:"
+      your_email: "Hesap e-posta adresiniz <b>%{email}</b>."
       accept_invite: "Daveti kabul et"
+      success: "Hesabınız oluşturuldu ve şimdi giriş yaptınız."
       name_label: "İsim"
+      password_label: "Parola Belirle"
+      optional_description: "(isteğe bağlı)"
     password_reset:
       continue: "%{site_name} devam edin"
     emoji_set:
@@ -936,6 +977,8 @@ tr_TR:
       twitter: "Twitter"
       emoji_one: "Emoji One"
       win10: "Win10"
+      google_classic: "Google Classic"
+      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Yalnızca Kategoriler"
       categories_with_featured_topics: "Kategoriler ve Öne Çıkarılan Konular"
@@ -944,12 +987,26 @@ tr_TR:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    select_box:
+      default_header_text: Seç...
+      no_content: Hiçbir sonuç bulunamadı
+      filter_placeholder: Ara...
+    emoji_picker:
+      filter_placeholder: Emoji ara
+      people: İnsanlar
+      nature: Doğa
+      food: Gıda
+      activity: Etkinlik
+      travel: Seyahat
+      celebration: Kutlama
+      recent: Son zamanlarda kullanılmış
     composer:
       emoji: "Emoji :)"
       more_emoji: "dahası..."
       options: "Seçenekler"
       whisper: "fısıltı"
       unlist: "listelenmedi"
+      blockquote_text: "Blok-alıntı"
       add_warning: "Bu resmi bir uyarıdır."
       toggle_whisper: "Fısıldamayı Aç/Kapa"
       toggle_unlisted: "Listelenmeme aç/kapa"
@@ -1072,6 +1129,7 @@ tr_TR:
       sort_by: "Sırala"
       relevance: "Alaka"
       latest_post: "Son Gönderi"
+      latest_topic: "Güncel konu"
       most_viewed: "En Çok Görüntülenen"
       most_liked: "En Çok Beğenilen"
       select_all: "Tümünü Seç"
@@ -1082,6 +1140,9 @@ tr_TR:
       no_more_results: "Başka sonuç yok."
       searching: "Aranıyor..."
       post_format: "{{username}} tarafından #{{post_number}}"
+      more_results: "Daha fazla sonuç var. Lütfen arama kriterlerini daraltın."
+      search_google_button: "Google"
+      search_google_title: "Bu sitede ara"
       context:
         user: "@{{username}} kullancısına ait gönderilerde ara"
         category: "#{{category}} kategorisini ara"
@@ -1110,7 +1171,11 @@ tr_TR:
           first: en ilk gönderidir.
           pinned: tutturulmuş
           unpinned: tutturulmamış
+          seen: Okudum
+          unseen: Okumadım
           wiki: wiki olan
+          images: resim(ler) aktar
+          all_tags: Tüm etiketleri içerir
         statuses:
           label: Şöyle olan konular
           open: açık
@@ -1136,6 +1201,7 @@ tr_TR:
         select_all: "Tümünü Seç"
         clear_all: "Tümünü Temizle"
         unlist_topics: "Konuları Listeleme"
+        relist_topics: "Konuları sırala"
         reset_read: "Okunmuşları Sıfırla"
         delete: "Konuları Sil"
         dismiss: "Yoksay"
@@ -1146,12 +1212,15 @@ tr_TR:
         dismiss_new: "Yenileri Yoksay"
         toggle: "konuların toplu seçimini aç/kapa"
         actions: "Toplu Eylemler"
+        change_category: "Kategori düzenle"
         close_topics: "Konuları Kapat"
         archive_topics: "Konuları Arşivle"
         notification_level: "Bildirimler"
         choose_new_category: "Konular için yeni bir kategori seçin:"
         selected:
           other: "<b>{{count}}</b> konu seçtiniz."
+        change_tags: "Etiketleri Değiştir"
+        append_tags: "Etiketleri Ekle"
         choose_new_tags: "Konular için yeni etiketler seçin:"
         changed_tags: "Bu konuların etiketleri değiştirildi."
       none:
@@ -1233,6 +1302,18 @@ tr_TR:
       jump_reply_up: Daha önceki cevaba geç
       jump_reply_down: Daha sonraki cevaba geç
       deleted: "Konu silindi "
+      topic_status_update:
+        when: "Ne zaman:"
+        public_timer_types: Konu Zamanlayıcıları
+        private_timer_types: Kullanıcı Konusu Zamanlayıcılar
+      auto_update_input:
+        none: "Bir zaman çerçevesi seçin"
+        one_year: "Bir Yıl"
+        forever: "Sonsuza dek"
+      auto_close:
+        error: "Lütfen geçerli bir değer giriniz."
+      reminder:
+        title: "Bana hatırlat"
       auto_close_title: 'Otomatik Kapatma Ayarları'
       auto_close_immediate:
         other: "Konudaki son gönderi zaten %{count} saat eski, bu yüzden konu hemen kapatılacak."
@@ -1484,6 +1565,7 @@ tr_TR:
         has_liked: "bu gönderiyi beğendiniz"
         undo_like: "beğenmekten vazgeç"
         edit: "bu gönderiyi düzenle"
+        edit_action: "Düzenle"
         edit_anonymous: "Üzgünüz, ama bu gönderiyi düzenleyebilmek için oturum açmalısınız."
         flag: "bu gönderiyi kontrol edilmesi için özel olarak bildirin ya da bununla ilgili özel bir bildirim yollayın"
         delete: "bu gönderiyi sil"
@@ -2034,7 +2116,6 @@ tr_TR:
         no_problems: "Herhangi bir sorun bulunamadı."
         moderators: 'Moderatörler:'
         admins: 'Yöneticiler:'
-        blocked: 'Engellenmiş:'
         suspended: 'Uzaklaştırılmışlar:'
         private_messages_short: "İletiler"
         private_messages_title: "İletiler"
@@ -2099,29 +2180,26 @@ tr_TR:
         dispositions:
           agreed: "onaylandı"
           disagreed: "onaylanmadı"
-          deferred: "ertelendi"
         flagged_by: "Bildiren"
         resolved_by: "Çözen"
         took_action: "İşlem uygulandı"
         system: "Sistem"
         error: "Bir şeyler ters gitti"
         reply_message: "Cevapla"
-        no_results: "Bildirilen içerik yok."
         topic_flagged: "Bu <strong>konu</strong> bildirildi."
         visit_topic: "Harekete geçmek için konuyu ziyaret edin"
         was_edited: "İlk bildirimden sonra gönderi düzenlendi"
         previous_flags_count: "Bu gönderi daha önce {{count}} defa bildirilmiş."
-        summary:
-          action_type_3:
-            other: "konu dışı x{{count}}"
-          action_type_4:
-            other: "uygunsuz x{{count}}"
-          action_type_6:
-            other: "özel x{{count}}"
-          action_type_7:
-            other: "özel x{{count}}"
-          action_type_8:
-            other: "istenmeyen x{{count}}"
+        flagged_topics:
+          topic: "Konu"
+          type: "Tür"
+          users: "Kullanıcılar"
+        short_names:
+          off_topic: "konu-dışı"
+          inappropriate: "uygunsuz"
+          spam: "istenmeyen"
+          notify_user: "özel"
+          notify_moderators: "özel"
       groups:
         primary: "Ana Grup"
         no_primary: "(ana grup yok)"
@@ -2320,6 +2398,7 @@ tr_TR:
         new_style: "Yeni Biçim"
         import: "İçeri Aktar"
         delete: "Sil"
+        delete_confirm: "Bu tema silinsin mi?"
         about: "Sitedeki CSS biçim sayfalarını ve HTML başlıklarını değiştir. Özelleştirme ekleyerek başla."
         color: "Renk"
         opacity: "Opaklık"
@@ -2332,6 +2411,29 @@ tr_TR:
           none_selected: "Düzenlemeye başlamak için bir e-posta şablonu seçin. "
           revert: "Değişiklikleri Geri Al"
           revert_confirm: "Değişikliklerinizi geri almak istediğinize emin misiniz?"
+        theme:
+          customize_desc: "Özelleştir:"
+          title: "Temalar"
+          edit: "Düzenle"
+          common: "Ortak"
+          desktop: "Masaüstü"
+          mobile: "Mobil"
+          preview: "Önizleme"
+          is_default: "Tema varsayılan olarak etkinleştirildi"
+          uploads: "Yüklemeler"
+          upload: "Yükle"
+          about_theme: "Tema Hakkında"
+          check_for_updates: "Güncellemeleri kontrol et"
+          updating: "Güncelleniyor..."
+          add: "Ekle"
+          scss:
+            text: "CSS"
+          header:
+            text: "Başlık"
+          after_header:
+            text: "Başlıktan Sonra"
+          footer:
+            text: "Alt Kısım"
         colors:
           title: "Renkler"
           long_title: "Renk Düzenleri"
@@ -2452,6 +2554,7 @@ tr_TR:
           block: "engelle"
           do_nothing: "hiçbir şey yapma"
         staff_actions:
+          all: "hepsi"
           title: "Görevli Eylemleri"
           clear_filters: "Hepsini Göster"
           staff_user: "Görevli Kullanıcı"
@@ -2486,8 +2589,6 @@ tr_TR:
             change_category_settings: "kategori ayarlarını değiştir"
             delete_category: "kategoriyi sil"
             create_category: "kategori oluştur"
-            block_user: "kullanıcıyı engelle"
-            unblock_user: "kullanıcı engelini kaldır"
             grant_admin: "yönetici yetkisi ver"
             revoke_admin: "yönetici yetkisini kaldır"
             grant_moderation: "moderasyon yetkisi ver"
@@ -2536,10 +2637,15 @@ tr_TR:
         logster:
           title: "Hata Kayıtları"
       watched_words:
+        search: "ara"
+        clear_filter: "Temizle"
+        actions:
+          flag: 'Bildir'
         form:
           label: 'Yeni Kelime: '
           add: 'Ekle'
           upload: "Yükle"
+          upload_successful: "Yükleme başarılı oldu. Kelimeler eklendi."
       impersonate:
         title: "Rolüne gir"
         help: "Hata bulma ve giderme amaçları için, bu aracı kullanarak kullanıcının rolüne girin. İşiniz bitince sistemdne çıkış yapmanız gerekecek."
@@ -2559,7 +2665,6 @@ tr_TR:
           pending: "Bekleyen"
           staff: 'Görevli'
           suspended: 'Uzaklaştırılmış'
-          blocked: 'Engellenmiş'
           suspect: 'Kuşkulanılan'
         approved: "Onaylanmış mı?"
         approved_selected:
@@ -2578,7 +2683,6 @@ tr_TR:
           staff: "Görevli"
           admins: 'Yöneticiler'
           moderators: 'Moderatörler'
-          blocked: 'Engellenen Kullanıcılar'
           suspended: 'Uzaklaştırılmış Kullanıcılar'
           suspect: 'Kuşkulanılan Kullanıcılar'
         reject_successful:
@@ -2595,22 +2699,22 @@ tr_TR:
         suspend_duration: "Kullanıcı ne kadar uzun bir süre için uzaklaştırılacak?"
         suspend_reason_label: "Neden uzaklaştırıyorsunuz? Buraya yazdıklarınız bu kullanıcının profil sayfasında <b>herkese gözükecek<b> ve sistemde oturum açtığı anda kullanıcıya gösterilecek. Lütfen yazıyı kısa tutun."
         suspend_reason: "Neden"
+        suspend_reason_placeholder: "Askıya alma sebebi"
         suspend_message: "E Posta Mesajı"
         suspended_by: "Uzaklaştıran"
+        cant_suspend: "Bu kullanıcı askıya alınamaz."
         delete_all_posts: "Tüm gönderileri sil"
         delete_all_posts_confirm_MF: "{POSTS, plural, one {1 gönderi} other {# gönderi}} ve {TOPICS, plural, one {1 konu} other {# konu}} silmek üzeresiniz. Emin misiniz?"
-        suspend: "Uzaklaştır"
-        unsuspend: "Uzaklaştırmayı geri al"
-        suspended: "Uzaklaştırıldı mı?"
         moderator: "Moderatör mü?"
         admin: "Yönetici mi?"
-        blocked: "Engellendi mi?"
+        suspended: "Uzaklaştırıldı mı?"
         staged: "Aşamalı?"
         show_admin_profile: "Yönetici"
         refresh_browsers: "Tarayıcıyı sayfa yenilemesine zorla"
         refresh_browsers_message: "İleti tüm kullanıcılara gönderildi!"
         show_public_profile: "Herkese Açık Profili Görüntüle"
         impersonate: 'Rolüne gir'
+        action_logs: "İşlem Kayıtları"
         ip_lookup: "IP Arama"
         log_out: "Çıkış Yap"
         logged_out: "Kullanıcının tüm cihazlarda oturumu kapatılmış"
@@ -2618,8 +2722,8 @@ tr_TR:
         grant_admin: 'Yönetici Yetkisi Ver'
         revoke_moderation: 'Moderasyonu İptal Et'
         grant_moderation: 'Moderasyon Yetkisi Ver'
-        unblock: 'Engeli Kaldır'
-        block: 'Engelle'
+        unsuspend: 'Uzaklaştırmayı geri al'
+        suspend: 'Uzaklaştır'
         reputation: İtibar
         permissions: İzinler
         activity: Etkinlik
@@ -2663,17 +2767,13 @@ tr_TR:
         activate_failed: "Kullanıcı etkinleştirilirken bir sorun yaşandı."
         deactivate_account: "Hesabı Pasifleştir"
         deactivate_failed: "Kullanıcı deaktive edilirken bir sorun yaşandı."
-        unblock_failed: 'Kullanıcının engeli kaldırılırken bir sorun yaşandı.'
-        block_failed: 'Kullanıcı engellenirken bir sorun yaşandı.'
-        block_confirm: 'Bu kullanıcıyı engellemek istediğinize emin misiniz? Bunu yaparsanız yeni başlık ya da gönderi oluşturamayacak.'
-        block_accept: 'Evet, bu kullanıcıyı engelle'
         bounce_score: "Geri Sekme Skoru"
         reset_bounce_score:
           label: "Sıfırla"
           title: "Geri sekme skorunu 0'a çek"
+        visit_profile: "Profilini güncellemek için <a href='%{url}'>kullanıcı tercihleri sayfası</a> 'nı ziyaret edebilirsin"
         deactivate_explanation: "Deaktive edilmiş bir kullanıcı e-postasını tekrar doğrulamalı."
         suspended_explanation: "Uzaklaştırılmış kullanıcılar sistemde oturum açamaz."
-        block_explanation: "Engellenmiş bir kullanıcı gönderi oluşturamaz veya konu başlatamaz."
         staged_explanation: "Aşamalı bir kullanıcı sadece belirli konularda e-posta ile gönderide bulunabilir."
         bounce_score_explanation:
           none: "Bu e-posta adresinden yakın zamanda hiç geri sekme alınmadı."
@@ -2879,6 +2979,7 @@ tr_TR:
         sample: "Discourse konuları oluşturmak ve gömmek için aşağıdaki HTML kodunu sitenizde kullanın. <b>REPLACE_ME</b>'yi Discourse'u gömdüğünüz sayfanın tam URL'i ile değiştirin."
         title: "Gömme"
         host: "İzin Verilen Sunucular"
+        class_name: "Sınıf adı"
         path_whitelist: "Kabul edilen yol listesi"
         edit: "düzenle"
         category: "Kategoriye Gönder"

@@ -162,7 +162,7 @@ zh_CN:
           - https://en.wikipedia.org/wiki/Death_by_coconut
           - https://en.wikipedia.org/wiki/Calculator_spelling
         reply: |-
-          酷！这将会对大多数<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16">链接起作用。请记住，它必须是单独的一行链接，在它之前和之后都没有内容。
+          酷！这对许多<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16">链接都管用。请记住，它必须占**单独的一行**，前后都没东西。
         not_found: |-
           抱歉，我没在你的回复中找到链接！ :cry:
 
@@ -222,20 +222,20 @@ zh_CN:
           选择我帖子中的任何文字都会弹出<kbd>**引用**</kbd>按钮。然后选中文字的同时按下**回复**按钮也可以！你可以再试一次吗？
       bookmark:
         instructions: |-
-          如果你想了解更多，请选择下方<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">并<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16">**收藏此私信**。如果你这样做， 未来你可能会有 :gift: ！
+          如果你想了解更多，请选择下方<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">并<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16">**收藏此私信**。如果你这样做，你一会可能收到份 :gift: ！
         reply: |-
           太棒了！现在你可以轻松地找到我们的私信了。它就在[你个人页面的收藏栏](%{profile_page_url}/activity/bookmarks)中。选择右上方你的个人头像  &#8599;
         not_found: |-
           啊哦，我没有在这个主题中看到任何收藏。你在每个帖子下找到了收藏按钮吗？如果需要的话，使用显示更多<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">展开更多操作。
       emoji:
         instructions: |-
-          你可能看到我在回复中用了些小图片 :blue_car::dash: 他们叫[emoji](https://zh.wikipedia.org/wiki/Emoji)。你能在你的回复中**添加Emoji**吗？以下任意方式都可以：
+          你可能已经看到我在回复中用了很多小图片 :blue_car::dash: 这些叫做[绘文字（Emoji）](https://zh.wikipedia.org/wiki/%E7%B9%AA%E6%96%87%E5%AD%97)。你能在回复中**使用一个 Emoji **吗？这些都可以用：
 
           - 输入 `:) ;) :D :P :O`
 
-          - 输入半角冒号 <kbd>:</kbd> 跟上 emoji 的名字 `:tada:`
+          - 输入冒号 <kbd>:</kbd> 然后输入完整的 Emoji 名字 `:tada:`
 
-          - 在编辑器中或者你移动端的键盘上按下 emoji 按钮 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16">
+          - 点击编辑器中的 Emoji 按钮<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16">，或者使用移动设备的键盘
         reply: |-
           这是 :sparkles: **Emoji 精神!** :sparkles:
         not_found: |-
@@ -267,14 +267,14 @@ zh_CN:
         reply: |-
           [我们的管理人员](/groups/staff)将会私下里通知关于你标记的后续。如果许多社区成员标记了帖子，出于谨慎，帖子将自动被隐藏。（我没有真的写很糟糕的帖子 :angel:，我先把这个标记删除了）
         not_found: |-
-          啊不，我糟糕的帖子还没被标记。 :worried: 你能**标记**<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">其为不合适的吗？不要忘记用显示更多按钮<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">来显示每个帖子的更多操作。
+          啊不，我糟糕的帖子还没被标记。 :worried: 你能**标记**<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">其为不合适的吗？不要忘记用显示更多按钮来显示每个帖子的更多操作。
       search:
         instructions: |-
-          呼…我已经在这个主题中隐藏了一个惊喜。如果你想挑战的话，点击右上角&#8599;的**搜索按钮** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> 来找到它。
+          呼…我已经在这个主题中隐藏了一个惊喜。如果你想挑战的话，点击右上角&#8599;的**搜索按钮** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16">来找到它。
 
           试试在这个主题中搜索关键词“capy&#8203;bara”
         hidden_message: |-
-          你怎么错过这个 capybara 哒 :wink:
+          你怎么错过这个 capybara 哒？ :wink:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 

@@ -606,7 +606,6 @@ ja:
     tl2_additional_likes_per_day_multiplier: "この数字を掛けると TL2 (メンバー) の1日あたりの「いいね！」の上限を増やします"
     tl3_additional_likes_per_day_multiplier: "この数字を掛けると TL3 (レギュラー) の1日あたりの「いいね！」の上限を増やします"
     tl4_additional_likes_per_day_multiplier: "この数字を掛けると TL4 (リーダー) の1日あたりの「いいね！」の上限を増やします"
-    notify_mods_when_user_blocked: "ユーザが自動的にブロックされた際に、すべてのモデレータにメッセージを送信する。"
     flag_sockpuppets: "トピックを作成したユーザーと同じIPアドレスで、新規ユーザーがトピックに回答した場合、両者を潜在的なスパムとしてフラグを立てるか"
     traditional_markdown_linebreaks: "Markdown の従来形式のラインブレーク (行の終わりにダブルスペース) を使う"
     post_undo_action_window_mins: "投稿に対するアクション (「いいね!」、通報等) 取り消しを許可する時間 (秒)"
@@ -770,9 +769,6 @@ ja:
     num_flags_to_close_topic: "トピックの介入のため、自動的にトピックを停止するために必要なフラグの数"
     auto_respond_to_flag_actions: "フラグを解除時の自動返信を有効にする"
     min_first_post_typing_time: "最初の投稿に必要なタイピング時間。閾値以下の場合、投稿は自動的に承認キューに追加されます。0を設定すると無効化されます(推奨されません)"
-    auto_block_fast_typers_on_first_post: "min_first_post_typing_timeを満たしていないユーザーを自動的にブロック"
-    auto_block_fast_typers_max_trust_level: "自動的にブロックされるfast typerに対する最大のトラストレベル"
-    auto_block_first_post_regex: "この正規表現に一致すると、ユーザーの最初の投稿をブロックし、承認キューに送られる。最初の投稿にのみ適用されます"
     reply_by_email_enabled: "メールでのトピックへの返信を有効化する"
     reply_by_email_address: "メールアドレスによる回答のテンプレート。例: %{reply_key}@reply.myforum.com"
     disable_emails: "Discourseからの全ての種類のメール送信を止める"
@@ -976,8 +972,6 @@ ja:
       text_body_template: |
         申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした
         メールから回答を見つける事ができませんでした。返信はメールのトップにあることを確認してください。インライン回答を見つける事はできません。
-    spam_post_blocked:
-      subject_template: "同一リンクの連続投稿による新規ユーザ %{username} のブロック"
     pending_users_reminder:
       subject_template:
         other: "%{count} 人のユーザか承認を待っています。"

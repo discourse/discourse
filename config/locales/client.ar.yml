@@ -654,7 +654,6 @@ ar:
       admin: "{{user}} هو مدير"
       moderator_tooltip: "هذا المستخدم مشرف"
       admin_tooltip: "هذا المستخدم مدير"
-      blocked_tooltip: "هذا المستخدم محظور"
       suspended_notice: "هذا المستخدم موقوف حتى تاريخ  {{date}}"
       suspended_permanently: "هذا العضو موقوف."
       suspended_reason: "السبب:"
@@ -2764,7 +2763,6 @@ ar:
         no_problems: "لا مشاكل."
         moderators: 'المشرفون:'
         admins: 'المدراء:'
-        blocked: 'محظورون:'
         suspended: 'موقوفون:'
         private_messages_short: "الرسائل"
         private_messages_title: "الرسائل"
@@ -3310,8 +3308,6 @@ ar:
             change_category_settings: "تغيير إعدادات القسم"
             delete_category: "حذف القسم"
             create_category: "أنشئ قسم"
-            block_user: "حظر"
-            unblock_user: "رفع الحظر"
             grant_admin: "منح صلاحيات ادارية"
             revoke_admin: "سحب الصلاحيات الادارية"
             grant_moderation: "عين كمشرف"
@@ -3398,7 +3394,6 @@ ar:
           pending: "قيد الانتظار"
           staff: 'الطاقم'
           suspended: 'موقوف'
-          blocked: 'محظور'
           suspect: 'المريبون'
         approved: "موافقة؟"
         approved_selected:
@@ -3427,7 +3422,6 @@ ar:
           staff: "الطاقم"
           admins: 'الأعضاء المدراء'
           moderators: 'المشرفون'
-          blocked: 'الأعضاء المحظورين'
           suspended: 'أعضاء موقوفين'
           suspect: 'الأعضاء المريبون'
         reject_successful:
@@ -3463,12 +3457,9 @@ ar:
         cant_suspend: "لا يمكن ايقاف هذا العضو"
         delete_all_posts: "احذف كل مشاركاته"
         delete_all_posts_confirm_MF: "أنت على وشك {POSTS, plural, zero {عدم حذف شيء} one {حذف مشاركة واحدة} two {حذف مشاركتين} few {حذف # مشاركات} many {حذف # مشاركة} other {حذف # مشاركة}}{TOPICS, plural, zero {} one { وموضوع واحد} two { وموضوعين} few { و# مواضيع} many {و# موضوعا} other {و# موضوع}}. أمتأكد؟"
-        suspend: "علّق"
-        unsuspend: "إلقاء التعليق"
-        suspended: "معلّق؟"
         moderator: "مراقب؟"
         admin: "مدير؟"
-        blocked: "محظور؟"
+        suspended: "معلّق؟"
         staged: "تنظيم؟"
         show_admin_profile: "مدير"
         refresh_browsers: "أجبر إنعاش المتصفح"
@@ -3484,8 +3475,8 @@ ar:
         grant_admin_confirm: "لقد ارسلنا بريداً الكترونياً لتأكيد المدير الجديد. رجاء افتح الرسالة و اتبع التعلميات."
         revoke_moderation: 'سحب المراقبة'
         grant_moderation: 'منحة مراقبة'
-        unblock: 'إلغاء حظر'
-        block: 'حظر'
+        unsuspend: 'إلقاء التعليق'
+        suspend: 'علّق'
         reputation: شهرة
         permissions: التّصاريح
         activity: أنشطة
@@ -3544,17 +3535,12 @@ ar:
         activate_failed: "حدث خطأ عند تفعيل هذا المستخدم."
         deactivate_account: "تعطيل الحساب"
         deactivate_failed: "حدث خطأ عند تعطيل هذا المستخدم."
-        unblock_failed: 'حدثت مشكلة في رفع المنع عن المستخدم.'
-        block_failed: 'حدثت مشكلة في منع المستخدم.'
-        block_confirm: 'هل انت متأكد من حظر هذا المستخدم؟ لن يستطيع انشاء مواضيع او ردود جديدة'
-        block_accept: 'نعم، امنع هذا المستخدم'
         bounce_score: "سجل الترويج"
         reset_bounce_score:
           label: "اعادة تعيين"
           title: "اعادة تعيين سجل الترويج  الى 0"
         deactivate_explanation: "المستخدم الغير نشط يحب أن يتأكد من البريد الالكتروني"
         suspended_explanation: "المستخدم الموقوف لايملك صلاحية تسجيل الدخول"
-        block_explanation: "المستخدم الموقوف لايستطيع أن يشارك"
         staged_explanation: "العضو المنظم يمكنه فقط النشر عن طريق البريد الالكتروني في المواضيع المخصصه ."
         bounce_score_explanation:
           none: "لا ترويجات تم استلامها من هذا البريد الالكتروني"

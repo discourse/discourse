@@ -44,7 +44,6 @@ zh_TW:
         auto_generated_email_error: "郵件頭部的“precedence”為：list、junk、bulk 或 auto_reply，或者頭部包含了：auto-submitted、auto-replied 或 auto-generated。"
         no_body_detected_error: "無法解析正文並且沒有附件。"
         inactive_user_error: "當寄件者處於非啟動狀態時發生。"
-        blocked_user_error: "當寄件者已被封鎖時發生。"
         bad_destination_address: "發至/抄送/密送欄中的所有郵件都不匹配進站郵件地址。"
         strangers_not_allowed_error: "當用戶試圖在尚未晉身為成員之一的分類中新建討論話題時發生。"
         insufficient_trust_level_error: "用戶嘗試在用戶等級不滿足分類要求時發帖。"
@@ -847,19 +846,12 @@ zh_TW:
     tl2_additional_likes_per_day_multiplier: "增加信任等級2（成員）的贊限制，可提供一個乘數與原始值相乘"
     tl3_additional_likes_per_day_multiplier: "增加信任等級3（常規）的每日贊限制，將此設置項與原始值相乘"
     tl4_additional_likes_per_day_multiplier: "增加信任等級4（資深）的贊限制，可提供一個乘數與原始值相乘"
-    num_spam_flags_to_block_new_user: "如果新用戶的帖子被 num_users_to_block_new_user 個不同用戶標記，隱藏他們的所有帖子並不讓其繼續發表內容。0 為禁用。"
-    num_users_to_block_new_user: "如果新用戶的帖子被不同用戶 num_spam_flags_to_block_new_user 次標記為垃圾信息，隱藏他們的所有帖子並不讓其繼續發表內容。0 為禁用。"
-    num_tl3_flags_to_block_new_user: "如果新用戶的帖子被 num_tl3_users_to_block_new_user 個不同的信任等級3的用戶標記，隱藏他們的所有帖子並不讓其繼續發表內容。0 為禁用。"
-    num_tl3_users_to_block_new_user: "如果新用戶的帖子被不同的信任等級3的用戶標記 num_tl3_flags_to_block_new_user 次，隱藏他們的所有帖子並不讓其繼續發表內容。0 為禁用。"
-    notify_mods_when_user_blocked: "若有用戶被自動封鎖，將發送訊息給所有板主。"
     flag_sockpuppets: "如果一個新用戶開始了一個主題，並且同時另一個新用戶以同一個 IP 在該主題回復，他們所有的帖子都將被自動標記為垃圾。"
     traditional_markdown_linebreaks: "在 Markdown 中使用傳統的換行符號，即用兩個行末空格來換行"
     post_undo_action_window_mins: "允許使用者還原文章上近期動作（讚、標記等）的時間長度（分鐘數）。"
     must_approve_users: "新用戶在被允許訪問站點前需要由管理人員批准。警告：在運行的站點中啟用將解除所有非管理人員用戶的訪問權限！"
     pending_users_reminder_delay: "如果新用戶等待批准時間超過此小時設置則通知版主。設置 -1 關閉通知。"
     maximum_session_age: "用戶自訪問後可維持登錄 n 小時"
-    ga_tracking_code: "廢棄：Google 分析追蹤代碼（ga.js），例如：UA-12345678-9。參考 http://google.com/analytics"
-    ga_domain_name: "廢棄：Google 分析域名（ga.js），例如：mysite.com；參考 http://google.com/analytics"
     ga_universal_tracking_code: "Google 通用 Analytics (分析) 追蹤代碼（analytics.js）追蹤代碼，例如：UA-12345678-9；參考 http://google.com/analytics"
     ga_universal_domain_name: "Google 通用 Analytics (分析) 域名（analytics.js）追踪代码，例如：mysite.com；参考 http://google.com/analytics"
     gtm_container_id: "Google Tag Manager 容器 id。例如：GTM-ABCDEF"
@@ -1075,9 +1067,6 @@ zh_TW:
     num_flags_to_close_topic: "要自動終止一個主題的討論並介入時所需的最小數量的有效標記"
     auto_respond_to_flag_actions: "啟用自動回覆當加入一個標籤。"
     min_first_post_typing_time: "用戶發表第一帖時打字的最小時間（以毫秒計），如果沒有達到該閾值，帖子將自動進入需要批准隊列。設置為 0 禁用（不推薦）"
-    auto_block_fast_typers_on_first_post: "自動封禁沒有達到首貼輸入時間 min_first_post_typing_time 要求的用戶"
-    auto_block_fast_typers_max_trust_level: "自動封禁輸入過于快速的用戶的最高信任等級"
-    auto_block_first_post_regex: "大小寫不相關的正則表達式，如果匹配成功，會導致該用戶不能發表第一帖，而是進入審核隊列。例如：求下載|謝謝樓[主豬]，會阻止包含求下載、謝謝樓主或謝謝樓豬的帖子。該選項只適用於首貼。"
     reply_by_email_enabled: "啟用通過電郵回覆。"
     reply_by_email_address: "通過郵件回覆的回覆地址模板，例如：%{reply_key}@reply.example.com 或 replies+%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "通過郵件回覆的回覆地址模板，例如：%{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
@@ -1686,12 +1675,6 @@ zh_TW:
         我們非常抱歉，但是你發送至 %{destination}（名為%{former_title}） 的郵件出問題了。
 
         與你賬戶關聯的郵件地址沒有激活，請先激活你的賬號再發送郵件。
-    email_reject_blocked_user:
-      title: "電子郵件拒絕 已封鎖的用戶"
-      text_body_template: |
-        我們非常抱歉，但是你發送至 %{destination}（名為%{former_title}） 的郵件出問題了。
-
-        與你賬戶關聯的郵件地址已經被封禁。
     email_reject_reply_user_not_matching:
       title: "點子郵件拒絕 未找到符合的用戶"
     email_reject_no_account:
@@ -1759,70 +1742,9 @@ zh_TW:
     too_many_spam_flags:
       title: "過多垃圾文章投訴"
       subject_template: "新帳號被暫時停用"
-      text_body_template: |
-        你好，
-
-        這是 %{site_name} 自動發出的郵件。你的文章因社群投訴而被臨時隱藏。
-
-        出於謹慎的考慮，在管理人員審核通過前，你的新帳號不能再回覆或者發表文章。我們對此帶來的不便表示歉意。
-
-        要查看更多指引，請參考我們的[社群準則](%{base_url}/guidelines)。
     too_many_tl3_flags:
       title: "過多 TL3 投訴"
       subject_template: "新帳號被暫時停用"
-      text_body_template: |+
-        你好，
-
-        這是 %{site_name} 自動發出的郵件。你的帳號因大量社群投訴，而被暫時停用。
-
-        出於謹慎的考慮，在管理人員審核通過前，你的新帳號不能再回覆或者發表文章。我們對此帶來的不便表示歉意。
-
-        要查看更多指引，請參考我們的[社群準則](%{base_url}/guidelines)。
-
-    blocked_by_staff:
-      title: "被管理員封鎖"
-      subject_template: "帳號已暫時停用"
-      text_body_template: |
-        你好，
-
-        這是%{site_name}自動發出的郵件。出於謹慎的考慮，你的帳號已被暫時停用。
-
-        請繼續瀏覽，但在[管理成員](/about)審核前，你將無法回應或發表文章。我們對帶來的不便表示歉意。
-
-        要查看更多指引，請參考我們的[社群準則](%{base_url}/guidelines)。
-    user_automatically_blocked:
-      title: "用戶自動封鎖"
-      subject_template: "新使用者 %{username} 因社群投訴而被阻擋"
-      text_body_template: |
-        這是自動發出的訊息。
-
-        因多位使用者投訴 %{username} 的文章，新使用者 [%{username}](%{base_url}) 已被自動阻擋。
-
-        請[查看這些投訴](%{base_url}/admin/flags)。如果 %{username} 被不合理地阻止貼文，點擊[該用戶管理頁面](%{base_url}%{user_url})內的解除封鎖按鈕。
-
-        您可以調整網站設定中的 `block_new_user` 以變更封鎖門檻值。
-    spam_post_blocked:
-      title: "因垃圾貼文而被封鎖"
-      subject_template: "新用戶 %{username} 由於重複貼連結，文章已被封鎖"
-      text_body_template: |
-        這是自動發出的訊息。
-
-        新使用者 [%{username}](%{base_url}%{user_url}) 試圖張貼多重文章連結至 %{domains}，但這些文章因為反垃圾策略而被阻擋了。使用者仍能夠發表不包含 %{domains} 連結的新文章。
-
-        請[審核該使用者](%{base_url}%{user_url})。
-
-        該閾值可以通過站點設置中的 `newuser_spam_host_threshold` 和 `white_listed_spam_host_domains` 更改。
-
-        您可以調整網站設定中的 `newuser_spam_host_threshold` 和 `white_listed_spam_host_domains` 以變更封鎖門檻值。
-    unblocked:
-      title: "解除封鎖"
-      subject_template: "帳號已解除封鎖"
-      text_body_template: |
-        你好，
-
-        這是 %{site_name} 自動發出的郵件。經管理成員審核後，你的帳號已恢復正常狀態。
-
-        你現在可以發表新文章與回覆討論了。感謝你的耐心等待。
     pending_users_reminder:
       title: "待審用戶提醒"
       subject_template:

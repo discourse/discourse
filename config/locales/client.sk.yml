@@ -504,7 +504,6 @@ sk:
       admin: "{{user}} je administrátor"
       moderator_tooltip: "Tento používateľ je moderátor"
       admin_tooltip: "Tento používateľ je administrátor"
-      blocked_tooltip: "Tento používateľ je zablokovaný"
       suspended_notice: "Tento  používateľ je suspendovaný do {{date}}"
       suspended_reason: "Dôvod:"
       github_profile: "Github"
@@ -2050,7 +2049,6 @@ sk:
         no_problems: "Nenašli sa žiadne problémy."
         moderators: 'Moderátori:'
         admins: 'Administrátori:'
-        blocked: 'Zablokované:'
         suspended: 'Odobraté:'
         private_messages_short: "Správy"
         private_messages_title: "Správy"
@@ -2434,8 +2432,6 @@ sk:
             change_category_settings: "zmeniť nastavenia kategórie"
             delete_category: "odstrániť kategóriu"
             create_category: "vytvoriť kategóriu"
-            block_user: "blokovať používateľa"
-            unblock_user: "odblokovať používateľa"
             grant_admin: "udeliť administrátorské práva"
             revoke_admin: "odobrať admin"
             grant_moderation: "udeliť moderátorské práva"
@@ -2493,7 +2489,6 @@ sk:
           pending: "Čakajúci"
           staff: 'Zamestnanci'
           suspended: 'Odobrate práva'
-          blocked: 'Zablokovaný'
           suspect: 'Podozrivý'
         approved: "Schválený?"
         approved_selected:
@@ -2516,7 +2511,6 @@ sk:
           staff: "Zamestnanci"
           admins: 'Admin používatelia'
           moderators: 'Moderátori'
-          blocked: 'Zablokovaní užívatelia'
           suspended: 'Užívatelia s odobratými právami'
           suspect: 'Podozriví užívatelia'
         reject_successful:
@@ -2535,17 +2529,13 @@ sk:
         suspend_failed: "Niečo sa pokazilo pri odoberaní práv tomuto používateľovi {{error}}"
         unsuspend_failed: "Niečo sa pokazilo pri obnovovaní práv tomuto používateľovi {{error}}"
         suspend_duration: "Ako dlho budú používateľovi odobrate práva?"
-        suspend_duration_units: "(dni)"
         suspend_reason_label: "Prečo mu odoberáte práva? Tento text <b>sa zobrazí každému</b> na stránke profilu používateľa a bude zobrazený užívateľovi pri pokuse o prihlásenie. Buďte strucný."
         suspend_reason: "Dôvod"
         suspended_by: "Práva odobraté"
         delete_all_posts: "Zmazať všetky príspevky"
-        suspend: "Odobrať"
-        unsuspend: "Obnoviť"
-        suspended: "Odobrate práva?"
         moderator: "Moderátor?"
         admin: "Admin?"
-        blocked: "Blokovaný?"
+        suspended: "Odobrate práva?"
         staged: "Dočasný?"
         show_admin_profile: "Admin"
         refresh_browsers: "Vynútiť refresh browsera."
@@ -2559,8 +2549,8 @@ sk:
         grant_admin: 'Udeliť admin'
         revoke_moderation: 'Odobrať moderovanie'
         grant_moderation: 'Udeliť moderovanie'
-        unblock: 'Odblokovať'
-        block: 'Blokovať'
+        unsuspend: 'Obnoviť'
+        suspend: 'Odobrať'
         reputation: Reputácia
         permissions: Práva
         activity: Aktivita
@@ -2610,13 +2600,8 @@ sk:
         activate_failed: "Počas aktivácie používateľa nastala chyba."
         deactivate_account: "Deaktivovať účet"
         deactivate_failed: "Počas deaktivácie používateľa nastala chyba."
-        unblock_failed: 'Nastala chyba pri odblokovaní používateľa.'
-        block_failed: 'Nastala chyba pri zablokovaní používateľa.'
-        block_confirm: 'Ste si istý tým, že chcete zablokovať tohoto používateľa? Nebude môcť vytvárať žiadne nové témy alebo príspevky.'
-        block_accept: 'Ano, zablokovať používateľa'
         deactivate_explanation: "Deaktivovaý používateľ musí znovu overiť svoj email"
         suspended_explanation: "Suspendovaní užívatelia sa nemôžu prihlasovať."
-        block_explanation: "Zablokovaní používatelia nemôžu zakladať témy ani pridávať príspevky."
         staged_explanation: "Dočasný používateľ môže iba prispievať emailom do vybraných tém."
         trust_level_change_failed: "Nastala chyba pri zmene stupňa dôvery používateľa."
         suspend_modal_title: "Zruš práva používateľovi"

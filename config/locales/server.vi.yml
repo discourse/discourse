@@ -37,7 +37,6 @@ vi:
         no_message_id_error: "Xảy ra khi thư không có tiêu đề."
         auto_generated_email_error: "Xảy ra khi tiêu đề 'ưu tiên' được đặt là: danh sách, rác, theo lô hoặc tự động trả lời, hoặc khi có tiêu đề khác bao gồm: tự động gửi, tự động trả lời hoặc tự động tạo."
         inactive_user_error: "Xảy ra khi người gửi không hoạt động."
-        blocked_user_error: "Xảy ra khi người gửi đã bị chặn."
         bad_destination_address: "Xảy ra khi không có địa chỉ email trong các trường Tới/Cc/Bcc khớp với địa chỉ email đến đã được cấu hình."
         strangers_not_allowed_error: "Xảy ra khi người dùng cố tạo chủ đề mới trong một danh mục mà họ không phải là thành viên."
         insufficient_trust_level_error: "Xảy ra khi người dùng cố tạo chủ đề mới trong một danh mục mà họ chưa đủ cấp độ tin cậy."
@@ -675,7 +674,6 @@ vi:
     tl2_additional_likes_per_day_multiplier: "Tăng giới hạn thích mỗi ngày cho mức độ tin tưởng 2 (thành viên) bằng cách nhân với số này"
     tl3_additional_likes_per_day_multiplier: "Tăng giới hạn thích mỗi ngày cho mức độ tin tưởng 3 (bình thường) bằng cách nhân với số này"
     tl4_additional_likes_per_day_multiplier: "Tăng giới hạn thích mỗi ngày cho mức độ tin tưởng 4 (dẫn đầu) bằng cách nhân với số này"
-    notify_mods_when_user_blocked: "Nếu một thành viên được khóa tự động, gửi tin nhắn đến tất cả các điều hành viên."
     flag_sockpuppets: "Nếu thành viên mới trả lời chủ đề có cùng địa chỉ IP với thành viên mới tạo chủ đề, đánh dấu các bài viết của họ là spam tiềm năng."
     traditional_markdown_linebreaks: "Sử dụng ngắt dòng truyền thống trong Markdown, đòi hỏi hai khoảng trống kế tiếp cho một ngắt dòng."
     post_undo_action_window_mins: "Số phút thành viên được phép làm lại các hành động gần đây với bài viết (like, đánh dấu...)."
@@ -872,9 +870,6 @@ vi:
     num_flags_to_close_topic: "Số lượng tối thiểu đánh dấu hoạt động để tự động tạm dừng một chủ đề để can thiệp."
     auto_respond_to_flag_actions: "Kích hoạt tính năng trả lời tự động khi xử lý một đánh dấu."
     min_first_post_typing_time: "Số lượng thời gian tối thiểu theo phần ngàn giây mà thành viên phải nhập trong bài viết đầu tiên, nếu ngưỡng không được đáp ứng sẽ tự động nhập vào hàng chờ duyệt. Đặt là 0 để tắt (không khuyến nghị)"
-    auto_block_fast_typers_on_first_post: "Tự động chặn người dùng không đáp ứng min_first_post_typing_time"
-    auto_block_fast_typers_max_trust_level: "Cấp độ tin cậy tối đa để tự động chặn những người đánh máy quá nhanh"
-    auto_block_first_post_regex: "Regex trường hợp không nhạy cảm để nếu vượt qua sẽ khóa bài viết đầu tiên của thành viên và gửi tới chờ duyệt. Ví dụ: raging|a[bc]a , sẽ khóa tất cả các bài viết đầu tiên có chứa raging, aba hoặc aca. Chỉ áp dụng cho các bài viết đầu tiên."
     reply_by_email_enabled: "Cho phép trả lời chủ đề qua email."
     reply_by_email_address: "Mẫu để trả lời cho các địa chỉ email đến, ví dụ: %{reply_key}@reply.example.com hoặc replies+%{reply_key}@example.com"
     disable_emails: "Ngăn chặn Discourse gửi thêm bất kỳ email nào"
@@ -1128,11 +1123,6 @@ vi:
         Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
 
         Tài khoản của bạn liên kết với địa chỉ email này chưa được kích hoạt. Xin hãy kích hoạt tài khoản của bạn trước khi gửi email.
-    email_reject_blocked_user:
-      text_body_template: |
-        Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
-
-        Tài khoản của bạn liên kết với địa chỉ email này đã bị chặn.
     email_reject_empty:
       text_body_template: |
         Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
@@ -1171,25 +1161,6 @@ vi:
         Hãy chắc chắn rằng bạn đã cấu hình đúng các thông tin POP trong [thiết lập website](%{base_url}/admin/site_settings/category/email).
 
         Nếu có một giao diện web cho các tài khoản email POP, bạn có thể cần phải đăng nhập vào website và kiểm tra các thiết lập này.
-    user_automatically_blocked:
-      text_body_template: |
-        Đây là tin nhắn tự động.
-
-        Tài khoản mới [%{username}](%{user_url}) đã được tự động chặn do nhiều thành viên đã gắn cờ các bài viết của %{username}.
-
-        Hãy [xem lại các cờ](%{base_url}/admin/flags). Nếu %{username} không đáng bị chặn gửi bài, click nút gỡ bỏ trên [trang quản trị thành viên](%{user_url}).
-
-        Ngưỡng này có thể thay đổi trong thiết lập `block_new_user` của website.
-    spam_post_blocked:
-      subject_template: "Các bài viết của tài khoản mới %{username} đã bị chặn do lặp đi lặp lại các liên kết"
-      text_body_template: |
-        Đây là tin nhắn tự động.
-
-        Tài khoản mới [%{username}](%{user_url}) đã nhiều lần tạo bài viết chứa các liên kết tới %{domains}, nhưng những bài viết này đã bị chặn để tránh spam. Thành viên vẫn có thể tạo bài viết mới mà không liên kết tới %{domains}.
-
-        Hãy [xem xét thành viên](%{user_url}).
-
-        Có thể thay đổi điều này trong thiết lập `newuser_spam_host_threshold` và `white_listed_spam_host_domains` của website.
     pending_users_reminder:
       subject_template:
         other: "%{count} thành viên đang chờ duyệt"

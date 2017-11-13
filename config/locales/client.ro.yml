@@ -535,7 +535,6 @@ ro:
       admin: "{{user}} este admin"
       moderator_tooltip: "Acest utilizator este moderator"
       admin_tooltip: "Acest utilizator este admin"
-      blocked_tooltip: "Acest utilizator este blocat."
       suspended_notice: "Acest utilizator este suspendat până la {{date}}."
       suspended_reason: "Motiv: "
       github_profile: "Github"
@@ -2194,7 +2193,6 @@ ro:
         no_problems: "Nu a apărut nicio problemă."
         moderators: 'Moderatori:'
         admins: 'Admini:'
-        blocked: 'Blocați:'
         suspended: 'Suspendați:'
         private_messages_short: "Mesje"
         private_messages_title: "Mesaje"
@@ -2657,8 +2655,6 @@ ro:
             change_category_settings: "schimbă setările categoriei"
             delete_category: "șterge categorie"
             create_category: "creează categorie"
-            block_user: "blochează utilizator"
-            unblock_user: "deblochează utilizator"
             grant_admin: "Acordă titlul de Admin"
             revoke_admin: "Revocă titlul de Admin"
             grant_moderation: "Acordă titlul de Moderator"
@@ -2717,7 +2713,6 @@ ro:
           pending: "În așteptare"
           staff: 'Membrii echipei'
           suspended: 'Suspendați'
-          blocked: 'Blocați'
           suspect: 'Suspecți'
         approved: "Aprobați?"
         approved_selected:
@@ -2740,7 +2735,6 @@ ro:
           staff: "Echipa"
           admins: 'Administratori'
           moderators: 'Moderatori'
-          blocked: 'Utilizatori blocați'
           suspended: 'Utilizatori suspendați'
           suspect: 'Utilizatori suspecţi'
         reject_successful:
@@ -2759,18 +2753,14 @@ ro:
         suspend_failed: "Ceva nu a funcționat la suspendarea acestui utilizator {{error}}"
         unsuspend_failed: "Ceva nu a funcționat la activarea acestui utilizator {{error}}"
         suspend_duration: "Pentru cât timp va fi suspendat utilizatorul?"
-        suspend_duration_units: "(zile)"
         suspend_reason_label: "Motivul suspendării? Acest text <b>va fi vizibil</b> pe pagina de profil a utilizatorului, și va fi arătat utilizatorului  atunci când încearcă să se autentifice. Încearcă să fii succint."
         suspend_reason: "Motiv"
         suspended_by: "Suspendat de"
         delete_all_posts: "Șterge toate postările"
         delete_all_posts_confirm_MF: "Ești pe cale să ștergi {POSTS, plural, one {1 postare} other {# postări}} și {TOPICS, plural, one {1 subiect} other {# subiecte}}. Ești sigur?"
-        suspend: "Suspendă"
-        unsuspend: "Reactivează"
-        suspended: "Suspendat?"
         moderator: "Moderator?"
         admin: "Admin?"
-        blocked: "Blocat?"
+        suspended: "Suspendat?"
         staged: "În așteptare?"
         show_admin_profile: "Admin"
         refresh_browsers: "Forțează reîmprospătarea browserului"
@@ -2784,8 +2774,8 @@ ro:
         grant_admin: 'Acordă titlu de admin'
         revoke_moderation: 'Revocă titlu de moderator'
         grant_moderation: 'Acordă titlu de moderator'
-        unblock: 'Deblochează'
-        block: 'Blochează'
+        unsuspend: 'Reactivează'
+        suspend: 'Suspendă'
         reputation: Reputație
         permissions: Permisiuni
         activity: Activitate
@@ -2835,17 +2825,12 @@ ro:
         activate_failed: "A apărut o problemă la activarea utilizatorului."
         deactivate_account: "Dezactivează cont"
         deactivate_failed: "A apărut o problemă la dezactivarea contului."
-        unblock_failed: 'A apărut o problemă la deblocarea contului.'
-        block_failed: 'A apărut o problemă la blocarea contului.'
-        block_confirm: 'Ești sigur că vrei să blochezi acest utilizator? Nu va mai putea să creeze niciun subiect sau postare.'
-        block_accept: 'Blochează utilizatorul'
         bounce_score: "Rata de ricoșeu"
         reset_bounce_score:
           label: "Resetează"
           title: "Resetează rata de ricoșeu înapoi la 0"
         deactivate_explanation: "Un utilizator dezactivat va trebui să-și revalideze email-ul."
         suspended_explanation: "Un utilizator suspendat nu se poate autentifica"
-        block_explanation: "Un utilizator blocat nu poate posta sau scrie un subiect."
         staged_explanation: "Un utilizator în așteptare poate posta numai prin email la subiectele specifice."
         bounce_score_explanation:
           none: "În ultimul timp nu au fost primite ricoșeuri de acest email."

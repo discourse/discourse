@@ -48,7 +48,6 @@ zh_CN:
         no_body_detected_error: "无法解析正文并且没有附件。"
         no_sender_detected_error: "当无法在来源信息中找到有效邮件地址时发生。"
         inactive_user_error: "发送者未激活。"
-        blocked_user_error: "发送者被封禁。"
         bad_destination_address: "发至/抄送/密送栏中的所有邮件都不匹配进站邮件地址。"
         strangers_not_allowed_error: "用户尝试在非成员分类中创建主题。"
         insufficient_trust_level_error: "用户尝试在用户等级不满足分类要求时发帖。"
@@ -128,6 +127,7 @@ zh_CN:
   not_logged_in: "你需要登录后才能这么做。"
   not_found: "找不到请求的地址或资源。"
   invalid_access: "你没有权限查看请求的资源。"
+  invalid_api_credentials: "你没有权限查看请求的资源。API 用户名或者秘钥无效。"
   read_only_mode_enabled: "这个站点正处于只读模式。交互功能已禁用。"
   reading_time: "阅读时间"
   likes: "赞"
@@ -597,6 +597,9 @@ zh_CN:
       short_description: '为该贴投票'
       long_form: '已给本帖投票'
   user_activity:
+    no_default:
+      self: "你还没有活动。"
+      others: "无活动。"
     no_bookmarks:
       self: "你没有收藏帖子，收藏帖子能让你之后轻松找到他们。"
       others: "没有收藏。"
@@ -622,7 +625,7 @@ zh_CN:
       email_title: '“{title}”主题需要你的关注'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>你的帖子被社区成员标记了。请<a href="/my/messages">查看你的私信</a>。</p>'
+    you_must_edit: '<p>你的帖子被社区标记了。请<a href="%{path}">查看你的消息</a>。</p>'
     user_must_edit: '<p>你的帖子已经被社区标记并被临时隐藏。</p>'
   archetypes:
     regular:
@@ -881,7 +884,8 @@ zh_CN:
     digest_logo_url: "邮件摘要中使用的标志图像。应为长方形。不能使用 SVG 图片。如果留空，将使用 `logo_url`。"
     logo_small_url: "在你站点左上角的小号标志图片，应为正方形，当滚动时才可见。如果留空，将显示主页图标。"
     favicon_url: "你的站点图标（favicon），参考 http://zh.wikipedia.org/wiki/Favicon，如果要正确地通过 CDN 分发，它必须是 png 图片"
-    mobile_logo_url: "移动站点左上角的固定标志图片。应为正方形。如果留空，`logo_url` 将被使用。如：http://example.com/uploads/default/logo.png"
+    mobile_logo_url: "站点移动版本的自定义标志 url。如果留空，则使用`logo_url`。例如: http://example.com/uploads/default/logo.png"
+    large_icon_url: "Android 上用于标志和启动屏图标。推荐 512px x 512px 大小。"
     apple_touch_icon_url: "Apple 触摸设备使用的图标。推荐 144x144 大小。"
     notification_email: "这个表格：被用于发送所有重要系统邮件的邮箱地址。指定的域名必须正确设置 SPF、DKIM 和反向 PTR 记录以发送邮件。"
     email_custom_headers: "一个逗号分离的自定义邮件头部"
@@ -908,11 +912,6 @@ zh_CN:
     tl2_additional_likes_per_day_multiplier: "增加信任等级2（成员）的赞限制，可提供一个乘数与原始值相乘"
     tl3_additional_likes_per_day_multiplier: "增加信任等级3（常规）的每日赞限制，将此设置项与原始值相乘"
     tl4_additional_likes_per_day_multiplier: "增加信任等级4（资深）的赞限制，可提供一个乘数与原始值相乘"
-    num_spam_flags_to_block_new_user: "如果新用户的帖子被 num_users_to_block_new_user 个不同用户标记，隐藏他们的所有帖子并不让其继续发表内容。0 为禁用。"
-    num_users_to_block_new_user: "如果新用户的帖子被不同用户 num_spam_flags_to_block_new_user 次标记为垃圾信息，隐藏他们的所有帖子并不让其继续发表内容。0 为禁用。"
-    num_tl3_flags_to_block_new_user: "如果新用户的帖子被 num_tl3_users_to_block_new_user 个不同的信任等级3的用户标记，隐藏他们的所有帖子并不让其继续发表内容。0 为禁用。"
-    num_tl3_users_to_block_new_user: "如果新用户的帖子被不同的信任等级3的用户标记 num_tl3_flags_to_block_new_user 次，隐藏他们的所有帖子并不让其继续发表内容。0 为禁用。"
-    notify_mods_when_user_blocked: "如果一个用户被自动封禁了，发送一个私信给所有管理员。"
     flag_sockpuppets: "如果一个新用户开始了一个主题，并且同时另一个新用户以同一个 IP 在该主题回复，他们所有的帖子都将被自动标记为垃圾。"
     traditional_markdown_linebreaks: "在 Markdown 中使用传统换行符，即用两个尾随空格来换行"
     enable_markdown_typographer: "使用基本的排版规则来提高文本段落的可读性，用符号替换 (c) (tm) 等，减少问号等等"
@@ -920,14 +919,13 @@ zh_CN:
     must_approve_users: "新用户在被允许访问站点前需要由管理人员批准。警告：在运行的站点中启用将解除所有非管理人员用户的访问权限！"
     pending_users_reminder_delay: "如果新用户等待批准时间超过此小时设置则通知版主。设置 -1 关闭通知。"
     maximum_session_age: "用户自访问后可维持登录 n 小时"
-    ga_tracking_code: "废弃：Google 分析追踪代码（ga.js），例如：UA-12345678-9。参考 http://google.com/analytics"
-    ga_domain_name: "废弃：Google 分析域名（ga.js），例如：mysite.com；参考 http://google.com/analytics"
     ga_universal_tracking_code: "Google 通用分析追踪代码（analytics.js）追踪代码，例如：UA-12345678-9；参考 http://google.com/analytics"
     ga_universal_domain_name: "Google 通用分析域名（analytics.js）追踪代码，例如：mysite.com；参考 http://google.com/analytics"
     ga_universal_auto_link_domains: "启用Google通用数据分析（analytics.js）跨域跟踪。发送到这些域的链接将添加客户端标识。请参阅Google的跨域跟踪指南。"
     gtm_container_id: "Google Tag Manager 容器 id。例如：GTM-ABCDEF"
     enable_escaped_fragments: "如未侦测到爬虫回退到使用 Google Ajax-Crawling API。参见 https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
     allow_moderators_to_create_categories: "允许版主创建新的分类"
+    crawler_user_agents: "被当做爬虫的用户代理列表，将向他们提供静态 HTML  而非 JavaScript payload"
     cors_origins: "允许跨源请求（CORS）。每个源必须包括 http:// 或 https://。DISCOURSE_ENABLE_CORS 环境变量必须设置为 true 才能启用 CORS 政策。"
     use_admin_ip_whitelist: "当目前的IP刚好处于IP段禁止名单(Admin > Logs > Screened Ips)中的时候，只有管理员才可登入。"
     blacklist_ip_blocks: "Discourse 不会访问抓取的保密 IP 封禁列表"
@@ -956,7 +954,7 @@ zh_CN:
     allow_index_in_robots_txt: "在 robots.txt 中详细指出这个站点允许被网页搜索引擎检索。"
     email_domains_blacklist: "用管道符“|”分隔的邮箱域名黑名单列表，其中的域名将不能用来注册账户，例如：mailinator.com|trashmail.net"
     email_domains_whitelist: "用管道符“|”分隔的电子邮箱域名的列表，用户必须使用这些邮箱域名注册。警告：用户使用不包含在这个列表里的邮箱域名，将无法成功注册。"
-    hide_email_address_taken: "用户找回密码时不提示帐户是否存在。"
+    hide_email_address_taken: "通过邮件地址注册账户或忘记密码时不反馈用户账户是否存在的信息。"
     log_out_strict: "退出时，退出用户所有设备的会话"
     version_checks: "访问 Discourse Hub 来检查版本更新，并在管理面板 /admin 显示新版本信息"
     new_version_emails: "当新版本发布时，发送一封邮件至 contact_email 设置的地址。"
@@ -1152,9 +1150,7 @@ zh_CN:
     num_hours_to_close_topic: "暂停主题以介入处理的小时数"
     auto_respond_to_flag_actions: "当处理标记时启用自动回复。"
     min_first_post_typing_time: "用户发表第一帖时打字的最小时间（以毫秒计），如果没有达到该阈值，帖子将自动进入需要批准队列。设置为 0 禁用（不推荐）"
-    auto_block_fast_typers_on_first_post: "自动封禁没有达到首贴输入时间 min_first_post_typing_time 要求的用户"
-    auto_block_fast_typers_max_trust_level: "自动封禁输入过于快速的用户的最高信任等级"
-    auto_block_first_post_regex: "大小写不相关的正则表达式，如果匹配成功，会导致该用户不能发表第一帖，而是进入审核队列。例如：求下载|谢谢楼[主猪]，会阻止包含求下载、谢谢楼主或谢谢楼猪的帖子。该选项只适用于首贴。"
+    flags_default_topics: "在管理栏目中默认显示被标记的主题"
     reply_by_email_enabled: "启用通过邮件回复。"
     reply_by_email_address: "通过邮件回复的回复地址模板，例如：%{reply_key}@reply.example.com 或 replies+%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "通过邮件回复的回复地址模板，例如：%{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
@@ -1217,7 +1213,7 @@ zh_CN:
     suppress_digest_email_after_days: "停止给(n)天未登陆网站的用户发送摘要邮件。"
     digest_suppress_categories: "不在摘要邮件中显示这些分类的内容。"
     disable_digest_emails: "禁用所有用户摘要邮件功能。"
-    email_accent_bg_color: "HTML 邮件中某些元素的背景使用的强调颜色。输入色彩名（“red”）或十六进制值（“#FF0000”）。"
+    email_accent_bg_color: "HTML 邮件中用于背景的强调颜色。输入色彩名字（“red”）或十六进制值（“#0000FF”）。"
     email_accent_fg_color: "HTML 邮件中背景使用的字体颜色。输入色彩名（“white”）或十六进制值（“#FFFFFF”）。"
     email_link_color: "HTML 邮件中的链接颜色。输入色彩名字（“blue”）或十六进制值（“#0000FF”）。"
     detect_custom_avatars: "检测用户是否上传了自定义个人头像。"
@@ -1230,6 +1226,7 @@ zh_CN:
     anonymous_posting_min_trust_level: "启用匿名发帖所需的最小信任等级"
     anonymous_account_duration_minutes: "为了匿名性，为每个用户每 N 分钟创建一个匿名账户。例如：如果设置为 600，只要发帖后 600 分钟到了，并且用户切换至了匿名模式，就会创建一个新的匿名账户。"
     hide_user_profiles_from_public: "不对来访用户显示用户信息卡、用户资料和用户目录。"
+    hide_suspension_reasons: "不在用户页面公开显示封禁原因。"
     user_website_domains_whitelist: "用户网站要属于这些域名中。用 | 分割。"
     allow_profile_backgrounds: "允许用户上传个人资料背景图片。"
     sequential_replies_threshold: "在被提醒回复了太多连续的回复前，用户在主题中可以连续回复的帖子的数量。"
@@ -1246,7 +1243,7 @@ zh_CN:
     topic_page_title_includes_category: "主题页面标题包含分类名。"
     native_app_install_banner: "邀請常客安裝 Discourse 本机应用程序"
     share_anonymized_statistics: "分享匿名使用数据。"
-    auto_handle_queued_age: "此设定天数后自动处理待审核的记录。标记将被推迟。队列中的帖子及用户将被拒绝。设为 0 将禁用此功能。"
+    auto_handle_queued_age: "此设定天数后自动处理待审核的记录。标记将被忽略。队列中的帖子及用户将被拒绝。设为 0 将禁用此功能。"
     max_prints_per_hour_per_user: "/print 页面的每小时最大展示量（设置为 0 禁用）"
     full_name_required: "全名是用户个人信息的必填项。"
     enable_names: "在用户的个人信息、用户卡片和邮件中显示全名。禁用将在所有地方隐藏全名。"
@@ -1278,6 +1275,7 @@ zh_CN:
     auto_close_topics_post_count: "主题中贴子数上限，达到后自动关闭主题 ( 0 为禁用 )"
     code_formatting_style: "编辑器中的代码格式化按钮设置的默认格式"
     max_allowed_message_recipients: "私信允许的最大收件人数。"
+    watched_words_regular_expressions: "监视词是正则表达式。"
     default_email_digest_frequency: "用户收到摘要邮件的默认频率。"
     default_include_tl0_in_digests: "在摘要邮件中默认包含新用户帖子。用户可以自行在参数设置中更改这个设置。"
     default_email_private_messages: "默认在有人发私信给用户时发送一封邮件通知。"
@@ -1358,6 +1356,7 @@ zh_CN:
       category: '分类'
       topic: '结果'
       user: '用户'
+    results_page: "关于“%{term}”的搜索结果"
   sso:
     login_error: "登录错误"
     not_found: "无法找到你的账户。请联系站点管理人员。"
@@ -1463,7 +1462,7 @@ zh_CN:
     username:
       short: "必须超过 %{min} 个字"
       long: "必须不超过 %{max} 个字"
-      characters: "必须只包含字母、数字和下划线"
+      characters: "必须只包括数字、字母、连字号或下划线"
       unique: "已被使用"
       blank: "必须存在"
       must_begin_with_alphanumeric_or_underscore: "必须以字母、数字或下划线开头"
@@ -1832,6 +1831,13 @@ zh_CN:
         我们非常抱歉，但是你发送至%{destination}（名为%{former_title}）的邮件出问题了。
 
         你发送回复的邮件地址是已被封禁的邮件地址。试试从另外一个邮件地址发送，或者[联系管理人员](%{base_url}/about)。
+    email_reject_not_allowed_email:
+      title: "邮件被拒绝：不被允许的邮件地址"
+      subject_template: "[%{email_prefix}] 邮件问题 -- 被封禁的邮件地址"
+      text_body_template: |
+        我们非常抱歉，但是你发送至%{destination}（名为%{former_title}）的邮件出问题了。
+
+        你发送回复的邮件地址是已被封禁的邮件地址。试试从另外一个邮件地址发送，或者[联系管理人员](%{base_url}/about)。
     email_reject_inactive_user:
       title: "Email被拒绝：未激活的用户"
       subject_template: "[%{email_prefix}] 邮件问题 -- 未激活用户"
@@ -1839,13 +1845,6 @@ zh_CN:
         我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
 
         与你账户关联的邮件地址没有激活，请先激活你的帐号再发送邮件。
-    email_reject_blocked_user:
-      title: "Email被拒绝：被禁用的用户"
-      subject_template: "[%{email_prefix}] 邮件问题 -- 被封禁的用户"
-      text_body_template: |
-        我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
-
-        与你账户关联的邮件地址已经被封禁。
     email_reject_reply_user_not_matching:
       title: "Email被拒绝：用户未找到"
       subject_template: "[%{email_prefix}] 邮件问题 -- 未预期的回复地址"
@@ -1970,67 +1969,9 @@ zh_CN:
     too_many_spam_flags:
       title: "太多垃圾标记"
       subject_template: "新账户被暂时封禁"
-      text_body_template: |
-        你好，
-
-        这是%{site_name}自动发出的邮件。你的帖子因社区标记而被临时隐藏。
-
-        出于谨慎的考虑，在管理人员审核通过前，你的新账户不能再发表新的回复或者主题。我们对此带来的不便表示歉意。
-
-        要查看更多指引，请参考我们的[社区指引](%{base_url}/guidelines)。
     too_many_tl3_flags:
       title: "太多信任等级3用户标记"
       subject_template: "新账户被暂时封禁"
-      text_body_template: |
-        你好，
-
-        这是%{site_name}自动发出的邮件。你的帐户因大量社区标记而被暂停使用。
-
-        出于谨慎的考虑，在管理人员审核通过前，你的新账户不能再发表新的回复或者主题。我们对此带来的不便表示歉意。
-
-        要查看更多指引，请参考我们的[社区指引](%{base_url}/guidelines)。
-    blocked_by_staff:
-      title: "已被管理人员封禁"
-      subject_template: "账户被暂时封禁"
-      text_body_template: |
-        你好，
-
-        这是%{site_name}自动发出的邮件。出于谨慎的考虑，你的帐户临时暂停使用。
-
-        请继续浏览，但在管理人员审核通过前，你的账户不能再发表新的回复或者主题。我们对此带来的不便表示歉意。
-
-        要查看更多指引，请参考我们的[社区指引](%{base_url}/guidelines)。
-    user_automatically_blocked:
-      title: "用户被自动封禁"
-      subject_template: "新用户%{username}因社区标记而被封禁"
-      text_body_template: |
-        这是自动发出的邮件。
-
-        因多位用户标记%{username}的帖子，新用户[%{username}](%{base_url}%{user_url})已被自动封禁。
-
-        请[查看这些标记](%{base_url}/admin/flags)。如果%{username}被意外禁用了编辑功能，点击[该用户管理页面](%{base_url}%{user_url})内的解封按钮。
-
-        该阈值可以通过站点设置中的 `block_new_user` 更改。
-    spam_post_blocked:
-      title: "垃圾帖子被封锁"
-      subject_template: "新用户 %{username} 因重复发布链接而被禁止发表相关帖子"
-      text_body_template: |
-        这是自动发出的邮件。
-
-        新用户[%{username}](%{base_url}%{user_url})试图创建多个链接至 %{domains} 的帖子，但这些帖子因为反垃圾策略而被阻挡了。用户仍能够发表不包含到 %{domains} 的帖子。
-
-        请[审核该用户](%{base_url}%{user_url})。
-
-        该阈值可以通过站点设置中的 `newuser_spam_host_threshold` 和 `white_listed_spam_host_domains` 更改。
-    unblocked:
-      title: "解锁"
-      subject_template: "账户已解除封禁"
-      text_body_template: |
-        你好，
-
-        这是%{site_name}自动发出的邮件。管理人员审核你的帐户后，你的帐户不再受到限制。
-
-        你现在可以创建新回复和主题了。感谢你的耐心等待。
     pending_users_reminder:
       title: "待审核用户提醒"
       subject_template:
@@ -2054,11 +1995,11 @@ zh_CN:
       title: "你是这个月的最佳新用户！"
       subject_template: "你是这个月的最佳新用户！"
       text_body_template: |
-        恭喜，你获得了**%{month_year}月最佳新用户**。 :trophy:
+        恭喜，你是**%{month_year}月最佳新用户**。 :trophy:
 
         该奖项每月只授予给两位新用户，并且你永远都可以在[你的用户页](%{base_url}/my/badges)找到。
 
-        你迅速成为了我们社区中的宝贵一员。感谢你参与，未来继续努力！
+        你迅速成为了我们社区中的宝贵一员。感谢你的参与，未来继续努力！
     queued_posts_reminder:
       title: "待处理帖子提醒"
       subject_template:
@@ -2262,6 +2203,26 @@ zh_CN:
       text_body_template: |2
 
         %{message}
+    account_suspended:
+      title: "账户被禁用"
+      subject_template: "[%{email_prefix}] 你的账户已经被禁用"
+      text_body_template: |
+        你的账户已经被禁用至%{suspended_till}。
+
+        %{reason}
+
+        %{message}
+    account_exists:
+      title: "账户已经存在"
+      subject_template: "[%{email_prefix}] 账户已经存在"
+      text_body_template: |
+        你刚试着在%{site_name}创建账户或者试着将账户的邮箱改为%{email}。然而，%{email}已经绑定于另一账户了。
+
+        如果你忘记了密码，[立即重置](%{base_url}/password-reset)。
+
+        如果你没有试着用%{email}创建账户或者更改邮件，不要担心——你可以安全地忽略这封邮件。
+
+        如果你有任何问题，[联系我们友善的工作人员](%{base_url}/about)。
     digest:
       why: "在你上次于%{last_seen_at}访问后，%{site_link}的新内容摘要。"
       since_last_visit: "自从你上次访问"
@@ -2277,7 +2238,8 @@ zh_CN:
       popular_posts: "流行帖子"
       more_new: "你关注的新帖"
       subject_template: "[%{email_prefix}] 摘要"
-      unsubscribe: "这是一封来自%{site_link}的摘要邮件，因为你长时间没有访问而发送。修改<a href='%{email_settings_url}'>你的邮件设置</a>，或%{unsubscribe_link}取消订阅。"
+      unsubscribe: "这是来自%{site_link}的摘要邮件，因为你长时间没有访问站点而发送。修改你的邮件设置%{email_preferences_link}，或%{unsubscribe_link}取消订阅。"
+      your_email_settings: "你的邮件设置"
       click_here: "点击此处"
       from: "%{site_name}的摘要"
       preheader: "在你上次于%{last_seen_at}访问后的新内容摘要"
@@ -2379,6 +2341,9 @@ zh_CN:
     see_more: "更多"
     search_title: "搜索该网页"
     search_google: "Google"
+  offline:
+    title: "无法载入应用"
+    offline_page_message: "看起来你掉线了！请检查网络连接并重试。"
   login_required:
     welcome_message: |
       ##[欢迎来到 %{title}](#welcome)
@@ -2794,9 +2759,9 @@ zh_CN:
         该徽章授予给帖子收到了第一个赞的成员。恭喜，有社区成员发现你发表的内容有意思、酷炫或者有用！
     autobiographer:
       name: 自传作者
-      description: 已填写用户<a href="/my/preferences">资料</a>信息
+      description: 填写<a href="%{base_uri}/my/preferences/profile">用户资料</a>信息
       long_description: |
-        该徽章授予给填写了<a href="/my/preferences">用户页面</a>并选择了用户头像的你。让社区成员们多了解你一点以及你感兴趣的内容，能帮助我们打造一个更好、更团结的社区。让我们一起努力！
+        该徽章授予给填写了<a href="%{base_uri}/my/preferences/profile">用户资料页</a>并设置了用户头像的你。让社群成员们多了解你一点以及你感兴趣的内容，能帮助我们打造一个更好、更团结的社群。让我们一起努力！
     anniversary:
       name: 年度纪念日
       description: 一年活跃用户，至少发了一个帖子
@@ -2891,9 +2856,9 @@ zh_CN:
         该徽章授予给第一次在回复中引用帖子的你。在你的回复中引用之前帖子中的相关的段落将把主题关联在一起并切题。只要选中别的帖子中的任何文字，然后点击回复按钮将可以引用啦。多引用一些吧！
     read_guidelines:
       name: 阅读指引
-      description: 阅读<a href="/guidelines">社区指引</a>
+      description: 阅读<a href="%{base_uri}/guidelines">社群指引</a>
       long_description: |
-        该徽章授予给<a href="/guidelines">阅读了社区指引</a>的你。遵守和分享简单的指引能让我们打造一个稳定、有趣和可持续的社区。永远记住别人，一个和你有很多共同点的人，就在屏幕的那一侧。友好一些！
+        该徽章授予给<a href="%{base_uri}/guidelines">阅读了社群指引</a>的你。遵守和分享简单的指引能让我们打造一个稳定、有趣和可持续的社群。永远记住别人，一个和你有很多共同点的人，就在屏幕的那一侧。友好一些！
     reader:
       name: 读者
       description: 阅读了有至少 100 个回复的主题中的所有回复

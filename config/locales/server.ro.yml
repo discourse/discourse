@@ -43,7 +43,6 @@ ro:
         auto_generated_email_error: "Apare când header-ul de 'precedență' este setat pe: list, junk, bulk sau auto_reply, sau atunci când orice alt header conține: auto-submitted, auto-replied sau auto-generated."
         no_body_detected_error: "Apare când nu am putut extrage corpul mesajului și nu existau fișiere atașate."
         inactive_user_error: "Apare când expeditorul nu este activ."
-        blocked_user_error: "Apare când expeditorul a fost blocat."
         bad_destination_address: "Apare  când niciuna dintre adresele de email din câmpurile To/Cc/Bcc nu se potrivește cu o adresa de email expeditor configurată."
         strangers_not_allowed_error: "Apare când un utilizator a încercat să creeze un nou subiect într-o categorie în care nu este membru. "
         insufficient_trust_level_error: "Apare atunci când un utilizator a încercat să creeze un subiect nou într-o categorie pentru care nu are nivelul de încredere necesar."
@@ -868,19 +867,12 @@ ro:
     tl2_additional_likes_per_day_multiplier: "Crește numărul maxim de aprecieri pe zi pentru (membrii cu) nivelul de încredere 2, multiplicând cu această valoare"
     tl3_additional_likes_per_day_multiplier: "Crește numărul maxim de aprecieri pe zi pentru (membrii cu) nivelul de încredere 3, multiplicând cu această valoare"
     tl4_additional_likes_per_day_multiplier: "Crește numărul maxim de aprecieri pe zi pentru (membrii cu) nivelul de încredere 4, multiplicând cu această valoare"
-    num_spam_flags_to_block_new_user: "Dacă postările unui nou utilizator primesc atâtea marcaje de avertizare ca spam de la num_users_to_block_new_user utilizatori diferiți, ascunde-i toate postările și împiedică-l să mai posteze. 0 pentru dezactivare."
-    num_users_to_block_new_user: "Dacă mesajele unui nou utilizator obțin num_spam_flags_to_block_new_user marcaje de avertizare de la tot atâția utilizatori diferiți, ascunde toate mesajele sale și blochează-i posibilitatea de a posta. 0 pentru dezactivare."
-    num_tl3_flags_to_block_new_user: "Dacă postările unui nou utilizator primesc atâtea marcaje de avertizare de la num_tl3_users_to_block_new_user de utilizatori diferiți cu nivel de încredere 3, ascunde toate postările sale și blochează-i posibilitatea de a posta pe viitor. 0 pentru dezactivare."
-    num_tl3_users_to_block_new_user: "Dacă postările unui utilizator nou primesc num_tl3_flags_to_block_new_user marcaje de avertizare de la tot atâția utilizatori diferiți cu nivelul de încredere 3, ascunde-i toate postările și blochează-i posibilitatea de a posta pe viitor. 0 pentru dezactivare."
-    notify_mods_when_user_blocked: "Dacă un utilizator este blocat automat, trimite un mesaj tuturor moderatorilor."
     flag_sockpuppets: "Dacă un utilizator nou răspunde unui subiect de la același IP ca utilizatorul ce a pornit subiectul, marchează ambele postări ca potențial spam."
     traditional_markdown_linebreaks: "Folosește întreruperi de rând tradiționale în Markdown, ceea ce necesită două spații pentru un capăt de rând. "
     post_undo_action_window_mins: "Numărul de minute în care utilizatorii pot anula acțiunile recente asupra unei postări (aprecieri, marcări cu marcaje de avertizare, etc)."
     must_approve_users: "Membrii echipei trebuie să aprobe toate conturile noilor utilizatori înainte ca aceștia să poată accesa site-ul. ATENȚIE: activarea acestei opțiuni pentru un site în producție va revoca accesul tuturor utilizatorilor care nu sunt membri ai echipei!"
     pending_users_reminder_delay: "Notifică moderatorii dacă noii utilizatori sunt în așteptarea aprobării de mai mult de atâtea ore. Setează la -1 pentru a dezactiva notificările."
     maximum_session_age: "Utilizatorul va rămâne autentificat pentru n ore de la ultima vizită"
-    ga_tracking_code: "ÎNVECHIT: Google analytics (ga.js) cod de urmărire, eg: UA-12345678-9; see http://google.com/analytics"
-    ga_domain_name: "ÎNVECHIT: numele domeniului Google Analytics (ga.js), de exemplu: siteulmeu.com ; vezi http://google.com/analytics"
     ga_universal_tracking_code: "Codul de urmărire Google Universal Analytics (analytics.js), ex: UA-12345678-9; vezi http://google.com/analytics"
     ga_universal_domain_name: "Numele de domeniu Google Universal Analytics (analytics.js), ex: mysite.com; vezi http://google.com/analytics"
     gtm_container_id: "ID-ul containerului Google Tag Manager. De ex: GTM-ABCDEF"
@@ -1092,9 +1084,6 @@ ro:
     num_flags_to_close_topic: "Numărul minim de marcaje de avertizare active care este necesar pentru a suspenda un subiect în vederea intervenției"
     auto_respond_to_flag_actions: "Activează răspunsul automat la gestionarea unui marcaj de avertizare."
     min_first_post_typing_time: "Durata de timp minimă în milisecunde cât este nevoie ca un utilizator să tasteze la prima postare, dacă acest prag nu este atins postarea va intra automat în coada mesajelor care necesită aprobare. Valoarea 0 dezactivează (nerecomandat)"
-    auto_block_fast_typers_on_first_post: "Blochează automat utilizatorii care nu întrunesc min_first_post_typing_time"
-    auto_block_fast_typers_max_trust_level: "Nivelul maxim de încredere pentru a-i bloca automat pe cei care scriu rapid la tastatură"
-    auto_block_first_post_regex: "Un regex care nu ține cont de majuscule și minuscule va determina prima postare a utilizatorului să fie blocată și trimisă în coada de aprobare. Exemplu: raging|a[bc]a va determina toate postările care conțin raging sau aba sau aca să fie blocate din prima. Se aplică doar la prima postare."
     reply_by_email_enabled: "Activează răspunsurile către subiecte prin email."
     reply_by_email_address: "șablon pentru răspuns prin email de intrare, de exemplu: %{reply_key}@reply.example.com sau răspunsuri+%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Listă de șabloane alternative pentru adresele de email primite cu răspunsuri prin email. Exemplu: %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
@@ -1562,11 +1551,6 @@ ro:
         Ne pare rău dar mesajul tău către %{destination} (cu titlul %{former_title}) nu a mers.
 
         Contul tău asociat acestei adrese de email nu este activat. Te rugăm să îți activezi contul înainte de a trimite emailuri.
-    email_reject_blocked_user:
-      text_body_template: |
-        Ne pare rău dar mesajul tău către %{destination} (cu titlul %{former_title}) nu a mers.
-
-        Contul asociat acestei adrese de email este blocat.
     email_reject_empty:
       text_body_template: |
         Ne pare rău dar mesajul tău către %{destination} (cu titlul %{former_title}) nu a mers.
@@ -1607,63 +1591,8 @@ ro:
         Dacă există interfață utilizator web pentru contul tău POP, ar trebui să te autentifici pe ea și să îți verifici acolo setările.
     too_many_spam_flags:
       subject_template: "Cont nou suspendat"
-      text_body_template: |
-        Salut,
-
-        Acesta este un mesaj automat de pe %{site_name} pentru a te informa că postările tale au fost temporar ascunse pentru că au fost marcate cu marcaje de avertizare de către comunitate..
-
-        Ca măsura de precauție, noului tău cont i s-a blocat posibilitatea de a crea noi răspunsuri sau subiecte până ce un un membru al echipei nu îl va verifica. Ne cerem scuze pentru inconveniență.
-
-        Pentru informații suplimentare, te rugăm să citești [ghidul comunității](%{base_url}/guidelines).
     too_many_tl3_flags:
       subject_template: "Cont nou suspendat"
-      text_body_template: |
-        Salut,
-
-        Acesta este un mesaj automat de pe %{site_name} pentru a te informa că ți-a fost suspendat contul din cauza unui număr mare de marcaje de avertizare primite de la comunitate.
-
-        Ca măsura de precauție, noului tău cont i s-a blocat posibilitatea de a crea noi răspunsuri sau subiecte până ce un un membru al echipei nu îl va verifica. Ne cerem scuze pentru inconveniență.
-
-        Pentru informații suplimentare, te rugăm să citești [ghidul comunității](%{base_url}/guidelines).
-    blocked_by_staff:
-      subject_template: "Cont suspendat temporar"
-      text_body_template: |+
-        Salut,
-
-        Acesta este un mesaj automat de pe %{site_name} pentru a te informa că ți-a fost suspendat temporar contul, ca măsură de precauție.
-
-        Poți să continui să răsfoiești, dar nu vei mai putea să răspunzi sau să creezi subiecte până când un [membru al echipei](%{base_url}/about) nu îți verifică postările recente. Ne cerem scuze pentru inconveniență.
-
-        Pentru informații suplimentare, te rugăm să citești [ghidul comunității](%{base_url}/guidelines).
-
-    user_automatically_blocked:
-      subject_template: "Noul utilizator %{username} a fost blocat de marcajele de avertizare ale comunității."
-      text_body_template: |
-        Acesta este un mesaj automat.
-
-        Noul utilizator [%{username}](%{user_url}) a fost blocat în mod automat din cauza că mai mulți utilizatori au marcat postarea(ările) lui %{username} cu cu marcaje de avertizare.
-
-        Te rugăm [verifică marcajele de avertizare](%{base_url}/admin/flags). Dacă %{username} a fost blocat în mod incorect de la postare, dă click pe butonul deblocare din [pagina de administrare pentru acest utilizator](%{user_url}).
-
-        Pragul poate fi schimbat prin `block_new_user` din setările site-ului.
-    spam_post_blocked:
-      subject_template: "Utilizatorul nou %{username} are postările blocate datorită adreselor repetate"
-      text_body_template: |
-        Acesta este un mesaj automat.
-
-        Noul utilizator [%{username}](%{user_url}) a încercat să creeze postări multiple cu link-uri la %{domains}, dar aceste postări au fost blocate pentru a evita spam-ul. Utilizatorul poate încă să creeze noi subiecte dar care să nu link-uiască la  %{domains}.
-
-        Te rugăam [verifică acest utilizator](%{user_url}).
-
-        Această setare poate fi schimbată prin `newuser_spam_host_threshold` și `white_listed_spam_host_domains` din setările site-ului.
-    unblocked:
-      subject_template: "Contul nu mai este în așteptare"
-      text_body_template: |
-        Salut,
-
-        Acesta este un mesaj automat de pe %{site_name} pentru a te informa că - în urma verificărilor echipei - contul tău nu mai este suspendat.
-
-        Acum poți să creezi din nou subiecte și postări. Îți mulțumim pentru răbdare.
     pending_users_reminder:
       subject_template:
         one: "un utilizator în așteptarea aprobării"

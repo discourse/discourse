@@ -509,7 +509,6 @@ sv:
       admin: "{{user}} är en admin"
       moderator_tooltip: "Den här användaren är moderator"
       admin_tooltip: "Den här användaren är administrator"
-      blocked_tooltip: "Den här användaren är blockerad"
       suspended_notice: "Den här användaren är avstängd till {{date}}."
       suspended_reason: "Anledning:"
       github_profile: "Github"
@@ -1517,7 +1516,7 @@ sv:
       reply_as_new_private_message: "Svara som nytt meddelande till samma mottagare"
       continue_discussion: "Fortsätter diskussionen från {{postLink}}:"
       follow_quote: "gå till det citerade inlägget"
-      show_full: "Via hela inlägget"
+      show_full: "Visa hela inlägget"
       show_hidden: 'Visa dolt innehåll.'
       deleted_by_author:
         one: "(inlägg tillbakadraget av skaparen, kommer att raderas automatiskt om 1 timme om det inte flaggas)"
@@ -2174,7 +2173,6 @@ sv:
         no_problems: "Inga problem upptäcktes."
         moderators: 'Moderatorer:'
         admins: 'Administratörer:'
-        blocked: 'Blockerad:'
         suspended: 'Avstängd:'
         private_messages_short: "Meddelanden"
         private_messages_title: "Meddelanden"
@@ -2636,8 +2634,6 @@ sv:
             change_category_settings: "ändra kategori-inställningarna"
             delete_category: "radera kategori"
             create_category: "skapa kategori"
-            block_user: "blockera användare"
-            unblock_user: "häv blockering av användare"
             grant_admin: "bevlija administratör"
             revoke_admin: "återkalla administratör"
             grant_moderation: "bevilja moderering"
@@ -2704,7 +2700,6 @@ sv:
           pending: "Avvaktar"
           staff: 'Medarbetare'
           suspended: 'Avstängd'
-          blocked: 'Blockerad'
           suspect: 'Misstänkt'
         approved: "Godkänd?"
         approved_selected:
@@ -2725,7 +2720,6 @@ sv:
           staff: "Medarbetare"
           admins: 'Admin-användare'
           moderators: 'Moderatorer'
-          blocked: 'Blockerade användare'
           suspended: 'Avstängda användare'
           suspect: 'Misstänkta användare'
         reject_successful:
@@ -2742,18 +2736,14 @@ sv:
         suspend_failed: "Någonting gick fel under avstängningen av denna användare {{error}}"
         unsuspend_failed: "Någonting gick fel under upplåsningen av denna användare {{error}}"
         suspend_duration: "Hur länge ska användaren vara avstängd?"
-        suspend_duration_units: "(dagar)"
         suspend_reason_label: "Varför stänger du av användaren? Denna text <b>kommer att vara synlig för alla</b> på användarens profilsida, och kommer att visas för användaren när han/hon försöker logga in. Håll den kort."
         suspend_reason: "Anledning"
         suspended_by: "Avstängd av"
         delete_all_posts: "Radera alla inlägg"
         delete_all_posts_confirm_MF: "Du håller på att radera {POSTS, plural, one {1 inlägg} other {# inlägg}} och {TOPICS, plural, one {1 ämne} other {# ämnen}}. Är du säker?"
-        suspend: "Stäng av användare"
-        unsuspend: "Lås upp användare"
-        suspended: "Avstängd?"
         moderator: "Moderator?"
         admin: "Administratör?"
-        blocked: "Blockerad?"
+        suspended: "Avstängd?"
         staged: "Arrangerad?"
         show_admin_profile: "Administratör"
         refresh_browsers: "Tvinga webbläsaruppdatering"
@@ -2769,8 +2759,8 @@ sv:
         grant_admin_confirm: "Vi har skickat ett mail till dig för att bekräfta den nya administratören. Vänligen öppna det och följ instruktionerna."
         revoke_moderation: 'Återkalla Moderering'
         grant_moderation: 'Bevilja Moderering'
-        unblock: 'Avblockera'
-        block: 'Blockera'
+        unsuspend: 'Lås upp användare'
+        suspend: 'Stäng av användare'
         reputation: Rykte
         permissions: Rättigheter
         activity: Aktivitet
@@ -2817,17 +2807,12 @@ sv:
         activate_failed: "Ett problem uppstod då användaren skulle aktiveras."
         deactivate_account: "Inaktivera Konto"
         deactivate_failed: "Det uppstod ett problem vid inaktiveringen av användaren."
-        unblock_failed: 'Ett problem uppstod vid avblockeringen av användaren.'
-        block_failed: 'Ett problem uppstod vid blockering av användaren.'
-        block_confirm: 'Är du säker på att du vill blockera den här användaren? Användaren kommer inte att kunna skapa några nya ämnen eller inlägg.'
-        block_accept: 'Ja, blockera den här användaren'
         bounce_score: "Antal studs"
         reset_bounce_score:
           label: "Återställ"
           title: "Återställ studsantalet till 0"
         deactivate_explanation: "En avaktiverad användare måste bekräfta sin e-postadress igen."
         suspended_explanation: "En avstängd användare kan inte logga in."
-        block_explanation: "En blockerad användare kan inte skriva inlägg eller starta ämnen."
         staged_explanation: "En arrangerad användare kan endast skriva inlägg via e-post i specifika ämnen."
         bounce_score_explanation:
           none: "Inga studsar har mottagits nyligen från den e-posten."

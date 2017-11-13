@@ -432,7 +432,6 @@ gl:
       admin: "{{user}} é administrador"
       moderator_tooltip: "Este usuario é  un moderador"
       admin_tooltip: "Este usuario é un administrador"
-      blocked_tooltip: "Este usuario está bloqueado"
       suspended_notice: "Este usuario está suspendido até o {{date}}."
       suspended_reason: "Razón:"
       github_profile: "Github"
@@ -1616,7 +1615,6 @@ gl:
         no_problems: "Non se atoparon problemas."
         moderators: 'Moderadores:'
         admins: 'Administradores:'
-        blocked: 'Bloqueados:'
         suspended: 'Suspendidos:'
         private_messages_short: "Mensaxes"
         private_messages_title: "Mensaxes"
@@ -1989,8 +1987,6 @@ gl:
             change_category_settings: "cambiar axustes da categoría"
             delete_category: "eliminar categoría"
             create_category: "crear categoría"
-            block_user: "bloquear usuario"
-            unblock_user: "desbloquear usuario"
             grant_admin: "conceder administración"
             revoke_admin: "revogar administración"
             grant_moderation: "conceder moderación"
@@ -2046,7 +2042,6 @@ gl:
           pending: "Pendente"
           staff: 'Equipo'
           suspended: 'Suspendido'
-          blocked: 'Bloqueado'
           suspect: 'Sospeitoso'
         approved: "Aprobado?"
         approved_selected:
@@ -2067,7 +2062,6 @@ gl:
           staff: "Equipo"
           admins: 'Usuarios administradores'
           moderators: 'Moderadores'
-          blocked: 'Usuarios bloqueados'
           suspended: 'Usuarios suspendidos'
           suspect: 'Usuarios sospeitosos'
         reject_successful:
@@ -2084,17 +2078,13 @@ gl:
         suspend_failed: "Algo fallou rexeitando este usuario {{error}}"
         unsuspend_failed: "Algo foi mal levantando a suspensión deste usuario {{error}}"
         suspend_duration: "Canto tempo estará suspendido o usuario?"
-        suspend_duration_units: "(días)"
         suspend_reason_label: "Cal é o motivo da suspensión? Este texto <b>será visíbel para todo o mundo</b> na páxina do perfil deste usuario e amosaráselle ao usuario cando tente iniciar sesión. Procura ser breve."
         suspend_reason: "Razón"
         suspended_by: "Suspendido por"
         delete_all_posts: "Eliminar todas as publicacións"
-        suspend: "Suspender"
-        unsuspend: "Non suspender"
-        suspended: "Suspendido?"
         moderator: "Moderador?"
         admin: "Administrador?"
-        blocked: "Bloqueado?"
+        suspended: "Suspendido?"
         staged: "Transitorio?"
         show_admin_profile: "Administración"
         refresh_browsers: "Forzar a actualización do navegador"
@@ -2108,8 +2098,8 @@ gl:
         grant_admin: 'Facer administrador'
         revoke_moderation: 'Revogar moderación'
         grant_moderation: 'Conceder moderación'
-        unblock: 'Desbloquear'
-        block: 'Bloquear'
+        unsuspend: 'Non suspender'
+        suspend: 'Suspender'
         reputation: Reputación
         permissions: Permisos
         activity: Actividade
@@ -2156,13 +2146,8 @@ gl:
         activate_failed: "Produciuse un problema activando o usuario."
         deactivate_account: "Desactivar a conta"
         deactivate_failed: "Produciuse un problema desactivando o usuario."
-        unblock_failed: 'Produciuse un problema desbloqueando o usuario.'
-        block_failed: 'Produciuse un problema bloqueando o usuario.'
-        block_confirm: 'Confirmas o bloqueo deste usuario? Non poderá crear máis temas nin publicacións.'
-        block_accept: 'Si, bloquealo'
         deactivate_explanation: "Un usuario desactivado debe revalidar o seu correo-e."
         suspended_explanation: "Un usuario suspendido non pode iniciar sesión."
-        block_explanation: "Un usuario bloquedo non pode publicar nin iniciar temas."
         trust_level_change_failed: "Produciuse un problema cambiando o nivel de confianza do usuario."
         suspend_modal_title: "Suspender usuario"
         trust_level_2_users: "Usuarios con nivel 2 de confianza"

@@ -48,7 +48,6 @@ fr:
         no_body_detected_error: "Se produit quand il est impossible d'extraire le corps du message et qu'il n'y a pas de pièces-jointes."
         no_sender_detected_error: "Se produit lorsque nous n'avons pas trouvé une adresse courriel valide dans l'entête From."
         inactive_user_error: "Se produit quand l'expéditeur n'est pas actif."
-        blocked_user_error: "Se produit quand l'expéditeur a été bloqué."
         bad_destination_address: "Se produit quand aucune des adresses de courriel des champs To/Cc/Bcc ne correspondent à une adresse de courriel entrante configurée."
         strangers_not_allowed_error: "Se produit quand un utilisateur a essayé de créer un nouveau sujet dans une catégorie dans laquelle il n'est pas membre."
         insufficient_trust_level_error: "Se produit quand un utilisateur a essayé de créer un nouveau sujet dans une catégorie pour laquelle il n'a pas le niveau de confiance nécessaire."
@@ -943,19 +942,12 @@ fr:
     tl2_additional_likes_per_day_multiplier: "Augmenter la limite de J'aime par jour pour les utilisateurs de niveau 2 (membres) en la multipliant par ce nombre"
     tl3_additional_likes_per_day_multiplier: "Augmenter la limite de J'aime par jour pour les utilisateurs de niveau 3 (réguliers) en la multipliant par ce nombre"
     tl4_additional_likes_per_day_multiplier: "Augmenter la limite de J'aime par jour pour les utilisateurs de niveau 4 (meneurs) en la multipliant par ce nombre"
-    num_spam_flags_to_block_new_user: "Si les messages d'un nouvel utilisateur obtiennent ce nombre de signalements pour spam de la part de num_users_to_block_new_user utilisateurs différents, masquer tous ses messages et l'empêcher de poster à l'avenir. 0 désactive cette fonctionnalité."
-    num_users_to_block_new_user: "Si les messages d'un nouvel utilisateur obtiennent num_spam_flags_to_block_new_user signalements d'autant d'utilisateurs différents, masquer tous ses messages et l'empêcher de poster à l'avenir. 0 désactive cette fonctionnalité."
-    num_tl3_flags_to_block_new_user: "Si les messages d'un nouvel utilisateur obtiennent\nce nombre de signalements de la part de num_tl3_users_to_block_new_user utilisateurs de niveau de confiance 3 différents, masquer tous ses messages et l'empêcher de poster à l'avenir. 0 désactive cette fonctionnalité."
-    num_tl3_users_to_block_new_user: "Si les messages d'un nouvel utilisateur obtiennent num_tl3_flags_to_block_new_user signalements d'autant d'utilisateurs de niveau de confiance 3 différents, masquer tous ses messages et l'empêcher de poster à l'avenir. 0 désactive cette fonctionnalité."
-    notify_mods_when_user_blocked: "Si un utilisateur est bloqué automatiquement, envoyer un message à tous les modérateurs."
     flag_sockpuppets: "Si un nouvel utilisateur répond à un sujet avec la même adresse IP que le nouvel utilisateur qui a commencé le sujet, alors leurs messages seront automatiquement marqués comme spam."
     traditional_markdown_linebreaks: "Utiliser le retour à la ligne traditionnel dans Markdown, qui nécessite deux espaces pour un saut de ligne."
     post_undo_action_window_mins: "Nombre de minutes pendant lesquelles un utilisateur peut annuler une action sur un message (J'aime, signaler, etc.)"
     must_approve_users: "Les responsables doivent approuver les nouveaux utilisateurs afin qu'ils puissent accéder au site. ATTENTION : activer cette option sur un site en production suspendra l'accès des utilisateurs existants qui ne sont pas des responsables !"
     pending_users_reminder_delay: "Avertir les modérateurs si des nouveaux utilisateurs sont en attente d'approbation depuis x heures. Mettre -1 pour désactiver les notifications."
     maximum_session_age: "L'utilisateur restera connecté pour n heures après la dernière visite"
-    ga_tracking_code: "Obsolète : code de suivi Google Analytics (ga.js), par exemple : UA-12345678-9 ; voir http://google.com/analytics"
-    ga_domain_name: "Obsolète : nom de domaine Google Analytics (ga.js), par exemple : monsite.com ; voir http://google.com/analytics"
     ga_universal_tracking_code: "Code de suivi Google Universal Analytics (analytics.js), par exemple : UA-12345678-9 ; voir http://google.com/analytics"
     ga_universal_domain_name: "Nom de domaine Google Universal Analytics (analytics.js), par exemple : monsite.com ; voir http://google.com/analytics"
     gtm_container_id: "ID du conteneur Google Tag Manager, par exemple : GTM-ABCDEF"
@@ -1181,9 +1173,6 @@ fr:
     num_hours_to_close_topic: "Nombre d'heures de fermeture d'un sujet pour intervention."
     auto_respond_to_flag_actions: "Activer la réponse automatique lors du traitement d'un signalement."
     min_first_post_typing_time: "Minimum de temps en millisecondes qu'un utilisateur doit passer à la saisie de son premier commentaire, si le seuil n'est pas atteint, il rejoindra automatiquement la file des commentaires en cours d'approbation. Mettre à 0 pour désactiver (non recommandé)"
-    auto_block_fast_typers_on_first_post: "Bloque automatiquement les utilisateurs qui n'ont pas respecté min_first_post_typing_time"
-    auto_block_fast_typers_max_trust_level: "Niveau de confiance maximum pour bloquer automatiquement les 'dactylo rapides'"
-    auto_block_first_post_regex: "Regex non sensible à la casse qui, si elle est déclenchée, bloquera le premier message de l'utilisateur et l'enverra dans la file d'attente d'approbation.\nExemple: rageux|a[bc]a bloquera les premiers messages contenant rageux ou aba ou aca."
     reply_by_email_enabled: "Activer les réponses aux sujets via courriel."
     reply_by_email_address: "Modèle pour la réponse par courriel entrant; exemple : %{reply_key}@reply.example.com ou replies+%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Liste des templates alternatifs pour les adresses des courriels entrants de la réponse par courriel. Exemple : %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
@@ -1819,12 +1808,6 @@ fr:
         Malheureusement votre courriel à %{destination} (titled %{former_title}) a échoué.
 
         Le compte associé avec cette adresse existe n'est pas activé. Veuillez activer votre compte avant d'envoyer des courriels.
-    email_reject_blocked_user:
-      subject_template: "[%{email_prefix}] Problème de courriel -- Utilisateur bloqué"
-      text_body_template: |
-        Malheureusement votre courriel à %{destination} (titled %{former_title}) a échoué.
-
-        Le compte associé avec cette adresse a été bloqué.
     email_reject_reply_user_not_matching:
       subject_template: "[%{email_prefix}] Problème de courriel -- Adresse de réponse inattendue"
     email_reject_no_account:
@@ -1890,66 +1873,8 @@ fr:
     too_many_spam_flags:
       title: "Trop de signalements de spam"
       subject_template: "Nouveau compte bloqué"
-      text_body_template: |
-        Bonjour,
-
-        Ceci est un message automatique de %{site_name} pour vous informer que vos messages ont été temporairement masqués suite à des signalements de la communauté.
-
-        Par mesure de précaution, votre nouveau compte a été bloqué et vous ne pourrez plus créer de nouvelles réponses et sujets tant qu'un responsable n'a pas vérifié votre compte. Veuillez nous excuser pour la gêne occasionnée.
-
-        Pour plus d'informations, merci de vous référer à la [charte de la communauté](%{base_url}/guidelines).
     too_many_tl3_flags:
       subject_template: "Nouveau compte bloqué"
-      text_body_template: |
-        Bonjour,
-
-        Ceci est un message automatique de %{site_name} pour vous informer que votre compte a été bloqué suite à un grand nombre de signalements de la communauté.
-
-        Par mesure de précaution, votre nouveau compte a été bloqué et vous ne pourrez par créer de nouvelles réponses ou sujets tant qu'un responsable n'a pas vérifié votre compte.
-
-        Pour plus d'informations, merci de vous en référer à la [charte de la communauté](%{base_url}/guidelines).
-    blocked_by_staff:
-      title: "Bloqué par un responsable"
-      subject_template: "Compte bloqué temporairement"
-      text_body_template: |
-        Bonjour,
-
-        Ceci est un message automatique de %{site_name} pour vous informer que votre compte a été temporairement bloqué par mesure de précaution.
-
-        Vous pouvez continuer à naviguer mais vous ne pourrez plus répondre ou créer de sujets tant qu'un [responsable](%{base_url}/about) n'a pas vérifié vos messages les plus récents. Veuillez nous excuser pour la gêne occasionnée.
-
-        Pour plus d'informations, merci de vous référer à la [charte de la communauté](%{base_url}/guidelines).
-    user_automatically_blocked:
-      title: "Utilisateur bloqué automatiquement"
-      subject_template: "Nouvel utilisateur %{username} bloqué suite à des signalements de la communauté"
-      text_body_template: |
-        Ceci est un message automatique
-
-        Le nouvel utilisateur [%{username}](%{user_url}) a été bloqué automatiquement par plusieurs utilisateurs ayant signalés ses (%{username}) messages.
-
-        Merci de [vérifier les signalements](%{base_url}/admin/flags). Si %{username} a été bloqué injustement, cliquez sur le bouton débloquer sur la [page d'administration de cet utilisateur](%{user_url}).
-
-        Cette limite peut être changée par le paramètre du site `block_new_user`.
-    spam_post_blocked:
-      title: "Message spam bloqué"
-      subject_template: "Les messages du nouvel utilisateur %{username} sont bloqués pour des liens répétés"
-      text_body_template: |
-        Ceci est un message automatique.
-
-        Le nouvel utilisateur [%{username}](%{user_url}) tente de créer de multiples messages avec des liens vers %{domains}, mais que ces messages ont été bloqués pour éviter le spam. Cet utilisateur est toujours capable de créer des messages qui ne contiennent pas de liens vers %{domains}.
-
-        Merci de [review the user](%{user_url}).
-
-        Ceci peut être modifier via les options `newuser_spam_host_threshold` et white_listed_spam_host_domains`.
-    unblocked:
-      title: "Débloqué"
-      subject_template: "Compte débloqué"
-      text_body_template: |
-        Bonjour,
-
-        Ceci est un message automatique de %{site_name} pour vous informer que votre compte a été débloqué après vérification d'un responsable.
-
-        Vous pouvez à nouveau créer des nouveaux messages et sujets. Merci pour votre patience.
     pending_users_reminder:
       title: "Rappel d'utilisateurs en attente"
       subject_template:

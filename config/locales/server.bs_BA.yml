@@ -397,7 +397,6 @@ bs_BA:
     polling_interval: "How often should logged in user clients poll in milliseconds"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     cooldown_minutes_after_hiding_posts: "Number of minutes a user must wait before they can edit a post hidden via community flagging"
-    notify_mods_when_user_blocked: "If a user is automatically blocked, send a message to all moderators."
     flag_sockpuppets: "If a new user replies to a topic from the same IP address as the new user who started the topic, flag both of their posts as potential spam."
     traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak."
     post_undo_action_window_mins: "Number of minutes users are allowed to undo recent actions on a post (like, flag, etc)."
@@ -679,8 +678,6 @@ bs_BA:
       subject_template: "Data Export completed successfully"
     csv_export_failed:
       subject_template: "Export failed"
-    spam_post_blocked:
-      subject_template: "New user %{username} posts blocked due to repeated links"
     pending_users_reminder:
       text_body_template: |
         There are new user signups waiting to be approved (or rejected) before they can access this forum.

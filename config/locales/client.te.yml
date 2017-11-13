@@ -1096,7 +1096,6 @@ te:
         no_problems: "ఎటువంటి సమస్యలూ కనిపించలేదు"
         moderators: 'నిర్వాహకులు:'
         admins: 'అధికారులు:'
-        blocked: 'నిలిపిన:'
         suspended: 'సస్పెండయిన:'
         space_free: "{{size}} ఖాలీ"
         uploads: "ఎగుమతులు"
@@ -1441,7 +1440,6 @@ te:
           pending: "పెండింగు"
           staff: 'సిబ్బంది'
           suspended: 'సస్పెడయ్యాడు'
-          blocked: 'నిలిపాడు'
           suspect: 'అనుమానించు'
         approved: "అంగీకరించు"
         approved_selected:
@@ -1459,7 +1457,6 @@ te:
           staff: "సిబ్బంది"
           admins: 'అధికారి సభ్యులు'
           moderators: 'నిర్వాహకులు'
-          blocked: 'నిలిపిన సభ్యులు'
           suspended: 'సస్పెండయిన సభ్యులు'
           suspect: 'అనుమానిత సభ్యులు'
         reject_successful:
@@ -1475,17 +1472,13 @@ te:
         suspend_failed: "ఈ సభ్యుడిని సస్పెండ్ చేసేప్పుడు ఏదో తేడా జరిగింది.  {{error}}"
         unsuspend_failed: "ఈ వినియోగదారు వలన ఏదో తొలగింపబడని తప్పు జరిగింది {{error}}"
         suspend_duration: "వినియోగదారు ఎంతకాలం నిలిపివేయబడ్డాడు?"
-        suspend_duration_units: "(రోజులు)"
         suspend_reason_label: "మీరు ఎందుకు తొలగించబడ్డారు? ఈ పాఠ్యం <b> వినియోగదారును ప్రొఫైల్ పుట మీద ప్రతివారికి </b> కనబడుతుంది, మరియు వినియోగదారుడు లాగిన్‌కు ప్రయత్నించినపుడు చూస్తారు.చిన్నదిగా ఉంచండి."
         suspend_reason: "కారణం"
         suspended_by: "సస్పెండు చేసినవారు"
         delete_all_posts: "అన్ని టపాలూ తొలగించు"
-        suspend: "సస్పెండు"
-        unsuspend: "సస్పెండు తొలగించు"
-        suspended: "సస్పెండయ్యాడా? "
         moderator: "నిర్వాహకుడు?"
         admin: "అధికారి?"
-        blocked: "నిలిపిన?"
+        suspended: "సస్పెండయ్యాడా? "
         show_admin_profile: "అధికారి"
         refresh_browsers: "బ్రౌజరు తాజాకరణ బలవంతంచేయి"
         refresh_browsers_message: "అన్ని క్లైంటులకు సందేశం పంపబడింది!"
@@ -1498,8 +1491,8 @@ te:
         grant_admin: 'నిర్వాహకులు సమ్మతించారు'
         revoke_moderation: 'సమన్వయం నిలిపివేశారు'
         grant_moderation: 'సమన్వయం అనుమతించారు'
-        unblock: 'అడ్డగింపలేదు'
-        block: 'నిలుపు'
+        unsuspend: 'సస్పెండు తొలగించు'
+        suspend: 'సస్పెండు'
         reputation: ప్రసిధ్ధ
         permissions: అనుమతులు
         activity: కలాపం
@@ -1533,11 +1526,8 @@ te:
         activate_failed: "సభ్యుడిని చేతనం చేయుటలో దోషం"
         deactivate_account: "ఖాతా అక్రియాశీలం చేయి"
         deactivate_failed: "వినియోగదారుని నిర్వీర్యం చేసే ఒక సమస్య ఉంది."
-        unblock_failed: 'వినియోగదారుని అనుమతించడంలో ఒక సమస్య ఉంది.'
-        block_failed: 'వినియోగదారుని ఒక సమస్య నిరోధిస్తుంది.'
         deactivate_explanation: "క్రియారహిత వినియోగదారు తప్పనిసరిగా వారి ఈ-మెయిల్ ను సరిదిద్దాలి."
         suspended_explanation: "నిలిపివేయబడ్డ వినియోగదారు లాగిన్ కాలేరు."
-        block_explanation: "అడ్డగింపబడ్డ వినియోగదారు టపాలు చేయలేరు లేదా విషయాలు మొదలుపెట్టలేరు."
         trust_level_change_failed: "వినియోగదారు నమ్మకపు స్థాయి మార్చడానికి సమస్య ఉంది."
         suspend_modal_title: "సభ్యుడిని సస్పెండు చేయి"
         trust_level_2_users: "నమ్మకం స్థాయి 2 సభ్యులు"

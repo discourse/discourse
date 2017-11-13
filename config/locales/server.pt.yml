@@ -47,7 +47,6 @@ pt:
         auto_generated_email_error: "Acontece quando o cabeçalho 'precedence' é definida como: 'list', 'junk' ou 'auto_reply', ou quando algum cabeçalho contém: 'auto-submitted', 'auto-replied' ou 'auto-generated'."
         no_body_detected_error: "Acontece quando nós não conseguimos extrair um corpo e não existiam anexos."
         inactive_user_error: "Acontece quando o remetente não está ativo."
-        blocked_user_error: "Acontece quando o remetente foi bloqueado."
         bad_destination_address: "Acontece quando nenhum dos endereços de e-mail nos campos Para/Cc/Bcc coincidem com um endereço de e-mail de 'A Receber' configurado."
         strangers_not_allowed_error: "Acontece quando um utilizador tentou criar um novo tópico numa categoria em que não é membro."
         insufficient_trust_level_error: "Acontece quando um utilizador tentou criar um novo tópico numa categoria em que não tem o nível de confiança necessário."
@@ -854,19 +853,12 @@ pt:
     tl2_additional_likes_per_day_multiplier: "Aumentar limite de gostos por dia para nc2 (membro) ao multiplicar por este número"
     tl3_additional_likes_per_day_multiplier: "Aumentar limite de gostos por dia para nc3 (habitual) ao multiplicar por este número"
     tl4_additional_likes_per_day_multiplier: "Aumentar limite de gostos por dia para nc4 (líder) ao multiplicar por este número"
-    num_spam_flags_to_block_new_user: "Se as publicações de um novo utilizador receberem estas tantas denúncias de num_users_to_block_new_user  diferentes utilizadores, esconder todos as suas publicações e prevenir publicação futura. 0 para desactivar."
-    num_users_to_block_new_user: "Se as publicações de um novo utilizador receberem num_spam_flags_to_block_new_user denúncias de spam de estes tantos diferentes utilizadores, esconder todos as suas publicações e prevenir publicação futura. 0 para desactivar."
-    num_tl3_flags_to_block_new_user: "Se as publicações de um novo utilizador receberem estas tantas denúncias de num_tl3_users_to_block_new_user diferentes utilizadores de nível de confiança 3, esconder todos as suas publicações e prevenir publicação futura. 0 para desactivar."
-    num_tl3_users_to_block_new_user: "Se as publicações de um novo utilizador receberem num_tl3_flags_to_block_new_user denúncias de estes tantos diferentes utilizadores de nível de confiança 3, esconder todos as suas publicações e prevenir publicação futura. 0 para desactivar."
-    notify_mods_when_user_blocked: "Se um utilizador for bloqueado de forma automática, enviar uma mensagem a todos os moderadores."
     flag_sockpuppets: "Se um novo utilizador responde a um tópico a partir do mesmo endereço IP do novo utilizador que iniciou o tópico, sinalizar ambas as mensagens como potencial spam."
     traditional_markdown_linebreaks: "Utilize tradicionais quebras de linha no Markdown, que requer dois espaços no final para uma quebra de linha."
     post_undo_action_window_mins: "Número de minutos durante o qual os utilizadores têm permissão para desfazer ações numa mensagem (gostos, sinalizações, etc)."
     must_approve_users: "O pessoal deve aprovar todas as novas contas de utilizador antes destas terem permissão para aceder ao sítio. AVISO: ativar isto para um sítio ativo irá revogar o acesso aos utilizadores existentes que não fazem parte do pessoal!"
     pending_users_reminder_delay: "Notificar moderadores se novos utilizadores estiverem à espera de aprovação por mais que esta quantidade de horas. Configurar com -1 para desativar notificações."
     maximum_session_age: "Utilizador permanecerá ligado durante n horas desde a última visita"
-    ga_tracking_code: "OBSOLETO: Google analytics (ga.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
-    ga_domain_name: "OBSOLETO: Google analytics (ga.js) domain name, eg: mysite.com; see http://google.com/analytics"
     ga_universal_tracking_code: "Código de acompanhamento do Google Universal Analytics (analytics.js), ex: UA-12345678-9; ver http://google.com/analytics"
     ga_universal_domain_name: "Nome de domínio do Google Universal Analytics (analytics.js), ex: omeusitio.com; ver http://google.com/analytics"
     gtm_container_id: "id de contentor do Google Tag Manager. eg: GTM-ABCDEF"
@@ -1078,9 +1070,6 @@ pt:
     num_hours_to_close_topic: "Número de horas para pausar um tópico para intervenção."
     auto_respond_to_flag_actions: "Ativar respostas automáticas ao eliminar uma bandeira."
     min_first_post_typing_time: "Quantidade mínima de tempo em milissegundos que um utilizador deve digitar durante a sua primeira mensagem, se o limite não for atingido a mensagem será automaticamente inserida na fila de aprovação. Configurar a 0 para desativar (não recomendado)"
-    auto_block_fast_typers_on_first_post: "Bloquear automaticamente utilizadores que não cumprem min_first_post_typing_time"
-    auto_block_fast_typers_max_trust_level: "Nível de confiança máximo para bloquear automaticamente escritores rápidos"
-    auto_block_first_post_regex: "Expressão regular sensível a maiúsculas e minúsculas que se passar irá fazer com que a primeira mensagem do utilizador seja bloqueada e enviada para a fila de aprovação. Exemplo: raging|a[bc]a, irá fazer com que todas as mensagens que contenham raging ou aba ou aca sejam bloqueadas primeiro. Aplicável apenas à primeira mensagem."
     reply_by_email_enabled: "Ativar respostas aos tópicos por email."
     reply_by_email_address: "Modelo para endereços emails recebidos com função resposta por email, por exemplo: %{reply_key}@resposta.exemplo.com ou resposta+%{reply_key}@exemplo.com"
     alternative_reply_by_email_addresses: "Lista de modelos alternativos para respostas via email. Exemplo: %{reply_key}@resposta.exemplo.com ou resposta+%{reply_key}@exemplo.com"
@@ -1570,12 +1559,6 @@ pt:
         Pedimos desculpa mas a sua mensagem de email para %{destination} (intitulada %{former_title}) não funcionou.
 
         A sua conta associada com este email não está activa. Por favor active a sua conta antes de enviar emails.
-    email_reject_blocked_user:
-      text_body_template: |+
-        Pedimos desculpa mas a sua mensagem de email para %{destination} (intitulada %{former_title}) não funcionou.
-
-        A sua conta associada com este endereço de email foi bloqueada.
-
     email_reject_empty:
       text_body_template: |
         Pedimos desculpa, mas a sua mensagem de email para %{destination} (com título%{former_title}) não funcionou.
@@ -1617,62 +1600,8 @@ pt:
         Se existe uma interface web para a sua conta de POP de email, pode precisar de iniciar sessão na web e verificar a suas configurações aí.
     too_many_spam_flags:
       subject_template: "Nova conta suspensa"
-      text_body_template: |
-        Olá,
-
-        Esta é uma mensagem automática de %{site_name} para informá-lo de que as suas publicações foram temporariamente ocultadas porque foram denunciadas pela comunidade.
-
-        Como medida precaucionária, a sua conta nova foi bloqueada de criar novas respostas ou tópicos até um membro da equipa de apoio poder rever a sua conta. Pedimos desculpa pela inconveniência.
-
-        Para orientação adicional, por favor consulte as [orientações da comunidade](%{base_url}/guidelines).
     too_many_tl3_flags:
       subject_template: "Nova conta suspensa"
-      text_body_template: |
-        Olá,
-
-        Esta é uma mensagem automática de %{site_name} para informá-lo de que a sua conta está temporariamente suspensa devido a um número elevado de denúncias pela comunidade.
-
-        Como medida precaucionária, a sua conta nova foi bloqueada de criar novas respostas ou tópicos até um membro da equipa de apoio poder rever a sua conta. Pedimos desculpa pela inconveniência.
-
-        Para orientação adicional, por favor consulte as [orientações da comunidade](%{base_url}/guidelines).
-    blocked_by_staff:
-      subject_template: "Conta temporariamente suspensa"
-      text_body_template: |
-        Olá,
-
-        Esta é uma mensagem automática de %{site_name} para informá-lo de que a sua conta está temporariamente suspensa como medida precaucionária.
-
-        Por favor continue a navegar, mas não será capaz de criar novas respostas ou tópicos até um [membro da equipa de apoio](%{base_url}/about)  poder rever a sua conta. Pedimos desculpa pela inconveniência.
-
-        Para orientação adicional, por favor consulte as [orientações da comunidade](%{base_url}/guidelines).
-    user_automatically_blocked:
-      subject_template: "Novo utilizador %{username}  bloqueado devido a denúncias da comunidade."
-      text_body_template: |
-        Esta é uma mensagem automática.
-
-        O novo utilizador [%{username}](%{user_url}) foi automaticamente bloqueado porque múltiplos utilizadores marcaram mensagem(ns) de %{username}.
-
-        Por favor [reveja as sinalizações](%{base_url}/admin/flags). Se %{username} foi incorretamente bloqueado de publicar, carregue no botão de desbloqueio em [a página de administração para este utilizador](%{user_url})
-
-        Este limite pode ser alterado através de `block_new_user` nas configurações do sítio.
-    spam_post_blocked:
-      subject_template: "Novas mensagens do novo utilizador %{username} foram bloqueadas devido a hiperligações repetidas"
-      text_body_template: |
-        Esta é uma mensagem automática.
-
-        O novo utilizador [%{username}](%{user_url}) tentou criar múltiplas mensagens com hiperligações para %{domains}, mas estas foram bloqueadas para evitar spam. O utilizador ainda pode criar novas mensagens sem hiperligação a %{domains}.
-
-        Por favor [reveja o utilizador](%{user_url}).
-
-        Isto pode ser modificado através de `newuser_spam_host_threshold` e `white_listed_spam_host_domains` nas configurações do sítio.
-    unblocked:
-      subject_template: "Conta deixou de estar suspensa"
-      text_body_template: |
-        Olá,
-
-        Esta é uma mensagem automática de %{site_name} para informar que a sua conta deixou de estar suspensa após avaliação da staff.
-
-        Pode agora voltar a responder e criar novos tópicos.
     pending_users_reminder:
       subject_template:
         one: "1 utilizador espera a aprovação"
