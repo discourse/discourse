@@ -478,7 +478,6 @@ zh_TW:
       admin: "{{user}} 是管理員"
       moderator_tooltip: "此用戶為板主"
       admin_tooltip: "此用戶為管理員"
-      blocked_tooltip: "此用戶被屏蔽"
       suspended_notice: "此用戶已被停權至 {{date}}。"
       suspended_reason: "原因: "
       github_profile: "Github"
@@ -2034,7 +2033,6 @@ zh_TW:
         no_problems: "未發現任何問題。"
         moderators: '板主：'
         admins: '管理員：'
-        blocked: '已封鎖：'
         suspended: '已停權:'
         private_messages_short: "訊息"
         private_messages_title: "訊息"
@@ -2486,8 +2484,6 @@ zh_TW:
             change_category_settings: "變更分類設定"
             delete_category: "刪除分類"
             create_category: "建立分類"
-            block_user: "封鎖用戶"
-            unblock_user: "解除封鎖"
             grant_admin: "授予管理員權限"
             revoke_admin: "撤銷管理員權限"
             grant_moderation: "授予板主權限"
@@ -2554,7 +2550,6 @@ zh_TW:
           pending: "申請中"
           staff: '管理員'
           suspended: '已停權'
-          blocked: '已封鎖'
           suspect: '嫌疑'
         approved: "已批准？"
         approved_selected:
@@ -2573,7 +2568,6 @@ zh_TW:
           staff: "管理員"
           admins: '管理員'
           moderators: '板主'
-          blocked: '已封鎖的用戶'
           suspended: '已停權的用戶'
           suspect: '嫌疑使用者'
         reject_successful:
@@ -2588,18 +2582,14 @@ zh_TW:
         suspend_failed: "將此用戶停權時發生錯誤 {{error}}"
         unsuspend_failed: "恢復此用戶的權限時發生錯誤 {{error}}"
         suspend_duration: "你想將此用戶停權多久?"
-        suspend_duration_units: "(天)"
         suspend_reason_label: "你為什麼要將此用戶停權？你輸入的原因將在此用戶登入時顯示，及顯示在此用戶的基本資料頁面，且<b>任何人都可以看見</b>，請簡短說明原因。"
         suspend_reason: "原因"
         suspended_by: "將其停權者"
         delete_all_posts: "刪除所有文章"
         delete_all_posts_confirm_MF: "你將要刪除 {POSTS, plural, one {1 個帖子} other {# 個帖子}}和 {TOPICS, plural, one {1 個主題} other {# 個主題}}。確定嗎？"
-        suspend: "停權"
-        unsuspend: "恢復權限"
-        suspended: "已停權?"
         moderator: "板主？"
         admin: "管理員？"
-        blocked: "已封鎖？"
+        suspended: "已停權?"
         staged: "暫存？"
         show_admin_profile: "管理員"
         refresh_browsers: "強制瀏覽器重新整理"
@@ -2614,8 +2604,8 @@ zh_TW:
         grant_admin: '授予管理員權限'
         revoke_moderation: '撤銷板主權限'
         grant_moderation: '授予板主權限'
-        unblock: '解除封鎖'
-        block: '封鎖'
+        unsuspend: '恢復權限'
+        suspend: '停權'
         reputation: 聲望
         permissions: 權限
         activity: 活動
@@ -2659,17 +2649,12 @@ zh_TW:
         activate_failed: "啟用此帳號時發生錯誤。"
         deactivate_account: "取消帳號的啟用狀態"
         deactivate_failed: "取消此帳號的啟用狀態時發生錯誤。"
-        unblock_failed: '解除此用戶的封鎖狀態時發生錯誤。'
-        block_failed: '封鎖此用戶時發生錯誤。'
-        block_confirm: '你確定要封禁用戶嗎？他們將沒有辦法創建任何主題或者帖子。'
-        block_accept: '是的，封禁用戶'
         bounce_score: "累計退信分值"
         reset_bounce_score:
           label: "重置"
           title: "重置累計退信分值為 0"
         deactivate_explanation: "帳號的啟用狀態被取消的用戶必需重新啟用帳號。"
         suspended_explanation: "被停權的用戶無法登入。"
-        block_explanation: "被封鎖的用戶無法發表文章或建立討論話題。"
         staged_explanation: "暫存用戶只能通過郵件回覆指定主題。"
         bounce_score_explanation:
           none: "近期該郵箱沒有退信。"

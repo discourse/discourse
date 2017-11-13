@@ -521,7 +521,6 @@ pt_BR:
       admin: "{{user}} é um administrador"
       moderator_tooltip: "Esse usuário é da moderação"
       admin_tooltip: "Esse usuário é da administração"
-      blocked_tooltip: "Esse usuário está bloqueado."
       suspended_notice: "Esse usuário está suspenso até {{date}}."
       suspended_reason: "Motivo:"
       github_profile: "Github"
@@ -2209,7 +2208,6 @@ pt_BR:
         no_problems: "Nenhum problema encontrado."
         moderators: 'Moderadores:'
         admins: 'Admins:'
-        blocked: 'Bloqueado:'
         suspended: 'Suspenso:'
         private_messages_short: "Msgs"
         private_messages_title: "Mensagens"
@@ -2686,8 +2684,6 @@ pt_BR:
             change_category_settings: "mudas configurações da categoria"
             delete_category: "apagar a categoria"
             create_category: "criar uma categoria"
-            block_user: "bloquear usuário"
-            unblock_user: "desbloquear usuário"
             grant_admin: "conceder admin"
             revoke_admin: "revogar admin"
             grant_moderation: "conceder moderação"
@@ -2754,7 +2750,6 @@ pt_BR:
           pending: "Pendentes"
           staff: 'Equipe'
           suspended: 'Suspenso'
-          blocked: 'Bloqueados'
           suspect: 'Suspeito'
         approved: "Aprovado?"
         approved_selected:
@@ -2775,7 +2770,6 @@ pt_BR:
           staff: "Equipe de apoio"
           admins: 'Usuários Administradores'
           moderators: 'Moderadores'
-          blocked: 'Usuários Boqueados'
           suspended: 'Usuários Suspensos'
           suspect: 'Usuários suspeitos'
         reject_successful:
@@ -2792,18 +2786,14 @@ pt_BR:
         suspend_failed: "Algo deu errado suspendendo este usuário {{error}}"
         unsuspend_failed: "Algo deu errado reativando este usuário {{error}}"
         suspend_duration: "Por quanto tempo o usuário deverá ser suspenso?"
-        suspend_duration_units: "(dias)"
         suspend_reason_label: "Por que você está suspendendo? Esse texto <b>será visível para todos</b> na página de perfil desse usuário, e será mostrado ao usuário quando ele tentar se logar. Seja breve."
         suspend_reason: "Motivo"
         suspended_by: "Suspenso por"
         delete_all_posts: "Apagar todas mensagens"
         delete_all_posts_confirm_MF: "Você está prestes a apagar {POSTS, plural, one {1 publicação} other {# publicações}} and {TOPICS, plural, one {1 tópico} other {# tópicos}}. Você tem certeza?"
-        suspend: "Suspender"
-        unsuspend: "Readmitir"
-        suspended: "Suspenso?"
         moderator: "Moderador?"
         admin: "Admin?"
-        blocked: "Bloqueado?"
+        suspended: "Suspenso?"
         staged: "Testado?"
         show_admin_profile: "Admin"
         refresh_browsers: "Forçar atualização da página no browser"
@@ -2819,8 +2809,8 @@ pt_BR:
         grant_admin_confirm: "Nós o enviamos um email para verificar o novo administrador. Por favor abra-o e siga as instruções."
         revoke_moderation: 'Revogar Moderação'
         grant_moderation: 'Conceder Moderação'
-        unblock: 'Desbloquear'
-        block: 'Bloquear'
+        unsuspend: 'Readmitir'
+        suspend: 'Suspender'
         reputation: Reputação
         permissions: Permissões
         activity: Atividade
@@ -2867,17 +2857,12 @@ pt_BR:
         activate_failed: "Houve um problema ao tornar o usuário ativo."
         deactivate_account: "Desativar Conta"
         deactivate_failed: "Houve um problema ao desativar o usuário."
-        unblock_failed: 'Houve um problema ao desbloquear o usuário.'
-        block_failed: 'Houve um problema ao bloquear o usuário.'
-        block_confirm: 'Você tem certeza que quer bloquear este usuário? Ele não vai poder criar nenhum tópico ou postagem nova.'
-        block_accept: 'Sim, bloquear este usuário'
         bounce_score: "Pontuação de Devolução"
         reset_bounce_score:
           label: "Redefinir"
           title: "Redefinir pontuação de devolução para 0"
         deactivate_explanation: "Um usuário desativado deve revalidar seu email."
         suspended_explanation: "Um usuário suspenso não pode entrar."
-        block_explanation: "Um usuário bloqueado não pode postar ou iniciar tópicos."
         staged_explanation: "Um usuário de teste só pode postar por email em tópicos específicos."
         bounce_score_explanation:
           none: "Nenhuma devolução foi recebida recentemente daquele email."

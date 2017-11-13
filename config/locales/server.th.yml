@@ -33,7 +33,6 @@ th:
     incoming:
       errors:
         inactive_user_error: "เกิดขึ้นเมื่อผู้ส่งยังไม่มีการใช้งาน"
-        blocked_user_error: "เกิดขึ้นเมื่อผู้ใช้งานโดนบล็อค"
   errors: &errors
     messages:
       invalid: ไม่ถูกต้อง

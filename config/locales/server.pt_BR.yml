@@ -43,7 +43,6 @@ pt_BR:
         auto_generated_email_error: "Ocorre quando o cabeçalho 'precedência' estiver definido como: lista, lixo eletrônico, lote ou resposta_automática, ou quando outro cabeçalho contiver: enviado_automaticamente, respondido_automaticamente ou gerado_automaticamente."
         no_body_detected_error: "Ocorre quando não conseguimos extrair um corpo e não há anexos."
         inactive_user_error: "Ocorre quando o remetente não está ativo."
-        blocked_user_error: "Ocorre quando o remetente foi bloqueado."
         bad_destination_address: "Ocorre quando nenhum dos endereços de email nos campos Para/Cc/Cco era correspondente ao endereço de email recebido."
         strangers_not_allowed_error: "Ocorre quando um usuário tentou criar um novo tópico em uma categoria da qual não é membro."
         insufficient_trust_level_error: "Ocorre quando um usuário tenta criar um novo tópico em uma categoria onde não possui nível de confiança necessário."
@@ -845,17 +844,11 @@ pt_BR:
     tl2_additional_likes_per_day_multiplier: "Aumentar limite de likes por dia para tl2 (membros) multiplicando por esse número"
     tl3_additional_likes_per_day_multiplier: "Aumentar limite de likes por dia para tl3 (regular) multiplicando por esse número"
     tl4_additional_likes_per_day_multiplier: "Aumentar limite de likes por dia para tl4 (lideres) multiplicando por esse número"
-    num_spam_flags_to_block_new_user: "Se as publicações de um novo usuário receberem essa quantidade de sinalizações de spam de num_users_to_block_new_user usuários diferentes, esconder todos os seus posts e impedir publicação futura. 0 para desabilitar. "
-    num_users_to_block_new_user: "Se as publicações de um usuário novo receberem num_spam_flags_to_block_new_user sinalizações de spam dessa quantidade de usuários diferentes, esconder todos as suas publicações e impedir publicações futuras. 0 para desabilitar."
-    num_tl3_flags_to_block_new_user: "Se as publicações de um usuário novo tiverem essa quantidade de sinalizações de num_tl3_users_to_block_new_user usuários de nível de confiança 3 diferentes, esconder todas as publicações do usuário e prevenir postagem futura. 0 para desabilitar."
-    notify_mods_when_user_blocked: "Se um usuário for bloqueado de forma automática, enviar uma mensagem para todos os moderadores."
     flag_sockpuppets: "Se um novo usuário responder um tópico usando o mesmo endereço de IP do novo usário que começou o tópico, sinalize as duas publicações como um potencial spam."
     traditional_markdown_linebreaks: "Use quebras de linhas tradicionais em Markdown, as quais requerem dois espaços à direita para uma quebra de linha."
     post_undo_action_window_mins: "Número de minutos permitidos aos usuários para desfazerem uma ação recente em uma publicação (curtir, sinalizar, etc)"
     must_approve_users: "Os moderadores devem aprovar todas novas contas antes que elas sejam permitidas acessarem o site. CUIDADO: habilitar esta opção para um site já em funcionamento irá revogar o acesso para todos usuários já cadastrados que não são moderadores."
     maximum_session_age: "Usuário continuará logado por n horas desde a última visita"
-    ga_tracking_code: "OBSOLETO: Código de monitoramento do Google analytics (ga.js), por ex: UA-12345678-9; veja http://google.com/analytics"
-    ga_domain_name: "OBSOLETO: Nome de domínio do Google Analytics (ga.js), por ex: meusite.com; veja http://google.com/analytics"
     ga_universal_tracking_code: "Código de monitoramento Google Universal Analytics (analytics.js), ex: UA-12345678-9; veja http://google.com/analytics"
     ga_universal_domain_name: "Nome de domínio do Google Universal Analytics (analytics.js), ex: meusite.com; veja http://google.com/analytics"
     gtm_container_id: "ID do container do Gerenciador de Tags do Google. eg: GTM-ABCDEF"
@@ -1288,12 +1281,6 @@ pt_BR:
       subject_template: "Nova conta suspensa"
     too_many_tl3_flags:
       subject_template: "Nova conta suspensa"
-    blocked_by_staff:
-      subject_template: "Conta temporariamente suspensa"
-    spam_post_blocked:
-      subject_template: "Novo usuário %{username} teve postagem bloqueada por repetidos links"
-    unblocked:
-      subject_template: "Conta não está mais suspensa"
     pending_users_reminder:
       subject_template:
         one: "1 usuário aguardando aprovação"

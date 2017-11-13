@@ -496,7 +496,6 @@ ur:
       admin: "{{user}} ایک ایڈمِن ہے"
       moderator_tooltip: "یہ صارف ایک ماڈریٹر ہے"
       admin_tooltip: "یہ صارف ایک ایڈمِن ہے"
-      blocked_tooltip: "یہ صارف بلاک کیا ہوا ہے"
       suspended_notice: "ہ صارف {{date}} تک معطل ہے۔"
       suspended_reason: "وجہ:"
       github_profile: "گِٹ حَب"
@@ -2136,7 +2135,6 @@ ur:
         no_problems: "کوئی مسائل نہیں پائے گئے۔"
         moderators: 'ماڈریٹرز:'
         admins: 'ایڈمن:'
-        blocked: 'بلاک کردہ:'
         suspended: 'معطل کردہ:'
         private_messages_short: "پغم"
         private_messages_title: "پیغامات"
@@ -2599,8 +2597,6 @@ ur:
             change_category_settings: "زمرہ جات کی سیٹِنگ تبدیل کریں"
             delete_category: "زمرہ حذف کریں"
             create_category: "زمرہ بنائیں"
-            block_user: "صارف بلاک کریں"
-            unblock_user: "صارف پر بلاک ختم کریں"
             grant_admin: "اَیڈمِن عطا کریں"
             revoke_admin: "اَیڈمِن منسوخ کریں"
             grant_moderation: "ماڈرَیشَن عطا کریں"
@@ -2667,7 +2663,6 @@ ur:
           pending: "زیرِاِلتوَاء"
           staff: 'سٹاف'
           suspended: 'معطل کردہ'
-          blocked: 'بلاک کردہ'
           suspect: 'مشتبہ'
         approved: "منظورشدہ؟"
         approved_selected:
@@ -2688,7 +2683,6 @@ ur:
           staff: "سٹاف"
           admins: 'ایڈمِن صارفین'
           moderators: 'ماڈریٹرز'
-          blocked: 'بلاک کردہ صارفین'
           suspended: 'معطل کردہ صارفین'
           suspect: 'مشتبہ صارفین'
         reject_successful:
@@ -2705,18 +2699,14 @@ ur:
         suspend_failed: "اِس صارف کو معطل کرتے ہوے کچھ غلط ہو گیا {{error}}"
         unsuspend_failed: "اِس صارف کی معطلی ختم کرتے ہوے کچھ غلط ہو گیا {{error}}"
         suspend_duration: "صارف کب تک معطل رہے گا؟"
-        suspend_duration_units: "(دن)"
         suspend_reason_label: "آپ معطل کیوں کر رہے ہیں؟ یہ ٹَیکسٹ اِس صارف کے پروفائل پیج پر <b>ہر کسی کے لیے ظاہر ہو گا</b>، اور جب صارف لاگ اِن کرنے کی کوشش کریں گے تو اُنہیں دکھایا جائے گا۔ اِسے مختصر رکھیں۔"
         suspend_reason: "وجہ"
         suspended_by: "کی طرف سے معطل کیا گیا"
         delete_all_posts: "تمام پوسٹس حذف کریں"
         delete_all_posts_confirm_MF: "آپ {POSTS، جمع، ایک {1 پوسٹ} دیگر {# posts}} اور {TOPICS، جمع، ایک {1 ٹاپک} دیگر {# topics}} حذف کرنے والے ہیں۔ کیا آپ کو یقین ہے؟"
-        suspend: "معطل کریں"
-        unsuspend: "معطلی ختم کریں"
-        suspended: "معطل کردہ؟"
         moderator: "ماڈریٹر؟"
         admin: "ایڈمن؟"
-        blocked: "بلاک کردہ؟"
+        suspended: "معطل کردہ؟"
         staged: "سٹَیجڈ؟"
         show_admin_profile: "ایڈمن"
         refresh_browsers: "براؤزر رِیفریش فورس کریں"
@@ -2731,8 +2721,8 @@ ur:
         grant_admin: 'اَیڈمِن عطا کریں'
         revoke_moderation: 'ماڈرَیشَن منسوخ کریں'
         grant_moderation: 'ماڈرَیشَن عطا کریں'
-        unblock: 'بلاک ختم کریں'
-        block: 'بلاک کریں'
+        unsuspend: 'معطلی ختم کریں'
+        suspend: 'معطل کریں'
         reputation: ساکھ
         permissions: اجازتیں
         activity: سرگرمی
@@ -2779,17 +2769,12 @@ ur:
         activate_failed: "صارف فعال کرنے میں ایک مسئلہ پیش آیا۔"
         deactivate_account: "اکاؤنٹ غیر فعال کریں"
         deactivate_failed: "صارف کو غیر فعال کرنے میں ایک مسئلہ پیش آیا۔"
-        unblock_failed: 'صارف کو بلاک سے ہٹانے میں ایک مسئلہ پیش آیا۔'
-        block_failed: 'صارف کو بلاک کرنے میں ایک مسئلہ پیش آیا۔'
-        block_confirm: 'کیا آپ واقعی اِس صارف کو بلاک کرنا چاہتے ہیں؟ وہ کوئی بھی نئے ٹاپک یا پوسٹ  نہیں بنا سکیں گے۔'
-        block_accept: 'جی ہاں، اِس صارف کو بلاک کریں'
         bounce_score: "بائونس سکور"
         reset_bounce_score:
           label: "رِی سَیٹ"
           title: "بائونس سکور واپس 0 پر رِی سَیٹ کریں"
         deactivate_explanation: "ایک غیر فعال صارف کو اپنا اِیمیل دوبارہ تصدیق کرنا ضروری ہے۔"
         suspended_explanation: "کوئی معطل صارف لاگ اِن نہیں کر سکتا۔"
-        block_explanation: "ایک بلاک ہوا صارف پوسٹ شائع یا ٹاپک شروع نہیں کر سکتا۔"
         staged_explanation: "ایک سٹَیجڈ صارف صرف مخصوص ٹاپکس پر اِیمیل کے ذریعے پوسٹ کر سکتا ہے۔"
         bounce_score_explanation:
           none: "اس اِیمیل سے حال میں کوئی باؤنسِز موصول نہیں ہوئے۔"

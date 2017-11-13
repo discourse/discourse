@@ -526,6 +526,7 @@ de:
         disable: "Benachrichtigungen deaktivieren"
         enable: "Benachrichtigungen aktivieren"
         each_browser_note: "Hinweis: Du musst diese Einstellung in jedem von dir verwendeten Browser ändern."
+      dismiss: 'Ablehnen'
       dismiss_notifications: "Alles ausblenden"
       dismiss_notifications_tooltip: "Alle ungelesenen Benachrichtigungen als gelesen markieren"
       first_notification: "Deine erste Benachrichtigung! Wähle sie aus um fortzufahren."
@@ -540,7 +541,7 @@ de:
       admin: "{{user}} ist ein Administrator"
       moderator_tooltip: "Dieser Benutzer ist ein Moderator"
       admin_tooltip: "Dieser Benutzer ist ein Administrator"
-      blocked_tooltip: "Dieser Benutzer wird blockiert."
+      silenced_tooltip: "Der Benutzer ist stummgeschaltet"
       suspended_notice: "Dieser Benutzer ist bis zum {{date}} gesperrt."
       suspended_permanently: "Der Benutzer ist gesperrt."
       suspended_reason: "Grund: "
@@ -592,6 +593,7 @@ de:
       undo_revoke_access: "Entziehe Zugriffsrecht widerrufen"
       api_approved: "Genehmigt:"
       theme: "Design"
+      home: "Standard-Startseite"
       staff_counters:
         flags_given: "hilfreiche Meldungen"
         flagged_posts: "gemeldete Beiträge"
@@ -904,7 +906,8 @@ de:
     first_post: Erster Beitrag
     mute: Stummschalten
     unmute: Stummschaltung aufheben
-    last_post: Letzter Beitrag
+    last_post: Geschrieben
+    time_read: Gelesen
     last_reply_lowercase: letzte Antwort
     replies_lowercase:
       one: Antwort
@@ -1041,6 +1044,7 @@ de:
       default_header_text: Auswählen…
       no_content: Keine Treffer gefunden
       filter_placeholder: Suchen…
+      create: "Erstelle {{content}}"
     emoji_picker:
       filter_placeholder: Emoji suchen
       people: Personen
@@ -1096,6 +1100,7 @@ de:
       cancel: "Abbrechen"
       create_topic: "Thema erstellen"
       create_pm: "Nachricht"
+      create_whisper: "Flüstern"
       title: "Oder drücke Strg+Eingabetaste"
       users_placeholder: "Benutzer hinzufügen"
       title_placeholder: "Um was geht es in dieser Diskussion? Schreib einen kurzen Satz."
@@ -2343,7 +2348,7 @@ de:
         no_problems: "Es wurden keine Probleme gefunden."
         moderators: 'Moderatoren:'
         admins: 'Administratoren:'
-        blocked: 'Blockiert:'
+        silenced: 'Stummgeschaltet:'
         suspended: 'Gesperrt:'
         private_messages_short: "Nachr."
         private_messages_title: "Nachrichten"
@@ -2425,6 +2430,7 @@ de:
         was_edited: "Beitrag wurde nach der ersten Meldung bearbeitet"
         previous_flags_count: "Dieses Thema wurde bereits {{count}} mal gemeldet."
         show_details: "Zeige Meldungsdetails"
+        details: "Details"
         flagged_topics:
           topic: "Thema"
           type: "Art"
@@ -2885,8 +2891,8 @@ de:
             change_category_settings: "Kategorieeinstellungen ändern"
             delete_category: "Kategorie löschen"
             create_category: "Kategorie erstellen"
-            block_user: "Benutzer blockieren"
-            unblock_user: "Blockierung von Benutzer aufheben"
+            silence_user: "Benutzer stummschalten"
+            unsilence_user: "Benutzer nicht mehr stummschalten"
             grant_admin: "Administration gewähren"
             revoke_admin: "Administration entziehen"
             grant_moderation: "Moderation gewähren"
@@ -2981,7 +2987,7 @@ de:
           pending: "Genehmigung"
           staff: 'Team'
           suspended: 'Gesperrt'
-          blocked: 'Blockiert'
+          silenced: 'Stummgeschaltet'
           suspect: 'Verdächtig'
         approved: "Genehmigt?"
         approved_selected:
@@ -3002,7 +3008,7 @@ de:
           staff: "Team"
           admins: 'Administratoren'
           moderators: 'Moderatoren'
-          blocked: 'Blockierte Benutzer'
+          silenced: 'Stummgeschaltete Benutzer'
           suspended: 'Gesperrte Benutzer'
           suspect: 'Verdächtige Benutzer'
         reject_successful:
@@ -3030,12 +3036,12 @@ de:
         cant_suspend: "Der Benutzer kann nicht gesperrt werden."
         delete_all_posts: "Lösche alle Beiträge"
         delete_all_posts_confirm_MF: "Du wirst {POSTS, plural, one {einen Beitrag} other {# Beiträge}} und {TOPICS, plural, one {ein Thema} other {# Themen}} löschen. Bist du dir sicher?"
-        suspend: "Sperren"
-        unsuspend: "Entsperren"
-        suspended: "Gesperrt?"
+        silence: "Stummschalten"
+        unsilence: "Stummschaltung aufheben"
+        silenced: "Stummgeschaltet?"
         moderator: "Moderator?"
         admin: "Administrator?"
-        blocked: "Geblockt?"
+        suspended: "Gesperrt?"
         staged: "Vorbereitet?"
         show_admin_profile: "Administration"
         refresh_browsers: "Aktualisierung im Browser erzwingen"
@@ -3051,8 +3057,8 @@ de:
         grant_admin_confirm: "Wir haben dir eine E-Mail geschickt, um den neuen Administrator zu überprüfen. Bitte öffne sie und folge den Anweisungen."
         revoke_moderation: 'Moderationsrechte entziehen'
         grant_moderation: 'Moderationsrechte vergeben'
-        unblock: 'Blockierung aufheben'
-        block: 'Blockieren'
+        unsuspend: 'Entsperren'
+        suspend: 'Sperren'
         reputation: Reputation
         permissions: Berechtigungen
         activity: Aktivität
@@ -3099,10 +3105,10 @@ de:
         activate_failed: "Beim Aktivieren des Benutzers ist ein Fehler aufgetreten."
         deactivate_account: "Benutzer deaktivieren"
         deactivate_failed: "Beim Deaktivieren des Benutzers ist ein Fehler aufgetreten."
-        unblock_failed: 'Beim Aufheben der Blockierung des Benutzers ist ein Fehler aufgetreten.'
-        block_failed: 'Beim Blocken des Benutzers ist ein Fehler aufgetreten.'
-        block_confirm: 'Bist du sicher, dass du diesen Benutzer blockieren willst? Der Benutzer wird keine Möglichkeit mehr haben, Themen oder Beiträge zu erstellen.'
-        block_accept: 'Ja, diesen Benutzer blockieren.'
+        unsilence_failed: 'Beim Aufheben der Stummschaltung ist ein Fehler aufgetreten.'
+        silence_failed: 'Beim Aufheben der Stummschaltung ist ein Fehler aufgetreten.'
+        silence_confirm: 'Bist du sicher, dass du diesen Benutzer stummschalten möchtest? Der Benutzer wird keine Möglichkeit mehr haben, Themen oder Beiträge zu erstellen.'
+        silence_accept: 'Ja, diesen Benutzer stummschalten'
         bounce_score: "Anzahl unzustellbarer E-Mails"
         reset_bounce_score:
           label: "Zurücksetzen"
@@ -3110,7 +3116,7 @@ de:
         visit_profile: "Besuche die <a href='%{url}'>Benutzer-Einstellungen</a>, um dieses Profil zu bearbeiten"
         deactivate_explanation: "Ein deaktivierter Benutzer muss seine E-Mail-Adresse erneut bestätigen."
         suspended_explanation: "Ein gesperrter Benutzer kann sich nicht anmelden."
-        block_explanation: "Ein geblockter Benutzer kann keine Themen erstellen oder Beiträge veröffentlichen."
+        silence_explanation: "Ein stummgeschalteter Benutzer kann keine Beiträge schreiben oder Themen beginnen."
         staged_explanation: "Ein vorbereiteter Benutzer kann nur per E-Mail und nur in bestimmten Themen schreiben."
         bounce_score_explanation:
           none: "Keine unzustellbaren E-Mails an diese Adresse in letzter Zeit."
@@ -3228,6 +3234,7 @@ de:
           developer: 'Entwickler'
           embedding: "Einbettung"
           legal: "Rechtliches"
+          api: 'API-Schnittstelle'
           user_api: 'Benutzer API'
           uncategorized: 'Sonstiges'
           backups: "Backups"

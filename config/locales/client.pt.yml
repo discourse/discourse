@@ -524,7 +524,6 @@ pt:
       admin: "{{user}} é um administrador"
       moderator_tooltip: "Este utilizador é um moderador"
       admin_tooltip: "Este utilizador é um administrador"
-      blocked_tooltip: "Este utilizador está bloqueado"
       suspended_notice: "Este utilizador está suspenso até {{date}}."
       suspended_reason: "Motivo: "
       github_profile: "Github"
@@ -2184,7 +2183,6 @@ pt:
         no_problems: "Nenhum problema encontrado."
         moderators: 'Moderadores:'
         admins: 'Administradores:'
-        blocked: 'Bloqueado:'
         suspended: 'Suspenso: '
         private_messages_short: "Msgs"
         private_messages_title: "Mensagens"
@@ -2641,8 +2639,6 @@ pt:
             change_category_settings: "alterar configurações de categoria"
             delete_category: "eliminar categoria"
             create_category: "criar categoria"
-            block_user: "utilizador bloqueado"
-            unblock_user: "Desbloquear utilizador"
             grant_admin: "conceder administração"
             revoke_admin: "revogar administração"
             grant_moderation: "conceder moderação"
@@ -2703,7 +2699,6 @@ pt:
           pending: "Pendente"
           staff: 'Pessoal'
           suspended: 'Suspenso'
-          blocked: 'Bloqueado'
           suspect: 'Suspeito'
         approved: "Aprovado?"
         approved_selected:
@@ -2724,7 +2719,6 @@ pt:
           staff: "Pessoal"
           admins: 'Utilizadores da Administração'
           moderators: 'Moderadores'
-          blocked: 'Utilizadores Bloqueados'
           suspended: 'Utilizadores Suspensos'
           suspect: 'Utilizadores Suspeitos'
         reject_successful:
@@ -2741,18 +2735,14 @@ pt:
         suspend_failed: "Ocorreu um erro ao suspender este utilizador {{error}}"
         unsuspend_failed: "Ocorreu um erro ao retirar a suspensão deste utilizador {{error}}"
         suspend_duration: "Durante quanto tempo o utilizador estará suspenso?"
-        suspend_duration_units: "(dias)"
         suspend_reason_label: "Qual é o motivo da sua suspensão? Este texto <b>estará visível para todos</b> na página do perfil deste utilizador, e será mostrada ao utilizador quando tentar iniciar sessão. Mantenha-o breve."
         suspend_reason: "Motivo"
         suspended_by: "Suspendido por"
         delete_all_posts: "Eliminar todas as publicações"
         delete_all_posts_confirm_MF: "Está prestes a apagar {POSTS, plural, one {1  publicação} other {# publicações}}  e {TOPICS, plural, one {1 tópico} other {# tópicos}}. Tem a certeza de que quer continuar?"
-        suspend: "Suspender"
-        unsuspend: "Retirar a suspensão"
-        suspended: "Suspendido?"
         moderator: "Moderador?"
         admin: "Administração?"
-        blocked: "Bloqueado?"
+        suspended: "Suspendido?"
         staged: "Temporário?"
         show_admin_profile: "Administração"
         refresh_browsers: "Forçar atualização da página no browser"
@@ -2766,8 +2756,8 @@ pt:
         grant_admin: 'Conceder Administração'
         revoke_moderation: 'Revogar Moderação'
         grant_moderation: 'Conceder Moderação'
-        unblock: 'Desbloquear'
-        block: 'Bloquear'
+        unsuspend: 'Retirar a suspensão'
+        suspend: 'Suspender'
         reputation: Reputação
         permissions: Permissões
         activity: Atividade
@@ -2814,17 +2804,12 @@ pt:
         activate_failed: "Ocorreu um problema ao ativar o utilizador."
         deactivate_account: "Desativar Conta"
         deactivate_failed: "Ocorreu um problema ao desativar o utilizador."
-        unblock_failed: 'Ocorreu um problema ao desbloquear o utilizador.'
-        block_failed: 'Ocorreu um problema ao bloquear o utilizador.'
-        block_confirm: 'Tem a certeza que pretende bloquear este utilizador? Este não será capaz de criar novos tópicos ou publicações.'
-        block_accept: 'Sim, bloquear este utilizador'
         bounce_score: "Pontuação de Redirecionamento"
         reset_bounce_score:
           label: "Repor"
           title: "Repor pontuação de redirecionamento a 0"
         deactivate_explanation: "Um utilizador desativado deve revalidar o seu email."
         suspended_explanation: "Um utilizador suspenso não pode iniciar sessão."
-        block_explanation: "Um utilizador bloqueado não pode publicar publicações ou iniciar tópicos."
         staged_explanation: "Um utilizador temporário pode apenas publicar por email em tópicos específicos."
         bounce_score_explanation:
           none: "Nenhum redirecionamento foi recebido recentemente desse email."

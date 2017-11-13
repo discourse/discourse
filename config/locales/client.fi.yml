@@ -539,7 +539,6 @@ fi:
       admin: "{{user}} on ylläpitäjä"
       moderator_tooltip: "Tämä käyttäjä on valvoja"
       admin_tooltip: "Tämä käyttäjä on ylläpitäjä"
-      blocked_tooltip: "Tämä käyttäjä on estetty"
       suspended_notice: "Tämä käyttäjätili on hyllytetty {{date}} asti."
       suspended_permanently: "Käyttäjä on hyllytetty."
       suspended_reason: "Syy:"
@@ -2347,7 +2346,6 @@ fi:
         no_problems: "Ongelmia ei löytynyt."
         moderators: 'Valvojat:'
         admins: 'Ylläpitäjät:'
-        blocked: 'Estetyt:'
         suspended: 'Hyllytetyt:'
         private_messages_short: "YV:t"
         private_messages_title: "Viestit"
@@ -2887,8 +2885,6 @@ fi:
             change_category_settings: "muuta alueen asetuksia"
             delete_category: "poista alue"
             create_category: "luo alue"
-            block_user: "estä käyttäjä"
-            unblock_user: "poista esto"
             grant_admin: "myönnä ylläpitäjän oikeudet"
             revoke_admin: "peru ylläpitäjän oikeudet"
             grant_moderation: "myönnä valvojan oikeudet"
@@ -2983,7 +2979,6 @@ fi:
           pending: "Odottaa"
           staff: 'Henkilökunta'
           suspended: 'Hyllytetyt'
-          blocked: 'Estetyt'
           suspect: 'Epäilty'
         approved: "Hyväksytty?"
         approved_selected:
@@ -3004,7 +2999,6 @@ fi:
           staff: "Henkilökunta"
           admins: 'Ylläpitäjät'
           moderators: 'Valvojat'
-          blocked: 'Estetyt käyttäjät'
           suspended: 'Hyllytetyt käyttäjät'
           suspect: 'Epäillyt käyttäjät'
         reject_successful:
@@ -3032,12 +3026,9 @@ fi:
         cant_suspend: "Käyttäjää ei voi hyllyttää."
         delete_all_posts: "Poista kaikki viestit"
         delete_all_posts_confirm_MF: "Olet poistamassa {POSTS, plural, one {1 viestin} other {# viestiä}} ja {TOPICS, plural, one {1 ketjun} other {# ketjua}}. Oletko varma?"
-        suspend: "Hyllytä"
-        unsuspend: "Poista hyllytys"
-        suspended: "Hyllytetty?"
         moderator: "Valvoja?"
         admin: "Ylläpitäjä?"
-        blocked: "Estetty?"
+        suspended: "Hyllytetty?"
         staged: "Esikäyttäjä?"
         show_admin_profile: "Ylläpito"
         refresh_browsers: "Pakota sivun uudelleen lataus"
@@ -3053,8 +3044,8 @@ fi:
         grant_admin_confirm: "Vahvistaaksemme uuden ylläpitäjän lähetimme sinulle sähköpostin. Avaa se ja noudata ohjeita."
         revoke_moderation: 'Peru valvojan oikeudet'
         grant_moderation: 'Myönnä valvojan oikeudet'
-        unblock: 'Poista esto'
-        block: 'Estä'
+        unsuspend: 'Poista hyllytys'
+        suspend: 'Hyllytä'
         reputation: Maine
         permissions: Oikeudet
         activity: Toiminta
@@ -3101,10 +3092,6 @@ fi:
         activate_failed: "Käyttäjätilin vahvistaminen ei onnistunut."
         deactivate_account: "Poista käyttäjätili käytöstä"
         deactivate_failed: "Käyttäjätilin poistaminen käytöstä ei onnistunut."
-        unblock_failed: 'Käyttäjätilin eston poistaminen ei onnistunut.'
-        block_failed: 'Käyttäjätilin estäminen ei onnistunut.'
-        block_confirm: 'Oletko varma, että haluat estää tämän käyttäjän? He eivät voi luoda uusia aiheita tai viestejä.'
-        block_accept: 'Kyllä, estä tämä käyttäjä'
         bounce_score: "Palautuspisteet"
         reset_bounce_score:
           label: "Palauta"
@@ -3112,7 +3099,6 @@ fi:
         visit_profile: "Muokkaa <a href='%{url}'>tämän käyttäjän käyttäjäasetuksia</a> hänen profiilissaan"
         deactivate_explanation: "Käytöstä poistetun käyttäjän täytyy uudelleen vahvistaa sähköpostiosoitteensa."
         suspended_explanation: "Hyllytetty käyttäjä ei voi kirjautua sisään."
-        block_explanation: "Estetty käyttäjä ei voi luoda viestejä tai ketjuja."
         staged_explanation: "Esikäyttäjä voi kirjoittaa vain tiettyihin ketjuihin sähköpostin välityksellä."
         bounce_score_explanation:
           none: "Tästä sähköpostiosoitteesta ei ole tullut palautuksia viime aikoina"

@@ -502,7 +502,6 @@ fa_IR:
       admin: "{{user}} یک مدیر ارشد است"
       moderator_tooltip: "این کاربر یک مدیر است"
       admin_tooltip: "این کاربر یک ادمین است"
-      blocked_tooltip: "این کاربر مسدود شده است"
       suspended_notice: "این کاربر تا {{date}} در وضعیت معلق است."
       suspended_permanently: "این کاربر معلق شده."
       suspended_reason: "دلیل: "
@@ -2167,7 +2166,6 @@ fa_IR:
         no_problems: "هیچ مشکلات پیدا نشد."
         moderators: 'مدیران:'
         admins: 'مدیران ارشد:'
-        blocked: 'مسدود شده‌ها:'
         suspended: 'تعلیق شده:'
         private_messages_short: "پیام‌ها"
         private_messages_title: "پیام‌ها"
@@ -2698,8 +2696,6 @@ fa_IR:
             change_category_settings: "تغییر تنظیمات دسته‌بندی"
             delete_category: "حذف دسته‌بندی"
             create_category: "ساخت دسته‌بندی"
-            block_user: "بستن دسترسی کاربر"
-            unblock_user: "باز کردن دسترسی کاربر"
             grant_admin: "اعطای مقام مدیر ارشد"
             revoke_admin: "برداشتن مقام مدیر ارشد"
             grant_moderation: "اعطای مقام مدیریت"
@@ -2766,7 +2762,6 @@ fa_IR:
           pending: "در انتظار"
           staff: 'همکاران'
           suspended: 'تعلیق شد '
-          blocked: 'مسدود شده'
           suspect: 'مشکوک'
         approved: "تایید شده ؟"
         approved_selected:
@@ -2785,7 +2780,6 @@ fa_IR:
           staff: "همکار"
           admins: 'مدیران ارشد'
           moderators: 'مدیران'
-          blocked: 'کاربران مسدود شده'
           suspended: 'کاربران تعلیق شده'
           suspect: 'کاربران مشکوک'
         reject_successful:
@@ -2800,18 +2794,14 @@ fa_IR:
         suspend_failed: "در جریان به تعلیق درآوردن این کاربر اشتباهی رخ داد. {{error}}"
         unsuspend_failed: "در جریان خارج کردن این کاربر از تعلیق، اشتباهی رخ داد {{error}}"
         suspend_duration: "کاربر چه مدت در تعلیق خواهد بود؟"
-        suspend_duration_units: "(روزا)"
         suspend_reason_label: "شما چرا معلق شده‌اید؟ این متن بر روی صفحه‌ی نمایه‌ی کاربر <b/>برای همه قابل مشاهده خواهد بود<b>، و در هنگام ورود به سیستم نیز به خود کاربر نشان داده خواهد شد. لطفاً خلاصه بنویسید."
         suspend_reason: "دلیل"
         suspended_by: "تعلیق شده توسط"
         delete_all_posts: "پاک کردن همه‌ی نوشته‌ها"
         delete_all_posts_confirm_MF: "شما در حال حذف {POSTS, plural, one {1 نوشته} other {# نوشته}} and {TOPICS, plural, one {1 نوشته} other {# موضوع}} هستید. ادامه می‌دهید؟"
-        suspend: "تعلیق"
-        unsuspend: "خارج کردن از تعلیق"
-        suspended: "تعلیق شد؟"
         moderator: "مدیر؟ "
         admin: "مدیر ارشد؟"
-        blocked: "مسدود شد؟"
+        suspended: "تعلیق شد؟"
         staged: "کاربر خودکار؟"
         show_admin_profile: "مدیر ارشد"
         refresh_browsers: "تازه کردن اجباری مرورگر"
@@ -2827,8 +2817,8 @@ fa_IR:
         grant_admin_confirm: "برای تایید مدیر ارشد جدید ایمیلی ارسال کردیم. لطفا ایمیل را باز کرده و دستور‌العمل آن را دنبال کنید."
         revoke_moderation: 'پس گرفتن مدیریت'
         grant_moderation: 'اعطای مدیریت'
-        unblock: 'باز کردن'
-        block: 'بستن'
+        unsuspend: 'خارج کردن از تعلیق'
+        suspend: 'تعلیق'
         reputation: ' اعتبار'
         permissions: دسترسی‌ها
         activity: فعالیت
@@ -2872,17 +2862,12 @@ fa_IR:
         activate_failed: "در فعال‌سازی این کاربر مشکلی پیش آمد."
         deactivate_account: "غیرفعال‌کردن حساب‌کاربری"
         deactivate_failed: "در غیرفعال کردن این کاربر مشکلی وجود دارد."
-        unblock_failed: 'در رفع مسدودی این کاربر مشکلی وجود دارد.'
-        block_failed: 'در مسدودی این کاربر مشکلی وجود دارد.'
-        block_confirm: 'آیا از بستن دسترسی کاربر اطمینان دارید؟ بعد از انجام این کار امکان ایجاد موضوع یا ارسال پست نخواهند داشت.'
-        block_accept: 'بله، این کاربر را مسدود کن'
         bounce_score: "امتیاز ویژه"
         reset_bounce_score:
           label: "بازنشانی"
           title: "بازنشانی امتیاز ویژه به 0"
         deactivate_explanation: "کاربر غیر فعال باید دوباره ایمیل خود را تایید کند."
         suspended_explanation: "کاربر تعلیق شده نمی‌تواند وارد سیستم شود."
-        block_explanation: "کاربر مسدود شده نمی‌تواند نوشته‌ای بگذارد یا موضوعی آغاز کند."
         staged_explanation: "کاربر خودکار فقط در بخش های خاص و با ایمیل می‌تواند پست ارسال کند."
         bounce_score_explanation:
           none: "بازتابی به تازگی از آن ایمیل دریافت نشده."

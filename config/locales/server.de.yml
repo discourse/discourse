@@ -48,7 +48,7 @@ de:
         no_body_detected_error: "Passiert, wenn wir keinen Textkörper extrahieren konnten und keine Anhänge gefunden wurden."
         no_sender_detected_error: "Kommt vor, wenn wir keine gültige E-Mail-Adresse im From-Header finden konnten."
         inactive_user_error: "Passiert wenn der Sender nicht aktiv ist."
-        blocked_user_error: "Passiert wenn der Sender geblockt wurde."
+        silenced_user_error: "Kommt vor, wenn der Absender stummgeschaltet wurde."
         bad_destination_address: "Passiert wenn keine der E-Mail Adressen in den Feldern To/Cc/Bcc zu einer konfigurierten Eingangs-E-Mail-Adresse passt."
         strangers_not_allowed_error: "Passiert wenn ein Benutzer versuchte ein neues Thema in einer Kategorie ohne Mitgliedschaft zu erstellen."
         insufficient_trust_level_error: "Passiert wenn ein Benutzer versuchte ein neues Thema in einer Kategorie zu erstellen, ohne die erforderliche Vertrauensstufe dafür zu haben."
@@ -665,7 +665,7 @@ de:
       email_title: 'Das Thema "%{title}" benötigt die Aufmerksamkeit eines Moderators'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Dein Beitrag wurde von der Community gemeldet. Bitte <a href="/my/messages">lies deine Nachrichten</a>.</p>'
+    you_must_edit: '<p>Dein Beitrag wurde von der Community gemeldet. Bitte <a href="%{path}">überprüfe deine Nachrichten</a>.</p>'
     user_must_edit: '<p>Dieser Beitrag wurde von der Community gemeldet und ist vorübergehend ausgeblendet.</p>'
   archetypes:
     regular:
@@ -925,7 +925,8 @@ de:
     digest_logo_url: "Das alternative Logo oben in den E-Mail-Zusammenfassungen deiner Site. Sollte eine breite, rechteckige Form haben. Sollte kein SVG-Bild sein. Wenn leer, wird `logo_url` verwendet."
     logo_small_url: "Dein Logo in klein für die obere linke Seite deiner Site, in Form eines rechteckigen Quadrates. Es wird angezeigt, wenn der Benutzer scrollt. Wenn du dieses Feld frei lässt, wird stattdessen ein Haus-Symbol angezeigt."
     favicon_url: "Das Favicon deiner Site. Besuche http://de.wikipedia.org/wiki/Favicon um weitere Informationen zu erhalten. Damit das Favicon korrekt über einen CDN-Service funktioniert, muss es eine .png Datei sein."
-    mobile_logo_url: "Das fixierte Logo in der oberen linken Hälfte der mobilen Siteversion. Es sollte eine quadratische Form haben. Wenn du dieses Feld frei lässt, wird `logo_url` benutzt. Z.B. http://example.com/uploads/default/logo.png"
+    mobile_logo_url: "Benutzerdefiniertes Logo für die mobile Seitenversion. Falls leer, wird `logo_url` verwendet. Beispiel: http://example.com/uploads/default/logo.png"
+    large_icon_url: "Bild wird als Logo/Startbild auf Android verwendet. Empfohlene Größe beträgt 512px mal 512px."
     apple_touch_icon_url: "Icon für berührungsempfindliche Apple-Geräte. Empfohlene Grösse ist 144px auf 144px."
     notification_email: "Die E-Mail-Adresse die als \"From:\" Absender aller wichtiger System-E-Mails benutzt wird. Die benutzte Domain sollte über korrekte SPF, DKIM und PTR Einträge verfügen, damit E-Mails sicher zugestellt werden können."
     email_custom_headers: "Eine durch senkrechte Striche getrennte Liste von eigenen E-Mail Headerzeilen"
@@ -952,11 +953,11 @@ de:
     tl2_additional_likes_per_day_multiplier: "Limit für \"Gefällt mir\" für Benutzer auf Vertrauensstufe 2 (Mitglied) mit diesem Faktor multiplizieren"
     tl3_additional_likes_per_day_multiplier: "Limit für \"Gefällt mir\" für Benutzer auf Vertrauensstufe 3 (Stammgast) mit diesem Faktor multiplizieren"
     tl4_additional_likes_per_day_multiplier: "Limit für \"Gefällt mir\" für Benutzer auf Vertrauensstufe 4 (Anführer) mit diesem Faktor multiplizieren"
-    num_spam_flags_to_block_new_user: "Verstecke alle Beiträge eines neuen Benutzers und erlaube keine neuen Beiträge mehr, wenn der neue Benutzer die hier angegebene Zahl an Meldungen bezüglich Spam von num_users_to_block_new_user verschiedenen anderen Benutzern erhalten hat. 0 deaktiviert diese Funktion."
-    num_users_to_block_new_user: "Wenn Beiträge eines neuen Benutzers so viele Spam-Meldungen von num_spam_flags_to_block_new_user verschiedenen Benutzern mit Vertrauensstufe 3 erhält, werden alle Beiträge des Benutzers ausgeblendet und weitere Beiträge verhindert. 0, um die Funktion zu deaktivieren."
-    num_tl3_flags_to_block_new_user: "Wenn Beiträge eines neuen Benutzers so viele Meldungen von num_tl3_users_to_block_new_user verschiedenen Benutzern mit Vertrauensstufe 3 erhält, werden alle Beiträge des Benutzers ausgeblendet und weitere Beiträge verhindert. 0, um die Funktion zu deaktivieren."
-    num_tl3_users_to_block_new_user: "Wenn Beiträge eines neuen Benutzers so viele Meldungen von num_tl3_users_to_block_new_user verschiedenen Benutzern mit Vertrauensstufe 3 erhält, werden alle Beiträge des Benutzers ausgeblendet und weitere Beiträge verhindert. 0, um die Funktion zu deaktivieren."
-    notify_mods_when_user_blocked: "Wenn ein Benutzer automatisch gesperrt wird, sende eine Nachricht an alle Moderatoren."
+    num_spam_flags_to_silence_new_user: "Wenn Beiträge eines neuen Benutzers von num_users_to_silence_new_user verschiedenen Benutzern gemeldet wird, verstecke alle Beiträge des Benutzers und erlaube keine weiteren Beiträge. Ein Wert von 0 deaktiviert diese Funktion."
+    num_users_to_silence_new_user: "Wenn Beiträge eines neuen Benutzers Spam-Meldungen von num_spam_flags_to_block_new_user verschiedenen Benutzern erhalten, werden alle Beiträge des Benutzers ausgeblendet und weitere Beiträge verhindert. Ein Wert von 0 deaktiviert die Funktion."
+    num_tl3_flags_to_silence_new_user: "Wenn Beiträge eines neuen Benutzers von num_tl3_users_to_silence_new_user verschiedenen Benutzern mit Vertrauensstufe 3 gemeldet werden, verstecke alle Beiträge des Benutzers und erlaube keine weiteren Beiträge. Ein Wert von 0 deaktiviert diese Funktion."
+    num_tl3_users_to_silence_new_user: "Wenn Beiträge eines neuen Benutzers von num_tl3_users_to_silence_new_user verschiedenen Benutzern mit Vertrauensstufe 3 gemeldet werden, verstecke alle Beiträge des Benutzers und erlaube keine weiteren Beiträge. Ein Wert von 0 deaktiviert diese Funktion."
+    notify_mods_when_user_silenced: "Wenn ein Benutzer automatisch stummgeschaltet wird, sende eine Nachricht an alle Moderatoren."
     flag_sockpuppets: "Wenn ein neuer Benutzer auf ein Thema antwortet, das von einem anderen neuen Benutzer aber mit der gleichen IP-Adresse begonnen wurde, markiere beide Beiträge als potenziellen Spam."
     traditional_markdown_linebreaks: "Traditionelle Zeilenumbrüche in Markdown, die zwei nachfolgende Leerzeichen für einen Zeilenumbruch benötigen."
     enable_markdown_typographer: "Verwende grundlegende typografische Regeln, um die Lesbarkeit von Absätzen zu erhöhen, ersetzt (c) (tm) usw. durch Symbole, reduziert die Anzahl von Lesezeichen und so weiter"
@@ -964,8 +965,6 @@ de:
     must_approve_users: "Team-Mitglieder müssen alle neuen Benutzerkonten freischalten, bevor diese Zugriff auf die Website erhalten. ACHTUNG: Das Aktivieren dieser Option für eine Live-Site entfernt den Zugriff auch für alle existierenden Benutzer außer für Team-Mitglieder!"
     pending_users_reminder_delay: "Benachrichtige die Moderatoren, falls neue Benutzer mehr als so viele Stunden auf ihre Genehmigung gewartet haben. Stelle -1 ein, um diese Benachrichtigungen zu deaktivieren."
     maximum_session_age: "Benutzer bleiben (n) Stunden nach ihrem letzten Besuch angemeldet"
-    ga_tracking_code: "VERALTET: Google Analytics (analytics.js) tracking code code, z.B.: UA-12345678-9; siehe http://google.com/analytics"
-    ga_domain_name: "VERALTET: Google Analytics (analytics.js) Domain-Name, z.B.: mysite.com; siehe http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code code, beispielsweise: UA-12345678-9; Siehe http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) domain name, eg: mysite.com; Siehe http://google.com/analytics"
     ga_universal_auto_link_domains: "Aktiviere Google Universal Analytics (analytics.js) Cross-Domain-Tracking. Ausgehenden Links zu diesen Domains wird eine Client-ID hinzugefügt. Siehe Googles Anleitung zu Cross-Domain Tracking."
@@ -1197,9 +1196,9 @@ de:
     num_hours_to_close_topic: "Anzahl Stunden, um ein Thema als Maßnahme zu pausieren."
     auto_respond_to_flag_actions: "Automatische Antwort auf abgearbeitete Meldungen aktivieren."
     min_first_post_typing_time: "Minimale Zeit die ein Benutzer mindestens aufwenden muss, um einen Beitrag zu schreiben. Wenn diese Zeit unterschritten wird, wird der Beitrag automatisch in die Warteschlange für freizuschaltende Beiträge verschoben. Setze diesen Wert auf 0 um dieses Verhalten zu deaktivieren (nicht empfohlen)."
-    auto_block_fast_typers_on_first_post: "Blockiere Benutzer automatisch, welche unterhalb der min_first_post_typing_time liegen."
-    auto_block_fast_typers_max_trust_level: "Maximale Vertrauensstufe um \"Schnelltipper\" automatisch zu blockieren."
-    auto_block_first_post_regex: "Regulärer Ausdruck der dafür sorgt dass passende erste Beiträge von Benutzern genehmigt werden müssen. Groß- und Kleinschreibung wird nicht beachtet.\nBeispiel: raging|a[bc]a blockiert alle ersten Beiträge, die raging, aba oder aca beinhalten. Wird nur auf den ersten Beitrag angewendet."
+    auto_silence_fast_typers_on_first_post: "Benutzer automatisch stummschalten, die nicht der min_first_post_typing_time entsprechen."
+    auto_silence_fast_typers_max_trust_level: "Maximale Vertrauensstufe, um „Schnelltipper“ stummzuschalten."
+    auto_silence_first_post_regex: "Regulärer Ausdruck (ohne Groß- und Kleinschreibung), der dafür sorgt dass entsprechende erste Beiträge von Benutzern stummgeschaltet und in die Genehmigungswarteschlange verschoben werden. Beispiel: raging|a[bc]a sorgt dafür, dass Beiträge, die raging, aba oder aca enthalten, zunächst stummgeschaltet werden. Dies betrifft jedoch nur den ersten Beitrag."
     flags_default_topics: "Zeige gemeldete Themen standardmäßig im Administrationsbereich"
     reply_by_email_enabled: "Aktviere das Antworten auf Themen via E-Mail."
     reply_by_email_address: "Vorlage für die Antwort einer per E-Mail eingehender E-Mail-Adresse, zum Beispiel: %{reply_key}@reply.example.com oder replies+%{reply_key}@example.com"
@@ -1349,6 +1348,7 @@ de:
     default_categories_tracking: "Liste der standardmäßig gefolgten Kategorien."
     default_categories_muted: "Liste der standardmäßig stummgeschalteten Kategorien."
     default_categories_watching_first_post: "Liste von Kategorien, in denen der erste Beiträge in jedem neuen Thema automatisch beobachtet wird."
+    retain_web_hook_events_period_days: "Anzahl an Tagen, die Web-Hook-Ereigniseinträge aufbewahrt werden"
     max_user_api_reqs_per_day: "Maximale Zahl der Benutzer API Anfragen pro Schlüssel pro Tag"
     max_user_api_reqs_per_minute: "Maximale Zahl der Benutzer API Anfragen pro Schlüssel pro Minute"
     allow_user_api_keys: "Erlaube das Generieren von Benutzer-API-Schlüsseln"
@@ -1914,13 +1914,13 @@ de:
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
 
         Dein mit dieser E-Mail-Adresse verbundenes Benutzerkonto ist nicht aktiviert. Bitte aktiviere dein Konto bevor du E-Mails sendest.
-    email_reject_blocked_user:
-      title: "E-Mail abgelehnt weil Benutzer gesperrt"
-      subject_template: "[%{email_prefix}] E-Mail-Problem -- Benutzer blockiert"
+    email_reject_silenced_user:
+      title: "E-Mail abgelehnt weil Benutzer stummgeschaltet"
+      subject_template: "[%{email_prefix}] E-Mail-Problem -- Benutzer stummgeschaltet"
       text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
+        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (mit dem Betreff %{former_title}) hat nicht funktioniert.
 
-        Dein mit dieser E-Mail-Adresse verbundenes Konto wurde blockiert.
+        Dein mit dieser E-Mail-Adresse verbundenes Konto wurde stummgeschaltet.
     email_reject_reply_user_not_matching:
       title: "E-Mail abgelehnt weil E-Mail-Adresse abweichend"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Antwortadresse unerwartet"
@@ -2047,9 +2047,9 @@ de:
       text_body_template: |
         Hallo,
 
-        dies ist eine automatisch erzeugte Nachricht von %{site_name}, um dich darüber zu informieren, dass deine Beitrage vorübergehend ausgeblendet wurden, weil sie von der Community gemeldet wurden.
+        dies ist eine automatisch erzeugte Nachricht von %{site_name}, um dich darüber zu informieren, dass dein Beitrag vorübergehend versteckt wurde, weil er von der Community gemeldet wurde..
 
-        Als Vorsichtsmaßnahme wurde dein neues Konto für das Erstellen neuer Antworten und Themen gesperrt, bis ein Team-Mitglied dein Konto überprüfen kann. Wir bitten um Entschuldigung für die Unannehmlichkeiten.
+        Als Vorsichtsmaßnahme wurde dein neues Konto für das Erstellen neuer Antworten und Themen stummgeschaltet, bis ein Team-Mitglied dein Konto überprüfen kann. Wir bitten um Entschuldigung für die Unannehmlichkeiten.
 
         Weitere Hinweise findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
     too_many_tl3_flags:
@@ -2058,46 +2058,46 @@ de:
       text_body_template: |
         Hallo,
 
-        dies ist eine automatisch erzeugte Nachricht von %{site_name}, um dich darüber zu informieren, dass dein Konto aufgrund einer großen Anzahl von Community-Meldungen vorübergehend gesperrt wurde.
+        dies ist eine automatisch erzeugte Nachricht von %{site_name}, um dich darüber zu informieren, dass dein Konto vorübergehend gesperrt wurde aufgrund einer großen Anzahl an Community-Meldungen.
 
-        Als Vorsichtsmaßnahme wurde dein neues Konto für das Erstellen neuer Antworten und Themen gesperrt, bis ein Team-Mitglied dein Konto überprüfen kann. Wir bitten um Entschuldigung für die Unannehmlichkeiten.
+        Als Vorsichtsmaßnahme wurde dein neues Konto für das Erstellen neuer Antworten und Themen stummgeschaltet, bis ein Team-Mitglied dein Konto überprüfen kann. Wir bitten um Entschuldigung für die Unannehmlichkeiten.
 
         Weitere Hinweise findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
-    blocked_by_staff:
-      title: "Gesperrt vom Team"
+    silenced_by_staff:
+      title: "Stummgeschaltet vom Team"
       subject_template: "Konto vorübergehend gesperrt"
       text_body_template: |
         Hallo,
 
         dies ist eine automatisch erzeugte Nachricht von %{site_name}, um dich darüber zu informieren, dass dein Konto als Vorsichtsmaßnahme vorübergehend gesperrt wurde.
 
-        Bitte schaue dir weiter Inhalte an, aber du kannst zunächst keine Antworten oder Themen erstellen, bis ein [Team-Mitglied](%{base_url}/about) deine aktuellesten Beiträge überprüft hat. Wir bitten um Entschuldigung für die Unannehmlichkeiten.
+        Bitte schaue dir weiter Inhalte an, aber du kannst zunächst keine Antworten oder Themen erstellen, bis ein [Team-Mitglied](%{base_url}/about) deine aktuellsten Beiträge überprüft hat. Wir bitten um Entschuldigung für die Unannehmlichkeiten.
 
         Weitere Hinweise findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
-    user_automatically_blocked:
-      title: "Benutzer automatisch gesperrt"
-      subject_template: "Neuer Benutzer %{username} gesperrt wegen Community-Meldungen"
+    user_automatically_silenced:
+      title: "Benutzer automatisch stummgeschaltet"
+      subject_template: "Neuer Benutzer %{username} stummgeschaltet wegen Community-Meldungen"
       text_body_template: |
         Dies ist eine automatisierte Nachricht.
 
-        Der neue Benutzer  [%{username}](%{user_url}) wurde automatisch blockiert, weil mehrere Benutzer Beiträge von %{username} gemeldet haben.
+        Der neue Benutzer  [%{username}](%{user_url}) wurde automatisch stummgeschaltet, weil mehrere Benutzer Beiträge von %{username} gemeldet haben.
 
-        Bitte [überprüfe die Meldungen](%{base_url}/admin/flags). Wenn %{username} fälschlich blockiert wurde, so klicke die „Entsperren“-Schaltfläche auf der [Administrationsseite dieses Benutzers](%{user_url}).
+        Bitte [überprüfe die Meldungen](%{base_url}/admin/flags). Wenn %{username} fälschlich stummgeschaltet wurde, so klicke die „Stummschaltung aufheben“-Schaltfläche auf der [Administrationsseite dieses Benutzers](%{user_url}).
 
         Der Schwellenwert kann über die Einstellung `block_new_user` geändert werden.
-    spam_post_blocked:
-      title: "Spam-Beitrag gesperrt"
-      subject_template: "Beiträge des neuen Benutzers ${username} wegen mehrfacher Verlinkung blockiert"
+    spam_post_silenced:
+      title: "Spam-Beitrag stummgeschaltet"
+      subject_template: "Beiträge des neuen Benutzers %{username} stummgeschaltet wegen wiederholten Links"
       text_body_template: |
         Dies ist eine automatisierte Nachricht.
 
-        Der neue Benutzer [%{username}](%{user_url}) hat versucht, mehrere Beiträge mit Links zur Domain %{domains} zu erstellen, aber diese Beiträge wuden blockiert, um Spam zu vermeiden. Der Benutzer kann weiter neue Beiträge erstellen, die nicht auf %{domains} verlinken.
+        Der neue Benutzer [%{username}](%{user_url}) hat versucht, mehrere Beiträge mit Links zur Domain %{domains} zu erstellen, aber diese Beiträge wurden stummgeschaltet, um Spam zu vermeiden. Der Benutzer kann weiter neue Beiträge erstellen, die nicht auf %{domains} verlinken.
 
         Bitte [überprüfe den Benutzer](%{user_url}).
 
-        Dies kann über die Einstellungen `newuser_spam_host_threshold` und `white_listed_spam_host_domains` geändert werden.
-    unblocked:
-      title: "Entsperrt"
+        Dieses Verhalten kann über die Einstellungen `newuser_spam_host_threshold` und `white_listed_spam_host_domains` geändert werden.
+    unsilenced:
+      title: "Stummschaltung aufgehoben"
       subject_template: "Konto nicht mehr gesperrt"
       text_body_template: |
         Hallo,
@@ -2131,7 +2131,7 @@ de:
       text_body_template: |
         Glückwunsch, du hast die Auszeichnung **Neuer Benutzer des Monats %{month_year}** erhalten. :trophy:
 
-        Diese Auszeichnung wird nur zwei neuen Benutzern pro Monat verliehen, und wird dauerhaft sichtbar sein auf [deiner Profilseite](/my/badges).
+        Diese Auszeichnung wird nur zwei neuen Benutzern pro Monat verliehen, und wird dauerhaft sichtbar sein auf [deiner Abzeichen-Seite](%{url}).
 
         Du bist schnell ein wertvolles Mitglied unserer Community geworden. Danke, dass du dazugekommen bist, und mache weiter mit der großartigen Arbeit!
     queued_posts_reminder:
@@ -2374,7 +2374,8 @@ de:
       popular_posts: "Beliebte Beiträge"
       more_new: "Neu für dich"
       subject_template: "[%{email_prefix}] Zusammenfassung"
-      unsubscribe: "Diese Zusammenfassung wird von %{site_link} versendet, wenn wir dich einige Zeit lang nicht gesehen haben. Ändere <a href='%{email_settings_url}'>deine E-Mail-Einstellungen</a>. Abbestellen unter %{unsubscribe_link}."
+      unsubscribe: "Diese Zusammenfassung wird von %{site_link} versendet, wenn wir dich einige Zeit lang nicht gesehen haben. Ändere %{email_preferences_link} oder %{unsubscribe_link}zum Abbestellen."
+      your_email_settings: "deine E-Mail-Einstellungen"
       click_here: "klicke hier"
       from: "Zusammenfassung für %{site_name}"
       preheader: "Eine kurze Zusammenfassung seit deinem letzten Besuch am %{last_seen_at}"
@@ -2476,6 +2477,9 @@ de:
     see_more: "Mehr"
     search_title: "Diese Site durchsuchen"
     search_google: "Google"
+  offline:
+    title: "App kann nicht geladen werden"
+    offline_page_message: "Sieht so aus als wärst du offline! Bitte überprüfe deine Netzwerkverbindung und probiere es nochmal."
   login_required:
     welcome_message: |
       #[Wilkommen bei %{title}](#welcome)
@@ -2894,9 +2898,9 @@ de:
         Das Abzeichen wird verliehen, wenn du den ersten Like auf einen Beitrag erhältst. Glückwunsch, du hast einen Beitrag geschrieben, den deine Mitbenutzer interessant, cool oder nützlich finden!
     autobiographer:
       name: Autobiograf
-      description: Hat <a href="/my/preferences">Benutzerprofil</a> ausgefüllt
+      description: Hat <a href="%{base_uri}/my/preferences/profile">Benutzerprofil</a> ausgefüllt
       long_description: |
-        Das Abzeichen wird verliehen, wenn du dein <a href="/my/preferences">Benutzerprofil</a> ausfüllst und ein Profilbild hochlädst. Die Community mehr über dich wissen zu lassen und darüber, was dich interessiert, trägt zu einer besseren, verbundeneren Community bei. Mach mit!
+        Dieses Abzeichen erhältst du für das Ausfüllen von deinem <a href="%{base_uri}/my/preferences/profile">Benutzerprofil</a> und für das Hochladen eines Profilbildes erhalten. Die Community ein bisschen mehr wissen zu lassen über dich und darüber, was du gerne tust, macht die gesamte Community besser. Mach mit!
     anniversary:
       name: Jubiläum
       description: Ist ein aktives Mitglied für ein Jahr und hat mindestens einen Beitrag verfasst
@@ -2989,9 +2993,9 @@ de:
         Das Abzeichen wird verliehen, wenn du das erste Mal einen Beitrag in deiner Antwort zitierst. Das Zitieren relevanter Abschnitte früherer Beiträge in deiner Antwort hilft dabei, Diskussionen verbunden zu halten und beim Thema zu bleiben. Der einfachste Weg zu zitieren besteht darin, den Abschnitt eines Beitrags zu markieren und dann die Antwort-Schaltfläche zu drücken. Zitiere weiter großzügig!
     read_guidelines:
       name: Richtlinien gelesen
-      description: Hat die <a href="/guidelines">Community-Richtlinien</a> gelesen
+      description: Hat die <a href="%{base_uri}/guidelines">Community-Richtlinien</a> gelesen
       long_description: |
-        Das Abzeichen wird verliehen, wenn du die <a href="/guidelines">Community-Richtlinien liest</a>. Das Befolgen und Teilen dieser einfachen Richtlinien hilft dabei, eine sichere, lustige und nachhaltige Community für alle aufzubauen. Denke immer daran, dass dort ein anderer Mensch, sehr ähnlich zu dir, auf der anderen Seite des Bildschirms ist. Sei nett!
+        Dieses Abzeichen wird verliehen für das <a href="%{base_uri}/guidelines">Lesen der Communtiy-Richtlinien</a>. Ein Befolgen und Teilen dieser einfachen Richtlinien hilft uns dabei, eine sichere, lustige und nachhaltige Gemeinschaft für alle zu schaffen. Denke immer daran, dass dort ein anderer Mensch, genauso wie du, auf der anderen Seite des Bildschirms ist. Sei nett!
     reader:
       name: Leser
       description: Hat in einem Thema mit mehr als 100 Beiträgen jeden Beitrag gelesen

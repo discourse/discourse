@@ -555,7 +555,6 @@ lv:
       admin: "{{user}} ir administrators"
       moderator_tooltip: "Šis lietotājs ir moderators"
       admin_tooltip: "Šis lietotājs ir administrators"
-      blocked_tooltip: "Šis lietotājs ir bloķēts"
       suspended_notice: "Lietotājs ir īslaicīgi bloķēts līdz {{date}}."
       suspended_reason: "Iemesls:"
       github_profile: "Github"
@@ -2369,7 +2368,6 @@ lv:
         no_problems: "Problēmas nav atrastas."
         moderators: 'Moderatori:'
         admins: 'Administratori:'
-        blocked: 'Bloķētie:'
         suspended: 'Īslaicīgi bloķētie:'
         private_messages_short: "Ziņas"
         private_messages_title: "Ziņās"
@@ -2814,8 +2812,6 @@ lv:
             change_category_settings: "Mainīt kategorijas iestatījumus"
             delete_category: "Dzēst kategoriju"
             create_category: "Radīt kategoriju"
-            block_user: "bloķēt lietotāju"
-            unblock_user: "atbloķēt lietotāju"
             grant_admin: "piešķirt admina tiesības"
             revoke_admin: "atsaukt adminu"
             grant_moderation: "piešķirt moderātora tiesības"
@@ -2909,7 +2905,6 @@ lv:
           pending: "Neizlemts"
           staff: 'Personāls'
           suspended: 'Apturēts'
-          blocked: 'Bloķēts'
           suspect: 'Novērot'
         approved: "Apstiprināt?"
         approved_selected:
@@ -2932,7 +2927,6 @@ lv:
           staff: "Personāls"
           admins: 'Administratori'
           moderators: 'Moderātori'
-          blocked: 'Bloķētie lietotāji'
           suspended: 'Atceltie lietotāji'
           suspect: 'Novēroti (suspect) lietotāji'
         reject_successful:
@@ -2951,18 +2945,14 @@ lv:
         suspend_failed: "Kaut kas nenostrādāj apturot šo lietotāju {{error}}"
         unsuspend_failed: "Kaut kas nenostrādāj atjaunojot šo lietotāju {{error}}"
         suspend_duration: "Uz cik ilgu laiku lietotājs tiks atstādināts?"
-        suspend_duration_units: "(dienas)"
         suspend_reason_label: "Kādēļ apturēt? Šis texts <b>būt redzams visiem</b> šajā lietotāja profila lapā, un tiks rādīts visiem, kas \"ielogojas\"."
         suspend_reason: "Iemesls"
         suspended_by: "Apturēja"
         delete_all_posts: "Dzēst visus ierakstus"
         delete_all_posts_confirm_MF: "Jūs grasaties dzēst šos ierakstus. Vai est drošs?"
-        suspend: "Apturēt"
-        unsuspend: "Neapturēt"
-        suspended: "Neapturēts?"
         moderator: "Moderātors?"
         admin: "Administrators?"
-        blocked: "Bloķēts?"
+        suspended: "Neapturēts?"
         staged: "Izveidots?"
         show_admin_profile: "Administrators"
         refresh_browsers: "Piespiest pārlūka atsvaidzināšanu (Force browser refresh)"
@@ -2978,8 +2968,8 @@ lv:
         grant_admin_confirm: "Mēs nosūtījām jums e-pastu, lai jūs apstiprinātu jauno administratoru. Lūdzu atver e-pastu un seko instrukcijām."
         revoke_moderation: 'Atsaukt Moderātora pakāpi'
         grant_moderation: 'Piešķirt Moderātora pakāpi'
-        unblock: 'Atbloķēt'
-        block: 'Bloķēt'
+        unsuspend: 'Neapturēt'
+        suspend: 'Apturēt'
         reputation: Reputācija
         permissions: Atļaujas / Pieejas
         activity: Aktivitāte
@@ -3029,10 +3019,6 @@ lv:
         activate_failed: "Radās problēma aktivizējot šo lietotāju."
         deactivate_account: "Deaktivizēts konts"
         deactivate_failed: "Radās problēma deaktivizējot šo lietotāju."
-        unblock_failed: 'Radās problēma atbloķējot šo lietotāju.'
-        block_failed: 'Radās problēma bloķējot šo lietotāju.'
-        block_confirm: 'Vai esi drošs, ka vēlies bloķēt šo lietotāju? Viņs nevarēs veikt jaunus ierakstus un tēmas.'
-        block_accept: 'Jā, bloķēt šo lietotāju.'
         bounce_score: "Pieprasījumu \"Score\""
         reset_bounce_score:
           label: "Atlikt"
@@ -3040,7 +3026,6 @@ lv:
         visit_profile: "Apskati<a href='%{url}'>lietotāja iestatījumu lapu </a> lai labotu viņu profilu"
         deactivate_explanation: "Deaktivizētam lietotājam jā-apstiprina sava e-pasta adrese."
         suspended_explanation: "Apturēts lietotājs nevar pieslēgties."
-        block_explanation: "Bloķēts lietotājs nevar veikt ierakstus vai uzsākt tēmas."
         staged_explanation: "Lietotājs caur iepastu var veikt ierakstus tikai specifiskās tēmās."
         bounce_score_explanation:
           none: "Neviens pieprasījums nesen nav saņemts."

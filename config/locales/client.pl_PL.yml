@@ -596,7 +596,6 @@ pl_PL:
       admin: "{{user}} jest adminem"
       moderator_tooltip: "Ten użytkownik jest moderatorem"
       admin_tooltip: "Ten użytkownik jest administratorem"
-      blocked_tooltip: "Ten użytkownik jest zablokowany"
       suspended_notice: "ten użytkownik jest zawieszony do {{date}}."
       suspended_reason: "Powód: "
       github_profile: "Github"
@@ -2541,7 +2540,6 @@ pl_PL:
         no_problems: "Nie znaleziono problemów."
         moderators: 'Moderatorzy:'
         admins: 'Adminstratorzy:'
-        blocked: 'Zablokowani:'
         suspended: 'Zawieszeni:'
         private_messages_short: "Wiad."
         private_messages_title: "Wiadomości"
@@ -3109,8 +3107,6 @@ pl_PL:
             change_category_settings: "zmiana ustawień kategorii"
             delete_category: "Usuń kategorię"
             create_category: "Dodaj nową kategorię"
-            block_user: "zablokuj użytkownika"
-            unblock_user: "odblokuj użytkownika"
             grant_admin: "nadaj prawa admina"
             revoke_admin: "odbierz prawa admina"
             grant_moderation: "Przyznaj status moderatora"
@@ -3207,7 +3203,6 @@ pl_PL:
           pending: "Oczekujący"
           staff: 'Zespół'
           suspended: 'Zawieszeni'
-          blocked: 'Zablokowani'
           suspect: 'Podejrzani'
         approved: "Zatwierdzam?"
         approved_selected:
@@ -3232,7 +3227,6 @@ pl_PL:
           staff: "Zespół"
           admins: 'Administratorzy'
           moderators: 'Moderatoratorzy'
-          blocked: 'Zablokowane konta'
           suspended: 'Zawieszone konta'
           suspect: 'Podejrzani użytkownicy'
         reject_successful:
@@ -3264,12 +3258,9 @@ pl_PL:
         cant_suspend: "Nie można zawiesić tego użytkownika."
         delete_all_posts: "Usuń wszystkie wpisy"
         delete_all_posts_confirm_MF: "Zamierzasz usunąć {POSTS, plural, one {1 post} few {# posty} many {# postów} other {# postów}} i {TOPICS, plural, one {1 temat} few {# tematy} many {# tematów} other {# tematów}}. Czy jesteś pewien?"
-        suspend: "Zawieś"
-        unsuspend: "Odwieś"
-        suspended: "Zawieszony?"
         moderator: "Moderator?"
         admin: "Admin?"
-        blocked: "Zablokowany?"
+        suspended: "Zawieszony?"
         staged: "Wystawiony?"
         show_admin_profile: "Admin"
         refresh_browsers: "Wymuś odświeżenie przeglądarki"
@@ -3285,8 +3276,8 @@ pl_PL:
         grant_admin_confirm: "Wysłaliśmy adres email, aby zweryfikować nowego administratora. Zapoznaj się z instrukcjami w nim zawartymi."
         revoke_moderation: 'Odbierz status moderatora'
         grant_moderation: 'Przyznaj status moderatora'
-        unblock: 'Odblokuj'
-        block: 'Blokuj'
+        unsuspend: 'Odwieś'
+        suspend: 'Zawieś'
         reputation: Reputacja
         permissions: Uprawnienia
         activity: Aktywność
@@ -3339,10 +3330,6 @@ pl_PL:
         activate_failed: "Wystąpił problem przy aktywacji konta użytkownika."
         deactivate_account: "Deaktywuj konto"
         deactivate_failed: "Wystąpił problem przy deaktywacji konta użytkownika."
-        unblock_failed: 'Wystąpił problem podczaj odblokowania użytkownika.'
-        block_failed: 'Wystąpił problem podczas blokowania użytkownika.'
-        block_confirm: 'Czy na pewno chcesz zablokować tego użytkownika ? Nie będzie już mógł tworzyć nowych tematów ani pisać postów.'
-        block_accept: 'Tak, zablokuj tego użytkownika'
         bounce_score: "Wskaźnik odbić"
         reset_bounce_score:
           label: "Przywróć"
@@ -3350,7 +3337,6 @@ pl_PL:
         visit_profile: "Odwiedź <a href='%{url}'>ustawienia tego użytkownika</a>, aby zedytować jego profil."
         deactivate_explanation: "Wymusza ponowne potwierdzenie adresu email tego konta."
         suspended_explanation: "Zawieszony użytkownik nie może się logować."
-        block_explanation: "Zablokowany użytkownik nie może tworzyć wpisów ani zaczynać tematów."
         staged_explanation: "Etapowy użytkownik może pisać tylko za pośrednictwem poczty email w konkretnych tematach."
         bounce_score_explanation:
           none: "Z tego adresu email nie otrzymano ostatnio żadnych wiadomości zwrotnych."

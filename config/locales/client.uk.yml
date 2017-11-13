@@ -339,7 +339,6 @@ uk:
       admin: "{{user}} є адміном"
       moderator_tooltip: "Цей користувач є модератором"
       admin_tooltip: "Цей користувач є адміністратором"
-      blocked_tooltip: "Цього користувача заблоковано"
       suspended_notice: "Цього користувача призупинено до {{date}}."
       suspended_reason: "Причина: "
       github_profile: "Github"
@@ -1137,7 +1136,6 @@ uk:
         no_problems: "Не виявлено жодних проблем."
         moderators: 'Модератори:'
         admins: 'Адміни:'
-        blocked: 'Заблоковані:'
         suspended: 'Призупинені:'
         private_messages_short: "Пвдмл"
         private_messages_title: "Повідомлення"
@@ -1457,8 +1455,6 @@ uk:
             change_category_settings: "змінити налаштування категорії"
             delete_category: "видалити категорію"
             create_category: "створити категорію"
-            block_user: "заблокувати користувача"
-            unblock_user: "розблокувати користувача"
             grant_admin: "зробити адміністратором"
             revoke_admin: "відкликати адміністраторство"
             grant_moderation: "зробити модератором"
@@ -1513,7 +1509,6 @@ uk:
           pending: "Очікують"
           staff: 'Персонал'
           suspended: 'Призупинені'
-          blocked: 'Заблоковані'
         approved: "Схвалено?"
         titles:
           active: 'Активні користувачі'
@@ -1524,7 +1519,6 @@ uk:
           staff: "Персонал"
           admins: 'Адміністратори'
           moderators: 'Модератори'
-          blocked: 'Заблоковані користувачі'
           suspended: 'Призупинені користувачі'
         not_verified: "Не підтверджений"
         check_email:
@@ -1537,12 +1531,9 @@ uk:
         suspend_reason: "Причина"
         suspended_by: "Призупинено"
         delete_all_posts: "Видалити всі дописи"
-        suspend: "Призупинити"
-        unsuspend: "Скасувати призупинення"
-        suspended: "Призупинено?"
         moderator: "Модератор?"
         admin: "Адмін?"
-        blocked: "Заблоковано?"
+        suspended: "Призупинено?"
         show_admin_profile: "Адмін"
         refresh_browsers: "Примусово оновити оглядач"
         refresh_browsers_message: "Повідомлення надіслано всім клієнтам!"
@@ -1555,8 +1546,8 @@ uk:
         grant_admin: 'Зробити адміністратором'
         revoke_moderation: 'Відкликати модераторство'
         grant_moderation: 'Зробити модератором'
-        unblock: 'Розблокувати'
-        block: 'Заблокувати'
+        unsuspend: 'Скасувати призупинення'
+        suspend: 'Призупинити'
         reputation: Репутація
         permissions: Дозволи
         activity: Активність
@@ -1587,15 +1578,10 @@ uk:
         activate_failed: "Під час активації користувача сталася помилка."
         deactivate_account: "Деактивувати обліковий запис"
         deactivate_failed: "Під час деактивації користувача сталася помилка."
-        unblock_failed: 'Під час розблокування користувача сталася помилка.'
-        block_failed: 'Під час блокування користувача сталася помилка.'
-        block_confirm: 'Ви впевнені, що хочете заблокувати цього користувача? Вони не зможуть створювати будь-які нові теми або дописи.'
-        block_accept: 'Так, заблокувати цього користувача'
         reset_bounce_score:
           label: "Скинути"
         deactivate_explanation: "Деактивований користувач має повторно підтвердити свою електронну скриньку."
         suspended_explanation: "Призупинений користувач не може увійти."
-        block_explanation: "Заблокований користувач не може дописувати і розпочинати теми."
         trust_level_change_failed: "Під час зміни Рівня довіри користувача трапилася помилка."
         suspend_modal_title: "Призупинити користувача"
         trust_level_2_users: "Користувачі з Рівнем довіри 2"

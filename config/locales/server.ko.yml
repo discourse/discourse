@@ -47,7 +47,6 @@ ko:
         auto_generated_email_error: "'precedence'헤더가 list, junk, bulk, auto_reply로 설정되어 있거나 다른 헤더에 auto-submitted, auto-replied, auto-generated가 있을 때 발생합니다."
         no_body_detected_error: "body를 추출할 수 없거나 첨부파일이 없을 때 발생합니다."
         inactive_user_error: "발신자(sender)가 비활성상태일 때 발생합니다."
-        blocked_user_error: "발신자(sender)가 차단되었을 때 발생합니다."
         bad_destination_address: "수신/참조/비밀참조 필드에 있는 이메일 주소가 설정된 수신 이메일 주소와 하나도 매칭되지 않을 때 발생합니다."
         strangers_not_allowed_error: "사용자가 자신이 속하지 않은 카테고리에 토픽 생성을 시도할 때 발생합니다."
         insufficient_trust_level_error: "사용자가 더 높은 신뢰 레벨이 필요한 카테고리에 토픽 생성을 시도할 때 발생합니다."
@@ -879,11 +878,6 @@ ko:
     tl2_additional_likes_per_day_multiplier: "tl2 (회원)의 일별 좋아요 제한을 올릴 배수"
     tl3_additional_likes_per_day_multiplier: "tl3 (정회원)의 일별 좋아요 제한을 올릴 배수"
     tl4_additional_likes_per_day_multiplier: "tl4 (리더)의 일별 좋아요 제한을 올릴 배수"
-    num_spam_flags_to_block_new_user: "신규 사용자가 num_users_to_block_new_user 명의 다른 사용자들로부터 이 수치에 해당하는 신고를 받으면, 작성한 모든 글을 숨기고 더 이상의 글 게시를 금지함(0 = 기능해제)"
-    num_users_to_block_new_user: "만약 신규 사용자의 포스트가 num_spam_flags_to_block_new_user개의 스팸 신고를 설정된 숫자 만큼의 사용자에게 받으면, 포스트를 모두 숨기고 앞으로의 포스팅을 금지합니다. 0으로 설정하면 해제됩니다."
-    num_tl3_flags_to_block_new_user: "만약 신규 사용자의 포스트가 num_tl3_users_to_block_new_user명 이상의 신뢰도3 사용자로부터 설정된 숫자만큼의 신고를 받으면 해당 사용자의 포스트를 모두 숨기고 앞으로의 포스팅을 금지합니다. 0으로 설정하면 해제됩니다."
-    num_tl3_users_to_block_new_user: "만약 신규 사용자의 포스트가 설정된 숫자 이상의 신뢰도 3 사용자로부터 num_tl3_flags_to_block_new_user개의 신고를  받으면 해당 사용자의 포스트를 모두 숨기고 앞으로의 포스팅을 금지합니다. 0으로 설정하면 해제합니다."
-    notify_mods_when_user_blocked: "만약 사용자가 자동 블락되면 중간 운영자에게 메시지 보내기"
     flag_sockpuppets: "어떤 신규 사용자(예:24이내 가입자)가 글타래를 생성하고 같은 IP주소의 또 다른 신규 사용자가 댓글을 쓰면 자동 스팸 신고"
     traditional_markdown_linebreaks: "Markdown에서 전통적인 linebreak를 사용, linebreak시 두개의 trailing space를 사용하는 것."
     enable_markdown_typographer: "문단의 가독성을 높이기 위해서 기본 타이포그라피 룰을 사용합니다. (c) (tm), 기타 기호를 교체하고 연달아 나오는 물음표의 갯수를 줄입니다."
@@ -891,8 +885,6 @@ ko:
     must_approve_users: "스태프는 반드시 사이트 엑세스권한을 허용하기 전에 모든 신규가입계정을 승인해야 합니다. 경고: 이것을 활성화하면 기존 스태프 아닌 회원들의 엑세스권한이 회수됩니다."
     pending_users_reminder_delay: "새로운 사용자가 승인을 기다리는 시간이 여기에 지정된 시간횟수보다 더 길어길경우 운영자에게 알려줍니다. 알림을 해제하려면 -1로 설정하세요."
     maximum_session_age: "마지막 방문으로 부터 n시간 동안 사용자의 로그인이 유지됩니다"
-    ga_tracking_code: "노후기술경고: Google 애널리틱스 (ga.js) 추적 코드, 예: UA-12345678-9; http://google.com/analytics를 참고하세요."
-    ga_domain_name: "노후기술경고: Google 애널리틱스 (ga.js) 도메인 명, 예: mysite.com; http://google.com/analytics을 참조하세요."
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js)의 트래킹 코드, 예: UA-12345678-9; 참고 http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js)의 도메인 이름, 예: mysite.com; 참고 http://google.com/analytics"
     gtm_container_id: "Google Tag Manager 컨테이너 id. 예: GTM-ABCDEF"
@@ -1118,9 +1110,6 @@ ko:
     num_hours_to_close_topic: "운영진 중재를 위하여 토픽을 중지시킬 시간"
     auto_respond_to_flag_actions: "신고 기각 시 자동 답변 활성화"
     min_first_post_typing_time: "사용자가 첫번째 포스트를 작성할 때 타이핑에 소요해야 하는 밀리초. 설정값에 도달하지 않았을 때는 자동으로 승인 큐에 포함됩니다. 승인 0으로 설정하면 해제됩니다.(해제는 권장하지 않습니다)"
-    auto_block_fast_typers_on_first_post: " min_first_post_typing_time에 도달하지 않은 사용자를 자동으로 차단"
-    auto_block_fast_typers_max_trust_level: "빠른 타이핑이 감지되면 자동 차단을 적용할 최대 신뢰도"
-    auto_block_first_post_regex: "첫번째 포스트를 검사하여 통과하면 사용자를 차단하고 승인 대기열에 포함시키는 대소문자 구분이 없는 정규표현식. 예: raging|a[bc]a, 는 raging, aba, aca를 포함한 첫번째 포스트를 차단합니다. 첫번째 포스트에만 적용됩니다."
     reply_by_email_enabled: "이메일을 통해 주제에 답글을 달 수 있음."
     reply_by_email_address: "이메일 주소로 답글을 다는 템플릿. 예: %{reply_key}@reply.myforum.com"
     alternative_reply_by_email_addresses: "수신된 이메일에 대한 답장메일의 대체 템플릿 목록. 예: %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
@@ -1393,16 +1382,6 @@ ko:
     too_many_tl3_flags:
       title: "TL3 Flag가 너무 많음"
       subject_template: "대기중인 신규 계정"
-    blocked_by_staff:
-      title: "운영진에 의해 차단됨"
-    user_automatically_blocked:
-      title: "사용자 자동차단됨"
-    spam_post_blocked:
-      title: "스팸 게시글 차단됨"
-      subject_template: "%{username} 신규가입자가 연속 링크로 블락됨"
-    unblocked:
-      title: "차단해제됨"
-      subject_template: "계정의 대기가 해제되었습니다"
     pending_users_reminder:
       subject_template:
         other: "%{count}명의 새로운 사용자가 가입 승인 대기중 입니다."

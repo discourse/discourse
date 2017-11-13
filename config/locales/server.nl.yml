@@ -47,7 +47,6 @@ nl:
         auto_generated_email_error: "Gebeurt wanneer de 'precedence'-header is ingesteld op list, junk, bulk of auto_reply, of wanneer een andere header het volgende bevat: auto-submitted, auto-replied of auto-generated."
         no_body_detected_error: "Gebeurt wanneer er geen hoofdtekst uit de mail kon worden gehaald en er geen bijlagen waren."
         inactive_user_error: "Gebeurt wanneer de afzender niet actief is."
-        blocked_user_error: "Gebeurt wanneer de afzender is geblokkeerd."
         bad_destination_address: "Gebeurt wanneer geen van de e-mailadressen in de Aan, CC-, of BCC-velden gelijk zijn aan de geconfigureerde inkomende e-mailadressen."
         strangers_not_allowed_error: "Gebeurt wanneer een gebruiker een nieuwe topic probeerde aan te maken in een categorie waar hij/zij geen lid van is."
         insufficient_trust_level_error: "Gebeurt wanneer een gebruiker een nieuwe topic probeerde aan te maken in een categorie waarvoor hij/zij niet het vereiste vertrouwensniveau heeft."
@@ -647,7 +646,6 @@ nl:
       email_title: 'Het topic ''%{title}'' vereist aandacht van een moderator'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Uw bericht is gemarkeerd door de gemeenschap. <a href="/my/messages">Bekijk uw berichten</a>.</p>'
     user_must_edit: '<p>Uw bericht is gemarkeerd door de gemeenschap en is tijdelijk verborgen.</p>'
   archetypes:
     regular:
@@ -922,7 +920,6 @@ nl:
     tl2_additional_likes_per_day_multiplier: "Verhoog de limiet van likes per dag voor tl2 (lid) door te vermenigvuldigen met dit getal"
     tl3_additional_likes_per_day_multiplier: "Verhoog de limiet van likes per dag voor tl3 (vaste bezoeker) door te vermenigvuldigen met dit getal"
     tl4_additional_likes_per_day_multiplier: "Verhoog de limiet van likes per dag voor tl4 (leider) door te vermenigvuldigen met dit getal"
-    notify_mods_when_user_blocked: "Als een gebruiker automatisch geblokkeerd is, stuur dan een bericht naar alle moderatoren."
     flag_sockpuppets: "Als een nieuwe gebruiker antwoord op een topic vanaf hetzelfde ip-adres als de nieuwe gebruiker die het topic opende, markeer dan beide berichten als potentiële spam."
     traditional_markdown_linebreaks: "Gebruik traditionele regeleinden in Markdown, welke 2 spaties aan het einde van een regel nodig heeft voor een regeleinde."
     post_undo_action_window_mins: "Het aantal minuten waarin gebruikers hun recente acties op een bericht nog terug kunnen draaien (liken, markeren, etc)."
@@ -1118,9 +1115,6 @@ nl:
     num_flags_to_close_topic: "Minimun aantal actieve markeerders benodigd om geautomatiseerd een topic te pauzeren."
     auto_respond_to_flag_actions: "Automatisch antwoord Inschakelen op moment van weggooien van een markering."
     min_first_post_typing_time: "Minimum tijd in milliseconden dat een gebruiker moet typen tijdens een eerste post, als de drempelwaarde niet wordt bereikt zal de post automatisch in de wachtrij voor goedkeuring gezet worden. Zet op 0 om uit te schakelen (niet aanbevolen)"
-    auto_block_fast_typers_on_first_post: "Blokkeer gebruikers automatisch als ze niet voldoen aan min_first_post_typing_time"
-    auto_block_fast_typers_max_trust_level: "Maximale vertrouwensniveau om snelle typers automatisch te blokkeren "
-    auto_block_first_post_regex: "Hoofdlettergevoelige regex die bij overeenkomst het eerste bericht van een gebruiker blokkeert en in de wachtrij voor goedkeuring zet. Voorbeeld: raging|a[bc]a zorgt ervoor dat alle eerste berichten die raging, aba of aca bevatten worden geblokkeerd. Alleen van toepassing op het eerste bericht."
     reply_by_email_enabled: "Mogelijk inschakelen om te antwoorden per e-mail."
     reply_by_email_address: "Template voor antwoorden per e-mail, bijvoorbeeld: %{reply_key}@reageer.mijnforum.nl"
     incoming_email_prefer_html: "De HTML gebruiken in plaats van de tekst voor inkomende e-mail"
@@ -1422,11 +1416,6 @@ nl:
         Het spijt ons, maar het plaatsen van je e-mail op %{destination} (met onderwerp %{former_title}) is niet gelukt.
 
         Het account dat bij dit e-mailadres hoort, is niet geactiveerd. Je moet je account activeren voordat je e-mails instuurt.
-    email_reject_blocked_user:
-      text_body_template: |
-        Het spijt ons, maar het plaatsen van je e-mail op %{destination} (met onderwerp %{former_title}) is niet gelukt.
-
-        Het account dat bij dit e-mailadres hoort, is geblokkeerd.
     email_reject_empty:
       text_body_template: |+
         Het spijt ons, maar het plaatsen van uw e-mailbericht naar %{destination} (getiteld %{former_title}) is niet gelukt.
@@ -1460,23 +1449,6 @@ nl:
         Het spijt ons, maar het plaatsen van je e-mail op %{destination} (met onderwerp %{former_title}) is niet gelukt.
 
         De plaatsingsactie werd niet herkend. Probeer het opnieuw of plaats je bericht via de website als het nog steeds niet lukt.
-    blocked_by_staff:
-      subject_template: "Account tijdelijk geblokkeerd"
-    user_automatically_blocked:
-      title: "Gebruiker Automatisch Geblokkeerd"
-      subject_template: "Nieuwe gebruiker %{username} geblokkeerd wegens meldingen van andere gebruikers"
-    spam_post_blocked:
-      title: "Spam bericht geblokkeerd"
-      subject_template: "Berichten van nieuwe gebruiker %{username} geblokkeerd vanwege herhaalde links"
-    unblocked:
-      title: "Gedeblokkeerd"
-      subject_template: "Account niet langer geblokkeerd"
-      text_body_template: |
-        Hallo,
-
-        Dit is een automatisch bericht van %{site_name} om u te laten weten dat uw account na beoordeling door een staflid niet meer is geblokkeerd.
-
-        U kunt nu weer nieuwe antwoorden en topics aanmaken. Bedankt voor uw geduld.
     pending_users_reminder:
       subject_template:
         one: "1 gebruiker wacht op goedkeuring"
@@ -1588,6 +1560,8 @@ nl:
   privacy_topic:
     title: "Privacy Voorwaarden"
   badges:
+    autobiographer:
+      name: Autobiograaf
     read_guidelines:
       name: Richtlijnen gelezen
   admin_login:

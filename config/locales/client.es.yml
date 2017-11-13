@@ -528,7 +528,6 @@ es:
       admin: "{{user}} es un administrador"
       moderator_tooltip: "Este usuario es un moderador"
       admin_tooltip: "Este usuario es un administrador"
-      blocked_tooltip: "El usuario está bloqueado"
       suspended_notice: "Este usuario ha sido suspendido hasta {{date}}."
       suspended_permanently: "Este usuario está suspendido."
       suspended_reason: "Causa: "
@@ -3001,12 +3000,9 @@ es:
         cant_suspend: "Este usuario no puede ser suspendido."
         delete_all_posts: "Eliminar todos los posts"
         delete_all_posts_confirm_MF: "Estás a punto de eliminar {POSTS, plural, one {1 post} other {# posts}} y {TOPICS, plural, one {1 topic} other {# topics}}. ¿Seguro?"
-        suspend: "Suspender"
-        unsuspend: "Quitar suspensión"
-        suspended: "¿Suspendido?"
         moderator: "¿Moderador?"
         admin: "¿Administrador?"
-        blocked: "¿Bloqueado?"
+        suspended: "¿Suspendido?"
         staged: "¿Provisional?"
         show_admin_profile: "Administrador"
         refresh_browsers: "Forzar recarga del navegador"
@@ -3022,8 +3018,8 @@ es:
         grant_admin_confirm: "Te hemos enviado un e-mail para verificar el nuevo administrador. Por favor abre el correo y sigue las instrucciones."
         revoke_moderation: 'Revocar moderación'
         grant_moderation: 'Conceder moderación'
-        unblock: 'Desbloquear'
-        block: 'Bloquear'
+        unsuspend: 'Quitar suspensión'
+        suspend: 'Suspender'
         reputation: Reputación
         permissions: Permisos
         activity: Actividad
@@ -3070,10 +3066,6 @@ es:
         activate_failed: "Ha habido un problem activando el usuario."
         deactivate_account: "Desactivar cuenta"
         deactivate_failed: "Ha habido un problema desactivando el usuario."
-        unblock_failed: 'Ha habido un problema desbloqueando el usuario.'
-        block_failed: 'Ha habido un problema bloqueando el usuario.'
-        block_confirm: '¿Seguro que quieres bloquear a este usuario? No podrá crear nuevos temas ni publicar posts.'
-        block_accept: 'Sí, bloquear este usuario'
         bounce_score: "Puntuación de rebote"
         reset_bounce_score:
           label: "Restablecer"
@@ -3081,7 +3073,6 @@ es:
         visit_profile: "Visita <a href='%{url}'>esta página de preferencias del usuario</a> para editar el perfil"
         deactivate_explanation: "Un usuario desactivado debe rehabilitar su dirección de correo."
         suspended_explanation: "Un usuario suspendido no puede ingresar al sitio."
-        block_explanation: "Un usuario bloqueado no puede publicar posts ni crear temas."
         staged_explanation: "Un usuario provisional solo puede publicar por email en temas específicos."
         bounce_score_explanation:
           none: "No se han recibido rebotes recientemente desde ese email."

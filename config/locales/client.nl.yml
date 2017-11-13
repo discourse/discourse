@@ -538,7 +538,6 @@ nl:
       admin: "{{user}} is een beheerder"
       moderator_tooltip: "Deze gebruiker is een moderator"
       admin_tooltip: "Deze gebruiker is een beheerder"
-      blocked_tooltip: "Deze gebruiker is geblokkeerd"
       suspended_notice: "Deze gebruiker is geschorst tot {{date}}."
       suspended_permanently: "Deze gebruiker is geschorst."
       suspended_reason: "Reden: "
@@ -2340,7 +2339,6 @@ nl:
         no_problems: "Er zijn geen problemen gevonden."
         moderators: 'Moderators:'
         admins: 'Beheerders:'
-        blocked: 'Geblokkeerd:'
         suspended: 'Geschorst:'
         private_messages_short: "PB's"
         private_messages_title: "Berichten"
@@ -2892,8 +2890,6 @@ nl:
             change_category_settings: "categorie-instellingen wijzigen"
             delete_category: "categorie verwijderen"
             create_category: "categorie maken"
-            block_user: "gebruiker blokkeren"
-            unblock_user: "gebruiker deblokkeren"
             grant_admin: "beheerdersrechten toekennen"
             revoke_admin: "beheerdersrechten intrekken"
             grant_moderation: "moderatierechten toekennen"
@@ -2987,7 +2983,6 @@ nl:
           pending: "Te beoordelen"
           staff: 'Stafleden'
           suspended: 'Geschorst'
-          blocked: 'Geblokkeerd'
           suspect: 'Verdacht'
         approved: "Goedgekeurd?"
         approved_selected:
@@ -3008,7 +3003,6 @@ nl:
           staff: "Stafleden"
           admins: 'Beheerders'
           moderators: 'Moderators'
-          blocked: 'Geblokkeerde gebruikers'
           suspended: 'Geschorste gebruikers'
           suspect: 'Verdachte gebruikers'
         reject_successful:
@@ -3036,12 +3030,9 @@ nl:
         cant_suspend: "Deze gebruiker kan niet worden geschorst."
         delete_all_posts: "Alle berichten verwijderen"
         delete_all_posts_confirm_MF: "U gaat {POSTS, plural, one {1 bericht} other {# berichten}} en {TOPICS, plural, one {1 topic} other {# topics}} verwijderen. Weet u het zeker?"
-        suspend: "Schorsen"
-        unsuspend: "Schorsing opheffen"
-        suspended: "Geschorst?"
         moderator: "Moderator?"
         admin: "Beheerder?"
-        blocked: "Geblokkeerd?"
+        suspended: "Geschorst?"
         staged: "Staged?"
         show_admin_profile: "Beheerder"
         refresh_browsers: "Vernieuwen in browser forceren"
@@ -3057,8 +3048,8 @@ nl:
         grant_admin_confirm: "We hebben u een e-mail gestuurd om de nieuwe beheerder te verifiëren. Open deze en volg de instructies."
         revoke_moderation: 'Moderatierechten intrekken'
         grant_moderation: 'Moderatierechten toekennen'
-        unblock: 'Deblokkeren'
-        block: 'Blokkeren'
+        unsuspend: 'Schorsing opheffen'
+        suspend: 'Schorsen'
         reputation: Reputatie
         permissions: Toestemmingen
         activity: Activiteit
@@ -3105,10 +3096,6 @@ nl:
         activate_failed: "Er is een probleem opgetreden bij het activeren van de gebruiker."
         deactivate_account: "Deactiveer account"
         deactivate_failed: "Er is een probleem opgetreden bij het deactiveren van de gebruiker."
-        unblock_failed: 'Er is een probleem opgetreden bij het deblokkeren van de gebruiker.'
-        block_failed: 'Er is een probleem opgetreden bij het blokkeren van de gebruiker.'
-        block_confirm: 'Weet u zeker dat u deze gebruiker wilt blokkeren? De gebruiker zal dan geen nieuwe topics of berichten kunnen plaatsen.'
-        block_accept: 'Ja, blokkeer deze gebruiker'
         bounce_score: "Bouncescore"
         reset_bounce_score:
           label: "Terugzetten"
@@ -3116,7 +3103,6 @@ nl:
         visit_profile: "Ga naar <a href='%{url}'>de instellingen van deze gebruiker</a> om hun profiel te bewerken"
         deactivate_explanation: "Een gedeactiveerde gebruiker moet zijn of haar e-mailadres opnieuw valideren."
         suspended_explanation: "Een geschorste gebruiker kan zich niet aanmelden."
-        block_explanation: "Een geblokkeerde gebruiker kan geen berichten plaatsen of topics maken."
         staged_explanation: "Een staged gebruiker kan alleen in bepaalde topics berichten plaatsen via e-mail."
         bounce_score_explanation:
           none: "Er zijn onlangs geen bounceberichten van dat e-mailadres ontvangen."

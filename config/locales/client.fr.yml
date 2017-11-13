@@ -540,7 +540,6 @@ fr:
       admin: "{{user}} est un administrateur"
       moderator_tooltip: "Cet utilisateur est un modérateur"
       admin_tooltip: "Cet utilisateur est un administrateur"
-      blocked_tooltip: "Cet utilisateur est bloqué"
       suspended_notice: "L'utilisateur est suspendu jusqu'au {{date}}."
       suspended_permanently: "Cet utilisateur est suspendu."
       suspended_reason: "Raison :"
@@ -1226,7 +1225,7 @@ fr:
       no_more_results: "Aucun résultat supplémentaire."
       searching: "Recherche en cours…"
       post_format: "#{{post_number}} par {{username}}"
-      results_page: "Résultats de votre recherche"
+      results_page: "Résultats de recherche pour « {{term}} »"
       more_results: "Il y a d'autres résultats. Merci de préciser vos critères de recherche."
       cant_find: "Vous ne trouvez pas ce que vous cherchez ?"
       start_new_topic: "Voulez-vous commencer un nouveau sujet ?"
@@ -1420,6 +1419,9 @@ fr:
         next_week: "Semaine prochaine"
         two_weeks: "Deux semaines"
         next_month: "Mois prochai"
+        three_months: "Trois mois"
+        six_months: "Six mois"
+        one_year: "Une année"
         forever: "Toujours"
         pick_date_and_time: "Sélectionner une date et heure"
         set_based_on_last_post: "Fermer par rapport au dernier message"
@@ -1743,8 +1745,8 @@ fr:
       actions:
         flag: 'Signaler'
         defer_flags:
-          one: "Reporter le signalement"
-          other: "Reporter les signalements"
+          one: "Ignorer le signalement"
+          other: "Ignorer les signalements"
         undo:
           off_topic: "Annuler le signalement"
           spam: "Annuler le signalement"
@@ -2344,7 +2346,6 @@ fr:
         no_problems: "Aucun problème n'a été trouvé."
         moderators: 'Modérateurs :'
         admins: 'Administateurs :'
-        blocked: 'Bloqués :'
         suspended: 'Suspendus :'
         private_messages_short: "Msgs"
         private_messages_title: "Messages"
@@ -2389,11 +2390,11 @@ fr:
         agree_flag_restore_post_title: "Restaurer ce message"
         agree_flag: "Accepter le signalement"
         agree_flag_title: "Accepter le signalement et garder le message inchangé"
-        defer_flag: "Reporter"
+        defer_flag: "Ignorer"
         defer_flag_title: "Retirer le signalement ; il ne nécessite aucune action pour le moment."
         delete: "Supprimer"
         delete_title: "Supprimer le message signalé."
-        delete_post_defer_flag: "Supprimer le message et reporter le signalement"
+        delete_post_defer_flag: "Supprimer le message et ignorer le signalement"
         delete_post_defer_flag_title: "Supprimer le message ; si c'est le premier message, le sujet sera supprimé"
         delete_post_agree_flag: "Supprimer le message et accepter le signalement"
         delete_post_agree_flag_title: "Supprimer le message ; si c'est le premier message, le sujet sera supprimé"
@@ -2412,7 +2413,7 @@ fr:
         dispositions:
           agreed: "accepté"
           disagreed: "refusé"
-          deferred: "reporté"
+          deferred: "ignoré"
         flagged_by: "Signalé par"
         resolved_by: "Résolu par"
         took_action: "Intervenu"
@@ -2435,6 +2436,8 @@ fr:
           off_topic: "hors-sujet"
           inappropriate: "inapproprié"
           spam: "spam"
+          notify_user: "personnalisé"
+          notify_moderators: "personnalisé"
       groups:
         primary: "Groupe principal"
         no_primary: "(pas de groupe principal)"
@@ -2884,8 +2887,6 @@ fr:
             change_category_settings: "modifier les paramètres de la catégorie"
             delete_category: "supprimer la catégorie"
             create_category: "créer une catégorie"
-            block_user: "bloquer l'utilisateur"
-            unblock_user: "débloquer l'utilisateur"
             grant_admin: "accorder les droits d'administration"
             revoke_admin: "révoquer les droits d'administration"
             grant_moderation: "Accorder les droits de modération"
@@ -2980,7 +2981,6 @@ fr:
           pending: "En attente"
           staff: 'Responsables'
           suspended: 'Suspendus'
-          blocked: 'Bloqués'
           suspect: 'Suspects'
         approved: "Approuvé ?"
         approved_selected:
@@ -3001,7 +3001,6 @@ fr:
           staff: "Responsables"
           admins: 'Administrateurs'
           moderators: 'Modérateurs'
-          blocked: 'Utilisateurs bloqués'
           suspended: 'Utilisateurs suspendus'
           suspect: 'Utilisateurs suspects'
         reject_successful:
@@ -3029,12 +3028,9 @@ fr:
         cant_suspend: "Cet utilisateur ne peut pas être suspendu."
         delete_all_posts: "Supprimer tous les messages"
         delete_all_posts_confirm_MF: "Vous êtes sur le point de supprimer {POSTS, plural, one {1 message} other {# messages}} et {TOPICS, plural, one {1 sujet} other {# sujets}}. Êtes-vous sûr ?"
-        suspend: "Suspendre"
-        unsuspend: "Annuler la suspension"
-        suspended: "Suspendu ?"
         moderator: "Modérateur ?"
         admin: "Administrateur ?"
-        blocked: "Bloqué ?"
+        suspended: "Suspendu ?"
         staged: "En attente ?"
         show_admin_profile: "Administration"
         refresh_browsers: "Forcer le rafraîchissement du navigateur"
@@ -3050,8 +3046,8 @@ fr:
         grant_admin_confirm: "Nous vous avons envoyé un courriel pour vérifier le nouvel administrateur. Veuillez le lire et suivre les instructions."
         revoke_moderation: 'Révoquer les droits de modération'
         grant_moderation: 'Accorder les droits de modération'
-        unblock: 'Débloquer'
-        block: 'Bloquer'
+        unsuspend: 'Annuler la suspension'
+        suspend: 'Suspendre'
         reputation: Réputation
         permissions: Permissions
         activity: Activité
@@ -3098,10 +3094,6 @@ fr:
         activate_failed: "Il y a eu un problème lors de l'activation du compte."
         deactivate_account: "Désactiver le compte"
         deactivate_failed: "Il y a eu un problème lors de la désactivation du compte."
-        unblock_failed: 'Il y a eu un problème lors du déblocage de l''utilisateur.'
-        block_failed: 'Il y a eu un problème lors du blocage de l''utilisateur.'
-        block_confirm: 'Êtes-vous sûr de vouloir bloquer cet utilisateur ? Il ne pourra plus créer de sujets ou messages.'
-        block_accept: 'Oui, bloquer cet utilisateur'
         bounce_score: "Score de rejet"
         reset_bounce_score:
           label: "Réinitialiser"
@@ -3109,7 +3101,6 @@ fr:
         visit_profile: "Visiter <a href='%{url}'>la page de préférence de cet utilisateur</a> pour éditer son profil"
         deactivate_explanation: "Un utilisateur désactivé doit revalider son adresse de courriel."
         suspended_explanation: "Un utilisateur suspendu ne peut pas se connecter."
-        block_explanation: "Un utilisateur bloqué ne peut pas écrire de messages ni créer de sujets."
         staged_explanation: "Un utilisateur en attente ne peut envoyer des messages par courriel que pour des sujets spécifiques."
         bounce_score_explanation:
           none: "Aucune rejet récent pour cette adresse courriel."

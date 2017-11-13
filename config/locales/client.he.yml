@@ -527,7 +527,6 @@ he:
       admin: "{{user}} הוא מנהל מערכת"
       moderator_tooltip: "משתמש זה הינו מנחה (Moderator)"
       admin_tooltip: "משתמש זה הינו אדמיניסטרטור"
-      blocked_tooltip: "משתמש זה חסום"
       suspended_notice: "המשתמש הזה מושעה עד לתאריך: {{date}}."
       suspended_reason: "הסיבה: "
       github_profile: "גיטהאב"
@@ -2276,7 +2275,6 @@ he:
         no_problems: "לא נמצאו בעיות."
         moderators: 'מנהלים:'
         admins: 'מנהלים ראשיים:'
-        blocked: 'חסומים:'
         suspended: 'מושעים:'
         private_messages_short: "הודעות"
         private_messages_title: "הודעות"
@@ -2818,8 +2816,6 @@ he:
             change_category_settings: "שינוי הגדרות קטגוריה"
             delete_category: "מחיקת קטגוריה"
             create_category: "יצירת קטגוריה"
-            block_user: "חסום משתמש"
-            unblock_user: "בטל חסימת משתמש"
             grant_admin: "הענקת ניהול"
             revoke_admin: "שללו אדמיניסטרציה"
             grant_moderation: "הענקת הנחיה"
@@ -2909,7 +2905,6 @@ he:
           pending: "ממתין"
           staff: 'צוות'
           suspended: 'מושעים'
-          blocked: 'חסומים'
           suspect: 'חשודים'
         approved: "מאושר?"
         approved_selected:
@@ -2930,7 +2925,6 @@ he:
           staff: "צוות"
           admins: 'מנהלים ראשיים'
           moderators: 'מנהלים'
-          blocked: 'משתמשים חסומים'
           suspended: 'משתמשים מושעים'
           suspect: 'משתמשים חשודים'
         reject_successful:
@@ -2947,18 +2941,14 @@ he:
         suspend_failed: "משהו נכשל בהשעיית המשתמש הזה {{error}}"
         unsuspend_failed: "משהו נכשל בביטול השהיית המשתמש הזה {{error}}"
         suspend_duration: "למשך כמה זמן יהיה המשתמש מושעה?"
-        suspend_duration_units: "(ימים)"
         suspend_reason_label: "מדוע אתם משעים? הטקסט הזה <b>יהיה נראה לכולם</b> בעמוד המשתמש הזה, ויוצג למשתמש כשינסה להתחבר. נסו לשמור עליו קצר."
         suspend_reason: "סיבה"
         suspended_by: "הושעה על ידי"
         delete_all_posts: "מחק את כל הפוסטים"
         delete_all_posts_confirm_MF: "אתם עומדים למחוק {POSTS, plural, one {פוסט אחד} other {# פסוטים}} ו{TOPICS, plural, one {נושא אחד} other {# נושאים}}. האם אתם בטוחים?"
-        suspend: "השעה"
-        unsuspend: "בטל השעייה"
-        suspended: "מושעה?"
         moderator: "מנהל?"
         admin: "מנהל ראשי?"
-        blocked: "חסום?"
+        suspended: "מושעה?"
         staged: "מועמד?"
         show_admin_profile: "מנהל ראשי"
         refresh_browsers: "הכרח רענון דפדפן"
@@ -2974,8 +2964,8 @@ he:
         grant_admin_confirm: "שלחנו אליכם מייל כדי לוודא את האדמיניסטרטור החדש. בבקשה פיתחו אותו ועיקבו אחר ההוראות."
         revoke_moderation: 'שללו הנחיה'
         grant_moderation: 'הענקת הנחיה'
-        unblock: 'ביטול חסימה'
-        block: 'חסום'
+        unsuspend: 'בטל השעייה'
+        suspend: 'השעה'
         reputation: מוניטין
         permissions: הרשאות
         activity: פעילות
@@ -3022,10 +3012,6 @@ he:
         activate_failed: "הייתה בעיה בהפעלת המשתמש."
         deactivate_account: "נטרל חשבון"
         deactivate_failed: "הייתה בעיה בנטרול חשבון המשתמש."
-        unblock_failed: 'הייתה בעיה בביטול חסימת המשתמש.'
-        block_failed: 'הייתה בעיה בחסימת המשתמש.'
-        block_confirm: 'האם אתם בטוחים שאתם מעוניינים לחסום משתמש זה? הם לא יוכלו ליצור נושאים חדשים או פוסטים.'
-        block_accept: 'כן, חסום משתמש זה'
         bounce_score: "ניקוד-החזר"
         reset_bounce_score:
           label: "איפוס"
@@ -3033,7 +3019,6 @@ he:
         visit_profile: "בקרו <a href='%{url}'>בדף ההעדפות של משתמש/ת זה/זו</a> כדי לערוך את הפרופיל שלהם"
         deactivate_explanation: "חשבון משתמש מנוטרל נדרש לוודא דואר אלקטרוני מחדש."
         suspended_explanation: "משתמש מושעה לא יכול להתחבר."
-        block_explanation: "משתמש חסום לא יכול לפרסם או להתחיל נושאים."
         staged_explanation: "משתמש מועמד יכול לפרסם רק באמצעות מייל בנושאים ספציפיים."
         bounce_score_explanation:
           none: "לא התקבלו החזרים לאחרונה מהמייל הזה."

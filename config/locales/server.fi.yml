@@ -48,7 +48,6 @@ fi:
         no_body_detected_error: "Näin käy, kun leipätekstin poiminta epäonnistuu eikä liitteitä ole."
         no_sender_detected_error: "Näin käy, kun emme tunnista käypää sähköpostiosoitetta viestin From-otsikkotiedosta."
         inactive_user_error: "Näin käy, kun lähettäjä ei ole aktiivinen."
-        blocked_user_error: "Näin käy, kun lähettäjä on estetty."
         bad_destination_address: "Näin käy, kun viestin vastaanottaja/kopio/piilokopio -kenttien osoitteet eivät täsmää asetettuihin saapuvan sähköpostin osoitteiden kanssa."
         strangers_not_allowed_error: "Näin käy, kun käyttäjä yrittää luoda ketjun alueelle, jonka jäsen ei ole."
         insufficient_trust_level_error: "Näin käy, kun käyttäjä yrittää luoda ketjun alueelle, jonka vähimmäisluottamustasovaatimusta ei täytä."
@@ -950,11 +949,6 @@ fi:
     tl2_additional_likes_per_day_multiplier: "Nosta tykkäysten päivittäistä rajaa tasolla lt2 (konkari) kertomalla tällä luvulla"
     tl3_additional_likes_per_day_multiplier: "Nosta tykkäysten päivittäistä rajaa tasolla lt3 (mestari) kertomalla tällä luvulla"
     tl4_additional_likes_per_day_multiplier: "Nosta tykkäysten päivittäistä rajaa tasolla lt4 (johtaja) kertomalla tällä luvulla"
-    num_spam_flags_to_block_new_user: "Jos uuden käyttäjän viestit saavat näin monta roskapostiliputusta num_users_to_block_new_user eri käyttäjältä, piilota kaikki viestit ja jäädytä kirjoitusoikeudet. Aseta 0 poistaaksesi käytöstä."
-    num_users_to_block_new_user: "Jos uuden käyttäjän viestit saavat num_spam_flags_to_block_new_user roskapostiliputusta näin monelta eri käyttäjältä, piilota kaikki viestit ja jäädytä kirjoitusoikeudet. Aseta 0 poistaaksesi käytöstä."
-    num_tl3_flags_to_block_new_user: "Jos uuden käyttäjän viesti saa näin monta lippua num_tl3_users_to_block_new_user eri lt3 käyttäjältä, piilota kaikki hänen viestinsä ja estä uusien viestien kirjoittaminen. 0 poistaa käytöstä."
-    num_tl3_users_to_block_new_user: "Jos uuden käyttäjän viesti saa num_tl3_flags_to_block_new_user lippua näin monelta lt3 käyttäjältä, piilota kaikki hänen viestinsä ja estä uusien viestien kirjoittaminen. 0 poistaa käytöstä."
-    notify_mods_when_user_blocked: "Jos käyttäjä estetään automaattisesti, lähetä viesti kaikille valvojille."
     flag_sockpuppets: "Jos uuden käyttäjän luomaan ketjuun vastaa toinen uusi käyttäjä samasta IP-osoitteesta, liputa molemmat viestit mahdolliseksi roskapostiksi."
     traditional_markdown_linebreaks: "Käytä perinteisiä rivinvaihtoja Markdownissa, joka vaatii kaksi perättäistä välilyöntiä rivin vaihtoon."
     enable_markdown_typographer: "Käytetään tavanomaisia typografisia sääntöjä parantamaan tekstikappaleiden luettavuutta, (c), (tm) ym. korvataan symboleilla, kysymysmerkkien määrää vähennetään jne."
@@ -962,8 +956,6 @@ fi:
     must_approve_users: "Henkilökunnan täytyy hyväksyä kaikki uudet tilit, ennen uusien käyttäjien päästämistä sivustolle. VAROITUS: tämän asetuksen valitseminen poistaa pääsyn kaikilta jo olemassa olevilta henkilökuntaan kuulumattomilta käyttäjiltä."
     pending_users_reminder_delay: "Ilmoita valvojille, jos uusi käyttäjä on odottanut hyväksyntää kauemmin kuin näin monta tuntia. Aseta -1, jos haluat kytkeä ilmoitukset pois päältä."
     maximum_session_age: "Käyttäjä pysyy sisäänkirjautuneena n tuntia vierailunsa jälkeen"
-    ga_tracking_code: "VANHENTUNUT: Google Analytics (ga.js) -seurantatunnus, esim. UA-12345678-9; ks. http://google.com/analytics"
-    ga_domain_name: "VANHENTUNUT: Google Analytics (ga.js) -verkkotunnus, esim. mysite.com; ks. http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal analytics (analytics.js) seurantakoodi, esim.: UA-12345678-9; katso http://google.com/analytics"
     ga_universal_domain_name: "Google Universal analytics (analytics.js) verkkotunnus, esim.: osoite.fi; katso http://google.com/analytics"
     gtm_container_id: "Google Tag Manager -säiliön ID. Esim: GTM-ABCDEF"
@@ -1191,9 +1183,6 @@ fi:
     num_hours_to_close_topic: "Kuinka moneksi tunniksi ketju menee tauolle puuttumistoimia odottamaan."
     auto_respond_to_flag_actions: "Ota käyttöön automaattinen vastaus lippua poistettaessa."
     min_first_post_typing_time: "Minimimäärä aikaa millisekunneissa, joka käyttäjän täytyy kirjoittaa ensimmäistä viestiään. Jos rajaa ei saavuteta, viesti lisätään automaattisesti hyväksyttävien jonoon. Aseta 0 ottaaksesi pois käytöstä (ei suositella)."
-    auto_block_fast_typers_on_first_post: "Estä automaattisesti käyttäjät, jotka eivät saavuta min_first_post_typing_time"
-    auto_block_fast_typers_max_trust_level: "Suurin luottamustaso, jolla automaattisesti estetään nopeat kirjoittajat"
-    auto_block_first_post_regex: "Merkkikokoriippumaton regex joka aiheuttaa käyttäjän ensimmäisen viestin estämisen ja lisäämisen hyväksymisjonoon. Esimerkiksi raivoaminen|a[bc]a aiheuttaa kaikkien viestien, joissa on sanat raivoava, aba tai aca estämisen. Vaikuttaa vain ensimmäiseen viestiin."
     reply_by_email_enabled: "Ota käyttöön vastaukset sähköpostin avulla."
     reply_by_email_address: "Saapuvien sähköpostivastausten sähköpostiosoitekaava, esimerkiksi: %{reply_key}@reply.example.com tai replies+%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Lista vaihtoehtoisista saapuvien sähköpostivastausten sähköpostiosoitekaavoista, esimerkiksi: %{reply_key}@reply.example.com tai replies+%{reply_key}@example.com"
@@ -1903,13 +1892,6 @@ fi:
         Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
 
         Käyttäjätiliä tällä sähköpostiosoitteella ei ole aktivoitu. Aktivoi käyttäjätili ennen sähköpostien lähettämistä.
-    email_reject_blocked_user:
-      title: "Sähköposti hylätty - estetty käyttäjä"
-      subject_template: "[%{email_prefix}] Sähköpostiongelma-- Estetty käyttäjä"
-      text_body_template: |
-        Pahoittelemme, mutta sähköpostiviesetisi tänne  %{destination} (otsikolla %{former_title}) ei onnistunut.
-
-        Käyttäjätili tällä sähköpostiosoitteella on estetty.
     email_reject_reply_user_not_matching:
       title: "Sähköposti hylätty - käyttäjä ei täsmää"
       subject_template: "[%{email_prefix}] Sähköpostiongelma -- Vastaus odottamattomasta osoitteesta"
@@ -2030,67 +2012,9 @@ fi:
     too_many_spam_flags:
       title: "Liian monta roskapostiliputusta"
       subject_template: "Uusi tili on estetty"
-      text_body_template: |
-        Hei,
-
-        Tämä automaattinen viesti on lähetetty sivustolta %{site_name} kertoaksemme, että viestejäsi on väliakaisesti piilotettu yhteisön liputusten perusteella.
-
-        Varotoimena uudelta tililtäsi ei voi vastata tai luoda uusia ketjuja ennen kuin henkilökunnan jäsen tarkastaa sen. Pahoittelemme tästä aiheutuvaa vaivaa.
-
-        Saadaksesi lisätietoa, tutustu [yhteisön ohjeisiin](%{base_url}/guidelines).
     too_many_tl3_flags:
       title: "Liian monta lt3-lippua"
       subject_template: "Uusi tili on estetty"
-      text_body_template: |
-        Hei,
-
-        Tämä automaattinen viesti on lähetetty sivustolta %{site_name} kertoaksemme, että tilisi on jäädytetty yhteisön useiden liputusten perusteella.
-
-        Varotoimena uudelta tililtäsi ei voi vastata tai luoda uusia ketjuja ennen kuin henkilökunnan jäsen tarkastaa sen. Pahoittelemme tästä aiheutuvaa vaivaa.
-
-        Saadaksesi lisätietoa, tutustu [yhteisön ohjeisiin](%{base_url}/guidelines).
-    blocked_by_staff:
-      title: "Henkilökunta esti"
-      subject_template: "Tili on väliaikaisesti estetty"
-      text_body_template: |
-        Hei,
-
-        Tämä automaattinen viesti on lähetetty sivustolta %{site_name} kertoaksemme, että tilisi on jäädytetty väliaikaisesti varotoimenpiteenä.
-
-        Voit jatkaa selailua, muttet voi vastata tai luoda uusia ketjuja ennen kuin [henkilökunnan jäsen](%{base_url}/about) tarkastaa viimeisimmät viestisi. Pahoittelemme tästä aiheutuvaa vaivaa.
-
-        Saadaksesi lisätietoa, tutustu [yhteisön ohjeisiin](%{base_url}/guidelines).
-    user_automatically_blocked:
-      title: "Käyttäjä estetty automaattisesti"
-      subject_template: "Uusi käyttäjä %{username} on estetty yhteisön liputusten perusteella"
-      text_body_template: |
-        Tämä on automaattinen viesti.
-
-        Uusi käyttäjätili [%{username}](%{user_url}) estettiin, koska monet liputtivat käyttäjän %{username} viestin tai viestejä.
-
-        [Tarkastele liputettuja viestejä](%{base_url}/admin/flags). Jos käyttäjä %{username} estettiin aiheettomasti, klikkaa poista esto -painiketta [tähän käyttäjään liittyvällä ylläpitäjän sivulla](%{user_url}).
-
-        Kynnysarvoa voi muuttaa säätämällä asetuksen `block_new_user` arvoa sivuston asetuksissa.
-    spam_post_blocked:
-      title: "Roskapostiviesti estetty"
-      subject_template: "Uuden käyttäjän %{username} viestit on estetty toistuvien linkkien vuoksi"
-      text_body_template: |
-        Tämä on automaattisesti luotu viesti.
-
-        Uusi käyttäjä [%{username}](%{user_url}) yritti luoda useita viestejä, jotka sisälsivät linkkejä osoitteeseen %{domains}, mutta jotka estettiin roskapostin välttämiseksi. Käyttäjä voi edelleen luoda viesteijä, joissa ei ole linkkejä näihin osoitteisiin %{domains}.
-
-        [Tarkasta käyttäjätili](%{user_url}).
-
-        Tätä toimintoa voi muokata vaihtamalla asetuksia `newuser_spam_host_threshold`  `white_listed_spam_host_domains` sivuston asetuksissa.
-    unblocked:
-      title: "Ei enää estetty"
-      subject_template: "Tili avattu"
-      text_body_template: |
-        Hei,
-
-        Tämä automaattinen viesti on lähetetty sivustolta %{site_name} kertoaksemme, että tilisi on avattu henkilökunnan tarkastettua tilanteen.
-
-        Voit jälleen luoda uusia viestejä ja ketjuja. Kiitos kärsivällisyydestänne.
     pending_users_reminder:
       title: "Käyttäjiä jonossa"
       subject_template:
@@ -2115,9 +2039,9 @@ fi:
       title: "Olet kuukauden tulokas!"
       subject_template: "Olet kuukauden tulokas!"
       text_body_template: |
-        Onneksi olkoon, olet ansainnut Kuukauden tulokas -palkinnon %{month_year}** :trophy:
+        Onneksi olkoon, olet ansainnut **Kuukauden tulokas -palkinnon %{month_year}** :trophy:
 
-        Palkinto myönnetään vain kahdelle käyttäjälle joka kuukausi, ja se näkyy pysyvästi [käyttäjäsivullasi](%{base_url}/my/badges).
+        Palkinto myönnetään vain kahdelle käyttäjälle joka kuukausi, ja se näkyy pysyvästi [käyttäjäsivullasi](%{url}).
 
         Sinusta on äkkiä tullut tärkeä osa yhteisöä. Kiitos kun liityit, ja jatka samaa rataa!
     queued_posts_reminder:
@@ -2360,8 +2284,9 @@ fi:
       popular_posts: "Suosittuja viestejä"
       more_new: "Uutta sinulle"
       subject_template: "[%{email_prefix}] Kooste"
-      unsubscribe: "Tämä kooste lähetettiin sivustolta %{site_link}, koska sinua ei ole näkynyt vähään aikaan. Voit perua tilauksen muuttamalla <a href='%{email_settings_url}'>sähköpostiasetuksiasi</a> tai %{unsubscribe_link}."
-      click_here: "klikkaa tästä"
+      unsubscribe: "Tämä kooste lähetettiin sivustolta %{site_link}, koska sinua ei ole näkynyt vähään aikaan. Voit perua tilauksen muuttamalla %{email_preferences_link} tai %{unsubscribe_link} peruaksesi tilauksen."
+      your_email_settings: "sähköpostiasetuksiasi"
+      click_here: "klikkaa tätä"
       from: "%{site_name} kooste"
       preheader: "Lyhyt yhteenveto tapahtumista viime vierailusi (%{last_seen_at}) jälkeen"
     forgot_password:
@@ -2461,6 +2386,9 @@ fi:
     see_more: "Lisää"
     search_title: "Etsi tältä sivustolta"
     search_google: "Google"
+  offline:
+    title: "Sovellusta ei voida ladata"
+    offline_page_message: "Yhteydessäsi vaikuttaa olevan vikaa! Tarkista verkkoyhteytesi ja yritä uudelleen."
   login_required:
     welcome_message: |
       ## [Tervetuloa sivustolle %{title}](#welcome)
@@ -2742,9 +2670,9 @@ fi:
         Tämä ansiomerkki myönnetään, kun viestistäsi tykätään ensi kertaa. Onnittelut, olet tuottanut jotakin, mitä toinen käyttäjä on pitänyt mielenkiintoisena, hauskana tai hyödyllisenä!
     autobiographer:
       name: Omaelämäkerta
-      description: Täytti <a href="/my/preferences">käyttäjätiedot</a>
+      description: Täytti <a href="%{base_uri}/my/preferences/profile">käyttäjätiedot</a>
       long_description: |
-        Tämä ansiomerkki myönnetään , kun täytät <a href="/my/preferences">käyttäjätiedot</a> ja valitset profiilikuvan. Kertomalla hieman itsestäsi ja kiinnostuksen kohteistasi edistät yhteisöllisyyttä. Liity meihin!
+        Tämä ansiomerkki myönnetään, kun täytät <a href="%{base_uri}/my/preferences/profile">käyttäjätiedot</a> ja valitset profiilikuvan. Kertomalla hieman itsestäsi ja kiinnostuksen kohteistasi edistät yhteisöllisyyttä. Liity meihin!
     anniversary:
       name: Vuosipäivä
       description: Aktiivinen jäsen vuoden ajan, kirjoittanut ainakin yhden viestin
@@ -2839,9 +2767,9 @@ fi:
         Tämä ansiomerkki myönnetään, kun ensi kerran lainaat viestiä vastauksessasi. Edellisten viestien olennaisten osien lainaaminen auttaa pitämään keskustelun yhtenäisenä ja aiheen mukaisena. Helpoin tapa on maalata viestin osa ja sitten painaa vastaa-painiketta. Lainaa runsaasti!
     read_guidelines:
       name: Luki ohjeet
-      description: Luki <a href="/guidelines">palstan säännöt</a>
+      description: Luki <a href="%{base_uri}/guidelines">yhteisön säännöt</a>
       long_description: |
-        Tämä ansiomerkki myönnetään, kun <a href="/guidelines">luet yhteisön ohjeet </a>. Noudattamalla ja jakamalla näitä yksinkertaisia ohjeita edistät yhteisön turvallisuutta, viihtyisyyttä ja jatkuvuutta. Muista aina, että toisessa päässä on toinen ihminen, hyvin itsesi kaltainen. Ole kohtelias!
+        Tämä ansiomerkki myönnetään, kun <a href="%{base_uri}/guidelines">luet yhteisön säännöt</a>. Noudattamalla ja jakamalla näitä yksinkertaisia ohjeita edistät yhteisön turvallisuutta, viihtyisyyttä ja jatkuvuutta. Muista aina, että toisessa päässä on toinen ihminen, hyvin itsesi kaltainen. Ole kohtelias!
     reader:
       name: Lukutoukka
       description: Luki jokaisen viestin ketjusta, jossa on enemmän kuin 100 vastausta

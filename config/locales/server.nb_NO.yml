@@ -46,7 +46,6 @@ nb_NO:
         no_body_detected_error: "Skjer når vi ikke kunne trekke ut meldingskroppen eller det ikke var noen vedlegg."
         no_sender_detected_error: "Skjer når vi ikke kunne finne en gyldig adresse i Fra-feltet"
         inactive_user_error: "Skjer når senderen ikke er aktiv."
-        blocked_user_error: "Skjer når avsenderen har blitt blokkert."
         bad_destination_address: "Skjer når ingen av adressene i To-, Cc- eller Bcc-feltene passer med en konfigurert innkommende e-postadresse."
         strangers_not_allowed_error: "Skjer når en bruker forsøket å opprette et nytt emne i en kategori som han eller hun ikke er medlem av."
         insufficient_trust_level_error: "Skjer når en bruker forsøket å opprette et nytt emne i en kategori som han eller hun ikke har tillitsnivå for."
@@ -259,6 +258,7 @@ nb_NO:
               no_user_selected: "Du må velge en gyldig bruker. "
             featured_link:
               invalid: "er ugyldig. Nettadressen bør inneholde http:// eller https://"
+              invalid_category: "kan ikke redigeres i denne kategorien."
         user:
           attributes:
             password:
@@ -273,10 +273,21 @@ nb_NO:
           attributes:
             hex:
               invalid: "er ikke en gyldig farge"
+        post_reply:
+          base:
+            different_topic: "Innlegg ogg svar må tilhøre samme emne."
         web_hook:
           attributes:
             payload_url:
               invalid: "URL-adresse er ikke gyldig. Adressen skal starte med http:// eller https:// og ingen blanke tegn er tillatt."
+        custom_emoji:
+          attributes:
+            name:
+              taken: er allerede i bruk av en annen emoji
+        topic_timer:
+          attributes:
+            execute_at:
+              in_the_past: "må være i fremtiden."
       <<: *errors
   user_profile:
     no_info_other: "<div class='missing-profile'>%{name} har ikke skrevet noe i Om meg-feltet på sin profil ennå</div>"
@@ -851,8 +862,6 @@ nb_NO:
       subject_template: "Ny konto på vent"
     too_many_tl3_flags:
       subject_template: "Ny konto på vent"
-    unblocked:
-      subject_template: "Kontoen er ikke lenger på vent"
   unsubscribe_mailing_list: |
     Du mottar dette fordi du har slått på e-postlistemodus.
 

@@ -43,7 +43,6 @@ sv:
         auto_generated_email_error: "Händer när 'precedence'-rubriken är satt till: list, skräp, mass eller auto-reply, eller när någon annan rubrik innehåller: auto-submitted, auto-replied eller auto-generated."
         no_body_detected_error: "Händer när vi inte kunde extrahera någon huvuddel och det inte fanns några bilagor."
         inactive_user_error: "Händer när sändaren inte är aktiv."
-        blocked_user_error: "Händer när sändare har blivit blockerad."
         bad_destination_address: "Händer när inga av e-postadresserna i Till/Cc/Bcc-fälten matchar en konfigurerad inkommande e-postadress."
         strangers_not_allowed_error: "Händer när en användare försöker skapa ett nytt ämne i en kategori som användare inte är en medlem av."
         insufficient_trust_level_error: "Händer när en användare försöker skapa ett nytt ämne i en kategori som användare saknar förtroendenivå för."
@@ -808,11 +807,6 @@ sv:
     tl2_additional_likes_per_day_multiplier: "Höj gränsen för antal gillningar per dag för användare med förtroendenivå 2 (medlem) genom att multiplicera med det här numret "
     tl3_additional_likes_per_day_multiplier: "Höj gränsen för antal gillningar per dag för användare med förtroendenivå 3 (regelbundna) genom att multiplicera med det här numret"
     tl4_additional_likes_per_day_multiplier: "Höj gränsen för antal gillningar per dag för användare med förtroendenivå 4 (ledare) genom att multiplicera med det här numret"
-    num_spam_flags_to_block_new_user: "Dölj alla inlägg från en ny användare och förhindra framtida inlägg om ett av användarens inlägg får så här många flaggningar för spam från num_users_to_block_new_user olika användare. Ange 0 för att inaktivera."
-    num_users_to_block_new_user: "Dölj alla inlägg och förhindra framtida inlägg från en ny användare om ett av användarens inlägg får num_spam_flags_to_block_new_user flaggningar för spam från så här många olika användare. Ange 0 för att inaktivera."
-    num_tl3_flags_to_block_new_user: "Dölj alla inlägg från en ny användare och förhindra framtida inlägg om ett av användarens inlägg får så här många flaggningar från num_tl3_users_to_block_new_user olika användare med förtroendenivå 3. Ange 0 för att inaktivera."
-    num_tl3_users_to_block_new_user: "Dölj alla inlägg och förhindra framtida inlägg från en ny användare om ett av användarens inlägg får num_tl3_flags_to_block_new_user flaggningar från så här många olika användare med förtroendenivå 3. Ange 0 för att inaktivera."
-    notify_mods_when_user_blocked: "Om en användare blockeras automatiskt, skicka ett meddelande till alla moderatorer."
     flag_sockpuppets: "Flagga båda användarnas inlägg som potentiell skräppost om en ny användare svarar på ett ämne från samma IP-adress som den andra nya användaren som skapade ämnet."
     traditional_markdown_linebreaks: "Använd vanliga radmatningar i Markdown, vilka kräver 2 avslutande mellanslag för en radmatning."
     post_undo_action_window_mins: "Antal minuter som en användare tillåts att upphäva handlingar på ett inlägg som gjorts nyligen (gillning, flaggning osv)."
@@ -1026,9 +1020,6 @@ sv:
     num_flags_to_close_topic: "Minsta antal aktiva flaggor som krävs för att automatiskt pausa ett ämne för ingripande"
     auto_respond_to_flag_actions: "Aktivera automatiskt svar vid hantering av en flagga."
     min_first_post_typing_time: "Minsta tid i millisekunder en användare måste skriva vid komponerandet av sitt första inlägg. Om gränsen inte är uppnådd så kommer inlägget automatiskt att hamna i kön av saker som behöver granskas. Ange 0 för att inaktivera (rekommenderas ej)"
-    auto_block_fast_typers_on_first_post: "Blockera automatiskt användare som inte når upp till min_first_post_typing_time"
-    auto_block_fast_typers_max_trust_level: "Högsta förtroendenivå för att automatiskt blockera snabba författare"
-    auto_block_first_post_regex: "Skriftlägeskänsligt regex som om godkänt kommer att orsaka att första inlägget av en användare blockeras och skickas till kön för saker som behöver granskas. Exempel: raging|a[bc]a kommer att orsaka att alla inlägg som börjar med raging eller aba eller aca blockeras vid första försöket. Gäller endast användarens första inlägg. "
     reply_by_email_enabled: "Aktivera möjlighet att svara på ämnen via e-post."
     reply_by_email_address: "Mall för inkommande e-postadress för svar via e-post, till exempel: %{reply_key}@svar.exempel.se eller svar+%{reply_key}@exempel.se"
     disable_emails: "Förhindra Discourse från att skicka någon form av e-post"
@@ -1399,12 +1390,6 @@ sv:
         Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
 
         Kontot associerat till den här e-postadressen är inte aktiverat. Var god se till att ditt konto är aktiverat innan du skickar e-post.
-    email_reject_blocked_user:
-      title: "Email avslås blockerad användare"
-      text_body_template: |
-        Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
-
-        Kontot associerat till den här e-postadressen har blockerats.
     email_reject_reply_user_not_matching:
       title: "Emailet avslås användare hittas ej"
     email_reject_no_account:
@@ -1469,66 +1454,8 @@ sv:
     too_many_spam_flags:
       title: "För många skräppost flaggningar"
       subject_template: "Nytt konto pausat"
-      text_body_template: |
-        Hej!
-
-        Det här är ett automatiserat meddelande från %{site_name} för att informera dig om att dina inlägg temporärt har dolts på grund av att de flaggades av medlemmar.
-
-        Som en förebyggande åtgärd har ditt nya konto blockerats från att skapa nya inlägg eller ämnen tills det har granskats av personal. Vi ber om ursäkt för besväret.
-
-        För ytterligare information, se våra [riktlinjer](%{base_url}/guidelines).
     too_many_tl3_flags:
       subject_template: "Nytt konto pausat"
-      text_body_template: |
-        Hej!
-
-        Det här är ett automatiserat meddelande från %{site_name} för att informera dig om att dina inlägg temporärt har dolts på grund av att de flaggades av ett stort antal medlemmar.
-
-        Som en förebyggande åtgärd har ditt nya konto blockerats från att skapa nya inlägg eller ämnen tills det har granskats av personal. Vi ber om ursäkt för besväret.
-
-        För ytterligare information, se våra [riktlinjer](%{base_url}/guidelines).
-    blocked_by_staff:
-      title: "Blockerat av personal"
-      subject_template: "Konto tillfälligt pausat"
-      text_body_template: |
-        Hej!
-
-        Det här är ett automatiserat meddelande från %{site_name} för att informera dig om att ditt konto tillfälligt har pausats som en försiktighetsåtgärd.
-
-        Det går bra att fortsätta besöka sidan men du kommer inte att kunna skriva inlägg eller skapa nya ämnen förrän [personalen](%{base_url}/about) granskar dina senaste inlägg. Vi ber om ursäkt för besväret.
-
-        För mer information, se våra [riktlinjer](%{base_url}/guidelines).
-    user_automatically_blocked:
-      title: "Användare blir automatiskt blockerad"
-      subject_template: "Ny användare  %{username} blockerad på grund av flaggningar från forumet"
-      text_body_template: |
-        Det här är ett automatiserat meddelande.
-
-        Den nya användaren [%{username}](%{user_url}) blockerades automatiskt på grund av att ett flertal medlemmar flaggat användaren %{username}s inlägg.
-
-        Var vänlig och [granska inläggen](%{base_url}/admin/flags). Om %{username} har blockerats på felaktig grund, var god och klicka på avblockeringsknappen [på administrationssidan för den här användaren](%{user_url}).
-
-        Du kan också modifiera inställningen `block_new_user` via Webbplatsinställningar.
-    spam_post_blocked:
-      title: "Skräppost är blockerat"
-      subject_template: "Ny användare %{username} har fått meddelanden blockerade pga. upprepade länkar "
-      text_body_template: |
-        Det här är ett automatiserat meddelande.
-
-        Den nya användaren [%{username}](%{user_url}) försökte skriva flera inlägg med länkar till %{domains}, men inläggen blockerades för att undvika spam. Användaren kan fortfarande skriva nya inlägg som inte länkar till %{domains}.
-
-        Var vänlig och [granska användaren](%{user_url}).
-
-        Du kan också modifiera webbplatsinställningarna `newuser_spam_host_threshold`och `white_listed_spam_host_domains`.
-    unblocked:
-      title: "Avblockerat"
-      subject_template: "Konto ej längre pausat"
-      text_body_template: |
-        Hej!
-
-        Det här är ett automatiserat meddelande från %{site_name} för att informera dig om att ditt konto inte längre är pausat efter att personal har granskat ärendet.
-
-        Du kan nu skriva inlägg och skapa nya ämnen igen. Tack för ditt tålamod.
     pending_users_reminder:
       title: "Påminnelse om väntande användare"
       subject_template:

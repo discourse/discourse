@@ -428,7 +428,6 @@ id:
     allow_user_locale: "Perbolehkan pengguna untuk memilih bahasa sendiri"
     allow_duplicate_topic_titles: "Perbolehkan topik dengan judul yang sama."
     contact_url: "URL kontak untuk situs ini. Digunakan dalam formulir kontak pada /about untuk hal penting."
-    notify_mods_when_user_blocked: "Jika pengguna diblokir secara otomatis, kirimkan pesan kepada semua moderator."
     maximum_backups: "Jumlah maksimum backup yang disimpan dalam disk. Backup lama akan dihapus secara otomatis."
     email_editable: "Perbolehkan pengguna untuk mengganti alamat email setelah registrasi."
     errors:
@@ -446,8 +445,6 @@ id:
       blocked: "Registrasi baru dari alamat IP Anda tidak diijinkan."
       max_new_accounts_per_registration_ip: "Registrasi baru dari alamat IP Anda tidak diijinkan (telah mencapai batas maksimum). Silahkan hubungi staff."
   system_messages:
-    spam_post_blocked:
-      subject_template: "Pengguna baru %{username} disuspensi atas penulisan tautan yang berulang-ulang kali"
     pending_users_reminder:
       subject_template:
         other: "%{count} pengguna sedang menunggu persetujuan"
