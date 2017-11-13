@@ -16,6 +16,8 @@ import PreloadStore from 'preload-store';
 import { defaultHomepage } from 'discourse/lib/utilities';
 import { userPath } from 'discourse/lib/url';
 
+const isForever = dt => moment().diff(dt, 'years') < -500;
+
 const User = RestModel.extend({
 
   hasPMs: Em.computed.gt("private_messages_stats.all", 0),
@@ -178,14 +180,16 @@ const User = RestModel.extend({
   },
 
   @computed("suspended_till")
-  suspendedForever(suspendedTill) {
-    return moment().diff(suspendedTill, 'years') < -500;
-  },
+  suspendedForever: isForever,
+
+  @computed("silenced_till")
+  silencedForever: isForever,
 
   @computed("suspended_till")
-  suspendedTillDate(suspendedTill) {
-    return longDate(suspendedTill);
-  },
+  suspendedTillDate: longDate,
+
+  @computed("silenced_till")
+  silencedTillDate: longDate,
 
   changeUsername(new_username) {
     return ajax(userPath(`${this.get('username_lower')}/preferences/username`), {

@@ -710,7 +710,7 @@ describe PostsController do
           expect(parsed["action"]).to eq("enqueued")
 
           user.reload
-          expect(user.silenced).to eq(true)
+          expect(user).to be_silenced
 
           qp = QueuedPost.first
 
@@ -718,7 +718,7 @@ describe PostsController do
           qp.approve!(mod)
 
           user.reload
-          expect(user.silenced).to eq(false)
+          expect(user).not_to be_silenced
         end
 
         it "doesn't enqueue replies when the topic is closed" do
@@ -763,7 +763,7 @@ describe PostsController do
         expect(parsed["action"]).to eq("enqueued")
 
         user.reload
-        expect(user.silenced).to eq(true)
+        expect(user).to be_silenced
       end
 
       it "can send a message to a group" do

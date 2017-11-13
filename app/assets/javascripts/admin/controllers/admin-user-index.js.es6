@@ -70,7 +70,9 @@ export default Ember.Controller.extend(CanCheckEmails, {
     unsuspend() {
       this.get("model").unsuspend().catch(popupAjaxError);
     },
-
+    showSilenceModal() {
+      this.get('adminTools').showSilenceModal(this.get('model'));
+    },
 
     toggleUsernameEdit() {
       this.set('userUsernameValue', this.get('model.username'));

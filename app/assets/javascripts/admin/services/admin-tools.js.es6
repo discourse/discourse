@@ -20,12 +20,12 @@ export default Ember.Service.extend({
     };
   },
 
-  showSuspendModal(user, opts) {
+  _showControlModal(type, user, opts) {
     opts = opts || {};
 
-    let controller = showModal('admin-suspend-user', {
+    let controller = showModal(`admin-${type}-user`, {
       admin: true,
-      modalClass: 'suspend-user-modal'
+      modalClass: `${type}-user-modal`
     });
     if (opts.post) {
       controller.set('post', opts.post);
@@ -42,6 +42,14 @@ export default Ember.Service.extend({
         successCallback: opts.successCallback
       });
     });
+  },
+
+  showSilenceModal(user, opts) {
+    this._showControlModal('silence', user, opts);
+  },
+
+  showSuspendModal(user, opts) {
+    this._showControlModal('suspend', user, opts);
   },
 
   _deleteSpammer(adminUser) {

@@ -1,5 +1,7 @@
 class UserSilencer
 
+  attr_reader :user_history
+
   def initialize(user, by_user = nil, opts = {})
     @user, @by_user, @opts = user, by_user, opts
   end
@@ -14,14 +16,26 @@ class UserSilencer
 
   def silence
     hide_posts unless @opts[:keep_posts]
-    unless @user.silenced?
-      @user.silenced = true
+    unless @user.silenced_till.present?
+      @user.silenced_till = @opts[:silenced_till] || 1000.years.from_now
       if @user.save
         message_type = @opts[:message] || :silenced_by_staff
-        post = SystemMessage.create(@user, message_type)
-        if post && @by_user
-          StaffActionLogger.new(@by_user).log_silence_user(@user, context: "#{message_type}: '#{post.topic&.title rescue ''}' #{@opts[:reason]}")
+
+        if @opts[:context].present?
+          context = @opts[:context]
+        else
+          context = "#{message_type}: '#{post.topic&.title rescue ''}' #{@opts[:reason]}"
+          SystemMessage.create(@user, message_type)
         end
+
+        if @by_user
+          @user_history = StaffActionLogger.new(@by_user).log_silence_user(
+            @user,
+            context: context,
+            details: @opts[:reason]
+          )
+        end
+        return true
       end
     else
       false
@@ -37,7 +51,7 @@ class UserSilencer
   end
 
   def unsilence
-    @user.silenced = false
+    @user.silenced_till = nil
     if @user.save
       SystemMessage.create(@user, :unsilenced)
       StaffActionLogger.new(@by_user).log_unsilence_user(@user) if @by_user

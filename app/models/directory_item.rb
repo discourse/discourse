@@ -82,7 +82,7 @@ class DirectoryItem < ActiveRecord::Base
                   LEFT OUTER JOIN posts AS p ON ua.target_post_id = p.id
                   LEFT OUTER JOIN categories AS c ON t.category_id = c.id
                   WHERE u.active
-                    AND NOT u.silenced
+                    AND u.silenced_till IS NULL
                     AND t.deleted_at IS NULL
                     AND COALESCE(t.visible, true)
                     AND p.deleted_at IS NULL

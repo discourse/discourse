@@ -349,19 +349,49 @@
 
   <div class="display-row {{if model.silenced 'highlight-danger'}}">
     <div class='field'>{{i18n 'admin.user.silenced'}}</div>
-    <div class='value'>{{i18n-yes-no model.silenced}}</div>
+    <div class='value'>
+      {{i18n-yes-no model.silenced}}
+      {{#if model.isSilenced}}
+        {{#unless model.silencedForever}}
+          {{i18n "admin.user.suspended_until" until=model.silencedTillDate}}
+        {{/unless}}
+      {{/if}}
+    </div>
     <div class='controls'>
       {{#conditional-loading-spinner size="small" condition=model.silencingUser}}
         {{#if model.silenced}}
-          {{d-button action="unsilence" icon="thumbs-o-up" label="admin.user.unsilence"}}
+          {{d-button
+            class="btn-danger unsilence-user"
+            action="unsilence"
+            icon="microphone-slash"
+            label="admin.user.unsilence"}}
           {{i18n 'admin.user.silence_explanation'}}
         {{else}}
-          {{d-button action="silence" icon="ban" label="admin.user.silence"}}
+          {{d-button
+            class="btn-danger silence-user"
+            action=(action "showSilenceModal")
+            icon="microphone-slash"
+            label="admin.user.silence"}}
           {{i18n 'admin.user.silence_explanation'}}
         {{/if}}
       {{/conditional-loading-spinner}}
     </div>
   </div>
+
+  {{#if model.isSilenced}}
+    <div class='display-row highlight-danger silence-info'>
+      <div class='field'>{{i18n 'admin.user.silenced_by'}}</div>
+      <div class='value'>
+        {{#link-to 'adminUser' silencedBy}}{{avatar model.silencedBy imageSize="tiny"}}{{/link-to}}
+        {{#link-to 'adminUser' silencedBy}}{{model.silencedBy.username}}{{/link-to}}
+      </div>
+      <div class='controls'>
+        <b>{{i18n 'admin.user.silence_reason'}}</b>:
+        {{model.silence_reason}}
+      </div>
+    </div>
+  {{/if}}
+
 </section>
 
 {{#if currentUser.admin}}

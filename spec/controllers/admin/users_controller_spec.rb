@@ -495,15 +495,7 @@ describe Admin::UsersController do
     end
 
     context '.destroy' do
-      before do
-        @delete_me = Fabricate(:user)
-      end
-
-      it "raises an error when the user doesn't have permission" do
-        Guardian.any_instance.expects(:can_delete_user?).with(@delete_me).returns(false)
-        delete :destroy, params: { id: @delete_me.id }, format: :json
-        expect(response).to be_forbidden
-      end
+      let(:delete_me) { Fabricate(:user) }
 
       it "returns a 403 if the user doesn't exist" do
         delete :destroy, params: { id: 123123 }, format: :json
@@ -511,31 +503,26 @@ describe Admin::UsersController do
       end
 
       context "user has post" do
+        let(:topic) { create_topic(user: delete_me) }
 
         before do
-          @user = Fabricate(:user)
-          topic = create_topic(user: @user)
-          _post = create_post(topic: topic, user: @user)
-          @user.stubs(:first_post_created_at).returns(Time.zone.now)
-          User.expects(:find_by).with(id: @delete_me.id).returns(@user)
+          _post = create_post(topic: topic, user: delete_me)
         end
 
         it "returns an error" do
-          delete :destroy, params: { id: @delete_me.id }, format: :json
+          delete :destroy, params: { id: delete_me.id }, format: :json
           expect(response).to be_forbidden
         end
 
         it "doesn't return an error if delete_posts == true" do
-          UserDestroyer.any_instance.expects(:destroy).with(@user, has_entry('delete_posts' => true)).returns(true)
-          delete :destroy, params: { id: @delete_me.id, delete_posts: true }, format: :json
+          delete :destroy, params: { id: delete_me.id, delete_posts: true }, format: :json
           expect(response).to be_success
         end
-
       end
 
       it "deletes the user record" do
         UserDestroyer.any_instance.expects(:destroy).returns(true)
-        delete :destroy, params: { id: @delete_me.id }, format: :json
+        delete :destroy, params: { id: delete_me.id }, format: :json
       end
     end
 
@@ -590,9 +577,10 @@ describe Admin::UsersController do
 
       it "raises an error when the user doesn't have permission" do
         Guardian.any_instance.expects(:can_silence_user?).with(@reg_user).returns(false)
-        UserSilencer.expects(:silence).never
         put :silence, params: { user_id: @reg_user.id }, format: :json
         expect(response).to be_forbidden
+        @reg_user.reload
+        expect(@reg_user).not_to be_silenced
       end
 
       it "returns a 403 if the user doesn't exist" do
@@ -601,8 +589,43 @@ describe Admin::UsersController do
       end
 
       it "punishes the user for spamming" do
-        UserSilencer.expects(:silence).with(@reg_user, @user, anything)
         put :silence, params: { user_id: @reg_user.id }, format: :json
+        expect(response).to be_success
+        @reg_user.reload
+        expect(@reg_user).to be_silenced
+      end
+
+      it "will set a length of time if provided" do
+        future_date = 1.month.from_now.to_date
+        put(
+          :silence,
+          params: {
+            user_id: @reg_user.id,
+            silenced_till: future_date
+          },
+          format: :json
+        )
+        @reg_user.reload
+        expect(@reg_user.silenced_till).to eq(future_date)
+      end
+
+      it "will send a message if provided" do
+        Jobs.expects(:enqueue).with(
+          :critical_user_email,
+          has_entries(
+            type: :account_silenced,
+            user_id: @reg_user.id
+          )
+        )
+
+        put(
+          :silence,
+          params: {
+            user_id: @reg_user.id,
+            message: "Email this to the user"
+          },
+          format: :json
+        )
       end
     end
 

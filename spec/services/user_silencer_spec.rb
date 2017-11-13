@@ -7,8 +7,8 @@ describe UserSilencer do
   end
 
   describe 'silence' do
-    let(:user)           { stub_everything(save: true) }
-    let(:silencer)        { UserSilencer.new(user) }
+    let(:user) { Fabricate(:user) }
+    let(:silencer) { UserSilencer.new(user) }
     subject(:silence_user) { silencer.silence }
 
     it 'silences the user' do
@@ -53,7 +53,7 @@ describe UserSilencer do
     end
 
     it "doesn't send a pm if the user is already silenced" do
-      user.stubs(:silenced?).returns(true)
+      user.silenced_till = 1.year.from_now
       SystemMessage.unstub(:create)
       SystemMessage.expects(:create).never
       expect(silence_user).to eq(false)
@@ -73,7 +73,7 @@ describe UserSilencer do
     subject(:unsilence_user) { UserSilencer.unsilence(user, Fabricate.build(:admin)) }
 
     it 'unsilences the user' do
-      u = Fabricate(:user, silenced: true)
+      u = Fabricate(:user, silenced_till: 1.year.from_now)
       expect { UserSilencer.unsilence(u) }.to change { u.reload.silenced? }
     end
 

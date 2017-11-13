@@ -275,7 +275,7 @@ describe SpamRule::AutoSilence do
     end
 
     context "silenced, but has higher trust level now" do
-      let(:user)  { Fabricate(:user, silenced: true, trust_level: TrustLevel[1]) }
+      let(:user)  { Fabricate(:user, silenced_till: 1.year.from_now, trust_level: TrustLevel[1]) }
       subject     { described_class.new(user) }
 
       it 'returns false' do

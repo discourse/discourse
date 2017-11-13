@@ -72,6 +72,17 @@ ColumnDropper.drop(
   }
 )
 
+ColumnDropper.drop(
+  table: 'users',
+  after_migration: 'AddSilencedTillToUsers',
+  columns: %w[
+    silenced
+  ],
+  on_drop: ->() {
+    STDERR.puts 'Removing user silenced column!'
+  }
+)
+
 # User for the smoke tests
 if ENV["SMOKE"] == "1"
   UserEmail.seed do |ue|
