@@ -43,7 +43,7 @@
     font-size: 1em;
   }
 
-  .expand-item {
+  .expand-item, .collapse-item {
     float: right;
     margin-right: 0.5em;
     color: lighten($primary, 40%);
