@@ -2360,7 +2360,7 @@ en:
 
         Please [review the flags](%{base_url}/admin/flags). If %{username} was incorrectly silenced from posting, click the unsilence button on [the admin page for this user](%{user_url}).
 
-        This threshold can be changed via the `block_new_user` site settings.
+        This threshold can be changed via the `silence_new_user` site settings.
 
     spam_post_silenced:
       title: "Spam Post Silenced"
