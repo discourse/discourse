@@ -13,9 +13,7 @@ import { tinyAvatar,
          displayErrorForUpload,
          getUploadMarkdown,
          validateUploadedFiles } from 'discourse/lib/utilities';
-import { lookupCachedUploadUrl,
-         lookupUncachedUploadUrls,
-         cacheShortUploadUrl } from 'pretty-text/image-short-url';
+import { cacheShortUploadUrl, resolveAllShortUrls } from 'pretty-text/image-short-url';
 
 export default Ember.Component.extend({
   classNameBindings: ['showToolbar:toolbar-visible', ':wmd-controls'],
@@ -178,24 +176,6 @@ export default Ember.Component.extend({
     }
 
     $oneboxes.each((_, o) => load(o, refresh, ajax, this.currentUser.id));
-  },
-
-  _loadShortUrls($images) {
-    const urls = _.map($images, img => $(img).data('orig-src'));
-    lookupUncachedUploadUrls(urls, ajax).then(() => this._loadCachedShortUrls($images));
-  },
-
-  _loadCachedShortUrls($images) {
-    $images.each((idx, image) => {
-      let $image = $(image);
-      let url = lookupCachedUploadUrl($image.data('orig-src'));
-      if (url) {
-        $image.removeAttr('data-orig-src');
-        if (url !== "missing") {
-          $image.attr('src', url);
-        }
-      }
-    });
   },
 
   _warnMentionedGroups($preview) {
@@ -584,18 +564,8 @@ export default Ember.Component.extend({
         Ember.run.debounce(this, this._loadOneboxes, $oneboxes, 450);
       }
 
-      // Short upload urls
-      let $shortUploadUrls = $('img[data-orig-src]');
-
-      if ($shortUploadUrls.length > 0) {
-        this._loadCachedShortUrls($shortUploadUrls);
-
-        $shortUploadUrls = $('img[data-orig-src]');
-        if ($shortUploadUrls.length > 0) {
-          // this is carefully batched so we can do an leading debounce (trigger right away)
-          Ember.run.debounce(this, this._loadShortUrls, $shortUploadUrls, 450, true);
-        }
-      }
+      // Short upload urls need resolution
+      resolveAllShortUrls(ajax);
 
       let inline = {};
       $('a.inline-onebox-loading', $preview).each(function(index, link) {
