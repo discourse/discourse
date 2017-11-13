@@ -104,11 +104,13 @@ export default Ember.Controller.extend({
   cleanTerm(term) {
     if (term) {
       SortOrders.forEach(order => {
-        let matches = term.match(new RegExp(`${order.term}\\b`));
-        if (matches) {
-          this.set('sortOrder', order.id);
-          term = term.replace(new RegExp(`${order.term}\\b`, 'g'), "");
-          term = term.trim();
+        if (order.term) {
+          let matches = term.match(new RegExp(`${order.term}\\b`));
+          if (matches) {
+            this.set('sortOrder', order.id);
+            term = term.replace(new RegExp(`${order.term}\\b`, 'g'), "");
+            term = term.trim();
+          }
         }
       });
     }
