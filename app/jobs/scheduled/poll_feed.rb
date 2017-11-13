@@ -2,9 +2,12 @@
 # Creates and Updates Topics based on an RSS or ATOM feed.
 #
 require 'digest/sha1'
+require 'open-uri'
+require 'rss'
+require_dependency 'feed_item_accessor'
+require_dependency 'feed_element_installer'
 require_dependency 'post_creator'
 require_dependency 'post_revisor'
-require 'open-uri'
 
 module Jobs
   class PollFeed < Jobs::Scheduled
@@ -46,13 +49,11 @@ module Jobs
 
     def import_topic(topic)
       if topic.user
-        TopicEmbed.import(topic.user, topic.url, topic.title, CGI.unescapeHTML(topic.content.scrub))
+        TopicEmbed.import(topic.user, topic.url, topic.title, CGI.unescapeHTML(topic.content))
       end
     end
 
     class Feed
-      require 'simple-rss'
-
       def initialize
         @feed_url = SiteSetting.feed_polling_url
         @feed_url = "http://#{@feed_url}" if @feed_url !~ /^https?\:\/\//
@@ -76,38 +77,42 @@ module Jobs
 
       def fetch_rss
         if SiteSetting.embed_username_key_from_feed.present?
-          SimpleRSS.item_tags |= [SiteSetting.embed_username_key_from_feed.to_sym]
+          FeedElementInstaller.install_rss_element(SiteSetting.embed_username_key_from_feed)
+          FeedElementInstaller.install_atom_element(SiteSetting.embed_username_key_from_feed)
         end
 
-        SimpleRSS.parse open(@feed_url, allow_redirections: :all)
-      rescue OpenURI::HTTPError, SimpleRSSError
+        RSS::Parser.parse(open(@feed_url, allow_redirections: :all), false)
+      rescue OpenURI::HTTPError, RSS::NotWellFormedError
         nil
       end
-
     end
 
     class FeedTopic
       def initialize(article_rss_item)
-        @article_rss_item = article_rss_item
+        @accessor = FeedItemAccessor.new(article_rss_item)
       end
 
       def url
-        link = @article_rss_item.link
+        link = @accessor.link
         if url?(link)
           return link
         else
-          return @article_rss_item.id
+          return @accessor.element_content(:id)
         end
       end
 
       def content
-        @article_rss_item.content_encoded&.force_encoding("UTF-8")&.scrub ||
-          @article_rss_item.content&.force_encoding("UTF-8")&.scrub ||
-          @article_rss_item.description&.force_encoding("UTF-8")&.scrub
+        content = nil
+
+        %i[content_encoded content description].each do |content_element_name|
+          content ||= @accessor.element_content(content_element_name)
+        end
+
+        content&.force_encoding('UTF-8')&.scrub
       end
 
       def title
-        @article_rss_item.title.force_encoding("UTF-8").scrub
+        @accessor.element_content(:title).force_encoding('UTF-8').scrub
       end
 
       def user
@@ -125,11 +130,7 @@ module Jobs
       end
 
       def author_username
-        begin
-          @article_rss_item.send(SiteSetting.embed_username_key_from_feed.to_sym)
-        rescue
-          nil
-        end
+        @accessor.element_content(SiteSetting.embed_username_key_from_feed.to_sym)
       end
 
       def default_user
@@ -145,9 +146,6 @@ module Jobs
       def find_user(user_name)
         User.where(username_lower: user_name).first
       end
-
     end
-
   end
-
 end
