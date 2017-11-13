@@ -446,8 +446,8 @@ module Email
       incoming_emails = IncomingEmail
         .joins(:post)
         .where('posts.topic_id = ?', email_log.topic_id)
-        .where('incoming_emails.to_addresses ILIKE :email OR incoming_emails.cc_addresses ILIKE :email', email: "%#{email_log.reply_key}%")
-        .where('incoming_emails.to_addresses ILIKE :email OR incoming_emails.cc_addresses ILIKE :email', email: "%#{user.email}%")
+        .addressed_to(email_log.reply_key)
+        .addressed_to(user.email)
 
       incoming_emails.each do |email|
         next unless contains_email_address?(email.to_addresses, user.email) ||
