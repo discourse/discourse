@@ -3357,7 +3357,7 @@ en:
         deactivate_account: "Deactivate Account"
         deactivate_failed: "There was a problem deactivating the user."
         unsilence_failed: 'There was a problem unsilencing the user.'
-        silence_failed: 'There was a problem unsilencing the user.'
+        silence_failed: 'There was a problem silencing the user.'
         silence_confirm: 'Are you sure you want to silence this user? They will not be able to create any new topics or posts.'
         silence_accept: 'Yes, silence this user'
         bounce_score: "Bounce Score"
