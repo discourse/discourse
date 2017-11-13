@@ -40,9 +40,7 @@ class FinalDestination
     @opts[:max_redirects] ||= 5
     @opts[:lookup_ip] ||= lambda do |host|
       begin
-        IPSocket::getaddress(host)
-      rescue SocketError
-        nil
+        FinalDestination.lookup_ip(host)
       end
     end
     @ignored = [Discourse.base_url_no_prefix] + (@opts[:ignore_redirects] || [])
@@ -272,7 +270,13 @@ class FinalDestination
   end
 
   def self.lookup_ip(host)
+    # TODO clean this up in the test suite, cause it is a mess
+    # if Rails.env == "test"
+    #   STDERR.puts "WARNING FinalDestination.lookup_ip was called with host: #{host}, this is network call that should be mocked"
+    # end
     IPSocket::getaddress(host)
+  rescue SocketError
+    nil
   end
 
 end
