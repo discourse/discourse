@@ -3503,6 +3503,7 @@ en:
     only_official: "Disable unofficial plugins"
     no_plugins: "Disable all plugins"
     enter: "Enter Safe Mode"
+    must_select: "You must select at least one option to enter safe mode."
   wizard:
     title: "Discourse Setup"
     step:
