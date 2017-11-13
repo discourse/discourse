@@ -1532,4 +1532,32 @@ describe User do
       ])
     end
   end
+
+  describe "silenced?" do
+
+    it "is not silenced by default" do
+      expect(Fabricate(:user)).not_to be_silenced
+    end
+
+    it "is not silenced with a date in the past" do
+      expect(Fabricate(:user, silenced_till: 1.month.ago)).not_to be_silenced
+    end
+
+    it "is is silenced with a date in the future" do
+      expect(Fabricate(:user, silenced_till: 1.month.from_now)).to be_silenced
+    end
+
+    context "finders" do
+      let!(:user0) { Fabricate(:user, silenced_till: 1.month.ago) }
+      let!(:user1) { Fabricate(:user, silenced_till: 1.month.from_now) }
+
+      it "doesn't return old silenced records" do
+        expect(User.silenced).to_not include(user0)
+        expect(User.silenced).to include(user1)
+        expect(User.not_silenced).to include(user0)
+        expect(User.not_silenced).to_not include(user1)
+      end
+    end
+  end
+
 end

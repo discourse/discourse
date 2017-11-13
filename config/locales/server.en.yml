@@ -2660,6 +2660,17 @@ en:
 
         %{message}
 
+    account_silenced:
+      title: "Account Silenced"
+      subject_template: "[%{email_prefix}] Your account has been silenced"
+      text_body_template: |
+        You have been silenced from the forum until %{silenced_till}.
+
+        %{reason}
+
+        %{message}
+
+
     account_exists:
       title: "Account already exists"
       subject_template: "[%{email_prefix}] Account already exists"

@@ -66,7 +66,7 @@ describe Jobs::NotifyMailingListSubscribers do
       end
 
       context "to a silenced user" do
-        before { mailing_list_user.update(silenced: true) }
+        before { mailing_list_user.update(silenced_till: 1.year.from_now) }
         include_examples "no emails"
       end
 

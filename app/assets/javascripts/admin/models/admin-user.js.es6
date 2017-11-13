@@ -8,6 +8,8 @@ import Group from 'discourse/models/group';
 import TL3Requirements from 'admin/models/tl3-requirements';
 import { userPath } from 'discourse/lib/url';
 
+const wrapAdmin = user => user ? AdminUser.create(user) : null;
+
 const AdminUser = Discourse.User.extend({
   adminUserView: true,
   customGroups: Ember.computed.filter("groups", g => !g.automatic && Group.create(g)),
@@ -232,6 +234,7 @@ const AdminUser = Discourse.User.extend({
   }.property('trust_level'),
 
   isSuspended: Em.computed.equal('suspended', true),
+  isSilenced: Ember.computed.equal('silenced', true),
   canSuspend: Em.computed.not('staff'),
 
   suspendDuration: function() {
@@ -301,44 +304,36 @@ const AdminUser = Discourse.User.extend({
 
   unsilence() {
     this.set('silencingUser', true);
-    return ajax('/admin/users/' + this.id + '/unsilence', {
+
+    return ajax(`/admin/users/${this.id}/unsilence`, {
       type: 'PUT'
-    }).then(function() {
-      window.location.reload();
-    }).catch(function(e) {
-      var error = I18n.t('admin.user.unsilence_failed', { error: "http: " + e.status + " - " + e.body });
+    }).then(result => {
+      this.setProperties(result.unsilence);
+    }).catch(e => {
+      let error = I18n.t('admin.user.unsilence_failed', {
+        error: `http: ${e.status} - ${e.body}`
+      });
       bootbox.alert(error);
+    }).finally(() => {
+      this.set('silencingUser', false);
     });
   },
 
-  silence() {
-    const user = this,
-          message = I18n.t("admin.user.silence_confirm");
-
-    const performSilence = function() {
-      user.set('silencingUser', true);
-      return ajax('/admin/users/' + user.id + '/silence', {
-        type: 'PUT'
-      }).then(function() {
-        window.location.reload();
-      }).catch(function(e) {
-        var error = I18n.t('admin.user.silence_failed', { error: "http: " + e.status + " - " + e.body });
-        bootbox.alert(error);
-        user.set('silencingUser', false);
+  silence(data) {
+    this.set('silencingUser', true);
+    return ajax(`/admin/users/${this.id}/silence`, {
+      type: 'PUT',
+      data
+    }).then(result => {
+      this.setProperties(result.silence);
+    }).catch(e => {
+      let error = I18n.t('admin.user.silence_failed', {
+        error: `http: ${e.status} - ${e.body}`
       });
-    };
-
-    const buttons = [{
-      "label": I18n.t("composer.cancel"),
-      "class": "cancel",
-      "link":  true
-    }, {
-      "label": `${iconHTML('exclamation-triangle')} ` + I18n.t('admin.user.silence_accept'),
-      "class": "btn btn-danger",
-      "callback": function() { performSilence(); }
-    }];
-
-    bootbox.dialog(message, buttons, { "classes": "delete-user-modal" });
+      bootbox.alert(error);
+    }).finally(() => {
+      this.set('silencingUser', false);
+    });
   },
 
   sendActivationEmail() {
@@ -475,17 +470,14 @@ const AdminUser = Discourse.User.extend({
     }
   }.property('tl3_requirements'),
 
-  suspendedBy: function() {
-    if (this.get('suspended_by')) {
-      return AdminUser.create(this.get('suspended_by'));
-    }
-  }.property('suspended_by'),
+  @computed('suspended_by')
+  suspendedBy: wrapAdmin,
 
-  approvedBy: function() {
-    if (this.get('approved_by')) {
-      return AdminUser.create(this.get('approved_by'));
-    }
-  }.property('approved_by')
+  @computed('silenced_by')
+  silencedBy: wrapAdmin,
+
+  @computed('approved_by')
+  approvedBy: wrapAdmin,
 
 });
 

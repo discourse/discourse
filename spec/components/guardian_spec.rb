@@ -195,7 +195,7 @@ describe Guardian do
 
     context "author is silenced" do
       before do
-        user.silenced = true
+        user.silenced_till = 1.year.from_now
         user.save
       end
 
@@ -853,13 +853,13 @@ describe Guardian do
         end
 
         it "allows new posts from silenced users included in the pm" do
-          user.update_attribute(:silenced, true)
+          user.update_attribute(:silenced_till, 1.year.from_now)
           private_message.topic_allowed_users.create!(user_id: user.id)
           expect(Guardian.new(user).can_create?(Post, private_message)).to be_truthy
         end
 
         it "doesn't allow new posts from silenced users not invited to the pm" do
-          user.update_attribute(:silenced, true)
+          user.update_attribute(:silenced_till, 1.year.from_now)
           expect(Guardian.new(user).can_create?(Post, private_message)).to be_falsey
         end
       end
@@ -1376,7 +1376,7 @@ describe Guardian do
 
     context 'when user is silenced' do
       it 'returns false' do
-        user.toggle!(:silenced)
+        user.update_column(:silenced_till, 1.year.from_now)
         expect(Guardian.new(user).can_moderate?(post)).to be(false)
         expect(Guardian.new(user).can_moderate?(topic)).to be(false)
       end

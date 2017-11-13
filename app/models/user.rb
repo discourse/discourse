@@ -147,8 +147,8 @@ class User < ActiveRecord::Base
   # TODO-PERF: There is no indexes on any of these
   # and NotifyMailingListSubscribers does a select-all-and-loop
   # may want to create an index on (active, silence, suspended_till)?
-  scope :silenced, -> { where(silenced: true) }
-  scope :not_silenced, -> { where(silenced: false) }
+  scope :silenced, -> { where("silenced_till IS NOT NULL AND silenced_till > ?", Time.zone.now) }
+  scope :not_silenced, -> { where("silenced_till IS NULL OR silenced_till <= ?", Time.zone.now) }
   scope :suspended, -> { where('suspended_till IS NOT NULL AND suspended_till > ?', Time.zone.now) }
   scope :not_suspended, -> { where('suspended_till IS NULL OR suspended_till <= ?', Time.zone.now) }
   scope :activated, -> { where(active: true) }
@@ -658,6 +658,22 @@ class User < ActiveRecord::Base
 
   def suspended?
     !!(suspended_till && suspended_till > DateTime.now)
+  end
+
+  def silenced?
+    !!(silenced_till && silenced_till > DateTime.now)
+  end
+
+  def silenced_record
+    UserHistory.for(self, :silence_user).order('id DESC').first
+  end
+
+  def silence_reason
+    silenced_record.try(:details) if silenced?
+  end
+
+  def silenced_at
+    silenced_record.try(:created_at) if silenced?
   end
 
   def suspend_record

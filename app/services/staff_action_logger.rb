@@ -275,8 +275,13 @@ class StaffActionLogger
 
   def log_silence_user(user, opts = {})
     raise Discourse::InvalidParameters.new(:user) unless user
-    UserHistory.create(params(opts).merge(action: UserHistory.actions[:silence_user],
-                                          target_user_id: user.id))
+    UserHistory.create(
+      params(opts).merge(
+        action: UserHistory.actions[:silence_user],
+        target_user_id: user.id,
+        details: opts[:details]
+      )
+    )
   end
 
   def log_unsilence_user(user, opts = {})

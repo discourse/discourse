@@ -167,7 +167,7 @@ describe AdminUserIndexQuery do
 
   describe "with a silenced user" do
 
-    let!(:user) { Fabricate(:user, silenced: true) }
+    let!(:user) { Fabricate(:user, silenced_till: 1.year.from_now) }
 
     it "finds the silenced user" do
       query = ::AdminUserIndexQuery.new(query: 'silenced')

@@ -57,7 +57,7 @@ describe Email::Receiver do
   end
 
   it "raises a SilencedUserError when the sender has been silenced" do
-    Fabricate(:user, email: "silenced@bar.com", silenced: true)
+    Fabricate(:user, email: "silenced@bar.com", silenced_till: 1.year.from_now)
     expect { process(:silenced_sender) }.to raise_error(Email::Receiver::SilencedUserError)
   end
 
