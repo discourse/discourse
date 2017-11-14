@@ -47,7 +47,7 @@ export default SelectKitComponent.extend({
   createRowComputedContent(filter, shouldDisplayCreateRow) {
     if (shouldDisplayCreateRow === true) {
       let content = this.createContentFromInput(filter);
-      return this.computeContentItem(content);
+      return this.computeContentItem(content, { created: true });
     }
   },
 
@@ -102,12 +102,32 @@ export default SelectKitComponent.extend({
     };
   },
 
+  didPressBackspace(event) {
+    this.expand();
+    this.keyDown(event);
+    this._killEvent(event);
+  },
+
+  didPressEscape(event) {
+    const $highlighted = this.$(".selected-name.is-highlighted");
+    if ($highlighted.length > 0) {
+      $highlighted.removeClass("is-highlighted");
+    }
+
+    this._super(event);
+  },
+
   keyDown(event) {
     const keyCode = event.keyCode || event.which;
     const $filterInput = this.$filterInput();
 
-    if (this.get("isFocused") === true && this.get("isExpanded") === false && keyCode === this.keys.BACKSPACE) {
+    if (this.get("isFocused") === true && this.get("isExpanded") === false) {
       this.expand();
+      return;
+    }
+
+    if (this.keys.LEFT === keyCode) {
+
       return;
     }
 
@@ -191,6 +211,10 @@ export default SelectKitComponent.extend({
     this.autoHighlight();
   },
 
+  validateComputedContentItem(computedContentItem) {
+    return !this.get("computedValues").includes(computedContentItem.value);
+  },
+
   actions: {
     onClear() {
       this.get("selectedComputedContents").forEach(selectedComputedContent => {
@@ -199,8 +223,7 @@ export default SelectKitComponent.extend({
     },
 
     onCreate(computedContentItem) {
-      if (this.validateComputedContent(computedContentItem) &&
-          !this.get("computedValues").includes(computedContentItem.value)) {
+      if (this.validateComputedContentItem(computedContentItem)) {
         this.get("computedContent").pushObject(computedContentItem);
         this.send("onSelect", computedContentItem);
       }

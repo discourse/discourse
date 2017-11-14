@@ -42,11 +42,6 @@ export default Ember.Mixin.create({
   },
 
   _filterRemovableComputedContents(computedContent) {
-    return computedContent.filter(c => {
-      if (!this.get("_initialValues").includes(c.value)) {
-        return true;
-      }
-      return false;
-    });
+    return computedContent.filter(c => c.created === true);
   }
 });

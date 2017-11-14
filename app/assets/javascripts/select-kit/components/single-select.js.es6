@@ -79,12 +79,15 @@ export default SelectKitComponent.extend({
 
   @computed("computedValue", "computedContent.[]")
   selectedComputedContent(computedValue, computedContent) {
-    if (isNone(computedValue) || isNone(computedContent)) { return []; }
+    if (isNone(computedValue) || isNone(computedContent)) { return null; }
     return computedContent.findBy("value", computedValue);
   },
 
   @computed("selectedComputedContent")
-  hasSelection(selectedComputedContent) { return !Ember.isNone(selectedComputedContent); },
+  hasSelection(selectedComputedContent) {
+    return selectedComputedContent !== this.get("noneRowComputedContent") &&
+      !Ember.isNone(selectedComputedContent);
+  },
 
   autoHighlight() {
     Ember.run.schedule("afterRender", () => {
@@ -111,6 +114,10 @@ export default SelectKitComponent.extend({
     });
   },
 
+  validateComputedContentItem(computedContentItem) {
+    return this.get("computedValue") !== computedContentItem.value;
+  },
+
   actions: {
     onClear() {
       this.send("onDeselect", this.get("selectedComputedContent"));
@@ -120,12 +127,11 @@ export default SelectKitComponent.extend({
       let content = this.createContentFromInput(input);
       if (!Ember.isNone(content)) return;
 
-      const computedContent = this.computeContentItem(content);
-      if (this.validateComputedContent(computedContent) &&
-          this.get("computedValue") !== computedContent.value) {
-        this.get("computedContent").pushObject(computedContent);
+      const computedContentItem = this.computeContentItem(content);
+      if (this.validateComputedContentItem(computedContentItem)) {
+        this.get("computedContent").pushObject(computedContentItem);
         this.clearFilter();
-        this.send("onSelect", computedContent);
+        this.send("onSelect", computedContentItem);
       }
     },
 
