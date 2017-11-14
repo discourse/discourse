@@ -11,8 +11,10 @@ export default DropdownSelectBox.extend({
 
   @on("didReceiveAttrs")
   _setAdminDeleteDropdownOptions() {
-    this.set("headerComponentOptions.selectedName", I18n.t(this.get("headerText")));
-    this.set("headerComponentOptions.icon", iconHTML("trash-o"));
+    this.get('headerComponentOptions').setProperties({
+      selectedName: `${I18n.t(this.get("headerText"))} ...`,
+      icon: iconHTML("trash-o")
+    });
   },
 
   @computed("adminTools", "post.user")
@@ -27,19 +29,19 @@ export default DropdownSelectBox.extend({
     const content = [];
 
     content.push({
-      title:  I18n.t("admin.flags.delete_post_defer_flag_title"),
       icon: "external-link",
       id: "delete-defer",
       action: () => this.send("deletePostDeferFlag"),
-      label: I18n.t("admin.flags.delete_post_defer_flag")
+      label: I18n.t("admin.flags.delete_post_defer_flag"),
+      description:  I18n.t("admin.flags.delete_post_defer_flag_title"),
     });
 
     content.push({
-      title:  I18n.t("admin.flags.delete_post_agree_flag_title"),
       icon: "thumbs-o-up",
       id: "delete-agree",
       action: () => this.send("deletePostAgreeFlag"),
-      label: I18n.t("admin.flags.delete_post_agree_flag")
+      label: I18n.t("admin.flags.delete_post_agree_flag"),
+      description:  I18n.t("admin.flags.delete_post_agree_flag_title"),
     });
 
     if (canDeleteSpammer) {
