@@ -1,3 +1,5 @@
+require 'base64'
+
 class ThemeFieldSerializer < ApplicationSerializer
   attributes :name, :target, :value, :error, :type_id, :upload_id, :url, :filename
 
@@ -67,4 +69,29 @@ class ThemeSerializer < ChildThemeSerializer
   def child_themes
     object.child_themes.order(:name)
   end
+end
+
+class ThemeFieldWithEmbeddedUploadsSerializer < ThemeFieldSerializer
+  attributes :raw_upload
+
+  def include_raw_upload?
+    object.upload
+  end
+
+  def raw_upload
+    filename = Discourse.store.path_for(object.upload)
+    raw = nil
+
+    if filename
+      raw = File.read(filename)
+    else
+      raw = Discourse.store.download(object.upload).read
+    end
+
+    Base64.encode64(raw)
+  end
+end
+
+class ThemeWithEmbeddedUploadsSerializer < ThemeSerializer
+  has_many :theme_fields, serializer: ThemeFieldWithEmbeddedUploadsSerializer, embed: :objects
 end
