@@ -11,11 +11,11 @@
 
   <%= theme_lookup("head_tag") %>
   <%= yield(:no_ember_head) %>
-  <%= raw build_plugin_html 'server:before-head-close' %>
+  <%= build_plugin_html 'server:before-head-close' %>
 </head>
 <body <% if @custom_body_class %>class="<%= @custom_body_class %>"<% end %>>
   <%= theme_lookup("header") %>
-  <%= raw build_plugin_html 'server:header' %>
+  <%= build_plugin_html 'server:header' %>
   <section id='main'>
     <%= render partial: 'header' %>
     <div id="main-outlet" class="<%= @container_class ? @container_class : 'wrap' %>">
@@ -23,7 +23,7 @@
     </div>
   </section>
   <%= theme_lookup("footer") %>
-  <%= raw build_plugin_html 'no-client:footer' %>
-  <%= raw build_plugin_html 'server:before-body-close' %>
+  <%= build_plugin_html 'no-client:footer' %>
+  <%= build_plugin_html 'server:before-body-close' %>
 </body>
 </html>

@@ -356,6 +356,11 @@ module ApplicationHelper
     DiscoursePluginRegistry.build_html(name, controller) || ""
   end
 
+  # If there is plugin HTML return that, otherwise yield to the template
+  def replace_plugin_html(name)
+    build_plugin_html(name).presence || yield
+  end
+
   def theme_lookup(name)
     lookup = Theme.lookup_field(theme_key, mobile_view? ? :mobile : :desktop, name)
     lookup.html_safe if lookup
