@@ -183,11 +183,11 @@ class Invite < ActiveRecord::Base
   end
 
   def self.find_pending_invites_count(inviter)
-    find_all_invites_from(inviter, 0, nil).where('invites.user_id IS NULL').count
+    find_all_invites_from(inviter, 0, nil).where('invites.user_id IS NULL').reorder(nil).count
   end
 
   def self.find_redeemed_invites_count(inviter)
-    find_all_invites_from(inviter, 0, nil).where('invites.user_id IS NOT NULL').count
+    find_all_invites_from(inviter, 0, nil).where('invites.user_id IS NOT NULL').reorder(nil).count
   end
 
   def self.filter_by(email_or_username)
