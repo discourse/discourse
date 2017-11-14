@@ -13,8 +13,12 @@ export default Ember.Mixin.create({
     return content;
   },
 
+  _isNumeric(input) {
+    return !isNaN(parseFloat(input)) && isFinite(input);
+  },
+
   _castInteger(value) {
-    if (this.get("castInteger") === true && Ember.isPresent(value)) {
+    if (this.get("castInteger") === true && Ember.isPresent(value) && this._isNumeric(value)) {
       return parseInt(value, 10);
     }
 
