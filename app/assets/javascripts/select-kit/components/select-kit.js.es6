@@ -2,11 +2,11 @@ const { isNone, run, makeArray } = Ember;
 import computed from "ember-addons/ember-computed-decorators";
 import UtilsMixin from "select-kit/mixins/utils";
 import DomHelpersMixin from "select-kit/mixins/dom-helpers";
-import KeyboardMixin from "select-kit/mixins/keyboard";
+import EventsMixin from "select-kit/mixins/events";
 import PluginApiMixin from "select-kit/mixins/plugin-api";
 import { applyContentPluginApiCallbacks } from "select-kit/mixins/plugin-api";
 
-export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixin, KeyboardMixin, {
+export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixin, EventsMixin, {
   pluginApiIdentifiers: ["select-kit"],
   layoutName: "select-kit/templates/components/select-kit",
   classNames: ["select-kit", "select-box-kit"],
@@ -56,7 +56,6 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   allowInitialValueMutation: false,
   content: null,
   computedContent: null,
-  _initialValues: null,
 
   init() {
     this._super();
@@ -82,13 +81,13 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   _beforeDidComputeContent(content) {
     content = applyContentPluginApiCallbacks(this.get("pluginApiIdentifiers"), content);
 
+    const existingCreatedComputedContent = this.get("computedContent").filterBy("created", true);
     this.setProperties({
-      computedContent: content.map(c => this.computeContentItem(c)),
-      _initialValues: this.get("_initialValues") || content.map(c => this._valueForContent(c) )
+      computedContent: content.map(c => this.computeContentItem(c)).concat(existingCreatedComputedContent)
     });
     return content;
   },
-  didComputeContent(content) { return content; },
+  didComputeContent() {},
 
   mutateAttributes() {
     run.next(() => {
@@ -104,12 +103,14 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     return this.baseHeaderComputedContent();
   },
 
-  computeContentItem(contentItem, name) {
-    return this.baseComputedContentItem(contentItem, name);
+  computeContentItem(contentItem, options) {
+    return this.baseComputedContentItem(contentItem, options);
   },
 
-  baseComputedContentItem(contentItem, name) {
+  baseComputedContentItem(contentItem, options) {
     let originalContent;
+    options = options || {};
+    const name = options.name;
 
     if (typeof contentItem === "string" || typeof contentItem === "number") {
       originalContent = {};
@@ -123,6 +124,7 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
       value: this._castInteger(this._valueForContent(contentItem)),
       name: name || this._nameForContent(contentItem),
       locked: false,
+      created: options.created || false,
       originalContent
     };
   },
@@ -144,7 +146,7 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   createRowComputedContent(filter, shouldDisplayCreateRow) {
     if (shouldDisplayCreateRow === true) {
       let content = this.createContentFromInput(filter);
-      return this.computeContentItem(content);
+      return this.computeContentItem(content, { created: true });
     }
   },
 
@@ -169,15 +171,13 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
 
     switch (typeof none) {
     case "string":
-      return this.computeContentItem(this.noneValue, I18n.t(none));
+      return this.computeContentItem(this.noneValue, { name: I18n.t(none) });
     default:
       return this.computeContentItem(none);
     }
   },
 
   createContentFromInput(input) { return input; },
-
-  validateComputedContent() { return true; },
 
   willSelect() {
     this.clearFilter();
@@ -206,7 +206,6 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     },
 
     onFilter(filter) {
-      this.expand();
       this.setProperties({
         highlightedValue: null,
         renderedFilterOnce: true,
