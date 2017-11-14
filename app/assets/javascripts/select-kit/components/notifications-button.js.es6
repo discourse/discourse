@@ -14,6 +14,7 @@ export default DropdownSelectBoxComponent.extend({
   autofilterable: false,
   filterable: false,
   rowComponent: "notifications-button/notifications-button-row",
+  allowInitialValueMutation: false,
 
   i18nPrefix: "",
   i18nPostfix: "",

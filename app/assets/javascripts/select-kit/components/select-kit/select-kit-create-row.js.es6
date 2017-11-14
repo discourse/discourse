@@ -5,6 +5,6 @@ export default SelectKitRowComponent.extend({
   classNames: "create",
 
   click() {
-    this.sendAction("onCreate", this.get("computedContent.name"));
+    this.sendAction("onCreate", this.get("computedContent"));
   },
 });

@@ -6,7 +6,6 @@ export default ComboBoxComponent.extend({
   filterable: false,
   autoFilterable: false,
   allowInitialValueMutation: false,
-  autoSelectFirst: false,
 
   computeHeaderContent() {
     let content = this.baseHeaderComputedContent();

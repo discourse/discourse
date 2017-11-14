@@ -33,9 +33,9 @@ componentTest('with scopedCategoryId', {
     expandSelectKit();
 
     andThen(() => {
-      assert.equal(selectKit('.category-chooser').rowByIndex(0).name(), "feature");
-      assert.equal(selectKit('.category-chooser').rowByIndex(1).name(), "spec");
-      assert.equal(selectKit('.category-chooser').el.find(".select-kit-row").length, 2);
+      assert.equal(selectKit('.category-chooser').rowByIndex(1).name(), "feature");
+      assert.equal(selectKit('.category-chooser').rowByIndex(2).name(), "spec");
+      assert.equal(selectKit('.category-chooser').el.find(".select-kit-row").length, 3);
     });
   }
 });

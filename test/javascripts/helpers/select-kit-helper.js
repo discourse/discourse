@@ -1,36 +1,36 @@
-function checkSelectBoxIsNotExpanded(selectBoxSelector) {
-  if (find(selectBoxSelector).hasClass('is-expanded')) {
-    throw 'You expected select-box to be collapsed but it is expanded.';
+function checkSelectKitIsNotExpanded(selector) {
+  if (find(selector).hasClass('is-expanded')) {
+    throw 'You expected select-kit to be collapsed but it is expanded.';
   }
 }
 
-function checkSelectBoxIsNotCollapsed(selectBoxSelector) {
-  if (!find(selectBoxSelector).hasClass('is-expanded')) {
-    throw 'You expected select-box to be expanded but it is collapsed.';
+function checkSelectKitIsNotCollapsed(selector) {
+  if (!find(selector).hasClass('is-expanded')) {
+    throw 'You expected select-kit to be expanded but it is collapsed.';
   }
 }
 
-Ember.Test.registerAsyncHelper('expandSelectKit', function(app, selectBoxSelector) {
-  selectBoxSelector = selectBoxSelector || '.select-kit';
+Ember.Test.registerAsyncHelper('expandSelectKit', function(app, selector) {
+  selector = selector || '.select-kit';
 
-  checkSelectBoxIsNotExpanded(selectBoxSelector);
+  checkSelectKitIsNotExpanded(selector);
 
-  click(selectBoxSelector + ' .select-kit-header');
+  click(selector + ' .select-kit-header');
 });
 
-Ember.Test.registerAsyncHelper('collapseSelectKit', function(app, selectBoxSelector) {
-  selectBoxSelector = selectBoxSelector || '.select-kit';
+Ember.Test.registerAsyncHelper('collapseSelectKit', function(app, selector) {
+  selector = selector || '.select-kit';
 
-  checkSelectBoxIsNotCollapsed(selectBoxSelector);
+  checkSelectKitIsNotCollapsed(selector);
 
-  click(selectBoxSelector + ' .select-kit-header');
+  click(selector + ' .select-kit-header');
 });
 
 Ember.Test.registerAsyncHelper('selectKitSelectRow', function(app, rowValue, options) {
   options = options || {};
   options.selector = options.selector || '.select-kit';
 
-  checkSelectBoxIsNotCollapsed(options.selector);
+  checkSelectKitIsNotCollapsed(options.selector);
 
   click(options.selector + " .select-kit-row[data-value='" + rowValue + "']");
 });
@@ -39,7 +39,7 @@ Ember.Test.registerAsyncHelper('selectKitSelectNoneRow', function(app, options) 
   options = options || {};
   options.selector = options.selector || '.select-kit';
 
-  checkSelectBoxIsNotCollapsed(options.selector);
+  checkSelectKitIsNotCollapsed(options.selector);
 
   click(options.selector + " .select-kit-row.none");
 });
@@ -48,10 +48,11 @@ Ember.Test.registerAsyncHelper('selectKitFillInFilter', function(app, filter, op
   options = options || {};
   options.selector = options.selector || '.select-kit';
 
-  checkSelectBoxIsNotCollapsed(options.selector);
+  checkSelectKitIsNotCollapsed(options.selector);
 
   var filterQuerySelector = options.selector + ' .filter-input';
   fillIn(filterQuerySelector, filter);
+
 });
 
 function selectKit(selector) { // eslint-disable-line no-unused-vars
@@ -88,11 +89,13 @@ function selectKit(selector) { // eslint-disable-line no-unused-vars
 
   function keyboardHelper() {
     function createEvent(target, keyCode, options) {
-      target = target || ".select-kit-filter-input";
+      target = target || ".filter-input";
       selector = find(selector).find(target);
+      options = options || {};
 
       andThen(function() {
-        var event = jQuery.Event(options.type);
+        var type = options.type || 'keydown';
+        var event = jQuery.Event(type);
         event.keyCode = keyCode;
         if (options && options.metaKey === true) { event.metaKey = true; }
         find(selector).trigger(event);
@@ -100,13 +103,13 @@ function selectKit(selector) { // eslint-disable-line no-unused-vars
     }
 
     return {
-      down: function(target) { createEvent(target, 40, {type: 'keydown'}); },
-      up: function(target) { createEvent(target, 38, {type: 'keydown'}); },
-      escape: function(target) { createEvent(target, 27, {type: 'keydown'}); },
+      down: function(target) { createEvent(target, 40); },
+      up: function(target) { createEvent(target, 38); },
+      escape: function(target) { createEvent(target, 27); },
       enter: function(target) { createEvent(target, 13, {type: 'keypress'}); },
-      tab: function(target) { createEvent(target, 9, {type: 'keydown'}); },
-      backspace: function(target) { createEvent(target, 8, {type: 'keydown'}); },
-      selectAll: function(target) { createEvent(target, 65, {metaKey: true, type: 'keydown'}); },
+      tab: function(target) { createEvent(target, 9); },
+      backspace: function(target) { createEvent(target, 8); },
+      selectAll: function(target) { createEvent(target, 65, {metaKey: true}); },
     };
   }
 
