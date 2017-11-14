@@ -188,8 +188,14 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     this.focus();
   },
 
-  willDeselect() { this.set("highlightedValue", null); },
-  didDeselect() { this.focus(); },
+  willDeselect() {
+    this.clearFilter();
+    this.set("highlightedValue", null);
+  },
+  didDeselect() {
+    this.collapse();
+    this.focus();
+  },
 
   clearFilter() {
     this.$filterInput().val("");

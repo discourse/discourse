@@ -130,7 +130,6 @@ export default SelectKitComponent.extend({
       const computedContentItem = this.computeContentItem(content);
       if (this.validateComputedContentItem(computedContentItem)) {
         this.get("computedContent").pushObject(computedContentItem);
-        this.clearFilter();
         this.send("onSelect", computedContentItem);
       }
     },
