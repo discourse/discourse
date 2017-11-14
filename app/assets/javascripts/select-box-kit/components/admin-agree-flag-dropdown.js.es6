@@ -12,8 +12,10 @@ export default DropdownSelectBox.extend({
 
   @on("didReceiveAttrs")
   _setAdminAgreeDropdownOptions() {
-    this.set("headerComponentOptions.selectedName", `${I18n.t(this.get("headerText"))}...`);
-    this.set("headerComponentOptions.icon", iconHTML("thumbs-o-up"));
+    this.get('headerComponentOptions').setProperties({
+      selectedName: `${I18n.t(this.get("headerText"))} ...`,
+      icon: iconHTML("thumbs-o-up")
+    });
   },
 
   @computed("adminTools", "post.user")
@@ -27,30 +29,30 @@ export default DropdownSelectBox.extend({
   content(post, canDeleteSpammer) {
     const content = [];
 
-    if (post.user_deleted === true) {
+    if (post.user_deleted) {
       content.push({
-        title:  I18n.t("admin.flags.agree_flag_restore_post_title"),
         icon: "eye",
         id: "confirm-agree-restore",
         action: () => this.send("perform", "restore"),
         label:  I18n.t("admin.flags.agree_flag_restore_post"),
+        description:  I18n.t("admin.flags.agree_flag_restore_post_title")
       });
     } else {
-      if (post.get("postHidden") !== true) {
+      if (!post.get("postHidden")) {
         content.push({
-          title:  I18n.t("admin.flags.agree_flag_hide_post_title"),
           icon: "eye-slash",
           action: () => this.send("perform", "hide"),
           id: "confirm-agree-hide",
-          label:  I18n.t("admin.flags.agree_flag_hide_post"),
+          label: I18n.t("admin.flags.agree_flag_hide_post"),
+          description: I18n.t("admin.flags.agree_flag_hide_post_title")
         });
       }
     }
 
     content.push({
-      title:  I18n.t("admin.flags.agree_flag_title"),
       icon: "thumbs-o-up",
       id: "confirm-agree-keep",
+      description: I18n.t('admin.flags.agree_flag_title'),
       action: () => this.send("perform", "keep"),
       label:  I18n.t("admin.flags.agree_flag"),
     });
