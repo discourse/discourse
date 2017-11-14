@@ -1,6 +1,6 @@
-<% local_domain = "#{request.protocol}#{request.host_with_port}" %>
-
 <h1 class="page-not-found"><%= t 'page_not_found.title' %></h1>
+
+<%= raw build_plugin_html 'server:not-found-before-topics' %>
 
 <% unless SiteSetting.login_required? && current_user.nil? %>
   <div class="row page-not-found-topics">
@@ -28,6 +28,8 @@
 <% end %>
 
 <%- unless @hide_google %>
+  <% local_domain = "#{request.protocol}#{request.host_with_port}" %>
+
   <div class="row">
     <div class="span10 page-not-found-search">
       <h2><%= t 'page_not_found.search_title' %></h2>
