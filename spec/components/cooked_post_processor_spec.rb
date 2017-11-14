@@ -170,6 +170,58 @@ describe CookedPostProcessor do
 
     end
 
+    context "with tall images" do
+
+      let(:upload) { Fabricate(:upload) }
+      let(:post) { Fabricate(:post_with_large_image) }
+      let(:cpp) { CookedPostProcessor.new(post) }
+
+      before do
+        SiteSetting.create_thumbnails = true
+
+        Upload.expects(:get_from_url).returns(upload)
+        FastImage.expects(:size).returns([860, 1900])
+        OptimizedImage.expects(:resize).never
+        OptimizedImage.expects(:crop).returns(true)
+
+        FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
+      end
+
+      it "crops the image" do
+        cpp.post_process_images
+        expect(cpp.html).to match /width="690" height="500">/
+        expect(cpp).to be_dirty
+      end
+
+    end
+
+    context "with iPhone X screenshots" do
+
+      let(:upload) { Fabricate(:upload) }
+      let(:post) { Fabricate(:post_with_large_image) }
+      let(:cpp) { CookedPostProcessor.new(post) }
+
+      before do
+        SiteSetting.create_thumbnails = true
+
+        Upload.expects(:get_from_url).returns(upload)
+        FastImage.expects(:size).returns([1125, 2436])
+        OptimizedImage.expects(:resize).returns(true)
+        OptimizedImage.expects(:crop).never
+
+        FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
+      end
+
+      it "crops the image" do
+        cpp.post_process_images
+        expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a data-download-href=\"/uploads/default/#{upload.sha1}\" href=\"/uploads/default/1/1234567890123456.jpg\" class=\"lightbox\" title=\"logo.png\"><img src=\"/uploads/default/optimized/1X/#{upload.sha1}_1_230x500.png\" width=\"230\" height=\"500\"><div class=\"meta\">
+<span class=\"filename\">logo.png</span><span class=\"informations\">1125x2436 1.21 KB</span><span class=\"expand\"></span>
+</div></a></div></p>"
+        expect(cpp).to be_dirty
+      end
+
+    end
+
     context "with large images when using subfolders" do
 
       let(:upload) { Fabricate(:upload) }
