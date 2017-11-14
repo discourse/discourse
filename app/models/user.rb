@@ -965,6 +965,12 @@ class User < ActiveRecord::Base
     end
   end
 
+  def recent_time_read
+    self.created_at && self.created_at < 60.days.ago ?
+      self.user_visits.where('visited_at >= ?', 60.days.ago).sum(:time_read) :
+      self.user_stat&.time_read
+  end
+
   protected
 
   def badge_grant
