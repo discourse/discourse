@@ -138,12 +138,7 @@
           icon="external-link"
           label="admin.flags.defer_flag"}}
 
-        {{d-button
-          class="btn-danger delete-flag"
-          title="admin.flags.delete_title"
-          action="showDeleteFlagModal"
-          icon="trash-o"
-          label="admin.flags.delete"}}
+        {{admin-delete-flag-dropdown post=flaggedPost removeAfter=(action "removeAfter")}}
 
         {{#unless suspended}}
           {{d-button

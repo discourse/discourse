@@ -151,10 +151,12 @@
   .flagged-post-controls {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
 
-    button {
-      margin-right: 0.5em;
+    button, .select-box-kit {
       margin-bottom: 0.5em;
+      margin-right: 0.5em;
     }
   }
 }
@@ -188,13 +190,6 @@
   margin-bottom: 2em;
 }
 
-.delete-flag-modal {
-  button {
-    margin: 10px 0 10px 10px;
-    padding: 10px 15px;
-  }
-}
-
 .mobile-view {
   .flagged-posts {
     .flagged-post {
@@ -210,4 +205,3 @@
     padding-right: 0.25em;
   }
 }
-
