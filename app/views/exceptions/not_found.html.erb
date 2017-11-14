@@ -1,6 +1,6 @@
 <h1 class="page-not-found"><%= t 'page_not_found.title' %></h1>
 
-<%= raw build_plugin_html 'server:not-found-before-topics' %>
+<%= build_plugin_html 'server:not-found-before-topics' %>
 
 <% unless SiteSetting.login_required? && current_user.nil? %>
   <div class="row page-not-found-topics">

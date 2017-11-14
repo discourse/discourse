@@ -143,7 +143,7 @@ class DiscoursePluginRegistry
 
   def self.build_html(name, ctx = nil)
     builders = html_builders[name] || []
-    builders.map { |b| b.call(ctx) }.join("\n")
+    builders.map { |b| b.call(ctx) }.join("\n").html_safe
   end
 
   def javascripts
