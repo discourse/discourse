@@ -41,9 +41,7 @@ module Stylesheet
       colors.each do |n, hex|
         contents << "$#{n}: ##{hex} !default;\n"
       end
-      theme&.theme_fields&.each do |field|
-        next unless ThemeField.theme_var_type_ids.include?(field.type_id)
-
+      theme&.all_theme_variables&.each do |field|
         if field.type_id == ThemeField.types[:theme_upload_var]
           if upload = field.upload
             url = upload_cdn_path(upload.url)
