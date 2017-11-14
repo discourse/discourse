@@ -109,10 +109,6 @@ export default Ember.Mixin.create({
     }
   },
 
-  blur() {
-    Ember.run.schedule("afterRender", () => this.$offscreenInput().blur() );
-  },
-
   _killEvent(event) {
     event.preventDefault();
     event.stopPropagation();

@@ -24,6 +24,6 @@ export default SingleSelectComponent.extend({
 
   didSelect() {
     this._super();
-    this.blur();
+    this.close();
   }
 });
