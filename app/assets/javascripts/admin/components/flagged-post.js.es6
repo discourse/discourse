@@ -36,10 +36,6 @@ export default Ember.Component.extend({
       this.removeAfter(promise);
     },
 
-    showDeleteFlagModal() {
-      this._spawnModal('admin-delete-flag', this.get('flaggedPost'), 'delete-flag-modal');
-    },
-
     disagree() {
       this.removeAfter(this.get('flaggedPost').disagreeFlags());
     },
