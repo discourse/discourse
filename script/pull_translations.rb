@@ -310,6 +310,7 @@ YML_DIRS.each do |dir|
         # fix_invalid_yml(filename)
 
         # TODO check if this is still needed with recent Transifex changes
+        #      Nov 14, 2017: yup, still needed
         add_anchors_and_aliases(english_alias_data, filename)
 
         update_file_header(filename, language)
