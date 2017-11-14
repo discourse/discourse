@@ -107,6 +107,11 @@ class SessionController < ApplicationController
     begin
       if user = sso.lookup_or_create_user(request.remote_ip)
 
+        if user.suspended?
+          render_sso_error(text: I18n.t("login.suspended", date: user.suspended_till), status: 403)
+          return
+        end
+
         if SiteSetting.must_approve_users? && !user.approved?
           if SiteSetting.sso_not_approved_url.present?
             redirect_to SiteSetting.sso_not_approved_url
