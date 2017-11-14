@@ -174,6 +174,7 @@ gem 'cppjieba_rb', require: false
 
 gem 'lograge', require: false
 gem 'logstash-event', require: false
+gem 'logstash-logger', require: false
 gem 'logster'
 
 gem 'sassc', require: false
