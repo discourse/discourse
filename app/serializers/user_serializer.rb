@@ -67,6 +67,7 @@ class UserSerializer < BasicUserSerializer
              :pending_count,
              :profile_view_count,
              :time_read,
+             :recent_time_read,
              :primary_group_name,
              :primary_group_flair_url,
              :primary_group_flair_bg_color,
@@ -403,7 +404,11 @@ class UserSerializer < BasicUserSerializer
   end
 
   def time_read
-    AgeWords.age_words(object.user_stat&.time_read)
+    object.user_stat&.time_read
+  end
+
+  def recent_time_read
+    time = object.recent_time_read
   end
 
 end
