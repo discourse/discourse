@@ -6,6 +6,7 @@ export default NotificationOptionsComponent.extend({
   isHidden: Ember.computed.or("category.deleted", "site.isMobileDevice"),
   i18nPrefix: "category.notifications",
   showFullTitle: false,
+  allowInitialValueMutation: false,
 
   computeValue() {
     return this.get("category.notification_level");

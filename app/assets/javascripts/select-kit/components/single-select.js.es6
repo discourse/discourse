@@ -83,6 +83,9 @@ export default SelectKitComponent.extend({
     return computedContent.findBy("value", computedValue);
   },
 
+  @computed("selectedComputedContent")
+  hasSelection(selectedComputedContent) { return !Ember.isNone(selectedComputedContent); },
+
   autoHighlight() {
     Ember.run.schedule("afterRender", () => {
       if (!isNone(this.get("highlightedValue"))) { return; }
@@ -110,8 +113,7 @@ export default SelectKitComponent.extend({
 
   actions: {
     onClear() {
-      this.set("computedValue", null);
-      this.mutateAttributes();
+      this.send("onDeselect", this.get("selectedComputedContent"));
     },
 
     onCreate(input) {
@@ -122,9 +124,7 @@ export default SelectKitComponent.extend({
       if (this.validateComputedContent(computedContent) &&
           this.get("computedValue") !== computedContent.value) {
         this.get("computedContent").pushObject(computedContent);
-        this.set("computedValue", computedContent.value);
         this.clearFilter();
-        this.autoHighlight();
         this.send("onSelect", computedContent);
       }
     },

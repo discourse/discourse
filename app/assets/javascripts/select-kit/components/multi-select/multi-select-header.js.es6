@@ -7,7 +7,6 @@ export default SelectKitHeaderComponent.extend({
   classNames: "multi-select-header",
   layoutName: "select-kit/templates/components/multi-select/multi-select-header",
   selectedNameComponent: Ember.computed.alias("options.selectedNameComponent"),
-  shouldDisplayFilter: true,
 
   @on("didRender")
   _positionFilter() {

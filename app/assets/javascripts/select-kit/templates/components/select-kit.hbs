@@ -19,6 +19,7 @@
   onFilter=(action "onFilter")
   onClear=(action "onClear")
   options=headerComponentOptions
+  shouldDisplayFilter=shouldDisplayFilter
 }}
 
 <div class="select-kit-body">
@@ -33,9 +34,9 @@
 
   {{#if renderedBodyOnce}}
     {{component collectionComponent
+      hasSelection=hasSelection
       noneRowComputedContent=noneRowComputedContent
       createRowComputedContent=createRowComputedContent
-      selectedComputedContent=selectedComputedContent
       filteredComputedContent=filteredComputedContent
       rowComponent=rowComponent
       noneRowComponent=noneRowComponent

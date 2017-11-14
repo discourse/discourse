@@ -11,7 +11,7 @@ QUnit.test("does not display uncategorized if not allowed", assert => {
   visit("/");
   click('#create-topic');
 
-  ('.category-chooser');
+  expandSelectKit('.category-chooser');
 
   andThen(() => {
     assert.ok(selectKit('.category-chooser').rowByIndex(0).name() !== 'uncategorized');
