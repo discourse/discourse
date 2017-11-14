@@ -42,7 +42,7 @@ export default TextField.extend({
       allowAny: this.get('allowAny'),
       updateData: (opts && opts.updateData) ? opts.updateData : false,
 
-      dataSource: function(term) {
+      dataSource(term) {
         const termRegex = Discourse.User.currentProp('can_send_private_email_messages') ?
           /[^a-zA-Z0-9_\-\.@\+]/ : /[^a-zA-Z0-9_\-\.]/;
 
@@ -60,7 +60,7 @@ export default TextField.extend({
         return results;
       },
 
-      transformComplete: function(v) {
+      transformComplete(v) {
         if (v.username || v.name) {
           if (!v.username) { groups.push(v.name); }
           return v.username || v.name;
@@ -72,7 +72,7 @@ export default TextField.extend({
         }
       },
 
-      onChangeItems: function(items) {
+      onChangeItems(items) {
         var hasGroups = false;
         items = items.map(function(i) {
           if (groups.indexOf(i) > -1) { hasGroups = true; }
@@ -85,7 +85,7 @@ export default TextField.extend({
         if (self.get('onChangeCallback')) self.sendAction('onChangeCallback');
       },
 
-      reverseTransform: function(i) {
+      reverseTransform(i) {
         return { username: i };
       }
 
