@@ -216,9 +216,11 @@ class CookedPostProcessor
     return if original_width <= width && original_height <= height
     return if original_width <= SiteSetting.max_image_width && original_height <= SiteSetting.max_image_height
 
-    crop = false
-    if original_width.to_f / original_height.to_f < MIN_RATIO_TO_CROP
-      crop = true
+    crop = original_width.to_f / original_height.to_f < MIN_RATIO_TO_CROP
+    # prevent iPhone X screenshots from being cropped
+    crop &= original_width != 1125 && original_height != 2436
+
+    if crop
       width, height = ImageSizer.crop(original_width, original_height)
       img["width"] = width
       img["height"] = height
