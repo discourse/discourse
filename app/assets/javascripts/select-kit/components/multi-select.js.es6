@@ -10,7 +10,6 @@ export default SelectKitComponent.extend({
   headerText: "select_kit.default_header_text",
   allowAny: true,
   allowInitialValueMutation: false,
-  autoSelectFirst: false,
   autoFilterable: true,
   selectedNameComponent: "multi-select/selected-name",
 
@@ -37,9 +36,9 @@ export default SelectKitComponent.extend({
       values = this.willComputeValues(values);
       values = this.computeValues(values);
       values = this._beforeDidComputeValues(values);
+      this.set("headerComputedContent", this.computeHeaderContent());
       this.didComputeContent(content);
       this.didComputeValues(values);
-      this.set("headerComputedContent", this.computeHeaderContent());
       this.didComputeAttributes();
     });
   },
@@ -156,33 +155,13 @@ export default SelectKitComponent.extend({
 
   @computed("computedValues.[]", "computedContent.[]")
   selectedComputedContents(computedValues, computedContent) {
-    const contents = [];
-    computedValues.forEach(cv => {
-      const content = computedContent.findBy("value", cv);
-      if (!isNone(content)) { contents.push(content); }
-    });
-    return contents;
+    const selected = [];
+    computedValues.forEach(v => selected.push(computedContent.findBy("value", v)) );
+    return selected;
   },
 
-  createContentFunction(input) {
-    const formatedContent = this.formatContentItem(input);
-    this.get("computedContent").pushObject(formatedContent);
-    this.get("computedValues").pushObject(formatedContent.value);
-    this.setValuesFunction();
-    this.setContentFunction();
-  },
-
-  highlightValueFunction(value) {
-    this.set("highlightedValue", value);
-  },
-
-  setValuesFunction() {
-    this.set("value", this.get("computedValues"));
-  },
-
-  setContentFunction() {
-    this.set("content", this.get("computedContent").map(c => c.originalContent));
-  },
+  @computed("selectedComputedContents.[]")
+  hasSelection(selectedComputedContents) { return !Ember.isEmpty(selectedComputedContents); },
 
   autoHighlight() {
     Ember.run.schedule("afterRender", () => {
@@ -191,9 +170,9 @@ export default SelectKitComponent.extend({
       if (!isNone(this.get("highlightedValue"))) { return; }
 
       if (isEmpty(this.get("filteredComputedContent"))) {
-        if (!isEmpty(this.get("filter"))) {
+        if (this.get("createRowComputedContent")) {
           this.send("onHighlight", this.get("createRowComputedContent"));
-        } else if (this.get("none") && !isEmpty(this.get("selectedContent"))) {
+        } else if (this.get("noneRowComputedContent") && this.get("hasSelection") === true) {
           this.send("onHighlight", this.get("noneRowComputedContent"));
         }
       } else {
@@ -202,47 +181,36 @@ export default SelectKitComponent.extend({
     });
   },
 
-  _beforeWillLoadValues(values) {
-    return values.map(v => this._castInteger(v === "" ? null : v));
+  didSelect() {
+    this.focus();
+    this.autoHighlight();
   },
-  willLoadValues(values) { return values; },
-  loadValuesFunction(values) { return values; },
-  _beforeDidLoadValues(values) {
-    this.setProperties({ computedValues: values });
-    return values;
+
+  didDeselect() {
+    this.focus();
+    this.autoHighlight();
   },
-  didLoadValues() {},
 
   actions: {
     onClear() {
-      this.set("computedValues", []);
-      this.mutateAttributes();
+      this.get("selectedComputedContents").forEach(selectedComputedContent => {
+        this.send("onDeselect", selectedComputedContent);
+      });
     },
 
-    onCreate(input) {
-      let content = this.createContentFromInput(input);
-      if (Ember.isNone(content)) return;
-
-      const computedContent = this.computeContentItem(content);
-      if (this.validateComputedContent(computedContent) &&
-          !this.get("computedValues").includes(computedContent.value)) {
-        this.get("computedContent").pushObject(computedContent);
-        this.get("computedValues").pushObject(computedContent.value);
-        this.set("validCreateContent", true);
-        this.clearFilter();
-        this.autoHighlight();
-        this.focus();
-        this.mutateAttributes();
-      } else {
-        this.set("validCreateContent", false);
+    onCreate(computedContentItem) {
+      if (this.validateComputedContent(computedContentItem) &&
+          !this.get("computedValues").includes(computedContentItem.value)) {
+        this.get("computedContent").pushObject(computedContentItem);
+        this.send("onSelect", computedContentItem);
       }
     },
 
-    onSelect(rowComputedContentItem) {
-      this.willSelect(rowComputedContentItem);
-      this.get("computedValues").pushObject(rowComputedContentItem.value);
+    onSelect(computedContentItem) {
+      this.willSelect(computedContentItem);
+      this.get("computedValues").pushObject(computedContentItem.value);
       this.mutateAttributes();
-      Ember.run.schedule("afterRender", () => this.didSelect(rowComputedContentItem));
+      Ember.run.schedule("afterRender", () => this.didSelect(computedContentItem));
     },
 
     onDeselect(rowComputedContentItems) {

@@ -36,7 +36,7 @@ export default MultiSelectComponent.extend({
   },
 
   didComputeAttributes() {
-    if (Ember.isEmpty(this.get("content"))) {
+    if (Ember.isEmpty(this.get("computedContent"))) {
       this.setProperties({ rowComponent: null, noContentLabel: null });
     }
   },

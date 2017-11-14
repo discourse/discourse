@@ -54,7 +54,6 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   castInteger: false,
   allowAny: false,
   allowInitialValueMutation: false,
-  autoSelectFirst: true,
   content: null,
   computedContent: null,
   _initialValues: null,
@@ -82,6 +81,7 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   computeContent(content) { return content; },
   _beforeDidComputeContent(content) {
     content = applyContentPluginApiCallbacks(this.get("pluginApiIdentifiers"), content);
+
     this.setProperties({
       computedContent: content.map(c => this.computeContentItem(c)),
       _initialValues: this.get("_initialValues") || content.map(c => this._valueForContent(c) )
@@ -129,10 +129,9 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
 
   @computed("filter", "filterable", "autoFilterable", "renderedFilterOnce")
   shouldDisplayFilter(filter, filterable, autoFilterable, renderedFilterOnce) {
-    return true;
-    // if ((renderedFilterOnce === true || filterable === true) && filter.length > 0) { return true; }
-    // if (filter.length > 0 && autoFilterable === true) { return true; }
-    // return false;
+    if ((renderedFilterOnce === true || filterable === true) && filter.length > 0) { return true; }
+    if (filter.length > 0 && autoFilterable === true) { return true; }
+    return false;
   },
 
   @computed("filter")
