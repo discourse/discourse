@@ -5,6 +5,7 @@ export default NotificationOptionsComponent.extend({
   classNames: "tag-notifications-button",
   i18nPrefix: "tagging.notifications",
   showFullTitle: false,
+  allowInitialValueMutation: false,
 
   mutateValue(value) {
     this.sendAction("action", value);

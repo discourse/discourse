@@ -10,6 +10,7 @@ export default SingleSelectComponent.extend({
   headerComponent: "dropdown-select-box/dropdown-select-box-header",
   rowComponent: "dropdown-select-box/dropdown-select-box-row",
   showFullTitle: true,
+  allowInitialValueMutation: false,
 
   @on("didReceiveAttrs")
   _setDropdownSelectBoxComponentOptions() {

@@ -5,6 +5,7 @@ import { on } from "ember-addons/ember-computed-decorators";
 export default DropdownSelectBoxComponent.extend({
   classNames: "categories-admin-dropdown",
   showFullTitle: false,
+  allowInitialValueMutation: false,
 
   computeHeaderContent() {
     let content = this.baseHeaderComputedContent();

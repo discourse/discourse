@@ -182,7 +182,7 @@ componentTest('with no value and no none', {
 //   test(assert) {
 //     ();
 //
-//     andThen(() => assert.equal(find(".select-kit-filter-input").length, 1, "it has a search input"));
+//     andThen(() => assert.equal(find(".filter-input").length, 1, "it has a search input"));
 //
 //     selectKitFillInFilter("regis");
 //
