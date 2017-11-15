@@ -38,12 +38,10 @@ export default Ember.Mixin.create({
 
     $(document)
       .on("mousedown.select-kit, touchstart.select-kit", event => {
-        if (Ember.isNone(this.get("element"))) {
-          return;
-        }
+        if (Ember.isNone(this.get("element"))) return;
+        if (this.get("element").contains(event.target)) return;
 
-        if (this.get("element").contains(event.target)) { return; }
-        this.clickOutside(event);
+        this.didClickOutside(event);
     });
 
     this.$offscreenInput()
@@ -68,7 +66,7 @@ export default Ember.Mixin.create({
       .on("keypress.select-kit", (event) => {
         const keyCode = event.keyCode || event.which;
 
-        this.expand();
+        this.expand(event);
 
         if (this.get("filterable") === true || this.get("autoFilterable")) {
           this.set("renderedFilterOnce", true);
@@ -116,7 +114,7 @@ export default Ember.Mixin.create({
 
   didPressEscape(event) {
     this._killEvent(event);
-    this.unfocus();
+    this.unfocus(event);
   },
 
   didPressUpAndDownArrows(event) {
@@ -148,7 +146,7 @@ export default Ember.Mixin.create({
   didPressBackspace(event) {
     this._killEvent(event);
 
-    this.expand();
+    this.expand(event);
 
     if (this.$filterInput().is(":visible")) {
       this.$filterInput().focus().trigger(event).trigger("change");
@@ -159,10 +157,20 @@ export default Ember.Mixin.create({
     this._killEvent(event);
 
     if (this.get("isExpanded") === false) {
-      this.expand();
+      this.expand(event);
     } else if (this.$highlightedRow().length === 1) {
       Ember.run.throttle(this, this._rowClick, this.$highlightedRow(), 150, true);
     }
+  },
+
+  didClickOutside(event) {
+    if ($(event.target).parents(".select-kit").length === 1) {
+      this.close(event);
+      return false;
+    }
+
+    this.unfocus(event);
+    return;
   },
 
   tabFromOffscreen(event) { this.didPressTab(event); },

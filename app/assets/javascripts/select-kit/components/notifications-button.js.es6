@@ -18,19 +18,18 @@ export default DropdownSelectBoxComponent.extend({
   i18nPrefix: "",
   i18nPostfix: "",
 
-  loadValueFunction() {
-    return this.get("notificationLevel");
-  },
+  @computed("iconForSelectedDetails")
+  headerIcon(iconForSelectedDetails) { return iconForSelectedDetails; },
+
 
   @computed("selectedDetails.icon", "selectedDetails.key")
   iconForSelectedDetails(icon, key) {
-    return `${icon} ${key}`;
+    return `d-${key}`;
   },
 
   computeHeaderContent() {
     let content = this.baseHeaderComputedContent();
     content.name = I18n.t(`${this.get("i18nPrefix")}.${this.get("selectedDetails.key")}.title`);
-    content.icon = "d-tracking";
     content.hasSelection = this.get("selectedComputedContent").length >= 1;
     return content;
   },

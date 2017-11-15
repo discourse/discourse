@@ -2,6 +2,7 @@ import MultiSelectComponent from "select-kit/components/multi-select";
 const { makeArray } = Ember;
 
 export default MultiSelectComponent.extend({
+  pluginApiIdentifiers: ["admin-group-selector"],
   classNames: "admin-group-selector",
   selected: null,
   available: null,
@@ -9,7 +10,7 @@ export default MultiSelectComponent.extend({
 
   computeValues() {
     return makeArray(this.get("selected"))
-      .map(s => this._valueForContent(s));
+      .map(s => this.valueForContentItem(s));
   },
 
   computeContent() {
@@ -24,17 +25,26 @@ export default MultiSelectComponent.extend({
 
   mutateValues(values) {
     if (values.length > this.get("selected").length) {
-      const newValues = values.filter(v => !this.get("selected").map(s => s.id).includes(v));
+      const newValues = values
+        .filter(v => !this.get("selected")
+        .map(s => this.valueForContentItem(s))
+        .includes(v));
+
       newValues.forEach(value => {
-        this.triggerAction({
-          action: "groupAdded",
-          actionContext: this.get("available").findBy("id", parseInt(value, 10))
-        });
+        const actionContext = this.get("available")
+          .findBy(this.get("valueAttribute"), parseInt(value, 10));
+
+        this.triggerAction({ action: "groupAdded", actionContext });
       });
     } else if (values.length < this.get("selected").length) {
-      const selected = this.get("selected").filter(s => !values.includes(s.id));
+      const selected = this.get("selected")
+        .filter(s => !values.includes(this.valueForContentItem(s)));
+
       selected.forEach(s => {
-        this.triggerAction({ action: "groupRemoved", actionContext: s.id });
+        this.triggerAction({
+          action: "groupRemoved",
+          actionContext: this.valueForContentItem(s)
+        });
       });
     }
   }

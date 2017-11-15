@@ -4,6 +4,7 @@ import computed from "ember-addons/ember-computed-decorators";
 const { get, isNone, isEmpty, isPresent } = Ember;
 
 export default SelectKitComponent.extend({
+  pluginApiIdentifiers: ["single-select"],
   classNames: "single-select",
   computedValue: null,
   value: null,
@@ -17,7 +18,7 @@ export default SelectKitComponent.extend({
       const emptyValue = isEmpty(this.get("value"));
       if (none && emptyValue) {
         if (!isEmpty(this.get("content"))) {
-          const value = this._valueForContent(this.get("content.firstObject"));
+          const value = this.valueForContentItem(this.get("content.firstObject"));
           Ember.run.next(() => this.mutateValue(value));
         }
       }
@@ -50,7 +51,7 @@ export default SelectKitComponent.extend({
   computeValue(value) { return value; },
   _beforeDidComputeValue(value) {
     if (!isEmpty(this.get("content")) && isNone(value) && isNone(this.get("none"))) {
-      value = this._valueForContent(get(this.get("content"), "firstObject"));
+      value = this.valueForContentItem(get(this.get("content"), "firstObject"));
     }
 
     this.setProperties({ computedValue: value });
@@ -98,7 +99,7 @@ export default SelectKitComponent.extend({
       const displayCreateRow = this.get("shouldDisplayCreateRow");
       const none = this.get("noneRowComputedContent");
 
-      if (this.get("hasSelection")) {
+      if (this.get("hasSelection") && isEmpty(this.get("filter"))) {
         this.send("onHighlight", this.get("selectedComputedContent"));
         return;
       }

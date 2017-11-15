@@ -7,6 +7,7 @@ import Category from "discourse/models/category";
 const { get, isNone, isEmpty } = Ember;
 
 export default ComboBoxComponent.extend({
+  pluginApiIdentifiers: ["category-chooser"],
   classNames: "category-chooser",
   filterable: true,
   castInteger: true,
@@ -79,7 +80,7 @@ export default ComboBoxComponent.extend({
     const excludeCategoryId = this.get("excludeCategoryId");
 
     return categories.filter(c => {
-      const categoryId = this._valueForContent(c);
+      const categoryId = this.valueForContentItem(c);
       if (scopedCategoryId && categoryId !== scopedCategoryId && get(c, "parent_category_id") !== scopedCategoryId) {
         return false;
       }

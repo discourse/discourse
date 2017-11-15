@@ -2,6 +2,7 @@ import SingleSelectComponent from "select-kit/components/single-select";
 import { on } from "ember-addons/ember-computed-decorators";
 
 export default SingleSelectComponent.extend({
+  pluginApiIdentifiers: ["dropdown-select-box"],
   classNames: "dropdown-select-box",
   verticalOffset: 3,
   fullWidthOnMobile: true,
@@ -19,7 +20,7 @@ export default SingleSelectComponent.extend({
     });
   },
 
-  clickOutside() {
+  didClickOutside() {
     if (this.get("isExpanded") === false) { return; }
     this.close();
   },

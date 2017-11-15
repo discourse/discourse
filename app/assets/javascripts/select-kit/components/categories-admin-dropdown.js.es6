@@ -2,6 +2,7 @@ import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-bo
 import { on } from "ember-addons/ember-computed-decorators";
 
 export default DropdownSelectBoxComponent.extend({
+  pluginApiIdentifiers: ["categories-admin-dropdown"],
   classNames: "categories-admin-dropdown",
   showFullTitle: false,
   allowInitialValueMutation: false,

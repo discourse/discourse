@@ -122,7 +122,7 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     }
 
     return {
-      value: this._castInteger(this._valueForContent(contentItem)),
+      value: this._castInteger(this.valueForContentItem(contentItem)),
       name: name || this._nameForContent(contentItem),
       locked: false,
       created: options.created || false,
