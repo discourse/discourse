@@ -214,7 +214,7 @@ describe CookedPostProcessor do
 
       it "crops the image" do
         cpp.post_process_images
-        expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a data-download-href=\"/uploads/default/#{upload.sha1}\" href=\"/uploads/default/1/1234567890123456.jpg\" class=\"lightbox\" title=\"logo.png\"><img src=\"/uploads/default/optimized/1X/#{upload.sha1}_1_230x500.png\" width=\"230\" height=\"500\"><div class=\"meta\">
+        expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a class=\"lightbox\" href=\"/uploads/default/1/1234567890123456.jpg\" data-download-href=\"/uploads/default/#{upload.sha1}\" title=\"logo.png\"><img src=\"/uploads/default/optimized/1X/#{upload.sha1}_1_230x500.png\" width=\"230\" height=\"500\"><div class=\"meta\">
 <span class=\"filename\">logo.png</span><span class=\"informations\">1125x2436 1.21 KB</span><span class=\"expand\"></span>
 </div></a></div></p>"
         expect(cpp).to be_dirty
