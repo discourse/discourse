@@ -30,11 +30,13 @@ class LocaleSiteSetting < EnumSiteSetting
           File.join(Rails.root, 'config', 'locales', 'client.*.yml')
         )
 
-        plugin_client_files = Dir.glob(
-          File.join(Rails.root, 'plugins', '*', 'config', 'locales', 'client.*.yml')
-        )
+        unless Rails.env.test? && ENV['LOAD_PLUGINS'] != "1"
+          app_client_files += Dir.glob(
+            File.join(Rails.root, 'plugins', '*', 'config', 'locales', 'client.*.yml')
+          )
+        end
 
-        (app_client_files + plugin_client_files).map { |x| x.split('.')[-2] }.uniq.sort
+        app_client_files.map { |x| x.split('.')[-2] }.uniq.sort
       end
     end
   end
