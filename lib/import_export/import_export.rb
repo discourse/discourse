@@ -11,12 +11,12 @@ module ImportExport
     ImportExport::Importer.new(data).perform
   end
 
-  def self.export_categories(include_users, filename = nil)
+  def self.export_category_structure(include_users, filename = nil)
     ImportExport::CategoryStructureExporter.new(include_users).perform.save_to_file(filename)
   end
 
-  def self.export_category(category_id, filename = nil)
-    ImportExport::CategoryExporter.new(category_id).perform.save_to_file(filename)
+  def self.export_categories(category_ids, filename = nil)
+    ImportExport::CategoryExporter.new(category_ids).perform.save_to_file(filename)
   end
 
   def self.export_topics(topic_ids, filename = nil)

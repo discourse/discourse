@@ -4,10 +4,8 @@ require "import_export/topic_exporter"
 module ImportExport
   class CategoryExporter < BaseExporter
 
-    def initialize(category_id)
-      @category = Category.find(category_id)
-      @categories = Category.where(parent_category_id: category_id).to_a
-      @categories << @category
+    def initialize(category_ids)
+      @categories = Category.where(id: category_ids).or(Category.where(parent_category_id: category_ids)).to_a
       @export_data = {
         categories: [],
         groups: [],
@@ -17,7 +15,6 @@ module ImportExport
     end
 
     def perform
-      puts "Exporting category #{@category.name}...", ""
       export_categories!
       export_category_groups!
       export_topics_and_users
