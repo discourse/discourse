@@ -137,6 +137,14 @@ class GlobalSetting
       end
   end
 
+  def self.add_default(name, default)
+    unless self.respond_to? name
+      define_singleton_method(name) do
+        default
+      end
+    end
+  end
+
   class BaseProvider
     def self.coerce(setting)
       return setting == "true" if setting == "true" || setting == "false"
