@@ -414,6 +414,40 @@ a.mention, a.mention-group {
   }
 }
 
+.large-image-placeholder {
+  > a {
+
+    &.link {
+      margin-right: 10px;
+    }
+
+    > * { overflow: hidden; }
+
+    > i.fa {
+      color: dark-light-choose($primary-medium, $secondary-medium);
+      margin-right: 6px;
+      font-size: $base-font-size;
+      line-height: $base-line-height;
+    }
+
+    > span.url {
+      display: inline-block;
+      max-width: 300px;
+      margin-right: 6px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    > span.help {
+      display: inline-block;
+      color: dark-light-choose($primary-medium, $secondary-medium);
+      font-size: 0.929em;
+      font-style: italic;
+      line-height: $base-line-height;
+    }
+  }
+}
+
 .broken-image, .large-image {
   color: dark-light-choose($primary-low-mid, $secondary-high);
   border: 1px solid $primary-low;

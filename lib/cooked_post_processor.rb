@@ -81,9 +81,51 @@ class CookedPostProcessor
     return if images.blank?
 
     images.each do |img|
+      next if large_images.include?(img["src"]) && add_large_image_placeholder!(img)
+
       limit_size!(img)
       convert_to_link!(img)
     end
+  end
+
+  def add_large_image_placeholder!(img)
+    url = img["src"]
+
+    is_hyperlinked = is_a_hyperlink?(img)
+
+    placeholder = create_node("div", "large-image-placeholder")
+    img.add_next_sibling(placeholder)
+    placeholder.add_child(img)
+
+    a = create_link_node(nil, url, true)
+    img.add_next_sibling(a)
+
+    span = create_span_node("url", url)
+    a.add_child(span)
+    span.add_previous_sibling(create_icon_node("image"))
+    span.add_next_sibling(create_span_node("help", I18n.t("upload.placeholders.too_large", max_size_kb: SiteSetting.max_image_size_kb)))
+
+    # Only if the image is already linked
+    if is_hyperlinked
+      parent = placeholder.parent
+      parent.add_next_sibling(placeholder)
+
+      if parent.name == 'a' && parent["href"].present? && url != parent["href"]
+        parent["class"] = "link"
+        a.add_previous_sibling(parent)
+
+        lspan = create_span_node("url", parent["href"])
+        parent.add_child(lspan)
+        lspan.add_previous_sibling(create_icon_node("link"))
+      end
+    end
+
+    img.remove
+    true
+  end
+
+  def large_images
+    @large_images ||= @post.custom_fields[Jobs::PullHotlinkedImages::LARGE_IMAGES].presence || []
   end
 
   def extract_images
@@ -244,21 +286,18 @@ class CookedPostProcessor
 
   def add_lightbox!(img, original_width, original_height, upload = nil)
     # first, create a div to hold our lightbox
-    lightbox = Nokogiri::XML::Node.new("div", @doc)
-    lightbox["class"] = "lightbox-wrapper"
+    lightbox = create_node("div", "lightbox-wrapper")
     img.add_next_sibling(lightbox)
     lightbox.add_child(img)
 
     # then, the link to our larger image
-    a = Nokogiri::XML::Node.new("a", @doc)
+    a = create_link_node("lightbox", img["src"])
     img.add_next_sibling(a)
 
     if upload && Discourse.store.internal?
       a["data-download-href"] = Discourse.store.download_url(upload)
     end
 
-    a["href"] = img["src"]
-    a["class"] = "lightbox"
     a.add_child(img)
 
     # replace the image by its thumbnail
@@ -266,8 +305,7 @@ class CookedPostProcessor
     img["src"] = upload.thumbnail(w, h).url if upload && upload.has_thumbnail?(w, h)
 
     # then, some overlay informations
-    meta = Nokogiri::XML::Node.new("div", @doc)
-    meta["class"] = "meta"
+    meta = create_node("div", "meta")
     img.add_next_sibling(meta)
 
     filename = get_filename(upload, img["src"])
@@ -287,11 +325,30 @@ class CookedPostProcessor
     return I18n.t("upload.pasted_image_filename")
   end
 
+  def create_node(tag_name, klass)
+    node = Nokogiri::XML::Node.new(tag_name, @doc)
+    node["class"] = klass if klass.present?
+    node
+  end
+
   def create_span_node(klass, content = nil)
-    span = Nokogiri::XML::Node.new("span", @doc)
+    span = create_node("span", klass)
     span.content = content if content
-    span["class"] = klass
     span
+  end
+
+  def create_icon_node(klass)
+    create_node("i", "fa fa-fw fa-#{klass}")
+  end
+
+  def create_link_node(klass, url, external = false)
+    a = create_node("a", klass)
+    a["href"] = url
+    if external
+      a["target"] = "_blank"
+      a["rel"] = "nofollow noopener"
+    end
+    a
   end
 
   def update_post_image
@@ -318,14 +375,17 @@ class CookedPostProcessor
 
     uploads = oneboxed_image_uploads.select(:url, :origin)
     oneboxed_images.each do |img|
+      if large_images.include?(img["src"])
+        img.remove
+        next
+      end
+
       url = img["src"].sub(/^https?:/i, "")
       upload = uploads.find { |u| u.origin.sub(/^https?:/i, "") == url }
       img["src"] = upload.url if upload.present?
-    end
 
-    # make sure we grab dimensions for oneboxed images
-    # and wrap in a div
-    oneboxed_images.each do |img|
+      # make sure we grab dimensions for oneboxed images
+      # and wrap in a div
       limit_size!(img)
 
       next if img["class"]&.include?('onebox-avatar')
