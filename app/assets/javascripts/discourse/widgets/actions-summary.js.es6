@@ -30,7 +30,7 @@ createWidget('small-user-list', {
       let description = null;
 
       if (atts.description) {
-        description = I18n.t(atts.description, { icons: '' });
+        description = I18n.t(atts.description, { count: atts.count });
       }
 
       // oddly post_url is on the user
