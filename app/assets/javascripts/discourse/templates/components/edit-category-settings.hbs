@@ -119,6 +119,13 @@
       </label>
     </section>
 
+    <section class='field'>
+        <label>
+          {{input type="checkbox" checked=category.mailinglist_mirror}}
+          {{i18n 'category.mailinglist_mirror'}}
+        </label>
+    </section>
+
   {{plugin-outlet name="category-email-in" args=(hash category=category)}}
 {{/if}}
 

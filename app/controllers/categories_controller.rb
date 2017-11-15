@@ -233,6 +233,7 @@ class CategoriesController < ApplicationController
                         :position,
                         :email_in,
                         :email_in_allow_strangers,
+                        :mailinglist_mirror,
                         :suppress_from_homepage,
                         :all_topics_wiki,
                         :parent_category_id,
