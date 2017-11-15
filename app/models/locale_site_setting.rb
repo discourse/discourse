@@ -25,7 +25,17 @@ class LocaleSiteSetting < EnumSiteSetting
 
   def self.supported_locales
     @lock.synchronize do
-      @supported_locales ||= Dir.glob(File.join(Rails.root, 'config', 'locales', 'client.*.yml')).map { |x| x.split('.')[-2] }.sort
+      @supported_locales ||= begin
+        app_client_files = Dir.glob(
+          File.join(Rails.root, 'config', 'locales', 'client.*.yml')
+        )
+
+        plugin_client_files = Dir.glob(
+          File.join(Rails.root, 'plugins', '*', 'config', 'locales', 'client.*.yml')
+        )
+
+        (app_client_files + plugin_client_files).map { |x| x.split('.')[-2] }.uniq.sort
+      end
     end
   end
 
