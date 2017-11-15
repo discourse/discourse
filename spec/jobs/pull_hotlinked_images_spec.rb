@@ -111,7 +111,7 @@ describe Jobs::PullHotlinkedImages do
         expect(post.cooked).to match(/<p><img src=.*\/uploads/)
         expect(post.cooked).to match(/<img src=.*\/uploads.*\ class="thumbnail"/)
         expect(post.cooked).to match(/<span class="broken-image fa fa-chain-broken/)
-        expect(post.cooked).to match(/<\/a><br><a href=.*\ target="_blank" .*\><span class="large-image fa fa-picture-o"><\/span><\/a>/)
+        expect(post.cooked).to match(/<div class="large-image-placeholder">/)
       end
     end
   end
@@ -132,9 +132,10 @@ describe Jobs::PullHotlinkedImages do
 
       Jobs::ProcessPost.new.execute(post_id: post.id)
       Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
+      Jobs::ProcessPost.new.execute(post_id: post.id)
       post.reload
 
-      expect(post.cooked).to match(/<a href=.*\ target="_blank" .*\><span class="large-image fa fa-picture-o"><\/span><\/a>/)
+      expect(post.cooked).to match(/<div class="large-image-placeholder"><a href=.*\ target="_blank" .*\>/)
     end
   end
 
