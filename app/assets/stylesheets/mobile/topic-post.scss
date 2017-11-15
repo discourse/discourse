@@ -20,45 +20,44 @@ span.badge-posts {
   display: none;
 }
 
-nav.post-controls {
-  clear: both;
-  .d-icon {
-    opacity: 1.0;
-  }
-}
-
 .who-liked {
   margin-left: 10px;
 }
 
 .topic-post {
-  button {
-    border: none;
-    font-size: 1.214em;
-    padding: 8px 10px;
-    vertical-align: top;
-    background: transparent;
-    color: dark-light-choose($primary-low-mid, $secondary-high);
-    float: left;
-    &.hidden {
-      display: none;
+  nav.post-controls {
+    clear: both;
+    .d-icon {
+      opacity: 1.0;
     }
-    &.admin {
-      position: relative;
-    }
-    &.expand-post {
-      margin:10px 0 10px 0;
-    }
-    &.has-like {color: $love;}
+    button {
+      border: none;
+      font-size: 1.214em;
+      padding: 8px 10px;
+      vertical-align: top;
+      background: transparent;
+      color: dark-light-choose($primary-low-mid, $secondary-high);
+      float: left;
+      &.hidden {
+        display: none;
+      }
+      &.admin {
+        position: relative;
+      }
+      &.expand-post {
+        margin:10px 0 10px 0;
+      }
+      &.has-like {color: $love;}
 
-    &.bookmarked {
-      color: $tertiary;
+      &.bookmarked {
+        color: $tertiary;
+      }
     }
-  }
 
-  button.like-count {
-    font-size: 1em;
-    padding: 8px 4px;
+    button.like-count {
+      font-size: 1em;
+      padding: 8px 4px;
+    }
   }
 }
 
