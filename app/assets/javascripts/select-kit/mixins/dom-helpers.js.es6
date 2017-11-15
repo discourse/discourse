@@ -85,17 +85,6 @@ export default Ember.Mixin.create({
     Ember.run.schedule("afterRender", () => this._removeFixedPosition() );
   },
 
-  // make sure we close/unfocus the component when clicked outside
-  clickOutside(event) {
-    if ($(event.target).parents(".select-kit").length === 1) {
-      this.close();
-      return false;
-    }
-
-    this.unfocus();
-    return;
-  },
-
   // lose focus of the component in two steps
   // first collapase and keep focus and then remove focus
   unfocus() {

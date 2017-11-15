@@ -1,6 +1,7 @@
 import ComboBoxComponent from "select-kit/components/combo-box";
 
 export default ComboBoxComponent.extend({
+  pluginApiIdentifiers: ["topic-footer-mobile-dropdown"],
   classNames: "topic-footer-mobile-dropdown",
   filterable: false,
   autoFilterable: false,

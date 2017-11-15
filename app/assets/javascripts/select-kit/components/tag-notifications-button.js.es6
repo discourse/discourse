@@ -2,6 +2,7 @@ import NotificationOptionsComponent from "select-kit/components/notifications-bu
 import computed from "ember-addons/ember-computed-decorators";
 
 export default NotificationOptionsComponent.extend({
+  pluginApiIdentifiers: ["tag-notifications-button"],
   classNames: "tag-notifications-button",
   i18nPrefix: "tagging.notifications",
   showFullTitle: false,
