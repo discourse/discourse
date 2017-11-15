@@ -27,6 +27,7 @@ describe ActiveRecord::ConnectionHandling do
   let(:postgresql_fallback_handler) { PostgreSQLFallbackHandler.instance }
 
   before do
+    skip("Disable these tests until we figure out what is leaking connections")
     postgresql_fallback_handler.initialized = true
 
     ['default', multisite_db].each do |db|
