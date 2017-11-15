@@ -58,7 +58,7 @@ module ImportScripts::Mbox
         msg_id = receiver.message_id
         parsed_email = receiver.mail
         from_email, from_display_name = receiver.parse_from_field(parsed_email)
-        body, elided = receiver.select_body
+        body, elided, format = receiver.select_body
         reply_message_ids = extract_reply_message_ids(parsed_email)
 
         email = {
@@ -70,6 +70,7 @@ module ImportScripts::Mbox
           raw_message: receiver.raw_email,
           body: body,
           elided: elided,
+          format: format,
           attachment_count: receiver.attachments.count,
           charset: parsed_email.charset&.downcase,
           category: category_name,
