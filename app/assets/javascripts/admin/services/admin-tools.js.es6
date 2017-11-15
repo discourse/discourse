@@ -6,8 +6,16 @@ import AdminUser from 'admin/models/admin-user';
 import { iconHTML } from 'discourse-common/lib/icon-library';
 import { ajax } from 'discourse/lib/ajax';
 import showModal from 'discourse/lib/show-modal';
+import { getOwner } from 'discourse-common/lib/get-owner';
 
 export default Ember.Service.extend({
+
+  init() {
+    this._super();
+
+    // TODO: Make `siteSettings` a service that can be injected
+    this.siteSettings = getOwner(this).lookup('site-settings:main');
+  },
 
   checkSpammer(userId) {
     return AdminUser.find(userId).then(au => this.spammerDetails(au));
@@ -53,7 +61,13 @@ export default Ember.Service.extend({
   },
 
   _deleteSpammer(adminUser) {
-    return adminUser.checkEmail().then(() => {
+
+    // Try loading the email if the site supports it
+    let tryEmail = this.siteSettings.show_email_on_profile ?
+      adminUser.checkEmail() :
+      Ember.RSVP.resolve();
+
+    return tryEmail.then(() => {
 
       let message = I18n.messageFormat('flagging.delete_confirm_MF', {
         "POSTS": adminUser.get('post_count'),
