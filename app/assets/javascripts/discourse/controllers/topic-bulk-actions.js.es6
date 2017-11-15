@@ -115,7 +115,6 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
     showChangeCategory() {
       this.send('changeBulkTemplate', 'modal/bulk-change-category');
-      this.set('modal.modalClass', 'topic-bulk-actions-modal full');
     },
 
     showNotificationLevel() {
