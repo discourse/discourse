@@ -555,6 +555,7 @@ end
 #  default_view                  :string(50)
 #  subcategory_list_style        :string(50)       default("rows_with_featured_topics")
 #  default_top_period            :string(20)       default("all")
+#  mailinglist_mirror            :boolean          default(FALSE), not null
 #
 # Indexes
 #
