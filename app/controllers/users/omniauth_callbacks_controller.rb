@@ -16,7 +16,7 @@ class Users::OmniauthCallbacksController < ApplicationController
 
   skip_before_action :redirect_to_login_if_required
 
-  layout false
+  layout 'no_ember'
 
   def self.types
     @types ||= Enum.new(:facebook, :instagram, :twitter, :google, :yahoo, :github, :persona, :cas)
@@ -80,7 +80,7 @@ class Users::OmniauthCallbacksController < ApplicationController
 
   def failure
     flash[:error] = I18n.t("login.omniauth_error")
-    render layout: 'no_ember'
+    render 'failure'
   end
 
   def self.find_authenticator(name)
