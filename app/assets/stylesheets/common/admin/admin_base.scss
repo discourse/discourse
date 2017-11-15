@@ -1328,7 +1328,7 @@ table.api-keys {
   position: absolute;
 }
 
-.staff-actions, .screened-emails, .screened-urls, .screened-ip-addresses, .permalinks, .web-hook-events {
+.staff-actions, .screened-emails, .screened-urls, .screened-ip-addresses, .permalinks, .search-logs-list, .web-hook-events {
 
   border-bottom: dotted 1px dark-light-choose($primary-low-mid, $secondary);
 
@@ -1351,6 +1351,23 @@ table.api-keys {
   .ember-list-item-view {
     width: 100%;
     border-top: solid 1px $primary-low;
+  }
+}
+
+.search-logs-list{
+  .col {
+    text-align: center;
+    width: 10%;
+  }
+
+  .col.term {
+    width: 30%;
+  }
+
+  .col.topic {
+    width: 35%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 

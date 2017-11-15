@@ -66,6 +66,7 @@ export default function() {
       this.route('screenedEmails', { path: '/screened_emails' });
       this.route('screenedIpAddresses', { path: '/screened_ip_addresses' });
       this.route('screenedUrls', { path: '/screened_urls' });
+      this.route('searchLogs', { path: '/search_logs' });
       this.route('adminWatchedWords', { path: '/watched_words', resetNamespace: true}, function() {
         this.route('index', { path: '/' } );
         this.route('action', { path: '/action/:action_id' } );

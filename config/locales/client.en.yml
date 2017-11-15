@@ -3184,6 +3184,13 @@ en:
           roll_up:
             text: "Roll up"
             title: "Creates new subnet ban entries if there are at least 'min_ban_entries_for_roll_up' entries."
+        search_logs:
+          title: "Search Logs"
+          term: "Term"
+          searches: "Searches"
+          click_through: "Click Through"
+          most_viewed_topic: "Most Viewed Topic"
+          unique: "Unique"
         logster:
           title: "Error Logs"
 

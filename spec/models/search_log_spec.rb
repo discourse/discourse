@@ -156,6 +156,41 @@ RSpec.describe SearchLog, type: :model do
     end
   end
 
+  context "trending" do
+    before do
+      SearchLog.log(term: 'ruby', search_type: :header, ip_address: '127.0.0.1')
+      SearchLog.log(term: 'php', search_type: :header, ip_address: '127.0.0.1')
+      SearchLog.log(term: 'java', search_type: :header, ip_address: '127.0.0.1')
+      SearchLog.log(term: 'ruby', search_type: :header, ip_address: '127.0.0.1', user_id: Fabricate(:user).id)
+      SearchLog.log(term: 'swift', search_type: :header, ip_address: '127.0.0.1')
+      SearchLog.log(term: 'ruby', search_type: :header, ip_address: '127.0.0.2')
+    end
+
+    it "considers time period" do
+      expect(SearchLog.trending.count).to eq(4)
+
+      SearchLog.where(term: 'swift').update_all(created_at: 1.year.ago)
+      expect(SearchLog.trending(:monthly).count).to eq(3)
+    end
+
+    it "correctly returns trending data" do
+      top_trending = SearchLog.trending.first
+      expect(top_trending.term).to eq("ruby")
+      expect(top_trending.searches).to eq(3)
+      expect(top_trending.unique).to eq(2)
+      expect(top_trending.click_through).to eq(0)
+      expect(top_trending.clicked_topic_id).to eq(nil)
+
+      popular_topic = Fabricate(:topic)
+      not_so_popular_topic = Fabricate(:topic)
+      SearchLog.where(term: 'ruby', ip_address: '127.0.0.1').update_all(clicked_topic_id: popular_topic.id)
+      SearchLog.where(term: 'ruby', ip_address: '127.0.0.2').update_all(clicked_topic_id: not_so_popular_topic.id)
+      top_trending = SearchLog.trending.first
+      expect(top_trending.click_through).to eq(3)
+      expect(top_trending.clicked_topic_id).to eq(popular_topic.id)
+    end
+  end
+
   context "clean_up" do
 
     it "will remove old logs" do

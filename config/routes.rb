@@ -174,6 +174,7 @@ Discourse::Application.routes.draw do
         end
       end
       post "watched_words/upload" => "watched_words#upload"
+      resources :search_logs,           only: [:index]
     end
 
     get "/logs" => "staff_action_logs#index"
