@@ -58,6 +58,7 @@ class SearchLog < ActiveRecord::Base
                            END) AS click_through,
                        MODE() WITHIN GROUP (ORDER BY clicked_topic_id) AS clicked_topic_id,
                        COUNT(DISTINCT ip_address) AS unique")
+      .includes(:topic)
       .where('created_at > ?', start_of(period))
       .group(:term)
       .order('COUNT(DISTINCT ip_address) DESC')
