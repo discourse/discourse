@@ -1362,10 +1362,12 @@ table.api-keys {
 
   .col.term {
     width: 30%;
+    text-align: left;
   }
 
   .col.topic {
     width: 35%;
+    text-align: left;
     text-overflow: ellipsis;
     white-space: nowrap;
   }

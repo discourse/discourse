@@ -60,7 +60,7 @@ class SearchLog < ActiveRecord::Base
                        COUNT(DISTINCT ip_address) AS unique")
       .where('created_at > ?', start_of(period))
       .group(:term)
-      .order('COUNT(*) DESC')
+      .order('COUNT(DISTINCT ip_address) DESC')
       .limit(100).to_a
   end
 
