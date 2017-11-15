@@ -110,13 +110,17 @@ class CookedPostProcessor
       parent = placeholder.parent
       parent.add_next_sibling(placeholder)
 
-      if parent.name == 'a' && parent["href"].present? && url != parent["href"]
-        parent["class"] = "link"
-        a.add_previous_sibling(parent)
+      if parent.name == 'a' && parent["href"].present?
+        if url == parent["href"]
+          parent.remove
+        else
+          parent["class"] = "link"
+          a.add_previous_sibling(parent)
 
-        lspan = create_span_node("url", parent["href"])
-        parent.add_child(lspan)
-        lspan.add_previous_sibling(create_icon_node("link"))
+          lspan = create_span_node("url", parent["href"])
+          parent.add_child(lspan)
+          lspan.add_previous_sibling(create_icon_node("link"))
+        end
       end
     end
 
