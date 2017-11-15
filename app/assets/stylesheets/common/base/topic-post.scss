@@ -334,7 +334,7 @@ blockquote > *:last-child {
       color: dark-light-choose($primary-low-mid, $secondary-high);
     }
   }
-  
+
   .small-action.deleted {
     background-color: dark-light-diff(rgba($danger,.7), $secondary, 50%, -60%);
   }
@@ -444,6 +444,11 @@ a.mention, a.mention-group {
       font-size: 0.929em;
       font-style: italic;
       line-height: $base-line-height;
+      margin-bottom: 1px;
+    }
+
+    > span.badge-notification {
+      vertical-align: unset;
     }
   }
 }
