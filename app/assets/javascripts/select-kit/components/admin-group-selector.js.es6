@@ -16,12 +16,6 @@ export default MultiSelectComponent.extend({
     return makeArray(this.get("available"));
   },
 
-  formatContentItem(content) {
-    let formatedContent = this._super(content);
-    formatedContent.locked = content.automatic;
-    return formatedContent;
-  },
-
   computeContentItem(contentItem, name) {
     let computedContent = this.baseComputedContentItem(contentItem, name);
     computedContent.locked = contentItem.automatic;
