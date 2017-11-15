@@ -38,6 +38,11 @@ module Email
     attr_reader :mail
     attr_reader :message_id
 
+    def self.formats
+      @formats ||= Enum.new(plaintext: 1,
+                            markdown: 2)
+    end
+
     def initialize(mail_string)
       raise EmptyEmailError if mail_string.blank?
       @staged_users = []
@@ -236,9 +241,9 @@ module Email
       end
 
       if text.blank? || (SiteSetting.incoming_email_prefer_html && markdown.present?)
-        return [markdown, elided_markdown]
+        return [markdown, elided_markdown, Receiver::formats[:markdown]]
       else
-        return [text, elided_text]
+        return [text, elided_text, Receiver::formats[:plaintext]]
       end
     end
 

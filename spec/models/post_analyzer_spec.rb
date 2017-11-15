@@ -38,9 +38,14 @@ describe PostAnalyzer do
       expect(cooked).to eq('Hello <div/> world')
     end
 
-    it "does not interpret Markdown when cook_method is 'email'" do
-      cooked = post_analyzer.cook('*this is not italic* and here is a link: https://www.example.com', cook_method: Post.cook_methods[:email])
+    it "does not interpret Markdown when cook_method is 'email' and raw contains plaintext" do
+      cooked = post_analyzer.cook("[plaintext]\n*this is not italic* and here is a link: https://www.example.com\n[/plaintext]", cook_method: Post.cook_methods[:email])
       expect(cooked).to eq('*this is not italic* and here is a link: <a href="https://www.example.com">https://www.example.com</a>')
+    end
+
+    it "does interpret Markdown when cook_method is 'email' and raw does not contain plaintext" do
+      cooked = post_analyzer.cook('*this is italic*', cook_method: Post.cook_methods[:email])
+      expect(cooked).to eq('<p><em>this is italic</em></p>')
     end
 
     it "does interpret Markdown when cook_method is 'regular'" do
