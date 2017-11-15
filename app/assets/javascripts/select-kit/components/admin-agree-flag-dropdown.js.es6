@@ -2,6 +2,7 @@ import DropdownSelectBox from "select-kit/components/dropdown-select-box";
 import computed from "ember-addons/ember-computed-decorators";
 
 export default DropdownSelectBox.extend({
+  pluginApiIdentifiers: ["admin-agree-flag-dropdown"],
   classNames: ["agree-flag", "admin-agree-flag-dropdown"],
   adminTools: Ember.inject.service(),
   nameProperty: "label",

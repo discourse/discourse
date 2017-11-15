@@ -14,7 +14,7 @@ const buildTopic = function(level) {
 moduleForComponent('topic-notifications-button', { integration: true });
 
 componentTest('the header has a localized title', {
-  template: '{{topic-notifications-button value=topic.details.notification_level topic=topic}}',
+  template: '{{topic-notifications-button notification_level=topic.details.notification_level topic=topic}}',
 
   beforeEach() {
     this.set("topic", buildTopic(1));

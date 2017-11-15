@@ -3,6 +3,7 @@ import { on } from "ember-addons/ember-computed-decorators";
 import { iconHTML } from 'discourse-common/lib/icon-library';
 
 export default DropdownSelectBoxComponent.extend({
+  pluginApiIdentifiers: ["pinned-options"],
   classNames: "pinned-options",
   allowInitialValueMutation: false,
 

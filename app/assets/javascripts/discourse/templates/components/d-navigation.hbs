@@ -9,7 +9,7 @@
 {{navigation-bar navItems=navItems filterMode=filterMode category=category}}
 
 {{#if showCategoryNotifications}}
-  {{category-notifications-button category=category}}
+  {{category-notifications-button value=category.notification_level category=category}}
 {{/if}}
 
 {{create-topic-button

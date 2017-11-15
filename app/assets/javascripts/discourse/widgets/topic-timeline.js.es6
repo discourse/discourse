@@ -317,6 +317,7 @@ createWidget('timeline-footer-controls', {
       controls.push(new ComponentConnector(this,
         'topic-notifications-button',
         {
+          notification_level: topic.get("details.notification_level"),
           topic,
           appendReason: false,
           showFullTitle: false

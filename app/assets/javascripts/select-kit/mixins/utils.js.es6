@@ -1,6 +1,16 @@
 const { get, isNone, guidFor, isPresent } = Ember;
 
 export default Ember.Mixin.create({
+  valueForContentItem(content) {
+    switch (typeof content) {
+    case "string":
+    case "number":
+      return content;
+    default:
+      return get(content, this.get("valueAttribute"));
+    }
+  },
+
   _nameForContent(content) {
     if (isNone(content)) {
       return null;
@@ -23,16 +33,6 @@ export default Ember.Mixin.create({
     }
 
     return value;
-  },
-
-  _valueForContent(content) {
-    switch (typeof content) {
-    case "string":
-    case "number":
-      return content;
-    default:
-      return get(content, this.get("valueAttribute"));
-    }
   },
 
   _findComputedContentByGuid(guid) {
