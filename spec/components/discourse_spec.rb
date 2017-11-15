@@ -15,6 +15,18 @@ describe Discourse do
 
   end
 
+  context 'running_in_rack' do
+    after do
+      ENV.delete("DISCOURSE_RUNNING_IN_RACK")
+    end
+
+    it 'should not be running in rack' do
+      expect(Discourse.running_in_rack?).to eq(false)
+      ENV["DISCOURSE_RUNNING_IN_RACK"] = "1"
+      expect(Discourse.running_in_rack?).to eq(true)
+    end
+  end
+
   context 'base_url' do
     context 'when https is off' do
       before do
