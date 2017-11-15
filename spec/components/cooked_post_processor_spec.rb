@@ -11,8 +11,8 @@ describe CookedPostProcessor do
 
     it "post process in sequence" do
       cpp.expects(:keep_reverse_index_up_to_date).in_sequence(post_process)
-      cpp.expects(:post_process_images).in_sequence(post_process)
       cpp.expects(:post_process_oneboxes).in_sequence(post_process)
+      cpp.expects(:post_process_images).in_sequence(post_process)
       cpp.expects(:optimize_urls).in_sequence(post_process)
       cpp.expects(:pull_hotlinked_images).in_sequence(post_process)
       cpp.post_process

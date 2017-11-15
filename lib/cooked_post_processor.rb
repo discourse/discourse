@@ -32,8 +32,8 @@ class CookedPostProcessor
     DistributedMutex.synchronize("post_process_#{@post.id}") do
       DiscourseEvent.trigger(:before_post_process_cooked, @doc, @post)
       keep_reverse_index_up_to_date
-      post_process_images
       post_process_oneboxes
+      post_process_images
       optimize_urls
       update_post_image
       enforce_nofollow
