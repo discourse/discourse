@@ -19,7 +19,7 @@ class PostAnalyzer
     return raw if cook_method == Post.cook_methods[:raw_html]
 
     if cook_method == Post.cook_methods[:email]
-      cooked = EmailCook.new(raw).cook
+      cooked = EmailCook.new(raw).cook(opts)
     else
       cooked = PrettyText.cook(raw, opts)
     end
