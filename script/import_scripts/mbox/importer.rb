@@ -97,15 +97,13 @@ module ImportScripts::Mbox
 
     def map_post(row)
       user_id = user_id_from_imported_user_id(row['from_email']) || Discourse::SYSTEM_USER_ID
-      body = CGI.escapeHTML(row['body'] || '')
-      body << map_attachments(row['raw_message'], user_id) if row['attachment_count'].positive?
-      body << Email::Receiver.elided_html(row['elided']) if row['elided'].present?
+      attachment_html = map_attachments(row['raw_message'], user_id) if row['attachment_count'].positive?
 
       {
         id: row['msg_id'],
         user_id: user_id,
         created_at: to_time(row['email_date']),
-        raw: body,
+        raw: format_raw(row['body'], attachment_html, row['elided'], row['format']),
         raw_email: row['raw_message'],
         via_email: true,
         cook_method: Post.cook_methods[:email],
@@ -113,6 +111,28 @@ module ImportScripts::Mbox
           create_incoming_email(post, row)
         end
       }
+    end
+
+    def format_raw(email_body, attachment_html, elided, format)
+      email_body ||= ''
+
+      case format
+      when Email::Receiver::formats[:markdown]
+        body = email_body
+        body << attachment_html if attachment_html.present?
+        body << elided if elided.present?
+      when Email::Receiver::formats[:plaintext]
+        body =  %|[plaintext]\n#{escape_tags(email_body)}\n[/plaintext]|
+        body << %|\n[attachments]\n#{escape_tags(attachment_html)}\n[/attachments]| if attachment_html.present?
+        body << %|\n[elided]\n#{escape_tags(elided)}\n[/elided]| if elided.present?
+      end
+
+      body
+    end
+
+    def escape_tags(text)
+      text.gsub!(/^(\[\/?(?:plaintext|attachments|elided)\])$/, ' \1')
+      text
     end
 
     def map_first_post(row)
