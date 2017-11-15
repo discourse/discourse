@@ -1,6 +1,10 @@
 if (Rails.env.production? && SiteSetting.logging_provider == 'lograge') || ENV["ENABLE_LOGRAGE"]
   require 'lograge'
 
+  if Rails.configuration.multisite
+    Rails.logger.formatter = ActiveSupport::Logger::SimpleFormatter.new
+  end
+
   Rails.application.configure do
     config.lograge.enabled = true
 
