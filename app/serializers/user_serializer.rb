@@ -388,7 +388,7 @@ class UserSerializer < BasicUserSerializer
     end
 
     if fields.present?
-      User.custom_fields_for_ids([object.id], fields)[object.id]
+      User.custom_fields_for_ids([object.id], fields)[object.id] || {}
     else
       {}
     end
