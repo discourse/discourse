@@ -74,6 +74,9 @@ en:
         x_seconds:
           one:   "1s"
           other: "%{count}s"
+        less_than_x_minutes:
+          one:   "< 1m"
+          other: "< %{count}m"
         x_minutes:
           one:   "1m"
           other: "%{count}m"
@@ -83,6 +86,9 @@ en:
         x_days:
           one:   "1d"
           other: "%{count}d"
+        x_months:
+          one:   "1mon"
+          other: "%{count}mon"
         about_x_years:
           one:   "1y"
           other: "%{count}y"
@@ -892,6 +898,7 @@ en:
         title: "Summary"
         stats: "Stats"
         time_read: "read time"
+        recent_time_read: "recent read time"
         topic_count:
           one: "topic created"
           other: "topics created"
@@ -1005,6 +1012,8 @@ en:
     unmute: Unmute
     last_post: Posted
     time_read: Read
+    time_read_recently: '%{time_read} recently'
+    time_read_recently_tooltip: '%{time_read} read time in the last 60 days'
     last_reply_lowercase: last reply
     replies_lowercase:
       one: reply

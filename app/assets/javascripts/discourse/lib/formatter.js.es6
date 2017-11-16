@@ -129,6 +129,56 @@ function wrapAgo(dateStr) {
   return I18n.t("dates.wrap_ago", { date: dateStr });
 }
 
+export function durationTiny(distance, ageOpts) {
+  const dividedDistance = Math.round(distance / 60.0);
+  const distanceInMinutes = (dividedDistance < 1) ? 1 : dividedDistance;
+
+  const t = function(key, opts) {
+    const result = I18n.t("dates.tiny." + key, opts);
+    return (ageOpts && ageOpts.addAgo) ? wrapAgo(result) : result;
+  };
+
+  let formatted;
+
+  switch(true) {
+    case(distance <= 59):
+      formatted = t("less_than_x_minutes", {count: 1});
+      break;
+    case(distanceInMinutes >= 0 && distanceInMinutes <= 44):
+      formatted = t("x_minutes", {count: distanceInMinutes});
+      break;
+    case(distanceInMinutes >= 45 && distanceInMinutes <= 89):
+      formatted = t("about_x_hours", {count: 1});
+      break;
+    case(distanceInMinutes >= 90 && distanceInMinutes <= 1409):
+      formatted = t("about_x_hours", {count: Math.round(distanceInMinutes / 60.0)});
+      break;
+    case(distanceInMinutes >= 1410 && distanceInMinutes <= 2519):
+      formatted = t("x_days", {count: 1});
+      break;
+    case(distanceInMinutes >= 2520 && distanceInMinutes <= 129599):
+      formatted = t("x_days", {count: Math.round(distanceInMinutes / 1440.0)});
+      break;
+    case(distanceInMinutes >= 129600 && distanceInMinutes <= 525599):
+      formatted = t("x_months", {count: Math.round(distanceInMinutes / 43200.0)});
+      break;
+    default:
+      const numYears = distanceInMinutes / 525600.0;
+      const remainder = numYears % 1;
+      if (remainder < 0.25) {
+        formatted = t("about_x_years", {count: parseInt(numYears)});
+      } else if (remainder < 0.75) {
+        formatted = t("over_x_years", {count: parseInt(numYears)});
+      } else {
+        formatted = t("almost_x_years", {count: parseInt(numYears) + 1});
+      }
+
+      break;
+  }
+
+  return formatted;
+}
+
 function relativeAgeTiny(date, ageOpts) {
   const format = "tiny";
   const distance = Math.round((new Date() - date) / 1000);

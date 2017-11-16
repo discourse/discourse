@@ -6,6 +6,7 @@ import { default as computed, observes } from 'ember-addons/ember-computed-decor
 import DiscourseURL from 'discourse/lib/url';
 import User from 'discourse/models/user';
 import { userPath } from 'discourse/lib/url';
+import { durationTiny } from 'discourse/lib/formatter';
 
 const clickOutsideEventName = "mousedown.outside-user-card";
 const clickDataExpand = "click.discourse-user-card";
@@ -85,6 +86,16 @@ export default Ember.Component.extend(CleansUp, {
     const url = this.get('user.card_background');
     const bg = Ember.isEmpty(url) ? '' : `url(${Discourse.getURLWithCDN(url)})`;
     $this.css('background-image', bg);
+  },
+
+  @computed('user.time_read', 'user.recent_time_read')
+  showRecentTimeRead(timeRead, recentTimeRead) {
+    return timeRead !== recentTimeRead && recentTimeRead !== 0;
+  },
+
+  @computed('user.recent_time_read')
+  recentTimeRead(recentTimeReadSeconds) {
+    return durationTiny(recentTimeReadSeconds);
   },
 
   _show(username, $target) {
