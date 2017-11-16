@@ -58,7 +58,7 @@ module AnnotatorStore
     # Overwrite this method to customize how tags are displayed
     # across all pages of the admin dashboard.
     def display_resource(tag)
-      "Tag ##{tag.id}"
+      "Code ##{tag.id}"
     end
 
   end

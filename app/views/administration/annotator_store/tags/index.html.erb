@@ -24,7 +24,7 @@ It renders the `_table` partial to display details about the resources.
 %>
 
 <% content_for(:title) do %>
-    Tags
+    Codes
 <% end %>
 
 
@@ -37,13 +37,13 @@ It renders the `_table` partial to display details about the resources.
       <%= render(
                   'search',
                   search_term: search_term,
-                  resource_name: 'Tags'
+                  resource_name: 'Codes'
           ) %>
   <% end %>
 
   <div>
     <%= link_to(
-                "#{t("administrate.actions.new")} Tag",
+                "#{t("administrate.actions.new")} Code",
                 [:new, namespace, page.resource_path],
                 class: "button"
         ) if valid_action? :new %>

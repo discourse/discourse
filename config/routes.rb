@@ -19,7 +19,7 @@ Discourse::Application.routes.draw do
   namespace :administration, constraints: StaffConstraint.new do
 
     namespace :annotator_store, path: 'annotator' do
-      resources :tags
+      resources :tags, path: 'codes'
       resources :collections
       resources :annotations, only: [:index], constraints: { format: 'json' }
     end

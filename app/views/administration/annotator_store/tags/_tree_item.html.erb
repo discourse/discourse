@@ -5,6 +5,9 @@
     <% end %>
     <strong class="item" title="<%= tag.annotations.count %> annotations use this tag"><%= tag.name %> (<%= tag.annotations.count %>)</strong>
   </span>
+  <% unless params[:creator_id].present? %>
+    by <%= tag.creator.username %>&nbsp;&nbsp;
+  <% end %>
   <%= link_to(
               t('administrate.actions.show'),
               [namespace, :annotator_store, tag],
@@ -30,7 +33,7 @@
 
   <% if tag.children.any? %>
       <ul>
-        <% tag.children.each do |tag| %>
+        <% tag.children.order('LOWER(name) asc').each do |tag| %>
             <%= render 'tree_item', tag: tag %>
         <% end %>
       </ul>
