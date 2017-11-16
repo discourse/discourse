@@ -58,7 +58,11 @@ class Post < ActiveRecord::Base
   # We can pass several creating options to a post via attributes
   attr_accessor :image_sizes, :quoted_post_numbers, :no_bump, :invalidate_oneboxes, :cooking_options, :skip_unique_check
 
-  SHORT_POST_CHARS = 1200
+  LARGE_IMAGES      ||= "large_images".freeze
+  BROKEN_IMAGES     ||= "broken_images".freeze
+  DOWNLOADED_IMAGES ||= "downloaded_images".freeze
+
+  SHORT_POST_CHARS ||= 1200
 
   scope :private_posts_for_user, ->(user) {
     where("posts.topic_id IN (SELECT topic_id

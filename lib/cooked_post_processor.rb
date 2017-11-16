@@ -31,9 +31,9 @@ class CookedPostProcessor
   def post_process(bypass_bump = false)
     DistributedMutex.synchronize("post_process_#{@post.id}") do
       DiscourseEvent.trigger(:before_post_process_cooked, @doc, @post)
-      keep_reverse_index_up_to_date
-      post_process_images
       post_process_oneboxes
+      post_process_images
+      keep_reverse_index_up_to_date
       optimize_urls
       update_post_image
       enforce_nofollow
@@ -65,26 +65,28 @@ class CookedPostProcessor
       end
     end
 
-    upload_ids |= oneboxed_image_uploads.pluck(:id)
+    upload_ids |= downloaded_images.values.select { |id| Upload.exists?(id) }
 
     values = upload_ids.map { |u| "(#{@post.id},#{u})" }.join(",")
     PostUpload.transaction do
       PostUpload.where(post_id: @post.id).delete_all
-      if upload_ids.length > 0
+      if upload_ids.size > 0
         PostUpload.exec_sql("INSERT INTO post_uploads (post_id, upload_id) VALUES #{values}")
       end
     end
   end
 
   def post_process_images
-    images = extract_images
-    return if images.blank?
-
-    images.each do |img|
-      next if large_images.include?(img["src"]) && add_large_image_placeholder!(img)
-
-      limit_size!(img)
-      convert_to_link!(img)
+    extract_images.each do |img|
+      src = img["src"].sub(/^https?:/i, "")
+      if large_images.include?(src)
+        add_large_image_placeholder!(img)
+      elsif broken_images.include?(src)
+        add_broken_image_placeholder!(img)
+      else
+        limit_size!(img)
+        convert_to_link!(img)
+      end
     end
   end
 
@@ -125,50 +127,53 @@ class CookedPostProcessor
     end
 
     img.remove
-    true
+  end
+
+  def add_broken_image_placeholder!(img)
+    img.name = "span"
+    img.set_attribute("class", "broken-image fa fa-chain-broken")
+    img.set_attribute("title", I18n.t("post.image_placeholder.broken"))
+    img.remove_attribute("src")
+    img.remove_attribute("width")
+    img.remove_attribute("height")
   end
 
   def large_images
-    @large_images ||= @post.custom_fields[Jobs::PullHotlinkedImages::LARGE_IMAGES].presence || []
+    @large_images ||= JSON.parse(@post.custom_fields[Post::LARGE_IMAGES].presence || "[]") rescue []
+  end
+
+  def broken_images
+    @broken_images ||= JSON.parse(@post.custom_fields[Post::BROKEN_IMAGES].presence || "[]") rescue []
+  end
+
+  def downloaded_images
+    @downloaded_images ||= JSON.parse(@post.custom_fields[Post::DOWNLOADED_IMAGES].presence || "{}") rescue {}
   end
 
   def extract_images
-    # all image with a src attribute
+    # all images with a src attribute
     @doc.css("img[src]") -
-    # minus, data images
+    # minus data images
     @doc.css("img[src^='data']") -
-    # minus, emojis
+    # minus emojis
     @doc.css("img.emoji") -
-    # minus, image inside oneboxes
+    # minus oneboxed images
     oneboxed_images -
-    # minus, images inside quotes
+    # minus images inside quotes
     @doc.css(".quote img")
   end
 
   def extract_images_for_post
-    # all image with a src attribute
+    # all images with a src attribute
     @doc.css("img[src]") -
-    # minus, emojis
+    # minus emojis
     @doc.css("img.emoji") -
-    # minus, images inside quotes
+    # minus images inside quotes
     @doc.css(".quote img")
   end
 
   def oneboxed_images
     @doc.css(".onebox-body img, .onebox img")
-  end
-
-  def oneboxed_image_uploads
-    urls = Set.new
-
-    oneboxed_images.each do |img|
-      url = img["src"].sub(/^https?:/i, "")
-      urls << url
-      urls << "http:#{url}"
-      urls << "https:#{url}"
-    end
-
-    Upload.where(origin: urls.to_a)
   end
 
   def limit_size!(img)
@@ -377,15 +382,16 @@ class CookedPostProcessor
       Oneboxer.onebox(url, args)
     end
 
-    uploads = oneboxed_image_uploads.select(:url, :origin)
     oneboxed_images.each do |img|
-      if large_images.include?(img["src"])
+      src = img["src"].sub(/^https?:/i, "")
+
+      if large_images.include?(src) || broken_images.include?(src)
         img.remove
         next
       end
 
-      url = img["src"].sub(/^https?:/i, "")
-      upload = uploads.find { |u| u.origin.sub(/^https?:/i, "") == url }
+      upload_id = downloaded_images[src]
+      upload = Upload.find(upload_id) if upload_id
       img["src"] = upload.url if upload.present?
 
       # make sure we grab dimensions for oneboxed images
@@ -462,7 +468,7 @@ class CookedPostProcessor
     # don't download remote images for posts that are more than n days old
     return unless @post.created_at > (Date.today - SiteSetting.download_remote_images_max_days_old)
     # we only want to run the job whenever it's changed by a user
-    return if @post.last_editor_id == Discourse.system_user.id
+    return if @post.last_editor_id && @post.last_editor_id <= 0
     # make sure no other job is scheduled
     Jobs.cancel_scheduled_job(:pull_hotlinked_images, post_id: @post.id)
     # schedule the job

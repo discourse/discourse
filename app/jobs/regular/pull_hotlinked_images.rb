@@ -5,10 +5,7 @@ require_dependency 'upload_creator'
 module Jobs
 
   class PullHotlinkedImages < Jobs::Base
-
     sidekiq_options queue: 'low'
-
-    LARGE_IMAGES = "large_images".freeze
 
     def initialize
       @max_size = SiteSetting.max_image_size_kb.kilobytes
@@ -47,26 +44,25 @@ module Jobs
 
       raw = post.raw.dup
       start_raw = raw.dup
+
       downloaded_urls = {}
-      large_images = post.custom_fields[LARGE_IMAGES].presence || []
 
-      # recover from bad custom field silently
-      unless Array === large_images
-        large_images = []
-      end
+      large_images = JSON.parse(post.custom_fields[Post::LARGE_IMAGES].presence || "[]") rescue []
+      broken_images = JSON.parse(post.custom_fields[Post::BROKEN_IMAGES].presence || "[]") rescue []
+      downloaded_images = JSON.parse(post.custom_fields[Post::DOWNLOADED_IMAGES].presence || "{}") rescue {}
 
-      broken_images, new_large_images = [], []
+      has_new_large_image  = false
+      has_new_broken_image = false
+      has_downloaded_image = false
 
       extract_images_from(post.cooked).each do |image|
         src = original_src = image['src']
-        if src.start_with?("//")
-          src = "#{SiteSetting.force_https ? "https" : "http"}:#{src}"
-        end
+        src = "#{SiteSetting.force_https ? "https" : "http"}:#{src}" if src.start_with?("//")
 
         if is_valid_image_url(src)
           begin
             # have we already downloaded that file?
-            unless downloaded_urls.include?(src) || large_images.include?(src) || broken_images.include?(src)
+            unless downloaded_images.include?(src) || large_images.include?(src) || broken_images.include?(src)
               if hotlinked = download(src)
                 if File.size(hotlinked.path) <= @max_size
                   filename = File.basename(URI.parse(src).path)
@@ -74,15 +70,18 @@ module Jobs
                   upload = UploadCreator.new(hotlinked, filename, origin: src).create_for(post.user_id)
                   if upload.persisted?
                     downloaded_urls[src] = upload.url
+                    downloaded_images[src.sub(/^https?:/i, "")] = upload.id
+                    has_downloaded_image = true
                   else
                     log(:info, "Failed to pull hotlinked image for post: #{post_id}: #{src} - #{upload.errors.full_messages.join("\n")}")
                   end
                 else
-                  large_images << original_src
-                  new_large_images << original_src
+                  large_images << original_src.sub(/^https?:/i, "")
+                  has_new_large_image = true
                 end
               else
-                broken_images << original_src
+                broken_images << original_src.sub(/^https?:/i, "")
+                has_new_broken_image = true
               end
             end
             # have we successfully downloaded that file?
@@ -111,42 +110,24 @@ module Jobs
             log(:error, "Failed to pull hotlinked image (#{src}) post: #{post_id}\n" + e.message + "\n" + e.backtrace.join("\n"))
           end
         end
-
       end
 
-      if new_large_images.length > 0
-        post.custom_fields[LARGE_IMAGES] = large_images
-        post.save_custom_fields
-      end
+      large_images.uniq!
+      broken_images.uniq!
+
+      post.custom_fields[Post::LARGE_IMAGES]      = large_images.to_json      if large_images.present?
+      post.custom_fields[Post::BROKEN_IMAGES]     = broken_images.to_json     if broken_images.present?
+      post.custom_fields[Post::DOWNLOADED_IMAGES] = downloaded_images.to_json if downloaded_images.present?
+      # only save custom fields if there are any
+      post.save_custom_fields if large_images.present? || broken_images.present? || downloaded_images.present?
 
       post.reload
 
       if start_raw == post.raw && raw != post.raw
         changes = { raw: raw, edit_reason: I18n.t("upload.edit_reason") }
-        # we never want that job to bump the topic
-        options = { bypass_bump: true }
-        post.revise(Discourse.system_user, changes, options)
-      elsif downloaded_urls.present? || new_large_images.present?
+        post.revise(Discourse.system_user, changes, bypass_bump: true)
+      elsif has_downloaded_image || has_new_large_image || has_new_broken_image
         post.trigger_post_process(true)
-      elsif broken_images.present?
-        start_html = post.cooked
-        doc = Nokogiri::HTML::fragment(start_html)
-        images = doc.css("img[src]") - doc.css("img.avatar")
-        images.each do |tag|
-          src = tag['src']
-          if broken_images.include?(src)
-            tag.name = 'span'
-            tag.set_attribute('class', 'broken-image fa fa-chain-broken')
-            tag.set_attribute('title', I18n.t('post.image_placeholder.broken'))
-            tag.remove_attribute('src')
-            tag.remove_attribute('width')
-            tag.remove_attribute('height')
-          end
-        end
-        if start_html == post.cooked && doc.to_html != post.cooked
-          post.update_column(:cooked, doc.to_html)
-          post.publish_change_to_clients! :revised
-        end
       end
     end
 
