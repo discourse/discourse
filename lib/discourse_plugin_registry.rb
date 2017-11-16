@@ -64,6 +64,10 @@ class DiscoursePluginRegistry
       @html_builders ||= {}
     end
 
+    def seed_path_builders
+      @seed_path_builders ||= Set.new
+    end
+
     def vendored_pretty_text
       @vendored_pretty_text ||= Set.new
     end
@@ -136,6 +140,10 @@ class DiscoursePluginRegistry
     self.seed_data[key] = value
   end
 
+  def self.register_seed_path_builder(&block)
+    seed_path_builders << block
+  end
+
   def self.register_html_builder(name, &block)
     html_builders[name] ||= []
     html_builders[name] << block
@@ -144,6 +152,14 @@ class DiscoursePluginRegistry
   def self.build_html(name, ctx = nil)
     builders = html_builders[name] || []
     builders.map { |b| b.call(ctx) }.join("\n").html_safe
+  end
+
+  def self.seed_paths
+    result = SeedFu.fixture_paths.dup
+    unless Rails.env.test? && ENV['LOAD_PLUGINS'] != "1"
+      seed_path_builders.each { |b| result += b.call }
+    end
+    result
   end
 
   def javascripts
@@ -190,6 +206,7 @@ class DiscoursePluginRegistry
     asset_globs.clear
     html_builders.clear
     vendored_pretty_text.clear
+    seed_path_builders.clear
   end
 
   def self.setup(plugin_class)
