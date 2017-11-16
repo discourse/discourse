@@ -106,9 +106,10 @@ module AnnotatorStore
       path_ids = []
       tag = nil
       path.each do |tag_name|
-        tag = AnnotatorStore::Tag.find_by(
+        tag = AnnotatorStore::Tag.find_or_create_by!(
           ancestry: path_ids.blank? ? nil : path_ids.join('/'),
-          name: tag_name
+          name: tag_name,
+          creator_id: current_user.id
         )
         path_ids << tag.id
       end
