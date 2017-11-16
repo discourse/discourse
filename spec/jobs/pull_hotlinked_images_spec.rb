@@ -15,6 +15,7 @@ describe Jobs::PullHotlinkedImages do
     stub_request(:head, broken_image_url).to_return(status: 404)
     stub_request(:get, large_image_url).to_return(body: large_png, headers: { "Content-Type" => "image/png" })
     stub_request(:head, large_image_url)
+    SiteSetting.crawl_images = true
     SiteSetting.download_remote_images_to_local = true
     SiteSetting.max_image_size_kb = 2
     SiteSetting.download_remote_images_threshold = 0
@@ -96,10 +97,8 @@ describe Jobs::PullHotlinkedImages do
       it 'replaces image src' do
         post = Fabricate(:post, raw: "#{url}")
 
-        Jobs::ProcessPost.new.execute(post_id: post.id)
         Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
         Jobs::ProcessPost.new.execute(post_id: post.id)
-
         post.reload
 
         expect(post.cooked).to match(/<img src=.*\/uploads/)
@@ -113,7 +112,6 @@ describe Jobs::PullHotlinkedImages do
 <a href='#{url}'><img src='#{large_image_url}'></a>
         ")
 
-        Jobs::ProcessPost.new.execute(post_id: post.id)
         Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
         Jobs::ProcessPost.new.execute(post_id: post.id)
         Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
@@ -131,7 +129,6 @@ describe Jobs::PullHotlinkedImages do
     it 'broken image with placeholder' do
       post = Fabricate(:post, raw: "<img src='#{broken_image_url}'>")
 
-      Jobs::ProcessPost.new.execute(post_id: post.id)
       Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
       post.reload
 
@@ -141,9 +138,7 @@ describe Jobs::PullHotlinkedImages do
     it 'large image with placeholder' do
       post = Fabricate(:post, raw: "<img src='#{large_image_url}'>")
 
-      Jobs::ProcessPost.new.execute(post_id: post.id)
       Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
-      Jobs::ProcessPost.new.execute(post_id: post.id)
       post.reload
 
       expect(post.cooked).to match(/<div class="large-image-placeholder"><a href=.*\ target="_blank" .*\>/)
