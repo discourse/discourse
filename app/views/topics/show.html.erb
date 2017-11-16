@@ -73,6 +73,37 @@
     <%# -------------------------------------- -%>
 
     <% @topic_view.posts.each do |post| %>
+        <div id="post-<%= post.id %>" itemscope itemtype='http://schema.org/DiscussionForumPosting'>
+          <% if (u = post.user) %>
+              <div class='creator'>
+        <span>
+          <a href='<%= Discourse.base_uri %>/u/<%= u.username %>'><b itemprop='author'><%= u.username %></b></a>
+          <%= "(#{u.name})" if (SiteSetting.display_name_on_posts && SiteSetting.enable_names? && !u.name.blank?) %>
+          <time datetime='<%= post.created_at.to_formatted_s(:iso8601) %>' itemprop='datePublished'>
+            <%= post.created_at %>
+          </time>
+        </span>
+                <span itemprop='position'>#<%= post.post_number %></span>
+              </div>
+              <div class='post' itemprop='articleBody'>
+                <%= post.hidden ? t('flagging.user_must_edit').html_safe : post.cooked.html_safe %>
+              </div>
+              <meta itemprop='interactionCount' content='UserLikes:<%= post.like_count %>'>
+              <meta itemprop='interactionCount' content='UserComments:<%= post.reply_count %>'>
+              <meta itemprop='headline' content='<%= @topic_view.title %>'>
+              <hr>
+              <% if @topic_view.link_counts[post.id] && @topic_view.link_counts[post.id].length > 0 %>
+                  <% @topic_view.link_counts[post.id].each do |link| %>
+                      <% if link[:reflection] && link[:title].present? %>
+                          <a href="<%= link[:url] %>"><%= link[:title] %></a>
+                          <hr>
+                      <% end %>
+                  <% end %>
+              <% end %>
+          <% end %>
+        </div>
+
+
 
         <%# --- damingo (Github ID), 2017-08-22, #annotator --- %>
         <% if params[:oe].present? %>
@@ -104,41 +135,13 @@
                         }
                     });
 
+                    $("#post-<%= post.id %> .annotator-adder").on("click", function () {
+                        setTimeout(function() { $("#post-<%= post.id %> input").focus();   }, 150);
+                    });
                 });
             </script>
         <% end %>
         <%# -------------------------------------- -%>
-
-
-        <div id="post-<%= post.id %>" itemscope itemtype='http://schema.org/DiscussionForumPosting'>
-          <% if (u = post.user) %>
-              <div class='creator'>
-        <span>
-          <a href='<%= Discourse.base_uri %>/u/<%= u.username %>'><b itemprop='author'><%= u.username %></b></a>
-          <%= "(#{u.name})" if (SiteSetting.display_name_on_posts && SiteSetting.enable_names? && !u.name.blank?) %>
-          <time datetime='<%= post.created_at.to_formatted_s(:iso8601) %>' itemprop='datePublished'>
-            <%= post.created_at %>
-          </time>
-        </span>
-                <span itemprop='position'>#<%= post.post_number %></span>
-              </div>
-              <div class='post' itemprop='articleBody'>
-                <%= post.hidden ? t('flagging.user_must_edit').html_safe : post.cooked.html_safe %>
-              </div>
-              <meta itemprop='interactionCount' content='UserLikes:<%= post.like_count %>'>
-              <meta itemprop='interactionCount' content='UserComments:<%= post.reply_count %>'>
-              <meta itemprop='headline' content='<%= @topic_view.title %>'>
-              <hr>
-              <% if @topic_view.link_counts[post.id] && @topic_view.link_counts[post.id].length > 0 %>
-                  <% @topic_view.link_counts[post.id].each do |link| %>
-                      <% if link[:reflection] && link[:title].present? %>
-                          <a href="<%= link[:url] %>"><%= link[:title] %></a>
-                          <hr>
-                      <% end %>
-                  <% end %>
-              <% end %>
-          <% end %>
-        </div>
     <% end %>
 
 
