@@ -2,10 +2,11 @@
 # Creates and Updates Topics based on an RSS or ATOM feed.
 #
 require 'digest/sha1'
-require 'open-uri'
+require 'excon'
 require 'rss'
 require_dependency 'feed_item_accessor'
 require_dependency 'feed_element_installer'
+require_dependency 'final_destination'
 require_dependency 'post_creator'
 require_dependency 'post_revisor'
 
@@ -62,7 +63,7 @@ module Jobs
       def topics
         feed_topics = []
 
-        rss = fetch_rss
+        rss = parsed_feed
         return feed_topics unless rss.present?
 
         rss.items.each do |i|
@@ -75,14 +76,27 @@ module Jobs
 
       private
 
-      def fetch_rss
+      def parsed_feed
+        raw_feed = fetch_rss
+        return nil if raw_feed.blank?
+
         if SiteSetting.embed_username_key_from_feed.present?
           FeedElementInstaller.install_rss_element(SiteSetting.embed_username_key_from_feed)
           FeedElementInstaller.install_atom_element(SiteSetting.embed_username_key_from_feed)
         end
 
-        RSS::Parser.parse(open(@feed_url, allow_redirections: :all), false)
-      rescue OpenURI::HTTPError, RSS::NotWellFormedError
+        RSS::Parser.parse(raw_feed, false)
+      rescue RSS::NotWellFormedError
+        nil
+      end
+
+      def fetch_rss
+        final_destination = FinalDestination.new(@feed_url, verbose: true)
+        feed_final_url = final_destination.resolve
+        return nil unless final_destination.status == :resolved
+
+        Excon.new(feed_final_url.to_s).request(method: :get, expects: 200).body
+      rescue Excon::Error::HTTPStatus
         nil
       end
     end
