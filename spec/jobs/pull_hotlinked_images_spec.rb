@@ -97,6 +97,7 @@ describe Jobs::PullHotlinkedImages do
       it 'replaces image src' do
         post = Fabricate(:post, raw: "#{url}")
 
+        Jobs::ProcessPost.new.execute(post_id: post.id)
         Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
         Jobs::ProcessPost.new.execute(post_id: post.id)
         post.reload
@@ -112,6 +113,7 @@ describe Jobs::PullHotlinkedImages do
 <a href='#{url}'><img src='#{large_image_url}'></a>
         ")
 
+        Jobs::ProcessPost.new.execute(post_id: post.id)
         Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
         Jobs::ProcessPost.new.execute(post_id: post.id)
         Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
