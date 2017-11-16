@@ -269,7 +269,7 @@ class ImportScripts::Base
     merge = opts.delete(:merge)
     post_create_action = opts.delete(:post_create_action)
 
-    existing = User.joins(:user_emails).where("user_emails.email = ? OR username = ?", opts[:email].downcase, opts[:username]).first
+    existing = find_existing_user(opts[:email], opts[:username])
     return existing if existing && (merge || existing.custom_fields["import_id"].to_s == import_id.to_s)
 
     bio_raw = opts.delete(:bio_raw)
@@ -367,6 +367,10 @@ class ImportScripts::Base
     post_create_action.try(:call, u) if u.persisted?
 
     u # If there was an error creating the user, u.errors has the messages
+  end
+
+  def find_existing_user(email, username)
+    User.joins(:user_emails).where("user_emails.email = ? OR username = ?", email.downcase, username).first
   end
 
   def created_category(category)
