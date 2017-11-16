@@ -1,6 +1,6 @@
 var clock;
 
-import { relativeAge, autoUpdatingRelativeAge, updateRelativeAge, breakUp, number, longDate } from 'discourse/lib/formatter';
+import { relativeAge, autoUpdatingRelativeAge, updateRelativeAge, breakUp, number, longDate, durationTiny } from 'discourse/lib/formatter';
 
 QUnit.module("lib:formatter", {
   beforeEach() {
@@ -211,4 +211,26 @@ QUnit.test("number", assert => {
   assert.equal(number(NaN), "0", "it returns 0 for NaN");
   assert.equal(number(3333), "3.3k", "it abbreviates thousands");
   assert.equal(number(2499999), "2.5M", "it abbreviates millions");
+});
+
+QUnit.test("durationTiny", assert => {
+  assert.equal(durationTiny(0), '< 1m', "0 seconds shows as < 1m");
+  assert.equal(durationTiny(59), '< 1m', "59 seconds shows as < 1m");
+  assert.equal(durationTiny(60), '1m', "60 seconds shows as 1m");
+  assert.equal(durationTiny(90), '2m', "90 seconds shows as 2m");
+  assert.equal(durationTiny(120), '2m', "120 seconds shows as 2m");
+  assert.equal(durationTiny(60 * 45), '1h', "45 minutes shows as 1h");
+  assert.equal(durationTiny(60 * 60), '1h', "60 minutes shows as 1h");
+  assert.equal(durationTiny(60 * 90), '2h', "90 minutes shows as 2h");
+  assert.equal(durationTiny(3600 * 23), '23h', "23 hours shows as 23h");
+  assert.equal(durationTiny(3600 * 24 - 29), '1d', "23 hours 31 mins shows as 1d");
+  assert.equal(durationTiny(3600 * 24 * 89), '89d', "89 days shows as 89d");
+  assert.equal(durationTiny(60 * (525600 - 1)), '12mon', "364 days shows as 12mon");
+  assert.equal(durationTiny(60 * 525600), '1y', "365 days shows as 1y");
+  assert.equal(durationTiny(86400 * 456), '1y', "456 days shows as 1y");
+  assert.equal(durationTiny(86400 * 457), '> 1y', "457 days shows as > 1y");
+  assert.equal(durationTiny(86400 * 638), '> 1y', "638 days shows as > 1y");
+  assert.equal(durationTiny(86400 * 639), '2y', "639 days shows as 2y");
+  assert.equal(durationTiny(86400 * 821), '2y', "821 days shows as 2y");
+  assert.equal(durationTiny(86400 * 822), '> 2y', "822 days shows as > 2y");
 });

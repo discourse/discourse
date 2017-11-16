@@ -6,8 +6,13 @@
         {{user-stat value=model.days_visited label="user.summary.days_visited"}}
       </li>
       <li>
-        {{user-stat value=model.time_read label="user.summary.time_read" type="string"}}
+        {{user-stat value=timeRead label="user.summary.time_read" type="string"}}
       </li>
+      {{#if showRecentTimeRead}}
+        <li>
+          {{user-stat value=recentTimeRead label="user.summary.recent_time_read" type="string"}}
+        </li>
+      {{/if}}
       <li>
         {{user-stat value=model.posts_read_count label="user.summary.posts_read"}}
       </li>

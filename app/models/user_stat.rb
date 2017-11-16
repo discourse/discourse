@@ -72,7 +72,9 @@ class UserStat < ActiveRecord::Base
     if last_seen = last_seen_cached
       diff = (Time.now.to_f - last_seen.to_f).round
       if diff > 0 && diff < MAX_TIME_READ_DIFF
-        UserStat.where(user_id: id, time_read: time_read).update_all ["time_read = time_read + ?", diff]
+        update_args = ["time_read = time_read + ?", diff]
+        UserStat.where(user_id: id, time_read: time_read).update_all(update_args)
+        UserVisit.where(user_id: id, visited_at: Time.zone.now.to_date).update_all(update_args)
       end
     end
     cache_last_seen(Time.now.to_f)

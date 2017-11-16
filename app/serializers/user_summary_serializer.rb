@@ -37,6 +37,7 @@ class UserSummarySerializer < ApplicationSerializer
              :topic_count,
              :post_count,
              :time_read,
+             :recent_time_read,
              :bookmark_count
 
   def include_badges?
@@ -48,6 +49,10 @@ class UserSummarySerializer < ApplicationSerializer
   end
 
   def time_read
-    AgeWords.age_words(object.time_read)
+    object.time_read
+  end
+
+  def recent_time_read
+    object.recent_time_read
   end
 end
