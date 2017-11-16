@@ -47,15 +47,19 @@
 <section class="field default-view-field">
   <label>
     {{i18n "category.default_view"}}
-    {{combo-box valueAttribute="value" content=availableViews value=category.default_view}}
   </label>
+  <div class="controls">
+    {{combo-box valueAttribute="value" content=availableViews value=category.default_view}}
+  </div>
 </section>
 
 <section class="field default-top-period-field">
   <label>
     {{i18n "category.default_top_period"}}
-    {{combo-box valueAttribute="value" content=availableTopPeriods value=category.default_top_period}}
   </label>
+  <div class="controls">
+    {{combo-box valueAttribute="value" content=availableTopPeriods value=category.default_top_period}}
+  </div>
 </section>
 
 <section class="field">
