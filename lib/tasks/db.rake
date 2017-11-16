@@ -1,6 +1,10 @@
 # we should set the locale before the migration
 task 'set_locale' do
-  I18n.locale = (SiteSetting.default_locale || :en) rescue :en
+  begin
+    I18n.locale = (SiteSetting.default_locale || :en) rescue :en
+  rescue I18n::InvalidLocale
+    I18n.locale = :en
+  end
 end
 
 task 'db:environment:set', [:multisite] => [:load_config]  do |_, args|
