@@ -215,7 +215,7 @@ module HasCustomFields
 
   def refresh_custom_fields_from_db
     target = Hash.new
-    _custom_fields.pluck(:name, :value).each do |key, value|
+    _custom_fields.order('id asc').pluck(:name, :value).each do |key, value|
       self.class.append_custom_field(target, key, value)
     end
     @custom_fields_orig = target
