@@ -340,6 +340,10 @@ class Plugin::Instance
     seed_data[key] = value
   end
 
+  def register_seed_path_builder(&block)
+    DiscoursePluginRegistry.register_seed_path_builder(&block)
+  end
+
   def register_emoji(name, url)
     Plugin::CustomEmoji.register(name, url)
   end
