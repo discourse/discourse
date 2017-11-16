@@ -49,6 +49,12 @@ module Jobs
       start_raw = raw.dup
       downloaded_urls = {}
       large_images = post.custom_fields[LARGE_IMAGES].presence || []
+
+      # recover from bad custom field silently
+      unless Array === large_images
+        large_images = []
+      end
+
       broken_images, new_large_images = [], []
 
       extract_images_from(post.cooked).each do |image|
@@ -108,8 +114,11 @@ module Jobs
 
       end
 
-      post.custom_fields[LARGE_IMAGES] = large_images
-      post.save!
+      if new_large_images.length > 0
+        post.custom_fields[LARGE_IMAGES] = large_images
+        post.save_custom_fields
+      end
+
       post.reload
 
       if start_raw == post.raw && raw != post.raw
