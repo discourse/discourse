@@ -159,7 +159,7 @@ class DiscoursePluginRegistry
     unless Rails.env.test? && ENV['LOAD_PLUGINS'] != "1"
       seed_path_builders.each { |b| result += b.call }
     end
-    result
+    result.uniq
   end
 
   def javascripts
