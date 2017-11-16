@@ -125,26 +125,6 @@ describe Jobs::PullHotlinkedImages do
     end
   end
 
-  describe 'replace' do
-    it 'broken image with placeholder' do
-      post = Fabricate(:post, raw: "<img src='#{broken_image_url}'>")
-
-      Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
-      post.reload
-
-      expect(post.cooked).to match(/<span class="broken-image fa fa-chain-broken/)
-    end
-
-    it 'large image with placeholder' do
-      post = Fabricate(:post, raw: "<img src='#{large_image_url}'>")
-
-      Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
-      post.reload
-
-      expect(post.cooked).to match(/<div class="large-image-placeholder"><a href=.*\ target="_blank" .*\>/)
-    end
-  end
-
   describe '#is_valid_image_url' do
     subject { described_class.new }
 
