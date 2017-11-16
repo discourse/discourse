@@ -20,6 +20,17 @@ describe Jobs::PullHotlinkedImages do
     SiteSetting.download_remote_images_threshold = 0
   end
 
+  describe "#nochange" do
+    it 'does saves nothing if there are no large images to pull' do
+      post = Fabricate(:post, raw: 'bob bob')
+      orig = post.updated_at
+
+      freeze_time 1.week.from_now
+      Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
+      expect(orig).to be_within(1.second).of(post.reload.updated_at)
+    end
+  end
+
   describe '#execute' do
     before do
       FastImage.expects(:size).returns([100, 100]).at_least_once
