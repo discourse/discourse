@@ -19,7 +19,7 @@ class Administration::AnnotatorStore::AnnotationsController < Administration::Ap
     end
 
     # Only annotations that are tagged with the given Open Ethnographer tag.
-    scope = scope.where(tag_id: params[:annotator_tag_id]) if params[:annotator_tag_id].present?
+    scope = scope.where(tag_id: params[:code_id]) if params[:code_id].present?
 
     search_term = params[:search].to_s.strip
     resources = Administrate::Search.new(scope, dashboard_class, search_term).run
