@@ -124,7 +124,7 @@ class FinalDestination
     when 200
       @status = :resolved
       return @uri
-    when 405, 409, 501
+    when 405, 406, 409, 501
       get_response = small_get(headers)
 
       response_status = get_response.code.to_i
