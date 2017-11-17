@@ -48,20 +48,36 @@ describe WordWatcher do
         expect(m[1]).to eq("acknowledge")
       end
 
-      it "supports regular expressions as a site setting" do
-        SiteSetting.watched_words_regular_expressions = true
-        Fabricate(
-          :watched_word,
-          word: "tro[uo]+t",
-          action: WatchedWord.actions[:require_approval]
-        )
-        m = WordWatcher.new("Evil Trout is cool").word_matches_for_action?(:require_approval)
-        expect(m[1]).to eq("Trout")
-        m = WordWatcher.new("Evil Troot is cool").word_matches_for_action?(:require_approval)
-        expect(m[1]).to eq("Troot")
-        m = WordWatcher.new("trooooooooot").word_matches_for_action?(:require_approval)
-        expect(m[1]).to eq("trooooooooot")
+      context "regular expressions" do
+        before do
+          SiteSetting.watched_words_regular_expressions = true
+        end
+
+        it "supports regular expressions on word boundaries" do
+          Fabricate(
+            :watched_word,
+            word: /\btest\b/,
+            action: WatchedWord.actions[:block]
+          )
+          m = WordWatcher.new("this is not a test.").word_matches_for_action?(:block)
+          expect(m[1]).to eq("test")
+        end
+
+        it "supports regular expressions as a site setting" do
+          Fabricate(
+            :watched_word,
+            word: /tro[uo]+t/,
+            action: WatchedWord.actions[:require_approval]
+          )
+          m = WordWatcher.new("Evil Trout is cool").word_matches_for_action?(:require_approval)
+          expect(m[1]).to eq("Trout")
+          m = WordWatcher.new("Evil Troot is cool").word_matches_for_action?(:require_approval)
+          expect(m[1]).to eq("Troot")
+          m = WordWatcher.new("trooooooooot").word_matches_for_action?(:require_approval)
+          expect(m[1]).to eq("trooooooooot")
+        end
       end
+
     end
   end
 
