@@ -19,7 +19,7 @@ class WordWatcher
         nil
       else
         regexp = '(' + words.map { |w| word_to_regexp(w) }.join('|'.freeze) + ')'
-        SiteSetting.watched_words_regular_expressions? ? regexp : "(#{regexp})"
+        SiteSetting.watched_words_regular_expressions? ? regexp : "\\b(#{regexp})\\b"
       end
     end
     s.present? ? Regexp.new(s, Regexp::IGNORECASE) : nil
