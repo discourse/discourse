@@ -47,8 +47,13 @@ span.badge-posts {
       &.expand-post {
         margin:10px 0 10px 0;
       }
-      &.has-like {color: $love;}
-
+      &.reply {
+        float: right;
+        color: $primary-high;        
+      }
+      &.has-like {
+        color: $love;
+      }
       &.bookmarked {
         color: $tertiary;
       }
