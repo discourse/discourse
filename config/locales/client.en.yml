@@ -914,6 +914,9 @@ en:
         days_visited:
           one: "day visited"
           other: "days visited"
+        topics_entered:
+          one: "topic viewed"
+          other: "topics viewed"
         posts_read:
           one: "post read"
           other: "posts read"

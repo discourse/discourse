@@ -158,6 +158,7 @@ class UserSummary
   delegate :likes_given,
            :likes_received,
            :days_visited,
+           :topics_entered,
            :posts_read_count,
            :topic_count,
            :post_count,
