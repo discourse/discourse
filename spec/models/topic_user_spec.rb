@@ -206,7 +206,7 @@ describe TopicUser do
       it 'should create a new record for a visit' do
         freeze_time yesterday
 
-        TopicUser.update_last_read(user, topic.id, 1, 0)
+        TopicUser.update_last_read(user, topic.id, 1, 1, 0)
 
         expect(topic_user.last_read_post_number).to eq(1)
         expect(topic_user.last_visited_at.to_i).to eq(yesterday.to_i)
@@ -218,13 +218,13 @@ describe TopicUser do
         today = Time.zone.now
         freeze_time Time.zone.now
 
-        TopicUser.update_last_read(user, topic.id, 1, 0)
+        TopicUser.update_last_read(user, topic.id, 1, 1, 0)
 
         tomorrow = 1.day.from_now
         freeze_time tomorrow
 
         Fabricate(:post, topic: topic, user: user)
-        TopicUser.update_last_read(user, topic.id, 2, 0)
+        TopicUser.update_last_read(user, topic.id, 2, 1, 0)
         topic_user = TopicUser.get(topic, user)
 
         expect(topic_user.last_read_post_number).to eq(2)
@@ -249,7 +249,7 @@ describe TopicUser do
       let(:post_creator) { PostCreator.new(new_user, raw: Fabricate.build(:post).raw, topic_id: topic.id) }
 
       before do
-        TopicUser.update_last_read(new_user, topic.id, 2, 0)
+        TopicUser.update_last_read(new_user, topic.id, 2, 2, 0)
       end
 
       it 'should automatically track topics you reply to' do
@@ -311,13 +311,13 @@ describe TopicUser do
 
       it 'should automatically track topics after they are read for long enough' do
         expect(topic_new_user.notification_level).to eq(TopicUser.notification_levels[:regular])
-        TopicUser.update_last_read(new_user, topic.id, 2, SiteSetting.default_other_auto_track_topics_after_msecs + 1)
+        TopicUser.update_last_read(new_user, topic.id, 2, 2, SiteSetting.default_other_auto_track_topics_after_msecs + 1)
         expect(TopicUser.get(topic, new_user).notification_level).to eq(TopicUser.notification_levels[:tracking])
       end
 
       it 'should not automatically track topics after they are read for long enough if changed manually' do
         TopicUser.change(new_user, topic, notification_level: TopicUser.notification_levels[:regular])
-        TopicUser.update_last_read(new_user, topic, 2, SiteSetting.default_other_auto_track_topics_after_msecs + 1)
+        TopicUser.update_last_read(new_user, topic, 2, 2, SiteSetting.default_other_auto_track_topics_after_msecs + 1)
         expect(topic_new_user.notification_level).to eq(TopicUser.notification_levels[:regular])
       end
     end
