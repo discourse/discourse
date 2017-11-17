@@ -951,7 +951,7 @@ vi:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
-    select_box:
+    select_kit:
       default_header_text: Chọn...
       no_content: Không tìm thấy
       filter_placeholder: Tìm kiến...

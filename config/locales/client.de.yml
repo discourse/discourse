@@ -1040,7 +1040,7 @@ de:
       shift: 'Umschalt'
       ctrl: 'Strg'
       alt: 'Alt'
-    select_box:
+    select_kit:
       default_header_text: Auswählen…
       no_content: Keine Treffer gefunden
       filter_placeholder: Suchen…

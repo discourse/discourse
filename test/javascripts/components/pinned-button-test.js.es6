@@ -21,15 +21,15 @@ componentTest('updating the content refreshes the list', {
   },
 
   test(assert) {
-    andThen(() => assert.notOk(selectBox().isHidden) );
+    andThen(() => assert.notOk(selectKit().isHidden) );
 
-    expandSelectBoxKit();
+    expandSelectKit();
 
-    andThen(() => assert.equal(selectBox().selectedRow.name(), "Pinned") );
+    andThen(() => assert.equal(selectKit().selectedRow.name(), "Pinned") );
 
     andThen(() => {
       this.set("topic.pinned", false);
-      assert.equal(selectBox().selectedRow.name(), "Unpinned");
+      assert.equal(selectKit().selectedRow.name(), "Unpinned");
     });
 
     andThen(() => {

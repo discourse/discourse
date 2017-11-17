@@ -1094,7 +1094,7 @@ ru:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
-    select_box:
+    select_kit:
       filter_placeholder: Искать...
     emoji_picker:
       filter_placeholder: Искать emoji

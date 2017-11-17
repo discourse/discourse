@@ -17,16 +17,16 @@ componentTest('default', {
   },
 
   test(assert) {
-    expandSelectBoxKit();
+    expandSelectKit();
 
     andThen(() => {
-      assert.equal(selectBox().header.name(), "Topic Controls");
-      assert.equal(selectBox().rowByIndex(0).name(), "Bookmark");
-      assert.equal(selectBox().rowByIndex(1).name(), "Share");
-      assert.equal(selectBox().selectedRow.el.length, 0, "it doesn’t preselect first row");
+      assert.equal(selectKit().header.name(), "Topic Controls");
+      assert.equal(selectKit().rowByIndex(0).name(), "Bookmark");
+      assert.equal(selectKit().rowByIndex(1).name(), "Share");
+      assert.equal(selectKit().selectedRow.el.length, 0, "it doesn’t preselect first row");
     });
 
-    selectBoxKitSelectRow("share");
+    selectKitSelectRow("share");
 
     andThen(() => {
       assert.equal(this.get("value"), null, "it resets the value");
