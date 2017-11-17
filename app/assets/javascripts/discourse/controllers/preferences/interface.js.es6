@@ -65,7 +65,7 @@ export default Ember.Controller.extend(PreferencesTabController, {
   @computed()
   userSelectableHome() {
     return _.map(USER_HOMES, (name, num) => {
-      return {name: I18n.t('filters.' + name + '.title'), value: num};
+      return {name: I18n.t('filters.' + name + '.title'), value: Number(num)};
     });
   },
 
