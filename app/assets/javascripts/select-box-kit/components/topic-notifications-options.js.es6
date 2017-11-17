@@ -7,10 +7,6 @@ export default NotificationOptionsComponent.extend({
   content: topicLevels,
   i18nPrefix: "topic.notifications",
 
-  loadValueFunction() {
-    return this.get("topic.details.notification_level");
-  },
-
   @on("didInsertElement")
   _bindGlobalLevelChanged() {
     this.appEvents.on("topic-notifications-button:changed", (msg) => {
@@ -27,7 +23,7 @@ export default NotificationOptionsComponent.extend({
     this.appEvents.off("topic-notifications-button:changed");
   },
 
-  setValueFunction(value) {
+  mutateValue(value) {
     if (value !== this.get("value")) {
       this.get("topic.details").updateNotifications(value);
     }

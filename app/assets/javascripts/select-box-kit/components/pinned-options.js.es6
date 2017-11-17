@@ -1,22 +1,13 @@
 import DropdownSelectBoxComponent from "select-box-kit/components/dropdown-select-box";
-import { on } from "ember-addons/ember-computed-decorators";
-import { observes } from "ember-addons/ember-computed-decorators";
+import { on  } from "ember-addons/ember-computed-decorators";
 import { iconHTML } from 'discourse-common/lib/icon-library';
 
 export default DropdownSelectBoxComponent.extend({
   classNames: "pinned-options",
 
-  @on("didReceiveAttrs")
-  _setPinnedOptionsComponentOptions() {
-    this.get("headerComponentOptions").setProperties({ showFullTitle: true });
-  },
-
-  computeValue() {
-    return this.get("topic.pinned") ? "pinned" : "unpinned";
-  },
+  autoHighlight() {},
 
   computeHeaderContent() {
-    console.log("RECOPUED")
     let content = this.baseHeaderComputedContent();
     const pinnedGlobally = this.get("topic.pinned_globally");
     const pinned = this.get("topic.pinned");
@@ -64,7 +55,5 @@ export default DropdownSelectBoxComponent.extend({
     } else {
       topic.rePin();
     }
-
-    topic.notifyPropertyChange();
   }
 });

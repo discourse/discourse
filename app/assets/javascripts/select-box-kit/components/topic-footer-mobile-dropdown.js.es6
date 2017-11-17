@@ -1,5 +1,4 @@
 import ComboBoxComponent from "select-box-kit/components/combo-box";
-import { on } from "ember-addons/ember-computed-decorators";
 
 export default ComboBoxComponent.extend({
   headerText: "topic.controls",
@@ -9,10 +8,10 @@ export default ComboBoxComponent.extend({
   allowInitialValueMutation: false,
   autoSelectFirst: false,
 
-  @on("didReceiveAttrs")
-  _setTopicFooterMobileDropdownOptions() {
-    this.get("headerComponentOptions")
-        .set("selectedName", I18n.t(this.get("headerText")));
+  computeHeaderContent() {
+    let content = this.baseHeaderComputedContent();
+    content.name = I18n.t(this.get("headerText"));
+    return content;
   },
 
   computeContent(content) {

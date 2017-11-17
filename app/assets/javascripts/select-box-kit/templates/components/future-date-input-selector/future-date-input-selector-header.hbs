@@ -1,16 +1,18 @@
-{{#if icon}}
+{{#if icons}}
   <div class="future-date-input-selector-icons">
-    {{{icon}}}
+    {{#each icons as |icon|}}
+      {{{icon}}}
+    {{/each}}
   </div>
 {{/if}}
 
-<span class="selected-name" title={{selectedName}}>
-  {{{selectedName}}}
+<span class="selected-name" title={{computedContent.name}}>
+  {{{computedContent.name}}}
 </span>
 
-{{#if datetime}}
+{{#if computedContent.datetime}}
   <span class="future-date-input-selector-datetime">
-    {{datetime}}
+    {{computedContent.datetime}}
   </span>
 {{/if}}
 

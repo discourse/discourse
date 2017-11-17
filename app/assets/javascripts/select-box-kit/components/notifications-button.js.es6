@@ -14,36 +14,29 @@ export default DropdownSelectBoxComponent.extend({
   autofilterable: false,
   filterable: false,
   rowComponent: "notifications-button/notifications-button-row",
-  headerComponent: "notifications-button/notifications-button-header",
 
   i18nPrefix: "",
   i18nPostfix: "",
-  showFullTitle: true,
 
   loadValueFunction() {
     return this.get("notificationLevel");
   },
 
+  @computed("selectedDetails.icon", "selectedDetails.key")
+  iconForSelectedDetails(icon, key) {
+    return iconHTML(icon, { class: key }).htmlSafe();
+  },
+
   computeHeaderContent() {
     let content = this.baseHeaderComputedContent();
-
     content.name = I18n.t(`${this.get("i18nPrefix")}.${this.get("selectedDetails.key")}.title`);
-
-    content.icons = [
-      iconHTML(this.get("selectedDetails.icon"), {
-        class: this.get("selectedDetails.key")
-      }).htmlSafe()
-    ];
+    content.icons = [ this.get("iconForSelectedDetails") ];
     content.hasSelection = this.get("selectedComputedContent").length >= 1;
-
     return content;
   },
 
-  @on("didReceiveAttrs", "didUpdateAttrs")
-  _setComponentOptions() {
-    this.get("headerComponentOptions").setProperties({
-      showFullTitle: this.get("showFullTitle")
-    });
+  @on("didReceiveAttrs")
+  _setNotificationsButtonComponentOptions() {
     this.get("rowComponentOptions").setProperties({
       i18nPrefix: this.get("i18nPrefix"),
       i18nPostfix: this.get("i18nPostfix")

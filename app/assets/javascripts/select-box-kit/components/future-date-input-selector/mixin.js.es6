@@ -20,7 +20,6 @@ export default Ember.Mixin.create({
 
     let {time} = this._updateAt(value);
     if (time) {
-
       let details = timeframeDetails(value);
       if (!details.displayWhen) {
         time = null;
