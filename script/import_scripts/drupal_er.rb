@@ -12,6 +12,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
   DRUPAL_FILES_DIR = ENV['DRUPAL_FILES_DIR']
 
 
+  # Import content from Drupal 7.
   def execute
 
     site_settings = {
@@ -57,7 +58,7 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     normalize_urls
     post_process_posts
 
-    
+
     # import_taxonomy_tags
     # import_taxonomy_taggings
 
