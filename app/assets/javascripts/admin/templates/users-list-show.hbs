@@ -60,10 +60,10 @@
               {{unbound user.email}}
             </td>
             <td>
-              {{{unbound user.last_emailed_age}}}
+              {{{format-duration user.last_emailed_age}}}
             </td>
             <td>
-              {{{unbound user.last_seen_age}}}
+              {{{format-duration user.last_seen_age}}}
             </td>
             <td>
               {{number user.topics_entered}}
@@ -72,11 +72,11 @@
               {{number user.posts_read_count}}
             </td>
             <td>
-              {{{unbound user.time_read}}}
+              {{{format-duration user.time_read}}}
             </td>
 
             <td>
-              {{{unbound user.created_at_age}}}
+              {{{format-duration user.created_at_age}}}
             </td>
 
             {{#if showApproval}}
