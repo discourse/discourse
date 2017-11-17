@@ -134,6 +134,9 @@ aside.onebox {
     img {
       max-height: 170px;
       max-width: 20%;
+      @media all and (max-width: 600px) {
+        max-width: 35%;
+      }
       height: auto;
       width: auto;
       float: left;
