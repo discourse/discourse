@@ -57,6 +57,7 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   allowInitialValueMutation: false,
   content: null,
   computedContent: null,
+  limitMatches: 2,
 
   init() {
     this._super();
@@ -135,6 +136,11 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     if (shouldFilter === true) return true;
     if (allowAny === true && filter.length > 0) return true;
     return false;
+  },
+
+  @computed("filter", "filteredComputedContent.[]")
+  shouldDisplayNoContentRow(filter, filteredComputedContent) {
+    return filter.length > 0 && filteredComputedContent.length === 0;
   },
 
   @computed("filter", "filterable", "autoFilterable", "renderedFilterOnce")
