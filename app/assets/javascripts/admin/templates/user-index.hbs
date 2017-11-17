@@ -429,7 +429,7 @@
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n 'admin.users.last_emailed'}}</div>
-    <div class='value'>{{format-date model.last_emailed_at leaveAgo="true"}}</div>
+    <div class='value'>{{format-date model.last_emailed_at}}</div>
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n 'last_seen'}}</div>
@@ -474,7 +474,7 @@
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n 'admin.user.time_read'}}</div>
-    <div class='value'>{{{model.time_read}}}</div>
+    <div class='value'>{{{format-duration model.time_read}}}</div>
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n 'user.invited.days_visited'}}</div>
