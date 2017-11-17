@@ -63,7 +63,7 @@ class FinalDestination
   def request_headers
     result = {
       "User-Agent" => "Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
-      "Accept" => "text/html",
+      "Accept" => "*/*",
       "Host" => @uri.hostname
     }
 
@@ -76,11 +76,7 @@ class FinalDestination
     Net::HTTP.start(@uri.host, @uri.port, use_ssl: @uri.is_a?(URI::HTTPS)) do |http|
       http.open_timeout = FinalDestination.connection_timeout
       http.read_timeout = FinalDestination.connection_timeout
-
-      request = Net::HTTP::Get.new(@uri.request_uri, headers)
-      http.request(request) do |response|
-        return response
-      end
+      http.request_get(@uri.request_uri, headers)
     end
   end
 
@@ -125,7 +121,7 @@ class FinalDestination
       @status = :resolved
       return @uri
     when 405, 406, 409, 501
-      get_response = small_get(headers)
+      get_response = small_get(request_headers)
 
       response_status = get_response.code.to_i
       if response_status == 200
