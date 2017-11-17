@@ -130,10 +130,18 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     };
   },
 
+  @computed("shouldFilter", "allowAny", "filter")
+  shouldDisplayFilter(shouldFilter, allowAny, filter) {
+    if (shouldFilter === true) return true;
+    if (allowAny === true && filter.length > 0) return true;
+    return false;
+  },
+
   @computed("filter", "filterable", "autoFilterable", "renderedFilterOnce")
-  shouldDisplayFilter(filter, filterable, autoFilterable, renderedFilterOnce) {
-    if ((renderedFilterOnce === true || filterable === true) && filter.length > 0) { return true; }
-    if (filter.length > 0 && autoFilterable === true) { return true; }
+  shouldFilter(filter, filterable, autoFilterable, renderedFilterOnce) {
+    if (renderedFilterOnce === true && filterable === true) return true;
+    if (filterable === true) return true;
+    if (autoFilterable === true && filter.length > 0) return true;
     return false;
   },
 

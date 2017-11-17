@@ -19,9 +19,8 @@ export default Ember.Mixin.create({
       .off("mousedown.select-kit")
       .off("touchstart.select-kit");
 
-    this.$offscreenInput()
+    this.$header()
       .off("focus.select-kit")
-      .off("focusin.select-kit")
       .off("blur.select-kit")
       .off("keypress.select-kit")
       .off("keydown.select-kit");
@@ -44,24 +43,27 @@ export default Ember.Mixin.create({
         this.didClickOutside(event);
     });
 
-    this.$offscreenInput()
+    this.$header()
       .on("blur.select-kit", () => {
         if (this.get("isExpanded") === false && this.get("isFocused") === true) {
           this.close();
         }
       })
-      .on("focus.select-kit focusin.select-kit", (event) => {
+      .on("focus.select-kit", (event) => {
         this.set("isFocused", true);
-        this._killEvent(event);
+        this._destroyEvent(event);
       })
       .on("keydown.select-kit", (event) => {
         const keyCode = event.keyCode || event.which;
-        if (keyCode === this.keys.TAB) this.tabFromOffscreen(event);
-        if (keyCode === this.keys.BACKSPACE) this.backspaceFromOffscreen(event);
-        if (keyCode === this.keys.ESC) this.escapeFromOffscreen(event);
-        if (keyCode === this.keys.ENTER) this.enterFromOffscreen(event);
-        if ([this.keys.UP, this.keys.DOWN].includes(keyCode)) this.upAndDownFromOffscreen(event);
-        return true;
+
+        if (document.activeElement !== this.$header()[0]) return event;
+
+        if (keyCode === this.keys.TAB) this.tabFromHeader(event);
+        if (keyCode === this.keys.BACKSPACE) this.backspaceFromHeader(event);
+        if (keyCode === this.keys.ESC) this.escapeFromHeader(event);
+        if (keyCode === this.keys.ENTER) this.enterFromHeader(event);
+        if ([this.keys.UP, this.keys.DOWN].includes(keyCode)) this.upAndDownFromHeader(event);
+        return event;
       })
       .on("keypress.select-kit", (event) => {
         const keyCode = event.keyCode || event.which;
@@ -85,7 +87,7 @@ export default Ember.Mixin.create({
       })
       .on("focus.select-kit focusin.select-kit", (event) => {
         this.set("isFocused", true);
-        this._killEvent(event);
+        this._destroyEvent(event);
       })
       .on("keydown.select-kit", (event) => {
         const keyCode = event.keyCode || event.which;
@@ -101,11 +103,11 @@ export default Ember.Mixin.create({
     if (this.get("isExpanded") === false) {
       this.unfocus(event);
     } else if (this.$highlightedRow().length === 1) {
-      this._killEvent(event);
+      this._destroyEvent(event);
       Ember.run.throttle(this, this._rowClick, this.$highlightedRow(), 150, 150, true);
       this.focus(event);
     } else {
-      this._killEvent(event);
+      this._destroyEvent(event);
       this.unfocus(event);
     }
 
@@ -113,12 +115,12 @@ export default Ember.Mixin.create({
   },
 
   didPressEscape(event) {
-    this._killEvent(event);
+    this._destroyEvent(event);
     this.unfocus(event);
   },
 
   didPressUpAndDownArrows(event) {
-    this._killEvent(event);
+    this._destroyEvent(event);
 
     const keyCode = event.keyCode || event.which;
     const $rows = this.$rows();
@@ -144,7 +146,7 @@ export default Ember.Mixin.create({
   },
 
   didPressBackspace(event) {
-    this._killEvent(event);
+    this._destroyEvent(event);
 
     this.expand(event);
 
@@ -154,7 +156,7 @@ export default Ember.Mixin.create({
   },
 
   didPressEnter(event) {
-    this._killEvent(event);
+    this._destroyEvent(event);
 
     if (this.get("isExpanded") === false) {
       this.expand(event);
@@ -173,18 +175,18 @@ export default Ember.Mixin.create({
     return;
   },
 
-  tabFromOffscreen(event) { this.didPressTab(event); },
+  tabFromHeader(event) { this.didPressTab(event); },
   tabFromFilter(event) { this.didPressTab(event); },
 
-  escapeFromOffscreen(event) { this.didPressEscape(event); },
+  escapeFromHeader(event) { this.didPressEscape(event); },
   escapeFromFilter(event) { this.didPressEscape(event); },
 
-  upAndDownFromOffscreen(event) { this.didPressUpAndDownArrows(event); },
+  upAndDownFromHeader(event) { this.didPressUpAndDownArrows(event); },
   upAndDownFromFilter(event) { this.didPressUpAndDownArrows(event); },
 
-  backspaceFromOffscreen(event) { this.didPressBackspace(event); },
+  backspaceFromHeader(event) { this.didPressBackspace(event); },
 
-  enterFromOffscreen(event) { this.didPressEnter(event); },
+  enterFromHeader(event) { this.didPressEnter(event); },
   enterFromFilter(event) { this.didPressEnter(event); },
 
   _moveHighlight(direction, $rows) {

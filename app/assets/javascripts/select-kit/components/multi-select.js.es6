@@ -77,6 +77,7 @@ export default SelectKitComponent.extend({
       return !computedValues.includes(get(c, "value"));
     });
 
+    if (this.get("shouldFilter") === false) { return computedContent; }
     if (isEmpty(filter)) { return computedContent; }
 
     const lowerFilter = filter.toLowerCase();
@@ -106,7 +107,7 @@ export default SelectKitComponent.extend({
   didPressBackspace(event) {
     this.expand();
     this.keyDown(event);
-    this._killEvent(event);
+    this._destroyEvent(event);
   },
 
   didPressEscape(event) {
@@ -119,27 +120,19 @@ export default SelectKitComponent.extend({
   },
 
   keyDown(event) {
+    if (!isEmpty(this.get("filter"))) return;
+
     const keyCode = event.keyCode || event.which;
     const $filterInput = this.$filterInput();
 
-    if (this.get("isFocused") === true && this.get("isExpanded") === false) {
-      this.expand();
-      return;
-    }
-
-    if (this.keys.LEFT === keyCode) {
-
-      return;
-    }
-
     // select all choices
-    if (event.metaKey === true && keyCode === 65 && isEmpty(this.get("filter"))) {
+    if (this.get("hasSelection") && event.metaKey === true && keyCode === 65) {
       this.$(".choices .selected-name:not(.is-locked)").addClass("is-highlighted");
-      return;
+      return false;
     }
 
     // clear selection when multiple
-    if (isEmpty(this.get("filter")) && this.$(".selected-name.is-highlighted").length >= 1 && keyCode === this.keys.BACKSPACE) {
+    if (this.$(".selected-name.is-highlighted").length >= 1 && keyCode === this.keys.BACKSPACE) {
       const highlightedComputedContents = [];
       $.each(this.$(".selected-name.is-highlighted"), (i, el) => {
         const computedContent = this._findComputedContentByGuid($(el).attr("data-guid"));
@@ -150,7 +143,7 @@ export default SelectKitComponent.extend({
     }
 
     // try to remove last item from the list
-    if (isEmpty(this.get("filter")) && keyCode === this.keys.BACKSPACE) {
+    if (keyCode === this.keys.BACKSPACE) {
       let $lastSelectedValue = $(this.$(".choices .selected-name:not(.is-locked)").last());
 
       if ($lastSelectedValue.length === 0) { return; }

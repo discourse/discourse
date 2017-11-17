@@ -266,17 +266,4 @@
     pointer-events: none;
     border: 1px solid transparent;
   }
-
-  .offscreen, .offscreen:focus {
-    margin: -1px;
-    width: 1px;
-    height: 1px;
-    border: 0;
-    padding: 0;
-    overflow: hidden;
-    position: fixed;
-    outline: 0;
-    left: 0px;
-    top: 0px;
-  }
 }
