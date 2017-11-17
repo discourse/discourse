@@ -60,6 +60,7 @@ export default SelectKitComponent.extend({
   didComputeValue(value) { return value; },
 
   filterComputedContent(computedContent, computedValue, filter) {
+    if (this.get("shouldFilter") === false) { return computedContent; }
     if (isEmpty(filter)) { return computedContent; }
     const lowerFilter = filter.toLowerCase();
     return computedContent.filter(c => {
@@ -130,11 +131,7 @@ export default SelectKitComponent.extend({
       this.send("onDeselect", this.get("selectedComputedContent"));
     },
 
-    onCreate(input) {
-      let content = this.createContentFromInput(input);
-      if (!Ember.isNone(content)) return;
-
-      const computedContentItem = this.computeContentItem(content);
+    onCreate(computedContentItem) {
       if (this.validateComputedContentItem(computedContentItem)) {
         this.get("computedContent").pushObject(computedContentItem);
         this.send("onSelect", computedContentItem);
