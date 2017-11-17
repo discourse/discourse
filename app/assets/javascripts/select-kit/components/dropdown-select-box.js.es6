@@ -14,7 +14,9 @@ export default SingleSelectComponent.extend({
 
   @on("didReceiveAttrs")
   _setDropdownSelectBoxComponentOptions() {
-    this.get("headerComponentOptions").setProperties({showFullTitle: this.get("showFullTitle")});
+    this.get("headerComponentOptions").setProperties({
+      showFullTitle: this.get("showFullTitle")
+    });
   },
 
   clickOutside() {

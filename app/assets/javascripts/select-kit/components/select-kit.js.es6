@@ -38,6 +38,7 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   filter: "",
   filterPlaceholder: "select_kit.filter_placeholder",
   filterIcon: "search",
+  headerIcon: null,
   rowComponent: "select-kit/select-kit-row",
   rowComponentOptions: null,
   noneRowComponent: "select-kit/select-kit-none-row",

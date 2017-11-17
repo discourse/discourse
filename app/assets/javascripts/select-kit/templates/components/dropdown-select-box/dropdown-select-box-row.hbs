@@ -1,10 +1,10 @@
 {{#if template}}
   {{{template}}}
 {{else}}
-  {{#if icon}}
+  {{#if icons}}
     <div class="icons">
       <span class="selection-indicator"></span>
-      {{{icon}}}
+      {{#each icons as |icon|}} {{d-icon icon}} {{/each}}
     </div>
   {{/if}}
 
