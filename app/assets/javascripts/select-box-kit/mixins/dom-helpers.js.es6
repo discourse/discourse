@@ -65,7 +65,7 @@ export default Ember.Mixin.create({
 
   // force the component in a known default state
   focus() {
-    Ember.run.schedule("afterRender", () => this.$offscreenInput().focus() );
+    Ember.run.schedule("afterRender", () => this.$offscreenInput().select() );
   },
 
   expand() {
