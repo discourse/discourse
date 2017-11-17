@@ -7,8 +7,8 @@ class DiscourseLogstashLogger
       sync: true,
       customize_event: ->(event) {
         event['hostname'] = `hostname`.chomp
-        event['severity'] = Object.const_get("Logger::Severity::#{event['severity']}")
         event['severity_name'] = event['severity']
+        event['severity'] = Object.const_get("Logger::Severity::#{event['severity']}")
         event['type'] = type
       },
     )
