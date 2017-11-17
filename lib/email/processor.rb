@@ -13,17 +13,17 @@ module Email
 
     def process!
       begin
-        receiver = Email::Receiver.new(@mail)
-        receiver.process!
+        @receiver = Email::Receiver.new(@mail)
+        @receiver.process!
       rescue RateLimiter::LimitExceeded
         @retry_on_rate_limit ? Jobs.enqueue(:process_email, mail: @mail) : raise
       rescue Email::Receiver::BouncedEmailError => e
         # never reply to bounced emails
         log_email_process_failure(@mail, e)
-        set_incoming_email_rejection_message(receiver.incoming_email, I18n.t("emails.incoming.errors.bounced_email_error"))
+        set_incoming_email_rejection_message(@receiver.incoming_email, I18n.t("emails.incoming.errors.bounced_email_error"))
       rescue => e
         log_email_process_failure(@mail, e)
-        incoming_email = receiver.try(:incoming_email)
+        incoming_email = @receiver.try(:incoming_email)
         rejection_message = handle_failure(@mail, e)
         if rejection_message.present?
           set_incoming_email_rejection_message(incoming_email, rejection_message.body.to_s)
@@ -94,6 +94,7 @@ module Email
     end
 
     def can_send_rejection_email?(email, type)
+      return false if @receiver.sent_to_mailinglist_mirror?
       return true if type == :email_reject_unrecognized_error
 
       key = "rejection_email:#{email}:#{type}:#{Date.today}"
