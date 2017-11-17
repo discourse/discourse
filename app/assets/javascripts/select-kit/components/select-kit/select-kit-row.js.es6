@@ -1,6 +1,6 @@
 import { on } from 'ember-addons/ember-computed-decorators';
 import computed from 'ember-addons/ember-computed-decorators';
-const { run, isPresent } = Ember;
+const { run, isPresent, makeArray, isEmpty } = Ember;
 import UtilsMixin from "select-kit/mixins/utils";
 
 export default Ember.Component.extend(UtilsMixin, {
@@ -38,10 +38,10 @@ export default Ember.Component.extend(UtilsMixin, {
 
   @computed("computedContent.icon", "computedContent.icons", "computedContent.originalContent.icon")
   icons(icon, icons, originalIcon) {
-    return Ember.makeArray(icon)
+    return makeArray(icon)
             .concat(icons)
-            .concat(Ember.makeArray(originalIcon))
-            .filter(i => !Ember.isEmpty(i));
+            .concat(makeArray(originalIcon))
+            .filter(i => !isEmpty(i));
   },
 
   mouseEnter() {

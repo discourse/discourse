@@ -1,0 +1,19 @@
+{{#if category}}
+    {{#if hasParentCategory}}
+      <div class="category-status">
+        {{badgeForParentCategory}}&nbsp;{{badgeForCategory}}
+        &nbsp;<span class="topic-count">&times; {{topicCount}}</span>
+      </div>
+    {{else}}
+      <div class="category-status">
+        {{badgeForCategory}}
+        &nbsp;<span class="topic-count">&times; {{topicCount}}</span>
+      </div>
+    {{/if}}
+
+    {{#if hasDescription}}
+      <div class="category-desc">{{description}}</div>
+    {{/if}}
+{{else}}
+  {{computedContent.name}}
+{{/if}}
