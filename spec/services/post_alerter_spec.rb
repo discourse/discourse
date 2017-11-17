@@ -627,6 +627,21 @@ describe PostAlerter do
       expect(dave.notifications.count).to eq(1)
       expect(erin.notifications.count).to eq(1)
     end
+
+    it "does not send email notifications to staged users when notification originates in mailinglist mirror category" do
+      category = Fabricate(:mailinglist_mirror_category)
+      topic = Fabricate(:topic, category: category)
+      user = Fabricate(:staged)
+      post = Fabricate(:post, user: user, topic: topic)
+      reply = Fabricate(:post, topic: topic, reply_to_post_number: 1)
+
+      NotificationEmailer.expects(:process_notification).never
+      expect { PostAlerter.post_created(reply) }.to change(user.notifications, :count).by(0)
+
+      category.mailinglist_mirror = false
+      NotificationEmailer.expects(:process_notification).once
+      expect { PostAlerter.post_created(reply) }.to change(user.notifications, :count).by(1)
+    end
   end
 
   context "watching" do

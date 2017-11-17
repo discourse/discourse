@@ -298,6 +298,8 @@ class PostAlerter
     # Make sure the user can see the post
     return unless Guardian.new(user).can_see?(post)
 
+    return if user.staged? && post.topic.category&.mailinglist_mirror?
+
     notifier_id = opts[:user_id] || post.user_id # xxxxx look at revision history
 
     # apply muting here
