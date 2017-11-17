@@ -87,4 +87,22 @@ describe Email::Processor do
 
   end
 
+  context "mailinglist mirror" do
+    before do
+      SiteSetting.email_in = true
+      Fabricate(:mailinglist_mirror_category)
+    end
+
+    it "does not send rejection email" do
+      Email::Receiver.any_instance.stubs(:process_internal).raises("boom")
+
+      email = <<~EMAIL
+        From: foo@example.com
+        To: list@example.com
+        Subject: Hello world
+      EMAIL
+
+      expect { Email::Processor.process!(email) }.to_not change { EmailLog.count }
+    end
+  end
 end
