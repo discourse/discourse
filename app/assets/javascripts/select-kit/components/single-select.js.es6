@@ -60,8 +60,6 @@ export default SelectKitComponent.extend({
   didComputeValue(value) { return value; },
 
   filterComputedContent(computedContent, computedValue, filter) {
-    if (this.get("shouldFilter") === false) { return computedContent; }
-    if (isEmpty(filter)) { return computedContent; }
     const lowerFilter = filter.toLowerCase();
     return computedContent.filter(c => {
       return get(c, "name").toLowerCase().indexOf(lowerFilter) > -1;
@@ -77,7 +75,11 @@ export default SelectKitComponent.extend({
 
   @computed("computedContent.[]", "computedValue.[]", "filter")
   filteredComputedContent(computedContent, computedValue, filter) {
-    return this.filterComputedContent(computedContent, computedValue, filter);
+    if (this.get("shouldFilter") === true) {
+      computedContent = this.filterComputedContent(computedContent, computedValue, filter);
+    }
+
+    return computedContent.slice(0, this.get("limitMatches"));
   },
 
   @computed("computedValue", "computedContent.[]")

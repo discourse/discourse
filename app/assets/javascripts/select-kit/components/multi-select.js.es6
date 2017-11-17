@@ -73,13 +73,6 @@ export default SelectKitComponent.extend({
   mutateValues(computedValues) { this.set("values", computedValues); },
 
   filterComputedContent(computedContent, computedValues, filter) {
-    computedContent = computedContent.filter(c => {
-      return !computedValues.includes(get(c, "value"));
-    });
-
-    if (this.get("shouldFilter") === false) { return computedContent; }
-    if (isEmpty(filter)) { return computedContent; }
-
     const lowerFilter = filter.toLowerCase();
     return computedContent.filter(c => {
       return get(c, "name").toLowerCase().indexOf(lowerFilter) > -1;
@@ -88,7 +81,15 @@ export default SelectKitComponent.extend({
 
   @computed("computedContent.[]", "computedValues.[]", "filter")
   filteredComputedContent(computedContent, computedValues, filter) {
-    return this.filterComputedContent(computedContent, computedValues, filter);
+    computedContent = computedContent.filter(c => {
+      return !computedValues.includes(get(c, "value"));
+    });
+
+    if (this.get("shouldFilter") === true) {
+      computedContent = this.filterComputedContent(computedContent, computedValues, filter);
+    }
+
+    return computedContent.slice(0, this.get("limitMatches"));
   },
 
   baseHeaderComputedContent() {
