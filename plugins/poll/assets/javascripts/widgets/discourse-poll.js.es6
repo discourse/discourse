@@ -3,6 +3,7 @@ import { h } from 'virtual-dom';
 import { iconNode } from 'discourse-common/lib/icon-library';
 import RawHtml from 'discourse/widgets/raw-html';
 import { ajax } from 'discourse/lib/ajax';
+import { popupAjaxError } from 'discourse/lib/ajax-error';
 import evenRound from "discourse/plugins/poll/lib/even-round";
 import { avatarFor } from 'discourse/widgets/post';
 import round from "discourse/lib/round";
@@ -15,8 +16,12 @@ function fetchVoters(payload) {
   return ajax("/polls/voters.json", {
     type: "get",
     data: payload
-  }).catch(() => {
-    bootbox.alert(I18n.t('poll.error_while_fetching_voters'));
+  }).catch((error) => {
+    if (error) {
+      popupAjaxError(error);
+    } else {
+      bootbox.alert(I18n.t('poll.error_while_fetching_voters'));
+    }
   });
 }
 
@@ -511,8 +516,12 @@ export default createWidget('discourse-poll', {
           }).then(() => {
             poll.set('status', status);
             this.scheduleRerender();
-          }).catch(() => {
-            bootbox.alert(I18n.t("poll.error_while_toggling_status"));
+          }).catch((error) => {
+            if (error) {
+              popupAjaxError(error);
+            } else {
+              bootbox.alert(I18n.t("poll.error_while_toggling_status"));
+            }
           }).finally(() => {
             state.loading = false;
           });
@@ -570,8 +579,12 @@ export default createWidget('discourse-poll', {
       }
     }).then(() => {
       state.showResults = true;
-    }).catch(() => {
-      bootbox.alert(I18n.t("poll.error_while_casting_votes"));
+    }).catch((error) => {
+      if (error) {
+        popupAjaxError(error);
+      } else {
+        bootbox.alert(I18n.t("poll.error_while_casting_votes"));
+      }
     }).finally(() => {
       state.loading = false;
     });
