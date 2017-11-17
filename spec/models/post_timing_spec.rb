@@ -78,12 +78,15 @@ describe PostTiming do
 
   describe 'process_timings' do
 
-    # integration test
+    # integration tests
 
     it 'processes timings correctly' do
       PostActionNotifier.enable
 
       post = Fabricate(:post)
+      (2..5).each do |i|
+        Fabricate(:post, topic: post.topic, post_number: i)
+      end
       user2 = Fabricate(:coding_horror, created_at: 1.day.ago)
 
       PostAction.act(user2, post, PostActionType.types[:like])
@@ -97,6 +100,34 @@ describe PostTiming do
 
       PostTiming.process_timings(post.user, post.topic_id, 1, [[post.post_number, 1.day]])
 
+      user_visit = post.user.user_visits.order('id DESC').first
+      expect(user_visit.posts_read).to eq(1)
+
+      # Skip to bottom
+      PostTiming.process_timings(post.user, post.topic_id, 1, [[5, 100]])
+      expect(user_visit.reload.posts_read).to eq(2)
+
+      # Scroll up
+      PostTiming.process_timings(post.user, post.topic_id, 1, [[4, 100]])
+      expect(user_visit.reload.posts_read).to eq(3)
+      PostTiming.process_timings(post.user, post.topic_id, 1, [[2, 100], [3, 100]])
+      expect(user_visit.reload.posts_read).to eq(5)
+    end
+
+    it 'does not count private message posts read' do
+      pm = Fabricate(:private_message_topic, user: Fabricate(:admin))
+      user1, user2 = pm.topic_allowed_users.map(&:user)
+
+      (1..3).each do |i|
+        Fabricate(:post, topic: pm, user: user1)
+      end
+
+      PostTiming.process_timings(user2, pm.id, 10, [[1, 100]])
+      user_visit = user2.user_visits.last
+      expect(user_visit.posts_read).to eq(0)
+
+      PostTiming.process_timings(user2, pm.id, 10, [[2, 100], [3, 100]])
+      expect(user_visit.reload.posts_read).to eq(0)
     end
   end
 

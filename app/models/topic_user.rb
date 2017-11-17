@@ -248,7 +248,7 @@ SQL
 
     INSERT_TOPIC_USER_SQL_STAFF = INSERT_TOPIC_USER_SQL.gsub("highest_post_number", "highest_staff_post_number")
 
-    def update_last_read(user, topic_id, post_number, msecs, opts = {})
+    def update_last_read(user, topic_id, post_number, new_posts_read, msecs, opts = {})
       return if post_number.blank?
       msecs = 0 if msecs.to_i < 0
 
@@ -284,7 +284,10 @@ SQL
         if before_last_read < post_number
           # The user read at least one new post
           TopicTrackingState.publish_read(topic_id, post_number, user.id, after)
-          user.update_posts_read!(post_number - before_last_read, mobile: opts[:mobile])
+        end
+
+        if new_posts_read > 0
+          user.update_posts_read!(new_posts_read, mobile: opts[:mobile])
         end
 
         if before != after
@@ -300,7 +303,7 @@ SQL
         end
         TopicTrackingState.publish_read(topic_id, post_number, user.id, args[:new_status])
 
-        user.update_posts_read!(post_number, mobile: opts[:mobile])
+        user.update_posts_read!(new_posts_read, mobile: opts[:mobile])
 
         begin
           if user.staff?
@@ -315,7 +318,7 @@ SQL
             raise
           else
             opts[:retry] = true
-            update_last_read(user, topic_id, post_number, msecs, opts)
+            update_last_read(user, topic_id, post_number, new_posts_read, msecs, opts)
           end
         end
 

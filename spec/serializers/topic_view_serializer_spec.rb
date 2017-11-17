@@ -8,7 +8,7 @@ describe TopicViewSerializer do
     let(:topic2) { Fabricate(:topic) }
 
     before do
-      TopicUser.update_last_read(user, topic2.id, 0, 0)
+      TopicUser.update_last_read(user, topic2.id, 0, 0, 0)
     end
 
     describe 'when loading last chunk' do

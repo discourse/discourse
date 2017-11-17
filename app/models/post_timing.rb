@@ -1,3 +1,5 @@
+require_dependency 'archetype'
+
 class PostTiming < ActiveRecord::Base
   belongs_to :topic
   belongs_to :user
@@ -80,6 +82,7 @@ class PostTiming < ActiveRecord::Base
     max_time_per_post = MAX_READ_TIME_PER_BATCH if max_time_per_post > MAX_READ_TIME_PER_BATCH
 
     highest_seen = 1
+    new_posts_read = 0
 
     join_table = []
 
@@ -114,6 +117,7 @@ SQL
       result = exec_sql(sql)
       result.type_map = SqlBuilder.pg_type_map
       existing = Set.new(result.column_values(0))
+      new_posts_read = timings.size - existing.size if Topic.where(id: topic_id, archetype: Archetype.default).exists?
 
       timings.each_with_index do |(post_number, time), index|
         unless existing.include?(index)
@@ -132,7 +136,7 @@ SQL
 
     topic_time = max_time_per_post if topic_time > max_time_per_post
 
-    TopicUser.update_last_read(current_user, topic_id, highest_seen, topic_time, opts)
+    TopicUser.update_last_read(current_user, topic_id, highest_seen, new_posts_read, topic_time, opts)
 
     if total_changed > 0
       current_user.reload

@@ -102,7 +102,7 @@ describe PostMover do
 
     context "successfully moved" do
       before do
-        TopicUser.update_last_read(user, topic.id, p4.post_number, 0)
+        TopicUser.update_last_read(user, topic.id, p4.post_number, p4.post_number, 0)
         TopicLink.extract_from(p2)
       end
 
