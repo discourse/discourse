@@ -81,12 +81,11 @@ module Jobs
         return nil if raw_feed.blank?
 
         if SiteSetting.embed_username_key_from_feed.present?
-          FeedElementInstaller.install_rss_element(SiteSetting.embed_username_key_from_feed)
-          FeedElementInstaller.install_atom_element(SiteSetting.embed_username_key_from_feed)
+          FeedElementInstaller.install(SiteSetting.embed_username_key_from_feed, raw_feed)
         end
 
-        RSS::Parser.parse(raw_feed, false)
-      rescue RSS::NotWellFormedError
+        RSS::Parser.parse(raw_feed)
+      rescue RSS::NotWellFormedError, RSS::InvalidRSSError
         nil
       end
 
@@ -144,7 +143,7 @@ module Jobs
       end
 
       def author_username
-        @accessor.element_content(SiteSetting.embed_username_key_from_feed.to_sym)
+        @accessor.element_content(SiteSetting.embed_username_key_from_feed.sub(':', '_'))
       end
 
       def default_user

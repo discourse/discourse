@@ -44,7 +44,7 @@ describe Jobs::PollFeed do
 
   describe '#poll_feed' do
     let(:embed_by_username) { 'eviltrout' }
-    let(:embed_username_key_from_feed) { 'username' }
+    let(:embed_username_key_from_feed) { 'discourse:username' }
     let!(:default_user) { Fabricate(:evil_trout) }
     let!(:feed_author) { Fabricate(:user, username: 'xrav3nz', email: 'hi@bye.com') }
 
