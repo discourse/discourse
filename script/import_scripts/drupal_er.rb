@@ -14,25 +14,26 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
 
   def execute
 
-    # site_settings = {
-    #   # Basic Setup
-    #   enable_badges: false,
-    #   # Login
-    #   invite_only: true,
-    #   login_required: true,
-    #   # Posting
-    #   allow_duplicate_topic_titles: true,
-    #   allow_html_tables: true,
-    #   suppress_reply_directly_below: false,
-    #   suppress_reply_directly_above: false,
-    #   # Email
-    #   disable_emails: true,
-    #   # Plugins
-    #   discourse_narrative_bot_enabled: false
-    # }
-    # site_settings.each { |key, value| SiteSetting.set(key, value) }
+    site_settings = {
+      # Basic Setup
+      enable_badges: false,
+      # Login
+      invite_only: true,
+      login_required: true,
+      # Posting
+      allow_duplicate_topic_titles: true,
+      allow_html_tables: true,
+      suppress_reply_directly_below: false,
+      suppress_reply_directly_above: false,
+      # Email
+      disable_emails: true,
+      # Plugins
+      discourse_narrative_bot_enabled: false
+    }
+    site_settings.each { |key, value| SiteSetting.set(key, value) }
 
 
+    # NOTE: This was used for testing the import script.
     # if Rails.env.development?
     #   # User.where.not("email = 'admin@example.com' or id = -1 or id = -2").delete_all
     #   # UserCustomField.delete_all
@@ -46,16 +47,17 @@ class ImportScripts::DrupalER < ImportScripts::Drupal
     # end
 
 
-    # import_users
-    # import_categories
-    # import_topics
-    # import_replies
-    # import_likes
-    # import_tags
-    # create_permalinks
-    # normalize_urls
-    # post_process_posts
+    import_users
+    import_categories
+    import_topics
+    import_replies
+    import_likes
+    import_tags
+    create_permalinks
+    normalize_urls
+    post_process_posts
 
+    
     # import_taxonomy_tags
     # import_taxonomy_taggings
 
