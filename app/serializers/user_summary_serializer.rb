@@ -32,6 +32,7 @@ class UserSummarySerializer < ApplicationSerializer
 
   attributes :likes_given,
              :likes_received,
+             :topics_entered,
              :posts_read_count,
              :days_visited,
              :topic_count,
