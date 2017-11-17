@@ -291,7 +291,7 @@ createWidget('timeline-footer-controls', {
 
   html(attrs) {
     const controls = [];
-    const { currentUser, fullScreen, topic } = attrs;
+    const { currentUser, fullScreen, topic, notificationLevel } = attrs;
 
     if (currentUser && !fullScreen) {
       if (topic.get('details.can_create_post')) {
@@ -315,11 +315,10 @@ createWidget('timeline-footer-controls', {
 
     if (currentUser) {
       controls.push(new ComponentConnector(this,
-        'topic-notifications-button',
+        'topic-notifications-options',
         {
-          notification_level: topic.get("details.notification_level"),
+          value: notificationLevel,
           topic,
-          appendReason: false,
           showFullTitle: false
         }
       ));

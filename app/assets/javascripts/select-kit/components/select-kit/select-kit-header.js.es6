@@ -6,8 +6,15 @@ export default Ember.Component.extend({
   classNameBindings: ["isFocused"],
   attributeBindings: [
     "dataName:data-name",
+    "tabindex",
+    "ariaLabel:aria-label",
+    "ariaHasPopup:aria-haspopup",
     "title"
   ],
+
+  ariaHasPopup: true,
+
+  ariaLabel: Ember.computed.alias("title"),
 
   name: Ember.computed.alias("computedContent.name"),
 

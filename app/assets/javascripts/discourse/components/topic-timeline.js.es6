@@ -12,6 +12,7 @@ export default MountWidget.extend(Docking, {
   buildArgs() {
     let attrs =  {
       topic: this.get('topic'),
+      notificationLevel: this.get('notificationLevel'),
       topicTrackingState: this.topicTrackingState,
       enteredIndex: this.get('enteredIndex'),
       dockAt: this.dockAt,
