@@ -47,6 +47,8 @@ class EmailCook
 
     quote_buffer = ""
     text.each_line do |line|
+      # replace indentation with non-breaking spaces
+      line.sub!(/^\s{2,}/) { |s| "\u00A0" * s.length }
 
       if line =~ /^\s*>/
         in_quote = true
