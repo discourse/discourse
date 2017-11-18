@@ -13,10 +13,11 @@ module ImportScripts::Mbox
       @database = Database.new(@settings.data_dir, @settings.batch_size)
     end
 
-    def change_site_settings
-      super
-
-      SiteSetting.enable_staged_users = true
+    def get_site_settings_for_import
+      settings = super
+      settings[:enable_staged_users] = true
+      settings[:incoming_email_prefer_html] = @settings.prefer_html
+      settings
     end
 
     protected
@@ -120,7 +121,7 @@ module ImportScripts::Mbox
       when Email::Receiver::formats[:markdown]
         body = email_body
         body << attachment_html if attachment_html.present?
-        body << elided if elided.present?
+        body << Email::Receiver.elided_html(elided) if elided.present?
       when Email::Receiver::formats[:plaintext]
         body =  %|[plaintext]\n#{escape_tags(email_body)}\n[/plaintext]|
         body << %|\n[attachments]\n#{escape_tags(attachment_html)}\n[/attachments]| if attachment_html.present?
