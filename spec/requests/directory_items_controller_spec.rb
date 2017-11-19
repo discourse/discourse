@@ -3,7 +3,6 @@ require 'rails_helper'
 describe DirectoryItemsController do
   let!(:user) { Fabricate(:user) }
 
-
   it "requires a `period` param" do
     expect do
       get '/directory_items.json'
