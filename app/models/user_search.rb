@@ -9,6 +9,7 @@ class UserSearch
     @topic_id = opts[:topic_id]
     @topic_allowed_users = opts[:topic_allowed_users]
     @searching_user = opts[:searching_user]
+    @include_staged_users = opts[:include_staged_users] || false
     @limit = opts[:limit] || 20
     @group = opts[:group]
     @guardian = Guardian.new(@searching_user)
@@ -16,7 +17,8 @@ class UserSearch
   end
 
   def scoped_users
-    users = User.where(active: true, staged: false)
+    users = User.where(active: true)
+    users = users.where(staged: false) unless @include_staged_users
 
     if @group
       users = users.where('users.id IN (
