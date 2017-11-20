@@ -169,10 +169,14 @@ class StaffActionLogger
 
   def log_user_suspend(user, reason, opts = {})
     raise Discourse::InvalidParameters.new(:user) unless user
+
+    details = (reason || '').dup
+    details << "\n\n#{opts[:message]}" if opts[:message].present?
+
     args = params(opts).merge(
       action: UserHistory.actions[:suspend_user],
       target_user_id: user.id,
-      details: reason
+      details: details
     )
     args[:post_id] = opts[:post_id] if opts[:post_id]
     UserHistory.create(args)
@@ -275,6 +279,7 @@ class StaffActionLogger
 
   def log_silence_user(user, opts = {})
     raise Discourse::InvalidParameters.new(:user) unless user
+
     UserHistory.create(
       params(opts).merge(
         action: UserHistory.actions[:silence_user],

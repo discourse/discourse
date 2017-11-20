@@ -192,7 +192,7 @@ describe Admin::UsersController do
         log = UserHistory.where(target_user_id: user.id).order('id desc').first
         expect(log).to be_present
         expect(log.details).to match(/short reason/)
-        expect(log.context).to match(/long reason/)
+        expect(log.details).to match(/long reason/)
       end
 
       it "also revoke any api keys" do
@@ -610,6 +610,7 @@ describe Admin::UsersController do
       end
 
       it "will send a message if provided" do
+        Jobs.stubs(:enqueue)
         Jobs.expects(:enqueue).with(
           :critical_user_email,
           has_entries(

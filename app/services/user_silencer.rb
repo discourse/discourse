@@ -21,18 +21,17 @@ class UserSilencer
       if @user.save
         message_type = @opts[:message] || :silenced_by_staff
 
-        if @opts[:context].present?
-          context = @opts[:context]
-        else
-          context = "#{message_type}: '#{post.topic&.title rescue ''}' #{@opts[:reason]}"
-          SystemMessage.create(@user, message_type)
-        end
+        details = (@opts[:reason] || '').dup
+        details << "\n\n#{@opts[:message_body]}" if @opts[:message_body].present?
+
+        context = "#{message_type}: '#{post.topic&.title rescue ''}' #{@opts[:reason]}"
+        SystemMessage.create(@user, message_type)
 
         if @by_user
           @user_history = StaffActionLogger.new(@by_user).log_silence_user(
             @user,
             context: context,
-            details: @opts[:reason]
+            details: details
           )
         end
         return true
