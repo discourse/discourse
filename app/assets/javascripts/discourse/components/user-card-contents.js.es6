@@ -98,6 +98,15 @@ export default Ember.Component.extend(CleansUp, {
     return durationTiny(recentTimeReadSeconds);
   },
 
+  @computed('showRecentTimeRead', 'user.time_read', 'recentTimeRead')
+  timeReadTooltip(showRecent, timeRead, recentTimeRead) {
+    if (showRecent) {
+      return I18n.t('time_read_recently_tooltip', {time_read: durationTiny(timeRead), recent_time_read: recentTimeRead});
+    } else {
+      return I18n.t('time_read_tooltip', {time_read: durationTiny(timeRead)});
+    }
+  },
+
   _show(username, $target) {
     // No user card for anon
     if (this.siteSettings.hide_user_profiles_from_public && !this.currentUser) {
