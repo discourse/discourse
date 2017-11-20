@@ -12,6 +12,8 @@ describe ::Presence::PresencesController do
   let(:post1) { Fabricate(:post) }
   let(:post2) { Fabricate(:post) }
 
+  let(:manager) { ::Presence::PresenceManager }
+
   after do
     $redis.del("presence:topic:#{post1.topic.id}")
     $redis.del("presence:topic:#{post2.topic.id}")
@@ -114,6 +116,24 @@ describe ::Presence::PresencesController do
       end
 
       expect(messages.count).to eq(3)
+    end
+
+    it 'cleans up old users when requested' do
+      freeze_time Time.zone.now do
+        manager.add('topic', post1.topic.id, user2.id)
+      end
+
+      # Anything older than 20 seconds should be cleaned up
+      freeze_time 30.seconds.from_now do
+        post '/presence/publish.json', params: {
+          current: { compose_state: 'open', action: 'reply', topic_id: post1.topic.id }, response_needed: true
+        }
+
+        data = JSON.parse(response.body)
+
+        expect(data['users'].length).to eq(1)
+      end
+
     end
 
     describe 'when post has been deleted' do
