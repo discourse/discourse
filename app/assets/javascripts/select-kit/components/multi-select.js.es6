@@ -239,7 +239,6 @@ export default SelectKitComponent.extend({
       this.get("computedValues").pushObject(computedContentItem.value);
       Ember.run.next(() => this.mutateAttributes());
       Ember.run.schedule("afterRender", () => this.didSelect(computedContentItem));
-      Ember.run.schedule("afterRender", () => this.didSelect(computedContentItem));
     },
 
     onDeselect(rowComputedContentItems) {
