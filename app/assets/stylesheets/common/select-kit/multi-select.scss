@@ -70,7 +70,6 @@
       margin: 0;
       padding: 5px 6px;
       flex: 1;
-      min-height: 38px;
       box-sizing: border-box;
 
       li {
@@ -79,6 +78,8 @@
         padding: 0 5px;
         margin: 2px 0px;
         border: 1px solid transparent;
+        align-items: center;
+        justify-content: space-between;
       }
 
       .filter {
@@ -86,7 +87,8 @@
         justify-content: flex-start;
         white-space: nowrap;
         min-width: 50px;
-        padding: 0;
+        padding-left: 0;
+        padding-right: 0;
 
         .filter-input, .filter-input:focus {
           border: none;
@@ -133,12 +135,13 @@
         background-color: $primary-low;
         cursor: pointer;
         outline: none;
-        padding: 0;
+        padding-left: 0;
+        padding-right: 0;
         line-height: normal;
 
         .name {
           padding: 0 5px;
-          line-height: 22px
+          line-height: 18px
         }
 
         &.is-highlighted {

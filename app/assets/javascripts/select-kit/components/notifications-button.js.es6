@@ -14,13 +14,11 @@ export default DropdownSelectBoxComponent.extend({
   filterable: false,
   rowComponent: "notifications-button/notifications-button-row",
   allowInitialValueMutation: false,
-
   i18nPrefix: "",
   i18nPostfix: "",
 
   @computed("iconForSelectedDetails")
   headerIcon(iconForSelectedDetails) { return iconForSelectedDetails; },
-
 
   @computed("selectedDetails.icon", "selectedDetails.key")
   iconForSelectedDetails(icon, key) {
@@ -30,7 +28,7 @@ export default DropdownSelectBoxComponent.extend({
   computeHeaderContent() {
     let content = this.baseHeaderComputedContent();
     content.name = I18n.t(`${this.get("i18nPrefix")}.${this.get("selectedDetails.key")}.title`);
-    content.hasSelection = this.get("selectedComputedContent").length >= 1;
+    content.hasSelection = this.get("hasSelection");
     return content;
   },
 

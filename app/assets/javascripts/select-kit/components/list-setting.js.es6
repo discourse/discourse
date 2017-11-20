@@ -29,11 +29,18 @@ export default MultiSelectComponent.extend({
     }  else {
       content = this.get("choices");
     }
-    return Ember.makeArray(content);
+
+    return Ember.makeArray(content).filter(c => !Ember.isEmpty(c));
+  },
+
+  mutateValues(values) {
+    this.set("settingValue", values.join(this.get("tokenSeparator")));
   },
 
   computeValues() {
-    return this.get("settingValue").split(this.get("tokenSeparator"));
+    return this.get("settingValue")
+               .split(this.get("tokenSeparator"))
+               .filter(c => !Ember.isEmpty(c));
   },
 
   didComputeAttributes() {

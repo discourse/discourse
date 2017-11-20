@@ -75,11 +75,7 @@ export default Ember.Mixin.create({
   expand(event) {
     if (this.get("isExpanded") === true) return;
     this.setProperties({ isExpanded: true, renderedBodyOnce: true, isFocused: true });
-<<<<<<< HEAD:app/assets/javascripts/select-kit/mixins/dom-helpers.js.es6
     this.focus(event);
-=======
-    this.focus();
->>>>>>> 6196291a1906d279dc57d7fe3572ec7d11a774df:app/assets/javascripts/select-kit/mixins/dom-helpers.js.es6
     this.autoHighlight();
   },
 

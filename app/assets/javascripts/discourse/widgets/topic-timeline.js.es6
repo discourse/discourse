@@ -320,7 +320,8 @@ createWidget('timeline-footer-controls', {
           value: notificationLevel,
           topic,
           showFullTitle: false
-        }
+        },
+        ["value"]
       ));
     }
 
