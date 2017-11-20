@@ -10,13 +10,28 @@ describe TranslationOverride do
       describe 'when interpolation keys are missing' do
         it 'should not be valid' do
           translation_override = TranslationOverride.upsert!(
-            I18n.locale, 'some_key', '%{first}'
+            I18n.locale, 'some_key', '%{key} %{omg}'
           )
 
           expect(translation_override.errors.full_messages).to include(I18n.t(
-            'activerecord.errors.models.translation_overrides.attributes.value.missing_interpolation_keys',
-            keys: 'second'
+            'activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys',
+            keys: 'key, omg'
           ))
+        end
+
+        context 'when custom interpolation keys are included' do
+          it 'should be valid' do
+            translation_override = TranslationOverride.upsert!(
+              I18n.locale,
+              'some_key',
+              "#{described_class::CUSTOM_INTERPOLATION_KEYS_WHITELIST['user_notifications.user_'].join(", ")} %{something}"
+            )
+
+            expect(translation_override.errors.full_messages).to include(I18n.t(
+              'activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys',
+              keys: 'something'
+            ))
+          end
         end
       end
     end
