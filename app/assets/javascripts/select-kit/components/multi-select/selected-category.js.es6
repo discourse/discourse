@@ -3,7 +3,7 @@ import computed from "ember-addons/ember-computed-decorators";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 
 export default SelectedNameComponent.extend({
-  classNames: "selected-color",
+  classNames: "selected-category",
   layoutName: "select-kit/templates/components/multi-select/selected-category",
 
 

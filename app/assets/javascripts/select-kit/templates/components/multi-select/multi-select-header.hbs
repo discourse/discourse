@@ -2,7 +2,7 @@
   {{#each computedContent.selectedComputedContents as |selectedComputedContent|}}
     {{component selectedNameComponent onDeselect=onDeselect content=selectedComputedContent}}
   {{/each}}
-  <li class="filter">
+  <li class="filter choice">
     {{component "select-kit/select-kit-filter"
       onFilter=onFilter
       shouldDisplayFilter=shouldDisplayFilter

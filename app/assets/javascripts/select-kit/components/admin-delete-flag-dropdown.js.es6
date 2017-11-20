@@ -54,8 +54,8 @@ export default DropdownSelectBox.extend({
   },
 
   mutateValue(value) {
-    const computedContent = this.get("computedContent").findBy("value", value);
-    Ember.get(computedContent, "originalContent.action")();
+    const computedContentItem = this.get("computedContent").findBy("value", value);
+    Ember.get(computedContentItem, "originalContent.action")();
   },
 
   actions: {

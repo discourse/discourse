@@ -7,7 +7,7 @@ export default Ember.Component.extend({
     "content.value:data-value",
     "guid:data-guid"
   ],
-  classNames: "selected-name",
+  classNames: ["selected-name", "choice"],
   classNameBindings: ["isHighlighted", "isLocked"],
   layoutName: "select-kit/templates/components/multi-select/selected-name",
   tagName: "li",

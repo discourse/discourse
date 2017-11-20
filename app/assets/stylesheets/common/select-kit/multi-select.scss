@@ -72,7 +72,7 @@
       flex: 1;
       box-sizing: border-box;
 
-      li {
+      .choice {
         display: inline-flex;
         box-sizing: border-box;
         padding: 0 5px;
@@ -141,7 +141,7 @@
 
         .name {
           padding: 0 5px;
-          line-height: 18px
+          line-height: 18px;
         }
 
         &.is-highlighted {

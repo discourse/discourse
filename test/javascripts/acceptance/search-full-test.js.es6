@@ -136,10 +136,13 @@ QUnit.test("update category through advanced search ui", assert => {
   visit("/search");
   fillIn('.search input.full-page-search', 'none');
   click('.search-advanced-btn');
-  fillIn('.search-advanced-options .category-selector', 'faq');
-  click('.search-advanced-options .category-selector');
-  keyEvent('.search-advanced-options .category-selector', 'keydown', 8);
-  keyEvent('.search-advanced-options .category-selector', 'keydown', 9);
+
+  expandSelectKit('.search-advanced-options .category-chooser');
+  selectKitFillInFilter('faq', { selector: '.search-advanced-options .category-chooser' });
+
+  andThen(() => {
+    selectKit('.search-advanced-options .category-chooser').keyboard.enter();
+  });
 
   andThen(() => {
     assert.ok(exists('.search-advanced-options .badge-category:contains("faq")'), 'has "faq" populated');
