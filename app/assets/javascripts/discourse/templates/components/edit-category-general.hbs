@@ -22,7 +22,9 @@
         {{category-chooser
           none="category.none"
           value=category.parent_category_id
+          excludeCategoryId=category.id
           categories=parentCategories
+          allowSubCategories=false
           allowUncategorized=false}}
       {{/if}}
     </section>
