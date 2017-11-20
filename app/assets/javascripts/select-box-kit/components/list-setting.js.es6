@@ -21,22 +21,22 @@ export default MultiComboBoxComponent.extend({
     }
   },
 
-  transformInputs() {
+  computeContent() {
     let content;
-    const values = this.get("settingValue").split(this.get("tokenSeparator"));
     if (Ember.isNone(this.get("choices"))) {
-      content = values;
+      content = this.get("settingValue").split(this.get("tokenSeparator"));;
     }  else {
       content = this.get("choices");
     }
-
-    console.log("transformInputs", content, Ember.makeArray(content))
-    this.send("onReceiveContent", Ember.makeArray(content));
-    this.send("onReceiveValues", values);
+    return Ember.makeArray(content);
   },
 
-  didLoadContent(content) {
-    if (Ember.isEmpty(content)) {
+  computeValues() {
+    return this.get("settingValue").split(this.get("tokenSeparator"));
+  },
+
+  didComputeAttributes() {
+    if (Ember.isEmpty(this.get("content"))) {
       this.setProperties({ rowComponent: null, noContentLabel: null });
     }
   },

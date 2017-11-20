@@ -13,12 +13,11 @@ export default SelectBoxKitComponent.extend({
   computeHeaderContent() {
     let content = this.baseHeaderComputedContent();
 
-    const noneName = this.get("none.name");
-    if (!Ember.isPresent(content.name) && !Ember.isNone(noneName)) {
+    const noneName = this.get("noneRowComputedContent.name");
+    if (Ember.isEmpty(content.name) && !Ember.isNone(noneName)) {
       content.name = noneName;
     }
-
-    content.hasSelection = this.get("selectedComputedContent").length >= 1;
+    content.hasSelection = !Ember.isEmpty(this.get("selectedComputedContent"));
 
     return content;
   },
