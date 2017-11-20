@@ -1016,7 +1016,8 @@ en:
     last_post: Posted
     time_read: Read
     time_read_recently: '%{time_read} recently'
-    time_read_recently_tooltip: '%{time_read} read time in the last 60 days'
+    time_read_tooltip: '%{time_read} total time read'
+    time_read_recently_tooltip: '%{time_read} total time read (%{recent_time_read} in the last 60 days)'
     last_reply_lowercase: last reply
     replies_lowercase:
       one: reply
