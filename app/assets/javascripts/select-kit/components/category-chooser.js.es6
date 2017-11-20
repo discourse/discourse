@@ -10,9 +10,10 @@ export default ComboBoxComponent.extend({
   classNames: "category-chooser",
   filterable: true,
   castInteger: true,
-  allowUncategorized: null,
+  allowUncategorized: false,
   rowComponent: "category-row",
   noneRowComponent: "none-category-row",
+  allowSubCategories: true,
 
   filterComputedContent(computedContent, computedValue, filter) {
     if (isEmpty(filter)) { return computedContent; }
@@ -72,12 +73,19 @@ export default ComboBoxComponent.extend({
 
     return categories.filter(c => {
       const categoryId = this.valueForContentItem(c);
+
       if (scopedCategoryId && categoryId !== scopedCategoryId && get(c, "parent_category_id") !== scopedCategoryId) {
         return false;
       }
+
+      if (this.get("allowSubCategories") === false && c.get("parentCategory") ) {
+        return false;
+      }
+
       if ((this.get("allowUncategorized") === false && get(c, "isUncategorizedCategory")) || excludeCategoryId === categoryId) {
         return false;
       }
+
       return get(c, "permission") === PermissionType.FULL;
     });
   }
