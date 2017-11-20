@@ -52,6 +52,11 @@ export default SelectKitComponent.extend({
     }
   },
 
+  @computed("filter", "computedValues")
+  shouldDisplayCreateRow(filter, computedValues) {
+    return this._super() && !computedValues.includes(filter);
+  },
+
   _beforeWillComputeValues(values) {
     return values.map(v => this._castInteger(v === "" ? null : v));
   },
@@ -227,7 +232,8 @@ export default SelectKitComponent.extend({
     onSelect(computedContentItem) {
       this.willSelect(computedContentItem);
       this.get("computedValues").pushObject(computedContentItem.value);
-      this.mutateAttributes();
+      Ember.run.next(() => this.mutateAttributes());
+      Ember.run.schedule("afterRender", () => this.didSelect(computedContentItem));
       Ember.run.schedule("afterRender", () => this.didSelect(computedContentItem));
     },
 
@@ -237,7 +243,7 @@ export default SelectKitComponent.extend({
       this.willDeselect(rowComputedContentItems);
       this.get("computedValues").removeObjects(rowComputedContentItems.map(r => r.value));
       this.get("computedContent").removeObjects(generatedComputedContents);
-      this.mutateAttributes();
+      Ember.run.next(() => this.mutateAttributes());
       Ember.run.schedule("afterRender", () => this.didDeselect(rowComputedContentItems));
     }
   }

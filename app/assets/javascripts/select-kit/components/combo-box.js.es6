@@ -13,13 +13,7 @@ export default SingleSelectComponent.extend({
 
   computeHeaderContent() {
     let content = this.baseHeaderComputedContent();
-
-    const noneName = this.get("noneRowComputedContent.name");
-    if (Ember.isEmpty(content.name) && !Ember.isNone(noneName)) {
-      content.name = noneName;
-    }
-    content.hasSelection = !Ember.isEmpty(this.get("selectedComputedContent"));
-
+    content.hasSelection = this.get("hasSelection");
     return content;
   },
 

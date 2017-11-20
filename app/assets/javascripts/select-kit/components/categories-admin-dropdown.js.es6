@@ -1,5 +1,4 @@
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
-import { on } from "ember-addons/ember-computed-decorators";
 
 export default DropdownSelectBoxComponent.extend({
   pluginApiIdentifiers: ["categories-admin-dropdown"],
@@ -10,8 +9,7 @@ export default DropdownSelectBoxComponent.extend({
 
   autoHighlight() {},
 
-  @on("init")
-  _setContent() {
+  computeContent() {
     const items = [
       {
         id: "create",
@@ -31,7 +29,7 @@ export default DropdownSelectBoxComponent.extend({
       });
     }
 
-    this.set("content", items);
+    return items;
   },
 
   mutateValue(value) {
