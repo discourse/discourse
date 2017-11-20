@@ -1,0 +1,13 @@
+<ul class="choices">
+  {{#each selectedContent as |selectedContent|}}
+    {{component selectedNameComponent onDeselect=onDeselect content=selectedContent}}
+  {{/each}}
+  <li class="filter">
+    {{component "select-box-kit/select-box-kit-filter"
+      onFilter=onFilter
+      shouldDisplayFilter=shouldDisplayFilter
+      isFocused=isFocused
+      filter=filter
+    }}
+  </li>
+</ul>
