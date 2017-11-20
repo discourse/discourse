@@ -1,8 +1,6 @@
-{{#if icons}}
-  {{{icons}}}
-{{/if}}
+{{#each icons as |icon|}} {{d-icon icon}} {{/each}}
 
-<span class="selected-name" title={{name}}>
+<span class="selected-name" title={{title}}>
   {{{name}}}
 </span>
 
