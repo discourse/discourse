@@ -1374,6 +1374,12 @@ table.api-keys {
 }
 
 .log-details-modal {
+
+  pre {
+    white-space: pre-wrap;
+    max-height: 250px;
+  }
+
   .modal-tab {
     width: 95%;
   }

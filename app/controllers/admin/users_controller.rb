@@ -67,7 +67,7 @@ class Admin::UsersController < Admin::AdminController
       user_history = StaffActionLogger.new(current_user).log_user_suspend(
         @user,
         params[:reason],
-        context: message,
+        message: message,
         post_id: params[:post_id]
       )
     end
@@ -282,7 +282,7 @@ class Admin::UsersController < Admin::AdminController
       current_user,
       silenced_till: params[:silenced_till],
       reason: params[:reason],
-      context: message,
+      message_body: message,
       keep_posts: true
     )
     if silencer.silence && message.present?
