@@ -1,9 +1,6 @@
 {{#if template}}
   {{{template}}}
 {{else}}
-  {{#if icon}}
-    {{{icon}}}
-  {{/if}}
-
+  {{#each icons as |icon|}} {{d-icon icon}} {{/each}}
   <span class="name">{{computedContent.name}}</span>
 {{/if}}

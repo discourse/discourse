@@ -1,7 +1,6 @@
 import ComboBoxComponent from "select-kit/components/combo-box";
 
 export default ComboBoxComponent.extend({
-  headerText: "topic.controls",
   classNames: "topic-footer-mobile-dropdown",
   filterable: false,
   autoFilterable: false,
@@ -9,7 +8,7 @@ export default ComboBoxComponent.extend({
 
   computeHeaderContent() {
     let content = this.baseHeaderComputedContent();
-    content.name = I18n.t(this.get("headerText"));
+    content.name = I18n.t("topic.controls");
     return content;
   },
 
