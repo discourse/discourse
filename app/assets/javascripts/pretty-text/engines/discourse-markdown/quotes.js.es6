@@ -3,13 +3,13 @@ import { performEmojiUnescape } from 'pretty-text/emoji';
 const rule = {
   tag: 'quote',
 
-  before: function(state, tagInfo) {
+  before(state, tagInfo) {
 
     const attrs = tagInfo.attrs;
     let options = state.md.options.discourse;
 
     let quoteInfo = attrs['_default'];
-    let username, postNumber, topicId, avatarImg, primaryGroupName, full;
+    let username, postNumber, topicId, avatarImg, primaryGroupName, full, displayName;
 
     if (quoteInfo) {
       let split = quoteInfo.split(/\,\s*/);
@@ -48,6 +48,12 @@ const rule = {
     } else if (options.lookupPrimaryUserGroup) {
       // server-side, we need to lookup the primary user group from the username
       primaryGroupName = options.lookupPrimaryUserGroup(username);
+    }
+
+    if (options.formatUsername) {
+      displayName = options.formatUsername(username);
+    } else {
+      displayName = username;
     }
 
     let token   = state.push('bbcode_open', 'aside', 1);
@@ -118,7 +124,7 @@ const rule = {
         }
       } else {
         token = state.push('text', '', 0);
-        token.content = ` ${username}:`;
+        token.content = ` ${displayName}:`;
       }
 
       token = state.push('quote_header_close', 'div', -1);

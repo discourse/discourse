@@ -12,7 +12,9 @@ import { findRawTemplate } from 'discourse/lib/raw-templates';
 import { tinyAvatar,
          displayErrorForUpload,
          getUploadMarkdown,
-         validateUploadedFiles } from 'discourse/lib/utilities';
+         validateUploadedFiles,
+         formatUsername
+} from 'discourse/lib/utilities';
 import { cacheShortUploadUrl, resolveAllShortUrls } from 'pretty-text/image-short-url';
 
 export default Ember.Component.extend({
@@ -30,6 +32,8 @@ export default Ember.Component.extend({
   markdownOptions() {
     return {
       previewing: true,
+
+      formatUsername,
 
       lookupAvatarByPostNumber: (postNumber, topicId) => {
         const topic = this.get('topic');
