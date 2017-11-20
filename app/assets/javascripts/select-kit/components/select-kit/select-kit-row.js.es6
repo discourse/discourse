@@ -1,4 +1,3 @@
-import { iconHTML } from 'discourse-common/lib/icon-library';
 import { on } from 'ember-addons/ember-computed-decorators';
 import computed from 'ember-addons/ember-computed-decorators';
 const { run, isPresent } = Ember;
@@ -17,10 +16,8 @@ export default Ember.Component.extend(UtilsMixin, {
   ],
   classNameBindings: ["isHighlighted", "isSelected"],
 
-  @computed("computedContent.originalContent.title", "computedContent.name")
-  title(title, name) {
-    return title || name;
-  },
+  @computed("computedContent.title", "computedContent.name")
+  title(title, name) { return title || name; },
 
   @computed("templateForRow")
   template(templateForRow) { return templateForRow(this); },
@@ -39,13 +36,12 @@ export default Ember.Component.extend(UtilsMixin, {
     if (isPresent(hoverDebounce)) { run.cancel(hoverDebounce); }
   },
 
-  @computed("computedContent.originalContent.icon", "computedContent.originalContent.iconClass")
-  icon(icon, cssClass) {
-    if (icon) {
-      return iconHTML(icon, { class: cssClass });
-    }
-
-    return null;
+  @computed("computedContent.icon", "computedContent.icons", "computedContent.originalContent.icon")
+  icons(icon, icons, originalIcon) {
+    return Ember.makeArray(icon)
+            .concat(icons)
+            .concat(Ember.makeArray(originalIcon))
+            .filter(i => !Ember.isEmpty(i));
   },
 
   mouseEnter() {
