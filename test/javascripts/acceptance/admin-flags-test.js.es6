@@ -82,11 +82,11 @@ QUnit.test("flagged posts - delete + defer", assert => {
   visit("/admin/flags/active");
 
   andThen(() => {
-    expandSelectBoxKit('.delete-flag');
+    expandSelectKit('.delete-flag');
   });
 
   andThen(() => {
-    selectBoxKitSelectRow('delete-defer', { selector: '.delete-flag'});
+    selectKitSelectRow('delete-defer', { selector: '.delete-flag'});
   });
 
   andThen(() => {
@@ -98,11 +98,11 @@ QUnit.test("flagged posts - delete + agree", assert => {
   visit("/admin/flags/active");
 
   andThen(() => {
-    expandSelectBoxKit('.delete-flag');
+    expandSelectKit('.delete-flag');
   });
 
   andThen(() => {
-    selectBoxKitSelectRow('delete-agree', { selector: '.delete-flag'});
+    selectKitSelectRow('delete-agree', { selector: '.delete-flag'});
   });
 
   andThen(() => {
@@ -114,11 +114,11 @@ QUnit.test("flagged posts - delete + deleteSpammer", assert => {
   visit("/admin/flags/active");
 
   andThen(() => {
-    expandSelectBoxKit('.delete-flag');
+    expandSelectKit('.delete-flag');
   });
 
   andThen(() => {
-    selectBoxKitSelectRow('delete-spammer', { selector: '.delete-flag'});
+    selectKitSelectRow('delete-spammer', { selector: '.delete-flag'});
   });
 
   click('.confirm-delete');

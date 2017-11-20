@@ -29,7 +29,6 @@ componentTest('updating the content refreshes the list', {
     andThen(() => this.set("pinned", false));
 
     andThen(() => {
-      console.log("is it unpunned")
       assert.equal(selectKit().header.name(), "Unpinned");
     });
   }

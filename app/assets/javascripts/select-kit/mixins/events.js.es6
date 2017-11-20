@@ -75,10 +75,22 @@ export default Ember.Mixin.create({
         }
 
         Ember.run.schedule("afterRender", () => {
-          this.$filterInput()
-              .focus()
-              .val(this.$filterInput().val() + String.fromCharCode(keyCode));
+          let newVal = this.$filterInput().val();
+
+          const start = this.$filterInput()[0].selectionStart;
+          const end = this.$filterInput()[0].selectionEnd;
+          if (!Ember.isNone(start) && !Ember.isNone(end)) {
+            newVal = newVal.substr(0, start) +
+              String.fromCharCode(keyCode) +
+              newVal.substr(end, newVal.length);
+          } else {
+            newVal = newVal + String.fromCharCode(keyCode);
+          }
+
+          this.$filterInput().focus().val(newVal);
         });
+
+        return false;
       });
 
     this.$filterInput()
@@ -126,7 +138,7 @@ export default Ember.Mixin.create({
     const $rows = this.$rows();
 
     if (this.get("isExpanded") === false) {
-      this.expand();
+      this.expand(event);
 
       if (this.$selectedRow().length === 1) {
         this._highlightRow(this.$selectedRow());

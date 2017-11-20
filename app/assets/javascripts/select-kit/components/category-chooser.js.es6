@@ -75,7 +75,7 @@ export default ComboBoxComponent.extend({
       if (scopedCategoryId && categoryId !== scopedCategoryId && get(c, "parent_category_id") !== scopedCategoryId) {
         return false;
       }
-      if (get(c, "isUncategorizedCategory") || excludeCategoryId === categoryId) {
+      if ((this.get("allowUncategorized") === false && get(c, "isUncategorizedCategory")) || excludeCategoryId === categoryId) {
         return false;
       }
       return get(c, "permission") === PermissionType.FULL;

@@ -19,6 +19,22 @@ componentTest('default', {
   }
 });
 
+componentTest('with emptry string as value', {
+  template: '{{list-setting settingValue=settingValue}}',
+
+  beforeEach() {
+    this.set('settingValue', '');
+  },
+
+  test(assert) {
+    expandSelectKit();
+
+    andThen(() => {
+      assert.equal(selectKit().header.el.find(".selected-name").length, 0);
+    });
+  }
+});
+
 componentTest('with only setting value', {
   template: '{{list-setting settingValue=settingValue}}',
 

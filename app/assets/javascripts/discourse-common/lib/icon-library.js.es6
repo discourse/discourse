@@ -2,10 +2,10 @@ import { h } from 'virtual-dom';
 let _renderers = [];
 
 const REPLACEMENTS = {
-  'd-tracking': 'circle',
-  'd-muted': 'times-circle',
-  'd-regular': 'circle-o',
-  'd-watching': 'exclamation-circle',
+  'd-tracking': 'circle tracking',
+  'd-muted': 'times-circle muted',
+  'd-regular': 'circle-o regular',
+  'd-watching': 'exclamation-circle watching',
   'd-watching-first': 'dot-circle-o',
   'd-drop-expanded': 'caret-down',
   'd-drop-collapsed': 'caret-right',
