@@ -386,8 +386,9 @@ export default Ember.Controller.extend({
           const body = I18n.t('composer.group_mentioned', {
             group: "@" + group.name,
             count: group.user_count,
-            group_link: Discourse.getURL(`/group/${group.name}/members`)
+            group_link: Discourse.getURL(`/groups/${group.name}/members`)
           });
+
           this.appEvents.trigger('composer-messages:create', {
             extraClass: 'custom-body',
             templateName: 'custom-body',
