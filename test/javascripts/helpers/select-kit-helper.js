@@ -106,7 +106,7 @@ function selectKit(selector) { // eslint-disable-line no-unused-vars
       down: function(target) { createEvent(target, 40); },
       up: function(target) { createEvent(target, 38); },
       escape: function(target) { createEvent(target, 27); },
-      enter: function(target) { createEvent(target, 13, {type: 'keypress'}); },
+      enter: function(target) { createEvent(target, 13); },
       tab: function(target) { createEvent(target, 9); },
       backspace: function(target) { createEvent(target, 8); },
       selectAll: function(target) { createEvent(target, 65, {metaKey: true}); },

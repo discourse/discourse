@@ -123,10 +123,16 @@ export default Ember.Mixin.create({
     this._killEvent(event);
 
     const keyCode = event.keyCode || event.which;
-
-    if (this.get("isExpanded") === false) { this.expand(); }
-
     const $rows = this.$rows();
+
+    if (this.get("isExpanded") === false) {
+      this.expand();
+
+      if (this.$selectedRow().length === 1) {
+        this._highlightRow(this.$selectedRow());
+        return;
+      }
+    }
 
     if ($rows.length <= 0) { return; }
     if ($rows.length === 1) {
@@ -191,9 +197,12 @@ export default Ember.Mixin.create({
   _rowSelection($rows, nextIndex) {
     const highlightableValue = $rows.eq(nextIndex).attr("data-value");
     const $highlightableRow = this.$findRowByValue(highlightableValue);
+    this._highlightRow($highlightableRow);
+  },
 
+  _highlightRow($row) {
     Ember.run.schedule("afterRender", () => {
-      $highlightableRow.trigger("mouseover").focus();
+      $row.trigger("mouseover").focus();
       this.focus();
     });
   }
