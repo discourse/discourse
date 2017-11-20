@@ -45,13 +45,8 @@ class Admin::EmojisController < Admin::AdminController
   def destroy
     name = params.require(:id)
 
-    custom_emoji = CustomEmoji.find_by(name: name)
-    raise Discourse::InvalidParameters unless custom_emoji
-
-    CustomEmoji.transaction do
-      custom_emoji.upload.destroy!
-      custom_emoji.destroy!
-    end
+    # NOTE: the upload will automatically be removed by the 'clean_up_uploads' job
+    CustomEmoji.find_by(name: name)&.destroy!
 
     Emoji.clear_cache
 

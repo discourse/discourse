@@ -67,7 +67,7 @@ RSpec.describe Admin::EmojisController do
       expect do
         delete "/admin/customize/emojis/#{custom_emoji.name}.json",
           params: { name: 'test' }
-      end.to change { Upload.count }.by(-1).and change { CustomEmoji.count }.by(-1)
+      end.to change { CustomEmoji.count }.by(-1)
     end
   end
 end
