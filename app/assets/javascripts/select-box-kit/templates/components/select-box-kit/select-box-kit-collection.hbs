@@ -1,7 +1,7 @@
-{{#if none}}
-  {{#if selectedContent}}
+{{#if selectedComputedContent}}
+  {{#if noneRowComputedContent}}
     {{component noneRowComponent
-      content=none
+      computedContent=noneRowComputedContent
       templateForRow=templateForNoneRow
       highlightedValue=highlightedValue
       onClear=onClear
@@ -12,9 +12,9 @@
   {{/if}}
 {{/if}}
 
-{{#if createRowContent}}
+{{#if createRowComputedContent}}
   {{component createRowComponent
-    content=createRowContent
+    computedContent=createRowComputedContent
     templateForRow=templateForCreateRow
     highlightedValue=highlightedValue
     onHighlight=onHighlight

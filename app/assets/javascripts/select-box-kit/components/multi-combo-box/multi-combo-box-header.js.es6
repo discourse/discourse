@@ -25,6 +25,8 @@ export default SelectBoxKitHeaderComponent.extend({
     $filter.width(availableSpace - parentRightPadding * 4);
   },
 
-  @computed("selectedContent.[]")
-  names(selectedContent) { return selectedContent.map(sc => sc.name).join(","); }
+  @computed("computedContent.selectedComputedContents.[]")
+  names(selectedComputedContents) {
+    return Ember.makeArray(selectedComputedContents).map(sc => sc.name).join(",");
+  }
 });

@@ -1,4 +1,4 @@
-const { get, isNone } = Ember;
+const { get, isNone, guidFor, isPresent } = Ember;
 
 export default Ember.Mixin.create({
   _nameForContent(content) {
@@ -18,7 +18,7 @@ export default Ember.Mixin.create({
   },
 
   _castInteger(value) {
-    if (this.get("castInteger") === true && Ember.isPresent(value) && this._isNumeric(value)) {
+    if (this.get("castInteger") === true && isPresent(value) && this._isNumeric(value)) {
       return parseInt(value, 10);
     }
 
@@ -35,27 +35,18 @@ export default Ember.Mixin.create({
     }
   },
 
-  _contentForValue(value) {
-    return this.get("content").find(c => {
-      if (this._valueForContent(c) === value) { return true; }
-    });
-  },
-
-  _computedContentForValue(value) {
-    const searchedValue = value.toString();
+  _findComputedContentByGuid(guid) {
     return this.get("computedContent").find(c => {
-      if (c.value.toString() === searchedValue) { return true; }
+      return guidFor(c) === guid;
     });
   },
 
-  _originalValueForValue(value) {
-    if (isNone(value)) { return null; }
-    if (value === this.noneValue) { return this.noneValue; }
-
-    const computedContent = this._computedContentForValue(value);
-
-    if (isNone(computedContent)) { return value; }
-
-    return get(computedContent.originalContent, this.get("valueAttribute"));
-  },
+  _filterRemovableComputedContents(computedContent) {
+    return computedContent.filter(c => {
+      if (!this.get("_initialValues").includes(c.value)) {
+        return true;
+      }
+      return false;
+    });
+  }
 });

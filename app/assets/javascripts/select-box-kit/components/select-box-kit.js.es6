@@ -55,7 +55,7 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   fullWidthOnMobile: false,
   castInteger: false,
   allowAny: false,
-  allowInitialValueMutation: true,
+  allowInitialValueMutation: false,
   autoSelectFirst: true,
   content: null,
   computedValue: null,
@@ -118,11 +118,10 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     if (this.get("allowInitialValueMutation") === true) {
       const none = isNone(this.get("none"));
       const emptyValue = isEmpty(value);
-
       if (none && emptyValue) {
         if (!isEmpty(this.get("content"))) {
           value = this._valueForContent(this.get("content.firstObject"));
-          Ember.run.next(() => this.mutateValue(value) );
+          Ember.run.next(() => this.mutateValue(value));
         }
       }
     }
@@ -131,11 +130,12 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   willComputeValue(value) { return value; },
   computeValue(value) { return value; },
   _beforeDidComputeValue(value) {
-    if (!isEmpty(this.get("content")) && isNone(value) && isNone(this.get("none")) && this.get("autoSelectFirst") === true) {
+    if (!isEmpty(this.get("content")) && isNone(value) && isNone(this.get("none"))) {
       value = this._valueForContent(get(this.get("content"), "firstObject"));
     }
 
     this.setProperties({ computedValue: value });
+    return value;
   },
   didComputeValue(value) { return value; },
 
@@ -150,6 +150,7 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   mutateValue(computedValue) { this.set("value", computedValue); },
 
   filterComputedContent(computedContent, computedValue, filter) {
+    if (isEmpty(filter)) { return computedContent; }
     const lowerFilter = filter.toLowerCase();
     return computedContent.filter(c => {
       return get(c, "name").toLowerCase().indexOf(lowerFilter) > -1;
@@ -162,15 +163,15 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
 
   baseHeaderComputedContent() {
     return {
-      name: this.get("selectedComputedContent.name")
+      name: this.get("selectedComputedContent.name") || this.get("noneRowComputedContent.name")
     };
   },
 
   computeContentItem(contentItem, name) {
-    return this.baseComputeContentItem(contentItem, name);
+    return this.baseComputedContentItem(contentItem, name);
   },
 
-  baseComputeContentItem(contentItem, name) {
+  baseComputedContentItem(contentItem, name) {
     let originalContent;
 
     if (typeof contentItem === "string" || typeof contentItem === "number") {
@@ -191,7 +192,6 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
 
   @computed("computedContent.[]", "computedValue.[]", "filter")
   filteredComputedContent(computedContent, computedValue, filter) {
-    if (isEmpty(filter)) { return computedContent; }
     return this.filterComputedContent(computedContent, computedValue, filter);
   },
 
@@ -209,8 +209,8 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   },
 
   @computed("filter", "shouldDisplayCreateRow")
-  createRowContent(filter, shouldDisplayCreateRow) {
-    if (shouldDisplayCreateRow === true && !this.get("computedValue").includes(filter)) {
+  createRowComputedContent(filter, shouldDisplayCreateRow) {
+    if (shouldDisplayCreateRow === true && !this.get("computedValue") === filter) {
       let content = this.createContentFromInput(filter);
       return this.computeContentItem(content);
     }
@@ -226,12 +226,12 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   templateForCreateRow() { return () => null; },
 
   @computed("none")
-  noneRowContent(none) {
+  noneRowComputedContent(none) {
     if (isNone(none)) { return null; }
 
     switch (typeof none) {
     case "string":
-      return this.computeContentItem(none, I18n.t(none));
+      return this.computeContentItem(this.noneValue, I18n.t(none));
     default:
       return this.computeContentItem(none);
     }
@@ -249,7 +249,7 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
 
       const filteredComputedContent = this.get("filteredComputedContent");
       const displayCreateRow = this.get("shouldDisplayCreateRow");
-      const none = this.get("noneRowContent");
+      const none = this.get("noneRowComputedContent");
 
       if (isNone(this.get("highlightedValue")) && !isEmpty(filteredComputedContent)) {
         this.send("onHighlight", get(filteredComputedContent, "firstObject"));
@@ -257,7 +257,7 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
       }
 
       if (displayCreateRow === true && isEmpty(filteredComputedContent)) {
-        this.send("onHighlight", this.get("createRowContent"));
+        this.send("onHighlight", this.get("createRowComputedContent"));
       }
       else if (!isEmpty(filteredComputedContent)) {
         this.send("onHighlight", get(filteredComputedContent, "firstObject"));
@@ -269,6 +269,8 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   },
 
   createContentFromInput(input) { return input; },
+
+  validateComputedContent() { return true; },
 
   willSelect() {
     this.clearFilter();
@@ -282,6 +284,11 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   willDeselect() { this.set("highlightedValue", null); },
   didDeselect() { this.focus(); },
 
+  clearFilter() {
+    this.$filterInput().val("");
+    this.setProperties({ filter: "" });
+  },
+
   actions: {
     onToggle() {
       this.get("isExpanded") === true ? this.collapse() : this.expand();
@@ -293,15 +300,18 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     },
 
     onHighlight(rowComputedContent) {
-      this.set("highlightedValue", this._originalValueForValue(rowComputedContent.value));
+      this.set("highlightedValue", rowComputedContent.value);
     },
 
     onCreate(input) {
       let content = this.createContentFromInput(input);
-      if (!Ember.isNone(content)) {
-        const computedContent = this.computeContentItem(content);
+      if (!Ember.isNone(content)) return;
+
+      const computedContent = this.computeContentItem(content);
+      if (this.validateComputedContent(computedContent) &&
+          this.get("computedValue") !== computedContent.value) {
         this.get("computedContent").pushObject(computedContent);
-        this.get("computedValue").pushObject(computedContent.value);
+        this.set("computedValue", computedContent.value);
         this.clearFilter();
         this.autoHighlight();
         this.send("onSelect", computedContent);
@@ -310,7 +320,7 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
 
     onSelect(rowComputedContentItem) {
       this.willSelect(rowComputedContentItem);
-      this.set("computedValue", this._originalValueForValue(rowComputedContentItem.value));
+      this.set("computedValue", rowComputedContentItem.value);
       this.mutateAttributes();
       Ember.run.schedule("afterRender", () => this.didSelect(rowComputedContentItem));
     },
@@ -330,11 +340,6 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
         filter
       });
       this.autoHighlight();
-    },
-  },
-
-  clearFilter() {
-    this.$filterInput().val("");
-    this.setProperties({ filter: "" });
-  },
+    }
+  }
 });
