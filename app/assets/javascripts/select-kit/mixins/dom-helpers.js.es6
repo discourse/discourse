@@ -85,7 +85,7 @@ export default Ember.Mixin.create({
   },
 
   // lose focus of the component in two steps
-  // first collapase and keep focus and then remove focus
+  // first collapse and keep focus and then remove focus
   unfocus(event) {
     if (this.get("isExpanded") === true) {
       this.collapse(event);
