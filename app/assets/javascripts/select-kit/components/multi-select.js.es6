@@ -4,6 +4,7 @@ import { on } from "ember-addons/ember-computed-decorators";
 const { get, isNone, isEmpty, makeArray } = Ember;
 
 export default SelectKitComponent.extend({
+  pluginApiIdentifiers: ["multi-select"],
   classNames: "multi-select",
   headerComponent: "multi-select/multi-select-header",
   filterComponent: null,

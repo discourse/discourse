@@ -1,6 +1,7 @@
 import MultiSelectComponent from "select-kit/components/multi-select";
 
 export default MultiSelectComponent.extend({
+  pluginApiIdentifiers: ["list-setting"],
   classNames: "list-setting",
   tokenSeparator: "|",
   settingValue: "",

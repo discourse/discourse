@@ -2,6 +2,7 @@ import SingleSelectComponent from "select-kit/components/single-select";
 import { on } from "ember-addons/ember-computed-decorators";
 
 export default SingleSelectComponent.extend({
+  pluginApiIdentifiers: ["combo-box"],
   classNames: "combobox combo-box",
   autoFilterable: true,
   headerComponent: "combo-box/combo-box-header",

@@ -111,6 +111,7 @@ export function timeframeDetails(id) {
 export const FORMAT = "YYYY-MM-DD HH:mm";
 
 export default ComboBoxComponent.extend(DatetimeMixin, {
+  pluginApiIdentifiers: ["future-date-input-selector"],
   classNames: ["future-date-input-selector"],
   isCustom: Ember.computed.equal("value", "pick_date_and_time"),
   clearable: true,
