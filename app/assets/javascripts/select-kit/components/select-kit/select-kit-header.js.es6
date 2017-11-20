@@ -4,12 +4,23 @@ export default Ember.Component.extend({
   layoutName: "select-kit/templates/components/select-kit/select-kit-header",
   classNames: ["select-kit-header", "select-box-kit-header"],
   classNameBindings: ["isFocused"],
-  attributeBindings: ["dataName:data-name"],
+  attributeBindings: [
+    "dataName:data-name",
+    "title"
+  ],
 
   name: Ember.computed.alias("computedContent.name"),
 
-  @computed("computedContent.dataName", "computedContent.name")
+  @computed("computedContent.icon", "computedContent.icons")
+  icons(icon, icons) {
+    return Ember.makeArray(icon).concat(icons).filter(i => !Ember.isEmpty(i));
+  },
+
+  @computed("computedContent.dataName", "name")
   dataName(dataName, name) { return dataName || name; },
+
+  @computed("computedContent.title", "name")
+  title(title, name) { return title || name; },
 
   click() {
     this.sendAction("onToggle");

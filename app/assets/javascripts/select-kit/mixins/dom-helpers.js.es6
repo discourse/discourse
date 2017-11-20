@@ -99,8 +99,6 @@ export default Ember.Mixin.create({
   // lose focus of the component in two steps
   // first collapase and keep focus and then remove focus
   unfocus() {
-    this.set("highlightedValue", null);
-
     if (this.get("isExpanded") === true) {
       this.collapse();
       this.focus();

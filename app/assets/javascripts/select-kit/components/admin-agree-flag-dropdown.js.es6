@@ -1,22 +1,17 @@
-import { iconHTML } from 'discourse-common/lib/icon-library';
 import DropdownSelectBox from "select-kit/components/dropdown-select-box";
 import computed from "ember-addons/ember-computed-decorators";
-import { on } from "ember-addons/ember-computed-decorators";
 
 export default DropdownSelectBox.extend({
-  headerText: "admin.flags.agree",
-  headerIcon: "thumbs-o-up",
   classNames: ["agree-flag", "admin-agree-flag-dropdown"],
   adminTools: Ember.inject.service(),
   nameProperty: "label",
   allowInitialValueMutation: false,
+  headerIcon: "thumbs-o-up",
 
-  @on("didReceiveAttrs")
-  _setAdminAgreeDropdownOptions() {
-    this.get('headerComponentOptions').setProperties({
-      selectedName: `${I18n.t(this.get("headerText"))} ...`,
-      icon: iconHTML("thumbs-o-up")
-    });
+  computeHeaderContent() {
+    let content = this.baseHeaderComputedContent();
+    content.name = `${I18n.t("admin.flags.agree")}...`;
+    return content;
   },
 
   @computed("adminTools", "post.user")

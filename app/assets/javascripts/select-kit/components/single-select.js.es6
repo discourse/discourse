@@ -68,6 +68,7 @@ export default SelectKitComponent.extend({
 
   baseHeaderComputedContent() {
     return {
+      icons: Ember.makeArray(this.getWithDefault("headerIcon", [])),
       name: this.get("selectedComputedContent.name") || this.get("noneRowComputedContent.name")
     };
   },
@@ -96,6 +97,11 @@ export default SelectKitComponent.extend({
       const filteredComputedContent = this.get("filteredComputedContent");
       const displayCreateRow = this.get("shouldDisplayCreateRow");
       const none = this.get("noneRowComputedContent");
+
+      if (this.get("hasSelection")) {
+        this.send("onHighlight", this.get("selectedComputedContent"));
+        return;
+      }
 
       if (isNone(this.get("highlightedValue")) && !isEmpty(filteredComputedContent)) {
         this.send("onHighlight", get(filteredComputedContent, "firstObject"));

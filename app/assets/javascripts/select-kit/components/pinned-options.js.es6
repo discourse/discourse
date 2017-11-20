@@ -18,13 +18,7 @@ export default DropdownSelectBoxComponent.extend({
 
     content.name = `${title}${iconHTML("caret-down")}`.htmlSafe();
     content.dataName = title;
-
-    content.icons = [
-      iconHTML("thumb-tack", {
-        class: (state === "unpinned" ? "unpinned" : null)
-      }).htmlSafe()
-    ];
-
+    content.icon = `thumb-tack ${state === "unpinned" ? "unpinned" : null}`;
     return content;
   },
 
@@ -42,9 +36,8 @@ export default DropdownSelectBoxComponent.extend({
       {
         id: "unpinned",
         name: I18n.t("topic_statuses.unpinned.title"),
-        icon: "thumb-tack",
+        icon: "thumb-tack unpinned",
         description: I18n.t('topic_statuses.unpinned.help'),
-        iconClass: "unpinned"
       }
     ]);
   },

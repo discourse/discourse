@@ -1,16 +1,15 @@
-import { iconHTML } from 'discourse-common/lib/icon-library';
 import { CLOSE_STATUS_TYPE } from 'discourse/controllers/edit-topic-timer';
 import { timeframeDetails } from 'select-kit/components/future-date-input-selector';
 
 export default Ember.Mixin.create({
-  _computeIconForValue(value) {
+  _computeIconsForValue(value) {
     let {icon} = this._updateAt(value);
 
     if (icon) {
-      return icon.split(",").map(i => iconHTML(i)).join(" ");
+      return icon.split(",");
     }
 
-    return null;
+    return [];
   },
 
   _computeDatetimeForValue(value) {
@@ -33,6 +32,7 @@ export default Ember.Mixin.create({
 
   _updateAt(selection) {
     let details = timeframeDetails(selection);
+
     if (details) {
       return {
         time: details.when(moment(), this.get('statusType') !== CLOSE_STATUS_TYPE ? 8 : 18),
