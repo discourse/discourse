@@ -47,12 +47,12 @@ export default ComboBoxComponent.extend({
 
   @computed
   templateForRow() {
-    return rowComponent => this._rowContentTemplate(rowComponent.get("content"));
+    return rowComponent => this._rowContentTemplate(rowComponent.get("computedContent"));
   },
 
   @computed
   templateForNoneRow() {
-    return rowComponent => this._rowContentTemplate(rowComponent.get("content"));
+    return rowComponent => this._rowContentTemplate(rowComponent.get("computedContent"));
   },
 
   @on("didRender")
@@ -90,20 +90,20 @@ export default ComboBoxComponent.extend({
     });
   },
 
-  _rowContentTemplate(content) {
+  _rowContentTemplate(computedContent) {
     let category;
 
     // If we have no id, but text with the uncategorized name, we can use that badge.
-    if (isEmpty(get(content, "value"))) {
+    if (isEmpty(get(computedContent, "value"))) {
       const uncat = Category.findUncategorized();
-      if (uncat && uncat.get("name") === get(content, "name")) {
+      if (uncat && uncat.get("name") === get(computedContent, "name")) {
         category = uncat;
       }
     } else {
-      category = Category.findById(parseInt(get(content, "value"), 10));
+      category = Category.findById(parseInt(get(computedContent, "value"), 10));
     }
 
-    if (!category) return get(content, "name");
+    if (!category) return get(computedContent, "name");
     let result = categoryBadgeHTML(category, {link: false, allowUncategorized: true, hideParent: true});
     const parentCategoryId = category.get("parent_category_id");
 

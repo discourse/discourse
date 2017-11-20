@@ -1,6 +1,6 @@
 <ul class="choices">
-  {{#each selectedContent as |selectedContent|}}
-    {{component selectedNameComponent onDeselect=onDeselect content=selectedContent}}
+  {{#each computedContent.selectedComputedContents as |selectedComputedContent|}}
+    {{component selectedNameComponent onDeselect=onDeselect content=selectedComputedContent}}
   {{/each}}
   <li class="filter">
     {{component "select-box-kit/select-box-kit-filter"

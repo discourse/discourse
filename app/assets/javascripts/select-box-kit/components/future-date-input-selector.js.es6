@@ -1,4 +1,3 @@
-import { default as computed, observes } from "ember-addons/ember-computed-decorators";
 import ComboBoxComponent from "select-box-kit/components/combo-box";
 import { CLOSE_STATUS_TYPE } from "discourse/controllers/edit-topic-timer";
 import DatetimeMixin from "select-box-kit/components/future-date-input-selector/mixin";
@@ -118,6 +117,17 @@ export default ComboBoxComponent.extend(DatetimeMixin, {
   rowComponent: "future-date-input-selector/future-date-input-selector-row",
   headerComponent: "future-date-input-selector/future-date-input-selector-header",
 
+  computeHeaderContent() {
+    let content = this.baseHeaderComputedContent();
+    content.datetime = this._computeDatetimeForValue(this.get("computedValue"));
+    content.name = this.get("selectedComputedContent.name") || content.name;
+    content.hasSelection = !Ember.isEmpty(this.get("selectedComputedContent"));
+    content.icons = [
+      this._computeIconForValue(this.get("computedValue"))
+    ];
+    return content;
+  },
+
   computeContent() {
     let now = moment();
     let opts = {
@@ -137,21 +147,15 @@ export default ComboBoxComponent.extend(DatetimeMixin, {
     });
   },
 
-  @observes("value")
-  _updateInput() {
+  mutateValue(value) {
     if (this.get("isCustom")) return;
     let input = null;
-    const { time } = this.get("updateAt");
+    const { time } = this._updateAt(value);
 
-    if (time && !Ember.isEmpty(this.get("value"))) {
+    if (time && !Ember.isEmpty(value)) {
       input = time.format(FORMAT);
     }
 
-    this.set("input", input);
+    this.setProperties({ input, value });
   },
-
-  @computed("value")
-  updateAt(value) {
-    return this._updateAt(value);
-  }
 });

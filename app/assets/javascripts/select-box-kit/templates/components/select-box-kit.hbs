@@ -10,8 +10,6 @@
   readonly=true
 />
 
-{{log headerComputedContent}}
-
 {{component headerComponent
   isFocused=isFocused
   isExpanded=isExpanded
@@ -35,9 +33,9 @@
 
   {{#if renderedBodyOnce}}
     {{component collectionComponent
-      none=noneRowContent
-      createRowContent=createRowContent
-      selectedContent=selectedContent
+      noneRowComputedContent=noneRowComputedContent
+      createRowComputedContent=createRowComputedContent
+      selectedComputedContent=selectedComputedContent
       filteredComputedContent=filteredComputedContent
       rowComponent=rowComponent
       noneRowComponent=noneRowComponent
