@@ -540,6 +540,26 @@ componentTest("quote button - empty lines", {
   }
 });
 
+componentTest("quote button - selecting empty lines", {
+  template: '{{d-editor value=value composerEvents=true}}',
+  beforeEach() {
+    this.set('value', "one\n\n\n\ntwo");
+  },
+  test(assert) {
+    const textarea = jumpEnd(this.$('textarea.d-editor-input')[0]);
+
+    andThen(() => {
+      textarea.selectionStart = 6;
+      textarea.selectionEnd = 10;
+    });
+
+    click('button.quote');
+    andThen(() => {
+      assert.equal(this.get('value'), "one\n\n\n> \n> two");
+    });
+  }
+});
+
 testCase('quote button', function(assert, textarea) {
 
   andThen(() => {

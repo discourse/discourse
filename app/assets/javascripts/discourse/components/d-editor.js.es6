@@ -438,7 +438,9 @@ export default Ember.Component.extend({
       }
 
       if (operation !== OP.ADDED &&
-          (l.slice(0, hlen) === hval && tlen === 0 || l.slice(-tlen) === tail)) {
+          (l.slice(0, hlen) === hval && tlen === 0 ||
+          (tail.length && l.slice(-tlen) === tail))) {
+
         operation = OP.REMOVED;
         if (tlen === 0) {
           const result = l.slice(hlen);
@@ -500,6 +502,7 @@ export default Ember.Component.extend({
           tlen,
           opts
         );
+
         this.set('value', `${pre}${contents}${post}`);
         if (lines.length === 1 && tlen > 0) {
           this._selectText(sel.start + hlen, sel.value.length);
