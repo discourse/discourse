@@ -9,6 +9,7 @@ export default DropdownSelectBox.extend({
   classNames: ["agree-flag", "admin-agree-flag-dropdown"],
   adminTools: Ember.inject.service(),
   nameProperty: "label",
+  allowInitialValueMutation: false,
 
   @on("didReceiveAttrs")
   _setAdminAgreeDropdownOptions() {
