@@ -5,7 +5,7 @@ import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
 import { iconNode } from 'discourse-common/lib/icon-library';
 import highlightText from 'discourse/lib/highlight-text';
-import { escapeExpression } from 'discourse/lib/utilities';
+import { escapeExpression, formatUsername } from 'discourse/lib/utilities';
 
 class Highlighted extends RawHtml {
   constructor(html, term) {
@@ -57,7 +57,15 @@ createSearchResult({
   type: 'user',
   linkField: 'path',
   builder(u) {
-    return [ avatarImg('small', { template: u.avatar_template, username: u.username }), ' ', h('span.user-results', h('b', u.username)), ' ',  h('span.user-results', u.name ? u.name : '') ];
+    return [
+      avatarImg('small', {
+        template: u.avatar_template, username: u.username
+      }),
+      ' ',
+      h('span.user-results', h('b', formatUsername(u.username))),
+      ' ',
+      h('span.user-results', u.name ? u.name : '')
+    ];
   }
 });
 
