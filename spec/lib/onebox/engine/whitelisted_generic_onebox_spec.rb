@@ -95,6 +95,14 @@ describe Onebox::Engine::WhitelistedGenericOnebox do
       expect(onebox.to_html).not_to be_empty
       expect(FakeWeb.last_request['Cookie']).to eq('evil=trout')
     end
+
+    it "fetches site_name and article_published_time tags" do
+      onebox = described_class.new(url)
+      expect(onebox.to_html).not_to be_empty
+
+      expect(onebox.to_html).to include("Mail Online")
+      expect(onebox.to_html).to include("08:03PM - 08 Aug 14")
+    end
   end
 
   describe 'canonical link' do
