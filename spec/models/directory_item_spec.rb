@@ -23,12 +23,36 @@ describe DirectoryItem do
       UserActionCreator.enable
     end
 
-    it "creates the record for the user" do
+    it "creates the record for the user and handles likes" do
       post = create_post
+      _post2 = create_post(topic_id: post.topic_id, user: post.user)
+
+      user2 = Fabricate(:user)
+
+      PostAction.act(user2, post, PostActionType.types[:like])
+
       DirectoryItem.refresh!
-      expect(DirectoryItem.where(period_type: DirectoryItem.period_types[:all])
-                          .where(user_id: post.user.id)
-                          .where(topic_count: 1).count).to eq(1)
+
+      item1 = DirectoryItem.find_by(period_type: DirectoryItem.period_types[:all], user_id: post.user_id)
+      item2 = DirectoryItem.find_by(period_type: DirectoryItem.period_types[:all], user_id: user2.id)
+
+      expect(item1.topic_count).to eq(1)
+      expect(item1.likes_received).to eq(1)
+      expect(item1.post_count).to eq(1)
+
+      expect(item2.likes_given).to eq(1)
+
+      post.topic.trash!
+
+      DirectoryItem.refresh!
+
+      item1 = DirectoryItem.find_by(period_type: DirectoryItem.period_types[:all], user_id: post.user_id)
+      item2 = DirectoryItem.find_by(period_type: DirectoryItem.period_types[:all], user_id: user2.id)
+
+      expect(item1.likes_given).to eq(0)
+      expect(item1.likes_received).to eq(0)
+      expect(item1.post_count).to eq(0)
+      expect(item1.topic_count).to eq(0)
     end
 
     it "handles users with no activity" do
