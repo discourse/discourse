@@ -288,9 +288,8 @@ class TopicQuery
 
     list
       .where("tu.last_read_post_number < topics.#{col_name}")
-      .where("tu.notification_level >= :tracking",
-        tracking: TopicUser.notification_levels[:tracking]
-      )
+      .where("COALESCE(tu.notification_level, :regular) >= :tracking",
+               regular: TopicUser.notification_levels[:regular], tracking: TopicUser.notification_levels[:tracking])
   end
 
   def prioritize_pinned_topics(topics, options)
@@ -370,10 +369,6 @@ class TopicQuery
     result
   end
 
-  def unread_results_redis_key
-    "last_unread_result_bumped_at:#{@user.id}"
-  end
-
   def unread_results(options = {})
     result = TopicQuery.unread_filter(
         default_results(options.reverse_merge(unordered: true)),
@@ -385,17 +380,6 @@ class TopicQuery
       result = filter_callback.call(:unread, result, @user, options)
     end
 
-    if !(last_bumped_at = $redis.get(unread_results_redis_key))
-      last_bumped_at = result.unscope(:limit, :order).order(:bumped_at).first&.bumped_at
-
-      $redis.setex(
-        unread_results_redis_key,
-        1.hour.to_i,
-        (last_bumped_at || Time.zone.now).to_s
-      )
-    end
-
-    result = result.where("topics.bumped_at >= ?", last_bumped_at) if last_bumped_at
     suggested_ordering(result, options)
   end
 
