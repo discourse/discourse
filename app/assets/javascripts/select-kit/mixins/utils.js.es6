@@ -1,4 +1,4 @@
-const { get, isNone, guidFor } = Ember;
+const { get, isNone, guidFor, isPresent } = Ember;
 
 export default Ember.Mixin.create({
   valueForContentItem(content) {
@@ -28,7 +28,7 @@ export default Ember.Mixin.create({
   },
 
   _castInteger(value) {
-    if (this.get("castInteger") === true && Ember.isPresent(value) && this._isNumeric(value)) {
+    if (this.get("castInteger") === true && isPresent(value) && this._isNumeric(value)) {
       return parseInt(value, 10);
     }
 
