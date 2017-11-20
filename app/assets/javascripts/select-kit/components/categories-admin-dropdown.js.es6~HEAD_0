@@ -1,21 +1,15 @@
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import { on } from "ember-addons/ember-computed-decorators";
 
 export default DropdownSelectBoxComponent.extend({
+  pluginApiIdentifiers: ["categories-admin-dropdown"],
   classNames: "categories-admin-dropdown",
   showFullTitle: false,
-
-  computeHeaderContent() {
-    let content = this.baseHeaderComputedContent();
-    content.icons = [`${iconHTML('bars')}${iconHTML('caret-down')}`.htmlSafe()];
-    return content;
-  },
+  allowInitialValueMutation: false,
+  headerIcon: ["bars", "caret-down"],
 
   autoHighlight() {},
 
-  @on("init")
-  _setContent() {
+  computeContent() {
     const items = [
       {
         id: "create",
@@ -35,7 +29,7 @@ export default DropdownSelectBoxComponent.extend({
       });
     }
 
-    this.set("content", items);
+    return items;
   },
 
   mutateValue(value) {

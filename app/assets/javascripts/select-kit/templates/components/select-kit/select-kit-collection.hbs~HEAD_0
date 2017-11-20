@@ -1,4 +1,4 @@
-{{#if selectedComputedContent}}
+{{#if hasSelection}}
   {{#if noneRowComputedContent}}
     {{component noneRowComponent
       computedContent=noneRowComputedContent
@@ -34,10 +34,12 @@
     computedValue=computedValue
     options=rowComponentOptions
   }}
-{{else}}
+{{/each}}
+
+{{#if shouldDisplayNoContentRow}}
   {{#if noContentLabel}}
     <li class="select-kit-row no-content">
       {{i18n noContentLabel}}
     </li>
   {{/if}}
-{{/each}}
+{{/if}}

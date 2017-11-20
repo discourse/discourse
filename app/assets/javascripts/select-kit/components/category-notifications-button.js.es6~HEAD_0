@@ -1,25 +1,20 @@
 import NotificationOptionsComponent from "select-kit/components/notifications-button";
-import { iconHTML } from 'discourse-common/lib/icon-library';
+import computed from "ember-addons/ember-computed-decorators";
 
 export default NotificationOptionsComponent.extend({
+  pluginApiIdentifiers: ["category-notifications-button"],
   classNames: "category-notifications-button",
   isHidden: Ember.computed.or("category.deleted", "site.isMobileDevice"),
   i18nPrefix: "category.notifications",
   showFullTitle: false,
-
-  computeValue() {
-    return this.get("category.notification_level");
-  },
+  allowInitialValueMutation: false,
 
   mutateValue(value) {
     this.get("category").setNotification(value);
   },
 
-  computeHeaderContent() {
-    let content = this._super();
-    content.icons = [
-      `${this.get("iconForSelectedDetails")}${iconHTML("caret-down")}`.htmlSafe()
-    ];
-    return content;
-  },
+  @computed("iconForSelectedDetails")
+  headerIcon(iconForSelectedDetails) {
+    return [iconForSelectedDetails, "caret-down"];
+  }
 });

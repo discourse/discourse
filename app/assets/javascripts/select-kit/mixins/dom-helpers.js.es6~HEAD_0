@@ -4,7 +4,6 @@ export default Ember.Mixin.create({
   init() {
     this._super();
 
-    this.offscreenInputSelector = ".offscreen";
     this.filterInputSelector = ".filter-input";
     this.rowSelector = ".select-kit-row";
     this.collectionSelector = ".select-kit-collection";
@@ -34,8 +33,6 @@ export default Ember.Mixin.create({
 
   $selectedRow() { return this.$rows().filter(".is-selected"); },
 
-  $offscreenInput() { return this.$(this.offscreenInputSelector); },
-
   $filterInput() { return this.$(this.filterInputSelector); },
 
   @on("didRender")
@@ -60,23 +57,25 @@ export default Ember.Mixin.create({
 
   // make sure we don’t propagate a click outside component
   // to avoid closing a modal containing the component for example
-  click(event) { this._killEvent(event); },
+  click(event) {
+    this._destroyEvent(event);
+  },
 
   // use to collapse and remove focus
-  close() {
-    this.collapse();
+  close(event) {
+    this.collapse(event);
     this.setProperties({ isFocused: false });
   },
 
   // force the component in a known default state
   focus() {
-    Ember.run.schedule("afterRender", () => this.$offscreenInput().select() );
+    Ember.run.schedule("afterRender", () => this.$header().focus() );
   },
 
-  expand() {
-    if (this.get("isExpanded") === true) { return; }
+  expand(event) {
+    if (this.get("isExpanded") === true) return;
     this.setProperties({ isExpanded: true, renderedBodyOnce: true, isFocused: true });
-    this.focus();
+    this.focus(event);
     this.autoHighlight();
   },
 
@@ -85,35 +84,18 @@ export default Ember.Mixin.create({
     Ember.run.schedule("afterRender", () => this._removeFixedPosition() );
   },
 
-  // make sure we close/unfocus the component when clicked outside
-  clickOutside(event) {
-    if ($(event.target).parents(".select-kit").length === 1) {
-      this.close();
-      return false;
-    }
-
-    this.unfocus();
-    return;
-  },
-
   // lose focus of the component in two steps
-  // first collapase and keep focus and then remove focus
-  unfocus() {
-    this.set("highlightedValue", null);
-
+  // first collapse and keep focus and then remove focus
+  unfocus(event) {
     if (this.get("isExpanded") === true) {
-      this.collapse();
-      this.focus();
+      this.collapse(event);
+      this.focus(event);
     } else {
-      this.close();
+      this.close(event);
     }
   },
 
-  blur() {
-    Ember.run.schedule("afterRender", () => this.$offscreenInput().blur() );
-  },
-
-  _killEvent(event) {
+  _destroyEvent(event) {
     event.preventDefault();
     event.stopPropagation();
   },

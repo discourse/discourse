@@ -1,6 +1,16 @@
-const { get, isNone, guidFor } = Ember;
+const { get, isNone, guidFor, isPresent } = Ember;
 
 export default Ember.Mixin.create({
+  valueForContentItem(content) {
+    switch (typeof content) {
+    case "string":
+    case "number":
+      return content;
+    default:
+      return get(content, this.get("valueAttribute"));
+    }
+  },
+
   _nameForContent(content) {
     if (isNone(content)) {
       return null;
@@ -18,21 +28,11 @@ export default Ember.Mixin.create({
   },
 
   _castInteger(value) {
-    if (this.get("castInteger") === true && Ember.isPresent(value) && this._isNumeric(value)) {
+    if (this.get("castInteger") === true && isPresent(value) && this._isNumeric(value)) {
       return parseInt(value, 10);
     }
 
     return value;
-  },
-
-  _valueForContent(content) {
-    switch (typeof content) {
-    case "string":
-    case "number":
-      return content;
-    default:
-      return get(content, this.get("valueAttribute"));
-    }
   },
 
   _findComputedContentByGuid(guid) {
@@ -42,11 +42,6 @@ export default Ember.Mixin.create({
   },
 
   _filterRemovableComputedContents(computedContent) {
-    return computedContent.filter(c => {
-      if (!this.get("_initialValues").includes(c.value)) {
-        return true;
-      }
-      return false;
-    });
+    return computedContent.filter(c => c.created === true);
   }
 });

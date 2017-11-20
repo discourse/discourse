@@ -1,7 +1,18 @@
-{{#each icons as |icon|}} {{d-icon icon}} {{/each}}
+<button
+  class="btn {{if options.showFullTitle 'btn-icon-text' 'no-text btn-icon'}}"
+  aria-label="{{name}}"
+  type="button"
+  tabindex="-1"
+  title="{{name}}">
 
-{{#if options.showFullTitle}}
-  <span class="d-button-label selected-name">
-    {{name}}
-  </span>
-{{/if}}
+  {{#each icons as |icon|}}
+    {{{icon}}}
+  {{/each}}
+
+  {{#if options.showFullTitle}}
+    <span class="d-button-label selected-name">
+      {{name}}
+    </span>
+  {{/if}}
+
+</button>

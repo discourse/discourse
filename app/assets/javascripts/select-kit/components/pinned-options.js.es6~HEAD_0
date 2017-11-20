@@ -1,28 +1,25 @@
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
-import { on  } from "ember-addons/ember-computed-decorators";
+import { on } from "ember-addons/ember-computed-decorators";
 import { iconHTML } from 'discourse-common/lib/icon-library';
 
 export default DropdownSelectBoxComponent.extend({
+  pluginApiIdentifiers: ["pinned-options"],
   classNames: "pinned-options",
+  allowInitialValueMutation: false,
 
   autoHighlight() {},
 
   computeHeaderContent() {
     let content = this.baseHeaderComputedContent();
     const pinnedGlobally = this.get("topic.pinned_globally");
-    const pinned = this.get("topic.pinned");
+    const pinned = this.get("computedValue");
     const globally = pinnedGlobally ? "_globally" : "";
     const state = pinned ? `pinned${globally}` : "unpinned";
     const title = I18n.t(`topic_statuses.${state}.title`);
 
     content.name = `${title}${iconHTML("caret-down")}`.htmlSafe();
-
-    content.icons = [
-      iconHTML("thumb-tack", {
-        class: (state === "unpinned" ? "unpinned" : null)
-      }).htmlSafe()
-    ];
-
+    content.dataName = title;
+    content.icon = `thumb-tack ${state === "unpinned" ? "unpinned" : null}`;
     return content;
   },
 
@@ -40,9 +37,8 @@ export default DropdownSelectBoxComponent.extend({
       {
         id: "unpinned",
         name: I18n.t("topic_statuses.unpinned.title"),
-        icon: "thumb-tack",
+        icon: "thumb-tack unpinned",
         description: I18n.t('topic_statuses.unpinned.help'),
-        iconClass: "unpinned"
       }
     ]);
   },

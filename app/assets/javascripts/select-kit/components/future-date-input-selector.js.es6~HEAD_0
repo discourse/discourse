@@ -111,6 +111,7 @@ export function timeframeDetails(id) {
 export const FORMAT = "YYYY-MM-DD HH:mm";
 
 export default ComboBoxComponent.extend(DatetimeMixin, {
+  pluginApiIdentifiers: ["future-date-input-selector"],
   classNames: ["future-date-input-selector"],
   isCustom: Ember.computed.equal("value", "pick_date_and_time"),
   clearable: true,
@@ -121,11 +122,16 @@ export default ComboBoxComponent.extend(DatetimeMixin, {
     let content = this.baseHeaderComputedContent();
     content.datetime = this._computeDatetimeForValue(this.get("computedValue"));
     content.name = this.get("selectedComputedContent.name") || content.name;
-    content.hasSelection = !Ember.isEmpty(this.get("selectedComputedContent"));
-    content.icons = [
-      this._computeIconForValue(this.get("computedValue"))
-    ];
+    content.hasSelection = this.get("hasSelection");
+    content.icons = this._computeIconsForValue(this.get("computedValue"));
     return content;
+  },
+
+  computeContentItem(contentItem, name) {
+    let item = this.baseComputedContentItem(contentItem, name);
+    item.datetime = this._computeDatetimeForValue(contentItem.id);
+    item.icons = this._computeIconsForValue(contentItem.id);
+    return item;
   },
 
   computeContent() {

@@ -1,16 +1,5 @@
-<input
-  class="offscreen"
-  type="text"
-  aria-haspopup="true"
-  role="button"
-  aria-labelledby="offscreen-{{elementId}}"
-  tabindex={{tabindex}}
-  name={{name}}
-  value={{computedValue}}
-  readonly=true
-/>
-
 {{component headerComponent
+  tabindex=tabindex
   isFocused=isFocused
   isExpanded=isExpanded
   computedContent=headerComputedContent
@@ -19,6 +8,7 @@
   onFilter=(action "onFilter")
   onClear=(action "onClear")
   options=headerComponentOptions
+  shouldDisplayFilter=shouldDisplayFilter
 }}
 
 <div class="select-kit-body">
@@ -33,9 +23,9 @@
 
   {{#if renderedBodyOnce}}
     {{component collectionComponent
+      hasSelection=hasSelection
       noneRowComputedContent=noneRowComputedContent
       createRowComputedContent=createRowComputedContent
-      selectedComputedContent=selectedComputedContent
       filteredComputedContent=filteredComputedContent
       rowComponent=rowComponent
       noneRowComponent=noneRowComponent
@@ -50,6 +40,7 @@
       noContentLabel=noContentLabel
       highlightedValue=highlightedValue
       computedValue=computedValue
+      shouldDisplayNoContentRow=shouldDisplayNoContentRow
       rowComponentOptions=rowComponentOptions
     }}
   {{/if}}
