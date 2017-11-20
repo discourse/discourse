@@ -6,7 +6,6 @@ export default SelectedNameComponent.extend({
 
   didRender() {
     const name = this.get("content.name");
-    console.log("?????", this.$(".color-preview").length, name)
     this.$(".color-preview").css("background", `#${name}`.htmlSafe());
   }
 });

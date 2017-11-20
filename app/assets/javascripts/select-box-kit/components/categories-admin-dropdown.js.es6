@@ -4,16 +4,18 @@ import { on } from "ember-addons/ember-computed-decorators";
 
 export default DropdownSelectBoxComponent.extend({
   classNames: "categories-admin-dropdown",
+  showFullTitle: false,
 
-  @on("didReceiveAttrs")
-  _setComponentOptions() {
-    this.get("headerComponentOptions").setProperties({
-      shouldDisplaySelectedName: false,
-      icon: `${iconHTML('bars')}${iconHTML('caret-down')}`.htmlSafe(),
-    });
+  computeHeaderContent() {
+    let content = this.baseHeaderComputedContent();
+    content.icons = [`${iconHTML('bars')}${iconHTML('caret-down')}`.htmlSafe()];
+    return content;
   },
 
-  computeContent() {
+  autoHighlight() {},
+
+  @on("init")
+  _setContent() {
     const items = [
       {
         id: "create",
@@ -33,7 +35,7 @@ export default DropdownSelectBoxComponent.extend({
       });
     }
 
-    return items;
+    this.set("content", items);
   },
 
   mutateValue(value) {
