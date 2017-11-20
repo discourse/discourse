@@ -1,20 +1,16 @@
-import { iconHTML } from 'discourse-common/lib/icon-library';
-import DropdownSelectBox from "select-box-kit/components/dropdown-select-box";
+import DropdownSelectBox from "select-kit/components/dropdown-select-box";
 import computed from "ember-addons/ember-computed-decorators";
-import { on } from "ember-addons/ember-computed-decorators";
 
 export default DropdownSelectBox.extend({
-  headerText: "admin.flags.delete",
   classNames: ["delete-flag", "admin-delete-flag-dropdown"],
   adminTools: Ember.inject.service(),
   nameProperty: "label",
+  headerIcon: "trash-o",
 
-  @on("didReceiveAttrs")
-  _setAdminDeleteDropdownOptions() {
-    this.get('headerComponentOptions').setProperties({
-      selectedName: `${I18n.t(this.get("headerText"))} ...`,
-      icon: iconHTML("trash-o")
-    });
+  computeHeaderContent() {
+    let content = this.baseHeaderComputedContent();
+    content.name = I18n.t("admin.flags.delete");
+    return content;
   },
 
   @computed("adminTools", "post.user")
@@ -24,9 +20,9 @@ export default DropdownSelectBox.extend({
 
   canDeleteSpammer: Ember.computed.and("spammerDetails.canDelete", "post.flaggedForSpam"),
 
-  @computed("post", "canDeleteSpammer")
-  content(post, canDeleteSpammer) {
+  computeContent() {
     const content = [];
+    const canDeleteSpammer = this.get("canDeleteSpammer");
 
     content.push({
       icon: "external-link",
@@ -57,8 +53,9 @@ export default DropdownSelectBox.extend({
     return content;
   },
 
-  selectValueFunction(value) {
-    Ember.get(this._contentForValue(value), "action")();
+  mutateValue(value) {
+    const computedContent = this.get("computedContent").findBy("value", value);
+    Ember.get(computedContent, "originalContent.action")();
   },
 
   actions: {
