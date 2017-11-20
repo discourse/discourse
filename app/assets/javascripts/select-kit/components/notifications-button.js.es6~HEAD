@@ -2,7 +2,6 @@ import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-bo
 import { default as computed, on } from "ember-addons/ember-computed-decorators";
 import { buttonDetails } from "discourse/lib/notification-levels";
 import { allLevels } from "discourse/lib/notification-levels";
-import { iconHTML } from 'discourse-common/lib/icon-library';
 
 export default DropdownSelectBoxComponent.extend({
   classNames: "notifications-button",
@@ -14,6 +13,7 @@ export default DropdownSelectBoxComponent.extend({
   autofilterable: false,
   filterable: false,
   rowComponent: "notifications-button/notifications-button-row",
+  allowInitialValueMutation: false,
 
   i18nPrefix: "",
   i18nPostfix: "",
@@ -24,13 +24,13 @@ export default DropdownSelectBoxComponent.extend({
 
   @computed("selectedDetails.icon", "selectedDetails.key")
   iconForSelectedDetails(icon, key) {
-    return iconHTML(icon, { class: key }).htmlSafe();
+    return `${icon} ${key}`;
   },
 
   computeHeaderContent() {
     let content = this.baseHeaderComputedContent();
     content.name = I18n.t(`${this.get("i18nPrefix")}.${this.get("selectedDetails.key")}.title`);
-    content.icons = [ this.get("iconForSelectedDetails") ];
+    content.icon = "d-tracking";
     content.hasSelection = this.get("selectedComputedContent").length >= 1;
     return content;
   },

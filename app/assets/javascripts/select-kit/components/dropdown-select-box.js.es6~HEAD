@@ -10,10 +10,13 @@ export default SingleSelectComponent.extend({
   headerComponent: "dropdown-select-box/dropdown-select-box-header",
   rowComponent: "dropdown-select-box/dropdown-select-box-row",
   showFullTitle: true,
+  allowInitialValueMutation: false,
 
   @on("didReceiveAttrs")
   _setDropdownSelectBoxComponentOptions() {
-    this.get("headerComponentOptions").setProperties({showFullTitle: this.get("showFullTitle")});
+    this.get("headerComponentOptions").setProperties({
+      showFullTitle: this.get("showFullTitle")
+    });
   },
 
   clickOutside() {
@@ -23,6 +26,6 @@ export default SingleSelectComponent.extend({
 
   didSelect() {
     this._super();
-    this.blur();
+    this.close();
   }
 });

@@ -1,6 +1,6 @@
-{{#if icon}}
+{{#if icons}}
   <div class="future-date-input-selector-icons">
-    {{{icon}}}
+    {{#each icons as |icon|}} {{d-icon icon}} {{/each}}
   </div>
 {{/if}}
 

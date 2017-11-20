@@ -6,6 +6,7 @@ export default NotificationOptionsComponent.extend({
   classNames: "topic-notifications-options",
   content: topicLevels,
   i18nPrefix: "topic.notifications",
+  allowInitialValueMutation: false,
 
   @on("didInsertElement")
   _bindGlobalLevelChanged() {
