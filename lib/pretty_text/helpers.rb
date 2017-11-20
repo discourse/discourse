@@ -33,6 +33,12 @@ module PrettyText
       user.primary_group.try(:name) || ""
     end
 
+    # Overwrite this in a plugin to change how markdown can format
+    # usernames on the server side
+    def format_username(username)
+      username
+    end
+
     def mention_lookup(name)
       return false   if name.blank?
       return "group" if Group.exists?(name: name)

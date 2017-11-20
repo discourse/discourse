@@ -1,7 +1,6 @@
 function addMention(buffer, matches, state) {
   let username = matches[1] || matches[2];
-  let mentionLookup = state.md.options.discourse.mentionLookup;
-  let getURL = state.md.options.discourse.getURL;
+  let { getURL, mentionLookup, formatUsername } = state.md.options.discourse;
 
   let type = mentionLookup && mentionLookup(username);
 
@@ -25,6 +24,9 @@ function addMention(buffer, matches, state) {
   }
 
   buffer.push(token);
+  if (formatUsername) {
+    username = formatUsername(username);
+  }
 
   token = new state.Token('text', '', 0);
   token.content = '@'+username;
