@@ -12,6 +12,10 @@ export default NotificationOptionsComponent.extend({
     this.sendAction("action", value);
   },
 
+  computeValue() {
+    return this.get("notificationLevel");
+  },
+
   @computed("iconForSelectedDetails")
   headerIcon(iconForSelectedDetails) {
     return [iconForSelectedDetails, "caret-down"];

@@ -25,6 +25,11 @@ export default SelectKitComponent.extend({
     }));
   },
 
+  @on("didRender")
+  _setChoicesMaxWidth() {
+    this.$(".choices").css("max-width", this.$body().outerWidth(false));
+  },
+
   @on("didReceiveAttrs")
   _compute() {
     Ember.run.scheduleOnce("afterRender", () => {

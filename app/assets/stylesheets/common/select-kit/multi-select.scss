@@ -68,15 +68,14 @@
     .choices {
       list-style: none;
       margin: 0;
-      padding: 5px 6px;
-      flex: 1;
+      padding: 5px;
       box-sizing: border-box;
 
       .choice {
-        display: inline-flex;
+        display: inline-block;
         box-sizing: border-box;
         padding: 0 5px;
-        margin: 2px 0px;
+        margin: 2px 0;
         border: 1px solid transparent;
         align-items: center;
         justify-content: space-between;
@@ -138,6 +137,7 @@
         padding-left: 0;
         padding-right: 0;
         line-height: normal;
+        overflow: unset;
 
         .name {
           padding: 0 5px;
@@ -148,7 +148,7 @@
           box-shadow: 0 0 2px $danger, 0 1px 0 rgba(0,0,0,0.05);
         }
 
-        .delete-icon {
+        .locked-icon, .delete-icon {
           justify-content: center;
           align-items: center;
           width: 21px;

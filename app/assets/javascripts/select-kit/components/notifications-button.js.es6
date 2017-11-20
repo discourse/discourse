@@ -20,10 +20,8 @@ export default DropdownSelectBoxComponent.extend({
   @computed("iconForSelectedDetails")
   headerIcon(iconForSelectedDetails) { return iconForSelectedDetails; },
 
-  @computed("selectedDetails.icon", "selectedDetails.key")
-  iconForSelectedDetails(icon, key) {
-    return `d-${key}`;
-  },
+  @computed("selectedDetails.icon")
+  iconForSelectedDetails(icon) { return icon; },
 
   computeHeaderContent() {
     let content = this.baseHeaderComputedContent();
