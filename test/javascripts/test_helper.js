@@ -32,7 +32,7 @@
 //= require sinon-qunit-1.0.0
 
 //= require helpers/assertions
-//= require helpers/select-box-kit-helper
+//= require helpers/select-kit-helper
 
 //= require helpers/qunit-helpers
 //= require_tree ./fixtures

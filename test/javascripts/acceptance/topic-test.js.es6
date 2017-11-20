@@ -53,9 +53,9 @@ QUnit.test("Updating the topic title and category", assert => {
 
   fillIn('#edit-title', 'this is the new title');
 
-  expandSelectBoxKit('.title-wrapper .category-chooser');
+  expandSelectKit('.title-wrapper .category-chooser');
 
-  selectBoxKitSelectRow(4, {selector: '.title-wrapper .category-chooser'});
+  selectKitSelectRow(4, {selector: '.title-wrapper .category-chooser'});
 
   click('#topic-title .submit-edit');
 
@@ -103,7 +103,7 @@ QUnit.test("Reply as new topic", assert => {
       "it fills composer with the ring string"
     );
     assert.equal(
-      selectBox('.category-chooser').header.name(), "feature",
+      selectKit('.category-chooser').header.name(), "feature",
       "it fills category selector with the right category"
     );
   });

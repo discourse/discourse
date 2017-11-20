@@ -996,7 +996,7 @@ ko:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
-    select_box:
+    select_kit:
       default_header_text: 선택...
       no_content: 검색 결과가 없습니다
       filter_placeholder: 검색...
