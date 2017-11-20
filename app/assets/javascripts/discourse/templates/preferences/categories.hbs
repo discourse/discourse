@@ -4,9 +4,6 @@
 
   <div class="controls category-controls">
     <label>{{d-icon "d-watching" class="icon watching"}} {{i18n 'user.watched_categories'}}</label>
-
-    {{log selectedCategories}}
-    {{log model.watchedCategories}}
     {{category-selector categories=model.watchedCategories blacklist=selectedCategories}}
   </div>
   <div class="instructions">{{i18n 'user.watched_categories_instructions'}}</div>
