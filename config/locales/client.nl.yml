@@ -1033,7 +1033,7 @@ nl:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
-    select_box:
+    select_kit:
       default_header_text: Selecteer...
       no_content: Geen resultaten gevonden
       filter_placeholder: Zoeken...

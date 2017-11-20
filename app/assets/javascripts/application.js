@@ -4,7 +4,7 @@
 //= require ./ember-addons/ember-computed-decorators
 //= require ./ember-addons/fmt
 //= require_tree ./discourse-common
-//= require_tree ./select-box-kit
+//= require_tree ./select-kit
 //= require ./discourse
 //= require ./deprecated
 

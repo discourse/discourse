@@ -6,10 +6,10 @@ componentTest('with value', {
   template: '{{category-chooser value=2}}',
 
   test(assert) {
-    expandSelectBoxKit();
+    expandSelectKit();
 
     andThen(() => {
-      assert.equal(selectBox('.category-chooser').header.name(), "feature");
+      assert.equal(selectKit('.category-chooser').header.name(), "feature");
     });
   }
 });
@@ -18,10 +18,10 @@ componentTest('with excludeCategoryId', {
   template: '{{category-chooser excludeCategoryId=2}}',
 
   test(assert) {
-    expandSelectBoxKit();
+    expandSelectKit();
 
     andThen(() => {
-      assert.equal(selectBox('.category-chooser').rowByValue(2).el.length, 0);
+      assert.equal(selectKit('.category-chooser').rowByValue(2).el.length, 0);
     });
   }
 });
@@ -30,12 +30,12 @@ componentTest('with scopedCategoryId', {
   template: '{{category-chooser scopedCategoryId=2}}',
 
   test(assert) {
-    expandSelectBoxKit();
+    expandSelectKit();
 
     andThen(() => {
-      assert.equal(selectBox('.category-chooser').rowByIndex(0).name(), "feature");
-      assert.equal(selectBox('.category-chooser').rowByIndex(1).name(), "spec");
-      assert.equal(selectBox('.category-chooser').el.find(".select-box-kit-row").length, 2);
+      assert.equal(selectKit('.category-chooser').rowByIndex(0).name(), "feature");
+      assert.equal(selectKit('.category-chooser').rowByIndex(1).name(), "spec");
+      assert.equal(selectKit('.category-chooser').el.find(".select-kit-row").length, 2);
     });
   }
 });
@@ -48,10 +48,10 @@ componentTest('with allowUncategorized=null', {
   },
 
   test(assert) {
-    expandSelectBoxKit();
+    expandSelectKit();
 
     andThen(() => {
-      assert.equal(selectBox('.category-chooser').header.name(), "Select a category&hellip;");
+      assert.equal(selectKit('.category-chooser').header.name(), "Select a category&hellip;");
     });
   }
 });
@@ -64,10 +64,10 @@ componentTest('with allowUncategorized=null rootNone=true', {
   },
 
   test(assert) {
-    expandSelectBoxKit();
+    expandSelectKit();
 
     andThen(() => {
-      assert.equal(selectBox('.category-chooser').header.name(), "Select a category&hellip;");
+      assert.equal(selectKit('.category-chooser').header.name(), "Select a category&hellip;");
     });
   }
 });
@@ -81,10 +81,10 @@ componentTest('with disallowed uncategorized, rootNone and rootNoneLabel', {
   },
 
   test(assert) {
-    expandSelectBoxKit();
+    expandSelectKit();
 
     andThen(() => {
-      assert.equal(selectBox('.category-chooser').header.name(), "Select a category&hellip;");
+      assert.equal(selectKit('.category-chooser').header.name(), "Select a category&hellip;");
     });
   }
 });
@@ -97,10 +97,10 @@ componentTest('with allowed uncategorized', {
   },
 
   test(assert) {
-    expandSelectBoxKit();
+    expandSelectKit();
 
     andThen(() => {
-      assert.equal(selectBox('.category-chooser').header.name(), "uncategorized");
+      assert.equal(selectKit('.category-chooser').header.name(), "uncategorized");
     });
   }
 });
@@ -113,10 +113,10 @@ componentTest('with allowed uncategorized and rootNone', {
   },
 
   test(assert) {
-    expandSelectBoxKit();
+    expandSelectKit();
 
     andThen(() => {
-      assert.equal(selectBox('.category-chooser').header.name(), "(no category)");
+      assert.equal(selectKit('.category-chooser').header.name(), "(no category)");
     });
   }
 });
@@ -130,10 +130,10 @@ componentTest('with allowed uncategorized rootNone and rootNoneLabel', {
   },
 
   test(assert) {
-    expandSelectBoxKit();
+    expandSelectKit();
 
     andThen(() => {
-      assert.equal(selectBox('.category-chooser').header.name(), "root none label");
+      assert.equal(selectKit('.category-chooser').header.name(), "root none label");
     });
   }
 });
