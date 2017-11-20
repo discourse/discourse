@@ -122,7 +122,7 @@ export default ComboBoxComponent.extend(DatetimeMixin, {
     let content = this.baseHeaderComputedContent();
     content.datetime = this._computeDatetimeForValue(this.get("computedValue"));
     content.name = this.get("selectedComputedContent.name") || content.name;
-    content.hasSelection = !Ember.isEmpty(this.get("selectedComputedContent"));
+    content.hasSelection = this.get("hasSelection");
     content.icons = this._computeIconsForValue(this.get("computedValue"));
     return content;
   },

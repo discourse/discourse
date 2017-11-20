@@ -4,6 +4,7 @@
     display: -ms-inline-flexbox;
     display: inline-flex;
     min-width: auto;
+    border: none;
 
     &.is-expanded {
       .select-box-kit-collection,

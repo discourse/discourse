@@ -57,7 +57,7 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   allowInitialValueMutation: false,
   content: null,
   computedContent: null,
-  limitMatches: 2,
+  limitMatches: 100,
 
   init() {
     this._super();
@@ -151,9 +151,10 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     return false;
   },
 
-  @computed("filter")
-  shouldDisplayCreateRow(filter) {
-    if (this.get("allowAny") === true && filter.length > 0) { return true; }
+  @computed("filter", "computedContent")
+  shouldDisplayCreateRow(filter, computedContent) {
+    if (computedContent.map(c => c.value).includes(filter)) return false;
+    if (this.get("allowAny") === true && filter.length > 0) return true;
     return false;
   },
 

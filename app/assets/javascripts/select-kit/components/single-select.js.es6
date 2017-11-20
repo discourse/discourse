@@ -45,7 +45,13 @@ export default SelectKitComponent.extend({
   },
 
   _beforeWillComputeValue(value) {
-    return this._castInteger(value === "" ? null : value);
+    switch (typeof value) {
+    case "string":
+    case "number":
+      return this._castInteger(value === "" ? null : value);
+    default:
+      return value;
+    }
   },
   willComputeValue(value) { return value; },
   computeValue(value) { return value; },
@@ -73,9 +79,9 @@ export default SelectKitComponent.extend({
     };
   },
 
-  @computed("computedContent.[]", "computedValue.[]", "filter")
-  filteredComputedContent(computedContent, computedValue, filter) {
-    if (this.get("shouldFilter") === true) {
+  @computed("computedContent.[]", "computedValue", "filter", "shouldFilter")
+  filteredComputedContent(computedContent, computedValue, filter, shouldFilter) {
+    if (shouldFilter === true) {
       computedContent = this.filterComputedContent(computedContent, computedValue, filter);
     }
 
@@ -92,6 +98,11 @@ export default SelectKitComponent.extend({
   hasSelection(selectedComputedContent) {
     return selectedComputedContent !== this.get("noneRowComputedContent") &&
       !Ember.isNone(selectedComputedContent);
+  },
+
+  @computed("filter", "computedValue")
+  shouldDisplayCreateRow(filter, computedValue) {
+    return this._super() && computedValue !== filter;
   },
 
   autoHighlight() {
