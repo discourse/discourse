@@ -53,8 +53,8 @@ $mobile-breakpoint: 700px;
         background-color: lighten($primary, 80%);
       }
 
-      .d-icon-chevron-down,
-      .d-icon-chevron-up {
+      .d-chevron-down,
+      .d-chevron-up {
         margin-left: 0.5em;
       }
     }
@@ -905,7 +905,7 @@ table.api-keys {
       .d-icon {
         color: $primary;
       }
-      .d-icon-heart {
+      .d-heart {
         color: $love;
       }
     }
@@ -1386,10 +1386,10 @@ table.api-keys {
 }
 
 .tl3-requirements {
-  .d-icon-check {
+  .d-check {
     color: $success;
   }
-  .d-icon-times {
+  .d-times {
     color: $danger;
   }
 }
