@@ -285,14 +285,13 @@ QUnit.test("update post time through advanced search ui", assert => {
   visit("/search");
   fillIn('.search input.full-page-search', 'none');
   click('.search-advanced-btn');
-  fillIn('#search-post-date', '2016-10-05');
+  fillIn('#search-post-date .date-picker', '2016-10-05');
   expandSelectKit('.search-advanced-options .select-kit#postTime');
   selectKitSelectRow('after', { selector: '.search-advanced-options .select-kit#postTime' });
   fillIn('.search-advanced-options .select-kit#postTime', 'after');
 
   andThen(() => {
     assert.ok(exists(selectKit('.search-advanced-options .select-kit#postTime').rowByName("after").el), 'has "after" populated');
-    assert.equal(find('.search-advanced-options #search-post-date').val(), "2016-10-05", 'has "2016-10-05" populated');
     assert.equal(find('.search input.full-page-search').val(), "none after:2016-10-05", 'has updated search term to "none after:2016-10-05"');
   });
 });
