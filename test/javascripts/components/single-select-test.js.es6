@@ -2,7 +2,7 @@ import componentTest from 'helpers/component-test';
 import { withPluginApi } from 'discourse/lib/plugin-api';
 import { clearCallbacks } from 'select-kit/mixins/plugin-api';
 
-moduleForComponent('select-kit', { integration: true });
+moduleForComponent('single-select', { integration: true });
 
 componentTest('updating the content refreshes the list', {
   template: '{{single-select value=1 content=content}}',
@@ -93,7 +93,7 @@ componentTest('custom search icon', {
     expandSelectKit();
 
     andThen(() => {
-      assert.ok(selectKit().filter.icon().hasClass("d-icon-shower"), "it has a the correct icon");
+      assert.ok(selectKit().filter.icon().hasClass("fa-shower"), "it has a the correct icon");
     });
   }
 });
@@ -174,7 +174,7 @@ componentTest('dynamic headerText', {
     expandSelectKit();
 
     andThen(() => {
-      assert.equal(selectKit().header.name(), "robin")
+      assert.equal(selectKit().header.name(), "robin");
     });
 
     selectKitSelectRow(2);
