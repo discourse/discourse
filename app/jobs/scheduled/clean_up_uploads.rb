@@ -55,8 +55,10 @@ module Jobs
           encoded_sha = Base62.encode(upload.sha1.hex)
           next if QueuedPost.where("raw LIKE '%#{upload.sha1}%' OR raw LIKE '%#{encoded_sha}%'").exists?
           next if Draft.where("data LIKE '%#{upload.sha1}%' OR data LIKE '%#{encoded_sha}%'").exists?
+          upload.destroy
+        else
+          upload.delete
         end
-        upload.destroy
       end
     end
   end
