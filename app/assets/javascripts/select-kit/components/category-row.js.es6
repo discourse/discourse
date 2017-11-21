@@ -6,7 +6,15 @@ import { categoryBadgeHTML } from "discourse/helpers/category-link";
 export default SelectKitRowComponent.extend({
   layoutName: "select-kit/templates/components/category-row",
   classNames: "category-row",
-  displayCategoryDescription: true,
+
+  @computed("options.displayCategoryDescription")
+  displayCategoryDescription(displayCategoryDescription) {
+    if (Ember.isNone(displayCategoryDescription)) {
+      return true;
+    }
+
+    return displayCategoryDescription;
+  },
 
   @computed("computedContent.value", "computedContent.name")
   category(value, name) {
@@ -51,8 +59,8 @@ export default SelectKitRowComponent.extend({
 
   topicCount: Ember.computed.alias("category.topic_count"),
 
-  @computed("options.displayCategoryDescription", "category.description")
-  hasDescription(displayCategoryDescription, description) {
+  @computed("displayCategoryDescription", "category.description")
+  shouldDisplayDescription(displayCategoryDescription, description) {
     return displayCategoryDescription && description && description !== "null";
   },
 
