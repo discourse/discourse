@@ -5,18 +5,24 @@ describe UserBadgesController do
   let(:badge) { Fabricate(:badge) }
 
   context 'index' do
+    let(:badge) { Fabricate(:badge, target_posts: true, show_posts: false) }
     it 'does not leak private info' do
-      badge = Fabricate(:badge, target_posts: true, show_posts: false)
       p = create_post
       UserBadge.create(badge: badge, user: user, post_id: p.id, granted_by_id: -1, granted_at: Time.now)
 
       get :index, params: { badge_id: badge.id }, format: :json
-      expect(response.status).to eq(200)
+      expect(response).to be_success
 
       parsed = JSON.parse(response.body)
       expect(parsed["topics"]).to eq(nil)
       expect(parsed["badges"].length).to eq(1)
       expect(parsed["user_badge_info"]["user_badges"][0]["post_id"]).to eq(nil)
+    end
+
+    it "fails when badges are disabled" do
+      SiteSetting.enable_badges = false
+      get :index, params: { badge_id: badge.id }, format: :json
+      expect(response).not_to be_success
     end
   end
 

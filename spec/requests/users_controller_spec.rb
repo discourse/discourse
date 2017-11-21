@@ -26,6 +26,19 @@ RSpec.describe UsersController do
     end
   end
 
+  describe "#badges" do
+    it "renders fine by default" do
+      get "/u/#{user.username}/badges"
+      expect(response).to be_success
+    end
+
+    it "fails if badges are disabled" do
+      SiteSetting.enable_badges = false
+      get "/u/#{user.username}/badges"
+      expect(response).not_to be_success
+    end
+  end
+
   describe "updating a user" do
     before do
       sign_in(user)
