@@ -63,6 +63,13 @@ export default Ember.Mixin.create({
 
   // force the component in a known default state
   focus() {
+    Ember.run.schedule("afterRender", () => this.$header().focus());
+  },
+
+  expand() {
+    if (this.get("isExpanded") === true) return;
+    this.setProperties({ isExpanded: true, renderedBodyOnce: true, isFocused: true });
+
     Ember.run.schedule("afterRender", () => {
       if (this.$filterInput().is(":visible")) {
         this.$filterInput().focus();
@@ -70,12 +77,7 @@ export default Ember.Mixin.create({
         this.$header().focus();
       }
     });
-  },
 
-  expand(event) {
-    if (this.get("isExpanded") === true) return;
-    this.setProperties({ isExpanded: true, renderedBodyOnce: true, isFocused: true });
-    this.focus(event);
     this.autoHighlight();
   },
 
