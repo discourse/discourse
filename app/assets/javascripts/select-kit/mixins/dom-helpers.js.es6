@@ -152,10 +152,10 @@ export default Ember.Mixin.create({
     const hasAboveSpace = offsetTop - fullHeight - dHeaderHeight > 0;
     if (hasBelowSpace || (!hasBelowSpace && !hasAboveSpace)) {
       this.setProperties({ isBelow: true, isAbove: false });
-      options.top = componentHeight + this.get("verticalOffset");
+      options.top = componentHeight + this.get("verticalOffset") - 2;
     } else {
       this.setProperties({ isBelow: false, isAbove: true });
-      options.bottom = componentHeight + this.get("verticalOffset");
+      options.bottom = componentHeight + this.get("verticalOffset") - 1;
     }
 
     this.$body().css(options);
