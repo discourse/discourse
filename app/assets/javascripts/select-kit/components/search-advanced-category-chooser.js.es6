@@ -9,6 +9,14 @@ export default CategoryChooserComponent.extend({
   allowUncategorized: true,
   clearable: true,
 
+  init() {
+    this._super();
+
+    this.get("rowComponentOptions").setProperties({
+      displayCategoryDescription: false
+    });
+  },
+
   mutateValue(value) {
     if (value) {
       this.set("value", Category.findById(value));

@@ -11,13 +11,13 @@ export default MultiSelectComponent.extend({
   init() {
     this._super();
 
-    this.set("headerComponentOptions", Ember.Object.create({
+    this.get("headerComponentOptions").setProperties({
       selectedNameComponent: "multi-select/selected-category"
-    }));
+    });
 
-    this.set("rowComponentOptions", Ember.Object.create({
+    this.get("rowComponentOptions").setProperties({
       displayCategoryDescription: false
-    }));
+    });
   },
 
   computeValues() {
