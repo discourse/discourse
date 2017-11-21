@@ -63,6 +63,9 @@ export default SelectKitComponent.extend({
     return this._super() && !computedValues.includes(filter);
   },
 
+  @computed
+  shouldDisplayFilter() { return true; },
+
   _beforeWillComputeValues(values) {
     return values.map(v => this._castInteger(v === "" ? null : v));
   },
