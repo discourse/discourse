@@ -25,7 +25,7 @@ export default Ember.Component.extend(CleansUp, {
 
     if (!this.get('showPeriods')) {
       if (!this.site.mobileView) {
-        const $chevron = this.$('.d-icon-caret-down');
+        const $chevron = this.$('.d-caret-down');
         this.$('#period-popup').css($chevron.position());
       } else {
         this.$('#period-popup').css({top: this.$().height()});
