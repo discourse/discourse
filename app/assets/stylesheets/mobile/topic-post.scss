@@ -49,7 +49,7 @@ span.badge-posts {
       }
       &.reply {
         float: right;
-        color: $primary-high;        
+        color: $primary-high;
       }
       &.has-like {
         color: $love;
@@ -289,7 +289,7 @@ a.star {
 #topic-footer-buttons {
   @include clearfix;
   padding: 20px 0 0 0;
-  .d-icon-bookmark.bookmarked { color: $tertiary; }
+  .d-bookmark.bookmarked { color: $tertiary; }
 
   .combobox {
     float: left;
@@ -337,7 +337,7 @@ span.post-count {
   .btn {
     margin-bottom: 5px;
     margin-right: 10px;
-    .d-icon-star {margin-right: 5px;}
+    .d-star {margin-right: 5px;}
   }
 }
 

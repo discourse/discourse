@@ -249,7 +249,7 @@ nav.post-controls {
   }
 
   .post-date { color: dark-light-choose($primary-medium, $secondary-high); }
-  .d-icon-arrow-up, .d-icon-arrow-down { margin-left: 5px; }
+  .d-arrow-up, .d-arrow-down { margin-left: 5px; }
   .reply:first-of-type .row { border-top: none; }
 
   .topic-meta-data {
@@ -373,7 +373,7 @@ a.star {
       font-weight: bold;
       font-size: 0.929em;
     }
-    .d-icon-times {
+    .d-times {
       color: dark-light-choose($primary-medium, $secondary-high);
     }
   }
@@ -443,10 +443,10 @@ a.star {
   }
   .btn {
     @include topic-footer-button;
-    .d-icon-bookmark.bookmarked { color: $tertiary; }
+    .d-bookmark.bookmarked { color: $tertiary; }
   }
 
-  .bookmark.bookmarked .d-icon-bookmark {
+  .bookmark.bookmarked .d-bookmark {
     color: $tertiary;
   }
 }
@@ -519,7 +519,7 @@ video {
 
   .topic-statuses {
     i { color: $header_primary; }
-    .d-icon-envelope { color: $danger; }
+    .d-envelope { color: $danger; }
     .unpinned { color: $header_primary; }
   }
 
