@@ -31,6 +31,10 @@ export default class ComponentConnector {
   }
 
   update(prev) {
+    // mutated external properties might not correctly update the underlying component
+    // in this case we can define trackedProperties, if different from previous
+    // state we will re-init the whole component, be careful when using this
+    // to not track a property which would be updated too often (on scroll for example)
     let shouldInit = false;
     this.trackedProperties.forEach(prop => {
       if (prev.opts[prop] !== this.opts[prop]) {
@@ -38,7 +42,7 @@ export default class ComponentConnector {
       }
     });
 
-    if (shouldInit === true) return this.init();
+    if (shouldInit) return this.init();
 
     return null;
   }
