@@ -106,8 +106,8 @@ export default Ember.Mixin.create({
     const dHeader = $(".d-header")[0];
     const dHeaderBounds = dHeader ? dHeader.getBoundingClientRect() : {top: 0, height: 0};
     const dHeaderHeight = dHeaderBounds.top + dHeaderBounds.height;
-    const headerHeight = this.$header().outerHeight(false);
-    const headerWidth = this.$header().outerWidth(false);
+    const componentHeight = this.$().outerHeight(false);
+    const componentWidth = this.$().outerWidth(false);
     const bodyHeight = this.$body().outerHeight(false);
     const windowWidth = $(window).width();
     const windowHeight = $(window).height();
@@ -132,7 +132,7 @@ export default Ember.Mixin.create({
           options.left = bodyWidth + this.get("horizontalOffset");
         } else {
           this.setProperties({ isLeftAligned: false, isRightAligned: true });
-          options.right = - (bodyWidth - headerWidth + this.get("horizontalOffset"));
+          options.right = - (bodyWidth - componentWidth + this.get("horizontalOffset"));
         }
       } else {
         const horizontalSpacing = boundingRect.left;
@@ -147,15 +147,15 @@ export default Ember.Mixin.create({
       }
     }
 
-    const componentHeight = this.get("verticalOffset") + bodyHeight + headerHeight;
-    const hasBelowSpace = windowHeight - offsetBottom - componentHeight > 0;
-    const hasAboveSpace = offsetTop - componentHeight - dHeaderHeight > 0;
+    const fullHeight = this.get("verticalOffset") + bodyHeight + componentHeight;
+    const hasBelowSpace = windowHeight - offsetBottom - fullHeight > 0;
+    const hasAboveSpace = offsetTop - fullHeight - dHeaderHeight > 0;
     if (hasBelowSpace || (!hasBelowSpace && !hasAboveSpace)) {
       this.setProperties({ isBelow: true, isAbove: false });
-      options.top = headerHeight + this.get("verticalOffset");
+      options.top = componentHeight + this.get("verticalOffset");
     } else {
       this.setProperties({ isBelow: false, isAbove: true });
-      options.bottom = headerHeight + this.get("verticalOffset");
+      options.bottom = componentHeight + this.get("verticalOffset");
     }
 
     this.$body().css(options);
@@ -223,11 +223,11 @@ export default Ember.Mixin.create({
   },
 
   _positionWrapper() {
-    const headerHeight = this.$header().outerHeight(false);
+    const componentHeight = this.$().outerHeight(false);
 
     this.$(this.wrapperSelector).css({
-      width: this.$().outerWidth(false),
-      height: headerHeight + this.$body().outerHeight(false) + 2
+      width: this.$().outerWidth(false) - 2,
+      height: componentHeight + this.$body().outerHeight(false)
     });
   },
 });

@@ -22,8 +22,6 @@
 
     .multi-select-header {
       background: $secondary;
-      border: 0;
-      border-bottom: 1px solid transparent;
 
       &.is-focused {
         box-shadow: $tertiary 0px 0px 6px 0px;
@@ -55,7 +53,6 @@
       }
 
       .multi-select-header {
-        border-bottom: 1px solid $primary-low;
         border-radius: 0;
         box-shadow: none;
       }
@@ -70,15 +67,19 @@
       margin: 0;
       padding: 5px;
       box-sizing: border-box;
+      display: inline;
+      list-style-type: none;
 
       .choice {
-        display: inline-block;
+        display: inline-flex;
         box-sizing: border-box;
         padding: 0 5px;
         margin: 2px 0;
         border: 1px solid transparent;
         align-items: center;
         justify-content: space-between;
+        overflow: hidden;
+        align-items: center;
       }
 
       .filter {
@@ -86,8 +87,7 @@
         justify-content: flex-start;
         white-space: nowrap;
         min-width: 50px;
-        padding-left: 0;
-        padding-right: 0;
+        padding: 0;
 
         .filter-input, .filter-input:focus {
           border: none;
@@ -103,6 +103,7 @@
           -webkit-box-shadow: none;
           box-shadow: none;
           border-radius: 0;
+          height: 21px;
         }
       }
 
@@ -137,7 +138,6 @@
         padding-left: 0;
         padding-right: 0;
         line-height: normal;
-        overflow: unset;
 
         .name {
           padding: 0 5px;

@@ -257,8 +257,8 @@
 
   .select-box-kit-wrapper, .select-kit-wrapper {
     position: absolute;
-    top: -1px;
-    left: -1px;
+    top: 0;
+    left: 0;
     background: none;
     display: none;
     -webkit-box-sizing: border-box;
