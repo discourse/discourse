@@ -30,7 +30,7 @@ export default MultiSelectComponent.extend({
       content = this.get("choices");
     }
 
-    return Ember.makeArray(content).filter(c => !Ember.isEmpty(c));
+    return Ember.makeArray(content).filter(c => c);
   },
 
   mutateValues(values) {
@@ -40,13 +40,7 @@ export default MultiSelectComponent.extend({
   computeValues() {
     return this.get("settingValue")
                .split(this.get("tokenSeparator"))
-               .filter(c => !Ember.isEmpty(c));
-  },
-
-  didComputeAttributes() {
-    if (Ember.isEmpty(this.get("computedContent"))) {
-      this.setProperties({ rowComponent: null, noContentLabel: null });
-    }
+               .filter(c => c);
   },
 
   _handleTabOnKeyDown(event) {
