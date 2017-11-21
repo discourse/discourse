@@ -125,9 +125,9 @@ export default Ember.Mixin.create({
     if (this.get("isExpanded") === false) {
       this.unfocus(event);
     } else if (this.$highlightedRow().length === 1) {
-      this._destroyEvent(event);
       Ember.run.throttle(this, this._rowClick, this.$highlightedRow(), 150, 150, true);
-      this.focus(event);
+      this.unfocus(event);
+      return true;
     } else {
       this._destroyEvent(event);
       this.unfocus(event);
