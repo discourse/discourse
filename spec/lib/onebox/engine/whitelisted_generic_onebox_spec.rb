@@ -101,7 +101,7 @@ describe Onebox::Engine::WhitelistedGenericOnebox do
       expect(onebox.to_html).not_to be_empty
 
       expect(onebox.to_html).to include("Mail Online")
-      expect(onebox.to_html).to include("08:03PM - 08 Aug 14")
+      expect(onebox.to_html).to include("08 Aug 14")
     end
   end
 
