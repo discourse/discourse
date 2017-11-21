@@ -98,7 +98,7 @@ componentTest('custom search icon', {
   }
 });
 
-componentTest('select-box is expandable', {
+componentTest('is expandable', {
   template: '{{single-select}}',
   test(assert) {
     expandSelectKit();
