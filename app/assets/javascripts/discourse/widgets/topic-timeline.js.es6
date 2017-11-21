@@ -1,5 +1,5 @@
 import { createWidget } from 'discourse/widgets/widget';
-import ComponentConnector from 'discourse/widgets/component_connector';
+import ComponentConnector from 'discourse/widgets/component-connector';
 import { h } from 'virtual-dom';
 import { relativeAge } from 'discourse/lib/formatter';
 import { iconNode } from 'discourse-common/lib/icon-library';
