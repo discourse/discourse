@@ -214,6 +214,8 @@ QUnit.test("number", assert => {
 });
 
 QUnit.test("durationTiny", assert => {
+  assert.equal(durationTiny(), '&mdash;', "undefined is a dash");
+  assert.equal(durationTiny(null), '&mdash;', "null is a dash");
   assert.equal(durationTiny(0), '< 1m', "0 seconds shows as < 1m");
   assert.equal(durationTiny(59), '< 1m', "59 seconds shows as < 1m");
   assert.equal(durationTiny(60), '1m', "60 seconds shows as 1m");
