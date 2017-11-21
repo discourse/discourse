@@ -1739,7 +1739,8 @@ en:
     email_too_long: "The email you provided is too long. Mailbox names must be no more than 254 characters, and domain names must be no more than 253 characters."
     reserved_username: "That username is not allowed."
     missing_user_field: "You have not completed all the user fields"
-    close_window: "Authentication is complete. Close this window to continue."
+    auth_complete: "Authentication is complete."
+    click_to_continue: "Click here to continue."
     already_logged_in: "Oops, looks like you are attempting to accept an invitation for another user. If you are not %{current_user}, please log out and try again."
 
   user:
