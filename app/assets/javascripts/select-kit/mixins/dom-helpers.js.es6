@@ -233,7 +233,7 @@ export default Ember.Mixin.create({
     const componentHeight = this.$().outerHeight(false);
 
     this.$(this.wrapperSelector).css({
-      width: this.$().outerWidth(false) - 2,
+      width: this.$().outerWidth(false),
       height: componentHeight + this.$body().outerHeight(false)
     });
   },

@@ -193,14 +193,12 @@ input {
     line-height: 18px;
     color: $primary;
     background-color: $secondary;
-    border: 1px solid $primary-low;
-    border-radius: 3px;
-    box-shadow: inset 0 1px 1px rgba(0,0,0, .3);
+    border: 1px solid $primary-medium;
 
     &:focus {
       border-color: $tertiary;
+      box-shadow: $tertiary 0px 0px 6px 0px;
       outline: 0;
-      box-shadow: inset 0 1px 1px rgba(0,0,0, .3), 0 0 8px $tertiary;
     }
   }
 }
@@ -208,14 +206,11 @@ input {
 textarea {
   height: auto;
   background-color:$secondary;
-  border: 1px solid $primary-low;
-  border-radius: 3px;
-  box-shadow: inset 0 1px 1px rgba(0,0,0, .3);
+  border: 1px solid $primary-medium;
 
   &:focus {
     border-color: $tertiary;
     outline: 0;
-    box-shadow: inset 0 1px 1px rgba(0,0,0, .3), 0 0 8px $tertiary;
   }
 }
 

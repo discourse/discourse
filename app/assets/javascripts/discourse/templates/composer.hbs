@@ -23,34 +23,35 @@
                           messageCount=messageCount
                           addLinkLookup="addLinkLookup"}}
 
-      {{composer-toggles composeState=model.composeState
-                         toggleComposer=(action "toggle")
-                         toggleToolbar=(action "toggleToolbar")}}
-
       {{#if model.viewOpen}}
-
-        <div class='reply-area {{if canEditTags "with-tags"}}'>
+ 
+        <div class="reply-area {{if canEditTags 'with-tags'}}">
 
           <div class='composer-fields'>
 
             {{plugin-outlet name="composer-open" args=(hash model=model)}}
 
             <div class='reply-to'>
-              {{{model.actionTitle}}}
+              <div class="reply-details">
+                {{{model.actionTitle}}}
 
-              {{#unless site.mobileView}}
-                {{#if whisperOrUnlistTopicText}}
-                  <span class='whisper'>({{whisperOrUnlistTopicText}})</span>
-                {{/if}}
-              {{/unless}}
+                {{#unless site.mobileView}}
+                  {{#if whisperOrUnlistTopicText}}
+                    <span class='whisper'>({{whisperOrUnlistTopicText}})</span>
+                  {{/if}}
+                {{/unless}}
 
-              {{#if canEdit}}
-                {{#if showEditReason}}
-                  {{text-field autofocus="true" value=editReason tabindex="7" id="edit-reason" maxlength="255" placeholderKey="composer.edit_reason_placeholder"}}
-                {{else}}
-                  <a {{action "displayEditReason"}} class="display-edit-reason">{{i18n 'composer.show_edit_reason'}}</a>
+                {{#if canEdit}}
+                  {{#if showEditReason}}
+                    {{text-field autofocus="true" value=editReason tabindex="7" id="edit-reason" maxlength="255" placeholderKey="composer.edit_reason_placeholder"}}
+                  {{else}}
+                    <a {{action "displayEditReason"}} class="display-edit-reason">{{i18n 'composer.show_edit_reason'}}</a>
+                  {{/if}}
                 {{/if}}
-              {{/if}}
+              </div>
+              {{composer-toggles composeState=model.composeState
+                        toggleComposer=(action "toggle")
+                        toggleToolbar=(action "toggleToolbar")}}
             </div>
 
             {{#if model.canEditTitle}}
@@ -70,7 +71,7 @@
                 </div>
               {{/if}}
 
-              <div class="title-and-category">
+              <div class="title-and-category {{if showPreview 'with-preview'}}">
 
                 {{composer-title composer=model lastValidatedAt=lastValidatedAt focusTarget=focusTarget}}
 
@@ -83,6 +84,10 @@
                     {{d-button action="showOptions" label="topic.options"}}
                   {{/if}}
                 {{/if}}
+                {{#if canEditTags}}
+                  {{tag-chooser tags=model.tags tabIndex="4" categoryId=model.categoryId}}
+                {{/if}}
+
 
               </div>
             {{/if}}
@@ -111,13 +116,10 @@
                             showUploadSelector="showUploadSelector"
                             afterRefresh="afterRefresh"}}
 
-          <div class='submit-panel {{if canEditTags "with-tags"}}'>
+          <div class='submit-panel'>
             {{plugin-outlet name="composer-fields-below" args=(hash model=model)}}
 
-            {{#if canEditTags}}
-              {{tag-chooser tags=model.tags tabIndex="4" categoryId=model.categoryId}}
-            {{/if}}
-
+     
             <div class='save-or-cancel'>
               {{composer-save-button action=(action "save")
                                      icon=model.saveIcon
@@ -180,6 +182,11 @@
             {{i18n "composer.saved_draft"}}
           {{/if}}
         </div>
+
+        {{composer-toggles composeState=model.composeState
+          toggleComposer=(action "toggle")
+          toggleToolbar=(action "toggleToolbar")}}
+
       {{/if}}
 
   {{/if}}

@@ -47,11 +47,20 @@
   flex-direction: column;
   background-color: $secondary;
   position: relative;
+  border: 1px solid $primary-medium;
+  
+  textarea {
+    border-top: 1px solid $primary-low;
+    &:focus {
+      border-top: 1px solid $primary-low;      
+    }
+  }
+
 }
 
 .d-editor-preview-wrapper {
-  margin-left: 5px;
-  max-width: 50%;
+  max-width: 49%;
+  margin-left: 1%;
   display: flex;
   flex-direction: column;
   background: $secondary;
@@ -60,12 +69,13 @@
 .d-editor-button-bar {
   display: flex;
   align-items: center;
-  border-bottom: 2px solid $primary-low;
+  border-bottom: none;
   min-height: 30px;
+  padding-left: 3px;
 
   button {
     background-color: transparent;
-    color: $primary-medium;
+    color: $primary-high;
   }
 
   .btn:not(.no-text) {
@@ -113,16 +123,15 @@
 
 .d-editor-input {
   border: 0;
-  padding: 7px;
+  padding: 10px;
   overflow-x: hidden;
 }
 
 .d-editor-preview {
-  border: 1px dashed $primary-low;
   overflow: auto;
   cursor: default;
-  background-color: $secondary;
-  padding: 7px;
+  background-color: $primary-very-low;
+  padding: 10px;
 }
 
 .composing-whisper .d-editor-preview {
