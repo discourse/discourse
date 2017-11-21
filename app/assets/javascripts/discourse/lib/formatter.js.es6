@@ -130,6 +130,8 @@ function wrapAgo(dateStr) {
 }
 
 export function durationTiny(distance, ageOpts) {
+  if (typeof(distance) !== 'number') { return '&mdash;'; }
+
   const dividedDistance = Math.round(distance / 60.0);
   const distanceInMinutes = (dividedDistance < 1) ? 1 : dividedDistance;
 
