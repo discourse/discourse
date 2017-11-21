@@ -19,18 +19,22 @@ export default Ember.Mixin.create({
       .off("mousedown.select-kit")
       .off("touchstart.select-kit");
 
-    this.$header()
-      .off("focus.select-kit")
-      .off("blur.select-kit")
-      .off("keypress.select-kit")
-      .off("keydown.select-kit");
+    if (this.$header()) {
+      this.$header()
+        .off("focus.select-kit")
+        .off("blur.select-kit")
+        .off("keypress.select-kit")
+        .off("keydown.select-kit");
+    }
 
-    this.$filterInput()
-      .off("change.select-kit")
-      .off("keydown.select-kit")
-      .off("keypress.select-kit")
-      .off("focus.select-kit")
-      .off("focusin.select-kit");
+    if (this.$filterInput()) {
+      this.$filterInput()
+        .off("change.select-kit")
+        .off("keydown.select-kit")
+        .off("keypress.select-kit")
+        .off("focus.select-kit")
+        .off("focusin.select-kit");
+    }
   },
 
   didInsertElement() {
