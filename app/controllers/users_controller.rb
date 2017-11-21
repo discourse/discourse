@@ -8,7 +8,7 @@ require_dependency 'admin_confirmation'
 class UsersController < ApplicationController
 
   skip_before_action :authorize_mini_profiler, only: [:avatar]
-  skip_before_action :check_xhr, only: [:show, :password_reset, :update, :account_created, :activate_account, :perform_account_activation, :user_preferences_redirect, :avatar, :my_redirect, :toggle_anon, :admin_login, :confirm_admin]
+  skip_before_action :check_xhr, only: [:show, :badges, :password_reset, :update, :account_created, :activate_account, :perform_account_activation, :user_preferences_redirect, :avatar, :my_redirect, :toggle_anon, :admin_login, :confirm_admin]
 
   before_action :ensure_logged_in, only: [:username, :update, :user_preferences_redirect, :upload_user_image,
                                           :pick_avatar, :destroy_user_image, :destroy, :check_emails, :topic_tracking_state]
@@ -67,12 +67,18 @@ class UsersController < ApplicationController
       format.html do
         @restrict_fields = guardian.restrict_user_fields?(@user)
         store_preloaded("user_#{@user.username}", MultiJson.dump(user_serializer))
+        render :show
       end
 
       format.json do
         render_json_dump(user_serializer)
       end
     end
+  end
+
+  def badges
+    raise Discourse::NotFound unless SiteSetting.enable_badges?
+    show
   end
 
   def card_badge

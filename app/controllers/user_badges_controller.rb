@@ -1,4 +1,6 @@
 class UserBadgesController < ApplicationController
+  before_action :ensure_badges_enabled
+
   def index
     params.permit [:granted_before, :offset, :username]
 
@@ -105,5 +107,9 @@ class UserBadgesController < ApplicationController
     def can_assign_badge_to_user?(user)
       master_api_call = current_user.nil? && is_api?
       master_api_call || guardian.can_grant_badges?(user)
+    end
+
+    def ensure_badges_enabled
+      raise Discourse::NotFound unless SiteSetting.enable_badges?
     end
 end
