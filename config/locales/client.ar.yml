@@ -1193,7 +1193,7 @@ ar:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
-    select_box:
+    select_kit:
       default_header_text: اختر...
       no_content: لا يوجد نتائج مطابقة
       filter_placeholder: بحث...

@@ -1,0 +1,13 @@
+{{#if icons}}
+  <div class="future-date-input-selector-icons">
+    {{#each icons as |icon|}} {{d-icon icon}} {{/each}}
+  </div>
+{{/if}}
+
+<span class="name">{{computedContent.name}}</span>
+
+{{#if datetime}}
+  <span class="future-date-input-selector-datetime">
+    {{datetime}}
+  </span>
+{{/if}}

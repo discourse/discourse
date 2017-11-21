@@ -136,10 +136,10 @@ QUnit.test("update category through advanced search ui", assert => {
   visit("/search");
   fillIn('.search input.full-page-search', 'none');
   click('.search-advanced-btn');
-  fillIn('.search-advanced-options .category-selector', 'faq');
-  click('.search-advanced-options .category-selector');
-  keyEvent('.search-advanced-options .category-selector', 'keydown', 8);
-  keyEvent('.search-advanced-options .category-selector', 'keydown', 9);
+
+  expandSelectKit('.search-advanced-options .category-chooser');
+  selectKitFillInFilter('faq', { selector: '.search-advanced-options .category-chooser' });
+  selectKitSelectRow(4, { selector: '.search-advanced-options .category-chooser' });
 
   andThen(() => {
     assert.ok(exists('.search-advanced-options .badge-category:contains("faq")'), 'has "faq" populated');
@@ -257,12 +257,12 @@ QUnit.test("update in filter through advanced search ui", assert => {
   fillIn('.search input.full-page-search', 'none');
   click('.search-advanced-btn');
 
-  expandSelectBoxKit('.search-advanced-options .select-box-kit#in');
-  selectBoxKitSelectRow('bookmarks', { selector: '.search-advanced-options .select-box-kit#in' });
-  fillIn('.search-advanced-options .select-box-kit#in', 'bookmarks');
+  expandSelectKit('.search-advanced-options .select-kit#in');
+  selectKitSelectRow('bookmarks', { selector: '.search-advanced-options .select-kit#in' });
+  fillIn('.search-advanced-options .select-kit#in', 'bookmarks');
 
   andThen(() => {
-    assert.ok(exists(selectBox('.search-advanced-options .select-box-kit#in').rowByName("I\'ve bookmarked").el), 'has "I\'ve bookmarked" populated');
+    assert.ok(exists(selectKit('.search-advanced-options .select-kit#in').rowByName("I\'ve bookmarked").el), 'has "I\'ve bookmarked" populated');
     assert.equal(find('.search input.full-page-search').val(), "none in:bookmarks", 'has updated search term to "none in:bookmarks"');
   });
 });
@@ -271,12 +271,12 @@ QUnit.test("update status through advanced search ui", assert => {
   visit("/search");
   fillIn('.search input.full-page-search', 'none');
   click('.search-advanced-btn');
-  expandSelectBoxKit('.search-advanced-options .select-box-kit#status');
-  selectBoxKitSelectRow('closed', { selector: '.search-advanced-options .select-box-kit#status' });
-  fillIn('.search-advanced-options .select-box-kit#status', 'closed');
+  expandSelectKit('.search-advanced-options .select-kit#status');
+  selectKitSelectRow('closed', { selector: '.search-advanced-options .select-kit#status' });
+  fillIn('.search-advanced-options .select-kit#status', 'closed');
 
   andThen(() => {
-    assert.ok(exists(selectBox('.search-advanced-options .select-box-kit#status').rowByName("are closed").el), 'has "are closed" populated');
+    assert.ok(exists(selectKit('.search-advanced-options .select-kit#status').rowByName("are closed").el), 'has "are closed" populated');
     assert.equal(find('.search input.full-page-search').val(), "none status:closed", 'has updated search term to "none status:closed"');
   });
 });
@@ -286,12 +286,12 @@ QUnit.test("update post time through advanced search ui", assert => {
   fillIn('.search input.full-page-search', 'none');
   click('.search-advanced-btn');
   fillIn('#search-post-date', '2016-10-05');
-  expandSelectBoxKit('.search-advanced-options .select-box-kit#postTime');
-  selectBoxKitSelectRow('after', { selector: '.search-advanced-options .select-box-kit#postTime' });
-  fillIn('.search-advanced-options .select-box-kit#postTime', 'after');
+  expandSelectKit('.search-advanced-options .select-kit#postTime');
+  selectKitSelectRow('after', { selector: '.search-advanced-options .select-kit#postTime' });
+  fillIn('.search-advanced-options .select-kit#postTime', 'after');
 
   andThen(() => {
-    assert.ok(exists(selectBox('.search-advanced-options .select-box-kit#postTime').rowByName("after").el), 'has "after" populated');
+    assert.ok(exists(selectKit('.search-advanced-options .select-kit#postTime').rowByName("after").el), 'has "after" populated');
     assert.equal(find('.search-advanced-options #search-post-date').val(), "2016-10-05", 'has "2016-10-05" populated');
     assert.equal(find('.search input.full-page-search').val(), "none after:2016-10-05", 'has updated search term to "none after:2016-10-05"');
   });

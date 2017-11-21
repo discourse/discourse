@@ -1,12 +1,13 @@
 export default class ComponentConnector {
-  constructor(widget, componentName, opts) {
+  constructor(widget, componentName, opts, trackedProperties) {
     this.widget = widget;
     this.opts = opts;
     this.componentName = componentName;
+    this.trackedProperties = trackedProperties || [];
   }
 
   init() {
-    const $elem = $('<div style="display: inline-block;" class="widget-component-connector"></div>');
+    const $elem = $('<div style="display: inline-flex;" class="widget-component-connector"></div>');
     const elem = $elem[0];
     const { opts, widget, componentName } = this;
 
@@ -29,7 +30,18 @@ export default class ComponentConnector {
     return elem;
   }
 
-  update() { }
+  update(prev) {
+    let shouldInit = false;
+    this.trackedProperties.forEach(prop => {
+      if (prev.opts[prop] !== this.opts[prop]) {
+        shouldInit = true;
+      }
+    });
+
+    if (shouldInit === true) return this.init();
+
+    return null;
+  }
 }
 
 ComponentConnector.prototype.type = 'Widget';

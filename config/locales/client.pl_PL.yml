@@ -1111,7 +1111,7 @@ pl_PL:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
-    select_box:
+    select_kit:
       default_header_text: Wybierz...
       no_content: Nie znaleziono dopasowań
       filter_placeholder: Wyszukiwanie...

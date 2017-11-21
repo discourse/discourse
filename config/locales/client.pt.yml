@@ -1010,7 +1010,7 @@ pt:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
-    select_box:
+    select_kit:
       filter_placeholder: Pesquisar...
     emoji_picker:
       filter_placeholder: Pesquisar por emoji

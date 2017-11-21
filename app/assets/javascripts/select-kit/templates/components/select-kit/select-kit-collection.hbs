@@ -1,0 +1,45 @@
+{{#if hasSelection}}
+  {{#if noneRowComputedContent}}
+    {{component noneRowComponent
+      computedContent=noneRowComputedContent
+      templateForRow=templateForNoneRow
+      highlightedValue=highlightedValue
+      onClear=onClear
+      onHighlight=onHighlight
+      value=computedValue
+      options=rowComponentOptions
+    }}
+  {{/if}}
+{{/if}}
+
+{{#if createRowComputedContent}}
+  {{component createRowComponent
+    computedContent=createRowComputedContent
+    templateForRow=templateForCreateRow
+    highlightedValue=highlightedValue
+    onHighlight=onHighlight
+    onCreate=onCreate
+    value=computedValue
+    options=rowComponentOptions
+  }}
+{{/if}}
+
+{{#each filteredComputedContent as |computedContent|}}
+  {{component rowComponent
+    computedContent=computedContent
+    templateForRow=templateForRow
+    highlightedValue=highlightedValue
+    onSelect=onSelect
+    onHighlight=onHighlight
+    computedValue=computedValue
+    options=rowComponentOptions
+  }}
+{{/each}}
+
+{{#if shouldDisplayNoContentRow}}
+  {{#if noContentLabel}}
+    <li class="select-kit-row no-content">
+      {{i18n noContentLabel}}
+    </li>
+  {{/if}}
+{{/if}}

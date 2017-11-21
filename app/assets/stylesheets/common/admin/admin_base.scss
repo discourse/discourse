@@ -212,10 +212,10 @@ $mobile-breakpoint: 700px;
 .admin-container {
   margin-top: 20px;
 
-  .select-box-kit {
+  .select-kit {
     width: 350px;
   }
-  .select-box-kit.multi-combo-box {
+  .select-kit.multi-select {
     width: 500px;
   }
   .select-box-kit.dropdown-select-box {
@@ -452,7 +452,7 @@ $mobile-breakpoint: 700px;
         width: 100%;
         padding-right: 0;
       }
-      .select-box-kit {
+      .select-kit {
         width: 100% !important; // Needs !important to override hard-coded value
         @media (max-width: $mobile-breakpoint) {
           width: 100% !important; // !important overrides hard-coded mobile width of 68px
@@ -623,7 +623,7 @@ section.details {
       margin-left: 0;
     }
 
-    .select-box-kit {
+    .select-kit {
       width: inherit;
     }
   }

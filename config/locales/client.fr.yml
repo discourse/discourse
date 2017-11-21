@@ -1036,7 +1036,7 @@ fr:
       shift: 'Maj'
       ctrl: 'Ctrl'
       alt: 'Alt'
-    select_box:
+    select_kit:
       default_header_text: Sélectionner…
       no_content: Aucune correspondance trouvée
       filter_placeholder: Recherche...

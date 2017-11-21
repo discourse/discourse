@@ -1039,7 +1039,7 @@ nb_NO:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
-    select_box:
+    select_kit:
       default_header_text: Velg…
       no_content: Ingen treff funnet
       filter_placeholder: Søk…
