@@ -35,7 +35,7 @@ export default Ember.Mixin.create({
     return value;
   },
 
-  _findComputedContentByGuid(guid) {
+  _findComputedContentItemByGuid(guid) {
     return this.get("computedContent").find(c => {
       return guidFor(c) === guid;
     });

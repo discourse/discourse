@@ -147,7 +147,7 @@ export default SelectKitComponent.extend({
     if (this.$(".selected-name.is-highlighted").length >= 1 && keyCode === this.keys.BACKSPACE) {
       const highlightedComputedContents = [];
       $.each(this.$(".selected-name.is-highlighted"), (i, el) => {
-        const computedContent = this._findComputedContentByGuid($(el).attr("data-guid"));
+        const computedContent = this._findComputedContentItemByGuid($(el).attr("data-guid"));
         if (!Ember.isNone(computedContent)) { highlightedComputedContents.push(computedContent); }
       });
       this.send("onDeselect", highlightedComputedContents);
