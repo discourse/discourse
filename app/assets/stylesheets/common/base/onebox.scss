@@ -437,6 +437,9 @@ aside.onebox.stackexchange .onebox-body {
 
 // whitelistedgeneric twitter labels
 .onebox.whitelistedgeneric {
+  .label1, .label2 {
+    color: dark-light-choose($primary-medium, $secondary-medium);
+  }
   .label1 {
     float: left;
   }
