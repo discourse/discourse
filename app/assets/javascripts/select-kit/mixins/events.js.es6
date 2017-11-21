@@ -189,7 +189,7 @@ export default Ember.Mixin.create({
       return false;
     }
 
-    this.unfocus(event);
+    this.close(event);
     return;
   },
 
