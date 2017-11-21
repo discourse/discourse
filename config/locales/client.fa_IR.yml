@@ -981,7 +981,7 @@ fa_IR:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
-    select_box:
+    select_kit:
       default_header_text: انتخاب...
       no_content: چیزی یافت نشد.
       filter_placeholder: جستجو...

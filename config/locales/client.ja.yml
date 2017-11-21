@@ -990,7 +990,7 @@ ja:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
-    select_box:
+    select_kit:
       default_header_text: 選択...
       no_content: 一致する結果が見つかりませんでした。
       filter_placeholder: 検索...

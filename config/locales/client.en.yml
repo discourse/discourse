@@ -1165,7 +1165,7 @@ en:
       ctrl: 'Ctrl'
       alt: 'Alt'
 
-    select_box:
+    select_kit:
       default_header_text: Select...
       no_content: No matches found
       filter_placeholder: Search...

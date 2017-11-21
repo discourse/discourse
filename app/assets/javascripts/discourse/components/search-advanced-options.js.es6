@@ -185,18 +185,18 @@ export default Em.Component.extend({
         const userInput = Discourse.Category.findBySlug(subcategories[1], subcategories[0]);
         if ((!existingInput && userInput)
           || (existingInput && userInput && existingInput.id !== userInput.id))
-          this.set('searchedTerms.category', [userInput]);
+          this.set('searchedTerms.category', userInput);
       } else
       if (isNaN(subcategories)) {
         const userInput = Discourse.Category.findSingleBySlug(subcategories[0]);
         if ((!existingInput && userInput)
           || (existingInput && userInput && existingInput.id !== userInput.id))
-          this.set('searchedTerms.category', [userInput]);
+          this.set('searchedTerms.category', userInput);
       } else {
         const userInput = Discourse.Category.findById(subcategories[0]);
         if ((!existingInput && userInput)
           || (existingInput && userInput && existingInput.id !== userInput.id))
-          this.set('searchedTerms.category', [userInput]);
+          this.set('searchedTerms.category', userInput);
       }
     } else
       this.set('searchedTerms.category', '');
@@ -303,11 +303,11 @@ export default Em.Component.extend({
 
     const slugCategoryMatches = (match.length !== 0) ? match[0].match(REGEXP_CATEGORY_SLUG) : null;
     const idCategoryMatches = (match.length !== 0) ? match[0].match(REGEXP_CATEGORY_ID) : null;
-    if (categoryFilter && categoryFilter[0]) {
-      const id = categoryFilter[0].id;
-      const slug = categoryFilter[0].slug;
-      if (categoryFilter[0].parentCategory) {
-        const parentSlug = categoryFilter[0].parentCategory.slug;
+    if (categoryFilter) {
+      const id = categoryFilter.id;
+      const slug = categoryFilter.slug;
+      if (categoryFilter.parentCategory) {
+        const parentSlug = categoryFilter.parentCategory.slug;
         if (slugCategoryMatches)
           searchTerm = searchTerm.replace(slugCategoryMatches[0], `#${parentSlug}:${slug}`);
         else if (idCategoryMatches)

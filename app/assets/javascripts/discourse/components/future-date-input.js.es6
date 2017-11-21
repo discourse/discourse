@@ -1,7 +1,7 @@
 import { default as computed, observes } from "ember-addons/ember-computed-decorators";
 import {
   FORMAT,
-} from "select-box-kit/components/future-date-input-selector";
+} from "select-kit/components/future-date-input-selector";
 
 import { PUBLISH_TO_CATEGORY_STATUS_TYPE } from 'discourse/controllers/edit-topic-timer';
 

@@ -42,7 +42,8 @@ export function renderIcon(renderType, id, params) {
     let rendererForType = renderer[renderType];
 
     if (rendererForType) {
-      let result = rendererForType(REPLACEMENTS[id] || id, params || {});
+      const icon = { id, replacementId: REPLACEMENTS[id] };
+      let result = rendererForType(icon, params || {});
       if (result) {
         return result;
       }
@@ -68,8 +69,14 @@ export function registerIconRenderer(renderer) {
 }
 
 // Support for font awesome icons
-function faClasses(id, params) {
-  let classNames = `fa fa-${id} d-icon d-icon-${id}`;
+function faClasses(icon, params) {
+  let classNames;
+  if (typeof icon.replacementId !== "undefined") {
+    classNames = `fa fa-${icon.replacementId} d-icon ${icon.id}`;
+  } else {
+    classNames = `fa fa-${icon.id} d-icon d-${icon.id}`;
+  }
+
   if (params) {
     if (params.modifier) { classNames += " fa-" + params.modifier; }
     if (params['class']) { classNames += ' ' + params['class']; }
@@ -81,9 +88,9 @@ function faClasses(id, params) {
 registerIconRenderer({
   name: 'font-awesome',
 
-  string(id, params) {
+  string(icon, params) {
     let tagName = params.tagName || 'i';
-    let html = `<${tagName} class='${faClasses(id, params)}'`;
+    let html = `<${tagName} class='${faClasses(icon, params)}'`;
     if (params.title) { html += ` title='${I18n.t(params.title)}'`; }
     if (params.label) { html += " aria-hidden='true'"; }
     html += `></${tagName}>`;
@@ -93,11 +100,11 @@ registerIconRenderer({
     return html;
   },
 
-  node(id, params) {
+  node(icon, params) {
     let tagName = params.tagName || 'i';
 
     const properties = {
-      className: faClasses(id, params),
+      className: faClasses(icon, params),
       attributes: { "aria-hidden": true }
     };
 

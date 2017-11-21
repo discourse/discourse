@@ -16,11 +16,11 @@ QUnit.test("flagged posts - agree", assert => {
   visit("/admin/flags/active");
 
   andThen(() => {
-    expandSelectBoxKit('.agree-flag');
+    expandSelectKit('.agree-flag');
   });
 
   andThen(() => {
-    selectBoxKitSelectRow('confirm-agree-keep', { selector: '.agree-flag'});
+    selectKitSelectRow('confirm-agree-keep', { selector: '.agree-flag'});
   });
 
   andThen(() => {
@@ -32,11 +32,11 @@ QUnit.test("flagged posts - agree + hide", assert => {
   visit("/admin/flags/active");
 
   andThen(() => {
-    expandSelectBoxKit('.agree-flag');
+    expandSelectKit('.agree-flag');
   });
 
   andThen(() => {
-    selectBoxKitSelectRow('confirm-agree-hide', { selector: '.agree-flag'});
+    selectKitSelectRow('confirm-agree-hide', { selector: '.agree-flag'});
   });
 
   andThen(() => {
@@ -48,11 +48,11 @@ QUnit.test("flagged posts - agree + deleteSpammer", assert => {
   visit("/admin/flags/active");
 
   andThen(() => {
-    expandSelectBoxKit('.agree-flag');
+    expandSelectKit('.agree-flag');
   });
 
   andThen(() => {
-    selectBoxKitSelectRow('delete-spammer', { selector: '.agree-flag'});
+    selectKitSelectRow('delete-spammer', { selector: '.agree-flag'});
   });
 
   click('.confirm-delete');
@@ -82,11 +82,11 @@ QUnit.test("flagged posts - delete + defer", assert => {
   visit("/admin/flags/active");
 
   andThen(() => {
-    expandSelectBoxKit('.delete-flag');
+    expandSelectKit('.delete-flag');
   });
 
   andThen(() => {
-    selectBoxKitSelectRow('delete-defer', { selector: '.delete-flag'});
+    selectKitSelectRow('delete-defer', { selector: '.delete-flag'});
   });
 
   andThen(() => {
@@ -98,11 +98,11 @@ QUnit.test("flagged posts - delete + agree", assert => {
   visit("/admin/flags/active");
 
   andThen(() => {
-    expandSelectBoxKit('.delete-flag');
+    expandSelectKit('.delete-flag');
   });
 
   andThen(() => {
-    selectBoxKitSelectRow('delete-agree', { selector: '.delete-flag'});
+    selectKitSelectRow('delete-agree', { selector: '.delete-flag'});
   });
 
   andThen(() => {
@@ -114,11 +114,11 @@ QUnit.test("flagged posts - delete + deleteSpammer", assert => {
   visit("/admin/flags/active");
 
   andThen(() => {
-    expandSelectBoxKit('.delete-flag');
+    expandSelectKit('.delete-flag');
   });
 
   andThen(() => {
-    selectBoxKitSelectRow('delete-spammer', { selector: '.delete-flag'});
+    selectKitSelectRow('delete-spammer', { selector: '.delete-flag'});
   });
 
   click('.confirm-delete');

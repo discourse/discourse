@@ -5,15 +5,15 @@ componentTest('default', {
   template: '{{categories-admin-dropdown}}',
 
   test(assert) {
-    const $selectBox = selectBox('.categories-admin-dropdown');
+    const $selectKit = selectKit('.categories-admin-dropdown');
 
-    assert.equal($selectBox.el.find(".d-icon-bars").length, 1);
-    assert.equal($selectBox.el.find(".d-icon-caret-down").length, 1);
+    assert.equal($selectKit.el.find(".d-bars").length, 1);
+    assert.equal($selectKit.el.find(".d-caret-down").length, 1);
 
-    expandSelectBoxKit();
+    expandSelectKit();
 
     andThen(() => {
-      assert.equal($selectBox.rowByValue("create").name(), "New Category");
+      assert.equal($selectKit.rowByValue("create").name(), "New Category");
     });
   }
 });

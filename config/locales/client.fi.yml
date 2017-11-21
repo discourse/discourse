@@ -1036,7 +1036,7 @@ fi:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
-    select_box:
+    select_kit:
       default_header_text: Valitse...
       no_content: Ei osumia
       filter_placeholder: Hae...
