@@ -117,7 +117,7 @@ export default SelectKitComponent.extend({
   },
 
   didPressBackspace(event) {
-    this.expand();
+    this.expand(event);
     this.keyDown(event);
     this._destroyEvent(event);
   },
