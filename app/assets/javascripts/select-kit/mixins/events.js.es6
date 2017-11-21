@@ -68,6 +68,8 @@ export default Ember.Mixin.create({
       .on("keypress.select-kit", (event) => {
         const keyCode = event.keyCode || event.which;
 
+        if (keyCode === this.keys.ENTER) { return true; }
+
         this.expand(event);
 
         if (this.get("filterable") === true || this.get("autoFilterable")) {
