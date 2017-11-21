@@ -28,6 +28,7 @@ export default Ember.Mixin.create({
     this.$filterInput()
       .off("change.select-kit")
       .off("keydown.select-kit")
+      .off("keypress.select-kit")
       .off("focus.select-kit")
       .off("focusin.select-kit");
   },
@@ -102,6 +103,9 @@ export default Ember.Mixin.create({
       .on("focus.select-kit focusin.select-kit", (event) => {
         this.set("isFocused", true);
         this._destroyEvent(event);
+      })
+      .on("keypress.select-kit", (event) => {
+        event.stopPropagation();
       })
       .on("keydown.select-kit", (event) => {
         const keyCode = event.keyCode || event.which;
