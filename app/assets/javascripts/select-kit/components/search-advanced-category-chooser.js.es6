@@ -2,7 +2,8 @@ import CategoryChooserComponent from "select-kit/components/category-chooser";
 import Category from "discourse/models/category";
 
 export default CategoryChooserComponent.extend({
-  pluginApiIdentifiers: ["advanced-search-category-chooser"],
+  pluginApiIdentifiers: ["search-advanced-category-chooser"],
+  classNames: ["search-advanced-category-chooser"],
   rootNone: true,
   rootNoneLabel: "category.all",
   allowUncategorized: true,
