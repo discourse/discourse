@@ -8,6 +8,8 @@
   left: 0;
   margin-left: auto;
   margin-right: auto;
+  width: 80vw;
+  min-width: 1110px;
   max-width: 1450px;
   @media screen and (max-width: 1200px) {
     width: 100%;
