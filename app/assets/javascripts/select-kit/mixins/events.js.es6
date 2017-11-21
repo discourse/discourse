@@ -193,6 +193,12 @@ export default Ember.Mixin.create({
     return;
   },
 
+  // make sure we don’t propagate a click outside component
+  // to avoid closing a modal containing the component for example
+  click(event) {
+    this._destroyEvent(event);
+  },
+
   tabFromHeader(event) { this.didPressTab(event); },
   tabFromFilter(event) { this.didPressTab(event); },
 

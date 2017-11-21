@@ -55,12 +55,6 @@ export default Ember.Mixin.create({
     $(`.select-kit-fixed-placeholder-${this.elementId}`).remove();
   },
 
-  // make sure we don’t propagate a click outside component
-  // to avoid closing a modal containing the component for example
-  click(event) {
-    this._destroyEvent(event);
-  },
-
   // use to collapse and remove focus
   close(event) {
     this.collapse(event);
@@ -69,7 +63,13 @@ export default Ember.Mixin.create({
 
   // force the component in a known default state
   focus() {
-    Ember.run.schedule("afterRender", () => this.$header().focus() );
+    Ember.run.schedule("afterRender", () => {
+      if (this.$filterInput().is(":visible")) {
+        this.$filterInput().focus();
+      } else {
+        this.$header().focus();
+      }
+    });
   },
 
   expand(event) {
