@@ -302,7 +302,7 @@ componentTest('support appending content through plugin api', {
 
   beforeEach() {
     withPluginApi('0.8.11', api => {
-      api.selectKit("select-kit")
+      api.modifySelectKit("select-kit")
          .appendContent([{ id: "2", name: "regis"}]);
     });
 
@@ -320,13 +320,39 @@ componentTest('support appending content through plugin api', {
   }
 });
 
+componentTest('support modifying content through plugin api', {
+  template: '{{single-select content=content}}',
+
+  beforeEach() {
+    withPluginApi('0.8.11', api => {
+      api.modifySelectKit("select-kit")
+         .modifyContent((existingContent) => {
+           existingContent.splice(1, 0, { id: "2", name: "sam" });
+           return existingContent;
+         });
+    });
+
+    this.set("content", [{ id: "1", name: "robin"}, { id: "3", name: "regis"}]);
+  },
+
+  test(assert) {
+    expandSelectKit();
+
+    andThen(() => {
+      assert.equal(selectKit().rows.length, 3);
+      assert.equal(selectKit().rows.eq(1).data("name"), "sam");
+    });
+
+    clearCallbacks();
+  }
+});
 
 componentTest('support prepending content through plugin api', {
   template: '{{single-select content=content}}',
 
   beforeEach() {
     withPluginApi('0.8.11', api => {
-      api.selectKit("select-kit")
+      api.modifySelectKit("select-kit")
          .prependContent([{ id: "2", name: "regis"}]);
     });
 

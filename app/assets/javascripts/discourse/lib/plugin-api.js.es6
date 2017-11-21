@@ -21,7 +21,7 @@ import { attachAdditionalPanel } from 'discourse/widgets/header';
 import { registerIconRenderer, replaceIcon } from 'discourse-common/lib/icon-library';
 import { addNavItem } from 'discourse/models/nav-item';
 import { replaceFormatter } from 'discourse/lib/utilities';
-import { selectKit } from "select-kit/mixins/plugin-api";
+import { modifySelectKit } from "select-kit/mixins/plugin-api";
 
 // If you add any methods to the API ensure you bump up this number
 const PLUGIN_API_VERSION = '0.8.12';
@@ -597,13 +597,13 @@ class PluginApi {
   *
   * Example:
   *
-  * selectKit("topic-footer-mobile-dropdown").appendContent((component) => [{
+  * modifySelectKit("topic-footer-mobile-dropdown").appendContent(() => [{
   *   name: "discourse",
   *   id: 1
   * }])
   */
-  selectKit(pluginApiKey) {
-    return selectKit(pluginApiKey);
+  modifySelectKit(pluginApiKey) {
+    return modifySelectKit(pluginApiKey);
   }
 }
 

@@ -28,32 +28,32 @@ function modifyContent(pluginApiIdentifiers, contentFunction) {
 export function applyContentPluginApiCallbacks(identifiers, content) {
   identifiers.forEach((key) => {
     (_prependContentCallbacks[key] || []).forEach((c) => {
-      content = c(this).concat(content);
+      content = c().concat(content);
     });
     (_appendContentCallbacks[key] || []).forEach((c) => {
-      content = content.concat(c(this));
+      content = content.concat(c());
     });
     (_modifyContentCallbacks[key] || []).forEach((c) => {
-      content = c(this, content);
+      content = c(content);
     });
   });
 
   return content;
 }
 
-export function selectKit(pluginApiIdentifiers) {
+export function modifySelectKit(pluginApiIdentifiers) {
   return {
     appendContent: (content) => {
       appendContent(pluginApiIdentifiers, () => {return content;} );
-      return selectKit(pluginApiIdentifiers);
+      return modifySelectKit(pluginApiIdentifiers);
     },
     prependContent: (content) => {
       prependContent(pluginApiIdentifiers, () => {return content;} );
-      return selectKit(pluginApiIdentifiers);
+      return modifySelectKit(pluginApiIdentifiers);
     },
     modifyContent: (callback) => {
       modifyContent(pluginApiIdentifiers, callback);
-      return selectKit(pluginApiIdentifiers);
+      return modifySelectKit(pluginApiIdentifiers);
     }
   };
 }
