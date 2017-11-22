@@ -21,8 +21,8 @@ export default Ember.Mixin.create({
 
     if (this.$header()) {
       this.$header()
-        .off("focus.select-kit")
         .off("blur.select-kit")
+        .off("focus.select-kit")
         .off("keypress.select-kit")
         .off("keydown.select-kit");
     }
@@ -31,9 +31,7 @@ export default Ember.Mixin.create({
       this.$filterInput()
         .off("change.select-kit")
         .off("keydown.select-kit")
-        .off("keypress.select-kit")
-        .off("focus.select-kit")
-        .off("focusin.select-kit");
+        .off("keypress.select-kit");
     }
   },
 
@@ -74,6 +72,7 @@ export default Ember.Mixin.create({
         const keyCode = event.keyCode || event.which;
 
         if (keyCode === this.keys.ENTER) { return true; }
+        if (keyCode === this.keys.TAB) { return true; }
 
         this.expand(event);
 
@@ -81,21 +80,13 @@ export default Ember.Mixin.create({
           this.set("renderedFilterOnce", true);
         }
 
-        Ember.run.schedule("afterRender", () => {
-          let newVal = this.$filterInput().val();
-
-          const start = this.$filterInput()[0].selectionStart;
-          const end = this.$filterInput()[0].selectionEnd;
-          if (!Ember.isNone(start) && !Ember.isNone(end)) {
-            newVal = newVal.substr(0, start) +
-              String.fromCharCode(keyCode) +
-              newVal.substr(end, newVal.length);
-          } else {
-            newVal = newVal + String.fromCharCode(keyCode);
-          }
-
-          this.$filterInput().focus().val(newVal);
-        });
+        if (keyCode >= 65 && keyCode <= 122) {
+          Ember.run.schedule("afterRender", () => {
+            this.$filterInput()
+                .focus()
+                .val(this.$filterInput().val() + String.fromCharCode(keyCode));
+          });
+        }
 
         return false;
       });
@@ -103,10 +94,6 @@ export default Ember.Mixin.create({
     this.$filterInput()
       .on("change.select-kit", (event) => {
         this.send("onFilter", $(event.target).val());
-      })
-      .on("focus.select-kit focusin.select-kit", (event) => {
-        this.set("isFocused", true);
-        this._destroyEvent(event);
       })
       .on("keypress.select-kit", (event) => {
         event.stopPropagation();

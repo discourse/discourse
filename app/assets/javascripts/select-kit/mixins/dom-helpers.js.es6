@@ -66,10 +66,8 @@ export default Ember.Mixin.create({
     Ember.run.schedule("afterRender", () => this.$header().focus());
   },
 
-  expand() {
-    if (this.get("isExpanded") === true) return;
-    this.setProperties({ isExpanded: true, renderedBodyOnce: true, isFocused: true });
-
+  // try to focus filter and fallback to header if not present
+  focusFilterOrHeader() {
     Ember.run.schedule("afterRender", () => {
       if (this.$filterInput().is(":visible")) {
         this.$filterInput().focus();
@@ -77,7 +75,12 @@ export default Ember.Mixin.create({
         this.$header().focus();
       }
     });
+  },
 
+  expand() {
+    if (this.get("isExpanded") === true) return;
+    this.setProperties({ isExpanded: true, renderedBodyOnce: true, isFocused: true });
+    this.focusFilterOrHeader();
     this.autoHighlight();
   },
 
