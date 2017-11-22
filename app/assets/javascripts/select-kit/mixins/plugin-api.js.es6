@@ -25,7 +25,16 @@ function modifyContent(pluginApiIdentifiers, contentFunction) {
   _modifyContentCallbacks[pluginApiIdentifiers].push(contentFunction);
 }
 
-export function applyContentPluginApiCallbacks(identifiers, content) {
+let _onSelectCallbacks = {};
+function onSelect(pluginApiIdentifiers, mutationFunction) {
+  if (Ember.isNone(_onSelectCallbacks[pluginApiIdentifiers])) {
+    _onSelectCallbacks[pluginApiIdentifiers] = [];
+  }
+
+  _onSelectCallbacks[pluginApiIdentifiers].push(mutationFunction);
+}
+
+export function applyContentPluginApiCallbacks(identifiers, content, context) {
   identifiers.forEach((key) => {
     (_prependContentCallbacks[key] || []).forEach((c) => {
       content = c().concat(content);
@@ -34,11 +43,17 @@ export function applyContentPluginApiCallbacks(identifiers, content) {
       content = content.concat(c());
     });
     (_modifyContentCallbacks[key] || []).forEach((c) => {
-      content = c(content);
+      content = c(context, content);
     });
   });
 
   return content;
+}
+
+export function applyOnSelectPluginApiCallbacks(identifiers, val, context) {
+  identifiers.forEach((key) => {
+    (_onSelectCallbacks[key] || []).forEach((c) => c(context, val));
+  });
 }
 
 export function modifySelectKit(pluginApiIdentifiers) {
@@ -54,6 +69,10 @@ export function modifySelectKit(pluginApiIdentifiers) {
     modifyContent: (callback) => {
       modifyContent(pluginApiIdentifiers, callback);
       return modifySelectKit(pluginApiIdentifiers);
+    },
+    onSelect: (callback) => {
+      onSelect(pluginApiIdentifiers, callback);
+      return modifySelectKit(pluginApiIdentifiers);
     }
   };
 }
@@ -62,6 +81,7 @@ export function clearCallbacks() {
   _appendContentCallbacks = {};
   _prependContentCallbacks = {};
   _modifyContentCallbacks = {};
+  _onSelectCallbacks = {};
 }
 
 const EMPTY_ARRAY = Object.freeze([]);

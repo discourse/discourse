@@ -1,7 +1,10 @@
 import SelectKitComponent from "select-kit/components/select-kit";
 import { on } from "ember-addons/ember-computed-decorators";
 import computed from "ember-addons/ember-computed-decorators";
-const { get, isNone, isEmpty, isPresent } = Ember;
+const { get, isNone, isEmpty, isPresent, run } = Ember;
+import {
+  applyOnSelectPluginApiCallbacks
+} from "select-kit/mixins/plugin-api";
 
 export default SelectKitComponent.extend({
   pluginApiIdentifiers: ["single-select"],
@@ -42,6 +45,19 @@ export default SelectKitComponent.extend({
       this.set("headerComputedContent", this.computeHeaderContent());
       this.didComputeAttributes();
     });
+  },
+
+  mutateAttributes() {
+    run.next(() => {
+      this.mutateContent(this.get("computedContent"));
+      this.mutateValue(this.get("computedValue"));
+      applyOnSelectPluginApiCallbacks(this.get("pluginApiIdentifiers"), this.get("computedValue"), this);
+      this.set("headerComputedContent", this.computeHeaderContent());
+    });
+  },
+  mutateContent() {},
+  mutateValue(computedValue) {
+    this.set("value", computedValue);
   },
 
   _beforeWillComputeValue(value) {

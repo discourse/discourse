@@ -2,6 +2,9 @@ import SelectKitComponent from "select-kit/components/select-kit";
 import computed from "ember-addons/ember-computed-decorators";
 import { on } from "ember-addons/ember-computed-decorators";
 const { get, isNone, isEmpty, makeArray } = Ember;
+import {
+  applyOnSelectPluginApiCallbacks
+} from "select-kit/mixins/plugin-api";
 
 export default SelectKitComponent.extend({
   pluginApiIdentifiers: ["multi-select"],
@@ -81,10 +84,14 @@ export default SelectKitComponent.extend({
     Ember.run.next(() => {
       this.mutateContent(this.get("computedContent"));
       this.mutateValues(this.get("computedValues"));
+      applyOnSelectPluginApiCallbacks(this.get("pluginApiIdentifiers"), this.get("computedValues"), this);
       this.set("headerComputedContent", this.computeHeaderContent());
     });
   },
-  mutateValues(computedValues) { this.set("values", computedValues); },
+  mutateValues(computedValues) {
+    this.set("values", computedValues);
+  },
+  mutateContent() { },
 
   filterComputedContent(computedContent, computedValues, filter) {
     const lowerFilter = filter.toLowerCase();
