@@ -1,10 +1,12 @@
-const { isNone, run, makeArray } = Ember;
+const { isNone, makeArray } = Ember;
 import computed from "ember-addons/ember-computed-decorators";
 import UtilsMixin from "select-kit/mixins/utils";
 import DomHelpersMixin from "select-kit/mixins/dom-helpers";
 import EventsMixin from "select-kit/mixins/events";
 import PluginApiMixin from "select-kit/mixins/plugin-api";
-import { applyContentPluginApiCallbacks } from "select-kit/mixins/plugin-api";
+import {
+  applyContentPluginApiCallbacks
+} from "select-kit/mixins/plugin-api";
 
 export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixin, EventsMixin, {
   pluginApiIdentifiers: ["select-kit"],
@@ -81,7 +83,7 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   willComputeContent(content) { return content; },
   computeContent(content) { return content; },
   _beforeDidComputeContent(content) {
-    content = applyContentPluginApiCallbacks(this.get("pluginApiIdentifiers"), content);
+    content = applyContentPluginApiCallbacks(this.get("pluginApiIdentifiers"), content, this);
 
     const existingCreatedComputedContent = this.get("computedContent").filterBy("created", true);
     this.setProperties({
@@ -90,16 +92,6 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     return content;
   },
   didComputeContent() {},
-
-  mutateAttributes() {
-    run.next(() => {
-      this.mutateContent(this.get("computedContent"));
-      this.mutateValue(this.get("computedValue"));
-      this.set("headerComputedContent", this.computeHeaderContent());
-    });
-  },
-  mutateContent() {},
-  mutateValue(computedValue) { this.set("value", computedValue); },
 
   computeHeaderContent() {
     return this.baseHeaderComputedContent();

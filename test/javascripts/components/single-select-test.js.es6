@@ -301,7 +301,7 @@ componentTest('support appending content through plugin api', {
   template: '{{single-select content=content}}',
 
   beforeEach() {
-    withPluginApi('0.8.11', api => {
+    withPluginApi('0.8.13', api => {
       api.modifySelectKit("select-kit")
          .appendContent([{ id: "2", name: "regis"}]);
     });
@@ -316,7 +316,7 @@ componentTest('support appending content through plugin api', {
       assert.equal(selectKit().rows.eq(1).data("name"), "regis");
     });
 
-    clearCallbacks();
+    andThen(() => clearCallbacks());
   }
 });
 
@@ -324,9 +324,9 @@ componentTest('support modifying content through plugin api', {
   template: '{{single-select content=content}}',
 
   beforeEach() {
-    withPluginApi('0.8.11', api => {
+    withPluginApi('0.8.13', api => {
       api.modifySelectKit("select-kit")
-         .modifyContent((existingContent) => {
+         .modifyContent((context, existingContent) => {
            existingContent.splice(1, 0, { id: "2", name: "sam" });
            return existingContent;
          });
@@ -343,7 +343,7 @@ componentTest('support modifying content through plugin api', {
       assert.equal(selectKit().rows.eq(1).data("name"), "sam");
     });
 
-    clearCallbacks();
+    andThen(() => clearCallbacks());
   }
 });
 
@@ -351,7 +351,7 @@ componentTest('support prepending content through plugin api', {
   template: '{{single-select content=content}}',
 
   beforeEach() {
-    withPluginApi('0.8.11', api => {
+    withPluginApi('0.8.13', api => {
       api.modifySelectKit("select-kit")
          .prependContent([{ id: "2", name: "regis"}]);
     });
@@ -367,6 +367,34 @@ componentTest('support prepending content through plugin api', {
       assert.equal(selectKit().rows.eq(0).data("name"), "regis");
     });
 
-    clearCallbacks();
+    andThen(() => clearCallbacks());
+  }
+});
+
+componentTest('support modifying on select behavior through plugin api', {
+  template: '<span class="on-select-test"></span>{{single-select content=content}}',
+
+  beforeEach() {
+    withPluginApi('0.8.13', api => {
+      api
+        .modifySelectKit("select-kit")
+        .onSelect((context, value) => {
+          find(".on-select-test").html(value);
+        });
+    });
+
+    this.set("content", [{ id: "1", name: "robin"}]);
+  },
+
+  test(assert) {
+    expandSelectKit();
+
+    selectKitSelectRow(1);
+
+    andThen(() => {
+      assert.equal(find(".on-select-test").html(), "1");
+    });
+
+    andThen(() => clearCallbacks());
   }
 });
