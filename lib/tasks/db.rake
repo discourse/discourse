@@ -28,7 +28,6 @@ end
 # we need to run seed_fu every time we run rails db:migrate
 task 'db:migrate', [:multisite] => ['environment', 'set_locale'] do |_, args|
   SeedFu.seed(DiscoursePluginRegistry.seed_paths)
-  Jobs.enqueue_in(60, :enqueue_onceoffs)
 
   if Rails.env.test? && !args[:multisite]
     system("rails db:schema:dump")
