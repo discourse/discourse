@@ -38,8 +38,7 @@ export default SelectKitComponent.extend({
   _compute() {
     Ember.run.scheduleOnce("afterRender", () => {
       this.willComputeAttributes();
-      let content = this._beforeWillComputeContent(this.get("content"));
-      content = this.willComputeContent(content);
+      let content = this.willComputeContent(this.get("content") || []);
       let values = this._beforeWillComputeValues(this.get("values"));
       content = this.computeContent(content);
       content = this._beforeDidComputeContent(content);

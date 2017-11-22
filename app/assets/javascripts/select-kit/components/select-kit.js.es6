@@ -1,4 +1,4 @@
-const { isNone, makeArray } = Ember;
+const { isNone } = Ember;
 import computed from "ember-addons/ember-computed-decorators";
 import UtilsMixin from "select-kit/mixins/utils";
 import DomHelpersMixin from "select-kit/mixins/dom-helpers";
@@ -88,7 +88,6 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   willComputeAttributes() {},
   didComputeAttributes() {},
 
-  _beforeWillComputeContent(content) { return makeArray(content); },
   willComputeContent(content) { return content; },
   computeContent(content) { return content; },
   _beforeDidComputeContent(content) {
