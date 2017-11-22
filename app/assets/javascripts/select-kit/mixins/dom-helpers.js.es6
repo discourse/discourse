@@ -46,7 +46,9 @@ export default Ember.Mixin.create({
 
   @on("didInsertElement")
   _setupResizeListener() {
-    $(window).on("resize.select-kit", () => this.collapse() );
+    if (!(this.site && this.site.isMobileDevice)) {
+      $(window).on("resize.select-kit", () => this.collapse() );
+    }
   },
 
   @on("willDestroyElement")
@@ -69,10 +71,10 @@ export default Ember.Mixin.create({
   // try to focus filter and fallback to header if not present
   focusFilterOrHeader() {
     Ember.run.schedule("afterRender", () => {
-      if (this.$filterInput().is(":visible")) {
-        this.$filterInput().focus();
-      } else {
+      if ((this.site && this.site.isMobileDevice) || !this.$filterInput().is(":visible")) {
         this.$header().focus();
+      } else {
+        this.$filterInput().focus();
       }
     });
   },
