@@ -398,3 +398,28 @@ componentTest('support modifying on select behavior through plugin api', {
     andThen(() => clearCallbacks());
   }
 });
+
+componentTest('with nameChanges', {
+  template: '{{single-select content=content nameChanges=true}}',
+
+  beforeEach() {
+    this.set("robin", { id: "1", name: "robin"});
+    this.set("content", [this.get("robin")]);
+  },
+
+  test(assert) {
+    expandSelectKit();
+
+    andThen(() => {
+      assert.equal(selectKit().header.name(), "robin");
+    });
+
+    andThen(() => {
+      this.set("robin.name", "robin2");
+    });
+
+    andThen(() => {
+      assert.equal(selectKit().header.name(), "robin2");
+    });
+  }
+});
