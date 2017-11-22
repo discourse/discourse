@@ -1,6 +1,7 @@
 .d-editor-container {
   display: flex;
   flex-grow: 1;
+  max-width: 100%;
 }
 
 .d-editor-overlay {
@@ -130,8 +131,7 @@
 .d-editor-preview {
   overflow: auto;
   cursor: default;
-  background-color: $primary-very-low;
-  padding: 10px;
+  padding: 0 10px;
 }
 
 .composing-whisper .d-editor-preview {
