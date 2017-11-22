@@ -97,7 +97,6 @@ class PostRevisor
 
   track_topic_field(:featured_link) do |topic_changes, featured_link|
     if SiteSetting.topic_featured_link_enabled &&
-       featured_link.present? &&
        topic_changes.guardian.can_edit_featured_link?(topic_changes.topic.category_id)
 
       topic_changes.record_change('featured_link', topic_changes.topic.featured_link, featured_link)

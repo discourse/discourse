@@ -37,6 +37,7 @@ QUnit.test("Showing and hiding the edit controls", assert => {
 
   andThen(() => {
     assert.ok(exists('#edit-title'), 'it shows the editing controls');
+    assert.ok(!exists('.title-wrapper .remove-featured-link'), 'link to remove featured link is not shown');
   });
 
   fillIn('#edit-title', 'this is the new title');
@@ -172,5 +173,31 @@ QUnit.test("Updating the topic title with emojis", assert => {
 
   andThen(() => {
     assert.equal(find('.fancy-title').html().trim(), 'emojis title <img src=\"/images/emoji/emoji_one/bike.png?v=5\" title=\"bike\" alt=\"bike\" class=\"emoji\"> <img src=\"/images/emoji/emoji_one/blonde_woman/6.png?v=5\" title=\"blonde_woman:t6\" alt=\"blonde_woman:t6\" class=\"emoji\">', 'it displays the new title with emojis');
+  });
+});
+
+acceptance("Topic featured links", {
+  loggedIn: true,
+  settings: {
+    topic_featured_link_enabled: true,
+    max_topic_title_length: 80
+  }
+});
+
+QUnit.test("remove featured link", assert => {
+  visit("/t/299/1");
+  andThen(() => {
+    assert.ok(exists('.title-wrapper .topic-featured-link'), 'link is shown with topic title');
+  });
+
+  click('.title-wrapper .edit-topic');
+  andThen(() => {
+    assert.ok(exists('.title-wrapper .remove-featured-link'), 'link to remove featured link');
+  });
+
+  click('.title-wrapper .remove-featured-link');
+  click('.title-wrapper .submit-edit');
+  andThen(() => {
+    assert.ok(!exists('.title-wrapper .topic-featured-link'), 'link is gone');
   });
 });

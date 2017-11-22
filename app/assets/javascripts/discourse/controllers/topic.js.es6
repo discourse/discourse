@@ -12,6 +12,7 @@ import debounce from 'discourse/lib/debounce';
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import QuoteState from 'discourse/lib/quote-state';
 import { userPath } from 'discourse/lib/url';
+import { extractLinkMeta } from 'discourse/lib/render-topic-featured-link';
 
 export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   composer: Ember.inject.controller(),
@@ -32,6 +33,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   username_filters: null,
   filter: null,
   quoteState: null,
+  canRemoveTopicFeaturedLink: Ember.computed.and('canEditTopicFeaturedLink', 'buffered.featured_link'),
 
   updateQueryParams() {
     const postStream = this.get('model.postStream');
@@ -97,6 +99,12 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
     const categoryIds = this.site.get('topic_featured_link_allowed_category_ids');
     return categoryIds === undefined || !categoryIds.length || categoryIds.indexOf(categoryId) !== -1;
+  },
+
+  @computed('model')
+  featuredLinkDomain(topic) {
+    const meta = extractLinkMeta(topic);
+    return meta.domain;
   },
 
   @computed('model.isPrivateMessage')
@@ -694,6 +702,10 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
     convertToPrivateMessage() {
       this.get('content').convertTopic("private");
+    },
+
+    removeFeaturedLink() {
+      this.set('buffered.featured_link', null);
     }
   },
 
