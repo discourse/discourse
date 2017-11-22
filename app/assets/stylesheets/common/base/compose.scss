@@ -260,6 +260,12 @@
     flex-basis: 50%;
     display: flex;
     flex-direction: row-reverse;
+    a {
+      color: $primary-medium;
+      &:hover {
+        color: $tertiary;
+      }
+    }
     .toggle-preview {
       order: 2;
     }
