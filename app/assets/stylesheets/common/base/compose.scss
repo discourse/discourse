@@ -8,9 +8,7 @@
   left: 0;
   margin-left: auto;
   margin-right: auto;
-  width: 80vw;
-  min-width: 1110px;
-  max-width: 1500px;
+  max-width: 1450px;
   @media screen and (max-width: 1200px) {
     width: 100%;
     min-width: 0;
@@ -106,8 +104,8 @@
     .composer-controls {
       margin-left: auto;
       margin-right: -5px;
-      .d-chevron-down {
-        vertical-align: text-top;
+      button {
+        padding: 0 8px;
       }
     }
   }
@@ -241,6 +239,9 @@
     button {
       flex: 0 0 auto;
     }
+    .cancel {
+      margin-left: 10px;
+    }
     #draft-status,
     #file-uploading {
       margin-left: 25px;
@@ -257,12 +258,6 @@
     flex-basis: 50%;
     display: flex;
     flex-direction: row-reverse;
-    a {
-      color: $primary-medium;
-      &:hover {
-        color: $tertiary;
-      }
-    }
     .toggle-preview {
       order: 2;
     }

@@ -128,6 +128,12 @@
   }
 }
 
+.composer-controls {
+  .d-chevron-down {
+    vertical-align: text-top;
+  }
+}
+
 .custom-body {
   background-color: $tertiary-low;
   p {
@@ -164,6 +170,15 @@
 .composer-popup:nth-of-type(2) {
   margin-left: 10px;
   width: calc(50% - 65px);
+}
+
+.composer-bottom-right {
+  a {
+    color: $primary-medium;
+    &:hover {
+      color: $tertiary;
+    }
+  }
 }
 
 #draft-status,

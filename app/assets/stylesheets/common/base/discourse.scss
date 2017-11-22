@@ -194,6 +194,8 @@ input {
     color: $primary;
     background-color: $secondary;
     border: 1px solid $primary-medium;
+    border-radius: 0;
+    -webkit-appearance: none;
 
     &:focus {
       border-color: $tertiary;

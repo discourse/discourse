@@ -110,6 +110,7 @@
   width: 100%;
   word-wrap: break-word;
   flex-grow: 1;
+  -webkit-appearance: none;
   &:focus {
     box-shadow: none;
     border: 0;

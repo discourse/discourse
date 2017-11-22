@@ -9,7 +9,10 @@
 #reply-control {
   z-index: 1002; //d-header is 1001
     .reply-area {
-      padding: 0 5px;
+      padding: 0 10px;
+      @media screen and (max-width: 374px) {
+        padding: 0 5px;
+      }
       flex-grow: 1;
     }
 
