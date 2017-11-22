@@ -93,7 +93,7 @@ createWidget('user-menu-dismiss-link', {
   buildKey: () => 'user-menu-dismiss-link',
 
   html() {
-    if (userNotifications.state.notifications.get('length') > 0) {
+    if (userNotifications.state.notifications.filterBy("read", false).length > 0) {
       return h('ul.menu-links',
         h('li',
           this.attach('link', {
