@@ -1770,6 +1770,10 @@ en:
     website:
       domain_not_allowed: "Website is invalid. Allowed domains are: %{domains}"
     auto_rejected: "Rejected automatically due to age. See auto_handle_queued_age site setting."
+    destroy_reasons:
+      unused_staged_user: "Unused staged user"
+      fixed_primary_email: "Fixed primary email for staged user"
+      same_ip_address: "Same IP address (%ip_address%) as other users"
 
   flags_reminder:
     flags_were_submitted:

@@ -387,7 +387,14 @@ class Admin::UsersController < Admin::AdminController
     params.require(:order)
 
     user_destroyer = UserDestroyer.new(current_user)
-    options = { delete_posts: true, block_email: true, block_urls: true, block_ip: true, delete_as_spammer: true }
+    options = {
+      delete_posts: true,
+      block_email: true,
+      block_urls: true,
+      block_ip: true,
+      delete_as_spammer: true,
+      context: I18n.t("user.destroy_reasons.same_ip_address", ip_address: params[:ip])
+    }
 
     AdminUserIndexQuery.new(params).find_users(50).each do |user|
       user_destroyer.destroy(user, options) rescue nil
