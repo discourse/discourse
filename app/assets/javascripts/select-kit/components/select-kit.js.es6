@@ -60,6 +60,7 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   content: null,
   computedContent: null,
   limitMatches: 100,
+  nameChanges: false,
 
   init() {
     this._super();
@@ -74,6 +75,14 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     if ((this.site && this.site.isMobileDevice) || $(window).outerWidth(false) <= 420) {
       this.setProperties({ filterable: false, autoFilterable: false });
     }
+
+    if (this.get("nameChanges")) {
+      this.addObserver(`content.@each.${this.get("nameProperty")}`, this, this._compute);
+    }
+  },
+
+  willDestroyElement() {
+    this.removeObserver(`content.@each.${this.get("nameProperty")}`, this, this._compute);
   },
 
   willComputeAttributes() {},
