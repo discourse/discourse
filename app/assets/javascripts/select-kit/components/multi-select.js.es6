@@ -218,12 +218,12 @@ export default SelectKitComponent.extend({
   },
 
   didSelect() {
-    this.focus();
+    this.focusFilterOrHeader();
     this.autoHighlight();
   },
 
   didDeselect() {
-    this.focus();
+    this.focusFilterOrHeader();
     this.autoHighlight();
   },
 
