@@ -26,7 +26,7 @@
     margin-top: 6px;
     margin-right: 6px;
   }
-  #edit-title, .category-chooser {
+  #edit-title, .category-chooser, .edit-controls {
     width: 500px;
   }
   h1 {
@@ -42,6 +42,12 @@
     vertical-align: middle;
   }
   .private-message-glyph { display: none; }
+  .remove-featured-link {
+    float: right;
+    text-transform: lowercase;
+    color: dark-light-choose($primary-medium, $secondary-medium);
+    font-size: 0.875rem;
+  }
 }
 
 .private-message-glyph {

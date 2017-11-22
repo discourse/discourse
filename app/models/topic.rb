@@ -96,7 +96,7 @@ class Topic < ActiveRecord::Base
 
   before_validation do
     self.title = TextCleaner.clean_title(TextSentinel.title_sentinel(title).text) if errors[:title].empty?
-    self.featured_link.strip! if self.featured_link
+    self.featured_link = self.featured_link.strip.presence if self.featured_link
   end
 
   belongs_to :category

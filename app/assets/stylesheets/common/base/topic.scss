@@ -196,7 +196,7 @@
 a.topic-featured-link {
   display: inline-block;
   text-transform: lowercase;
-  color: #858585;
+  color: dark-light-choose($primary-medium, $secondary-medium);
   font-size: 0.875rem;
 
   &::before {

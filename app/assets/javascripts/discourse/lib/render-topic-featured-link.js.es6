@@ -7,7 +7,7 @@ export function addFeaturedLinkMetaDecorator(decorator) {
   _decorators.push(decorator);
 }
 
-function extractLinkMeta(topic) {
+export function extractLinkMeta(topic) {
   const href = topic.featured_link,
         target = Discourse.User.currentProp('external_links_in_new_tab') ? '_blank' : '';
 
