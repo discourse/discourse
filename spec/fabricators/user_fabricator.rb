@@ -97,7 +97,7 @@ Fabricator(:anonymous, from: :user) do
   username { sequence(:username) { |i| "anonymous#{i}" } }
   email { sequence(:email) { |i| "anonymous#{i}@anonymous.com" } }
   trust_level TrustLevel[1]
-  trust_level_locked true
+  manual_locked_trust_level TrustLevel[1]
 
   before_create do |user|
     user.custom_fields["master_id"] = 1

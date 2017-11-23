@@ -775,6 +775,8 @@ end
 #  public_version          :integer          default(1), not null
 #  action_code             :string
 #  image_url               :string
+#  trolling_count          :integer          default(0), not null
+#  real_life_threat_count  :integer          default(0), not null
 #
 # Indexes
 #

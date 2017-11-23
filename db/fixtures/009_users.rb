@@ -83,6 +83,17 @@ ColumnDropper.drop(
   }
 )
 
+ColumnDropper.drop(
+  table: 'users',
+  after_migration: 'AddTrustLevelLocksToUsers',
+  columns: %w[
+    trust_level_locked
+  ],
+  on_drop: ->() {
+    STDERR.puts 'Removing user trust_level_locked!'
+  }
+)
+
 # User for the smoke tests
 if ENV["SMOKE"] == "1"
   UserEmail.seed do |ue|
