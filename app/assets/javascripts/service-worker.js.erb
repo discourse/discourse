@@ -1,15 +1,13 @@
-/*
- I'm here to support Google Chrome App Banner on Android
- */
-
 'use strict';
 
 // Incrementing CACHE_VERSION will kick off the install event and force previously cached
 // resources to be cached again.
 const CACHE_VERSION = 1;
-let CURRENT_CACHES = {
+
+const CURRENT_CACHES = {
   offline: 'offline-v' + CACHE_VERSION
 };
+
 const OFFLINE_URL = 'offline.html';
 
 function createCacheBustedRequest(url) {
@@ -23,7 +21,7 @@ function createCacheBustedRequest(url) {
 
   // If {cache: 'reload'} didn't have any effect, append a cache-busting URL parameter instead.
   let bustedUrl = new URL(url, self.location.href);
-  bustedUrl.search += (bustedUrl.search ? '&' : '') + 'cachebust=' + Date.now();
+  bustedUrl.search += `${(bustedUrl.search ? '&' : '')}cachebust=${Date.now()}`;
   return new Request(bustedUrl);
 }
 
@@ -88,3 +86,7 @@ self.addEventListener('fetch', event => {
   // event.respondWith(). If no fetch handlers call event.respondWith(), the request will be
   // handled by the browser as if there were no service worker involvement.
 });
+
+<% DiscoursePluginRegistry.service_workers.each do |js| %>
+<%=raw "#{File.read(js)}" %>
+<% end %>
