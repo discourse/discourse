@@ -39,6 +39,23 @@ module Onebox
       og
     end
 
+    def self.fetch_html_doc(url, headers=nil)
+      response = (fetch_response(url, nil, nil, headers) rescue nil)
+      doc = Nokogiri::HTML(response)
+
+      ignore_canonical = doc.at('meta[property="og:ignore_canonical"]')
+      unless ignore_canonical && ignore_canonical['content'].to_s == 'true'
+        # prefer canonical link
+        canonical_link = doc.at('//link[@rel="canonical"]/@href')
+        if canonical_link && "#{URI(canonical_link).host}#{URI(canonical_link).path}" != "#{URI(url).host}#{URI(url).path}"
+          response = (fetch_response(canonical_link, nil, nil, headers) rescue nil)
+          doc = Nokogiri::HTML(response) if response
+        end
+      end
+
+      doc
+    end
+
     def self.fetch_response(location, limit = nil, domain = nil, headers = nil)
 
       limit ||= 5

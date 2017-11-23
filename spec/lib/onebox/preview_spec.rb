@@ -4,12 +4,6 @@ describe Onebox::Preview do
 
   before do
     fake("https://www.amazon.com/product", response("amazon"))
-    FakeWeb.register_uri(:get, "https://www.amazon.com/404-url", status: 404)
-    FakeWeb.register_uri(:get, "https://www.amazon.com/500-url", status: 500)
-    FakeWeb.register_uri(:get, "https://www.amazon.com/error-url", status: 500)
-    FakeWeb.register_uri(:get, "https://www.amazon.com/timeout-url", exception: Timeout::Error)
-    FakeWeb.register_uri(:get, "https://www.amazon.com/http-error", exception: Net::HTTPError)
-    FakeWeb.register_uri(:get, "https://www.amazon.com/error-connecting", exception: Errno::ECONNREFUSED)
   end
 
   let(:preview_url) { "http://www.amazon.com/product" }
@@ -19,26 +13,6 @@ describe Onebox::Preview do
     it "returns some html if given a valid url" do
       title = "Seven Languages in Seven Weeks: A Pragmatic Guide to Learning Programming Languages (Pragmatic Programmers)"
       expect(preview.to_s).to include(title)
-    end
-
-    it "returns an empty string if the resource is missing" do
-      expect(described_class.new("http://www.amazon.com/404-url").to_s).to eq("")
-    end
-
-    it "returns an empty string if the resource returns an error" do
-      expect(described_class.new("http://www.amazon.com/500-url").to_s).to eq("")
-    end
-
-    it "returns an empty string if the resource times out" do
-      expect(described_class.new("http://www.amazon.com/timeout-url").to_s).to eq("")
-    end
-
-    it "returns an empty string if there is an http error" do
-      expect(described_class.new("http://www.amazon.com/http-error").to_s).to eq("")
-    end
-
-    it "returns an empty string if there is an error connecting" do
-      expect(described_class.new("http://www.amazon.com/error-connecting").to_s).to eq("")
     end
 
     it "returns an empty string if the url is not valid" do
