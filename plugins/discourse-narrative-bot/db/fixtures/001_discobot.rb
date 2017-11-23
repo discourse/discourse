@@ -12,6 +12,8 @@ end
 unless user = User.find_by(id: -2)
   suggested_username = UserNameSuggester.suggest(discobot_username)
 
+  seed_primary_email
+
   User.seed do |u|
     u.id = -2
     u.name = discobot_username
