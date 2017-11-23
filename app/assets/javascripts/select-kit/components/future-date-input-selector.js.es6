@@ -154,14 +154,17 @@ export default ComboBoxComponent.extend(DatetimeMixin, {
   },
 
   mutateValue(value) {
-    if (this.get("isCustom")) return;
-    let input = null;
-    const { time } = this._updateAt(value);
+    if (this.get("isCustom")) {
+      this.set("value", value);
+    } else {
+      let input = null;
+      const { time } = this._updateAt(value);
 
-    if (time && !Ember.isEmpty(value)) {
-      input = time.format(FORMAT);
+      if (time && !Ember.isEmpty(value)) {
+        input = time.format(FORMAT);
+      }
+
+      this.setProperties({ input, value });
     }
-
-    this.setProperties({ input, value });
   },
 });
