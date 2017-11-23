@@ -44,16 +44,8 @@ export default Ember.Mixin.create({
     this._positionWrapper();
   },
 
-  @on("didInsertElement")
-  _setupResizeListener() {
-    if (!(this.site && this.site.isMobileDevice)) {
-      $(window).on("resize.select-kit", () => this.collapse() );
-    }
-  },
-
   @on("willDestroyElement")
   _clearState() {
-    $(window).off("resize.select-kit");
     $(`.select-kit-fixed-placeholder-${this.elementId}`).remove();
   },
 
