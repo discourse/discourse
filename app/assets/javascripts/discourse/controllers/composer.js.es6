@@ -86,7 +86,9 @@ export default Ember.Controller.extend({
 
   @observes('showPreview')
   showPreviewChanged() {
-    this.keyValueStore.set({ key: 'composer.showPreview', value: this.get('showPreview') });
+    if (!this.site.mobileView) {
+      this.keyValueStore.set({ key: 'composer.showPreview', value: this.get('showPreview') });
+    }
   },
 
   @computed('model.replyingToTopic', 'model.creatingPrivateMessage', 'model.targetUsernames')
