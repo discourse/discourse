@@ -4,7 +4,7 @@ require_dependency 'file_helper'
 class StaticController < ApplicationController
 
   skip_before_action :check_xhr, :redirect_to_login_if_required
-  skip_before_action :verify_authenticity_token, only: [:brotli_asset, :cdn_asset, :enter, :favicon]
+  skip_before_action :verify_authenticity_token, only: [:brotli_asset, :cdn_asset, :enter, :favicon, :service_worker_asset]
 
   PAGES_WITH_EMAIL_PARAM = ['login', 'password_reset', 'signup']
 
@@ -141,6 +141,14 @@ class StaticController < ApplicationController
 
   def cdn_asset
     serve_asset
+  end
+
+  def service_worker_asset
+    respond_to do |format|
+      format.js do
+        render plain: Rails.application.assets["service-worker.js"].to_s
+      end
+    end
   end
 
   protected
