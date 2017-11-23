@@ -8,7 +8,7 @@ export default Ember.Component.extend(bufferedRender({
   rerenderTriggers: ['topic.archived', 'topic.closed', 'topic.pinned', 'topic.visible', 'topic.unpinned', 'topic.is_warning'],
 
   click(e) {
-    if ($(e.target).hasClass('d-thumb-tack')) {
+    if ($(e.target).hasClass('d-icon-thumb-tack')) {
       const topic = this.get('topic');
 
       // only pin unpin for now

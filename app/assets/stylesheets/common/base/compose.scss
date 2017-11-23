@@ -62,7 +62,7 @@
       padding-right: 5px;
       .toggle-toolbar {
         display: none;
-      }      
+      }
       .d-icon {
         opacity: 1;
       }
@@ -132,10 +132,10 @@
   .title-input {
     position: relative;
     display: flex;
-    flex: 1 1 50%;          
+    flex: 1 1 50%;
 
     input {
-      flex-grow: 1;      
+      flex-grow: 1;
       box-shadow: none;
       border: 1px solid $primary-medium;
       &:focus {
@@ -195,7 +195,7 @@
   .tag-chooser {
     flex: 1 1 25%;
     margin: 0 0 0 10px;
-    border: 1px solid $primary-medium; 
+    border: 1px solid $primary-medium;
     @media all and (max-width: 900px) {
       margin: 5px 0 0 0;
       flex: 1 1 100%;
@@ -222,13 +222,13 @@
       padding: 5px;
     }
   }
-  
+
   .submit-panel {
     display: flex;
-    flex-shrink: 0; 
-    margin-top: 10px;    
+    flex-shrink: 0;
+    margin-top: 10px;
   }
-  
+
   .save-or-cancel {
     flex-basis: 50%;
     display: flex;
