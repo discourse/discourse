@@ -30,18 +30,6 @@ describe UploadsController do
         end.to raise_error(ActionController::ParameterMissing)
       end
 
-      it 'parameterize the type' do
-        subject.expects(:create_upload).with(
-          anything,
-          nil,
-          "super_long_type_with_charssuper_long_type_with_char",
-          false,
-          false
-        )
-
-        post :create, params: { format: :json, file: logo, type: "super \# long \//\\ type with \\. $%^&*( chars" * 5 }
-      end
-
       it 'can look up long urls' do
         upload = Fabricate(:upload)
         post :lookup_urls, params: { short_urls: [upload.short_url], format: :json }
