@@ -15,9 +15,7 @@ export default Ember.Mixin.create({
   willDestroyElement() {
     this._super();
 
-    $(document)
-      .off("mousedown.select-kit")
-      .off("touchstart.select-kit");
+    $(document).off("mousedown.select-kit");
 
     if (this.$header()) {
       this.$header()
@@ -39,7 +37,7 @@ export default Ember.Mixin.create({
     this._super();
 
     $(document)
-      .on("mousedown.select-kit, touchstart.select-kit", event => {
+      .on("mousedown.select-kit", event => {
         if (Ember.isNone(this.get("element"))) return;
         if (this.get("element").contains(event.target)) return;
 
