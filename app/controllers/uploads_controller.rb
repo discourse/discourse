@@ -6,6 +6,9 @@ class UploadsController < ApplicationController
   skip_before_action :preload_json, :check_xhr, :redirect_to_login_if_required, only: [:show]
 
   def create
+    # capture current user for block later on
+    me = current_user
+
     # 50 characters ought to be enough for the upload type
     type = params.require(:type).parameterize(separator: "_")[0..50]
 
@@ -19,12 +22,12 @@ class UploadsController < ApplicationController
     for_private_message = params[:for_private_message] == "true"
 
     if params[:synchronous] && (current_user.staff? || is_api?)
-      data = create_upload(file, url, type, for_private_message, pasted)
+      data = create_upload(current_user, file, url, type, for_private_message, pasted)
       render json: serialize_upload(data)
     else
       Scheduler::Defer.later("Create Upload") do
         begin
-          data = create_upload(file, url, type, for_private_message, pasted)
+          data = create_upload(me, file, url, type, for_private_message, pasted)
         ensure
           MessageBus.publish("/uploads/#{type}", serialize_upload(data), client_ids: [params[:client_id]])
         end
@@ -80,7 +83,7 @@ class UploadsController < ApplicationController
     raise Discourse::NotFound
   end
 
-  def create_upload(file, url, type, for_private_message, pasted)
+  def create_upload(current_user, file, url, type, for_private_message, pasted)
     if file.nil?
       if url.present? && is_api?
         maximum_upload_size = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
