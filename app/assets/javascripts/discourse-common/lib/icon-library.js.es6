@@ -70,12 +70,7 @@ export function registerIconRenderer(renderer) {
 
 // Support for font awesome icons
 function faClasses(icon, params) {
-  let classNames;
-  if (typeof icon.replacementId !== "undefined") {
-    classNames = `fa fa-${icon.replacementId} d-icon ${icon.id}`;
-  } else {
-    classNames = `fa fa-${icon.id} d-icon d-${icon.id}`;
-  }
+  let classNames = `fa fa-${icon.replacementId || icon.id} d-icon d-icon-${icon.id}`;
 
   if (params) {
     if (params.modifier) { classNames += " fa-" + params.modifier; }
