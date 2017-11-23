@@ -28,11 +28,6 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
 
     user = User.new(email: invite.email, username: available_username, name: available_name, active: true, trust_level: SiteSetting.default_invitee_trust_level)
 
-    if password
-      user.password_required!
-      user.password = password
-    end
-
     if !SiteSetting.must_approve_users? || (SiteSetting.must_approve_users? && invite.invited_by.staff?)
       user.approved = true
       user.approved_by_id = invite.invited_by_id
@@ -52,9 +47,14 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
     end
 
     user.moderator = true if invite.moderator? && invite.invited_by.staff?
-    user.save!
 
-    user
+    if password
+      user.password = password
+      user.password_required!
+    end
+
+    user.save!
+    User.find(user.id)
   end
 
   private
