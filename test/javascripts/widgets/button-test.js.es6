@@ -11,7 +11,7 @@ widgetTest('icon only button', {
 
   test(assert) {
     assert.ok(this.$('button.btn.btn-icon.no-text').length, 'it has all the classes');
-    assert.ok(this.$('button .d-icon.d-smile-o').length, 'it has the icon');
+    assert.ok(this.$('button .d-icon.d-icon-smile-o').length, 'it has the icon');
   }
 });
 
@@ -24,7 +24,7 @@ widgetTest('icon and text button', {
 
   test(assert) {
     assert.ok(this.$('button.btn.btn-icon-text').length, 'it has all the classes');
-    assert.ok(this.$('button .d-icon.d-plus').length, 'it has the icon');
+    assert.ok(this.$('button .d-icon.d-icon-plus').length, 'it has the icon');
     assert.ok(this.$('button span.d-button-label').length, 'it has the label');
   }
 });
