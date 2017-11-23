@@ -48,7 +48,7 @@ function loadNext(ajax) {
   // Retrieve the onebox
   return ajax("/onebox", {
     dataType: 'html',
-    data: { url, refresh, user_id: userId },
+    data: { url, refresh },
     cache: true
   }).then(html => {
     let $html = $(html);
