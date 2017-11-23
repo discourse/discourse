@@ -231,21 +231,21 @@ export default Ember.Component.extend({
 
     let position = 0;
 
-    _.times(numberOfLines, currentLineNumber => {
-      if (scrollMap[currentLineNumber] !== -1) {
+    for (let i = 1; i < numberOfLines; i++) {
+      if (scrollMap[i] !== -1) {
         position++;
-        return;
+        continue;
       }
 
       let top = nonEmptyList[position];
       let bottom = nonEmptyList[position + 1];
 
-      scrollMap[currentLineNumber] =
+      scrollMap[i] =
         ((
-          scrollMap[bottom] * (currentLineNumber - top) +
-          scrollMap[top] * (bottom - currentLineNumber)
+          scrollMap[bottom] * (i - top) +
+          scrollMap[top] * (bottom - i)
         ) / (bottom - top)).toFixed(2);
-    });
+    };
 
     return scrollMap;
   },
