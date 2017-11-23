@@ -17,11 +17,18 @@ import { tinyAvatar,
 } from 'discourse/lib/utilities';
 import { cacheShortUploadUrl, resolveAllShortUrls } from 'pretty-text/image-short-url';
 
+const REBUILD_SCROLL_MAP_EVENTS = [
+  'composer:resized',
+  'composer:typed-reply'
+];
+
 export default Ember.Component.extend({
   classNameBindings: ['showToolbar:toolbar-visible', ':wmd-controls'],
 
   uploadProgress: 0,
   _xhr: null,
+  shouldBuildScrollMap: true,
+  scrollMap: null,
 
   @computed
   uploadPlaceholder() {
@@ -67,6 +74,8 @@ export default Ember.Component.extend({
   _composerEditorInit() {
     const topicId = this.get('topic.id');
     const $input = this.$('.d-editor-input');
+    const $preview = this.$('.d-editor-preview');
+
     $input.autocomplete({
       template: findRawTemplate('user-selector-autocomplete'),
       dataSource: term => userSearch({
@@ -78,7 +87,7 @@ export default Ember.Component.extend({
       transformComplete: v => v.username || v.name
     });
 
-    $input.on('scroll', () => Ember.run.throttle(this, this._syncEditorAndPreviewScroll, 20));
+    this._initInputPreviewSync($input, $preview);
 
     // Focus on the body unless we have a title
     if (!this.get('composer.canEditTitle') && !this.capabilities.isIOS) {
@@ -118,29 +127,146 @@ export default Ember.Component.extend({
     }
   },
 
-  _syncEditorAndPreviewScroll() {
-    const $input = this.$('.d-editor-input');
-    if (!$input) { return; }
+  _resetShouldBuildScrollMap() {
+    this.set('shouldBuildScrollMap', true);
+  },
 
-    const $preview = this.$('.d-editor-preview');
+  _initInputPreviewSync($input, $preview) {
+    REBUILD_SCROLL_MAP_EVENTS.forEach(event => {
+      this.appEvents.on(event, this, this._resetShouldBuildScrollMap);
+    });
 
-    if ($input.scrollTop() === 0) {
-      $preview.scrollTop(0);
-      return;
-    }
+    $input.on('touchstart mouseenter', () => {
+      if (!$preview.is(":visible")) return;
+      $preview.off('scroll');
 
-    const inputHeight = $input[0].scrollHeight;
-    const previewHeight = $preview[0].scrollHeight;
-    if (($input.height() + $input.scrollTop() + 100) > inputHeight) {
-      // cheat, special case for bottom
-      $preview.scrollTop(previewHeight);
-      return;
-    }
+      if (this.get('shouldBuildScrollMap')) {
+        this.set('scrollMap', this._buildScrollMap($input, $preview));
+        this.set('shouldBuildScrollMap', false);
+      }
 
-    const scrollPosition = $input.scrollTop();
-    const factor = previewHeight / inputHeight;
-    const desired = scrollPosition * factor;
-    $preview.scrollTop(desired + 50);
+      $input.on('scroll', () => {
+        Ember.run.throttle(this, this._syncEditorAndPreviewScroll, $input, $preview, this.get('scrollMap'), 20);
+      });
+    });
+
+    $preview.on('touchstart mouseenter', () => {
+      $input.off('scroll');
+
+      if (this.get('shouldBuildScrollMap')) {
+        this.set('scrollMap', this._buildScrollMap($input, $preview));
+        this.set('shouldBuildScrollMap', false);
+      }
+
+      $preview.on('scroll', () => {
+        Ember.run.throttle(this, this._syncPreviewAndEditorScroll, $input, $preview, this.get('scrollMap'), 20);
+      });
+    });
+  },
+
+  _teardownInputPreviewSync() {
+    [this.$('.d-editor-input'), this.$('.d-editor-preview')].forEach($element => {
+      $element.off("mouseenter touchstart");
+      $element.off("scroll");
+    });
+
+    REBUILD_SCROLL_MAP_EVENTS.forEach(event => {
+      this.appEvents.off(event, this, this._resetShouldBuildScrollMap);
+    });;
+  },
+
+  // Adapted from https://github.com/markdown-it/markdown-it.github.io
+  _buildScrollMap($input, $preview) {
+    let sourceLikeDiv = $('<div />').css({
+      position: 'absolute',
+      height: 'auto',
+      visibility: 'hidden',
+      width: $input[0].clientWidth,
+      'font-size': $input.css('font-size'),
+      'font-family': $input.css('font-family'),
+      'line-height': $input.css('line-height'),
+      'white-space': $input.css('white-space')
+    }).appendTo('body');
+
+    const linesMap = [];
+    let numberOfLines = 0;
+
+    $input.val().split('\n').forEach(text => {
+      linesMap.push(numberOfLines);
+
+      if (text.length === 0) {
+        numberOfLines++;
+      } else {
+        sourceLikeDiv.text(text);
+
+        let height;
+        let lineHeight;
+        height = parseFloat(sourceLikeDiv.css('height'));
+        lineHeight = parseFloat(sourceLikeDiv.css('line-height'));
+        numberOfLines += Math.round(height / lineHeight);
+      }
+    });
+
+    linesMap.push(numberOfLines);
+    sourceLikeDiv.remove();
+
+    const previewOffsetTop = $preview.offset().top;
+    const offset = $preview.scrollTop() - previewOffsetTop - ($input.offset().top - previewOffsetTop);
+    const nonEmptyList = [];
+    const scrollMap = Array(numberOfLines).fill(-1);
+
+    nonEmptyList.push(0);
+    scrollMap[0] = 0;
+
+    $preview.find('.preview-sync-line').each((_, element) => {
+      let $element = $(element);
+      let lineNumber = $element.data('line-number');
+      let linesToTop = linesMap[lineNumber];
+      if (linesToTop !== 0) { nonEmptyList.push(linesToTop); }
+      scrollMap[linesToTop] = Math.round($element.offset().top + offset);
+    });
+
+    nonEmptyList.push(numberOfLines);
+    scrollMap[numberOfLines] = $preview[0].scrollHeight;
+
+    let position = 0;
+
+    _.times(numberOfLines, currentLineNumber => {
+      if (scrollMap[currentLineNumber] !== -1) {
+        position++;
+        return;
+      }
+
+      let top = nonEmptyList[position];
+      let bottom = nonEmptyList[position + 1];
+
+      scrollMap[currentLineNumber] =
+        ((
+          scrollMap[bottom] * (currentLineNumber - top) +
+          scrollMap[top] * (bottom - currentLineNumber)
+        ) / (bottom - top)).toFixed(2);
+    });
+
+    return scrollMap;
+  },
+
+  _syncEditorAndPreviewScroll($input, $preview, scrollMap) {
+    const lineHeight = parseFloat($input.css('line-height'));
+    const lineNumber = Math.floor($input.scrollTop() / lineHeight);
+
+    $preview.stop(true).animate({
+      scrollTop: scrollMap[lineNumber]
+    }, 100, 'linear');
+  },
+
+  _syncPreviewAndEditorScroll($input, $preview, scrollMap) {
+    if (scrollMap.length < 1) return;
+    const scrollTop = $preview.scrollTop();
+    const lineHeight = parseFloat($input.css('line-height'));
+
+    $input.stop(true).animate({
+      scrollTop: lineHeight * scrollMap.findIndex(offset => offset > scrollTop)
+    }, 100, 'linear');
   },
 
   _renderUnseenMentions($preview, unseen) {
@@ -461,6 +587,8 @@ export default Ember.Component.extend({
       // need to wait a bit for the "slide down" transition of the composer
       Ember.run.later(() => this.appEvents.trigger("composer:closed"), 400);
     });
+
+    this._teardownInputPreviewSync();
 
     if (this.site.mobileView) {
       $(window).off('resize.composer-popup-menu');
