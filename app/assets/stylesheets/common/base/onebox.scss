@@ -156,10 +156,11 @@ aside.onebox {
 
       .aspect-image {
         max-height: 170px;
+        --magic-ratio: calc(var(--aspect-ratio) + 0.15);
+        width: calc(128px * var(--magic-ratio));
         max-width: 20%;
         float: left;
         margin-right: 10px;
-        width: 100%;
         height: auto;
 
         img {
