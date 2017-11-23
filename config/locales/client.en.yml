@@ -665,6 +665,7 @@ en:
       api_approved: "Approved:"
       theme: "Theme"
       home: "Default Home Page"
+      staged: "Staged"
 
       staff_counters:
         flags_given: "helpful flags"
