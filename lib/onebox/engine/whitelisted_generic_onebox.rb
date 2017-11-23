@@ -223,22 +223,22 @@ module Onebox
           d[:video] = d[:video_secure_url] || d[:video_url] || d[:video]
 
           if !Onebox::Helpers.blank?(d[:published_time])
-            d[:article_published_time] = Time.parse(d[:published_time]).strftime("%d %b %y")
+            d[:article_published_time] = Time.parse(d[:published_time]).strftime("%-d %b %y")
             d[:article_published_time_title] = Time.parse(d[:published_time]).strftime("%I:%M%p - %d %B %Y")
-          else
-            # Twitter labels
-            if !Onebox::Helpers.blank?(d[:label1]) && !Onebox::Helpers.blank?(d[:data1]) && !!WhitelistedGenericOnebox.twitter_label_whitelist.find { |l| d[:label1] =~ /#{l}/i }
-              d[:label_1] = Sanitize.fragment(Onebox::Helpers.truncate(d[:label1].strip))
-              d[:data_1]  = Sanitize.fragment(Onebox::Helpers.truncate(d[:data1].strip))
-            end
-            if !Onebox::Helpers.blank?(d[:label2]) && !Onebox::Helpers.blank?(d[:data2]) && !!WhitelistedGenericOnebox.twitter_label_whitelist.find { |l| d[:label2] =~ /#{l}/i }
-              unless Onebox::Helpers.blank?(d[:label_1])
-                d[:label_2] = Sanitize.fragment(Onebox::Helpers.truncate(d[:label2].strip))
-                d[:data_2]  = Sanitize.fragment(Onebox::Helpers.truncate(d[:data2].strip))
-              else
-                d[:label_1] = Sanitize.fragment(Onebox::Helpers.truncate(d[:label2].strip))
-                d[:data_1]  = Sanitize.fragment(Onebox::Helpers.truncate(d[:data2].strip))
-              end
+          end
+
+          # Twitter labels
+          if !Onebox::Helpers.blank?(d[:label1]) && !Onebox::Helpers.blank?(d[:data1]) && !!WhitelistedGenericOnebox.twitter_label_whitelist.find { |l| d[:label1] =~ /#{l}/i }
+            d[:label_1] = Sanitize.fragment(Onebox::Helpers.truncate(d[:label1].strip))
+            d[:data_1]  = Sanitize.fragment(Onebox::Helpers.truncate(d[:data1].strip))
+          end
+          if !Onebox::Helpers.blank?(d[:label2]) && !Onebox::Helpers.blank?(d[:data2]) && !!WhitelistedGenericOnebox.twitter_label_whitelist.find { |l| d[:label2] =~ /#{l}/i }
+            unless Onebox::Helpers.blank?(d[:label_1])
+              d[:label_2] = Sanitize.fragment(Onebox::Helpers.truncate(d[:label2].strip))
+              d[:data_2]  = Sanitize.fragment(Onebox::Helpers.truncate(d[:data2].strip))
+            else
+              d[:label_1] = Sanitize.fragment(Onebox::Helpers.truncate(d[:label2].strip))
+              d[:data_1]  = Sanitize.fragment(Onebox::Helpers.truncate(d[:data2].strip))
             end
           end
 

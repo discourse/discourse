@@ -49,27 +49,13 @@ module Onebox
         record[:domain] || URI(link || '').host.to_s.sub(/^www\./, '')
       end
 
-      def metadata_1_label
-        record[:metadata_1_label]
-      end
-
-      def metadata_1_value
-        record[:metadata_1_value]
-      end
-
-      def metadata_2_label
-        record[:metadata_2_label]
-      end
-
-      def metadata_2_value
-        record[:metadata_2_value]
-      end
-
       def details
         {
           link: record[:link],
           title: record[:title],
           domain: domain,
+          article_published_time: record[:article_published_time],
+          article_published_time_title: record[:article_published_time_title],
           metadata_1_label: record[:metadata_1_label],
           metadata_1_value: record[:metadata_1_value],
           metadata_2_label: record[:metadata_2_label],
