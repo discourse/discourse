@@ -468,6 +468,67 @@ describe Group do
     expect(u3.reload.trust_level).to eq(3)
   end
 
+  describe "group_removes_trust_level" do
+
+    context "set to false" do
+      before do
+        SiteSetting.group_removes_trust_level = false
+      end
+
+      it "maintains the chosen trust level" do
+        g0 = Fabricate(:group, grant_trust_level: 2)
+        g1 = Fabricate(:group, grant_trust_level: 3)
+        user = Fabricate(:user, trust_level: 0)
+
+        g0.add(user)
+        expect(user.reload.trust_level).to eq(2)
+
+        g1.add(user)
+        expect(user.reload.trust_level).to eq(3)
+
+        g1.remove(user)
+        expect(user.reload.trust_level).to eq(3)
+
+        g0.remove(user)
+        expect(user.reload.trust_level).to eq(3)
+      end
+    end
+
+    context "set to true" do
+      before do
+        SiteSetting.group_removes_trust_level = true
+      end
+
+      it "adjusts the user trust level" do
+        g0 = Fabricate(:group, grant_trust_level: 2)
+        g1 = Fabricate(:group, grant_trust_level: 3)
+        g2 = Fabricate(:group)
+
+        # Add a group without one to consider `NULL` check
+        g2.add(user)
+
+        user = Fabricate(:user, trust_level: 0)
+
+        g0.add(user)
+        expect(user.reload.trust_level).to eq(2)
+        expect(user.trust_level_locked?).to eq(true)
+
+        g1.add(user)
+        expect(user.reload.trust_level).to eq(3)
+        expect(user.trust_level_locked?).to eq(true)
+
+        g1.remove(user)
+        expect(user.reload.trust_level).to eq(2)
+        expect(user.trust_level_locked?).to eq(true)
+
+        g0.remove(user)
+        expect(user.reload.trust_level).to eq(0)
+        expect(user.trust_level_locked?).to eq(false)
+      end
+    end
+
+  end
+
   it 'should cook the bio' do
     group = Fabricate(:group)
     group.update_attributes!(bio_raw: 'This is a group for :unicorn: lovers')
