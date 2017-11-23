@@ -24,6 +24,9 @@
 
 .d-editor .d-editor-modal {
   min-width: 400px;
+  @media screen and (max-width: 424px) {
+    min-width: 300px;
+  }
   position: absolute;
   background-color: $secondary;
   border: 1px solid $primary-low;
