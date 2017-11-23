@@ -13,21 +13,6 @@ export default SelectKitComponent.extend({
   value: null,
   allowInitialValueMutation: true,
 
-  init() {
-    this._super();
-
-    if (this.get("allowInitialValueMutation") === true) {
-      const none = isNone(this.get("none"));
-      const emptyValue = isEmpty(this.get("value"));
-      if (none && emptyValue) {
-        if (!isEmpty(this.get("content"))) {
-          const value = this.valueForContentItem(this.get("content.firstObject"));
-          Ember.run.next(() => this.mutateValue(value));
-        }
-      }
-    }
-  },
-
   @on("didReceiveAttrs")
   _compute() {
     Ember.run.scheduleOnce("afterRender", () => {
@@ -43,6 +28,8 @@ export default SelectKitComponent.extend({
       this.didComputeValue(value);
       this.set("headerComputedContent", this.computeHeaderContent());
       this.didComputeAttributes();
+
+      if (this.get("allowInitialValueMutation")) this.mutateAttributes();
     });
   },
 
@@ -71,7 +58,7 @@ export default SelectKitComponent.extend({
   willComputeValue(value) { return value; },
   computeValue(value) { return value; },
   _beforeDidComputeValue(value) {
-    if (!isEmpty(this.get("content")) && isNone(value) && isNone(this.get("none"))) {
+    if (!isEmpty(this.get("content")) && isEmpty(value) && isNone(this.get("none"))) {
       value = this.valueForContentItem(get(this.get("content"), "firstObject"));
     }
 
