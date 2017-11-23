@@ -95,6 +95,18 @@ describe Plugin::Instance do
     end
   end
 
+  context "register service worker" do
+    it "populates the DiscoursePluginRegistry" do
+      plugin = Plugin::Instance.new nil, "/tmp/test.rb"
+      plugin.register_service_worker("test.js")
+      plugin.register_service_worker("test2.js")
+
+      plugin.send :register_service_workers!
+
+      expect(DiscoursePluginRegistry.service_workers.count).to eq(2)
+    end
+  end
+
   context "activate!" do
     it "can activate plugins correctly" do
       plugin = Plugin::Instance.new
