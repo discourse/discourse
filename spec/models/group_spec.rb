@@ -468,65 +468,38 @@ describe Group do
     expect(u3.reload.trust_level).to eq(3)
   end
 
-  describe "group_removes_trust_level" do
+  it "adjusts the user trust level" do
+    g0 = Fabricate(:group, grant_trust_level: 2)
+    g1 = Fabricate(:group, grant_trust_level: 3)
+    g2 = Fabricate(:group)
 
-    context "set to false" do
-      before do
-        SiteSetting.group_removes_trust_level = false
-      end
+    user = Fabricate(:user, trust_level: 0)
 
-      it "maintains the chosen trust level" do
-        g0 = Fabricate(:group, grant_trust_level: 2)
-        g1 = Fabricate(:group, grant_trust_level: 3)
-        user = Fabricate(:user, trust_level: 0)
+    # Add a group without one to consider `NULL` check
+    g2.add(user)
+    expect(user.group_locked_trust_level).to be_nil
+    expect(user.manual_locked_trust_level).to be_nil
 
-        g0.add(user)
-        expect(user.reload.trust_level).to eq(2)
+    g0.add(user)
+    expect(user.reload.trust_level).to eq(2)
+    expect(user.group_locked_trust_level).to eq(2)
+    expect(user.manual_locked_trust_level).to be_nil
 
-        g1.add(user)
-        expect(user.reload.trust_level).to eq(3)
+    g1.add(user)
+    expect(user.reload.trust_level).to eq(3)
+    expect(user.group_locked_trust_level).to eq(3)
+    expect(user.manual_locked_trust_level).to be_nil
 
-        g1.remove(user)
-        expect(user.reload.trust_level).to eq(3)
+    g1.remove(user)
+    expect(user.reload.trust_level).to eq(2)
+    expect(user.group_locked_trust_level).to eq(2)
+    expect(user.manual_locked_trust_level).to be_nil
 
-        g0.remove(user)
-        expect(user.reload.trust_level).to eq(3)
-      end
-    end
-
-    context "set to true" do
-      before do
-        SiteSetting.group_removes_trust_level = true
-      end
-
-      it "adjusts the user trust level" do
-        g0 = Fabricate(:group, grant_trust_level: 2)
-        g1 = Fabricate(:group, grant_trust_level: 3)
-        g2 = Fabricate(:group)
-
-        # Add a group without one to consider `NULL` check
-        g2.add(user)
-
-        user = Fabricate(:user, trust_level: 0)
-
-        g0.add(user)
-        expect(user.reload.trust_level).to eq(2)
-        expect(user.trust_level_locked?).to eq(true)
-
-        g1.add(user)
-        expect(user.reload.trust_level).to eq(3)
-        expect(user.trust_level_locked?).to eq(true)
-
-        g1.remove(user)
-        expect(user.reload.trust_level).to eq(2)
-        expect(user.trust_level_locked?).to eq(true)
-
-        g0.remove(user)
-        expect(user.reload.trust_level).to eq(0)
-        expect(user.trust_level_locked?).to eq(false)
-      end
-    end
-
+    g0.remove(user)
+    user.reload
+    expect(user.manual_locked_trust_level).to be_nil
+    expect(user.group_locked_trust_level).to be_nil
+    expect(user.trust_level).to eq(0)
   end
 
   it 'should cook the bio' do

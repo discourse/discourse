@@ -1040,7 +1040,6 @@ en:
 
     max_topics_in_first_day: "The maximum number of topics a user is allowed to create in the 24 hour period after creating their first post"
     max_replies_in_first_day: "The maximum number of replies a user is allowed to create in the 24 hour period after creating their first post"
-    group_removes_trust_level: "When a user is removed grom a group, their adjusted trust level should be reverted."
 
     tl2_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl2 (member) by multiplying with this number"
     tl3_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl3 (regular) by multiplying with this number"

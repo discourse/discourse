@@ -89,7 +89,7 @@ class StaffActionLogger
 
   def log_lock_trust_level(user, opts = {})
     raise Discourse::InvalidParameters.new(:user) unless user && user.is_a?(User)
-    UserHistory.create!(params(opts).merge(action: UserHistory.actions[user.trust_level_locked ? :lock_trust_level : :unlock_trust_level],
+    UserHistory.create!(params(opts).merge(action: UserHistory.actions[user.manual_locked_trust_level.nil? ? :unlock_trust_level : :lock_trust_level],
                                            target_user_id: user.id))
   end
 

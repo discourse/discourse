@@ -11,7 +11,7 @@ class Promotion
   # Returns true if the user was promoted, false otherwise.
   def review
     # nil users are never promoted
-    return false if @user.blank? || @user.trust_level_locked
+    return false if @user.blank? || !@user.manual_locked_trust_level.nil?
 
     # Promotion beyond basic requires some expensive queries, so don't do that here.
     return false if @user.trust_level >= TrustLevel[2]
@@ -40,7 +40,7 @@ class Promotion
     old_level = @user.trust_level
     new_level = level
 
-    if new_level < old_level && !@user.trust_level_locked
+    if new_level < old_level && @user.manual_locked_trust_level.nil?
       next_up = new_level + 1
       key = "tl#{next_up}_met?"
       if self.class.respond_to?(key) && self.class.send(key, @user)
@@ -105,6 +105,33 @@ class Promotion
 
   def self.tl3_lost?(user)
     TrustLevel3Requirements.new(user).requirements_lost?
+  end
+
+  # Figure out what a user's trust level should be from scratch
+  def self.recalculate(user, performed_by = nil)
+    # First, use the manual locked level
+    unless user.manual_locked_trust_level.nil?
+      user.trust_level = user.manual_locked_trust_level
+      user.save
+      return
+    end
+
+    # Then consider the group locked level
+    if user.group_locked_trust_level
+      user.trust_level = user.group_locked_trust_level
+      user.save
+      return
+    end
+
+    user.update_column(:trust_level, TrustLevel[0])
+
+    p = Promotion.new(user)
+    p.review_tl0
+    p.review_tl1
+    p.review_tl2
+    if user.trust_level == 3 && Promotion.tl3_lost?(user)
+      user.change_trust_level!(2, log_action_for: performed_by || Discourse.system_user)
+    end
   end
 
 end

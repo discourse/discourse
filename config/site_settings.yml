@@ -908,8 +908,6 @@ trust:
   tl3_links_no_follow:
     default: false
     client: true
-  group_removes_trust_level:
-    default: false
 
 security:
   force_https:
