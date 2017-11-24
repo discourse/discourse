@@ -155,6 +155,38 @@ describe UploadsController do
         expect(message.data["id"]).to be
       end
 
+      it 'respects `additional_authorized_extensions_for_staff` setting when staff upload file' do
+        SiteSetting.authorized_extensions = ""
+        SiteSetting.additional_authorized_extensions_for_staff = "*"
+        @user.update_columns(moderator: true)
+
+        message = MessageBus.track_publish('/uploads/composer') do
+          post :create, params: {
+            file: text_file,
+            type: "composer",
+            format: :json
+          }
+        end.first
+
+        expect(response).to be_success
+        expect(message.data["id"]).to be
+      end
+
+      it 'ignores `additional_authorized_extensions_for_staff` setting when non-staff upload file' do
+        SiteSetting.authorized_extensions = ""
+        SiteSetting.additional_authorized_extensions_for_staff = "*"
+
+        message = MessageBus.track_publish('/uploads/composer') do
+          post :create, params: {
+            file: text_file,
+            type: "composer",
+            format: :json
+          }
+        end.first
+
+        expect(message.data["errors"].first).to eq(I18n.t("upload.unauthorized", authorized_extensions: ''))
+      end
+
       it 'returns an error when it could not determine the dimensions of an image' do
         Jobs.expects(:enqueue).with(:create_avatar_thumbnails, anything).never
 

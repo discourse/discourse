@@ -237,12 +237,21 @@ export function validateUploadedFile(file, opts) {
 
 const IMAGES_EXTENSIONS_REGEX = /(png|jpe?g|gif|bmp|tiff?|svg|webp|ico)/i;
 
+function rawExtensions() {
+  const staffExtensions =  Discourse.SiteSettings.additional_authorized_extensions_for_staff;
+
+  let extensions = Discourse.SiteSettings.authorized_extensions;
+  if (Discourse.User.currentProp('staff') && staffExtensions) {
+    extensions += `|${staffExtensions}`;
+  }
+  return extensions;
+}
+
 function extensions() {
-  return Discourse.SiteSettings.authorized_extensions
-                               .toLowerCase()
-                               .replace(/[\s\.]+/g, "")
-                               .split("|")
-                               .filter(ext => ext.indexOf("*") === -1);
+  return rawExtensions().toLowerCase()
+                        .replace(/[\s\.]+/g, "")
+                        .split("|")
+                        .filter(ext => ext.indexOf("*") === -1);
 }
 
 function imagesExtensions() {
@@ -274,7 +283,7 @@ export function authorizedImagesExtensions() {
 }
 
 export function authorizesAllExtensions() {
-  return Discourse.SiteSettings.authorized_extensions.indexOf("*") >= 0;
+  return rawExtensions().indexOf("*") >= 0;
 }
 
 export function isAnImage(path) {

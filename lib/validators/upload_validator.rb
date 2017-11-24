@@ -50,10 +50,25 @@ class Validators::UploadValidator < ActiveModel::Validator
 
   private
 
+  def raw_extensions(upload)
+    if upload.for_theme
+      return SiteSetting.theme_authorized_extensions
+    end
+
+    extensions = SiteSetting.authorized_extensions
+    staff_extensions = SiteSetting.additional_authorized_extensions_for_staff;
+
+    if upload.user&.staff? && !staff_extensions.empty?
+      extensions += "|#{staff_extensions}"
+    end
+
+    extensions
+  end
+
   def authorized_uploads(upload)
     authorized_uploads = Set.new
 
-    extensions = upload.for_theme ? SiteSetting.theme_authorized_extensions : SiteSetting.authorized_extensions
+    extensions = raw_extensions(upload)
 
     extensions
       .gsub(/[\s\.]+/, "")
@@ -73,7 +88,7 @@ class Validators::UploadValidator < ActiveModel::Validator
   end
 
   def authorizes_all_extensions?(upload)
-    extensions = upload.for_theme ? SiteSetting.theme_authorized_extensions : SiteSetting.authorized_extensions
+    extensions = raw_extensions(upload)
     extensions.include?("*")
   end
 
