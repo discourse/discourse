@@ -21,17 +21,37 @@ describe OneboxController do
 
     describe "cached onebox" do
 
-      let(:body) { "This is a cached onebox body" }
-
-      before do
-        Oneboxer.expects(:cached_preview).with(url).returns(body)
-        Oneboxer.expects(:preview).never
-        get :show, params: { url: url, user_id: @user.id }, format: :json
-      end
-
       it "returns the cached onebox response in the body" do
+        onebox_html = <<~HTML
+          <html>
+          <head>
+            <meta property="og:title" content="Fred the title">
+            <meta property="og:description" content="this is bodycontent">
+          </head>
+          <body>
+             <p>body</p>
+          </body>
+          <html>
+        HTML
+
+        url = "http://noodle.com/"
+
+        stub_request(:head, url).
+          to_return(status: 200, body: "", headers: {}).then.to_raise
+
+        stub_request(:get, url)
+          .to_return(status: 200, headers: {}, body: onebox_html).then.to_raise
+
+        get :show, params: { url: url, user_id: @user.id, refresh: "true" }, format: :json
+
         expect(response).to be_success
-        expect(response.body).to eq(body)
+        expect(response.body).to include('Fred')
+        expect(response.body).to include('bodycontent')
+
+        get :show, params: { url: url, user_id: @user.id }, format: :json
+        expect(response).to be_success
+        expect(response.body).to include('Fred')
+        expect(response.body).to include('bodycontent')
       end
 
     end

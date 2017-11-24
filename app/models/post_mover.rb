@@ -158,7 +158,7 @@ class PostMover
 
     message = I18n.with_locale(SiteSetting.default_locale) do
       I18n.t("move_posts.#{move_type_str}_moderator_post",
-             count: post_ids.count,
+             count: posts.length,
              topic_link: "[#{destination_topic.title}](#{destination_topic.relative_url})")
     end
 
@@ -172,7 +172,10 @@ class PostMover
 
   def posts
     @posts ||= begin
-      Post.where(topic: @original_topic, id: post_ids).order(:created_at).tap do |posts|
+      Post.where(topic: @original_topic, id: post_ids)
+        .where.not(post_type: Post.types[:small_action])
+        .order(:created_at).tap do |posts|
+
         raise Discourse::InvalidParameters.new(:post_ids) if posts.empty?
       end
     end

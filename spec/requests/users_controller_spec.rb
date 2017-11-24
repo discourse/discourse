@@ -35,7 +35,7 @@ RSpec.describe UsersController do
     it "fails if badges are disabled" do
       SiteSetting.enable_badges = false
       get "/u/#{user.username}/badges"
-      expect(response).not_to be_success
+      expect(response.status).to eq(404)
     end
   end
 

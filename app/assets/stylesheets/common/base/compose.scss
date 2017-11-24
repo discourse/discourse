@@ -286,7 +286,7 @@
 
     li {
       .d-icon-users {
-        color: $primary-medium;
+        color: lighten($primary, 40%);
         padding: 0 2px;
       }
 

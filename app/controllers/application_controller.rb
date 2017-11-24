@@ -11,12 +11,14 @@ require_dependency 'distributed_cache'
 require_dependency 'global_path'
 require_dependency 'secure_session'
 require_dependency 'topic_query'
+require_dependency 'hijack'
 
 class ApplicationController < ActionController::Base
   include CurrentUser
   include CanonicalURL::ControllerExtensions
   include JsonError
   include GlobalPath
+  include Hijack
 
   attr_reader :theme_key
 

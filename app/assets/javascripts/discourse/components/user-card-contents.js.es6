@@ -7,12 +7,13 @@ import DiscourseURL from 'discourse/lib/url';
 import User from 'discourse/models/user';
 import { userPath } from 'discourse/lib/url';
 import { durationTiny } from 'discourse/lib/formatter';
+import CanCheckEmails from 'discourse/mixins/can-check-emails';
 
 const clickOutsideEventName = "mousedown.outside-user-card";
 const clickDataExpand = "click.discourse-user-card";
 const clickMention = "click.discourse-user-mention";
 
-export default Ember.Component.extend(CleansUp, {
+export default Ember.Component.extend(CleansUp, CanCheckEmails, {
   elementId: 'user-card',
   classNameBindings: ['visible:show', 'showBadges', 'hasCardBadgeImage', 'user.card_background::no-bg'],
   allowBackgrounds: setting('allow_profile_backgrounds'),
@@ -30,6 +31,7 @@ export default Ember.Component.extend(CleansUp, {
   showDelete: Ember.computed.and("viewingAdmin", "showName", "user.canBeDeleted"),
   linkWebsite: Ember.computed.not('user.isBasic'),
   hasLocationOrWebsite: Ember.computed.or('user.location', 'user.website_name'),
+  showCheckEmail: Ember.computed.and('user.staged', 'canCheckEmails'),
 
   visible: false,
   user: null,
@@ -291,6 +293,10 @@ export default Ember.Component.extend(CleansUp, {
     showUser() {
       this.sendAction('showUser', this.get('user'));
       this._close();
+    },
+
+    checkEmail(user) {
+      user.checkEmail();
     }
   }
 });

@@ -247,6 +247,17 @@ describe PostMover do
 
           expect(post.raw).to eq(expected_text)
         end
+
+        it "does not try to move small action posts" do
+          small_action = Fabricate(:post, topic: topic, raw: "A small action", post_type: Post.types[:small_action])
+          new_topic = topic.move_posts(user, [p2.id, p4.id, small_action.id], title: "new testing topic name", category_id: category.id)
+
+          expect(new_topic.posts_count).to eq(2)
+          expect(small_action.topic_id).to eq(topic.id)
+
+          moderator_post = topic.posts.last
+          expect(moderator_post.raw).to include("2 posts were split")
+        end
       end
 
       context "to an existing topic" do
@@ -308,6 +319,18 @@ describe PostMover do
 
           topic.reload
           expect(topic.closed).to eq(true)
+        end
+
+        it "does not try to move small action posts" do
+          small_action = Fabricate(:post, topic: topic, raw: "A small action", post_type: Post.types[:small_action])
+          moved_to = topic.move_posts(user, [p1.id, p2.id, p3.id, p4.id, small_action.id], destination_topic_id: destination_topic.id)
+
+          moved_to.reload
+          expect(moved_to.posts_count).to eq(5)
+          expect(small_action.topic_id).to eq(topic.id)
+
+          moderator_post = topic.posts.find_by(post_number: 2)
+          expect(moderator_post.raw).to include("4 posts were merged")
         end
       end
 

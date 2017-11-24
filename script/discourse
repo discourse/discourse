@@ -3,8 +3,6 @@
 require "thor"
 
 class DiscourseCLI < Thor
-  class_option :verbose, default: false, aliases: :v
-
   desc "remap [--global,--regex] FROM TO", "Remap a string sequence accross all tables"
   long_desc <<-LONGDESC
     Replace a string sequence FROM with TO across all tables.

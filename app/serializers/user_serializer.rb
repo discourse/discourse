@@ -71,7 +71,8 @@ class UserSerializer < BasicUserSerializer
              :primary_group_name,
              :primary_group_flair_url,
              :primary_group_flair_bg_color,
-             :primary_group_flair_color
+             :primary_group_flair_color,
+             :staged
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
@@ -409,6 +410,10 @@ class UserSerializer < BasicUserSerializer
 
   def recent_time_read
     time = object.recent_time_read
+  end
+
+  def include_staged?
+    scope.is_staff?
   end
 
 end
