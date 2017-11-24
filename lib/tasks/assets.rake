@@ -1,6 +1,7 @@
 task 'assets:precompile:before' do
 
   require 'uglifier'
+  require 'open3'
 
   unless %w{profile production}.include? Rails.env
     raise "rake assets:precompile should only be run in RAILS_ENV=production, you are risking unminified assets"
@@ -114,10 +115,26 @@ def gzip(path)
   raise "gzip compression failed: exit code #{$?.exitstatus}" if $?.exitstatus != 0
 end
 
+# different brotli versions use different parameters
+ver_out, ver_err, ver_status = Open3.capture3('brotli --version')
+if !ver_status.success?
+  # old versions of brotli don't respond to --version
+  def brotli_command(path)
+    "brotli --quality 11 --input #{path} --output #{path}.br"
+  end
+elsif ver_out >= "brotli 1.0.0"
+  def brotli_command(path)
+    "brotli --quality=11 #{path} --output=#{path}.br"
+  end
+else
+  # not sure what to do here, not expecting this
+  raise "cannot determine brotli version"
+end
+
 def brotli(path)
   if ENV['COMPRESS_BROTLI']&.to_i == 1
-    STDERR.puts "brotli --quality 11 --input #{path} --output #{path}.br"
-    STDERR.puts `brotli --quality 11 --input #{path} --output #{path}.br`
+    STDERR.puts brotli_command(path)
+    STDERR.puts `#{brotli_command(path)}`
     raise "brotli compression failed: exit code #{$?.exitstatus}" if $?.exitstatus != 0
     STDERR.puts `chmod +r #{path}.br`
     raise "chmod failed: exit code #{$?.exitstatus}" if $?.exitstatus != 0
