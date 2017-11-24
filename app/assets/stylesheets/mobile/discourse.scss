@@ -26,23 +26,6 @@ blockquote {
 
 }
 
-h1.page-not-found {
-  line-height: 24px;
-  margin: 5px 0 -5px 0;
-}
-
-h2 {
-  &.popular-topics-title {
-    margin-bottom: 6px;
-    font-size: 1.2em;
-  }
-
-  &.recent-topics-title {
-    margin-bottom: 6px;
-    font-size: 1.2em;
-  }
-}
-
 // Common classes
 .wrap {
   padding: 0 10px;
@@ -143,17 +126,6 @@ h2 {
         }
       }
     }
-  }
-}
-
-/* page not found styles */
-.page-not-found {
-  &-topics a.badge-wrapper {
-    margin-left: 8px;
-  }
-
-  &-search h2 {
-    font-size: 1.2em;
   }
 }
 
