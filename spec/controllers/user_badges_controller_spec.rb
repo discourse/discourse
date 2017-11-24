@@ -22,7 +22,7 @@ describe UserBadgesController do
     it "fails when badges are disabled" do
       SiteSetting.enable_badges = false
       get :index, params: { badge_id: badge.id }, format: :json
-      expect(response).not_to be_success
+      expect(response.status).to eq(404)
     end
   end
 
