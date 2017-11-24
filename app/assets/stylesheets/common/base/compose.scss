@@ -122,7 +122,7 @@
     flex-wrap: wrap;
     width: 100%;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     position: relative;
     &.with-preview {
       width: 50%;
@@ -154,10 +154,10 @@
   .category-input {
     display: flex;
     flex: 1 0 35%;
+    margin: 0 0 5px 10px;
     @media screen and (max-width: 955px) {
       flex: 1 0 100%;
       margin-left: 0;
-      margin-top: 5px;
     }
     .category-chooser {
       display: flex;
@@ -179,25 +179,16 @@
 
   #reply-title {
     padding: 6px 10px;
-    margin: 0;
+    margin: 0 0 5px 0;
     flex-basis: 50%;
-  }
-
-  .with-tags {
-    #reply-title {
-      margin: 0 0 5px 0;
-      @media all and (max-width: 955px) {
-        margin: 0;
-      }
-    }
   }
 
   .tag-chooser {
     flex: 1 1 25%;
-    margin: 0 0 0 10px;
+    margin: 0 0 5px 10px;
     border: 1px solid $primary-medium;
     @media all and (max-width: 900px) {
-      margin: 5px 0 0 0;
+      margin: 0;
       flex: 1 1 100%;
     }
     .select2-choices {
