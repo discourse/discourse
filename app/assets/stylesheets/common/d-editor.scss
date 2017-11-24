@@ -34,7 +34,7 @@
   top: 25px;
 
   input {
-    width: 98%;
+    width: 95%;
   }
   h3 {
     margin-bottom: 0.5em;
@@ -105,7 +105,6 @@
 
 .d-editor-input,
 .d-editor-preview {
-  box-shadow: none;
   box-sizing: border-box;
   height: 100%;
   margin: 0;
@@ -114,6 +113,7 @@
   word-wrap: break-word;
   flex-grow: 1;
   -webkit-appearance: none;
+  border-radius: 0;  
   &:focus {
     box-shadow: none;
     border: 0;
@@ -130,6 +130,7 @@
   border: 0;
   padding: 10px;
   overflow-x: hidden;
+  resize: none;  
 }
 
 .d-editor-preview {

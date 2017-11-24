@@ -136,12 +136,6 @@
 
     input {
       flex-grow: 1;
-      box-shadow: none;
-      border: 1px solid $primary-medium;
-      &:focus {
-        border: 1px solid $tertiary;
-        box-shadow: $tertiary 0px 0px 6px 0px
-      }
     }
   }
 
