@@ -282,8 +282,8 @@ componentTest('supports keyboard events', {
 });
 
 
-componentTest('supports mutating value when no value given', {
-  template: '{{single-select value=value content=content}}',
+componentTest('with allowInitialValueMutation', {
+  template: '{{single-select value=value content=content allowInitialValueMutation=true}}',
 
   beforeEach() {
     this.set("value", "");
@@ -292,7 +292,7 @@ componentTest('supports mutating value when no value given', {
 
   test(assert) {
     andThen(() => {
-      assert.equal(this.get("value"), "1");
+      assert.equal(this.get("value"), "1", "it mutates the value on initial rendering");
     });
   }
 });
