@@ -47,6 +47,10 @@ export default SelectKitComponent.extend({
   },
 
   _beforeWillComputeValue(value) {
+    if (!isEmpty(this.get("content")) && isEmpty(value) && isNone(this.get("none"))) {
+      value = this.valueForContentItem(get(this.get("content"), "firstObject"));
+    }
+
     switch (typeof value) {
     case "string":
     case "number":
@@ -58,10 +62,6 @@ export default SelectKitComponent.extend({
   willComputeValue(value) { return value; },
   computeValue(value) { return value; },
   _beforeDidComputeValue(value) {
-    if (!isEmpty(this.get("content")) && isEmpty(value) && isNone(this.get("none"))) {
-      value = this.valueForContentItem(get(this.get("content"), "firstObject"));
-    }
-
     this.setProperties({ computedValue: value });
     return value;
   },
