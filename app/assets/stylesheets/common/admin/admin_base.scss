@@ -176,6 +176,12 @@ $mobile-breakpoint: 700px;
   }
 }
 
+.admin-users .users-list {
+  .username .fa {
+    color: dark-light-choose($primary-medium, $secondary-medium);
+  }
+}
+
 .ip-lookup {
   position: relative;
   display: inline-block;

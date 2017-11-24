@@ -141,7 +141,8 @@ class UserSerializer < BasicUserSerializer
   end
 
   def include_email?
-    object.id && object.id == scope.user.try(:id)
+    (object.id && object.id == scope.user.try(:id)) ||
+      (scope.is_staff? && object.staged?)
   end
 
   def can_change_bio
