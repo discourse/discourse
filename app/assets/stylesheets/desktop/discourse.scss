@@ -64,36 +64,6 @@ pre {
   font-family: Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace;
 }
 
-/* page not found styles */
-h1.page-not-found {
-  line-height: 30px;
-}
-
-.page-not-found {
-  margin: 20px 0 40px 0;
-
-  &-search {
-    margin-top: 20px;
-  }
-
-  &-topics .span8 {
-    line-height: 1.5em;
-    margin-right: 20px;
-  }
-}
-
-.popular-topics-title,
-.recent-topics-title {
-  margin-bottom: 10px;
-}
-
-.not-found-topic {
-  > a {
-    margin-right: 10px;
-    line-height: 2;
-  }
-}
-
 // this removes the unwanted top margin on a paragraph under a heading
 h1,
 h2,
