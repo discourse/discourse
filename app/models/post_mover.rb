@@ -92,9 +92,15 @@ class PostMover
       raw: post.raw,
       topic_id: destination_topic.id,
       acting_user: user,
+      cook_method: post.cook_method,
+      via_email: post.via_email,
+      raw_email: post.raw_email,
       skip_validations: true,
       guardian: Guardian.new(user)
     )
+
+    move_incoming_emails(post, new_post)
+    move_email_logs(post, new_post)
 
     PostAction.copy(post, new_post)
     new_post.update_column(:reply_count, @reply_count[1] || 0)
@@ -123,10 +129,27 @@ class PostMover
 
     post.update(update)
 
+    move_incoming_emails(post, post)
+    move_email_logs(post, post)
+
     DiscourseEvent.trigger(:post_moved, post, original_topic.id)
 
     # Move any links from the post to the new topic
     post.topic_links.update_all(topic_id: destination_topic.id)
+  end
+
+  def move_incoming_emails(old_post, new_post)
+    return if old_post.incoming_email.nil?
+
+    email = old_post.incoming_email
+    email.update_columns(topic_id: new_post.topic_id, post_id: new_post.id)
+    new_post.incoming_email = email
+  end
+
+  def move_email_logs(old_post, new_post)
+    EmailLog
+      .where(post_id: old_post.id)
+      .update_all(topic_id: new_post.topic_id, post_id: new_post.id)
   end
 
   def update_statistics
