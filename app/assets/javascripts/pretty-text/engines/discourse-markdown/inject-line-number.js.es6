@@ -28,11 +28,12 @@ export function setup(helper) {
     helper.registerPlugin(md => {
       const injectLineNumber = (tokens, index, options, env, self) => {
         let line;
+        const token = tokens[index];
 
-        if (tokens[index].map && tokens[index].level === 0) {
-          line = tokens[index].map[0];
-          tokens[index].attrJoin('class', 'preview-sync-line');
-          tokens[index].attrSet('data-line-number', String(line));
+        if (token.map && token.level === 0) {
+          line = token.map[0];
+          token.attrJoin('class', 'preview-sync-line');
+          token.attrSet('data-line-number', String(line));
         }
 
         return self.renderToken(tokens, index, options, env, self);

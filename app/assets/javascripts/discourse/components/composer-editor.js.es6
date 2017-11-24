@@ -136,32 +136,35 @@ export default Ember.Component.extend({
       this.appEvents.on(event, this, this._resetShouldBuildScrollMap);
     });
 
-    $input.on('touchstart mouseenter', () => {
-      if (!$preview.is(":visible")) return;
-      $preview.off('scroll');
+    Ember.run.schedule("afterRender", () => {
+      $input.scrollTop(0);
 
-      $input.on('scroll', () => {
-        if (this.get('shouldBuildScrollMap')) {
-          this.set('scrollMap', this._buildScrollMap($input, $preview));
-          this.set('shouldBuildScrollMap', false);
-        }
+      $input.on('touchstart mouseenter', () => {
+        if (!$preview.is(":visible")) return;
+        $preview.off('scroll');
 
-        Ember.run.throttle(this, this._syncEditorAndPreviewScroll, $input, $preview, this.get('scrollMap'), 20);
+        $input.on('scroll', () => {
+          this._syncScroll(this._syncEditorAndPreviewScroll, $input, $preview);
+        });
+      });
+
+      $preview.on('touchstart mouseenter', () => {
+        $input.off('scroll');
+
+        $preview.on('scroll', () => {
+          this._syncScroll(this._syncPreviewAndEditorScroll, $input, $preview);
+        });
       });
     });
+  },
 
-    $preview.on('touchstart mouseenter', () => {
-      $input.off('scroll');
+  _syncScroll($callback, $input, $preview) {
+    if (!this.get('scrollMap') || this.get('shouldBuildScrollMap')) {
+      this.set('scrollMap', this._buildScrollMap($input, $preview));
+      this.set('shouldBuildScrollMap', false);
+    }
 
-      $preview.on('scroll', () => {
-        if (this.get('shouldBuildScrollMap')) {
-          this.set('scrollMap', this._buildScrollMap($input, $preview));
-          this.set('shouldBuildScrollMap', false);
-        }
-
-        Ember.run.throttle(this, this._syncPreviewAndEditorScroll, $input, $preview, this.get('scrollMap'), 20);
-      });
-    });
+    Ember.run.throttle(this, $callback, $input, $preview, this.get('scrollMap'), 20);
   },
 
   _teardownInputPreviewSync() {
