@@ -114,6 +114,7 @@ export default ComboBoxComponent.extend(DatetimeMixin, {
   pluginApiIdentifiers: ["future-date-input-selector"],
   classNames: ["future-date-input-selector"],
   isCustom: Ember.computed.equal("value", "pick_date_and_time"),
+  isBasedOnLastPost: Ember.computed.equal("value", "set_based_on_last_post"),
   clearable: true,
   rowComponent: "future-date-input-selector/future-date-input-selector-row",
   headerComponent: "future-date-input-selector/future-date-input-selector-header",
@@ -154,7 +155,7 @@ export default ComboBoxComponent.extend(DatetimeMixin, {
   },
 
   mutateValue(value) {
-    if (this.get("isCustom")) {
+    if (this.get("isCustom") || this.get("isBasedOnLastPost")) {
       this.set("value", value);
     } else {
       let input = null;
