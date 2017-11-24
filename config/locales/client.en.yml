@@ -1330,6 +1330,7 @@ en:
         linked: "Link to your post"
         granted_badge: "Badge granted"
         group_message_summary: "Messages in group inbox"
+        topic_reminder: "A reminder"
 
       popup:
         mentioned: '{{username}} mentioned you in "{{topic}}" - {{site_title}}'
