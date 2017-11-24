@@ -109,15 +109,18 @@ def compress_ruby(from, to)
 end
 
 def gzip(path)
-  STDERR.puts "gzip #{path}"
+  STDERR.puts "gzip -f -c -9 #{path} > #{path}.gz"
   STDERR.puts `gzip -f -c -9 #{path} > #{path}.gz`
+  raise "gzip compression failed: exit code #{$?.exitstatus}" if $?.exitstatus != 0
 end
 
 def brotli(path)
   if ENV['COMPRESS_BROTLI']&.to_i == 1
-    STDERR.puts "brotli #{path}"
+    STDERR.puts "brotli --quality 11 --input #{path} --output #{path}.br"
     STDERR.puts `brotli --quality 11 --input #{path} --output #{path}.br`
+    raise "brotli compression failed: exit code #{$?.exitstatus}" if $?.exitstatus != 0
     STDERR.puts `chmod +r #{path}.br`
+    raise "chmod failed: exit code #{$?.exitstatus}" if $?.exitstatus != 0
   end
 end
 
