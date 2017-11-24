@@ -115,20 +115,22 @@ def gzip(path)
   raise "gzip compression failed: exit code #{$?.exitstatus}" if $?.exitstatus != 0
 end
 
-# different brotli versions use different parameters
-ver_out, ver_err, ver_status = Open3.capture3('brotli --version')
-if !ver_status.success?
-  # old versions of brotli don't respond to --version
-  def brotli_command(path)
-    "brotli --quality 11 --input #{path} --output #{path}.br"
+if ENV['COMPRESS_BROTLI']&.to_i == 1
+  # different brotli versions use different parameters
+  ver_out, ver_err, ver_status = Open3.capture3('brotli --version')
+  if !ver_status.success?
+    # old versions of brotli don't respond to --version
+    def brotli_command(path)
+      "brotli --quality 11 --input #{path} --output #{path}.br"
+    end
+  elsif ver_out >= "brotli 1.0.0"
+    def brotli_command(path)
+      "brotli --quality=11 #{path} --output=#{path}.br"
+    end
+  else
+    # not sure what to do here, not expecting this
+    raise "cannot determine brotli version"
   end
-elsif ver_out >= "brotli 1.0.0"
-  def brotli_command(path)
-    "brotli --quality=11 #{path} --output=#{path}.br"
-  end
-else
-  # not sure what to do here, not expecting this
-  raise "cannot determine brotli version"
 end
 
 def brotli(path)
