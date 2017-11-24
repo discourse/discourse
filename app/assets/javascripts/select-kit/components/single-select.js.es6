@@ -11,7 +11,7 @@ export default SelectKitComponent.extend({
   classNames: "single-select",
   computedValue: null,
   value: null,
-  allowInitialValueMutation: true,
+  allowInitialValueMutation: false,
 
   @on("didReceiveAttrs")
   _compute() {

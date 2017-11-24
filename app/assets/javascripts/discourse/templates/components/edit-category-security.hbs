@@ -15,7 +15,7 @@
     {{/each}}
   </ul>
   {{#if editingPermissions}}
-    {{combo-box content=category.availableGroups value=selectedGroup}}
+    {{combo-box allowInitialValueMutation=true content=category.availableGroups value=selectedGroup}}
     {{combo-box class="permission-selector"
                 nameProperty="description"
                 content=category.availablePermissions
