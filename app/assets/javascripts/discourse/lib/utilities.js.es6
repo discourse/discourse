@@ -240,11 +240,11 @@ const IMAGES_EXTENSIONS_REGEX = /(png|jpe?g|gif|bmp|tiff?|svg|webp|ico)/i;
 function rawExtensions() {
   const staffExtensions =  Discourse.SiteSettings.additional_authorized_extensions_for_staff;
 
-  let extensions = Discourse.SiteSettings.authorized_extensions;
+  let exts = Discourse.SiteSettings.authorized_extensions;
   if (Discourse.User.currentProp('staff') && staffExtensions) {
-    extensions += `|${staffExtensions}`;
+    exts += `|${staffExtensions}`;
   }
-  return extensions;
+  return exts;
 }
 
 function extensions() {
