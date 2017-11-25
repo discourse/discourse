@@ -100,7 +100,7 @@ describe Onebox::Engine::WhitelistedGenericOnebox do
       onebox = described_class.new(url)
       expect(onebox.to_html).not_to be_empty
 
-      expect(onebox.to_html).to include("Mail Online - 8 Aug 14")
+      expect(onebox.to_html).to include("Mail Online &ndash; 8 Aug 14")
     end
   end
 
@@ -116,6 +116,8 @@ describe Onebox::Engine::WhitelistedGenericOnebox do
       it 'fetches opengraph data and twitter labels from canonical link' do
         onebox = described_class.new(mobile_url)
         expect(onebox.to_html).not_to be_nil
+        expect(onebox.to_html).to include("images/favicon.ico")
+        expect(onebox.to_html).to include("Etsy")
         expect(onebox.to_html).to include("Personalized Word Pillow Case")
         expect(onebox.to_html).to include("Allow your personality to shine through your decor; this contemporary and modern accent will help you do just that.")
         expect(onebox.to_html).to include("https://img1.etsystatic.com/028/1/6088772/il_570xN.613262127_e0zl.jpg")

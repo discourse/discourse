@@ -44,6 +44,9 @@ module Onebox
         twitter.each { |k, v| @raw[k] ||= v unless Onebox::Helpers::blank?(v) }
         oembed.each { |k, v| @raw[k] ||= v unless Onebox::Helpers::blank?(v) }
 
+        favicon = get_favicon
+        @raw["favicon".to_sym] = favicon unless Onebox::Helpers::blank?(favicon)
+
         @raw
       end
 
@@ -110,6 +113,20 @@ module Onebox
           end
 
           twitter
+        end
+
+        def get_favicon
+          return nil unless html_doc
+
+          favicon = html_doc.css('link[rel="shortcut icon"], link[rel="icon shortcut"], link[rel="shortcut"], link[rel="icon"]').first
+          favicon = favicon.nil? ? nil : favicon['href']&.strip
+
+          if favicon && favicon.match(/^https?:\/\//i).nil?
+            uri = URI(url)
+            favicon = uri.scheme + "://" + uri.host.sub(/\/$/,"") + "/" + favicon.sub(/^\//,"")
+          end
+
+          favicon
         end
     end
   end

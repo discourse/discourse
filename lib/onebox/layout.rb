@@ -53,6 +53,7 @@ module Onebox
         {
           link: record[:link],
           title: record[:title],
+          favicon: record[:favicon],
           domain: domain,
           article_published_time: record[:article_published_time],
           article_published_time_title: record[:article_published_time_title],
