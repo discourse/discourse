@@ -867,6 +867,10 @@ ru:
           few: "дня заходил"
           many: "дней заходил"
           other: "дней заходил"
+        topics_entered:
+          one: "тема просмотренна"
+          few: "темы просмотренно"
+          other: "тем просмотренно"          
         posts_read:
           one: "сообщение прочел"
           few: "сообщения прочел"
@@ -1199,6 +1203,12 @@ ru:
       more: "посмотреть более ранние уведомления"
       total_flagged: "всего сообщений с жалобами"
       granted_badge: "Заслужил(а) '{{description}}'"
+      
+      group_message_summary:
+          one: "{{count}} сообщение в вашем {{group_name}} ящике"
+          few: "{{count}} сообщения в вашем {{group_name}} ящике"
+          other: "{{count}} сообщений в вашем {{group_name}} ящике"
+      
       alt:
         mentioned: "Упомянуто"
         quoted: "Процитировано пользователем"
