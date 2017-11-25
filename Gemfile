@@ -35,7 +35,7 @@ gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox', '1.8.26'
+gem 'onebox', '1.8.27'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 
