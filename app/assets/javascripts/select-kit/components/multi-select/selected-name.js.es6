@@ -10,7 +10,7 @@ export default Ember.Component.extend({
   classNames: ["selected-name", "choice"],
   classNameBindings: ["isHighlighted", "isLocked"],
   layoutName: "select-kit/templates/components/multi-select/selected-name",
-  tagName: "li",
+  tagName: "span",
   tabindex: -1,
 
   @computed("content")

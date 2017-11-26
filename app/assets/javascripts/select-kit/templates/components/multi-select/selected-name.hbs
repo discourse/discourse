@@ -1,13 +1,13 @@
-<span class="name">
-  {{#if isLocked}}
-    <span class="delete-icon">
-      {{d-icon "lock"}}
-    </span>
-  {{else}}
-    <span class="locked-icon" {{action onDeselect content bubbles=false}}>
-      {{d-icon "times"}}
-    </span>
-  {{/if}}
+{{#if isLocked}}
+  <span class="delete-icon">
+    {{d-icon "lock"}}
+  </span>
+{{else}}
+  <span class="locked-icon" {{action onDeselect content bubbles=false}}>
+    {{d-icon "times"}}
+  </span>
+{{/if}}
 
+<span class="name">
   {{content.name}}
 </span>

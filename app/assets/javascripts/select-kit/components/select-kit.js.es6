@@ -72,7 +72,7 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     this.set("rowComponentOptions", Ember.Object.create());
     this.set("computedContent", []);
 
-    if ((this.site && this.site.isMobileDevice) || $(window).outerWidth(false) <= 420) {
+    if (this.site && this.site.isMobileDevice) {
       this.setProperties({ filterable: false, autoFilterable: false });
     }
 

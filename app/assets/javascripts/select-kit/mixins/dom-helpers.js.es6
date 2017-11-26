@@ -114,7 +114,7 @@ export default Ember.Mixin.create({
     const offsetTop = boundingRect.top;
     const offsetBottom = boundingRect.bottom;
 
-    if (this.get("fullWidthOnMobile") && windowWidth <= 420) {
+    if (this.get("fullWidthOnMobile") && (this.site && this.site.isMobileDevice)) {
       const margin = 10;
       const relativeLeft = this.$().offset().left - $(window).scrollLeft();
       options.left = margin - relativeLeft;
@@ -151,10 +151,10 @@ export default Ember.Mixin.create({
     const hasAboveSpace = offsetTop - fullHeight - dHeaderHeight > 0;
     if (hasBelowSpace || (!hasBelowSpace && !hasAboveSpace)) {
       this.setProperties({ isBelow: true, isAbove: false });
-      options.top = componentHeight + this.get("verticalOffset");
+      options.top = this.$header()[0].getBoundingClientRect().height + this.get("verticalOffset");
     } else {
       this.setProperties({ isBelow: false, isAbove: true });
-      options.bottom = componentHeight + this.get("verticalOffset");
+      options.bottom = this.$header()[0].getBoundingClientRect().height + this.get("verticalOffset");
     }
 
     this.$body().css(options);
@@ -223,11 +223,11 @@ export default Ember.Mixin.create({
   },
 
   _positionWrapper() {
-    const boundingRect = this.get("element").getBoundingClientRect();
+    const headerBoundingRect = this.$header()[0].getBoundingClientRect();
 
     this.$(this.wrapperSelector).css({
-      width: boundingRect.width,
-      height: boundingRect.height + this.$body()[0].getBoundingClientRect().height
+      width: this.get("element").getBoundingClientRect().width,
+      height: headerBoundingRect.height + this.$body()[0].getBoundingClientRect().height
     });
   },
 });
