@@ -105,23 +105,23 @@ export default Ember.Mixin.create({
     const dHeader = $(".d-header")[0];
     const dHeaderBounds = dHeader ? dHeader.getBoundingClientRect() : {top: 0, height: 0};
     const dHeaderHeight = dHeaderBounds.top + dHeaderBounds.height;
-    const componentHeight = this.$().outerHeight(false);
-    const componentWidth = this.$().outerWidth(false);
-    const bodyHeight = this.$body().outerHeight(false);
+    const bodyHeight = this.$body()[0].getBoundingClientRect().height;
     const windowWidth = $(window).width();
     const windowHeight = $(window).height();
     const boundingRect = this.get("element").getBoundingClientRect();
+    const componentHeight = boundingRect.height;
+    const componentWidth = boundingRect.width;
     const offsetTop = boundingRect.top;
     const offsetBottom = boundingRect.bottom;
 
-    if (this.get("fullWidthOnMobile") && windowWidth <= 420) {
+    if (this.get("fullWidthOnMobile") && (this.site && this.site.isMobileDevice)) {
       const margin = 10;
       const relativeLeft = this.$().offset().left - $(window).scrollLeft();
       options.left = margin - relativeLeft;
       options.width = windowWidth - margin * 2;
       options.maxWidth = options.minWidth = "unset";
     } else {
-      const bodyWidth = this.$body().outerWidth(false);
+      const bodyWidth = this.$body()[0].getBoundingClientRect().width;
 
       if ($("html").css("direction") === "rtl") {
         const horizontalSpacing = boundingRect.right;
@@ -151,10 +151,10 @@ export default Ember.Mixin.create({
     const hasAboveSpace = offsetTop - fullHeight - dHeaderHeight > 0;
     if (hasBelowSpace || (!hasBelowSpace && !hasAboveSpace)) {
       this.setProperties({ isBelow: true, isAbove: false });
-      options.top = componentHeight + this.get("verticalOffset") - 2;
+      options.top = this.$header()[0].getBoundingClientRect().height + this.get("verticalOffset");
     } else {
       this.setProperties({ isBelow: false, isAbove: true });
-      options.bottom = componentHeight + this.get("verticalOffset") - 1;
+      options.bottom = this.$header()[0].getBoundingClientRect().height + this.get("verticalOffset");
     }
 
     this.$body().css(options);
@@ -166,8 +166,9 @@ export default Ember.Mixin.create({
     const scrollableParent = this.$().parents(this.get("scrollableParentSelector"));
     if (scrollableParent.length === 0) { return; }
 
-    const width = this.$().outerWidth(false);
-    const height = this.$().outerHeight(false);
+    const boundingRect = this.get("element").getBoundingClientRect();
+    const width = boundingRect.width;
+    const height = boundingRect.height;
     const $placeholder = $(`<div class='select-kit-fixed-placeholder-${this.elementId}'></div>`);
 
     this._previousScrollParentOverflow = this._previousScrollParentOverflow || scrollableParent.css("overflow");
@@ -222,11 +223,11 @@ export default Ember.Mixin.create({
   },
 
   _positionWrapper() {
-    const componentHeight = this.$().outerHeight(false);
+    const headerBoundingRect = this.$header()[0].getBoundingClientRect();
 
     this.$(this.wrapperSelector).css({
-      width: this.$().outerWidth(false) - 2,
-      height: componentHeight + this.$body().outerHeight(false)
+      width: this.get("element").getBoundingClientRect().width,
+      height: headerBoundingRect.height + this.$body()[0].getBoundingClientRect().height
     });
   },
 });

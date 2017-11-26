@@ -72,13 +72,17 @@
       }
 
       .select-kit-body {
-        border-radius: 3px 3px 0 0;
+        border-radius: 0 0 3px 3px ;
       }
     }
 
     &.is-expanded.is-above {
       .select-kit-header {
         border-radius: 0 0 3px 3px;
+      }
+
+      .select-kit-body {
+        border-radius: 3px 3px 0 0;
       }
     }
   }
