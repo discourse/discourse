@@ -165,7 +165,6 @@ export default Ember.Component.extend({
     if (topicId) { args.topic_id = topicId; }
     if (postId)  { args.post_id = postId; }
 
-    const queuedForTyping = this.get('queuedForTyping');
     composer.store.find('composer-message', args).then(messages => {
       if (this.isDestroying || this.isDestroyed) { return; }
 
@@ -176,6 +175,7 @@ export default Ember.Component.extend({
       }
 
       this.set('checkedMessages', true);
+      const queuedForTyping = this.get('queuedForTyping');
       messages.forEach(msg => msg.wait_for_typing ? queuedForTyping.addObject(msg) : this.send('popup', msg));
     });
   }
