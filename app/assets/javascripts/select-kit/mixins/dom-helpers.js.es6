@@ -166,7 +166,7 @@ export default Ember.Mixin.create({
     const scrollableParent = this.$().parents(this.get("scrollableParentSelector"));
     if (scrollableParent.length === 0) { return; }
 
-    const boundingRect = this.get("elment").getBoundingClientRect();
+    const boundingRect = this.get("element").getBoundingClientRect();
     const width = boundingRect.width;
     const height = boundingRect.height;
     const $placeholder = $(`<div class='select-kit-fixed-placeholder-${this.elementId}'></div>`);
