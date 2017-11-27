@@ -20,6 +20,8 @@ class QueuedPostsController < ApplicationController
   def update
     qp = QueuedPost.where(id: params[:id]).first
 
+    return render_json_error I18n.t('queue.not_found') if qp.blank?
+
     update_params = params[:queued_post]
 
     qp.raw = update_params[:raw] if update_params[:raw].present?
