@@ -46,7 +46,8 @@ module JsLocaleHelper
         # so let's start with a basic object we can merge into
         translations = {
           locale_str => {
-            'js' => {}
+            'js' => {},
+            'admin_js' => {}
           }
         }
       end
