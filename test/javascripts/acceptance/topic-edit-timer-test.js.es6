@@ -24,10 +24,10 @@ QUnit.test('autoclose - specific time', assert => {
   click('.toggle-admin-menu');
   click('.topic-admin-status-update button');
   expandSelectKit('.future-date-input-selector');
-  selectKitSelectRow('later_today', { selector: '.future-date-input-selector' });
+  selectKitSelectRow('next_week', { selector: '.future-date-input-selector' });
 
   andThen(() => {
-    assert.equal(selectKit('.future-date-input-selector').header.name(), 'Later today');
+    assert.equal(selectKit('.future-date-input-selector').header.name(), 'Next week');
     const regex = /will automatically close in/g;
     const html = find('.future-date-input .topic-status-info').html().trim();
     assert.ok(regex.test(html));
@@ -40,9 +40,9 @@ QUnit.test('autoclose', assert => {
   click('.topic-admin-status-update button');
   expandSelectKit('.future-date-input-selector');
 
-  selectKitSelectRow('later_today', { selector: '.future-date-input-selector' });
+  selectKitSelectRow('next_week', { selector: '.future-date-input-selector' });
   andThen(() => {
-    assert.equal(selectKit('.future-date-input-selector').header.name(), 'Later today');
+    assert.equal(selectKit('.future-date-input-selector').header.name(), 'Next week');
     const regex = /will automatically close in/g;
     const html = find('.future-date-input .topic-status-info').html().trim();
     assert.ok(regex.test(html));
@@ -83,9 +83,9 @@ QUnit.test('close temporarily', assert => {
   });
 
   expandSelectKit('.future-date-input-selector');
-  selectKitSelectRow('tomorrow', { selector: '.future-date-input-selector' });
+  selectKitSelectRow('next_week', { selector: '.future-date-input-selector' });
   andThen(() => {
-    assert.equal(selectKit('.future-date-input-selector').header.name(), 'Tomorrow');
+    assert.equal(selectKit('.future-date-input-selector').header.name(), 'Next week');
     const regex = /will automatically open in/g;
     const html = find('.future-date-input .topic-status-info').html().trim();
     assert.ok(regex.test(html));
