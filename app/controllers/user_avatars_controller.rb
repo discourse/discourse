@@ -9,13 +9,15 @@ class UserAvatarsController < ApplicationController
     guardian.ensure_can_edit!(user)
 
     if user
-      user.create_user_avatar(user_id: user.id) unless user.user_avatar
-      user.user_avatar.update_gravatar!
+      hijack do
+        user.create_user_avatar(user_id: user.id) unless user.user_avatar
+        user.user_avatar.update_gravatar!
 
-      render json: {
-        gravatar_upload_id: user.user_avatar.gravatar_upload_id,
-        gravatar_avatar_template: User.avatar_template(user.username, user.user_avatar.gravatar_upload_id)
-      }
+        render json: {
+          gravatar_upload_id: user.user_avatar.gravatar_upload_id,
+          gravatar_avatar_template: User.avatar_template(user.username, user.user_avatar.gravatar_upload_id)
+        }
+      end
     else
       raise Discourse::NotFound
     end
@@ -31,17 +33,17 @@ class UserAvatarsController < ApplicationController
     params.require(:version)
     params.require(:size)
 
-    no_cookies
+    hijack do
+      identity = LetterAvatar::Identity.new
+      identity.letter = params[:letter].to_s[0].upcase
+      identity.color = params[:color].scan(/../).map(&:hex)
+      image = LetterAvatar.generate(params[:letter].to_s, params[:size].to_i, identity: identity)
 
-    identity = LetterAvatar::Identity.new
-    identity.letter = params[:letter].to_s[0].upcase
-    identity.color = params[:color].scan(/../).map(&:hex)
-    image = LetterAvatar.generate(params[:letter].to_s, params[:size].to_i, identity: identity)
-
-    response.headers["Last-Modified"] = File.ctime(image).httpdate
-    response.headers["Content-Length"] = File.size(image).to_s
-    immutable_for(1.year)
-    send_file image, disposition: nil
+      response.headers["Last-Modified"] = File.ctime(image).httpdate
+      response.headers["Content-Length"] = File.size(image).to_s
+      immutable_for(1.year)
+      send_file image, disposition: nil
+    end
   end
 
   def show_letter
@@ -53,20 +55,22 @@ class UserAvatarsController < ApplicationController
 
     return render_blank if params[:version] != LetterAvatar.version
 
-    image = LetterAvatar.generate(params[:username].to_s, params[:size].to_i)
+    hijack do
+      image = LetterAvatar.generate(params[:username].to_s, params[:size].to_i)
 
-    response.headers["Last-Modified"] = File.ctime(image).httpdate
-    response.headers["Content-Length"] = File.size(image).to_s
-    immutable_for(1.year)
-    send_file image, disposition: nil
+      response.headers["Last-Modified"] = File.ctime(image).httpdate
+      response.headers["Content-Length"] = File.size(image).to_s
+      immutable_for(1.year)
+      send_file image, disposition: nil
+    end
   end
 
   def show
-    no_cookies
-
     # we need multisite support to keep a single origin pull for CDNs
     RailsMultisite::ConnectionManagement.with_hostname(params[:hostname]) do
-      show_in_site(params[:hostname])
+      hijack do
+        show_in_site(params[:hostname])
+      end
     end
   end
 
