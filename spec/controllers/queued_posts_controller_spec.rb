@@ -31,6 +31,20 @@ describe QueuedPostsController do
     let!(:user) { log_in(:moderator) }
     let(:qp) { Fabricate(:queued_post) }
 
+    context 'not found' do
+      it 'returns json error' do
+        qp.destroy!
+
+        put :update, params: {
+          id: qp.id, queued_post: { state: 'approved' }
+        }, format: :json
+
+        expect(response.status).to eq(422)
+
+        expect(eval(response.body)).to eq(described_class.new.create_errors_json(I18n.t('queue.not_found')))
+      end
+    end
+
     context 'approved' do
       it 'updates the post to approved' do
 

@@ -264,6 +264,7 @@ en:
 
   queue:
     delete_reason: "Deleted via post moderation queue"
+    not_found: "Post not found or already updated."
 
   groups:
     success:
