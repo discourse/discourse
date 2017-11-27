@@ -39,6 +39,7 @@ module Hijack
           instance = controller_class.new
           response = ActionDispatch::Response.new
           instance.response = response
+
           instance.request = request_copy
           instance.params = params_copy
 
@@ -48,7 +49,7 @@ module Hijack
             Rails.logger.warn("Failed to process hijacked response correctly #{e}")
           end
 
-          unless instance.response_body
+          unless instance.response_body || response.committed?
             instance.status = 500
           end
 

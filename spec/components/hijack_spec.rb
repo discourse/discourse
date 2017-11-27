@@ -59,6 +59,32 @@ describe Hijack do
     expect(tester.io.string).to include("world")
   end
 
+  it "handles send_file correctly" do
+    tester.hijack_test do
+      send_file __FILE__, disposition: nil
+    end
+
+    expect(tester.io.string).to start_with("HTTP/1.1 200")
+  end
+
+  it "renders a redirect correctly" do
+    tester.hijack_test do
+      redirect_to 'http://awesome.com'
+    end
+
+    result = "HTTP/1.1 302 Found\r\nLocation: http://awesome.com\r\nContent-Type: text/html\r\nContent-Length: 84\r\nConnection: close\r\n\r\n<html><body>You are being <a href=\"http://awesome.com\">redirected</a>.</body></html>"
+    expect(tester.io.string).to eq(result)
+  end
+
+  it "renders stuff correctly if is empty" do
+    tester.hijack_test do
+      render body: nil
+    end
+
+    result = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 0\r\nConnection: close\r\n\r\n"
+    expect(tester.io.string).to eq(result)
+  end
+
   it "renders stuff correctly if it works" do
     tester.hijack_test do
       render plain: "hello world"
