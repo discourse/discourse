@@ -1,7 +1,5 @@
 import { withPluginApi } from 'discourse/lib/plugin-api';
 
-const returnFalse = () => false;
-
 export default {
   name: "apply-lazyYT",
   initialize() {
