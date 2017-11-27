@@ -1,35 +1,39 @@
 require 'rails_helper'
 
 describe Hijack do
-  class Hijack::Tester
+  class Hijack::Tester < ApplicationController
     attr_reader :io
 
     include Hijack
+
     def initialize
       @io = StringIO.new
-    end
-
-    def hijack_test(&blk)
-      hijack do
-        self.instance_eval(&blk)
-      end
-    end
-
-    def request
-      @req ||= ActionController::TestRequest.new(
+      self.request = ActionController::TestRequest.new(
         { "rack.hijack" => lambda { @io } },
         nil,
         nil
       )
+      # we need this for the 418
+      self.response = ActionDispatch::Response.new
     end
 
-    def render(*opts)
-      # don't care
+    def hijack_test(&blk)
+      hijack(&blk)
     end
+
   end
 
   let :tester do
     Hijack::Tester.new
+  end
+
+  it "handles expires_in" do
+    tester.hijack_test do
+      expires_in 1.year
+      render body: "hello world", status: 402
+    end
+
+    expect(tester.io.string).to include("max-age=31556952")
   end
 
   it "renders non 200 status if asked for" do
@@ -46,14 +50,14 @@ describe Hijack do
       render plain: "hello world"
     end
 
-    result = "HTTP/1.1 200 OK\r\nContent-Length: 11\r\nContent-Type: text/plain; charset=utf-8\r\nConnection: close\r\n\r\nhello world"
+    result = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 11\r\nConnection: close\r\n\r\nhello world"
     expect(tester.io.string).to eq(result)
   end
 
   it "returns 500 by default" do
     tester.hijack_test
 
-    expected = "HTTP/1.1 500 OK\r\nContent-Length: 0\r\nContent-Type: text/plain\r\nConnection: close\r\n\r\n"
+    expected = "HTTP/1.1 500 Internal Server Error\r\nContent-Type: text/html\r\nContent-Length: 0\r\nConnection: close\r\n\r\n"
     expect(tester.io.string).to eq(expected)
   end
 
