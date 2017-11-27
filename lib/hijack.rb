@@ -4,13 +4,26 @@
 # For cases where we are making remote calls like onebox or proxying files and so on this helps
 # free up a unicorn worker while the remote IO is happening
 module Hijack
+
+  class FakeResponse
+    attr_reader :headers
+    def initialize
+      @headers = {}
+    end
+  end
+
   class Binder
-    attr_reader :content_type, :body, :status
+    attr_reader :content_type, :body, :status, :response
 
     def initialize
       @content_type = 'text/plain'
       @status = 500
       @body = ""
+      @response = FakeResponse.new
+    end
+
+    def immutable_for(duration)
+      response.headers['Cache-Control'] = "max-age=#{duration}, public, immutable"
     end
 
     def render(opts)
@@ -22,6 +35,10 @@ module Hijack
 
       if opts.key?(:body)
         @body = opts[:body].to_s
+      end
+
+      if opts.key?(:content_type)
+        @content_type = opts[:content_type]
       end
 
       if opts.key?(:plain)
@@ -57,10 +74,17 @@ module Hijack
             Rails.logger.warn("Failed to process hijacked response correctly #{e}")
           end
 
+          headers = binder.response.headers
+          headers['Content-Length'] = binder.body.bytesize
+          headers['Content-Type'] = binder.content_type
+          headers['Connection'] = "close"
+
           io.write "#{binder.status} OK\r\n"
-          io.write "Content-Length: #{binder.body.bytesize}\r\n"
-          io.write "Content-Type: #{binder.content_type}\r\n"
-          io.write "Connection: close\r\n"
+
+          headers.each do |name, val|
+            io.write "#{name}: #{val}\r\n"
+          end
+
           io.write "\r\n"
           io.write binder.body
           io.close
@@ -71,7 +95,18 @@ module Hijack
       # not leaked out, we use 418 ... I am a teapot to denote that we are hijacked
       render plain: "", status: 418
     else
-      blk.call
+      binder = Binder.new
+      binder.instance_eval(&blk)
+
+      binder.response.headers.each do |name, val|
+        response.headers[name] = val
+      end
+
+      render(
+        body: binder.body,
+        content_type: binder.content_type,
+        status: status
+      )
     end
   end
 end
