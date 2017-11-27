@@ -1,4 +1,4 @@
-import { isAppleDevice } from 'discourse/lib/safari-hacks';
+import { isAppleDevice } from 'discourse/lib/utilities';
 
 export default function(name, opts) {
   opts = opts || {};

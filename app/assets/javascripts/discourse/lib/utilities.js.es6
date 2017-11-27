@@ -1,5 +1,4 @@
 import { escape } from 'pretty-text/sanitizer';
-import { isAppleDevice } from 'discourse/lib/safari-hacks';
 
 const homepageSelector = 'meta[name=discourse_current_homepage]';
 
@@ -294,7 +293,7 @@ function imageNameFromFileName(fileName) {
   const split = fileName.split('.');
   const name = split[split.length-2];
 
-  if (isAppleDevice() && isGUID(name)) {
+  if (exports.isAppleDevice() && isGUID(name)) {
     return I18n.t('upload_selector.default_image_alt_text');
   }
 
@@ -412,6 +411,14 @@ export function determinePostReplaceSelection({ selection, needle, replacement }
     // Selection starts (and ends) behind needle.
     return { start: selection.start + diff, end: selection.end + diff };
   }
+}
+
+export function isAppleDevice() {
+  // IE has no DOMNodeInserted so can not get this hack despite saying it is like iPhone
+  // This will apply hack on all iDevices
+  return navigator.userAgent.match(/(iPad|iPhone|iPod)/g) &&
+    navigator.userAgent.match(/Safari/g) &&
+    !navigator.userAgent.match(/Trident/g);
 }
 
 // This prevents a mini racer crash

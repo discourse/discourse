@@ -82,7 +82,6 @@ module PrettyText
     ctx_load_manifest(ctx, "markdown-it-bundle.js")
     root_path = "#{Rails.root}/app/assets/javascripts/"
 
-    apply_es6_file(ctx, root_path, "discourse/lib/safari-hacks")
     apply_es6_file(ctx, root_path, "discourse/lib/utilities")
 
     PrettyText::Helpers.instance_methods.each do |method|

@@ -16,7 +16,7 @@ import {
   caretRowCol,
   setCaretPosition
 } from 'discourse/lib/utilities';
-import * as SafariHacks from 'discourse/lib/safari-hacks';
+import * as Utilities from 'discourse/lib/utilities';
 
 QUnit.module("lib:utilities");
 
@@ -128,7 +128,7 @@ QUnit.test("getUploadMarkdown", assert => {
 QUnit.test("replaces GUID in image alt text on iOS", assert => {
   assert.equal(testUploadMarkdown("8F2B469B-6B2C-4213-BC68-57B4876365A0.jpeg"),'![8F2B469B-6B2C-4213-BC68-57B4876365A0|100x200](/uploads/123/abcdef.ext)');
 
-  sandbox.stub(SafariHacks, 'isAppleDevice').returns(true);
+  sandbox.stub(Utilities, 'isAppleDevice').returns(true);
   assert.equal(testUploadMarkdown("8F2B469B-6B2C-4213-BC68-57B4876365A0.jpeg"),'![image|100x200](/uploads/123/abcdef.ext)');
 });
 
