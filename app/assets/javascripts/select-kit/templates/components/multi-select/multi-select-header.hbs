@@ -1,13 +1,13 @@
-<ul class="choices">
+<div class="choices">
   {{#each computedContent.selectedComputedContents as |selectedComputedContent|}}
     {{component selectedNameComponent onDeselect=onDeselect content=selectedComputedContent}}
   {{/each}}
-  <li class="filter choice" tabindex="-1">
+  <span class="filter choice" tabindex="-1">
     {{component "select-kit/select-kit-filter"
       onFilter=onFilter
       shouldDisplayFilter=shouldDisplayFilter
       isFocused=isFocused
       filter=filter
     }}
-  </li>
-</ul>
+  </span>
+</div>

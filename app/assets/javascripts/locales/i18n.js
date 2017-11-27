@@ -48,8 +48,7 @@ function checkExtras(origScope, sep, extras) {
 I18n.lookup = function(scope, options) {
   options = options || {};
 
-  var lookupInitialScope = scope,
-      translations = this.prepareOptions(I18n.translations),
+  var translations = this.prepareOptions(I18n.translations),
       locale = options.locale || I18n.currentLocale(),
       messages = translations[locale] || {},
       currentScope;

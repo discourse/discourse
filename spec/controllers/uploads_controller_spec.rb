@@ -40,12 +40,10 @@ describe UploadsController do
       it 'is successful with an image' do
         Jobs.expects(:enqueue).with(:create_avatar_thumbnails, anything)
 
-        message = MessageBus.track_publish('/uploads/avatar') do
-          post :create, params: { file: logo, type: "avatar", format: :json }
-        end.first
+        post :create, params: { file: logo, type: "avatar", format: :json }
 
         expect(response.status).to eq 200
-        expect(message.data["id"]).to be
+        expect(JSON.parse(response.body)["id"]).to be
       end
 
       it 'is successful with an attachment' do
@@ -53,12 +51,11 @@ describe UploadsController do
 
         Jobs.expects(:enqueue).never
 
-        message = MessageBus.track_publish('/uploads/composer') do
-          post :create, params: { file: text_file, type: "composer", format: :json }
-        end.first
+        post :create, params: { file: text_file, type: "composer", format: :json }
 
         expect(response.status).to eq 200
-        expect(message.data["id"]).to be
+        id = JSON.parse(response.body)["id"]
+        expect(id).to be
       end
 
       it 'is successful with synchronous api' do
@@ -88,28 +85,25 @@ describe UploadsController do
         log_in :admin
         Jobs.expects(:enqueue).with(:create_avatar_thumbnails, anything).never
 
-        message = MessageBus.track_publish('/uploads/profile_background') do
-          post :create, params: {
-            file: logo,
-            retain_hours: 100,
-            type: "profile_background",
-            format: :json
-          }
-        end.first
+        post :create, params: {
+          file: logo,
+          retain_hours: 100,
+          type: "profile_background",
+          format: :json
+        }
 
-        id = message.data["id"]
+        id = JSON.parse(response.body)["id"]
         expect(Upload.find(id).retain_hours).to eq(100)
       end
 
       it 'requires a file' do
         Jobs.expects(:enqueue).never
 
-        message = MessageBus.track_publish('/uploads/composer') do
-          post :create, params: { type: "composer", format: :json }
-        end.first
+        post :create, params: { type: "composer", format: :json }
 
-        expect(response.status).to eq 200
-        expect(message.data["errors"]).to contain_exactly(I18n.t("upload.file_missing"))
+        message = JSON.parse(response.body)
+        expect(response.status).to eq 422
+        expect(message["errors"]).to contain_exactly(I18n.t("upload.file_missing"))
       end
 
       it 'properly returns errors' do
@@ -117,12 +111,11 @@ describe UploadsController do
 
         Jobs.expects(:enqueue).never
 
-        message = MessageBus.track_publish("/uploads/avatar") do
-          post :create, params: { file: text_file, type: "avatar", format: :json }
-        end.first
+        post :create, params: { file: text_file, type: "avatar", format: :json }
 
-        expect(response.status).to eq 200
-        expect(message.data["errors"]).to be
+        expect(response.status).to eq 422
+        errors = JSON.parse(response.body)["errors"]
+        expect(errors).to be
       end
 
       it 'ensures allow_uploaded_avatars is enabled when uploading an avatar' do
@@ -142,28 +135,26 @@ describe UploadsController do
         SiteSetting.allow_staff_to_upload_any_file_in_pm = true
         @user.update_columns(moderator: true)
 
-        message = MessageBus.track_publish('/uploads/composer') do
-          post :create, params: {
-            file: text_file,
-            type: "composer",
-            for_private_message: "true",
-            format: :json
-          }
-        end.first
+        post :create, params: {
+          file: text_file,
+          type: "composer",
+          for_private_message: "true",
+          format: :json
+        }
 
         expect(response).to be_success
-        expect(message.data["id"]).to be
+        id = JSON.parse(response.body)["id"]
+        expect(id).to be
       end
 
       it 'returns an error when it could not determine the dimensions of an image' do
         Jobs.expects(:enqueue).with(:create_avatar_thumbnails, anything).never
 
-        message = MessageBus.track_publish('/uploads/composer') do
-          post :create, params: { file: fake_jpg, type: "composer", format: :json }
-        end.first
+        post :create, params: { file: fake_jpg, type: "composer", format: :json }
 
-        expect(response.status).to eq 200
-        expect(message.data["errors"]).to contain_exactly(I18n.t("upload.images.size_not_found"))
+        expect(response.status).to eq 422
+        message = JSON.parse(response.body)["errors"]
+        expect(message).to contain_exactly(I18n.t("upload.images.size_not_found"))
       end
 
     end

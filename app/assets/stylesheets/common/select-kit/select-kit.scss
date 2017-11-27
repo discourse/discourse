@@ -3,8 +3,10 @@
 }
 
 .select-box-kit, .select-kit {
+  border: none;
   min-width: 220px;
   -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
           box-sizing: border-box;
   display: inline-block;
   -webkit-box-orient: vertical;
@@ -221,6 +223,7 @@
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
+    box-sizing: border-box;
     -webkit-box-align: center;
         -ms-flex-align: center;
             align-items: center;

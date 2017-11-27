@@ -53,8 +53,11 @@
                 {{avatar user imageSize="small"}}
               </a>
             </td>
-            <td>
+            <td class="username">
               {{#link-to 'adminUser' user}}{{unbound user.username}}{{/link-to}}
+              {{#if user.staged}}
+                {{d-icon "envelope-o" title="user.staged" }}
+              {{/if}}
             </td>
             <td class='email'>
               {{unbound user.email}}

@@ -19,6 +19,15 @@ if (Rails.env.production? && SiteSetting.logging_provider == 'lograge') || ENV["
         database: RailsMultisite::ConnectionManagement.current_db,
       }
 
+      if data = Thread.current[:_method_profiler]
+        sql = data[:sql]
+        output[:db] = sql[:duration] * 1000
+        output[:db_calls] = sql[:calls]
+        redis = data[:redis]
+        output[:redis] = redis[:duration] * 1000
+        output[:redis_calls] = redis[:calls]
+      end
+
       output
     end
 

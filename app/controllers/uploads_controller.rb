@@ -20,19 +20,23 @@ class UploadsController < ApplicationController
     file   = params[:file] || params[:files]&.first
     pasted = params[:pasted] == "true"
     for_private_message = params[:for_private_message] == "true"
+    is_api = is_api?
+    retain_hours = params[:retain_hours].to_i
 
-    if params[:synchronous] && (current_user.staff? || is_api?)
-      data = create_upload(current_user, file, url, type, for_private_message, pasted)
-      render json: serialize_upload(data)
-    else
-      Scheduler::Defer.later("Create Upload") do
-        begin
-          data = create_upload(me, file, url, type, for_private_message, pasted)
-        ensure
-          MessageBus.publish("/uploads/#{type}", serialize_upload(data), client_ids: [params[:client_id]])
-        end
-      end
-      render json: success_json
+    # note, atm hijack is processed in its own context and has not access to controller
+    # longer term we may change this
+    hijack do
+      info = UploadsController.create_upload(
+        current_user: me,
+        file: file,
+        url: url,
+        type: type,
+        for_private_message: for_private_message,
+        pasted: pasted,
+        is_api: is_api,
+        retain_hours: retain_hours
+      )
+      render json: UploadsController.serialize_upload(info), status: Upload === info ? 200 : 422
     end
   end
 
@@ -72,20 +76,20 @@ class UploadsController < ApplicationController
 
   protected
 
-  def serialize_upload(data)
+  def render_404
+    raise Discourse::NotFound
+  end
+
+  def self.serialize_upload(data)
     # as_json.as_json is not a typo... as_json in AM serializer returns keys as symbols, we need them
     # as strings here
     serialized = UploadSerializer.new(data, root: nil).as_json.as_json if Upload === data
     serialized ||= (data || {}).as_json
   end
 
-  def render_404
-    raise Discourse::NotFound
-  end
-
-  def create_upload(current_user, file, url, type, for_private_message, pasted)
+  def self.create_upload(current_user:, file:, url:, type:, for_private_message:, pasted:, is_api:, retain_hours:)
     if file.nil?
-      if url.present? && is_api?
+      if url.present? && is_api
         maximum_upload_size = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
         tempfile = FileHelper.download(
           url,
@@ -112,7 +116,6 @@ class UploadsController < ApplicationController
     upload = UploadCreator.new(tempfile, filename, opts).create_for(current_user.id)
 
     if upload.errors.empty? && current_user.admin?
-      retain_hours = params[:retain_hours].to_i
       upload.update_columns(retain_hours: retain_hours) if retain_hours > 0
     end
 
