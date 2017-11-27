@@ -65,7 +65,7 @@ export default MountWidget.extend({
 
     // We use this because watching videos fullscreen in Chrome was super buggy
     // otherwise. Thanks to arrendek from q23 for the technique.
-    if (document.elementFromPoint(0, 0).tagName.toUpperCase() == "IFRAME") { return; }
+    if (document.elementFromPoint(0, 0).tagName.toUpperCase() === "IFRAME") { return; }
 
     const $w = $(window);
     const windowHeight = window.innerHeight ? window.innerHeight : $w.height();
