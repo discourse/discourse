@@ -8,8 +8,10 @@ describe Hijack do
 
     def initialize
       @io = StringIO.new
-      self.request = ActionController::TestRequest.new(
-        { "rack.hijack" => lambda { @io } },
+      self.request = ActionController::TestRequest.new({
+        "rack.hijack" => lambda { @io },
+        "rack.input" => StringIO.new
+      },
         nil,
         nil
       )
@@ -25,6 +27,18 @@ describe Hijack do
 
   let :tester do
     Hijack::Tester.new
+  end
+
+  it "dupes the request params and env" do
+    orig_req = tester.request
+    copy_req = nil
+
+    tester.hijack_test do
+      copy_req = request
+      render body: "hello world", status: 200
+    end
+
+    expect(copy_req.object_id).not_to eq(orig_req.object_id)
   end
 
   it "handles expires_in" do
