@@ -63,6 +63,10 @@ export default MountWidget.extend({
     if (this.isDestroyed || this.isDestroying) { return; }
     if (isWorkaroundActive()) { return; }
 
+    // We use this because watching videos fullscreen in Chrome was super buggy
+    // otherwise. Thanks to arrendek from q23 for the technique.
+    if (document.elementFromPoint(0, 0).tagName.toUpperCase() == "IFRAME") { return; }
+
     const $w = $(window);
     const windowHeight = window.innerHeight ? window.innerHeight : $w.height();
     const slack = Math.round(windowHeight * 5);
