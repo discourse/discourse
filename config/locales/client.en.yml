@@ -1355,6 +1355,7 @@ en:
       uploading: "Uploading"
       select_file: "Select File"
       image_link: "link your image will point to"
+      default_image_alt_text: image
 
     search:
       sort_by: "Sort by"

@@ -1,4 +1,5 @@
 import { escape } from 'pretty-text/sanitizer';
+import { isAppleDevice } from 'discourse/lib/safari-hacks';
 
 const homepageSelector = 'meta[name=discourse_current_homepage]';
 
@@ -285,6 +286,21 @@ function uploadTypeFromFileName(fileName) {
   return isAnImage(fileName) ? 'image' : 'attachment';
 }
 
+function isGUID(value) {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
+}
+
+function imageNameFromFileName(fileName) {
+  const split = fileName.split('.');
+  const name = split[split.length-2];
+
+  if (isAppleDevice() && isGUID(name)) {
+    return I18n.t('upload_selector.default_image_alt_text');
+  }
+
+  return name;
+}
+
 export function allowsImages() {
   return authorizesAllExtensions() || IMAGES_EXTENSIONS_REGEX.test(authorizedExtensions());
 }
@@ -309,8 +325,7 @@ export function uploadLocation(url) {
 
 export function getUploadMarkdown(upload) {
   if (isAnImage(upload.original_filename)) {
-    const split = upload.original_filename.split('.');
-    const name = split[split.length-2];
+    const name = imageNameFromFileName(upload.original_filename);
     return `![${name}|${upload.width}x${upload.height}](${upload.short_url || upload.url})`;
   } else if (!Discourse.SiteSettings.prevent_anons_from_downloading_files && (/\.(mov|mp4|webm|ogv|mp3|ogg|wav|m4a)$/i).test(upload.original_filename)) {
     return uploadLocation(upload.url);

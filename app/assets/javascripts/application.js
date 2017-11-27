@@ -27,6 +27,7 @@
 //= require ./discourse/lib/formatter
 //= require ./discourse/lib/eyeline
 //= require ./discourse/lib/show-modal
+//= require ./discourse/lib/safari-hacks
 //= require ./discourse/mixins/scrolling
 //= require ./discourse/lib/ajax-error
 //= require ./discourse/models/model
@@ -49,7 +50,6 @@
 //= require ./discourse/lib/autocomplete
 //= require ./discourse/lib/after-transition
 //= require ./discourse/lib/debounce
-//= require ./discourse/lib/safari-hacks
 //= require_tree ./discourse/adapters
 //= require ./discourse/models/post-action-type
 //= require ./discourse/models/post
