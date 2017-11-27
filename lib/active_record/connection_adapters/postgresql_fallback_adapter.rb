@@ -131,13 +131,7 @@ module ActiveRecord
       if fallback_handler.master_down?
         Discourse.enable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
         fallback_handler.verify_master
-
-        connection = postgresql_connection(config.dup.merge(
-          host: config[:replica_host],
-          port: config[:replica_port]
-        ))
-
-        verify_replica(connection)
+        connection = replica_postgresql_connection(config)
       else
         begin
           connection = postgresql_connection(config)
@@ -158,10 +152,21 @@ module ActiveRecord
       connection
     end
 
+    def replica_postgresql_connection(config)
+      config = config.dup.merge(
+        host: config[:replica_host],
+        port: config[:replica_port]
+      )
+
+      connection = postgresql_connection(config)
+      verify_replica(connection)
+      connection
+    end
+
     private
 
     def verify_replica(connection)
-      value = connection.raw_connection.exec("SELECT pg_is_in_recovery()").values[0][0]
+      value = connection.exec_query("SELECT pg_is_in_recovery()").rows[0][0]
       raise "Replica database server is not in recovery mode." if !value
     end
   end
