@@ -71,7 +71,6 @@
   }
 
   .select-box-kit-header, .select-kit-header {
-    border: 1px solid transparent;
     box-sizing: border-box;
     overflow: hidden;
     -webkit-transition: all .25s;
@@ -270,6 +269,5 @@
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
     pointer-events: none;
-    border: 1px solid transparent;
   }
 }

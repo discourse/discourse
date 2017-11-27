@@ -9,9 +9,10 @@
 #reply-control {
   z-index: 1002; //d-header is 1001
     .reply-area {
-      padding: 0 5px;
-      display: flex;
-      flex-direction: column;
+      padding: 0 10px;
+      @media screen and (max-width: 374px) {
+        padding: 0 5px;
+      }
       flex-grow: 1;
     }
 
@@ -23,13 +24,14 @@
     }
 
     .reply-to {
-      margin: 5px;
-      max-width: calc(100% - 60px);
+      margin: 5px 0;
     }
 
-    .toggle-toolbar,
     .toggler {
-      top: 2px;
+      margin-left: -5px;
+      .d-icon-chevron-down {
+        vertical-align: text-top;
+      }
     }
 
     &.draft {
@@ -37,10 +39,12 @@
       .toggler {
         top: 8px;
       }
-    }
-
-    .title-input {
-      margin-bottom: 5px;
+      .draft-text {
+        width: calc(100% - 40px);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
 
     #reply-title {
@@ -56,14 +60,17 @@
 
     .submit-panel {
       margin-bottom: 5px;
-      display: flex;
       align-items: baseline;
-      flex-shrink: 0;
       .save-or-cancel {
-        flex-basis: 69%;
+        flex: 1 1 auto;
+        #draft-status,
+        #file-uploading {
+          margin-left: 15px;
+        }
       }
       .composer-bottom-right {
-        flex-basis: 30%;
+        margin-left: auto;
+        flex: 1 1 auto;
       }
     }
 
@@ -126,6 +133,7 @@
     .user-selector {
       flex-direction: column;
       margin: 0;
+      min-height: 75px;
     }
 
     .title-input,
@@ -138,10 +146,5 @@
     .add-warning {
       margin: 5px 0 5px 5px;
     }
-
-    #draft-status {
-      color: $primary-medium;
-    }
-
   }
 

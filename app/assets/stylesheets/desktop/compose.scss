@@ -1,3 +1,67 @@
+#reply-control {
+  .reply-area {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 5px 15px;
+    box-sizing: border-box;
+    height: calc(100% - 11px);
+    width: 100%;
+    .submit-panel {
+      flex-wrap: wrap;
+      align-items: center;
+    }
+  }
+}
+
+.category-input {
+  margin-left: 10px;  
+}
+
+.edit-title {
+  .d-editor-preview {
+    margin-top: -43px;
+  }
+  &:not(.private-message) {
+    .d-editor-preview {
+      @media screen and (max-width: 955px) {
+        margin-top: -79px;
+      }
+    }
+  }
+  
+  
+  
+  .with-tags {
+    .d-editor-preview {
+      margin-top: -79px;
+      @media screen and (max-width: 900px) {
+        margin-top: -116px;
+      }
+    }
+  }
+}
+
+.closed {
+  .grippie {
+    display: none;
+  }
+}
+
+.open {
+  .grippie {
+    cursor: row-resize;
+    padding: 4px 0px;
+    background: $tertiary;
+    &:before {
+      content: '';
+      display: block;
+      width: 27px;
+      margin: auto;
+      border-top: 3px double $secondary;
+    }
+  }
+}
+
 .composer-popup-container {
   max-width: 1500px;
   margin-left: auto;
@@ -6,15 +70,11 @@
 
 .composer-popup {
   position: absolute;
-  width: calc(50% - 55px);
+  width: calc(50% - 45px);
   max-width: 724px;
-  top: 16px;
-  bottom: 16px;
-  left: 50%;
-  // The composer goes off-center at 1550px
-  @media (min-width: 1550px) {
-    left: calc(50%);
-  }
+  top: 20px;
+  bottom: 10px;
+  left: 51%;
   overflow-y: auto;
   z-index: 110;
   padding: 10px 10px 35px 10px;
@@ -68,8 +128,10 @@
   }
 }
 
-.d-editor-container {
-  max-width: 100%;
+.composer-controls {
+  .d-chevron-down {
+    vertical-align: text-top;
+  }
 }
 
 .custom-body {
@@ -110,21 +172,11 @@
   width: calc(50% - 65px);
 }
 
-#reply-control {
-  .reply-area {
-    max-width: 1500px;
-    margin: 0 auto;
-    padding: 0 10px 10px 10px;
-    box-sizing: border-box;
-    height: calc(100% - 11px);
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    .submit-panel {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      flex-shrink: 0;
+.composer-bottom-right {
+  a {
+    color: $primary-medium;
+    &:hover {
+      color: $tertiary;
     }
   }
 }
