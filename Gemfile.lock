@@ -352,7 +352,7 @@ GEM
       bundler
       ffi (~> 1.9.6)
       sass (>= 3.3.0)
-    seed-fu (2.3.6)
+    seed-fu (2.3.7)
       activerecord (>= 3.1)
       activesupport (>= 3.1)
     shoulda (3.5.0)
@@ -494,7 +494,7 @@ DEPENDENCIES
   ruby-readability
   sanitize
   sassc
-  seed-fu (~> 2.3.5)
+  seed-fu
   shoulda
   sidekiq
   simple-rss
