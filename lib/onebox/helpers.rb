@@ -39,7 +39,7 @@ module Onebox
       og
     end
 
-    def self.fetch_html_doc(url, headers=nil)
+    def self.fetch_html_doc(url, headers = nil)
       response = (fetch_response(url, nil, nil, headers) rescue nil)
       doc = Nokogiri::HTML(response)
 

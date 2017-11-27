@@ -1,4 +1,5 @@
 language: ruby
+sudo: false
 rvm:
   - 2.2
   - 2.3
@@ -9,3 +10,4 @@ notifications:
     on_failure: change
 script:
   - bundle exec rubocop
+  - bundle exec rspec
