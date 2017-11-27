@@ -146,6 +146,8 @@ describe ActiveRecord::ConnectionHandling do
   describe '.verify_replica' do
     describe 'when database is not in recovery' do
       it 'should raise the right error' do
+        skip("Figure out why this test leaks connections")
+
         expect do
           ActiveRecord::Base.send(:verify_replica, ActiveRecord::Base.connection)
         end.to raise_error(RuntimeError, "Replica database server is not in recovery mode.")

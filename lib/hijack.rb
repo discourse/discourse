@@ -4,42 +4,11 @@
 # For cases where we are making remote calls like onebox or proxying files and so on this helps
 # free up a unicorn worker while the remote IO is happening
 module Hijack
-  class Binder
-    attr_reader :content_type, :body, :status
-
-    def initialize
-      @content_type = 'text/plain'
-      @status = 500
-      @body = ""
-    end
-
-    def render(opts)
-      if opts[:status]
-        @status = opts[:status].to_i
-      else
-        @status = 200
-      end
-
-      if opts.key?(:body)
-        @body = opts[:body].to_s
-      end
-
-      if opts.key?(:plain)
-        @content_type = 'text/plain; charset=utf-8'
-        @body = opts[:plain].to_s
-      end
-
-      if opts.key?(:json)
-        @content_type = 'application/json; charset=utf-8'
-        @body = opts[:json]
-        unless String === @body
-          @body = @body.to_json
-        end
-      end
-    end
-  end
 
   def hijack(&blk)
+    controller_class = self.class
+    request = self.request
+
     if hijack = request.env['rack.hijack']
       io = hijack.call
 
@@ -50,19 +19,41 @@ module Hijack
           # before doing any work
           io.write "HTTP/1.1 "
 
-          binder = Binder.new
+          # this trick avoids double render, also avoids any litter that the controller hooks
+          # place on the response
+          instance = controller_class.new
+          response = ActionDispatch::Response.new
+          instance.response = response
+          instance.request = request
+
           begin
-            binder.instance_eval(&blk)
+            instance.instance_eval(&blk)
           rescue => e
             Rails.logger.warn("Failed to process hijacked response correctly #{e}")
           end
 
-          io.write "#{binder.status} OK\r\n"
-          io.write "Content-Length: #{binder.body.bytesize}\r\n"
-          io.write "Content-Type: #{binder.content_type}\r\n"
-          io.write "Connection: close\r\n"
+          unless instance.response_body
+            instance.status = 500
+          end
+
+          response.commit!
+
+          body = response.body
+
+          headers = response.headers
+          headers['Content-Length'] = body.bytesize
+          headers['Content-Type'] = response.content_type || "text/plain"
+          headers['Connection'] = "close"
+
+          status_string = Rack::Utils::HTTP_STATUS_CODES[instance.status.to_i] || "Unknown"
+          io.write "#{instance.status} #{status_string}\r\n"
+
+          headers.each do |name, val|
+            io.write "#{name}: #{val}\r\n"
+          end
+
           io.write "\r\n"
-          io.write binder.body
+          io.write body
           io.close
         rescue Errno::EPIPE, IOError
           # happens if client terminated before we responded, ignore
