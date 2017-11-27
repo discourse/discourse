@@ -30,10 +30,10 @@ function registerButton(name, builder) {
 }
 
 export function buildButton(name, widget) {
-  let { attrs, state, siteSettings } = widget;
+  let { attrs, state, siteSettings, settings } = widget;
   let builder = _builders[name];
   if (builder) {
-    let button = builder(attrs, state, siteSettings);
+    let button = builder(attrs, state, siteSettings, settings);
     if (button && !button.id) {
       button.id = name;
     }
@@ -166,7 +166,7 @@ registerButton('share', attrs => {
   };
 });
 
-registerButton('reply', attrs => {
+registerButton('reply', (attrs, state, siteSettings, postMenuSettings) => {
   const args = {
     action: 'replyToPost',
     title: 'post.controls.reply',
@@ -176,7 +176,7 @@ registerButton('reply', attrs => {
 
   if (!attrs.canCreatePost) { return; }
 
-  if (!attrs.mobileView) {
+  if (postMenuSettings.showReplyTitleOnMobile || !attrs.mobileView) {
     args.label = 'topic.reply.title';
   }
 
@@ -233,7 +233,8 @@ export default createWidget('post-menu', {
 
   settings: {
     collapseButtons: true,
-    buttonType: 'flat-button'
+    buttonType: 'flat-button',
+    showReplyTitleOnMobile: false
   },
 
   defaultState() {
