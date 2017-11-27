@@ -1,6 +1,5 @@
 .select-box-kit, .select-kit {
   &.combo-box {
-    border-radius: 3px;
 
     .select-box-kit-body, .select-kit-body {
       width: 100%;
@@ -14,7 +13,7 @@
 
     .select-box-kit-filter, .select-kit-filter {
       line-height: 18px;
-      padding: 5px 10px;
+      padding: 6px 10px;
       border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
       border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
 
@@ -25,16 +24,14 @@
 
     .select-box-kit-header, .select-kit-header {
       background: $secondary;
-      border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-      border-radius: 3px;
-      padding: 5px 10px;
+      border: 1px solid $primary-medium;
+      padding: 6px 10px;
       font-weight: 500;
-      font-size: 1em;
+      font-size: 0.929em;
       line-height: 18px;
 
       &.is-focused {
         border: 1px solid $tertiary;
-        border-radius: 3px;
         -webkit-box-shadow: $tertiary 0px 0px 6px 0px;
                 box-shadow: $tertiary 0px 0px 6px 0px;
       }
@@ -59,13 +56,11 @@
       .select-kit-wrapper {
         display: block;
         border: 1px solid $tertiary;
-        border-radius: 3px;
         -webkit-box-shadow: $tertiary 0px 0px 6px 0px;
                 box-shadow: $tertiary 0px 0px 6px 0px;
       }
 
       .select-kit-header {
-        border-radius: 3px 3px 0 0;
         border-color: transparent;
         -webkit-box-shadow: none;
                 box-shadow: none;

@@ -1,6 +1,7 @@
 .d-editor-container {
   display: flex;
   flex-grow: 1;
+  max-width: 100%;
 }
 
 .d-editor-overlay {
@@ -23,6 +24,9 @@
 
 .d-editor .d-editor-modal {
   min-width: 400px;
+  @media screen and (max-width: 424px) {
+    min-width: 300px;
+  }
   position: absolute;
   background-color: $secondary;
   border: 1px solid $primary-low;
@@ -30,7 +34,7 @@
   top: 25px;
 
   input {
-    width: 98%;
+    width: 95%;
   }
   h3 {
     margin-bottom: 0.5em;
@@ -47,11 +51,20 @@
   flex-direction: column;
   background-color: $secondary;
   position: relative;
+  border: 1px solid $primary-medium;
+  
+  textarea {
+    border-top: 1px solid $primary-low;
+    &:focus {
+      border-top: 1px solid $primary-low;      
+    }
+  }
+
 }
 
 .d-editor-preview-wrapper {
-  margin-left: 5px;
-  max-width: 50%;
+  max-width: 49%;
+  margin-left: 1%;
   display: flex;
   flex-direction: column;
   background: $secondary;
@@ -60,12 +73,13 @@
 .d-editor-button-bar {
   display: flex;
   align-items: center;
-  border-bottom: 2px solid $primary-low;
+  border-bottom: none;
   min-height: 30px;
+  padding-left: 3px;
 
   button {
     background-color: transparent;
-    color: $primary-medium;
+    color: $primary-high;
   }
 
   .btn:not(.no-text) {
@@ -91,7 +105,6 @@
 
 .d-editor-input,
 .d-editor-preview {
-  box-shadow: none;
   box-sizing: border-box;
   height: 100%;
   margin: 0;
@@ -99,6 +112,8 @@
   width: 100%;
   word-wrap: break-word;
   flex-grow: 1;
+  -webkit-appearance: none;
+  border-radius: 0;  
   &:focus {
     box-shadow: none;
     border: 0;
@@ -113,16 +128,15 @@
 
 .d-editor-input {
   border: 0;
-  padding: 7px;
+  padding: 10px;
   overflow-x: hidden;
+  resize: none;  
 }
 
 .d-editor-preview {
-  border: 1px dashed $primary-low;
   overflow: auto;
   cursor: default;
-  background-color: $secondary;
-  padding: 7px;
+  padding: 0 10px;
 }
 
 .composing-whisper .d-editor-preview {

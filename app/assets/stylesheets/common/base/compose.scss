@@ -1,27 +1,27 @@
 #reply-control {
-  background-color: $primary-low;
-  border-top: 1px solid $primary-low;
-  bottom: 0;
-  height: 0;
   position: fixed;
   display: flex;
   flex-direction: column;
-  transition: height 250ms ease;
-  width: 100%;
+  bottom: 0;
+  height: 0;
+  right: 0;
+  left: 0;
+  margin-left: auto;
+  margin-right: auto;
+
+  max-width: 1400px;
+  @media screen and (max-width: 1200px) {
+    width: 100%;
+    min-width: 0;
+  }
   z-index: 999;
+  transition: height 250ms ease, background 250ms ease;
+  background-color: $secondary;
+  box-shadow: 0 -2px 40px rgba($primary, .12);
 
-  .toggler,
-  .toggle-toolbar {
-    position: absolute;
-    color: $primary-medium;
-  }
-
-  .toggler {
-    right: 1px;
-  }
-
-  .toggle-toolbar {
-    right: 30px;
+  .reply-area {
+    display: flex;
+    flex-direction: column;
   }
 
   .saving-text,
@@ -30,9 +30,11 @@
     padding-left: 10px;
     .spinner {
       margin-left: 5px;
+      border-color: $secondary;
+      border-right-color: transparent;
     }
     i {
-      color: $primary-medium;
+      color: $secondary;
     }
   }
 
@@ -50,7 +52,21 @@
   &.draft,
   &.saving {
     height: 40px !important;
-    justify-content: center;
+    align-items: center;
+    background: $tertiary;
+    color: $secondary;
+    flex-direction: row;
+    .composer-controls {
+      margin-left: auto;
+      display: flex;
+      padding-right: 5px;
+      .toggle-toolbar {
+        display: none;
+      }
+      .d-icon {
+        opacity: 1;
+      }
+    }
   }
 
   &.draft {
@@ -62,34 +78,38 @@
     .grippie, .saving-text {
       display: none;
     }
-    .toggler {
-      right: 10px;
-    }
   }
 
   &.saving .saving-text {
     display: flex;
   }
 
-  input[type="text"] {
-    border: 0;
-  }
-
   .reply-to {
-    color: $tertiary;
-    margin-bottom: 10px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    color: $primary-medium;
+    margin: 5px 0 10px 0;
+    display: flex;
+    align-items: center;
     i {
       color: $primary-medium;
+    }
+    .reply-details {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: calc(100% - 100px);
+    }
+    .composer-controls {
+      margin-left: auto;
+      margin-right: -5px;
+      button {
+        padding: 0 8px;
+      }
     }
   }
 
   .whisper,
   .display-edit-reason {
     font-style: italic;
-    color: $primary-medium !important;
   }
 
   #edit-reason {
@@ -99,14 +119,52 @@
   .user-selector,
   .title-and-category {
     display: flex;
+    flex-wrap: wrap;
+    width: 100%;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     position: relative;
+    &.with-preview {
+      width: 50%;
+    }
   }
 
   .title-input {
     position: relative;
-    .popup-tip {margin-top: -30px;}
+    display: flex;
+    flex: 1 1 50%;
+
+    input {
+      flex-grow: 1;
+    }
+  }
+
+  .with-tags {
+    .title-input {
+      flex: 1 1 100%;
+    }
+  }
+
+  .category-input {
+    display: flex;
+    flex: 1 0 35%;
+    margin: 0 0 5px 10px;
+    @media screen and (max-width: 955px) {
+      flex: 1 0 100%;
+      margin-left: 0;
+    }
+    .category-chooser {
+      display: flex;
+      flex: 1;
+      width: auto;
+    }
+  }
+
+  .with-tags {
+    .category-input {
+      flex-basis: 25%;
+      margin-left: 0;
+    }
   }
 
   .add-warning {
@@ -114,14 +172,25 @@
   }
 
   #reply-title {
-    width: 400px;
     padding: 6px 10px;
-    margin: 0 10px 0 0;
+    margin: 0 0 5px 0;
+    flex-basis: 50%;
   }
 
   .tag-chooser {
-    margin: 5px 0 0 0;
-    flex-basis: 30%;
+    flex: 1 1 25%;
+    margin: 0 0 5px 10px;
+    border: 1px solid $primary-medium;
+    @media all and (max-width: 900px) {
+      margin: 0;
+      flex: 1 1 100%;
+    }
+    .select2-choices {
+      border: none;
+    }
+    &.select2-dropdown-open, &.select2-container-active {
+      border-color: $tertiary;
+    }
   }
 
   .wmd-controls {
@@ -133,14 +202,28 @@
   }
 
   .d-editor-button-bar .btn {
-    padding: 0 6px;
+    padding: 3px 8px;
+    @media all and (max-width: 800px) {
+      padding: 5px;
+    }
+  }
+
+  .submit-panel {
+    display: flex;
+    flex-shrink: 0;
+    margin-top: 10px;
   }
 
   .save-or-cancel {
-    margin-top: 5px;
     flex-basis: 50%;
     display: flex;
     align-items: center;
+    button {
+      flex: 0 0 auto;
+    }
+    .cancel {
+      margin-left: 10px;
+    }
     #draft-status,
     #file-uploading {
       margin-left: 25px;
@@ -162,22 +245,12 @@
     }
   }
 
-  .with-tags {
-    .composer-bottom-right {
-      flex-basis: 60%;
-      margin-left: auto;
-    }
-    .save-or-cancel {
-      order: 3;
-    }
-  }
-
   .create {
     margin-right: 5px;
   }
 
   #draft-status, #file-uploading {
-    color: dark-light-choose($primary-medium, $secondary-medium);
+    color: $primary-medium;
   }
 }
 
@@ -212,7 +285,7 @@
         text-overflow: ellipsis;
 
         span.username {
-          color: darken($primary, 40%);
+          color: $primary;
         }
         span.name {
           font-size: 11px;
@@ -260,8 +333,8 @@ div.ac-wrap {
   overflow: auto;
   max-height: 150px;
   background-color: $secondary;
-  border: 1px solid $primary-low;
-  padding: 5px 4px 1px 4px;
+  border: 1px solid $primary-medium;
+  padding: 5px 4px 1px 10px;
   div.item {
     float: left;
     margin-bottom: 4px;
@@ -294,7 +367,7 @@ div.ac-wrap {
 
 .future-date-input {
   .examples {
-    color: lighten($primary, 40%);
+    color: $primary-medium;
   }
 }
 
