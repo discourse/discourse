@@ -416,6 +416,19 @@ export default Ember.Component.extend({
       }
     });
 
+    $element.on("fileuploaddone", (e, data) => {
+      let upload = data.result;
+
+      if (!this._xhr || !this._xhr._userCancelled) {
+        const markdown = getUploadMarkdown(upload);
+        cacheShortUploadUrl(upload.short_url, upload.url);
+        this.appEvents.trigger('composer:replace-text', uploadPlaceholder, markdown);
+        this._resetUpload(false);
+      } else {
+        this._resetUpload(true);
+      }
+    });
+
     $element.on("fileuploadfail", (e, data) => {
       this._resetUpload(true);
 
@@ -423,24 +436,7 @@ export default Ember.Component.extend({
       this._xhr = null;
 
       if (!userCancelled) {
-        displayErrorForUpload(data);
-      }
-    });
-
-    this.messageBus.subscribe("/uploads/composer", upload => {
-      // replace upload placeholder
-      if (upload && upload.url) {
-        if (!this._xhr || !this._xhr._userCancelled) {
-          const markdown = getUploadMarkdown(upload);
-          cacheShortUploadUrl(upload.short_url, upload.url);
-          this.appEvents.trigger('composer:replace-text', uploadPlaceholder, markdown);
-          this._resetUpload(false);
-        } else {
-          this._resetUpload(true);
-        }
-      } else {
-        this._resetUpload(true);
-        displayErrorForUpload(upload);
+        displayErrorForUpload(data.jqXHR.responseJSON);
       }
     });
 

@@ -25,8 +25,16 @@ module Hijack
       end
 
       if opts.key?(:plain)
-        @content_type = 'text/plain'
+        @content_type = 'text/plain; charset=utf-8'
         @body = opts[:plain].to_s
+      end
+
+      if opts.key?(:json)
+        @content_type = 'application/json; charset=utf-8'
+        @body = opts[:json]
+        unless String === @body
+          @body = @body.to_json
+        end
       end
     end
   end

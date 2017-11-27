@@ -18,12 +18,9 @@ export default Em.Mixin.create({
           uploadUrl = Discourse.getURL(this.getWithDefault("uploadUrl", "/uploads")),
           reset = () => this.setProperties({ uploading: false, uploadProgress: 0});
 
-    this.messageBus.subscribe("/uploads/" + this.get("type"), upload => {
-      if (upload && upload.url) {
-        this.uploadDone(upload);
-      } else {
-        displayErrorForUpload(upload);
-      }
+    $upload.on("fileuploaddone", (e, data) => {
+      let upload = data.result;
+      this.uploadDone(upload);
       reset();
     });
 
@@ -59,7 +56,7 @@ export default Em.Mixin.create({
     });
 
     $upload.on("fileuploadfail", (e, data) => {
-      displayErrorForUpload(data);
+      displayErrorForUpload(data.jqXHR.responseJSON);
       reset();
     });
   }.on("didInsertElement"),
