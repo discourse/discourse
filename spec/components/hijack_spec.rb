@@ -46,7 +46,7 @@ describe Hijack do
       render plain: "hello world"
     end
 
-    result = "HTTP/1.1 200 OK\r\nContent-Length: 11\r\nContent-Type: text/plain\r\nConnection: close\r\n\r\nhello world"
+    result = "HTTP/1.1 200 OK\r\nContent-Length: 11\r\nContent-Type: text/plain; charset=utf-8\r\nConnection: close\r\n\r\nhello world"
     expect(tester.io.string).to eq(result)
   end
 
