@@ -1,10 +1,10 @@
 AllCops:
   TargetRubyVersion: 2.2
   DisabledByDefault: true
-  Includes:
+  Include:
     - '**/*.gemspec'
     - '**/Rakefile'
-  Excludes: []
+  Exclude: []
 
 
 # Prefer &&/|| over and/or.
