@@ -119,7 +119,7 @@ module Onebox
           return nil unless html_doc
 
           favicon = html_doc.css('link[rel="shortcut icon"], link[rel="icon shortcut"], link[rel="shortcut"], link[rel="icon"]').first
-          favicon = favicon.nil? ? nil : favicon['href']&.strip
+          favicon = favicon.nil? ? nil : (favicon['href'].nil? ? nil : favicon['href'].strip)
 
           if favicon && favicon.match(/^https?:\/\//i).nil?
             uri = URI(url)
