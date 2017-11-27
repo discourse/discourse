@@ -80,6 +80,8 @@ export default SelectKitComponent.extend({
   didComputeValues(values) { return values; },
 
   mutateAttributes() {
+    if (this.get("isDestroyed") || this.get("isDestroying")) return;
+
     Ember.run.next(() => {
       this.mutateContent(this.get("computedContent"));
       this.mutateValues(this.get("computedValues"));
