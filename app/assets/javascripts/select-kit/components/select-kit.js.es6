@@ -61,6 +61,7 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   computedContent: null,
   limitMatches: 100,
   nameChanges: false,
+  allowsContentReplacement: false,
 
   init() {
     this._super();
@@ -79,10 +80,15 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     if (this.get("nameChanges")) {
       this.addObserver(`content.@each.${this.get("nameProperty")}`, this, this._compute);
     }
+
+    if (this.get("allowsContentReplacement")) {
+      this.addObserver(`content.[]`, this, this._compute);
+    }
   },
 
   willDestroyElement() {
     this.removeObserver(`content.@each.${this.get("nameProperty")}`, this, this._compute);
+    this.removeObserver(`content.[]`, this, this._compute);
   },
 
   willComputeAttributes() {},
