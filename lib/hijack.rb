@@ -7,10 +7,25 @@ module Hijack
 
   def hijack(&blk)
     controller_class = self.class
-    request = self.request
+
+    #env = request.env.dup
+    #request_copy = ActionDispatch::Request.new(env)
+    request_copy = self.request
 
     if hijack = request.env['rack.hijack']
       io = hijack.call
+
+      # in prd the env object is re-used
+      # make a copy of all strings
+      env_copy = {}
+      request.env.each do |k, v|
+        env_copy[k] = v if String === v
+      end
+
+      request_copy = ActionDispatch::Request.new(env_copy)
+
+      # params is generated per request so we can simply reuse it
+      params_copy = params
 
       Scheduler::Defer.later("hijack work") do
 
@@ -24,7 +39,8 @@ module Hijack
           instance = controller_class.new
           response = ActionDispatch::Response.new
           instance.response = response
-          instance.request = request
+          instance.request = request_copy
+          instance.params = params_copy
 
           begin
             instance.instance_eval(&blk)
