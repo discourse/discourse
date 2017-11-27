@@ -2,6 +2,53 @@ require 'rails_helper'
 
 describe StaticController do
 
+  context '#favicon' do
+    before do
+      # this is a mess in test, will fix in a future commit
+      FinalDestination.stubs(:lookup_ip).returns('1.2.3.4')
+    end
+
+    let(:png) { Base64.decode64("R0lGODlhAQABALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//wBiZCH5BAEAAA8ALAAAAAABAAEAAAQC8EUAOw==") }
+
+    it 'returns the default favicon for a missing download' do
+
+      url = "https://somewhere1.over.rainbow/#{SecureRandom.hex}.png"
+
+      stub_request(:head, url).
+        with(headers: { 'Host' => 'somewhere1.over.rainbow' }).
+        to_return(status: 404, body: "", headers: {})
+
+      SiteSetting.favicon_url = url
+
+      get '/favicon/proxied'
+
+      favicon = File.read(Rails.root + "public/images/default-favicon.png")
+
+      expect(response.status).to eq(200)
+      expect(response.content_type).to eq('image/png')
+      expect(response.body.bytesize).to eq(favicon.bytesize)
+    end
+
+    it 'can proxy a favicon correctly' do
+      url = "https://somewhere.over.rainbow/#{SecureRandom.hex}.png"
+
+      stub_request(:head, url).
+        with(headers: { 'Host' => 'somewhere.over.rainbow' }).
+        to_return(status: 200, body: "", headers: {})
+
+      stub_request(:get, url).
+        to_return(status: 200, body: png, headers: {})
+
+      SiteSetting.favicon_url = url
+
+      get '/favicon/proxied'
+
+      expect(response.status).to eq(200)
+      expect(response.content_type).to eq('image/png')
+      expect(response.body.bytesize).to eq(png.bytesize)
+    end
+  end
+
   context '#brotli_asset' do
     it 'returns a non brotli encoded 404 if asset is missing' do
 
@@ -9,7 +56,7 @@ describe StaticController do
 
       expect(response.status).to eq(404)
       expect(response.headers['Content-Encoding']).not_to eq('br')
-      expect(response.headers["Cache-Control"]).to match(/max-age=1/)
+      expect(response.headers['Cache-Control']).to match(/max-age=1/)
     end
 
     it 'can handle fallback brotli assets' do
