@@ -105,7 +105,7 @@ module Hijack
       render(
         body: binder.body,
         content_type: binder.content_type,
-        status: status
+        status: binder.status
       )
     end
   end
