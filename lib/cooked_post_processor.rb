@@ -383,6 +383,8 @@ class CookedPostProcessor
     end
 
     oneboxed_images.each do |img|
+      next if img["src"].blank?
+
       src = img["src"].sub(/^https?:/i, "")
 
       if large_images.include?(src) || broken_images.include?(src)
