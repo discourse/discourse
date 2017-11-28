@@ -21,23 +21,22 @@
               {{{i18n 'admin.user.suspend_reason_label'}}}
             {{/if}}
           </div>
-
-          {{text-field
-            value=reason
-            class="suspend-reason"
-            placeholderKey="admin.user.suspend_reason_placeholder"}}
         </label>
+        {{text-field
+          value=reason
+          class="suspend-reason"
+          placeholderKey="admin.user.suspend_reason_placeholder"}}
       </div>
 
       <label>
         <div class='suspend-message-label'>
           {{i18n "admin.user.suspend_message"}}
         </div>
-        {{textarea
+      </label>
+      {{textarea
           value=message
           class="suspend-message"
           placeholder=(i18n "admin.user.suspend_message_placeholder")}}
-      </label>
     {{else}}
       <div class='cant-suspend'>
         {{i18n "admin.user.cant_suspend"}}
