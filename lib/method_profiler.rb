@@ -25,8 +25,14 @@ class MethodProfiler
     klass.class_eval patches
   end
 
-  def self.start
-    Thread.current[:_method_profiler] = {
+  def self.transfer
+    result = Thread.current[:_method_profiler]
+    Thread.current[:_method_profiler] = nil
+    result
+  end
+
+  def self.start(transfer = nil)
+    Thread.current[:_method_profiler] = transfer || {
       __start: Process.clock_gettime(Process::CLOCK_MONOTONIC)
     }
   end
