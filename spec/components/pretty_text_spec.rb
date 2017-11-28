@@ -388,6 +388,19 @@ describe PrettyText do
       it "should remove meta informations" do
         expect(PrettyText.excerpt(wrapped_image, 100)).to match_html "<a href='//localhost:3000/uploads/default/4399/33691397e78b4d75.png' class='lightbox' title='Screen Shot 2014-04-14 at 9.47.10 PM.png'>[image]</a>"
       end
+
+      it "should strip images when option is set" do
+        expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif'>", 100, strip_images: true)).to be_blank
+        expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif'> Hello world!", 100, strip_images: true)).to eq("Hello world!")
+      end
+
+      it "should strip images, but keep emojis when option is set" do
+        emoji_image = "<img src='/images/emoji/twitter/heart.png?v=1' title=':heart:' class='emoji' alt='heart'>"
+        html = "<img src='http://cnn.com/a.gif'> Hello world #{emoji_image}"
+
+        expect(PrettyText.excerpt(html, 100, strip_images: true)).to eq("Hello world heart")
+        expect(PrettyText.excerpt(html, 100, strip_images: true, keep_emoji_images: true)).to match_html("Hello world #{emoji_image}")
+      end
     end
 
     it "should have an option to strip links" do
