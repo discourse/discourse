@@ -108,7 +108,7 @@ export function timeframeDetails(id) {
   return _timeframeById[id];
 }
 
-export const FORMAT = "YYYY-MM-DD HH:mm Z";
+export const FORMAT = "YYYY-MM-DD HH:mmZ";
 
 export default ComboBoxComponent.extend(DatetimeMixin, {
   pluginApiIdentifiers: ["future-date-input-selector"],
