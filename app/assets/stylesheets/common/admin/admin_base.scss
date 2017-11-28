@@ -227,6 +227,11 @@ $mobile-breakpoint: 700px;
   .select-box-kit.dropdown-select-box {
     width: auto;
   }
+
+  .search-logs-filter {
+    width: 200px;
+    float: right;
+  }
 }
 
 .admin-container .controls {
@@ -1267,19 +1272,12 @@ table.api-keys {
 .search-logs-list{
   .col {
     text-align: center;
-    width: 10%;
+    width: 15%;
   }
 
   .col.term {
-    width: 30%;
+    width: 45%;
     text-align: left;
-  }
-
-  .col.topic {
-    width: 35%;
-    text-align: left;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 }
 
