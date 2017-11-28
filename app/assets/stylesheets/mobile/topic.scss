@@ -179,24 +179,29 @@
 sup sup, sub sup, sup sub, sub sub { top: 0; }
 
 // inline editing of title on mobile
-.title-wrapper {
+#topic-title .title-wrapper {
+  position: relative;
+  float: none;
+  width: 100%;
+
   input#edit-title {
-    width: 95%;
-    padding: 5px;
     box-sizing: border-box;
+    width: 100%;
+    height: 32px;
   }
 
+  .select2-container {
+    box-sizing: border-box;
+    width: 100% !important;
+  }
   .btn-small {
     padding: 8px 12px;
     margin: 6px 6px 0 0;
   }
-  .select2-container {
-    margin-top: 8px;
-    width: 95% !important;
-  }
-  .category-chooser {
-    margin-top: 8px;
-    width: 95%;
+
+  .select-box-kit.combo-box.category-chooser {
+    width: 100%;
+    margin-top: 0;
   }
 }
 
