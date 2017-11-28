@@ -1,5 +1,6 @@
 <p>
   {{period-chooser period=period}}
+  {{combo-box content=searchTypeOptions value=searchType class='search-logs-filter'}}
 </p>
 <br>
 
@@ -11,7 +12,6 @@
         <div class="col heading term">{{i18n 'admin.logs.search_logs.term'}}</div>
         <div class="col heading">{{i18n 'admin.logs.search_logs.searches'}}</div>
         <div class="col heading">{{i18n 'admin.logs.search_logs.click_through'}}</div>
-        <div class="col heading topic">{{i18n 'admin.logs.search_logs.most_viewed_topic'}}</div>
         <div class="col heading" title="{{i18n 'admin.logs.search_logs.unique_title'}}">{{i18n 'admin.logs.search_logs.unique'}}</div>
       </div>
 
@@ -20,11 +20,6 @@
           <div class="col term">{{item.term}}</div>
           <div class="col">{{item.searches}}</div>
           <div class="col">{{item.click_through}}</div>
-          <div class="col topic">
-            {{#if item.clicked_topic_id}}
-              <a href='{{unbound item.topic_url}}'>{{item.topic_title}}</a>
-            {{/if}}
-          </div>
           <div class="col">{{item.unique}}</div>
         </div>
       {{/each}}

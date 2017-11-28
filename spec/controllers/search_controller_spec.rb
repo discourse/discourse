@@ -187,14 +187,14 @@ describe SearchController do
       }
 
       expect(response).to be_success
-      expect(SearchLog.find(search_log_id).clicked_topic_id).to be_blank
+      expect(SearchLog.find(search_log_id).search_result_id).to be_blank
     end
 
     it "records the click for a logged in user" do
       user = log_in(:user)
 
       _, search_log_id = SearchLog.log(
-        term: 'kitty',
+        term: 'foobar',
         search_type: :header,
         user_id: user.id,
         ip_address: '127.0.0.1'
@@ -203,11 +203,12 @@ describe SearchController do
       post :click, params: {
         search_log_id: search_log_id,
         search_result_id: 12345,
-        search_result_type: 'topic'
+        search_result_type: 'user'
       }, format: :json
 
       expect(response).to be_success
-      expect(SearchLog.find(search_log_id).clicked_topic_id).to eq(12345)
+      expect(SearchLog.find(search_log_id).search_result_id).to eq(12345)
+      expect(SearchLog.find(search_log_id).search_result_type).to eq(SearchLog.search_result_types[:user])
     end
 
     it "records the click for an anonymous user" do
@@ -226,7 +227,8 @@ describe SearchController do
       }, format: :json
 
       expect(response).to be_success
-      expect(SearchLog.find(search_log_id).clicked_topic_id).to eq(22222)
+      expect(SearchLog.find(search_log_id).search_result_id).to eq(22222)
+      expect(SearchLog.find(search_log_id).search_result_type).to eq(SearchLog.search_result_types[:topic])
     end
 
     it "doesn't record the click for a different IP" do
@@ -245,7 +247,48 @@ describe SearchController do
       }
 
       expect(response).to be_success
-      expect(SearchLog.find(search_log_id).clicked_topic_id).to be_blank
+      expect(SearchLog.find(search_log_id).search_result_id).to be_blank
+    end
+
+    it "records the click for search result type category" do
+      request.remote_addr = '192.168.0.1';
+
+      _, search_log_id = SearchLog.log(
+        term: 'dev',
+        search_type: :header,
+        ip_address: '192.168.0.1'
+      )
+
+      post :click, params: {
+        search_log_id: search_log_id,
+        search_result_id: 23456,
+        search_result_type: 'category'
+      }, format: :json
+
+      expect(response).to be_success
+      expect(SearchLog.find(search_log_id).search_result_id).to eq(23456)
+      expect(SearchLog.find(search_log_id).search_result_type).to eq(SearchLog.search_result_types[:category])
+    end
+
+    it "records the click for search result type tag" do
+      request.remote_addr = '192.168.0.1';
+       tag = Fabricate(:tag, name: 'test')
+
+      _, search_log_id = SearchLog.log(
+        term: 'test',
+        search_type: :header,
+        ip_address: '192.168.0.1'
+      )
+
+      post :click, params: {
+        search_log_id: search_log_id,
+        search_result_id: tag.name,
+        search_result_type: 'tag'
+      }, format: :json
+
+      expect(response).to be_success
+      expect(SearchLog.find(search_log_id).search_result_id).to eq(tag.id)
+      expect(SearchLog.find(search_log_id).search_result_type).to eq(SearchLog.search_result_types[:tag])
     end
   end
 end
