@@ -216,10 +216,9 @@ module ApplicationHelper
 
     [:url, :title, :description].each do |property|
       if opts[property].present?
-        escape = (property != :image)
         content = (property == :url ? opts[property] : gsub_emoji_to_unicode(opts[property]))
-        result << tag(:meta, { property: "og:#{property}", content: content }, nil, escape)
-        result << tag(:meta, { name: "twitter:#{property}", content: content }, nil, escape)
+        result << tag(:meta, { property: "og:#{property}", content: content }, nil, true)
+        result << tag(:meta, { name: "twitter:#{property}", content: content }, nil, true)
       end
     end
 
