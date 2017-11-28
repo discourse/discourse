@@ -141,6 +141,12 @@ aside.onebox {
       width: auto;
       float: left;
       margin-right: 10px;
+      &.onebox-full-image {
+        max-height: none;
+        max-width: none;
+        width: initial;
+        height: initial;
+      }
     }
 
     [style*="--aspect-ratio"] > :first-child {
