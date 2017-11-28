@@ -92,6 +92,26 @@ describe DiscoursePluginRegistry do
     end
   end
 
+  context '.register_service_worker' do
+    let(:registry) { DiscoursePluginRegistry }
+
+    before do
+      registry.register_service_worker('hello.js')
+    end
+
+    after do
+      registry.reset!
+    end
+
+    it 'is returned by DiscoursePluginRegistry.service_workers' do
+      expect(registry.service_workers.include?('hello.js')).to eq(true)
+    end
+
+    it "won't add the same file twice" do
+      expect { registry.register_service_worker('hello.js') }.not_to change(registry.service_workers, :size)
+    end
+  end
+
   context '.register_archetype' do
     it "delegates archetypes to the Archetype component" do
       Archetype.expects(:register).with('threaded', hello: 123)

@@ -5,6 +5,7 @@ class DiscoursePluginRegistry
 
   class << self
     attr_writer :javascripts
+    attr_writer :service_workers
     attr_writer :admin_javascripts
     attr_writer :stylesheets
     attr_writer :mobile_stylesheets
@@ -22,6 +23,10 @@ class DiscoursePluginRegistry
     # Default accessor values
     def javascripts
       @javascripts ||= Set.new
+    end
+
+    def service_workers
+      @service_workers ||= Set.new
     end
 
     def asset_globs
@@ -77,6 +82,10 @@ class DiscoursePluginRegistry
   def register_js(filename, options = {})
     # If we have a server side option, add that too.
     self.class.javascripts << filename
+  end
+
+  def self.register_service_worker(filename, options = {})
+    self.service_workers << filename
   end
 
   def register_css(filename)
@@ -166,6 +175,10 @@ class DiscoursePluginRegistry
     self.class.javascripts
   end
 
+  def service_workers
+    self.class.service_workers
+  end
+
   def stylesheets
     self.class.stylesheets
   end
@@ -188,6 +201,7 @@ class DiscoursePluginRegistry
 
   def self.clear
     self.javascripts = nil
+    self.service_workers = nil
     self.stylesheets = nil
     self.mobile_stylesheets = nil
     self.desktop_stylesheets = nil
@@ -197,6 +211,7 @@ class DiscoursePluginRegistry
 
   def self.reset!
     javascripts.clear
+    service_workers.clear
     admin_javascripts.clear
     stylesheets.clear
     mobile_stylesheets.clear
