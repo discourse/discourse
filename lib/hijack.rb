@@ -9,7 +9,6 @@ module Hijack
     controller_class = self.class
 
     if hijack = request.env['rack.hijack']
-      io = hijack.call
 
       request.env['discourse.request_tracker.skip'] = true
       request_tracker = request.env['discourse.request_tracker']
@@ -18,7 +17,7 @@ module Hijack
       # make a copy of all strings
       env_copy = {}
       request.env.each do |k, v|
-        env_copy[k] = v if String === v
+        env_copy[k] = v if String === v || Hash === v
       end
       # we require that for request initialization
       env_copy["rack.input"] = StringIO.new
@@ -32,7 +31,9 @@ module Hijack
 
       transfer_timings = MethodProfiler.transfer if defined? MethodProfiler
 
-      Scheduler::Defer.later("hijack work") do
+      io = hijack.call
+
+      Scheduler::Defer.later("hijack #{params["controller"]} #{params["action"]}") do
 
         MethodProfiler.start(transfer_timings) if defined? MethodProfiler
 
