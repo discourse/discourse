@@ -8,12 +8,11 @@ module Hijack
   def hijack(&blk)
     controller_class = self.class
 
-    #env = request.env.dup
-    #request_copy = ActionDispatch::Request.new(env)
-    request_copy = self.request
-
     if hijack = request.env['rack.hijack']
       io = hijack.call
+
+      request.env['discourse.request_tracker.skip'] = true
+      request_tracker = request.env['discourse.request_tracker']
 
       # in prd the env object is re-used
       # make a copy of all strings
@@ -21,13 +20,21 @@ module Hijack
       request.env.each do |k, v|
         env_copy[k] = v if String === v
       end
-
-      request_copy = ActionDispatch::Request.new(env_copy)
+      # we require that for request initialization
+      env_copy["rack.input"] = StringIO.new
 
       # params is generated per request so we can simply reuse it
       params_copy = params
 
+      env_copy["action_dispatch.request.parameters"] = params_copy
+
+      request_copy = ActionDispatch::Request.new(env_copy)
+
+      transfer_timings = MethodProfiler.transfer if defined? MethodProfiler
+
       Scheduler::Defer.later("hijack work") do
+
+        MethodProfiler.start(transfer_timings) if defined? MethodProfiler
 
         begin
           # do this first to confirm we have a working connection
@@ -74,6 +81,12 @@ module Hijack
           io.close
         rescue Errno::EPIPE, IOError
           # happens if client terminated before we responded, ignore
+        ensure
+          if request_tracker
+            status = instance.status rescue 500
+            timings = MethodProfiler.stop if defined? MethodProfiler
+            request_tracker.log_request_info(env_copy, [status, headers || {}, []], timings)
+          end
         end
       end
       # not leaked out, we use 418 ... I am a teapot to denote that we are hijacked

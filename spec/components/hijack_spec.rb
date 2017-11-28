@@ -6,15 +6,16 @@ describe Hijack do
 
     include Hijack
 
-    def initialize
+    def initialize(env = {})
       @io = StringIO.new
-      self.request = ActionController::TestRequest.new({
+
+      env.merge!(
         "rack.hijack" => lambda { @io },
         "rack.input" => StringIO.new
-      },
-        nil,
-        nil
       )
+
+      self.request = ActionController::TestRequest.new(env, nil, nil)
+
       # we need this for the 418
       self.response = ActionDispatch::Response.new
     end
@@ -27,6 +28,43 @@ describe Hijack do
 
   let :tester do
     Hijack::Tester.new
+  end
+
+  context "Request Tracker integration" do
+    let :logger do
+      lambda do |env, data|
+        @calls += 1
+        @status = data[:status]
+        @total = data[:timing][:total_duration]
+      end
+    end
+
+    before do
+      Middleware::RequestTracker.register_detailed_request_logger logger
+      @calls = 0
+    end
+
+    after do
+      Middleware::RequestTracker.unregister_detailed_request_logger logger
+    end
+
+    it "can properly track execution" do
+      app = lambda do |env|
+        tester = Hijack::Tester.new(env)
+        tester.hijack_test do
+          render body: "hello", status: 201
+        end
+      end
+
+      env = {}
+      middleware = Middleware::RequestTracker.new(app)
+
+      middleware.call(env)
+
+      expect(@calls).to eq(1)
+      expect(@status).to eq(201)
+      expect(@status).to be > 0
+    end
   end
 
   it "dupes the request params and env" do
