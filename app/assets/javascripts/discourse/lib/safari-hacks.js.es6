@@ -1,10 +1,4 @@
-export function isAppleDevice() {
-  // IE has no DOMNodeInserted so can not get this hack despite saying it is like iPhone
-  // This will apply hack on all iDevices
-  return navigator.userAgent.match(/(iPad|iPhone|iPod)/g) &&
-         navigator.userAgent.match(/Safari/g) &&
-         !navigator.userAgent.match(/Trident/g);
-}
+import { isAppleDevice } from 'discourse/lib/utilities';
 
 // we can't tell what the actual visible window height is
 // because we cannot account for the height of the mobile keyboard
