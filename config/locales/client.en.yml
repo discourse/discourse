@@ -3211,6 +3211,7 @@ en:
           click_through: "Click Through"
           most_viewed_topic: "Most Viewed Topic"
           unique: "Unique"
+          unique_title: "unique users performing the search"
         logster:
           title: "Error Logs"
 
