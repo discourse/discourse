@@ -16,6 +16,7 @@ import {
   caretRowCol,
   setCaretPosition
 } from 'discourse/lib/utilities';
+import * as Utilities from 'discourse/lib/utilities';
 
 QUnit.module("lib:utilities");
 
@@ -122,6 +123,13 @@ var testUploadMarkdown = function(filename) {
 QUnit.test("getUploadMarkdown", assert => {
   assert.equal(testUploadMarkdown("lolcat.gif"),'![lolcat|100x200](/uploads/123/abcdef.ext)');
   assert.ok(testUploadMarkdown("important.txt") === '<a class="attachment" href="/uploads/123/abcdef.ext">important.txt</a> (42 Bytes)\n');
+});
+
+QUnit.test("replaces GUID in image alt text on iOS", assert => {
+  assert.equal(testUploadMarkdown("8F2B469B-6B2C-4213-BC68-57B4876365A0.jpeg"),'![8F2B469B-6B2C-4213-BC68-57B4876365A0|100x200](/uploads/123/abcdef.ext)');
+
+  sandbox.stub(Utilities, 'isAppleDevice').returns(true);
+  assert.equal(testUploadMarkdown("8F2B469B-6B2C-4213-BC68-57B4876365A0.jpeg"),'![image|100x200](/uploads/123/abcdef.ext)');
 });
 
 QUnit.test("isAnImage", assert => {
