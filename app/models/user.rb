@@ -657,11 +657,11 @@ class User < ActiveRecord::Base
   end
 
   def suspended?
-    !!(suspended_till && suspended_till > DateTime.now)
+    !!(suspended_till && suspended_till > Time.zone.now)
   end
 
   def silenced?
-    !!(silenced_till && silenced_till > DateTime.now)
+    !!(silenced_till && silenced_till > Time.zone.now)
   end
 
   def silenced_record
