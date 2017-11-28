@@ -146,7 +146,10 @@ class StaticController < ApplicationController
   def service_worker_asset
     respond_to do |format|
       format.js do
-        render plain: Rails.application.assets["service-worker.js"].to_s
+        render(
+          plain: Rails.application.assets_manifest.find_sources('service-worker.js').first,
+          content_type: 'application/javascript'
+        )
       end
     end
   end
