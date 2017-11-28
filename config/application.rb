@@ -82,12 +82,20 @@ module Discourse
     end]
 
     config.assets.precompile += %w{
-                                 vendor.js admin.js preload-store.js
-                                 browser-update.js break_string.js ember_jquery.js
-                                 pretty-text-bundle.js wizard-application.js
-                                 wizard-vendor.js plugin.js plugin-third-party.js
-                                 markdown-it-bundle.js
-                                 }
+      vendor.js
+      admin.js
+      preload-store.js
+      browser-update.js
+      break_string.js
+      ember_jquery.js
+      pretty-text-bundle.js
+      wizard-application.js
+      wizard-vendor.js
+      plugin.js
+      plugin-third-party.js
+      markdown-it-bundle.js
+      service-worker.js
+    }
 
     # Precompile all available locales
     Dir.glob("#{config.root}/app/assets/javascripts/locales/*.js.erb").each do |file|
