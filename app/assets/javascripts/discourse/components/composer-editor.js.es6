@@ -136,7 +136,7 @@ export default Ember.Component.extend({
       this.appEvents.on(event, this, this._resetShouldBuildScrollMap);
     });
 
-    Ember.run.schedule("afterRender", () => {
+    Ember.run.scheduleOnce("afterRender", () => {
       $input.on('touchstart mouseenter', () => {
         if (!$preview.is(":visible")) return;
         $preview.off('scroll');
