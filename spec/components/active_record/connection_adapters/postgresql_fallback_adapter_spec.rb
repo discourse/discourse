@@ -41,8 +41,14 @@ describe ActiveRecord::ConnectionHandling do
 
   describe "#postgresql_fallback_connection" do
     it 'should return a PostgreSQL adapter' do
-      expect(ActiveRecord::Base.postgresql_fallback_connection(config))
-        .to be_an_instance_of(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
+      begin
+        connection = ActiveRecord::Base.postgresql_fallback_connection(config)
+
+        expect(connection)
+          .to be_an_instance_of(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
+      ensure
+        connection.disconnect!
+      end
     end
 
     context 'when master server is down' do
