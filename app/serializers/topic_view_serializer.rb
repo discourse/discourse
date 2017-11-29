@@ -37,6 +37,7 @@ class TopicViewSerializer < ApplicationSerializer
                         :user_id,
                         :pm_with_non_human_user?,
                         :featured_link,
+                        :featured_link_root_domain,
                         :pinned_globally,
                         :pinned_at,
                         :pinned_until
@@ -259,6 +260,10 @@ class TopicViewSerializer < ApplicationSerializer
 
   def include_featured_link?
     SiteSetting.topic_featured_link_enabled
+  end
+
+  def include_featured_link_root_domain?
+    SiteSetting.topic_featured_link_enabled && object.topic.featured_link
   end
 
   def include_unicode_title?
