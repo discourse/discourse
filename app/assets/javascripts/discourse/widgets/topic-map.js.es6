@@ -168,17 +168,16 @@ createWidget('topic-map-expanded', {
 
     const result = [avatars];
     if (attrs.topicLinks) {
-
       const toShow = state.allLinksShown ? attrs.topicLinks : attrs.topicLinks.slice(0, LINKS_SHOWN);
-      const links = toShow.map(l => {
 
+      const links = toShow.map(l => {
         let host = '';
+
         if (l.title && l.title.length) {
-          const domain = l.domain;
-          if (domain && domain.length) {
-            const s = domain.split('.');
-            if (s[0] === 'www') s.shift();
-            host = h('span.domain', s.join('.'));
+          const rootDomain = l.root_domain;
+
+          if (rootDomain && rootDomain.length) {
+            host = h('span.domain', rootDomain);
           }
         }
 
