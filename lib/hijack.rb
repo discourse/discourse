@@ -13,20 +13,8 @@ module Hijack
       request.env['discourse.request_tracker.skip'] = true
       request_tracker = request.env['discourse.request_tracker']
 
-      # in prd the env object is re-used
-      # make a copy of all strings
-      env_copy = {}
-      request.env.each do |k, v|
-        env_copy[k] = v if String === v || Hash === v
-      end
-      # we require that for request initialization
-      env_copy["rack.input"] = StringIO.new
-
-      # params is generated per request so we can simply reuse it
-      params_copy = params
-
-      env_copy["action_dispatch.request.parameters"] = params_copy
-
+      # unicorn will re-cycle env, this ensures we keep the original copy
+      env_copy = request.env.dup
       request_copy = ActionDispatch::Request.new(env_copy)
 
       transfer_timings = MethodProfiler.transfer if defined? MethodProfiler
@@ -49,7 +37,6 @@ module Hijack
           instance.response = response
 
           instance.request = request_copy
-          instance.params = params_copy
 
           begin
             instance.instance_eval(&blk)
@@ -79,10 +66,13 @@ module Hijack
 
           io.write "\r\n"
           io.write body
-          io.close
         rescue Errno::EPIPE, IOError
           # happens if client terminated before we responded, ignore
+          io = nil
         ensure
+
+          io.close if io rescue nil
+
           if request_tracker
             status = instance.status rescue 500
             timings = MethodProfiler.stop if defined? MethodProfiler
