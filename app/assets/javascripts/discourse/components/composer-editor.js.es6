@@ -214,7 +214,8 @@ export default Ember.Component.extend({
     const previewOffsetTop = $preview.offset().top;
     const offset = $preview.scrollTop() - previewOffsetTop - ($input.offset().top - previewOffsetTop);
     const nonEmptyList = [];
-    const scrollMap = Array(numberOfLines).fill(-1);
+    const scrollMap = [];
+    for (let i = 0; i < numberOfLines; i++) { scrollMap.push(-1); };
 
     nonEmptyList.push(0);
     scrollMap[0] = 0;
