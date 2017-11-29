@@ -54,10 +54,7 @@
   border: 1px solid $primary-medium;
   
   textarea {
-    border-top: 1px solid $primary-low;
-    &:focus {
-      border-top: 1px solid $primary-low;      
-    }
+    background: transparent;
   }
 
 }
@@ -76,7 +73,8 @@
   border-bottom: none;
   min-height: 30px;
   padding-left: 3px;
-
+  border-bottom: 1px solid $primary-low;
+  
   button {
     background-color: transparent;
     color: $primary-high;
