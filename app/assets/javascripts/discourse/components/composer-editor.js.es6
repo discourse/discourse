@@ -144,14 +144,6 @@ export default Ember.Component.extend({
         $input.on('scroll', () => {
           this._syncScroll(this._syncEditorAndPreviewScroll, $input, $preview);
         });
-
-        $input.on('keypress', () => {
-          Ember.run.debounce(
-            this,
-            this._syncScroll, this._syncEditorAndPreviewScroll, $input, $preview,
-            200
-          );
-        });
       });
 
       $preview.on('touchstart mouseenter', () => {
@@ -727,6 +719,7 @@ export default Ember.Component.extend({
         Ember.run.debounce(this, this._loadInlineOneboxes, inline, 450);
       }
 
+      this._syncScroll(this._syncEditorAndPreviewScroll, this.$('.d-editor-input'), $preview);
       this.trigger('previewRefreshed', $preview);
       this.sendAction('afterRefresh', $preview);
     },
