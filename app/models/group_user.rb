@@ -65,10 +65,11 @@ class GroupUser < ActiveRecord::Base
 
   def grant_trust_level
     return if group.grant_trust_level.nil?
+
     if (user.group_locked_trust_level || 0) < group.grant_trust_level
-      user.group_locked_trust_level = group.grant_trust_level
-      user.save
+      user.update!(group_locked_trust_level: group.grant_trust_level)
     end
+
     TrustLevelGranter.grant(group.grant_trust_level, user)
   end
 
@@ -84,14 +85,10 @@ class GroupUser < ActiveRecord::Base
     if highest_level.nil?
       # If the user no longer has a group with a trust level,
       # unlock them, start at 0 and consider promotions.
-      user.group_locked_trust_level = nil
-      user.save
-
+      user.update!(group_locked_trust_level: nil)
       Promotion.recalculate(user)
     else
-      user.group_locked_trust_level = highest_level
-      user.save
-
+      user.update!(group_locked_trust_level: highest_level)
       user.change_trust_level!(highest_level)
     end
   end
