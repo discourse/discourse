@@ -13,10 +13,19 @@ class UserAvatarsController < ApplicationController
         user.create_user_avatar(user_id: user.id) unless user.user_avatar
         user.user_avatar.update_gravatar!
 
-        render json: {
-          gravatar_upload_id: user.user_avatar.gravatar_upload_id,
-          gravatar_avatar_template: User.avatar_template(user.username, user.user_avatar.gravatar_upload_id)
-        }
+        gravatar = if user.user_avatar.gravatar_upload_id
+          {
+            gravatar_upload_id: user.user_avatar.gravatar_upload_id,
+            gravatar_avatar_template: User.avatar_template(user.username, user.user_avatar.gravatar_upload_id)
+          }
+        else
+          {
+            gravatar_upload_id: nil,
+            gravatar_avatar_template: nil
+          }
+        end
+
+        render json: gravatar
       end
     else
       raise Discourse::NotFound

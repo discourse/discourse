@@ -320,6 +320,13 @@
 }
 
 .avatar-selector {
+  padding-bottom: 0 !important;
+  label.radio {
+    padding-left: 10px;
+  }
+  .avatar-choice {
+    min-height: 40px;
+  }
   label {
     display: inline-block;
     margin-right: 10px;
@@ -331,6 +338,9 @@
   }
   .avatar {
     margin: 5px 10px 5px 0;
+  }
+  p.error {
+    color: $danger;
   }
 }
 
