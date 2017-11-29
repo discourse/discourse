@@ -136,9 +136,7 @@ export default Ember.Component.extend({
       this.appEvents.on(event, this, this._resetShouldBuildScrollMap);
     });
 
-    Ember.run.schedule("afterRender", () => {
-      $input.scrollTop(0);
-
+    Ember.run.scheduleOnce("afterRender", () => {
       $input.on('touchstart mouseenter', () => {
         if (!$preview.is(":visible")) return;
         $preview.off('scroll');
@@ -216,7 +214,8 @@ export default Ember.Component.extend({
     const previewOffsetTop = $preview.offset().top;
     const offset = $preview.scrollTop() - previewOffsetTop - ($input.offset().top - previewOffsetTop);
     const nonEmptyList = [];
-    const scrollMap = Array(numberOfLines).fill(-1);
+    const scrollMap = [];
+    for (let i = 0; i < numberOfLines; i++) { scrollMap.push(-1); };
 
     nonEmptyList.push(0);
     scrollMap[0] = 0;
@@ -254,22 +253,33 @@ export default Ember.Component.extend({
   },
 
   _syncEditorAndPreviewScroll($input, $preview, scrollMap) {
-    const lineHeight = parseFloat($input.css('line-height'));
-    const lineNumber = Math.floor($input.scrollTop() / lineHeight);
+    let scrollTop;
 
-    $preview.stop(true).animate({
-      scrollTop: scrollMap[lineNumber]
-    }, 100, 'linear');
+    if (($input.height() + $input.scrollTop() + 100) > $input[0].scrollHeight) {
+      scrollTop = $preview[0].scrollHeight;
+    } else {
+      const lineHeight = parseFloat($input.css('line-height'));
+      const lineNumber = Math.floor($input.scrollTop() / lineHeight);
+      scrollTop = scrollMap[lineNumber];
+    }
+
+    $preview.stop(true).animate({ scrollTop }, 100, 'linear');
   },
 
   _syncPreviewAndEditorScroll($input, $preview, scrollMap) {
     if (scrollMap.length < 1) return;
-    const scrollTop = $preview.scrollTop();
-    const lineHeight = parseFloat($input.css('line-height'));
 
-    $input.stop(true).animate({
-      scrollTop: lineHeight * scrollMap.findIndex(offset => offset > scrollTop)
-    }, 100, 'linear');
+    let scrollTop;
+    const previewScrollTop = $preview.scrollTop();
+
+    if (($preview.height() + previewScrollTop + 100) > $preview[0].scrollHeight) {
+      scrollTop = $input[0].scrollHeight;
+    } else {
+      const lineHeight = parseFloat($input.css('line-height'));
+      scrollTop = lineHeight * scrollMap.findIndex(offset => offset > previewScrollTop);
+    }
+
+    $input.stop(true).animate({ scrollTop }, 100, 'linear');
   },
 
   _renderUnseenMentions($preview, unseen) {
@@ -710,6 +720,7 @@ export default Ember.Component.extend({
         Ember.run.debounce(this, this._loadInlineOneboxes, inline, 450);
       }
 
+      this._syncScroll(this._syncEditorAndPreviewScroll, this.$('.d-editor-input'), $preview);
       this.trigger('previewRefreshed', $preview);
       this.sendAction('afterRefresh', $preview);
     },

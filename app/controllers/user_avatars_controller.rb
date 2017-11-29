@@ -13,10 +13,19 @@ class UserAvatarsController < ApplicationController
         user.create_user_avatar(user_id: user.id) unless user.user_avatar
         user.user_avatar.update_gravatar!
 
-        render json: {
-          gravatar_upload_id: user.user_avatar.gravatar_upload_id,
-          gravatar_avatar_template: User.avatar_template(user.username, user.user_avatar.gravatar_upload_id)
-        }
+        gravatar = if user.user_avatar.gravatar_upload_id
+          {
+            gravatar_upload_id: user.user_avatar.gravatar_upload_id,
+            gravatar_avatar_template: User.avatar_template(user.username, user.user_avatar.gravatar_upload_id)
+          }
+        else
+          {
+            gravatar_upload_id: nil,
+            gravatar_avatar_template: nil
+          }
+        end
+
+        render json: gravatar
       end
     else
       raise Discourse::NotFound
@@ -87,7 +96,7 @@ class UserAvatarsController < ApplicationController
     return render_blank if version != OptimizedImage::VERSION
 
     upload_id = upload_id.to_i
-    return render_blank unless upload_id > 0 && user_avatar = user.user_avatar
+    return render_blank unless upload_id > 0
 
     size = params[:size].to_i
     return render_blank if size < 8 || size > 1000
@@ -98,7 +107,7 @@ class UserAvatarsController < ApplicationController
       return redirect_to cdn_path(avatar_url)
     end
 
-    upload = Upload.find_by(id: upload_id) if user_avatar.contains_upload?(upload_id)
+    upload = Upload.find_by(id: upload_id) if user.user_avatar.contains_upload?(upload_id)
     upload ||= user.uploaded_avatar if user.uploaded_avatar_id == upload_id
 
     if user.uploaded_avatar && !upload
