@@ -1266,6 +1266,10 @@ SQL
     result.ntuples != 0
   end
 
+  def featured_link_root_domain
+    MiniSuffix.domain(URI.parse(self.featured_link).hostname)
+  end
+
   private
 
   def update_category_topic_count_by(num)
