@@ -537,12 +537,6 @@ $mobile-breakpoint: 700px;
     }
   }
 
-  .setting.overridden {
-    h3 {
-      color: scale-color($highlight, $lightness: -50%);
-    }
-  }
-
   .setting.overridden.string {
     input[type=text], textarea {
       background-color: $highlight-medium;
