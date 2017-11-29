@@ -32,7 +32,9 @@
           {{input type='number'
                   value=pollStep
                   valueAttribute="value"
+                  min="1"
                   class="poll-options-step"}}
+          {{input-tip validation=minStepValueValidation}}
         </div>
       {{/if}}
     {{/if}}
