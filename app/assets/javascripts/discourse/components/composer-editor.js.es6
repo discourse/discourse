@@ -137,14 +137,20 @@ export default Ember.Component.extend({
     });
 
     Ember.run.schedule("afterRender", () => {
-      $input.scrollTop(0);
-
       $input.on('touchstart mouseenter', () => {
         if (!$preview.is(":visible")) return;
         $preview.off('scroll');
 
         $input.on('scroll', () => {
           this._syncScroll(this._syncEditorAndPreviewScroll, $input, $preview);
+        });
+
+        $input.on('keypress', () => {
+          Ember.run.debounce(
+            this,
+            this._syncScroll, this._syncEditorAndPreviewScroll, $input, $preview,
+            200
+          );
         });
       });
 
