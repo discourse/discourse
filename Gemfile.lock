@@ -177,7 +177,7 @@ GEM
     mini_portile2 (2.3.0)
     mini_racer (0.1.11)
       libv8 (~> 5.7)
-    mini_suffix (0.2.0)
+    mini_suffix (0.3.0)
       ffi (~> 1.9)
     minitest (5.10.3)
     mocha (1.2.1)
