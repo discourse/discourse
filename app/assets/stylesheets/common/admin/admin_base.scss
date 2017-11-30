@@ -539,7 +539,7 @@ $mobile-breakpoint: 700px;
 
   .setting.overridden {
     h3 {
-      color: scale-color($highlight, $lightness: -50%);
+      color: $highlight-high;
     }
   }
 
