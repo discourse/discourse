@@ -310,7 +310,6 @@ export default Ember.Controller.extend({
         if (this.get('model.composeState') === Composer.OPEN) {
           this.shrink();
         } else {
-          debugger;
           this.cancelComposer();
         }
       }
