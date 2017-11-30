@@ -45,12 +45,16 @@ ko:
           other: "< %{count}초"
         x_seconds:
           other: "%{count}초 전"
+        less_than_x_minutes:
+          other: "< %{count}분"
         x_minutes:
           other: "%{count}분 전"
         about_x_hours:
           other: "%{count}시간"
         x_days:
           other: "%{count}일 전"
+        x_months:
+          other: "%{count}달"
         about_x_years:
           other: "%{count}년"
         over_x_years:
@@ -497,6 +501,7 @@ ko:
         disable: "알림 비활성화"
         enable: "알림 활성화"
         each_browser_note: "노트: 사용하시는 모든 브라우저에서 이 설정을 변경해야합니다."
+      dismiss: '해지'
       dismiss_notifications: "모두 해지"
       dismiss_notifications_tooltip: "읽지 않은 알림을 모두 읽음으로 표시"
       first_notification: "당신의 첫 번째 알림입니다! 시작하려면 선택해보세요."
@@ -511,6 +516,7 @@ ko:
       admin: "{{user}}님은 관리자 입니다"
       moderator_tooltip: "이 회원은 운영자 입니다"
       admin_tooltip: "이 회원은 관리자입니다."
+      silenced_tooltip: "이 회원은 차단되었습니다"
       suspended_notice: "이 회원은 {{date}}까지 접근 금지 되었습니다."
       suspended_permanently: "이 회원은 일시정지되었습니다."
       suspended_reason: "사유: "
@@ -562,6 +568,8 @@ ko:
       undo_revoke_access: "접근권환 회수 취소"
       api_approved: "승인됨:"
       theme: "테마"
+      home: "기본 홈페이지"
+      staged: "격리됨"
       staff_counters:
         flags_given: "유용한 신고"
         flagged_posts: "신고된 글"
@@ -769,6 +777,7 @@ ko:
         title: "요약"
         stats: "통계"
         time_read: "읽은 시간"
+        recent_time_read: "최근 읽은 시간"
         topic_count:
           other: "작성 시간"
         post_count:
@@ -779,6 +788,8 @@ ko:
           other: "받음"
         days_visited:
           other: "방문일수"
+        topics_entered:
+          other: "토픽이 표시됨"
         posts_read:
           other: "읽은 글 갯수"
         bookmark_count:
@@ -864,7 +875,8 @@ ko:
     first_post: 첫 번째 글
     mute: 음소거
     unmute: 음소거 해제
-    last_post: 최근 글
+    last_post: 게시날짜
+    time_read: 읽음
     last_reply_lowercase: 마지막 답글
     replies_lowercase:
       other: 답글

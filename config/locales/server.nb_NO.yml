@@ -119,6 +119,7 @@ nb_NO:
   not_logged_in: "Du må være logget inn for å gjøre dette."
   not_found: "Den etterspurte URL eller ressurs ble ikke funnet"
   invalid_access: "Du har ingen tilgang til denne resurssen."
+  invalid_api_credentials: "Du har ikke tillatelse til å se denne forespurte ressuresen. API-brukernavnet eller -nøkkelen er ikke gyldig."
   read_only_mode_enabled: "Siden er i skrivebeskyttet modus. Alle interaksjoner er utilgjengelige."
   reading_time: "Lesetid"
   likes: "Likes"
@@ -774,6 +775,7 @@ nb_NO:
       invalid_email: "Ugyldig e-mail adresse"
       invalid_username: "Ingen bruker med det brukernavnet."
       invalid_integer_min_max: "Verdien må være mellom %{min} og %{max}."
+      invalid_integer: "Verdien må være et heltall."
       invalid_string: "Ugyldig verdi"
       invalid_string_min: "Må være minst %{min} tegn."
       invalid_string_max: "Må ikke være mer enn %{max} tegn."
@@ -910,6 +912,12 @@ nb_NO:
     user_suspended: "Brukeren var suspendert"
     already_read: "bruker har allerede lest dette innlegget"
     message_blank: "meldingen er tom"
+  color_schemes:
+    default: "Lys drakt"
+    dark: "Mørk drakt"
+    default_theme_name: "Forvalg"
+    dark_theme_name: "Mørk"
+    light_theme_name: "Lys"
   about: "Om"
   guidelines: "Retningslinjer"
   privacy: "Personvern"
@@ -917,6 +925,8 @@ nb_NO:
   csv_export:
     boolean_yes: "Ja"
     boolean_no: "Nei"
+  guidelines_topic:
+    title: "O-S-S/retningslinjer"
   tos_topic:
     title: "Bruksvilkår"
   privacy_topic:
@@ -1008,6 +1018,8 @@ nb_NO:
       name: Tekstbehandler
     member:
       name: Medlem
+    welcome:
+      name: Velkommen
     anniversary:
       name: Jubileum
     good_topic:

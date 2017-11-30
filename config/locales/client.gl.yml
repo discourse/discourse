@@ -138,12 +138,16 @@ gl:
         disabled: 'retirado da lista o %{when}'
     topic_admin_menu: "accións do administrador de temas"
     emails_are_disabled: "Todos os correos electrónicos saíntes foron desactivados globalmente por un administrador. Non se enviará ningún tipo de notificación por correo electrónico."
+    themes:
+      default_description: "Predeterminado"
     s3:
       regions:
         ap_northeast_1: "Asia Pacífico (Tokio)"
         ap_northeast_2: "Asia Pacífico (Seúl)"
+        ap_south_1: "Asia Pacífico (Mumbai)"
         ap_southeast_1: "Asia Pacífico (Singapur)"
         ap_southeast_2: "Asia Pacífico (Sidney)"
+        cn_north_1: "China (Beijing)"
         eu_central_1: "EU (Frankfurt)"
         eu_west_1: "EU (Irlanda)"
         sa_east_1: "América do Sur (São Paulo)"
@@ -210,6 +214,7 @@ gl:
       like_count: "Gústames"
       topic_count: "Temas"
       post_count: "Publicacións"
+      user_count: "Usuarios"
       active_user_count: "Usuarios activos"
       contact: "Contacta connosco"
       contact_info: "No caso dunha incidencia crítica ou asunto urxente que afecte este sitio, contacta connosco en %{contact_info}."
@@ -316,6 +321,7 @@ gl:
       add: "Engadir"
       selector_placeholder: "Engadir membros"
       owner: "propietario"
+      activity: "Actividade"
       members: "Membros"
       topics: "Temas"
       posts: "Publicacións"

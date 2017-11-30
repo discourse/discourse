@@ -491,6 +491,7 @@ tr_TR:
         disable: "Bildirimleri Devre Dışı Bırakın"
         enable: "Bildirimleri Etkinleştirin"
         each_browser_note: "Not: Bu ayarı kullandığınız her tarayıcıda değiştirmelisiniz."
+      dismiss: 'Yoksay'
       dismiss_notifications: "Tümünü Yoksay"
       dismiss_notifications_tooltip: "Tüm okunmamış bildirileri okunmuş olarak işaretle"
       first_notification: "İlk bilidiriminiz! Başlamak için seçiniz"
@@ -556,6 +557,7 @@ tr_TR:
       undo_revoke_access: "Erişim İptalini Geri Al"
       api_approved: "Onaylanmış:"
       theme: "Tema"
+      home: "Varsayılan Anasayfa"
       staff_counters:
         flags_given: "yardımcı bildirimler"
         flagged_posts: "bildirilen gönderiler"
@@ -857,7 +859,8 @@ tr_TR:
     first_post: İlk gönderi
     mute: Sustur
     unmute: Susturma
-    last_post: Son gönderi
+    last_post: Gönderilme
+    time_read: Okuma
     last_reply_lowercase: son cevap
     replies_lowercase:
       other: cevap
@@ -1673,6 +1676,10 @@ tr_TR:
           side_by_side_markdown:
             title: "İşlenmemiş diff kaynaklarını yan yana göster"
             button: 'Raw'
+      raw_email:
+        displays:
+          html_part:
+            button: 'HTML'
     category:
       can: 'yapabilir&hellip;'
       none: '(kategori yok)'
@@ -2180,6 +2187,7 @@ tr_TR:
         dispositions:
           agreed: "onaylandı"
           disagreed: "onaylanmadı"
+          deferred: "Yoksayıldı"
         flagged_by: "Bildiren"
         resolved_by: "Çözen"
         took_action: "İşlem uygulandı"
@@ -2190,6 +2198,7 @@ tr_TR:
         visit_topic: "Harekete geçmek için konuyu ziyaret edin"
         was_edited: "İlk bildirimden sonra gönderi düzenlendi"
         previous_flags_count: "Bu gönderi daha önce {{count}} defa bildirilmiş."
+        details: "ayrıntılar"
         flagged_topics:
           topic: "Konu"
           type: "Tür"
@@ -2422,7 +2431,10 @@ tr_TR:
           is_default: "Tema varsayılan olarak etkinleştirildi"
           uploads: "Yüklemeler"
           upload: "Yükle"
+          css_html: "Özel CSS/HTML"
+          edit_css_html: "CSS/HTML Düzenle"
           about_theme: "Tema Hakkında"
+          license: "Lisans"
           check_for_updates: "Güncellemeleri kontrol et"
           updating: "Güncelleniyor..."
           add: "Ekle"
