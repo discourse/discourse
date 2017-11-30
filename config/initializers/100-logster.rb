@@ -32,7 +32,10 @@ if Rails.env.production?
     /^ActiveRecord::RecordNotFound/,
 
     # bad asset requested, no need to log
-    /^ActionController::BadRequest/
+    /^ActionController::BadRequest/,
+
+    # we can't do anything about invalid parameters
+    /Rack::QueryParser::InvalidParameterError/
   ]
 end
 
