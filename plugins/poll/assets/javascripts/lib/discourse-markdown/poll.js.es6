@@ -132,7 +132,7 @@ const rule = {
     let min = parseInt(attrs["min"], 10);
     let max = parseInt(attrs["max"], 10);
     let step = parseInt(attrs["step"], 10);
-    
+
     // infinite loop if step < 1
     if (step < 1) {
       step = 1;
