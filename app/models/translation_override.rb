@@ -2,6 +2,15 @@ require 'js_locale_helper'
 require "i18n/i18n_interpolation_keys_finder"
 
 class TranslationOverride < ActiveRecord::Base
+  # Whitelist i18n interpolation keys that can be included when customizing translations
+  CUSTOM_INTERPOLATION_KEYS_WHITELIST = {
+    "user_notifications.user_" => %w{
+      topic_title_url_encoded
+      site_title_url_encoded
+      context
+    }
+  }
+
   validates_uniqueness_of :translation_key, scope: :locale
   validates_presence_of :locale, :translation_key, :value
 
@@ -41,12 +50,23 @@ class TranslationOverride < ActiveRecord::Base
       if original_text
         original_interpolation_keys = I18nInterpolationKeysFinder.find(original_text)
         new_interpolation_keys = I18nInterpolationKeysFinder.find(value)
-        missing_keys = (original_interpolation_keys - new_interpolation_keys)
 
-        if missing_keys.present?
+        custom_interpolation_keys = []
+
+        CUSTOM_INTERPOLATION_KEYS_WHITELIST.select do |key, value|
+          if self.translation_key.start_with?(key)
+            custom_interpolation_keys = value
+          end
+        end
+
+        invalid_keys = (original_interpolation_keys | new_interpolation_keys) -
+          original_interpolation_keys -
+          custom_interpolation_keys
+
+        if invalid_keys.present?
           self.errors.add(:base, I18n.t(
-            'activerecord.errors.models.translation_overrides.attributes.value.missing_interpolation_keys',
-            keys: missing_keys.join(', ')
+            'activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys',
+            keys: invalid_keys.join(', ')
           ))
 
           return false

@@ -113,27 +113,52 @@ RSpec.describe Admin::EmailTemplatesController do
       end
 
       context "when subject is invalid" do
-        let(:email_subject) { 'Subject with missing interpolation key' }
-        let(:email_body) { 'The body contains [%{site_name}](%{base_url}) and %{email_token}.' }
-        let(:expected_errors) { ['<b>Subject</b>: The following interpolation key(s) are missing: "email_prefix"'] }
+        let(:email_subject) { '%{email_wrongfix} Foo' }
+        let(:email_body) { 'Body with missing interpolation keys' }
+
+        let(:expected_errors) do
+          [
+            "<b>Subject</b>: #{I18n.t(
+              'activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys',
+              keys: 'email_wrongfix'
+            )}"
+          ]
+        end
 
         include_examples "invalid email template"
       end
 
       context "when body is invalid" do
-        let(:email_subject) { '%{email_prefix} Foo' }
-        let(:email_body) { 'Body with some missing interpolation keys: %{email_token}' }
-        let(:expected_errors) { ['<b>Body</b>: The following interpolation key(s) are missing: "site_name, base_url"'] }
+        let(:email_subject) { 'Subject with missing interpolation key' }
+        let(:email_body) { 'Body with %{invalid} interpolation key' }
+
+        let(:expected_errors) do
+          [
+            "<b>Body</b>: #{I18n.t(
+              'activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys',
+              keys: 'invalid'
+            )}"
+          ]
+        end
 
         include_examples "invalid email template"
       end
 
       context "when subject and body are invalid invalid" do
-        let(:email_subject) { 'Subject with missing interpolation key' }
-        let(:email_body) { 'Body with some missing interpolation keys: %{email_token}' }
+        let(:email_subject) { 'Subject with %{invalid} interpolation key' }
+        let(:email_body) { 'Body with some invalid interpolation keys: %{invalid}' }
+
         let(:expected_errors) do
-          ['<b>Subject</b>: The following interpolation key(s) are missing: "email_prefix"',
-           '<b>Body</b>: The following interpolation key(s) are missing: "site_name, base_url"']
+          [
+            "<b>Subject</b>: #{I18n.t(
+              'activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys',
+              keys: 'invalid'
+            )}",
+            "<b>Body</b>: #{I18n.t(
+              'activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys',
+              keys: 'invalid'
+            )}",
+          ]
         end
 
         include_examples "invalid email template"

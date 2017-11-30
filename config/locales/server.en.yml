@@ -424,7 +424,7 @@ en:
         translation_overrides:
           attributes:
             value:
-              missing_interpolation_keys: 'The following interpolation key(s) are missing: "%{keys}"'
+              invalid_interpolation_keys: 'The following interpolation key(s) are invalid: "%{keys}"'
         watched_word:
           attributes:
             word:
