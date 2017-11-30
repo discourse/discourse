@@ -1287,6 +1287,13 @@ en:
       admin_options_title: "Optional staff settings for this topic"
 
     notifications:
+      tooltip:
+        regular:
+          one: "1 unseen notification"
+          other: "{{count}} unseen notifications"
+        message:
+          one: "1 unread message"
+          other: "{{count}} unread messages"
       title: "notifications of @name mentions, replies to your posts and topics, messages, etc"
       none: "Unable to load notifications at this time."
       empty: "No notifications found."
