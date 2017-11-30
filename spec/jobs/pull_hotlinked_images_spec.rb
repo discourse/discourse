@@ -15,9 +15,21 @@ describe Jobs::PullHotlinkedImages do
     stub_request(:head, broken_image_url).to_return(status: 404)
     stub_request(:get, large_image_url).to_return(body: large_png, headers: { "Content-Type" => "image/png" })
     stub_request(:head, large_image_url)
+    SiteSetting.crawl_images = true
     SiteSetting.download_remote_images_to_local = true
     SiteSetting.max_image_size_kb = 2
     SiteSetting.download_remote_images_threshold = 0
+  end
+
+  describe "#nochange" do
+    it 'does saves nothing if there are no large images to pull' do
+      post = Fabricate(:post, raw: 'bob bob')
+      orig = post.updated_at
+
+      freeze_time 1.week.from_now
+      Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
+      expect(orig).to be_within(1.second).of(post.reload.updated_at)
+    end
   end
 
   describe '#execute' do
@@ -88,7 +100,6 @@ describe Jobs::PullHotlinkedImages do
         Jobs::ProcessPost.new.execute(post_id: post.id)
         Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
         Jobs::ProcessPost.new.execute(post_id: post.id)
-
         post.reload
 
         expect(post.cooked).to match(/<img src=.*\/uploads/)
@@ -111,30 +122,8 @@ describe Jobs::PullHotlinkedImages do
         expect(post.cooked).to match(/<p><img src=.*\/uploads/)
         expect(post.cooked).to match(/<img src=.*\/uploads.*\ class="thumbnail"/)
         expect(post.cooked).to match(/<span class="broken-image fa fa-chain-broken/)
-        expect(post.cooked).to match(/<\/a><br><a href=.*\ target="_blank" .*\><span class="large-image fa fa-picture-o"><\/span><\/a>/)
+        expect(post.cooked).to match(/<div class="large-image-placeholder">/)
       end
-    end
-  end
-
-  describe 'replace' do
-    it 'broken image with placeholder' do
-      post = Fabricate(:post, raw: "<img src='#{broken_image_url}'>")
-
-      Jobs::ProcessPost.new.execute(post_id: post.id)
-      Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
-      post.reload
-
-      expect(post.cooked).to match(/<span class="broken-image fa fa-chain-broken/)
-    end
-
-    it 'large image with placeholder' do
-      post = Fabricate(:post, raw: "<img src='#{large_image_url}'>")
-
-      Jobs::ProcessPost.new.execute(post_id: post.id)
-      Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
-      post.reload
-
-      expect(post.cooked).to match(/<a href=.*\ target="_blank" .*\><span class="large-image fa fa-picture-o"><\/span><\/a>/)
     end
   end
 

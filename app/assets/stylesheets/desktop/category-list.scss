@@ -116,14 +116,24 @@
 
 .categories-and-latest {
   display: flex;
-  flex-direction: row;
+  flex-flow: row wrap;
 
   div.column {
     flex: 1;
+    flex-direction: row;
+    min-width: 300px;
   }
 
   div.column.categories {
-    margin-right: 2em;
+    @media all and (max-width : 600px) {
+      margin-right: 0;
+    }
+    @media all and (min-width : 600px) {
+      margin-right: 1em;
+    }
+    @media all and (min-width : 700px) {
+      margin-right: 2em;
+    }
   }
 
   .discourse-tag {

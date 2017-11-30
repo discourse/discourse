@@ -4,8 +4,6 @@ class OneboxController < ApplicationController
   before_action :ensure_logged_in
 
   def show
-    params.require(:user_id)
-
     unless params[:refresh] == 'true'
       preview = Oneboxer.cached_preview(params[:url])
       preview.strip! if preview.present?
@@ -13,21 +11,25 @@ class OneboxController < ApplicationController
     end
 
     # only 1 outgoing preview per user
-    return render(body: nil, status: 429) if Oneboxer.is_previewing?(params[:user_id])
+    return render(body: nil, status: 429) if Oneboxer.is_previewing?(current_user.id)
 
-    Oneboxer.preview_onebox!(params[:user_id])
+    user_id = current_user.id
+    invalidate = params[:refresh] == 'true'
+    url = params[:url]
 
-    preview = Oneboxer.preview(params[:url], invalidate_oneboxes: params[:refresh] == 'true')
-    preview.strip! if preview.present?
+    hijack do
+      Oneboxer.preview_onebox!(user_id)
 
-    Scheduler::Defer.later("Onebox previewed") {
-      Oneboxer.onebox_previewed!(params[:user_id])
-    }
+      preview = Oneboxer.preview(url, invalidate_oneboxes: invalidate)
+      preview.strip! if preview.present?
 
-    if preview.blank?
-      render body: nil, status: 404
-    else
-      render plain: preview
+      Oneboxer.onebox_previewed!(user_id)
+
+      if preview.blank?
+        render body: nil, status: 404
+      else
+        render plain: preview
+      end
     end
   end
 

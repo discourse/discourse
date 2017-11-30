@@ -402,6 +402,8 @@ describe Invite do
 
       expect(invites.length).to eq(1)
       expect(invites.first).to eq pending_invite
+
+      expect(Invite.find_pending_invites_count(inviter)).to eq(1)
     end
   end
 
@@ -426,6 +428,8 @@ describe Invite do
 
       expect(invites.length).to eq(1)
       expect(invites.first).to eq redeemed_invite
+
+      expect(Invite.find_redeemed_invites_count(inviter)).to eq(1)
     end
   end
 

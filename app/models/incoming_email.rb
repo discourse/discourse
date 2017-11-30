@@ -4,6 +4,8 @@ class IncomingEmail < ActiveRecord::Base
   belongs_to :post
 
   scope :errored,  -> { where("NOT is_bounce AND error IS NOT NULL") }
+
+  scope :addressed_to, -> (email) { where('incoming_emails.to_addresses ILIKE :email OR incoming_emails.cc_addresses ILIKE :email', email: "%#{email}%") }
 end
 
 # == Schema Information

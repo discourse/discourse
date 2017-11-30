@@ -270,6 +270,18 @@ class Theme < ActiveRecord::Base
     end
   end
 
+  def all_theme_variables
+    fields = {}
+    ([self] + (included_themes || [])).each do |theme|
+      theme&.theme_fields.each do |field|
+        next unless ThemeField.theme_var_type_ids.include?(field.type_id)
+        next if fields.key?(field.name)
+        fields[field.name] = field
+      end
+    end
+    fields.values
+  end
+
   def add_child_theme!(theme)
     child_theme_relation.create!(child_theme_id: theme.id)
     @included_themes = nil

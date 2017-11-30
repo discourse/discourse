@@ -412,7 +412,8 @@ class PostCreator
       attrs[:word_count] = (@topic.word_count || 0) + @post.word_count
       attrs[:excerpt] = @post.excerpt(220, strip_links: true) if new_topic?
       attrs[:bumped_at] = @post.created_at unless @post.no_bump
-      @topic.update_attributes(attrs)
+      attrs[:updated_at] = 'now()'
+      @topic.update_columns(attrs)
     end
   end
 
@@ -473,7 +474,7 @@ class PostCreator
     end
 
     unless @post.topic.private_message?
-      @user.user_stat.post_count += 1
+      @user.user_stat.post_count += 1 if @post.post_type == Post.types[:regular] && !@post.is_first_post?
       @user.user_stat.topic_count += 1 if @post.is_first_post?
     end
 

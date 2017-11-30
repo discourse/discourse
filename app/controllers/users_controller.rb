@@ -8,7 +8,7 @@ require_dependency 'admin_confirmation'
 class UsersController < ApplicationController
 
   skip_before_action :authorize_mini_profiler, only: [:avatar]
-  skip_before_action :check_xhr, only: [:show, :password_reset, :update, :account_created, :activate_account, :perform_account_activation, :user_preferences_redirect, :avatar, :my_redirect, :toggle_anon, :admin_login, :confirm_admin]
+  skip_before_action :check_xhr, only: [:show, :badges, :password_reset, :update, :account_created, :activate_account, :perform_account_activation, :user_preferences_redirect, :avatar, :my_redirect, :toggle_anon, :admin_login, :confirm_admin]
 
   before_action :ensure_logged_in, only: [:username, :update, :user_preferences_redirect, :upload_user_image,
                                           :pick_avatar, :destroy_user_image, :destroy, :check_emails, :topic_tracking_state]
@@ -67,12 +67,18 @@ class UsersController < ApplicationController
       format.html do
         @restrict_fields = guardian.restrict_user_fields?(@user)
         store_preloaded("user_#{@user.username}", MultiJson.dump(user_serializer))
+        render :show
       end
 
       format.json do
         render_json_dump(user_serializer)
       end
     end
+  end
+
+  def badges
+    raise Discourse::NotFound unless SiteSetting.enable_badges?
+    show
   end
 
   def card_badge
@@ -465,7 +471,10 @@ class UsersController < ApplicationController
         if @error
           render layout: 'no_ember'
         else
-          store_preloaded("password_reset", MultiJson.dump(is_developer: UsernameCheckerService.is_developer?(@user.email)))
+          store_preloaded(
+            "password_reset",
+            MultiJson.dump(is_developer: UsernameCheckerService.is_developer?(@user.email), admin: @user.admin?)
+          )
         end
         return redirect_to(wizard_path) if request.put? && Wizard.user_requires_completion?(@user)
       end
@@ -477,7 +486,8 @@ class UsersController < ApplicationController
               success: false,
               message: @error,
               errors: @user&.errors.to_hash,
-              is_developer: UsernameCheckerService.is_developer?(@user.email)
+              is_developer: UsernameCheckerService.is_developer?(@user.email),
+              admin: @user.admin?
             }
           else
             render json: {
@@ -488,7 +498,7 @@ class UsersController < ApplicationController
             }
           end
         else
-          render json: { is_developer: UsernameCheckerService.is_developer?(@user.email) }
+          render json: { is_developer: UsernameCheckerService.is_developer?(@user.email), admin: @user.admin? }
         end
       end
     end
@@ -633,9 +643,9 @@ class UsersController < ApplicationController
       @user = User.where(id: user_key.to_i).first
     end
 
-    raise Discourse::InvalidAccess.new unless @user.present?
-    raise Discourse::InvalidAccess.new if @user.active?
-    raise Discourse::InvalidAccess.new if current_user.present?
+    if @user.blank? || @user.active? || current_user.present?
+      raise Discourse::InvalidAccess.new
+    end
 
     User.transaction do
       primary_email = @user.primary_email
@@ -644,7 +654,7 @@ class UsersController < ApplicationController
       primary_email.skip_validate_email = false
 
       if primary_email.save
-        @user.email_tokens.create(email: @user.email)
+        @user.email_tokens.create!(email: @user.email)
         enqueue_activation_email
         render json: success_json
       else
@@ -684,7 +694,7 @@ class UsersController < ApplicationController
   end
 
   def enqueue_activation_email
-    @email_token ||= @user.email_tokens.create(email: @user.email)
+    @email_token ||= @user.email_tokens.create!(email: @user.email)
     Jobs.enqueue(:critical_user_email, type: :signup, user_id: @user.id, email_token: @email_token.token, to_address: @user.email)
   end
 
@@ -710,23 +720,23 @@ class UsersController < ApplicationController
 
     to_render = { users: results.as_json(only: user_fields, methods: [:avatar_template]) }
 
-    if params[:include_groups] == "true"
-      to_render[:groups] = Group.search_group(term).map do |m|
-        { name: m.name, full_name: m.full_name }
-      end
-    end
-
-    if current_user
-      groups =
+    groups =
+      if current_user
         if params[:include_mentionable_groups] == 'true'
           Group.mentionable(current_user)
         elsif params[:include_messageable_groups] == 'true'
           Group.messageable(current_user)
         end
+      end
 
-      if groups
-        to_render[:groups] = groups.where("name ILIKE :term_like", term_like: "#{term}%")
-          .map { |m| { name: m.name, full_name: m.full_name } }
+    include_groups = params[:include_groups] == "true"
+
+    if include_groups || groups
+      groups = Group.search_groups(term, groups: groups)
+      groups = groups.where(visibility_level: Group.visibility_levels[:public]) if include_groups
+
+      to_render[:groups] = groups.map do |m|
+        { name: m.name, full_name: m.full_name }
       end
     end
 

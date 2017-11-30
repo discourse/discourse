@@ -46,6 +46,12 @@ const CLOSED = 'closed',
         featuredLink: 'topic.featured_link'
       };
 
+const _saveLabels = {};
+_saveLabels[EDIT] = 'composer.save_edit';
+_saveLabels[REPLY] = 'composer.reply';
+_saveLabels[CREATE_TOPIC] = 'composer.create_topic';
+_saveLabels[PRIVATE_MESSAGE] = 'composer.create_pm';
+
 const Composer = RestModel.extend({
   _categoryId: null,
   unlistTopic: false,
@@ -85,7 +91,7 @@ const Composer = RestModel.extend({
 
   @computed("privateMessage", "archetype.hasOptions")
   showCategoryChooser(isPrivateMessage, hasOptions) {
-    const manyCategories = Discourse.Category.list().length > 1;
+    const manyCategories = this.site.get('categories').length > 1;
     return !isPrivateMessage && (hasOptions || manyCategories);
   },
 
@@ -250,14 +256,9 @@ const Composer = RestModel.extend({
     }
   },
 
-  @computed('action')
-  saveLabel(action) {
-    switch (action) {
-      case EDIT: return 'composer.save_edit';
-      case REPLY: return 'composer.reply';
-      case CREATE_TOPIC: return 'composer.create_topic';
-      case PRIVATE_MESSAGE: return 'composer.create_pm';
-    }
+  @computed('action', 'whisper')
+  saveLabel(action, whisper) {
+    return whisper ? 'composer.create_whisper' : _saveLabels[action];
   },
 
   hasMetaData: function() {
@@ -273,6 +274,16 @@ const Composer = RestModel.extend({
   replyDirty: function() {
     return this.get('reply') !== this.get('originalText');
   }.property('reply', 'originalText'),
+
+  /**
+    Did the user make changes to the topic title?
+
+    @property titleDirty
+  **/
+  @computed('title', 'originalTitle')
+  titleDirty(title, originalTitle) {
+    return title !== originalTitle;
+  },
 
   /**
     Number of missing characters in the title until valid.
@@ -481,7 +492,7 @@ const Composer = RestModel.extend({
     this.set('categoryId', opts.categoryId || this.get('topic.category.id'));
 
     if (!this.get('categoryId') && this.get('creatingTopic')) {
-      const categories = Discourse.Category.list();
+      const categories = this.site.get('categories');
       if (categories.length === 1) {
         this.set('categoryId', categories[0].get('id'));
       }
@@ -518,6 +529,9 @@ const Composer = RestModel.extend({
     }
     if (opts.title) { this.set('title', opts.title); }
     this.set('originalText', opts.draft ? '' : this.get('reply'));
+    if (this.get('editingFirstPost')) {
+      this.set('originalTitle', this.get('title'));
+    }
 
     return false;
   },
@@ -740,10 +754,18 @@ const Composer = RestModel.extend({
   saveDraft() {
     // Do not save when drafts are disabled
     if (this.get('disableDrafts')) return;
-    // Do not save when there is no reply
-    if (!this.get('reply')) return;
-    // Do not save when the reply's length is too small
-    if (this.get('replyLength') < this.siteSettings.min_post_length) return;
+
+    if (this.get('canEditTitle')) {
+      // Save title and/or post body
+      if (!this.get('title') && !this.get('reply')) return;
+      if (this.get('title') && this.get('titleLengthValid') &&
+        this.get('reply') && this.get('replyLength') < this.siteSettings.min_post_length) return;
+    } else {
+      // Do not save when there is no reply
+      if (!this.get('reply')) return;
+      // Do not save when the reply's length is too small
+      if (this.get('replyLength') < this.siteSettings.min_post_length) return;
+    }
 
     const data = {
       reply: this.get('reply'),

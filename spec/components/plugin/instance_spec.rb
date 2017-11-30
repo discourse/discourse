@@ -95,6 +95,18 @@ describe Plugin::Instance do
     end
   end
 
+  context "register service worker" do
+    it "populates the DiscoursePluginRegistry" do
+      plugin = Plugin::Instance.new nil, "/tmp/test.rb"
+      plugin.register_service_worker("test.js")
+      plugin.register_service_worker("test2.js")
+
+      plugin.send :register_service_workers!
+
+      expect(DiscoursePluginRegistry.service_workers.count).to eq(2)
+    end
+  end
+
   context "activate!" do
     it "can activate plugins correctly" do
       plugin = Plugin::Instance.new
@@ -149,6 +161,14 @@ describe Plugin::Instance do
   end
 
   context "serialized_current_user_fields" do
+    before do
+      DiscoursePluginRegistry.serialized_current_user_fields << "has_car"
+    end
+
+    after do
+      DiscoursePluginRegistry.serialized_current_user_fields.delete "has_car"
+    end
+
     it "correctly serializes custom user fields" do
       DiscoursePluginRegistry.serialized_current_user_fields << "has_car"
       user = Fabricate(:user)
@@ -157,6 +177,18 @@ describe Plugin::Instance do
 
       payload = JSON.parse(CurrentUserSerializer.new(user, scope: Guardian.new(user)).to_json)
       expect(payload["current_user"]["custom_fields"]["has_car"]).to eq("true")
+
+      payload = JSON.parse(UserSerializer.new(user, scope: Guardian.new(user)).to_json)
+      expect(payload["user"]["custom_fields"]["has_car"]).to eq("true")
+
+      UserCustomField.destroy_all
+      user.reload
+
+      payload = JSON.parse(CurrentUserSerializer.new(user, scope: Guardian.new(user)).to_json)
+      expect(payload["current_user"]["custom_fields"]).to eq({})
+
+      payload = JSON.parse(UserSerializer.new(user, scope: Guardian.new(user)).to_json)
+      expect(payload["user"]["custom_fields"]).to eq({})
     end
   end
 

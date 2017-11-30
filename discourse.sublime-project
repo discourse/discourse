@@ -16,7 +16,7 @@
     { "path": "script" },
     { "path": "spec" },
     { "path": "vendor" },
-    { "path": "test" },
+    { "path": "test" }
   ],
   "settings":
   {

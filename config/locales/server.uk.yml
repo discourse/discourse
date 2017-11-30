@@ -19,7 +19,6 @@ uk:
     incoming:
       errors:
         inactive_user_error: "Таке трапляється, якщо відправник не активний"
-        blocked_user_error: "Таке трапляється, якщо відправника було заблоковано"
   errors: &errors
     messages:
       accepted: має бути прийнятий
@@ -311,7 +310,6 @@ uk:
     email_custom_headers: "Список заголовків електронної пошти, розділених вертикальною рискою"
     enable_long_polling: "Message bus used for notification can use long polling"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
-    notify_mods_when_user_blocked: "Якщо користувача автоматично заблоковано, надіслати повідомлення всім модераторам."
     ga_universal_tracking_code: "Код відстеження Google Universal Analytics (analytics.js), напр.: UA-12345678-9; див. http://google.com/analytics"
     ga_universal_domain_name: "Доменне ім'я Google Universal Analytics (analytics.js), напр.: mysite.com; див. http://google.com/analytics"
     post_menu: "Визначає, які елементи з'являються в меню допису, та в якому порядку. Наприклад, like|edit|flag|delete|share|bookmark|reply"

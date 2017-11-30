@@ -18,20 +18,26 @@
 
           {{text-field id="edit-title" value=buffered.title maxlength=siteSettings.max_topic_title_length autofocus="true"}}
           {{#if showCategoryChooser}}
-            <br>
             {{category-chooser class="small" value=buffered.category_id}}
           {{/if}}
 
           {{#if canEditTags}}
-            <br>
             {{tag-chooser tags=buffered.tags categoryId=buffered.category_id}}
           {{/if}}
 
           {{plugin-outlet name="edit-topic" args=(hash model=model buffered=buffered)}}
 
-          <br>
-          {{d-button action="finishedEditingTopic" class="btn-primary btn-small submit-edit" icon="check"}}
-          {{d-button action="cancelEditingTopic" class="btn-small cancel-edit" icon="times"}}
+          <div class="edit-controls">
+            {{d-button action="finishedEditingTopic" class="btn-primary btn-small submit-edit" icon="check"}}
+            {{d-button action="cancelEditingTopic" class="btn-small cancel-edit" icon="times"}}
+
+            {{#if canRemoveTopicFeaturedLink}}
+              <a href {{action "removeFeaturedLink"}} class="remove-featured-link" title="{{i18n "composer.remove_featured_link"}}">
+                {{d-icon "times-circle"}}
+                {{featuredLinkDomain}}
+              </a>
+            {{/if}}
+          </div>
         {{else}}
           <h1>
             {{#unless model.is_warning}}
@@ -85,6 +91,7 @@
 
           {{topic-timeline
             topic=model
+            notificationLevel=model.details.notification_level
             prevEvent=info.prevEvent
             fullscreen=info.topicProgressExpanded
             enteredIndex=enteredIndex

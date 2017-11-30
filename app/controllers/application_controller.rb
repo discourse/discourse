@@ -11,12 +11,14 @@ require_dependency 'distributed_cache'
 require_dependency 'global_path'
 require_dependency 'secure_session'
 require_dependency 'topic_query'
+require_dependency 'hijack'
 
 class ApplicationController < ActionController::Base
   include CurrentUser
   include CanonicalURL::ControllerExtensions
   include JsonError
   include GlobalPath
+  include Hijack
 
   attr_reader :theme_key
 
@@ -308,7 +310,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_homepage
-    current_user ? SiteSetting.homepage : SiteSetting.anonymous_homepage
+    current_user&.user_option&.homepage || SiteSetting.anonymous_homepage
   end
 
   def serialize_data(obj, serializer, opts = nil)
@@ -465,9 +467,9 @@ class ApplicationController < ActionController::Base
         data.merge! DiscoursePluginRegistry.custom_html
       end
 
-      DiscoursePluginRegistry.html_builders.each do |name, blk|
+      DiscoursePluginRegistry.html_builders.each do |name, _|
         if name.start_with?("client:")
-          data[name.sub(/^client:/, '')] = blk.call(self)
+          data[name.sub(/^client:/, '')] = DiscoursePluginRegistry.build_html(name, self)
         end
       end
 
@@ -596,6 +598,11 @@ class ApplicationController < ActionController::Base
     end
 
     def build_not_found_page(status = 404, layout = false)
+      if SiteSetting.bootstrap_error_pages?
+        preload_json
+        layout = 'application' if layout == 'no_ember'
+      end
+
       category_topic_ids = Category.pluck(:topic_id).compact
       @container_class = "wrap not-found-container"
       @top_viewed = TopicQuery.new(nil, except_topic_ids: category_topic_ids).list_top_for("monthly").topics.first(10)

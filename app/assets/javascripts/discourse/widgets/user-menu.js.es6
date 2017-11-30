@@ -1,5 +1,7 @@
 import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
+import { formatUsername } from 'discourse/lib/utilities';
+import { ajax } from 'discourse/lib/ajax';
 
 let extraGlyphs;
 
@@ -50,7 +52,7 @@ createWidget('user-menu-links', {
       model: currentUser,
       className: 'user-activity-link',
       icon: 'user',
-      rawLabel: currentUser.username
+      rawLabel: formatUsername(currentUser.username)
     };
 
     if (currentUser.is_anonymous) {
@@ -86,6 +88,38 @@ createWidget('user-menu-links', {
   }
 });
 
+createWidget('user-menu-dismiss-link', {
+  tagName: 'div.dismiss-link',
+  buildKey: () => 'user-menu-dismiss-link',
+
+  html() {
+    if (userNotifications.state.notifications.filterBy("read", false).length > 0) {
+      return h('ul.menu-links',
+        h('li',
+          this.attach('link', {
+            action: 'dismissNotifications',
+            className: 'dismiss',
+            icon: 'check',
+            label: 'user.dismiss',
+            title: 'user.dismiss_notifications_tooltip'
+          })
+        )
+      );
+    } else {
+      return '';
+    }
+  },
+
+  dismissNotifications() {
+    ajax('/notifications/mark-read', { method: 'PUT' }).then(() => {
+      userNotifications.notificationsChanged();
+    });
+  }
+});
+
+let userNotifications = null,
+  dismissLink = null;
+
 export default createWidget('user-menu', {
   tagName: 'div.user-menu',
 
@@ -95,16 +129,26 @@ export default createWidget('user-menu', {
 
   panelContents() {
     const path = this.currentUser.get('path');
+    userNotifications = this.attach('user-notifications', { path });
+    dismissLink = this.attach('user-menu-dismiss-link');
 
-    return [this.attach('user-menu-links', { path }),
-            this.attach('user-notifications', { path }),
-            h('div.logout-link', [
-              h('ul.menu-links',
-                h('li', this.attach('link', { action: 'logout',
-                                                       className: 'logout',
-                                                       icon: 'sign-out',
-                                                       label: 'user.log_out' })))
-              ])];
+    return [
+      this.attach('user-menu-links', { path }),
+      userNotifications,
+      h('div.logout-link', [
+        h('ul.menu-links',
+          h('li',
+            this.attach('link', {
+              action: 'logout',
+              className: 'logout',
+              icon: 'sign-out',
+              label: 'user.log_out'
+            })
+          )
+        )
+      ]),
+      dismissLink
+    ];
   },
 
   html() {

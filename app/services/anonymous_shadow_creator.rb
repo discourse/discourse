@@ -17,7 +17,7 @@ class AnonymousShadowCreator
     if (shadow_id = user.custom_fields["shadow_id"].to_i) > 0
       shadow = User.find_by(id: shadow_id)
 
-      if shadow && shadow.post_count > 0 &&
+      if shadow && (shadow.post_count + shadow.topic_count) > 0 &&
           shadow.last_posted_at < SiteSetting.anonymous_account_duration_minutes.minutes.ago
         shadow = nil
       end
@@ -39,7 +39,7 @@ class AnonymousShadowCreator
         username: username,
         active: true,
         trust_level: 1,
-        trust_level_locked: true,
+        manual_locked_trust_level: 1,
         created_at: 1.day.ago # bypass new user restrictions
       )
 

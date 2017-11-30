@@ -48,7 +48,6 @@ he:
         no_body_detected_error: "קורה כאשר לא הצלחנו לחלץ גוף ולא היו קבצים מצורפים."
         no_sender_detected_error: "קורה כשאנחנו לא מצליחים כתובת מייל תקינה בכותרת ״From״."
         inactive_user_error: "קורה כאשר השולח אינו פעיל."
-        blocked_user_error: "קורה כאשר השולח נחסם."
         bad_destination_address: "קורה כאשר אף אחת מהכתובות ב To/CC/Bcc לא מתאימה לאף כתובת מייל נכנסת."
         strangers_not_allowed_error: "מתרחש כאשר משתמשים מנסים ליצור נושא חדש בקטגוריה בה הם אינם חברים."
         insufficient_trust_level_error: "מתרחש כאשר משתמשים מנסים ליצור נושא חדש בקטגוריה בה אין להם את רמת האמון/הרשאה הנדרשת."
@@ -932,19 +931,12 @@ he:
     tl2_additional_likes_per_day_multiplier: "להגדיל את כמות הלייקים האפשרית ביום עבור tl2 (משתמש) באמצעות הכפלה במספר זה. "
     tl3_additional_likes_per_day_multiplier: "להגדיל את כמות הלייקים האפשרית ביום עבור רמת-אמון 3 (רגיל) באמצעות הכפלה במספר זה."
     tl4_additional_likes_per_day_multiplier: "להגדיל את כמות הלייקים האפשרית ביום עבור tl4 (מנהיג) באמצעות הכפלה במספר זה. "
-    num_spam_flags_to_block_new_user: "אם פוסטים של משתמשים חדשים מקבלים כמות זו של דגלי ספאם מ num_users_to_block_new_user משתמשים אחרים, הסתירו את הפוסטים שלהם ומנעו מהם פרסומים בעתיד. 0 לניטרול."
-    num_users_to_block_new_user: "אם פוסטים של משתמשים חדשים מקבלים num_spam_flags_to_block_new_user דגלי ספאם מכמות זו של משתמשים שונים, הסתירו את הפוסטים שלהם ומנעו פרסומים עתידיים. 0 לניטרול."
-    num_tl3_flags_to_block_new_user: "אם פוסטים של משתמשים חדשים מקבלים כמות זו של דגלים מ num_tl3_users_to_block_new_user משתמשים שונים ברמת אמון 3, הסתירו את כל הפוסטים שלהם ומנעו פרסומים עתידיים. 0 לניטרול."
-    num_tl3_users_to_block_new_user: "אם פוסטים של משתמשים חדשים מקבלים num_tl3_flags_to_block_new_user דגלים מכמות זו של משתמשים ברמת אמון 3, הסתירו את הפוסטים שלהם ומנעו פרסומים עתידיים. 0 לניטרול."
-    notify_mods_when_user_blocked: "אם משתמש נחסם אוטומטית, שילחו הודעה לכל המנחים."
     flag_sockpuppets: "אם משתמשים חדשים מגיבים לנושא מכתובת IP זהה לזו של מי שהחל את הנושא, סמנו את הפוסטים של שניהם כספאם פוטנציאלי."
     traditional_markdown_linebreaks: "שימוש בשבירת שורות מסורתית בסימון, מה שדורש שני רווחים עוקבים למעבר שורה."
     post_undo_action_window_mins: "מספר הדקות בהן מתאפשר למשתמשים לבטל פעולות אחרות בפוסט (לייק, סימון, וכו')."
     must_approve_users: "על הצוות לאשר את כל המשתמשים החדשים לפני שהם מקבלים גישה לאתר. אזהרה: בחירה זו עבור אתר קיים תשלול גישה ממשתמשים קיימים שאינם מנהלים."
     pending_users_reminder_delay: "הודיעו למנחים אם משתמשים חדשים ממתינים לאישור למעלה מכמות זו של שעות. קבעו ל -1 כדי לנטרל התראות."
     maximum_session_age: "משתמשים ישארו מחוברים ל n שעות מאז ביקורם האחרון"
-    ga_tracking_code: "מיושן: קוד גוגל אנליטיקס (ga.js) למעקב, כגון: UA-12345678-9ֿ; ראו http://google.com/analytics"
-    ga_domain_name: "מיושן: שם מתחם (דומיין) לגוגל אנליטיקס (ga.js), למשל: mysite.com; ראו http://google.com/analytics"
     ga_universal_tracking_code: "קוד מעקב של (Google Universal Analytics (analytics.js, למשל: UA-12345678-9; ראו http://google.com/analytics"
     ga_universal_domain_name: "שם המתחם של (Google Universal Analytics analytics.js), למשל: mysite.com; ראו http://google.com/analytics"
     gtm_container_id: "מזהה קונטיינר של מנהל תגיות גוגל. למשל: GTM-ABCDEF"
@@ -1170,9 +1162,6 @@ he:
     num_hours_to_close_topic: "מספר שעות לעצירת נושא לצורך התערבות."
     auto_respond_to_flag_actions: "אפשרו תגובה אוטמטית עם הסרת דגל."
     min_first_post_typing_time: "זמן מינימלי במילי-שניות שמשתמש חייב להקיש בזמן הפוסט הראשון, אם הסף לא נעבר הפוסט אוטומטית יכנס לתור של אלו שצריכים אישור. קיבעו 0 כדי לנטרל (לא מומלץ)"
-    auto_block_fast_typers_on_first_post: "חסימה אוטומטית של משתמשים שלא עונים על min_first_post_typing_time"
-    auto_block_fast_typers_max_trust_level: "רמת אמון מקסימלית שבה לחסום אוטומטית מקלידים מהירים"
-    auto_block_first_post_regex: "ביטוי רגולרי case insensitive שאם הוא מתקיים יגרום לפוסט הראשון מהמשתמש להחסם ולהשלח לתור האישורים. למשל raging|a[bc]a , יגרום לכל הפוסטים שמכילים raging או aba או aca קודם כל להחסם. רלוונטי רק לפוסט הראשון."
     reply_by_email_enabled: "אפשרו  תגובה לנושאים באמצעות הדוא\"ל."
     reply_by_email_address: "תבנית עבור כתובות מייל של מענה באמצעות אימייל, למשל: {reply_key}@reply.example.com או  replies+%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "רשימה של כמה תבניות לתגובות במייל באמצעות כתובות מייל נכנסות. למשל: %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
@@ -1796,13 +1785,6 @@ he:
         אנחנו מצטערים, אך הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
         החשבון שלכם שמקושר לכתובת המייל הזו לא הופעל. אנא הפעילו את החשבון שלכם לפני שאתם שולחים מיילים למערכת.
-    email_reject_blocked_user:
-      title: "מייל נדחה, משתמש חסום"
-      subject_template: "[%{email_prefix}] בעיית מייל -- משתמש חסום"
-      text_body_template: |
-        אנחנו מצטערים, אך הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
-
-        חשבונכם שקשור לכתובת מייל זו נחסם.
     email_reject_reply_user_not_matching:
       title: "דחיית מייל משתמש/ת לא מתאימים"
       subject_template: "[%{email_prefix}] בעיית מייל -- נמען לא תואם"
@@ -1885,67 +1867,9 @@ he:
     too_many_spam_flags:
       title: "יותר מידי דיגלי ספאם"
       subject_template: "חשבון חדש בהשהיה"
-      text_body_template: |
-        שלום,
-
-        זוהי הודעה אוטומטית מ %{site_name} כדי ליידע אתכם שהפוסטים שלכם מוחבאים זמנית כיוון שהם דוגלו על ידי הקהילה.
-
-        כאמצעי זהירות, חשבונכם החדש נחסם מליצור תגובות או נושאים חדשים עד שחבר צוות יסקור את חשבונכם. אנחנו מצטערים על חוסר הנוחות.
-
-        להנחיות נוספות, אנא פנו ל[הנחיות הקהילה](%{base_url}/guidelines).
     too_many_tl3_flags:
       title: "יותר מידי דגלי רמת-אמון 3"
       subject_template: "חשבון חדש בהשהיה"
-      text_body_template: |
-        שלום,
-
-        זוהי הודעה אוטומטית מ %{site_name} כדי ליידע אתכם שחשבונכם הושהה בגלל דגלים רבים מהקהילה.
-
-        כאמצעי זהירות, חשבונכם החדש נחסם מליצור תגובות או נושאים חדשים עד שחבר צוות יוכל לסקור את חשבונכם. אנחנו מתנצלים על חוסר הנוחות.
-
-        לפרטים נוספים, אנא פנו ל[הנחיות הקהילה](%{base_url}/guidelines).
-    blocked_by_staff:
-      title: "נחסם על ידי הצוות"
-      subject_template: "חשבון זמנית בהשהיה"
-      text_body_template: |
-        שלום,
-
-        זוהי הודעה אוטומטית מ %{site_name} כדי ליידע אתכם שהחשבון שלכם הושהה באופן זמני כאמצעי זהירות.
-
-        אנא המשיכו לבקר, אך לא תוכלו לענות או ליצור נושאים עד ש[חבר צוות](%{base_url}/about) יסקור את הפוסטים האחרונים שלכם. אנחנו מתנצלים על אי הנוחות.
-
-        להנחיות נוספות, אנא פנו ל[הנחיות הקהילה](%{base_url}/guidelines).
-    user_automatically_blocked:
-      title: "משתמש נחסם אוטומטית"
-      subject_template: "המשתמש החדש %{username} נחסם על ידי דגלים של הקהילה"
-      text_body_template: |
-        זוהי הודעה אוטומטית.
-
-        המשתמש החדש [%{username}](%{user_url}) נחסם אוטומטית כיוון שמספר משתמשים דיגלו פוסטים שלו.
-
-        אנא [סיקרו את הדגלים](%{base_url}/admin/flags). אם %{username} נחסם בטעות מלפרסם, לחצו על כפתור שחרור הנעילה ב [דף הניהול למשתמש זה](%{user_url}).
-
-        סף זה ניתן לשינוי באמצעות הגדרת האתר `block_new_user`.
-    spam_post_blocked:
-      title: "פוסט ספאם נחסם"
-      subject_template: "פוסים של המשתמש/ת החדש/ה %{username} נחסמו בשל קישורים חוזרים."
-      text_body_template: |
-        זוהי הודעה אוטומטית.
-
-        המשתמש החדש [%{username}](%{user_url}) ניסה ליצור מספר פוסטים עם קישורים ל %{domains}, אבל הפוסטים האלו נחסמו כדי למנוע ספאם. המשתמש עדיין יכול ליצור פוסטים חדשים שלא מקשרים ל %{domains}.
-
-        אנא [סיקרו את המשתמש](%{user_url}).
-
-        ניתן לכוון זאת בהגדרות האתר `newuser_spam_host_threshold` ו`white_listed_spam_host_domains`.
-    unblocked:
-      title: "לא-חסום"
-      subject_template: "החשבון כבר לא מושהה"
-      text_body_template: |
-        שלום,
-
-        זוהי הודעה אוטומטית מ %{site_name} כדי ליידע אתכם שהחשבון שלכם כבר לא מושהה לאחר סקירה של הצוות.
-
-        אתם יכולים עכשיו ליצור נושאים חדשים, ושוב להגיב לנושאים קיימים. תודה על הסבלנות.
     pending_users_reminder:
       title: "תזכורת משתמשים ממתינים"
       subject_template:

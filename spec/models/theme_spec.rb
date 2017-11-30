@@ -155,6 +155,26 @@ HTML
   end
 
   context 'theme vars' do
+
+    it 'works in parent theme' do
+
+      theme = Theme.new(name: 'theme', user_id: -1)
+      theme.set_field(target: :common, name: :scss, value: 'body {color: $magic; }')
+      theme.set_field(target: :common, name: :magic, value: 'red', type: :theme_var)
+      theme.set_field(target: :common, name: :not_red, value: 'red', type: :theme_var)
+      theme.save
+
+      parent_theme = Theme.new(name: 'parent theme', user_id: -1)
+      parent_theme.set_field(target: :common, name: :scss, value: 'body {background-color: $not_red; }')
+      parent_theme.set_field(target: :common, name: :not_red, value: 'blue', type: :theme_var)
+      parent_theme.save
+      parent_theme.add_child_theme!(theme)
+
+      scss, _map = Stylesheet::Compiler.compile('@import "theme_variables"; @import "desktop_theme"; ', "theme.scss", theme_id: parent_theme.id)
+      expect(scss).to include("color:red")
+      expect(scss).to include("background-color:blue")
+    end
+
     it 'can generate scss based off theme vars' do
       theme = Theme.new(name: 'theme', user_id: -1)
       theme.set_field(target: :common, name: :scss, value: 'body {color: $magic; content: quote($content)}')

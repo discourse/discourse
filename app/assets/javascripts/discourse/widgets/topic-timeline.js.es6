@@ -1,5 +1,5 @@
 import { createWidget } from 'discourse/widgets/widget';
-import ComponentConnector from 'discourse/widgets/component_connector';
+import ComponentConnector from 'discourse/widgets/component-connector';
 import { h } from 'virtual-dom';
 import { relativeAge } from 'discourse/lib/formatter';
 import { iconNode } from 'discourse-common/lib/icon-library';
@@ -291,7 +291,7 @@ createWidget('timeline-footer-controls', {
 
   html(attrs) {
     const controls = [];
-    const { currentUser, fullScreen, topic } = attrs;
+    const { currentUser, fullScreen, topic, notificationLevel } = attrs;
 
     if (currentUser && !fullScreen) {
       if (topic.get('details.can_create_post')) {
@@ -315,12 +315,13 @@ createWidget('timeline-footer-controls', {
 
     if (currentUser) {
       controls.push(new ComponentConnector(this,
-        'topic-notifications-button',
+        'topic-notifications-options',
         {
+          value: notificationLevel,
           topic,
-          appendReason: false,
           showFullTitle: false
-        }
+        },
+        ["value"]
       ));
     }
 

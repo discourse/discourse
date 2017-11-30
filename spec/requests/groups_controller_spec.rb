@@ -112,10 +112,11 @@ describe GroupsController do
               full_name: 'awesome team',
               public_admission: true,
               public_exit: true,
-              allow_membership_requests: true
+              allow_membership_requests: true,
+              membership_request_template: 'testing',
             }
           }
-        end.to change { GroupHistory.count }.by(8)
+        end.to change { GroupHistory.count }.by(9)
 
         expect(response).to be_success
 
@@ -129,7 +130,8 @@ describe GroupsController do
         expect(group.public_admission).to eq(true)
         expect(group.public_exit).to eq(true)
         expect(group.allow_membership_requests).to eq(true)
-        expect(GroupHistory.last.subject).to eq('allow_membership_requests')
+        expect(group.membership_request_template).to eq('testing')
+        expect(GroupHistory.last.subject).to eq('membership_request_template')
       end
     end
 

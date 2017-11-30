@@ -74,6 +74,9 @@ en:
         x_seconds:
           one:   "1s"
           other: "%{count}s"
+        less_than_x_minutes:
+          one:   "< 1m"
+          other: "< %{count}m"
         x_minutes:
           one:   "1m"
           other: "%{count}m"
@@ -83,6 +86,9 @@ en:
         x_days:
           one:   "1d"
           other: "%{count}d"
+        x_months:
+          one:   "1mon"
+          other: "%{count}mon"
         about_x_years:
           one:   "1y"
           other: "%{count}y"
@@ -127,7 +133,7 @@ en:
           other: "%{count} years later"
       previous_month: 'Previous Month'
       next_month: 'Next Month'
-      placeholder: Pick a date
+      placeholder: date
     share:
       topic: 'share a link to this topic'
       post: 'post #%{postNumber}'
@@ -590,6 +596,7 @@ en:
         enable: "Enable Notifications"
         currently_disabled: ""
         each_browser_note: "Note: You have to change this setting on every browser you use."
+      dismiss: 'Dismiss'
       dismiss_notifications: "Dismiss All"
       dismiss_notifications_tooltip: "Mark all unread notifications as read"
       first_notification: "Your first notification! Select it to begin."
@@ -604,7 +611,7 @@ en:
       admin: "{{user}} is an admin"
       moderator_tooltip: "This user is a moderator"
       admin_tooltip: "This user is an admin"
-      blocked_tooltip: "This user is blocked"
+      silenced_tooltip: "This user is silenced"
       suspended_notice: "This user is suspended until {{date}}."
       suspended_permanently: "This user is suspended."
       suspended_reason: "Reason: "
@@ -657,6 +664,8 @@ en:
       undo_revoke_access: "Undo Revoke Access"
       api_approved: "Approved:"
       theme: "Theme"
+      home: "Default Home Page"
+      staged: "Staged"
 
       staff_counters:
         flags_given: "helpful flags"
@@ -717,6 +726,7 @@ en:
         title: "Change your profile picture"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, based on"
         gravatar_title: "Change your avatar on Gravatar's website"
+        gravatar_failed: "Could not fetch the Gravatar. Is there one associated to that email address?"
         refresh_gravatar_title: "Refresh your Gravatar"
         letter_based: "System assigned profile picture"
         uploaded_avatar: "Custom picture"
@@ -890,6 +900,7 @@ en:
         title: "Summary"
         stats: "Stats"
         time_read: "read time"
+        recent_time_read: "recent read time"
         topic_count:
           one: "topic created"
           other: "topics created"
@@ -905,6 +916,9 @@ en:
         days_visited:
           one: "day visited"
           other: "days visited"
+        topics_entered:
+          one: "topic viewed"
+          other: "topics viewed"
         posts_read:
           one: "post read"
           other: "posts read"
@@ -1001,7 +1015,11 @@ en:
     first_post: First post
     mute: Mute
     unmute: Unmute
-    last_post: Last post
+    last_post: Posted
+    time_read: Read
+    time_read_recently: '%{time_read} recently'
+    time_read_tooltip: '%{time_read} total time read'
+    time_read_recently_tooltip: '%{time_read} total time read (%{recent_time_read} in the last 60 days)'
     last_reply_lowercase: last reply
     replies_lowercase:
       one: reply
@@ -1149,10 +1167,11 @@ en:
       ctrl: 'Ctrl'
       alt: 'Alt'
 
-    select_box:
+    select_kit:
       default_header_text: Select...
       no_content: No matches found
       filter_placeholder: Search...
+      create: "Create {{content}}"
 
     emoji_picker:
       filter_placeholder: Search for emoji
@@ -1214,6 +1233,7 @@ en:
       cancel: "Cancel"
       create_topic: "Create Topic"
       create_pm: "Message"
+      create_whisper: "Whisper"
       title: "Or press Ctrl+Enter"
 
       users_placeholder: "Add a user"
@@ -1222,6 +1242,7 @@ en:
       edit_reason_placeholder: "why are you editing?"
       show_edit_reason: "(add edit reason)"
       topic_featured_link_placeholder: "Enter link shown with title."
+      remove_featured_link: "Remove link from topic."
       reply_placeholder: "Type here. Use Markdown, BBCode, or HTML to format. Drag or paste images."
       view_new_post: "View your new post."
       saving: "Saving"
@@ -1254,7 +1275,8 @@ en:
       ulist_title: "Bulleted List"
       list_item: "List item"
       help: "Markdown Editing Help"
-      toggler: "hide or show the composer panel"
+      collapse: "minimize the composer panel"
+      abandon: "close composer and discard draft"
       modal_ok: "OK"
       modal_cancel: "Cancel"
       cant_send_pm: "Sorry, you can't send a message to %{username}."
@@ -1265,6 +1287,13 @@ en:
       admin_options_title: "Optional staff settings for this topic"
 
     notifications:
+      tooltip:
+        regular:
+          one: "1 unseen notification"
+          other: "{{count}} unseen notifications"
+        message:
+          one: "1 unread message"
+          other: "{{count}} unread messages"
       title: "notifications of @name mentions, replies to your posts and topics, messages, etc"
       none: "Unable to load notifications at this time."
       empty: "No notifications found."
@@ -1310,6 +1339,7 @@ en:
         linked: "Link to your post"
         granted_badge: "Badge granted"
         group_message_summary: "Messages in group inbox"
+        topic_reminder: "A reminder"
 
       popup:
         mentioned: '{{username}} mentioned you in "{{topic}}" - {{site_title}}'
@@ -1334,6 +1364,7 @@ en:
       uploading: "Uploading"
       select_file: "Select File"
       image_link: "link your image will point to"
+      default_image_alt_text: image
 
     search:
       sort_by: "Sort by"
@@ -1373,29 +1404,29 @@ en:
         posted_by:
           label: Posted by
         in_category:
-          label: In Category
+          label: Categorized
         in_group:
           label: In Group
         with_badge:
           label: With Badge
         with_tags:
-          label: With Tags
+          label: Tagged
         filters:
-          label: Only return topics/posts that...
+          label: Only return topics/posts...
           likes: I liked
           posted: I posted in
           watching: I'm watching
           tracking: I'm tracking
-          private: are in my messages
-          bookmarks: I've bookmarked
+          private: In my messages
+          bookmarks: I bookmarked
           first: are the very first post
           pinned: are pinned
           unpinned: are not pinned
-          seen: I've read
+          seen: I read
           unseen: I've not read
           wiki: are wiki
-          images: includes image(s)
-          all_tags: Contains all tags
+          images: include image(s)
+          all_tags: All the above tags
         statuses:
           label: Where topics
           open: are open
@@ -1951,6 +1982,9 @@ en:
           notify_user: "sent a message"
           bookmark: "bookmarked this"
           like: "liked this"
+          like_capped:
+            one: "and {{count}} other liked this"
+            other: "and {{count}} others liked this"
           vote: "voted for this"
         by_you:
           off_topic: "You flagged this as off-topic"
@@ -2105,6 +2139,7 @@ en:
       email_in_allow_strangers: "Accept emails from anonymous users with no accounts"
       email_in_disabled: "Posting new topics via email is disabled in the Site Settings. To enable posting new topics via email, "
       email_in_disabled_click: 'enable the "email in" setting.'
+      mailinglist_mirror: "Category mirrors a mailinglist"
       suppress_from_homepage: "Suppress this category from the homepage."
       show_subcategory_list: "Show subcategory list above topics in this category."
       num_featured_topics: "Number of topics shown on the categories page:"
@@ -2570,7 +2605,7 @@ en:
         no_problems: "No problems were found."
         moderators: 'Moderators:'
         admins: 'Admins:'
-        blocked: 'Blocked:'
+        silenced: 'Silenced:'
         suspended: 'Suspended:'
         private_messages_short: "Msgs"
         private_messages_title: "Messages"
@@ -2612,20 +2647,19 @@ en:
 
         agree: "Agree"
         agree_title: "Confirm this flag as valid and correct"
-        agree_flag_modal_title: "Agree and..."
-        agree_flag_hide_post: "Agree (hide post + send PM)"
-        agree_flag_hide_post_title: "Hide this post and automatically send the user a message urging them to edit it"
-        agree_flag_restore_post: "Agree (restore post)"
-        agree_flag_restore_post_title: "Restore this post"
-        agree_flag: "Agree with flag"
-        agree_flag_title: "Agree with flag and keep the post unchanged"
+        agree_flag_hide_post: "Agree and Hide Post"
+        agree_flag_hide_post_title: "Hide this post and automatically send the user a message urging them to edit it."
+        agree_flag_restore_post: "Agree and Restore Post"
+        agree_flag_restore_post_title: "Restore the post so that all users can see it."
+        agree_flag: "Agree and Keep Post"
+        agree_flag_title: "Agree with flag and keep the post unchanged."
         defer_flag: "Ignore"
         defer_flag_title: "Remove this flag; it requires no action at this time."
         delete: "Delete"
         delete_title: "Delete the post this flag refers to."
-        delete_post_defer_flag: "Delete post and Ignore flag"
+        delete_post_defer_flag: "Delete Post and Ignore flag"
         delete_post_defer_flag_title: "Delete post; if the first post, delete the topic"
-        delete_post_agree_flag: "Delete post and Agree with flag"
+        delete_post_agree_flag: "Delete Post and Agree with flag"
         delete_post_agree_flag_title: "Delete post; if the first post, delete the topic"
         delete_flag_modal_title: "Delete and..."
         delete_spammer: "Delete Spammer"
@@ -2658,6 +2692,7 @@ en:
         was_edited: "Post was edited after the first flag"
         previous_flags_count: "This post has already been flagged {{count}} times."
         show_details: "Show flag details"
+        details: "details"
 
         flagged_topics:
           topic: "Topic"
@@ -3130,8 +3165,8 @@ en:
             change_category_settings: "change category settings"
             delete_category: "delete category"
             create_category: "create category"
-            block_user: "block user"
-            unblock_user: "unblock user"
+            silence_user: "silence user"
+            unsilence_user: "unsilence user"
             grant_admin: "grant admin"
             revoke_admin: "revoke admin"
             grant_moderation: "grant moderation"
@@ -3179,6 +3214,14 @@ en:
           roll_up:
             text: "Roll up"
             title: "Creates new subnet ban entries if there are at least 'min_ban_entries_for_roll_up' entries."
+        search_logs:
+          title: "Search Logs"
+          term: "Term"
+          searches: "Searches"
+          click_through: "Click Through"
+          most_viewed_topic: "Most Viewed Topic"
+          unique: "Unique"
+          unique_title: "unique users performing the search"
         logster:
           title: "Error Logs"
 
@@ -3229,7 +3272,7 @@ en:
           pending: "Pending"
           staff: 'Staff'
           suspended: 'Suspended'
-          blocked: 'Blocked'
+          silenced: 'Silenced'
           suspect: 'Suspect'
         approved: "Approved?"
         approved_selected:
@@ -3250,7 +3293,7 @@ en:
           staff: "Staff"
           admins: 'Admin Users'
           moderators: 'Moderators'
-          blocked: 'Blocked Users'
+          silenced: 'Silenced Users'
           suspended: 'Suspended Users'
           suspect: 'Suspect Users'
         reject_successful:
@@ -3275,18 +3318,26 @@ en:
         suspend_message: "Email Message"
         suspend_message_placeholder: "Optionally, provide more information about the suspension and it will be emailed to the user."
         suspended_by: "Suspended by"
+        silence_reason: "Reason"
+        silenced_by: "Silenced By"
+        silence_modal_title: "Silence User"
+        silence_duration: "How long will the user be silenced for?"
+        silence_reason_label: "Why are you silencing this user?"
+        silence_reason_placeholder: "Silence Reason"
+        silence_message: "Email Message"
+        silence_message_placeholder: "(leave blank to send default message)"
         suspended_until: "(until %{until})"
         cant_suspend: "This user cannot be suspended."
         delete_all_posts: "Delete all posts"
 
         # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
         delete_all_posts_confirm_MF: "You are about to delete {POSTS, plural, one {1 post} other {# posts}} and {TOPICS, plural, one {1 topic} other {# topics}}. Are you sure?"
-        suspend: "Suspend"
-        unsuspend: "Unsuspend"
-        suspended: "Suspended?"
+        silence: "Silence"
+        unsilence: "Unsilence"
+        silenced: "Silenced?"
         moderator: "Moderator?"
         admin: "Admin?"
-        blocked: "Blocked?"
+        suspended: "Suspended?"
         staged: "Staged?"
         show_admin_profile: "Admin"
         refresh_browsers: "Force browser refresh"
@@ -3302,8 +3353,8 @@ en:
         grant_admin_confirm: "We've sent you an email to verify the new administrator. Please open it and follow the instructions."
         revoke_moderation: 'Revoke Moderation'
         grant_moderation: 'Grant Moderation'
-        unblock: 'Unblock'
-        block: 'Block'
+        unsuspend: 'Unsuspend'
+        suspend: 'Suspend'
         reputation: Reputation
         permissions: Permissions
         activity: Activity
@@ -3350,10 +3401,10 @@ en:
         activate_failed: "There was a problem activating the user."
         deactivate_account: "Deactivate Account"
         deactivate_failed: "There was a problem deactivating the user."
-        unblock_failed: 'There was a problem unblocking the user.'
-        block_failed: 'There was a problem blocking the user.'
-        block_confirm: 'Are you sure you want to block this user? They will not be able to create any new topics or posts.'
-        block_accept: 'Yes, block this user'
+        unsilence_failed: 'There was a problem unsilencing the user.'
+        silence_failed: 'There was a problem silencing the user.'
+        silence_confirm: 'Are you sure you want to silence this user? They will not be able to create any new topics or posts.'
+        silence_accept: 'Yes, silence this user'
         bounce_score: "Bounce Score"
         reset_bounce_score:
           label: "Reset"
@@ -3362,7 +3413,7 @@ en:
 
         deactivate_explanation: "A deactivated user must re-validate their email."
         suspended_explanation: "A suspended user can't log in."
-        block_explanation: "A blocked user can't post or start topics."
+        silence_explanation: "A silenced user can't post or start topics."
         staged_explanation: "A staged user can only post via email in specific topics."
         bounce_score_explanation:
           none: "No bounces were received recently from that email."
@@ -3484,6 +3535,7 @@ en:
           developer: 'Developer'
           embedding: "Embedding"
           legal: "Legal"
+          api: 'API'
           user_api: 'User API'
           uncategorized: 'Other'
           backups: "Backups"

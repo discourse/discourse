@@ -30,10 +30,10 @@ function registerButton(name, builder) {
 }
 
 export function buildButton(name, widget) {
-  let { attrs, state, siteSettings } = widget;
+  let { attrs, state, siteSettings, settings } = widget;
   let builder = _builders[name];
   if (builder) {
-    let button = builder(attrs, state, siteSettings);
+    let button = builder(attrs, state, siteSettings, settings);
     if (button && !button.id) {
       button.id = name;
     }
@@ -166,7 +166,7 @@ registerButton('share', attrs => {
   };
 });
 
-registerButton('reply', attrs => {
+registerButton('reply', (attrs, state, siteSettings, postMenuSettings) => {
   const args = {
     action: 'replyToPost',
     title: 'post.controls.reply',
@@ -176,7 +176,7 @@ registerButton('reply', attrs => {
 
   if (!attrs.canCreatePost) { return; }
 
-  if (!attrs.mobileView) {
+  if (postMenuSettings.showReplyTitleOnMobile || !attrs.mobileView) {
     args.label = 'topic.reply.title';
   }
 
@@ -233,7 +233,8 @@ export default createWidget('post-menu', {
 
   settings: {
     collapseButtons: true,
-    buttonType: 'flat-button'
+    buttonType: 'flat-button',
+    showReplyTitleOnMobile: false
   },
 
   defaultState() {
@@ -353,11 +354,13 @@ export default createWidget('post-menu', {
 
     const contents = [ h('nav.post-controls.clearfix', postControls) ];
     if (state.likedUsers.length) {
+      const remaining = state.total - state.likedUsers.length;
       contents.push(this.attach('small-user-list', {
         users: state.likedUsers,
-        addSelf: attrs.liked,
+        addSelf: attrs.liked && remaining === 0,
         listClassName: 'who-liked',
-        description: 'post.actions.people.like'
+        description: remaining > 0 ? 'post.actions.people.like_capped' : 'post.actions.people.like',
+        count: remaining
       }));
     }
 
@@ -413,6 +416,7 @@ export default createWidget('post-menu', {
 
     return this.store.find('post-action-user', { id: attrs.id, post_action_type_id: LIKE_ACTION }).then(users => {
       state.likedUsers = users.map(avatarAtts);
+      state.total = users.totalRows;
     });
   },
 

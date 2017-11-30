@@ -443,9 +443,6 @@ describe TopicQuery do
   end
 
   context 'unread / read topics' do
-    after do
-      $redis.flushall
-    end
 
     context 'with no data' do
       it "has no unread topics" do
@@ -465,8 +462,8 @@ describe TopicQuery do
 
         topic_id = first.topic.id
 
-        TopicUser.update_last_read(user, topic_id, first.post_number, 1)
-        TopicUser.update_last_read(admin, topic_id, first.post_number, 1)
+        TopicUser.update_last_read(user, topic_id, first.post_number, 1, 1)
+        TopicUser.update_last_read(admin, topic_id, first.post_number, 1, 1)
 
         TopicUser.change(user.id, topic_id, notification_level: TopicUser.notification_levels[:tracking])
         TopicUser.change(admin.id, topic_id, notification_level: TopicUser.notification_levels[:tracking])
@@ -481,21 +478,16 @@ describe TopicQuery do
       let!(:fully_read) { Fabricate(:post, user: creator).topic }
 
       before do
-        TopicUser.update_last_read(user, partially_read.id, 0, 0)
-        TopicUser.update_last_read(user, fully_read.id, 1, 0)
+        TopicUser.update_last_read(user, partially_read.id, 0, 0, 0)
+        TopicUser.update_last_read(user, fully_read.id, 1, 1, 0)
       end
 
       context 'list_unread' do
         it 'lists topics correctly' do
-          freeze_time do
-            new_topic = Fabricate(:post, user: creator).topic
+          new_topic = Fabricate(:post, user: creator).topic
 
-            expect(topic_query.list_unread.topics).to eq([])
-            expect(topic_query.list_read.topics).to match_array([fully_read, partially_read])
-
-            expect($redis.get(topic_query.unread_results_redis_key))
-              .to eq(Time.zone.now.to_s)
-          end
+          expect(topic_query.list_unread.topics).to eq([])
+          expect(topic_query.list_read.topics).to match_array([fully_read, partially_read])
         end
       end
 
@@ -503,16 +495,10 @@ describe TopicQuery do
         before do
           user.user_option.auto_track_topics_after_msecs = 0
           user.user_option.save
-          partially_read.update!(bumped_at: 2.days.ago)
         end
 
         it 'only contains the partially read topic' do
-          freeze_time do
-            expect(topic_query.list_unread.topics).to eq([partially_read])
-
-            expect($redis.get(topic_query.unread_results_redis_key))
-              .to eq(partially_read.bumped_at.to_s)
-          end
+          expect(topic_query.list_unread.topics).to eq([partially_read])
         end
       end
 
@@ -633,7 +619,7 @@ describe TopicQuery do
       context "but interacted with" do
 
         it "is not included if read" do
-          TopicUser.update_last_read(user, other_users_topic.id, 0, 0)
+          TopicUser.update_last_read(user, other_users_topic.id, 0, 0, 0)
 
           expect(topics).to be_blank
         end
@@ -680,7 +666,7 @@ describe TopicQuery do
     end
 
     def read(user, topic, post_number)
-      TopicUser.update_last_read(user, topic, post_number, 10000)
+      TopicUser.update_last_read(user, topic, post_number, post_number, 10000)
     end
 
     it 'returns the correct suggestions' do
@@ -848,10 +834,10 @@ describe TopicQuery do
         before do
           user.user_option.auto_track_topics_after_msecs = 0
           user.user_option.save
-          TopicUser.update_last_read(user, partially_read.id, 0, 0)
-          TopicUser.update_last_read(user, fully_read.id, 1, 0)
-          TopicUser.update_last_read(user, fully_read_closed.id, 1, 0)
-          TopicUser.update_last_read(user, fully_read_archived.id, 1, 0)
+          TopicUser.update_last_read(user, partially_read.id, 0, 0, 0)
+          TopicUser.update_last_read(user, fully_read.id, 1, 1, 0)
+          TopicUser.update_last_read(user, fully_read_closed.id, 1, 1, 0)
+          TopicUser.update_last_read(user, fully_read_archived.id, 1, 1, 0)
           fully_read_closed.closed = true
           fully_read_closed.save
           fully_read_archived.archived = true

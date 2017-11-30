@@ -122,9 +122,9 @@ after_initialize do
         if topic
           guardian.ensure_can_see!(topic)
 
-          any_changes = false
-          any_changes ||= Presence::PresenceManager.remove(type, id, current_user.id)
-          any_changes ||= Presence::PresenceManager.cleanup(type, id)
+          removed = Presence::PresenceManager.remove(type, id, current_user.id)
+          any_removed = Presence::PresenceManager.cleanup(type, id)
+          any_changes = removed || any_removed
 
           users = Presence::PresenceManager.publish(type, id) if any_changes
         end
@@ -144,9 +144,9 @@ after_initialize do
         if topic
           guardian.ensure_can_see!(topic)
 
-          any_changes = false
-          any_changes ||= Presence::PresenceManager.add(type, id, current_user.id)
-          any_changes ||= Presence::PresenceManager.cleanup(type, id)
+          added = Presence::PresenceManager.add(type, id, current_user.id)
+          any_removed = Presence::PresenceManager.cleanup(type, id)
+          any_changes = added || any_removed
 
           users = Presence::PresenceManager.publish(type, id) if any_changes
 

@@ -499,4 +499,8 @@ module Discourse
     nil
   end
 
+  def self.running_in_rack?
+    ENV["DISCOURSE_RUNNING_IN_RACK"] == "1"
+  end
+
 end

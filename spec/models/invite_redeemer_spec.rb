@@ -107,5 +107,14 @@ describe InviteRedeemer do
       expect(user.custom_fields["user_field_#{required_field.id}"]).to eq('value1')
       expect(user.custom_fields["user_field_#{optional_field.id}"]).to eq('value2')
     end
+
+    it "adds user to group" do
+      group = Fabricate(:group, grant_trust_level: 2)
+      InvitedGroup.create(group_id: group.id, invite_id: invite.id)
+      user = InviteRedeemer.new(invite, username, name, password).redeem
+
+      expect(user.group_users.count).to eq(4)
+      expect(user.trust_level).to eq(2)
+    end
   end
 end

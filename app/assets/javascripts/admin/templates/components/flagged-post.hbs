@@ -20,6 +20,10 @@
   </div>
 
   <div class="flagged-post-contents">
+    <div class='flagged-post-user-details'>
+      <a class='username' href={{user.path}} data-user-card={{flaggedPost.user.username}}>{{format-username flaggedPost.user.username}}</a>
+    </div>
+
     <div class='flagged-post-excerpt'>
       {{#unless hideTitle}}
         <h3>
@@ -107,13 +111,9 @@
 
     {{#if canAct}}
       <div class='flagged-post-controls'>
-        {{d-button
-          title="admin.flags.agree_title"
-          class="agree-flag"
-          label="admin.flags.agree"
-          icon="thumbs-o-up"
-          action="showAgreeFlagModal"
-          ellipsis=true}}
+        {{admin-agree-flag-dropdown
+          post=flaggedPost
+          removeAfter=(action "removeAfter") }}
 
         {{#if flaggedPost.postHidden}}
           {{d-button
@@ -138,12 +138,7 @@
           icon="external-link"
           label="admin.flags.defer_flag"}}
 
-        {{d-button
-          class="btn-danger delete-flag"
-          title="admin.flags.delete_title"
-          action="showDeleteFlagModal"
-          icon="trash-o"
-          label="admin.flags.delete"}}
+        {{admin-delete-flag-dropdown post=flaggedPost removeAfter=(action "removeAfter")}}
 
         {{#unless suspended}}
           {{d-button

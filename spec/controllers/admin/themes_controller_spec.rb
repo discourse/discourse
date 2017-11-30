@@ -1,4 +1,5 @@
 require 'rails_helper'
+require_dependency 'theme_serializer'
 
 describe Admin::ThemesController do
 
@@ -32,6 +33,39 @@ describe Admin::ThemesController do
     context '.import' do
       let(:theme_file) do
         Rack::Test::UploadedFile.new(file_from_fixtures("sam-s-simple-theme.dcstyle.json", "json"))
+      end
+
+      let :image do
+        file_from_fixtures("logo.png")
+      end
+
+      it 'can import a theme with an upload' do
+        upload = Fabricate(:upload)
+        theme = Theme.new(name: 'with-upload', user_id: -1)
+        upload = UploadCreator.new(image, "logo.png").create_for(-1)
+        theme.set_field(target: :common, name: :logo, upload_id: upload.id, type: :theme_upload_var)
+        theme.save
+
+        json = ThemeWithEmbeddedUploadsSerializer.new(theme, root: 'theme').to_json
+        theme.destroy
+
+        temp = Tempfile.new
+        temp.write(json)
+        temp.rewind
+
+        uploaded_json = Rack::Test::UploadedFile.new(temp)
+        upload.destroy
+
+        post :import, params: { theme: uploaded_json }, format: :json
+        expect(response).to be_success
+        temp.unlink
+
+        theme = Theme.last
+        expect(theme.theme_fields.count).to eq(1)
+        expect(theme.theme_fields.first.upload).not_to eq(nil)
+        expect(theme.theme_fields.first.upload.filesize).to eq(upload.filesize)
+        expect(theme.theme_fields.first.upload.sha1).to eq(upload.sha1)
+        expect(theme.theme_fields.first.upload.original_filename).to eq(upload.original_filename)
       end
 
       it 'imports a theme' do

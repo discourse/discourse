@@ -1,27 +1,3 @@
-.gap {
-  /* may not need this */
-}
-
-.small-action {
-  border-top: 1px solid $primary-low;
-  color: lighten($primary, 50%);
-  padding-bottom: 3px;
-  text-transform: uppercase;
-  font-weight: bold;
-
-  .topic-avatar {
-    margin-top: 5px;
-  }
-
-  .small-action-desc {
-    padding-top: 1em;
-
-    button {
-      padding-top: 0px;
-    }
-  }
-}
-
 /* hide the reply border above the time gap notices */
 .time-gap + .topic-post article {
   border-top: none;
@@ -36,7 +12,6 @@
   padding-bottom: 30px;
 }
 
-
 span.badge-posts {
   margin-right: 5px;
 }
@@ -45,45 +20,49 @@ span.badge-posts {
   display: none;
 }
 
-nav.post-controls {
-  clear: both;
-  .d-icon {
-    opacity: 1.0;
-  }
-}
-
 .who-liked {
   margin-left: 10px;
 }
 
 .topic-post {
-  button {
-    border: none;
-    font-size: 1.214em;
-    padding: 8px 10px;
-    vertical-align: top;
-    background: transparent;
-    color: dark-light-choose($primary-low-mid, $secondary-high);
-    float: left;
-    &.hidden {
-      display: none;
+  nav.post-controls {
+    clear: both;
+    .d-icon {
+      opacity: 1.0;
     }
-    &.admin {
-      position: relative;
+    button {
+      border: none;
+      font-size: 1.214em;
+      padding: 8px 10px;
+      vertical-align: top;
+      background: transparent;
+      color: dark-light-choose($primary-low-mid, $secondary-high);
+      float: left;
+      &.hidden {
+        display: none;
+      }
+      &.admin {
+        position: relative;
+      }
+      &.expand-post {
+        margin:10px 0 10px 0;
+      }
+      &.reply {
+        float: right;
+        color: $primary-high;        
+      }
+      &.has-like {
+        color: $love;
+      }
+      &.bookmarked {
+        color: $tertiary;
+      }
     }
-    &.expand-post {
-      margin:10px 0 10px 0;
-    }
-    &.has-like {color: $love;}
 
-    &.bookmarked {
-      color: $tertiary;
+    button.like-count {
+      font-size: 1em;
+      padding: 8px 4px;
     }
-  }
-
-  button.like-count {
-    font-size: 1em;
-    padding: 8px 4px;
   }
 }
 

@@ -1,6 +1,10 @@
 # we should set the locale before the migration
 task 'set_locale' do
-  I18n.locale = (SiteSetting.default_locale || :en) rescue :en
+  begin
+    I18n.locale = (SiteSetting.default_locale || :en) rescue :en
+  rescue I18n::InvalidLocale
+    I18n.locale = :en
+  end
 end
 
 task 'db:environment:set', [:multisite] => [:load_config]  do |_, args|
@@ -23,8 +27,7 @@ end
 
 # we need to run seed_fu every time we run rails db:migrate
 task 'db:migrate', [:multisite] => ['environment', 'set_locale'] do |_, args|
-  SeedFu.seed
-  Jobs::Onceoff.enqueue_all
+  SeedFu.seed(DiscoursePluginRegistry.seed_paths)
 
   if Rails.env.test? && !args[:multisite]
     system("rails db:schema:dump")
@@ -35,7 +38,7 @@ end
 
 task 'test:prepare' => 'environment' do
   I18n.locale = SiteSetting.default_locale rescue :en
-  SeedFu.seed
+  SeedFu.seed(DiscoursePluginRegistry.seed_paths)
 end
 
 task 'db:api_test_seed' => 'environment' do

@@ -17,6 +17,7 @@
         {{d-button action="logOut" icon="power-off" label="admin.user.log_out"}}
       {{/if}}
     {{/if}}
+    {{plugin-outlet name="admin-user-controls-after" args=(hash model=model) tagName="" connectorTagName=""}}
   </div>
 
   <div class='display-row username'>
@@ -287,7 +288,7 @@
     </div>
     <div class="controls">
       {{#if model.canLockTrustLevel}}
-        {{#if model.trust_level_locked}}
+        {{#if model.manual_locked_trust_level}}
           {{d-icon "lock" title="admin.user.trust_level_locked_tip"}}
           {{d-button action="lockTrustLevel" actionParam=false label="admin.user.unlock_trust_level"}}
         {{else}}
@@ -346,21 +347,51 @@
     </div>
   {{/if}}
 
-  <div class="display-row {{if model.blocked 'highlight-danger'}}">
-    <div class='field'>{{i18n 'admin.user.blocked'}}</div>
-    <div class='value'>{{i18n-yes-no model.blocked}}</div>
+  <div class="display-row {{if model.silenced 'highlight-danger'}}">
+    <div class='field'>{{i18n 'admin.user.silenced'}}</div>
+    <div class='value'>
+      {{i18n-yes-no model.silenced}}
+      {{#if model.isSilenced}}
+        {{#unless model.silencedForever}}
+          {{i18n "admin.user.suspended_until" until=model.silencedTillDate}}
+        {{/unless}}
+      {{/if}}
+    </div>
     <div class='controls'>
-      {{#conditional-loading-spinner size="small" condition=model.blockingUser}}
-        {{#if model.blocked}}
-          {{d-button action="unblock" icon="thumbs-o-up" label="admin.user.unblock"}}
-          {{i18n 'admin.user.block_explanation'}}
+      {{#conditional-loading-spinner size="small" condition=model.silencingUser}}
+        {{#if model.silenced}}
+          {{d-button
+            class="btn-danger unsilence-user"
+            action="unsilence"
+            icon="microphone-slash"
+            label="admin.user.unsilence"}}
+          {{i18n 'admin.user.silence_explanation'}}
         {{else}}
-          {{d-button action="block" icon="ban" label="admin.user.block"}}
-          {{i18n 'admin.user.block_explanation'}}
+          {{d-button
+            class="btn-danger silence-user"
+            action=(action "showSilenceModal")
+            icon="microphone-slash"
+            label="admin.user.silence"}}
+          {{i18n 'admin.user.silence_explanation'}}
         {{/if}}
       {{/conditional-loading-spinner}}
     </div>
   </div>
+
+  {{#if model.isSilenced}}
+    <div class='display-row highlight-danger silence-info'>
+      <div class='field'>{{i18n 'admin.user.silenced_by'}}</div>
+      <div class='value'>
+        {{#link-to 'adminUser' silencedBy}}{{avatar model.silencedBy imageSize="tiny"}}{{/link-to}}
+        {{#link-to 'adminUser' silencedBy}}{{model.silencedBy.username}}{{/link-to}}
+      </div>
+      <div class='controls'>
+        <b>{{i18n 'admin.user.silence_reason'}}</b>:
+        {{model.silence_reason}}
+      </div>
+    </div>
+  {{/if}}
+
 </section>
 
 {{#if currentUser.admin}}
@@ -398,7 +429,7 @@
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n 'admin.users.last_emailed'}}</div>
-    <div class='value'>{{format-date model.last_emailed_at leaveAgo="true"}}</div>
+    <div class='value'>{{format-date model.last_emailed_at}}</div>
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n 'last_seen'}}</div>
@@ -443,7 +474,7 @@
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n 'admin.user.time_read'}}</div>
-    <div class='value'>{{{model.time_read}}}</div>
+    <div class='value'>{{{format-duration model.time_read}}}</div>
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n 'user.invited.days_visited'}}</div>

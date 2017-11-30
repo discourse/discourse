@@ -1,13 +1,10 @@
 .presence-users{
-  
-  background-color: $primary-low;
-
+  background-color: $secondary;
   color: $primary-medium;
   padding: 0px 5px;
   position: absolute;
-  top: 8px;
-  right: 30px;
-
+  top: 18px;
+  right: 35px;
 
   .wave {
 
@@ -37,8 +34,8 @@
 }
 
 .mobile-view .presence-users{
-  top: 5px;
-  right: 60px;
+  top: 3px;
+  right: 54px;
   .description{
     display:none;
   }

@@ -25,7 +25,7 @@ class Guardian
     def moderator?; false; end
     def approved?; false; end
     def staged?; false; end
-    def blocked?; false; end
+    def silenced?; false; end
     def secure_category_ids; []; end
     def topic_create_allowed_category_ids; []; end
     def has_trust_level?(level); false; end
@@ -63,8 +63,8 @@ class Guardian
     @user.moderator?
   end
 
-  def is_blocked?
-    @user.blocked?
+  def is_silenced?
+    @user.silenced?
   end
 
   def is_developer?
@@ -122,7 +122,7 @@ class Guardian
   end
 
   def can_moderate?(obj)
-    obj && authenticated? && !is_blocked? && (is_staff? || (obj.is_a?(Topic) && @user.has_trust_level?(TrustLevel[4])))
+    obj && authenticated? && !is_silenced? && (is_staff? || (obj.is_a?(Topic) && @user.has_trust_level?(TrustLevel[4])))
   end
   alias :can_move_posts? :can_moderate?
   alias :can_see_flags? :can_moderate?
@@ -300,8 +300,8 @@ class Guardian
     (is_staff? || SiteSetting.enable_private_messages) &&
     # Can't send PMs to suspended users
     (is_staff? || is_group || !target.suspended?) &&
-    # Blocked users can only send PM to staff
-    (!is_blocked? || target.staff?)
+    # Silenced users can only send PM to staff
+    (!is_silenced? || target.staff?)
   end
 
   def cand_send_private_messages_to_email?

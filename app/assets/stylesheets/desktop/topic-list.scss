@@ -92,8 +92,8 @@
   .posters {
     // we know there are up to 5 avatars of fixed size
     // will be overridden by media width queries on narrow displays to 1 avatar's width
-    width: 145px;
-    min-width: 145px;
+    width: 146px;
+    min-width: 146px;
   }
   .posters {
     > a {
@@ -117,7 +117,7 @@
   .sortable {
     cursor: pointer;
     &:hover {
-      background-color: $primary-low; 
+      background-color: $primary-low;
     }
     @include unselectable;
   }

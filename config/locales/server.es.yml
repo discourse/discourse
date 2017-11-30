@@ -47,7 +47,6 @@ es:
         auto_generated_email_error: "Sucede cuando la 'prioridad' en el encabezado está establecida en: lista, basura, en masa o auto_respuesta, o cuando algún otro encabezado contiene: auto-enviado, auto-respondido o auto-generado."
         no_body_detected_error: "Sucede cuando no podemos extraer el cuerpo del mensaje y no hay archivos adjuntos."
         inactive_user_error: "Sucede cuando el emisor no está activo."
-        blocked_user_error: "Sucede cuando el emisor ha sido bloqueado."
         bad_destination_address: "Sucede cuando ninguna de las direcciones de email en los campos Para/Cc/Bcc coincide con un email configurado como dirección de correo entrante."
         strangers_not_allowed_error: "Sucede cuando un usuario intentó crear un nuevo tema en una categoría de la que no forma parte."
         insufficient_trust_level_error: "Sucede cuando un usuario intentó crear un nuevo tema en una categoría para la que no tiene el nivel de confianza requerido."
@@ -928,11 +927,6 @@ es:
     tl2_additional_likes_per_day_multiplier: "Incrementar el límite de likes por día para el nivel de confianza 2 (miembro) multiplicando por este número"
     tl3_additional_likes_per_day_multiplier: "Incrementar el límite de likes por día para el nivel de confianza 3 (habitual) multiplicando por este número"
     tl4_additional_likes_per_day_multiplier: "Incrementar el límite de likes por día para el nivel de confianza 4 (líder) multiplicando por este número"
-    num_spam_flags_to_block_new_user: "Si los posts de un nuevo usuario obtienen este número de reportes por spam de num_users_to_block_new_user diferentes usuarios, se ocultarán todos sus posts y no podrá publicar más en un futuro. Pon 0 para deshabilitar esto."
-    num_users_to_block_new_user: "Si los posts de un nuevo usuario son reportados como spam por num_spam_flags_to_block_new_user usuarios diferentes, ocultar todos sus posts y evitar que publique en el futuro. Poner 0 para desactivar."
-    num_tl3_flags_to_block_new_user: "Si los posts de un nuevo usuario obtienen este número de reportes por spam de num_users_to_block_new_user diferentes usuarios, se ocultarán todos sus posts y no podrá publicar más en un futuro. Pon 0 para deshabilitar esto."
-    num_tl3_users_to_block_new_user: "Si los posts de un nuevo usuario reciben num_tl3_flags_to_block_new_user reportes de este número de usuarios de nivel 3 de confianza, ocultar todos sus posts y prevenir futuras publicaciones. 0 para desactivar esta opción."
-    notify_mods_when_user_blocked: "Si un usuario es bloqueado automáticamente, enviar un mensaje a todos los moderadores."
     flag_sockpuppets: "Si un nuevo usuario responde a un tema desde la misma dirección de IP que el nuevo usuario que inició el tema, reportar los posts de los dos como spam en potencia."
     traditional_markdown_linebreaks: "Utiliza saltos de línea tradicionales en Markdown, que requieren dos espacios al final para un salto de línea."
     enable_markdown_typographer: "Utilice reglas básicas de tipografía para mejorar la legibilidad de texto de los párrafos de texto, reemplaza (c) (tm) etc, con símbolos, reduce el número de signos de interrogación y así sucesivamente"
@@ -940,8 +934,6 @@ es:
     must_approve_users: "Los miembros administración deben aprobar todas las nuevas cuentas antes de que se les permita el acceso al sitio. AVISO: ¡habilitar esta opción en un sitio activo revocará el acceso a los usuarios que no sean moderadores o admin!"
     pending_users_reminder_delay: "Notificar a los moderadores si hay nuevos usuarios que hayan estado esperando aprbación durante más estas horas. Usa -1 para desactivar estas notificaciones."
     maximum_session_age: "El usuario permanecerá n horas con su sesión iniciada desde su última visita"
-    ga_tracking_code: "El código \"Google analytics (ga.js)\", por ejemplo: UA-12345678-9 es OBSOLETO; leer  http://google.com/analytics"
-    ga_domain_name: "El nombre del dominio para \"Google analytics (ga.js)\" es OBSOLETO, ejemplo: mysite.com; ver http://google.com/analytics"
     ga_universal_tracking_code: "Código de seguimiento de Google Universal Analytics (analytics.js), ejemplo: UA-12345678-9; visita http://google.com/analytics"
     ga_universal_domain_name: "Nombre del dominio establecido en Google Universal Analytics (analytics.js), ejemplo: misitio.com; visita http://google.com/analytics"
     gtm_container_id: "Google Tag Manager container id. ejempo: GTM-ABCDEF"
@@ -1167,9 +1159,6 @@ es:
     num_hours_to_close_topic: "Número de horas a pausar un tema para invervención."
     auto_respond_to_flag_actions: "Activar la respuesta automática al deshacer un reporte."
     min_first_post_typing_time: "Mínimo período de tiempo en milisegundos en el que un usuario debe estar tecleando durante su primer post, si no se llega a este umbral entrará automáticamente a la cola de moderación. Establece esta opción a 0 para desactivarla (no recomendado)."
-    auto_block_fast_typers_on_first_post: "Bloquear automáticamente a usuarios que no cumplan el umbral establecido en min_first_post_typing_time"
-    auto_block_fast_typers_max_trust_level: "Máximo nivel de confianza por debajo del cual se podrán bloquearán usuarios que escriban demasiado rápido en su primer post"
-    auto_block_first_post_regex: "Expresión regular que no distingue mayúsculas y minúsculas que si es detectada hará que el primer post de un usuario sea bloqueado y enviado a la cola de aprobacion. Ejemplo: raging|a[bc]a hará que todos los posts que contengan gaging, aba o aca sean bloqueados. Sólo tiene efecto en el primer mensaje de un usuario."
     reply_by_email_enabled: "Habilitar la respuesta a temas por email."
     reply_by_email_address: "Plantilla para la dirección de email que aparecerá al recibir correos con la función de respuesta por email: %{reply_key}@respuesta.ejemplo.com o respuestas+%{reply_key}@ejemplo.com"
     alternative_reply_by_email_addresses: "Lista de plantillas alternativa para las direcciones de respuesta por email. Ejemplo: %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
@@ -1840,13 +1829,6 @@ es:
         Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) no se entregó.
 
         La cuenta asociada a esta dirección de email no ha sido activada. Por favor activa tu cuenta antes de enviar emails.
-    email_reject_blocked_user:
-      title: "Email rechazado, usuario bloqueado"
-      subject_template: "[%{email_prefix}] Problema con el email -- Usuario bloqueado"
-      text_body_template: |
-        Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) no se entregó.
-
-        La cuenta asociada a esta dirección de email ha sido bloqueada.
     email_reject_reply_user_not_matching:
       title: "Email rechazado, el usuario no coincide"
       subject_template: "[%{email_prefix}] Problema con el correo -- Email de respuesta no esperado"
@@ -1928,68 +1910,9 @@ es:
     too_many_spam_flags:
       title: "Demasiadas banderas por Spam"
       subject_template: "Nueva cuenta retenida"
-      text_body_template: |
-        Hola,
-
-        Esto es un mensaje automático de %{site_name} para hacerte saber que tus mensajes han sido ocultados temporalmente porque han sido reportados por la comunidad.
-
-        Como medida cautelar, tu cuenta nueva ha sido bloqueada y no puede crear nuevas respuestas o temas hasta que un miembro del staff la revise. Sentimos las molestias ocasionadas.
-
-        Para más información sobre lo que consideramos adecuado, lee las [directrices de la comunidad](%{base_url}/guidelines).
     too_many_tl3_flags:
       title: "Demasiadas banderas NC3"
       subject_template: "Nueva cuenta retenida"
-      text_body_template: |
-        Hola,
-
-        Esto es un mensaje automático de %{site_name} para hacerte saber que tus mensajes han sido ocultados temporalmente porque han sido reportados muchas veces por la comunidad.
-
-        Como medida cautelar, tu cuenta nueva ha sido bloqueada y no puede crear nuevas respuestas o temas hasta que un miembro del staff la revise. Sentimos las molestias ocasionadas.
-
-        Para más información sobre lo que consideramos adecuado, lee las [directrices de la comunidad](%{base_url}/guidelines).
-    blocked_by_staff:
-      title: "Bloqueado por Staff"
-      subject_template: "Cuenta temporalmente retenida"
-      text_body_template: |
-        Hola,
-
-        Esto es un mensaje automático de %{site_name} para hacerte saber que tu cuenta ha sido temporalmente retenida como medida cautelar.
-
-        Por favor, sigue leyendo, pero no podrás responder o crear temas hasta que un [miembro del staff](%{base_url}/about) revise tus últimos temas. Sentimos las molestias ocasionadas.
-
-
-        Para más información sobre lo que consideramos adecuado, lee las [directrices de la comunidad](%{base_url}/guidelines).
-    user_automatically_blocked:
-      title: "Usuario Bloqueado Automaticamente"
-      subject_template: "Nuevo usuario %{username} bloqueado por las \"banderas\" de la comunidad."
-      text_body_template: |
-        Este es un mensaje automático.
-
-        El usuario nuevo [%{username}](%{user_url}) ha sido automáticamente bloqueado porque varios usuarios han reportado los mensajes de %{username}.
-
-        Por favor, [mira los reportes](%{base_url}/admin/flags). Si %{username} hubiera sido bloqueado incorrectamente, click haz clic en el botón de desbloquear en la [página de administración del usuario](%{user_url}).
-
-        Esto puede ser cambiado con el ajuste `block_new_user`.
-    spam_post_blocked:
-      title: "Post con Spam Bloqueado"
-      subject_template: "El nuevo usuario %{username} tiene posts bloqueados debido a repetición de enlaces."
-      text_body_template: |
-        Este es un mensaje automático.
-
-        El usuario nuevo [%{username}](%{user_url}) ha intentado crear múltiples temas con enlaces a %{domains}, pero han sido bloqueados para evitar spam. El usuario todavía puede crear temas, siempre y cuando no contengan enlaces a  %{domains}.
-
-        Por favor, [echa un vistazo al usuario](%{user_url}).
-
-        Esto puede ser modificado con los ajustes`newuser_spam_host_threshold` y`white_listed_spam_host_domains`.
-    unblocked:
-      title: "Desbloqueado"
-      subject_template: "Cuenta no retenida"
-      text_body_template: |
-        Hola,
-
-        Este es un mensaje automático desde %{site_name} para informarte que tu cuenta no se encuentra retenida debido a la revisión de miembros del staff.
-
-        Ahora puedes crear temas, y responder a otros usuarios. Gracias por tu paciencia.
     pending_users_reminder:
       title: "Recordatorio de usuarios pendientes de revisión"
       subject_template:

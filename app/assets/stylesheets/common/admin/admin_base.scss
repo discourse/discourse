@@ -176,6 +176,12 @@ $mobile-breakpoint: 700px;
   }
 }
 
+.admin-users .users-list {
+  .username .fa {
+    color: dark-light-choose($primary-medium, $secondary-medium);
+  }
+}
+
 .ip-lookup {
   position: relative;
   display: inline-block;
@@ -212,12 +218,14 @@ $mobile-breakpoint: 700px;
 .admin-container {
   margin-top: 20px;
 
-  .select-box-kit {
+  .select-kit {
     width: 350px;
   }
-
-  .select-box-kit-header {
-    height: 28px;
+  .select-kit.multi-select {
+    width: 500px;
+  }
+  .select-box-kit.dropdown-select-box {
+    width: auto;
   }
 }
 
@@ -450,7 +458,7 @@ $mobile-breakpoint: 700px;
         width: 100%;
         padding-right: 0;
       }
-      .select-box-kit {
+      .select-kit {
         width: 100% !important; // Needs !important to override hard-coded value
         @media (max-width: $mobile-breakpoint) {
           width: 100% !important; // !important overrides hard-coded mobile width of 68px
@@ -531,7 +539,7 @@ $mobile-breakpoint: 700px;
 
   .setting.overridden {
     h3 {
-      color: scale-color($highlight, $lightness: -50%);
+      color: $highlight-high;
     }
   }
 
@@ -620,6 +628,10 @@ section.details {
       text-align: left;
       margin-left: 0;
     }
+
+    .select-kit {
+      width: inherit;
+    }
   }
   .long-value {
     width: 800px;
@@ -701,7 +713,7 @@ section.details {
 
         .ace_editor {
           pointer-events:none;
-          
+
           .ace_cursor {
             visibility: hidden;
           }
@@ -1031,102 +1043,6 @@ table.api-keys {
   }
 }
 
-.commits-widget {
-  border: solid 1px $primary-low;
-  height: 180px;
-  margin-bottom: 36px;
-
-  ul, li {
-    margin: 0;
-    padding: 0;
-  }
-  ul {
-    list-style: none;
-  }
-  a {
-    color: $primary;
-    text-decoration: none;
-  }
-  a:hover {
-    text-decoration: underline;
-  }
-
-  .header {
-    color: $primary;
-    font-weight: bold;
-    height: 30px;
-    background: $primary-low;
-    cursor: pointer;
-
-    h1 {
-      font-size: 1.286em;
-      margin: 5px 0 0 8px;
-      display: inline-block;
-      line-height: 1.0em;
-    }
-  }
-
-  .header:hover h1 {
-    color: $tertiary;
-  }
-
-  .commits-list {
-    height: 149px;
-    overflow-y:auto;
-
-    li {
-      @extend .clearfix;
-      line-height: 1.0em;
-      padding: 6px 8px;
-    background-color: $primary-low;
-      .left {
-        float: left;
-      }
-      .right {
-        margin-left: 52px;
-      }
-
-      img {
-        margin-top: 2px;
-        border: solid 1px $primary-low;
-        padding: 2px;
-        background-color: $secondary;
-      }
-
-      .commit-message {
-        color: $primary;
-        font-size: 0.857em;
-        font-weight: bold;
-      }
-
-      .commit-meta {
-        color: $primary;
-        font-size: 0.857em;
-      }
-
-      .committer-name {
-        font-weight: bold;
-        color: $primary;
-      }
-    }
-    li:last-child {
-      border: none;
-    }
-  }
-
-  // Always show the scrollbar:
-  ::-webkit-scrollbar {
-    width: 6px;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: $primary-low;
-    -webkit-border-radius: 3px;
-  }
-  ::-webkit-scrollbar-track {
-    border-left: solid 1px $primary-low;
-  }
-}
-
 .content-editor {
   min-height: 500px;
 
@@ -1322,7 +1238,7 @@ table.api-keys {
   position: absolute;
 }
 
-.staff-actions, .screened-emails, .screened-urls, .screened-ip-addresses, .permalinks, .web-hook-events {
+.staff-actions, .screened-emails, .screened-urls, .screened-ip-addresses, .permalinks, .search-logs-list, .web-hook-events {
 
   border-bottom: dotted 1px dark-light-choose($primary-low-mid, $secondary);
 
@@ -1348,7 +1264,32 @@ table.api-keys {
   }
 }
 
+.search-logs-list{
+  .col {
+    text-align: center;
+    width: 10%;
+  }
+
+  .col.term {
+    width: 30%;
+    text-align: left;
+  }
+
+  .col.topic {
+    width: 35%;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
 .log-details-modal {
+
+  pre {
+    white-space: pre-wrap;
+    max-height: 250px;
+  }
+
   .modal-tab {
     width: 95%;
   }

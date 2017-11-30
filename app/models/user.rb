@@ -19,6 +19,9 @@ class User < ActiveRecord::Base
   include Roleable
   include HasCustomFields
 
+  # TODO: Remove this after 7th Jan 2018
+  self.ignored_columns = %w{email}
+
   has_many :posts
   has_many :notifications, dependent: :destroy
   has_many :topic_users, dependent: :destroy
@@ -143,9 +146,9 @@ class User < ActiveRecord::Base
 
   # TODO-PERF: There is no indexes on any of these
   # and NotifyMailingListSubscribers does a select-all-and-loop
-  # may want to create an index on (active, blocked, suspended_till)?
-  scope :blocked, -> { where(blocked: true) }
-  scope :not_blocked, -> { where(blocked: false) }
+  # may want to create an index on (active, silence, suspended_till)?
+  scope :silenced, -> { where("silenced_till IS NOT NULL AND silenced_till > ?", Time.zone.now) }
+  scope :not_silenced, -> { where("silenced_till IS NULL OR silenced_till <= ?", Time.zone.now) }
   scope :suspended, -> { where('suspended_till IS NOT NULL AND suspended_till > ?', Time.zone.now) }
   scope :not_suspended, -> { where('suspended_till IS NULL OR suspended_till <= ?', Time.zone.now) }
   scope :activated, -> { where(active: true) }
@@ -654,7 +657,23 @@ class User < ActiveRecord::Base
   end
 
   def suspended?
-    !!(suspended_till && suspended_till > DateTime.now)
+    !!(suspended_till && suspended_till > Time.zone.now)
+  end
+
+  def silenced?
+    !!(silenced_till && silenced_till > Time.zone.now)
+  end
+
+  def silenced_record
+    UserHistory.for(self, :silence_user).order('id DESC').first
+  end
+
+  def silence_reason
+    silenced_record.try(:details) if silenced?
+  end
+
+  def silenced_at
+    silenced_record.try(:created_at) if silenced?
   end
 
   def suspend_record
@@ -946,6 +965,12 @@ class User < ActiveRecord::Base
     end
   end
 
+  def recent_time_read
+    self.created_at && self.created_at < 60.days.ago ?
+      self.user_visits.where('visited_at >= ?', 60.days.ago).sum(:time_read) :
+      self.user_stat&.time_read
+  end
+
   protected
 
   def badge_grant
@@ -1111,48 +1136,49 @@ end
 #
 # Table name: users
 #
-#  id                      :integer          not null, primary key
-#  username                :string(60)       not null
-#  created_at              :datetime         not null
-#  updated_at              :datetime         not null
-#  name                    :string
-#  seen_notification_id    :integer          default(0), not null
-#  last_posted_at          :datetime
-#  email                   :string(513)
-#  password_hash           :string(64)
-#  salt                    :string(32)
-#  active                  :boolean          default(FALSE), not null
-#  username_lower          :string(60)       not null
-#  last_seen_at            :datetime
-#  admin                   :boolean          default(FALSE), not null
-#  last_emailed_at         :datetime
-#  trust_level             :integer          not null
-#  approved                :boolean          default(FALSE), not null
-#  approved_by_id          :integer
-#  approved_at             :datetime
-#  previous_visit_at       :datetime
-#  suspended_at            :datetime
-#  suspended_till          :datetime
-#  date_of_birth           :date
-#  views                   :integer          default(0), not null
-#  flag_level              :integer          default(0), not null
-#  ip_address              :inet
-#  moderator               :boolean          default(FALSE)
-#  blocked                 :boolean          default(FALSE)
-#  title                   :string
-#  uploaded_avatar_id      :integer
-#  locale                  :string(10)
-#  primary_group_id        :integer
-#  registration_ip_address :inet
-#  trust_level_locked      :boolean          default(FALSE), not null
-#  staged                  :boolean          default(FALSE), not null
-#  first_seen_at           :datetime
+#  id                        :integer          not null, primary key
+#  username                  :string(60)       not null
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  name                      :string
+#  seen_notification_id      :integer          default(0), not null
+#  last_posted_at            :datetime
+#  password_hash             :string(64)
+#  salt                      :string(32)
+#  active                    :boolean          default(FALSE), not null
+#  username_lower            :string(60)       not null
+#  last_seen_at              :datetime
+#  admin                     :boolean          default(FALSE), not null
+#  last_emailed_at           :datetime
+#  trust_level               :integer          not null
+#  approved                  :boolean          default(FALSE), not null
+#  approved_by_id            :integer
+#  approved_at               :datetime
+#  previous_visit_at         :datetime
+#  suspended_at              :datetime
+#  suspended_till            :datetime
+#  date_of_birth             :date
+#  views                     :integer          default(0), not null
+#  flag_level                :integer          default(0), not null
+#  ip_address                :inet
+#  moderator                 :boolean          default(FALSE)
+#  title                     :string
+#  uploaded_avatar_id        :integer
+#  locale                    :string(10)
+#  primary_group_id          :integer
+#  registration_ip_address   :inet
+#  trust_level_locked        :boolean          default(FALSE), not null
+#  staged                    :boolean          default(FALSE), not null
+#  first_seen_at             :datetime
+#  blizzard_avatar           :string
+#  silenced_till             :datetime
+#  group_locked_trust_level  :integer
+#  manual_locked_trust_level :integer
 #
 # Indexes
 #
 #  idx_users_admin                    (id)
 #  idx_users_moderator                (id)
-#  index_users_on_email               (lower((email)::text)) UNIQUE
 #  index_users_on_last_posted_at      (last_posted_at)
 #  index_users_on_last_seen_at        (last_seen_at)
 #  index_users_on_uploaded_avatar_id  (uploaded_avatar_id)

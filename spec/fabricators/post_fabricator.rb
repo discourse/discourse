@@ -133,3 +133,14 @@ Fabricator(:private_message_post, from: :post) do
   end
   raw "Ssshh! This is our secret conversation!"
 end
+
+Fabricator(:post_via_email, from: :post) do
+  incoming_email
+  via_email true
+
+  after_create do |post|
+    incoming_email.topic = post.topic
+    incoming_email.post = post
+    incoming_email.user = post.user
+  end
+end

@@ -58,7 +58,11 @@ class Post < ActiveRecord::Base
   # We can pass several creating options to a post via attributes
   attr_accessor :image_sizes, :quoted_post_numbers, :no_bump, :invalidate_oneboxes, :cooking_options, :skip_unique_check
 
-  SHORT_POST_CHARS = 1200
+  LARGE_IMAGES      ||= "large_images".freeze
+  BROKEN_IMAGES     ||= "broken_images".freeze
+  DOWNLOADED_IMAGES ||= "downloaded_images".freeze
+
+  SHORT_POST_CHARS ||= 1200
 
   scope :private_posts_for_user, ->(user) {
     where("posts.topic_id IN (SELECT topic_id
@@ -622,6 +626,7 @@ class Post < ActiveRecord::Base
 
   def self.public_posts_count_per_day(start_date, end_date, category_id = nil)
     result = public_posts.where('posts.created_at >= ? AND posts.created_at <= ?', start_date, end_date)
+      .where(post_type: Post.types[:regular])
     result = result.where('topics.category_id = ?', category_id) if category_id
     result.group('date(posts.created_at)').order('date(posts.created_at)').count
   end
@@ -770,6 +775,8 @@ end
 #  public_version          :integer          default(1), not null
 #  action_code             :string
 #  image_url               :string
+#  trolling_count          :integer          default(0), not null
+#  real_life_threat_count  :integer          default(0), not null
 #
 # Indexes
 #

@@ -12,6 +12,7 @@ import debounce from 'discourse/lib/debounce';
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import QuoteState from 'discourse/lib/quote-state';
 import { userPath } from 'discourse/lib/url';
+import { extractLinkMeta } from 'discourse/lib/render-topic-featured-link';
 
 export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   composer: Ember.inject.controller(),
@@ -32,6 +33,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   username_filters: null,
   filter: null,
   quoteState: null,
+  canRemoveTopicFeaturedLink: Ember.computed.and('canEditTopicFeaturedLink', 'buffered.featured_link'),
 
   updateQueryParams() {
     const postStream = this.get('model.postStream');
@@ -99,6 +101,12 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     return categoryIds === undefined || !categoryIds.length || categoryIds.indexOf(categoryId) !== -1;
   },
 
+  @computed('model')
+  featuredLinkDomain(topic) {
+    const meta = extractLinkMeta(topic);
+    return meta.domain;
+  },
+
   @computed('model.isPrivateMessage')
   canEditTags(isPrivateMessage) {
     return !isPrivateMessage && this.site.get('can_tag_topics');
@@ -123,9 +131,11 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
         const composer = this.get('composer');
         const viewOpen = composer.get('model.viewOpen');
 
+        const quotedText = Quote.build(post, buffer);
+
         // If we can't create a post, delegate to reply as new topic
         if ((!viewOpen) && (!this.get('model.details.can_create_post'))) {
-          this.send('replyAsNewTopic', post);
+          this.send('replyAsNewTopic', post, quotedText);
           return;
         }
 
@@ -146,7 +156,6 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
           composerOpts.post = composerPost;
         }
 
-        const quotedText = Quote.build(post, buffer);
         composerOpts.quote = quotedText;
         if (composer.get('model.viewOpen')) {
           this.appEvents.trigger('composer:insert-block', quotedText);
@@ -615,11 +624,11 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       }
     },
 
-    replyAsNewTopic(post) {
+    replyAsNewTopic(post, quotedText) {
       const composerController = this.get('composer');
 
       const { quoteState } = this;
-      const quotedText = Quote.build(post, quoteState.buffer);
+      quotedText = quotedText || Quote.build(post, quoteState.buffer);
       quoteState.clear();
 
       var options;
@@ -694,6 +703,10 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
     convertToPrivateMessage() {
       this.get('content').convertTopic("private");
+    },
+
+    removeFeaturedLink() {
+      this.set('buffered.featured_link', null);
     }
   },
 
@@ -752,9 +765,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     return selectedPostsUsername !== undefined;
   },
 
-  categories: function() {
-    return Discourse.Category.list();
-  }.property(),
+  categories: Ember.computed.alias('site.categoriesList'),
 
   canSelectAll: Em.computed.not('allPostsSelected'),
 

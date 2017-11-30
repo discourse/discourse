@@ -547,6 +547,8 @@ describe UserNotifications do
           You are now officially notified.
           %{header_instructions}
           %{message} %{respond_instructions}
+          %{topic_title_url_encoded}
+          %{site_title_url_encoded}
           BODY
 
           body << "%{context}" if notification_type != :invited_to_topic

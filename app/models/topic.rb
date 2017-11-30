@@ -96,7 +96,7 @@ class Topic < ActiveRecord::Base
 
   before_validation do
     self.title = TextCleaner.clean_title(TextSentinel.title_sentinel(title).text) if errors[:title].empty?
-    self.featured_link.strip! if self.featured_link
+    self.featured_link = self.featured_link.strip.presence if self.featured_link
   end
 
   belongs_to :category
@@ -645,7 +645,7 @@ SQL
 
       Category.where(id: new_category.id).update_all("topic_count = topic_count + 1")
       CategoryFeaturedTopic.feature_topics_for(old_category) unless @import_mode
-      CategoryFeaturedTopic.feature_topics_for(new_category) unless @import_mode || old_category.id == new_category.id
+      CategoryFeaturedTopic.feature_topics_for(new_category) unless @import_mode || old_category.try(:id) == new_category.id
     end
 
     true
@@ -1266,6 +1266,10 @@ SQL
     result.ntuples != 0
   end
 
+  def featured_link_root_domain
+    MiniSuffix.domain(URI.parse(self.featured_link).hostname)
+  end
+
   private
 
   def update_category_topic_count_by(num)
@@ -1288,56 +1292,51 @@ end
 #
 # Table name: topics
 #
-#  id                            :integer          not null, primary key
-#  title                         :string           not null
-#  last_posted_at                :datetime
-#  created_at                    :datetime         not null
-#  updated_at                    :datetime         not null
-#  views                         :integer          default(0), not null
-#  posts_count                   :integer          default(0), not null
-#  user_id                       :integer
-#  last_post_user_id             :integer          not null
-#  reply_count                   :integer          default(0), not null
-#  featured_user1_id             :integer
-#  featured_user2_id             :integer
-#  featured_user3_id             :integer
-#  avg_time                      :integer
-#  deleted_at                    :datetime
-#  highest_post_number           :integer          default(0), not null
-#  image_url                     :string
-#  like_count                    :integer          default(0), not null
-#  incoming_link_count           :integer          default(0), not null
-#  category_id                   :integer
-#  visible                       :boolean          default(TRUE), not null
-#  moderator_posts_count         :integer          default(0), not null
-#  closed                        :boolean          default(FALSE), not null
-#  archived                      :boolean          default(FALSE), not null
-#  bumped_at                     :datetime         not null
-#  has_summary                   :boolean          default(FALSE), not null
-#  vote_count                    :integer          default(0), not null
-#  archetype                     :string           default("regular"), not null
-#  featured_user4_id             :integer
-#  notify_moderators_count       :integer          default(0), not null
-#  spam_count                    :integer          default(0), not null
-#  pinned_at                     :datetime
-#  score                         :float
-#  percent_rank                  :float            default(1.0), not null
-#  subtype                       :string
-#  slug                          :string
-#  auto_close_at                 :datetime
-#  auto_close_user_id            :integer
-#  auto_close_started_at         :datetime
-#  deleted_by_id                 :integer
-#  participant_count             :integer          default(1)
-#  word_count                    :integer
-#  excerpt                       :string(1000)
-#  pinned_globally               :boolean          default(FALSE), not null
-#  auto_close_based_on_last_post :boolean          default(FALSE)
-#  auto_close_hours              :float
-#  pinned_until                  :datetime
-#  fancy_title                   :string(400)
-#  highest_staff_post_number     :integer          default(0), not null
-#  featured_link                 :string
+#  id                        :integer          not null, primary key
+#  title                     :string           not null
+#  last_posted_at            :datetime
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  views                     :integer          default(0), not null
+#  posts_count               :integer          default(0), not null
+#  user_id                   :integer
+#  last_post_user_id         :integer          not null
+#  reply_count               :integer          default(0), not null
+#  featured_user1_id         :integer
+#  featured_user2_id         :integer
+#  featured_user3_id         :integer
+#  avg_time                  :integer
+#  deleted_at                :datetime
+#  highest_post_number       :integer          default(0), not null
+#  image_url                 :string
+#  like_count                :integer          default(0), not null
+#  incoming_link_count       :integer          default(0), not null
+#  category_id               :integer
+#  visible                   :boolean          default(TRUE), not null
+#  moderator_posts_count     :integer          default(0), not null
+#  closed                    :boolean          default(FALSE), not null
+#  archived                  :boolean          default(FALSE), not null
+#  bumped_at                 :datetime         not null
+#  has_summary               :boolean          default(FALSE), not null
+#  vote_count                :integer          default(0), not null
+#  archetype                 :string           default("regular"), not null
+#  featured_user4_id         :integer
+#  notify_moderators_count   :integer          default(0), not null
+#  spam_count                :integer          default(0), not null
+#  pinned_at                 :datetime
+#  score                     :float
+#  percent_rank              :float            default(1.0), not null
+#  subtype                   :string
+#  slug                      :string
+#  deleted_by_id             :integer
+#  participant_count         :integer          default(1)
+#  word_count                :integer
+#  excerpt                   :string(1000)
+#  pinned_globally           :boolean          default(FALSE), not null
+#  pinned_until              :datetime
+#  fancy_title               :string(400)
+#  highest_staff_post_number :integer          default(0), not null
+#  featured_link             :string
 #
 # Indexes
 #

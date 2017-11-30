@@ -165,18 +165,44 @@ describe AdminUserIndexQuery do
 
   end
 
-  describe "with a blocked user" do
+  describe "with a silenced user" do
 
-    let!(:user) { Fabricate(:user, blocked: true) }
+    let!(:user) { Fabricate(:user, silenced_till: 1.year.from_now) }
 
-    it "finds the blocked user" do
-      query = ::AdminUserIndexQuery.new(query: 'blocked')
+    it "finds the silenced user" do
+      query = ::AdminUserIndexQuery.new(query: 'silenced')
       expect(query.find_users.count).to eq(1)
     end
 
   end
 
   describe "filtering" do
+
+    context "exact email bypass" do
+      it "can correctly bypass expensive ilike query" do
+        user = Fabricate(:user, email: 'sam@Sam.com')
+
+        query = AdminUserIndexQuery.new(filter: 'Sam@sam.com').find_users_query
+        expect(query.count).to eq(1)
+        expect(query.first.id).to eq(user.id)
+
+        expect(query.to_sql.downcase).not_to include("ilike")
+      end
+
+      it "can correctly bypass expensive ilike query" do
+        user = Fabricate(:user, email: 'sam2@Sam.com')
+
+        query = AdminUserIndexQuery.new(email: 'Sam@sam.com').find_users_query
+        expect(query.count).to eq(0)
+        expect(query.to_sql.downcase).not_to include("ilike")
+
+        query = AdminUserIndexQuery.new(email: 'Sam2@sam.com').find_users_query
+        expect(query.first.id).to eq(user.id)
+        expect(query.count).to eq(1)
+        expect(query.to_sql.downcase).not_to include("ilike")
+
+      end
+    end
 
     context "by email fragment" do
 

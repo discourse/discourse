@@ -131,19 +131,43 @@ describe PostOwnerChanger do
         expect(user_a_stat.likes_received).to eq(1)
       end
 
+      it "handles whispers" do
+        whisper = PostCreator.new(
+          editor,
+          topic_id: p1.topic_id,
+          reply_to_post_number: 1,
+          post_type: Post.types[:whisper],
+          raw: 'this is a whispered reply'
+        ).create
+
+        user_stat = editor.user_stat
+
+        expect {
+          described_class.new(
+            post_ids: [whisper.id],
+            topic_id: topic.id,
+            new_owner: Fabricate(:admin),
+            acting_user: editor
+          ).change_owner!
+        }.to_not change { user_stat.reload.post_count }
+      end
+
       context 'private message topic' do
         let(:topic) { Fabricate(:private_message_topic) }
 
         it "should update users' counts" do
           PostAction.act(p2user, p1, PostActionType.types[:like])
 
-          change_owners
+          expect {
+            change_owners
+          }.to_not change { p1user.user_stat.post_count }
 
           expect(p1user.user_stat.likes_received).to eq(0)
 
           user_a_stat = user_a.user_stat
           expect(user_a_stat.first_post_created_at).to be_present
           expect(user_a_stat.likes_received).to eq(0)
+          expect(user_a_stat.post_count).to eq(0)
         end
       end
 

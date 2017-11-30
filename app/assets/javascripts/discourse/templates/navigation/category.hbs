@@ -11,24 +11,14 @@
   </section>
 
   <div class='category-navigation'>
-    {{bread-crumbs categories=categories
-                   category=category
-                   noSubcategories=noSubcategories}}
-
-    {{navigation-bar navItems=navItems filterMode=filterMode category=category}}
-
-    {{#if currentUser}}
-      {{category-notifications-button category=category}}
-    {{/if}}
-
-    {{create-topic-button
+    {{d-navigation
+      category=category
+      filterMode=filterMode
+      noSubcategories=noSubcategories
       canCreateTopic=canCreateTopic
-      disabled=cannotCreateTopicOnCategory
-      action=(route-action "createTopic")}}
-
-    {{#if canEditCategory}}
-      {{d-button class="btn-default edit-category" action="editCategory" actionParam=category icon="wrench" label="category.edit_long"}}
-    {{/if}}
+      createTopic=(route-action "createTopic")
+      createTopicDisabled=cannotCreateTopicOnCategory
+      editCategory=(route-action "editCategory" category)}}
 
     {{plugin-outlet name="category-navigation" args=(hash category=category)}}
   </div>

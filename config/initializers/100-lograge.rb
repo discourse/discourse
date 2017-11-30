@@ -1,35 +1,50 @@
 if (Rails.env.production? && SiteSetting.logging_provider == 'lograge') || ENV["ENABLE_LOGRAGE"]
   require 'lograge'
 
+  if Rails.configuration.multisite
+    Rails.logger.formatter = ActiveSupport::Logger::SimpleFormatter.new
+  end
+
   Rails.application.configure do
     config.lograge.enabled = true
-
-    logstash_uri = ENV["LOGSTASH_URI"]
 
     config.lograge.custom_options = lambda do |event|
       exceptions = %w(controller action format id)
 
+      params = event.payload[:params].except(*exceptions)
+      params[:files].map!(&:headers) if params[:files]
+
       output = {
-        params: event.payload[:params].except(*exceptions),
+        params: params.to_query,
         database: RailsMultisite::ConnectionManagement.current_db,
-        time: event.time,
       }
 
-      output[:type] = :rails if logstash_uri
+      if data = Thread.current[:_method_profiler]
+        sql = data[:sql]
+
+        if sql
+          output[:db] = sql[:duration] * 1000
+          output[:db_calls] = sql[:calls]
+        end
+
+        redis = data[:redis]
+
+        if redis
+          output[:redis] = redis[:duration] * 1000
+          output[:redis_calls] = redis[:calls]
+        end
+      end
+
       output
     end
 
-    if logstash_uri
-      require 'logstash-logger'
-
+    if ENV["LOGSTASH_URI"]
       config.lograge.formatter = Lograge::Formatters::Logstash.new
 
-      config.lograge.logger = LogStashLogger.new(
-        type: :multi_delegator,
-        outputs: [
-          { uri: logstash_uri },
-          { type: :file, path: "#{Rails.root}/log/#{Rails.env}.log", sync: true }
-        ]
+      require 'discourse_logstash_logger'
+
+      config.lograge.logger = DiscourseLogstashLogger.logger(
+        uri: ENV['LOGSTASH_URI'], type: :rails
       )
     end
   end

@@ -74,9 +74,11 @@ class HtmlNormalize
       attrs.each do |a|
         buffer << " "
         buffer << a.name
-        buffer << "='"
-        buffer << a.value
-        buffer << "'"
+        if a.value
+          buffer << "='"
+          buffer << a.value
+          buffer << "'"
+        end
       end
     end
 

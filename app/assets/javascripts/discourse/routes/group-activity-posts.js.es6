@@ -6,12 +6,13 @@ export function buildGroupPage(type) {
       return I18n.t(`groups.${type}`);
     },
 
-    model() {
-      return this.modelFor("group").findPosts({ type });
+    model(params, transition) {
+      let categoryId = Ember.get(transition, 'queryParams.category_id');
+      return this.modelFor("group").findPosts({ type, categoryId });
     },
 
     setupController(controller, model) {
-      this.controllerFor('group-activity-posts').setProperties({ model, type });
+      this.controllerFor('group-activity-posts').setProperties({ model, type, canLoadMore: true });
       this.controllerFor("group").set("showing", type);
     },
 

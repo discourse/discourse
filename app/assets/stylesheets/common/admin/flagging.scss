@@ -42,6 +42,14 @@
       width: 100%;
       word-wrap: break-word;
 
+      .flagged-post-user-details {
+        .username {
+          font-weight: bold;
+          color: $primary;
+        }
+        margin-bottom: 0.5em;
+      }
+
       .d-icon {
         display: inline-block;
       }
@@ -143,6 +151,8 @@
   .flagged-post-controls {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
 
     button {
       margin-right: 0.5em;
@@ -180,13 +190,6 @@
   margin-bottom: 2em;
 }
 
-.delete-flag-modal, .agree-flag-modal {
-  button {
-    margin: 10px 0 10px 10px;
-    padding: 10px 15px;
-  }
-}
-
 .mobile-view {
   .flagged-posts {
     .flagged-post {
@@ -194,5 +197,11 @@
         display: block;
       }
     }
+  }
+}
+
+.show-details {
+  .d-icon {
+    padding-right: 0.25em;
   }
 }

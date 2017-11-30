@@ -10,8 +10,8 @@
         {{#user-link user=post.user}}
           {{post.user.username}}
         {{/user-link}}
-        {{#if post.user.blocked}}
-          {{d-icon "ban" title="user.blocked_tooltip"}}
+        {{#if post.user.silenced}}
+          {{d-icon "ban" title="user.silenced_tooltip"}}
         {{/if}}
       </span>
     </div>

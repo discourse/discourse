@@ -16,6 +16,8 @@ import PreloadStore from 'preload-store';
 import { defaultHomepage } from 'discourse/lib/utilities';
 import { userPath } from 'discourse/lib/url';
 
+const isForever = dt => moment().diff(dt, 'years') < -500;
+
 const User = RestModel.extend({
 
   hasPMs: Em.computed.gt("private_messages_stats.all", 0),
@@ -178,14 +180,16 @@ const User = RestModel.extend({
   },
 
   @computed("suspended_till")
-  suspendedForever(suspendedTill) {
-    return moment().diff(suspendedTill, 'years') < -500;
-  },
+  suspendedForever: isForever,
+
+  @computed("silenced_till")
+  silencedForever: isForever,
 
   @computed("suspended_till")
-  suspendedTillDate(suspendedTill) {
-    return longDate(suspendedTill);
-  },
+  suspendedTillDate: longDate,
+
+  @computed("silenced_till")
+  silencedTillDate: longDate,
 
   changeUsername(new_username) {
     return ajax(userPath(`${this.get('username_lower')}/preferences/username`), {
@@ -249,6 +253,7 @@ const User = RestModel.extend({
       'include_tl0_in_digests',
       'theme_key',
       'allow_private_messages',
+      'homepage_id',
     ];
 
     if (fields) {
@@ -461,7 +466,7 @@ const User = RestModel.extend({
 
   "delete": function() {
     if (this.get('can_delete_account')) {
-      return ajax(userPath(this.get('username')), {
+      return ajax(userPath(this.get('username') + ".json"), {
         type: 'DELETE',
         data: {context: window.location.pathname}
       });
@@ -472,7 +477,7 @@ const User = RestModel.extend({
 
   dismissBanner(bannerKey) {
     this.set("dismissed_banner_key", bannerKey);
-    ajax(userPath(this.get('username')), {
+    ajax(userPath(this.get('username') + ".json"), {
       type: 'PUT',
       data: { dismissed_banner_key: bannerKey }
     });

@@ -63,7 +63,7 @@ class TrustLevel3Requirements
   end
 
   def trust_level_locked
-    @user.trust_level_locked
+    !@user.manual_locked_trust_level.nil?
   end
 
   def on_grace_period

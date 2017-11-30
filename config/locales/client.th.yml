@@ -444,7 +444,6 @@ th:
       admin: "{{user}} เป็นผู้ดูแลระบบ"
       moderator_tooltip: "ผู้ใช้นี้เป็นผู้ตรวจสอบ"
       admin_tooltip: "ผู้ใช้นี้เป็นผู้ดูแลระบบ"
-      blocked_tooltip: "ผู้ใช้นี้ถูกระงับ"
       suspended_notice: "ผู้ใช้นี้ถูกระงับตั้งแต่ {{date}}"
       suspended_reason: "เหตุผล:"
       github_profile: "Github"
@@ -1349,7 +1348,6 @@ th:
         no_problems: "ไม่พบปัญหา"
         moderators: 'ผู้ดูแล:'
         admins: 'ผู้ดูแลระบบ:'
-        blocked: 'ถูกบล็อก:'
         suspended: 'ถูกปิด:'
         private_messages_short: "ข้อความ"
         private_messages_title: "ข้อความ"
@@ -1500,7 +1498,6 @@ th:
           pending: "กำลังรอ"
           staff: 'ทีมงาน'
           suspended: 'ระงับการใช้งาน'
-          blocked: 'ถูกบล็อก'
           suspect: 'ต้องสงสัย'
         approved: "ยืนยันหรือไม่"
         approved_selected:
@@ -1517,7 +1514,6 @@ th:
           regular: 'ผู้ใช้ที่ระดับความไว้ใจ 3 (ทั่วไป)'
           leader: 'ผู้ใช้ที่ระดับความไว้ใจ 4 (ผู้นำ)'
           staff: "ทีมงาน"
-          blocked: 'ผู้ใช้งานที่ถูกบล็อก'
           suspended: 'ผู้ใช้งานที่ถูกระงับ'
           suspect: 'ผู้ใช้งานที่ต้องสงสัย'
         not_verified: "ยังไม่ได้รับการตรวจสอบ"
@@ -1528,15 +1524,12 @@ th:
         suspend_failed: "มีข้อผิดพลาดในการระงับการใช้งาน {{error}}"
         unsuspend_failed: "มีข้อผิดพลาดในเปิดการใช้งาน {{error}}"
         suspend_duration: "ระงับการใช้งานถึงเมื่อไร"
-        suspend_duration_units: "(วัน)"
         suspended_by: "ระงับการใช้งานโดย"
         delete_all_posts: "ลบโพสทั้งหมด"
-        suspend: "ระงับการใช้งาน"
-        unsuspend: "เปิดการใช้งาน"
         suspended: "ระงับการใช้งานหรือไม่"
-        blocked: "บล็อกหรือไม่"
         ip_lookup: "ค้นหา IP"
-        unblock: 'ปลดบล็อก'
+        unsuspend: 'เปิดการใช้งาน'
+        suspend: 'ระงับการใช้งาน'
         last_100_days: 'ใน 100 วันที่ผ่านมา'
         private_topics_count: หัวข้อส่วนตัว
         posts_read_count: อ่านโพส

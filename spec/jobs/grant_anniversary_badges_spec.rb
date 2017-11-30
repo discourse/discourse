@@ -23,8 +23,8 @@ describe Jobs::GrantAnniversaryBadges do
     expect(badge).to be_blank
   end
 
-  it "doesn't award to a blocked user" do
-    user = Fabricate(:user, created_at: 400.days.ago, blocked: true)
+  it "doesn't award to a silenced user" do
+    user = Fabricate(:user, created_at: 400.days.ago, silenced_till: 1.year.from_now)
     Fabricate(:post, user: user, created_at: 1.week.ago)
     granter.execute({})
 

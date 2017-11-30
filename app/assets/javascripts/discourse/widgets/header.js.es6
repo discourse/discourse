@@ -41,7 +41,9 @@ createWidget('header-notifications', {
         action: attrs.action,
         className: 'badge-notification unread-notifications',
         rawLabel: unreadNotifications,
-        omitSpan: true
+        omitSpan: true,
+        title: "notifications.tooltip.regular",
+        titleOptions: {count: unreadNotifications}
       }));
     }
 
@@ -62,7 +64,9 @@ createWidget('header-notifications', {
         action: attrs.action,
         className: 'badge-notification unread-private-messages',
         rawLabel: unreadPMs,
-        omitSpan: true
+        omitSpan: true,
+        title: "notifications.tooltip.message",
+        titleOptions: {count: unreadPMs}
       }));
     }
 

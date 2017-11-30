@@ -4,13 +4,13 @@ import { cloak, uncloak } from 'discourse/widgets/post-stream';
 import { isWorkaroundActive } from 'discourse/lib/safari-hacks';
 import offsetCalculator from 'discourse/lib/offset-calculator';
 
-function findTopView($posts, viewportTop, min, max) {
+function findTopView($posts, viewportTop, postsWrapperTop, min, max) {
   if (max < min) { return min; }
 
   while (max > min) {
     const mid = Math.floor((min + max) / 2);
     const $post = $($posts[mid]);
-    const viewBottom = $post.position().top + $post.height();
+    const viewBottom = ($post.offset().top - postsWrapperTop) + $post.height();
 
     if (viewBottom > viewportTop) {
       max = mid-1;
@@ -63,6 +63,10 @@ export default MountWidget.extend({
     if (this.isDestroyed || this.isDestroying) { return; }
     if (isWorkaroundActive()) { return; }
 
+    // We use this because watching videos fullscreen in Chrome was super buggy
+    // otherwise. Thanks to arrendek from q23 for the technique.
+    if (document.elementFromPoint(0, 0).tagName.toUpperCase() === "IFRAME") { return; }
+
     const $w = $(window);
     const windowHeight = window.innerHeight ? window.innerHeight : $w.height();
     const slack = Math.round(windowHeight * 5);
@@ -71,9 +75,10 @@ export default MountWidget.extend({
 
     const windowTop = $w.scrollTop();
 
+    const postsWrapperTop = $('.posts-wrapper').offset().top;
     const $posts = this.$('.onscreen-post, .cloaked-post');
     const viewportTop = windowTop - slack;
-    const topView = findTopView($posts, viewportTop, 0, $posts.length-1);
+    const topView = findTopView($posts, viewportTop, postsWrapperTop, 0, $posts.length-1);
 
     let windowBottom = windowTop + windowHeight;
     let viewportBottom = windowBottom + slack;

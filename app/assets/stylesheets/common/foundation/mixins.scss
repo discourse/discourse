@@ -110,3 +110,10 @@
 	-webkit-transform: $transforms;
             transform: $transforms;
 }
+
+
+@mixin appearance-none() { // resets default browser styles
+  -webkit-appearance: none;
+  -moz-appearance:    none;
+  appearance:         none;
+}

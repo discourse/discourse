@@ -70,7 +70,7 @@ en:
         no_body_detected_error: "Happens when we couldn't extract a body and there were no attachments."
         no_sender_detected_error: "Happens when we couldn't find a valid email address in the From header."
         inactive_user_error: "Happens when the sender is not active."
-        blocked_user_error: "Happens when the sender has been blocked."
+        silenced_user_error: "Happens when the sender has been silenced."
         bad_destination_address: "Happens when none of the email addresses in To/Cc/Bcc fields matched a configured incoming email address."
         strangers_not_allowed_error: "Happens when a user tried to create a new topic in a category they're not a member of."
         insufficient_trust_level_error: "Happens when a user tried to create a new topic in a category they don't have the required trust level for."
@@ -264,6 +264,7 @@ en:
 
   queue:
     delete_reason: "Deleted via post moderation queue"
+    not_found: "Post not found or already updated."
 
   groups:
     success:
@@ -423,7 +424,7 @@ en:
         translation_overrides:
           attributes:
             value:
-              missing_interpolation_keys: 'The following interpolation key(s) are missing: "%{keys}"'
+              invalid_interpolation_keys: 'The following interpolation key(s) are invalid: "%{keys}"'
         watched_word:
           attributes:
             word:
@@ -524,7 +525,6 @@ en:
   post:
     image_placeholder:
       broken: "This image is broken"
-      large: "This image is too large to display here; click to view"
 
   rate_limiter:
     slow_down: "You have performed this action too many times, try again later."
@@ -1011,7 +1011,8 @@ en:
     digest_logo_url: "The alternate logo image used at the top of your site's email summary. Should be a wide rectangle shape. Should not be an SVG image. If left blank `logo_url` will be used."
     logo_small_url: "The small logo image at the top left of your site, should be a square shape, seen when scrolling down. If left blank a home glyph will be shown."
     favicon_url: "A favicon for your site, see http://en.wikipedia.org/wiki/Favicon, to work correctly over a CDN it must be a png"
-    mobile_logo_url: "The fixed position logo image used at the top left of your mobile site. Should be a square shape. If left blank, `logo_url` will be used. eg: http://example.com/uploads/default/logo.png"
+    mobile_logo_url: "Custom logo url used on mobile version of your site. If left blank, `logo_url` will be used. eg: http://example.com/uploads/default/logo.png"
+    large_icon_url: "Image used as logo/splash image on Android. Recommended size is 512px by 512px."
     apple_touch_icon_url: "Icon used for Apple touch devices. Recommended size is 144px by 144px."
 
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
@@ -1045,11 +1046,11 @@ en:
     tl3_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl3 (regular) by multiplying with this number"
     tl4_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl4 (leader) by multiplying with this number"
 
-    num_spam_flags_to_block_new_user: "If a new user's posts get this many spam flags from num_users_to_block_new_user different users, hide all their posts and prevent future posting. 0 to disable."
-    num_users_to_block_new_user: "If a new user's posts get num_spam_flags_to_block_new_user spam flags from this many different users, hide all their posts and prevent future posting. 0 to disable."
-    num_tl3_flags_to_block_new_user: "If a new user's posts get this many flags from num_tl3_users_to_block_new_user different trust level 3 users, hide all their posts and prevent future posting. 0 to disable."
-    num_tl3_users_to_block_new_user: "If a new user's posts get num_tl3_flags_to_block_new_user flags from this many different trust level 3 users, hide all their posts and prevent future posting. 0 to disable."
-    notify_mods_when_user_blocked: "If a user is automatically blocked, send a message to all moderators."
+    num_spam_flags_to_silence_new_user: "If a new user's posts get this many spam flags from num_users_to_silence_new_user different users, hide all their posts and prevent future posting. 0 to disable."
+    num_users_to_silence_new_user: "If a new user's posts get num_spam_flags_to_silence_new_user spam flags from this many different users, hide all their posts and prevent future posting. 0 to disable."
+    num_tl3_flags_to_silence_new_user: "If a new user's posts get this many flags from num_tl3_users_to_silence_new_user different trust level 3 users, hide all their posts and prevent future posting. 0 to disable."
+    num_tl3_users_to_silence_new_user: "If a new user's posts get num_tl3_flags_to_silence_new_user flags from this many different trust level 3 users, hide all their posts and prevent future posting. 0 to disable."
+    notify_mods_when_user_silenced: "If a user is automatically silenced, send a message to all moderators."
     flag_sockpuppets: "If a new user replies to a topic from the same IP address as the new user who started the topic, flag both of their posts as potential spam."
 
     traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak."
@@ -1058,8 +1059,6 @@ en:
     must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site. WARNING: enabling this for a live site will revoke access for existing non-staff users!"
     pending_users_reminder_delay: "Notify moderators if new users have been waiting for approval for longer than this many hours. Set to -1 to disable notifications."
     maximum_session_age: "User will remain logged in for n hours since last visit"
-    ga_tracking_code: "OBSOLETE: Google analytics (ga.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
-    ga_domain_name: "OBSOLETE: Google analytics (ga.js) domain name, eg: mysite.com; see http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) domain name, eg: mysite.com; see http://google.com/analytics"
     ga_universal_auto_link_domains: "Enable Google Universal Analytics (analytics.js) cross-domain tracking. Outgoing links to these domains will have the client id added to them. See Google's Cross-Domain Tracking guide."
@@ -1355,9 +1354,9 @@ en:
 
     auto_respond_to_flag_actions: "Enable automatic reply when disposing a flag."
     min_first_post_typing_time: "Minimum amount of time in milliseconds a user must type during first post, if threshold is not met post will automatically enter the needs approval queue. Set to 0 to disable (not recommended)"
-    auto_block_fast_typers_on_first_post: "Automatically block users that do not meet min_first_post_typing_time"
-    auto_block_fast_typers_max_trust_level: "Maximum trust level to auto block fast typers"
-    auto_block_first_post_regex: "Case insensitive regex that if passed will cause first post by user to be blocked and sent to approval queue. Example: raging|a[bc]a , will cause all posts containing raging or aba or aca to be blocked on first. Only applies to first post."
+    auto_silence_fast_typers_on_first_post: "Automatically silence users that do not meet min_first_post_typing_time"
+    auto_silence_fast_typers_max_trust_level: "Maximum trust level to auto silence fast typers"
+    auto_silence_first_post_regex: "Case insensitive regex that if passed will cause first post by user to be silenced and sent to approval queue. Example: raging|a[bc]a , will cause all posts containing raging or aba or aca to be silenced on first. Only applies to first post."
     flags_default_topics: "Show flagged topics by default in the admin section"
 
     reply_by_email_enabled: "Enable replying to topics via email."
@@ -1557,6 +1556,8 @@ en:
     default_categories_muted: "List of categories that are muted by default."
     default_categories_watching_first_post: "List of categories in which first post in each new topic will be watched by default."
 
+    retain_web_hook_events_period_days: "Number of days to retain web hook event records."
+
     max_user_api_reqs_per_day: "Maximum number of user API requests per key per day"
     max_user_api_reqs_per_minute: "Maximum number of user API requests per key per minute"
     allow_user_api_keys: "Allow generation of user API keys"
@@ -1739,7 +1740,8 @@ en:
     email_too_long: "The email you provided is too long. Mailbox names must be no more than 254 characters, and domain names must be no more than 253 characters."
     reserved_username: "That username is not allowed."
     missing_user_field: "You have not completed all the user fields"
-    close_window: "Authentication is complete. Close this window to continue."
+    auth_complete: "Authentication is complete."
+    click_to_continue: "Click here to continue."
     already_logged_in: "Oops, looks like you are attempting to accept an invitation for another user. If you are not %{current_user}, please log out and try again."
 
   user:
@@ -1769,6 +1771,10 @@ en:
     website:
       domain_not_allowed: "Website is invalid. Allowed domains are: %{domains}"
     auto_rejected: "Rejected automatically due to age. See auto_handle_queued_age site setting."
+    destroy_reasons:
+      unused_staged_user: "Unused staged user"
+      fixed_primary_email: "Fixed primary email for staged user"
+      same_ip_address: "Same IP address (%ip_address%) as other users"
 
   flags_reminder:
     flags_were_submitted:
@@ -2171,13 +2177,13 @@ en:
 
         Your account associated with this email address is not activated. Please activate your account before sending emails in.
 
-    email_reject_blocked_user:
-      title: "Email Reject Blocked User"
-      subject_template: "[%{email_prefix}] Email issue -- Blocked User"
+    email_reject_silenced_user:
+      title: "Email Reject Silenced User"
+      subject_template: "[%{email_prefix}] Email issue -- Silenced User"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        Your account associated with this email address has been blocked.
+        Your account associated with this email address has been silenced.
 
     email_reject_reply_user_not_matching:
       title: "Email Reject User Not Matching"
@@ -2323,7 +2329,7 @@ en:
 
         This is an automated message from %{site_name} to let you know that your posts have been temporarily hidden because they were flagged by the community.
 
-        As a precautionary measure, your new account has been blocked from creating new replies or topics until a staff member can review your account. We apologize for the inconvenience.
+        As a precautionary measure, your new account has been silenced from creating new replies or topics until a staff member can review your account. We apologize for the inconvenience.
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
     too_many_tl3_flags:
@@ -2334,11 +2340,11 @@ en:
 
         This is an automated message from %{site_name} to let you know you that your account has been placed on hold due to a large number of community flags.
 
-        As a precautionary measure, your new account has been blocked from creating new replies or topics until a staff member can review your account.  We apologize for the inconvenience.
+        As a precautionary measure, your new account has been silenced from creating new replies or topics until a staff member can review your account.  We apologize for the inconvenience.
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
-    blocked_by_staff:
-      title: "Blocked by Staff"
+    silenced_by_staff:
+      title: "Silenced by Staff"
       subject_template: "Account temporarily on hold"
       text_body_template: |
         Hello,
@@ -2349,32 +2355,32 @@ en:
 
         For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
-    user_automatically_blocked:
-      title: "User Automatically Blocked"
-      subject_template: "New user %{username} blocked by community flags"
+    user_automatically_silenced:
+      title: "User Automatically Silenced"
+      subject_template: "New user %{username} silenced by community flags"
       text_body_template: |
         This is an automated message.
 
-        The new user [%{username}](%{user_url}) was automatically blocked because multiple users flagged %{username}'s post(s).
+        The new user [%{username}](%{user_url}) was automatically silenced because multiple users flagged %{username}'s post(s).
 
-        Please [review the flags](%{base_url}/admin/flags). If %{username} was incorrectly blocked from posting, click the unblock button on [the admin page for this user](%{user_url}).
+        Please [review the flags](%{base_url}/admin/flags). If %{username} was incorrectly silenced from posting, click the unsilence button on [the admin page for this user](%{user_url}).
 
-        This threshold can be changed via the `block_new_user` site settings.
+        This threshold can be changed via the `silence_new_user` site settings.
 
-    spam_post_blocked:
-      title: "Spam Post Blocked"
-      subject_template: "New user %{username} posts blocked due to repeated links"
+    spam_post_silenced:
+      title: "Spam Post Silenced"
+      subject_template: "New user %{username} posts silenced due to repeated links"
       text_body_template: |
         This is an automated message.
 
-        The new user [%{username}](%{user_url}) tried to create multiple posts with links to %{domains}, but those posts were blocked to avoid spam. The user is still able to create new posts that do not link to %{domains}.
+        The new user [%{username}](%{user_url}) tried to create multiple posts with links to %{domains}, but those posts were silenced to avoid spam. The user is still able to create new posts that do not link to %{domains}.
 
         Please [review the user](%{user_url}).
 
         This can be modified via the `newuser_spam_host_threshold` and `white_listed_spam_host_domains` site settings.
 
-    unblocked:
-      title: "Unblocked"
+    unsilenced:
+      title: "Unsilenced"
       subject_template: "Account no longer on hold"
       text_body_template: |
         Hello,
@@ -2659,6 +2665,17 @@ en:
 
         %{message}
 
+    account_silenced:
+      title: "Account Silenced"
+      subject_template: "[%{email_prefix}] Your account has been silenced"
+      text_body_template: |
+        You have been silenced from the forum until %{silenced_till}.
+
+        %{reason}
+
+        %{message}
+
+
     account_exists:
       title: "Account already exists"
       subject_template: "[%{email_prefix}] Account already exists"
@@ -2688,7 +2705,8 @@ en:
       popular_posts: "Popular Posts"
       more_new: "New for you"
       subject_template: "[%{email_prefix}] Summary"
-      unsubscribe: "This summary is sent from %{site_link} when we haven't seen you in a while. Change <a href='%{email_settings_url}'>your email settings</a>, or %{unsubscribe_link} to unsubscribe."
+      unsubscribe: "This summary is sent from %{site_link} when we haven't seen you in a while. Change %{email_preferences_link}, or %{unsubscribe_link} to unsubscribe."
+      your_email_settings: "your email settings"
       click_here: "click here"
       from: "%{site_name} summary"
       preheader: "A brief summary since your last visit on %{last_seen_at}"
@@ -2827,6 +2845,10 @@ en:
     search_title: "Search this site"
     search_google: "Google"
 
+  offline:
+    title: "Cannot load app"
+    offline_page_message: "It looks like you are offline! Please check your network connection and try again."
+
   login_required:
     welcome_message: |
       ## [Welcome to %{title}](#welcome)
@@ -2853,6 +2875,8 @@ en:
       too_large: "Sorry, the image you are trying to upload is too big (maximum size is %{max_size_kb}KB), please resize it and try again."
       larger_than_x_megapixels: "Sorry, the image you are trying to upload is too large (maximum dimension is %{max_image_megapixels}-megapixels), please resize it and try again."
       size_not_found: "Sorry, but we couldn't determine the size of the image. Maybe your image is corrupted?"
+    placeholders:
+      too_large: "(image larger than %{max_size_kb}KB)"
 
   avatar:
     missing: "Sorry, we can't find any avatar associated with that email address. Can you try uploading it again?"
@@ -3260,9 +3284,9 @@ en:
         This badge is granted when you receive your first like on a post. Congratulations, you've posted something that your fellow community members found interesting, cool, or useful!
     autobiographer:
       name: Autobiographer
-      description: Filled out <a href="/my/preferences">profile</a> information
+      description: Filled out <a href="%{base_uri}/my/preferences/profile">profile</a> information
       long_description: |
-        This badge is granted for filling out <a href="/my/preferences">your user profile</a> and selecting a profile picture. Letting the community know a bit more about who you are and what you're interested in makes for a better, more connected community. Join us!
+        This badge is granted for filling out <a href="%{base_uri}/my/preferences/profile">your user profile</a> and selecting a profile picture. Letting the community know a bit more about who you are and what you're interested in makes for a better, more connected community. Join us!
     anniversary:
       name: Anniversary
       description: Active member for a year, posted at least once
@@ -3355,9 +3379,9 @@ en:
         This badge is granted the first time you quote a post in your reply. Quoting relevant sections of earlier posts in your reply helps keep discussions connected together and on topic. The easiest way to quote is to highlight a section of a post, and then press any reply button. Quote generously!
     read_guidelines:
       name: Read Guidelines
-      description: Read the <a href="/guidelines">community guidelines</a>
+      description: Read the <a href="%{base_uri}/guidelines">community guidelines</a>
       long_description: |
-        This badge is granted for <a href="/guidelines">reading the community guidelines</a>. Following and sharing these simple guidelines helps build a safe, fun, and sustainable community for everyone. Always remember there's another human being, one very much like yourself, on the other side of that screen. Be nice!
+        This badge is granted for <a href="%{base_uri}/guidelines">reading the community guidelines</a>. Following and sharing these simple guidelines helps build a safe, fun, and sustainable community for everyone. Always remember there's another human being, one very much like yourself, on the other side of that screen. Be nice!
     reader:
       name: Reader
       description: Read every reply in a topic with more than 100 replies
@@ -3497,6 +3521,7 @@ en:
     only_official: "Disable unofficial plugins"
     no_plugins: "Disable all plugins"
     enter: "Enter Safe Mode"
+    must_select: "You must select at least one option to enter safe mode."
   wizard:
     title: "Discourse Setup"
     step:

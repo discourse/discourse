@@ -97,7 +97,6 @@ class PostRevisor
 
   track_topic_field(:featured_link) do |topic_changes, featured_link|
     if SiteSetting.topic_featured_link_enabled &&
-       featured_link.present? &&
        topic_changes.guardian.can_edit_featured_link?(topic_changes.topic.category_id)
 
       topic_changes.record_change('featured_link', topic_changes.topic.featured_link, featured_link)
@@ -290,9 +289,11 @@ class PostRevisor
       private_message = @post.topic.private_message?
 
       prev_owner_user_stat = prev_owner.user_stat
-      prev_owner_user_stat.post_count -= 1
-      prev_owner_user_stat.topic_count -= 1 if @post.is_first_post?
-      prev_owner_user_stat.likes_received -= likes if !private_message
+      unless private_message
+        prev_owner_user_stat.post_count -= 1 if @post.post_type == Post.types[:regular]
+        prev_owner_user_stat.topic_count -= 1 if @post.is_first_post?
+        prev_owner_user_stat.likes_received -= likes
+      end
       prev_owner_user_stat.update_topic_reply_count
 
       if @post.created_at == prev_owner.user_stat.first_post_created_at
@@ -302,9 +303,11 @@ class PostRevisor
       prev_owner_user_stat.save!
 
       new_owner_user_stat = new_owner.user_stat
-      new_owner_user_stat.post_count += 1
-      new_owner_user_stat.topic_count += 1 if @post.is_first_post?
-      new_owner_user_stat.likes_received += likes if !private_message
+      unless private_message
+        new_owner_user_stat.post_count += 1 if @post.post_type == Post.types[:regular]
+        new_owner_user_stat.topic_count += 1 if @post.is_first_post?
+        new_owner_user_stat.likes_received += likes
+      end
       new_owner_user_stat.update_topic_reply_count
       new_owner_user_stat.save!
     end

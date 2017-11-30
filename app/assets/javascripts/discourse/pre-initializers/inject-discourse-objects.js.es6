@@ -36,13 +36,13 @@ export default {
     app.register('topic-tracking-state:main', topicTrackingState, { instantiate: false });
     ALL_TARGETS.forEach(t => app.inject(t, 'topicTrackingState', 'topic-tracking-state:main'));
 
-    const site = Discourse.Site.current();
-    app.register('site:main', site, { instantiate: false });
-    ALL_TARGETS.forEach(t => app.inject(t, 'site', 'site:main'));
-
     const siteSettings = Discourse.SiteSettings;
     app.register('site-settings:main', siteSettings, { instantiate: false });
     ALL_TARGETS.forEach(t => app.inject(t, 'siteSettings', 'site-settings:main'));
+
+    const site = Discourse.Site.current();
+    app.register('site:main', site, { instantiate: false });
+    ALL_TARGETS.forEach(t => app.inject(t, 'site', 'site:main'));
 
     app.register('search-service:main', SearchService);
     ALL_TARGETS.forEach(t => app.inject(t, 'searchService', 'search-service:main'));

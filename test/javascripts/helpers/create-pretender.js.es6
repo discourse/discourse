@@ -391,6 +391,12 @@ export default function() {
       return response(200, result);
     });
 
+    this.get('/admin/logs/search_logs.json', () => {
+      return response(200, [
+        {"term":"foobar","searches":35,"click_through":6,"clicked_topic_id":1550,"topic_title":"Foo Bar Topic Title","topic_url":"http://discourse.example.com/t/foo-bar-topic-title/1550","unique":16}
+      ]);
+    });
+
     this.get('/onebox', request => {
       if (request.queryParams.url === 'http://www.example.com/has-title.html' ||
           request.queryParams.url === 'http://www.example.com/has-title-and-a-url-that-is-more-than-80-characters-because-thats-good-for-seo-i-guess.html') {

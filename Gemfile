@@ -22,12 +22,13 @@ else
   gem 'activesupport', '~> 5.1'
   gem 'railties', '~> 5.1'
   gem 'sprockets-rails'
-  gem 'seed-fu', '~> 2.3.5'
+  gem 'seed-fu'
 end
 
 gem 'mail'
 gem 'mime-types', require: 'mime/types/columnar'
 gem 'mini_mime'
+gem 'mini_suffix'
 
 gem 'hiredis'
 gem 'redis', require:  ["redis", "redis/connection/hiredis"]
@@ -35,7 +36,7 @@ gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox', '1.8.19'
+gem 'onebox', '1.8.28'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 
@@ -46,7 +47,7 @@ gem 'barber'
 
 gem 'message_bus'
 
-gem 'rails_multisite', '~> 1.1.0.rc4'
+gem 'rails_multisite'
 
 gem 'fast_xs'
 
@@ -173,6 +174,7 @@ gem 'memory_profiler', require: false, platform: :mri
 gem 'cppjieba_rb', require: false
 
 gem 'lograge', require: false
+gem 'logstash-event', require: false
 gem 'logstash-logger', require: false
 gem 'logster'
 

@@ -12,8 +12,7 @@ module Onebox
         url = other.to_s
         return false unless url[Discourse.base_url]
 
-        path = url.sub(Discourse.base_url, "")
-        route = Rails.application.routes.recognize_path(path)
+        route = Discourse.route_for(url)
 
         !!(route[:controller] =~ /topics|uploads/)
       rescue ActionController::RoutingError
@@ -21,8 +20,9 @@ module Onebox
       end
 
       def to_html
-        path = @url.sub(Discourse.base_url, "")
-        route = Rails.application.routes.recognize_path(path)
+        uri = URI(@url)
+        path = uri.path || ""
+        route = Discourse.route_for(uri)
 
         case route[:controller]
         when "uploads" then upload_html(path)

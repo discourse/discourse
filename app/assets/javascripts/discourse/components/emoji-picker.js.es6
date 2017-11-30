@@ -474,9 +474,8 @@ export default Ember.Component.extend({
           desktopModalePositioning();
         } else {
           let previewInputOffset = $(".d-editor-input").offset();
-          let replyControlOffset = $("#reply-control").offset() || {left: 0};
-          let left = previewInputOffset.left - replyControlOffset.left;
-          desktopPositioning({left, bottom: $("#reply-control").height() - 48});
+          let left = previewInputOffset.left;
+          desktopPositioning({left, bottom: $("#reply-control").height() - 45});
         }
       }
     }

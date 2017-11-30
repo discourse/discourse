@@ -8,6 +8,10 @@ module Scheduler
       @thread = nil
     end
 
+    def length
+      @queue.length
+    end
+
     def pause
       stop!
       @paused = true
@@ -80,16 +84,6 @@ module Scheduler
   end
 
   class Defer
-
-    module Unicorn
-      def process_client(client)
-        Defer.pause
-        super(client)
-        Defer.do_all_work
-        Defer.resume
-      end
-    end
-
     extend Deferrable
     initialize
   end

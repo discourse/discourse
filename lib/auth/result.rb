@@ -6,8 +6,11 @@ class Auth::Result
                 :admin_not_allowed_from_ip_address, :omit_username,
                 :skip_email_validation
 
-  attr_accessor :failed,
-                :failed_reason
+  attr_accessor(
+    :failed,
+    :failed_reason,
+    :failed_code
+  )
 
   def initialize
     @failed = false

@@ -151,9 +151,14 @@ class UserSummary
       .count
   end
 
+  def recent_time_read
+    @user.recent_time_read
+  end
+
   delegate :likes_given,
            :likes_received,
            :days_visited,
+           :topics_entered,
            :posts_read_count,
            :topic_count,
            :post_count,

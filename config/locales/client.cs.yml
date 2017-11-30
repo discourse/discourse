@@ -527,7 +527,6 @@ cs:
       admin: "{{user}} je administrátor"
       moderator_tooltip: "Tento uživatel je moderátor"
       admin_tooltip: "Tento uživatel je admi"
-      blocked_tooltip: "Tento uživatel je zablokován."
       suspended_notice: "Uživatel je suspendován do {{date}}."
       suspended_reason: "Důvod: "
       github_profile: "Github"
@@ -2223,7 +2222,6 @@ cs:
         no_problems: "Nenalezeny žádné problémy."
         moderators: 'Moderátoři:'
         admins: 'Administrátoři:'
-        blocked: 'Blokováno:'
         suspended: 'Zakázáno:'
         private_messages_short: "Zpráv"
         private_messages_title: "Zprávy"
@@ -2653,8 +2651,6 @@ cs:
             change_category_settings: "změnit nastavení kategorie"
             delete_category: "smazat kategorii"
             create_category: "vytvořit kategorii"
-            block_user: "zablokuj uživatele"
-            unblock_user: "odblokuj uživatele"
             grant_admin: "udělit administrátorská práva"
             revoke_admin: "odebrat administrátorská práva"
             grant_moderation: "udělit moderátorská práva"
@@ -2711,7 +2707,6 @@ cs:
           pending: "Čeká na schválení"
           staff: 'Redakce'
           suspended: 'Zakázaní'
-          blocked: 'Blokovaní'
           suspect: 'Podezřelí'
         approved: "Schválen?"
         approved_selected:
@@ -2734,7 +2729,6 @@ cs:
           staff: "Redakce"
           admins: 'Administrátoři'
           moderators: 'Moderátoři'
-          blocked: 'Blokovaní uživatelé'
           suspended: 'Zakázaní uživatelé'
           suspect: 'Podezřelí uživatelé'
         reject_successful:
@@ -2753,18 +2747,14 @@ cs:
         suspend_failed: "Nastala chyba při zakazování uživatele {{error}}"
         unsuspend_failed: "Nastala chyba při povolování uživatele {{error}}"
         suspend_duration: "Jak dlouho má zákaz platit? (dny)"
-        suspend_duration_units: "(days)"
         suspend_reason_label: "Why are you suspending? This text <b>will be visible to everyone</b> on this user's profile page, and will be shown to the user when they try to log in. Keep it short."
         suspend_reason: "Reason"
         suspended_by: "Suspended by"
         delete_all_posts: "Smazat všechny příspěvky"
         delete_all_posts_confirm_MF: "Chystáte se smazat {POSTS, plural, one {1 příspěvek} other {# příspěvků}} and {TOPICS, plural, one {1 téma} other {# témat}}. Jste si jistí?"
-        suspend: "Zakázat"
-        unsuspend: "Povolit"
-        suspended: "Zakázán?"
         moderator: "Moderátor?"
         admin: "Administrátor?"
-        blocked: "Zablokovaný?"
+        suspended: "Zakázán?"
         show_admin_profile: "Administrace"
         refresh_browsers: "Vynutit obnovení prohlížeče"
         refresh_browsers_message: "Zpráva odeslána všem klientům!"
@@ -2777,8 +2767,8 @@ cs:
         grant_admin: 'Udělit administrátorská práva'
         revoke_moderation: 'Odebrat moderátorská práva'
         grant_moderation: 'Udělit moderátorská práva'
-        unblock: 'Odblokovat'
-        block: 'Zablokovat'
+        unsuspend: 'Povolit'
+        suspend: 'Zakázat'
         reputation: Reputace
         permissions: Oprávnění
         activity: Aktivita
@@ -2828,17 +2818,12 @@ cs:
         activate_failed: "Nasstal problém při aktivování tohoto uživatele."
         deactivate_account: "Deaktivovat účet"
         deactivate_failed: "Nastal problém při deaktivování tohoto uživatele."
-        unblock_failed: 'Nastal problém při odblokování uživatele.'
-        block_failed: 'Nastal problém při blokování uživatele.'
-        block_confirm: 'Jste si jistí, že chcete zablokovat tohoto uživatele? Nebudou poté oprávněni vytvářet žádné témata ani příspěvky.'
-        block_accept: 'Ano, zablokuj tohoto uživatele:'
         bounce_score: "Bounce skóre"
         reset_bounce_score:
           label: "obnovit výchozí"
           title: "Resetovat bounce skóre zpět na 0"
         deactivate_explanation: "Uživatel bude muset znovu potvrdit emailovou adresu."
         suspended_explanation: "Zakázaný uživatel se nemůže přihlásit."
-        block_explanation: "Zablokovaný uživatel nemůže přispívat nebo vytvářet nová témata."
         trust_level_change_failed: "Nastal problém při změně důveryhodnosti uživatele."
         suspend_modal_title: "Suspend User"
         trust_level_2_users: "Uživatelé důvěryhodnosti 2"

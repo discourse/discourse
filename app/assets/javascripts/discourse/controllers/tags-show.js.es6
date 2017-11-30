@@ -58,6 +58,8 @@ export default Ember.Controller.extend(BulkTopicSelection, {
   max_posts: null,
   q: null,
 
+  categories: Ember.computed.alias('site.categoriesList'),
+
   queryParams: ['order', 'ascending', 'status', 'state', 'search', 'max_posts', 'q'],
 
   navItems: function() {
@@ -67,10 +69,6 @@ export default Ember.Controller.extend(BulkTopicSelection, {
   showTagFilter: function() {
     return Discourse.SiteSettings.show_filter_by_tag;
   }.property('category'),
-
-  categories: function() {
-    return Discourse.Category.list();
-  }.property(),
 
   showAdminControls: function() {
     return !this.get('additionalTags') && this.get('canAdminTag') && !this.get('category');

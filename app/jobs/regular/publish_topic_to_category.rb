@@ -2,7 +2,7 @@ module Jobs
   class PublishTopicToCategory < Jobs::Base
     def execute(args)
       topic_timer = TopicTimer.find_by(id: args[:topic_timer_id] || args[:topic_status_update_id])
-      raise Discourse::InvalidParameters.new(:topic_timer_id) if topic_timer.blank?
+      return if topic_timer.blank?
 
       topic = topic_timer.topic
       return if topic.blank?

@@ -54,6 +54,8 @@ required:
   mobile_logo_url:
     client: true
     default: ''
+  large_icon_url:
+    default: ''
   favicon_url:
     client: true
     default: '/images/default-favicon.ico'
@@ -104,12 +106,6 @@ basic:
   ga_universal_auto_link_domains:
     default: ''
     type: list
-  ga_tracking_code:
-    client: true
-    default: ''
-  ga_domain_name:
-    client: true
-    default: ''
   gtm_container_id:
     client: true
     default: ''
@@ -972,11 +968,11 @@ spam:
   add_rel_nofollow_to_user_content: true
   flags_required_to_hide_post: 3
   cooldown_minutes_after_hiding_posts: 10
-  num_spam_flags_to_block_new_user: 3
-  num_users_to_block_new_user: 3
-  num_tl3_flags_to_block_new_user: 4
-  num_tl3_users_to_block_new_user: 2
-  notify_mods_when_user_blocked: false
+  num_spam_flags_to_silence_new_user: 3
+  num_users_to_silence_new_user: 3
+  num_tl3_flags_to_silence_new_user: 4
+  num_tl3_users_to_silence_new_user: 2
+  notify_mods_when_user_silenced: false
   flag_sockpuppets: false
   newuser_spam_host_threshold: 3
   white_listed_spam_host_domains:
@@ -996,9 +992,9 @@ spam:
     min: 1
   auto_respond_to_flag_actions: true
   min_first_post_typing_time: 3000
-  auto_block_fast_typers_on_first_post: true
-  auto_block_fast_typers_max_trust_level: 0
-  auto_block_first_post_regex: ""
+  auto_silence_fast_typers_on_first_post: true
+  auto_silence_fast_typers_max_trust_level: 0
+  auto_silence_first_post_regex: ""
   flags_default_topics:
     default: false
     client: true
@@ -1107,6 +1103,9 @@ developer:
     choices:
       - 'default'
       - 'lograge'
+  bootstrap_error_pages:
+    hidden: true
+    default: false
 
 embedding:
   feed_polling_enabled:
@@ -1430,6 +1429,10 @@ user_preferences:
   default_categories_watching_first_post:
     type: category_list
     default: ''
+
+api:
+  retain_web_hook_events_period_days:
+    default: 30
 
 user_api:
   max_user_api_reqs_per_day:

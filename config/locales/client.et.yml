@@ -506,7 +506,6 @@ et:
       admin: "{{user}} on admin"
       moderator_tooltip: "See kasutaja on moderaator"
       admin_tooltip: "See kasutaja on admin"
-      blocked_tooltip: "See kasutaja on blokeeritud"
       suspended_notice: "Selle kasutaja ligipääs on ajutiselt peatatud kuni {{date}}."
       suspended_reason: "Põhjus:"
       github_profile: "Github"
@@ -2127,7 +2126,6 @@ et:
         no_problems: "Probleeme ei tuvastatud."
         moderators: 'Moderaatorid:'
         admins: 'Adminnid:'
-        blocked: 'Blokeeritud:'
         suspended: 'Peatatud:'
         private_messages_short: "Sõnumid"
         private_messages_title: "Sõnumid"
@@ -2160,8 +2158,6 @@ et:
         by: "autor"
       flags:
         title: "Lipud"
-        old: "Vana"
-        active: "Aktiivne"
         agree: "Nõustun"
         agree_title: "Kinnita see tähis kui korrektne ja kehtiv"
         agree_flag_modal_title: "Nõustun ning..."
@@ -2171,11 +2167,9 @@ et:
         agree_flag_restore_post_title: "Taasta see postitus"
         agree_flag: "Nõustu tähisega"
         agree_flag_title: "Nõustu tähisega ja ära postitust muuda"
-        defer_flag: "Lükka edasi"
         defer_flag_title: "Eemalda see tähis: praegu ei ole vaja sekkuda."
         delete: "Kustuta"
         delete_title: "Kustuta postitus, millele see tähis viitab."
-        delete_post_defer_flag: "Kustuta postitus ja lükka tähis edasi"
         delete_post_defer_flag_title: "Kustuta postitus; kui on ainus, kustuta teema"
         delete_post_agree_flag: "Kustuta postitus ja nõustu tähisega"
         delete_post_agree_flag_title: "Kustuta postitus; kui on ainus, kustuta teema"
@@ -2586,8 +2580,6 @@ et:
             change_category_settings: "muuda foorumi sätteid"
             delete_category: "kustuta foorum"
             create_category: "loo foorum"
-            block_user: "blokeeri kasutaja"
-            unblock_user: "vabasta kasutaja blokeeringust"
             grant_admin: "anna admin-õigus"
             revoke_admin: "võta admin-õigus ära"
             grant_moderation: "anna modereerimisõigus"
@@ -2654,7 +2646,6 @@ et:
           pending: "Ootel"
           staff: 'Meeskond'
           suspended: 'Peatatud'
-          blocked: 'Blokeeritud'
           suspect: 'Kahtlane'
         approved: "Heakskiidetud?"
         approved_selected:
@@ -2675,7 +2666,6 @@ et:
           staff: "Meeskond"
           admins: 'Admin-kasutajad'
           moderators: 'Moderaatorid'
-          blocked: 'Blokeeritud kasutajad'
           suspended: 'Peatatud kasutajad'
           suspect: 'Kahtlased kasutajad'
         reject_successful:
@@ -2692,18 +2682,14 @@ et:
         suspend_failed: "Selle kasutaja peatamisel tekkis viga {{error}}"
         unsuspend_failed: "Selle kasutaja taaslubamisel tekkis viga {{error}}"
         suspend_duration: "Kauaks see kasutaja peatatakse?"
-        suspend_duration_units: "(päeva)"
         suspend_reason_label: "Peatamise põhjus? See tekst <b>on nähtav kõigile</b> selle kasutaja profiililehel, samuti kuvatakse kasutajale, kui ta üritab sisse logida. Tee lühidalt."
         suspend_reason: "Põhjus"
         suspended_by: "Peatati kasutaja poolt"
         delete_all_posts: "Kustuta kõik postitused"
         delete_all_posts_confirm_MF: "Sa oled kustutamas {POSTS, plural, one {1 post} other {# posts}} and {TOPICS, plural, one {1 topic} other {# topics}}. Oled Sa kindel?"
-        suspend: "Peata"
-        unsuspend: "Taasluba"
-        suspended: "Peatatud?"
         moderator: "Moderaator?"
         admin: "Admin?"
-        blocked: "Blokeeritud?"
+        suspended: "Peatatud?"
         staged: "Ettevalmistamisel?"
         show_admin_profile: "Admin"
         refresh_browsers: "Sunni brauserit värskendama"
@@ -2718,8 +2704,8 @@ et:
         grant_admin: 'Anna admini õigused'
         revoke_moderation: 'Eemalda modereerimise õigused'
         grant_moderation: 'Anna modereerimise õigused'
-        unblock: 'Eemalda blokeering'
-        block: 'Blokeeri'
+        unsuspend: 'Taasluba'
+        suspend: 'Peata'
         reputation: Maine
         permissions: Õigused
         activity: Tegevused
@@ -2766,17 +2752,12 @@ et:
         activate_failed: "Viga kasutaja aktiveerimisel."
         deactivate_account: "Deaktiveeri konto"
         deactivate_failed: "Viga kasutaja deaktiveerimisel."
-        unblock_failed: 'Viga kasutaja blokeeringu eemaldamisel.'
-        block_failed: 'Viga kasutaja blokeerimisel.'
-        block_confirm: 'Oled Sa kindel, et soovid seda kasutajat blokeerida? Kasutaja ei saa peale seda luua ühtegi teemat ega postitust.'
-        block_accept: 'Jah, blokeeri see kasutaja'
         bounce_score: "Väljaviskamiste skoor"
         reset_bounce_score:
           label: "Lähtesta"
           title: "Lähtesta väljaviskamiste skoor tagasi 0"
         deactivate_explanation: "Deaktiveeritud kasutaja peab valideerima oma meiliaadressi."
         suspended_explanation: "Peatatud kasutaja ei saa sisse logida."
-        block_explanation: "Blokeeritud kasutaja ei saa postitada ega alustada teemasid."
         staged_explanation: "Ettevalmistamisel oleval kasutajal on lubatud postitada ettemääratud teemadesse vaid meili teel."
         bounce_score_explanation:
           none: "Sellelt meiliaadressilt pole viimasel ajal tagasipõrgatusi saabunud."

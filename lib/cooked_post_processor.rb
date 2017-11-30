@@ -7,7 +7,7 @@ require_dependency 'pretty_text'
 class CookedPostProcessor
   include ActionView::Helpers::NumberHelper
 
-  attr_reader :cooking_options
+  attr_reader :cooking_options, :doc
 
   def initialize(post, opts = {})
     @dirty = false
@@ -31,9 +31,9 @@ class CookedPostProcessor
   def post_process(bypass_bump = false)
     DistributedMutex.synchronize("post_process_#{@post.id}") do
       DiscourseEvent.trigger(:before_post_process_cooked, @doc, @post)
-      keep_reverse_index_up_to_date
-      post_process_images
       post_process_oneboxes
+      post_process_images
+      keep_reverse_index_up_to_date
       optimize_urls
       update_post_image
       enforce_nofollow
@@ -65,64 +65,115 @@ class CookedPostProcessor
       end
     end
 
-    upload_ids |= oneboxed_image_uploads.pluck(:id)
+    upload_ids |= downloaded_images.values.select { |id| Upload.exists?(id) }
 
     values = upload_ids.map { |u| "(#{@post.id},#{u})" }.join(",")
     PostUpload.transaction do
       PostUpload.where(post_id: @post.id).delete_all
-      if upload_ids.length > 0
+      if upload_ids.size > 0
         PostUpload.exec_sql("INSERT INTO post_uploads (post_id, upload_id) VALUES #{values}")
       end
     end
   end
 
   def post_process_images
-    images = extract_images
-    return if images.blank?
-
-    images.each do |img|
-      limit_size!(img)
-      convert_to_link!(img)
+    extract_images.each do |img|
+      src = img["src"].sub(/^https?:/i, "")
+      if large_images.include?(src)
+        add_large_image_placeholder!(img)
+      elsif broken_images.include?(src)
+        add_broken_image_placeholder!(img)
+      else
+        limit_size!(img)
+        convert_to_link!(img)
+      end
     end
   end
 
+  def add_large_image_placeholder!(img)
+    url = img["src"]
+
+    is_hyperlinked = is_a_hyperlink?(img)
+
+    placeholder = create_node("div", "large-image-placeholder")
+    img.add_next_sibling(placeholder)
+    placeholder.add_child(img)
+
+    a = create_link_node(nil, url, true)
+    img.add_next_sibling(a)
+
+    span = create_span_node("url", url)
+    a.add_child(span)
+    span.add_previous_sibling(create_icon_node("image"))
+    span.add_next_sibling(create_span_node("help", I18n.t("upload.placeholders.too_large", max_size_kb: SiteSetting.max_image_size_kb)))
+
+    # Only if the image is already linked
+    if is_hyperlinked
+      parent = placeholder.parent
+      parent.add_next_sibling(placeholder)
+
+      if parent.name == 'a' && parent["href"].present?
+        if url == parent["href"]
+          parent.remove
+        else
+          parent["class"] = "link"
+          a.add_previous_sibling(parent)
+
+          lspan = create_span_node("url", parent["href"])
+          parent.add_child(lspan)
+          lspan.add_previous_sibling(create_icon_node("link"))
+        end
+      end
+    end
+
+    img.remove
+  end
+
+  def add_broken_image_placeholder!(img)
+    img.name = "span"
+    img.set_attribute("class", "broken-image fa fa-chain-broken")
+    img.set_attribute("title", I18n.t("post.image_placeholder.broken"))
+    img.remove_attribute("src")
+    img.remove_attribute("width")
+    img.remove_attribute("height")
+  end
+
+  def large_images
+    @large_images ||= JSON.parse(@post.custom_fields[Post::LARGE_IMAGES].presence || "[]") rescue []
+  end
+
+  def broken_images
+    @broken_images ||= JSON.parse(@post.custom_fields[Post::BROKEN_IMAGES].presence || "[]") rescue []
+  end
+
+  def downloaded_images
+    @downloaded_images ||= JSON.parse(@post.custom_fields[Post::DOWNLOADED_IMAGES].presence || "{}") rescue {}
+  end
+
   def extract_images
-    # all image with a src attribute
+    # all images with a src attribute
     @doc.css("img[src]") -
-    # minus, data images
+    # minus data images
     @doc.css("img[src^='data']") -
-    # minus, emojis
+    # minus emojis
     @doc.css("img.emoji") -
-    # minus, image inside oneboxes
+    # minus oneboxed images
     oneboxed_images -
-    # minus, images inside quotes
+    # minus images inside quotes
     @doc.css(".quote img")
   end
 
   def extract_images_for_post
-    # all image with a src attribute
+    # all images with a src attribute
     @doc.css("img[src]") -
-    # minus, emojis
+    # minus emojis
     @doc.css("img.emoji") -
-    # minus, images inside quotes
+    # minus images inside quotes
     @doc.css(".quote img")
   end
 
   def oneboxed_images
     @doc.css(".onebox-body img, .onebox img")
-  end
-
-  def oneboxed_image_uploads
-    urls = Set.new
-
-    oneboxed_images.each do |img|
-      url = img["src"].sub(/^https?:/i, "")
-      urls << url
-      urls << "http:#{url}"
-      urls << "https:#{url}"
-    end
-
-    Upload.where(origin: urls.to_a)
   end
 
   def limit_size!(img)
@@ -180,7 +231,6 @@ class CookedPostProcessor
 
     # FastImage fails when there's no scheme
     absolute_url = SiteSetting.scheme + ":" + absolute_url if absolute_url.start_with?("//")
-
     return unless is_valid_image_url?(absolute_url)
 
     # we can *always* crawl our own images
@@ -217,9 +267,11 @@ class CookedPostProcessor
     return if original_width <= width && original_height <= height
     return if original_width <= SiteSetting.max_image_width && original_height <= SiteSetting.max_image_height
 
-    crop = false
-    if original_width.to_f / original_height.to_f < MIN_RATIO_TO_CROP
-      crop = true
+    crop = original_width.to_f / original_height.to_f < MIN_RATIO_TO_CROP
+    # prevent iPhone X screenshots from being cropped
+    crop &= original_width != 1125 && original_height != 2436
+
+    if crop
       width, height = ImageSizer.crop(original_width, original_height)
       img["width"] = width
       img["height"] = height
@@ -243,21 +295,18 @@ class CookedPostProcessor
 
   def add_lightbox!(img, original_width, original_height, upload = nil)
     # first, create a div to hold our lightbox
-    lightbox = Nokogiri::XML::Node.new("div", @doc)
-    lightbox["class"] = "lightbox-wrapper"
+    lightbox = create_node("div", "lightbox-wrapper")
     img.add_next_sibling(lightbox)
     lightbox.add_child(img)
 
     # then, the link to our larger image
-    a = Nokogiri::XML::Node.new("a", @doc)
+    a = create_link_node("lightbox", img["src"])
     img.add_next_sibling(a)
 
     if upload && Discourse.store.internal?
       a["data-download-href"] = Discourse.store.download_url(upload)
     end
 
-    a["href"] = img["src"]
-    a["class"] = "lightbox"
     a.add_child(img)
 
     # replace the image by its thumbnail
@@ -265,8 +314,7 @@ class CookedPostProcessor
     img["src"] = upload.thumbnail(w, h).url if upload && upload.has_thumbnail?(w, h)
 
     # then, some overlay informations
-    meta = Nokogiri::XML::Node.new("div", @doc)
-    meta["class"] = "meta"
+    meta = create_node("div", "meta")
     img.add_next_sibling(meta)
 
     filename = get_filename(upload, img["src"])
@@ -286,11 +334,30 @@ class CookedPostProcessor
     return I18n.t("upload.pasted_image_filename")
   end
 
+  def create_node(tag_name, klass)
+    node = Nokogiri::XML::Node.new(tag_name, @doc)
+    node["class"] = klass if klass.present?
+    node
+  end
+
   def create_span_node(klass, content = nil)
-    span = Nokogiri::XML::Node.new("span", @doc)
+    span = create_node("span", klass)
     span.content = content if content
-    span["class"] = klass
     span
+  end
+
+  def create_icon_node(klass)
+    create_node("i", "fa fa-fw fa-#{klass}")
+  end
+
+  def create_link_node(klass, url, external = false)
+    a = create_node("a", klass)
+    a["href"] = url
+    if external
+      a["target"] = "_blank"
+      a["rel"] = "nofollow noopener"
+    end
+    a
   end
 
   def update_post_image
@@ -315,15 +382,57 @@ class CookedPostProcessor
       Oneboxer.onebox(url, args)
     end
 
-    uploads = oneboxed_image_uploads.select(:url, :origin)
     oneboxed_images.each do |img|
-      url = img["src"].sub(/^https?:/i, "")
-      upload = uploads.find { |u| u.origin.sub(/^https?:/i, "") == url }
-      img["src"] = upload.url if upload.present?
-    end
+      next if img["src"].blank?
 
-    # make sure we grab dimensions for oneboxed images
-    oneboxed_images.each { |img| limit_size!(img) }
+      src = img["src"].sub(/^https?:/i, "")
+
+      if large_images.include?(src) || broken_images.include?(src)
+        img.remove
+        next
+      end
+
+      upload_id = downloaded_images[src]
+      upload = Upload.find(upload_id) if upload_id
+      img["src"] = upload.url if upload.present?
+
+      # make sure we grab dimensions for oneboxed images
+      # and wrap in a div
+      limit_size!(img)
+
+      next if img["class"]&.include?('onebox-avatar')
+
+      parent_class = img.parent && img.parent["class"]
+      if parent_class&.include?("onebox-body") && (width = img["width"].to_i) > 0 && (height = img["height"].to_i) > 0
+
+        # special instruction for width == height, assume we are dealing with an avatar
+        if (img["width"].to_i == img["height"].to_i)
+          found = false
+          parent = img
+          while parent = parent.parent
+            if parent["class"] && parent["class"].include?("whitelistedgeneric")
+              found = true
+              break
+            end
+          end
+
+          if found
+            img["class"] = img["class"].to_s + " onebox-avatar"
+            next
+          end
+        end
+
+        if width < 64 && height < 64
+          img["class"] = img["class"].to_s + " onebox-full-image"
+        else
+          img.delete('width')
+          img.delete('height')
+          new_parent = img.add_next_sibling("<div class='aspect-image' style='--aspect-ratio:#{width}/#{height};'/>")
+          new_parent.first.add_child(img)
+        end
+
+      end
+    end
   end
 
   def optimize_urls
@@ -366,7 +475,7 @@ class CookedPostProcessor
     # don't download remote images for posts that are more than n days old
     return unless @post.created_at > (Date.today - SiteSetting.download_remote_images_max_days_old)
     # we only want to run the job whenever it's changed by a user
-    return if @post.last_editor_id == Discourse.system_user.id
+    return if @post.last_editor_id && @post.last_editor_id <= 0
     # make sure no other job is scheduled
     Jobs.cancel_scheduled_job(:pull_hotlinked_images, post_id: @post.id)
     # schedule the job

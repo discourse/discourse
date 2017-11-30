@@ -3,13 +3,13 @@ import { performEmojiUnescape } from 'pretty-text/emoji';
 const rule = {
   tag: 'quote',
 
-  before: function(state, tagInfo) {
+  before(state, tagInfo) {
 
     const attrs = tagInfo.attrs;
     let options = state.md.options.discourse;
 
     let quoteInfo = attrs['_default'];
-    let username, postNumber, topicId, avatarImg, full;
+    let username, postNumber, topicId, avatarImg, primaryGroupName, full, displayName;
 
     if (quoteInfo) {
       let split = quoteInfo.split(/\,\s*/);
@@ -34,9 +34,36 @@ const rule = {
       }
     }
 
+    if (options.lookupAvatarByPostNumber) {
+      // client-side, we can retrieve the avatar from the post
+      avatarImg = options.lookupAvatarByPostNumber(postNumber, topicId);
+    } else if (options.lookupAvatar) {
+      // server-side, we need to lookup the avatar from the username
+      avatarImg = options.lookupAvatar(username);
+    }
 
-    let token    = state.push('bbcode_open', 'aside', 1);
-    token.attrs  = [['class', 'quote']];
+    if (options.lookupPrimaryUserGroupByPostNumber) {
+      // client-side, we can retrieve the primary user group from the post
+      primaryGroupName = options.lookupPrimaryUserGroupByPostNumber(postNumber, topicId);
+    } else if (options.lookupPrimaryUserGroup) {
+      // server-side, we need to lookup the primary user group from the username
+      primaryGroupName = options.lookupPrimaryUserGroup(username);
+    }
+
+    if (options.formatUsername) {
+      displayName = options.formatUsername(username);
+    } else {
+      displayName = username;
+    }
+
+    let token   = state.push('bbcode_open', 'aside', 1);
+    token.attrs = [];
+
+    if (primaryGroupName && primaryGroupName.length !== 0) {
+      token.attrs.push(['class', `quote group-${primaryGroupName}`]);
+    } else {
+      token.attrs.push(['class', 'quote']);
+    }
 
     if (postNumber) {
       token.attrs.push(['data-post', postNumber]);
@@ -48,14 +75,6 @@ const rule = {
 
     if (full) {
       token.attrs.push(['data-full', 'true']);
-    }
-
-    if (options.lookupAvatarByPostNumber) {
-      // client-side, we can retrieve the avatar from the post
-      avatarImg = options.lookupAvatarByPostNumber(postNumber, topicId);
-    } else if (options.lookupAvatar) {
-      // server-side, we need to lookup the avatar from the username
-      avatarImg = options.lookupAvatar(username);
     }
 
     if (username) {
@@ -105,7 +124,7 @@ const rule = {
         }
       } else {
         token = state.push('text', '', 0);
-        token.content = ` ${username}:`;
+        token.content = ` ${displayName}:`;
       }
 
       token = state.push('quote_header_close', 'div', -1);
@@ -132,4 +151,11 @@ export function setup(helper) {
   });
 
   helper.whiteList(['img[class=avatar]']);
+  helper.whiteList({
+    custom(tag, name, value) {
+      if (tag === 'aside' && name === 'class') {
+        return !!/^quote group\-(.+)$/.exec(value);
+      }
+    }
+  });
 }

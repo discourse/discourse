@@ -102,7 +102,7 @@ describe PostMover do
 
     context "successfully moved" do
       before do
-        TopicUser.update_last_read(user, topic.id, p4.post_number, 0)
+        TopicUser.update_last_read(user, topic.id, p4.post_number, p4.post_number, 0)
         TopicLink.extract_from(p2)
       end
 
@@ -247,6 +247,17 @@ describe PostMover do
 
           expect(post.raw).to eq(expected_text)
         end
+
+        it "does not try to move small action posts" do
+          small_action = Fabricate(:post, topic: topic, raw: "A small action", post_type: Post.types[:small_action])
+          new_topic = topic.move_posts(user, [p2.id, p4.id, small_action.id], title: "new testing topic name", category_id: category.id)
+
+          expect(new_topic.posts_count).to eq(2)
+          expect(small_action.topic_id).to eq(topic.id)
+
+          moderator_post = topic.posts.last
+          expect(moderator_post.raw).to include("2 posts were split")
+        end
       end
 
       context "to an existing topic" do
@@ -309,6 +320,61 @@ describe PostMover do
           topic.reload
           expect(topic.closed).to eq(true)
         end
+
+        it "does not try to move small action posts" do
+          small_action = Fabricate(:post, topic: topic, raw: "A small action", post_type: Post.types[:small_action])
+          moved_to = topic.move_posts(user, [p1.id, p2.id, p3.id, p4.id, small_action.id], destination_topic_id: destination_topic.id)
+
+          moved_to.reload
+          expect(moved_to.posts_count).to eq(5)
+          expect(small_action.topic_id).to eq(topic.id)
+
+          moderator_post = topic.posts.find_by(post_number: 2)
+          expect(moderator_post.raw).to include("4 posts were merged")
+        end
+      end
+
+      shared_examples "moves email related stuff" do
+        it "moves incoming email" do
+          Fabricate(:incoming_email, user: old_post.user, topic: old_post.topic, post: old_post)
+
+          new_topic = topic.move_posts(user, [old_post.id], title: "new testing topic name")
+          new_post = new_topic.first_post
+          email = new_post.incoming_email
+
+          expect(email).to be_present
+          expect(email.topic_id).to eq(new_topic.id)
+          expect(email.post_id).to eq(new_post.id)
+
+          expect(old_post.reload.incoming_email).to_not be_present unless old_post.id == new_post.id
+        end
+
+        it "moves email log entries" do
+          old_topic = old_post.topic
+          Fabricate(:email_log, user: old_post.user, topic: old_topic, post: old_post, email_type: :mailing_list)
+          Fabricate(:email_log, user: old_post.user, topic: old_topic, post: old_post, email_type: :mailing_list)
+          Fabricate(:email_log, user: old_post.user, post: old_post, email_type: :mailing_list)
+
+          expect(EmailLog.where(topic_id: old_topic.id, post_id: old_post.id).count).to eq(2)
+          expect(EmailLog.where(topic_id: nil, post_id: old_post.id).count).to eq(1)
+
+          new_topic = old_topic.move_posts(user, [old_post.id], title: "new testing topic name")
+          new_post = new_topic.first_post
+
+          expect(EmailLog.where(topic_id: old_topic.id, post_id: old_post.id).count).to eq(0)
+          expect(EmailLog.where(topic_id: new_topic.id, post_id: new_post.id).count).to eq(3)
+        end
+
+        it "preserves post attributes" do
+          old_post.update_columns(cook_method: Post.cook_methods[:email], via_email: true, raw_email: "raw email content")
+
+          new_topic = old_post.topic.move_posts(user, [old_post.id], title: "new testing topic name")
+          new_post = new_topic.first_post
+
+          expect(new_post.cook_method).to eq(Post.cook_methods[:email])
+          expect(new_post.via_email).to eq(true)
+          expect(new_post.raw_email).to eq("raw email content")
+        end
       end
 
       context "moving the first post" do
@@ -367,6 +433,15 @@ describe PostMover do
           expect(new_topic.first_post.custom_fields).to eq(custom_fields)
         end
 
+        include_examples "moves email related stuff" do
+          let!(:old_post) { p1 }
+        end
+      end
+
+      context "moving replies" do
+        include_examples "moves email related stuff" do
+          let!(:old_post) { p3 }
+        end
       end
 
       context "to an existing topic with a deleted post" do

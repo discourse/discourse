@@ -61,4 +61,24 @@ describe PostActionUsersController do
 
     expect(response).to be_success
   end
+
+  it "paginates post actions" do
+    user_ids = []
+    5.times do
+      user = Fabricate(:user)
+      user_ids << user["id"]
+      PostAction.act(user, post, PostActionType.types[:like])
+    end
+
+    get :index, params: { id: post.id, post_action_type_id: PostActionType.types[:like], page: 1, limit: 2 }, format: :json
+    json = JSON.parse(response.body)
+
+    users = json["post_action_users"]
+    total = json["total_rows_post_action_users"]
+
+    expect(users.length).to eq(2)
+    expect(users.map { |u| u["id"] }).to eq(user_ids[2..3])
+
+    expect(total).to eq(5)
+  end
 end

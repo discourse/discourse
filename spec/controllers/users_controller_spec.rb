@@ -342,7 +342,7 @@ describe UsersController do
         )
 
         expect(response).to be_success
-        expect(response.body).to include('{"is_developer":false}')
+        expect(response.body).to include('{"is_developer":false,"admin":false}')
 
         user.reload
 
@@ -2148,7 +2148,7 @@ describe UsersController do
       json = JSON.parse(response.body)
 
       expect(json["user_summary"]["topic_count"]).to eq(1)
-      expect(json["user_summary"]["post_count"]).to eq(1)
+      expect(json["user_summary"]["post_count"]).to eq(0)
     end
   end
 

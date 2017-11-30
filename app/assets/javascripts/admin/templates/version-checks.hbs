@@ -24,7 +24,7 @@
           <span class="normal-note">{{i18n 'admin.dashboard.no_check_performed'}}</span>
         </td>
       {{else}}
-        {{#if versionCheck.staleData}}
+        {{#if versionCheck.stale_data}}
           <td class="version-number">{{#if versionCheck.version_check_pending}}{{dash-if-empty versionCheck.installed_version}}{{/if}}</td>
           <td class="face">
             {{#if versionCheck.version_check_pending}}

@@ -9,7 +9,7 @@ module UserGuardian
     return false if (SiteSetting.sso_overrides_username? && SiteSetting.enable_sso?)
     return true if is_staff?
     return false if SiteSetting.username_change_period <= 0
-    is_me?(user) && (user.post_count == 0 || user.created_at > SiteSetting.username_change_period.days.ago)
+    is_me?(user) && ((user.post_count + user.topic_count) == 0 || user.created_at > SiteSetting.username_change_period.days.ago)
   end
 
   def can_edit_email?(user)
@@ -30,11 +30,11 @@ module UserGuardian
     is_me?(user) || is_admin?
   end
 
-  def can_block_user?(user)
+  def can_silence_user?(user)
     user && is_staff? && not(user.staff?)
   end
 
-  def can_unblock_user?(user)
+  def can_unsilence_user?(user)
     user && is_staff?
   end
 

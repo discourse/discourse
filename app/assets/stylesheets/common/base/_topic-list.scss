@@ -8,19 +8,11 @@
 }
 
 .list-controls {
-  #navigation-bar {
-    .has-icon span:before {
-      margin-right: 4px;
-      font: 1.071em/0.9 "FontAwesome";
-    }
-  }
-
-  .select-box-kit {
+  .select-kit {
     align-self: center;
 
     &.categories-admin-dropdown, &.category-notifications-button, &.tag-notifications-button {
       float: right;
-      margin-left: 8px;
     }
   }
 }

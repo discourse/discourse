@@ -1,5 +1,5 @@
 {{#each users as |u|}}
-  {{#link-to 'adminUser' u class="flagged-topic-user"}}
+  {{#link-to 'adminUser' u.id u.username class="flagged-topic-user"}}
     {{avatar u imageSize="small"}}
   {{/link-to}}
 {{/each}}

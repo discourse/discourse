@@ -38,10 +38,25 @@ module JsLocaleHelper
       locale_str = locale.to_s
 
       # load default translations
-      translations = YAML.load_file("#{Rails.root}/config/locales/client.#{locale_str}.yml")
+      yml_file = "#{Rails.root}/config/locales/client.#{locale_str}.yml"
+      if File.exist?(yml_file)
+        translations = YAML.load_file(yml_file)
+      else
+        # If we can't find a base file in Discourse, it might only exist in a plugin
+        # so let's start with a basic object we can merge into
+        translations = {
+          locale_str => {
+            'js' => {},
+            'admin_js' => {}
+          }
+        }
+      end
 
       # merge translations (plugin translations overwrite default translations)
-      translations[locale_str]['js'].deep_merge!(plugin_translations(locale_str)['js']) if translations[locale_str] && plugin_translations(locale_str) && plugin_translations(locale_str)['js']
+      if translations[locale_str] && plugin_translations(locale_str)
+        translations[locale_str]['js'].deep_merge!(plugin_translations(locale_str)['js']) if plugin_translations(locale_str)['js']
+        translations[locale_str]['admin_js'].deep_merge!(plugin_translations(locale_str)['admin_js']) if plugin_translations(locale_str)['admin_js']
+      end
 
       translations
     end

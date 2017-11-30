@@ -14,6 +14,7 @@ class SafeModeController < ApplicationController
     if safe_mode.length > 0
       redirect_to path("/?safe_mode=#{safe_mode.join("%2C")}")
     else
+      flash[:must_select] = true
       redirect_to safe_mode_path
     end
   end

@@ -47,7 +47,6 @@ da:
         auto_generated_email_error: "Dette sker når headeren 'precedence' er angivet til: list, junk, bulk eller auto_reply, eller når enhver anden header indeholder: auto-submitted, auto-replied eller auto-generated."
         no_body_detected_error: "Dette sker når vi ikke kunne trække noget indhold ud og der heller ikke var nogen vedhæftninger."
         inactive_user_error: "Dette sker når afsenderen ikke er aktiv."
-        blocked_user_error: "Dette sker når afsenderen er blevet blokeret."
         bad_destination_address: "Dette sker når ingen af email adresserne i To/Cc/Bcc felterne matcher en opsat indgående email adresse."
         strangers_not_allowed_error: "Dette sker når en bruger prøver at oprette et nyt emne i en kategori som de ikke er medlem af."
         insufficient_trust_level_error: "Dette sker når en bruger prøvede at oprette et nyt emne i en kategori som de ikke har den krævne \"trust level\" til."
@@ -893,19 +892,12 @@ da:
     tl2_additional_likes_per_day_multiplier: "Øg antallet af likes pr dag for tl2 (member) ved at gange med dette tal"
     tl3_additional_likes_per_day_multiplier: "Øg antallet af likes pr. dag for tl3 (regular) ved at gange med dette tal"
     tl4_additional_likes_per_day_multiplier: "Øg antallet af likes pr. dag for tl4 (leader) ved at gange med dette tal"
-    num_spam_flags_to_block_new_user: "Hvis indlæg fra en ny bruger får så mange spam flag fra forskellige brugere num_users_to_block_new_user gem da deres indlæg og forhindre at vedkommende kan udgive flere indlæg. 0 for at slå fra."
-    num_users_to_block_new_user: "Hvis en ny bruger får num_spam_flags_to_block_new_user spam flag fra dette antal forskellige brugere, gem da alle indlæg og forhindr yderligere posteringer 0 for at slå fra."
-    num_tl3_flags_to_block_new_user: "Hvis en ny brugers indlæg får dette antal flag fra num_tl3_users_to_block_new_user fra Trust Level 3 brugere, gem da alle deres indlæg og bloker yderligere posteringer. 0 for at slå fra."
-    num_tl3_users_to_block_new_user: "Hvis en brugers indlæg får num_tl3_flags_to_block_new_user flag fra mange forskellige \"trust level 3\" brugere, så gem alle deres indlæg og fjern muligheden for nye indlæg. Skriv 0 for at deaktivere."
-    notify_mods_when_user_blocked: "Send en besked til alle moderatorer hvis en bruger blokeres automatisk"
     flag_sockpuppets: "Hvis en ny bruger svarer på et emne fra den samme IP adresse som den der startede emnet, så rapporter begge at deres indlæg potentielt er spam."
     traditional_markdown_linebreaks: "Brug traditionelle linjeskift i Markdown, som kræver 2 mellemrum i slutningen af sætningen."
     post_undo_action_window_mins: "Antal minutter som brugere er tilladt at fortryde handlinger på et indlæg (like, flag, etc)."
     must_approve_users: "Personale skal godkende alle nye bruger konti inden de kan tilgå sitet. ADVARSEL: aktivering af dette for et live site vil medføre en ophævning af adgang for eksisterende ikke-personale brugere."
     pending_users_reminder_delay: "Underret moderatorer hvis nye brugere har ventet på godkendelse i længere end så mange timer. Skriv -1 for at deaktivere notifikationer."
     maximum_session_age: "Bruger vil forblive logget in for n hours siden sidste besøg"
-    ga_tracking_code: "OBSOLETE: Google analytics (ga.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
-    ga_domain_name: "OBSOLETE: Google analytics (ga.js) domain name, eg: mysite.com; see http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) domain name, eg: mysite.com; see http://google.com/analytics"
     gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCDEF"
@@ -978,8 +970,6 @@ da:
     num_flaggers_to_close_topic: "Minimum antal flagmarkeringer fra unikke brugere, der skal til for automatisk at pause et emne til ingriben"
     num_flags_to_close_topic: "Minimum antal aktive flagmarkeringer, der skal til for automatisk at pause et emne til indgriben"
     auto_respond_to_flag_actions: "Aktivér automatisk besvarelse, når en flagmarkering fjernes."
-    auto_block_fast_typers_on_first_post: "Blokér automatisk brugere som ikke opfylder min_first_post_typing_time"
-    auto_block_fast_typers_max_trust_level: "Maksimal trust level for at blokere \"fast typers\""
     reply_by_email_enabled: "Aktivér muligheden for at svare til emner via email."
     reply_by_email_address: "Skabelon for e-mail-adressen i formularen, for eksempel: %{reply_key}@reply.myforum.com."
     disable_emails: "Stop Discourse i at sende nogen form for emails"
@@ -1216,12 +1206,6 @@ da:
 
         Den konto, der er knyttet til denne mailadresse, er ikke aktiveret. Aktiver din konto, før du sendere flere mails ind.
 
-    email_reject_blocked_user:
-      text_body_template: |+
-        Vi beklager, men din mailbesked til %{destination} (titled %{former_title}) fungerede ikke.
-
-        Den konto, der er knyttet til denne mailadresse, er blokeret.
-
     email_reject_empty:
       text_body_template: |+
         Vi beklager, men din mailbesked til %{destination} (titled %{former_title}) fungerede ikke.
@@ -1258,68 +1242,9 @@ da:
     too_many_spam_flags:
       title: "For Mange Flagmarkeringer for Spam"
       subject_template: "Nyoprettet konto sat på hold"
-      text_body_template: |
-        Hej,
-
-        Dette er en automatisk besked fra %{site_name} for at lade dig vide, at dine indlæg midlertidigt er blevet skjult, fordi de er blevet flagmarkeret af andre brugere.
-
-        For en sikkerheds skyld er din nyoprettede konto blevet spærret, så du ikke kan oprette nye svar eller emner, indtil en administrator kan gennemgå din konto. Vi beklager ulejligheden.
-
-        Se venligst vores [Retningslinjer](%{base_url}/guidelines) for yderligere vejledning.
     too_many_tl3_flags:
       title: "For Mange TL3 Flagmarkeringer"
       subject_template: "Nyoprettet konto sat på hold"
-      text_body_template: |
-        Hej,
-
-        Dette er en automatisk besked fra %{site_name} for at lade dig vide, at din konto er blevet sat i venteposition på grund af et stort antal flagmarkeringer fra andre brugere.
-
-        For en sikkerheds skyld er din nyoprettede konto blevet spærret, så du ikke kan oprette nye svar eller emner, indtil en administrator kan gennemgå din konto. Vi beklager ulejligheden.
-
-        Se venligst vores [Retningslinjer](%{base_url}/guidelines) for yderligere vejledning.
-    blocked_by_staff:
-      title: "Blokeret af hjælperteamet"
-      subject_template: "Konto midlertidigt sat på hold"
-      text_body_template: |
-        Hej,
-
-        Dette er en automatisk besked fra %{site_name} for at lade dig vide, at din konto midlertidigt er blevet sat på hold af sikkerhedsmæssige årsager.
-
-        Du kan fortsat kigge dig omkring på sitet, men du kan ikke oprette indlæg eller emner, intil en [administrator](%{base_url}/about) har gennemgået dine seneste indlæg. Vi beklager ulejligheden.
-
-        Se venligst vores [Retningslinjer](%{base_url}/guidelines) for yderligere vejledning.
-    user_automatically_blocked:
-      title: "Bruger automatisk spærret"
-      subject_template: "Den nye bruger %{username} er blokeret pga. flagmakeringer"
-      text_body_template: |
-        Dette er en automatisk besked.
-
-        Den nye bruger [%{username}](%{user_url}) er automatisk blevet spærret, fordi adskillige brugere har flagmarkeret %{username}s indlæg.
-
-        [Gennemgå venligst flagmarkeringerne](%{base_url}/admin/flags). Hvis %{username} uretmæssigt er blevet forhindret i oprette indlæg, kan du klikke på ophæv spærring på [admin-siden for denne bruger](%{user_url}).
-
-        Grænseværdien kan ændres via indstillingen `block_new_user`.
-    spam_post_blocked:
-      title: "Spam-indlæg blokeret"
-      subject_template: "Ny bruger %{username} indlæg blokeret på grund af gentagne links"
-      text_body_template: |
-        Dette er en automatisk besked.
-
-        Den nye bruger [%{username}](%{user_url}) har forsøgt at oprette flere indlæg med links til %{domains}, men indlæggene blev blokeret for at forhindre spam. Brugeren kan stadig oprette nye indlæg, som ikke linker til %{domains}.
-
-        [Tjek denne bruger](%{user_url}).
-
-        Indstillingen kan ændres via `newuser_spam_host_threshold` og `white_listed_spam_host_domains`.
-    unblocked:
-      title: "Spærring ophævet"
-      subject_template: "Konto ikke længere sat på hold"
-      text_body_template: |+
-        Hej,
-
-        Dette er en automatisk besked fra %{site_name} for at lade dig vide, at din konto ikke længere er på hold, efter at den er blevet gennemgået af administrator.
-
-        Du kan nu oprette nye indlæg og emner igen. Tak for din tålmodighed.
-
     pending_users_reminder:
       title: "Påmindelse om afventende brugere"
       subject_template:

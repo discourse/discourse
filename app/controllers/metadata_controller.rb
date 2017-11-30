@@ -13,6 +13,8 @@ class MetadataController < ApplicationController
   private
 
   def default_manifest
+    logo = SiteSetting.large_icon_url.presence || SiteSetting.logo_small_url.presence || SiteSetting.apple_touch_icon_url.presence
+
     manifest = {
       name: SiteSetting.title,
       short_name: SiteSetting.title,
@@ -23,8 +25,8 @@ class MetadataController < ApplicationController
       theme_color: "##{ColorScheme.hex_for_name('header_background')}",
       icons: [
         {
-          src: SiteSetting.apple_touch_icon_url,
-          sizes: "144x144",
+          src: logo,
+          sizes: "512x512",
           type: "image/png"
         }
       ]

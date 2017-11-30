@@ -34,10 +34,10 @@ module ImportScripts::Mbox
     def insert_email(email)
       @db.execute(<<-SQL, email)
         INSERT OR REPLACE INTO email (msg_id, from_email, from_name, subject,
-          email_date, raw_message, body, elided, attachment_count, charset,
+          email_date, raw_message, body, elided, format, attachment_count, charset,
           category, filename, first_line_number, last_line_number)
         VALUES (:msg_id, :from_email, :from_name, :subject,
-          :email_date, :raw_message, :body, :elided, :attachment_count, :charset,
+          :email_date, :raw_message, :body, :elided, :format, :attachment_count, :charset,
           :category, :filename, :first_line_number, :last_line_number)
       SQL
     end
@@ -148,7 +148,7 @@ module ImportScripts::Mbox
     def fetch_messages(last_row_id)
       rows = @db.execute(<<-SQL, last_row_id)
         SELECT o.ROWID, e.msg_id, from_email, subject, email_date, in_reply_to,
-          raw_message, body, elided, attachment_count, category
+          raw_message, body, elided, format, attachment_count, category
         FROM email e
           JOIN email_order o USING (msg_id)
         WHERE email_date IS NOT NULL AND
@@ -204,6 +204,7 @@ module ImportScripts::Mbox
           raw_message TEXT,
           body TEXT,
           elided TEXT,
+          format INTEGER,
           attachment_count INTEGER NOT NULL DEFAULT 0,
           charset TEXT,
           category TEXT NOT NULL,

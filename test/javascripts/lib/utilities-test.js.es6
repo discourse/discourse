@@ -10,11 +10,13 @@ import {
   getRawSize,
   avatarImg,
   defaultHomepage,
+  setDefaultHomepage,
   validateUploadedFiles,
   getUploadMarkdown,
   caretRowCol,
   setCaretPosition
 } from 'discourse/lib/utilities';
+import * as Utilities from 'discourse/lib/utilities';
 
 QUnit.module("lib:utilities");
 
@@ -123,6 +125,13 @@ QUnit.test("getUploadMarkdown", assert => {
   assert.ok(testUploadMarkdown("important.txt") === '<a class="attachment" href="/uploads/123/abcdef.ext">important.txt</a> (42 Bytes)\n');
 });
 
+QUnit.test("replaces GUID in image alt text on iOS", assert => {
+  assert.equal(testUploadMarkdown("8F2B469B-6B2C-4213-BC68-57B4876365A0.jpeg"),'![8F2B469B-6B2C-4213-BC68-57B4876365A0|100x200](/uploads/123/abcdef.ext)');
+
+  sandbox.stub(Utilities, 'isAppleDevice').returns(true);
+  assert.equal(testUploadMarkdown("8F2B469B-6B2C-4213-BC68-57B4876365A0.jpeg"),'![image|100x200](/uploads/123/abcdef.ext)');
+});
+
 QUnit.test("isAnImage", assert => {
   _.each(["png", "jpg", "jpeg", "bmp", "gif", "tif", "tiff", "ico"], function(extension) {
     var image = "image." + extension;
@@ -204,6 +213,22 @@ QUnit.test("allowsAttachments", assert => {
 QUnit.test("defaultHomepage", assert => {
   Discourse.SiteSettings.top_menu = "latest|top|hot";
   assert.equal(defaultHomepage(), "latest", "default homepage is the first item in the top_menu site setting");
+  var meta = document.createElement("meta");
+  meta.name = "discourse_current_homepage";
+  meta.content = "hot";
+  document.body.appendChild(meta);
+  assert.equal(defaultHomepage(), "hot", "default homepage is pulled from <meta name=discourse_current_homepage>");
+  document.body.removeChild(meta);
+});
+
+QUnit.test("setDefaultHomepage", assert => {
+  var meta = document.createElement("meta");
+  meta.name = "discourse_current_homepage";
+  meta.content = "hot";
+  document.body.appendChild(meta);
+  setDefaultHomepage("top");
+  assert.equal(meta.content, "top", "default homepage set by setDefaultHomepage");
+  document.body.removeChild(meta);
 });
 
 QUnit.test("caretRowCol", assert => {

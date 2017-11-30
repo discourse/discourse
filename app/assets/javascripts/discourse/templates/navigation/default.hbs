@@ -1,7 +1,6 @@
 {{#d-section bodyClass="navigation-topics" class="navigation-container" scrollTop="false"}}
-  {{bread-crumbs categories=categories}}
-
-  {{navigation-bar navItems=navItems filterMode=filterMode}}
-
-  {{create-topic-button canCreateTopic=canCreateTopic action=(route-action "createTopic")}}
+  {{d-navigation
+    filterMode=filterMode
+    canCreateTopic=canCreateTopic
+    createTopic=(route-action "createTopic")}}
 {{/d-section}}

@@ -1,5 +1,10 @@
 # See http://unicorn.bogomips.org/Unicorn/Configurator.html
 
+if ENV["LOGSTASH_UNICORN_URI"]
+  require_relative '../lib/discourse_logstash_logger'
+  logger DiscourseLogstashLogger.logger(uri: ENV['LOGSTASH_UNICORN_URI'], type: :unicorn)
+end
+
 # enable out of band gc out of the box, it is low risk and improves perf a lot
 ENV['UNICORN_ENABLE_OOBGC'] ||= "1"
 

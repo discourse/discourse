@@ -572,6 +572,76 @@ describe PostAlerter do
 
       expect(admin1.notifications.where(notification_type: Notification.types[:replied]).count).to eq(1)
     end
+
+    it "sends email notifications only to users not on CC list of incoming email" do
+      alice = Fabricate(:user, username: "alice", email: "alice@example.com")
+      bob = Fabricate(:user, username: "bob", email: "bob@example.com")
+      carol = Fabricate(:user, username: "carol", email: "carol@example.com", staged: true)
+      dave = Fabricate(:user, username: "dave", email: "dave@example.com", staged: true)
+      erin = Fabricate(:user, username: "erin", email: "erin@example.com")
+
+      topic = Fabricate(:private_message_topic, topic_allowed_users: [
+        Fabricate.build(:topic_allowed_user, user: alice),
+        Fabricate.build(:topic_allowed_user, user: bob),
+        Fabricate.build(:topic_allowed_user, user: carol),
+        Fabricate.build(:topic_allowed_user, user: dave),
+        Fabricate.build(:topic_allowed_user, user: erin)
+      ])
+      post = Fabricate(:post, user: alice, topic: topic)
+
+      TopicUser.change(alice.id, topic.id, notification_level: TopicUser.notification_levels[:watching])
+      TopicUser.change(bob.id, topic.id, notification_level: TopicUser.notification_levels[:watching])
+      TopicUser.change(erin.id, topic.id, notification_level: TopicUser.notification_levels[:watching])
+
+      email = Fabricate(:incoming_email,
+                        raw: <<~RAW,
+                          Return-Path: <bob@example.com>
+                          From: Bob <bob@example.com>
+                          To: meta+1234@discoursemail.com, dave@example.com
+                          CC: carol@example.com, erin@example.com
+                          Subject: Hello world
+                          Date: Fri, 15 Jan 2016 00:12:43 +0100
+                          Message-ID: <12345@example.com>
+                          Mime-Version: 1.0
+                          Content-Type: text/plain; charset=UTF-8
+                          Content-Transfer-Encoding: quoted-printable
+
+                          This post was created by email.
+                        RAW
+                        from_address: "bob@example.com",
+                        to_addresses: "meta+1234@discoursemail.com;dave@example.com",
+                        cc_addresses: "carol@example.com;erin@example.com")
+      reply = Fabricate(:post_via_email, user: bob, topic: topic, incoming_email: email, reply_to_post_number: 1)
+
+      NotificationEmailer.expects(:process_notification).with { |n| n.user_id == alice.id }.once
+      NotificationEmailer.expects(:process_notification).with { |n| n.user_id == bob.id }.never
+      NotificationEmailer.expects(:process_notification).with { |n| n.user_id == carol.id }.never
+      NotificationEmailer.expects(:process_notification).with { |n| n.user_id == dave.id }.never
+      NotificationEmailer.expects(:process_notification).with { |n| n.user_id == erin.id }.never
+
+      PostAlerter.post_created(reply)
+
+      expect(alice.notifications.count).to eq(1)
+      expect(bob.notifications.count).to eq(0)
+      expect(carol.notifications.count).to eq(1)
+      expect(dave.notifications.count).to eq(1)
+      expect(erin.notifications.count).to eq(1)
+    end
+
+    it "does not send email notifications to staged users when notification originates in mailinglist mirror category" do
+      category = Fabricate(:mailinglist_mirror_category)
+      topic = Fabricate(:topic, category: category)
+      user = Fabricate(:staged)
+      post = Fabricate(:post, user: user, topic: topic)
+      reply = Fabricate(:post, topic: topic, reply_to_post_number: 1)
+
+      NotificationEmailer.expects(:process_notification).never
+      expect { PostAlerter.post_created(reply) }.to change(user.notifications, :count).by(0)
+
+      category.mailinglist_mirror = false
+      NotificationEmailer.expects(:process_notification).once
+      expect { PostAlerter.post_created(reply) }.to change(user.notifications, :count).by(1)
+    end
   end
 
   context "watching" do

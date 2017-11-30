@@ -142,6 +142,10 @@ class DiscourseSingleSignOn < SingleSignOn
       }
 
       user = User.create!(user_params)
+
+      if SiteSetting.verbose_sso_logging
+        Rails.logger.warn("Verbose SSO log: New User (user_id: #{user.id}) Created with #{user_params}")
+      end
     end
 
     if user
@@ -149,8 +153,15 @@ class DiscourseSingleSignOn < SingleSignOn
         sso_record.last_payload = unsigned_payload
         sso_record.external_id = external_id
       else
-        Jobs.enqueue(:download_avatar_from_url, url: avatar_url, user_id: user.id, override_gravatar: SiteSetting.sso_overrides_avatar) if avatar_url.present?
-        user.create_single_sign_on_record(
+        if avatar_url.present?
+          Jobs.enqueue(:download_avatar_from_url,
+            url: avatar_url,
+            user_id: user.id,
+            override_gravatar: SiteSetting.sso_overrides_avatar
+          )
+        end
+
+        user.create_single_sign_on_record!(
           last_payload: unsigned_payload,
           external_id: external_id,
           external_username: username,
@@ -165,7 +176,7 @@ class DiscourseSingleSignOn < SingleSignOn
   end
 
   def change_external_attributes_and_override(sso_record, user)
-    if SiteSetting.sso_overrides_email && user.email != email
+    if SiteSetting.sso_overrides_email && user.email != Email.downcase(email)
       user.email = email
       user.active = false if require_activation
     end

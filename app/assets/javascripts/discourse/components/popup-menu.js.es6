@@ -11,11 +11,8 @@ export default Ember.Component.extend({
       this.sendAction('hide');
     });
 
-    $('html').on(`mouseup.popup-menu-${this.get('elementId')}`, (e) => {
-      const $target = $(e.target);
-      if ($target.is("button") || this.$().has($target).length === 0) {
-        this.sendAction('hide');
-      }
+    $('html').on(`mouseup.popup-menu-${this.get('elementId')}`, () => {
+      this.sendAction('hide');
     });
   },
 

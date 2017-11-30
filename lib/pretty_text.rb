@@ -158,6 +158,8 @@ module PrettyText
         __optInput.getURL = __getURL;
         __optInput.getCurrentUser = __getCurrentUser;
         __optInput.lookupAvatar = __lookupAvatar;
+        __optInput.lookupPrimaryUserGroup = __lookupPrimaryUserGroup;
+        __optInput.formatUsername = __formatUsername;
         __optInput.getTopicInfo = __getTopicInfo;
         __optInput.categoryHashtagLookup = __categoryLookup;
         __optInput.mentionLookup = __mentionLookup;
