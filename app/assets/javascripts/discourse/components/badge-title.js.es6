@@ -11,9 +11,11 @@ export default Ember.Component.extend(BadgeSelectController, {
     save() {
       this.setProperties({ saved: false, saving: true });
 
+      var badge_id = this.get('selectedUserBadgeId') || 0;
+
       ajax(this.get('user.path') + "/preferences/badge_title", {
         type: "PUT",
-        data: { user_badge_id: this.get('selectedUserBadgeId') }
+        data: { user_badge_id: badge_id }
       }).then(() => {
         this.setProperties({
           saved: true,
