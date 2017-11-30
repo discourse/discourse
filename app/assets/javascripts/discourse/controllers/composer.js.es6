@@ -740,7 +740,7 @@ export default Ember.Controller.extend({
   },
 
   shrink() {
-    if (this.get('model.replyDirty')) {
+    if (this.get('model.replyDirty') || (this.get('model.canEditTitle') && this.get('model.titleDirty'))) {
       this.collapse();
     } else {
       this.close();

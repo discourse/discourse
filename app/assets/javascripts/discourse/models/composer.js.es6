@@ -276,6 +276,16 @@ const Composer = RestModel.extend({
   }.property('reply', 'originalText'),
 
   /**
+    Did the user make changes to the topic title?
+
+    @property titleDirty
+  **/
+  @computed('title', 'originalTitle')
+  titleDirty(title, originalTitle) {
+    return title !== originalTitle;
+  },
+
+  /**
     Number of missing characters in the title until valid.
 
     @property missingTitleCharacters
@@ -519,6 +529,9 @@ const Composer = RestModel.extend({
     }
     if (opts.title) { this.set('title', opts.title); }
     this.set('originalText', opts.draft ? '' : this.get('reply'));
+    if (this.get('editingFirstPost')) {
+      this.set('originalTitle', this.get('title'));
+    }
 
     return false;
   },
@@ -741,10 +754,18 @@ const Composer = RestModel.extend({
   saveDraft() {
     // Do not save when drafts are disabled
     if (this.get('disableDrafts')) return;
-    // Do not save when there is no reply
-    if (!this.get('reply')) return;
-    // Do not save when the reply's length is too small
-    if (this.get('replyLength') < this.siteSettings.min_post_length) return;
+
+    if (this.get('canEditTitle')) {
+      // Save title and/or post body
+      if (!this.get('title') && !this.get('reply')) return;
+      if (this.get('title') && this.get('titleLengthValid') &&
+        this.get('reply') && this.get('replyLength') < this.siteSettings.min_post_length) return;
+    } else {
+      // Do not save when there is no reply
+      if (!this.get('reply')) return;
+      // Do not save when the reply's length is too small
+      if (this.get('replyLength') < this.siteSettings.min_post_length) return;
+    }
 
     const data = {
       reply: this.get('reply'),
