@@ -175,10 +175,10 @@ class SessionController < ApplicationController
 
     rescue => e
       message = "Failed to create or lookup user: #{e}."
-      message << "\n\n" << "-" * 100 << "\n\n"
-      message << sso.diagnostics
-      message << "\n\n" << "-" * 100 << "\n\n"
-      message << e.backtrace.join("\n")
+      message << "  "
+      message << "  #{sso.diagnostics}"
+      message << "  "
+      message << "  #{e.backtrace.join("\n")}"
 
       Rails.logger.error(message)
 
