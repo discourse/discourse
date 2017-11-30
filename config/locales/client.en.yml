@@ -133,7 +133,7 @@ en:
           other: "%{count} years later"
       previous_month: 'Previous Month'
       next_month: 'Next Month'
-      placeholder: Pick a date
+      placeholder: date
     share:
       topic: 'share a link to this topic'
       post: 'post #%{postNumber}'
@@ -1404,29 +1404,29 @@ en:
         posted_by:
           label: Posted by
         in_category:
-          label: In Category
+          label: Categorized
         in_group:
           label: In Group
         with_badge:
           label: With Badge
         with_tags:
-          label: With Tags
+          label: Tagged
         filters:
-          label: Only return topics/posts that...
+          label: Only return topics/posts...
           likes: I liked
           posted: I posted in
           watching: I'm watching
           tracking: I'm tracking
-          private: are in my messages
-          bookmarks: I've bookmarked
+          private: In my messages
+          bookmarks: I bookmarked
           first: are the very first post
           pinned: are pinned
           unpinned: are not pinned
-          seen: I've read
+          seen: I read
           unseen: I've not read
           wiki: are wiki
-          images: includes image(s)
-          all_tags: Contains all tags
+          images: include image(s)
+          all_tags: All the above tags
         statuses:
           label: Where topics
           open: are open
