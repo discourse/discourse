@@ -1029,7 +1029,6 @@ class User < ActiveRecord::Base
       UserAuthToken.where(user_id: id).destroy_all
       # We should not carry this around after save
       @raw_password = nil
-      @password_required = false
     end
   end
 
