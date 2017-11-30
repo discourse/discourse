@@ -69,6 +69,11 @@ pl_PL:
           few: "%{count}d"
           many: "%{count}d"
           other: "%{count}d"
+        x_months:
+          one: "1mies"
+          few: "%{count}mies"
+          many: "%{count}mies"
+          other: "%{count}mies"
         about_x_years:
           one: "1r"
           few: "%{count}r"
@@ -1297,7 +1302,7 @@ pl_PL:
       most_liked: "Najbardziej lajkowane"
       select_all: "Zaznacz wszystkie"
       clear_all: "Wyczyść wszystkie"
-      too_short: "Wyszukiwane określenie jest zbyt krótkie."
+      too_short: "Wyszukiwana fraza jest zbyt krótka."
       result_count:
         one: "1 wynik dla <span class='term'>{[count}}</span>"
         few: "1 wynik dla <span class='term'>{{term}}</span>"
@@ -1308,7 +1313,7 @@ pl_PL:
       no_more_results: "Nie znaleziono więcej wyników."
       searching: "Szukam…"
       post_format: "#{{post_number}} za {{username}}"
-      results_page: "Wyniki wyszukiwania"
+      results_page: "Wyniki wyszukiwania dla '{{term}}'"
       more_results: "Istnieje więcej wyników wyszukiwania. Doprecyzuj kryteria wyszukiwania."
       cant_find: "Nie możesz znaleźć tego, czego szukasz?"
       start_new_topic: "Może utwórz nowy temat?"
@@ -3154,6 +3159,10 @@ pl_PL:
           roll_up:
             text: "Zgrupuj"
             title: "Tworzy nowy ban dla podsieci jeśli jest co najmniej  'min_ban_entries_for_roll_up' pozycji."
+        search_logs:
+          title: "Logi wyszukiwań"
+          term: "Szukana fraza"
+          searches: "Wyszukiwania"
         logster:
           title: "Logi błędów"
       watched_words:

@@ -48,6 +48,9 @@ nb_NO:
         x_seconds:
           one: "1s"
           other: "%{count}s"
+        less_than_x_minutes:
+          one: "< 1m"
+          other: "< %{count}m"
         x_minutes:
           one: "1m"
           other: "%{count}m"
@@ -57,6 +60,9 @@ nb_NO:
         x_days:
           one: "1d"
           other: "%{count}d"
+        x_months:
+          one: "1mnd"
+          other: "%{count}mnd"
         about_x_years:
           one: "1år"
           other: "%{count}år"
@@ -541,6 +547,7 @@ nb_NO:
       admin: "{{user}} er en admin"
       moderator_tooltip: "Denne brukeren er en moderator"
       admin_tooltip: "Denne brukeren er en administrator"
+      silenced_tooltip: "Brukeren er forstummet"
       suspended_notice: "Denne brukeren er bannlyst til {{date}}."
       suspended_permanently: "Brukeren er bannlyst."
       suspended_reason: "Begrunnelse:"
@@ -593,6 +600,7 @@ nb_NO:
       api_approved: "Godkjent:"
       theme: "Drakt"
       home: "Forvalgt hjemmeside"
+      staged: "Arrangert"
       staff_counters:
         flags_given: "nyttige rapporteringer"
         flagged_posts: "rapporterte innlegg"
@@ -802,6 +810,7 @@ nb_NO:
         title: "Oppsummering"
         stats: "Statistikk"
         time_read: "lesetid"
+        recent_time_read: "nylig lesetid"
         topic_count:
           one: "emne opprettet"
           other: "emner opprettet"
@@ -817,6 +826,9 @@ nb_NO:
         days_visited:
           one: "dag besøkt"
           other: "dager besøkt"
+        topics_entered:
+          one: "emne vist"
+          other: "emner vist"
         posts_read:
           one: "innlegg lest"
           other: "innlegg lest"
@@ -907,6 +919,9 @@ nb_NO:
     unmute: Fjern ignorering
     last_post: Postet
     time_read: Les
+    time_read_recently: '%{time_read} nylig'
+    time_read_tooltip: '%{time_read} total tidsforbruk på lesning'
+    time_read_recently_tooltip: '%{time_read} total tidsforbruk på lesning (%{recent_time_read} i løpet av de siste 60 dagene)'
     last_reply_lowercase: siste svar
     replies_lowercase:
       one: svar
@@ -1107,6 +1122,7 @@ nb_NO:
       edit_reason_placeholder: "hvorfor endrer du?"
       show_edit_reason: "(legg till endringsbegrunnelse)"
       topic_featured_link_placeholder: "Skriv inn lenke vist med tittel."
+      remove_featured_link: "Fjern lenken fra emnet."
       reply_placeholder: "Skriv her. Bruk Markdown, BBCode eller HTML for å formattere. Dra og slipp bilder."
       view_new_post: "Se ditt nye innlegg."
       saving: "Lagrer"
@@ -1190,6 +1206,7 @@ nb_NO:
         linked: "Link til innlegget ditt"
         granted_badge: "Merke innvilget"
         group_message_summary: "Meldinger i gruppeinnboks"
+        topic_reminder: "En påminnelse"
       popup:
         mentioned: '{{username}} nevnte deg i "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} nevnte deg i "{{topic}}" - {{site_title}}'
@@ -1212,6 +1229,7 @@ nb_NO:
       uploading: "Laster opp bilde"
       select_file: "Velg fil"
       image_link: "lenken som bildet skal peke til"
+      default_image_alt_text: bilde
     search:
       sort_by: "Sorter etter"
       relevance: "Relevanse"
@@ -1767,6 +1785,9 @@ nb_NO:
           notify_user: "sendte en melding"
           bookmark: "bokmerket dette"
           like: "likte dette"
+          like_capped:
+            one: "og {{count}} annen likte dette"
+            other: "og {{count}} andre likte dette"
           vote: "stemte for dette"
         by_you:
           off_topic: "Du rapporterte dette som irrelevant"
@@ -1916,6 +1937,7 @@ nb_NO:
       email_in_allow_strangers: "Godta e-post fra anonyme brukere uten brukerkonto"
       email_in_disabled: "Posting av nye emner via e-post er deaktivert i nettstedsinstillingene. For å aktivere posting av nye emner via e-post,"
       email_in_disabled_click: 'aktiver innstillingen "e-post inn".'
+      mailinglist_mirror: "Kategorien speiler en e-postliste"
       suppress_from_homepage: "Utelat denne kategorien fra hjemmesiden."
       show_subcategory_list: "Vis underkategoriliste over emner i denne kategorien."
       num_featured_topics: "Antall emner vist på kategori-siden:"
@@ -2351,6 +2373,7 @@ nb_NO:
         no_problems: "Ingen problemer ble funnet."
         moderators: 'Moderatorer:'
         admins: 'Adminer:'
+        silenced: 'Forstummet:'
         suspended: 'Bannlyst:'
         private_messages_short: "Meldinger"
         private_messages_title: "Meldinger"
@@ -2388,20 +2411,19 @@ nb_NO:
         topics: "Rapporterte innlegg"
         agree: "Godta"
         agree_title: "Bekreft at denne rapporteringen er gyldig og korrekt"
-        agree_flag_modal_title: "Godta og…"
-        agree_flag_hide_post: "Godta (skjul innlegg + send PM)"
-        agree_flag_hide_post_title: "Skjul dette innlegget og automatisk send brukeren en melding som oppfordrer vedkommende til å foreta endringer"
-        agree_flag_restore_post: "Gi medhold (gjenopprett innlegg)"
-        agree_flag_restore_post_title: "Gjenopprett dette innlegget"
-        agree_flag: "Si deg enig med rapportering"
-        agree_flag_title: "Si deg enig med rapportering og la innlegget stå urørt"
+        agree_flag_hide_post: "Samtykk og skjul innlegg"
+        agree_flag_hide_post_title: "Gjem dette innlegget og send en melding til brukeren automatisk med en forespørsel om gjøre endringer."
+        agree_flag_restore_post: "Samtykk og gjenopprett innlegg"
+        agree_flag_restore_post_title: "Gjenopprett innlegget slik at alle brukere kan se det."
+        agree_flag: "Samtykk og behold innlegg"
+        agree_flag_title: "Samtykk med flagg og behold innlegget uendret."
         defer_flag: "Ignorer"
         defer_flag_title: "Fjern denne rapporteringen; den krever ingen handling på dette tidspunktet."
         delete: "Slett"
         delete_title: "Fjern innlegget denne rapporteringen refererer til."
-        delete_post_defer_flag: "Slett innlegg og ignorer flagg"
+        delete_post_defer_flag: "Slett innlegg og ingorer flagg"
         delete_post_defer_flag_title: "Slett innlegg; hvis det er første innlegg, slett emnet"
-        delete_post_agree_flag: "Slett innlegg og si deg enig med rapportering"
+        delete_post_agree_flag: "Slett innlegg og samtykk med flagg"
         delete_post_agree_flag_title: "Slett innlegg; hvis det er første innlegg, slett emnet"
         delete_flag_modal_title: "Slett og…"
         delete_spammer: "Slett spammer"
@@ -2893,6 +2915,8 @@ nb_NO:
             change_category_settings: "endre kategori-innstillinger"
             delete_category: "slett kategori"
             create_category: "opprett kategori"
+            silence_user: "forstum bruker"
+            unsilence_user: "fjern forstumming av bruker"
             grant_admin: "innvilg admin"
             revoke_admin: "tilbakekall admin"
             grant_moderation: "innvilg moderering"
@@ -2940,6 +2964,14 @@ nb_NO:
           roll_up:
             text: "Slå sammen."
             title: "Lager nye blokkeringsoppføringer for subnett hvis det er minst 'min_ban_entries_for_roll_up' oppføringer."
+        search_logs:
+          title: "Søkelogger"
+          term: "Term"
+          searches: "Søk"
+          click_through: "Klikk gjennom"
+          most_viewed_topic: "Mest viste emne"
+          unique: "Unike"
+          unique_title: "unike brukere som har utført søket"
         logster:
           title: "Feillogg"
       watched_words:
@@ -2987,6 +3019,7 @@ nb_NO:
           pending: "Ventende"
           staff: 'Stab'
           suspended: 'Bannlyst'
+          silenced: 'Forstummet'
           suspect: 'Mistenkt'
         approved: "Godkjent?"
         approved_selected:
@@ -3007,6 +3040,7 @@ nb_NO:
           staff: "Stab"
           admins: 'Admin-brukere'
           moderators: 'Moderatorer'
+          silenced: 'Forstummede brukere'
           suspended: 'Bannlyste brukere'
           suspect: 'Mistenkte brukere'
         reject_successful:
@@ -3030,10 +3064,21 @@ nb_NO:
         suspend_message: "E-postmelding"
         suspend_message_placeholder: "Alternativt, kan du detaljere bannlysningen og det vil bli sendt per e-post til brukeren."
         suspended_by: "Bannlyst av"
+        silence_reason: "Grunn"
+        silenced_by: "Forstummet av"
+        silence_modal_title: "Forstum bruker"
+        silence_duration: "Hvor lenge vil du forstumme denne brukeren?"
+        silence_reason_label: "Hvorfor forstummer du denne brukeren?"
+        silence_reason_placeholder: "Grunn til forstumming"
+        silence_message: "E-postmelding"
+        silence_message_placeholder: "(la stå tom for forvalgt melding)"
         suspended_until: "(til %{until})"
         cant_suspend: "Brukeren kan ikke bannlyses."
         delete_all_posts: "Slett alle innlegg"
         delete_all_posts_confirm_MF: "Du er i ferd med å slette {INNLEGG, flertall, ett {ett innlegg} andre {# innlegg}} og {INNLEGG, flertall, ett {ett emne} andre {# emner}}. Er du sikker?"
+        silence: "Forstum"
+        unsilence: "Fjern forstumming"
+        silenced: "Forstummet?"
         moderator: "Moderator?"
         admin: "Admin?"
         suspended: "Bannlyst?"
@@ -3100,6 +3145,10 @@ nb_NO:
         activate_failed: "Det oppstod et problem ved aktiveringen av den brukeren."
         deactivate_account: "Skru av konto"
         deactivate_failed: "Det oppstod et problem ved deaktiveringen av den brukeren."
+        unsilence_failed: 'Feil ved fjerning av forstumming av bruker.'
+        silence_failed: 'Feil ved forstumming av bruker.'
+        silence_confirm: 'Er du sikker på at du vil forstumme denne brukeren? Vedkommende vil ikke kunne opprette nye emner eller innlegg.'
+        silence_accept: 'Ja, forstum denne brukeren'
         bounce_score: "Antall tilbakesendinger"
         reset_bounce_score:
           label: "Tilbakestill"
@@ -3107,6 +3156,7 @@ nb_NO:
         visit_profile: "Besøk <a href='%{url}'>denne brukerinnstillingssiden</a> for å redigere profilen deres"
         deactivate_explanation: "En deaktivert bruker må re-validere sin e-post."
         suspended_explanation: "En bannlyst bruker kan ikke logge inn."
+        silence_explanation: "En forstummet bruker kan ikke poste eller starte emner."
         staged_explanation: "En arrangert bruker kan bare skrive innlegg via e-post i gitte emner."
         bounce_score_explanation:
           none: "Ingen tilbakesendinger ble mottatt nylig fra den e-posten."

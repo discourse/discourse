@@ -27,8 +27,11 @@ th:
   topics: "หัวข้อ"
   posts: "โพสต์"
   loading: "กำลังโหลด"
+  powered_by_html: 'บอร์ดนี้ใช้<a href="https://www.discourse.org">Discourse</a> จะแสดงได้สมบูรณ์เมื่อเปิดการใช้งาน JavaScript'
   log_in: "เข้าสู่ระบบ"
+  disable_remote_images_download_reason: "ไม่สามารถดาวน์โหลดรูปได้เนื่องจากพื้นที่ไม่เพียงพอ"
   anonymous: "ไม่ระบุชื่อ"
+  remove_posts_deleted_by_author: "ถูกลบโดยผู้โพส"
   emails:
     incoming:
       errors:

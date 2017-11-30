@@ -48,6 +48,9 @@ de:
         x_seconds:
           one: "1s"
           other: "%{count}s"
+        less_than_x_minutes:
+          one: "< 1 Min."
+          other: "< %{count} Min."
         x_minutes:
           one: "1min"
           other: "%{count}min"
@@ -57,6 +60,9 @@ de:
         x_days:
           one: "1d"
           other: "%{count}d"
+        x_months:
+          one: "1 Monat"
+          other: "%{count}Monate"
         about_x_years:
           one: "1a"
           other: "%{count}a"
@@ -101,7 +107,7 @@ de:
           other: "%{count} Jahre später"
       previous_month: 'Vormonat'
       next_month: 'Nächster Monat'
-      placeholder: Datum auswählen
+      placeholder: Datum
     share:
       topic: 'Teile einen Link zu diesem Thema'
       post: 'Beitrag #%{postNumber}'
@@ -526,7 +532,7 @@ de:
         disable: "Benachrichtigungen deaktivieren"
         enable: "Benachrichtigungen aktivieren"
         each_browser_note: "Hinweis: Du musst diese Einstellung in jedem von dir verwendeten Browser ändern."
-      dismiss: 'Ablehnen'
+      dismiss: 'Als gelesen markieren'
       dismiss_notifications: "Alles ausblenden"
       dismiss_notifications_tooltip: "Alle ungelesenen Benachrichtigungen als gelesen markieren"
       first_notification: "Deine erste Benachrichtigung! Wähle sie aus um fortzufahren."
@@ -594,6 +600,7 @@ de:
       api_approved: "Genehmigt:"
       theme: "Design"
       home: "Standard-Startseite"
+      staged: "Vorbereitet"
       staff_counters:
         flags_given: "hilfreiche Meldungen"
         flagged_posts: "gemeldete Beiträge"
@@ -646,6 +653,7 @@ de:
         title: "Ändere dein Profilbild"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basierend auf"
         gravatar_title: "Ändere deinen Avatar auf der Gravatar-Webseite"
+        gravatar_failed: "Konnte Gravatar nicht abrufen. Ist mit dieser E-Mail-Adresse eines verknüpft?"
         refresh_gravatar_title: "Deinen Gravatar aktualisieren"
         letter_based: "ein vom System zugewiesenes Profilbild"
         uploaded_avatar: "Eigenes Bild"
@@ -787,7 +795,7 @@ de:
         link_generated: "Der Einladungslink wurde erfolgreich generiert!"
         valid_for: "Der Einladungslink ist nur für die Adresse %{email} gültig"
         bulk_invite:
-          none: "Du hast noch niemanden eingeladen. Verschicke eine individuelle Einladung, oder lade gleich mehrere Leute auf einmal durch <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>Hochladen einer CSV-Datei</a>ein."
+          none: "Du hast noch niemanden eingeladen. Verschicke eine individuelle Einladung, oder lade gleich mehrere Leute auf einmal durch <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>Hochladen einer CSV-Datei</a> ein."
           text: "Masseneinladung aus Datei"
           success: "Die Datei wurde erfolgreich hochgeladen. Du erhältst eine Nachricht, sobald der Vorgang abgeschlossen ist."
           error: "Die Datei sollte im CSV Format vorliegen."
@@ -803,6 +811,7 @@ de:
         title: "Übersicht"
         stats: "Statistiken"
         time_read: "Lesezeit"
+        recent_time_read: "aktuelle Lesezeit"
         topic_count:
           one: "Thema erstellt"
           other: "Themen erstellt"
@@ -818,6 +827,9 @@ de:
         days_visited:
           one: "Tag vorbeigekommen"
           other: "Tage vorbeigekommen"
+        topics_entered:
+          one: "betrachtetes Thema"
+          other: "betrachtete Themen"
         posts_read:
           one: "Beitrag gelesen"
           other: "Beiträge gelesen"
@@ -908,6 +920,9 @@ de:
     unmute: Stummschaltung aufheben
     last_post: Geschrieben
     time_read: Gelesen
+    time_read_recently: '%{time_read} aktuell'
+    time_read_tooltip: '%{time_read} Lesezeit insgesamt'
+    time_read_recently_tooltip: '%{time_read} Lesezeit insgesamt (%{recent_time_read} in den letzten 60 Tagen)'
     last_reply_lowercase: letzte Antwort
     replies_lowercase:
       one: Antwort
@@ -1108,6 +1123,7 @@ de:
       edit_reason_placeholder: "Warum bearbeitest du?"
       show_edit_reason: "(Bearbeitungsgrund hinzufügen)"
       topic_featured_link_placeholder: "Gib einen Link, der mit dem Titel angezeigt wird."
+      remove_featured_link: "Link aus Thema entfernen."
       reply_placeholder: "Schreib hier. Verwende Markdown, BBCode oder HTML zur Formatierung. Füge Bilder ein oder ziehe sie herein."
       view_new_post: "Sieh deinen neuen Beitrag an."
       saving: "Wird gespeichert"
@@ -1139,7 +1155,8 @@ de:
       ulist_title: "Liste mit Aufzählungszeichen"
       list_item: "Listenelement"
       help: "Hilfe zur Markdown-Formatierung"
-      toggler: "Eingabebereich aus- oder einblenden"
+      collapse: "Editor minimieren"
+      abandon: "Editor schließen und Entwurf verwerfen"
       modal_ok: "OK"
       modal_cancel: "Abbrechen"
       cant_send_pm: "Entschuldige, aber du kannst keine Nachricht an %{username} senden."
@@ -1148,6 +1165,13 @@ de:
         body: "Im Augenblick wird diese Nachricht nur an dich selbst gesendet!"
       admin_options_title: "Optionale Team-Einstellungen für dieses Thema"
     notifications:
+      tooltip:
+        regular:
+          one: "1 nicht gesehene Benachrichtigung"
+          other: "{{count}} nicht gesehene Benachrichtigungen"
+        message:
+          one: "1 ungelesene Nachricht"
+          other: "{{count}} ungelesene Nachrichten"
       title: "Benachrichtigung über @Name-Erwähnungen, Antworten auf deine Beiträge und Themen, Nachrichten, usw."
       none: "Die Benachrichtigungen können derzeit nicht geladen werden."
       empty: "Keine Benachrichtigungen gefunden."
@@ -1191,6 +1215,7 @@ de:
         linked: "Link zu deinem Beitrag"
         granted_badge: "Abzeichen erhalten"
         group_message_summary: "Nachrichten im Gruppenpostfach"
+        topic_reminder: "Eine Erinnerung"
       popup:
         mentioned: '{{username}} hat dich in "{{topic}}" - {{site_title}} erwähnt'
         group_mentioned: '{{username}} hat dich in "{{topic}}" - {{site_title}} erwähnt'
@@ -1213,6 +1238,7 @@ de:
       uploading: "Wird hochgeladen"
       select_file: "Datei auswählen"
       image_link: "Der Link deines Bildes verweist auf"
+      default_image_alt_text: Bild
     search:
       sort_by: "Sortieren nach"
       relevance: "Relevanz"
@@ -1255,7 +1281,7 @@ de:
         with_badge:
           label: Mit dem Abzeichen
         with_tags:
-          label: Mit den Schlagwörtern
+          label: Mit dem Schlagwort
         filters:
           label: 'Themen/Beiträge einschränken:'
           likes: Themen/Beiträge, die mir gefallen
@@ -1263,14 +1289,14 @@ de:
           watching: Themen, die ich beobachte
           tracking: Themen, denen ich folge
           private: Beiträge in meinen Unterhaltungen
-          bookmarks: Gemerkte Themen/Beiträge
+          bookmarks: Themen/Beiträge mit Lesezeichen
           first: Erste Beiträge in Themen
           pinned: Angeheftete Themen
           unpinned: Nicht angeheftete Themen
           seen: Gelesene Themen/Beiträge
           unseen: Ungelesene Themen/Beiträge
           wiki: Wikis
-          images: eingeschlossene(s) Bild(er)
+          images: Mit Bild(ern)
           all_tags: Enthält alle Schlagwörter
         statuses:
           label: 'Themen einschränken:'
@@ -1768,6 +1794,9 @@ de:
           notify_user: "hat eine Nachricht gesendet"
           bookmark: "hat/haben ein Lesezeichen gesetzt"
           like: "gefällt dies"
+          like_capped:
+            one: "und {{count}} anderen gefällt das"
+            other: "und {{count}} anderen gefällt das"
           vote: "hat/haben dafür gestimmt"
         by_you:
           off_topic: "Du hast das als „am Thema vorbei“ gemeldet"
@@ -1917,6 +1946,7 @@ de:
       email_in_allow_strangers: "Akzeptiere E-Mails von anonymen Benutzern."
       email_in_disabled: "Das Erstellen von neuen Themen per E-Mail ist in den Website-Einstellungen deaktiviert. Um das Erstellen von neuen Themen per E-Mail zu erlauben,"
       email_in_disabled_click: 'aktiviere die Einstellung „email in“.'
+      mailinglist_mirror: "Kategorie spiegelt eine Mailingliste"
       suppress_from_homepage: "Löse diese Kategorie von der Startseite."
       show_subcategory_list: "Zeige Liste von Unterkategorien oberhalb von Themen in dieser Kategorie"
       num_featured_topics: "Anzahl der Themen, die auf der Kategorien-Seite angezeigt werden"
@@ -2386,20 +2416,19 @@ de:
         topics: "Gemeldete Themen"
         agree: "Zustimmen"
         agree_title: "Meldung bestätigen, weil diese gültig und richtig ist"
-        agree_flag_modal_title: "Zustimmen und…"
-        agree_flag_hide_post: "Zustimmen (Beitrag ausblenden + PN senden)"
-        agree_flag_hide_post_title: "Diesen Beitrag ausblenden und den Benutzer mit einer automatisch gesendeten Nachricht zum Bearbeiten des Beitrags auffordern."
-        agree_flag_restore_post: "Zustimmen (Beitrag wiederherstellen)"
-        agree_flag_restore_post_title: "Diesen Beitrag wiederherstellen"
-        agree_flag: "Meldung zustimmen"
-        agree_flag_title: "Der Meldung zustimmen und den Beitrag unverändert lassen."
+        agree_flag_hide_post: "Zustimmen und Beitrag verstecken"
+        agree_flag_hide_post_title: "Verstecke diesen Beitrag und sende dem Benutzer/der Benutzerin eine Nachricht mit der Bitte, ihn zu bearbeiten."
+        agree_flag_restore_post: "Zustimmen und Beitrag wiederherstellen"
+        agree_flag_restore_post_title: "Beitrag wiederherstellen, sodass alle Benutzer/-innen ihn sehen können."
+        agree_flag: "Zustimmen und Beitrag behalten"
+        agree_flag_title: "Meldung zustimmen und den Beitrag unbearbeitet lassen."
         defer_flag: "Ignorieren"
         defer_flag_title: "Entferne diese Meldung. Derzeit besteht kein Handlungsbedarf."
         delete: "Löschen"
         delete_title: "Lösche den Beitrag, auf den diese Meldung verweist."
         delete_post_defer_flag: "Beitrag löschen und Meldung ignorieren"
         delete_post_defer_flag_title: "Beitrag löschen; das Thema löschen, wenn es sich um den ersten Beitrag handelt"
-        delete_post_agree_flag: "Beitrag löschen und der Meldung zustimmen"
+        delete_post_agree_flag: "Beitrag löschen und Meldung zustimmen"
         delete_post_agree_flag_title: "Beitrag löschen; das Thema löschen, wenn es sich um den ersten Beitrag handelt"
         delete_flag_modal_title: "Löschen und…"
         delete_spammer: "Spammer löschen"
@@ -2940,6 +2969,14 @@ de:
           roll_up:
             text: "Zusammenfassen"
             title: "Erzeugt neue Einträge zum Blockieren von Subnetzen, wenn mindestens 'min_ban_entries_for_roll_up' Einträge vorhanden sind."
+        search_logs:
+          title: "Protokolle durchsuchen"
+          term: "Suchbegriff"
+          searches: "Suchen"
+          click_through: "Durchklicken"
+          most_viewed_topic: "Meist betrachtetes Thema"
+          unique: "Eindeutig"
+          unique_title: "einzelne Benutzer mit dieser Suche"
         logster:
           title: "Fehlerprotokolle"
       watched_words:
@@ -3032,6 +3069,14 @@ de:
         suspend_message: "E-Mail-Nachricht"
         suspend_message_placeholder: "Optional: Gib weitere Informationen über deine Sperrung an und sie wird dem Benutzer per E-Mail geschickt."
         suspended_by: "Gesperrt von"
+        silence_reason: "Grund"
+        silenced_by: "Stummgeschaltet von"
+        silence_modal_title: "Benutzer stummschalten"
+        silence_duration: "Wie lange wird der Benutzer/die Benutzerin stummgeschaltet?"
+        silence_reason_label: "Warum schaltest du diesen Benutzer/diese Benutzerin stumm?"
+        silence_reason_placeholder: "Grund der Stummschaltung"
+        silence_message: "E-Mail-Nachricht"
+        silence_message_placeholder: "(leer lassen um Standardnachricht zu schicken)"
         suspended_until: "(bis %{until})"
         cant_suspend: "Der Benutzer kann nicht gesperrt werden."
         delete_all_posts: "Lösche alle Beiträge"
@@ -3106,7 +3151,7 @@ de:
         deactivate_account: "Benutzer deaktivieren"
         deactivate_failed: "Beim Deaktivieren des Benutzers ist ein Fehler aufgetreten."
         unsilence_failed: 'Beim Aufheben der Stummschaltung ist ein Fehler aufgetreten.'
-        silence_failed: 'Beim Aufheben der Stummschaltung ist ein Fehler aufgetreten.'
+        silence_failed: 'Bei der Stummschaltung des Benutzers/der Benutzerin ist ein Fehler aufgetreten.'
         silence_confirm: 'Bist du sicher, dass du diesen Benutzer stummschalten möchtest? Der Benutzer wird keine Möglichkeit mehr haben, Themen oder Beiträge zu erstellen.'
         silence_accept: 'Ja, diesen Benutzer stummschalten'
         bounce_score: "Anzahl unzustellbarer E-Mails"

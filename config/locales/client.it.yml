@@ -48,6 +48,9 @@ it:
         x_seconds:
           one: "1s"
           other: "%{count}s"
+        less_than_x_minutes:
+          one: "< 1m"
+          other: "< %{count}m"
         x_minutes:
           one: "1m"
           other: "%{count}m"
@@ -57,6 +60,9 @@ it:
         x_days:
           one: "1g"
           other: "%{count}gg"
+        x_months:
+          one: "1mese"
+          other: "%{count}mesi"
         about_x_years:
           one: "1a"
           other: "%{count}a"
@@ -594,6 +600,7 @@ it:
       api_approved: "Approvato:"
       theme: "Tema"
       home: "Home Page Predefinita"
+      staged: "Temporaneo"
       staff_counters:
         flags_given: "segnalazioni utili"
         flagged_posts: "messaggi segnalati"
@@ -803,6 +810,7 @@ it:
         title: "Riepilogo"
         stats: "Statistiche"
         time_read: "tempo di lettura"
+        recent_time_read: "tempo di lettura recente"
         topic_count:
           one: "argomento creato"
           other: "argomenti creati"
@@ -818,6 +826,9 @@ it:
         days_visited:
           one: "giorno di frequenza"
           other: "giorni di frequenza"
+        topics_entered:
+          one: "argomenti visualizzati"
+          other: "argomenti visualizzati"
         posts_read:
           one: "messaggio letto"
           other: "messaggi letti"
@@ -908,6 +919,9 @@ it:
     unmute: Attiva
     last_post: Ultimo messaggio
     time_read: Letti
+    time_read_recently: '%{time_read} recentemente'
+    time_read_tooltip: '%{time_read} tempo totale di lettura'
+    time_read_recently_tooltip: '%{time_read} tempo totale di lettura (%{recent_time_read} negli ultimi 60 giorni)'
     last_reply_lowercase: ultima risposta
     replies_lowercase:
       one: risposta
@@ -1108,6 +1122,7 @@ it:
       edit_reason_placeholder: "perché stai scrivendo?"
       show_edit_reason: "(aggiungi motivo della modifica)"
       topic_featured_link_placeholder: "Inserisci il collegamento mostrato con il titolo."
+      remove_featured_link: "Rimuovi il collegamento dall'argomento."
       reply_placeholder: "Scrivi qui. Per formattare il testo usa Markdown, BBCode o HTML. Trascina o incolla le immagini."
       view_new_post: "Visualizza il tuo nuovo messaggio."
       saving: "Salvataggio"
@@ -1768,6 +1783,9 @@ it:
           notify_user: "hanno inviato un messaggio"
           bookmark: "l'hanno aggiunto ai segnalibri"
           like: "hanno messo \"Mi piace\""
+          like_capped:
+            one: "e a {{count}} persona è piaciuto"
+            other: "e ad altre {{count}} persone è piaciuto"
           vote: "hanno votato"
         by_you:
           off_topic: "L'hai segnalato come fuori tema"
@@ -1917,6 +1935,7 @@ it:
       email_in_allow_strangers: "Accetta email da utenti anonimi senza alcun account"
       email_in_disabled: "Le Impostazioni Sito non permettono di creare nuovi argomenti via email. Per abilitare la creazione di argomenti via email,"
       email_in_disabled_click: 'abilita l''impostazione "email entrante".'
+      mailinglist_mirror: "La categoria rispecchia una mailing list"
       suppress_from_homepage: "Elimina questa categoria dalla homepage."
       show_subcategory_list: "Mostra la lista delle sottocategorie sopra agli argomenti in questa categoria."
       num_featured_topics: "Numero degli argomenti mostrati nella pagina categorie:"
@@ -2386,20 +2405,19 @@ it:
         topics: "Argomenti Segnalati"
         agree: "Acconsento"
         agree_title: "Conferma che questa segnalazione è valida e corretta"
-        agree_flag_modal_title: "Acconsento e..."
-        agree_flag_hide_post: "D'accordo (nascondi il messaggio e invia MP)"
-        agree_flag_hide_post_title: "Nascondi questo messaggio e invia automaticamente all'utente un messaggio chiedendogli di modificarlo"
-        agree_flag_restore_post: "D'accordo (ripristina messaggio)"
-        agree_flag_restore_post_title: "Ripristina questo messaggio"
-        agree_flag: "Accetta la segnalazione"
-        agree_flag_title: "Accetta la segnalazione e non modificare il messaggio"
+        agree_flag_hide_post: "Accetta e Nascondi il Messaggio"
+        agree_flag_hide_post_title: "Nascondi questo messaggio e invia automaticamente all'utente un messaggio privato che lo invita a modificarlo."
+        agree_flag_restore_post: "Accetta e Ripristina il Messaggio"
+        agree_flag_restore_post_title: "Ripristina il messaggio in modo che tutti gli utenti possano vederlo."
+        agree_flag: "Accetto e Mantieni il Messaggio"
+        agree_flag_title: "Accetta la segnalazione e mantieni invariato il messaggio."
         defer_flag: "Ignora"
         defer_flag_title: "Rimuovi segnalazione; non è necessaria alcuna azione questa volta."
         delete: "Cancella"
         delete_title: "Cancella il messaggio a cui si riferisce la segnalazione."
-        delete_post_defer_flag: "Elimina il messaggio e Ignora la segnalazione"
+        delete_post_defer_flag: "Elimina il Messaggio e Ignora la segnalazione"
         delete_post_defer_flag_title: "Cancella il messaggio: se è il primo, cancella l'argomento"
-        delete_post_agree_flag: "Elimina messaggio e Accetta la segnalazione"
+        delete_post_agree_flag: "Elimina il Messaggio e Accetta la segnalazione"
         delete_post_agree_flag_title: "Cancella il messaggio: se è il primo, cancella l'argomento"
         delete_flag_modal_title: "Cancella e..."
         delete_spammer: "Cancella lo Spammer"
@@ -2940,6 +2958,13 @@ it:
           roll_up:
             text: "Sintetizza"
             title: "Crea nuovi elenchi di indirizzi IP interdetti se ci sono almeno 'min_ban_entries_for_roll_up' elementi."
+        search_logs:
+          title: "Log Ricerca"
+          term: "Termine"
+          searches: "Ricerche"
+          click_through: "Cliccate"
+          most_viewed_topic: "Argomento Più Visualizzato"
+          unique: "Unico"
         logster:
           title: "Log Errori"
       watched_words:
@@ -3032,6 +3057,14 @@ it:
         suspend_message: "Messaggio Email"
         suspend_message_placeholder: "Facoltativamente, fornisci ulteriori informazioni sulla sospensione e verranno inviate via email all'utente."
         suspended_by: "Sospeso da"
+        silence_reason: "Motivo"
+        silenced_by: "Silenziato Da"
+        silence_modal_title: "Utente in Silenzio"
+        silence_duration: "Per quanto tempo l'utente sarà silenziato? "
+        silence_reason_label: "Perché stai silenziando questo utente?"
+        silence_reason_placeholder: "Motivo Silenzio"
+        silence_message: "Messaggio Email"
+        silence_message_placeholder: "(lasciare vuoto per inviare il messaggio predefinito)"
         suspended_until: "(fino %{until})"
         cant_suspend: "Questo utente non può essere sospeso."
         delete_all_posts: "Cancella tutti i messaggi"
@@ -3106,7 +3139,7 @@ it:
         deactivate_account: "Disattiva Account"
         deactivate_failed: "Si è verificato un errore durante la disattivazione dell'utente."
         unsilence_failed: 'Si è verificato un errore mentre si de-silenziava l''utente.'
-        silence_failed: 'Si è verificato un errore mentre si de-silenziava l''utente.'
+        silence_failed: 'Si è verificato un errore mentre si silenziava l''utente'
         silence_confirm: 'Sei sicuro di voler silenziare questo utente? Non sarà più in grado di creare alcun nuovo argomento o messaggio.'
         silence_accept: 'Sì, silenzia questo utente'
         bounce_score: "Errori di Ritorno"

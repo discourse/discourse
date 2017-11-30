@@ -497,6 +497,7 @@ zh_CN:
         disable: "停用通知"
         enable: "启用通知"
         each_browser_note: "注意：你必须在你使用的所用浏览器中更改这项设置。"
+      dismiss: '忽略'
       dismiss_notifications: "忽略所有"
       dismiss_notifications_tooltip: "标记所有未读通知为已读"
       first_notification: "你的头一个通知！选中它开始。"
@@ -511,6 +512,7 @@ zh_CN:
       admin: "{{user}}是管理员"
       moderator_tooltip: "用户是版主"
       admin_tooltip: "用户是管理员"
+      silenced_tooltip: "该用户已被禁言。"
       suspended_notice: "该用户将被禁止登录，直至 {{date}}。"
       suspended_permanently: "该用户被封禁了。"
       suspended_reason: "原因："
@@ -562,6 +564,7 @@ zh_CN:
       undo_revoke_access: "解除撤销许可"
       api_approved: "已批准："
       theme: "主题"
+      home: "默认主页"
       staff_counters:
         flags_given: "采纳标记"
         flagged_posts: "被标记"
@@ -864,7 +867,8 @@ zh_CN:
     first_post: 最早帖子
     mute: 静音
     unmute: 取消静音
-    last_post: 最后帖子
+    last_post: 最后发帖
+    time_read: 阅读
     last_reply_lowercase: 最后回复
     replies_lowercase:
       other: 回复
@@ -1026,7 +1030,7 @@ zh_CN:
       blockquote_text: "引用"
       add_warning: "正式警告"
       toggle_whisper: "折叠或展开密语"
-      toggle_unlisted: "未列表切换"
+      toggle_unlisted: "显示/隐藏于主题列表"
       posting_not_on_topic: "你想回复哪一个主题？"
       saving_draft_tip: "保存中..."
       saved_draft_tip: "已保存"
@@ -1054,6 +1058,7 @@ zh_CN:
       cancel: "取消"
       create_topic: "创建主题"
       create_pm: "私信"
+      create_whisper: "密语"
       title: "或 Ctrl + 回车"
       users_placeholder: "添加用户"
       title_placeholder: "一句话告诉讨论什么..."
@@ -1279,7 +1284,7 @@ zh_CN:
         hot: "没有热门主题。"
         bookmarks: "你没有收藏任何主题。"
         category: "{{category}}分类中没有主题。"
-        top: "没有最佳主题。"
+        top: "没有热门主题。"
         search: "没有搜索结果。"
         educate:
           new: '<p>这里显示了近期主题列表。</p><p>默认情况下，最近 2 天内创建的主题将显示在近期列表，还会显示一个<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">近期</span>标志。<p>你可以在<a href="%{userPrefsUrl}">用户设置</a>中更改要显示哪些内容。</p>'
@@ -2196,7 +2201,7 @@ zh_CN:
           latest: "没有最新主题。"
           hot: "没有热门主题。"
           bookmarks: "你还没有收藏主题。"
-          top: "没有最佳主题。"
+          top: "没有热门主题。"
           search: "没有搜索结果。"
         bottom:
           latest: "没有更多的最新主题。"
@@ -2240,6 +2245,7 @@ zh_CN:
         no_problems: "找不到问题."
         moderators: '版主：'
         admins: '管理员：'
+        silenced: '禁言：'
         suspended: '禁止登录'
         private_messages_short: "私信"
         private_messages_title: "私信"
@@ -2321,6 +2327,7 @@ zh_CN:
         was_edited: "帖子在第一次标记后被编辑"
         previous_flags_count: "这篇帖子已经被标记了 {{count}} 次。"
         show_details: "显示标记细节"
+        details: "详情"
         flagged_topics:
           topic: "主题"
           type: "类型"
@@ -2778,6 +2785,8 @@ zh_CN:
             change_category_settings: "更改分类设置"
             delete_category: "删除分类"
             create_category: "创建分类"
+            silence_user: "禁言用户"
+            unsilence_user: "解除禁言用户"
             grant_admin: "授予管理员权限"
             revoke_admin: "撤销管理员权限"
             grant_moderation: "授予版主权限"
@@ -2871,6 +2880,7 @@ zh_CN:
           pending: "未审核"
           staff: '管理人员'
           suspended: '禁止登录'
+          silenced: '已禁言'
           suspect: '怀疑'
         approved: "已批准？"
         approved_selected:
@@ -2889,6 +2899,7 @@ zh_CN:
           staff: "管理人员"
           admins: '管理员'
           moderators: '版主'
+          silenced: '被禁言的用户'
           suspended: '被禁用户'
           suspect: '嫌疑用户'
         reject_successful:
@@ -2914,6 +2925,9 @@ zh_CN:
         cant_suspend: "该用户不能被封禁。"
         delete_all_posts: "删除所有帖子"
         delete_all_posts_confirm_MF: "你将要删除 {POSTS, plural, one {1 个帖子} other {# 个帖子}}和 {TOPICS, plural, one {1 个主题} other {# 个主题}}。确定吗？"
+        silence: "禁言"
+        unsilence: "解除禁言"
+        silenced: "禁言？"
         moderator: "版主？"
         admin: "管理员？"
         suspended: "已禁止？"
@@ -2977,6 +2991,10 @@ zh_CN:
         activate_failed: "在激活用户帐号时发生了错误。"
         deactivate_account: "停用帐号"
         deactivate_failed: "在停用用户帐号时发生了错误。"
+        unsilence_failed: '解除禁言时出错了。'
+        silence_failed: '禁言用户时出错了。'
+        silence_confirm: '你确定要禁言该用户吗？他们将不能创建主题或帖子。'
+        silence_accept: '是的，禁言该用户'
         bounce_score: "累计退信分值"
         reset_bounce_score:
           label: "重置"
@@ -2984,6 +3002,7 @@ zh_CN:
         visit_profile: "访问<a href='%{url}'>用户设置页面</a>编辑他们的个人页"
         deactivate_explanation: "已停用的用户必须重新验证他们的电子邮件。"
         suspended_explanation: "一个被封禁的用户不能登录。"
+        silence_explanation: "被禁言的用户不能发帖或创建主题。"
         staged_explanation: "暂存用户只能通过邮件回复指定主题。"
         bounce_score_explanation:
           none: "近期该邮箱没有退信。"

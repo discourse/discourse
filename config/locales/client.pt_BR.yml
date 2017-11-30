@@ -389,7 +389,11 @@ pt_BR:
       mentions: "Menções"
       messages: "Mensagens"
       notification_level: "Nível de notificação padrão para mensagens de grupo"
+      visibility_levels:
+        title: "Quem pode ver este grupo?"
+        public: "Todo mundo"
       alias_levels:
+        messageable: "Quem pode enviar mensagens a este grupo?"
         nobody: "Ninguém"
         only_admins: "Somente administradores"
         mods_and_admins: "Somente moderadores e Administradores"
@@ -485,6 +489,7 @@ pt_BR:
       mute: "Silenciar"
       edit: "Editar Preferências"
       download_archive:
+        button_text: "Baixar Tudo"
         confirm: "Você tem certeza de que quer baixar as suas publicações?"
         success: "Download iniciado, você será notificado por mensagem quando o processo estiver completo."
         rate_limit_error: "Publicações podem ser baixadas somente uma vez por dia, por favor tente novamente amanhã."
@@ -509,11 +514,14 @@ pt_BR:
         disable: "Desativar Notificações"
         enable: "Ativar Notificações"
         each_browser_note: "Nota: Você deve modificar essa configuração em todos navegadores que você usa."
+      dismiss: 'Descartar'
       dismiss_notifications: "Descartar tudo"
       dismiss_notifications_tooltip: "Marcar todas as notificações não lidas como lidos"
       first_notification: "Sua primeira notificação! Selecione-a para começar."
       disable_jump_reply: "Não pular para o meu tópico depois que eu respondo"
       dynamic_favicon: "Exibir ícone no navegador de tópicos novos / atualizados."
+      theme_default_on_all_devices: "Definir este tema como padrão em todos os meus dispositivos"
+      allow_private_messages: "Permitir que outros usuários me mandem mensagens privadas"
       external_links_in_new_tab: "Abrir todos os links externos em uma nova aba"
       enable_quoting: "Ativar resposta citando o texto destacado"
       change: "alterar"
@@ -521,6 +529,7 @@ pt_BR:
       admin: "{{user}} é um administrador"
       moderator_tooltip: "Esse usuário é da moderação"
       admin_tooltip: "Esse usuário é da administração"
+      silenced_tooltip: "Este usuário está silenciado"
       suspended_notice: "Esse usuário está suspenso até {{date}}."
       suspended_reason: "Motivo:"
       github_profile: "Github"
@@ -556,7 +565,7 @@ pt_BR:
       delete_account_confirm: "Tem certeza de que deseja excluir permanentemente a sua conta? Essa ação não pode ser desfeita!"
       deleted_yourself: "Sua conta foi excluída com sucesso."
       delete_yourself_not_allowed: "Você não pode excluir a sua conta agora. Contate um administrador para apagar a sua conta para você."
-      unread_message_count: "Mensagens Privadas"
+      unread_message_count: "Mensagens"
       admin_delete: "Apagar"
       users: "Usuários"
       muted_users: "Silenciado"
@@ -569,6 +578,7 @@ pt_BR:
       undo_revoke_access: "Desfazer a Revogação de Acesso"
       api_approved: "Aprovada:"
       theme: "Tema"
+      home: "Página Inicial Padrão"
       staff_counters:
         flags_given: "sinalizadas úteis"
         flagged_posts: "posts sinalizados"
@@ -616,6 +626,7 @@ pt_BR:
         taken: "Desculpe, esse email não é válido."
         error: "Houve um erro ao alterar seu email. Talvez ele já esteja sendo usado neste forum?"
         success: "Enviamos um email para esse endereço. Por favor, siga as instruções de confirmação."
+        success_staff: "Enviamos um e-mail ao seu endereço atual. Por favor, siga as instruções de confirmação."
       change_avatar:
         title: "Alterar sua imagem de perfil"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, baseado em"
@@ -745,8 +756,12 @@ pt_BR:
         expired: "Este convite expirou."
         rescind: "Remover"
         rescinded: "Convite removido"
+        rescind_all: "Remover todos os convites"
+        rescinded_all: "Todos os convites foram removidos!"
+        rescind_all_confirm: "Tem certeza de que deseja remover todos os convites?"
         reinvite: "Reenviar convite"
         reinvite_all: "Reenviar todos os convites"
+        reinvite_all_confirm: "Tem certeza de que deseja reenviar todos os convites?"
         reinvited: "Convite reenviado"
         reinvited_all: "Todos os convites foram reenviados!"
         time_read: "Tempo de leitura"
@@ -876,7 +891,7 @@ pt_BR:
     first_post: Primeira resposta
     mute: Silenciar
     unmute: Reativar
-    last_post: Última resposta
+    time_read: Lido
     last_reply_lowercase: última resposta
     replies_lowercase:
       one: resposta
@@ -902,6 +917,7 @@ pt_BR:
     private_message_info:
       title: "Mensagem"
       invite: "Convidar outros..."
+      leave_message: "Você quer mesmo deixar esta mensagem?"
       remove_allowed_user: "Tem a certeza que deseja remover {{name}} desta mensagem?"
       remove_allowed_group: "Tem a certeza que deseja remover {{name}} desta mensagem?"
     email: 'Email'
@@ -926,6 +942,8 @@ pt_BR:
       complete_email_found: "Encontramos uma conta com <b>%{email}</b>, você deve receber um email com instruções em como resetar sua senha em breve."
       complete_username_not_found: "Nenhuma conta com usuário <b>%{username}</b>"
       complete_email_not_found: "Nenhuma conta com <b>%{email}</b>"
+      button_ok: "OK"
+      button_help: "Ajuda"
     login:
       title: "Log In"
       username: "Usuário"
@@ -984,6 +1002,9 @@ pt_BR:
       your_email: "O endereço de email da sua conta é <b>%{email}</b>."
       accept_invite: "Aceitar Convite"
       success: "Sua conta foi criada e você já está logado."
+      name_label: "Nome"
+      password_label: "Definir Senha"
+      optional_description: "(opcional)"
     password_reset:
       continue: "Continuar para %{site_name}"
     emoji_set:
@@ -992,6 +1013,8 @@ pt_BR:
       twitter: "Twitter"
       emoji_one: "Emoji One"
       win10: "Win10"
+      google_classic: "Google Classic"
+      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Categorias Apenas"
       categories_with_featured_topics: "Categorias com Tópicos em Destaque"
@@ -1000,6 +1023,17 @@ pt_BR:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    select_kit:
+      default_header_text: Selecionar...
+      filter_placeholder: Buscar...
+    emoji_picker:
+      people: Pessoas
+      nature: Natureza
+      food: Comida
+      activity: Atividade
+      travel: Viagem
+      objects: Objetos
+      custom: Emojis personalizados
     composer:
       emoji: "Emoji :)"
       more_emoji: "mais..."
@@ -1036,6 +1070,7 @@ pt_BR:
       cancel: "Cancelar"
       create_topic: "Criar Tópico"
       create_pm: "Mensagem"
+      create_whisper: "Sussurrar"
       title: "Ou pressione Ctrl+Enter"
       users_placeholder: "Adicionar um usuário"
       title_placeholder: "Sobre o que é esta discussão em uma pequena frase?"
@@ -1043,6 +1078,7 @@ pt_BR:
       edit_reason_placeholder: "por que você está editando?"
       show_edit_reason: "(adicione motivo da edição)"
       topic_featured_link_placeholder: "Entre com o link mostrado no título."
+      remove_featured_link: "Remover link do tópico."
       reply_placeholder: "Escreva aqui. Use Markdown, BBCode ou HTML para formatar. Arraste ou cole uma imagens."
       view_new_post: "Ver sua nova resposta."
       saving: "Salvando"
@@ -1088,6 +1124,22 @@ pt_BR:
       empty: "Não foi encontrada nenhuma notificação."
       more: "ver notificações antigas"
       total_flagged: "total de mensagens sinalizadas"
+      mentioned: "<span>{{username}}</span> {{description}}"
+      group_mentioned: "<span>{{username}}</span> {{description}}"
+      quoted: "<span>{{username}}</span> {{description}}"
+      replied: "<span>{{username}}</span> {{description}}"
+      posted: "<span>{{username}}</span> {{description}}"
+      edited: "<span>{{username}}</span> {{description}}"
+      liked: "<span>{{username}}</span> {{description}}"
+      liked_2: "<span>{{username}}, {{username2}}</span> {{description}}"
+      private_message: "<span>{{username}}</span> {{description}}"
+      invited_to_private_message: "<p><span>{{username}}</span> {{description}}"
+      invited_to_topic: "<span>{{username}}</span> {{description}}"
+      invitee_accepted: "<span>{{username}}</span> aceitou o seu convite"
+      moved_post: "<span>{{username}}</span> moveu {{description}}"
+      linked: "<span>{{username}}</span> {{description}}"
+      topic_reminder: "<span>{{username}}</span> {{description}}"
+      watching_first_post: "<span>Novo Tópico</span> {{description}}"
       alt:
         mentioned: "Mencionado por"
         quoted: "Citado por"
@@ -1103,6 +1155,7 @@ pt_BR:
         linked: "Link para sua mensagem"
         granted_badge: "Emblema concedido"
         group_message_summary: "Mensagens na caixa de entrada do grupo"
+        topic_reminder: "Um lembrete"
       popup:
         mentioned: '{{username}} mencionou você em "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} mencionou você em "{{topic}}" - {{site_title}}'
@@ -1125,6 +1178,7 @@ pt_BR:
       uploading: "Enviando"
       select_file: "Selecionar Arquivo"
       image_link: "link da sua imagem"
+      default_image_alt_text: imagem
     search:
       sort_by: "Ordenar por"
       relevance: "Relevância"
@@ -1140,7 +1194,10 @@ pt_BR:
       no_more_results: "Sem mais resultados encontrados."
       searching: "Procurando..."
       post_format: "#{{post_number}} por {{username}}"
-      results_page: "Resultados da pesquisa"
+      cant_find: "Não está conseguindo achar o que você quer?"
+      start_new_topic: "Que tal começar um novo tópico?"
+      search_google_button: "Google"
+      search_google_title: "Buscar neste site"
       context:
         user: "Procurar respostas de @{{username}}"
         category: "Procurar a categoria #{{category}}"
@@ -1209,6 +1266,7 @@ pt_BR:
         actions: "Ações em Massa"
         close_topics: "Fechar Tópicos"
         archive_topics: "Arquivar Tópicos"
+        notification_level: "Notificações"
         choose_new_category: "Escolha a nova categoria para os tópicos:"
         selected:
           one: "Você selecionou <b>1</b> tópico."
@@ -1315,6 +1373,12 @@ pt_BR:
         later_this_week: "Mais tarde esta semana"
         this_weekend: "Este fim de semana"
         next_week: "Próxima semana"
+        two_weeks: "Duas Semanas"
+        next_month: "Mês que vem"
+        three_months: "Três Meses"
+        six_months: "Seis Meses"
+        one_year: "Um Ano"
+        forever: "Para Sempre"
         pick_date_and_time: "Escolha uma data e uma hora"
         set_based_on_last_post: "Fechar baseado na última postagem"
       publish_to_category:
@@ -1329,9 +1393,13 @@ pt_BR:
         title: "Fechar tópico automaticamente"
         label: "Horas para fechar tópico automaticamente:"
         error: "Por favor insira um valor válido."
+      reminder:
+        title: "Lembrar-me"
       status_update_notice:
         auto_open: "Este tópico irá abrir automaticamente em %{timeLeft}"
         auto_close: "Este tópico irá fechar automaticamente em %{timeLeft}"
+        auto_publish_to_category: "Este tópico será publicado em <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
+        auto_delete: "Este tópico será automaticamente apagado %{timeLeft}."
       auto_close_title: 'Configurações para fechar automaticamente'
       auto_close_immediate:
         one: "A última publicação no tópico já tem 1 hora, portanto ele será fechado imediatamente."
@@ -1597,6 +1665,7 @@ pt_BR:
         has_liked: "você curtiu essa resposta"
         undo_like: "desfazer curtida"
         edit: "editar esta resposta"
+        edit_action: "Editar"
         edit_anonymous: "Você precisa estar conectado para editar essa resposta."
         flag: "sinalize privativamente esta resposta para chamar atenção ou enviar uma notificação privada sobre ela"
         delete: "apagar esta resposta"
@@ -2208,6 +2277,7 @@ pt_BR:
         no_problems: "Nenhum problema encontrado."
         moderators: 'Moderadores:'
         admins: 'Admins:'
+        silenced: 'Silenciado:'
         suspended: 'Suspenso:'
         private_messages_short: "Msgs"
         private_messages_title: "Mensagens"
@@ -2272,34 +2342,25 @@ pt_BR:
         dispositions:
           agreed: "concordar"
           disagreed: "discordar"
-          deferred: "deferida"
         flagged_by: "Sinalizado por"
         resolved_by: "Resolvido por"
         took_action: "Tomar ação"
         system: "Sistema"
         error: "Algo deu errado"
         reply_message: "Responder"
-        no_results: "Não há sinalizações."
         topic_flagged: "Este <strong>tópico</strong> foi sinalizado."
         visit_topic: "Visitar o tópico para tomar ações"
         was_edited: "Resposta foi editada após uma primeira sinalização"
         previous_flags_count: "Este post já foi marcado {{count}} vezes."
-        summary:
-          action_type_3:
-            one: "off-topic"
-            other: "off-topic x{{count}}"
-          action_type_4:
-            one: "inapropriado"
-            other: "inapropriado x{{count}}"
-          action_type_6:
-            one: "customizado"
-            other: "customizados x{{count}}"
-          action_type_7:
-            one: "personalizado"
-            other: "personalizado x{{count}}"
-          action_type_8:
-            one: "spam"
-            other: "spam x{{count}}"
+        details: "detalhes"
+        flagged_topics:
+          topic: "Tópico"
+          users: "Usuários"
+        short_names:
+          inappropriate: "impróprio"
+          spam: "spam"
+          notify_user: "personalizado"
+          notify_moderators: "personalizado"
       groups:
         primary: "Grupo Primário"
         no_primary: "(sem grupo primário)"
@@ -2504,6 +2565,7 @@ pt_BR:
         new_style: "Novo Estilo"
         import: "Importar"
         delete: "Apagar"
+        delete_confirm: "Apagar este tema?"
         about: "Modificar o CSS e HTML do cabeçalho do site. Adicione uma customização para começar."
         color: "Cor"
         opacity: "Opacidade"
@@ -2519,12 +2581,20 @@ pt_BR:
           revert: "Reverter Alterações"
           revert_confirm: "Tem certeza de que deseja reverter as alterações?"
         theme:
+          import_theme: "Importar Tema"
+          customize_desc: "Personalizar:"
+          title: "Temas"
           edit: "Editar"
           desktop: "Desktop"
           mobile: "Mobile"
           preview: "Prévia"
           color_scheme_select: "Selecione as cores a serem usadas pelo tema"
+          custom_sections: "Seções personalizadas:"
           edit_css_html: "Editar CSS/HTML"
+          about_theme: "Sobre o Tema"
+          license: "Licença"
+          check_for_updates: "Verificar Atualizações"
+          updating: "Atualizando..."
           add: "Adicionar"
           scss:
             text: "CSS"
@@ -2731,6 +2801,10 @@ pt_BR:
             title: "Cria novas entradas de banimento por subnet caso existam no mínimo 'min_ban_entries_for_roll_up' entradas."
         logster:
           title: "Registro de erros"
+      watched_words:
+        form:
+          add: 'Adicionar'
+          success: 'Sucesso'
       impersonate:
         title: "Personificar"
         help: "Utilize esta ferramenta para personificar uma conta de usuário para efeitos de depuração. Você terá que sair dela assim que terminar."
@@ -2770,6 +2844,7 @@ pt_BR:
           staff: "Equipe de apoio"
           admins: 'Usuários Administradores'
           moderators: 'Moderadores'
+          silenced: 'Usuários Silenciados'
           suspended: 'Usuários Suspensos'
           suspect: 'Usuários suspeitos'
         reject_successful:
@@ -2789,8 +2864,10 @@ pt_BR:
         suspend_reason_label: "Por que você está suspendendo? Esse texto <b>será visível para todos</b> na página de perfil desse usuário, e será mostrado ao usuário quando ele tentar se logar. Seja breve."
         suspend_reason: "Motivo"
         suspended_by: "Suspenso por"
+        silence_reason: "Motivo"
         delete_all_posts: "Apagar todas mensagens"
         delete_all_posts_confirm_MF: "Você está prestes a apagar {POSTS, plural, one {1 publicação} other {# publicações}} and {TOPICS, plural, one {1 tópico} other {# tópicos}}. Você tem certeza?"
+        silence: "Silenciar"
         moderator: "Moderador?"
         admin: "Admin?"
         suspended: "Suspenso?"
@@ -2857,6 +2934,7 @@ pt_BR:
         activate_failed: "Houve um problema ao tornar o usuário ativo."
         deactivate_account: "Desativar Conta"
         deactivate_failed: "Houve um problema ao desativar o usuário."
+        silence_accept: 'Sim, silenciar este usuário'
         bounce_score: "Pontuação de Devolução"
         reset_bounce_score:
           label: "Redefinir"
@@ -2980,6 +3058,7 @@ pt_BR:
           developer: 'Desenvolvedor'
           embedding: "Incorporação"
           legal: "Jurídico"
+          api: 'API'
           user_api: 'API de Usuário'
           uncategorized: 'Outros'
           backups: "Backups"
