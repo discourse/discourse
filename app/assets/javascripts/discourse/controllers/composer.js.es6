@@ -303,15 +303,18 @@ export default Ember.Controller.extend({
     // Toggle the reply view
     toggle() {
       this.closeAutocomplete();
-      if (this.get('model.composeState') === Composer.OPEN) {
-        if (Ember.isEmpty(this.get('model.reply')) && Ember.isEmpty(this.get('model.title'))) {
-          this.close();
-        } else {
-          this.shrink();
-        }
-      } else {
+
+      if (Ember.isEmpty(this.get('model.reply')) && Ember.isEmpty(this.get('model.title'))) {
         this.close();
+      } else {
+        if (this.get('model.composeState') === Composer.OPEN) {
+          this.shrink();
+        } else {
+          debugger;
+          this.cancelComposer();
+        }
       }
+
       return false;
     },
 
