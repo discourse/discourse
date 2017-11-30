@@ -196,6 +196,10 @@ test("number pollOutput", function(assert) {
   controller.set("publicPoll", true);
 
   assert.equal(controller.get("pollOutput"), "[poll type=number min=1 max=20 step=2 public=true]\n[/poll]", "it should return the right output");
+
+  controller.set("pollStep", 0);
+
+  assert.equal(controller.get("pollOutput"), "[poll type=number min=1 max=20 step=1 public=true]\n[/poll]", "it should return the right output");
 });
 
 test("regular pollOutput", function(assert) {
