@@ -143,9 +143,9 @@ QUnit.test('auto delete', assert => {
   });
 
   expandSelectKit('.future-date-input-selector');
-  selectKitSelectRow('next_month', { selector: '.future-date-input-selector' });
+  selectKitSelectRow('two_weeks', { selector: '.future-date-input-selector' });
   andThen(() => {
-    assert.equal(selectKit('.future-date-input-selector').header.name(), 'Next month');
+    assert.equal(selectKit('.future-date-input-selector').header.name(), 'Two Weeks');
     const regex = /will be automatically deleted/g;
     const html = find('.future-date-input .topic-status-info').html().trim();
     assert.ok(regex.test(html));
