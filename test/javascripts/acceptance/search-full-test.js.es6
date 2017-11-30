@@ -262,7 +262,7 @@ QUnit.test("update in filter through advanced search ui", assert => {
   fillIn('.search-advanced-options .select-kit#in', 'bookmarks');
 
   andThen(() => {
-    assert.ok(exists(selectKit('.search-advanced-options .select-kit#in').rowByName("I\'ve bookmarked").el), 'has "I\'ve bookmarked" populated');
+    assert.ok(exists(selectKit('.search-advanced-options .select-kit#in').rowByName("I bookmarked").el), 'has "I bookmarked" populated');
     assert.equal(find('.search input.full-page-search').val(), "none in:bookmarks", 'has updated search term to "none in:bookmarks"');
   });
 });
