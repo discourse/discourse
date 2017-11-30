@@ -24,13 +24,9 @@
                           addLinkLookup="addLinkLookup"}}
 
       {{#if model.viewOpen}}
- 
         <div class="reply-area {{if canEditTags 'with-tags'}}">
-
           <div class='composer-fields'>
-
             {{plugin-outlet name="composer-open" args=(hash model=model)}}
-
             <div class='reply-to'>
               <div class="reply-details">
                 {{{model.actionTitle}}}
@@ -119,7 +115,6 @@
           <div class='submit-panel'>
             {{plugin-outlet name="composer-fields-below" args=(hash model=model)}}
 
-     
             <div class='save-or-cancel'>
               {{composer-save-button action=(action "save")
                                      icon=model.saveIcon
