@@ -1,5 +1,7 @@
 class SingleSignOnRecord < ActiveRecord::Base
   belongs_to :user
+
+  validates :external_id, uniqueness: true
 end
 
 # == Schema Information
