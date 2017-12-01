@@ -13,7 +13,8 @@ import { tinyAvatar,
          displayErrorForUpload,
          getUploadMarkdown,
          validateUploadedFiles,
-         formatUsername
+         formatUsername,
+         clipboardData
 } from 'discourse/lib/utilities';
 import { cacheShortUploadUrl, resolveAllShortUrls } from 'pretty-text/image-short-url';
 
@@ -394,7 +395,14 @@ export default Ember.Component.extend({
       pasteZone: $element,
     });
 
-    $element.on('fileuploadpaste', () => this._pasted = true);
+    $element.on('fileuploadpaste', (e) => {
+      let {types} = clipboardData(e);
+      this._pasted = true;
+
+      if (types.some(t => t === "text/plain")) {
+        e.preventDefault();
+      }
+    });
 
     $element.on('fileuploadsubmit', (e, data) => {
       const isPrivateMessage = this.get("composer.privateMessage");

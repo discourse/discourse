@@ -9,6 +9,9 @@ const Discourse = Ember.Application.extend({
   RAW_TEMPLATES: {},
   __widget_helpers: {},
   showingSignup: false,
+  customEvents: {
+    paste: 'paste'
+  },
 
   getURL(url) {
     if (!url) return url;
