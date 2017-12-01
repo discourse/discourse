@@ -53,10 +53,11 @@ class Validators::UploadValidator < ActiveModel::Validator
   def extensions_to_set(exts)
     extensions = Set.new
 
-    exts.gsub(/[\s\.]+/, "")
-        .downcase
-        .split("|")
-        .each { |extension| extensions << extension unless extension.include?("*") }
+    exts
+      .gsub(/[\s\.]+/, "")
+      .downcase
+      .split("|")
+      .each { |extension| extensions << extension unless extension.include?("*") }
 
     extensions
   end
