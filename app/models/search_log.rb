@@ -1,13 +1,21 @@
 require_dependency 'enum'
 
 class SearchLog < ActiveRecord::Base
-  belongs_to :topic, foreign_key: :clicked_topic_id
   validates_presence_of :term, :ip_address
 
   def self.search_types
     @search_types ||= Enum.new(
       header: 1,
       full_page: 2
+    )
+  end
+
+  def self.search_result_types
+    @search_result_types ||= Enum.new(
+      topic: 1,
+      user: 2,
+      category: 3,
+      tag: 4
     )
   end
 
@@ -49,19 +57,19 @@ class SearchLog < ActiveRecord::Base
     end
   end
 
-  def self.trending(period = :all)
-    SearchLog.select("term,
-                       COUNT(*) AS searches,
-                       SUM(CASE
-                               WHEN clicked_topic_id IS NOT NULL THEN 1
-                               ELSE 0
-                           END) AS click_through,
-                       MODE() WITHIN GROUP (ORDER BY clicked_topic_id) AS clicked_topic_id,
-                       COUNT(DISTINCT ip_address) AS unique")
-      .includes(:topic)
+  def self.trending(period = :all, search_type = :all)
+    result = SearchLog.select("term,
+       COUNT(*) AS searches,
+       SUM(CASE
+               WHEN search_result_id IS NOT NULL THEN 1
+               ELSE 0
+           END) AS click_through,
+       COUNT(DISTINCT ip_address) AS unique")
       .where('created_at > ?', start_of(period))
-      .group(:term)
-      .order('COUNT(DISTINCT ip_address) DESC')
+
+    result = result.where('search_type = ?', search_types[search_type]) unless search_type == :all
+    result = result.group(:term)
+      .order('COUNT(DISTINCT ip_address) DESC, COUNT(*) DESC')
       .limit(100).to_a
   end
 
