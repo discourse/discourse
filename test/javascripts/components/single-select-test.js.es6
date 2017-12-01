@@ -423,3 +423,20 @@ componentTest('with nameChanges', {
     });
   }
 });
+
+
+componentTest('with null value', {
+  template: '{{single-select content=content}}',
+
+  beforeEach() {
+    this.set("content", [{ name: "robin" }]);
+  },
+
+  test(assert) {
+    expandSelectKit();
+
+    andThen(() => {
+      assert.equal(selectKit().header.name(), "robin");
+    });
+  }
+});
