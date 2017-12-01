@@ -103,6 +103,10 @@
 
 .search-menu {
 
+  .search-input {
+    position: relative;
+  }
+
   .search-context .show-help {
     float: right;
   }
@@ -129,14 +133,14 @@
 
   .searching {
     position: absolute;
-    top: 0.25em;
-    right: 1.5em;
+    top: 1.15em;
+    right: 1em;
 
     .spinner {
       width: 10px;
       height: 10px;
       border-width: 2px;
-      margin: 20px 0 0 0;
+      margin: 0;
     }
   }
   // I am ghetto using this to display "Show More".. be warned
