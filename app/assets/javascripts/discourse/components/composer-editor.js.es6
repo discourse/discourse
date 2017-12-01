@@ -254,8 +254,12 @@ export default Ember.Component.extend({
 
   _syncEditorAndPreviewScroll($input, $preview, scrollMap) {
     let scrollTop;
+    const inputHeight = $input.height();
+    const inputScrollHeight = $input[0].scrollHeight;
+    const inputClientHeight = $input[0].clientHeight;
+    const scrollable = inputScrollHeight > inputClientHeight;
 
-    if (($input.height() + $input.scrollTop() + 100) > $input[0].scrollHeight) {
+    if (scrollable && ((inputHeight + $input.scrollTop() + 100) > inputScrollHeight)) {
       scrollTop = $preview[0].scrollHeight;
     } else {
       const lineHeight = parseFloat($input.css('line-height'));
