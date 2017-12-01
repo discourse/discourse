@@ -75,12 +75,11 @@ class Validators::UploadValidator < ActiveModel::Validator
   end
 
   def authorizes_all_extensions?(upload)
-    extensions = upload.for_theme ? SiteSetting.theme_authorized_extensions : SiteSetting.authorized_extensions
-    return true if extensions.include?("*")
-
     if upload.user&.staff?
       return true if SiteSetting.authorized_extensions_for_staff.include?("*")
     end
+    extensions = upload.for_theme ? SiteSetting.theme_authorized_extensions : SiteSetting.authorized_extensions
+    return extensions.include?("*")
   end
 
   def extension_authorized?(upload, extension, extensions)

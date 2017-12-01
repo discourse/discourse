@@ -253,7 +253,12 @@ function staffExtensions() {
 }
 
 function imagesExtensions() {
-  return extensions().filter(ext => IMAGES_EXTENSIONS_REGEX.test(ext));
+  let exts =  extensions().filter(ext => IMAGES_EXTENSIONS_REGEX.test(ext));
+  if (Discourse.User.currentProp('staff')) {
+    const staffExts = staffExtensions().filter(ext => IMAGES_EXTENSIONS_REGEX.test(ext));
+    exts = _.union(exts, staffExts);
+  }
+  return exts;
 }
 
 function extensionsRegex() {
@@ -280,9 +285,6 @@ function isAuthorizedImage(fileName){
 }
 
 export function authorizedExtensions() {
-  if (authorizesAllExtensions()) {
-    return "*";
-  }
   const exts = Discourse.User.currentProp('staff') ? [...extensions(), ...staffExtensions()] : extensions();
   return exts.join(", ");
 }
@@ -310,7 +312,7 @@ export function allowsImages() {
 }
 
 export function allowsAttachments() {
-  return authorizesAllExtensions() || extensions().length > imagesExtensions().length;
+  return authorizesAllExtensions() || authorizedExtensions().split(", ").length > imagesExtensions().length;
 }
 
 export function uploadLocation(url) {
