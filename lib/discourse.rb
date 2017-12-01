@@ -442,6 +442,25 @@ module Discourse
     nil
   end
 
+  # report a warning maintaining backtrack for logster
+  def self.warn_exception(e, message: "", env: nil)
+    if Rails.logger.respond_to? :add_with_opts
+      # logster
+      Rails.logger.add_with_opts(
+        ::Logger::Severity::WARN,
+        "#{message} : #{e}",
+        "discourse-exception",
+        backtrace: e.backtrace.join("\n"),
+        env: env
+      )
+    else
+      # no logster ... fallback
+      Rails.logger.warn("#{message} #{e}")
+    end
+  rescue
+    STDERR.puts "Failed to report exception #{e} #{message}"
+  end
+
   def self.start_connection_reaper
     return if GlobalSetting.connection_reaper_age < 1 ||
               GlobalSetting.connection_reaper_interval < 1
@@ -453,7 +472,7 @@ module Discourse
           sleep GlobalSetting.connection_reaper_interval
           reap_connections(GlobalSetting.connection_reaper_age, GlobalSetting.connection_reaper_max_age)
         rescue => e
-          Discourse.handle_exception(e, message: "Error reaping connections")
+          Discourse.warn_exception(e, message: "Error reaping connections")
         end
       end
     end

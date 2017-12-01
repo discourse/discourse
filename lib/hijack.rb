@@ -26,6 +26,7 @@ module Hijack
         MethodProfiler.start(transfer_timings) if defined? MethodProfiler
 
         begin
+          Thread.current[Logster::Logger::LOGSTER_ENV] = env_copy
           # do this first to confirm we have a working connection
           # before doing any work
           io.write "HTTP/1.1 "
@@ -41,7 +42,8 @@ module Hijack
           begin
             instance.instance_eval(&blk)
           rescue => e
-            Rails.logger.warn("Failed to process hijacked response correctly #{e}")
+            # TODO we need to reuse our exception handling in ApplicationController
+            Discourse.warn_exception(e, message: "Failed to process hijacked response correctly", env: env_copy)
           end
 
           unless instance.response_body || response.committed?
@@ -70,6 +72,8 @@ module Hijack
           # happens if client terminated before we responded, ignore
           io = nil
         ensure
+
+          Thread.current[Logster::Logger::LOGSTER_ENV] = nil
 
           io.close if io rescue nil
 
