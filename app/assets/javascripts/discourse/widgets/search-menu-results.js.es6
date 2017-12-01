@@ -24,9 +24,13 @@ function createSearchResult({ type, linkField, builder }) {
 
       return attrs.results.map(r => {
         let searchResultId;
+
         if (type === "topic") {
           searchResultId = r.get('topic_id');
+        } else {
+          searchResultId = r.get('id');
         }
+
         return h('li', this.attach('link', {
           href: r.get(linkField),
           contents: () => builder.call(this, r, attrs.term),

@@ -3219,9 +3219,12 @@ en:
           term: "Term"
           searches: "Searches"
           click_through: "Click Through"
-          most_viewed_topic: "Most Viewed Topic"
           unique: "Unique"
           unique_title: "unique users performing the search"
+          types:
+            all_search_types: "All search types"
+            header: "Header"
+            full_page: "Full Page"
         logster:
           title: "Error Logs"
 
