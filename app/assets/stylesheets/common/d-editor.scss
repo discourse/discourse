@@ -104,12 +104,12 @@
 .d-editor-input,
 .d-editor-preview {
   box-sizing: border-box;
+  flex: 1 1 100%;  
   height: 100%;
+  width: 100%;  
   margin: 0;
   min-height: auto;
-  width: 100%;
   word-wrap: break-word;
-  flex-grow: 1;
   -webkit-appearance: none;
   border-radius: 0;  
   &:focus {
