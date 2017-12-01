@@ -155,9 +155,9 @@ describe UploadsController do
         expect(message.data["id"]).to be
       end
 
-      it 'respects `additional_authorized_extensions_for_staff` setting when staff upload file' do
+      it 'respects `authorized_extensions_for_staff` setting when staff upload file' do
         SiteSetting.authorized_extensions = ""
-        SiteSetting.additional_authorized_extensions_for_staff = "*"
+        SiteSetting.authorized_extensions_for_staff = "*"
         @user.update_columns(moderator: true)
 
         message = MessageBus.track_publish('/uploads/composer') do
@@ -172,9 +172,9 @@ describe UploadsController do
         expect(message.data["id"]).to be
       end
 
-      it 'ignores `additional_authorized_extensions_for_staff` setting when non-staff upload file' do
+      it 'ignores `authorized_extensions_for_staff` setting when non-staff upload file' do
         SiteSetting.authorized_extensions = ""
-        SiteSetting.additional_authorized_extensions_for_staff = "*"
+        SiteSetting.authorized_extensions_for_staff = "*"
 
         message = MessageBus.track_publish('/uploads/composer') do
           post :create, params: {

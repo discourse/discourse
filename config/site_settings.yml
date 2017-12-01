@@ -758,7 +758,7 @@ files:
     default: 'jpg|jpeg|png|gif'
     refresh: true
     type: list
-  additional_authorized_extensions_for_staff:
+  authorized_extensions_for_staff:
     client: true
     default: ''
     refresh: true

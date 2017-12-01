@@ -59,6 +59,7 @@ Discourse.SiteSettingsOriginal = {
   "autohighlight_all_code":false,
   "email_in":false,
   "authorized_extensions":".jpg|.jpeg|.png|.gif|.svg|.txt|.ico|.yml",
+  "authorized_extensions_for_staff": "",
   "max_image_width":690,
   "max_image_height":500,
   "allow_profile_backgrounds":true,

@@ -201,7 +201,7 @@ export function validateUploadedFile(file, opts) {
 
   // check that the uploaded file is authorized
   if (opts.allowStaffToUploadAnyFileInPm && opts.isPrivateMessage) {
-    if (Discourse.User.current("staff")) {
+    if (Discourse.User.currentProp('staff')) {
       return true;
     }
   }
@@ -237,21 +237,19 @@ export function validateUploadedFile(file, opts) {
 
 const IMAGES_EXTENSIONS_REGEX = /(png|jpe?g|gif|bmp|tiff?|svg|webp|ico)/i;
 
-function rawExtensions() {
-  const staffExtensions =  Discourse.SiteSettings.additional_authorized_extensions_for_staff;
-
-  let exts = Discourse.SiteSettings.authorized_extensions;
-  if (Discourse.User.currentProp('staff') && staffExtensions) {
-    exts += `|${staffExtensions}`;
-  }
-  return exts;
+function extensionsToArray(exts) {
+  return exts.toLowerCase()
+             .replace(/[\s\.]+/g, "")
+             .split("|")
+             .filter(ext => ext.indexOf("*") === -1);
 }
 
 function extensions() {
-  return rawExtensions().toLowerCase()
-                        .replace(/[\s\.]+/g, "")
-                        .split("|")
-                        .filter(ext => ext.indexOf("*") === -1);
+  return extensionsToArray(Discourse.SiteSettings.authorized_extensions);
+}
+
+function staffExtensions() {
+  return extensionsToArray(Discourse.SiteSettings.authorized_extensions_for_staff);
 }
 
 function imagesExtensions() {
@@ -266,7 +264,14 @@ function imagesExtensionsRegex() {
   return new RegExp("\\.(" + imagesExtensions().join("|") + ")$", "i");
 }
 
+function staffExtensionsRegex() {
+  return new RegExp("\\.(" + staffExtensions().join("|") + ")$", "i");
+}
+
 function isAuthorizedFile(fileName) {
+  if (Discourse.User.currentProp('staff') && staffExtensionsRegex().test(fileName)) {
+    return true;
+  }
   return extensionsRegex().test(fileName);
 }
 
@@ -275,7 +280,11 @@ function isAuthorizedImage(fileName){
 }
 
 export function authorizedExtensions() {
-  return authorizesAllExtensions() ? "*" : extensions().join(", ");
+  if (authorizesAllExtensions()) {
+    return "*";
+  }
+  const exts = Discourse.User.currentProp('staff') ? [...extensions(), ...staffExtensions()] : extensions();
+  return exts.join(", ");
 }
 
 export function authorizedImagesExtensions() {
@@ -283,7 +292,9 @@ export function authorizedImagesExtensions() {
 }
 
 export function authorizesAllExtensions() {
-  return rawExtensions().indexOf("*") >= 0;
+  return Discourse.SiteSettings.authorized_extensions.indexOf("*") >= 0 || (
+         Discourse.SiteSettings.authorized_extensions_for_staff.indexOf("*") >= 0 &&
+         Discourse.User.currentProp('staff'));
 }
 
 export function isAnImage(path) {
