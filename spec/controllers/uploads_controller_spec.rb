@@ -161,7 +161,8 @@ describe UploadsController do
         end.first
 
         expect(response).to be_success
-        expect(message.data["id"]).to be
+        data = JSON.parse(response.body)
+        expect(data["id"]).to be
       end
 
       it 'ignores `authorized_extensions_for_staff` setting when non-staff upload file' do
@@ -176,7 +177,8 @@ describe UploadsController do
           }
         end.first
 
-        expect(message.data["errors"].first).to eq(I18n.t("upload.unauthorized", authorized_extensions: ''))
+        data = JSON.parse(response.body)
+        expect(data["errors"].first).to eq(I18n.t("upload.unauthorized", authorized_extensions: ''))
       end
 
       it 'returns an error when it could not determine the dimensions of an image' do
