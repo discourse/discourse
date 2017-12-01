@@ -77,7 +77,7 @@
               {{track-selected selectedList=selected selectedId=result.topic}}
             {{/if}}
 
-            <a class='search-link' href='{{unbound result.url}}'>
+            <a class='search-link' href='{{unbound result.url}}' {{action "logClick" result.topic_id}}>
               {{topic-status topic=result.topic disableActions=true}}<span class='topic-title'>{{#highlight-text highlight=q}}{{{unbound result.topic.fancyTitle}}}{{/highlight-text}}</span>
             </a>
 

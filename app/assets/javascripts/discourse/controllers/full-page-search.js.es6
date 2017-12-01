@@ -286,5 +286,18 @@ export default Ember.Controller.extend({
         this._search();
       }
     },
+
+    logClick(topicId) {
+      if (this.get('model.grouped_search_result.search_log_id') && topicId) {
+        ajax('/search/click', {
+          type: 'POST',
+          data: {
+            search_log_id: this.get('model.grouped_search_result.search_log_id'),
+            search_result_id: topicId,
+            search_result_type: 'topic'
+          }
+        });
+      }
+    }
   }
 });
