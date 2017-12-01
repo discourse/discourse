@@ -94,7 +94,6 @@ export default SelectKitComponent.extend({
 
   @computed("computedValue", "computedContent.[]")
   selectedComputedContent(computedValue, computedContent) {
-    if (isNone(computedValue) || isNone(computedContent)) { return null; }
     return computedContent.findBy("value", computedValue);
   },
 
