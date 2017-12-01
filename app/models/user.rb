@@ -452,6 +452,10 @@ class User < ActiveRecord::Base
     !!@password_required
   end
 
+  def password_validation_required?
+    password_required? || @raw_password.present?
+  end
+
   def has_password?
     password_hash.present?
   end
@@ -1029,6 +1033,7 @@ class User < ActiveRecord::Base
       UserAuthToken.where(user_id: id).destroy_all
       # We should not carry this around after save
       @raw_password = nil
+      @password_required = false
     end
   end
 
