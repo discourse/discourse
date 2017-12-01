@@ -192,15 +192,15 @@ describe QueuedPost do
     end
   end
 
-  context 'approving a post by a blocked user' do
-    let(:blocked_user) { Fabricate(:user, blocked: true) }
+  context 'approving a post by a silenced user' do
+    let(:silenced_user) { Fabricate(:user, silenced_till: 1.year.from_now) }
     let(:admin) { Fabricate(:admin) }
-    let(:qp) { Fabricate(:queued_post, user: blocked_user) }
+    let(:qp) { Fabricate(:queued_post, user: silenced_user) }
 
-    it 'unblocks a blocked user' do
+    it 'unsilence a silenced user' do
       expect {
         qp.approve!(admin)
-      }.to change { blocked_user.blocked? }.from(true).to(false)
+      }.to change { silenced_user.silenced? }.from(true).to(false)
     end
   end
   context "visibility" do

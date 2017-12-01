@@ -74,7 +74,7 @@ class QueuedPost < ActiveRecord::Base
     ) if revised?
 
     transaction do
-      UserBlocker.unsilence(user, approved_by) if user.silenced?
+      UserSilencer.unsilence(user, approved_by) if user.silenced?
       change_to!(:approved, approved_by)
     end
   rescue
