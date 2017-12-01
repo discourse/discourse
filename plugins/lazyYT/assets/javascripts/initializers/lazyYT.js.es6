@@ -1,7 +1,5 @@
 import { withPluginApi } from 'discourse/lib/plugin-api';
 
-const returnFalse = () => false;
-
 export default {
   name: "apply-lazyYT",
   initialize() {
@@ -18,14 +16,6 @@ export default {
             if (postId) {
               api.preventCloak(postId);
             }
-
-            // We use this because watching videos fullscreen in Chrome was super buggy
-            // otherwise. Thanks to arrendek from q23 for the technique.
-            $('iframe', iframes).iframeTracker({ blurCallback: () => {
-              $(document).on("scroll.discourse-youtube", returnFalse);
-              window.setTimeout(() => $(document).off('scroll.discourse-youtube', returnFalse), 1500);
-              $(document).scroll();
-            }});
           }
         });
 

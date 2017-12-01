@@ -2095,4 +2095,19 @@ describe Topic do
       end
     end
   end
+
+  describe '#featured_link_root_domain' do
+    let(:topic) { Fabricate.build(:topic) }
+
+    it 'should extract the root domain correctly' do
+      [
+        "https://meta.discourse.org",
+        "https://meta.discourse.org/",
+        "https://meta.discourse.org/?filter=test"
+      ].each do |featured_link|
+        topic.featured_link = featured_link
+        expect(topic.featured_link_root_domain).to eq("discourse.org")
+      end
+    end
+  end
 end

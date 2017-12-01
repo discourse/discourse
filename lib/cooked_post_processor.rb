@@ -383,6 +383,8 @@ class CookedPostProcessor
     end
 
     oneboxed_images.each do |img|
+      next if img["src"].blank?
+
       src = img["src"].sub(/^https?:/i, "")
 
       if large_images.include?(src) || broken_images.include?(src)
@@ -420,10 +422,15 @@ class CookedPostProcessor
           end
         end
 
-        img.delete('width')
-        img.delete('height')
-        new_parent = img.add_next_sibling("<div class='aspect-image' style='--aspect-ratio:#{width}/#{height};'/>")
-        new_parent.first.add_child(img)
+        if width < 64 && height < 64
+          img["class"] = img["class"].to_s + " onebox-full-image"
+        else
+          img.delete('width')
+          img.delete('height')
+          new_parent = img.add_next_sibling("<div class='aspect-image' style='--aspect-ratio:#{width}/#{height};'/>")
+          new_parent.first.add_child(img)
+        end
+
       end
     end
   end

@@ -6,20 +6,6 @@
     min-width: auto;
     border: none;
 
-
-    .d-icon {
-      color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
-    }
-
-    .d-regular, .d-muted, .d-watching-first-post {
-      color: dark-light-choose($primary-medium, $secondary-medium);
-    }
-
-    .d-tracking, .d-watching {
-      color: $tertiary;
-      font-weight: normal;
-    }
-
     &.is-expanded {
       .select-box-kit-collection,
       .select-box-kit-body,

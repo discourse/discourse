@@ -22,12 +22,13 @@ else
   gem 'activesupport', '~> 5.1'
   gem 'railties', '~> 5.1'
   gem 'sprockets-rails'
-  gem 'seed-fu', '~> 2.3.5'
+  gem 'seed-fu'
 end
 
 gem 'mail'
 gem 'mime-types', require: 'mime/types/columnar'
 gem 'mini_mime'
+gem 'mini_suffix'
 
 gem 'hiredis'
 gem 'redis', require:  ["redis", "redis/connection/hiredis"]
@@ -35,7 +36,7 @@ gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox', '1.8.26'
+gem 'onebox', '1.8.28'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 

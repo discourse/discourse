@@ -8,7 +8,7 @@ class GroupUser < ActiveRecord::Base
   after_destroy :remove_title
 
   after_save :set_primary_group
-  after_destroy :remove_primary_group
+  after_destroy :remove_primary_group, :recalculate_trust_level
 
   before_create :set_notification_level
   after_save :grant_trust_level
@@ -65,8 +65,34 @@ class GroupUser < ActiveRecord::Base
 
   def grant_trust_level
     return if group.grant_trust_level.nil?
+
+    if (user.group_locked_trust_level || 0) < group.grant_trust_level
+      user.update!(group_locked_trust_level: group.grant_trust_level)
+    end
+
     TrustLevelGranter.grant(group.grant_trust_level, user)
   end
+
+  def recalculate_trust_level
+    return if group.grant_trust_level.nil?
+
+    # Find the highest level of the user's remaining groups
+    highest_level = GroupUser
+      .where(user_id: user.id)
+      .includes(:group)
+      .maximum("groups.grant_trust_level")
+
+    if highest_level.nil?
+      # If the user no longer has a group with a trust level,
+      # unlock them, start at 0 and consider promotions.
+      user.update!(group_locked_trust_level: nil)
+      Promotion.recalculate(user)
+    else
+      user.update!(group_locked_trust_level: highest_level)
+      user.change_trust_level!(highest_level)
+    end
+  end
+
 end
 
 # == Schema Information

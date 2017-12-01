@@ -53,7 +53,7 @@ describe Admin::SiteTextsController do
 
         it 'returns the right error message' do
           put :update, params: {
-            id: 'some_key', site_text: { value: 'hello %{key}' }
+            id: 'some_key', site_text: { value: 'hello %{key} %{omg}' }
           }, format: :json
 
           expect(response.status).to eq(422)
@@ -61,8 +61,8 @@ describe Admin::SiteTextsController do
           body = JSON.parse(response.body)
 
           expect(body['message']).to eq(I18n.t(
-            'activerecord.errors.models.translation_overrides.attributes.value.missing_interpolation_keys',
-            keys: 'first, second'
+            'activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys',
+            keys: 'key, omg'
           ))
         end
       end

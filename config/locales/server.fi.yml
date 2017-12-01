@@ -48,6 +48,7 @@ fi:
         no_body_detected_error: "Näin käy, kun leipätekstin poiminta epäonnistuu eikä liitteitä ole."
         no_sender_detected_error: "Näin käy, kun emme tunnista käypää sähköpostiosoitetta viestin From-otsikkotiedosta."
         inactive_user_error: "Näin käy, kun lähettäjä ei ole aktiivinen."
+        silenced_user_error: "Näin käy, kun lähettäjä on hiljennetty."
         bad_destination_address: "Näin käy, kun viestin vastaanottaja/kopio/piilokopio -kenttien osoitteet eivät täsmää asetettuihin saapuvan sähköpostin osoitteiden kanssa."
         strangers_not_allowed_error: "Näin käy, kun käyttäjä yrittää luoda ketjun alueelle, jonka jäsen ei ole."
         insufficient_trust_level_error: "Näin käy, kun käyttäjä yrittää luoda ketjun alueelle, jonka vähimmäisluottamustasovaatimusta ei täytä."
@@ -663,7 +664,7 @@ fi:
       email_title: 'Ketju"%{title}" kaipaa valvojan huomiota'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Muu yhteisö liputti viestisi. Käy lukemassa <a href="/my/messages">saapuneet viestisi</a>.</p>'
+    you_must_edit: '<p>Muu yhteisö liputti viestisi. Käy lukemassa <a href="%{path}">saapuneet viestisi</a>.</p>'
     user_must_edit: '<p>Tämä viesti on liputettu ja on siksi piilotettu väliaikaisesti.</p>'
   archetypes:
     regular:

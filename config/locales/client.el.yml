@@ -48,6 +48,9 @@ el:
         x_seconds:
           one: "1δ"
           other: "%{count}δ"
+        less_than_x_minutes:
+          one: "< 1λ"
+          other: "< %{count}λ"
         x_minutes:
           one: "1λ"
           other: "%{count}λ"
@@ -57,6 +60,9 @@ el:
         x_days:
           one: "1η"
           other: "%{count}η"
+        x_months:
+          one: "1μην"
+          other: "%{count}μην"
         about_x_years:
           one: "1χ"
           other: "%{count}έ"
@@ -803,6 +809,7 @@ el:
         title: "Περίληψη"
         stats: "Στατιστικά"
         time_read: "χρόνος ανάγνωσης"
+        recent_time_read: "πρόσφατος χρόνος ανάγνωσης"
         topic_count:
           one: "δημιουργημένο θέμα"
           other: "δημιουργημένα θέματα"
@@ -818,6 +825,9 @@ el:
         days_visited:
           one: "ημέρα επίσκεψης"
           other: "ημέρες επίσκεψης"
+        topics_entered:
+          one: "νήμα προβλήθηκε"
+          other: "νήματα προβλήθηκαν"
         posts_read:
           one: "διαβασμένη ανάρτηση"
           other: "διαβασμένες αναρτήσεις"
@@ -908,6 +918,9 @@ el:
     unmute: Αναίρεση σίγασης
     last_post: Αναρτήθηκε
     time_read: Διαβάστηκε
+    time_read_recently: '%{time_read} πρόσφατα'
+    time_read_tooltip: '%{time_read}συνολικός χρόνος ανάγνωσης'
+    time_read_recently_tooltip: '%{time_read}συνολικός χρόνος ανάγνωσης (%{recent_time_read} τις τελευταίες 60 ημέρες)'
     last_reply_lowercase: τελευταία απάντηση
     replies_lowercase:
       one: απάντηση
@@ -1041,7 +1054,7 @@ el:
       ctrl: 'Ctrl'
       alt: 'Alt'
     select_kit:
-      default_header_text: Επίλεξε...
+      default_header_text: Επιλογή...
       no_content: Δεν βρέθηκαν αποτελέσματα
       filter_placeholder: Αναζήτηση...
       create: "Δημιουργία {{content}}"
@@ -1768,6 +1781,9 @@ el:
           notify_user: "έστειλαν ένα μήνυμα"
           bookmark: "έβαλαν σελιδοδείκτη"
           like: "άρεσαν αυτό"
+          like_capped:
+            one: "και {{count}} άλλος το άρεσε αυτό "
+            other: "και {{count}} άλλοι το άρεσαν αυτό "
           vote: "ψήφισαν για αυτό"
         by_you:
           off_topic: "Το επισήμανες σαν εκτός θέματος"
@@ -2390,20 +2406,19 @@ el:
         topics: "Επισημασμένα Νήματα"
         agree: "Συμφωνώ"
         agree_title: "Επιβεβαίωσε αυτή τη σήμανση ως έγκυρη και σωστή"
-        agree_flag_modal_title: "Συμφωνώ και..."
-        agree_flag_hide_post: "Συμφωνώ (κρύψε την ανάρτηση και στείλε ΠΜ)"
-        agree_flag_hide_post_title: "Κρύψε αυτή την ανάρτηση και ειδοποίησε το χρήστη με ένα αυτόματο μήνυμα που τον προτρέπει να το επεξεργαστεί"
-        agree_flag_restore_post: "Συμφωνώ (επανάφερε την ανάρτηση)"
-        agree_flag_restore_post_title: "Επανάφερε την ανάρτηση"
-        agree_flag: "Συμφωνώ με την επισήμανση "
-        agree_flag_title: "Συμφωνώ με την επισήμανση και κρατάω την ανάρτηση αμετάβλητη"
+        agree_flag_hide_post: "Αποδοχή και απόκρυψη ανάρτησης"
+        agree_flag_hide_post_title: "Κρύψε αυτή την ανάρτηση και αυτόματα στείλε στον χρήστη ένα μήνυμα που θα τους προτρέπει να το επεξεργαστούν."
+        agree_flag_restore_post: "Αποδοχή και επαναφορά ανάρτησης"
+        agree_flag_restore_post_title: "Επαναφορά της ανάρτησης ώστε όλοι οι χρήστες να μπορούν να το δουν."
+        agree_flag: "Αποδοχή και διατήρηση της ανάρτησης"
+        agree_flag_title: "Αποδοχή επισήμανσης και διατήρηση της ανάρτησης αμετάβλητης."
         defer_flag: "Αγνόηση"
         defer_flag_title: "Αφαίρεσε αυτή την επισήμανση. Δεν χρειάζεται να γίνει κάποια ενέργεια αυτή τη στιγμή"
         delete: "Διαγραφή"
         delete_title: "Διέγραψε την ανάρτηση στην οποία αναφέρεται αυτή η επισήμανση."
-        delete_post_defer_flag: "Διέγραψε την ανάρτηση και αγνόησε την επισήμανση"
+        delete_post_defer_flag: "Διαγραφή ανάρτησης και αγνόηση επισήμανσης"
         delete_post_defer_flag_title: "Διέγραψε την ανάρτηση. Αν είναι η πρώτη στο νήμα, διέγραψε και αυτό"
-        delete_post_agree_flag: "Διέγραψε την ανάρτηση και συμφώνησε με την επισήμανση"
+        delete_post_agree_flag: "Διαγραφή ανάρτησης και αποδοχή επισήμανσης"
         delete_post_agree_flag_title: "Διέγραψε την ανάρτηση. Αν είναι η πρώτη στο νήμα, διέγραψε και αυτό"
         delete_flag_modal_title: "Διέγραψε και..."
         delete_spammer: "Διαγραφή ανεπιθύμητου χρήστη"
@@ -2944,6 +2959,12 @@ el:
           roll_up:
             text: "Σύνοψη"
             title: "Δημιουργεί νέες εγγραφές για τον αποκλεισμό υποδικτύων αν υπάρχουν τουλάχιστον  'min_ban_entries_for_roll_up' εγγραφές."
+        search_logs:
+          title: "Αναζήτηση καταγραφών"
+          term: "Όρος"
+          searches: "Αναζητήσεις"
+          most_viewed_topic: "Περισσότερο προβεβλημένο νήμα"
+          unique: "Μοναδικό"
         logster:
           title: "Error Logs"
       watched_words:
@@ -3036,6 +3057,14 @@ el:
         suspend_message: "Μήνυμα Email"
         suspend_message_placeholder: "Προεραιτικά συμπληρώστε αναλυτική αιτιολόγηση για τον λόγο αποβολής και αυτή θα σταλεί με email στον χρήστη."
         suspended_by: "Αποβλήθηκε από τον/την"
+        silence_reason: "Αιτία"
+        silenced_by: "Σίγαση Από"
+        silence_modal_title: "Σίγαση Χρήστη"
+        silence_duration: "Για πόσο χρονικό διάστημα ο χρήστης θα σιωπηθεί;"
+        silence_reason_label: "Γιατί εσείς σιωπάτε αυτό τον χρήστη;"
+        silence_reason_placeholder: "Αιτία σιώπησης"
+        silence_message: "Μήνυμα email"
+        silence_message_placeholder: "(αφήστε κενό για να στείλετε το προκαθορισμένο μήνυμα)"
         suspended_until: "(έως %{until})"
         cant_suspend: "Ο χρήστης αυτός δεν μπορεί να αποβληθεί."
         delete_all_posts: "Σβήσε όλες τις αναρτήσεις"
@@ -3110,7 +3139,7 @@ el:
         deactivate_account: "Απενεργοποίηση Λογαριασμού"
         deactivate_failed: "Παρουσιάστηκε πρόβλημα κατά την απενεργοποίηση του χρήστη."
         unsilence_failed: 'Υπήρξε ένα πρόβλημα κατά την αναίρεση της σίγασης του χρήστη.'
-        silence_failed: 'Υπήρξε ένα πρόβλημα κατά την σίγαση του χρήστη'
+        silence_failed: 'Υπήρξε ένα πρόβλημα κατά την σίγαση του χρήστη.'
         silence_confirm: 'Θέλετε σίγουρα να σιγήσετε τον χρήστη; Δεν θα μπορεί να δημιουργήσει νέα νήματα ή αναρτήσεις.'
         silence_accept: 'Ναι, σίγαση του χρήστη'
         bounce_score: "Bounce Score"

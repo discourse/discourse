@@ -6,24 +6,51 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 cs:
+  site_settings:
+    discourse_narrative_bot_enabled: 'Zapnonut Discourse robota průvodce'
+    disable_discourse_narrative_bot_welcome_post: "Vypnout uvítací příspěvek od Discourse robota průvodce"
+    discourse_narrative_bot_ignored_usernames: "Uživatelská jména, která by měl Discourse robot průvodce ignorovat"
+    discourse_narrative_bot_disable_public_replies: "Vypnout veřejné odpovědi Discourse robota průvodce"
+    discourse_narrative_bot_welcome_post_type: "Typ uvítacího příspěvku, který by měl Discourse robot průvodce poslat"
+    discourse_narrative_bot_welcome_post_delay: "Počkat (n) vteřin, než Discourse robot průvodce odešle uvítací příspěvek."
   badges:
     certified:
-      name: Certifikován
+      name: Certifikován(a)
       description: "Dokončil náš tutorial pro nové uživatele"
+      long_description: |
+        Tento odznak je udělen za úspěšné dokončení interaktivního tutoriálu pro nové uživatele. Udělali jste krok, abyste se naučili základní nástroje diskuse a nyní jste certifikováni!
+    licensed:
+      name: Licencován(a)
+      description: "Dokončen náš pokročilý uživatelský tutoriál"
+      long_description: |
+        Tento odznak je udělen za úspěšné dokončení pokročilého interaktivního tutoriálu pro uživatele. Zvládli jste pokročilé nástroje diskuse — a nyní jste plně licencováni!
   discourse_narrative_bot:
+    bio: "Ahoj, já nejsem člověk. Jsem robot, který Vás může naučit něco o tomto webu. Pro interakci se mnou mi pošlete zprávu nebo kdekoliv zmiňte **%{discobot_username}**."
+    timeout:
+      message: |-
+        Ahoj @%{username}, jen se ozývám, protože jsem od Vás nějakou dobu nic neslyšel.
+
+        - Pro pokračování mi kdykoliv odpovězte.
+
+        - Pokud byste chtěli tento krok přeskočit, řekněte "%{skip_trigger}".
+
+        - Pro opětovný začátek řekněte "%{reset_trigger}".
+
+        Pokud raději nechcete, je to taky OK. Jsem robot. Neraníte mé pocity. :sob:
     dice:
       trigger: "hodit"
       invalid: |-
-        Omlouvám se, ale je matematicky nemožné hodit s touhle kombinací kostek. :confounded:
+        Omlouvám se, ale je matematicky nemožné hodit tuto kombinaci kostek. :confounded:
       not_enough_dice: |-
-        Mám jen %{num_of_dice} kostek. Naprosto [ostudné](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php).
+        Mám jen %{num_of_dice} kostek. Naprosto [ostudné](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), já vím!
       out_of_range: |-
         Víš, že [maximální počet stěn](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) pro matematicky férovou kostku je 120?
       results: |-
         > :game_die: %{results}
     quote:
-      trigger: "citát"
+      trigger: "citace"
       '1':
+        quote: "Uprostřed každé těžkosti leží příležitost"
         author: "Albert Einstein"
       '2':
         author: "Mahatma Gandhi"

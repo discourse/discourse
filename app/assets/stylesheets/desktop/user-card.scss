@@ -41,6 +41,9 @@ $user_card_background: $secondary;
     a.card-huge-avatar {
       outline: none;
     }
+    .staged {
+      font-style: italic;
+    }
   }
 
   &.no-bg {
@@ -221,7 +224,7 @@ $user_card_background: $secondary;
 
       .user-badge {
         background: scale-color($user_card_background, $lightness: -5%);
-        border: 1px solid $primary-low; 
+        border: 1px solid $primary-low;
         color: $user_card_primary;
       }
 
@@ -254,5 +257,9 @@ $user_card_background: $secondary;
     bottom: 12px;
     font-size: 2.143em;
     i {color: $user_card_primary;}
+  }
+
+  .metadata .email .btn {
+    padding: 2px 12px;
   }
 }

@@ -136,32 +136,33 @@ export default Ember.Component.extend({
       this.appEvents.on(event, this, this._resetShouldBuildScrollMap);
     });
 
-    $input.on('touchstart mouseenter', () => {
-      if (!$preview.is(":visible")) return;
-      $preview.off('scroll');
+    Ember.run.scheduleOnce("afterRender", () => {
+      $input.on('touchstart mouseenter', () => {
+        if (!$preview.is(":visible")) return;
+        $preview.off('scroll');
 
-      $input.on('scroll', () => {
-        if (this.get('shouldBuildScrollMap')) {
-          this.set('scrollMap', this._buildScrollMap($input, $preview));
-          this.set('shouldBuildScrollMap', false);
-        }
+        $input.on('scroll', () => {
+          this._syncScroll(this._syncEditorAndPreviewScroll, $input, $preview);
+        });
+      });
 
-        Ember.run.throttle(this, this._syncEditorAndPreviewScroll, $input, $preview, this.get('scrollMap'), 20);
+      $preview.on('touchstart mouseenter', () => {
+        $input.off('scroll');
+
+        $preview.on('scroll', () => {
+          this._syncScroll(this._syncPreviewAndEditorScroll, $input, $preview);
+        });
       });
     });
+  },
 
-    $preview.on('touchstart mouseenter', () => {
-      $input.off('scroll');
+  _syncScroll($callback, $input, $preview) {
+    if (!this.get('scrollMap') || this.get('shouldBuildScrollMap')) {
+      this.set('scrollMap', this._buildScrollMap($input, $preview));
+      this.set('shouldBuildScrollMap', false);
+    }
 
-      $preview.on('scroll', () => {
-        if (this.get('shouldBuildScrollMap')) {
-          this.set('scrollMap', this._buildScrollMap($input, $preview));
-          this.set('shouldBuildScrollMap', false);
-        }
-
-        Ember.run.throttle(this, this._syncPreviewAndEditorScroll, $input, $preview, this.get('scrollMap'), 20);
-      });
-    });
+    Ember.run.throttle(this, $callback, $input, $preview, this.get('scrollMap'), 20);
   },
 
   _teardownInputPreviewSync() {
@@ -213,7 +214,8 @@ export default Ember.Component.extend({
     const previewOffsetTop = $preview.offset().top;
     const offset = $preview.scrollTop() - previewOffsetTop - ($input.offset().top - previewOffsetTop);
     const nonEmptyList = [];
-    const scrollMap = Array(numberOfLines).fill(-1);
+    const scrollMap = [];
+    for (let i = 0; i < numberOfLines; i++) { scrollMap.push(-1); };
 
     nonEmptyList.push(0);
     scrollMap[0] = 0;
@@ -251,22 +253,37 @@ export default Ember.Component.extend({
   },
 
   _syncEditorAndPreviewScroll($input, $preview, scrollMap) {
-    const lineHeight = parseFloat($input.css('line-height'));
-    const lineNumber = Math.floor($input.scrollTop() / lineHeight);
+    let scrollTop;
+    const inputHeight = $input.height();
+    const inputScrollHeight = $input[0].scrollHeight;
+    const inputClientHeight = $input[0].clientHeight;
+    const scrollable = inputScrollHeight > inputClientHeight;
 
-    $preview.stop(true).animate({
-      scrollTop: scrollMap[lineNumber]
-    }, 100, 'linear');
+    if (scrollable && ((inputHeight + $input.scrollTop() + 100) > inputScrollHeight)) {
+      scrollTop = $preview[0].scrollHeight;
+    } else {
+      const lineHeight = parseFloat($input.css('line-height'));
+      const lineNumber = Math.floor($input.scrollTop() / lineHeight);
+      scrollTop = scrollMap[lineNumber];
+    }
+
+    $preview.stop(true).animate({ scrollTop }, 100, 'linear');
   },
 
   _syncPreviewAndEditorScroll($input, $preview, scrollMap) {
     if (scrollMap.length < 1) return;
-    const scrollTop = $preview.scrollTop();
-    const lineHeight = parseFloat($input.css('line-height'));
 
-    $input.stop(true).animate({
-      scrollTop: lineHeight * scrollMap.findIndex(offset => offset > scrollTop)
-    }, 100, 'linear');
+    let scrollTop;
+    const previewScrollTop = $preview.scrollTop();
+
+    if (($preview.height() + previewScrollTop + 100) > $preview[0].scrollHeight) {
+      scrollTop = $input[0].scrollHeight;
+    } else {
+      const lineHeight = parseFloat($input.css('line-height'));
+      scrollTop = lineHeight * scrollMap.findIndex(offset => offset > previewScrollTop);
+    }
+
+    $input.stop(true).animate({ scrollTop }, 100, 'linear');
   },
 
   _renderUnseenMentions($preview, unseen) {
@@ -413,6 +430,19 @@ export default Ember.Component.extend({
       }
     });
 
+    $element.on("fileuploaddone", (e, data) => {
+      let upload = data.result;
+
+      if (!this._xhr || !this._xhr._userCancelled) {
+        const markdown = getUploadMarkdown(upload);
+        cacheShortUploadUrl(upload.short_url, upload.url);
+        this.appEvents.trigger('composer:replace-text', uploadPlaceholder, markdown);
+        this._resetUpload(false);
+      } else {
+        this._resetUpload(true);
+      }
+    });
+
     $element.on("fileuploadfail", (e, data) => {
       this._resetUpload(true);
 
@@ -420,24 +450,7 @@ export default Ember.Component.extend({
       this._xhr = null;
 
       if (!userCancelled) {
-        displayErrorForUpload(data);
-      }
-    });
-
-    this.messageBus.subscribe("/uploads/composer", upload => {
-      // replace upload placeholder
-      if (upload && upload.url) {
-        if (!this._xhr || !this._xhr._userCancelled) {
-          const markdown = getUploadMarkdown(upload);
-          cacheShortUploadUrl(upload.short_url, upload.url);
-          this.appEvents.trigger('composer:replace-text', uploadPlaceholder, markdown);
-          this._resetUpload(false);
-        } else {
-          this._resetUpload(true);
-        }
-      } else {
-        this._resetUpload(true);
-        displayErrorForUpload(upload);
+        displayErrorForUpload(data.jqXHR.responseJSON);
       }
     });
 
@@ -711,6 +724,7 @@ export default Ember.Component.extend({
         Ember.run.debounce(this, this._loadInlineOneboxes, inline, 450);
       }
 
+      this._syncScroll(this._syncEditorAndPreviewScroll, this.$('.d-editor-input'), $preview);
       this.trigger('previewRefreshed', $preview);
       this.sendAction('afterRefresh', $preview);
     },

@@ -468,6 +468,40 @@ describe Group do
     expect(u3.reload.trust_level).to eq(3)
   end
 
+  it "adjusts the user trust level" do
+    g0 = Fabricate(:group, grant_trust_level: 2)
+    g1 = Fabricate(:group, grant_trust_level: 3)
+    g2 = Fabricate(:group)
+
+    user = Fabricate(:user, trust_level: 0)
+
+    # Add a group without one to consider `NULL` check
+    g2.add(user)
+    expect(user.group_locked_trust_level).to be_nil
+    expect(user.manual_locked_trust_level).to be_nil
+
+    g0.add(user)
+    expect(user.reload.trust_level).to eq(2)
+    expect(user.group_locked_trust_level).to eq(2)
+    expect(user.manual_locked_trust_level).to be_nil
+
+    g1.add(user)
+    expect(user.reload.trust_level).to eq(3)
+    expect(user.group_locked_trust_level).to eq(3)
+    expect(user.manual_locked_trust_level).to be_nil
+
+    g1.remove(user)
+    expect(user.reload.trust_level).to eq(2)
+    expect(user.group_locked_trust_level).to eq(2)
+    expect(user.manual_locked_trust_level).to be_nil
+
+    g0.remove(user)
+    user.reload
+    expect(user.manual_locked_trust_level).to be_nil
+    expect(user.group_locked_trust_level).to be_nil
+    expect(user.trust_level).to eq(0)
+  end
+
   it 'should cook the bio' do
     group = Fabricate(:group)
     group.update_attributes!(bio_raw: 'This is a group for :unicorn: lovers')

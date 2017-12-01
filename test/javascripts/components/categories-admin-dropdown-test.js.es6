@@ -7,8 +7,8 @@ componentTest('default', {
   test(assert) {
     const $selectKit = selectKit('.categories-admin-dropdown');
 
-    assert.equal($selectKit.el.find(".d-bars").length, 1);
-    assert.equal($selectKit.el.find(".d-caret-down").length, 1);
+    assert.equal($selectKit.el.find(".d-icon-bars").length, 1);
+    assert.equal($selectKit.el.find(".d-icon-caret-down").length, 1);
 
     expandSelectKit();
 

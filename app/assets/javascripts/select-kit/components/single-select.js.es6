@@ -11,11 +11,11 @@ export default SelectKitComponent.extend({
   classNames: "single-select",
   computedValue: null,
   value: null,
-  allowInitialValueMutation: true,
+  allowInitialValueMutation: false,
 
   @on("didReceiveAttrs")
   _compute() {
-    Ember.run.scheduleOnce("afterRender", () => {
+    run.scheduleOnce("afterRender", () => {
       this.willComputeAttributes();
       let content = this.willComputeContent(this.get("content") || []);
       let value = this._beforeWillComputeValue(this.get("value"));
@@ -34,6 +34,8 @@ export default SelectKitComponent.extend({
   },
 
   mutateAttributes() {
+    if (this.get("isDestroyed") || this.get("isDestroying")) return;
+
     run.next(() => {
       this.mutateContent(this.get("computedContent"));
       this.mutateValue(this.get("computedValue"));
@@ -47,6 +49,10 @@ export default SelectKitComponent.extend({
   },
 
   _beforeWillComputeValue(value) {
+    if (!isEmpty(this.get("content")) && isEmpty(value) && isNone(this.get("none"))) {
+      value = this.valueForContentItem(get(this.get("content"), "firstObject"));
+    }
+
     switch (typeof value) {
     case "string":
     case "number":
@@ -58,10 +64,6 @@ export default SelectKitComponent.extend({
   willComputeValue(value) { return value; },
   computeValue(value) { return value; },
   _beforeDidComputeValue(value) {
-    if (!isEmpty(this.get("content")) && isEmpty(value) && isNone(this.get("none"))) {
-      value = this.valueForContentItem(get(this.get("content"), "firstObject"));
-    }
-
     this.setProperties({ computedValue: value });
     return value;
   },
@@ -108,7 +110,7 @@ export default SelectKitComponent.extend({
   },
 
   autoHighlight() {
-    Ember.run.schedule("afterRender", () => {
+    run.schedule("afterRender", () => {
       if (!isNone(this.get("highlightedValue"))) { return; }
 
       const filteredComputedContent = this.get("filteredComputedContent");
@@ -157,14 +159,14 @@ export default SelectKitComponent.extend({
       this.willSelect(rowComputedContentItem);
       this.set("computedValue", rowComputedContentItem.value);
       this.mutateAttributes();
-      Ember.run.schedule("afterRender", () => this.didSelect(rowComputedContentItem));
+      run.schedule("afterRender", () => this.didSelect(rowComputedContentItem));
     },
 
     onDeselect(rowComputedContentItem) {
       this.willDeselect(rowComputedContentItem);
       this.set("computedValue", null);
       this.mutateAttributes();
-      Ember.run.schedule("afterRender", () => this.didDeselect(rowComputedContentItem));
+      run.schedule("afterRender", () => this.didDeselect(rowComputedContentItem));
     }
   }
 });

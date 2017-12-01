@@ -254,6 +254,15 @@ describe PostCreator do
         end
       end
 
+      it "updates topic stats" do
+        first_post = creator.create
+        topic = first_post.topic.reload
+
+        expect(topic.last_posted_at).to be_within(1.seconds).of(first_post.created_at)
+        expect(topic.last_post_user_id).to eq(first_post.user_id)
+        expect(topic.word_count).to eq(4)
+      end
+
       it 'creates a post with featured link' do
         SiteSetting.topic_featured_link_enabled = true
         SiteSetting.min_first_post_length = 100
@@ -385,7 +394,6 @@ describe PostCreator do
     let!(:topic) { Fabricate(:topic, user: user) }
 
     it 'whispers do not mess up the public view' do
-
       first = PostCreator.new(user,
         topic_id: topic.id,
         raw: 'this is the first post').create
@@ -429,6 +437,9 @@ describe PostCreator do
       expect(topic.reply_count).to eq(0)
       expect(topic.posts_count).to eq(1)
       expect(topic.highest_staff_post_number).to eq(3)
+      expect(topic.last_posted_at).to be_within(1.seconds).of(first.created_at)
+      expect(topic.last_post_user_id).to eq(first.user_id)
+      expect(topic.word_count).to eq(5)
 
       topic.update_columns(
         highest_staff_post_number: 0,
@@ -537,7 +548,7 @@ describe PostCreator do
 
   # more integration testing ... maximise our testing
   context 'existing topic' do
-    let(:topic) { Fabricate(:topic, user: user) }
+    let(:topic) { Fabricate(:topic, user: user, title: 'topic title with 25 chars') }
     let(:creator) { PostCreator.new(user, raw: 'test reply', topic_id: topic.id, reply_to_post_number: 4) }
 
     it 'ensures the user can create the post' do
@@ -555,9 +566,38 @@ describe PostCreator do
         expect(Topic.count).to eq(1)
         expect(post.reply_to_post_number).to eq(4)
       end
-
     end
 
+    context "topic stats" do
+      before do
+        PostCreator.new(
+          Fabricate(:coding_horror),
+          raw: 'first post in topic',
+          topic_id: topic.id,
+          created_at: Time.zone.now - 24.hours
+        ).create
+      end
+
+      it "updates topic stats" do
+        post = creator.create
+        topic.reload
+
+        expect(topic.last_posted_at).to be_within(1.seconds).of(post.created_at)
+        expect(topic.last_post_user_id).to eq(post.user_id)
+        expect(topic.word_count).to eq(6)
+      end
+
+      it "updates topic stats even when topic fails validation" do
+        topic.update_columns(title: 'below 15 chars')
+
+        post = creator.create
+        topic.reload
+
+        expect(topic.last_posted_at).to be_within(1.seconds).of(post.created_at)
+        expect(topic.last_post_user_id).to eq(post.user_id)
+        expect(topic.word_count).to eq(6)
+      end
+    end
   end
 
   context 'closed topic' do

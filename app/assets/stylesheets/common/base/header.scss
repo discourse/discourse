@@ -26,7 +26,7 @@
     max-height: 40px;
   }
 
-  .d-home {
+  .d-icon-home {
     font-size: 1.643em;
   }
 
@@ -51,7 +51,7 @@
   }
 }
 
-.header-dropdown-toggle, .drop-down {
+.header-dropdown-toggle, .drop-down, .panel-body {
   .flagged-posts, .queued-posts {
     background: $danger;
   }

@@ -227,11 +227,11 @@ body.wizard {
       background-color: #ccc;
     }
 
-    .d-chevron-right {
+    .d-icon-chevron-right {
       margin-left: 0.25em;
       font-size: 0.8em;
     }
-    .d-chevron-left {
+    .d-icon-chevron-left {
       margin-right: 0.25em;
       font-size: 0.8em;
     }
@@ -290,7 +290,7 @@ body.wizard {
     .wizard-btn.next {
       min-width: 70px;
 
-      .d-chevron-right {
+      .d-icon-chevron-right {
         margin-left: 0.25em;
         font-size: 0.8em;
       }
@@ -401,7 +401,6 @@ body.wizard {
     textarea {
       padding: 3px;
       border: 4px solid red;
-      border-radius: 3px;
     }
   }
 }
@@ -419,7 +418,6 @@ body.wizard {
     input {
       padding: 3px;
       border: 4px solid red;
-      border-radius: 3px;
     }
   }
 }

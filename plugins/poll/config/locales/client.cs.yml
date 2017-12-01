@@ -28,24 +28,24 @@ cs:
           up_to_max_options:
             one: "Zvolte maximálně <strong>1</strong> možnost."
             few: "Zvolte maximálně <strong>%{count}</strong> možnosti."
-            other: "Zvolte maximálně <strong>%{count}</strong> možností."
+            other: "Zvolte maximálně <strong>%{count}</strong> možností"
           x_options:
             one: "Zvolte <strong>1</strong> možnost."
             few: "Zvolte <strong>%{count}</strong> možnosti."
-            other: "Zvolte <strong>%{count}</strong> možností."
-          between_min_and_max_options: "Zvolte mezi <strong>%{min}</strong> a <strong>%{max}</strong> možnostmi."
+            other: "Zvolte <strong>%{count}</strong> možností"
+          between_min_and_max_options: "Zvolte mezi <strong>%{min}</strong> a <strong>%{max}</strong> možnostmi"
       cast-votes:
         title: "Hlasujte"
-        label: "Hlasovat!"
+        label: "Hlasovat nyní!"
       show-results:
-        title: "Zobraz výsledky hlasování"
+        title: "Zobrazit výsledky hlasování"
         label: "Ukaž výsledky"
       hide-results:
         title: "Zpět k hlasování"
-        label: "Schovej výsledky"
+        label: "Skrýt výsledky"
       open:
         title: "Otevřít hlasování"
-        label: "Otevři"
+        label: "Otevřít"
         confirm: "Opravdu chcete otevřít toto hlasování?"
       close:
         title: "Zavřít hlasování"

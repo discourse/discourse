@@ -11,7 +11,7 @@ test('details button', (assert) => {
 
   click('#create-topic');
   click('button.options');
-  click('.popup-menu .d-caret-right');
+  click('.popup-menu .d-icon-caret-right');
 
   andThen(() => {
     assert.equal(
@@ -30,7 +30,7 @@ test('details button', (assert) => {
   });
 
   click('button.options');
-  click('.popup-menu .d-caret-right');
+  click('.popup-menu .d-icon-caret-right');
 
   andThen(() => {
     assert.equal(
@@ -53,7 +53,7 @@ test('details button', (assert) => {
   });
 
   click('button.options');
-  click('.popup-menu .d-caret-right');
+  click('.popup-menu .d-icon-caret-right');
 
   andThen(() => {
     assert.equal(
@@ -76,7 +76,7 @@ test('details button', (assert) => {
   });
 
   click('button.options');
-  click('.popup-menu .d-caret-right');
+  click('.popup-menu .d-icon-caret-right');
 
   andThen(() => {
     assert.equal(
@@ -105,7 +105,7 @@ test('details button surrounds all selected text in a single details block', (as
   });
 
   click('button.options');
-  click('.popup-menu .d-caret-right');
+  click('.popup-menu .d-icon-caret-right');
 
   andThen(() => {
     assert.equal(

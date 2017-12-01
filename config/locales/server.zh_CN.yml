@@ -48,6 +48,7 @@ zh_CN:
         no_body_detected_error: "无法解析正文并且没有附件。"
         no_sender_detected_error: "当无法在来源信息中找到有效邮件地址时发生。"
         inactive_user_error: "发送者未激活。"
+        silenced_user_error: "当发件人被禁言时发生。"
         bad_destination_address: "发至/抄送/密送栏中的所有邮件都不匹配进站邮件地址。"
         strangers_not_allowed_error: "用户尝试在非成员分类中创建主题。"
         insufficient_trust_level_error: "用户尝试在用户等级不满足分类要求时发帖。"
@@ -237,11 +238,11 @@ zh_CN:
     new-topic: |
       欢迎来到%{site_name} &mdash; **衷心感谢你参与讨论！**
 
-      - 标题是否清晰明了地描述了主题？看起来有意思么？
+      - 标题念出来后听着有趣么？是否清晰明了？
 
-      - 谁会感兴趣？它为什么重要？你期望从社区中获得什么样的回应？
+      - 谁会对它感兴趣？它为什么有价值？你期望从社区中获得什么样的回应？
 
-      - 选择恰当的词句以便别人能找到你的主题。若想要给主题分组，选择一个分类。
+      - 选择常用的词句以便别人能找到你的主题。如果想要把主题和类似主题放在一起，选择一个分类。
 
       更多的帮助信息，[请查看我们的社区准则](/guidelines)。此信息面板只在你发布前 %{education_posts_text}时显示。
     new-reply: |
@@ -253,7 +254,7 @@ zh_CN:
 
       - 欢迎有建设性的批评，但是请批判观点，而不是人身攻击。
 
-      欲查看更多，[请查看我们的社区准则](/guidelines)。此信息面板只会在你发表前 %{education_posts_text} 时显示。
+      欲查看更多，[请查看我们的社区准则](/guidelines)。此信息面板只会在你发表前 %{education_posts_text}时显示。
     avatar: |
       ### 想更改你的头像吗?
 
@@ -912,6 +913,11 @@ zh_CN:
     tl2_additional_likes_per_day_multiplier: "增加信任等级2（成员）的赞限制，可提供一个乘数与原始值相乘"
     tl3_additional_likes_per_day_multiplier: "增加信任等级3（常规）的每日赞限制，将此设置项与原始值相乘"
     tl4_additional_likes_per_day_multiplier: "增加信任等级4（资深）的赞限制，可提供一个乘数与原始值相乘"
+    num_spam_flags_to_silence_new_user: "如果新用户被 num_users_to_silence_new_user 个用户标记垃圾信息，隐藏他们的所以帖子并禁止发音。设置为 0 禁用。"
+    num_users_to_silence_new_user: "如果新用户被不同用户标记了 num_spam_flags_to_silence_new_user 次垃圾信息，隐藏他们的所以帖子并禁止发音。设置为 0 禁用。"
+    num_tl3_flags_to_silence_new_user: "如果新用户被 num_tl3_users_to_silence_new_user 个信任等级3的用户标记垃圾信息，隐藏他们的所以帖子并禁止发音。设置为 0 禁用。"
+    num_tl3_users_to_silence_new_user: "如果新用户被不同信任等级3的用户标记 num_tl3_flags_to_silence_new_use 为标记垃圾信息，隐藏他们的所以帖子并禁止发音。设置为 0 禁用。"
+    notify_mods_when_user_silenced: "如果用户被自动禁言了，发私信给所有版主。"
     flag_sockpuppets: "如果一个新用户开始了一个主题，并且同时另一个新用户以同一个 IP 在该主题回复，他们所有的帖子都将被自动标记为垃圾。"
     traditional_markdown_linebreaks: "在 Markdown 中使用传统换行符，即用两个尾随空格来换行"
     enable_markdown_typographer: "使用基本的排版规则来提高文本段落的可读性，用符号替换 (c) (tm) 等，减少问号等等"
@@ -1150,6 +1156,9 @@ zh_CN:
     num_hours_to_close_topic: "暂停主题以介入处理的小时数"
     auto_respond_to_flag_actions: "当处理标记时启用自动回复。"
     min_first_post_typing_time: "用户发表第一帖时打字的最小时间（以毫秒计），如果没有达到该阈值，帖子将自动进入需要批准队列。设置为 0 禁用（不推荐）"
+    auto_silence_fast_typers_on_first_post: "自动禁言未达到 min_first_post_typing_time 的用户"
+    auto_silence_fast_typers_max_trust_level: "自动禁言输入快速的用户的适用信任等级"
+    auto_silence_first_post_regex: "检查用户首贴的大小写不相关的正则表达式。如匹配，用户将被禁言并送至审核队列。例子：raging|a[bc]a 将匹配 raging、aba 或者 aca，因此禁言该用户。只对首贴有效。"
     flags_default_topics: "在管理栏目中默认显示被标记的主题"
     reply_by_email_enabled: "启用通过邮件回复。"
     reply_by_email_address: "通过邮件回复的回复地址模板，例如：%{reply_key}@reply.example.com 或 replies+%{reply_key}@example.com"
@@ -1299,6 +1308,7 @@ zh_CN:
     default_categories_tracking: "分类列表默认追踪。"
     default_categories_muted: "分类列表默认不显示。"
     default_categories_watching_first_post: "默认监看这些分类中每个新主题的第一贴"
+    retain_web_hook_events_period_days: "保存 web hook 事件记录的天数。"
     max_user_api_reqs_per_day: "用户API每日每密钥最高请求数"
     max_user_api_reqs_per_minute: "用户API每密钥每分钟最高请求数"
     allow_user_api_keys: "允许生成用户API密钥"
@@ -1578,11 +1588,11 @@ zh_CN:
     title: "下载备份邮件发件人"
     subject_template: "[%{email_prefix}] 站点备份下载"
     text_body_template: |
-      这是你[站点备份文件](%{backup_file_path})。
+      这是你的[站点备份文件](%{backup_file_path})。
 
-      出于安全原因我们把下载链接直接发到你确认过的邮箱。
+      出于安全原因，我们把下载链接发送至你验证过的邮箱。
 
-      （如果你**没有**请求下载，你需要认真想想了——有个管理员请求了备份文件）
+      （如果你**没有**请求下载，你需要思考一下了——某管理员请求了备份文件）
     no_token: |
       抱歉，这个备份下载链接已经被使用或已经过期。
   admin_confirmation_mailer:
@@ -1845,6 +1855,13 @@ zh_CN:
         我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
 
         与你账户关联的邮件地址没有激活，请先激活你的帐号再发送邮件。
+    email_reject_silenced_user:
+      title: "Email被拒绝：被禁言的用户"
+      subject_template: "[%{email_prefix}] 邮件问题 -- 被禁言的用户"
+      text_body_template: |
+        我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
+
+        与你账户关联的邮件地址已经被禁言。
     email_reject_reply_user_not_matching:
       title: "Email被拒绝：用户未找到"
       subject_template: "[%{email_prefix}] 邮件问题 -- 未预期的回复地址"
@@ -1969,9 +1986,69 @@ zh_CN:
     too_many_spam_flags:
       title: "太多垃圾标记"
       subject_template: "新账户被暂时封禁"
+      text_body_template: |
+        你好，
+
+        这是%{site_name}自动发出的邮件。你的帖子因社区标记而被临时隐藏
+
+        。
+
+        出于谨慎的考虑，在管理人员审核通过前，你的新账户不能再发表新的回复或者主题。我们对此带来的不便表示歉意。
+
+        要查看更多指引，请参考我们的[社区指引](%{base_url}/guidelines)。
     too_many_tl3_flags:
       title: "太多信任等级3用户标记"
       subject_template: "新账户被暂时封禁"
+      text_body_template: |
+        你好，
+
+        这是%{site_name}自动发出的邮件。你的帖子因社区标记而被临时禁用。
+
+        出于谨慎的考虑，在管理人员审核通过前，你的新账户不能再发表新的回复或者主题。我们对此带来的不便表示歉意。
+
+        要查看更多指引，请参考我们的[社区指引](%{base_url}/guidelines)。
+    silenced_by_staff:
+      title: "被管理人员禁言"
+      subject_template: "账户临时被禁用"
+      text_body_template: |
+        你好，
+
+        这是%{site_name}自动发出的邮件。出于谨慎的考虑，你的帐户临时暂停使用。
+
+        请继续浏览，但在管理人员审核通过前，你的账户不能再发表新的回复或者主题。我们对此带来的不便表示歉意。
+
+        要查看更多指引，请参考我们的[社区指引](%{base_url}/guidelines)。
+    user_automatically_silenced:
+      title: "用户自动被禁用"
+      subject_template: "新用户%{username}因社区标记被封禁"
+      text_body_template: |
+        这是自动发出的邮件。
+
+        因多位用户标记%{username}的帖子，新用户[%{username}](%{user_url})已被自动禁言。
+
+        请[查看这些标记](%{base_url}/admin/flags)。如果%{username}被意外禁言，点击[该用户管理页面](%{user_url})内的解除禁言按钮。
+
+        该阈值可以通过站点设置中的 `silence_new_user` 更改。
+    spam_post_silenced:
+      title: "垃圾帖子别禁言"
+      subject_template: "新用户 %{username} 因重复发布链接而被禁言发表该链接"
+      text_body_template: |
+        这是自动发出的邮件。
+
+        新用户[%{username}](%{user_url})试图创建多个链接至 %{domains} 的帖子，但这些帖子因为反垃圾策略而被阻挡了。用户仍能够发表不包含到 %{domains} 的帖子。
+
+        请[审核该用户](%{user_url})。
+
+        该阈值可以通过站点设置中的 `newuser_spam_host_threshold` 和 `white_listed_spam_host_domains` 更改。
+    unsilenced:
+      title: "解除禁言"
+      subject_template: "账户不再被挂起"
+      text_body_template: |
+        你好，
+
+        这是%{site_name}自动发出的邮件。管理人员审核你的帐户后，你的帐户不再受到限制。
+
+        你现在可以创建新回复和主题了。感谢你的耐心等待。
     pending_users_reminder:
       title: "待审核用户提醒"
       subject_template:
@@ -2993,6 +3070,7 @@ zh_CN:
     only_official: "禁用非官方插件"
     no_plugins: "禁用所以插件"
     enter: "进入安全模式"
+    must_select: "你必须选择至少一个选项以进入安全模式。"
   wizard:
     title: "Discourse 安装"
     step:

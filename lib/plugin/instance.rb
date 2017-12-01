@@ -29,6 +29,7 @@ class Plugin::Instance
    :color_schemes,
    :initializers,
    :javascripts,
+   :service_workers,
    :styles,
    :themes].each do |att|
     class_eval %Q{
@@ -332,6 +333,13 @@ class Plugin::Instance
     assets << [full_path, opts]
   end
 
+  def register_service_worker(file, opts = nil)
+    service_workers << [
+      File.join(File.dirname(path), 'assets', file),
+      opts
+    ]
+  end
+
   def register_color_scheme(name, colors)
     color_schemes << { name: name, colors: colors }
   end
@@ -419,6 +427,8 @@ JS
     end
 
     register_assets! unless assets.blank?
+
+    register_service_workers!
 
     seed_data.each do |key, value|
       DiscoursePluginRegistry.register_seed_data(key, value)
@@ -513,6 +523,12 @@ JS
   def register_assets!
     assets.each do |asset, opts|
       DiscoursePluginRegistry.register_asset(asset, opts)
+    end
+  end
+
+  def register_service_workers!
+    service_workers.each do |asset, opts|
+      DiscoursePluginRegistry.register_service_worker(asset, opts)
     end
   end
 

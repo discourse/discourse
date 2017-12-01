@@ -290,10 +290,18 @@ id:
       posts_read: "baca"
       total_rows:
         other: "%{count} pengguna"
+    group_histories:
+      actions:
+        add_user_to_group: "Tambahkan pengguna"
+        remove_user_from_group: "Hapus pengguna"
+        make_user_group_owner: "Jadikan pemilik"
     groups:
       logs:
         action: "Aksi"
+        subject: "Subyek"
         details: "Detil"
+        from: "Dari"
+        to: "Kepada"
       edit:
         full_name: 'Nama Lengkap'
         add_members: "Tambah Anggota"
@@ -304,6 +312,7 @@ id:
         messages: "Tidak ada pesan untuk kelompok ini."
         topics: "Tidak ada topik oleh anggota kelompok ini."
       add: "Menambahkan"
+      join: "Gabung dengan grup"
       message: "Pesan"
       automatic_group: Kelompok Otomatis
       closed_group: Kelompok Tertutup
@@ -314,6 +323,7 @@ id:
       bio: "Tentang Kelompok"
       selector_placeholder: "Menambahkan anggota"
       owner: "pemilik"
+      activity: "Aktifitas"
       members: "Anggota"
       topics: "Topik-topik"
       mentions: "Balasan-balasan"
@@ -477,12 +487,22 @@ id:
         move_to_archive: "Arsip"
         failed_to_move: "Gagal memindahkan pesan terpilih (mungkin internet kamu putus ?)"
         select_all: "Pilih Semua"
+      preferences_nav:
+        account: "Akun"
+        profile: "Profil"
+        emails: "Surel"
+        notifications: "Pemberitahuan"
+        categories: "Kategori"
+        interface: "Antarmuka"
+        apps: "Aplikasi"
       change_password:
         success: "(surel terkirim)"
         in_progress: "(mengirimkan surel)"
         error: "(galat)"
         action: "Kirim Email Reset Kata Sandi"
         set_password: "Atur Kata Sandi"
+        choose_new: "Pilih kata sandi baru"
+        choose: "Pilih kata sandi"
       change_about:
         title: "Ganti Tentang Saya"
         error: "Ada kesalahan saat mengganti nilai ini"
@@ -521,14 +541,17 @@ id:
           other: "Kami akan mengirimkan email kepada anda jika kami tidak melihat anda selama {{count}} menit."
       name:
         title: "Name"
+        instructions: "Nama lengkap anda (opsional)"
         instructions_required: "Nama lengkap anda"
         too_short: "Nama anda terlalu pendek"
         ok: "Nama anda terlihat bagus"
       username:
         title: "Nama Pengguna"
+        instructions: "unik, tidak ada spasi, pendek"
         short_instructions: "Orang dapat menyebut anda sebagai @{{username}}"
         available: "Nama pengguna anda tersedia"
         not_available: "Tidak tersedia. Coba {{suggestion}}?"
+        not_available_no_suggestion: "Tidak tersedia"
         too_short: "Nama pengguna anda terlalu pendek"
         too_long: "Nama pengguna anda terlalu panjang"
         checking: "Memeriksa ketersediaan nama pengguna..."
@@ -563,6 +586,7 @@ id:
       other_settings: "Lainnya"
       categories_settings: "Kategori"
       new_topic_duration:
+        after_1_day: "dibuat hari ini"
         after_2_days: "dibuat 2 hari ini"
         after_1_week: "dibuat minggu ini"
         after_2_weeks: "dibuat 2 minggu ini"
@@ -577,6 +601,9 @@ id:
         after_5_minutes: "setelah 5 menit"
         after_10_minutes: "setelah 10 menit"
       invited:
+        search: "ketik untuk mecari undangan..."
+        title: "Undangan"
+        user: "Pengguna yang telah diundang"
         sent: "Terkirim"
         pending: "Undangan yang tertunda"
         pending_tab: "Tertunda"
@@ -586,6 +613,7 @@ id:
         expired: "Undangan ini sudah kadaluarsa"
         rescind: "Hapus"
         rescinded: "Undangan dihapus"
+        rescind_all: "Hapus semua undangan"
         reinvite: "Kirim Ulang Undangan"
         reinvite_all: "Kirim ulang semua Undangan"
         reinvited: "Undangan sudah dikirim ulang"
@@ -595,8 +623,12 @@ id:
         account_age_days: "Umur akun dalam hari"
         create: "Kirim Undangan"
         generate_link: "Salin Tautan Undangan"
+        link_generated: "Tautan undangan telah sukses dibuat!"
+        valid_for: "Tautan undangan hanya berlaku untuk alamat surel: %{email}"
         bulk_invite:
           text: "Undangan Massal dari Berkas"
+          success: "File telah sukses diunggah, anda akan mendapat pesan pemberitahuan saat proses telah selesai."
+          error: "Maaf, file harus dalam format CSV"
       password:
         title: "Kata sandi"
         too_short: "Password kamu terlalu pendek."
@@ -604,9 +636,14 @@ id:
         same_as_username: "Password dan nama pengguna kamu sama"
         same_as_email: "Password dan email kamu sama"
         ok: "Kata sandi Anda terlihat baik."
+        instructions: "paling tidak %{count} karakter"
       summary:
         title: "Ringkasan"
         stats: "Statistik"
+        topic_count:
+          other: "topik dibuat"
+        post_count:
+          other: "tulisan dibuat"
         days_visited:
           other: "hari berkunjung"
         top_replies: "Balasan Teratas"
@@ -651,7 +688,10 @@ id:
     signup_cta:
       hide_forever: "tidak, terima kasih"
     summary:
+      enable: 'Rangkum Topik Ini'
       disable: 'Tampilkan Semua Postingan'
+    deleted_filter:
+      enable: "Sembunyikan Tulisan Terhapus"
     private_message_info:
       title: "Pesan"
     email: 'Surel'
@@ -704,18 +744,74 @@ id:
       accept_invite: "Terima Undangan"
       name_label: "Nama"
       password_label: "Atur Kata Sandi"
+    select_kit:
+      filter_placeholder: Cari...
+      create: "Buat {{konten}}"
+    emoji_picker:
+      filter_placeholder: Cari emoji
+      people: Orang
+      nature: Alam
+      food: Makanan
+      activity: Aktifitas
+      objects: Objek
+      celebration: Perayaan
     composer:
+      options: "Pilihan"
+      add_warning: "Ini adalah peringatan resmi."
+      saving_draft_tip: "menyimpan..."
+      saved_draft_tip: "tersimpan"
+      similar_topics: "Topik anda mirip dengan..."
+      error:
+        title_missing: "Judul harus ada"
+        title_too_short: "Judul setidaknya {{min}} karakter"
+        title_too_long: "Judul tidak boleh lebih dari {{max}} karakter"
+        post_missing: "Tulisan tidak boleh kosong"
+        post_length: "Tulisan setidaknya harus {{min}} karakter"
+        try_like: 'Pernahkan anda mencoba tombol <i class="fa fa-heart"></i>?'
+        category_missing: "Anda harus memilih kategori"
+      save_edit: "Simpah Ubahan"
+      reply_original: "Balas pada Topik Asal"
       reply_here: "Balas Disini"
       reply: "Balas"
       cancel: "Batal"
+      create_topic: "Buat Topik"
+      create_pm: "Pesan"
+      title: "Atau tekan Ctrl+Enter"
       users_placeholder: "Tambahkan pengguna"
+      title_placeholder: "Tentang apa diskusi ini dalam satu kalimat pendek?"
+      title_or_link_placeholder: "Ketik judul, atau tempel tautan disini"
+      show_edit_reason: "(tambahkan alasan pengubahan)"
+      topic_featured_link_placeholder: "Masukkan tautan yang terlihat dengan judul."
+      remove_featured_link: "Hapus tautan dari topik"
+      reply_placeholder: "Ketik disini. Gunakan Markdown, BBCode, atau HTML untuk memformat. Tarik atau tempel gambar."
       view_new_post: "Lihat posting baru Anda"
+      saving: "Menyimpan"
+      saved: "Tersimpan!"
+      uploading: "Mengunggah..."
+      show_preview: 'tunjukkan pratinjau &raquo;'
+      hide_preview: '&laquo; sembunyikan pratinjau'
+      bold_label: "B"
       bold_title: "Strong"
+      italic_label: "I"
       italic_title: "Emphasis"
       link_title: "Hyperlink"
+      upload_title: "Unggah"
+      modal_ok: "OK"
       modal_cancel: "Batal"
+      cant_send_pm: "Maaf, anda tidak dapat mengirim pesan kepada %{username}"
+      yourself_confirm:
+        title: "Apakah anda lupa menambahkan penerima?"
     notifications:
+      empty: "Tidak ada pemberitahuan."
       more: "lihat notifikasi sebelumnya"
+      alt:
+        mentioned: "Disebut oleh"
+        replied: "Telah dibalas"
+        posted: "Tulisan oleh"
+        private_message: "Pesan pribadi dari"
+        invited_to_private_message: "Diundang untuk pesan pribadi dari"
+        linked: "Tautkan pada tulisan anda"
+        group_message_summary: "Pesan di kotak pesan grup"
     new_item: "baru"
     topics:
       bulk:

@@ -32,9 +32,11 @@ pt_BR:
   disable_remote_images_download_reason: "Download de imagens remotas foi desativado porque não havia espaço suficiente em disco disponível."
   anonymous: "Anônimo"
   remove_posts_deleted_by_author: "Deletado pelo autor"
+  themes:
+    other_error: "Algo de errado aconteceu ao atualizar o tema"
   emails:
     incoming:
-      default_subject: "Este tópico necessita de um título"
+      default_subject: "Este tópico precisa de um título"
       show_trimmed_content: "Exibir conteúdo abreviado"
       maximum_staged_user_per_email_reached: "Atingido número máximo de usuários de teste criados por email."
       errors:
@@ -49,8 +51,9 @@ pt_BR:
         reply_user_not_matching_error: "Ocorre quando uma resposta chega em um endereço de email diferente ao da notificação enviada."
         topic_not_found_error: "Ocorre quando uma resposta foi enviada mas o tópico relacionado foi excluído."
         topic_closed_error: "Ocorre quando uma resposta foi enviada mas o tópico relacionado foi fechado."
-        bounced_email_error: "O email é um relatório de email devolvido."
-        screened_email_error: "Acontece quando o endereço de email do remetente já foi examinado."
+        bounced_email_error: "O e-mail é um relatório de e-mail devolvido."
+        screened_email_error: "Acontece quando o endereço de e-mail do remetente já foi examinado."
+      unrecognized_error: "Erro Desconhecido"
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -312,6 +315,14 @@ pt_BR:
           attributes:
             payload_url:
               invalid: "URL inválida. A URL deve conter http:// ou https://. Espaço em branco não é permitido."
+        topic_timer:
+          attributes:
+            execute_at:
+              in_the_past: "deve estar no futuro."
+        watched_word:
+          attributes:
+            word:
+              too_many: "Muitas palavras para esta ação"
       <<: *errors
   user_profile:
     no_info_other: "<div class='missing-profile'>%{name} ainda não colocou nada no campo Sobre Mim</div>"
@@ -391,6 +402,9 @@ pt_BR:
     leader:
       title: "líder"
     change_failed_explanation: "Você tentou rebaixar %{user_name} para '%{new_trust_level}'. No entanto o nível de confiança dele já é '%{current_trust_level}'. %{user_name} permanecerá em '%{current_trust_level}' - se você deseja rebaixar um usuário, tranque o nível de confiança primeiro"
+  post:
+    image_placeholder:
+      broken: "Esta imagem está danificada"
   rate_limiter:
     slow_down: "Você fez essa ação demais, tente novamente mais tarde."
     too_many_requests: "Nós possuímos um limite diário do número de vezes que uma ação pode ser tomada. Por favor aguarde %{time_left} antes de tentar novamente."
@@ -513,13 +527,17 @@ pt_BR:
     welcome_to: "Bem-vindo a %{site_name}!"
     approval_required: "Um moderador tem que aprovar a sua conta para que você possa acessar este fórum. Você receberá um email quando sua conta for aprovada!"
     missing_session: "Não conseguimos detectar se sua conta foi criada. Por favor, certifique-se de que você está com os cookies do navegador habilitados."
+    admin_confirm:
+      title: "Confirmar Conta de Administrador"
   post_action_types:
     off_topic:
       title: 'Off-Topic'
       description: 'Essa mensagem não é relevante para a discussão definida pelo título e primeira mensagem, e deveria ser movida para outro local.'
+      short_description: 'Isso não é relevante à discussão'
       long_form: 'sinalizou isto como off-topic'
     spam:
       title: 'Spam'
+      short_description: 'Isto é uma propaganda ou vandalismo'
       long_form: 'sinalizado como spam'
       email_title: '"%{title}" foi sinalizado como spam'
       email_body: "%{link}\n\n%{message}"
@@ -542,18 +560,25 @@ pt_BR:
     bookmark:
       title: 'Adicionar Marcador'
       description: 'Adicionar um marcador a esta postagem'
+      short_description: 'Favoritar esta publicação'
       long_form: 'adicionou um marcador esta postagem'
     like:
       title: 'Curtir'
       description: 'Curtir esta postagem'
+      short_description: 'Curtir esta publicação'
       long_form: 'curtiu isto'
     vote:
       title: 'Vote'
       description: 'Votar nesta postagem'
       long_form: 'voto computado para esta postagem'
   user_activity:
+    no_default:
+      self: "Você não tem nenhuma atividade ainda."
+      others: "Nenhuma atividade."
     no_bookmarks:
       others: "Nenhum favorito."
+    no_likes_given:
+      self: "Você não curtiu nenhuma publicação."
   topic_flag_types:
     spam:
       title: 'Spam'

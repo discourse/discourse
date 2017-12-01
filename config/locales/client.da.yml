@@ -30,7 +30,7 @@ da:
       timeline_date: "MMM YYYY"
       long_no_year: "MMM D h:mm a"
       long_no_year_no_time: "MMM D"
-      full_no_year_no_time: "MMMM Do"
+      full_no_year_no_time: "D. MMMM"
       long_with_year: "MMM D, YYYY h:mm a"
       long_with_year_no_time: "MMM D, YYYY"
       full_with_year_no_time: "MMMM Do, YYYY"
@@ -113,17 +113,18 @@ da:
     action_codes:
       public_topic: "offentliggjorde dette emne %{when}"
       private_topic: "gjorde dette emne privat %{when}"
-      split_topic: "delte dette emne op %{when}"
+      split_topic: "del dette emne op %{when}"
       invited_user: "Inviterede %{who} %{when}"
       invited_group: "inviterede %{who} %{when}"
+      user_left: "%{who} efterlod denne besked %{when}"
       removed_user: "fjernede %{who} %{when}"
       removed_group: "fjernede %{who} %{when}"
       autoclosed:
         enabled: 'lukket %{when}'
-        disabled: 'åbnet %{when}'
+        disabled: 'åbnede %{when}'
       closed:
         enabled: 'lukket %{when}'
-        disabled: 'åbnet %{when}'
+        disabled: 'åbnede %{when}'
       archived:
         enabled: 'arkiveret %{when}'
         disabled: 'dearkiveret %{when}'
@@ -159,6 +160,7 @@ da:
         eu_west_2: "EU (London)"
         sa_east_1: "Sydamerika (Sao Paulo)"
         us_east_1: "US East (N. Virginia)"
+        us_east_2: "US East (Ohio)"
         us_gov_west_1: "AWS GovCloud (US)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
@@ -255,7 +257,7 @@ da:
     saved: "Gemt!"
     upload: "Upload"
     uploading: "Uploader…"
-    uploading_filename: "Uploader {{filename}}..."
+    uploading_filename: "Overfører {{filename}}..."
     uploaded: "Uploadet!"
     enable: "Aktiver"
     disable: "Deaktiver"
@@ -351,7 +353,9 @@ da:
         full_name: 'Fulde Navn'
         add_members: "Tilføj Medlemmer"
         delete_member_confirm: "Fjern '%{username}' fra '%{group}' gruppen?"
-      name_placeholder: "Gruppe navn, ingen mellemrum, samme som reglen for brugernavn"
+      name_placeholder: "Gruppenavn uden mellemrum, samme som reglen for brugernavn"
+      public_admission: "Tillad brugere frit at tilmelde sig gruppen (Kræver at det er en offentlig synlig gruppe)"
+      public_exit: "Tillad brugere frit at forlade gruppen"
       empty:
         posts: "Der er ingen indlæg skrevet af medlemmer i denne gruppe."
         members: "Der er ingen medlemmer i denne gruppe."
@@ -363,10 +367,16 @@ da:
       join: "Bliv medlem af gruppen"
       leave: "Forlad gruppen"
       request: "Anmod om indmeldelse i gruppen"
+      message: "Besked"
       automatic_group: Automatisk gruppe
       closed_group: Lukket gruppe
       is_group_user: "Du er medlem af denne gruppe"
       allow_membership_requests: "Tillad at brugere sender medlemsanmodninger til gruppeejere"
+      membership_request_template: "Brugerdefineret skabelon, der skal vises til brugere, når der sendes en medlemskabsanmodning"
+      membership_request:
+        submit: "Send forespørgsel"
+        title: "Anmod om medlemskab af gruppen @%{group_name}"
+        reason: "Fortæl gruppeejerne, hvorfor du tilhører denne gruppe"
       membership: "Medlemskab"
       name: "Navn"
       user_count: "Antal medlemmer"
@@ -383,7 +393,15 @@ da:
       mentions: "Omtaler"
       messages: "Beskeder"
       notification_level: "Standard notifikationsniveau for gruppebeskeder"
+      visibility_levels:
+        title: "Hvem kan se denne gruppe?"
+        public: "Alle"
+        members: "Gruppeejer, medlemmer og admins"
+        staff: "Gruppeejer og hjælpeteam"
+        owners: "Gruppeejer og admins"
       alias_levels:
+        mentionable: "Hvem kan @gruppenavn denne gruppe?"
+        messageable: "Hvem kan sende en besked til denne gruppe?"
         nobody: "Ingen"
         only_admins: "Kun administratore"
         mods_and_admins: "Kun moderatore og administratore"
@@ -479,6 +497,7 @@ da:
       mute: "Mute"
       edit: "Redigér indstillinger"
       download_archive:
+        button_text: "Hent alle"
         confirm: "Er du sikker på, at du vil downloade dine indlæg?"
         success: "Downloaden er startet. Du vil blive notificeret via en besked, når processen er færdig."
         rate_limit_error: "Indlæg kan downloades en gang om dagen, prøv igen i morgen."
@@ -503,11 +522,14 @@ da:
         disable: "Deaktiver notifikationer"
         enable: "Aktiver notifikationer"
         each_browser_note: "Bemærk: Du skal ændre indstillingen i alle dine browsere."
+      dismiss: 'Afvist'
       dismiss_notifications: "Afvis alle"
       dismiss_notifications_tooltip: "Marker alle ulæste notifikationer som læst"
       first_notification: "Din første notifikation! Vælg den for at begynde."
       disable_jump_reply: "Ikke hop til mit indlæg efter jeg svarer"
       dynamic_favicon: "Vis nyt / opdateret emnetal på browserikon"
+      theme_default_on_all_devices: "Gør dette til mit standard design på alle mine enheder"
+      allow_private_messages: "Tillad andre brugere at sende mig private beskeder"
       external_links_in_new_tab: "Åbn alle eksterne links i en ny fane"
       enable_quoting: "Tillad citering af markeret tekst"
       change: "skift"
@@ -515,7 +537,9 @@ da:
       admin: "{{user}} er admin"
       moderator_tooltip: "Denne bruger er moderator"
       admin_tooltip: "Denne bruger er administrator"
+      silenced_tooltip: "Denne bruger er gjort stum"
       suspended_notice: "Denne bruger er suspenderet indtil {{date}}."
+      suspended_permanently: "Denne bruger er udelukket."
       suspended_reason: "Begrundelse: "
       github_profile: "Github"
       email_activity_summary: "Resumé over aktivitet"
@@ -546,6 +570,7 @@ da:
       watched_first_post_tags_instructions: "Du får besked om første indlæg i hvert nyt emne med disse tags."
       muted_categories: "Ignoreret"
       muted_categories_instructions: "Du får ikke beskeder om nye emner i disse kategorier og de fremstår ikke i seneste."
+      no_category_access: "Som moderator har du begrænset kategori-adgang, at gemme er slået fra. "
       delete_account: "Slet min konto"
       delete_account_confirm: "Er du sikker på du vil slette din konto permanent? Dette kan ikke fortrydes!"
       deleted_yourself: "Din konto er nu slettet."
@@ -564,6 +589,7 @@ da:
       undo_revoke_access: "Revider tilbagekald adgang"
       api_approved: "Godkendt:"
       theme: "Tema"
+      home: "Standard hjemmeside"
       staff_counters:
         flags_given: "hjælpsomme markeringer"
         flagged_posts: "markerede indlæg"
@@ -740,6 +766,9 @@ da:
         expired: "Denne invitation er forældet"
         rescind: "Fjern"
         rescinded: "Invitation fjernet"
+        rescind_all: "Fjern alle inviterede"
+        rescinded_all: "Alle inviterede fjernet!"
+        rescind_all_confirm: "Er du sikker på du ønsker at fjerne alle inviterede?"
         reinvite: "Gensend invitation"
         reinvite_all: "Gensend alle invitationer"
         reinvited: "Invitation gensendt"

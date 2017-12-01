@@ -89,10 +89,6 @@ describe GroupsController do
       )
     end
 
-    before do
-      sign_in(user)
-    end
-
     context "when user is group owner" do
       before do
         group.add_owner(user)

@@ -2,7 +2,6 @@
   &.multi-select {
     width: 300px;
     background: $secondary;
-    border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
     border-radius: 0;
 
     .select-box-kit-body, .select-kit-body {
@@ -22,6 +21,7 @@
 
     .multi-select-header {
       background: $secondary;
+      border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
 
       &.is-focused {
         box-shadow: $tertiary 0px 0px 6px 0px;
@@ -63,23 +63,23 @@
     }
 
     .choices {
-      list-style: none;
       margin: 0;
-      padding: 5px;
+      padding: 2.5px;
       box-sizing: border-box;
-      display: inline;
-      list-style-type: none;
+      display: inline-flex;
+      justify-content: flex-start;
+      flex-wrap: wrap;
 
       .choice {
         display: inline-flex;
         box-sizing: border-box;
         padding: 0 5px;
-        margin: 2px 0;
         border: 1px solid transparent;
         align-items: center;
         justify-content: space-between;
-        overflow: hidden;
-        align-items: center;
+        flex-wrap: wrap;
+        flex-direction: row;
+        margin: 2.5px;
       }
 
       .filter {
@@ -136,9 +136,10 @@
         background-color: $primary-low;
         cursor: pointer;
         outline: none;
-        padding-left: 0;
-        padding-right: 0;
         line-height: normal;
+        overflow: auto;
+        flex: unset;
+        flex-wrap: nowrap;
 
         .name {
           padding: 0 5px;

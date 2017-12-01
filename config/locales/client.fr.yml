@@ -48,6 +48,9 @@ fr:
         x_seconds:
           one: "1s"
           other: "%{count}s"
+        less_than_x_minutes:
+          one: "< 1m"
+          other: "< %{count}m"
         x_minutes:
           one: "1m"
           other: "%{count}m"
@@ -57,6 +60,9 @@ fr:
         x_days:
           one: "1j"
           other: "%{count}j"
+        x_months:
+          one: "1 mois"
+          other: "%{count} mois"
         about_x_years:
           one: "1a"
           other: "%{count}a"
@@ -526,6 +532,7 @@ fr:
         disable: "Désactiver les notifications"
         enable: "Activer les notifications"
         each_browser_note: "Note : Vous devez changer ce paramètre sur chaque navigateur que vous utilisez."
+      dismiss: 'Ignorer'
       dismiss_notifications: "Tout ignorer"
       dismiss_notifications_tooltip: "Marquer les notifications comme lues"
       first_notification: "Votre première notification ! Cliquez-la pour démarrer."
@@ -540,6 +547,7 @@ fr:
       admin: "{{user}} est un administrateur"
       moderator_tooltip: "Cet utilisateur est un modérateur"
       admin_tooltip: "Cet utilisateur est un administrateur"
+      silenced_tooltip: "Cet utilisateur est mis sous silence"
       suspended_notice: "L'utilisateur est suspendu jusqu'au {{date}}."
       suspended_permanently: "Cet utilisateur est suspendu."
       suspended_reason: "Raison :"
@@ -591,6 +599,8 @@ fr:
       undo_revoke_access: "Annuler la révocation d'accès"
       api_approved: "Approuvé :"
       theme: "Thème"
+      home: "Page d'accueil par défaut"
+      staged: "En attente"
       staff_counters:
         flags_given: "signalements utiles"
         flagged_posts: "messages signalés"
@@ -800,6 +810,7 @@ fr:
         title: "Résumé"
         stats: "Statistiques"
         time_read: "de lecture"
+        recent_time_read: "temps de lecture récent"
         topic_count:
           one: "sujets créés"
           other: "sujets créés"
@@ -815,6 +826,9 @@ fr:
         days_visited:
           one: "jour visité"
           other: "jours visités"
+        topics_entered:
+          one: "sujet vu"
+          other: "sujets vus"
         posts_read:
           one: "message lu"
           other: "messages lus"
@@ -904,6 +918,10 @@ fr:
     mute: Désactiver
     unmute: Activer
     last_post: Dernier message
+    time_read: Temps de lecture
+    time_read_recently: '%{time_read} récemment'
+    time_read_tooltip: '%{time_read} temps de lecture total'
+    time_read_recently_tooltip: '%{time_read} temps de lecture total (%{recent_time_read} durant les 60 derniers jours)'
     last_reply_lowercase: dernière réponse
     replies_lowercase:
       one: réponse
@@ -1039,7 +1057,8 @@ fr:
     select_kit:
       default_header_text: Sélectionner…
       no_content: Aucune correspondance trouvée
-      filter_placeholder: Recherche...
+      filter_placeholder: Rechercher...
+      create: "Créer {{content}}"
     emoji_picker:
       filter_placeholder: Chercher un emoji
       people: Personnes
@@ -1095,6 +1114,7 @@ fr:
       cancel: "Annuler"
       create_topic: "Créer le sujet"
       create_pm: "Message privé"
+      create_whisper: "Murmurer"
       title: "ou appuyez sur Ctrl+Entrée"
       users_placeholder: "Ajouter un utilisateur"
       title_placeholder: "Quel est le sujet en une courte phrase ?"
@@ -1102,6 +1122,7 @@ fr:
       edit_reason_placeholder: "pourquoi modifiez-vous le message ?"
       show_edit_reason: "(ajouter la raison de la modification)"
       topic_featured_link_placeholder: "Entrez un lien affiché avec le titre."
+      remove_featured_link: "Retirer le lien du sujet"
       reply_placeholder: "Écrivez ici. Utilisez Markdown, BBCode, ou HTML pour mettre en forme. Glissez ou collez des images."
       view_new_post: "Voir votre nouveau message."
       saving: "Sauvegarde"
@@ -1185,6 +1206,7 @@ fr:
         linked: "Lien vers votre message"
         granted_badge: "Badge attribué"
         group_message_summary: "Messages dans la boite de réception du groupe"
+        topic_reminder: "Un rappel"
       popup:
         mentioned: '{{username}} vous a mentionné dans « {{topic}} » - {{site_title}}'
         group_mentioned: '{{username}} vous a mentionné dans « {{topic}} » - {{site_title}}'
@@ -1762,6 +1784,9 @@ fr:
           notify_user: "a envoyé un message"
           bookmark: "signet ajouté"
           like: "a aimé ceci"
+          like_capped:
+            one: "et {{count}} autre a aimé ça"
+            other: "et {{count}} autres ont aimé ça"
           vote: "a voté pour ceci"
         by_you:
           off_topic: "Vous l'avez signalé comme étant hors-sujet"
@@ -1911,6 +1936,7 @@ fr:
       email_in_allow_strangers: "Accepter les courriels d'utilisateurs anonymes sans compte"
       email_in_disabled: "La possibilité de créer des nouveaux sujets via courriel est désactivé dans les Paramètres. Pour l'activer,"
       email_in_disabled_click: 'activer le paramètre « email in ».'
+      mailinglist_mirror: "La catégorie reflète une liste de diffusion"
       suppress_from_homepage: "Retirer cette catégorie de la page d'accueil"
       show_subcategory_list: "Afficher la liste des sous-catégories au dessus des sujets dans cette catégorie."
       num_featured_topics: "Nombre de sujets affichés sur la page des catégories :"
@@ -2346,6 +2372,7 @@ fr:
         no_problems: "Aucun problème n'a été trouvé."
         moderators: 'Modérateurs :'
         admins: 'Administateurs :'
+        silenced: 'Mis sous silence :'
         suspended: 'Suspendus :'
         private_messages_short: "Msgs"
         private_messages_title: "Messages"
@@ -2383,13 +2410,12 @@ fr:
         topics: "Sujets signalés"
         agree: "Accepter"
         agree_title: "Confirmer que le signalement est valide et correcte"
-        agree_flag_modal_title: "Accepter et…"
-        agree_flag_hide_post: "Accepter (cacher le message + envoi d'un MP)"
-        agree_flag_hide_post_title: "Masquer ce message et envoyer automatiquement un message à l'utilisateur afin qu'il le modifie rapidement"
-        agree_flag_restore_post: "Accepter (rétablir le message)"
-        agree_flag_restore_post_title: "Restaurer ce message"
-        agree_flag: "Accepter le signalement"
-        agree_flag_title: "Accepter le signalement et garder le message inchangé"
+        agree_flag_hide_post: "Accepter et cacher le message"
+        agree_flag_hide_post_title: "Cacher le message et envoyer automatiquement un message à l'utilisateur l'incitant à le modifier."
+        agree_flag_restore_post: "Accepter et rétablir le message"
+        agree_flag_restore_post_title: "Rétablir le message afin que tous les utilisateurs puissent le voir."
+        agree_flag: "Accepter et conserver le message"
+        agree_flag_title: "Accepter le signalement et conserver le message tel quel."
         defer_flag: "Ignorer"
         defer_flag_title: "Retirer le signalement ; il ne nécessite aucune action pour le moment."
         delete: "Supprimer"
@@ -2427,6 +2453,7 @@ fr:
         was_edited: "Le message a été modifié après le premier signalement"
         previous_flags_count: "Ce message a déjà été signalé {{count}} fois."
         show_details: "Afficher les détails du signalement"
+        details: "détails"
         flagged_topics:
           topic: "Sujet"
           type: "Type"
@@ -2887,6 +2914,8 @@ fr:
             change_category_settings: "modifier les paramètres de la catégorie"
             delete_category: "supprimer la catégorie"
             create_category: "créer une catégorie"
+            silence_user: "mettre l'utilisateur sous silence"
+            unsilence_user: "annuler la mise sous silence de l'utilisateur"
             grant_admin: "accorder les droits d'administration"
             revoke_admin: "révoquer les droits d'administration"
             grant_moderation: "Accorder les droits de modération"
@@ -2934,6 +2963,13 @@ fr:
           roll_up:
             text: "Consolider"
             title: "Créer de nouvelles plages de sous réseaux à bannir s'il y a au moins 'min_ban_entries_for_roll_up' entrées."
+        search_logs:
+          title: "Rechercher dans les journaux"
+          term: "Terme"
+          searches: "Recherches"
+          click_through: "Taux de clics"
+          most_viewed_topic: "Sujet le plus vu"
+          unique: "Unique"
         logster:
           title: "Journal d'erreurs"
       watched_words:
@@ -2981,6 +3017,7 @@ fr:
           pending: "En attente"
           staff: 'Responsables'
           suspended: 'Suspendus'
+          silenced: 'Sous silence'
           suspect: 'Suspects'
         approved: "Approuvé ?"
         approved_selected:
@@ -3001,6 +3038,7 @@ fr:
           staff: "Responsables"
           admins: 'Administrateurs'
           moderators: 'Modérateurs'
+          silenced: 'Utilisateurs sous silence'
           suspended: 'Utilisateurs suspendus'
           suspect: 'Utilisateurs suspects'
         reject_successful:
@@ -3024,10 +3062,21 @@ fr:
         suspend_message: "Message courriel"
         suspend_message_placeholder: "Donner plus d'informations au sujet de la suspension qui seront envoyées à l'utilisateur par courriel."
         suspended_by: "Suspendu par"
+        silence_reason: "Raison"
+        silenced_by: "Mis sous silence par"
+        silence_modal_title: "Mettre l'utilisateur sous silence"
+        silence_duration: "Combien de temps sera l'utilisateur mis sous silence ?"
+        silence_reason_label: "Pourquoi mettez-vous l'utilisateur sous silence ?"
+        silence_reason_placeholder: "Raison de la mise sous silence"
+        silence_message: "Message courriel"
+        silence_message_placeholder: "(laisser vide pour envoyer un message par défaut)"
         suspended_until: "(jusqu'à %{until})"
         cant_suspend: "Cet utilisateur ne peut pas être suspendu."
         delete_all_posts: "Supprimer tous les messages"
         delete_all_posts_confirm_MF: "Vous êtes sur le point de supprimer {POSTS, plural, one {1 message} other {# messages}} et {TOPICS, plural, one {1 sujet} other {# sujets}}. Êtes-vous sûr ?"
+        silence: "Mettre sous silence"
+        unsilence: "Ne pas mettre sous silence"
+        silenced: "Mis sous silence ?"
         moderator: "Modérateur ?"
         admin: "Administrateur ?"
         suspended: "Suspendu ?"
@@ -3094,6 +3143,10 @@ fr:
         activate_failed: "Il y a eu un problème lors de l'activation du compte."
         deactivate_account: "Désactiver le compte"
         deactivate_failed: "Il y a eu un problème lors de la désactivation du compte."
+        unsilence_failed: 'Il y a eu un problème en supprimant la mise sous silence de l''utilisateur.'
+        silence_failed: 'Il y a eu un problème en mettant l''utilisateur sous silence.'
+        silence_confirm: 'Êtes-vous sûr de vouloir mettre l’utilisateur sous silence ? Il ne sera plus capable de créer de nouveaux sujets ou messages.'
+        silence_accept: 'Oui, mettre cet utilisateur sous silence'
         bounce_score: "Score de rejet"
         reset_bounce_score:
           label: "Réinitialiser"
@@ -3101,6 +3154,7 @@ fr:
         visit_profile: "Visiter <a href='%{url}'>la page de préférence de cet utilisateur</a> pour éditer son profil"
         deactivate_explanation: "Un utilisateur désactivé doit revalider son adresse de courriel."
         suspended_explanation: "Un utilisateur suspendu ne peut pas se connecter."
+        silence_explanation: "Un utilisateur mis sous silence ne peut pas créer des messages ou sujets."
         staged_explanation: "Un utilisateur en attente ne peut envoyer des messages par courriel que pour des sujets spécifiques."
         bounce_score_explanation:
           none: "Aucune rejet récent pour cette adresse courriel."
@@ -3218,6 +3272,7 @@ fr:
           developer: 'Développeur'
           embedding: "Externe"
           legal: "Légal"
+          api: 'API'
           user_api: 'API utilisateur'
           uncategorized: 'Autre'
           backups: "Sauvegardes"

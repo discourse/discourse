@@ -1520,7 +1520,8 @@ it:
     email_too_long: "L'email fornita è troppo lunga. Le mailbox non devono superare i 254 caratteri, e i nomi di dominio non devono superare i 253 caratteri."
     reserved_username: "Questo utente non ha il permesso."
     missing_user_field: "Non hai inserito tutti i campi utente"
-    close_window: "L'autenticazione è completa. Chiudi questa finestra per continuare."
+    auth_complete: "L'autenticazione è completa"
+    click_to_continue: "Clicca qui per continuare."
     already_logged_in: "Oops, sembra che tu stai tentando di accettare un invito per un altro utente. Se non sei %{current_user}, disconnettiti e prova di nuovo."
   user:
     no_accounts_associated: "Nessun account associato"
@@ -1549,6 +1550,10 @@ it:
     website:
       domain_not_allowed: "Il sito web non è valido. I domini consentiti sono: %{domains}"
     auto_rejected: "Rifiutato automaticamente a causa dell'età. Vedi l'impostazione del sito auto_handle_queued_age."
+    destroy_reasons:
+      unused_staged_user: "Utente temporaneo non utilizzato"
+      fixed_primary_email: "Risolto il problema dell'email principale per l'utente temporaneo"
+      same_ip_address: "Stesso indirizzo IP (%ip_address%) degli altri utenti"
   flags_reminder:
     flags_were_submitted:
       one: "Flags were submitted over 1 hour ago. [Please review them](/admin/flags)."
@@ -2087,7 +2092,7 @@ it:
 
         Per favore [controlla le segnalazioni](%{base_url}/admin/flags). Se %{username} è stato silenziato per errore, clicca sul tasto di sblocco nella [pagina di amministrazione di questo utente](%{user_url}).
 
-        Questa impostazione può essere modificata tramite l'impostazione del sito `block_new_user`.
+        Questa impostazione può essere modificata tramite l'impostazione del sito `silence_new_user`.
     spam_post_silenced:
       title: "Messaggio Spam Silenziato"
       subject_template: "I messaggi del nuovo utente %{username} sono stati silenziati a causa dell'invio di ripetuti collegamenti."
@@ -2351,6 +2356,15 @@ it:
         %{reason}
 
         %{message}
+    account_silenced:
+      title: "Account Silenziato"
+      subject_template: "[%{email_prefix}] Il tuo account è stato silenziato"
+      text_body_template: |
+        Sei silenziato dal forum fino %{silenced_till}.
+
+        %{reason}
+
+        %{message}
     account_exists:
       title: "L'account esiste già"
       subject_template: "[%{email_prefix}] L'account esiste già"
@@ -2508,6 +2522,8 @@ it:
       too_large: "Spiacenti, ma l'immagine che stai cercando di caricare è troppo grande (la dimensione massima è %{max_size_kb}KB), per favore ridimensionala e riprova."
       larger_than_x_megapixels: "Spiacenti, ma l'immagine che stai cercando di caricare è troppo grande (la dimensione massima è %{max_image_megapixels}-megapixel), per favore ridimensionala e riprova."
       size_not_found: "Spiacenti, ma non riusciamo a determinare la dimensione dell'immagine. E' forse danneggiata?"
+    placeholders:
+      too_large: "(immagine più grande di %{max_size_kb}KB)"
   avatar:
     missing: "Spiacenti, non troviamo nessun avatar associato a questo indirizzo email. Puoi provare a caricarlo nuovamente?"
   flag_reason:

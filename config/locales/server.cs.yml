@@ -7,9 +7,9 @@
 
 cs:
   dates:
-    short_date_no_year: "D. MMMM"
-    short_date: "D. MMMM, YYYY"
-    long_date: "D. MMMM YYYY H:mm"
+    short_date_no_year: "D MMM"
+    short_date: "D MMM, YYYY"
+    long_date: "D. MMMM, YYYY h:mm"
   datetime_formats: &datetime_formats
     formats:
       short: "%-d. %-m. %Y"
@@ -27,14 +27,18 @@ cs:
   topics: "Témata"
   posts: "příspěvky"
   loading: "Nahrávám"
+  powered_by_html: 'Systém běží na <a href="https://www.discourse.org">Discourse</a>, nejlépe funguje se zapnutým JavaScriptem'
   log_in: "Přihlásit se"
   purge_reason: "Tento účet byl automaticky smazán a deaktivován jako opuštěný"
   disable_remote_images_download_reason: "Stahování obrázků z cizích serverů bylo vypnuto protože na disku není dostatek místa."
   anonymous: "Anonymní"
   remove_posts_deleted_by_author: "Smazáno autorem"
+  themes:
+    bad_color_scheme: "Nelze aktualizovat skin (theme), neplatné barevné schéma"
+    other_error: "Něco se pokazilo při aktualizaci skinu (theme)"
   emails:
     incoming:
-      default_subject: "Toto téma vyžaduje název"
+      default_subject: "Toto téma potřebuje nadpis"
       show_trimmed_content: "Ukázat upravený obsah"
       maximum_staged_user_per_email_reached: "Dosáhli jste maximálního počtu uživatelů na jeden e-mail."
       errors:

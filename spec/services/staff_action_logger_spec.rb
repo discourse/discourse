@@ -385,12 +385,12 @@ describe StaffActionLogger do
     end
 
     it "creates a new UserHistory record" do
-      user.trust_level_locked = true
+      user.manual_locked_trust_level = 3
       expect { logger.log_lock_trust_level(user) }.to change { UserHistory.count }.by(1)
       user_history = UserHistory.last
       expect(user_history.action).to eq(UserHistory.actions[:lock_trust_level])
 
-      user.trust_level_locked = false
+      user.manual_locked_trust_level = nil
       expect { logger.log_lock_trust_level(user) }.to change { UserHistory.count }.by(1)
       user_history = UserHistory.last
       expect(user_history.action).to eq(UserHistory.actions[:unlock_trust_level])

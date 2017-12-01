@@ -6,11 +6,11 @@ describe ActiveRecord::ConnectionHandling do
   let(:replica_port) { 6432 }
 
   let(:config) do
-    ActiveRecord::Base.configurations[Rails.env].merge(
-      "adapter" => "postgresql_fallback",
-      "replica_host" => replica_host,
-      "replica_port" => replica_port
-    ).symbolize_keys!
+    ActiveRecord::Base.connection_config.merge(
+      adapter: "postgresql_fallback",
+      replica_host: replica_host,
+      replica_port: replica_port
+    )
   end
 
   let(:multisite_db) { "database_2" }
@@ -27,7 +27,6 @@ describe ActiveRecord::ConnectionHandling do
   let(:postgresql_fallback_handler) { PostgreSQLFallbackHandler.instance }
 
   before do
-    skip("Disable these tests until we figure out what is leaking connections")
     postgresql_fallback_handler.initialized = true
 
     ['default', multisite_db].each do |db|
@@ -42,12 +41,19 @@ describe ActiveRecord::ConnectionHandling do
 
   describe "#postgresql_fallback_connection" do
     it 'should return a PostgreSQL adapter' do
-      expect(ActiveRecord::Base.postgresql_fallback_connection(config))
-        .to be_an_instance_of(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
+      begin
+        connection = ActiveRecord::Base.postgresql_fallback_connection(config)
+
+        expect(connection)
+          .to be_an_instance_of(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
+      ensure
+        connection.disconnect!
+      end
     end
 
     context 'when master server is down' do
       before do
+        skip("Figure out why this test leaks connections")
         @replica_connection = mock('replica_connection')
       end
 
@@ -70,8 +76,8 @@ describe ActiveRecord::ConnectionHandling do
           ActiveRecord::Base.expects(:postgresql_connection).with(configuration).raises(PG::ConnectionBad)
           ActiveRecord::Base.expects(:verify_replica).with(@replica_connection)
 
-          ActiveRecord::Base.expects(:postgresql_connection).with(configuration.merge(
-            host: replica_host, port: replica_port)
+          ActiveRecord::Base.expects(:postgresql_connection).with(
+            configuration.dup.merge(host: replica_host, port: replica_port)
           ).returns(@replica_connection)
         end
 
@@ -129,10 +135,9 @@ describe ActiveRecord::ConnectionHandling do
       it 'should raise the right error' do
         ActiveRecord::Base.expects(:postgresql_connection).with(config).raises(PG::ConnectionBad)
 
-        ActiveRecord::Base.expects(:postgresql_connection).with(config.dup.merge(
-          host: replica_host,
-          port: replica_port
-        )).raises(PG::ConnectionBad).once
+        ActiveRecord::Base.expects(:postgresql_connection).with(
+          config.dup.merge(host: replica_host, port: replica_port)
+        ).raises(PG::ConnectionBad).once
 
         postgresql_fallback_handler.expects(:verify_master).twice
 
@@ -147,6 +152,8 @@ describe ActiveRecord::ConnectionHandling do
   describe '.verify_replica' do
     describe 'when database is not in recovery' do
       it 'should raise the right error' do
+        skip("Figure out why this test leaks connections")
+
         expect do
           ActiveRecord::Base.send(:verify_replica, ActiveRecord::Base.connection)
         end.to raise_error(RuntimeError, "Replica database server is not in recovery mode.")

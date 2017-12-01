@@ -10,6 +10,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     @current_length = 0
     options || {}
     @strip_links = options[:strip_links] == true
+    @strip_images = options[:strip_images] == true
     @text_entities = options[:text_entities] == true
     @markdown_images = options[:markdown_images] == true
     @keep_newlines = options[:keep_newlines] == true
@@ -53,18 +54,19 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     when "img"
       attributes = Hash[*attributes.flatten]
 
-        if attributes["class"]&.include?('emoji')
-          if @remap_emoji
-            title = (attributes["alt"] || "").gsub(":", "")
-            title = Emoji.lookup_unicode(title) || attributes["alt"]
-            return characters(title)
-          elsif @keep_emoji_images
-            return include_tag(name, attributes)
-          else
-            return characters(attributes["alt"])
-          end
+      if attributes["class"]&.include?('emoji')
+        if @remap_emoji
+          title = (attributes["alt"] || "").gsub(":", "")
+          title = Emoji.lookup_unicode(title) || attributes["alt"]
+          return characters(title)
+        elsif @keep_emoji_images
+          return include_tag(name, attributes)
+        else
+          return characters(attributes["alt"])
         end
+      end
 
+      unless @strip_images
         # If include_images is set, include the image in markdown
         characters("!") if @markdown_images
 
@@ -77,6 +79,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
         end
 
         characters("(#{attributes['src']})") if @markdown_images
+      end
 
     when "a"
       unless @strip_links

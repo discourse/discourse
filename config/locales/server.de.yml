@@ -221,6 +221,7 @@ de:
   excerpt_image: "Bild"
   queue:
     delete_reason: "Aus der Moderations-Warteschlange für Beiträge gelöscht"
+    not_found: "Seite nicht gefunden oder bereits aktualisiert."
   groups:
     success:
       bulk_add: "%{users_added} Benutzer wurden der Gruppe hinzugefügt."
@@ -366,7 +367,7 @@ de:
         translation_overrides:
           attributes:
             value:
-              missing_interpolation_keys: 'Die folgenden Erweiterungsschlüssel fehlen: "%{keys}"'
+              invalid_interpolation_keys: 'Die folgenden Erweiterungsschlüssel sind ungültig: "%{keys}"'
         watched_word:
           attributes:
             word:
@@ -1517,7 +1518,8 @@ de:
     email_too_long: "Die von dir eingegebene E-Mail-Adresse ist zu lang. Der Teil vor dem @ darf maximal 254 Zeichen lang sein und Domain-Namen maximal 253 Zeichen."
     reserved_username: "Der Benutzername ist nicht erlaubt."
     missing_user_field: "Du hast nicht alle Benutzerangaben ausgefüllt"
-    close_window: "Authentifizierung abgeschlossen. Schließe das Fenster um fortzufahren."
+    auth_complete: "Authentifizierung ist abgeschlossen."
+    click_to_continue: "Klicke hier um fortzufahren."
     already_logged_in: "Hoppla, es sieht so aus als ob du versuchst die Einladung für einen anderen Benutzer zu akzeptieren. Wenn du nicht %{current_user} bist, melde dich bitte ab und versuch es erneut."
   user:
     no_accounts_associated: "Es sind keine Konten zugeordnet"
@@ -1546,6 +1548,10 @@ de:
     website:
       domain_not_allowed: "Webseite ist ungültig. Erlaubte Domains sind: %{domains}"
     auto_rejected: "Automatisch abgelehnt aufgrund des Alters. Siehe Seiteneinstellung auto_handle_queued_age."
+    destroy_reasons:
+      unused_staged_user: "Unbenutztes, vorbereiteter Benutzerkonto"
+      fixed_primary_email: "Primäre E-Mail-Adresse für vorbereitetes Benutzerkonto korrigiert"
+      same_ip_address: "Gleiche IP-Adresse (%ip_address%) wie andere Benutzer"
   flags_reminder:
     flags_were_submitted:
       one: "Meldungen wurden vor über 1 Stunde eingereicht. [Bitte übeprüfe sie](/admin/flags)."
@@ -2078,13 +2084,13 @@ de:
       title: "Benutzer automatisch stummgeschaltet"
       subject_template: "Neuer Benutzer %{username} stummgeschaltet wegen Community-Meldungen"
       text_body_template: |
-        Dies ist eine automatisierte Nachricht.
+        Dies ist eine automatische Nachricht.
 
-        Der neue Benutzer  [%{username}](%{user_url}) wurde automatisch stummgeschaltet, weil mehrere Benutzer Beiträge von %{username} gemeldet haben.
+        Der neue Benutzer [%{username}](%{user_url}) wurde automatisch stummgeschaltet, weil mehrere Benutzer Beiträge von %{username} gemeldet haben.
 
         Bitte [überprüfe die Meldungen](%{base_url}/admin/flags). Wenn %{username} fälschlich stummgeschaltet wurde, so klicke die „Stummschaltung aufheben“-Schaltfläche auf der [Administrationsseite dieses Benutzers](%{user_url}).
 
-        Der Schwellenwert kann über die Einstellung `block_new_user` geändert werden.
+        Der Schwellenwert kann über die Einstellung `silence_new_user` geändert werden.
     spam_post_silenced:
       title: "Spam-Beitrag stummgeschaltet"
       subject_template: "Beiträge des neuen Benutzers %{username} stummgeschaltet wegen wiederholten Links"
@@ -2348,6 +2354,15 @@ de:
         %{reason}
 
         %{message}
+    account_silenced:
+      title: "Konto stummgeschaltet"
+      subject_template: "[%{email_prefix}] Dein Konto wurde stummgeschaltet"
+      text_body_template: |
+        Du wurdest im Forum stummgeschaltet bis %{suspended_till}.
+
+        %{reason}
+
+        %{message}
     account_exists:
       title: "Konto existiert bereits"
       subject_template: "[%{email_prefix}] Konto existiert bereits"
@@ -2502,6 +2517,8 @@ de:
       too_large: "Entschuldigung, das Bild das du hochladen möchtest, ist zu groß (maximale Dateigröße ist %{max_size_kb}KB). Bitte verkleinere es und versuche es erneut."
       larger_than_x_megapixels: "Entschuldige, das Bild, das du versucht hast hochzuladen, ist zu groß (maximale Auflösung beträgt %{max_image_megapixels} Megapixel), bitte verkleinere es und versuche es erneut."
       size_not_found: "Entschuldige, aber wir konnten die Größe des Bildes nicht bestimmen. Vielleicht ist das Bild defekt?"
+    placeholders:
+      too_large: "(Bild größer als %{max_size_kb}KB)"
   avatar:
     missing: "Hoppla, wir können kein Profilbild für diese E-Mail-Adresse finden. Kannst du versuchen es erneut hochzuladen?"
   flag_reason:
@@ -3130,6 +3147,7 @@ de:
     only_official: "Inoffizielle Plugins deaktivieren"
     no_plugins: "Alle Plugins deaktivieren"
     enter: "Abgesicherten Modus betreten"
+    must_select: "Du musst mindestens eine Option auswählen, um den abgesicherten Modus zu betreten."
   wizard:
     title: "Discourse einrichten"
     step:

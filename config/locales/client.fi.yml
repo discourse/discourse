@@ -48,6 +48,9 @@ fi:
         x_seconds:
           one: "1 s"
           other: "%{count} s"
+        less_than_x_minutes:
+          one: "< 1 min"
+          other: "< %{count}min"
         x_minutes:
           one: "1 min"
           other: "%{count} min"
@@ -57,6 +60,9 @@ fi:
         x_days:
           one: "1 pv"
           other: "%{count} pv"
+        x_months:
+          one: "1 kk"
+          other: "%{count} kk"
         about_x_years:
           one: "1 v"
           other: "%{count} v"

@@ -36,10 +36,17 @@ export default Ember.Controller.extend(ModalFunctionality, {
     refreshGravatar() {
       this.set("gravatarRefreshDisabled", true);
       return ajax(`/user_avatar/${this.get("username")}/refresh_gravatar.json`, { method: "POST" })
-        .then(result => this.setProperties({
-          gravatar_avatar_template: result.gravatar_avatar_template,
-          gravatar_avatar_upload_id: result.gravatar_upload_id,
-        }))
+        .then(result => {
+          if (!result.gravatar_avatar_upload_id) {
+            this.set("gravatarFailed", true);
+          } else {
+            this.setProperties({
+              gravatarFailed: false,
+              gravatar_avatar_template: result.gravatar_avatar_template,
+              gravatar_avatar_upload_id: result.gravatar_upload_id,
+            });
+          }
+        })
         .finally(() => this.set("gravatarRefreshDisabled", false));
     }
   }

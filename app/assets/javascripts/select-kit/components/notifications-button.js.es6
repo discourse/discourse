@@ -20,8 +20,7 @@ export default DropdownSelectBoxComponent.extend({
   @computed("iconForSelectedDetails")
   headerIcon(iconForSelectedDetails) { return iconForSelectedDetails; },
 
-  @computed("selectedDetails.icon")
-  iconForSelectedDetails(icon) { return icon; },
+  iconForSelectedDetails: Ember.computed.alias("selectedDetails.icon"),
 
   computeHeaderContent() {
     let content = this.baseHeaderComputedContent();

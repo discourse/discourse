@@ -644,7 +644,7 @@ describe User do
 
       UserAuthToken.generate!(user_id: @user.id)
 
-      @user.password = "passwordT"
+      @user.password = "passwordT0"
       @user.save!
 
       # must expire old token on password change
@@ -1270,7 +1270,8 @@ describe User do
 
       expect(user.title).to eq("bars and wats")
       expect(user.trust_level).to eq(1)
-      expect(user.trust_level_locked).to eq(true)
+      expect(user.manual_locked_trust_level).to be_nil
+      expect(user.group_locked_trust_level).to eq(1)
     end
   end
 

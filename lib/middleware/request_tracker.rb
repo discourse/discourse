@@ -105,12 +105,7 @@ class Middleware::RequestTracker
 
   end
 
-  def call(env)
-    MethodProfiler.start if @@detailed_request_loggers
-    result = @app.call(env)
-    info = MethodProfiler.stop if @@detailed_request_loggers
-    result
-  ensure
+  def log_request_info(env, result, info)
 
     # we got to skip this on error ... its just logging
     data = self.class.get_data(env, result, info) rescue nil
@@ -128,6 +123,16 @@ class Middleware::RequestTracker
       log_later(data, host)
     end
 
+  end
+
+  def call(env)
+    env["discourse.request_tracker"] = self
+    MethodProfiler.start if @@detailed_request_loggers
+    result = @app.call(env)
+    info = MethodProfiler.stop if @@detailed_request_loggers
+    result
+  ensure
+    log_request_info(env, result, info) unless env["discourse.request_tracker.skip"]
   end
 
   def log_later(data, host)

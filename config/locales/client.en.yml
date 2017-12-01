@@ -133,7 +133,7 @@ en:
           other: "%{count} years later"
       previous_month: 'Previous Month'
       next_month: 'Next Month'
-      placeholder: Pick a date
+      placeholder: date
     share:
       topic: 'share a link to this topic'
       post: 'post #%{postNumber}'
@@ -665,6 +665,7 @@ en:
       api_approved: "Approved:"
       theme: "Theme"
       home: "Default Home Page"
+      staged: "Staged"
 
       staff_counters:
         flags_given: "helpful flags"
@@ -725,6 +726,7 @@ en:
         title: "Change your profile picture"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, based on"
         gravatar_title: "Change your avatar on Gravatar's website"
+        gravatar_failed: "Could not fetch the Gravatar. Is there one associated to that email address?"
         refresh_gravatar_title: "Refresh your Gravatar"
         letter_based: "System assigned profile picture"
         uploaded_avatar: "Custom picture"
@@ -1273,7 +1275,8 @@ en:
       ulist_title: "Bulleted List"
       list_item: "List item"
       help: "Markdown Editing Help"
-      toggler: "hide or show the composer panel"
+      collapse: "minimize the composer panel"
+      abandon: "close composer and discard draft"
       modal_ok: "OK"
       modal_cancel: "Cancel"
       cant_send_pm: "Sorry, you can't send a message to %{username}."
@@ -1284,6 +1287,13 @@ en:
       admin_options_title: "Optional staff settings for this topic"
 
     notifications:
+      tooltip:
+        regular:
+          one: "1 unseen notification"
+          other: "{{count}} unseen notifications"
+        message:
+          one: "1 unread message"
+          other: "{{count}} unread messages"
       title: "notifications of @name mentions, replies to your posts and topics, messages, etc"
       none: "Unable to load notifications at this time."
       empty: "No notifications found."
@@ -1329,6 +1339,7 @@ en:
         linked: "Link to your post"
         granted_badge: "Badge granted"
         group_message_summary: "Messages in group inbox"
+        topic_reminder: "A reminder"
 
       popup:
         mentioned: '{{username}} mentioned you in "{{topic}}" - {{site_title}}'
@@ -1353,6 +1364,7 @@ en:
       uploading: "Uploading"
       select_file: "Select File"
       image_link: "link your image will point to"
+      default_image_alt_text: image
 
     search:
       sort_by: "Sort by"
@@ -1392,29 +1404,29 @@ en:
         posted_by:
           label: Posted by
         in_category:
-          label: In Category
+          label: Categorized
         in_group:
           label: In Group
         with_badge:
           label: With Badge
         with_tags:
-          label: With Tags
+          label: Tagged
         filters:
-          label: Only return topics/posts that...
+          label: Only return topics/posts...
           likes: I liked
           posted: I posted in
           watching: I'm watching
           tracking: I'm tracking
-          private: are in my messages
-          bookmarks: I've bookmarked
+          private: In my messages
+          bookmarks: I bookmarked
           first: are the very first post
           pinned: are pinned
           unpinned: are not pinned
-          seen: I've read
+          seen: I read
           unseen: I've not read
           wiki: are wiki
-          images: includes image(s)
-          all_tags: Contains all tags
+          images: include image(s)
+          all_tags: All the above tags
         statuses:
           label: Where topics
           open: are open
@@ -2482,7 +2494,7 @@ en:
       selector_no_tags: "no tags"
       changed: "tags changed:"
       tags: "Tags"
-      choose_for_topic: "choose optional tags for this topic"
+      choose_for_topic: "optional tags"
       delete_tag: "Delete Tag"
       delete_confirm:
         one: "Are you sure you want to delete this tag and remove it from 1 topic it is assigned to?"
@@ -3207,8 +3219,12 @@ en:
           term: "Term"
           searches: "Searches"
           click_through: "Click Through"
-          most_viewed_topic: "Most Viewed Topic"
           unique: "Unique"
+          unique_title: "unique users performing the search"
+          types:
+            all_search_types: "All search types"
+            header: "Header"
+            full_page: "Full Page"
         logster:
           title: "Error Logs"
 

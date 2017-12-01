@@ -166,7 +166,7 @@ GEM
     mail (2.6.6)
       mime-types (>= 1.16, < 4)
     memory_profiler (0.9.8)
-    message_bus (2.0.8)
+    message_bus (2.0.9)
       rack (>= 1.1.3)
     metaclass (0.0.4)
     method_source (0.8.2)
@@ -177,6 +177,8 @@ GEM
     mini_portile2 (2.3.0)
     mini_racer (0.1.11)
       libv8 (~> 5.7)
+    mini_suffix (0.3.0)
+      ffi (~> 1.9)
     minitest (5.10.3)
     mocha (1.2.1)
       metaclass (~> 0.0.1)
@@ -230,7 +232,7 @@ GEM
     omniauth-twitter (1.3.0)
       omniauth-oauth (~> 1.1)
       rack
-    onebox (1.8.26)
+    onebox (1.8.28)
       fast_blank (>= 1.0.0)
       htmlentities (~> 4.3)
       moneta (~> 1.0)
@@ -259,7 +261,7 @@ GEM
     puma (3.9.1)
     r2 (0.2.6)
     rack (2.0.3)
-    rack-mini-profiler (0.10.5)
+    rack-mini-profiler (0.10.7)
       rack (>= 1.2.0)
     rack-openid (1.3.1)
       rack (>= 1.1.0)
@@ -352,7 +354,7 @@ GEM
       bundler
       ffi (~> 1.9.6)
       sass (>= 3.3.0)
-    seed-fu (2.3.6)
+    seed-fu (2.3.7)
       activerecord (>= 3.1)
       activesupport (>= 3.1)
     shoulda (3.5.0)
@@ -451,6 +453,7 @@ DEPENDENCIES
   mime-types
   mini_mime
   mini_racer
+  mini_suffix
   minitest
   mocha
   mock_redis
@@ -467,7 +470,7 @@ DEPENDENCIES
   omniauth-oauth2
   omniauth-openid
   omniauth-twitter
-  onebox (= 1.8.26)
+  onebox (= 1.8.28)
   openid-redis-store
   pg
   pry-nav
@@ -494,7 +497,7 @@ DEPENDENCIES
   ruby-readability
   sanitize
   sassc
-  seed-fu (~> 2.3.5)
+  seed-fu
   shoulda
   sidekiq
   simple-rss
