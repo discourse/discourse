@@ -644,7 +644,7 @@ describe User do
 
       UserAuthToken.generate!(user_id: @user.id)
 
-      @user.password = "passwordT"
+      @user.password = "passwordT0"
       @user.save!
 
       # must expire old token on password change
