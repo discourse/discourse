@@ -421,5 +421,14 @@ export function isAppleDevice() {
     !navigator.userAgent.match(/Trident/g);
 }
 
+export function clipboardData(e) {
+  let data = e.clipboardData ||
+                e.originalEvent.clipboardData ||
+                e.delegatedEvent.originalEvent.clipboardData ||
+                event.clipboardData;
+
+  return { items: data.items, types: data.types };
+}
+
 // This prevents a mini racer crash
 export default {};
