@@ -233,6 +233,10 @@
     }
     #file-uploading {
       display: flex;
+      a {
+        margin-left: 5px;
+        color: $primary-medium;
+      }
       .spinner {
         margin-right: 5px;
       }
