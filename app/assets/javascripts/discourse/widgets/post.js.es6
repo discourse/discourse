@@ -68,7 +68,7 @@ createWidget('reply-to-tab', {
               username: attrs.replyToUsername
             }),
             ' ',
-            h('span', attrs.replyToUsername)];
+            h('span', formatUsername(attrs.replyToUsername))];
   },
 
   click() {
