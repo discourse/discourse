@@ -19,7 +19,7 @@ export default DropdownSelectBoxComponent.extend({
 
     content.name = `${title}${iconHTML("caret-down")}`.htmlSafe();
     content.dataName = title;
-    content.icon = `thumb-tack ${state === "unpinned" ? "unpinned" : null}`;
+    content.icon = `thumb-tack${state === "unpinned" ? " unpinned" : ''}`;
     return content;
   },
 
