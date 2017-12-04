@@ -64,3 +64,14 @@ QUnit.test("link is longer than max title length", assert => {
     assert.equal(find('.title-input input').val(), "An interesting article", "title is from the oneboxed article");
   });
 });
+
+QUnit.test("onebox with title but extra words in title field", assert => {
+  visit("/");
+  click('#create-topic');
+  fillIn('#reply-title', "http://www.example.com/has-title.html test");
+  andThen(() => {
+    assert.equal(find('.d-editor-preview').html().trim().indexOf('onebox'), -1, "onebox preview doesn't show");
+    assert.equal(find('.d-editor-input').val().length, 0, "link isn't put into the post");
+    assert.equal(find('.title-input input').val(), "http://www.example.com/has-title.html test", "title is unchanged");
+  });
+});
