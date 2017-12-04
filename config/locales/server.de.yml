@@ -1572,9 +1572,9 @@ de:
       Wenn du weiterhin E-Mail-Aktualisierungen erhalten möchtest, kannst du diese E-Mail ignorieren.
   invite_mailer:
     title: "Einladung zu einem Thema"
-    subject_template: "%{invitee_name} hat dich zum Thema '%{topic_title}' auf %{site_domain_name} eingeladen"
+    subject_template: "%{inviter_name} hat dich zum Thema '%{topic_title}' auf %{site_domain_name} eingeladen"
     text_body_template: |
-      %{invitee_name} hat dich eingeladen zur Diskussion
+      %{inviter_name} hat dich eingeladen zur Diskussion
 
       > **%{topic_title}**
       >
@@ -1589,9 +1589,9 @@ de:
       %{invite_link}
   custom_invite_mailer:
     title: "Einladung zu einem Thema (mit Nachricht)"
-    subject_template: "%{invitee_name} hat dich eingeladen zu '%{topic_title}' auf %{site_domain_name}"
+    subject_template: "%{inviter_name} hat dich eingeladen zu '%{topic_title}' auf %{site_domain_name}"
     text_body_template: |
-      %{invitee_name} hat dich eingeladen zur Diskussion
+      %{inviter_name} hat dich eingeladen zur Diskussion
 
       > **%{topic_title}**
       >
@@ -1610,9 +1610,9 @@ de:
       %{invite_link}
   invite_forum_mailer:
     title: "Einladung zur Teilnahme"
-    subject_template: "%{invitee_name} hat dich eingeladen %{site_domain_name} beizutreten"
+    subject_template: "%{inviter_name} hat dich eingeladen %{site_domain_name} beizutreten"
     text_body_template: |
-      %{invitee_name} hat dich eingeladen, der folgenden Seite beizutreten:
+      %{inviter_name} hat dich eingeladen, der folgenden Seite beizutreten:
 
       > **%{site_title}**
       >
@@ -1623,9 +1623,9 @@ de:
       %{invite_link}
   custom_invite_forum_mailer:
     title: "Einladung zum Forum (mit Nachricht)"
-    subject_template: "%{invitee_name} hat dich eingeladen %{site_domain_name} beizutreten"
+    subject_template: "%{inviter_name} hat dich eingeladen %{site_domain_name} beizutreten"
     text_body_template: |
-      %{invitee_name} hat dich eingeladen der folgenden Seite beizutreten:
+      %{inviter_name} hat dich eingeladen der folgenden Seite beizutreten:
 
       > **%{site_title}**
       >

@@ -1307,11 +1307,11 @@ ru:
   unsubscribe_mailer:
     subject_template: "Подтвердите, что вы больше не желаете получать обновления по электронной почте от %{site_title}"
   invite_mailer:
-    subject_template: "%{invitee_name} приглашает вас присоединиться к '%{topic_title}' на сайте %{site_domain_name}"
+    subject_template: "%{inviter_name} приглашает вас присоединиться к '%{topic_title}' на сайте %{site_domain_name}"
   custom_invite_mailer:
-    subject_template: "%{invitee_name} приглашает Вас присоединиться к '%{topic_title}' на сайте %{site_domain_name}"
+    subject_template: "%{inviter_name} приглашает Вас присоединиться к '%{topic_title}' на сайте %{site_domain_name}"
   invite_forum_mailer:
-    subject_template: "%{invitee_name} приглашает вас присоединиться к %{site_domain_name}"
+    subject_template: "%{inviter_name} приглашает вас присоединиться к %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Задайте пароль для вашей учетной записи на сайте %{site_name}"
   flag_reasons:

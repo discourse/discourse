@@ -1462,13 +1462,13 @@ ar:
   unsubscribe_mailer:
     subject_template: "أكّد عدم رغبتك بعد الآن باستقبال تحديثات %{site_title} على البريد"
   invite_mailer:
-    subject_template: "دعاك %{invitee_name} إلى ’%{topic_title}‘ على %{site_domain_name}"
+    subject_template: "دعاك %{inviter_name} إلى ’%{topic_title}‘ على %{site_domain_name}"
   custom_invite_mailer:
-    subject_template: "دعاك %{invitee_name} إلى ’%{topic_title}‘ على %{site_domain_name}"
+    subject_template: "دعاك %{inviter_name} إلى ’%{topic_title}‘ على %{site_domain_name}"
   invite_forum_mailer:
-    subject_template: "%{invitee_name} قام بدعوتك للإنضمام إلى %{site_domain_name}"
+    subject_template: "%{inviter_name} قام بدعوتك للإنضمام إلى %{site_domain_name}"
   custom_invite_forum_mailer:
-    subject_template: "دعاك %{invitee_name} للانضمام إلى %{site_domain_name}"
+    subject_template: "دعاك %{inviter_name} للانضمام إلى %{site_domain_name}"
   invite_password_instructions:
     subject_template: "اضبط كلمة سرّ لحسابك على %{site_name}"
   admin_confirmation_mailer:

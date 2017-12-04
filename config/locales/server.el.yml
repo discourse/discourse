@@ -1579,9 +1579,9 @@ el:
       Εάν θέλεις να συνεχίσεις να λαμβάνεις ενημερώσεις με email, μπορείς να αγνοήσεις αυτό το email.
   invite_mailer:
     title: "Αποστολή Προσκλήσεων"
-    subject_template: "Ο/Η %{invitee_name} σε προσκάλεσε στο νήμα '%{topic_title}' στην %{site_domain_name}"
+    subject_template: "Ο/Η %{inviter_name} σε προσκάλεσε στο νήμα '%{topic_title}' στην %{site_domain_name}"
     text_body_template: |
-      Ο/Η %{invitee_name} σας προσκάλεσε σε μία συζήτηση
+      Ο/Η %{inviter_name} σας προσκάλεσε σε μία συζήτηση
 
       > **%{topic_title}**
       >
@@ -1596,9 +1596,9 @@ el:
       %{invite_link}
   custom_invite_mailer:
     title: "Προσαρμοσμένη Αποστολή Προσκλήσεων"
-    subject_template: "Ο/Η %{invitee_name} σε προσκάλεσε στο νήμα '%{topic_title}' στην %{site_domain_name}"
+    subject_template: "Ο/Η %{inviter_name} σε προσκάλεσε στο νήμα '%{topic_title}' στην %{site_domain_name}"
     text_body_template: |
-      Ο/Η %{invitee_name} σας προσκάλεσε σε μία συζήτηση
+      Ο/Η %{inviter_name} σας προσκάλεσε σε μία συζήτηση
 
       > **%{topic_title}**
       >
@@ -1617,9 +1617,9 @@ el:
       %{invite_link}
   invite_forum_mailer:
     title: "Αποστολή Προσκλήσεων Forum"
-    subject_template: "Ο/Η %{invitee_name} σε προσκάλεσε να συμμετέχεις στην %{site_domain_name}"
+    subject_template: "Ο/Η %{inviter_name} σε προσκάλεσε να συμμετέχεις στην %{site_domain_name}"
     text_body_template: |+
-      Ο/Η %{invitee_name} σας προσκάλεσε να γίνετε μέλος
+      Ο/Η %{inviter_name} σας προσκάλεσε να γίνετε μέλος
 
       > **%{site_title}**
       >
@@ -1631,9 +1631,9 @@ el:
 
   custom_invite_forum_mailer:
     title: "Προσαρμογή Πρόσκλησης Forum "
-    subject_template: "Ο/Η %{invitee_name} σε προσκάλεσε να συμμετέχεις στην %{site_domailn_name}"
+    subject_template: "Ο/Η %{inviter_name} σε προσκάλεσε να συμμετέχεις στην %{site_domailn_name}"
     text_body_template: |
-      Ο/Η %{invitee_name} σας προσκάλεσε να γίνετε μέλος
+      Ο/Η %{inviter_name} σας προσκάλεσε να γίνετε μέλος
 
       > **%{site_title}**
       >

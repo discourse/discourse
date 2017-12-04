@@ -1609,9 +1609,9 @@ pl_PL:
       Jeśli nadal chcesz otrzymywać powiadomienia mailowe, po prostu zignoruj ten mail.
   invite_mailer:
     title: "Zaproś mailera"
-    subject_template: "%{invitee_name} zaprosił cię do '%{topic_title}' na %{site_domain_name}"
+    subject_template: "%{inviter_name} zaprosił cię do '%{topic_title}' na %{site_domain_name}"
     text_body_template: |
-      %{invitee_name} zaprosił cię do dyskusji
+      %{inviter_name} zaprosił cię do dyskusji
 
       > **%{topic_title}**
       >
@@ -1626,9 +1626,9 @@ pl_PL:
       %{invite_link}
   custom_invite_mailer:
     title: "Niestandardowe zaproszenie mailera"
-    subject_template: "%{invitee_name} zaprosił cię do dyskusji '%{topic_title}' w serwisie %{site_domain_name}"
+    subject_template: "%{inviter_name} zaprosił cię do dyskusji '%{topic_title}' w serwisie %{site_domain_name}"
     text_body_template: |
-      %{invitee_name} zaprosił cię do dyskusji
+      %{inviter_name} zaprosił cię do dyskusji
 
       > **%{topic_title}**
       >
@@ -1647,9 +1647,9 @@ pl_PL:
       %{invite_link}
   invite_forum_mailer:
     title: "Zaproś forum mailera"
-    subject_template: "%{invitee_name} zaprosił cię do dołączenia do %{site_domain_name}"
+    subject_template: "%{inviter_name} zaprosił cię do dołączenia do %{site_domain_name}"
     text_body_template: |
-      %{invitee_name} zaprosił cię, byś dołączył do serwisu
+      %{inviter_name} zaprosił cię, byś dołączył do serwisu
 
       > **%{site_title}**
       >
@@ -1660,9 +1660,9 @@ pl_PL:
       %{invite_link}
   custom_invite_forum_mailer:
     title: "Niestandardowe zaproszenie forum mailera"
-    subject_template: "%{invitee_name} zaprosił cię, byś dołączył do serwisu %{site_domain_name}"
+    subject_template: "%{inviter_name} zaprosił cię, byś dołączył do serwisu %{site_domain_name}"
     text_body_template: |
-      %{invitee_name} zaprosił cię, byś dołączył do serwisu
+      %{inviter_name} zaprosił cię, byś dołączył do serwisu
 
       > **%{site_title}**
       >

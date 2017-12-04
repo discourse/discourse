@@ -1154,9 +1154,9 @@ sk:
   unsubscribe_mailer:
     subject_template: "Potvrďte, že už ďalej nechcete dostávať aktualizácie z  %{site_title}"
   invite_mailer:
-    subject_template: "%{invitee_name} Vás pozval '%{topic_title}' na %{site_domain_name}"
+    subject_template: "%{inviter_name} Vás pozval '%{topic_title}' na %{site_domain_name}"
   invite_forum_mailer:
-    subject_template: "%{invitee_name} Vás pozval na %{site_domain_name}"
+    subject_template: "%{inviter_name} Vás pozval na %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Nastavte heslo pre účet na  %{site_name}"
   flag_reasons:

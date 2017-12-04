@@ -927,11 +927,11 @@ sq:
       one: "1 sinjalizim në pritje për t'u trajtuar"
       other: "%{count} sinjalizime në pritje për t'u trajtuar"
   invite_mailer:
-    subject_template: "%{invitee_name} ju ftoi tek tema '%{topic_title}' tek %{site_domain_name}"
+    subject_template: "%{inviter_name} ju ftoi tek tema '%{topic_title}' tek %{site_domain_name}"
   invite_forum_mailer:
-    subject_template: "%{invitee_name} ju ka ftuar të bëheni pjesë e %{site_domain_name}"
+    subject_template: "%{inviter_name} ju ka ftuar të bëheni pjesë e %{site_domain_name}"
   custom_invite_forum_mailer:
-    subject_template: "%{invitee_name} ju ka ftuar të bëheni pjesë e %{site_domain_name}"
+    subject_template: "%{inviter_name} ju ka ftuar të bëheni pjesë e %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Vendos fjalëkalimin për llogarinë tek %{site_name}"
   admin_confirmation_mailer:

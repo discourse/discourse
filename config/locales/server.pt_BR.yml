@@ -1259,9 +1259,9 @@ pt_BR:
       one: "1 sinalização aguardando a ser controlada"
       other: "%{count} sinalizações aguardando a ser controladas"
   invite_mailer:
-    subject_template: "%{invitee_name} convidou você para '%{topic_title}' em %{site_domain_name}"
+    subject_template: "%{inviter_name} convidou você para '%{topic_title}' em %{site_domain_name}"
   invite_forum_mailer:
-    subject_template: "%{invitee_name} convidou você para participar de %{site_domain_name}"
+    subject_template: "%{inviter_name} convidou você para participar de %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Defina uma senha para a sua %{site_name}  conta"
   flag_reasons:

@@ -1574,9 +1574,9 @@ it:
       Se desideri continuare a ricevere aggiornamenti via email, puoi ignorare questa email.
   invite_mailer:
     title: "Mailer Invito"
-    subject_template: "%{invitee_name} ti ha invitato a '%{topic_title}' su %{site_domain_name}"
+    subject_template: "%{inviter_name} ti ha invitato a '%{topic_title}' su %{site_domain_name}"
     text_body_template: |
-      %{invitee_name} ti ha invitato alla discussione
+      %{inviter_name} ti ha invitato alla discussione
 
       > **%{topic_title}**
       >
@@ -1591,9 +1591,9 @@ it:
       %{invite_link}
   custom_invite_mailer:
     title: "Mailer Invito Personalizzato"
-    subject_template: "%{invitee_name} ti ha invitato a '%{topic_title}' su %{site_domain_name}"
+    subject_template: "%{inviter_name} ti ha invitato a '%{topic_title}' su %{site_domain_name}"
     text_body_template: |
-      %{invitee_name} ti ha invitato alla discussione
+      %{inviter_name} ti ha invitato alla discussione
 
       > **%{topic_title}**
       >
@@ -1612,9 +1612,9 @@ it:
       %{invite_link}
   invite_forum_mailer:
     title: "Mailer Invito Forum"
-    subject_template: "%{invitee_name} ti invita a partecipare su %{site_domain_name}"
+    subject_template: "%{inviter_name} ti invita a partecipare su %{site_domain_name}"
     text_body_template: |
-      %{invitee_name} ti ha invitato ad unirti a
+      %{inviter_name} ti ha invitato ad unirti a
 
       > **%{site_title}**
       >
@@ -1625,9 +1625,9 @@ it:
       %{invite_link}
   custom_invite_forum_mailer:
     title: "Mailer Invito Forum Personalizzato"
-    subject_template: "%{invitee_name} ti ha invitato ad unirti a %{site_domain_name}"
+    subject_template: "%{inviter_name} ti ha invitato ad unirti a %{site_domain_name}"
     text_body_template: |
-      %{invitee_name} ti ha invitato ad unirti a
+      %{inviter_name} ti ha invitato ad unirti a
 
       > **%{site_title}**
       >

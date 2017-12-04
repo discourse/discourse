@@ -1314,15 +1314,15 @@ sv:
     subject_template: "Bekräfta att du inte längre vill motta e-postuppdateringar från %{site_title}"
   invite_mailer:
     title: "Invitera mail skrivaren"
-    subject_template: "%{invitee_name} har bjudit in dig till '%{topic_title}' på %{site_domain_name}"
+    subject_template: "%{inviter_name} har bjudit in dig till '%{topic_title}' på %{site_domain_name}"
   custom_invite_mailer:
     title: "Kund inviterar mail skrivare"
-    subject_template: "%{invitee_name} har bjudit in dig till '%{topic_title}' på %{site_domain_name}"
+    subject_template: "%{inviter_name} har bjudit in dig till '%{topic_title}' på %{site_domain_name}"
   invite_forum_mailer:
     title: "Invitera forumets skrivare"
-    subject_template: "%{invitee_name} har bjudit in dig till %{site_domain_name}"
+    subject_template: "%{inviter_name} har bjudit in dig till %{site_domain_name}"
   custom_invite_forum_mailer:
-    subject_template: "%{invitee_name} har bjudit in dig till %{site_domain_name}"
+    subject_template: "%{inviter_name} har bjudit in dig till %{site_domain_name}"
   invite_password_instructions:
     title: "Invitera lösenords instruktioner"
     subject_template: "Ange lösenord för ditt konto på %{site_name}"

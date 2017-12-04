@@ -1134,13 +1134,13 @@ tr_TR:
   unsubscribe_mailer:
     subject_template: "%{site_title} üzerinden daha fazla e-posta güncellemesi almak istemediğinizi onaylayın"
   invite_mailer:
-    subject_template: "%{invitee_name}  sizi %{site_domain_name} sitesindeki '%{topic_title}' adlı konuya davet etti. "
+    subject_template: "%{inviter_name}  sizi %{site_domain_name} sitesindeki '%{topic_title}' adlı konuya davet etti. "
   custom_invite_mailer:
-    subject_template: "%{invitee_name} sizi %{site_domain_name} sitesindeki '%{topic_title}' adlı konuya davet etti "
+    subject_template: "%{inviter_name} sizi %{site_domain_name} sitesindeki '%{topic_title}' adlı konuya davet etti "
   invite_forum_mailer:
-    subject_template: "%{invitee_name} sizi %{site_domain_name} sitesine katılmanız için davet etti"
+    subject_template: "%{inviter_name} sizi %{site_domain_name} sitesine katılmanız için davet etti"
   custom_invite_forum_mailer:
-    subject_template: "%{invitee_name} sizi %{site_domain_name} sitesine katılmaya davet etti"
+    subject_template: "%{inviter_name} sizi %{site_domain_name} sitesine katılmaya davet etti"
   invite_password_instructions:
     subject_template: "%{site_name} hesabınız için parola oluşturun"
   new_version_mailer:
