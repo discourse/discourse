@@ -309,8 +309,6 @@ after_initialize do
   end
 
   validate(:post, :validate_polls) do |force = nil|
-    return if !SiteSetting.poll_enabled? && (self.user && !self.user.staff?)
-
     # only care when raw has changed!
     return unless self.raw_changed? || force
 
