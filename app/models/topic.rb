@@ -1267,7 +1267,14 @@ SQL
   end
 
   def featured_link_root_domain
-    MiniSuffix.domain(URI.parse(self.featured_link).hostname)
+    url = URI.extract(self.featured_link).first
+
+    begin
+      MiniSuffix.domain(URI.parse(url).hostname)
+    rescue URI::InvalidURIError => e
+      Rails.logger.warn("#{e.message}: #{e.backtrace.join("\n")}")
+      nil
+    end
   end
 
   private
