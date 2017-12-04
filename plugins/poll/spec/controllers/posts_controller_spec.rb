@@ -391,4 +391,22 @@ describe PostsController do
       expect(json["polls"]["poll"]).to be
     end
   end
+
+  describe "admin with insufficient trust level" do
+    before do
+      log_in_user(Fabricate(:user, admin: true, trust_level: 1))
+      SiteSetting.poll_minimum_trust_level_to_create = 2
+    end
+
+    it "validates the post" do
+      post :create, params: {
+        title: title, raw: "[poll]\n- A\n- B\n[/poll]"
+      }, format: :json
+
+      expect(response).to be_success
+      json = ::JSON.parse(response.body)
+      expect(json["cooked"]).to match("data-poll-")
+      expect(json["polls"]["poll"]).to be
+    end
+  end
 end
