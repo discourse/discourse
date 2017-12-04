@@ -626,7 +626,7 @@ export default Ember.Component.extend({
         const isTable = columns.reduce((a, b) => a && columns[0] === b && b > 1);
 
         if (isTable) {
-          const splitterRow = [...Array(columns[0])].map(c => "---").join("\t");
+          const splitterRow = [...Array(columns[0])].map(() => "---").join("\t");
           rows.splice(1, 0, splitterRow);
 
           return "|" + rows.map(r => r.split("\t").join("|")).join("|\n|") + "|\n";
