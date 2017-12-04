@@ -1456,15 +1456,15 @@ fa_IR:
       اگر می‌خواهید ایمیل بروزرسانی دریافت کنید، این ایمیل را نادیده بگیرید.
   invite_mailer:
     title: "دعوت نامه‌رسان"
-    subject_template: "%{invitee_name} شما را به %{topic_title}' در  %{site_domain_name}  دعوت کرده"
+    subject_template: "%{inviter_name} شما را به %{topic_title}' در  %{site_domain_name}  دعوت کرده"
   custom_invite_mailer:
     title: "دعوت سفارشی نامه‌رسان"
-    subject_template: "%{invitee_name} شما را به '%{topic_title}' در %{site_domain_name} دعوت کرده"
+    subject_template: "%{inviter_name} شما را به '%{topic_title}' در %{site_domain_name} دعوت کرده"
   invite_forum_mailer:
     title: "دعوت نامه‌رسان انجمن"
-    subject_template: "%{invitee_name} به عضویت در %{site_domain_name} دعوت شدید"
+    subject_template: "%{inviter_name} به عضویت در %{site_domain_name} دعوت شدید"
     text_body_template: |
-      %{invitee_name} شما را دعوت کرده که به سایت زیر بپیوندید
+      %{inviter_name} شما را دعوت کرده که به سایت زیر بپیوندید
 
       > **%{site_title}**
       >
@@ -1475,9 +1475,9 @@ fa_IR:
       %{invite_link}
   custom_invite_forum_mailer:
     title: "دعوت نامه‌رسان سفارشی انجمن"
-    subject_template: "%{invitee_name} از شما دعوت کرده که به %{site_domain_name} بپیوندید"
+    subject_template: "%{inviter_name} از شما دعوت کرده که به %{site_domain_name} بپیوندید"
     text_body_template: |
-      %{invitee_name} از شما دعوت کرده به سایت زیر بپیوندید
+      %{inviter_name} از شما دعوت کرده به سایت زیر بپیوندید
 
       > **%{site_title}**
       >

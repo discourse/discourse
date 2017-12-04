@@ -1542,9 +1542,9 @@ fr:
       Si vous souhaitez continuer à recevoir ces emails, vous pouvez ignorer ce message.
   invite_mailer:
     title: "Invitiation"
-    subject_template: "%{invitee_name} vous a invité(e) à participer à « %{topic_title} » sur %{site_domain_name}"
+    subject_template: "%{inviter_name} vous a invité(e) à participer à « %{topic_title} » sur %{site_domain_name}"
     text_body_template: |
-      %{invitee_name} vous a invité(e) à une discussion
+      %{inviter_name} vous a invité(e) à une discussion
 
       > **%{topic_title}**
       >
@@ -1559,9 +1559,9 @@ fr:
       %{invite_link}
   custom_invite_mailer:
     title: "Invitation personnalisée"
-    subject_template: "%{invitee_name} vous a invité(e) à participer à « %{topic_title} » sur %{site_domain_name}"
+    subject_template: "%{inviter_name} vous a invité(e) à participer à « %{topic_title} » sur %{site_domain_name}"
     text_body_template: |
-      %{invitee_name} vous a invité(e) à une discussion
+      %{inviter_name} vous a invité(e) à une discussion
 
       > **%{topic_title}**
       >
@@ -1580,9 +1580,9 @@ fr:
       %{invite_link}
   invite_forum_mailer:
     title: "Invitation sur le forum"
-    subject_template: "%{invitee_name} vous a invité(e) à rejoindre %{site_domain_name}"
+    subject_template: "%{inviter_name} vous a invité(e) à rejoindre %{site_domain_name}"
     text_body_template: |
-      %{invitee_name} vous invite à rejoindre :
+      %{inviter_name} vous invite à rejoindre :
 
       > **%{site_title}**
       >
@@ -1593,9 +1593,9 @@ fr:
       %{invite_link}
   custom_invite_forum_mailer:
     title: "Invitation personnalisée sur le forum"
-    subject_template: "%{invitee_name} vous a invité(e) à rejoindre %{site_domain_name}"
+    subject_template: "%{inviter_name} vous a invité(e) à rejoindre %{site_domain_name}"
     text_body_template: |
-      %{invitee_name} vous invite à rejoindre :
+      %{inviter_name} vous invite à rejoindre :
 
       > **%{site_title}**
       >

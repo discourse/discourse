@@ -1334,9 +1334,9 @@ ko:
   unsubscribe_mailer:
     title: "메일링 구독해지"
   invite_mailer:
-    subject_template: "%{invitee_name} 회원님이 %{site_domain_name} 에 '%{topic_title}'에 초대하였습니다."
+    subject_template: "%{inviter_name} 회원님이 %{site_domain_name} 에 '%{topic_title}'에 초대하였습니다."
   invite_forum_mailer:
-    subject_template: "%{site_domain_name}의 %{invitee_name}님께서 당신을 초대하였습니다."
+    subject_template: "%{site_domain_name}의 %{inviter_name}님께서 당신을 초대하였습니다."
   invite_password_instructions:
     subject_template: "%{site_name} 계정을 위해 비밀번호 설정"
   flag_reasons:

@@ -1512,9 +1512,9 @@ es:
       Si quieres continuar recibiendo actualizaciones por email, por favor ignora este correo.
   invite_mailer:
     title: "Invitar Usuario"
-    subject_template: "%{invitee_name} te invitó a '%{topic_title}' en %{site_domain_name}"
+    subject_template: "%{inviter_name} te invitó a '%{topic_title}' en %{site_domain_name}"
     text_body_template: |
-      %{invitee_name} te ha invitado a un debate
+      %{inviter_name} te ha invitado a un debate
 
       > **%{topic_title}**
       >
@@ -1528,12 +1528,12 @@ es:
       %{invite_link}
   custom_invite_mailer:
     title: "Personalizar Invitar Usuario"
-    subject_template: "%{invitee_name} te ha invitado a '%{topic_title}' en %{site_domain_name}"
+    subject_template: "%{inviter_name} te ha invitado a '%{topic_title}' en %{site_domain_name}"
   invite_forum_mailer:
     title: "Invitación suscripción del foro"
-    subject_template: "%{invitee_name} te invitó a unirte a %{site_domain_name}"
+    subject_template: "%{inviter_name} te invitó a unirte a %{site_domain_name}"
     text_body_template: |
-      %{invitee_name} te ha invitado a unirte a
+      %{inviter_name} te ha invitado a unirte a
 
       > **%{site_title}**
       >
@@ -1546,15 +1546,15 @@ es:
       Esta invitación viene de un usuario en el que confiamos, por lo que se te creará una cuenta automáticamente.
   custom_invite_forum_mailer:
     title: "Invitación suscripción del foro"
-    subject_template: "%{invitee_name} te ha invitado a %{site_domain_name}"
+    subject_template: "%{inviter_name} te ha invitado a %{site_domain_name}"
     text_body_template: |
-      %{invitee_name} te ha invitado a
+      %{inviter_name} te ha invitado a
 
       > **%{site_title}**
       >
       > %{site_description}
 
-      Mensaje de %{invitee_name}:
+      Mensaje de %{inviter_name}:
 
       %{user_custom_message}
 

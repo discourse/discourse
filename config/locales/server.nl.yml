@@ -1365,9 +1365,9 @@ nl:
       one: "Eén vlag af te handelen"
       other: "%{count} vlaggen af te handelen"
   invite_mailer:
-    subject_template: "%{invitee_name} nodigt je uit voor '%{topic_title}' op %{site_domain_name}"
+    subject_template: "%{inviter_name} nodigt je uit voor '%{topic_title}' op %{site_domain_name}"
   invite_forum_mailer:
-    subject_template: "%{invitee_name} heeft je uitgenodigd voor %{site_domain_name}"
+    subject_template: "%{inviter_name} heeft je uitgenodigd voor %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Geeft wachtwoord voor je %{site_name} account"
   flag_reasons:

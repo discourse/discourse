@@ -1080,9 +1080,9 @@ vi:
   unsubscribe_mailer:
     subject_template: "Xác nhận bạn không còn muốn nhận email cập nhật từ %{site_title}"
   invite_mailer:
-    subject_template: "%{invitee_name} mời bạn tham gia chủ đề '%{topic_title}' trên %{site_domain_name}"
+    subject_template: "%{inviter_name} mời bạn tham gia chủ đề '%{topic_title}' trên %{site_domain_name}"
   invite_forum_mailer:
-    subject_template: "%{invitee_name} đã mời bạn gia nhập %{site_domain_name}"
+    subject_template: "%{inviter_name} đã mời bạn gia nhập %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Đặt mật khẩu cho tài khoản của bạn ở %{site_name}"
   flag_reasons:

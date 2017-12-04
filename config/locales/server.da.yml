@@ -1134,13 +1134,13 @@ da:
       Hvis du ønsker at fortsætte med at modtage mailopdateringer, kan du bare ignorere denne mail.
 
   invite_mailer:
-    subject_template: "%{invitee_name} inviterede dig til '%{topic_title}' på %{site_domain_name}"
+    subject_template: "%{inviter_name} inviterede dig til '%{topic_title}' på %{site_domain_name}"
   custom_invite_mailer:
-    subject_template: "%{invitee_name} inviterede dig til '%{topic_title}' på %{site_domain_name}"
+    subject_template: "%{inviter_name} inviterede dig til '%{topic_title}' på %{site_domain_name}"
   invite_forum_mailer:
-    subject_template: "%{invitee_name} inviterede dig til at oprette dig på %{site_domain_name}"
+    subject_template: "%{inviter_name} inviterede dig til at oprette dig på %{site_domain_name}"
   custom_invite_forum_mailer:
-    subject_template: "%{invitee_name} inviterede dig til at oprette dig på %{site_domain_name}"
+    subject_template: "%{inviter_name} inviterede dig til at oprette dig på %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Opret password til din %{site_name}-konto"
     text_body_template: |

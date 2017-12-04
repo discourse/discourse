@@ -1517,15 +1517,15 @@ he:
       אם אתם מעוניינים להמשיך לקבל עדכוני מייל, אתם יכולים להתעלם ממייל זה.
   invite_mailer:
     title: "שולח-מיילים להזמנה"
-    subject_template: "הוזמנת על ידי %{invitee_name} ל '%{topic_title}' ב%{site_domain_name}"
+    subject_template: "הוזמנת על ידי %{inviter_name} ל '%{topic_title}' ב%{site_domain_name}"
   custom_invite_mailer:
     title: "שולח-מיילים מותאם-אישית להזמנה"
-    subject_template: "%{invitee_name} הזמין/הזמינה אותך לדיון  '%{topic_title}' באתר %{site_domain_name}"
+    subject_template: "%{inviter_name} הזמין/הזמינה אותך לדיון  '%{topic_title}' באתר %{site_domain_name}"
   invite_forum_mailer:
     title: "שולח-מיילים להזמנה לפורום"
-    subject_template: "%{invitee_name} הזמינ/ה אתכם להצטרף ל%{site_domain_name}"
+    subject_template: "%{inviter_name} הזמינ/ה אתכם להצטרף ל%{site_domain_name}"
     text_body_template: |
-      %{invitee_name} הזמין/ה אתכם להצטרף
+      %{inviter_name} הזמין/ה אתכם להצטרף
 
       > **%{site_title}**
       >
@@ -1536,9 +1536,9 @@ he:
       %{invite_link}
   custom_invite_forum_mailer:
     title: "דואר הזמנה לפורום מותאם אישית"
-    subject_template: "%{invitee_name} הזמין/ה אתכם להצטרף ל %{site_domain_name}"
+    subject_template: "%{inviter_name} הזמין/ה אתכם להצטרף ל %{site_domain_name}"
     text_body_template: |
-      %{invitee_name} הזמין/ה אתכם להצטרף
+      %{inviter_name} הזמין/ה אתכם להצטרף
 
       > **%{site_title}**
       >

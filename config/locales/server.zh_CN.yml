@@ -1508,9 +1508,9 @@ zh_CN:
       如果你想要继续收到邮件更新，你可以忽略这封邮件。
   invite_mailer:
     title: "要求发件人"
-    subject_template: "%{invitee_name} 邀请你参与 %{site_domain_name} 主题 '%{topic_title}' "
+    subject_template: "%{inviter_name} 邀请你参与 %{site_domain_name} 主题 '%{topic_title}' "
     text_body_template: |
-      %{invitee_name}邀请你参与讨论：
+      %{inviter_name}邀请你参与讨论：
 
       > **%{topic_title}**
       >
@@ -1525,9 +1525,9 @@ zh_CN:
       %{invite_link}
   custom_invite_mailer:
     title: "自定义邀请发件人"
-    subject_template: "%{invitee_name}邀请你'%{topic_title}'在%{site_domain_name}"
+    subject_template: "%{inviter_name}邀请你'%{topic_title}'在%{site_domain_name}"
     text_body_template: |
-      %{invitee_name}邀请你参与讨论：
+      %{inviter_name}邀请你参与讨论：
 
       > **%{topic_title}**
       >
@@ -1546,9 +1546,9 @@ zh_CN:
       %{invite_link}
   invite_forum_mailer:
     title: "邀请论坛发件人"
-    subject_template: "%{invitee_name} 邀请你加入 %{site_domain_name}"
+    subject_template: "%{inviter_name} 邀请你加入 %{site_domain_name}"
     text_body_template: |
-      %{invitee_name}邀请你加入
+      %{inviter_name}邀请你加入
 
       > **%{site_title}**
       >
@@ -1559,9 +1559,9 @@ zh_CN:
       %{invite_link}
   custom_invite_forum_mailer:
     title: "自定义论坛邀请发件人"
-    subject_template: "%{invitee_name}邀请你加入%{site_domain_name}"
+    subject_template: "%{inviter_name}邀请你加入%{site_domain_name}"
     text_body_template: |
-      %{invitee_name}邀请你加入
+      %{inviter_name}邀请你加入
 
       > **%{site_title}**
       >

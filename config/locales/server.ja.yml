@@ -929,9 +929,9 @@ ja:
     subject_template:
       other: "%{count}件の通報が対応待ちです"
   invite_mailer:
-    subject_template: "%{invitee_name} があなたを %{site_domain_name}の'%{topic_title}'に招待しました"
+    subject_template: "%{inviter_name} があなたを %{site_domain_name}の'%{topic_title}'に招待しました"
   invite_forum_mailer:
-    subject_template: "%{invitee_name} あなたを %{site_domain_name}に招待しました。"
+    subject_template: "%{inviter_name} あなたを %{site_domain_name}に招待しました。"
   invite_password_instructions:
     subject_template: "%{site_name} アカウントのパスワードを設定"
   flag_reasons:

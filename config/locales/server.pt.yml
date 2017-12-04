@@ -1373,13 +1373,13 @@ pt:
   unsubscribe_mailer:
     subject_template: "Confirme que não quer receber emails com actualizações de %{site_title}"
   invite_mailer:
-    subject_template: "%{invitee_name} convidou-o a juntar-se a '%{topic_title}' em %{site_domain_name}"
+    subject_template: "%{inviter_name} convidou-o a juntar-se a '%{topic_title}' em %{site_domain_name}"
   custom_invite_mailer:
-    subject_template: "%{invitee_name} convidou-o para '%{topic_title}' em %{site_domain_name}"
+    subject_template: "%{inviter_name} convidou-o para '%{topic_title}' em %{site_domain_name}"
   invite_forum_mailer:
-    subject_template: "%{invitee_name} convidou-o a juntar-se a %{site_domain_name}"
+    subject_template: "%{inviter_name} convidou-o a juntar-se a %{site_domain_name}"
   custom_invite_forum_mailer:
-    subject_template: "%{invitee_name} convidou-o para %{site_domain_name}"
+    subject_template: "%{inviter_name} convidou-o para %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Configurar a palavra-passe para a sua conta %{site_name}"
   download_backup_mailer:

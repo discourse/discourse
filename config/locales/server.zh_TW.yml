@@ -1375,9 +1375,9 @@ zh_TW:
       如果你想要繼續接收郵件更新，你可以直接忽略這封郵件。
   invite_mailer:
     title: "邀請郵件"
-    subject_template: "%{invitee_name} 在 %{site_domain_name} 邀請你參與「%{topic_title}」"
+    subject_template: "%{inviter_name} 在 %{site_domain_name} 邀請你參與「%{topic_title}」"
     text_body_template: |
-      %{invitee_name} 邀請你參與
+      %{inviter_name} 邀請你參與
 
       > %{site_title}－%{site_description}
 
@@ -1392,9 +1392,9 @@ zh_TW:
       %{invite_link}
   custom_invite_mailer:
     title: "客製邀請郵件"
-    subject_template: "%{invitee_name} 在 %{site_domain_name} 邀請你參與「%{topic_title}」"
+    subject_template: "%{inviter_name} 在 %{site_domain_name} 邀請你參與「%{topic_title}」"
     text_body_template: |
-      %{invitee_name} 留下以下留言
+      %{inviter_name} 留下以下留言
 
       > %{user_custom_message}
 
@@ -1413,9 +1413,9 @@ zh_TW:
       %{invite_link}
   invite_forum_mailer:
     title: "邀請論壇 Mailer"
-    subject_template: "%{invitee_name} 邀請你加入 %{site_domain_name}"
+    subject_template: "%{inviter_name} 邀請你加入 %{site_domain_name}"
     text_body_template: |
-      %{invitee_name} 邀請你加入
+      %{inviter_name} 邀請你加入
 
       > **%{site_title}**
       >
@@ -1426,9 +1426,9 @@ zh_TW:
       %{invite_link}
   custom_invite_forum_mailer:
     title: "客製討論區邀請郵件"
-    subject_template: "%{invitee_name} 邀請你加入 %{site_domain_name}"
+    subject_template: "%{inviter_name} 邀請你加入 %{site_domain_name}"
     text_body_template: |
-      %{invitee_name} 留下以下留言
+      %{inviter_name} 留下以下留言
 
       > %{user_custom_message}
 

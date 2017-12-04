@@ -1398,13 +1398,13 @@ ro:
   unsubscribe_mailer:
     subject_template: "Confirmă că nu mai vrei să primești actualizări pe email de la %{site_title}"
   invite_mailer:
-    subject_template: "%{invitee_name} te-a invitat la subiectul '%{topic_title}' pe %{site_domain_name}"
+    subject_template: "%{inviter_name} te-a invitat la subiectul '%{topic_title}' pe %{site_domain_name}"
   custom_invite_mailer:
-    subject_template: "%{invitee_name} te-a invitat la subiectul '%{topic_title}' pe  %{site_domain_name}"
+    subject_template: "%{inviter_name} te-a invitat la subiectul '%{topic_title}' pe  %{site_domain_name}"
   invite_forum_mailer:
-    subject_template: "%{invitee_name} te-a invitat să te alături pe %{site_domain_name}"
+    subject_template: "%{inviter_name} te-a invitat să te alături pe %{site_domain_name}"
   custom_invite_forum_mailer:
-    subject_template: "%{invitee_name} te-a invitat să te alături pe %{site_domain_name}"
+    subject_template: "%{inviter_name} te-a invitat să te alături pe %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Setează parolă pentru contul tău %{site_name}"
   test_mailer:

@@ -1544,9 +1544,9 @@ fi:
       Jos haluat jatkossakin saada sähköposti-ilmoituksia, voit jättää tämän viestin huomiotta.
   invite_mailer:
     title: "Kutsu keskusteluun"
-    subject_template: "%{invitee_name} kutsui sinut ketjuun '%{topic_title}' sivustolla %{site_domain_name}"
+    subject_template: "%{inviter_name} kutsui sinut ketjuun '%{topic_title}' sivustolla %{site_domain_name}"
     text_body_template: |
-      %{invitee_name} kutsui sinut keskusteluun
+      %{inviter_name} kutsui sinut keskusteluun
 
       > **%{topic_title}**
       >
@@ -1561,9 +1561,9 @@ fi:
       %{invite_link}
   custom_invite_mailer:
     title: "Kutsu keskusteluun saatesanoilla"
-    subject_template: "%{invitee_name} kutsui sinut ketjuun '%{topic_title}' sivustolla %{site_domain_name}"
+    subject_template: "%{inviter_name} kutsui sinut ketjuun '%{topic_title}' sivustolla %{site_domain_name}"
     text_body_template: |
-      %{invitee_name} kutsui sinut keskusteluun
+      %{inviter_name} kutsui sinut keskusteluun
 
       > **%{topic_title}**
       >
@@ -1582,9 +1582,9 @@ fi:
       %{invite_link}
   invite_forum_mailer:
     title: "Kutsu palstalle"
-    subject_template: "%{invitee_name} kutsui sinut sivustolle %{site_domain_name}"
+    subject_template: "%{inviter_name} kutsui sinut sivustolle %{site_domain_name}"
     text_body_template: |
-      %{invitee_name} kutsui sinut liittymään sivustolle
+      %{inviter_name} kutsui sinut liittymään sivustolle
 
       > **%{site_title}**
       >
@@ -1595,9 +1595,9 @@ fi:
       %{invite_link}
   custom_invite_forum_mailer:
     title: "Kutsu palstalle saatesanoilla"
-    subject_template: "%{invitee_name} kutsui sinut sivustolle %{site_domain_name}"
+    subject_template: "%{inviter_name} kutsui sinut sivustolle %{site_domain_name}"
     text_body_template: |
-      %{invitee_name} kutsui sinut liittymään sivustolle
+      %{inviter_name} kutsui sinut liittymään sivustolle
 
       > **%{site_title}**
       >
