@@ -11,6 +11,3 @@ plugins:
     default: 1
     client: true
     enum: 'TrustLevelSetting'
-  poll_allow_staff_to_create:
-    default: true
-    client: true

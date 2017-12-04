@@ -20,7 +20,6 @@ en:
     poll_maximum_options: "Maximum number of options allowed in a poll."
     poll_edit_window_mins: "Number of minutes after post creation during which polls can be edited."
     poll_minimum_trust_level_to_create: "Define the minimum trust level needed to create polls."
-    poll_allow_staff_to_create: "Allow staff to create polls, regardless of their trust level."
 
   poll:
     multiple_polls_without_name: "There are multiple polls without a name. Use the '<code>name</code>' attribute to uniquely identify your polls."

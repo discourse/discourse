@@ -6,13 +6,12 @@ acceptance("Poll Builder - polls are enabled", {
   loggedIn: true,
   settings: {
     poll_enabled: true,
-    poll_allow_staff_to_create: false,
     poll_minimum_trust_level_to_create: 1
   }
 });
 
-test("sufficient trust level", (assert) => {
-  replaceCurrentUser({ admin: false, trust_level: 1 });
+test("regular user - sufficient trust level", (assert) => {
+  replaceCurrentUser({ staff: false, trust_level: 1 });
 
   displayPollBuilderButton();
 
@@ -21,8 +20,8 @@ test("sufficient trust level", (assert) => {
   });
 });
 
-test("insufficient trust level", (assert) => {
-  replaceCurrentUser({ admin: false, trust_level: 0 });
+test("regular user - insufficient trust level", (assert) => {
+  replaceCurrentUser({ staff: false, trust_level: 0 });
 
   displayPollBuilderButton();
 
@@ -31,19 +30,8 @@ test("insufficient trust level", (assert) => {
   });
 });
 
-test("staff with insufficient trust level", (assert) => {
-  replaceCurrentUser({ admin: false, staff: true, trust_level: 0 });
-
-  displayPollBuilderButton();
-
-  andThen(() => {
-    assert.ok(!exists("button[title='Build Poll']"), "it hides the builder button");
-  });
-});
-
-
-test("admin with insufficient trust level", (assert) => {
-  replaceCurrentUser({ admin: true, trust_level: 0 });
+test("staff - with insufficient trust level", (assert) => {
+  replaceCurrentUser({ staff: true, trust_level: 0 });
 
   displayPollBuilderButton();
 
