@@ -4,15 +4,12 @@ import showModal from 'discourse/lib/show-modal';
 
 function initializePollUIBuilder(api) {
   api.modifyClass('controller:composer', {
-    @computed('siteSettings.poll_enabled',
-              'siteSettings.poll_minimum_trust_level_to_create',
-              'siteSettings.poll_allow_staff_to_create')
-    canBuildPoll(pollEnabled, minimumTrustLevel, allowStaff) {
+    @computed('siteSettings.poll_enabled', 'siteSettings.poll_minimum_trust_level_to_create')
+    canBuildPoll(pollEnabled, minimumTrustLevel) {
       return pollEnabled &&
              this.currentUser &&
              (
-               this.currentUser.admin ||
-               (this.currentUser.staff && allowStaff) ||
+               this.currentUser.staff ||
                this.currentUser.trust_level >= minimumTrustLevel
              );
     },
