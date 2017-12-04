@@ -158,7 +158,7 @@ GEM
     logstash-event (1.2.02)
     logstash-logger (0.25.1)
       logstash-event (~> 1.2)
-    logster (1.2.10)
+    logster (1.2.9)
     loofah (2.1.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -445,7 +445,7 @@ DEPENDENCIES
   lograge
   logstash-event
   logstash-logger
-  logster
+  logster (= 1.2.9)
   lru_redux
   mail
   memory_profiler
