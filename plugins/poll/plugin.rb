@@ -14,12 +14,12 @@ PLUGIN_NAME ||= "discourse_poll".freeze
 DATA_PREFIX ||= "data-poll-".freeze
 
 after_initialize do
-
   module ::DiscoursePoll
     DEFAULT_POLL_NAME ||= "poll".freeze
     POLLS_CUSTOM_FIELD ||= "polls".freeze
     VOTES_CUSTOM_FIELD ||= "polls-votes".freeze
 
+    autoload :PostValidator, "#{Rails.root}/plugins/poll/lib/post_validator"
     autoload :PollsValidator, "#{Rails.root}/plugins/poll/lib/polls_validator"
     autoload :PollsUpdater, "#{Rails.root}/plugins/poll/lib/polls_updater"
 
@@ -313,6 +313,9 @@ after_initialize do
 
     # only care when raw has changed!
     return unless self.raw_changed? || force
+
+    validator = DiscoursePoll::PostValidator.new(self)
+    return unless validator.validate_post
 
     validator = DiscoursePoll::PollsValidator.new(self)
     return unless (polls = validator.validate_polls)
