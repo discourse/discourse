@@ -49,7 +49,7 @@ describe RateLimiter do
         begin
           limiter.performed!
         rescue RateLimiter::LimitExceeded => e
-          expect(e.available_in.class).to eq(Integer)
+          expect(Integer === e.available_in).to eq(true)
           expect(e.available_in).to be > 28
           expect(e.available_in).to be < 32
           thrown = true
