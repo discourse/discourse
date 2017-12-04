@@ -7,7 +7,7 @@ class RateLimiter
   attr_reader :max, :secs, :user, :key
 
   def self.key_prefix
-    "l-rate-limit:"
+    "l-rate-limit2:"
   end
 
   def self.disable
@@ -76,7 +76,7 @@ class RateLimiter
 
   def performed!
     return if rate_unlimited?
-    now = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    now = Process.clock_gettime(Process::CLOCK_MONOTONIC).to_i
     if eval_lua(PERFORM_LUA, PERFORM_LUA_SHA, [prefixed_key], [now, @secs, @max]) == 0
       raise RateLimiter::LimitExceeded.new(seconds_to_wait, @type)
     end
@@ -97,7 +97,7 @@ class RateLimiter
     return @max if @user && @user.staff?
 
     arr = redis.lrange(prefixed_key, 0, @max) || []
-    t0 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    t0 = Process.clock_gettime(Process::CLOCK_MONOTONIC).to_i
     arr.reject! { |a| (t0 - a.to_i) > @secs }
     @max - arr.size
   end
@@ -122,7 +122,7 @@ class RateLimiter
 
   def age_of_oldest
     # age of oldest event in buffer, in seconds
-    Process.clock_gettime(Process::CLOCK_MONOTONIC) - redis.lrange(prefixed_key, -1, -1).first.to_i
+    Process.clock_gettime(Process::CLOCK_MONOTONIC).to_i - redis.lrange(prefixed_key, -1, -1).first.to_i
   end
 
   def is_under_limit?

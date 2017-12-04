@@ -39,12 +39,22 @@ describe RateLimiter do
     context 'global rate limiter' do
 
       it 'can operate in global mode' do
-        limiter = RateLimiter.new(nil, "test", 2, 10, global: true)
+        limiter = RateLimiter.new(nil, "test", 2, 30, global: true)
         limiter.clear!
+
+        thrown = false
 
         limiter.performed!
         limiter.performed!
-        expect { limiter.performed! }.to raise_error(RateLimiter::LimitExceeded)
+        begin
+          limiter.performed!
+        rescue RateLimiter::LimitExceeded => e
+          expect(e.available_in.class).to eq(Integer)
+          expect(e.available_in).to be > 28
+          expect(e.available_in).to be < 32
+          thrown = true
+        end
+        expect(thrown).to be(true)
       end
 
     end
