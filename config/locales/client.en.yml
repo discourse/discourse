@@ -2646,6 +2646,7 @@ en:
         active_posts: "Flagged Posts"
         old_posts: "Old Flagged Posts"
         topics: "Flagged Topics"
+        moderation_history: "Moderation History"
 
         agree: "Agree"
         agree_title: "Confirm this flag as valid and correct"
@@ -3111,6 +3112,16 @@ en:
             type_placeholder: "digest, signup..."
             reply_key_placeholder: "reply key"
             skipped_reason_placeholder: "reason"
+
+      moderation_history:
+        performed_by: "Performed By"
+        no_results: "There is no moderation history available."
+        actions:
+          delete_user: "User Deleted"
+          suspend_user: "User Suspended"
+          silence_user: "User Silenced"
+          delete_post: "Post Deleted"
+          delete_topic: "Topic Deleted"
 
       logs:
         title: "Logs"
