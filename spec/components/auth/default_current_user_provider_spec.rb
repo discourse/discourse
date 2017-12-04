@@ -172,38 +172,47 @@ describe Auth::DefaultCurrentUserProvider do
 
   end
 
-  it "can only try 10 bad cookies a minute" do
-    user = Fabricate(:user)
-    token = UserAuthToken.generate!(user_id: user.id)
+  context "rate limiting" do
 
-    provider('/').log_on_user(user, {}, {})
-
-    RateLimiter.stubs(:disabled?).returns(false)
-
-    RateLimiter.new(nil, "cookie_auth_10.0.0.1", 10, 60).clear!
-    RateLimiter.new(nil, "cookie_auth_10.0.0.2", 10, 60).clear!
-
-    ip = "10.0.0.1"
-    env = { "HTTP_COOKIE" => "_t=#{SecureRandom.hex}", "REMOTE_ADDR" => ip }
-
-    10.times do
-      provider('/', env).current_user
+    before do
+      RateLimiter.enable
     end
 
-    expect {
-      provider('/', env).current_user
-    }.to raise_error(Discourse::InvalidAccess)
+    after do
+      RateLimiter.disable
+    end
 
-    expect {
-      env["HTTP_COOKIE"] = "_t=#{token.unhashed_auth_token}"
-      provider("/", env).current_user
-    }.to raise_error(Discourse::InvalidAccess)
+    it "can only try 10 bad cookies a minute" do
+      user = Fabricate(:user)
+      token = UserAuthToken.generate!(user_id: user.id)
 
-    env["REMOTE_ADDR"] = "10.0.0.2"
+      provider('/').log_on_user(user, {}, {})
 
-    expect {
-      provider('/', env).current_user
-    }.not_to raise_error
+      RateLimiter.new(nil, "cookie_auth_10.0.0.1", 10, 60).clear!
+      RateLimiter.new(nil, "cookie_auth_10.0.0.2", 10, 60).clear!
+
+      ip = "10.0.0.1"
+      env = { "HTTP_COOKIE" => "_t=#{SecureRandom.hex}", "REMOTE_ADDR" => ip }
+
+      10.times do
+        provider('/', env).current_user
+      end
+
+      expect {
+        provider('/', env).current_user
+      }.to raise_error(Discourse::InvalidAccess)
+
+      expect {
+        env["HTTP_COOKIE"] = "_t=#{token.unhashed_auth_token}"
+        provider("/", env).current_user
+      }.to raise_error(Discourse::InvalidAccess)
+
+      env["REMOTE_ADDR"] = "10.0.0.2"
+
+      expect {
+        provider('/', env).current_user
+      }.not_to raise_error
+    end
   end
 
   it "correctly removes invalid cookies" do
@@ -295,44 +304,53 @@ describe Auth::DefaultCurrentUserProvider do
 
     end
 
-    it "rate limits api usage" do
+    context "rate limiting" do
 
-      RateLimiter.stubs(:disabled?).returns(false)
-      limiter1 = RateLimiter.new(nil, "user_api_day_#{api_key.key}", 10, 60)
-      limiter2 = RateLimiter.new(nil, "user_api_min_#{api_key.key}", 10, 60)
-      limiter1.clear!
-      limiter2.clear!
-
-      SiteSetting.max_user_api_reqs_per_day = 3
-      SiteSetting.max_user_api_reqs_per_minute = 4
-
-      params = {
-        "REQUEST_METHOD" => "GET",
-        "HTTP_USER_API_KEY" => api_key.key,
-      }
-
-      3.times do
-        provider("/", params).current_user
+      before do
+        RateLimiter.enable
       end
 
-      expect {
-        provider("/", params).current_user
-      }.to raise_error(RateLimiter::LimitExceeded)
-
-      SiteSetting.max_user_api_reqs_per_day = 4
-      SiteSetting.max_user_api_reqs_per_minute = 3
-
-      limiter1.clear!
-      limiter2.clear!
-
-      3.times do
-        provider("/", params).current_user
+      after do
+        RateLimiter.disable
       end
 
-      expect {
-        provider("/", params).current_user
-      }.to raise_error(RateLimiter::LimitExceeded)
+      it "rate limits api usage" do
+        limiter1 = RateLimiter.new(nil, "user_api_day_#{api_key.key}", 10, 60)
+        limiter2 = RateLimiter.new(nil, "user_api_min_#{api_key.key}", 10, 60)
+        limiter1.clear!
+        limiter2.clear!
 
+        SiteSetting.max_user_api_reqs_per_day = 3
+        SiteSetting.max_user_api_reqs_per_minute = 4
+
+        params = {
+          "REQUEST_METHOD" => "GET",
+          "HTTP_USER_API_KEY" => api_key.key,
+        }
+
+        3.times do
+          provider("/", params).current_user
+        end
+
+        expect {
+          provider("/", params).current_user
+        }.to raise_error(RateLimiter::LimitExceeded)
+
+        SiteSetting.max_user_api_reqs_per_day = 4
+        SiteSetting.max_user_api_reqs_per_minute = 3
+
+        limiter1.clear!
+        limiter2.clear!
+
+        3.times do
+          provider("/", params).current_user
+        end
+
+        expect {
+          provider("/", params).current_user
+        }.to raise_error(RateLimiter::LimitExceeded)
+
+      end
     end
   end
 end

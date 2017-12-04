@@ -756,7 +756,7 @@ describe SessionController do
     context 'rate limited' do
       it 'rate limits login' do
         SiteSetting.max_logins_per_ip_per_hour = 2
-        RateLimiter.stubs(:disabled?).returns(false)
+        RateLimiter.enable
         RateLimiter.clear_all!
 
         2.times do
