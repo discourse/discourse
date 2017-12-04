@@ -1,8 +1,8 @@
 // DO NOT MODIFY
 // TODO: remove when all select2 instances are gone
 .select2-results .select2-highlighted {
-    background: $highlight-medium;
-    color: $primary;
+  background: $highlight-medium;
+  color: $primary;
 }
 
 .select2-drop {
@@ -36,9 +36,8 @@
 }
 
 .select2-container {
-  border: 1px solid $primary-low;
   min-width: 200px;
-
+  
   &.select2-dropdown-open {
     border: 0;
     margin-bottom: 2px;

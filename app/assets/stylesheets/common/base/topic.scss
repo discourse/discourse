@@ -73,7 +73,45 @@
   }
 
   a.edit-topic i { font-size: 0.8em; }
+
+  .edit-topic-title {
+    display: flex;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+    max-width: 758px;
+    #edit-title {
+      flex: 1 1 auto;
+    }
+    .private-message-glyph {
+      margin: 5px 5px 0 0;
+    }
+    .category-chooser, .tag-chooser {
+      flex: 1 1 49%;
+      margin: 0 0 9px 0;
+      @media all and (max-width: 500px) {
+        flex: 1 1 100%;        
+      }
+        
+    }
+    .tag-chooser {
+      margin-left: 2%;
+      @media all and (max-width: 500px) {
+        margin-left: 0;
+      }
+    }
+  }
 }
+
+.private_message {
+  #topic-title {
+    .edit-topic-title {
+      #edit-title {
+        width: calc(100% - 50px);
+      }
+    }
+  }
+}
+
 
 .topic-title-outlet {
   clear: both;
