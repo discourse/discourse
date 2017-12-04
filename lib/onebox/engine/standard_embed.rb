@@ -22,6 +22,7 @@ module Onebox
 
       # Some oembed providers (like meetup.com) don't provide links to themselves
       add_oembed_provider(/www\.meetup\.com\//, 'http://api.meetup.com/oembed')
+      add_oembed_provider(/www\.mixcloud\.com\//, 'https://www.mixcloud.com/oembed/')
       # In order to support Private Videos
       add_oembed_provider(/vimeo\.com\//, 'https://vimeo.com/api/oembed.json')
       # NYT requires login so use oembed only
