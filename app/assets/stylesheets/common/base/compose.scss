@@ -188,6 +188,7 @@
     flex: 1 1 25%;
     margin: 0 0 5px 10px;
     border: 1px solid $primary-medium;
+    background: $secondary;
     @media all and (max-width: 900px) {
       margin: 0;
       flex: 1 1 100%;

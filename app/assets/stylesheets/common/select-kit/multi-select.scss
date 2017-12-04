@@ -21,7 +21,7 @@
 
     .multi-select-header {
       background: $secondary;
-      border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+      border: 1px solid $primary-medium;
 
       &.is-focused {
         box-shadow: $tertiary 0px 0px 6px 0px;
