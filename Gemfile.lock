@@ -445,7 +445,7 @@ DEPENDENCIES
   lograge
   logstash-event
   logstash-logger
-  logster (= 1.2.9)
+  logster
   lru_redux
   mail
   memory_profiler
