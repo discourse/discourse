@@ -6,9 +6,7 @@ module DiscoursePoll
 
     def validate_post
       min_trust_level = SiteSetting.poll_minimum_trust_level_to_create
-      staff_allowed = SiteSetting.poll_allow_staff_to_create
-      trusted = @post&.user&.admin ||
-                (@post&.user&.staff? && staff_allowed) ||
+      trusted = @post&.user&.staff? ||
                 @post&.user&.trust_level >= TrustLevel[min_trust_level]
 
       if !trusted
