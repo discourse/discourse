@@ -396,10 +396,10 @@ export default Ember.Component.extend({
     });
 
     $element.on('fileuploadpaste', (e) => {
-      let {types} = clipboardData(e);
+      const clipboard = clipboardData(e);
       this._pasted = true;
 
-      if (types.some(t => t === "text/plain")) {
+      if (clipboard.types.some(t => t === "text/plain")) {
         e.preventDefault();
       }
     });
