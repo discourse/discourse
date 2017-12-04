@@ -41,7 +41,7 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 .hljs-name,
 .coffeescript .hljs-params,
 .scss .hljs-meta {
-  color: #900;
+  color: dark-light-choose(#d14, #f99);
   font-weight: bold;
 }
 
