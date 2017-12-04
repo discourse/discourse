@@ -616,10 +616,43 @@ export default Ember.Component.extend({
     Ember.run.scheduleOnce("afterRender", () => $textarea.focus());
   },
 
-  paste(e) {
-    let {types} = clipboardData(e);
+  _detectTable(text) {
+    if (text.endsWith("\n")) {
+      text = text.substring(0, text.length - 1);
+      let rows = text.split("\r").join("").split("\n");
 
-    if (types.some(t => t === "Files") && !types.some(t => t === "text/plain")) {
+      if (rows.length > 1) {
+        const columns = rows.map(r => r.split("\t").length);
+        const isTable = columns.reduce((a, b) => a && columns[0] === b && b > 1);
+
+        if (isTable) {
+          const splitterRow = [...Array(columns[0])].map(c => "---").join("\t");
+          rows.splice(1, 0, splitterRow);
+
+          return "|" + rows.map(r => r.split("\t").join("|")).join("|\n|") + "|\n";
+        }
+      }
+    }
+    return null;
+  },
+
+  paste(e) {
+    const clipboard = clipboardData(e);
+    const types = clipboard.types;
+    let preventDefault = false;
+
+    if (types.some(t => t === "text/plain")) {
+      const text = clipboard.getData("text/plain");
+      const table = this._detectTable(text);
+      if (table) {
+        this._addText(this._getSelected(), table);
+        preventDefault = true;
+      }
+    } else if (types.some(t => t === "Files")) {
+      preventDefault = true;
+    }
+
+    if (preventDefault) {
       e.preventDefault();
     }
   },
