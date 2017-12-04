@@ -106,7 +106,8 @@ RSpec.configure do |config|
     #   perf benefit seems low (shaves 20 secs off a 4 minute test suite)
     #
     # $redis = DiscourseMockRedis.new
-    #
+
+    RateLimiter.disable
     PostActionNotifier.disable
     SearchIndexer.disable
     UserActionCreator.disable
@@ -202,6 +203,7 @@ def freeze_time(now = Time.now)
   Time.stubs(:now).returns(time)
   Date.stubs(:today).returns(datetime.to_date)
   TrackTimeStub.stubs(:stubbed).returns(true)
+  Process.stubs(:clock_gettime).with(Process::CLOCK_MONOTONIC).returns(datetime.to_f)
 
   if block_given?
     begin
@@ -217,6 +219,7 @@ def unfreeze_time
   Time.unstub(:now)
   Date.unstub(:today)
   TrackTimeStub.unstub(:stubbed)
+  Process.unstub(:clock_gettime)
 end
 
 def file_from_fixtures(filename, directory = "images")
