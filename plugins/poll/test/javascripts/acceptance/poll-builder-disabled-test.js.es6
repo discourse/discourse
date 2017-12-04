@@ -1,8 +1,8 @@
 import { acceptance } from "helpers/qunit-helpers";
 import { displayPollBuilderButton } from "discourse/plugins/poll/helpers/display-poll-builder-button";
-import { setCurrentUserWithTrustLevel } from "discourse/plugins/poll/helpers/set-current-user-with-trust-level";
+import { replaceCurrentUser } from "discourse/plugins/poll/helpers/replace-current-user";
 
-acceptance("Poll Builder - disabled", {
+acceptance("Poll Builder - polls are disabled", {
   loggedIn: true,
   settings: {
     poll_enabled: false,
@@ -11,7 +11,7 @@ acceptance("Poll Builder - disabled", {
 });
 
 test("sufficient trust level", (assert) => {
-  setCurrentUserWithTrustLevel(3);
+  replaceCurrentUser({ admin: false, trust_level: 3 });
 
   displayPollBuilderButton();
 
@@ -21,7 +21,17 @@ test("sufficient trust level", (assert) => {
 });
 
 test("insufficient trust level", (assert) => {
-  setCurrentUserWithTrustLevel(1);
+  replaceCurrentUser({ admin: false, trust_level: 1 });
+
+  displayPollBuilderButton();
+
+  andThen(() => {
+    assert.ok(!exists("button[title='Build Poll']"), "it hides the builder button");
+  });
+});
+
+test("admin", (assert) => {
+  replaceCurrentUser({ admin: true });
 
   displayPollBuilderButton();
 

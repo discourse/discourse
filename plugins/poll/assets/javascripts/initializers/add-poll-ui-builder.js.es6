@@ -8,7 +8,10 @@ function initializePollUIBuilder(api) {
     canBuildPoll(pollEnabled, minimumTrustLevelToCreate) {
       return pollEnabled &&
              this.currentUser &&
-             this.currentUser.trust_level >= minimumTrustLevelToCreate;
+             (
+               this.currentUser.admin ||
+               this.currentUser.trust_level >= minimumTrustLevelToCreate
+             );
     },
 
     actions: {

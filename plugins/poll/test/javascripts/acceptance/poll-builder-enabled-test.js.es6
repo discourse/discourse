@@ -1,8 +1,8 @@
 import { acceptance } from "helpers/qunit-helpers";
 import { displayPollBuilderButton } from "discourse/plugins/poll/helpers/display-poll-builder-button";
-import { setCurrentUserWithTrustLevel } from "discourse/plugins/poll/helpers/set-current-user-with-trust-level";
+import { replaceCurrentUser } from "discourse/plugins/poll/helpers/replace-current-user";
 
-acceptance("Poll Builder - enabled", {
+acceptance("Poll Builder - polls are enabled", {
   loggedIn: true,
   settings: {
     poll_enabled: true,
@@ -11,21 +11,31 @@ acceptance("Poll Builder - enabled", {
 });
 
 test("sufficient trust level", (assert) => {
-  setCurrentUserWithTrustLevel(1);
+  replaceCurrentUser({ admin: false, trust_level: 1 });
 
   displayPollBuilderButton();
 
   andThen(() => {
-    assert.ok(exists("button[title='Build Poll']"), "it show the builder button");
+    assert.ok(exists("button[title='Build Poll']"), "it shows the builder button");
   });
 });
 
 test("insufficient trust level", (assert) => {
-  setCurrentUserWithTrustLevel(0);
+  replaceCurrentUser({ admin: false, trust_level: 0 });
 
   displayPollBuilderButton();
 
   andThen(() => {
     assert.ok(!exists("button[title='Build Poll']"), "it hides the builder button");
+  });
+});
+
+test("admin with insufficient trust level", (assert) => {
+  replaceCurrentUser({ admin: true, trust_level: 0 });
+
+  displayPollBuilderButton();
+
+  andThen(() => {
+    assert.ok(exists("button[title='Build Poll']"), "it shows the builder button");
   });
 });
