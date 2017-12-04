@@ -27,6 +27,7 @@ describe ActiveRecord::ConnectionHandling do
   let(:postgresql_fallback_handler) { PostgreSQLFallbackHandler.instance }
 
   before do
+    skip("Figure out why this test leaks connections")
     postgresql_fallback_handler.initialized = true
 
     ['default', multisite_db].each do |db|
@@ -41,8 +42,6 @@ describe ActiveRecord::ConnectionHandling do
 
   describe "#postgresql_fallback_connection" do
     it 'should return a PostgreSQL adapter' do
-      skip("Figure out why this test leaks connections")
-
       begin
         connection = ActiveRecord::Base.postgresql_fallback_connection(config)
 
@@ -55,7 +54,7 @@ describe ActiveRecord::ConnectionHandling do
 
     context 'when master server is down' do
       before do
-        skip("Figure out why this test leaks connections")
+
         @replica_connection = mock('replica_connection')
       end
 
@@ -154,7 +153,7 @@ describe ActiveRecord::ConnectionHandling do
   describe '.verify_replica' do
     describe 'when database is not in recovery' do
       it 'should raise the right error' do
-        skip("Figure out why this test leaks connections")
+
 
         expect do
           ActiveRecord::Base.send(:verify_replica, ActiveRecord::Base.connection)
