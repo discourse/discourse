@@ -172,6 +172,10 @@
 
   .add-warning {
     margin-left: 1em;
+    display: flex;
+    input {
+      margin-right: 5px;
+    }
   }
 
   #reply-title {

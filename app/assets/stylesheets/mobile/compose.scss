@@ -133,7 +133,9 @@
     .user-selector {
       flex-direction: column;
       margin: 0;
-      min-height: 75px;
+      .users-input {
+        margin-bottom: 5px;
+      }
     }
 
     .title-input,
@@ -144,7 +146,7 @@
     }
 
     .add-warning {
-      margin: 5px 0 5px 5px;
+      margin: 0 0 5px 5px;
     }
   }
 
