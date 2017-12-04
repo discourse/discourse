@@ -13,9 +13,9 @@ class InviteMailer < ActionMailer::Base
     first_topic = invite.topics.order(:created_at).first
 
     # get invitee name (based on site setting)
-    invitee_name = invite.invited_by.username
+    inviter_name = invite.invited_by.username
     if SiteSetting.enable_names && invite.invited_by.name.present?
-      invitee_name = "#{invite.invited_by.name} (#{invite.invited_by.username})"
+      inviter_name = "#{invite.invited_by.name} (#{invite.invited_by.username})"
     end
 
     # If they were invited to a topic
@@ -39,7 +39,7 @@ class InviteMailer < ActionMailer::Base
 
       build_email(invite.email,
                   template: template,
-                  invitee_name: invitee_name,
+                  inviter_name: inviter_name,
                   site_domain_name: Discourse.current_hostname,
                   invite_link: "#{Discourse.base_url}/invites/#{invite.invite_key}",
                   topic_title: topic_title,
@@ -55,7 +55,7 @@ class InviteMailer < ActionMailer::Base
 
       build_email(invite.email,
                   template: template,
-                  invitee_name: invitee_name,
+                  inviter_name: inviter_name,
                   site_domain_name: Discourse.current_hostname,
                   invite_link: "#{Discourse.base_url}/invites/#{invite.invite_key}",
                   site_description: SiteSetting.site_description,
