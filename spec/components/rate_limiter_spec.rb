@@ -8,9 +8,12 @@ describe RateLimiter do
 
   context 'disabled' do
     before do
-      RateLimiter.stubs(:disabled?).returns(true)
       rate_limiter.performed!
       rate_limiter.performed!
+    end
+
+    it "should be disabled" do
+      expect(RateLimiter.disabled?).to eq(true)
     end
 
     it "returns true for can_perform?" do
@@ -25,8 +28,39 @@ describe RateLimiter do
 
   context 'enabled' do
     before do
-      RateLimiter.stubs(:disabled?).returns(false)
+      RateLimiter.enable
       rate_limiter.clear!
+    end
+
+    after do
+      RateLimiter.disable
+    end
+
+    context 'global rate limiter' do
+
+      it 'can operate in global mode' do
+        limiter = RateLimiter.new(nil, "test", 2, 10, global: true)
+        limiter.clear!
+
+        limiter.performed!
+        limiter.performed!
+        expect { limiter.performed! }.to raise_error(RateLimiter::LimitExceeded)
+      end
+
+    end
+
+    context 'handles readonly' do
+      before do
+        $redis.without_namespace.slaveof '10.0.0.1', '99999'
+      end
+
+      after do
+        $redis.without_namespace.slaveof 'no', 'one'
+      end
+
+      it 'does not explode' do
+        expect { rate_limiter.performed! }.not_to raise_error
+      end
     end
 
     context 'never done' do

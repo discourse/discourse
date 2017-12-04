@@ -579,7 +579,7 @@ describe Topic do
 
     it "rate limits topic invitations" do
       SiteSetting.max_topic_invitations_per_day = 2
-      RateLimiter.stubs(:disabled?).returns(false)
+      RateLimiter.enable
       RateLimiter.clear_all!
 
       start = Time.now.tomorrow.beginning_of_day
@@ -1694,7 +1694,7 @@ describe Topic do
       SiteSetting.max_replies_in_first_day = 1
       SiteSetting.stubs(:client_settings_json).returns(SiteSetting.client_settings_json_uncached)
       RateLimiter.stubs(:rate_limit_create_topic).returns(100)
-      RateLimiter.stubs(:disabled?).returns(false)
+      RateLimiter.enable
       RateLimiter.clear_all!
     end
 
