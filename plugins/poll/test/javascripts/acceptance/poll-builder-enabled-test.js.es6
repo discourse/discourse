@@ -6,6 +6,7 @@ acceptance("Poll Builder - polls are enabled", {
   loggedIn: true,
   settings: {
     poll_enabled: true,
+    poll_allow_staff_to_create: false,
     poll_minimum_trust_level_to_create: 1
   }
 });
@@ -29,6 +30,17 @@ test("insufficient trust level", (assert) => {
     assert.ok(!exists("button[title='Build Poll']"), "it hides the builder button");
   });
 });
+
+test("staff with insufficient trust level", (assert) => {
+  replaceCurrentUser({ admin: false, staff: true, trust_level: 0 });
+
+  displayPollBuilderButton();
+
+  andThen(() => {
+    assert.ok(!exists("button[title='Build Poll']"), "it hides the builder button");
+  });
+});
+
 
 test("admin with insufficient trust level", (assert) => {
   replaceCurrentUser({ admin: true, trust_level: 0 });
