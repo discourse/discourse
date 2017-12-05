@@ -88,7 +88,16 @@ export default Ember.Component.extend({
       transformComplete: v => v.username || v.name
     });
 
-    this._initInputPreviewSync($input, $preview);
+    if (this._enableAdvancedEditorPreviewSync()) {
+      this._initInputPreviewSync($input, $preview);
+    } else {
+      $input.on('scroll', () => Ember.run.throttle(this,
+        this._syncEditorAndPreviewScroll,
+        $input,
+        $preview,
+        20
+      ));
+    }
 
     // Focus on the body unless we have a title
     if (!this.get('composer.canEditTitle') && !this.capabilities.isIOS) {
@@ -126,6 +135,10 @@ export default Ember.Component.extend({
     if (reason) {
       return InputValidation.create({ failed: true, reason, lastShownAt: lastValidatedAt });
     }
+  },
+
+  _enableAdvancedEditorPreviewSync() {
+    return this.siteSettings.enable_advanced_editor_preview_sync;
   },
 
   _resetShouldBuildScrollMap() {
@@ -254,21 +267,44 @@ export default Ember.Component.extend({
   },
 
   _syncEditorAndPreviewScroll($input, $preview, scrollMap) {
-    let scrollTop;
-    const inputHeight = $input.height();
-    const inputScrollHeight = $input[0].scrollHeight;
-    const inputClientHeight = $input[0].clientHeight;
-    const scrollable = inputScrollHeight > inputClientHeight;
+    if (this._enableAdvancedEditorPreviewSync()) {
+      let scrollTop;
+      const inputHeight = $input.height();
+      const inputScrollHeight = $input[0].scrollHeight;
+      const inputClientHeight = $input[0].clientHeight;
+      const scrollable = inputScrollHeight > inputClientHeight;
 
-    if (scrollable && ((inputHeight + $input.scrollTop() + 100) > inputScrollHeight)) {
-      scrollTop = $preview[0].scrollHeight;
+      if (scrollable && ((inputHeight + $input.scrollTop() + 100) > inputScrollHeight)) {
+        scrollTop = $preview[0].scrollHeight;
+      } else {
+        const lineHeight = parseFloat($input.css('line-height'));
+        const lineNumber = Math.floor($input.scrollTop() / lineHeight);
+        scrollTop = scrollMap[lineNumber];
+      }
+
+      $preview.stop(true).animate({ scrollTop }, 100, 'linear');
     } else {
-      const lineHeight = parseFloat($input.css('line-height'));
-      const lineNumber = Math.floor($input.scrollTop() / lineHeight);
-      scrollTop = scrollMap[lineNumber];
-    }
+      if (!$input) { return; }
 
-    $preview.stop(true).animate({ scrollTop }, 100, 'linear');
+      if ($input.scrollTop() === 0) {
+        $preview.scrollTop(0);
+        return;
+      }
+
+      const inputHeight = $input[0].scrollHeight;
+      const previewHeight = $preview[0].scrollHeight;
+
+      if (($input.height() + $input.scrollTop() + 100) > inputHeight) {
+        // cheat, special case for bottom
+        $preview.scrollTop(previewHeight);
+        return;
+      }
+
+      const scrollPosition = $input.scrollTop();
+      const factor = previewHeight / inputHeight;
+      const desired = scrollPosition * factor;
+      $preview.scrollTop(desired + 50);
+    }
   },
 
   _syncPreviewAndEditorScroll($input, $preview, scrollMap) {
@@ -609,7 +645,7 @@ export default Ember.Component.extend({
       Ember.run.later(() => this.appEvents.trigger("composer:closed"), 400);
     });
 
-    this._teardownInputPreviewSync();
+    if (this._enableAdvancedEditorPreviewSync()) this._teardownInputPreviewSync();
 
     if (this.site.mobileView) {
       $(window).off('resize.composer-popup-menu');
@@ -732,7 +768,14 @@ export default Ember.Component.extend({
         Ember.run.debounce(this, this._loadInlineOneboxes, inline, 450);
       }
 
-      this._syncScroll(this._syncEditorAndPreviewScroll, this.$('.d-editor-input'), $preview);
+      if (this._enableAdvancedEditorPreviewSync()) {
+        this._syncScroll(
+          this._syncEditorAndPreviewScroll,
+          this.$('.d-editor-input'),
+          $preview
+        );
+      }
+
       this.trigger('previewRefreshed', $preview);
       this.sendAction('afterRefresh', $preview);
     },

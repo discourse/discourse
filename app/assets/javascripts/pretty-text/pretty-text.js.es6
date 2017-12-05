@@ -71,6 +71,7 @@ export function buildOptions(state) {
     allowedHrefSchemes: siteSettings.allowed_href_schemes ? siteSettings.allowed_href_schemes.split('|') : null,
     allowedIframes: siteSettings.allowed_iframes ? siteSettings.allowed_iframes.split('|') : [],
     markdownIt: true,
+    injectLineNumbersToPreview: siteSettings.enable_advanced_editor_preview_sync,
     previewing
   };
 
