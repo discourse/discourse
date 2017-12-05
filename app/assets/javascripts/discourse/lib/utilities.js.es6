@@ -424,8 +424,7 @@ export function isAppleDevice() {
 export function clipboardData(e) {
   return  e.clipboardData ||
             e.originalEvent.clipboardData ||
-            e.delegatedEvent.originalEvent.clipboardData ||
-            event.clipboardData;
+            e.delegatedEvent.originalEvent.clipboardData;
 }
 
 // This prevents a mini racer crash
