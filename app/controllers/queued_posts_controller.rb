@@ -24,14 +24,20 @@ class QueuedPostsController < ApplicationController
 
     update_params = params[:queued_post]
 
-    qp.raw = update_params[:raw] if update_params[:raw].present?
-    unless qp.topic_id
-      qp.post_options['title'] = update_params[:title] if update_params[:title].present?
-      qp.post_options['category'] = update_params[:category_id].to_i if update_params[:category_id].present?
-      qp.post_options['tags'] = update_params[:tags] if update_params[:tags].present?
-    end
+    changes =
+      if qp.topic_id
+        update_params.slice(:raw, :edit_reason)
+      else
+        update_params.slice(:raw, :edit_reason, :title, :category_id, :tags)
+      end
 
-    qp.save(validate: false)
+    if changes.present?
+      changes[:category_id] = changes[:category_id].to_i if changes[:category_id].present?
+      changes[:editor_id] = current_user.id
+
+      qp.post_options['changes'] = changes
+      qp.save(validate: false)
+    end
 
     state = params[:queued_post][:state]
     begin

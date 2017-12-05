@@ -32,7 +32,7 @@ describe NewPostManager do
       queued_post = QueuedPost.last
       queued_post.approve!(admin)
 
-      expect(Post.last.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD])
+      expect(user.posts.last.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD])
         .to_not eq(nil)
     end
   end
