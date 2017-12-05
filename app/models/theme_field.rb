@@ -160,8 +160,8 @@ end
 #  name             :string(30)       not null
 #  value            :text             not null
 #  value_baked      :text
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
+#  created_at       :datetime
+#  updated_at       :datetime
 #  compiler_version :integer          default(0), not null
 #  error            :string
 #  upload_id        :integer
