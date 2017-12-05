@@ -640,7 +640,7 @@ export default Ember.Component.extend({
   },
 
   paste(e) {
-    const clipboard = clipboardData(e);
+    const { clipboard, types } = clipboardData(e);
     const placeholder = `${ I18n.t('pasting') }`;
     let plainText = clipboard.getData("text/plain");
     const html = clipboard.getData("text/html");
@@ -675,7 +675,7 @@ export default Ember.Component.extend({
       });
     }
 
-    const uploadFiles = clipboard.types.includes("Files") && !plainText && !html;
+    const uploadFiles = types.includes("Files") && !plainText && !html;
 
     if (handled || uploadFiles) {
       e.preventDefault();
