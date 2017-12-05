@@ -5,6 +5,7 @@
   xmlns:atom="http://www.w3.org/2005/Atom"
   xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
   xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+  xmlns:discourse="http://discourse.org/rss/modules/discourse/"
   >
 <channel>
   <title>Discourse</title>
@@ -21,6 +22,7 @@
     <link>https://blog.discourse.org/2017/09/poll-feed-spec-fixture/</link>
     <pubDate>Thu, 14 Sep 2017 15:22:33 +0000</pubDate>
     <dc:creator><![CDATA[xrav3nz]]></dc:creator>
+    <discourse:username><![CDATA[xrav3nz]]></discourse:username>
     <category><![CDATA[spec]]></category>
     <guid isPermaLink="false">https://blog.discourse.org/?p=pollfeedspec</guid>
     <description><![CDATA[Here are some random descriptions... [&#8230;]]]></description>

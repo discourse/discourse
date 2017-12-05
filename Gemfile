@@ -166,7 +166,6 @@ gem 'gc_tracer', require: false, platform: :mri
 
 # required for feed importing and embedding
 gem 'ruby-readability', require: false
-gem 'simple-rss', require: false
 
 gem 'stackprof', require: false, platform: :mri
 gem 'memory_profiler', require: false, platform: :mri
