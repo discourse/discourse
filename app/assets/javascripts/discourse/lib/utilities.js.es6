@@ -428,7 +428,7 @@ export function clipboardData(e) {
 
   let types = clipboard.types;
 
-  if (typeof types !== "array") {
+  if (!Array.isArray(types)) {
     types = Array.from(types);
   }
 
