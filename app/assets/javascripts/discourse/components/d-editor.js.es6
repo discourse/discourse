@@ -9,6 +9,8 @@ import { emojiUrlFor } from 'discourse/lib/text';
 import { getRegister } from 'discourse-common/lib/get-owner';
 import { findRawTemplate } from 'discourse/lib/raw-templates';
 import { determinePostReplaceSelection, clipboardData } from 'discourse/lib/utilities';
+import { ajax } from 'discourse/lib/ajax';
+import { popupAjaxError } from 'discourse/lib/ajax-error';
 import deprecated from 'discourse-common/lib/deprecated';
 
 // Our head can be a static string or a function that returns a string
@@ -616,7 +618,7 @@ export default Ember.Component.extend({
     Ember.run.scheduleOnce("afterRender", () => $textarea.focus());
   },
 
-  _detectTable(text) {
+  _extractTable(text) {
     if (text.endsWith("\n")) {
       text = text.substring(0, text.length - 1);
     }
@@ -639,21 +641,43 @@ export default Ember.Component.extend({
 
   paste(e) {
     const clipboard = clipboardData(e);
-    const types = clipboard.types;
-    let preventDefault = false;
+    const placeholder = `${ I18n.t('pasting') }`;
+    let plainText = clipboard.getData("text/plain");
+    const html = clipboard.getData("text/html");
+    let handled = false;
 
-    if (types.some(t => t === "text/plain")) {
-      const text = clipboard.getData("text/plain");
-      const table = this._detectTable(text);
+    if (plainText) {
+      plainText = plainText.trim();
+      const table = this._extractTable(plainText);
       if (table) {
         this._addText(this._getSelected(), table);
-        preventDefault = true;
+        handled = true;
       }
-    } else if (types.some(t => t === "Files")) {
-      preventDefault = true;
     }
 
-    if (preventDefault) {
+    if (html && !handled) {
+      const self = this;
+
+      this.appEvents.trigger('composer:insert-text', placeholder);
+      handled = true;
+
+      ajax('/composer/parse_html', {
+        type: 'POST',
+        data: { html }
+      }).then(response => {
+        self.appEvents.trigger('composer:replace-text', placeholder, response.markdown);
+      }).catch(error => {
+        if (plainText) {
+          self.appEvents.trigger('composer:replace-text', placeholder, plainText);
+        } else {
+          popupAjaxError(error);
+        }
+      });
+    }
+
+    const uploadFiles = clipboard.types.includes("Files") && !plainText && !html;
+
+    if (handled || uploadFiles) {
       e.preventDefault();
     }
   },
