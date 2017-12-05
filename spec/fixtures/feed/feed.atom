@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed
+  xmlns="http://www.w3.org/2005/Atom"
+  xmlns:thr="http://purl.org/syndication/thread/1.0"
+  xmlns:discourse="http://discourse.org/rss/modules/discourse/"
+  xml:lang="en-US"
+  xml:base="https://blog.discourse.org/wp-atom.php"
+   >
+  <title type="text">Discourse</title>
+  <subtitle type="text">Official blog for the open source Discourse project</subtitle>
+  <updated>2017-10-23T23:45:37Z</updated>
+  <link rel="alternate" type="text/html" href="https://blog.discourse.org" />
+  <id>https://blog.discourse.org/feed/atom/</id>
+  <link rel="self" type="application/atom+xml" href="https://blog.discourse.org/feed/atom/" />
+  <generator uri="https://wordpress.org/" version="4.8.2">WordPress</generator>
+  <entry>
+    <discourse:username><![CDATA[xrav3nz]]></discourse:username>
+    <author>
+      <name>xrav3nz</name>
+    </author>
+    <title type="html"><![CDATA[Poll Feed Spec Fixture]]></title>
+    <link rel="alternate" type="text/html" href="https://blog.discourse.org/2017/09/poll-feed-spec-fixture/" />
+    <id>https://blog.discourse.org/?p=pollfeedspec</id>
+    <updated>2017-09-14T15:22:33Z</updated>
+    <published>2017-09-14T15:22:33Z</published>
+    <category scheme="https://blog.discourse.org" term="design" />
+    <summary type="html"><![CDATA[Here are some random descriptions... [&#8230;]]]></summary>
+    <content type="html" xml:base="https://blog.discourse.org/2017/09/poll-feed-spec-fixture/"><![CDATA[<p>This is the body &amp; content. </p>]]></content>
+  </entry>
+</feed>
