@@ -8,6 +8,13 @@ if (Rails.env.production? && SiteSetting.logging_provider == 'lograge') || ENV["
   Rails.application.configure do
     config.lograge.enabled = true
 
+    config.lograge.custom_payload do |controller|
+      {
+        ip: controller.request.remote_ip,
+        current_username: controller.current_user&.username,
+      }
+    end
+
     config.lograge.custom_options = lambda do |event|
       exceptions = %w(controller action format id)
 
