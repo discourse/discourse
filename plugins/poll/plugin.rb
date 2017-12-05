@@ -312,11 +312,13 @@ after_initialize do
     # only care when raw has changed!
     return unless self.raw_changed? || force
 
-    validator = DiscoursePoll::PostValidator.new(self)
-    return unless validator.validate_post
-
     validator = DiscoursePoll::PollsValidator.new(self)
     return unless (polls = validator.validate_polls)
+
+    if !polls.empty?
+      validator = DiscoursePoll::PostValidator.new(self)
+      return unless validator.validate_post
+    end
 
     # are we updating a post?
     if self.id.present?
