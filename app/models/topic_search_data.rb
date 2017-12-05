@@ -8,7 +8,7 @@ end
 #
 #  topic_id    :integer          not null, primary key
 #  raw_data    :text
-#  locale      :string           not null
+#  locale      :string(255)      not null
 #  search_data :tsvector
 #  version     :integer          default(0)
 #

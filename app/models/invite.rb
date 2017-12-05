@@ -258,7 +258,7 @@ end
 #
 #  id             :integer          not null, primary key
 #  invite_key     :string(32)       not null
-#  email          :string
+#  email          :string(255)
 #  invited_by_id  :integer          not null
 #  user_id        :integer
 #  redeemed_at    :datetime

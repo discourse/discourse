@@ -96,11 +96,12 @@ end
 #
 # Table name: search_logs
 #
-#  id               :integer          not null, primary key
-#  term             :string           not null
-#  user_id          :integer
-#  ip_address       :inet             not null
-#  clicked_topic_id :integer
-#  search_type      :integer          not null
-#  created_at       :datetime         not null
+#  id                 :integer          not null, primary key
+#  term               :string           not null
+#  user_id            :integer
+#  ip_address         :inet             not null
+#  search_result_id   :integer
+#  search_type        :integer          not null
+#  created_at         :datetime         not null
+#  search_result_type :integer
 #

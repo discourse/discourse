@@ -157,8 +157,8 @@ end
 #  based_on_last_post :boolean          default(FALSE), not null
 #  deleted_at         :datetime
 #  deleted_by_id      :integer
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
+#  created_at         :datetime
+#  updated_at         :datetime
 #  category_id        :integer
 #  public_type        :boolean          default(TRUE)
 #

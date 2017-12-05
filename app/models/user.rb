@@ -1145,7 +1145,7 @@ end
 #  username                  :string(60)       not null
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
-#  name                      :string
+#  name                      :string(255)
 #  seen_notification_id      :integer          default(0), not null
 #  last_posted_at            :datetime
 #  password_hash             :string(64)
@@ -1167,15 +1167,13 @@ end
 #  flag_level                :integer          default(0), not null
 #  ip_address                :inet
 #  moderator                 :boolean          default(FALSE)
-#  title                     :string
+#  title                     :string(255)
 #  uploaded_avatar_id        :integer
-#  locale                    :string(10)
 #  primary_group_id          :integer
+#  locale                    :string(10)
 #  registration_ip_address   :inet
-#  trust_level_locked        :boolean          default(FALSE), not null
 #  staged                    :boolean          default(FALSE), not null
 #  first_seen_at             :datetime
-#  blizzard_avatar           :string
 #  silenced_till             :datetime
 #  group_locked_trust_level  :integer
 #  manual_locked_trust_level :integer
