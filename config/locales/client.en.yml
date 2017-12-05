@@ -309,6 +309,8 @@ en:
     uploading_filename: "Uploading {{filename}}..."
     uploaded: "Uploaded!"
 
+    pasting: "Pasting..."
+
     enable: "Enable"
     disable: "Disable"
     undo: "Undo"
