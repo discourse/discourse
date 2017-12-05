@@ -619,18 +619,19 @@ export default Ember.Component.extend({
   _detectTable(text) {
     if (text.endsWith("\n")) {
       text = text.substring(0, text.length - 1);
-      let rows = text.split("\r").join("").split("\n");
+    }
 
-      if (rows.length > 1) {
-        const columns = rows.map(r => r.split("\t").length);
-        const isTable = columns.reduce((a, b) => a && columns[0] === b && b > 1);
+    let rows = text.split("\r").join("").split("\n");
 
-        if (isTable) {
-          const splitterRow = [...Array(columns[0])].map(() => "---").join("\t");
-          rows.splice(1, 0, splitterRow);
+    if (rows.length > 1) {
+      const columns = rows.map(r => r.split("\t").length);
+      const isTable = columns.reduce((a, b) => a && columns[0] === b && b > 1);
 
-          return "|" + rows.map(r => r.split("\t").join("|")).join("|\n|") + "|\n";
-        }
+      if (isTable) {
+        const splitterRow = [...Array(columns[0])].map(() => "---").join("\t");
+        rows.splice(1, 0, splitterRow);
+
+        return "|" + rows.map(r => r.split("\t").join("|")).join("|\n|") + "|\n";
       }
     }
     return null;
