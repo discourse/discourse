@@ -422,9 +422,17 @@ export function isAppleDevice() {
 }
 
 export function clipboardData(e) {
-  return  e.clipboardData ||
-            e.originalEvent.clipboardData ||
-            e.delegatedEvent.originalEvent.clipboardData;
+  const clipboard = e.clipboardData ||
+                      e.originalEvent.clipboardData ||
+                      e.delegatedEvent.originalEvent.clipboardData;
+
+  let types = clipboard.types;
+
+  if (typeof types !== "array") {
+    types = Array.from(types);
+  }
+
+  return { clipboard: clipboard, types: types };
 }
 
 // This prevents a mini racer crash
