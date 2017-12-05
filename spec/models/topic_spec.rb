@@ -1236,21 +1236,9 @@ describe Topic do
       expect(topic.topic_timers.first.execute_at).to eq(3.days.from_now)
     end
 
-    it 'can take a number of hours as an integer, with timezone offset' do
-      freeze_time now
-      topic.set_or_create_timer(TopicTimer.types[:close], 72, by_user: admin, timezone_offset: 240)
-      expect(topic.topic_timers.first.execute_at).to eq(3.days.from_now)
-    end
-
     it 'can take a number of hours as a string' do
       freeze_time now
       topic.set_or_create_timer(TopicTimer.types[:close], '18', by_user: admin)
-      expect(topic.topic_timers.first.execute_at).to eq(18.hours.from_now)
-    end
-
-    it 'can take a number of hours as a string, with timezone offset' do
-      freeze_time now
-      topic.set_or_create_timer(TopicTimer.types[:close], '18', by_user: admin, timezone_offset: 240)
       expect(topic.topic_timers.first.execute_at).to eq(18.hours.from_now)
     end
 
@@ -1264,12 +1252,6 @@ describe Topic do
       freeze_time now
       topic.set_or_create_timer(TopicTimer.types[:close], '2013-11-22 5:00', by_user: admin)
       expect(topic.topic_timers.first.execute_at).to eq(Time.zone.local(2013, 11, 22, 5, 0))
-    end
-
-    it "can take a timestamp for a future time, with timezone offset" do
-      freeze_time now
-      topic.set_or_create_timer(TopicTimer.types[:close], '2013-11-22 5:00', by_user: admin, timezone_offset: 240)
-      expect(topic.topic_timers.first.execute_at).to eq(Time.zone.local(2013, 11, 22, 9, 0))
     end
 
     it "sets a validation error when given a timestamp in the past" do
