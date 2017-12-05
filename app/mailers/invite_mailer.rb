@@ -15,7 +15,7 @@ class InviteMailer < ActionMailer::Base
     # get invitee name (based on site setting)
     inviter_name = invite.invited_by.username
     if SiteSetting.enable_names && invite.invited_by.name.present?
-      inviter_name = "#{invite.invited_by.name} (#{invite.invited_by.username})"
+      inviter_name = invite.invited_by.name
     end
 
     # If they were invited to a topic
