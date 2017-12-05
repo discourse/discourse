@@ -232,7 +232,7 @@ GEM
     omniauth-twitter (1.3.0)
       omniauth-oauth (~> 1.1)
       rack
-    onebox (1.8.28)
+    onebox (1.8.29)
       fast_blank (>= 1.0.0)
       htmlentities (~> 4.3)
       moneta (~> 1.0)
@@ -470,7 +470,7 @@ DEPENDENCIES
   omniauth-oauth2
   omniauth-openid
   omniauth-twitter
-  onebox (= 1.8.28)
+  onebox (= 1.8.29)
   openid-redis-store
   pg
   pry-nav
