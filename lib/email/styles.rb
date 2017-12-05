@@ -113,6 +113,7 @@ module Email
 
       # Oneboxes
       style('aside.onebox', "border: 5px solid #e9e9e9; padding: 12px 25px 12px 12px;")
+      style('aside.onebox header img.site-icon', "width: 16px; height: 16px; margin-right: 3px;")
       style('aside.onebox header a[href]', "color: #222222; text-decoration: none;")
       style('aside.onebox .onebox-body', "clear: both")
       style('aside.onebox .onebox-body img', "max-height: 80%; max-width: 20%; height: auto; float: left; margin-right: 10px;")
