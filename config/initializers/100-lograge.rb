@@ -11,7 +11,7 @@ if (Rails.env.production? && SiteSetting.logging_provider == 'lograge') || ENV["
     config.lograge.custom_payload do |controller|
       {
         ip: controller.request.remote_ip,
-        current_username: controller.current_user&.username,
+        username: controller.current_user&.username,
       }
     end
 
