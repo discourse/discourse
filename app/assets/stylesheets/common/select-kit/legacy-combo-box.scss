@@ -54,6 +54,10 @@
   background: $secondary image-url("select2-spinner.gif") no-repeat 100% !important;
 }
 
+.select2-container-multi .select2-choices {
+  border: 1px solid $primary-medium;  
+}
+
 .select2-container a.select2-choice {
   background: $secondary;
   border-radius: 3px;
