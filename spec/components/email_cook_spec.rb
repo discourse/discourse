@@ -146,7 +146,9 @@ describe EmailCook do
 
       <details class='elided'>
       <summary title='Show trimmed content'>&#183;&#183;&#183;</summary>
+
       At vero eos *et accusam* et justo duo dolores et ea rebum.<br>
+
       </details>
     LONG_COOKED
 
@@ -169,7 +171,9 @@ describe EmailCook do
 
       <details class='elided'>
       <summary title='Show trimmed content'>&#183;&#183;&#183;</summary>
+
       At vero eos *et accusam* et justo duo dolores et ea rebum.<br>
+
       </details>
     LONG_COOKED
 
