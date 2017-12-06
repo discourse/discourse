@@ -104,30 +104,19 @@ module ImportScripts::Mbox
         id: row['msg_id'],
         user_id: user_id,
         created_at: to_time(row['email_date']),
-        raw: format_raw(row['body'], attachment_html, row['elided'], row['format']),
+        raw: format_raw(row['body'], attachment_html, row['elided']),
         raw_email: row['raw_message'],
         via_email: true,
-        cook_method: Post.cook_methods[:email],
         post_create_action: proc do |post|
           create_incoming_email(post, row)
         end
       }
     end
 
-    def format_raw(email_body, attachment_html, elided, format)
-      email_body ||= ''
-
-      case format
-      when Email::Receiver::formats[:markdown]
-        body = email_body
-        body << attachment_html if attachment_html.present?
-        body << Email::Receiver.elided_html(elided) if elided.present?
-      when Email::Receiver::formats[:plaintext]
-        body =  %|[plaintext]\n#{escape_tags(email_body)}\n[/plaintext]|
-        body << %|\n[attachments]\n#{escape_tags(attachment_html)}\n[/attachments]| if attachment_html.present?
-        body << %|\n[elided]\n#{escape_tags(elided)}\n[/elided]| if elided.present?
-      end
-
+    def format_raw(email_body, attachment_html, elided)
+      body = email_body || ''
+      body << attachment_html if attachment_html.present?
+      body << Email::Receiver.elided_html(elided) if elided.present?
       body
     end
 
