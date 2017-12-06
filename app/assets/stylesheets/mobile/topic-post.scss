@@ -133,7 +133,6 @@ a.reply-to-tab {
   z-index: 400;
   right: 80px;
   color: dark-light-choose($primary-medium, $secondary-medium);
-  span { display: none; }
 }
 
 a.star {
@@ -360,10 +359,6 @@ span.post-count {
   line-height: $base-line-height + 2; /* bump up line height to match increased font */
 }
 
-.moderator .topic-body {
-  background-color: dark-light-choose($highlight-low, $highlight-medium);
-}
-
 .quote-button.visible {
   display: block;
   z-index: 936;
@@ -488,9 +483,6 @@ span.highlighted {
   .names {
     margin: 5px 0 0 5px;
     line-height: 17px;
-    span.full-name, span.user-title, span.username {
-      display: block;
-    }
 
     .poster-icon {
       float: right;

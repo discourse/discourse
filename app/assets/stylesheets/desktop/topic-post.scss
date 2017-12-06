@@ -572,11 +572,6 @@ video {
   position: relative;
 }
 
-.moderator {
-  .topic-body {
-    background-color: dark-light-choose($highlight-low, $highlight-medium);
-  }
-}
 
 .deleted {
   .topic-body {
@@ -967,22 +962,6 @@ and (max-width : 870px) {
     &.top {
       width: calc(100% - 56px); // [100% - margin-left]
     }
-  }
-
-}
-
-
-
-/* below standard tablet portrait ----------- */
-
-@media all
-and (max-width : 767px) {
-
-  .reply-to-tab {
-    span {display: none;}
-  }
-  .names {
-    span {display: block;}
   }
 
 }
