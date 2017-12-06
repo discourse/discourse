@@ -226,6 +226,8 @@
                 {{signup-cta}}
               {{else}}
                 {{#if currentUser}}
+                  {{plugin-outlet name="topic-above-footer-buttons" args=(hash model=model)}}
+
                   {{topic-footer-buttons
                     topic=model
                     toggleMultiSelect=(action "toggleMultiSelect")

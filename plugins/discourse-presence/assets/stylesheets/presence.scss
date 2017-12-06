@@ -1,13 +1,9 @@
-.presence-users{
+.presence-users {
   background-color: $secondary;
   color: $primary-medium;
   padding: 0px 5px;
-  position: absolute;
-  top: 18px;
-  right: 35px;
 
   .wave {
-
     .dot {
       display: inline-block;
       animation: wave 1.8s linear infinite;
@@ -33,10 +29,18 @@
   }
 }
 
-.mobile-view .presence-users{
-  top: 3px;
-  right: 54px;
-  .description{
-    display:none;
+.composer-fields .presence-users {
+  position: absolute;
+  top: 18px;
+  right: 35px;
+}
+
+.mobile-view {
+  .composer-fields .presence-users {
+    top: 3px;
+    right: 54px;
+    .description {
+      display:none;
+    }
   }
 }
