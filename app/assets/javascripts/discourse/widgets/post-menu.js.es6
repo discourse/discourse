@@ -43,6 +43,7 @@ export function buildButton(name, widget) {
 
 registerButton('like', attrs => {
   if (!attrs.showLike) { return; }
+
   const className = attrs.liked ? 'toggle-like has-like fade-out' : 'toggle-like like';
 
   const button = {
@@ -51,13 +52,13 @@ registerButton('like', attrs => {
     className
   };
 
-
   if (attrs.canToggleLike) {
     button.title = attrs.liked ? 'post.controls.undo_like' : 'post.controls.like';
   } else if (attrs.liked) {
     button.title = 'post.controls.has_liked';
     button.disabled = true;
   }
+
   return button;
 });
 
@@ -256,12 +257,18 @@ export default createWidget('post-menu', {
   },
 
   html(attrs, state) {
-    const { siteSettings } = this;
+    const { currentUser, keyValueStore, siteSettings } = this;
 
-    const hiddenSetting = (siteSettings.post_menu_hidden_items || '');
-    const hiddenButtons = hiddenSetting.split('|').filter(s => {
-      return !attrs.bookmarked || s !== 'bookmark';
-    });
+    const hiddenSetting = siteSettings.post_menu_hidden_items || '';
+    const hiddenButtons = hiddenSetting.split('|').filter(s => !attrs.bookmarked || s !== 'bookmark');
+
+    if (currentUser) {
+      const likedPostId = keyValueStore.getInt("likedPostId");
+      if (likedPostId === attrs.id) {
+        keyValueStore.remove("likedPostId");
+        Ember.run.next(() => this.sendWidgetAction("toggleLike"));
+      }
+    }
 
     const allButtons = [];
     let visibleButtons = [];
@@ -380,10 +387,13 @@ export default createWidget('post-menu', {
   },
 
   like() {
+    const { attrs } = this;
+
     if (!this.currentUser) {
+      this.keyValueStore.set({ key: "likedPostId", value: attrs.id });
       return this.sendWidgetAction('showLogin');
     }
-    const attrs = this.attrs;
+
     if (attrs.liked) {
       return this.sendWidgetAction('toggleLike');
     }
