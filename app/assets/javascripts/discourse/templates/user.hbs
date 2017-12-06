@@ -140,7 +140,6 @@
           {{#if model.invited_by}}
             <dt class="invited-by">{{i18n 'user.invited_by'}}</dt><dd class="invited-by">{{#link-to 'user' model.invited_by}}{{model.invited_by.username}}{{/link-to}}</dd>
           {{/if}}
-          {{log model.trust_level}}
           {{#if model.trust_level}}
             <dt class="trust-level">{{i18n 'user.trust_level'}}</dt><dd class="trust-level">{{model.trustLevel.name}}</dd>
           {{/if}}
