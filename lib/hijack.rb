@@ -55,6 +55,11 @@ module Hijack
           body = response.body
 
           headers = response.headers
+          # add cors if needed
+          if cors_origins = env_copy[Discourse::Cors::ORIGINS_ENV]
+            Discourse::Cors.apply_headers(cors_origins, env_copy, headers)
+          end
+
           headers['Content-Length'] = body.bytesize
           headers['Content-Type'] = response.content_type || "text/plain"
           headers['Connection'] = "close"
