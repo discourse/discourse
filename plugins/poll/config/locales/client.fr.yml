@@ -55,6 +55,7 @@ fr:
         help:
           options_count: Entrez au moins 2 options
           invalid_values: La valeur minimum doit être plus petite que la valeur maximum.
+          min_step_value: Le valeur minimum du pas est 1
         poll_type:
           label: Type
           regular: Choix unique

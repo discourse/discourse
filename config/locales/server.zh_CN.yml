@@ -209,6 +209,7 @@ zh_CN:
   excerpt_image: "图片"
   queue:
     delete_reason: "通过帖子审核队列删除"
+    not_found: "未找到帖子或已经更新。"
   groups:
     success:
       bulk_add: "%{users_added}用户已经被添加至小组。"
@@ -353,7 +354,7 @@ zh_CN:
         translation_overrides:
           attributes:
             value:
-              missing_interpolation_keys: '缺少以下内插键值：“%{keys}”'
+              invalid_interpolation_keys: '以下内插键值无效：“%{keys}”'
         watched_word:
           attributes:
             word:
@@ -443,7 +444,6 @@ zh_CN:
   post:
     image_placeholder:
       broken: "此图片已损坏"
-      large: "此图片太大无法在此显示; 点击以查看"
   rate_limiter:
     slow_down: "你执行这个操作太多次了，请稍后再试。"
     too_many_requests: "你的请求过于频繁，请等待%{time_left}之后再试。"
@@ -1460,7 +1460,8 @@ zh_CN:
     email_too_long: "你输入的邮件太长了。邮箱名不得超过 254 字符，域名必须不超过 253 字符。"
     reserved_username: "该用户名不可被使用。"
     missing_user_field: "你还没有填写完所有用户字段"
-    close_window: "验证已经完成。关闭窗口以继续。"
+    auth_complete: "验证已经完成。"
+    click_to_continue: "点击这里继续。"
     already_logged_in: "喔，看起来你正尝试查看给另一个用户的邀请链接。如果你不是%{current_user}，请退出再重试。"
   user:
     no_accounts_associated: "无关联账户"
@@ -1489,6 +1490,10 @@ zh_CN:
     website:
       domain_not_allowed: "网站无效。允许的域名有：%{domains}"
     auto_rejected: "因时限被自动拒绝。查看站点自动处理队列时限设置。"
+    destroy_reasons:
+      unused_staged_user: "未使用的暂存用户"
+      fixed_primary_email: "为暂存用户固定主要邮箱"
+      same_ip_address: "同一IP地址(%{ip_address})如其他用户"
   flags_reminder:
     flags_were_submitted:
       other: "标志已经提交%{count}小时前。[请审核他们](/admin/flags)。"
@@ -1508,70 +1513,70 @@ zh_CN:
       如果你想要继续收到邮件更新，你可以忽略这封邮件。
   invite_mailer:
     title: "要求发件人"
-    subject_template: "%{inviter_name} 邀请你参与 %{site_domain_name} 主题 '%{topic_title}' "
+    subject_template: "%{inviter_name} 邀请您参与 '%{topic_title}' 于 %{site_domain_name}"
     text_body_template: |
-      %{inviter_name}邀请你参与讨论：
+      %{inviter_name} 邀请您参与讨论
 
       > **%{topic_title}**
       >
       > %{topic_excerpt}
 
-      社区：
+      于
 
       > %{site_title} -- %{site_description}
 
-      如果你有兴趣，点击下方的链接：
+      如果您感兴趣，点击以下链接:
 
       %{invite_link}
   custom_invite_mailer:
     title: "自定义邀请发件人"
-    subject_template: "%{inviter_name}邀请你'%{topic_title}'在%{site_domain_name}"
+    subject_template: "%{inviter_name} 邀请您加入 '%{topic_title}' 于 %{site_domain_name}"
     text_body_template: |
-      %{inviter_name}邀请你参与讨论：
+      %{inviter_name} 邀请您参与讨论
 
       > **%{topic_title}**
       >
       > %{topic_excerpt}
 
-      社区：
+      于
 
       > %{site_title} -- %{site_description}
 
-      并附留言：
+      留言为
 
       > %{user_custom_message}
 
-      如果你有兴趣，点击下方的链接：
+      如果您感兴趣，点击以下链接:
 
       %{invite_link}
   invite_forum_mailer:
     title: "邀请论坛发件人"
-    subject_template: "%{inviter_name} 邀请你加入 %{site_domain_name}"
+    subject_template: "%{inviter_name} 邀请您加入 %{site_domain_name}"
     text_body_template: |
-      %{inviter_name}邀请你加入
+      %{inviter_name} 邀请您加入
 
       > **%{site_title}**
       >
       > %{site_description}
 
-      如果你有兴趣，点击下方的链接：
+      如果您感兴趣，点击以下链接:
 
       %{invite_link}
   custom_invite_forum_mailer:
     title: "自定义论坛邀请发件人"
-    subject_template: "%{inviter_name}邀请你加入%{site_domain_name}"
+    subject_template: "%{inviter_name} 邀请您加入 %{site_domain_name}"
     text_body_template: |
-      %{inviter_name}邀请你加入
+      %{inviter_name} 邀请您加入
 
       > **%{site_title}**
       >
       > %{site_description}
 
-      并附留言：
+      留言为
 
       > %{user_custom_message}
 
-      如果你有兴趣，点击下方的链接：
+      如果您感兴趣，点击以下链接:
 
       %{invite_link}
   invite_password_instructions:
@@ -1657,7 +1662,7 @@ zh_CN:
 
       - 浏览器访问**[一键更新工具](%{base_url}/admin/upgrade)**升级。
 
-      - 查看[GitHub 改动日志（英文）](https://github.com/discourse/discourse/commits/master)中更新的内容。
+      - 查看 [发行注记（英文）](https://meta.discourse.org/tags/release-notes) 或查看 [GitHub 改动日志](https://github.com/discourse/discourse/commits/master)中更新的内容。
 
       - 访问 [meta.discourse.org（英文）](https://meta.discourse.org) 获取 Discourse 的最新资讯、讨论和支持。也可访问 [meta.discoursecn.org 非官方的中文支持论坛](https://meta.discoursecn.org) 获得支持。
   new_version_mailer_with_notes:
@@ -1669,11 +1674,11 @@ zh_CN:
       你的版本：%{installed_version}
       新的版本：**%{new_version}**
 
-      - 查看[GitHub 改动日志（英文）](https://github.com/discourse/discourse/commits/master)中更新的内容。
-
       - 浏览器访问**[一键更新工具](%{base_url}/admin/upgrade)**升级。
 
-      - 访问 [meta.discourse.org（英文）](http://meta.discourse.org) 获取 Discourse 的最新资讯、讨论和支持。也可访问 [meta.discoursecn.org 非官方的中文支持论坛](http://meta.discoursecn.org) 获得支持。
+      - 查看 [发行注记（英文）](https://meta.discourse.org/tags/release-notes) 或查看 [GitHub 改动日志](https://github.com/discourse/discourse/commits/master)中更新的内容。
+
+      - 访问 [meta.discourse.org（英文）](https://meta.discourse.org) 获取 Discourse 的最新资讯、讨论和支持。也可访问 [meta.discoursecn.org 非官方的中文支持论坛](https://meta.discoursecn.org) 获得支持。
 
       ### 发行注记
 
@@ -2289,6 +2294,15 @@ zh_CN:
         %{reason}
 
         %{message}
+    account_silenced:
+      title: "账号被禁言"
+      subject_template: "[%{email_prefix}] 你的账号已被禁言"
+      text_body_template: |
+        你的账号已经被禁言至%{silenced_till}。
+
+        %{reason}
+
+        %{message}
     account_exists:
       title: "账户已经存在"
       subject_template: "[%{email_prefix}] 账户已经存在"
@@ -2443,6 +2457,8 @@ zh_CN:
       too_large: "抱歉，你试图上传的图片太大了（最大限制为%{max_size_kb}%KB），请裁剪它并重试。"
       larger_than_x_megapixels: "对不起，你上传的图片太大(最大支持%{max_image_megapixels}像素)，请缩小图片然后再试一次。"
       size_not_found: "抱歉，我们无法获取图片大小，请检查你的图片是否已损坏。"
+    placeholders:
+      too_large: "(图片大小超过%{max_size_kb}KB)"
   avatar:
     missing: "抱歉，我们没法找到与你邮件地址关联的头像。你能再上传一次试试吗？"
   flag_reason:

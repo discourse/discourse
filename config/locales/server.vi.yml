@@ -446,7 +446,6 @@ vi:
       email_title: 'Chủ đề "%{title}" cần được ban điều hành quan tâm'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Bài viết của bạn đã được gắn cờ bở cộng đồng. Vui lòng<a href="/my/messages">xem tin nhắn của bạn</a>.</p>'
     user_must_edit: '<p>Bài viết này đã bị đánh dấu bởi cộng đồng và đang được ẩn tạm thời.</p>'
   archetypes:
     regular:
@@ -653,7 +652,6 @@ vi:
     logo_url: "Logo ở vị trí trên cùng của website nên là hình chữ nhật, nếu để trống thì tên website sẽ hiển thị."
     logo_small_url: "Logo nhỏ ở vị trí trên cùng của website hiển thị khi cuộn xuống nên là hình vuông, nếu để trống thì icon trang chủ sẽ hiển thị."
     favicon_url: "Favicon cho trang của bạn, xem tại http://en.wikipedia.org/wiki/Favicon, để chạy được với CDN ảnh phải là png"
-    mobile_logo_url: "Cố định vị trí hình logo sử dụng tại phía trên bên trái trang mobile của bạn. Nên là hình vuông. Nếu để trống, sẽ sử dụng `logo_url`. Ví dụ: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Biểu tượng sử dụng trong các thiết bị cảm ứng của Apple. Kích thước gợi ý 144px x 144px"
     notification_email: "Địa chỉ email 'Từ:' được dùng để gửi các email thiết yếu của hệ thống. Các tên miền quy định ở đây phải có SPF, DKIM và bản ghi PTR phải được thiết lập chính xác cho email đến."
     email_custom_headers: "Danh sách xác định email header tùy chỉnh"
@@ -1054,14 +1052,12 @@ vi:
     email_too_long: "Email bạn cung cấp quá dài. Địa chỉ email phải không quá 254 ký tự, và tên miền phải không quá 253 ký tự."
     reserved_username: "Tên đăng nhập không được cho phép."
     missing_user_field: "Bạn không hoàn tất tất cả các trường người dùng"
-    close_window: "Chứng thực hoàn tất. Đóng của sổ này để tiếp tụ."
     already_logged_in: "Rất tiếc, có vẻ như bạn đang cố gắng để chấp nhận lời mời của một người dùng khác. Nếu bạn không phải là %{current_user}, xin vui lòng đăng xuất và thử lại."
   user:
     no_accounts_associated: "Không có tài khoản liên quan"
     username:
       short: "phải dài ít nhất %{min} ký tự"
       long: "không được dài hơn %{max} ký tự"
-      characters: "chỉ bao gồm số, ký tự và dấu gạch dưới"
       unique: "phải độc nhất"
       blank: "phải hiện hành"
       must_begin_with_alphanumeric_or_underscore: "phải bắt đầu bằng chữ, số hoặc dấu gạch dưới"
@@ -1079,10 +1075,6 @@ vi:
       other: "%{count} đánh dấu đang đợi xử lý"
   unsubscribe_mailer:
     subject_template: "Xác nhận bạn không còn muốn nhận email cập nhật từ %{site_title}"
-  invite_mailer:
-    subject_template: "%{inviter_name} mời bạn tham gia chủ đề '%{topic_title}' trên %{site_domain_name}"
-  invite_forum_mailer:
-    subject_template: "%{inviter_name} đã mời bạn gia nhập %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Đặt mật khẩu cho tài khoản của bạn ở %{site_name}"
   flag_reasons:
@@ -1290,9 +1282,6 @@ vi:
         Huy hiệu này được cấp khi bạn nhận được like đầu tiên. Xin chúc mừng, bạn đã đăng nội dung mà các thành viên của cộng đồng cảm thấy thú vị, hấp dẫn, hoặc có ích!
     autobiographer:
       name: Tự truyện
-      description: Điền thông tin vào <a href="/my/preferences">hồ sơ</a>
-      long_description: |
-        Huy hiệu này được cấp khi bạn điền thông tin vào <a href="/my/preferences">hồ sơ thành viên</a> và chọn một ảnh cá nhân. Cho cộng đồng biết thêm một chút về bạn và những gì bạn quan tâm, qua đó làm cho cộng đồng tốt hơn, kết nối hơn. Tham gia cùng chúng tôi!
     anniversary:
       name: Ngày kỷ niệm
       description: Thành viên hoạt động trong một năm, gửi bài ít nhất một lần
@@ -1381,9 +1370,6 @@ vi:
       description: Trích dẫn một bài viết
     read_guidelines:
       name: Xem hướng dẫn
-      description: Xem <a href="/guidelines">nguyên tắc cộng đồng</a>
-      long_description: |
-        Huy hiệu này được cấp khi bạn xem <a href="/guidelines">nguyên tắc cộng đồng</a>. Xem và làm theo những nguyên tắc này sẽ giúp bạn cùng chúng tôi xây dựng một cộng đồng an toàn, bền vững, và đem lại nhiều niềm vui cho tất cả mọi người!
     reader:
       name: Người xem
       description: Đọc từng trả lời trong một chủ đề có hơn 100 trả lời

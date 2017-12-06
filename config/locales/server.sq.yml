@@ -375,7 +375,6 @@ sq:
       email_title: 'Tema "%{title}" kërkon redaktimin e një moderatori'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Postimi juaj u sinjalizua nga komuniteti. <a href="/my/messages">Shikoni mesazhet</a>.</p>'
     user_must_edit: '<p>Kjo temë u sinjalizua nga komuniteti dhe është fshehur përkohësisht.</p>'
   archetypes:
     regular:
@@ -578,7 +577,6 @@ sq:
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post in characters."
     logo_url: "The logo image at the top left of your site, should be a wide rectangle shape. If left blank site title text will be shown."
     logo_small_url: "The small logo image at the top left of your site, should be a square shape, seen when scrolling down. If left blank a home glyph will be shown."
-    mobile_logo_url: "The fixed position logo image used at the top left of your mobile site. Should be a square shape. If left blank, `logo_url` will be used. eg: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Icon used for Apple touch devices. Recommended size is 144px by 144px."
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
     email_custom_headers: "A pipe-delimited list of custom email headers"
@@ -907,13 +905,11 @@ sq:
     suspended: "You can't log in until %{date}."
     reserved_username: "Ky emër nuk lejohet."
     missing_user_field: "You have not completed all the user fields"
-    close_window: "Authentication is complete. Close this window to continue."
   user:
     no_accounts_associated: "No accounts associated"
     username:
       short: "must be at least %{min} characters"
       long: "must be no more than %{max} characters"
-      characters: "must only include numbers, letters and underscores"
       unique: "must be unique"
       blank: "must be present"
     email:
@@ -926,12 +922,6 @@ sq:
     subject_template:
       one: "1 sinjalizim në pritje për t'u trajtuar"
       other: "%{count} sinjalizime në pritje për t'u trajtuar"
-  invite_mailer:
-    subject_template: "%{inviter_name} ju ftoi tek tema '%{topic_title}' tek %{site_domain_name}"
-  invite_forum_mailer:
-    subject_template: "%{inviter_name} ju ka ftuar të bëheni pjesë e %{site_domain_name}"
-  custom_invite_forum_mailer:
-    subject_template: "%{inviter_name} ju ka ftuar të bëheni pjesë e %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Vendos fjalëkalimin për llogarinë tek %{site_name}"
   admin_confirmation_mailer:
@@ -1127,7 +1117,6 @@ sq:
     digest:
       why: "Një përmbledhje e shkurtër e temave tek %{site_link} që prej vizitës tuaj të fundit më %{last_seen_at}"
       subject_template: "[%{email_prefix}] Përmbledhja"
-      unsubscribe: "Kjo përmbledhje dërgohet nga %{site_link} ku nuk ju kemi parë në faqe për ca kohë. Ndryshoni <a href='%{email_settings_url}'>preferencat tuaja</a>, ose %{unsubscribe_link} për të mos i marrë më këto mesazhe."
       click_here: "klikoni këtu"
       from: "%{site_name} - përmbledhja"
       preheader: "Një përmbledhe e shkurtër e faqes që nga vizita juaj e fundit më %{last_seen_at}"
@@ -1379,9 +1368,6 @@ sq:
         Kjo stemë jepet kur merrni pëlqimin e parë për një postim. Urime, keni postuar diçka të cilën anëtarët e komunitetit e gjetën interesante, fantastike apo të dobishme!
     autobiographer:
       name: Autobiograf
-      description: Plotësoi <a href="/my/preferences">profilin</a> e anëtarit
-      long_description: |
-        Kjo stemë jepet kur mbushni <a href="/my/preferences">profilin tuaj</a> dhe zgjidhni një imazhi profili. Kur lejoni komunitetin t'ju njohë ca më shumë se kush jeni dhe çfarë ju intereson, ndihmon në përmirësimin dhe lidhjen e mëtejshme të komunitetit. Bashkohuni me ne!
     anniversary:
       name: Përvjetor
       description: Anëtar aktiv për një vit, postoi të paktën një herë
@@ -1474,9 +1460,6 @@ sq:
         Kjo stemë jepet kur për herë të parë citoni një postim në përgjigjen tuaj. Të cituarit në përgjigjen tuaj e pjesëve të rëndësishme prej postimeve të mëparshme, ndihmon në mbajtjen e bisedave të lidhura me njëra-tjetrën dhe brenda tematikës. Mënyra më e lehtë për të cituar është duke theksuar pjesë të një postimi, dhe duke shtypur më pas butonin përgjigju. Citoni me bollëk!
     read_guidelines:
       name: Lexoi Udhëzimet
-      description: Ka lexuar <a href="/guidelines">udhëzimet e komunitetit</a>
-      long_description: |
-        Kjo stemë jepet pasi <a href="/guidelines">lexon udhëzimet e komunitetit</a>. Duke ndjekur dhe ndarë këto udhëzime të thjeshta ndihmon në ndërtimin e një komuniteti të sigurtë, dëfryes dhe të qëndrueshëm. Gjithmonë kini parasysh që është një tjetër qënie njerëzore, dikush shumë i ngjashëm me ju, në anën tjetër të ekranit. Silluni mirë!
     reader:
       name: Lexues
       description: Lexoi çdo përgjigje në një temë me mbi 100 përgjigje

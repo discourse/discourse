@@ -731,10 +731,6 @@ zh_TW:
           other: "討論話題已建立"
         post_count:
           other: "帖子已建立"
-        likes_given:
-          other: "<i class='fa fa-heart'></i> 送出的"
-        likes_received:
-          other: "<i class='fa fa-heart'></i> 收到的"
         days_visited:
           other: "到訪天數"
         posts_read:
@@ -822,7 +818,6 @@ zh_TW:
     first_post: 第一篇文章
     mute: 靜音
     unmute: 取消靜音
-    last_post: 最後一篇文章
     last_reply_lowercase: 最新回覆
     replies_lowercase:
       other: 回覆
@@ -1013,7 +1008,6 @@ zh_TW:
       ulist_title: "符號清單"
       list_item: "清單項目"
       help: "Markdown 編輯說明"
-      toggler: "隱藏或顯示編輯面板"
       modal_ok: "確定"
       modal_cancel: "取消"
       cant_send_pm: "抱歉，你不能向 %{username} 發送訊息。"
@@ -1087,22 +1081,15 @@ zh_TW:
         title: 高級搜索
         posted_by:
           label: 發帖人
-        in_category:
-          label: 在該分類中
         in_group:
           label: 在該群組中
         with_badge:
           label: 有該徽章
-        with_tags:
-          label: 有該標籤
         filters:
-          label: 只返回主題/帖子符合...
           likes: 我給了讚的
           posted: 我參與發帖
           watching: 我正在監看
           tracking: 我正在追蹤
-          private: 在我的私信中
-          bookmarks: 我已經收藏了
           first: 是第一帖
           pinned: 是置頂的
           unpinned: 不是置頂的
@@ -1503,8 +1490,6 @@ zh_TW:
         change_owner: "更改作者"
       actions:
         flag: '投訴'
-        defer_flags:
-          other: "暫緩投訴"
         undo:
           off_topic: "撤回投訴"
           spam: "撤回投訴"
@@ -1936,9 +1921,7 @@ zh_TW:
       selector_no_tags: "無標籤"
       changed: "標籤被修改："
       tags: "標籤"
-      choose_for_topic: "為此主題選擇可選標籤"
       delete_tag: "刪除標籤"
-      delete_confirm: "確定要刪除這個標籤嗎？"
       rename_tag: "重命名標籤"
       rename_instructions: "標籤的新名稱："
       sort_by: "排序方式："
@@ -2065,24 +2048,12 @@ zh_TW:
         by: "由"
       flags:
         title: "投訴"
-        old: "舊的"
-        active: "待處理"
         agree: "同意"
         agree_title: "確認此投訴為有效且正確"
-        agree_flag_modal_title: "批准並且 ..."
-        agree_flag_hide_post: "批准 (隱藏文章 + 送出私人訊息)"
-        agree_flag_hide_post_title: "隱藏此文章，並自動向此用戶送出私人訊息，要求盡快修改它"
-        agree_flag_restore_post: "同意（還原文章）"
-        agree_flag_restore_post_title: "回復此文章"
-        agree_flag: "同意投訴"
-        agree_flag_title: "同意投訴且不更動文章"
-        defer_flag: "延遲"
         defer_flag_title: "移除標記；不需處理。"
         delete: "刪除"
         delete_title: "刪除此標記文章。"
-        delete_post_defer_flag: "刪除文章並且延緩檢舉"
         delete_post_defer_flag_title: "刪除文章，如果刪除的是討論話題的第一則文章，討論話題也將一併刪除"
-        delete_post_agree_flag: "刪除文章並且同意檢舉"
         delete_post_agree_flag_title: "刪除文章，如果刪除的是討論話題的第一則文章，討論話題也將一併刪除"
         delete_flag_modal_title: "刪除並且..."
         delete_spammer: "刪除垃圾文章發送者"
@@ -2097,29 +2068,16 @@ zh_TW:
         dispositions:
           agreed: "同意"
           disagreed: "不同意"
-          deferred: "之後再處理"
         flagged_by: "投訴者"
         resolved_by: "處理為"
         took_action: "採取行動"
         system: "系統"
         error: "發生了某些錯誤"
         reply_message: "回覆"
-        no_results: "沒有投訴。"
         topic_flagged: "此 <strong>討論話題</strong> 已被投訴。"
         visit_topic: "瀏覽討論話題以採取行動"
         was_edited: "文章已在第一次標記後被編輯"
         previous_flags_count: "這篇文章已經被標記  {{count}} 次。"
-        summary:
-          action_type_3:
-            other: "離題 x{{count}}"
-          action_type_4:
-            other: "不宜內容 x{{count}}"
-          action_type_6:
-            other: "自訂 x{{count}}"
-          action_type_7:
-            other: "自訂 x{{count}}"
-          action_type_8:
-            other: "垃圾內容 x{{count}}"
       groups:
         primary: "主要群組"
         no_primary: "( 沒有主要群組 )"

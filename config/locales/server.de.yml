@@ -458,7 +458,6 @@ de:
   post:
     image_placeholder:
       broken: "Dieses Bild ist beschädigt"
-      large: "Dieses Bild ist zu groß, um es hier darzustellen; klicke um es anzuzeigen"
   rate_limiter:
     slow_down: "Du hast diese Aktion zu oft durchgeführt. Versuche es später wieder."
     too_many_requests: "Diese Aktion kann nur ein begrenztes Mal pro Tag durchgeführt werden. Bitte warte %{time_left} bis zum nächsten Versuch."
@@ -1551,7 +1550,6 @@ de:
     destroy_reasons:
       unused_staged_user: "Unbenutztes, vorbereiteter Benutzerkonto"
       fixed_primary_email: "Primäre E-Mail-Adresse für vorbereitetes Benutzerkonto korrigiert"
-      same_ip_address: "Gleiche IP-Adresse (%ip_address%) wie andere Benutzer"
   flags_reminder:
     flags_were_submitted:
       one: "Meldungen wurden vor über 1 Stunde eingereicht. [Bitte übeprüfe sie](/admin/flags)."
@@ -1572,72 +1570,12 @@ de:
       Wenn du weiterhin E-Mail-Aktualisierungen erhalten möchtest, kannst du diese E-Mail ignorieren.
   invite_mailer:
     title: "Einladung zu einem Thema"
-    subject_template: "%{inviter_name} hat dich zum Thema '%{topic_title}' auf %{site_domain_name} eingeladen"
-    text_body_template: |
-      %{inviter_name} hat dich eingeladen zur Diskussion
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      bei
-
-      > %{site_title} -- %{site_description}
-
-      Wenn du interessiert bist, klicke auf den folgenden Link:
-
-      %{invite_link}
   custom_invite_mailer:
     title: "Einladung zu einem Thema (mit Nachricht)"
-    subject_template: "%{inviter_name} hat dich eingeladen zu '%{topic_title}' auf %{site_domain_name}"
-    text_body_template: |
-      %{inviter_name} hat dich eingeladen zur Diskussion
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      bei
-
-      > %{site_title} -- %{site_description}
-
-      Mit dieser Notiz:
-
-      > %{user_custom_message}
-
-      Wenn du interessiert bist, klicke auf den folgenden Link:
-
-      %{invite_link}
   invite_forum_mailer:
     title: "Einladung zur Teilnahme"
-    subject_template: "%{inviter_name} hat dich eingeladen %{site_domain_name} beizutreten"
-    text_body_template: |
-      %{inviter_name} hat dich eingeladen, der folgenden Seite beizutreten:
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      Falls du Interesse hast, klicke auf den folgenden Link:
-
-      %{invite_link}
   custom_invite_forum_mailer:
     title: "Einladung zum Forum (mit Nachricht)"
-    subject_template: "%{inviter_name} hat dich eingeladen %{site_domain_name} beizutreten"
-    text_body_template: |
-      %{inviter_name} hat dich eingeladen der folgenden Seite beizutreten:
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      Mit dieser Notiz:
-
-      > %{user_custom_message}
-
-      Falls du Interesse hast, klicke auf den nachfolgenden Link:
-
-      %{invite_link}
   invite_password_instructions:
     title: "Passwort festlegen"
     subject_template: "Lege ein Passwort für dein %{site_name}-Konto fest"
@@ -1713,35 +1651,9 @@ de:
   new_version_mailer:
     title: "Neue Version"
     subject_template: "[%{email_prefix}] Neue Discourse-Version, Update verfügbar"
-    text_body_template: |
-      Hurra, eine neue Version von [Discourse](http://www.discourse.org) ist verfügbar!
-
-      Deine Version: %{installed_version}
-      Neue Version: **%{new_version}**
-
-      - Aktualisiere mit dem einfachen **[Ein-Klick-Browser-Upgrade](%{base_url}/admin/upgrade)**
-
-      - Schaue dir im [GitHub-Changelog](https://github.com/discourse/discourse/commits/master) an, was neu ist
-
-      - Besuche [meta.discourse.org](https://meta.discourse.org) für Neuigkeiten, Diskussionen und Support für Discourse
   new_version_mailer_with_notes:
     title: "Neue Version mit Versionshinweisen"
     subject_template: "[%{email_prefix}] Update verfügbar"
-    text_body_template: |
-      Hurra, eine neue Version von [Discourse](http://www.discourse.org) ist verfügbar!
-
-      Deine Version: %{installed_version}
-      Neue Version: **%{new_version}**
-
-      - Aktualisiere mit dem einfachen **[Ein-Klick-Browser-Upgrade](%{base_url}/admin/upgrade)**
-
-      - Schaue dir im [GitHub-Changelog](https://github.com/discourse/discourse/commits/master) an, was neu ist
-
-      - Besuche [meta.discourse.org](https://meta.discourse.org) für Neuigkeiten, Diskussionen und Support für Discourse
-
-      ### Versionshinweise
-
-      %{notes}
   flag_reasons:
     off_topic: "Dein Beitrag wurde als **Thema verfehlt** gemeldet: Die Community glaubt, dass er nicht zum Thema passt, wie es durch den Titel und den ersten Beitrag definiert wurde."
     inappropriate: "Dein Beitrag wurde als **unangemessen** gemeldet: die Community glaubt, dass er anstößig oder beleidigend ist oder einen Verstoß gegen [die Community Richtlinien](/guidelines) darstellt."

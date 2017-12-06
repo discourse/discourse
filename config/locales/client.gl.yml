@@ -101,7 +101,6 @@ gl:
           other: "%{count} anos despois"
       previous_month: 'Mes anterior'
       next_month: 'Mes seguinte'
-      placeholder: Escolla unha data
     share:
       topic: 'compartir unha ligazón a este tema'
       post: 'publicación %{postNumber}'
@@ -696,7 +695,6 @@ gl:
     first_post: Publicación inicial
     mute: Silenciar
     unmute: Non silenciar
-    last_post: Última publicación
     last_reply_lowercase: última resposta
     replies_lowercase:
       one: resposta
@@ -852,7 +850,6 @@ gl:
       ulist_title: "Lista con símbolos"
       list_item: "Elemento da lista"
       help: "Axuda para edición con Markdown"
-      toggler: "agochar ou amosar o panel de composición"
       modal_ok: "De acordo"
       modal_cancel: "Cancelar"
       cant_send_pm: "Sentímolo pero non podes enviar unha mensaxe a %{username}."
@@ -1273,9 +1270,6 @@ gl:
         change_owner: "Cambiar propietario"
       actions:
         flag: 'Denunciar'
-        defer_flags:
-          one: "Pospor denuncia"
-          other: "Pospor denuncias"
         undo:
           off_topic: "Desfacer denuncia"
           spam: "Desfacer denuncia"
@@ -1650,24 +1644,12 @@ gl:
         by: "por"
       flags:
         title: "Denuncias"
-        old: "Antigo"
-        active: "Activo"
         agree: "Aceptar"
         agree_title: "Confirmar esta denuncia como válida"
-        agree_flag_modal_title: "Aceptar e..."
-        agree_flag_hide_post: "Aceptar (ocultar publicación + enviar msx. privada)"
-        agree_flag_hide_post_title: "Ocultar esta publicación e enviar automaticamente unha mensaxe ao usuario para que a edite axiña"
-        agree_flag_restore_post: "Aceptar (restabelecer publicación)"
-        agree_flag_restore_post_title: "Restabelecer esta publicación"
-        agree_flag: "Aceptar denuncia"
-        agree_flag_title: "Aceptar a denuncia e manter a publicación sen cambios"
-        defer_flag: "Pospor"
         defer_flag_title: "Eliminar esta denuncia; non precisa medidas neste momento."
         delete: "Eliminar"
         delete_title: "Eliminar a publicación á que se refire esta denuncia."
-        delete_post_defer_flag: "Eliminar publicación e pospor a denuncia"
         delete_post_defer_flag_title: "Eliminar publicación. Se é a inicial, eliminar tamén o tema"
-        delete_post_agree_flag: "Eliminar a publicación e aceptar a denuncia"
         delete_post_agree_flag_title: "Eliminar publicación. Se é a inicial, eliminar tamén o tema."
         delete_flag_modal_title: "Eliminar e..."
         delete_spammer: "Eliminar spammer"
@@ -1682,34 +1664,16 @@ gl:
         dispositions:
           agreed: "aceptar"
           disagreed: "non aceptar"
-          deferred: "posposta"
         flagged_by: "Denunciado por"
         resolved_by: "Arranxado por"
         took_action: "Tomadas medidas"
         system: "Sistema"
         error: "Algo foi mal"
         reply_message: "Responder"
-        no_results: "Non hai denuncias"
         topic_flagged: "Este <strong>tema</strong> foi denunciado."
         visit_topic: "Visite o tema para actuar"
         was_edited: "A publicación editouse despois da primeira denuncia"
         previous_flags_count: "Esta publicación xa se denunciou {{count}} veces."
-        summary:
-          action_type_3:
-            one: "sen relación"
-            other: "sen relación x{{count}}"
-          action_type_4:
-            one: "inapropiado"
-            other: "inapropiados x{{count}}"
-          action_type_6:
-            one: "personalizar"
-            other: "personalizar x{{count}}"
-          action_type_7:
-            one: "personalizar"
-            other: "personalizar x{{count}}"
-          action_type_8:
-            one: "spam"
-            other: "spam x{{count}}"
       groups:
         primary: "Grupo primario"
         no_primary: "(non hai un grupo primario)"

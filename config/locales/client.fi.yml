@@ -107,7 +107,6 @@ fi:
           other: "%{count} vuotta myöhemmin"
       previous_month: 'Edellinen kuukausi'
       next_month: 'Seuraava kuukausi'
-      placeholder: Valitse päivämäärä
     share:
       topic: 'jaa linkki tähän ketjuun'
       post: '%{postNumber}. viesti'
@@ -909,7 +908,6 @@ fi:
     first_post: Ensimmäinen viesti
     mute: Vaienna
     unmute: Poista vaimennus
-    last_post: Viimeisin viesti
     last_reply_lowercase: edellinen vastaus
     replies_lowercase:
       one: vastaus
@@ -1042,10 +1040,6 @@ fi:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
-    select_kit:
-      default_header_text: Valitse...
-      no_content: Ei osumia
-      filter_placeholder: Hae...
     emoji_picker:
       filter_placeholder: Etsi emojia
       people: Ihmiset
@@ -1139,7 +1133,6 @@ fi:
       ulist_title: "Luettelomerkillinen luettelo"
       list_item: "Listan alkio"
       help: "Markdown apu"
-      toggler: "näytä tai piilota kirjoitusalue"
       modal_ok: "OK"
       modal_cancel: "Peruuta"
       cant_send_pm: "Et voi lähettää viestiä käyttäjälle  %{username}."
@@ -1248,30 +1241,20 @@ fi:
         title: Tarkennettu haku
         posted_by:
           label: Kirjoittaja
-        in_category:
-          label: Alue
         in_group:
           label: Kirjoittajan ryhmä
         with_badge:
           label: Kirjoittajalla ansiomerkki
-        with_tags:
-          label: Tunniste
         filters:
-          label: Tuloksiin vain ketjuja/viestejä, ...
           likes: joista olen tykännyt
           posted: joihin olen kirjoittanut
           watching: joita tarkkailen
           tracking: joita seuraan
-          private: jotka ovat yksityisviesteistäni
-          bookmarks: jotka olen lisännyt kirjanmerkkeihini
           first: jotka ovat ketjun avausviestejä
           pinned: jotka on kiinnitettyjä
           unpinned: jotka eivät ole kiinnitettyjä
-          seen: jotka olen lukenut
           unseen: joita en ole lukenut
           wiki: ovat wiki-viestejä
-          images: joissa on kuv(i)a
-          all_tags: Ketjulla on kaikki tunnisteet
         statuses:
           label: Ketju/Ketjuun
           open: on avoin
@@ -2252,7 +2235,6 @@ fi:
       selector_no_tags: "ei tunnisteita"
       changed: "muutetut tunnisteet"
       tags: "Tunnisteet"
-      choose_for_topic: "valitse valinnaiset tunnisteet tälle ketjulle"
       delete_tag: "Poista tunniste"
       delete_confirm:
         one: "Haluatko varmasti poistaa tunnisteen, mikä poistaa sen myös yhdeltä ketjulta, jolla tunniste on?"
@@ -2389,20 +2371,11 @@ fi:
         topics: "Liputetut ketjut"
         agree: "Ole samaa mieltä"
         agree_title: "Vahvista, että lippu on annettu oikeasta syystä"
-        agree_flag_modal_title: "Ole samaa mieltä ja..."
-        agree_flag_hide_post: "Samaa mieltä (piilota viesti ja lähetä YV)"
-        agree_flag_hide_post_title: "Piilota tämä viesti automaattisesti ja lähetä käyttäjälle muokkaamaan hoputtava viesti"
-        agree_flag_restore_post: "Ole samaa mieltä (palauta viesti)"
-        agree_flag_restore_post_title: "Palauta tämä viesti"
-        agree_flag: "Ole samaa mieltä lipun kanssa"
-        agree_flag_title: "Ole samaa mieltä lipun kanssa ja älä muokkaa viestiä"
         defer_flag: "Sivuuta"
         defer_flag_title: "Poista lippu; se ei vaadi toimenpiteitä tällä hetkellä."
         delete: "Poista"
         delete_title: "Poista viesti, johon lippu viittaa."
-        delete_post_defer_flag: "Poista viesti ja sivuuta lippu"
         delete_post_defer_flag_title: "Poista viesti; jos se on aloitusviesti, niin poista koko ketju"
-        delete_post_agree_flag: "Poista viesti ja ole sama mieltä lipun kanssa"
         delete_post_agree_flag_title: "Poista viesti; jos se on aloitusviesti, niin poista koko ketju"
         delete_flag_modal_title: "Poista ja..."
         delete_spammer: "Poista roskapostittaja"

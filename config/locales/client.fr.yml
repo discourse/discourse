@@ -107,7 +107,7 @@ fr:
           other: "%{count} années plus tard"
       previous_month: 'Mois précédent'
       next_month: 'Mois suivant'
-      placeholder: Sélectionner une date
+      placeholder: date
     share:
       topic: 'partager ce sujet'
       post: 'message #%{postNumber}'
@@ -653,6 +653,7 @@ fr:
         title: "Modifier votre image de profil"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basé sur"
         gravatar_title: "Modifier votre avatar sur le site de Gravatar"
+        gravatar_failed: "Impossible de récupérer le Gravatar. En existe-t-il un associé à cette adresse courriel ?"
         refresh_gravatar_title: "Actualiser votre Gravatar"
         letter_based: "Image de profil attribuée par le système"
         uploaded_avatar: "Avatar personnalisé"
@@ -1154,7 +1155,8 @@ fr:
       ulist_title: "Liste à puces"
       list_item: "Élément"
       help: "Aide Markdown"
-      toggler: "cacher ou afficher le panneau d'édition"
+      collapse: "réduire le panneau d'édition"
+      abandon: "fermer le panneau d'édition et supprimer le brouillon"
       modal_ok: "OK"
       modal_cancel: "Annuler"
       cant_send_pm: "Désolé, vous ne pouvez pas envoyer de message à l'utilisateur %{username}."
@@ -1163,6 +1165,13 @@ fr:
         body: "Pour le moment, ce message est uniquement envoyé à vous-même !"
       admin_options_title: "Paramètres optionnels pour ce sujet"
     notifications:
+      tooltip:
+        regular:
+          one: "1 notification non vue"
+          other: "{{count}} notifications non vues"
+        message:
+          one: "1 message non lu"
+          other: "{{count}} messages non lus"
       title: "notifications des mentions de votre @pseudo, des réponses à vos messages, à vos sujets, etc."
       none: "Impossible de charger les notifications pour le moment."
       empty: "Aucune notification trouvée."
@@ -1229,6 +1238,7 @@ fr:
       uploading: "En cours d'envoi"
       select_file: "Sélectionner un fichier"
       image_link: "lien vers lequel l'image pointera"
+      default_image_alt_text: image
     search:
       sort_by: "Trier par"
       relevance: "Pertinence"
@@ -1283,10 +1293,10 @@ fr:
           first: qui sont les premiers messages
           pinned: qui sont épinglés
           unpinned: qui ne sont pas épinglés
-          seen: j'ai lu
+          seen: que j'ai lu
           unseen: je n'ai pas lu
           wiki: qui sont des wikis
-          images: y compris les images
+          images: inclure le(s) images(s)
           all_tags: Contient tous les tags
         statuses:
           label: Dont les sujets
@@ -2272,7 +2282,7 @@ fr:
       selector_no_tags: "aucun tag"
       changed: "tags modifiés :"
       tags: "Tags"
-      choose_for_topic: "choisir des tags optionnels pour ce sujet"
+      choose_for_topic: "tags optionnels"
       delete_tag: "Supprimer le tag"
       delete_confirm:
         one: "Êtes-vous sûr de vouloir supprimer ce tag et l'enlever de 1 sujet auquel il est assigné ?"
@@ -2968,8 +2978,12 @@ fr:
           term: "Terme"
           searches: "Recherches"
           click_through: "Taux de clics"
-          most_viewed_topic: "Sujet le plus vu"
           unique: "Unique"
+          unique_title: "utilisateurs uniques ayant recherché"
+          types:
+            all_search_types: "Tous les types de recherche"
+            header: "Entête"
+            full_page: "Page complète"
         logster:
           title: "Journal d'erreurs"
       watched_words:

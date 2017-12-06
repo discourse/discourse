@@ -566,7 +566,6 @@ zh_TW:
       email_title: '此討論話題 "%{title}" 需要板主注意'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>你的帖子被社群成員標記了。請<a href="/my/messages">查看你的消息</a>。</p>'
     user_must_edit: '<p>你的帖子已經被社群標記並被臨時隱藏。</p>'
   archetypes:
     regular:
@@ -821,7 +820,6 @@ zh_TW:
     digest_logo_url: "郵件摘要中使用的標誌圖像。應為長方形。不能使用 SVG 圖片。如果留空，將使用 `logo_url`。"
     logo_small_url: "在你站點左上角的小號標誌圖片，應為正方形，當滾動時才可見。如果留空，將顯示主頁表徵圖。"
     favicon_url: "你的站點表徵圖（favicon），參考 http://zh.wikipedia.org/wiki/Favicon，如果要正確地通過 CDN 分發，它必須是 png 圖片"
-    mobile_logo_url: "移動站點左上角的固定標誌圖片。應為正方形。如果留空，`logo_url` 將被使用。如：http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Apple 觸碰設備使用的圖示，建議 144 X 144px 大小"
     notification_email: "這個表格：被用於發送所有重要系統郵件的郵箱地址。指定的域名必須正確設置 SPF、DKIM 和反向 PTR 記錄以發送郵件。"
     email_custom_headers: "自定義的電子郵件標題的管道分隔列表"
@@ -882,7 +880,6 @@ zh_TW:
     allow_index_in_robots_txt: "在 robots.txt 中記錄這個網站允許被搜尋引擎索引的部分"
     email_domains_blacklist: "用管道符“|”分隔的郵箱域名黑名單列表，其中的域名將不能用來註冊賬戶，例如：mailinator.com|trashmail.net"
     email_domains_whitelist: "用管道符“|”分隔的電子郵箱域名的列表，用戶必須使用這些郵箱域名註冊。警告：用戶使用不包含在這個列表裡的郵箱域名，將無法成功註冊。"
-    hide_email_address_taken: "用戶找回密碼時不提示帳戶是否存在。"
     log_out_strict: "登出時，登出用戶所有設備上的所有時段"
     version_checks: "訪問 Discourse Hub 來檢查版本更新，並在管理面板 /admin 顯示新版本訊息"
     new_version_emails: "當新版本發佈時，將會發送一封新的 EMail 至 contact_email 設定的位址"
@@ -1125,7 +1122,6 @@ zh_TW:
     suppress_digest_email_after_days: "對於 (n) 日以上未上站的用戶，停止發送摘要郵件。"
     digest_suppress_categories: "不在摘要郵件中顯示這些分類的內容。"
     disable_digest_emails: "停用發送摘要郵件給所有用戶的功能。"
-    email_accent_bg_color: "HTML 郵件中某些元素的背景使用的強調顏色。輸入色彩名（“red”）或十六進制值（“#FF0000”）。"
     email_accent_fg_color: "HTML 郵件中背景使用的字型顏色。輸入色彩名（“white”）或十六進制值（“#FFFFFF”）。"
     email_link_color: "HTML 郵件中的連結顏色。輸入色彩名字（“blue”）或十六進制值（“#0000FF”）。"
     detect_custom_avatars: "檢測用戶是否上傳了自定義個人頭像。"
@@ -1334,7 +1330,6 @@ zh_TW:
     email_too_long: "你輸入的郵件太長了。郵箱名不得超過 254 字元，域名必須不超過 253 字元。"
     reserved_username: "該用戶名不可被使用。"
     missing_user_field: "你還沒有填寫完所有用戶字段"
-    close_window: "驗證已經完成。關閉視窗以繼續。"
     already_logged_in: "喔，看起來你正嘗試查看給另一個用戶的邀請連結。如果你不是%{current_user}，請退出再重試。"
   user:
     no_accounts_associated: "無關聯的帳戶"
@@ -1344,7 +1339,6 @@ zh_TW:
     username:
       short: "必須至少 %{min} 個字"
       long: "不能超過 %{max} 個字"
-      characters: "必須只包含字母和數位"
       unique: "必須是唯一的"
       blank: "必須存在"
       must_begin_with_alphanumeric_or_underscore: "必須以英數字或底線開頭"
@@ -1375,72 +1369,12 @@ zh_TW:
       如果你想要繼續接收郵件更新，你可以直接忽略這封郵件。
   invite_mailer:
     title: "邀請郵件"
-    subject_template: "%{inviter_name} 在 %{site_domain_name} 邀請你參與「%{topic_title}」"
-    text_body_template: |
-      %{inviter_name} 邀請你參與
-
-      > %{site_title}－%{site_description}
-
-      的以下討論
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      如果你有興趣，請點擊下面的連結：
-
-      %{invite_link}
   custom_invite_mailer:
     title: "客製邀請郵件"
-    subject_template: "%{inviter_name} 在 %{site_domain_name} 邀請你參與「%{topic_title}」"
-    text_body_template: |
-      %{inviter_name} 留下以下留言
-
-      > %{user_custom_message}
-
-      邀請你參與
-
-      > %{site_title}—%{site_description}
-
-      的討論
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      如果你有興趣，請點擊下面的連結：
-
-      %{invite_link}
   invite_forum_mailer:
     title: "邀請論壇 Mailer"
-    subject_template: "%{inviter_name} 邀請你加入 %{site_domain_name}"
-    text_body_template: |
-      %{inviter_name} 邀請你加入
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      如果你感興趣，請點擊下面的連結：
-
-      %{invite_link}
   custom_invite_forum_mailer:
     title: "客製討論區邀請郵件"
-    subject_template: "%{inviter_name} 邀請你加入 %{site_domain_name}"
-    text_body_template: |
-      %{inviter_name} 留下以下留言
-
-      > %{user_custom_message}
-
-      邀請你加入
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      如果你感興趣，請點擊下面的連結：
-
-      %{invite_link}
   invite_password_instructions:
     title: "邀請密碼的說明"
     subject_template: "為 %{site_name} 的帳戶設置密碼"
@@ -1502,35 +1436,9 @@ zh_TW:
   new_version_mailer:
     title: "新版本 Mailer"
     subject_template: "[%{email_prefix}] 有可用的 Discourse 更新"
-    text_body_template: |
-      哇哦，有新版本的 [Discourse](http://www.discourse.org) 可以升級！
-
-      你的版本：%{installed_version}
-      新的版本：**%{new_version}**
-
-      - 瀏覽器訪問**[一鍵更新工具](%{base_url}/admin/upgrade)**升級。
-
-      - 查看[GitHub 改動日誌（英文）](https://github.com/discourse/discourse/commits/master)中更新的內容。
-
-      - 訪問 [meta.discourse.org（英文）](https://meta.discourse.org) 獲取 Discourse 的最新資訊、討論和支持。也可訪問 [meta.discoursecn.org 非官方的中文支持論壇](https://meta.discoursecn.org) 獲得支持。
   new_version_mailer_with_notes:
     title: "包含提醒的新版本 Mailer"
     subject_template: "[%{email_prefix}] 有得更新了"
-    text_body_template: |
-      哇哦，有新版本的 [Discourse](http://www.discourse.org) 可以升級！
-
-      你的版本：%{installed_version}
-      新的版本：**%{new_version}**
-
-      - 查看[GitHub 改動日誌（英文）](https://github.com/discourse/discourse/commits/master)中更新的內容。
-
-      - 瀏覽器訪問**[一鍵更新工具](%{base_url}/admin/upgrade)**升級。
-
-      - 訪問 [meta.discourse.org（英文）](http://meta.discourse.org) 獲取 Discourse 的最新資訊、討論和支持。也可訪問 [meta.discoursecn.org 非官方的中文支持論壇](http://meta.discoursecn.org) 獲得支持。
-
-      ### 發行註記
-
-      %{notes}
   flag_reasons:
     off_topic: "你的帖子被標記為 **偏離主題**：鑒於當前的主題標題和第一個帖子，社群成員們感覺它不適合處于這個主題中。"
     inappropriate: "你的帖子被標記為 **不恰當**：社群成員感覺它有冒犯或者侮辱的意味，亦或是它違反了[社群準則](/guidelines)。"
@@ -1767,12 +1675,6 @@ zh_TW:
     new_user_of_the_month:
       title: "你是本月最佳新人！"
       subject_template: "你是本月最佳新人！"
-      text_body_template: |
-        恭喜，你贏得了**%{month_year} 最佳新人獎**！ :trophy:
-
-        每個月我們會頒發給兩位新使用者，獎章會一直呈現在[你的使用者頁面](%{base_url}/my/badges)上。
-
-        你迅速地成為社群不可或缺的一份子了。感謝加入，繼續保持好表現！
   unsubscribe_link: |
     要退訂這些郵件，[請點擊這裡](%{unsubscribe_url})。
   unsubscribe_link_and_mail: |
@@ -1957,7 +1859,6 @@ zh_TW:
       popular_posts: "熱門貼文"
       more_new: "新內容與你分享"
       subject_template: "[%{email_prefix}] 摘要"
-      unsubscribe: "因為你有一段時間沒有來 %{site_link}，因此為你送上摘要郵件。如需取消訂閱，請至 <a href='%{email_settings_url}'>你的郵件設定</a> 或點擊 %{unsubscribe_link}。"
       click_here: "點擊此處"
       from: "%{site_name}的摘要"
       preheader: "在你上次於%{last_seen_at}訪問後的新內容摘要"
@@ -2470,9 +2371,6 @@ zh_TW:
         該徽章授予給帖子收到了第一個讚的成員。恭喜，有社群成員發現你發表的內容有意思、酷炫或者有用！
     autobiographer:
       name: 自傳作者
-      description: 已填寫用戶<a href="/my/preferences">資料</a>信息
-      long_description: |
-        該徽章授予給填寫了<a href="/my/preferences">用戶頁面</a>並選擇了用戶頭像的你。讓社群成員們多瞭解你一點以及你感興趣的內容，能幫助我們打造一個更好、更團結的社群。讓我們一起努力！
     anniversary:
       name: 年度紀念日
       description: 一年活躍用戶，至少發了一個帖子
@@ -2567,9 +2465,6 @@ zh_TW:
         該徽章授予給第一次在回覆中引用帖子的你。在你的回覆中引用之前帖子中的相關的段落將把主題關聯在一起並切題。只要選中別的帖子中的任何文字，然後點擊回覆按鈕將可以引用啦。多引用一些吧！
     read_guidelines:
       name: 閲讀指引
-      description: 閲讀<a href="/guidelines">社群指引</a>
-      long_description: |
-        該徽章授予給<a href="/guidelines">閲讀了社群指引</a>的你。遵守和分享簡單的指引能讓我們打造一個穩定、有趣和可持續的社群。永遠記住別人，一個和你有很多共同點的人，就在屏幕的那一側。友好一些！
     reader:
       name: 讀者
       description: 閲讀了有至少 100 個回覆的主題中的所有回覆

@@ -83,7 +83,6 @@ ja:
           other: "%{count}年後"
       previous_month: '前の月'
       next_month: '次の月'
-      placeholder: 日時を選択
     share:
       topic: 'このトピックのリンクをシェアする'
       post: '投稿 #%{postNumber}'
@@ -768,10 +767,6 @@ ja:
           other: "つのトピックを作成"
         post_count:
           other: "つの投稿"
-        likes_given:
-          other: "あげた <i class='fa fa-heart'></i>"
-        likes_received:
-          other: "もらった <i class='fa fa-heart'></i>"
         days_visited:
           other: "訪問日数"
         posts_read:
@@ -859,7 +854,6 @@ ja:
     first_post: 最初の投稿
     mute: ミュート
     unmute: ミュート解除
-    last_post: 最終投稿時刻
     last_reply_lowercase: 最後の返信
     replies_lowercase:
       other: 返信
@@ -990,10 +984,6 @@ ja:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
-    select_kit:
-      default_header_text: 選択...
-      no_content: 一致する結果が見つかりませんでした。
-      filter_placeholder: 検索...
     emoji_picker:
       filter_placeholder: 絵文字を探す
       people: ピープル
@@ -1086,7 +1076,6 @@ ja:
       ulist_title: "箇条書き"
       list_item: "リストアイテム"
       help: "Markdown 編集のヘルプ"
-      toggler: "編集パネルの表示/非表示"
       modal_ok: "OK"
       modal_cancel: "キャンセル"
       cant_send_pm: "%{username}へメッセージを送ることはできません。"
@@ -1175,7 +1164,6 @@ ja:
       no_more_results: "検索結果は以上です。"
       searching: "検索中..."
       post_format: "#{{post_number}}  {{username}}から"
-      results_page: "検索結果"
       more_results: "検索結果が多数あります。検索条件を絞ってください。"
       cant_find: "探しているものが見つかりませんか？"
       start_new_topic: "新しいトピックを始めてみては？"
@@ -1192,29 +1180,19 @@ ja:
         title: 高度な検索
         posted_by:
           label: 投稿者
-        in_category:
-          label: カテゴリー内
         in_group:
           label: グループ内
         with_badge:
           label: バッヂ指定
-        with_tags:
-          label: タグ指定
         filters:
-          label: トピック/投稿のうち...
           likes: 「いいね！」したもの
           posted: 投稿済
           watching: ウォッチ中
-          private: メッセージにあるもの
-          bookmarks: ブックマーク済
           first: 最初の投稿
           pinned: 固定表示されている
           unpinned: 固定表示されていない
-          seen: 既読
           unseen: 未読
           wiki: wiki
-          images: 画像を含む
-          all_tags: 指定した全てのタグを含む
         statuses:
           label: トピックのうち
           open: オープンされている
@@ -1342,7 +1320,6 @@ ja:
       jump_reply_down: 以後の返信へジャンプ
       deleted: "トピックは削除されました"
       topic_status_update:
-        title: "トピックにタイマーをセット"
         save: "タイマーをセットする"
         num_of_hours: "時間数"
         remove: "タイマーをはずす"
@@ -1657,8 +1634,6 @@ ja:
         change_owner: "オーナーシップを変更"
       actions:
         flag: '通報'
-        defer_flags:
-          other: "取り下げた通報"
         undo:
           off_topic: "通報を取り消す"
           spam: "通報を取り消す"
@@ -2022,7 +1997,6 @@ ja:
         hamburger_menu: '<b>=</b> メニューを開く'
         user_profile_menu: '<b>p</b> ユーザーメニューを開く'
         show_incoming_updated_topics: '<b>.</b> 更新されたトピックを表示する'
-        search: '<b>/</b> or <b>ctrl</b>+<b>shift</b>+<b>s</b> 検索'
         help: '<b>?</b> キーボードヘルプを表示する'
         dismiss_new_posts: '<b>x</b>, <b>r</b> 新規投稿を非表示にする'
         dismiss_topics: '<b>x</b>, <b>t</b> トピックを既読にする'
@@ -2131,20 +2105,10 @@ ja:
         title: "通報"
         agree: "賛成する"
         agree_title: "この通報が有効で正しいことを確認してください"
-        agree_flag_modal_title: "Agree and..."
-        agree_flag_hide_post: "賛成(ポスト非表示 + プライベートメッセージ送信)"
-        agree_flag_hide_post_title: "この投稿を非表示にし、編集を促すプライベートメッセージを自動的に送信する"
-        agree_flag_restore_post: "賛成(投稿を復元)"
-        agree_flag_restore_post_title: "この投稿を復元"
-        agree_flag: "通報に賛成"
-        agree_flag_title: "投稿を変更できなくする事に賛成"
-        defer_flag: "取り下げる"
         defer_flag_title: "通報を削除します。何も行いません。"
         delete: "削除する"
         delete_title: "この通報で通報されている投稿を削除します"
-        delete_post_defer_flag: "投稿を削除し、通報を取り下げます"
         delete_post_defer_flag_title: "投稿を削除します。最初の投稿を削除した場合、トピックも削除されます。"
-        delete_post_agree_flag: "投稿を削除することに賛成します"
         delete_post_agree_flag_title: "投稿を削除します。最初の投稿を削除した場合、トピックも削除されます。"
         delete_flag_modal_title: "Delete and..."
         delete_spammer: "スパムユーザーを削除"
@@ -2161,7 +2125,6 @@ ja:
         dispositions:
           agreed: "賛成しました。"
           disagreed: "反対する"
-          deferred: "取り下げられた"
         flagged_by: "通報者: "
         resolved_by: "解決方法"
         took_action: "Took action"
@@ -2173,17 +2136,6 @@ ja:
         visit_topic: "トピックを確認"
         was_edited: "最初の通報後に編集された投稿"
         previous_flags_count: "この投稿は既に {{count}} 回通報されています"
-        summary:
-          action_type_3:
-            other: "オフトピック x{{count}}"
-          action_type_4:
-            other: "不適切 x{{count}}"
-          action_type_6:
-            other: "カスタム x{{count}}"
-          action_type_7:
-            other: "カスタム x{{count}}"
-          action_type_8:
-            other: "スパム x{{count}}"
       groups:
         primary: "プライマリーグループ"
         no_primary: "（プライマリーグループなし）"

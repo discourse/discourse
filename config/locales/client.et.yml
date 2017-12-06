@@ -101,7 +101,6 @@ et:
           other: "%{count} aastat hiljem"
       previous_month: 'Eelmine Kuu'
       next_month: 'Järgmine Kuu'
-      placeholder: Vali kuupäev
     share:
       topic: 'jaga teema viidet'
       post: 'post nr%{postNumber}'
@@ -754,12 +753,6 @@ et:
         post_count:
           one: "postitus loodud"
           other: "postitust loodud"
-        likes_given:
-          one: "<i class='fa fa-heart'></i> antud"
-          other: "<i class='fa fa-heart'></i> antud"
-        likes_received:
-          one: "<i class='fa fa-heart'></i> saadud"
-          other: "<i class='fa fa-heart'></i> saadud"
         days_visited:
           one: "päev külastatud"
           other: "päevi külastatud"
@@ -851,7 +844,6 @@ et:
     first_post: Esimene postitus
     mute: Vaigista
     unmute: Tühista vaigistus
-    last_post: Viimane postitus
     last_reply_lowercase: viimane vastus
     replies_lowercase:
       one: vastus
@@ -1044,7 +1036,6 @@ et:
       ulist_title: "Täpploend"
       list_item: "Loendi element"
       help: "Markdown-i redaktori spikker"
-      toggler: "peida või ava ladumispaneel"
       modal_ok: "OK"
       modal_cancel: "Tühista"
       cant_send_pm: "Kahjuks ei saa sa kasutajale %{username} sõnumit saata."
@@ -1118,22 +1109,15 @@ et:
         title: Täpsem otsing
         posted_by:
           label: Postitaja
-        in_category:
-          label: Foorumis
         in_group:
           label: Grupis
         with_badge:
           label: Märgisega
-        with_tags:
-          label: Sildiga
         filters:
-          label: Tagasta ainult need postitused, mis
           likes: mulle meeldisid
           posted: sisaldavad minu postitust
           watching: on minu vaatlemise nimekirjas
           tracking: on minu jälgimise nimekirjas
-          private: on minu sõnumite hulgas
-          bookmarks: on minu järjehoidjaga
           first: on teema esimesed postitused
           pinned: on esile tõstetud
           unpinned: ei ole esile tõstetud
@@ -1557,9 +1541,6 @@ et:
         change_owner: "Omanikuvahetus"
       actions:
         flag: 'Tähis'
-        defer_flags:
-          one: "Lükka tähis edasi"
-          other: "Lükka tähised edasi"
         undo:
           off_topic: "Tühista tähise andmine"
           spam: "Tühista tähise andmine"
@@ -2029,9 +2010,7 @@ et:
       selector_no_tags: "sildid puuduvad"
       changed: "muudetud sildid:"
       tags: "Sildid"
-      choose_for_topic: "Vali teemadele valikulised sildid:"
       delete_tag: "Kustuta silt"
-      delete_confirm: "Oled Sa kindel, et soovid selle sildi kustutada?"
       rename_tag: "Nimeta silt ümber"
       rename_instructions: "Vali sildile uus nimi:"
       sort_by: "Järjesta:"
@@ -2160,18 +2139,10 @@ et:
         title: "Lipud"
         agree: "Nõustun"
         agree_title: "Kinnita see tähis kui korrektne ja kehtiv"
-        agree_flag_modal_title: "Nõustun ning..."
-        agree_flag_hide_post: "Nõustun (peida postitus + saada PS)"
-        agree_flag_hide_post_title: "Peida see postitus ja saada kasutajale automaatselt teade soovitusega see üle vaadata"
-        agree_flag_restore_post: "Nõustun (taasta postitus)"
-        agree_flag_restore_post_title: "Taasta see postitus"
-        agree_flag: "Nõustu tähisega"
-        agree_flag_title: "Nõustu tähisega ja ära postitust muuda"
         defer_flag_title: "Eemalda see tähis: praegu ei ole vaja sekkuda."
         delete: "Kustuta"
         delete_title: "Kustuta postitus, millele see tähis viitab."
         delete_post_defer_flag_title: "Kustuta postitus; kui on ainus, kustuta teema"
-        delete_post_agree_flag: "Kustuta postitus ja nõustu tähisega"
         delete_post_agree_flag_title: "Kustuta postitus; kui on ainus, kustuta teema"
         delete_flag_modal_title: "Kustuta ning..."
         delete_spammer: "Kustuta spämmija"
@@ -2186,34 +2157,16 @@ et:
         dispositions:
           agreed: "nõustumisi"
           disagreed: "mittenõustumisi"
-          deferred: "edasilükkamisi"
         flagged_by: "Tähistatud kasutaja poolt"
         resolved_by: "Lahendatud kasutaja poolt"
         took_action: "Reageeris"
         system: "Süsteem"
         error: "Miskit läks nihu"
         reply_message: "Vasta"
-        no_results: "Tähised puuduvad."
         topic_flagged: "See <strong>teema</strong> on tähistatud."
         visit_topic: "Reageerimiseks külasta teemat"
         was_edited: "Postitust on peale esimest tähist muudetud"
         previous_flags_count: "Seda postitust on tähistatud juba {{count}} korda."
-        summary:
-          action_type_3:
-            one: "teemaväline"
-            other: "teemaväline x{{count}}"
-          action_type_4:
-            one: "sobimatu"
-            other: "sobimatu x{{count}}"
-          action_type_6:
-            one: "individuaalne"
-            other: "individuaalne x{{count}}"
-          action_type_7:
-            one: "individuaalne"
-            other: "individuaalne x{{count}}"
-          action_type_8:
-            one: "spämm"
-            other: "spämm x{{count}}"
       groups:
         primary: "Peamine grupp"
         no_primary: "(peamine grupp puudub)"

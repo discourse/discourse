@@ -783,14 +783,6 @@ ro:
           one: "o postare creată"
           few: "postări create"
           other: "de postări create"
-        likes_given:
-          one: "<i class='fa fa-heart'></i> dată"
-          few: "<i class='fa fa-heart'></i> date"
-          other: "de <i class='fa fa-heart'></i> date"
-        likes_received:
-          one: "<i class='fa fa-heart'></i> primită"
-          few: "<i class='fa fa-heart'></i> primite"
-          other: "de <i class='fa fa-heart'></i> primite"
         days_visited:
           one: "vizită"
           few: "vizite"
@@ -886,7 +878,6 @@ ro:
     first_post: Prima postare
     mute: Blochează
     unmute: Deblochează
-    last_post: Ultima postare
     last_reply_lowercase: Ultimul răspuns
     replies_lowercase:
       one: răspuns
@@ -1072,7 +1063,6 @@ ro:
       ulist_title: "Listă cu marcatori"
       list_item: "Element listă"
       help: "Ajutor pentru formatarea cu Markdown"
-      toggler: "ascunde sau arată editorul"
       modal_ok: "Ok"
       modal_cancel: "Anulare"
       cant_send_pm: "Nu poți trimite mesaje către %{username}"
@@ -1146,22 +1136,15 @@ ro:
         title: Căutare avansată
         posted_by:
           label: Postat de
-        in_category:
-          label: În categoria
         in_group:
           label: În grupul
         with_badge:
           label: Cu ecusonul
-        with_tags:
-          label: Cu etichetele
         filters:
-          label: Afișează doar postările/subiectele ...
           likes: pe care le-am apreciat
           posted: în care am postat
           watching: pe care le urmăresc activ
           tracking: le urmăresc
-          private: sunt în mesajele mele
-          bookmarks: le-am adăugat la semne de carte
           first: sunt chiar pe primul loc în listă
           pinned: sunt fixate
           unpinned: nu sunt fixate
@@ -1599,10 +1582,6 @@ ro:
         change_owner: "Schimbă proprietarul"
       actions:
         flag: 'Marchează cu marcaj de avertizare'
-        defer_flags:
-          one: "Amână marcarea"
-          few: "Amână marcările"
-          other: "Amână marcările"
         undo:
           off_topic: "Retrage marcaj de avertizare"
           spam: "Retrage marcaj de avertizare"
@@ -2096,9 +2075,7 @@ ro:
       selector_no_tags: "fără etichete"
       changed: "etichete schimbate:"
       tags: "Etichete"
-      choose_for_topic: "alege etichetele opționale pentru acest subiect"
       delete_tag: "Șterge etichetă"
-      delete_confirm: "Ești sigur că vrei să ștergi această etichetă?"
       rename_tag: "Redenumire etichetă"
       rename_instructions: "Alege un nume nou pentru etichetă:"
       sort_by: "Sortat după:"
@@ -2223,24 +2200,12 @@ ro:
         by: "de către"
       flags:
         title: "Marcaje de avertizare"
-        old: "Vechi"
-        active: "Active"
         agree: "De acord"
         agree_title: "Confirmă acest marcaj ca valid și corect"
-        agree_flag_modal_title: "De acord și..."
-        agree_flag_hide_post: "De acord (ascunde postarea + trimite MP)"
-        agree_flag_hide_post_title: "Ascunde această postare și trimite automat un mesaj utilizatorului, cerându-i insistent să îl editeze."
-        agree_flag_restore_post: "De acord (restaurare postare)"
-        agree_flag_restore_post_title: "Restaurează această postare"
-        agree_flag: "De acord cu marcajul de avertizare"
-        agree_flag_title: "De acord cu marcajul de avertizare și menține postarea neschimbată"
-        defer_flag: "Amânare"
         defer_flag_title: "Scoate marcajul de avertizare; Nu necesită nicio acțiune deocamdată."
         delete: "Șterge"
         delete_title: "Șterge postarea la care se referă marcajul de avertizare."
-        delete_post_defer_flag: "Șterge postarea și amână decizia privind marcajul de avertizare"
         delete_post_defer_flag_title: "Șterge postarea; dacă este prima, șterge subiectul"
-        delete_post_agree_flag: "Șterge postarea și aprobă marcajul de avertizare"
         delete_post_agree_flag_title: "Șterge postarea; dacă este prima, șterge subiectul"
         delete_flag_modal_title: "Șterge și..."
         delete_spammer: "Șterge spammer"
@@ -2255,39 +2220,16 @@ ro:
         dispositions:
           agreed: "aprobate"
           disagreed: "respinse"
-          deferred: "amânate"
         flagged_by: "Marcat de către"
         resolved_by: "Rezolvat de "
         took_action: "A luat măsuri"
         system: "Sistem"
         error: "Ceva nu a funcționat"
         reply_message: "Răspunde"
-        no_results: "Nu există marcaje."
         topic_flagged: "Aceast <strong>subiect</strong> a fost marcat cu marcaj de avertizare."
         visit_topic: "Vizualizează subiectul pentru a acționa."
         was_edited: "Mesajul a fost editat după primul marcaj"
         previous_flags_count: "Acest mesaj a fost deja marcat de {{count}} (de) ori."
-        summary:
-          action_type_3:
-            one: "în afara subiectului"
-            few: "în afara subiectului x{{count}}"
-            other: "în afara subiectului x{{count}}"
-          action_type_4:
-            one: "inadecvat"
-            few: "inadecvat x{{count}}"
-            other: "inadecvat x{{count}}"
-          action_type_6:
-            one: "personalizat"
-            few: "personalizat x{{count}}"
-            other: "personalizat x{{count}}"
-          action_type_7:
-            one: "personalizat"
-            few: "personalizat x{{count}}"
-            other: "personalizat x{{count}}"
-          action_type_8:
-            one: "spam"
-            few: "spam x{{count}}"
-            other: "spam x{{count}}"
       groups:
         primary: "Grup primar"
         no_primary: "(nu există grup primar)"

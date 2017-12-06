@@ -758,12 +758,6 @@ sv:
         post_count:
           one: "inlägg skapat"
           other: "inlägg skapade"
-        likes_given:
-          one: "<i class='fa fa-heart'></i> given"
-          other: "<i class='fa fa-heart'></i> given"
-        likes_received:
-          one: "<i class='fa fa-heart'></i> mottagen"
-          other: "<i class='fa fa-heart'></i> mottagen"
         days_visited:
           one: "dag besökt"
           other: "dagar besökta"
@@ -855,7 +849,6 @@ sv:
     first_post: Första inlägget
     mute: Tysta
     unmute: Avtysta
-    last_post: Senaste inlägg
     last_reply_lowercase: senaste svar
     replies_lowercase:
       one: svar
@@ -1053,7 +1046,6 @@ sv:
       ulist_title: "Punktlista"
       list_item: "Listobjekt"
       help: "Markdown redigeringshjälp"
-      toggler: "Dölj eller visa composer-panelen"
       modal_ok: "OK"
       modal_cancel: "Avbryt"
       cant_send_pm: "Tyvärr, du kan inte skicka ett meddelande till %{username}."
@@ -1128,26 +1120,18 @@ sv:
         title: Avancerad sökning
         posted_by:
           label: Postat av
-        in_category:
-          label: I kategorin
         in_group:
           label: I gruppen
         with_badge:
           label: Med märke
-        with_tags:
-          label: Med taggar
         filters:
-          label: Sänd bara tillbaka ämnen/inlägg som...
           likes: Jag gillade
           posted: Jag postade i
           watching: Jag tittar
           tracking: Jag bevakar
-          private: finns i mitt meddelande
-          bookmarks: Jag har bokmärkt
           first: är den första posten
           pinned: är pinnade
           unpinned: är inte pinnade
-          seen: Jag har läst
           unseen: Jag har inte läst
           wiki: är wiki
         statuses:
@@ -1590,9 +1574,6 @@ sv:
         change_owner: "Ändra ägare"
       actions:
         flag: 'Flagga'
-        defer_flags:
-          one: "Skjut upp"
-          other: "Skjut upp"
         undo:
           off_topic: "Ångra flaggning"
           spam: "Ångra flaggning"
@@ -2076,9 +2057,7 @@ sv:
       selector_no_tags: "inga taggar"
       changed: "taggar ändrade:"
       tags: "Taggar"
-      choose_for_topic: "välj valfria taggar för det här ämnet"
       delete_tag: "Radera tag"
-      delete_confirm: "Är du säker på att du vill ta bort den taggen?"
       rename_tag: "Döp om taggen"
       rename_instructions: "Välj ett nytt namn för taggen:"
       sort_by: "Sortera efter:"
@@ -2205,24 +2184,12 @@ sv:
         by: "av"
       flags:
         title: "Flaggningar"
-        old: "Gamla"
-        active: "Aktiva"
         agree: "Godkänn"
         agree_title: "Bekräfta att den här flaggan är giltig och korrekt"
-        agree_flag_modal_title: "Bekräfta och..."
-        agree_flag_hide_post: "Godkänn (dölj inlägg + skicka PM)"
-        agree_flag_hide_post_title: "Dölj detta inlägg och sänd användaren ett meddelande automatiskt som uppmanar att redigera det"
-        agree_flag_restore_post: "Godkänn (återställ inlägg)"
-        agree_flag_restore_post_title: "Återställ detta inlägg"
-        agree_flag: "Godkänn flaggning"
-        agree_flag_title: "Godkänn flaggning och behåll inlägget oförändrat"
-        defer_flag: "Skjut upp"
         defer_flag_title: "Ta bort den här flaggan; den kräver ingen åtgärd för tillfället."
         delete: "Ta bort"
         delete_title: "Ta bort inlägget som den här flaggan refererar till."
-        delete_post_defer_flag: "Ta bort inlägg och skjut upp flagga"
         delete_post_defer_flag_title: "Ta bort inlägg; om det är det första inlägget, ta bort ämnet"
-        delete_post_agree_flag: "Ta bort inlägg och godkänn flaggning."
         delete_post_agree_flag_title: "Ta bort inlägg; om det är det första inlägget, ta bort ämnet"
         delete_flag_modal_title: "Ta bort och..."
         delete_spammer: "Radera spammare"
@@ -2237,34 +2204,16 @@ sv:
         dispositions:
           agreed: "godkände"
           disagreed: "godkände ej"
-          deferred: "sköt upp"
         flagged_by: "Flaggad av"
         resolved_by: "Löst av"
         took_action: "Agerade"
         system: "System"
         error: "Någonting gick snett"
         reply_message: "Svara"
-        no_results: "Det finns inga flaggor."
         topic_flagged: "Detta <strong>ämne</strong> har blivit flaggad."
         visit_topic: "Besök ämnet för att vidta åtgärder"
         was_edited: "Inlägget redigerades efter den första flaggningen"
         previous_flags_count: "Det här inlägget har redan flaggats {{count}} gånger."
-        summary:
-          action_type_3:
-            one: "orelevant"
-            other: "orelevant x{{count}}"
-          action_type_4:
-            one: "olämpligt"
-            other: "olämpligt x{{count}}"
-          action_type_6:
-            one: "custom"
-            other: "custom x{{count}}"
-          action_type_7:
-            one: "anpassad"
-            other: "anpassad x{{count}}"
-          action_type_8:
-            one: "spam"
-            other: "spam x{{count}}"
       groups:
         primary: "Primär grupp"
         no_primary: "(ingen primär grupp)"

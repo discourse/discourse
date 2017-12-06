@@ -107,7 +107,6 @@ nb_NO:
           other: "%{count} år senere"
       previous_month: 'Forrige måned'
       next_month: 'Neste måned'
-      placeholder: Velg en dato
     share:
       topic: 'del en lenke til dette emnet'
       post: 'innlegg #%{postNumber}'
@@ -1154,7 +1153,6 @@ nb_NO:
       ulist_title: "Kulepunktliste"
       list_item: "Listeelement"
       help: "Hjelp for redigering i Markdown"
-      toggler: "gjem eller vis redigeringspanelet"
       modal_ok: "OK"
       modal_cancel: "Avbryt"
       cant_send_pm: "Beklager, du kan ikke sende privat melding til %{username}."
@@ -1266,29 +1264,24 @@ nb_NO:
         posted_by:
           label: Skrevet av
         in_category:
-          label: I kategorien
+          label: Kategorisert
         in_group:
           label: I gruppen
         with_badge:
           label: Med merke
-        with_tags:
-          label: Med stikkord
         filters:
-          label: Bare returner emner/innlegg som…
           likes: Jeg likte
           posted: jeg skrev innlegg i
           watching: Jeg følger
           tracking: Jeg overvåker
-          private: er i mine meldinger
-          bookmarks: Jeg har bokmerket
+          bookmarks: Jeg bokmerket
           first: er det første innlegget
           pinned: er festet
           unpinned: er ikke festet
-          seen: Jeg har lest
+          seen: Jeg leste
           unseen: Jeg har ikke lest
           wiki: er wiki
           images: inkluder bilde(r)
-          all_tags: Inneholder alle stikkord
         statuses:
           label: Der emner
           open: er åpen
@@ -2273,7 +2266,6 @@ nb_NO:
       selector_no_tags: "ingen stikkord"
       changed: "stikkord endret:"
       tags: "Stikkord"
-      choose_for_topic: "velg alternative stikkord for dette emnet"
       delete_tag: "Slett stikkord"
       delete_confirm:
         one: "Er du sikker på at du ønsker å slette dette stikkordet og fjerne det fra emnet det er tilknyttet?"
@@ -2571,7 +2563,7 @@ nb_NO:
           request: "Forespørsel"
           response: "Svar"
           redeliver_confirm: "Er du sikker på at du vil sende samme payload på nytt?"
-          headers: "Headere"
+          headers: "Hoder"
           payload: "Payload"
           body: "Body"
           go_list: "Gå til liste"
@@ -2674,7 +2666,7 @@ nb_NO:
         import: "Importer"
         delete: "Slett"
         delete_confirm: "Slett denne drakten?"
-        about: "Endre CSS og HTML-headere på nettstedet. Legg til en tilpasning for å starte."
+        about: "Endre CSS og HTML-hoder på nettstedet. Legg til en tilpasning for å starte."
         color: "Farge"
         opacity: "Opacity"
         copy: "Kopier"
@@ -2780,11 +2772,11 @@ nb_NO:
             name: "kvartær"
             description: "Navigasjonslenker."
           header_background:
-            name: "bakgrunn i header"
-            description: "Bakgrunnsfarge i nettstedets header"
+            name: "hodebakgrunn"
+            description: "Bakgrunnsfarge i nettstedets hode"
           header_primary:
-            name: "primær header"
-            description: "Tekst og ikoner i nettstedets header"
+            name: "primærhode"
+            description: "Tekst og ikoner i nettstedets hode."
           highlight:
             name: 'utheving'
             description: 'Bakgrunnsfarge på uthevede elementer på siden, som innlegg og emner.'
@@ -2969,9 +2961,10 @@ nb_NO:
           term: "Term"
           searches: "Søk"
           click_through: "Klikk gjennom"
-          most_viewed_topic: "Mest viste emne"
           unique: "Unike"
           unique_title: "unike brukere som har utført søket"
+          types:
+            header: "Hode"
         logster:
           title: "Feillogg"
       watched_words:

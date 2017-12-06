@@ -7,7 +7,6 @@
 
 sv:
   site_settings:
-    poll_enabled: "Tillåt användare att skapa omröstningar?"
     poll_maximum_options: "Maximalt antal alternativ tillåtna i en omröstning."
     poll_edit_window_mins: "Antal minuter efter ett inlägg har skapats som omröstningar kan redigeras."
   poll:

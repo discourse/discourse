@@ -938,7 +938,6 @@ id:
         check_email:
           title: "Tampilkan alamat email pengguna ini"
       user:
-        suspend_duration_units: "(hari)"
         suspend_reason: "Alasan"
         approve: 'Terima'
         delete: "Hapus Pengguna"

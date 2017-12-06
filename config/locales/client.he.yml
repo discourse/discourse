@@ -101,7 +101,6 @@ he:
           other: "אחרי %{count} שנים"
       previous_month: 'חודש קודם'
       next_month: 'חודש הבא'
-      placeholder: בחרו תאריך
     share:
       topic: 'שתפו קישור לנושא זה'
       post: 'פוסט #%{postNumber}'
@@ -791,12 +790,6 @@ he:
         post_count:
           one: "פוסט נוצר"
           other: "פוסטים נוצרו"
-        likes_given:
-          one: "ניתן <i class='fa fa-heart'></i>"
-          other: "ניתנו <i class='fa fa-heart'></i>"
-        likes_received:
-          one: "התקבל <i class='fa fa-heart'></i>"
-          other: "התקבלו <i class='fa fa-heart'></i>"
         days_visited:
           one: "יום שבוקר"
           other: "ימים שבוקרו"
@@ -888,7 +881,6 @@ he:
     first_post: פוסט ראשון
     mute: השתק
     unmute: בטל השתקה
-    last_post: פוסט אחרון
     last_reply_lowercase: תגובה אחרונה
     replies_lowercase:
       one: תגובה
@@ -1105,7 +1097,6 @@ he:
       ulist_title: "רשימת נקודות"
       list_item: "פריט ברשימה"
       help: "עזרה על כתיבה ב-Markdown"
-      toggler: "הסתר או הצג את פאנל העריכה"
       modal_ok: "אישור"
       modal_cancel: "ביטול"
       cant_send_pm: "מצטערים, אינכם יכולים לשלוח הודעה ל-%{username}."
@@ -1174,7 +1165,6 @@ he:
       no_more_results: "לא נמצאו עוד תוצאות."
       searching: "מחפש ..."
       post_format: "#{{post_number}} מאת {{username}}"
-      results_page: "תוצאות חיפוש"
       context:
         user: "חיפוש פוסטים לפי @{{username}}"
         category: "חפשו את הקטגוריה #{{category}}"
@@ -1184,29 +1174,20 @@ he:
         title: חיפוש מתקדם
         posted_by:
           label: פורסם על ידי
-        in_category:
-          label: בקטגוריה
         in_group:
           label: בקבוצה
         with_badge:
           label: עם עיטור
-        with_tags:
-          label: עם תגיות
         filters:
-          label: החזירו רק נושאים/פוסטים ש...
           likes: אהבתי
           posted: פרסמתי בהם
           watching: אני צופה בהם
           tracking: אני עוקב אחריהם
-          private: בהודעות שלי
-          bookmarks: סימנתי עם סימנייה
           first: הפוסטים הראשונים
           pinned: נעוצים
           unpinned: לא נעוצים
-          seen: קראתי
           unseen: לא קראתי
           wiki: הם ויקי
-          all_tags: מכיל את כל התגים
         statuses:
           label: כאשר נושאים
           open: פתוחים
@@ -1345,7 +1326,6 @@ he:
       jump_reply_down: קפיצה לתגובה מאוחרת
       deleted: "הנושא הזה נמחק"
       topic_status_update:
-        title: "קביעת שעון עצר לנושא"
         save: "קביעת שעון עצר"
         num_of_hours: "מספר שעות:"
         remove: "הסרת שעון עצר"
@@ -1678,9 +1658,6 @@ he:
         change_owner: "שינוי בעלות"
       actions:
         flag: 'דיגול'
-        defer_flags:
-          one: "דחיית סימון"
-          other: "דחיית דגלים"
         undo:
           off_topic: "ביטול דיגול"
           spam: "ביטול דיגול"
@@ -2178,9 +2155,7 @@ he:
       selector_no_tags: "ללא תגיות"
       changed: "תגיות ששונו:"
       tags: "תגיות"
-      choose_for_topic: "בחרו תגים אופציונליים לנושא זה"
       delete_tag: "מחק תגית"
-      delete_confirm: "האם אתם בטוחים שאתם מעוניינים למחוק את התגית הזו?"
       rename_tag: "שנו תגית"
       rename_instructions: "בחרו שם חדש לתגית:"
       sort_by: "סידור לפי:"
@@ -2307,24 +2282,12 @@ he:
         by: "על ידי"
       flags:
         title: "דגלים"
-        old: "ישן"
-        active: "פעיל"
         agree: "הסכמה"
         agree_title: "אישור דגל זה כתקין ונכון"
-        agree_flag_modal_title: "הסכמה ו..."
-        agree_flag_hide_post: "קבלה (הסתרת פוסט + שליחת מסר פרטי)"
-        agree_flag_hide_post_title: "הסתרת פוסט זה ושליחה אוטומטית של הודעה פרטית למשתמשים שמאיצה בהם לערוך אותו"
-        agree_flag_restore_post: "הסכמה (שחזור הפוסט)"
-        agree_flag_restore_post_title: "שחזור פוסט זה"
-        agree_flag: "הסכמה עם הדגל"
-        agree_flag_title: "הסכמה עם הדגל ושמירת הפוסט ללא שינוי"
-        defer_flag: "דחייה"
         defer_flag_title: "הסרה של דגל זה; הוא אינו דורש פעולה כעת."
         delete: "מחיקה"
         delete_title: "מחיקת הפוסט שהדגל מצביע עליו."
-        delete_post_defer_flag: "מחיקת הפוסט ודחיית הדגל"
         delete_post_defer_flag_title: "מחיקת הפוסט; אם זהו הפוסט הראשון, מחיקת הנושא"
-        delete_post_agree_flag: "מחיקת הפוסט והסכמה עם הדגל"
         delete_post_agree_flag_title: "מחיקת פוסט; אם זהו הפוסט הראשון, מחיקת הנושא"
         delete_flag_modal_title: "מחיקה ו..."
         delete_spammer: "מחיקת ספאמר"
@@ -2339,34 +2302,16 @@ he:
         dispositions:
           agreed: "התקבל"
           disagreed: "לא התקבל"
-          deferred: "נדחה"
         flagged_by: "דוגל על ידי"
         resolved_by: "נפתר על ידי"
         took_action: "ננקטה פעולה"
         system: "מערכת"
         error: "משהו השתבש"
         reply_message: "תגובה"
-        no_results: "אין דגלים."
         topic_flagged: "<strong>נושא</strong> זה דוגל."
         visit_topic: "בקרו בנושא כדי לנקוט פעולה"
         was_edited: "הפוסט נערך לאחר הדיגול הראשון"
         previous_flags_count: "פוסט זה כבר דוגל {{count}} פעמים."
-        summary:
-          action_type_3:
-            one: "אוף-טופיק"
-            other: "אוף-טופיק x{{count}}"
-          action_type_4:
-            one: "לא ראוי"
-            other: "לא ראוי x{{count}}"
-          action_type_6:
-            one: "מותאם אישית"
-            other: "מותאם אישית x{{count}}"
-          action_type_7:
-            one: "מותאם אישית"
-            other: "מותאם אישית x{{count}}"
-          action_type_8:
-            one: "ספאם"
-            other: "ספאם x{{count}}"
       groups:
         primary: "קבוצה ראשית"
         no_primary: "(אין קבוצה ראשית)"

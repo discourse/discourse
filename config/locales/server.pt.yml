@@ -577,7 +577,6 @@ pt:
       email_title: 'O tópico "%{title}" requer a atenção do moderador'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>A sua mensagem foi sinalizada pela comunidade.Por favor <a href="/my/messages"> consulte as suas mensagens</a>.</p>'
     user_must_edit: '<p>Esta mensagem foi sinalizada pela comunidade e está temporariamente oculta.</p>'
   archetypes:
     regular:
@@ -828,7 +827,6 @@ pt:
     digest_logo_url: "A imagem de logo alternativa usada no topo dos emails de sumário do seu site. Deverá ser um rectângulo largo. Não deve ser uma imagem SVG. Se deixado vazio 'logo_url' será usado."
     logo_small_url: "A pequena imagem do logótipo no canto superior esquerdo do seu sítio, deve ter uma forma quadrada, visível quando arrastado para baixo. Quando deixado em branco, um glifo de início será exibido."
     favicon_url: "Um favicon para o seu sítio, veja http://en.wikipedia.org/wiki/Favicon, para trabalhar corretamente sobre um CDN deve ser um png"
-    mobile_logo_url: "A imagem do logótipo com posição fixa utilizada no canto superior esquerdo do seu sítio móvel deve ter uma forma quadrada. Quando deixado em branco, `logo_url` será utilizado. ex: http://exemplo.com/uploads/default/logo.png"
     apple_touch_icon_url: "Ícone usado para dispositivos Apple. Tamanho recomendado é 144px por 144px."
     notification_email: "Para: endereço de email usado ao enviar emails essenciais do sistema. O domínio especificado aqui deverá ter SPF, DKIM e registos PTR inversos configurados corretamente para a chegada do email."
     email_custom_headers: "A lista delimitada por barras verticais de cabeçalhos de e-mail personalizados"
@@ -889,7 +887,6 @@ pt:
     allow_index_in_robots_txt: "Especificar em robots.txt que este sítio permite ser indexado pelos motores de pesquisa."
     email_domains_blacklist: "Lista de domínios de email que os utilizadores não podem usar para registo de contas. Exemplo: mailinator.com|trashmail.net"
     email_domains_whitelist: "Lista de domínios de email que os utilizadores DEVEM usar para registar contas. AVISO: Utilizadores com domínios de email diferentes dos listados não serão permitidos!"
-    hide_email_address_taken: "Não informar utilizadores da existência de uma conta quando estes usam o diálogo de palavra-passe esquecida. "
     log_out_strict: "Ao terminar sessão, saia de TODAS as sessões do utilizador em todos dispositivos"
     version_checks: "Fazer o ping do Discourse Hub para atualização de versões e mostrar mensagens sobre novas versões no painel de administração"
     new_version_emails: "Enviar um email para o endereço 'contact_email' quando uma nova versão do Discourse estiver disponível."
@@ -1344,7 +1341,6 @@ pt:
     email_too_long: "O email fornecido é demasiado longo. Nomes de caixas de email não devem ter mais que 254 caracteres, e nomes de domínio não devem ter mais que 253 caracteres."
     reserved_username: "Esse nome de utilizador não é permitido."
     missing_user_field: "Não completou todos os campos de utilizador."
-    close_window: "A autenticação está completa. Feche esta janela para continuar."
     already_logged_in: "Oops, parece que tentou aceitar um convite para outro utilizador. Se não é o %{current_user}, por favor saia e tente novamente."
   user:
     no_accounts_associated: "Sem contas associadas"
@@ -1352,7 +1348,6 @@ pt:
     username:
       short: "deve ter pelo menos %{min} caracteres"
       long: "não deve ter mais que %{max} caracteres"
-      characters: "pode incluir apenas números, letras e sublinhados"
       unique: "tem que ser único"
       blank: "tem que estar preenchido"
       must_begin_with_alphanumeric_or_underscore: "tem de começar por uma letra, um número ou o carácter sublinhado"
@@ -1372,14 +1367,6 @@ pt:
       other: "%{count} sinalizações à espera de serem tratadas"
   unsubscribe_mailer:
     subject_template: "Confirme que não quer receber emails com actualizações de %{site_title}"
-  invite_mailer:
-    subject_template: "%{inviter_name} convidou-o a juntar-se a '%{topic_title}' em %{site_domain_name}"
-  custom_invite_mailer:
-    subject_template: "%{inviter_name} convidou-o para '%{topic_title}' em %{site_domain_name}"
-  invite_forum_mailer:
-    subject_template: "%{inviter_name} convidou-o a juntar-se a %{site_domain_name}"
-  custom_invite_forum_mailer:
-    subject_template: "%{inviter_name} convidou-o para %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Configurar a palavra-passe para a sua conta %{site_name}"
   download_backup_mailer:
@@ -1432,34 +1419,8 @@ pt:
       [mt]: http://www.mail-tester.com/
   new_version_mailer:
     subject_template: "[%{email_prefix}] Nova versão do Discourse, disponível atualização"
-    text_body_template: |
-      Hurrah, uma nova versão do [Discourse](http://www.discourse.org) está disponível!
-
-      A sua versão: %{installed_version}
-      A nova versão: **%{new_version}**
-
-      -Atualize facilmente usando a nossa **[actualização de um-clique via navegador](%{base_url}/admin/upgrade)**
-
-      - Veja o que há de novo em [GitHub changelog](https://github.com/discourse/discourse/commits/master).
-
-      - Visite [meta.discourse.org](https://meta.discourse.org) para notícias, debates, e suporte para o Discourse.
   new_version_mailer_with_notes:
     subject_template: "[%{email_prefix}] disponível atualização"
-    text_body_template: |
-      Hurrah, uma nova versão do [Discourse](http://www.discourse.org) está disponível!
-
-      A sua versão: %{installed_version}
-      A nova versão: **%{new_version}**
-
-      -Atualize facilmente usando a nossa **[actualização de um-clique via navegador](%{base_url}/admin/upgrade)**
-
-      - Veja o que há de novo em [GitHub changelog](https://github.com/discourse/discourse/commits/master).
-
-      - Visite [meta.discourse.org](https://meta.discourse.org) para notícias, debates, e suporte para o Discourse.
-
-      ### Notas de lançamento
-
-      %{notes}
   flag_reasons:
     off_topic: "A sua mensagem foi marcada como **fora do contexto**: a comunidade sente que não se enquadra neste tópico, conforme o seu título e a sua primeira mensagem."
     inappropriate: "A sua mensagem foi sinalizada como **inapropriada**: a comunidade sente que é ofensiva, abusiva ou que é uma violação das [orientações da nossa comunidade](/guidelines)."
@@ -2087,9 +2048,6 @@ pt:
         Este distintivo é concedido quando recebe o seu primeiro gosto numa publicação. Parabéns, publicou algo que os colegas membros da comunidade acham interessante, giro, ou útil!
     autobiographer:
       name: Autobiógrafo
-      description: Preencheu informação de <a href="/my/preferences">perfil</a>
-      long_description: |
-        Este distintivo é concedido por preencher <a href="/my/preferences">o seu perfil de utilizador</a> e por selecionar uma imagem de perfil. Deixar a comunidade saber mais sobre quem você é e no que está interessado torna a comunidade melhor e mais ligada. Junte-se a nós!
     anniversary:
       name: Aniversário
       description: Membro ativo há um ano, publicou pelo menos uma vez
@@ -2183,9 +2141,6 @@ pt:
         Este distintivo é concedido pela primeira vez que cita uma publicação numa resposta sua. Citar secções relevantes de publicações anteriores na sua resposta ajuda a manter as discussões coesas e focadas. Cite generosamente!
     read_guidelines:
       name: Ler Orientações
-      description: Ler as <a href="/guidelines">orientações da comunidade</a>
-      long_description: |
-        Este distintivo é concedido por <a href="/guidelines">ler as orientações da comunidade</a>. Seguir e partilhar estas simples orientações ajuda a construir uma comunidade segura, divertida e sustentável para todos. Lembre-se sempre que está outro ser humano, em muito como si, do outro lado do ecrã. Seja agradável!
     reader:
       name: Leitor
       description: Ler todas as respostas num tópico com mais de 100 respostas

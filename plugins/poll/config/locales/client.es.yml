@@ -55,6 +55,7 @@ es:
         help:
           options_count: Introducir al menos 2 opciones
           invalid_values: El valor mínimo debe ser menor que el valor máximo.
+          min_step_value: El valor mínimo por paso es 1
         poll_type:
           label: Tipo
           regular: Una opción

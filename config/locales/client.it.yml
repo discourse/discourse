@@ -107,7 +107,6 @@ it:
           other: "%{count} anni dopo"
       previous_month: 'Mese Precedente'
       next_month: 'Mese Successivo'
-      placeholder: Seleziona una data
     share:
       topic: 'Condividi un link a questa conversazione'
       post: 'messaggio n°%{postNumber}'
@@ -1154,7 +1153,6 @@ it:
       ulist_title: "Elenco Puntato"
       list_item: "Elemento lista"
       help: "Aiuto Inserimento Markdown"
-      toggler: "nascondi o mostra il pannello di editing"
       modal_ok: "OK"
       modal_cancel: "Annulla"
       cant_send_pm: "Spiacenti, non puoi inviare un messaggio a %{username}."
@@ -1263,30 +1261,20 @@ it:
         title: Ricerca Avanzata
         posted_by:
           label: Pubblicato da
-        in_category:
-          label: Nella Categoria
         in_group:
           label: Nel Gruppo
         with_badge:
           label: Con Distintivo
-        with_tags:
-          label: Con Etichette
         filters:
-          label: 'Mostra solamente argomenti/messaggi:'
           likes: su cui ho messo "Mi Piace"
           posted: ho pubblicato in
           watching: sto osservando
           tracking: sto seguendo
-          private: messaggi privati
-          bookmarks: ho aggiunto ai segnalibri
           first: sono il primissimo post
           pinned: sono appuntati
           unpinned: non sono appuntati
-          seen: ho letto
           unseen: non ho letto
           wiki: sono wiki
-          images: include immagine/i
-          all_tags: Contiene tutte le etichette
         statuses:
           label: In cui gli argomenti
           open: sono aperti
@@ -2267,7 +2255,6 @@ it:
       selector_no_tags: "nessuna etichetta"
       changed: "etichette cambiate:"
       tags: "Etichette"
-      choose_for_topic: "scegli delle etichette opzionali per questo argomento"
       delete_tag: "Cancella Etichetta"
       delete_confirm:
         one: "Sei sicuro di voler eliminare questa etichetta e rimuoverla da {{count}} argomenti a cui è assegnata?"
@@ -2963,7 +2950,6 @@ it:
           term: "Termine"
           searches: "Ricerche"
           click_through: "Cliccate"
-          most_viewed_topic: "Argomento Più Visualizzato"
           unique: "Unico"
         logster:
           title: "Log Errori"

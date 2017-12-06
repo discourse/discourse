@@ -101,7 +101,6 @@ sq:
           other: "%{count} vjet më vonë"
       previous_month: 'Muaji i kaluar'
       next_month: 'Muaji i ardhshëm'
-      placeholder: Zgjidh një datë
     share:
       topic: 'shpërnda një lidhje tek kjo temë'
       post: 'postim #%{postNumber}'
@@ -740,12 +739,6 @@ sq:
         post_count:
           one: "postim i krijuar"
           other: "postime të krijuara"
-        likes_given:
-          one: "<i class='fa fa-heart'></i> dhënë"
-          other: "<i class='fa fa-heart'></i> dhënë"
-        likes_received:
-          one: "<i class='fa fa-heart'></i> marrë"
-          other: "<i class='fa fa-heart'></i> marrë"
         days_visited:
           one: "ditë që viziton faqen"
           other: "ditë që viziton faqen"
@@ -835,7 +828,6 @@ sq:
     first_post: Postimi i parë
     mute: Hesht
     unmute: Çaktivizo heshtjen
-    last_post: Postimi i fundit
     last_reply_lowercase: përgjigja e fundit
     replies_lowercase:
       one: përgjigje
@@ -1030,7 +1022,6 @@ sq:
       ulist_title: "Listë me pika"
       list_item: "Element liste"
       help: "Ndihmë mbi Markdown"
-      toggler: "trego ose fshih panelin e shkrimit"
       modal_ok: "OK"
       modal_cancel: "Anulo"
       cant_send_pm: "Na vjen keq, nuk mund t'i dërgoni mesazh privat anëtarit %{username}."
@@ -1096,7 +1087,6 @@ sq:
       no_more_results: "Nuk gjetëm rezultate të tjera. "
       searching: "Duke kërkuar..."
       post_format: "#{{post_number}} nga {{username}}"
-      results_page: "Rezultatet e kërkimit"
       context:
         user: "Kërko postime nga @{{username}}"
         category: "Kërkoni kategorinë #{{category}}"
@@ -1106,14 +1096,10 @@ sq:
         title: Kërkim i avancuar
         posted_by:
           label: Postuar nga
-        in_category:
-          label: Në kategorinë
         in_group:
           label: Në grupin
         with_badge:
           label: Me stemën
-        with_tags:
-          label: Me etiketat
     hamburger_menu: "shko tek një kategori ose një listë e re temash"
     new_item: "e re"
     go_back: 'kthehu mbrapa'
@@ -1491,9 +1477,6 @@ sq:
         change_owner: "Ndrysho zotëruesin"
       actions:
         flag: 'Sinjalizoni'
-        defer_flags:
-          one: "Shty sinjalizimin"
-          other: "Shty sinjalizimet"
         undo:
           off_topic: "Anulo sinjalizimin"
           spam: "Anulo sinjalizimin"
@@ -1934,9 +1917,7 @@ sq:
       selector_no_tags: "asnjë etiketë"
       changed: "etiketat e ndryshuara:"
       tags: "Etiketat"
-      choose_for_topic: "zgjidhni etiketat fakultative për këtë temë"
       delete_tag: "Fshi etiketën"
-      delete_confirm: "Jeni të sigurtë që doni të fshini këtë etiketë?"
       rename_tag: "Riemëro etiketën"
       rename_instructions: "Zgjidhni një emër të ri për këtë etiketë"
       sort_by: "Rendit sipas:"
@@ -2055,24 +2036,12 @@ sq:
         by: "nga"
       flags:
         title: "Sinjalizimet"
-        old: "Të Vjetra"
-        active: "Aktive"
         agree: "Pranoj"
         agree_title: "Konfirmo këtë sinjalizim si të vlefshëm do korrekt"
-        agree_flag_modal_title: "Prano dhe..."
-        agree_flag_hide_post: "Dakord (fshi postimin + ço MP)"
-        agree_flag_hide_post_title: "Fshihe këtë postim automatikisht dhe çoi postuesit një mesazh që t'a redaktojë postimin"
-        agree_flag_restore_post: "Dakord (rikthe postimin)"
-        agree_flag_restore_post_title: "Rikthe këtë postim"
-        agree_flag: "Bi dakord me sinjalizimin"
-        agree_flag_title: "Dakord me sinjalizimin dhe lini postimin të pandryshuar"
-        defer_flag: "Shty"
         defer_flag_title: "Hiqe këtë sinjalizim; nuk ka nevojë për veprime në këtë moment. "
         delete: "Fshij"
         delete_title: "Fshini postimin e sinjalizuar."
-        delete_post_defer_flag: "Fshini postimin dhe shtyni për më vonë sinjalizimin"
         delete_post_defer_flag_title: "Fshini postimin; në qoftë postim i parë, fshihet tema"
-        delete_post_agree_flag: "Fshini postimin dhe bini dakord me sinjalizimin"
         delete_post_agree_flag_title: "Fshini postimin; në qoftë postim i parë, fshihet tema"
         delete_flag_modal_title: "Fshi dhe..."
         delete_spammer: "Elimino Spammer"
@@ -2087,34 +2056,16 @@ sq:
         dispositions:
           agreed: "dakort"
           disagreed: "nuk ishte dakord"
-          deferred: "shtyu"
         flagged_by: "Sinjalizuar nga"
         resolved_by: "Zgjidhur nga"
         took_action: "Mori veprimin"
         system: "Sistemi"
         error: "Pati një gabim"
         reply_message: "Përgjigju"
-        no_results: "Nuk ka sinjalizime."
         topic_flagged: "Kjo <strong>temë</strong> është sinjalizuar."
         visit_topic: "Vizito temën për të vepruar"
         was_edited: "Postimi është redaktuar pas sinjalizimit të parë"
         previous_flags_count: "Ky postim është sinjalizuar {{count}} herë."
-        summary:
-          action_type_3:
-            one: "jashtë teme"
-            other: "jashtë teme x{{count}}"
-          action_type_4:
-            one: "e papërshtatshme"
-            other: "e papërshtatshme x{{count}}"
-          action_type_6:
-            one: "tjetër"
-            other: "tjetër x{{count}}"
-          action_type_7:
-            one: "tjetër"
-            other: "tjetër x{{count}}"
-          action_type_8:
-            one: "spam"
-            other: "spam x{{count}}"
       groups:
         primary: "Grupi Parësor"
         no_primary: "(asnjë grup parësor)"

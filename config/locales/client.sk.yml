@@ -119,7 +119,6 @@ sk:
           other: "%{count} rokov neskôr"
       previous_month: 'Predchádzajúci mesiac'
       next_month: 'Nasledujúci mesiac'
-      placeholder: Zvoľte dátum
     share:
       topic: 'zdieľaj odkaz na túto tému'
       post: 'príspevok #%{postNumber}'
@@ -742,14 +741,6 @@ sk:
           one: "vytvorený príspevok"
           few: "vytvorené príspevky"
           other: "vytvorených príspevkov"
-        likes_given:
-          one: "<i class='fa fa-heart'></i> rozdaný"
-          few: "<i class='fa fa-heart'></i> rozdané"
-          other: "<i class='fa fa-heart'></i> rozdaných"
-        likes_received:
-          one: "<i class='fa fa-heart'></i> získaný"
-          few: "<i class='fa fa-heart'></i> získané"
-          other: "<i class='fa fa-heart'></i> získaných"
         days_visited:
           one: "deň na stránke"
           few: "dni na stránke"
@@ -838,7 +829,6 @@ sk:
     first_post: Prvý príspevok
     mute: Ignorovať
     unmute: Prestať ignorovať
-    last_post: Posledný príspevok
     last_reply_lowercase: posledná odpoveď
     replies_lowercase:
       one: odpoveď
@@ -1016,7 +1006,6 @@ sk:
       ulist_title: "Odrážky"
       list_item: "Položka zoznamu"
       help: "Nápoveda úprav pre Markdown"
-      toggler: "skryť alebo zobraziť panel úprav"
       modal_ok: "OK"
       modal_cancel: "Zrušiť"
       cant_send_pm: "Ľutujeme, nemôžete poslať správu používateľovi %{username}."
@@ -1087,18 +1076,11 @@ sk:
         title: Rozširené vyhľadávanie
         posted_by:
           label: Autor príspevku
-        in_category:
-          label: V kategórii
-        with_tags:
-          label: Má štítky
         filters:
-          label: Hľadaj iba v témach/prispevkoch, ktoré...
           likes: sa mi páčia
           posted: obsahujú môj príspevok
           watching: Sledujem
           tracking: Pozorujem
-          private: sú v mojich správach
-          seen: som čítal
           unseen: som nečítal
         statuses:
           label: Kde témy
@@ -1513,10 +1495,6 @@ sk:
         change_owner: "Zmeniť vlastníctvo"
       actions:
         flag: 'Označ'
-        defer_flags:
-          one: "Zrušiť označenie"
-          few: "Zrušiť označenia"
-          other: "Zrušiť označenia"
         undo:
           off_topic: "Zruš označenie"
           spam: "Zruš označenie"
@@ -1962,9 +1940,7 @@ sk:
       selector_no_tags: "žiadne štítky"
       changed: "zmenené štítky:"
       tags: "Štítky"
-      choose_for_topic: "Zvoľte voliteľné štítky pre túto tému"
       delete_tag: "Zmazať štítok"
-      delete_confirm: "Ste si istý, že chcete zmazať tento štítok?"
       rename_tag: "Premenovať štítok"
       rename_instructions: "Vyberte nové meno pre štítok:"
       sort_by: "Zoradiť podľa:"
@@ -2079,24 +2055,12 @@ sk:
         by: "podľa"
       flags:
         title: "Označenia"
-        old: "Staré"
-        active: "Aktívny"
         agree: "Súhlasiť"
         agree_title: "Akceptovať toto označenie ako platné a správne"
-        agree_flag_modal_title: "Súhlasiť a ...."
-        agree_flag_hide_post: "Súhlasiť (skryť príspevok a poslať súkromnú správu)"
-        agree_flag_hide_post_title: "Skryť tento príspevok a automaticky poslať súkromnú správu s výzvou na úpravu príspevku."
-        agree_flag_restore_post: "Súhlasiť (obnoviť príspevok)"
-        agree_flag_restore_post_title: "Obnoviť tento príspevok"
-        agree_flag: "Súhlasiť s označením"
-        agree_flag_title: "Súhlasiť s označením, ale nemeníť príspevok"
-        defer_flag: "Odložiť"
         defer_flag_title: "Zrušíť označenie. Žiadna akcia nie je nateraz potrebná."
         delete: "Odstrániť"
         delete_title: "Zmazať príspevok na ktorý označenie odkazuje ."
-        delete_post_defer_flag: "Zmazať príspevok a zrušiť označenie"
         delete_post_defer_flag_title: "Zmazať prípspevok; ak ide o prvý príspevok, zmazať aj tému"
-        delete_post_agree_flag: "Zmazať príspevok a súhlasiť s označením"
         delete_post_agree_flag_title: "Zmazať prípspevok; ak ide o prvý príspevok, zmazať aj tému"
         delete_flag_modal_title: "Zmazať a..."
         delete_spammer: "Zmazať spammera"
@@ -2111,39 +2075,16 @@ sk:
         dispositions:
           agreed: "odsúhlasené"
           disagreed: "neodsúhlasené"
-          deferred: "odložené"
         flagged_by: "Označené "
         resolved_by: "Vyriešené"
         took_action: "Prijal opatrenia"
         system: "Systém"
         error: "Niečo sa pokazilo"
         reply_message: "Odpovedať"
-        no_results: "Žiadne označenia."
         topic_flagged: "Táto <strong>téma</strong> bola označená. "
         visit_topic: "Navšťívte tému pre prijatie opatrení"
         was_edited: "Príspevok bol upravený po prvom označení"
         previous_flags_count: "Tento príspevok bol už označený {{count}} krát."
-        summary:
-          action_type_3:
-            one: "mimo tému"
-            few: "mimo tému x{{count}}"
-            other: "mimo tému x{{count}}"
-          action_type_4:
-            one: "nevhodný"
-            few: "nevhodné x{{count}}"
-            other: "nevhodných x{{count}}"
-          action_type_6:
-            one: "vlastná"
-            few: "vlastné x{{count}}"
-            other: "vlastných x{{count}}"
-          action_type_7:
-            one: "vlastný"
-            few: "vlastné x{{count}}"
-            other: "vlastných x{{count}}"
-          action_type_8:
-            one: "spam"
-            few: "spam x{{count}}"
-            other: "spam x{{count}}"
       groups:
         primary: "Hlavná skupina"
         no_primary: "(bez hlavnej skupiny)"

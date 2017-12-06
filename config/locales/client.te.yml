@@ -456,7 +456,6 @@ te:
     first_post: తొలి టపా
     mute: నిశ్శబ్దం
     unmute: వినిశ్శబ్దం
-    last_post: చివరి టపా
     summary:
       enabled_description: "మీరు ఈ విషయపు సారాంశము చదువుతున్నారు. ఆసక్తికర టపాలు కమ్యునిటీ ఎంచుకుంటుంది. "
       enable: 'ఈ విషయాన్ని సంగ్రహించు'
@@ -574,7 +573,6 @@ te:
       ulist_title: "చుక్కల జాబితా"
       list_item: "జాబితా అంశం"
       help: "మార్క్ డైన్ సవరణ సహాయం"
-      toggler: "దాచు లేదా చూపు కంపోజరు ఫలకం"
       admin_options_title: "ఈ విషయానికి ఐచ్చిక సిబ్బంది అమరికలు"
     notifications:
       none: "ఈ సమయంలో ప్రకటనలు చూపలేకున్నాము."
@@ -841,9 +839,6 @@ te:
         unhide: "చూపు"
       actions:
         flag: 'కేతనం'
-        defer_flags:
-          one: "కేతనం వాయిదావేయి"
-          other: "కేతనాలు వాయిదావేయి"
         undo:
           off_topic: "కేతనం రద్దు"
           spam: "కేతనం రద్దు"
@@ -1121,23 +1116,12 @@ te:
         by: "నుండి"
       flags:
         title: "కేతనాలు"
-        old: "పాత"
-        active: "చేతన"
         agree: "ఒప్పుకోండి"
         agree_title: "ఈ కేతనం సరైనదిగా చెప్పండి"
-        agree_flag_modal_title: "ఒప్పుకొను మరియు"
-        agree_flag_hide_post: "ఒప్పుకొని (టపా దాచు మరియు ప్రైవేటు సందేశం పంపు)"
-        agree_flag_restore_post: "ఒప్పుకొను (టపా పునస్తాపించు)"
-        agree_flag_restore_post_title: "ఈ టపా పునస్తాపించు"
-        agree_flag: "కేతనంతో ఒప్పుకో"
-        agree_flag_title: "కేతనంతో ఒప్పుకో మరియు టపాను మార్చకుండా ఉంచు"
-        defer_flag: "వాయిదావేయి"
         defer_flag_title: "ఈ కేతనం తొలగించు; ఇప్పుడు ఎటువంటి చర్య అవసరంలేదు."
         delete: "తొలగించు"
         delete_title: "ఈ కేతనం వర్తించే టపా తొలగించు"
-        delete_post_defer_flag: "టపా తొలగించు మరియు కేతనం వాయిదా వేయి"
         delete_post_defer_flag_title: "టపా తొలగించు; ఇదే తొలి టపా అయితే ఈ విషయాన్ని తొలగించు"
-        delete_post_agree_flag: "టపా తొలగించు మరియు కేతనంతో అంగీకరించు"
         delete_post_agree_flag_title: "టపా తొలగించు; తొలగి టపా అయితే, విషయాన్ని కూడా తొలగించు"
         delete_flag_modal_title: "తొలగించు మరియు..."
         delete_spammer: "స్పామరును తొలగించు"
@@ -1152,34 +1136,16 @@ te:
         dispositions:
           agreed: "ఒప్పుకున్నారు"
           disagreed: "ఒప్పుకోలేదు"
-          deferred: "వాయిదా వేసారు"
         flagged_by: "కేతనించినవారు"
         resolved_by: "సరిచేసినవారు"
         took_action: "చర్య తీసుకున్నారు"
         system: "వ్యవస్థ"
         error: "ఏదే తేడా జరిగింది"
         reply_message: "జవాబు"
-        no_results: "ఎట్టి కేతనాలూ లేవు"
         topic_flagged: "ఈ <strong>విషయం</strong> కేతనించబడింది."
         visit_topic: "చర్య తీసుకోడానికి విషయం దర్శించు"
         was_edited: "తొలి కేతనం తర్వాత టపా సవరించబడింది"
         previous_flags_count: "ఈ టపా ఇప్పటికే {{count}}  కేతనించబడింది."
-        summary:
-          action_type_3:
-            one: "విషయాంతరం"
-            other: "విషయాంతరం x{{count}}"
-          action_type_4:
-            one: "అసమంజసం "
-            other: "అసమంజసం x{{count}}"
-          action_type_6:
-            one: "అనురూపం"
-            other: "అనురూప x{{count}}"
-          action_type_7:
-            one: "అనురూపం"
-            other: "అనురూపం x{{count}}"
-          action_type_8:
-            one: "స్పాము"
-            other: "స్పామ్ x{{count}}"
       groups:
         primary: "ప్రాథమిక గుంపు"
         no_primary: "(ప్రాథమిక గుంపు లేదు)"

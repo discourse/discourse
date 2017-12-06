@@ -7,9 +7,10 @@
 
 es:
   site_settings:
-    poll_enabled: "¿Permitir la creación de encuestas?"
+    poll_enabled: "¿Permitir encuestas?"
     poll_maximum_options: "Número máximo de opciones permitidas en una encuesta."
     poll_edit_window_mins: "Número de minutos tras la creación del mensaje durante los cuales las encuestas pueden ser editadas."
+    poll_minimum_trust_level_to_create: "Definir el mínimo nivel de confianza requerido para crear encuestas."
   poll:
     multiple_polls_without_name: "Hay varias encuestas sin nombre. Usa la etiqueta '<code>name</code>' para diferenciar tus encuestas."
     multiple_polls_with_same_name: "Hay varias encuestas con el mismo nombre: <strong>%{name}</strong>. Usa la etiqueta '<code>name</code>' para diferenciar tus encuestas."
@@ -39,5 +40,6 @@ es:
     poll_must_be_open_to_vote: "La encuesta debe estar abierta para votar."
     topic_must_be_open_to_toggle_status: "Este tema debe estar abierto para cambiar entre estados."
     only_staff_or_op_can_toggle_status: "Solo un moderador, administrador o el autor original del post puede cambiar el estado de una encuesta."
+    insufficient_rights_to_create: "No tienes permitido para crear encuestas."
     email:
       link_to_poll: "Haz clic para ver la encuesta."

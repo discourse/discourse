@@ -641,7 +641,6 @@ ru:
       email_title: 'Тема "%{title}" требует внимания модератора'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>На ваше сообщение поступила жалоба. Вы можете посмотреть ваше сообщение <a href="/my/messages">тут</a>.</p>'
     user_must_edit: '<p>На это сообщение поступили жалобы от участников сообщества, поэтому оно временно скрыто.</p>'
   archetypes:
     regular:
@@ -1079,7 +1078,6 @@ ru:
     allow_animated_thumbnails: "Генерировать анимированные миниатюры gif-картинок."
     default_avatars: "URL для аватара, который будет использован по умолчанию для новых пользователей, пока они не изменят его."
     automatically_download_gravatars: "Скачивать аватарку Gravatar пользователя во время создания учетной записи или изменения e-mail."
-    email_accent_bg_color: "Акцентирующий цвет для использования в качестве фона некоторых элементов в HTML писем. Введите название цвета ('red') или hex значение ('#FF000').  "
     email_link_color: "Цвет ссылок в HTML письмах. Введите название цвета ('blue') или hex значение ('#0000FF')."
     detect_custom_avatars: "Проверять ли, что пользователи загрузили свои собственные картинки профиля (аватарки)."
     max_daily_gravatar_crawls: "Максимальное количество загрузок аватаорок с Gravatar за один день"
@@ -1273,7 +1271,6 @@ ru:
     email_too_long: "E-mail, который Вы указали, слишком длинный. Имя почтового ящика должно быть не длиннее 254 символов, а доменное имя не более 253 символов."
     reserved_username: "Такой псевдоним не разрешен."
     missing_user_field: "Вы не заполнили все поля пользователя"
-    close_window: "Аутентификация выполнена. Закройте это окно для продолжения."
     already_logged_in: "Ой, кажется, Вы пытаетесь принять приглашение для другого пользователя. Если Вы не %{current_user}, пожалуйста, выйдите из учётной записи и попробуйте снова."
   user:
     no_accounts_associated: "Нет ассоциированных учетных записей"
@@ -1282,7 +1279,6 @@ ru:
     username:
       short: "минимум %{min} знаков"
       long: "должно быть более %{max} знаков"
-      characters: "должно состоять только из цифр и латинских букв"
       unique: "должно быть уникально"
       blank: "необходимо заполнить"
       must_begin_with_alphanumeric_or_underscore: "должно начинаться с буквы, цифры или нижнего подчёркивания"
@@ -1306,12 +1302,6 @@ ru:
       other: "%{count} жалоб ожидают рассмотрения"
   unsubscribe_mailer:
     subject_template: "Подтвердите, что вы больше не желаете получать обновления по электронной почте от %{site_title}"
-  invite_mailer:
-    subject_template: "%{inviter_name} приглашает вас присоединиться к '%{topic_title}' на сайте %{site_domain_name}"
-  custom_invite_mailer:
-    subject_template: "%{inviter_name} приглашает Вас присоединиться к '%{topic_title}' на сайте %{site_domain_name}"
-  invite_forum_mailer:
-    subject_template: "%{inviter_name} приглашает вас присоединиться к %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Задайте пароль для вашей учетной записи на сайте %{site_name}"
   flag_reasons:
@@ -1502,7 +1492,6 @@ ru:
       description: Получил симпатию
     autobiographer:
       name: Автобиограф
-      description: Заполнил информацию в <a href="/my/preferences">профиле</a>
     anniversary:
       name: Годовщина
     nice_post:

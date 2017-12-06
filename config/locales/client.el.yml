@@ -107,7 +107,7 @@ el:
           other: "%{count} χρόνια μετά"
       previous_month: 'Προηγούμενος μήνας'
       next_month: 'Επόμενος μήνας'
-      placeholder: Επιλέξτε ημερομηνία
+      placeholder: ημερομηνία
     share:
       topic: 'κοινοποίησε έναν σύνδεσμο προς αυτό το νήμα'
       post: 'ανάρτηση #%{postNumber}'
@@ -919,7 +919,7 @@ el:
     last_post: Αναρτήθηκε
     time_read: Διαβάστηκε
     time_read_recently: '%{time_read} πρόσφατα'
-    time_read_tooltip: '%{time_read}συνολικός χρόνος ανάγνωσης'
+    time_read_tooltip: '%{time_read} συνολικός χρόνος ανάγνωσης'
     time_read_recently_tooltip: '%{time_read}συνολικός χρόνος ανάγνωσης (%{recent_time_read} τις τελευταίες 60 ημέρες)'
     last_reply_lowercase: τελευταία απάντηση
     replies_lowercase:
@@ -1152,7 +1152,6 @@ el:
       ulist_title: "Κουκίδες"
       list_item: "Στοιχείο Λίστας"
       help: "Βοήθεια Επεξεργασίας Markdown"
-      toggler: "εμφάνιση ή απόκρυψη του παραθύρου σύνθεσης"
       modal_ok: "OK"
       modal_cancel: "Ακύρωση"
       cant_send_pm: "Λυπούμαστε, δεν μπορείτε να στείλετε μήνυμα στο χρήστη %{username}."
@@ -1261,30 +1260,20 @@ el:
         title: Προηγμένη Αναζήτηση
         posted_by:
           label: Αναρτήθηκε από
-        in_category:
-          label: Σε κατηγορία
         in_group:
           label: Σε ομάδα
         with_badge:
           label: Με Παράσημο
-        with_tags:
-          label: Με Ετικέτες
         filters:
-          label: Να επιστρέψεις μόνο νήματα/αναρτήσεις που...
           likes: μου άρεσαν
           posted: απάντησα
           watching: επιτηρώ
           tracking: παρακολουθώ
-          private: είναι στα μηνύματα μου
-          bookmarks: εχω βάλει σελιδοδείκτη
           first: είναι η πρώτη ανάρτηση
           pinned: είναι καρφιτσωμένα
           unpinned: δεν είναι καρφιτσωμένα
-          seen: διάβασα
           unseen: δεν διάβασα
           wiki: ' είναι βίκι'
-          images: περιλαμβάνουν εικόνες
-          all_tags: Πειρέχει όλες τις ετικέτες
         statuses:
           label: Τα οποία νήματα
           open: είναι ανοιχτά
@@ -2268,7 +2257,6 @@ el:
       selector_no_tags: "καμία ετικέτα"
       changed: "αλλαγμένες ετικέτες:"
       tags: "Ετικέτες"
-      choose_for_topic: "επίλεξε προαιρετικές ετικέτες για αυτό το νήμα"
       delete_tag: "Αφαίρεση Ετικέτας"
       delete_confirm:
         one: "Είσαι βέβαιος πως θέλεις να διαγράψεις αυτήν την ετικέτα και να την αφαιρέσεις από το 1 νήμα στο οποίο είναι προσαρτημένη;"
@@ -2963,7 +2951,6 @@ el:
           title: "Αναζήτηση καταγραφών"
           term: "Όρος"
           searches: "Αναζητήσεις"
-          most_viewed_topic: "Περισσότερο προβεβλημένο νήμα"
           unique: "Μοναδικό"
         logster:
           title: "Error Logs"

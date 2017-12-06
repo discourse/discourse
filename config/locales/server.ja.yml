@@ -383,7 +383,6 @@ ja:
       email_title: 'トピック"%{title}" は不適切な可能性があるため、管理人による確認を必要とする。'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>投稿が他のユーザーから通報されました。<a href="/my/messages">投稿したメッセージ</a>を確認してください。</p>'
     user_must_edit: '<p>この投稿は他のユーザーから通報されたため、非表示にされています。</p>'
   archetypes:
     regular:
@@ -586,7 +585,6 @@ ja:
     post_onebox_maxlength: "Discourse OneBox投稿の最大文字数"
     logo_url: "サイトの左上に表示されるロゴ画像です。横幅の大きい長方形にする必要があります。空欄の場合、サイトタイトルが表示されます"
     logo_small_url: "サイトの左上に表示される小さいロゴ画像です。正方形である必要があります。下にスクロールすると表示されます。空欄の場合、ホームアイコンが表示されます"
-    mobile_logo_url: "モバイルサイトの左上に固定で表示されるロゴ画像です。正方形である必要があります。空欄の場合 `logo_url` が利用されます 例: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Apple のタッチデバイス用のアイコン。推奨サイズは 144px x 144px"
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
     email_custom_headers: "カスタムメールヘッダのリスト (パイプ(バーティカルバー) 区切り)"
@@ -910,13 +908,11 @@ ja:
     email_too_long: "メールアドレスが長過ぎます。アドレス部は254文字以内に、ドメイン部は253文字以内にする必要があります"
     reserved_username: "そのユーザー名は許可されていません"
     missing_user_field: "全てのユーザーフィールドの入力が終わっていません"
-    close_window: "ログインは完了しました。このウィンドウを閉じて続けてください"
   user:
     no_accounts_associated: "関連づけられたアカウントはありませんでした"
     username:
       short: "少なくとも%{min}文字は必要です"
       long: "%{max}文字以下である必要があります"
-      characters: "英数字/アンダースコア/ハイフン/ドットのみ使用できます"
       unique: "はユニークである必要があります"
       blank: "は空であってはなりません"
     email:
@@ -928,10 +924,6 @@ ja:
   flags_reminder:
     subject_template:
       other: "%{count}件の通報が対応待ちです"
-  invite_mailer:
-    subject_template: "%{inviter_name} があなたを %{site_domain_name}の'%{topic_title}'に招待しました"
-  invite_forum_mailer:
-    subject_template: "%{inviter_name} あなたを %{site_domain_name}に招待しました。"
   invite_password_instructions:
     subject_template: "%{site_name} アカウントのパスワードを設定"
   flag_reasons:
@@ -1157,9 +1149,6 @@ ja:
         このバッジは投稿に対して初めていいね!された時に授与されます。おめでとうございます、投稿した内容についてあなたのコミュニティメンバーは興味深く、クールで有能です!
     autobiographer:
       name: あなたはだれ？
-      description: <a href="/my/preferences">プロフィール</a>をすべて書く
-      long_description: |
-        このバッジは<a href="/my/preferences">ご自身のユーザープロフィール</a>を記入またはプロフィール写真を選択すると授与されます。コミュニティに対してあなたがどういう人物であるか、また改善について興味がある物をもう少し詳しくお知らせ頂き、更に結びつきのあるコミュニティへ。連携しましょう!
     anniversary:
       long_description: |
         このバッジは一年間メンバーで有り続け、少なくともその年に一回は投稿したときに授与されます。サイトに出入りして下さったり、我々のコミュニティに貢献して下さり有難うございます。我々はあなたを必要としています。
@@ -1193,8 +1182,6 @@ ja:
     first_flag:
       name: はじめの通報
       description: 通報した投稿
-    read_guidelines:
-      description: <a href="/guidelines">ガイドライン</a>を読む
     popular_link:
       name: 人気のリンク
     hot_link:

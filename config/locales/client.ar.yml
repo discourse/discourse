@@ -173,7 +173,6 @@ ar:
           other: "بعد %{count} عام"
       previous_month: 'الشهر السابق'
       next_month: 'الشهر التالي'
-      placeholder: حدد تاريخًا
     share:
       topic: 'شارك رابط هذا الموضوع'
       post: 'المنشور رقم %{postNumber}'
@@ -936,20 +935,6 @@ ar:
           few: "المنشورات المنشأة"
           many: "المنشورات المنشأة"
           other: "المنشورات المنشأة"
-        likes_given:
-          zero: "ما أعطى من <i class='fa fa-heart'></i>"
-          one: "ما أعطى من <i class='fa fa-heart'></i>"
-          two: "ما أعطى من <i class='fa fa-heart'></i>"
-          few: "ما أعطى من <i class='fa fa-heart'></i>"
-          many: "ما أعطى من <i class='fa fa-heart'></i>"
-          other: "ما أعطى من <i class='fa fa-heart'></i>"
-        likes_received:
-          zero: "ما تلقي من <i class='fa fa-heart'></i>"
-          one: "ما تلقي من <i class='fa fa-heart'></i>"
-          two: "ما تلقي من <i class='fa fa-heart'></i>"
-          few: "ما تلقي من <i class='fa fa-heart'></i>"
-          many: "ما تلقي من <i class='fa fa-heart'></i>"
-          other: "ما تلقي من <i class='fa fa-heart'></i>"
         days_visited:
           zero: "أيّام الزّيارة"
           one: "أيّام الزّيارة"
@@ -1057,7 +1042,6 @@ ar:
     first_post: أوّل منشور
     mute: كتم
     unmute: إلغاء الكتم
-    last_post: آخر منشور
     last_reply_lowercase: آخر رد
     replies_lowercase:
       zero: الردود
@@ -1193,10 +1177,6 @@ ar:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
-    select_kit:
-      default_header_text: اختر...
-      no_content: لا يوجد نتائج مطابقة
-      filter_placeholder: بحث...
     emoji_picker:
       filter_placeholder: بحث عن الرموز التعبيرية
       people: الاشخاص
@@ -1293,12 +1273,7 @@ ar:
       olist_title: "قائمة مرقمة"
       ulist_title: "قائمة نقطية"
       list_item: "قائمة العناصر"
-      heading_label: "H"
-      heading_title: "عنوان"
-      heading_text: "عنوان"
-      hr_title: "خط افقي"
       help: "مساعدة في رموز التنسيق"
-      toggler: "اخف او اظهر صندوق التحرير"
       modal_ok: "حسنا"
       modal_cancel: "إلغاء"
       cant_send_pm: "نأسف، لا يمكنك إرسال الرسائل إلى %{username}."
@@ -1402,7 +1377,6 @@ ar:
       no_more_results: "لا يوجد نتائج أخرى."
       searching: "يبحث..."
       post_format: "#{{post_number}} كتبها {{username}}"
-      results_page: "نتائج البحث"
       more_results: "يوجد عدد كبير من النتائج, يرجى تضييق نطاق البحث."
       cant_find: "لا تستطيع ايجاد ما تبحث عنة؟"
       start_new_topic: "افتح موضوع جديد."
@@ -1419,30 +1393,20 @@ ar:
         title: بحث متقدّم
         posted_by:
           label: نشرها
-        in_category:
-          label: في قسم
         in_group:
           label: في المجموعة
         with_badge:
           label: عليها شارة
-        with_tags:
-          label: بها الاوسمة
         filters:
-          label: ابحث فقط في الموضوعات / المنشورات التي...
           likes: أعجبتني
           posted: نشرت بها
           watching: أراقبها
           tracking: أتابعها
-          private: موجودة في رسائلي
-          bookmarks: علّمتُها
           first: اول منشور في الموضوعات
           pinned: مثبتة
           unpinned: غير مثبتة
-          seen: قرأتها
           unseen: لم أقرأها
           wiki: من النوع wiki
-          images: تحتوي صوراً !!
-          all_tags: تحتوي علي كل الأوسمة
         statuses:
           label: بشرط أن تكون المواضيع
           open: مفتوحة
@@ -1611,7 +1575,6 @@ ar:
       jump_reply_down: انتقل إلى آخر رد
       deleted: "الموضوع محذوف"
       topic_status_update:
-        title: "ضع مؤقت للموضوع"
         save: "ضع مؤقت"
         num_of_hours: "عدد الساعات:"
         remove: "ازل المؤقت"
@@ -2005,13 +1968,6 @@ ar:
         change_owner: "غير الكاتب"
       actions:
         flag: 'ابلاغ'
-        defer_flags:
-          zero: "أجل البلاغ"
-          one: "أجل البلاغ"
-          two: "أجل البلاغات"
-          few: "أجل البلاغات"
-          many: "أجل البلاغات"
-          other: "أجل البلاغات"
         undo:
           off_topic: "تراجع عن التبليغ"
           spam: "تراجع عن البلاغ"
@@ -2572,7 +2528,6 @@ ar:
         hamburger_menu: '<b>=</b> فتح القائمة الرّئيسيّة'
         user_profile_menu: '<b>p</b>فتح قائمة المستخدم'
         show_incoming_updated_topics: '<b>.</b> عرض الموضوعات المحدثة'
-        search: '<b>/</b> او <b>ctrl</b>+<b>shift</b>+<b>s</b> بحث'
         help: '<b>?</b> فتح مساعدة لوحة المفاتيح'
         dismiss_new_posts: '<b>x</b>, <b>r</b> تجاهل المنشورات الجديدة'
         dismiss_topics: '<b>x</b>, <b>t</b> تجاهل الموضوعات'
@@ -2659,7 +2614,6 @@ ar:
       selector_no_tags: "لا أوسمة"
       changed: "الأوسمة المعدلة:"
       tags: "الأوسمة"
-      choose_for_topic: "اختر (إن أردت) وسوما لهذا الموضوع"
       delete_tag: "احذف الوسم"
       delete_confirm:
         zero: "هل أنت متاكد انك تريد حذف هذا الوسم و إذالتة من {{count}} موضوع؟"
@@ -2800,20 +2754,10 @@ ar:
         topics: "الموشوعات المبلغ عنها "
         agree: "أوافق"
         agree_title: "أكد هذا البلاغ كونه صحيح وصالح"
-        agree_flag_modal_title: "أوافق و ..."
-        agree_flag_hide_post: "اوافق (اخفاء المنشور + ارسال رسالة خاصة)"
-        agree_flag_hide_post_title: "أخفي هذا المنشور و ارسل رسالة للعضو تلقائيا تحثه علي تعديلة"
-        agree_flag_restore_post: "موافق (اعد المنشور)"
-        agree_flag_restore_post_title: "اعد هذا المنشور."
-        agree_flag: "الموافقه على البلاغ"
-        agree_flag_title: "الموافقة علي البلاغ و حفظ المنشور دون تغيير."
-        defer_flag: "تأجيل"
         defer_flag_title: "ازل هذا البلاغ، لا يتطلب منك إجراء في الوقت الحالي."
         delete: "احذف"
         delete_title: "احذف المنشور المرتبط بهذا البلاغ"
-        delete_post_defer_flag: "احذف المنشور مع تأجيل البلاغ"
         delete_post_defer_flag_title: "احذف المنشور. اذا كان المنشور الاول, احذف الموضوع"
-        delete_post_agree_flag: "احذف المنشور مع الموافقة على البلاغ"
         delete_post_agree_flag_title: "احذف المنشور. اذا كان المنشور الاول, احذف الموضوع"
         delete_flag_modal_title: "احذف و..."
         delete_spammer: "احذف ناشر السبام"
@@ -2830,7 +2774,6 @@ ar:
         dispositions:
           agreed: "متفق"
           disagreed: "أختلف"
-          deferred: "مؤجل"
         flagged_by: "مُبلّغ عنه بواسطة"
         resolved_by: "تم حلّه بواسطة"
         took_action: "اجريت العمليات"
@@ -2849,42 +2792,6 @@ ar:
           type: "النوع"
           users: "الأعضاء"
           last_flagged: "اخر البلاغات"
-        summary:
-          action_type_3:
-            zero: "خارج الموضوع x{{count}}"
-            one: "خارج الموضوع"
-            two: "خارج الموضوع x{{count}}"
-            few: "خارج الموضوع x{{count}}"
-            many: "خارج الموضوع x{{count}}"
-            other: "خارج الموضوع x{{count}}"
-          action_type_4:
-            zero: "غير لائق"
-            one: "غير لائق"
-            two: "غير لائق x{{count}}"
-            few: "غير لائق x{{count}}"
-            many: "غير لائق x{{count}}"
-            other: "غير لائق x{{count}}"
-          action_type_6:
-            zero: "مخصص"
-            one: "مخصص"
-            two: "مخصص x{{count}}"
-            few: "مخصص x{{count}}"
-            many: "مخصص x{{count}}"
-            other: "مخصص x{{count}}"
-          action_type_7:
-            zero: "مخصص"
-            one: "مخصص"
-            two: "مخصص x{{count}}"
-            few: "مخصص x{{count}}"
-            many: "مخصص x{{count}}"
-            other: "مخصص x{{count}}"
-          action_type_8:
-            zero: "سبام"
-            one: "سبام"
-            two: "سبام x{{count}}"
-            few: "سبام x{{count}}"
-            many: "سبام x{{count}}"
-            other: "سبام x{{count}}"
       groups:
         primary: "المجموعة الأساسية"
         no_primary: "(لا يوجد مجموعة أساسية)"
