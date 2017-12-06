@@ -32,6 +32,7 @@ export default Ember.Controller.extend({
     if (this.get('thrown.jqTextStatus') === "timeout") return true;
     return false;
   }.property(),
+
   isNotFound: Em.computed.equal('thrown.status', 404),
   isForbidden: Em.computed.equal('thrown.status', 403),
   isServer: Em.computed.gte('thrown.status', 500),
