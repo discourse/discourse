@@ -27,6 +27,7 @@ span.badge-posts {
 .topic-post {
   nav.post-controls {
     clear: both;
+    color: dark-light-choose($primary-low-mid, $secondary-high);        
     .d-icon {
       opacity: 1.0;
     }
@@ -36,7 +37,6 @@ span.badge-posts {
       padding: 8px 10px;
       vertical-align: top;
       background: transparent;
-      color: dark-light-choose($primary-low-mid, $secondary-high);
       float: left;
       &.hidden {
         display: none;
