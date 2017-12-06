@@ -60,16 +60,18 @@ end
 puts 'Pulling new translations...', ''
 command = "tx pull --mode=developer --language=#{languages.join(',')} --force"
 
-Open3.popen2e(command) do |stdin, stdout_err, wait_thr|
+return_value = Open3.popen2e(command) do |_, stdout_err, wait_thr|
   while (line = stdout_err.gets)
     puts line
   end
+  wait_thr.value
 end
+
 puts ''
 
-unless $?.success?
-  puts 'Something failed. Check the output above.', ''
-  exit $?.exitstatus
+unless return_value.success?
+  STDERR.puts 'Something failed. Check the output above.', ''
+  exit return_value.exitstatus
 end
 
 YML_FILE_COMMENTS = <<END
