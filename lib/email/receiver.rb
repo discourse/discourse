@@ -2,6 +2,7 @@ require "digest"
 require_dependency "new_post_manager"
 require_dependency "post_action_creator"
 require_dependency "html_to_markdown"
+require_dependency "plain_text_to_markdown"
 require_dependency "upload_creator"
 
 module Email
@@ -43,12 +44,13 @@ module Email
                             markdown: 2)
     end
 
-    def initialize(mail_string)
+    def initialize(mail_string, opts = {})
       raise EmptyEmailError if mail_string.blank?
       @staged_users = []
       @raw_email = try_to_encode(mail_string, "UTF-8") || try_to_encode(mail_string, "ISO-8859-1") || mail_string
       @mail = Mail.new(@raw_email)
       @message_id = @mail.message_id.presence || Digest::MD5.hexdigest(mail_string)
+      @opts = opts
     end
 
     def process!
@@ -222,19 +224,32 @@ module Email
     def select_body
       text = nil
       html = nil
+      text_content_type = nil
 
       if @mail.multipart?
         text = fix_charset(@mail.text_part)
         html = fix_charset(@mail.html_part)
+        text_content_type = @mail.text_part&.content_type
       elsif @mail.content_type.to_s["text/html"]
         html = fix_charset(@mail)
       else
         text = fix_charset(@mail)
+        text_content_type = @mail.content_type
       end
 
-      text, elided_text = if text.present?
+      if text.present?
         text = trim_discourse_markers(text)
-        EmailReplyTrimmer.trim(text, true)
+        text, elided_text = EmailReplyTrimmer.trim(text, true)
+
+        if @opts[:convert_plaintext] || sent_to_mailinglist_mirror?
+          text_content_type ||= ""
+          converter_opts = {
+            format_flowed: !!(text_content_type =~ /format\s*=\s*["']?flowed["']?/i),
+            delete_flowed_space: !!(text_content_type =~ /DelSp\s*=\s*["']?yes["']?/i)
+          }
+          text = PlainTextToMarkdown.new(text, converter_opts).to_markdown
+          elided_text = PlainTextToMarkdown.new(elided_text, converter_opts).to_markdown
+        end
       end
 
       markdown, elided_markdown = if html.present?
@@ -755,8 +770,8 @@ module Email
 
     def self.elided_html(elided)
       html =  "\n\n" << "<details class='elided'>" << "\n"
-      html << "<summary title='#{I18n.t('emails.incoming.show_trimmed_content')}'>&#183;&#183;&#183;</summary>" << "\n"
-      html << elided << "\n"
+      html << "<summary title='#{I18n.t('emails.incoming.show_trimmed_content')}'>&#183;&#183;&#183;</summary>" << "\n\n"
+      html << elided << "\n\n"
       html << "</details>" << "\n"
       html
     end
