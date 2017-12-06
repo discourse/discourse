@@ -89,9 +89,10 @@
         background-color: $secondary;
         max-width: 100%;
         margin: 0;
+        padding: 10px;
+        overflow: auto;        
         .d-editor-preview {
           margin-bottom: 40px;
-          overflow: auto;
         }
       }
       .btn.hide-preview {

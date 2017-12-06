@@ -64,7 +64,6 @@
   margin-left: 1%;
   display: flex;
   flex-direction: column;
-  background: $secondary;
 }
 
 .d-editor-button-bar {
@@ -101,11 +100,15 @@
   display: inline-block;
 }
 
+.d-editor-preview-wrapper {
+  overflow: auto;
+  cursor: default;
+}
+
 .d-editor-input,
 .d-editor-preview {
   box-sizing: border-box;
   flex: 1 1 100%;  
-  height: 100%;
   width: 100%;  
   margin: 0;
   min-height: auto;
@@ -119,22 +122,21 @@
   }
 }
 
-.d-editor-plugin {
-  display: flex;
-  overflow: auto;
-}
-
 .d-editor-input {
   border: 0;
   padding: 10px;
+  height: 100%;
   overflow-x: hidden;
-  resize: none;  
+  resize: none; 
 }
 
 .d-editor-preview {
+  height: auto;
+}
+
+.d-editor-plugin {
+  display: flex;
   overflow: auto;
-  cursor: default;
-  padding: 0 10px;
 }
 
 .composing-whisper .d-editor-preview {

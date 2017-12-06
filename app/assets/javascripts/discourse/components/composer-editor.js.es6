@@ -75,7 +75,7 @@ export default Ember.Component.extend({
   _composerEditorInit() {
     const topicId = this.get('topic.id');
     const $input = this.$('.d-editor-input');
-    const $preview = this.$('.d-editor-preview');
+    const $preview = this.$('.d-editor-preview-wrapper');
 
     $input.autocomplete({
       template: findRawTemplate('user-selector-autocomplete'),
@@ -180,7 +180,7 @@ export default Ember.Component.extend({
   },
 
   _teardownInputPreviewSync() {
-    [this.$('.d-editor-input'), this.$('.d-editor-preview')].forEach($element => {
+    [this.$('.d-editor-input'), this.$('.d-editor-preview-wrapper')].forEach($element => {
       $element.off("mouseenter touchstart");
       $element.off("scroll");
     });
