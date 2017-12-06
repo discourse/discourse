@@ -344,7 +344,7 @@ describe Email::Receiver do
       topic.save
 
       expect { process(:original_message) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to eq("This is a reply :)\n\n<details class='elided'>\n<summary title='Show trimmed content'>&#183;&#183;&#183;</summary>\n---Original Message---\nThis part should not be included\n</details>")
+      expect(topic.posts.last.raw).to eq("This is a reply :)\n\n<details class='elided'>\n<summary title='Show trimmed content'>&#183;&#183;&#183;</summary>\n\n---Original Message---\nThis part should not be included\n\n</details>")
     end
 
     it "doesn't include the 'elided' part of the original message when always_show_trimmed_content is disabled" do
@@ -356,7 +356,7 @@ describe Email::Receiver do
     it "adds the 'elided' part of the original message for public replies when always_show_trimmed_content is enabled" do
       SiteSetting.always_show_trimmed_content = true
       expect { process(:original_message) }.to change { topic.posts.count }.from(1).to(2)
-      expect(topic.posts.last.raw).to eq("This is a reply :)\n\n<details class='elided'>\n<summary title='Show trimmed content'>&#183;&#183;&#183;</summary>\n---Original Message---\nThis part should not be included\n</details>")
+      expect(topic.posts.last.raw).to eq("This is a reply :)\n\n<details class='elided'>\n<summary title='Show trimmed content'>&#183;&#183;&#183;</summary>\n\n---Original Message---\nThis part should not be included\n\n</details>")
     end
 
     it "supports attached images in TEXT part" do

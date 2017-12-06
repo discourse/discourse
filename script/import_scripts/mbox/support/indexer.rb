@@ -163,7 +163,7 @@ module ImportScripts::Mbox
     end
 
     def read_mail_from_string(raw_message)
-      Email::Receiver.new(raw_message) unless raw_message.blank?
+      Email::Receiver.new(raw_message, convert_plaintext: true) unless raw_message.blank?
     end
 
     def extract_reply_message_ids(mail)
