@@ -1,5 +1,5 @@
 import { ajax } from 'discourse/lib/ajax';
-import { observes, on }  from 'ember-addons/ember-computed-decorators';
+import { on }  from 'ember-addons/ember-computed-decorators';
 import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Component.extend({
@@ -18,7 +18,6 @@ export default Ember.Component.extend({
         presenceUsers: data.users,
       });
       this.messageBus.subscribe(data.messagebus_channel, message => {
-        console.log(message)
         this.set("presenceUsers", message.users);
       }, data.messagebus_id);
     });
