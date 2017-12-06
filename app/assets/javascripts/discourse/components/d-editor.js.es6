@@ -640,6 +640,10 @@ export default Ember.Component.extend({
   },
 
   paste(e) {
+    if (!$(".d-editor-input").is(":focus")) {
+      return;
+    }
+
     const { clipboard, types } = clipboardData(e);
     const placeholder = `${ I18n.t('pasting') }`;
     let plainText = clipboard.getData("text/plain");
