@@ -262,7 +262,7 @@ export default createWidget('post-menu', {
     const hiddenSetting = siteSettings.post_menu_hidden_items || '';
     const hiddenButtons = hiddenSetting.split('|').filter(s => !attrs.bookmarked || s !== 'bookmark');
 
-    if (currentUser) {
+    if (currentUser && keyValueStore) {
       const likedPostId = keyValueStore.getInt("likedPostId");
       if (likedPostId === attrs.id) {
         keyValueStore.remove("likedPostId");
@@ -387,10 +387,10 @@ export default createWidget('post-menu', {
   },
 
   like() {
-    const { attrs } = this;
+    const { attrs, currentUser, keyValueStore } = this;
 
-    if (!this.currentUser) {
-      this.keyValueStore.set({ key: "likedPostId", value: attrs.id });
+    if (!currentUser) {
+      keyValueStore && keyValueStore.set({ key: "likedPostId", value: attrs.id });
       return this.sendWidgetAction('showLogin');
     }
 
