@@ -534,7 +534,6 @@ sv:
       email_title: 'Ämnet "%{title}" kräver moderators uppmärksamhet'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Ditt inlägg blev flaggat av andra medlemmar i forumet. Vänligen <a href="/my/messages">se över dina meddelanden</a>.</p>'
     user_must_edit: '<p>Detta inlägg blev flaggat av andra medlemmar i forumet och är dolt för tillfället.</p>'
   archetypes:
     regular:
@@ -782,7 +781,6 @@ sv:
     digest_logo_url: "Den alternativa logotypen används överst i din webbplats e-postsammanfattning. Den bör ha en bred rektangulär form. Den borde inte vara en SVG-bild. Om den lämnas blank kommer `logo_url` att användas."
     logo_small_url: "Den lilla logotypen som visas i övre vänstra hörnet av hemsidan när man bläddrar ned i ämnen. Om den lämnas blank kommer hemloggan visas."
     favicon_url: "En favoritikon för din webbplats, se http://en.wikipedia.org/wiki/Favicon. För att fungera korrekt med en CDN måste det vara en png"
-    mobile_logo_url: "Den fixerade logotypen som används i det övre vänstra hörnet av din mobilsida. Bör vara en kvadratisk form. Om den lämnas blank så kommer `logo_url` att användas, eg: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Ikon som används för Apples touch-enheter. Rekommenderad storlek är 144*144 pixlar."
     notification_email: "Avsändaradressen som används vid utskick av system e-post. Domänen som specifieras här måste ha en SPF, DKIM och reverse PTR record korrekt inställt för att e-post ska levereras."
     email_custom_headers: "En pipe-avgränsad lista av anpassade e-postrubriker"
@@ -842,7 +840,6 @@ sv:
     allow_index_in_robots_txt: "Specificera i robots.txt att den här webbplatsen tillåter att bli indexerad av sökmotorer. "
     email_domains_blacklist: "En pipe-avgränsad lista av alla e-postdomän som användare inte tillåts registrera konton med. Exempel: mailinator.com, trashmail.net"
     email_domains_whitelist: "En pipe-avgränsad lista av alla e-postdomän som användare MÅSTE registrera konton med. VARNING: Användare med e-postdomän som inte finns på listan kommer inte att tillåtas!"
-    hide_email_address_taken: "Informera inte användare om ett kontos existens när de försöker använda dialogen vid bortglömt lösenord. "
     log_out_strict: "Vid utloggning, logga ut ALLA sessioner för den användaren på alla apparater"
     version_checks: "Pinga Discourse Hubben för versionsuppdatering och visa nya versionsmeddelanden på /admin översiktspanelen"
     new_version_emails: "Skicka ett mejl till contact_email när en ny version av Discourse finns tillgängligt."
@@ -1283,7 +1280,6 @@ sv:
     email_too_long: "E-postadressen du tillhandahöll är för lång. E-postadresser kan på sin höjd vara 254 tecken och domännamn inte mer än 253 tecken."
     reserved_username: "Användarnamnet är inte tillåtet."
     missing_user_field: "Du har inte fyllt i alla användarfält"
-    close_window: "Autentiseringen är färdig. Stäng det här fönstret för att fortsätta."
     already_logged_in: "Hoppsan, det ser ut som att du försöker acceptera en inbjudan för en annan användare. Logga ut och försök igen om du inte är %{current_user}. "
   user:
     no_accounts_associated: "Inga kopplade konton"
@@ -1292,7 +1288,6 @@ sv:
     username:
       short: "måste var minst %{min} tecken"
       long: "får högst vara %{max} tecken"
-      characters: "får endast innehålla nummer, bokstäver och understreck"
       unique: "måste vara unikt"
       blank: "måste finnas"
       must_begin_with_alphanumeric_or_underscore: "måste börja med en bostav, en siffra eller ett understreck"
@@ -1314,15 +1309,10 @@ sv:
     subject_template: "Bekräfta att du inte längre vill motta e-postuppdateringar från %{site_title}"
   invite_mailer:
     title: "Invitera mail skrivaren"
-    subject_template: "%{inviter_name} har bjudit in dig till '%{topic_title}' på %{site_domain_name}"
   custom_invite_mailer:
     title: "Kund inviterar mail skrivare"
-    subject_template: "%{inviter_name} har bjudit in dig till '%{topic_title}' på %{site_domain_name}"
   invite_forum_mailer:
     title: "Invitera forumets skrivare"
-    subject_template: "%{inviter_name} har bjudit in dig till %{site_domain_name}"
-  custom_invite_forum_mailer:
-    subject_template: "%{inviter_name} har bjudit in dig till %{site_domain_name}"
   invite_password_instructions:
     title: "Invitera lösenords instruktioner"
     subject_template: "Ange lösenord för ditt konto på %{site_name}"
@@ -1748,9 +1738,6 @@ sv:
         Den här utmärkelsen beviljas när du får din första gillning på ett inlägg. Grattis, du har skrivit något som en av medlemmarna på forumet tyckte var intressant, coolt eller användbart!
     autobiographer:
       name: Självbiograf
-      description: 'Fyllde ut sin <a href="/my/preferences">profilinformation</a> '
-      long_description: |
-        Den här utmärkelsen beviljas för att ha fyllt i din <a href="/my/preferences">profilinformation</a> och valt en profilbild. Genom att låta oss få lära känna dig bättre och vad du är intresserad av så blir forumet bättre och mer förenat.
     anniversary:
       name: Årsdag
       description: Aktiv medlem ett år, har skrivit minst en gång
@@ -1843,9 +1830,6 @@ sv:
         Den här utmärkelsen beviljas första gången du citerar ett inlägg i ditt svar. Att citera relevanta delar av tidigare inlägg i ditt svar hjälper att hålla diskussionen sammankopplad och relevant för ämnet. Det lättaste sättet att citera är att markera en del av ett inlägg och sedan klicka på svara-knappen. Citera generöst!
     read_guidelines:
       name: Läst riktlinjer
-      description: Läste <a href="/guidelines">forumets riktlinjer</a>
-      long_description: |
-        Den här utmärkelsen beviljas för <a href="/guidelines">att ha läst forumets riktlinjer</a>. Att följa och dela de här enkla riktlinjerna hjälper oss att bygga en rolig, säker och hållbar sida för alla. Kom alltid ihåg att det finns en annan människa, inte helt olik dig själv, på andra sidan skärmen. Var hövlig!
     reader:
       name: Läsare
       description: Läst varje inlägg i ett ämne med över 100 svar

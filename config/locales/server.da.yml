@@ -617,7 +617,6 @@ da:
       email_title: 'Emnet "%{title}" kræver moderator-opmærksomhed'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Dit indlæg er blevet markeret af fællesskabet. <a href="/my/messages">Se dine beskeder</a>.</p>'
     user_must_edit: '<p>Dette indlæg er blevet markert af fællesskabet, og er midlertidigt skjult.</p>'
   archetypes:
     regular:
@@ -868,7 +867,6 @@ da:
     digest_logo_url: "Det alternative logo billede der anvendes øverst på jeres sides email opsummering, burde være en bred rektangel. Skal ikke være et SVG billede. Hvis denne efterlades blank, vil 'logo_url' blive anvendt."
     logo_small_url: "Det lille logo øverst til venstre på siden burde være firkantet når der bladres ned. Såfremt denne efterlades blank. vil home 'glyph' blive vist."
     favicon_url: "Favoritikonet for jeres side, se http://en.wikipedia.org/wiki/Favicon, bør være en png, for at det fungere korrekt over CDN."
-    mobile_logo_url: "Jeres site logo, øverst til venstre på siden, skulle være firkantet. Såfremt det efterlades blankt, vil `logo_url` blive anvendt. F.eks: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Ikon til Apple touch-enheder. Den anbefalede størrelse er 144px gange 144px."
     notification_email: "Afsender email adresse, anvendt når der sendes esentielle system emails. Domænet her skal have korrekt opsatte SPF, DKIM og 'PTR records', for succesfuld afskibning af mails."
     email_custom_headers: "En liste af brugerdefinerede e-mail-headers adskilt af |-tegn."
@@ -1094,7 +1092,6 @@ da:
     email_too_long: "Den mailadresse, du har opgivet, er for lang. Navnet i mailadressen må ikke overstige 254 tegn, og domænenavnet må ikke overstige 253 tegn."
     reserved_username: "Dette brugernavn er ikke tilladt."
     missing_user_field: "Du har ikke udfyldt alle felterne"
-    close_window: "Godkendelsen er færdig. Luk dette vindue for at fortsætte."
     already_logged_in: "Hovsa, det ser ud til, at du forsøger at acceptere en invitation til en anden bruger. Hvis du ikke er %{current_user}, så log venligst ud og prøv igen."
   user:
     no_accounts_associated: "Ingen konti tilknyttet"
@@ -1104,7 +1101,6 @@ da:
     username:
       short: "skal være på mindst %{{min}} tegn."
       long: "skal være kortere end %{max} tegn"
-      characters: "må kun indeholde bogstaver og tal"
       unique: "skal være unik"
       blank: "skal udfyldes"
       must_begin_with_alphanumeric_or_underscore: "skal begynde med et bogstav, et nummer eller en underscore"
@@ -1133,14 +1129,6 @@ da:
 
       Hvis du ønsker at fortsætte med at modtage mailopdateringer, kan du bare ignorere denne mail.
 
-  invite_mailer:
-    subject_template: "%{inviter_name} inviterede dig til '%{topic_title}' på %{site_domain_name}"
-  custom_invite_mailer:
-    subject_template: "%{inviter_name} inviterede dig til '%{topic_title}' på %{site_domain_name}"
-  invite_forum_mailer:
-    subject_template: "%{inviter_name} inviterede dig til at oprette dig på %{site_domain_name}"
-  custom_invite_forum_mailer:
-    subject_template: "%{inviter_name} inviterede dig til at oprette dig på %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Opret password til din %{site_name}-konto"
     text_body_template: |
@@ -1576,7 +1564,6 @@ da:
       description: Citerede et indlæg
     read_guidelines:
       name: Læst retningslinierne
-      description: Har læst <a href="/guidelines">retningslinierne for forummet</a>
     reader:
       name: Læser
       description: Har læst hvert eneste svar i et emne med mere end 100 svar

@@ -221,6 +221,7 @@ fr:
   excerpt_image: "image"
   queue:
     delete_reason: "Supprimé depuis la liste des messages en attente de validation"
+    not_found: "Message non trouvé ou déjà mis à jour."
   groups:
     success:
       bulk_add: "%{users_added} utilisateurs ont bien été ajoutés au groupe."
@@ -366,7 +367,7 @@ fr:
         translation_overrides:
           attributes:
             value:
-              missing_interpolation_keys: 'Les clés d''interpolation suivantes sont absentes : « %{keys} »'
+              invalid_interpolation_keys: 'Les clés d''interpolation suivantes sont invalides : « %{keys} »'
         watched_word:
           attributes:
             word:
@@ -457,7 +458,6 @@ fr:
   post:
     image_placeholder:
       broken: "Cette image ne fonctionne pas"
-      large: "Cette image est trop grande pour l'afficher ici ; cliquer pour voir"
   rate_limiter:
     slow_down: "Vous avez réalisé cette action un trop grand nombre de fois, essayez à nouveau plus tard."
     too_many_requests: "Nous avons une limite journalière du nombre d'actions qui peuvent être effectuées. Veuillez patienter %{time_left} avant de recommencer."
@@ -988,7 +988,6 @@ fr:
     allow_index_in_robots_txt: "Préciser dans robots.txt que le site est autorisé à être indexé par les robots des moteurs de recherche."
     email_domains_blacklist: "Liste des domaines de courriel qui ne sont pas autorisés lors de la création de compte, délimitée par des pipes. Exemple : mailinator.com|trashmail.net"
     email_domains_whitelist: "Liste des domaines de courriel avec lesquelles les utilisateurs DOIVENT s'enregistrer, délimités par un pipe. ATTENTION : les utilisateurs ayant une adresse de courriel sur un autre domaine ne pourront pas s'enregistrer."
-    hide_email_address_taken: "Ne pas mentionner l'existence d'un compte utilisateur quand un utilisateur utilise le formulaire d'oubli de mot de passe."
     log_out_strict: "Lors de la déconnexion, déconnecter TOUTES les sessions pour l'utilisateur sur tous les appareils"
     version_checks: "Ping les serveurs de Discourse afin d'obtenir les mises à jours et affiche les nouveaux messages d'information dans le tableau de bord /admin"
     new_version_emails: "Envoyer un courriel à contact_email quand une nouvelle version de Discourse est disponible."
@@ -1243,7 +1242,6 @@ fr:
     suppress_digest_email_after_days: "Ne pas envoyer de résumés par courriel aux utilisateurs qui n'ont pas visité le site depuis plus de (n) jours."
     digest_suppress_categories: "Ne pas inclure ces catégories dans les résumés par courriel."
     disable_digest_emails: "Désactiver les résumés par courriel pour tous les utilisateurs."
-    email_accent_bg_color: "La couleur d'accentuation utilisée comme arrière-plan de certains éléments des courriels HTML. Entrez un nom de couleur (« red ») ou une valeur hexadécimale (« #FF0000 »)."
     email_accent_fg_color: "La couleur des textes rendus sur la couleur d'arrière-plan des courriels HTML. Entrez un nom de couleur (« white ») ou une valeur hexadécimale (« #FFFFFF »)."
     email_link_color: "La couleur des liens dans les courriels HTML. Entrez un nom de couleur (« blue ») ou une valeur hexadécimale (« #0000FF »)."
     detect_custom_avatars: "Vérifier ou non si les utilisateurs ont envoyé une photo de profil personnalisée."
@@ -1542,72 +1540,12 @@ fr:
       Si vous souhaitez continuer à recevoir ces emails, vous pouvez ignorer ce message.
   invite_mailer:
     title: "Invitiation"
-    subject_template: "%{inviter_name} vous a invité(e) à participer à « %{topic_title} » sur %{site_domain_name}"
-    text_body_template: |
-      %{inviter_name} vous a invité(e) à une discussion
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      sur
-
-      > %{site_title} -- %{site_description}
-
-      Si cela vous intéresse, cliquez sur le lien ci-dessous :
-
-      %{invite_link}
   custom_invite_mailer:
     title: "Invitation personnalisée"
-    subject_template: "%{inviter_name} vous a invité(e) à participer à « %{topic_title} » sur %{site_domain_name}"
-    text_body_template: |
-      %{inviter_name} vous a invité(e) à une discussion
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      sur
-
-      > %{site_title} -- %{site_description}
-
-      Avec cette note
-
-      > %{user_custom_message}
-
-      Si cela vous intéresse, cliquez sur le lien ci-dessous :
-
-      %{invite_link}
   invite_forum_mailer:
     title: "Invitation sur le forum"
-    subject_template: "%{inviter_name} vous a invité(e) à rejoindre %{site_domain_name}"
-    text_body_template: |
-      %{inviter_name} vous invite à rejoindre :
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      Si cela vous intéresse, cliquez sur le lien ci-dessous :
-
-      %{invite_link}
   custom_invite_forum_mailer:
     title: "Invitation personnalisée sur le forum"
-    subject_template: "%{inviter_name} vous a invité(e) à rejoindre %{site_domain_name}"
-    text_body_template: |
-      %{inviter_name} vous invite à rejoindre :
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      Avec ce message :
-
-      > %{user_custom_message}
-
-      Si cela vous intéresse, cliquez sur le lien ci-dessous :
-
-      %{invite_link}
   invite_password_instructions:
     title: "Instructions du mot de passe d'invité"
     subject_template: "Renseignez le mot de passe pour votre compte utilisateur %{site_name} "
@@ -1690,11 +1628,11 @@ fr:
       Votre version : %{installed_version}
       Nouvelle version : **%{new_version}**
 
-      - Mettez à jour depuis votre navigateur sur [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
+      - Mettez à jour depuis le navigateur avec notre **[mise à jour en 1 clic](%{base_url}/admin/upgrade)**
 
-      - Consultez les nouveautés sur l'historique [GitHub](https://github.com/discourse/discourse/commits/master).
+      - Consultez les nouveautés dans les [notes de version](https://meta.discourse.org/tags/release-notes) ou l'[historique GitHub](https://github.com/discourse/discourse/commits/master).
 
-      - Visitez [meta.discourse.org](https://meta.discourse.org) pour des nouvelles, des discussions, et de l'aide concernant Discourse.
+      - Visitez [meta.discourse.org](https://meta.discourse.org) pour des nouvelles, des discussions et de l'aide concernant Discourse
 
   new_version_mailer_with_notes:
     title: "Nouvelle version avec notes"
@@ -1705,11 +1643,11 @@ fr:
       Votre version : %{installed_version}
       Nouvelle version : **%{new_version}**
 
-      - Mettez à jour depuis votre navigateur sur [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
+      - Mettez à jour depuis le navigateur avec notre **[mise à jour en 1 clic](/admin/upgrade)**
 
-      - Consultez les nouveautés sur l'historique [GitHub](https://github.com/discourse/discourse/commits/master).
+      - Consultez les nouveautés dans les [notes de version](https://meta.discourse.org/tags/release-notes) ou l'[historique GitHub](https://github.com/discourse/discourse/commits/master).
 
-      - Visitez [meta.discourse.org](https://meta.discourse.org) pour des nouvelles, des discussions, et de l'aide concernant Discourse.
+      - Visitez [meta.discourse.org](https://meta.discourse.org) pour des nouvelles, des discussions et de l'aide concernant Discourse
 
       ### Notes de version
 
@@ -1734,6 +1672,21 @@ fr:
     post_hidden:
       title: "Message caché"
       subject_template: "Message caché suite à des signalements de la communauté"
+      text_body_template: |+
+        Bonjour,
+
+        Ceci est un message automatique de %{site_name} pour vous informer que votre message a été caché.
+
+        %{base_url}%{url}
+
+        %{flag_reason}
+
+        Plusieurs membres de la communauté ont signalé ce message avant qu'il ne soit masqué donc nous vous invitons à le revoir en fonction de ces retours. **Vous pouvez modifier votre message après %{edit_delay} minutes et il sera alors automatiquement démasqué.**
+
+        Cependant, si votre message est masqué par la communauté une seconde fois, il le restera jusqu'à ce qu'un responsable s'en occupe.
+
+        Pour plus d'informations, merci de vous référer à notre [charte](%{base_url}/guidelines).
+
     usage_tips:
       text_body_template: |+
         Pour connaître quelques astuces pour vous aider à démarrer en tant que nouveau membre, [check out this blog post](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).

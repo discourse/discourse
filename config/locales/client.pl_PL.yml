@@ -142,7 +142,6 @@ pl_PL:
           other: "%{count} lat później"
       previous_month: 'Poprzedni miesiąc'
       next_month: 'Następny miesiąc'
-      placeholder: Wybierz datę
     share:
       topic: 'udostępnij odnośnik do tego tematu'
       post: 'wpis #%{postNumber}'
@@ -650,6 +649,7 @@ pl_PL:
       undo_revoke_access: "Cofnij zablokowanie dostępu"
       api_approved: "Zatwierdzony:"
       theme: "Motyw"
+      home: "Domyślna strona domowa"
       staff_counters:
         flags_given: "uczynnych oflagowań"
         flagged_posts: "oflagowane wpisy"
@@ -982,7 +982,6 @@ pl_PL:
     first_post: Pierwszy wpis
     mute: Wycisz
     unmute: Wyłącz wyciszenie
-    last_post: Ostatni wpis
     last_reply_lowercase: ostatnia odpowiedź
     replies_lowercase:
       one: odpowiedź
@@ -1116,10 +1115,6 @@ pl_PL:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
-    select_kit:
-      default_header_text: Wybierz...
-      no_content: Nie znaleziono dopasowań
-      filter_placeholder: Wyszukiwanie...
     emoji_picker:
       filter_placeholder: Szukaj emoji
       people: Ludzie
@@ -1215,7 +1210,6 @@ pl_PL:
       ulist_title: "Lista wypunktowana"
       list_item: "Element listy"
       help: "Pomoc formatowania Markdown"
-      toggler: "ukryj lub pokaż panel kompozytora tekstu"
       modal_ok: "OK"
       modal_cancel: "Anuluj"
       cant_send_pm: "Przepraszamy, niestety nie możesz wysłać prywatnej wiadomości do %{username}."
@@ -1330,22 +1324,15 @@ pl_PL:
         title: Zaawansowane wyszukiwanie
         posted_by:
           label: Wysłane przez
-        in_category:
-          label: W kategorii
         in_group:
           label: W grupie
         with_badge:
           label: Z odnaką
-        with_tags:
-          label: Z tagami
         filters:
-          label: Pokaż tylko tematy/posty które...
           likes: Lubię
           posted: Opublikowałem w
           watching: Obserwuję
           tracking: Śledzę
-          private: są w moich wiadomościach
-          bookmarks: Dodałeś do zakładek
           first: 'tylko najnowsze posty '
           pinned: są przypięte
           unpinned: są nie przypięte
@@ -1506,7 +1493,6 @@ pl_PL:
       jump_reply_down: przeskocz do późniejszej odpowiedzi
       deleted: "Temat został usunięty"
       topic_status_update:
-        title: "Ustaw ważność wątku"
         save: "Ustaw czas"
         num_of_hours: "Liczba godzin:"
         remove: "Usuń czas"
@@ -1870,11 +1856,6 @@ pl_PL:
         change_owner: "Zmiana właściciela"
       actions:
         flag: 'Oflaguj'
-        defer_flags:
-          one: "Odrocz flagę"
-          few: "Odrocz flagi"
-          many: "Odrocz flagi"
-          other: "Odrocz flagi"
         undo:
           off_topic: "Cofnij flagę"
           spam: "Cofnij flagę"
@@ -2448,9 +2429,7 @@ pl_PL:
       selector_no_tags: "brak tagów"
       changed: "zmienione tagi:"
       tags: "Tagi"
-      choose_for_topic: "Wybierz opcjonalne tagi dla tych tematów:"
       delete_tag: "Usuń Tag"
-      delete_confirm: "Czy na pewno chcesz usunąć ten tag?"
       rename_tag: "Zmień nazwę taga"
       rename_instructions: "Wybierz nową nazwę dla tego taga:"
       sort_by: "Sortuj po:"
@@ -2582,20 +2561,10 @@ pl_PL:
         topics: "Oflagowane tematy"
         agree: "Potwierdź"
         agree_title: "Potwierdź to zgłoszenie jako uzasadnione i poprawne"
-        agree_flag_modal_title: "Potwierdź i…"
-        agree_flag_hide_post: "Potwierdź (ukryj post i wyślij PW)"
-        agree_flag_hide_post_title: "Ukryj ten wpis i automatycznie wyślij użytkownikowi  wiadomość informującą, że wpis wymaga przeredagowania"
-        agree_flag_restore_post: "Zgoda (przywróć wpis)"
-        agree_flag_restore_post_title: "Przywróć ten wpis"
-        agree_flag: "Potwierdź flagę"
-        agree_flag_title: "Potwierdź flagę i zostaw wpis bez zmian"
-        defer_flag: "Zignoruj"
         defer_flag_title: "Usunięcie flagi z twojej listy, nie wymaga dalszych działań."
         delete: "Usuń"
         delete_title: "Usuń wpis do którego odnosi się flaga."
-        delete_post_defer_flag: "Usuń wpis i zignoruj flagę"
         delete_post_defer_flag_title: "Usuń wpis. Jeśli jest pierwszym w temacie, usuń temat."
-        delete_post_agree_flag: "Usuń post i potwierdź flagę"
         delete_post_agree_flag_title: "Usuń wpis. Jeśli jest pierwszym w temacie, usuń temat."
         delete_flag_modal_title: "Usuń i…"
         delete_spammer: "Usuń spamera"
@@ -2612,7 +2581,6 @@ pl_PL:
         dispositions:
           agreed: "potwierdzono"
           disagreed: "wycofano"
-          deferred: "zignorowano"
         flagged_by: "Oflagowano przez"
         resolved_by: "Rozwiązano przez"
         took_action: "Podjęto działanie"
@@ -2631,32 +2599,6 @@ pl_PL:
           type: "Typ"
           users: "Użytkownicy"
           last_flagged: "Ostatnio Oflagowane"
-        summary:
-          action_type_3:
-            one: "nie-na-temat"
-            few: "nie-na-temat x{{count}}"
-            many: "nie-na-temat x{{count}}"
-            other: "nie-na-temat x{{count}}"
-          action_type_4:
-            one: "nieodpowiednie"
-            few: "nieodpowiednie x{{count}}"
-            many: "nieodpowiednie x{{count}}"
-            other: "nieodpowiednie x{{count}}"
-          action_type_6:
-            one: "niestandardowy"
-            few: "niestandardowe x{{count}}"
-            many: "niestandardowych x{{count}}"
-            other: "niestandardowych x{{count}}"
-          action_type_7:
-            one: "niestandardowy"
-            few: "niestandardowe x{{count}}"
-            many: "niestandardowych x{{count}} "
-            other: "niestandardowych x{{count}} "
-          action_type_8:
-            one: "spam"
-            few: "spam x{{count}}"
-            many: "spam x{{count}}"
-            other: "spam x{{count}}"
       groups:
         primary: "Główna grupa"
         no_primary: "(brak podstawowej grupy)"

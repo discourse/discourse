@@ -823,7 +823,6 @@ bs_BA:
     first_post: Prvi post
     mute: Mutiraj
     unmute: Odmutiraj
-    last_post: Zadnji post
     last_reply_lowercase: zadnji odgovor
     signup_cta:
       sign_up: "Registruj se"
@@ -1006,7 +1005,6 @@ bs_BA:
       ulist_title: "Bulleted List"
       list_item: "List item"
       help: "Markdown Editing Help"
-      toggler: "sakrij ili pokaži komposer"
       modal_ok: "OK"
       modal_cancel: "Otkaži"
       cant_send_pm: "Neuspješno, ne možete slati poruke ka %{username}."
@@ -1080,22 +1078,15 @@ bs_BA:
         title: Napredna tražilica
         posted_by:
           label: Objavljeno od
-        in_category:
-          label: U kategoriji
         in_group:
           label: U grupi
         with_badge:
           label: Sa bedžom
-        with_tags:
-          label: Sa tagovima
         filters:
-          label: Izlistaj samo teme/objave koje...
           likes: Moji lajkovi
           posted: Moje objave
           watching: Pratim
           tracking: Pratim
-          private: su u mojim porukama
-          bookmarks: Boji bookmark-ci
           first: su friške prve objave
           pinned: su okačene
           unpinned: nisu okačene
@@ -1689,24 +1680,12 @@ bs_BA:
         by: "by"
       flags:
         title: "Opomene"
-        old: "Stare"
-        active: "Aktivne"
         agree: "Slažem se"
         agree_title: "Confirm this flag as valid and correct"
-        agree_flag_modal_title: "Agree and..."
-        agree_flag_hide_post: "Agree (hide post + send PM)"
-        agree_flag_hide_post_title: "Hide this post and automatically send the user a private message urging them to edit it"
-        agree_flag_restore_post: "Agree (restore post)"
-        agree_flag_restore_post_title: "Restore this post"
-        agree_flag: "Agree with flag"
-        agree_flag_title: "Agree with flag and keep the post unchanged"
-        defer_flag: "Defer"
         defer_flag_title: "Remove this flag; it requires no action at this time."
         delete: "Delete"
         delete_title: "Delete the post this flag refers to."
-        delete_post_defer_flag: "Delete post and Defer flag"
         delete_post_defer_flag_title: "Delete post; if the first post, delete the topic"
-        delete_post_agree_flag: "Delete post and Agree with flag"
         delete_post_agree_flag_title: "Delete post; if the first post, delete the topic"
         delete_flag_modal_title: "Delete and..."
         delete_spammer: "Delete Spammer"
@@ -1721,14 +1700,12 @@ bs_BA:
         dispositions:
           agreed: "agreed"
           disagreed: "disagreed"
-          deferred: "deferred"
         flagged_by: "Flagged by"
         resolved_by: "Resolved by"
         took_action: "Took action"
         system: "System"
         error: "Something went wrong"
         reply_message: "Odgovori"
-        no_results: "There are no flags."
         topic_flagged: "This <strong>topic</strong> has been flagged."
         visit_topic: "Visit the topic to take action"
         was_edited: "Post was edited after the first flag"

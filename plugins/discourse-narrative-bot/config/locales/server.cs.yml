@@ -53,8 +53,10 @@ cs:
         quote: "Uprostřed každé těžkosti leží příležitost"
         author: "Albert Einstein"
       '2':
+        quote: "Nemá cenu mít svobodu, pokud nemáte svobodu dělat chyby."
         author: "Mahatma Gandhi"
       '3':
+        quote: "Neplačte proto, že je po všem, radujte se, protože se to stalo."
         author: "Dr Seuss"
       '4':
         author: "Charles-Guillaume Étienne"
@@ -117,8 +119,5 @@ cs:
       reset_trigger: "nový uživatel"
       hello:
         title: ":robot: Zdravím!"
-      search:
-        not_found: |-
-          Hmm…vypadá to, že máš potíže. To mě mrzí. Hledal jsi <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> pro výraz **capy&#8203;bara**?
     advanced_user_narrative:
       reset_trigger: 'pokročilý uživatel'

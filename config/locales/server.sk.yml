@@ -520,7 +520,6 @@ sk:
       email_title: 'Téma "%{title}" vyžaduje pozornosť moderátora'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Váš príspevok bol označený komunitou. Prosim <a href="/my/messages">pozrite si Vaše správy</a>.</p>'
     user_must_edit: '<p>Tento príspevok bol označený komunitou a je dočasne skrytý</p>'
   archetypes:
     regular:
@@ -734,7 +733,6 @@ sk:
     logo_url: "Obrázok loga na ľavej hornej časti stránky, mal by byť tvaru širokého obdĺžnika. Ak nebude uvedený, zobrazí sa nadpis stránok."
     logo_small_url: "Malý obrázok loga na ľavej hornej strane stránok, mal by mať tvar štvorca a bude zobrazený pri skrolovaní nadol. Ak nebude uvedený, zobrazí sa piktogram domu."
     favicon_url: "Favicon pre Vaše stránky, pozrite http://en.wikipedia.org/wiki/Favicon. Aby fungoval správne s CDN, musí byť vo formáte png"
-    mobile_logo_url: "Obrázok loga zobrazený na fixnej pozícií v ľavom hornom rohu mobilnej verzie. Mal byť mať tvar štvorca. Ak nie je uvedené, použije sa `logo_url`. Napríklad: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Ikona použitá na zariadeniach Apple touch. Doporučovaná veľkosť je 144px na 144px."
     notification_email: "Odosieľateľ: email adresa použitá na zasielanie všetkých systémových emailov. Uvedená doména musí mať správne nastavené záznamy SPF, DKIM a opačný PTR aby email dorazil."
     email_custom_headers: "Zoznam voliteľných emailových hlavičiek oddelených |"
@@ -1129,13 +1127,11 @@ sk:
     email_too_long: "Emailová adresa je príliš dlhá. Meno priečinka musí byť kratšie ako 254 znakov a meno domény musí byť kratšie ako 253 znakov."
     reserved_username: "Toto užívateľské meno nie je povolené."
     missing_user_field: "Nevyplnili ste všetky užívateľké polia."
-    close_window: "Autentifikácia je dokončená. Pre pokračovanie zavrite toto okno. "
   user:
     no_accounts_associated: "Žiadne pripojené účty "
     username:
       short: "musí mať minimálne %{min} znakov"
       long: "nesmie byť dlhší než %{max} znakov"
-      characters: "musí obsahovať len čísla, písmená a podržníky"
       unique: "musí byť jedinečné"
       blank: "musí existovať"
       must_not_contain_two_special_chars_in_seq: "nesmie obsahovať reťazec 2 alebo viac špeciálnych znakov po sebe (.-_)"
@@ -1153,10 +1149,6 @@ sk:
       other: "%{count} značiek čaká na zpracovanie"
   unsubscribe_mailer:
     subject_template: "Potvrďte, že už ďalej nechcete dostávať aktualizácie z  %{site_title}"
-  invite_mailer:
-    subject_template: "%{inviter_name} Vás pozval '%{topic_title}' na %{site_domain_name}"
-  invite_forum_mailer:
-    subject_template: "%{inviter_name} Vás pozval na %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Nastavte heslo pre účet na  %{site_name}"
   flag_reasons:

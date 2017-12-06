@@ -344,10 +344,6 @@ ko:
           attributes:
             execute_at:
               in_the_past: "미래값으로 설정되어야 합니다."
-        translation_overrides:
-          attributes:
-            value:
-              missing_interpolation_keys: '다음 interpolation key가 없습니다: "%{keys}"'
         watched_word:
           attributes:
             word:
@@ -597,7 +593,6 @@ ko:
       email_title: '글타래 "%{title}" 은 운영자의 확인이 필요합니다'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>회원님의 글이 신고되었습니다. <a href="/my/messages">메세지를 확인</a> 해주세요.</p>'
     user_must_edit: '<p>글이 신고되었기 때문에 일시적으로 보이지 않습니다.</p>'
   archetypes:
     regular:
@@ -852,7 +847,6 @@ ko:
     digest_logo_url: "대체 로고 이미지는 사이트 요약 메일의 상단에 위치하게 됩니다. 옆으로 넓은 사각형 모양이어야 하며, SVG이미지는 사용할 수 없습니다. 빈칸으로 두시면 `logo_url`이 사용됩니다."
     logo_small_url: "사이트의 좌측 상단에 위치할 작은 로고입니다. 정사각형이어야 하며, 스크롤을 내릴때 보이게 됩니다. 비워두시면 홈 글리프가 보이게 됩니다."
     favicon_url: "사이트의 파비콘 입니다. http://en.wikipedia.org/wiki/Favicon를 확인하세요. CDN을 통해 설정하려면 png 파일을 설정해야 합니다."
-    mobile_logo_url: "고정위치 로고는 모바일 사이트의 좌측 상단에 위치하게 됩니다. 정사각형 모양이어야 하며, 비워두시면 `logo_url`이 사용됩니다. 예: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "애플 디바이스는 144px의 아이콘을 사용함. 144px X 144px 사이즈를 추천함"
     notification_email: "The from: 이 이메일 주소는 모든 기본 시스템 메일을 보내는데 사용됩니다. 여기에 명시된 도메인은 SPF, DKIM가 적용되어 있어야하며, reverse PTR 레코드가 제대로 설정되어 있어야 메일이 도착 할 수 있습니다."
     email_custom_headers: "커스텀 이메일 해더의 pipe-delimited"
@@ -917,7 +911,6 @@ ko:
     allow_index_in_robots_txt: "이 사이트가 검색엔진에 의해 인덱스되는 것을 허용합니다.(robots.txt 수정)"
     email_domains_blacklist: "가입 금지된 이메일 도메인 목록, 파이프 기호로 구분. 예: mailinator.com|trashmail.net"
     email_domains_whitelist: "가입하려면 반드시 사용해야하는 이메일 도메인 목록, 파이프 기호로 구분. 경고: 이 목록외의 도메인으로는 가입이 안됩니다!"
-    hide_email_address_taken: "비밀번호 찾기 창에서 사용자 계정의 존재 여부를 알리지 않음."
     log_out_strict: "로그아웃 할때, 모든 장치에서 다같이 로그아웃"
     version_checks: "Dicousre Hub에 ping을 날려 버전 업데이트와 새 버전 알림을 /admin 대시보드에 보이게 합니다."
     new_version_emails: "사용가능한 새로운 업데이트가 있으면 등록된 contact_email 주소로 메일을 발송하여 알려줍니다."
@@ -1170,7 +1163,6 @@ ko:
     suppress_digest_email_after_days: "(n) 일 이상 사이트를 방문하지 않은 사용자에게는 요약 이메일 보내지 않기."
     digest_suppress_categories: "요약 이메일에서 이 카테고리 숨기기."
     disable_digest_emails: "모든 사용자에게 요약 이메일 전송 해제하기"
-    email_accent_bg_color: "강조 색상은 HTML 이메일의 몇몇 요소의 배경색상으로 사용됩니다. 색상명('red')이나 hex 값('#FF0000')을 입력하세요."
     email_accent_fg_color: "텍스트 컬러는 HTML 이메일의 배경색상으로 렌더링됩니다. 색상명('white')나 hex값('#FFFFFF')을 입력하세요."
     email_link_color: "HTML 이메일의 링크 색상. 색상명('blue')나 hex값('#0000FF')를 입력하세요."
     detect_custom_avatars: "사용자가 커스텀 프로필 사진을 올렸는지의 체크 여부."
@@ -1302,7 +1294,6 @@ ko:
     new_registrations_disabled: "지금은 새로 가입할 수 없습니다."
     password_too_long: "비밀번호는 200글자 이내만 허용됩니다."
     missing_user_field: "사용자 정보 입력을 덜 끝마쳤습니다."
-    close_window: "사용자 인증 완료. 계속하기 위해 브라우저 창을 닫으세요."
   user:
     no_accounts_associated: "연계된 계정이 없음"
     deactivated_by_staff: "운영진에 의해 비활성화됨"
@@ -1312,7 +1303,6 @@ ko:
     username:
       short: "최소 %{min}자 이상이어야 합니다."
       long: "%{max}자 이상 사용할 수 없습니다."
-      characters: "문자나 숫자만 사용해야 합니다."
       unique: "이미 사용중입니다."
       blank: "공백이 없어야 합니다."
       must_begin_with_alphanumeric_or_underscore: "첫글자는 알파벳, 숫자, 언더바만 쓸 수 있습니다."
@@ -1333,10 +1323,6 @@ ko:
       other: "%{count}개의 신고가 접수 대기 중"
   unsubscribe_mailer:
     title: "메일링 구독해지"
-  invite_mailer:
-    subject_template: "%{inviter_name} 회원님이 %{site_domain_name} 에 '%{topic_title}'에 초대하였습니다."
-  invite_forum_mailer:
-    subject_template: "%{site_domain_name}의 %{inviter_name}님께서 당신을 초대하였습니다."
   invite_password_instructions:
     subject_template: "%{site_name} 계정을 위해 비밀번호 설정"
   flag_reasons:
@@ -1560,9 +1546,6 @@ ko:
         이 배지는 당신이 쓴 포스트에 좋아요를 처음받았을 때 수여됩니다. 축하드립니다. 동료 커뮤니티 사용자들이 흥미를 느끼는 훌륭한 포스트를 올리셨군요!
     autobiographer:
       name: 자서전 작가
-      description: <a href="/my/preferences">프로필</a> 정보를 채워넣었습니다.
-      long_description: |
-        이 배지는 <a href="/my/preferences">사용자 프로필</a>을 채워 넣고 프로필 사진을 올렸을 때 수여됩니다. 커뮤니티에 당신이 누구인지 무엇에 흥미를 느끼는지를 알려주면, 커뮤니티를 더 끈끈하게 만드는데 도움이 됩니다. 같이 갑시다!
     anniversary:
       name: 1주년
       description: 1년동안 활동하고 글도 1개이상 썼습니다
@@ -1655,9 +1638,6 @@ ko:
         이 배지는 답글을 쓸 때 처음으로 인용을 했을 때 수여됩니다. 앞선 포스트의 관련있는 부분을 인용하면 대화가 토픽과 다른 포스트끼리 연결되는데 도움이 됩니다. 인용을 하는 가장 쉬운 방법은 포스트의 특정 내용을 마우스로 드래그하고 답글 버튼을 누르는 것입니다. 아낌없이 인용해보세요!
     read_guidelines:
       name: 가이드라인을 읽었어요
-      description: <a href="/guidelines">커뮤니티 가이드라인</a> 을 읽었습니다
-      long_description: |
-        이 배지는 <a href="/guidelines">커뮤니티 가이드라인</a>을 읽은 사용자에게 수여됩니다. 이 단순한 가이드라인을 따르는 것만으로 모두에게 안전하고, 즐겁고, 지속가능한 커뮤니티가 되는데 도움이 됩니다. 이 화면 너머에 다른 사람이 있다는 것을 명심합시다. 착하게 살아요!
     reader:
       name: 독서가
       description: 100개가 넘는 답글이 달린 토픽의 답글을 모두 읽었습니다

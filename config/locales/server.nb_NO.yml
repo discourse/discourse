@@ -41,10 +41,10 @@ nb_NO:
       show_trimmed_content: "Vis beskåret innhold"
       errors:
         empty_email_error: "Skjer når den rå e-posten vi mottok var blank."
-        no_message_id_error: "Skjer når en e-post ikke har noen «Message-Id»-header."
-        auto_generated_email_error: "Skjer når «Precedence»-headeren er satt til list, junk, bulk eller auto_reply eller når en annen header innholder auto-submitted, auto-replied eller auto-generated."
+        no_message_id_error: "Skjer når en e-post ikke har noen «Message-ID»-hode."
+        auto_generated_email_error: "Skjer når «Presedens»-hodet er satt til list, junk, bulk eller auto_reply eller når en annen header inneholder auto-submitted, auto-replied eller auto-generated."
         no_body_detected_error: "Skjer når vi ikke kunne trekke ut meldingskroppen eller det ikke var noen vedlegg."
-        no_sender_detected_error: "Skjer når vi ikke kunne finne en gyldig adresse i Fra-feltet"
+        no_sender_detected_error: "Skjer når vi ikke kunne finne en gyldig adresse i Fra-hodet."
         inactive_user_error: "Skjer når senderen ikke er aktiv."
         bad_destination_address: "Skjer når ingen av adressene i To-, Cc- eller Bcc-feltene passer med en konfigurert innkommende e-postadresse."
         strangers_not_allowed_error: "Skjer når en bruker forsøket å opprette et nytt emne i en kategori som han eller hun ikke er medlem av."
@@ -520,7 +520,6 @@ nb_NO:
       email_title: 'Emne "%{title}" krever moderator oppmerksomhet'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Innlegget ditt har blitt rapportert av nettsamfunnet. <a href="/my/messages">Sjekk meldingene dine</a>.</p>'
     user_must_edit: '<p>Dette innlegget ble rapportert av gemenskapen og er midlertidig skjult.</p>'
   archetypes:
     regular:

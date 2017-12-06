@@ -7,9 +7,10 @@
 
 fi:
   site_settings:
-    poll_enabled: "Annetaanko käyttäjien luoda äänestyskyselyitä?"
+    poll_enabled: "Salli äänestykset?"
     poll_maximum_options: "Äänestysvaihtoehtojen suurin sallittu määrä."
     poll_edit_window_mins: "Kuinka monta minuuttia on aikaa muokata äänestystä sen luomisen jälkeen."
+    poll_minimum_trust_level_to_create: "Vähimmäisluottamustaso, jolla voi luoda äänestyksiä."
   poll:
     multiple_polls_without_name: "Viesti sisältää useamman nimettömän äänestyskyselyn. Nimeä ne '<code>name</code>'-määreellä."
     multiple_polls_with_same_name: "Useamman kyselyn nimi on <strong>%{name}</strong>. Anna kaikille eri nimet '<code>name</code>'-määreellä."
@@ -39,5 +40,6 @@ fi:
     poll_must_be_open_to_vote: "Vain avoimessa kyselyssä voi äänestää."
     topic_must_be_open_to_toggle_status: "Vain avoimessa ketjussa voi muuttaa äänestyksen tilaa."
     only_staff_or_op_can_toggle_status: "Vain henkilökunta tai kyselyn laatija voi muuttaa äänestyksen tilaa."
+    insufficient_rights_to_create: "Et voi luoda äänestyksiä."
     email:
       link_to_poll: "Siirry äänestykseen klikkaamalla tästä"

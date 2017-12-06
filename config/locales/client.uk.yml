@@ -55,7 +55,6 @@ uk:
           other: "%{count} днів тому"
       previous_month: 'Попередній місяць'
       next_month: 'Наступний місяць'
-      placeholder: Виберіть дату
     share:
       topic: 'поширити посилання на цю тему'
       post: 'допис #%{postNumber}'
@@ -541,7 +540,6 @@ uk:
     first_post: Перший допис
     mute: Mute
     unmute: Unmute
-    last_post: Останній допис
     signup_cta:
       sign_up: "Зареєструватись"
       hide_session: "Нагадати мені завтра"
@@ -671,7 +669,6 @@ uk:
       ulist_title: "Маркований список"
       list_item: "Елемент списку"
       help: "Markdown Editing Help"
-      toggler: "показати або сховати панель редагування"
       modal_ok: "OK"
       modal_cancel: "Скасувати"
       admin_options_title: "Необов'язкові налаштування персоналу для цієї теми"
@@ -701,8 +698,6 @@ uk:
         title: Розширений пошук
         posted_by:
           label: Опубліковано
-        in_category:
-          label: У категорії
         in_group:
           label: У групі
         post:
@@ -1156,12 +1151,8 @@ uk:
         by: "від"
       flags:
         title: "Скарги"
-        old: "Старі"
-        active: "Активні"
         agree: "Погодитися"
         agree_title: "Підтвердити, що ця позначка дійсна та коректна"
-        agree_flag_modal_title: "Погодитися та..."
-        agree_flag: "Погодитися з позначкою"
         delete: "Видалити"
         delete_title: "Видалити допис, до якого відноситься ця позначка"
         delete_post_defer_flag_title: "Видалити допис; якщо допис перший, видалити тему"
@@ -1177,13 +1168,7 @@ uk:
         system: "System"
         error: "Щось трапилося"
         reply_message: "Відповісти"
-        no_results: "Скарг немає."
         topic_flagged: "This <strong>topic</strong> has been flagged."
-        summary:
-          action_type_8:
-            one: "спам"
-            few: "спаму: x{{count}}"
-            other: "спаму: x{{count}}"
       groups:
         primary: "Primary Group"
         no_primary: "(no primary group)"

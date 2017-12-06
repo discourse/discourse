@@ -363,10 +363,6 @@ el:
           attributes:
             execute_at:
               in_the_past: "θα πρέπει να είναι στο μέλλον."
-        translation_overrides:
-          attributes:
-            value:
-              missing_interpolation_keys: 'Τα παρακάτω interpolation key(s) απουσιάζουν: "%{keys}"'
         watched_word:
           attributes:
             word:
@@ -465,7 +461,6 @@ el:
   post:
     image_placeholder:
       broken: "Η εικόνα είναι χαλασμένη"
-      large: "Η εικόνα είναι πολύ μεγάλη για να προβληθεί εδώ, πατήστε για προβολή"
   rate_limiter:
     slow_down: "Η εντολή αυτή έχει εκτελεστεί πάρα πολλές φορές, δοκιμάστε ξανά αργότερα."
     too_many_requests: "Υπάρχει περιορισμός στις φορές που μπορεί να επαναληφθεί αυτή η ενέργεια. Παρακαλούμε παριμένετε  %{time_left}  προτού δοκιμάσετε ξανά."
@@ -1557,8 +1552,6 @@ el:
     website:
       domain_not_allowed: "Η ιστοσελίδα δεν είναι έγκυρη. Τα επιτρεπόμενα domains είναι: %{domains}"
     auto_rejected: "Απορρίφθηκε αυτόματα λόγω παλαιότητας. Δες την ρύθμιση auto_handle_queued_age της ιστοσελίδας."
-    destroy_reasons:
-      same_ip_address: "Διεύθυνση IP (%ip_address%) ίδια με άλλους χρήστες"
   flags_reminder:
     flags_were_submitted:
       one: "Οι σημάνσεις έχουν καταχωρηθεί πάνω από 1 ώρα πριν. [Παρακαλούμε ελέγξτε τις](/admin/flags)."
@@ -1579,75 +1572,12 @@ el:
       Εάν θέλεις να συνεχίσεις να λαμβάνεις ενημερώσεις με email, μπορείς να αγνοήσεις αυτό το email.
   invite_mailer:
     title: "Αποστολή Προσκλήσεων"
-    subject_template: "Ο/Η %{inviter_name} σε προσκάλεσε στο νήμα '%{topic_title}' στην %{site_domain_name}"
-    text_body_template: |
-      Ο/Η %{inviter_name} σας προσκάλεσε σε μία συζήτηση
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      στην
-
-      > %{site_title} -- %{site_description}
-
-      Αν σας ενδιαφέρει, κάντε κλικ στον παρακάτω σύνδεσμο:
-
-      %{invite_link}
   custom_invite_mailer:
     title: "Προσαρμοσμένη Αποστολή Προσκλήσεων"
-    subject_template: "Ο/Η %{inviter_name} σε προσκάλεσε στο νήμα '%{topic_title}' στην %{site_domain_name}"
-    text_body_template: |
-      Ο/Η %{inviter_name} σας προσκάλεσε σε μία συζήτηση
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      στην
-
-      > %{site_title} -- %{site_description}
-
-      Με αυτήν την υποσημείωση
-
-      > %{user_custom_message}
-
-      Αν σας ενδιαφέρει, κάντε κλικ στον παρακάτω σύνδεσμο:
-
-      %{invite_link}
   invite_forum_mailer:
     title: "Αποστολή Προσκλήσεων Forum"
-    subject_template: "Ο/Η %{inviter_name} σε προσκάλεσε να συμμετέχεις στην %{site_domain_name}"
-    text_body_template: |+
-      Ο/Η %{inviter_name} σας προσκάλεσε να γίνετε μέλος
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      Εάν σε ενδιαφέρει, κάνε κλικ στο σύνδεσμο παρακάτω:
-
-      %{invite_link}
-
   custom_invite_forum_mailer:
     title: "Προσαρμογή Πρόσκλησης Forum "
-    subject_template: "Ο/Η %{inviter_name} σε προσκάλεσε να συμμετέχεις στην %{site_domailn_name}"
-    text_body_template: |
-      Ο/Η %{inviter_name} σας προσκάλεσε να γίνετε μέλος
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      Με αυτή τη σημείωση
-
-      > %{user_custom_message}
-
-      Εάν σε ενδιαφέρει, κάνε κλικ στο σύνδεσμο παρακάτω:
-
-      %{invite_link}
-
-      Αυτή η πρόσκληση προέρχεται από έμπιστο χρήστη, επομένως ένας λογαριασμός θα δημιουργηθεί αυτόματα για εσένα χρησιμοποιώντας αυτή τη διεύθυνση ηλεκτρονικού ταχυδρομείου.
   invite_password_instructions:
     title: "Οδηγίες Κωδικού Πρόσκλησης"
     subject_template: "Όρισε κωδικό πρόσβασης για τον λογαρισμό σου %{site_name}"
@@ -1723,35 +1653,9 @@ el:
   new_version_mailer:
     title: "Αποστολή Καινούργιας Έκδοσης"
     subject_template: "[%{email_prefix}] Νέα έκδοση Discourse, διαθέσιμη ενημέρωση"
-    text_body_template: |
-      Ζήτω, μια νέα έκδοση του [Discourse](http://www.discourse.org) είναι διαθέσιμη!
-
-      Η έκδοσή σου: %{installed_version}
-      Η νέα έκδοση: **%{new_version}**
-
-      - Λάβε την νέα έκδοση εύκολα με την λειτουργία **[ενημέρωσης μέσω browser με ένα κλικ](%{base_url}/admin/upgrade)**
-
-      - Δες τι νέο υπάρχει [GitHub changelog](https://github.com/discourse/discourse/commits/master)
-
-      - Επισκέψου [meta.discourse.org](https://meta.discourse.org) για νέα, συζήτηση, και υποστήριξη για το Discourse
   new_version_mailer_with_notes:
     title: "Αποστολή Καινούργιας Έκδοσης με Σημειώσεις"
     subject_template: "[%{email_prefix}] διαθέσιμη ενημέρωση"
-    text_body_template: |
-      Γιούπιιι, μια νέα έκδοση του [Discourse](http://www.discourse.org) είανι διαθέσιμη!
-
-      Η έκδοσή σου: %{installed_version}
-      Η νέα έκδοση: **%{new_version}**
-
-      - Λάβε την νέα έκδοση εύκολα με την λειτουργία **[ενημέρωσης μέσω browser με ένα κλικ](%{base_url}/admin/upgrade)**
-
-      - Δες τι νέο υπάρχει [GitHub changelog](https://github.com/discourse/discourse/commits/master)
-
-      - Επισκέψου [meta.discourse.org](https://meta.discourse.org) για νέα, συζήτηση, και υποστήριξη για το Discourse
-
-      ### Σημειώσεις Έκδοσης
-
-      %{notes}
   flag_reasons:
     off_topic: "Η ανάρτησή σου επισημάθηκε ως **εκτός θέματος**: η κοινότητα πιστεύει ότι δεν ταιριάζει με το νήμα, όπως ορίζεται από τον τίτλο και την πρώτη ανάρτηση αυτή τη στιγμή. "
     inappropriate: "Η δημοσίευσή σου επισημάνθηκε ως \"ακατάλληλη\": η κοινότητα θεωρεί ότι είναι προσβλητική, υβριστική ή παραβιάζει τον [οδηγό χρήσης της κοινότητας](/οδηγίες)."

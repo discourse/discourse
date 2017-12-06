@@ -87,7 +87,6 @@ ko:
           other: "%{count}년 후"
       previous_month: '지난 달'
       next_month: '다음 달'
-      placeholder: 날짜를 선택하세요
     share:
       topic: '토픽을 공유합니다'
       post: '게시글 #%{postNumber}'
@@ -1008,10 +1007,6 @@ ko:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
-    select_kit:
-      default_header_text: 선택...
-      no_content: 검색 결과가 없습니다
-      filter_placeholder: 검색...
     emoji_picker:
       filter_placeholder: 이모지 찾기
       people: 인물
@@ -1104,7 +1099,6 @@ ko:
       ulist_title: "글 머리 기호 목록"
       list_item: "주제"
       help: "마크다운 편집 도움말"
-      toggler: "작성 패널을 숨기거나 표시"
       modal_ok: "OK"
       modal_cancel: "취소"
       cant_send_pm: "죄송합니다. %{username}님에게 메시지를 보낼 수 없습니다."
@@ -1209,30 +1203,20 @@ ko:
         title: 고급 검색
         posted_by:
           label: 글쓴이
-        in_category:
-          label: 카테고리에 속한
         in_group:
           label: 그룹에 속한
         with_badge:
           label: 배지가 있는
-        with_tags:
-          label: 태그가 있는
         filters:
-          label: '다음과 같은 토픽/게시글만 보기:'
           likes: 내가 좋아요 누른
           posted: 내가 게시글을 쓴
           watching: 내가 주시하는
           tracking: 내가 추적하는
-          private: 가 메시지함에 있습니다.
-          bookmarks: 내가 북마크한
           first: 가 가장 첫 포스트입니다.
           pinned: 핀고정된
           unpinned: 핀고정 되지 않은
-          seen: 읽은 것
           unseen: 읽지 않은 것
           wiki: 은(는) 위키입니다.
-          images: 이미지 포함
-          all_tags: 모든 태그를 포함
         statuses:
           label: 토픽 조건
           open: 가 열렸습니다
@@ -1685,8 +1669,6 @@ ko:
         change_owner: "소유자 변경"
       actions:
         flag: '신고하기'
-        defer_flags:
-          other: "신고 보류하기"
         undo:
           off_topic: "신고 취소"
           spam: "신고 취소"
@@ -2149,7 +2131,6 @@ ko:
       selector_no_tags: "태그 없음"
       changed: "바뀐 태그:"
       tags: "태그"
-      choose_for_topic: "이 토픽에 붙일 태그 선택"
       delete_tag: "태그 삭제"
       delete_confirm:
         other: "정말로 이 태그를 삭제하고 이 태그가 붙은 {{count}} 개의 토픽에서 태그를 제거할까요?"
@@ -2285,20 +2266,10 @@ ko:
         topics: "신고된 토픽"
         agree: "동의"
         agree_title: "이 신고가 올바르고 타당함을 확인합니다"
-        agree_flag_modal_title: "동의 및 ..."
-        agree_flag_hide_post: "동의 (글 숨기기 + 개인 메시지 보내기)"
-        agree_flag_hide_post_title: "이 글을 숨기고 글쓴이에게 글을 수정하라고 개인메시지 자동발송하기"
-        agree_flag_restore_post: "동의 (글 복원)"
-        agree_flag_restore_post_title: "글을 복원하기"
-        agree_flag: "신고에 동의함"
-        agree_flag_title: "신고에 동의하며 글이 수정되지 않도록 유지하기"
-        defer_flag: "연기"
         defer_flag_title: "신고 제거하기. 별도추가조치는 더이상 필요없습니다"
         delete: "삭제"
         delete_title: "신고에서 멘션된 글 삭제하기"
-        delete_post_defer_flag: "글을 삭제하고 신고를 보류함"
         delete_post_defer_flag_title: "글을 삭제하고 첫번째 글이면 주제 삭제하기"
-        delete_post_agree_flag: "글을 삭제하고 신고에 동의함"
         delete_post_agree_flag_title: "글을 삭제하고 첫번째 글이면 주제 삭제하기"
         delete_flag_modal_title: "삭제하고.."
         delete_spammer: "스패머 삭제"

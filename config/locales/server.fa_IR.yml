@@ -430,7 +430,6 @@ fa_IR:
   post:
     image_placeholder:
       broken: "عکس خراب شده است."
-      large: "عکس بزرگتر از آن است که اینجا نمایش داده شد. برای مشاهده کلیک کنید."
   rate_limiter:
     slow_down: "شما این عمل را بیش از حد انجام داده اید, بعدا دوباره امتحان کنید."
     too_many_requests: "ما روزانه  محدودیت زمانی داریم برای اینکه این اقدام چند بار انجام شود. لطفا %{time_left} قبل از اینکه دوباره تلاش کنید صبر کنید . "
@@ -610,7 +609,6 @@ fa_IR:
       email_title: 'موضوع "%{title}" نیاز به توجه مدیر دارد. '
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>نوشته شما توسط انجمن پرچم گذاری شده. لطفا <a href="/my/private-messages"> پیام هایتان را ببینید</a>.</p> '
     user_must_edit: '<p> این نوشته توسط انجمن پرچم گذاری شده و بطور موقت مخفی شده است.</p>'
   archetypes:
     regular:
@@ -865,7 +863,6 @@ fa_IR:
     digest_logo_url: "موقعیت لوگوی تصویر ثابت در بالای خلاصه ایمیل استفاده  شده است. باید به شکل یک مستطیل عریض باشد. نباید تصویر SVG باشد. اگر این قسمت را وارد نکنید مقدار  `logo_url` استفاده می‌شود."
     logo_small_url: "لوگو کوچک در قسمت بالا چپ سایت نمایش داده می‌شود. باید شکل مربعی داشته باشد، وقتی که کاربر اسکرول می‌کند نمایش داده می‌شود. اگر خالی باشد آیکن home glyph نمایش داده می‌شود."
     favicon_url: "فاویکون سایت، برای استفاده صحیح از CDN لینک زیر را ببینید، فرمت باید png باشد\nhttp://en.wikipedia.org/wiki/Favicon"
-    mobile_logo_url: "موقعیت لوگو ثابت در قسمت بالا چپ نسخه موبایل استفاده می‌شود. باید به شکل مربع باشد، اگر خالی باشد از مقدار `logo_url` استفاده می‌شود. مثال: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "آیکن استفاده شده برای دستگاه های لمسی اپل. اندازه پیشنهادی 144px by 144px."
     notification_email: "از: ایمیل آدرس زمان ارسال تمام ایمیل های ضروری سیستم استفاده شد. .دامنه مشخص شده در اینجا باید SPF, DKIM  داشته باشد و سوابق PTR معکوس به درستی برای ورود ایمیل تنظیم شده باشد. "
     email_custom_headers: "فهرست pipe-delimited از سربرگ‌های ایمیل سفارشی "
@@ -927,7 +924,6 @@ fa_IR:
     allow_index_in_robots_txt: "در robots.txt که به این سایت اجازه دهید که در موتور‌های جستجو ایندکس شود."
     email_domains_blacklist: "لیست pipe-delimit دامنه های ایمیل که کاربران اجازه ندارند با آن حساب کاربری ثبت‌نام کنند. برای مثال:  mailinator.com|trashmail.net"
     email_domains_whitelist: "لیست pipe-delimit دامنه های ایمیل که کاربران اجازه باید با آن حساب کاربری ثبت نام کنند. اخطار: کاربرانی با دامنه‌های ایمیلی به غیر از آن‌هایی که در لیست هستند اجازه ندارند. "
-    hide_email_address_taken: "آگاه نکردن کاربران از وجود حساب کاربری در صفحه فراموشی روز عبور"
     log_out_strict: "وقتی از سیستم خارج می شود، کاربر را از تمام session‌ها بر روی تمام دستگاه‌ها خارج کن "
     version_checks: "Discourse Hub را پینگ کن برای  نسخه بروزرسانی و پیام نسخه جدید را صفحه آمار ادمین نشان بده."
     new_version_emails: "ارسال ایمیل به contact_email address وقتی نسخه جدید  Discourse موجود است. "
@@ -1181,7 +1177,6 @@ fa_IR:
     suppress_digest_email_after_days: "غیر‌فعال کردن خلاصه ایمیل برای کاربرانی که بیش از (n) روز وارد سایت نشدند."
     digest_suppress_categories: "غیر‌فعال کردن این دسته‌بندی‌ها در ایمیل های خلاصه."
     disable_digest_emails: "غیر‌فعال کردن خلاصه ایمیل برای تمامی کاربران"
-    email_accent_bg_color: "رنگ پس زمینه عناصر HTML استفاده شده در ایمیل‌ها. یک نام رنگ مثل ('red') یا کد هگز ('#FF0000') وارد کنید."
     email_accent_fg_color: "رنگ متن پس‌زمینه ایمیل HTML. یک نام رنگ مثل ('white') یا کد هگز وارد کنید ('#FFFFFF')."
     email_link_color: "رنگ پیوند‌ها در ایمیل‌های HTML. یک نام رنگ مثل ('blue') یا کد هگز ('#0000FF') وارد کنید"
     detect_custom_avatars: "بررسی کن که کاربران تصویر پروفایل سفارشی بارگذاری کرده‌اند یا خیر."
@@ -1409,7 +1404,6 @@ fa_IR:
     email_too_long: "ایمیل شما بسیار طولانی است. ایمیل باکس ها نباید بیش از 254 نویسه و نام دامنه نباید بیش از 253 نویسه باشد."
     reserved_username: "این نام کاربری مجاز نیست."
     missing_user_field: "شما تمام فیلد‌های کاربری را تکمیل نکرده اید"
-    close_window: "احراز هویت تمام شد. برای ادامه پنجره را ببندید."
     already_logged_in: "به نظر می‌رسد می‌خواهید دعوت کاربری دیگری را تایید کنید. اگر کاربر %{current_user} نیستید لطفا خارج شده و دوباره وارد سایت شوید."
   user:
     no_accounts_associated: "بدون حساب‌کاربری مرتبط"
@@ -1421,7 +1415,6 @@ fa_IR:
     username:
       short: "نباید کمتر از  %{min} نویسه باشد"
       long: "نباید بیشتر از  %{max}  نویسه باشد"
-      characters: "باید شامل٬‌اعداد٬ حروف و زیر خط باشد"
       unique: "باید خاص باشد"
       blank: "باید حاضر باشد"
       must_begin_with_alphanumeric_or_underscore: "باید با یک حرف، عدد یا زیر‌خط شروع شود"
@@ -1456,40 +1449,12 @@ fa_IR:
       اگر می‌خواهید ایمیل بروزرسانی دریافت کنید، این ایمیل را نادیده بگیرید.
   invite_mailer:
     title: "دعوت نامه‌رسان"
-    subject_template: "%{inviter_name} شما را به %{topic_title}' در  %{site_domain_name}  دعوت کرده"
   custom_invite_mailer:
     title: "دعوت سفارشی نامه‌رسان"
-    subject_template: "%{inviter_name} شما را به '%{topic_title}' در %{site_domain_name} دعوت کرده"
   invite_forum_mailer:
     title: "دعوت نامه‌رسان انجمن"
-    subject_template: "%{inviter_name} به عضویت در %{site_domain_name} دعوت شدید"
-    text_body_template: |
-      %{inviter_name} شما را دعوت کرده که به سایت زیر بپیوندید
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      اگر علاقه‌مند هستید روی لینک زیر کلیک کنید:
-
-      %{invite_link}
   custom_invite_forum_mailer:
     title: "دعوت نامه‌رسان سفارشی انجمن"
-    subject_template: "%{inviter_name} از شما دعوت کرده که به %{site_domain_name} بپیوندید"
-    text_body_template: |
-      %{inviter_name} از شما دعوت کرده به سایت زیر بپیوندید
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      With this note
-
-      > %{user_custom_message}
-
-      اگر علاقه‌مند هستید کلیک کنید:
-
-      %{invite_link}
   invite_password_instructions:
     title: "دستور‌العمل رمز دعوت"
     subject_template: "تنظیم رمز عبور برای حساب‌کاربری {site_name}%"
@@ -1525,36 +1490,9 @@ fa_IR:
   new_version_mailer:
     title: "نسخه جدید نامه‌رسان"
     subject_template: "[%{email_prefix}] نسخه جدید Discourse موجود است"
-    text_body_template: |+
-      نسخه جدید  [Discourse](http://www.discourse.org) موجود است!
-
-      نسخه شما: %{installed_version}
-      نسخه جدید: **%{new_version}**
-
-      - با **[نصب کننده آسان](%{base_url}/admin/upgrade)** بروز رسانی کنید
-
-      - مشاهده تغییرات [در Github](https://github.com/discourse/discourse/commits/master)
-
-      نمایش [meta.discourse.org](https://meta.discourse.org) برای اخبار، بحث‌ها و پشتیبانی Discourse
-
   new_version_mailer_with_notes:
     title: "نسخه جدید نامه‌رسان با یادداشت"
     subject_template: "[%{email_prefix}] نسخه جدید موجود است"
-    text_body_template: |
-      نسخه جدید  [Discourse](http://www.discourse.org) موجود است!
-
-      نسخه شما: %{installed_version}
-      نسخه جدید: **%{new_version}**
-
-      - با **[نصب کننده آسان](%{base_url}/admin/upgrade)** بروز رسانی کنید
-
-      - مشاهده تغییرات [در Github](https://github.com/discourse/discourse/commits/master)
-
-      نمایش [meta.discourse.org](https://meta.discourse.org) برای اخبار، بحث‌ها و پشتیبانی Discourse
-
-      ### نکات انتشار
-
-      %{notes}
   flag_reasons:
     off_topic: "نوشته شما به عنوان **بی ربط به موضوع** پرچم‌گذاری شده. انجمن احساس خوبی برای جا دادن آن در موضوع ندارد٬ آن طور که در عنوان و نوشته اول تعریف شده. "
     inappropriate: "نوشاه شما به عنوان ** نامناسب** پرچم‌گذاری شده. انجمن احساس کرده این تهاجمی، توهین آمیز، و یا نقض  [دستورالعمل  انجمن ما است](/guidelines)"
@@ -2204,9 +2142,6 @@ fa_IR:
         این نشان را وقتی که اولین پسند را دریافت کنید به شما اعطا می‌شود. تبریک، نوشته‌ای ارسال کردید که اعضای انجمن به آن علاقه نشان دادند، باحال، یا مفید بود!
     autobiographer:
       name: نویسنده شرح‌حال
-      description: <a href="/my/preferences">مشخصات</a>  خود را تکمیل کنید
-      long_description: |
-        این نشان را وقتی دریافت می‌کنید <a href="/my/preferences">پروفایل کاربریe</a> خود را کامل کنید و یک تصویر کاربری انتخاب کنید. به انجمن اجازه دهید بیشتر درباره شما بدانند و متوجه علایق شما شوند، تا بتوانیم انجمن به هم پیوسته‌ای داشته باشیم. به ما ملحق شوید!
     anniversary:
       name: سالگرد
       description: برای یک سال کاربر فعال بوده، حداقل یک نوشته دارد.
@@ -2299,9 +2234,6 @@ fa_IR:
         این نشان زمانی اعطا می‌شود که برای بار اول یک نوشته را  در پاسخ خود نقل‌قول کنید. نقل‌قول بخش‌های مربوطه کمک می‌کند که بحث‌های موضوع به هم متصل شوند. بهترین راه برای نقل قول انتخاب متن در نوشته و کلیک روی دکمه پاسخ است. سخاوتمندانه نقل‌قول کنید!
     read_guidelines:
       name: خواندن دستورالعمل‌ها
-      description: <a href="/guidelines">دستورالعمل های انجمن</a> را بخوانید
-      long_description: |
-        این نشان زمانی اعطا می‌شود  <a href="/guidelines">راهنمای انجمن را بخوانید</a>. دنبال کردن و به اشتراک گذاری این راهنمای ساده به ایجاد یک انجمن امن، لذت‌بخش و پایدار برای همه کمک می‌کند. همیشه به یاد داشته باشید که همیشه فردی وجود دارد که خیلی شبیه شماست، و برعکس این مسئله هم وجود دارد. خوب باشید!
     reader:
       name: اهل مطالعه
       description: همه‌ی پاسخ‌های یک موضوع با ۱۰۰ پاسخ را مطالعه کرده.

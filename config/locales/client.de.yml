@@ -532,8 +532,8 @@ de:
         disable: "Benachrichtigungen deaktivieren"
         enable: "Benachrichtigungen aktivieren"
         each_browser_note: "Hinweis: Du musst diese Einstellung in jedem von dir verwendeten Browser ändern."
-      dismiss: 'Als gelesen markieren'
-      dismiss_notifications: "Alles ausblenden"
+      dismiss: 'Alles gelesen'
+      dismiss_notifications: "Alles gelesen"
       dismiss_notifications_tooltip: "Alle ungelesenen Benachrichtigungen als gelesen markieren"
       first_notification: "Deine erste Benachrichtigung! Wähle sie aus um fortzufahren."
       disable_jump_reply: "Springe nicht zu meinem Beitrag, nachdem ich geantwortet habe"
@@ -1434,14 +1434,14 @@ de:
       jump_reply_down: zur nachfolgenden Antwort springen
       deleted: "Das Thema wurde gelöscht"
       topic_status_update:
-        title: "Themen-Zeitschaltuhr"
-        save: "Stoppuhr setzen"
+        title: "Zeitschaltuhren"
+        save: "Zeitschaltuhr aktivieren"
         num_of_hours: "Stunden:"
-        remove: "Stoppuhr löschen"
+        remove: "Zeitschaltuhr deaktivieren"
         publish_to: "Veröffentlichen in:"
         when: "Wann:"
-        public_timer_types: Themen-Zeitschaltuhren
-        private_timer_types: Benutzer-Themen-Zeitschaltuhren
+        public_timer_types: Globale Zeitschaltuhren
+        private_timer_types: Zeitschaltuhren für Benutzer
       auto_update_input:
         none: "Wähle einen Zeitbereich aus"
         later_today: "Im Laufe des Tages"
@@ -1550,7 +1550,7 @@ de:
         open: "Thema öffnen"
         close: "Thema schließen"
         multi_select: "Beiträge auswählen..."
-        timed_update: "Themen-Timer setzen…"
+        timed_update: "Zeitschaltuhren…"
         pin: "Thema anheften..."
         unpin: "Thema loslösen..."
         unarchive: "Thema aus Archiv holen"
@@ -2278,7 +2278,7 @@ de:
       selector_no_tags: "keine Schlagwörter"
       changed: "Geänderte Schlagwörter:"
       tags: "Schlagwörter"
-      choose_for_topic: "Optionale Schlagwörter für dieses Thema wählen"
+      choose_for_topic: "optionale Schlagwörter"
       delete_tag: "Schlagwört löschen"
       delete_confirm:
         one: "Bist du sicher, dass du dieses Schlagwort löschen und von einem zugeordneten Thema entfernen möchtest?"
@@ -2974,9 +2974,12 @@ de:
           term: "Suchbegriff"
           searches: "Suchen"
           click_through: "Durchklicken"
-          most_viewed_topic: "Meist betrachtetes Thema"
           unique: "Eindeutig"
           unique_title: "einzelne Benutzer mit dieser Suche"
+          types:
+            all_search_types: "Alle Sucharten"
+            header: "Überschrift"
+            full_page: "Desktop-Seite"
         logster:
           title: "Fehlerprotokolle"
       watched_words:

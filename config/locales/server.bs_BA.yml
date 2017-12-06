@@ -252,7 +252,6 @@ bs_BA:
       email_title: 'Ova tema "%{title}" treba pažnju moderatora'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Your post was flagged by the community. Please <a href="/my/private-messages">see your private messages</a>.</p>'
     user_must_edit: '<p>This post was flagged by the community and is temporarily hidden.</p>'
   archetypes:
     regular:
@@ -627,22 +626,16 @@ bs_BA:
     new_registrations_disabled: "New account registrations are not allowed at this time."
     password_too_long: "Passwords are limited to 200 characters."
     missing_user_field: "You have not completed all the user fields"
-    close_window: "Authentication is complete. Close this window to continue."
   user:
     no_accounts_associated: "No accounts associated"
     username:
       short: "must be at least %{min} characters"
       long: "must be no more than %{max} characters"
-      characters: "must only include numbers, letters and underscores"
       unique: "must be unique"
       blank: "must be present"
     email:
       not_allowed: "is not allowed from that email provider. Please use another email address."
       blocked: "is not allowed."
-  invite_mailer:
-    subject_template: "%{inviter_name} vas poziva da pogledate '%{topic_title}' na sajtu %{site_domain_name}"
-  invite_forum_mailer:
-    subject_template: "%{inviter_name} vas poziva da se pridružite %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Set password for your %{site_name} account"
   flag_reasons:

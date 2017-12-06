@@ -119,7 +119,6 @@ lv:
           other: "pēc %{count} gadiem"
       previous_month: 'Iepriekšējais mēnesis'
       next_month: 'Nākamais mēnesis'
-      placeholder: Izvēlies datumu
     share:
       topic: 'padalīties ar saiti uz šo tēmu'
       post: 'ieraksts #%{postNumber}'
@@ -823,14 +822,6 @@ lv:
           zero: "ierakstu izveidoti"
           one: "ieraksts izveidots"
           other: "izveidotie ieraksti"
-        likes_given:
-          zero: "<i class='fa fa-heart'></i> doti"
-          one: "<i class='fa fa-heart'></i> dots"
-          other: "<i class='fa fa-heart'></i> veiktas"
-        likes_received:
-          zero: "<i class='fa fa-heart'></i> saņemti"
-          one: "<i class='fa fa-heart'></i> saņemts"
-          other: "<i class='fa fa-heart'></i> saņemtas"
         days_visited:
           zero: "apmeklētas dienas"
           one: " apmeklēta diena"
@@ -926,7 +917,6 @@ lv:
     first_post: Pirmais ieraksts
     mute: Noklusināt
     unmute: Pārtraukt klusināšanu
-    last_post: Pēdējais ieraksts
     last_reply_lowercase: pēdējā atbilde
     replies_lowercase:
       zero: atbildes
@@ -1153,7 +1143,6 @@ lv:
       ulist_title: "Nenumurēts saraksts"
       list_item: "Saraksta punkts"
       help: "Palīdzība ar formatēšanu, izmantojot Markdown"
-      toggler: "slēpt vai rādīt rediģēšanas paneli"
       modal_ok: "Labi"
       modal_cancel: "Atcelt"
       cant_send_pm: "Atvainojiet, jūs nevarat sūtīt ziņu %{username}."
@@ -1223,7 +1212,6 @@ lv:
       no_more_results: "Vairāk nav rezultātu."
       searching: "Meklējam..."
       post_format: "#{{post_number}} - {{username}}"
-      results_page: "Meklēšanas rezultāti"
       more_results: "Ir vēl vairāk rezultātu. Lūdzu precizējiet meklēšanas kritērijus."
       context:
         user: "Meklēt ierakstus ar @{{username}}"
@@ -1234,30 +1222,20 @@ lv:
         title: Izvērstā meklēšana
         posted_by:
           label: Ierakstīja
-        in_category:
-          label: Sadaļā
         in_group:
           label: Grupā
         with_badge:
           label: Ar žetonu
-        with_tags:
-          label: Ar tagiem
         filters:
-          label: Meklēt tikai tēmās/ierakstos, kas...
           likes: Man patika
           posted: Es ierakstīju
           watching: Es skatos
           tracking: Es sekoju
-          private: ir manās ziņās
-          bookmarks: Es ievietoju grāmatzīmēs
           first: ir tēmas pirmais ieraksts
           pinned: ir piesprausts
           unpinned: nav piesprausts
-          seen: esmu izlasījis
           unseen: neesmu izlasījis
           wiki: ir wiki
-          images: ieskaitot attēlu(s)
-          all_tags: Satur visus tagus
         statuses:
           label: Kur tēmas
           open: ir atvērtas
@@ -1402,7 +1380,6 @@ lv:
       jump_reply_down: 'pāriet uz vēlāku atbildi '
       deleted: "Tēma ir dzēsta "
       topic_status_update:
-        title: "Uzstādīt tēmas taimeri "
         save: "Uzstādīt taimeri "
         num_of_hours: "Stundu skaits:"
         remove: "Noņemt taimeri"
@@ -1751,10 +1728,6 @@ lv:
         change_owner: "Mainīt īpašnieku"
       actions:
         flag: 'Ziņot'
-        defer_flags:
-          zero: "Atlikt sūdzību izskatīšanu"
-          one: "Atlikt sūdzības izskatīšanu"
-          other: "Atlikt sūdzību izskatīšanu"
         undo:
           off_topic: "Atcelt ziņošanu"
           spam: "Atcelt ziņošanu"
@@ -2271,9 +2244,7 @@ lv:
       selector_no_tags: "bez tagiem"
       changed: "mainītie tagi:"
       tags: "Tagi"
-      choose_for_topic: "izvēlēties neobligātos tagus šai tēmai"
       delete_tag: "Dzēst tagu"
-      delete_confirm: "Vai jūs esat drošs, ka vēlaties dzēst šo tagu?"
       rename_tag: "Pārsaukt tagu"
       rename_instructions: "Izvēlēties jaunu nosaukumu tagam:"
       sort_by: "Kārtot pēc:"
@@ -2399,24 +2370,12 @@ lv:
         by: " "
       flags:
         title: "Sūdzības"
-        old: "Veci"
-        active: "Aktīvi"
         agree: "Piekrist"
         agree_title: "Apstiprināt šo ziņojumu kā pamatotu un korektu"
-        agree_flag_modal_title: "Piekrist un..."
-        agree_flag_hide_post: "Piekrist (paslēpt ierakstu + nosūtīt privātu ziņu)"
-        agree_flag_hide_post_title: "Paslēpt šo ierakstu un automātiski sūtīt lietotājam ziņu ar prasību viņam to izlabot"
-        agree_flag_restore_post: "Piekrist (atjaunot ierakstu)"
-        agree_flag_restore_post_title: "Atjaunot šo ierakstu"
-        agree_flag: "Piekrist ziņojumam"
-        agree_flag_title: "Piekrist ziņojumam un atstāt ierakstu nemainītu"
-        defer_flag: "Nepiekrist"
         defer_flag_title: "Dzēst šo sūdzību; šoreiz nav jāveic nekādas darbības."
         delete: "Dzēst"
         delete_title: "Dzēst ierakstu, par ko ir šī sūdzība."
-        delete_post_defer_flag: "Dzēst ierakstu un atlikt sūdzības izskatīšanu"
         delete_post_defer_flag_title: "Dzēst ierakstu; ja tas ir tēmas pirmais ieraksts, dzēst arī tēmu"
-        delete_post_agree_flag: "Dzēst ierakstu un piekrist sūdzībai"
         delete_post_agree_flag_title: "Dzēst ierakstu; ja tas ir tēmas pirmais ieraksts, dzēst arī tēmu"
         delete_flag_modal_title: "Dzēst un..."
         delete_spammer: "Izdzēst spamotāju"
@@ -2431,31 +2390,16 @@ lv:
         dispositions:
           agreed: "piekrita"
           disagreed: "nepiekrita"
-          deferred: "atlika"
         flagged_by: "Sūdzība no"
         resolved_by: "Atrisināja"
         took_action: "Rīkojās"
         system: "Sistēma"
         error: "Kaut kur notika kļūda"
         reply_message: "Atbilde"
-        no_results: "Šeit nav sūdzību."
         topic_flagged: "Par šo <strong>tēmu</strong> ir saņemta sūdzība."
         visit_topic: "Apmeklēt tēmu, lai rīkotos."
         was_edited: "Ieraksts tika rediģēts pēc pirmās sūdzības"
         previous_flags_count: "Par šo ierakstu jau saņemtas {{count}} sūdzības."
-        summary:
-          action_type_3:
-            zero: "novirzīšanās no tēmas x{{count}}"
-            one: "novirzīšanās no tēmas"
-            other: "novirzīšanās no tēmas x{{count}}"
-          action_type_4:
-            zero: "nepiedienīgi x{{count}}"
-            one: "nepiedienīgs"
-            other: "nepiedienīgi x{{count}}"
-          action_type_8:
-            zero: "spams x{{count}}"
-            one: "spams"
-            other: "spams x{{count}}"
       groups:
         primary: "Galvenā grupa"
         no_primary: "(nav galvenās grupas)"

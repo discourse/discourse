@@ -101,7 +101,6 @@ pt_BR:
           other: "%{count} anos depois"
       previous_month: 'Mês Anterior'
       next_month: 'Mês Seguinte'
-      placeholder: Escolha uma data
     share:
       topic: 'compartilhe o link desse tópico'
       post: 'mensagem #%{postNumber}'
@@ -794,12 +793,6 @@ pt_BR:
         post_count:
           one: "post criado"
           other: "posts criados"
-        likes_given:
-          one: "<i class='fa fa-heart'></i> dada"
-          other: "<i class='fa fa-heart'></i> dadas"
-        likes_received:
-          one: "<i class='fa fa-heart'></i> recebida"
-          other: "<i class='fa fa-heart'></i> recebidas"
         days_visited:
           one: "dia visitado"
           other: "dias visitados"
@@ -1110,7 +1103,6 @@ pt_BR:
       ulist_title: "Lista de itens"
       list_item: "Item da lista"
       help: "Ajuda da edição Markdown"
-      toggler: "esconder ou exibir o painel de composição"
       modal_ok: "OK"
       modal_cancel: "Cancelar"
       cant_send_pm: "Desculpe, você não pode enviar uma mensagem para %{username}."
@@ -1207,26 +1199,18 @@ pt_BR:
         title: Busca avançada
         posted_by:
           label: Postado por
-        in_category:
-          label: Em Categoria
         in_group:
           label: Em Grupo
         with_badge:
           label: Com Emblema
-        with_tags:
-          label: Com Etiquetas
         filters:
-          label: Retornar apenas tópicos/publicações que...
           likes: Eu gostei
           posted: Eu publiquei em
           watching: Eu estou assistindo
           tracking: Eu estou rastreando
-          private: estão em minhas mensagens
-          bookmarks: Eu marquei
           first: são a primeira publicação
           pinned: está fixado
           unpinned: não está fixado
-          seen: Eu li
           unseen: Eu não li
           wiki: é uma wiki
         statuses:
@@ -1688,9 +1672,6 @@ pt_BR:
         change_owner: "Trocar autor"
       actions:
         flag: 'Sinalização'
-        defer_flags:
-          one: "Delegar denuncia"
-          other: "Delegar denúncias"
         undo:
           off_topic: "Desfazer sinalização"
           spam: "Desfazer sinalização"
@@ -2180,9 +2161,7 @@ pt_BR:
       selector_no_tags: "sem etiquetas"
       changed: "etiquetas alteradas:"
       tags: "Etiquetas"
-      choose_for_topic: "Escolha marcadores opcionais para este tópico"
       delete_tag: "Apagar marcação"
-      delete_confirm: "Você tem certeza que deseja apagar essa marcação?"
       rename_tag: "Renomear marcador"
       rename_instructions: "Escolha um novo nome para o marcador"
       sort_by: "Ordenar por"
@@ -2310,24 +2289,13 @@ pt_BR:
         by: "por"
       flags:
         title: "Sinalizações"
-        old: "Antigo"
-        active: "Ativo"
         agree: "Concordo"
         agree_title: "Confirmar esta marcação como válida e correta"
-        agree_flag_modal_title: "Concordar e..."
-        agree_flag_hide_post: "Aceitar (esconder post + enviar MP)"
-        agree_flag_hide_post_title: "Esconder este post e enviar automaticamente uma mensagem particular para o usuário solicitando que ele edite este post urgentemente"
-        agree_flag_restore_post: "Concordar (restaurar post)"
-        agree_flag_restore_post_title: "Restaurar este post"
-        agree_flag: "Concordar com a marcação"
-        agree_flag_title: "Concordar com a marcação e manter o post inalterado"
-        defer_flag: "Delegar"
+        defer_flag: "Ignorar"
         defer_flag_title: "Remover esta marcação; ela não requer nenhuma ação neste momento."
         delete: "Apagar"
         delete_title: "Apagar o post ao qual a marcação se refere."
-        delete_post_defer_flag: "Apagar o post e postergar a marcação"
         delete_post_defer_flag_title: "Apaga a resposta; se for a primeira, apagar o tópico"
-        delete_post_agree_flag: "Deletar o post e Concordar com a marcação"
         delete_post_agree_flag_title: "Apagar resposta; se for a primeira, deletar o tópico"
         delete_flag_modal_title: "Apagar e ..."
         delete_spammer: "Deletar Spammer"

@@ -7,7 +7,6 @@
 
 tr_TR:
   site_settings:
-    poll_enabled: "Kullanıcılar anket oluşturabilirler mi?"
     poll_maximum_options: "Bir ankette izin verilen en fazla seçenek sayısı."
     poll_edit_window_mins: "Gönderinin oluşturulmasından sonra anketin düzenlenebileceği dakika sayısı"
   poll:

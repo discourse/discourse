@@ -137,7 +137,6 @@ ru:
           other: "%{count} лет спустя"
       previous_month: 'Предыдущий месяц'
       next_month: 'Следующий месяц'
-      placeholder: Выберите дату
     share:
       topic: 'Поделиться ссылкой на эту тему'
       post: 'Ссылка на сообщение №%{postNumber}'
@@ -852,16 +851,6 @@ ru:
           few: "сообщения написал"
           many: "сообщений написал"
           other: "сообщений написал"
-        likes_given:
-          one: "<i class='fa fa-heart'></i> поставил"
-          few: "<i class='fa fa-heart'></i> given"
-          many: "<i class='fa fa-heart'></i> given"
-          other: "<i class='fa fa-heart'></i> given"
-        likes_received:
-          one: "<i class='fa fa-heart'></i> получил"
-          few: "<i class='fa fa-heart'></i> получил"
-          many: "<i class='fa fa-heart'></i> получил"
-          other: "<i class='fa fa-heart'></i> получил"
         days_visited:
           one: "день заходил"
           few: "дня заходил"
@@ -961,7 +950,6 @@ ru:
     first_post: Первое сообщение
     mute: Отключить
     unmute: Включить
-    last_post: Последнее сообщение
     last_reply_lowercase: последний ответ
     replies_lowercase:
       one: ответ
@@ -1094,8 +1082,6 @@ ru:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
-    select_kit:
-      filter_placeholder: Искать...
     emoji_picker:
       filter_placeholder: Искать emoji
       people: People
@@ -1184,7 +1170,6 @@ ru:
       ulist_title: "Ненумерованный список"
       list_item: "Пункт первый"
       help: "Справка по форматированию (Markdown)"
-      toggler: "Закрыть / открыть панель редактирования"
       modal_ok: "OK"
       modal_cancel: "Отмена"
       cant_send_pm: "К сожалению, вы не можете отправлять сообщения пользователю %{username}."
@@ -1251,7 +1236,6 @@ ru:
       no_more_results: "Больше ничего не найдено."
       searching: "Поиск ..."
       post_format: "#{{post_number}} от {{username}}"
-      results_page: "Результаты поиска"
       more_results: "Найдено множество результатов. Пожалуйста, уточните, критерии поиска."
       cant_find: "Не можете найти нужную информацию?"
       start_new_topic: "Создать новую тему?"
@@ -1264,29 +1248,20 @@ ru:
         title: Расширенный поиск
         posted_by:
           label: Автор
-        in_category:
-          label: Раздел
         in_group:
           label: Группа
         with_badge:
           label: С наградами
-        with_tags:
-          label: С тегами
         filters:
-          label: Ограничить поиск только тем и сообщений...
           likes: Мне понравились
           posted: В которых я писал
           watching: За которыми я наблюдаю
           tracking: За которыми я слежу
-          private: В моих личных сообщениях
-          bookmarks: В моих закладках
           first: Только первые сообщения в темах
           pinned: Закреплены
           unpinned: Не закреплены
-          seen: Отметить прочитанным
           unseen: Отметить непрочитанным
           wiki: Являются вики
-          all_tags: Содержит все теги
         statuses:
           label: Характеристика темы
           open: Открыта
@@ -1786,11 +1761,6 @@ ru:
         change_owner: "Изменить владельца"
       actions:
         flag: 'Жалоба'
-        defer_flags:
-          one: "Отложить жалобу"
-          few: "Отложить жалобы"
-          many: "Отложить жалобы"
-          other: "Отложить жалобы"
         undo:
           off_topic: "Отозвать жалобу"
           spam: "Отозвать жалобу"
@@ -2348,9 +2318,7 @@ ru:
       selector_no_tags: "Нет тегов"
       changed: "Теги изменены:"
       tags: "Теги"
-      choose_for_topic: "Выберите теги для этой темы (опционально)"
       delete_tag: "Удалить тег"
-      delete_confirm: "Вы уверены, что хотите удалить этот тег?"
       rename_tag: "Редактировать тег"
       rename_instructions: "Выберите новое название тега:"
       sort_by: "Сортировка:"
@@ -2477,24 +2445,12 @@ ru:
         by: "от"
       flags:
         title: "Жалобы"
-        old: "Старые"
-        active: "Активные"
         agree: "Принять"
         agree_title: "Подтвердить корректность жалобы"
-        agree_flag_modal_title: "Принять и..."
-        agree_flag_hide_post: "Принять (скрыть сообщение и послать личное сообщение)"
-        agree_flag_hide_post_title: "Скрыть сообщение и автоматически отправить пользователю сообщение с просьбой исправить его"
-        agree_flag_restore_post: "Согласиться (восстановить сообщение)"
-        agree_flag_restore_post_title: "Восстановить это сообщение"
-        agree_flag: "Принять жалобу"
-        agree_flag_title: "Принять жалобу, оставить сообщение без изменений"
-        defer_flag: "Отложить"
-        defer_flag_title: "Удалить эту жалобу - никаких действий на данный момент не требуется."
+        defer_flag_title: "Удалить эту жалобу — никаких действий на данный момент не требуется."
         delete: "Удалить"
         delete_title: "Удалить обжалованное сообщение."
-        delete_post_defer_flag: "Удалить сообщение и отложить жалобу"
         delete_post_defer_flag_title: "Удалить сообщение; если это первое сообщение, удалить тему целиком"
-        delete_post_agree_flag: "Принять жалобу, удалить сообщение"
         delete_post_agree_flag_title: "Удалить сообщение; если это первое сообщение, удалить тему целиком"
         delete_flag_modal_title: "Удалить и..."
         delete_spammer: "Удалить спамера"
@@ -2505,48 +2461,20 @@ ru:
         disagree_flag_title: "Отклонить эту жалобу как некорректную"
         clear_topic_flags: "Готово"
         clear_topic_flags_title: "Тема была просмотрена, и все проблемы были решены. Нажмите Готово, чтобы удалить все жалобы."
-        more: "(еще ответы...)"
+        more: "(ещё ответы...)"
         dispositions:
           agreed: "принято"
           disagreed: "отклонено"
-          deferred: "отложено"
         flagged_by: "Отмечено"
         resolved_by: "Разрешено"
         took_action: "Принята мера"
         system: "Системные"
         error: "что-то пошло не так"
         reply_message: "Ответить"
-        no_results: "Жалоб нет."
         topic_flagged: "Эта <strong>тема</strong> была помечена."
         visit_topic: "Посетите тему чтобы принять меры"
         was_edited: "Сообщение было отредактировано после первой жалобы"
         previous_flags_count: "На это сообщение уже пожаловались {{count}} раз(а)."
-        summary:
-          action_type_3:
-            one: "вне темы"
-            few: "вне темы x{{count}}"
-            many: "вне темы x{{count}}"
-            other: "вне темы x{{count}}"
-          action_type_4:
-            one: "неуместно"
-            few: "неуместно x{{count}}"
-            many: "неуместно x{{count}}"
-            other: "неуместно x{{count}}"
-          action_type_6:
-            one: "другое"
-            few: "других x{{count}}"
-            many: "других x{{count}}"
-            other: "других x{{count}}"
-          action_type_7:
-            one: "другое"
-            few: "других x{{count}}"
-            many: "других x{{count}}"
-            other: "других x{{count}}"
-          action_type_8:
-            one: "спам"
-            few: "спам x{{count}}"
-            many: "спам x{{count}}"
-            other: "спам x{{count}}"
       groups:
         primary: "Основная группа"
         no_primary: "(нет основной группы)"

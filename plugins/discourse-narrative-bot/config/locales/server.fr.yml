@@ -53,7 +53,6 @@ fr:
         quote: "La difficulté est porteuse d'occasions"
         author: "Albert Einstein"
       '2':
-        quote: "Vous devez être le changement que vous voulez voir dans ce monde."
         author: "Mahatma Gandhi"
       '3':
         quote: "Ne pleurez pas parce que c'est fini, souriez parce que c'est arrivé !"
@@ -161,8 +160,6 @@ fr:
           - https://fr.wikipedia.org/wiki/Jeu_de_mots
           - https://fr.wikipedia.org/wiki/Liste_de_morts_insolites
           - https://fr.wikipedia.org/wiki/Orthographe_pour_calculatrice
-        reply: |-
-          Super ! Ça fonctionne pour la plupart <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> des liens. N'oubliez pas, ils doivent être sur une ligne _vide_, sans rien devant, ni derrière.
         not_found: |-
           Désolé, je n'ai pas pu trouvé le lien dans votre réponse ! :cry:
 
@@ -170,14 +167,6 @@ fr:
 
           <https://en.wikipedia.org/wiki/Exotic_Shorthair>
       images:
-        instructions: |-
-          Voici une photo de licorne :
-
-          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
-
-          Si vous l'aimez (et qui n'aime pas les licornes ?) appuyez sur le bouton _J'aime_ :heart: sous ce message pour me le faire savoir.
-
-          Pouvez-vous **répondre avec une image ?** N'importe laquelle fera l'affaire ! Glissez et déposer, appuyez sur le bouton d'upload, ou copiez juste son lien.
         reply: |-
           Sympa la photo ! – J'ai appuyé sur le bouton :heart: J'aime pour que vous sachiez au combien je l'apprécie. :heart_eyes:
         like_not_found: |-
@@ -221,31 +210,11 @@ fr:
 
           Sectionner n'importe quel texte dans mon message fera apparaitre le bouton <kbd>**Citer**</kbd>. Et appuyer sur "Répondre" avec du texte sélectionné fonctionnera également ! Pouvez-vous essayer de nouveau ?
       bookmark:
-        instructions: |-
-          Si vous souhaitez en savoir plus, sélectionnez <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> en dessous et <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> ** marquez ce message privé**. Si vous le faites, il pourrait y avoir un :gift: dans le futur !
         reply: |-
           Excellent ! Maintenant, vous pouvez facilement retrouver notre conversation privée à tout moment, à partir de [l'onglet marque page sur votre profil](%{profile_page_url}/activity/bookmarks). Sélectionnez juste votre photo de profil dans le coin en haut à droite &#8599;
-        not_found: |-
-          Uh oh, je ne vois aucun marque page sur ce sujet ! Avez-vous trouvé le marque page sous chaque message ? Utilisez le bouton Afficher plus <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> pour dévoiler d'autres actions si nécessaire.
       emoji:
-        instructions: |-
-          Vous pouvez avoir remarqué que j'utilise des petites images dans mes réponses :blue_car::dash: Elles sont appelées [emoji](https://fr.wikipedia.org/wiki/Emoji). Pouvez-vous **ajouter un emoji** à votre réponse ? N'importe lequel sera bien:
-
-          - Tapez  `:) ;) :D :P :O`
-
-          - Tapez <kbd>:</kbd> puis complétez le nom de l'emoji  `:tada:`
-
-          - Appuyez sur le bouton emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16">~dans l'éditeur, ou sur le clavier de votre mobile.
         reply: |-
           C'est :sparkles: _emojitastic !_ :sparkles:
-        not_found: |-
-          Oops, Je ne vois pas aucun emoji dans votre réponse ? Oh non ! :sob:
-
-          Essayez de taper <kbd>:</kbd> pour faire apparaitre la selection d'emoji, puis appuyer sur les premières lettres de ce que vous voulez, comme par exemple `:bird:`
-
-          Ou, appuyez sur le bouton emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> dans l'éditeur.
-
-          (Si vous êtes sur un périphérique mobile, vous pouvez aussi entrer l'émoji directement depuis votre clavier.)
       mention:
         instructions: |-
           Parfois vous avez peut-être envie d'attirer l'attention, même si vous ne lui répondez pas directement. Tapez  `@` et complétez son pseudo pour le mentionner.
@@ -258,28 +227,10 @@ fr:
 
           (Et oui, mon nom d'utilisateur est écrit «_disco_», comme dans la folie des années 1970. J'adore [la vie nocturne!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
-        instructions: |-
-          Nous aimons nos discussions amicales, et nous avons besoin de votre aide pour [garder les lieux civilisés](%{guidelines_url}). Si vous voyez un problème, signalez-le s'il vous plait de façon privée à l'auteur, ou à notre [équipe](%{about_url}).
-
-          > :imp: J'ai écris quelque chose de très méchant ici
-
-          Je devine que vous savez ce que vous avez à faire. **Signalez ce message** comme inapproprié !
         reply: |-
           [Notre équipe](/groups/staff) sera notifié de façon privée de votre signalement. Si assez de membres de la communauté signalent un message, il sera automatiquement masqué par précaution.
           (Puisque je n'ai pas réellement écrit un article méchant :ange: j'ai anticipé et j'ai enlevé le signalement pour le moment.)
-        not_found: |-
-          Oh non, mon méchant message n'a pas encore été signalé. :worried: Pouvez-vous le signaler comme inapproprié en utilisant le **drapeau** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? N'oubliez pas d'utiliser le bouton Afficher plus<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> pour afficher plus d'actions pour chaque message.
       search:
-        instructions: |-
-          _psst_ … J'ai caché une surprise dans ce sujet. Si vous aimez les challenges, sélectionnez **l’icône de recherche** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> en haut à droite &#8599; pour la trouver.
-
-          Essayer de chercher le terme "capy​bara" dans ce sujet.
-        hidden_message: |-
-          Comment avez-vous pu rater le capy​bara ? :wink:
-
-          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
-
-          Avez-vous remarqué que nous sommes maintenant revenu au début ? Nourrissez ce pauvre capybara en **répondant avec l'emoji `:herb:`** et vous serez automatiquement amené à la fin.
         reply: |-
           Vous l'avez trouvé :tada:
 
@@ -288,8 +239,6 @@ fr:
           - Pour naviguer n'importe où dans une longue discussion, essayez la timeline du sujet sur la droite (et en bas sur mobile).
 
           - Si vous avez un clavier physique :keyboard:, appuyez sur <kbd>?</kbd> pour voir nos raccourcis clavier pratiques.
-        not_found: |-
-          Hmm... Il semblerait que vous ayez des difficultés. J'en suis désolé. Avez-vous cherché <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> le mot **capy&#8203;bara**?
       end:
         message: |-
           Merci d'être resté avec moi @%{username}! J'ai fait ça pour vous, je pense que vous l'avez mérité :
@@ -315,33 +264,17 @@ fr:
           Tout le monde fait des erreurs. Mais ne vous inquiétez pas, vous pouvez toujours éditer vos messages pour les réparer.
 
           Pouvez-vous commencer par **éditer** le message que je viens de créer en votre nom?
-        not_found: |-
-          Il semble que vous n'avez pas encore éditer le [message](%{url}) que j'ai créé pour vous. Pouvez-vous essayer de nouveau ?
-
-          Utilisez l’icône <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16">pour afficher l'éditeur.
         reply: |-
           Bon boulot !
 
           Remarquez que les éditions après 5 minutes seront considérés comme des modifications publiques, et qu'un petit crayon apparaitra dans le coin haut droit avec le nombre de modification.
       delete:
-        instructions: |-
-          Si vous souhaitez effacer un message que vous avez écrit, vous pouvez le supprimer.
-
-          Allons-y et **supprimez** un de vos messages précédents en utilisant la <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> **suppression**. Attention à ne pas supprimer le premier message !
-        not_found: |-
-          Je ne vois toujours aucun message supprimé ! Rappelez-vous, <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> afficher plus révélera <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16">supprimer.
         reply: |-
           Whoa ! :boom:
 
           Pour préserver la continuité des discussions, les suppressions ne sont pas immédiates, et le message ne sera supprimé qu'après quelques temps.
       recover:
         deleted_post_raw: 'Pourquoi @%{discobot_username} a supprimé mon message ? :anguished:'
-        instructions: |-
-          Oh non ! J'ai l'impression que j'ai accidentellement supprimé un nouveau message que je venais de créer pour vous.
-
-          Pouvez-vous me faire une faveur et <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> le **restaurer** ?
-        not_found: |-
-          Des soucis ? Rappelez-vous: <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> Afficher plus révélera <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> restaurer.
         reply: |-
           Pfiou, c'était moins une ! Merci d'avoir réparé ça ! :wink:
 
@@ -373,19 +306,6 @@ fr:
 
           Remarquez que quand vous répondez à un sujet, ou lisez un sujet pendant plusieurs minutes, le niveau de notification est automatiquement mis sur 'Suivi'. Vous pouvez changer cela dans [vos préférences utilisateur](/my/preferences).
       poll:
-        instructions: |-
-          Savez-vous que vous pouvez ajouter un sondage sur n'importe quel message ? Essayez en utilisant la <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> roue dans l'éditeur pour **créer un sondage**.
-        not_found: |-
-          Whooops ! Il n'y a pas de sondage dans votre réponse.
-
-          Utilisez la <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> roue dans l'éditeur, ou copiez et coller ce sondage dans votre prochaine réponse :
-
-          ```text
-          [poll]
-          * :cat:
-          * :dog:
-          [/poll]
-          ```
         reply: |-
           Hey, bon sondage ! Comment s'est passé votre formation ?
 
@@ -394,20 +314,6 @@ fr:
           :-1:
           [/poll]
       details:
-        instructions: |-
-          Parfois vous souhaitez **masquer des détails** dans vos réponses :
-
-          - Quand vous discutez d'un film ou d'une série TV et que vous pourriez spoiler la communauté.
-
-          - Quand votre message a besoin de beaucoup de détails qui peuvent rendre le sujet illisible
-
-          [details=Sélectionnez ceci pour voir comment cela fonctionne !]
-          1. Sélectionnez la roue <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> dans l'éditeur.
-          2. Sélectionnez "Cacher le texte".
-          3. Éditez le résumé et ajoutez votre contenu.
-          [/details]
-
-          Pouvez-vous utiliser la roue <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16">dans l'éditeur pour ajouter une section de détails dans votre prochaine réponse ?
         not_found: |-
           Des soucis pour créer le widget de détail ? Essayez d'inclure le texte suivant dans votre prochaine réponse :
 

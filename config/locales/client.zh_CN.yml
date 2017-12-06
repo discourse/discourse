@@ -45,12 +45,16 @@ zh_CN:
           other: "%{count}秒内"
         x_seconds:
           other: "%{count}秒前"
+        less_than_x_minutes:
+          other: "%{count}分钟内"
         x_minutes:
           other: "%{count}分钟前"
         about_x_hours:
           other: "%{count}小时前"
         x_days:
           other: "%{count}天前"
+        x_months:
+          other: "%{count} 个月"
         about_x_years:
           other: "%{count}年内"
         over_x_years:
@@ -83,7 +87,7 @@ zh_CN:
           other: "%{count}年后"
       previous_month: '上个月'
       next_month: '下个月'
-      placeholder: 选择日期
+      placeholder: 日期
     share:
       topic: '分享指向这个主题的链接'
       post: '#%{postNumber} 楼'
@@ -565,6 +569,7 @@ zh_CN:
       api_approved: "已批准："
       theme: "主题"
       home: "默认主页"
+      staged: "暂存"
       staff_counters:
         flags_given: "采纳标记"
         flagged_posts: "被标记"
@@ -617,6 +622,7 @@ zh_CN:
         title: "更换头像"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>头像，基于："
         gravatar_title: "在 Gravatar 网站上更改你的头像"
+        gravatar_failed: "无法获取 Gravatar 。有关联到该电子邮件地址的 Gravatar ？"
         refresh_gravatar_title: "刷新你的 Gravatar 头像"
         letter_based: "默认头像"
         uploaded_avatar: "自定义图片"
@@ -772,6 +778,7 @@ zh_CN:
         title: "概要"
         stats: "统计"
         time_read: "阅读时间"
+        recent_time_read: "最近阅读时间"
         topic_count:
           other: "创建主题"
         post_count:
@@ -782,6 +789,8 @@ zh_CN:
           other: "收到"
         days_visited:
           other: "访问天数"
+        topics_entered:
+          other: "已阅主题"
         posts_read:
           other: "阅读帖子"
         bookmark_count:
@@ -869,6 +878,9 @@ zh_CN:
     unmute: 取消静音
     last_post: 最后发帖
     time_read: 阅读
+    time_read_recently: '最近 %{time_read}'
+    time_read_tooltip: '合计阅读时间 %{time_read}'
+    time_read_recently_tooltip: '总阅读时间 %{time_read} (最近60天 %{recent_time_read})'
     last_reply_lowercase: 最后回复
     replies_lowercase:
       other: 回复
@@ -1004,6 +1016,7 @@ zh_CN:
       default_header_text: 选择...
       no_content: 无符合的结果
       filter_placeholder: 搜索……
+      create: "创建{{content}}"
     emoji_picker:
       filter_placeholder: 查找表情符号
       people: 人物
@@ -1066,6 +1079,7 @@ zh_CN:
       edit_reason_placeholder: "编辑理由"
       show_edit_reason: "添加理由"
       topic_featured_link_placeholder: "在标题里输入链接"
+      remove_featured_link: "从主题中移除链接。"
       reply_placeholder: "在此键入。使用Markdown，BBCode，或HTML格式。可拖拽或粘贴图片。"
       view_new_post: "浏览新帖。"
       saving: "保存中"
@@ -1097,7 +1111,8 @@ zh_CN:
       ulist_title: "符号列表"
       list_item: "列表条目"
       help: "Markdown 编辑帮助"
-      toggler: "隐藏或显示编辑面板"
+      collapse: "最小号编辑面板"
+      abandon: "关闭编辑面板并放弃草稿"
       modal_ok: "确认"
       modal_cancel: "取消"
       cant_send_pm: "抱歉，你不能向 %{username} 发送私信。"
@@ -1106,6 +1121,11 @@ zh_CN:
         body: "目前该私信只发给了你自己！"
       admin_options_title: "本主题可选设置"
     notifications:
+      tooltip:
+        regular:
+          other: "{{count}} 个未读通知"
+        message:
+          other: "{{count}} 条未读私信"
       title: "使用@提到你，回复你的内容、私信以及其他的通知"
       none: "现在无法载入通知"
       empty: "未发现通知"
@@ -1147,6 +1167,7 @@ zh_CN:
         linked: "链接至你的帖子"
         granted_badge: "勋章授予"
         group_message_summary: "在群组收件箱中的私信"
+        topic_reminder: "一个提醒"
       popup:
         mentioned: '{{username}}在“{{topic}}”提到了你 - {{site_title}}'
         group_mentioned: '{{username}}在“{{topic}}”提到了你 - {{site_title}}'
@@ -1169,6 +1190,7 @@ zh_CN:
       uploading: "上传中"
       select_file: "选择文件"
       image_link: "链接图片到"
+      default_image_alt_text: 图片
     search:
       sort_by: "排序"
       relevance: "最相关"
@@ -1204,29 +1226,29 @@ zh_CN:
         posted_by:
           label: 发帖人
         in_category:
-          label: 在该分类中
+          label: 分类
         in_group:
           label: 在该群组中
         with_badge:
           label: 有该徽章
         with_tags:
-          label: 有该标签
+          label: 标签
         filters:
-          label: 只返回主题/帖子符合...
+          label: 只返回主题/帖子……
           likes: 我给了赞的
           posted: 我参与发帖
           watching: 我正在监看
           tracking: 我正在追踪
           private: 在我的私信中
-          bookmarks: 我已经收藏了
+          bookmarks: 我收藏了
           first: 是第一帖
           pinned: 是置顶的
           unpinned: 不是置顶的
-          seen: 我已经读过的
+          seen: 我阅读了
           unseen: 我还没有读过的
           wiki: 公共编辑
           images: 包含图片
-          all_tags: 包含所有标签
+          all_tags: 上述所有标签
         statuses:
           label: 当主题
           open: 是开放的
@@ -1699,6 +1721,8 @@ zh_CN:
           notify_user: "发送私信"
           bookmark: "收藏"
           like: "赞了它"
+          like_capped:
+            other: "和其他 {{count}} 人赞了它"
           vote: "已投票"
         by_you:
           off_topic: "你标记其偏离主题"
@@ -1830,6 +1854,7 @@ zh_CN:
       email_in_allow_strangers: "接受无帐号的匿名用户的邮件"
       email_in_disabled: "站点设置中已经禁用通过邮件发表新主题。欲启用通过邮件发表新主题，"
       email_in_disabled_click: '启用“邮件发表”设置。'
+      mailinglist_mirror: "分类镜像邮件列表"
       suppress_from_homepage: "不在主页中显示这个分类。"
       show_subcategory_list: "在这个分类中把子分类列表显示在主题的上面"
       num_featured_topics: "分类页面上显示的主题数量："
@@ -2146,7 +2171,7 @@ zh_CN:
       selector_no_tags: "无标签"
       changed: "标签被修改："
       tags: "标签"
-      choose_for_topic: "为此主题选择可选标签"
+      choose_for_topic: "可选标签"
       delete_tag: "删除标签"
       delete_confirm:
         other: "你确定你想要删除这个标签以及撤销在{{count}}个主题中的关联么？"
@@ -2283,13 +2308,12 @@ zh_CN:
         topics: "被标记主题"
         agree: "确认标记"
         agree_title: "确认这个标记有效且正确"
-        agree_flag_modal_title: "确认标记并执行..."
-        agree_flag_hide_post: "确认标记（隐藏帖子并发送私信）"
-        agree_flag_hide_post_title: "隐藏帖子并自动发送私信要求用户修改"
-        agree_flag_restore_post: "确认 (还原帖子)"
-        agree_flag_restore_post_title: "还原这篇帖子"
-        agree_flag: "确认标记"
-        agree_flag_title: "确认标记，不对帖子进行操作"
+        agree_flag_hide_post: "确认并隐藏帖子"
+        agree_flag_hide_post_title: "隐藏帖子并自动发送私信给作者使其修改"
+        agree_flag_restore_post: "确认并恢复帖子"
+        agree_flag_restore_post_title: "恢复帖子为所有用户可见。"
+        agree_flag: "确认并保持帖子"
+        agree_flag_title: "确认标记并保持帖子不变。"
         defer_flag: "忽略"
         defer_flag_title: "移除标记；这次不处理。"
         delete: "删除"
@@ -2834,6 +2858,17 @@ zh_CN:
           roll_up:
             text: "折叠"
             title: "如果有至少 'min_ban_entries_for_roll_up' 个记录，创建一个子网封禁记录"
+        search_logs:
+          title: "搜索日志"
+          term: "术语"
+          searches: "搜索"
+          click_through: "点击通过"
+          unique: "独特"
+          unique_title: "执行搜索的特定用户"
+          types:
+            all_search_types: "所有搜索类型"
+            header: "头部"
+            full_page: "完整页面"
         logster:
           title: "错误日志"
       watched_words:
@@ -2921,6 +2956,14 @@ zh_CN:
         suspend_message: "邮件消息"
         suspend_message_placeholder: "（可选）你可以提供更多封禁的理由并邮件用户该理由。"
         suspended_by: "封禁操作者："
+        silence_reason: "理由"
+        silenced_by: "已禁用，由"
+        silence_modal_title: "被禁言用户"
+        silence_duration: "该用户将被禁言多久？"
+        silence_reason_label: "为何禁言该用户？"
+        silence_reason_placeholder: "禁言理由"
+        silence_message: "邮件消息"
+        silence_message_placeholder: "(留空以发送默认消息)"
         suspended_until: "（直到%{until}）"
         cant_suspend: "该用户不能被封禁。"
         delete_all_posts: "删除所有帖子"

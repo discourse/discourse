@@ -7,7 +7,6 @@
 
 da:
   site_settings:
-    poll_enabled: "Tillad at brugere opretter afstemninger?"
     poll_maximum_options: "Maksimalt antal valgmuligheder i en afstemning."
     poll_edit_window_mins: "Antal af minutter efter oprettelse af et indlæg hvor en afstemning kan redigeres."
   poll:

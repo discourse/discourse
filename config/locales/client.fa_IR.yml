@@ -83,7 +83,6 @@ fa_IR:
           other: "%{count} سال بعد"
       previous_month: 'ماه قبل'
       next_month: 'ماه بعد'
-      placeholder: انتخاب تاریخ
     share:
       topic: 'پیوندی به این موضوع را به اشتراک بگذارید'
       post: 'ارسال #%{postNumber}'
@@ -762,10 +761,6 @@ fa_IR:
           other: "موضوعات ساخته شدند"
         post_count:
           other: "نوشته‌ها ساخته شدند"
-        likes_given:
-          other: "<i class='fa fa-heart'></i> داده"
-        likes_received:
-          other: "<i class='fa fa-heart'></i> دریافت کرده"
         days_visited:
           other: "روز‌هایی که بازدید شده"
         posts_read:
@@ -853,7 +848,6 @@ fa_IR:
     first_post: نوشته نخست
     mute: بی صدا
     unmute: صدادار
-    last_post: آخرین نوشته
     last_reply_lowercase: آخرین پاسخ
     replies_lowercase:
       other: 'پاسخ‌ها '
@@ -981,10 +975,6 @@ fa_IR:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
-    select_kit:
-      default_header_text: انتخاب...
-      no_content: چیزی یافت نشد.
-      filter_placeholder: جستجو...
     emoji_picker:
       people: مردم
       nature: طبیعت
@@ -1068,7 +1058,6 @@ fa_IR:
       ulist_title: "فهرست نقطه‌ای"
       list_item: "فهرست موارد"
       help: "راهنمای ویرایش با Markdown"
-      toggler: "مخفی‌سازی یا نمایش پنل نوشتن"
       modal_ok: "تایید"
       modal_cancel: "لغو"
       cant_send_pm: "متاسفانه , شما نمیتوانید به %{username}  پیام بفرستید."
@@ -1134,7 +1123,6 @@ fa_IR:
       no_more_results: "نتایجی بیشتری یافت نشد."
       searching: "در حال جستجو..."
       post_format: "#{{post_number}} توسط {{username}}"
-      results_page: "نتایج جستجو"
       context:
         user: "جستجوی نوشته‌ها با @{{username}}"
         category: "جستجوی دسته‌بندی #{{category}}"
@@ -1144,26 +1132,18 @@ fa_IR:
         title: جستجوی پیشرفته
         posted_by:
           label: فرستنده
-        in_category:
-          label: در دسته‌بندی
         in_group:
           label: در گروه
         with_badge:
           label: با نشان
-        with_tags:
-          label: با برچسب
         filters:
-          label: فقط موضوعات/نوشته‌هایی را برگردان که...
           likes: پسندیدم
           posted: نوشته ارسال کردم در
           watching: در حال مشاهده هستم
           tracking: در حال پیگیری هستم
-          private: در پیام‌های من هستند
-          bookmarks: نشانک گذاری کردم
           first: اولین نوشته هستند
           pinned: سنجاق شدند
           unpinned: سنجاق نشدند
-          seen: خواندم
           unseen: نخواندم
           wiki: دانشنامه هستند
         statuses:
@@ -1294,7 +1274,6 @@ fa_IR:
       jump_reply_down: رفتن به پاسخ بعدی
       deleted: "موضوع پاک شده است"
       topic_status_update:
-        title: "تنظیم زمان‌سنج موضوع"
         save: "تنظیم زمان‌سنج"
         num_of_hours: "تعداد ساعت:"
         remove: "حذف زمان‌سنج"
@@ -1611,8 +1590,6 @@ fa_IR:
         change_owner: "تغییر مالکیت"
       actions:
         flag: 'پرچم'
-        defer_flags:
-          other: "پرچم تاخیر"
         undo:
           off_topic: "برداشتن پرچم"
           spam: "برداشتن پرچم"
@@ -2069,9 +2046,7 @@ fa_IR:
       selector_no_tags: "بدون برچسب"
       changed: "برچسب‌های تغییر یافته:"
       tags: "برچسب‌ها"
-      choose_for_topic: "انتخاب برچسب‌های اختیاری برای موضوع"
       delete_tag: "حذف برچسب"
-      delete_confirm: "آیا از حذف برچسب اطمینان دارید؟"
       rename_tag: "تغییر نام برچسب"
       rename_instructions: "انتخاب نام جدید برای برچسب:"
       sort_by: "مرتب سازی بر اساس:"
@@ -2198,24 +2173,13 @@ fa_IR:
         by: "توسط"
       flags:
         title: "پرچم‌ها"
-        old: "قدیمی"
-        active: "فعال"
         agree: "موافقت کردن"
         agree_title: "تایید این پرچم به عنوان معتبر و صحیح"
-        agree_flag_modal_title: "موافقت کردن و..."
-        agree_flag_hide_post: "موافقت با (مخفی کردن نوشته + ارسال پیام خصوصی)"
-        agree_flag_hide_post_title: "این نوشته را مخفی کن و به کاربر به صورت خودکار پیام ارسال کن تا این نوشته را ویرایش کند"
-        agree_flag_restore_post: "موافقم (بازگرداندن نوشته)"
-        agree_flag_restore_post_title: "بازگرداندن این نوشته"
-        agree_flag: "موافقت با پرچم گذاری"
-        agree_flag_title: "موافقت با پرچم و نگه داشتن نوشته بدون تغییر"
-        defer_flag: " واگذار کردن"
+        defer_flag: "چشم پوشی"
         defer_flag_title: "حذف این پرچم; بدون نیاز به اقدام در این زمان"
         delete: "حذف"
         delete_title: "نوشته‌ای که پرچم به آن اشاره دارد حذف کن."
-        delete_post_defer_flag: "حذف نوشته و تاثیر در پرچم"
         delete_post_defer_flag_title: "حذف نوشته; اگر اولین نوشته است، موضوع را حذف نمایید."
-        delete_post_agree_flag: "حذف نوشته و موافقت با پرچم"
         delete_post_agree_flag_title: "حذف نوشته; اگر اولین نوشته است، موضوع را حذف نمایید."
         delete_flag_modal_title: "حذف و..."
         delete_spammer: "حذف هرزنگار"
@@ -2230,29 +2194,16 @@ fa_IR:
         dispositions:
           agreed: "موافقت شد"
           disagreed: "مخالفت شد"
-          deferred: "به تعویق افتاد"
         flagged_by: "پرچم شده توسط"
         resolved_by: "حل شده توسط"
         took_action: "زمان عمل"
         system: "سیستم"
         error: "اشتباهی روی داد"
         reply_message: "پاسخ دادن"
-        no_results: "هیچ پرچمی نیست"
         topic_flagged: "این <strong>موضوع</strong> پرچم خورده است."
         visit_topic: " موضوع را برای اقدام لازم ببینید"
         was_edited: "نوشته پس از پرچم اول ویرایش شد"
         previous_flags_count: "این موضوع در حال حاضر {{count}} بار پرچم گذاری شده است."
-        summary:
-          action_type_3:
-            other: "x{{count}} خارج از بحث"
-          action_type_4:
-            other: "X{{count}} نامناسب"
-          action_type_6:
-            other: "x{{count}} سفارشی"
-          action_type_7:
-            other: "x{{count}} دلخواه"
-          action_type_8:
-            other: " x{{count}} هرزنامه"
       groups:
         primary: "گروه اصلی"
         no_primary: "(بدون گروه اصلی)"

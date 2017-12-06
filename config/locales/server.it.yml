@@ -366,10 +366,6 @@ it:
           attributes:
             execute_at:
               in_the_past: "deve essere in data futura."
-        translation_overrides:
-          attributes:
-            value:
-              missing_interpolation_keys: 'Le seguenti chiavi(e) di interpolazione sono mancanti: "%{keys}"'
         watched_word:
           attributes:
             word:
@@ -460,7 +456,6 @@ it:
   post:
     image_placeholder:
       broken: "Questa immagine è assente"
-      large: "Questa immagine è troppo grande da visualizzare; clicca per vederla"
   rate_limiter:
     slow_down: "Hai eseguito questa operazione troppe volte, riprova più tardi."
     too_many_requests: "C'è un limite giornaliero su quante volte si può fare questa azione. Per favore attendi %{time_left} prima di riprovare."
@@ -1553,7 +1548,6 @@ it:
     destroy_reasons:
       unused_staged_user: "Utente temporaneo non utilizzato"
       fixed_primary_email: "Risolto il problema dell'email principale per l'utente temporaneo"
-      same_ip_address: "Stesso indirizzo IP (%ip_address%) degli altri utenti"
   flags_reminder:
     flags_were_submitted:
       one: "Flags were submitted over 1 hour ago. [Please review them](/admin/flags)."
@@ -1574,72 +1568,12 @@ it:
       Se desideri continuare a ricevere aggiornamenti via email, puoi ignorare questa email.
   invite_mailer:
     title: "Mailer Invito"
-    subject_template: "%{inviter_name} ti ha invitato a '%{topic_title}' su %{site_domain_name}"
-    text_body_template: |
-      %{inviter_name} ti ha invitato alla discussione
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      su
-
-      > %{site_title} -- %{site_description}
-
-      Se sei interessato, clicca sul collegamento qui sotto:
-
-      %{invite_link}
   custom_invite_mailer:
     title: "Mailer Invito Personalizzato"
-    subject_template: "%{inviter_name} ti ha invitato a '%{topic_title}' su %{site_domain_name}"
-    text_body_template: |
-      %{inviter_name} ti ha invitato alla discussione
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      su
-
-      > %{site_title} -- %{site_description}
-
-      Con questa nota
-
-      > %{user_custom_message}
-
-      Se sei interessato, clicca sul collegamento qui sotto:
-
-      %{invite_link}
   invite_forum_mailer:
     title: "Mailer Invito Forum"
-    subject_template: "%{inviter_name} ti invita a partecipare su %{site_domain_name}"
-    text_body_template: |
-      %{inviter_name} ti ha invitato ad unirti a
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      Se sei interessato, clicca sul collegamento qui sotto:
-
-      %{invite_link}
   custom_invite_forum_mailer:
     title: "Mailer Invito Forum Personalizzato"
-    subject_template: "%{inviter_name} ti ha invitato ad unirti a %{site_domain_name}"
-    text_body_template: |
-      %{inviter_name} ti ha invitato ad unirti a
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      Con questa nota
-
-      > %{user_custom_message}
-
-      Se sei interessato, clicca sul collegamento qui sotto:
-
-      %{invite_link}
   invite_password_instructions:
     title: "Invito Istruzioni Password"
     subject_template: "Imposta la password per il tuo account su %{site_name}"
@@ -1715,35 +1649,9 @@ it:
   new_version_mailer:
     title: "Mailer Nuova Versione"
     subject_template: "[%{email_prefix}] Nuova versione di Discourse, aggiornamento disponibile"
-    text_body_template: |
-      Hurrà, una nuova versione di [Discourse](http://www.discourse.org) è disponibile!
-
-      La tua versione: %{installed_version}
-      Nuova versione: **%{new_version}**
-
-      - Aggiorna usando il nostro semplice **[aggiornamento one-click dal browser](%{base_url}/admin/upgrade)**
-
-      - Guarda cosa c'è di nuovo sul  [changelog di GitHub](https://github.com/discourse/discourse/commits/master)
-
-      - Visita [meta.discourse.org](https://meta.discourse.org) per notizie, discussioni e supporto per Discourse
   new_version_mailer_with_notes:
     title: "Mailer Nuova Versione con Note"
     subject_template: "[%{email_prefix}] aggiornamento disponibile"
-    text_body_template: |
-      Hurrà, una nuova versione di [Discourse](http://www.discourse.org) è disponibile!
-
-      La tua versione: %{installed_version}
-      Nuova versione: **%{new_version}**
-
-      - Aggiorna usando il nostro semplice **[aggiornamento one-click dal browser](%{base_url}/admin/upgrade)**
-
-      - Guarda cosa c'è di nuovo sul [changelog di GitHub](https://github.com/discourse/discourse/commits/master)
-
-      - Visita [meta.discourse.org](https://meta.discourse.org) per notizie, discussioni e supporto per Discourse
-
-      ### Note di rilascio
-
-      %{notes}
   flag_reasons:
     off_topic: "Il tuo messaggio è stato segnalato come **fuori tema**: la comunità pensa non riguardi l'argomento, come attualmente definito dal titolo e dal contenuto del primo messaggio."
     inappropriate: "Il tuo messaggio è stato segnalato come **inappropriato**: la comunità lo ritiene offensivo, ingiurioso o una violazione delle [linee guida della comunità](/guidelines)."

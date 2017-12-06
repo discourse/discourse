@@ -7,7 +7,6 @@
 
 th:
   site_settings:
-    poll_enabled: "อนุญาตให้ผู้ใช้สร้างแบบสำรวจ ?"
     poll_maximum_options: "จำนวนตัวเลือกมากสุดที่อนุญาตให้ในการสร้างแบบสำรวจ"
   poll:
     multiple_polls_without_name: "มีการสำรวจจำนวนมากที่ไม่มีชื่อ ใช้แอทเทอบิว '<code>name</code>' เพื่อระบุตัวตนของการสำรวจนั้น"

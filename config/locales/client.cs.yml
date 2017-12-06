@@ -119,7 +119,6 @@ cs:
           other: "za %{count} let"
       previous_month: 'Předchozí měsíc'
       next_month: 'Další měsíc'
-      placeholder: Vyber datum
     share:
       topic: 'sdílet odkaz na toto téma'
       post: 'příspěvek #%{postNumber}'
@@ -154,6 +153,8 @@ cs:
       visible:
         enabled: 'uvedeno %{when}'
         disabled: 'neuvedeno %{when}'
+      banner:
+        enabled: 'vytvořil(a) tento banner %{when}. Bude se zobrazovat nahoře na každé stránce, dokud nebude uživatelem odmítnut.'
     topic_admin_menu: "akce administrátora tématu"
     emails_are_disabled: "Všechny odchozí emaily byly administrátorem vypnuty. Žádné odchozí emaily nebudou odeslány."
     bootstrap_mode_enabled: "Aby se váš web jednodušeji rozjel, nachází se v režimu bootstrap. Všichni noví uživatelé začínají s důveryhodností 1 a mají povolené denní odesílání souhrnných emailů. Tento režim se automaticky vypne, jakmile počet registrovaných uživatelů překročí %{min_users}."
@@ -515,6 +516,7 @@ cs:
         disable: "Vypnout upozornění"
         enable: "Povolit upozornění"
         each_browser_note: "Poznámka: Musíš změnit tuto volbu v každém prohlížeči, který používáš."
+      dismiss: 'Odbýt'
       dismiss_notifications: "Odbýt vše"
       dismiss_notifications_tooltip: "Označit všechny nepřečtené notifikace jako přečtené"
       first_notification: "Vaše první notifikace! Klikněte zde a začněte."
@@ -785,14 +787,6 @@ cs:
           one: "příspěvek vytvořen"
           few: "příspěvky vytvořeny"
           other: "příspěvků vytvořeno"
-        likes_given:
-          one: "<i class='fa fa-heart'></i> dán"
-          few: "<i class='fa fa-heart'></i> dány"
-          other: "<i class='fa fa-heart'></i> dáno"
-        likes_received:
-          one: "<i class='fa fa-heart'></i> obdržen"
-          few: "<i class='fa fa-heart'></i> obdrženy"
-          other: "<i class='fa fa-heart'></i> obdrženo"
         days_visited:
           one: "den navštíven"
           few: "dny navštíveno"
@@ -885,7 +879,6 @@ cs:
     first_post: První příspěvek
     mute: Ignorovat
     unmute: Zrušit ignorování
-    last_post: Poslední příspěvek
     last_reply_lowercase: poslední odpověď
     replies_lowercase:
       one: odpověď
@@ -1079,12 +1072,7 @@ cs:
       olist_title: "Číslovaný seznam"
       ulist_title: "Odrážkový seznam"
       list_item: "Položka seznam"
-      heading_label: "H"
-      heading_title: "Nadpis"
-      heading_text: "Nadpis"
-      hr_title: "Horizontální oddělovač"
       help: "Nápověda pro Markdown"
-      toggler: "zobrazit nebo skrýt editor příspěvku"
       modal_ok: "OK"
       modal_cancel: "Zrušit"
       cant_send_pm: "Bohužel, nemůžete poslat zprávu uživateli %{username}."
@@ -1150,7 +1138,6 @@ cs:
       no_more_results: "Nenalezeny žádné další výsledky."
       searching: "Hledám ..."
       post_format: "#{{post_number}} od {{username}}"
-      results_page: "Výsledky hledání"
       context:
         user: "Vyhledat příspěvky od @{{username}}"
         category: "Hledat v kategorii #{{category}}"
@@ -1160,29 +1147,20 @@ cs:
         title: Pokročilé hledání
         posted_by:
           label: Zaslal
-        in_category:
-          label: V kategorii
         in_group:
           label: Ve skupině
         with_badge:
           label: S odznakem
-        with_tags:
-          label: Se štítky
         filters:
-          label: Zobraz jen témata/příspěvky, které...
           likes: líbí se mi
           posted: Přidal jsem příspěvek
           watching: Sleduji
           tracking: Sleduji.
-          private: jsou v mých zprávách
-          bookmarks: Mám v záložkách
           first: jsou první příspěvek v tématu
           pinned: jsou připnuty
           unpinned: nejsou připnuty
-          seen: jsem četl
           unseen: jsem nečetl
           wiki: jsou wiki
-          all_tags: Obsahuje všechny štítky
         statuses:
           label: Kde příspěvky
           open: jsou otevřeny
@@ -1623,10 +1601,6 @@ cs:
         change_owner: "Změna autora"
       actions:
         flag: 'Nahlásit'
-        defer_flags:
-          one: "Odložit nahlášení"
-          few: "Odložit nahlášení"
-          other: "Odložit nahlášení"
         undo:
           off_topic: "Zrušit nahlášení"
           spam: "Zrušit nahlášení"
@@ -2066,6 +2040,8 @@ cs:
         user_profile_menu: '<b>p</b> Otevře uživatelské menu'
         show_incoming_updated_topics: '<b>.</b> Ukáže aktualizovaná témata'
         help: '<b>?</b> Otevře seznam klávesových zkratek'
+        dismiss_new_posts: '<b>x</b>, <b>r</b> Odbýt nové/příspěvky'
+        dismiss_topics: '<b>x</b>, <b>t</b> Odbýt témata'
         log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Odhlásit se'
       actions:
         title: 'Akce'
@@ -2130,9 +2106,7 @@ cs:
       selector_no_tags: "bez štítků"
       changed: "změněné štítky:"
       tags: "Štítky"
-      choose_for_topic: "zvolte volitelné štítky pro toto téma"
       delete_tag: "Smaž štítek"
-      delete_confirm: "Opravdu chcete smazat tento štítek?"
       rename_tag: "Přejmenovat štítek"
       rename_instructions: "Vyber název nového štítku:"
       sort_by: "Seřadit dle:"
@@ -2252,24 +2226,12 @@ cs:
         by: "od"
       flags:
         title: "Nahlášení"
-        old: "Stará"
-        active: "Aktivní"
         agree: "Schválit"
         agree_title: "Potvrdit toto hlášení jako právoplatné a korektní"
-        agree_flag_modal_title: "Schvaluji a..."
-        agree_flag_hide_post: "Schvaluji (skrýt příspěvek + poslat soukromou zprávu)"
-        agree_flag_hide_post_title: "Skrýt tento příspěvek a automaticky odeslat zprávu, která uživatele žádá o editaci"
-        agree_flag_restore_post: "Schvaluji (obnovit příspěvek)"
-        agree_flag_restore_post_title: "Obnovit tento příspěvek"
-        agree_flag: "Souhlasit s hlášením"
-        agree_flag_title: "Schválit hlášení a nechat příspěvek nezměněný"
-        defer_flag: "Odložit"
         defer_flag_title: "Odstranit nahlášení; teď nevyžaduje žádné opatření."
         delete: "Smazat"
         delete_title: "Smazat příspěvek, na který toto hlášení odkazuje."
-        delete_post_defer_flag: "Smazat příspěvek a odložit nahlášení"
         delete_post_defer_flag_title: "Smazat příspěvek; pokud je to první příspěvek, tak smazat téma"
-        delete_post_agree_flag: "Smazat příspěvek a Schválit hlášení"
         delete_post_agree_flag_title: "Smazat příspěvek; pokud je to první příspěvek, tak smazat téma"
         delete_flag_modal_title: "Smazat a..."
         delete_spammer: "Odstranit spamera"
@@ -2284,39 +2246,16 @@ cs:
         dispositions:
           agreed: "schváleno"
           disagreed: "neschváleno"
-          deferred: "odloženo"
         flagged_by: "Nahlásil"
         resolved_by: "Vyřešeno"
         took_action: "Zakročit"
         system: "Systémové soukromé zprávy"
         error: "Něco se pokazilo"
         reply_message: "Odpovědět"
-        no_results: "Nejsou zde žádná nahlášení."
         topic_flagged: "Tohle <strong>téma</strong> bylo označeno."
         visit_topic: "Zobrazit téma pro přijmutí opatření."
         was_edited: "Příspěvek byl upraven po prvním nahlášení"
         previous_flags_count: "Tento příspěvek byl již nahlášen {{count}} krát."
-        summary:
-          action_type_3:
-            one: "off-topic"
-            few: "off-topic x{{count}}"
-            other: "off-topic x{{count}}"
-          action_type_4:
-            one: "nevhodné"
-            few: "nevhodné x{{count}}"
-            other: "nevhodné x{{count}}"
-          action_type_6:
-            one: "spam"
-            few: "spam x{{count}}"
-            other: "spam x{{count}}"
-          action_type_7:
-            one: "vlastní"
-            few: "vlastní x{{count}}"
-            other: "vlastní x{{count}}"
-          action_type_8:
-            one: "spam"
-            few: "spam x{{count}}"
-            other: "spam x{{count}}"
       groups:
         primary: "Hlavní skupina"
         no_primary: "(žádná hlavní skupina)"

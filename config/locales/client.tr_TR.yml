@@ -83,7 +83,6 @@ tr_TR:
           other: "%{count} yıl sonra"
       previous_month: 'Önceki Ay'
       next_month: 'Sonraki Ay'
-      placeholder: Tarih seç
     share:
       topic: 'bu konunun bağlantısını paylaşın'
       post: '#%{postNumber} numaralı gönderiyi paylaşın'
@@ -990,10 +989,6 @@ tr_TR:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
-    select_box:
-      default_header_text: Seç...
-      no_content: Hiçbir sonuç bulunamadı
-      filter_placeholder: Ara...
     emoji_picker:
       filter_placeholder: Emoji ara
       people: İnsanlar
@@ -1077,7 +1072,6 @@ tr_TR:
       ulist_title: "Madde İşaretli Liste"
       list_item: "Liste öğesi"
       help: "Markdown Düzenleme Yardımı"
-      toggler: "yazım alanını gizle veya göster"
       modal_ok: "Tamam"
       modal_cancel: "İptal"
       cant_send_pm: "Üzgünüz, %{username} kullanıcısına ileti gönderemezsiniz."
@@ -1155,30 +1149,20 @@ tr_TR:
         title: Gelişmiş Arama
         posted_by:
           label: Gönderen
-        in_category:
-          label: Şu Kategoride
         in_group:
           label: Şu Grupta
         with_badge:
           label: Rozetle
-        with_tags:
-          label: Şu Etiketli
         filters:
-          label: Yalnızca bu özelliğe sahip konuları/gönderileri göster...
           likes: beğendiğim
           posted: gönderide bulunduğum
           watching: gözlediğim
           tracking: takip ettiğim
-          private: iletilerimde olan
-          bookmarks: imlediğim
           first: en ilk gönderidir.
           pinned: tutturulmuş
           unpinned: tutturulmamış
-          seen: Okudum
           unseen: Okumadım
           wiki: wiki olan
-          images: resim(ler) aktar
-          all_tags: Tüm etiketleri içerir
         statuses:
           label: Şöyle olan konular
           open: açık
@@ -1590,8 +1574,6 @@ tr_TR:
         change_owner: "Sahipliğini Değiştir"
       actions:
         flag: 'Bildir'
-        defer_flags:
-          other: "Bildirimi ertele"
         undo:
           off_topic: "Bildirimi geri al"
           spam: "Bildirimi geri al"
@@ -2026,9 +2008,7 @@ tr_TR:
       selector_no_tags: "etiket yok"
       changed: "değişen etiketler:"
       tags: "Etiketler"
-      choose_for_topic: "bu konu için etiket seçiniz"
       delete_tag: "Etiketi Sil"
-      delete_confirm: "Bu etiketi silmek istiyor musunuz?"
       rename_tag: "Etiketi Yeniden Adlandır"
       rename_instructions: "Bu etiket için yeni bir ad seçin:"
       sort_by: "Sırala:"
@@ -2155,24 +2135,13 @@ tr_TR:
         by: "tarafından"
       flags:
         title: "Bildirilenler"
-        old: "Eski"
-        active: "Etkin"
         agree: "Onayla"
         agree_title: "Bu bildirimi geçerli ve doğru olarak onayla"
-        agree_flag_modal_title: "Onayla ve..."
-        agree_flag_hide_post: "Onayla (gönderiyi gizle + özel ileti yolla)"
-        agree_flag_hide_post_title: "Bu gönderiyi gizle ve otomatik olarak kullanıcıya acilen düzenleme yapmasını belirten bir ileti gönder"
-        agree_flag_restore_post: "Kabul ediyorum (gönderiyi geri getir)"
-        agree_flag_restore_post_title: "Gönderiyi geri getir"
-        agree_flag: "Bildirimi onayla"
-        agree_flag_title: "Bildirimi onayla ve gönderide değişiklik yapma"
-        defer_flag: "Ertele"
+        defer_flag: "Yoksay"
         defer_flag_title: "Bu bildirimi kaldır; şu an için bir şey yapmak gerekmiyor."
         delete: "Sil"
         delete_title: "Bu bildirimin ait olduğu gönderiyi sil."
-        delete_post_defer_flag: "Gönderiyi sil ve bildirimi ertele"
         delete_post_defer_flag_title: "Gönderiyi sil; başka gönderi yoksa, konuyu da sil."
-        delete_post_agree_flag: "Gönderiyi sil ve bildirimi onayla"
         delete_post_agree_flag_title: "Gönderiyi sil; başka gönderi yoksa, konuyu da sil."
         delete_flag_modal_title: "Sil ve..."
         delete_spammer: "Spamcıyı Sil"

@@ -53,7 +53,6 @@ id:
         quote: "Setiap kesulitan ada kemudahan"
         author: "Albert Einstein"
       '2':
-        quote: "Kamu harus jadi agen perubahan agar dunia mengenalimu."
         author: "Mahatma Gandhi"
       '3':
         quote: "Jangan menangis karena sudah selesai, tersenyumlah karena itu telah terjadi."
@@ -161,8 +160,6 @@ id:
           - https://en.wikipedia.org/wiki/Inherently_funny_word
           - https://en.wikipedia.org/wiki/Death_by_coconut
           - https://en.wikipedia.org/wiki/Calculator_spelling
-        reply: |-
-          Keren! Ini akan berhasil untuk 1 tautan. Ingat, itu harus berada di garis depan dengan sendirinya, tanpa hal lain di depan, atau di belakang.
       images:
         reply: |-
           Gambar yang menarik – Saya telah menekan tombol :heart: supaya Anda tahu kalau saya menghargainya :heart_eyes:

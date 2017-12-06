@@ -101,7 +101,6 @@ pt:
           other: "%{count} anos mais tarde"
       previous_month: 'Mês Anterior'
       next_month: 'Mês Seguinte'
-      placeholder: Escolha uma data
     share:
       topic: 'partilhar uma ligação para este tópico'
       post: 'publicação #%{postNumber}'
@@ -787,12 +786,6 @@ pt:
         post_count:
           one: "publicação criada"
           other: "publicações criadas"
-        likes_given:
-          one: "<i class='fa fa-heart'></i> dado"
-          other: "<i class='fa fa-heart'></i> dados"
-        likes_received:
-          one: "<i class='fa fa-heart'></i> recebido"
-          other: "<i class='fa fa-heart'></i> recebidos"
         days_visited:
           one: "dia visitado"
           other: "dias visitados"
@@ -884,7 +877,6 @@ pt:
     first_post: Primeira publicação
     mute: Silenciar
     unmute: Desactivar silenciamento
-    last_post: Última publicação
     last_reply_lowercase: última resposta
     replies_lowercase:
       one: resposta
@@ -1010,8 +1002,6 @@ pt:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
-    select_kit:
-      filter_placeholder: Pesquisar...
     emoji_picker:
       filter_placeholder: Pesquisar por emoji
       people: Pessoas
@@ -1097,7 +1087,6 @@ pt:
       ulist_title: "Lista de items"
       list_item: "Item da Lista"
       help: "Ajuda de Edição Markdown"
-      toggler: "esconder ou exibir o painel de composição"
       modal_ok: "OK"
       modal_cancel: "Cancelar"
       cant_send_pm: "Desculpe, não pode enviar uma mensagem para %{username}."
@@ -1163,7 +1152,6 @@ pt:
       no_more_results: "Mais nenhum resultado encontrado."
       searching: "A procurar..."
       post_format: "#{{post_number}} por {{username}}"
-      results_page: "Resultados da Pesquisa"
       context:
         user: "Procurar publicações por @{{username}}"
         category: "Pesquise na categoria #{{category}}"
@@ -1173,26 +1161,18 @@ pt:
         title: Pesquisa Avançada
         posted_by:
           label: Publicado por
-        in_category:
-          label: Na Categoria
         in_group:
           label: No Grupo
         with_badge:
           label: Com Distintivo
-        with_tags:
-          label: Com Etiquetas
         filters:
-          label: Apenas devolver tópicos/respostas que...
           likes: eu gostei
           posted: Eu publiquei em
           watching: estou a vigiar
           tracking: estou a seguir
-          private: estão nas minhas mensagens
-          bookmarks: eu adicionei marcadores
           first: são a primeira publicação
           pinned: estão afixados
           unpinned: não estão afixados
-          seen: Eu li
           unseen: Eu não li
           wiki: são wiki
         statuses:
@@ -1622,9 +1602,6 @@ pt:
         change_owner: "Mudar Titularidade"
       actions:
         flag: 'Denunciar'
-        defer_flags:
-          one: "Diferir denúncia"
-          other: "Diferir denúncias"
         undo:
           off_topic: "Retirar denúncia"
           spam: "Retirar denúncia"
@@ -2086,9 +2063,7 @@ pt:
       selector_no_tags: "sem etiquetas"
       changed: "etiquetas modificadas:"
       tags: "Etiquetas"
-      choose_for_topic: "escolha etiquetas opcionais para este tópico"
       delete_tag: "Remover Etiqueta"
-      delete_confirm: "Tem a certeza que deseja remover esta etiqueta?"
       rename_tag: "Renomear Etiqueta"
       rename_instructions: "Escolha o novo nome para a etiqueta:"
       sort_by: "Ordenar por:"
@@ -2213,24 +2188,12 @@ pt:
         by: "por"
       flags:
         title: "Denúncias"
-        old: "Antigo"
-        active: "Ativo"
         agree: "Aceitar"
         agree_title: "Confirmar esta denúncia como válida e correta"
-        agree_flag_modal_title: "Aceitar e..."
-        agree_flag_hide_post: "Aceitar (esconder publicação + enviar MP)"
-        agree_flag_hide_post_title: "Esconder esta publicação e enviar automaticamente uma mensagem ao utilizador solicitando a edição urgente da mesma"
-        agree_flag_restore_post: "Concordar (restaurar publicação)"
-        agree_flag_restore_post_title: "Restaurar esta publicação"
-        agree_flag: "Concordar com a denúncia"
-        agree_flag_title: "Concordar com a denúncia e manter a publicação inalterada"
-        defer_flag: "Diferir"
         defer_flag_title: "Remover esta denúncia; não requer qualquer ação de momento."
         delete: "Eliminar"
         delete_title: "Eliminar a publicação associada a esta denúncia."
-        delete_post_defer_flag: "Eliminar publicação e diferir a denúncia."
         delete_post_defer_flag_title: "Eliminar publicação; se é a primeira do tópico então eliminar o tópico"
-        delete_post_agree_flag: "Eliminar publicação e Concordar com a denúncia"
         delete_post_agree_flag_title: "Eliminar publicação; se é a primeira do tópico então eliminar o tópico"
         delete_flag_modal_title: "Eliminar e…"
         delete_spammer: "Eliminar Spammer"
@@ -2245,34 +2208,16 @@ pt:
         dispositions:
           agreed: "concordado"
           disagreed: "discordado"
-          deferred: "diferido"
         flagged_by: "Denunciado por"
         resolved_by: "Resolvido por"
         took_action: "Realizou uma ação"
         system: "Sistema"
         error: "Aconteceu um erro"
         reply_message: "Responder"
-        no_results: "Não há denúncias."
         topic_flagged: "Este <strong>tópico</strong> foi denunciado."
         visit_topic: "Visitar tópico para acionar medidas"
         was_edited: "A publicação foi editada após a primeira denúncia"
         previous_flags_count: "Esta publicação já foi denunciada {{count}} vezes."
-        summary:
-          action_type_3:
-            one: "fora do contexto"
-            other: "fora do contexto x{{count}}"
-          action_type_4:
-            one: "inapropriado"
-            other: "inapropriado x{{count}}"
-          action_type_6:
-            one: "personalizado"
-            other: "personalizado x{{count}}"
-          action_type_7:
-            one: "personalizado"
-            other: "personalizado x{{count}}"
-          action_type_8:
-            one: "spam"
-            other: "spam x{{count}}"
       groups:
         primary: "Grupo Primário"
         no_primary: "(nenhum grupo primário)"

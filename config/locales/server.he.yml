@@ -443,7 +443,6 @@ he:
   post:
     image_placeholder:
       broken: "תמונה זו שבורה"
-      large: "התמונה גדולה מכדי להציג אותה כאן; לחצו כדי לצפות"
   rate_limiter:
     slow_down: "ביצעתם פעולה זו מספר רב מדי של פעמים. נסו שוב מאוחר יותר."
     too_many_requests: "יש לנו מגבלה יומית על מספר הפעמים שניתן לבצע פעולה זו. אנא המתינו %{time_left} לפני ניסיון חוזר."
@@ -650,7 +649,6 @@ he:
       email_title: 'הנושא "%{title}" דורש תשומת לב של מנחה'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>פוסט שלכם סומן על ידי הקהילה. בבקשה <a href="/my/messages">בדקו את ההודעות</a>.</p>'
     user_must_edit: '<p>פוסט זה סומן על ידי הקהילה וכרגע מוסתר באופן זמני.</p>'
   archetypes:
     regular:
@@ -905,7 +903,6 @@ he:
     digest_logo_url: "תמונת הלוגו האלטרנטיבי שמשמשת בראש המיילים של הסיכום מאתרכם. אמורה להיות צורה מלבנית מוארכת. צריכה לא להיות תמונת SVG. אם נשאר ריק ייעשה שימוש ב `logo_url`."
     logo_small_url: "תמונת לוגו קטנה בפינה הימנית עליונה של האתר, אמורה להיות ריבועית, נראית כאשר גוללים למטה. אם נשארת ריקה תוצג צלמית בית."
     favicon_url: "צלמית favicon לאתר שלכם, ראו http://en.wikipedia.org/wiki/Favicon, כדי שתעבוד כמו שצריך עם CDN חייבת להיות png"
-    mobile_logo_url: "תמונת הלוגו הקבועה לצד ימין למעלה של האתר הנייד שלכם. אמורה להיות ריבועית. אם משאירים ריקה, ייעשה שימוש ב `logo_url`. למשל: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "אייקון שמשמש למכשירי טאץ׳ של אפל. גודל מומלץ 144 על 144 פיקסלים."
     notification_email: "מאת: נעשה שימוש בכתובת מייל זו כאשר שולחים את כל הודעות המערכת הנדרשות. כדי שהודעות הדוא\"ל יגיעו, המתחם (domain) המצויין כאן חייב לכלול SPF, DKIM ורשומות reverse PTR מוגדרים כהלכה."
     email_custom_headers: "רשימה מופרדת pipes (הסימון |) של כותרות מייל מותאמות אישית"
@@ -968,7 +965,6 @@ he:
     allow_index_in_robots_txt: "פרטו ב-robots.txt שלאתר זה מותר להיות מאונדקס על ידי מנועי חיפוש."
     email_domains_blacklist: "רשימה מופרדת בצינור (pipe) של דומיינים של אימייל אשר מהם משתמשים לא מורשים לרשום חשבונות. למשל: mailinator.com|trashmail.net"
     email_domains_whitelist: "רשימה מופרדת בצינור (pipe) אשר ר-ק ממנה משתמשים יכולים לרשום חשבונות. א-ז-ה-ר-ה: משתמשים עם אימיילים מדומיינים אחרים לא יורשו!"
-    hide_email_address_taken: "אל תיידעו משתמשים בנוגע לקיום חשבון כשהם משתמשים באפשרות של ״שכחתי סיסמה״."
     log_out_strict: "בהתנתקות, נתקו את כל ההפעלות של המשתמש/ת בכל המכשירים"
     version_checks: "שלחו פינג להאב של Discourse לעדכוני גרסה וכדי להציג מסרים אודות גרסאות בלוח התצוגה ב /admin"
     new_version_emails: "שלחו דוא\"ל לכתובת של contact_email כשגרסה חדשה של Discourse זמינה."
@@ -1222,7 +1218,6 @@ he:
     suppress_digest_email_after_days: "השתקת מיילים של סיכום למשתמשים שלא נראו באתר למעלה מ (n) ימים."
     digest_suppress_categories: "וותרו על קטגוריות אלו במיילים מסכמים."
     disable_digest_emails: "בטל סיכומי מיילים לכל המשתמשים."
-    email_accent_bg_color: "צבע האקסנט שיעשה בו שימוש כרקע לחלק מהאלמנטים של מיילים מסוג HTML. הכניסו שם צבע ('red') או ערך הקסדצימלי ('#FF000')."
     email_accent_fg_color: "צבע הטקסט שמופיע על צבע הרקע של מיילים מסוג HTML. הכניסו שם צבע ('white') או ערך הקסדצימלי ('#FFFFFF')."
     email_link_color: "צבע הקישורים במיילים מסוג HTML. הכניסו שם צבע ('blue') או ערך הקסדצימלי ('#0000FF')."
     detect_custom_avatars: "האם לבדוק או לא לבדוק שמשתמשים העלו תמונות פרופיל אישיות."
@@ -1469,7 +1464,6 @@ he:
     email_too_long: "המייל שהזנת ארוך מדי. שמות מייל צריכים להכיל לכל היותר 254 תוים, ושמות דומיין צריכים להכיל לכל היותר 253 תוים."
     reserved_username: "שם משתמש זה אינו מורשה."
     missing_user_field: "לא מילאת את כל שדות המשתמש/ת"
-    close_window: "האימות הושלם. סגרו חלון זה כדי להמשיך."
     already_logged_in: "אופס, נראה שאתם מנסים לקבל הזמנה שנועדה למשתמש אחר. אם אתם לא %{current_user}, אנא התנתקו ונסו שוב."
   user:
     no_accounts_associated: "אין חשבונות מקושרים."
@@ -1481,7 +1475,6 @@ he:
     username:
       short: "חייבים להיות לפחות %{min} תווים"
       long: "נדרשים לא יותר מ-%{max} תווים"
-      characters: "חייב לכלול מספרים, אותיות ומקפים תחתונים בלבד."
       unique: "חייב להיות ייחודי"
       blank: "חייב להיות מלא"
       must_begin_with_alphanumeric_or_underscore: "חייב להתחיל באות, מספר, או קו תחתון"
@@ -1517,40 +1510,12 @@ he:
       אם אתם מעוניינים להמשיך לקבל עדכוני מייל, אתם יכולים להתעלם ממייל זה.
   invite_mailer:
     title: "שולח-מיילים להזמנה"
-    subject_template: "הוזמנת על ידי %{inviter_name} ל '%{topic_title}' ב%{site_domain_name}"
   custom_invite_mailer:
     title: "שולח-מיילים מותאם-אישית להזמנה"
-    subject_template: "%{inviter_name} הזמין/הזמינה אותך לדיון  '%{topic_title}' באתר %{site_domain_name}"
   invite_forum_mailer:
     title: "שולח-מיילים להזמנה לפורום"
-    subject_template: "%{inviter_name} הזמינ/ה אתכם להצטרף ל%{site_domain_name}"
-    text_body_template: |
-      %{inviter_name} הזמין/ה אתכם להצטרף
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      אם אתם מעוניינים, לחצו על הקישור למטה:
-
-      %{invite_link}
   custom_invite_forum_mailer:
     title: "דואר הזמנה לפורום מותאם אישית"
-    subject_template: "%{inviter_name} הזמין/ה אתכם להצטרף ל %{site_domain_name}"
-    text_body_template: |
-      %{inviter_name} הזמין/ה אתכם להצטרף
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      עם ההערה הזו
-
-      > %{site_description}
-
-      אם אתם מעוניינים, לחצו על הקישור למטה:
-
-      %{invite_link}
   invite_password_instructions:
     title: "הנחיות סיסמה למוזמנים"
     subject_template: "צרו סיסמה עבור חשבון ה-%{site_name} שלכם."
@@ -1626,35 +1591,9 @@ he:
   new_version_mailer:
     title: "שולח-מיילים של גרסה חדשה"
     subject_template: "[%{email_prefix}] גרסת Discourse חדשה, עדכון זמין."
-    text_body_template: |
-      יש! יצאה גרסה חדשה של [Discourse](http://www.discourse.org)
-
-      הגרסה שלכם: %{installed_version}
-      הגרסה החדשה: **%{new_version}**
-
-      - שדרגו באמצעות כפתור **[שדרוג בלחיצה-אחת בדפדפן](%{base_url}/admin/upgrade)** הפשוט שלנו
-
-      - בידקו מה חדש ב[יומן השינויים בגיטהאב](https://github.com/discourse/discourse/commits/master)
-
-      - בקרו את [meta.discourse.org](https://meta.discourse.org) לחדשות, דיונים, ותמיכה ב Discourse
   new_version_mailer_with_notes:
     title: "שולח-מיילים של גרסה חדשה עם הערות"
     subject_template: "[%{email_prefix}] עדכון זמין"
-    text_body_template: |
-      יש! יצאה גרסה חדשה של [Discourse](http://www.discourse.org)
-
-      הגרסה שלכם: %{installed_version}
-      הגרסה החדשה: **%{new_version}**
-
-      - שדרגו באמצעות כפתור **[שדרוג בלחיצה-אחת בדפדפן](%{base_url}/admin/upgrade)** הפשוט שלנו
-
-      - בידקו מה חדש ב[יומן השינויים בגיטהאב](https://github.com/discourse/discourse/commits/master)
-
-      - בקרו ב-[meta.discourse.org](https://meta.discourse.org) לחדשות, דיונים, ותמיכה ב Discourse
-
-      ### הערות בנוגע לגרסה
-
-      %{notes}
   flag_reasons:
     off_topic: "הפוסט שלכם סומן כ **מחוץ לנושא**: הקהילה מרגישה שהוא לא מתאים לנושא, כפי שמוגדר על ידי הכותרת והפוסט הראשון. "
     inappropriate: "התגובה שלך סומנה כ**לא מתאימה**: הקהילה מרגישה שהיא פוגענית או הפרה של [הנחיות הקהילה](/guidelines)"
@@ -2478,9 +2417,6 @@ he:
         עיטור זוה מוענק כאשר אתם מקבלים את הלייק הראשון שלכם על פוסט. מזל טוב, פרסמתם משהו שחבריכם לקהילה חשבו שהוא מעניין, מגניב, או שימושי!
     autobiographer:
       name: אוטוביוגרפים
-      description: מילאו מידע <a href="/my/preferences">פרופיל</a>
-      long_description: |
-        עיטור זה מוענק על מילוי מידע ה<a href="/my/preferences">פרופיל</a> ובחירת תמונת פרופיל. שיתוף מידע עם הקהילה לגבי מי אתם ומהם תחומי העיניין שלכם - תורם לקהילה מחוברת יותר. הצטרפו אלינו!
     anniversary:
       name: יום השנה
       description: חברים פעילים למשך שנה, פרסמו לפחות פעם אחת
@@ -2574,9 +2510,6 @@ he:
         עיטור זה מוענק בפעם הראשונה שאתם מצטטים פוסט בתגובה שלכם. ציטוט חלקים רלוונטיים של פוסטים קודמים בתגובה שלכם עוזרת לדיונים להשאר מחוברים לנושא. הדרך הקלה ביותר לצטט היא להדגיש קטע בפוסט, וללחוץ על כפתור מענה כלשהו. צטטו בנדיבות!
     read_guidelines:
       name: קראו את ההנחיות
-      description: קראו את <a href="/guidelines">הנחיות הקהילה</a>
-      long_description: |
-        עיטור זה מוענק בעבור <a href="/guidelines">קריאת הנחיות הקהילה</a>. פעולה לפי הכללים ושיתוף שלהם יעזרו לבנות קהילה בטוחה, כיפית, ומקיימת לכולם. זכרו תמיד שיש אנשים אחרים, ממש כמוכם, בצד השני של המסך. תהיו נחמדים!
     reader:
       name: קוראים
       description: קראו כל תגובה בנושא עם למעלה מ 100 תגובות

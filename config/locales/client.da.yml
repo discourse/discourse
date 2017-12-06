@@ -101,7 +101,6 @@ da:
           other: "%{count} år senere"
       previous_month: 'Forrige måned'
       next_month: 'Næste måned'
-      placeholder: Vælg en dato
     share:
       topic: 'del et link til dette emne'
       post: 'indlæg #%{postNumber}'
@@ -803,12 +802,6 @@ da:
         post_count:
           one: "Indlæg oprettet"
           other: "Indlæg oprettet"
-        likes_given:
-          one: "<i class='fa fa-heart'></i> givet"
-          other: "<i class='fa fa-heart'></i> givet"
-        likes_received:
-          one: "<i class='fa fa-heart'></i> modtaget"
-          other: "<i class='fa fa-heart'></i> modtaget"
         days_visited:
           one: "dag besøgt"
           other: "dage besøgt"
@@ -900,7 +893,6 @@ da:
     first_post: Første indlæg
     mute: Mute
     unmute: Unmute
-    last_post: Sidste indlæg
     last_reply_lowercase: seneste svar
     replies_lowercase:
       one: svar
@@ -1098,7 +1090,6 @@ da:
       ulist_title: "Punktopstilling"
       list_item: "Listepunkt"
       help: "Hjælp til Markdown-redigering"
-      toggler: "skjul eller vis editor-panelet"
       modal_ok: "OK"
       modal_cancel: "Annuller"
       cant_send_pm: "Beklager, du kan ikke sende en besked til %{username}."
@@ -1164,7 +1155,6 @@ da:
       no_more_results: "Ikke flere resultater."
       searching: "Søger…"
       post_format: "#{{post_number}} af {{username}}"
-      results_page: "Søgeresultater"
       context:
         user: "Søg i indlæg fra @{{username}}"
         category: "Søg i #{{category}} kategorien"
@@ -1174,26 +1164,18 @@ da:
         title: Avanceret Søgning
         posted_by:
           label: Skrevet af
-        in_category:
-          label: I Kategorien
         in_group:
           label: I Gruppen
         with_badge:
           label: Med Badge
-        with_tags:
-          label: Med Tags
         filters:
-          label: Returnér kun emner/indlæg som...
           likes: Jeg syntes om
           posted: Jeg skrev i
           watching: Jeg overvåger
           tracking: Jeg følger
-          private: er i mine beskeder
-          bookmarks: Jeg har bogmærket
           first: er det allerførste indlæg
           pinned: er fastgjort
           unpinned: er ikke fastgjort
-          seen: Jeg har læst
           unseen: Jeg har ikke læst
           wiki: er wiki
         statuses:
@@ -1329,7 +1311,6 @@ da:
       jump_reply_down: hop til senere svar
       deleted: "Emnet er blevet slettet"
       topic_status_update:
-        title: "Angiv timerfunktion for emne"
         save: "Indstil timerfunktion"
         num_of_hours: "Antal timer:"
         remove: "Fjern timerfunktion"
@@ -1654,9 +1635,6 @@ da:
         change_owner: "Skift ejerskab"
       actions:
         flag: 'Flag'
-        defer_flags:
-          one: "Udsæt markering"
-          other: "Udsæt markeringer"
         undo:
           off_topic: "Undo flag"
           spam: "Undo flag"
@@ -2147,9 +2125,7 @@ da:
       selector_no_tags: "ingen tags"
       changed: "tags skiftet:"
       tags: "Tags"
-      choose_for_topic: "vælg tags for dette emne (valgfrit)"
       delete_tag: "Slet tag"
-      delete_confirm: "Er du sikker på at du vil slette dette tag?"
       rename_tag: "Omdøb tag"
       rename_instructions: "Vælg et nyt navn for det tag:"
       sort_by: "Sortér efter:"
@@ -2276,24 +2252,12 @@ da:
         by: "af"
       flags:
         title: "Flag"
-        old: "Gamle"
-        active: "Aktive"
         agree: "Enig"
         agree_title: "Bekræft dette flag er gyldigt og korrekt"
-        agree_flag_modal_title: "Enig og..."
-        agree_flag_hide_post: "Enig (skjul indlæg + send PM)"
-        agree_flag_hide_post_title: "Gem dette indlæg og send automatisk brugeren en besked der opfordrer dem til at redigere det."
-        agree_flag_restore_post: "Enig (gendan indlæg)"
-        agree_flag_restore_post_title: "Gendan dette indlæg"
-        agree_flag: "sæt markeringen til \"enig\""
-        agree_flag_title: "Sæt flaget til \"enig\" og behold indlægget uændret"
-        defer_flag: "Udsæt"
         defer_flag_title: "Fjern dette flag; Det kræver ingen handling på nuværende tidspunkt."
         delete: "Slet"
         delete_title: "Slet det indlæg, som flaget refererer til."
-        delete_post_defer_flag: "Slet indlægget og udsæt flaget"
         delete_post_defer_flag_title: "Slet indlægget; hvis det er det første, så slet hele emnet"
-        delete_post_agree_flag: "Slet indlæg og sæt flaget til \"enig\""
         delete_post_agree_flag_title: "Slet indlæg; hvis det er det første indlæg, slet emnet"
         delete_flag_modal_title: "Slet og..."
         delete_spammer: "Slet spammer"
@@ -2308,34 +2272,16 @@ da:
         dispositions:
           agreed: "enig"
           disagreed: "uenig"
-          deferred: "udsat"
         flagged_by: "Flaget af"
         resolved_by: "Løst af"
         took_action: "Reagerede"
         system: "System"
         error: "Noget gik galt"
         reply_message: "Svar"
-        no_results: "Der er ingen flag."
         topic_flagged: "Dette <strong>emne</strong> er blevet rapporteret til administrator."
         visit_topic: "Besøg emnet for at gøre noget ved det"
         was_edited: "Indlægget blev redigeret efter det første gang blev flagget"
         previous_flags_count: "Dette indlæg er allerede blevet markeret {{count}} gange."
-        summary:
-          action_type_3:
-            one: "off-topic"
-            other: "off-topic x{{count}}"
-          action_type_4:
-            one: "upassende"
-            other: "upassende x{{count}}"
-          action_type_6:
-            one: "brugerdefineret"
-            other: "brugerdefinerede x{{count}}"
-          action_type_7:
-            one: "brugerdefineret"
-            other: "brugerdefinerede x{{count}}"
-          action_type_8:
-            one: "spam"
-            other: "spam x{{count}}"
       groups:
         primary: "Primær gruppe"
         no_primary: "(ingen primær gruppe)"

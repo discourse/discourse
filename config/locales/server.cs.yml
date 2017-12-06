@@ -239,6 +239,7 @@ cs:
     title: "Vítejte v Redakci"
   category:
     topic_prefix: "Definice kategorie pro %{category}"
+    post_template: "%{replace_paragraph}\n\nPoužijte následující odstavce pro delší popis, nebo pro vytvoření pokynů ke kategorii nebo pravidel:\n\n- Proč by lidé měli používat tuto kategorii? K čemu slouží?\n\nJak přesně je tato kategorie odlišná od ostatních, které již máme?\n\n- Co by měly témata v této kategorii obvykle obsahovat?\n\nPotřebujeme tuto kategorii? Můžeme ji sloučit s jinou kategorií nebo subkategorií?\n"
     errors:
       uncategorized_parent: "„Bez kategorie“ nemůže mít nadřazenou kategorii"
       self_parent: "Nadřazená kategorie nemůže zároveň být podkategorie"
@@ -685,7 +686,6 @@ cs:
     omniauth_error_unknown: "Nastala chyba při zpracování vašeho přihlášení, prosím zkuste to znovu."
   user:
     username:
-      characters: "musí obsahovat pouze písmena a číslice"
       unique: "musí být unikátní"
       blank: "nesmí být prázdný"
     email:
@@ -779,10 +779,11 @@ cs:
   privacy_topic:
     title: "Ochrana soukromí"
   badges:
+    editor:
+      long_description: |
+        Tento odznak je udělen, když poprvé upravíte jeden z Vašich příspěvků. I když nebudete moci upravovat Vaše příspěvky po určitém čase, úprava je vždy dobrý nápad - můžete své příspěvky vylepšit, opravit malé chyby nebo přidat cokoliv, co jste v původním příspěvku zapomněli. Upravujte, abyste Vaše příspěvky udělali ještě lepšími!
     welcome:
       name: Vítejte
-    autobiographer:
-      description: Vyplněné informace v <a href="/my/preferences">profilu</a>
     first_like:
       name: První "to se mi líbí"
     first_share:

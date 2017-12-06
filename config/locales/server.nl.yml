@@ -898,7 +898,6 @@ nl:
     logo_url: "De logoafbeelding links bovenaan op uw website moet de vorm van een brede rechthoek hebben. Wanneer leeg gelaten, wordt de titeltekst van de website getoond."
     logo_small_url: "De kleine logoafbeelding linksboven op uw website dient een vierkante vorm te hebben en wordt getoond als omlaag wordt gescrold. Bij leeg laten wordt een startpaginasymbool getoond."
     favicon_url: "Een favicon voor je site, zie http://nl.wikipedia.org/wiki/Favicon. Voor een correcte werking via CDN moet het een png zijn."
-    mobile_logo_url: "De logoafbeelding met vaste positie voor linksboven op uw mobiele website. De afbeelding dient een vierkante vorm te hebben. Bij leeg laten wordt 'logo_url' gebruikt. Vb.: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Pictogram voor Apple touch-apparaten. Aanbevolen grootte is 144px bij 144px."
     notification_email: "Het afzender email adres dat wordt gebruikt voor het verzenden van alle essentiële systeem emails. Voor het domein dat hier gespecificeerd is moeten de SPF, DKIM en reverse PTR records goed ingesteld zijn om de mails te doen aankomen."
     email_custom_headers: "Een lijst van custom email headers, gescheiden door een pipe (|)"
@@ -1341,13 +1340,11 @@ nl:
     email_too_long: "De e-mail die je hebt opgegeven is te lang. Mailbox namen mogen niet langer zijn dan 254 tekens, en domeinnamen niet langer dan 253 tekens."
     reserved_username: "Die gebruikersnaam is niet toegestaan."
     missing_user_field: "U hebt niet alle gebruikersvelden ingevuld"
-    close_window: "Authenticatie is voltooid. Sluit dit venster om verder te gaan."
   user:
     no_accounts_associated: "Geen accounts gekoppeld"
     username:
       short: "moet ten minste %{min} tekens zijn"
       long: "moet niet meer dan %{max} tekens zijn"
-      characters: "mag alleen nummers, letters en underscores bevatten"
       unique: "moet uniek zijn"
       blank: "mag niet leeg zijn"
       must_begin_with_alphanumeric_or_underscore: "moet beginnen met een letter, een nummer of een laag streepje"
@@ -1364,10 +1361,6 @@ nl:
     subject_template:
       one: "Eén vlag af te handelen"
       other: "%{count} vlaggen af te handelen"
-  invite_mailer:
-    subject_template: "%{inviter_name} nodigt je uit voor '%{topic_title}' op %{site_domain_name}"
-  invite_forum_mailer:
-    subject_template: "%{inviter_name} heeft je uitgenodigd voor %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Geeft wachtwoord voor je %{site_name} account"
   flag_reasons:

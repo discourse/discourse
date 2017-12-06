@@ -590,7 +590,6 @@ ro:
       email_title: 'Subiectul "%{title}" necesită atenția moderatorilor'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Postarea ta a fost marcată cu marcaj de avertizare de către comunitate. Te rugăm <a href="/my/messages">să verifici mesajele</a>.</p>'
     user_must_edit: '<p>Această postare a fost marcată de către comunitate cu marcaj de avertizare și a fost ascunsă temporar.</p>'
   archetypes:
     regular:
@@ -842,7 +841,6 @@ ro:
     digest_logo_url: "Imaginea logo alternativă folosită în partea de sus a emailurilor-rezumat de pe site-ul tău. Trebuie să aibă o forma de dreptunghi lat. Nu trebuie să  fie o imagine SVG. Dacă e lăsată goală, va fi folosit în locul ei - `logo_url` ."
     logo_small_url: "Imaginea logo mică din partea de sus-stânga a site-ului tău va trebui să aibă o formă dreptunghiulară, vizibilă când se derulează pagina. Dacă e lăsată goală, va fi afișat un pictograf."
     favicon_url: "Un favicon pentru site-ul tău trebuie să fie în format png pentru a funcționa corect peste un CDN  vedeți http://en.wikipedia.org/wiki/Favicon"
-    mobile_logo_url: "Imaginea logo cu poziție fixă folosită în partea stângă-sus a site-ului tău mobil. Trebuie să aibă o formă pătrată. Dacă este lăsată goală, va fi folosit `logo_url` . De ex.: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Iconiță folosită pentru dispozitivele touch Apple. Mărimea recomandată este 144px pe 144px."
     notification_email: "Adresă expeditor: adresa de email folosită când se trimit toate emailurile esențiale ale sistemului. Domeniul specificat aici trebuie să aibă setate corect SPF, DKIM și reverse PTR pentru ca emailul să poată fi livrat."
     email_custom_headers: "O listă delimitată cu simbolul | (pipe) a header-elor personalizate de email"
@@ -903,7 +901,6 @@ ro:
     allow_index_in_robots_txt: "Specifică în robots.txt că acest site poate fi indexat de motoarele de căutare web."
     email_domains_blacklist: "O listă de domenii de email separate cu simbolul | (pipe) ale căror utilizatori nu au permisiunea să înregistreze conturi. Exemplu: mailinator.com|trashmail.net"
     email_domains_whitelist: "O listă de domenii de email (separate cu simbolul | (pipe)) cu care utilizatorii TREBUIE să se înregistreze. ATENȚIE: utilizatorii cu alte domenii de email decât cele listate nu vor avea permisiunea să se înregistreze."
-    hide_email_address_taken: "Nu informa utilizatorii despre existența unui cont atunci când folosesc dialogul pentru parolă uitată."
     log_out_strict: "La ieșire, închide TOATE sesiunile pentru utilizator, pe toate dispozitivele."
     version_checks: "Verifică Hub-ul Discourse pentru actualizări și arată notificările de versiuni noi pe spațiul de lucru /admin ."
     new_version_emails: "Trimite un email la adresa contact_email când o nouă versiune de Discourse este disponibilă."
@@ -1141,7 +1138,6 @@ ro:
     digest_min_excerpt_length: "Lungimea minimă (în caractere) a extraselor de postări, ce vor fi incluse în emailul-rezumat."
     digest_suppress_categories: "Nu include aceste categorii în emailurile-rezumat."
     disable_digest_emails: "Dezactivează emailurile-rezumat pentru toți utilizatorii."
-    email_accent_bg_color: "Culoarea accent care să fie folosită ca fundal pentru unele elemente din emailurile HTML. Introdu numele culorii („roșu”) sau valoarea hex ('#FF000')."
     email_accent_fg_color: "Culoarea textului redat pe culoarea de fundal a emailurilor HTML. Introdu un nume de culoare („alb”) sau o valoare hex ('#FFFFFF')."
     email_link_color: "Culoarea link-urilor din emailurile HTML. Introdu un nume de culoare („albastru”) sau o valoare hex ('#0000FF')."
     detect_custom_avatars: "Dacă sau nu să verifice dacă utilizatorii și-au încărcat poze de profil personalizate."
@@ -1368,7 +1364,6 @@ ro:
     email_too_long: "Adresa de email pe care ai introdus-o este prea lungă. Numele de căsuțe poștale nu trebuie să depășească 254 de caractere, și numele de domenii nu trebuie să depășească 253 de caractere."
     reserved_username: "Acest nume utilizator nu este permis."
     missing_user_field: "Nu ai completat toate câmpurile utilizatorului"
-    close_window: "Autentificarea este completă. Închide această fereastră pentru a continua."
     already_logged_in: "Oops, se pare că încerci să accepți o invitație de la un alt utilizator. Dacă nu ești %{current_user}, te rugăm ieși și intră din nou."
   user:
     no_accounts_associated: "Nu sunt conturi asociate"
@@ -1376,7 +1371,6 @@ ro:
     username:
       short: "trebuie să fie cel puțin %{min} de caractere"
       long: "trebuie să nu aibă mai mult de %{max} caractere"
-      characters: "trebuie să includă doar numere, litere și underscor-uri"
       unique: "trebuie să fie unic"
       blank: "trebuie să fie prezent"
       must_begin_with_alphanumeric_or_underscore: "trebuie să înceapă ci o literă, un număr sau un underscore"
@@ -1397,14 +1391,6 @@ ro:
       other: "%{count} de marcaje de avertizare așteptând să fie gestionate"
   unsubscribe_mailer:
     subject_template: "Confirmă că nu mai vrei să primești actualizări pe email de la %{site_title}"
-  invite_mailer:
-    subject_template: "%{inviter_name} te-a invitat la subiectul '%{topic_title}' pe %{site_domain_name}"
-  custom_invite_mailer:
-    subject_template: "%{inviter_name} te-a invitat la subiectul '%{topic_title}' pe  %{site_domain_name}"
-  invite_forum_mailer:
-    subject_template: "%{inviter_name} te-a invitat să te alături pe %{site_domain_name}"
-  custom_invite_forum_mailer:
-    subject_template: "%{inviter_name} te-a invitat să te alături pe %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Setează parolă pentru contul tău %{site_name}"
   test_mailer:
@@ -1449,34 +1435,6 @@ ro:
       [mg]: http://www.mailgun.com/
       [mj]: https://www.mailjet.com/pricing
       [mt]: http://www.mail-tester.com/
-  new_version_mailer:
-    text_body_template: |
-      Uraaa, o nouă versiune de [Discourse](http://www.discourse.org) este acum disponibilă!
-
-      Versiunea curentă: %{installed_version}
-      Noua versiune: **%{new_version}**
-
-      - Actualizează folosind metoda noastră de **[actualizare cu un singur click în browser](%{base_url}/admin/upgrade)**
-
-      - Află ce e nou în [raportul de schimbări GitHub](https://github.com/discourse/discourse/commits/master)
-
-      - Vizitează [meta.discourse.org](https://meta.discourse.org) pentru știri, discuții și suport pentru Discourse
-  new_version_mailer_with_notes:
-    text_body_template: |
-      Uraaa, o nouă versiune de [Discourse](http://www.discourse.org) este acum disponibilă!
-
-      Versiunea curentă: %{installed_version}
-      Noua versiune: **%{new_version}**
-
-      - Actualizează folosind metoda noastră de **[actualizare cu un singur click în browser](%{base_url}/admin/upgrade)**
-
-      - Află ce e nou în [raportul de schimbări GitHub](https://github.com/discourse/discourse/commits/master)
-
-      - Vizitează [meta.discourse.org](https://meta.discourse.org) pentru știri, discuții și supot pentru Discourse
-
-      ### Note de versiune
-
-      %{notes}
   flag_reasons:
     off_topic: "Postarea ta a fost marcată cu marcaj de avertizare **în afara subiectului**: comunitatea simte că nu se potrivește subiectului, așa cum e el momentan definit de titlu și de prima postare."
     inappropriate: "Postarea ta a fost marcată cu marcaj de avertizare **inadecvat**: comunitatea simte că este ofensatoare, abuzivă sau în contradicție cu [ghidul comunității noastre](/guidelines)."
@@ -2077,9 +2035,6 @@ ro:
         Acest ecuson se acordă atunci când primești prima apreciere la o postare. Felicitări, ai postat ceva ce colegii tăi membri ai comunității au găsit a fi interesant, mișto și folositor!
     autobiographer:
       name: Autobiograf
-      description: Ai completat informațiile de la <a href="/my/preferences">profil</a>
-      long_description: |
-        Acest ecuson se acordă pentru completarea <a href="/my/preferences">profilului utilizator</a> și selectare unei poze de profil. Faptul că oferi celorlați câteva informații despre cine ești și ce anume te interesează contribuie crearea unei comunităil mai bune și mai coezive. Alătură-te nouă!
     anniversary:
       name: Aniversare
       description: Ești membru activ de un an, ai postat cel puțin odată
@@ -2172,9 +2127,6 @@ ro:
         Acest ecuson se acordă când, pentru prima dată, citezi o postare precedentă în cadrul propriului tău răspuns și ajută la conexarea discuțiilor în cadrul unui subiect. Cel mai simplu mod să citezi este să selectezi o secțiune a unei postări și apoi să apeși orice buton de răspuns. Citează generos!
     read_guidelines:
       name: Ghid Citit
-      description: Ai citit <a href="/guidelines">ghidul comunității</a>
-      long_description: |
-        Acest ecuson se acordă pentru că <a href="/guidelines">ai citit ghidul comunității</a>. Urmând și distribuind aceste reguli simple putem construi o comunitate sustenabilă, amuzantă și sigură pentru toți. Întotdeauna adu-ți aminte că o altă ființă umană, una ce seamănă foarte mult cu tine, se află de partea cealaltă a ecranului. Fii drăguț!
     reader:
       name: Cititor
       description: Ai citit toate răspunsurile dintr-un subiect cu mai mult de 100 de răspunsuri
