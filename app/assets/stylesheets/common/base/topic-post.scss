@@ -23,13 +23,13 @@
 
  span {
    font-size: 0.929em;
-   padding-right: 8px;
+   margin-right: 8px;
    display: inline-block;
    max-width: 280px;
    white-space: nowrap;
    overflow: hidden;
    text-overflow: ellipsis;
-   a {
+   &.user-title, &.user-title a, a {
      color: dark-light-choose($primary-high, $secondary-low);
    }
  }
@@ -38,7 +38,7 @@
    margin-left: 3px;
    color: dark-light-choose($primary-medium, $secondary-medium);
  }
-  .new_user a, .user-title, .user-title a {
+  .new_user a {
     color: dark-light-choose($primary-medium, $secondary-medium);
  }
 }
@@ -62,6 +62,23 @@
     top: 0;
   }
 }
+
+.moderator {
+  .cooked {
+    background-color: dark-light-choose($highlight-low, $highlight-medium);
+    padding: 10px;
+    img:not(.thumbnail) {
+      max-width: 100%;
+      height: auto;
+    }
+  }
+  span.user-title, .first {
+    background-color: dark-light-choose($highlight-low, $highlight-medium);
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+}
+
 // we use aside to hold expandable quotes (versus, say, static blockquotes)
 aside.quote {
   margin-top: 1em;
@@ -458,4 +475,20 @@ a.mention, a.mention-group {
   border: 1px solid $primary-low;
   font-size: 32px;
   padding: 16px;
+}
+
+/* below standard tablet portrait ----------- */
+
+@media all
+and (max-width : 767px) {
+  .reply-to-tab {
+    span {display: none;}
+  }
+  .names {
+    span {display: block;}
+  }
+  .user-title {
+    float: left;
+    clear: left;
+  }
 }
