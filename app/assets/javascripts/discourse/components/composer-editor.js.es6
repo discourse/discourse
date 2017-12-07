@@ -435,7 +435,7 @@ export default Ember.Component.extend({
       const { types } = clipboardData(e);
       this._pasted = true;
 
-      if (types.includes("text/plain")) {
+      if (types.includes("text/plain") || types.includes("text/html")) {
         e.preventDefault();
       }
     });
