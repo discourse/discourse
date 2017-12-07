@@ -77,16 +77,18 @@ export default Ember.Component.extend({
     const $input = this.$('.d-editor-input');
     const $preview = this.$('.d-editor-preview-wrapper');
 
-    $input.autocomplete({
-      template: findRawTemplate('user-selector-autocomplete'),
-      dataSource: term => userSearch({
-        term,
-        topicId,
-        includeMentionableGroups: true
-      }),
-      key: "@",
-      transformComplete: v => v.username || v.name
-    });
+    if (this.siteSettings.enable_mentions) {
+      $input.autocomplete({
+        template: findRawTemplate('user-selector-autocomplete'),
+        dataSource: term => userSearch({
+          term,
+          topicId,
+          includeMentionableGroups: true
+        }),
+        key: "@",
+        transformComplete: v => v.username || v.name
+      });
+    }
 
     if (this._enableAdvancedEditorPreviewSync()) {
       this._initInputPreviewSync($input, $preview);
