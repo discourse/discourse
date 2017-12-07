@@ -222,6 +222,7 @@ module Onebox
           d[:image] = d[:image_secure_url] || d[:image_url] || d[:thumbnail_url] || d[:image]
           d[:video] = d[:video_secure_url] || d[:video_url] || d[:video]
 
+          d[:published_time] = d[:article_published_time] unless Onebox::Helpers.blank?(d[:article_published_time])
           if !Onebox::Helpers.blank?(d[:published_time])
             d[:article_published_time] = Time.parse(d[:published_time]).strftime("%-d %b %y")
             d[:article_published_time_title] = Time.parse(d[:published_time]).strftime("%I:%M%p - %d %B %Y")
