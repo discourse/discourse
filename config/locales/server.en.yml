@@ -2367,13 +2367,13 @@ en:
 
         This threshold can be changed via the `silence_new_user` site settings.
 
-    spam_post_silenced:
-      title: "Spam Post Silenced"
-      subject_template: "New user %{username} posts silenced due to repeated links"
+    spam_post_blocked:
+      title: "Spam Post Blocked"
+      subject_template: "New user %{username} posts blocked due to repeated links"
       text_body_template: |
         This is an automated message.
 
-        The new user [%{username}](%{user_url}) tried to create multiple posts with links to %{domains}, but those posts were silenced to avoid spam. The user is still able to create new posts that do not link to %{domains}.
+        The new user [%{username}](%{user_url}) tried to create multiple posts with links to %{domains}, but those posts were blocked to avoid spam. The user is still able to create new posts that do not link to %{domains}.
 
         Please [review the user](%{user_url}).
 
