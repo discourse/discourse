@@ -138,7 +138,7 @@
         outline: none;
         line-height: normal;
         overflow: auto;
-        flex: unset;
+        flex: 0 1 auto;
         flex-wrap: nowrap;
 
         .name {
