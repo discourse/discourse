@@ -9,9 +9,10 @@ if (Rails.env.production? && SiteSetting.logging_provider == 'lograge') || ENV["
     config.lograge.enabled = true
 
     config.lograge.custom_payload do |controller|
+      username = controller.try(:current_user)&.username rescue nil
       {
         ip: controller.request.remote_ip,
-        username: controller.try(:current_user)&.username,
+        username: username,
       }
     end
 
