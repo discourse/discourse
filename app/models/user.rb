@@ -684,8 +684,16 @@ class User < ActiveRecord::Base
     UserHistory.for(self, :suspend_user).order('id DESC').first
   end
 
+  def full_suspend_reason
+    return suspend_record.try(:details) if suspended?
+  end
+
   def suspend_reason
-    suspend_record.try(:details) if suspended?
+    if details = full_suspend_reason
+      return details.split("\n")[0]
+    end
+
+    nil
   end
 
   # Use this helper to determine if the user has a particular trust level.
