@@ -623,7 +623,7 @@ export default Ember.Component.extend({
       text = text.substring(0, text.length - 1);
     }
 
-    let rows = text.split("\r").join("").split("\n");
+    let rows = text.split("\n");
 
     if (rows.length > 1) {
       const columns = rows.map(r => r.split("\t").length);
@@ -645,19 +645,20 @@ export default Ember.Component.extend({
     }
 
     const { clipboard, types } = clipboardData(e);
-    const placeholder = `${ I18n.t('pasting') }`;
     let plainText = clipboard.getData("text/plain");
     const html = clipboard.getData("text/html");
     let handled = false;
 
     if (plainText) {
-      plainText = plainText.trim();
+      plainText = plainText.trim().replace(/\r/g,"");
       const table = this._extractTable(plainText);
       if (table) {
-        this._addText(this._getSelected(), table);
+        this.appEvents.trigger('composer:insert-text', table);
         handled = true;
       }
     }
+
+    const placeholder = `${ plainText || I18n.t('pasting') }`;
 
     if (html && !handled) {
       const self = this;
@@ -671,9 +672,8 @@ export default Ember.Component.extend({
       }).then(response => {
         self.appEvents.trigger('composer:replace-text', placeholder, response.markdown);
       }).catch(error => {
-        if (plainText) {
-          self.appEvents.trigger('composer:replace-text', placeholder, plainText);
-        } else {
+        if (!plainText) {
+          self.appEvents.trigger('composer:replace-text', placeholder, "");
           popupAjaxError(error);
         }
       });
