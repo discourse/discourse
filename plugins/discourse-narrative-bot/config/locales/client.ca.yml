@@ -1,0 +1,6 @@
+ca:
+  js:
+    discourse_narrative_bot:
+      welcome_post_type:
+        new_user_track: "Inicia el tutorial de nou usuari per a tots els nous usuaris"
+        welcome_message: "Envia a tots els nous usuaris un missatge de benvinguda amb una guia ràpida d'iniciació."

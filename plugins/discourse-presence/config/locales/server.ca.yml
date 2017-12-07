@@ -1,0 +1,3 @@
+ca:
+  site_settings:
+    presence_enabled: 'Mostra usuaris que en aquests moments estan responent l''actual tema  o editant l''actual entrada?'

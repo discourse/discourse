@@ -1,0 +1,5 @@
+ca:
+  js:
+    presence:
+      replying: "responent"
+      editing: "editant"
