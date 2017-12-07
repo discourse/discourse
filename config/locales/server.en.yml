@@ -1449,6 +1449,8 @@ en:
 
     hide_user_profiles_from_public: "Disable user cards, user profiles and user directory for anonymous users."
 
+    show_inactive_accounts: "Allow logged in users to browse profiles of inactive accounts."
+
     hide_suspension_reasons: "Don't display suspension reasons publically on user profiles."
     user_website_domains_whitelist: "User website will be verified against these domains. Pipe-delimited list."
 
