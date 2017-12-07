@@ -83,7 +83,7 @@ class Plugin::Instance
 
         if define_include_method
           # Don't include serialized methods if the plugin is disabled
-          klass.send(:define_method, "include_#{attr}?") { plugin.enabled? }
+          klass.send(:define_method, "include_#{attr}?") { plugin.enabled? && object.respond_to?(attr) }
         end
       end
 
