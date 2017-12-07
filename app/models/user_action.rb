@@ -209,6 +209,11 @@ SQL
     else
       builder.where("a.user_id = :user_id", user_id: user_id.to_i)
       builder.where("a.action_type in (:action_types)", action_types: action_types) if action_types && action_types.length > 0
+
+      unless SiteSetting.enable_mentions?
+        builder.where("a.action_type <> :mention_type", mention_type: UserAction::MENTION)
+      end
+
       builder
         .order_by("a.created_at desc")
         .offset(offset.to_i)
