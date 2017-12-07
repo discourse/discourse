@@ -537,6 +537,9 @@ posting:
     default: 1
     client: true
   post_undo_action_window_mins: 10
+  enable_mentions:
+    default: true
+    client: true
   max_mentions_per_post: 10
   max_users_notified_per_group_mention: 100
   newuser_max_replies_per_topic: 3
