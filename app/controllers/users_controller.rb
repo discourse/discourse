@@ -39,7 +39,7 @@ class UsersController < ApplicationController
     return redirect_to path('/login') if SiteSetting.hide_user_profiles_from_public && !current_user
 
     @user = fetch_user_from_params(
-      { include_inactive: current_user.try(:staff?) },
+      { include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts) },
       [{ user_profile: :card_image_badge }]
     )
 
@@ -203,14 +203,14 @@ class UsersController < ApplicationController
   end
 
   def summary
-    user = fetch_user_from_params
+    user = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
     summary = UserSummary.new(user, guardian)
     serializer = UserSummarySerializer.new(summary, scope: guardian)
     render_json_dump(serializer)
   end
 
   def invited
-    inviter = fetch_user_from_params
+    inviter = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
     offset = params[:offset].to_i || 0
     filter_by = params[:filter]
 
@@ -226,7 +226,7 @@ class UsersController < ApplicationController
   end
 
   def invited_count
-    inviter = fetch_user_from_params
+    inviter = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
 
     pending_count = Invite.find_pending_invites_count(inviter)
     redeemed_count = Invite.find_redeemed_invites_count(inviter)

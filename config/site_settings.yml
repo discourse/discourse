@@ -415,6 +415,8 @@ users:
   hide_user_profiles_from_public:
     default: false
     client: true
+  show_inactive_accounts:
+    default: false
   user_website_domains_whitelist:
     default: ''
     type: list
