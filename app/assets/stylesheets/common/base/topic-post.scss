@@ -23,7 +23,7 @@
 
  span {
    font-size: 0.929em;
-   padding-right: 8px;
+   margin-right: 8px;
    display: inline-block;
    max-width: 280px;
    white-space: nowrap;
@@ -38,7 +38,7 @@
    margin-left: 3px;
    color: dark-light-choose($primary-medium, $secondary-medium);
  }
-  .new_user a, .user-title, .user-title a {
+ .new_user a, .user-title, .user-title a {
     color: dark-light-choose($primary-medium, $secondary-medium);
  }
 }
@@ -53,7 +53,6 @@
   del { background-color: dark-light-choose($danger-low, scale-color($danger, $lightness: -60%)); }
 }
 
-
 .cooked, .d-editor-preview {
   video {
     max-width: 100%;
@@ -62,6 +61,27 @@
     top: 0;
   }
 }
+
+// add staff color
+.moderator {
+  .cooked {
+    background-color: dark-light-choose($highlight-low, $highlight-medium);
+    padding: 10px;
+    img:not(.thumbnail) {
+      max-width: 100%;
+      height: auto;
+    }
+  }
+  .names {
+    span.user-title, .first {
+      background-color: dark-light-choose($highlight-low, $highlight-medium);
+      color: dark-light-choose($primary-high, $secondary-low);      
+      padding-left: 4px;
+      padding-right: 4px;
+    }
+  }
+}
+
 // we use aside to hold expandable quotes (versus, say, static blockquotes)
 aside.quote {
   margin-top: 1em;
@@ -458,4 +478,20 @@ a.mention, a.mention-group {
   border: 1px solid $primary-low;
   font-size: 32px;
   padding: 16px;
+}
+
+/* below standard tablet portrait ----------- */
+
+@media all
+and (max-width : 767px) {
+  .reply-to-tab {
+    span {display: none;}
+  }
+  .names {
+    span {display: block;}
+  }
+  .user-title {
+    float: left;
+    clear: left;
+  }
 }
