@@ -287,7 +287,7 @@ class TopicsController < ApplicationController
   end
 
   def timer
-    params.permit(:time, :timezone_offset, :based_on_last_post, :category_id)
+    params.permit(:time, :based_on_last_post, :category_id)
     params.require(:status_type)
 
     status_type =
@@ -302,7 +302,6 @@ class TopicsController < ApplicationController
 
     options = {
       by_user: current_user,
-      timezone_offset: params[:timezone_offset]&.to_i,
       based_on_last_post: params[:based_on_last_post]
     }
 

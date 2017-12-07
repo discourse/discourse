@@ -1032,10 +1032,9 @@ SQL
   #  * `nil` to delete the topic's status update.
   # Options:
   #  * by_user: User who is setting the topic's status update.
-  #  * timezone_offset: (Integer) offset from UTC in minutes of the given argument.
   #  * based_on_last_post: True if time should be based on timestamp of the last post.
   #  * category_id: Category that the update will apply to.
-  def set_or_create_timer(status_type, time, by_user: nil, timezone_offset: 0, based_on_last_post: false, category_id: SiteSetting.uncategorized_category_id)
+  def set_or_create_timer(status_type, time, by_user: nil, based_on_last_post: false, category_id: SiteSetting.uncategorized_category_id)
     return delete_topic_timer(status_type, by_user: by_user) if time.blank?
 
     public_topic_timer = !!TopicTimer.public_types[status_type]
@@ -1067,7 +1066,6 @@ SQL
       if is_timestamp && time.include?("-") && timestamp = utc.parse(time)
         # a timestamp in client's time zone, like "2015-5-27 12:00"
         topic_timer.execute_at = timestamp
-        topic_timer.execute_at += timezone_offset * 60 if timezone_offset
         topic_timer.errors.add(:execute_at, :invalid) if timestamp < now
       else
         num_hours = time.to_f
