@@ -154,13 +154,15 @@ export function applySearchAutocomplete($input, siteSettings, appEvents, options
     afterComplete
   }, options));
 
-  $input.autocomplete(_.merge({
-    template: findRawTemplate('user-selector-autocomplete'),
-    key: "@",
-    width: '100%',
-    treatAsTextarea: true,
-    transformComplete: v => v.username || v.name,
-    dataSource: term => userSearch({ term, includeGroups: true }),
-    afterComplete
-  }, options));
+  if (Discourse.SiteSettings.enable_mentions) {
+    $input.autocomplete(_.merge({
+      template: findRawTemplate('user-selector-autocomplete'),
+      key: "@",
+      width: '100%',
+      treatAsTextarea: true,
+      transformComplete: v => v.username || v.name,
+      dataSource: term => userSearch({ term, includeGroups: true }),
+      afterComplete
+    }, options));
+  }
 };
