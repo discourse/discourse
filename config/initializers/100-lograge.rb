@@ -8,13 +8,17 @@ if (Rails.env.production? && SiteSetting.logging_provider == 'lograge') || ENV["
   Rails.application.configure do
     config.lograge.enabled = true
 
-    config.lograge.custom_payload do |controller|
-      username = controller.try(:current_user)&.username rescue nil
-      {
-        ip: controller.request.remote_ip,
-        username: username,
-      }
-    end
+    # Seeing RuntimeError (Missing rack.input)
+    # for: `/topics/timings`
+    #
+    #
+    # config.lograge.custom_payload do |controller|
+    #   username = controller.try(:current_user)&.username rescue nil
+    #   {
+    #     ip: controller.request.remote_ip,
+    #     username: username,
+    #   }
+    # end
 
     config.lograge.custom_options = lambda do |event|
       exceptions = %w(controller action format id)
