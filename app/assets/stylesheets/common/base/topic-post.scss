@@ -29,7 +29,7 @@
    white-space: nowrap;
    overflow: hidden;
    text-overflow: ellipsis;
-   a {
+   &.user-title, &.user-title a, a {
      color: dark-light-choose($primary-high, $secondary-low);
    }
  }
@@ -53,6 +53,7 @@
   del { background-color: dark-light-choose($danger-low, scale-color($danger, $lightness: -60%)); }
 }
 
+
 .cooked, .d-editor-preview {
   video {
     max-width: 100%;
@@ -73,11 +74,11 @@
     }
   }
   .names {
-    span.user-title, .first {
-      background-color: dark-light-choose($highlight-low, $highlight-medium);
+  span.user-title, .first {
+    background-color: dark-light-choose($highlight-low, $highlight-medium);
       color: dark-light-choose($primary-high, $secondary-low);      
-      padding-left: 4px;
-      padding-right: 4px;
+    padding-left: 4px;
+    padding-right: 4px;
     }
   }
 }
