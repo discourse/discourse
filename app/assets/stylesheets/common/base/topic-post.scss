@@ -73,7 +73,7 @@
     }
   }
   .names {
-    span.user-title, .first {
+    span.user-title {
       background-color: dark-light-choose($highlight-low, $highlight-medium);
       color: dark-light-choose($primary-high, $secondary-low);      
       padding-left: 4px;
