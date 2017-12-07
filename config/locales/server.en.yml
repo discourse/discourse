@@ -1283,6 +1283,7 @@ en:
     newuser_max_replies_per_topic: "Maximum number of replies a new user can make in a single topic until someone replies to them."
     max_mentions_per_post: "Maximum number of @name notifications anyone can use in a post."
     max_users_notified_per_group_mention: "Maximum number of users that may receive a notification if a group is mentioned (if threshold is met no notifications will be raised)"
+    enable_mentions: "Allow users to mention other users."
 
     create_thumbnails: "Create thumbnails and lightbox images that are too large to fit in a post."
 

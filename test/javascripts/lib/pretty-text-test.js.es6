@@ -8,6 +8,7 @@ QUnit.module("lib:pretty-text");
 const rawOpts = {
   siteSettings: {
     enable_emoji: true,
+    enable_mentions: true,
     emoji_set: 'emoji_one',
     highlighted_languages: 'json|ruby|javascript',
     default_code_lang: 'auto',
@@ -282,7 +283,6 @@ QUnit.test("Quotes", assert => {
 });
 
 QUnit.test("Mentions", assert => {
-
   const alwaysTrue = { mentionLookup: (function() { return "user"; }) };
 
   assert.cookedOptions("Hello @sam", alwaysTrue,
@@ -368,6 +368,12 @@ QUnit.test("Mentions", assert => {
   assert.cookedOptions("<small>a @sam c</small>", alwaysTrue,
                 "<p><small>a <a class=\"mention\" href=\"/u/sam\">@sam</a> c</small></p>",
                 "it allows mentions within HTML tags");
+});
+
+QUnit.test("Mentions - disabled", assert => {
+  assert.cookedOptions("@eviltrout",
+                { siteSettings : { enable_mentions: false }},
+                "<p>@eviltrout</p>");
 });
 
 QUnit.test("Category hashtags", assert => {
