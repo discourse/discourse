@@ -109,8 +109,8 @@
       </div>
     {{/if}}
 
-    {{#if canAct}}
-      <div class='flagged-post-controls'>
+    <div class='flagged-post-controls'>
+      {{#if canAct}}
         {{admin-agree-flag-dropdown
           post=flaggedPost
           removeAfter=(action "removeAfter") }}
@@ -148,8 +148,13 @@
             title="admin.flags.suspend_user_title"
             action=(action "showSuspendModal")}}
         {{/unless}}
-      </div>
-    {{/if}}
+      {{/if}}
+
+      {{d-button
+        icon="list"
+        label="admin.flags.moderation_history"
+        action=(action "showModerationHistory")}}
+    </div>
     {{plugin-outlet
       name="flagged-post-below-controls"
       tagName=""
