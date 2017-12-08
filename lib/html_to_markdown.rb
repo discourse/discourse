@@ -210,7 +210,9 @@ class HtmlToMarkdown
 
   def visit_text(node)
     node.content = node.content.gsub(/\A[[:space:]]+/, "") if node.previous_element.nil? && EMPHASIS.include?(node.parent.name)
-    @stack[-1].markdown << node.text
+    indent = node.text[/^\s+/] || ""
+    text = node.text.gsub(/^\s+/, "").gsub(/\s{2,}/, " ")
+    @stack[-1].markdown << [indent, text].join("")
   end
 
   def format_block
