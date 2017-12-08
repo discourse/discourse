@@ -278,7 +278,7 @@ $mobile-breakpoint: 700px;
   .controls .menu-toggle {
     display: none;
     float: left;
-    font-size: 24px;
+    font-size: 1.7em;
     padding: 3px 6px;
     margin-right: 32px;
     border: 1px solid lighten($primary, 40%);
@@ -529,7 +529,7 @@ $mobile-breakpoint: 700px;
 
     .desc, .validation-error {
       padding-top: 3px;
-      font-size: 80%;
+      font-size: .8em;
       line-height: 1.4em;
     }
 
@@ -677,7 +677,7 @@ section.details {
 
     .list-badge {
       float: right;
-      font-size: 11px;
+      font-size: .8em;
       font-weight: normal;
       padding: 0 6px;
       color: $secondary;
@@ -1613,7 +1613,7 @@ table#user-badges {
   }
   .reply-key {
     display: block;
-    font-size: 12px;
+    font-size: .857em;
     color: dark-light-choose($primary-medium, $secondary-high);
   }
   .username div {
@@ -1643,7 +1643,7 @@ table#user-badges {
   }
   .error-description {
     color: #919191;
-    font-size: 90%;
+    font-size: .857em;
   }
   hr {
     margin: 0;
@@ -1802,7 +1802,7 @@ table#user-badges {
   float: right;
   text-align: right;
   .instructions {
-    font-size: 12px;
+    font-size: .857em;
   }
 }
 .watched-words-detail {
