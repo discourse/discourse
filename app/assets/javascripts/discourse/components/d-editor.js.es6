@@ -670,7 +670,11 @@ export default Ember.Component.extend({
         type: 'POST',
         data: { html }
       }).then(response => {
-        self.appEvents.trigger('composer:replace-text', placeholder, response.markdown);
+        if (response.markdown) {
+          self.appEvents.trigger('composer:replace-text', placeholder, response.markdown);
+        } else if (!plainText) {
+          self.appEvents.trigger('composer:replace-text', placeholder, "");
+        }
       }).catch(error => {
         if (!plainText) {
           self.appEvents.trigger('composer:replace-text', placeholder, "");
