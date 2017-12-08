@@ -640,7 +640,7 @@ export default Ember.Component.extend({
   },
 
   paste(e) {
-    if (!this.siteSettings.enable_rich_text_paste || !$(".d-editor-input").is(":focus")) {
+    if (!$(".d-editor-input").is(":focus")) {
       return;
     }
 
@@ -658,9 +658,8 @@ export default Ember.Component.extend({
       }
     }
 
-    const placeholder = `${ plainText || I18n.t('pasting') }`;
-
-    if (html && !handled) {
+    if (this.siteSettings.enable_rich_text_paste && html && !handled) {
+      const placeholder = `${ plainText || I18n.t('pasting') }`;
       const self = this;
 
       this.appEvents.trigger('composer:insert-text', placeholder);
@@ -683,7 +682,7 @@ export default Ember.Component.extend({
       });
     }
 
-    const uploadFiles = types.includes("Files") && !plainText && !html;
+    const uploadFiles = types.includes("Files") && !plainText && !handled;
 
     if (handled || uploadFiles) {
       e.preventDefault();
