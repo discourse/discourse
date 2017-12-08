@@ -434,8 +434,13 @@ export default Ember.Component.extend({
     });
 
     $element.on('fileuploadpaste', (e) => {
-      const { types } = clipboardData(e);
       this._pasted = true;
+
+      if (!this.siteSettings.enable_rich_text_paste || !$(".d-editor-input").is(":focus")) {
+        return;
+      }
+
+      const { types } = clipboardData(e);
 
       if (types.includes("text/plain") || types.includes("text/html")) {
         e.preventDefault();

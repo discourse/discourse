@@ -640,7 +640,7 @@ export default Ember.Component.extend({
   },
 
   paste(e) {
-    if (!$(".d-editor-input").is(":focus")) {
+    if (!this.siteSettings.enable_rich_text_paste || !$(".d-editor-input").is(":focus")) {
       return;
     }
 

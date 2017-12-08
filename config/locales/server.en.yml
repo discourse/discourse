@@ -1088,6 +1088,7 @@ en:
     top_page_default_timeframe: "Default timeframe for the top view page."
     show_email_on_profile: "Show a user's email on their profile (only visible to themselves and staff)"
     prioritize_username_in_ux: "Show username first on user page, user card and posts (when disabled name is shown first)"
+    enable_rich_text_paste: "Enable automatic HTML to Markdown conversion"
 
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
 
