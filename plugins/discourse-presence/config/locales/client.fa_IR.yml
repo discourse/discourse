@@ -1,1 +1,8 @@
-fa_IR: {}
+fa_IR: 
+  js:
+    presence:
+      replying: "پاسخ دادن"
+      editing: "ویرایش کردن"
+      replying_to_topic:
+        one: "در حال پاسخ دادن است"
+other: "در حال پاسخ دادن هستند"
