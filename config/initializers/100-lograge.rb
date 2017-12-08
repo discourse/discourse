@@ -8,46 +8,51 @@ if (Rails.env.production? && SiteSetting.logging_provider == 'lograge') || ENV["
   Rails.application.configure do
     config.lograge.enabled = true
 
-    # Seeing RuntimeError (Missing rack.input)
-    # for: `/topics/timings`
-    #
-    #
-    # config.lograge.custom_payload do |controller|
-    #   username = controller.try(:current_user)&.username rescue nil
-    #   {
-    #     ip: controller.request.remote_ip,
-    #     username: username,
-    #   }
-    # end
+    config.lograge.custom_payload do |controller|
+      begin
+        {
+          ip: controller.request.remote_ip,
+          username: controller.current_user&.username,
+        }
+      rescue => e
+        Rails.logger.warn("Failed to append custom payload: #{e.message}\n#{e.backtrace.join("\n")}")
+        {}
+      end
+    end
 
     config.lograge.custom_options = lambda do |event|
-      exceptions = %w(controller action format id)
+      begin
+        exceptions = %w(controller action format id)
 
-      params = event.payload[:params].except(*exceptions)
-      params[:files].map!(&:headers) if params[:files]
+        params = event.payload[:params].except(*exceptions)
+        params[:files].map!(&:headers) if params[:files]
 
-      output = {
-        params: params.to_query,
-        database: RailsMultisite::ConnectionManagement.current_db,
-      }
+        output = {
+          params: params.to_query,
+          database: RailsMultisite::ConnectionManagement.current_db,
+        }
 
-      if data = Thread.current[:_method_profiler]
-        sql = data[:sql]
+        if data = Thread.current[:_method_profiler]
+          sql = data[:sql]
 
-        if sql
-          output[:db] = sql[:duration] * 1000
-          output[:db_calls] = sql[:calls]
+          if sql
+            output[:db] = sql[:duration] * 1000
+            output[:db_calls] = sql[:calls]
+          end
+
+          redis = data[:redis]
+
+          if redis
+            output[:redis] = redis[:duration] * 1000
+            output[:redis_calls] = redis[:calls]
+          end
         end
 
-        redis = data[:redis]
-
-        if redis
-          output[:redis] = redis[:duration] * 1000
-          output[:redis_calls] = redis[:calls]
-        end
+        output
+      rescue => e
+        Rails.logger.warn("Failed to append custom options: #{e.message}\n#{e.backtrace.join("\n")}")
+        {}
       end
-
-      output
     end
 
     if ENV["LOGSTASH_URI"]
