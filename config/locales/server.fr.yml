@@ -2747,7 +2747,7 @@ fr:
             label: "Nom de votre communauté"
             placeholder: "Le repaire de Jeanne"
           site_description:
-            label: "Dévrivez votre communauté en une courte phrase"
+            label: "Décrivez votre communauté en une courte phrase"
             placeholder: "Un endroit de discussion pour Jeanne et ses amis"
       introduction:
         title: "Introduction"
