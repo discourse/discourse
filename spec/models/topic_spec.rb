@@ -2101,8 +2101,6 @@ describe Topic do
       "https://meta.discourse.org",
       "https://meta.discourse.org/",
       "https://meta.discourse.org/?filter=test",
-      "https://meta.discourse.org/ there might be text",
-      "http://meta.discourse.org/\u0441",
     ].each do |featured_link|
       it "should extract the root domain from #{featured_link} correctly" do
         topic.featured_link = featured_link
