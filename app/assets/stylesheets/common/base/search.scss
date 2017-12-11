@@ -87,9 +87,15 @@
 
 .search.row {
   margin-bottom: 15px;
-  input {
-    height: 22px;
-    padding-left: 6px;
+
+  .search-bar {
+    display: flex; 
+    margin-bottom: 10px;
+    input {
+      height: 22px;
+      padding-left: 6px;
+      margin: 0 5px 0 0;
+    }
   }
 
   .new-topic-btn {
