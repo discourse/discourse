@@ -121,7 +121,6 @@ it:
       split_topic: "ha separato questo argomento %{when}"
       invited_user: "Invitato %{who} %{when}"
       invited_group: "invitato %{who} %{when}"
-      user_left: "%{who} ha abbandonato questo messaggio %{when}"
       removed_user: "rimosso %{who} %{when}"
       removed_group: "cancellato %{who} %{when}"
       autoclosed:
@@ -1669,7 +1668,6 @@ it:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Cita"
-      edit: "Modifica in corso {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Motivo:"
       post_number: "messaggio {{number}}"
       wiki_last_edited_on: "ultima modifica alla wiki"
@@ -1923,7 +1921,6 @@ it:
       email_in_allow_strangers: "Accetta email da utenti anonimi senza alcun account"
       email_in_disabled: "Le Impostazioni Sito non permettono di creare nuovi argomenti via email. Per abilitare la creazione di argomenti via email,"
       email_in_disabled_click: 'abilita l''impostazione "email entrante".'
-      mailinglist_mirror: "La categoria rispecchia una mailing list"
       suppress_from_homepage: "Elimina questa categoria dalla homepage."
       show_subcategory_list: "Mostra la lista delle sottocategorie sopra agli argomenti in questa categoria."
       num_featured_topics: "Numero degli argomenti mostrati nella pagina categorie:"

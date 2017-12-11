@@ -1300,8 +1300,6 @@ he:
     default_categories_tracking: "רשימת קטגוריות שנעקבת כברירת מחדל."
     default_categories_muted: "רשימת קטגוריות שמושתקות כברירת מחדל."
     default_categories_watching_first_post: "רשימת קטגוריות שבה הפוסט הראשון בכל נושא ייצפה אוטומטית."
-    max_user_api_reqs_per_day: "המספר המקסימלי של בקשות API של משתמש ליום"
-    max_user_api_reqs_per_minute: "המספר המקסימלי של בקשות API של משתמש לדקה"
     allow_user_api_keys: "איפשור יצירת מפתחות API למשתמשים"
     allow_user_api_key_scopes: "רשימת אזורים מותרים למפתחות API של משתמשים"
     max_api_keys_per_user: "מספר מקסימלי של מפתחות API של משתמש לכל משתמש"

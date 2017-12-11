@@ -122,7 +122,6 @@ es:
       split_topic: "separó este tema %{when}"
       invited_user: "invitó a %{who} %{when}"
       invited_group: "invitó a %{who} %{when}"
-      user_left: "%{who} dejó este mensaje %{when}"
       removed_user: "eliminó a %{who} %{when}"
       removed_group: "eliminó a %{who} %{when}"
       autoclosed:
@@ -1693,7 +1692,7 @@ es:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Citar"
-      edit: "Editando {{link}} {{replyAvatar}} {{username}}"
+      edit: "<i class='fa fa-pencil'></i>{{link}} {{replyAvatar}} {{username}} "
       edit_reason: "Motivo:"
       post_number: "post {{number}}"
       wiki_last_edited_on: "wiki editada por última vez"
@@ -1947,7 +1946,6 @@ es:
       email_in_allow_strangers: "Aceptar emails de usuarios anónimos sin cuenta"
       email_in_disabled: "La posibilidad de publicar nuevos temas por email está deshabilitada en los ajustes del sitio. Para habilitar la publicación de nuevos temas por email,"
       email_in_disabled_click: 'activa la opción "email in".'
-      mailinglist_mirror: "Categoría refleja una lista de correo"
       suppress_from_homepage: "Ocultar categoría de la página de inicio."
       show_subcategory_list: "Mostrar la lista de subcategorías arriba de la lista de temas en esta categoría."
       num_featured_topics: "Número de temas a mostrar en la página de categorías:"

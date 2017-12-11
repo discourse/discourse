@@ -1574,7 +1574,6 @@ he:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "ציטוט"
-      edit: "עורך את {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "סיבה: "
       post_number: "פוסט {{number}}"
       wiki_last_edited_on: "וויקי נערך לאחרונה ב"

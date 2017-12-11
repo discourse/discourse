@@ -119,6 +119,7 @@ sk:
           other: "%{count} rokov neskôr"
       previous_month: 'Predchádzajúci mesiac'
       next_month: 'Nasledujúci mesiac'
+      placeholder: Dátum
     share:
       topic: 'zdieľaj odkaz na túto tému'
       post: 'príspevok #%{postNumber}'
@@ -128,9 +129,13 @@ sk:
       google+: 'zdieľaj odkaz na Google+'
       email: 'pošli odkaz emailom'
     action_codes:
+      public_topic: "téma je verejná%{when}"
+      private_topic: "téma je súkromná  %{when}"
       split_topic: "rozdeľ tému %{when}"
       invited_user: "pozvaný %{who} %{when}"
+      invited_group: "pozvaný %{who} %{when}"
       removed_user: "odstránený %{who} %{when}"
+      removed_group: "odstránený %{who} %{when}"
       autoclosed:
         enabled: 'uzavreté %{when}'
         disabled: 'otvorené %{when}'
@@ -149,6 +154,8 @@ sk:
       visible:
         enabled: 'zverejnené %{when}'
         disabled: 'stiahnuté %{when}'
+      banner:
+        enabled: 'Téma je odteraz baner %{when} Bude sa zobrazovať navrchu každej stránky, pokiaľ ju používateľ nezavrie.'
     topic_admin_menu: "akcie administrátora témy"
     emails_are_disabled: "Odosielanie emailov bolo globálne vypnuté administrátorom. Žiadne emailové notifikácie nebudú odoslané."
     bootstrap_mode_enabled: "Pre zjednodušenie spustenia Vašej novej stránky sa nachádzate v zavádzacom režime. Všetci noví používatelia budú mať pridelený stupeň dôvery 1 a budú mať zapnutý denný emailový výber aktualít. Toto bude automaticky vypnuté keď celkový počet používateľov presiahne %{min_users}."
@@ -1412,7 +1419,6 @@ sk:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Citácia"
-      edit: "Upravujete {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Dôvod:"
       post_number: "príspevok {{number}}"
       last_edited_on: "príspevok naposledy upravený"

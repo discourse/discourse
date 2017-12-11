@@ -1210,8 +1210,6 @@ nl:
     default_categories_watching: "Lijst van categorieën die standaard worden bekeken."
     default_categories_tracking: "Lijst van categorieën die standaard worden bijgehouden."
     default_categories_muted: "Lijst van categorieën die standaard worden gedempt."
-    max_user_api_reqs_per_day: "Maximale aantal API-aanvragen van gebruiker per sleutel per dag"
-    max_user_api_reqs_per_minute: "Maximale aantal API-aanvragen van gebruiker per sleutel per minuut"
     allow_user_api_keys: "Genereren van API-sleutels van gebruiker toestaan"
     allow_user_api_key_scopes: "Lijst van toegestane scopes voor API-sleutels van gebruiker"
     max_api_keys_per_user: "Maximale aantal API-aanvragen van gebruiker per gebruiker"

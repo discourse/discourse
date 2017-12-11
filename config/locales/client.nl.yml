@@ -1635,7 +1635,6 @@ nl:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Citeren"
-      edit: "Bewerken: {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Reden: "
       post_number: "bericht {{number}}"
       wiki_last_edited_on: "wiki laatst bewerkt op"

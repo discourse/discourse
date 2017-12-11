@@ -122,7 +122,6 @@ fr:
       split_topic: "a scindé ce sujet %{when}"
       invited_user: "a invité %{who} %{when}"
       invited_group: "a invité %{who} %{when}"
-      user_left: "%{who}a quitté cette conversation %{when}"
       removed_user: "a retiré %{who} %{when}"
       removed_group: "a retiré %{who} %{when}"
       autoclosed:
@@ -265,6 +264,7 @@ fr:
     uploading: "Envoi en cours…"
     uploading_filename: "Envoi de {{filename}}…"
     uploaded: "Envoyé !"
+    pasting: "Coller..."
     enable: "Activer"
     disable: "Désactiver"
     undo: "Annuler"
@@ -1692,7 +1692,7 @@ fr:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Citer"
-      edit: "Modifier {{link}} par {{replyAvatar}} {{username}}"
+      edit: "<i class='fa fa-pencil'></i> {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Raison :"
       post_number: "message {{number}}"
       wiki_last_edited_on: "Wiki dernièrement modifié le"
@@ -1946,7 +1946,6 @@ fr:
       email_in_allow_strangers: "Accepter les courriels d'utilisateurs anonymes sans compte"
       email_in_disabled: "La possibilité de créer des nouveaux sujets via courriel est désactivé dans les Paramètres. Pour l'activer,"
       email_in_disabled_click: 'activer le paramètre « email in ».'
-      mailinglist_mirror: "La catégorie reflète une liste de diffusion"
       suppress_from_homepage: "Retirer cette catégorie de la page d'accueil"
       show_subcategory_list: "Afficher la liste des sous-catégories au dessus des sujets dans cette catégorie."
       num_featured_topics: "Nombre de sujets affichés sur la page des catégories :"
@@ -2418,6 +2417,7 @@ fr:
         active_posts: "Messages signalés"
         old_posts: "Anciens messages signalés"
         topics: "Sujets signalés"
+        moderation_history: "Historique de la modération"
         agree: "Accepter"
         agree_title: "Confirmer que le signalement est valide et correcte"
         agree_flag_hide_post: "Accepter et cacher le message"
@@ -2869,6 +2869,15 @@ fr:
             type_placeholder: "résumé, inscription…"
             reply_key_placeholder: "clé de réponse"
             skipped_reason_placeholder: "raison"
+      moderation_history:
+        performed_by: "Réalisé par"
+        no_results: "Il n'y a pas d'historique de modération disponible."
+        actions:
+          delete_user: "Utilisateur Supprimé"
+          suspend_user: "Utilisateur Suspendu"
+          silence_user: "Utilisateur mis sous silence"
+          delete_post: "Message Supprimé"
+          delete_topic: "Sujet supprimé"
       logs:
         title: "Journaux"
         action: "Action"

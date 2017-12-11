@@ -971,7 +971,6 @@ es:
     gtm_container_id: "Google Tag Manager container id. ejempo: GTM-ABCDEF"
     enable_escaped_fragments: "Ir a la API Ajax-Crawling de Google si no se detecta ningún webcrawler. Mira https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
     allow_moderators_to_create_categories: "Permitir a los moderadores crear nuevas categorías"
-    crawler_user_agents: "Lista de user agents que son considerados crawlers y served static HTML en vez de JavaScript payload"
     cors_origins: "Orígenes permitidos para las cross-origin requests (CORS). Cada origen debe incluir http:// or https://. La variable env DISCOURSE_ENABLE_CORS debe establecerse a verdadero para activar CORS."
     use_admin_ip_whitelist: "Los admins solo pueden iniciar sesión si están en una dirección IP definida en la lista de Screened IPs (Admin > Logs > Screened Ips)."
     blacklist_ip_blocks: "Una lista de IPs bloqueadas privadas que nunca deberían ser rastreadas por Discourse"
@@ -1349,8 +1348,6 @@ es:
     default_categories_muted: "Lista de categorías que están silenciadas por defecto."
     default_categories_watching_first_post: "Lista de categorías en las que el mensaje de cada nuevo tema será vigilado por defecto."
     retain_web_hook_events_period_days: "Número de días para retener registros de eventos de web hook."
-    max_user_api_reqs_per_day: "Número máximo de peticiones de API de usuario por clave y por día"
-    max_user_api_reqs_per_minute: "Número máximo de peticiones de API de usuario por clave y por minuto"
     allow_user_api_keys: "Permitir que se generen claves de API de usuario"
     allow_user_api_key_scopes: "Lista de ámbitos permitidos para las claves API de usuario"
     max_api_keys_per_user: "Número máximo de claves de usuario por usuario"
@@ -2095,17 +2092,6 @@ es:
         Por favor, [mira los reportes](%{base_url}/admin/flags). Si %{username} hubiera sido silenciado  incorrectamente, haz clic en el botón de quitar silencio en la [página de administración del usuario](%{user_url}).
 
         Esto puede ser cambiado con el ajuste `silence_new_user` en configuración del sitio.
-    spam_post_silenced:
-      title: "Post con Spam Silenciado"
-      subject_template: "Posts de nuevo usuario %{username} silenciados por enlaces repetidos"
-      text_body_template: |
-        Este es un mensaje automático.
-
-        El usuario nuevo [%{username}](%{user_url}) ha intentado crear múltiples temas con enlaces a %{domains}, pero han sido silenciados para evitar spam. El usuario todavía puede crear temas, siempre y cuando no contengan enlaces a %{domains}.
-
-        Por favor, [revisa el usuario](%{user_url}).
-
-        Esto puede ser modificado con los ajustes `newuser_spam_host_threshold` y `white_listed_spam_host_domains`.
     unsilenced:
       title: "Dejar de silenciar"
       subject_template: "Cuenta no retenida"

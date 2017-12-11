@@ -993,8 +993,6 @@ tr_TR:
     default_categories_watching: "Öntanımlı olarak gözlenen kategorilerin listesi."
     default_categories_tracking: "Öntanımlı olarak, takip edilen kategorilerin listesi."
     default_categories_muted: "Öntanımlı olarak, sesi kısılan kategorilerin listesi."
-    max_user_api_reqs_per_day: "Gün başına yapılabilecek en fazla kullanıcı API isteği"
-    max_user_api_reqs_per_minute: "Dakika başına yapılabilecek en fazla kullanıcı API isteği"
     max_api_keys_per_user: "Kullanıcı başına kullanılabilecek kullanıcı API anahtarı sayısı"
     min_trust_level_for_user_api_key: "Kullanıcı API'si oluşturmak için gereken güven seviyesi"
     tagging_enabled: "Konularda etiketleri etkinleştirin?"

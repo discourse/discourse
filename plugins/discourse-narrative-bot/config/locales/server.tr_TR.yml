@@ -16,6 +16,8 @@ tr_TR:
       name: Lisanslı
       description: "Gelişmiş kullanıcı eğitimi tamamlandı"
   discourse_narrative_bot:
+    dice:
+      trigger: "yuvarla"
     quote:
       trigger: "alıntıla"
       '1':

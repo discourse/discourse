@@ -1,1 +1,5 @@
-pl_PL: {}
+pl_PL:
+  js:
+    presence:
+      replying: "odpowiada"
+      editing: "edytuje"

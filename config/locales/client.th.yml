@@ -1138,7 +1138,6 @@ th:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      edit: "แก้ไข {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "เหตุผล:"
       post_number: "โพสต์ {{number}}"
       last_edited_on: "โพสแก้ไขล่าสุดเมื่อ"

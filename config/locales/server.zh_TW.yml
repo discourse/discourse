@@ -1200,8 +1200,6 @@ zh_TW:
     default_categories_tracking: "分類列表預設追蹤。"
     default_categories_muted: "分類列表預設不顯示。"
     default_categories_watching_first_post: "預設監看這些分類中每個新主題的第一貼"
-    max_user_api_reqs_per_day: "用戶API每日每密鑰最高請求數"
-    max_user_api_reqs_per_minute: "用戶API每密鑰每分鐘最高請求數"
     allow_user_api_keys: "允許生成用戶API密鑰"
     allow_user_api_key_scopes: "用戶API授權範圍列表"
     max_api_keys_per_user: "每用戶最多持有的用戶 API 數"

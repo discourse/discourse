@@ -1423,7 +1423,6 @@ vi:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Trích dẫn"
-      edit: "Đang sửa {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Lý do: "
       post_number: "bài viết {{number}}"
       last_edited_on: "đã sửa bài viết lần cuối lúc"

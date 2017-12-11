@@ -107,6 +107,7 @@ fi:
           other: "%{count} vuotta myöhemmin"
       previous_month: 'Edellinen kuukausi'
       next_month: 'Seuraava kuukausi'
+      placeholder: päivämäärä
     share:
       topic: 'jaa linkki tähän ketjuun'
       post: '%{postNumber}. viesti'
@@ -263,6 +264,7 @@ fi:
     uploading: "Lähettää..."
     uploading_filename: "Lähettää {{filename}}..."
     uploaded: "Lähetetty!"
+    pasting: "Liitetään..."
     enable: "Ota käyttöön"
     disable: "Poista käytöstä"
     undo: "Peru"
@@ -323,7 +325,7 @@ fi:
       topics_entered_long: "Katseltuja ketjuja"
       time_read: "Lukuaika"
       topic_count: "Ketjut"
-      topic_count_long: "Luotuja ketjuja"
+      topic_count_long: "Ketjunaloituksia"
       post_count: "Vastauksia"
       post_count_long: "Kirjoitettuja vastauksia"
       no_results: "Ei tuloksia."
@@ -365,7 +367,7 @@ fi:
         members: "Ryhmässä ei ole jäseniä."
         mentions: "Ryhmää ei ole mainittu."
         messages: "Ryhmälle ei ole yksityisviestejä."
-        topics: "Ryhmän jäsenet eivät ole luoneet ketjuja."
+        topics: "Ryhmän jäsenet eivät ole aloittaneet ketjuja."
         logs: "Ryhmälle ei ole lokitietoja."
       add: "Lisää"
       join: "Liity ryhmään"
@@ -530,6 +532,7 @@ fi:
         disable: "Poista ilmoitukset käytöstä"
         enable: "Näytä ilmoituksia"
         each_browser_note: "Huom: Asetus on säädettävä erikseen jokaisessa selaimessa, jota käytät."
+      dismiss: 'Unohda'
       dismiss_notifications: "Unohda kaikki"
       dismiss_notifications_tooltip: "Merkitse kaikki lukemattomat ilmoitukset luetuiksi"
       first_notification: "Ensimmäinen ilmoitus sinulle! Valitse se niin aloitetaan."
@@ -544,6 +547,7 @@ fi:
       admin: "{{user}} on ylläpitäjä"
       moderator_tooltip: "Tämä käyttäjä on valvoja"
       admin_tooltip: "Tämä käyttäjä on ylläpitäjä"
+      silenced_tooltip: "Käyttäjä on hiljennetty"
       suspended_notice: "Tämä käyttäjätili on hyllytetty {{date}} asti."
       suspended_permanently: "Käyttäjä on hyllytetty."
       suspended_reason: "Syy:"
@@ -596,6 +600,8 @@ fi:
       undo_revoke_access: "Peru käyttöoikeuden peruminen"
       api_approved: "Sallittu:"
       theme: "Teema"
+      home: "Oletusnäkymä"
+      staged: "Esikäyttäjä"
       staff_counters:
         flags_given: "hyödyllistä liputusta"
         flagged_posts: "liputettua viestiä"
@@ -648,6 +654,7 @@ fi:
         title: "Vaihda profiilikuvasi"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, osoitteesta"
         gravatar_title: "Vaihda profiilikuvasi Gravatar-sivustolla"
+        gravatar_failed: "Gravataria ei löytynyt. Liittyykö tähän sähköpostiosoitteeseen sellainen?"
         refresh_gravatar_title: "Päivitä Gravatar"
         letter_based: "Sivuston luoma profiilikuva"
         uploaded_avatar: "Oma kuva"
@@ -805,9 +812,10 @@ fi:
         title: "Yhteenveto"
         stats: "Tilastot"
         time_read: "lukenut palstaa"
+        recent_time_read: "lukenut hiljattain"
         topic_count:
           one: "avattu ketju"
-          other: "luotua ketjua"
+          other: "aloitettua ketjua"
         post_count:
           one: "kirjoitettu viesti"
           other: "kirjoitettua viestiä"
@@ -820,6 +828,9 @@ fi:
         days_visited:
           one: "päivänä vieraillut"
           other: "päivänä vieraillut"
+        topics_entered:
+          one: "ketjua lukenut"
+          other: "ketjua lukenut"
         posts_read:
           one: "luettu viesti"
           other: "luettua viestiä"
@@ -897,17 +908,22 @@ fi:
         other: "%{count} virhettä/%{duration}"
     learn_more: "opi lisää..."
     all_time: 'yhteensä'
-    all_time_desc: 'ketjuja luotu yhteensä'
+    all_time_desc: 'ketjuja aloitettu yhteensä'
     year: 'vuosi'
-    year_desc: 'viimeisen 365 päivän aikana luodut ketjut'
+    year_desc: 'viimeisen 365 päivän aikana aloitetut ketjut'
     month: 'kuukausi'
-    month_desc: 'viimeisen 30 päivän aikana luodut ketjut'
+    month_desc: 'viimeisen 30 päivän aikana aloitetut ketjut'
     week: 'viikko'
-    week_desc: 'viimeisen 7 päivän aikana luodut ketjut'
+    week_desc: 'viimeisen 7 päivän aikana aloitetut ketjut'
     day: 'päivä'
     first_post: Ensimmäinen viesti
     mute: Vaienna
     unmute: Poista vaimennus
+    last_post: Kirjoitti
+    time_read: Lukenut
+    time_read_recently: '%{time_read} viime aikoina'
+    time_read_tooltip: '%{time_read} lukenut kaikkiaan'
+    time_read_recently_tooltip: '%{time_read} lukenut kaikkiaan (%{recent_time_read} edellisen 60 päivän aikana)'
     last_reply_lowercase: edellinen vastaus
     replies_lowercase:
       one: vastaus
@@ -1040,6 +1056,11 @@ fi:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    select_kit:
+      default_header_text: Valitse...
+      no_content: Ei osumia
+      filter_placeholder: Hae...
+      create: "Luo {{content}}"
     emoji_picker:
       filter_placeholder: Etsi emojia
       people: Ihmiset
@@ -1093,8 +1114,9 @@ fi:
       reply_here: "Vastaa tänne"
       reply: "Vastaa"
       cancel: "Peruuta"
-      create_topic: "Luo ketju"
+      create_topic: "Aloita ketju"
       create_pm: "Viesti"
+      create_whisper: "Kuiskaa"
       title: "Tai paina Ctrl+Enter"
       users_placeholder: "Lisää käyttäjä"
       title_placeholder: "Kuvaile lyhyesti mistä tässä ketjussa on kyse?"
@@ -1102,6 +1124,7 @@ fi:
       edit_reason_placeholder: "miksi muokkaat viestiä?"
       show_edit_reason: "(lisää syy muokkaukselle)"
       topic_featured_link_placeholder: "Tähän linkki, joka näytetään otsikon yhteydessä."
+      remove_featured_link: "Poista ketjulinkki"
       reply_placeholder: "Kirjoita tähän. Käytä Markdownia, BBCodea tai HTML:ää muotoiluun. Raahaa tai liitä kuvia."
       view_new_post: "Katsele uutta viestiäsi."
       saving: "Tallennetaan"
@@ -1133,6 +1156,8 @@ fi:
       ulist_title: "Luettelomerkillinen luettelo"
       list_item: "Listan alkio"
       help: "Markdown apu"
+      collapse: "pienennä kirjoitusalue"
+      abandon: "sulje kirjoitusalue ja poista luonnos"
       modal_ok: "OK"
       modal_cancel: "Peruuta"
       cant_send_pm: "Et voi lähettää viestiä käyttäjälle  %{username}."
@@ -1141,6 +1166,13 @@ fi:
         body: "Olet lähettämässä viestiä vain itsellesi!"
       admin_options_title: "Tämän ketjun vain henkilökunnalle näytettävät asetukset"
     notifications:
+      tooltip:
+        regular:
+          one: "Uusi ilmoitus"
+          other: "{{count}} uutta ilmoitusta"
+        message:
+          one: "Uusi yksityisviesti"
+          other: "{{count}} uutta yksityisviestiä"
       title: "ilmoitukset @nimeen viittauksista, vastauksista omiin viesteihin ja ketjuihin, viesteistä ym."
       none: "Ilmoitusten lataaminen ei onnistunut."
       empty: "Ilmoituksia ei löydetty."
@@ -1184,6 +1216,7 @@ fi:
         linked: "Linkki viestiisi"
         granted_badge: "Ansiomerkki myönnetty"
         group_message_summary: "Viestejä ryhmän saapuneissa viesteissä."
+        topic_reminder: "Muistutus"
       popup:
         mentioned: '{{username}} mainitsi sinut ketjussa "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} mainitsi sinut ketjussa "{{topic}}" - {{site_title}}'
@@ -1206,6 +1239,7 @@ fi:
       uploading: "Lähettää"
       select_file: "Valitse tiedosto"
       image_link: "linkki, johon kuvasi osoittaa"
+      default_image_alt_text: kuva
     search:
       sort_by: "Järjestä"
       relevance: "Osuvuus"
@@ -1241,20 +1275,30 @@ fi:
         title: Tarkennettu haku
         posted_by:
           label: Kirjoittaja
+        in_category:
+          label: Sijaitsee alueella
         in_group:
           label: Kirjoittajan ryhmä
         with_badge:
           label: Kirjoittajalla ansiomerkki
+        with_tags:
+          label: Ketjulla on tunniste
         filters:
+          label: Tuloksiin vain ketjuja/viestejä...
           likes: joista olen tykännyt
           posted: joihin olen kirjoittanut
           watching: joita tarkkailen
           tracking: joita seuraan
+          private: yksityiskeskusteluistani
+          bookmarks: kirjanmerkeistäni
           first: jotka ovat ketjun avausviestejä
           pinned: jotka on kiinnitettyjä
           unpinned: jotka eivät ole kiinnitettyjä
+          seen: jotka olen lukenut
           unseen: joita en ole lukenut
           wiki: ovat wiki-viestejä
+          images: joissa on kuv(i)a
+          all_tags: Ketjulla on kaikki nämä tunnisteet
         statuses:
           label: Ketju/Ketjuun
           open: on avoin
@@ -1316,8 +1360,8 @@ fi:
         top: "Huippuketjuja ei ole."
         search: "Hakutuloksia ei löytynyt."
         educate:
-          new: '<p>Sinulle uudet ketjut näytetään tässä.</p><p>Ketjut tulkitaan uusiksi ja niiden yhteydessä näytetään <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">uusi</span>-merkintä, jos ne on luotu edellisten kahden päivän aikana.</p><p>Aikarajaa voit muuttaa <a href="%{userPrefsUrl}">käyttäjäasetuksissasi</a>.</p>'
-          unread: '<p>Lukemattomia viestejä sisältävät ketjut näytetään tässä.</p><p>Ketjun yhteydessä näytetään lukemattomien viestien lukumäärä <span class="badge new-posts badge-notification">1</span> jos olet:</p><ul><li>luonut ketjun</li><li>vastannut ketjuun</li><li>lukenut ketjua pidempään, kuin 4 minuuttia</li></ul><p>tai, jos olet erikseen merkannut ketjun seurattavaksi tai tarkkailtavaksi ketjun lopusta löytyvästä painikkeesta.</p><p>Voit muuttaa tätä <a href="%{userPrefsUrl}">käyttäjäasetuksistasi</a>.</p>'
+          new: '<p>Sinulle uudet ketjut näytetään tässä.</p><p>Ketju tulkitaan uudeksi ja sen yhteydessä näytetään <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">uusi</span>-merkintä, jos se on aloitettu edellisten kahden päivän aikana.</p><p>Aikarajaa voit muuttaa <a href="%{userPrefsUrl}">käyttäjäasetuksissasi</a>.</p>'
+          unread: '<p>Lukemattomia viestejä sisältävät ketjut näytetään tässä.</p><p>Ketjun yhteydessä näytetään lukemattomien viestien lukumäärä <span class="badge new-posts badge-notification">1</span>, jos olet:</p><ul><li>aloittanut ketjun</li><li>vastannut ketjuun</li><li>lukenut ketjua pidempään, kuin 4 minuuttia</li></ul><p>tai, jos olet erikseen merkannut ketjun seurattavaksi tai tarkkailtavaksi ketjun lopusta löytyvästä painikkeesta.</p><p>Voit muuttaa tätä <a href="%{userPrefsUrl}">käyttäjäasetuksistasi</a>.</p>'
       bottom:
         latest: "Tuoreimpia ketjuja ei ole enempää."
         hot: "Kuumia ketjuja ei ole enempää."
@@ -1337,7 +1381,7 @@ fi:
         one: "1 viesti ketjussa"
         other: "{{count}} viestiä ketjussa"
       create: 'Uusi ketju'
-      create_long: 'Luo uusi ketju'
+      create_long: 'Aloita uusi ketju'
       private_message: 'Luo viesti'
       archive_message:
         help: 'Siirrä viesti arkistoosi'
@@ -1466,7 +1510,7 @@ fi:
           '3_6': 'Saat ilmoituksia, koska olet asettanut tämän alueen tarkkailuun.'
           '3_5': 'Saat ilmoituksia, koska ketju on asetettu tarkkailuun automaattisesti.'
           '3_2': 'Saat ilmoituksia, koska olet asettanut ketjun tarkkailuun.'
-          '3_1': 'Saat ilmoituksia, koska loit tämän ketjun.'
+          '3_1': 'Saat ilmoituksia, koska aloitit tämän ketjun.'
           '3': 'Saat ilmoituksia, koska olet asettanut ketjun tarkkailuun.'
           '2_8': 'Näet uusien vastausten määrän, koska olet asettanut tämän alueen seurantaan.'
           '2_4': 'Näet uusien vastausten määrän, koska olet kirjoittanut ketjuun.'
@@ -1606,7 +1650,7 @@ fi:
         error: "Viestien siirtämisessä uuteen ketjuun tapahtui virhe."
         instructions:
           one: "Olet luomassa uutta ketjua valitsemastasi viestistä."
-          other: "Olet luomassa uutta ketjua valitsemistasi <b>{{count}}</b> viestistä."
+          other: "Olet aloittamassa uutta ketjua valitsemistasi <b>{{count}}</b> viestistä."
       merge_topic:
         title: "Siirrä olemassa olevaan ketjuun"
         action: "siirrä olemassa olevaan ketjuun"
@@ -1649,7 +1693,7 @@ fi:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Lainaa"
-      edit: "Muokataan {{link}} {{replyAvatar}} {{username}}"
+      edit: "<i class='fa fa-pencil'></i> {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Syy:"
       post_number: "viesti {{number}}"
       wiki_last_edited_on: "wikiä muokattiin viimeksi"
@@ -1751,6 +1795,9 @@ fi:
           notify_user: "lähetti viestin"
           bookmark: "lisäsi tämän kirjanmerkkeihin"
           like: "tykkäsi tästä"
+          like_capped:
+            one: "ja {{count}} muu tykkäsi tästä"
+            other: "ja {{count}} muuta tykkäsi tästä"
           vote: "äänesti tätä"
         by_you:
           off_topic: "Liputit tämän eksyvän aiheesta"
@@ -1898,7 +1945,7 @@ fi:
       images: "Kuvat"
       email_in: "Saapuvan postin sähköpostiosoite:"
       email_in_allow_strangers: "Hyväksy viestejä anonyymeiltä käyttäjiltä joilla ei ole tiliä"
-      email_in_disabled: "Uusien ketjujen luominen sähköpostitse on otettu pois käytöstä sivuston asetuksissa. Salliaksesi uusien ketjujen luomisen sähköpostilla, "
+      email_in_disabled: "Uusien ketjujen aloittaminen sähköpostitse on otettu pois käytöstä sivuston asetuksissa. Salliaksesi uusien ketjujen luomisen sähköpostilla, "
       email_in_disabled_click: 'ota käyttöön "email in" asetus.'
       suppress_from_homepage: "Vaimenna alue kotisivulta."
       show_subcategory_list: "Näytä lista tytäralueista ketjujen yläpuolella tällä alueella."
@@ -1924,7 +1971,7 @@ fi:
           description: "Tarkkailet kaikkia ketjuja näillä alueilla. Saat ilmoituksen jokaisesta uudesta viestistä missä tahansa ketjussa, ja uusien vastausten määrä näytetään."
         watching_first_post:
           title: "Tarkkaile uusia ketjuja"
-          description: "Saat ilmoituksen näille alueille luoduista ketjuista."
+          description: "Saat ilmoituksen näillä alueilla aloitetuista ketjuista."
         tracking:
           title: "Seuraa"
           description: "Seuraat kaikkia ketjuja näillä alueilla. Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle, ja uusien vastausten määrä näytetään."
@@ -2095,7 +2142,7 @@ fi:
         title_with_count:
           one: "Uudet (1)"
           other: "Uudet ({{count}})"
-        help: "viime päivinä luodut ketjut"
+        help: "viime päivinä aloitetut ketjut"
       posted:
         title: "Viestini"
         help: "ketjut, joihin olet kirjoittanut"
@@ -2159,7 +2206,7 @@ fi:
         next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Seuraava/edellinen valinta'
       application:
         title: 'Ohjelma'
-        create: '<b>c</b> Luo uusi ketju'
+        create: '<b>c</b> Aloita uusi ketju'
         notifications: '<b>n</b> Avaa ilmoitukset'
         hamburger_menu: '<b>=</b> Avaa hampurilaisvalikko'
         user_profile_menu: '<b>p</b> Avaa käyttäjävalikko'
@@ -2235,6 +2282,7 @@ fi:
       selector_no_tags: "ei tunnisteita"
       changed: "muutetut tunnisteet"
       tags: "Tunnisteet"
+      choose_for_topic: "valinnaiset tunnisteet"
       delete_tag: "Poista tunniste"
       delete_confirm:
         one: "Haluatko varmasti poistaa tunnisteen, mikä poistaa sen myös yhdeltä ketjulta, jolla tunniste on?"
@@ -2258,7 +2306,7 @@ fi:
           description: "Ketjut, joilla on tämä tunniste, asetetaan automaattisesti tarkkailuun. Saat ilmoituksen kaikista uusista viesteistä ja ketjuista, ja uusien ja lukemattomien viestien lukumäärä näytetään ketjujen yhteydessä. "
         watching_first_post:
           title: "Tarkkaile uusia ketjuja"
-          description: "Saat ilmoituksen luoduista ketjuista, joilla on joku näistä tunnisteista."
+          description: "Saat ilmoituksen aloitetuista ketjuista, joilla on joku näistä tunnisteista."
         tracking:
           title: "Seuraa"
           description: "Seuraat kaikkia ketjuja, joilla on tämä tunniste. Lukemattomien ja uusien viestien lukumäärä näytetään ketjun yhteydessä."
@@ -2334,6 +2382,7 @@ fi:
         no_problems: "Ongelmia ei löytynyt."
         moderators: 'Valvojat:'
         admins: 'Ylläpitäjät:'
+        silenced: 'Hiljennetty:'
         suspended: 'Hyllytetyt:'
         private_messages_short: "YV:t"
         private_messages_title: "Viestit"
@@ -2369,13 +2418,22 @@ fi:
         active_posts: "Liputetut viestit"
         old_posts: "Aiemmin liputetut viestit"
         topics: "Liputetut ketjut"
+        moderation_history: "Valvontahistoria"
         agree: "Ole samaa mieltä"
         agree_title: "Vahvista, että lippu on annettu oikeasta syystä"
+        agree_flag_hide_post: "Ole samaa mieltä ja piilota viesti"
+        agree_flag_hide_post_title: "Piilota viesti ja lähetä automaattinen yksityisviesti, joka kehottaa käyttäjää muokkaamaan viestiä."
+        agree_flag_restore_post: "Ole samaa mieltä ja palauta viesti"
+        agree_flag_restore_post_title: "Palauta viesti niin että kaikki käyttäjät näkevät sen."
+        agree_flag: "Ole samaa mieltä ja säilytä viesti"
+        agree_flag_title: "Ole samaa mieltä lipun kanssa ja pidä viesti ennallaan"
         defer_flag: "Sivuuta"
         defer_flag_title: "Poista lippu; se ei vaadi toimenpiteitä tällä hetkellä."
         delete: "Poista"
         delete_title: "Poista viesti, johon lippu viittaa."
+        delete_post_defer_flag: "Poista viesti ja sivuuta lippu"
         delete_post_defer_flag_title: "Poista viesti; jos se on aloitusviesti, niin poista koko ketju"
+        delete_post_agree_flag: "Poista viesti ja ole samaa mieltä lipun kanssa"
         delete_post_agree_flag_title: "Poista viesti; jos se on aloitusviesti, niin poista koko ketju"
         delete_flag_modal_title: "Poista ja..."
         delete_spammer: "Poista roskapostittaja"
@@ -2406,6 +2464,7 @@ fi:
         was_edited: "Viestiä muokattiin ensimmäisen lipun jälkeen"
         previous_flags_count: "Tämä viesti on liputettu {{count}} kertaa."
         show_details: "Näytä lipun yksityiskohdat"
+        details: "yksityiskohdat"
         flagged_topics:
           topic: "Ketju"
           type: "Tyyppi"
@@ -2461,7 +2520,7 @@ fi:
         revoke: "Peruuta"
         confirm_regen: "Oletko varma, että haluat korvata tämän API avaimen uudella?"
         confirm_revoke: "Oletko varma, että haluat peruuttaa tämän avaimen?"
-        info_html: "API avaimen avulla voi luoda ja pävittää ketjuja käyttämällä JSON kutsuja."
+        info_html: "Rajapinta-avaimen avulla voi aloittaa ja päivittää ketjuja JSON-pyynnöillä."
         all_users: "Kaikki käyttäjät"
         note_html: "Pidä tämä avain <strong>salaisena</strong>, sen haltija voi luoda viestejä esiintyen minä hyvänsä käyttäjänä."
       web_hooks:
@@ -2498,7 +2557,7 @@ fi:
         delete_confirm: "Poista tämä webhook?"
         topic_event:
           name: "Ketjutapahtuma"
-          details: "Luodaan uusi ketju, ketju päivitetään, muutetaan tai poistetaan"
+          details: "Kun aloitetaan uusi ketju, ketju päivitetään, muutetaan tai poistetaan"
         post_event:
           name: "Viestitapahtuma"
           details: "Luodaan uusi vastaus, muokataan, poistetaan tai palautetaan."
@@ -2809,6 +2868,15 @@ fi:
             type_placeholder: "tiivistelmä, kirjautuminen..."
             reply_key_placeholder: "vastausavain"
             skipped_reason_placeholder: "syy"
+      moderation_history:
+        performed_by: "Toimija"
+        no_results: "Ei valvontahistoriaa"
+        actions:
+          delete_user: "Käyttäjä poistettiin"
+          suspend_user: "Käyttäjä hyllytettiin"
+          silence_user: "Käyttäjä hiljennettiin"
+          delete_post: "Viesti poistettiin"
+          delete_topic: "Ketju poistettiin"
       logs:
         title: "Lokit"
         action: "Toiminto"
@@ -2864,6 +2932,8 @@ fi:
             change_category_settings: "muuta alueen asetuksia"
             delete_category: "poista alue"
             create_category: "luo alue"
+            silence_user: "hiljennä käyttäjä"
+            unsilence_user: "kumoa käyttäjän hiljennys"
             grant_admin: "myönnä ylläpitäjän oikeudet"
             revoke_admin: "peru ylläpitäjän oikeudet"
             grant_moderation: "myönnä valvojan oikeudet"
@@ -2911,6 +2981,17 @@ fi:
           roll_up:
             text: "Kääri"
             title: "Luo uusia aliverkkojen laajuisia porttikieltoja, jos kieltoja on asetettu vähintään 'min_ban_entries_for_roll_up' asetuksen määrä."
+        search_logs:
+          title: "Hakuloki"
+          term: "Hakusana"
+          searches: "Haut"
+          click_through: "Klikkaussuhde"
+          unique: "Uniikki"
+          unique_title: "uniikit käyttäjät, jotka hakivat"
+          types:
+            all_search_types: "Kaikki hakutyypit"
+            header: "Otsikko"
+            full_page: "Koko sivu"
         logster:
           title: "Virhelokit"
       watched_words:
@@ -2958,6 +3039,7 @@ fi:
           pending: "Odottaa"
           staff: 'Henkilökunta'
           suspended: 'Hyllytetyt'
+          silenced: 'Hiljennetty'
           suspect: 'Epäilty'
         approved: "Hyväksytty?"
         approved_selected:
@@ -2978,6 +3060,7 @@ fi:
           staff: "Henkilökunta"
           admins: 'Ylläpitäjät'
           moderators: 'Valvojat'
+          silenced: 'Hiljennetyt käyttäjät'
           suspended: 'Hyllytetyt käyttäjät'
           suspect: 'Epäillyt käyttäjät'
         reject_successful:
@@ -3001,10 +3084,21 @@ fi:
         suspend_message: "Sähköpostiviesti"
         suspend_message_placeholder: "Voit halutessasi kertoa enemmän hyllytyksen syystä, jolloin kertomus lähetetään käyttäjälle sähköpostitse."
         suspended_by: "Käyttäjän hyllytti"
+        silence_reason: "Syy"
+        silenced_by: "Hiljentäjä"
+        silence_modal_title: "Hiljennä käyttäjä"
+        silence_duration: "Kuinka pitkäksi aikaa hiljennetään?"
+        silence_reason_label: "Miksi hiljennät käyttäjän?"
+        silence_reason_placeholder: "Hiljennyksen syy"
+        silence_message: "Sähköpostiviesti"
+        silence_message_placeholder: "(jätä tyhjäksi ja lähetä oletusviesti)"
         suspended_until: "(%{until} asti)"
         cant_suspend: "Käyttäjää ei voi hyllyttää."
         delete_all_posts: "Poista kaikki viestit"
         delete_all_posts_confirm_MF: "Olet poistamassa {POSTS, plural, one {1 viestin} other {# viestiä}} ja {TOPICS, plural, one {1 ketjun} other {# ketjua}}. Oletko varma?"
+        silence: "Hiljennä"
+        unsilence: "Kumoa hiljennys"
+        silenced: "Hiljennetty?"
         moderator: "Valvoja?"
         admin: "Ylläpitäjä?"
         suspended: "Hyllytetty?"
@@ -3071,6 +3165,10 @@ fi:
         activate_failed: "Käyttäjätilin vahvistaminen ei onnistunut."
         deactivate_account: "Poista käyttäjätili käytöstä"
         deactivate_failed: "Käyttäjätilin poistaminen käytöstä ei onnistunut."
+        unsilence_failed: 'Hiljennyksen kumoaminen ei onnistunut'
+        silence_failed: 'Käyttäjän hiljentäminen ei onnistunut.'
+        silence_confirm: 'Haluatko varmasti hiljentää käyttäjän? Hiljennetty käyttäjä ei voi aloittaa ketjuja eikä vastauksia.'
+        silence_accept: 'Kyllä, hiljennä käyttäjä'
         bounce_score: "Palautuspisteet"
         reset_bounce_score:
           label: "Palauta"
@@ -3078,6 +3176,7 @@ fi:
         visit_profile: "Muokkaa <a href='%{url}'>tämän käyttäjän käyttäjäasetuksia</a> hänen profiilissaan"
         deactivate_explanation: "Käytöstä poistetun käyttäjän täytyy uudelleen vahvistaa sähköpostiosoitteensa."
         suspended_explanation: "Hyllytetty käyttäjä ei voi kirjautua sisään."
+        silence_explanation: "Hiljennetty käyttäjä ei voi kirjoittaa eikä aloittaa ketjuja."
         staged_explanation: "Esikäyttäjä voi kirjoittaa vain tiettyihin ketjuihin sähköpostin välityksellä."
         bounce_score_explanation:
           none: "Tästä sähköpostiosoitteesta ei ole tullut palautuksia viime aikoina"
@@ -3195,6 +3294,7 @@ fi:
           developer: 'Kehittäjä'
           embedding: "Upottaminen"
           legal: "Säännöt"
+          api: 'Rajapinta'
           user_api: 'Käyttäjärajapinta'
           uncategorized: 'Muut'
           backups: "Varmuuskopiot"
@@ -3282,7 +3382,7 @@ fi:
       embedding:
         get_started: "Jos haluat upottaa Discoursen toiselle sivustolle, aloita lisäämällä isäntä."
         confirm_delete: "Oletko varma, että haluat poistaa tämän isännän?"
-        sample: "Käytä alla olevaa HTML-koodia sivustollasi luodaksesi ja upottaaksesi discourse ketjuja. Korvaa <b>REPLACE_ME</b> upotettavan sivun kanonisella URL-osoitteella."
+        sample: "Käytä alla olevaa HTML-koodia sivustollasi aloittaaksesi ja upottaaksesi discourse ketjuja. Korvaa <b>REPLACE_ME</b> upotettavan sivun kanonisella URL-osoitteella."
         title: "Upottaminen"
         host: "Sallitut isännät"
         path_whitelist: "Sallitut polut"
@@ -3293,8 +3393,8 @@ fi:
         feed_settings: "Syötteen asetukset"
         feed_description: "Tarjoamalla RSS/ATOM syötteen sivustollesi, voit lisätä Discoursen kykyä tuoda sisältöä."
         crawling_settings: "Crawlerin asetukset"
-        crawling_description: "Kun Discourse luo ketjuja kirjoituksistasi, se yrittää jäsentää kirjoitustesi sisältöä HTML:stä, jos RSS/ATOM syötettä ei ole tarjolla,  Joskus kirjoitusten sisällön poimiminen on haastavaa, joten tarjoamme mahdollisuuden määrittää CSS sääntöjä sen helpottamiseksi."
-        embed_by_username: "Käyttäjänimi ketjun luomiseksi"
+        crawling_description: "Kun Discourse aloittaa ketjuja kirjoituksistasi, se yrittää jäsentää kirjoitustesi sisältöä HTML:stä, jos RSS/ATOM-syötettä ei ole tarjolla,  Joskus kirjoitusten sisällön poimiminen on haastavaa, joten tarjoamme mahdollisuuden määrittää CSS-sääntöjä sen helpottamiseksi."
+        embed_by_username: "Käyttäjänimi, jonka nimissä ketjut aloitetaan"
         embed_post_limit: "Upotettavien viestien maksimimäärä"
         embed_username_key_from_feed: "Avain, jolla erotetaan Discourse-käyttäjänimi syötteestä"
         embed_title_scrubber: "Säännöllinen lauseke, jolla riisutaan viestien otsikkoja"

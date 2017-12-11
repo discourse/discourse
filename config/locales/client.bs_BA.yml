@@ -1382,7 +1382,6 @@ bs_BA:
         deselect_all: deselect all
     post:
       quote_reply: "Citat"
-      edit: "Editing {{link}} by {{replyAvatar}} {{username}}"
       edit_reason: "Razlog: "
       post_number: "post {{number}}"
       last_edited_on: "post last edited on"

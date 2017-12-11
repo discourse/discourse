@@ -1637,7 +1637,6 @@ lv:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Citāts"
-      edit: "Rediģēt {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Iemesls:"
       post_number: "ieraksts {{number}}"
       wiki_last_edited_on: "wiki pēdējo reizi rediģēta"

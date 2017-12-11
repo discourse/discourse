@@ -1,1 +1,5 @@
-da: {}
+da:
+  js:
+    presence:
+      replying: "svarer"
+      editing: "redigering"

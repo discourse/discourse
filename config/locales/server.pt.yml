@@ -1200,8 +1200,6 @@ pt:
     default_categories_tracking: "Lista de categorias que por defeito são acompanhadas."
     default_categories_muted: "Lista de categorias que por defeito são mudas."
     default_categories_watching_first_post: "Lista de categorias em que a primeira publicação em cada novo tópico será vigiada por defeito."
-    max_user_api_reqs_per_day: "Número máximo de pedidos à API de utilizador por dia, por chave"
-    max_user_api_reqs_per_minute: "Número máximo de pedidos à API de utilizador por dia, por minuto"
     allow_user_api_keys: "Permitir geração de chaves de API de utilizador"
     allow_user_api_key_scopes: "Lista de esferas permitidas para chaves da API de utlizador"
     max_api_keys_per_user: "Número máximo de chaves de API de utilizador por utlizador"

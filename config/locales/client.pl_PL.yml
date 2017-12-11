@@ -1758,7 +1758,6 @@ pl_PL:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Cytuj"
-      edit: "Edycja {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Powód"
       post_number: "wpis {{number}}"
       wiki_last_edited_on: "wiki ostatnio edytowane w"

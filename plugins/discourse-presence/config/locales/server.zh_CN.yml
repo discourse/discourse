@@ -1,1 +1,3 @@
-zh_CN: {}
+zh_CN:
+  site_settings:
+    presence_enabled: '显示正在回复或者编辑当前主题的用户'

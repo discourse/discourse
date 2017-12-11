@@ -1,1 +1,8 @@
-de: {}
+de:
+  js:
+    presence:
+      replying: "antwortet"
+      editing: "bearbeitet"
+      replying_to_topic:
+        one: "antwortet"
+        other: "antworten"

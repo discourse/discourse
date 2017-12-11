@@ -1,1 +1,3 @@
-de: {}
+de:
+  site_settings:
+    presence_enabled: 'Benutzer anzeigen, die gerade im aktuellen Thema antworten, oder den aktuellen Beitrag bearbeiten?'

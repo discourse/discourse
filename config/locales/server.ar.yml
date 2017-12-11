@@ -327,6 +327,7 @@ ar:
         name: "اسم القسم"
       topic:
         title: 'عنوان'
+        featured_link: 'رابط مشهور'
       post:
         raw: "متن النص"
       user_profile:
@@ -627,6 +628,8 @@ ar:
         other: "قبل حوالي %{count} سنة"
   password_reset:
     no_token: "نأسف، رابط تغيير كلمة السّرّ قديم جدًّا. انقر زرّ ”لِج“ واختر ”نسيت كلمة السّرّ“ لنرسل لك رابطًا آخر."
+    choose_new: "اختر كلمة المرور الجديدة"
+    choose: "اختر كلمة المرور"
     update: 'حدّث كلمة السّرّ'
     save: 'تعين كلمة المرور'
     title: 'إعادة تعين كلمة المرور'
@@ -708,6 +711,7 @@ ar:
       others: "لا يوجد منشورات اعجبت بها."
     no_replies:
       self: "لم تقم بالرد علي اي منشور."
+      others: "لا يوجد ردود ."
   topic_flag_types:
     spam:
       title: 'مزعج'
@@ -2017,6 +2021,12 @@ ar:
     congratulations: "تهانينا على تثبيت دسكورس!"
   wizard:
     step:
+      privacy:
+        title: "صلاحية"
+      corporate:
+        title: "منظمات"
+      icons:
+        title: "أيقونة"
       homepage:
         description: "نحن نوصي بإظهار اخر الموضوعات بالصفحة الرئيسية للموقع, لكن ايضاً يمكنك عرض الأقسام إذا اردت."
         title: "الرّئيسيّة"

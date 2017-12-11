@@ -1327,8 +1327,6 @@ fr:
     default_categories_muted: "Liste de catégories silencées par défaut."
     default_categories_watching_first_post: "Liste des catégories dont le premier message de chaque nouveau sujet sera surveillé par défaut."
     retain_web_hook_events_period_days: "Nombre de jours de conservation des événement des Web hooks."
-    max_user_api_reqs_per_day: "Nombre maximum de requêtes de l'API utilisateur par clé et par jour"
-    max_user_api_reqs_per_minute: "Nombre maximum de requêtes de l'API utilisateur par clé et par minute"
     allow_user_api_keys: "Autoriser la génération des clés de l'API utilisateur"
     allow_user_api_key_scopes: "Liste des champs d'action autorisés pour les clés de l'API utilisateur"
     max_api_keys_per_user: "Nombre maximum de clés de l'API utilisateur par utilisateur"
@@ -1916,17 +1914,6 @@ fr:
         Merci de [vérifier les signalements](%{base_url}/admin/flags). Si %{username} a été injustement mis sous silence, cliquez sur le bouton d'annulation de la mise sous silence sur la [page d'administration de cet utilisateur](%{user_url}).
 
         Ce seuil peut être changé par le paramètre `silence_new_user`.
-    spam_post_silenced:
-      title: "Message de spam mis sous silence"
-      subject_template: "Messages du nouvel utilisateur %{username} mis sous silence pour des liens répétés."
-      text_body_template: |
-        Ceci est un message automatique.
-
-        Le nouvel utilisateur [%{username}](%{user_url}) a tenté de créer plusieurs messages avec des liens vers %{domains}, mais ces messages ont été mis sous silence pour éviter le spam. Cet utilisateur est toujours capable de créer des messages qui ne contiennent pas de liens vers %{domains}.
-
-        Veuillez [vérifier cet utilisateur](%{user_url}).
-
-        Ceci peut être modifier via les paramètres `newuser_spam_host_threshold` et `white_listed_spam_host_domains`.
     unsilenced:
       title: "Mise sous silence annulée"
       subject_template: "Compte débloqué"

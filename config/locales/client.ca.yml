@@ -1,3 +1,10 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
 ca:
   js:
     number:
@@ -41,6 +48,9 @@ ca:
         x_seconds:
           one: "1s"
           other: "%{count}s"
+        less_than_x_minutes:
+          one: "< 1m"
+          other: "< %{count}m"
         x_minutes:
           one: "1m"
           other: "%{count}m"
@@ -50,6 +60,9 @@ ca:
         x_days:
           one: "1d"
           other: "%{count}d"
+        x_months:
+          one: "1mes"
+          other: "%{count}mes"
         about_x_years:
           one: "1a"
           other: "%{count}a"
@@ -94,6 +107,7 @@ ca:
           other: "%{count} anys després"
       previous_month: 'Mes anterior'
       next_month: 'Següent mes'
+      placeholder: data
     share:
       topic: 'compartir un enllaç a aquest tema'
       post: 'publica #%{postNumber}'
@@ -128,10 +142,16 @@ ca:
       visible:
         enabled: 'va llistar %{when}'
         disabled: 'va desllistar %{when}'
+      banner:
+        enabled: 'ha fet un bàner %{when}. Apareixerà a dalt de cada pàgina fins que sigui descartat per la persona usuària.'
+        disabled: 'ha tret aquest bàner %{when}. No apareixerà més a dalt de cada pàgina.'
     topic_admin_menu: "accions d'administració de tema"
+    wizard_required: "Et donem la benvinguda al teu nou Discourse! Comencem amb <a href='%{url}' data-auto-route='true'>l'assistent de configuració</a> ✨"
     emails_are_disabled: "Tots els correus sortints han estat globalment inhabilitats per un administrador. No s'enviarà cap  notificació de cap tipus per correu electrònic."
     bootstrap_mode_enabled: "Per llançar el teu nou lloc més fàcilment, ets en mode d'arrencada. Tots les noves persones usuàries obtindran el nivell 1 de confiança i tindran activats els avisos diaris via correu electrònic sobre actualitzacions. Es cancel·len automàticament quan el recompte total supera %{min_users} persones usuàries."
     bootstrap_mode_disabled: "El mode <i>Bootstrap</i> es desactivarà durant les properes 24 hores."
+    themes:
+      default_description: "Per defecte"
     s3:
       regions:
         ap_northeast_1: "Àsia Pacífic (Tòquio)"
@@ -142,8 +162,10 @@ ca:
         cn_north_1: "Xina (Beijing)"
         eu_central_1: "EU (Frankfurt)"
         eu_west_1: "EU (Irlanda)"
+        eu_west_2: "EU (Londres)"
         sa_east_1: "Sudamèrica (São Paulo)"
         us_east_1: "US East (N. Virginia)"
+        us_east_2: "EEUU Est (Ohio)"
         us_gov_west_1: "AWS GovCloud (US)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
@@ -242,6 +264,7 @@ ca:
     uploading: "Actualitzant..."
     uploading_filename: "Actualitzant {{filename}}..."
     uploaded: "Actualitzat!"
+    pasting: "Enganxant..."
     enable: "Activa"
     disable: "Desactiva"
     undo: "Desfés"
@@ -348,6 +371,7 @@ ca:
       join: "Uneix-te al grup"
       leave: "Abandona el grup"
       request: "Demana afegir-te al grup"
+      message: "Missatge"
       automatic_group: Grup Automàtic
       closed_group: Grup Tancat
       is_group_user: "Ets membre d'aquest grup"
@@ -360,12 +384,18 @@ ca:
       index:
         title: "Grups"
         empty: "No hi ha grups visibles"
+      title:
+        one: "Grup"
+        other: "Grups"
       activity: "Activitat"
       members: "Membres"
       topics: "Temes"
       posts: "Publicacions"
       mentions: "Mencions"
       messages: "Missatges"
+      visibility_levels:
+        title: "Qui pot veure aquest grup?"
+        public: "Tothom"
       alias_levels:
         nobody: "Ningú"
         only_admins: "Només persones administradores"
@@ -401,8 +431,8 @@ ca:
       flair_preview_image: "Vista prèvia d'imatge"
       flair_note: "Nota: l'adornament només es mostrarà per a un grup primari de persones usuàries."
     user_action_groups:
-      '1': "<i>M'agrada</i> donats"
-      '2': "<i>M'agrada</i> rebuts"
+      '1': "Donats"
+      '2': "Rebuts"
       '3': "Preferits"
       '4': "Temes"
       '5': "Respostes"
@@ -486,6 +516,7 @@ ca:
         disable: "Desactiva les notificacions"
         enable: "Activa les notificacions"
         each_browser_note: "Nota: has de canviar aquesta configuració a cada navegador que facis servir."
+      dismiss: 'Descarta-ho'
       dismiss_notifications: "Descarta-ho tot"
       dismiss_notifications_tooltip: "Marca totes les notificacions no llegides com a llegides"
       first_notification: "La teva primera notificació! Selecciona-la per començar."
@@ -545,6 +576,7 @@ ca:
       revoke_access: "Revoca l'accés"
       undo_revoke_access: "Desfes revocar l'accés"
       api_approved: "Aprovat:"
+      theme: "Tema"
       staff_counters:
         flags_given: "banderes útils"
         flagged_posts: "publicacions amb banderes"
@@ -562,6 +594,15 @@ ca:
         move_to_archive: "Arxiu"
         failed_to_move: "Ha fallat en moure els missatges seleccionats (potser ha caigut la teva xarxa)"
         select_all: "Selecciona-ho tot"
+      preferences_nav:
+        account: "Compte"
+        profile: "Perfil"
+        emails: "Correus"
+        notifications: "Notificacions"
+        categories: "Categories"
+        tags: "Etiquetes"
+        interface: "Interfície"
+        apps: "Aplicacions"
       change_password:
         success: "(correu electrònic enviat)"
         in_progress: "(enviant correu electrònic)"
@@ -646,7 +687,7 @@ ca:
       website: "Lloc web"
       email_settings: "Correu electrònic"
       like_notification_frequency:
-        title: "Avisa quan hi hagi un <i>M'Agrada</i>"
+        title: "Notifica'm quan sigui apreciat"
         always: "Sempre"
         first_time_and_daily: "El primer cop que agradi una publicació i a diari "
         first_time: "El primer cop que agradi una publicació"
@@ -746,6 +787,12 @@ ca:
         post_count:
           one: "publicació creada"
           other: "publicacions creades"
+        likes_given:
+          one: "donada"
+          other: "donada"
+        likes_received:
+          one: "Rebuda"
+          other: "Rebudes"
         days_visited:
           one: "dia visitat"
           other: "dies visitats"
@@ -766,10 +813,10 @@ ca:
         more_badges: "Més distintius"
         top_links: "Principals enllaços"
         no_links: "Encara sense enllaços"
-        most_liked_by: "Més agradat per"
+        most_liked_by: "Més apreciat per"
         most_liked_users: "Més agradat"
         most_replied_to_users: "Més respost a "
-        no_likes: "Encara sense <i>M'agrada</i>"
+        no_likes: "Encara sense :heart:"
       associated_accounts: "Sessions iniciades"
       ip_address:
         title: "Darrera adreça IP"
@@ -812,7 +859,7 @@ ca:
     logout: "T'has desconnectat."
     refresh: "Actualitza"
     read_only_mode:
-      enabled: "El lloc web es troba en mode només de lectura. Si us plau, continua navegant però per ara estan desactivades respondre, <i>M'agrada</i> i altres accions."
+      enabled: "El lloc web es troba en mode només de lectura. Si us plau, continua navegant però per ara estan desactivades respondre i altres accions."
       login_disabled: "S'ha desactivat l'inici de sessió mentre aquest lloc es trobi en mode només de lectura."
       logout_disabled: "S'ha desactivat el tancament de sessió mentre aquest lloc es trobi en mode només de lectura."
     too_few_topics_and_posts_notice: "Som-hi, <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>comença aquest debat!</a> Hores d'ara hi ha <strong>%{currentTopics} / %{requiredTopics}</strong> temes i <strong>%{currentPosts} / %{requiredPosts}</strong> publicacions. Les noves visites necessiten algunes converses per llegir-te i respondre't."
@@ -837,6 +884,9 @@ ca:
     first_post: Primera publicació
     mute: Silenciar
     unmute: Reanudar
+    last_post: Publicat
+    time_read: Llegit
+    time_read_recently: '%{time_read} recentment'
     last_reply_lowercase: darrera resposta
     replies_lowercase:
       one: resposta
@@ -846,7 +896,7 @@ ca:
       hide_session: "Recorda-m'ho demà"
       hide_forever: "no, gràcies"
       hidden_for_session: "D'acord, to demanarem demà. També podràs fer servir sempre <i>Iniciar sessió</i> per crear un compte."
-      intro: "Ep! :heart_eyes: sembla que estàs gaudiant d'allò més amb el debat, però no t'hi has registrat per a crear un compte."
+      intro: "Ep! :heart_eyes: sembla que estàs gaudint d'allò més amb el debat, però no t'hi has registrat per a crear un compte."
       value_prop: "En crear un compte, et recordem exactament el que has llegit, i així sempre arribes just on ho has deixat. També pots obtenir notificacions, aquí i per correu electrònic, sempre que hi hagi nous missatges. I pots rebre missatges de compartir l'amor. :heartbeat:"
     summary:
       enabled_description: "Estàs mirant un resum d'aquest tema: les publicacions més interessants segons determina la comunitat."
@@ -886,6 +936,8 @@ ca:
       complete_email_found: "Hem trobat el compte corresponent a l'adreça <b>%{email}</b>, hauries de rebre en breu un correu amb instruccions per restablir la teva contrasenya."
       complete_username_not_found: "Cap compte no coincideix amb la identitat usuària <b>%{username}</b>"
       complete_email_not_found: "Cap compte no coincideix amb <b>%{email}</b>"
+      button_ok: "D'acord"
+      button_help: "Ajuda"
     login:
       title: "Entrar"
       username: "Persona usuària"
@@ -939,6 +991,9 @@ ca:
       your_email: "El teu compte de correu és <b>%{email}</b>"
       accept_invite: "Accepta invitació"
       success: "El teu comte ha estat creat i ara t'hi has connectat."
+      name_label: "Nom"
+      password_label: "Estableix la contrasenya"
+      optional_description: "(opcional)"
     password_reset:
       continue: "Continua cap a %{site_name}"
     emoji_set:
@@ -1451,7 +1506,6 @@ ca:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Cita"
-      edit: "Editant {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Motiu:"
       post_number: "publicació {{number}}"
       wiki_last_edited_on: "wiki editada per darrer cop el"

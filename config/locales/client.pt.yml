@@ -1524,7 +1524,6 @@ pt:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Citar"
-      edit: "Editar {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Motivo:"
       post_number: "publicação {{number}}"
       last_edited_on: "publicação editada pela última vez em"

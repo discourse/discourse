@@ -1,1 +1,3 @@
-pl_PL: {}
+pl_PL:
+  site_settings:
+    presence_enabled: 'Pokaż użytkowników, którzy aktualnie odpowiadają na bieżący temat lub edytują bieżący wpis?'

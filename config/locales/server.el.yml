@@ -976,7 +976,6 @@ el:
     gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCDEF"
     enable_escaped_fragments: "Επιλογή του Ajax-Crawling API της Google, αν δεν βρεθεί κάποιο πρόγραμμα ανίχνευσης του Ιστού. Βλέπε https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
     allow_moderators_to_create_categories: "Να επιτρέπεται στους συντονιστές να δημιουργούν νέες κατηγορίες"
-    crawler_user_agents: "Λίστα από user agents τα οποία θεωρούνται crawlers και τους παρέχεται static HTML αντί για JavaScript payload"
     cors_origins: "Επιτρεπόμενες πηγές για αιτήσεις πολλαπλής προέλευσης (cross-origin requests, CORS). Η κάθε προέλευση πρέπει να περιέχει http:// or https://. Η env μεταβλητή DISCOURSE_ENABLE_CORS πρέπει να οριστεί σε αληθινή για να ενεργοποιηθεί το CORS."
     use_admin_ip_whitelist: "Οι διαχειριστές μπορούν να συνδέονται μόνο αν βρίσκονται σε μια διευθυνση IP καθορισμένη στη λίστα Screened IPs (Admin > Logs > Screened Ips)."
     blacklist_ip_blocks: "Μια λίστα από private IP blocks η οποία ποτέ δεν θα ανιχνεύεται από το Discourse"
@@ -1354,8 +1353,6 @@ el:
     default_categories_muted: "Λίστα κατηγοριών που βρίσκονται σε σίγαση από προεπιλογή."
     default_categories_watching_first_post: "Λίστα κατηγοριών στις οποίες η πρώτη ανάρτηση σε κάθε νέο νήμα θα επιτηρείται από προεπιλογή."
     retain_web_hook_events_period_days: "Number of days to retain web hook event records."
-    max_user_api_reqs_per_day: "Μέγιστος αριθμός από user API requests ανά κλειδί ανά μέρα"
-    max_user_api_reqs_per_minute: "Μέγιστος αριθμός από user API requests ανά κλειδί ανά λεπτό"
     allow_user_api_keys: "Επιτρέψτε την δημιουργία των user API keys"
     allow_user_api_key_scopes: "Λίστα των πεδίων που επιτρέπεται για τα user API keys"
     max_api_keys_per_user: "Μέγιστος αριθμός user API keys ανά χρήστη. "
@@ -2003,17 +2000,6 @@ el:
         Παρακαλούμε [ελέγξτε τις σημάνσεις](%{base_url}/admin/flags). Αν ο/η %{username} τέθηκε λανθασμένα σε σιγή, κάντε κλικ στο κουμπί αναίρεσης σίγασης στην [σελίδα διαχείρισης χρήστη](%{user_url}).
 
         Αυτό το όριο μπορεί να ρυθμιστεί μέσω του πεδίου `silence_new_user` στις ρυθμίσεις ιστοσελίδας.
-    spam_post_silenced:
-      title: "Σιγήθηκε Ανάρτηση Spam"
-      subject_template: "Οι αναρτήσεις του νέου χρήστη %{username} σιγήθηκαν λόγω επαναλαμβανόμενων συνδέσμων"
-      text_body_template: |
-        Αυτό είναι αυτοματοποιημένο μήνυμα.
-
-        Ο νέος χρήστης [%{username}](%{user_url}) προσπάθησε να δημιουργήσει πολλαπλές αναρτήσεις με συνδέσμους προς %{domains}, οι οποίες τέθηκαν σε σιγή για να αποφεχθεί το spam. Ο νέος χρήστης μπορεί ακόμα να δημιουργήσει νέες αναρτήσεις που δεν περιέχουν συνδέσμους προς %{domains}.
-
-        Παρακαλούμε [ελέγξτε τον χρήστη](%{user_url}).
-
-        Αυτό μπορεί να αλλαχθεί μέσω της ρύθμισης `newuser_spam_host_threshold` και `white_listed_spam_host_domains`.
     unsilenced:
       title: "Εκτός Σιγής"
       subject_template: "Λογαριασμός όχι πια σε αναστολή"

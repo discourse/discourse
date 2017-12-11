@@ -1,1 +1,3 @@
-fi: {}
+fi:
+  site_settings:
+    presence_enabled: 'Näytä ketkä parhaillaan kirjoittavat tai muokkaavat viestiä ketjussa, jossa käyttäjä on?'

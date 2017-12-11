@@ -33,7 +33,7 @@ vi:
     incoming:
       show_trimmed_content: "Hiện nội dung đã cắt"
       errors:
-        empty_email_error: "Xảy ra khi thư nguồn hệ thống nhận được là trống."
+        empty_email_error: "Xảy ra khi thư nguồn hệ thống nhận được trống."
         no_message_id_error: "Xảy ra khi thư không có tiêu đề."
         auto_generated_email_error: "Xảy ra khi tiêu đề 'ưu tiên' được đặt là: danh sách, rác, theo lô hoặc tự động trả lời, hoặc khi có tiêu đề khác bao gồm: tự động gửi, tự động trả lời hoặc tự động tạo."
         inactive_user_error: "Xảy ra khi người gửi không hoạt động."

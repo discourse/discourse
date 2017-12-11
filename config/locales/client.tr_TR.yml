@@ -97,7 +97,6 @@ tr_TR:
       split_topic: "bu konuyu %{when} ayırdı"
       invited_user: "%{when} %{who} davet edildi"
       invited_group: "%{who} %{when} davet edildi"
-      user_left: "%{who} bu iletiden ayrıldı %{when}"
       removed_user: "%{when} %{who} silindi"
       removed_group: "%{who} %{when} kaldırıldı"
       autoclosed:
@@ -1497,7 +1496,6 @@ tr_TR:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Alıntı"
-      edit: "{{link}} {{replyAvatar}} {{username}} düzenleniyor"
       edit_reason: "Neden: "
       post_number: "gönderi {{number}}"
       wiki_last_edited_on: "wiki en son düzenlendi"

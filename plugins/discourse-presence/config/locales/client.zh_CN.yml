@@ -1,1 +1,7 @@
-zh_CN: {}
+zh_CN:
+  js:
+    presence:
+      replying: "正在回复"
+      editing: "正在编辑"
+      replying_to_topic:
+        other: "正在回复"
