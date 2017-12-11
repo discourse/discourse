@@ -40,7 +40,8 @@ function loadDraft(store, opts) {
       draft: true,
       composerState: Composer.DRAFT,
       composerTime: draft.composerTime,
-      typingTime: draft.typingTime
+      typingTime: draft.typingTime,
+      whisper: draft.whisper
     });
     return composer;
   }
