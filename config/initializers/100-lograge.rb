@@ -49,6 +49,9 @@ if (Rails.env.production? && SiteSetting.logging_provider == 'lograge') || ENV["
         end
 
         output
+      rescue RateLimiter::LimitExceeded
+        # no idea who this is, but they are limited
+        {}
       rescue => e
         Rails.logger.warn("Failed to append custom options: #{e.message}\n#{e.backtrace.join("\n")}")
         {}
