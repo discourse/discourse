@@ -28,6 +28,12 @@ class RateLimiter
     $redis.delete_prefixed(RateLimiter.key_prefix)
   end
 
+  def self.clear_all_global!
+    $redis.without_namespace.keys("GLOBAL::#{key_prefix}*").each do |k|
+      $redis.without_namespace.del k
+    end
+  end
+
   def build_key(type)
     "#{RateLimiter.key_prefix}:#{@user && @user.id}:#{type}"
   end
@@ -38,7 +44,7 @@ class RateLimiter
     @key = build_key(type)
     @max = max
     @secs = secs
-    @global = false
+    @global = global
   end
 
   def clear!
