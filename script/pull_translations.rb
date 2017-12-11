@@ -13,7 +13,8 @@ require_relative '../lib/i18n/locale_file_walker'
 
 YML_DIRS = ['config/locales',
             'plugins/poll/config/locales',
-            'plugins/discourse-narrative-bot/config/locales']
+            'plugins/discourse-narrative-bot/config/locales',
+            'plugins/discourse-presence/config/locales']
 YML_FILE_PREFIXES = ['server', 'client']
 
 if `which tx`.strip.empty?

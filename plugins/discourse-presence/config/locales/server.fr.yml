@@ -5,4 +5,6 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-tr_TR: {}
+fr:
+  site_settings:
+    presence_enabled: 'Afficher les utilisateurs qui sont en train de répondre au sujet actuel ou modifier le message actuel ?'
