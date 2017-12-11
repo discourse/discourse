@@ -88,7 +88,7 @@ class Topic < ActiveRecord::Base
               (!t.user_id || !t.user.staff?)
             }
 
-  validates :featured_link, allow_nil: true, format: URI::regexp(%w(http https))
+  validates :featured_link, allow_nil: true, url: true
   validate if: :featured_link do
     errors.add(:featured_link, :invalid_category) unless !featured_link_changed? ||
       Guardian.new.can_edit_featured_link?(category_id)
@@ -1265,14 +1265,7 @@ SQL
   end
 
   def featured_link_root_domain
-    url = URI.extract(self.featured_link).first
-
-    begin
-      MiniSuffix.domain(URI.parse(url).hostname)
-    rescue URI::InvalidURIError => e
-      Rails.logger.warn("#{e.message}: #{e.backtrace.join("\n")}")
-      nil
-    end
+    MiniSuffix.domain(URI.parse(self.featured_link).hostname)
   end
 
   private
