@@ -1497,7 +1497,6 @@ ro:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Citează"
-      edit: "Editează {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Motivul edit[rii: "
       post_number: "postarea {{number}}"
       last_edited_on: "postare editată ultima oară la"

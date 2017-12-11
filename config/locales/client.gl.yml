@@ -1196,7 +1196,6 @@ gl:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      edit: "Editando {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Razón:"
       post_number: "publicación {{number}}"
       last_edited_on: "última edición da publicación"

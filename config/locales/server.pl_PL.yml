@@ -1385,8 +1385,6 @@ pl_PL:
     default_categories_tracking: "Lista kategorii śledzonych domyślnie."
     default_categories_muted: "Lista domyślnie wyciszonych kategorii."
     default_categories_watching_first_post: "Lista kategorii, w której domyślnie każdy pierwszy post w wątku będzie obserwowany."
-    max_user_api_reqs_per_day: "Maksymalna liczba zapytań o klucz API użytkownika na dzień."
-    max_user_api_reqs_per_minute: "Maksymalna liczba zapytań o klucz API użytkownika na minutę."
     allow_user_api_keys: "Pozwól na generację kluczy API użytkownika."
     allow_user_api_key_scopes: "Lista zakresów dozwolona dla kluczy API użytkownika."
     max_api_keys_per_user: "Maksymalna liczba kluczy API użytkownika na użytkownika."

@@ -151,7 +151,6 @@ ru:
       split_topic: "Разделил эту тему %{when}"
       invited_user: "Пригласил %{who} %{when}"
       invited_group: "Пригласил %{who} %{when}"
-      user_left: "%{who} написал(а) это сообщение %{when}"
       removed_user: "Исключил %{who} %{when}"
       removed_group: "Исключил %{who} %{when}"
       autoclosed:
@@ -1664,7 +1663,6 @@ ru:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Цитата"
-      edit: "Изменить {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Причина:"
       post_number: "сообщение {{number}}"
       wiki_last_edited_on: "вики редактировалось"

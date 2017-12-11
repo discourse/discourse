@@ -931,7 +931,6 @@ zh_CN:
     gtm_container_id: "Google Tag Manager 容器 id。例如：GTM-ABCDEF"
     enable_escaped_fragments: "如未侦测到爬虫回退到使用 Google Ajax-Crawling API。参见 https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
     allow_moderators_to_create_categories: "允许版主创建新的分类"
-    crawler_user_agents: "被当做爬虫的用户代理列表，将向他们提供静态 HTML  而非 JavaScript payload"
     cors_origins: "允许跨源请求（CORS）。每个源必须包括 http:// 或 https://。DISCOURSE_ENABLE_CORS 环境变量必须设置为 true 才能启用 CORS 政策。"
     use_admin_ip_whitelist: "当目前的IP刚好处于IP段禁止名单(Admin > Logs > Screened Ips)中的时候，只有管理员才可登入。"
     blacklist_ip_blocks: "Discourse 不会访问抓取的保密 IP 封禁列表"
@@ -1309,8 +1308,6 @@ zh_CN:
     default_categories_muted: "分类列表默认不显示。"
     default_categories_watching_first_post: "默认监看这些分类中每个新主题的第一贴"
     retain_web_hook_events_period_days: "保存 web hook 事件记录的天数。"
-    max_user_api_reqs_per_day: "用户API每日每密钥最高请求数"
-    max_user_api_reqs_per_minute: "用户API每密钥每分钟最高请求数"
     allow_user_api_keys: "允许生成用户API密钥"
     allow_user_api_key_scopes: "用户API授权范围列表"
     max_api_keys_per_user: "每用户最多持有的用户 API 数"
@@ -2034,17 +2031,6 @@ zh_CN:
         请[查看这些标记](%{base_url}/admin/flags)。如果%{username}被意外禁言，点击[该用户管理页面](%{user_url})内的解除禁言按钮。
 
         该阈值可以通过站点设置中的 `silence_new_user` 更改。
-    spam_post_silenced:
-      title: "垃圾帖子别禁言"
-      subject_template: "新用户 %{username} 因重复发布链接而被禁言发表该链接"
-      text_body_template: |
-        这是自动发出的邮件。
-
-        新用户[%{username}](%{user_url})试图创建多个链接至 %{domains} 的帖子，但这些帖子因为反垃圾策略而被阻挡了。用户仍能够发表不包含到 %{domains} 的帖子。
-
-        请[审核该用户](%{user_url})。
-
-        该阈值可以通过站点设置中的 `newuser_spam_host_threshold` 和 `white_listed_spam_host_domains` 更改。
     unsilenced:
       title: "解除禁言"
       subject_template: "账户不再被挂起"

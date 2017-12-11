@@ -173,6 +173,7 @@ ar:
           other: "بعد %{count} عام"
       previous_month: 'الشهر السابق'
       next_month: 'الشهر التالي'
+      placeholder: التاريخ
     share:
       topic: 'شارك رابط هذا الموضوع'
       post: 'المنشور رقم %{postNumber}'
@@ -640,12 +641,14 @@ ar:
         disable: "عطّل الإشعارات"
         enable: "فعّل الإشعارات"
         each_browser_note: "ملاحظة: عليك تغيير هذا الإعداد في كل متصفح تستخدمه."
+      dismiss: 'تجاهل'
       dismiss_notifications: "تجاهل الكل"
       dismiss_notifications_tooltip: "اجعل كل الإشعارات مقروءة"
       first_notification: "إشعارك الأول! قم بالضغط عليه للبدء."
       disable_jump_reply: "لا تنتقل إلى منشوري بعد النشر"
       dynamic_favicon: "أظهر عدد الموضوعات الجديدة/المحدّثة في أيقونة المتصفح"
       theme_default_on_all_devices: "اجعل هذة الواجهة افتراضية على جميع اجهزتي"
+      allow_private_messages: "السماح للأعضاء الاخرين بإرسال رسالة خاصة لي"
       external_links_in_new_tab: "فتح الروابط الخارجية في تبويب جديد"
       enable_quoting: "فعل خاصية إقتباس النصوص المظللة"
       change: "غيّر"
@@ -1042,6 +1045,8 @@ ar:
     first_post: أوّل منشور
     mute: كتم
     unmute: إلغاء الكتم
+    last_post: المُرسَلة
+    time_read: المقروءة
     last_reply_lowercase: آخر رد
     replies_lowercase:
       zero: الردود
@@ -1177,6 +1182,10 @@ ar:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    select_kit:
+      default_header_text: اختر...
+      no_content: لا يوجد نتائج مطابقة
+      filter_placeholder: بحث...
     emoji_picker:
       filter_placeholder: بحث عن الرموز التعبيرية
       people: الاشخاص
@@ -1243,6 +1252,7 @@ ar:
       edit_reason_placeholder: "لماذا تقوم بالتعديل؟"
       show_edit_reason: "(أضف سبب التعديل)"
       topic_featured_link_placeholder: "ضع رابطاً يظهر مع العنوان"
+      remove_featured_link: "حذف الرابط من الموضوع"
       reply_placeholder: "اكتب ما تريد هنا. استخدم Markdown، أو BBCode، أو HTML للتنسيق. اسحب الصور أو ألصقها."
       view_new_post: "شاهد منشورك الجديد."
       saving: "يحفظ"
@@ -1333,6 +1343,7 @@ ar:
         linked: "وضع رابطا لمنشورك"
         granted_badge: "تم منح الوسام"
         group_message_summary: "رسائل صندوق المجموعة"
+        topic_reminder: "تذكير"
       popup:
         mentioned: 'أشار {{username}} إليك في "{{topic}}" - {{site_title}}'
         group_mentioned: 'أشار {{username}} إليك في "{{topic}}" - {{site_title}}'
@@ -1355,6 +1366,7 @@ ar:
       uploading: "يرفع"
       select_file: "اختر ملفا"
       image_link: "رابط سيفتح عند الضغط علي الصورة"
+      default_image_alt_text: صورة
     search:
       sort_by: "رتب حسب"
       relevance: "الملاءمة"
@@ -1397,14 +1409,18 @@ ar:
           label: في المجموعة
         with_badge:
           label: عليها شارة
+        with_tags:
+          label: موسوم
         filters:
           likes: أعجبتني
           posted: نشرت بها
           watching: أراقبها
           tracking: أتابعها
+          bookmarks: وضعت علية علامة مرجعية
           first: اول منشور في الموضوعات
           pinned: مثبتة
           unpinned: غير مثبتة
+          seen: قراءته
           unseen: لم أقرأها
           wiki: من النوع wiki
         statuses:
@@ -1587,6 +1603,7 @@ ar:
         this_weekend: "هذا الأسبوع"
         next_week: "الاسبوع القادم"
         next_month: "الشهر القادم"
+        one_year: "سنة واحدة"
         pick_date_and_time: "اختر التاريخ والوقت"
         set_based_on_last_post: "اغلقة بناء علي اخر منشور"
       publish_to_category:
@@ -1856,7 +1873,6 @@ ar:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "اقتبس"
-      edit: "تعديل {{link}} {{replyAvatar}} {{username}} ."
       edit_reason: "السبب:"
       post_number: "المنشور {{number}}"
       wiki_last_edited_on: "آخر تعديل على الـ wiki في "
@@ -2787,11 +2803,18 @@ ar:
         was_edited: "تم تعديل المنشور بعد أول بلاغ"
         previous_flags_count: "هذا المنشور قد سبق الإبلاغ عنه {{count}} مرة."
         show_details: "اظهر تفاصيل البلاغ"
+        details: "التفاصيل"
         flagged_topics:
           topic: "موضوع"
           type: "النوع"
           users: "الأعضاء"
           last_flagged: "اخر البلاغات"
+        short_names:
+          off_topic: "خارج الموضوع"
+          inappropriate: "غير لائق"
+          spam: "مزعج"
+          notify_user: "مخصص"
+          notify_moderators: "مخصص"
       groups:
         primary: "المجموعة الأساسية"
         no_primary: "(لا يوجد مجموعة أساسية)"
@@ -3160,6 +3183,10 @@ ar:
             type_placeholder: "الخلاصة، إنشاء حساب..."
             reply_key_placeholder: "مفتاح الرد"
             skipped_reason_placeholder: "السبب"
+      moderation_history:
+        actions:
+          delete_user: "حُذف المستخدم."
+          suspend_user: "العضو موقوف."
       logs:
         title: "السجلات"
         action: "الإجراء"
@@ -3260,6 +3287,10 @@ ar:
           roll_up:
             text: "متغير"
             title: "أنشئ مدخلات فرعية جديدة إذا كانت هذه على الأقل مدخلات 'min_ban_entries_for_roll_up'."
+        search_logs:
+          types:
+            all_search_types: "بحث في جميع الأنواع"
+            full_page: "صفحة كاملة"
         logster:
           title: "سجلات الخطأ."
       watched_words:
@@ -3360,6 +3391,8 @@ ar:
         suspend_message: "رسالة بريد الكتروني"
         suspend_message_placeholder: "اختياري. وفر المزيد من المعلومات حول التوقيف و سيتم ارساله عبر البريد الالكتروني الى العضو."
         suspended_by: "محظور من قبل"
+        silence_reason: "السبب"
+        silence_message: "رسالة بريد الكتروني"
         suspended_until: "(حتى %{until})"
         cant_suspend: "لا يمكن ايقاف هذا العضو"
         delete_all_posts: "احذف كل مشاركاته"

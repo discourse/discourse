@@ -1,9 +1,16 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
 ca:
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
-  datetime_formats:
+  datetime_formats: &datetime_formats
     formats:
       short: "%m-%d-%Y"
       short_no_year: "%B %-d"
@@ -11,9 +18,11 @@ ca:
       long: "%B %-d, %Y, %l:%M%P"
   date:
     month_names: [null, gener, febrer, març, abril, maig, juny, juliol, agost, setembre, octubre, novembre, desembre]
+    <<: *datetime_formats
   time:
     am: "am"
     pm: "pm"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Temes"
   posts: "escrits"
@@ -42,7 +51,7 @@ ca:
         topic_closed_error: "Succeeix quan una resposta ha arribat però el tema relacionat ja ha estat tancat. "
         bounced_email_error: "S'ha informat que el correu electrònic ha estat retornat."
         screened_email_error: "Succeeix quan l'adreça remitent de correu electrònic ja s'ha seleccionat."
-  errors:
+  errors: &errors
     format: '%{attribute} %{message}'
     messages:
       too_long_validation: "es limita a %{max} caràcters; n'ha introduït %{length}."
@@ -308,6 +317,7 @@ ca:
           attributes:
             payload_url:
               invalid: "La URL no és vàlida. La URL hauria d'incloure http:// o https://. I no es permeten espais en blanc."
+      <<: *errors
   user_profile:
     no_info_other: "<div class='missing-profile'>%{name} encara no ha introduït res al camp <b>Sobre mi</b> del seu perfil</div>"
   vip_category_name: "Saló"
@@ -1204,8 +1214,6 @@ ca:
     default_categories_tracking: "Per defecte, llista de categories seguides."
     default_categories_muted: "Per defecte, llista de categories silenciades."
     default_categories_watching_first_post: "Per defecte, llista de categories on serà vista la primera publicació de cada nou tema."
-    max_user_api_reqs_per_day: "Quantitat màxima de peticions d'API personals per clau i dia"
-    max_user_api_reqs_per_minute: "Quantitat màxima de peticions d'API personals per minut"
     allow_user_api_keys: "Permet la generació de claus API personals"
     allow_user_api_key_scopes: "Llista d'àmbits permesos per a les claus API personals"
     max_api_keys_per_user: "Quantitat màxima de claus API personals per participant"
@@ -2356,3 +2364,6 @@ ca:
         description: |
           <p>Si mai vols canviar aquesta configuració, visita <a href='/admin' target='_blank'>la teva secció d'administració</a>; troba-ho al costat de la icona de clau anglesa al menú del lloc.</p>
           <p>Passa-t'ho bé i molta sort <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>amb la construcció de la teva nova comunitat!</a></p>
+  activemodel:
+    errors:
+      <<: *errors

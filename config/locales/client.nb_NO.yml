@@ -121,7 +121,6 @@ nb_NO:
       split_topic: "splittet dette emnet %{when}"
       invited_user: "inviterte %{who} %{when}"
       invited_group: "inviterte %{who} %{when}"
-      user_left: "%{who} la igjen denne meldingen %{when}"
       removed_user: "fjernet %{who} %{when}"
       removed_group: "fjernet %{who} %{when}"
       autoclosed:
@@ -1676,7 +1675,6 @@ nb_NO:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Sitat"
-      edit: "Redigerer {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Begrunnelse:"
       post_number: "innlegg {{number}}"
       wiki_last_edited_on: "wikien sist redigert"
@@ -1930,7 +1928,6 @@ nb_NO:
       email_in_allow_strangers: "Godta e-post fra anonyme brukere uten brukerkonto"
       email_in_disabled: "Posting av nye emner via e-post er deaktivert i nettstedsinstillingene. For å aktivere posting av nye emner via e-post,"
       email_in_disabled_click: 'aktiver innstillingen "e-post inn".'
-      mailinglist_mirror: "Kategorien speiler en e-postliste"
       suppress_from_homepage: "Utelat denne kategorien fra hjemmesiden."
       show_subcategory_list: "Vis underkategoriliste over emner i denne kategorien."
       num_featured_topics: "Antall emner vist på kategori-siden:"

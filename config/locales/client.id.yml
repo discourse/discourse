@@ -96,7 +96,6 @@ id:
       private_topic: "membuat topik ini pribadi %{when}"
       split_topic: "pisahkan topik ini %{when}"
       invited_user: "mengundang %{who} %{when}"
-      user_left: "%{who}meninggalkan pesan %{when}"
       removed_user: "menghapus %{who} %{when}"
       autoclosed:
         enabled: 'ditutup %{when}'

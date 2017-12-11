@@ -1514,7 +1514,6 @@ fa_IR:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "نقل‌قول"
-      edit: "در حال ویرایش {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "دلیل:"
       post_number: "نوشته {{number}}"
       wiki_last_edited_on: "دانشنامه آخرین بار در این زمان ویرایش شده"

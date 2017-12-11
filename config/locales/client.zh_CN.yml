@@ -102,7 +102,6 @@ zh_CN:
       split_topic: "于%{when}分割了该主题"
       invited_user: "于%{when}邀请了%{who}"
       invited_group: "于%{when}邀请了%{who}"
-      user_left: "%{who}于%{when}写了该消息"
       removed_user: "于%{when}移除了%{who}"
       removed_group: "于%{when}移除了%{who}"
       autoclosed:
@@ -240,6 +239,7 @@ zh_CN:
     uploading: "上传中..."
     uploading_filename: "上传“{{filename}}”中..."
     uploaded: "上传成功！"
+    pasting: "粘贴中..."
     enable: "启用"
     disable: "停用"
     undo: "重置"
@@ -890,7 +890,7 @@ zh_CN:
       hide_forever: "不了"
       hidden_for_session: "好的，我会在明天提醒你。不过你随时都可以使用“登录”来创建账户。"
       intro: "嘿！:heart_eyes: 看来你很欣赏该讨论，但你没有注册帐号。"
-      value_prop: "你创建一个帐号后，我们可以准确地记录你的阅读进度，以便你总是马上回到你离开的地方。你也可以选择收到新帖的网站和邮件通知。并且你可以赞帖子以分享你的喜欢。:heartbeat:"
+      value_prop: "当你创建了帐号，我们就可以准确地记录你的阅读进度。这样你再次访问时就可以回到上次离开的地方。你也可以选择接受新帖通知或者邮件。而且你还可以赞帖子，向他人分享感激之情。:heartbeat:"
     summary:
       enabled_description: "你正在查看主题的精简摘要版本：一些社区公认有意思的帖子。"
       description: "有 <b>{{replyCount}}</b> 个回复。"
@@ -1627,7 +1627,7 @@ zh_CN:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "引用"
-      edit: "编辑 {{replyAvatar}} {{username}}发表的{{link}}"
+      edit: "<i class='fa fa-pencil'></i> {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "理由："
       post_number: "帖子 {{number}}"
       wiki_last_edited_on: "维基最后修改于"
@@ -1854,7 +1854,6 @@ zh_CN:
       email_in_allow_strangers: "接受无帐号的匿名用户的邮件"
       email_in_disabled: "站点设置中已经禁用通过邮件发表新主题。欲启用通过邮件发表新主题，"
       email_in_disabled_click: '启用“邮件发表”设置。'
-      mailinglist_mirror: "分类镜像邮件列表"
       suppress_from_homepage: "不在主页中显示这个分类。"
       show_subcategory_list: "在这个分类中把子分类列表显示在主题的上面"
       num_featured_topics: "分类页面上显示的主题数量："
@@ -2306,6 +2305,7 @@ zh_CN:
         active_posts: "被标记帖子"
         old_posts: "过去被标记帖子"
         topics: "被标记主题"
+        moderation_history: "管理日志"
         agree: "确认标记"
         agree_title: "确认这个标记有效且正确"
         agree_flag_hide_post: "确认并隐藏帖子"
@@ -2754,6 +2754,15 @@ zh_CN:
             type_placeholder: "摘要、注册…"
             reply_key_placeholder: "回复键"
             skipped_reason_placeholder: "原因"
+      moderation_history:
+        performed_by: "执行由"
+        no_results: "暂无管理历史。"
+        actions:
+          delete_user: "删除的用户"
+          suspend_user: "封禁的用户"
+          silence_user: "禁言的用户"
+          delete_post: "删除的帖子"
+          delete_topic: "删除的主题"
       logs:
         title: "日志"
         action: "操作"

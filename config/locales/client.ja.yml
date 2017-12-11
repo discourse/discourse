@@ -1559,7 +1559,6 @@ ja:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "引用"
-      edit: "編集中 {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "理由: "
       post_number: "投稿{{number}}"
       wiki_last_edited_on: "wikiの最終編集日"

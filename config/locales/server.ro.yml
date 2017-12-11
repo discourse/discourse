@@ -1213,8 +1213,6 @@ ro:
     default_categories_tracking: "Implicit, listează categoriile care sunt urmărite."
     default_categories_muted: "Implicit, listează categoriile care sunt setate pe silențios."
     default_categories_watching_first_post: "Lista categoriilor în care prima postare din fiecare topic va fi urmărită activ în mod implicit."
-    max_user_api_reqs_per_day: "Numărul maxim de interogări API utilizator pe cheie, pe zi. "
-    max_user_api_reqs_per_minute: "Numărul maxim de interogări API utilizator pe cheie, pe minut. "
     allow_user_api_keys: "Permite generarea de chei API pentru utilizator"
     allow_user_api_key_scopes: "Lista domeniilor pentru care se permit chei API pentru utilizatori"
     max_api_keys_per_user: "Numărul maxim de chei API utilizator pe utilizator"

@@ -75,6 +75,7 @@ ar:
         help:
           options_count: أدخل خيارين على الأقل
           invalid_values: يجب أن تكون القيمة الدّنيا أصغر من القيمة العليا.
+          min_step_value: قيمة الخطوة الدنيا هي 1
         poll_type:
           label: النوع
           regular: اختيار من متعدد

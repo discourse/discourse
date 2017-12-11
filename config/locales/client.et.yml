@@ -1458,7 +1458,6 @@ et:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Tsitaat"
-      edit: "Redigeerin {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Põhjus:"
       post_number: "postitus {{number}}"
       wiki_last_edited_on: "viimati muudeti wikit"

@@ -122,7 +122,6 @@ el:
       split_topic: "διαχώρισε αυτό το νήμα %{when}"
       invited_user: "προσκάλεσε τον χρήστη %{who} στις %{when}"
       invited_group: "προσκάλεσε την ομάδα %{who} στις %{when}"
-      user_left: "%{who} άφησε αυτό το μήνυμα στις %{when}"
       removed_user: "αφαίρεσε τον χρήστη %{who} στις %{when}"
       removed_group: "αφαίρεσε την ομάδα %{who} στις %{when}"
       autoclosed:
@@ -1668,7 +1667,6 @@ el:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Παράθεση"
-      edit: "Επεξεργασία του {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Αιτία:"
       post_number: "ανάρτηση {{number}}"
       wiki_last_edited_on: "το βίκι επεξεργάστηκε τελευταία φορά στις"

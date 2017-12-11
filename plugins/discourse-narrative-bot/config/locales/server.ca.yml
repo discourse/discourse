@@ -1,3 +1,10 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
 ca:
   site_settings:
     discourse_narrative_bot_enabled: 'Habilita el Discourse Narrative Bot'
@@ -141,9 +148,9 @@ ca:
           Gràcies per unir-te a %{title}, i benvingut!
           - Només sóc un robot però [el nostre amable personal](/about) està disposat a ajudar-te si necessites contactar amb una persona.
 
-          - Per raons de seguretat, limitem temporalment les accions que poden realitzar els nous usuaris. Obtindràs noves habilitats (i [insígnies] (/badges)) quan ens coneguem millor.
+          - Per raons de seguretat, limitem temporalment les accions que poden realitzar els nous usuaris. Obtindràs noves habilitats (i [distintius](/badges)) quan ens coneguem millor.
 
-          - Creiem en el [comportament civilitzat en comunitat] (/guidelines) en tot moment.
+          - Creiem en el [comportament civilitzat en comunitat](/guidelines) en tot moment.
       onebox:
         instructions: |-
           Seguidament, pots compartir un d'aquests enllaços amb mi? Respon amb  **un enllaç d'una línia sense res més**, i s'expandirà automàticament per incloure un breu resum.
@@ -188,7 +195,7 @@ ca:
 
           - o clica els botons <kbd><b>B</b></kbd> o <kbd><i>I</i></kbd> de l'editor.
         reply: |-
-          Bona feina! HTML i BBCocde també funcionen per formatejar - per saber-ne més, [prova aquí] (https://ca.wikipedia.org/wiki/Markdown) :nerd:
+          Bona feina! HTML i BBCode també funcionen per formatar - per saber-ne més, [prova aquí](https://ca.wikipedia.org/wiki/Markdown) :nerd:
         not_found: |-
           Ai, no he trobat cap format a la teva resposta. :pencil2:
 
@@ -244,7 +251,7 @@ ca:
 
           Pots mencionar **`@%{discobot_username}`** a la teva resposta?
         reply: |-
-          _Algú ha dit el meu nom!?_ :raise_hand: Crec que ho has fet! :wave: Bé, sóc aquí! Gràcies per mencionar-me.  :ok_hand:
+          _Algú ha dit el meu nom!?_ :raised_hand: Crec que ho has fet! :wave: Bé, sóc aquí! Gràcies per mencionar-me.  :ok_hand:
         not_found: |-
           No veig el meu nom enlloc :frowning: Pots mencionar-me com `@%{discobot_username}` un altre cop?
 
@@ -261,15 +268,15 @@ ca:
           Oh no, la meva publicació desagradable encara no ha estat avisada! :worried: Pots fer un avís de publicació inapropiada utilitzant la **bandera** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? No oblidis utilitzar el botó mostrar més <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> per desplegar més accions per a cada publicació.
       search:
         instructions: |-
-          _psst_ ... He amagat una sorpresa en aquest tema. Si et ve de gust el repte, **selecciona el buscador d'icones** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16">a la part superior dreta &#8599; per buscar-lo.
+          _psst_ ... He amagat una sorpresa en aquest tema. Si et ve de gust el repte, **selecciona la icona de buscador** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16">a la part superior dreta &#8599; per buscar-lo.
 
-          Prova de buscar el terme "capy&#8203;bara" en aquest tema
+          Prova de cercar el terme "capi&#8203;bara" en aquest tema
         hidden_message: |-
           Com has pogut oblidar-te d'aquest capibara? :wink:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
-          T'has adonat que tornes a ser al principi? Dóna menjar a aquest pobre capibara **responent amb el `:herb:`emoji** i seràs enviat automàticament al final.
+          T'has adonat que tornes a ser al principi? Dóna menjar a aquest pobre capibara **responent amb el `:herb:` emoji** i seràs enviat automàticament al final.
         reply: |-
           Visca ho has trobat :tada:
 
@@ -290,7 +297,7 @@ ca:
 
           (Si vols parlar amb mi novament per obtenir més informació, envia'm un missatge o menciona `@%{discobot_username}` quan ho necessitis!)
       certificate:
-        alt: 'Certificat d''Assoliment'
+        alt: 'Certificat d&#39;Assoliment'
     advanced_user_narrative:
       reset_trigger: 'usuari avançat'
       cert_title: "En reconeixement a la finalització satisfactòria del tutorial d'usuari avançat"

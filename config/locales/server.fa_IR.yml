@@ -1258,8 +1258,6 @@ fa_IR:
     default_categories_tracking: "لیست دسته‌بندی‌هایی که به صورت پیشفرض پیگیری می‌شوند."
     default_categories_muted: "لیست دسته‌بندی‌هایی که به صورت پیشفرض غیر‌فعال می‌شوند."
     default_categories_watching_first_post: "لیست دسته‌بندی‌هایی که نوشته‌هایشان در هر موضوع به صورت پیشفرض تحت نظر هستند."
-    max_user_api_reqs_per_day: "حداکثر تعداد درخواست روزانه API کاربر هر کلید در هر روز"
-    max_user_api_reqs_per_minute: "حداکثر تعداد درخواست روزانه API کاربر هر کلید در هر دقیقه"
     allow_user_api_keys: "اجازه‌ی ساخت کلید‌های API"
     allow_user_api_key_scopes: "لیست حوزه‌های مجاز برای کلید‌های API کاربری"
     max_api_keys_per_user: "حداکثر تعداد کلید API برای هر کاربر"

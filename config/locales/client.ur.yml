@@ -1447,7 +1447,6 @@ ur:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "اقتباس کریں"
-      edit: "ترمیم {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "وجہ:"
       post_number: "پوسٹ {{number}}"
       wiki_last_edited_on: "وِکی کو آخری بار ترمیم کیا گیا"

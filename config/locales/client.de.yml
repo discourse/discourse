@@ -122,7 +122,6 @@ de:
       split_topic: "Thema aufgeteilt, %{when}"
       invited_user: "%{who} eingeladen, %{when}"
       invited_group: "%{who} eingeladen, %{when}"
-      user_left: "%{who} hat diese Nachricht %{when} hinterlassen"
       removed_user: "%{who} entfernt, %{when}"
       removed_group: "%{who} entfernt, %{when}"
       autoclosed:
@@ -265,6 +264,7 @@ de:
     uploading: "Wird hochgeladen…"
     uploading_filename: "{{filename}} wird hochgeladen…"
     uploaded: "Hochgeladen!"
+    pasting: "Einfügen..."
     enable: "Aktivieren"
     disable: "Deaktivieren"
     undo: "Rückgängig machen"
@@ -1692,7 +1692,6 @@ de:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Zitat"
-      edit: "Du bearbeitest {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Grund: "
       post_number: "Beitrag {{number}}"
       wiki_last_edited_on: "Wiki zuletzt bearbeitet am"
@@ -1946,7 +1945,6 @@ de:
       email_in_allow_strangers: "Akzeptiere E-Mails von anonymen Benutzern."
       email_in_disabled: "Das Erstellen von neuen Themen per E-Mail ist in den Website-Einstellungen deaktiviert. Um das Erstellen von neuen Themen per E-Mail zu erlauben,"
       email_in_disabled_click: 'aktiviere die Einstellung „email in“.'
-      mailinglist_mirror: "Kategorie spiegelt eine Mailingliste"
       suppress_from_homepage: "Löse diese Kategorie von der Startseite."
       show_subcategory_list: "Zeige Liste von Unterkategorien oberhalb von Themen in dieser Kategorie"
       num_featured_topics: "Anzahl der Themen, die auf der Kategorien-Seite angezeigt werden"
@@ -2414,6 +2412,7 @@ de:
         active_posts: "Gemeldete Beiträge"
         old_posts: "Alte gemeldete Beiträge"
         topics: "Gemeldete Themen"
+        moderation_history: "Moderationshistorie"
         agree: "Zustimmen"
         agree_title: "Meldung bestätigen, weil diese gültig und richtig ist"
         agree_flag_hide_post: "Zustimmen und Beitrag verstecken"
@@ -2865,6 +2864,15 @@ de:
             type_placeholder: "zusammenfassen, registrieren…"
             reply_key_placeholder: "Antwort-Schlüssel"
             skipped_reason_placeholder: "Grund"
+      moderation_history:
+        performed_by: "Durchgeführt von"
+        no_results: "Es ist keine Moderationshistorie verfügbar."
+        actions:
+          delete_user: "Benutzer gelöscht"
+          suspend_user: "Benutzer gesperrt"
+          silence_user: "Benutzer stummgeschaltet"
+          delete_post: "Beitrag gelöscht"
+          delete_topic: "Thema gelöscht"
       logs:
         title: "Logs"
         action: "Aktion"
