@@ -34,6 +34,9 @@
   &.disabled {
     color: $primary-medium;
     background-color: $primary-very-low;
+    .fa {
+      opacity: 0.4;
+    }
   }
 }
 
