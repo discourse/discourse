@@ -68,6 +68,79 @@ describe Middleware::RequestTracker do
 
   end
 
+  context "rate limiting" do
+
+    class TestLogger
+      attr_accessor :warnings
+
+      def initialize
+        @warnings = 0
+      end
+
+      def warn(*args)
+        @warnings += 1
+      end
+    end
+
+    before do
+      RateLimiter.enable
+      RateLimiter.clear_all_global!
+
+      @old_logger = Rails.logger
+      Rails.logger = TestLogger.new
+    end
+
+    after do
+      RateLimiter.disable
+      Rails.logger = @old_logger
+    end
+
+    let :middleware do
+      app = lambda do |env|
+        [200, {}, ["OK"]]
+      end
+
+      Middleware::RequestTracker.new(app)
+    end
+
+    it "does nothing by default" do
+      global_setting :max_requests_per_ip_per_10_seconds, 1
+
+      status, _ = middleware.call(env)
+      status, _ = middleware.call(env)
+
+      expect(status).to eq(200)
+    end
+
+    it "does warn if rate limiter is enabled" do
+      global_setting :max_requests_per_ip_per_10_seconds, 1
+      global_setting :max_requests_per_ip_mode, 'warn'
+
+      status, _ = middleware.call(env)
+      status, _ = middleware.call(env)
+
+      expect(Rails.logger.warnings).to eq(1)
+      expect(status).to eq(200)
+    end
+
+    it "does block if rate limiter is enabled" do
+      global_setting :max_requests_per_ip_per_10_seconds, 1
+      global_setting :max_requests_per_ip_mode, 'block'
+
+      env1 = env("REMOTE_ADDR" => "1.1.1.1")
+      env2 = env("REMOTE_ADDR" => "1.1.1.2")
+
+      status, _ = middleware.call(env1)
+      status, _ = middleware.call(env1)
+
+      expect(status).to eq(429)
+
+      status, _ = middleware.call(env2)
+      expect(status).to eq(200)
+
+    end
+  end
+
   context "callbacks" do
     def app(result, sql_calls: 0, redis_calls: 0)
       lambda do |env|
