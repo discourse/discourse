@@ -53,7 +53,7 @@
     }
 
     .details {
-      background: rgba($secondary, .85);
+      background: rgba($secondary, .8);
 
       blockquote {
         background-color: $secondary-low;
@@ -145,7 +145,7 @@
 
       .details {
         margin-top: 0;
-        background: rgba($secondary, .85);
+        background: rgba($secondary, .8);
 
         .bio {
           display: none;
@@ -198,7 +198,7 @@
     }
 
     a {
-      color: dark-light-choose($primary-medium, $secondary-high);
+      color: $secondary;
     }
 
     .active {
@@ -388,7 +388,7 @@
     &.linked-stat { // This makes the entire "box" (the li) clickable instead of a narrow area.
       padding: 0;
       a {
-        padding: 10px 14px;
+        padding: 10px 14px;        
         width: 100%;
         height: 100%;
         display: block;
