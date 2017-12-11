@@ -48,10 +48,6 @@
       float: right
     }
 
-    h2 {
-      margin-bottom: 10px;
-    }
-
     table {
       width: 100%;
       margin-top: 10px;
@@ -74,11 +70,21 @@
     margin-bottom: 10px;
     color: $secondary;
 
+    &.no-background {
+      .profile-image {
+        display: none;
+      }
+    }
+
     .secondary {
       background: $primary-low;
 
       dl {
-        padding: 10px 15px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        padding: 10px;
+
       }
 
       dd {
@@ -87,18 +93,30 @@
     }
 
     .details {
-      padding: 15px 0 4px 0;
+      padding: 15px 5px 5px 5px;
 
       h1 {
-        margin: 10px 0 0 0;
+        margin: 0;
+        line-height: 1;
+      }
+
+      h2 {
+        line-height: normal;
       }
 
       .primary {
+        display: flex;
+        flex-wrap: wrap;
         color: $primary;
 
+        .avatar {
+          margin: 0 5px 10px 5px;
+        }
+
         .primary-textual {
-          float: left;
-          padding-left: 15px;
+          flex: 1 1 40%;
+          padding-left: 5px;
+          word-break: break-word;
           a[href] {
             color: $primary;
           }
@@ -112,21 +130,47 @@
     }
 
     .controls {
-      float: left;
-      padding-left: 15px;
+      order: 3;
+      flex: 1 1 25%;
+      margin-left: auto;
 
       ul {
         margin: 0;
+        display: flex;
+        flex: 1 1 auto;
+        flex-wrap: wrap;
+        
+      }
+
+      li, span {
+        display: flex;
+        flex: 1 1 auto; 
+        margin: 0 5px;       
+      }
+
+      .user-profile-controls-outlet {
+        margin: 0;
+        li {
+          margin: 0;
+        }
       }
 
       a {
-        width: 120px;
+        flex: 1 1 auto;        
+        min-width: 120px;
       }
     }
 
     &.collapsed-info {
       .details {
-        padding: 12px 15px 2px 15px;
+        .primary {
+          .primary-textual {
+            margin: 0 10px 5px 0;
+          }
+          .avatar {
+            margin: 0 5px 10px 5px;
+          }
+        }
       }
     }
   }
@@ -162,9 +206,21 @@
   margin-top: 20px;
 }
 
+.stats-section {
+  li {    
+    margin: 0 15px 10px 0;
+    padding: 0;
+    &.linked-stat {
+      a {
+        padding: 0;
+      }
+    }
+  }
+}
+
 // mobile fixups for badges
 .badge-card.medium {
-  width: 300px;
+  width: 100%;
 }
 
 .user-badges {
@@ -180,14 +236,6 @@
 }
 
 .user-preferences {
-  .control-group {
-    padding: 8px 36px 8px 8px;
-  }
-
-  .static {
-    margin-top: 5px;
-    margin-left: 5px;
-  }
 
   .instructions {
     margin-top: 5px;
@@ -200,7 +248,6 @@
   .controls-dropdown {
     margin-top: 10px;
     margin-bottom: 15px;
-    padding-left: 5px;
 
     select {
       width: 280px;
@@ -222,10 +269,13 @@
   }
 
   .checkbox-label {
-    overflow: auto;
-    display: block;
+    display: flex;
+    overflow: auto;    
     width: 100%;
-    padding: 5px 8px;
+    padding: 5px 0;
+    input {
+      margin-right: 5px;
+    }
   }
 
   .desktop-notifications button {

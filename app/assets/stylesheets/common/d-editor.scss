@@ -165,12 +165,16 @@
   .d-editor-textarea-wrapper {
     border: 1px solid $primary-low;
   }
+  .d-editor-button-bar .btn {
+    padding: 6px 8px;
+  }
   .d-editor-preview-wrapper {
     max-width: 100%;
     margin: 10px 0 0 0;
   }
   .d-editor-preview {
     background-color: $primary-very-low;
+    padding: 5px;
   }
 }
 
