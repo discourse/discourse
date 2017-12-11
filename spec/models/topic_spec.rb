@@ -11,6 +11,22 @@ describe Topic do
   context 'validations' do
     let(:topic) { Fabricate.build(:topic) }
 
+    context "#featured_link" do
+      describe 'when featured_link contains more than a URL' do
+        it 'should not be valid' do
+          topic.featured_link = 'http://meta.discourse.org TEST'
+          expect(topic).to_not be_valid
+        end
+      end
+
+      describe 'when featured_link is a valid URL' do
+        it 'should be valid' do
+          topic.featured_link = 'http://meta.discourse.org'
+          expect(topic).to be_valid
+        end
+      end
+    end
+
     context "#title" do
       it { is_expected.to validate_presence_of :title }
 
