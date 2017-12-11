@@ -5,6 +5,6 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-pl_PL:
+el:
   site_settings:
-    presence_enabled: 'Pokaż użytkowników, którzy aktualnie odpowiadają na bieżący temat lub edytują bieżący wpis?'
+    presence_enabled: 'Εμφάνιση των χρηστών που απαντάνε αυτή τη στιγμή στο νήμα ή επεξεργάζονται την τρέχουσα ανάρτηση;'
