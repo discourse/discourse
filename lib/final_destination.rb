@@ -2,6 +2,7 @@ require 'socket'
 require 'ipaddr'
 require 'excon'
 require 'rate_limiter'
+require 'url_helper'
 
 # Determine the final endpoint for a Web URI, following redirects
 class FinalDestination
@@ -237,7 +238,7 @@ class FinalDestination
   end
 
   def escape_url
-    TopicEmbed.escape_uri(
+    UrlHelper.escape_uri(
       CGI.unescapeHTML(@url),
       Regexp.new("[^#{URI::PATTERN::UNRESERVED}#{URI::PATTERN::RESERVED}#]")
     )
