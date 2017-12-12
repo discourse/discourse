@@ -117,6 +117,7 @@ class Users::OmniauthCallbacksController < ApplicationController
       # ensure there is an active email token
       user.email_tokens.create(email: user.email) unless EmailToken.where(email: user.email, confirmed: true).present? || user.email_tokens.active.where(email: user.email).exists?
       user.activate
+      user.update!(registration_ip_address: request.remote_ip) if user.registration_ip_address.blank?
     end
 
     if ScreenedIpAddress.should_block?(request.remote_ip)
