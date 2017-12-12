@@ -485,7 +485,7 @@ class UsersController < ApplicationController
             render json: {
               success: false,
               message: @error,
-              errors: @user&.errors.to_hash,
+              errors: @user&.errors&.to_hash,
               is_developer: UsernameCheckerService.is_developer?(@user.email),
               admin: @user.admin?
             }
