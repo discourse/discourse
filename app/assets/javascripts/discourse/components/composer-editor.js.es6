@@ -633,7 +633,6 @@ export default Ember.Component.extend({
     },
 
     onExpandPopupMenuOptions(toolbarEvent) {
-      console.log("ON EXPAND")
       const selected = toolbarEvent.selected;
       toolbarEvent.selectText(selected.start, selected.end - selected.start);
       this.sendAction('storeToolbarState', toolbarEvent);
