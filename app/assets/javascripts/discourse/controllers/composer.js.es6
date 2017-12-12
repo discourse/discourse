@@ -63,7 +63,6 @@ export default Ember.Controller.extend({
   showEditReason: false,
   editReason: null,
   scopedCategoryId: null,
-  optionsVisible: false,
   lastValidatedAt: null,
   isUploading: false,
   topic: null,
@@ -178,7 +177,7 @@ export default Ember.Controller.extend({
   },
 
   @computed("model.composeState", "model.creatingTopic")
-  popupMenuOptions(composeState) {
+  popupMenuOptions(composeState, creatingTopic) {
     if (composeState === 'open') {
       let options = [];
 
@@ -200,9 +199,12 @@ export default Ember.Controller.extend({
         };
       }));
 
-      return options.concat(_popupMenuOptionsCallbacks.map(callback => {
+      const test = options.concat(_popupMenuOptionsCallbacks.map(callback => {
         return this._setupPopupMenuOption(callback);
       }));
+
+      console.log(test)
+      return test;
     }
   },
 
@@ -225,6 +227,13 @@ export default Ember.Controller.extend({
   },
 
   actions: {
+    popupMenuAction(action) {
+      this.send(action);
+    },
+
+    showPopupMenu(toolbarEvent) {
+     this.set('toolbarEvent', toolbarEvent);
+   },
 
     togglePreview() {
       this.toggleProperty('showPreview');
@@ -237,7 +246,6 @@ export default Ember.Controller.extend({
 
     cancelled() {
       this.send('hitEsc');
-      this.send('hideOptions');
     },
 
     addLinkLookup(linkLookup) {
@@ -288,16 +296,6 @@ export default Ember.Controller.extend({
 
     toggleToolbar() {
       this.toggleProperty('showToolbar');
-    },
-
-    showOptions(toolbarEvent, loc) {
-      this.set('toolbarEvent', toolbarEvent);
-      this.appEvents.trigger('popup-menu:open', loc);
-      this.set('optionsVisible', true);
-    },
-
-    hideOptions() {
-      this.set('optionsVisible', false);
     },
 
     // Toggle the reply view

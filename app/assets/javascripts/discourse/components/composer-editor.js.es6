@@ -108,14 +108,6 @@ export default Ember.Component.extend({
 
     this._bindUploadTarget();
     this.appEvents.trigger('composer:will-open');
-
-    if (this.site.mobileView) {
-      $(window).on('resize.composer-popup-menu', () => {
-        if (this.get('optionsVisible')) {
-          this.appEvents.trigger('popup-menu:open', this._optionsLocation());
-        }
-      });
-    }
   },
 
   @computed('composer.reply', 'composer.replyLength', 'composer.missingReplyCharacters', 'composer.minimumPostLength', 'lastValidatedAt')
@@ -515,34 +507,6 @@ export default Ember.Component.extend({
     this._firefoxPastingHack();
   },
 
-  _optionsLocation() {
-    const composer = $("#reply-control");
-    const composerOffset = composer.offset();
-    const composerPosition = composer.position();
-
-    const buttonBarOffset = $('#reply-control .d-editor-button-bar').offset();
-    const optionsButton = $('#reply-control .d-editor-button-bar .options');
-
-    const popupMenu = $("#reply-control .popup-menu");
-    const popupWidth = popupMenu.outerWidth();
-    const popupHeight = popupMenu.outerHeight();
-
-    const headerHeight = $(".d-header").outerHeight();
-
-    let left = optionsButton.offset().left - composerOffset.left;
-    let top = buttonBarOffset.top - composerOffset.top - popupHeight + popupMenu.innerHeight();
-
-    if (top + composerPosition.top - headerHeight - popupHeight < 0) {
-      top += popupHeight + optionsButton.outerHeight();
-    }
-
-    if (left + popupWidth > composer.width()) {
-      left -= popupWidth - optionsButton.outerWidth();
-    }
-
-    return { position: "absolute", left, top };
-  },
-
   // Believe it or not pasting an image in Firefox doesn't work without this code
   _firefoxPastingHack() {
     const uaMatch = navigator.userAgent.match(/Firefox\/(\d+)\.\d/);
@@ -653,10 +617,6 @@ export default Ember.Component.extend({
     });
 
     if (this._enableAdvancedEditorPreviewSync()) this._teardownInputPreviewSync();
-
-    if (this.site.mobileView) {
-      $(window).off('resize.composer-popup-menu');
-    }
   },
 
   actions: {
@@ -673,13 +633,10 @@ export default Ember.Component.extend({
     },
 
     toggleOptions(toolbarEvent) {
-      if (this.get('optionsVisible')) {
-        this.sendAction('hideOptions');
-      } else {
+      if (!this.get('optionsVisible')) {
         const selected = toolbarEvent.selected;
         toolbarEvent.selectText(selected.start, selected.end - selected.start);
-
-        this.sendAction('showOptions', toolbarEvent, this._optionsLocation());
+        this.sendAction('showPopupMenu', toolbarEvent);
       }
     },
 
@@ -715,7 +672,8 @@ export default Ember.Component.extend({
           group: 'extras',
           icon: 'gear',
           title: 'composer.options',
-          sendAction: 'toggleOptions'
+          sendAction: 'toggleOptions',
+          popupMenuOptions: true
         });
       }
 

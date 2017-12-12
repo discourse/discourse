@@ -62,6 +62,7 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   limitMatches: 100,
   nameChanges: false,
   allowsContentReplacement: false,
+  collectionHeader: null,
 
   init() {
     this._super();
@@ -227,8 +228,12 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   },
 
   actions: {
-    onToggle() {
+    onToggle(param) {
       this.get("isExpanded") === true ? this.collapse() : this.expand();
+
+      if (this.get("onToggle")) {
+        this.get("onToggle")(param);
+      }
     },
 
     onHighlight(rowComputedContent) {

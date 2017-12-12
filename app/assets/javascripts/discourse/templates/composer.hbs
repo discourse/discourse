@@ -6,19 +6,6 @@
                  save="save"}}
 
   {{#if visible}}
-
-      {{#if showPopupMenu}}
-        {{#popup-menu visible=optionsVisible hide="hideOptions" title="composer.options"}}
-          {{#each popupMenuOptions as |option|}}
-            {{#if option.condition}}
-              <li>
-                {{d-button action=option.action icon=option.icon label=option.label}}
-              </li>
-            {{/if}}
-          {{/each}}
-        {{/popup-menu}}
-      {{/if}}
-
       {{composer-messages composer=model
                           messageCount=messageCount
                           addLinkLookup="addLinkLookup"}}
@@ -77,7 +64,7 @@
                     {{popup-input-tip validation=categoryValidation}}
                   </div>
                   {{#if model.archetype.hasOptions}}
-                    {{d-button action="showOptions" label="topic.options"}}
+                    {{d-button action="showPopupMenu" label="topic.options"}}
                   {{/if}}
                 {{/if}}
                 {{#if canEditTags}}
@@ -96,7 +83,9 @@
                             composer=model
                             lastValidatedAt=lastValidatedAt
                             canWhisper=canWhisper
-                            showPopupMenu=showPopupMenu
+                            showPopupMenu="showPopupMenu"
+                            popupMenuAction=(action "popupMenuAction")
+                            popupMenuOptions=popupMenuOptions
                             draftStatus=model.draftStatus
                             isUploading=isUploading
                             isCancellable=isCancellable
@@ -104,9 +93,7 @@
                             groupsMentioned="groupsMentioned"
                             cannotSeeMention="cannotSeeMention"
                             importQuote="importQuote"
-                            showOptions="showOptions"
                             hideOptions="hideOptions"
-                            optionsVisible=optionsVisible
                             togglePreview="togglePreview"
                             showToolbar=showToolbar
                             showUploadSelector="showUploadSelector"

@@ -26,8 +26,10 @@ export default Ember.Component.extend({
   @computed("computedContent.dataName", "name")
   dataName(dataName, name) { return dataName || name; },
 
-  @computed("computedContent.title", "name")
-  title(title, name) { return title || name; },
+  @computed("title", "computedContent.title", "name")
+  title(title, computedContentTitle, name) {
+    return title || computedContentTitle || name;
+  },
 
   click() {
     this.sendAction("onToggle");
