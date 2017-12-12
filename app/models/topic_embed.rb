@@ -1,4 +1,5 @@
 require_dependency 'nokogiri'
+require_dependency 'url_helper'
 
 class TopicEmbed < ActiveRecord::Base
   include Trashable
@@ -24,16 +25,6 @@ class TopicEmbed < ActiveRecord::Base
 
   def self.imported_from_html(url)
     "\n<hr>\n<small>#{I18n.t('embed.imported_from', link: "<a href='#{url}'>#{url}</a>")}</small>\n"
-  end
-
-  DOUBLE_ESCAPED_EXPR = /%25([0-9a-f]{2})/i
-
-  # Prevents double URL encode
-  # https://stackoverflow.com/a/37599235
-  def self.escape_uri(uri, pattern = URI::UNSAFE)
-    encoded = URI.encode(uri, pattern)
-    encoded.gsub!(DOUBLE_ESCAPED_EXPR, '%\1')
-    encoded
   end
 
   # Import an article from a source (RSS/Atom/Other)
@@ -87,7 +78,7 @@ class TopicEmbed < ActiveRecord::Base
   def self.find_remote(url)
     require 'ruby-readability'
 
-    url = escape_uri(url)
+    url = UrlHelper.escape_uri(url)
     original_uri = URI.parse(url)
     opts = {
       tags: %w[div p code pre h1 h2 h3 b em i strong a img ul li ol blockquote],
@@ -130,7 +121,7 @@ class TopicEmbed < ActiveRecord::Base
       src = node[url_param]
       unless (src.nil? || src.empty?)
         begin
-          uri = URI.parse(escape_uri(src))
+          uri = URI.parse(UrlHelper.escape_uri(src))
           unless uri.host
             uri.scheme = original_uri.scheme
             uri.host = original_uri.host
@@ -170,7 +161,7 @@ class TopicEmbed < ActiveRecord::Base
   # Convert any relative URLs to absolute. RSS is annoying for this.
   def self.absolutize_urls(url, contents)
     url = normalize_url(url)
-    uri = URI(escape_uri(url))
+    uri = URI(UrlHelper.escape_uri(url))
     prefix = "#{uri.scheme}://#{uri.host}"
     prefix << ":#{uri.port}" if uri.port != 80 && uri.port != 443
 
