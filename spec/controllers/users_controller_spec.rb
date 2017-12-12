@@ -1044,8 +1044,10 @@ describe UsersController do
 
         result = ::JSON.parse(response.body)
         expect(result["success"]).to eq(true)
-        expect(User.find_by_email(staged.email).staged).to eq(false)
-        expect(User.find_by_email(staged.email).registration_ip_address).to be_present
+
+        active_user = User.find_by_email(staged.email)
+        expect(active_user.staged).to eq(false)
+        expect(active_user.registration_ip_address).to be_present
       end
     end
 
