@@ -16,7 +16,7 @@ test("regular user - sufficient trust level", (assert) => {
   displayPollBuilderButton();
 
   andThen(() => {
-    assert.ok(!exists("button[title='Build Poll']"), "it hides the builder button");
+    assert.ok(!exists(".select-kit-row[title='Build Poll']"), "it hides the builder button");
   });
 });
 
@@ -26,7 +26,7 @@ test("regular user - insufficient trust level", (assert) => {
   displayPollBuilderButton();
 
   andThen(() => {
-    assert.ok(!exists("button[title='Build Poll']"), "it hides the builder button");
+    assert.ok(!exists(".select-kit-row[title='Build Poll']"), "it hides the builder button");
   });
 });
 
@@ -36,6 +36,6 @@ test("staff", (assert) => {
   displayPollBuilderButton();
 
   andThen(() => {
-    assert.ok(!exists("button[title='Build Poll']"), "it hides the builder button");
+    assert.ok(!exists(".select-kit-row[title='Build Poll']"), "it hides the builder button");
   });
 });
