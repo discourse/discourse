@@ -16,6 +16,11 @@ describe Auth::DefaultCurrentUserProvider do
     TestProvider.new(env)
   end
 
+  it "can be used to pretend that a user doesn't exist" do
+    provider = TestProvider.new({})
+    expect(provider.current_user).to eq(nil)
+  end
+
   context "server api" do
 
     it "raises errors for incorrect api_key" do
