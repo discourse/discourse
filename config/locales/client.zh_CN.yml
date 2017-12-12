@@ -102,6 +102,7 @@ zh_CN:
       split_topic: "于%{when}分割了该主题"
       invited_user: "于%{when}邀请了%{who}"
       invited_group: "于%{when}邀请了%{who}"
+      user_left: "%{who}于%{when}离开了该私信"
       removed_user: "于%{when}移除了%{who}"
       removed_group: "于%{when}移除了%{who}"
       autoclosed:
@@ -1854,6 +1855,7 @@ zh_CN:
       email_in_allow_strangers: "接受无帐号的匿名用户的邮件"
       email_in_disabled: "站点设置中已经禁用通过邮件发表新主题。欲启用通过邮件发表新主题，"
       email_in_disabled_click: '启用“邮件发表”设置。'
+      mailinglist_mirror: "分类镜像了一个邮件列表"
       suppress_from_homepage: "不在主页中显示这个分类。"
       show_subcategory_list: "在这个分类中把子分类列表显示在主题的上面"
       num_featured_topics: "分类页面上显示的主题数量："

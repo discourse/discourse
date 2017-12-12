@@ -1103,6 +1103,7 @@ zh_CN:
     newuser_max_replies_per_topic: "直至有人回复他们前，新用户在一个帖子里的最大回复数量。"
     max_mentions_per_post: "你可以在一个帖子里使用 @name 提及的最大数量。"
     max_users_notified_per_group_mention: "当群组被提及时，接受提醒的最大用户数 ( 超过阈值后将不发送提醒 )"
+    enable_mentions: "允许用户提及其他用户。"
     create_thumbnails: "为太大而无法恰当地显示在帖子里的图片创建 lightbox 缩略图。"
     email_time_window_mins: "等待多少（n）分钟才给用户发送通知电子邮件，好让他们有机会自己来编辑和完善他们的帖子。"
     private_email_time_window_seconds: "等待多少（n）秒再给用户发送通知电子邮件，这可以让用户有时间来编辑和完善他们的私信。"
@@ -1234,6 +1235,7 @@ zh_CN:
     anonymous_posting_min_trust_level: "启用匿名发帖所需的最小信任等级"
     anonymous_account_duration_minutes: "为了匿名性，为每个用户每 N 分钟创建一个匿名账户。例如：如果设置为 600，只要发帖后 600 分钟到了，并且用户切换至了匿名模式，就会创建一个新的匿名账户。"
     hide_user_profiles_from_public: "不对来访用户显示用户信息卡、用户资料和用户目录。"
+    show_inactive_accounts: "允许已登录用户查看不活跃账户。"
     hide_suspension_reasons: "不在用户页面公开显示封禁原因。"
     user_website_domains_whitelist: "用户网站要属于这些域名中。用 | 分割。"
     allow_profile_backgrounds: "允许用户上传个人资料背景图片。"
@@ -2031,6 +2033,17 @@ zh_CN:
         请[查看这些标记](%{base_url}/admin/flags)。如果%{username}被意外禁言，点击[该用户管理页面](%{user_url})内的解除禁言按钮。
 
         该阈值可以通过站点设置中的 `silence_new_user` 更改。
+    spam_post_blocked:
+      title: "垃圾帖子被封锁"
+      subject_template: "新用户 %{username} 因重复发布链接而被禁止发表相关帖子"
+      text_body_template: |
+        这是自动发出的消息。
+
+        新用户[%{username}](%{base_url}%{user_url})试图创建多个链接至 %{domains} 的帖子，但这些帖子因为反垃圾策略而被阻挡了。用户仍能够发表不包含到 %{domains} 的帖子。
+
+        请[审核该用户](%{user_url})。
+
+        该阈值可以通过站点设置中的 `newuser_spam_host_threshold` 和 `white_listed_spam_host_domains` 更改。
     unsilenced:
       title: "解除禁言"
       subject_template: "账户不再被挂起"
