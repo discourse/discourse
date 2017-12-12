@@ -142,12 +142,17 @@
         
       }
 
-      li, span {
+      li {
         display: flex;
         flex: 1 1 auto; 
         margin: 0 5px;       
       }
 
+      span {
+        flex: 0 1 100%;
+        margin: 0 5px;               
+      }
+      
       .user-profile-controls-outlet {
         margin: 0;
         li {
