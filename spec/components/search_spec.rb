@@ -71,6 +71,17 @@ describe Search do
     expect(search.clean_term).to eq('capybara')
   end
 
+  it 'replaces curly quotes to regular quotes in search terms' do
+    term = '“discourse”'
+
+    expect(term == '"discourse"').to eq(false)
+
+    search = Search.new(term)
+    expect(search.valid?).to eq(true)
+    expect(search.term).to eq('"discourse"')
+    expect(search.clean_term).to eq('"discourse"')
+  end
+
   it 'does not search when the search term is too small' do
     search = Search.new('evil', min_search_term_length: 5)
     search.execute
