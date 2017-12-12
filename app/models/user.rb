@@ -166,9 +166,12 @@ class User < ActiveRecord::Base
     SiteSetting.min_username_length.to_i..SiteSetting.max_username_length.to_i
   end
 
-  def self.username_available?(username)
+  def self.username_available?(username, email=nil)
     lower = username.downcase
-    !reserved_username?(lower) && !User.where(username_lower: lower).exists?
+    return false if reserved_username?(lower)
+    return true  if !User.exists?(username_lower: lower)
+    # staged users can use the same username since they will take over the account
+    email.present? && User.joins(:user_emails).exists?(staged: true, username_lower: lower, user_emails: { primary: true, email: email })
   end
 
   def self.reserved_username?(username)
