@@ -166,7 +166,7 @@ class User < ActiveRecord::Base
     SiteSetting.min_username_length.to_i..SiteSetting.max_username_length.to_i
   end
 
-  def self.username_available?(username, email=nil)
+  def self.username_available?(username, email = nil)
     lower = username.downcase
     return false if reserved_username?(lower)
     return true  if !User.exists?(username_lower: lower)
