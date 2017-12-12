@@ -1,10 +1,12 @@
 import MountWidget from 'discourse/components/mount-widget';
 import Docking from 'discourse/mixins/docking';
 import { observes } from 'ember-addons/ember-computed-decorators';
+import optionalService from 'discourse/lib/optional-service';
 
 const headerPadding = () => parseInt($('#main-outlet').css('padding-top')) + 3;
 
 export default MountWidget.extend(Docking, {
+  adminTools: optionalService(),
   widget: 'topic-timeline-container',
   dockBottom: null,
   dockAt: null,
@@ -85,5 +87,12 @@ export default MountWidget.extend(Docking, {
     }
 
     this.dispatch('topic:current-post-scrolled', 'timeline-scrollarea');
+  },
+
+  showModerationHistory() {
+    this.get('adminTools').showModerationHistory({
+      filter: 'topic',
+      topic_id: this.get('topic.id')
+    });
   }
 });
