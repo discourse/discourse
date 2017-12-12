@@ -39,7 +39,7 @@ class Auth::DefaultCurrentUserProvider
     request = @request
 
     user_api_key = @env[USER_API_KEY]
-    api_key = request[API_KEY]
+    api_key = @env.blank? ? nil : request[API_KEY]
 
     auth_token = request.cookies[TOKEN_COOKIE] unless user_api_key || api_key
 
