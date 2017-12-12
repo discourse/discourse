@@ -35,8 +35,12 @@ describe WebHook do
   end
 
   context 'web hooks' do
-    let!(:post_hook) { Fabricate(:web_hook) }
+    let!(:post_hook) { Fabricate(:web_hook, payload_url: " https://example.com ") }
     let!(:topic_hook) { Fabricate(:topic_web_hook) }
+
+    it "removes whitspace from payload_url before saving" do
+      expect(post_hook.payload_url).to eq("https://example.com")
+    end
 
     describe '#find_by_type' do
       it 'find relevant hooks' do

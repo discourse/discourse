@@ -83,6 +83,10 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
         c.error(xhrOrErr);
       }
 
+      if (xhrOrErr && xhrOrErr.status === 404) {
+        return this.transitionTo('exception-unknown');
+      }
+
       exceptionController.setProperties({ lastTransition: transition, thrown: xhrOrErr });
 
       this.intermediateTransitionTo('exception');

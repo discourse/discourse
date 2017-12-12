@@ -17,7 +17,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   onShow() {
     this.setProperties({
       selected: null,
-      spammerDetails: null
+      spammerDetails: null,
     });
 
     let adminTools = this.get('adminTools');

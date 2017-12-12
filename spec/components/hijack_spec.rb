@@ -79,6 +79,41 @@ describe Hijack do
     expect(copy_req.object_id).not_to eq(orig_req.object_id)
   end
 
+  it "handles cors" do
+    SiteSetting.cors_origins = "www.rainbows.com"
+
+    app = lambda do |env|
+      tester = Hijack::Tester.new(env)
+      tester.hijack_test do
+        render body: "hello", status: 201
+      end
+
+      expect(tester.io.string).to include("Access-Control-Allow-Origin: www.rainbows.com")
+    end
+
+    env = {}
+    middleware = Discourse::Cors.new(app)
+    middleware.call(env)
+
+    # it can do pre-flight
+    env = {
+      'REQUEST_METHOD' => 'OPTIONS',
+      'HTTP_ACCESS_CONTROL_REQUEST_METHOD' => 'GET'
+    }
+
+    status, headers, _body = middleware.call(env)
+
+    expect(status).to eq(200)
+
+    expected = {
+      "Access-Control-Allow-Origin" => "www.rainbows.com",
+      "Access-Control-Allow-Headers" => "X-Requested-With, X-CSRF-Token, Discourse-Visible",
+      "Access-Control-Allow-Credentials" => "true"
+    }
+
+    expect(headers).to eq(expected)
+  end
+
   it "handles expires_in" do
     tester.hijack_test do
       expires_in 1.year

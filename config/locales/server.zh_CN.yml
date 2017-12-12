@@ -209,6 +209,7 @@ zh_CN:
   excerpt_image: "图片"
   queue:
     delete_reason: "通过帖子审核队列删除"
+    not_found: "未找到帖子或已经更新。"
   groups:
     success:
       bulk_add: "%{users_added}用户已经被添加至小组。"
@@ -353,7 +354,7 @@ zh_CN:
         translation_overrides:
           attributes:
             value:
-              missing_interpolation_keys: '缺少以下内插键值：“%{keys}”'
+              invalid_interpolation_keys: '以下内插键值无效：“%{keys}”'
         watched_word:
           attributes:
             word:
@@ -443,7 +444,6 @@ zh_CN:
   post:
     image_placeholder:
       broken: "此图片已损坏"
-      large: "此图片太大无法在此显示; 点击以查看"
   rate_limiter:
     slow_down: "你执行这个操作太多次了，请稍后再试。"
     too_many_requests: "你的请求过于频繁，请等待%{time_left}之后再试。"
@@ -931,7 +931,6 @@ zh_CN:
     gtm_container_id: "Google Tag Manager 容器 id。例如：GTM-ABCDEF"
     enable_escaped_fragments: "如未侦测到爬虫回退到使用 Google Ajax-Crawling API。参见 https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
     allow_moderators_to_create_categories: "允许版主创建新的分类"
-    crawler_user_agents: "被当做爬虫的用户代理列表，将向他们提供静态 HTML  而非 JavaScript payload"
     cors_origins: "允许跨源请求（CORS）。每个源必须包括 http:// 或 https://。DISCOURSE_ENABLE_CORS 环境变量必须设置为 true 才能启用 CORS 政策。"
     use_admin_ip_whitelist: "当目前的IP刚好处于IP段禁止名单(Admin > Logs > Screened Ips)中的时候，只有管理员才可登入。"
     blacklist_ip_blocks: "Discourse 不会访问抓取的保密 IP 封禁列表"
@@ -1104,6 +1103,7 @@ zh_CN:
     newuser_max_replies_per_topic: "直至有人回复他们前，新用户在一个帖子里的最大回复数量。"
     max_mentions_per_post: "你可以在一个帖子里使用 @name 提及的最大数量。"
     max_users_notified_per_group_mention: "当群组被提及时，接受提醒的最大用户数 ( 超过阈值后将不发送提醒 )"
+    enable_mentions: "允许用户提及其他用户。"
     create_thumbnails: "为太大而无法恰当地显示在帖子里的图片创建 lightbox 缩略图。"
     email_time_window_mins: "等待多少（n）分钟才给用户发送通知电子邮件，好让他们有机会自己来编辑和完善他们的帖子。"
     private_email_time_window_seconds: "等待多少（n）秒再给用户发送通知电子邮件，这可以让用户有时间来编辑和完善他们的私信。"
@@ -1235,6 +1235,7 @@ zh_CN:
     anonymous_posting_min_trust_level: "启用匿名发帖所需的最小信任等级"
     anonymous_account_duration_minutes: "为了匿名性，为每个用户每 N 分钟创建一个匿名账户。例如：如果设置为 600，只要发帖后 600 分钟到了，并且用户切换至了匿名模式，就会创建一个新的匿名账户。"
     hide_user_profiles_from_public: "不对来访用户显示用户信息卡、用户资料和用户目录。"
+    show_inactive_accounts: "允许已登录用户查看不活跃账户。"
     hide_suspension_reasons: "不在用户页面公开显示封禁原因。"
     user_website_domains_whitelist: "用户网站要属于这些域名中。用 | 分割。"
     allow_profile_backgrounds: "允许用户上传个人资料背景图片。"
@@ -1309,8 +1310,6 @@ zh_CN:
     default_categories_muted: "分类列表默认不显示。"
     default_categories_watching_first_post: "默认监看这些分类中每个新主题的第一贴"
     retain_web_hook_events_period_days: "保存 web hook 事件记录的天数。"
-    max_user_api_reqs_per_day: "用户API每日每密钥最高请求数"
-    max_user_api_reqs_per_minute: "用户API每密钥每分钟最高请求数"
     allow_user_api_keys: "允许生成用户API密钥"
     allow_user_api_key_scopes: "用户API授权范围列表"
     max_api_keys_per_user: "每用户最多持有的用户 API 数"
@@ -1460,7 +1459,8 @@ zh_CN:
     email_too_long: "你输入的邮件太长了。邮箱名不得超过 254 字符，域名必须不超过 253 字符。"
     reserved_username: "该用户名不可被使用。"
     missing_user_field: "你还没有填写完所有用户字段"
-    close_window: "验证已经完成。关闭窗口以继续。"
+    auth_complete: "验证已经完成。"
+    click_to_continue: "点击这里继续。"
     already_logged_in: "喔，看起来你正尝试查看给另一个用户的邀请链接。如果你不是%{current_user}，请退出再重试。"
   user:
     no_accounts_associated: "无关联账户"
@@ -1489,6 +1489,10 @@ zh_CN:
     website:
       domain_not_allowed: "网站无效。允许的域名有：%{domains}"
     auto_rejected: "因时限被自动拒绝。查看站点自动处理队列时限设置。"
+    destroy_reasons:
+      unused_staged_user: "未使用的暂存用户"
+      fixed_primary_email: "为暂存用户固定主要邮箱"
+      same_ip_address: "同一IP地址(%{ip_address})如其他用户"
   flags_reminder:
     flags_were_submitted:
       other: "标志已经提交%{count}小时前。[请审核他们](/admin/flags)。"
@@ -1508,70 +1512,70 @@ zh_CN:
       如果你想要继续收到邮件更新，你可以忽略这封邮件。
   invite_mailer:
     title: "要求发件人"
-    subject_template: "%{invitee_name} 邀请你参与 %{site_domain_name} 主题 '%{topic_title}' "
+    subject_template: "%{inviter_name} 邀请您参与 '%{topic_title}' 于 %{site_domain_name}"
     text_body_template: |
-      %{invitee_name}邀请你参与讨论：
+      %{inviter_name} 邀请您参与讨论
 
       > **%{topic_title}**
       >
       > %{topic_excerpt}
 
-      社区：
+      于
 
       > %{site_title} -- %{site_description}
 
-      如果你有兴趣，点击下方的链接：
+      如果您感兴趣，点击以下链接:
 
       %{invite_link}
   custom_invite_mailer:
     title: "自定义邀请发件人"
-    subject_template: "%{invitee_name}邀请你'%{topic_title}'在%{site_domain_name}"
+    subject_template: "%{inviter_name} 邀请您加入 '%{topic_title}' 于 %{site_domain_name}"
     text_body_template: |
-      %{invitee_name}邀请你参与讨论：
+      %{inviter_name} 邀请您参与讨论
 
       > **%{topic_title}**
       >
       > %{topic_excerpt}
 
-      社区：
+      于
 
       > %{site_title} -- %{site_description}
 
-      并附留言：
+      留言为
 
       > %{user_custom_message}
 
-      如果你有兴趣，点击下方的链接：
+      如果您感兴趣，点击以下链接:
 
       %{invite_link}
   invite_forum_mailer:
     title: "邀请论坛发件人"
-    subject_template: "%{invitee_name} 邀请你加入 %{site_domain_name}"
+    subject_template: "%{inviter_name} 邀请您加入 %{site_domain_name}"
     text_body_template: |
-      %{invitee_name}邀请你加入
+      %{inviter_name} 邀请您加入
 
       > **%{site_title}**
       >
       > %{site_description}
 
-      如果你有兴趣，点击下方的链接：
+      如果您感兴趣，点击以下链接:
 
       %{invite_link}
   custom_invite_forum_mailer:
     title: "自定义论坛邀请发件人"
-    subject_template: "%{invitee_name}邀请你加入%{site_domain_name}"
+    subject_template: "%{inviter_name} 邀请您加入 %{site_domain_name}"
     text_body_template: |
-      %{invitee_name}邀请你加入
+      %{inviter_name} 邀请您加入
 
       > **%{site_title}**
       >
       > %{site_description}
 
-      并附留言：
+      留言为
 
       > %{user_custom_message}
 
-      如果你有兴趣，点击下方的链接：
+      如果您感兴趣，点击以下链接:
 
       %{invite_link}
   invite_password_instructions:
@@ -1657,7 +1661,7 @@ zh_CN:
 
       - 浏览器访问**[一键更新工具](%{base_url}/admin/upgrade)**升级。
 
-      - 查看[GitHub 改动日志（英文）](https://github.com/discourse/discourse/commits/master)中更新的内容。
+      - 查看 [发行注记（英文）](https://meta.discourse.org/tags/release-notes) 或查看 [GitHub 改动日志](https://github.com/discourse/discourse/commits/master)中更新的内容。
 
       - 访问 [meta.discourse.org（英文）](https://meta.discourse.org) 获取 Discourse 的最新资讯、讨论和支持。也可访问 [meta.discoursecn.org 非官方的中文支持论坛](https://meta.discoursecn.org) 获得支持。
   new_version_mailer_with_notes:
@@ -1669,11 +1673,11 @@ zh_CN:
       你的版本：%{installed_version}
       新的版本：**%{new_version}**
 
-      - 查看[GitHub 改动日志（英文）](https://github.com/discourse/discourse/commits/master)中更新的内容。
-
       - 浏览器访问**[一键更新工具](%{base_url}/admin/upgrade)**升级。
 
-      - 访问 [meta.discourse.org（英文）](http://meta.discourse.org) 获取 Discourse 的最新资讯、讨论和支持。也可访问 [meta.discoursecn.org 非官方的中文支持论坛](http://meta.discoursecn.org) 获得支持。
+      - 查看 [发行注记（英文）](https://meta.discourse.org/tags/release-notes) 或查看 [GitHub 改动日志](https://github.com/discourse/discourse/commits/master)中更新的内容。
+
+      - 访问 [meta.discourse.org（英文）](https://meta.discourse.org) 获取 Discourse 的最新资讯、讨论和支持。也可访问 [meta.discoursecn.org 非官方的中文支持论坛](https://meta.discoursecn.org) 获得支持。
 
       ### 发行注记
 
@@ -2029,13 +2033,13 @@ zh_CN:
         请[查看这些标记](%{base_url}/admin/flags)。如果%{username}被意外禁言，点击[该用户管理页面](%{user_url})内的解除禁言按钮。
 
         该阈值可以通过站点设置中的 `silence_new_user` 更改。
-    spam_post_silenced:
-      title: "垃圾帖子别禁言"
-      subject_template: "新用户 %{username} 因重复发布链接而被禁言发表该链接"
+    spam_post_blocked:
+      title: "垃圾帖子被封锁"
+      subject_template: "新用户 %{username} 因重复发布链接而被禁止发表相关帖子"
       text_body_template: |
-        这是自动发出的邮件。
+        这是自动发出的消息。
 
-        新用户[%{username}](%{user_url})试图创建多个链接至 %{domains} 的帖子，但这些帖子因为反垃圾策略而被阻挡了。用户仍能够发表不包含到 %{domains} 的帖子。
+        新用户[%{username}](%{base_url}%{user_url})试图创建多个链接至 %{domains} 的帖子，但这些帖子因为反垃圾策略而被阻挡了。用户仍能够发表不包含到 %{domains} 的帖子。
 
         请[审核该用户](%{user_url})。
 
@@ -2289,6 +2293,15 @@ zh_CN:
         %{reason}
 
         %{message}
+    account_silenced:
+      title: "账号被禁言"
+      subject_template: "[%{email_prefix}] 你的账号已被禁言"
+      text_body_template: |
+        你的账号已经被禁言至%{silenced_till}。
+
+        %{reason}
+
+        %{message}
     account_exists:
       title: "账户已经存在"
       subject_template: "[%{email_prefix}] 账户已经存在"
@@ -2443,6 +2456,8 @@ zh_CN:
       too_large: "抱歉，你试图上传的图片太大了（最大限制为%{max_size_kb}%KB），请裁剪它并重试。"
       larger_than_x_megapixels: "对不起，你上传的图片太大(最大支持%{max_image_megapixels}像素)，请缩小图片然后再试一次。"
       size_not_found: "抱歉，我们无法获取图片大小，请检查你的图片是否已损坏。"
+    placeholders:
+      too_large: "(图片大小超过%{max_size_kb}KB)"
   avatar:
     missing: "抱歉，我们没法找到与你邮件地址关联的头像。你能再上传一次试试吗？"
   flag_reason:

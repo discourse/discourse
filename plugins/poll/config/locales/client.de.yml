@@ -55,6 +55,7 @@ de:
         help:
           options_count: Gib mindestens 2 Optionen ein
           invalid_values: Der Minimalwert muss kleiner sein als der Maximalwert.
+          min_step_value: Die minimale Schrittweite beträgt 1.
         poll_type:
           label: Art
           regular: Einfachauswahl

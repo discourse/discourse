@@ -26,14 +26,14 @@ Fabricator(:evil_trout, from: :user) do
   name 'Evil Trout'
   username 'eviltrout'
   email 'eviltrout@somewhere.com'
-  password 'imafish'
+  password 'imafish123'
 end
 
 Fabricator(:walter_white, from: :user) do
   name 'Walter White'
   username 'heisenberg'
   email 'wwhite@bluemeth.com'
-  password 'letscook'
+  password 'letscook123'
 end
 
 Fabricator(:inactive_user, from: :user) do

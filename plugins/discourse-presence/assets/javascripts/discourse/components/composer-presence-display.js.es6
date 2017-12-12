@@ -59,8 +59,10 @@ export default Ember.Component.extend({
     this.set('presenceState', stateObject);
   },
 
+  _ACTIONS: ['edit', 'reply'],
+
   shouldSharePresence(action){
-    return ['edit','reply'].includes(action);
+    return this._ACTIONS.includes(action);
   },
 
   @observes('presenceState')

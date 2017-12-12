@@ -59,14 +59,15 @@ cs:
         insert: Vložit hlasování
         help:
           options_count: Zadejte alespoň 2 možnosti
+          invalid_values: Minimální hodnota musí být menší než maximální hodnota.
         poll_type:
           label: Typ
           regular: Jedna možnost
           multiple: Více možností
           number: Číselné hodnocení
         poll_config:
-          max: Maximum
-          min: Minimum
+          max: Max
+          min: Min
           step: Krok
         poll_public:
           label: Zobrazit kdo hlasoval

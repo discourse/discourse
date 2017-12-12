@@ -11,14 +11,14 @@
           <form>
           <table>
 
-          <tr class="input">
+          <tr class="input create-account-email">
                 <td class="label"><label for='new-account-email'>{{i18n 'user.email.title'}}</label></td>
                 <td>
                 {{input type="email" value=accountEmail id="new-account-email" disabled=emailValidated name="email" autofocus="autofocus"}}
                 &nbsp;{{input-tip validation=emailValidation}}
                 </td>
           </tr>
-          <tr class="instructions">
+          <tr class="instructions create-account-email">
             <td></td>
             <td><label>{{i18n 'user.email.instructions'}}</label></td>
           </tr>

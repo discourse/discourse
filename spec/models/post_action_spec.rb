@@ -20,7 +20,7 @@ describe PostAction do
 
     it "limits redo/undo" do
 
-      RateLimiter.stubs(:disabled?).returns(false)
+      RateLimiter.enable
 
       PostAction.act(eviltrout, post, PostActionType.types[:like])
       PostAction.remove_act(eviltrout, post, PostActionType.types[:like])

@@ -50,6 +50,13 @@ export default Ember.Component.extend({
       });
     },
 
+    showModerationHistory() {
+      this.get('adminTools').showModerationHistory({
+        filter: 'post',
+        post_id: this.get('flaggedPost.id')
+      });
+    },
+
     showSuspendModal() {
       let post = this.get('flaggedPost');
       let user = post.get('user');

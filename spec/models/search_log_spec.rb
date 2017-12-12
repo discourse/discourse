@@ -179,15 +179,11 @@ RSpec.describe SearchLog, type: :model do
       expect(top_trending.searches).to eq(3)
       expect(top_trending.unique).to eq(2)
       expect(top_trending.click_through).to eq(0)
-      expect(top_trending.clicked_topic_id).to eq(nil)
 
-      popular_topic = Fabricate(:topic)
-      not_so_popular_topic = Fabricate(:topic)
-      SearchLog.where(term: 'ruby', ip_address: '127.0.0.1').update_all(clicked_topic_id: popular_topic.id)
-      SearchLog.where(term: 'ruby', ip_address: '127.0.0.2').update_all(clicked_topic_id: not_so_popular_topic.id)
+      SearchLog.where(term: 'ruby', ip_address: '127.0.0.1').update_all(search_result_id: 12)
+      SearchLog.where(term: 'ruby', ip_address: '127.0.0.2').update_all(search_result_id: 24)
       top_trending = SearchLog.trending.first
       expect(top_trending.click_through).to eq(3)
-      expect(top_trending.clicked_topic_id).to eq(popular_topic.id)
     end
   end
 

@@ -60,6 +60,11 @@ export default Ember.Service.extend({
     this._showControlModal('suspend', user, opts);
   },
 
+  showModerationHistory(target) {
+    let controller = showModal('admin-moderation-history', { admin: true });
+    controller.loadHistory(target);
+  },
+
   _deleteSpammer(adminUser) {
 
     // Try loading the email if the site supports it

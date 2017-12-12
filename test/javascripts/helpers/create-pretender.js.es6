@@ -393,7 +393,7 @@ export default function() {
 
     this.get('/admin/logs/search_logs.json', () => {
       return response(200, [
-        {"term":"foobar","searches":35,"click_through":6,"clicked_topic_id":1550,"topic_title":"Foo Bar Topic Title","topic_url":"http://discourse.example.com/t/foo-bar-topic-title/1550","unique":16}
+        {"term":"foobar","searches":35,"click_through":6,"unique":16}
       ]);
     });
 

@@ -37,8 +37,8 @@ end
 #  user_id    :integer          not null
 #  email      :string(513)      not null
 #  primary    :boolean          default(FALSE), not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  created_at :datetime
+#  updated_at :datetime
 #
 # Indexes
 #

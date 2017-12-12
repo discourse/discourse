@@ -5,6 +5,7 @@
 
 @import "common/admin/customize";
 @import "common/admin/flagging";
+@import "common/admin/moderation_history";
 @import "common/admin/suspend";
 
 $mobile-breakpoint: 700px;
@@ -176,6 +177,10 @@ $mobile-breakpoint: 700px;
   }
 }
 
+.full-reason {
+  white-space: pre-wrap;
+}
+
 .admin-users .users-list {
   .username .fa {
     color: dark-light-choose($primary-medium, $secondary-medium);
@@ -227,6 +232,11 @@ $mobile-breakpoint: 700px;
   .select-box-kit.dropdown-select-box {
     width: auto;
   }
+
+  .search-logs-filter {
+    width: 200px;
+    float: right;
+  }
 }
 
 .admin-container .controls {
@@ -268,7 +278,7 @@ $mobile-breakpoint: 700px;
   .controls .menu-toggle {
     display: none;
     float: left;
-    font-size: 24px;
+    font-size: 1.7em;
     padding: 3px 6px;
     margin-right: 32px;
     border: 1px solid lighten($primary, 40%);
@@ -519,7 +529,7 @@ $mobile-breakpoint: 700px;
 
     .desc, .validation-error {
       padding-top: 3px;
-      font-size: 80%;
+      font-size: .8em;
       line-height: 1.4em;
     }
 
@@ -667,7 +677,7 @@ section.details {
 
     .list-badge {
       float: right;
-      font-size: 11px;
+      font-size: .8em;
       font-weight: normal;
       padding: 0 6px;
       color: $secondary;
@@ -1267,19 +1277,12 @@ table.api-keys {
 .search-logs-list{
   .col {
     text-align: center;
-    width: 10%;
+    width: 15%;
   }
 
   .col.term {
-    width: 30%;
+    width: 45%;
     text-align: left;
-  }
-
-  .col.topic {
-    width: 35%;
-    text-align: left;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 }
 
@@ -1610,7 +1613,7 @@ table#user-badges {
   }
   .reply-key {
     display: block;
-    font-size: 12px;
+    font-size: .857em;
     color: dark-light-choose($primary-medium, $secondary-high);
   }
   .username div {
@@ -1640,7 +1643,7 @@ table#user-badges {
   }
   .error-description {
     color: #919191;
-    font-size: 90%;
+    font-size: .857em;
   }
   hr {
     margin: 0;
@@ -1799,7 +1802,7 @@ table#user-badges {
   float: right;
   text-align: right;
   .instructions {
-    font-size: 12px;
+    font-size: .857em;
   }
 }
 .watched-words-detail {

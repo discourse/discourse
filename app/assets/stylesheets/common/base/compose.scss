@@ -8,14 +8,16 @@
   left: 0;
   margin-left: auto;
   margin-right: auto;
-
   max-width: 1475px;
+  width: 100%;
+  &.hide-preview {
+    max-width:740px;  
+  }
   @media screen and (max-width: 1200px) {
-    width: 100%;
     min-width: 0;
   }
   z-index: 999;
-  transition: height 250ms ease, background 250ms ease;
+  transition: height 250ms ease, background 250ms ease, transform 250ms ease, max-width 250ms ease;
   background-color: $secondary;
   box-shadow: 0 -2px 40px rgba($primary, .12);
 
@@ -27,7 +29,7 @@
   .saving-text,
   .draft-text {
     display: none;
-    padding-left: 10px;
+    padding-left: 10px;   
     .spinner {
       margin-left: 5px;
       border-color: $secondary;
@@ -56,6 +58,7 @@
     background: $tertiary;
     color: $secondary;
     flex-direction: row;
+    width: 100%;
     .composer-controls {
       margin-left: auto;
       display: flex;
@@ -169,6 +172,10 @@
 
   .add-warning {
     margin-left: 1em;
+    display: flex;
+    input {
+      margin-right: 5px;
+    }
   }
 
   #reply-title {
@@ -181,6 +188,7 @@
     flex: 1 1 25%;
     margin: 0 0 5px 10px;
     border: 1px solid $primary-medium;
+    background: $secondary;
     @media all and (max-width: 900px) {
       margin: 0;
       flex: 1 1 100%;
@@ -230,6 +238,10 @@
     }
     #file-uploading {
       display: flex;
+      a {
+        margin-left: 5px;
+        color: $primary-medium;
+      }
       .spinner {
         margin-right: 5px;
       }
@@ -288,7 +300,7 @@
           color: $primary;
         }
         span.name {
-          font-size: 11px;
+          font-size: .8em;
           vertical-align: middle;
         }
         &.selected {
@@ -314,7 +326,7 @@ div.ac-wrap.disabled {
 
 div.ac-wrap div.item a.remove, .remove-link {
   margin-left: 4px;
-  font-size: 11px;
+  font-size: .8em;
   line-height: 10px;
   padding: 1.5px 1.5px 1.5px 2.5px;
   border-radius: 12px;

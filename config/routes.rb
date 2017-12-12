@@ -93,6 +93,8 @@ Discourse::Application.routes.draw do
     get "groups/:type" => "groups#show", constraints: AdminConstraint.new
     get "groups/:type/:id" => "groups#show", constraints: AdminConstraint.new
 
+    get "moderation_history" => "moderation_history#index"
+
     resources :users, id: USERNAME_ROUTE_FORMAT, except: [:show] do
       collection do
         get "list" => "users#index"
@@ -301,6 +303,7 @@ Discourse::Application.routes.draw do
   get "session/current" => "session#current"
   get "session/csrf" => "session#csrf"
   get "composer_messages" => "composer_messages#index"
+  post "composer/parse_html" => "composer#parse_html"
 
   resources :static
   post "login" => "static#enter", constraints: { format: /(json|html)/ }

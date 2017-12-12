@@ -44,6 +44,14 @@ describe UsersController do
         expect(response).not_to be_success
       end
 
+      it 'returns success when show_inactive_accounts is true and user is logged in' do
+        SiteSetting.show_inactive_accounts = true
+        log_in_user(user)
+        inactive = Fabricate(:user, active: false)
+        get :show, params: { username: inactive.username }, format: :json
+        expect(response).to be_success
+      end
+
       it "raises an error on invalid access" do
         Guardian.any_instance.expects(:can_see?).with(user).returns(false)
         get :show, params: { username: user.username }, format: :json
@@ -1036,7 +1044,10 @@ describe UsersController do
 
         result = ::JSON.parse(response.body)
         expect(result["success"]).to eq(true)
-        expect(User.find_by_email(staged.email).staged).to eq(false)
+
+        active_user = User.find_by_email(staged.email)
+        expect(active_user.staged).to eq(false)
+        expect(active_user.registration_ip_address).to be_present
       end
     end
 

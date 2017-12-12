@@ -7,7 +7,6 @@
 
 nb_NO:
   site_settings:
-    poll_enabled: "Tillate brukere å opprette avstemning?"
     poll_maximum_options: "Maksimalt antall alternativer som tillates i en avstemning."
     poll_edit_window_mins: "Antall minutter etter at et innlegg er opprettet som avstemninger kan redigeres."
   poll:

@@ -16,6 +16,14 @@ export function buildManageButtons(attrs, currentUser) {
   }
 
   let contents = [];
+  if (attrs.canManage) {
+    contents.push({
+      icon: 'list',
+      label: 'admin.flags.moderation_history',
+      action: 'showModerationHistory',
+    });
+  }
+
   if (!attrs.isWhisper && currentUser.staff) {
     const buttonAtts = {
       action: 'togglePostType',

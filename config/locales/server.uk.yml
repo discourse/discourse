@@ -389,7 +389,6 @@ uk:
   user:
     username:
       short: "має бути найменше %{min} символів"
-      characters: "must only include numbers, letters and underscores"
       unique: "має бути унікальним"
       blank: "має бути наявним"
     email:

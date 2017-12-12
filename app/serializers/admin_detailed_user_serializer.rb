@@ -16,7 +16,7 @@ class AdminDetailedUserSerializer < AdminUserSerializer
              :can_delete_all_posts,
              :can_be_deleted,
              :can_be_anonymized,
-             :suspend_reason,
+             :full_suspend_reason,
              :suspended_till,
              :silence_reason,
              :primary_group_id,

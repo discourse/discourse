@@ -2,7 +2,9 @@
   {{#mobile-nav class='group-activity-nav' desktopClass="pull-left nav nav-stacked" currentPath=application.currentPath}}
     {{group-activity-filter filter="posts" categoryId=category_id}}
     {{group-activity-filter filter="topics" categoryId=category_id}}
-    {{group-activity-filter filter="mentions" categoryId=category_id}}
+    {{#if siteSettings.enable_mentions}}
+      {{group-activity-filter filter="mentions" categoryId=category_id}}
+    {{/if}}
     {{#if showGroupMessages}}
       {{group-activity-filter filter="messages"}}
     {{/if}}

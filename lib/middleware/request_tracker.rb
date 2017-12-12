@@ -126,6 +126,13 @@ class Middleware::RequestTracker
   end
 
   def call(env)
+    result = nil
+
+    if rate_limit(env)
+      result = [429, {}, ["Slow down, too Many Requests from this IP Address"]]
+      return result
+    end
+
     env["discourse.request_tracker"] = self
     MethodProfiler.start if @@detailed_request_loggers
     result = @app.call(env)
@@ -133,6 +140,46 @@ class Middleware::RequestTracker
     result
   ensure
     log_request_info(env, result, info) unless env["discourse.request_tracker.skip"]
+  end
+
+  def rate_limit(env)
+    if (
+      GlobalSetting.max_requests_per_ip_mode == "block" ||
+      GlobalSetting.max_requests_per_ip_mode == "warn"
+    )
+
+      ip = Rack::Request.new(env).ip
+
+      limiter10 = RateLimiter.new(
+        nil,
+        "global_ip_limit_10_#{ip}",
+        GlobalSetting.max_requests_per_ip_per_10_seconds,
+        10,
+        global: true
+      )
+
+      limiter60 = RateLimiter.new(
+        nil,
+        "global_ip_limit_60_#{ip}",
+        GlobalSetting.max_requests_per_ip_per_10_seconds,
+        10,
+        global: true
+      )
+
+      type = 10
+      begin
+        limiter10.performed!
+        type = 60
+        limiter60.performed!
+      rescue RateLimiter::LimitExceeded
+        if GlobalSetting.max_requests_per_ip_mode == "warn"
+          Rails.logger.warn("Global IP rate limit exceeded for #{ip} type: #{type}")
+          false
+        else
+          true
+        end
+      end
+    end
   end
 
   def log_later(data, host)

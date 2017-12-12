@@ -1,6 +1,7 @@
 export default function() {
   // Error page
   this.route('exception', { path: '/exception' });
+  this.route('exception-unknown', { path: '/404' });
 
   this.route('about', { path: '/about', resetNamespace: true });
 

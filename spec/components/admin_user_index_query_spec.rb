@@ -130,7 +130,7 @@ describe AdminUserIndexQuery do
       users = ::AdminUserIndexQuery.new(order: "last_emailed", ascending: true).find_users
 
       expect(users.where('users.id > -2').count).to eq(2)
-      expect(users.first.username).to eq("system")
+      expect(users.where('users.id > -2').order('users.id asc').first.username).to eq("system")
       expect(users.first.last_emailed_at).to eq(nil)
     end
 

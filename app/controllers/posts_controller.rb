@@ -133,7 +133,6 @@ class PostsController < ApplicationController
   end
 
   def create
-
     @manager_params = create_params
     @manager_params[:first_post_checks] = !is_api?
 

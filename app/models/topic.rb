@@ -88,7 +88,7 @@ class Topic < ActiveRecord::Base
               (!t.user_id || !t.user.staff?)
             }
 
-  validates :featured_link, allow_nil: true, format: URI::regexp(%w(http https))
+  validates :featured_link, allow_nil: true, url: true
   validate if: :featured_link do
     errors.add(:featured_link, :invalid_category) unless !featured_link_changed? ||
       Guardian.new.can_edit_featured_link?(category_id)
@@ -1032,10 +1032,9 @@ SQL
   #  * `nil` to delete the topic's status update.
   # Options:
   #  * by_user: User who is setting the topic's status update.
-  #  * timezone_offset: (Integer) offset from UTC in minutes of the given argument.
   #  * based_on_last_post: True if time should be based on timestamp of the last post.
   #  * category_id: Category that the update will apply to.
-  def set_or_create_timer(status_type, time, by_user: nil, timezone_offset: 0, based_on_last_post: false, category_id: SiteSetting.uncategorized_category_id)
+  def set_or_create_timer(status_type, time, by_user: nil, based_on_last_post: false, category_id: SiteSetting.uncategorized_category_id)
     return delete_topic_timer(status_type, by_user: by_user) if time.blank?
 
     public_topic_timer = !!TopicTimer.public_types[status_type]
@@ -1067,7 +1066,6 @@ SQL
       if is_timestamp && time.include?("-") && timestamp = utc.parse(time)
         # a timestamp in client's time zone, like "2015-5-27 12:00"
         topic_timer.execute_at = timestamp
-        topic_timer.execute_at += timezone_offset * 60 if timezone_offset
         topic_timer.errors.add(:execute_at, :invalid) if timestamp < now
       else
         num_hours = time.to_f
@@ -1293,7 +1291,7 @@ end
 # Table name: topics
 #
 #  id                        :integer          not null, primary key
-#  title                     :string           not null
+#  title                     :string(255)      not null
 #  last_posted_at            :datetime
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
@@ -1308,7 +1306,7 @@ end
 #  avg_time                  :integer
 #  deleted_at                :datetime
 #  highest_post_number       :integer          default(0), not null
-#  image_url                 :string
+#  image_url                 :string(255)
 #  like_count                :integer          default(0), not null
 #  incoming_link_count       :integer          default(0), not null
 #  category_id               :integer
@@ -1319,15 +1317,15 @@ end
 #  bumped_at                 :datetime         not null
 #  has_summary               :boolean          default(FALSE), not null
 #  vote_count                :integer          default(0), not null
-#  archetype                 :string           default("regular"), not null
+#  archetype                 :string(255)      default("regular"), not null
 #  featured_user4_id         :integer
 #  notify_moderators_count   :integer          default(0), not null
 #  spam_count                :integer          default(0), not null
 #  pinned_at                 :datetime
 #  score                     :float
 #  percent_rank              :float            default(1.0), not null
-#  subtype                   :string
-#  slug                      :string
+#  subtype                   :string(255)
+#  slug                      :string(255)
 #  deleted_by_id             :integer
 #  participant_count         :integer          default(1)
 #  word_count                :integer
@@ -1343,7 +1341,7 @@ end
 #  idx_topics_front_page                   (deleted_at,visible,archetype,category_id,id)
 #  idx_topics_user_id_deleted_at           (user_id)
 #  idxtopicslug                            (slug)
-#  index_topics_on_bumped_at               (bumped_at)
+#  index_forum_threads_on_bumped_at        (bumped_at)
 #  index_topics_on_created_at_and_visible  (created_at,visible)
 #  index_topics_on_id_and_deleted_at       (id,deleted_at)
 #  index_topics_on_lower_title             (lower((title)::text))

@@ -13,6 +13,8 @@ class WebHook < ActiveRecord::Base
   validates_presence_of :last_delivery_status
   validates_presence_of :web_hook_event_types, unless: :wildcard_web_hook?
 
+  before_save :strip_url
+
   def self.content_types
     @content_types ||= Enum.new('application/json' => 1,
                                 'application/x-www-form-urlencoded' => 2)
@@ -47,6 +49,10 @@ class WebHook < ActiveRecord::Base
   def self.enqueue_post_hooks(event, post, user = nil)
     WebHook.enqueue_hooks(:post, post_id: post.id, category_id: post&.topic&.category_id, event_name: event.to_s)
   end
+
+  def strip_url
+    self.payload_url = (payload_url || "").strip.presence
+  end
 end
 
 # == Schema Information
@@ -62,6 +68,6 @@ end
 #  wildcard_web_hook    :boolean          default(FALSE), not null
 #  verify_certificate   :boolean          default(TRUE), not null
 #  active               :boolean          default(FALSE), not null
-#  created_at           :datetime         not null
-#  updated_at           :datetime         not null
+#  created_at           :datetime
+#  updated_at           :datetime
 #

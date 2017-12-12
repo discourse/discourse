@@ -97,7 +97,7 @@ class EmailController < ApplicationController
     end
 
     unless updated
-      redirect_to :back
+      redirect_back fallback_location: path("/")
     else
       if topic
         redirect_to path("/email/unsubscribed?topic_id=#{topic.id}&email=#{user.email}")

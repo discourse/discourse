@@ -209,6 +209,11 @@ SQL
     else
       builder.where("a.user_id = :user_id", user_id: user_id.to_i)
       builder.where("a.action_type in (:action_types)", action_types: action_types) if action_types && action_types.length > 0
+
+      unless SiteSetting.enable_mentions?
+        builder.where("a.action_type <> :mention_type", mention_type: UserAction::MENTION)
+      end
+
       builder
         .order_by("a.created_at desc")
         .offset(offset.to_i)
@@ -412,9 +417,9 @@ end
 #
 # Indexes
 #
-#  idx_unique_rows                                (action_type,user_id,target_topic_id,target_post_id,acting_user_id) UNIQUE
-#  idx_user_actions_speed_up_user_all             (user_id,created_at,action_type)
-#  index_user_actions_on_acting_user_id           (acting_user_id)
-#  index_user_actions_on_target_post_id           (target_post_id)
-#  index_user_actions_on_user_id_and_action_type  (user_id,action_type)
+#  idx_unique_rows                           (action_type,user_id,target_topic_id,target_post_id,acting_user_id) UNIQUE
+#  idx_user_actions_speed_up_user_all        (user_id,created_at,action_type)
+#  index_actions_on_acting_user_id           (acting_user_id)
+#  index_actions_on_user_id_and_action_type  (user_id,action_type)
+#  index_user_actions_on_target_post_id      (target_post_id)
 #

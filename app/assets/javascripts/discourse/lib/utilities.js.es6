@@ -421,5 +421,19 @@ export function isAppleDevice() {
     !navigator.userAgent.match(/Trident/g);
 }
 
+export function clipboardData(e) {
+  const clipboard = e.clipboardData ||
+                      e.originalEvent.clipboardData ||
+                      e.delegatedEvent.originalEvent.clipboardData;
+
+  let types = clipboard.types;
+
+  if (!Array.isArray(types)) {
+    types = Array.from(types);
+  }
+
+  return { clipboard: clipboard, types: types };
+}
+
 // This prevents a mini racer crash
 export default {};

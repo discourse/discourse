@@ -7,7 +7,6 @@
 
 pl_PL:
   site_settings:
-    poll_enabled: "Pozwolić użytkownikom na tworzenie ankiet?"
     poll_maximum_options: "Maksymalna ilość dozwolonych opcji w ankiecie."
     poll_edit_window_mins: "Liczba minut po utworzeniu postu, podczas którego można edytować ankietę."
   poll:

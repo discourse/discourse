@@ -1065,7 +1065,6 @@ en:
     gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCDEF"
     enable_escaped_fragments: "Fall back to Google's Ajax-Crawling API if no webcrawler is detected. See https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
     allow_moderators_to_create_categories: "Allow moderators to create new categories"
-    crawler_user_agents: "List of user agents that are considered crawlers and served static HTML instead of JavaScript payload"
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
     use_admin_ip_whitelist: "Admins can only log in if they are at an IP address defined in the Screened IPs list (Admin > Logs > Screened Ips)."
     blacklist_ip_blocks: "A list of private IP blocks that should never be crawled by Discourse"
@@ -1088,6 +1087,7 @@ en:
     top_page_default_timeframe: "Default timeframe for the top view page."
     show_email_on_profile: "Show a user's email on their profile (only visible to themselves and staff)"
     prioritize_username_in_ux: "Show username first on user page, user card and posts (when disabled name is shown first)"
+    enable_rich_text_paste: "Enable automatic HTML to Markdown conversion when pasting text into the composer."
 
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
 
@@ -1283,6 +1283,7 @@ en:
     newuser_max_replies_per_topic: "Maximum number of replies a new user can make in a single topic until someone replies to them."
     max_mentions_per_post: "Maximum number of @name notifications anyone can use in a post."
     max_users_notified_per_group_mention: "Maximum number of users that may receive a notification if a group is mentioned (if threshold is met no notifications will be raised)"
+    enable_mentions: "Allow users to mention other users."
 
     create_thumbnails: "Create thumbnails and lightbox images that are too large to fit in a post."
 
@@ -1449,6 +1450,8 @@ en:
 
     hide_user_profiles_from_public: "Disable user cards, user profiles and user directory for anonymous users."
 
+    show_inactive_accounts: "Allow logged in users to browse profiles of inactive accounts."
+
     hide_suspension_reasons: "Don't display suspension reasons publically on user profiles."
     user_website_domains_whitelist: "User website will be verified against these domains. Pipe-delimited list."
 
@@ -1558,8 +1561,6 @@ en:
 
     retain_web_hook_events_period_days: "Number of days to retain web hook event records."
 
-    max_user_api_reqs_per_day: "Maximum number of user API requests per key per day"
-    max_user_api_reqs_per_minute: "Maximum number of user API requests per key per minute"
     allow_user_api_keys: "Allow generation of user API keys"
     allow_user_api_key_scopes: "List of scopes allowed for user API keys"
     max_api_keys_per_user: "Maximum number of user API keys per user"
@@ -1774,7 +1775,7 @@ en:
     destroy_reasons:
       unused_staged_user: "Unused staged user"
       fixed_primary_email: "Fixed primary email for staged user"
-      same_ip_address: "Same IP address (%ip_address%) as other users"
+      same_ip_address: "Same IP address (%{ip_address}) as other users"
 
   flags_reminder:
     flags_were_submitted:
@@ -1798,9 +1799,9 @@ en:
 
   invite_mailer:
     title: "Invite Mailer"
-    subject_template: "%{invitee_name} invited you to '%{topic_title}' on %{site_domain_name}"
+    subject_template: "%{inviter_name} invited you to '%{topic_title}' on %{site_domain_name}"
     text_body_template: |
-      %{invitee_name} invited you to a discussion
+      %{inviter_name} invited you to a discussion
 
       > **%{topic_title}**
       >
@@ -1816,9 +1817,9 @@ en:
 
   custom_invite_mailer:
     title: "Custom Invite Mailer"
-    subject_template: "%{invitee_name} invited you to '%{topic_title}' on %{site_domain_name}"
+    subject_template: "%{inviter_name} invited you to '%{topic_title}' on %{site_domain_name}"
     text_body_template: |
-      %{invitee_name} invited you to a discussion
+      %{inviter_name} invited you to a discussion
 
       > **%{topic_title}**
       >
@@ -1838,9 +1839,9 @@ en:
 
   invite_forum_mailer:
     title: "Invite Forum Mailer"
-    subject_template: "%{invitee_name} invited you to join %{site_domain_name}"
+    subject_template: "%{inviter_name} invited you to join %{site_domain_name}"
     text_body_template: |
-      %{invitee_name} invited you to join
+      %{inviter_name} invited you to join
 
       > **%{site_title}**
       >
@@ -1852,9 +1853,9 @@ en:
 
   custom_invite_forum_mailer:
     title: "Custom Invite Forum Mailer"
-    subject_template: "%{invitee_name} invited you to join %{site_domain_name}"
+    subject_template: "%{inviter_name} invited you to join %{site_domain_name}"
     text_body_template: |
-      %{invitee_name} invited you to join
+      %{inviter_name} invited you to join
 
       > **%{site_title}**
       >
@@ -1955,7 +1956,7 @@ en:
 
       - Upgrade using our easy **[one-click browser upgrade](%{base_url}/admin/upgrade)**
 
-      - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master)
+      - See what's new in the [release notes](https://meta.discourse.org/tags/release-notes) or view the [raw GitHub changelog](https://github.com/discourse/discourse/commits/master)
 
       - Visit [meta.discourse.org](https://meta.discourse.org) for news, discussion, and support for Discourse
 
@@ -1970,7 +1971,7 @@ en:
 
       - Upgrade using our easy **[one-click browser upgrade](%{base_url}/admin/upgrade)**
 
-      - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master)
+      - See what's new in the [release notes](https://meta.discourse.org/tags/release-notes) or view the [raw GitHub changelog](https://github.com/discourse/discourse/commits/master)
 
       - Visit [meta.discourse.org](https://meta.discourse.org) for news, discussion, and support for Discourse
 
@@ -2367,13 +2368,13 @@ en:
 
         This threshold can be changed via the `silence_new_user` site settings.
 
-    spam_post_silenced:
-      title: "Spam Post Silenced"
-      subject_template: "New user %{username} posts silenced due to repeated links"
+    spam_post_blocked:
+      title: "Spam Post Blocked"
+      subject_template: "New user %{username} posts blocked due to repeated links"
       text_body_template: |
         This is an automated message.
 
-        The new user [%{username}](%{user_url}) tried to create multiple posts with links to %{domains}, but those posts were silenced to avoid spam. The user is still able to create new posts that do not link to %{domains}.
+        The new user [%{username}](%{user_url}) tried to create multiple posts with links to %{domains}, but those posts were blocked to avoid spam. The user is still able to create new posts that do not link to %{domains}.
 
         Please [review the user](%{user_url}).
 

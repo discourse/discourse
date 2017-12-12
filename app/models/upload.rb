@@ -156,11 +156,11 @@ end
 #
 #  id                :integer          not null, primary key
 #  user_id           :integer          not null
-#  original_filename :string           not null
+#  original_filename :string(255)      not null
 #  filesize          :integer          not null
 #  width             :integer
 #  height            :integer
-#  url               :string           not null
+#  url               :string(255)      not null
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  sha1              :string(40)

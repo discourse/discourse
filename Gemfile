@@ -36,7 +36,7 @@ gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox', '1.8.28'
+gem 'onebox', '1.8.30'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 
@@ -166,7 +166,6 @@ gem 'gc_tracer', require: false, platform: :mri
 
 # required for feed importing and embedding
 gem 'ruby-readability', require: false
-gem 'simple-rss', require: false
 
 gem 'stackprof', require: false, platform: :mri
 gem 'memory_profiler', require: false, platform: :mri

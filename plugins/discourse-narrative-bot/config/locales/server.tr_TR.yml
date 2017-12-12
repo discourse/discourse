@@ -16,13 +16,14 @@ tr_TR:
       name: Lisanslı
       description: "Gelişmiş kullanıcı eğitimi tamamlandı"
   discourse_narrative_bot:
+    dice:
+      trigger: "yuvarla"
     quote:
       trigger: "alıntıla"
       '1':
         quote: "Her zorluğun ortasında fırsat yatar."
         author: "Albert Einstein"
       '2':
-        quote: "Dünyada görmek istediğiniz değişim olmalı."
         author: "Mahatma Gandhi"
       '3':
         quote: "Ağlama çünkü bitti, gülümse çünkü gerçekleşti."

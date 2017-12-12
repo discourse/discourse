@@ -71,7 +71,7 @@ module Jobs
     end
 
     def web_hook_request(args, web_hook)
-      uri = URI(web_hook.payload_url)
+      uri = URI(web_hook.payload_url.strip)
 
       conn = Excon.new(
         uri.to_s,

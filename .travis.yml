@@ -43,6 +43,7 @@ before_install:
   - git clone --depth=1 https://github.com/discourse/discourse-cakeday.git plugins/discourse-cakeday
   - git clone --depth=1 https://github.com/discourse/discourse-canned-replies.git plugins/discourse-canned-replies
   - git clone --depth=1 https://github.com/discourse/discourse-chat-integration.git plugins/discourse-chat-integration
+  - git clone --depth=1 https://github.com/discourse/discourse-assign.git plugins/discourse-assign
 
 install:
   - bash -c "if [ '$RAILS_MASTER' == '1' ]; then bundle update --retry=3 --jobs=3 arel rails seed-fu; fi"

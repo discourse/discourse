@@ -106,7 +106,8 @@ RSpec.configure do |config|
     #   perf benefit seems low (shaves 20 secs off a 4 minute test suite)
     #
     # $redis = DiscourseMockRedis.new
-    #
+
+    RateLimiter.disable
     PostActionNotifier.disable
     SearchIndexer.disable
     UserActionCreator.disable

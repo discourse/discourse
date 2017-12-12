@@ -13,7 +13,8 @@ import { tinyAvatar,
          displayErrorForUpload,
          getUploadMarkdown,
          validateUploadedFiles,
-         formatUsername
+         formatUsername,
+         clipboardData
 } from 'discourse/lib/utilities';
 import { cacheShortUploadUrl, resolveAllShortUrls } from 'pretty-text/image-short-url';
 
@@ -74,20 +75,31 @@ export default Ember.Component.extend({
   _composerEditorInit() {
     const topicId = this.get('topic.id');
     const $input = this.$('.d-editor-input');
-    const $preview = this.$('.d-editor-preview');
+    const $preview = this.$('.d-editor-preview-wrapper');
 
-    $input.autocomplete({
-      template: findRawTemplate('user-selector-autocomplete'),
-      dataSource: term => userSearch({
-        term,
-        topicId,
-        includeMentionableGroups: true
-      }),
-      key: "@",
-      transformComplete: v => v.username || v.name
-    });
+    if (this.siteSettings.enable_mentions) {
+      $input.autocomplete({
+        template: findRawTemplate('user-selector-autocomplete'),
+        dataSource: term => userSearch({
+          term,
+          topicId,
+          includeMentionableGroups: true
+        }),
+        key: "@",
+        transformComplete: v => v.username || v.name
+      });
+    }
 
-    this._initInputPreviewSync($input, $preview);
+    if (this._enableAdvancedEditorPreviewSync()) {
+      this._initInputPreviewSync($input, $preview);
+    } else {
+      $input.on('scroll', () => Ember.run.throttle(this,
+        this._syncEditorAndPreviewScroll,
+        $input,
+        $preview,
+        20
+      ));
+    }
 
     // Focus on the body unless we have a title
     if (!this.get('composer.canEditTitle') && !this.capabilities.isIOS) {
@@ -125,6 +137,10 @@ export default Ember.Component.extend({
     if (reason) {
       return InputValidation.create({ failed: true, reason, lastShownAt: lastValidatedAt });
     }
+  },
+
+  _enableAdvancedEditorPreviewSync() {
+    return this.siteSettings.enable_advanced_editor_preview_sync;
   },
 
   _resetShouldBuildScrollMap() {
@@ -166,7 +182,7 @@ export default Ember.Component.extend({
   },
 
   _teardownInputPreviewSync() {
-    [this.$('.d-editor-input'), this.$('.d-editor-preview')].forEach($element => {
+    [this.$('.d-editor-input'), this.$('.d-editor-preview-wrapper')].forEach($element => {
       $element.off("mouseenter touchstart");
       $element.off("scroll");
     });
@@ -253,17 +269,44 @@ export default Ember.Component.extend({
   },
 
   _syncEditorAndPreviewScroll($input, $preview, scrollMap) {
-    let scrollTop;
+    if (this._enableAdvancedEditorPreviewSync()) {
+      let scrollTop;
+      const inputHeight = $input.height();
+      const inputScrollHeight = $input[0].scrollHeight;
+      const inputClientHeight = $input[0].clientHeight;
+      const scrollable = inputScrollHeight > inputClientHeight;
 
-    if (($input.height() + $input.scrollTop() + 100) > $input[0].scrollHeight) {
-      scrollTop = $preview[0].scrollHeight;
+      if (scrollable && ((inputHeight + $input.scrollTop() + 100) > inputScrollHeight)) {
+        scrollTop = $preview[0].scrollHeight;
+      } else {
+        const lineHeight = parseFloat($input.css('line-height'));
+        const lineNumber = Math.floor($input.scrollTop() / lineHeight);
+        scrollTop = scrollMap[lineNumber];
+      }
+
+      $preview.stop(true).animate({ scrollTop }, 100, 'linear');
     } else {
-      const lineHeight = parseFloat($input.css('line-height'));
-      const lineNumber = Math.floor($input.scrollTop() / lineHeight);
-      scrollTop = scrollMap[lineNumber];
-    }
+      if (!$input) { return; }
 
-    $preview.stop(true).animate({ scrollTop }, 100, 'linear');
+      if ($input.scrollTop() === 0) {
+        $preview.scrollTop(0);
+        return;
+      }
+
+      const inputHeight = $input[0].scrollHeight;
+      const previewHeight = $preview[0].scrollHeight;
+
+      if (($input.height() + $input.scrollTop() + 100) > inputHeight) {
+        // cheat, special case for bottom
+        $preview.scrollTop(previewHeight);
+        return;
+      }
+
+      const scrollPosition = $input.scrollTop();
+      const factor = previewHeight / inputHeight;
+      const desired = scrollPosition * factor;
+      $preview.scrollTop(desired + 50);
+    }
   },
 
   _syncPreviewAndEditorScroll($input, $preview, scrollMap) {
@@ -390,7 +433,19 @@ export default Ember.Component.extend({
       pasteZone: $element,
     });
 
-    $element.on('fileuploadpaste', () => this._pasted = true);
+    $element.on('fileuploadpaste', (e) => {
+      this._pasted = true;
+
+      if (!$(".d-editor-input").is(":focus")) {
+        return;
+      }
+
+      const { types } = clipboardData(e);
+
+      if (types.includes("text/plain") || (types.includes("text/html") && this.siteSettings.enable_rich_text_paste)) {
+        e.preventDefault();
+      }
+    });
 
     $element.on('fileuploadsubmit', (e, data) => {
       const isPrivateMessage = this.get("composer.privateMessage");
@@ -597,7 +652,7 @@ export default Ember.Component.extend({
       Ember.run.later(() => this.appEvents.trigger("composer:closed"), 400);
     });
 
-    this._teardownInputPreviewSync();
+    if (this._enableAdvancedEditorPreviewSync()) this._teardownInputPreviewSync();
 
     if (this.site.mobileView) {
       $(window).off('resize.composer-popup-menu');
@@ -720,7 +775,14 @@ export default Ember.Component.extend({
         Ember.run.debounce(this, this._loadInlineOneboxes, inline, 450);
       }
 
-      this._syncScroll(this._syncEditorAndPreviewScroll, this.$('.d-editor-input'), $preview);
+      if (this._enableAdvancedEditorPreviewSync()) {
+        this._syncScroll(
+          this._syncEditorAndPreviewScroll,
+          this.$('.d-editor-input'),
+          $preview
+        );
+      }
+
       this.trigger('previewRefreshed', $preview);
       this.sendAction('afterRefresh', $preview);
     },

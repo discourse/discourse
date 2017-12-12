@@ -8,7 +8,9 @@ import { emojiSearch, isSkinTonableEmoji } from 'pretty-text/emoji';
 import { emojiUrlFor } from 'discourse/lib/text';
 import { getRegister } from 'discourse-common/lib/get-owner';
 import { findRawTemplate } from 'discourse/lib/raw-templates';
-import { determinePostReplaceSelection } from 'discourse/lib/utilities';
+import { determinePostReplaceSelection, clipboardData } from 'discourse/lib/utilities';
+import { ajax } from 'discourse/lib/ajax';
+import { popupAjaxError } from 'discourse/lib/ajax-error';
 import deprecated from 'discourse-common/lib/deprecated';
 
 // Our head can be a static string or a function that returns a string
@@ -614,6 +616,77 @@ export default Ember.Component.extend({
     $textarea.prop("selectionStart", insert.length);
     $textarea.prop("selectionEnd", insert.length);
     Ember.run.scheduleOnce("afterRender", () => $textarea.focus());
+  },
+
+  _extractTable(text) {
+    if (text.endsWith("\n")) {
+      text = text.substring(0, text.length - 1);
+    }
+
+    let rows = text.split("\n");
+
+    if (rows.length > 1) {
+      const columns = rows.map(r => r.split("\t").length);
+      const isTable = columns.reduce((a, b) => a && columns[0] === b && b > 1);
+
+      if (isTable) {
+        const splitterRow = [...Array(columns[0])].map(() => "---").join("\t");
+        rows.splice(1, 0, splitterRow);
+
+        return "|" + rows.map(r => r.split("\t").join("|")).join("|\n|") + "|\n";
+      }
+    }
+    return null;
+  },
+
+  paste(e) {
+    if (!$(".d-editor-input").is(":focus")) {
+      return;
+    }
+
+    const { clipboard, types } = clipboardData(e);
+    let plainText = clipboard.getData("text/plain");
+    const html = clipboard.getData("text/html");
+    let handled = false;
+
+    if (plainText) {
+      plainText = plainText.trim().replace(/\r/g,"");
+      const table = this._extractTable(plainText);
+      if (table) {
+        this.appEvents.trigger('composer:insert-text', table);
+        handled = true;
+      }
+    }
+
+    if (this.siteSettings.enable_rich_text_paste && html && !handled) {
+      const placeholder = `${ plainText || I18n.t('pasting') }`;
+      const self = this;
+
+      this.appEvents.trigger('composer:insert-text', placeholder);
+      handled = true;
+
+      ajax('/composer/parse_html', {
+        type: 'POST',
+        data: { html }
+      }).then(response => {
+        if (response.markdown) {
+          self.appEvents.trigger('composer:replace-text', placeholder, response.markdown);
+        } else if (!plainText) {
+          self.appEvents.trigger('composer:replace-text', placeholder, "");
+        }
+      }).catch(error => {
+        if (!plainText) {
+          self.appEvents.trigger('composer:replace-text', placeholder, "");
+          popupAjaxError(error);
+        }
+      });
+    }
+
+    const uploadFiles = types.includes("Files") && !plainText && !handled;
+
+    if (handled || uploadFiles) {
+      e.preventDefault();
+    }
   },
 
   actions: {

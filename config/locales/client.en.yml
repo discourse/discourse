@@ -149,7 +149,7 @@ en:
       split_topic: "split this topic %{when}"
       invited_user: "invited %{who} %{when}"
       invited_group: "invited %{who} %{when}"
-      user_left: "%{who} left this message %{when}"
+      user_left: "%{who} removed themselves from this message %{when}"
       removed_user: "removed %{who} %{when}"
       removed_group: "removed %{who} %{when}"
       autoclosed:
@@ -308,6 +308,8 @@ en:
     uploading: "Uploading..."
     uploading_filename: "Uploading {{filename}}..."
     uploaded: "Uploaded!"
+
+    pasting: "Pasting..."
 
     enable: "Enable"
     disable: "Disable"
@@ -1869,7 +1871,7 @@ en:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Quote"
-      edit: "Editing {{link}} {{replyAvatar}} {{username}}"
+      edit: "<i class='fa fa-pencil'></i> {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Reason: "
       post_number: "post {{number}}"
       wiki_last_edited_on: "wiki last edited on"
@@ -2139,7 +2141,7 @@ en:
       email_in_allow_strangers: "Accept emails from anonymous users with no accounts"
       email_in_disabled: "Posting new topics via email is disabled in the Site Settings. To enable posting new topics via email, "
       email_in_disabled_click: 'enable the "email in" setting.'
-      mailinglist_mirror: "Category mirrors a mailinglist"
+      mailinglist_mirror: "Category mirrors a mailing list"
       suppress_from_homepage: "Suppress this category from the homepage."
       show_subcategory_list: "Show subcategory list above topics in this category."
       num_featured_topics: "Number of topics shown on the categories page:"
@@ -2494,7 +2496,7 @@ en:
       selector_no_tags: "no tags"
       changed: "tags changed:"
       tags: "Tags"
-      choose_for_topic: "choose optional tags for this topic"
+      choose_for_topic: "optional tags"
       delete_tag: "Delete Tag"
       delete_confirm:
         one: "Are you sure you want to delete this tag and remove it from 1 topic it is assigned to?"
@@ -2644,6 +2646,7 @@ en:
         active_posts: "Flagged Posts"
         old_posts: "Old Flagged Posts"
         topics: "Flagged Topics"
+        moderation_history: "Moderation History"
 
         agree: "Agree"
         agree_title: "Confirm this flag as valid and correct"
@@ -3110,6 +3113,16 @@ en:
             reply_key_placeholder: "reply key"
             skipped_reason_placeholder: "reason"
 
+      moderation_history:
+        performed_by: "Performed By"
+        no_results: "There is no moderation history available."
+        actions:
+          delete_user: "User Deleted"
+          suspend_user: "User Suspended"
+          silence_user: "User Silenced"
+          delete_post: "Post Deleted"
+          delete_topic: "Topic Deleted"
+
       logs:
         title: "Logs"
         action: "Action"
@@ -3219,9 +3232,12 @@ en:
           term: "Term"
           searches: "Searches"
           click_through: "Click Through"
-          most_viewed_topic: "Most Viewed Topic"
           unique: "Unique"
           unique_title: "unique users performing the search"
+          types:
+            all_search_types: "All search types"
+            header: "Header"
+            full_page: "Full Page"
         logster:
           title: "Error Logs"
 
