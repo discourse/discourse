@@ -13,6 +13,7 @@ module AnnotatorStore
     # Validations
     validates :post, presence: true
     validates :creator, presence: true
+    validates :tag, presence: true
     validates :version, presence: true
     # validates :text, presence: true
     validates :quote, presence: true

@@ -211,7 +211,7 @@ GEM
       activerecord
       kaminari-core (= 1.0.1)
     kaminari-core (1.0.1)
-    libv8 (5.3.332.38.5)
+    libv8 (5.9.211.38.1)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -245,7 +245,6 @@ GEM
     multi_xml (0.6.0)
     multipart-post (2.0.0)
     mustache (1.0.5)
-    mysql2 (0.4.6)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-ssh (4.1.0)
@@ -361,7 +360,6 @@ GEM
       ffi (>= 1.0.6)
       msgpack (>= 0.4.3)
       trollop (>= 1.16.2)
-    redcarpet (3.4.0)
     redis (3.3.3)
     redis-namespace (1.5.3)
       redis (~> 3.0, >= 3.0.4)
@@ -531,7 +529,6 @@ DEPENDENCIES
   mock_redis
   multi_json
   mustache
-  mysql2
   nokogiri (= 1.7.2)
   oj
   omniauth
@@ -558,7 +555,6 @@ DEPENDENCIES
   rb-fsevent
   rb-inotify (~> 0.9)
   rbtrace
-  redcarpet
   redis
   redis-namespace
   rest-client
@@ -587,4 +583,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   1.15.4
+   1.16.0

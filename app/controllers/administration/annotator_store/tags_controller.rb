@@ -4,34 +4,33 @@ class Administration::AnnotatorStore::TagsController < Administration::Applicati
 
 
   def index
-    if params[:search].present?
-      scope = scoped_resource
-    else
-      # tree view and JSON API.
-      scope = resource_class.where(ancestry: nil)
-      scope = scope.where(creator_id: params[:creator_id]) if params[:creator_id].present?
-    end
+    scope = if api_request?
+              scoped_resource
+            else
+              # Search or Tree view
+              params[:search].present? ? scoped_resource : scoped_resource.where(ancestry: nil)
+            end
+
+    scope = scope.where(creator_id: params[:creator_id]) if params[:creator_id].present?
 
     search_term = params[:search].to_s.strip
     resources = Administrate::Search.new(scope, dashboard_class, search_term).run
     resources = resources.includes(*resource_includes) if resource_includes.any?
-
     resources = params[:search].present? ? order.apply(resources) : resources.order('LOWER(name) asc')
-
     resources = resources.page(params[:page]).per(records_per_page)
     page = Administrate::Page::Collection.new(dashboard)
 
     respond_to do |format|
       format.html { render locals: {resources: resources, search_term: search_term, page: page, show_search_bar: show_search_bar?} }
-      format.json { render json: JSON.pretty_generate(JSON.parse(resources.to_json))}
+      format.json { render json: JSON.pretty_generate(JSON.parse(resources.to_json)) }
     end
   end
 
 
   def show
     respond_to do |format|
-      format.html { render locals: { page: Administrate::Page::Show.new(dashboard, requested_resource) } }
-      format.json { render json: JSON.pretty_generate(JSON.parse(requested_resource.to_json))}
+      format.html { render locals: {page: Administrate::Page::Show.new(dashboard, requested_resource)} }
+      format.json { render json: JSON.pretty_generate(JSON.parse(requested_resource.to_json)) }
     end
   end
 
@@ -43,7 +42,7 @@ class Administration::AnnotatorStore::TagsController < Administration::Applicati
     if resource.save
       redirect_to [namespace, :annotator_store, resource], notice: 'Code was successfully created.'
     else
-      render :new, locals: {page: Administrate::Page::Form.new(dashboard, resource) }
+      render :new, locals: {page: Administrate::Page::Form.new(dashboard, resource)}
     end
   end
 
@@ -52,7 +51,7 @@ class Administration::AnnotatorStore::TagsController < Administration::Applicati
     if requested_resource.update(resource_params)
       redirect_to [namespace, :annotator_store, requested_resource], notice: 'Code was successfully updated.'
     else
-      render :edit, locals: { page: Administrate::Page::Form.new(dashboard, requested_resource) }
+      render :edit, locals: {page: Administrate::Page::Form.new(dashboard, requested_resource)}
     end
   end
 
@@ -79,5 +78,11 @@ class Administration::AnnotatorStore::TagsController < Administration::Applicati
     params[:per_page] || 100
   end
 
+
+  private
+
+  def api_request?
+    request.format.json? || request.format.xml?
+  end
 
 end

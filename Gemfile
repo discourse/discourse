@@ -210,8 +210,8 @@ gem 'unix-crypt', '1.3.0'   #, :require_name => 'unix_crypt'
 
 
 # if ENV["IMPORT"] == "1"
-  gem 'mysql2'
-  gem 'redcarpet'
+#   gem 'mysql2'
+#   gem 'redcarpet'
   # gem 'sqlite3', '~> 1.3.13'
 # end
 

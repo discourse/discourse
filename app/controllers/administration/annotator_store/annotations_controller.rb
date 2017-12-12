@@ -29,7 +29,11 @@ class Administration::AnnotatorStore::AnnotationsController < Administration::Ap
     # page = Administrate::Page::Collection.new(dashboard, order: order)
 
     respond_to do |format|
-      format.json { render json: JSON.pretty_generate(JSON.parse(resources.to_json))}
+      format.json {
+        # Rename tag_id to code_id
+        r = resources.to_a.map(&:attributes).each { |a|  a['code_id'] = a.delete('tag_id') }
+        render json: JSON.pretty_generate(JSON.parse(r.to_json) )
+      }
     end
   end
 
