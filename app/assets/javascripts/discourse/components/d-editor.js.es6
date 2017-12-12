@@ -9,6 +9,7 @@ import { emojiUrlFor } from 'discourse/lib/text';
 import { getRegister } from 'discourse-common/lib/get-owner';
 import { findRawTemplate } from 'discourse/lib/raw-templates';
 import { determinePostReplaceSelection, clipboardData } from 'discourse/lib/utilities';
+import toMarkdown from 'discourse/lib/to-markdown';
 import { ajax } from 'discourse/lib/ajax';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 import deprecated from 'discourse-common/lib/deprecated';
@@ -659,27 +660,9 @@ export default Ember.Component.extend({
     }
 
     if (this.siteSettings.enable_rich_text_paste && html && !handled) {
-      const placeholder = `${ plainText || I18n.t('pasting') }`;
-      const self = this;
-
-      this.appEvents.trigger('composer:insert-text', placeholder);
+      const markdown = toMarkdown(html);
+      this.appEvents.trigger('composer:insert-text', markdown);
       handled = true;
-
-      ajax('/composer/parse_html', {
-        type: 'POST',
-        data: { html }
-      }).then(response => {
-        if (response.markdown) {
-          self.appEvents.trigger('composer:replace-text', placeholder, response.markdown);
-        } else if (!plainText) {
-          self.appEvents.trigger('composer:replace-text', placeholder, "");
-        }
-      }).catch(error => {
-        if (!plainText) {
-          self.appEvents.trigger('composer:replace-text', placeholder, "");
-          popupAjaxError(error);
-        }
-      });
     }
 
     const uploadFiles = types.includes("Files") && !plainText && !handled;
