@@ -10,9 +10,23 @@ if (Rails.env.production? && SiteSetting.logging_provider == 'lograge') || ENV["
 
     config.lograge.custom_payload do |controller|
       begin
+        username =
+          begin
+            controller.current_user&.username
+          rescue Discourse::InvalidAccess
+            nil
+          end
+
+        ip =
+          begin
+            controller.request.remote_ip
+          rescue ActionDispatch::RemoteIp::IpSpoofAttackError
+            nil
+          end
+
         {
-          ip: controller.request.remote_ip,
-          username: controller.current_user&.username,
+          ip: ip,
+          username: username,
         }
       rescue => e
         Rails.logger.warn("Failed to append custom payload: #{e.message}\n#{e.backtrace.join("\n")}")
