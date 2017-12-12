@@ -181,21 +181,21 @@
   }
 
   .staff-counters {
-    text-align: left;
     background: $primary;
-
-    > div {
+    color: $secondary;    
+    display: flex;
+    padding: 10px;    
+    > div, > div a {
+      display: flex;
+      align-items: baseline;
+      flex: 0 1 auto;
       margin: 0 10px 0 0;
-      display: inline-block;
-      padding: 5px 0;
-      &:first-of-type {
-        padding-left: 10px;
-      }
       span {
-        padding: 1px 5px;
+        padding: 1px 6px;
         border-radius: 10px;
+        margin-right: 5px;        
       }
-    }
+    }  
 
     a {
       color: $secondary;
