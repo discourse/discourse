@@ -122,6 +122,7 @@ fi:
       split_topic: "pilkkoi tämän ketjun %{when}"
       invited_user: "kutsui käyttäjän %{who} %{when}"
       invited_group: "kutsui käyttäjän %{who} %{when}"
+      user_left: "%{who} poisti itsensä tästä yksityiskeskustelusta %{when}"
       removed_user: "poisti käyttäjän %{who} %{when}"
       removed_group: "poisti käyttäjän %{who} %{when}"
       autoclosed:
@@ -1947,6 +1948,7 @@ fi:
       email_in_allow_strangers: "Hyväksy viestejä anonyymeiltä käyttäjiltä joilla ei ole tiliä"
       email_in_disabled: "Uusien ketjujen aloittaminen sähköpostitse on otettu pois käytöstä sivuston asetuksissa. Salliaksesi uusien ketjujen luomisen sähköpostilla, "
       email_in_disabled_click: 'ota käyttöön "email in" asetus.'
+      mailinglist_mirror: "Alue jäljittelee postituslistaa"
       suppress_from_homepage: "Vaimenna alue kotisivulta."
       show_subcategory_list: "Näytä lista tytäralueista ketjujen yläpuolella tällä alueella."
       num_featured_topics: "Kuinka monta ketjua näytetään Keskustelualueet-sivulla:"
@@ -2012,7 +2014,7 @@ fi:
       submit_tooltip: "Toimita lippu"
       take_action_tooltip: "Saavuta liputusraja välittömästi; ei tarvetta odottaa muiden käyttäjien liputuksia."
       cant: "Pahoittelut, et pysty liputtamaan tätä viestiä tällä hetkellä."
-      notify_staff: 'Ilmoita ylläpidolle yksityisesti'
+      notify_staff: 'Ilmoita henkilökunnalle yksityisesti'
       formatted_name:
         off_topic: "Se eksyy aiheesta"
         inappropriate: "Se on sopimaton"
