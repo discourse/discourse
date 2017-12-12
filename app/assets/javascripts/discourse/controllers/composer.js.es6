@@ -159,11 +159,6 @@ export default Ember.Controller.extend({
     return isStaffUser && this.siteSettings.enable_whispers && action === Composer.REPLY;
   },
 
-  @computed("popupMenuOptions")
-  showPopupMenu(popupMenuOptions) {
-    return popupMenuOptions ? popupMenuOptions.some(option => option.condition) : false;
-  },
-
   _setupPopupMenuOption(callback) {
     let option = callback();
 
@@ -177,7 +172,7 @@ export default Ember.Controller.extend({
   },
 
   @computed("model.composeState", "model.creatingTopic")
-  popupMenuOptions(composeState, creatingTopic) {
+  popupMenuOptions(composeState) {
     if (composeState === 'open') {
       let options = [];
 
@@ -199,12 +194,9 @@ export default Ember.Controller.extend({
         };
       }));
 
-      const test = options.concat(_popupMenuOptionsCallbacks.map(callback => {
+      return options.concat(_popupMenuOptionsCallbacks.map(callback => {
         return this._setupPopupMenuOption(callback);
       }));
-
-      console.log(test)
-      return test;
     }
   },
 
@@ -227,13 +219,13 @@ export default Ember.Controller.extend({
   },
 
   actions: {
-    popupMenuAction(action) {
+    onPopupMenuAction(action) {
       this.send(action);
     },
 
-    showPopupMenu(toolbarEvent) {
-     this.set('toolbarEvent', toolbarEvent);
-   },
+    storeToolbarState(toolbarEvent) {
+      this.set('toolbarEvent', toolbarEvent);
+    },
 
     togglePreview() {
       this.toggleProperty('showPreview');

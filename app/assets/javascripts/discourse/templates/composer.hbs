@@ -63,9 +63,6 @@
                     {{category-chooser value=model.categoryId scopedCategoryId=scopedCategoryId tabindex="3"}}
                     {{popup-input-tip validation=categoryValidation}}
                   </div>
-                  {{#if model.archetype.hasOptions}}
-                    {{d-button action="showPopupMenu" label="topic.options"}}
-                  {{/if}}
                 {{/if}}
                 {{#if canEditTags}}
                   {{tag-chooser tags=model.tags tabIndex="4" categoryId=model.categoryId}}
@@ -83,8 +80,8 @@
                             composer=model
                             lastValidatedAt=lastValidatedAt
                             canWhisper=canWhisper
-                            showPopupMenu="showPopupMenu"
-                            popupMenuAction=(action "popupMenuAction")
+                            storeToolbarState="storeToolbarState"
+                            onPopupMenuAction=(action "onPopupMenuAction")
                             popupMenuOptions=popupMenuOptions
                             draftStatus=model.draftStatus
                             isUploading=isUploading
@@ -93,7 +90,6 @@
                             groupsMentioned="groupsMentioned"
                             cannotSeeMention="cannotSeeMention"
                             importQuote="importQuote"
-                            hideOptions="hideOptions"
                             togglePreview="togglePreview"
                             showToolbar=showToolbar
                             showUploadSelector="showUploadSelector"

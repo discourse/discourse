@@ -228,12 +228,12 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   },
 
   actions: {
-    onToggle(param) {
-      this.get("isExpanded") === true ? this.collapse() : this.expand();
+    onToggle() {
+      if (this.get("onToggle")) this.sendAction("onToggle");
+      if (this.get("onCollapse") && this.get("isExpanded") === true) this.sendAction("onCollapse");
+      if (this.get("onExpand") && this.get("isExpanded") === false) this.sendAction("onExpand");
 
-      if (this.get("onToggle")) {
-        this.get("onToggle")(param);
-      }
+      this.get("isExpanded") === true ? this.collapse() : this.expand();
     },
 
     onHighlight(rowComputedContent) {

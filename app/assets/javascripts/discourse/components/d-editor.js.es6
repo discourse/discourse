@@ -124,7 +124,7 @@ class Toolbar {
       action: button.action || 'toolbarButton',
       perform: button.perform || function() { },
       trimLeading: button.trimLeading,
-      popupMenuOptions: button.popupMenuOptions || false
+      popupMenu: button.popupMenu || false
     };
 
     if (button.sendAction) {

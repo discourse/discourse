@@ -3,20 +3,18 @@ import computed from "ember-addons/ember-computed-decorators";
 
 export default DropdownSelectBoxComponent.extend({
   pluginApiIdentifiers: ["toolbar-popup-menu-options"],
-  classNames: "toolbar-popup-menu-options",
-  headerIcon: "gear",
+  classNames: ["toolbar-popup-menu-options"],
   isHidden: Ember.computed.empty("computedContent"),
   showFullTitle: false,
 
   @computed("title")
   collectionHeader(title) {
-    return `<h3>${title}</h3>`;
+    return `<h3>${I18n.t(title)}</h3>`;
   },
 
   mutateValue(value) {
-    this.sendAction("popupMenuAction", value);
-    this.set("value", null);
-    this.set("highlightedValue", null);
+    this.sendAction("onPopupMenuAction", value);
+    this.setProperties({ value: null, highlightedValue: null });
   },
 
   computeContent(content) {
@@ -28,7 +26,7 @@ export default DropdownSelectBoxComponent.extend({
           id: contentItem.action
         };
       }
-    }).filter(c => c);
+    }).filter(contentItem => contentItem);
   },
 
   didInsertElement() {

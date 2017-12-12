@@ -632,12 +632,11 @@ export default Ember.Component.extend({
       this._resetUpload(true);
     },
 
-    toggleOptions(toolbarEvent) {
-      if (!this.get('optionsVisible')) {
-        const selected = toolbarEvent.selected;
-        toolbarEvent.selectText(selected.start, selected.end - selected.start);
-        this.sendAction('showPopupMenu', toolbarEvent);
-      }
+    onExpandPopupMenuOptions(toolbarEvent) {
+      console.log("ON EXPAND")
+      const selected = toolbarEvent.selected;
+      toolbarEvent.selectText(selected.start, selected.end - selected.start);
+      this.sendAction('storeToolbarState', toolbarEvent);
     },
 
     togglePreview() {
@@ -666,16 +665,14 @@ export default Ember.Component.extend({
         sendAction: 'showUploadModal'
       });
 
-      if (this.get("showPopupMenu")) {
-        toolbar.addButton({
-          id: 'options',
-          group: 'extras',
-          icon: 'gear',
-          title: 'composer.options',
-          sendAction: 'toggleOptions',
-          popupMenuOptions: true
-        });
-      }
+      toolbar.addButton({
+        id: 'options',
+        group: 'extras',
+        icon: 'gear',
+        title: 'composer.options',
+        sendAction: 'onExpandPopupMenuOptions',
+        popupMenu: true
+      });
 
       if (this.site.mobileView) {
         toolbar.addButton({
