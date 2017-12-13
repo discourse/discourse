@@ -1035,7 +1035,7 @@ describe UsersController do
     end
 
     context "when taking over a staged account" do
-      let!(:staged) { Fabricate(:staged, email: "staged@account.com") }
+      let!(:staged) { Fabricate(:staged, email: "staged@account.com", active: true) }
 
       it "succeeds" do
         post :create, params: {
@@ -1045,9 +1045,10 @@ describe UsersController do
         result = ::JSON.parse(response.body)
         expect(result["success"]).to eq(true)
 
-        active_user = User.find_by_email(staged.email)
-        expect(active_user.staged).to eq(false)
-        expect(active_user.registration_ip_address).to be_present
+        created_user = User.find_by_email(staged.email)
+        expect(created_user.staged).to eq(false)
+        expect(created_user.active).to eq(false)
+        expect(created_user.registration_ip_address).to be_present
       end
     end
 

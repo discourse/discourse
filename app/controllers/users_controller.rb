@@ -321,6 +321,7 @@ class UsersController < ApplicationController
     if user = User.where(staged: true).with_email(params[:email].strip.downcase).first
       user_params.each { |k, v| user.send("#{k}=", v) }
       user.staged = false
+      user.active = false
     else
       user = User.new(user_params)
     end
