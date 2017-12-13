@@ -377,7 +377,7 @@ class TopicView
     @unfiltered_post_ids ||=
       begin
         if @contains_gaps
-          unfiltered_post.pluck(:id)
+          unfiltered_posts.pluck(:id)
         else
           filtered_post_ids
         end
