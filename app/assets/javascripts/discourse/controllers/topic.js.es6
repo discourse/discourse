@@ -256,7 +256,7 @@ export default Ember.Controller.extend(BufferedContent, {
 
       if (topic.get('archiving')) { return; }
 
-      const backToInbox = () => this.goToInbox(topic.get("inboxGroupName"));
+      const backToInbox = () => this.gotoInbox(topic.get("inboxGroupName"));
 
       if (topic.get('message_archived')) {
         topic.moveToInbox().then(backToInbox);
