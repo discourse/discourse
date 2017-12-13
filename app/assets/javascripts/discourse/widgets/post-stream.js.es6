@@ -87,7 +87,6 @@ export default createWidget('post-stream', {
 
         if (attrs.multiSelect) {
           transformed.selected = attrs.selectedQuery(post);
-          transformed.selectedPostsCount = attrs.selectedPostsCount;
         }
       }
 
