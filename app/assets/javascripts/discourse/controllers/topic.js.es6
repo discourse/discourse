@@ -514,7 +514,7 @@ export default Ember.Controller.extend(BufferedContent, {
     },
 
     changePostOwner(post) {
-      this.get("selectedPostIds").addObject(post.id);
+      this.set("selectedPostIds", [post.id]);
       this.send('changeOwner');
     },
 
