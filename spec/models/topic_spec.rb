@@ -201,26 +201,6 @@ describe Topic do
         end
       end
     end
-
-    describe 'when updating SiteSetting.slug_generation_method' do
-      let(:title) { '熱帶風暴畫眉熱帶風暴畫眉熱帶風暴畫眉' }
-      let(:slug) { 'topic' }
-
-      it 'should clear the slug' do
-        topic.save!
-        expect(topic.title).to eq(title)
-        expect(topic.slug).to eq(slug)
-
-        begin
-          Scheduler::Defer.async = false
-          SiteSetting.update(name: 'slug_generation_method', value: 'encoded')
-          expect(topic.reload.read_attribute(:slug)).to eq(nil)
-        ensure
-          SiteSetting.where(name: 'slug_generation_method').destroy_all
-          Scheduler::Defer.async = true
-        end
-      end
-    end
   end
 
   context "updating a title to be shorter" do
