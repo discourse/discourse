@@ -65,6 +65,7 @@ module ImportScripts::Mbox
             name: row['name'],
             trust_level: @settings.trust_level,
             staged: true,
+            active: false,
             created_at: to_time(row['date_of_first_message'])
           }
         end
