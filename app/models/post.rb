@@ -656,28 +656,26 @@ class Post < ActiveRecord::Base
 
   def reply_ids(guardian = nil)
     replies = Post.exec_sql("
-      WITH RECURSIVE breadcrumb(id, post_number, level) AS (
-        SELECT id, post_number, 0
-          FROM posts
-         WHERE id = :post_id
+      WITH RECURSIVE breadcrumb(id, level) AS (
+        SELECT :post_id, 0
         UNION
-        SELECT p.id, p.post_number, b.level + 1
-          FROM posts p, breadcrumb b
-         WHERE b.post_number = p.reply_to_post_number
-           AND p.topic_id = :topic_id
-      ), breadcrumb_with_replies AS (
-        SELECT b.id, b.level, COUNT(*)
-          FROM breadcrumb b, post_replies pr
-         WHERE pr.reply_id = b.id
-         GROUP BY b.id, b.level
-      ) SELECT id, level FROM breadcrumb_with_replies WHERE count = 1 ORDER BY id
-    ", post_id: id, topic_id: topic_id).to_a
+        SELECT reply_id, level + 1
+          FROM post_replies, breadcrumb
+         WHERE post_id = id
+      ), breadcrumb_with_count AS (
+        SELECT id, level, COUNT(*)
+          FROM post_replies, breadcrumb
+         WHERE reply_id = id
+         GROUP BY id, level
+      )
+      SELECT id, level FROM breadcrumb_with_count WHERE level > 0 AND count = 1 ORDER BY id
+    ", post_id: id).to_a
 
     replies.map! { |r| { id: r["id"].to_i, level: r["level"].to_i } }
 
     secured_ids = Post.secured(guardian).where(id: replies.map { |r| r[:id] }).pluck(:id).to_set
 
-    replies.reject { |r| r[:id] == id || !secured_ids.include?(r[:id]) }
+    replies.reject { |r| !secured_ids.include?(r[:id]) }
   end
 
   def revert_to(number)
