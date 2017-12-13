@@ -33,7 +33,7 @@ export default Ember.Controller.extend(PreferencesTabController, {
 
   @computed()
   availableLocales() {
-    return this.siteSettings.available_locales.split('|').map(s => ({ name: s, value: s }));
+    return JSON.parse(this.siteSettings.available_locales);
   },
 
   @computed()

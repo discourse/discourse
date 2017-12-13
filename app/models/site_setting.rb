@@ -30,7 +30,7 @@ class SiteSetting < ActiveRecord::Base
   client_settings << :available_locales
 
   def self.available_locales
-    LocaleSiteSetting.values.map { |e| e[:value] }.join('|')
+    LocaleSiteSetting.values.to_json
   end
 
   def self.topic_title_length
