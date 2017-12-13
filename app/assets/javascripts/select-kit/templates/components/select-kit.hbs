@@ -9,6 +9,7 @@
   onClear=(action "onClear")
   options=headerComponentOptions
   shouldDisplayFilter=shouldDisplayFilter
+  title=(i18n title)
 }}
 
 <div class="select-kit-body">
@@ -23,6 +24,7 @@
 
   {{#if renderedBodyOnce}}
     {{component collectionComponent
+      collectionHeader=collectionHeader
       hasSelection=hasSelection
       noneRowComputedContent=noneRowComputedContent
       createRowComputedContent=createRowComputedContent

@@ -1,3 +1,9 @@
+{{#if collectionHeader}}
+  <div class="collection-header">
+    {{{collectionHeader}}}
+  </div>
+{{/if}}
+
 {{#if hasSelection}}
   {{#if noneRowComputedContent}}
     {{component noneRowComponent
