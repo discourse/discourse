@@ -745,7 +745,7 @@ email:
     default: "pkcs7|x-vcard"
   attachment_filename_blacklist:
     type: list
-    default: "smime.p7s|signature.asc"
+    default: "smime.p7s|signature.asc|winmail.dat"
   enable_forwarded_emails: false
   always_show_trimmed_content: false
   private_email: false
