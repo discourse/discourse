@@ -5,13 +5,15 @@
            markdownOptions=markdownOptions
            extraButtons="extraButtons"
            importQuote="importQuote"
-           toggleOptions="toggleOptions"
            showUploadModal="showUploadModal"
            togglePreview="togglePreview"
            validation=validation
            loading=composer.loading
            forcePreview=forcePreview
-           composerEvents=true}}
+           composerEvents=true
+           onExpandPopupMenuOptions="onExpandPopupMenuOptions"
+           onPopupMenuAction=onPopupMenuAction
+           popupMenuOptions=popupMenuOptions}}
 
 {{#if site.mobileView}}
     <input type="file" id="mobile-uploader" multiple />
