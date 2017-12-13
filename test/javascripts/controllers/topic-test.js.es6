@@ -122,7 +122,7 @@ QUnit.test("showSelectedPostsAtBottom", function(assert) {
   const model = Topic.create({ posts_count: 3 });
   const controller = this.subject({ model, site });
 
-  assert.not(controller.get("showSelectedPostsAtBottom"), "false on desktop")
+  assert.not(controller.get("showSelectedPostsAtBottom"), "false on desktop");
 
   site.set("mobileView", true);
 
