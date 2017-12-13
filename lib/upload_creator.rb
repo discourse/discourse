@@ -21,9 +21,9 @@ class UploadCreator
   #  - for_private_message (boolean)
   #  - pasted (boolean)
   def initialize(file, filename, opts = {})
-    @upload = Upload.new
     @file = file
-    @filename = filename
+    @filename = filename || ''
+    @upload = Upload.new(original_filename: filename, filesize: 0)
     @opts = opts
   end
 
