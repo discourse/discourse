@@ -434,6 +434,7 @@ Discourse::Application.routes.draw do
   get "private-posts" => "posts#latest", id: "private_posts"
   get "posts/by_number/:topic_id/:post_number" => "posts#by_number"
   get "posts/:id/reply-history" => "posts#reply_history"
+  get "posts/:id/reply-ids"     => "posts#reply_ids"
   get "posts/:username/deleted" => "posts#deleted_posts", constraints: { username: USERNAME_ROUTE_FORMAT }
   get "posts/:username/flagged" => "posts#flagged_posts", constraints: { username: USERNAME_ROUTE_FORMAT }
 

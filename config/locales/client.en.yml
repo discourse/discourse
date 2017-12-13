@@ -1858,7 +1858,18 @@ en:
       multi_select:
         select: 'select'
         selected: 'selected ({{count}})'
-        select_replies: 'select +replies'
+        select_post:
+          label: 'select'
+          title: 'Add post to selection'
+        selected_post:
+          label: 'selected'
+          title: 'Click to remove post from selection'
+        select_replies:
+          label: 'select +replies'
+          title: 'Add post and all its replies to selection'
+        select_below:
+          label: 'select +below'
+          title: 'Add post and all after it to selection'
         delete: delete selected
         cancel: cancel selecting
         select_all: select all
@@ -1950,11 +1961,14 @@ en:
         share: "share a link to this post"
         more: "More"
         delete_replies:
-          confirm:
-            one: "Do you also want to delete the direct reply to this post?"
-            other: "Do you also want to delete the {{count}} direct replies to this post?"
-          yes_value: "Yes, delete the replies too"
-          no_value: "No, just this post"
+          confirm: "Do you also want to delete the replies to this post?"
+          direct_replies:
+            one: "Yes, and 1 direct reply"
+            other: "Yes, and {{count}} direct replies"
+          all_replies:
+            one: "Yes, and 1 reply"
+            other: "Yes, and all {{count}} replies"
+          just_the_post: "No, just this post"
         admin: "post admin actions"
         wiki: "Make Wiki"
         unwiki: "Remove Wiki"
@@ -2051,11 +2065,10 @@ en:
       delete:
         confirm:
           one: "Are you sure you want to delete that post?"
-          other: "Are you sure you want to delete all those posts?"
+          other: "Are you sure you want to delete those {{count}} posts?"
 
       merge:
         confirm:
-          one: "Are you sure you want to merge those posts?"
           other: "Are you sure you want to merge those {{count}} posts?"
 
       revisions:

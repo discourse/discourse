@@ -9,7 +9,6 @@ import { clearHTMLCache } from 'discourse/helpers/custom-html';
 import { flushMap } from 'discourse/models/store';
 import { clearRewrites } from 'discourse/lib/url';
 
-
 export function currentUser() {
   return Discourse.User.create(sessionFixtures['/session/current.json'].current_user);
 }

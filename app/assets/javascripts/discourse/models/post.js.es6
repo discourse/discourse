@@ -329,22 +329,17 @@ Post.reopenClass({
     });
   },
 
-  deleteMany(selectedPosts, selectedReplies) {
+  deleteMany(post_ids) {
     return ajax("/posts/destroy_many", {
       type: 'DELETE',
-      data: {
-        post_ids: selectedPosts.map(function(p) { return p.get('id'); }),
-        reply_post_ids: selectedReplies.map(function(p) { return p.get('id'); })
-      }
+      data: { post_ids }
     });
   },
 
-  mergePosts(selectedPosts) {
+  mergePosts(post_ids) {
     return ajax("/posts/merge_posts", {
       type: 'PUT',
-      data: { post_ids: selectedPosts.map(p => p.get('id')) }
-    }).catch(() => {
-      self.flash(I18n.t('topic.merge_posts.error'));
+      data: { post_ids }
     });
   },
 
