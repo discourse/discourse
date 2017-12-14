@@ -3,6 +3,48 @@ require 'rails_helper'
 RSpec.describe UsersController do
   let(:user) { Fabricate(:user) }
 
+  def honeypot_magic(params)
+    get '/u/hp.json'
+    json = JSON.parse(response.body)
+    params[:password_confirmation] = json["value"]
+    params[:challenge] = json["challenge"].reverse
+    params
+  end
+
+  describe '#create' do
+
+    context "when taking over a staged account" do
+      let!(:staged) { Fabricate(:staged, email: "staged@account.com", active: true) }
+
+      it "succeeds" do
+        post '/u.json', params: honeypot_magic(
+          email: staged.email,
+          username: "zogstrip",
+          password: "P4ssw0rd$$"
+        )
+
+        expect(response.status).to eq(200)
+        result = ::JSON.parse(response.body)
+        expect(result["success"]).to eq(true)
+
+        created_user = User.find_by_email(staged.email)
+        expect(created_user.staged).to eq(false)
+        expect(created_user.active).to eq(false)
+        expect(created_user.registration_ip_address).to be_present
+        expect(!!created_user.custom_fields["from_staged"]).to eq(true)
+
+        # do not allow emails changes please
+
+        put "/u/update-activation-email.json", params: { email: 'bob@bob.com' }
+
+        created_user.reload
+        expect(created_user.email).to eq("staged@account.com")
+        expect(response.status).not_to eq(200)
+      end
+    end
+
+  end
+
   describe '#show' do
 
     it "should be able to view a user" do
