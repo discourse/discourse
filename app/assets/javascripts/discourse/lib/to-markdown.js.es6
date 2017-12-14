@@ -72,6 +72,17 @@ class Tag {
       constructor() {
         super(name, decorator, decorator);
       }
+
+      decorate(text) {
+        text = text.trim();
+
+        if (text.includes("\n")) {
+          this.prefix = `<${this.name}>`;
+          this.suffix = `</${this.name}>`;
+        }
+
+        return super.decorate(text);
+      }
     };
   }
 
@@ -150,7 +161,7 @@ class Tag {
   static li() {
     return class extends Tag.slice("li", "", "\n") {
       decorate(text) {
-        const indent = this.element.filterParentNames("li").map(() => "  ").join("");
+        const indent = this.element.filterParentNames("ul").slice(1).map(() => "  ").join("");
         return super.decorate(`${indent}* ${trimLeft(text)}`);
       }
     };
@@ -217,6 +228,8 @@ class Element {
       text = trimRight(text);
     }
 
+    text = text.replace(/[ \t]+/g, " ");
+
     return text;
   }
 
@@ -263,7 +276,8 @@ class Element {
 
 export default function toMarkdown(html) {
   try {
-    const markdown = Element.parse(parseHTML(html)).trim();
+    let markdown = Element.parse(parseHTML(html)).trim();
+    markdown = markdown.replace(/^<b>/, "").replace(/<\/b>$/, "").trim(); // fix for google doc copy paste
     return markdown.replace(/\r/g, "").replace(/\n \n/g, "\n\n").replace(/\n{3,}/g, "\n\n");
   } catch(err) {
     return "";

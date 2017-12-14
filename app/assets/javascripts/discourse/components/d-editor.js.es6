@@ -647,7 +647,7 @@ export default Ember.Component.extend({
 
     const { clipboard, types } = clipboardData(e);
     let plainText = clipboard.getData("text/plain");
-    const html = clipboard.getData("text/html");
+    let html = clipboard.getData("text/html");
     let handled = false;
 
     if (plainText) {
@@ -656,6 +656,10 @@ export default Ember.Component.extend({
       if (table) {
         this.appEvents.trigger('composer:insert-text', table);
         handled = true;
+      }
+
+      if (html && html.includes("urn:schemas-microsoft-com:office:word")) {
+        html = ""; // use plain text data for microsoft word
       }
     }
 

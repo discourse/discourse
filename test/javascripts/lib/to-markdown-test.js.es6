@@ -9,8 +9,14 @@ QUnit.test("converts styles between normal words", assert => {
 });
 
 QUnit.test("converts inline nested styles", assert => {
-  const html = `<em>Italicised line with <strong>some random</strong> <b>bold</b> words.</em>`;
-  const markdown = `_Italicised line with **some random** **bold** words._`;
+  let html = `<em>Italicised line with <strong>some random</strong> <b>bold</b> words.</em>`;
+  let markdown = `_Italicised line with **some random** **bold** words._`;
+  assert.equal(toMarkdown(html), markdown);
+
+  html = `<i class="fa">Italicised line
+   with <b title="strong">some
+   random</b> <s>bold</s> words.</i>`;
+  markdown = `<i>Italicised line\n with <b>some\n random</b> ~~bold~~ words.</i>`;
   assert.equal(toMarkdown(html), markdown);
 });
 
@@ -65,7 +71,8 @@ QUnit.test("converts ul and ol list tags", assert => {
       Item 2
       <ul>
         <li>Sub Item 1</li>
-        <li>Sub Item 2<ul><li>Sub <i>Sub</i> Item 1</li><li>Sub <b>Sub</b> Item 2</li></ul></li>
+        <li>Sub Item 2</li>
+        <ul><li>Sub <i>Sub</i> Item 1</li><li>Sub <b>Sub</b> Item 2</li></ul>
       </ul>
     </li>
     <li>Item 3</li>
