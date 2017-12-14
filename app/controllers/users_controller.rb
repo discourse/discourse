@@ -298,6 +298,8 @@ class UsersController < ApplicationController
     params[:for_user_id] ? User.find(params[:for_user_id]) : current_user
   end
 
+  FROM_STAGED = "from_staged".freeze
+
   def create
     params.require(:email)
     params.permit(:user_fields)
@@ -322,6 +324,7 @@ class UsersController < ApplicationController
       user_params.each { |k, v| user.send("#{k}=", v) }
       user.staged = false
       user.active = false
+      user.custom_fields[FROM_STAGED] = true
     else
       user = User.new(user_params)
     end
@@ -590,7 +593,7 @@ class UsersController < ApplicationController
       if user = User.where(id: session_user_id.to_i).first
         @account_created[:username] = user.username
         @account_created[:email] = user.email
-        @account_created[:show_controls] = true
+        @account_created[:show_controls] = !user.custom_fields[FROM_STAGED]
       end
     end
 
@@ -645,6 +648,10 @@ class UsersController < ApplicationController
     end
 
     if @user.blank? || @user.active? || current_user.present?
+      raise Discourse::InvalidAccess.new
+    end
+
+    if @user.custom_fields[FROM_STAGED]
       raise Discourse::InvalidAccess.new
     end
 
