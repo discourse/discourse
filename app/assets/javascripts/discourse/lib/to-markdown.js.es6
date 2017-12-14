@@ -19,18 +19,8 @@ class Tag {
     return text;
   }
 
-  innerMarkdown() {
-    let text = this.element.innerMarkdown();
-
-    if (this.element.name !== 'li') {
-      text = text.replace(/^ +/g, "");
-    }
-
-    return text;
-  }
-
   toMarkdown() {
-    const text = this.innerMarkdown();
+    const text = this.element.innerMarkdown();
 
     if (text && text.trim()) {
       return this.decorate(text);
@@ -100,18 +90,34 @@ class Tag {
     };
   }
 
-  static listItem() {
+  static slice(name, prefix, suffix) {
     return class extends Tag {
       constructor() {
-        super("li", "", "\n");
+        super(name, prefix, suffix);
       }
 
       decorate(text) {
-        const indent = this.element.filterParentNames("li").map(() => "  ").join("");
         if (!this.element.next) {
           this.suffix = "";
         }
-        return `${indent}* ${trimLeft(text)}${this.suffix}`;
+        return `${text}${this.suffix}`;
+      }
+    };
+  }
+
+  static row(name) {
+    return Tag.slice(name, "", "\n");
+  }
+
+  static cell(name) {
+    return Tag.slice(name, "", " ");
+  }
+
+  static li() {
+    return class extends Tag.row("li") {
+      decorate(text) {
+        const indent = this.element.filterParentNames("li").map(() => "  ").join("");
+        return super.decorate(`${indent}* ${trimLeft(text)}`);
       }
     };
   }
@@ -132,8 +138,14 @@ const tags = [
 
   Tag.region("p"), Tag.region("div"),, Tag.region("table"),
   Tag.region("ul"), Tag.region("ol"), Tag.region("dl"),
+  Tag.region("pre"),
 
-  Tag.listItem(),
+  Tag.row("dt"), Tag.row("dd"),
+  Tag.row("tr"), Tag.row("thead"),
+
+  Tag.cell("td"), Tag.cell("th"),
+
+  Tag.li(),
 
   Tag.separator("br", "\n"),
   Tag.separator("hr", "\n---\n"),
@@ -142,7 +154,9 @@ const tags = [
 
   Tag.replace("head", ""),
 
-  // TODO: img, pre, code, dt, dd, thead, tbody, tr, th, td, ins, del, blockquote
+  // TODO
+  // CREATE: img, code, tbody, ins, del, blockquote, small, large
+  // UPDATE: ol, pre, thead, th, td
 ];
 
 class Element {
@@ -173,10 +187,16 @@ class Element {
     return Element.parseChildren(this);
   }
 
+  text() {
+    let text = this.data || "";
+    text = text.replace(/[ \t]+/g, " ");
+    return text;
+  }
+
   toMarkdown() {
     switch(this.type) {
       case "text":
-        return this.data;
+        return this.text();
         break;
       case "tag":
         return this.tag().toMarkdown();
@@ -221,7 +241,7 @@ class Element {
 export default function toMarkdown(html) {
   try {
     let markdown = Element.parse(parseHTML(html)).trim();
-    return markdown.replace(/\r/g, "").replace(/\n{4,}/g, "\n\n\n");
+    return markdown.replace(/\r/g, "").replace(/\n \n/g, "\n\n").replace(/\n{3,}/g, "\n\n");
   } catch(err) {
     return "";
   }

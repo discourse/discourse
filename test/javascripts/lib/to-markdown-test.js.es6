@@ -33,3 +33,26 @@ QUnit.test("put raw URL instead of converting the link", assert => {
 QUnit.test("skip empty link", assert => {
   assert.equal(toMarkdown(`<a href="https://example.com"></a>`), "");
 });
+
+QUnit.test("converts heading tags", assert => {
+  const html = `
+  <h1>Heading 1</h1>
+  <h2>Heading 2</h2>
+
+  \t  <h3>Heading 3</h3>
+
+
+  <h4>Heading 4</h4>
+
+
+
+<h5>Heading 5</h5>
+
+
+
+
+<h6>Heading 6</h6>
+  `;
+  const markdown = `# Heading 1\n\n## Heading 2\n\n### Heading 3\n\n#### Heading 4\n\n##### Heading 5\n\n###### Heading 6`;
+  assert.equal(toMarkdown(html), markdown);
+});
