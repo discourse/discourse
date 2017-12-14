@@ -56,3 +56,30 @@ QUnit.test("converts heading tags", assert => {
   const markdown = `# Heading 1\n\n## Heading 2\n\n### Heading 3\n\n#### Heading 4\n\n##### Heading 5\n\n###### Heading 6`;
   assert.equal(toMarkdown(html), markdown);
 });
+
+QUnit.test("converts ul and ol list tags", assert => {
+  const html = `
+  <ul>
+    <li>Item 1</li>
+    <li>
+      Item 2
+      <ul>
+        <li>Sub Item 1</li>
+        <li>Sub Item 2<ul><li>Sub <i>Sub</i> Item 1</li><li>Sub <b>Sub</b> Item 2</li></ul></li>
+      </ul>
+    </li>
+    <li>Item 3</li>
+  </ul>
+  `;
+  const markdown = `* Item 1\n* Item 2\n\n  * Sub Item 1\n  * Sub Item 2\n\n    * Sub _Sub_ Item 1\n    * Sub **Sub** Item 2\n\n* Item 3`;
+  assert.equal(toMarkdown(html), markdown);
+});
+
+QUnit.test("stripes unwanted inline tags", assert => {
+  const html = `
+  <p>Lorem ipsum <span>dolor sit amet, consectetur</span> <strike>elit.</strike></p>
+  <p>Ut minim veniam, <label>quis nostrud</label> laboris <nisi> ut aliquip ex ea</nisi> commodo.</p>
+  `;
+  const markdown = `Lorem ipsum dolor sit amet, consectetur ~~elit.~~\n\nUt minim veniam, quis nostrud laboris  ut aliquip ex ea commodo.`;
+  assert.equal(toMarkdown(html), markdown);
+});

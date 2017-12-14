@@ -1,11 +1,10 @@
 import parseHTML from 'discourse/helpers/parse-html';
 
-function trimLeft(text) {
-    return text.replace(/^\s+/,"");
-}
+const trimLeft = text => text.replace(/^\s+/,"");
+const trimRight = text => text.replace(/\s+$/,"");
 
 class Tag {
-  constructor(name, prefix, suffix) {
+  constructor(name, prefix = "", suffix = "") {
     this.name = name;
     this.prefix = prefix;
     this.suffix = suffix;
@@ -29,12 +28,43 @@ class Tag {
     return text;
   }
 
-  static heading(name, prefix) {
+  static blocks() {
+    return ["address", "article", "aside", "blockquote", "dd", "div", "dl", "dt", "fieldset",
+            "figcaption", "figure", "footer", "form", "header", "hgroup", "hr", "main", "nav",
+            "ol", "p", "pre", "section", "table", "ul"];
+  }
+
+  static headings() {
+    return ["h1", "h2", "h3", "h4", "h5", "h6"];
+  }
+
+  static emphases() {
+    return  [ ["b", "**"], ["strong", "**"], ["i", "_"], ["em", "_"], ["s", "~~"], ["strike", "~~"] ];
+  }
+
+  static slices() {
+    return ["dt", "dd", "tr", "thead", "tbody", "tfoot"];
+  }
+
+  static trimmable() {
+    return [...Tag.blocks(), ...Tag.headings(), ...Tag.slices(), "li", "td", "th", "br", "hr"];
+  }
+
+  static block(name, prefix, suffix) {
     return class extends Tag {
       constructor() {
-        super(name, `\n\n${prefix} `, "\n\n");
+        super(name, prefix, suffix);
+      }
+
+      decorate(text) {
+        return `\n\n${this.prefix}${text}${this.suffix}\n\n`;
       }
     };
+  }
+
+  static heading(name, i) {
+    const prefix = `${[...Array(i)].map(() => "#").join("")} `;
+    return Tag.block(name, prefix, "");
   }
 
   static emphasis(name, decorator) {
@@ -54,18 +84,6 @@ class Tag {
 
       toMarkdown() {
         return this.text;
-      }
-    };
-  }
-
-  static separator(name, text) {
-    return Tag.replace(name, text);
-  }
-
-  static region(name) {
-    return class extends Tag {
-      constructor() {
-        super(name, "\n\n", "\n\n");
       }
     };
   }
@@ -105,16 +123,12 @@ class Tag {
     };
   }
 
-  static row(name) {
-    return Tag.slice(name, "", "\n");
-  }
-
   static cell(name) {
     return Tag.slice(name, "", " ");
   }
 
   static li() {
-    return class extends Tag.row("li") {
+    return class extends Tag.slice("li", "", "\n") {
       decorate(text) {
         const indent = this.element.filterParentNames("li").map(() => "  ").join("");
         return super.decorate(`${indent}* ${trimLeft(text)}`);
@@ -125,38 +139,16 @@ class Tag {
 }
 
 const tags = [
-  Tag.heading("h1", "#"),
-  Tag.heading("h2", "##"),
-  Tag.heading("h3", "###"),
-  Tag.heading("h4", "####"),
-  Tag.heading("h5", "#####"),
-  Tag.heading("h6", "######"),
-
-  Tag.emphasis("b", "**"), Tag.emphasis("strong", "**"),
-  Tag.emphasis("i", "_"), Tag.emphasis("em", "_"),
-  Tag.emphasis("s", "~~"), Tag.emphasis("strike", "~~"),
-
-  Tag.region("p"), Tag.region("div"),, Tag.region("table"),
-  Tag.region("ul"), Tag.region("ol"), Tag.region("dl"),
-  Tag.region("pre"),
-
-  Tag.row("dt"), Tag.row("dd"),
-  Tag.row("tr"), Tag.row("thead"),
-
+  ...Tag.blocks().map((b) => Tag.block(b)),
+  ...Tag.headings().map((h, i) => Tag.heading(h, i + 1)),
+  ...Tag.slices().map((s) => Tag.slice(s, "", "\n")),
+  ...Tag.emphases().map((e) => Tag.emphasis(e[0], e[1])),
   Tag.cell("td"), Tag.cell("th"),
+  Tag.replace("br", "\n"), Tag.replace("hr", "\n---\n"), Tag.replace("head", ""),
+  Tag.li(), Tag.link(),
 
-  Tag.li(),
-
-  Tag.separator("br", "\n"),
-  Tag.separator("hr", "\n---\n"),
-
-  Tag.link(),
-
-  Tag.replace("head", ""),
-
-  // TODO
-  // CREATE: img, code, tbody, ins, del, blockquote, small, large
-  // UPDATE: ol, pre, thead, th, td
+  // TO-DO  CREATE: img, code, tbody, ins, del, blockquote, small, large
+  //        UPDATE: ol, pre, thead, th, td
 ];
 
 class Element {
@@ -177,8 +169,7 @@ class Element {
   }
 
   tag() {
-    let tag = tags.filter(t => (new t().name === this.name))[0] || Tag;
-    tag = new tag();
+    const tag = new (tags.filter(t => (new t().name === this.name))[0] || Tag)();
     tag.element = this;
     return tag;
   }
@@ -187,9 +178,25 @@ class Element {
     return Element.parseChildren(this);
   }
 
+  leftTrimmable() {
+    return this.previous && Tag.trimmable().includes(this.previous.name);
+  }
+
+  rightTrimmable() {
+    return this.next && Tag.trimmable().includes(this.next.name);
+  }
+
   text() {
     let text = this.data || "";
-    text = text.replace(/[ \t]+/g, " ");
+
+    if (this.leftTrimmable()) {
+      text = trimLeft(text);
+    }
+
+    if (this.rightTrimmable()) {
+      text = trimRight(text);
+    }
+
     return text;
   }
 
@@ -202,10 +209,6 @@ class Element {
         return this.tag().toMarkdown();
         break;
     }
-  }
-
-  isInside(name) {
-    return this.name === name || this.filterParentNames(name)[0];
   }
 
   filterParentNames(name) {
@@ -240,7 +243,7 @@ class Element {
 
 export default function toMarkdown(html) {
   try {
-    let markdown = Element.parse(parseHTML(html)).trim();
+    const markdown = Element.parse(parseHTML(html)).trim();
     return markdown.replace(/\r/g, "").replace(/\n \n/g, "\n\n").replace(/\n{3,}/g, "\n\n");
   } catch(err) {
     return "";
