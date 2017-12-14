@@ -190,7 +190,7 @@ class Admin::ThemesController < Admin::AdminController
 
         response.headers['Content-Disposition'] = "attachment; filename=#{@theme.name.parameterize}.dcstyle.json"
         response.sending_file = true
-        render json: ThemeWithEmbeddedUploadsSerializer.new(@theme, root: 'theme')
+        render json: ::ThemeWithEmbeddedUploadsSerializer.new(@theme, root: 'theme')
       end
     end
 
