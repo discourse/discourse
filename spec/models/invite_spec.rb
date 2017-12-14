@@ -141,6 +141,7 @@ describe Invite do
     let(:inviter) { group_private_topic.user }
 
     before do
+      group.add_owner(inviter)
       @invite = group_private_topic.invite_by_email(inviter, iceking)
     end
 
