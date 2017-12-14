@@ -26,13 +26,13 @@ class Admin::ThemesController < Admin::AdminController
 
   def import
     @theme = nil
-    uploaded_theme = params.require(:theme)
-    if uploaded_theme
-      json = JSON::parse(uploaded_theme.read)
+    if params[:theme]
+      json = JSON::parse(params[:theme].read)
       theme = json['theme']
 
       @theme = Theme.new(name: theme["name"], user_id: current_user.id)
       theme["theme_fields"]&.each do |field|
+
         if field["raw_upload"]
           begin
             tmp = Tempfile.new
