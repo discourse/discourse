@@ -661,8 +661,11 @@ export default Ember.Component.extend({
 
     if (this.siteSettings.enable_rich_text_paste && html && !handled) {
       const markdown = toMarkdown(html);
-      this.appEvents.trigger('composer:insert-text', markdown);
-      handled = true;
+
+      if (!plainText || plainText.length < markdown.length) {
+        this.appEvents.trigger('composer:insert-text', markdown);
+        handled = true;
+      }
     }
 
     const uploadFiles = types.includes("Files") && !plainText && !handled;

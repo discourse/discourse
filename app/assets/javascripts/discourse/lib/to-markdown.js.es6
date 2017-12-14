@@ -219,6 +219,10 @@ class Element {
 }
 
 export default function toMarkdown(html) {
-  let markdown = Element.parse(parseHTML(html)).trim();
-  return markdown.replace(/\r/g, "").replace(/\n{4,}/g, "\n\n\n");
+  try {
+    let markdown = Element.parse(parseHTML(html)).trim();
+    return markdown.replace(/\r/g, "").replace(/\n{4,}/g, "\n\n\n");
+  } catch(err) {
+    return "";
+  }
 }
