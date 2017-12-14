@@ -786,7 +786,6 @@ describe Post do
     let!(:p4) { Fabricate(:post, topic: topic, post_number: 4, reply_to_post_number: 2) }
     let!(:p5) { Fabricate(:post, topic: topic, post_number: 5, reply_to_post_number: 4) }
     let!(:p6) { Fabricate(:post, topic: topic, post_number: 6) }
-    let!(:p7) { Fabricate(:post, topic: topic, post_number: 7) }
 
     before {
       PostReply.create!(post: p1, reply: p2)
@@ -794,7 +793,7 @@ describe Post do
       PostReply.create!(post: p2, reply: p6) # simulates p6 quoting p2
       PostReply.create!(post: p3, reply: p5) # simulates p5 quoting p3
       PostReply.create!(post: p4, reply: p5)
-      PostReply.create!(post: p7, reply: p7) # https://meta.discourse.org/t/topic-quoting-itself-displays-reply-indicator/76085
+      PostReply.create!(post: p6, reply: p6) # https://meta.discourse.org/t/topic-quoting-itself-displays-reply-indicator/76085
     }
 
     it "returns the reply ids and their level" do
@@ -803,8 +802,7 @@ describe Post do
       expect(p3.reply_ids).to be_empty # has no replies
       expect(p4.reply_ids).to be_empty # p5 replies to 2 posts (p4 and p3)
       expect(p5.reply_ids).to be_empty # has no replies
-      expect(p6.reply_ids).to be_empty # has no replies
-      expect(p7.reply_ids).to be_empty # quotes itself
+      expect(p6.reply_ids).to be_empty # quotes itself
     end
 
   end

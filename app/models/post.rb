@@ -673,6 +673,7 @@ class Post < ActiveRecord::Base
         SELECT id, level, COUNT(*)
           FROM post_replies, breadcrumb
          WHERE reply_id = id
+           AND reply_id <> post_id
          GROUP BY id, level
       )
       SELECT id, level FROM breadcrumb_with_count WHERE level > 0 AND count = 1 ORDER BY id
