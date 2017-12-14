@@ -467,7 +467,7 @@ class TopicsController < ApplicationController
     topic = Topic.find_by(id: params[:topic_id])
 
     if topic.private_message?
-      guardian.ensure_can_send_private_message!(group)
+      guardian.ensure_can_invite_group_to_private_message!(group, topic)
       topic.invite_group(current_user, group)
       render_json_dump BasicGroupSerializer.new(group, scope: guardian, root: 'group')
     else

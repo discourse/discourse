@@ -158,4 +158,59 @@ RSpec.describe TopicsController do
       end
     end
   end
+
+  describe 'invite_group' do
+    let(:admins) { Group[:admins] }
+    let(:pm) { Fabricate(:private_message_topic) }
+
+    def invite_group(topic, expected_status)
+      post "/t/#{topic.id}/invite-group.json", params: { group: admins.name }
+      expect(response.status).to eq(expected_status)
+    end
+
+    before do
+      admins.update!(messageable_level: Group::ALIAS_LEVELS[:everyone])
+    end
+
+    describe 'as an anon user' do
+      it 'should be forbidden' do
+        invite_group(pm, 403)
+      end
+    end
+
+    describe 'as a normal user' do
+      let!(:user) { sign_in(Fabricate(:user)) }
+
+      describe 'when user does not have permission to view the topic' do
+        it 'should be forbidden' do
+          invite_group(pm, 403)
+        end
+      end
+
+      describe 'when user has permission to view the topic' do
+        before do
+          pm.allowed_users << user
+        end
+
+        it 'should allow user to invite group to topic' do
+          invite_group(pm, 200)
+          expect(pm.allowed_groups.first.id).to eq(admins.id)
+        end
+      end
+    end
+
+    describe 'as an admin user' do
+      let!(:admin) { sign_in(Fabricate(:admin)) }
+
+      it "disallows inviting a group to a topic" do
+        topic = Fabricate(:topic)
+        invite_group(topic, 422)
+      end
+
+      it "allows inviting a group to a PM" do
+        invite_group(pm, 200)
+        expect(pm.allowed_groups.first.id).to eq(admins.id)
+      end
+    end
+  end
 end
