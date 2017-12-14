@@ -775,6 +775,7 @@ email:
   pop3_polling_port: 995
   pop3_polling_username: ''
   pop3_polling_password: ''
+  pop3_polling_delete_from_server: true
   log_mail_processing_failures: false
   incoming_email_prefer_html: true
   email_in:
