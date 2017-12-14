@@ -37,7 +37,8 @@ const Topic = RestModel.extend({
 
   @computed('last_read_post_number', 'highest_post_number')
   visited(lastReadPostNumber, highestPostNumber) {
-    return lastReadPostNumber === highestPostNumber;
+    // >= to handle case where there are deleted posts at the end of the topic
+    return lastReadPostNumber >= highestPostNumber;
   },
 
   @computed('posters.firstObject')
