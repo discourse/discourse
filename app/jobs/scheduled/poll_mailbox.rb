@@ -39,8 +39,9 @@ module Jobs
       end
 
       pop3.start(SiteSetting.pop3_polling_username, SiteSetting.pop3_polling_password) do |pop|
-        pop.delete_all do |p|
+        pop.each_mail do |p|
           process_popmail(p)
+          p.delete if SiteSetting.pop3_polling_delete_from_server?
         end
       end
     rescue Net::OpenTimeout => e
