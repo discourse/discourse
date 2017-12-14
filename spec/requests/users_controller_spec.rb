@@ -278,7 +278,7 @@ RSpec.describe UsersController do
           }
 
           expect(response).to be_success
-          expect(JSON.parse(response.body)["groups"].first['name']).to eq(messageable_group.name)
+          expect(JSON.parse(response.body)["groups"].last['name']).to eq(messageable_group.name)
         end
 
         it 'searches for mentionable groups' do

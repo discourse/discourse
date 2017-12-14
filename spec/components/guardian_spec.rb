@@ -211,9 +211,27 @@ describe Guardian do
       it "returns true if target is a staff group" do
         Group::STAFF_GROUPS.each do |name|
           g = Group[name]
-          g.messageable_level = Group::ALIAS_LEVELS[:everyone]
+          g.update!(messageable_level: Group::ALIAS_LEVELS[:everyone])
           expect(Guardian.new(user).can_send_private_message?(g)).to be_truthy
         end
+      end
+    end
+
+    it "respects the group's messageable_level" do
+      group = Fabricate(:group)
+
+      Group::ALIAS_LEVELS.each do |level, _|
+        group.update!(messageable_level: Group::ALIAS_LEVELS[level])
+        output = level == :everyone ? true : false
+
+        expect(Guardian.new(user).can_send_private_message?(group)).to eq(output)
+      end
+
+      admin = Fabricate(:admin)
+
+      Group::ALIAS_LEVELS.each do |level, _|
+        group.update!(messageable_level: Group::ALIAS_LEVELS[level])
+        expect(Guardian.new(admin).can_send_private_message?(group)).to eq(true)
       end
     end
 

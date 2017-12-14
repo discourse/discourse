@@ -248,7 +248,12 @@ class Group < ActiveRecord::Base
 
     unless group = self.lookup_group(name)
       group = Group.new(name: name.to_s, automatic: true)
-      group.default_notification_level = 2 if AUTO_GROUPS[:moderators] == id
+
+      if AUTO_GROUPS[:moderators] == id
+        group.default_notification_level = 2
+        group.messageable_level = ALIAS_LEVELS[:everyone]
+      end
+
       group.id = id
       group.save!
     end
