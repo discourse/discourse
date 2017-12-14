@@ -654,6 +654,8 @@ class Post < ActiveRecord::Base
     Post.secured(guardian).where(id: post_ids).includes(:user, :topic).order(:id).to_a
   end
 
+  MAX_REPLY_LEVEL ||= 1000
+
   def reply_ids(guardian = nil)
     replies = Post.exec_sql("
       WITH RECURSIVE breadcrumb(id, level) AS (
@@ -662,6 +664,8 @@ class Post < ActiveRecord::Base
         SELECT reply_id, level + 1
           FROM post_replies, breadcrumb
          WHERE post_id = id
+           AND post_id <> reply_id
+           AND level < #{MAX_REPLY_LEVEL}
       ), breadcrumb_with_count AS (
         SELECT id, level, COUNT(*)
           FROM post_replies, breadcrumb
