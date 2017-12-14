@@ -35,6 +35,9 @@ export default MultiSelectComponent.extend({
 
   computeContent() {
     const blacklist = Ember.makeArray(this.get("blacklist"));
-    return Category.list().filter(category => !blacklist.includes(category));
+    return Category.list().filter(category => {
+      return this.get("computedValues").includes(category.id) ||
+             !blacklist.includes(category);
+    });
   }
 });
