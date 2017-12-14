@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-SCRIPTPATH=$(cd "$(dirname "$0")"; pwd -P)
+SCRIPTPATH=$(cd "$(dirname "$0")" >/dev/null; pwd -P)
 SOURCE_DIR=$(cd "$SCRIPTPATH" && cd ../.. && pwd -P)
 DATA_DIR="$SOURCE_DIR/data/postgres"
 
