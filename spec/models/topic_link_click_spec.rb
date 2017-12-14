@@ -192,6 +192,32 @@ describe TopicLinkClick do
         end
       end
 
+      context 'with a query param and google analytics' do
+        before do
+          @topic = Fabricate(:topic)
+          @post = Fabricate(:post,
+              topic: @topic,
+              user: @topic.user,
+              raw: "Here's a link to twitter: http://twitter.com?ref=forum"
+            )
+          TopicLink.extract_from(@post)
+          @topic_link = @topic.topic_links.first
+        end
+
+        it 'creates a click' do
+          url = TopicLinkClick.create_from(
+            url: 'http://twitter.com?ref=forum&_ga=1.16846778.221554446.1071987018',
+            topic_id: @topic.id,
+            post_id: @post.id,
+            ip: '127.0.0.3'
+          )
+          click = TopicLinkClick.last
+          expect(click).to be_present
+          expect(click.topic_link).to eq(@topic_link)
+          expect(url).to eq('http://twitter.com?ref=forum&_ga=1.16846778.221554446.1071987018')
+        end
+      end
+
       context 'with a google analytics tracking code and a hash' do
         before do
           @url = TopicLinkClick.create_from(url: 'http://discourse.org?_ga=1.16846778.221554446.1071987018#faq',

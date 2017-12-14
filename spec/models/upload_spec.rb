@@ -51,6 +51,13 @@ describe Upload do
     expect(created_upload.extension).to eq("png")
   end
 
+  it "should create an invalid upload when the filename is blank" do
+    SiteSetting.authorized_extensions = "*"
+
+    created_upload = UploadCreator.new(image, nil).create_for(user_id)
+    expect(created_upload.valid?).to eq(false)
+  end
+
   context ".get_from_url" do
     let(:url) { "/uploads/default/original/3X/1/0/10f73034616a796dfd70177dc54b6def44c4ba6f.png" }
     let(:upload) { Fabricate(:upload, url: url) }

@@ -40,7 +40,8 @@ function loadDraft(store, opts) {
       draft: true,
       composerState: Composer.DRAFT,
       composerTime: draft.composerTime,
-      typingTime: draft.typingTime
+      typingTime: draft.typingTime,
+      whisper: draft.whisper
     });
     return composer;
   }
@@ -63,7 +64,6 @@ export default Ember.Controller.extend({
   showEditReason: false,
   editReason: null,
   scopedCategoryId: null,
-  optionsVisible: false,
   lastValidatedAt: null,
   isUploading: false,
   topic: null,
@@ -160,11 +160,6 @@ export default Ember.Controller.extend({
     return isStaffUser && this.siteSettings.enable_whispers && action === Composer.REPLY;
   },
 
-  @computed("popupMenuOptions")
-  showPopupMenu(popupMenuOptions) {
-    return popupMenuOptions ? popupMenuOptions.some(option => option.condition) : false;
-  },
-
   _setupPopupMenuOption(callback) {
     let option = callback();
 
@@ -225,6 +220,13 @@ export default Ember.Controller.extend({
   },
 
   actions: {
+    onPopupMenuAction(action) {
+      this.send(action);
+    },
+
+    storeToolbarState(toolbarEvent) {
+      this.set('toolbarEvent', toolbarEvent);
+    },
 
     togglePreview() {
       this.toggleProperty('showPreview');
@@ -237,7 +239,6 @@ export default Ember.Controller.extend({
 
     cancelled() {
       this.send('hitEsc');
-      this.send('hideOptions');
     },
 
     addLinkLookup(linkLookup) {
@@ -288,16 +289,6 @@ export default Ember.Controller.extend({
 
     toggleToolbar() {
       this.toggleProperty('showToolbar');
-    },
-
-    showOptions(toolbarEvent, loc) {
-      this.set('toolbarEvent', toolbarEvent);
-      this.appEvents.trigger('popup-menu:open', loc);
-      this.set('optionsVisible', true);
-    },
-
-    hideOptions() {
-      this.set('optionsVisible', false);
     },
 
     // Toggle the reply view

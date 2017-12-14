@@ -2008,7 +2008,7 @@ en:
 
         This is an automated message from %{site_name} to let you know that your post was hidden.
 
-        %{base_url}%{url}
+        <%{base_url}%{url}>
 
         %{flag_reason}
 

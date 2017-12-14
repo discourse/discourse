@@ -29,5 +29,6 @@ module IntegrationHelpers
     Fabricate(:email_token, confirmed: true, user: user)
     post "/session.json", params: { login: user.username, password: password }
     expect(response).to be_success
+    user
   end
 end

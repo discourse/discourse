@@ -468,7 +468,8 @@ const Composer = RestModel.extend({
       topic: opts.topic,
       targetUsernames: opts.usernames,
       composerTotalOpened: opts.composerTime,
-      typingTime: opts.typingTime
+      typingTime: opts.typingTime,
+      whisper: opts.whisper
     });
 
     if (opts.post) {
@@ -774,6 +775,7 @@ const Composer = RestModel.extend({
       categoryId: this.get('categoryId'),
       postId: this.get('post.id'),
       archetypeId: this.get('archetypeId'),
+      whisper: this.get('whisper'),
       metaData: this.get('metaData'),
       usernames: this.get('targetUsernames'),
       composerTime: this.get('composerTime'),

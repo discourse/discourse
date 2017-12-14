@@ -285,6 +285,11 @@ class Guardian
     is_admin? || (authenticated? && @user.id == user_id)
   end
 
+  def can_invite_group_to_private_message?(group, topic)
+    can_see_topic?(topic) &&
+    can_send_private_message?(group)
+  end
+
   def can_send_private_message?(target)
     is_user = target.is_a?(User)
     is_group = target.is_a?(Group)
@@ -300,6 +305,8 @@ class Guardian
     (is_staff? || SiteSetting.enable_private_messages) &&
     # Can't send PMs to suspended users
     (is_staff? || is_group || !target.suspended?) &&
+    # Check group messageable level
+    (is_staff? || is_user || Group.messageable(@user).where(id: target.id).exists?) &&
     # Silenced users can only send PM to staff
     (!is_silenced? || target.staff?)
   end

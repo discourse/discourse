@@ -306,6 +306,10 @@ export default function() {
       return response(200, [ { id: 2222, post_number: 2222 } ]);
     });
 
+    this.get("/posts/:post_id/reply-ids.json", () => {
+      return response(200, { direct_reply_ids: [45], all_reply_ids: [45, 100] });
+    });
+
     this.post('/user_badges', () => response(200, fixturesByUrl['/user_badges']));
     this.delete('/user_badges/:badge_id', success);
 

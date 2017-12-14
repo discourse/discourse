@@ -1,5 +1,4 @@
 <div class="control-group category-notifications">
-
   <label class="control-label">{{i18n 'user.categories_settings'}}</label>
 
   <div class="controls category-controls">
@@ -22,7 +21,7 @@
 
   <div class="controls category-controls">
     <label>{{d-icon "d-watching-first"}} {{i18n 'user.watched_first_post_categories'}}</label>
-    {{category-selector categories=model.watchedFirstPostCategories}}
+    {{category-selector categories=model.watchedFirstPostCategories blacklist=selectedCategories}}
   </div>
   <div class="instructions">{{i18n 'user.watched_first_post_categories_instructions'}}</div>
 

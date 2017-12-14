@@ -279,7 +279,7 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def participant_count
-    object.participants.size
+    object.participant_count
   end
 
   private

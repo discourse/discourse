@@ -33,6 +33,14 @@ class Topic < ActiveRecord::Base
 
   attr_accessor :allowed_user_ids, :tags_changed
 
+  DiscourseEvent.on(:site_setting_saved) do |site_setting|
+    if site_setting.name.to_s == "slug_generation_method" && site_setting.saved_change_to_value?
+      Scheduler::Defer.later("Null topic slug") do
+        Topic.update_all(slug: nil)
+      end
+    end
+  end
+
   def self.max_sort_order
     @max_sort_order ||= (2**31) - 1
   end

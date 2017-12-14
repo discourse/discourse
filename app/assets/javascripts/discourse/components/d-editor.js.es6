@@ -123,7 +123,8 @@ class Toolbar {
       icon: button.label ? null : button.icon || button.id,
       action: button.action || 'toolbarButton',
       perform: button.perform || function() { },
-      trimLeading: button.trimLeading
+      trimLeading: button.trimLeading,
+      popupMenu: button.popupMenu || false
     };
 
     if (button.sendAction) {
