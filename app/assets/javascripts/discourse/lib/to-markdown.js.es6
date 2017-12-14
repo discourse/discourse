@@ -91,19 +91,39 @@ class Tag {
   static link() {
     return class extends Tag {
       constructor() {
-        super("a", "", "");
+        super("a");
       }
 
       decorate(text) {
         const attr = this.element.attributes;
 
-        if (!text) {
-          return "";
-        } else if (attr && attr.href && text !== attr.href) {
+        if (attr && attr.href && text !== attr.href) {
           return "[" + text + "](" + attr.href + ")";
         }
 
         return text;
+      }
+    };
+  }
+
+  static image() {
+    return class extends Tag {
+      constructor() {
+        super("img");
+      }
+
+      toMarkdown() {
+        const e = this.element;
+        const attr = e.attributes;
+        const pAttr = e.parent && e.parent.attributes;
+        const src = (attr && attr.src) || (pAttr && pAttr.src);
+
+        if (src) {
+          const alt = (attr && attr.alt) || (pAttr && pAttr.alt) || "";
+          return "![" + alt + "](" + src + ")";
+        }
+
+        return "";
       }
     };
   }
@@ -145,9 +165,9 @@ const tags = [
   ...Tag.emphases().map((e) => Tag.emphasis(e[0], e[1])),
   Tag.cell("td"), Tag.cell("th"),
   Tag.replace("br", "\n"), Tag.replace("hr", "\n---\n"), Tag.replace("head", ""),
-  Tag.li(), Tag.link(),
+  Tag.li(), Tag.link(), Tag.image(),
 
-  // TO-DO  CREATE: img, code, tbody, ins, del, blockquote, small, large
+  // TO-DO  CREATE: code, tbody, ins, del, blockquote, small, large
   //        UPDATE: ol, pre, thead, th, td
 ];
 

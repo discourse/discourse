@@ -96,3 +96,24 @@ QUnit.test("converts table as readable", assert => {
   const markdown = `Discourse Avenue\n\n**laboris**\n\nHeading 1 Head 2\n\nLorem ipsum\n**dolor** _sit amet_`;
   assert.equal(toMarkdown(html), markdown);
 });
+
+QUnit.test("converts img tag", assert => {
+  const url = "https://example.com/image.png";
+  let html = `<img src="${url}">`;
+  assert.equal(toMarkdown(html), `![](${url})`);
+
+  html = `<div><span><img src="${url}" alt="description" /></span></div>`;
+  assert.equal(toMarkdown(html), `![description](${url})`);
+
+  html = `<a href="http://example.com"><img src="${url}" alt="description" /></a>`;
+  assert.equal(toMarkdown(html), `[![description](${url})](http://example.com)`);
+
+  html = `<a href="http://example.com">description <img src="${url}" /></a>`;
+  assert.equal(toMarkdown(html), `[description ![](${url})](http://example.com)`);
+
+  html = `<img alt="description" />`;
+  assert.equal(toMarkdown(html), "");
+
+  html = `<a><img src="${url}" alt="description" /></a>`;
+  assert.equal(toMarkdown(html), `![description](${url})`);
+});
