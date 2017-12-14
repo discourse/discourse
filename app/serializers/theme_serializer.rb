@@ -91,3 +91,7 @@ class ThemeFieldWithEmbeddedUploadsSerializer < ThemeFieldSerializer
     Base64.encode64(raw)
   end
 end
+
+class ThemeWithEmbeddedUploadsSerializer < ThemeSerializer
+  has_many :theme_fields, serializer: ThemeFieldWithEmbeddedUploadsSerializer, embed: :objects
+end
