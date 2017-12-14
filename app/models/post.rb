@@ -20,7 +20,9 @@ class Post < ActiveRecord::Base
   self.permitted_create_params = Set.new
 
   # increase this number to force a system wide post rebake
-  BAKED_VERSION = 1
+  # Version 1, was the initial version
+  # Version 2 15-12-2017, introduces CommonMark and a huge number of onebox fixes
+  BAKED_VERSION = 2
 
   rate_limit
   rate_limit :limit_posts_per_day
@@ -472,6 +474,7 @@ class Post < ActiveRecord::Base
   def self.rebake_old(limit)
     problems = []
     Post.where('baked_version IS NULL OR baked_version < ?', BAKED_VERSION)
+      .order('id desc')
       .limit(limit).each do |p|
       begin
         p.rebake!
