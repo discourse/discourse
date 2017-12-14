@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+
 SCRIPTPATH=$(cd "$(dirname "$0")"; pwd -P)
 SOURCE_DIR=$(cd "$SCRIPTPATH" && cd ../.. && pwd -P)
 DATA_DIR="$SOURCE_DIR/data/postgres"
