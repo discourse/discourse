@@ -1363,6 +1363,7 @@ es:
     pop3_polling_host: "El host utilizado para hacer polling de e-mails vía POP3."
     pop3_polling_username: "El nombre de usuario de la cuenta POP3 para hacer polling de e-mails."
     pop3_polling_password: "La contraseña de la cuenta POP3 para hacer polling de correos."
+    pop3_polling_delete_from_server: "Eliminar los e-mails del servidor"
     log_mail_processing_failures: "Registra todos los fallos de procesamiento de email a http://yoursitename.com/logs"
     email_in: "Permitir a los usuarios crear nuevos temas por email (requiere el polling pop3). Configura las direcciones en la pestaña \"Ajustes\" de cada categoría."
     email_in_min_trust: "El mínimo nivel de confianza requerido para poder publicar nuevos temas por email."
