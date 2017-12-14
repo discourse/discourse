@@ -83,3 +83,16 @@ QUnit.test("stripes unwanted inline tags", assert => {
   const markdown = `Lorem ipsum dolor sit amet, consectetur ~~elit.~~\n\nUt minim veniam, quis nostrud laboris  ut aliquip ex ea commodo.`;
   assert.equal(toMarkdown(html), markdown);
 });
+
+QUnit.test("converts table as readable", assert => {
+  const html = `<address>Discourse Avenue</address><b>laboris</b>
+  <table>
+    <thead> <tr><th>Heading 1</th><th>Head 2</th></tr> </thead>
+      <tbody>
+        <tr><td>Lorem</td><td>ipsum</td></tr>
+        <tr><td><b>dolor</b></td> <td><i>sit amet</i></td></tr></tbody>
+</table>
+  `;
+  const markdown = `Discourse Avenue\n\n**laboris**\n\nHeading 1 Head 2\n\nLorem ipsum\n**dolor** _sit amet_`;
+  assert.equal(toMarkdown(html), markdown);
+});
