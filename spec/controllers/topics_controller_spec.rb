@@ -1011,31 +1011,57 @@ describe TopicsController do
   end
 
   describe 'invite_group' do
-    let :admins do
-      Group[:admins]
-    end
+    let(:admins) { Group[:admins] }
+    let(:pm) { Fabricate(:private_message_topic) }
 
-    let! :admin do
-      log_in :admin
+    def invite_group(topic, expected_status)
+      xhr :post, :invite_group, topic_id: topic.id, group: admins.name
+      expect(response.status).to eq(expected_status)
     end
 
     before do
-      admins.alias_level = Group::ALIAS_LEVELS[:everyone]
-      admins.save!
+      admins.update!(alias_level: Group::ALIAS_LEVELS[:everyone])
     end
 
-    it "disallows inviting a group to a topic" do
-      topic = Fabricate(:topic)
-      xhr :post, :invite_group, topic_id: topic.id, group: 'admins'
-      expect(response.status).to eq(422)
+    describe 'as an anon user' do
+      it 'should be forbidden' do
+        invite_group(pm, 403)
+      end
     end
 
-    it "allows inviting a group to a PM" do
-      topic = Fabricate(:private_message_topic)
-      xhr :post, :invite_group, topic_id: topic.id, group: 'admins'
+    describe 'as a normal user' do
+      let!(:user) { log_in }
 
-      expect(response.status).to eq(200)
-      expect(topic.allowed_groups.first.id).to eq(admins.id)
+      describe 'when user does not have permission to view the topic' do
+        it 'should be forbidden' do
+          invite_group(pm, 403)
+        end
+      end
+
+      describe 'when user has permission to view the topic' do
+        before do
+          pm.allowed_users << user
+        end
+
+        it 'should allow user to invite group to topic' do
+          invite_group(pm, 200)
+          expect(pm.allowed_groups.first.id).to eq(admins.id)
+        end
+      end
+    end
+
+    describe 'as an admin user' do
+      let!(:admin) { log_in(:admin) }
+
+      it "disallows inviting a group to a topic" do
+        topic = Fabricate(:topic)
+        invite_group(topic, 422)
+      end
+
+      it "allows inviting a group to a PM" do
+        invite_group(pm, 200)
+        expect(pm.allowed_groups.first.id).to eq(admins.id)
+      end
     end
   end
 
