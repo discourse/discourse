@@ -292,6 +292,8 @@ class UsersController < ApplicationController
     params[:for_user_id] ? User.find(params[:for_user_id]) : current_user
   end
 
+  FROM_STAGED = "from_staged"
+
   def create
     params.permit(:user_fields)
 
@@ -314,6 +316,8 @@ class UsersController < ApplicationController
     if user = User.where(staged: true).find_by(email: params[:email].strip.downcase)
       user_params.each { |k, v| user.send("#{k}=", v) }
       user.staged = false
+      user.active = false
+      user.custom_fields[FROM_STAGED] = true
     else
       user = User.new(user_params)
     end
@@ -608,6 +612,7 @@ class UsersController < ApplicationController
     raise Discourse::InvalidAccess.new unless @user.present?
     raise Discourse::InvalidAccess.new if @user.active?
     raise Discourse::InvalidAccess.new if current_user.present?
+    raise Discourse::InvalidAccess.new if @user.custom_fields[FROM_STAGED]
 
     User.transaction do
       @user.email = params[:email]
