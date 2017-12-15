@@ -15,7 +15,10 @@
       {{d-button action="deleteTag" icon="trash-o" class="admin-tag btn-danger"}}
       {{d-button action="renameTag" actionParam=tag icon="pencil" class="admin-tag"}}
     {{else}}
-      {{create-topic-button canCreateTopic=canCreateTopic action=(route-action "createTopic")}}
+      {{create-topic-button
+        canCreateTopic=canCreateTopic
+        disabled=createTopicDisabled
+        action=(route-action "createTopic")}}
     {{/if}}
 
     {{#if showTagFilter}}
