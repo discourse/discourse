@@ -1,6 +1,7 @@
 import Composer from 'discourse/models/composer';
 import showModal from "discourse/lib/show-modal";
 import { findTopicList } from 'discourse/routes/build-topic-route';
+import PermissionType from 'discourse/models/permission-type';
 
 export default Discourse.Route.extend({
   navMode: 'latest',
@@ -62,8 +63,10 @@ export default Discourse.Route.extend({
       } else {
         params.filter = `tags/c/${categorySlug}/${tag_id}/l/${filter}`;
       }
-
-      this.set('category', category);
+      if (category) {
+        category.setupGroupsAndPermissions();
+        this.set('category', category);
+      }
     } else if (this.get("additionalTags")) {
       params.filter = `tags/intersection/${tag_id}/${this.get('additionalTags').join('/')}`;
       this.set('category', null);
@@ -72,10 +75,13 @@ export default Discourse.Route.extend({
       this.set('category', null);
     }
 
-    return findTopicList(this.store, this.topicTrackingState, params.filter, params, {}).then(function(list) {
-      controller.set('list', list);
-      controller.set('canCreateTopic', list.get('can_create_topic'));
-      controller.set('loading', false);
+    return findTopicList(this.store, this.topicTrackingState, params.filter, params, {}).then((list) => {
+      controller.setProperties({
+        list: list,
+        canCreateTopic: list.get('can_create_topic'),
+        loading: false,
+        canCreateTopicOnCategory: this.get('category.permission') === PermissionType.FULL
+      });
     });
   },
 
