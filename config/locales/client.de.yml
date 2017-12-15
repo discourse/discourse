@@ -1680,7 +1680,6 @@ de:
       multi_select:
         select: 'auswählen'
         selected: 'ausgewählt ({{count}})'
-        select_replies: 'samt Antworten auswählen'
         delete: ausgewählte löschen
         cancel: Auswahlvorgang abbrechen
         select_all: alle auswählen
