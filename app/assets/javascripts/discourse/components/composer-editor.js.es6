@@ -432,7 +432,7 @@ export default Ember.Component.extend({
         return;
       }
 
-      const { types, canUpload, canPasteHtml } = clipboardData(e, true);
+      const { canUpload, canPasteHtml } = clipboardData(e, true);
 
       if (!canUpload || canPasteHtml) {
         e.preventDefault();
