@@ -125,12 +125,19 @@ class Tag {
 
       toMarkdown() {
         const e = this.element;
-        const attr = e.attributes;
-        const pAttr = e.parent && e.parent.attributes;
-        const src = (attr && attr.src) || (pAttr && pAttr.src);
+        const attr = e.attributes || {};
+        const pAttr = (e.parent && e.parent.attributes) || {};
+        const src = attr.src || pAttr.src;
 
         if (src) {
-          const alt = (attr && attr.alt) || (pAttr && pAttr.alt) || "";
+          let alt = attr.alt || pAttr.alt || "";
+          const width = attr.width || pAttr.width;
+          const height = attr.height || pAttr.height;
+
+          if (width && height) {
+            alt = `${alt}|${width}x${height}`;
+          }
+
           return "![" + alt + "](" + src + ")";
         }
 
