@@ -50,7 +50,7 @@ const CDP = require('chrome-remote-interface');
         });
 
         Page.loadEventFired(() => {
-          
+
           Runtime.evaluate({
             expression: `(${qunit_script})()`
           }).then(() => {
@@ -62,19 +62,19 @@ const CDP = require('chrome-remote-interface');
                 console.error("Tests timed out");
 
                 protocol.close();
-                chrome.kill(); 
+                chrome.kill();
                 process.exit(124);
               } else {
-                
+
                 Runtime.evaluate({
                   expression: `(${check_script})()`
-                }).then((numFails) => {
+                }).then(numFails => {
                   if (numFails.result.type !== 'undefined') {
                     clearInterval(interval);
                     protocol.close();
-                    chrome.kill(); 
+                    chrome.kill();
 
-                    if (numFails.value > 0) {
+                    if (numFails.result.value > 0) {
                       process.exit(1);
                     } else {
                       process.exit();
