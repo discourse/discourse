@@ -10,8 +10,6 @@ import { getRegister } from 'discourse-common/lib/get-owner';
 import { findRawTemplate } from 'discourse/lib/raw-templates';
 import { determinePostReplaceSelection, clipboardData } from 'discourse/lib/utilities';
 import toMarkdown from 'discourse/lib/to-markdown';
-import { ajax } from 'discourse/lib/ajax';
-import { popupAjaxError } from 'discourse/lib/ajax-error';
 import deprecated from 'discourse-common/lib/deprecated';
 
 // Our head can be a static string or a function that returns a string
@@ -657,9 +655,7 @@ export default Ember.Component.extend({
       if (table) {
         this.appEvents.trigger('composer:insert-text', table);
         handled = true;
-      }
-
-      if (html && html.includes("urn:schemas-microsoft-com:office:word")) {
+      } else if (html && html.includes("urn:schemas-microsoft-com:office:word")) {
         html = ""; // use plain text data for microsoft word
       }
     }
