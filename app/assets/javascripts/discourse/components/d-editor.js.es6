@@ -639,6 +639,17 @@ export default Ember.Component.extend({
     return null;
   },
 
+  _pasteMarkdown(text) {
+    const lineVal = this._getSelected(null, {lineVal: true}).lineVal;
+
+    if(lineVal) { // inline pasting
+      text = text.replace(/^#+/, "").trim();
+      text = (lineVal.search(/\s$/) === lineVal.length - 1) ? text : ` ${text}`;
+    }
+
+    this.appEvents.trigger('composer:insert-text', text);
+  },
+
   paste(e) {
     if (!$(".d-editor-input").is(":focus")) {
       return;
@@ -664,7 +675,7 @@ export default Ember.Component.extend({
       const markdown = toMarkdown(html);
 
       if (!plainText || plainText.length < markdown.length) {
-        this.appEvents.trigger('composer:insert-text', markdown);
+        this._pasteMarkdown(markdown);
         handled = true;
       }
     }
