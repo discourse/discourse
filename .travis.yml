@@ -10,6 +10,7 @@ env:
     - "RAILS_MASTER=0 QUNIT_RUN=0 RUN_LINT=1"
 
 addons:
+  chrome: stable
   postgresql: 9.5
   apt:
     packages:
@@ -50,6 +51,7 @@ install:
   - bash -c "if [ '$RAILS_MASTER' == '1' ]; then bundle update --retry=3 --jobs=3 arel rails seed-fu; fi"
   - bash -c "if [ '$RAILS_MASTER' == '0' ]; then bundle install --without development --deployment --retry=3 --jobs=3; fi"
   - bash -c "if [ '$RUN_LINT' == '1' ]; then yarn global add eslint babel-eslint; fi"
+  - bash -c "if [ '$QUNIT_RUN' == '1' ]; then yarn install --dev; fi"
 
 script:
   - |
@@ -65,7 +67,7 @@ script:
         bundle exec rake db:create db:migrate
 
         if [ '$QUNIT_RUN' == '1' ]; then
-          LOAD_PLUGINS=1 bundle exec rake qunit:test['400000']
+          USE_CHROME=1 LOAD_PLUGINS=1 bundle exec rake qunit:test['400000']
         else
           bundle exec rspec && bundle exec rake plugin:spec
         fi
