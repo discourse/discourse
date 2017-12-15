@@ -655,7 +655,9 @@ export default Ember.Component.extend({
       return;
     }
 
-    const { clipboard, types } = clipboardData(e);
+    const isComposer = $("#reply-control .d-editor-input").is(":focus");
+    const { clipboard, canPasteHtml } = clipboardData(e, isComposer);
+
     let plainText = clipboard.getData("text/plain");
     let html = clipboard.getData("text/html");
     let handled = false;
@@ -671,7 +673,7 @@ export default Ember.Component.extend({
       }
     }
 
-    if (this.siteSettings.enable_rich_text_paste && html && !handled) {
+    if (canPasteHtml && !handled) {
       const markdown = toMarkdown(html);
 
       if (!plainText || plainText.length < markdown.length) {
@@ -680,9 +682,7 @@ export default Ember.Component.extend({
       }
     }
 
-    const uploadFiles = types.includes("Files") && !plainText && !handled;
-
-    if (handled || uploadFiles) {
+    if (handled) {
       e.preventDefault();
     }
   },

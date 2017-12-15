@@ -432,9 +432,9 @@ export default Ember.Component.extend({
         return;
       }
 
-      const { types } = clipboardData(e);
+      const { types, canUpload, canPasteHtml } = clipboardData(e, true);
 
-      if (types.includes("text/plain") || (types.includes("text/html") && this.siteSettings.enable_rich_text_paste)) {
+      if (!canUpload || canPasteHtml) {
         e.preventDefault();
       }
     });
