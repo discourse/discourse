@@ -421,18 +421,27 @@ export function isAppleDevice() {
     !navigator.userAgent.match(/Trident/g);
 }
 
-export function clipboardData(e) {
+export function clipboardData(e, canUpload) {
   const clipboard = e.clipboardData ||
                       e.originalEvent.clipboardData ||
                       e.delegatedEvent.originalEvent.clipboardData;
 
   let types = clipboard.types;
+  let files = clipboard.files;
 
   if (!Array.isArray(types)) {
     types = Array.from(types);
   }
 
-  return { clipboard: clipboard, types: types };
+  if (!Array.isArray(files)) {
+    files = Array.from(files);
+  }
+
+  canUpload = files && canUpload && !types.includes("text/plain");
+  const canUploadImage = canUpload && files.filter(f => f.type.match('^image/'))[0];
+  const canPasteHtml = Discourse.SiteSettings.enable_rich_text_paste && types.includes("text/html") && !canUploadImage;
+
+  return { clipboard: clipboard, types: types, canUpload: canUpload, canPasteHtml: canPasteHtml };
 }
 
 // This prevents a mini racer crash
