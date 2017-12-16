@@ -113,7 +113,10 @@ class UsersController < ApplicationController
       fields = UserField.all
       fields = fields.where(editable: true) unless current_user.staff?
       fields.each do |f|
-        val = params[:user_fields][f.id.to_s]
+        field_id = f.id.to_s
+        next unless params[:user_fields].has_key?(field_id)
+
+        val = params[:user_fields][field_id]
         val = nil if val === "false"
         val = val[0...UserField.max_length] if val
 
