@@ -1533,6 +1533,27 @@ describe UsersController do
 
               expect(user.user_fields[user_field.id.to_s].size).to eq(UserField.max_length)
             end
+
+            it "should retain existing user fields" do
+              put :update, params: {
+                username: user.username, name: 'Jim Tom', user_fields: { user_field.id.to_s => 'happy', optional_field.id.to_s => 'feet' }
+              }, format: :json
+
+              expect(response).to be_success
+              expect(user.user_fields[user_field.id.to_s]).to eq('happy')
+              expect(user.user_fields[optional_field.id.to_s]).to eq('feet')
+
+              put :update, params: {
+                username: user.username, name: 'Jim Tom', user_fields: { user_field.id.to_s => 'sad' }
+              }, format: :json
+
+              expect(response).to be_success
+
+              user.reload
+
+              expect(user.user_fields[user_field.id.to_s]).to eq('sad')
+              expect(user.user_fields[optional_field.id.to_s]).to eq('feet')
+            end
           end
 
           context "uneditable field" do
