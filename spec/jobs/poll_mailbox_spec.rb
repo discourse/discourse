@@ -71,6 +71,13 @@ describe Jobs::PollMailbox do
       Net::POP3.any_instance.expects(:enable_ssl).never
       poller.poll_pop3
     end
+
+    it "delete emails from inbox when the setting is enabled" do
+      SiteSetting.pop3_polling_delete_from_server = true
+      Net::POP3.any_instance.stubs(:start)
+      Net::POP3.any_instance.expects(:empty?).to eq(true)
+      poller.poll_pop3
+    end
   end
 
   describe "#process_popmail" do
