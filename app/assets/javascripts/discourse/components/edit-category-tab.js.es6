@@ -23,9 +23,17 @@ export default Em.Component.extend({
     this.get('panels').addObject(this.get('tabClassName'));
   },
 
+  _resetModalScrollState() {
+    const $modalBody = this.$().parents("#discourse-modal").find(".modal-body");
+    if ($modalBody.length === 1) {
+      $modalBody.scrollTop(0);
+    }
+  },
+
   actions: {
     select: function() {
       this.set('selectedTab', this.get('tab'));
+      this._resetModalScrollState();
     }
   }
 });
