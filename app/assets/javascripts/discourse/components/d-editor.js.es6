@@ -640,11 +640,11 @@ export default Ember.Component.extend({
   },
 
   _pasteMarkdown(text) {
-    const lineVal = this._getSelected(null, {lineVal: true}).lineVal;
+    const { pre, lineVal } = this._getSelected(null, {lineVal: true});
 
-    if(lineVal) { // inline pasting
+    if(lineVal && pre.match(/[^\n]$/)) { // inline pasting
       text = text.replace(/^#+/, "").trim();
-      text = (lineVal.search(/\s$/) === lineVal.length - 1) ? text : ` ${text}`;
+      text = pre.match(/\S$/) ? ` ${text}` : text;
     }
 
     this.appEvents.trigger('composer:insert-text', text);

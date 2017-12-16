@@ -109,6 +109,7 @@ class Tag {
         const attr = this.element.attributes;
 
         if (attr && attr.href && text !== attr.href) {
+          text = text.replace(/\n{2,}/g, "\n");
           return "[" + text + "](" + attr.href + ")";
         }
 

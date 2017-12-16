@@ -21,8 +21,12 @@ QUnit.test("converts inline nested styles", assert => {
 });
 
 QUnit.test("converts a link", assert => {
-  const html = `<a href="https://discourse.org">Discourse</a>`;
-  const markdown = `[Discourse](https://discourse.org)`;
+  let html = `<a href="https://discourse.org">Discourse</a>`;
+  let markdown = `[Discourse](https://discourse.org)`;
+  assert.equal(toMarkdown(html), markdown);
+
+  html = `<a href="https://discourse.org">Disc\n\n\nour\n\nse</a>`;
+  markdown = `[Disc\nour\nse](https://discourse.org)`;
   assert.equal(toMarkdown(html), markdown);
 });
 
