@@ -72,11 +72,28 @@ describe Jobs::PollMailbox do
       poller.poll_pop3
     end
 
-    it "delete emails from inbox when the setting is enabled" do
-      SiteSetting.pop3_polling_delete_from_server = true
-      Net::POP3.any_instance.stubs(:start)
-      Net::POP3.any_instance.expects(:empty?).to eq(true)
-      poller.poll_pop3
+    context "has emails" do
+      before do
+        mail1 = Net::POPMail.new(3, nil, nil, nil)
+        mail2 = Net::POPMail.new(3, nil, nil, nil)
+        mail3 = Net::POPMail.new(3, nil, nil, nil)
+        Net::POP3.any_instance.stubs(:start).yields(Net::POP3.new(nil, nil))
+        Net::POP3.any_instance.stubs(:mails).returns([mail1, mail2, mail3])
+        Net::POP3.any_instance.expects(:delete_all).never
+        poller.stubs(:process_popmail)
+      end
+
+      it "deletes emails from server when when deleting emails from server is enabled" do
+        Net::POPMail.any_instance.stubs(:delete).times(3)
+        SiteSetting.pop3_polling_delete_from_server = true
+        poller.poll_pop3
+      end
+
+      it "does not delete emails server inbox when deleting emails from server is disabled" do
+        Net::POPMail.any_instance.stubs(:delete).never
+        SiteSetting.pop3_polling_delete_from_server = false
+        poller.poll_pop3
+      end
     end
   end
 
