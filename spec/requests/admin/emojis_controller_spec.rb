@@ -11,14 +11,15 @@ RSpec.describe Admin::EmojisController do
   describe "#create" do
     describe 'when upload is invalid' do
       it 'should publish the right error' do
-        message = MessageBus.track_publish("/uploads/emoji") do
-          post "/admin/customize/emojis.json", params: {
-            name: 'test',
-            file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/fake.jpg")
-          }
-        end.first
 
-        expect(message.data["errors"]).to eq([I18n.t('upload.images.size_not_found')])
+        post "/admin/customize/emojis.json", params: {
+          name: 'test',
+          file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/fake.jpg")
+        }
+
+        expect(response.status).to eq(422)
+        parsed = JSON.parse(response.body)
+        expect(parsed["errors"]).to eq([I18n.t('upload.images.size_not_found')])
       end
     end
 
@@ -26,14 +27,14 @@ RSpec.describe Admin::EmojisController do
       it 'should publish the right error' do
         CustomEmoji.create!(name: 'test', upload: upload)
 
-        message = MessageBus.track_publish("/uploads/emoji") do
-          post "/admin/customize/emojis.json", params: {
-            name: 'test',
-            file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/logo.png")
-          }
-        end.first
+        post "/admin/customize/emojis.json", params: {
+          name: 'test',
+          file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/logo.png")
+        }
 
-        expect(message.data["errors"]).to eq([
+        expect(response.status).to eq(422)
+        parsed = JSON.parse(response.body)
+        expect(parsed["errors"]).to eq([
           "Name #{I18n.t('activerecord.errors.models.custom_emoji.attributes.name.taken')}"
         ])
       end
@@ -42,20 +43,22 @@ RSpec.describe Admin::EmojisController do
     it 'should allow an admin to add a custom emoji' do
       Emoji.expects(:clear_cache)
 
-        message = MessageBus.track_publish("/uploads/emoji") do
-          post "/admin/customize/emojis.json", params: {
-            name: 'test',
-            file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/logo.png")
-          }
-        end.first
+        post "/admin/customize/emojis.json", params: {
+          name: 'test',
+          file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/logo.png")
+        }
 
         custom_emoji = CustomEmoji.last
         upload = custom_emoji.upload
 
         expect(upload.original_filename).to eq('logo.png')
-        expect(message.data["errors"]).to eq(nil)
-        expect(message.data["name"]).to eq(custom_emoji.name)
-        expect(message.data["url"]).to eq(upload.url)
+
+        data = JSON.parse(response.body)
+
+        expect(response.status).to eq(200)
+        expect(data["errors"]).to eq(nil)
+        expect(data["name"]).to eq(custom_emoji.name)
+        expect(data["url"]).to eq(upload.url)
     end
   end
 
