@@ -13,13 +13,16 @@ class Admin::ThemesController < Admin::AdminController
 
   def upload_asset
     path = params[:file].path
-    File.open(path) do |file|
-      filename = params[:file]&.original_filename || File.basename(path)
-      upload = UploadCreator.new(file, filename, for_theme: true).create_for(current_user.id)
-      if upload.errors.count > 0
-        render_json_error upload
-      else
-        render json: { upload_id: upload.id }, status: :created
+
+    hijack do
+      File.open(path) do |file|
+        filename = params[:file]&.original_filename || File.basename(path)
+        upload = UploadCreator.new(file, filename, for_theme: true).create_for(current_user.id)
+        if upload.errors.count > 0
+          render_json_error upload
+        else
+          render json: { upload_id: upload.id }, status: :created
+        end
       end
     end
   end
