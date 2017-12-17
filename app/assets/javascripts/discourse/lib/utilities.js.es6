@@ -421,20 +421,26 @@ export function isAppleDevice() {
     !navigator.userAgent.match(/Trident/g);
 }
 
+const toArray = items => {
+  items = items || [];
+
+  if (!Array.isArray(items)) {
+    return Array.from(items);
+  }
+
+  return items;
+};
+
 export function clipboardData(e, canUpload) {
   const clipboard = e.clipboardData ||
                       e.originalEvent.clipboardData ||
                       e.delegatedEvent.originalEvent.clipboardData;
 
-  let types = clipboard.types;
-  let files = clipboard.files;
+  const types = toArray(clipboard.types);
+  let files = toArray(clipboard.files);
 
-  if (!Array.isArray(types)) {
-    types = Array.from(types);
-  }
-
-  if (!Array.isArray(files)) {
-    files = Array.from(files);
+  if (types.includes("Files") && files.length === 0) { // for IE
+    files = toArray(clipboard.items).filter(i => i.kind === "file");
   }
 
   canUpload = files && canUpload && !types.includes("text/plain");
