@@ -127,27 +127,6 @@ describe Admin::BackupsController do
 
     end
 
-    describe ".email" do
-
-      let(:b) { Backup.new(backup_filename) }
-
-      it "enqueues email job" do
-        Backup.expects(:[]).with(backup_filename).returns(b)
-        Jobs.expects(:enqueue).with(:download_backup_email, has_entries(to_address: @admin.email))
-
-        put :email, params: { id: backup_filename }, format: :json
-
-        expect(response).to be_success
-      end
-
-      it "returns 404 when the backup does not exist" do
-        put :email, params: { id: backup_filename }, format: :json
-
-        expect(response).to be_not_found
-      end
-
-    end
-
     describe ".destroy" do
 
       let(:b) { Backup.new(backup_filename) }

@@ -36,4 +36,29 @@ RSpec.describe Admin::BackupsController do
         .to raise_error(ActionController::RoutingError)
     end
   end
+
+  describe "#email" do
+    let(:backup_filename) { "test.tar.gz" }
+    let(:backup) { Backup.new(backup_filename) }
+
+    it "enqueues email job" do
+      Backup.expects(:[]).with(backup_filename).returns(backup)
+
+      Jobs.expects(:enqueue).with(:download_backup_email,
+        user_id: admin.id,
+        backup_file_path: 'http://www.example.com/admin/backups/test.tar.gz'
+      )
+
+      put "/admin/backups/#{backup_filename}.json"
+
+      expect(response).to be_success
+    end
+
+    it "returns 404 when the backup does not exist" do
+      put "/admin/backups/#{backup_filename}.json"
+
+      expect(response).to be_not_found
+    end
+
+  end
 end
