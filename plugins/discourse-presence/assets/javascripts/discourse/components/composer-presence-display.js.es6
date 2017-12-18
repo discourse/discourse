@@ -3,6 +3,9 @@ import { observes, on }  from 'ember-addons/ember-computed-decorators';
 import computed from 'ember-addons/ember-computed-decorators';
 import pageVisible from 'discourse/lib/page-visible';
 
+export const keepAliveDuration = 10000;
+const bufferTime = 3000;
+
 export default Ember.Component.extend({
   composer: Ember.inject.controller(),
 
@@ -26,7 +29,17 @@ export default Ember.Component.extend({
 
   @on('willDestroyElement')
   composerClosing(){
-    this.updateStateObject(true);
+    this.updateStateObject({closing: true});
+  },
+
+  @observes('reply', 'title')
+  dataChanged() {
+    if (!this._dataChanged && (new Date() - this._lastPublish) > keepAliveDuration) {
+      this._dataChanged = true;
+      this.keepPresenceAlive();
+    } else {
+      this._dataChanged = true;
+    }
   },
 
   @observes('action', 'post', 'topic')
@@ -34,7 +47,9 @@ export default Ember.Component.extend({
     Ember.run.once(this, 'updateStateObject');
   },
 
-  updateStateObject(isClosing = false){
+  updateStateObject(opts){
+    const isClosing = opts && opts.closing;
+
     var stateObject = null;
 
     if(!isClosing && this.shouldSharePresence(this.get('action'))){
@@ -73,14 +88,10 @@ export default Ember.Component.extend({
     }
 
     this.set('presenceUsers', []);
-
-    ajax('/presence/publish', {
-      type: 'POST',
-      data: {
-        response_needed: true,
-        previous: this.get('oldPresenceState'),
-        current: this.get('presenceState')
-      }
+    this.publish({
+      response_needed: true,
+      previous: this.get('oldPresenceState'),
+      current: this.get('presenceState')
     }).then((data) => {
       const messageBusChannel = data['messagebus_channel'];
       if(messageBusChannel){
@@ -90,18 +101,40 @@ export default Ember.Component.extend({
         this.set('messageBusChannel', messageBusChannel);
         this.messageBus.subscribe(messageBusChannel, message => {
           this.set('presenceUsers', message['users']);
+          this.timeoutPresence();
         }, messageBusId);
       }
     }).catch((error) => {
       // This isn't a critical failure, so don't disturb the user
-      console.error("Error publishing composer status", error);
+      if (window.console && console.error) {
+        console.error("Error publishing composer status", error);
+      }
     });
 
     Ember.run.cancel(this.get('keepAliveTimer'));
     if(this.shouldSharePresence(this.get('presenceState.action'))){
       // Send presence data every 10 seconds
-      this.set('keepAliveTimer', Ember.run.later(this, 'keepPresenceAlive', 10000));
+      this.set('keepAliveTimer', Ember.run.later(this, 'keepPresenceAlive', keepAliveDuration));
     }
+  },
+
+  timeoutPresence() {
+    Ember.run.cancel(this._timeoutTimer);
+    this._timeoutTimer = Ember.run.later(
+      this,
+      () => { this.set("presenceUsers", []); },
+      keepAliveDuration + bufferTime
+    );
+  },
+
+  publish(data) {
+    this._lastPublish = new Date();
+    this._dataChanged = false;
+
+    return ajax('/presence/publish', {
+      type: 'POST',
+      data: data
+    });
   },
 
   keepPresenceAlive(){
@@ -111,22 +144,26 @@ export default Ember.Component.extend({
       return;
     }
 
-    const browserInFocus = pageVisible();
+    if (this._dataChanged) {
+      this._dataChanged = false;
+      const browserInFocus = pageVisible();
 
-    // Only send the keepalive message if the browser has focus
-    if(browserInFocus){
-      ajax('/presence/publish', {
-        type: 'POST',
-        data: { current: this.get('presenceState') }
-      }).catch((error) => {
-        // This isn't a critical failure, so don't disturb the user
-        console.error("Error publishing composer status", error);
-      });
+      // Only send the keepalive message if the browser has focus
+      if(browserInFocus){
+        this.publish({
+          current: this.get('presenceState')
+        }).catch((error) => {
+          // This isn't a critical failure, so don't disturb the user
+          if (window.console && console.error) {
+            console.error("Error publishing composer status", error);
+          }
+        });
+      }
     }
 
     // Schedule again in another 10 seconds
     Ember.run.cancel(this.get('keepAliveTimer'));
-    this.set('keepAliveTimer', Ember.run.later(this, 'keepPresenceAlive', 10000));
+    this.set('keepAliveTimer', Ember.run.later(this, 'keepPresenceAlive', keepAliveDuration));
   },
 
   @computed('presenceUsers', 'currentUser.id')
