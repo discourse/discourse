@@ -132,7 +132,11 @@ describe Admin::BackupsController do
 
       it "enqueues email job" do
         Backup.expects(:[]).with(backup_filename).returns(b)
-        Jobs.expects(:enqueue).with(:download_backup_email, has_entries(to_address: @admin.email))
+
+        Jobs.expects(:enqueue).with(:download_backup_email,
+          user_id: @admin.id,
+          backup_file_path: "http://test.host/admin/backups/2014-02-10-065935.tar.gz"
+        )
 
         xhr :put, :email, id: backup_filename
 
