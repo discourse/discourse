@@ -1,68 +1,42 @@
-import { on }  from 'ember-addons/ember-computed-decorators';
-import computed from 'ember-addons/ember-computed-decorators';
-import { keepAliveDuration } from 'discourse/plugins/discourse-presence/discourse/components/composer-presence-display';
+import { default as computed, on }  from 'ember-addons/ember-computed-decorators';
+import { keepAliveDuration, bufferTime } from 'discourse/plugins/discourse-presence/discourse/components/composer-presence-display';
 
-const bufferTime = 3000;
+const MB_GET_LAST_MESSAGE = -2;
 
 export default Ember.Component.extend({
   topicId: null,
-
-  messageBusChannel: null,
   presenceUsers: null,
+
+  clear() {
+    if (!this.get('isDestroyed')) this.set('presenceUsers', []);
+  },
 
   @on('didInsertElement')
   _inserted() {
-    this.set("presenceUsers", []);
-    const messageBusChannel = `/presence/topic/${this.get('topicId')}`;
-    this.set('messageBusChannel', messageBusChannel);
+    this.clear();
 
-    var firstMessage = true;
-
-    this.messageBus.subscribe(messageBusChannel, message => {
-
-      let users = message.users;
-
-      // account for old messages,
-      // we only do this once to allow for some bad clocks
-      if (firstMessage) {
-        const old = ((new Date()) / 1000) - ((keepAliveDuration / 1000) * 2);
-        if (message.time && (message.time < old)) {
-          users = [];
-        }
-        firstMessage = false;
-      }
-
-      Em.run.cancel(this._expireTimer);
-
-      this.set("presenceUsers", users);
-
-      this._expireTimer = Em.run.later(
-        this,
-        () => {
-          this.set("presenceUsers", []);
-        },
-        keepAliveDuration + bufferTime
-      );
-    }, -2); /* subscribe at position -2 so we get last message */
+    this.messageBus.subscribe(this.get('channel'), message => {
+      if (!this.get('isDestroyed')) this.set('presenceUsers', message.users);
+      this._clearTimer = Ember.run.debounce(this, 'clear', keepAliveDuration + bufferTime);
+    }, MB_GET_LAST_MESSAGE);
   },
 
   @on('willDestroyElement')
   _destroyed() {
-    const channel = this.get("messageBusChannel");
-    if (channel) {
-      Em.run.cancel(this._expireTimer);
-      this.messageBus.unsubscribe(channel);
-      this.set("messageBusChannel", null);
-    }
+    Ember.run.cancel(this._clearTimer);
+    this.messageBus.unsubscribe(this.get('channel'));
+  },
+
+  @computed('topicId')
+  channel(topicId) {
+    return `/presence/topic/${topicId}`;
   },
 
   @computed('presenceUsers', 'currentUser.id')
-  users(presenceUsers, currentUser_id){
-    return (presenceUsers || []).filter(user => user.id !== currentUser_id);
+  users(users, currentUserId) {
+    return (users || []).filter(user => user.id !== currentUserId);
   },
 
-  @computed('users.length')
-  shouldDisplay(length){
-    return length > 0;
-  }
+  shouldDisplay: Ember.computed.gt('users.length', 0)
+
 });
