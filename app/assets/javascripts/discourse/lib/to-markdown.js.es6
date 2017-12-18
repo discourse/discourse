@@ -86,6 +86,14 @@ class Tag {
     };
   }
 
+  static keep(name) {
+    return class extends Tag {
+      constructor() {
+        super(name, `<${name}>`, `</${name}>`);
+      }
+    };
+  }
+
   static replace(name, text) {
     return class extends Tag {
       constructor() {
@@ -184,9 +192,10 @@ const tags = [
   ...Tag.emphases().map((e) => Tag.emphasis(e[0], e[1])),
   Tag.cell("td"), Tag.cell("th"),
   Tag.replace("br", "\n"), Tag.replace("hr", "\n---\n"), Tag.replace("head", ""),
+  Tag.keep("ins"), Tag.keep("del"), Tag.keep("small"), Tag.keep("big"),
   Tag.li(), Tag.link(), Tag.image(),
 
-  // TO-DO  CREATE: code, tbody, ins, del, blockquote, small, large
+  // TO-DO  CREATE: code, tbody, blockquote
   //        UPDATE: ol, pre, thead, th, td
 ];
 
