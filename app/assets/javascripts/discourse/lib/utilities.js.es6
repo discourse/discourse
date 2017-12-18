@@ -447,7 +447,7 @@ export function clipboardData(e, canUpload) {
   const canUploadImage = canUpload && files.filter(f => f.type.match('^image/'))[0];
   const canPasteHtml = Discourse.SiteSettings.enable_rich_text_paste && types.includes("text/html") && !canUploadImage;
 
-  return { clipboard: clipboard, types: types, canUpload: canUpload, canPasteHtml: canPasteHtml };
+  return { clipboard, types, canUpload, canPasteHtml };
 }
 
 // This prevents a mini racer crash
