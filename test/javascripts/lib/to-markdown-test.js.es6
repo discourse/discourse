@@ -129,7 +129,7 @@ QUnit.test("converts img tag", assert => {
   assert.equal(toMarkdown(html), `![description](${url})`);
 });
 
-QUnit.test("suppring html tags by keeping them", assert => {
+QUnit.test("supporting html tags by keeping them", assert => {
   let html = "Lorem <del>ipsum dolor</del> sit <big>amet, <ins>consectetur</ins></big>";
   let output = html;
   assert.equal(toMarkdown(html), output);
@@ -146,5 +146,27 @@ QUnit.test("suppring html tags by keeping them", assert => {
 
   html = `Lorem <a href="http://example.com"><del>ipsum \n\n\n dolor</del> sit.</a>`;
   output = `Lorem [<del>ipsum \n dolor</del> sit.](http://example.com)`;
+  assert.equal(toMarkdown(html), output);
+});
+
+QUnit.test("converts code tags", assert => {
+  let html = `Lorem ipsum dolor sit amet,
+  <pre><code>var helloWorld = () => {
+  alert('    hello \t\t world    ');
+    return;
+}
+helloWorld();</code></pre>
+  consectetur.`;
+  let output = `Lorem ipsum dolor sit amet,\n\n\`\`\`\nvar helloWorld = () => {\n  alert('    hello \t\t world    ');\n    return;\n}\nhelloWorld();\n\`\`\`\n\nconsectetur.`;
+
+  assert.equal(toMarkdown(html), output);
+
+  html = `Lorem ipsum dolor sit amet, <code>var helloWorld = () => {
+  alert('    hello \t\t world    ');
+    return;
+}
+helloWorld();</code> consectetur.`;
+  output = `Lorem ipsum dolor sit amet, \`var helloWorld = () => {\n  alert('    hello \t\t world    ');\n    return;\n}\nhelloWorld();\` consectetur.`;
+
   assert.equal(toMarkdown(html), output);
 });

@@ -183,6 +183,24 @@ class Tag {
     };
   }
 
+  static code() {
+    return class extends Tag {
+      constructor() {
+        super("code", "`", "`");
+      }
+
+      decorate(text) {
+        if (this.element.parentNames.includes("pre")) {
+          this.prefix = '\n\n```\n';
+          this.suffix = '\n```\n\n';
+        }
+
+        text = $('<textarea />').html(text).text();
+        return super.decorate(text);
+      }
+    };
+  }
+
 }
 
 const tags = [
@@ -193,7 +211,7 @@ const tags = [
   Tag.cell("td"), Tag.cell("th"),
   Tag.replace("br", "\n"), Tag.replace("hr", "\n---\n"), Tag.replace("head", ""),
   Tag.keep("ins"), Tag.keep("del"), Tag.keep("small"), Tag.keep("big"),
-  Tag.li(), Tag.link(), Tag.image(),
+  Tag.li(), Tag.link(), Tag.image(), Tag.code(),
 
   // TO-DO  CREATE: code, tbody, blockquote
   //        UPDATE: ol, pre, thead, th, td
@@ -209,9 +227,11 @@ class Element {
 
     if (parent) {
       this.parent = parent;
-      this.parentNames = (parent.parentNames || []).slice();
+      this.parentNames = parent.parentNames.slice();
       this.parentNames.push(parent.name);
     }
+
+    this.parentNames = this.parentNames || [];
     this.previous = previous;
     this.next = next;
   }
@@ -291,11 +311,39 @@ class Element {
   }
 }
 
+function putPlaceholders(html) {
+  const codeRegEx = /<code[^>]*>(.*?)<\/code>/gs;
+  const origHtml = html;
+  let match = codeRegEx.exec(origHtml);
+  let placeholders = [];
+
+  while(match) {
+    const placeholder = `DISCOURSE_PLACEHOLDER_${placeholders.length + 1}`;
+    let code = match[1];
+    code = $('<div />').html(code).text().replace(/^\n/, '').replace(/\n$/, '');
+    placeholders.push([placeholder, code]);
+    html = html.replace(match[0], `<code>${placeholder}</code>`);
+    match = codeRegEx.exec(origHtml);
+  }
+
+  const elements = parseHTML(html);
+  return { elements, placeholders };
+}
+
+function replacePlaceholders(markdown, placeholders) {
+  placeholders.forEach(p => {
+    markdown = markdown.replace(p[0], p[1]);
+  });
+  return markdown;
+}
+
 export default function toMarkdown(html) {
   try {
-    let markdown = Element.parse(parseHTML(html)).trim();
+    const { elements, placeholders } = putPlaceholders(html);
+    let markdown = Element.parse(elements).trim();
     markdown = markdown.replace(/^<b>/, "").replace(/<\/b>$/, "").trim(); // fix for google doc copy paste
-    return markdown.replace(/\r/g, "").replace(/\n \n/g, "\n\n").replace(/\n{3,}/g, "\n\n");
+    markdown = markdown.replace(/\r/g, "").replace(/\n \n/g, "\n\n").replace(/\n{3,}/g, "\n\n");
+    return replacePlaceholders(markdown, placeholders);
   } catch(err) {
     return "";
   }

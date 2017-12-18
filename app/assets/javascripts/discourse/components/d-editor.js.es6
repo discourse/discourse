@@ -37,6 +37,11 @@ const FOUR_SPACES_INDENT = '4-spaces-indent';
 
 const _createCallbacks = [];
 
+const isInside = (text, regex) => {
+  const matches = text.match(regex);
+  return matches && (matches.length % 2);
+};
+
 class Toolbar {
 
   constructor(site) {
@@ -639,24 +644,13 @@ export default Ember.Component.extend({
     return null;
   },
 
-  _pasteMarkdown(text) {
-    const { pre, lineVal } = this._getSelected(null, {lineVal: true});
-
-    if(lineVal && pre.match(/[^\n]$/)) { // inline pasting
-      text = text.replace(/^#+/, "").trim();
-      text = pre.match(/\S$/) ? ` ${text}` : text;
-    }
-
-    this.appEvents.trigger('composer:insert-text', text);
-  },
-
   paste(e) {
     if (!$(".d-editor-input").is(":focus")) {
       return;
     }
 
     const isComposer = $("#reply-control .d-editor-input").is(":focus");
-    const { clipboard, canPasteHtml } = clipboardData(e, isComposer);
+    let { clipboard, canPasteHtml } = clipboardData(e, isComposer);
 
     let plainText = clipboard.getData("text/plain");
     let html = clipboard.getData("text/html");
@@ -673,11 +667,27 @@ export default Ember.Component.extend({
       }
     }
 
+    const { pre, lineVal } = this._getSelected(null, {lineVal: true});
+    const isInlinePasting = pre.match(/[^\n]$/);
+
+    if (canPasteHtml && plainText) {
+      if (isInlinePasting) {
+        canPasteHtml = !(lineVal.match(/^```/) || isInside(pre, /`/g) || lineVal.match(/^    /));
+      } else {
+        canPasteHtml = !isInside(pre, /(^|\n)```/g);
+      }
+    }
+
     if (canPasteHtml && !handled) {
-      const markdown = toMarkdown(html);
+      let markdown = toMarkdown(html);
 
       if (!plainText || plainText.length < markdown.length) {
-        this._pasteMarkdown(markdown);
+        if(isInlinePasting) {
+          markdown = markdown.replace(/^#+/, "").trim();
+          markdown = pre.match(/\S$/) ? ` ${markdown}` : markdown;
+        }
+
+        this.appEvents.trigger('composer:insert-text', markdown);
         handled = true;
       }
     }
