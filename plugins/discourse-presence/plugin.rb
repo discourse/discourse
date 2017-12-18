@@ -30,12 +30,17 @@ after_initialize do
 
     def self.add(type, id, user_id)
       # return true if a key was added
-      $redis.hset(get_redis_key(type, id), user_id, Time.zone.now)
+      key = get_redis_key(type, id)
+      result = $redis.hset(key, user_id, Time.zone.now)
+      $redis.expire(key, 60)
+      result
     end
 
     def self.remove(type, id, user_id)
+      key = get_redis_key(type, id)
+      $redis.expire(key, 60)
       # return true if a key was deleted
-      $redis.hdel(get_redis_key(type, id), user_id) > 0
+      $redis.hdel(key, user_id) > 0
     end
 
     def self.get_users(type, id)
@@ -47,16 +52,16 @@ after_initialize do
     def self.publish(type, id)
       users = get_users(type, id)
       serialized_users = users.map { |u| BasicUserSerializer.new(u, root: false) }
-      message = { users: serialized_users }
+      message = { users: serialized_users, time: Time.now.to_i }
       messagebus_channel = get_messagebus_channel(type, id)
 
       topic = type == 'post' ? Post.find_by(id: id).topic : Topic.find_by(id: id)
 
       if topic.archetype == Archetype.private_message
         user_ids = User.where('admin OR moderator').pluck(:id) + topic.allowed_users.pluck(:id)
-        MessageBus.publish(messagebus_channel, message.as_json, user_ids: user_ids)
+        MessageBus.publish(messagebus_channel, message.as_json, user_ids: user_ids, max_backlog_age: 60)
       else
-        MessageBus.publish(messagebus_channel, message.as_json, group_ids: topic.secure_group_ids)
+        MessageBus.publish(messagebus_channel, message.as_json, group_ids: topic.secure_group_ids, max_backlog_age: 60)
       end
 
       users
@@ -104,9 +109,9 @@ after_initialize do
         if topic
           guardian.ensure_can_see!(topic)
 
-          removed = Presence::PresenceManager.remove(type, id, current_user.id)
-          cleaned = Presence::PresenceManager.cleanup(type, id)
-          users   = Presence::PresenceManager.publish(type, id) if removed || cleaned
+          _removed = Presence::PresenceManager.remove(type, id, current_user.id)
+          cleaned  = Presence::PresenceManager.cleanup(type, id)
+          users    = Presence::PresenceManager.publish(type, id)
         end
       end
 
@@ -119,9 +124,9 @@ after_initialize do
         if topic
           guardian.ensure_can_see!(topic)
 
-          added   = Presence::PresenceManager.add(type, id, current_user.id)
+          _added  = Presence::PresenceManager.add(type, id, current_user.id)
           cleaned = Presence::PresenceManager.cleanup(type, id)
-          users   = Presence::PresenceManager.publish(type, id) if added || cleaned
+          users   = Presence::PresenceManager.publish(type, id)
 
           if data[:response_needed]
             messagebus_channel = Presence::PresenceManager.get_messagebus_channel(type, id)
@@ -132,17 +137,6 @@ after_initialize do
       end
 
       render json: payload
-    end
-
-    def ping
-      topic_id = params.require(:topic_id)
-
-      Presence::PresenceManager.cleanup("topic", topic_id)
-
-      messagebus_channel = Presence::PresenceManager.get_messagebus_channel("topic", topic_id)
-      users = Presence::PresenceManager.get_users("topic", topic_id)
-
-      render json: json_payload(messagebus_channel, users)
     end
 
     def json_payload(channel, users)
@@ -157,7 +151,6 @@ after_initialize do
 
   Presence::Engine.routes.draw do
     post '/publish' => 'presences#publish'
-    get  '/ping/:topic_id' => 'presences#ping'
   end
 
   Discourse::Application.routes.append do

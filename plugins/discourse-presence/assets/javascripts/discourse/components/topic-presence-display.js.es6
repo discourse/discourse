@@ -1,6 +1,8 @@
-import { ajax } from 'discourse/lib/ajax';
 import { on }  from 'ember-addons/ember-computed-decorators';
 import computed from 'ember-addons/ember-computed-decorators';
+import { keepAliveDuration } from 'discourse/plugins/discourse-presence/discourse/components/composer-presence-display';
+
+const bufferTime = 3000;
 
 export default Ember.Component.extend({
   topicId: null,
@@ -11,22 +13,45 @@ export default Ember.Component.extend({
   @on('didInsertElement')
   _inserted() {
     this.set("presenceUsers", []);
+    const messageBusChannel = `/presence/topic/${this.get('topicId')}`;
+    this.set('messageBusChannel', messageBusChannel);
 
-    ajax(`/presence/ping/${this.get("topicId")}`).then((data) => {
-      this.setProperties({
-        messageBusChannel: data.messagebus_channel,
-        presenceUsers: data.users,
-      });
-      this.messageBus.subscribe(data.messagebus_channel, message => {
-        this.set("presenceUsers", message.users);
-      }, data.messagebus_id);
-    });
+    var firstMessage = true;
+
+    this.messageBus.subscribe(messageBusChannel, message => {
+
+      let users = message.users;
+
+      // account for old messages,
+      // we only do this once to allow for some bad clocks
+      if (firstMessage) {
+        const old = ((new Date()) / 1000) - ((keepAliveDuration / 1000) * 2);
+        if (message.time && (message.time < old)) {
+          users = [];
+        }
+        firstMessage = false;
+      }
+
+      Em.run.cancel(this._expireTimer);
+
+      this.set("presenceUsers", users);
+
+      this._expireTimer = Em.run.later(
+        this,
+        () => {
+          this.set("presenceUsers", []);
+        },
+        keepAliveDuration + bufferTime
+      );
+    }, -2); /* subscribe at position -2 so we get last message */
   },
 
   @on('willDestroyElement')
   _destroyed() {
-    if (this.get("messageBusChannel")) {
-      this.messageBus.unsubscribe(this.get("messageBusChannel"));
+    const channel = this.get("messageBusChannel");
+    if (channel) {
+      Em.run.cancel(this._expireTimer);
+      this.messageBus.unsubscribe(channel);
       this.set("messageBusChannel", null);
     }
   },
