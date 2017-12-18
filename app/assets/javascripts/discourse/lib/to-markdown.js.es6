@@ -155,10 +155,10 @@ class Tag {
     };
   }
 
-  static slice(name, prefix, suffix) {
+  static slice(name, suffix) {
     return class extends Tag {
       constructor() {
-        super(name, prefix, suffix);
+        super(name, "", suffix);
       }
 
       decorate(text) {
@@ -171,11 +171,11 @@ class Tag {
   }
 
   static cell(name) {
-    return Tag.slice(name, "", " ");
+    return Tag.slice(name, " ");
   }
 
   static li() {
-    return class extends Tag.slice("li", "", "\n") {
+    return class extends Tag.slice("li", "\n") {
       decorate(text) {
         const indent = this.element.filterParentNames("ul").slice(1).map(() => "  ").join("");
         return super.decorate(`${indent}* ${trimLeft(text)}`);
@@ -188,7 +188,7 @@ class Tag {
 const tags = [
   ...Tag.blocks().map((b) => Tag.block(b)),
   ...Tag.headings().map((h, i) => Tag.heading(h, i + 1)),
-  ...Tag.slices().map((s) => Tag.slice(s, "", "\n")),
+  ...Tag.slices().map((s) => Tag.slice(s, "\n")),
   ...Tag.emphases().map((e) => Tag.emphasis(e[0], e[1])),
   Tag.cell("td"), Tag.cell("th"),
   Tag.replace("br", "\n"), Tag.replace("hr", "\n---\n"), Tag.replace("head", ""),
