@@ -20,6 +20,8 @@ after_initialize do
   end
 
   module ::Presence::PresenceManager
+    MAX_BACKLOG_AGE ||= 60
+
     def self.get_redis_key(type, id)
       "presence:#{type}:#{id}"
     end
@@ -28,24 +30,23 @@ after_initialize do
       "/presence/#{type}/#{id}"
     end
 
+    # return true if a key was added
     def self.add(type, id, user_id)
-      # return true if a key was added
       key = get_redis_key(type, id)
       result = $redis.hset(key, user_id, Time.zone.now)
-      $redis.expire(key, 60)
+      $redis.expire(key, MAX_BACKLOG_AGE)
       result
     end
 
+    # return true if a key was deleted
     def self.remove(type, id, user_id)
       key = get_redis_key(type, id)
-      $redis.expire(key, 60)
-      # return true if a key was deleted
+      $redis.expire(key, MAX_BACKLOG_AGE)
       $redis.hdel(key, user_id) > 0
     end
 
     def self.get_users(type, id)
       user_ids = $redis.hkeys(get_redis_key(type, id)).map(&:to_i)
-      # TODO: limit the # of users returned
       User.where(id: user_ids)
     end
 
@@ -59,9 +60,19 @@ after_initialize do
 
       if topic.archetype == Archetype.private_message
         user_ids = User.where('admin OR moderator').pluck(:id) + topic.allowed_users.pluck(:id)
-        MessageBus.publish(messagebus_channel, message.as_json, user_ids: user_ids, max_backlog_age: 60)
+        MessageBus.publish(
+          messagebus_channel,
+          message.as_json,
+          user_ids: user_ids,
+          max_backlog_age: MAX_BACKLOG_AGE
+        )
       else
-        MessageBus.publish(messagebus_channel, message.as_json, group_ids: topic.secure_group_ids, max_backlog_age: 60)
+        MessageBus.publish(
+          messagebus_channel,
+          message.as_json,
+          group_ids: topic.secure_group_ids,
+          max_backlog_age: MAX_BACKLOG_AGE
+        )
       end
 
       users
@@ -89,7 +100,8 @@ after_initialize do
     requires_plugin PLUGIN_NAME
     before_action :ensure_logged_in
 
-    ACTIONS = %w{edit reply}.each(&:freeze)
+    ACTIONS   ||= %w{edit reply}.each(&:freeze)
+    MAX_USERS ||= 20
 
     def publish
       data = params.permit(
@@ -109,9 +121,9 @@ after_initialize do
         if topic
           guardian.ensure_can_see!(topic)
 
-          _removed = Presence::PresenceManager.remove(type, id, current_user.id)
-          cleaned  = Presence::PresenceManager.cleanup(type, id)
-          users    = Presence::PresenceManager.publish(type, id)
+          Presence::PresenceManager.remove(type, id, current_user.id)
+          Presence::PresenceManager.cleanup(type, id)
+          Presence::PresenceManager.publish(type, id)
         end
       end
 
@@ -124,9 +136,9 @@ after_initialize do
         if topic
           guardian.ensure_can_see!(topic)
 
-          _added  = Presence::PresenceManager.add(type, id, current_user.id)
-          cleaned = Presence::PresenceManager.cleanup(type, id)
-          users   = Presence::PresenceManager.publish(type, id)
+          Presence::PresenceManager.add(type, id, current_user.id)
+          Presence::PresenceManager.cleanup(type, id)
+          users = Presence::PresenceManager.publish(type, id)
 
           if data[:response_needed]
             messagebus_channel = Presence::PresenceManager.get_messagebus_channel(type, id)
@@ -143,7 +155,7 @@ after_initialize do
       {
         messagebus_channel: channel,
         messagebus_id: MessageBus.last_id(channel),
-        users: users.map { |u| BasicUserSerializer.new(u, root: false) }
+        users: users.limit(MAX_USERS).map { |u| BasicUserSerializer.new(u, root: false) }
       }
     end
 
