@@ -31,7 +31,15 @@ task "smoke:test" do
   end
 
   results = ""
-  IO.popen("#{phantom_path} #{Rails.root}/spec/phantom_js/smoke_test.js #{url}").each do |line|
+
+  command =
+    if ENV["USE_CHROME"]
+      "node #{Rails.root}/test/smoke_test.js #{url}"
+    else
+      "#{phantom_path} #{Rails.root}/spec/phantom_js/smoke_test.js #{url}"
+    end
+
+  IO.popen(command).each do |line|
     puts line
     results << line
   end
