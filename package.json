@@ -8,6 +8,7 @@
   "dependencies": {},
   "devDependencies": {
     "chrome-launcher": "^0.10.0",
-    "chrome-remote-interface": "^0.25.4"
+    "chrome-remote-interface": "^0.25.4",
+    "puppeteer": "^0.13.0"
   }
 }
