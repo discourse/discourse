@@ -312,7 +312,7 @@ class Element {
 }
 
 function putPlaceholders(html) {
-  const codeRegEx = /<code[^>]*>(.*?)<\/code>/gs;
+  const codeRegEx = /<code[^>]*>([\s\S]*?)<\/code>/gi;
   const origHtml = html;
   let match = codeRegEx.exec(origHtml);
   let placeholders = [];
