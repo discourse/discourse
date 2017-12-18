@@ -72,6 +72,10 @@ export default Ember.Component.extend({
 
     this.set('oldPresenceState', this.get('presenceState'));
     this.set('presenceState', stateObject);
+
+    if (isClosing) {
+      Ember.run.cancel(this._timeoutTimer);
+    }
   },
 
   _ACTIONS: ['edit', 'reply'],
