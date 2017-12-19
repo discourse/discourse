@@ -17,7 +17,7 @@ export default Ember.Component.extend(LoadMore, {
 
     $(window).on('resize.discourse-on-scroll', () => this.scrolled());
 
-    this.$().on('click.details-disabled', 'details.disabled', () => false)
+    this.$().on('click.details-disabled', 'details.disabled', () => false);
     this.$().on('mouseup.discourse-redirect', '.excerpt a', function(e) {
       // bypass if we are selecting stuff
       const selection = window.getSelection && window.getSelection();
@@ -39,7 +39,7 @@ export default Ember.Component.extend(LoadMore, {
   _destroyed: function() {
     this.unbindScrolling('user-stream-view');
     $(window).unbind('resize.discourse-on-scroll');
-    this.$().off('click.details-disabled', 'details.disabled')
+    this.$().off('click.details-disabled', 'details.disabled');
 
     // Unbind link tracking
     this.$().off('mouseup.discourse-redirect', '.excerpt a');
