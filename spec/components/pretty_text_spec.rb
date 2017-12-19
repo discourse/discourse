@@ -385,6 +385,10 @@ describe PrettyText do
         expect(PrettyText.excerpt("<span class='spoiler'>spoiler</div>", 100)).to match_html "<span class='spoiler'>spoiler</span>"
       end
 
+      it "should keep details" do
+        expect(PrettyText.excerpt("<details><summary>expand</summary><p>hello</p></details>", 30)).to match_html "<details><summary>expand</summary></details>"
+      end
+
       it "should remove meta informations" do
         expect(PrettyText.excerpt(wrapped_image, 100)).to match_html "<a href='//localhost:3000/uploads/default/4399/33691397e78b4d75.png' class='lightbox' title='Screen Shot 2014-04-14 at 9.47.10 PM.png'>[image]</a>"
       end
