@@ -170,3 +170,17 @@ helloWorld();</code> consectetur.`;
 
   assert.equal(toMarkdown(html), output);
 });
+
+QUnit.test("converts blockquote tag", assert => {
+  let html = "<blockquote>Lorem ipsum</blockquote>";
+  let output = "> Lorem ipsum";
+  assert.equal(toMarkdown(html), output);
+
+  html = "<blockquote>Lorem ipsum</blockquote><blockquote><p>dolor sit amet</p></blockquote>";
+  output = "> Lorem ipsum\n\n> dolor sit amet";
+  assert.equal(toMarkdown(html), output);
+
+  html = "<blockquote>\nLorem ipsum\n<blockquote><p>dolor <blockquote>sit</blockquote> amet</p></blockquote></blockquote>";
+  output = "> Lorem ipsum\n> > dolor\n> > > sit\n> > amet";
+  assert.equal(toMarkdown(html), output);
+});

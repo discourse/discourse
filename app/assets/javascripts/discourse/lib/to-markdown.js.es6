@@ -29,7 +29,7 @@ class Tag {
   }
 
   static blocks() {
-    return ["address", "article", "aside", "blockquote", "dd", "div", "dl", "dt", "fieldset",
+    return ["address", "article", "aside", "dd", "div", "dl", "dt", "fieldset",
             "figcaption", "figure", "footer", "form", "header", "hgroup", "hr", "main", "nav",
             "ol", "p", "pre", "section", "table", "ul"];
   }
@@ -47,7 +47,7 @@ class Tag {
   }
 
   static trimmable() {
-    return [...Tag.blocks(), ...Tag.headings(), ...Tag.slices(), "li", "td", "th", "br", "hr"];
+    return [...Tag.blocks(), ...Tag.headings(), ...Tag.slices(), "li", "td", "th", "br", "hr", "blockquote"];
   }
 
   static block(name, prefix, suffix) {
@@ -201,6 +201,19 @@ class Tag {
     };
   }
 
+  static blockquote() {
+    return class extends Tag {
+      constructor() {
+        super("blockquote", "\n> ", "\n");
+      }
+
+      decorate(text) {
+        text = text.trim().replace(/\n{2,}>/g, "\n>").replace(/\n/g, "\n> ");
+        return super.decorate(text);
+      }
+    };
+  }
+
 }
 
 const tags = [
@@ -211,10 +224,10 @@ const tags = [
   Tag.cell("td"), Tag.cell("th"),
   Tag.replace("br", "\n"), Tag.replace("hr", "\n---\n"), Tag.replace("head", ""),
   Tag.keep("ins"), Tag.keep("del"), Tag.keep("small"), Tag.keep("big"),
-  Tag.li(), Tag.link(), Tag.image(), Tag.code(),
+  Tag.li(), Tag.link(), Tag.image(), Tag.code(), Tag.blockquote(),
 
-  // TO-DO  CREATE: code, tbody, blockquote
-  //        UPDATE: ol, pre, thead, th, td
+  // TO-DO  CREATE: tbody
+  //        UPDATE: ol, thead, th, td
 ];
 
 class Element {
