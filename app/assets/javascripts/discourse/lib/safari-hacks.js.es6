@@ -33,6 +33,12 @@ function calcHeight() {
     if (window.screen.height === 736) {
       withoutKeyboard = smallViewport ? 353 : 383;
     }
+
+    // iPhone X
+    if (window.screen.height === 812) {
+      withoutKeyboard = smallViewport ? 340 : 370;
+    }
+
     // iPad can use innerHeight cause it renders nothing in the footer
     if (window.innerHeight > 920) {
       withoutKeyboard -= 45;
