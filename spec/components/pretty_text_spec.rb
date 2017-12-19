@@ -386,7 +386,7 @@ describe PrettyText do
       end
 
       it "should keep details" do
-        expect(PrettyText.excerpt("<details><summary>expand</summary><p>hello</p></details>", 30)).to match_html "<details><summary>expand</summary></details>"
+        expect(PrettyText.excerpt("<details><summary>expand</summary><p>hello</p></details>", 30)).to match_html "<details class='disabled'><summary>expand</summary></details>"
       end
 
       it "should remove meta informations" do
