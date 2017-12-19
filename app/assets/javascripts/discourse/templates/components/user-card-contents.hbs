@@ -42,7 +42,7 @@
 
     <ul class="usercard-controls">
       {{#if user.can_send_private_message_to_user}}
-        <li>
+        <li class='compose-pm'>
           {{d-button
             class="btn-primary"
             action=(action "composePrivateMessage" user post)

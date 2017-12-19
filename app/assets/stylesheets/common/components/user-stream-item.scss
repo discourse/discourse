@@ -110,6 +110,10 @@
     font-size: 0.929em;
     word-wrap: break-word;
     color: $primary;
+
+    details.disabled {
+      color: $primary-medium;
+    }
   }
 }
 
