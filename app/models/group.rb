@@ -268,10 +268,13 @@ class Group < ActiveRecord::Base
 
     # the everyone group is special, it can include non-users so there is no
     # way to have the membership in a table
-    if name == :everyone
+    case name
+    when :everyone
       group.visibility_level = Group.visibility_levels[:owners]
       group.save!
       return group
+    when :moderators
+      group.update!(messageable_level: ALIAS_LEVELS[:everyone])
     end
 
     # Remove people from groups they don't belong in.
