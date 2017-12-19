@@ -33,7 +33,6 @@ span.badge-posts {
     }
     button {
       border: none;
-      font-size: 1.214em;
       padding: 8px 10px;
       vertical-align: top;
       background: transparent;
@@ -135,12 +134,6 @@ a.reply-to-tab {
   color: dark-light-choose($primary-medium, $secondary-medium);
 }
 
-a.star {
-  display: inline-block;
-  float: left;
-  font-size: 1.3em;
-}
-
 .topic-post .boxed .contents {
   clear: both;
 }
@@ -196,7 +189,7 @@ a.star {
       padding: 4px 5px 2px 5px;
       text-align: center;
       font-weight: normal;
-      font-size: .786em;
+      font-size: .857em;
       line-height: 1;
     }
   }
@@ -225,7 +218,7 @@ a.star {
     }
     .number, i {
       color: dark-light-choose($primary-high, $secondary-low);
-      font-size: 110%;
+      font-size: 1.143em;
     }
 
     .avatar + a {
@@ -318,12 +311,10 @@ a.star {
     }
 
    a.badge-category, a.badge-category-parent {
-    font-size: 0.714em;
+    font-size: 0.857em;
     vertical-align: top;
     }
 }
-
-
 
 span.post-count {
   background: $primary;
@@ -452,7 +443,7 @@ button.select-post {
 }
 
 .deleted-user-avatar {
-  font-size: 2.571em;
+  font-size: 2.286em;
 }
 
 span.btn-text {display: none;}
@@ -490,7 +481,6 @@ span.highlighted {
   }
   .post-info {
     float: right;
-    font-size: 0.929em;
     margin: 4px 10px 0 0;
     .edits { margin-right: 5px; }
   }
