@@ -16,6 +16,22 @@ export default Ember.Component.extend({
   selectedNavItem(filterMode, navItems) {
     if (filterMode.indexOf("top/") === 0) { filterMode = "top"; }
     var item = navItems.find(i => i.get('filterMode').indexOf(filterMode) === 0);
+    if (!item) {
+      let connectors = this.get('connectors');
+      let category = this.get('category');
+      if (connectors && category) {
+        connectors.forEach(c => {
+          if (c.connectorClass && typeof(c.connectorClass.path) === "function" && typeof(c.connectorClass.displayName === "function")) {
+            let path = c.connectorClass.path(category);
+            if (path.indexOf(filterMode) > 0) {
+              item = {
+                displayName: c.connectorClass.displayName()
+              };
+            }
+          }
+        });
+      }
+    }
     return item || navItems[0];
   },
 
