@@ -13,11 +13,11 @@ task "qunit:test", [:timeout, :qunit_path] => :environment do |_, args|
     abort "Chrome 59 or higher is required to run tests in headless mode."
   end
 
-  unless system("command -v yarn >/dev/null;")
-    abort "Yarn is not installed. Download from https://yarnpkg.com/lang/en/docs/install/"
-  end
-
-  system("yarn install --dev")
+  # unless system("command -v yarn >/dev/null;")
+  #   abort "Yarn is not installed. Download from https://yarnpkg.com/lang/en/docs/install/"
+  # end
+  #
+  # system("yarn install --dev")
 
   # ensure we have this port available
   def port_available?(port)
