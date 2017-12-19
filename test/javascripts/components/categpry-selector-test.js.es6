@@ -12,7 +12,7 @@ componentTest('default', {
 
   test(assert) {
     andThen(() => {
-      assert.propEqual(selectKit().header.name(), 'feature');
+      assert.propEqual(selectKit().header.value(), 'feature');
       assert.ok(!exists(".select-kit .select-kit-row[data-value='2']"), "selected categories are not in the list");
     });
   }
@@ -52,7 +52,7 @@ componentTest('interactions', {
     selectKitSelectRow(8);
 
     andThen(() => {
-      assert.propEqual(selectKit().header.name(), 'feature,support,hosting', 'it adds the selected category');
+      assert.propEqual(selectKit().header.value(), 'feature,support,hosting', 'it adds the selected category');
       assert.equal(this.get('categories').length, 3);
     });
 
@@ -60,7 +60,7 @@ componentTest('interactions', {
     selectKit().keyboard.backspace();
 
     andThen(() => {
-      assert.propEqual(selectKit().header.name(), 'feature,support', 'it removes the last selected category');
+      assert.propEqual(selectKit().header.value(), 'feature,support', 'it removes the last selected category');
       assert.equal(this.get('categories').length, 2);
     });
   }

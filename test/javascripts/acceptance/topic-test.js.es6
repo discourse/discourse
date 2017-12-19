@@ -104,7 +104,7 @@ QUnit.test("Reply as new topic", assert => {
       "it fills composer with the ring string"
     );
     assert.equal(
-      selectKit('.category-chooser').header.name(), "feature",
+      selectKit('.category-chooser').header.value(), "feature",
       "it fills category selector with the right category"
     );
   });

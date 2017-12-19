@@ -9,7 +9,7 @@ componentTest('with value', {
     expandSelectKit();
 
     andThen(() => {
-      assert.equal(selectKit('.category-chooser').header.name(), "feature");
+      assert.equal(selectKit('.category-chooser').header.value(), "feature");
     });
   }
 });
@@ -51,7 +51,7 @@ componentTest('with allowUncategorized=null', {
     expandSelectKit();
 
     andThen(() => {
-      assert.equal(selectKit('.category-chooser').header.name(), "Select a category&hellip;");
+      assert.equal(selectKit('.category-chooser').header.value(), "Select a category&hellip;");
     });
   }
 });
@@ -67,7 +67,7 @@ componentTest('with allowUncategorized=null rootNone=true', {
     expandSelectKit();
 
     andThen(() => {
-      assert.equal(selectKit('.category-chooser').header.name(), "Select a category&hellip;");
+      assert.equal(selectKit('.category-chooser').header.value(), "Select a category&hellip;");
     });
   }
 });
@@ -84,7 +84,7 @@ componentTest('with disallowed uncategorized, rootNone and rootNoneLabel', {
     expandSelectKit();
 
     andThen(() => {
-      assert.equal(selectKit('.category-chooser').header.name(), "Select a category&hellip;");
+      assert.equal(selectKit('.category-chooser').header.value(), "Select a category&hellip;");
     });
   }
 });
@@ -100,7 +100,7 @@ componentTest('with allowed uncategorized', {
     expandSelectKit();
 
     andThen(() => {
-      assert.equal(selectKit('.category-chooser').header.name(), "uncategorized");
+      assert.equal(selectKit('.category-chooser').header.value(), "uncategorized");
     });
   }
 });
@@ -116,7 +116,7 @@ componentTest('with allowed uncategorized and rootNone', {
     expandSelectKit();
 
     andThen(() => {
-      assert.equal(selectKit('.category-chooser').header.name(), "(no category)");
+      assert.equal(selectKit('.category-chooser').header.value(), "(no category)");
     });
   }
 });
@@ -133,7 +133,7 @@ componentTest('with allowed uncategorized rootNone and rootNoneLabel', {
     expandSelectKit();
 
     andThen(() => {
-      assert.equal(selectKit('.category-chooser').header.name(), "root none label");
+      assert.equal(selectKit('.category-chooser').header.value(), "root none label");
     });
   }
 });

@@ -174,13 +174,13 @@ componentTest('dynamic headerText', {
     expandSelectKit();
 
     andThen(() => {
-      assert.equal(selectKit().header.name(), "robin");
+      assert.equal(selectKit().header.value(), "robin");
     });
 
     selectKitSelectRow(2);
 
     andThen(() => {
-      assert.equal(selectKit().header.name(), "regis", "it changes header text");
+      assert.equal(selectKit().header.value(), "regis", "it changes header text");
     });
   }
 });
@@ -411,7 +411,7 @@ componentTest('with nameChanges', {
     expandSelectKit();
 
     andThen(() => {
-      assert.equal(selectKit().header.name(), "robin");
+      assert.equal(selectKit().header.value(), "robin");
     });
 
     andThen(() => {
@@ -419,7 +419,7 @@ componentTest('with nameChanges', {
     });
 
     andThen(() => {
-      assert.equal(selectKit().header.name(), "robin2");
+      assert.equal(selectKit().header.value(), "robin2");
     });
   }
 });
@@ -436,7 +436,7 @@ componentTest('with null value', {
     expandSelectKit();
 
     andThen(() => {
-      assert.equal(selectKit().header.name(), "robin");
+      assert.equal(selectKit().header.value(), "robin");
     });
   }
 });

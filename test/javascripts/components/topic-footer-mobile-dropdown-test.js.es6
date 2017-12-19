@@ -20,7 +20,7 @@ componentTest('default', {
     expandSelectKit();
 
     andThen(() => {
-      assert.equal(selectKit().header.name(), "Topic Controls");
+      assert.equal(selectKit().header.value(), "Topic Controls");
       assert.equal(selectKit().rowByIndex(0).name(), "Bookmark");
       assert.equal(selectKit().rowByIndex(1).name(), "Share");
       assert.equal(selectKit().selectedRow.el.length, 0, "it doesn’t preselect first row");

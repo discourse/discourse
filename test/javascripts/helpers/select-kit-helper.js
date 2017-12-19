@@ -70,8 +70,8 @@ function selectKit(selector) { // eslint-disable-line no-unused-vars
 
   function headerHelper(header) {
     return {
-      name: function() {
-        return header.attr('data-name');
+      value: function() {
+        return header.attr('data-value');
       },
       icon: function() { return header.find('.icon'); },
       title: function() { return header.attr('title'); },

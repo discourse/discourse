@@ -22,6 +22,6 @@ QUnit.test("prefill category when category_id is set", assert => {
   visit("/new-topic?category_id=1");
 
   andThen(() => {
-    assert.equal(selectKit('.category-chooser').header.name(), 'bug');
+    assert.equal(selectKit('.category-chooser').header.value(), 'bug');
   });
 });

@@ -5,30 +5,31 @@ export default Ember.Component.extend({
   classNames: ["select-kit-header", "select-box-kit-header"],
   classNameBindings: ["isFocused"],
   attributeBindings: [
-    "dataName:data-name",
     "tabindex",
-    "ariaLabel:aria-label",
+    "label:aria-label",
     "ariaHasPopup:aria-haspopup",
-    "title"
+    "label:title",
+    "value:data-value"
   ],
 
   ariaHasPopup: true,
 
-  ariaLabel: Ember.computed.alias("title"),
-
   name: Ember.computed.alias("computedContent.name"),
+
+  value: Ember.computed.alias("computedContent.value"),
 
   @computed("computedContent.icon", "computedContent.icons")
   icons(icon, icons) {
     return Ember.makeArray(icon).concat(icons).filter(i => !Ember.isEmpty(i));
   },
 
-  @computed("computedContent.dataName", "name")
-  dataName(dataName, name) { return dataName || name; },
-
   @computed("title", "computedContent.title", "name")
-  title(title, computedContentTitle, name) {
-    return title || computedContentTitle || name;
+  label(title, computedContentTitle, name) {
+    if (title) return I18n.t(title).htmlSafe();
+    if (computedContentTitle) return computedContentTitle.htmlSafe();
+    if (name) return name;
+
+    return null;
   },
 
   click() {

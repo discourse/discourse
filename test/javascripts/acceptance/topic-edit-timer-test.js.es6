@@ -7,15 +7,15 @@ QUnit.test('default', assert => {
   click('.topic-admin-status-update button');
 
   andThen(() => {
-    assert.equal(selectKit('.select-kit.timer-type').header.name(), 'Auto-Close Topic');
-    assert.equal(selectKit('.future-date-input-selector').header.name(), 'Select a timeframe');
+    assert.equal(selectKit('.select-kit.timer-type').header.value(), 'Auto-Close Topic');
+    assert.equal(selectKit('.future-date-input-selector').header.value(), 'Select a timeframe');
   });
 
   click('#private-topic-timer');
 
   andThen(() => {
-    assert.equal(selectKit('.select-kit.timer-type').header.name(), 'Remind Me');
-    assert.equal(selectKit('.future-date-input-selector').header.name(), 'Select a timeframe');
+    assert.equal(selectKit('.select-kit.timer-type').header.value(), 'Remind Me');
+    assert.equal(selectKit('.future-date-input-selector').header.value(), 'Select a timeframe');
   });
 });
 
@@ -27,7 +27,7 @@ QUnit.test('autoclose - specific time', assert => {
   selectKitSelectRow('next_week', { selector: '.future-date-input-selector' });
 
   andThen(() => {
-    assert.equal(selectKit('.future-date-input-selector').header.name(), 'Next week');
+    assert.equal(selectKit('.future-date-input-selector').header.value(), 'Next week');
     const regex = /will automatically close in/g;
     const html = find('.future-date-input .topic-status-info').html().trim();
     assert.ok(regex.test(html));
@@ -42,7 +42,7 @@ QUnit.test('autoclose', assert => {
 
   selectKitSelectRow('next_week', { selector: '.future-date-input-selector' });
   andThen(() => {
-    assert.equal(selectKit('.future-date-input-selector').header.name(), 'Next week');
+    assert.equal(selectKit('.future-date-input-selector').header.value(), 'Next week');
     const regex = /will automatically close in/g;
     const html = find('.future-date-input .topic-status-info').html().trim();
     assert.ok(regex.test(html));
@@ -53,7 +53,7 @@ QUnit.test('autoclose', assert => {
   fillIn('.future-date-input .date-picker', '2099-11-24');
 
   andThen(() => {
-    assert.equal(selectKit('.future-date-input-selector').header.name(), 'Pick date and time');
+    assert.equal(selectKit('.future-date-input-selector').header.value(), 'Pick date and time');
     const regex = /will automatically close in/g;
     const html = find('.future-date-input .topic-status-info').html().trim();
     assert.ok(regex.test(html));
@@ -63,7 +63,7 @@ QUnit.test('autoclose', assert => {
   selectKitSelectRow('set_based_on_last_post', { selector: '.future-date-input-selector' });
   fillIn('.future-date-input input[type=number]', '2');
   andThen(() => {
-    assert.equal(selectKit('.future-date-input-selector').header.name(), 'Close based on last post');
+    assert.equal(selectKit('.future-date-input-selector').header.value(), 'Close based on last post');
     const regex = /This topic will close.*after the last reply/g;
     const html = find('.future-date-input .topic-status-info').html().trim();
     assert.ok(regex.test(html));
@@ -79,13 +79,13 @@ QUnit.test('close temporarily', assert => {
   selectKitSelectRow('open', { selector: '.select-kit.timer-type' });
 
   andThen(() => {
-    assert.equal(selectKit('.future-date-input-selector').header.name(), 'Select a timeframe');
+    assert.equal(selectKit('.future-date-input-selector').header.value(), 'Select a timeframe');
   });
 
   expandSelectKit('.future-date-input-selector');
   selectKitSelectRow('next_week', { selector: '.future-date-input-selector' });
   andThen(() => {
-    assert.equal(selectKit('.future-date-input-selector').header.name(), 'Next week');
+    assert.equal(selectKit('.future-date-input-selector').header.value(), 'Next week');
     const regex = /will automatically open in/g;
     const html = find('.future-date-input .topic-status-info').html().trim();
     assert.ok(regex.test(html));
@@ -96,7 +96,7 @@ QUnit.test('close temporarily', assert => {
   fillIn('.future-date-input .date-picker', '2099-11-24');
 
   andThen(() => {
-    assert.equal(selectKit('.future-date-input-selector').header.name(), 'Pick date and time');
+    assert.equal(selectKit('.future-date-input-selector').header.value(), 'Pick date and time');
     const regex = /will automatically open in/g;
     const html = find('.future-date-input .topic-status-info').html().trim();
     assert.ok(regex.test(html));
@@ -112,8 +112,8 @@ QUnit.test('schedule', assert => {
   selectKitSelectRow('publish_to_category', { selector: '.select-kit.timer-type' });
 
   andThen(() => {
-    assert.equal(selectKit('.modal-body .category-chooser').header.name(), 'uncategorized');
-    assert.equal(selectKit('.future-date-input-selector').header.name(), 'Select a timeframe');
+    assert.equal(selectKit('.modal-body .category-chooser').header.value(), 'uncategorized');
+    assert.equal(selectKit('.future-date-input-selector').header.value(), 'Select a timeframe');
   });
 
   expandSelectKit('.modal-body .category-chooser');
@@ -123,7 +123,7 @@ QUnit.test('schedule', assert => {
   selectKitSelectRow('next_week', { selector: '.future-date-input-selector' });
 
   andThen(() => {
-    assert.equal(selectKit('.future-date-input-selector').header.name(), 'Next week');
+    assert.equal(selectKit('.future-date-input-selector').header.value(), 'Next week');
     const regex = /will be published to #dev/g;
     const text = find('.future-date-input .topic-status-info').text().trim();
     assert.ok(regex.test(text));
@@ -139,13 +139,13 @@ QUnit.test('auto delete', assert => {
   selectKitSelectRow('delete', { selector: '.select-kit.timer-type' });
 
   andThen(() => {
-    assert.equal(selectKit('.future-date-input-selector').header.name(), 'Select a timeframe');
+    assert.equal(selectKit('.future-date-input-selector').header.value(), 'Select a timeframe');
   });
 
   expandSelectKit('.future-date-input-selector');
   selectKitSelectRow('two_weeks', { selector: '.future-date-input-selector' });
   andThen(() => {
-    assert.equal(selectKit('.future-date-input-selector').header.name(), 'Two Weeks');
+    assert.equal(selectKit('.future-date-input-selector').header.value(), 'Two Weeks');
     const regex = /will be automatically deleted/g;
     const html = find('.future-date-input .topic-status-info').html().trim();
     assert.ok(regex.test(html));

@@ -14,7 +14,7 @@ componentTest('default', {
     expandSelectKit();
 
     andThen(() => {
-      assert.propEqual(selectKit().header.name(), 'bold,italic');
+      assert.propEqual(selectKit().header.value(), 'bold,italic');
     });
   }
 });
@@ -46,7 +46,7 @@ componentTest('with only setting value', {
     expandSelectKit();
 
     andThen(() => {
-      assert.propEqual(selectKit().header.name(), 'bold,italic');
+      assert.propEqual(selectKit().header.value(), 'bold,italic');
     });
   }
 });
@@ -65,7 +65,7 @@ componentTest('interactions', {
     selectKitSelectRow('underline');
 
     andThen(() => {
-      assert.propEqual(selectKit().header.name(), 'bold,italic,underline');
+      assert.propEqual(selectKit().header.value(), 'bold,italic,underline');
     });
 
     selectKitFillInFilter('strike');
@@ -77,7 +77,7 @@ componentTest('interactions', {
     selectKit().keyboard.enter();
 
     andThen(() => {
-      assert.propEqual(selectKit().header.name(), 'bold,italic,underline,strike');
+      assert.propEqual(selectKit().header.value(), 'bold,italic,underline,strike');
     });
 
     selectKit().keyboard.backspace();

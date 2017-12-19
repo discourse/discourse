@@ -24,12 +24,12 @@ componentTest('updating the content refreshes the list', {
   test(assert) {
     expandSelectKit();
 
-    andThen(() => assert.equal(selectKit().header.name(), "Pinned") );
+    andThen(() => assert.equal(selectKit().header.value(), "Pinned") );
 
     andThen(() => this.set("pinned", false));
 
     andThen(() => {
-      assert.equal(selectKit().header.name(), "Unpinned");
+      assert.equal(selectKit().header.value(), "Unpinned");
     });
   }
 });

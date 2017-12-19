@@ -11,7 +11,7 @@ componentTest('with objects and values', {
 
   test(assert) {
     andThen(() => {
-      assert.propEqual(selectKit().header.name(), 'hello,world');
+      assert.propEqual(selectKit().header.value(), 'hello,world');
     });
   }
 });

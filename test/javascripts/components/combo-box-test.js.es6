@@ -11,7 +11,7 @@ componentTest('default', {
     expandSelectKit();
 
     andThen(() => {
-      assert.equal(selectKit('.combobox').header.name(), "hello");
+      assert.equal(selectKit('.combobox').header.value(), "hello");
       assert.equal(selectKit('.combobox').rowByValue(1).name(), "hello");
       assert.equal(selectKit('.combobox').rowByValue(2).name(), "world");
     });
@@ -81,7 +81,7 @@ componentTest('with value and none as a string', {
       assert.equal(selectKit('.combobox').noneRow.name(), 'none');
       assert.equal(selectKit('.combobox').rowByValue("evil").name(), "evil");
       assert.equal(selectKit('.combobox').rowByValue("trout").name(), "trout");
-      assert.equal(selectKit('.combobox').header.name(), 'trout');
+      assert.equal(selectKit('.combobox').header.value(), 'trout');
       assert.equal(this.get('value'), 'trout');
     });
 
@@ -108,7 +108,7 @@ componentTest('with value and none as an object', {
       assert.equal(selectKit('.combobox').noneRow.name(), 'none');
       assert.equal(selectKit('.combobox').rowByValue("evil").name(), "evil");
       assert.equal(selectKit('.combobox').rowByValue("trout").name(), "trout");
-      assert.equal(selectKit('.combobox').header.name(), 'evil');
+      assert.equal(selectKit('.combobox').header.value(), 'evil');
       assert.equal(this.get('value'), 'evil');
     });
 
@@ -133,7 +133,7 @@ componentTest('with no value and none as an object', {
     expandSelectKit();
 
     andThen(() => {
-      assert.equal(selectKit('.combobox').header.name(), 'none');
+      assert.equal(selectKit('.combobox').header.value(), 'none');
     });
   }
 });
@@ -151,7 +151,7 @@ componentTest('with no value and none string', {
     expandSelectKit();
 
     andThen(() => {
-      assert.equal(selectKit('.combobox').header.name(), 'none');
+      assert.equal(selectKit('.combobox').header.value(), 'none');
     });
   }
 });
@@ -167,7 +167,7 @@ componentTest('with no value and no none', {
     expandSelectKit();
 
     andThen(() => {
-      assert.equal(selectKit('.combobox').header.name(), 'evil', 'it sets the first row as value');
+      assert.equal(selectKit('.combobox').header.value(), 'evil', 'it sets the first row as value');
     });
   }
 });
@@ -235,7 +235,7 @@ componentTest('with empty string as value', {
     expandSelectKit();
 
     andThen(() => {
-      assert.equal(selectKit('.combobox').header.name(), 'evil', 'it sets the first row as value');
+      assert.equal(selectKit('.combobox').header.value(), 'evil', 'it sets the first row as value');
     });
   }
 });
