@@ -60,10 +60,13 @@ after_initialize do
 
       if topic.archetype == Archetype.private_message
         user_ids = User.where('admin OR moderator').pluck(:id) + topic.allowed_users.pluck(:id)
+        group_ids = topic.allowed_groups.pluck(:id)
+
         MessageBus.publish(
           messagebus_channel,
           message.as_json,
           user_ids: user_ids,
+          group_ids: group_ids,
           max_backlog_age: MAX_BACKLOG_AGE
         )
       else
