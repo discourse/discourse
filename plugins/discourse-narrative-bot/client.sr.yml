@@ -1,0 +1,6 @@
+sr:
+  js:
+    discourse_narrative_bot:
+      welcome_post_type:
+        new_user_track: "Započni korisnički tutorijal za sve nove korisnike"
+        welcome_message: "Pošalji svim novim korisnicima poruku dobrodošlice sa kratkim uputstvom za početnike"
