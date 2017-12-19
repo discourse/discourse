@@ -2357,7 +2357,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	$export.B = 16; // bind
 	$export.W = 32; // wrap
 	$export.U = 64; // safe
-	$export.R = 128; // real proto method for `library` 
+	$export.R = 128; // real proto method for `library`
 	module.exports = $export;
 
 /***/ }),
@@ -62208,13 +62208,6 @@ return /******/ (function(modules) { // webpackBootstrap
 			"strictEqual": false,
 			"test": false,
 			"throws": false
-		},
-		"phantomjs": {
-			"console": true,
-			"exports": true,
-			"phantom": true,
-			"require": true,
-			"WebPage": true
 		},
 		"couch": {
 			"emit": false,

@@ -1,66 +1,104 @@
-// PhantomJS QUnit Test Runner
+// Chrome QUnit Test Runner
+// Author: David Taylor
+// Requires chrome-launcher and chrome-remote-interface from npm
+// An up-to-date version of chrome is also required
 
-/*globals QUnit phantom*/
+/* globals Promise */
 
-var system = require("system"),
-    args = phantom.args;
-
-if (args === undefined) {
-  args = system.args;
-  args.shift();
-}
+var args = process.argv.slice(2);
 
 if (args.length < 1 || args.length > 2) {
-  console.log("Usage: " + phantom.scriptName + " <URL> <timeout>");
-  phantom.exit(1);
+  console.log("Usage: node run-qunit.js <URL> <timeout>");
+  process.exit(1);
 }
 
-var page = require("webpage").create();
+const chromeLauncher = require('chrome-launcher');
+const CDP = require('chrome-remote-interface');
 
-page.onConsoleMessage = function(msg) {
-  if (msg.slice(0, 8) === "WARNING:") { return; }
-  if (msg.slice(0, 6) === "DEBUG:") { return; }
+(function() {
 
-  console.log(msg);
-};
+  function launchChrome() {
+    return chromeLauncher.launch({
+      chromeFlags: [
+        '--disable-gpu',
+       '--headless',
+       '--no-sandbox'
+      ]
+    });
+  }
 
-page.onCallback = function (message) {
-  // forward the message to the standard output
-  system.stdout.write(message);
-};
+  launchChrome().then(chrome => {
+    CDP({
+      port: chrome.port
+    }).then(protocol => {
+      const {Page, Runtime} = protocol;
+      Promise.all([Page.enable(), Runtime.enable()]).then(()=>{
 
-page.open(args[0], function(status) {
-  if (status !== "success") {
-    console.error("Unable to access network");
-    phantom.exit(1);
-  } else {
-    page.evaluate(logQUnit);
+        Runtime.consoleAPICalled((response) => {
+          const message = response['args'][0].value;
 
-    var timeout = parseInt(args[1] || 300000, 10),
-        start = Date.now();
-
-    var interval = setInterval(function() {
-      if (Date.now() > start + timeout) {
-        console.error("Tests timed out");
-        phantom.exit(124);
-      } else {
-        var qunitDone = page.evaluate(function() {
-          return window.qunitDone;
+          // If it's a simple test result, write without newline
+          if(message === "." || message === "F"){
+            process.stdout.write(message);
+          }else{
+            console.log(message);
+          }
         });
 
-        if (qunitDone) {
-          clearInterval(interval);
-          if (qunitDone.failed > 0) {
-            phantom.exit(1);
-          } else {
-            phantom.exit();
-          }
-        }
-      }
-    }, 250);
-  }
-});
+        Page.navigate({
+          url: args[0]
+        });
 
+        Page.loadEventFired(() => {
+
+          Runtime.evaluate({
+            expression: `(${qunit_script})()`
+          }).then(() => {
+            const timeout = parseInt(args[1] || 300000, 10);
+            var start = Date.now();
+
+            var interval = setInterval(() => {
+              if (Date.now() > start + timeout) {
+                console.error("Tests timed out");
+
+                protocol.close();
+                chrome.kill();
+                process.exit(124);
+              } else {
+
+                Runtime.evaluate({
+                  expression: `(${check_script})()`
+                }).then(numFails => {
+                  if (numFails.result.type !== 'undefined') {
+                    clearInterval(interval);
+                    protocol.close();
+                    chrome.kill();
+
+                    if (numFails.result.value > 0) {
+                      process.exit(1);
+                    } else {
+                      process.exit();
+                    }
+                  }
+                }).catch(error);
+              }
+            }, 250);
+          }).catch(error(1));
+        });
+      }).catch(error(3));
+    }).catch(error(4));
+  }).catch(error(5));
+})();
+
+function error(code){
+  return function(){
+    console.log("A promise failed to resolve code:"+code);
+    process.exit(1);
+  };
+}
+
+// The following functions are converted to strings
+// And then sent to chrome to be evalaluated
 function logQUnit() {
   var moduleErrors = [];
   var testErrors = [];
@@ -83,9 +121,9 @@ function logQUnit() {
       var msg = "  Test Failed: " + context.name + assertionErrors.join("    ");
       testErrors.push(msg);
       assertionErrors = [];
-      window.callPhantom("F");
+      console.log("F");
     } else {
-      window.callPhantom(".");
+      console.log(".");
     }
   });
 
@@ -123,3 +161,11 @@ function logQUnit() {
     window.qunitDone = context;
   });
 }
+const qunit_script = logQUnit.toString();
+
+function check() {
+  if(window.qunitDone){
+    return window.qunitDone.failed;
+  }
+}
+const check_script = check.toString();

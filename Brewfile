@@ -14,6 +14,3 @@ brew 'postgresql'
 
 # install the Redis datastore
 brew 'redis'
-
-# install headless Javascript testing library
-brew 'phantomjs'
