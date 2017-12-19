@@ -42,14 +42,8 @@ describe ActiveRecord::ConnectionHandling do
 
   describe "#postgresql_fallback_connection" do
     it 'should return a PostgreSQL adapter' do
-      begin
-        connection = ActiveRecord::Base.postgresql_fallback_connection(config)
-
-        expect(connection)
-          .to be_an_instance_of(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
-      ensure
-        connection.disconnect!
-      end
+      expect(ActiveRecord::Base.postgresql_fallback_connection(config))
+        .to be_an_instance_of(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
     end
 
     context 'when master server is down' do
@@ -154,7 +148,12 @@ describe ActiveRecord::ConnectionHandling do
     describe 'when database is not in recovery' do
       it 'should raise the right error' do
         expect do
-          ActiveRecord::Base.send(:verify_replica, ActiveRecord::Base.connection)
+          begin
+            connection = ActiveRecord::Base.connection
+            ActiveRecord::Base.send(:verify_replica, connection)
+          ensure
+            connection.disconnect!
+          end
         end.to raise_error(RuntimeError, "Replica database server is not in recovery mode.")
       end
     end
