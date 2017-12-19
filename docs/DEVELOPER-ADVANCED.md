@@ -38,7 +38,7 @@ To get your Ubuntu 16.04 LTS install up and running to develop Discourse and Dis
 
     nvm install node
     nvm alias default node
-    npm install -g svgo phantomjs-prebuilt
+    npm install -g svgo
 
 
 If everything goes alright, let's clone Discourse and start hacking:
@@ -54,10 +54,10 @@ If everything goes alright, let's clone Discourse and start hacking:
     # time to create the database and run migrations
     bundle exec rake db:create db:migrate
     RAILS_ENV=test bundle exec rake db:create db:migrate
-    
+
     # run the specs (optional)
     bundle exec rake autospec # CTRL + C to stop
-    
+
     # launch discourse
     bundle exec rails s -b 0.0.0.0 # open browser on http://localhost:3000 and you should see Discourse
 

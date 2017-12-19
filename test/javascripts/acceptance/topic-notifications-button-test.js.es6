@@ -38,11 +38,10 @@ QUnit.test("Updating topic notification level", assert => {
       "it should display the right notification level"
     );
 
-    // TODO: tgxworld I can't figure out why the topic timeline doesn't show when
-    // running the tests in phantomjs
-    // ok(
-    //   exists(".timeline-footer-controls .notifications-button .watching"),
-    //   'it should display the right notification level in topic timeline'
-    // );
+    assert.equal(
+      find(`.timeline-footer-controls .select-kit-header`).data().name,
+      'Watching',
+      'it should display the right notification level in topic timeline'
+    );
   });
 });
