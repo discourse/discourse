@@ -14,6 +14,9 @@ class ThemeField < ActiveRecord::Base
     @theme_var_type_ids ||= [2, 3, 4]
   end
 
+  validates :name, format: { with: /\A[a-z_][a-z0-9_-]*\z/i },
+                   if: Proc.new { |field| ThemeField.theme_var_type_ids.include?(field.type_id) }
+
   COMPILER_VERSION = 5
 
   belongs_to :theme
@@ -124,7 +127,6 @@ COMPILED
       if will_save_change_to_error?
         update_columns(error: self.error)
       end
-
     end
   end
 
