@@ -44,7 +44,7 @@ class DirectoryItem < ActiveRecord::Base
       # Delete records that belonged to users who have been deleted
       exec_sql "DELETE FROM directory_items
                 USING directory_items di
-                LEFT JOIN users u ON u.id = user_id
+                LEFT JOIN users u ON (u.id = user_id AND u.active AND u.silenced_till IS NULL AND u.id > 0)
                 WHERE di.id = directory_items.id AND
                       u.id IS NULL AND
                       di.period_type = :period_type", period_type: period_types[period_type]
@@ -63,7 +63,7 @@ class DirectoryItem < ActiveRecord::Base
                     0
                 FROM users u
                 LEFT JOIN directory_items di ON di.user_id = u.id AND di.period_type = :period_type
-                WHERE di.id IS NULL AND u.id > 0
+                WHERE di.id IS NULL AND u.id > 0 AND u.silenced_till IS NULL and u.active
       ", period_type: period_types[period_type]
 
       # Calculate new values and update records
