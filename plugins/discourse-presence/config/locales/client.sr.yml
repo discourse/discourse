@@ -1,0 +1,9 @@
+sr:
+  js:
+    presence:
+      replying: "odgovara"
+      editing: "menja"
+      replying_to_topic:
+        one: "odgovara"
+        few: "odgovaraju"
+        other: "odgovaraju"
