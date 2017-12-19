@@ -5,9 +5,19 @@ task "qunit:test", [:timeout, :qunit_path] => :environment do |_, args|
   require "rack"
   require "socket"
 
-  unless %x{which phantomjs > /dev/null 2>&1} || ENV["USE_CHROME"]
-    abort "PhantomJS is not installed. Download from http://phantomjs.org"
+  unless system("command -v google-chrome >/dev/null;")
+    abort "Chrome is not installed. Download from https://www.google.com/chrome/browser/desktop/index.html"
   end
+
+  if Gem::Version.new(`$(command -v google-chrome) --version`.match(/[\d\.]+/)[0]) < Gem::Version.new("59")
+    abort "Chrome 59 or higher is required to run tests in headless mode."
+  end
+
+  unless system("command -v yarn >/dev/null;")
+    abort "Yarn is not installed. Download from https://yarnpkg.com/lang/en/docs/install/"
+  end
+
+  system("yarn install --dev")
 
   # ensure we have this port available
   def port_available?(port)
@@ -36,13 +46,7 @@ task "qunit:test", [:timeout, :qunit_path] => :environment do |_, args|
     success = true
     test_path = "#{Rails.root}/vendor/assets/javascripts"
     qunit_path = args[:qunit_path] || "/qunit"
-
-    if ENV["USE_CHROME"]
-      cmd = "node #{test_path}/run-qunit-chrome.js http://localhost:#{port}#{qunit_path}"
-    else
-      cmd = "phantomjs #{test_path}/run-qunit.js http://localhost:#{port}#{qunit_path}"
-    end
-
+    cmd = "node #{test_path}/run-qunit.js http://localhost:#{port}#{qunit_path}"
     options = {}
 
     %w{module filter qunit_skip_core qunit_single_plugin}.each do |arg|
