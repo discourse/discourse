@@ -5,21 +5,36 @@ QUnit.module("model:topic");
 import Topic from 'discourse/models/topic';
 
 QUnit.test("defaults", assert => {
-  var topic = Topic.create({id: 1234});
+  const topic = Topic.create({ id: 1234 });
+
   assert.blank(topic.get('deleted_at'), 'deleted_at defaults to blank');
   assert.blank(topic.get('deleted_by'), 'deleted_by defaults to blank');
 });
 
+QUnit.test("visited", assert => {
+  const topic = Topic.create({ highest_post_number: 2, last_read_post_number: 1 });
+
+  assert.not(topic.get("visited"), "not visited unless we've read all the posts");
+
+  topic.set("last_read_post_number", 2);
+  assert.ok(topic.get("visited"), "is visited once we've read all the posts");
+
+  topic.set("last_read_post_number", 3);
+  assert.ok(topic.get("visited"), "is visited if we've read all the posts and some are deleted at the end");
+});
+
 QUnit.test('has details', assert => {
-  var topic = Topic.create({id: 1234});
-  var topicDetails = topic.get('details');
+  const topic = Topic.create({ id: 1234 });
+  const topicDetails = topic.get('details');
+
   assert.present(topicDetails, "a topic has topicDetails after we create it");
   assert.equal(topicDetails.get('topic'), topic, "the topicDetails has a reference back to the topic");
 });
 
 QUnit.test('has a postStream', assert => {
-  var topic = Topic.create({id: 1234});
-  var postStream = topic.get('postStream');
+  const topic = Topic.create({ id: 1234 });
+  const postStream = topic.get('postStream');
+
   assert.present(postStream, "a topic has a postStream after we create it");
   assert.equal(postStream.get('topic'), topic, "the postStream has a reference back to the topic");
 });
@@ -34,19 +49,19 @@ QUnit.test('has suggestedTopics', assert => {
 
 QUnit.test('category relationship', assert => {
   // It finds the category by id
-  var category = Discourse.Category.list()[0],
-      topic = Topic.create({id: 1111, category_id: category.get('id') });
+  const category = Discourse.Category.list()[0];
+  const topic = Topic.create({ id: 1111, category_id: category.get('id') });
 
   assert.equal(topic.get('category'), category);
 });
 
 QUnit.test("updateFromJson", assert => {
-  var topic = Topic.create({id: 1234}),
-      category = Discourse.Category.list()[0];
+  const topic = Topic.create({ id: 1234 });
+  const category = Discourse.Category.list()[0];
 
   topic.updateFromJson({
     post_stream: [1,2,3],
-    details: {hello: 'world'},
+    details: { hello: 'world' },
     cool: 'property',
     category_id: category.get('id')
   });
@@ -58,8 +73,8 @@ QUnit.test("updateFromJson", assert => {
 });
 
 QUnit.test("destroy", assert => {
-  var user = Discourse.User.create({username: 'eviltrout'});
-  var topic = Topic.create({id: 1234});
+  const user = Discourse.User.create({ username: 'eviltrout' });
+  const topic = Topic.create({ id: 1234 });
 
   topic.destroy(user);
   assert.present(topic.get('deleted_at'), 'deleted at is set');
@@ -67,8 +82,8 @@ QUnit.test("destroy", assert => {
 });
 
 QUnit.test("recover", assert => {
-  var user = Discourse.User.create({username: 'eviltrout'});
-  var topic = Topic.create({id: 1234, deleted_at: new Date(), deleted_by: user});
+  const user = Discourse.User.create({ username: 'eviltrout' });
+  const topic = Topic.create({ id: 1234, deleted_at: new Date(), deleted_by: user });
 
   topic.recover();
   assert.blank(topic.get('deleted_at'), "it clears deleted_at");
@@ -76,7 +91,7 @@ QUnit.test("recover", assert => {
 });
 
 QUnit.test('fancyTitle', assert => {
-  var topic = Topic.create({ fancy_title: ":smile: with all :) the emojis :pear::peach:" });
+  const topic = Topic.create({ fancy_title: ":smile: with all :) the emojis :pear::peach:" });
 
   assert.equal(topic.get('fancyTitle'),
         `<img src='/images/emoji/emoji_one/smile.png?v=${v}' title='smile' alt='smile' class='emoji'> with all <img src='/images/emoji/emoji_one/slight_smile.png?v=${v}' title='slight_smile' alt='slight_smile' class='emoji'> the emojis <img src='/images/emoji/emoji_one/pear.png?v=${v}' title='pear' alt='pear' class='emoji'><img src='/images/emoji/emoji_one/peach.png?v=${v}' title='peach' alt='peach' class='emoji'>`,
@@ -84,7 +99,7 @@ QUnit.test('fancyTitle', assert => {
 });
 
 QUnit.test('excerpt', assert => {
-  var topic = Topic.create({ excerpt: "This is a test topic :smile:", pinned: true });
+  const topic = Topic.create({ excerpt: "This is a test topic :smile:", pinned: true });
 
   assert.equal(topic.get('escapedExcerpt'),
         `This is a test topic <img src='/images/emoji/emoji_one/smile.png?v=${v}' title='smile' alt='smile' class='emoji'>`,

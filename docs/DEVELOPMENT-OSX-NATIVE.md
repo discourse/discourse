@@ -183,11 +183,11 @@ You should not need to alter `/usr/local/var/postgres/pg_hba.conf`
 
 That's about it.
 
-## PhantomJS
+## Google Chrome 59+
 
-Homebrew loves you.
+Chrome is used for running QUnit tests in headless mode.
 
-    brew install phantomjs
+Download from https://www.google.com/chrome/index.html
 
 ## ImageMagick
 

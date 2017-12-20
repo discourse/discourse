@@ -515,7 +515,7 @@ describe PostAction do
     end
   end
 
-  describe "#create_message_for_post_action" do
+  describe ".create_message_for_post_action" do
     it "does not create a message when there is no message" do
       message_id = PostAction.create_message_for_post_action(Discourse.system_user, post, PostActionType.types[:spam], {})
       expect(message_id).to be_nil
@@ -525,6 +525,25 @@ describe PostAction do
       it "creates a message for #{post_action_type}" do
         message_id = PostAction.create_message_for_post_action(Discourse.system_user, post, PostActionType.types[post_action_type], message: "WAT")
         expect(message_id).to be_present
+      end
+    end
+
+    it "should raise the right errors when it fails to create a post" do
+      begin
+        group = Group[:moderators]
+        messageable_level = group.messageable_level
+        group.update!(messageable_level: Group::ALIAS_LEVELS[:nobody])
+
+        expect do
+          PostAction.create_message_for_post_action(
+            Fabricate(:user),
+            post,
+            PostActionType.types[:notify_moderators],
+            message: 'testing',
+          )
+        end.to raise_error(ActiveRecord::RecordNotSaved)
+      ensure
+        group.update!(messageable_level: messageable_level)
       end
     end
 

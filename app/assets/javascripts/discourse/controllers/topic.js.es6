@@ -305,7 +305,7 @@ export default Ember.Controller.extend(BufferedContent, {
     },
 
     recoverPost(post) {
-      post.get("post_number") === 1 ? this.recoverTopic() : this.recover();
+      post.get("post_number") === 1 ? this.recoverTopic() : post.recover();
     },
 
     deletePost(post) {

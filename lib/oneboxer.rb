@@ -154,6 +154,7 @@ module Oneboxer
         fd = FinalDestination.new(url, ignore_redirects: ignore_redirects, force_get_hosts: force_get_hosts)
         uri = fd.resolve
         return blank_onebox if uri.blank? || SiteSetting.onebox_domains_blacklist.include?(uri.hostname)
+
         options = {
           cache: {},
           max_width: 695,
@@ -162,7 +163,12 @@ module Oneboxer
 
         options[:cookie] = fd.cookie if fd.cookie
 
+        if Rails.env.development? && SiteSetting.port.to_i > 0
+          Onebox.options = { allowed_ports: [80, 443, SiteSetting.port.to_i] }
+        end
+
         r = Onebox.preview(uri.to_s, options)
+
         { onebox: r.to_s, preview: r.try(:placeholder_html).to_s }
       end
     rescue => e

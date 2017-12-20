@@ -11,7 +11,7 @@
 
   .like-count {
     color: dark-light-choose($primary-medium, $secondary-medium);
-    .fa { color: $love; font-size: 12px; }
+    .fa { color: $love; font-size: .857em; }
   }
 
   .badge-wrapper span.badge-category {
@@ -80,7 +80,7 @@
   }
   a {
     margin-right: 15px;
-    font-size: 12px;
+    font-size: .857em;
     padding: 2px 5px;
   }
 }

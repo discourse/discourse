@@ -60,7 +60,7 @@
     display: inline-flex;
     align-items: baseline;
     margin-right: 5px;
-    font-size: 12px;
+    font-size: .857em;
     line-height: 15px;
 
     span.badge-category {
@@ -251,7 +251,7 @@
   padding: 4px 5px 2px 5px;
   vertical-align: middle;
   color: $secondary;
-  font-size: 11px;
+  font-size: .786em;
   line-height: 1;
   text-align: center;
   background-color: dark-light-choose($primary-low-mid, $secondary-low);

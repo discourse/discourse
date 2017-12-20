@@ -194,6 +194,10 @@ img.emoji {
   display: flex;
   position: relative;
   align-items: center;
+
+  input[type="text"] {
+    width: auto!important;
+  }
 }
 
 .emoji-picker .filter .d-icon-search {

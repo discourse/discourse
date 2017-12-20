@@ -206,6 +206,14 @@ describe Group do
       expect(g.visibility_level).to eq(Group.visibility_levels[:owners])
     end
 
+    it "ensures that the moderators group is messageable by all" do
+      group = Group.find(Group::AUTO_GROUPS[:moderators])
+      group.update!(messageable_level: Group::ALIAS_LEVELS[:nobody])
+      Group.refresh_automatic_group!(:moderators)
+
+      expect(group.reload.messageable_level).to eq(Group::ALIAS_LEVELS[:everyone])
+    end
+
     it "does not reset the localized name" do
       begin
         default_locale = SiteSetting.default_locale

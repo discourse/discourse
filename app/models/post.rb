@@ -20,7 +20,9 @@ class Post < ActiveRecord::Base
   self.permitted_create_params = Set.new
 
   # increase this number to force a system wide post rebake
-  BAKED_VERSION = 1
+  # Version 1, was the initial version
+  # Version 2 15-12-2017, introduces CommonMark and a huge number of onebox fixes
+  BAKED_VERSION = 2
 
   rate_limit
   rate_limit :limit_posts_per_day
@@ -472,6 +474,7 @@ class Post < ActiveRecord::Base
   def self.rebake_old(limit)
     problems = []
     Post.where('baked_version IS NULL OR baked_version < ?', BAKED_VERSION)
+      .order('id desc')
       .limit(limit).each do |p|
       begin
         p.rebake!
@@ -654,6 +657,8 @@ class Post < ActiveRecord::Base
     Post.secured(guardian).where(id: post_ids).includes(:user, :topic).order(:id).to_a
   end
 
+  MAX_REPLY_LEVEL ||= 1000
+
   def reply_ids(guardian = nil)
     replies = Post.exec_sql("
       WITH RECURSIVE breadcrumb(id, level) AS (
@@ -662,10 +667,13 @@ class Post < ActiveRecord::Base
         SELECT reply_id, level + 1
           FROM post_replies, breadcrumb
          WHERE post_id = id
+           AND post_id <> reply_id
+           AND level < #{MAX_REPLY_LEVEL}
       ), breadcrumb_with_count AS (
         SELECT id, level, COUNT(*)
           FROM post_replies, breadcrumb
          WHERE reply_id = id
+           AND reply_id <> post_id
          GROUP BY id, level
       )
       SELECT id, level FROM breadcrumb_with_count WHERE level > 0 AND count = 1 ORDER BY id

@@ -16,16 +16,17 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   @computed('name')
   nameValid(name) {
-    return name && name.match(/^[a-zA-Z0-9-_]+$/);
+    return name && name.match(/\A[a-z_][a-z0-9_-]*\z/i);
   },
 
   @observes('name')
-  uploadChanged(){
-    let file = $('#file-input')[0];
+  uploadChanged() {
+    const file = $('#file-input')[0];
     this.set('fileSelected', file && file.files[0]);
   },
 
   actions: {
+
     updateName() {
       let name = this.get('name');
       if (Em.isEmpty(name)) {
@@ -34,20 +35,21 @@ export default Ember.Controller.extend(ModalFunctionality, {
       }
       this.uploadChanged();
     },
-    upload() {
 
-      let options = {
-        type: 'POST'
+    upload() {
+      const file = $('#file-input')[0].files[0];
+
+      const options = {
+        type: 'POST',
+        processData: false,
+        contentType: false,
+        data: new FormData()
       };
 
-      options.processData = false;
-      options.contentType = false;
-      options.data = new FormData();
-      let file = $('#file-input')[0].files[0];
       options.data.append('file', file);
 
-      ajax('/admin/themes/upload_asset', options).then(result=>{
-        let upload = {
+      ajax('/admin/themes/upload_asset', options).then(result => {
+        const upload = {
           upload_id: result.upload_id,
           name: this.get('name'),
           original_filename: file.name
@@ -57,7 +59,6 @@ export default Ember.Controller.extend(ModalFunctionality, {
       }).catch(e => {
         popupAjaxError(e);
       });
-
     }
   }
 });

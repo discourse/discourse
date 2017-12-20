@@ -270,7 +270,7 @@ pre.onebox code ol.lines li:before {
   color:#AFAFAF;
   text-align:right;
   padding-right:5px;
-  font-size:12px;
+  font-size:.857em;
   line-height: 1.9em;
   content: counter(li-counter);
   counter-increment: li-counter;
@@ -331,7 +331,7 @@ pre.onebox code {
 .onebox-body .build_status
 {
   padding: 2px;
-  font-size:12px;
+  font-size:.857em;
 }
 
 .onebox-body .status_tag.open {
@@ -379,7 +379,7 @@ aside.onebox.twitterstatus .onebox-body {
     z-index: 935;
     height: 30px;
     overflow: hidden;
-    font-size: 12px;
+    font-size: .857em;
     color: #fff;
     background-color: rgba(0, 0, 0, 0.6);
     text-overflow: ellipsis;
@@ -395,7 +395,7 @@ aside.onebox.twitterstatus .onebox-body {
 
       .album-title {
         width: 100%;
-        font-size: 13px;
+        font-size: 1.083em;
         line-height: 30px;
         color: #ccc;
         text-decoration: none;

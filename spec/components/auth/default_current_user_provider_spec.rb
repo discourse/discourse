@@ -100,6 +100,8 @@ describe Auth::DefaultCurrentUserProvider do
       it "rate limits api requests per api key" do
         global_setting :max_admin_api_reqs_per_key_per_minute, 3
 
+        freeze_time
+
         user = Fabricate(:user)
         key = SecureRandom.hex
         api_key = ApiKey.create!(key: key, created_by_id: -1)
@@ -111,6 +113,17 @@ describe Auth::DefaultCurrentUserProvider do
         expect do
           provider("/?api_key=#{key}&api_username=system").current_user
         end.to raise_error(RateLimiter::LimitExceeded)
+
+        freeze_time 59.seconds.from_now
+
+        expect do
+          provider("/?api_key=#{key}&api_username=system").current_user
+        end.to raise_error(RateLimiter::LimitExceeded)
+
+        freeze_time 2.seconds.from_now
+
+        # 1 minute elapsed
+        provider("/?api_key=#{key}&api_username=system").current_user
 
         # should not rake limit a random key
         api_key.destroy

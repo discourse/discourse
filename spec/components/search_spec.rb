@@ -760,8 +760,9 @@ describe Search do
     end
 
     it 'can tokanize website names correctly' do
-      post = Fabricate(:post, raw: 'i like wb.camra.org.uk so yay')
-      expect(Search.execute('wb.camra.org.uk').posts.map(&:id)).to eq([post.id])
+      post = Fabricate(:post, raw: 'i like http://wb.camra.org.uk/latest#test so yay')
+      expect(Search.execute('http://wb.camra.org.uk/latest#test').posts.map(&:id)).to eq([post.id])
+      expect(Search.execute('camra').posts.map(&:id)).to eq([post.id])
     end
 
     it 'supports category slug and tags' do

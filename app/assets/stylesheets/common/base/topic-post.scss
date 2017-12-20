@@ -34,7 +34,7 @@
    }
  }
  .fa {
-   font-size: 11px;
+   font-size: .786em;
    margin-left: 3px;
    color: dark-light-choose($primary-medium, $secondary-medium);
  }
@@ -46,8 +46,11 @@
 // global styles for the cooked HTML content in posts (and preview)
 .cooked, .d-editor-preview {
   word-wrap: break-word;
-  h1, h2, h3, h4, h5, h6 { margin: 30px 0 10px; }
-  h1 { line-height: 1em; } /* normalize.css sets h1 font size but not line height */
+  h1, h2, h3, h4, h5, h6 { 
+    margin: 30px 0 10px; 
+    line-height: 1.25; 
+  }
+  
   a { word-wrap: break-word; }
   ins { background-color: dark-light-choose($success-low, scale-color($success, $lightness: -60%)); }
   del { background-color: dark-light-choose($danger-low, scale-color($danger, $lightness: -60%)); }
@@ -201,7 +204,7 @@ aside.quote {
     right: -4px;
   }
   .fa {
-    font-size: 24px;
+    font-size: 1.714em;
   }
 }
 .topic-map .poster .avatar-flair {
@@ -219,7 +222,7 @@ aside.quote {
     right: 0;
   }
   .fa {
-    font-size: 14px;
+    font-size: 1em;
   }
 }
 .topic-avatar .poster-avatar-extra {
@@ -348,7 +351,7 @@ blockquote > *:last-child {
     border-top: none;
     float: left;
     i {
-      font-size: 35px;
+      font-size: 2.500em;
       width: 45px;
       text-align: center;
       color: dark-light-choose($primary-low-mid, $secondary-high);
@@ -375,7 +378,7 @@ blockquote > *:last-child {
       text-transform: none;
       margin: 15px 0px 5px;
       font-weight: normal;
-      font-size: 14px;
+      font-size: 1.11em;
       p {
         margin: 5px 0;
       }
@@ -476,7 +479,7 @@ a.mention, a.mention-group {
 .broken-image, .large-image {
   color: dark-light-choose($primary-low-mid, $secondary-high);
   border: 1px solid $primary-low;
-  font-size: 32px;
+  font-size: 2.286em;
   padding: 16px;
 }
 
