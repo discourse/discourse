@@ -156,6 +156,26 @@ RSpec.describe SearchLog, type: :model do
     end
   end
 
+  context "term_details" do
+    before do
+      SearchLog.log(term: "ruby", search_type: :header, ip_address: "127.0.0.1")
+      SearchLog.log(term: 'ruby', search_type: :header, ip_address: '127.0.0.1', user_id: Fabricate(:user).id)
+      SearchLog.log(term: "ruby", search_type: :full_page, ip_address: "127.0.0.2")
+    end
+
+    it "correctly returns term details" do
+      term_details = SearchLog.term_details("ruby")
+      expect(term_details[:data][0][:y]).to eq(3)
+
+      term_header_details = SearchLog.term_details("ruby", :all, :header)
+      expect(term_header_details[:data][0][:y]).to eq(2)
+
+      SearchLog.where(term: 'ruby', ip_address: '127.0.0.2').update_all(search_result_id: 24)
+      term_click_through_details = SearchLog.term_details("ruby", :all, :click_through_only)
+      expect(term_click_through_details[:data][0][:y]).to eq(1)
+    end
+  end
+
   context "trending" do
     before do
       SearchLog.log(term: 'ruby', search_type: :header, ip_address: '127.0.0.1')

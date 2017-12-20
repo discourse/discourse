@@ -57,6 +57,30 @@ class SearchLog < ActiveRecord::Base
     end
   end
 
+  def self.term_details(term, period = :weekly, search_type = :all)
+    details = []
+
+    result = SearchLog.select("COUNT(*) AS count, created_at::date AS date")
+      .where('term LIKE ?', term)
+      .where('created_at > ?', start_of(period))
+
+    result = result.where('search_type = ?', search_types[search_type]) if search_type == :header || search_type == :full_page
+    result = result.where('search_result_id IS NOT NULL') if search_type == :click_through_only
+
+    result.group(:term)
+      .order("date")
+      .group("date")
+      .each do |record|
+        details << { x: Date.parse(record['date'].to_s), y: record['count'] }
+      end
+
+    return {
+      type: "search_log_term",
+      title: I18n.t("search_logs.graph_title"),
+      data: details
+    }
+  end
+
   def self.trending(period = :all, search_type = :all)
     result = SearchLog.select("term,
        COUNT(*) AS searches,
