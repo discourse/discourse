@@ -17,7 +17,9 @@
 
       {{#each model as |item|}}
         <div class="admin-list-item">
-          <div class="col term">{{item.term}}</div>
+          <div class="col term">
+            {{#link-to 'adminSearchLogs.term' item.term}}{{item.term}}{{/link-to}}
+          </div>
           <div class="col">{{item.searches}}</div>
           <div class="col">{{item.click_through}}</div>
           <div class="col">{{item.unique}}</div>

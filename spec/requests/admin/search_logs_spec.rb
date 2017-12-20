@@ -32,4 +32,29 @@ RSpec.describe Admin::SearchLogsController do
       expect(json[0]['term']).to eq('ruby')
     end
   end
+
+  context "#term" do
+    it "raises an error if you aren't logged in" do
+      expect do
+        get '/admin/logs/search_logs/term/ruby.json'
+      end.to raise_error(ActionController::RoutingError)
+    end
+
+    it "raises an error if you aren't an admin" do
+      sign_in(user)
+      expect do
+        get '/admin/logs/search_logs/term/ruby.json'
+      end.to raise_error(ActionController::RoutingError)
+    end
+
+    it "should work if you are an admin" do
+      sign_in(admin)
+        get '/admin/logs/search_logs/term/ruby.json'
+
+      expect(response).to be_success
+
+      json = ::JSON.parse(response.body)
+      expect(json['term']['type']).to eq('search_log_term')
+    end
+  end
 end

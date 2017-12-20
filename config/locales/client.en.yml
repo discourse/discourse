@@ -3252,6 +3252,7 @@ en:
             all_search_types: "All search types"
             header: "Header"
             full_page: "Full Page"
+            click_through_only: "All (click through only)"
         logster:
           title: "Error Logs"
 
