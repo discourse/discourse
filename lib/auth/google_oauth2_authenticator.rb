@@ -21,6 +21,19 @@ class Auth::GoogleOAuth2Authenticator < Auth::Authenticator
     if !result.user && !result.email.blank? && result.email_valid
       result.user = User.find_by_email(result.email)
       if result.user
+        # we've matched an existing user to this login attempt...
+        if result.user.google_user_info && result.user.google_user_info.google_user_id != google_hash[:google_user_id]
+          # but the user has changed the google account used to log in...
+          if result.user.google_user_info.email != google_hash[:email]
+            # the user changed their email, go ahead and scrub the old record
+            result.user.google_user_info.destroy!
+          else
+            # same email address but different account? likely a takeover scenario
+            result.failed = true
+            result.failed_reason = I18n.t('errors.conflicting_google_user_id')
+            return result
+          end
+        end
         ::GoogleUserInfo.create({ user_id: result.user.id }.merge(google_hash))
       end
     end
