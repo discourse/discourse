@@ -1682,7 +1682,18 @@ fi:
       multi_select:
         select: 'valitse'
         selected: 'valittuna ({{count}})'
-        select_replies: 'valitse +vastausta'
+        select_post:
+          label: 'valitse'
+          title: 'Lisää viesti valittuihin'
+        selected_post:
+          label: 'valittu'
+          title: 'Poista valituista klikkaamalla'
+        select_replies:
+          label: 'valitse +vastaukset'
+          title: 'Lisää viesti ja vastaukset siihen valittuihin'
+        select_below:
+          label: 'valitse +myöhemmät'
+          title: 'Lisää viesti ja kaikki myöhemmät valittuihin'
         delete: poista valitut
         cancel: kumoa valinta
         select_all: valitse kaikki
@@ -1763,11 +1774,14 @@ fi:
         share: "jaa linkki tähän viestiin"
         more: "Lisää"
         delete_replies:
-          confirm:
-            one: "Haluatko poistaa myös yhden suoran vastauksen tähän viestiin."
-            other: "Haluatko poistaa myös {{count}} suoraa vastausta tähän viestiin?"
-          yes_value: "Kyllä, poista myös vastaukset"
-          no_value: "En, poista vain tämä viesti"
+          confirm: "Haluatko poistaa myös tähän viestiin liittyvät vastaukset?"
+          direct_replies:
+            one: "Kyllä, ja yksi suora vastaus"
+            other: "Kyllä, ja {{count}} suoraa vastausta"
+          all_replies:
+            one: "Kyllä, ja yksi vastaus"
+            other: "Kyllä, ja kaikki {{count}} vastausta"
+          just_the_post: "Ei, vain tämä viesti"
         admin: "viestin ylläpitotoimet"
         wiki: "Tee wiki"
         unwiki: "Poista wiki"
@@ -1861,8 +1875,8 @@ fi:
             other: "{{count}} käyttäjää äänesti tätä viestiä"
       delete:
         confirm:
-          one: "Oletko varma, että haluat poistaa tämän viestin?"
-          other: "Oletko varma, että haluat poistaa kaikki nämä viestit?"
+          one: "Oletko varma, että haluat poistaa viestin?"
+          other: "Oletko varma, että haluat poistaa {{count}} viestiä?"
       merge:
         confirm:
           one: "Oletko varma, että haluat yhdistää nämä viestit?"
@@ -2565,7 +2579,6 @@ fi:
           details: "Luodaan uusi vastaus, muokataan, poistetaan tai palautetaan."
         user_event:
           name: "Käyttäjätapahtuma"
-          details: "Luodaan uusi käyttäjä, käyttäjä hyväksytään tai päivittyy."
         delivery_status:
           title: "Toimituksen tila"
           inactive: "Ei toiminnassa"
@@ -3387,6 +3400,7 @@ fi:
         sample: "Käytä alla olevaa HTML-koodia sivustollasi aloittaaksesi ja upottaaksesi discourse ketjuja. Korvaa <b>REPLACE_ME</b> upotettavan sivun kanonisella URL-osoitteella."
         title: "Upottaminen"
         host: "Sallitut isännät"
+        class_name: "Luokan nimi"
         path_whitelist: "Sallitut polut"
         edit: "muokkaa"
         category: "Julkaise alueelle"

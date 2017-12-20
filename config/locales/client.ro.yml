@@ -1484,7 +1484,6 @@ ro:
       multi_select:
         select: 'selectează'
         selected: 'selectate ({{count}})'
-        select_replies: 'selectează +răspunsuri'
         delete: șterge selecția
         cancel: anulare selecție
         select_all: selectează tot
@@ -1564,13 +1563,6 @@ ro:
         undelete: "restaurează această postare"
         share: "distribuie un link către această postare"
         more: "Mai mult"
-        delete_replies:
-          confirm:
-            one: "Vrei să ștergi răspunsul direct la acest mesaj?"
-            few: "Vrei să ștergi cele {{count}} răspunsuri directe la acest mesaj?"
-            other: "Vrei să ștergi cele {{count}} de răspunsuri directe la acest mesaj?"
-          yes_value: "Da, șterge și răspunsurile"
-          no_value: "Nu, doar postarea"
         admin: "acțiuni administrative pentru postare"
         wiki: "Fă postarea Wiki"
         unwiki: "Nu mai fă Wiki din postare"
@@ -1672,11 +1664,6 @@ ro:
             one: "O persoană a votat pentru acest mesaj"
             few: "{{count}} persoane au votat pentru acest mesaj"
             other: "{{count}} de persoane au votat pentru acest mesaj"
-      delete:
-        confirm:
-          one: "Ești sigur că vrei să ștergi acest mesaj?"
-          few: "Ești sigur că vrei să ștergi toate aceste mesaje?"
-          other: "Ești sigur că vrei să ștergi toate aceste mesaje?"
       revisions:
         controls:
           first: "Prima revizie"
@@ -2311,7 +2298,6 @@ ro:
           details: "Atunci când exista un răspuns nou, editat, șters sau recuperat."
         user_event:
           name: "Eveniment utilizator"
-          details: "Când un utilizator este creat, aprobat sau actualizat."
         delivery_status:
           title: "Starea livrării"
           inactive: "Inactivă"

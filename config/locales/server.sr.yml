@@ -1,15 +1,23 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
 sr:
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
-  datetime_formats:
+  datetime_formats: &datetime_formats
     formats:
       short: "%m-%d-%Y"
       short_no_year: "%B %-d"
       date_only: "%B %-d, %Y"
   date:
     month_names: [null, januar, februar, mart, april, maj, jun, jul, avgust, septembar, oktobar, novembar, decembar]
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Teme"
   posts: "poruke"
@@ -21,7 +29,7 @@ sr:
   emails:
     incoming:
       default_subject: "Ovoj temi je potreban naslov"
-  errors:
+  errors: &errors
     messages:
       too_long_validation: "je limitirano na %{max} karaktera; koje ste vi uneli %{length}."
       invalid_boolean: "Nepravilan boolean."
@@ -107,6 +115,7 @@ sr:
             password:
               common: "je jedna od 10000 najčešće korišćenih lozinki. Molimo Vas izaberite sigurniju lozinku."
               same_as_username: "je ista kao vaše korisničko ime. Molimo Vas izaberite sigurniju šifru."
+      <<: *errors
   change_email:
     authorizing_old:
       title: "Hvala što ste potvrdili svoju važeću email adresu"
@@ -138,7 +147,7 @@ sr:
     pop3_polling_port: "Port za proveru POP3 naloga."
     pop3_polling_username: "Korisničko ime POP3 naloga za proveru postojanja novih email poruka"
     pop3_polling_password: "Lozinka PO3 naloga za proveru postojanja novih email poruka"
-    log_mail_processing_failures: "Beleži sve greške u obradi email poruka na http://imevasegsajta.com"
+    log_mail_processing_failures: "Beleži sve greške u obradi email poruka na http://yoursitename.com/logs"
     minimum_topics_similar: "Koliko teme mora da postoji da bi se prikazivale slične teme prilikom kreiranja novih"
     delete_user_max_post_age: "Ne dozvoli brisanje korisnika čije prve poruke su starije od (x) dana."
     delete_all_posts_max: "Maksimalan broj poruke koje mogu biti obrisane odjednom korišćenjem dugmeta Obriši sve poruke. Ako korisnik ima više poruka, poruke ne mogu biti obrisane odjednom i korisnik ne može biti obrisan."
@@ -166,7 +175,38 @@ sr:
     delete_drafts_older_than_n_days: Izbriši radne verzije poruka starije od (n) dana
     enable_emoji: "Omogući emotikone"
     enforce_square_emoji: "Forsiraj kvadratni oblik za sve emotikone."
-    auto_close_messages_post_count: " "
+    auto_close_messages_post_count: "Maksimalan broj dozvoljenih poruka pre nego se tema automatski zatvori  (0 da se isključi)"
     default_email_mailing_list_mode: "Podrazumevano šalji email za svaku novu poruku"
     default_email_previous_replies: "Podrazumevano uključi prethodne odgovore u email poruku"
     default_other_external_links_in_new_tab: "Podrazumevano otvori spoljne veze u novoj kartici "
+  wizard:
+    step:
+      locale:
+        title: "Dobrodošli na vaš Discourse"
+        fields:
+          default_locale:
+            description: "Koji je podrazumevani jezik vaše zajednice?"
+      forum_title:
+        title: "Ime foruma"
+        description: "Naziv foruma je <i>prva</i> stvar koju će posetioci primetiti. Šta vaše ime govori o vašoj zajednici?"
+        fields:
+          title:
+            label: "Ime vaše zajednice"
+            placeholder: "Milenino mesto za bleju"
+          site_description:
+            label: "Opišite vašu zajednicu u jednoj kratkoj rečenici"
+            placeholder: "Mesto gde Milena i njene prijateljice ćaskaju o kul stvarima"
+      introduction:
+        title: "Uvod"
+        fields:
+          welcome:
+            label: "Tema dobrodošlice"
+            description: "<p>Kako biste najbolje opisali vašu zajednicu totalnom strancu u liftu u 1 minuti?</p> <ul> <li>Za koga su ove diskusije?</li> <li>Šta ovde mogu da pronađem?</li> <li>Zašto bih ovo posećivao?</li> </ul> <p>Vaša tema dobrodošlice je prvo što će novi posetioci pročitati. Posmatrajte je to kao <b>vašu misiju</b> u jednom paragrafu. </p>"
+            one_paragraph: "Molimo da vaša poruka dobrodošlice ne bude duža od jednog paragrafa."
+      finished:
+        title: "Vaš Discource je spreman!"
+  time:
+    <<: *datetime_formats
+  activemodel:
+    errors:
+      <<: *errors

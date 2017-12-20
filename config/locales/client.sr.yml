@@ -1,3 +1,10 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
 sr:
   js:
     number:
@@ -44,6 +51,10 @@ sr:
           one: "1 sek."
           few: "%{count} sek."
           other: "%{count} sek."
+        less_than_x_minutes:
+          one: "< 1m"
+          few: "< %{count}m"
+          other: "< %{count}m"
         x_minutes:
           one: "1 minuta"
           few: "%{count} minuta"
@@ -56,6 +67,10 @@ sr:
           one: "1 dan"
           few: "%{count} dana"
           other: "%{count} dana"
+        x_months:
+          one: "1mes"
+          few: "%{count}mes"
+          other: "%{count}mes"
         about_x_years:
           one: "1 godina"
           few: "%{count} godina"
@@ -112,6 +127,7 @@ sr:
           other: "%{count} godin(a-e) kasnije"
       previous_month: 'Prethodni mesec'
       next_month: 'Sledeći mesec'
+      placeholder: datum
     share:
       topic: 'podijeli link na ovu temu'
       post: 'poruka #%{postNumber}'
@@ -126,6 +142,7 @@ sr:
       split_topic: "podeli ovu temu %{when}"
       invited_user: "pozvan %{who} %{when}"
       invited_group: "pozvan%{who}%{when}"
+      user_left: "%{who} je sam sebe obrisao iz ove poruke %{when}"
       removed_user: "uklonjen %{who} %{when}"
       removed_group: "uklonjen%{who}%{when}"
       autoclosed:
@@ -179,6 +196,10 @@ sr:
     show_more: "prikaži više"
     show_help: "opcije"
     links: "Linkovi"
+    links_lowercase:
+      one: "link"
+      few: "linkovi"
+      other: "linkovi"
     faq: "ČPP"
     guidelines: "Smernice"
     privacy_policy: "Politika Privatnosti"
@@ -216,8 +237,8 @@ sr:
       our_moderators: "Naši Moderatori"
       stat:
         all_time: "Sve vreme"
-        last_7_days: "Zadnjih 7 Dana"
-        last_30_days: "Zadnjih 30 Dana"
+        last_7_days: "Posledjih 7 dana"
+        last_30_days: "Poslednjih 30 dana"
       like_count: "Sviđanja"
       topic_count: "Teme"
       post_count: "Poruka"
@@ -260,6 +281,7 @@ sr:
     uploading: "Učitava se..."
     uploading_filename: "Slanje {{filename}}..."
     uploaded: "Učitano!"
+    pasting: "Nalepljivanje..."
     enable: "Omogući"
     disable: "Onemogući"
     undo: "Vrati na prethodno"
@@ -285,7 +307,13 @@ sr:
       edit: "Izmeni"
       cancel: "Otkaži"
       view_pending: "vidi poruke na čekanju"
+      has_pending_posts:
+        one: "Ova tema ima <b>1</b> poruku koja čeka na odobrenje"
+        few: "This topic has <b>{{count}}</b> posts awaiting approval"
+        other: "Ova tema ima <b>{{count}}</b> poruka koje čekaju na odobrenje"
+      confirm: "Sačuvaj izmene"
       approval:
+        title: "Potrebno odobrenje"
         ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> je objavio <a href='{{topicUrl}}'>  temu</a>"
@@ -308,6 +336,8 @@ sr:
       days_visited: "Poseta"
       posts_read: "Pročitano"
     groups:
+      logs:
+        action: "Akcije"
       owner: "vlasnik"
       members: "Članovi"
       topics: "Teme"
@@ -322,7 +352,7 @@ sr:
         everyone: "Svi"
       trust_levels:
         none: "Ništa"
-      flair_bg_color_placeholder: "Šaljemo poruku na Vašu novu email adresu radi potvrde"
+      flair_bg_color_placeholder: "(Opciono) Hex vrednost boje"
     user_action_groups:
       '1': "Sviđanja Dodata"
       '2': "Primljena Sviđanja"
@@ -465,13 +495,13 @@ sr:
         checking: "Proveravamo dostupnost korisničkog imena..."
         prefilled: "E-mail odgovara ovom registrovanom korisničkom imenu"
       locale:
-        title: "Interfejs jezika"
+        title: "Jezik interfejsa"
         instructions: "Korisnički jezik interfejs. Promeniće se kad ponovo učitate stranicu."
         default: "(zadano)"
       password_confirmation:
         title: "Ponoviti šifru"
-      last_posted: "Zadnja Poruka"
-      last_emailed: "Zadnji e-mail"
+      last_posted: "Poslednja poruka"
+      last_emailed: "Poslednji e-mail"
       last_seen: "Viđen"
       created: "Pridružio"
       log_out: "Odjavi se"
@@ -573,7 +603,7 @@ sr:
         forbidden: "Nemate dozvolu da pogledate to."
         unknown: "Nešto nije bilo u redu."
       buttons:
-        back: "Idi natrag"
+        back: "Idi nazad"
         again: "Pokušaj ponovno"
         fixed: "Učitaj stranicu"
     close: "Zatvori"
@@ -815,7 +845,7 @@ sr:
         login_required: "Morate se prijaviti da vidite temu."
       server_error:
         title: "Očitavanje teme nije uspelo"
-        description: "Žao nam je, nismo mogli očitat temu, moguće zbog problema s konekcijom. Molimo pokušajte ponovno. Ako problem i dalje postoji, javite nam."
+        description: "Žao nam je, nije uspelo učitavanje ove teme, verovatno zbog problema sa konekcijom. Molimo pokušajte ponovno. Ako problem i dalje postoji, javite nam."
       not_found:
         title: "Tema nije pronađena"
         description: "Žao nam je, nismo mogli pronaći temu. Možda ju je moderator uklonio?"
@@ -835,7 +865,7 @@ sr:
         one: "Ima {{count}} sviđanja u temi"
         few: "Ima {{count}} sviđanja u temi"
         other: "Ima {{count}} sviđanja u temi"
-      back_to_list: "Natrag na listu Tema"
+      back_to_list: "Nazad na listu tema"
       options: "Opcije Teme"
       show_links: "Prikaži linkove u ovoj temi"
       toggle_information: "uključi/isključi detalje teme"
@@ -910,7 +940,7 @@ sr:
         success_message: 'Uspešno ste označili ovu temu zastavicom'
       feature_topic:
         title: "Prikaži ovu temu"
-        unpin: "Ukloni ovu temu sa vrha {{ kategorije"
+        unpin: "Ukloni ovu temu sa vrha {{categoryLink}} kategorije."
         pin_validation: "Neophodan je datum da zakačite ovu temu"
         unpin_globally: "Ukloni ovu temu sa vrha svih lista"
       inviting: "Pozivanje..."
@@ -1099,7 +1129,7 @@ sr:
           first: "Prva revizija"
           previous: "Prethodna revizija"
           next: "Sedeća revizija"
-          last: "Zadnja revizija"
+          last: "Poslednja revizija"
           hide: "Sakrij reviziju"
           show: "Prikaži reviziju"
         displays:
@@ -1227,6 +1257,11 @@ sr:
       with_topics: "%{filter} teme"
       with_category: "%{filter} %{category} teme"
       latest:
+        title: "Poslednje"
+        title_with_count:
+          one: "Poslednja (1)"
+          few: "Poslednjih ({{count}})"
+          other: "Poslednjih ({{count}})"
         help: "teme sa nedavnim porukama"
       hot:
         title: "Vruće"
@@ -1239,9 +1274,27 @@ sr:
         title_in: "Kategorija - {{categoryName}}"
         help: "sve teme grupirane po kategorijama"
       unread:
+        title: "Nepročitano"
+        title_with_count:
+          one: "Neporčitano (1)"
+          few: "Neporčitano ({{count}})"
+          other: "Neporčitano ({{count}})"
         help: "teme koje trenutno posmatrate ili pratite s nepročitanim porukama"
+        lower_title_with_count:
+          one: "1 nepročitana"
+          few: "{{count}} nepročitanih"
+          other: "{{count}} nepročitanih"
       new:
+        lower_title_with_count:
+          one: "1 nova"
+          few: "{{count}} novih"
+          other: "{{count}} novih"
         lower_title: "novo"
+        title: "Novo"
+        title_with_count:
+          one: "Nova (1)"
+          few: "Novih ({{count}})"
+          other: "Novih ({{count}})"
         help: "teme otvorene u zadnjih par dana"
       posted:
         title: "Moje poruke"
@@ -1849,3 +1902,23 @@ sr:
         name: "Ime"
         image: "Slika"
         delete_confirm: "Jeste li sigurni da želite izbrisati :%{name}: emoji?"
+  wizard_js:
+    wizard:
+      done: "Gotovo"
+      back: "Nazad"
+      next: "Dalje"
+      step: "%{current} od %{total}"
+      upload: "Upload"
+      uploading: "Uploading..."
+      quit: "Možda kasnije"
+      staff_count:
+        one: "Tvoja zajednica ima 1 člana tima (tebe). "
+        few: "Vaša zajednica ima  %{count} članova tima, uključujući i vas."
+        other: "Vaša zajednica ima %{count} članova tima, uključujući i vas."
+      invites:
+        add_user: "dodaj"
+        none_added: "Nikoga još niste pozvali za člana tima. Jesi li siguran da želiš da nastaviš dalje?"
+        roles:
+          admin: "Admin"
+          moderator: "Moderator"
+          regular: "Običan korisnik"

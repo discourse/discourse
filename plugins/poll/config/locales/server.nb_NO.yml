@@ -7,8 +7,10 @@
 
 nb_NO:
   site_settings:
+    poll_enabled: "Tillat avstemninger?"
     poll_maximum_options: "Maksimalt antall alternativer som tillates i en avstemning."
     poll_edit_window_mins: "Antall minutter etter at et innlegg er opprettet som avstemninger kan redigeres."
+    poll_minimum_trust_level_to_create: "Definer minimumstillitsnivå som trengs for å opprette avstemninger."
   poll:
     multiple_polls_without_name: "Det er flere avstemninger uten et navn. Bruk '<code>navn</code>'-attributten til å identifisere avstemningene dine."
     multiple_polls_with_same_name: "Det er flere avstemninger med samme navn: <strong>%{name}</strong>. Bruk '<code>name</code>'-attributten til å identifisere avstemningene dine entydig."
@@ -38,5 +40,6 @@ nb_NO:
     poll_must_be_open_to_vote: "Avstemningen må være åpen for å kunne avgi stemme."
     topic_must_be_open_to_toggle_status: "Emnet må være åpent for å redigere status."
     only_staff_or_op_can_toggle_status: "Kun forumpersonalet eller den forfatteren av emnet kan redigere status på avstemningen."
+    insufficient_rights_to_create: "Du har ikke lov til å opprette avstemninger."
     email:
       link_to_poll: "Klikk for å se avstemningen"

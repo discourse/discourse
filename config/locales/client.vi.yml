@@ -1412,7 +1412,6 @@ vi:
       multi_select:
         select: 'chọn'
         selected: 'đã chọn ({{count}})'
-        select_replies: 'chọn + trả lời'
         delete: xóa lựa chọn
         cancel: hủy lựa chọn
         select_all: chọn tất cả
@@ -1477,11 +1476,6 @@ vi:
         undelete: "hủy xóa bài viết này"
         share: "chia sẻ liên kết đến bài viết này"
         more: "Thêm"
-        delete_replies:
-          confirm:
-            other: "Bạn muốn xóa {{count}} trả lời cho bài viết này?"
-          yes_value: "Đồng ý, xóa những trả lời"
-          no_value: "Không, chỉ xóa chủ đề"
         admin: "quản lý bài viết"
         wiki: "Tạo Wiki"
         unwiki: "Xóa Wiki"
@@ -1551,9 +1545,6 @@ vi:
             other: "{count}} người đã thích cái này"
           vote:
             other: "{{count}} người đã bình chọn cho bài viết này"
-      delete:
-        confirm:
-          other: "Bạn muốn xóa những bài viết này?"
       revisions:
         controls:
           first: "Sửa đổi đầu tiên"

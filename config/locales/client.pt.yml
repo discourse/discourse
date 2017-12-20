@@ -1512,7 +1512,6 @@ pt:
       multi_select:
         select: 'selecionar'
         selected: '({{count}}) selecionados'
-        select_replies: 'selecione +respostas'
         delete: eliminar selecionados
         cancel: cancelar seleção
         select_all: 'selecionar tudo '
@@ -1585,12 +1584,6 @@ pt:
         undelete: "repor esta publicação"
         share: "partilhar uma ligação a esta publicação"
         more: "Mais"
-        delete_replies:
-          confirm:
-            one: "Também quer eliminar a {{count}} resposta direta a esta publicação?"
-            other: "Também quer eliminar as {{count}} respostas diretas a esta publicação?"
-          yes_value: "Sim, eliminar as respostas também"
-          no_value: "Não, somente esta publicação"
         admin: "ações administrativas de publicação"
         wiki: "Fazer Wiki"
         unwiki: "Remover Wiki"
@@ -1676,10 +1669,6 @@ pt:
           vote:
             one: "1 pessoa votou nesta publicação"
             other: "{{count}} pessoas votaram nesta publicação"
-      delete:
-        confirm:
-          one: "Tem a certeza que quer eliminar essa publicação?"
-          other: "Tem a certeza que quer eliminar todas essas publicações?"
       revisions:
         controls:
           first: "Primeira revisão"

@@ -122,6 +122,7 @@ de:
       split_topic: "Thema aufgeteilt, %{when}"
       invited_user: "%{who} eingeladen, %{when}"
       invited_group: "%{who} eingeladen, %{when}"
+      user_left: "%{who} hat sich selbst von dieser Nachricht entfernt %{when}"
       removed_user: "%{who} entfernt, %{when}"
       removed_group: "%{who} entfernt, %{when}"
       autoclosed:
@@ -1691,6 +1692,7 @@ de:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Zitat"
+      edit: "<i class='fa fa-pencil'></i> {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Grund: "
       post_number: "Beitrag {{number}}"
       wiki_last_edited_on: "Wiki zuletzt bearbeitet am"
@@ -1758,12 +1760,6 @@ de:
         undelete: "diesen Beitrag wiederherstellen"
         share: "Link zu diesem Beitrag teilen"
         more: "Mehr"
-        delete_replies:
-          confirm:
-            one: "Willst du auch die direkte Antwort auf diesen Beitrag löschen?"
-            other: "Willst du auch die {{count}} direkten Antworten auf diesen Beitrag löschen?"
-          yes_value: "Ja, auch die Antworten löschen"
-          no_value: "Nein, nur diesen Beitrag"
         admin: "Administrative Aktionen"
         wiki: "Wiki erstellen"
         unwiki: "Wiki entfernen"
@@ -1855,10 +1851,6 @@ de:
           vote:
             one: "Eine Person hat für diesen Beitrag gestimmt"
             other: "{{count}} Personen haben für diesen Beitrag gestimmt"
-      delete:
-        confirm:
-          one: "Möchtest du wirklich diesen Beitrag löschen?"
-          other: "Möchtest du wirklich all diese Beiträge löschen?"
       merge:
         confirm:
           one: "Möchtest du diese Beiträge wirklich zusammenführen?"
@@ -1944,6 +1936,7 @@ de:
       email_in_allow_strangers: "Akzeptiere E-Mails von anonymen Benutzern."
       email_in_disabled: "Das Erstellen von neuen Themen per E-Mail ist in den Website-Einstellungen deaktiviert. Um das Erstellen von neuen Themen per E-Mail zu erlauben,"
       email_in_disabled_click: 'aktiviere die Einstellung „email in“.'
+      mailinglist_mirror: "Kategorie spiegelt eine Mailingliste"
       suppress_from_homepage: "Löse diese Kategorie von der Startseite."
       show_subcategory_list: "Zeige Liste von Unterkategorien oberhalb von Themen in dieser Kategorie"
       num_featured_topics: "Anzahl der Themen, die auf der Kategorien-Seite angezeigt werden"
@@ -2556,7 +2549,6 @@ de:
           details: "Wenn auf einen Beitrag geantwortet wird oder der Beitrag geändert, gelöscht oder wiederhergestellt wird."
         user_event:
           name: "Benutzer Ereignis"
-          details: "Wenn ein Benutzer erstellt, genehmigt oder aktualisiert wird."
         delivery_status:
           title: "Versandstatus"
           inactive: "Inaktiv"

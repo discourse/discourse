@@ -1624,7 +1624,6 @@ lv:
       multi_select:
         select: 'izvēlēties'
         selected: 'izvēlēti ({{count}})'
-        select_replies: 'izvēlēties +atbildes'
         delete: dzēst izvēlētos
         cancel: atcelt izvēlēšanos
         select_all: izvēlēties visu
@@ -1710,13 +1709,6 @@ lv:
         undelete: "atcelt šī ieraksta dzēšanu"
         share: "dalīties ar saiti uz šo ierakstu"
         more: "Vairāk"
-        delete_replies:
-          confirm:
-            zero: "Vai jūs vēlaties dzēst arī {{count}} tiešās atbildes uz šo ierakstu?"
-            one: "Vai jūs vēlaties dzēst arī tiešo atbildi uz šo ierakstu?"
-            other: "Vai jūs vēlaties dzēst arī {{count}} tiešās atbildes uz šo ierakstu?"
-          yes_value: "Jā, dzēst arī atbildes"
-          no_value: "Nē, tikai šo ierakstu"
         admin: "ieraksta administratora darbības"
         wiki: "Pārveidot par wiki ierakstu"
         unwiki: "Noņemt wiki statusu"
@@ -1818,11 +1810,6 @@ lv:
             zero: "{{count}} cilvēki balsoja par šo ierakstu"
             one: "1 cilvēks balsoja par šo ierakstu"
             other: "{{count}} cilvēki balsoja par šo ierakstu"
-      delete:
-        confirm:
-          zero: "Vai jūs esat drošs, ka vēlaties izdzēst visus šos ierakstus?"
-          one: "Vai jūs esat drošs, ka vēlaties izdzēst šo ierakstu?"
-          other: "Vai jūs esat drošs, ka vēlaties izdzēst visus šos ierakstus?"
       merge:
         confirm:
           zero: "Vai jūs esat drošs, ka vēlaties apvienot šos {{count}} ierakstus?"
@@ -2471,7 +2458,6 @@ lv:
           details: "Kad ir jauna, labota, dzēsta vai atjaunota atbilde."
         user_event:
           name: "Lietotāja notikums"
-          details: "Kad ir izveidots, apstiprināts vai atjaunināts lietotājs."
         delivery_status:
           title: "Piegādes statuss"
           inactive: "Neaktīvs"

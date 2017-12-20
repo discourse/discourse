@@ -135,6 +135,7 @@ pl_PL:
   not_logged_in: "Aby to zrobić musisz się zalogować."
   not_found: "Żądany URL lub źródło nie mógł zostać znaleziony."
   invalid_access: "Nie jesteś uprawniony, by zobaczyć żądane źródło."
+  invalid_api_credentials: "Nie masz dostępu do żądanego zasobu. Nazwa użytkownika lub klucz API jest nieprawidłowy."
   read_only_mode_enabled: "Strona jest w trybie tylko do odczytu. Możliwość interakcji jest wyłączona."
   reading_time: "Czas odczytu"
   likes: "Lajki"
@@ -234,6 +235,7 @@ pl_PL:
   excerpt_image: "zdjęcie"
   queue:
     delete_reason: "Skasowany z poziomu kolejki moderacji."
+    not_found: "Post nie został znaleziony lub jest już zaktualizowany."
   groups:
     success:
       bulk_add: "%{users_added} użytkowników zostało dodanych do grupy"
@@ -348,6 +350,7 @@ pl_PL:
               too_many_users: "Jedno ostrzeżenie możesz wysłać tylko do pojedynczego użytkownika."
               cant_send_pm: "Przepraszamy, niestety nie możesz wysłać prywatnej wiadomości temu użytkownikowi."
               no_user_selected: "Musisz wybrać poprawnego użytkownika,"
+              reply_by_email_disabled: "Odpowiedź przez e-mail została wyłączona."
             featured_link:
               invalid: "Link jest nieprawidłowy, powinien zawierać http:// lub https://."
               invalid_category: "nie może być edytowany w tej kategorii."
@@ -469,6 +472,9 @@ pl_PL:
     leader:
       title: "lider"
     change_failed_explanation: "Twoja próba obniżenia poziomu %{user_name} do '%{new_trust_level}' była nieudana. Ten użytkownik posiada już poziom '%{current_trust_level}'. %{user_name} pozostanie na poziomie '%{current_trust_level}' - jeśli chcesz to zmienić, najpierw zablokuj poziom zaufania temu użytkownikowi."
+  post:
+    image_placeholder:
+      broken: "Ten obraz jest uszkodzony"
   rate_limiter:
     slow_down: "Powtórzyłeś to działanie zbyt wiele razy, spróbuj ponownie później."
     too_many_requests: "Liczba wykonań tej czynności w ciągu dnia jest ograniczona. Odczekaj %{time_left} przed ponowną próbą."
@@ -699,6 +705,7 @@ pl_PL:
       long_form: 'zagłosowano za tym wpisem'
   user_activity:
     no_default:
+      self: "Nie masz jeszcze żadnej aktywności."
       others: "Brak aktywności"
     no_bookmarks:
       self: "Nie masz postów dodanych do zakładek, posty w zakładkach pozwalają ci na łatwiejszy dostęp do nich w późniejszym czasie."
@@ -707,6 +714,7 @@ pl_PL:
       self: "Nie masz lajkowanych postów."
       others: "Brak lajkowanych postów."
     no_replies:
+      self: "Nie odpowiedziałeś na żadne posty."
       others: "Brak odpowiedzi."
   topic_flag_types:
     spam:
@@ -1552,6 +1560,7 @@ pl_PL:
     email_too_long: "Podałeś zbyt długi adres email. Nazwa skrzynki pocztowej nie może być dłuższa niż 254 znaki, a nazwa domeny nie może zawierać więcej niż 253 znaki."
     reserved_username: "Niedozwolona nazwa użytkownika."
     missing_user_field: "Nie wypełniłeś wszystkich pól użytkownika"
+    click_to_continue: "Kliknij tutaj aby kontynuować."
     already_logged_in: "Próbujesz zaakceptować zaproszenie przeznaczone dla innego użytkownika. Jeśli %{current_user} to nie ty, wyloguj się i zaloguj ponownie."
   user:
     no_accounts_associated: "Brak powiązanych kont"
@@ -1704,20 +1713,6 @@ pl_PL:
     post_hidden:
       title: "Ukryty post"
       subject_template: "Wpis został ukryty z powodu oflagowania przez społeczność"
-      text_body_template: |
-        Witaj,
-
-        To automatyczna wiadomość z serwisu %{site_name}, którą wysłaliśmy, by poinformować cię, że twój post został ukryty.
-
-        %{base_url}%{url}
-
-        %{flag_reason}
-
-        Wielu członków społeczności oflagowało go zanim został ukryty. Pomyśl, jak mógłbyś go poprawić to, co im się nie podobało. **Po upływie %{edit_delay} będziesz mógł zmienić jego treść, wtedy zostanie on automatycznie odkryty.**
-
-        Pamiętaj jednak, że jeśli post zostanie ukryty po raz kolejny, pozostanie on ukryty do momentu, gdy sprawdzą go nasi moderatorzy. Podejmą oni dalsze kroki, włączając w to nawet możliwość zawieszenia twojego konta.
-
-        Więcej dowiesz się czytając [zasady naszej społeczności](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         Dla kilku szybkich wskazówek dotyczących rozpoczęcia użytkowania strony dla nowych użytkowników [sprawdź ten blog] (https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).

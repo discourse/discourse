@@ -1403,7 +1403,6 @@ zh_TW:
       multi_select:
         select: '選取'
         selected: '選取了 ({{count}})'
-        select_replies: '選取 + 回覆'
         delete: 刪除選取的文章
         cancel: 取消選取
         select_all: 選擇全部
@@ -1474,11 +1473,6 @@ zh_TW:
         undelete: "復原此文章"
         share: "分享此文章的連結"
         more: "更多"
-        delete_replies:
-          confirm:
-            other: "你是否要同時刪除 {{count}} 篇針對這則文章的回覆？"
-          yes_value: "是，將回覆文章一併刪除"
-          no_value: "否，只刪除此文章"
         admin: "文章管理動作"
         wiki: "做為共筆"
         unwiki: "取消共筆"
@@ -1548,9 +1542,6 @@ zh_TW:
             other: "{{count}} 人對此按讚"
           vote:
             other: "{{count}} 人已投票給此文章"
-      delete:
-        confirm:
-          other: "你確定要刪除這些文章?"
       revisions:
         controls:
           first: "第一版"
@@ -2160,7 +2151,6 @@ zh_TW:
           details: "當有新回覆、編輯、帖子被刪除或者恢復時。"
         user_event:
           name: "用戶事件"
-          details: "當用戶被創建、審核通過或更新時。"
         delivery_status:
           title: "分髮狀態"
           inactive: "不活躍"

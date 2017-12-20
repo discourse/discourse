@@ -1669,20 +1669,6 @@ it:
     post_hidden:
       title: "Messaggio Nascosto"
       subject_template: "Messaggio nascosto a causa di segnalazioni dalla comunità"
-      text_body_template: |
-        Ciao,
-
-        questo è un messaggio automatico da %{site_name} per informarti che il tuo messaggio è stato nascosto.
-
-        %{base_url}%{url}
-
-        %{flag_reason}
-
-        Vari membri della comunità hanno segnalato il messaggio prima che venisse nascosto, quindi per favore pensa a come modificarlo alla luce di queste osservazioni. **Puoi modificare il messaggio dopo %{edit_delay} minuti, e verrà automaticamente ripubblicato.**
-
-        Tuttavia, se il messaggio dovesse venire nascosto dalla comunità una seconda volta, rimarrà nascosto fino a che un membro dello staff se ne occuperà.
-
-        Per ulteriori informazioni, puoi far riferimento alle [linee guida della comunità](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         Per alcuni suggerimenti veloci per iniziare come nuovo utente, [consulta questo post sul blog](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
