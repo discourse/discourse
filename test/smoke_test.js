@@ -60,7 +60,7 @@ const path = require('path');
   });
 
   await exec("go to latest page", () => {
-    return page.goto(path.join(url, 'latest'), { timeout: 1500 });
+    return page.goto(path.join(url, 'latest'), { timeout: 3000 });
   });
 
   await exec("at least one topic shows up", () => {
@@ -80,7 +80,7 @@ const path = require('path');
   });
 
   await exec("at least one post body", () => {
-    return page.waitForSelector(".topic-post", { timeout: 500, visible: true });
+    return page.waitForSelector(".topic-post", { timeout: 2000, visible: true });
   });
 
   await exec("click on the 1st user", () => {
