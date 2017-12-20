@@ -7,7 +7,7 @@
 }
 
 h1 .topic-statuses .topic-status i {
-  font-size: 0.8em;
+  font-size: 0.857em;
   vertical-align: middle;
 }
 
@@ -105,7 +105,7 @@ nav.post-controls {
     }
     i {
       margin-left: 5px;
-      font-size: 90%;
+      font-size: .857em;
     }
   }
 
@@ -311,7 +311,7 @@ a.star {
   }
 
   span.domain {
-    font-size: 0.714em;
+    font-size: 0.786em;
     color: dark-light-choose($primary-medium, $secondary-medium);
   }
 
@@ -353,7 +353,7 @@ a.star {
     }
     .number, i {
       color: dark-light-choose($primary-high, $secondary-low);
-      font-size: 130%;
+      font-size: 1.286em;
     }
     .avatar  a {
       float: left;
@@ -473,7 +473,7 @@ a.star {
 #suggested-topics .topic-statuses .topic-status {
   padding: 0;
   i {
-    font-size:1.071em;
+    font-size:1em;
   }
 }
 
@@ -541,7 +541,7 @@ video {
 .extra-info {
   h1 {
     margin: 5px 0 0 0;
-    font-size: 1.6em;
+    font-size: 1.429em;
     line-height: 1.3em;
   }
 
@@ -783,7 +783,7 @@ $topic-avatar-width: 45px;
     margin: 10px 0 0 0;
   }
   h3 {
-    font-size: 1.786em;
+    font-size: 1.857em;
     color: $primary;
     margin-bottom: 5px;
     i {

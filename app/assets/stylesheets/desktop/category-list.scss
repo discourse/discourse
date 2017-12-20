@@ -35,10 +35,10 @@
     text-align: right;
 
     .value {
-      font-size: 1.2em;
+      font-size: 1.143em;
     }
     .unit {
-      font-size: .8em;
+      font-size: .857em;
     }
     .badge-notification {
       display: block;
@@ -69,7 +69,7 @@
 
     a.last-posted-at,
     a.last-posted-at:visited {
-      font-size: 0.86em;
+      font-size: 0.857em;
       color: dark-light-choose($primary-medium, $secondary-high);
     }
 
@@ -98,7 +98,7 @@
     .category {
       border-left: 6px solid;
       h3 {
-        font-size: 1.2em;
+        font-size: 1.286em;
         a[href] {
           color: $primary;
         }
@@ -137,7 +137,7 @@
   }
 
   .discourse-tag {
-    font-size: 0.75em;
+    font-size: 0.786em;
   }
 
   .topic-featured-link {
