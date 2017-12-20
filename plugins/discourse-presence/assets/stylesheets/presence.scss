@@ -2,6 +2,12 @@
   background-color: $secondary;
   color: $primary-medium;
   padding: 0px 5px;
+  display: flex;
+  align-items: center;
+  
+  span.presence-text {
+    margin-left: 5px;
+  }
 
   .wave {
     .dot {
