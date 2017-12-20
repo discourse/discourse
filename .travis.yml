@@ -67,7 +67,8 @@ script:
         bundle exec rake db:create db:migrate
 
         if [ '$QUNIT_RUN' == '1' ]; then
-          USE_CHROME=1 LOAD_PLUGINS=1 bundle exec rake qunit:test['400000']
+          bundle exec rake qunit:test['400000']
+          bundle exec rake plugin:spec
         else
           bundle exec rspec && bundle exec rake plugin:spec
         fi
