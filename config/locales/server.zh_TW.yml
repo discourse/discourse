@@ -1454,20 +1454,6 @@ zh_TW:
     post_hidden:
       title: "文章已隱藏"
       subject_template: "帖子因社群標記隱藏"
-      text_body_template: |
-        你好
-
-        這是 %{site_name} 自動發出的郵件，通知你下列文章已被隱藏：
-
-        %{base_url}%{url}
-
-        %{flag_reason}
-
-        有多位社群成員投訴此文章，導致文章被自動隱藏。請考慮他們的回饋並重新修改文章。**你可以在 %{edit_delay} 分鐘後重新編輯文章，以自動解除文章隱藏。**
-
-        然而，如果文章再次受到社群投訴，他將會恢復隱藏狀態，並等候管理員手動處理。
-
-        想了解更多指引，請查看我們的[社群準則](%{base_url}/guidelines)。
     welcome_user:
       title: "歡迎使用者"
       subject_template: "歡迎來到 %{site_name}！"

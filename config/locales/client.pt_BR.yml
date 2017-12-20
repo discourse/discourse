@@ -1580,7 +1580,6 @@ pt_BR:
       multi_select:
         select: 'selecionar'
         selected: '({{count}}) selecionados'
-        select_replies: 'selecione +respostas'
         delete: apagar selecionados
         cancel: cancelar seleção
         select_all: selecionar tudo
@@ -1659,12 +1658,6 @@ pt_BR:
         undelete: "recuperar esta resposta"
         share: "compartilhar o link desta resposta"
         more: "Mais"
-        delete_replies:
-          confirm:
-            one: "Você também quer remover a resposta direta a esta resposta?"
-            other: "Você também quer remover as {{count}} respostas diretas a esta resposta?"
-          yes_value: "Sim, remover as respostas também"
-          no_value: "Não, somente esta resposta"
         admin: "ações de mensagens do admin"
         wiki: "Tornar Wiki"
         unwiki: "Remover Wiki"
@@ -1750,10 +1743,6 @@ pt_BR:
           vote:
             one: "1 pessoa votou nesta resposta"
             other: "{{count}} pessoas votaram nesta resposta"
-      delete:
-        confirm:
-          one: "Tem certeza que quer apagar esta resposta?"
-          other: "Tem certeza que quer apagar todos essas respostas?"
       revisions:
         controls:
           first: "Primeira revisão"
@@ -2417,7 +2406,6 @@ pt_BR:
           details: "Quando existir uma nova resposta, edição, deleção ou recuperação."
         user_event:
           name: "Evento de Usuário"
-          details: "Quando um usuário é criado, aprovado ou atualizado."
         delivery_status:
           title: "Status de Entrega"
           inactive: "Inativo"

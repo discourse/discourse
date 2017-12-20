@@ -1539,7 +1539,6 @@ da:
       multi_select:
         select: 'vælg'
         selected: 'valgt ({{count}})'
-        select_replies: 'vælg +svar'
         delete: slet valgte
         cancel: glem valg
         select_all: marker alle
@@ -1617,12 +1616,6 @@ da:
         undelete: "annullér sletning"
         share: "del et link til dette indlæg"
         more: "Mere"
-        delete_replies:
-          confirm:
-            one: "Ønsker du også at slette svaret på dette indlæg?"
-            other: "Ønsker du også at slette de {{count}} svar på dette indlæg?"
-          yes_value: "Ja, slet også svarene"
-          no_value: "Nej, kun dette indlæg"
         admin: "indlæg administrator handlinger"
         wiki: "Opret Wiki"
         unwiki: "Fjern Wiki"
@@ -1708,10 +1701,6 @@ da:
           vote:
             one: "1 person stemte for dette indlæg"
             other: "{{count}} personer stemte for dette indlæg"
-      delete:
-        confirm:
-          one: "Er du sikker på, at du vil slette indlægget?"
-          other: "Er du sikker på, at du vil slette alle de valgte indlæg?"
       revisions:
         controls:
           first: "Første udgave"
@@ -2366,7 +2355,6 @@ da:
           details: "Når der er et nyt svar, redigering, sletning eller gendannelse."
         user_event:
           name: "Bruger-event"
-          details: "Når en bruger oprettes, godkendes eller opdateres."
         delivery_status:
           title: "Leveringsstatus"
           inactive: "Inaktiv"

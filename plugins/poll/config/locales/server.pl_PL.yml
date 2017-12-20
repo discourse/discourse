@@ -7,8 +7,10 @@
 
 pl_PL:
   site_settings:
+    poll_enabled: "Zezwalać na ankiety?"
     poll_maximum_options: "Maksymalna ilość dozwolonych opcji w ankiecie."
     poll_edit_window_mins: "Liczba minut po utworzeniu postu, podczas którego można edytować ankietę."
+    poll_minimum_trust_level_to_create: "Minimalny poziom zaufania potrzebny do stworzenia ankiety."
   poll:
     multiple_polls_without_name: "Istnieje kilka nienazwanych ankiet. Uzyj atrybutu '<code>name</code>', aby umożliwić ich jednoznaczną identyfikację."
     multiple_polls_with_same_name: "Istnieje kilka ankiet o tej samej nazwie: <strong>%{name}</strong>. Użyj atrybutu '<code>name</code>', aby umożliwić ich jednoznaczną identyfikację."
@@ -42,5 +44,6 @@ pl_PL:
     poll_must_be_open_to_vote: "Głosowanie jest możliwe tylko w otwartych ankietach."
     topic_must_be_open_to_toggle_status: "Zmiana statusu jest możliwa jedynie w otwartych tematach."
     only_staff_or_op_can_toggle_status: "Status może być zmieniony przez autora wpisu lub członka załogi serwisu."
+    insufficient_rights_to_create: "Nie masz zezwolenia na tworzenie ankiet."
     email:
       link_to_poll: "Kliknij, aby zobaczyć ankietę."

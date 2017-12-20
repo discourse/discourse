@@ -5,7 +5,4 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-sr:
-  js:
-    poll:
-      average_rating: "Prosečan rejting: <strong>%{average}</strong>."
+sr: {}

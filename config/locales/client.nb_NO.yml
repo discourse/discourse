@@ -107,6 +107,7 @@ nb_NO:
           other: "%{count} år senere"
       previous_month: 'Forrige måned'
       next_month: 'Neste måned'
+      placeholder: dato
     share:
       topic: 'del en lenke til dette emnet'
       post: 'innlegg #%{postNumber}'
@@ -121,6 +122,7 @@ nb_NO:
       split_topic: "splittet dette emnet %{when}"
       invited_user: "inviterte %{who} %{when}"
       invited_group: "inviterte %{who} %{when}"
+      user_left: "%{who} fjernet seg fra denne meldingen %{when}"
       removed_user: "fjernet %{who} %{when}"
       removed_group: "fjernet %{who} %{when}"
       autoclosed:
@@ -263,6 +265,7 @@ nb_NO:
     uploading: "Laster opp…"
     uploading_filename: "Laster opp {{filename}}…"
     uploaded: "Lastet opp!"
+    pasting: "Limer inn…"
     enable: "Aktiver"
     disable: "Deaktiver"
     undo: "Angre"
@@ -651,6 +654,7 @@ nb_NO:
         title: "Bytt profilbilde"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basert på"
         gravatar_title: "Endre din avatar på Gravatars nettside"
+        gravatar_failed: "Kunne ikke hente Gravatar-bilde. Er det et tilknyttet den e-postadressen?"
         refresh_gravatar_title: "Oppdater din Gravatar"
         letter_based: "Systemtildelt profilbilde"
         uploaded_avatar: "Egendefinert bilde"
@@ -1152,6 +1156,8 @@ nb_NO:
       ulist_title: "Kulepunktliste"
       list_item: "Listeelement"
       help: "Hjelp for redigering i Markdown"
+      collapse: "minimer redigeringspanelet"
+      abandon: "lukk redigeringspanel og forkast utkast"
       modal_ok: "OK"
       modal_cancel: "Avbryt"
       cant_send_pm: "Beklager, du kan ikke sende privat melding til %{username}."
@@ -1160,6 +1166,13 @@ nb_NO:
         body: "Nå sender du denne meldingen bare til deg selv!"
       admin_options_title: "Valgfrie emne-instillinger for stab"
     notifications:
+      tooltip:
+        regular:
+          one: "Én usett merknad"
+          other: "{{count}} usette merknader"
+        message:
+          one: "Én ulest melding"
+          other: "{{count}} uleste meldinger"
       title: "varsler om at ditt @navn blir nevnt, svar på dine innlegg, emner, meldinger, osv"
       none: "Notifikasjoner er ikke tilgjengelig for øyeblikket."
       empty: "Ingen varsler funnet."
@@ -1268,11 +1281,15 @@ nb_NO:
           label: I gruppen
         with_badge:
           label: Med merke
+        with_tags:
+          label: Merket
         filters:
+          label: Kun kom med emner/innlegg…
           likes: Jeg likte
           posted: jeg skrev innlegg i
           watching: Jeg følger
           tracking: Jeg overvåker
+          private: I mine meldinger
           bookmarks: Jeg bokmerket
           first: er det første innlegget
           pinned: er festet
@@ -1281,6 +1298,7 @@ nb_NO:
           unseen: Jeg har ikke lest
           wiki: er wiki
           images: inkluder bilde(r)
+          all_tags: Alle ovennevnte stikkord
         statuses:
           label: Der emner
           open: er åpen
@@ -1663,7 +1681,18 @@ nb_NO:
       multi_select:
         select: 'velg'
         selected: 'valgte ({{count}})'
-        select_replies: 'velg +svar'
+        select_post:
+          label: 'velg'
+          title: 'Legg til innlegg i utvalg'
+        selected_post:
+          label: 'valgt'
+          title: 'Klikk for å fjerne innlegg fra utvalg'
+        select_replies:
+          label: 'velg + svar'
+          title: 'Legg til innlegg og alle dets svar i utvalg'
+        select_below:
+          label: 'velg + under'
+          title: 'Legg til innlegg og alle etter det til utvalget'
         delete: fjern valgte
         cancel: avbryt valg
         select_all: velg alle
@@ -1675,6 +1704,7 @@ nb_NO:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Sitat"
+      edit: "<i class='fa fa-pencil'></i> {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Begrunnelse:"
       post_number: "innlegg {{number}}"
       wiki_last_edited_on: "wikien sist redigert"
@@ -1743,11 +1773,14 @@ nb_NO:
         share: "del en lenke til dette innlegget"
         more: "Mer"
         delete_replies:
-          confirm:
-            one: "Vil du også slette det direkte svaret til dette innlegget?"
-            other: "Vil du også slette de {{count}} direkte svarene til dette innlegget?"
-          yes_value: "Ja, slett svarene også."
-          no_value: "Nei, kun dette innlegget."
+          confirm: "Ønsker du å slette svarene på dette innlegget?"
+          direct_replies:
+            one: "Ja, og ett direkte svar"
+            other: "Ja, og {{count}} direkte svar"
+          all_replies:
+            one: "Ja, og ett svar"
+            other: "Ja, og alle {{count}} svar"
+          just_the_post: "Nei, kun dette innlegget"
         admin: "Innleggsadministrasjon"
         wiki: "Opprett wiki"
         unwiki: "Fjern Wiki"
@@ -1841,8 +1874,8 @@ nb_NO:
             other: "{{count}} brukere stemte på dette innlegget"
       delete:
         confirm:
-          one: "Er du sikker på at du vil slette det innlegget?"
-          other: "Er du sikker på at du vil slette alle de innleggene?"
+          one: "Er du sikker på at du ønsker å slette dette innlegget?"
+          other: "Er du sikker på at du ønsker å slette disse {{count}} innleggene?"
       merge:
         confirm:
           one: "Er du sikker på at du vil flette disse postene?"
@@ -1893,7 +1926,7 @@ nb_NO:
       topic_template: "Emnemal"
       tags: "Stikkord"
       tags_allowed_tags: "Bare tillat disse etikettene brukt i denne kategorien:"
-      tags_allowed_tag_groups: "Bare tillat etiketter fra disse gruppene brukt i denne kategorien:"
+      tags_allowed_tag_groups: "Bare tillat stikkord fra disse gruppene brukt i denne kategorien:"
       tags_placeholder: "(Valgfritt) Liste over tillatte stikkord"
       tag_groups_placeholder: "(Valgfritt) Liste over tillatte stikkordgrupper"
       topic_featured_link_allowed: "Tillat fremhevede lenker i denne kategorien"
@@ -1928,6 +1961,7 @@ nb_NO:
       email_in_allow_strangers: "Godta e-post fra anonyme brukere uten brukerkonto"
       email_in_disabled: "Posting av nye emner via e-post er deaktivert i nettstedsinstillingene. For å aktivere posting av nye emner via e-post,"
       email_in_disabled_click: 'aktiver innstillingen "e-post inn".'
+      mailinglist_mirror: "Kategorien gjenspeiler en e-postliste"
       suppress_from_homepage: "Utelat denne kategorien fra hjemmesiden."
       show_subcategory_list: "Vis underkategoriliste over emner i denne kategorien."
       num_featured_topics: "Antall emner vist på kategori-siden:"
@@ -2263,6 +2297,7 @@ nb_NO:
       selector_no_tags: "ingen stikkord"
       changed: "stikkord endret:"
       tags: "Stikkord"
+      choose_for_topic: "valgfrie stikkord"
       delete_tag: "Slett stikkord"
       delete_confirm:
         one: "Er du sikker på at du ønsker å slette dette stikkordet og fjerne det fra emnet det er tilknyttet?"
@@ -2398,6 +2433,7 @@ nb_NO:
         active_posts: "Rapporterte innlegg"
         old_posts: "Gamle rapporterte innlegg"
         topics: "Rapporterte innlegg"
+        moderation_history: "Moderatorhistorikk"
         agree: "Godta"
         agree_title: "Bekreft at denne rapporteringen er gyldig og korrekt"
         agree_flag_hide_post: "Samtykk og skjul innlegg"
@@ -2542,7 +2578,6 @@ nb_NO:
           details: "Når det er et nytt, redigert, slettet eller gjenopprettet innlegg."
         user_event:
           name: "Brukerhendelse"
-          details: "Når en bruker blir opprettet, godkjent eller oppdatert."
         delivery_status:
           title: "Sendingsstatus"
           inactive: "Inaktiv"
@@ -2849,6 +2884,15 @@ nb_NO:
             type_placeholder: "oppsummering, registrering…"
             reply_key_placeholder: "svarnøkkel"
             skipped_reason_placeholder: "grunn"
+      moderation_history:
+        performed_by: "Utført av"
+        no_results: "Ingen moderatorhistorikk tilgjengelig."
+        actions:
+          delete_user: "Bruker slettet"
+          suspend_user: "Bruker suspendert"
+          silence_user: "Bruker forstummet"
+          delete_post: "Innlegg slettet"
+          delete_topic: "Emne slettet"
       logs:
         title: "Logger"
         action: "Handling"
@@ -2961,7 +3005,9 @@ nb_NO:
           unique: "Unike"
           unique_title: "unike brukere som har utført søket"
           types:
+            all_search_types: "Alle søketyper"
             header: "Hode"
+            full_page: "Full side"
         logster:
           title: "Feillogg"
       watched_words:
