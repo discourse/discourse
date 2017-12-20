@@ -8,6 +8,7 @@ import { clearCache as clearOutletCache, resetExtraClasses } from 'discourse/lib
 import { clearHTMLCache } from 'discourse/helpers/custom-html';
 import { flushMap } from 'discourse/models/store';
 import { clearRewrites } from 'discourse/lib/url';
+import { initSearchData } from 'discourse/widgets/search-menu';
 
 export function currentUser() {
   return Discourse.User.create(sessionFixtures['/session/current.json'].current_user);
@@ -97,6 +98,7 @@ export function acceptance(name, options) {
       clearHTMLCache();
       resetPluginApi();
       clearRewrites();
+      initSearchData();
       Discourse.reset();
     }
   });

@@ -3,14 +3,18 @@ import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
 import DiscourseURL from 'discourse/lib/url';
 
-const searchData = {
-  loading: false,
-  results: {},
-  noResults: false,
-  term: undefined,
-  typeFilter: null,
-  invalidTerm: false
-};
+const searchData = {};
+
+export function initSearchData() {
+  searchData.loading = false;
+  searchData.results = {};
+  searchData.noResults = false;
+  searchData.term = undefined;
+  searchData.typeFilter = null;
+  searchData.invalidTerm = false;
+}
+
+initSearchData();
 
 // Helps with debouncing and cancelling promises
 const SearchHelper = {
@@ -161,7 +165,7 @@ export default createWidget('search-menu', {
   html(attrs) {
     if (searchData.contextEnabled !== attrs.contextEnabled) {
       searchData.contextEnabled = attrs.contextEnabled;
-      this.triggerSearch();
+      if (searchData.term) this.triggerSearch();
     } else {
       searchData.contextEnabled = attrs.contextEnabled;
     }
