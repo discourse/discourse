@@ -29,9 +29,8 @@ class Tag {
   }
 
   static blocks() {
-    return ["address", "article", "aside", "dd", "div", "dl", "dt", "fieldset",
-            "figcaption", "figure", "footer", "form", "header", "hgroup", "hr", "main", "nav",
-            "ol", "p", "pre", "section", "table", "ul"];
+    return ["address", "article", "aside", "dd", "div", "dl", "dt", "fieldset", "figcaption", "figure",
+            "footer", "form", "header", "hgroup", "hr", "main", "nav", "p", "pre", "section", "ul"];
   }
 
   static headings() {
@@ -47,7 +46,7 @@ class Tag {
   }
 
   static trimmable() {
-    return [...Tag.blocks(), ...Tag.headings(), ...Tag.slices(), "li", "td", "th", "br", "hr", "blockquote"];
+    return [...Tag.blocks(), ...Tag.headings(), ...Tag.slices(), "li", "td", "th", "br", "hr", "blockquote", "table", "ol"];
   }
 
   static block(name, prefix, suffix) {
@@ -116,7 +115,7 @@ class Tag {
       decorate(text) {
         const attr = this.element.attributes;
 
-        if (attr && attr.href && text !== attr.href) {
+        if (attr.href && text !== attr.href) {
           text = text.replace(/\n{2,}/g, "\n");
           return "[" + text + "](" + attr.href + ")";
         }
@@ -134,7 +133,7 @@ class Tag {
 
       toMarkdown() {
         const e = this.element;
-        const attr = e.attributes || {};
+        const attr = e.attributes;
         const pAttr = (e.parent && e.parent.attributes) || {};
         const src = attr.src || pAttr.src;
 
@@ -171,13 +170,31 @@ class Tag {
   }
 
   static cell(name) {
-    return Tag.slice(name, " ");
+    return class extends Tag {
+      constructor() {
+        super(name, "|");
+      }
+
+      toMarkdown() {
+        const text = this.element.innerMarkdown().trim();
+
+        if (text.includes("\n") || text.includes("[![")) {
+          throw "Unsupported format inside Markdown table cells";
+        }
+
+        if (!this.element.next) {
+          this.suffix = "|";
+        }
+
+        return this.decorate(text);
+      }
+    };
   }
 
   static li() {
     return class extends Tag.slice("li", "\n") {
       decorate(text) {
-        const indent = this.element.filterParentNames("ul").slice(1).map(() => "  ").join("");
+        const indent = this.element.filterParentNames(["ol", "ul"]).slice(1).map(() => "  ").join("");
         return super.decorate(`${indent}* ${trimLeft(text)}`);
       }
     };
@@ -214,6 +231,32 @@ class Tag {
     };
   }
 
+  static table() {
+    return class extends Tag.block("table") {
+      decorate(text) {
+        text = super.decorate(text);
+        const splitterRow = text.split("|\n")[0].match(/\|/g).map(() => "| --- ").join("") + "|\n";
+        text = text.replace("|\n", "|\n" + splitterRow).replace(/\|\n{2,}\|/g, "|\n|");
+        return text;
+      }
+    };
+  }
+
+  static ol() {
+    return class extends Tag.block("ol") {
+      decorate(text) {
+        text = "\n" + text;
+        const bullet = text.match(/\n *\*/)[0];
+
+        for (let i = parseInt(this.element.attributes.start || 1); text.includes(bullet); i++) {
+          text = text.replace(bullet, bullet.replace("*", `${i}.`));
+        }
+
+        return super.decorate(text.slice(1));
+      }
+    };
+  }
+
 }
 
 const tags = [
@@ -224,10 +267,7 @@ const tags = [
   Tag.cell("td"), Tag.cell("th"),
   Tag.replace("br", "\n"), Tag.replace("hr", "\n---\n"), Tag.replace("head", ""),
   Tag.keep("ins"), Tag.keep("del"), Tag.keep("small"), Tag.keep("big"),
-  Tag.li(), Tag.link(), Tag.image(), Tag.code(), Tag.blockquote(),
-
-  // TO-DO  CREATE: tbody
-  //        UPDATE: ol, thead, th, td
+  Tag.li(), Tag.link(), Tag.image(), Tag.code(), Tag.blockquote(), Tag.table(),, Tag.ol(),
 ];
 
 class Element {
@@ -236,7 +276,7 @@ class Element {
     this.type = element.type;
     this.data = element.data;
     this.children = element.children;
-    this.attributes = element.attributes;
+    this.attributes = element.attributes || {};
 
     if (parent) {
       this.parent = parent;
@@ -294,8 +334,8 @@ class Element {
     }
   }
 
-  filterParentNames(name) {
-    return this.parentNames.filter(p => p === name);
+  filterParentNames(names) {
+    return this.parentNames.filter(p => names.includes(p));
   }
 
   static toMarkdown(element, parent, prev, next) {

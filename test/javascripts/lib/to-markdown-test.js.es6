@@ -67,7 +67,7 @@ QUnit.test("converts heading tags", assert => {
   assert.equal(toMarkdown(html), markdown);
 });
 
-QUnit.test("converts ul and ol list tags", assert => {
+QUnit.test("converts ul list tag", assert => {
   const html = `
   <ul>
     <li>Item 1</li>
@@ -95,7 +95,7 @@ QUnit.test("stripes unwanted inline tags", assert => {
   assert.equal(toMarkdown(html), markdown);
 });
 
-QUnit.test("converts table as readable", assert => {
+QUnit.test("converts table tags", assert => {
   const html = `<address>Discourse Avenue</address><b>laboris</b>
   <table>
     <thead> <tr><th>Heading 1</th><th>Head 2</th></tr> </thead>
@@ -104,8 +104,19 @@ QUnit.test("converts table as readable", assert => {
         <tr><td><b>dolor</b></td> <td><i>sit amet</i></td></tr></tbody>
 </table>
   `;
-  const markdown = `Discourse Avenue\n\n**laboris**\n\nHeading 1 Head 2\n\nLorem ipsum\n**dolor** _sit amet_`;
+  const markdown = `Discourse Avenue\n\n**laboris**\n\n|Heading 1|Head 2|\n| --- | --- |\n|Lorem|ipsum|\n|**dolor**|_sit amet_|`;
   assert.equal(toMarkdown(html), markdown);
+});
+
+QUnit.test("returns empty string if table format not supported", assert => {
+  const html = `<table>
+    <thead> <tr><th>Headi\n\nng 1</th><th>Head 2</th></tr> </thead>
+      <tbody>
+        <tr><td>Lorem</td><td>ipsum</td></tr>
+        <tr><td><a href="http://example.com"><img src="http://dolor.com/image.png" /></a></td> <td><i>sit amet</i></td></tr></tbody>
+</table>
+  `;
+  assert.equal(toMarkdown(html), "");
 });
 
 QUnit.test("converts img tag", assert => {
@@ -183,4 +194,23 @@ QUnit.test("converts blockquote tag", assert => {
   html = "<blockquote>\nLorem ipsum\n<blockquote><p>dolor <blockquote>sit</blockquote> amet</p></blockquote></blockquote>";
   output = "> Lorem ipsum\n> > dolor\n> > > sit\n> > amet";
   assert.equal(toMarkdown(html), output);
+});
+
+QUnit.test("converts ol list tag", assert => {
+  const html = `Testing
+  <ol>
+    <li>Item 1</li>
+    <li>
+      Item 2
+      <ol start="100">
+        <li>Sub Item 1</li>
+        <li>Sub Item 2</li>
+        <ul><li>Sub <i>Sub</i> Item 1</li><li>Sub <b>Sub</b> Item 2</li></ul>
+      </ol>
+    </li>
+    <li>Item 3</li>
+  </ol>
+  `;
+  const markdown = `Testing\n\n1. Item 1\n2. Item 2\n\n  100. Sub Item 1\n  101. Sub Item 2\n\n    * Sub _Sub_ Item 1\n    * Sub **Sub** Item 2\n\n3. Item 3`;
+  assert.equal(toMarkdown(html), markdown);
 });
