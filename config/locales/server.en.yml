@@ -139,6 +139,7 @@ en:
       max_username_length_range: "You cannot set the maximum below the minimum."
       default_categories_already_selected: "You cannot select a category used in another list."
       s3_upload_bucket_is_required: "You cannot enable uploads to S3 unless you've provided the 's3_upload_bucket'."
+    conflicting_google_user_id: 'The Google Account ID for this account has changed, for protection this requires manual intervention. Please contact the site administrator with the following reference:<br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
 
   activemodel:
     errors:
