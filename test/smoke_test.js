@@ -56,48 +56,48 @@ const path = require('path');
   await page.goto(url);
 
   await exec("expect a log in button in the header", () => {
-    return page.waitForSelector("header .login-button", { timeout: 500, visible: true });
+    return page.waitForSelector("header .login-button", { visible: true });
   });
 
   await exec("go to latest page", () => {
-    return page.goto(path.join(url, 'latest'), { timeout: 3000 });
+    return page.goto(path.join(url, 'latest'));
   });
 
   await exec("at least one topic shows up", () => {
-    return page.waitForSelector(".topic-list tbody tr", { timeout: 500, visible: true });
+    return page.waitForSelector(".topic-list tbody tr", { visible: true });
   });
 
   await exec("go to categories page", () => {
-    return page.goto(path.join(url, 'categories'), { timeout: 1500 });
+    return page.goto(path.join(url, 'categories'));
   });
 
   await exec("can see categories on the page", () => {
-    return page.waitForSelector(".category-list", { timeout: 500, visible: true });
+    return page.waitForSelector(".category-list", { visible: true });
   });
 
   await exec("navigate to 1st topic", () => {
-    return page.click(".main-link a.title:first-of-type", { timeout: 500 });
+    return page.click(".main-link a.title:first-of-type");
   });
 
   await exec("at least one post body", () => {
-    return page.waitForSelector(".topic-post", { timeout: 2000, visible: true });
+    return page.waitForSelector(".topic-post", { visible: true });
   });
 
   await exec("click on the 1st user", () => {
-    return page.click(".topic-meta-data a:first-of-type", { timeout: 500 });
+    return page.click(".topic-meta-data a:first-of-type");
   });
 
   await exec("user has details", () => {
-    return page.waitForSelector("#user-card .names", { timeout: 500, visible: true });
+    return page.waitForSelector("#user-card .names", { visible: true });
   });
 
   if (!process.env.READONLY_TESTS) {
     await exec("open login modal", () => {
-      return page.click(".login-button", { timeout: 500 });
+      return page.click(".login-button");
     });
 
     await exec("login modal is open", () => {
-      return page.waitForSelector(".login-modal", { timeout: 500, visible: true });
+      return page.waitForSelector(".login-modal", { visible: true });
     });
 
     await exec("type in credentials & log in", () => {
@@ -108,36 +108,35 @@ const path = require('path');
       });
 
       promise = promise.then(() => {
-        return page.click(".login-modal .btn-primary", { timeout: 500 });
+        return page.click(".login-modal .btn-primary");
       });
 
       return promise;
     });
 
     await exec("is logged in", () => {
-      return page.waitForSelector(".current-user", { timeout: 5000, visible: true });
+      return page.waitForSelector(".current-user", { visible: true });
     });
 
     await exec("go home", () => {
-      return page.click("#site-logo, #site-text-logo", { timeout: 500 });
+      return page.click("#site-logo, #site-text-logo");
     });
 
     await exec("it shows a topic list", () => {
-      return page.waitForSelector(".topic-list", { timeout: 1500, visible: true });
+      return page.waitForSelector(".topic-list", { visible: true });
     });
 
     await exec("we have a create topic button", () => {
-      return page.waitForSelector("#create-topic", { timeout: 500, visible: true });
+      return page.waitForSelector("#create-topic", { visible: true });
     });
 
     await exec("open composer", () => {
-      return page.click("#create-topic", { timeout: 500 });
+      return page.click("#create-topic");
     });
 
     await exec("the editor is visible", () => {
       return page.waitForFunction(
-        "document.activeElement === document.getElementById('reply-title')",
-        { timeout: 500 }
+        "document.activeElement === document.getElementById('reply-title')"
       );
     });
 
@@ -156,37 +155,37 @@ const path = require('path');
     });
 
     await exec("updates preview", () => {
-      return page.waitForSelector(".d-editor-preview p", { timeout: 500, visible: true });
+      return page.waitForSelector(".d-editor-preview p", { visible: true });
     });
 
     await exec("open upload modal", () => {
-      return page.click(".d-editor-button-bar .upload", { timeout: 500 });
+      return page.click(".d-editor-button-bar .upload");
     });
 
     await exec("upload modal is open", () => {
-      let promise = page.waitForSelector("#filename-input", { timeout: 1500, visible: true });
+      let promise = page.waitForSelector("#filename-input", { visible: true });
 
       promise.then(() => {
-        return page.click(".d-modal-cancel", { timeout: 500 });
+        return page.click(".d-modal-cancel");
       });
 
       return promise;
     });
 
     await exec("submit the topic", () => {
-      return page.click(".submit-panel .create", { timeout: 500 });
+      return page.click(".submit-panel .create");
     });
 
     await exec("topic is created", () => {
-      return page.waitForSelector(".fancy-title", { timeout: 1500, visible: true });
+      return page.waitForSelector(".fancy-title", { visible: true });
     });
 
     await exec("open the composer", () => {
-      return page.click(".post-controls:first-of-type .create", { timeout: 500 });
+      return page.click(".post-controls:first-of-type .create");
     });
 
     await exec("composer is open", () => {
-      return page.waitForSelector("#reply-control .d-editor-input", { timeout: 500, visible: true });
+      return page.waitForSelector("#reply-control .d-editor-input", { visible: true });
     });
 
     await exec("compose reply", () => {
@@ -196,7 +195,7 @@ const path = require('path');
 
     await assert("waiting for the preview", () => {
       let promise = page.waitForSelector(".d-editor-preview p",
-        { timeout: 500, visible: true }
+        { visible: true }
       );
 
       promise = promise.then(() => {
@@ -211,11 +210,11 @@ const path = require('path');
     });
 
     await exec("submit the topic", () => {
-      return page.click("#reply-control .create", { timeout: 6000 });
+      return page.click("#reply-control .create");
     });
 
     await assert("reply is created", () => {
-      let promise = page.waitForSelector(".topic-post", { timeout: 500 });
+      let promise = page.waitForSelector(".topic-post");
 
       promise = promise.then(() => {
         return page.evaluate(() => {
