@@ -2813,7 +2813,7 @@ en:
           details: "When there is a new reply, edit, deleted or recovered."
         user_event:
           name: "User Event"
-          details: "When a user is created, approved or updated."
+          details: "When a user logs in, logs out, is created, approved or updated."
         delivery_status:
           title: "Delivery Status"
           inactive: "Inactive"
