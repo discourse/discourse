@@ -12,7 +12,11 @@ module BackupRestore
   LOGS_CHANNEL = "/admin/backups/logs"
 
   def self.backup!(user_id, opts = {})
-    start! BackupRestore::Backuper.new(user_id, opts)
+    if opts[:fork] == false
+      BackupRestore::Backuper.new(user_id, opts).run
+    else
+      start! BackupRestore::Backuper.new(user_id, opts)
+    end
   end
 
   def self.restore!(user_id, opts = {})
