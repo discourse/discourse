@@ -65,7 +65,6 @@
   }
   button.bulk-select {
     padding: 0;
-    font-size: 1.05em;
     margin-right: 0.3em;
   }
 
@@ -142,7 +141,6 @@
       margin-right: 2px;
     }
     a {
-      font-size: 0.917em;
       color: dark-light-choose($primary-medium, $secondary-medium);
       margin-right: 3px;
       line-height: 20px;
@@ -173,7 +171,6 @@
 .topic-list.categories {
   a.title {
     color: $tertiary;
-    font-size: 0.929em;
   }
 
   th.posts {
@@ -225,10 +222,10 @@
     }
     a.last-posted-at, a.last-posted-at:visited {
       color: dark-light-choose($primary-medium, $secondary-medium);
-      font-size: 0.88em;
+      font-size: 0.857em;
     }
     .badge {
-      font-size: 0.714em;
+      font-size: 0.857em;
       top: -1px;
     }
   }
@@ -291,7 +288,7 @@ button.dismiss-read {
   clear: both;
   p {
     line-height: 1.5em;
-    font-size: 1.5em;
+    font-size: 1.429em;
   }
 }
 
@@ -338,10 +335,10 @@ and (max-width : 850px) {
    // smaller table cell font and cell spacing
    th, td {
       padding: 12px 2px;
-      font-size: 0.929em;
+      font-size: 1em;
      }
     .main-link {
-      font-size: 1.071em;
+      font-size: 1em;
       }
     .category {
       min-width: 0;

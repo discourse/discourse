@@ -21,17 +21,12 @@
   padding-top: 14px;
   margin-bottom: 10px;
 
-  .star {
-    font-size: 1.429em;
-    margin-top: 6px;
-    margin-right: 6px;
-  }
   #edit-title, .category-chooser, .edit-controls {
     width: 500px;
   }
   h1 {
-    font-size: 1.8em;
-    line-height: 1.2em;
+    font-size: 1.857em;
+    line-height: 1.25em;
     overflow: hidden;
     a {color: $primary;}
   }
@@ -46,7 +41,7 @@
     float: right;
     text-transform: lowercase;
     color: dark-light-choose($primary-medium, $secondary-medium);
-    font-size: 0.875rem;
+    font-size: 0.857rem;
   }
 }
 
@@ -62,7 +57,7 @@
   width: 60%;
   margin-left: auto;
   margin-right: auto;
-  font-size: 1.714em;
+  font-size: 1.857em;
   text-align: center;
   line-height: 1.1em;
 
@@ -199,7 +194,7 @@
   bottom: 0;
   position: fixed;
   width: 100%;
-  font-size: 1.071em;
+  font-size: 1em;
   z-index: 495
 }
 
