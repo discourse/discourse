@@ -10,6 +10,25 @@ describe CategoryFeaturedTopic do
     let(:category)       { Fabricate(:category) }
     let!(:category_post) { PostCreator.create(user, raw: "I put this post in the category", title: "categorize THIS", category: category.id) }
 
+    it "works in batched mode" do
+      category2 = Fabricate(:category)
+      post2 = create_post(category: category2.id)
+
+      CategoryFeaturedTopic.destroy_all
+      CategoryFeaturedTopic.clear_batch!
+
+      size = Category.order(:id).where('id < ?', category.id).count + 1
+
+      CategoryFeaturedTopic.feature_topics(batched: true, batch_size: size)
+
+      expect(CategoryFeaturedTopic.where(topic_id: category_post.topic_id).count).to eq(1)
+      expect(CategoryFeaturedTopic.where(topic_id: post2.topic_id).count).to eq(0)
+
+      CategoryFeaturedTopic.feature_topics(batched: true, batch_size: size)
+
+      expect(CategoryFeaturedTopic.where(topic_id: post2.topic_id).count).to eq(1)
+    end
+
     it "should feature topics for a secure category" do
 
       # so much dancing, I am thinking fixures make sense here.
