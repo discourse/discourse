@@ -19,6 +19,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     @remap_emoji = options[:remap_emoji] == true
     @start_excerpt = false
     @summary_contents = ""
+    @detail_contents = ""
   end
 
   def self.get_excerpt(html, length, options)
@@ -110,8 +111,10 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
           @in_spoiler = true
         end
     when "details"
+      @detail_contents = ""
       @in_details = true
     when "summary"
+      @summary_contents = ""
       @in_summary = true
     end
   end
@@ -133,17 +136,24 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
       @in_quote = false
     when "details"
       @in_details = false
+      full = "<details><summary>#{clean(@summary_contents)}</summary>#{clean(@detail_contents)}</details>"
+      if @current_length + full.length > @length
+        @excerpt << "<details class='disabled'><summary>#{@summary_contents[0..@length]}</summary></details>"
+      else
+        @excerpt << full
+      end
+
     when "summary"
       @in_summary = false
-      if @summary_contents.present?
-        @excerpt << "<details class='disabled'><summary>#{@summary_contents[0..@length]}</summary></details>"
-      end
-      @summary_contents = ""
     when "div", "span"
       throw :done if @start_excerpt
       characters("</span>", false, false, false) if @in_spoiler
       @in_spoiler = false
     end
+  end
+
+  def clean(str)
+    ERB::Util.html_escape(str.strip)
   end
 
   def characters(string, truncate = true, count_it = true, encode = true)
@@ -154,6 +164,8 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     if @in_details
       if @in_summary
         @summary_contents << string
+      else
+        @detail_contents << string
       end
       return
     end

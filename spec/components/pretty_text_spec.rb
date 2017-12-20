@@ -385,8 +385,12 @@ describe PrettyText do
         expect(PrettyText.excerpt("<span class='spoiler'>spoiler</div>", 100)).to match_html "<span class='spoiler'>spoiler</span>"
       end
 
-      it "should keep details" do
+      it "should keep details if too long" do
         expect(PrettyText.excerpt("<details><summary>expand</summary><p>hello</p></details>", 30)).to match_html "<details class='disabled'><summary>expand</summary></details>"
+      end
+
+      it "doesn't disable details if short enough" do
+        expect(PrettyText.excerpt("<details><summary>expand</summary><p>hello</p></details>", 60)).to match_html "<details><summary>expand</summary>hello</details>"
       end
 
       it "should remove meta informations" do
