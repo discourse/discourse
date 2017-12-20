@@ -1143,6 +1143,7 @@ de:
     newuser_max_replies_per_topic: "Maximale Anzahl an Antworten, die ein neuer Benutzer in einem einzigen Thema geben darf, bevor jemand auf diese antwortet."
     max_mentions_per_post: "Maximale Anzahl der @Namens-Erwähnungen, die jemand in einem Beitrag nutzen kann."
     max_users_notified_per_group_mention: "Maximale Anzahl von Benutzern die eine Benachrichtigung erhalten, wenn eine Gruppe erwähnt wird (wenn der Schwellenwert erreicht wird, wird keine Benachrichtigung erzeugt)"
+    enable_mentions: "Erlaube Benutzern, andere Benutzer zu erwähnen."
     create_thumbnails: "Erzeuge ein Vorschaubild und eine Lightbox für Bilder, die zu groß sind, um in einem Beitrag angezeigt zu werden."
     email_time_window_mins: "Warte (n) Minuten bevor eine E-Mail-Benachrichtigung geschickt wird, um Benutzern Gelegenheit zu geben, ihre Beiträge abschließend bearbeiten zu können."
     private_email_time_window_seconds: "Warte (n) Sekunden bevor eine E-Mail-Benachrichtigung geschickt wird, um Benutzern Gelegenheit zu geben, ihre Beiträge abschließend bearbeiten zu können."
@@ -1274,6 +1275,7 @@ de:
     anonymous_posting_min_trust_level: "Vertrauensstufe, ab der das Schreiben anonymer Beiträge erlaubt ist"
     anonymous_account_duration_minutes: "Erzeuge alle (n) Minuten ein neues anonymes Konto je Benutzer, um die Anonymität der virtuellen anonymen Benutzer zu gewährleisten. Beispiel: Ein Wert von 600 sorgt dafür, dass ein neues anonymes Konto erzeugt wird, wenn ein Benutzer in den anonymen Modus wechselt UND mindestens 600 Minuten seit der letzten anonymen Nachricht dieses Benutzers vergangen sind."
     hide_user_profiles_from_public: "Deaktiviert Benutzerkarten, Benutzerprofile und das Benutzerverzeichnis für anonyme Benutzer."
+    show_inactive_accounts: "Erlaube angemeldeten Benutzern, die Profile inaktiver Benutzer anzuschauen."
     hide_suspension_reasons: "Zeige Sperrgründe nicht öffentlich auf Benutzerprofilen an."
     user_website_domains_whitelist: "Benutzer-Webseiten werden mit diesen Domains abgeglichen. Mehrere Domains können mit einem Pipe-Symbol „|“ getrennt angegeben werden."
     allow_profile_backgrounds: "Erlaubt es Benutzern, Profilhintergründe hochzuladen."
@@ -1758,20 +1760,6 @@ de:
     post_hidden:
       title: "Benachrichtigung: Beitrag versteckt"
       subject_template: "Beitrag versteckt wegen Community-Meldungen"
-      text_body_template: |
-        Hallo,
-
-        dies ist eine automatische Nachricht von %{site_name}, um dich darüber zu informieren, dass dein Beitrag ausgeblendet wurde.
-
-        %{base_url}%{url}
-
-        %{flag_reason}
-
-        Mehrere Community-Mitglieder haben diesen Beitrag gemeldet, bevor er ausgeblendet wurde, daher überdenke bitte, wie du deinen Beitrag überarbeiten könntest, damit er auf die Rückmeldung eingeht. **Du kannst deinen Beitrag nach %{edit_delay} Minuten bearbeiten, und er wird automatisch wieder angezeigt.**
-
-        Wenn der Beitrag allerdings erneut von der Community ausgeblendet wird, bleibt er ausgeblendet, bis er von einem Team-Mitglied behandelt wurde.
-
-        Weitere Hinweise findest du in unserem [Community-Leitfaden]%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         Für einige schnelle Tipps, um als neuer Benutzer loszulegen, [schaue einmal diesen Blog-Beitrag an](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).

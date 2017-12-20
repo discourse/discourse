@@ -13,8 +13,25 @@
     <div class='d-editor-button-bar'>
       {{#each toolbar.groups as |group|}}
         {{#each group.buttons as |b|}}
-          {{d-button action=b.action actionParam=b translatedTitle=b.title label=b.label icon=b.icon class=b.className}}
+          {{#if b.popupMenu}}
+            {{toolbar-popup-menu-options
+              onPopupMenuAction=onPopupMenuAction
+              onExpand=(action b.action b)
+              title="composer.options"
+              headerIcon=b.icon
+              class=b.className
+              content=popupMenuOptions}}
+          {{else}}
+            {{d-button
+              action=b.action
+              actionParam=b
+              translatedTitle=b.title
+              label=b.label
+              icon=b.icon
+              class=b.className}}
+          {{/if}}
         {{/each}}
+
         {{#unless group.lastGroup}}
           <div class='d-editor-spacer'></div>
         {{/unless}}

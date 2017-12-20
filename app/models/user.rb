@@ -312,6 +312,7 @@ class User < ActiveRecord::Base
     @unread_notifications = nil
     @unread_total_notifications = nil
     @unread_pms = nil
+    @user_fields = nil
     super
   end
 

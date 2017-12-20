@@ -1446,7 +1446,6 @@ et:
       multi_select:
         select: 'vali'
         selected: 'valitud ({{count}})'
-        select_replies: 'vali +vastused'
         delete: kustuta valitud
         cancel: tühista valimine
         select_all: vali kõik
@@ -1524,12 +1523,6 @@ et:
         undelete: "ennista see postitus"
         share: "jaga viidet sellele postitusele"
         more: "Veel"
-        delete_replies:
-          confirm:
-            one: "Kas soovid ühtlasi kustutada vahetu vastuse sellele postitusele?"
-            other: "Kas soovid ühtlasi kustutada {{count}} vahetut vastust sellele postitusele?"
-          yes_value: "Jah, kustuta ka vastused"
-          no_value: "Ei, ainult see postitus"
         admin: "postituse administreerimise tegevused"
         wiki: "Loo Wiki"
         unwiki: "Eemalda Wiki"
@@ -1615,10 +1608,6 @@ et:
           vote:
             one: "1 kasutaja hääletas selle postituse poolt"
             other: "{{count}} kasutajat hääletasid selle postituse poolt"
-      delete:
-        confirm:
-          one: "Oled kindel, et soovid selle postituse kustutada?"
-          other: "Oled kindel, et soovid kõik need postitused kustutada?"
       revisions:
         controls:
           first: "Esimene redaktsioon"
@@ -2249,7 +2238,6 @@ et:
           details: "Kui teemas on uus vastus, muudatus, kustutamine või taastamine."
         user_event:
           name: "Kasutaja sündmus"
-          details: "Kui kasutaja luuakse, kinnitatakse või muudetakse."
         delivery_status:
           title: "Kättetoimetamise staatus"
           inactive: "Mitteaktiivne"

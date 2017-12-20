@@ -1759,20 +1759,6 @@ es:
     post_hidden:
       title: "Post oculto"
       subject_template: "Mensaje ocultado debido a varios reportes de la comnuidad"
-      text_body_template: |
-        Hola,
-
-        Este es un mensaje automático desde %{site_name} para notificarte que tu mensaje ha sido ocultado.
-
-        %{base_url}%{url}
-
-        %{flag_reason}
-
-        Varios miembros de la comunidad han reportado tu mensaje antes de que éste se haya ocultado, así que por favor considera cómo vas a editar tu mensaje. **Puedes editar tu mensaje después de  %{edit_delay} minutos, y será automáticamente mostrado de nuevo.**
-
-        Sin embargo, si el mensaje es ocultado por la comunidad por segunda vez, permanecerá en ese estado hasta que sea revisado por alguien del staff.
-
-        Para aprender más, por favor leer nuestra [guía de la comunidad](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         Si quieres unos consejos para empezar, [echa un vistazo a esta entrada de blog](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).

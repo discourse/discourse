@@ -255,7 +255,7 @@ SQL
         end
     end
 
-    PostCreator.new(user, opts).create.try(:id)
+    PostCreator.new(user, opts).create!&.id
   end
 
   def self.limit_action!(user, post, post_action_type_id)

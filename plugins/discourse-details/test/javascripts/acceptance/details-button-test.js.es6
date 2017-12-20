@@ -8,10 +8,9 @@ function findTextarea() {
 
 test('details button', (assert) => {
   visit("/");
-
   click('#create-topic');
-  click('button.options');
-  click('.popup-menu .d-icon-caret-right');
+  expandSelectKit('.toolbar-popup-menu-options');
+  selectKitSelectRow('insertDetails', { selector: '.toolbar-popup-menu-options'});
 
   andThen(() => {
     assert.equal(
@@ -29,8 +28,8 @@ test('details button', (assert) => {
     textarea.selectionEnd = textarea.value.length;
   });
 
-  click('button.options');
-  click('.popup-menu .d-icon-caret-right');
+  expandSelectKit('.toolbar-popup-menu-options');
+  selectKitSelectRow('insertDetails', { selector: '.toolbar-popup-menu-options'});
 
   andThen(() => {
     assert.equal(
@@ -52,8 +51,8 @@ test('details button', (assert) => {
     textarea.selectionEnd = 28;
   });
 
-  click('button.options');
-  click('.popup-menu .d-icon-caret-right');
+  expandSelectKit('.toolbar-popup-menu-options');
+  selectKitSelectRow('insertDetails', { selector: '.toolbar-popup-menu-options'});
 
   andThen(() => {
     assert.equal(
@@ -75,8 +74,8 @@ test('details button', (assert) => {
     textarea.selectionEnd = 29;
   });
 
-  click('button.options');
-  click('.popup-menu .d-icon-caret-right');
+  expandSelectKit('.toolbar-popup-menu-options');
+  selectKitSelectRow('insertDetails', { selector: '.toolbar-popup-menu-options'});
 
   andThen(() => {
     assert.equal(
@@ -104,8 +103,8 @@ test('details button surrounds all selected text in a single details block', (as
     textarea.selectionEnd = textarea.value.length;
   });
 
-  click('button.options');
-  click('.popup-menu .d-icon-caret-right');
+  expandSelectKit('.toolbar-popup-menu-options');
+  selectKitSelectRow('insertDetails', { selector: '.toolbar-popup-menu-options'});
 
   andThen(() => {
     assert.equal(

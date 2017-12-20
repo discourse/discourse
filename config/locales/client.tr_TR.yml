@@ -370,6 +370,7 @@ tr_TR:
         staff: "Grup sahipleri ve yetkili"
         owners: "Grup sahipleri ve yöneticileri"
       alias_levels:
+        mentionable: "Bu gruptan kimler @bahsedebilir?"
         messageable: "Bu gruba kimler ileti gönderebilir?"
         nobody: " Hiç Kimse"
         only_admins: "Sadece Yöneticiler"
@@ -504,6 +505,7 @@ tr_TR:
       admin: "{{user}} bir yöneticidir"
       moderator_tooltip: "Bu kullanıcı bir moderatör"
       admin_tooltip: "Bu kullanıcı bir yönetici."
+      silenced_tooltip: "Bu kullanıcı susturuldu"
       suspended_notice: "Bu kullanıcı {{tarih}} tarihine kadar uzaklaştırıldı."
       suspended_permanently: "Bu kullanıcı askıya alındı."
       suspended_reason: "Neden:"
@@ -603,6 +605,7 @@ tr_TR:
         taken: "Üzgünüz, bu e-posta kullanılabilir değil."
         error: "E-posta adresinizi değiştirirken bir hata oluştu. Belki bu adres zaten kullanımdadır?"
         success: "Adresinize bir e-posta gönderdik. Lütfen onaylama talimatlarını uygulayınız."
+        success_staff: "Şu anki adresinize bir eposta gönderdik. Lütfen doğrulama yönergelerini takip edin."
       change_avatar:
         title: "Profil görselinizi değiştirin"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, baz alındı"
@@ -988,6 +991,10 @@ tr_TR:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    select_kit:
+      no_content: Hiçbir sonuç bulunamadı
+      filter_placeholder: Ara...
+      create: "{{content}} oluştur"
     emoji_picker:
       filter_placeholder: Emoji ara
       people: İnsanlar
@@ -997,6 +1004,9 @@ tr_TR:
       travel: Seyahat
       celebration: Kutlama
       recent: Son zamanlarda kullanılmış
+      default_tone: Cilt rengi yok
+      light_tone: Açık cilt tonu
+      dark_tone: Koyu cilt tonu
     composer:
       emoji: "Emoji :)"
       more_emoji: "dahası..."
@@ -1033,6 +1043,7 @@ tr_TR:
       cancel: "İptal et"
       create_topic: "Konu Oluştur"
       create_pm: "İleti"
+      create_whisper: "Fısılda"
       title: "Ya da Ctrl+Enter'a bas"
       users_placeholder: "Kullanıcı ekle"
       title_placeholder: "Bir cümlede açıklamak gerekirse bu tartışmanın konusu nedir?"
@@ -1294,8 +1305,13 @@ tr_TR:
         private_timer_types: Kullanıcı Konusu Zamanlayıcılar
       auto_update_input:
         none: "Bir zaman çerçevesi seçin"
+        tomorrow: "Yarın"
+        this_weekend: "Bu hafta sonu"
+        next_week: "Gelecek hafta"
+        next_month: "Gelecek ay"
         one_year: "Bir Yıl"
         forever: "Sonsuza dek"
+        pick_date_and_time: "Tarih ve saat seç"
       auto_close:
         error: "Lütfen geçerli bir değer giriniz."
       reminder:
@@ -1485,7 +1501,6 @@ tr_TR:
       multi_select:
         select: 'seç'
         selected: '({{count}}) seçildi'
-        select_replies: 'cevaplarıyla seç'
         delete: seçilenleri sil
         cancel: seçimi iptal et
         select_all: hepsini seç
@@ -1557,11 +1572,6 @@ tr_TR:
         undelete: "bu gönderinin silinmesini geri al"
         share: "bu gönderinin bağlantısını paylaşın"
         more: "Daha fazla"
-        delete_replies:
-          confirm:
-            other: "Bu gönderiye verilen {{count}} direk cevabı da silmek istiyor musunuz?"
-          yes_value: "Evet, cevapları da sil"
-          no_value: "Hayır, sadece bu gönderiyi"
         admin: "gönderiyle alakalı yönetici eylemleri"
         wiki: "Wiki Yap"
         unwiki: "Wiki'yi Kaldır"
@@ -1631,9 +1641,6 @@ tr_TR:
             other: "{{count}} kişi bunu beğendi"
           vote:
             other: "{{count}} kişi bu gönderiyi oyladı"
-      delete:
-        confirm:
-          other: "Tüm bu gönderileri silmek istediğinize emin misiniz?"
       revisions:
         controls:
           first: "İlk revizyon"
@@ -2259,7 +2266,6 @@ tr_TR:
           details: "Yeni bir cevap oluşturulduğunda, düzenlendiğinde veya silindiğinde."
         user_event:
           name: "Kullanıcı Olayı"
-          details: "Bir kullanıcı oluşturulduğunda, onaylandığında veya güncellendiğinde"
         delivery_status:
           title: "Teslim Durumu"
           inactive: "Etkin Değil"

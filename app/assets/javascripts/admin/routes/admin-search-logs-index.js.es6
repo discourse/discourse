@@ -1,10 +1,6 @@
 import { ajax } from 'discourse/lib/ajax';
 
 export default Discourse.Route.extend({
-  renderTemplate() {
-    this.render('admin/templates/logs/search-logs', {into: 'adminLogs'});
-  },
-
   queryParams: {
     period: { refreshModel: true },
     searchType: { refreshModel: true }

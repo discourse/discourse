@@ -1406,7 +1406,6 @@ sk:
       multi_select:
         select: 'označ'
         selected: 'označených ({{count}})'
-        select_replies: 'označ +odpovede'
         delete: zmaž označené
         cancel: zrušiť výber
         select_all: označ všetko
@@ -1484,13 +1483,6 @@ sk:
         undelete: "vrátiť späť odstránenie príspevku"
         share: "zdieľať odkaz na tento príspevok"
         more: "Viac"
-        delete_replies:
-          confirm:
-            one: "Chcete tiež odstrániť {{count}} priamu reakciu na tento príspevok?"
-            few: "Chcete tiež odstrániť {{count}} priame reakcie na tento príspevok?"
-            other: "Chcete tiež odstrániť {{count}} priamych reakcií na tento príspevok?"
-          yes_value: "Áno, odstrániť aj reakcie."
-          no_value: "Nie, len tento príspevok."
         admin: "akcie administrátora príspevku"
         wiki: "Spraviť Wiki"
         unwiki: "Odstrániť Wiki"
@@ -1585,11 +1577,6 @@ sk:
             one: "1 osoba hlasovala za tento príspevok"
             few: "{{count}} osoby hlasovali za tento príspevok"
             other: "{{count}} osôb hlasovalo za tento príspevok"
-      delete:
-        confirm:
-          one: "Ste si istý že chcete zmazať tento príspevok?"
-          few: "Ste si istý že chcete zmazať všetky tieto príspevky?"
-          other: "Ste si istý že chcete zmazať všetky tieto príspevky?"
       revisions:
         controls:
           first: "Prvá revízia"

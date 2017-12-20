@@ -18,6 +18,8 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     @keep_onebox_source = options[:keep_onebox_source] == true
     @remap_emoji = options[:remap_emoji] == true
     @start_excerpt = false
+    @summary_contents = ""
+    @detail_contents = ""
   end
 
   def self.get_excerpt(html, length, options)
@@ -108,6 +110,12 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
           include_tag("span", attributes)
           @in_spoiler = true
         end
+    when "details"
+      @detail_contents = ""
+      @in_details = true
+    when "summary"
+      @summary_contents = ""
+      @in_summary = true
     end
   end
 
@@ -126,6 +134,17 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
       end
     when "aside"
       @in_quote = false
+    when "details"
+      @in_details = false
+      full = "<details><summary>#{clean(@summary_contents)}</summary>#{clean(@detail_contents)}</details>"
+      if @current_length + full.length > @length
+        @excerpt << "<details class='disabled'><summary>#{@summary_contents[0..@length]}</summary></details>"
+      else
+        @excerpt << full
+      end
+
+    when "summary"
+      @in_summary = false
     when "div", "span"
       throw :done if @start_excerpt
       characters("</span>", false, false, false) if @in_spoiler
@@ -133,10 +152,23 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     end
   end
 
+  def clean(str)
+    ERB::Util.html_escape(str.strip)
+  end
+
   def characters(string, truncate = true, count_it = true, encode = true)
     return if @in_quote
+
     # we call length on this so might as well ensure we have a string
     string = string.to_s
+    if @in_details
+      if @in_summary
+        @summary_contents << string
+      else
+        @detail_contents << string
+      end
+      return
+    end
 
     encode = encode ? lambda { |s| ERB::Util.html_escape(s) } : lambda { |s| s }
     if count_it && @current_length + string.length > @length

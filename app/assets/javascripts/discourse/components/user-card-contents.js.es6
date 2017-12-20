@@ -270,6 +270,10 @@ export default Ember.Component.extend(CleansUp, CanCheckEmails, {
   },
 
   actions: {
+    close() {
+      this._close();
+    },
+
     cancelFilter() {
       const postStream = this.get('postStream');
       postStream.cancelFilter();

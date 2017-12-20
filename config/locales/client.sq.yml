@@ -1460,12 +1460,6 @@ sq:
         undelete: "anuloni fshirjen e postimit"
         share: "shpërndani një link tek ky postim"
         more: "Më shumë"
-        delete_replies:
-          confirm:
-            one: "A doni të fshini edhe 1 përgjigje direkte ndaj këtij postimi?"
-            other: "A doni të fshini edhe {{count}} përgjigjet direkte ndaj këtij postimi?"
-          yes_value: "Po, fshi edhe përgjigjet"
-          no_value: "Jo, vetëm këtë postim"
         admin: "veprimet administrative mbi postimin"
         wiki: "Bëje Wiki"
         unwiki: "Hiqe Wiki"

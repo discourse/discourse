@@ -261,10 +261,10 @@ QUnit.test("Composer can toggle between edit and reply", assert => {
 
 QUnit.test("Composer can toggle between reply and createTopic", assert => {
   visit("/t/this-is-a-test-topic/9");
-
   click('.topic-post:eq(0) button.reply');
-  click('button.options');
-  click('.popup-menu .d-icon-eye-slash');
+  expandSelectKit('.toolbar-popup-menu-options');
+  selectKitSelectRow('toggleWhisper', { selector: '.toolbar-popup-menu-options'});
+
   andThen(() => {
     assert.ok(
       find('.composer-fields .whisper').text().indexOf(I18n.t("composer.whisper")) > 0,
@@ -285,8 +285,9 @@ QUnit.test("Composer can toggle between reply and createTopic", assert => {
     );
   });
 
-  click('button.options');
-  click('.popup-menu .d-icon-eye-slash');
+  expandSelectKit('.toolbar-popup-menu-options');
+  selectKitSelectRow('toggleInvisible', { selector: '.toolbar-popup-menu-options'});
+
   andThen(() => {
     assert.ok(
       find('.composer-fields .whisper').text().indexOf(I18n.t("composer.unlist")) > 0,

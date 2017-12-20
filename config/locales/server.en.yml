@@ -1087,7 +1087,7 @@ en:
     top_page_default_timeframe: "Default timeframe for the top view page."
     show_email_on_profile: "Show a user's email on their profile (only visible to themselves and staff)"
     prioritize_username_in_ux: "Show username first on user page, user card and posts (when disabled name is shown first)"
-    enable_rich_text_paste: "Enable automatic HTML to Markdown conversion when pasting text into the composer."
+    enable_rich_text_paste: "Enable automatic HTML to Markdown conversion when pasting text into the composer. (Experimental)"
 
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
 
@@ -1418,7 +1418,7 @@ en:
     relative_date_duration: "Number of days after posting where post dates will be shown as relative (7d) instead of absolute (20 Feb)."
     delete_user_max_post_age: "Don't allow deleting users whose first post is older than (x) days."
     delete_all_posts_max: "The maximum number of posts that can be deleted at once with the Delete All Posts button. If a user has more than this many posts, the posts cannot all be deleted at once and the user can't be deleted."
-    username_change_period: "The number of days after registration that accounts can change their username (0 to disallow username change)."
+    username_change_period: "The maximum number of days after registration that accounts can change their username (0 to disallow username change)."
     email_editable: "Allow users to change their e-mail address after registration."
     logout_redirect: "Location to redirect browser to after logout (eg: http://somesite.com/logout)"
 
@@ -2008,7 +2008,7 @@ en:
 
         This is an automated message from %{site_name} to let you know that your post was hidden.
 
-        %{base_url}%{url}
+        <%{base_url}%{url}>
 
         %{flag_reason}
 
@@ -3660,3 +3660,6 @@ en:
         description: |
           <p>If you ever feel like changing these settings, visit <a href='/admin' target='_blank'>your admin section</a>; find it next to the wrench icon in the site menu.</p>
           <p>Have fun, and good luck <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>building your new community!</a></p>
+
+  search_logs:
+    graph_title: "Search Count"

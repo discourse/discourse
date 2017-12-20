@@ -2,7 +2,7 @@ import createStore from 'helpers/create-store';
 
 QUnit.module("lib:category-link");
 
-import parseHTML from 'helpers/parse-html';
+import parseHTML from 'discourse/helpers/parse-html';
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 
 QUnit.test("categoryBadge without a category", assert => {

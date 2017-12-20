@@ -440,3 +440,60 @@ componentTest('with null value', {
     });
   }
 });
+
+componentTest('with collection header', {
+  template: '{{single-select collectionHeader=collectionHeader}}',
+
+  beforeEach() {
+    this.set("collectionHeader", "<h2>Hello</h2>");
+  },
+
+  test(assert) {
+    expandSelectKit();
+    andThen(() => assert.ok(exists(".collection-header h2")));
+  }
+});
+
+componentTest('with onToggle', {
+  template: '{{single-select onToggle=onToggle}}',
+
+  beforeEach() {
+    this.set("onToggle", () => $(".select-kit").append("<span class='onToggleTest'></span>"));
+  },
+
+  test(assert) {
+    andThen(() => assert.notOk(exists(".onToggleTest")));
+    expandSelectKit();
+    andThen(() => assert.ok(exists(".onToggleTest")));
+  }
+});
+
+componentTest('with onExpand', {
+  template: '{{single-select onExpand=onExpand}}',
+
+  beforeEach() {
+    this.set("onExpand", () => $(".select-kit").append("<span class='onExpandTest'></span>"));
+  },
+
+  test(assert) {
+    andThen(() => assert.notOk(exists(".onExpandTest")));
+    expandSelectKit();
+    andThen(() => assert.ok(exists(".onExpandTest")));
+  }
+});
+
+componentTest('with onCollapse', {
+  template: '{{single-select onCollapse=onCollapse}}',
+
+  beforeEach() {
+    this.set("onCollapse", () => $(".select-kit").append("<span class='onCollapseTest'></span>"));
+  },
+
+  test(assert) {
+    andThen(() => assert.notOk(exists(".onCollapseTest")));
+    expandSelectKit();
+    andThen(() => assert.notOk(exists(".onCollapseTest")));
+    collapseSelectKit();
+    andThen(() => assert.ok(exists(".onCollapseTest")));
+  }
+});

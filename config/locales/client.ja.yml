@@ -1548,7 +1548,6 @@ ja:
       multi_select:
         select: '選択'
         selected: '選択中 ({{count}})'
-        select_replies: '返信と選択'
         delete: 選択中のものを削除
         cancel: 選択を外す
         select_all: すべて選択する
@@ -1618,11 +1617,6 @@ ja:
         undelete: "投稿を元に戻す"
         share: "投稿のリンクを共有する"
         more: "もっと読む"
-        delete_replies:
-          confirm:
-            other: "この投稿への{{count}}件の返信を削除しますか?"
-          yes_value: "返信も一緒に削除します"
-          no_value: "投稿のみを削除する"
         admin: "投稿の管理"
         wiki: "wiki投稿にする"
         unwiki: "wiki投稿から外す"
@@ -1692,9 +1686,6 @@ ja:
             other: "{{count}}人のユーザが「いいね！」しました"
           vote:
             other: "{{count}}人のユーザがこのポストに投票しました"
-      delete:
-        confirm:
-          other: "これらの投稿を削除してもよろしいですか？"
       merge:
         confirm:
           other: "これらの{{count}}の投稿を統合したいですか?"

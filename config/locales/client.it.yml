@@ -1656,7 +1656,6 @@ it:
       multi_select:
         select: 'scegli'
         selected: 'selezionati ({{count}})'
-        select_replies: 'seleziona +risposte'
         delete: elimina i selezionati
         cancel: annulla selezione
         select_all: seleziona tutto
@@ -1735,12 +1734,6 @@ it:
         undelete: "recupera questo messaggio"
         share: "condividi un collegamento a questo messaggio"
         more: "Di più"
-        delete_replies:
-          confirm:
-            one: "Vuoi anche cancellare la risposta diretta a questo post?"
-            other: "Vuoi anche cancellare le {{count}} risposte dirette a questo messaggio?"
-          yes_value: "Si, cancella anche le risposte"
-          no_value: "No, solo questo messaggio"
         admin: "azioni post-amministrazione"
         wiki: "Rendi Wiki"
         unwiki: "Rimuovi Wiki"
@@ -1832,10 +1825,6 @@ it:
           vote:
             one: "Una persona ha votato per questo post"
             other: "{{count}} persone hanno votato per questo post"
-      delete:
-        confirm:
-          one: "Sei sicuro di voler cancellare questo messaggio?"
-          other: "Sei sicuro di voler cancellare tutti questi messaggi?"
       merge:
         confirm:
           one: "Sicuro di voler unire questi messaggi?"
@@ -2531,7 +2520,6 @@ it:
           details: "Quando c'è una nuova risposta, modifica, cancellazione o recupero."
         user_event:
           name: "Evento Utente"
-          details: "Quando un utente viene creato, approvato o aggiornato."
         delivery_status:
           title: "Stato di Consegna"
           inactive: "Non attivo"

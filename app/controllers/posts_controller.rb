@@ -7,8 +7,7 @@ require_dependency 'new_post_result_serializer'
 
 class PostsController < ApplicationController
 
-  # Need to be logged in for all actions here
-  before_action :ensure_logged_in, except: [:show, :replies, :by_number, :short_link, :reply_history, :revisions, :latest_revision, :expand_embed, :markdown_id, :markdown_num, :cooked, :latest, :user_posts_feed]
+  before_action :ensure_logged_in, except: [:show, :replies, :by_number, :short_link, :reply_history, :replyIids, :revisions, :latest_revision, :expand_embed, :markdown_id, :markdown_num, :cooked, :latest, :user_posts_feed]
 
   skip_before_action :preload_json, :check_xhr, only: [:markdown_id, :markdown_num, :short_link, :latest, :user_posts_feed]
 
@@ -222,6 +221,11 @@ class PostsController < ApplicationController
   def reply_history
     post = find_post_from_params
     render_serialized(post.reply_history(params[:max_replies].to_i, guardian), PostSerializer)
+  end
+
+  def reply_ids
+    post = find_post_from_params
+    render json: post.reply_ids(guardian).to_json
   end
 
   def destroy

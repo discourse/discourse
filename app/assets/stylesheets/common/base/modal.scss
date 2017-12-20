@@ -180,7 +180,7 @@
           color: rgb(255,255,255);
           position: absolute;
           top: 40%;
-          font-size: 36px;
+          font-size: 2.571em;
           text-align: center;
           line-height: 38px;
           margin-left: auto;
@@ -197,7 +197,7 @@
       .jsfu-separator {
         vertical-align: middle;
         display: table-cell;
-        font-size: 36px;
+        font-size: 2.571em;
         padding-left: 10px;
         padding-right: 10px;
       }
@@ -225,7 +225,7 @@
 
   // password reset modal
   .modal-body.forgot-password-modal p {
-    font-size: 14px;
+    font-size: 1em;
   }
 }
 

@@ -107,7 +107,7 @@ class UserAvatarsController < ApplicationController
       return redirect_to cdn_path(avatar_url)
     end
 
-    upload = Upload.find_by(id: upload_id) if user.user_avatar.contains_upload?(upload_id)
+    upload = Upload.find_by(id: upload_id) if user&.user_avatar&.contains_upload?(upload_id)
     upload ||= user.uploaded_avatar if user.uploaded_avatar_id == upload_id
 
     if user.uploaded_avatar && !upload

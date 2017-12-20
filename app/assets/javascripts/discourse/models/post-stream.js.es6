@@ -538,7 +538,7 @@ export default RestModel.extend({
   triggerDeletedPost(postId){
     const existing = this._identityMap[postId];
 
-    if (existing) {
+    if (existing && !existing.deleted_at) {
       const url = "/posts/" + postId;
       const store = this.store;
 

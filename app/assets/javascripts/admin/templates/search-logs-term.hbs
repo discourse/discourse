@@ -1,0 +1,13 @@
+<p>
+  {{period-chooser period=period}}
+  {{combo-box content=searchTypeOptions value=searchType class='search-logs-filter'}}
+</p>
+<br>
+
+<h2>
+  {{#link-to 'full-page-search' (query-params q=term)}}{{term}}{{/link-to}}
+</h2>
+
+{{#conditional-loading-spinner condition=refreshing}}
+  {{admin-graph model=model}}
+{{/conditional-loading-spinner}}

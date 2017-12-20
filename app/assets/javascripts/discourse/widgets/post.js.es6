@@ -37,15 +37,31 @@ createWidget('select-post', {
   html(attrs) {
     const buttons = [];
 
-    if (attrs.replyCount > 0 && !attrs.selected) {
-      buttons.push(this.attach('button', { label: 'topic.multi_select.select_replies', action: 'selectReplies' }));
+    if (!attrs.selected && attrs.post_number > 1) {
+      if (attrs.replyCount > 0) {
+        buttons.push(this.attach('button', {
+          label: 'topic.multi_select.select_replies.label',
+          title: 'topic.multi_select.select_replies.title',
+          action: 'selectReplies',
+          className: 'select-replies'
+        }));
+      }
+      buttons.push(this.attach('button', {
+        label: 'topic.multi_select.select_below.label',
+        title: 'topic.multi_select.select_below.title',
+        action: 'selectBelow',
+        className: 'select-below'
+      }));
     }
 
-    const selectPostKey = attrs.selected ? 'topic.multi_select.selected' : 'topic.multi_select.select';
-    buttons.push(this.attach('button', { className: 'select-post',
-                                         label: selectPostKey,
-                                         labelOptions: { count: attrs.selectedPostsCount },
-                                         action: 'selectPost' }));
+    const key = `topic.multi_select.${attrs.selected ? 'selected' : 'select' }_post`;
+    buttons.push(this.attach('button', {
+      label: key + ".label",
+      title: key + ".title",
+      action: 'togglePostSelection',
+      className: 'select-post'
+    }));
+
     return buttons;
   }
 });

@@ -1128,7 +1128,6 @@ th:
       multi_select:
         select: 'เลือก'
         selected: 'เลือกแล้ว ({{count}})'
-        select_replies: 'เลือก +ตอบ'
         delete: ลบที่เลือก
         cancel: ยกเลิกการเลือก
         select_all: เลือกทั้งหมด
@@ -1181,11 +1180,6 @@ th:
         delete: "ลบโพสนี้"
         undelete: "เลือกลบโพสนี้"
         more: "อื่น"
-        delete_replies:
-          confirm:
-            other: "คุณต้องการที่จะลบคำตอบจำนวน {{count}} คำตอบซึ่งตอบมายังหัวข้อนี้ด้วยหรือไม่?"
-          yes_value: "ใช่ ลบการตอบด้วย"
-          no_value: "ไม่, แค่โพสนี้พอ"
         unhide: "เลิกซ่อน"
       actions:
         undo:
@@ -1198,9 +1192,6 @@ th:
         by_others:
           bookmark:
             other: "{{count}} คน ได้บุ๊คมาร์คโพสนี้"
-      delete:
-        confirm:
-          other: "คุณแน่ใจหรือว่าจะลบโพสเหล่านั้นออก?"
     category:
       delete: 'ลบหมวดหมู่'
       delete_confirm: "คุณแน่ใจหรือว่าจะลบหมวดหมู่นี้ออก?"

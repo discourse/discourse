@@ -18,6 +18,35 @@ describe DirectoryItem do
     end
   end
 
+  context 'inactive and silenced users' do
+    it 'removes silenced users correctly' do
+      post = create_post
+      DirectoryItem.refresh_period!(:daily)
+
+      count = DirectoryItem.where(user_id: post.user_id).count
+      expect(count).to eq(1)
+
+      post.user.update_columns(active: false)
+      DirectoryItem.refresh_period!(:daily)
+
+      count = DirectoryItem.where(user_id: post.user_id).count
+      expect(count).to eq(0)
+
+      post.user.update_columns(active: true)
+      DirectoryItem.refresh_period!(:daily)
+
+      count = DirectoryItem.where(user_id: post.user_id).count
+      expect(count).to eq(1)
+
+      post.user.update_columns(silenced_till: 1.year.from_now)
+      DirectoryItem.refresh_period!(:daily)
+
+      count = DirectoryItem.where(user_id: post.user_id).count
+      expect(count).to eq(0)
+
+    end
+  end
+
   context 'refresh' do
     before do
       UserActionCreator.enable

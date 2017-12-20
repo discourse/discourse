@@ -1701,20 +1701,6 @@ zh_CN:
     post_hidden:
       title: "帖子隐藏"
       subject_template: "帖子因社区标记隐藏"
-      text_body_template: |
-        你好，
-
-        这是%{site_name}自动发出的邮件，通知你的帖子已被隐藏。
-
-        %{base_url}%{url}
-
-        %{flag_reason}
-
-        你的帖子是因为被多个社区成员标记才被隐藏的，所以请考虑根据他们的反馈修改你的帖子。**你可以在 %{edit_delay} 分钟后开始编辑你的帖子，然后它将重新被显示。**
-
-        然而，如果帖子再次被社区成员标记并隐藏，它将被隐藏至版主处理后。
-
-        想了解更多，请查看我们的[社区指引](%{base_url}/guidelines)。
     usage_tips:
       text_body_template: |
         要查看给新用户的简要技巧，[（英文）看看这篇博客文章](http://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)。
