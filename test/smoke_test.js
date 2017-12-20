@@ -115,7 +115,7 @@ const path = require('path');
     });
 
     await exec("is logged in", () => {
-      return page.waitForSelector(".current-user", { timeout: 2000, visible: true });
+      return page.waitForSelector(".current-user", { timeout: 5000, visible: true });
     });
 
     await exec("go home", () => {
