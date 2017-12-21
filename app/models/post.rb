@@ -103,7 +103,7 @@ class Post < ActiveRecord::Base
     when 'string'
       where('raw ILIKE ?', "%#{pattern}%")
     when 'regex'
-      where('raw ~ ?', pattern)
+      where('raw ~ ?', "(?n)#{pattern}")
     end
   }
 
