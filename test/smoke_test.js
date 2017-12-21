@@ -53,7 +53,9 @@ const path = require('path');
 
   page.on('console', msg => console.log(`PAGE LOG: ${msg.text}`));
 
-  await page.goto(url);
+  await exec("go to site", () => {
+    return page.goto(url);
+  });
 
   await exec("expect a log in button in the header", () => {
     return page.waitForSelector("header .login-button", { visible: true });
