@@ -22,7 +22,7 @@
     margin: 14px 0;
   }
   h3 {
-    font-size: 0.929em;
+    font-size: 1em;
   }
   .copy-text {
     display: inline-block;
@@ -31,7 +31,7 @@
     color: $success;
     opacity: 1;
     transition: opacity 0.25s;
-    font-size: .929em;
+    font-size: 1em;
     &:not(.success) {
       opacity: 0;
     }
@@ -40,7 +40,7 @@
     margin-left: 2px;
     margin-right: 8px;
     float: left;
-    font-size: 1.571em;
+    font-size: 1.857em;
   }
   .reply-as-new-topic {
     float: left;

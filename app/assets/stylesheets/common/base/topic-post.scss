@@ -371,14 +371,14 @@ blockquote > *:last-child {
     margin-top: 6px;
     text-transform: uppercase;
     font-weight: bold;
-    font-size: 0.9em;
+    font-size: 0.857em;
     color: dark-light-choose($primary-low-mid, $secondary-high);
 
     .custom-message {
       text-transform: none;
       margin: 15px 0px 5px;
       font-weight: normal;
-      font-size: 1.11em;
+      font-size: 1.143em;
       p {
         margin: 5px 0;
       }
@@ -464,7 +464,7 @@ a.mention, a.mention-group {
     > span.help {
       display: inline-block;
       color: dark-light-choose($primary-medium, $secondary-medium);
-      font-size: 0.929em;
+      font-size: 0.857em;
       font-style: italic;
       line-height: $base-line-height;
       margin-bottom: 1px;

@@ -65,7 +65,7 @@
     }
 
     .new {
-      font-size: 0.8em;
+      font-size: 0.857em;
       margin-left: 0.5em;
       color: dark-light-choose($primary-medium, $secondary-medium);
     }
@@ -174,7 +174,7 @@
   }
 
   li:not(.category):not(.heading) {
-    font-size: 0.929em;
+    font-size: 1em;
     line-height: 16px;
 
     .fa {
@@ -328,7 +328,7 @@ div.menu-links-header {
   }
 
   a {
-    font-size: 1.1em;
+    font-size: 1.143em;
   }
   .d-icon-user {
     margin-right: 0.2em;
