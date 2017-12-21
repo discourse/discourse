@@ -363,12 +363,15 @@ $mobile-breakpoint: 700px;
 
 .groups, .badges, .web-hook-container {
   .form-horizontal {
-    label {
-      font-weight: bold;
+    & > div {
+      margin-bottom: 20px;
     }
 
-    & > div {
-      margin-top: 10px;
+    .d-editor-textarea-wrapper {
+      max-width: 60%; 
+      .d-editor-button-bar {
+        overflow: hidden;
+      }
     }
 
     input, textarea, select, .select-box {
