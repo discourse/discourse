@@ -109,13 +109,25 @@ QUnit.test("converts table tags", assert => {
 });
 
 QUnit.test("returns empty string if table format not supported", assert => {
-  const html = `<table>
+  let html = `<table>
     <thead> <tr><th>Headi\n\nng 1</th><th>Head 2</th></tr> </thead>
       <tbody>
         <tr><td>Lorem</td><td>ipsum</td></tr>
         <tr><td><a href="http://example.com"><img src="http://dolor.com/image.png" /></a></td> <td><i>sit amet</i></td></tr></tbody>
 </table>
   `;
+  assert.equal(toMarkdown(html), "");
+
+  html = `<table>
+    <thead> <tr><th>Heading 1</th></tr> </thead>
+      <tbody>
+        <tr><td>Lorem</td></tr>
+        <tr><td><i>sit amet</i></td></tr></tbody>
+</table>
+  `;
+  assert.equal(toMarkdown(html), "");
+
+  html = `<table><tr><td>Lorem</td><td><i>sit amet</i></td></tr></table>`;
   assert.equal(toMarkdown(html), "");
 });
 
