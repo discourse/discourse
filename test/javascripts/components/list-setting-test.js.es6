@@ -18,17 +18,6 @@ componentTest('default', {
   }
 });
 
-componentTest('with title', {
-  template: '{{list-setting title="test"}}',
-
-  test(assert) {
-    andThen(() => {
-      assert.propEqual(selectKit().header().title(), 'test');
-      assert.propEqual(selectKit().header().value(), null);
-    });
-  }
-});
-
 componentTest('with empty string as value', {
   template: '{{list-setting settingValue=settingValue}}',
 

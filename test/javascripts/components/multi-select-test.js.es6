@@ -21,6 +21,19 @@ componentTest('with objects and values', {
   }
 });
 
+componentTest('with title', {
+  template: '{{multi-select title="test.title"}}',
+
+  beforeEach() {
+    I18n.translations[I18n.locale].js.test = {title: 'My title'};
+  },
+
+  test(assert) {
+    andThen(() => assert.equal(selectKit().header().title(), 'My title') );
+  }
+});
+
+
 componentTest('interactions', {
   template: '{{multi-select none=none content=items values=values}}',
 
