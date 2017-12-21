@@ -67,7 +67,7 @@
 
 // add staff color
 .moderator {
-  .cooked {
+  .regular > .cooked {
     background-color: dark-light-choose($highlight-low, $highlight-medium);
     padding: 10px;
     img:not(.thumbnail) {
@@ -75,7 +75,7 @@
       height: auto;
     }
   }
-  .names {
+  .clearfix > .topic-meta-data > .names {
     span.user-title {
       background-color: dark-light-choose($highlight-low, $highlight-medium);
       color: dark-light-choose($primary-high, $secondary-low);      
