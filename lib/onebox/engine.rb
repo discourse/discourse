@@ -81,9 +81,8 @@ module Onebox
     end
 
     def link
-      @url.gsub(/['\"&<>]/,
+      @url.gsub(/['\"<>]/,
         "'" => '&#39;',
-        '&' => '&amp;',
         '"' => '&quot;',
         '<' => '&lt;',
         '>' => '&gt;',
