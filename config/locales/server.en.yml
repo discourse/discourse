@@ -1159,6 +1159,7 @@ en:
     github_client_secret: "Client secret for Github authentication, registered at https://github.com/settings/applications"
 
     readonly_mode_during_backup: "Enable read only mode while taking a backup"
+    enable_backups: "Allow administrators to create backups of the forum"
     allow_restore: "Allow restore, which can replace ALL site data! Leave false unless you plan to restore a backup"
     maximum_backups: "The maximum amount of backups to keep on disk. Older backups are automatically deleted"
     automatic_backups_enabled: "Run automatic backups as defined in backup frequency"
