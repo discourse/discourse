@@ -521,3 +521,15 @@ componentTest('with onCollapse', {
     andThen(() => assert.ok(exists(".onCollapseTest")));
   }
 });
+
+componentTest('with title', {
+  template: '{{single-select title="test.title"}}',
+
+  beforeEach() {
+    I18n.translations[I18n.locale].js.test = {title: 'My title'};
+  },
+
+  test(assert) {
+    andThen(() => assert.equal(this.get('subject').header().title(), 'My title') );
+  }
+});
