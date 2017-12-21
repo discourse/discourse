@@ -45,6 +45,7 @@ before_install:
   - git clone --depth=1 https://github.com/discourse/discourse-canned-replies.git plugins/discourse-canned-replies
   - git clone --depth=1 https://github.com/discourse/discourse-chat-integration.git plugins/discourse-chat-integration
   - git clone --depth=1 https://github.com/discourse/discourse-assign.git plugins/discourse-assign
+  - git clone --depth=1 https://github.com/discourse/discourse-patreon.git plugins/discourse-patreon
   - export PATH=$HOME/.yarn/bin:$PATH
 
 install:
