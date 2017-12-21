@@ -1168,6 +1168,10 @@ legal:
     default: ''
 
 backups:
+  enable_backups:
+    default: true
+    shadowed_by_global: true
+    client: true
   readonly_mode_during_backup:
     default: false
   allow_restore:

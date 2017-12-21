@@ -68,7 +68,7 @@ export default Discourse.Route.extend({
         function(confirmed) {
           if (confirmed) {
             backup.destroy().then(function() {
-              self.controllerFor("adminBackupsIndex").removeObject(backup);
+              self.controllerFor("adminBackupsIndex").get('model').removeObject(backup);
             });
           }
         }
