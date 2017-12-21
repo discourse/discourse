@@ -26,7 +26,7 @@ export default {
     }
 
     // don't track links in quotes or in elided part
-    if ($link.parents('aside.quote,.elided').length) { return true; }
+    let tracking = $link.parents('aside.quote,.elided').length === 0;
 
     let href = $link.attr('href') || $link.data('href');
 
@@ -39,26 +39,31 @@ export default {
     const userId = $link.data('user-id') || $article.data('user-id');
     const ownLink = userId && (userId === Discourse.User.currentProp('id'));
 
-    let trackingUrl = Discourse.getURL('/clicks/track?url=' + encodeURIComponent(href));
+    let destUrl = href;
 
-    if (postId && !$link.data('ignore-post-id')) {
-      trackingUrl += "&post_id=" + encodeURI(postId);
-    }
-    if (topicId) {
-      trackingUrl += "&topic_id=" + encodeURI(topicId);
-    }
+    if (tracking) {
 
-    // Update badge clicks unless it's our own
-    if (!ownLink) {
-      const $badge = $('span.badge', $link);
-      if ($badge.length === 1) {
-        // don't update counts in category badge nor in oneboxes (except when we force it)
-        if (isValidLink($link)) {
-          const html = $badge.html();
-          const key = `${new Date().toLocaleDateString()}-${postId}-${href}`;
-          if (/^\d+$/.test(html) && !sessionStorage.getItem(key)) {
-            sessionStorage.setItem(key, true);
-            $badge.html(parseInt(html, 10) + 1);
+      destUrl = Discourse.getURL('/clicks/track?url=' + encodeURIComponent(href));
+
+      if (postId && !$link.data('ignore-post-id')) {
+        destUrl += "&post_id=" + encodeURI(postId);
+      }
+      if (topicId) {
+        destUrl += "&topic_id=" + encodeURI(topicId);
+      }
+
+      // Update badge clicks unless it's our own
+      if (!ownLink) {
+        const $badge = $('span.badge', $link);
+        if ($badge.length === 1) {
+          // don't update counts in category badge nor in oneboxes (except when we force it)
+          if (isValidLink($link)) {
+            const html = $badge.html();
+            const key = `${new Date().toLocaleDateString()}-${postId}-${href}`;
+            if (/^\d+$/.test(html) && !sessionStorage.getItem(key)) {
+              sessionStorage.setItem(key, true);
+              $badge.html(parseInt(html, 10) + 1);
+            }
           }
         }
       }
@@ -66,12 +71,12 @@ export default {
 
     // If they right clicked, change the destination href
     if (e.which === 3) {
-      $link.attr('href', Discourse.SiteSettings.track_external_right_clicks ? trackingUrl : href);
+      $link.attr('href', Discourse.SiteSettings.track_external_right_clicks ? destUrl : href);
       return true;
     }
 
     // if they want to open in a new tab, do an AJAX request
-    if (wantsNewWindow(e)) {
+    if (tracking && wantsNewWindow(e)) {
       ajax("/clicks/track", {
         data: {
           url: href,
@@ -109,7 +114,7 @@ export default {
     }
 
     // If we're on the same site, use the router and track via AJAX
-    if (DiscourseURL.isInternal(href) && !$link.hasClass('attachment')) {
+    if (tracking && DiscourseURL.isInternal(href) && !$link.hasClass('attachment')) {
       ajax("/clicks/track", {
         data: {
           url: href,
@@ -125,9 +130,9 @@ export default {
 
     // Otherwise, use a custom URL with a redirect
     if (Discourse.User.currentProp('external_links_in_new_tab')) {
-      window.open(trackingUrl, '_blank').focus();
+      window.open(destUrl, '_blank').focus();
     } else {
-      DiscourseURL.redirectTo(trackingUrl);
+      DiscourseURL.redirectTo(destUrl);
     }
 
     return false;
