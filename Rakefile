@@ -1,6 +1,5 @@
 #!/usr/bin/env rake
 require "rspec/core/rake_task"
-require "yard"
 require 'bundler'
 
 begin
@@ -14,13 +13,8 @@ end
 
 RSpec::Core::RakeTask.new(:spec)
 
-desc "Generate all of the docs"
-YARD::Rake::YardocTask.new do |config|
-  config.files = Dir["lib/**/*.rb"]
-end
-
-desc "Default: run tests and generate docs"
-task default: [ :spec, :yard ]
+desc "Default: run tests"
+task default: [ :spec ]
 
 task :server do
   require 'onebox/web'
