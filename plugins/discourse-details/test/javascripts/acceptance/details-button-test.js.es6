@@ -1,6 +1,12 @@
 import { acceptance } from "helpers/qunit-helpers";
+import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
 
-acceptance('Details Button', { loggedIn: true });
+acceptance('Details Button', {
+  loggedIn: true,
+  beforeEach: function() {
+    clearPopupMenuOptionsCallback();
+  }
+});
 
 function findTextarea() {
   return find(".d-editor-input")[0];
