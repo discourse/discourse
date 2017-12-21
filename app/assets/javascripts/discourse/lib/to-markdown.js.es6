@@ -234,9 +234,20 @@ class Tag {
   static table() {
     return class extends Tag.block("table") {
       decorate(text) {
-        text = super.decorate(text);
-        const splitterRow = text.split("|\n")[0].match(/\|/g).map(() => "| --- ").join("") + "|\n";
-        text = text.replace("|\n", "|\n" + splitterRow).replace(/\|\n{2,}\|/g, "|\n|");
+        text = super.decorate(text).replace(/\|\n{2,}\|/g, "|\n|");
+        const rows = text.trim().split("\n");
+        const pipes = rows[0].match(/\|/g);
+        const isValid = rows.length > 1 &&
+                        pipes.length > 2 &&
+                        rows.reduce((a, c) => a && c.match(/\|/g).length <= pipes.length);
+
+        if (!isValid) {
+          throw "Unsupported table format for Markdown conversion";
+        }
+
+        const splitterRow = pipes.slice(1).map(() => "| --- ").join("") + "|\n";
+        text = text.replace("|\n", "|\n" + splitterRow);
+
         return text;
       }
     };
