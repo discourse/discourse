@@ -17,23 +17,22 @@ acceptance("Topic Notifications button", {
 });
 
 QUnit.test("Updating topic notification level", assert => {
-  visit("/t/internationalization-localization/280");
+  const notificationOptions = selectKit("#topic-footer-buttons .topic-notifications-options");
 
-  const notificationOptions = "#topic-footer-buttons .topic-notifications-options";
+  visit("/t/internationalization-localization/280");
 
   andThen(() => {
     assert.ok(
-      exists(`${notificationOptions}`),
+      notificationOptions.exists(),
       "it should display the notification options button in the topic's footer"
     );
   });
 
-  expandSelectKit(notificationOptions);
-  selectKitSelectRow("3", { selector: notificationOptions});
+  notificationOptions.expand().selectRowByValue("3");
 
   andThen(() => {
     assert.equal(
-      selectKit(notificationOptions).selectedRow.name(),
+      notificationOptions.selectedRow().name(),
       "watching",
       "it should display the right notification level"
     );

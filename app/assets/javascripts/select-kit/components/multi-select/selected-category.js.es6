@@ -8,6 +8,7 @@ export default SelectedNameComponent.extend({
 
   @computed("content.originalContent")
   badge(category) {
-    return categoryBadgeHTML(category, {allowUncategorized: true, link: false}).htmlSafe();
+    return categoryBadgeHTML(category, { allowUncategorized: true, link: false })
+            .htmlSafe();
   }
 });

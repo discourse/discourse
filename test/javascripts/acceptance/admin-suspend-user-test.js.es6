@@ -33,6 +33,10 @@ QUnit.test("suspend a user - cancel", assert => {
 });
 
 QUnit.test("suspend, then unsuspend a user", assert => {
+  const suspendUntilCombobox = selectKit('.suspend-until .combobox');
+
+  visit("/admin/flags/active");
+
   visit("/admin/users/1234/regular");
 
   andThen(() => {
@@ -43,10 +47,9 @@ QUnit.test("suspend, then unsuspend a user", assert => {
 
   andThen(() => {
     assert.equal(find('.perform-suspend[disabled]').length, 1, 'disabled by default');
-
-    expandSelectKit('.suspend-until .combobox');
-    selectKitSelectRow('tomorrow', { selector: '.suspend-until .combobox'});
   });
+
+  suspendUntilCombobox.expand().selectRowByValue('tomorrow');
 
   fillIn('.suspend-reason', "for breaking the rules");
   fillIn('.suspend-message', "this is an email reason why");

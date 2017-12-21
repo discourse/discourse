@@ -11,15 +11,25 @@ componentTest('default', {
   },
 
   test(assert) {
-    expandSelectKit();
-
     andThen(() => {
-      assert.propEqual(selectKit().header.value(), 'bold,italic');
+      assert.propEqual(selectKit().header().title(), 'bold,italic');
+      assert.propEqual(selectKit().header().value(), 'bold,italic');
     });
   }
 });
 
-componentTest('with emptry string as value', {
+componentTest('with title', {
+  template: '{{list-setting title="test"}}',
+
+  test(assert) {
+    andThen(() => {
+      assert.propEqual(selectKit().header().title(), 'test');
+      assert.propEqual(selectKit().header().value(), null);
+    });
+  }
+});
+
+componentTest('with empty string as value', {
   template: '{{list-setting settingValue=settingValue}}',
 
   beforeEach() {
@@ -27,10 +37,8 @@ componentTest('with emptry string as value', {
   },
 
   test(assert) {
-    expandSelectKit();
-
     andThen(() => {
-      assert.equal(selectKit().header.el.find(".selected-name").length, 0);
+      assert.propEqual(selectKit().header().value(), null);
     });
   }
 });
@@ -43,10 +51,8 @@ componentTest('with only setting value', {
   },
 
   test(assert) {
-    expandSelectKit();
-
     andThen(() => {
-      assert.propEqual(selectKit().header.value(), 'bold,italic');
+      assert.propEqual(selectKit().header().value(), 'bold,italic');
     });
   }
 });
@@ -60,31 +66,31 @@ componentTest('interactions', {
   },
 
   test(assert) {
-    expandSelectKit();
+    const listSetting = selectKit();
 
-    selectKitSelectRow('underline');
+    listSetting.expand().selectRowByValue('underline');
 
     andThen(() => {
-      assert.propEqual(selectKit().header.value(), 'bold,italic,underline');
+      assert.propEqual(listSetting.header().value(), 'bold,italic,underline');
     });
 
-    selectKitFillInFilter('strike');
+    listSetting.fillInFilter('strike');
 
     andThen(() => {
-      assert.equal(selectKit().highlightedRow.name(), 'strike');
+      assert.equal(listSetting.highlightedRow().value(), 'strike');
     });
 
-    selectKit().keyboard.enter();
+    listSetting.keyboard().enter();
 
     andThen(() => {
-      assert.propEqual(selectKit().header.value(), 'bold,italic,underline,strike');
+      assert.propEqual(listSetting.header().value(), 'bold,italic,underline,strike');
     });
 
-    selectKit().keyboard.backspace();
-    selectKit().keyboard.backspace();
+    listSetting.keyboard().backspace();
+    listSetting.keyboard().backspace();
 
     andThen(() => {
-      assert.equal(this.get('choices').length, 3, 'it removes the created content from original list');
+      assert.equal(listSetting.header().value(), 'bold,italic,underline');
     });
   }
 });

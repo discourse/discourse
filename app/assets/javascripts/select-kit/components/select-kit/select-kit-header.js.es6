@@ -9,7 +9,8 @@ export default Ember.Component.extend({
     "label:aria-label",
     "ariaHasPopup:aria-haspopup",
     "label:title",
-    "value:data-value"
+    "value:data-value",
+    "name:data-name",
   ],
 
   ariaHasPopup: true,
@@ -23,10 +24,9 @@ export default Ember.Component.extend({
     return Ember.makeArray(icon).concat(icons).filter(i => !Ember.isEmpty(i));
   },
 
-  @computed("title", "computedContent.title", "name")
-  label(title, computedContentTitle, name) {
+  @computed("title", "name")
+  label(title, name) {
     if (title) return I18n.t(title).htmlSafe();
-    if (computedContentTitle) return computedContentTitle.htmlSafe();
     if (name) return name;
 
     return null;

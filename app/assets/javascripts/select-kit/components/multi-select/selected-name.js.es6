@@ -3,6 +3,8 @@ import computed from "ember-addons/ember-computed-decorators";
 export default Ember.Component.extend({
   attributeBindings: [
     "tabindex",
+    "content.name:aria-label",
+    "content.name:title",
     "content.name:data-name",
     "content.value:data-value",
     "guid:data-guid"

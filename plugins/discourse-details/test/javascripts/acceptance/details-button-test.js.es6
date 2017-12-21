@@ -7,10 +7,12 @@ function findTextarea() {
 }
 
 test('details button', (assert) => {
+  const popupMenu = selectKit('.toolbar-popup-menu-options');
+
   visit("/");
   click('#create-topic');
-  expandSelectKit('.toolbar-popup-menu-options');
-  selectKitSelectRow('insertDetails', { selector: '.toolbar-popup-menu-options'});
+
+  popupMenu.expand().selectRowByValue('insertDetails');
 
   andThen(() => {
     assert.equal(
@@ -28,8 +30,7 @@ test('details button', (assert) => {
     textarea.selectionEnd = textarea.value.length;
   });
 
-  expandSelectKit('.toolbar-popup-menu-options');
-  selectKitSelectRow('insertDetails', { selector: '.toolbar-popup-menu-options'});
+  popupMenu.expand().selectRowByValue('insertDetails');
 
   andThen(() => {
     assert.equal(
@@ -51,8 +52,7 @@ test('details button', (assert) => {
     textarea.selectionEnd = 28;
   });
 
-  expandSelectKit('.toolbar-popup-menu-options');
-  selectKitSelectRow('insertDetails', { selector: '.toolbar-popup-menu-options'});
+  popupMenu.expand().selectRowByValue('insertDetails');
 
   andThen(() => {
     assert.equal(
@@ -74,8 +74,7 @@ test('details button', (assert) => {
     textarea.selectionEnd = 29;
   });
 
-  expandSelectKit('.toolbar-popup-menu-options');
-  selectKitSelectRow('insertDetails', { selector: '.toolbar-popup-menu-options'});
+  popupMenu.expand().selectRowByValue('insertDetails');
 
   andThen(() => {
     assert.equal(
@@ -92,6 +91,7 @@ test('details button', (assert) => {
 
 test('details button surrounds all selected text in a single details block', (assert) => {
   const multilineInput = 'first line\n\nsecond line\n\nthird line';
+  const popupMenu = selectKit('.toolbar-popup-menu-options');
 
   visit("/");
   click('#create-topic');
@@ -103,8 +103,7 @@ test('details button surrounds all selected text in a single details block', (as
     textarea.selectionEnd = textarea.value.length;
   });
 
-  expandSelectKit('.toolbar-popup-menu-options');
-  selectKitSelectRow('insertDetails', { selector: '.toolbar-popup-menu-options'});
+  popupMenu.expand().selectRowByValue('insertDetails');
 
   andThen(() => {
     assert.equal(
