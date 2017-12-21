@@ -15,7 +15,7 @@
     .time,
     .delete-info {
       color: lighten($primary, 40%);
-      font-size: 0.8em;
+      font-size: 0.857em;
     }
 
     .group-member-info {
@@ -28,11 +28,13 @@
     display: flex;
     width: 100%;
     justify-content: space-between;
+    .group-post-title {
+      font-size: 1.143em;
+    }
   }
 
   .group-post-excerpt {
     margin: 1em 0;
-    font-size: 0.929em;
     word-wrap: break-word;
     color: $primary;
   }
@@ -45,13 +47,13 @@
   width: 100%;
 
   .group-info-name {
-    font-size: 1.4em;
+    font-size: 1.429em;
     font-weight: bold;
     color: $primary;
   }
 
   .group-info-full-name {
-    font-size: 1.2em;
+    font-size: 1.286em;
     color: dark-light-choose($primary-high, $secondary-low);
   }
 
