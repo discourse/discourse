@@ -4,7 +4,6 @@ require_dependency "admin_constraint"
 require_dependency "staff_constraint"
 require_dependency "homepage_constraint"
 require_dependency "permalink_constraint"
-require_dependency "route_format"
 
 Discourse::Application.routes.draw do
 
