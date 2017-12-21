@@ -378,11 +378,21 @@ export default Ember.Controller.extend({
     groupsMentioned(groups) {
       if (!this.get('model.creatingPrivateMessage') && !this.get('model.topic.isPrivateMessage')) {
         groups.forEach(group => {
-          const body = I18n.t('composer.group_mentioned', {
-            group: "@" + group.name,
-            count: group.user_count,
-            group_link: Discourse.getURL(`/groups/${group.name}/members`)
-          });
+          let body;
+
+          if (group.max_mentions < group.user_count) {
+            body = I18n.t('composer.group_mentioned_limit', {
+              group: "@" + group.name,
+              max: group.max_mentions,
+              group_link: Discourse.getURL(`/groups/${group.name}/members`)
+            });
+          } else {
+            body = I18n.t('composer.group_mentioned', {
+              group: "@" + group.name,
+              count: group.user_count,
+              group_link: Discourse.getURL(`/groups/${group.name}/members`)
+            });
+          }
 
           this.appEvents.trigger('composer-messages:create', {
             extraClass: 'custom-body',

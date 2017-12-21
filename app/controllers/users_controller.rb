@@ -248,7 +248,12 @@ class UsersController < ApplicationController
         Group.mentionable(current_user)
           .where(name: usernames)
           .pluck(:name, :user_count)
-          .map { |name, user_count| { name: name, user_count: user_count } }
+          .map do |name, user_count|
+          {
+            name: name,
+            user_count: user_count
+          }
+        end
       end
 
     usernames -= groups
@@ -267,7 +272,13 @@ class UsersController < ApplicationController
       .where(username_lower: usernames)
       .pluck(:username_lower)
 
-    render json: { valid: result, valid_groups: groups, mentionable_groups: mentionable_groups, cannot_see: cannot_see }
+    render json: {
+      valid: result,
+      valid_groups: groups,
+      mentionable_groups: mentionable_groups,
+      cannot_see: cannot_see,
+      max_users_notified_per_group_mention: SiteSetting.max_users_notified_per_group_mention
+    }
   end
 
   def render_available_true
