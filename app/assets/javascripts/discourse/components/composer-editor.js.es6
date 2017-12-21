@@ -363,7 +363,7 @@ export default Ember.Component.extend({
         const $e = $(e);
         var name = $e.data('name');
         if (found.indexOf(name) === -1){
-          this.sendAction('groupsMentioned', [{name: name, user_count: $e.data('mentionable-user-count')}]);
+          this.sendAction('groupsMentioned', [{name: name, user_count: $e.data('mentionable-user-count'), max_mentions: $e.data('max-mentions')}]);
           found.push(name);
         }
       });
