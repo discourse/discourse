@@ -1,4 +1,4 @@
-module RouteFormats
+module RouteFormat
 
   def self.username
     /[\w.\-]+?/
