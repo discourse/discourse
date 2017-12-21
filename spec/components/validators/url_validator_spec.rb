@@ -23,6 +23,8 @@ RSpec.describe UrlValidator do
   [
     "http://discourse.productions",
     "https://google.com",
+    'http://xn--nw2a.xn--j6w193g/',
+    "http://見.香港/",
   ].each do |valid_url|
     it "#{valid_url} should be valid" do
       record.website = valid_url
