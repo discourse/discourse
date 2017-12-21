@@ -5,6 +5,10 @@ require_dependency "staff_constraint"
 require_dependency "homepage_constraint"
 require_dependency "permalink_constraint"
 
+# The following constants have been replaced with `RouteFormat` and are deprecated.
+USERNAME_ROUTE_FORMAT = /[\w.\-]+?/ unless defined? USERNAME_ROUTE_FORMAT
+BACKUP_ROUTE_FORMAT = /.+\.(sql\.gz|tar\.gz|tgz)/i unless defined? BACKUP_ROUTE_FORMAT
+
 Discourse::Application.routes.draw do
 
   match "/404", to: "exceptions#not_found", via: [:get, :post]
