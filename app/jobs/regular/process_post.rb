@@ -38,7 +38,7 @@ module Jobs
         end
       end
 
-      if !post.user.staff? && !post.user.staged
+      if !post.user&.staff? && !post.user&.staged?
         s = post.cooked
         s << " #{post.topic.title}" if post.post_number == 1
         if !args[:bypass_bump] && WordWatcher.new(s).should_flag?
