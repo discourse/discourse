@@ -22,7 +22,7 @@ describe Onebox::Engine do
 
     it "escapes `link`" do
       html = OneboxEngineExample.new(%|http://foo.com/'?a=1&b=2|).to_html
-      expect(html).not_to match(/&(?!amp;)(?!#39;)/)
+      expect(html).not_to match(/'/)
     end
   end
 
