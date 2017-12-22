@@ -4,15 +4,20 @@ const trimLeft = text => text.replace(/^\s+/,"");
 const trimRight = text => text.replace(/\s+$/,"");
 
 class Tag {
-  constructor(name, prefix = "", suffix = "") {
+  constructor(name, prefix = "", suffix = "", inline = false) {
     this.name = name;
     this.prefix = prefix;
     this.suffix = suffix;
+    this.inline = inline;
   }
 
   decorate(text) {
     if (this.prefix || this.suffix) {
-      return [this.prefix, text, this.suffix].join("");
+      text = [this.prefix, text, this.suffix].join("");
+    }
+
+    if (this.inline) {
+      text = " " + text + " ";
     }
 
     return text;
@@ -69,7 +74,7 @@ class Tag {
   static emphasis(name, decorator) {
     return class extends Tag {
       constructor() {
-        super(name, decorator, decorator);
+        super(name, decorator, decorator, true);
       }
 
       decorate(text) {
@@ -112,7 +117,7 @@ class Tag {
   static link() {
     return class extends Tag {
       constructor() {
-        super("a");
+        super("a", "", "", true);
       }
 
       decorate(text) {
@@ -131,7 +136,7 @@ class Tag {
   static image() {
     return class extends Tag {
       constructor() {
-        super("img");
+        super("img", "", "", true);
       }
 
       toMarkdown() {
@@ -193,7 +198,7 @@ class Tag {
   static li() {
     return class extends Tag.slice("li", "\n") {
       decorate(text) {
-        const indent = this.element.filterParentNames(["ol", "ul"]).slice(1).map(() => "  ").join("");
+        const indent = this.element.filterParentNames(["ol", "ul"]).slice(1).map(() => "\t").join("");
         return super.decorate(`${indent}* ${trimLeft(text)}`);
       }
     };
@@ -209,6 +214,8 @@ class Tag {
         if (this.element.parentNames.includes("pre")) {
           this.prefix = '\n\n```\n';
           this.suffix = '\n```\n\n';
+        } else {
+          this.inline = true;
         }
 
         text = $('<textarea />').html(text).text();
@@ -256,7 +263,7 @@ class Tag {
     return class extends Tag.block("ol") {
       decorate(text) {
         text = "\n" + text;
-        const bullet = text.match(/\n *\*/)[0];
+        const bullet = text.match(/\n\t*\*/)[0];
 
         for (let i = parseInt(this.element.attributes.start || 1); text.includes(bullet); i++) {
           text = text.replace(bullet, bullet.replace("*", `${i}.`));
@@ -429,7 +436,7 @@ export default function toMarkdown(html) {
     const { elements, placeholders } = putPlaceholders(html);
     let markdown = Element.parse(elements).trim();
     markdown = markdown.replace(/^<b>/, "").replace(/<\/b>$/, "").trim(); // fix for google doc copy paste
-    markdown = markdown.replace(/ +\n/g, "\n").replace(/\n \n/g, "\n\n").replace(/\n{3,}/g, "\n\n");
+    markdown = markdown.replace(/\n +/g, "\n").replace(/ +\n/g, "\n").replace(/ {2,}/g, " ").replace(/\n{3,}/g, "\n\n").replace(/\t/g, "  ");
     return replacePlaceholders(markdown, placeholders);
   } catch(err) {
     return "";
