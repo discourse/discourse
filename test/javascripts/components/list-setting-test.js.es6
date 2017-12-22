@@ -12,8 +12,8 @@ componentTest('default', {
 
   test(assert) {
     andThen(() => {
-      assert.propEqual(selectKit().header().title(), 'bold,italic');
-      assert.propEqual(selectKit().header().value(), 'bold,italic');
+      assert.equal(selectKit().header().title(), 'bold,italic');
+      assert.equal(selectKit().header().value(), 'bold,italic');
     });
   }
 });
@@ -27,7 +27,7 @@ componentTest('with empty string as value', {
 
   test(assert) {
     andThen(() => {
-      assert.propEqual(selectKit().header().value(), null);
+      assert.equal(selectKit().header().value(), "");
     });
   }
 });
@@ -41,7 +41,7 @@ componentTest('with only setting value', {
 
   test(assert) {
     andThen(() => {
-      assert.propEqual(selectKit().header().value(), 'bold,italic');
+      assert.equal(selectKit().header().value(), 'bold,italic');
     });
   }
 });
@@ -60,7 +60,7 @@ componentTest('interactions', {
     listSetting.expand().selectRowByValue('underline');
 
     andThen(() => {
-      assert.propEqual(listSetting.header().value(), 'bold,italic,underline');
+      assert.equal(listSetting.header().value(), 'bold,italic,underline');
     });
 
     listSetting.fillInFilter('strike');
@@ -72,7 +72,7 @@ componentTest('interactions', {
     listSetting.keyboard().enter();
 
     andThen(() => {
-      assert.propEqual(listSetting.header().value(), 'bold,italic,underline,strike');
+      assert.equal(listSetting.header().value(), 'bold,italic,underline,strike');
     });
 
     listSetting.keyboard().backspace();

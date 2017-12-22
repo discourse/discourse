@@ -13,13 +13,9 @@ export default SelectKitHeaderComponent.extend({
   layoutName: "select-kit/templates/components/multi-select/multi-select-header",
   selectedNameComponent: Ember.computed.alias("options.selectedNameComponent"),
 
-  @computed("title", "names")
-  label(title, names) {
-    if (title) return I18n.t(title);
-    if (names) return names;
+  ariaLabel: Ember.computed.or("computedContent.ariaLabel", "title", "names"),
 
-    return null;
-  },
+  title: Ember.computed.or("computedContent.title", "names"),
 
   @on("didRender")
   _positionFilter() {

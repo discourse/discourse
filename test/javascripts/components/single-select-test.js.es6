@@ -522,7 +522,7 @@ componentTest('with onCollapse', {
 });
 
 componentTest('with title', {
-  template: '{{single-select title="test.title"}}',
+  template: '{{single-select title=(i18n "test.title")}}',
 
   beforeEach() {
     I18n.translations[I18n.locale].js.test = {title: 'My title'};

@@ -78,6 +78,7 @@ export default SelectKitComponent.extend({
 
   baseHeaderComputedContent() {
     return {
+      title: this.get("title"),
       icons: Ember.makeArray(this.getWithDefault("headerIcon", [])),
       value: this.get("selectedComputedContent.value"),
       name: this.get("selectedComputedContent.name") || this.get("noneRowComputedContent.name")

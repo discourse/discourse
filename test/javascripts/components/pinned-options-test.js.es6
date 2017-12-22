@@ -28,19 +28,13 @@ componentTest('updating the content refreshes the list', {
 
   test(assert) {
     andThen(() => {
-      assert.equal(
-        this.get('subject').header().name(),
-        "Pinned<i class='fa fa-caret-down d-icon d-icon-caret-down'></i>"
-      );
+      assert.equal(this.get('subject').header().name(), "pinned");
     });
 
     andThen(() => this.set("pinned", false));
 
     andThen(() => {
-      assert.equal(
-        this.get('subject').header().name(),
-        "Unpinned<i class='fa fa-caret-down d-icon d-icon-caret-down'></i>"
-      );
+      assert.equal(this.get('subject').header().name(), "unpinned");
     });
   }
 });

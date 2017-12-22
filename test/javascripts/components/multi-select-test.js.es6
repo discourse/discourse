@@ -22,7 +22,7 @@ componentTest('with objects and values', {
 });
 
 componentTest('with title', {
-  template: '{{multi-select title="test.title"}}',
+  template: '{{multi-select title=(i18n "test.title")}}',
 
   beforeEach() {
     I18n.translations[I18n.locale].js.test = {title: 'My title'};

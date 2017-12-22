@@ -116,6 +116,7 @@ export default SelectKitComponent.extend({
 
   baseHeaderComputedContent() {
     return {
+      title: this.get("title"),
       selectedComputedContents: this.get("selectedComputedContents")
     };
   },

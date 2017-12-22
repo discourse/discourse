@@ -33,15 +33,8 @@ QUnit.test("Updating topic notification level", assert => {
   andThen(() => {
     assert.equal(
       notificationOptions.selectedRow().name(),
-      "watching",
+      "Watching",
       "it should display the right notification level"
     );
-
-    // This test is failing in headless mode
-    // assert.equal(
-    //   find(`.timeline-footer-controls .select-kit-header`).data().name,
-    //   'Watching',
-    //   'it should display the right notification level in topic timeline'
-    // );
   });
 });
