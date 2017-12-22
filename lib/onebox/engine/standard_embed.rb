@@ -122,9 +122,12 @@ module Onebox
           favicon = html_doc.css('link[rel="shortcut icon"], link[rel="icon shortcut"], link[rel="shortcut"], link[rel="icon"]').first
           favicon = favicon.nil? ? nil : (favicon['href'].nil? ? nil : favicon['href'].strip)
 
-          if favicon && favicon.match(/^https?:\/\//i).nil?
+          if favicon && !!(favicon =~ /^\/\//)
             uri = URI(url)
-            favicon = uri.scheme + "://" + uri.host.sub(/\/$/, "") + "/" + favicon.sub(/^\//, "")
+            favicon = "#{uri.scheme}:#{favicon}"
+          elsif favicon && favicon.match(/^https?:\/\//i).nil?
+            uri = URI(url)
+            favicon = "#{uri.scheme}://#{uri.host.sub(/\/$/, '')}/#{favicon.sub(/^\//, '')}"
           end
 
           favicon
