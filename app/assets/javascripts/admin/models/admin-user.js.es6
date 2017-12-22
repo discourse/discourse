@@ -168,6 +168,14 @@ const AdminUser = Discourse.User.extend({
     }).catch(popupAjaxError);
   },
 
+  disableSecondFactor() {
+    return ajax("/admin/users/" + this.get('id') + "/disable_second_factor", {
+      type: 'PUT'
+    }).then(() => {
+      this.set('second_factor_enabled', false);
+    }).catch(popupAjaxError);
+  },
+
   refreshBrowsers() {
     return ajax("/admin/users/" + this.get('id') + "/refresh_browsers", {
       type: 'POST'

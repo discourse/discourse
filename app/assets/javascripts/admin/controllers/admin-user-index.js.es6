@@ -41,6 +41,11 @@ export default Ember.Controller.extend(CanCheckEmails, {
     return userPath(`${username}/preferences`);
   },
 
+  @computed('model.second_factor_enabled','model.can_disable_second_factor')
+  canDisableSecondFactor(secondFactorEnabled, canDisableSecondFactor) {
+    return secondFactorEnabled && canDisableSecondFactor;
+  },
+
   actions: {
 
     impersonate() { return this.get("model").impersonate(); },
@@ -63,6 +68,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
     deleteAllPosts() { return this.get("model").deleteAllPosts(); },
     anonymize() { return this.get('model').anonymize(); },
     destroy() { return this.get('model').destroy(); },
+    disableSecondFactor() { return this.get('model').disableSecondFactor(); },
 
     viewActionLogs() {
       this.get('adminTools').showActionLogs(this, {

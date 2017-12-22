@@ -33,6 +33,21 @@ class UsersEmailController < ApplicationController
 
   def confirm
     expires_now
+    token = EmailToken.confirmable params[:token]
+    change_req = token&.user&.email_change_requests
+      &.where('new_email_token_id = :token_id', token_id: token.id)
+      &.first
+    if change_req.try(:change_state) == EmailChangeRequest.states[:authorizing_new] &&
+       !EmailToken.second_factor_valid(params[:token], params[:second_factor_token])
+      @update_result = :invalid_second_factor
+      if params[:second_factor_token].present?
+        RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
+        @show_invalid_second_factor_error = true
+      end
+      render layout: 'no_ember'
+      return
+    end
+
     updater = EmailUpdater.new
     @update_result = updater.confirm(params[:token])
 
