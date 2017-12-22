@@ -1,5 +1,10 @@
 import componentTest from 'helpers/component-test';
-moduleForComponent('multi-select', {integration: true});
+moduleForComponent('multi-select', {
+  integration: true,
+  beforeEach: function() {
+    this.set('subject', selectKit());
+  }
+});
 
 componentTest('with objects and values', {
   template: '{{multi-select content=items values=values}}',
@@ -11,10 +16,23 @@ componentTest('with objects and values', {
 
   test(assert) {
     andThen(() => {
-      assert.propEqual(selectKit().header.name(), 'hello,world');
+      assert.equal(this.get('subject').header().value(), '1,2');
     });
   }
 });
+
+componentTest('with title', {
+  template: '{{multi-select title=(i18n "test.title")}}',
+
+  beforeEach() {
+    I18n.translations[I18n.locale].js.test = {title: 'My title'};
+  },
+
+  test(assert) {
+    andThen(() => assert.equal(selectKit().header().title(), 'My title') );
+  }
+});
+
 
 componentTest('interactions', {
   template: '{{multi-select none=none content=items values=values}}',
@@ -26,84 +44,104 @@ componentTest('interactions', {
   },
 
   test(assert) {
-    expandSelectKit();
+    this.get('subject').expand();
 
     andThen(() => {
-      assert.equal(selectKit().highlightedRow.name(), 'robin', 'it highlights the first content row');
+      assert.equal(
+        this.get('subject').highlightedRow().name(),
+        'robin',
+        'it highlights the first content row'
+      );
     });
 
     this.set('none', 'test.none');
 
     andThen(() => {
-      assert.equal(selectKit().noneRow.el.length, 1);
-      assert.equal(selectKit().highlightedRow.name(), 'robin', 'it highlights the first content row');
+      assert.ok(this.get('subject').noneRow().exists());
+      assert.equal(
+        this.get('subject').highlightedRow().name(),
+        'robin',
+        'it highlights the first content row'
+      );
     });
 
-    selectKitSelectRow(3);
+    this.get('subject').selectRowByValue(3);
 
     andThen(() => {
-      assert.equal(selectKit().highlightedRow.name(), 'none', 'it highlights none row if no content');
+      assert.equal(
+        this.get('subject').highlightedRow().name(),
+        'none',
+        'it highlights none row if no content'
+      );
     });
 
-    selectKitFillInFilter('joffrey');
+    this.get('subject').fillInFilter('joffrey');
 
     andThen(() => {
-      assert.equal(selectKit().highlightedRow.name(), 'joffrey', 'it highlights create row when filling filter');
+      assert.equal(
+        this.get('subject').highlightedRow().name(),
+        'joffrey',
+        'it highlights create row when filling filter'
+      );
     });
 
-    selectKit().keyboard.enter();
+    this.get('subject').keyboard().enter();
 
     andThen(() => {
-      assert.equal(selectKit().highlightedRow.name(), 'none', 'it highlights none row after creating content and no content left');
+      assert.equal(
+        this.get('subject').highlightedRow().name(),
+        'none',
+        'it highlights none row after creating content and no content left'
+      );
     });
 
-    selectKit().keyboard.backspace();
+    this.get('subject').keyboard().backspace();
 
     andThen(() => {
-      const $lastSelectedName = selectKit().header.el.find('.selected-name').last();
+      const $lastSelectedName = this.get('subject').header().el().find('.selected-name').last();
       assert.equal($lastSelectedName.attr('data-name'), 'joffrey');
       assert.ok($lastSelectedName.hasClass('is-highlighted'), 'it highlights the last selected name when using backspace');
     });
 
-    selectKit().keyboard.backspace();
+    this.get('subject').keyboard().backspace();
 
     andThen(() => {
-      const $lastSelectedName = selectKit().header.el.find('.selected-name').last();
+      const $lastSelectedName = this.get('subject').header().el().find('.selected-name').last();
       assert.equal($lastSelectedName.attr('data-name'), 'robin', 'it removes the previous highlighted selected content');
-      assert.notOk(exists(selectKit().rowByValue('joffrey').el), 'generated content shouldn’t appear in content when removed');
+      assert.notOk(this.get('subject').rowByValue('joffrey').exists(), 'generated content shouldn’t appear in content when removed');
     });
 
-    selectKit().keyboard.selectAll();
+    this.get('subject').keyboard().selectAll();
 
     andThen(() => {
-      const $highlightedSelectedNames = selectKit().header.el.find('.selected-name.is-highlighted');
+      const $highlightedSelectedNames = this.get('subject').header().el().find('.selected-name.is-highlighted');
       assert.equal($highlightedSelectedNames.length, 3, 'it highlights each selected name');
     });
 
-    selectKit().keyboard.backspace();
+    this.get('subject').keyboard().backspace();
 
     andThen(() => {
-      const $selectedNames = selectKit().header.el.find('.selected-name');
+      const $selectedNames = this.get('subject').header().el().find('.selected-name');
       assert.equal($selectedNames.length, 0, 'it removed all selected content');
     });
 
     andThen(() => {
-      assert.ok(this.$(".select-kit").hasClass("is-focused"));
-      assert.ok(this.$(".select-kit").hasClass("is-expanded"));
+      assert.ok(this.get('subject').isFocused());
+      assert.ok(this.get('subject').isExpanded());
     });
 
-    selectKit().keyboard.escape();
+    this.get('subject').keyboard().escape();
 
     andThen(() => {
-      assert.ok(this.$(".select-kit").hasClass("is-focused"));
-      assert.notOk(this.$(".select-kit").hasClass("is-expanded"));
+      assert.ok(this.get('subject').isFocused());
+      assert.notOk(this.get('subject').isExpanded());
     });
 
-    selectKit().keyboard.escape();
+    this.get('subject').keyboard().escape();
 
     andThen(() => {
-      assert.notOk(this.$(".select-kit").hasClass("is-focused"));
-      assert.notOk(this.$(".select-kit").hasClass("is-expanded"));
+      assert.notOk(this.get('subject').isFocused());
+      assert.notOk(this.get('subject').isExpanded());
     });
   }
 });

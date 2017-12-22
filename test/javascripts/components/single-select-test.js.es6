@@ -2,7 +2,12 @@ import componentTest from 'helpers/component-test';
 import { withPluginApi } from 'discourse/lib/plugin-api';
 import { clearCallbacks } from 'select-kit/mixins/plugin-api';
 
-moduleForComponent('single-select', { integration: true });
+moduleForComponent('single-select', {
+  integration: true,
+  beforeEach: function() {
+    this.set('subject', selectKit());
+  }
+});
 
 componentTest('updating the content refreshes the list', {
   template: '{{single-select value=1 content=content}}',
@@ -12,10 +17,10 @@ componentTest('updating the content refreshes the list', {
   },
 
   test(assert) {
-    expandSelectKit();
+    this.get('subject').expand();
 
     andThen(() => {
-      assert.equal(selectKit().rowByValue(1).name(), "BEFORE");
+      assert.equal(this.get('subject').rowByValue(1).name(), "BEFORE");
     });
 
     andThen(() => {
@@ -23,7 +28,7 @@ componentTest('updating the content refreshes the list', {
     });
 
     andThen(() => {
-      assert.equal(selectKit().rowByValue(1).name(), "AFTER");
+      assert.equal(this.get('subject').rowByValue(1).name(), "AFTER");
     });
   }
 });
@@ -37,16 +42,16 @@ componentTest('accepts a value by reference', {
   },
 
   test(assert) {
-    expandSelectKit();
+    this.get('subject').expand();
 
     andThen(() => {
       assert.equal(
-        selectKit().selectedRow.name(), "robin",
+        this.get('subject').selectedRow().name(), "robin",
         "it highlights the row corresponding to the value"
       );
     });
 
-    selectKitSelectRow(1);
+    this.get('subject').selectRowByValue(1);
 
     andThen(() => {
       assert.equal(this.get("value"), 1, "it mutates the value");
@@ -58,7 +63,11 @@ componentTest('no default icon', {
   template: '{{single-select}}',
 
   test(assert) {
-    assert.equal(selectKit().header.icon().length, 0, "it doesn’t have an icon if not specified");
+    assert.equal(
+      this.get('subject').header().icon().length,
+      0,
+      "it doesn’t have an icon if not specified"
+    );
   }
 });
 
@@ -66,10 +75,10 @@ componentTest('default search icon', {
   template: '{{single-select filterable=true}}',
 
   test(assert) {
-    expandSelectKit();
+    this.get('subject').expand();
 
     andThen(() => {
-      assert.ok(exists(selectKit().filter.icon), "it has a the correct icon");
+      assert.ok(exists(this.get('subject').filter().icon()), "it has an icon");
     });
   }
 });
@@ -78,10 +87,10 @@ componentTest('with no search icon', {
   template: '{{single-select filterable=true filterIcon=null}}',
 
   test(assert) {
-    expandSelectKit();
+    this.get('subject').expand();
 
     andThen(() => {
-      assert.equal(selectKit().filter.icon().length, 0, "it has no icon");
+      assert.notOk(exists(this.get('subject').filter().icon()), "it has no icon");
     });
   }
 });
@@ -90,10 +99,13 @@ componentTest('custom search icon', {
   template: '{{single-select filterable=true filterIcon="shower"}}',
 
   test(assert) {
-    expandSelectKit();
+    this.get('subject').expand();
 
     andThen(() => {
-      assert.ok(selectKit().filter.icon().hasClass("fa-shower"), "it has a the correct icon");
+      assert.ok(
+        this.get('subject').filter().icon().hasClass("fa-shower"),
+        "it has a the correct icon"
+      );
     });
   }
 });
@@ -101,13 +113,13 @@ componentTest('custom search icon', {
 componentTest('is expandable', {
   template: '{{single-select}}',
   test(assert) {
-    expandSelectKit();
+    this.get('subject').expand();
 
-    andThen(() => assert.ok(selectKit().isExpanded) );
+    andThen(() => assert.ok(this.get('subject').isExpanded()) );
 
-    collapseSelectKit();
+    this.get('subject').collapse();
 
-    andThen(() => assert.notOk(selectKit().isExpanded) );
+    andThen(() => assert.notOk(this.get('subject').isExpanded()) );
   }
 });
 
@@ -120,10 +132,10 @@ componentTest('accepts custom value/name keys', {
   },
 
   test(assert) {
-    expandSelectKit();
+    this.get('subject').expand();
 
     andThen(() => {
-      assert.equal(selectKit().selectedRow.name(), "robin");
+      assert.equal(this.get('subject').selectedRow().name(), "robin");
     });
   }
 });
@@ -138,7 +150,7 @@ componentTest('doesn’t render collection content before first expand', {
   test(assert) {
     assert.notOk(exists(find(".select-kit-collection")));
 
-    expandSelectKit();
+    this.get('subject').expand();
 
     andThen(() => {
       assert.ok(exists(find(".select-kit-collection")));
@@ -154,7 +166,7 @@ componentTest('supports options to limit size', {
   },
 
   test(assert) {
-    expandSelectKit();
+    this.get('subject').expand();
 
     andThen(() => {
       const height = find(".select-kit-collection").height();
@@ -171,16 +183,20 @@ componentTest('dynamic headerText', {
   },
 
   test(assert) {
-    expandSelectKit();
+    this.get('subject').expand();
 
     andThen(() => {
-      assert.equal(selectKit().header.name(), "robin");
+      assert.equal(this.get('subject').header().name(), 'robin');
     });
 
-    selectKitSelectRow(2);
+    this.get('subject').selectRowByValue(2);
 
     andThen(() => {
-      assert.equal(selectKit().header.name(), "regis", "it changes header text");
+      assert.equal(
+        this.get('subject').header().name(),
+        'regis',
+        'it changes header text'
+      );
     });
   }
 });
@@ -196,9 +212,13 @@ componentTest('supports custom row template', {
   },
 
   test(assert) {
-    expandSelectKit();
+    this.get('subject').expand();
 
-    andThen(() => assert.equal(selectKit().rowByValue(1).el.html().trim(), "<b>robin</b>") );
+    andThen(() => {
+      assert.equal(
+        this.get('subject').rowByValue(1).el().html().trim(), "<b>robin</b>"
+      );
+    });
   }
 });
 
@@ -206,22 +226,25 @@ componentTest('supports converting select value to integer', {
   template: '{{single-select value=value content=content castInteger=true}}',
 
   beforeEach() {
-    this.set("value", 2);
-    this.set("content", [{ id: "1", name: "robin"}, {id: "2", name: "régis" }]);
+    this.set('value', 2);
+    this.set('content', [{ id: '1', name: 'robin'}, {id: '2', name: 'régis' }]);
   },
 
   test(assert) {
-    expandSelectKit();
+    this.get('subject').expand();
 
-    andThen(() => assert.equal(selectKit().selectedRow.name(), "régis") );
+    andThen(() => assert.equal(this.get('subject').selectedRow().name(), 'régis') );
 
     andThen(() => {
-      this.set("value", 3);
-      this.set("content", [{ id: "3", name: "jeff" }]);
+      this.set('value', 1);
     });
 
     andThen(() => {
-      assert.equal(selectKit().selectedRow.name(), "jeff", "it works with dynamic content");
+      assert.equal(
+        this.get('subject').selectedRow().name(),
+        'robin',
+        'it works with dynamic content'
+      );
     });
   }
 });
@@ -234,49 +257,41 @@ componentTest('supports keyboard events', {
   },
 
   test(assert) {
-    expandSelectKit();
-
-    selectKit().keyboard.down();
+    this.get('subject').expand().keyboard().down();
 
     andThen(() => {
-      assert.equal(selectKit().highlightedRow.title(), "regis", "the next row is highlighted");
+      assert.equal(this.get('subject').highlightedRow().title(), "regis", "the next row is highlighted");
     });
 
-    selectKit().keyboard.down();
+    this.get('subject').keyboard().down();
 
     andThen(() => {
-      assert.equal(selectKit().highlightedRow.title(), "robin", "it returns to the first row");
+      assert.equal(this.get('subject').highlightedRow().title(), "robin", "it returns to the first row");
     });
 
-    selectKit().keyboard.up();
+    this.get('subject').keyboard().up();
 
     andThen(() => {
-      assert.equal(selectKit().highlightedRow.title(), "regis", "it highlights the last row");
+      assert.equal(this.get('subject').highlightedRow().title(), "regis", "it highlights the last row");
     });
 
-    selectKit().keyboard.enter();
+    this.get('subject').keyboard().enter();
 
     andThen(() => {
-      assert.equal(selectKit().selectedRow.title(), "regis", "it selects the row when pressing enter");
-      assert.notOk(selectKit().isExpanded, "it collapses the select box when selecting a row");
+      assert.equal(this.get('subject').selectedRow().title(), "regis", "it selects the row when pressing enter");
+      assert.notOk(this.get('subject').isExpanded(), "it collapses the select box when selecting a row");
     });
 
-    expandSelectKit();
-
-    selectKit().keyboard.escape();
+    this.get('subject').expand().keyboard().escape();
 
     andThen(() => {
-      assert.notOk(selectKit().isExpanded, "it collapses the select box");
+      assert.notOk(this.get('subject').isExpanded(), "it collapses the select box");
     });
 
-    expandSelectKit();
-
-    selectKitFillInFilter("regis");
-
-    selectKit().keyboard.tab();
+    this.get('subject').expand().fillInFilter('regis').keyboard().tab();
 
     andThen(() => {
-      assert.notOk(selectKit().isExpanded, "it collapses the select box when selecting a row");
+      assert.notOk(this.get('subject').isExpanded(), "it collapses the select box when selecting a row");
     });
   }
 });
@@ -302,18 +317,18 @@ componentTest('support appending content through plugin api', {
 
   beforeEach() {
     withPluginApi('0.8.13', api => {
-      api.modifySelectKit("select-kit")
-         .appendContent([{ id: "2", name: "regis"}]);
+      api.modifySelectKit('select-kit')
+         .appendContent([{ id: '2', name: 'regis'}]);
     });
 
-    this.set("content", [{ id: "1", name: "robin"}]);
+    this.set('content', [{ id: '1', name: 'robin'}]);
   },
   test(assert) {
-    expandSelectKit();
+    this.get('subject').expand();
 
     andThen(() => {
-      assert.equal(selectKit().rows.length, 2);
-      assert.equal(selectKit().rows.eq(1).data("name"), "regis");
+      assert.equal(this.get('subject').rows().length, 2);
+      assert.equal(this.get('subject').rowByIndex(1).name(), 'regis');
     });
 
     andThen(() => clearCallbacks());
@@ -336,11 +351,11 @@ componentTest('support modifying content through plugin api', {
   },
 
   test(assert) {
-    expandSelectKit();
+    this.get('subject').expand();
 
     andThen(() => {
-      assert.equal(selectKit().rows.length, 3);
-      assert.equal(selectKit().rows.eq(1).data("name"), "sam");
+      assert.equal(this.get('subject').rows().length, 3);
+      assert.equal(this.get('subject').rowByIndex(1).name(), "sam");
     });
 
     andThen(() => clearCallbacks());
@@ -360,11 +375,11 @@ componentTest('support prepending content through plugin api', {
   },
 
   test(assert) {
-    expandSelectKit();
+    this.get('subject').expand();
 
     andThen(() => {
-      assert.equal(selectKit().rows.length, 2);
-      assert.equal(selectKit().rows.eq(0).data("name"), "regis");
+      assert.equal(this.get('subject').rows().length, 2);
+      assert.equal(this.get('subject').rowByIndex(0).name(), "regis");
     });
 
     andThen(() => clearCallbacks());
@@ -387,9 +402,7 @@ componentTest('support modifying on select behavior through plugin api', {
   },
 
   test(assert) {
-    expandSelectKit();
-
-    selectKitSelectRow(1);
+    this.get('subject').expand().selectRowByValue(1);
 
     andThen(() => {
       assert.equal(find(".on-select-test").html(), "1");
@@ -408,10 +421,10 @@ componentTest('with nameChanges', {
   },
 
   test(assert) {
-    expandSelectKit();
+    this.get('subject').expand();
 
     andThen(() => {
-      assert.equal(selectKit().header.name(), "robin");
+      assert.equal(this.get('subject').header().name(), "robin");
     });
 
     andThen(() => {
@@ -419,7 +432,7 @@ componentTest('with nameChanges', {
     });
 
     andThen(() => {
-      assert.equal(selectKit().header.name(), "robin2");
+      assert.equal(this.get('subject').header().name(), "robin2");
     });
   }
 });
@@ -433,10 +446,11 @@ componentTest('with null value', {
   },
 
   test(assert) {
-    expandSelectKit();
+    this.get('subject').expand();
 
     andThen(() => {
-      assert.equal(selectKit().header.name(), "robin");
+      assert.equal(this.get('subject').header().name(), "robin");
+      assert.equal(this.get('subject').header().value(), undefined);
     });
   }
 });
@@ -449,7 +463,8 @@ componentTest('with collection header', {
   },
 
   test(assert) {
-    expandSelectKit();
+    this.get('subject').expand();
+
     andThen(() => assert.ok(exists(".collection-header h2")));
   }
 });
@@ -463,7 +478,9 @@ componentTest('with onToggle', {
 
   test(assert) {
     andThen(() => assert.notOk(exists(".onToggleTest")));
-    expandSelectKit();
+
+    this.get('subject').expand();
+
     andThen(() => assert.ok(exists(".onToggleTest")));
   }
 });
@@ -477,7 +494,9 @@ componentTest('with onExpand', {
 
   test(assert) {
     andThen(() => assert.notOk(exists(".onExpandTest")));
-    expandSelectKit();
+
+    this.get('subject').expand();
+
     andThen(() => assert.ok(exists(".onExpandTest")));
   }
 });
@@ -491,9 +510,25 @@ componentTest('with onCollapse', {
 
   test(assert) {
     andThen(() => assert.notOk(exists(".onCollapseTest")));
-    expandSelectKit();
+
+    this.get('subject').expand();
+
     andThen(() => assert.notOk(exists(".onCollapseTest")));
-    collapseSelectKit();
+
+    this.get('subject').collapse();
+
     andThen(() => assert.ok(exists(".onCollapseTest")));
+  }
+});
+
+componentTest('with title', {
+  template: '{{single-select title=(i18n "test.title")}}',
+
+  beforeEach() {
+    I18n.translations[I18n.locale].js.test = {title: 'My title'};
+  },
+
+  test(assert) {
+    andThen(() => assert.equal(this.get('subject').header().title(), 'My title') );
   }
 });

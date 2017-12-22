@@ -30,7 +30,7 @@ QUnit.test("update some fields", assert => {
   savePreferences();
 
   click(".preferences-nav .nav-notifications a");
-  selectDropdown('.control-group.notifications select.combobox', 1440);
+  selectKit('.control-group.notifications .combo-box.duration').expand().selectRowByValue(1440);
   savePreferences();
 
   click(".preferences-nav .nav-categories a");

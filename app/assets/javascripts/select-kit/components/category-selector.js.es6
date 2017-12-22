@@ -7,9 +7,14 @@ export default MultiSelectComponent.extend({
   filterable: true,
   allowAny: false,
   rowComponent: "category-row",
+  categories: null,
+  blacklist: null,
 
   init() {
     this._super();
+
+    if (!this.get("categories")) this.set("categories", []);
+    if (!this.get("blacklist")) this.set("blacklist", []);
 
     this.get("headerComponentOptions").setProperties({
       selectedNameComponent: "multi-select/selected-category"

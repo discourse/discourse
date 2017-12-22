@@ -1,12 +1,16 @@
 import { acceptance } from "helpers/qunit-helpers";
 import { displayPollBuilderButton } from "discourse/plugins/poll/helpers/display-poll-builder-button";
 import { replaceCurrentUser } from "discourse/plugins/poll/helpers/replace-current-user";
+import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
 
 acceptance("Poll Builder - polls are enabled", {
   loggedIn: true,
   settings: {
     poll_enabled: true,
     poll_minimum_trust_level_to_create: 1
+  },
+  beforeEach: function() {
+    clearPopupMenuOptionsCallback();
   }
 });
 

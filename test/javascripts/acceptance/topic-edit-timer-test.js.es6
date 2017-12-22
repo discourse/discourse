@@ -2,32 +2,42 @@ import { acceptance } from 'helpers/qunit-helpers';
 acceptance('Topic - Edit timer', { loggedIn: true });
 
 QUnit.test('default', assert => {
+  const timerType = selectKit('.select-kit.timer-type');
+  const futureDateInputSelector = selectKit('.future-date-input-selector');
+
   visit('/t/internationalization-localization');
   click('.toggle-admin-menu');
   click('.topic-admin-status-update button');
 
   andThen(() => {
-    assert.equal(selectKit('.select-kit.timer-type').header.name(), 'Auto-Close Topic');
-    assert.equal(selectKit('.future-date-input-selector').header.name(), 'Select a timeframe');
+    assert.equal(futureDateInputSelector.header().title(), 'Select a timeframe');
+    assert.equal(futureDateInputSelector.header().value(), null);
   });
 
   click('#private-topic-timer');
 
   andThen(() => {
-    assert.equal(selectKit('.select-kit.timer-type').header.name(), 'Remind Me');
-    assert.equal(selectKit('.future-date-input-selector').header.name(), 'Select a timeframe');
+    assert.equal(timerType.header().title(), 'Remind Me');
+    assert.equal(timerType.header().value(), 'reminder');
+
+    assert.equal(futureDateInputSelector.header().title(), 'Select a timeframe');
+    assert.equal(futureDateInputSelector.header().value(), null);
   });
 });
 
 QUnit.test('autoclose - specific time', assert => {
+  const futureDateInputSelector = selectKit('.future-date-input-selector');
+
   visit('/t/internationalization-localization');
   click('.toggle-admin-menu');
   click('.topic-admin-status-update button');
-  expandSelectKit('.future-date-input-selector');
-  selectKitSelectRow('next_week', { selector: '.future-date-input-selector' });
+
+  futureDateInputSelector.expand().selectRowByValue('next_week');
 
   andThen(() => {
-    assert.equal(selectKit('.future-date-input-selector').header.name(), 'Next week');
+    assert.equal(futureDateInputSelector.header().title(), 'Next week');
+    assert.equal(futureDateInputSelector.header().value(), 'next_week');
+
     const regex = /will automatically close in/g;
     const html = find('.future-date-input .topic-status-info').html().trim();
     assert.ok(regex.test(html));
@@ -35,35 +45,44 @@ QUnit.test('autoclose - specific time', assert => {
 });
 
 QUnit.test('autoclose', assert => {
+  const futureDateInputSelector = selectKit('.future-date-input-selector');
+
   visit('/t/internationalization-localization');
   click('.toggle-admin-menu');
   click('.topic-admin-status-update button');
-  expandSelectKit('.future-date-input-selector');
 
-  selectKitSelectRow('next_week', { selector: '.future-date-input-selector' });
+  futureDateInputSelector.expand().selectRowByValue('next_week');
+
   andThen(() => {
-    assert.equal(selectKit('.future-date-input-selector').header.name(), 'Next week');
+    assert.equal(futureDateInputSelector.header().title(), 'Next week');
+    assert.equal(futureDateInputSelector.header().value(), 'next_week');
+
     const regex = /will automatically close in/g;
     const html = find('.future-date-input .topic-status-info').html().trim();
     assert.ok(regex.test(html));
   });
 
-  expandSelectKit('.future-date-input-selector');
-  selectKitSelectRow('pick_date_and_time', { selector: '.future-date-input-selector' });
+  futureDateInputSelector.expand().selectRowByValue('pick_date_and_time');
+
   fillIn('.future-date-input .date-picker', '2099-11-24');
 
   andThen(() => {
-    assert.equal(selectKit('.future-date-input-selector').header.name(), 'Pick date and time');
+    assert.equal(futureDateInputSelector.header().title(), 'Pick date and time');
+    assert.equal(futureDateInputSelector.header().value(), 'pick_date_and_time');
+
     const regex = /will automatically close in/g;
     const html = find('.future-date-input .topic-status-info').html().trim();
     assert.ok(regex.test(html));
   });
 
-  expandSelectKit('.future-date-input-selector');
-  selectKitSelectRow('set_based_on_last_post', { selector: '.future-date-input-selector' });
+  futureDateInputSelector.expand().selectRowByValue('set_based_on_last_post');
+
   fillIn('.future-date-input input[type=number]', '2');
+
   andThen(() => {
-    assert.equal(selectKit('.future-date-input-selector').header.name(), 'Close based on last post');
+    assert.equal(futureDateInputSelector.header().title(), 'Close based on last post');
+    assert.equal(futureDateInputSelector.header().value(), 'set_based_on_last_post');
+
     const regex = /This topic will close.*after the last reply/g;
     const html = find('.future-date-input .topic-status-info').html().trim();
     assert.ok(regex.test(html));
@@ -71,32 +90,39 @@ QUnit.test('autoclose', assert => {
 });
 
 QUnit.test('close temporarily', assert => {
+  const timerType = selectKit('.select-kit.timer-type');
+  const futureDateInputSelector = selectKit('.future-date-input-selector');
+
   visit('/t/internationalization-localization');
   click('.toggle-admin-menu');
   click('.topic-admin-status-update button');
 
-  expandSelectKit('.select-kit.timer-type');
-  selectKitSelectRow('open', { selector: '.select-kit.timer-type' });
+  timerType.expand().selectRowByValue('open');
 
   andThen(() => {
-    assert.equal(selectKit('.future-date-input-selector').header.name(), 'Select a timeframe');
+    assert.equal(futureDateInputSelector.header().title(), 'Select a timeframe');
+    assert.equal(futureDateInputSelector.header().value(), null);
   });
 
-  expandSelectKit('.future-date-input-selector');
-  selectKitSelectRow('next_week', { selector: '.future-date-input-selector' });
+  futureDateInputSelector.expand().selectRowByValue('next_week');
+
   andThen(() => {
-    assert.equal(selectKit('.future-date-input-selector').header.name(), 'Next week');
+    assert.equal(futureDateInputSelector.header().title(), 'Next week');
+    assert.equal(futureDateInputSelector.header().value(), 'next_week');
+
     const regex = /will automatically open in/g;
     const html = find('.future-date-input .topic-status-info').html().trim();
     assert.ok(regex.test(html));
   });
 
-  expandSelectKit('.future-date-input-selector');
-  selectKitSelectRow('pick_date_and_time', { selector: '.future-date-input-selector' });
+  futureDateInputSelector.expand().selectRowByValue('pick_date_and_time');
+
   fillIn('.future-date-input .date-picker', '2099-11-24');
 
   andThen(() => {
-    assert.equal(selectKit('.future-date-input-selector').header.name(), 'Pick date and time');
+    assert.equal(futureDateInputSelector.header().title(), 'Pick date and time');
+    assert.equal(futureDateInputSelector.header().value(), 'pick_date_and_time');
+
     const regex = /will automatically open in/g;
     const html = find('.future-date-input .topic-status-info').html().trim();
     assert.ok(regex.test(html));
@@ -104,26 +130,32 @@ QUnit.test('close temporarily', assert => {
 });
 
 QUnit.test('schedule', assert => {
+  const timerType = selectKit('.select-kit.timer-type');
+  const categoryChooser = selectKit('.modal-body .category-chooser');
+  const futureDateInputSelector = selectKit('.future-date-input-selector');
+
   visit('/t/internationalization-localization');
   click('.toggle-admin-menu');
   click('.topic-admin-status-update button');
 
-  expandSelectKit('.select-kit.timer-type');
-  selectKitSelectRow('publish_to_category', { selector: '.select-kit.timer-type' });
+  timerType.expand().selectRowByValue('publish_to_category');
 
   andThen(() => {
-    assert.equal(selectKit('.modal-body .category-chooser').header.name(), 'uncategorized');
-    assert.equal(selectKit('.future-date-input-selector').header.name(), 'Select a timeframe');
+    assert.equal(categoryChooser.header().title(), 'uncategorized');
+    assert.equal(categoryChooser.header().value(), null);
+
+    assert.equal(futureDateInputSelector.header().title(), 'Select a timeframe');
+    assert.equal(futureDateInputSelector.header().value(), null);
   });
 
-  expandSelectKit('.modal-body .category-chooser');
-  selectKitSelectRow('7', { selector: '.modal-body .category-chooser' });
+  categoryChooser.expand().selectRowByValue('7');
 
-  expandSelectKit('.future-date-input-selector');
-  selectKitSelectRow('next_week', { selector: '.future-date-input-selector' });
+  futureDateInputSelector.expand().selectRowByValue('next_week');
 
   andThen(() => {
-    assert.equal(selectKit('.future-date-input-selector').header.name(), 'Next week');
+    assert.equal(futureDateInputSelector.header().title(), 'Next week');
+    assert.equal(futureDateInputSelector.header().value(), 'next_week');
+
     const regex = /will be published to #dev/g;
     const text = find('.future-date-input .topic-status-info').text().trim();
     assert.ok(regex.test(text));
@@ -131,21 +163,26 @@ QUnit.test('schedule', assert => {
 });
 
 QUnit.test('auto delete', assert => {
+  const timerType = selectKit('.select-kit.timer-type');
+  const futureDateInputSelector = selectKit('.future-date-input-selector');
+
   visit('/t/internationalization-localization');
   click('.toggle-admin-menu');
   click('.topic-admin-status-update button');
 
-  expandSelectKit('.select-kit.timer-type');
-  selectKitSelectRow('delete', { selector: '.select-kit.timer-type' });
+  timerType.expand().selectRowByValue('delete');
 
   andThen(() => {
-    assert.equal(selectKit('.future-date-input-selector').header.name(), 'Select a timeframe');
+    assert.equal(futureDateInputSelector.header().title(), 'Select a timeframe');
+    assert.equal(futureDateInputSelector.header().value(), null);
   });
 
-  expandSelectKit('.future-date-input-selector');
-  selectKitSelectRow('two_weeks', { selector: '.future-date-input-selector' });
+  futureDateInputSelector.expand().selectRowByValue('two_weeks');
+
   andThen(() => {
-    assert.equal(selectKit('.future-date-input-selector').header.name(), 'Two Weeks');
+    assert.equal(futureDateInputSelector.header().title(), 'Two Weeks');
+    assert.equal(futureDateInputSelector.header().value(), 'two_weeks');
+
     const regex = /will be automatically deleted/g;
     const html = find('.future-date-input .topic-status-info').html().trim();
     assert.ok(regex.test(html));
