@@ -2,7 +2,19 @@ module DiscourseNarrativeBot
   class CertificateGenerator
     def initialize(user, date)
       @user = user
-      @date = I18n.l(Date.parse(date), format: :date_only)
+
+      date =
+        begin
+          Date.parse(date)
+        rescue ArgumentError => e
+          if e.message == 'invalid date'
+            Date.parse(Date.today.to_s)
+          else
+            raise e
+          end
+        end
+
+      @date = I18n.l(date, format: :date_only)
       @discobot_user = User.find(-2)
     end
 
