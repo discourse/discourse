@@ -35,7 +35,7 @@ class Tag {
 
   static blocks() {
     return ["address", "article", "aside", "dd", "div", "dl", "dt", "fieldset", "figcaption", "figure",
-            "footer", "form", "header", "hgroup", "hr", "main", "nav", "p", "pre", "section", "ul"];
+            "footer", "form", "header", "hgroup", "hr", "main", "nav", "p", "pre", "section"];
   }
 
   static headings() {
@@ -51,17 +51,18 @@ class Tag {
   }
 
   static trimmable() {
-    return [...Tag.blocks(), ...Tag.headings(), ...Tag.slices(), "li", "td", "th", "br", "hr", "blockquote", "table", "ol", "tr"];
+    return [...Tag.blocks(), ...Tag.headings(), ...Tag.slices(), "li", "td", "th", "br", "hr", "blockquote", "table", "ol", "tr", "ul"];
   }
 
   static block(name, prefix, suffix) {
     return class extends Tag {
       constructor() {
         super(name, prefix, suffix);
+        this.gap = "\n\n";
       }
 
       decorate(text) {
-        return `\n\n${this.prefix}${text}${this.suffix}\n\n`;
+        return `${this.gap}${this.prefix}${text}${this.suffix}${this.gap}`;
       }
     };
   }
@@ -259,8 +260,23 @@ class Tag {
     };
   }
 
+  static list(name) {
+    return class extends Tag.block(name) {
+      decorate(text) {
+        let smallGap = "";
+
+        if (this.element.filterParentNames(["li"]).length) {
+          this.gap = "";
+          smallGap = "\n";
+        }
+
+        return smallGap + super.decorate(trimRight(text));
+      }
+    };
+  }
+
   static ol() {
-    return class extends Tag.block("ol") {
+    return class extends Tag.list("ol") {
       decorate(text) {
         text = "\n" + text;
         const bullet = text.match(/\n\t*\*/)[0];
@@ -295,7 +311,7 @@ const tags = [
   Tag.cell("td"), Tag.cell("th"),
   Tag.replace("br", "\n"), Tag.replace("hr", "\n---\n"), Tag.replace("head", ""),
   Tag.keep("ins"), Tag.keep("del"), Tag.keep("small"), Tag.keep("big"),
-  Tag.li(), Tag.link(), Tag.image(), Tag.code(), Tag.blockquote(), Tag.table(), Tag.ol(), Tag.tr(),
+  Tag.li(), Tag.link(), Tag.image(), Tag.code(), Tag.blockquote(), Tag.table(), Tag.tr(), Tag.ol(), Tag.list("ul"),
 ];
 
 class Element {
