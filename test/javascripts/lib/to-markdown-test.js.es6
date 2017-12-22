@@ -93,7 +93,7 @@ QUnit.test("stripes unwanted inline tags", assert => {
   <p>Lorem ipsum <span>dolor sit amet, consectetur</span> <strike>elit.</strike></p>
   <p>Ut minim veniam, <label>quis nostrud</label> laboris <nisi> ut aliquip ex ea</nisi> commodo.</p>
   `;
-  const markdown = `Lorem ipsum dolor sit amet, consectetur ~~elit.~~\n\nUt minim veniam, quis nostrud laboris  ut aliquip ex ea commodo.`;
+  const markdown = `Lorem ipsum dolor sit amet, consectetur ~~elit.~~\n\nUt minim veniam, quis nostrud laboris ut aliquip ex ea commodo.`;
   assert.equal(toMarkdown(html), markdown);
 });
 
@@ -192,7 +192,7 @@ helloWorld();</code></pre>
   alert('    hello \t\t world    ');
     return;
 }
-helloWorld();</code> consectetur.`;
+helloWorld();</code>consectetur.`;
   output = `Lorem ipsum dolor sit amet, \`var helloWorld = () => {\n  alert('    hello \t\t world    ');\n    return;\n}\nhelloWorld();\` consectetur.`;
 
   assert.equal(toMarkdown(html), output);
