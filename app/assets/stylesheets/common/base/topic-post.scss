@@ -34,7 +34,7 @@
    }
  }
  .fa {
-   font-size: .786em;
+   font-size: .778em;
    margin-left: 3px;
    color: dark-light-choose($primary-medium, $secondary-medium);
  }
@@ -49,6 +49,30 @@
   h1, h2, h3, h4, h5, h6 { 
     margin: 30px 0 10px; 
     line-height: 1.25; 
+  }
+
+  h1 {
+    font-size: 1.714em;
+  }
+  
+  h2 {
+    font-size: 1.5em;
+  }
+  
+  h3 {
+    font-size: 1.286em;
+  }
+  
+  h4 {
+    font-size: 1.143em;
+  }
+  
+  h5 {
+    font-size: 1em;
+  }
+  
+  h6 {
+    font-size: .875em;
   }
   
   a { word-wrap: break-word; }
