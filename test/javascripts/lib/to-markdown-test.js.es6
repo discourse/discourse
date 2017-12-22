@@ -77,14 +77,14 @@ QUnit.test("converts ul list tag", assert => {
       Item 2
       <ul>
         <li>Sub Item 1</li>
-        <li>Sub Item 2</li>
-        <ul><li>Sub <i>Sub</i> Item 1</li><li>Sub <b>Sub</b> Item 2</li></ul>
+        <li><p>Sub Item 2</p></li>
+        <li>Sub Item 3<ul><li>Sub <i>Sub</i> Item 1</li><li>Sub <b>Sub</b> Item 2</li></ul></li>
       </ul>
     </li>
     <li>Item 3</li>
   </ul>
   `;
-  const markdown = `* Item 1\n* Item 2\n\n  * Sub Item 1\n  * Sub Item 2\n\n    * Sub *Sub* Item 1\n    * Sub **Sub** Item 2\n\n* Item 3`;
+  const markdown = `* Item 1\n* Item 2\n  * Sub Item 1\n  * Sub Item 2\n\n  * Sub Item 3\n    * Sub *Sub* Item 1\n    * Sub **Sub** Item 2\n* Item 3`;
   assert.equal(toMarkdown(html), markdown);
 });
 
@@ -221,12 +221,11 @@ QUnit.test("converts ol list tag", assert => {
       <ol start="100">
         <li>Sub Item 1</li>
         <li>Sub Item 2</li>
-        <ul><li>Sub <i>Sub</i> Item 1</li><li>Sub <b>Sub</b> Item 2</li></ul>
       </ol>
     </li>
     <li>Item 3</li>
   </ol>
   `;
-  const markdown = `Testing\n\n1. Item 1\n2. Item 2\n\n  100. Sub Item 1\n  101. Sub Item 2\n\n    * Sub *Sub* Item 1\n    * Sub **Sub** Item 2\n\n3. Item 3`;
+  const markdown = `Testing\n\n1. Item 1\n2. Item 2\n  100. Sub Item 1\n  101. Sub Item 2\n3. Item 3`;
   assert.equal(toMarkdown(html), markdown);
 });
