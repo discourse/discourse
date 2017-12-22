@@ -38,15 +38,15 @@ class Tag {
   }
 
   static emphases() {
-    return  [ ["b", "**"], ["strong", "**"], ["i", "_"], ["em", "_"], ["s", "~~"], ["strike", "~~"] ];
+    return  [ ["b", "**"], ["strong", "**"], ["i", "*"], ["em", "*"], ["s", "~~"], ["strike", "~~"] ];
   }
 
   static slices() {
-    return ["dt", "dd", "tr", "thead", "tbody", "tfoot"];
+    return ["dt", "dd", "thead", "tbody", "tfoot"];
   }
 
   static trimmable() {
-    return [...Tag.blocks(), ...Tag.headings(), ...Tag.slices(), "li", "td", "th", "br", "hr", "blockquote", "table", "ol"];
+    return [...Tag.blocks(), ...Tag.headings(), ...Tag.slices(), "li", "td", "th", "br", "hr", "blockquote", "table", "ol", "tr"];
   }
 
   static block(name, prefix, suffix) {
@@ -73,14 +73,17 @@ class Tag {
       }
 
       decorate(text) {
-        text = text.trim();
-
         if (text.includes("\n")) {
           this.prefix = `<${this.name}>`;
           this.suffix = `</${this.name}>`;
         }
 
-        return super.decorate(text);
+        let space = text.match(/^\s/) || [""];
+        this.prefix = space[0] + this.prefix;
+        space = text.match(/\s$/) || [""];
+        this.suffix = this.suffix + space[0];
+
+        return super.decorate(text.trim());
       }
     };
   }
@@ -182,10 +185,6 @@ class Tag {
           throw "Unsupported format inside Markdown table cells";
         }
 
-        if (!this.element.next) {
-          this.suffix = "|";
-        }
-
         return this.decorate(text);
       }
     };
@@ -268,6 +267,17 @@ class Tag {
     };
   }
 
+  static tr() {
+    return class extends Tag.slice("tr", "|\n") {
+      decorate(text) {
+        if (!this.element.next) {
+          this.suffix = "|";
+        }
+        return `${text}${this.suffix}`;
+      }
+    };
+  }
+
 }
 
 const tags = [
@@ -278,7 +288,7 @@ const tags = [
   Tag.cell("td"), Tag.cell("th"),
   Tag.replace("br", "\n"), Tag.replace("hr", "\n---\n"), Tag.replace("head", ""),
   Tag.keep("ins"), Tag.keep("del"), Tag.keep("small"), Tag.keep("big"),
-  Tag.li(), Tag.link(), Tag.image(), Tag.code(), Tag.blockquote(), Tag.table(),, Tag.ol(),
+  Tag.li(), Tag.link(), Tag.image(), Tag.code(), Tag.blockquote(), Tag.table(), Tag.ol(), Tag.tr(),
 ];
 
 class Element {
@@ -375,6 +385,19 @@ class Element {
   }
 }
 
+function trimUnwantedSpaces(html) {
+  const body = html.match(/<body[^>]*>([\s\S]*?)<\/body>/);
+  html = body ? body[1] : html;
+  html = html.replace(/\r|\n|&nbsp;/g, " ");
+
+  let match;
+  while (match = html.match(/<[^\s>]+[^>]*>\s{2,}<[^\s>]+[^>]*>/)) {
+    html = html.replace(match[0], match[0].replace(/>\s{2,}</, "> <"));
+  }
+
+  return html;
+}
+
 function putPlaceholders(html) {
   const codeRegEx = /<code[^>]*>([\s\S]*?)<\/code>/gi;
   const origHtml = html;
@@ -390,7 +413,7 @@ function putPlaceholders(html) {
     match = codeRegEx.exec(origHtml);
   }
 
-  const elements = parseHTML(html);
+  const elements = parseHTML(trimUnwantedSpaces(html));
   return { elements, placeholders };
 }
 
@@ -406,7 +429,7 @@ export default function toMarkdown(html) {
     const { elements, placeholders } = putPlaceholders(html);
     let markdown = Element.parse(elements).trim();
     markdown = markdown.replace(/^<b>/, "").replace(/<\/b>$/, "").trim(); // fix for google doc copy paste
-    markdown = markdown.replace(/\r/g, "").replace(/\n \n/g, "\n\n").replace(/\n{3,}/g, "\n\n");
+    markdown = markdown.replace(/ +\n/g, "\n").replace(/\n \n/g, "\n\n").replace(/\n{3,}/g, "\n\n");
     return replacePlaceholders(markdown, placeholders);
   } catch(err) {
     return "";

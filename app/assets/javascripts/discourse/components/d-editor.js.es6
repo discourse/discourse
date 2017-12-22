@@ -662,8 +662,6 @@ export default Ember.Component.extend({
       if (table) {
         this.appEvents.trigger('composer:insert-text', table);
         handled = true;
-      } else if (html && html.includes("urn:schemas-microsoft-com:office:word")) {
-        html = ""; // use plain text data for microsoft word
       }
     }
 
