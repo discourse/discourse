@@ -542,6 +542,29 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_poll)
         end
       end
+
+      describe 'when poll is disabled' do
+        before do
+          SiteSetting.poll_enabled = false
+        end
+
+        it 'should create the right reply' do
+          TopicUser.change(
+            user.id,
+            topic.id,
+            notification_level: TopicUser.notification_levels[:tracking]
+          )
+
+          expected_raw = <<~RAW
+            #{I18n.t('discourse_narrative_bot.advanced_user_narrative.change_topic_notification_level.reply', base_uri: '')}
+
+            #{I18n.t('discourse_narrative_bot.advanced_user_narrative.details.instructions', base_uri: '')}
+          RAW
+
+          expect(Post.last.raw).to eq(expected_raw.chomp)
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_details)
+        end
+      end
     end
 
     context 'poll tutorial' do
