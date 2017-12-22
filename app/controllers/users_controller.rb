@@ -470,12 +470,21 @@ class UsersController < ApplicationController
       end
     end
 
+    if @user && (!SecondFactorHelper.totp_enabled?(@user) || SecondFactorHelper.authenticate(@user, params[:second_factor_token]))
+      secure_session["second-factor-#{token}"] = "true"
+    end
+    @valid_second_factor = secure_session["second-factor-#{token}"] == "true"
+
     if !@user
       @error = I18n.t('password_reset.no_token')
     elsif request.put?
       @invalid_password = params[:password].blank? || params[:password].length > User.max_password_length
 
-      if @invalid_password
+      if !@valid_second_factor
+        RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
+        @user.errors.add(:second_factor, :invalid)
+        @error = I18n.t('login.invalid_second_factor_code')
+      elsif @invalid_password
         @user.errors.add(:password, :invalid)
       else
         @user.password = params[:password]
@@ -484,6 +493,7 @@ class UsersController < ApplicationController
         if @user.save
           Invite.invalidate_for_email(@user.email) # invite link can't be used to log in anymore
           secure_session["password-#{token}"] = nil
+          secure_session["second-factor-#{token}"] = nil
           logon_after_password_reset
         end
       end
@@ -496,7 +506,7 @@ class UsersController < ApplicationController
         else
           store_preloaded(
             "password_reset",
-            MultiJson.dump(is_developer: UsernameCheckerService.is_developer?(@user.email), admin: @user.admin?)
+            MultiJson.dump(is_developer: UsernameCheckerService.is_developer?(@user.email), admin: @user.admin?, second_factor_required: !@valid_second_factor)
           )
         end
         return redirect_to(wizard_path) if request.put? && Wizard.user_requires_completion?(@user)
@@ -521,7 +531,7 @@ class UsersController < ApplicationController
             }
           end
         else
-          render json: { is_developer: UsernameCheckerService.is_developer?(@user.email), admin: @user.admin? }
+          render json: { is_developer: UsernameCheckerService.is_developer?(@user.email), admin: @user.admin?, second_factor_required: !@valid_second_factor }
         end
       end
     end
@@ -550,7 +560,7 @@ class UsersController < ApplicationController
   def admin_login
     return redirect_to(path("/")) if current_user
 
-    if request.put?
+    if request.put? && params[:email].present?
       RateLimiter.new(nil, "admin-login-hr-#{request.remote_ip}", 6, 1.hour).performed!
       RateLimiter.new(nil, "admin-login-min-#{request.remote_ip}", 3, 1.minute).performed!
 
@@ -563,13 +573,20 @@ class UsersController < ApplicationController
       end
     elsif params[:token].present?
       if EmailToken.valid_token_format?(params[:token])
-        @user = EmailToken.confirm(params[:token])
-
-        if @user&.admin?
-          log_on_user(@user)
-          return redirect_to path("/")
+        if params[:second_factor_token].present?
+          RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
+        end
+        if EmailToken.second_factor_valid(params[:token], params[:second_factor_token])
+          @user = EmailToken.confirm(params[:token])
+          if @user && @user.admin?
+            log_on_user(@user)
+            return redirect_to path("/")
+          else
+            @message = I18n.t("admin_login.errors.unknown_email_address")
+          end
         else
-          @message = I18n.t("admin_login.errors.unknown_email_address")
+          @second_factor_required = true
+          @message = I18n.t("login.second_factor_title")
         end
       else
         @message = I18n.t("admin_login.errors.invalid_token")

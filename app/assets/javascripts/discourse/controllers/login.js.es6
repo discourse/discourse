@@ -31,6 +31,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
     this.set('authenticate', null);
     this.set('loggingIn', false);
     this.set('loggedIn', false);
+    this.set('secondFactorRequired', false);
+    $("#credentials").show();
+    $("#second-factor").hide();
   },
 
   // Determines whether at least one login button is enabled
@@ -67,12 +70,19 @@ export default Ember.Controller.extend(ModalFunctionality, {
       this.set('loggingIn', true);
 
       ajax("/session", {
-        data: { login: this.get('loginName'), password: this.get('loginPassword') },
+        data: { login: this.get('loginName'), password: this.get('loginPassword'), second_factor_token: this.get('loginSecondFactor') },
         type: 'POST'
       }).then(function (result) {
         // Successful login
         if (result && result.error) {
           self.set('loggingIn', false);
+          if(result.reason === 'invalid_second_factor' && !self.get('secondFactorRequired')) {
+            $('#modal-alert').hide();
+            self.set('secondFactorRequired', true);
+            $("#credentials").hide();
+            $("#second-factor").show();
+            return;
+          }
           if (result.reason === 'not_activated') {
             self.send('showNotActivated', {
               username: self.get('loginName'),

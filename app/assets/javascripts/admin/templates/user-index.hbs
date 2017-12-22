@@ -156,6 +156,22 @@
       </div>
     </div>
   {{/if}}
+
+  <div class='display-row'>
+    <div class='field'>{{i18n 'user.second_factor.title'}}</div>
+    <div class='value'>
+      {{#if model.second_factor_enabled}}
+        {{i18n "yes_value"}}
+      {{else}}
+        {{i18n "no_value"}}
+      {{/if}}
+    </div>
+    <div class='controls'>
+      {{#if canDisableSecondFactor}}
+        {{d-button action="disableSecondFactor" icon="unlock-alt" label="user.second_factor.disable"}}
+      {{/if}}
+    </div>
+  </div>
 </section>
 
 {{#if userFields}}
