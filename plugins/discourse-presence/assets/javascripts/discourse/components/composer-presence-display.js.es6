@@ -73,6 +73,7 @@ export default Ember.Component.extend({
       previous: this.get('previousState'),
       current: this.get('currentState')
     }).then(r => {
+      if (this.get('isDestroyed')) { return; }
       this.set('presenceUsers', r.users);
       this.set('channel', r.messagebus_channel);
       this.messageBus.subscribe(r.messagebus_channel, message => {
