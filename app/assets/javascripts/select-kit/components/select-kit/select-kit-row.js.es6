@@ -11,23 +11,35 @@ export default Ember.Component.extend(UtilsMixin, {
   attributeBindings: [
     "tabIndex",
     "title",
-    "computedContent.value:data-value",
-    "computedContent.name:data-name"
+    "value:data-value",
+    "name:data-name",
+    "ariaLabel:aria-label"
   ],
   classNameBindings: ["isHighlighted", "isSelected"],
 
-  @computed("computedContent.title", "computedContent.name")
-  title(title, name) { return title || name; },
+  ariaLabel: Ember.computed.or("computedContent.ariaLabel", "title"),
+
+  @computed("computedContent.title", "name")
+  title(computedContentTitle, name) {
+    if (computedContentTitle) return computedContentTitle;
+    if (name) return name;
+
+    return null;
+  },
+
+  label: Ember.computed.or("computedContent.label", "title", "name"),
+
+  name: Ember.computed.alias("computedContent.name"),
+
+  value: Ember.computed.alias("computedContent.value"),
 
   @computed("templateForRow")
   template(templateForRow) { return templateForRow(this); },
 
   @on("didReceiveAttrs")
   _setSelectionState() {
-    const contentValue = this.get("computedContent.value");
-
-    this.set("isSelected", this.get("computedValue") === contentValue);
-    this.set("isHighlighted", this.get("highlightedValue") === contentValue);
+    this.set("isSelected", this.get("computedValue") === this.get("value"));
+    this.set("isHighlighted", this.get("highlightedValue") === this.get("value"));
   },
 
   @on("willDestroyElement")

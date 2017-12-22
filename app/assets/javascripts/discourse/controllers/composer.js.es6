@@ -49,6 +49,10 @@ function loadDraft(store, opts) {
 
 const _popupMenuOptionsCallbacks = [];
 
+export function clearPopupMenuOptionsCallback() {
+  _popupMenuOptionsCallbacks.length = 0;
+}
+
 export function addPopupMenuOptionsCallback(callback) {
   _popupMenuOptionsCallbacks.push(callback);
 }

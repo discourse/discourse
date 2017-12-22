@@ -10,7 +10,12 @@ const buildTopic = function() {
   });
 };
 
-moduleForComponent('pinned-options', { integration: true });
+moduleForComponent('pinned-options', {
+  integration: true,
+  beforeEach: function() {
+    this.set('subject', selectKit());
+  }
+});
 
 componentTest('updating the content refreshes the list', {
   template: '{{pinned-options value=pinned topic=topic}}',
@@ -22,14 +27,14 @@ componentTest('updating the content refreshes the list', {
   },
 
   test(assert) {
-    expandSelectKit();
-
-    andThen(() => assert.equal(selectKit().header.name(), "Pinned") );
+    andThen(() => {
+      assert.equal(this.get('subject').header().name(), "pinned");
+    });
 
     andThen(() => this.set("pinned", false));
 
     andThen(() => {
-      assert.equal(selectKit().header.name(), "Unpinned");
+      assert.equal(this.get('subject').header().name(), "unpinned");
     });
   }
 });
