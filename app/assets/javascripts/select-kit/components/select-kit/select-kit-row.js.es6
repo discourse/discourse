@@ -11,6 +11,7 @@ export default Ember.Component.extend(UtilsMixin, {
   attributeBindings: [
     "tabIndex",
     "title",
+    "title:aria-label",
     "computedContent.value:data-value",
     "computedContent.name:data-name"
   ],
