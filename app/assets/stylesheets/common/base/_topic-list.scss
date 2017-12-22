@@ -174,7 +174,7 @@
   }
   td.stats {
     .unit {
-      font-size: .857em;
+      font-size: .875em;
     }
   }
 
@@ -183,7 +183,7 @@
         padding: 2px;
         vertical-align: bottom;
         line-height: 24px;
-        &.value { text-align: right; font-size: 1.429em; }
+        &.value { text-align: right; font-size: 1.5em; }
         &.unit  { text-align: left; }
       }
     }
@@ -310,7 +310,7 @@ ol.category-breadcrumb {
     outline: 0;
     background: transparent;
     border: 0;
-    font-size: 1.429em;
+    font-size: 1.5em;
     padding: 5px 10px 0 10px;
   }
 
