@@ -236,14 +236,13 @@ componentTest('supports converting select value to integer', {
     andThen(() => assert.equal(this.get('subject').selectedRow().name(), 'régis') );
 
     andThen(() => {
-      this.set('value', 3);
-      this.set('content', [{ id: '3', name: 'jeff' }]);
+      this.set('value', 1);
     });
 
     andThen(() => {
       assert.equal(
         this.get('subject').selectedRow().name(),
-        'jeff',
+        'robin',
         'it works with dynamic content'
       );
     });

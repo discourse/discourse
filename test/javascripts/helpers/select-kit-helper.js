@@ -77,10 +77,10 @@ function selectKit(selector) { // eslint-disable-line no-unused-vars
     };
   }
 
-  function keyboardHelper(selector) {
+  function keyboardHelper(eventSelector) {
     function createEvent(target, keyCode, options) {
       target = target || ".filter-input";
-      selector = find(selector).find(target);
+      eventSelector = find(eventSelector).find(target);
       options = options || {};
 
       andThen(function() {
@@ -88,7 +88,7 @@ function selectKit(selector) { // eslint-disable-line no-unused-vars
         var event = jQuery.Event(type);
         event.keyCode = keyCode;
         if (options && options.metaKey === true) { event.metaKey = true; }
-        find(selector).trigger(event);
+        find(eventSelector).trigger(event);
       });
     }
 
