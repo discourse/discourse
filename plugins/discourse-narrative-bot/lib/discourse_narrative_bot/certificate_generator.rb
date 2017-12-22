@@ -568,6 +568,8 @@ module DiscourseNarrativeBot
       end
 
       def logo_group(size, width, height)
+        return unless SiteSetting.logo_small_url.present?
+
         begin
           uri = URI(SiteSetting.logo_small_url)
 
