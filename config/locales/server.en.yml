@@ -1783,6 +1783,10 @@ en:
     auth_complete: "Authentication is complete."
     click_to_continue: "Click here to continue."
     already_logged_in: "Oops, looks like you are attempting to accept an invitation for another user. If you are not %{current_user}, please log out and try again."
+    second_factor_title: "2-Step Verification Required"
+    second_factor_description: "Enter a generated verification code."
+    invalid_second_factor_code: "Invalid 2-Step Verification Code"
+    submit: "Submit"
 
   user:
     no_accounts_associated: "No accounts associated"
@@ -2728,6 +2732,15 @@ en:
 
         If you have any questions, [contact our friendly staff](%{base_url}/about).
 
+
+
+    account_second_factor_disabled:
+      title: "2-Step Verification disabled"
+      subject_template: "[%{email_prefix}] 2-Step Verification disabled"
+      text_body_template: |
+        Your account’s 2-Step verification at %{site_name} has been disabled. The account no longer needs a 2-Step Verification code to sign in.
+
+        If you have any questions, [contact our friendly staff](%{base_url}/about).
 
 
     digest:

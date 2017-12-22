@@ -60,6 +60,35 @@ describe UsersEmailController do
         expect(user.user_stat.bounce_score).to eq(0)
         expect(user.user_stat.reset_bounce_score_after).to eq(nil)
       end
+
+      context 'second factor required' do
+        second_factor_data = "rcyryaqage3jexfj"
+        before do
+          user.user_second_factor = UserSecondFactor.create(user_id: user.id, method: "totp", data: second_factor_data, enabled: true)
+        end
+
+        it 'requires a second factor token' do
+          get "/u/authorize-email/#{user.email_tokens.last.token}"
+          expect(response.body).to include(I18n.t("login.second_factor_title"))
+          expect(response.body).not_to include(I18n.t("login.invalid_second_factor_code"))
+        end
+
+        it 'adds an error on a second factor attempt' do
+          get "/u/authorize-email/#{user.email_tokens.last.token}", params: {
+                second_factor_token: "000000"
+              }
+          expect(response.body).to include(I18n.t("login.invalid_second_factor_code"))
+        end
+
+        it 'confirms with a correct second token' do
+          get "/u/authorize-email/#{user.email_tokens.last.token}", params: {
+                second_factor_token: ROTP::TOTP.new(second_factor_data).now
+              }
+          expect(response).to be_success
+          expect(response.body).not_to include(I18n.t("login.second_factor_title"))
+          expect(response.body).not_to include(I18n.t("login.invalid_second_factor_code"))
+        end
+      end
     end
   end
 

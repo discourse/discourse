@@ -227,6 +227,16 @@ export default function() {
                           current_email: 'current@example.com' });
       }
 
+      if (data.password === 'need-second-factor') {
+        if (data.second_factor_token) {
+          return response({username: 'eviltrout'});
+        }
+        return response({ error: "Invalid Second Factor",
+                          reason: "invalid_second_factor",
+                          sent_to_email: 'eviltrout@example.com',
+                          current_email: 'current@example.com' });
+      }
+
       return response(400, {error: 'invalid login'});
     });
 

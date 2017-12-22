@@ -304,6 +304,23 @@ const User = RestModel.extend({
     });
   },
 
+  loadSecondFactorCodes(password) {
+    return ajax("/second_factor/create", {
+      dataType: 'json',
+      data: { login: this.get('username'),
+              password: password},
+      type: 'POST'
+    });
+  },
+
+  toggleSecondFactor(token, enable) {
+    return ajax(userPath(`${this.get('username_lower')}/preferences/second-factor`), {
+      dataType: 'json',
+      data: { token, enable },
+      type: 'POST'
+    });
+  },
+
   loadUserAction(id) {
     const stream = this.get('stream');
     return ajax(`/user_actions/${id}.json`, { cache: 'false' }).then(result => {

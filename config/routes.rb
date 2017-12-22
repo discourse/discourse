@@ -129,6 +129,7 @@ Discourse::Application.routes.draw do
       get "tl3_requirements"
       put "anonymize"
       post "reset_bounce_score"
+      put "disable_second_factor"
     end
     get "users/:id.json" => 'users#show', defaults: { format: 'json' }
     get 'users/:id/:username' => 'users#show', constraints: { username: RouteFormat.username }
@@ -302,6 +303,8 @@ Discourse::Application.routes.draw do
   get "session/current" => "session#current"
   get "session/csrf" => "session#csrf"
   get "session/email-login/:token" => "session#email_login"
+  post "session/email-login/:token" => "session#email_login"
+  post "second_factor/create" => "second_factor#create"
   get "composer_messages" => "composer_messages#index"
   post "composer/parse_html" => "composer#parse_html"
 
@@ -335,6 +338,7 @@ Discourse::Application.routes.draw do
     get "#{root_path}/admin-login" => "users#admin_login"
     put "#{root_path}/admin-login" => "users#admin_login"
     get "#{root_path}/admin-login/:token" => "users#admin_login"
+    put "#{root_path}/admin-login/:token" => "users#admin_login"
     post "#{root_path}/toggle-anon" => "users#toggle_anon"
     post "#{root_path}/read-faq" => "users#read_faq"
     get "#{root_path}/search/users" => "users#search_users"
@@ -349,6 +353,7 @@ Discourse::Application.routes.draw do
     get "#{root_path}/activate-account/:token" => "users#activate_account"
     put({ "#{root_path}/activate-account/:token" => "users#perform_account_activation" }.merge(index == 1 ? { as: 'perform_activate_account' } : {}))
     get "#{root_path}/authorize-email/:token" => "users_email#confirm"
+    put "#{root_path}/authorize-email/:token" => "users_email#confirm"
     get({
       "#{root_path}/confirm-admin/:token" => "users#confirm_admin",
       constraints: { token: /[0-9a-f]+/ }
@@ -380,6 +385,8 @@ Discourse::Application.routes.draw do
     put "#{root_path}/:username/preferences/badge_title" => "users#badge_title", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/preferences/username" => "users#preferences", constraints: { username: RouteFormat.username }
     put "#{root_path}/:username/preferences/username" => "users#username", constraints: { username: RouteFormat.username }
+    post "#{root_path}/:username/preferences/second-factor" => "second_factor#update", constraints: { username: RouteFormat.username }
+    get "#{root_path}/:username/preferences/second-factor" => "users#preferences", constraints: { username: RouteFormat.username }
     delete "#{root_path}/:username/preferences/user_image" => "users#destroy_user_image", constraints: { username: RouteFormat.username }
     put "#{root_path}/:username/preferences/avatar/pick" => "users#pick_avatar", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/preferences/card-badge" => "users#card_badge", constraints: { username: RouteFormat.username }

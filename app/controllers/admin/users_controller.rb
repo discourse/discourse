@@ -25,7 +25,8 @@ class Admin::UsersController < Admin::AdminController
                                     :generate_api_key,
                                     :revoke_api_key,
                                     :anonymize,
-                                    :reset_bounce_score]
+                                    :reset_bounce_score,
+                                    :disable_second_factor]
 
   def index
     users = ::AdminUserIndexQuery.new(params).find_users
@@ -338,6 +339,18 @@ class Admin::UsersController < Admin::AdminController
       success: success_count,
       failed: (params[:users].try(:size) || 0) - success_count
     }
+  end
+
+  def disable_second_factor
+    guardian.ensure_can_disable_second_factor! @user
+    if @user.user_second_factor.try(:delete)
+      StaffActionLogger.new(current_user).log_disable_second_factor_auth(@user)
+    end
+    Jobs.enqueue(
+      :critical_user_email,
+      type: :account_second_factor_disabled,
+      user_id: @user.id
+    )
   end
 
   def destroy
