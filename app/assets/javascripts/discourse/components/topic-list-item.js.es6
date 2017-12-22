@@ -20,6 +20,12 @@ export function showEntrance(e) {
   }
 }
 
+export function navigateToTopic(topic, href) {
+  this.appEvents.trigger('header:update-topic', topic);
+  DiscourseURL.routeTo(href || topic.get('url'));
+  return false;
+}
+
 export default Ember.Component.extend(bufferedRender({
   rerenderTriggers: ['bulkSelectEnabled', 'topic.pinned'],
   tagName: 'tr',
@@ -107,8 +113,10 @@ export default Ember.Component.extend(bufferedRender({
     return false;
   }.property(),
 
+  showEntrance,
+
   click(e) {
-    const result = showEntrance.call(this, e);
+    const result = this.showEntrance(e);
     if (result === false) { return result; }
 
     const topic = this.get('topic');
@@ -124,18 +132,22 @@ export default Ember.Component.extend(bufferedRender({
     }
 
     if (target.hasClass('raw-topic-link')) {
-       if (wantsNewWindow(e)) { return true; }
-
-      this.appEvents.trigger('header:update-topic', topic);
-      DiscourseURL.routeTo(target.attr('href'));
-      return false;
+      if (wantsNewWindow(e)) { return true; }
+      return this.navigateToTopic(topic, target.attr('href'));
     }
 
     if (target.closest('a.topic-status').length === 1) {
       this.get('topic').togglePinnedForUser();
       return false;
     }
+
+    return this.unhandledRowClick(e, topic);
   },
+
+  navigateToTopic,
+
+  // Can be overwritten by plugins to handle clicks on other parts of the row
+  unhandledRowClick() { },
 
   highlight(opts = { isLastViewedTopic: false }) {
     const $topic = this.$();
