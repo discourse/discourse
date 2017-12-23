@@ -33,7 +33,7 @@ span.badge-posts {
     }
     button {
       border: none;
-      font-size: 1.286em;
+      font-size: 1.3195em;
       padding: 8px 10px;
       vertical-align: top;
       background: transparent;
@@ -190,7 +190,7 @@ a.reply-to-tab {
       padding: 4px 5px 2px 5px;
       text-align: center;
       font-weight: normal;
-      font-size: .875em;
+      font-size: .8706em;;
       line-height: 1;
     }
   }
@@ -219,7 +219,7 @@ a.reply-to-tab {
     }
     .number, i {
       color: dark-light-choose($primary-high, $secondary-low);
-      font-size: 1.143em;
+      font-size: 1.1487em;
     }
 
     .avatar + a {
@@ -266,7 +266,7 @@ a.reply-to-tab {
       border-top: 1px solid $primary-low;
       .fa {
         margin: 0;
-        font-size: 1.286em;
+        font-size: 1.3195em;
         line-height: 52px;
       }
     }
@@ -444,7 +444,7 @@ button.select-post {
 }
 
 .deleted-user-avatar {
-  font-size: 2.286em;
+  font-size: 2em;
 }
 
 span.btn-text {display: none;}

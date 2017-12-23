@@ -34,7 +34,7 @@
    }
  }
  .fa {
-   font-size: .778em;
+   font-size: .7579em;
    margin-left: 3px;
    color: dark-light-choose($primary-medium, $secondary-medium);
  }
@@ -52,19 +52,19 @@
   }
 
   h1 {
-    font-size: 1.714em;
+    font-size: 1.7511em;
   }
   
   h2 {
-    font-size: 1.5em;
+    font-size: 1.5157em;
   }
   
   h3 {
-    font-size: 1.286em;
+    font-size: 1.3195em;
   }
   
   h4 {
-    font-size: 1.143em;
+    font-size: 1.1487em;
   }
   
   h5 {
@@ -72,7 +72,7 @@
   }
   
   h6 {
-    font-size: .875em;
+    font-size: .8706em;;
   }
   
   a { word-wrap: break-word; }
@@ -228,7 +228,7 @@ aside.quote {
     right: -4px;
   }
   .fa {
-    font-size: 1.714em;
+    font-size: 1.7511em;
   }
 }
 .topic-map .poster .avatar-flair {
@@ -402,7 +402,7 @@ blockquote > *:last-child {
       text-transform: none;
       margin: 15px 0px 5px;
       font-weight: normal;
-      font-size: 1.143em;
+      font-size: 1.1487em;
       p {
         margin: 5px 0;
       }
@@ -503,7 +503,7 @@ a.mention, a.mention-group {
 .broken-image, .large-image {
   color: dark-light-choose($primary-low-mid, $secondary-high);
   border: 1px solid $primary-low;
-  font-size: 2.286em;
+  font-size: 2em;
   padding: 16px;
 }
 
