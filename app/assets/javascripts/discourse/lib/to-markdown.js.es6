@@ -2,6 +2,7 @@ import parseHTML from 'discourse/helpers/parse-html';
 
 const trimLeft = text => text.replace(/^\s+/,"");
 const trimRight = text => text.replace(/\s+$/,"");
+const countPipes = text => text.match(/(?<!\\)\|/g).length;
 
 class Tag {
   constructor(name, prefix = "", suffix = "", inline = false) {
@@ -152,7 +153,8 @@ class Tag {
           const height = attr.height || pAttr.height;
 
           if (width && height) {
-            alt = `${alt}|${width}x${height}`;
+            const pipe = this.element.parentNames.includes("table") ? "\\|" : "|";
+            alt = `${alt}${pipe}${width}x${height}`;
           }
 
           return "![" + alt + "](" + src + ")";
@@ -187,7 +189,7 @@ class Tag {
       toMarkdown() {
         const text = this.element.innerMarkdown().trim();
 
-        if (text.includes("\n") || text.includes("[![")) {
+        if (text.includes("\n")) {
           throw "Unsupported format inside Markdown table cells";
         }
 
@@ -243,16 +245,16 @@ class Tag {
       decorate(text) {
         text = super.decorate(text).replace(/\|\n{2,}\|/g, "|\n|");
         const rows = text.trim().split("\n");
-        const pipes = rows[0].match(/\|/g);
+        const pipeCount = countPipes(rows[0]);
         const isValid = rows.length > 1 &&
-                        pipes.length > 2 &&
-                        rows.reduce((a, c) => a && c.match(/\|/g).length <= pipes.length);
+                        pipeCount > 2 &&
+                        rows.reduce((a, c) => a && countPipes(c) <= pipeCount);
 
         if (!isValid) {
           throw "Unsupported table format for Markdown conversion";
         }
 
-        const splitterRow = pipes.slice(1).map(() => "| --- ").join("") + "|\n";
+        const splitterRow = [...Array(pipeCount-1)].map(() => "| --- ").join("") + "|\n";
         text = text.replace("|\n", "|\n" + splitterRow);
 
         return text;

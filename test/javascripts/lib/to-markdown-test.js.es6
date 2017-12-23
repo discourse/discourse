@@ -98,7 +98,7 @@ QUnit.test("stripes unwanted inline tags", assert => {
 });
 
 QUnit.test("converts table tags", assert => {
-  const html = `<address>Discourse Avenue</address><b>laboris</b>
+  let html = `<address>Discourse Avenue</address><b>laboris</b>
   <table>
     <thead> <tr><th>Heading 1</th><th>Head 2</th></tr> </thead>
       <tbody>
@@ -108,13 +108,20 @@ QUnit.test("converts table tags", assert => {
         </tbody>
 </table>
   `;
-  const markdown = `Discourse Avenue\n\n**laboris**\n\n|Heading 1|Head 2|\n| --- | --- |\n|Lorem|ipsum|\n|**dolor**|*sit amet*|`;
+  let markdown = `Discourse Avenue\n\n**laboris**\n\n|Heading 1|Head 2|\n| --- | --- |\n|Lorem|ipsum|\n|**dolor**|*sit amet*|`;
+  assert.equal(toMarkdown(html), markdown);
+
+  html = `<table>
+            <tr><th>Heading 1</th><th>Head 2</th></tr>
+            <tr><td><a href="http://example.com"><img src="http://example.com/image.png" alt="Lorem" width="45" height="45"></a></td><td>ipsum</td></tr>
+          </table>`;
+  markdown = `|Heading 1|Head 2|\n| --- | --- |\n|[![Lorem\\|45x45](http://example.com/image.png)](http://example.com)|ipsum|`;
   assert.equal(toMarkdown(html), markdown);
 });
 
 QUnit.test("returns empty string if table format not supported", assert => {
   let html = `<table>
-    <thead> <tr><th>Headi\n\nng 1</th><th>Head 2</th></tr> </thead>
+    <thead> <tr><th>Headi<br><br>ng 1</th><th>Head 2</th></tr> </thead>
       <tbody>
         <tr><td>Lorem</td><td>ipsum</td></tr>
         <tr><td><a href="http://example.com"><img src="http://dolor.com/image.png" /></a></td> <td><i>sit amet</i></td></tr></tbody>
