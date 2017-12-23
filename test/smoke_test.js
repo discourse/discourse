@@ -230,7 +230,9 @@ const path = require('path');
     });
   }
 
-  await browser.close();
+  await exec("close browser", () => {
+    return browser.close();
+  });
 
   console.log("ALL PASSED");
 })();
