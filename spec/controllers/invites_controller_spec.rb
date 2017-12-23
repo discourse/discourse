@@ -315,6 +315,7 @@ describe InvitesController do
           end
 
           it "does not send password reset email if sso is enabled" do
+            SiteSetting.sso_url = "https://www.example.com/sso"
             SiteSetting.enable_sso = true
             Jobs.expects(:enqueue).with(:invite_password_instructions_email, has_key(:username)).never
             put :perform_accept_invitation, params: { id: invite.invite_key }, format: :json
