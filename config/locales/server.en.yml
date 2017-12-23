@@ -1615,6 +1615,7 @@ en:
       enable_sso_disabled: "You must first enable 'enable sso' before enabling this setting."
       staged_users_disabled: "You must first enable 'staged users' before enabling this setting."
       reply_by_email_disabled: "You must first enable 'reply by email' before enabling this setting."
+      sso_url_is_empty: "You must set a 'sso url' before enabling this setting."
 
   search:
     within_post: "#%{post_number} by %{username}"
