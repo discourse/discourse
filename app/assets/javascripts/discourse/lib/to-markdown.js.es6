@@ -2,7 +2,7 @@ import parseHTML from 'discourse/helpers/parse-html';
 
 const trimLeft = text => text.replace(/^\s+/,"");
 const trimRight = text => text.replace(/\s+$/,"");
-const countPipes = text => text.match(/(?<!\\)\|/g).length;
+const countPipes = text => text.replace(/\\\|/,"").match(/\|/g).length;
 
 class Tag {
   constructor(name, prefix = "", suffix = "", inline = false) {
