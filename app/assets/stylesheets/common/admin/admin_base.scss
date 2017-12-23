@@ -267,7 +267,7 @@ $mobile-breakpoint: 700px;
     }
   }
   h1 {
-    font-size: 1.5em;
+    font-size: 1.5157em;
     line-height: 25px;
     color: $primary;
   }
@@ -531,7 +531,7 @@ $mobile-breakpoint: 700px;
 
     .desc, .validation-error {
       padding-top: 3px;
-      font-size: .875em;
+      font-size: .8706em;;
       line-height: 1.4em;
     }
 
@@ -564,7 +564,7 @@ $mobile-breakpoint: 700px;
 
 section.details {
   h1 {
-    font-size: 1.5em;
+    font-size: 1.5157em;
     color: $primary;
     padding: 5px 10px;
     margin: 30px 0 5px 0;
@@ -679,7 +679,7 @@ section.details {
 
     .list-badge {
       float: right;
-      font-size: .875em;
+      font-size: .8706em;;
       font-weight: normal;
       padding: 0 6px;
       color: $secondary;
@@ -850,7 +850,7 @@ section.details {
   }
 
   .version-number {
-    font-size: 1.5em;
+    font-size: 1.5157em;
     font-weight: bold;
   }
 
@@ -870,7 +870,7 @@ section.details {
   }
 
   .fa {
-    font-size: 1.714em;
+    font-size: 1.7511em;
   }
 
   .up-to-date {
@@ -886,7 +886,7 @@ section.details {
 
 .update-nag {
   .d-icon {
-    font-size: 1.5em;
+    font-size: 1.5157em;
   }
 }
 
@@ -989,7 +989,7 @@ table.api-keys {
       margin: 20px 10px 0 10px;
 
       .fa {
-        font-size: 2.286em;
+        font-size: 2em;
         vertical-align: middle;
         color: $primary
       }
@@ -1612,7 +1612,7 @@ table#user-badges {
   }
   .reply-key {
     display: block;
-    font-size: .875em;
+    font-size: .8706em;;
     color: dark-light-choose($primary-medium, $secondary-high);
   }
   .username div {
@@ -1642,7 +1642,7 @@ table#user-badges {
   }
   .error-description {
     color: #919191;
-    font-size: .875em;
+    font-size: .8706em;;
   }
   hr {
     margin: 0;
@@ -1801,7 +1801,7 @@ table#user-badges {
   float: right;
   text-align: right;
   .instructions {
-    font-size: .875em;
+    font-size: .8706em;;
   }
 }
 .watched-words-detail {
