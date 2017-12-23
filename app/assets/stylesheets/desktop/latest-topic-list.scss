@@ -24,15 +24,11 @@
   .main-link {
     @extend .topic-list-main-link;
     flex: 15;
+    font-size: 1em;
 
     .top-row {
       margin-bottom: 0.1em;
-    }
-    .bottom-row {
-      font-size: .75em; 
-      .bage-category {
-        font-size: 1.167em;
-      }
+      font-size: 1.143em;
     }
   }
   .topic-stats {
