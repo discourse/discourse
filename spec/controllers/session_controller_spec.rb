@@ -34,8 +34,8 @@ describe SessionController do
 
       request.host = Discourse.current_hostname
 
-      SiteSetting.enable_sso = true
       SiteSetting.sso_url = @sso_url
+      SiteSetting.enable_sso = true
       SiteSetting.sso_secret = @sso_secret
 
       # We have 2 options, either fabricate an admin or don't
@@ -487,6 +487,7 @@ describe SessionController do
 
     context 'SSO is enabled' do
       before do
+        SiteSetting.sso_url = "https://www.example.com/sso"
         SiteSetting.enable_sso = true
 
         post :create, params: {
@@ -827,6 +828,7 @@ describe SessionController do
 
       context 'SSO is enabled' do
         before do
+          SiteSetting.sso_url = "https://www.example.com/sso"
           SiteSetting.enable_sso = true
 
           post :create, params: {
