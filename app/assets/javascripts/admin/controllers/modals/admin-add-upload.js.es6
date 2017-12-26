@@ -16,7 +16,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   @computed('name')
   nameValid(name) {
-    return name && name.match(/\A[a-z_][a-z0-9_-]*\z/i);
+    return name && name.match(/^[a-z_][a-z0-9_-]*$/i);
   },
 
   @observes('name')
