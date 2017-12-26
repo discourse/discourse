@@ -1381,7 +1381,7 @@ en:
       too_short: "Your search term is too short."
       result_count:
         one: "1 result for <span class='term'>{{term}}</span>"
-        other: "{{count}} results for <span class='term'>{{term}}</span>"
+        other: "{{count}}{{plus}} results for <span class='term'>{{term}}</span>"
       title: "search topics, posts, users, or categories"
       no_results: "No results found."
       no_more_results: "No more results found."
