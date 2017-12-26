@@ -21,6 +21,8 @@ addons:
 
 matrix:
   fast_finish: true
+  allow_failures:
+    - rvm: 2.5.0
 
 rvm:
   - 2.5.0
