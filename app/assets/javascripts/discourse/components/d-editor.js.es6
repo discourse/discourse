@@ -633,7 +633,8 @@ export default Ember.Component.extend({
 
     if (rows.length > 1) {
       const columns = rows.map(r => r.split("\t").length);
-      const isTable = columns.reduce((a, b) => a && columns[0] === b && b > 1);
+      const isTable = columns.reduce((a, b) => a && columns[0] === b && b > 1) &&
+                      !(columns[0] === 2 && rows[0].split("\t")[0].match(/^•$|^\d+.$/)); // to skip tab delimited lists
 
       if (isTable) {
         const splitterRow = [...Array(columns[0])].map(() => "---").join("\t");
