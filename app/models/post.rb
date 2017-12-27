@@ -482,9 +482,10 @@ class Post < ActiveRecord::Base
         problems << { post: p, ex: e }
 
         attempts = p.custom_fields["rebake_attempts"].to_i
+
         if attempts > 3
           p.update_columns(baked_version: BAKED_VERSION)
-          Discourse.warn_exception(e, "Can not rebake post# #{p.id} after 3 attempts, giving up")
+          Discourse.warn_exception(e, message: "Can not rebake post# #{p.id} after 3 attempts, giving up")
         else
           p.custom_fields["rebake_attempts"] = attempts + 1
           p.save_custom_fields
