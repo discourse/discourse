@@ -191,7 +191,7 @@
       {{#if showBadges}}
         <li>{{#link-to 'user.badges'}}{{d-icon "certificate"}}{{i18n 'badges.title'}}{{/link-to}}</li>
       {{/if}}
-      {{plugin-outlet name="user-main-nav" connectorTagName='li' args=(hash model=model)}}
+      {{plugin-outlet name="user-main-nav" tagName='' connectorTagName='li' args=(hash model=model)}}
       {{#if model.can_edit}}
         <li>{{#link-to 'preferences'}}{{d-icon "cog"}}{{i18n 'user.preferences'}}{{/link-to}}</li>
       {{/if}}

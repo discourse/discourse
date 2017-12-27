@@ -122,6 +122,7 @@ es:
       split_topic: "separó este tema %{when}"
       invited_user: "invitó a %{who} %{when}"
       invited_group: "invitó a %{who} %{when}"
+      user_left: "%{who} se han eliminado de este mensaje %{when}"
       removed_user: "eliminó a %{who} %{when}"
       removed_group: "eliminó a %{who} %{when}"
       autoclosed:
@@ -1680,7 +1681,18 @@ es:
       multi_select:
         select: 'seleccionar'
         selected: 'seleccionado ({{count}})'
-        select_replies: 'seleccionar más respuestas'
+        select_post:
+          label: 'seleccionar'
+          title: 'Añadir mensaje a la selección'
+        selected_post:
+          label: 'seleccionado'
+          title: 'Haz clic para quitar el mensaje de la selección'
+        select_replies:
+          label: 'seleccionar +respuestas'
+          title: 'Añadir mensaje y todas sus respuestas a la selección'
+        select_below:
+          label: 'Seleccionar +abajo'
+          title: 'Añdir mensaje y todos los de debajo a la selección'
         delete: eliminar seleccionado
         cancel: cancelar selección
         select_all: seleccionar todo
@@ -1761,11 +1773,14 @@ es:
         share: "comparte un enlace a este post"
         more: "Más"
         delete_replies:
-          confirm:
-            one: "¿Quieres eliminar también la respuesta directa a este post?"
-            other: "¿Quieres eliminar también las {{count}} respuestas directas a este post?"
-          yes_value: "Sí, borrar también las respuestas"
-          no_value: "No, solo este post"
+          confirm: "¿También quieres borrar las respuestas a este mensaje?"
+          direct_replies:
+            one: "Sí, y 1 respuesta direct"
+            other: "Sí, y {{count}} respuestas directas"
+          all_replies:
+            one: "Sí, y 1 respuesta"
+            other: "Sí, y {{count}} respuestas"
+          just_the_post: "No, solo este mensaje"
         admin: "acciones de administrador para el post"
         wiki: "Formato wiki"
         unwiki: "Deshacer formato wiki"
@@ -1859,8 +1874,8 @@ es:
             other: "{{count}} personas votaron este post"
       delete:
         confirm:
-          one: "¿Seguro que quieres eliminar ese post?"
-          other: "¿Seguro que quieres eliminar todos esos posts?"
+          one: "¿Seguro que quieres borrar 1 mensaje?"
+          other: "¿Seguro que quieres borrar {{count}} mensajes?"
       merge:
         confirm:
           one: "Seguro que quieres unir esos posts?"
@@ -1946,6 +1961,7 @@ es:
       email_in_allow_strangers: "Aceptar emails de usuarios anónimos sin cuenta"
       email_in_disabled: "La posibilidad de publicar nuevos temas por email está deshabilitada en los ajustes del sitio. Para habilitar la publicación de nuevos temas por email,"
       email_in_disabled_click: 'activa la opción "email in".'
+      mailinglist_mirror: "La categoría refleja una lista de correo"
       suppress_from_homepage: "Ocultar categoría de la página de inicio."
       show_subcategory_list: "Mostrar la lista de subcategorías arriba de la lista de temas en esta categoría."
       num_featured_topics: "Número de temas a mostrar en la página de categorías:"
@@ -2562,7 +2578,6 @@ es:
           details: "Cuando se publique, edite, elimine o recupere una respuesta."
         user_event:
           name: "Evento de usuario"
-          details: "Cuando un usuario es creado, aprobado o actualizado."
         delivery_status:
           title: "Estado de entrega"
           inactive: "Inactivo"

@@ -5,4 +5,6 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-nb_NO: {}
+nb_NO:
+  site_settings:
+    presence_enabled: 'Vis brukere som akkurat nå svarer på gjeldende emne, eller redigerer gjeldende innlegg?'

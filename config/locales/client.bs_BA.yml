@@ -1375,7 +1375,6 @@ bs_BA:
       multi_select:
         select: 'select'
         selected: 'selected ({{count}})'
-        select_replies: 'select +replies'
         delete: delete selected
         cancel: cancel selecting
         select_all: select all
@@ -1420,9 +1419,6 @@ bs_BA:
         undelete: "povrati obrisan post"
         share: "podijeli link do ovog posta"
         more: "Još"
-        delete_replies:
-          yes_value: "Yes, delete the replies too"
-          no_value: "No, just this post"
         admin: "post admin actions"
         wiki: "Make Wiki"
         unwiki: "Remove Wiki"

@@ -115,8 +115,7 @@ export default Ember.Component.extend(CleansUp, CanCheckEmails, {
       return false;
     }
 
-    // XSS protection (should be encapsulated)
-    username = username.toString().replace(/[^A-Za-z0-9_\.\-]/g, "");
+    username = Ember.Handlebars.Utils.escapeExpression(username.toString());
 
     // Don't show on mobile
     if (this.site.mobileView) {
@@ -270,6 +269,10 @@ export default Ember.Component.extend(CleansUp, CanCheckEmails, {
   },
 
   actions: {
+    close() {
+      this._close();
+    },
+
     cancelFilter() {
       const postStream = this.get('postStream');
       postStream.cancelFilter();

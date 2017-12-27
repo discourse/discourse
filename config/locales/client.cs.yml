@@ -1499,7 +1499,6 @@ cs:
       multi_select:
         select: 'vybrat'
         selected: 'vybráno ({{count}})'
-        select_replies: 'vybrat +odpovědi'
         delete: smazat označené
         cancel: zrušit označování
         select_all: vybrat vše
@@ -1583,13 +1582,6 @@ cs:
         undelete: "obnovit příspěvek"
         share: "sdílet odkaz na tento příspěvek"
         more: "Více"
-        delete_replies:
-          confirm:
-            one: "Do you also want to delete the direct reply to this post?"
-            few: "Do you also want to delete the {{count}} direct replies to this post?"
-            other: "Do you also want to delete the {{count}} direct replies to this post?"
-          yes_value: "Ano, smazat i odpovědi"
-          no_value: "Ne, jenom tento příspěvek"
         admin: "post admin actions"
         wiki: "Vytvořte Wiki"
         unwiki: "Odtraňte Wiki"
@@ -1691,11 +1683,6 @@ cs:
             one: "1 člověk hlasoval pro tento příspěvek"
             few: "{{count}} lidé hlasovali pro tento příspěvek"
             other: "{{count}} lidí hlasovalo pro tento příspěvek"
-      delete:
-        confirm:
-          one: "Opravdu chcete odstranit tento příspěvek?"
-          few: "Opravdu chcete odstranit všechny tyto příspěvky?"
-          other: "Opravdu chcete odstranit všechny tyto příspěvky?"
       merge:
         confirm:
           one: "Opravdu chceš sloučit tyto příspěvky?"

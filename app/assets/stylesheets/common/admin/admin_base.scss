@@ -101,7 +101,7 @@ $mobile-breakpoint: 700px;
 
     h3 {
       font-weight: normal;
-      font-size: 1.1em;
+      font-size: 1em;
     }
 
     button.edit {
@@ -202,7 +202,7 @@ $mobile-breakpoint: 700px;
     padding: 12px 12px 5px;
 
     .powered-by {
-      font-size: 0.80em;
+      font-size: 0.857em;
       position: absolute;
       bottom: -10px;
       left: 10px;
@@ -278,7 +278,6 @@ $mobile-breakpoint: 700px;
   .controls .menu-toggle {
     display: none;
     float: left;
-    font-size: 1.7em;
     padding: 3px 6px;
     margin-right: 32px;
     border: 1px solid lighten($primary, 40%);
@@ -364,12 +363,15 @@ $mobile-breakpoint: 700px;
 
 .groups, .badges, .web-hook-container {
   .form-horizontal {
-    label {
-      font-weight: bold;
+    & > div {
+      margin-bottom: 20px;
     }
 
-    & > div {
-      margin-top: 10px;
+    .d-editor-textarea-wrapper {
+      max-width: 60%; 
+      .d-editor-button-bar {
+        overflow: hidden;
+      }
     }
 
     input, textarea, select, .select-box {
@@ -529,7 +531,7 @@ $mobile-breakpoint: 700px;
 
     .desc, .validation-error {
       padding-top: 3px;
-      font-size: .8em;
+      font-size: .857em;
       line-height: 1.4em;
     }
 
@@ -542,7 +544,7 @@ $mobile-breakpoint: 700px;
     }
 
     h3 {
-      font-size: 0.929em;
+      font-size: 1em;
       font-weight: normal;
     }
   }
@@ -562,7 +564,7 @@ $mobile-breakpoint: 700px;
 
 section.details {
   h1 {
-    font-size: 1.286em;
+    font-size: 1.429em;
     color: $primary;
     padding: 5px 10px;
     margin: 30px 0 5px 0;
@@ -647,7 +649,7 @@ section.details {
     width: 800px;
     float: left;
     margin-left: 12px;
-    font-size: 0.929em;
+    font-size: 0.857em;
 
     button {
       margin-left: 10px;
@@ -677,7 +679,7 @@ section.details {
 
     .list-badge {
       float: right;
-      font-size: .8em;
+      font-size: .857em;
       font-weight: normal;
       padding: 0 6px;
       color: $secondary;
@@ -692,7 +694,7 @@ section.details {
     p.help {
       margin: 0;
       color: dark-light-choose($primary-medium, $secondary-medium);
-      font-size: 0.9em;
+      font-size: 0.857em;
     }
   }
 
@@ -848,7 +850,7 @@ section.details {
   }
 
   .version-number {
-    font-size: 1.286em;
+    font-size: 1.429em;
     font-weight: bold;
   }
 
@@ -1392,9 +1394,6 @@ and (max-width : 500px) {
       .setting-value {
         width: 100%;
         }
-      label {
-        font-size: 0.929em;
-        }
     }
   }
 
@@ -1745,7 +1744,7 @@ table#user-badges {
     margin-top: 10px;
   }
   label {
-    font-size: 1.05em;
+    font-size: 1em;
   }
 }
 

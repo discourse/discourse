@@ -36,9 +36,7 @@ task "smoke:test" do
 
   results = ""
 
-  "node #{Rails.root}/test/smoke_test.js #{url}"
-
-  IO.popen(command).each do |line|
+  IO.popen("node #{Rails.root}/test/smoke_test.js #{url}").each do |line|
     puts line
     results << line
   end

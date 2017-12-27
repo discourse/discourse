@@ -123,13 +123,13 @@ ca:
   invalid_access: "No tens permís per veure el recurs sol·licitat."
   read_only_mode_enabled: "El lloc és només en mode de lectura. Les interaccions estan desactivades."
   reading_time: "Temps de lectura."
-  likes: "M'agrada"
+  likes: "M'agrades"
   too_many_replies:
     one: "Ho lamentem, però les noves persones usuàries ara estan de moment limitades a 1 resposta al mateix tema."
     other: "Ho lamentem, però les noves persones usuàries ara estan de moment limitades a %{count} respostes al mateix tema."
   embed:
-    start_discussion: "Comença un Debat"
-    continue: "Continua un Debat"
+    start_discussion: "Comença una discussió"
+    continue: "Continua la discussió"
     error: "Errada en incrustar"
     referer: "Referent:"
     mismatch: "El referent no coincideix amb cap dels següents amfitrions:"
@@ -138,9 +138,9 @@ ca:
     more_replies:
       one: "1 resposta més"
       other: "%{count} respostes més "
-    loading: "Carregant Debat"
+    loading: "Carregant la discussió..."
     permalink: "Enllaç permanent "
-    imported_from: "Aquest és un tema de debat complementari per a l'entrada original de %{link}"
+    imported_from: "Aquesta discussió és derivada de l'entrada original de %{link}"
     in_reply_to: "%{username}"
     replies:
       one: "1 resposta"
@@ -243,21 +243,21 @@ ca:
 
       Per saber-ne més, [fes un cop d'ull a la guia de la comunitat](/guidelines). Aquest avís només apareixerà per al teu primer %{education_posts_text}.
     avatar: |
-      ### Què et semblaria una foto per als teus comptes?
+      ### Què tal si poses una fotografia per al teu compte?
 
-      Has publicat un grapat de temes i respostes, però el teu perfil no és tan únic com tu – només és un redactat.
+      Has escrit uns quants temes i respostes, però encara no tens una fotorgrafia de perfil que t'identifiqui -- de moment, només és una lletra.
 
-      T'has plantejat **[visita el teu perfil](%{profile_path})** i carrega-hi una fotografia que et representi?
+      Has considerat **[visitar el teu perfil d'usuari](%{profile_path})** i pujar una fotografia que et representi?
 
-      És més senzill seguir debats i trobar gent interessant a converses on tothom té una foto de perfil única!
+      És més fàcil seguir discussions i trobar gent interessant a la conversa quan tots tenim una fotografia de perfil diferent!
     sequential_replies: |
-      ### Planteja't respondre moltes publicacions d'un sol cop
+      ### Considera respondre unes quantes entrades d'una tirada
 
-      Si us plau, planteja't una resposta única que inclogui cites de publicacions prèvies o referències de @name, més que no pas moltes respostes a una cel·la.
+      Enlloc d'escriure unes quantes respostes a un sol tema, siusplau considera escriure una sola resposta que citi diverses entrades prèvies, o mencions via @nom.
 
-      Pots editar la teva resposta prèvia per afegir-hi una cita, tot destacant el text i seleccionant el botó <b>resposta de cita</b>.
+      Pots editar la teva darrera resposta per a afegir una cita. Per a fer-ho, selecciona text i prem el botó de <b>cita resposta</b> que apareixerà.
 
-      És més fàcil per a tothom llegir temes que tenen menys respostes en profunditat que no pas moltes respostes petites i individuals.
+      És més fàcil seguir un tema quan té menys respostes més profundes que no pas moltes respostes indivituals.
     dominating_topic: |
       ### Deixa que altres s'afegeixin a a conversa
 
@@ -319,16 +319,16 @@ ca:
               invalid: "La URL no és vàlida. La URL hauria d'incloure http:// o https://. I no es permeten espais en blanc."
       <<: *errors
   user_profile:
-    no_info_other: "<div class='missing-profile'>%{name} encara no ha introduït res al camp <b>Sobre mi</b> del seu perfil</div>"
+    no_info_other: "<div class='missing-profile'>%{name} encara no ha introduït res al camp Sobre mi del seu perfil</div>"
   vip_category_name: "Saló"
   vip_category_description: "Una categoria exclusiva per a membres amb un nivell 3 o superior de confiança."
   meta_category_name: "Sindicació del lloc"
-  meta_category_description: "Debat sobre aquest lloc, la seva organització, com funciona i com podem millorar-ho."
+  meta_category_description: "Discussió sobre aquest lloc, la seva organització, com funciona i com podem millorar-ho."
   staff_category_name: "Equip"
-  staff_category_description: "Categoria privada per a debats d'equip. Els temes només són visibles per a persones administradores i moderadores."
+  staff_category_description: "Categoria privada per a converses de l'equip. Els temes només seran visibles per a debats entre moderadors i administradors."
   assets_topic_title: "Recursos per al disseny del lloc"
   discourse_welcome_topic:
-    title: "Et donem la benvinguda al Debat"
+    title: "Benvinguda o benvingut a Discourse"
     body: |2
 
       El primer paràgraf d'aquest tema fixat será visible com a missatge de benvinguda per a totes les noves visites a la teva pàgina principal. És important!
@@ -409,7 +409,7 @@ ca:
       public_group_membership: "T'estàs unint a grups o abandonant-los massa ràpid. Si us plau, espera %{time_left} abans de tornar a provar-ho."
       topics_per_day: "Avui has arribat a la quantitat màxima de temes. Si us plau, espera %{time_left} abans de tornar a provar-ho."
       pms_per_day: "Avui has arribat a la quantitat màxima de missatges. Si us plau, espera %{time_left} abans de tornar a provar-ho."
-      create_like: "Avui has arribat a la quantitat màxima de <i>M'agrada</i>. Si us plau, espera %{time_left} abans de tornar a provar-ho."
+      create_like: "Has arribat a la quantitat màxima de m'agrades avui. Si us plau, espera %{time_left} abans de tornar a provar-ho."
       create_bookmark: "Avui has arribat a la quantitat màxima de preferits. Si us plau, espera %{time_left} abans de tornar a provar-ho."
       live_post_counts: "Estàs demanant recomptes de publicacions massa ràpid. Si us plau, espera %{time_left} abans de tornar a provar-ho."
       unsubscribe_via_email: "Avui has arribat a la quantitat màxima de cancel·lacions de subscripcions per correu electrònic. Si us plau, espera %{time_left} abans de tornar a provar-ho."
@@ -523,7 +523,7 @@ ca:
   post_action_types:
     off_topic:
       title: 'Fora de context'
-      description: 'Aquesta publicació no és rellevant al debat actual, tal i com ha estat definit al títol i a la primera publicació i possiblement caldria moure-la a un altre racó.'
+      description: 'Aquesta entrada no és relevant per al tema actual tal i com està definit pel títol i la primera entrada, i probablement s''hauria de moure a un altre tema.'
       long_form: 'marcat amb bandera de fora de context'
     spam:
       title: 'Brossa'
@@ -643,7 +643,7 @@ ca:
     likes:
       title: "M'agrada"
       xaxis: "Dia"
-      yaxis: "Quantitat de nous <i>M'Agrada</i>"
+      yaxis: "Quantitat de nous m'agrades"
     flags:
       title: "Banderes"
       xaxis: "Dia"
@@ -762,7 +762,7 @@ ca:
   dashboard:
     rails_env_warning: "El teu servidor s'executa en mode %{env}."
     host_names_warning: "El teu fitxer config/database.yml empra el nom d'amfitrió local per defecte. Actualitza-ho per tal de fer servir el nom del teu lloc."
-    gc_warning: 'El teu servidor fa servir una col·lecció de paràmetres de brossa per defecte de <i>ruby</i> que no et donarà el millor rendiment. Llegeix aquest tema l''ajust del rendiment: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Ajustant <i>Ruby and Rails</i> per a <i>Discourse</i></a>.'
+    gc_warning: 'El teu servidor fa servir una col·lecció de paràmetres de brossa per defecte de ruby que no et donarà el millor rendiment. Llegeix aquest tema l''ajust del rendiment: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Ajustant Ruby and Rails per a Discourse</a>.'
     sidekiq_warning: 'No s''està executant <i>Sidekiq</i>. Hi ha moltes tasques asincrònicament en execució per <i>Sidekiq</i>, com ara enviament de correus. Si us plau, assegura''t que com a mínim hi ha un procés <i>Sidekiq</i> en marxa.  <a href="https://github.com/mperham/sidekiq" target="_blank">Aprèn més aquí sobre <i>Sidekiq</i></a>.'
     queue_size_warning: 'La quantitat de tasques en cua és de %{queue_size}, que és elevada. Això podria indicar un problema amb un o més procesos o potser et cal afegir-hi més treballadors de <i>Sidekiq</i>.'
     memory_warning: 'El teu servidor s''està executant amb menys d''1 GB de memòria total. Se''n recomana com a mínim un 1 GB de memòria.'
@@ -786,7 +786,7 @@ ca:
     censored_words: "Paraules que es reemplaçaran automàticament amb  &#9632;&#9632;&#9632;&#9632;"
     censored_pattern: "Patró d'expressió regular que serà reemplaçat automàticament amb  &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Esborra automàticament qualsevol publicació que resten oculta durant més de 30 dies."
-    default_locale: "La llengua per defecte d'aquesta instància <i>Discourse</i> (ISO 639-1 Code)"
+    default_locale: "La llengua per defecte d'aquesta instància Discourse (ISO 639-1 Code)"
     allow_user_locale: "Permet que les persones usuàries triïn la seva preferència de llengua d'interfície"
     set_locale_from_accept_language_header: "configura la llengua d'interfície per a persones anònimes des dels encapçalaments dels seus navegadors. (EXPERIMENTAL, no funciona amb memòria cau anònima)"
     min_post_length: "Mínim permès en caràcters per a l'extensió de publicacions "
@@ -840,7 +840,7 @@ ca:
     force_https: "Força el teu lloc a fer servir només HTTPS. ATENCIÓ: NO activis això fins que no verifiquis que HTTPS està totalment configurat i treballant a tot arreu. Has comprovat la teva xarxa de lliurament de continguts, totes les connexions socials i els logos i dependències externs per assegurar-te també que tots són compatibles amb HTTPS?"
     summary_score_threshold: "La puntuació mínima requerida per a una publicació per ser inclosa a 'Resumeix aquest tema'"
     summary_posts_required: "Publicacions mínimes a un tema abans d'activar 'Resumeix aquest tema'"
-    summary_likes_required: "Mínim de M'agrada a un tema abans d'activar 'Resumeix aquest tema'"
+    summary_likes_required: "Mínim nombre de m'agrades a un tema abans d'activar 'Resumeix aquest tema'"
     summary_percent_filter: "Quan una persona clica 'Resumeix aquest tema', mostra el '% o' principal de publicacions"
     summary_max_results: "Màxim de publicacions resultat de 'Resumeix aquest tema'"
     enable_private_messages: "Permet que les persones amb nivell de confiança 1 puguin crear missatges i respondre'ls (configurable amb el mínim de nivell de confiança per enviar missatges). Fixa't que l'equip sempre pot enviar qualsevol mena de missatges."
@@ -854,7 +854,7 @@ ca:
     cooldown_minutes_after_hiding_posts: "Quantitat de minuts que una persona ha d'esperar abans d'editar una publicació oculta amb les banderes de la comunitat"
     max_topics_in_first_day: "Quantitat màxima de temes que una persona pot crear en les 24 hores posteriors a la seva primera publicació"
     max_replies_in_first_day: "Quantitat màxima de respostes que una persona pot crear en les 24 hores posteriors a la seva primera publicació"
-    tl2_additional_likes_per_day_multiplier: "Augmenta el límit de M'agrada per dia per a nivell de confiança 2 (membre), en multiplicar per aquesta xifra"
+    tl2_additional_likes_per_day_multiplier: "Augmenta el límit de m'agrades per dia per a nivell de confiança 2 (membre), en multiplicar per aquesta xifra"
     tl3_additional_likes_per_day_multiplier: "Augmenta la quantitat de M'agrada per dia per nivell de confiança 3 (ordinari), en multiplicar per aquesta xifra"
     tl4_additional_likes_per_day_multiplier: "Augmenta el límit de M'agrada per dia a nivell de confiança 4 (líder), en multiplicar per aquesta xifra"
     flag_sockpuppets: "Si una nova persona usuària respon un tema des de la mateixa adreça IP que la persona creadora del tema, marca les seves publicacions com a brossa potencial."
@@ -1023,9 +1023,9 @@ ca:
     newuser_max_links: "Quants enllaços pot afegir una persona a una publicació."
     newuser_max_images: "Quantes imatges pot afegir una persona a una publicació."
     newuser_max_attachments: "Quants adjunts pot afegir una persona a una publicació"
-    newuser_max_mentions_per_post: "Quantitat màxima d'alertes @name que una nova persona pot fer servir a una publicació."
+    newuser_max_mentions_per_post: "Màxim nombre de mencions a @usuaris que un nou usuari pot usar en una entrada."
     newuser_max_replies_per_topic: "Quantitat màxima de respostes que una nova persona pot fer a un únic tema fins que altres participants ho responguin."
-    max_mentions_per_post: "Quantitat màxima d'alertes @name que qualsevol pot fer servir a una publicació."
+    max_mentions_per_post: "Màxim nombre de mencions a @usuaris que algú pot usar en una entrada."
     max_users_notified_per_group_mention: "Quantitat màxima de persones que poden rebre alertes si un grup és mencionat (si el valor límit no troba alertes, serà augmentat)"
     create_thumbnails: "Crea miniatures i finestres d'imatge de massa amplada per cabre a una publicació."
     email_time_window_mins: "Espera (n) minuts abans d'enviar qualsevol alerta de correu, per tal de possibilitar l'edició i la finalització de les publicacions."
@@ -1775,7 +1775,7 @@ ca:
       new_topics: "Nous temes"
       unread_messages: "Missatges sense llegir"
       unread_notifications: "Alertes sense llegir"
-      liked_received: "<i>M'agrada</i> rebuts"
+      liked_received: "M'agrades rebuts"
       new_posts: "Noves publicacions"
       new_users: "Noves persones usuàries"
       popular_topics: "Temes populars"
@@ -2025,24 +2025,24 @@ ca:
         Aquest distintiu es concedeix quan arribes al nivell 1 de confiança. Gràcies pel teu temps dedicat a llegir un grapat de temes i saber de què va la nostra comunitat. S'han aixecat les teves restriccions de nova persona usuària; t'hem concedit totes les capacitats essencials de la comunitat, com els missatges personals, les banderes, edició de wiki i la possibilitat de publicar múltiples imatges i enllaços.
     member:
       name: Membre
-      description: Invitacions, missatges de grups i més M'agrada <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">concedides</a>
+      description: Invitacions, missatges de grups i més m'agrades <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">concedits</a>
       long_description: |
-        Aquest distintiu es concedeix quan arribes al nivell 2 de confiança. Gràcies per participar durant setmanes per afegir-te de debò a la nostra comunitat. Ara pots enviar invitacions des de la teva pàgina personal o temes individuals, crear missatges personals en grup i donar uns pocs més M'agrada.
+        Aquest distintiu es concedeix quan arribes al nivell 2 de confiança. Gràcies per participar durant setmanes per afegir-te de debò a la nostra comunitat. Ara pots enviar invitacions des de la teva pàgina personal o temes individuals, crear missatges personals en grup i donar uns pocs més m'agrades cada dia.
     regular:
       name: Ordinari
-      description: Recategoritzar, reanomenar, enllaços seguits, wiki més M'agrada <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">conceditGranted</a>
+      description: Recategoritzar, reanomenar, enllaços seguits, wiki, més m'agrades <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">concedits</a>
       long_description: |
-        Aquest distintiu es concedeix quan arribes al nivell 3 de confiança. Gràcies per formar part de la nostra comunitat durant mesos. Ara ets una de les persones més actives en lectura i contribucions, a més de fer gran la nostra comunitat. Ara pots recategoritzar i reanomenar temes, aprofitar les banderes més potents de brossa, l'accés a l'àrea privada de saló i també rebràs cada dia més M'agrada.
+        Aquest distintiu es concedeix quan arribes al nivell 3 de confiança. Gràcies per formar part de la nostra comunitat durant mesos. Ara ets una de les persones més actives en lectura i contribucions, a més de fer gran la nostra comunitat. Ara pots recategoritzar i reanomenar temes, aprofitar les banderes més potents de brossa, l'accés a l'àrea privada de saló i també rebràs cada dia més m'agrades.
     leader:
       name: Líder
-      description: Edició global, clavar, tancar, arxivar, dividir i fusionar més M'agrada <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">condedit</a>
+      description: Edició global, clavar, tancar, arxivar, dividir i fusionar, més m'agrades <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">condedits</a>
       long_description: |
-        Aquest distintiu es concedeix quan has arribat al nivell de confiança 4. Lideres aquesta comunitat tal i com ha triat l'equip i ets un exemple positiu amb les teves paraules i accions per a la resta de la comunitat. Tens la possibilitat d'editar totes les publicacions, prendre accions moderadores típiques com ara clavar, desllistar, arxivar, dividir i fusionar i cada dia tens muntanyes de M'agrada.
+        Aquest distintiu es concedeix quan has arribat al nivell de confiança 4. Lideres aquesta comunitat tal i com ha triat l'equip i ets un exemple positiu amb les teves paraules i accions per a la resta de la comunitat. Tens la possibilitat d'editar totes les publicacions, prendre accions moderadores típiques com ara clavar, desllistar, arxivar, dividir i fusionar i cada dia tens muntanyes de m'agrades.
     welcome:
       name: Benvinguda
-      description: Ha rebut un M'agrada
+      description: Ha rebut un m'agrada
       long_description: |
-        Aquesta distinció es garanteix quan reps el teu primer M'agrada a una publicació. Enhorabona, has publicat alguna cosa que la resta de la teva comunitat considera interessant, bonic o útil.
+        Aquesta distinció es concedeix quan reps el teu primer m'agrada a una publicació. Enhorabona, has publicat alguna cosa que la resta de la teva comunitat considera interessant, bonic o útil.
     autobiographer:
       name: Autobiògraf
     anniversary:
@@ -2052,56 +2052,56 @@ ca:
         Aquest distintiu es concedeix quan has tingut activitat durant un any amb almenys una publicació. Gràcies per contribuir a la comunitat. Sense tu no ho aconseguiríem.
     nice_post:
       name: Bonica resposta
-      description: Ha rebut 10 M'agrada a una resposta
+      description: Ha rebut 10 m'agrades a una resposta
       long_description: |
-        Aquest distintiu es concedeix quan la teva resposta arriba a 10 M'agrada. La teva resposta ha impressionat la comunitat i ha ajudat a empènyer la conversa!
+        Aquest distintiu es concedeix quan la teva resposta arriba a 10 m'agrades. La teva resposta ha impressionat la comunitat i ha ajudat a empènyer la conversa!
     good_post:
       name: Bona resposta
-      description: Ha rebut 25 M'agrada a una resposta
+      description: Ha rebut 25 m'agrades a una resposta
       long_description: |
-        Aquest distintiu es concedeix quan la teva resposta arriba a 25 M'agrada. La teva resposta ha estat excepcional ha fet la conversa millor per a tothom!
+        Aquest distintiu es concedeix quan la teva resposta arriba a 25 m'agrades. La teva resposta ha estat excepcional ha fet la conversa millor per a tothom!
     great_post:
       name: Gran resposta
-      description: Ha rebut 50 M'agrada a una resposta
+      description: Ha rebut 50 m'agrades a una resposta
       long_description: |
-        Aquest distintiu es concedeix quan la teva resposta arriba a 50 M'agrada. La teva resposta és font d'inspiració i fascinant i la comunitat se l'estima!
+        Aquest distintiu es concedeix quan la teva resposta arriba a 50 m'agrades. La teva resposta és font d'inspiració i fascinant i la comunitat se l'estima!
     nice_topic:
       name: Bonic tema
-      description: Ha rebut 10 M'agrada a un tema
+      description: Ha rebut 10 m'agrades a un tema
       long_description: |
-        Aquest distintiu es concedeix quan el teu tema arriba a 10 M'agrada. Ep, has començat una conversa interessant i la comunitat en gaudeix!
+        Aquest distintiu es concedeix quan el teu tema arriba a 10 m'agrades. Ep, has començat una conversa interessant i la comunitat en gaudeix!
     good_topic:
       name: Bon tema
-      description: Ha rebut 25 M'agrada a un tema
+      description: Ha rebut 25 m'agrades a un tema
       long_description: |+
-        Aquest distintiu es concedeix quan el teu tema arriba a 25 M'agrada. Has encetat una conversa vibrant que la comunitat s'estima i comparteix!
+        Aquest distintiu es concedeix quan el teu tema arriba a 25 m'agrades. Has encetat una conversa vibrant que la comunitat s'estima i comparteix!
 
     great_topic:
       name: Gran tema
-      description: Ha rebut 50 M'agrada a un tema
+      description: Ha rebut 50 m'agrades a un tema
       long_description: |+
-        Aquest distintiu es concedeix quan el teu tema arriba a 50 M'agrada. Has provocat una conversa fascinant i la comunitat en gaudeix del dinamisme!
+        Aquest distintiu es concedeix quan el teu tema arriba a 50 m'agrades. Has provocat una conversa fascinant i la comunitat en gaudeix del dinamisme!
 
     nice_share:
       name: Bonica compartició
       description: Publicació compartida amb 25 visites úniques
       long_description: |
-        Aquest distintiu es concedeix en compartir un enllaç que ha estat clicat 25 cops per visites externes. Gràcies per difondre fora els nostres debats i aquesta comunitat!
+        Aquesta insígnia es concedeix quan comparteixes un enllaç que visiten 25 visitants externs. Bona feina! Compartir enllaços a discussions amb amics és una gran manera de fer créixer la nostra comunitat.
     good_share:
       name: Bona compartició
       description: Publicació compartida amb 300 visites úniques
       long_description: |
-        Aquest distintiu es concedeix en compartir un enllaç que ha estat clicat 300 cops per visites externes. Una feina ben feta! Has mostrat un gran debat a un munt de gent nova i ajudes a fer gran la comunitat!
+        Aquesta insígnia es concedeix quan comparteixes un enllaç a una entrada que ha estat visitat per 300 visitants externs. Has mostrat una discussió a molta gent nova i ens has ajudat a créixer.
     great_share:
       name: Gran compartició
       description: Publicació compartida amb 1000 visites úniques
       long_description: |
-        Aquest distintiu es concedeix en compartir un enllaç que ha estat clicat 1000 cops per visites externes. Impressionant! Has promogut un debat interessant a una gran nova audiència i ajudes molt a fer créixer la nostra comunitat!
+        Aquesta insígnia es concedeix quan comparteixes un enllaç que és visitat per 1000 visitants externs. Uau! Has promocionat una discussió a una nova audiència, la qual cosa ha ajudat a fer créier la comunitat.
     first_like:
       name: Primer M'agrada
       description: Publicació agradada
       long_description: |
-        Aquest distintiu es concedeix el primer cop que t'agrada una publicació fent servir el botó :heart:. Donar M'agrada a les publicacions és una manera genial de permetre que la teva comunitat sàpiga que el que hi han publicat és interessant, útil, bonic o divertit. Comparteix l'amor!
+        Aquesta insígnia es concedeix quan poses m'agrada per primera vegada usant el botó de :heart:. Posar m'agrada a les entrades és una gran manera de fer saber als membres de la comunitat que la seva entrada t'ha resultat interessant o divertida. Comparteix l'amor!
     first_flag:
       name: Primera bandera
       description: Ha abanderat una publicació
@@ -2111,12 +2111,12 @@ ca:
       name: Promoció
       description: Ha convidat una persona
       long_description: |
-        Aquest distintiu es concedeix quan hi convides algú de la teva comunitat amb el botó d'invitacions a la teva pàgina o al final d'un tema. Convidar-hi amistats que poden estar interessades en debats concrets és una gran manera de presentar nova gent a la nostra comunitat, gràcies per això!
+        Aquesta insígnia es concedeix quan invites algú a participar de la comunitat via el botó d'invitar en la teva pàgina d'usuari o al capdavall d'un tema. Invitar amics que puguin estar interessats en la conversa és una gran manera d'introduir nous membres a la comunitat, o sigui que gràcies!
     campaigner:
       name: Activista
       description: Ha convidat 3 persones usuàries bàsiques
       long_description: |
-        Aquest distintiu es concedeix quan has convidat 3 persones amb prou temps invertit al lloc com per esdevenir-ne usuàries bàsiques. Una comunitat vibrant necessita una injecció habitual de persones nouvingudes que hi participin amb regularitat i afegeixin noves veus als debats.
+        Aquesta insígnia es concedeix quan invites 3 persones que després passen prou temps al lloc web com per convertir-se en usuaris bàsics. Una comunitat vibrant necessita un influx constant de nouvinguts que regularment participen i afegeixen la seva veu a les converses.
     champion:
       name: De campionat
       description: Ha convidat 5 membres
@@ -2126,7 +2126,7 @@ ca:
       name: Primera compartició
       description: Ha compartit una publicació
       long_description: |
-        Aquest distintiu es concedeix el primer cop que comparteixes un enllaç a una resposta o a un tema fent servir el botó de compartir. Compartir enllaços és una gran manera de mostrar debats interessant a la resta del mon i fer créixer la teva comunitat.
+        Aquesta insígnia es concedeix quan comparteixes per primera vegada una resposta o un tema usant el botó de compartir. Compartir enllaços és una gran manera de mostrar discussions interessants amb la resta del món i així fer créixer la nostra comunitat.
     first_link:
       name: Primer enllaç
       description: Enllaça a un altre tema afegit
@@ -2137,14 +2137,14 @@ ca:
       name: Primera cita
       description: Ha citat una publicació
       long_description: |
-        Aquest distintiu es concedeix el primer cop que cites una publicació a la teva resposta. Citar a la teva resposta les seccions importants de publicacions anteriors ajuda a mantenir connectats els debats junts i sobre el tema. La manera més fàcil de citar és destacar una secció d'una publicació i clicar el botó de resposta. Cita amb generositat!
+        Aquesta insígnia es concedeix quan cites per primera vegada una entrada en la teva resposta. Citar les parts rellevants en la teva resposta ajuda a matenir les discussions focalitzades en el tema en qüestió. La manera més fàcil de fer-ho és seleccionar una secció de l'entrada abans d'apretar el botó de respondre. Cita amb generositat!
     read_guidelines:
       name: Llegeix les guies
     reader:
       name: Persona lectora
       description: Llegeix cada resposta a un tema amb més de 100 respostes
       long_description: |
-        Aquest distintiu es concedeix el primer cop que llegeixes un tema llarg amb més de 100 respostes. Llegir una conversa amb atenció t'ajuda a seguir el debat, comprendre diferents punts de vista i portar a intercanvis interessants. Com més llegeixis, millor serà la conversa. Com ens agrada dir, llegir és fonamental! :slight_smile:
+        Aquesta entrada se't concedeix la primera vegada que llegeixes un tema amb més de 100 respostes. Llegir una conversa t'ajuda a seguir la discussió, entendre diferents punts de vista, i porta a converses més interessants. Com més llegeixes, millor es torna la conversa. Com ens agrada dir, llegir és bàsic :slight_smile:
     popular_link:
       name: Enllaç popular
       description: Ha publicat un enllaç extern amb 50 clics
@@ -2154,7 +2154,7 @@ ca:
       name: Enllaç actiu
       description: Ha publicat un enllaç extern amb 300 clics
       long_description: |
-        Aquest distintiu es concedeix quan l'enllaç compartit per tu ha arribat a 300 clics. Gràcies per publicar un enllaç fascinant que ha impulsat la conversa i il·luminat el debat!
+        Aquesta insígnia se't concedeix quan un enllaç que comparteixes rep 300 clics. Gràcies per posar un enllaç tan interessant que ha il·luminat la discussió!
     famous_link:
       name: Enllaç famós
       description: Ha publicat un enllaç extern amb 1000 clics
@@ -2162,14 +2162,14 @@ ca:
         Aquest distintiu es concedeix quan l'enllaç compartit per tu ha arribat a 1000 clics. Has publicat un enllaç que ha millorat molt la conversa en afegir-hi detalls, context i informació essencials. Gran feina!
     appreciated:
       name: Apreciat
-      description: Ha rebut 1 M'agrada a 20 publicacions
+      description: Ha rebut 1 m'agrada a 20 publicacions
       long_description: |
-        Aquest distintiu es concedeix quan reps 20 M'agrada a diferents publicacions. La comunitat està gaudint amb les teves aportacions a les converses!
+        Aquest distintiu es concedeix quan reps 20 m'agrades a diferents publicacions. La comunitat està gaudint amb les teves aportacions a les converses!
     respected:
       name: Respectat
-      description: Ha rebut 2 M'agrada a 100 publicacions
+      description: Ha rebut 2 m'agrades a 100 publicacions
       long_description: |
-        Aquest distintiu es concedeix quan reps 2 M'agrada a 100 publicacions diferents. La comunitat està creixent per respectar les teves nombroses aportacions a les converses!
+        Aquest distintiu es concedeix quan reps 2 m'agrades a 100 publicacions diferents. La comunitat està creixent per respectar les teves nombroses aportacions a les converses!
     admired:
       name: Admirat
       description: Ha rebut 5 M'agrada a 300 publicacions
@@ -2177,9 +2177,9 @@ ca:
         Aquest distintiu es concedeix quan reps 5 M'agrada a 300 publicacions diferents. Gran! La comunitat admira les teves aportacions freqüents i de gran qualitat a les converses!
     out_of_love:
       name: Desenamorat
-      description: Ha fet servir 50 M'agrada en un dia
+      description: Ha fet servir 50 m'agrades en un dia
       long_description: |
-        Aquest distintiu es concedeix quan fas servir 50 dels teus M'agrada diaris. Si te'n recordes de prendre una estona per donar M'agrada a les publicacions, animes la gent de la teva comunitat a crear encara més debats al futur.
+        Aquesta insígnia se't concedeix quan uses 50 m'agrades diaris. El fet de recordar-te de prendre't un temps per a mostrar el teu apreci per les entrades que t'han agradat encoratja els membres de la comunitat a crear discussions encara millors en el futur.
     higher_love:
       name: Un amor més gran
       description: Ha fet servir 50 M'agrada en un dia 5 cops
@@ -2270,13 +2270,13 @@ ca:
             placeholder: "Lloc de conversa de la Jane"
           site_description:
             label: "Descriu la teva comunitat amb una frase breu"
-            placeholder: "Un lloc on la Jane i les seves amistats poden debatre sobre qüestions interessants"
+            placeholder: "Un lloc on la Jane i les seves amistats poden conversar sobre temes interessants"
       introduction:
         title: "Introducció"
         fields:
           welcome:
             label: "Tema de benvinguda"
-            description: "<p>Com podries descriure la teva comunitat a una persona de fora a un ascensor en 1 minut?</p> <ul> <li>Per a què serveixen aquests debats?</li> <li>Què hi puc trobar?</li> <li>Per què ho hauria de visitar?</li> </ul> <p>El teu tema de benvinguda és la primera cosa que llegiran les persones nouvingudes. Pensa-hi com la teva 'targeta de presentació' o 'declaració d'intencions' d'<b>un paràgraf</b>.</p>"
+            description: "<p>Com descriuries la teva comunitat a una persona de fora en 1 minut?</p> <ul> <li>Per a què serveixen aquests debats?</li> <li>Què hi puc trobar?</li> <li>Per què ho hauria de visitar?</li> </ul> <p>El teu tema de benvinguda és la primera cosa que llegiran les persones nouvingudes. Pensa-hi com la teva 'targeta de presentació' o 'declaració d'intencions' d'<b>un paràgraf</b>.</p>"
             one_paragraph: "Si us plau escurça el teu missatge de benvinguda a un paràgraf"
       privacy:
         title: "Accés"

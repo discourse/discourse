@@ -1,5 +1,10 @@
 import componentTest from 'helpers/component-test';
-moduleForComponent('combo-box', {integration: true});
+moduleForComponent('combo-box', {
+  integration: true,
+  beforeEach: function() {
+    this.set('subject', selectKit());
+  }
+});
 
 componentTest('default', {
   template: '{{combo-box content=items}}',
@@ -8,12 +13,12 @@ componentTest('default', {
   },
 
   test(assert) {
-    expandSelectKit();
+    this.get('subject').expand();
 
     andThen(() => {
-      assert.equal(selectKit('.combobox').header.name(), "hello");
-      assert.equal(selectKit('.combobox').rowByValue(1).name(), "hello");
-      assert.equal(selectKit('.combobox').rowByValue(2).name(), "world");
+      assert.equal(this.get('subject').header().name(), "hello");
+      assert.equal(this.get('subject').rowByValue(1).name(), "hello");
+      assert.equal(this.get('subject').rowByValue(2).name(), "world");
     });
   }
 });
@@ -25,11 +30,11 @@ componentTest('with valueAttribute', {
   },
 
   test(assert) {
-    expandSelectKit();
+    this.get('subject').expand();
 
     andThen(() => {
-      assert.equal(selectKit('.combobox').rowByValue(0).name(), "hello");
-      assert.equal(selectKit('.combobox').rowByValue(1).name(), "world");
+      assert.equal(this.get('subject').rowByValue(0).name(), "hello");
+      assert.equal(this.get('subject').rowByValue(1).name(), "world");
     });
   }
 });
@@ -41,11 +46,11 @@ componentTest('with nameProperty', {
   },
 
   test(assert) {
-    expandSelectKit();
+    this.get('subject').expand();
 
     andThen(() => {
-      assert.equal(selectKit('.combobox').rowByValue(0).name(), "hello");
-      assert.equal(selectKit('.combobox').rowByValue(1).name(), "world");
+      assert.equal(this.get('subject').rowByValue(0).name(), "hello");
+      assert.equal(this.get('subject').rowByValue(1).name(), "world");
     });
   }
 });
@@ -57,11 +62,11 @@ componentTest('with an array as content', {
   },
 
   test(assert) {
-    expandSelectKit();
+    this.get('subject').expand();
 
     andThen(() => {
-      assert.equal(selectKit('.combobox').rowByValue('evil').name(), "evil");
-      assert.equal(selectKit('.combobox').rowByValue('trout').name(), "trout");
+      assert.equal(this.get('subject').rowByValue('evil').name(), "evil");
+      assert.equal(this.get('subject').rowByValue('trout').name(), "trout");
     });
   }
 });
@@ -75,17 +80,17 @@ componentTest('with value and none as a string', {
   },
 
   test(assert) {
-    expandSelectKit();
+    this.get('subject').expand();
 
     andThen(() => {
-      assert.equal(selectKit('.combobox').noneRow.name(), 'none');
-      assert.equal(selectKit('.combobox').rowByValue("evil").name(), "evil");
-      assert.equal(selectKit('.combobox').rowByValue("trout").name(), "trout");
-      assert.equal(selectKit('.combobox').header.name(), 'trout');
+      assert.equal(this.get('subject').noneRow().name(), 'none');
+      assert.equal(this.get('subject').rowByValue("evil").name(), "evil");
+      assert.equal(this.get('subject').rowByValue("trout").name(), "trout");
+      assert.equal(this.get('subject').header().name(), 'trout');
       assert.equal(this.get('value'), 'trout');
     });
 
-    selectKitSelectRow('__none__', {selector: '.combobox' });
+    this.get('subject').selectNoneRow();
 
     andThen(() => {
       assert.equal(this.get('value'), null);
@@ -102,17 +107,17 @@ componentTest('with value and none as an object', {
   },
 
   test(assert) {
-    expandSelectKit();
+    this.get('subject').expand();
 
     andThen(() => {
-      assert.equal(selectKit('.combobox').noneRow.name(), 'none');
-      assert.equal(selectKit('.combobox').rowByValue("evil").name(), "evil");
-      assert.equal(selectKit('.combobox').rowByValue("trout").name(), "trout");
-      assert.equal(selectKit('.combobox').header.name(), 'evil');
+      assert.equal(this.get('subject').noneRow().name(), 'none');
+      assert.equal(this.get('subject').rowByValue("evil").name(), "evil");
+      assert.equal(this.get('subject').rowByValue("trout").name(), "trout");
+      assert.equal(this.get('subject').header().name(), 'evil');
       assert.equal(this.get('value'), 'evil');
     });
 
-    selectKitSelectNoneRow({ selector: '.combobox' });
+    this.get('subject').selectNoneRow();
 
     andThen(() => {
       assert.equal(this.get('value'), null);
@@ -130,10 +135,10 @@ componentTest('with no value and none as an object', {
   },
 
   test(assert) {
-    expandSelectKit();
+    this.get('subject').expand();
 
     andThen(() => {
-      assert.equal(selectKit('.combobox').header.name(), 'none');
+      assert.equal(this.get('subject').header().name(), 'none');
     });
   }
 });
@@ -148,10 +153,10 @@ componentTest('with no value and none string', {
   },
 
   test(assert) {
-    expandSelectKit();
+    this.get('subject').expand();
 
     andThen(() => {
-      assert.equal(selectKit('.combobox').header.name(), 'none');
+      assert.equal(this.get('subject').header().name(), 'none');
     });
   }
 });
@@ -164,65 +169,13 @@ componentTest('with no value and no none', {
   },
 
   test(assert) {
-    expandSelectKit();
+    this.get('subject').expand();
 
     andThen(() => {
-      assert.equal(selectKit('.combobox').header.name(), 'evil', 'it sets the first row as value');
+      assert.equal(this.get('subject').header().name(), 'evil', 'it sets the first row as value');
     });
   }
 });
-
-// componentTest('can be filtered', {
-//   template: '{{combo-box filterable=true value=1 content=content}}',
-//
-//   beforeEach() {
-//     this.set("content", [{ id: 1, name: "robin"}, { id: 2, name: "regis" }]);
-//   },
-//
-//   test(assert) {
-//     ();
-//
-//     andThen(() => assert.equal(find(".filter-input").length, 1, "it has a search input"));
-//
-//     selectKitFillInFilter("regis");
-//
-//     andThen(() => assert.equal(selectKit().rows.length, 1, "it filters results"));
-//
-//     selectKitFillInFilter("");
-//
-//     andThen(() => {
-//       assert.equal(
-//         selectKit().rows.length, 2,
-//         "it returns to original content when filter is empty"
-//       );
-//     });
-//   }
-// });
-
-// componentTest('persists filter state when expanding/collapsing', {
-//   template: '{{combo-box value=1 content=content filterable=true}}',
-//
-//   beforeEach() {
-//     this.set("content", [{ id: 1, name: "robin" }, { id: 2, name: "régis" }]);
-//   },
-//
-//   test(assert) {
-//     ();
-//
-//     selectKitFillInFilter("rob");
-//
-//     andThen(() => assert.equal(selectKit().rows.length, 1) );
-//
-//     collapseSelectKit();
-//
-//     andThen(() => assert.notOk(selectKit().isExpanded) );
-//
-//     ();
-//
-//     andThen(() => assert.equal(selectKit().rows.length, 1) );
-//   }
-// });
-
 
 componentTest('with empty string as value', {
   template: '{{combo-box content=items value=value}}',
@@ -232,10 +185,10 @@ componentTest('with empty string as value', {
   },
 
   test(assert) {
-    expandSelectKit();
+    this.get('subject').expand();
 
     andThen(() => {
-      assert.equal(selectKit('.combobox').header.name(), 'evil', 'it sets the first row as value');
+      assert.equal(this.get('subject').header().name(), 'evil', 'it sets the first row as value');
     });
   }
 });

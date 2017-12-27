@@ -1617,7 +1617,14 @@ zh_CN:
       multi_select:
         select: '选择'
         selected: '已选择（{{count}}）'
-        select_replies: '选择以及回复其的帖子'
+        select_post:
+          label: '选中'
+          title: '将帖子加入选择'
+        selected_post:
+          label: '已选中'
+          title: '单击以将帖子从中移除'
+        select_replies:
+          label: '选择与回复'
         delete: 删除所选
         cancel: 取消选择
         select_all: 全选
@@ -1690,11 +1697,6 @@ zh_CN:
         undelete: "恢复本帖"
         share: "分享指向这个帖子的链接"
         more: "更多"
-        delete_replies:
-          confirm:
-            other: "同时删除 {{count}} 个回复这个帖子的相关帖子么？"
-          yes_value: "是，一并删除相关回复"
-          no_value: "否，仅删除该帖"
         admin: "帖子管理"
         wiki: "公共编辑"
         unwiki: "限制公共编辑"
@@ -1768,9 +1770,6 @@ zh_CN:
             other: "{{count}} 人赞了它"
           vote:
             other: "{{count}} 人已投票"
-      delete:
-        confirm:
-          other: "确定要删除这些帖子吗？"
       merge:
         confirm:
           other: "确定要合并这 {{count}} 个帖子吗？"
@@ -2452,7 +2451,6 @@ zh_CN:
           details: "当有新回复、编辑、帖子被删除或者恢复时。"
         user_event:
           name: "用户事件"
-          details: "当用户被创建、审核通过或更新时。"
         delivery_status:
           title: "分发状态"
           inactive: "不活跃"

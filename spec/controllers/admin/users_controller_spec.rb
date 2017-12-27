@@ -738,6 +738,7 @@ describe Admin::UsersController do
       log_in(:admin)
 
       SiteSetting.email_editable = false
+      SiteSetting.sso_url = "https://www.example.com/sso"
       SiteSetting.enable_sso = true
       SiteSetting.sso_overrides_email = true
       SiteSetting.sso_overrides_name = true

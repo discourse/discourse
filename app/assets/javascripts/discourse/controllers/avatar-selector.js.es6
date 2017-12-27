@@ -37,7 +37,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       this.set("gravatarRefreshDisabled", true);
       return ajax(`/user_avatar/${this.get("username")}/refresh_gravatar.json`, { method: "POST" })
         .then(result => {
-          if (!result.gravatar_avatar_upload_id) {
+          if (!result.gravatar_upload_id) {
             this.set("gravatarFailed", true);
           } else {
             this.setProperties({

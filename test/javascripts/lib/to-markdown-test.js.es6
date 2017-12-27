@@ -4,19 +4,21 @@ QUnit.module("lib:to-markdown");
 
 QUnit.test("converts styles between normal words", assert => {
   const html = `Line with <s>styles</s> <b><i>between</i></b> words.`;
-  const markdown = `Line with ~~styles~~ **_between_** words.`;
+  const markdown = `Line with ~~styles~~ ***between*** words.`;
   assert.equal(toMarkdown(html), markdown);
+
+  assert.equal(toMarkdown("A <b>bold </b>word"), "A **bold** word");
 });
 
 QUnit.test("converts inline nested styles", assert => {
   let html = `<em>Italicised line with <strong>some random</strong> <b>bold</b> words.</em>`;
-  let markdown = `_Italicised line with **some random** **bold** words._`;
+  let markdown = `*Italicised line with **some random** **bold** words.*`;
   assert.equal(toMarkdown(html), markdown);
 
   html = `<i class="fa">Italicised line
-   with <b title="strong">some
+   with <b title="strong">some<br>
    random</b> <s>bold</s> words.</i>`;
-  markdown = `<i>Italicised line\n with <b>some\n random</b> ~~bold~~ words.</i>`;
+  markdown = `<i>Italicised line with <b>some\nrandom</b> ~~bold~~ words.</i>`;
   assert.equal(toMarkdown(html), markdown);
 });
 
@@ -26,7 +28,7 @@ QUnit.test("converts a link", assert => {
   assert.equal(toMarkdown(html), markdown);
 
   html = `<a href="https://discourse.org">Disc\n\n\nour\n\nse</a>`;
-  markdown = `[Disc\nour\nse](https://discourse.org)`;
+  markdown = `[Disc our se](https://discourse.org)`;
   assert.equal(toMarkdown(html), markdown);
 });
 
@@ -67,7 +69,7 @@ QUnit.test("converts heading tags", assert => {
   assert.equal(toMarkdown(html), markdown);
 });
 
-QUnit.test("converts ul and ol list tags", assert => {
+QUnit.test("converts ul list tag", assert => {
   const html = `
   <ul>
     <li>Item 1</li>
@@ -75,14 +77,14 @@ QUnit.test("converts ul and ol list tags", assert => {
       Item 2
       <ul>
         <li>Sub Item 1</li>
-        <li>Sub Item 2</li>
-        <ul><li>Sub <i>Sub</i> Item 1</li><li>Sub <b>Sub</b> Item 2</li></ul>
+        <li><p>Sub Item 2</p></li>
+        <li>Sub Item 3<ul><li>Sub <i>Sub</i> Item 1</li><li>Sub <b>Sub</b> Item 2</li></ul></li>
       </ul>
     </li>
     <li>Item 3</li>
   </ul>
   `;
-  const markdown = `* Item 1\n* Item 2\n\n  * Sub Item 1\n  * Sub Item 2\n\n    * Sub _Sub_ Item 1\n    * Sub **Sub** Item 2\n\n* Item 3`;
+  const markdown = `* Item 1\n* Item 2\n  * Sub Item 1\n  * Sub Item 2\n\n  * Sub Item 3\n    * Sub *Sub* Item 1\n    * Sub **Sub** Item 2\n* Item 3`;
   assert.equal(toMarkdown(html), markdown);
 });
 
@@ -91,21 +93,53 @@ QUnit.test("stripes unwanted inline tags", assert => {
   <p>Lorem ipsum <span>dolor sit amet, consectetur</span> <strike>elit.</strike></p>
   <p>Ut minim veniam, <label>quis nostrud</label> laboris <nisi> ut aliquip ex ea</nisi> commodo.</p>
   `;
-  const markdown = `Lorem ipsum dolor sit amet, consectetur ~~elit.~~\n\nUt minim veniam, quis nostrud laboris  ut aliquip ex ea commodo.`;
+  const markdown = `Lorem ipsum dolor sit amet, consectetur ~~elit.~~\n\nUt minim veniam, quis nostrud laboris ut aliquip ex ea commodo.`;
   assert.equal(toMarkdown(html), markdown);
 });
 
-QUnit.test("converts table as readable", assert => {
-  const html = `<address>Discourse Avenue</address><b>laboris</b>
+QUnit.test("converts table tags", assert => {
+  let html = `<address>Discourse Avenue</address><b>laboris</b>
   <table>
     <thead> <tr><th>Heading 1</th><th>Head 2</th></tr> </thead>
       <tbody>
         <tr><td>Lorem</td><td>ipsum</td></tr>
-        <tr><td><b>dolor</b></td> <td><i>sit amet</i></td></tr></tbody>
+        <tr><td><b>dolor</b></td> <td><i>sit amet</i></td> </tr>
+        
+        </tbody>
 </table>
   `;
-  const markdown = `Discourse Avenue\n\n**laboris**\n\nHeading 1 Head 2\n\nLorem ipsum\n**dolor** _sit amet_`;
+  let markdown = `Discourse Avenue\n\n**laboris**\n\n|Heading 1|Head 2|\n| --- | --- |\n|Lorem|ipsum|\n|**dolor**|*sit amet*|`;
   assert.equal(toMarkdown(html), markdown);
+
+  html = `<table>
+            <tr><th>Heading 1</th><th>Head 2</th></tr>
+            <tr><td><a href="http://example.com"><img src="http://example.com/image.png" alt="Lorem" width="45" height="45"></a></td><td>ipsum</td></tr>
+          </table>`;
+  markdown = `|Heading 1|Head 2|\n| --- | --- |\n|[![Lorem\\|45x45](http://example.com/image.png)](http://example.com)|ipsum|`;
+  assert.equal(toMarkdown(html), markdown);
+});
+
+QUnit.test("returns empty string if table format not supported", assert => {
+  let html = `<table>
+    <thead> <tr><th>Headi<br><br>ng 1</th><th>Head 2</th></tr> </thead>
+      <tbody>
+        <tr><td>Lorem</td><td>ipsum</td></tr>
+        <tr><td><a href="http://example.com"><img src="http://dolor.com/image.png" /></a></td> <td><i>sit amet</i></td></tr></tbody>
+</table>
+  `;
+  assert.equal(toMarkdown(html), "");
+
+  html = `<table>
+    <thead> <tr><th>Heading 1</th></tr> </thead>
+      <tbody>
+        <tr><td>Lorem</td></tr>
+        <tr><td><i>sit amet</i></td></tr></tbody>
+</table>
+  `;
+  assert.equal(toMarkdown(html), "");
+
+  html = `<table><tr><td>Lorem</td><td><i>sit amet</i></td></tr></table>`;
+  assert.equal(toMarkdown(html), "");
 });
 
 QUnit.test("converts img tag", assert => {
@@ -141,11 +175,11 @@ QUnit.test("supporting html tags by keeping them", assert => {
   output = `[Lorem <del>ipsum dolor</del> sit](http://example.com).`;
   assert.equal(toMarkdown(html), output);
 
-  html = `Lorem <del>ipsum \n\n dolor</del> sit.`;
+  html = `Lorem <del>ipsum dolor</del> sit.`;
   assert.equal(toMarkdown(html), html);
 
   html = `Lorem <a href="http://example.com"><del>ipsum \n\n\n dolor</del> sit.</a>`;
-  output = `Lorem [<del>ipsum \n dolor</del> sit.](http://example.com)`;
+  output = `Lorem [<del>ipsum dolor</del> sit.](http://example.com)`;
   assert.equal(toMarkdown(html), output);
 });
 
@@ -165,7 +199,7 @@ helloWorld();</code></pre>
   alert('    hello \t\t world    ');
     return;
 }
-helloWorld();</code> consectetur.`;
+helloWorld();</code>consectetur.`;
   output = `Lorem ipsum dolor sit amet, \`var helloWorld = () => {\n  alert('    hello \t\t world    ');\n    return;\n}\nhelloWorld();\` consectetur.`;
 
   assert.equal(toMarkdown(html), output);
@@ -183,4 +217,22 @@ QUnit.test("converts blockquote tag", assert => {
   html = "<blockquote>\nLorem ipsum\n<blockquote><p>dolor <blockquote>sit</blockquote> amet</p></blockquote></blockquote>";
   output = "> Lorem ipsum\n> > dolor\n> > > sit\n> > amet";
   assert.equal(toMarkdown(html), output);
+});
+
+QUnit.test("converts ol list tag", assert => {
+  const html = `Testing
+  <ol>
+    <li>Item 1</li>
+    <li>
+      Item 2
+      <ol start="100">
+        <li>Sub Item 1</li>
+        <li>Sub Item 2</li>
+      </ol>
+    </li>
+    <li>Item 3</li>
+  </ol>
+  `;
+  const markdown = `Testing\n\n1. Item 1\n2. Item 2\n  100. Sub Item 1\n  101. Sub Item 2\n3. Item 3`;
+  assert.equal(toMarkdown(html), markdown);
 });

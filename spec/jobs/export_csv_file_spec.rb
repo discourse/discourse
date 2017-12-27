@@ -26,6 +26,7 @@ describe Jobs::ExportCsvFile do
   end
 
   it 'exports sso data' do
+    SiteSetting.sso_url = "https://www.example.com/sso"
     SiteSetting.enable_sso = true
     user = Fabricate(:user)
     user.user_profile.update_column(:location, "La La Land")

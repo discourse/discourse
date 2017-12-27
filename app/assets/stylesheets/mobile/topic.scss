@@ -17,8 +17,8 @@
   //margin-bottom: 20px;
   margin: 0 60px 10px 0;
   h1 {
-    font-size: 1.5em;
-    line-height: 1.25em;
+    font-size: 1.429em;
+    line-height: 1.25;
     a {
       color: $primary;
       vertical-align: middle;
@@ -155,8 +155,8 @@
   width: 90%;
   margin-left: auto;
   margin-right: auto;
-  font-size: 1.714em;
-  line-height: 1.1em;
+  font-size: 1.857em;
+  line-height: 1.25;
 
   .topic-retry {
     display: block;
@@ -207,8 +207,10 @@ sup sup, sub sup, sup sub, sub sub { top: 0; }
 
 // make mobile timeline top and bottom dates easier to select
 .topic-timeline {
-  .start-date { font-size: 110%; padding: 5px; }
-  .now-date { font-size: 110%; padding: 5px; }
+  .start-date, .now-date { 
+    font-size: 1.143em; 
+    padding: 5px; 
+  }
 }
 
 .edit-topic-timer-modal {

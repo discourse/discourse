@@ -113,7 +113,10 @@ class UsersController < ApplicationController
       fields = UserField.all
       fields = fields.where(editable: true) unless current_user.staff?
       fields.each do |f|
-        val = params[:user_fields][f.id.to_s]
+        field_id = f.id.to_s
+        next unless params[:user_fields].has_key?(field_id)
+
+        val = params[:user_fields][field_id]
         val = nil if val === "false"
         val = val[0...UserField.max_length] if val
 
@@ -245,7 +248,12 @@ class UsersController < ApplicationController
         Group.mentionable(current_user)
           .where(name: usernames)
           .pluck(:name, :user_count)
-          .map { |name, user_count| { name: name, user_count: user_count } }
+          .map do |name, user_count|
+          {
+            name: name,
+            user_count: user_count
+          }
+        end
       end
 
     usernames -= groups
@@ -264,7 +272,13 @@ class UsersController < ApplicationController
       .where(username_lower: usernames)
       .pluck(:username_lower)
 
-    render json: { valid: result, valid_groups: groups, mentionable_groups: mentionable_groups, cannot_see: cannot_see }
+    render json: {
+      valid: result,
+      valid_groups: groups,
+      mentionable_groups: mentionable_groups,
+      cannot_see: cannot_see,
+      max_users_notified_per_group_mention: SiteSetting.max_users_notified_per_group_mention
+    }
   end
 
   def render_available_true

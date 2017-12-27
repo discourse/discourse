@@ -207,6 +207,18 @@ describe WebHook do
 
         expect(job_args["event_name"]).to eq("user_updated")
         expect(job_args["user_id"]).to eq(user.id)
+
+        user.logged_out
+        job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+
+        expect(job_args["event_name"]).to eq("user_logged_out")
+        expect(job_args["user_id"]).to eq(user.id)
+
+        user.logged_in
+        job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+
+        expect(job_args["event_name"]).to eq("user_logged_in")
+        expect(job_args["user_id"]).to eq(user.id)
       end
     end
   end

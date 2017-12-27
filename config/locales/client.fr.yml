@@ -122,6 +122,7 @@ fr:
       split_topic: "a scindé ce sujet %{when}"
       invited_user: "a invité %{who} %{when}"
       invited_group: "a invité %{who} %{when}"
+      user_left: "%{who}a quitté cette conversation %{when}"
       removed_user: "a retiré %{who} %{when}"
       removed_group: "a retiré %{who} %{when}"
       autoclosed:
@@ -1680,7 +1681,18 @@ fr:
       multi_select:
         select: 'sélectionner'
         selected: 'sélectionnés ({{count}})'
-        select_replies: 'selectionner +réponses'
+        select_post:
+          label: 'sélectionner'
+          title: 'Ajouter le message à la sélection'
+        selected_post:
+          label: 'sélectionné'
+          title: 'Cliquer pour retirer le message de la sélection'
+        select_replies:
+          label: 'sélectionner + les réponses'
+          title: 'Ajouter le message et toutes ses réponses à la sélection'
+        select_below:
+          label: 'sélectionner + le reste'
+          title: 'Ajouter un message et tout ceux qui suivent à la sélection'
         delete: supprimer la sélection
         cancel: annuler la sélection
         select_all: tout sélectionner
@@ -1761,11 +1773,14 @@ fr:
         share: "partager ce message"
         more: "Plus"
         delete_replies:
-          confirm:
-            one: "Voulez-vous aussi supprimer la réponse qui suit directement ce message ?"
-            other: "Voulez-vous aussi supprimer les  {{count}} réponses qui suivent directement ce message ?"
-          yes_value: "Oui, supprimer les réponses également"
-          no_value: "Non, juste ce message"
+          confirm: "Voulez-vous aussi supprimer les réponses à ce message ?"
+          direct_replies:
+            one: "Oui et 1 réponse directe"
+            other: "Oui et {{count}} réponses directes"
+          all_replies:
+            one: "Oui et la réponse"
+            other: "Oui et les {{count}} réponses"
+          just_the_post: "Non, uniquement ce message"
         admin: "actions d'administration sur le message"
         wiki: "Basculer en mode Wiki"
         unwiki: "Retirer le mode Wiki"
@@ -1860,7 +1875,7 @@ fr:
       delete:
         confirm:
           one: "Êtes-vous sûr de vouloir supprimer ce message ?"
-          other: "Êtes-vous sûr de vouloir supprimer tous ces messages ?"
+          other: "Êtes-vous sûr de vouloir supprimer ces {{count}} messages ?"
       merge:
         confirm:
           one: "Êtes-vous sûr de vouloir fusionner ces messages ?"
@@ -1946,6 +1961,7 @@ fr:
       email_in_allow_strangers: "Accepter les courriels d'utilisateurs anonymes sans compte"
       email_in_disabled: "La possibilité de créer des nouveaux sujets via courriel est désactivé dans les Paramètres. Pour l'activer,"
       email_in_disabled_click: 'activer le paramètre « email in ».'
+      mailinglist_mirror: "La catégorie reflète une liste de diffusion"
       suppress_from_homepage: "Retirer cette catégorie de la page d'accueil"
       show_subcategory_list: "Afficher la liste des sous-catégories au dessus des sujets dans cette catégorie."
       num_featured_topics: "Nombre de sujets affichés sur la page des catégories :"
@@ -2562,7 +2578,6 @@ fr:
           details: "Quand il y a une réponse nouvelle, modifiée, supprimée ou rétablie."
         user_event:
           name: "Événement d'utilisateur"
-          details: "Quand un utilisateur est créé, approuvé ou mis à jour."
         delivery_status:
           title: "État de l'envoi"
           inactive: "Inactif"

@@ -55,6 +55,7 @@ nb_NO:
         help:
           options_count: Må inneholde minst 2 alternativer
           invalid_values: Minimumsverdien må være mindre enn maksimumsverdien.
+          min_step_value: Minimal stegverdi er 1
         poll_type:
           label: Type
           regular: Et valg

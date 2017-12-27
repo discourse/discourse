@@ -6,6 +6,7 @@ RSpec.describe SsoOverridesEmailValidator do
   describe '#valid_value?' do
     describe "when 'email editable' is true" do
       before do
+        SiteSetting.sso_url = "https://www.example.com/sso"
         SiteSetting.enable_sso = true
         SiteSetting.email_editable = true
       end
@@ -29,6 +30,7 @@ RSpec.describe SsoOverridesEmailValidator do
 
     describe "when 'email editable' is false" do
       before do
+        SiteSetting.sso_url = "https://www.example.com/sso"
         SiteSetting.enable_sso = true
         SiteSetting.email_editable = false
       end

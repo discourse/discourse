@@ -1623,7 +1623,6 @@ nl:
       multi_select:
         select: 'selecteren'
         selected: 'geselecteerd ({{count}})'
-        select_replies: 'selecteren +antwoorden'
         delete: geselecteerde verwijderen
         cancel: selecteren annuleren
         select_all: alles selecteren
@@ -1702,12 +1701,6 @@ nl:
         undelete: "dit bericht herstellen"
         share: "een koppeling naar dit bericht delen"
         more: "Meer"
-        delete_replies:
-          confirm:
-            one: "Wilt u ook het directe antwoord op dit bericht verwijderen?"
-            other: "Wilt u ook de {{count}} directe antwoorden op dit bericht verwijderen?"
-          yes_value: "Ja, de antwoorden ook verwijderen"
-          no_value: "Nee, alleen dit bericht"
         admin: "beheeracties voor bericht"
         wiki: "Wiki maken"
         unwiki: "Wiki verwijderen"
@@ -1793,10 +1786,6 @@ nl:
           vote:
             one: "1 persoon heeft op dit bericht gestemd"
             other: "{{count}} personen hebben op dit bericht gestemd"
-      delete:
-        confirm:
-          one: "Weet u zeker dat u dat bericht wilt verwijderen?"
-          other: "Weet u zeker dat u al die berichten wilt verwijderen?"
       merge:
         confirm:
           one: "Weet je zeker dat je die berichten wilt samenvoegen?"
@@ -2477,7 +2466,6 @@ nl:
           details: "Wanneer een (nieuw) bericht wordt geplaatst, bewerkt, verwijderd of hersteld."
         user_event:
           name: "Gebruikersgebeurtenis"
-          details: "Wanneer een gebruiker wordt aangemaakt, goedgekeurd of bijgewerkt."
         delivery_status:
           title: "Afleveringsstatus"
           inactive: "Inactief"

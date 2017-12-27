@@ -1,8 +1,12 @@
 import { acceptance } from "helpers/qunit-helpers";
+import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
 
 acceptance("Rendering polls", {
   loggedIn: true,
-  settings: { poll_enabled: true }
+  settings: { poll_enabled: true },
+  beforeEach: function() {
+    clearPopupMenuOptionsCallback();
+  }
 });
 
 test("Single Poll", (assert) => {

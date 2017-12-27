@@ -495,6 +495,7 @@ describe UsersController do
 
     context 'logs in admin' do
       it 'does not log in admin with invalid token' do
+        SiteSetting.sso_url = "https://www.example.com/sso"
         SiteSetting.enable_sso = true
         get :admin_login, params: { token: "invalid" }
         expect(session[:current_user_id]).to be_blank
@@ -511,6 +512,7 @@ describe UsersController do
         end
 
         it 'logs in admin with SSO enabled' do
+          SiteSetting.sso_url = "https://www.example.com/sso"
           SiteSetting.enable_sso = true
           token = admin.email_tokens.create(email: admin.email).token
 
@@ -1532,6 +1534,27 @@ describe UsersController do
               }, format: :json
 
               expect(user.user_fields[user_field.id.to_s].size).to eq(UserField.max_length)
+            end
+
+            it "should retain existing user fields" do
+              put :update, params: {
+                username: user.username, name: 'Jim Tom', user_fields: { user_field.id.to_s => 'happy', optional_field.id.to_s => 'feet' }
+              }, format: :json
+
+              expect(response).to be_success
+              expect(user.user_fields[user_field.id.to_s]).to eq('happy')
+              expect(user.user_fields[optional_field.id.to_s]).to eq('feet')
+
+              put :update, params: {
+                username: user.username, name: 'Jim Tom', user_fields: { user_field.id.to_s => 'sad' }
+              }, format: :json
+
+              expect(response).to be_success
+
+              user.reload
+
+              expect(user.user_fields[user_field.id.to_s]).to eq('sad')
+              expect(user.user_fields[optional_field.id.to_s]).to eq('feet')
             end
           end
 

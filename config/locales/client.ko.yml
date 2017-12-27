@@ -1580,7 +1580,6 @@ ko:
       multi_select:
         select: '선택'
         selected: '({{count}})개가 선택됨'
-        select_replies: '선택 + 답글'
         delete: 선택 삭제
         cancel: 선택을 취소
         select_all: 전체 선택
@@ -1652,11 +1651,6 @@ ko:
         undelete: "이 글 삭제를 취소합니다."
         share: "이 글에 대한 링크를 공유합니다."
         more: "더"
-        delete_replies:
-          confirm:
-            other: "이 글에 작성된 {{count}}개의 댓글도 삭제하시겠습니까?"
-          yes_value: "예, 답글도 삭제합니다."
-          no_value: "아니오, 글만 삭제합니다."
         admin: "관리자 기능"
         wiki: "위키 만들기"
         unwiki: "위키 제거하기"
@@ -1726,9 +1720,6 @@ ko:
             other: "{{count}}명이 좋아합니다"
           vote:
             other: "{{count}}명이 이 글에 투표했습니다"
-      delete:
-        confirm:
-          other: "모든 글들을 삭제하시겠습니까?"
       merge:
         confirm:
           other: "정말로 이 {{count}}개의 게시글을 합칠까요?"
@@ -2395,7 +2386,6 @@ ko:
           details: "게시글이 생성, 편집, 삭제, 재생될 때."
         user_event:
           name: "사용자 이벤트"
-          details: "사용자가 생성, 허가, 갱신될 때"
         delivery_status:
           title: "발송 상태"
           inactive: "비활성화"

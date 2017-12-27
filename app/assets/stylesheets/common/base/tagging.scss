@@ -23,7 +23,7 @@
   }
 
   .tag-count {
-    font-size: 0.9em;
+    font-size: 0.857em;
   }
 }
 
@@ -86,7 +86,7 @@
 $tag-color: $primary-medium;
 
 .discourse-tag-count {
-  font-size: 0.8em;
+  font-size: 0.857em;
   color: $tag-color;
 }
 
@@ -153,7 +153,7 @@ $tag-color: $primary-medium;
 
 .topic-list-item .discourse-tags {
   display: block;
-  font-size: 0.75em;
+  font-size: 0.786em;
   font-weight: normal;
   clear: both;
   margin-top: 5px;
@@ -170,7 +170,7 @@ $tag-color: $primary-medium;
 
 .mobile-view .topic-list-item .discourse-tags {
   display: inline-block;
-  font-size: 0.9em;
+  font-size: 0.857em;
   margin-top: 0;
   .discourse-tag.box {
     position:relative;
@@ -185,7 +185,7 @@ $tag-color: $primary-medium;
   font-family: FontAwesome;
   color: $primary-low-mid;
   margin-right: 5px;
-  font-size: 0.7em;
+  font-size: 0.786em;
   position:relative;
   top: -0.1em;
 }

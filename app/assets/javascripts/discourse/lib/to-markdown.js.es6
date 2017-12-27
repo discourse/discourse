@@ -2,17 +2,23 @@ import parseHTML from 'discourse/helpers/parse-html';
 
 const trimLeft = text => text.replace(/^\s+/,"");
 const trimRight = text => text.replace(/\s+$/,"");
+const countPipes = text => text.replace(/\\\|/,"").match(/\|/g).length;
 
 class Tag {
-  constructor(name, prefix = "", suffix = "") {
+  constructor(name, prefix = "", suffix = "", inline = false) {
     this.name = name;
     this.prefix = prefix;
     this.suffix = suffix;
+    this.inline = inline;
   }
 
   decorate(text) {
     if (this.prefix || this.suffix) {
-      return [this.prefix, text, this.suffix].join("");
+      text = [this.prefix, text, this.suffix].join("");
+    }
+
+    if (this.inline) {
+      text = " " + text + " ";
     }
 
     return text;
@@ -29,9 +35,8 @@ class Tag {
   }
 
   static blocks() {
-    return ["address", "article", "aside", "dd", "div", "dl", "dt", "fieldset",
-            "figcaption", "figure", "footer", "form", "header", "hgroup", "hr", "main", "nav",
-            "ol", "p", "pre", "section", "table", "ul"];
+    return ["address", "article", "aside", "dd", "div", "dl", "dt", "fieldset", "figcaption", "figure",
+            "footer", "form", "header", "hgroup", "hr", "main", "nav", "p", "pre", "section"];
   }
 
   static headings() {
@@ -39,25 +44,26 @@ class Tag {
   }
 
   static emphases() {
-    return  [ ["b", "**"], ["strong", "**"], ["i", "_"], ["em", "_"], ["s", "~~"], ["strike", "~~"] ];
+    return  [ ["b", "**"], ["strong", "**"], ["i", "*"], ["em", "*"], ["s", "~~"], ["strike", "~~"] ];
   }
 
   static slices() {
-    return ["dt", "dd", "tr", "thead", "tbody", "tfoot"];
+    return ["dt", "dd", "thead", "tbody", "tfoot"];
   }
 
   static trimmable() {
-    return [...Tag.blocks(), ...Tag.headings(), ...Tag.slices(), "li", "td", "th", "br", "hr", "blockquote"];
+    return [...Tag.blocks(), ...Tag.headings(), ...Tag.slices(), "li", "td", "th", "br", "hr", "blockquote", "table", "ol", "tr", "ul"];
   }
 
   static block(name, prefix, suffix) {
     return class extends Tag {
       constructor() {
         super(name, prefix, suffix);
+        this.gap = "\n\n";
       }
 
       decorate(text) {
-        return `\n\n${this.prefix}${text}${this.suffix}\n\n`;
+        return `${this.gap}${this.prefix}${text}${this.suffix}${this.gap}`;
       }
     };
   }
@@ -70,18 +76,21 @@ class Tag {
   static emphasis(name, decorator) {
     return class extends Tag {
       constructor() {
-        super(name, decorator, decorator);
+        super(name, decorator, decorator, true);
       }
 
       decorate(text) {
-        text = text.trim();
-
         if (text.includes("\n")) {
           this.prefix = `<${this.name}>`;
           this.suffix = `</${this.name}>`;
         }
 
-        return super.decorate(text);
+        let space = text.match(/^\s/) || [""];
+        this.prefix = space[0] + this.prefix;
+        space = text.match(/\s$/) || [""];
+        this.suffix = this.suffix + space[0];
+
+        return super.decorate(text.trim());
       }
     };
   }
@@ -110,13 +119,13 @@ class Tag {
   static link() {
     return class extends Tag {
       constructor() {
-        super("a");
+        super("a", "", "", true);
       }
 
       decorate(text) {
         const attr = this.element.attributes;
 
-        if (attr && attr.href && text !== attr.href) {
+        if (attr.href && text !== attr.href) {
           text = text.replace(/\n{2,}/g, "\n");
           return "[" + text + "](" + attr.href + ")";
         }
@@ -129,12 +138,12 @@ class Tag {
   static image() {
     return class extends Tag {
       constructor() {
-        super("img");
+        super("img", "", "", true);
       }
 
       toMarkdown() {
         const e = this.element;
-        const attr = e.attributes || {};
+        const attr = e.attributes;
         const pAttr = (e.parent && e.parent.attributes) || {};
         const src = attr.src || pAttr.src;
 
@@ -144,7 +153,8 @@ class Tag {
           const height = attr.height || pAttr.height;
 
           if (width && height) {
-            alt = `${alt}|${width}x${height}`;
+            const pipe = this.element.parentNames.includes("table") ? "\\|" : "|";
+            alt = `${alt}${pipe}${width}x${height}`;
           }
 
           return "![" + alt + "](" + src + ")";
@@ -171,13 +181,27 @@ class Tag {
   }
 
   static cell(name) {
-    return Tag.slice(name, " ");
+    return class extends Tag {
+      constructor() {
+        super(name, "|");
+      }
+
+      toMarkdown() {
+        const text = this.element.innerMarkdown().trim();
+
+        if (text.includes("\n")) {
+          throw "Unsupported format inside Markdown table cells";
+        }
+
+        return this.decorate(text);
+      }
+    };
   }
 
   static li() {
     return class extends Tag.slice("li", "\n") {
       decorate(text) {
-        const indent = this.element.filterParentNames("ul").slice(1).map(() => "  ").join("");
+        const indent = this.element.filterParentNames(["ol", "ul"]).slice(1).map(() => "\t").join("");
         return super.decorate(`${indent}* ${trimLeft(text)}`);
       }
     };
@@ -193,6 +217,8 @@ class Tag {
         if (this.element.parentNames.includes("pre")) {
           this.prefix = '\n\n```\n';
           this.suffix = '\n```\n\n';
+        } else {
+          this.inline = true;
         }
 
         text = $('<textarea />').html(text).text();
@@ -214,6 +240,69 @@ class Tag {
     };
   }
 
+  static table() {
+    return class extends Tag.block("table") {
+      decorate(text) {
+        text = super.decorate(text).replace(/\|\n{2,}\|/g, "|\n|");
+        const rows = text.trim().split("\n");
+        const pipeCount = countPipes(rows[0]);
+        const isValid = rows.length > 1 &&
+                        pipeCount > 2 &&
+                        rows.reduce((a, c) => a && countPipes(c) <= pipeCount);
+
+        if (!isValid) {
+          throw "Unsupported table format for Markdown conversion";
+        }
+
+        const splitterRow = [...Array(pipeCount-1)].map(() => "| --- ").join("") + "|\n";
+        text = text.replace("|\n", "|\n" + splitterRow);
+
+        return text;
+      }
+    };
+  }
+
+  static list(name) {
+    return class extends Tag.block(name) {
+      decorate(text) {
+        let smallGap = "";
+
+        if (this.element.filterParentNames(["li"]).length) {
+          this.gap = "";
+          smallGap = "\n";
+        }
+
+        return smallGap + super.decorate(trimRight(text));
+      }
+    };
+  }
+
+  static ol() {
+    return class extends Tag.list("ol") {
+      decorate(text) {
+        text = "\n" + text;
+        const bullet = text.match(/\n\t*\*/)[0];
+
+        for (let i = parseInt(this.element.attributes.start || 1); text.includes(bullet); i++) {
+          text = text.replace(bullet, bullet.replace("*", `${i}.`));
+        }
+
+        return super.decorate(text.slice(1));
+      }
+    };
+  }
+
+  static tr() {
+    return class extends Tag.slice("tr", "|\n") {
+      decorate(text) {
+        if (!this.element.next) {
+          this.suffix = "|";
+        }
+        return `${text}${this.suffix}`;
+      }
+    };
+  }
+
 }
 
 const tags = [
@@ -224,10 +313,7 @@ const tags = [
   Tag.cell("td"), Tag.cell("th"),
   Tag.replace("br", "\n"), Tag.replace("hr", "\n---\n"), Tag.replace("head", ""),
   Tag.keep("ins"), Tag.keep("del"), Tag.keep("small"), Tag.keep("big"),
-  Tag.li(), Tag.link(), Tag.image(), Tag.code(), Tag.blockquote(),
-
-  // TO-DO  CREATE: tbody
-  //        UPDATE: ol, thead, th, td
+  Tag.li(), Tag.link(), Tag.image(), Tag.code(), Tag.blockquote(), Tag.table(), Tag.tr(), Tag.ol(), Tag.list("ul"),
 ];
 
 class Element {
@@ -236,7 +322,7 @@ class Element {
     this.type = element.type;
     this.data = element.data;
     this.children = element.children;
-    this.attributes = element.attributes;
+    this.attributes = element.attributes || {};
 
     if (parent) {
       this.parent = parent;
@@ -294,8 +380,8 @@ class Element {
     }
   }
 
-  filterParentNames(name) {
-    return this.parentNames.filter(p => p === name);
+  filterParentNames(names) {
+    return this.parentNames.filter(p => names.includes(p));
   }
 
   static toMarkdown(element, parent, prev, next) {
@@ -324,6 +410,19 @@ class Element {
   }
 }
 
+function trimUnwantedSpaces(html) {
+  const body = html.match(/<body[^>]*>([\s\S]*?)<\/body>/);
+  html = body ? body[1] : html;
+  html = html.replace(/\r|\n|&nbsp;/g, " ");
+
+  let match;
+  while (match = html.match(/<[^\s>]+[^>]*>\s{2,}<[^\s>]+[^>]*>/)) {
+    html = html.replace(match[0], match[0].replace(/>\s{2,}</, "> <"));
+  }
+
+  return html;
+}
+
 function putPlaceholders(html) {
   const codeRegEx = /<code[^>]*>([\s\S]*?)<\/code>/gi;
   const origHtml = html;
@@ -339,7 +438,7 @@ function putPlaceholders(html) {
     match = codeRegEx.exec(origHtml);
   }
 
-  const elements = parseHTML(html);
+  const elements = parseHTML(trimUnwantedSpaces(html));
   return { elements, placeholders };
 }
 
@@ -355,7 +454,7 @@ export default function toMarkdown(html) {
     const { elements, placeholders } = putPlaceholders(html);
     let markdown = Element.parse(elements).trim();
     markdown = markdown.replace(/^<b>/, "").replace(/<\/b>$/, "").trim(); // fix for google doc copy paste
-    markdown = markdown.replace(/\r/g, "").replace(/\n \n/g, "\n\n").replace(/\n{3,}/g, "\n\n");
+    markdown = markdown.replace(/\n +/g, "\n").replace(/ +\n/g, "\n").replace(/ {2,}/g, " ").replace(/\n{3,}/g, "\n\n").replace(/\t/g, "  ");
     return replacePlaceholders(markdown, placeholders);
   } catch(err) {
     return "";

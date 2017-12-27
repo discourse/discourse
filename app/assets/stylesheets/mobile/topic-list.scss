@@ -85,7 +85,7 @@
   .badge-notification, .category-topic-link td.num .badge-notification {
     position: relative;
     top: -1px;
-    font-size: 1.071em;
+    font-size: 1em;
     padding: 4px 6px 3px 6px;
     i {color: $secondary;}
 
@@ -260,15 +260,11 @@ tr.category-topic-link {
 
   th .badge-category {
     margin: 0;
-    font-size: 110%;
   }
 
   .category-topic-link {
     .num {
       white-space: nowrap;
-      .number {
-        font-size: 1.071em;
-      }
     }
     .topic-excerpt {
       width: 110%;
@@ -438,7 +434,7 @@ td .main-link {
 }
 .topic-list {
   .posts-map {
-    font-size: 1.15em;
+    font-size: 1.143em;
   }
   // so the topic excerpt is full width
   // as the containing div is 80%

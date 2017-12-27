@@ -1503,7 +1503,6 @@ fa_IR:
       multi_select:
         select: 'انتخاب'
         selected: 'انتخاب شده ({{count}}) '
-        select_replies: 'انتخاب کردن + جواب دادن'
         delete: حذف انتخاب شده ها
         cancel: لغو انتخاب
         select_all: انتخاب همه
@@ -1574,11 +1573,6 @@ fa_IR:
         undelete: "بازگردانی این نوشته"
         share: "اشتراک گذاری یک پیوند در این نوشته"
         more: "بیشتر"
-        delete_replies:
-          confirm:
-            other: "آیا شما می خواهید {{count}} پاسخ مستقیم را از این نوشته حذف کنید؟"
-          yes_value: "بله، پاسخ‌ها را نیز حذف کن"
-          no_value: "نه، تنها این نوشته"
         admin: "عملیات مدیریت نوشته"
         wiki: "ساخت دانشنامه"
         unwiki: "حذف دانشنامه"
@@ -1648,9 +1642,6 @@ fa_IR:
             other: "{{count}} کاربر این مورد را پسند کردند"
           vote:
             other: "{{count}} کاربر به این نوشته رأی دادند"
-      delete:
-        confirm:
-          other: "آیا مطمئنید که می‌خواهید همه‌ی آن نوشته ها را پاک کنید؟"
       revisions:
         controls:
           first: "بازبینی نخست"
@@ -2290,7 +2281,6 @@ fa_IR:
           details: "وقتی یک پاسخ، ویرایش، حذف یا بازگردانده شده."
         user_event:
           name: "رویداد کاربر"
-          details: "وقتی کاربر ایجاد تایید یا به‌روز می‌شود."
         delivery_status:
           title: "وضعیت تحویل"
           inactive: "غیر‌فعال"

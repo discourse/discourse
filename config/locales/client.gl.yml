@@ -1185,7 +1185,6 @@ gl:
       multi_select:
         select: 'seleccionar'
         selected: 'seleccionados ({{count}})'
-        select_replies: 'seleccionar +respostas'
         delete: eliminar seleccionados
         cancel: 'cancelar selección '
         select_all: seleccionar todo
@@ -1253,12 +1252,6 @@ gl:
         undelete: "recuperar publicación"
         share: "compartir ligazón á publicación"
         more: "Máis"
-        delete_replies:
-          confirm:
-            one: "Tamén desexas eliminar a resposta directa desta publicación?"
-            other: "Tamén desexas eliminar as {{count}} respostas directas desta publicación?"
-          yes_value: "Si, eliminar tamén as respostas"
-          no_value: "Non, só esta publicación"
         admin: "accións admin. nas publicacións"
         wiki: "Crear wiki"
         unwiki: "Eliminar wiki"
@@ -1344,10 +1337,6 @@ gl:
           vote:
             one: "Unha persoa votou por esta publicación"
             other: "{{count}} persoas votaron por esta publicación"
-      delete:
-        confirm:
-          one: "Confirmas a eliminación desta publicación?"
-          other: "Confirmas a eliminación de todas estas publicacións?"
       revisions:
         controls:
           first: "Primeira revisión"

@@ -469,6 +469,7 @@ describe Guardian do
     end
 
     it 'returns false for all users when sso is enabled' do
+      SiteSetting.sso_url = "https://www.example.com/sso"
       SiteSetting.enable_sso = true
 
       expect(Guardian.new(trust_level_2).can_invite_via_email?(topic)).to be_falsey
@@ -2176,6 +2177,7 @@ describe Guardian do
 
     context 'when SSO username override is active' do
       before do
+        SiteSetting.sso_url = "https://www.example.com/sso"
         SiteSetting.enable_sso = true
         SiteSetting.sso_overrides_username = true
       end
@@ -2250,6 +2252,7 @@ describe Guardian do
     context 'when SSO email override is active' do
       before do
         SiteSetting.email_editable = false
+        SiteSetting.sso_url = "https://www.example.com/sso"
         SiteSetting.enable_sso = true
         SiteSetting.sso_overrides_email = true
       end
@@ -2337,6 +2340,7 @@ describe Guardian do
 
       context 'when SSO is enabled' do
         before do
+          SiteSetting.sso_url = "https://www.example.com/sso"
           SiteSetting.enable_sso = true
         end
 

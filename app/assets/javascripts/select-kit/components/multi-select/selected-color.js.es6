@@ -5,7 +5,7 @@ export default SelectedNameComponent.extend({
   layoutName: "select-kit/templates/components/multi-select/selected-color",
 
   didRender() {
-    const name = this.get("content.name");
+    const name = this.get("name");
     this.$(".color-preview").css("background", `#${name}`.htmlSafe());
   }
 });

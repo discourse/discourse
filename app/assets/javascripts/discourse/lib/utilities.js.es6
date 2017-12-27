@@ -334,27 +334,27 @@ export function getUploadMarkdown(upload) {
 }
 
 export function displayErrorForUpload(data) {
-  // deal with meaningful errors first
   if (data.jqXHR) {
     switch (data.jqXHR.status) {
       // cancelled by the user
-      case 0: return;
+      case 0:
+        return;
 
-              // entity too large, usually returned from the web server
+      // entity too large, usually returned from the web server
       case 413:
-              var type = uploadTypeFromFileName(data.files[0].name);
-              var maxSizeKB = Discourse.SiteSettings['max_' + type + '_size_kb'];
-              bootbox.alert(I18n.t('post.errors.file_too_large', { max_size_kb: maxSizeKB }));
-              return;
+        const type = uploadTypeFromFileName(data.files[0].name);
+        const max_size_kb = Discourse.SiteSettings[`max_${type}_size_kb`];
+        bootbox.alert(I18n.t('post.errors.file_too_large', { max_size_kb }));
+        return;
 
-              // the error message is provided by the server
+      // the error message is provided by the server
       case 422:
-              if (data.jqXHR.responseJSON.message) {
-                bootbox.alert(data.jqXHR.responseJSON.message);
-              } else {
-                bootbox.alert(data.jqXHR.responseJSON.join("\n"));
-              }
-              return;
+        if (data.jqXHR.responseJSON.message) {
+          bootbox.alert(data.jqXHR.responseJSON.message);
+        } else {
+          bootbox.alert(data.jqXHR.responseJSON.join("\n"));
+        }
+        return;
     }
   } else if (data.errors && data.errors.length > 0) {
     bootbox.alert(data.errors.join("\n"));

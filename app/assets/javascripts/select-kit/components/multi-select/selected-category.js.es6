@@ -6,8 +6,9 @@ export default SelectedNameComponent.extend({
   classNames: "selected-category",
   layoutName: "select-kit/templates/components/multi-select/selected-category",
 
-  @computed("content.originalContent")
+  @computed("computedContent.originalContent")
   badge(category) {
-    return categoryBadgeHTML(category, {allowUncategorized: true, link: false}).htmlSafe();
+    return categoryBadgeHTML(category, { allowUncategorized: true, link: false })
+            .htmlSafe();
   }
 });

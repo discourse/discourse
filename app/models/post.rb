@@ -103,7 +103,7 @@ class Post < ActiveRecord::Base
     when 'string'
       where('raw ILIKE ?', "%#{pattern}%")
     when 'regex'
-      where('raw ~ ?', pattern)
+      where('raw ~ ?', "(?n)#{pattern}")
     end
   }
 
@@ -480,6 +480,17 @@ class Post < ActiveRecord::Base
         p.rebake!
       rescue => e
         problems << { post: p, ex: e }
+
+        attempts = p.custom_fields["rebake_attempts"].to_i
+
+        if attempts > 3
+          p.update_columns(baked_version: BAKED_VERSION)
+          Discourse.warn_exception(e, message: "Can not rebake post# #{p.id} after 3 attempts, giving up")
+        else
+          p.custom_fields["rebake_attempts"] = attempts + 1
+          p.save_custom_fields
+        end
+
       end
     end
     problems

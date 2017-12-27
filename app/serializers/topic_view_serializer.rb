@@ -267,7 +267,7 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def include_unicode_title?
-    !!(object.topic.title =~ /:([\w\-+]*):/)
+    object.topic.title.match?(/:[\w\-+]+:/)
   end
 
   def unicode_title

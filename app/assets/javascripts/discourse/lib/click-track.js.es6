@@ -13,48 +13,57 @@ export default {
     // cancel click if triggered as part of selection.
     if (selectedText() !== "") { return false; }
 
-    var $link = $(e.currentTarget);
+    const $link = $(e.currentTarget);
 
-    // don't track lightboxes, group mentions or links with disabled tracking
-    if ($link.hasClass('lightbox') || $link.hasClass('mention-group') ||
-        $link.hasClass('no-track-link') || $link.hasClass('hashtag')) {
+    // don't track
+    //   - lightboxes
+    //   - group mentions
+    //   - links with disabled tracking
+    //   - category links
+    //   - quote back button
+    if ($link.is('.lightbox, .mention-group, .no-track-link, .hashtag, .back')) {
       return true;
     }
 
     // don't track links in quotes or in elided part
-    if ($link.parents('aside.quote,.elided').length) { return true; }
+    let tracking = $link.parents('aside.quote,.elided').length === 0;
 
-    var href = $link.attr('href') || $link.data('href'),
-        $article = $link.closest('article,.excerpt,#revisions'),
-        postId = $article.data('post-id'),
-        topicId = $('#topic').data('topic-id') || $article.data('topic-id'),
-        userId = $link.data('user-id');
+    let href = $link.attr('href') || $link.data('href');
 
     if (!href || href.trim().length === 0) { return false; }
-    if (href.indexOf("mailto:") === 0) { return true; }
+    if (href.indexOf('mailto:') === 0) { return true; }
 
-    if (!userId) userId = $article.data('user-id');
+    const $article = $link.closest('article:not(.onebox-body), .excerpt, #revisions');
+    const postId = $article.data('post-id');
+    const topicId = $('#topic').data('topic-id') || $article.data('topic-id');
+    const userId = $link.data('user-id') || $article.data('user-id');
+    const ownLink = userId && (userId === Discourse.User.currentProp('id'));
 
-    var ownLink = userId && (userId === Discourse.User.currentProp('id')),
-        trackingUrl = Discourse.getURL("/clicks/track?url=" + encodeURIComponent(href));
-    if (postId && (!$link.data('ignore-post-id'))) {
-      trackingUrl += "&post_id=" + encodeURI(postId);
-    }
-    if (topicId) {
-      trackingUrl += "&topic_id=" + encodeURI(topicId);
-    }
+    let destUrl = href;
 
-    // Update badge clicks unless it's our own
-    if (!ownLink) {
-      const $badge = $('span.badge', $link);
-      if ($badge.length === 1) {
-        // don't update counts in category badge nor in oneboxes (except when we force it)
-        if (isValidLink($link)) {
-          const html = $badge.html();
-          const key = `${new Date().toLocaleDateString()}-${postId}-${href}`;
-          if (/^\d+$/.test(html) && !sessionStorage.getItem(key)) {
-            sessionStorage.setItem(key, true);
-            $badge.html(parseInt(html, 10) + 1);
+    if (tracking) {
+
+      destUrl = Discourse.getURL('/clicks/track?url=' + encodeURIComponent(href));
+
+      if (postId && !$link.data('ignore-post-id')) {
+        destUrl += "&post_id=" + encodeURI(postId);
+      }
+      if (topicId) {
+        destUrl += "&topic_id=" + encodeURI(topicId);
+      }
+
+      // Update badge clicks unless it's our own
+      if (!ownLink) {
+        const $badge = $('span.badge', $link);
+        if ($badge.length === 1) {
+          // don't update counts in category badge nor in oneboxes (except when we force it)
+          if (isValidLink($link)) {
+            const html = $badge.html();
+            const key = `${new Date().toLocaleDateString()}-${postId}-${href}`;
+            if (/^\d+$/.test(html) && !sessionStorage.getItem(key)) {
+              sessionStorage.setItem(key, true);
+              $badge.html(parseInt(html, 10) + 1);
+            }
           }
         }
       }
@@ -62,13 +71,12 @@ export default {
 
     // If they right clicked, change the destination href
     if (e.which === 3) {
-      var destination = Discourse.SiteSettings.track_external_right_clicks ? trackingUrl : href;
-      $link.attr('href', destination);
+      $link.attr('href', Discourse.SiteSettings.track_external_right_clicks ? destUrl : href);
       return true;
     }
 
     // if they want to open in a new tab, do an AJAX request
-    if (wantsNewWindow(e)) {
+    if (tracking && wantsNewWindow(e)) {
       ajax("/clicks/track", {
         data: {
           url: href,
@@ -82,9 +90,6 @@ export default {
     }
 
     e.preventDefault();
-
-    // We don't track clicks on quote back buttons
-    if ($link.hasClass('back')) { return true; }
 
     // Remove the href, put it as a data attribute
     if (!$link.data('href')) {
@@ -109,7 +114,7 @@ export default {
     }
 
     // If we're on the same site, use the router and track via AJAX
-    if (DiscourseURL.isInternal(href) && !$link.hasClass('attachment')) {
+    if (tracking && DiscourseURL.isInternal(href) && !$link.hasClass('attachment')) {
       ajax("/clicks/track", {
         data: {
           url: href,
@@ -125,10 +130,9 @@ export default {
 
     // Otherwise, use a custom URL with a redirect
     if (Discourse.User.currentProp('external_links_in_new_tab')) {
-      var win = window.open(trackingUrl, '_blank');
-      win.focus();
+      window.open(destUrl, '_blank').focus();
     } else {
-      DiscourseURL.redirectTo(trackingUrl);
+      DiscourseURL.redirectTo(destUrl);
     }
 
     return false;

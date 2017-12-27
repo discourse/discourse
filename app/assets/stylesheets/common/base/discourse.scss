@@ -47,11 +47,11 @@ body {
 }
 
 big {
-  font-size: 2em;
+  font-size: 2.286em;
 }
 
 small {
-  font-size: .643em;
+  font-size: .786em;
 }
 
 //setting a static limit on big and small prevents nesting abuse
@@ -423,7 +423,7 @@ select {
 .content-list {
   h3 {
     color: $primary-medium;
-    font-size: 1.071em;
+    font-size: 1.143em;
     padding-left: 5px;
     margin-bottom: 10px;
   }
@@ -474,7 +474,7 @@ select {
 
   .control-label {
     font-weight: bold;
-    font-size: 1.2em;
+    font-size: 1.286em;
     line-height: 2;
   }
 
@@ -517,7 +517,7 @@ select {
 
 #loading-message {
   position: absolute;
-  font-size: 2.143em;
+  font-size: 2.286em;
   text-align: center;
   top: 120px;
   left: 500px;

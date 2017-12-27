@@ -291,6 +291,7 @@ login:
   enable_sso:
     client: true
     default: false
+    validator: "EnableSsoValidator"
   sso_allows_all_return_paths: false
   enable_sso_provider: false
   verbose_sso_logging: false
@@ -1168,6 +1169,10 @@ legal:
     default: ''
 
 backups:
+  enable_backups:
+    default: true
+    shadowed_by_global: true
+    client: true
   readonly_mode_during_backup:
     default: false
   allow_restore:

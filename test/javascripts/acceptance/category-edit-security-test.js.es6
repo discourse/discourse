@@ -22,35 +22,38 @@ QUnit.test("default", assert => {
 });
 
 QUnit.test("removing a permission", assert => {
+  const availableGroups = selectKit(".available-groups");
+
   visit("/c/bug");
 
   click('.edit-category');
   click('li.edit-category-security a');
   click('.edit-category-tab-security .edit-permission');
-  expandSelectKit(".available-groups");
+  availableGroups.expand();
 
   andThen(() => {
-    assert.notOk(exists(".available-groups .select-kit-row[data-value='everyone']"), 'everyone is already used and is not in the available groups');
+    assert.notOk(availableGroups.rowByValue('everyone').exists(), 'everyone is already used and is not in the available groups');
   });
 
   click('.edit-category-tab-security .permission-list li:first-of-type .remove-permission');
-  expandSelectKit(".available-groups");
+  availableGroups.expand();
 
   andThen(() => {
-    assert.ok(exists(".available-groups .select-kit-row[data-value='everyone']"), 'everyone has been removed and appears in the available groups');
+    assert.ok(availableGroups.rowByValue('everyone').exists(), 'everyone has been removed and appears in the available groups');
   });
 });
 
 QUnit.test("adding a permission", assert => {
+  const availableGroups = selectKit(".available-groups");
+  const permissionSelector = selectKit(".permission-selector");
+
   visit("/c/bug");
 
   click('.edit-category');
   click('li.edit-category-security a');
   click('.edit-category-tab-security .edit-permission');
-  expandSelectKit('.available-groups');
-  selectKitSelectRow('staff', { selector: '.available-groups' });
-  expandSelectKit('.permission-selector');
-  selectKitSelectRow('2', { selector: '.permission-selector' });
+  availableGroups.expand().selectRowByValue('staff');
+  permissionSelector.expand().selectRowByValue('2');
   click('.edit-category-tab-security .add-permission');
 
   andThen(() => {
@@ -65,21 +68,20 @@ QUnit.test("adding a permission", assert => {
 });
 
 QUnit.test("adding a previously removed permission", assert => {
+  const availableGroups = selectKit(".available-groups");
+
   visit("/c/bug");
 
   click('.edit-category');
   click('li.edit-category-security a');
   click('.edit-category-tab-security .edit-permission');
-  expandSelectKit(".available-groups");
-
   click('.edit-category-tab-security .permission-list li:first-of-type .remove-permission');
 
   andThen(() => {
     assert.equal(find(".edit-category-tab-security .permission-list li").length, 0, 'it removes the permission from the list');
   });
 
-  expandSelectKit('.available-groups');
-  selectKitSelectRow('everyone', { selector: '.available-groups' });
+  availableGroups.expand().selectRowByValue('everyone');
   click('.edit-category-tab-security .add-permission');
 
   andThen(() => {

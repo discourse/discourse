@@ -1211,6 +1211,7 @@ en:
       similar_topics: "Your topic is similar to..."
       drafts_offline: "drafts offline"
 
+      group_mentioned_limit: "<b>Warning!</b> You mentioned <a href='{{group_link}}'>{{group}}</a>, however this group has more members than the administrator configured mention limit of {{max}} users. Nobody will be notified. "
       group_mentioned:
         one: "By mentioning {{group}}, you are about to notify <a href='{{group_link}}'>1 person</a> – are you sure?"
         other: "By mentioning {{group}}, you are about to notify <a href='{{group_link}}'>{{count}} people</a> – are you sure?"
@@ -1380,7 +1381,7 @@ en:
       too_short: "Your search term is too short."
       result_count:
         one: "1 result for <span class='term'>{{term}}</span>"
-        other: "{{count}} results for <span class='term'>{{term}}</span>"
+        other: "{{count}}{{plus}} results for <span class='term'>{{term}}</span>"
       title: "search topics, posts, users, or categories"
       no_results: "No results found."
       no_more_results: "No more results found."
@@ -2813,7 +2814,7 @@ en:
           details: "When there is a new reply, edit, deleted or recovered."
         user_event:
           name: "User Event"
-          details: "When a user is created, approved or updated."
+          details: "When a user logs in, logs out, is created, approved or updated."
         delivery_status:
           title: "Delivery Status"
           inactive: "Inactive"
@@ -3252,6 +3253,7 @@ en:
             all_search_types: "All search types"
             header: "Header"
             full_page: "Full Page"
+            click_through_only: "All (click through only)"
         logster:
           title: "Error Logs"
 

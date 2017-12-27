@@ -401,6 +401,12 @@ export default function() {
       ]);
     });
 
+    this.get('/admin/logs/search_logs/term/ruby.json', () => {
+      return response(200, {
+        "term":{"type":"search_log_term","title":"Search Count","data":[{"x":"2017-07-20","y":2}]}
+      });
+    });
+
     this.get('/onebox', request => {
       if (request.queryParams.url === 'http://www.example.com/has-title.html' ||
           request.queryParams.url === 'http://www.example.com/has-title-and-a-url-that-is-more-than-80-characters-because-thats-good-for-seo-i-guess.html') {

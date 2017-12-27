@@ -308,6 +308,7 @@ pl_PL:
     uploading: "Wysyłam…"
     uploading_filename: "Wysyłanie {{filename}}..."
     uploaded: "Wgrano!"
+    pasting: "Wklejanie..."
     enable: "Włącz"
     disable: "Wyłącz"
     undo: "Cofnij"
@@ -587,12 +588,14 @@ pl_PL:
         disable: "Wyłącz powiadomienia"
         enable: "Włącz powiadomienia"
         each_browser_note: "Uwaga: to ustawienie musisz zmienić w każdej przeglądarce której używasz."
+      dismiss: 'Odrzuć'
       dismiss_notifications: "Odrzuć wszystkie"
       dismiss_notifications_tooltip: "Oznacz wszystkie powiadomienia jako przeczytane"
       first_notification: "Twoje pierwsze powiadomienie! Kliknij aby zacząć."
       disable_jump_reply: "Po odpowiedzi nie przechodź do nowego wpisu"
       dynamic_favicon: "Pokazuj licznik powiadomień na karcie jako dynamiczny favicon"
       theme_default_on_all_devices: "Ustaw ten motyw jako domyślny na wszystkich moich urządzeniach"
+      allow_private_messages: "Zezwól aby użytkownicy wysyłali mi wiadomości prywatne"
       external_links_in_new_tab: "Otwieraj wszystkie zewnętrzne odnośniki w nowej karcie"
       enable_quoting: "Włącz cytowanie zaznaczonego tekstu"
       change: "zmień"
@@ -600,7 +603,9 @@ pl_PL:
       admin: "{{user}} jest adminem"
       moderator_tooltip: "Ten użytkownik jest moderatorem"
       admin_tooltip: "Ten użytkownik jest administratorem"
+      silenced_tooltip: "Ten użytkownik jest wyciszony"
       suspended_notice: "ten użytkownik jest zawieszony do {{date}}."
+      suspended_permanently: "Ten użytkownik jest zawieszony"
       suspended_reason: "Powód: "
       github_profile: "Github"
       email_activity_summary: "Podsumowanie aktywności"
@@ -982,6 +987,8 @@ pl_PL:
     first_post: Pierwszy wpis
     mute: Wycisz
     unmute: Wyłącz wyciszenie
+    last_post: Opublikowano
+    time_read: Przeczytane
     last_reply_lowercase: ostatnia odpowiedź
     replies_lowercase:
       one: odpowiedź
@@ -1115,6 +1122,11 @@ pl_PL:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    select_kit:
+      default_header_text: Wybierz...
+      no_content: Nie znaleziono dopasowań
+      filter_placeholder: Wyszukiwanie...
+      create: "Utwórz {{content}}"
     emoji_picker:
       filter_placeholder: Szukaj emoji
       people: Ludzie
@@ -1179,6 +1191,7 @@ pl_PL:
       edit_reason_placeholder: "powód edycji?"
       show_edit_reason: "(dodaj powód edycji)"
       topic_featured_link_placeholder: "Wstaw link pod nazwą "
+      remove_featured_link: "Usuń link z tematu."
       reply_placeholder: "Pisz w tym miejscu. Wspierane formatowanie to Markdown, BBCode lub HTML.  Możesz też przeciągnąć tu obrazek."
       view_new_post: "Zobacz Twój nowy wpis."
       saving: "Zapisywanie"
@@ -1218,6 +1231,17 @@ pl_PL:
         body: "Aktualnie ta wiadomość będzie wysłana tylko do ciebie!"
       admin_options_title: "Opcjonalne ustawienia obsługi dla tego tematu"
     notifications:
+      tooltip:
+        regular:
+          one: "1 nieprzeczytane powiadomienie"
+          few: "Nieprzeczytanych powiadomień: {{count}}"
+          many: "Nieprzeczytanych powiadomień: {{count}}"
+          other: "Nieprzeczytanych powiadomień: {{count}}"
+        message:
+          one: "Nieodczytane wiadomości: {{count}}"
+          few: "Nieodczytane wiadomości: {{count}}"
+          many: "Nieodczytane wiadomości: {{count}}"
+          other: "Nieodczytane wiadomości: 1"
       title: "powiadomienia o wywołanej @nazwie, odpowiedzi do twoich wpisów i tematów, prywatne wiadomości, itp"
       none: "Nie udało się załadować listy powiadomień."
       empty: "Nie znaleziono powiadomień."
@@ -1265,6 +1289,7 @@ pl_PL:
         linked: "Linkownie do twojego wpisu"
         granted_badge: "Przyznanie odznaki"
         group_message_summary: "Wiadomości w grupowej skrzynce odbiorczej"
+        topic_reminder: "Przypomnienie"
       popup:
         mentioned: '{{username}} wspomina o tobie w "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} wspomniał o Tobie w "{{topic}}" - {{site_title}}'
@@ -1287,6 +1312,7 @@ pl_PL:
       uploading: "Wgrywanie"
       select_file: "Wybierz plik"
       image_link: "odnośnik do którego Twój obraz będzie kierował"
+      default_image_alt_text: Obraz
     search:
       sort_by: "Sortuj po"
       relevance: "Trafność"
@@ -1328,11 +1354,15 @@ pl_PL:
           label: W grupie
         with_badge:
           label: Z odnaką
+        with_tags:
+          label: Otagowane
         filters:
           likes: Lubię
           posted: Opublikowałem w
           watching: Obserwuję
           tracking: Śledzę
+          private: W moich wiadomościach
+          bookmarks: Dodałeś do zakładek
           first: 'tylko najnowsze posty '
           pinned: są przypięte
           unpinned: są nie przypięte
@@ -1499,12 +1529,18 @@ pl_PL:
         publish_to: "Opublikuj do:"
         when: "Kiedy:"
       auto_update_input:
+        none: "Wybierz przedział czasowy"
         later_today: "Później dzisiaj"
         tomorrow: "Jutro"
         later_this_week: "Później w tym tygodniu"
         this_weekend: "W ten weekend"
         next_week: "Następny tydzień"
+        two_weeks: "Dwa tygodnie"
         next_month: "Następny miesiąc"
+        three_months: "Trzy miesiące"
+        six_months: "Sześć miesięcy"
+        one_year: "Jeden rok"
+        forever: "Zawsze"
         pick_date_and_time: "Wybierz datę i czas"
         set_based_on_last_post: "Zamknij na podstawie ostatniego postu"
       publish_to_category:
@@ -1744,7 +1780,12 @@ pl_PL:
       multi_select:
         select: 'wybierz'
         selected: 'wybrano ({{count}})'
-        select_replies: 'wybierz +replies'
+        select_post:
+          label: 'wybierz'
+          title: 'Dodaj wpis do zaznaczenia'
+        selected_post:
+          label: 'zaznaczone'
+          title: 'Kliknij aby usunąć post z zaznaczenia'
         delete: usuń wybrane
         cancel: anuluj wybieranie
         select_all: zaznacz wszystkie
@@ -1838,13 +1879,7 @@ pl_PL:
         share: "udostępnij odnośnik do tego wpisu"
         more: "Więcej"
         delete_replies:
-          confirm:
-            one: "Czy chcesz usunąć również bezpośrednią odpowiedź na ten wpis?"
-            few: "Czy chcesz usunąć również {{count}} bezpośrednie odpowiedzi na ten wpis?"
-            many: "Czy chcesz usunąć również {{count}} bezpośrednich odpowiedzi na ten wpis?"
-            other: "Czy chcesz usunąć również {{count}} bezpośrednich odpowiedzi na ten wpis?"
-          yes_value: "Tak, usuń też odpowiedzi"
-          no_value: "Nie, tylko ten wpis"
+          just_the_post: "Nie, tylko ten post"
         admin: "administracja wpisem (tryb wiki itp)"
         wiki: "Włącz tryb Wiki"
         unwiki: "Wyłącz tryb Wiki"
@@ -1855,6 +1890,11 @@ pl_PL:
         change_owner: "Zmiana właściciela"
       actions:
         flag: 'Oflaguj'
+        defer_flags:
+          one: "Ignoruj flagę"
+          few: "Ignoruj oflagowanie"
+          many: "Ignoruj flagi"
+          other: "Ignoruj flagi"
         undo:
           off_topic: "Cofnij flagę"
           spam: "Cofnij flagę"
@@ -1962,12 +2002,6 @@ pl_PL:
             few: "{{count}} osoby zagłosowały za tym wpisem"
             many: "{{count}} osób zagłosowało za tym wpisem"
             other: "{{count}} osób zagłosowało za tym wpisem"
-      delete:
-        confirm:
-          one: "Jesteś pewny(-a), że chcesz usunąć ten wpis?"
-          few: "Jesteś pewny(-a), że chcesz usunąć te wszystkie wpisy?"
-          many: "Czy na pewno chcesz usunąć te wszystkie wpisy?"
-          other: "Czy na pewno chcesz usunąć te wszystkie wpisy?"
       merge:
         confirm:
           one: "Czy na pewno chcesz połączyć te posty?"
@@ -2428,6 +2462,7 @@ pl_PL:
       selector_no_tags: "brak tagów"
       changed: "zmienione tagi:"
       tags: "Tagi"
+      choose_for_topic: "tagi opcjonalne"
       delete_tag: "Usuń Tag"
       rename_tag: "Zmień nazwę taga"
       rename_instructions: "Wybierz nową nazwę dla tego taga:"
@@ -2558,11 +2593,17 @@ pl_PL:
         active_posts: "Ofllagowane wpisy"
         old_posts: "Stare oflagowane wpisy"
         topics: "Oflagowane tematy"
+        moderation_history: "Historia moderacji"
         agree: "Potwierdź"
         agree_title: "Potwierdź to zgłoszenie jako uzasadnione i poprawne"
+        agree_flag_hide_post: "Potwierdź i ukryj post"
+        agree_flag_restore_post: "Potwierdź i przywróć post"
+        agree_flag: "Potwierdź i zachowaj post"
+        defer_flag: "Ignoruj"
         defer_flag_title: "Usunięcie flagi z twojej listy, nie wymaga dalszych działań."
         delete: "Usuń"
         delete_title: "Usuń wpis do którego odnosi się flaga."
+        delete_post_defer_flag: "Usuń post i ignoruj flagę"
         delete_post_defer_flag_title: "Usuń wpis. Jeśli jest pierwszym w temacie, usuń temat."
         delete_post_agree_flag_title: "Usuń wpis. Jeśli jest pierwszym w temacie, usuń temat."
         delete_flag_modal_title: "Usuń i…"
@@ -2580,6 +2621,7 @@ pl_PL:
         dispositions:
           agreed: "potwierdzono"
           disagreed: "wycofano"
+          deferred: "ignorowane"
         flagged_by: "Oflagowano przez"
         resolved_by: "Rozwiązano przez"
         took_action: "Podjęto działanie"
@@ -2593,11 +2635,17 @@ pl_PL:
         was_edited: "Wpis został zmieniony po pierwszej fladze"
         previous_flags_count: "Ten wpis został do tej pory oznaczony flagą {{count}} razy."
         show_details: "Pokaż szczegóły oflagowania"
+        details: "szczegóły"
         flagged_topics:
           topic: "Temat"
           type: "Typ"
           users: "Użytkownicy"
           last_flagged: "Ostatnio Oflagowane"
+        short_names:
+          inappropriate: "niewłaściwy"
+          spam: "spam"
+          notify_user: "niestandardowe"
+          notify_moderators: "niestandardowe"
       groups:
         primary: "Główna grupa"
         no_primary: "(brak podstawowej grupy)"
@@ -2685,7 +2733,6 @@ pl_PL:
           details: "Kiedy pojawia się nowa odpowiedź, edytuj, usuń lub odzyskaj."
         user_event:
           name: "Wydarzenie użytkownika"
-          details: "Gdy użytkownik jest utworzony, zatwierdzony lub zaktualizowany. "
         delivery_status:
           title: "Status dostarczenia"
           inactive: "Nieaktywny"
@@ -2998,6 +3045,15 @@ pl_PL:
             type_placeholder: "streszczenie, rejestracja…"
             reply_key_placeholder: "klucz odpowiedzi"
             skipped_reason_placeholder: "powód"
+      moderation_history:
+        performed_by: "Wykonane przez"
+        no_results: "Brak dostępnej historii moderacji."
+        actions:
+          delete_user: "Użytkownik usunięty"
+          suspend_user: "Użytkownik zawieszony"
+          silence_user: "Użytkownik wyciszony"
+          delete_post: "Wpis usunięty"
+          delete_topic: "Temat usunięty"
       logs:
         title: "Logi"
         action: "Działanie"
@@ -3053,6 +3109,7 @@ pl_PL:
             change_category_settings: "zmiana ustawień kategorii"
             delete_category: "Usuń kategorię"
             create_category: "Dodaj nową kategorię"
+            silence_user: "wycisz użytkownika"
             grant_admin: "nadaj prawa admina"
             revoke_admin: "odbierz prawa admina"
             grant_moderation: "Przyznaj status moderatora"
@@ -3104,6 +3161,12 @@ pl_PL:
           title: "Logi wyszukiwań"
           term: "Szukana fraza"
           searches: "Wyszukiwania"
+          click_through: "Kliknij przez"
+          unique: "Unikalny"
+          types:
+            all_search_types: "Wszystkie typy wyszukiwania"
+            header: "Nagłówek"
+            full_page: "Pełna strona"
         logster:
           title: "Logi błędów"
       watched_words:
@@ -3153,6 +3216,7 @@ pl_PL:
           pending: "Oczekujący"
           staff: 'Zespół'
           suspended: 'Zawieszeni'
+          silenced: 'Wyciszony'
           suspect: 'Podejrzani'
         approved: "Zatwierdzam?"
         approved_selected:
@@ -3177,6 +3241,7 @@ pl_PL:
           staff: "Zespół"
           admins: 'Administratorzy'
           moderators: 'Moderatoratorzy'
+          silenced: 'Wyciszeni użytkownicy'
           suspended: 'Zawieszone konta'
           suspect: 'Podejrzani użytkownicy'
         reject_successful:
@@ -3204,10 +3269,20 @@ pl_PL:
         suspend_message: "Wiadomość Email"
         suspend_message_placeholder: "Ewentualnie podaj więcej informacji o zawieszeniu użytkownika, a zostaną wysłane do niego poprzez email."
         suspended_by: "Zawieszony przez"
+        silence_reason: "Powód"
+        silenced_by: "Wyciszony przez"
+        silence_modal_title: "Wycisz użytkownika"
+        silence_duration: "Jak długo użytkownik będzie wyciszany?"
+        silence_reason_label: "Dlaczego uciszasz tego użytkownika?"
+        silence_reason_placeholder: "Powód wyciszenia"
+        silence_message: "Wiadomość Email"
+        silence_message_placeholder: "(zostaw puste aby wysłać domyślną wiadomość)"
         suspended_until: "(do %{until})"
         cant_suspend: "Nie można zawiesić tego użytkownika."
         delete_all_posts: "Usuń wszystkie wpisy"
         delete_all_posts_confirm_MF: "Zamierzasz usunąć {POSTS, plural, one {1 post} few {# posty} many {# postów} other {# postów}} i {TOPICS, plural, one {1 temat} few {# tematy} many {# tematów} other {# tematów}}. Czy jesteś pewien?"
+        silence: "Wycisz"
+        silenced: "Wyciszony?"
         moderator: "Moderator?"
         admin: "Admin?"
         suspended: "Zawieszony?"
@@ -3280,6 +3355,8 @@ pl_PL:
         activate_failed: "Wystąpił problem przy aktywacji konta użytkownika."
         deactivate_account: "Deaktywuj konto"
         deactivate_failed: "Wystąpił problem przy deaktywacji konta użytkownika."
+        silence_failed: 'Wystąpił problem podczas wyciszania użytkownika.'
+        silence_accept: 'Tak, ucisz tego użytkownika'
         bounce_score: "Wskaźnik odbić"
         reset_bounce_score:
           label: "Przywróć"
@@ -3287,6 +3364,7 @@ pl_PL:
         visit_profile: "Odwiedź <a href='%{url}'>ustawienia tego użytkownika</a>, aby zedytować jego profil."
         deactivate_explanation: "Wymusza ponowne potwierdzenie adresu email tego konta."
         suspended_explanation: "Zawieszony użytkownik nie może się logować."
+        silence_explanation: "Wyciszony użytkownik nie może publikować ani tworzyć tematów."
         staged_explanation: "Etapowy użytkownik może pisać tylko za pośrednictwem poczty email w konkretnych tematach."
         bounce_score_explanation:
           none: "Z tego adresu email nie otrzymano ostatnio żadnych wiadomości zwrotnych."
@@ -3406,6 +3484,7 @@ pl_PL:
           developer: 'Deweloperskie'
           embedding: "Osadzanie"
           legal: "Prawne"
+          api: 'API'
           user_api: 'API użytkownika'
           uncategorized: 'Inne'
           backups: "Kopie zapasowe"

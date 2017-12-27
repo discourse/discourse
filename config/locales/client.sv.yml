@@ -1479,7 +1479,6 @@ sv:
       multi_select:
         select: 'markera'
         selected: 'markerade ({{count}})'
-        select_replies: 'välj +svar'
         delete: radera markerade
         cancel: avbryt markering
         select_all: markera alla
@@ -1557,12 +1556,6 @@ sv:
         undelete: "återställ detta inlägg"
         share: "dela en länk till detta inlägg"
         more: "Mer"
-        delete_replies:
-          confirm:
-            one: "Vill du radera det direkta svaret till det här inlägget också?"
-            other: "Vill du radera de {{count}} direkta svaren på det här inlägget också?"
-          yes_value: "Ja, radera även svaren"
-          no_value: "Nej, bara det här inlägget"
         admin: "administratörsåtgärder för inlägg"
         wiki: "Skapa wiki"
         unwiki: "Ta bort wiki"
@@ -1648,10 +1641,6 @@ sv:
           vote:
             one: "1 person röstade för detta inlägg"
             other: "{{count}} personer röstade för detta inlägg"
-      delete:
-        confirm:
-          one: "Är du säker på att du vill radera detta inlägg?"
-          other: "Är du säker på att du vill radera alla dessa inlägg?"
       revisions:
         controls:
           first: "Första revision"
@@ -2297,7 +2286,6 @@ sv:
           details: "När det finns ett nytt svar, redigerat, borttaget eller återskapat."
         user_event:
           name: "Användarevent"
-          details: "När en användare är skapad, godkänd eller uppdaterad."
         delivery_status:
           title: "Leveransstatus"
           inactive: "Inaktiv"

@@ -155,6 +155,10 @@ describe PrettyText do
       expect(cooked).to eq(html.strip)
     end
 
+    it "handles bbcode edge cases" do
+      expect(PrettyText.cook "[constructor]\ntest").to eq("<p>[constructor]<br>\ntest</p>")
+    end
+
     it "can handle quote edge cases" do
       expect(PrettyText.cook("[quote]abc\ntest\n[/quote]")).not_to include('aside')
       expect(PrettyText.cook("[quote]  \ntest\n[/quote]  ")).to include('aside')
@@ -383,6 +387,14 @@ describe PrettyText do
       it "should keep spoilers" do
         expect(PrettyText.excerpt("<div class='spoiler'><img src='http://cnn.com/a.gif'></div>", 100)).to match_html "<span class='spoiler'>[image]</span>"
         expect(PrettyText.excerpt("<span class='spoiler'>spoiler</div>", 100)).to match_html "<span class='spoiler'>spoiler</span>"
+      end
+
+      it "should keep details if too long" do
+        expect(PrettyText.excerpt("<details><summary>expand</summary><p>hello</p></details>", 30)).to match_html "<details class='disabled'><summary>expand</summary></details>"
+      end
+
+      it "doesn't disable details if short enough" do
+        expect(PrettyText.excerpt("<details><summary>expand</summary><p>hello</p></details>", 60)).to match_html "<details><summary>expand</summary>hello</details>"
       end
 
       it "should remove meta informations" do
