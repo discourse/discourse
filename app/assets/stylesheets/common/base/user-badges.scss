@@ -30,6 +30,14 @@
   &.badge-type-bronze .fa {
     color: #cd7f32 !important;
   }
+
+  &.disabled {
+    color: $primary-medium;
+    background-color: $primary-very-low;
+    .fa {
+      opacity: 0.4;
+    }
+  }
 }
 
 @media all and (max-width: 750px) {
