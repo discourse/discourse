@@ -191,9 +191,11 @@ Download from https://www.google.com/chrome/index.html
 
 ## ImageMagick
 
-ImageMagick is used for generating avatars (including for test fixtures).
+ImageMagick is used for generating avatars (including for test fixtures). Brew installs ImageMagick 7 by default, and this version
+doesn't work with Discourse.
 
-    brew install imagemagick
+    brew install imagemagick@6
+    brew link --force imagemagick@6
 
 ImageMagick is going to want to use the Helvetica font to generate the
 letter-avatars:
