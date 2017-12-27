@@ -147,6 +147,10 @@ class StaticController < ApplicationController
   def service_worker_asset
     respond_to do |format|
       format.js do
+
+        # we take 1 hour to give a new service worker to all users
+        immutable_for 1.hour
+
         render(
           plain: Rails.application.assets_manifest.find_sources('service-worker.js').first,
           content_type: 'application/javascript'
