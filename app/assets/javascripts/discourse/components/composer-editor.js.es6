@@ -493,7 +493,7 @@ export default Ember.Component.extend({
       this._xhr = null;
 
       if (!userCancelled) {
-        displayErrorForUpload(data.jqXHR.responseJSON);
+        displayErrorForUpload(data);
       }
     });
 

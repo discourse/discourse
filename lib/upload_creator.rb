@@ -163,7 +163,7 @@ class UploadCreator
     command << '-debug' << 'all' if debug
     command << output_file.path
 
-    Discourse::Utils.execute_command(*command, failure_message: "failed to convert png to jpg")
+    Discourse::Utils.execute_command(*command, failure_message: I18n.t("upload.png_to_jpg_conversion_failure_message"))
   end
 
   def should_downsize?
