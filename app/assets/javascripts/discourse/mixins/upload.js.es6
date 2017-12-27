@@ -56,7 +56,7 @@ export default Em.Mixin.create({
     });
 
     $upload.on("fileuploadfail", (e, data) => {
-      displayErrorForUpload(data.jqXHR.responseJSON);
+      displayErrorForUpload(data);
       reset();
     });
   }.on("didInsertElement"),
