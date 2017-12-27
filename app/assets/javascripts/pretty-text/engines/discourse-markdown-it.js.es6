@@ -50,7 +50,9 @@ class Ruler {
 
   getRuleForTag(tag) {
     this.ensureCache();
-    return this.cache[tag];
+    if (this.cache.hasOwnProperty(tag)) {
+      return this.cache[tag];
+    }
   }
 
   ensureCache() {
