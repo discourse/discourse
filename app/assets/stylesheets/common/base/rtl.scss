@@ -56,3 +56,9 @@ float: left !important;
 .rtl .dashboard-right {
   float: left !important;
 }
+
+// Right and left will be flipped by the r2 gem
+.rtl #caret-clone[style] {
+  right: auto !important;
+  left: -7000px !important;
+}
