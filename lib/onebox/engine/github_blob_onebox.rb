@@ -190,7 +190,7 @@ module Onebox
 
       def data
         @data ||= {
-          title: link.sub(/^https?\:\/\/github\.com\//, ''),
+          title: Sanitize.fragment(URI.unescape(link).sub(/^https?\:\/\/github\.com\//, '')),
           link: link,
           # IMPORTANT NOTE: All of the other class variables are populated
           #     as *side effects* of the `raw` method! They must all appear
