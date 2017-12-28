@@ -29,7 +29,6 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   renderedBodyOnce: false,
   renderedFilterOnce: false,
   tabindex: 0,
-  scrollableParentSelector: ".modal-body",
   none: null,
   highlightedValue: null,
   noContentLabel: "select_kit.no_content",
@@ -68,8 +67,6 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     this._super();
 
     this.noneValue = "__none__";
-    this._previousScrollParentOverflow = "auto";
-    this._previousCSSContext = {};
     this.set("headerComponentOptions", Ember.Object.create());
     this.set("rowComponentOptions", Ember.Object.create());
     this.set("computedContent", []);
