@@ -45,7 +45,7 @@ $.fn.caretPosition = function(options) {
   };
 
   styles = getStyles(textarea[0]);
-  clone = $("<div><p></p></div>").appendTo("body");
+  clone = $("<div id='caret-clone'><p></p></div>").appendTo("body");
   p = clone.find("p");
   clone.width(textarea.width());
   clone.height(textarea.height());
