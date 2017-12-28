@@ -1,3 +1,7 @@
+## 1.8.33
+
+  * add support for private vimeo links
+
 ## 1.8.23
 
   * added public message about ruby support (2.2 and above)
