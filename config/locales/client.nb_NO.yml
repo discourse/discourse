@@ -1094,6 +1094,7 @@ nb_NO:
       saved_local_draft_tip: "lagret lokalt"
       similar_topics: "Emnet ditt har likheter med…"
       drafts_offline: "utkast offline"
+      group_mentioned_limit: "<b>Warning!</b> Du varslet <a href='{{group_link}}'>{{group}}</a>, dog har denne gruppen flere medlemmer en administratoren har satt opp som grense for varseling, {{max}} brukere. Ingen vil bli varslet."
       group_mentioned:
         one: "Ved å nevne {{group}}, er du i ferd med å henvende deg til <a href='{{group_link}}'>{{count}} én person</a> – er du sikker?"
         other: "Ved å nevne {{group}}, er du i ferd med å henvende deg til <a href='{{group_link}}'>{{count}} folk</a> – er du sikker?"
@@ -1250,9 +1251,6 @@ nb_NO:
       select_all: "Velg alle"
       clear_all: "Fjern Alle"
       too_short: "Din søketekst er for kort."
-      result_count:
-        one: "1 resultat for <span class='term'>{{term}}</span>"
-        other: "{{count}} resultater for <span class='term'>{{term}}</span>"
       title: "søk etter emner, innlegg, brukere eller kategorier"
       no_results: "Ingen resultater funnet."
       no_more_results: "Ingen flere resultater funnet."
@@ -2578,6 +2576,7 @@ nb_NO:
           details: "Når det er et nytt, redigert, slettet eller gjenopprettet innlegg."
         user_event:
           name: "Brukerhendelse"
+          details: "Når en bruker logger inn, logger ut, blir opprettet, godkjent eller oppdatert."
         delivery_status:
           title: "Sendingsstatus"
           inactive: "Inaktiv"
@@ -3008,6 +3007,7 @@ nb_NO:
             all_search_types: "Alle søketyper"
             header: "Hode"
             full_page: "Full side"
+            click_through_only: "Alle (kun klikk gjennom)"
         logster:
           title: "Feillogg"
       watched_words:

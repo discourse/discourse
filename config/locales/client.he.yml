@@ -1157,9 +1157,6 @@ he:
       select_all: "בחירה של הכל"
       clear_all: "נקוי של הכל"
       too_short: "מילת החיפוש שלכם קצרה מידי."
-      result_count:
-        one: "1 תוצאה עבור <span class='term'>{{term}}</span>"
-        other: "{{count}} תוצאות עבור <span class='term'>{{term}}</span>"
       title: "חיפוש נושאים, פוסטים, משתמשים או קטגוריות"
       no_results: "אין תוצאות."
       no_more_results: "לא נמצאו עוד תוצאות."

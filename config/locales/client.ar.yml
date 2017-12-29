@@ -1377,13 +1377,6 @@ ar:
       select_all: "أختر الكل"
       clear_all: "إلغ إختيار الكل"
       too_short: "عبارة البحث قصيرة جدًّا."
-      result_count:
-        zero: "{{count}} نتيجة ل‍ <span class='term'>\"{{term}}\"</span>"
-        one: "نتيجة واحدة ل‍ <span class='term'>\"{{term}}\"</span>"
-        two: "{{count}} نتيجة ل‍ <span class='term'>\"{{term}}\"</span>"
-        few: "{{count}} نتيجة ل‍ <span class='term'>\"{{term}}\"</span>"
-        many: "{{count}} نتيجة ل‍ <span class='term'>\"{{term}}\"</span>"
-        other: "{{count}} نتيجة ل‍ <span class='term'>\"{{term}}\"</span>"
       title: "أبحث في الموضوعات أو المنشورات أو الأعضاء أو الأقسام"
       no_results: "لا يوجد نتائج."
       no_more_results: "لا يوجد نتائج أخرى."

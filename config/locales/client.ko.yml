@@ -1179,8 +1179,6 @@ ko:
       select_all: "모두 선택"
       clear_all: "다 지우기"
       too_short: "검색 단어가 너무 짧습니다."
-      result_count:
-        other: "<span class='term'>{{term}}</span>에 대하여 {{count}}개의 결과가 검색되었습니다."
       title: "주제, 글, 사용자, 카테고리 검색"
       no_results: "검색 결과가 없습니다"
       no_more_results: "더 이상 결과가 없습니다."
