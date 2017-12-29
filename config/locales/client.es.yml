@@ -1094,6 +1094,7 @@ es:
       saved_local_draft_tip: "guardado localmente"
       similar_topics: "Tu tema es similar a..."
       drafts_offline: "borradores offline"
+      group_mentioned_limit: "<b>¡Advertencia!</b> Has mencionado <a href='{{group_link}}'>{{group}}</a>, pero este grupo tiene más miembros que el límite de menciones fijado por los administradores, que es de {{max}} usuarios. No se notificará a nadie."
       group_mentioned:
         one: "Al mencionar a {{group}}, estás a punto de notificar a <a href='{{group_link}}'>1 persona</a> – ¿seguro que quieres hacerlo?"
         other: "Al mencionar a {{group}}, estás a punto de notificar a <a href='{{group_link}}'>{{count}} personas</a> – ¿seguro que quieres hacerlo?"
@@ -1251,8 +1252,8 @@ es:
       clear_all: "Limpiar todo"
       too_short: "El término de búsqueda es demasiado corto."
       result_count:
-        one: "1 resultado para<span class='term'>{{term}}</span>"
-        other: "{{count}} resultados para <span class='term'>{{term}}</span>"
+        one: "1 resultado para <span class='term'>{{term}}</span>"
+        other: "{{count}}{{plus}} resultados para <span class='term'>{{term}}</span>"
       title: "buscar temas, posts, usuarios o categorías"
       no_results: "No se ha encontrado ningún resultado."
       no_more_results: "No se encontraron más resultados."
@@ -2578,6 +2579,7 @@ es:
           details: "Cuando se publique, edite, elimine o recupere una respuesta."
         user_event:
           name: "Evento de usuario"
+          details: "Cuando un usuario inicia sesión, la cierra o es creado, aprobado o actualizado."
         delivery_status:
           title: "Estado de entrega"
           inactive: "Inactivo"
@@ -2998,7 +3000,7 @@ es:
             text: "Agrupar"
             title: "Crea un nuevo rango de entradas para banear si hay al menos 'min_ban_entries_for_roll_up' entradas."
         search_logs:
-          title: "Buscar Logs"
+          title: "Logs de búsqueda"
           term: "Término"
           searches: "Búsquedas"
           click_through: "Click Through"

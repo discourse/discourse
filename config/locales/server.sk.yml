@@ -955,7 +955,6 @@ sk:
     relative_date_duration: "Počet dní, po uplynutí ktorých sa doba príspevkov začne zobrazovať relatívne (7d) miesto ablolútnej (20 Feb)."
     delete_user_max_post_age: "Neumožniť vymazanie použivateľov, ktorých prvý príspevok je starší ako (x) dní."
     delete_all_posts_max: "Maximálny počet príspevkov, ktoré môžu byť vymazané naraz pomocou tlačítka Vymaž všetky príspevky. Ak má používateľ viac ako uvedený počet, príspevky nemôžu byť vymazané naraz a používateľ nemôže byť vymazaný."
-    username_change_period: "Počet dní od registrácie po ktorých môžu účty zmeniť používateľské meno (Na vypnutie zmeny používateľského mena nastavte 0)."
     email_editable: "Povoliť užívateľom zmenu ich emailovej adresy po registrácii."
     allow_uploaded_avatars: "Povoliť používateľom nahranie profilovej fotky."
     allow_animated_avatars: "Umožniť používateľom, použiť ako profilový obrázok animovaný gif. VAROVANE: na zmenu tohoto nastavenia spustite rake task avatars:refresh."

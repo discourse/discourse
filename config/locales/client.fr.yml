@@ -1250,9 +1250,6 @@ fr:
       select_all: "Sélectionner tout"
       clear_all: "Tout désélectionner"
       too_short: "Votre terme de recherche est trop court."
-      result_count:
-        one: "1 résultat pour <span class='term'>{{term}}</span>"
-        other: "{{count}} résultats pour <span class='term'>{{term}}</span>"
       title: "rechercher des sujets, messages, utilisateurs ou catégories"
       no_results: "Aucun résultat."
       no_more_results: "Aucun résultat supplémentaire."
@@ -2578,6 +2575,7 @@ fr:
           details: "Quand il y a une réponse nouvelle, modifiée, supprimée ou rétablie."
         user_event:
           name: "Événement d'utilisateur"
+          details: "Quand un utilisateur se connecte, se déconnecte, est créé, approuvé ou mis à jour."
         delivery_status:
           title: "État de l'envoi"
           inactive: "Inactif"

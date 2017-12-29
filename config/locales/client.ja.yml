@@ -45,12 +45,16 @@ ja:
           other: "%{count}秒未満"
         x_seconds:
           other: "%{count}秒"
+        less_than_x_minutes:
+          other: "%{count}分以内"
         x_minutes:
           other: "%{count}分"
         about_x_hours:
           other: "%{count}時間"
         x_days:
           other: "%{count}日"
+        x_months:
+          other: "%{count}月"
         about_x_years:
           other: "%{count}年"
         over_x_years:
@@ -83,6 +87,7 @@ ja:
           other: "%{count}年後"
       previous_month: '前の月'
       next_month: '次の月'
+      placeholder: 日付
     share:
       topic: 'このトピックのリンクをシェアする'
       post: '投稿 #%{postNumber}'
@@ -1157,8 +1162,6 @@ ja:
       select_all: "すべて選択する"
       clear_all: "すべてクリア"
       too_short: "検索文字が短すぎます。"
-      result_count:
-        other: "<span class='term'>{{term}}</span> について、{{count}} 件が見つかりました"
       title: "トピック、投稿、ユーザ、カテゴリを探す"
       no_results: "何も見つかりませんでした。"
       no_more_results: "検索結果は以上です。"

@@ -1140,7 +1140,6 @@ nl:
     relative_date_duration: "Na hoeveel dagen moet een post datum niet meer worden getoond als relatieve datum (7d) maar als absolute datum (20 feb)."
     delete_user_max_post_age: "Gebruikers wiens eerste bericht ouder dan (x) dagen is kunnen niet meer verwijderd worden."
     delete_all_posts_max: "Het maximale aantal berichten dat tegelijk met de knop 'Alle berichten verwijderen' kan worden verwijderd. Als een gebruiker meer berichten heeft, kunnen de berichten niet allemaal tegelijk worden verwijderd, en kan de gebruiker niet worden verwijderd."
-    username_change_period: "The number of days after registration that accounts can change their username (0 om wijziging niet toe te staan)."
     email_editable: "Gebruikers mogen hun e-mailadres na registratie nog wijzigen."
     allow_uploaded_avatars: "Sta gebruikers toe eigen profielfoto's te uploaden."
     allow_animated_avatars: "Sta gebruikers toe gif animaties als profielfoto te gebruiken. WAARSCHUWING: draai de avatars:refresh rake task na het aanpassen van deze instelling. "

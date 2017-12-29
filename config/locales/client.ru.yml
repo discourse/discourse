@@ -1249,11 +1249,6 @@ ru:
       select_all: "Выбрать все"
       clear_all: "Сбросить все"
       too_short: "Слишком короткое слово для поиска."
-      result_count:
-        one: "1 результат для <span class='term'>{{term}}</span>"
-        few: "{{count}} результата для <span class='term'>{{term}}</span>"
-        many: "Множество результатов для <span class='term'>{{term}}</span>"
-        other: "{{count}} результатов для <span class='term'>{{term}}</span>"
       title: "Поиск по темам, сообщениям, псевдонимам и разделам"
       no_results: "Ничего не найдено."
       no_more_results: "Больше ничего не найдено."

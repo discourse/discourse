@@ -1057,7 +1057,6 @@ sv:
     relative_date_duration: "Antal dagar efter att ett inlägg skrivits som datummarkeringen som visas för inlägget är relativ (7d) istället för absolut (20 Feb). "
     delete_user_max_post_age: "Tillåt inte raderande av användare vars äldsta inlägg är äldre än (x) dagar."
     delete_all_posts_max: "Högsta antal inlägg som kan raderas på samma gång med Radera Alla Inlägg-knappen. Om en användare har fler än så många inlägg så kan inläggen inte raderas på samma gång och användaren kan inte raderas."
-    username_change_period: "Antal dagar efter registrering som användarnamn kan ändras för konton (ange 0 för att avvisa användarnamnsändringar)."
     email_editable: "Tillåt användare att ändra deras e-postadress efter registrering."
     allow_uploaded_avatars: "Tillåt att användare laddar upp egna profilbilder."
     allow_animated_avatars: "Tillåt att användare använder animerade gif-profilbilder. VARNING: kör avatars:refresh rake-kommando efter att ha ändrat den här inställningen."

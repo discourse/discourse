@@ -1207,9 +1207,6 @@ nl:
       select_all: "Alles selecteren"
       clear_all: "Alles wissen"
       too_short: "Uw zoekterm is te kort."
-      result_count:
-        one: "1 resultaat voor <span class='term'>{{term}}</span>"
-        other: "{{count}} resultaten voor <span class='term'>{{term}}</span>"
       title: "zoeken naar topics, berichten, gebruikers of categorieën"
       no_results: "Geen resultaten gevonden."
       no_more_results: "Geen resultaten meer gevonden."
@@ -2295,7 +2292,7 @@ nl:
         please_upgrade: "Voer een upgrade uit!"
         no_check_performed: "Er is nog niet op updates gecontroleerd. Zorg dat sidekiq actief is."
         stale_data: "Er is de laatste tijd niet op updates gecontroleerd. Zorg dat sidekiq actief is."
-        version_check_pending: "Blijkbaar hebt u onlangs een upgrade uitgevoerd. Fantastisch!"
+        version_check_pending: "Je hebt de software recentelijk bijgewerkt. Mooi!"
         installed_version: "Geïnstalleerd"
         latest_version: "Nieuwste"
         problems_found: "Er zijn een aantal problemen met uw installatie van Discourse gevonden:"
