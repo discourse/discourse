@@ -1384,7 +1384,9 @@ uncategorized:
       zh_CN: 350
       zh_TW: 350
 
-  topic_page_title_includes_category: true
+  topic_page_title_includes_category:
+    default: true
+    client: true
 
   native_app_install_banner: false
 
