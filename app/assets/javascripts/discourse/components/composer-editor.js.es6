@@ -1,5 +1,5 @@
 import userSearch from 'discourse/lib/user-search';
-import { default as computed, on } from 'ember-addons/ember-computed-decorators';
+import { default as computed, observes, on } from 'ember-addons/ember-computed-decorators';
 import { linkSeenMentions, fetchUnseenMentions } from 'discourse/lib/link-mentions';
 import { linkSeenCategoryHashtags, fetchUnseenCategoryHashtags } from 'discourse/lib/link-category-hashtags';
 import { linkSeenTagHashtags, fetchUnseenTagHashtags } from 'discourse/lib/link-tag-hashtag';
@@ -34,6 +34,18 @@ export default Ember.Component.extend({
   @computed
   uploadPlaceholder() {
     return `[${I18n.t('uploading')}]() `;
+  },
+
+  @observes('composer.uploadCancelled')
+  _cancelUpload() {
+    if (!this.get('composer.uploadCancelled')) { return; }
+    this.set('composer.uploadCancelled', false);
+
+    if (this._xhr) {
+      this._xhr._userCancelled = true;
+      this._xhr.abort();
+    }
+    this._resetUpload(true);
   },
 
   @computed
@@ -401,7 +413,9 @@ export default Ember.Component.extend({
   },
 
   _resetUpload(removePlaceholder) {
-    this._validUploads--;
+    if (this._validUploads > 0) {
+      this._validUploads--;
+    }
     if (this._validUploads === 0) {
       this.setProperties({ uploadProgress: 0, isUploading: false, isCancellable: false });
     }
@@ -622,14 +636,6 @@ export default Ember.Component.extend({
   actions: {
     importQuote(toolbarEvent) {
       this.sendAction('importQuote', toolbarEvent);
-    },
-
-    cancelUpload() {
-      if (this._xhr) {
-        this._xhr._userCancelled = true;
-        this._xhr.abort();
-      }
-      this._resetUpload(true);
     },
 
     onExpandPopupMenuOptions(toolbarEvent) {
