@@ -3,7 +3,7 @@
   <div class="controls">
     <span class='static'>{{model.username}}</span>
     {{#if model.can_edit_username}}
-      {{#link-to "preferences.username" class="btn btn-small pad-left no-text"}}
+      {{#link-to "preferences.username" class="btn btn-small btn-icon pad-left no-text"}}
       {{d-icon "pencil"}} {{/link-to}}
     {{/if}}
   </div>
@@ -37,7 +37,7 @@
       <div class="controls">
         <span class='static'>{{model.email}}</span>
         {{#if model.can_edit_email}}
-          {{#link-to "preferences.email" class="btn btn-small pad-left no-text"}}{{d-icon "pencil"}}{{/link-to}}
+          {{#link-to "preferences.email" class="btn btn-small btn-icon pad-left no-text"}}{{d-icon "pencil"}}{{/link-to}}
         {{/if}}
       </div>
       <div class='instructions'>
@@ -84,7 +84,7 @@
     <label class="control-label">{{i18n 'user.title.title'}}</label>
     <div class="controls">
       <span class="static">{{model.title}}</span>
-      {{#link-to "preferences.badgeTitle" class="btn btn-small pad-left no-text"}}{{d-icon "pencil"}}{{/link-to}}
+      {{#link-to "preferences.badgeTitle" class="btn btn-small btn-icon pad-left no-text"}}{{d-icon "pencil"}}{{/link-to}}
     </div>
   </div>
 {{/if}}
