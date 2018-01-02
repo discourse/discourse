@@ -95,11 +95,13 @@
 
 {{plugin-outlet name="user-custom-controls" args=(hash model=model)}}
 
-<div class="control-group save-button">
-  <div class="controls">
-    {{partial 'user/preferences/save-button'}}
+{{#if canSaveUser}}
+  <div class="control-group save-button">
+    <div class="controls">
+      {{partial 'user/preferences/save-button'}}
+    </div>
   </div>
-</div>
+{{/if}}
 
 
 {{#if model.canDeleteAccount}}
