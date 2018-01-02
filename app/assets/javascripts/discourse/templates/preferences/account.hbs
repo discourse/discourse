@@ -7,9 +7,11 @@
       {{d-icon "pencil"}} {{/link-to}}
     {{/if}}
   </div>
-  <div class='instructions'>
-    {{{i18n 'user.username.short_instructions' username=model.username}}}
-  </div>
+  {{#if siteSettings.enable_mentions}}
+    <div class='instructions'>
+      {{{i18n 'user.username.short_instructions' username=model.username}}}
+    </div>
+  {{/if}}
 </div>
 
 {{#if canEditName}}
