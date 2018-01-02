@@ -10,7 +10,7 @@
   margin: 0;
   padding: 6px 12px;
   font-weight: 500;
-  font-size: 1em;
+  font-size: $font-0;
   line-height: 18px;
   text-align: center;
   cursor: pointer;
@@ -185,7 +185,7 @@
 
 .btn-large {
   padding: 9px 18px;
-  font-size: 1.1487em;
+  font-size: $font-up-1;
   line-height: 20px;
 }
 

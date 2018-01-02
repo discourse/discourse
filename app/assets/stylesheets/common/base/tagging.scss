@@ -19,7 +19,7 @@
   float: left;
 
   .discourse-tag {
-    font-size: 1em;
+    font-size: $font-0;
   }
 
   .tag-count {
@@ -35,8 +35,8 @@
 .bullet + .topic-header-extra {
   display: block;
   line-height: 15px;
-  font-size: .8706em;;
-  .list-tags { font-size: 1em; }
+  font-size: $font-down-1;
+  .list-tags { font-size: $font-0; }
 }
 
 .bar + .topic-header-extra {
@@ -260,7 +260,7 @@ header .discourse-tag {color: $tag-color }
       margin-bottom: 20px;
     }
     label {
-      font-size: 1em;
+      font-size: $font-0;
       display: inline-block;
       margin-right: 10px;
     }

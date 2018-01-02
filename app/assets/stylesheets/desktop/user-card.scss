@@ -63,7 +63,7 @@ $user_card_background: $secondary;
 
   h1 {
     min-width: 120px;
-    font-size: 1.7511em;
+    font-size: $font-up-4;
     line-height: 1.25;
     display: block;
     max-width: 250px;
@@ -74,13 +74,13 @@ $user_card_background: $secondary;
       color: $user_card_primary;
     }
     i {
-      font-size: .8706em;;
+      font-size: $font-down-1;
       color: $user_card_primary;
     }
   }
 
   h2 {
-    font-size: 1.1487em;
+    font-size: $font-up-1;
     line-height: 1.25;
     font-weight: normal;
     display: block;
@@ -230,7 +230,7 @@ $user_card_background: $secondary;
 
       h3 {
         color: $user_card_background;
-        font-size: 1em;
+        font-size: $font-0;
         margin-bottom: -8px;
       }
     }
@@ -255,7 +255,7 @@ $user_card_background: $secondary;
     position: absolute;
     right: 12px;
     bottom: 12px;
-    font-size: 2em;
+    font-size: $font-up-5;
     i {color: $user_card_primary;}
   }
 

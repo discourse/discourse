@@ -45,7 +45,7 @@
         width: 30px;
 
         .d-icon {
-          font-size: 1.3195em;
+          font-size: $font-up-2;
           -ms-flex-item-align: center;
               align-self: center;
           margin-right: 0;
@@ -76,7 +76,7 @@
               -ms-flex: 1;
                   flex: 1;
           font-weight: bold;
-          font-size: 1em;
+          font-size: $font-0;
           color: $primary;
           padding: 0;
         }

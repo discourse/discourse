@@ -15,7 +15,7 @@ a.loading-onebox {
 
   margin-top: 15px;
   padding: 12px;
-  font-size: 1em;
+  font-size: $font-0;
   > .source {
     margin-bottom: 12px;
     margin-right: 10px;
@@ -30,7 +30,7 @@ a.loading-onebox {
         padding-right: 10px;
       }
       position: absolute;
-      font-size: 1em;
+      font-size: $font-0;
       img.favicon {
         margin-right: 3px;
       }
@@ -90,9 +90,8 @@ a.loading-onebox {
 
 aside.onebox {
   border: 5px solid $primary-low;
-
   padding: 12px 25px 12px 12px;
-  font-size: 1em;
+  font-size: $font-0;
 
   header {
     margin-bottom: 8px;
@@ -118,7 +117,7 @@ aside.onebox {
     clear: both;
 
     h3, h4 {
-      font-size: 1.1487em;
+      font-size: $font-up-1;
       margin: 0 0 10px 0;
     }
 
@@ -379,7 +378,7 @@ aside.onebox.twitterstatus .onebox-body {
     z-index: 935;
     height: 30px;
     overflow: hidden;
-    font-size: .8706em;;
+    font-size: $font-down-1;
     color: #fff;
     background-color: rgba(0, 0, 0, 0.6);
     text-overflow: ellipsis;
@@ -395,7 +394,7 @@ aside.onebox.twitterstatus .onebox-body {
 
       .album-title {
         width: 100%;
-        font-size: 1.1487em;
+        font-size: $font-up-1;
         line-height: 30px;
         color: #ccc;
         text-decoration: none;

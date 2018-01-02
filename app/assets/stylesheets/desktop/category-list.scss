@@ -35,10 +35,10 @@
     text-align: right;
 
     .value {
-      font-size: 1.1487em;
+      font-size: $font-up-1;
     }
     .unit {
-      font-size: .8706em;;
+      font-size: $font-down-1;
     }
     .badge-notification {
       display: block;
@@ -98,7 +98,7 @@
     .category {
       border-left: 6px solid;
       h3 {
-        font-size: 1.3195em;
+        font-size: $font-up-2;
         a[href] {
           color: $primary;
         }

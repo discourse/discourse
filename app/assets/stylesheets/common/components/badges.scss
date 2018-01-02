@@ -60,7 +60,7 @@
     display: inline-flex;
     align-items: baseline;
     margin-right: 5px;
-    font-size: .8706em;;
+    font-size: $font-down-1;
     line-height: 15px;
 
     span.badge-category {
@@ -172,7 +172,7 @@
 
     li.bar>.dropdown-header:not(.home):first-child {
       border-left: 5px solid;
-      font-size: 1em;
+      font-size: $font-0;
     }
 
     li.bar>.dropdown-header {
@@ -251,7 +251,7 @@
   padding: 4px 5px 2px 5px;
   vertical-align: middle;
   color: $secondary;
-  font-size: .7579em;
+  font-size: $font-down-2;
   line-height: 1;
   text-align: center;
   background-color: dark-light-choose($primary-low-mid, $secondary-low);
@@ -301,7 +301,7 @@
 
 .badge-posts {
   font-weight: normal;
-  font-size: 1em;
+  font-size: $font-0;
   line-height: 1;
   &[href] {
     color: dark-light-choose($primary-medium, $secondary-medium);

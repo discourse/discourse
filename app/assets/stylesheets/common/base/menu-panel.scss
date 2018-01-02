@@ -90,7 +90,7 @@
   b.topics-count {
     color: dark-light-choose($primary-medium, $secondary-medium);
     font-weight: normal;
-    font-size: .7579em;
+    font-size: $font-down-2;
   }
 
   span.badge-category {
@@ -174,7 +174,7 @@
   }
 
   li:not(.category):not(.heading) {
-    font-size: 1em;
+    font-size: $font-0;
     line-height: 16px;
 
     .fa {

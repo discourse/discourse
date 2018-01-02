@@ -24,7 +24,7 @@
   .main-link {
     @extend .topic-list-main-link;
     flex: 15;
-    font-size: 1em;
+    font-size: $font-0;
 
     .top-row {
       margin-bottom: 0.1em;

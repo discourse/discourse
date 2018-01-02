@@ -4,7 +4,7 @@
 
 @media only screen and (max-width: 320px) {
   #site-text-logo {
-    font-size: 1.3195em;
+    font-size: $font-up-2;
   }
 }
 
@@ -52,5 +52,5 @@
 }
 
 .search-link .topic-statuses .topic-status i {
-  font-size: 1em;
+  font-size: $font-0;
 }

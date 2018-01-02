@@ -33,7 +33,7 @@ span.badge-posts {
     }
     button {
       border: none;
-      font-size: 1.3195em;
+      font-size: $font-up-2;
       padding: 8px 10px;
       vertical-align: top;
       background: transparent;
@@ -60,7 +60,7 @@ span.badge-posts {
     }
 
     button.like-count {
-      font-size: 1em;
+      font-size: $font-0;
       padding: 8px 4px;
     }
   }
@@ -88,7 +88,7 @@ span.badge-posts {
   h3 {
     margin-top: 0;
     color: $primary;
-    font-size: 1em;
+    font-size: $font-0;
   }
 
   ul {
@@ -156,7 +156,7 @@ a.reply-to-tab {
     color: dark-light-choose($primary-medium, $secondary-medium);
     line-height: 23px;
     font-weight: normal;
-    font-size: 1em;
+    font-size: $font-0;
   }
 
   h4 {
@@ -190,7 +190,7 @@ a.reply-to-tab {
       padding: 4px 5px 2px 5px;
       text-align: center;
       font-weight: normal;
-      font-size: .8706em;;
+      font-size: $font-down-1;
       line-height: 1;
     }
   }
@@ -219,7 +219,7 @@ a.reply-to-tab {
     }
     .number, i {
       color: dark-light-choose($primary-high, $secondary-low);
-      font-size: 1.1487em;
+      font-size: $font-up-1;
     }
 
     .avatar + a {
@@ -266,7 +266,7 @@ a.reply-to-tab {
       border-top: 1px solid $primary-low;
       .fa {
         margin: 0;
-        font-size: 1.3195em;
+        font-size: $font-up-2;
         line-height: 52px;
       }
     }
@@ -444,7 +444,7 @@ button.select-post {
 }
 
 .deleted-user-avatar {
-  font-size: 2em;
+  font-size: $font-up-5;
 }
 
 span.btn-text {display: none;}

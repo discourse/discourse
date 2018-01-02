@@ -74,7 +74,7 @@ $mobile-breakpoint: 700px;
 
     .site-text-search {
       padding: 0.5em;
-      font-size: 1em;
+      font-size: $font-0;
       width: 50%;
     }
 
@@ -101,7 +101,7 @@ $mobile-breakpoint: 700px;
 
     h3 {
       font-weight: normal;
-      font-size: 1em;
+      font-size: $font-0;
     }
 
     button.edit {
@@ -267,7 +267,7 @@ $mobile-breakpoint: 700px;
     }
   }
   h1 {
-    font-size: 1.5157em;
+    font-size: $font-up-3;
     line-height: 25px;
     color: $primary;
   }
@@ -531,7 +531,7 @@ $mobile-breakpoint: 700px;
 
     .desc, .validation-error {
       padding-top: 3px;
-      font-size: .8706em;;
+      font-size: $font-down-1;
       line-height: 1.4em;
     }
 
@@ -544,7 +544,7 @@ $mobile-breakpoint: 700px;
     }
 
     h3 {
-      font-size: 1em;
+      font-size: $font-0;
       font-weight: normal;
     }
   }
@@ -564,7 +564,7 @@ $mobile-breakpoint: 700px;
 
 section.details {
   h1 {
-    font-size: 1.5157em;
+    font-size: $font-up-3;
     color: $primary;
     padding: 5px 10px;
     margin: 30px 0 5px 0;
@@ -679,7 +679,7 @@ section.details {
 
     .list-badge {
       float: right;
-      font-size: .8706em;;
+      font-size: $font-down-1;
       font-weight: normal;
       padding: 0 6px;
       color: $secondary;
@@ -765,7 +765,7 @@ section.details {
   }
 
   .badge-errors {
-    font-size: 1em;
+    font-size: $font-0;
     line-height: 16px;
     padding: 4px;
     background-color: $primary-low;
@@ -850,7 +850,7 @@ section.details {
   }
 
   .version-number {
-    font-size: 1.5157em;
+    font-size: $font-up-3;
     font-weight: bold;
   }
 
@@ -870,7 +870,7 @@ section.details {
   }
 
   .fa {
-    font-size: 1.7511em;
+    font-size: $font-up-4;
   }
 
   .up-to-date {
@@ -886,7 +886,7 @@ section.details {
 
 .update-nag {
   .d-icon {
-    font-size: 1.5157em;
+    font-size: $font-up-3;
   }
 }
 
@@ -989,7 +989,7 @@ table.api-keys {
       margin: 20px 10px 0 10px;
 
       .fa {
-        font-size: 2em;
+        font-size: $font-up-5;
         vertical-align: middle;
         color: $primary
       }
@@ -1612,7 +1612,7 @@ table#user-badges {
   }
   .reply-key {
     display: block;
-    font-size: .8706em;;
+    font-size: $font-down-1;
     color: dark-light-choose($primary-medium, $secondary-high);
   }
   .username div {
@@ -1642,7 +1642,7 @@ table#user-badges {
   }
   .error-description {
     color: #919191;
-    font-size: .8706em;;
+    font-size: $font-down-1;
   }
   hr {
     margin: 0;
@@ -1744,7 +1744,7 @@ table#user-badges {
     margin-top: 10px;
   }
   label {
-    font-size: 1em;
+    font-size: $font-0;
   }
 }
 
@@ -1801,7 +1801,7 @@ table#user-badges {
   float: right;
   text-align: right;
   .instructions {
-    font-size: .8706em;;
+    font-size: $font-down-1;
   }
 }
 .watched-words-detail {

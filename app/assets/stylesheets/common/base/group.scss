@@ -29,7 +29,7 @@
     width: 100%;
     justify-content: space-between;
     .group-post-title {
-      font-size: 1.1487em;
+      font-size: $font-up-1;
     }
   }
 
@@ -47,13 +47,13 @@
   width: 100%;
 
   .group-info-name {
-    font-size: 1.5157em;
+    font-size: $font-up-3;
     font-weight: bold;
     color: $primary;
   }
 
   .group-info-full-name {
-    font-size: 1.3195em;
+    font-size: $font-up-2;
     color: dark-light-choose($primary-high, $secondary-low);
   }
 

@@ -29,7 +29,7 @@
       border: none;
       padding: 5px 12px;
       color: $primary;
-      font-size: 1.1487em;
+      font-size: $font-up-1;
       line-height: 20px;
       transition: background .15s;
 
@@ -81,7 +81,7 @@
   a {
     margin: 0;
     padding: 13px;
-    font-size: 1.1487em;
+    font-size: $font-up-1;
     line-height: 20px;
     cursor: pointer;
     color: $primary;

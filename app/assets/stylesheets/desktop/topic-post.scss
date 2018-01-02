@@ -105,7 +105,7 @@ nav.post-controls {
     }
     i {
       margin-left: 5px;
-      font-size: .8706em;;
+      font-size: $font-down-1;
     }
   }
 
@@ -120,7 +120,7 @@ nav.post-controls {
   }
 
   button {
-    font-size: 1.1487em;
+    font-size: $font-up-1;
     padding: 8px 10px;
     vertical-align: top;
     background: transparent;
@@ -183,7 +183,7 @@ nav.post-controls {
     h3 {
       margin-top: 0;
       color: $primary;
-      font-size: 1em;
+      font-size: $font-0;
     }
 
     ul {
@@ -294,7 +294,7 @@ a.star {
     color: dark-light-choose($primary-high, $secondary-low);
     line-height: 23px;
     font-weight: normal;
-    font-size: 1em;
+    font-size: $font-0;
   }
 
   h4 {
@@ -328,7 +328,7 @@ a.star {
       padding: 4px 5px 2px 5px;
       text-align: center;
       font-weight: normal;
-      font-size: .7579em;
+      font-size: $font-down-2;
       line-height: 1;
     }
   }
@@ -353,7 +353,7 @@ a.star {
     }
     .number, i {
       color: dark-light-choose($primary-high, $secondary-low);
-      font-size: 1.3195em;
+      font-size: $font-up-2;
     }
     .avatar  a {
       float: left;
@@ -408,7 +408,7 @@ a.star {
       }
       .fa {
         margin: 0;
-        font-size: 1.3195em;
+        font-size: $font-up-2;
         line-height: 52px;
       }
     }
@@ -541,7 +541,7 @@ video {
 .extra-info {
   h1 {
     margin: 5px 0 0 0;
-    font-size: 1.5157em;
+    font-size: $font-up-3;
     line-height: 1.3em;
   }
 
@@ -701,7 +701,7 @@ $topic-avatar-width: 45px;
   span.title {
     font-weight: bold;
     display: block;
-    font-size: 1em;
+    font-size: $font-0;
     color: $primary;
   }
 }
@@ -738,7 +738,7 @@ $topic-avatar-width: 45px;
 .dropdown-menu .icon {
   margin-top: 3px;
   float: left;
-  font-size: 1.3195em;
+  font-size: $font-up-2;
 }
 
 .open > .dropdown-menu {
@@ -783,7 +783,7 @@ $topic-avatar-width: 45px;
     margin: 10px 0 0 0;
   }
   h3 {
-    font-size: 1.7511em;
+    font-size: $font-up-4;
     color: $primary;
     margin-bottom: 5px;
     i {

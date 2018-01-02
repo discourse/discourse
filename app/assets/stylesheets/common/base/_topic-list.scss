@@ -24,7 +24,7 @@
 }
 
 .topic-list-main-link {
-  font-size: 1.1487em;
+  font-size: $font-up-1;
   a.title {
     padding: 15px 0;
     word-break: break-word;
@@ -94,13 +94,13 @@
   th {
     color: dark-light-choose($primary-medium, $secondary-medium);
     font-weight: normal;
-    font-size: 1em;
+    font-size: $font-0;
     button .d-icon {color: dark-light-choose($primary-medium, $secondary-medium);}
 
   }
   td {
     color: dark-light-choose($primary-medium, $secondary-medium);
-    font-size: 1em;
+    font-size: $font-0;
   }
 
   .main-link {
@@ -174,7 +174,7 @@
   }
   td.stats {
     .unit {
-      font-size: .8706em;;
+      font-size: $font-down-1;
     }
   }
 
@@ -183,7 +183,7 @@
         padding: 2px;
         vertical-align: bottom;
         line-height: 24px;
-        &.value { text-align: right; font-size: 1.5157em; }
+        &.value { text-align: right; font-size: $font-up-3; }
         &.unit  { text-align: left; }
       }
     }
@@ -217,7 +217,7 @@
     padding: 0;
     border: 0;
     color: $danger-medium;
-    font-size: 1em;
+    font-size: $font-0;
     cursor: default;
   }
 }
@@ -225,7 +225,7 @@
 .topic-list {
   .alert {
     margin-bottom: 0;
-    font-size: 1em;
+    font-size: $font-0;
   }
   .spinner {
     margin-top: 40px;
@@ -310,7 +310,7 @@ ol.category-breadcrumb {
     outline: 0;
     background: transparent;
     border: 0;
-    font-size: 1.5157em;
+    font-size: $font-up-3;
     padding: 5px 10px 0 10px;
   }
 
@@ -318,7 +318,7 @@ ol.category-breadcrumb {
 
     @include unselectable;
 
-    font-size: 1.1487em;
+    font-size: $font-up-1;
     border: 1px solid $primary-low;
     padding: 5px;
     background: $secondary;

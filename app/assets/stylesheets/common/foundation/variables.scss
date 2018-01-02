@@ -20,7 +20,6 @@ $twitter: #00bced !default;
 $yahoo: #810293 !default;
 $github: #6d6d6d !default;
 
-
 // Fonts
 // --------------------------------------------------
 
@@ -28,12 +27,30 @@ $base-font-size: 14px !default;
 $base-line-height: 19px !default;
 $base-font-family: Helvetica, Arial, sans-serif !default;
 
-/* These files don't actually exist. They're injected by Stylesheet::Compiler. */
+// Font-size defintions, multiplier ^ (step / interval) 
+$font-up-6: 2.296em;
+$font-up-5: 2em;
+$font-up-4: 1.7511em;
+$font-up-3: 1.5157em;
+$font-up-2: 1.3195em;
+$font-up-1: 1.1487em; // 2^(1/5) 
+$font-0: 1em;
+$font-down-1: .8706em; // 2^(-1/5)
+$font-down-2: .7579em; // Smallest size we use based on the 1em base
+$font-down-3: .6599em;
+$font-down-4: .5745em;
+$font-down-5: .5em;
+$font-down-6: .4355em;
+
+// These files don't actually exist. They're injected by Stylesheet::Compiler. 
+// --------------------------------------------------
+
 @import "theme_variables";
 @import "plugins_variables";
 @import "common/foundation/math";
 
-// Color Utilities
+// Color utilities
+// --------------------------------------------------
 
 // w3c definition of color brightness https://www.w3.org/TR/AERT#color-contrast
 @function dc-color-brightness($color) {

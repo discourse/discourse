@@ -15,7 +15,7 @@
     float: right;
     margin-left: 8px;
     margin-bottom: 10px;
-    font-size: 1.1487em;
+    font-size: $font-up-1;
     font-weight: normal;
   }
 
@@ -25,7 +25,7 @@
 
   a.badge-category, .dropdown-header {
     padding: 3px 12px;
-    font-size: 1.1487em;
+    font-size: $font-up-1;
   }
 
 }
@@ -135,7 +135,7 @@
     width: auto;
     color: dark-light-choose($primary-medium, $secondary-medium);
     text-align: left;
-    font-size: .8706em;;
+    font-size: $font-down-1;
     margin-top: 5px;
     .fa {
       margin-right: 2px;
@@ -194,7 +194,7 @@
   .category{
     h3 {
       display: inline-block;
-      font-size: 1.3195em;
+      font-size: $font-up-2;
       i {
         margin-right: 5px;
       }
@@ -288,7 +288,7 @@ button.dismiss-read {
   clear: both;
   p {
     line-height: 1.5em;
-    font-size: 1.5157em;
+    font-size: $font-up-3;
   }
 }
 
@@ -311,7 +311,7 @@ and (max-width : 850px) {
   // slightly smaller font, tighten spacing on nav pills
   .nav-pills {
     > li > a {
-      font-size: 1em;
+      font-size: $font-0;
       padding: 5px 10px;
       }
   }
@@ -332,14 +332,11 @@ and (max-width : 850px) {
    th:first-of-type {
      padding: 12px 5px;
      }
-   // smaller table cell font and cell spacing
+   // smaller table cell spacing
    th, td {
-      padding: 12px 2px;
-      font-size: 1em;
+      padding: 10px;
+      font-size: $font-0;
      }
-    .main-link {
-      font-size: 1em;
-      }
     .category {
       min-width: 0;
       padding: 0;
