@@ -43,6 +43,13 @@ describe WebHook do
     end
 
     describe '#find_by_type' do
+      it "returns unique hooks" do
+        post_hook.web_hook_event_types << WebHookEventType.find_by(name: 'topic')
+        post_hook.update!(wildcard_web_hook: true)
+
+        expect(WebHook.find_by_type(:post)).to eq([post_hook])
+      end
+
       it 'find relevant hooks' do
         expect(WebHook.find_by_type(:post)).to eq([post_hook])
         expect(WebHook.find_by_type(:topic)).to eq([topic_hook])

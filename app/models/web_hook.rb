@@ -34,6 +34,7 @@ class WebHook < ActiveRecord::Base
     WebHook.where(active: true)
       .joins(:web_hook_event_types)
       .where("web_hooks.wildcard_web_hook = ? OR web_hook_event_types.name = ?", true, type.to_s)
+      .uniq
   end
 
   def self.enqueue_hooks(type, opts = {})
