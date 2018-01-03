@@ -19,7 +19,7 @@
   z-index: 999;
   transition: height 250ms ease, background 250ms ease, transform 250ms ease, max-width 250ms ease;
   background-color: $secondary;
-  box-shadow: 0 -2px 40px rgba($primary, .12);
+  box-shadow: 0 -1px 40px rgba(0,0,0, .12);
 
   .reply-area {
     display: flex;
