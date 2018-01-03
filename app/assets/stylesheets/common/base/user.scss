@@ -256,7 +256,7 @@
         margin-top: 5px;
         margin-bottom: 10px;
         font-size: $font-down-1;
-        line-height: 1.4em;
+        line-height: $line-height-large;
       }
     }
   }
@@ -480,7 +480,7 @@
     color: dark-light-choose($primary-medium, $secondary-medium);
     margin-bottom: 10px;
     font-size: $font-down-1;
-    line-height: 1.4em;
+    line-height: $line-height-large;
 
     a[href] {
       color: $tertiary;

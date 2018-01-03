@@ -86,7 +86,7 @@
 
   th,
   td {
-    line-height: 1.25;
+    line-height: $line-height-large;
     text-align: left;
     vertical-align: middle;
 
@@ -116,7 +116,7 @@
     margin-top: 8px;
     color: dark-light-choose($primary-medium, $secondary-medium);
     word-wrap: break-word;
-    line-height: 1.4;
+    line-height: $line-height-large;
     padding-right: 20px;
   }
   .topic-statuses:empty {
@@ -312,6 +312,7 @@ ol.category-breadcrumb {
     border: 0;
     font-size: $font-up-3;
     padding: 5px 10px 0 10px;
+    line-height: $line-height-large;
   }
 
   #period-popup {

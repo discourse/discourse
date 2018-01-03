@@ -23,7 +23,7 @@
   position: relative;
 
   &.bar { //bar category style
-    line-height: 1.25;
+    line-height: $line-height-medium;
     margin-right: 5px;
     display: inline-flex;
 
@@ -61,7 +61,6 @@
     align-items: baseline;
     margin-right: 5px;
     font-size: $font-down-1;
-    line-height: 15px;
 
     span.badge-category {
       color: $primary;
@@ -83,7 +82,7 @@
     height: 10px;
     margin-right: 5px;
     display: inline-block;
-    line-height: 1;
+    line-height: $line-height-small;
 
     &:before {
       content: "\a0";
@@ -103,7 +102,7 @@
 
 
   &.box {  //box category style (apply custom widths to the wrapper, not the children)
-    line-height: 1.5;
+    line-height: $line-height-large;
     margin-top: 5px;
     margin-right: 5px;
 
@@ -157,7 +156,7 @@
     a.badge-category, .dropdown-header {
       display: inline-block;
       padding: 5px 8px;
-      line-height: 20px;
+      line-height: $line-height-large;
 
       &.category-dropdown-button {
         margin-left: -4px;
@@ -201,7 +200,7 @@
       }
     }
     .cat {
-        line-height: 1;
+        line-height: $line-height-small;
       }
     .badge-wrapper {
       box-sizing: border-box;
@@ -226,7 +225,7 @@
       &.box {
         margin-top: 0;
         width: 100%;
-        line-height: 1;
+        line-height: $line-height-small;
         vertical-align: text-top;
         span.badge-category {
           max-width: 100px;
@@ -248,11 +247,11 @@
 
 .badge-notification {
   @extend %badge;
-  padding: 4px 5px 2px 5px;
+  padding: .3em .5em;
   vertical-align: middle;
   color: $secondary;
   font-size: $font-down-2;
-  line-height: 1;
+  line-height: $line-height-small;
   text-align: center;
   background-color: dark-light-choose($primary-low-mid, $secondary-low);
   &[href] {
@@ -302,7 +301,7 @@
 .badge-posts {
   font-weight: normal;
   font-size: $font-0;
-  line-height: 1;
+  line-height: $line-height-small;
   &[href] {
     color: dark-light-choose($primary-medium, $secondary-medium);
   }

@@ -240,7 +240,7 @@
     .btn {
       text-align: left;
       font-size: $font-up-2;
-      line-height: 20px;
+      line-height: $line-height-medium;
       width: auto;
       margin-bottom: 10px;
       display: block;
@@ -269,7 +269,7 @@
       font-weight: normal;
       text-align: left;
       font-size: $font-0;
-      line-height: 20px;
+      line-height: $line-height-large;
       margin-bottom: 10px;
       display: inline-block;
       margin-left: 0;

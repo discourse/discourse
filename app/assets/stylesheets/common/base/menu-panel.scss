@@ -123,7 +123,6 @@
     box-sizing: border-box;
     width: calc(100% - 6px);
     height: 32px;
-    padding: 5px;
   }
 
   .search-context {
@@ -156,7 +155,7 @@
 
   .search-link {
     .badge-category-parent {
-      line-height: 0.8em;
+      line-height: $line-height-small;
     }
     .topic-title {
       margin-right: 6px;
@@ -175,7 +174,7 @@
 
   li:not(.category):not(.heading) {
     font-size: $font-0;
-    line-height: 16px;
+    line-height: $line-height-medium;
 
     .fa {
       font-size: inherit;

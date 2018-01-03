@@ -34,13 +34,13 @@
 
 .bullet + .topic-header-extra {
   display: block;
-  line-height: 15px;
+  line-height: $line-height-medium;
   font-size: $font-down-1;
   .list-tags { font-size: $font-0; }
 }
 
 .bar + .topic-header-extra {
-  line-height: 1.25;
+  line-height: $line-height-medium;
 }
 
 .box + .topic-header-extra {

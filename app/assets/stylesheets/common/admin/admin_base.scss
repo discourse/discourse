@@ -268,7 +268,7 @@ $mobile-breakpoint: 700px;
   }
   h1 {
     font-size: $font-up-3;
-    line-height: 25px;
+    line-height: $line-height-medium;
     color: $primary;
   }
   .controls {
@@ -516,7 +516,7 @@ $mobile-breakpoint: 700px;
         padding: 3px 5px 3px 18px;
         margin: 3px 0px 3px 5px;
         position: relative;
-        line-height: 13px;
+        line-height: $line-height-small;
         cursor: default;
         border: 1px dashed #AAA;
         border-radius: 3px;
@@ -532,7 +532,7 @@ $mobile-breakpoint: 700px;
     .desc, .validation-error {
       padding-top: 3px;
       font-size: $font-down-1;
-      line-height: 1.4em;
+      line-height: $line-height-large;
     }
 
     .validation-error {
@@ -766,14 +766,14 @@ section.details {
 
   .badge-errors {
     font-size: $font-0;
-    line-height: 16px;
+    line-height: $line-height-medium;
     padding: 4px;
     background-color: $primary-low;
   }
 
   .badge-query-plan {
-    font-size: 0.857em;
-    line-height: 13px;
+    font-size: $font-down-1;
+    line-height: $line-height-medium;
     padding: 4px;
     background-color: $primary-low;
   }

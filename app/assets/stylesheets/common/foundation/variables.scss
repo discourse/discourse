@@ -24,7 +24,6 @@ $github: #6d6d6d !default;
 // --------------------------------------------------
 
 $base-font-size: 14px !default;
-$base-line-height: 19px !default;
 $base-font-family: Helvetica, Arial, sans-serif !default;
 
 // Font-size defintions, multiplier ^ (step / interval) 
@@ -41,6 +40,15 @@ $font-down-3: .6599em;
 $font-down-4: .5745em;
 $font-down-5: .5em;
 $font-down-6: .4355em;
+
+// Common line-heights
+$line-height-small: 1;
+$line-height-medium: 1.2;
+$line-height-large: 1.4;
+
+$base-line-height: $line-height-large !default;
+
+
 
 // These files don't actually exist. They're injected by Stylesheet::Compiler. 
 // --------------------------------------------------

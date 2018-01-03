@@ -89,6 +89,9 @@
 
 .flag-modal {
   max-height: 450px;
+  .flag-action-type-details {
+    line-height: $line-height-large;
+  }
 }
 
 .custom-message-length {

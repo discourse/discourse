@@ -361,7 +361,7 @@ tr.category-topic-link {
   padding: 3px 15px;
   clear: both;
   font-weight: normal;
-  line-height: 18px;
+  line-height: $line-height-medium;
   color: $primary;
 }
 .dropdown-menu li > a:hover,

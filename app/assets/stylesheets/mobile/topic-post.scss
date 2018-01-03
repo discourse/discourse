@@ -154,7 +154,7 @@ a.reply-to-tab {
     margin-bottom: 4px;
     margin-top: 0;
     color: dark-light-choose($primary-medium, $secondary-medium);
-    line-height: 23px;
+    line-height: $line-height-large;
     font-weight: normal;
     font-size: $font-0;
   }
@@ -163,8 +163,8 @@ a.reply-to-tab {
     margin: 0 0 3px 0;
     color: dark-light-choose($primary-medium, $secondary-medium);
     font-weight: normal;
-    font-size: 0.857em;
-    line-height: 15px;
+    font-size: $font-down-1;
+    line-height: $line-height-medium;
   }
 
   .user {
@@ -191,7 +191,7 @@ a.reply-to-tab {
       text-align: center;
       font-weight: normal;
       font-size: $font-down-1;
-      line-height: 1;
+      line-height: $line-height-small;
     }
   }
 
@@ -215,7 +215,7 @@ a.reply-to-tab {
       }
     }
     a, .number {
-      line-height: 20px;
+      line-height: $line-height-large;
     }
     .number, i {
       color: dark-light-choose($primary-high, $secondary-low);
@@ -347,8 +347,6 @@ span.post-count {
 // this prevents image overflow on deeply nested blockquotes, lists, etc
 .cooked {
   overflow: hidden;
-  font-size: $base-font-size + 1; /* let's bump post body font size on mobile slightly */
-  line-height: $base-line-height + 2; /* bump up line height to match increased font */
 }
 
 .quote-button.visible {
@@ -474,7 +472,7 @@ span.highlighted {
   margin-left: 50px;
   .names {
     margin: 5px 0 0 5px;
-    line-height: 17px;
+    line-height: $line-height-medium;
 
     .poster-icon {
       float: right;

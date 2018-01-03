@@ -136,14 +136,14 @@
         background-color: $primary-low;
         cursor: pointer;
         outline: none;
-        line-height: normal;
+        line-height: $line-height-medium;
         overflow: hidden;
         flex: 0 1 auto;
         flex-wrap: nowrap;
 
         .name {
           padding: 0 5px;
-          line-height: 18px;
+          line-height: $line-height-medium;
         }
 
         &.is-highlighted {

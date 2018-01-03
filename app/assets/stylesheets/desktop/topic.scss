@@ -26,7 +26,7 @@
   }
   h1 {
     font-size: $font-up-4;
-    line-height: 1.25em;
+    line-height: $line-height-medium;
     overflow: hidden;
     a {color: $primary;}
   }
@@ -59,7 +59,7 @@
   margin-right: auto;
   font-size: $font-up-4;
   text-align: center;
-  line-height: 1.1em;
+  line-height: $line-height-medium;
 
   .topic-retry {
     display: block;
@@ -166,7 +166,7 @@
   h4 {
     display: inline;
     font-size: $font-up-2;
-    line-height: 15px;
+    line-height: $line-height-small;
   }
   .bg {
     position: absolute;

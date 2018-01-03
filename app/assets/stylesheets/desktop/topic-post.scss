@@ -292,7 +292,7 @@ a.star {
   h3 {
     margin-bottom: 4px;
     color: dark-light-choose($primary-high, $secondary-low);
-    line-height: 23px;
+    line-height: $line-height-large;
     font-weight: normal;
     font-size: $font-0;
   }
@@ -301,8 +301,8 @@ a.star {
     margin: 1px 0 2px 0;
     color: dark-light-choose($primary-medium, $secondary-medium);
     font-weight: normal;
-    font-size: 0.857em;
-    line-height: 15px;
+    font-size: $font-down-1;
+    line-height: $line-height-large;
   }
 
   ul {
@@ -325,11 +325,11 @@ a.star {
       position: absolute;
       right: 0;
       border-radius: 100px;
-      padding: 4px 5px 2px 5px;
+      padding: .3em .5em;
       text-align: center;
       font-weight: normal;
       font-size: $font-down-2;
-      line-height: 1;
+      line-height: $line-height-small;
     }
   }
 
@@ -542,7 +542,7 @@ video {
   h1 {
     margin: 5px 0 0 0;
     font-size: $font-up-3;
-    line-height: 1.3em;
+    line-height: $line-height-medium;
   }
 
   .topic-statuses {
@@ -553,7 +553,7 @@ video {
 /* override docked header CSS for topics with categories */
 .extra-info.two-rows {
   h1 {
-    line-height: 1.1em;
+    line-height: $line-height-small;
     margin: 0;
   }
 }
@@ -710,7 +710,7 @@ $topic-avatar-width: 45px;
   padding: 9px;
   clear: both;
   font-weight: normal;
-  line-height: 18px;
+  line-height: $line-height-medium;
   color: $primary;
   transition: all linear .15s;
 

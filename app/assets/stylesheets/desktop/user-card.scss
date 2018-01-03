@@ -64,7 +64,7 @@ $user_card_background: $secondary;
   h1 {
     min-width: 120px;
     font-size: $font-up-4;
-    line-height: 1.25;
+    line-height: $line-height-medium;
     display: block;
     max-width: 250px;
     white-space: nowrap;
@@ -81,7 +81,7 @@ $user_card_background: $secondary;
 
   h2 {
     font-size: $font-up-1;
-    line-height: 1.25;
+    line-height: $line-height-medium;
     font-weight: normal;
     display: block;
     max-width: 250px;

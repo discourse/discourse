@@ -60,7 +60,7 @@ $input-width: 220px;
         margin: 0;
         font-size: 0.857em;
         font-weight: normal;
-        line-height: 18px;
+        line-height: $line-height-medium;
       }
     }
     clear: both;
@@ -102,7 +102,7 @@ $input-width: 220px;
       margin: 0;
       font-size: 0.857em;
       font-weight: normal;
-      line-height: 18px;
+      line-height: $line-height-medium;
     }
   }
 }

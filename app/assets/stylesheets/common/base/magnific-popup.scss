@@ -325,7 +325,7 @@ button {
   right: 0;
   color: $controls-text-color;
   font-size: 0.857em;
-  line-height: 18px;
+  line-height: $line-height-medium;
 }
 
 // Navigation arrows
@@ -489,8 +489,8 @@ button {
     small {
       color: $caption-subtitle-color;
       display: block;
-      font-size: 0.857em;
-      line-height: 14px;
+      font-size: $font-down-1;
+      line-height: $line-height-medium;
     }
     figure {
       margin: 0;
@@ -506,7 +506,7 @@ button {
   }
   .mfp-title {
     text-align: left;
-    line-height: 18px;
+    line-height: $line-height-medium;
     color: $caption-title-color;
     word-wrap: break-word;
     padding-right: 36px; // leave some space for counter at right side

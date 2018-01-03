@@ -147,7 +147,7 @@
 #suggested-topics h3 .badge-wrapper.bullet span.badge-category {
   // Override vertical-align: text-top from `badges.css.scss`
   vertical-align: baseline;
-  line-height: 1.2;
+  line-height: $line-height-medium;
 }
 
 #suggested-topics h3 .badge-wrapper.bullet,

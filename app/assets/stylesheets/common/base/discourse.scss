@@ -120,7 +120,7 @@ input {
   &[type="radio"],
   &[type="checkbox"] {
     margin: 3px 0;
-    line-height: normal;
+    line-height: $line-height-medium;
     cursor: pointer;
   }
   &[type="submit"],
@@ -191,7 +191,7 @@ input {
     padding: 4px 10px;
     margin-bottom: 9px;
     font-size:  1em;
-    line-height: 1.25;
+    line-height: $line-height-medium;
     color: $primary;
     background-color: $secondary;
     border: 1px solid $primary-medium;
@@ -475,7 +475,7 @@ select {
   .control-label {
     font-weight: bold;
     font-size: $font-up-2;
-    line-height: 2;
+    line-height: $line-height-large;
   }
 
   .controls {

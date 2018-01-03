@@ -30,7 +30,7 @@
       padding: 5px 12px;
       color: $primary;
       font-size: $font-up-1;
-      line-height: 20px;
+      line-height: $line-height-large;
       transition: background .15s;
 
       .d-icon {
@@ -82,7 +82,7 @@
     margin: 0;
     padding: 13px;
     font-size: $font-up-1;
-    line-height: 20px;
+    line-height: $line-height-small;
     cursor: pointer;
     color: $primary;
 
@@ -102,15 +102,15 @@
   }
 
   .count {
-    font-size: 0.857em;
-    line-height: 16px;
+    font-size: $font-down-1;
+    line-height: $line-height-large;
   }
 
   .glyph {
-    font-size: 0.857em;
+    font-size: $font-down-1;
     width: 1.25em;
     text-align: center;
     margin-right: .5em;
-    line-height: 20px;
+    line-height: $line-height-large;
   }
 }

@@ -18,7 +18,7 @@
   margin: 0 60px 10px 0;
   h1 {
     font-size: $font-up-3;
-    line-height: 1.25;
+    line-height: $line-height-medium;
     a {
       color: $primary;
       vertical-align: middle;
@@ -131,7 +131,7 @@
   h4 {
     display: inline;
     font-size: $font-up-2;
-    line-height: 15px;
+    line-height: $line-height-small;
   }
   .d-icon {
     position: absolute;
@@ -156,7 +156,7 @@
   margin-left: auto;
   margin-right: auto;
   font-size: $font-up-4;
-  line-height: 1.25;
+  line-height: $line-height-medium;
 
   .topic-retry {
     display: block;

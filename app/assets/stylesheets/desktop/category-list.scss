@@ -48,11 +48,6 @@
     }
   }
 
-  .category-description,
-  .subcategories {
-    margin-top: 10px;
-  }
-
   .subcategories {
     .badge-notification.new-posts {
       padding: 0;
@@ -99,6 +94,7 @@
       border-left: 6px solid;
       h3 {
         font-size: $font-up-2;
+        line-height: $line-height-medium;
         a[href] {
           color: $primary;
         }

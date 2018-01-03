@@ -37,19 +37,19 @@
   .search-link {
     .topic-statuses, .topic-title {
       font-size: $font-up-2;
-      line-height: 25px;
+      line-height: $line-height-large;
     }
 
     .topic-statuses {
       float: none;
       display: inline-block;
       color: dark-light-choose($primary-medium, $secondary-medium);
-      font-size: 1.0em;
+      font-size: $font-0;
     }
   }
   .blurb {
-    font-size: 1.0em;
-    line-height: 20px;
+    font-size: $font-0;
+    line-height: $line-height-large;
     word-wrap: break-word;
     max-width: 640px;
     color: dark-light-choose($primary-medium, $secondary-medium);
@@ -148,7 +148,7 @@
   .result-count {
     float: left;
     span {
-      line-height: 28px;
+      line-height: $line-height-large;
       height: 28px;
       display: inline-block;
     }

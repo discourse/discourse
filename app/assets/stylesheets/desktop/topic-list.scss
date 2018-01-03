@@ -287,7 +287,7 @@ button.dismiss-read {
 .category-heading {
   clear: both;
   p {
-    line-height: 1.5em;
+    line-height: $line-height-large;
     font-size: $font-up-3;
   }
 }
