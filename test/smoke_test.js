@@ -53,6 +53,15 @@ const path = require('path');
 
   page.on('console', msg => console.log(`PAGE LOG: ${msg.text}`));
 
+  if (process.env.AUTH_USER && process.env.AUTH_PASSWORD) {
+    await exec("basic authentication", () => {
+      return page.authenticate({
+        username: process.env.AUTH_USER,
+        password: process.env.AUTH_PASSWORD
+      });
+    });
+  }
+
   await exec("go to site", () => {
     return page.goto(url);
   });
