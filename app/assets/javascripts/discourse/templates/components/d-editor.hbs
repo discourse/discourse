@@ -41,13 +41,14 @@
     {{conditional-loading-spinner condition=loading}}
     {{textarea tabindex=tabindex value=value class="d-editor-input" placeholder=placeholderTranslated}}
     {{popup-input-tip validation=validation}}
+    {{plugin-outlet name="after-d-editor" tagName="" args=outletArgs}}
   </div>
 
   <div class="d-editor-preview-wrapper {{if forcePreview 'force-preview'}}">
     <div class="d-editor-preview">
       {{{preview}}}
     </div>
-      {{plugin-outlet name="editor-preview" classNames="d-editor-plugin"}}
+    {{plugin-outlet name="editor-preview" classNames="d-editor-plugin"}}
   </div>
 </div>
 

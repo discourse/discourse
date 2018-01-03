@@ -3010,6 +3010,7 @@ es:
             all_search_types: "Todos los tipos de búsqueda"
             header: "Encabezado"
             full_page: "Página Completa"
+            click_through_only: "Todo (solo entrados)"
         logster:
           title: "Registros de errores"
       watched_words:
