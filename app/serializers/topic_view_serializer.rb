@@ -92,7 +92,7 @@ class TopicViewSerializer < ApplicationSerializer
     end
 
     if object.post_counts_by_user.present?
-      participants = object.post_counts_by_user.reject{ |p| object.participants[p].blank? }.map do |pc|
+      participants = object.post_counts_by_user.reject { |p| object.participants[p].blank? }.map do |pc|
         TopicPostCountSerializer.new({ user: object.participants[pc[0]], post_count: pc[1] }, scope: scope, root: false)
       end
       result[:participants] = participants if participants.length > 0
