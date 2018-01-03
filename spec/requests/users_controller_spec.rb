@@ -278,7 +278,9 @@ RSpec.describe UsersController do
           }
 
           expect(response).to be_success
-          expect(JSON.parse(response.body)["groups"].last['name']).to eq(messageable_group.name)
+
+          expect(JSON.parse(response.body)["groups"].map { |group| group['name'] })
+            .to contain_exactly(messageable_group.name, Group.find(Group::AUTO_GROUPS[:moderators]).name)
         end
 
         it 'searches for mentionable groups' do
