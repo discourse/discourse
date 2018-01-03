@@ -279,6 +279,7 @@ export default Ember.Component.extend({
     const markdownOptions = this.get('markdownOptions') || {};
 
     cookAsync(value, markdownOptions).then(cooked => {
+      if (this.get('isDestroyed')) { return; }
       this.set('preview', cooked);
       Ember.run.scheduleOnce('afterRender', () => {
         if (this._state !== "inDOM") { return; }
@@ -632,7 +633,8 @@ export default Ember.Component.extend({
 
     if (rows.length > 1) {
       const columns = rows.map(r => r.split("\t").length);
-      const isTable = columns.reduce((a, b) => a && columns[0] === b && b > 1);
+      const isTable = columns.reduce((a, b) => a && columns[0] === b && b > 1) &&
+                      !(columns[0] === 2 && rows[0].split("\t")[0].match(/^•$|^\d+.$/)); // to skip tab delimited lists
 
       if (isTable) {
         const splitterRow = [...Array(columns[0])].map(() => "---").join("\t");
@@ -662,8 +664,6 @@ export default Ember.Component.extend({
       if (table) {
         this.appEvents.trigger('composer:insert-text', table);
         handled = true;
-      } else if (html && html.includes("urn:schemas-microsoft-com:office:word")) {
-        html = ""; // use plain text data for microsoft word
       }
     }
 

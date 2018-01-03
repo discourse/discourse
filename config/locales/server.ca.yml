@@ -1120,7 +1120,6 @@ ca:
     relative_date_duration: "Quantitat de dies després de publicar on les dates de publicació seran visibles com a relatives (7d) en comptes d'absolutes (20 febrer)."
     delete_user_max_post_age: "No permetis que s'esborrin persones usuàries amb una publicació de menys d'(x) dies."
     delete_all_posts_max: "Quantitat màxima de publicacions que es poden esborrar d'un cop amb el botó \"Esborra totes les publicacions\". Si una persona en té una quantitat superior, les publicacions no podran esborrar-se d'un cop i la persona tampoc no podrà ser eliminada."
-    username_change_period: "La quantitat de dies després del registre que els comptes poden canviar el seu nom de persona usuària (0 per desactivar el canvi de nom)."
     email_editable: "Permet que les persones canviïn la seva adreça de correu després del registre."
     logout_redirect: "Ubicació on redirigir el navegador després de desconnectar (per exemple: http://somesite.com/logout)"
     allow_uploaded_avatars: "Permet que les persones carreguin imatges de perfil personalitzades."

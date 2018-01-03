@@ -151,6 +151,12 @@ export default Ember.Controller.extend({
     this.set("application.showFooter", !this.get("loading"));
   },
 
+  @computed('resultCount', 'noSortQ')
+  resultCountLabel(count, term) {
+    const plus = (count % 50 === 0 ? "+" : "");
+    return I18n.t('search.result_count', {count, plus, term});
+  },
+
   @observes('model.posts.length')
   resultCountChanged() {
     this.set("resultCount", this.get("model.posts.length"));

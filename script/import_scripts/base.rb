@@ -319,8 +319,12 @@ class ImportScripts::Base
       User.transaction do
         u.save!
         if bio_raw.present? || website.present? || location.present?
+          if website.present?
+            u.user_profile.website = website
+            u.user_profile.website = nil unless u.user_profile.valid?
+          end
+
           u.user_profile.bio_raw = bio_raw[0..2999] if bio_raw.present?
-          u.user_profile.website = website unless website.blank? || website !~ UserProfile::WEBSITE_REGEXP
           u.user_profile.location = location if location.present?
           u.user_profile.save!
         end

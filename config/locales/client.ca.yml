@@ -2768,7 +2768,7 @@ ca:
             other: "durant els darrers %{count} dies:"
           value_heading: "Valor"
           requirement_heading: "Requisit"
-          visits: "Visits"
+          visits: "Visites"
           days: "dies"
           topics_replied_to: "Temes resposts a"
           topics_viewed: "Temes vistos"

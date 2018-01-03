@@ -101,6 +101,7 @@ sv:
           other: "%{count} år senare"
       previous_month: 'Föregående månad'
       next_month: 'Nästkommande månad'
+      placeholder: datum
     share:
       topic: 'dela en länk till detta ämne'
       post: 'inlägg #%{postNumber}'
@@ -115,6 +116,7 @@ sv:
       split_topic: "splitta det här ämnet %{when}"
       invited_user: "bjöd in %{who} %{when}"
       invited_group: "bjöd in %{who} %{when}"
+      user_left: "%{who} tog bort sig själva från detta meddelande %{when}"
       removed_user: "tog bort %{who} %{when}"
       removed_group: "tog bort %{who} %{when}"
       autoclosed:
@@ -139,6 +141,7 @@ sv:
         enabled: 'gjorde detta till en banderoll %{when}. Den kommer att visas högst upp på varje sida tills den blir avfärdad av användaren.'
         disabled: 'tog bort denna banderoll %{when}. Den kommer inte längre att visas högst upp på varje sida.'
     topic_admin_menu: "administratörsåtgärder för ämne"
+    wizard_required: "Välkommen till din nya Discourse! Låt oss komma igång genom <a href='%{url}' data-auto-route='true'>uppsättnings guiden</a> ✨"
     emails_are_disabled: "All utgående e-post har blivit globalt inaktiverad av en administratör. Inga e-postnotifikationer av något slag kommer att skickas ut."
     bootstrap_mode_enabled: "Du är i bootstrap-läge för att göra lanseringen av din nya webbplats enklare. Alla nya användare kommer att beviljas förtroendenivå 1 och få dagliga sammanfattningar skickade via e-post. Det här stängs automatiskt av när det totala antalet användare överstiger %{min_users}."
     bootstrap_mode_disabled: "Bootstrap-läge otillgängliggörs i 24 timmar."
@@ -256,6 +259,7 @@ sv:
     uploading: "Laddar upp..."
     uploading_filename: "Laddar upp {{filename}}..."
     uploaded: "Uppladdad!"
+    pasting: "Klistrar in..."
     enable: "Aktivera"
     disable: "Inaktivera"
     undo: "Ångra"

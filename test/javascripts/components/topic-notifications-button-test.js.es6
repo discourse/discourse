@@ -22,13 +22,13 @@ componentTest('the header has a localized title', {
 
   test(assert) {
     andThen(() => {
-      assert.equal(selectKit().header.name(), "Normal", "it has the correct title");
+      assert.equal(selectKit().header().name(), "Normal", "it has the correct title");
     });
 
     this.set("topic", buildTopic(2));
 
     andThen(() => {
-      assert.equal(selectKit().header.name(), "Tracking", "it correctly changes the title");
+      assert.equal(selectKit().header().name(), "Tracking", "it correctly changes the title");
     });
   }
 });

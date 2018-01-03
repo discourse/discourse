@@ -53,7 +53,18 @@ const path = require('path');
 
   page.on('console', msg => console.log(`PAGE LOG: ${msg.text}`));
 
-  await page.goto(url);
+  if (process.env.AUTH_USER && process.env.AUTH_PASSWORD) {
+    await exec("basic authentication", () => {
+      return page.authenticate({
+        username: process.env.AUTH_USER,
+        password: process.env.AUTH_PASSWORD
+      });
+    });
+  }
+
+  await exec("go to site", () => {
+    return page.goto(url);
+  });
 
   await exec("expect a log in button in the header", () => {
     return page.waitForSelector("header .login-button", { visible: true });
@@ -228,7 +239,9 @@ const path = require('path');
     });
   }
 
-  await browser.close();
+  await exec("close browser", () => {
+    return browser.close();
+  });
 
   console.log("ALL PASSED");
 })();

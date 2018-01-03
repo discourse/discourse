@@ -11,52 +11,42 @@ function checkSelectKitIsNotCollapsed(selector) {
 }
 
 Ember.Test.registerAsyncHelper('expandSelectKit', function(app, selector) {
-  selector = selector || '.select-kit';
-
   checkSelectKitIsNotExpanded(selector);
-
   click(selector + ' .select-kit-header');
 });
 
 Ember.Test.registerAsyncHelper('collapseSelectKit', function(app, selector) {
-  selector = selector || '.select-kit';
-
   checkSelectKitIsNotCollapsed(selector);
-
   click(selector + ' .select-kit-header');
 });
 
-Ember.Test.registerAsyncHelper('selectKitSelectRow', function(app, rowValue, options) {
-  options = options || {};
-  options.selector = options.selector || '.select-kit';
-
-  checkSelectKitIsNotCollapsed(options.selector);
-
-  click(options.selector + " .select-kit-row[data-value='" + rowValue + "']");
+Ember.Test.registerAsyncHelper('selectKitFillInFilter', function(app, filter, selector) {
+  checkSelectKitIsNotCollapsed(selector);
+  fillIn(selector + ' .filter-input', filter);
 });
 
-Ember.Test.registerAsyncHelper('selectKitSelectNoneRow', function(app, options) {
-  options = options || {};
-  options.selector = options.selector || '.select-kit';
-
-  checkSelectKitIsNotCollapsed(options.selector);
-
-  click(options.selector + " .select-kit-row.none");
+Ember.Test.registerAsyncHelper('selectKitSelectRowByValue', function(app, value, selector) {
+  checkSelectKitIsNotCollapsed(selector);
+  click(selector + " .select-kit-row[data-value='" + value + "']");
 });
 
-Ember.Test.registerAsyncHelper('selectKitFillInFilter', function(app, filter, options) {
-  options = options || {};
-  options.selector = options.selector || '.select-kit';
+Ember.Test.registerAsyncHelper('selectKitSelectRowByName', function(app, name, selector) {
+  checkSelectKitIsNotCollapsed(selector);
+  click(selector + " .select-kit-row[data-name='" + name + "']");
+});
 
-  checkSelectKitIsNotCollapsed(options.selector);
+Ember.Test.registerAsyncHelper('selectKitSelectNoneRow', function(app, selector) {
+  checkSelectKitIsNotCollapsed(selector);
+  click(selector + " .select-kit-row.none");
+});
 
-  var filterQuerySelector = options.selector + ' .filter-input';
-  fillIn(filterQuerySelector, filter);
-
+Ember.Test.registerAsyncHelper('selectKitSelectRowByIndex', function(app, index, selector) {
+  checkSelectKitIsNotCollapsed(selector);
+  click(find(selector + " .select-kit-row").eq(index));
 });
 
 function selectKit(selector) { // eslint-disable-line no-unused-vars
-  selector = selector || '.select-kit';
+  selector = selector || ".select-kit";
 
   function rowHelper(row) {
     return {
@@ -64,18 +54,18 @@ function selectKit(selector) { // eslint-disable-line no-unused-vars
       icon: function() { return row.find('.d-icon'); },
       title: function() { return row.attr('title'); },
       value: function() { return row.attr('data-value'); },
-      el: row
+      exists: function() { return exists(row); },
+      el: function() { return row; }
     };
   }
 
   function headerHelper(header) {
     return {
-      name: function() {
-        return header.attr('data-name');
-      },
+      value: function() { return header.attr('data-value'); },
+      name: function() { return header.attr('data-name'); },
       icon: function() { return header.find('.icon'); },
       title: function() { return header.attr('title'); },
-      el: header
+      el: function() { return header; }
     };
   }
 
@@ -83,14 +73,14 @@ function selectKit(selector) { // eslint-disable-line no-unused-vars
     return {
       icon: function() { return filter.find('.d-icon'); },
       exists: function() { return exists(filter); },
-      el: filter
+      el: function() { return filter; }
     };
   }
 
-  function keyboardHelper() {
+  function keyboardHelper(eventSelector) {
     function createEvent(target, keyCode, options) {
       target = target || ".filter-input";
-      selector = find(selector).find(target);
+      eventSelector = find(eventSelector).find(target);
       options = options || {};
 
       andThen(function() {
@@ -98,7 +88,7 @@ function selectKit(selector) { // eslint-disable-line no-unused-vars
         var event = jQuery.Event(type);
         event.keyCode = keyCode;
         if (options && options.metaKey === true) { event.metaKey = true; }
-        find(selector).trigger(event);
+        find(eventSelector).trigger(event);
       });
     }
 
@@ -111,20 +101,69 @@ function selectKit(selector) { // eslint-disable-line no-unused-vars
       backspace: function(target) { createEvent(target, 8); },
       selectAll: function(target) { createEvent(target, 65, {metaKey: true}); },
     };
-  }
+  };
 
   return {
-    keyboard: keyboardHelper(),
+    expand: function() {
+      expandSelectKit(selector);
+      return selectKit(selector);
+    },
 
-    isExpanded: find(selector).hasClass('is-expanded'),
+    collapse: function() {
+      collapseSelectKit(selector);
+      return selectKit(selector);
+    },
 
-    isHidden: find(selector).hasClass('is-hidden'),
+    selectRowByIndex: function(index) {
+      selectKitSelectRowByIndex(index, selector);
+      return selectKit(selector);
+    },
 
-    header: headerHelper(find(selector).find('.select-kit-header')),
+    selectRowByValue: function(value) {
+      selectKitSelectRowByValue(value, selector);
+      return selectKit(selector);
+    },
 
-    filter: filterHelper(find(selector).find('.select-kit-filter')),
+    selectRowByName: function(name) {
+      selectKitSelectRowByValue(name, selector);
+      return selectKit(selector);
+    },
 
-    rows: find(selector).find('.select-kit-row'),
+    selectNoneRow: function() {
+      selectKitSelectNoneRow(selector);
+      return selectKit(selector);
+    },
+
+    fillInFilter: function(filter) {
+      selectKitFillInFilter(filter, selector);
+      return selectKit(selector);
+    },
+
+    keyboard: function() { return keyboardHelper(selector); },
+
+    isExpanded: function() {
+      return find(selector).hasClass('is-expanded');
+    },
+
+    isFocused: function() {
+      return find(selector).hasClass('is-focused');
+    },
+
+    isHidden: function() {
+      return find(selector).hasClass('is-hidden');
+    },
+
+    header: function() {
+      return headerHelper(find(selector).find('.select-kit-header'));
+    },
+
+    filter: function() {
+      return filterHelper(find(selector).find('.select-kit-filter'));
+    },
+
+    rows: function() {
+      return find(selector).find('.select-kit-row');
+    },
 
     rowByValue: function(value) {
       return rowHelper(find(selector).find('.select-kit-row[data-value="' + value + '"]'));
@@ -138,12 +177,20 @@ function selectKit(selector) { // eslint-disable-line no-unused-vars
       return rowHelper(find(selector).find('.select-kit-row:eq(' + index + ')'));
     },
 
-    el: find(selector),
+    el: function() { return find(selector); },
 
-    noneRow: rowHelper(find(selector).find('.select-kit-row.none')),
+    noneRow: function() {
+      return rowHelper(find(selector).find('.select-kit-row.none'));
+    },
 
-    selectedRow: rowHelper(find(selector).find('.select-kit-row.is-selected')),
+    selectedRow: function() {
+      return rowHelper(find(selector).find('.select-kit-row.is-selected'));
+    },
 
-    highlightedRow: rowHelper(find(selector).find('.select-kit-row.is-highlighted'))
+    highlightedRow: function() {
+      return rowHelper(find(selector).find('.select-kit-row.is-highlighted'));
+    },
+
+    exists: function() { return exists(selector); }
   };
 }

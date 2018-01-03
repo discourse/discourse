@@ -1203,10 +1203,6 @@ lv:
       select_all: "Izvēlēties visu"
       clear_all: "Noņemt visus"
       too_short: "Jūsu meklēšanas frāze ir pārāk īsa."
-      result_count:
-        zero: "neko neatrada, meklējot \"{{term}}\""
-        one: "{{count}} rezultāts, meklējot \"{{term}}\""
-        other: "{{count}} rezultāti, meklējot <span class='term'>\"{{term}}\"</span>"
       title: "meklēt tēmās, ierakstos, lietotājos vai kategorijās"
       no_results: "Nav rezultātu."
       no_more_results: "Vairāk nav rezultātu."

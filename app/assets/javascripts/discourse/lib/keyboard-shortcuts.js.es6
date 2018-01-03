@@ -169,7 +169,9 @@ export default {
   },
 
   createTopic() {
-    this.container.lookup('controller:composer').open({action: Composer.CREATE_TOPIC, draftKey: Composer.CREATE_TOPIC});
+    if (this.currentUser && this.currentUser.can_create_topic) {
+      this.container.lookup('controller:composer').open({action: Composer.CREATE_TOPIC, draftKey: Composer.CREATE_TOPIC});
+    }
   },
 
   pinUnpinTopic() {

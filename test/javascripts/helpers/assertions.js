@@ -12,12 +12,6 @@ function visible(selector) {
   return find(selector + ":visible").length > 0;
 }
 
-Ember.Test.registerAsyncHelper('selectDropdown', function(app, selector, itemId) {
-  var $select2 = find(selector);
-  $select2.select2('val', itemId.toString());
-  $select2.trigger("change");
-});
-
 function invisible(selector) {
   var $items = find(selector + ":visible");
   return $items.length === 0 ||

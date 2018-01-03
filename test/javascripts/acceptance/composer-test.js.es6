@@ -262,8 +262,8 @@ QUnit.test("Composer can toggle between edit and reply", assert => {
 QUnit.test("Composer can toggle between reply and createTopic", assert => {
   visit("/t/this-is-a-test-topic/9");
   click('.topic-post:eq(0) button.reply');
-  expandSelectKit('.toolbar-popup-menu-options');
-  selectKitSelectRow('toggleWhisper', { selector: '.toolbar-popup-menu-options'});
+
+  selectKit('.toolbar-popup-menu-options').expand().selectRowByValue('toggleWhisper');
 
   andThen(() => {
     assert.ok(
@@ -285,8 +285,7 @@ QUnit.test("Composer can toggle between reply and createTopic", assert => {
     );
   });
 
-  expandSelectKit('.toolbar-popup-menu-options');
-  selectKitSelectRow('toggleInvisible', { selector: '.toolbar-popup-menu-options'});
+  selectKit('.toolbar-popup-menu-options').expand().selectRowByValue('toggleInvisible');
 
   andThen(() => {
     assert.ok(

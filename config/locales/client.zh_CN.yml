@@ -1202,8 +1202,6 @@ zh_CN:
       select_all: "全选"
       clear_all: "清除所有"
       too_short: "你的搜索词太短。"
-      result_count:
-        other: "<span class='term'>{{term}}</span> 共计 {{count}} 个结果"
       title: "搜索主题、帖子、用户或分类"
       no_results: "没有找到结果。"
       no_more_results: "没有找到更多结果。"

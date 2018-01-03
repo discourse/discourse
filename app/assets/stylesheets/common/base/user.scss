@@ -19,7 +19,6 @@
     width: 100%;
 
     .secondary {
-      font-size: 0.929em;
 
       .btn {
         padding: 3px 12px;
@@ -61,13 +60,13 @@
       }
 
       h1 {
-        font-size: 2.143em;
+        font-size: 2.286em;
         font-weight: normal;
         i {font-size: .8em;}
       }
 
       h2 {
-        font-size: 1.214em;
+        font-size: 1.286em;
         font-weight: normal;
         margin-top: 10px;
         max-width: 100%;
@@ -168,7 +167,7 @@
           }
 
           h2 {
-            font-size: 1.071em;
+            font-size: 1.143em;
             margin-top: 4px;
           }
 
@@ -256,7 +255,7 @@
       color: dark-light-choose($primary-medium, $secondary-medium);
         margin-top: 5px;
         margin-bottom: 10px;
-        font-size: 80%;
+        font-size: .857em;
         line-height: 1.4em;
       }
     }
@@ -268,7 +267,7 @@
     text-align: top;
     color: $danger;
     font-weight: bold;
-    font-size: 1.3em;
+    font-size: 1.286em;
   }
 }
 
@@ -403,7 +402,7 @@
 
   .value {
     font-weight: bold;
-    font-size: 1.2em;
+    font-size: 1.286em;
   }
 
   .label {
@@ -450,7 +449,7 @@
 
 .links-section {
   .domain {
-    font-size: 0.714em;
+    font-size: 0.786em;
     color: dark-light-choose($primary-medium, $secondary-high);
   }
 }
@@ -480,7 +479,7 @@
   .instructions {
     color: dark-light-choose($primary-medium, $secondary-medium);
     margin-bottom: 10px;
-    font-size: 80%;
+    font-size: .857em;
     line-height: 1.4em;
 
     a[href] {

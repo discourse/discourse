@@ -13,11 +13,11 @@ task "qunit:test", [:timeout, :qunit_path] => :environment do |_, args|
     abort "Chrome 59 or higher is required to run tests in headless mode."
   end
 
-  # unless system("command -v yarn >/dev/null;")
-  #   abort "Yarn is not installed. Download from https://yarnpkg.com/lang/en/docs/install/"
-  # end
-  #
-  # system("yarn install --dev")
+  unless system("command -v yarn >/dev/null;")
+    abort "Yarn is not installed. Download from https://yarnpkg.com/lang/en/docs/install/"
+  end
+
+  system("yarn install --dev")
 
   # ensure we have this port available
   def port_available?(port)
@@ -47,7 +47,7 @@ task "qunit:test", [:timeout, :qunit_path] => :environment do |_, args|
     test_path = "#{Rails.root}/vendor/assets/javascripts"
     qunit_path = args[:qunit_path] || "/qunit"
     cmd = "node #{test_path}/run-qunit.js http://localhost:#{port}#{qunit_path}"
-    options = { seed: (ENV["SEED"] || Random.new.seed) }
+    options = { seed: (ENV["QUNIT_SEED"] || Random.new.seed) }
 
     %w{module filter qunit_skip_core qunit_single_plugin}.each do |arg|
       options[arg] = ENV[arg.upcase] if ENV[arg.upcase].present?

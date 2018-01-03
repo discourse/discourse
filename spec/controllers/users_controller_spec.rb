@@ -495,6 +495,7 @@ describe UsersController do
 
     context 'logs in admin' do
       it 'does not log in admin with invalid token' do
+        SiteSetting.sso_url = "https://www.example.com/sso"
         SiteSetting.enable_sso = true
         get :admin_login, params: { token: "invalid" }
         expect(session[:current_user_id]).to be_blank
@@ -511,6 +512,7 @@ describe UsersController do
         end
 
         it 'logs in admin with SSO enabled' do
+          SiteSetting.sso_url = "https://www.example.com/sso"
           SiteSetting.enable_sso = true
           token = admin.email_tokens.create(email: admin.email).token
 

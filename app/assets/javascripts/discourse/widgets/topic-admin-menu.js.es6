@@ -185,11 +185,13 @@ export default createWidget('topic-admin-menu', {
                      label: isPrivateMessage ? 'actions.make_public' : 'actions.make_private' });
     }
 
-    buttons.push({
-      action: 'showModerationHistory',
-      icon: 'list',
-      fullLabel: 'admin.flags.moderation_history'
-    });
+    if (this.currentUser.get('staff')) {
+      buttons.push({
+        action: 'showModerationHistory',
+        icon: 'list',
+        fullLabel: 'admin.flags.moderation_history'
+      });
+    }
 
     const extraButtons = applyDecorators(this, 'adminMenuButtons', this.attrs, this.state);
 

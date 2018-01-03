@@ -5,8 +5,8 @@ describe DiscourseSingleSignOn do
     @sso_url = "http://somesite.com/discourse_sso"
     @sso_secret = "shjkfdhsfkjh"
 
-    SiteSetting.enable_sso = true
     SiteSetting.sso_url = @sso_url
+    SiteSetting.enable_sso = true
     SiteSetting.sso_secret = @sso_secret
   end
 

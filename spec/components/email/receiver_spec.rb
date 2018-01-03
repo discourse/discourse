@@ -81,6 +81,9 @@ describe Email::Receiver do
   it "raises a BouncerEmailError when email is a bounced email" do
     expect { process(:bounced_email) }.to raise_error(Email::Receiver::BouncedEmailError)
     expect(IncomingEmail.last.is_bounce).to eq(true)
+
+    expect { process(:bounced_email_multiple_status_codes) }.to raise_error(Email::Receiver::BouncedEmailError)
+    expect(IncomingEmail.last.is_bounce).to eq(true)
   end
 
   it "logs a blank error" do

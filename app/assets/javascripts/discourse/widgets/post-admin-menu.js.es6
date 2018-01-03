@@ -16,7 +16,7 @@ export function buildManageButtons(attrs, currentUser) {
   }
 
   let contents = [];
-  if (attrs.canManage) {
+  if (currentUser.staff) {
     contents.push({
       icon: 'list',
       label: 'admin.flags.moderation_history',

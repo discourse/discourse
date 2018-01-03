@@ -7,6 +7,14 @@ RSpec.describe Admin::BackupsController do
     sign_in(admin)
   end
 
+  describe "#index" do
+    it "raises an error when backups are disabled" do
+      SiteSetting.enable_backups = false
+      get "/admin/backups.json"
+      expect(response).not_to be_success
+    end
+  end
+
   describe '#rollback' do
     it 'should rollback the restore' do
       BackupRestore.expects(:rollback!)

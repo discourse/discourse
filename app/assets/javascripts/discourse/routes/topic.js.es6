@@ -20,11 +20,11 @@ const TopicRoute = Discourse.Route.extend({
   titleToken() {
     const model = this.modelFor('topic');
     if (model) {
-      const result = model.get('unicode_title') ? model.get('unicode_title') : model.get('title'),
+      const result = model.get('unicode_title') || model.get('title'),
             cat = model.get('category');
 
       // Only display uncategorized in the title tag if it was renamed
-      if (cat && !(cat.get('isUncategorizedCategory') && cat.get('name').toLowerCase() === "uncategorized")) {
+      if (this.siteSettings.topic_page_title_includes_category && cat && !(cat.get('isUncategorizedCategory') && cat.get('name').toLowerCase() === "uncategorized")) {
         let catName = cat.get('name');
 
         const parentCategory = cat.get('parentCategory');

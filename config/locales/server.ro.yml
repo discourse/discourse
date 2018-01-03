@@ -1124,7 +1124,6 @@ ro:
     relative_date_duration: "Numărul de zile după crearea unei postări cât data postării va sta afișată în format relativ (7z) în loc de format absolut (20 Feb)."
     delete_user_max_post_age: "Nu permite ștergerea utilizatorilor a căror prima postare e mai veche de (x) de zile."
     delete_all_posts_max: "Numărul maxim de postări ce pot fi șterse deodată folosind butonul șterge toate postările. Dacă un utilizator are mai multe postări decât această valoare, postările sale nu pot fi șterse dintr-o dată și utilizatorul nu poate fi șters."
-    username_change_period: "Numărul de zile după înregistrare în care conturile își pot schimba numele de utilizator (0 la nu permite schimbarea numelui de utilizator)."
     email_editable: "Permite utilizatorilor să își schimbe adresa de email după înregistrare."
     logout_redirect: "URL-ul spre care să fie redirecționat browserul după ieșire (ex: http://somesite.com/logout)"
     allow_uploaded_avatars: "Permite utilizatorilor să încarce o poză de profil personalizate."

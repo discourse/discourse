@@ -32,7 +32,10 @@ export default (viewName, path) => {
     },
 
     deactivate() {
-      this.searchService.set('contextType', 'private_messages');
+      this.searchService.set(
+        'searchContext',
+        this.controllerFor("user").get("model.searchContext")
+      );
     }
   });
 };

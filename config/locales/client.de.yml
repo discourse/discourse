@@ -1094,6 +1094,7 @@ de:
       saved_local_draft_tip: "lokal gespeichert"
       similar_topics: "Dein Thema hat Ähnlichkeit mit…"
       drafts_offline: "Entwürfe offline"
+      group_mentioned_limit: "<b>Warnung!</b> Du erwähnst <a href='{{group_link}}'>{{group}}</a>, aber diese Gruppe hat mehr Mitglieder als der Administrator als die maximale Anzahl von {{max}} Benutzern eingestellt hat, die gleichzeitig erwähnt werden können. Keiner davon wird benachrichtigt."
       group_mentioned:
         one: "Indem du {{group}} erwähnst, bist du dabei, <a href='{{group_link}}'>eine Person</a> zu benachrichtigen – bist du dir sicher?"
         other: "Indem du {{group}} erwähnst, bist du dabei, <a href='{{group_link}}'>{{count}} Personen</a> zu benachrichtigen – bist du dir sicher?"
@@ -1252,7 +1253,7 @@ de:
       too_short: "Der Suchbegriff ist zu kurz."
       result_count:
         one: "1 Ergebnis für <span class='term'>{{term}}</span>"
-        other: "{{count}} Ergebnisse für <span class='term'>{{term}}</span>"
+        other: "{{count}}{{plus}} Ergebnisse für <span class='term'>{{term}}</span>"
       title: "suche nach Themen, Beiträgen, Benutzern oder Kategorien"
       no_results: "Keine Ergebnisse gefunden."
       no_more_results: "Es wurde keine weiteren Ergebnisse gefunden."
@@ -1681,6 +1682,18 @@ de:
       multi_select:
         select: 'auswählen'
         selected: 'ausgewählt ({{count}})'
+        select_post:
+          label: 'auswählen'
+          title: 'Beitrag zu Auswahl hinzufügen'
+        selected_post:
+          label: 'ausgewählt'
+          title: 'Klicke, um den Beitrag aus der Auswahl zu entfernen'
+        select_replies:
+          label: 'auswählen inkl. Antworten'
+          title: 'Beitrag und alle Antworten zu Auswahl hinzufügen'
+        select_below:
+          label: 'auswählen inkl. folgende'
+          title: 'Beitrag und alle folgende zu Auswahl hinzufügen'
         delete: ausgewählte löschen
         cancel: Auswahlvorgang abbrechen
         select_all: alle auswählen
@@ -1760,6 +1773,15 @@ de:
         undelete: "diesen Beitrag wiederherstellen"
         share: "Link zu diesem Beitrag teilen"
         more: "Mehr"
+        delete_replies:
+          confirm: "Möchtest du auch die Antworten auf diese Beiträge löschen?"
+          direct_replies:
+            one: "Ja, und eine direkte Antwort"
+            other: "Ja, und {{count}} direkte Antworten"
+          all_replies:
+            one: "Ja, und eine Antwort"
+            other: "Ja, und {{count}} Antworten"
+          just_the_post: "Nein, nur diesen Beitrag"
         admin: "Administrative Aktionen"
         wiki: "Wiki erstellen"
         unwiki: "Wiki entfernen"
@@ -1851,6 +1873,10 @@ de:
           vote:
             one: "Eine Person hat für diesen Beitrag gestimmt"
             other: "{{count}} Personen haben für diesen Beitrag gestimmt"
+      delete:
+        confirm:
+          one: "Möchtest du wirklich diesen Beitrag löschen?"
+          other: "Möchtest du wirklich diese {{count}} Beiträge löschen?"
       merge:
         confirm:
           one: "Möchtest du diese Beiträge wirklich zusammenführen?"
@@ -2549,6 +2575,7 @@ de:
           details: "Wenn auf einen Beitrag geantwortet wird oder der Beitrag geändert, gelöscht oder wiederhergestellt wird."
         user_event:
           name: "Benutzer Ereignis"
+          details: "Wenn sich ein Benutzer anmeldet, abmeldet, erstellt, genehmigt oder aktualisiert wird."
         delivery_status:
           title: "Versandstatus"
           inactive: "Inaktiv"
@@ -2979,6 +3006,7 @@ de:
             all_search_types: "Alle Sucharten"
             header: "Überschrift"
             full_page: "Desktop-Seite"
+            click_through_only: "Alle (nur durcklicken)"
         logster:
           title: "Fehlerprotokolle"
       watched_words:

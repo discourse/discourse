@@ -155,6 +155,10 @@ describe PrettyText do
       expect(cooked).to eq(html.strip)
     end
 
+    it "handles bbcode edge cases" do
+      expect(PrettyText.cook "[constructor]\ntest").to eq("<p>[constructor]<br>\ntest</p>")
+    end
+
     it "can handle quote edge cases" do
       expect(PrettyText.cook("[quote]abc\ntest\n[/quote]")).not_to include('aside')
       expect(PrettyText.cook("[quote]  \ntest\n[/quote]  ")).to include('aside')

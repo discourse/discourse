@@ -41,3 +41,10 @@ QUnit.test("translation overrides", function(assert) {
   assert.equal(I18n.t("composer.reply"), "WAT", "overrides existing translation in current locale");
   assert.equal(I18n.t("topic.reply.help"), "foobar", "overrides translation in default locale");
 });
+
+QUnit.test("skip translation override if parent node is not an object", function(assert) {
+  PreloadStore.store('translationOverrides', {"js.composer.reply":"WAT","js.composer.reply.help":"foobar"});
+  LocalizationInitializer.initialize(this.registry);
+
+  assert.equal(I18n.t("composer.reply.help"), "[fr.composer.reply.help]");
+});

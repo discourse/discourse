@@ -138,9 +138,13 @@ def remap_posts(find, type, replace = "")
       end
 
     if new_raw != p.raw
-      p.revise(Discourse.system_user, { raw: new_raw }, bypass_bump: true, skip_revision: true)
-      putc "."
-      i += 1
+      begin
+        p.revise(Discourse.system_user, { raw: new_raw }, bypass_bump: true, skip_revision: true)
+        putc "."
+        i += 1
+      rescue
+        puts "\nFailed to remap post (topic_id: #{p.topic_id}, post_id: #{p.id})\n"
+      end
     end
   end
 

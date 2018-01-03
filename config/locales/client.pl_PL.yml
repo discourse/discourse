@@ -1323,11 +1323,6 @@ pl_PL:
       select_all: "Zaznacz wszystkie"
       clear_all: "Wyczyść wszystkie"
       too_short: "Wyszukiwana fraza jest zbyt krótka."
-      result_count:
-        one: "1 wynik dla <span class='term'>{[count}}</span>"
-        few: "1 wynik dla <span class='term'>{{term}}</span>"
-        many: "1 wynik dla <span class='term'>{{term}}</span>"
-        other: "{{count}} wyników dla <span class='term'>{{term}}</span>"
       title: "szukaj tematów, wpisów, użytkowników lub kategorii"
       no_results: "Brak wyników wyszukiwania"
       no_more_results: "Nie znaleziono więcej wyników."

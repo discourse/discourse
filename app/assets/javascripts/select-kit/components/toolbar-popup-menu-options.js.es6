@@ -10,7 +10,7 @@ export default DropdownSelectBoxComponent.extend({
 
   @computed("title")
   collectionHeader(title) {
-    return `<h3>${I18n.t(title)}</h3>`;
+    return `<h3>${title}</h3>`;
   },
 
   mutateValue(value) {

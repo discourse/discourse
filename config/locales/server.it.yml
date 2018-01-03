@@ -1244,7 +1244,6 @@ it:
     relative_date_duration: "Dopo quanti giorni dalla pubblicazione le date verranno mostrate in termini assoluti (20 feb) anziché relativi (7g)."
     delete_user_max_post_age: "Non permettere di cancellare utenti il cui primo messaggio è più vecchio di (x) giorni."
     delete_all_posts_max: "Numero massimo di messaggi che possono essere eliminati contemporaneamente con il pulsante Cancella Tutti. Se un utente ha un numero maggiore di tali messaggi, questi non possono essere eliminati contemporaneamente e l'utente non può essere cancellato."
-    username_change_period: "Numero di giorni dall'iscrizione dopo i quali è possibile modificare il nome utente (imposta a 0 per non permettere il cambio del nome utente)."
     email_editable: "Permetti agli utenti di cambiare l'indirizzo email dopo la registrazione."
     logout_redirect: "Posizione per reindirizzare il browser dopo il logout (es: http://tuosito.com/logout)"
     allow_uploaded_avatars: "Permetti agli utenti di caricare immagini di profilo personalizzate."
