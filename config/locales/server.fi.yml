@@ -3003,7 +3003,7 @@ fi:
             description: "Mikä on yhteisösi oletuskieli?"
       forum_title:
         title: "Nimi"
-        description: "Nimi on merkittävä asia, sillä se on <i>ensimmäinen</i>asia, jonka potentiaalinen vierailija saa tietää yhteisöstäsi. Mitä valitsemasi nimi kertoo yhteisöstä?"
+        description: "Nimi on merkittävä asia, sillä se on <i>ensimmäinen</i> asia, jonka potentiaalinen vierailija saa tietää yhteisöstäsi. Mitä valitsemasi nimi kertoo yhteisöstä?"
         fields:
           title:
             label: "Yhteisösi nimi"
@@ -3016,7 +3016,7 @@ fi:
         fields:
           welcome:
             label: "Tervetuloa-ketju"
-            description: "<p>How Kuinka kuvailisit yhteisöä hississä ventovieraalle, jos sinulla olisi minuutti aikaa?</p> <ul> <li>Keille nämä keskustelut on suunnattu?</li> <li>Mistä täällä puhutaan?</li> <li>Miksi täällä kannattaa käydä?</li> </ul> <p>Tervetuloa-ketju on ensimmäinen asia, jonka palstalle saapunut näkee. Ajattele sitä <b>yhden kappaleen mittaisena</b> \"hissipuheena\" tai \"perimmäisenä tavoitteena\".</p>"
+            description: "<p>Kuinka kuvailisit yhteisöä hississä ventovieraalle, jos sinulla olisi minuutti aikaa?</p> <ul> <li>Keille nämä keskustelut on suunnattu?</li> <li>Mistä täällä puhutaan?</li> <li>Miksi täällä kannattaa käydä?</li> </ul> <p>Tervetuloa-ketju on ensimmäinen asia, jonka palstalle saapunut näkee. Ajattele sitä <b>yhden kappaleen mittaisena</b> \"hissipuheena\" tai \"perimmäisenä tavoitteena\".</p>"
             one_paragraph: "Pidä tervetuloviesti yhden kappaleen mittaisena."
       privacy:
         title: "Käyttöoikeudet"
