@@ -119,6 +119,23 @@ createWidget('actions-summary-item', {
   }
 });
 
+createWidget('deleted-post', {
+  tagName: 'div.post-action',
+
+  html(attrs) {
+    return [
+      iconNode('trash-o'),
+      ' ',
+      avatarFor.call(this, 'small', {
+        template: attrs.deletedByAvatarTemplate,
+        username: attrs.deletedByUsername
+      }),
+      ' ',
+      dateNode(attrs.deleted_at)
+    ];
+  }
+});
+
 export default createWidget('actions-summary', {
   tagName: 'section.post-actions',
 
@@ -131,16 +148,7 @@ export default createWidget('actions-summary', {
     });
 
     if (attrs.deleted_at) {
-      body.push(h('div.post-action', [
-        iconNode('trash-o'),
-        ' ',
-        avatarFor.call(this, 'small', {
-          template: attrs.deletedByAvatarTemplate,
-          username: attrs.deletedByUsername
-        }),
-        ' ',
-        dateNode(attrs.deleted_at)
-      ]));
+      body.push(this.attach('deleted-post', attrs));
     }
 
     return body;
