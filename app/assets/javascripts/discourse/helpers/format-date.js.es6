@@ -25,5 +25,3 @@ registerUnbound('format-date', function(val, params) {
     return new Handlebars.SafeString(autoUpdatingRelativeAge(date, {format: format, title: title, leaveAgo: leaveAgo}));
   }
 });
-
-

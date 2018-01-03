@@ -1,4 +1,4 @@
-class MigrateUncategorizedDescriptionSetting < ActiveRecord::Migration
+class MigrateUncategorizedDescriptionSetting < ActiveRecord::Migration[4.2]
   def change
     execute "INSERT INTO translation_overrides (locale, translation_key, value, created_at, updated_at)
              SELECT '#{I18n.locale}', 'category.uncategorized_description', value, created_at, updated_at

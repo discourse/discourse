@@ -1,6 +1,6 @@
 
 desc "invite an admin to this discourse instance"
-task "admin:invite", [:email] => [:environment] do |_,args|
+task "admin:invite", [:email] => [:environment] do |_, args|
   email = args[:email]
   if !email || email !~ /@/
     puts "ERROR: Expecting rake admin:invite[some@email.com]"
@@ -20,7 +20,7 @@ task "admin:invite", [:email] => [:environment] do |_,args|
   puts "Granting admin!"
   user.grant_admin!
   user.change_trust_level!(4)
-  user.email_tokens.update_all  confirmed: true
+  user.email_tokens.update_all confirmed: true
 
   puts "Sending email!"
   email_token = user.email_tokens.create(email: user.email)
@@ -42,8 +42,8 @@ task "admin:create" => :environment do
       reset_password = ask("User with this email already exists! Do you want to reset the password for this email? (Y/n)  ")
       if (reset_password == "" || reset_password.downcase == 'y')
         begin
-          password = ask("Password:  ") {|q| q.echo = false}
-          password_confirmation = ask("Repeat password:  ") {|q| q.echo = false}
+          password = ask("Password:  ") { |q| q.echo = false }
+          password_confirmation = ask("Repeat password:  ") { |q| q.echo = false }
         end while password != password_confirmation
         admin.password = password
       end
@@ -53,8 +53,8 @@ task "admin:create" => :environment do
       admin.email = email
       admin.username = UserNameSuggester.suggest(admin.email)
       begin
-        password = ask("Password:  ") {|q| q.echo = false}
-        password_confirmation = ask("Repeat password:  ") {|q| q.echo = false}
+        password = ask("Password:  ") { |q| q.echo = false }
+        password_confirmation = ask("Repeat password:  ") { |q| q.echo = false }
       end while password != password_confirmation
       admin.password = password
     end
@@ -82,7 +82,7 @@ task "admin:create" => :environment do
   if (grant_admin == "" || grant_admin.downcase == 'y')
     admin.grant_admin!
     admin.change_trust_level!(4)
-    admin.email_tokens.update_all  confirmed: true
+    admin.email_tokens.update_all confirmed: true
     admin.activate
 
     say("\nYour account now has Admin privileges!")

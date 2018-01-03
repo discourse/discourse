@@ -24,6 +24,3 @@ describe Email::Renderer do
   end
 
 end
-
-
-

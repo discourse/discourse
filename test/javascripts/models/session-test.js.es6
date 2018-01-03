@@ -1,8 +1,8 @@
 import Session from "discourse/models/session";
 
-module("model:session");
+QUnit.module("model:session");
 
-test('highestSeenByTopic', function() {
+QUnit.test('highestSeenByTopic', assert => {
   const session = Session.current();
-  deepEqual(session.get('highestSeenByTopic'), {}, "by default it returns an empty object");
+  assert.deepEqual(session.get('highestSeenByTopic'), {}, "by default it returns an empty object");
 });

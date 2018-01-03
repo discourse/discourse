@@ -1,8 +1,10 @@
 {{#d-section pageClass="search" class="search-container"}}
+  {{scroll-tracker name="full-page-search" tag=searchTerm}}
   <div class="search row clearfix">
+    <div class="search-bar">
     {{search-text-field value=searchTerm class="full-page-search input-xxlarge search no-blur" action="search" hasAutofocus=hasAutofocus}}
     {{d-button action="search" icon="search" class="btn-primary" disabled=searching}}
-
+    </div>
     <div class='search-advanced'>
       <button class="search-advanced-btn btn" {{action "toggleAdvancedSearch"}}>
         {{{searchAdvancedIcon}}}
@@ -14,8 +16,8 @@
       {{/if}}
     </div>
 
-    {{#if canCreateTopic}}
-      <span class="new-topic-btn">{{d-button id="create-topic" class="btn-default" action="createTopic" actionParam=searchTerm icon="plus" label="topic.create"}}</span>
+    {{#if hasResults}}
+      {{create-topic-button canCreateTopic=canCreateTopic action=(action "createTopic" searchTerm)}}
     {{/if}}
 
     {{#if canBulkSelect}}
@@ -45,32 +47,23 @@
     </div>
   {{/if}}
 
-  {{#conditional-loading-spinner condition=loading}}
-
-    {{#unless hasResults}}
-      <h3>
-        {{#if searchActive}}
-          {{i18n "search.no_results"}}
-        {{/if}}
-      </h3>
-    {{/unless}}
-
-    {{#if hasResults}}
-      <div class='search-title clearfix'>
-        <div class='result-count'>
-          <span>
-            {{{i18n "search.result_count" count=resultCount term=noSortQ}}}
-          </span>
-        </div>
-        <div class='sort-by'>
-          <span class='desc'>
-            {{i18n "search.sort_by"}}
-          </span>
-          {{combo-box value=sortOrder content=sortOrders castInteger="true"}}
-        </div>
+  {{#if hasResults}}
+    <div class='search-title clearfix'>
+      <div class='result-count'>
+        <span>
+          {{{resultCountLabel}}}
+        </span>
       </div>
-    {{/if}}
+      <div class='sort-by'>
+        <span class='desc'>
+          {{i18n "search.sort_by"}}
+        </span>
+        {{combo-box value=sortOrder content=sortOrders castInteger=true}}
+      </div>
+    </div>
+  {{/if}}
 
+  {{#load-more selector=".fps-result" action="loadMore"}}
     {{#each model.posts as |result|}}
       <div class='fps-result'>
         <div class='author'>
@@ -85,12 +78,15 @@
               {{track-selected selectedList=selected selectedId=result.topic}}
             {{/if}}
 
-            <a class='search-link' href='{{unbound result.url}}'>
+            <a class='search-link' href='{{unbound result.url}}' {{action "logClick" result.topic_id}}>
               {{topic-status topic=result.topic disableActions=true}}<span class='topic-title'>{{#highlight-text highlight=q}}{{{unbound result.topic.fancyTitle}}}{{/highlight-text}}</span>
             </a>
 
             <div class='search-category'>
-              {{category-link result.topic.category}}
+              {{#if result.topic.category.parentCategory}}
+              {{category-link result.topic.category.parentCategory}}
+              {{/if}}
+              {{category-link result.topic.category hideParent=true}}
               {{#each result.topic.tags as |tag|}}
                 {{discourse-tag tag}}
               {{/each}}
@@ -107,7 +103,7 @@
             </span>
 
             {{#if result.blurb}}
-              {{#highlight-text highlight=q}}
+              {{#highlight-text highlight=highlightQuery}}
                 {{{unbound result.blurb}}}
               {{/highlight-text}}
             {{/if}}
@@ -116,7 +112,7 @@
           {{#if showLikeCount}}
             {{#if result.like_count}}
               <span class='like-count'>
-                {{result.like_count}} {{fa-icon "heart"}}
+                {{result.like_count}} {{d-icon "heart"}}
               </span>
             {{/if}}
           {{/if}}
@@ -124,11 +120,44 @@
       </div>
     {{/each}}
 
-    {{#if hasResults}}
-      <h3 class="search-footer">
-        {{i18n "search.no_more_results"}}
-      </h3>
-    {{/if}}
+    {{#conditional-loading-spinner condition=loading }}
+      {{#unless hasResults}}
+        {{#if searchActive}}
+          <h3>{{i18n "search.no_results"}}</h3>
 
-  {{/conditional-loading-spinner}}
+          {{#if showSuggestion}}
+            <div class="no-results-suggestion">
+              {{i18n "search.cant_find"}}
+              {{#if canCreateTopic}}
+                <a href {{action "createTopic" searchTerm}}>{{i18n "search.start_new_topic"}}</a>
+                {{#unless siteSettings.login_required}}
+                  {{i18n "search.or_search_google"}}
+                {{/unless}}
+              {{else}}
+                {{i18n "search.search_google"}}
+              {{/if}}
+            </div>
+
+            {{google-search searchTerm=searchTerm}}
+          {{/if}}
+        {{/if}}
+      {{/unless}}
+
+      {{#if hasResults}}
+        {{#unless loading}}
+          <h3 class="search-footer">
+            {{#if model.grouped_search_result.more_full_page_results}}
+              {{#if isLastPage }}
+                {{i18n "search.more_results"}}
+              {{/if}}
+            {{else}}
+              {{i18n "search.no_more_results"}}
+            {{/if}}
+          </h3>
+        {{/unless}}
+      {{/if}}
+    {{/conditional-loading-spinner}}
+
+  {{/load-more}}
+
 {{/d-section}}

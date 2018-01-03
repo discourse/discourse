@@ -21,11 +21,21 @@
     <div class="control-group">
       <label>
         {{input type='checkbox'
-            checked=model.public
-            class="group-edit-public"
+            checked=model.public_admission
+            class="group-edit-public-admission"
             disabled=model.allow_membership_requests}}
 
-        {{i18n 'groups.public'}}
+        {{i18n 'groups.public_admission'}}
+      </label>
+    </div>
+
+    <div class="control-group">
+      <label>
+        {{input type='checkbox'
+            checked=model.public_exit
+            class="group-edit-public-exit"}}
+
+        {{i18n 'groups.public_exit'}}
       </label>
     </div>
 
@@ -34,11 +44,25 @@
         {{input type='checkbox'
             checked=model.allow_membership_requests
             class="group-edit-allow-membership-requests"
-            disabled=model.public}}
+            disabled=model.public_admission}}
 
         {{i18n 'groups.allow_membership_requests'}}
       </label>
     </div>
+
+    {{#if model.allow_membership_requests}}
+      <div>
+        <label for="membership-request-template">
+          {{i18n 'groups.membership_request_template'}}
+        </label>
+
+        {{expanding-text-area name="membership-request-template"
+            value=model.membership_request_template
+            class="group-edit-membership-request-template"}}
+      </div>
+    {{/if}}
+
+    {{plugin-outlet name="group-edit" args=(hash group=model)}}
 
     {{d-button action="save" class="btn-primary" disabled=saving label="save"}}
     {{savingText}}

@@ -3,14 +3,18 @@ import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
 import DiscourseURL from 'discourse/lib/url';
 
-const searchData = {
-  loading: false,
-  results: {},
-  noResults: false,
-  term: undefined,
-  typeFilter: null,
-  invalidTerm: false
-};
+const searchData = {};
+
+export function initSearchData() {
+  searchData.loading = false;
+  searchData.results = {};
+  searchData.noResults = false;
+  searchData.term = undefined;
+  searchData.typeFilter = null;
+  searchData.invalidTerm = false;
+}
+
+initSearchData();
 
 // Helps with debouncing and cancelling promises
 const SearchHelper = {
@@ -54,6 +58,11 @@ const SearchHelper = {
       this._activeSearch = searchForTerm(term, { typeFilter, searchContext, fullSearchUrl });
       this._activeSearch.then(content => {
         searchData.noResults = content.resultTypes.length === 0;
+
+        if (content.grouped_search_result) {
+          searchData.term = content.grouped_search_result.term;
+        }
+
         searchData.results = content;
       }).finally(() => {
         searchData.loading = false;
@@ -66,6 +75,7 @@ const SearchHelper = {
 
 export default createWidget('search-menu', {
   tagName: 'div.search-menu',
+  searchData,
 
   fullSearchUrl(opts) {
     const contextEnabled = searchData.contextEnabled;
@@ -110,24 +120,29 @@ export default createWidget('search-menu', {
   panelContents() {
     const contextEnabled = searchData.contextEnabled;
 
-    const results = [
+    let searchInput = [
       this.attach('search-term', { value: searchData.term, contextEnabled }),
+    ];
+    if (searchData.term && searchData.loading) {
+      searchInput.push(h('div.searching', h('div.spinner')));
+    }
+
+    const results = [
+      h('div.search-input', searchInput),
       this.attach('search-context', {
         contextEnabled,
         url: this.fullSearchUrl({ expanded: true })
       })
     ];
 
-    if (searchData.term) {
-      if (searchData.loading) {
-        results.push(h('div.searching', h('div.spinner')));
-      } else {
-        results.push(this.attach('search-menu-results', { term: searchData.term,
-                                                          noResults: searchData.noResults,
-                                                          results: searchData.results,
-                                                          invalidTerm: searchData.invalidTerm,
-                                                          searchContextEnabled: searchData.contextEnabled }));
-      }
+    if (searchData.term && !searchData.loading) {
+      results.push(this.attach('search-menu-results', {
+        term: searchData.term,
+        noResults: searchData.noResults,
+        results: searchData.results,
+        invalidTerm: searchData.invalidTerm,
+        searchContextEnabled: searchData.contextEnabled,
+      }));
     }
 
     return results;
@@ -150,7 +165,7 @@ export default createWidget('search-menu', {
   html(attrs) {
     if (searchData.contextEnabled !== attrs.contextEnabled) {
       searchData.contextEnabled = attrs.contextEnabled;
-      this.triggerSearch();
+      if (searchData.term) this.triggerSearch();
     } else {
       searchData.contextEnabled = attrs.contextEnabled;
     }
@@ -160,6 +175,75 @@ export default createWidget('search-menu', {
 
   clickOutside() {
     this.sendWidgetAction('toggleSearchMenu');
+  },
+
+  keyDown(e) {
+    if (searchData.loading || searchData.noResults) {
+      return;
+    }
+
+    if (e.which === 65 /* a */) {
+      let focused = $('header .results .search-link:focus');
+      if (focused.length === 1) {
+        if ($('#reply-control.open').length === 1) {
+          // add a link and focus composer
+
+          this.appEvents.trigger('composer:insert-text', focused[0].href, {ensureSpace: true});
+          this.appEvents.trigger('header:keyboard-trigger', {type: 'search'});
+
+          e.preventDefault();
+          $('#reply-control.open textarea').focus();
+          return false;
+        }
+      }
+    }
+
+    const up = e.which === 38;
+    const down = e.which === 40;
+    if (up || down) {
+
+      let focused = $('header .panel-body *:focus')[0];
+
+      if (!focused) {
+        return;
+      }
+
+      let links = $('header .panel-body .results a');
+      let results = $('header .panel-body .results .search-link');
+
+      let prevResult;
+      let result;
+
+      links.each((idx,item) => {
+        if ($(item).hasClass('search-link')) {
+          prevResult = item;
+        }
+
+        if (item === focused) {
+          result = prevResult;
+        }
+      });
+
+      let index = -1;
+
+      if (result) {
+        index = results.index(result);
+      }
+
+      if (index === -1 && down) {
+        $('header .panel-body .search-link:first').focus();
+      } else if (index === 0 && up) {
+        $('header .panel-body input:first').focus();
+      } else if (index > -1) {
+        index += (down ? 1 : -1);
+        if (index >= 0 && index < results.length) {
+          $(results[index]).focus();
+        }
+      }
+
+      e.preventDefault();
+      return false;
+    }
   },
 
   triggerSearch() {

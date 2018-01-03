@@ -54,7 +54,6 @@ export var not = macroAlias(Ember.computed.not);
 export var notEmpty = macroAlias(Ember.computed.notEmpty);
 export var oneWay = macroAlias(Ember.computed.oneWay);
 export var or = macroAlias(Ember.computed.or);
-export var readOnly = macroAlias(Ember.computed.readOnly);
 export var reads = macroAlias(Ember.computed.reads);
 export var setDiff = macroAlias(Ember.computed.setDiff);
 export var sort = macroAlias(Ember.computed.sort);

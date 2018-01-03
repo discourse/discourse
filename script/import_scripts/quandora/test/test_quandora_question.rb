@@ -67,9 +67,9 @@ class TestQuandoraQuestion < Minitest::Test
     answer['uid'] = 'uid'
     answer['content'] = 'content'
     answer['created'] = '2013-01-06T18:24:54.62Z'
-    answer['author'] = {'uid' => 'auid'}
+    answer['author'] = { 'uid' => 'auid' }
 
-    post = @question.post_from_answer answer 
+    post = @question.post_from_answer answer
 
     assert_equal 'uid', post[:id]
     assert_equal @question.topic[:id], post[:parent_id]
@@ -83,8 +83,8 @@ class TestQuandoraQuestion < Minitest::Test
     comment = {}
     comment['text'] = 'text'
     comment['created'] = '2013-01-06T18:24:54.62Z'
-    comment['author'] = {'uid' => 'auid'}
-    parent = {'uid' => 'parent-uid'}
+    comment['author'] = { 'uid' => 'auid' }
+    parent = { 'uid' => 'parent-uid' }
 
     post = @question.post_from_comment comment, 0, parent
 
@@ -98,8 +98,8 @@ class TestQuandoraQuestion < Minitest::Test
 
   def test_post_from_comment_uses_parent_created_if_necessary
     comment = {}
-    comment['author'] = {'uid' => 'auid'}
-    parent = {'created' => '2013-01-06T18:24:54.62Z'}
+    comment['author'] = { 'uid' => 'auid' }
+    parent = { 'created' => '2013-01-06T18:24:54.62Z' }
 
     post = @question.post_from_comment comment, 0, parent
 
@@ -108,8 +108,8 @@ class TestQuandoraQuestion < Minitest::Test
 
   def test_post_from_comment_uses_previous_comment_as_parent
     comment = {}
-    comment['author'] = {'uid' => 'auid'}
-    parent = {'uid' => 'parent-uid', 'created' => '2013-01-06T18:24:54.62Z'}
+    comment['author'] = { 'uid' => 'auid' }
+    parent = { 'uid' => 'parent-uid', 'created' => '2013-01-06T18:24:54.62Z' }
 
     post = @question.post_from_comment comment, 1, parent
 
@@ -117,7 +117,7 @@ class TestQuandoraQuestion < Minitest::Test
     assert_equal 'parent-uid-0', post[:parent_id]
     assert_equal Time.parse('2013-01-06T18:24:54.62Z'), post[:created_at]
   end
-  
+
   def test_users
     users = @question.users
     assert_equal 5, users.size
@@ -127,10 +127,10 @@ class TestQuandoraQuestion < Minitest::Test
     assert_equal 'Greta Greatful', users[3][:name]
     assert_equal 'Eddy Excited', users[4][:name]
   end
-  
+
   private
 
-  def unescape html
+  def unescape(html)
     CGI.unescapeHTML html
   end
 end

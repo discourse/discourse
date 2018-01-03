@@ -25,8 +25,8 @@ describe ColorSchemeRevisor do
 
     it 'can change colors' do
       ColorSchemeRevisor.revise(color_scheme, valid_params.merge(colors: [
-        {name: color.name, hex: 'BEEF99'},
-        {name: 'bob', hex: 'AAAAAA'}
+        { name: color.name, hex: 'BEEF99' },
+        { name: 'bob', hex: 'AAAAAA' }
       ]))
       color_scheme.reload
 
@@ -39,7 +39,7 @@ describe ColorSchemeRevisor do
     it "doesn't make changes when a color is invalid" do
       expect {
         cs = ColorSchemeRevisor.revise(color_scheme, valid_params.merge(colors: [
-          {name: color.name, hex: 'OOPS'}
+          { name: color.name, hex: 'OOPS' }
         ]))
         expect(cs).not_to be_valid
         expect(cs.errors).to be_present

@@ -13,7 +13,7 @@ describe Cache do
   end
 
   it "supports hash" do
-    hash = {a: 1, b: [1,2,3]}
+    hash = { a: 1, b: [1, 2, 3] }
     cache.write("hash", hash)
     expect(cache.read("hash")).to eq(hash)
   end
@@ -41,7 +41,7 @@ describe Cache do
     cache.delete("key")
     cache.delete("bla")
 
-    key = cache.namespaced_key("key")
+    key = cache.normalize_key("key")
 
     cache.fetch("key", expires_in: 1.minute) do
       "bob"
@@ -50,9 +50,9 @@ describe Cache do
     expect($redis.ttl(key)).to be_within(2.seconds).of(1.minute)
 
     # we always expire withing a day
-    cache.fetch("bla"){ "hi" }
+    cache.fetch("bla") { "hi" }
 
-    key = cache.namespaced_key("bla")
+    key = cache.normalize_key("bla")
     expect($redis.ttl(key)).to be_within(2.seconds).of(1.day)
   end
 

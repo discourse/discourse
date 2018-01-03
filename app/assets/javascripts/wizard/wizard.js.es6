@@ -7,7 +7,7 @@ export default Ember.Application.extend({
   start() {
     Object.keys(requirejs._eak_seen).forEach(key => {
       if (/\/initializers\//.test(key)) {
-        const module = require(key, null, null, true);
+        const module = requirejs(key, null, null, true);
         if (!module) { throw new Error(key + ' must export an initializer.'); }
         this.initializer(module.default);
       }

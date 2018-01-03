@@ -11,7 +11,8 @@ class TopicListItemSerializer < ListableTopicSerializer
              :bookmarked_post_numbers,
              :liked_post_numbers,
              :tags,
-             :featured_link
+             :featured_link,
+             :featured_link_root_domain
 
   has_many :posters, serializer: TopicPosterSerializer, embed: :objects
   has_many :participants, serializer: TopicPosterSerializer, embed: :objects
@@ -77,8 +78,8 @@ class TopicListItemSerializer < ListableTopicSerializer
     SiteSetting.topic_featured_link_enabled
   end
 
-  def featured_link
-    object.featured_link
+  def include_featured_link_root_domain?
+    SiteSetting.topic_featured_link_enabled && object.featured_link.present?
   end
 
 end

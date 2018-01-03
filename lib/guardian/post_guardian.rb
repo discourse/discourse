@@ -3,21 +3,21 @@ module PostGuardian
 
   # Can the user act on the post in a particular way.
   #  taken_actions = the list of actions the user has already taken
-  def post_can_act?(post, action_key, opts={})
-
-    return false unless can_see_post?(post)
+  def post_can_act?(post, action_key, opts: {}, can_see_post: nil)
+    return false unless (can_see_post.nil? && can_see_post?(post)) || can_see_post
 
     # no warnings except for staff
     return false if (action_key == :notify_user && !is_staff? && opts[:is_warning].present? && opts[:is_warning] == 'true')
 
     taken = opts[:taken_actions].try(:keys).to_a
-    is_flag = PostActionType.is_flag?(action_key)
+    is_flag = PostActionType.flag_types_without_custom[action_key]
     already_taken_this_action = taken.any? && taken.include?(PostActionType.types[action_key])
-    already_did_flagging      = taken.any? && (taken & PostActionType.flag_types.values).any?
+    already_did_flagging      = taken.any? && (taken & PostActionType.flag_types_without_custom.values).any?
 
     result = if authenticated? && post && !@user.anonymous?
 
-      return false if action_key == :notify_moderators && !SiteSetting.enable_private_messages
+      return false if [:notify_user, :notify_moderators].include?(action_key) &&
+        !SiteSetting.enable_private_messages?
 
       # we allow flagging for trust level 1 and higher
       # always allowed for private messages
@@ -35,11 +35,9 @@ module PostGuardian
       # don't like your own stuff
       not(action_key == :like && is_my_own?(post)) &&
 
-      # new users can't notify_user because they are not allowed to send private messages
-      not(action_key == :notify_user && !@user.has_trust_level?(SiteSetting.min_trust_to_send_messages)) &&
-
-      # can't send private messages if they're disabled globally
-      not(action_key == :notify_user && !SiteSetting.enable_private_messages) &&
+      # new users can't notify_user or notify_moderators because they are not allowed to send private messages
+      not((action_key == :notify_user || action_key == :notify_moderators) &&
+        !@user.has_trust_level?(SiteSetting.min_trust_to_send_messages)) &&
 
       # no voting more than once on single vote topics
       not(action_key == :vote && opts[:voted_in_topic] && post.topic.has_meta_data_boolean?(:single_vote))
@@ -82,10 +80,10 @@ module PostGuardian
 
   # Creating Method
   def can_create_post?(parent)
-    (!SpamRule::AutoBlock.block?(@user) || (!!parent.try(:private_message?) && parent.allowed_users.include?(@user))) && (
+    (!SpamRule::AutoSilence.silence?(@user) || (!!parent.try(:private_message?) && parent.allowed_users.include?(@user))) && (
       !parent ||
       !parent.category ||
-      Category.post_create_allowed(self).where(:id => parent.category.id).count == 1
+      Category.post_create_allowed(self).where(id: parent.category.id).count == 1
     )
   end
 
@@ -186,8 +184,8 @@ module PostGuardian
     can_see_post?(post)
   end
 
-  def can_vote?(post, opts={})
-    post_can_act?(post,:vote, opts)
+  def can_vote?(post, opts = {})
+    post_can_act?(post, :vote, opts: opts)
   end
 
   def can_change_post_owner?

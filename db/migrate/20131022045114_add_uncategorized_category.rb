@@ -1,4 +1,4 @@
-class AddUncategorizedCategory < ActiveRecord::Migration
+class AddUncategorizedCategory < ActiveRecord::Migration[4.2]
   def up
 
     result = execute "SELECT 1 FROM categories WHERE lower(name) = 'uncategorized'"
@@ -16,7 +16,6 @@ class AddUncategorizedCategory < ActiveRecord::Migration
 
     execute "INSERT INTO site_settings(name, data_type, value, created_at, updated_at)
              VALUES ('uncategorized_category_id', 3, #{category_id}, now(), now())"
-
 
     execute "DELETE from site_settings where name in ('uncategorized_name', 'uncategorized_text_color', 'uncategorized_color')"
 

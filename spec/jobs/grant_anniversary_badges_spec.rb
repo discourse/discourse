@@ -23,8 +23,8 @@ describe Jobs::GrantAnniversaryBadges do
     expect(badge).to be_blank
   end
 
-  it "doesn't award to a blocked user" do
-    user = Fabricate(:user, created_at: 400.days.ago, blocked: true)
+  it "doesn't award to a silenced user" do
+    user = Fabricate(:user, created_at: 400.days.ago, silenced_till: 1.year.from_now)
     Fabricate(:post, user: user, created_at: 1.week.ago)
     granter.execute({})
 
@@ -102,9 +102,10 @@ describe Jobs::GrantAnniversaryBadges do
       user = Fabricate(:user, created_at: 800.days.ago)
       Fabricate(:post, user: user, created_at: 450.days.ago)
 
-      Timecop.freeze(400.days.ago) do
+      freeze_time(400.days.ago) do
         granter.execute({})
       end
+
       badge = user.user_badges.where(badge_id: Badge::Anniversary)
       expect(badge.count).to eq(1)
 
@@ -132,6 +133,5 @@ describe Jobs::GrantAnniversaryBadges do
       expect(badge.count).to eq(2)
     end
   end
-
 
 end

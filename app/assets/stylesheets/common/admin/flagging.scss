@@ -1,0 +1,207 @@
+.flagged-post.hidden-post {
+  .flagged-post-excerpt, .flagged-post-avatar {
+    opacity: 0.5;
+  }
+}
+
+.flagged-post.deleted {
+  .flagged-post-excerpt, .flagged-post-avatar {
+    background-color: $danger-low;
+  }
+}
+
+.flagged-post {
+  padding: 1em 0 0.55em 0;
+  border-bottom: 1px solid $primary-low;
+
+  .flagged-post-details {
+    display: flex;
+
+    .flagged-post-avatar {
+      margin-right: 1em;
+      position: relative;
+
+      img.avatar {
+        min-width: 45px;
+      }
+
+      .edited-after {
+        text-align: center;
+        margin-top: 0.5em;
+      }
+
+      .previous-flagged-posts {
+        position: absolute;
+        right: -5px;
+        top: -5px;
+        background-color: $danger;
+      }
+    }
+
+    .flagged-post-contents {
+      width: 100%;
+      word-wrap: break-word;
+
+      .flagged-post-user-details {
+        .username {
+          font-weight: bold;
+          color: $primary;
+        }
+        margin-bottom: 0.5em;
+      }
+
+      .d-icon {
+        display: inline-block;
+      }
+      h3 {
+        margin-top: 0;
+        margin-bottom: 0.5em;
+      }
+      p:last-child {
+        margin-bottom: 0;
+      }
+      margin-right: 1em;
+    }
+  }
+
+  .flag-user-lists {
+    display: flex;
+    align-items: flex-start;
+    margin-top: 1em;
+  }
+
+  .user-list-title {
+    font-weight: bold;
+    margin: 0;
+  }
+
+  .flag-users {
+    margin: 0.5em 0;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .flag-user {
+    display: flex;
+    margin-bottom: 1em;
+    margin-right: 2em;
+    align-items: center;
+    justify-content: space-between;
+
+    .flag-user-who {
+      display: flex;
+      width: 13em;
+    }
+    .flag-user-username {
+      font-weight: bold;
+      margin-right: 0.5em;
+    }
+    .flag-user-date {
+      color: $primary-medium;
+    }
+
+    .flag-user-avatar {
+      margin-right: 0.5em;
+    }
+  }
+
+  .flag-conversation {
+    padding: 1em;
+
+    .reply-conversation {
+      margin-left: 32px;
+    }
+  }
+
+  .suspended-message {
+    padding: 0.5em;
+    background-color: $danger;
+    margin-bottom: 1em;
+    color: $secondary;
+  }
+
+  .flagged-post-message {
+    padding: 0.5em 1em;
+    margin: 0.5em 0;
+    background-color: $highlight-medium;
+
+    .text {
+      margin-right: 1em;
+    }
+
+    &:hover {
+      background-color: dark-light-choose($highlight-low, $highlight-medium);
+    }
+  }
+
+  .flagged-post-response {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5em;
+
+    .response-avatar {
+      margin-right: 0.5em;
+    }
+
+    .has-more {
+      margin-left: 1em;
+    }
+  }
+
+  .flagged-post-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+
+    button {
+      margin-right: 0.5em;
+      margin-bottom: 0.5em;
+    }
+  }
+}
+
+.flag-counts {
+  display: inline-block;
+  margin-right: 0.5em;
+
+  .type-count {
+    color: $primary-medium;
+    font-size: 0.857em;
+  }
+}
+
+.flagged-topic {
+  td.topic-title {
+    width: 400px;
+    a {
+      width: 400px;
+      display: inline-block;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+  }
+}
+
+.flagged-topic-details {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2em;
+}
+
+.mobile-view {
+  .flagged-posts {
+    .flagged-post {
+      .flag-user-lists {
+        display: block;
+      }
+    }
+  }
+}
+
+.show-details {
+  .d-icon {
+    padding-right: 0.25em;
+  }
+}

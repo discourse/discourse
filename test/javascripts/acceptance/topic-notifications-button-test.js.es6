@@ -1,7 +1,7 @@
 import { acceptance } from "helpers/qunit-helpers";
 acceptance("Topic Notifications button", {
   loggedIn: true,
-  setup() {
+  beforeEach() {
     const response = object => {
       return [
         200,
@@ -16,32 +16,25 @@ acceptance("Topic Notifications button", {
   }
 });
 
-test("Updating topic notification level", () => {
+QUnit.test("Updating topic notification level", assert => {
+  const notificationOptions = selectKit("#topic-footer-buttons .topic-notifications-options");
+
   visit("/t/internationalization-localization/280");
 
-  const notificationOptions = "#topic-footer-buttons .notification-options";
-
   andThen(() => {
-    ok(
-      exists(`${notificationOptions} .tracking`),
+    assert.ok(
+      notificationOptions.exists(),
       "it should display the notification options button in the topic's footer"
     );
   });
 
-  click(`${notificationOptions} .tracking`);
-  click(`${notificationOptions} .dropdown-menu .watching`);
+  notificationOptions.expand().selectRowByValue("3");
 
   andThen(() => {
-    ok(
-      exists(`${notificationOptions} .watching`),
+    assert.equal(
+      notificationOptions.selectedRow().name(),
+      "Watching",
       "it should display the right notification level"
     );
-
-    // TODO: tgxworld I can't figure out why the topic timeline doesn't show when
-    // running the tests in phantomjs
-    // ok(
-    //   exists(".timeline-footer-controls .notification-options .watching"),
-    //   'it should display the right notification level in topic timeline'
-    // );
   });
 });

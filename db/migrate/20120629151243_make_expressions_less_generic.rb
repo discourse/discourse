@@ -1,4 +1,4 @@
-class MakeExpressionsLessGeneric < ActiveRecord::Migration
+class MakeExpressionsLessGeneric < ActiveRecord::Migration[4.2]
   def up
     rename_column :expressions, :parent_id, :post_id
     rename_column :expressions, :expression_type_id, :expression_index

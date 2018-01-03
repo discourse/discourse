@@ -1,4 +1,4 @@
-class AddSeenNotificationIdToUsers < ActiveRecord::Migration
+class AddSeenNotificationIdToUsers < ActiveRecord::Migration[4.2]
   def change
 
     execute "TRUNCATE TABLE notifications"

@@ -1,8 +1,8 @@
-import { keyDirty } from 'discourse/widgets/widget';
 import { diff, patch } from 'virtual-dom';
 import { WidgetClickHook } from 'discourse/widgets/hooks';
-import { renderedKey, queryRegistry } from 'discourse/widgets/widget';
+import { queryRegistry } from 'discourse/widgets/widget';
 import { getRegister } from 'discourse-common/lib/get-owner';
+import DirtyKeys from 'discourse/lib/dirty-keys';
 
 const _cleanCallbacks = {};
 export function addWidgetCleanCallback(widgetName, fn) {
@@ -18,6 +18,7 @@ export default Ember.Component.extend({
   _renderCallback: null,
   _childEvents: null,
   _dispatched: null,
+  dirtyKeys: null,
 
   init() {
     this._super();
@@ -34,6 +35,7 @@ export default Ember.Component.extend({
     this._childEvents = [];
     this._connected = [];
     this._dispatched = [];
+    this.dirtyKeys = new DirtyKeys(name);
   },
 
   didInsertElement() {
@@ -73,7 +75,7 @@ export default Ember.Component.extend({
 
   eventDispatched(eventName, key, refreshArg) {
     const onRefresh = Ember.String.camelize(eventName.replace(/:/, '-'));
-    keyDirty(key, { onRefresh, refreshArg });
+    this.dirtyKeys.keyDirty(key, { onRefresh, refreshArg });
     this.queueRerender();
   },
 
@@ -104,7 +106,10 @@ export default Ember.Component.extend({
 
       const t0 = new Date().getTime();
       const args = this.get('args') || this.buildArgs();
-      const opts = { model: this.get('model') };
+      const opts = {
+        model: this.get('model'),
+        dirtyKeys: this.dirtyKeys,
+      };
       const newTree = new this._widgetClass(args, this.register, opts);
 
       newTree._rerenderable = this;
@@ -122,8 +127,8 @@ export default Ember.Component.extend({
         this._renderCallback = null;
       }
       this.afterRender();
+      this.dirtyKeys.renderedKey('*');
 
-      Ember.run.scheduleOnce('afterRender', () => renderedKey('*'));
       if (this.profileWidget) {
         console.log(new Date().getTime() - t0);
       }

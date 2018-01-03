@@ -1,5 +1,6 @@
 require 'uri'
 require_dependency 'slug'
+require_dependency 'discourse'
 
 class TopicLink < ActiveRecord::Base
 
@@ -57,6 +58,8 @@ SQL
 
     builder.where('ftl.topic_id = :topic_id', topic_id: topic_id)
     builder.where('ft.deleted_at IS NULL')
+    # note that ILIKE means "case insensitive LIKE"
+    builder.where("NOT(ftl.url ILIKE '%.png' OR ftl.url ILIKE '%.jpg' OR ftl.url ILIKE '%.gif')")
     builder.where("COALESCE(ft.archetype, 'regular') <> :archetype", archetype: Archetype.private_message)
 
     builder.secure_category(guardian.secure_category_ids)
@@ -65,7 +68,7 @@ SQL
 
   end
 
-  def self.counts_for(guardian,topic, posts)
+  def self.counts_for(guardian, topic, posts)
     return {} if posts.blank?
 
     # Sam: I don't know how to write this cleanly in AR,
@@ -91,19 +94,18 @@ SQL
     builder.where('l.post_id IN (:post_ids)', post_ids: posts.map(&:id))
     builder.secure_category(guardian.secure_category_ids)
 
-    builder.map_exec(OpenStruct).each_with_object({}) do |l,result|
+    builder.map_exec(OpenStruct).each_with_object({}) do |l, result|
       result[l.post_id] ||= []
-      result[l.post_id] << {url: l.url,
-                            clicks: l.clicks,
-                            title: l.title,
-                            internal: l.internal,
-                            reflection: l.reflection}
+      result[l.post_id] << { url: l.url,
+                             clicks: l.clicks,
+                             title: l.title,
+                             internal: l.internal,
+                             reflection: l.reflection }
     end
   end
 
-  # Extract any urls in body
   def self.extract_from(post)
-    return unless post.present? && !post.whisper?
+    return if post.blank? || post.whisper?
 
     added_urls = []
     TopicLink.transaction do
@@ -122,16 +124,11 @@ SQL
           internal = false
           topic_id = nil
           post_number = nil
-          parsed_path = parsed.path || ""
 
           if Discourse.store.has_been_uploaded?(url)
             internal = Discourse.store.internal?
-          elsif (parsed.host == Discourse.current_hostname && parsed_path.start_with?(Discourse.base_uri)) || !parsed.host
+          elsif route = Discourse.route_for(parsed)
             internal = true
-
-            parsed_path.slice!(Discourse.base_uri)
-
-            route = Rails.application.routes.recognize_path(parsed_path)
 
             # We aren't interested in tracking internal links to users
             next if route[:controller] == 'users'
@@ -147,7 +144,6 @@ SQL
               url = "#{Discourse.base_url_no_prefix}#{topic.relative_url}"
               url << "/#{post_number}" if post_number.to_i > 1
             end
-
           end
 
           # Skip linking to ourselves
@@ -164,6 +160,7 @@ SQL
           added_urls << url
 
           unless TopicLink.exists?(topic_id: post.topic_id, post_id: post.id, url: url)
+            file_extension = File.extname(parsed.path)[1..10].downcase unless parsed.path.nil? || File.extname(parsed.path).empty?
             begin
               TopicLink.create!(post_id: post.id,
                                 user_id: post.user_id,
@@ -173,7 +170,8 @@ SQL
                                 internal: internal,
                                 link_topic_id: topic_id,
                                 link_post_id: reflected_post.try(:id),
-                                quote: link.is_quote)
+                                quote: link.is_quote,
+                                extension: file_extension)
             rescue ActiveRecord::RecordNotUnique, PG::UniqueViolation
               # it's fine
             end
@@ -183,7 +181,7 @@ SQL
           if topic_id.present?
             topic = Topic.find_by(id: topic_id)
 
-            if topic && post.topic && post.topic.archetype != 'private_message' && topic.archetype != 'private_message'
+            if topic && post.topic && topic.archetype != 'private_message' && post.topic.archetype != 'private_message' && post.topic.visible?
               prefix = Discourse.base_url_no_prefix
               reflected_url = "#{prefix}#{post.topic.relative_url(post.post_number)}"
               tl = TopicLink.find_by(topic_id: topic_id,
@@ -192,14 +190,14 @@ SQL
 
               unless tl
                 tl = TopicLink.create(user_id: post.user_id,
-                                    topic_id: topic_id,
-                                    post_id: reflected_post.try(:id),
-                                    url: reflected_url,
-                                    domain: Discourse.current_hostname,
-                                    reflection: true,
-                                    internal: true,
-                                    link_topic_id: post.topic_id,
-                                    link_post_id: post.id)
+                                      topic_id: topic_id,
+                                      post_id: reflected_post.try(:id),
+                                      url: reflected_url,
+                                      domain: Discourse.current_hostname,
+                                      reflection: true,
+                                      internal: true,
+                                      link_topic_id: post.topic_id,
+                                      link_post_id: post.id)
 
               end
 
@@ -216,17 +214,29 @@ SQL
 
       # Remove links that aren't there anymore
       if added_urls.present?
-        TopicLink.delete_all ["(url not in (:urls)) AND (post_id = :post_id AND NOT reflection)", urls: added_urls, post_id: post.id]
+        TopicLink.where(
+          "(url not in (:urls)) AND (post_id = :post_id AND NOT reflection)",
+          urls: added_urls, post_id: post.id
+        ).delete_all
 
         reflected_ids.compact!
         if reflected_ids.present?
-          TopicLink.delete_all ["(id not in (:reflected_ids)) AND (link_post_id = :post_id AND reflection)",
-                                reflected_ids: reflected_ids, post_id: post.id]
+          TopicLink.where(
+            "(id not in (:reflected_ids)) AND (link_post_id = :post_id AND reflection)",
+            reflected_ids: reflected_ids, post_id: post.id
+          ).delete_all
         else
-          TopicLink.delete_all ["link_post_id = :post_id AND reflection", post_id: post.id]
+          TopicLink
+            .where("link_post_id = :post_id AND reflection", post_id: post.id)
+            .delete_all
         end
       else
-        TopicLink.delete_all ["(post_id = :post_id AND NOT reflection) OR (link_post_id = :post_id AND reflection)", post_id: post.id]
+        TopicLink
+          .where(
+            "(post_id = :post_id AND NOT reflection) OR (link_post_id = :post_id AND reflection)",
+            post_id: post.id
+          )
+          .delete_all
       end
     end
   end
@@ -238,11 +248,11 @@ SQL
 
   def self.duplicate_lookup(topic)
     results = TopicLink
-                .includes(:post, :user)
-                .joins(:post, :user)
-                .where("posts.id IS NOT NULL AND users.id IS NOT NULL")
-                .where(topic_id: topic.id, reflection: false)
-                .last(200)
+      .includes(:post, :user)
+      .joins(:post, :user)
+      .where("posts.id IS NOT NULL AND users.id IS NOT NULL")
+      .where(topic_id: topic.id, reflection: false)
+      .last(200)
 
     lookup = {}
     results.each do |tl|
@@ -274,14 +284,16 @@ end
 #  reflection    :boolean          default(FALSE)
 #  clicks        :integer          default(0), not null
 #  link_post_id  :integer
-#  title         :string
+#  title         :string(255)
 #  crawled_at    :datetime
 #  quote         :boolean          default(FALSE), not null
+#  extension     :string(10)
 #
 # Indexes
 #
-#  index_topic_links_on_link_post_id_and_reflection  (link_post_id,reflection)
-#  index_topic_links_on_post_id                      (post_id)
-#  index_topic_links_on_topic_id                     (topic_id)
-#  unique_post_links                                 (topic_id,post_id,url) UNIQUE
+#  index_forum_thread_links_on_forum_thread_id                      (topic_id)
+#  index_forum_thread_links_on_forum_thread_id_and_post_id_and_url  (topic_id,post_id,url) UNIQUE
+#  index_topic_links_on_extension                                   (extension)
+#  index_topic_links_on_link_post_id_and_reflection                 (link_post_id,reflection)
+#  index_topic_links_on_post_id                                     (post_id)
 #

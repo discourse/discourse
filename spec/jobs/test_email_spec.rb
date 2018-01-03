@@ -22,6 +22,4 @@ describe Jobs::TestEmail do
 
   end
 
-
 end
-

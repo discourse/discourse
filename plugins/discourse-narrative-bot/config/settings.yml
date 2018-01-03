@@ -1,8 +1,6 @@
 plugins:
   discourse_narrative_bot_enabled:
-    default:
-      default: true
-      test: false
+    default: true
     client: true
   disable_discourse_narrative_bot_welcome_post:
     default: false

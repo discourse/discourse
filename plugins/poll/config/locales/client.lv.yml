@@ -1,0 +1,26 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+lv:
+  js:
+    poll:
+      public:
+        title: "Balsojumi ir publiski."
+      cast-votes:
+        label: "Balso tagad!"
+      show-results:
+        title: "Parādīt aptaujas rezultātus"
+        label: "Rādīt rezultātus"
+      hide-results:
+        title: "Atpakaļ pie balsojumiem"
+        label: "Paslēpt rezultātus"
+      open:
+        title: "Atvērt aptauju"
+        label: "Atvērt"
+      close:
+        title: "Aizvērt aptauju"
+        label: "Aizvērt"

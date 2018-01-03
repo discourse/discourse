@@ -1,10 +1,8 @@
 class UserProfile < ActiveRecord::Base
   belongs_to :user, inverse_of: :user_profile
 
-  WEBSITE_REGEXP = /(^$)|(^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,10}(([0-9]{1,5})?\/.*)?$)/ix
-
   validates :bio_raw, length: { maximum: 3000 }
-  validates :website, format: { with: WEBSITE_REGEXP }, allow_blank: true, if: Proc.new { |c| c.new_record? || c.website_changed? }
+  validates :website, url: true, allow_blank: true, if: Proc.new { |c| c.new_record? || c.website_changed? }
   validates :user, presence: true
   before_save :cook
   after_save :trigger_badges
@@ -19,7 +17,7 @@ class UserProfile < ActiveRecord::Base
 
   BAKED_VERSION = 1
 
-  def bio_excerpt(length=350, opts={})
+  def bio_excerpt(length = 350, opts = {})
     excerpt = PrettyText.excerpt(bio_cooked, length, opts).sub(/<br>$/, '')
     return excerpt if excerpt.blank? || (user.has_trust_level?(TrustLevel[1]) && !user.suspended?)
     PrettyText.strip_links(excerpt)
@@ -63,11 +61,11 @@ class UserProfile < ActiveRecord::Base
   def self.rebake_old(limit)
     problems = []
     UserProfile.where('bio_cooked_version IS NULL OR bio_cooked_version < ?', BAKED_VERSION)
-        .limit(limit).each do |p|
+      .limit(limit).each do |p|
       begin
         p.rebake!
       rescue => e
-        problems << {profile: p, ex: e}
+        problems << { profile: p, ex: e }
       end
     end
     problems
@@ -119,12 +117,12 @@ end
 # Table name: user_profiles
 #
 #  user_id              :integer          not null, primary key
-#  location             :string
-#  website              :string
+#  location             :string(255)
+#  website              :string(255)
 #  bio_raw              :text
 #  bio_cooked           :text
-#  profile_background   :string(255)
 #  dismissed_banner_key :integer
+#  profile_background   :string(255)
 #  bio_cooked_version   :integer
 #  badge_granted_title  :boolean          default(FALSE)
 #  card_background      :string(255)

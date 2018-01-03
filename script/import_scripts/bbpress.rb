@@ -1,7 +1,6 @@
 require 'mysql2'
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
-
 # Before running this script, paste these lines into your shell,
 # then use arrow keys to edit the values
 =begin
@@ -23,6 +22,8 @@ class ImportScripts::Bbpress < ImportScripts::Base
   def initialize
     super
 
+    @he = HTMLEntities.new
+
     @client = Mysql2::Client.new(
       host: BB_PRESS_HOST,
       username: BB_PRESS_USER,
@@ -36,21 +37,33 @@ class ImportScripts::Bbpress < ImportScripts::Base
     import_anonymous_users
     import_categories
     import_topics_and_posts
+    import_private_messages
+    create_permalinks
   end
 
   def import_users
     puts "", "importing users..."
 
     last_user_id = -1
-    total_users = bbpress_query("SELECT COUNT(*) count FROM #{BB_PRESS_PREFIX}users WHERE user_email LIKE '%@%'").first["count"]
+    total_users = bbpress_query(<<-SQL
+      SELECT COUNT(DISTINCT(u.id)) AS cnt
+      FROM #{BB_PRESS_PREFIX}users u
+      LEFT JOIN #{BB_PRESS_PREFIX}posts p ON p.post_author = u.id
+      WHERE p.post_type IN ('forum', 'reply', 'topic')
+        AND user_email LIKE '%@%'
+    SQL
+    ).first["cnt"]
 
     batches(BATCH_SIZE) do |offset|
       users = bbpress_query(<<-SQL
-        SELECT id, user_nicename, display_name, user_email, user_registered, user_url
-          FROM #{BB_PRESS_PREFIX}users
+        SELECT u.id, user_nicename, display_name, user_email, user_registered, user_url, user_pass
+          FROM #{BB_PRESS_PREFIX}users u
+          LEFT JOIN #{BB_PRESS_PREFIX}posts p ON p.post_author = u.id
          WHERE user_email LIKE '%@%'
-           AND id > #{last_user_id}
-      ORDER BY id
+           AND p.post_type IN ('forum', 'reply', 'topic')
+           AND u.id > #{last_user_id}
+      GROUP BY u.id
+      ORDER BY u.id
          LIMIT #{BATCH_SIZE}
       SQL
       ).to_a
@@ -86,6 +99,7 @@ class ImportScripts::Bbpress < ImportScripts::Base
         {
           id: u["id"].to_i,
           username: u["user_nicename"],
+          password: u["user_pass"],
           email: u["user_email"].downcase,
           name: u["display_name"].presence || u['user_nicename'],
           created_at: u["user_registered"],
@@ -125,7 +139,7 @@ class ImportScripts::Bbpress < ImportScripts::Base
     end
 
     # gather every existent username
-    anon_posts.each do |id,post|
+    anon_posts.each do |id, post|
       anon_names[post['name']] = Hash.new if not anon_names[post['name']]
       # overwriting email address, one user can only use one email address
       anon_names[post['name']]['email'] = post['email']
@@ -133,14 +147,13 @@ class ImportScripts::Bbpress < ImportScripts::Base
     end
 
     # make sure every user name has a unique email address
-    anon_names.each do |k,name|
+    anon_names.each do |k, name|
       if not emails.include? name['email']
         emails.push ( name['email'])
       else
         name['email'] = "anonymous_#{SecureRandom.hex}@no-email.invalid"
       end
     end
-
 
     create_users(anon_names) do |k, n|
       {
@@ -243,8 +256,7 @@ class ImportScripts::Bbpress < ImportScripts::Base
         }
 
         if post[:raw].present?
-          post[:raw].gsub!("<pre><code>", "```\n")
-          post[:raw].gsub!("</code></pre>", "\n```")
+          post[:raw].gsub!(/\<pre\>\<code(=[a-z]*)?\>(.*?)\<\/code\>\<\/pre\>/im) { "```\n#{@he.decode($2)}\n```" }
         end
 
         if p["post_type"] == "topic"
@@ -261,6 +273,130 @@ class ImportScripts::Bbpress < ImportScripts::Base
         end
 
         skip ? nil : post
+      end
+    end
+  end
+
+  def create_permalinks
+    puts "", "creating permalinks..."
+
+    last_topic_id = -1
+    total_topics = bbpress_query(<<-SQL
+      SELECT COUNT(*) count
+        FROM #{BB_PRESS_PREFIX}posts
+       WHERE post_status <> 'spam'
+         AND post_type IN ('topic')
+    SQL
+    ).first["count"]
+
+    batches(BATCH_SIZE) do |offset|
+      topics = bbpress_query(<<-SQL
+        SELECT id,
+               guid
+          FROM #{BB_PRESS_PREFIX}posts
+         WHERE post_status <> 'spam'
+           AND post_type IN ('topic')
+           AND id > #{last_topic_id}
+      ORDER BY id
+         LIMIT #{BATCH_SIZE}
+      SQL
+      ).to_a
+      break if topics.empty?
+
+      topics.each do |t|
+        topic = topic_lookup_from_imported_post_id(t['id'])
+        Permalink.create(url: URI.parse(t['guid']).path.chomp('/'), topic_id: topic[:topic_id]) rescue nil
+      end
+      last_topic_id = topics[-1]["id"].to_i
+    end
+  end
+
+  def import_private_messages
+    puts "", "importing private messages..."
+
+    last_post_id = -1
+    total_posts = bbpress_query("SELECT COUNT(*) count FROM #{BB_PRESS_PREFIX}bp_messages_messages").first["count"]
+
+    threads = {}
+
+    total_count = bbpress_query("SELECT COUNT(*) count FROM #{BB_PRESS_PREFIX}bp_messages_recipients").first["count"]
+    current_count = 0
+
+    batches(BATCH_SIZE) do |offset|
+      rows = bbpress_query(<<-SQL
+        SELECT thread_id, user_id
+          FROM #{BB_PRESS_PREFIX}bp_messages_recipients
+      ORDER BY id
+         LIMIT #{BATCH_SIZE}
+        OFFSET #{offset}
+      SQL
+      ).to_a
+
+      break if rows.empty?
+
+      rows.each do |row|
+        current_count += 1
+        print_status(current_count, total_count, get_start_time('private_messages'))
+
+        threads[row['thread_id']] ||= {
+          target_user_ids: [],
+          imported_topic_id: nil
+        }
+        user_id = user_id_from_imported_user_id(row['user_id'])
+        if user_id && !threads[row['thread_id']][:target_user_ids].include?(user_id)
+          threads[row['thread_id']][:target_user_ids] << user_id
+        end
+      end
+    end
+
+    batches(BATCH_SIZE) do |offset|
+      posts =  bbpress_query(<<-SQL
+        SELECT id,
+               thread_id,
+               date_sent,
+               sender_id,
+               subject,
+               message
+          FROM wp_bp_messages_messages
+         WHERE id > #{last_post_id}
+      ORDER BY thread_id, date_sent
+         LIMIT #{BATCH_SIZE}
+      SQL
+      ).to_a
+
+      break if posts.empty?
+
+      last_post_id = posts[-1]["id"].to_i
+
+      create_posts(posts, total: total_posts, offset: offset) do |post|
+        if tcf = TopicCustomField.where(name: 'bb_thread_id', value: post['thread_id']).first
+          {
+            id: "pm#{post['id']}",
+            topic_id: threads[post['thread_id']][:imported_topic_id],
+            user_id: user_id_from_imported_user_id(post['sender_id']) || find_user_by_import_id(post['sender_id'])&.id || -1,
+            raw: post['message'],
+            created_at: post['date_sent'],
+          }
+        else
+          # First post of the thread
+          {
+            id: "pm#{post['id']}",
+            archetype: Archetype.private_message,
+            user_id: user_id_from_imported_user_id(post['sender_id']) || find_user_by_import_id(post['sender_id'])&.id || -1,
+            title: post['subject'],
+            raw: post['message'],
+            created_at: post['date_sent'],
+            target_usernames: User.where(id: threads[post['thread_id']][:target_user_ids]).pluck(:username),
+            post_create_action: proc do |new_post|
+              if topic = new_post.topic
+                threads[post['thread_id']][:imported_topic_id] = topic.id
+                TopicCustomField.create(topic_id: topic.id, name: 'bb_thread_id', value: post['thread_id'])
+              else
+                puts "Error in post_create_action! Can't find topic!"
+              end
+            end
+          }
+        end
       end
     end
   end

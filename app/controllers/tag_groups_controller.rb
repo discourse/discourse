@@ -1,7 +1,7 @@
 class TagGroupsController < ApplicationController
-  skip_before_filter :check_xhr, only: [:index, :show]
-  before_filter :ensure_logged_in, except: [:index, :show]
-  before_filter :fetch_tag_group, only: [:show, :update, :destroy]
+  skip_before_action :check_xhr, only: [:index, :show]
+  before_action :ensure_logged_in, except: [:index, :show]
+  before_action :fetch_tag_group, only: [:show, :update, :destroy]
 
   def index
     tag_groups = TagGroup.order('name ASC').includes(:parent_tag).preload(:tags).all
@@ -69,7 +69,7 @@ class TagGroupsController < ApplicationController
     end
 
     def tag_groups_params
-      result = params.permit(:id, :name, :one_per_topic, :tag_names => [], :parent_tag_name => [])
+      result = params.permit(:id, :name, :one_per_topic, tag_names: [], parent_tag_name: [])
       result[:tag_names] ||= []
       result[:parent_tag_name] ||= []
       result[:one_per_topic] = (params[:one_per_topic] == "true")

@@ -1,0 +1,18 @@
+<div class='flag-user'>
+  {{#link-to 'adminUser' user.id user.username class='flag-user-avatar'}}
+    {{avatar user imageSize="small"}}
+  {{/link-to}}
+  <div class='flag-user-details'>
+    <div class='flag-user-who'>
+      {{#link-to 'adminUser' user.id user.username class="flag-user-username"}}
+        {{user.username}}
+      {{/link-to}}
+      <div class='flag-user-date'>
+        {{format-age date}}
+      </div>
+    </div>
+    <div class='flag-user-extra'>
+      {{yield}}
+    </div>
+  </div>
+</div>

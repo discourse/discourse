@@ -43,7 +43,6 @@ et:
         auto_generated_email_error: "Juhtub, kui 'precedence' päis on seatud väärtusele: list, junk, bulk või auto_reply või kui mingi muu päis sisaldab väärtusi: auto-submitted, auto-replied või auto-generated."
         no_body_detected_error: "Juhtub, kui meil ei õnnestunud keha eraldada ja manused puudusid."
         inactive_user_error: "Juhtub, kui saatja ei ole aktiveeritud."
-        blocked_user_error: "Juhtub, kui saatja on blokeeritud."
         bad_destination_address: "Juhtub, kui ükski To/Cc/Bcc meiliaadresidest ei lange kokku seadistatud sissetulavate meiliaadressidega."
         strangers_not_allowed_error: "Juhtub, kui kasutaja proovib teha teemat liiki, millesse ta ise ei kuulu."
         insufficient_trust_level_error: "Juhtub, kui kasutaja proovib teha teemat liiki, millele tal puudub vajalik usaldustase."
@@ -289,7 +288,6 @@ et:
   staff_category_name: "Meeskond"
   staff_category_description: "Privaatfoorum meeskonnasisesteks aruteludeks. Teemad on nähtavad vaid adminnidele ja moderaatoritele."
   assets_topic_title: "Saidi kujunduse vahendid"
-  assets_topic_body: "See on püsiteema, nähtav vaid meeskonnale, selle saidi kujunduses kasutatavate piltide ja failide talletamiseks. Ära seda kustuta!\n\n\nTee nii:\n\n\n1. Vasta siia teemasse.\n2. Lae üles kõik pildid, mida soovida kasutada logodena, ikoonidena, vms. (Kasuta üleslaadimise ikooni postituse redaktori tööriistaribal, võid pildid siia ka lohistada või kleepida.)\n3. Postita oma vastus.\n4. Tee üleslaetud pildifailini leiad kas oma uues postituses oleval pildil paremklikates, või postituse muutmise ikooni klikkides ja kopeerides postitusest redaktoris. Kopeeri teed pildifailideni.\n5. Kleebi need teed sättesse [basic settings](/admin/site_settings/category/required).\n\n\nKui soovid lubada einevate failitüüpide üleslaadimist, muuda `authorized_extensions` sättes [file settings](/admin/site_settings/category/files)."
   discourse_welcome_topic:
     title: "Teretulemast Discourse'i"
     body: |2
@@ -691,14 +689,8 @@ et:
     enable_staged_users: "Sissetulevate meilide töötlemisel loo kasutajad ettevalmistamiseks automaatselt."
     maximum_staged_users_per_email: "Ettevalmistamisel olevate kasutajate maksimaalne arv sai sissetuleva meili töötlemisel täis."
     dominating_topic_minimum_percent: "Mitu protsenti teema postitustest peab kasutaja tegema, et talle saadetaks meeldetuletus teema liigse domineerimise kohta."
-    feed_polling_enabled: "VAID SÄNGITAMISEL: Kas sängitada RSS/ATOM voog postitusena."
-    feed_polling_url: "VAID SÄNGITAMISEL: URL või RSS/ATOM voog, mida sängitada."
-    embed_by_username: "Sängitatud teemasid lisava kasutaja Discourse kasutajanimi."
-    embed_title_scrubber: "Regex sängitatavate päiste puhastamiseks."
     embed_truncate: "Lühenda sängitatud postitused."
     embed_post_limit: "Maksimaalne postituste arv, mida sängitada."
-    embed_whitelist_selector: "CSS valik elementidele, mida lubada sängitamistes."
-    embed_blacklist_selector: "CSS valik elementidele, mida eemaldada sängitamistes."
     tagging_enabled: "Luba silte teemadel?"
     min_trust_to_create_tag: "Sildi lisamiseks nõutav minimaalne usaldustase."
     max_tags_per_topic: "Teemale liidetavate siltide maksimaalne arv."
@@ -737,6 +729,8 @@ et:
     csv_export_failed:
       subject_template: "Andmete eksportimine ebaõnnestus"
   user_notifications:
+    previous_discussion: "Varasemad vastused"
+    in_reply_to: "Vastuseks"
     unsubscribe:
       title: "Tühista tellimus"
     user_posted_pm_staged:

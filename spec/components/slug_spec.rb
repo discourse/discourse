@@ -6,6 +6,24 @@ require 'slug'
 describe Slug do
 
   describe '#for' do
+    let(:default_slug) { 'topic' }
+
+    let(:very_long_string) do
+      '内容似乎不清晰，这是个完整的句子吗？内容似乎不清晰，这是个完整的句子吗？' * 10
+    end
+
+    it 'returns topic by default' do
+      expect(Slug.for('')).to eq default_slug
+    end
+
+    it 'accepts fallback' do
+      expect(Slug.for('', 'king')).to eq 'king'
+    end
+
+    it 'replaces the underscore' do
+      expect(Slug.for("o_o_o")).to eq("o-o-o")
+    end
+
     context 'ascii generator' do
       before { SiteSetting.slug_generation_method = 'ascii' }
 
@@ -14,11 +32,15 @@ describe Slug do
       end
 
       it 'generates default slug when nothing' do
-        expect(Slug.for('')).to eq('topic')
+        expect(Slug.for('')).to eq(default_slug)
       end
 
       it "doesn't generate slugs that are just numbers" do
-        expect(Slug.for('123')).to eq('topic')
+        expect(Slug.for('123')).to eq(default_slug)
+      end
+
+      it "fallbacks to empty string if it's too long" do
+        expect(Slug.for(very_long_string)).to eq(default_slug)
       end
     end
 
@@ -28,14 +50,25 @@ describe Slug do
 
       it 'generates the slug' do
         expect(Slug.for("熱帶風暴畫眉")).to eq('熱帶風暴畫眉')
+        expect(Slug.for("Jeff hate's !~-_|,=#this")).to eq("jeff-hates-this")
       end
 
       it 'generates default slug when nothing' do
-        expect(Slug.for('')).to eq('topic')
+        expect(Slug.for('')).to eq(default_slug)
       end
 
       it "doesn't generate slugs that are just numbers" do
-        expect(Slug.for('123')).to eq('topic')
+        expect(Slug.for('123')).to eq(default_slug)
+      end
+
+      it "handles the special characters" do
+        expect(Slug.for(
+          " - English and Chinese title with special characters / 中文标题 !@:?\\:'`#^& $%&*()` -- "
+        )).to eq("english-and-chinese-title-with-special-characters-中文标题")
+      end
+
+      it "kills the trailing dash" do
+        expect(Slug.for("2- -this!~-_|,we-#-=^-")).to eq('2-this-we')
       end
     end
 
@@ -45,9 +78,9 @@ describe Slug do
 
       it 'generates the slug' do
         expect(Slug.for("hello world", 'category')).to eq('category')
-        expect(Slug.for("hello world")).to eq('topic')
-        expect(Slug.for('')).to eq('topic')
-        expect(Slug.for('123')).to eq('topic')
+        expect(Slug.for("hello world")).to eq(default_slug)
+        expect(Slug.for('')).to eq(default_slug)
+        expect(Slug.for('123')).to eq(default_slug)
       end
     end
   end
@@ -89,10 +122,6 @@ describe Slug do
       expect(Slug.ascii_generator(from)).to eq(to)
     end
 
-    it 'replaces underscores' do
-      expect(Slug.ascii_generator("o_o_o")).to eq("o-o-o")
-    end
-
     it "doesn't keep single quotes within word" do
       expect(Slug.ascii_generator("Jeff hate's this")).to eq("jeff-hates-this")
     end
@@ -111,15 +140,13 @@ describe Slug do
     after { SiteSetting.slug_generation_method = 'ascii' }
 
     it 'generates precentage encoded string' do
-      expect(Slug.encoded_generator("Jeff hate's !~-_|,=#this")).to eq("Jeff-hates-this")
       expect(Slug.encoded_generator("뉴스피드")).to eq("뉴스피드")
       expect(Slug.encoded_generator("آموزش اضافه کردن لینک اختیاری به هدر")).to eq("آموزش-اضافه-کردن-لینک-اختیاری-به-هدر")
       expect(Slug.encoded_generator("熱帶風暴畫眉")).to eq("熱帶風暴畫眉")
     end
 
     it 'reject RFC 3986 reserved character and blank' do
-      expect(Slug.encoded_generator(":/?#[]@!$ &'()*+,;=% -_`~.")).to eq("")
-      expect(Slug.encoded_generator(" - English and Chinese title with special characters / 中文标题 !@:?\\:'`#^& $%&*()` -- ")).to eq("English-and-Chinese-title-with-special-characters-中文标题")
+      expect(Slug.encoded_generator(":/?#[]@!$ &'()*+,;=% -_`~.")).to eq("---") # will be clear by #for
     end
 
     it 'generates null when nothing' do
@@ -128,6 +155,10 @@ describe Slug do
 
     it "keeps number unchanged" do
       expect(Slug.encoded_generator('123')).to eq('123')
+    end
+
+    it 'downcase the string' do
+      expect(Slug.encoded_generator("LoWer")).to eq('lower')
     end
   end
 
@@ -143,4 +174,3 @@ describe Slug do
     end
   end
 end
-

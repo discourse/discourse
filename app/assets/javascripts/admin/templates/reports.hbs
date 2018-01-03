@@ -4,10 +4,10 @@
   {{i18n 'admin.dashboard.reports.start_date'}} {{date-picker-past value=startDate defaultDate=startDate}}
   {{i18n 'admin.dashboard.reports.end_date'}} {{date-picker-past value=endDate defaultDate=endDate}}
   {{#if showCategoryOptions}}
-    {{combo-box valueAttribute="value" content=categoryOptions value=categoryId}}
+    {{combo-box filterable=true valueAttribute="value" content=categoryOptions value=categoryId}}
   {{/if}}
   {{#if showGroupOptions}}
-    {{combo-box valueAttribute="value" content=groupOptions value=groupId}}
+    {{combo-box filterable=true valueAttribute="value" content=groupOptions value=groupId}}
   {{/if}}
   {{d-button action="refreshReport" class="btn-primary" label="admin.dashboard.reports.refresh_report" icon="refresh"}}
   {{d-button action="exportCsv" label="admin.export_csv.button_text" icon="download"}}

@@ -1,0 +1,14 @@
+.user-info {
+  &.medium {
+    width: 480px;
+
+    .user-image {
+      width: 55px;
+    }
+
+    .user-detail {
+      width: 380px;
+    }
+
+  }
+}

@@ -13,7 +13,7 @@ componentTest("renders correctly with no properties set", {
 componentTest("support a placeholder", {
   template: `{{text-field placeholderKey="placeholder.i18n.key"}}`,
 
-  setup() {
+  beforeEach() {
     sandbox.stub(I18n, "t").returnsArg(0);
   },
 

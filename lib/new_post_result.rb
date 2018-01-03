@@ -10,7 +10,7 @@ class NewPostResult
   attr_accessor :queued_post
   attr_accessor :pending_count
 
-  def initialize(action, success=false)
+  def initialize(action, success = false)
     @action = action
     @success = success
   end

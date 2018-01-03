@@ -1,4 +1,4 @@
-class RenameVersionColumn < ActiveRecord::Migration
+class RenameVersionColumn < ActiveRecord::Migration[4.2]
 
   def change
     add_column :posts, :version, :integer, default: 1, null: false

@@ -22,7 +22,7 @@ class TopicList
 
   def self.preload(topics, object)
     if @preload
-      @preload.each{|preload| preload.call(topics, object)}
+      @preload.each { |preload| preload.call(topics, object) }
     end
   end
 
@@ -37,7 +37,7 @@ class TopicList
                 :tags,
                 :current_user
 
-  def initialize(filter, current_user, topics, opts=nil)
+  def initialize(filter, current_user, topics, opts = nil)
     @filter = filter
     @current_user = current_user
     @topics_input = topics
@@ -86,7 +86,7 @@ class TopicList
 
     # Include bookmarks if you have bookmarked topics
     if @current_user && !post_action_type
-      post_action_type = PostActionType.types[:bookmark] if @topic_lookup.any?{|_,tu| tu && tu.bookmarked}
+      post_action_type = PostActionType.types[:bookmark] if @topic_lookup.any? { |_, tu| tu && tu.bookmarked }
     end
 
     # Data for bookmarks or likes
@@ -105,7 +105,7 @@ class TopicList
       ft.user_data = @topic_lookup[ft.id] if @topic_lookup.present?
 
       if ft.user_data && post_action_lookup && actions = post_action_lookup[ft.id]
-        ft.user_data.post_action_data = {post_action_type => actions}
+        ft.user_data.post_action_data = { post_action_type => actions }
       end
 
       ft.posters = ft.posters_summary(
@@ -127,6 +127,6 @@ class TopicList
   end
 
   def attributes
-    {'more_topics_url' => page}
+    { 'more_topics_url' => page }
   end
 end

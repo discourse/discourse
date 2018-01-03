@@ -24,7 +24,7 @@ class GroupActionLogger
   end
 
   def log_add_user_to_group(target_user)
-    @group.public || can_edit?
+    (target_user == @acting_user && @group.public_admission) || can_edit?
 
     GroupHistory.create!(default_params.merge(
       action: GroupHistory.actions[:add_user_to_group],
@@ -33,7 +33,7 @@ class GroupActionLogger
   end
 
   def log_remove_user_from_group(target_user)
-    @group.public || can_edit?
+    (target_user == @acting_user && @group.public_exit) || can_edit?
 
     GroupHistory.create!(default_params.merge(
       action: GroupHistory.actions[:remove_user_from_group],

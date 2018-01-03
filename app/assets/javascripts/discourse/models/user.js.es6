@@ -11,11 +11,12 @@ import UserBadge from 'discourse/models/user-badge';
 import UserActionStat from 'discourse/models/user-action-stat';
 import UserAction from 'discourse/models/user-action';
 import Group from 'discourse/models/group';
-import Topic from 'discourse/models/topic';
 import { emojiUnescape } from 'discourse/lib/text';
 import PreloadStore from 'preload-store';
 import { defaultHomepage } from 'discourse/lib/utilities';
 import { userPath } from 'discourse/lib/url';
+
+const isForever = dt => moment().diff(dt, 'years') < -500;
 
 const User = RestModel.extend({
 
@@ -179,9 +180,16 @@ const User = RestModel.extend({
   },
 
   @computed("suspended_till")
-  suspendedTillDate(suspendedTill) {
-    return longDate(suspendedTill);
-  },
+  suspendedForever: isForever,
+
+  @computed("silenced_till")
+  silencedForever: isForever,
+
+  @computed("suspended_till")
+  suspendedTillDate: longDate,
+
+  @computed("silenced_till")
+  silencedTillDate: longDate,
 
   changeUsername(new_username) {
     return ajax(userPath(`${this.get('username_lower')}/preferences/username`), {
@@ -243,7 +251,9 @@ const User = RestModel.extend({
       'notification_level_when_replying',
       'like_notification_frequency',
       'include_tl0_in_digests',
-      'theme_key'
+      'theme_key',
+      'allow_private_messages',
+      'homepage_id',
     ];
 
     if (fields) {
@@ -456,7 +466,7 @@ const User = RestModel.extend({
 
   "delete": function() {
     if (this.get('can_delete_account')) {
-      return ajax(userPath(this.get('username')), {
+      return ajax(userPath(this.get('username') + ".json"), {
         type: 'DELETE',
         data: {context: window.location.pathname}
       });
@@ -467,7 +477,7 @@ const User = RestModel.extend({
 
   dismissBanner(bannerKey) {
     this.set("dismissed_banner_key", bannerKey);
-    ajax(userPath(this.get('username')), {
+    ajax(userPath(this.get('username') + ".json"), {
       type: 'PUT',
       data: { dismissed_banner_key: bannerKey }
     });
@@ -487,38 +497,39 @@ const User = RestModel.extend({
   },
 
   summary() {
-    return ajax(userPath(`${this.get("username_lower")}/summary.json`))
-           .then(json => {
-              const summary = json["user_summary"];
-              const topicMap = {};
-              const badgeMap = {};
+    let { store } = this;
 
-              json.topics.forEach(t => topicMap[t.id] = Topic.create(t));
-              Badge.createFromJson(json).forEach(b => badgeMap[b.id] = b );
+    return ajax(userPath(`${this.get("username_lower")}/summary.json`)).then(json => {
+      const summary = json.user_summary;
+      const topicMap = {};
+      const badgeMap = {};
 
-              summary.topics = summary.topic_ids.map(id => topicMap[id]);
+      json.topics.forEach(t => topicMap[t.id] = store.createRecord('topic', t));
+      Badge.createFromJson(json).forEach(b => badgeMap[b.id] = b );
 
-              summary.replies.forEach(r => {
-                r.topic = topicMap[r.topic_id];
-                r.url = r.topic.urlForPostNumber(r.post_number);
-                r.createdAt = new Date(r.created_at);
-              });
+      summary.topics = summary.topic_ids.map(id => topicMap[id]);
 
-              summary.links.forEach(l => {
-                l.topic = topicMap[l.topic_id];
-                l.post_url = l.topic.urlForPostNumber(l.post_number);
-              });
+      summary.replies.forEach(r => {
+        r.topic = topicMap[r.topic_id];
+        r.url = r.topic.urlForPostNumber(r.post_number);
+        r.createdAt = new Date(r.created_at);
+      });
 
-              if (summary.badges) {
-                summary.badges = summary.badges.map(ub => {
-                  const badge = badgeMap[ub.badge_id];
-                  badge.count = ub.count;
-                  return badge;
-                });
-              }
+      summary.links.forEach(l => {
+        l.topic = topicMap[l.topic_id];
+        l.post_url = l.topic.urlForPostNumber(l.post_number);
+      });
 
-              return summary;
-           });
+      if (summary.badges) {
+        summary.badges = summary.badges.map(ub => {
+          const badge = badgeMap[ub.badge_id];
+          badge.count = ub.count;
+          return badge;
+        });
+      }
+
+      return summary;
+    });
   },
 
   canManageGroup(group) {
@@ -538,7 +549,7 @@ User.reopenClass(Singleton, {
   createCurrent() {
     const userJson = PreloadStore.get('currentUser');
     if (userJson) {
-      const store = Discourse.__container__.lookup('store:main');
+      const store = Discourse.__container__.lookup('service:store');
       return store.createRecord('user', userJson);
     }
     return null;

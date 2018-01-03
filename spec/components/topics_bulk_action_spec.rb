@@ -66,7 +66,7 @@ describe TopicsBulkAction do
   end
 
   describe "delete" do
-    let(:topic) { Fabricate(:topic) }
+    let(:topic) { Fabricate(:post).topic }
     let(:moderator) { Fabricate(:moderator) }
 
     it "deletes the topic" do

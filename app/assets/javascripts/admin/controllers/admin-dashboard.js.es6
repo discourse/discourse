@@ -7,7 +7,7 @@ import computed from 'ember-addons/ember-computed-decorators';
 
 const PROBLEMS_CHECK_MINUTES = 1;
 
-const ATTRIBUTES = [ 'disk_space','admins', 'moderators', 'blocked', 'suspended', 'top_traffic_sources',
+const ATTRIBUTES = [ 'disk_space','admins', 'moderators', 'silenced', 'suspended', 'top_traffic_sources',
                      'top_referred_topics', 'updated_at'];
 
 const REPORTS = [ 'global_reports', 'page_view_reports', 'private_message_reports', 'http_reports',

@@ -3,11 +3,9 @@ import { exportUserArchive } from 'discourse/lib/export-csv';
 export default Ember.Controller.extend({
   application: Ember.inject.controller(),
   user: Ember.inject.controller(),
-
   userActionType: null,
-  currentPath: Ember.computed.alias('application.currentPath'),
-  viewingSelf: Ember.computed.alias("user.viewingSelf"),
-  showBookmarks: Ember.computed.alias("user.showBookmarks"),
+
+  canDownloadPosts: Ember.computed.alias('user.viewingSelf'),
 
   _showFooter: function() {
     var showFooter;
@@ -26,11 +24,7 @@ export default Ember.Controller.extend({
         I18n.t("user.download_archive.confirm"),
         I18n.t("no_value"),
         I18n.t("yes_value"),
-        function(confirmed) {
-          if (confirmed) {
-            exportUserArchive();
-          }
-        }
+        confirmed => confirmed ? exportUserArchive() : null
       );
     }
   }

@@ -1,4 +1,4 @@
-class AddPercentRankToPosts < ActiveRecord::Migration
+class AddPercentRankToPosts < ActiveRecord::Migration[4.2]
   def change
     add_column :posts, :percent_rank, :float, default: 1.0
 

@@ -50,7 +50,7 @@ function findClass(outletName, uniqueName) {
   if (!_classPaths) {
     _classPaths = {};
     findOutlets(require._eak_seen, (outlet, res, un) => {
-      _classPaths[`${outlet}/${un}`] = require(res).default;
+      _classPaths[`${outlet}/${un}`] = requirejs(res).default;
     });
   }
 

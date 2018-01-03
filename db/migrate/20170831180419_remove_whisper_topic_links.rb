@@ -1,4 +1,4 @@
-class RemoveWhisperTopicLinks < ActiveRecord::Migration
+class RemoveWhisperTopicLinks < ActiveRecord::Migration[4.2]
   def change
     execute <<-SQL
       DELETE FROM topic_links

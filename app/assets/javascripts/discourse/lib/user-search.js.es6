@@ -7,7 +7,7 @@ var cache = {},
     currentTerm,
     oldSearch;
 
-function performSearch(term, topicId, includeGroups, includeMentionableGroups, allowedUsers, group, resultsFn) {
+function performSearch(term, topicId, includeGroups, includeMentionableGroups, includeMessageableGroups, allowedUsers, group, resultsFn) {
   var cached = cache[term];
   if (cached) {
     resultsFn(cached);
@@ -20,6 +20,7 @@ function performSearch(term, topicId, includeGroups, includeMentionableGroups, a
             topic_id: topicId,
             include_groups: includeGroups,
             include_mentionable_groups: includeMentionableGroups,
+            include_messageable_groups: includeMessageableGroups,
             group: group,
             topic_allowed_users: allowedUsers }
   });
@@ -46,6 +47,7 @@ function organizeResults(r, options) {
   var exclude = options.exclude || [],
       limit = options.limit || 5,
       users = [],
+      emails = [],
       groups = [],
       results = [];
 
@@ -57,6 +59,12 @@ function organizeResults(r, options) {
       }
       return results.length <= limit;
     });
+  }
+
+  if (options.term.match(/@/)) {
+    let e = { username: options.term };
+    emails = [ e ];
+    results.push(e);
   }
 
   if (r.groups) {
@@ -71,6 +79,7 @@ function organizeResults(r, options) {
   }
 
   results.users = users;
+  results.emails = emails;
   results.groups = groups;
   return results;
 }
@@ -80,6 +89,7 @@ export default function userSearch(options) {
   var term = options.term || "",
       includeGroups = options.includeGroups,
       includeMentionableGroups = options.includeMentionableGroups,
+      includeMessageableGroups = options.includeMessageableGroups,
       allowedUsers = options.allowedUsers,
       topicId = options.topicId,
       group = options.group;
@@ -94,7 +104,7 @@ export default function userSearch(options) {
 
   return new Ember.RSVP.Promise(function(resolve) {
     // TODO site setting for allowed regex in username
-    if (term.match(/[^\w\.\-]/)) {
+    if (term.match(/[^\w_\-\.@\+]/)) {
       resolve([]);
       return;
     }
@@ -112,6 +122,7 @@ export default function userSearch(options) {
         topicId,
         includeGroups,
         includeMentionableGroups,
+        includeMessageableGroups,
         allowedUsers,
         group,
         function(r) {

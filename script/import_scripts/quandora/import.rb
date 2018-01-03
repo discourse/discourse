@@ -10,7 +10,7 @@ class ImportScripts::Quandora < ImportScripts::Base
     @system_user = Discourse.system_user
     @questions = []
     Dir.foreach(JSON_FILES_DIR) do |filename|
-      next if filename == '.' or filename == '..'
+      next if filename == ('.') || filename == ('..')
       question = File.read JSON_FILES_DIR + '/' + filename
       @questions << question
     end
@@ -23,7 +23,7 @@ class ImportScripts::Quandora < ImportScripts::Base
     puts "", "Done"
   end
 
-  def import_questions questions
+  def import_questions(questions)
     topics = 0
     total = questions.size
 
@@ -40,13 +40,13 @@ class ImportScripts::Quandora < ImportScripts::Base
     puts "", "Imported #{topics} topics."
   end
 
-  def import_users users
+  def import_users(users)
     users.each do |user|
       create_user user, user[:id]
     end
   end
 
-  def import_topic topic
+  def import_topic(topic)
     post = nil
     if post_id = post_id_from_imported_post_id(topic[:id])
       post = Post.find(post_id) # already imported this topic
@@ -65,13 +65,13 @@ class ImportScripts::Quandora < ImportScripts::Base
     post
   end
 
-  def import_posts posts, topic_id
+  def import_posts(posts, topic_id)
     posts.each do |post|
       import_post post, topic_id
     end
   end
 
-  def import_post post, topic_id
+  def import_post(post, topic_id)
     if post_id_from_imported_post_id(post[:id])
       return # already imported
     end
@@ -89,6 +89,6 @@ class ImportScripts::Quandora < ImportScripts::Base
   end
 end
 
-if __FILE__==$0
+if __FILE__ == $0
   ImportScripts::Quandora.new.perform
 end

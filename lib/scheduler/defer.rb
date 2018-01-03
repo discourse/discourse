@@ -8,6 +8,10 @@ module Scheduler
       @thread = nil
     end
 
+    def length
+      @queue.length
+    end
+
     def pause
       stop!
       @paused = true
@@ -22,7 +26,7 @@ module Scheduler
       @async = val
     end
 
-    def later(desc = nil, db=RailsMultisite::ConnectionManagement.current_db, &blk)
+    def later(desc = nil, db = RailsMultisite::ConnectionManagement.current_db, &blk)
       if @async
         start_thread unless (@thread && @thread.alive?) || @paused
         @queue << [db, blk, desc]
@@ -43,7 +47,7 @@ module Scheduler
 
     def do_all_work
       while !@queue.empty?
-        do_work(_non_block=true)
+        do_work(_non_block = true)
       end
     end
 
@@ -61,33 +65,25 @@ module Scheduler
     end
 
     # using non_block to match Ruby #deq
-    def do_work(non_block=false)
+    def do_work(non_block = false)
       db, job, desc = @queue.deq(non_block)
-      begin
-        RailsMultisite::ConnectionManagement.establish_connection(db: db) if db
-        job.call
-      rescue => ex
-        Discourse.handle_job_exception(ex, {message: "Running deferred code '#{desc}'"})
+      db ||= RailsMultisite::ConnectionManagement::DEFAULT
+
+      RailsMultisite::ConnectionManagement.with_connection(db) do
+        begin
+          job.call
+        rescue => ex
+          Discourse.handle_job_exception(ex, message: "Running deferred code '#{desc}'")
+        end
       end
     rescue => ex
-      Discourse.handle_job_exception(ex, {message: "Processing deferred code queue"})
+      Discourse.handle_job_exception(ex, message: "Processing deferred code queue")
     ensure
       ActiveRecord::Base.connection_handler.clear_active_connections!
     end
-
   end
 
   class Defer
-
-    module Unicorn
-      def process_client(client)
-        Defer.pause
-        super(client)
-        Defer.do_all_work
-        Defer.resume
-      end
-    end
-
     extend Deferrable
     initialize
   end

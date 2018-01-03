@@ -8,18 +8,18 @@ module CurrentUser
     Discourse.current_user_provider.new(env).current_user
   end
 
-
   # can be used to pretend current user does no exist, for CSRF attacks
   def clear_current_user
     @current_user_provider = Discourse.current_user_provider.new({})
   end
 
   def log_on_user(user)
-    current_user_provider.log_on_user(user,session,cookies)
+    current_user_provider.log_on_user(user, session, cookies)
+    user.logged_in
   end
 
   def log_off_user
-    current_user_provider.log_off_user(session,cookies)
+    current_user_provider.log_off_user(session, cookies)
   end
 
   def is_api?
@@ -35,7 +35,7 @@ module CurrentUser
   end
 
   def refresh_session(user)
-    current_user_provider.refresh_session(user,session,cookies)
+    current_user_provider.refresh_session(user, session, cookies)
   end
 
   private

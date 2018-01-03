@@ -12,6 +12,7 @@ pt_BR:
     discourse_narrative_bot_ignored_usernames: "Nomes de Usuário que o Robô de Narrativas do Discourse deve ignorar"
     discourse_narrative_bot_disable_public_replies: "Desabilitar respostas públicas do Robô de Narrativas do Discourse"
     discourse_narrative_bot_welcome_post_type: "Tipo de mensagem de boas vindas que o Robô de Narrativas do Discourse deve enviar"
+    discourse_narrative_bot_welcome_post_delay: "Espere (n) segundos antes de enviar o post de boas-vindas do Bot Narrativo do Discourse."
   badges:
     certified:
       name: Certificado
@@ -24,33 +25,117 @@ pt_BR:
       long_description: |
         Este emblema é adquirido após finalizar com sucesso o tutorial interativo de usuário avançado. Você dominou as ferramentas avançadas de discussão -e agora você está totalmente licenciado!
   discourse_narrative_bot:
+    bio: "Olá, Eu não sou uma pessoa real. Eu sou um robô que pode te ensinar sobre este site. Para interagir comigo, me envie uma mensagem ou faça uma menção **`@%{discobot_username}`** em qualquer lugar."
+    timeout:
+      message: |-
+        Oi @%{username}, apenas verificando se você ainda está aí; por que não te escuto faz um tempo.
+
+        - Para continuar, me responda a qualquer momento.
+
+        - Se você preferir pular esse passo, diga `%{skip_trigger}`.
+
+        - Para iniciar novamente, diga `%{reset_trigger}`.
+
+        Se você não quiser falar nada, não tem problema também. Eu sou um robô. Você não vai ferir meus sentimentos. :sob:
     dice:
+      trigger: "rolar"
+      invalid: |-
+        Sinto muito, é matematicamente impossível rolar essa combinação de dados. :confounded:
+      not_enough_dice: |-
+        Eu tenho apenas um dado de %{num_of_dice} lados. [Shameful](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), Eu sei!
+      out_of_range: |-
+        Você sabia que [o número máximo de lados] (https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) para um dado matematicamente justo é 120?
       results: |-
         > :game_die: %{results}
     quote:
       trigger: "citação"
       '1':
+        quote: "No meio de toda dificuldade reside a oportunidade"
         author: "Albert Einstein"
       '2':
-        quote: "Você deve ser a mudança que quer ver no mundo."
         author: "Mahatma Gandhi"
       '3':
+        quote: "Não chore por que acabou, sorria por que aconteceu."
         author: "Dr Seuss"
       '4':
         quote: "Se você quer que algo seja feito corretamente, faça você mesmo."
         author: "Charles-Guillaume Étienne"
       '5':
+        quote: "Acredite você pode e está quase lá."
         author: "Theodore Roosevelt"
       '6':
+        quote: "A vida é como uma caixa de chocolates. Você nunca sabe o que vai conseguir."
         author: "Mãe do Forrest Gump"
       '7':
+        quote: "Um pequeno passo para um homem, uma grande salto para a humanidade."
         author: "Neil Armstrong"
       '8':
+        quote: "Faça uma coisa por dia que te assuste."
         author: "Eleanor Roosevelt"
       '9':
+        quote: "Erros são sempre perdoáveis se você tiver a coragem de adimiti-los."
         author: "Bruce Lee"
       '10':
+        quote: "Tudo que a mente humana pode conceber e acreditar, ela pode conquistar."
         author: "Napoleon Hill"
+      results: |-
+        > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
+      trigger: 'fortuna'
+      answers:
+        '1': "É certo"
+        '2': "Definitivamente sim"
+        '3': "sem dúvida"
+        '4': "Sim, definitivamente"
+        '5': "Você pode contar com ele"
+        '6': "Como eu vejo, sim"
+        '7': "Provavelmente"
+        '9': "Sim"
+        '12': "Pergunte novamente depois"
+        '13': "Melhor não falar pra você agora"
+        '16': "Não conte com isso"
+        '17': "Minha resposta é não"
+        '18': "Minhas fontes dizem que não"
+        '20': "Muito duvidoso"
       result: |-
         > :crystal_ball: %{result}
+    track_selector:
+      reset_trigger: 'começar'
+      skip_trigger: 'pular'
+      help_trigger: 'mostrar ajuda'
+      random_mention:
+        reply: |-
+          Oi! Para descobrir o que eu posso fazer diga `@%{discobot_username} %{help_trigger}`.
+        tracks: |-
+          Até agora eu sei como fazer as seguintes coisas:
+
+          `@%{discobot_username} %{reset_trigger} %{default_track}`
+          >Comece com uma das seguintes narrativas: %{tracks}.
+      do_not_understand:
+        first_response: |-
+          Oi, obrigado pela resposta!
+
+          Infelizmente, como um robo mal programado, eu não posso entender isso agora. :frowning:
+        track_response: Você pode tentar novamente, ou se quiser pular esse passo, diga `%{skip_trigger}`. Ou, para começar de novo, diga `%{reset_trigger}`.
+        second_response: |-
+          Me perdoe. Mas eu não estou entendendo ainda. :anguished:
+
+          Eu sou apenas um robô, mas se você quiser falar com uma pessoal real, veja [nossa página de contato](/about).
+
+          Enquanto isso eu ficarei fora do seu caminho.
+    new_user_narrative:
+      reset_trigger: "novo usuário"
+      cert_title: "Como forma de reconhecimento por completar com sucesso o tutorial do novo usuário."
+      hello:
+        title: "Olá! :robot:"
+        message: |-
+          Obrigado por se juntar ao %{title}, e seja bem vindo!
+
+          - Eu sou um robô, mas [nossa amigável equipe](/about) também estão aqui para te ajudar, case precise falar com uma pessoa.
+
+          - Por motivos de segurança, nós temporariamente limitamos o que novos usuários podem fazer. Você vai ganhar novas habilidades (e [emblemas](/badges) ao passo que nós conhecermos melhor você.
+
+          - Nós acreditamos em um {comunidade com comportamento civilizado](/guidelines) em todos os momentos.
+      images:
+        like_not_found: |-
+          Você esqueceu de curtir :heart: meu [post?](%{url})

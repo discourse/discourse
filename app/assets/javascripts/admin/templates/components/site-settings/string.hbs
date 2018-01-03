@@ -1,3 +1,8 @@
-{{text-field value=value classNames="input-setting-string"}}
+{{#if setting.textarea}}
+  {{textarea value=value classNames="input-setting-textarea"}}
+{{else}}
+  {{text-field value=value classNames="input-setting-string"}}
+{{/if}}
+
 {{setting-validation-message message=validationMessage}}
 <div class='desc'>{{{unbound setting.description}}}</div>

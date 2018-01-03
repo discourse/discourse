@@ -1,9 +1,8 @@
-import { blank } from 'helpers/qunit-helpers';
 import { currentUser } from 'helpers/qunit-helpers';
 import Composer from 'discourse/models/composer';
 import createStore from 'helpers/create-store';
 
-module("model:composer");
+QUnit.module("model:composer");
 
 function createComposer(opts) {
   opts = opts || {};
@@ -17,10 +16,10 @@ function openComposer(opts) {
   return composer;
 }
 
-test('replyLength', function() {
+QUnit.test('replyLength', assert => {
   const replyLength = function(val, expectedLength) {
     const composer = createComposer({ reply: val });
-    equal(composer.get('replyLength'), expectedLength);
+    assert.equal(composer.get('replyLength'), expectedLength);
   };
 
   replyLength("basic reply", 11, "basic reply length");
@@ -30,11 +29,11 @@ test('replyLength', function() {
   replyLength("1[quote=]not[quote=]counted[/quote]yay[/quote]2", 2, "handles nested quotes correctly");
 });
 
-test('missingReplyCharacters', function() {
+QUnit.test('missingReplyCharacters', assert => {
   Discourse.SiteSettings.min_first_post_length = 40;
   const missingReplyCharacters = function(val, isPM, isFirstPost, expected, message) {
     const composer = createComposer({ reply: val, creatingPrivateMessage: isPM, creatingTopic: isFirstPost });
-    equal(composer.get('missingReplyCharacters'), expected, message);
+    assert.equal(composer.get('missingReplyCharacters'), expected, message);
   };
 
   missingReplyCharacters('hi', false, false, Discourse.SiteSettings.min_post_length - 2, 'too short public post');
@@ -44,144 +43,144 @@ test('missingReplyCharacters', function() {
   const link = "http://imgur.com/gallery/grxX8";
   const composer = createComposer({ canEditTopicFeaturedLink: true, title: link, featuredLink: link, reply: link });
 
-  equal(composer.get('missingReplyCharacters'), 0, "don't require any post content");
+  assert.equal(composer.get('missingReplyCharacters'), 0, "don't require any post content");
 });
 
-test('missingTitleCharacters', function() {
+QUnit.test('missingTitleCharacters', assert => {
   const missingTitleCharacters = function(val, isPM, expected, message) {
     const composer = createComposer({ title: val, creatingPrivateMessage: isPM });
-    equal(composer.get('missingTitleCharacters'), expected, message);
+    assert.equal(composer.get('missingTitleCharacters'), expected, message);
   };
 
   missingTitleCharacters('hi', false, Discourse.SiteSettings.min_topic_title_length - 2, 'too short post title');
   missingTitleCharacters('z', true,  Discourse.SiteSettings.min_private_message_title_length - 1, 'too short pm title');
 });
 
-test('replyDirty', function() {
+QUnit.test('replyDirty', assert => {
   const composer = createComposer();
-  ok(!composer.get('replyDirty'), "by default it's false");
+  assert.ok(!composer.get('replyDirty'), "by default it's false");
 
   composer.setProperties({
     originalText: "hello",
     reply: "hello"
   });
 
-  ok(!composer.get('replyDirty'), "it's false when the originalText is the same as the reply");
+  assert.ok(!composer.get('replyDirty'), "it's false when the originalText is the same as the reply");
   composer.set('reply', 'hello world');
-  ok(composer.get('replyDirty'), "it's true when the reply changes");
+  assert.ok(composer.get('replyDirty'), "it's true when the reply changes");
 });
 
-test("appendText", function() {
+QUnit.test("appendText", assert => {
   const composer = createComposer();
 
-  blank(composer.get('reply'), "the reply is blank by default");
+  assert.blank(composer.get('reply'), "the reply is blank by default");
 
   composer.appendText("hello");
-  equal(composer.get('reply'), "hello", "it appends text to nothing");
+  assert.equal(composer.get('reply'), "hello", "it appends text to nothing");
   composer.appendText(" world");
-  equal(composer.get('reply'), "hello world", "it appends text to existing text");
+  assert.equal(composer.get('reply'), "hello world", "it appends text to existing text");
 
   composer.clearState();
   composer.appendText("a\n\n\n\nb");
   composer.appendText("c",3,{block: true});
 
-  equal(composer.get("reply"), "a\n\nc\n\nb");
+  assert.equal(composer.get("reply"), "a\n\nc\n\nb");
 
   composer.clearState();
   composer.appendText("ab");
   composer.appendText("c",1,{block: true});
 
-  equal(composer.get("reply"), "a\n\nc\n\nb");
+  assert.equal(composer.get("reply"), "a\n\nc\n\nb");
 
   composer.clearState();
   composer.appendText("\nab");
   composer.appendText("c",0,{block: true});
 
-  equal(composer.get("reply"), "c\n\nab");
+  assert.equal(composer.get("reply"), "c\n\nab");
 });
 
-test("prependText", function() {
+QUnit.test("prependText", assert => {
   const composer = createComposer();
 
-  blank(composer.get('reply'), "the reply is blank by default");
+  assert.blank(composer.get('reply'), "the reply is blank by default");
 
   composer.prependText("hello");
-  equal(composer.get('reply'), "hello", "it prepends text to nothing");
+  assert.equal(composer.get('reply'), "hello", "it prepends text to nothing");
 
   composer.prependText("world ");
-  equal(composer.get('reply'), "world hello", "it prepends text to existing text");
+  assert.equal(composer.get('reply'), "world hello", "it prepends text to existing text");
 
   composer.prependText("before new line", {new_line: true});
-  equal(composer.get('reply'), "before new line\n\nworld hello", "it prepends text with new line to existing text");
+  assert.equal(composer.get('reply'), "before new line\n\nworld hello", "it prepends text with new line to existing text");
 });
 
-test("Title length for regular topics", function() {
+QUnit.test("Title length for regular topics", assert => {
   Discourse.SiteSettings.min_topic_title_length = 5;
   Discourse.SiteSettings.max_topic_title_length = 10;
   const composer = createComposer();
 
   composer.set('title', 'asdf');
-  ok(!composer.get('titleLengthValid'), "short titles are not valid");
+  assert.ok(!composer.get('titleLengthValid'), "short titles are not valid");
 
   composer.set('title', 'this is a long title');
-  ok(!composer.get('titleLengthValid'), "long titles are not valid");
+  assert.ok(!composer.get('titleLengthValid'), "long titles are not valid");
 
   composer.set('title', 'just right');
-  ok(composer.get('titleLengthValid'), "in the range is okay");
+  assert.ok(composer.get('titleLengthValid'), "in the range is okay");
 });
 
-test("Title length for private messages", function() {
+QUnit.test("Title length for private messages", assert => {
   Discourse.SiteSettings.min_private_message_title_length = 5;
   Discourse.SiteSettings.max_topic_title_length = 10;
   const composer = createComposer({action: Composer.PRIVATE_MESSAGE});
 
   composer.set('title', 'asdf');
-  ok(!composer.get('titleLengthValid'), "short titles are not valid");
+  assert.ok(!composer.get('titleLengthValid'), "short titles are not valid");
 
   composer.set('title', 'this is a long title');
-  ok(!composer.get('titleLengthValid'), "long titles are not valid");
+  assert.ok(!composer.get('titleLengthValid'), "long titles are not valid");
 
   composer.set('title', 'just right');
-  ok(composer.get('titleLengthValid'), "in the range is okay");
+  assert.ok(composer.get('titleLengthValid'), "in the range is okay");
 });
 
-test("Title length for private messages", function() {
+QUnit.test("Title length for private messages", assert => {
   Discourse.SiteSettings.min_private_message_title_length = 5;
   Discourse.SiteSettings.max_topic_title_length = 10;
   const composer = createComposer({action: Composer.PRIVATE_MESSAGE});
 
   composer.set('title', 'asdf');
-  ok(!composer.get('titleLengthValid'), "short titles are not valid");
+  assert.ok(!composer.get('titleLengthValid'), "short titles are not valid");
 
   composer.set('title', 'this is a long title');
-  ok(!composer.get('titleLengthValid'), "long titles are not valid");
+  assert.ok(!composer.get('titleLengthValid'), "long titles are not valid");
 
   composer.set('title', 'just right');
-  ok(composer.get('titleLengthValid'), "in the range is okay");
+  assert.ok(composer.get('titleLengthValid'), "in the range is okay");
 });
 
-test("Post length for private messages with non human users", function() {
+QUnit.test("Post length for private messages with non human users", assert => {
   const composer = createComposer({
     topic: Ember.Object.create({ pm_with_non_human_user: true })
   });
 
-  equal(composer.get('minimumPostLength'), 1);
+  assert.equal(composer.get('minimumPostLength'), 1);
 });
 
-test('editingFirstPost', function() {
+QUnit.test('editingFirstPost', assert => {
   const composer = createComposer();
-  ok(!composer.get('editingFirstPost'), "it's false by default");
+  assert.ok(!composer.get('editingFirstPost'), "it's false by default");
 
   const post = Discourse.Post.create({id: 123, post_number: 2});
   composer.setProperties({post: post, action: Composer.EDIT });
-  ok(!composer.get('editingFirstPost'), "it's false when not editing the first post");
+  assert.ok(!composer.get('editingFirstPost'), "it's false when not editing the first post");
 
   post.set('post_number', 1);
-  ok(composer.get('editingFirstPost'), "it's true when editing the first post");
+  assert.ok(composer.get('editingFirstPost'), "it's true when editing the first post");
 
 });
 
-test('clearState', function() {
+QUnit.test('clearState', assert => {
   const composer = createComposer({
     originalText: 'asdf',
     reply: 'asdf2',
@@ -191,36 +190,36 @@ test('clearState', function() {
 
   composer.clearState();
 
-  blank(composer.get('originalText'));
-  blank(composer.get('reply'));
-  blank(composer.get('post'));
-  blank(composer.get('title'));
+  assert.blank(composer.get('originalText'));
+  assert.blank(composer.get('reply'));
+  assert.blank(composer.get('post'));
+  assert.blank(composer.get('title'));
 
 });
 
-test('initial category when uncategorized is allowed', function() {
+QUnit.test('initial category when uncategorized is allowed', assert => {
   Discourse.SiteSettings.allow_uncategorized_topics = true;
   const composer = openComposer({action: 'createTopic', draftKey: 'asfd', draftSequence: 1});
-  ok(!composer.get('categoryId'), "Uncategorized by default");
+  assert.ok(!composer.get('categoryId'), "Uncategorized by default");
 });
 
-test('initial category when uncategorized is not allowed', function() {
+QUnit.test('initial category when uncategorized is not allowed', assert => {
   Discourse.SiteSettings.allow_uncategorized_topics = false;
   const composer = openComposer({action: 'createTopic', draftKey: 'asfd', draftSequence: 1});
-  ok(!composer.get('categoryId'), "Uncategorized by default. Must choose a category.");
+  assert.ok(!composer.get('categoryId'), "Uncategorized by default. Must choose a category.");
 });
 
-test('open with a quote', function() {
+QUnit.test('open with a quote', assert => {
   const quote = '[quote="neil, post:5, topic:413"]\nSimmer down you two.\n[/quote]';
   const newComposer = function() {
     return openComposer({action: Composer.REPLY, draftKey: 'asfd', draftSequence: 1, quote: quote});
   };
 
-  equal(newComposer().get('originalText'), quote, "originalText is the quote" );
-  equal(newComposer().get('replyDirty'), false, "replyDirty is initally false with a quote" );
+  assert.equal(newComposer().get('originalText'), quote, "originalText is the quote" );
+  assert.equal(newComposer().get('replyDirty'), false, "replyDirty is initally false with a quote" );
 });
 
-test("Title length for static page topics as admin", function() {
+QUnit.test("Title length for static page topics as admin", assert => {
   Discourse.SiteSettings.min_topic_title_length = 5;
   Discourse.SiteSettings.max_topic_title_length = 10;
   const composer = createComposer();
@@ -229,38 +228,38 @@ test("Title length for static page topics as admin", function() {
   composer.setProperties({post: post, action: Composer.EDIT });
 
   composer.set('title', 'asdf');
-  ok(composer.get('titleLengthValid'), "admins can use short titles");
+  assert.ok(composer.get('titleLengthValid'), "admins can use short titles");
 
   composer.set('title', 'this is a long title');
-  ok(composer.get('titleLengthValid'), "admins can use long titles");
+  assert.ok(composer.get('titleLengthValid'), "admins can use long titles");
 
   composer.set('title', 'just right');
-  ok(composer.get('titleLengthValid'), "in the range is okay");
+  assert.ok(composer.get('titleLengthValid'), "in the range is okay");
 
   composer.set('title', '');
-  ok(!composer.get('titleLengthValid'), "admins must set title to at least 1 character");
+  assert.ok(!composer.get('titleLengthValid'), "admins must set title to at least 1 character");
 });
 
-test("title placeholder depends on what you're doing", function() {
+QUnit.test("title placeholder depends on what you're doing", assert => {
   let composer = createComposer({action: Composer.CREATE_TOPIC});
-  equal(composer.get('titlePlaceholder'), 'composer.title_placeholder', "placeholder for normal topic");
+  assert.equal(composer.get('titlePlaceholder'), 'composer.title_placeholder', "placeholder for normal topic");
 
   composer = createComposer({action: Composer.PRIVATE_MESSAGE});
-  equal(composer.get('titlePlaceholder'), 'composer.title_placeholder', "placeholder for private message");
+  assert.equal(composer.get('titlePlaceholder'), 'composer.title_placeholder', "placeholder for private message");
 
   Discourse.SiteSettings.topic_featured_link_enabled = true;
 
   composer = createComposer({action: Composer.CREATE_TOPIC});
-  equal(composer.get('titlePlaceholder'), 'composer.title_or_link_placeholder', "placeholder invites you to paste a link");
+  assert.equal(composer.get('titlePlaceholder'), 'composer.title_or_link_placeholder', "placeholder invites you to paste a link");
 
   composer = createComposer({action: Composer.PRIVATE_MESSAGE});
-  equal(composer.get('titlePlaceholder'), 'composer.title_placeholder', "placeholder for private message with topic links enabled");
+  assert.equal(composer.get('titlePlaceholder'), 'composer.title_placeholder', "placeholder for private message with topic links enabled");
 });
 
-test("allows featured link before choosing a category", function() {
+QUnit.test("allows featured link before choosing a category", assert => {
   Discourse.SiteSettings.topic_featured_link_enabled = true;
   Discourse.SiteSettings.allow_uncategorized_topics = false;
   let composer = createComposer({action: Composer.CREATE_TOPIC});
-  equal(composer.get('titlePlaceholder'), 'composer.title_or_link_placeholder', "placeholder invites you to paste a link");
-  ok(composer.get('canEditTopicFeaturedLink'), "can paste link");
+  assert.equal(composer.get('titlePlaceholder'), 'composer.title_or_link_placeholder', "placeholder invites you to paste a link");
+  assert.ok(composer.get('canEditTopicFeaturedLink'), "can paste link");
 });

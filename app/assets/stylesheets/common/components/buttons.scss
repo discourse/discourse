@@ -5,7 +5,6 @@
 // Base
 // --------------------------------------------------
 
-
 .btn {
   display: inline-block;
   margin: 0;
@@ -17,7 +16,7 @@
   cursor: pointer;
   transition: all .25s;
 
-  &:active {
+  &:active, &.btn-active {
     text-shadow: none;
   }
   &[disabled], &.disabled {
@@ -46,25 +45,25 @@
   border: none;
   color: $primary;
   font-weight: normal;
-  background: dark-light-diff($primary, $secondary, 90%, -65%);
+  background: $primary-low; 
 
   &[href] {
     color: $primary;
   }
-  &:hover {
-    background: dark-light-diff($primary, $secondary, 65%, -75%);
+  &:hover, &.btn-hover {
+    background: $primary-medium; 
     color: $secondary;
   }
   &[disabled], &.disabled {
-    background: dark-light-diff($primary, $secondary, 90%, -60%);
-    &:hover { color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%)); }
+    background: $primary-low; 
+    &:hover { color: dark-light-choose($primary-low-mid, $secondary-high); }
     cursor: not-allowed;
   }
 
-  i.fa {
+  .d-icon {
     opacity: 0.7;
   }
-  &.btn-primary i.fa {
+  &.btn-primary .d-icon {
     opacity: 1;
   }
 }
@@ -75,18 +74,18 @@
 .btn-primary {
   border: none;
   font-weight: normal;
-  color: dark-light-choose(#fff, scale-color($primary, $lightness: 60%));
+  color: $secondary;
   background: $tertiary;
 
   &[href] {
     color: $secondary;
   }
-  &:hover {
+  &:hover, &.btn-hover {
     color: #fff;
-    background: dark-light-choose(scale-color($tertiary, $lightness: -20%), scale-color($tertiary, $lightness: -20%));
+    background: dark-light-choose($tertiary, $tertiary);
   }
-  &:active {
-    @include linear-gradient(scale-color($tertiary, $lightness: -20%), scale-color($tertiary, $lightness: -10%));
+  &:active, &.btn-active {
+    @include linear-gradient($tertiary, $tertiary);
     color: $secondary;
   }
   &[disabled], &.disabled {
@@ -104,10 +103,10 @@
   &[href] {
     color: $secondary;
   }
-  &:hover{
+  &:hover, &.btn-hover {
     background: scale-color($danger, $lightness: -20%);
   }
-  &:active {
+  &:active, &.btn-active {
     @include linear-gradient(scale-color($danger, $lightness: -20%), $danger);
   }
   &[disabled], &.disabled {
@@ -128,7 +127,7 @@
   &:before {
     margin-right: 9px;
     font-family: FontAwesome;
-    font-size: 17px;
+    font-size: 1.214em;
   }
   &.google, &.google_oauth2 {
     background: $google;
@@ -188,4 +187,13 @@
   padding: 9px 18px;
   font-size: 1.143em;
   line-height: 20px;
+}
+
+.btn-flat {
+  background: transparent;
+  border: 0;
+  outline: 0;
+  .d-icon {
+    opacity: 0.7;
+  }
 }

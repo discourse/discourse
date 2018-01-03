@@ -2,6 +2,7 @@ import { MAX_MESSAGE_LENGTH } from 'discourse/models/post-action-type';
 import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Component.extend({
+  classNames: ['flag-action-type'],
 
   @computed('flag.name_key')
   customPlaceholder(nameKey) {

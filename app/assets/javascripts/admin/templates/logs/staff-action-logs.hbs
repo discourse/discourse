@@ -1,36 +1,36 @@
 <div class="staff-action-logs-controls">
   {{#if filtersExists}}
-  <div>
+  <div class='staff-action-logs-filters'>
     <a {{action "clearAllFilters"}} class="clear-filters filter">
       <span class="label">{{i18n 'admin.logs.staff_actions.clear_filters'}}</span>
     </a>
     {{#if actionFilter}}
       <a {{action "clearFilter" "actionFilter"}} class="filter">
         <span class="label">{{i18n 'admin.logs.action'}}</span>: {{actionFilter}}
-        {{fa-icon "times-circle"}}
+        {{d-icon "times-circle"}}
       </a>
     {{/if}}
     {{#if filters.acting_user}}
       <a {{action "clearFilter" "acting_user"}} class="filter">
         <span class="label">{{i18n 'admin.logs.staff_actions.staff_user'}}</span>: {{filters.acting_user}}
-        {{fa-icon "times-circle"}}
+        {{d-icon "times-circle"}}
       </a>
     {{/if}}
     {{#if filters.target_user}}
       <a {{action "clearFilter" "target_user"}} class="filter">
         <span class="label">{{i18n 'admin.logs.staff_actions.target_user'}}</span>: {{filters.target_user}}
-        {{fa-icon "times-circle"}}
+        {{d-icon "times-circle"}}
       </a>
     {{/if}}
     {{#if filters.subject}}
       <a {{action "clearFilter" "subject"}} class="filter">
         <span class="label">{{i18n 'admin.logs.staff_actions.subject'}}</span>: {{filters.subject}}
-        {{fa-icon "times-circle"}}
+        {{d-icon "times-circle"}}
       </a>
     {{/if}}
   </div>
   {{else}}
-    {{i18n "admin.logs.staff_actions.filter"}} {{combo-box content=userHistoryActions nameProperty="name" value=filterActionId none="admin.logs.staff_actions.all"}}
+    {{i18n "admin.logs.staff_actions.filter"}} {{combo-box content=userHistoryActions value=filterActionId none="admin.logs.staff_actions.all"}}
   {{/if}}
 
   <div class="pull-right">

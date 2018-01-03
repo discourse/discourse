@@ -32,6 +32,9 @@ tr_TR:
   disable_remote_images_download_reason: "Yeterli disk alanı kalmaması sebebiyle uzaktan görüntü indirme devre dışı bırakıldı."
   anonymous: "Anonim"
   remove_posts_deleted_by_author: "Yazar tarafından silindi"
+  themes:
+    bad_color_scheme: "Temayı güncelleyemiyorum, geçersiz renk şeması"
+    other_error: "Temanın güncellenmesi sırasında bir sorun oluştu"
   emails:
     incoming:
       default_subject: "Konuya bir başlık konulmalı"
@@ -40,7 +43,6 @@ tr_TR:
         empty_email_error: "Bize ulaşan ham posta boş olduğunda olur."
         no_message_id_error: "E-postanın 'Message-Id' başlığı olmadığında olur."
         inactive_user_error: "Gönderici etkin olmadığında olur."
-        blocked_user_error: "Gönderici engellendiğinde olur."
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -107,6 +109,7 @@ tr_TR:
   embed:
     start_discussion: "Tartışma Başlat"
     continue: "Tartışmaya Devam Et"
+    referer: "Yönlendiren:"
     more_replies:
       other: "%{count} cevap daha"
     loading: "Tartışma Yükleniyor..."
@@ -151,6 +154,12 @@ tr_TR:
     latest: "En son konular"
     hot: "Sıcak konular"
     top: "En iyi konular"
+    top_all: "Tüm zamanlarda en iyi konular"
+    top_yearly: "Yıllık en iyi konular"
+    top_quarterly: "Üç aylık en iyi konular"
+    top_monthly: "Aylık en iyi konular"
+    top_weekly: "Haftalık en iyi konular"
+    top_daily: "Günlük en iyi konular"
     posts: "Son gönderiler"
     private_posts: "Son özel iletiler"
     group_posts: "%{group_name} tarafından son gönderiler"
@@ -245,7 +254,6 @@ tr_TR:
   meta_category_description: "Bu site, sitenin organizasyonu, nasıl çalıştığı ve nasıl geliştirilebileceği ile ilgili tartışma alanı."
   staff_category_name: "Görevliler"
   staff_category_description: "Görevliler arası konuşmalar için özel kategori. Konular sadece yönetici ve moderatörlere gözükür."
-  assets_topic_body: "Bu kalıcı bir konudur, sadece görevlilere gözükür, site tasarımında kullanılan resim ve dosyaların depolanması için kullanılır. Sakın silmeyin!\n\n\nŞöyle ki:\n\n1. Bu konuyu cevaplayın.\n2. Görseller, simgecikler vb. kullanmak istediğiniz resimleri buraya yükleyin. (Gönderi düzenleyicisindeki yükleme düğmesini kullanabilir, resimleri sürükleyip bırakabilir veya kopyalayıp yapıştırabilirsiniz.)\n3. Cevabı gönderin.\n4. Yeni gönderinizdeki resimlere sağ tıklayarak ya da düzenleme ikonuna tıklayıp gönderinizi düzenleyerek resimlerin bağlantılarına ulaşabilirsiniz. Bağlantıları kopyalayın.\n5. Bağlantıları [basit ayarlarda](/admin/site_settings/category/required) ilgili bölümlere yapıştırın.\n\n\nEğer farklı dosya tipleri yükleyebilmek istiyorsanız, [dosya ayarları](/admin/site_settings/category/files) sayfasındaki `authorized_extensions` ayarını düzenleyin."
   lounge_welcome:
     title: "Lobiye hoş geldiniz"
     body: |2
@@ -426,6 +434,7 @@ tr_TR:
     like:
       title: 'Beğen'
       description: 'Bu gönderiyi beğen'
+      short_description: 'Bu gönderiyi beğen'
       long_form: 'bu beğenildi'
     vote:
       title: 'Oyla'
@@ -447,7 +456,6 @@ tr_TR:
       email_title: '"%{title}" konu başlığının moderatör tarafından kontrol edilmesi gerekiyor'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Gönderiniz topluluk tarafından bildirildi. Lütfen <a href="/my/private-messages">özel iletilerinize göz atın</a>.</p>'
     user_must_edit: '<p>Bu gönderi topluluk tarafından bildirildi ve geçici olarak gizlendi.</p>'
   archetypes:
     regular:
@@ -652,9 +660,7 @@ tr_TR:
     educate_until_posts: "Kullanıcılar, ilk (n) gönderilerini yazmaya başladıklarında, pop-up yeni kullanıcı eğitim paneli metin düzenleyecisinin üstünde çıksın."
     title: "Sayfa başlığı etiketinde kullanılacak, bu sitenin ismi."
     site_description: "Meta açıklama etiketinde kullanılacak, bu sitenin bir cümlelik açıklaması."
-    contact_email: "Bu site için sorumlu kişinin e-posta adresi. Sadece acil durumlar için /about iletişim formu içerisinde ve beklenmeyen bildirmeler gibi ciddi bildiriler için kullanılacak."
     contact_url: "Bu site için iletişim URL'si. Acil durumlar için /about iletişim formunda kullanılır."
-    queue_jobs: "SADECE GELİŞTİRİCİLER İÇİN! UYARI! Aksi gerekmediği takdirde işleri sidekiq ile sıraya koydurtun. Bu özellik devre dışı bırakılırsa, siteniz düzgün çalışmayacaktır."
     crawl_images: "Doğru genişlik ve yükseklik boyutlarını girmek için uzak URL'lerdeki resimlerin birer kopyasını alınsın."
     download_remote_images_to_local: "Uzaktaki resimler yerel resimlere çevirmek için indirilsin; bu ayar resim bağlantılarının kırılmasını önleyecektir"
     download_remote_images_threshold: "Uzaktaki resimlerin yerele indirilmesi için gereken en az disk alanı (yüzdesel)"
@@ -669,7 +675,6 @@ tr_TR:
     fixed_category_positions: "Seçerseniz, kategoriler için sabit bir sıralama belirleyebileceksiniz. Seçmezseniz, kategoriler etkinlik sırasına göre listelenir. "
     fixed_category_positions_on_create: "Seçerseniz, konu oluşturma ekranında da kategori sıralaması korunur (fixed_category_positions gerektirir)."
     add_rel_nofollow_to_user_content: "İç bağlantılar (ana alan adları dahil) hariç, gönderilen tüm kullanıcı içeriklerine rel nofollow ekle. Bu ayarı değiştirirseniz, tüm gönderileri \"rake post:rebake\" ile yeniden işlemeniz gerekir."
-    exclude_rel_nofollow_domains: "nofollow eklenmeyecek sınırlandırılmış alan adları listesi. ust.com'a izin verirseniz otomatik olarak alt.ust.com'a da izin verilir."
     post_excerpt_maxlength: "Gönderi alıntısının / özetinin en fazla uzunluğu."
     show_pinned_excerpt_mobile: "Mobil görünümünde başa tutturulmuş konuların özetini göster."
     show_pinned_excerpt_desktop: "Masaüstü görünümünde başa tutturulmuş konuların özetini göster."
@@ -678,7 +683,6 @@ tr_TR:
     logo_url: "Sitenin üst solundaki görsel, geniş dikdörtgen şeklinde olmalıdır. Boş bırakılırsa site başlığı gösterilecektir."
     logo_small_url: "Sitenin üst solundaki küçük görsel, kare şeklinde olmalıdır, aşağıya doğru kaydırılırken görünür. Boş bırakılırsa bir ev oyması gösterilecektir."
     favicon_url: "Site simgesi, bilgi için http://en.wikipedia.org/wiki/Favicon adresine bakınız, bir CDN ile doğru şekilde çalışmak için png olmalıdır."
-    mobile_logo_url: "Mobil sitenin üst solunda kullanılan sabit konumlu görsel. Kare şeklinde olmalıdır. Boş bırakılırsa, `logo_url` kullanılacaktır. Örneğin: http://ornek.com/uploads/default/gorsel.png"
     apple_touch_icon_url: "Apple dokunmatik cihazları için kullanılan ikon. Önerilen boyut; 144 x 144 pixel."
     notification_email: "Tüm önemli sistem e-postaları için kullanılacak olan gönderen e-posta adresi. E-postaların başarıyla ulaşması için buraya girilen alan adının SPF, DKIM ve reverse PTR kayıtlarının doğru yapılması lazım."
     email_custom_headers: "Sınırlandırılmış özel e-posta başlıkları listesi"
@@ -703,16 +707,12 @@ tr_TR:
     tl2_additional_likes_per_day_multiplier: "Güvenlik seviyesi 2 (Üye) olanlar için günlük beğeni limitini bu rakamla çarparak artır"
     tl3_additional_likes_per_day_multiplier: "Güven seviyesi 3 (Müdavim) olanlar için günlük beğeni limitini bu rakamla çarparak artır"
     tl4_additional_likes_per_day_multiplier: "Güvenlik seviyesi 4 (Lider) olanlar için günlük beğeni limitini bu rakamla çarparak artır"
-    notify_mods_when_user_blocked: "Eğer bir kullanıcı otomatik olarak engellendiyse, tüm moderatörlere ileti yolla."
     flag_sockpuppets: "Eğer, yeni kullanıcı konuya, konuyu başlatan yeni kullanıcı ile aynı IP adresinden cevap yazarsa, her iki gönderiyi de potansiyel istenmeyen olarak bildir. "
     traditional_markdown_linebreaks: "Markdown'da, satır sonundan önce yazının sağında iki tane boşluk gerektiren, geleneksel satır sonu metodunu kullan."
-    allow_html_tables: "Tabloların HTML etiketleri kullanılarak Markdown ile oluşturulmasına izin verin. TABLE, THEAD, TD, TR, TH kabul edilir (tablo içeren tüm eski gönderilerin yenilenmesini gerektirir) "
     post_undo_action_window_mins: "Bir gönderide yapılan yeni eylemlerin (beğenme, bildirme vb) geri alınabileceği zaman, dakika olarak"
     must_approve_users: "Siteye erişimlerine izin verilmeden önce tüm yeni kullanıcı hesaplarının görevliler tarafından onaylanması gerekir. UYARI: yayındaki bir site için bunu etkinleştirmek görevli olmayan hesapların erişimini iptal edecek."
     pending_users_reminder_delay: "Belirtilen saatten daha uzun bir süredir onay bekleyen yeni kullanıcılar mevcutsa moderatörleri bilgilendir. Bilgilendirmeyi devre dışı bırakmak için -1 girin."
     maximum_session_age: "Kullanıcı son ziyaretinden bu yana n saat boyunca giriş yapmış olarak kalacak"
-    ga_tracking_code: "ESKİ: Google analiz (ga.js) takip kodu, ör:UA-12345678-9; bakınız http://google.com/analytics"
-    ga_domain_name: "ESKİ: Google analiz (ga.js) alan adı, ör: benimsitem.com; bakınız http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) takip kodu, ör: UA-12345678-9; bakınız http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) alan adı, ör: mysite.com; bakınız http://google.com/analytics"
     enable_escaped_fragments: "Eğer bir ağ gezgini tespit edilmezse Google'ın Ajax-Crawling API'sine dönün. Dahası için şuraya bakın : https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
@@ -741,12 +741,9 @@ tr_TR:
     allow_index_in_robots_txt: "robots.txt dosyasında bu sitenin arama motorları tarafından dizinlenmesine izin verildiğini belirt."
     email_domains_blacklist: "Kullanıcıların kayıt olurken kullanamayacağı e-posta alan adlarının, dikey çizgilerle ayrıştırılmış listesi. Örneğin: mailinator.com|trashmail.net"
     email_domains_whitelist: "Kullanıcıların kayıt olurken kullanmak ZORUNDA olduğu e-posta alan adlarının, dikey çizgilerle ayrıştırılmış listesi. UYARI: Bu listede yer almayan e-posta alan adları kabul edilmeyecektir!"
-    forgot_password_strict: "Parola sıfırlama kullanıldığında kullanıcıyı hesabın varlığı ile ilgili olarak bilgilendirme."
     log_out_strict: "Çıkış yapılırken, kullanıcının tüm cihazlardaki TÜM seanslarını sonlandır"
     version_checks: "Discourse Hub'a sürüm güncellemeleri için haber yolla ve yeni versiyon iletilerine /admin gösterge panelinde yer ver"
     new_version_emails: "Discourse'un yeni sürümü çıktığında contact_email adresine e-posta gönder."
-    port: "SADECE YAZILIMCILAR İÇİN! UYARI! Öntanımlı 80 portu yerine bu HTTP portunu kullanın. Öntanımlı 80'i kullanmak için boş bırakın. "
-    force_hostname: "SADECE YAZILIMCILAR İÇİN! DİKKAT! URL'de bir bilgisayar adı belirleyin. Öntanımlı için boş bırakın."
     invite_expiry_days: "Kullanıcı davet anahtarlarının geçerlilik süresi, gün olarak"
     invite_passthrough_hours: "Daha önce kabul edilmiş davetiye anahtarının kullanım süresi, saat olarak"
     login_required: "Bu sitede içerik görüntülenebilmesi için kimlik doğrulamayı zorunlu kıl, isimsiz girişe izin verme."
@@ -811,7 +808,6 @@ tr_TR:
     clean_up_uploads: "Yasadışı barındırmayı engellemek için artık referanssız yüklemeleri kaldır. UYARI: Bu ayarı etkinleştirmeden önce /uploads dizinini yedeklemeyi isteyebilirsiniz"
     clean_orphan_uploads_grace_period_hours: "Artık yüklemeler kaldırılmadan önce tanınan süre (saat olarak)."
     purge_deleted_uploads_grace_period_days: "Silinen yüklemelerin kaldırılması için tanınan süre (gün olarak)."
-    purge_unactivated_users_grace_period_days: "Hesabını etkinleştirmemiş bir kullanıcının sistemden silinmesi için tanınan süre (gün olarak)."
     enable_s3_uploads: "Yüklemeleri Amazon S3 belleklerinde sakla. ÖNEMLİ: Doğru S3 bilgileri (erişim anahtarı id & gizli erişim anahtarı) gerektirir"
     s3_use_iam_profile: 'Anahtarları almak için AWS EC2 IAM rolünü kullan. NOT: Etkinleştirilmesi "s3 access key id" and "s3 secret access key" ayarlarının üzerine yazacaktır.'
     s3_upload_bucket: "Dosyaların yükleneceği Amazon S3 biriktirme yeri adı. DİKKAT: büyük harfler, nokta ve altçizgi karakterleri kullanılmamalı."
@@ -906,9 +902,6 @@ tr_TR:
     num_flags_to_close_topic: "Bir konunun moderatör müdahalesi için otomatik olarak durdurulmadan önce alması gereken en az etkin bildirim sayısı "
     auto_respond_to_flag_actions: "Bir bildirim kaldırırken otomatik olarak cevaplamayı etkinleştir"
     min_first_post_typing_time: "Milisaniye olarak bir kullanıcının ilk gönderisini yazarken geçmesi gereken en küçük süre, bu süre geçmezse gönderi otomatik olarak onaylanma kuyruğuna girer. Devre dışı bırakmak için 0'a ayarlayın (tavsiye edilmez)."
-    auto_block_fast_typers_on_first_post: "min_first_post_typing_time'ı karşılamayan kullanıcıları otomatik olarak engelle."
-    auto_block_fast_typers_max_trust_level: "Hızlı yazıcıları otomatik engellemek için en büyük güven seviyesi."
-    auto_block_first_post_regex: "Eğer eşleşirse kullanıcının ilk gönderisinin engellenmesi ve onaylanma kuyruğuna gitmesine neden olan harf büyüklüğü duyarsız düzenli ifade. Örnek: reklam|a[bc]a düzenli ifadesi reklam, aba ya da aca içeren ilk gönderilerin engellenmesi ve onaylanma kuyruğuna gitmesine neden olacaktır. Sadece ilk gönderiler için geçerlidir."
     reply_by_email_enabled: "Konulara e-posta üzerinden cevap yazmayı etkinleştir."
     reply_by_email_address: "Email ile cevapla özelliği için gelen e-posta adresi şablonu, örnek: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
     disable_emails: "Discourse'un herhangi bir e-posta göndermesine izin verme"
@@ -926,7 +919,6 @@ tr_TR:
     pop3_polling_username: "E-postaların sorgulanacağı POP3 hesabının kullanıcı adı."
     pop3_polling_password: "E-postaların sorgulanacağı POP3 hesabının parolası."
     log_mail_processing_failures: "Bütün e-posta işleme hatalarını http://yoursitename.com/logs adresine logla."
-    email_in: "Kullanıcıların e-posta aracılığıyla yeni konu oluşturabilmesine izin ver (pop3 sorgulaması gerektirir). Adresleri her kategorinin \"Ayarlar\" sekmesinden düzenleyin."
     email_in_min_trust: "Bir kullanıcının e-posta aracılığı ile yeni konu oluşturabilmesi için sahip olması gereken en az güven seviyesi."
     email_prefix: "E-postaların konu bölümünü belirten [etiket]. Boş bırakılırsa 'title' yazacak."
     email_site_title: "Bu siteden giden e-postalarda gönderici olarak kullanılacak sitenin başlığı. Herhangi bir şey girilmezse öntanımlı olarak 'title' yazacak. Eğer 'başlık\" içeriğinizde, e-posta göndericisinin stringlerinde izin verilmeyen karakterler varsa, bu ayarı kullanın.  "
@@ -934,7 +926,6 @@ tr_TR:
     relative_date_duration: "Gönderinin üstünden bu kadar gün geçtikten sonra, gönderi tarihi mutlak şekilde değil (20 Şubat) göreceli şekilde (7g) gösterilecek."
     delete_user_max_post_age: "İlk gönderisi (x) günden eski olan kullanıcıların silinmesine izin verme."
     delete_all_posts_max: "Tüm Gönderileri Sil düğmesine basıldığında tek seferde silinebilecek en fazla gönderi sayısı. Eğer bir kullanıcının gönderi sayısı bu sayıdan fazlaysa, gönderilerin hepsi tek seferde silinemez ve bu kullanıcı silinemez."
-    username_change_period: "Kayıt sonrası, kullanıcı adınının değiştirilebileceği gün sayısı. (Kullanıcı adının değiştirilebilmesini devre dışı bırakmak için 0 girin)"
     email_editable: "Kullanıcıların kayıt olduktan sonra e-posta adreslerini değiştirmesine izin ver."
     logout_redirect: "Çıkış yaptıktan sonra tarayıcının yönlendirileceği adres (ör: http://bitanesite.com/cikis)"
     allow_uploaded_avatars: "Kullanıcıların özel profil resimleri yüklemelerine izin ver."
@@ -972,15 +963,9 @@ tr_TR:
     warn_reviving_old_topic_age: "Herhangi bir kullanıcı, son cevabın burada belirtilen gün sayısından daha önce yazıldığı bir konuya cevap yazmaya başladığında, bir uyarı iletisi çıkacak. Bu özelliği devre dışı bırakmak için 0 girin. "
     autohighlight_all_code: "Tüm önceden biçimlendirilen kod parçalarına, açıkça dil seçimi yapılmamış olsa da, zorla kod vurgulaması uygula."
     highlighted_languages: "Dahil edilen kod renklendirme kuralları. (Uyarı: çok fazla dil eklemek performansı etkileyebilir) demo için bakınız: https://highlightjs.org/static/demo/"
-    feed_polling_enabled: "SADECE YERLEŞTİRME İÇİN: RSS/ATOM beslemesinin gönderi olarak yerleştirilip yerleştirilemeyeceği."
-    feed_polling_url: "SADECE YERLEŞTİRME İÇİN: Yerleştirilecek RSS/ATOM beslemesinin URL'i."
-    embed_by_username: "Yerleştirilmiş konuları oluşturan kullanıcıya ait Discourse kullanıcı adı. "
-    embed_username_key_from_feed: "Beslemeden Discourse kullanıcı adını çekmek için kullanılacak anahtar"
     embed_truncate: "Yerleştirilmiş gönderileri kırp."
     embed_post_limit: "Yerleştirilecek en fazla gönderi sayısı."
     embed_username_required: "Konu oluşturmak için kullanıcı adı gereklidir."
-    embed_whitelist_selector: "Yerleştirmelerde kullanılmasına izin verilen öğeler için CSS seçicisi."
-    embed_blacklist_selector: "Yerleştirmelerden çıkartılmış öğeler için CSS seçicisi."
     show_create_topics_notice: "Eğer sitede herkese açık konu sayısı 5'den az ise, yöneticiden yeni konular oluşturmasını isteyen bir uyarı iletisi göster. "
     delete_drafts_older_than_n_days: (n) günden eski taslakları sil.
     bootstrap_mode_min_users: "bootstrap modunun edilgen olması için gereken en az kullanıcı sayısı (edilgen bırakmak için 0 yapın)"
@@ -1007,8 +992,6 @@ tr_TR:
     default_categories_watching: "Öntanımlı olarak gözlenen kategorilerin listesi."
     default_categories_tracking: "Öntanımlı olarak, takip edilen kategorilerin listesi."
     default_categories_muted: "Öntanımlı olarak, sesi kısılan kategorilerin listesi."
-    max_user_api_reqs_per_day: "Gün başına yapılabilecek en fazla kullanıcı API isteği"
-    max_user_api_reqs_per_minute: "Dakika başına yapılabilecek en fazla kullanıcı API isteği"
     max_api_keys_per_user: "Kullanıcı başına kullanılabilecek kullanıcı API anahtarı sayısı"
     min_trust_level_for_user_api_key: "Kullanıcı API'si oluşturmak için gereken güven seviyesi"
     tagging_enabled: "Konularda etiketleri etkinleştirin?"
@@ -1120,13 +1103,11 @@ tr_TR:
     email_too_long: "Vermiş olduğun e-posta çok uzun. E-posta kutusu isimleri 254, alan adı isimleri ise 253 karakterden daha uzun olamaz."
     reserved_username: "Bu kullanıcı adını kullanamazsın."
     missing_user_field: "Kullanıcı alanlarının tamamını doldurmadınız"
-    close_window: "Doğrulama tamamlandı. Devam etmek için bu pencereyi kapatın."
   user:
     no_accounts_associated: "İlgili hesap yok"
     username:
       short: "en az %{min} karakter olmalı"
       long: "%{max} karakterden fazla olmamalı"
-      characters: "sadece rakam, harf ve altçizgi bulundurabilir "
       unique: "özgün olmalı"
       blank: "bulunmalı"
       must_begin_with_alphanumeric_or_underscore: "bir harf, rakam ya da alt çizgi ile başlamalı"
@@ -1144,44 +1125,8 @@ tr_TR:
       other: "İlgilenilmesi gereken %{count} bildirim var"
   unsubscribe_mailer:
     subject_template: "%{site_title} üzerinden daha fazla e-posta güncellemesi almak istemediğinizi onaylayın"
-  invite_mailer:
-    subject_template: "%{invitee_name}  sizi %{site_domain_name} sitesindeki '%{topic_title}' adlı konuya davet etti. "
-  custom_invite_mailer:
-    subject_template: "%{invitee_name} sizi %{site_domain_name} sitesindeki '%{topic_title}' adlı konuya davet etti "
-  invite_forum_mailer:
-    subject_template: "%{invitee_name} sizi %{site_domain_name} sitesine katılmanız için davet etti"
-  custom_invite_forum_mailer:
-    subject_template: "%{invitee_name} sizi %{site_domain_name} sitesine katılmaya davet etti"
   invite_password_instructions:
     subject_template: "%{site_name} hesabınız için parola oluşturun"
-  new_version_mailer:
-    text_body_template: |
-      Yuhaaa, [Discourse](http://www.discourse.org) için yeni bir sürüm hazır!
-
-      Sizin sürümünüz:  %{installed_version}
-      Yeni çıkan sürüm: **%{new_version}**
-
-      - **[Tek tıklamayla](%{base_url}/admin/upgrade)** basitçe yükseltin
-
-      - Nelerin yeni olduğunu [GitHub kayıtlarında](https://github.com/discourse/discourse/commits/master) görün
-
-      - Yeniliklerden haberdar olmak, tartışmak ve destek almak için [meta.discourse.org](https://meta.discourse.org) adresini ziyaret edin
-  new_version_mailer_with_notes:
-    text_body_template: |
-      Yuhaaa, [Discourse](http://www.discourse.org) için yeni bir sürüm hazır!
-
-      Sizin sürümünüz:  %{installed_version}
-      Yeni çıkan sürüm: **%{new_version}**
-
-      - **[Tek tıklamayla](%{base_url}/admin/upgrade)** basitçe yükseltin
-
-      - Nelerin yeni olduğunu [GitHub kayıtlarında](https://github.com/discourse/discourse/commits/master) görün
-
-      - Yeniliklerden haberdar olmak, tartışmak ve destek almak için [meta.discourse.org](https://meta.discourse.org) adresini ziyaret edin
-
-      ### Sürüm notları
-
-      %{notes}
   flag_reasons:
     off_topic: "Gönderiniz **konu-dışı** olarak bildirildi: topluluk, gönderinizin konu başlığı ve ilk gönderi ile tanımlanan konu içeriğine uygun olmadığını düşünüyor. "
     inappropriate: "Gönderiniz **uygunsuz** olarak bildirildi: topluluk gönderinizin saldırgan, kaba ya da [topluluk yönergelerine](/guidelines) aykırı olduğunu düşünüyor."
@@ -1251,7 +1196,6 @@ tr_TR:
       subject_template: "Dışarı veri aktarımı tamamlandı"
     csv_export_failed:
       subject_template: "Dışarı veri aktarımı başarısız oldu"
-      text_body_template: "Üzgünüz, dışarı veri aktarımı başarısız oldu. Lütfen kayıtları inceleyin veya bir görevli ile iletişime geçin."
     email_reject_empty:
       text_body_template: |
         Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermeye çalıştığınız e-posta başarısız oldu.
@@ -1264,30 +1208,8 @@ tr_TR:
         Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermeye çalıştığınız e-posta başırısız oldu. E-postada herhangi bir cevap bulamadık. **Cevabınızın e-posta'nın en üstünde yer aldığından emin olun** -- aralardaki cevapları işleyemiyoruz.
     too_many_spam_flags:
       subject_template: "Yeni hesap askıda"
-      text_body_template: |
-        Merhaba,
-
-        Bu, %{site_name} adresinden size gönderilen, topluluk tarafından bildirildiği için kontrol edilmek üzere gizlenen gönderinizi bildiren otomatik bir iletidir.
-
-        Bir önlem olarak, bir yetkili incelemesine kadar yeni hesabınızdan yeni cevaplar veya konular oluşturmanız engellendi. Bu rahatsızlık için üzgünüz.
-
-        Ek bilgi için, [topluluk yönergelerine](%{base_url}/guidelines) başvurun.
     too_many_tl3_flags:
       subject_template: "Yeni hesap askıda"
-    blocked_by_staff:
-      subject_template: "Hesap geçiçi olarak askıda"
-    user_automatically_blocked:
-      subject_template: "Yeni kullanıcı %{username} topluluk bildirimleri tarafından engellendi"
-    spam_post_blocked:
-      subject_template: "Üst üste aynı bağlantıların paylaşılmasından ötürü %{username} adlı yeni kullanıcının gönderileri engelledi"
-    unblocked:
-      subject_template: "Hesap artık askıda değil"
-      text_body_template: |
-        Merhaba,
-
-        Bu otomatik ileti %{site_name} forumunda, görevli incelemesinin ardından hesabınızın artık askıda olmadığını bilmeniz amacıyla gönderilmiştir.
-
-        Şimdi tekrar gönderi ve konular oluşturabilirsiniz. Sabrınız için teşekkürler.
     pending_users_reminder:
       subject_template:
         other: "%{count} kullanıcı onay bekliyor"
@@ -1326,26 +1248,6 @@ tr_TR:
     visit_link_to_respond: "Cevaplamak için [konuyu ziyaret edin](%{base_url}%{url})."
     visit_link_to_respond_pm: "Cevaplamak için [iletiyi ziyaret edin](%{base_url}%{url})."
     posted_by: "%{post_date} tarihinde %{username} tarafından gönderildi"
-    invited_to_private_message_body: |
-      %{username} sizi bir iletiye davet etti
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      şurada
-
-      > %{site_title} -- %{site_description}
-    invited_to_topic_body: |
-      %{username} sizi bir tartışmaya davet etti
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      şurada
-
-      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       text_body_template: |
         %{header_instructions}
@@ -1463,7 +1365,6 @@ tr_TR:
       follow_topic: "Bu konuyu takip et"
       join_the_discussion: "Devamını Oku"
       popular_posts: "Gözde Gönderiler"
-      unsubscribe: "Bir süredir görünmediğiniz için bu e-posta size %{site_link} topluluğundan gönderildi. Bu e-postaları almak istemiyorsanız %{unsubscribe_link}."
       click_here: "buraya tıklayın"
       from: "%{site_name} özeti"
       preheader: "%{last_seen_at} tarihindeki ziyaretinizden bu yana olanların kısa bir özeti"
@@ -1485,10 +1386,6 @@ tr_TR:
     see_more: "Daha fazla"
     search_title: "Bu sitede ara"
     search_google: "Google"
-  login_required:
-    welcome_message: |
-      #[%{title} topluluğuna hoş geldiniz](#welcome)
-      Hesap oluşturmanız gerekiyor. Devam etmek için lütfen bir hesap oluşturun ya da giriş yapın.
   terms_of_service:
     title: "Üyelik Sözleşmesi"
     signup_form_message: '<a href="/tos" target="_blank">Üyelik Sözleşmesini</a> okudum ve kabul ediyorum.'
@@ -1574,9 +1471,6 @@ tr_TR:
         Bu rozet gönderine ilk beğenini aldığın için verildi. Tebrikler forumda diğer üyelerin ilgisini çeken, yararlı bir paylaşımda bulundun!
     autobiographer:
       name: Güncel Profil
-      description: <a href="/my/preferences">profil</a> bilgilerini tamamlama
-      long_description: |
-        Bu rozet <a href="/my/preferences">profil sayfasını </a> tamamladığınız ve bir profil resmi seçtiğiniz için verilmiştir. Artık topluluk sizin hakkınızda daha fazla bilgi sahibi olup, sizin ilgi alanlarınızı daha yakından takip edebilir.
     anniversary:
       name: Yıldönümü
       description: Bir sene içerisinde, en az bir kere gönderi yazmış etkin üye
@@ -1669,9 +1563,6 @@ tr_TR:
         Bu rozet cevabınızda başkasından alıntı yaptığınız için verilmiştir. Başka konulardan ve gönderilerden alıntı yapmak mesajlar arasındaki bağlantıyı kuvvetlendirir. En kolay alıntı yapma yolu alıntı yapacağınız bölümü seçip cevap düğmesine basmaktır.
     read_guidelines:
       name: Yönergeleri Okuma
-      description: <a href="/guidelines">Topluluk yönergelerini</a> okuma
-      long_description: |
-        Bu rozeti <a href="/guidelines">topluluk yönergelerini</a> okuduğunuz için kazandınız. Site kurallarını bilmek ve bu kurallara uygun davranmak daha huzurlu bir ortam içerisinde paylaşım yapmanızı sağlar.
     reader:
       name: Okuyucu
       description: 100 cevaptan fazla cevabı olan bir konunun her cevabını okuma

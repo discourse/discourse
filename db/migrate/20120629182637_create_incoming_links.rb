@@ -1,4 +1,4 @@
-class CreateIncomingLinks < ActiveRecord::Migration
+class CreateIncomingLinks < ActiveRecord::Migration[4.2]
   def change
     create_table :incoming_links do |t|
       t.integer :site_id, null: false
@@ -7,7 +7,7 @@ class CreateIncomingLinks < ActiveRecord::Migration
       t.string :domain, limit: 100, null: false
       t.integer :forum_thread_id, null: true
       t.integer :post_number, null: true
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :incoming_links, [:site_id, :forum_thread_id, :post_number], name: 'incoming_index'

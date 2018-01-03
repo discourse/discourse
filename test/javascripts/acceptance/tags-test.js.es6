@@ -1,11 +1,11 @@
 import { acceptance } from "helpers/qunit-helpers";
 acceptance("Tags", { loggedIn: true });
 
-test("list the tags", () => {
+QUnit.test("list the tags", assert => {
   visit("/tags");
 
   andThen(() => {
-    ok($('body.tags-page').length, "has the body class");
-    ok(exists('.tag-eviltrout'), "shows the evil trout tag");
+    assert.ok($('body.tags-page').length, "has the body class");
+    assert.ok(exists('.tag-eviltrout'), "shows the evil trout tag");
   });
 });

@@ -11,15 +11,18 @@ class ThemeField < ActiveRecord::Base
   end
 
   def self.theme_var_type_ids
-    @theme_var_type_ids ||= [2,3,4]
+    @theme_var_type_ids ||= [2, 3, 4]
   end
+
+  validates :name, format: { with: /\A[a-z_][a-z0-9_-]*\z/i },
+                   if: Proc.new { |field| ThemeField.theme_var_type_ids.include?(field.type_id) }
 
   COMPILER_VERSION = 5
 
   belongs_to :theme
 
   def transpile(es6_source, version)
-    template  = Tilt::ES6ModuleTranspilerTemplate.new {}
+    template = Tilt::ES6ModuleTranspilerTemplate.new {}
     wrapped = <<PLUGIN_API_JS
 Discourse._registerPluginCode('#{version}', api => {
   #{es6_source}
@@ -37,7 +40,7 @@ PLUGIN_API_JS
       name = node["name"] || node["data-template-name"] || "broken"
       is_raw = name =~ /\.raw$/
       if is_raw
-        template = "require('discourse-common/lib/raw-handlebars').template(#{Barber::Precompiler.compile(node.inner_html)})"
+        template = "requirejs('discourse-common/lib/raw-handlebars').template(#{Barber::Precompiler.compile(node.inner_html)})"
         node.replace <<COMPILED
           <script>
             (function() {
@@ -90,15 +93,16 @@ COMPILED
     @scss_fields ||= %w(scss embedded_scss)
   end
 
-
   def ensure_baked!
     if ThemeField.html_fields.include?(self.name)
       if !self.value_baked || compiler_version != COMPILER_VERSION
-
         self.value_baked, self.error = process_html(self.value)
         self.compiler_version = COMPILER_VERSION
 
-        if self.value_baked_changed? || compiler_version.changed? || self.error_changed?
+        if self.will_save_change_to_value_baked? ||
+           self.will_save_change_to_compiler_version? ||
+           self.will_save_change_to_error?
+
           self.update_columns(value_baked: value_baked,
                               compiler_version: compiler_version,
                               error: error)
@@ -120,10 +124,9 @@ COMPILED
         self.error = e.message
       end
 
-      if error_changed?
+      if will_save_change_to_error?
         update_columns(error: self.error)
       end
-
     end
   end
 
@@ -132,7 +135,7 @@ COMPILED
   end
 
   before_save do
-    if value_changed? && !value_baked_changed?
+    if will_save_change_to_value? && !will_save_change_to_value_baked?
       self.value_baked = nil
     end
   end

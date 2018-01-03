@@ -9,19 +9,18 @@
     {{/if}}
   </div>
 
-  {{#if model.id}}
-    {{#unless model.automatic}}
-      <div>
-        <label for='full_name'>{{i18n 'groups.edit.full_name'}}</label>
-        {{input type='text' name='full_name' value=model.full_name class='group-edit-full-name'}}
-      </div>
+  {{#unless model.automatic}}
+    <div>
+      <label for='full_name'>{{i18n 'groups.edit.full_name'}}</label>
+      {{input type='text' name='full_name' value=model.full_name class='group-edit-full-name'}}
+    </div>
 
-      <div>
-        <label for="bio">{{i18n 'groups.bio'}}</label>
-        {{d-editor value=model.bio_raw}}
-      </div>
+    <div>
+      <label for="bio">{{i18n 'groups.bio'}}</label>
+      {{d-editor value=model.bio_raw}}
+    </div>
 
-      {{#if model.hasOwners}}
+    {{#if model.hasOwners}}
       <div>
         <label for='owner-list'>{{i18n 'admin.groups.group_owners'}}</label>
         <div class="ac-wrap clearfix" id='owner-list'>
@@ -30,33 +29,55 @@
           {{/each}}
         </div>
       </div>
-      {{/if}}
-      <div>
-        <label for="owner-selector">{{i18n 'admin.groups.add_owners'}}</label>
-        {{user-selector usernames=model.ownerUsernames placeholderKey="admin.groups.selector_placeholder" id="owner-selector"}}
-        {{d-button action="addOwners" class="add" icon="plus" label="admin.groups.add"}}
-      </div>
-    {{/unless}}
+    {{/if}}
+
     <div>
-      {{group-members-input model=model}}
+      <label for="owner-selector">{{i18n 'admin.groups.add_owners'}}</label>
+
+      {{user-selector usernames=model.ownerUsernames
+          placeholderKey="admin.groups.selector_placeholder"
+          id="owner-selector"}}
+
+      {{#if model.id}}
+        {{d-button
+            action="addOwners"
+            class="add"
+            icon="plus"
+            label="admin.groups.add"}}
+      {{/if}}
     </div>
-  {{/if}}
+  {{/unless}}
 
   <div>
-    <label>
-      {{input type="checkbox" checked=model.visible}}
-      {{i18n 'groups.visible'}}
-    </label>
+    {{group-members-input model=model addButton=model.id}}
+  </div>
+
+  <div>
+    <label for="visiblity">{{i18n 'groups.visibility_levels.title'}}</label>
+    {{combo-box name="alias"
+        valueAttribute="value"
+        value=model.visibility_level
+        content=visibilityLevelOptions
+        castInteger=true}}
   </div>
 
   {{#unless model.automatic}}
     <div>
       <label>
         {{input type="checkbox"
-            checked=model.public
+            checked=model.public_admission
             disabled=disablePublicSetting}}
 
-        {{i18n 'groups.public'}}
+        {{i18n 'groups.public_admission'}}
+      </label>
+    </div>
+
+    <div>
+      <label>
+        {{input type='checkbox'
+            checked=model.public_exit}}
+
+        {{i18n 'groups.public_exit'}}
       </label>
     </div>
 
@@ -70,8 +91,19 @@
       </label>
     </div>
 
+    {{#if model.allow_membership_requests}}
+      <div>
+        <label for="membership-request-template">
+          {{i18n 'groups.membership_request_template'}}
+        </label>
+
+        {{expanding-text-area name="membership-request-template"
+            value=model.membership_request_template}}
+      </div>
+    {{/if}}
+
     <div>
-      <label for="primary_group">
+      <label>
         {{input type="checkbox" checked=model.primary_group}}
         {{i18n 'admin.groups.primary_group'}}
       </label>
@@ -79,13 +111,18 @@
   {{/unless}}
 
   <div>
-    <label for="alias">{{i18n 'groups.alias_levels.title'}}</label>
-    {{combo-box name="alias" valueAttribute="value" value=model.alias_level content=aliasLevelOptions}}
+    <label for="alias">{{i18n 'groups.alias_levels.mentionable'}}</label>
+    {{combo-box name="alias" valueAttribute="value" value=model.mentionable_level content=aliasLevelOptions}}
+  </div>
+
+  <div>
+    <label for="alias">{{i18n 'groups.alias_levels.messageable'}}</label>
+    {{combo-box name="alias" valueAttribute="value" value=model.messageable_level content=aliasLevelOptions}}
   </div>
 
   <div>
     <label>{{i18n 'groups.notification_level'}}</label>
-    {{notifications-button i18nPrefix='groups.notifications' notificationLevel=model.default_notification_level}}
+    {{notifications-button i18nPrefix='groups.notifications' value=model.default_notification_level}}
     <div class='clearfix'></div>
   </div>
 
@@ -122,10 +159,12 @@
     {{group-flair-inputs model=model}}
   {{/unless}}
 
+  {{plugin-outlet name="group-edit" args=(hash group=model)}}
+
   <div class='buttons'>
     <button {{action "save"}} disabled={{disableSave}} class='btn btn-primary'>{{i18n 'admin.customize.save'}}</button>
     {{#unless model.automatic}}
-      <button {{action "destroy"}} class='btn btn-danger'>{{fa-icon "trash-o"}}{{i18n 'admin.customize.delete'}}</button>
+      <button {{action "destroy"}} class='btn btn-danger'>{{d-icon "trash-o"}}{{i18n 'admin.customize.delete'}}</button>
     {{/unless}}
 
     <span class="saving {{unless savingStatus 'hidden'}}">{{savingStatus}}</span>

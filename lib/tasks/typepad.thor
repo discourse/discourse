@@ -45,7 +45,7 @@ class Typepad < Thor
       end
     end
 
-    entries.each_with_index do |e,i|
+    entries.each_with_index do |e, i|
       if e[:title] =~ /Head/
         puts "#{i}: #{e[:title]}"
       end
@@ -56,7 +56,7 @@ class Typepad < Thor
 
     puts "Importing #{entries.size} entries"
     entries.each_with_index do |entry, idx|
-      puts "Importing (#{idx+1}/#{entries.size})"
+      puts "Importing (#{idx + 1}/#{entries.size})"
       next if entry[:body].blank?
 
       puts entry[:unique_url]
@@ -219,7 +219,7 @@ class Typepad < Thor
                 current << c
               end
             end
-            segments.delete_if {|s| s.nil? || s.size < 2}
+            segments.delete_if { |s| s.nil? || s.size < 2 }
             segments << current
 
             comment[:author] = segments[0]

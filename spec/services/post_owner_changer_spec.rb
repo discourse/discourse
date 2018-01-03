@@ -26,8 +26,12 @@ describe PostOwnerChanger do
       freeze_time 2.days.from_now
 
       old_user = p1.user
+      PostAction.act(user_a, p1, PostActionType.types[:like])
+      p1.reload
+      expect(p1.topic.like_count).to eq(1)
       PostOwnerChanger.new(post_ids: [p1.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
       p1.reload
+      expect(p1.topic.like_count).to eq(0)
       expect(p1.topic.bumped_at).to be_within(1.second).of (bumped_at)
       expect(p1.topic.last_post_user_id).to eq(user_a.id)
       expect(old_user).not_to eq(p1.user)
@@ -79,11 +83,10 @@ describe PostOwnerChanger do
           topic_reply_count: 1
         )
 
-        UserAction.create!( action_type: UserAction::NEW_TOPIC, user_id: p1user.id, acting_user_id: p1user.id,
-                            target_post_id: -1, target_topic_id: p1.topic_id, created_at: p1.created_at )
-        UserAction.create!( action_type: UserAction::REPLY, user_id: p2user.id, acting_user_id: p2user.id,
-                            target_post_id: p2.id, target_topic_id: p2.topic_id, created_at: p2.created_at )
-
+        UserAction.create!(action_type: UserAction::NEW_TOPIC, user_id: p1user.id, acting_user_id: p1user.id,
+                           target_post_id: -1, target_topic_id: p1.topic_id, created_at: p1.created_at)
+        UserAction.create!(action_type: UserAction::REPLY, user_id: p2user.id, acting_user_id: p2user.id,
+                           target_post_id: p2.id, target_topic_id: p2.topic_id, created_at: p2.created_at)
 
         UserActionCreator.enable
       end
@@ -128,19 +131,43 @@ describe PostOwnerChanger do
         expect(user_a_stat.likes_received).to eq(1)
       end
 
+      it "handles whispers" do
+        whisper = PostCreator.new(
+          editor,
+          topic_id: p1.topic_id,
+          reply_to_post_number: 1,
+          post_type: Post.types[:whisper],
+          raw: 'this is a whispered reply'
+        ).create
+
+        user_stat = editor.user_stat
+
+        expect {
+          described_class.new(
+            post_ids: [whisper.id],
+            topic_id: topic.id,
+            new_owner: Fabricate(:admin),
+            acting_user: editor
+          ).change_owner!
+        }.to_not change { user_stat.reload.post_count }
+      end
+
       context 'private message topic' do
         let(:topic) { Fabricate(:private_message_topic) }
 
         it "should update users' counts" do
           PostAction.act(p2user, p1, PostActionType.types[:like])
 
-          change_owners
+          expect {
+            change_owners
+          }.to_not change { p1user.user_stat.post_count }
 
           expect(p1user.user_stat.likes_received).to eq(0)
 
           user_a_stat = user_a.user_stat
           expect(user_a_stat.first_post_created_at).to be_present
           expect(user_a_stat.likes_received).to eq(0)
+          expect(user_a_stat.post_count).to eq(0)
         end
       end
 

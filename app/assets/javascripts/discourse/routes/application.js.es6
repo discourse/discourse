@@ -8,6 +8,7 @@ import mobile from 'discourse/lib/mobile';
 import { findAll } from 'discourse/models/login-method';
 import { getOwner } from 'discourse-common/lib/get-owner';
 import { userPath } from 'discourse/lib/url';
+import Composer from 'discourse/models/composer';
 
 function unlessReadOnly(method, message) {
   return function() {
@@ -58,7 +59,6 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
           reply = post ? window.location.protocol + "//" + window.location.host + post.get("url") : null;
 
       // used only once, one less dependency
-      const Composer = require('discourse/models/composer').default;
       return this.controllerFor('composer').open({
         action: Composer.PRIVATE_MESSAGE,
         usernames: recipient,
@@ -83,6 +83,10 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
         c.error(xhrOrErr);
       }
 
+      if (xhrOrErr && xhrOrErr.status === 404) {
+        return this.transitionTo('exception-unknown');
+      }
+
       exceptionController.setProperties({ lastTransition: transition, thrown: xhrOrErr });
 
       this.intermediateTransitionTo('exception');
@@ -94,6 +98,7 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
     showCreateAccount: unlessReadOnly('handleShowCreateAccount', I18n.t("read_only_mode.login_disabled")),
 
     showForgotPassword() {
+      this.controllerFor('forgot-password').setProperties({ offerHelp: null, helpSeen: false });
       showModal('forgotPassword', { title: 'forgot_password.title' });
     },
 
@@ -120,11 +125,11 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
       user clicks "No", reopenModal. If user clicks "Yes", be sure to call closeModal.
     **/
     hideModal() {
-      $('#discourse-modal').modal('hide');
+      $('.d-modal.fixed-modal').modal('hide');
     },
 
     reopenModal() {
-      $('#discourse-modal').modal('show');
+      $('.d-modal.fixed-modal').modal('show');
     },
 
     editCategory(category) {
@@ -135,11 +140,6 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
         showModal('edit-category', { model });
         this.controllerFor('edit-category').set('selectedTab', 'general');
       });
-    },
-
-    deleteSpammer(user) {
-      this.send('closeModal');
-      user.deleteAsSpammer(function() { window.location.reload(); });
     },
 
     checkEmail(user) {

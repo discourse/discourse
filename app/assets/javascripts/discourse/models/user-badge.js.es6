@@ -86,6 +86,9 @@ UserBadge.reopenClass({
     @returns {Promise} a promise that resolves to an array of `UserBadge`.
   **/
   findByUsername: function(username, options) {
+    if (!username) {
+      return Em.RSVP.resolve([]);
+    }
     var url = "/user-badges/" + username + ".json";
     if (options && options.grouped) {
       url += "?grouped=true";

@@ -1,4 +1,4 @@
-class CreateTopTopics < ActiveRecord::Migration
+class CreateTopTopics < ActiveRecord::Migration[4.2]
   PERIODS = [:yearly, :monthly, :weekly, :daily]
   SORT_ORDERS = [:posts, :views, :likes]
 

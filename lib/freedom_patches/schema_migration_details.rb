@@ -4,7 +4,7 @@ module FreedomPatches
       rval = nil
 
       time = Benchmark.measure do
-        rval=super
+        rval = super
       end
 
       sql = <<SQL

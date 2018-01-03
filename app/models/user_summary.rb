@@ -53,18 +53,18 @@ class UserSummary
   def most_liked_by_users
     likers = {}
     UserAction.joins(:target_topic, :target_post)
-              .merge(Topic.listable_topics.visible.secured(@guardian))
-              .where(user: @user)
-              .where(action_type: UserAction::WAS_LIKED)
-              .group(:acting_user_id)
-              .order('COUNT(*) DESC')
-              .limit(MAX_SUMMARY_RESULTS)
-              .pluck('acting_user_id, COUNT(*)')
-              .each { |l| likers[l[0].to_s] = l[1] }
+      .merge(Topic.listable_topics.visible.secured(@guardian))
+      .where(user: @user)
+      .where(action_type: UserAction::WAS_LIKED)
+      .group(:acting_user_id)
+      .order('COUNT(*) DESC')
+      .limit(MAX_SUMMARY_RESULTS)
+      .pluck('acting_user_id, COUNT(*)')
+      .each { |l| likers[l[0].to_s] = l[1] }
 
     User.where(id: likers.keys)
-        .pluck(:id, :username, :name, :uploaded_avatar_id)
-        .map do |u|
+      .pluck(:id, :username, :name, :uploaded_avatar_id)
+      .map do |u|
       UserWithCount.new(
         id: u[0],
         username: u[1],
@@ -78,18 +78,18 @@ class UserSummary
   def most_liked_users
     liked_users = {}
     UserAction.joins(:target_topic, :target_post)
-              .merge(Topic.listable_topics.visible.secured(@guardian))
-              .where(action_type: UserAction::WAS_LIKED)
-              .where(acting_user_id: @user.id)
-              .group(:user_id)
-              .order('COUNT(*) DESC')
-              .limit(MAX_SUMMARY_RESULTS)
-              .pluck('user_actions.user_id, COUNT(*)')
-              .each { |l| liked_users[l[0].to_s] = l[1] }
+      .merge(Topic.listable_topics.visible.secured(@guardian))
+      .where(action_type: UserAction::WAS_LIKED)
+      .where(acting_user_id: @user.id)
+      .group(:user_id)
+      .order('COUNT(*) DESC')
+      .limit(MAX_SUMMARY_RESULTS)
+      .pluck('user_actions.user_id, COUNT(*)')
+      .each { |l| liked_users[l[0].to_s] = l[1] }
 
     User.where(id: liked_users.keys)
-        .pluck(:id, :username, :name, :uploaded_avatar_id)
-        .map do |u|
+      .pluck(:id, :username, :name, :uploaded_avatar_id)
+      .map do |u|
       UserWithCount.new(
         id: u[0],
         username: u[1],
@@ -120,8 +120,8 @@ class UserSummary
       .each { |r| replied_users[r[0].to_s] = r[1] }
 
     User.where(id: replied_users.keys)
-        .pluck(:id, :username, :name, :uploaded_avatar_id)
-        .map do |u|
+      .pluck(:id, :username, :name, :uploaded_avatar_id)
+      .map do |u|
       UserWithCount.new(
         id: u[0],
         username: u[1],
@@ -151,9 +151,14 @@ class UserSummary
       .count
   end
 
+  def recent_time_read
+    @user.recent_time_read
+  end
+
   delegate :likes_given,
            :likes_received,
            :days_visited,
+           :topics_entered,
            :posts_read_count,
            :topic_count,
            :post_count,

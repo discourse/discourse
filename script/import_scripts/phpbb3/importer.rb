@@ -34,32 +34,9 @@ module ImportScripts::PhpBB3
     end
 
     def change_site_settings
-      # let's make sure that we import all attachments no matter how big they are
-      setting_keys = [:max_image_size_kb, :max_attachment_size_kb]
-      original_validators = disable_setting_validators(setting_keys)
-
       super
 
       @importers.permalink_importer.change_site_settings
-
-      enable_setting_validators(original_validators)
-    end
-
-    def disable_setting_validators(setting_keys)
-      original_validators = {}
-
-      setting_keys.each do |key|
-        original_validators[key] = SiteSetting.validators[key]
-        SiteSetting.validators[key] = nil
-      end
-
-      original_validators
-    end
-
-    def enable_setting_validators(original_validators)
-      original_validators.each do |key, validator|
-        SiteSetting.validators[key] = validator
-      end
     end
 
     def get_site_settings_for_import
@@ -68,6 +45,10 @@ module ImportScripts::PhpBB3
       max_file_size_kb = @database.get_max_attachment_size
       settings[:max_image_size_kb] = [max_file_size_kb, SiteSetting.max_image_size_kb].max
       settings[:max_attachment_size_kb] = [max_file_size_kb, SiteSetting.max_attachment_size_kb].max
+
+      # temporarily disable validation since we want to import all existing images and attachments
+      SiteSetting.type_supervisor.load_setting(:max_image_size_kb, max: settings[:max_image_size_kb])
+      SiteSetting.type_supervisor.load_setting(:max_attachment_size_kb, max: settings[:max_attachment_size_kb])
 
       settings
     end

@@ -27,8 +27,8 @@ def gather_uploads
   puts "", "Gathering uploads for '#{current_db}'...", ""
 
   Upload.where("url ~ '^\/uploads\/'")
-        .where("url !~ '^\/uploads\/#{current_db}'")
-        .find_each do |upload|
+    .where("url !~ '^\/uploads\/#{current_db}'")
+    .find_each do |upload|
     begin
       old_db = upload.url[/^\/uploads\/([^\/]+)\//, 1]
       from = upload.url.dup
@@ -100,7 +100,7 @@ def guess_filename(url, raw)
     filename ||= File.basename(url)
     filename
   rescue
-      nil
+    nil
   ensure
     f.try(:close!) rescue nil
   end
@@ -114,13 +114,13 @@ def migrate_from_s3
   require "file_store/s3_store"
 
   # make sure S3 is disabled
-  if SiteSetting.enable_s3_uploads
+  if SiteSetting.Uploads.enable_s3_uploads
     puts "You must disable S3 uploads before running that task."
     return
   end
 
   # make sure S3 bucket is set
-  if SiteSetting.s3_upload_bucket.blank?
+  if SiteSetting.Upload.s3_upload_bucket.blank?
     puts "The S3 upload bucket must be set before running that task."
     return
   end
@@ -148,7 +148,7 @@ def migrate_from_s3
               tmp_file_name: "from_s3",
               follow_redirect: true
             )
-            if upload = UploadCreator.new(file, filename, File.size(file)).create_for(post.user_id || -1)
+            if upload = UploadCreator.new(file, filename).create_for(post.user_id || -1)
               post.raw = post.raw.gsub(/(https?:)?#{Regexp.escape(url)}/, upload.url)
               post.save
               post.rebake!
@@ -188,14 +188,14 @@ end
 
 def migrate_to_s3
   # make sure s3 is enabled
-  if !SiteSetting.enable_s3_uploads
+  if !SiteSetting.Upload.enable_s3_uploads
     puts "You must enable s3 uploads before running that task"
     return
   end
 
   db = RailsMultisite::ConnectionManagement.current_db
 
-  puts "Migrating uploads to S3 (#{SiteSetting.s3_upload_bucket}) for '#{db}'..."
+  puts "Migrating uploads to S3 (#{SiteSetting.Upload.s3_upload_bucket}) for '#{db}'..."
 
   # will throw an exception if the bucket is missing
   s3 = FileStore::S3Store.new
@@ -203,8 +203,8 @@ def migrate_to_s3
 
   # Migrate all uploads
   Upload.where.not(sha1: nil)
-        .where("url NOT LIKE '#{s3.absolute_base_url}%'")
-        .find_each do |upload|
+    .where("url NOT LIKE '#{s3.absolute_base_url}%'")
+    .find_each do |upload|
     # remove invalid uploads
     if upload.url.blank?
       upload.destroy!
@@ -215,7 +215,7 @@ def migrate_to_s3
     # retrieve the path to the local file
     path = local.path_for(upload)
     # make sure the file exists locally
-    if !path or !File.exists?(path)
+    if !path || !File.exists?(path)
       putc "X"
       next
     end
@@ -438,7 +438,7 @@ def recover_from_tombstone
 
             if File.exists?(tombstone_path)
               File.open(tombstone_path) do |file|
-                new_upload = UploadCreator.new(file, File.basename(url), File.size(file)).create_for(Discourse::SYSTEM_USER_ID)
+                new_upload = UploadCreator.new(file, File.basename(url)).create_for(Discourse::SYSTEM_USER_ID)
 
                 if new_upload.persisted?
                   printf "Restored into #{new_upload.url}\n"

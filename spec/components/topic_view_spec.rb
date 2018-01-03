@@ -43,9 +43,9 @@ describe TopicView do
   end
 
   context "with a few sample posts" do
-    let!(:p1) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 1 )}
-    let!(:p2) { Fabricate(:post, topic: topic, user: coding_horror, percent_rank: 0.5 )}
-    let!(:p3) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 0 )}
+    let!(:p1) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 1) }
+    let!(:p2) { Fabricate(:post, topic: topic, user: coding_horror, percent_rank: 0.5) }
+    let!(:p3) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 0) }
 
     let(:moderator) { Fabricate(:moderator) }
     let(:admin) { Fabricate(:admin) }
@@ -64,12 +64,11 @@ describe TopicView do
       best = TopicView.new(topic.id, nil, best: 99)
       expect(best.posts.count).to eq(2)
       expect(best.filtered_post_ids.size).to eq(3)
-      expect(best.current_post_ids).to match_array([p2.id, p3.id])
+      expect(best.posts.pluck(:id)).to match_array([p2.id, p3.id])
 
       # should get no results for trust level too low
       best = TopicView.new(topic.id, nil, best: 99, min_trust_level: coding_horror.trust_level + 1)
       expect(best.posts.count).to eq(0)
-
 
       # should filter out the posts with a score that is too low
       best = TopicView.new(topic.id, nil, best: 99, min_score: 99)
@@ -134,7 +133,7 @@ describe TopicView do
       end
 
       it "generates a canonical correctly for paged results" do
-        expect(TopicView.new(1234, user, post_number: 10 * TopicView.chunk_size )
+        expect(TopicView.new(1234, user, post_number: 10 * TopicView.chunk_size)
           .canonical_path).to eql("/1234?page=10")
       end
     end
@@ -161,13 +160,18 @@ describe TopicView do
     end
 
     context '.post_counts_by_user' do
-      it 'returns the two posters with their counts' do
-        expect(topic_view.post_counts_by_user.to_a).to match_array([[first_poster.id, 2], [coding_horror.id, 1]])
+      it 'returns the two posters with their appropriate counts' do
+        Fabricate(:post, topic: topic, user: coding_horror, post_type: Post.types[:whisper])
+
+        expect(topic_view.post_counts_by_user.to_a).to match_array([[first_poster.id, 2], [coding_horror.id, 2]])
+
+        expect(TopicView.new(topic.id, first_poster).post_counts_by_user.to_a).to match_array([[first_poster.id, 2], [coding_horror.id, 1]])
       end
 
       it "doesn't return counts for posts with authors who have been deleted" do
         p2.user_id = nil
         p2.save!
+
         expect(topic_view.post_counts_by_user.to_a).to match_array([[first_poster.id, 2]])
       end
     end
@@ -211,7 +215,6 @@ describe TopicView do
       end
     end
 
-
     context '.read?' do
       it 'tracks correctly' do
         # anon is assumed to have read everything
@@ -223,7 +226,7 @@ describe TopicView do
         coding_horror.created_at = 2.days.ago
 
         # a real user that just read it should have it marked
-        PostTiming.process_timings(coding_horror, topic.id, 1, [[1,1000]])
+        PostTiming.process_timings(coding_horror, topic.id, 1, [[1, 1000]])
         expect(TopicView.new(topic.id, coding_horror).read?(1)).to eq(true)
         expect(TopicView.new(topic.id, coding_horror).topic_user).to be_present
       end
@@ -277,13 +280,13 @@ describe TopicView do
   context '.posts' do
 
     # Create the posts in a different order than the sort_order
-    let!(:p5) { Fabricate(:post, topic: topic, user: coding_horror)}
-    let!(:p2) { Fabricate(:post, topic: topic, user: coding_horror)}
-    let!(:p6) { Fabricate(:post, topic: topic, user: Fabricate(:user), deleted_at: Time.now)}
-    let!(:p4) { Fabricate(:post, topic: topic, user: coding_horror, deleted_at: Time.now)}
-    let!(:p1) { Fabricate(:post, topic: topic, user: first_poster)}
-    let!(:p7) { Fabricate(:post, topic: topic, user: coding_horror, deleted_at: Time.now)}
-    let!(:p3) { Fabricate(:post, topic: topic, user: first_poster)}
+    let!(:p5) { Fabricate(:post, topic: topic, user: coding_horror) }
+    let!(:p2) { Fabricate(:post, topic: topic, user: coding_horror) }
+    let!(:p6) { Fabricate(:post, topic: topic, user: Fabricate(:user), deleted_at: Time.now) }
+    let!(:p4) { Fabricate(:post, topic: topic, user: coding_horror, deleted_at: Time.now) }
+    let!(:p1) { Fabricate(:post, topic: topic, user: first_poster) }
+    let!(:p7) { Fabricate(:post, topic: topic, user: coding_horror, deleted_at: Time.now) }
+    let!(:p3) { Fabricate(:post, topic: topic, user: first_poster) }
 
     before do
       TopicView.stubs(:chunk_size).returns(3)
@@ -320,14 +323,13 @@ describe TopicView do
       topic.category_id = category.id
       topic.save!
 
-      expect{
+      expect {
         TopicView.new(topic.id, coding_horror).posts.count
       }.to raise_error(Discourse::InvalidAccess)
 
-      expect(TopicView.new(t2.id, coding_horror, post_ids: [p1.id,p2.id]).posts.count).to eq(0)
+      expect(TopicView.new(t2.id, coding_horror, post_ids: [p1.id, p2.id]).posts.count).to eq(0)
 
     end
-
 
     describe '#filter_posts_paged' do
       before { TopicView.stubs(:chunk_size).returns(2) }
@@ -342,7 +344,7 @@ describe TopicView do
 
     describe "filter_posts_near" do
 
-      def topic_view_near(post, show_deleted=false)
+      def topic_view_near(post, show_deleted = false)
         TopicView.new(topic.id, coding_horror, post_number: post.post_number, show_deleted: show_deleted)
       end
 
@@ -372,8 +374,8 @@ describe TopicView do
         near_view = topic_view_near(p3)
         expect(near_view.desired_post).to eq(p3)
         expect(near_view.posts).to eq([p2, p3, p5])
-        expect(near_view.gaps.before).to eq({p5.id => [p4.id]})
-        expect(near_view.gaps.after).to eq({p5.id => [p6.id, p7.id]})
+        expect(near_view.gaps.before).to eq(p5.id => [p4.id])
+        expect(near_view.gaps.after).to eq(p5.id => [p6.id, p7.id])
       end
 
       it "returns deleted posts to an admin with show_deleted" do
@@ -390,8 +392,8 @@ describe TopicView do
         expect(near_view.desired_post).to eq(p5)
         # note: both p4 and p6 get skipped
         expect(near_view.posts).to eq([p2, p3, p5])
-        expect(near_view.gaps.before).to eq({p5.id => [p4.id]})
-        expect(near_view.gaps.after).to eq({p5.id => [p6.id, p7.id]})
+        expect(near_view.gaps.before).to eq(p5.id => [p4.id])
+        expect(near_view.gaps.after).to eq(p5.id => [p6.id, p7.id])
       end
 
       it "returns deleted posts by nuked users to an admin with show_deleted" do
@@ -415,8 +417,8 @@ describe TopicView do
           coding_horror.admin = true
           near_view = topic_view_near(p5)
           expect(near_view.posts).to eq([p1, p2, p3, p5])
-          expect(near_view.gaps.before).to eq({p5.id => [p4.id]})
-          expect(near_view.gaps.after).to eq({p5.id => [p6.id, p7.id]})
+          expect(near_view.gaps.before).to eq(p5.id => [p4.id])
+          expect(near_view.gaps.after).to eq(p5.id => [p6.id, p7.id])
         end
 
         it 'returns deleted posts to admins' do
@@ -497,4 +499,3 @@ describe TopicView do
     end
   end
 end
-

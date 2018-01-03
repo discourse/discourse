@@ -8,16 +8,39 @@
 }
 
 .list-controls {
-  #navigation-bar {
-    .has-icon span:before {
-      margin-right: 4px;
-      font: 1.071em/0.9 "FontAwesome";
+  .select-kit {
+    align-self: center;
+
+    &.categories-admin-dropdown, &.category-notifications-button, &.tag-notifications-button {
+      float: right;
     }
   }
 }
 
-html.anon .topic-list a.title:visited:not(.badge-notification) {color: dark-light-diff($primary, $secondary, 45%, -30%);}
-.topic-list a.title.visited:not(.badge-notification) {color: dark-light-diff($primary, $secondary, 45%, -30%);}
+.topic-list-item.visited,
+.latest-topic-list-item.visited,
+.category-topic-link.visited {
+  a.title:not(.badge-notification) { color: $primary-medium; }
+}
+
+.topic-list-main-link {
+  font-size: 1.143em;
+  a.title {
+    padding: 15px 0;
+    word-break: break-word;
+    color: $primary;
+  }
+
+  .anon & {
+    a.title:visited:not(.badge-notification) {
+      color: $primary-medium;
+    }
+  }
+
+  a.title.visited:not(.badge-notification) {
+    color: $primary-medium;
+  }
+}
 
 .topic-list {
   width: 100%;
@@ -28,7 +51,7 @@ html.anon .topic-list a.title:visited:not(.badge-notification) {color: dark-ligh
       vertical-align: top;
       margin-top: 2px;
     }
-    border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
+    border-bottom: 1px solid $primary-low;
 
     &.last-visit {
       border-bottom: none;
@@ -43,7 +66,7 @@ html.anon .topic-list a.title:visited:not(.badge-notification) {color: dark-ligh
     border: none;
 
     td {
-      border-bottom: 1px solid scale-color($danger, $lightness: 60%);
+      border-bottom: 1px solid $danger-low;
       line-height: 0.1em;
       padding: 0px;
       text-align: center;
@@ -51,14 +74,14 @@ html.anon .topic-list a.title:visited:not(.badge-notification) {color: dark-ligh
 
     td span {
       background-color: $secondary;
-      color: scale-color($danger, $lightness: 60%);
+      color: $danger-low;
       padding: 0px 8px;
       font-size: 0.929em;
     }
   }
 
   > tbody > tr:first-of-type {
-    border-top: 3px solid dark-light-diff($primary, $secondary, 90%, -75%);
+    border-top: 3px solid $primary-low;
   }
 
   th,
@@ -69,23 +92,19 @@ html.anon .topic-list a.title:visited:not(.badge-notification) {color: dark-ligh
 
   }
   th {
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    color: dark-light-choose($primary-medium, $secondary-medium);
     font-weight: normal;
     font-size: 1em;
-    button i.fa {color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));}
+    button .d-icon {color: dark-light-choose($primary-medium, $secondary-medium);}
 
   }
   td {
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    color: dark-light-choose($primary-medium, $secondary-medium);
     font-size: 1em;
   }
 
   .main-link {
-    font-size: 1.143em;
-    a.title {
-      padding: 15px 0;
-      word-break: break-word;
-    }
+    @extend .topic-list-main-link;
   }
 
   .topic-featured-link {
@@ -95,7 +114,7 @@ html.anon .topic-list a.title:visited:not(.badge-notification) {color: dark-ligh
   .topic-excerpt {
     font-size: 0.929em;
     margin-top: 8px;
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    color: dark-light-choose($primary-medium, $secondary-medium);
     word-wrap: break-word;
     line-height: 1.4;
     padding-right: 20px;
@@ -140,7 +159,7 @@ html.anon .topic-list a.title:visited:not(.badge-notification) {color: dark-ligh
 
   .category .badge-notification {
     background-color:transparent;
-    color: scale-color($primary, $lightness: 50%);
+    color: $primary-medium;
   }
 
   .subcategories .badge {
@@ -155,7 +174,7 @@ html.anon .topic-list a.title:visited:not(.badge-notification) {color: dark-ligh
   }
   td.stats {
     .unit {
-      font-size: 11px;
+      font-size: .857em;
     }
   }
 
@@ -197,8 +216,8 @@ html.anon .topic-list a.title:visited:not(.badge-notification) {color: dark-ligh
     background-color: transparent;
     padding: 0;
     border: 0;
-    color: scale-color($danger, $lightness: 20%);
-    font-size: 0.929em;
+    color: $danger-medium;
+    font-size: 1em;
     cursor: default;
   }
 }
@@ -238,7 +257,7 @@ ol.category-breadcrumb {
   overflow-x: hidden;
   overflow-y: auto;
   position: absolute;
-  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  border: 1px solid $primary-low;
   background-color: $secondary;
   z-index: 100;
 
@@ -247,8 +266,8 @@ ol.category-breadcrumb {
     overflow:hidden;
     margin-bottom: 0;
   }
-  a.badge-category {
-    font-size: 0.929em;
+  a.badge-category, .dropdown-header {
+    font-size: 0.857em;
     font-weight: bold;
     float: none;
     text-transform: none;
@@ -257,7 +276,7 @@ ol.category-breadcrumb {
   }
 }
 
-.fa-thumb-tack.unpinned {
+.d-icon-thumb-tack.unpinned {
   @include fa-icon-rotate(180deg, 1);
   color: $primary;
   /* because it is rotated, right becomes left! */
@@ -277,12 +296,12 @@ ol.category-breadcrumb {
     float: left;
     margin: 5px 0 10px;
     .top-date-string {
-      font-size: 0.7em;
+      font-size: 0.857em;
     }
   }
 
   .top-date-string {
-    color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%));
+    color: dark-light-choose($primary-medium, $secondary-high);
     font-weight: normal;
     text-transform: uppercase;
   }
@@ -299,8 +318,8 @@ ol.category-breadcrumb {
 
     @include unselectable;
 
-    font-size: 1.2em;
-    border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    font-size: 1.143em;
+    border: 1px solid $primary-low;
     padding: 5px;
     background: $secondary;
     position: absolute;
@@ -323,10 +342,10 @@ ol.category-breadcrumb {
         }
         .top-date-string {
           font-weight: normal;
-          font-size: 0.8em;
+          font-size: 0.857em;
         }
         &:hover {
-          background-color: dark-light-diff($highlight, $secondary, 50%, -70%);
+          background-color: $highlight-medium;
         }
       }
     }
@@ -342,5 +361,15 @@ ol.category-breadcrumb {
 }
 
 div.education {
-  color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+  color: dark-light-choose($primary-medium, $secondary-medium);
+}
+
+.list-cell {
+  padding: 12px 5px;
+  color: dark-light-choose($primary-medium, $secondary-high);
+}
+
+.table-heading {
+  @extend .list-cell;
+  border-bottom: 2px solid $primary-low;
 }

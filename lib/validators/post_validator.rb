@@ -24,7 +24,7 @@ class Validators::PostValidator < ActiveModel::Validator
       post.errors.add(:topic_id, :blank, options) if post.topic_id.blank?
     end
 
-    if post.new_record? and post.user_id.nil?
+    if post.new_record? && post.user_id.nil?
       post.errors.add(:user_id, :blank, options)
     end
   end
@@ -33,6 +33,7 @@ class Validators::PostValidator < ActiveModel::Validator
     return if options[:skip_post_body] || post.topic&.pm_with_non_human_user?
     stripped_length(post)
     raw_quality(post)
+    watched_words(post)
   end
 
   def stripped_length(post)
@@ -53,6 +54,12 @@ class Validators::PostValidator < ActiveModel::Validator
   def raw_quality(post)
     sentinel = TextSentinel.body_sentinel(post.raw, private_message: private_message?(post))
     post.errors.add(:raw, I18n.t(:is_invalid)) unless sentinel.valid?
+  end
+
+  def watched_words(post)
+    if !post.acting_user&.staff? && !post.acting_user&.staged && WordWatcher.new(post.raw).should_block?
+      post.errors[:base] << I18n.t('contains_blocked_words')
+    end
   end
 
   # Ensure maximum amount of mentions in a post

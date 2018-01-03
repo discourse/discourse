@@ -1,10 +1,10 @@
-class AddLikedAndBookmarkedToTopicUser < ActiveRecord::Migration
+class AddLikedAndBookmarkedToTopicUser < ActiveRecord::Migration[4.2]
   def up
     add_column :topic_users, :liked, :boolean, default: false
     add_column :topic_users, :bookmarked, :boolean, default: false
 
     # likes and bookmarks PostActionType.types[:like] and :bookmark which should not be used in a migration
-    {liked: 2, bookmarked: 1}.each do |name, type|
+    { liked: 2, bookmarked: 1 }.each do |name, type|
       execute "UPDATE topic_users
                SET #{name} = true
                WHERE EXISTS (SELECT 1 FROM post_actions pa

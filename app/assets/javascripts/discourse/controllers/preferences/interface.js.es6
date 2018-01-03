@@ -1,7 +1,10 @@
 import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
+import { setDefaultHomepage } from "discourse/lib/utilities";
 import { default as computed, observes } from "ember-addons/ember-computed-decorators";
 import { currentThemeKey, listThemes, previewTheme, setLocalTheme } from 'discourse/lib/theme-selector';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
+
+const USER_HOMES = { 1: "latest", 2: "categories", 3: "unread", 4: "new", 5: "top" };
 
 export default Ember.Controller.extend(PreferencesTabController, {
 
@@ -13,7 +16,9 @@ export default Ember.Controller.extend(PreferencesTabController, {
       'dynamic_favicon',
       'enable_quoting',
       'disable_jump_reply',
-      'automatically_unpin_topics'
+      'automatically_unpin_topics',
+      'allow_private_messages',
+      'homepage_id',
     ];
 
     if (makeDefault) {
@@ -28,7 +33,7 @@ export default Ember.Controller.extend(PreferencesTabController, {
 
   @computed()
   availableLocales() {
-    return this.siteSettings.available_locales.split('|').map(s => ({ name: s, value: s }));
+    return JSON.parse(this.siteSettings.available_locales);
   },
 
   @computed()
@@ -51,6 +56,19 @@ export default Ember.Controller.extend(PreferencesTabController, {
     previewTheme(key);
   },
 
+  homeChanged() {
+    const siteHome = Discourse.SiteSettings.top_menu.split("|")[0].split(",")[0];
+    const userHome = USER_HOMES[this.get('model.user_option.homepage_id')];
+    setDefaultHomepage(userHome || siteHome);
+  },
+
+  @computed()
+  userSelectableHome() {
+    return _.map(USER_HOMES, (name, num) => {
+      return {name: I18n.t('filters.' + name + '.title'), value: Number(num)};
+    });
+  },
+
   actions: {
     save() {
       this.set('saved', false);
@@ -65,6 +83,8 @@ export default Ember.Controller.extend(PreferencesTabController, {
         if (!makeThemeDefault) {
           setLocalTheme(this.get('themeKey'), this.get('model.user_option.theme_key_seq'));
         }
+
+        this.homeChanged();
 
       }).catch(popupAjaxError);
     }

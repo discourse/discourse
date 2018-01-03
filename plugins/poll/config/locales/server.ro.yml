@@ -7,7 +7,6 @@
 
 ro:
   site_settings:
-    poll_enabled: "Permite utilizatorilor să creeze sondaje?"
     poll_maximum_options: "Numărul maxim admis de opțiuni într-un sondaj"
     poll_edit_window_mins: "Număr de minute după crearea postării pe parcursul cărora sondajele pot fi editate."
   poll:

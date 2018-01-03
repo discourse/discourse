@@ -23,6 +23,14 @@ export default Ember.Controller.extend(CanCheckEmails, {
     return (!indexStream || viewingSelf) && !forceExpand;
   },
 
+  hasGivenFlags: Ember.computed.gt('model.number_of_flags_given', 0),
+  hasFlaggedPosts: Ember.computed.gt('model.number_of_flagged_posts', 0),
+  hasDeletedPosts: Ember.computed.gt('model.number_of_deleted_posts', 0),
+  hasBeenSuspended: Ember.computed.gt('model.number_of_suspensions', 0),
+  hasReceivedWarnings: Ember.computed.gt('model.warnings_received_count', 0),
+
+  showStaffCounters: Ember.computed.or('hasGivenFlags', 'hasFlaggedPosts', 'hasDeletedPosts', 'hasBeenSuspended', 'hasReceivedWarnings'),
+
   @computed('model.isSuspended', 'currentUser.staff')
   isNotSuspendedOrIsStaff(isSuspended, isStaff) {
     return !isSuspended || isStaff;
@@ -87,7 +95,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
     adminDelete() {
       // I really want this deferred, don't want to bring in all this code till used
-      const AdminUser = require('admin/models/admin-user').default;
+      const AdminUser = requirejs('admin/models/admin-user').default;
       AdminUser.find(this.get('model.id')).then(user => user.destroy({deletePosts: true}));
     },
 

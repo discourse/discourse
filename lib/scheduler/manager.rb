@@ -34,16 +34,7 @@ module Scheduler
         end
         @thread = Thread.new do
           while !@stopped
-            if @manager.enable_stats
-              begin
-                RailsMultisite::ConnectionManagement.establish_connection(db: "default")
-                process_queue
-              ensure
-                ActiveRecord::Base.connection_handler.clear_active_connections!
-              end
-            else
-              process_queue
-            end
+            process_queue
           end
         end
       end
@@ -51,13 +42,13 @@ module Scheduler
       def keep_alive
         @manager.keep_alive
       rescue => ex
-        Discourse.handle_job_exception(ex, {message: "Scheduling manager keep-alive"})
+        Discourse.handle_job_exception(ex, message: "Scheduling manager keep-alive")
       end
 
       def reschedule_orphans
         @manager.reschedule_orphans!
       rescue => ex
-        Discourse.handle_job_exception(ex, {message: "Scheduling manager orphan rescheduler"})
+        Discourse.handle_job_exception(ex, message: "Scheduling manager orphan rescheduler")
       end
 
       def hostname
@@ -69,6 +60,7 @@ module Scheduler
       end
 
       def process_queue
+
         klass = @queue.deq
         return unless klass
 
@@ -83,15 +75,19 @@ module Scheduler
         begin
           info.prev_result = "RUNNING"
           @mutex.synchronize { info.write! }
+
           if @manager.enable_stats
-            stat = SchedulerStat.create!(
-              name: klass.to_s,
-              hostname: hostname,
-              pid: Process.pid,
-              started_at: Time.zone.now,
-              live_slots_start: GC.stat[:heap_live_slots]
-            )
+            RailsMultisite::ConnectionManagement.with_connection("default") do
+              stat = SchedulerStat.create!(
+                name: klass.to_s,
+                hostname: hostname,
+                pid: Process.pid,
+                started_at: Time.zone.now,
+                live_slots_start: GC.stat[:heap_live_slots]
+              )
+            end
           end
+
           klass.new.perform
         rescue => e
           if e.class != Jobs::HandledExceptionWrapper
@@ -106,35 +102,48 @@ module Scheduler
         info.prev_result = failed ? "FAILED" : "OK"
         info.current_owner = nil
         if stat
-          stat.update!(
-            duration_ms: duration,
-            live_slots_finish: GC.stat[:heap_live_slots],
-            success: !failed,
-            error: error
-          )
+          RailsMultisite::ConnectionManagement.with_connection("default") do
+            stat.update!(
+              duration_ms: duration,
+              live_slots_finish: GC.stat[:heap_live_slots],
+              success: !failed,
+              error: error
+            )
+            DiscourseEvent.trigger(:scheduled_job_ran, stat)
+          end
         end
         attempts(3) do
           @mutex.synchronize { info.write! }
         end
       rescue => ex
-        Discourse.handle_job_exception(ex, {message: "Processing scheduled job queue"})
+        Discourse.handle_job_exception(ex, message: "Processing scheduled job queue")
       ensure
         @running = false
+        ActiveRecord::Base.connection_handler.clear_active_connections!
       end
 
       def stop!
+        return if @stopped
+
         @mutex.synchronize do
           @stopped = true
 
           @keep_alive_thread.kill
           @reschedule_orphans_thread.kill
 
+          @keep_alive_thread.join
+          @reschedule_orphans_thread.join
+
           enq(nil)
 
-          Thread.new do
-            sleep 5
+          kill_thread = Thread.new do
+            sleep 0.5
             @thread.kill
           end
+
+          @thread.join
+          kill_thread.kill
+          kill_thread.join
         end
       end
 
@@ -165,11 +174,11 @@ module Scheduler
 
     end
 
-    def self.without_runner(redis=nil)
+    def self.without_runner(redis = nil)
       self.new(redis, skip_runner: true)
     end
 
-    def initialize(redis = nil, options=nil)
+    def initialize(redis = nil, options = nil)
       @redis = $redis || redis
       @random_ratio = 0.1
       unless options && options[:skip_runner]
@@ -226,7 +235,7 @@ module Scheduler
       end
     end
 
-    def reschedule_orphans_on!(hostname=nil)
+    def reschedule_orphans_on!(hostname = nil)
       redis.zrange(Manager.queue_key(hostname), 0, -1).each do |key|
         klass = get_klass(key)
         next unless klass
@@ -254,7 +263,7 @@ module Scheduler
       end
     end
 
-    def schedule_next_job(hostname=nil)
+    def schedule_next_job(hostname = nil)
       (key, due), _ = redis.zrange Manager.queue_key(hostname), 0, 0, withscores: true
       return unless key
 
@@ -300,7 +309,6 @@ module Scheduler
       end
     end
 
-
     def self.discover_schedules
       # hack for developemnt reloader is crazytown
       # multiple classes with same name can be in
@@ -333,7 +341,7 @@ module Scheduler
       "_scheduler_lock_"
     end
 
-    def self.queue_key(hostname=nil)
+    def self.queue_key(hostname = nil)
       if hostname
         "_scheduler_queue_#{hostname}_"
       else
@@ -341,7 +349,7 @@ module Scheduler
       end
     end
 
-    def self.schedule_key(klass,hostname=nil)
+    def self.schedule_key(klass, hostname = nil)
       if hostname
         "_scheduler_#{klass}_#{hostname}"
       else

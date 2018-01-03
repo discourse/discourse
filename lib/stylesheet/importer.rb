@@ -41,9 +41,7 @@ module Stylesheet
       colors.each do |n, hex|
         contents << "$#{n}: ##{hex} !default;\n"
       end
-      theme&.theme_fields&.each do |field|
-        next unless ThemeField.theme_var_type_ids.include?(field.type_id)
-
+      theme&.all_theme_variables&.each do |field|
         if field.type_id == ThemeField.types[:theme_upload_var]
           if upload = field.upload
             url = upload_cdn_path(upload.url)
@@ -61,7 +59,7 @@ module Stylesheet
     register_import "category_backgrounds" do
       contents = ""
       Category.where('uploaded_background_id IS NOT NULL').each do |c|
-        contents << category_css(c) if c.uploaded_background
+        contents << category_css(c) if c.uploaded_background&.url.present?
       end
 
       Import.new("categoy_background.scss", source: contents)

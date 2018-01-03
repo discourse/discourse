@@ -1,4 +1,4 @@
-class CreateGroupHistories < ActiveRecord::Migration
+class CreateGroupHistories < ActiveRecord::Migration[4.2]
   def change
     create_table :group_histories do |t|
       t.integer :group_id, null: false

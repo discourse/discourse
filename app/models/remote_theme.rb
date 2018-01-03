@@ -7,7 +7,7 @@ class RemoteTheme < ActiveRecord::Base
 
   has_one :theme
 
-  def self.import_theme(url, user=Discourse.system_user)
+  def self.import_theme(url, user = Discourse.system_user)
     importer = GitImporter.new(url)
     importer.import!
 
@@ -37,7 +37,7 @@ class RemoteTheme < ActiveRecord::Base
     self.remote_version, self.commits_behind = importer.commits_since(remote_version)
   end
 
-  def update_from_remote(importer=nil)
+  def update_from_remote(importer = nil)
     return unless remote_url
     cleanup = false
 
@@ -70,9 +70,9 @@ class RemoteTheme < ActiveRecord::Base
       end
 
       theme.set_field(target: info["target"] || :common,
-                        name: name,
-                        value: info["value"],
-                        type: info["type"] || :theme_var)
+                      name: name,
+                      value: info["value"],
+                      type: info["type"] || :theme_var)
     end
 
     Theme.targets.keys.each do |target|

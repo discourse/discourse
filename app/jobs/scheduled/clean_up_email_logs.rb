@@ -9,8 +9,8 @@ module Jobs
       threshold = SiteSetting.delete_email_logs_after_days.days.ago
 
       EmailLog.where(reply_key: nil)
-              .where("created_at < ?", threshold)
-              .delete_all
+        .where("created_at < ?", threshold)
+        .delete_all
     end
 
   end

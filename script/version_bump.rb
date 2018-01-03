@@ -33,7 +33,7 @@ if ARGV.length < 1
 end
 
 new_version = ARGV[0].split('.')
-if new_version.length < 2 and !ARGV.include?('push')
+if new_version.length < (2) && !ARGV.include?('push')
   puts "First argument must be a version number with at least 2 parts. Examples: 0.9.8, 0.10, 0.9.7.3"
   exit 1
 end
@@ -67,7 +67,7 @@ require File.expand_path('../../lib/version',  __FILE__)
 version = Discourse::VERSION::STRING
 puts "New version is: #{version}"
 
-unless ARGV.include?('no-commit') or !update_version_file
+unless ARGV.include?('no-commit') || !update_version_file
   puts "Committing..."
 
   `git add lib/version.rb`
@@ -87,4 +87,4 @@ if ARGV.include?('push')
   `git push origin latest-release`
 end
 
-puts "Done",''
+puts "Done", ''

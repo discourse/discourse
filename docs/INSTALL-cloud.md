@@ -6,13 +6,13 @@
 
 [Sign up for DigitalOcean][do], update billing info, then create your new cloud server.
 
-- Enter your domain `discourse.example.com` as the name.
+- The default of **Ubuntu 16.04 LTS x64** works fine. At minimum, a 64-bit Linux OS with a kernel version of 3.10+ is required.
 
 - The default of **1 GB** RAM works fine for small Discourse communities. We recommend 2 GB RAM for larger communities.
 
-- The default of **Ubuntu 16.04 LTS x64** works fine. At minimum, a 64-bit Linux OS with a kernel version of 3.10+ is required.
-
 - The default of **New York** is a good choice for most US and European audiences. Or select a region that is geographically closer to your audience.
+
+- Enter your domain `discourse.example.com` as the name.
 
 Create your new Droplet. You will receive an email with the root password. (However, if you know [how to use SSH keys](https://www.google.com/search?q=digitalocean+ssh+keys), you may not need a password to log in.)
 
@@ -68,7 +68,7 @@ Answer the following questions when prompted:
     SMTP port [587]:
     SMTP password? []: 
 
-This will generate an `app.yml` configuration file on your behalf, and then kicks off bootstrap. Bootstrapping takes between **2-8 minutes** to set up your Discourse. If you need to change or fix these settings after bootstrapping, edit your `/containers/app.yml` file and `./launcher rebuild app`, otherwise your changes will not take effect.
+This will generate an `app.yml` configuration file on your behalf, and then kicks off bootstrap. Bootstrapping takes between **2-8 minutes** to set up your Discourse. If you need to change these settings after bootstrapping, you can run `./discourse-setup` again (it will read your old values from the file) or edit `/containers/app.yml` with `nano` and then `./launcher rebuild app`, otherwise your changes will not take effect.
 
 ### Start Discourse
 

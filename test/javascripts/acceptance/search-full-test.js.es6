@@ -1,7 +1,8 @@
 import { acceptance, waitFor } from "helpers/qunit-helpers";
 acceptance("Search - Full Page", {
   settings: {tagging_enabled: true},
-  setup() {
+  loggedIn: true,
+  beforeEach() {
     const response = (object) => {
       return [
         200,
@@ -39,12 +40,12 @@ acceptance("Search - Full Page", {
   }
 });
 
-test("perform various searches", assert => {
+QUnit.test("perform various searches", assert => {
   visit("/search");
 
   andThen(() => {
-    ok($('body.search-page').length, "has body class");
-    ok(exists('.search-container'), "has container class");
+    assert.ok($('body.search-page').length, "has body class");
+    assert.ok(exists('.search-container'), "has container class");
     assert.ok(find('input.search').length > 0);
     assert.ok(find('.fps-topic').length === 0);
   });
@@ -52,7 +53,10 @@ test("perform various searches", assert => {
   fillIn('.search input.full-page-search', 'none');
   click('.search .btn-primary');
 
-  andThen(() => assert.ok(find('.fps-topic').length === 0), 'has no results');
+  andThen(() => {
+    assert.ok(find('.fps-topic').length === 0, 'has no results');
+    assert.ok(find('.no-results-suggestion .google-search-form'));
+  });
 
   fillIn('.search input.full-page-search', 'posts');
   click('.search .btn-primary');
@@ -60,7 +64,7 @@ test("perform various searches", assert => {
   andThen(() => assert.ok(find('.fps-topic').length === 1, 'has one post'));
 });
 
-test("open advanced search", assert => {
+QUnit.test("open advanced search", assert => {
   visit("/search");
 
   andThen(() => assert.ok(exists('.search .search-advanced'), 'shows advanced search panel'));
@@ -95,7 +99,7 @@ test("open advanced search", assert => {
 //   });
 // });
 
-test("escape search term", (assert) => {
+QUnit.test("escape search term", (assert) => {
   visit("/search");
   fillIn('.search input.full-page-search', '@<script>prompt(1337)</script>gmail.com');
   click('.search-advanced-btn');
@@ -105,7 +109,7 @@ test("escape search term", (assert) => {
   });
 });
 
-test("update username through advanced search ui", assert => {
+QUnit.test("update username through advanced search ui", assert => {
   visit("/search");
   fillIn('.search input.full-page-search', 'none');
   click('.search-advanced-btn');
@@ -114,7 +118,7 @@ test("update username through advanced search ui", assert => {
   keyEvent('.search-advanced-options .user-selector', 'keydown', 8);
 
   andThen(() => {
-    waitFor(() => {
+    waitFor(assert, () => {
       assert.ok(visible('.search-advanced-options .autocomplete'), '"autocomplete" popup is visible');
       assert.ok(exists('.search-advanced-options .autocomplete ul li a span.username:contains("admin")'), '"autocomplete" popup has an entry for "admin"');
 
@@ -128,14 +132,14 @@ test("update username through advanced search ui", assert => {
   });
 });
 
-test("update category through advanced search ui", assert => {
+QUnit.test("update category through advanced search ui", assert => {
+  const categoryChooser = selectKit('.search-advanced-options .category-chooser');
+
   visit("/search");
+
   fillIn('.search input.full-page-search', 'none');
   click('.search-advanced-btn');
-  fillIn('.search-advanced-options .category-selector', 'faq');
-  click('.search-advanced-options .category-selector');
-  keyEvent('.search-advanced-options .category-selector', 'keydown', 8);
-  keyEvent('.search-advanced-options .category-selector', 'keydown', 9);
+  categoryChooser.expand().fillInFilter('faq').selectRowByValue(4);
 
   andThen(() => {
     assert.ok(exists('.search-advanced-options .badge-category:contains("faq")'), 'has "faq" populated');
@@ -209,7 +213,7 @@ test("update category through advanced search ui", assert => {
 //   });
 // });
 
-test("update in:likes filter through advanced search ui", assert => {
+QUnit.test("update in:likes filter through advanced search ui", assert => {
   visit("/search");
   fillIn('.search input.full-page-search', 'none');
   click('.search-advanced-btn');
@@ -221,7 +225,7 @@ test("update in:likes filter through advanced search ui", assert => {
   });
 });
 
-test("update in:private filter through advanced search ui", assert => {
+QUnit.test("update in:private filter through advanced search ui", assert => {
   visit("/search");
   fillIn('.search input.full-page-search', 'none');
   click('.search-advanced-btn');
@@ -233,7 +237,7 @@ test("update in:private filter through advanced search ui", assert => {
   });
 });
 
-test("update in:seen filter through advanced search ui", assert => {
+QUnit.test("update in:seen filter through advanced search ui", assert => {
   visit("/search");
   fillIn('.search input.full-page-search', 'none');
   click('.search-advanced-btn');
@@ -248,48 +252,53 @@ test("update in:seen filter through advanced search ui", assert => {
   });
 });
 
-test("update in filter through advanced search ui", assert => {
+QUnit.test("update in filter through advanced search ui", assert => {
+  const inSelector = selectKit('.search-advanced-options .select-kit#in');
+
   visit("/search");
+
   fillIn('.search input.full-page-search', 'none');
   click('.search-advanced-btn');
-  selectDropdown('.search-advanced-options #s2id_in', 'bookmarks');
-  fillIn('.search-advanced-options #in', 'bookmarks');
+  inSelector.expand().selectRowByValue('bookmarks');
 
   andThen(() => {
-    assert.ok(exists('.search-advanced-options #s2id_in .select2-choice .select2-chosen:contains("I\'ve bookmarked")'), 'has "I\'ve bookmarked" populated');
+    assert.ok(inSelector.rowByName("I bookmarked").exists(), 'has "I bookmarked" populated');
     assert.equal(find('.search input.full-page-search').val(), "none in:bookmarks", 'has updated search term to "none in:bookmarks"');
   });
 });
 
-test("update status through advanced search ui", assert => {
+QUnit.test("update status through advanced search ui", assert => {
+  const statusSelector = selectKit('.search-advanced-options .select-kit#status');
+
   visit("/search");
+
   fillIn('.search input.full-page-search', 'none');
   click('.search-advanced-btn');
-  selectDropdown('.search-advanced-options #s2id_status', 'closed');
-  fillIn('.search-advanced-options #status', 'closed');
+  statusSelector.expand().selectRowByValue('closed');
 
   andThen(() => {
-    assert.ok(exists('.search-advanced-options #s2id_status .select2-choice .select2-chosen:contains("are closed")'), 'has "are closed" populated');
+    assert.ok(statusSelector.rowByName("are closed").exists(), 'has "are closed" populated');
     assert.equal(find('.search input.full-page-search').val(), "none status:closed", 'has updated search term to "none status:closed"');
   });
 });
 
-test("update post time through advanced search ui", assert => {
+QUnit.test("update post time through advanced search ui", assert => {
+  const postTimeSelector = selectKit('.search-advanced-options .select-kit#postTime');
+
   visit("/search");
+
   fillIn('.search input.full-page-search', 'none');
   click('.search-advanced-btn');
-  fillIn('#search-post-date', '2016-10-05');
-  selectDropdown('.search-advanced-options #s2id_postTime', 'after');
-  fillIn('.search-advanced-options #postTime', 'after');
+  fillIn('#search-post-date .date-picker', '2016-10-05');
+  postTimeSelector.expand().selectRowByValue('after');
 
   andThen(() => {
-    assert.ok(exists('.search-advanced-options #s2id_postTime .select2-choice .select2-chosen:contains("after")'), 'has "after" populated');
-    assert.equal(find('.search-advanced-options #search-post-date').val(), "2016-10-05", 'has "2016-10-05" populated');
+    assert.ok(postTimeSelector.rowByName("after").exists(), 'has "after" populated');
     assert.equal(find('.search input.full-page-search').val(), "none after:2016-10-05", 'has updated search term to "none after:2016-10-05"');
   });
 });
 
-test("update min post count through advanced search ui", assert => {
+QUnit.test("update min post count through advanced search ui", assert => {
   visit("/search");
   fillIn('.search input.full-page-search', 'none');
   click('.search-advanced-btn');
@@ -301,7 +310,7 @@ test("update min post count through advanced search ui", assert => {
   });
 });
 
-test("validate advanced search when initially empty", assert => {
+QUnit.test("validate advanced search when initially empty", assert => {
   visit("/search?expanded=true");
   click('.search-advanced-options .in-likes');
 

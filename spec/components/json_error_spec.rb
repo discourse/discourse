@@ -37,7 +37,7 @@ describe JsonError do
 
   describe "with a string" do
     it "returns the string in the error format" do
-      expect(creator.create_errors_json("test error")).to eq({errors: ["test error"]})
+      expect(creator.create_errors_json("test error")).to eq(errors: ["test error"])
     end
   end
 
@@ -52,4 +52,3 @@ describe JsonError do
   end
 
 end
-

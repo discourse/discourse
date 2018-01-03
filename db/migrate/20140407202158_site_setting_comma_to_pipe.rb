@@ -1,4 +1,4 @@
-class SiteSettingCommaToPipe < ActiveRecord::Migration
+class SiteSettingCommaToPipe < ActiveRecord::Migration[4.2]
   def up
     execute <<SQL
       UPDATE site_settings

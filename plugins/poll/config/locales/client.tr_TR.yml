@@ -49,6 +49,7 @@ tr_TR:
         insert: Anket Ekle
         help:
           options_count: En az 2 seçenek ekleyin
+          invalid_values: Minimum değer maksimum değerden küçük olmalıdır.
         poll_type:
           label: Tür
           regular: Tekli seçim

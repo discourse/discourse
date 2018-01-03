@@ -5,7 +5,7 @@ moduleForWidget('topic-participant');
 widgetTest('one post', {
   template: '{{mount-widget widget="topic-participant" args=args}}',
 
-  setup() {
+  beforeEach() {
     this.set('args', {
       username: 'test',
       avatar_template: '/images/avatar.png',
@@ -23,7 +23,7 @@ widgetTest('one post', {
 widgetTest('many posts, a primary group with flair', {
   template: '{{mount-widget widget="topic-participant" args=args}}',
 
-  setup() {
+  beforeEach() {
     this.set('args', {
       username: 'test',
       avatar_template: '/images/avatar.png',

@@ -1,10 +1,11 @@
+require_dependency 'archetype'
+
 class PostTiming < ActiveRecord::Base
   belongs_to :topic
   belongs_to :user
 
   validates_presence_of :post_number
   validates_presence_of :msecs
-
 
   def self.pretend_read(topic_id, actual_read_post_number, pretend_read_post_number)
     # This is done in SQL cause the logic is quite tricky and we want to do this in one db hit
@@ -39,9 +40,9 @@ class PostTiming < ActiveRecord::Base
                                   AND post_number = :post_number)",
              args)
     rescue PG::UniqueViolation
-       # concurrency is hard, we are not running serialized so this can possibly
-       # still happen, if it happens we just don't care, its an invalid record anyway
-       return
+      # concurrency is hard, we are not running serialized so this can possibly
+      # still happen, if it happens we just don't care, its an invalid record anyway
+      return
     end
 
     Post.where(['topic_id = :topic_id and post_number = :post_number', args]).update_all 'reads = reads + 1'
@@ -60,23 +61,28 @@ class PostTiming < ActiveRecord::Base
     record_new_timing(args) if rows == 0
   end
 
-
   def self.destroy_for(user_id, topic_ids)
     PostTiming.transaction do
-      PostTiming.delete_all(['user_id = ? and topic_id in (?)', user_id, topic_ids])
-      TopicUser.delete_all(['user_id = ? and topic_id in (?)', user_id, topic_ids])
+      PostTiming
+        .where('user_id = ? and topic_id in (?)', user_id, topic_ids)
+        .delete_all
+
+      TopicUser
+        .where('user_id = ? and topic_id in (?)', user_id, topic_ids)
+        .delete_all
     end
   end
 
-  MAX_READ_TIME_PER_BATCH = 60*1000.0
+  MAX_READ_TIME_PER_BATCH = 60 * 1000.0
 
-  def self.process_timings(current_user, topic_id, topic_time, timings, opts={})
+  def self.process_timings(current_user, topic_id, topic_time, timings, opts = {})
     current_user.user_stat.update_time_read!
 
     max_time_per_post = ((Time.now - current_user.created_at) * 1000.0)
     max_time_per_post = MAX_READ_TIME_PER_BATCH if max_time_per_post > MAX_READ_TIME_PER_BATCH
 
     highest_seen = 1
+    new_posts_read = 0
 
     join_table = []
 
@@ -89,9 +95,8 @@ class PostTiming < ActiveRecord::Base
 
     timings.each_with_index do |(post_number, time), index|
 
-        join_table << "SELECT #{topic_id.to_i} topic_id, #{post_number.to_i} post_number,
-                       #{current_user.id.to_i} user_id, #{time.to_i} msecs, #{index} idx"
-
+      join_table << "SELECT #{topic_id.to_i} topic_id, #{post_number.to_i} post_number,
+                     #{current_user.id.to_i} user_id, #{time.to_i} msecs, #{index} idx"
 
         highest_seen = post_number.to_i > highest_seen ?
                        post_number.to_i : highest_seen
@@ -112,25 +117,26 @@ SQL
       result = exec_sql(sql)
       result.type_map = SqlBuilder.pg_type_map
       existing = Set.new(result.column_values(0))
+      new_posts_read = timings.size - existing.size if Topic.where(id: topic_id, archetype: Archetype.default).exists?
 
-      timings.each_with_index do |(post_number, time),index|
+      timings.each_with_index do |(post_number, time), index|
         unless existing.include?(index)
           PostTiming.record_new_timing(topic_id: topic_id,
-                                 post_number: post_number,
-                                 user_id: current_user.id,
-                                 msecs: time)
+                                       post_number: post_number,
+                                       user_id: current_user.id,
+                                       msecs: time)
         end
       end
     end
 
     total_changed = 0
     if timings.length > 0
-      total_changed = Notification.mark_posts_read(current_user, topic_id, timings.map{|t| t[0]})
+      total_changed = Notification.mark_posts_read(current_user, topic_id, timings.map { |t| t[0] })
     end
 
     topic_time = max_time_per_post if topic_time > max_time_per_post
 
-    TopicUser.update_last_read(current_user, topic_id, highest_seen, topic_time, opts)
+    TopicUser.update_last_read(current_user, topic_id, highest_seen, new_posts_read, topic_time, opts)
 
     if total_changed > 0
       current_user.reload

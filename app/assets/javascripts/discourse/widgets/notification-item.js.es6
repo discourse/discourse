@@ -4,9 +4,10 @@ import { createWidget } from 'discourse/widgets/widget';
 import DiscourseURL from 'discourse/lib/url';
 import { h } from 'virtual-dom';
 import { emojiUnescape } from 'discourse/lib/text';
-import { postUrl, escapeExpression } from 'discourse/lib/utilities';
+import { postUrl, escapeExpression, formatUsername } from 'discourse/lib/utilities';
 import { setTransientHeader } from 'discourse/lib/ajax';
 import { userPath } from 'discourse/lib/url';
+import { iconNode } from 'discourse-common/lib/icon-library';
 
 const LIKED_TYPE = 5;
 const INVITED_TYPE = 8;
@@ -78,11 +79,11 @@ createWidget('notification-item', {
       return I18n.t(scope, { count, group_name });
     }
 
-    const username = data.display_username;
+    const username = formatUsername(data.display_username);
     const description = this.description();
     if (notificationType === LIKED_TYPE && data.count > 1) {
       const count = data.count - 2;
-      const username2 = data.username2;
+      const username2 = formatUsername(data.username2);
       if (count===0) {
         return I18n.t('notifications.liked_2', {description, username, username2});
       } else {
@@ -98,10 +99,21 @@ createWidget('notification-item', {
     const lookup = this.site.get('notificationLookup');
     const notName = lookup[notificationType];
 
-    const contents = new RawHtml({ html: `<div>${emojiUnescape(this.text(notificationType, notName))}</div>` });
+    let { data } = attrs;
+    let infoKey = notName === 'custom' ? data.message : notName;
+    let title = I18n.t(`notifications.alt.${infoKey}`);
+    let icon = iconNode(`notification.${infoKey}`, { title });
+
+    let text = emojiUnescape(this.text(notificationType, notName));
+
+    // We can use a `<p>` tag here once other languages have fixed their HTML
+    // translations.
+    let html = new RawHtml({ html: `<div>${text}</div>` });
+
+    let contents = [ icon, html ];
+
     const href = this.url();
-    const alt = I18n.t(`notifications.alt.${notName}`);
-    return href ? h('a', { attributes: { href, alt, 'data-auto-route': true } }, contents) : contents;
+    return href ? h('a', { attributes: { href, title, 'data-auto-route': true } }, contents) : contents;
   },
 
   click(e) {

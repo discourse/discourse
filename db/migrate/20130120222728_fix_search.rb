@@ -1,4 +1,4 @@
-class FixSearch < ActiveRecord::Migration
+class FixSearch < ActiveRecord::Migration[4.2]
   def up
     execute 'drop index idx_search_thread'
     execute 'drop index idx_search_user'

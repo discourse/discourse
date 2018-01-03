@@ -19,13 +19,12 @@ class ActiveRecord::Base
     ActiveRecord::Base.exec_sql(*args)
   end
 
-
   # Executes the given block +retries+ times (or forever, if explicitly given nil),
   # catching and retrying SQL Deadlock errors.
   #
   # Thanks to: http://stackoverflow.com/a/7427186/165668
   #
-  def self.retry_lock_error(retries=5, &block)
+  def self.retry_lock_error(retries = 5, &block)
     begin
       yield
     rescue ActiveRecord::StatementInvalid => e

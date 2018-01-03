@@ -49,7 +49,6 @@ export default (filterArg, params) => {
         category,
         filterMode: filterMode,
         noSubcategories: params && params.no_subcategories,
-        canEditCategory: category.get('can_edit')
       });
     },
 

@@ -14,12 +14,12 @@ PLUGIN_NAME ||= "discourse_poll".freeze
 DATA_PREFIX ||= "data-poll-".freeze
 
 after_initialize do
-
   module ::DiscoursePoll
     DEFAULT_POLL_NAME ||= "poll".freeze
     POLLS_CUSTOM_FIELD ||= "polls".freeze
     VOTES_CUSTOM_FIELD ||= "polls-votes".freeze
 
+    autoload :PostValidator, "#{Rails.root}/plugins/poll/lib/post_validator"
     autoload :PollsValidator, "#{Rails.root}/plugins/poll/lib/polls_validator"
     autoload :PollsUpdater, "#{Rails.root}/plugins/poll/lib/polls_updater"
 
@@ -136,7 +136,7 @@ after_initialize do
 
           post.save_custom_fields(true)
 
-          MessageBus.publish("/polls/#{post.topic_id}", {post_id: post.id, polls: polls })
+          MessageBus.publish("/polls/#{post.topic_id}", post_id: post.id, polls: polls)
 
           polls[poll_name]
         end
@@ -157,13 +157,13 @@ after_initialize do
           # extract attributes
           p.attributes.values.each do |attribute|
             if attribute.name.start_with?(DATA_PREFIX)
-              poll[attribute.name[DATA_PREFIX.length..-1]] = attribute.value
+              poll[attribute.name[DATA_PREFIX.length..-1]] = CGI.escapeHTML(attribute.value || "")
             end
           end
 
           # extract options
           p.css("li[#{DATA_PREFIX}option-id]").each do |o|
-            option_id = o.attributes[DATA_PREFIX + "option-id"].value
+            option_id = o.attributes[DATA_PREFIX + "option-id"].value || ""
             poll["options"] << { "id" => option_id, "html" => o.inner_html, "votes" => 0 }
           end
 
@@ -181,7 +181,7 @@ after_initialize do
   class DiscoursePoll::PollsController < ::ApplicationController
     requires_plugin PLUGIN_NAME
 
-    before_filter :ensure_logged_in, except: [:voters]
+    before_action :ensure_logged_in, except: [:voters]
 
     def vote
       post_id   = params.require(:post_id)
@@ -220,17 +220,26 @@ after_initialize do
       poll = post.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD][poll_name]
       raise Discourse::InvalidParameters.new("poll_name is invalid") if !poll
 
+      voter_limit = (params[:voter_limit] || 25).to_i
+      voter_limit = 0 if voter_limit < 0
+      voter_limit = 50 if voter_limit > 50
+
       user_ids = []
       options = poll["options"]
 
       if poll["type"] != "number"
+
+        per_option_voters = {}
+
         options.each do |option|
           if (params[:option_id])
             next unless option["id"] == params[:option_id].to_s
           end
 
           next unless option["voter_ids"]
-          user_ids << option["voter_ids"].slice((params[:offset].to_i || 0)  * 25, 25)
+          voters = option["voter_ids"].slice((params[:offset].to_i || 0) * voter_limit, voter_limit)
+          per_option_voters[option["id"]] = Set.new(voters)
+          user_ids << voters
         end
 
         user_ids.flatten!
@@ -248,6 +257,10 @@ after_initialize do
               next unless option_id == params[:option_id].to_s
             end
 
+            voters = per_option_voters[option_id]
+            # we may have a user from a different vote
+            next unless voters.include?(user.id)
+
             result[option_id] ||= []
             result[option_id] << user_hash
           end
@@ -256,11 +269,11 @@ after_initialize do
         user_ids = options.map { |option| option["voter_ids"] }.sort!
         user_ids.flatten!
         user_ids.uniq!
-        user_ids = user_ids.slice((params[:offset].to_i || 0) * 25, 25)
+        user_ids = user_ids.slice((params[:offset].to_i || 0) * voter_limit, voter_limit)
 
         result = []
 
-        users = User.where(id: user_ids).map do |user|
+        User.where(id: user_ids).map do |user|
           result << UserNameSerializer.new(user).serializable_hash
         end
       end
@@ -295,14 +308,17 @@ after_initialize do
     end
   end
 
-  validate(:post, :validate_polls) do |force=nil|
-    return if !SiteSetting.poll_enabled? && (self.user && !self.user.staff?)
-
+  validate(:post, :validate_polls) do |force = nil|
     # only care when raw has changed!
     return unless self.raw_changed? || force
 
     validator = DiscoursePoll::PollsValidator.new(self)
     return unless (polls = validator.validate_polls)
+
+    if !polls.empty?
+      validator = DiscoursePoll::PostValidator.new(self)
+      return unless validator.validate_post
+    end
 
     # are we updating a post?
     if self.id.present?
@@ -339,10 +355,10 @@ after_initialize do
     end
   end
 
-  Post.register_custom_field_type(DiscoursePoll::POLLS_CUSTOM_FIELD, :json)
-  Post.register_custom_field_type(DiscoursePoll::VOTES_CUSTOM_FIELD, :json)
+  register_post_custom_field_type(DiscoursePoll::POLLS_CUSTOM_FIELD, :json)
+  register_post_custom_field_type(DiscoursePoll::VOTES_CUSTOM_FIELD, :json)
 
-  TopicView.add_post_custom_fields_whitelister do |user|
+  topic_view_post_custom_fields_whitelister do |user|
     user ? [DiscoursePoll::POLLS_CUSTOM_FIELD, DiscoursePoll::VOTES_CUSTOM_FIELD] : [DiscoursePoll::POLLS_CUSTOM_FIELD]
   end
 
@@ -360,9 +376,8 @@ after_initialize do
   # tells the front-end we have a poll for that post
   on(:post_created) do |post|
     next if post.is_first_post? || post.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD].blank?
-    MessageBus.publish("/polls/#{post.topic_id}", {
-                         post_id: post.id,
-                         polls: post.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD]})
+    MessageBus.publish("/polls/#{post.topic_id}",                          post_id: post.id,
+                                                                           polls: post.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD])
   end
 
   add_to_serializer(:post, :polls, false) do

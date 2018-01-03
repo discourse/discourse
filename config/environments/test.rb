@@ -8,7 +8,7 @@ Discourse::Application.configure do
   config.cache_classes = true
 
   # Configure static asset server for tests with Cache-Control for performance
-  config.serve_static_files = true
+  config.public_file_server.enabled = true
 
   # Show full error reports and disable caching
   config.consider_all_requests_local       = true
@@ -18,7 +18,7 @@ Discourse::Application.configure do
   config.action_dispatch.show_exceptions = false
 
   # Disable request forgery protection in test environment
-  config.action_controller.allow_forgery_protection    = false
+  config.action_controller.allow_forgery_protection = false
 
   # Tell Action Mailer not to deliver emails to the real world.
   # The :test delivery method accumulates sent emails in the
@@ -41,4 +41,27 @@ Discourse::Application.configure do
   config.assets.digest = false
 
   config.eager_load = false
+
+  unless ENV['RAILS_ENABLE_TEST_LOG']
+    config.logger = Logger.new(nil)
+    config.log_level = :fatal
+  end
+
+  config.after_initialize do
+    SiteSetting.defaults.tap do |s|
+      s.set_regardless_of_locale(:s3_upload_bucket, 'bucket')
+      s.set_regardless_of_locale(:min_post_length, 5)
+      s.set_regardless_of_locale(:min_first_post_length, 5)
+      s.set_regardless_of_locale(:min_private_message_post_length, 10)
+      s.set_regardless_of_locale(:crawl_images, false)
+      s.set_regardless_of_locale(:download_remote_images_to_local, false)
+      s.set_regardless_of_locale(:unique_posts_mins, 0)
+      s.set_regardless_of_locale(:queue_jobs, false)
+      # disable plugins
+      if ENV['LOAD_PLUGINS'] == '1'
+        s.set_regardless_of_locale(:discourse_narrative_bot_enabled, false)
+      end
+    end
+    SiteSetting.refresh!
+  end
 end

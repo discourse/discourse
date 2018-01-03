@@ -7,7 +7,6 @@
 
 it:
   site_settings:
-    poll_enabled: "Permettere agli utenti di creare sondaggi?"
     poll_maximum_options: "Numero massimo di opzioni permesse in un sondaggio."
     poll_edit_window_mins: "Numero di minuti dopo la creazione di un messaggio durante i quali i sondaggi possono ancora essere modificati."
   poll:

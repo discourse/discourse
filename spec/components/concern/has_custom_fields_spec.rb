@@ -1,6 +1,5 @@
 require "rails_helper"
 
-
 describe HasCustomFields do
 
   context "custom_fields" do
@@ -48,7 +47,7 @@ describe HasCustomFields do
       test_item.save
       test_item = CustomFieldsTestItem.find(test_item.id)
 
-      expect(test_item.custom_fields).to eq({"jack" => "jill"})
+      expect(test_item.custom_fields).to eq("jack" => "jill")
     end
 
     it "casts integers to string without error" do
@@ -88,35 +87,35 @@ describe HasCustomFields do
 
     it "double save actually saves" do
       test_item = CustomFieldsTestItem.new
-      test_item.custom_fields = {"a" => "b"}
+      test_item.custom_fields = { "a" => "b" }
       test_item.save
 
       test_item.custom_fields["c"] = "d"
       test_item.save
 
       db_item = CustomFieldsTestItem.find(test_item.id)
-      expect(db_item.custom_fields).to eq({"a" => "b", "c" => "d"})
+      expect(db_item.custom_fields).to eq("a" => "b", "c" => "d")
     end
 
     it "handles arrays properly" do
       test_item = CustomFieldsTestItem.new
-      test_item.custom_fields = {"a" => ["b", "c", "d"]}
+      test_item.custom_fields = { "a" => ["b", "c", "d"] }
       test_item.save
 
       db_item = CustomFieldsTestItem.find(test_item.id)
-      expect(db_item.custom_fields).to eq({"a" => ["b", "c", "d"]})
+      expect(db_item.custom_fields).to eq("a" => ["b", "c", "d"])
 
       db_item.custom_fields.update('a' => ['c', 'd'])
       db_item.save
-      expect(db_item.custom_fields).to eq({"a" => ["c", "d"]})
+      expect(db_item.custom_fields).to eq("a" => ["c", "d"])
 
       # It can be updated to the exact same value
       db_item.custom_fields.update('a' => ['c'])
       db_item.save
-      expect(db_item.custom_fields).to eq({"a" => "c"})
+      expect(db_item.custom_fields).to eq("a" => "c")
       db_item.custom_fields.update('a' => ['c'])
       db_item.save
-      expect(db_item.custom_fields).to eq({"a" => "c"})
+      expect(db_item.custom_fields).to eq("a" => "c")
 
       db_item.custom_fields.delete('a')
       expect(db_item.custom_fields).to eq({})
@@ -124,12 +123,12 @@ describe HasCustomFields do
 
     it "casts integers in arrays properly without error" do
       test_item = CustomFieldsTestItem.new
-      test_item.custom_fields = {"a" => ["b", 10, "d"]}
+      test_item.custom_fields = { "a" => ["b", 10, "d"] }
       test_item.save
-      expect(test_item.custom_fields).to eq({"a" => ["b", "10", "d"]})
+      expect(test_item.custom_fields).to eq("a" => ["b", "10", "d"])
 
       db_item = CustomFieldsTestItem.find(test_item.id)
-      expect(db_item.custom_fields).to eq({"a" => ["b", "10", "d"]})
+      expect(db_item.custom_fields).to eq("a" => ["b", "10", "d"])
     end
 
     it "supportes type coersion" do
@@ -138,11 +137,21 @@ describe HasCustomFields do
       CustomFieldsTestItem.register_custom_field_type("int", :integer)
       CustomFieldsTestItem.register_custom_field_type("json", :json)
 
-      test_item.custom_fields = {"bool" => true, "int" => 1, "json" => { "foo" => "bar" }}
+      test_item.custom_fields = { "bool" => true, "int" => 1, "json" => { "foo" => "bar" } }
       test_item.save
       test_item.reload
 
-      expect(test_item.custom_fields).to eq({"bool" => true, "int" => 1, "json" => { "foo" => "bar" }})
+      expect(test_item.custom_fields).to eq("bool" => true, "int" => 1, "json" => { "foo" => "bar" })
+
+      before_ids = CustomFieldsTestItemCustomField.where(custom_fields_test_item_id: test_item.id).pluck(:id)
+
+      test_item.custom_fields["bool"] = false
+      test_item.save
+
+      after_ids = CustomFieldsTestItemCustomField.where(custom_fields_test_item_id: test_item.id).pluck(:id)
+
+      # we updated only 1 custom field, so there should be only 1 different id
+      expect((before_ids - after_ids).size).to eq(1)
     end
 
     it "simple modifications don't interfere" do
@@ -165,17 +174,17 @@ describe HasCustomFields do
       test_item = CustomFieldsTestItem.find(test_item.id)
       test_item2 = CustomFieldsTestItem.find(test_item2.id)
 
-      expect(test_item.custom_fields).to eq({"jack" => "black", "bob" => "marley"})
-      expect(test_item2.custom_fields).to eq({"sixto" => "rodriguez", "de" => "la playa"})
+      expect(test_item.custom_fields).to eq("jack" => "black", "bob" => "marley")
+      expect(test_item2.custom_fields).to eq("sixto" => "rodriguez", "de" => "la playa")
     end
 
     it "supports bulk retrieval with a list of ids" do
       item1 = CustomFieldsTestItem.new
-      item1.custom_fields = {"a" => ["b", "c", "d"], 'not_whitelisted' => 'secret'}
+      item1.custom_fields = { "a" => ["b", "c", "d"], 'not_whitelisted' => 'secret' }
       item1.save
 
       item2 = CustomFieldsTestItem.new
-      item2.custom_fields = {"e" => 'hallo'}
+      item2.custom_fields = { "e" => 'hallo' }
       item2.save
 
       fields = CustomFieldsTestItem.custom_fields_for_ids([item1.id, item2.id], ['a', 'e'])
@@ -183,6 +192,28 @@ describe HasCustomFields do
       expect(fields[item1.id]['a']).to match_array(['b', 'c', 'd'])
       expect(fields[item1.id]['not_whitelisted']).to be_blank
       expect(fields[item2.id]['e']).to eq('hallo')
+    end
+
+    it "handles interleaving saving properly" do
+      field_type = 'deep-nest-test'
+      CustomFieldsTestItem.register_custom_field_type(field_type, :json)
+      test_item = CustomFieldsTestItem.create!
+
+      test_item.custom_fields[field_type] ||= {}
+      test_item.custom_fields[field_type]['b'] ||= {}
+      test_item.custom_fields[field_type]['b']['c'] = 'd'
+      test_item.save_custom_fields(true)
+
+      db_item = CustomFieldsTestItem.find(test_item.id)
+      db_item.custom_fields[field_type]['b']['e'] = 'f'
+      test_item.custom_fields[field_type]['b']['e'] = 'f'
+      expected = { field_type => { 'b' => { 'c' => 'd', 'e' => 'f' } } }
+
+      db_item.save_custom_fields(true)
+      expect(db_item.reload.custom_fields).to eq(expected)
+
+      test_item.save_custom_fields(true)
+      expect(test_item.reload.custom_fields).to eq(expected)
     end
   end
 end

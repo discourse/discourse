@@ -55,7 +55,9 @@ export default {
         node = node[segs[i]];
       }
 
-      node[segs[segs.length-1]] = v;
+      if (typeof node === "object") {
+        node[segs[segs.length-1]] = v;
+      }
 
     });
   }

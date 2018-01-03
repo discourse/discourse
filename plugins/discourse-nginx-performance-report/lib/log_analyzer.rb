@@ -2,13 +2,12 @@ class LogAnalyzer
 
   class LineParser
 
-
-    # log_format log_discourse '[$time_local] $remote_addr "$request" "$http_user_agent" "$sent_http_x_discourse_route" $status $bytes_sent "$http_referer" $upstream_response_time $request_time "$sent_http_x_discourse_username"';
+    # log_format log_discourse '[$time_local] "$http_host" $remote_addr "$request" "$http_user_agent" "$sent_http_x_discourse_route" $status $bytes_sent "$http_referer" $upstream_response_time $request_time "$sent_http_x_discourse_username"';
 
     attr_accessor :time, :ip_address, :url, :route, :user_agent, :rails_duration, :total_duration,
                   :username, :status, :bytes_sent, :referer
 
-    PATTERN = /\[(.*)\] (\S+) \"(.*)\" \"(.*)\" \"(.*)\" ([0-9]+) ([0-9]+) \"(.*)\" ([0-9.]+) ([0-9.]+) "(.*)"/
+    PATTERN = /\[(.*)\](?: ".*")? (\S+) \"(.*)\" \"(.*)\" \"(.*)\" ([0-9]+) ([0-9]+) \"(.*)\" ([0-9.]+) ([0-9.]+) "(.*)"/
 
     TIME_FORMAT = "%d/%b/%Y:%H:%M:%S %Z"
 
@@ -69,8 +68,8 @@ class LogAnalyzer
       @aggregate_type = :duration
     end
 
-    def add(id, duration, aggregate=nil)
-      ary = (@data[id] ||= [0,0])
+    def add(id, duration, aggregate = nil)
+      ary = (@data[id] ||= [0, 0])
       ary[0] += duration
       ary[1] += 1
       unless aggregate.nil?
@@ -83,8 +82,8 @@ class LogAnalyzer
       end
     end
 
-    def top(n, aggregator_formatter=nil)
-      @data.sort{|a,b| b[1][0] <=> a[1][0]}.first(n).map do |metric, ary|
+    def top(n, aggregator_formatter = nil)
+      @data.sort { |a, b| b[1][0] <=> a[1][0] }.first(n).map do |metric, ary|
         metric = metric.to_s
         metric = "[empty]" if metric.length == 0
         result = [metric, ary[0], ary[1]]
@@ -93,7 +92,7 @@ class LogAnalyzer
           if aggregator_formatter
             result.push aggregator_formatter.call(ary[2], ary[0], ary[1])
           else
-            result.push ary[2].sort{|a,b| b[1] <=> a[1]}.first(5).map{|k,v|
+            result.push ary[2].sort { |a, b| b[1] <=> a[1] }.first(5).map { |k, v|
             v = "%.2f" % v if Float === v
             "#{k}(#{v})"}.join(" ")
           end
@@ -104,7 +103,7 @@ class LogAnalyzer
     end
   end
 
-  def initialize(filenames, args={})
+  def initialize(filenames, args = {})
     @filenames = filenames
     @ip_to_rails_duration = Aggeregator.new
     @username_to_rails_duration = Aggeregator.new
@@ -148,7 +147,7 @@ class LogAnalyzer
 
         @url_to_rails_duration.add(parsed.url, parsed.rails_duration)
 
-        @status_404_to_count.add(parsed.url,1) if parsed.status == "404"
+        @status_404_to_count.add(parsed.url, 1) if parsed.status == "404"
       end
     end
     self

@@ -16,6 +16,7 @@ describe FileStore::S3Store do
     SiteSetting.s3_upload_bucket = "s3-upload-bucket"
     SiteSetting.s3_access_key_id = "s3-access-key-id"
     SiteSetting.s3_secret_access_key = "s3-secret-access-key"
+    SiteSetting.enable_s3_uploads = true
   end
 
   shared_context 's3 helpers' do
@@ -30,7 +31,7 @@ describe FileStore::S3Store do
     let(:s3_helper) { store.instance_variable_get(:@s3_helper) }
 
     before do
-      SiteSetting.s3_region ='us-west-1'
+      SiteSetting.s3_region = 'us-west-1'
     end
   end
 
@@ -209,13 +210,13 @@ describe FileStore::S3Store do
     end
 
     it "uses the proper endpoint" do
-      SiteSetting.stubs(:s3_region).returns("us-east-1")
+      SiteSetting.s3_region = "us-east-1"
       expect(FileStore::S3Store.new(s3_helper).absolute_base_url).to eq("//s3-upload-bucket.s3.amazonaws.com")
 
-      SiteSetting.stubs(:s3_region).returns("us-east-2")
-      expect(FileStore::S3Store.new(s3_helper).absolute_base_url).to eq("//s3-upload-bucket.s3-us-east-2.amazonaws.com")
+      SiteSetting.s3_region = "us-west-2"
+      expect(FileStore::S3Store.new(s3_helper).absolute_base_url).to eq("//s3-upload-bucket.s3-us-west-2.amazonaws.com")
 
-      SiteSetting.stubs(:s3_region).returns("cn-north-1")
+      SiteSetting.s3_region = "cn-north-1"
       expect(FileStore::S3Store.new(s3_helper).absolute_base_url).to eq("//s3-upload-bucket.s3.cn-north-1.amazonaws.com.cn")
 
     end

@@ -1,5 +1,4 @@
 require 'execjs'
-require 'babel/transpiler'
 require 'mini_racer'
 
 module Tilt
@@ -15,7 +14,7 @@ module Tilt
       source = input[:data]
       context = input[:environment].context_class.new(input)
 
-      result = new(filename){source}.render(context)
+      result = new(filename) { source }.render(context)
       context.metadata.merge(data: result)
     end
 
@@ -27,22 +26,29 @@ module Tilt
     def self.create_new_context
       # timeout any eval that takes longer than 15 seconds
       ctx = MiniRacer::Context.new(timeout: 15000)
-      ctx.eval("var self = this; #{File.read(Babel::Transpiler.script_path)}")
+      ctx.eval("var self = this; #{File.read("#{Rails.root}/vendor/assets/javascripts/babel.js")}")
+      ctx.eval(File.read(Ember::Source.bundled_path_for('ember-template-compiler.js')))
       ctx.eval("module = {}; exports = {};");
-      ctx.load("#{Rails.root}/lib/es6_module_transpiler/support/es6-module-transpiler.js")
-      ctx.attach("rails.logger.info", proc{|err| Rails.logger.info(err.to_s)})
-      ctx.attach("rails.logger.error", proc{|err| Rails.logger.error(err.to_s)})
+      ctx.attach("rails.logger.info", proc { |err| Rails.logger.info(err.to_s) })
+      ctx.attach("rails.logger.error", proc { |err| Rails.logger.error(err.to_s) })
       ctx.eval <<JS
       console = {
         prefix: "",
         log: function(msg){ rails.logger.info(console.prefix + msg); },
         error: function(msg){ rails.logger.error(console.prefix + msg); }
       }
+
 JS
+      source = File.read("#{Rails.root}/lib/javascripts/widget-hbs-compiler.js.es6")
+      js_source = ::JSON.generate(source, quirks_mode: true)
+      js = ctx.eval("Babel.transform(#{js_source}, { ast: false, plugins: ['check-es2015-constants', 'transform-es2015-arrow-functions', 'transform-es2015-block-scoped-functions', 'transform-es2015-block-scoping', 'transform-es2015-classes', 'transform-es2015-computed-properties', 'transform-es2015-destructuring', 'transform-es2015-duplicate-keys', 'transform-es2015-for-of', 'transform-es2015-function-name', 'transform-es2015-literals', 'transform-es2015-object-super', 'transform-es2015-parameters', 'transform-es2015-shorthand-properties', 'transform-es2015-spread', 'transform-es2015-sticky-regex', 'transform-es2015-template-literals', 'transform-es2015-typeof-symbol', 'transform-es2015-unicode-regex'] }).code")
+      ctx.eval(js)
+
       ctx
     end
 
     def self.reset_context
+      @ctx&.dispose
       @ctx = nil
     end
 
@@ -106,12 +112,12 @@ JS
       klass = self.class
       klass.protect do
         klass.v8.eval("console.prefix = 'BABEL: babel-eval: ';")
-
-        transpiled = babel_source(source)
-
-        compiler_source = "new module.exports.Compiler(#{transpiled}, '#{module_name(root_path, logical_path)}', #{compiler_options}).#{compiler_method}()"
-
-        @output = klass.v8.eval(compiler_source)
+        transpiled = babel_source(
+          source,
+          module_name: module_name(root_path, logical_path),
+          filename: logical_path
+        )
+        @output = klass.v8.eval(transpiled)
       end
     end
 
@@ -121,7 +127,14 @@ JS
       klass = self.class
       klass.protect do
         klass.v8.eval("console.prefix = 'BABEL: #{scope.logical_path}: ';")
-        @output = klass.v8.eval(generate_source(scope))
+
+        source = babel_source(
+          data,
+          module_name: module_name(scope.root_path, scope.logical_path),
+          filename: scope.logical_path
+        )
+
+        @output = klass.v8.eval(source)
       end
 
       # For backwards compatibility with plugins, for now export the Global format too.
@@ -160,17 +173,20 @@ JS
       @output
     end
 
-    def babel_source(source)
+    def babel_source(source, opts = nil)
+      opts ||= {}
+
       js_source = ::JSON.generate(source, quirks_mode: true)
-      "babel.transform(#{js_source}, {ast: false, whitelist: ['es6.constants', 'es6.properties.shorthand', 'es6.arrowFunctions', 'es6.blockScoping', 'es6.destructuring', 'es6.spread', 'es6.parameters', 'es6.templateLiterals', 'es6.regex.unicode', 'es7.decorators', 'es6.classes']})['code']"
+
+      if opts[:module_name]
+        filename = opts[:filename] || 'unknown'
+        "Babel.transform(#{js_source}, { moduleId: '#{opts[:module_name]}', filename: '#{filename}', ast: false, presets: ['es2015'], plugins: [['transform-es2015-modules-amd', {noInterop: true}], 'transform-decorators-legacy', exports.WidgetHbsCompiler] }).code"
+      else
+        "Babel.transform(#{js_source}, { ast: false, plugins: ['check-es2015-constants', 'transform-es2015-arrow-functions', 'transform-es2015-block-scoped-functions', 'transform-es2015-block-scoping', 'transform-es2015-classes', 'transform-es2015-computed-properties', 'transform-es2015-destructuring', 'transform-es2015-duplicate-keys', 'transform-es2015-for-of', 'transform-es2015-function-name', 'transform-es2015-literals', 'transform-es2015-object-super', 'transform-es2015-parameters', 'transform-es2015-shorthand-properties', 'transform-es2015-spread', 'transform-es2015-sticky-regex', 'transform-es2015-template-literals', 'transform-es2015-typeof-symbol', 'transform-es2015-unicode-regex', 'transform-regenerator', 'transform-decorators-legacy', exports.WidgetHbsCompiler] }).code"
+      end
     end
 
     private
-
-    def generate_source(scope)
-      js_source = babel_source(data)
-      "new module.exports.Compiler(#{js_source}, '#{module_name(scope.root_path, scope.logical_path)}', #{compiler_options}).#{compiler_method}()"
-    end
 
     def module_name(root_path, logical_path)
       path = nil
@@ -180,7 +196,7 @@ JS
       if root_path =~ /(.*\/#{root_base}\/plugins\/[^\/]+)\//
         plugin_path = "#{Regexp.last_match[1]}/plugin.rb"
 
-        plugin = Discourse.plugins.find {|p| p.path == plugin_path }
+        plugin = Discourse.plugins.find { |p| p.path == plugin_path }
         path = "discourse/plugins/#{plugin.name}/#{logical_path.sub(/javascripts\//, '')}" if plugin
       end
 

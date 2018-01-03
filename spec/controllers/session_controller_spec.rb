@@ -1,20 +1,26 @@
 require 'rails_helper'
 
 describe SessionController do
+  shared_examples 'failed to continue local login' do
+    it 'should return the right response' do
+      expect(response).not_to be_success
+      expect(response.status.to_i).to eq 500
+    end
+  end
 
   describe 'become' do
     let!(:user) { Fabricate(:user) }
 
     it "does not work when not in development mode" do
       Rails.env.stubs(:development?).returns(false)
-      get :become, session_id: user.username
+      get :become, params: { session_id: user.username }, format: :json
       expect(response).not_to be_redirect
       expect(session[:current_user_id]).to be_blank
     end
 
     it "works in developmenet mode" do
       Rails.env.stubs(:development?).returns(true)
-      get :become, session_id: user.username
+      get :become, params: { session_id: user.username }, format: :json
       expect(response).to be_redirect
       expect(session[:current_user_id]).to eq(user.id)
     end
@@ -28,15 +34,15 @@ describe SessionController do
 
       request.host = Discourse.current_hostname
 
-      SiteSetting.enable_sso = true
       SiteSetting.sso_url = @sso_url
+      SiteSetting.enable_sso = true
       SiteSetting.sso_secret = @sso_secret
 
       # We have 2 options, either fabricate an admin or don't
       # send welcome messages
       Fabricate(:admin)
       # skip for now
-      # SiteSetting.stubs("send_welcome_message").returns(false)
+      # SiteSetting.send_welcome_message = false
     end
 
     def get_sso(return_path)
@@ -58,7 +64,7 @@ describe SessionController do
       sso.external_id = 'abc'
       sso.username = 'sam'
 
-      get :sso_login, Rack::Utils.parse_query(sso.payload)
+      get :sso_login, params: Rack::Utils.parse_query(sso.payload)
 
       expect(response).to redirect_to('/')
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
@@ -81,7 +87,7 @@ describe SessionController do
       ActionDispatch::Request.any_instance.stubs(:remote_ip).returns(screened_ip.ip_address)
 
       sso = sso_for_ip_specs
-      get :sso_login, Rack::Utils.parse_query(sso.payload)
+      get :sso_login, params: Rack::Utils.parse_query(sso.payload)
 
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
       expect(logged_on_user).to eq(nil)
@@ -95,7 +101,7 @@ describe SessionController do
       screened_ip = Fabricate(:screened_ip_address)
       ActionDispatch::Request.any_instance.stubs(:remote_ip).returns(screened_ip.ip_address)
 
-      get :sso_login, Rack::Utils.parse_query(sso.payload)
+      get :sso_login, params: Rack::Utils.parse_query(sso.payload)
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
       expect(logged_on_user).to be_blank
     end
@@ -108,7 +114,7 @@ describe SessionController do
       sso.username = 'sam'
 
       ScreenedEmail.block('bob@bob.com')
-      get :sso_login, Rack::Utils.parse_query(sso.payload)
+      get :sso_login, params: Rack::Utils.parse_query(sso.payload)
 
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
       expect(logged_on_user).to eq(nil)
@@ -124,7 +130,7 @@ describe SessionController do
       sso.custom_fields["shop_name"] = "Sam"
       sso.admin = true
 
-      get :sso_login, Rack::Utils.parse_query(sso.payload)
+      get :sso_login, params: Rack::Utils.parse_query(sso.payload)
 
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
       expect(logged_on_user.admin).to eq(true)
@@ -137,7 +143,7 @@ describe SessionController do
       sso.name = 'Sam Saffron'
       sso.username = 'sam'
 
-      get :sso_login, Rack::Utils.parse_query(sso.payload)
+      get :sso_login, params: Rack::Utils.parse_query(sso.payload)
       expect(response).to redirect_to('/b/')
     end
 
@@ -150,7 +156,7 @@ describe SessionController do
       sso.name = 'Sam Saffron'
       sso.username = 'sam'
 
-      get :sso_login, Rack::Utils.parse_query(sso.payload)
+      get :sso_login, params: Rack::Utils.parse_query(sso.payload)
       expect(response).to redirect_to('https://gusundtrout.com')
     end
 
@@ -161,7 +167,7 @@ describe SessionController do
       sso.name = 'Sam Saffron'
       sso.username = 'sam'
 
-      get :sso_login, Rack::Utils.parse_query(sso.payload)
+      get :sso_login, params: Rack::Utils.parse_query(sso.payload)
       expect(response).to redirect_to('/')
     end
 
@@ -172,7 +178,7 @@ describe SessionController do
       sso.name = 'Sam Saffron'
       sso.username = 'sam'
 
-      get :sso_login, Rack::Utils.parse_query(sso.payload)
+      get :sso_login, params: Rack::Utils.parse_query(sso.payload)
       expect(response).to redirect_to('/')
     end
 
@@ -185,7 +191,14 @@ describe SessionController do
       sso.custom_fields["shop_url"] = "http://my_shop.com"
       sso.custom_fields["shop_name"] = "Sam"
 
-      get :sso_login, Rack::Utils.parse_query(sso.payload)
+      events = DiscourseEvent.track_events do
+        get :sso_login, params: Rack::Utils.parse_query(sso.payload)
+      end
+
+      expect(events.map { |event| event[:event_name] }).to include(
+       :user_logged_in, :user_first_logged_in
+      )
+
       expect(response).to redirect_to('/a/')
 
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
@@ -216,7 +229,7 @@ describe SessionController do
           sso.username = 'sam'
           sso.require_activation = true
 
-          get :sso_login, Rack::Utils.parse_query(sso.payload)
+          get :sso_login, params: Rack::Utils.parse_query(sso.payload)
 
           logged_on_user = Discourse.current_user_provider.new(request.env).current_user
           expect(logged_on_user).to eq(nil)
@@ -231,7 +244,7 @@ describe SessionController do
           sso.username = 'sam'
           sso.require_activation = true
 
-          get :sso_login, Rack::Utils.parse_query(sso.payload)
+          get :sso_login, params: Rack::Utils.parse_query(sso.payload)
         end
       end
 
@@ -246,7 +259,7 @@ describe SessionController do
           user.create_single_sign_on_record(external_id: '997', last_payload: '')
           user.stubs(:active?).returns(true)
 
-          get :sso_login, Rack::Utils.parse_query(sso.payload)
+          get :sso_login, params: Rack::Utils.parse_query(sso.payload)
 
           logged_on_user = Discourse.current_user_provider.new(request.env).current_user
           expect(user.id).to eq(logged_on_user.id)
@@ -262,7 +275,7 @@ describe SessionController do
       user = Fabricate(:user)
       user.create_single_sign_on_record(external_id: '997', last_payload: '')
 
-      get :sso_login, Rack::Utils.parse_query(sso.payload)
+      get :sso_login, params: Rack::Utils.parse_query(sso.payload)
 
       user.single_sign_on_record.reload
       expect(user.single_sign_on_record.last_payload).to eq(sso.unsigned_payload)
@@ -273,7 +286,7 @@ describe SessionController do
       expect(user.id).to eq(logged_on_user.id)
 
       # nonce is bad now
-      get :sso_login, Rack::Utils.parse_query(sso.payload)
+      get :sso_login, params: Rack::Utils.parse_query(sso.payload)
       expect(response.code).to eq('419')
     end
 
@@ -289,17 +302,23 @@ describe SessionController do
         @sso.sso_secret = SiteSetting.sso_secret
         @sso.return_sso_url = "http://somewhere.over.rainbow/sso"
 
-        @user = Fabricate(:user, password: "frogs", active: true, admin: true)
+        @user = Fabricate(:user, password: "myfrogs123ADMIN", active: true, admin: true)
+        group = Fabricate(:group)
+        group.add(@user)
+        @user.reload
         EmailToken.update_all(confirmed: true)
       end
 
       it "successfully logs in and redirects user to return_sso_url when the user is not logged in" do
-        get :sso_provider, Rack::Utils.parse_query(@sso.payload)
+        get :sso_provider, params: Rack::Utils.parse_query(@sso.payload)
         expect(response).to redirect_to("/login")
 
-        xhr :post, :create, login: @user.username, password: "frogs", format: :json
+        post :create,
+          params: { login: @user.username, password: "myfrogs123ADMIN" },
+          format: :json,
+          xhr: true
 
-        location = cookies[:sso_destination_url]
+        location = response.cookies["sso_destination_url"]
         # javascript code will handle redirection of user to return_sso_url
         expect(location).to match(/^http:\/\/somewhere.over.rainbow\/sso/)
 
@@ -312,12 +331,13 @@ describe SessionController do
         expect(sso2.external_id).to eq(@user.id.to_s)
         expect(sso2.admin).to eq(true)
         expect(sso2.moderator).to eq(false)
+        expect(sso2.groups).to eq(@user.groups.pluck(:name))
       end
 
       it "successfully redirects user to return_sso_url when the user is logged in" do
         log_in_user(@user)
 
-        get :sso_provider, Rack::Utils.parse_query(@sso.payload)
+        get :sso_provider, params: Rack::Utils.parse_query(@sso.payload)
 
         location = response.header["Location"]
         expect(location).to match(/^http:\/\/somewhere.over.rainbow\/sso/)
@@ -336,9 +356,10 @@ describe SessionController do
 
     describe 'local attribute override from SSO payload' do
       before do
-        SiteSetting.stubs("sso_overrides_email").returns(true)
-        SiteSetting.stubs("sso_overrides_username").returns(true)
-        SiteSetting.stubs("sso_overrides_name").returns(true)
+        SiteSetting.email_editable = false
+        SiteSetting.sso_overrides_email = true
+        SiteSetting.sso_overrides_username = true
+        SiteSetting.sso_overrides_name = true
 
         @user = Fabricate(:user)
 
@@ -357,7 +378,7 @@ describe SessionController do
       end
 
       it 'stores the external attributes' do
-        get :sso_login, Rack::Utils.parse_query(@sso.payload)
+        get :sso_login, params: Rack::Utils.parse_query(@sso.payload)
         @user.single_sign_on_record.reload
         expect(@user.single_sign_on_record.external_username).to eq(@sso.username)
         expect(@user.single_sign_on_record.external_email).to eq(@sso.email)
@@ -365,7 +386,7 @@ describe SessionController do
       end
 
       it 'overrides attributes' do
-        get :sso_login, Rack::Utils.parse_query(@sso.payload)
+        get :sso_login, params: Rack::Utils.parse_query(@sso.payload)
 
         logged_on_user = Discourse.current_user_provider.new(request.env).current_user
         expect(logged_on_user.username).to eq(@suggested_username)
@@ -378,7 +399,7 @@ describe SessionController do
         @sso.name = @user.name
         @sso.email = @user.email
 
-        get :sso_login, Rack::Utils.parse_query(@sso.payload)
+        get :sso_login, params: Rack::Utils.parse_query(@sso.payload)
 
         logged_on_user = Discourse.current_user_provider.new(request.env).current_user
         expect(logged_on_user.username).to eq(@user.username)
@@ -401,17 +422,20 @@ describe SessionController do
       @sso.sso_secret = SiteSetting.sso_secret
       @sso.return_sso_url = "http://somewhere.over.rainbow/sso"
 
-      @user = Fabricate(:user, password: "frogs", active: true, admin: true)
+      @user = Fabricate(:user, password: "myfrogs123ADMIN", active: true, admin: true)
       EmailToken.update_all(confirmed: true)
     end
 
     it "successfully logs in and redirects user to return_sso_url when the user is not logged in" do
-      get :sso_provider, Rack::Utils.parse_query(@sso.payload)
+      get :sso_provider, params: Rack::Utils.parse_query(@sso.payload)
       expect(response).to redirect_to("/login")
 
-      xhr :post, :create, login: @user.username, password: "frogs", format: :json
+      post :create,
+        params: { login: @user.username, password: "myfrogs123ADMIN" },
+        format: :json,
+        xhr: true
 
-      location = cookies[:sso_destination_url]
+      location = response.cookies["sso_destination_url"]
       # javascript code will handle redirection of user to return_sso_url
       expect(location).to match(/^http:\/\/somewhere.over.rainbow\/sso/)
 
@@ -429,7 +453,7 @@ describe SessionController do
     it "successfully redirects user to return_sso_url when the user is logged in" do
       log_in_user(@user)
 
-      get :sso_provider, Rack::Utils.parse_query(@sso.payload)
+      get :sso_provider, params: Rack::Utils.parse_query(@sso.payload)
 
       location = response.header["Location"]
       expect(location).to match(/^http:\/\/somewhere.over.rainbow\/sso/)
@@ -450,6 +474,29 @@ describe SessionController do
 
     let(:user) { Fabricate(:user) }
 
+    context 'local login is disabled' do
+      before do
+        SiteSetting.enable_local_logins = false
+
+        post :create, params: {
+          login: user.username, password: 'myawesomepassword'
+        }, format: :json
+      end
+      it_behaves_like "failed to continue local login"
+    end
+
+    context 'SSO is enabled' do
+      before do
+        SiteSetting.sso_url = "https://www.example.com/sso"
+        SiteSetting.enable_sso = true
+
+        post :create, params: {
+          login: user.username, password: 'myawesomepassword'
+        }, format: :json
+      end
+      it_behaves_like "failed to continue local login"
+    end
+
     context 'when email is confirmed' do
       before do
         token = user.email_tokens.find_by(email: user.email)
@@ -457,12 +504,17 @@ describe SessionController do
       end
 
       it "raises an error when the login isn't present" do
-        expect { xhr :post, :create }.to raise_error(ActionController::ParameterMissing)
+        expect do
+          post :create, format: :json
+        end.to raise_error(ActionController::ParameterMissing)
       end
 
       describe 'invalid password' do
         it "should return an error with an invalid password" do
-          xhr :post, :create, login: user.username, password: 'sssss'
+          post :create, params: {
+            login: user.username, password: 'sssss'
+          }, format: :json
+
           expect(::JSON.parse(response.body)['error']).to be_present
         end
       end
@@ -470,7 +522,10 @@ describe SessionController do
       describe 'invalid password' do
         it "should return an error with an invalid password if too long" do
           User.any_instance.expects(:confirm_password?).never
-          xhr :post, :create, login: user.username, password: ('s' * (User.max_password_length + 1))
+          post :create, params: {
+            login: user.username, password: ('s' * (User.max_password_length + 1))
+          }, format: :json
+
           expect(::JSON.parse(response.body)['error']).to be_present
         end
       end
@@ -481,7 +536,9 @@ describe SessionController do
           user.suspended_at = Time.now
           user.save!
           StaffActionLogger.new(user).log_user_suspend(user, "<strike>banned</strike>")
-          xhr :post, :create, login: user.username, password: 'myawesomepassword'
+          post :create, params: {
+            login: user.username, password: 'myawesomepassword'
+          }, format: :json
 
           error = ::JSON.parse(response.body)['error']
           expect(error).to be_present
@@ -493,14 +550,26 @@ describe SessionController do
       describe 'deactivated user' do
         it 'should return an error' do
           User.any_instance.stubs(:active).returns(false)
-          xhr :post, :create, login: user.username, password: 'myawesomepassword'
+
+          post :create, params: {
+            login: user.username, password: 'myawesomepassword'
+          }, format: :json
+
           expect(JSON.parse(response.body)['error']).to eq(I18n.t('login.not_activated'))
         end
       end
 
       describe 'success by username' do
         it 'logs in correctly' do
-          xhr :post, :create, login: user.username, password: 'myawesomepassword'
+          events = DiscourseEvent.track_events do
+            post :create, params: {
+              login: user.username, password: 'myawesomepassword'
+            }, format: :json
+          end
+
+          expect(events.map { |event| event[:event_name] }).to include(
+            :user_logged_in, :user_first_logged_in
+          )
 
           user.reload
 
@@ -510,19 +579,14 @@ describe SessionController do
         end
       end
 
-      describe 'local logins disabled' do
-        it 'fails' do
-          SiteSetting.stubs(:enable_local_logins).returns(false)
-          xhr :post, :create, login: user.username, password: 'myawesomepassword'
-          expect(response.status.to_i).to eq(500)
-        end
-      end
-
       describe 'with a blocked IP' do
         before do
           screened_ip = Fabricate(:screened_ip_address)
           ActionDispatch::Request.any_instance.stubs(:remote_ip).returns(screened_ip.ip_address)
-          xhr :post, :create, login: "@" + user.username, password: 'myawesomepassword'
+          post :create, params: {
+            login: "@" + user.username, password: 'myawesomepassword'
+          }, format: :json
+
           user.reload
         end
 
@@ -533,7 +597,10 @@ describe SessionController do
 
       describe 'strips leading @ symbol' do
         before do
-          xhr :post, :create, login: "@" + user.username, password: 'myawesomepassword'
+          post :create, params: {
+            login: "@" + user.username, password: 'myawesomepassword'
+          }, format: :json
+
           user.reload
         end
 
@@ -544,7 +611,9 @@ describe SessionController do
 
       describe 'also allow login by email' do
         before do
-          xhr :post, :create, login: user.email, password: 'myawesomepassword'
+          post :create, params: {
+            login: user.email, password: 'myawesomepassword'
+          }, format: :json
         end
 
         it 'sets a session id' do
@@ -557,12 +626,18 @@ describe SessionController do
         let(:email) { " #{user.email} " }
 
         it "strips spaces from the username" do
-          xhr :post, :create, login: username, password: 'myawesomepassword'
+          post :create, params: {
+            login: username, password: 'myawesomepassword'
+          }, format: :json
+
           expect(::JSON.parse(response.body)['error']).not_to be_present
         end
 
         it "strips spaces from the email" do
-          xhr :post, :create, login: email, password: 'myawesomepassword'
+          post :create, params: {
+            login: email, password: 'myawesomepassword'
+          }, format: :json
+
           expect(::JSON.parse(response.body)['error']).not_to be_present
         end
       end
@@ -574,7 +649,9 @@ describe SessionController do
 
         context 'with an unapproved user' do
           before do
-            xhr :post, :create, login: user.email, password: 'myawesomepassword'
+            post :create, params: {
+              login: user.email, password: 'myawesomepassword'
+            }, format: :json
           end
 
           it "doesn't log in the user" do
@@ -591,7 +668,10 @@ describe SessionController do
         context "with an unapproved user who is an admin" do
           before do
             User.any_instance.stubs(:admin?).returns(true)
-            xhr :post, :create, login: user.email, password: 'myawesomepassword'
+
+            post :create, params: {
+              login: user.email, password: 'myawesomepassword'
+            }, format: :json
           end
 
           it 'sets a session id' do
@@ -604,20 +684,28 @@ describe SessionController do
         let(:permitted_ip_address) { '111.234.23.11' }
         before do
           Fabricate(:screened_ip_address, ip_address: permitted_ip_address, action_type: ScreenedIpAddress.actions[:allow_admin])
-          SiteSetting.stubs(:use_admin_ip_whitelist).returns(true)
+          SiteSetting.use_admin_ip_whitelist = true
         end
 
         it 'is successful for admin at the ip address' do
           User.any_instance.stubs(:admin?).returns(true)
           ActionDispatch::Request.any_instance.stubs(:remote_ip).returns(permitted_ip_address)
-          xhr :post, :create, login: user.username, password: 'myawesomepassword'
+
+          post :create, params: {
+            login: user.username, password: 'myawesomepassword'
+          }, format: :json
+
           expect(session[:current_user_id]).to eq(user.id)
         end
 
         it 'returns an error for admin not at the ip address' do
           User.any_instance.stubs(:admin?).returns(true)
           ActionDispatch::Request.any_instance.stubs(:remote_ip).returns("111.234.23.12")
-          xhr :post, :create, login: user.username, password: 'myawesomepassword'
+
+          post :create, params: {
+            login: user.username, password: 'myawesomepassword'
+          }, format: :json
+
           expect(JSON.parse(response.body)['error']).to be_present
           expect(session[:current_user_id]).not_to eq(user.id)
         end
@@ -625,7 +713,11 @@ describe SessionController do
         it 'is successful for non-admin not at the ip address' do
           User.any_instance.stubs(:admin?).returns(false)
           ActionDispatch::Request.any_instance.stubs(:remote_ip).returns("111.234.23.12")
-          xhr :post, :create, login: user.username, password: 'myawesomepassword'
+
+          post :create, params: {
+            login: user.username, password: 'myawesomepassword'
+          }, format: :json
+
           expect(session[:current_user_id]).to eq(user.id)
         end
       end
@@ -633,7 +725,9 @@ describe SessionController do
 
     context 'when email has not been confirmed' do
       def post_login
-        xhr :post, :create, login: user.email, password: 'myawesomepassword'
+        post :create, params: {
+          login: user.email, password: 'myawesomepassword'
+        }, format: :json
       end
 
       it "doesn't log in the user" do
@@ -663,14 +757,21 @@ describe SessionController do
     context 'rate limited' do
       it 'rate limits login' do
         SiteSetting.max_logins_per_ip_per_hour = 2
-        RateLimiter.stubs(:disabled?).returns(false)
+        RateLimiter.enable
         RateLimiter.clear_all!
 
         2.times do
-          xhr :post, :create, login: user.username, password: 'myawesomepassword'
+          post :create, params: {
+            login: user.username, password: 'myawesomepassword'
+          }, format: :json
+
           expect(response).to be_success
         end
-        xhr :post, :create, login: user.username, password: 'myawesomepassword'
+
+        post :create, params: {
+          login: user.username, password: 'myawesomepassword'
+        }, format: :json
+
         expect(response).not_to be_success
         json = JSON.parse(response.body)
         expect(json["error_type"]).to eq("rate_limit")
@@ -681,52 +782,71 @@ describe SessionController do
   describe '.destroy' do
     before do
       @user = log_in
-      xhr :delete, :destroy, id: @user.username
+      delete :destroy, params: { id: @user.username }, format: :json
     end
 
     it 'removes the session variable' do
       expect(session[:current_user_id]).to be_blank
     end
 
-
     it 'removes the auth token cookie' do
-      expect(cookies[:_t]).to be_blank
+      expect(response.cookies["_t"]).to be_blank
     end
   end
 
   describe '.forgot_password' do
 
     it 'raises an error without a username parameter' do
-      expect { xhr :post, :forgot_password }.to raise_error(ActionController::ParameterMissing)
+      expect do
+        post :forgot_password, format: :json
+      end.to raise_error(ActionController::ParameterMissing)
     end
 
     context 'for a non existant username' do
       it "doesn't generate a new token for a made up username" do
-        expect { xhr :post, :forgot_password, login: 'made_up'}.not_to change(EmailToken, :count)
+        expect do
+          post :forgot_password, params: { login: 'made_up' }, format: :json
+        end.not_to change(EmailToken, :count)
       end
 
       it "doesn't enqueue an email" do
         Jobs.expects(:enqueue).with(:user_mail, anything).never
-        xhr :post, :forgot_password, login: 'made_up'
+        post :forgot_password, params: { login: 'made_up' }, format: :json
       end
     end
 
     context 'for an existing username' do
       let(:user) { Fabricate(:user) }
 
-      it "returns a 500 if local logins are disabled" do
-        SiteSetting.enable_local_logins = false
-        xhr :post, :forgot_password, login: user.username
-        expect(response.code.to_i).to eq(500)
+      context 'local login is disabled' do
+        before do
+          SiteSetting.enable_local_logins = false
+          post :forgot_password, params: { login: user.username }, format: :json
+        end
+        it_behaves_like "failed to continue local login"
+      end
+
+      context 'SSO is enabled' do
+        before do
+          SiteSetting.sso_url = "https://www.example.com/sso"
+          SiteSetting.enable_sso = true
+
+          post :create, params: {
+            login: user.username, password: 'myawesomepassword'
+          }, format: :json
+        end
+        it_behaves_like "failed to continue local login"
       end
 
       it "generates a new token for a made up username" do
-        expect { xhr :post, :forgot_password, login: user.username}.to change(EmailToken, :count)
+        expect do
+          post :forgot_password, params: { login: user.username }, format: :json
+        end.to change(EmailToken, :count)
       end
 
       it "enqueues an email" do
         Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :forgot_password, user_id: user.id))
-        xhr :post, :forgot_password, login: user.username
+        post :forgot_password, params: { login: user.username }, format: :json
       end
     end
 
@@ -734,12 +854,14 @@ describe SessionController do
       let(:system) { Discourse.system_user }
 
       it 'generates no token for system username' do
-        expect { xhr :post, :forgot_password, login: system.username}.not_to change(EmailToken, :count)
+        expect do
+          post :forgot_password, params: { login: system.username }, format: :json
+        end.not_to change(EmailToken, :count)
       end
 
       it 'enqueues no email' do
         Jobs.expects(:enqueue).never
-        xhr :post, :forgot_password, login: system.username
+        post :forgot_password, params: { login: system.username }, format: :json
       end
     end
 
@@ -747,12 +869,14 @@ describe SessionController do
       let!(:staged) { Fabricate(:staged) }
 
       it 'generates no token for staged username' do
-        expect { xhr :post, :forgot_password, login: staged.username}.not_to change(EmailToken, :count)
+        expect do
+          post :forgot_password, params: { login: staged.username }, format: :json
+        end.not_to change(EmailToken, :count)
       end
 
       it 'enqueues no email' do
         Jobs.expects(:enqueue).never
-        xhr :post, :forgot_password, login: staged.username
+        post :forgot_password, params: { login: staged.username }, format: :json
       end
     end
   end
@@ -760,7 +884,7 @@ describe SessionController do
   describe '.current' do
     context "when not logged in" do
       it "retuns 404" do
-        xhr :get, :current
+        get :current, format: :json
         expect(response).not_to be_success
       end
     end
@@ -769,7 +893,7 @@ describe SessionController do
       let!(:user) { log_in }
 
       it "returns the JSON for the user" do
-        xhr :get, :current
+        get :current, format: :json
         expect(response).to be_success
         json = ::JSON.parse(response.body)
         expect(json['current_user']).to be_present

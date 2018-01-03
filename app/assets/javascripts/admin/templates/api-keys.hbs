@@ -29,5 +29,5 @@
 {{/if}}
 
 {{#unless hasMasterKey}}
-  <button class='btn' {{action "generateMasterKey"}}><i class="fa fa-key"></i>{{i18n 'admin.api.generate_master'}}</button>
+<button class='btn' {{action "generateMasterKey"}}>{{d-icon "key"}}</button>
 {{/unless}}

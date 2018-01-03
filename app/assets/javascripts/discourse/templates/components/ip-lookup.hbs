@@ -1,12 +1,13 @@
 {{#if ip}}
   <button class="btn" {{action "lookup"}}>
-    {{fa-icon "globe"}}{{i18n 'admin.user.ip_lookup'}}
+    {{d-icon "globe"}}{{i18n 'admin.user.ip_lookup'}}
   </button>
 {{/if}}
 {{#if show}}
   <div class="location-box">
-    <a class="close pull-right" {{action "hide"}}>{{fa-icon "times"}}</a>
+    <a class="close pull-right" {{action "hide"}}>{{d-icon "times"}}</a>
     <h4>{{i18n 'ip_lookup.title'}}</h4>
+    <p class='powered-by'>{{{i18n 'ip_lookup.powered_by'}}}</p>
     <dl>
       {{#if location}}
         {{#if location.hostname}}
@@ -42,7 +43,7 @@
         <strong>{{totalOthersWithSameIP}}</strong>
         {{#if other_accounts.length}}
           <button class="btn btn-danger pull-right" {{action "deleteOtherAccounts"}}>
-            {{fa-icon "warning"}}{{i18n 'ip_lookup.delete_other_accounts' count=otherAccountsToDelete}}
+            {{d-icon "warning"}}{{i18n 'ip_lookup.delete_other_accounts' count=otherAccountsToDelete}}
           </button>
         {{/if}}
       </dt>

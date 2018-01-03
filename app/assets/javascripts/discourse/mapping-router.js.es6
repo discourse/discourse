@@ -32,6 +32,7 @@ class RouteNode {
     this.children = [];
     this.childrenByName = {};
     this.paths = {};
+    this.site = Discourse.Site.current();
 
     if (!opts.path) {
       opts.path = name;
@@ -106,7 +107,7 @@ export function mapRoutes() {
   // can define admin routes.
   Object.keys(requirejs._eak_seen).forEach(function(key) {
     if (/route-map$/.test(key)) {
-      var module = require(key, null, null, true);
+      var module = requirejs(key, null, null, true);
       if (!module || !module.default) { throw new Error(key + ' must export a route map.'); }
 
       const mapObj = module.default;
@@ -119,7 +120,7 @@ export function mapRoutes() {
   });
 
   extras.forEach(extra => {
-    const node = tree.findPath(extra.resource);
+    let node = tree.findPath(extra.resource);
     if (node) {
       node.extract(extra.map);
     }

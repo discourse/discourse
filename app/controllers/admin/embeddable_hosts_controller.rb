@@ -1,6 +1,6 @@
 class Admin::EmbeddableHostsController < Admin::AdminController
 
-  before_filter :ensure_logged_in, :ensure_staff
+  before_action :ensure_logged_in, :ensure_staff
 
   def create
     save_host(EmbeddableHost.new)

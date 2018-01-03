@@ -1,14 +1,21 @@
 require 'rails_helper'
 
 describe DraftSequence do
+  let(:user) { Fabricate(:user) }
+
   it 'should produce next sequence for a key' do
-    u = Fabricate(:user)
-    expect(DraftSequence.next!(u, 'test')).to eq 1
-    expect(DraftSequence.next!(u, 'test')).to eq 2
+    expect(DraftSequence.next!(user, 'test')).to eq 1
+    expect(DraftSequence.next!(user, 'test')).to eq 2
   end
 
-  it 'should return 0 by default' do
-    u = Fabricate(:user)
-    expect(DraftSequence.current(u, 'test')).to eq 0
+  describe '.current' do
+    it 'should return 0 by default' do
+      expect(DraftSequence.current(user, 'test')).to eq 0
+    end
+
+    it 'should return the right sequence' do
+      expect(DraftSequence.next!(user, 'test')).to eq(1)
+      expect(DraftSequence.current(user, 'test')).to eq(1)
+    end
   end
 end

@@ -6,7 +6,7 @@ module ListHelper
 
     return if total_pages < 2
 
-    page = [total_pages - (max_pages+1), 2].max
+    page = [total_pages - (max_pages + 1), 2].max
 
     result = "("
     while page <= total_pages

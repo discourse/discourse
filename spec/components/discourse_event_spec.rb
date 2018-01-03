@@ -61,7 +61,7 @@ describe DiscourseEvent do
 
       before do
         DiscourseEvent.on(:acid_face) do |user|
-          user.job =  'Supervillian'
+          user.job = 'Supervillian'
         end
 
         DiscourseEvent.trigger(:acid_face, harvey)

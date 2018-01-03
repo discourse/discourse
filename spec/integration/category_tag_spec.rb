@@ -9,7 +9,7 @@ describe "category tag restrictions" do
     tag_records.map(&:name).sort
   end
 
-  def filter_allowed_tags(opts={})
+  def filter_allowed_tags(opts = {})
     DiscourseTagging.filter_allowed_tags(Tag.all, Guardian.new(user), opts)
   end
 
@@ -45,8 +45,8 @@ describe "category tag restrictions" do
 
     it "search can show only permitted tags" do
       expect(filter_allowed_tags.count).to eq(Tag.count)
-      expect(filter_allowed_tags({for_input: true, category: category_with_tags}).pluck(:name).sort).to eq([tag1.name, tag2.name].sort)
-      expect(filter_allowed_tags({for_input: true}).pluck(:name).sort).to eq([tag3.name, tag4.name].sort)
+      expect(filter_allowed_tags(for_input: true, category: category_with_tags).pluck(:name).sort).to eq([tag1.name, tag2.name].sort)
+      expect(filter_allowed_tags(for_input: true).pluck(:name).sort).to eq([tag3.name, tag4.name].sort)
     end
 
     it "can't create new tags in a restricted category" do
@@ -80,13 +80,13 @@ describe "category tag restrictions" do
       category.allowed_tag_groups = [tag_group1.name]
       category.reload
 
-      expect(sorted_tag_names(filter_allowed_tags({for_input: true, category: category}))).to eq(sorted_tag_names([tag1, tag2]))
-      expect(sorted_tag_names(filter_allowed_tags({for_input: true}))).to eq(sorted_tag_names([tag3, tag4]))
+      expect(sorted_tag_names(filter_allowed_tags(for_input: true, category: category))).to eq(sorted_tag_names([tag1, tag2]))
+      expect(sorted_tag_names(filter_allowed_tags(for_input: true))).to eq(sorted_tag_names([tag3, tag4]))
 
       tag_group1.tags = [tag2, tag3, tag4]
-      expect(sorted_tag_names(filter_allowed_tags({for_input: true, category: category}))).to eq(sorted_tag_names([tag2, tag3, tag4]))
-      expect(sorted_tag_names(filter_allowed_tags({for_input: true}))).to eq(sorted_tag_names([tag1]))
-      expect(sorted_tag_names(filter_allowed_tags({for_input: true, category: other_category}))).to eq(sorted_tag_names([tag1]))
+      expect(sorted_tag_names(filter_allowed_tags(for_input: true, category: category))).to eq(sorted_tag_names([tag2, tag3, tag4]))
+      expect(sorted_tag_names(filter_allowed_tags(for_input: true))).to eq(sorted_tag_names([tag1]))
+      expect(sorted_tag_names(filter_allowed_tags(for_input: true, category: other_category))).to eq(sorted_tag_names([tag1]))
     end
 
     it "groups and individual tags can be mixed" do
@@ -94,9 +94,9 @@ describe "category tag restrictions" do
       category.allowed_tags = [tag4.name]
       category.reload
 
-      expect(sorted_tag_names(filter_allowed_tags({for_input: true, category: category}))).to eq(sorted_tag_names([tag1, tag2, tag4]))
-      expect(sorted_tag_names(filter_allowed_tags({for_input: true}))).to eq(sorted_tag_names([tag3]))
-      expect(sorted_tag_names(filter_allowed_tags({for_input: true, category: other_category}))).to eq(sorted_tag_names([tag3]))
+      expect(sorted_tag_names(filter_allowed_tags(for_input: true, category: category))).to eq(sorted_tag_names([tag1, tag2, tag4]))
+      expect(sorted_tag_names(filter_allowed_tags(for_input: true))).to eq(sorted_tag_names([tag3]))
+      expect(sorted_tag_names(filter_allowed_tags(for_input: true, category: other_category))).to eq(sorted_tag_names([tag3]))
     end
   end
 
@@ -104,9 +104,9 @@ describe "category tag restrictions" do
     it "filter_allowed_tags returns results based on whether parent tag is present or not" do
       tag_group = Fabricate(:tag_group, parent_tag_id: tag1.id)
       tag_group.tags = [tag3, tag4]
-      expect(sorted_tag_names(filter_allowed_tags({for_input: true}))).to eq(sorted_tag_names([tag1, tag2]))
-      expect(sorted_tag_names(filter_allowed_tags({for_input: true, selected_tags: [tag1.name]}))).to eq(sorted_tag_names([tag1, tag2, tag3, tag4]))
-      expect(sorted_tag_names(filter_allowed_tags({for_input: true, selected_tags: [tag1.name, tag3.name]}))).to eq(sorted_tag_names([tag1, tag2, tag3, tag4]))
+      expect(sorted_tag_names(filter_allowed_tags(for_input: true))).to eq(sorted_tag_names([tag1, tag2]))
+      expect(sorted_tag_names(filter_allowed_tags(for_input: true, selected_tags: [tag1.name]))).to eq(sorted_tag_names([tag1, tag2, tag3, tag4]))
+      expect(sorted_tag_names(filter_allowed_tags(for_input: true, selected_tags: [tag1.name, tag3.name]))).to eq(sorted_tag_names([tag1, tag2, tag3, tag4]))
     end
 
     context "and category restrictions" do
@@ -137,15 +137,15 @@ describe "category tag restrictions" do
 
       it "handles all those rules" do
         # car tags can't be used outside of car category:
-        expect(sorted_tag_names(filter_allowed_tags({for_input: true}))).to eq(sorted_tag_names([tag1, tag2, tag3, tag4]))
-        expect(sorted_tag_names(filter_allowed_tags({for_input: true, category: other_category}))).to eq(sorted_tag_names([tag1, tag2, tag3, tag4]))
+        expect(sorted_tag_names(filter_allowed_tags(for_input: true))).to eq(sorted_tag_names([tag1, tag2, tag3, tag4]))
+        expect(sorted_tag_names(filter_allowed_tags(for_input: true, category: other_category))).to eq(sorted_tag_names([tag1, tag2, tag3, tag4]))
 
         # in car category, a make tag must be given first:
-        expect(sorted_tag_names(filter_allowed_tags({for_input: true, category: car_category}))).to eq(['ford', 'honda'])
+        expect(sorted_tag_names(filter_allowed_tags(for_input: true, category: car_category))).to eq(['ford', 'honda'])
 
         # model tags depend on which make is chosen:
-        expect(sorted_tag_names(filter_allowed_tags({for_input: true, category: car_category, selected_tags: ['honda']}))).to eq(['accord', 'civic', 'ford', 'honda'])
-        expect(sorted_tag_names(filter_allowed_tags({for_input: true, category: car_category, selected_tags: ['ford']}))).to eq(['ford', 'honda', 'mustang', 'taurus'])
+        expect(sorted_tag_names(filter_allowed_tags(for_input: true, category: car_category, selected_tags: ['honda']))).to eq(['accord', 'civic', 'ford', 'honda'])
+        expect(sorted_tag_names(filter_allowed_tags(for_input: true, category: car_category, selected_tags: ['ford']))).to eq(['ford', 'honda', 'mustang', 'taurus'])
       end
 
       it "can apply the tags to a topic" do
@@ -161,10 +161,10 @@ describe "category tag restrictions" do
         end
 
         it "can restrict one tag from each group" do
-          expect(sorted_tag_names(filter_allowed_tags({for_input: true, category: car_category}))).to eq(['ford', 'honda'])
-          expect(sorted_tag_names(filter_allowed_tags({for_input: true, category: car_category, selected_tags: ['honda']}))).to eq(['accord', 'civic', 'honda'])
-          expect(sorted_tag_names(filter_allowed_tags({for_input: true, category: car_category, selected_tags: ['ford']}))).to eq(['ford', 'mustang', 'taurus'])
-          expect(sorted_tag_names(filter_allowed_tags({for_input: true, category: car_category, selected_tags: ['ford', 'mustang']}))).to eq(['ford', 'mustang'])
+          expect(sorted_tag_names(filter_allowed_tags(for_input: true, category: car_category))).to eq(['ford', 'honda'])
+          expect(sorted_tag_names(filter_allowed_tags(for_input: true, category: car_category, selected_tags: ['honda']))).to eq(['accord', 'civic', 'honda'])
+          expect(sorted_tag_names(filter_allowed_tags(for_input: true, category: car_category, selected_tags: ['ford']))).to eq(['ford', 'mustang', 'taurus'])
+          expect(sorted_tag_names(filter_allowed_tags(for_input: true, category: car_category, selected_tags: ['ford', 'mustang']))).to eq(['ford', 'mustang'])
         end
 
         it "can apply the tags to a topic" do
@@ -175,7 +175,7 @@ describe "category tag restrictions" do
         it "can remove extra tags from the same group" do
           # A weird case that input field wouldn't allow.
           # Only one tag from car makers is allowed, but we're saying that two have been selected.
-          names = filter_allowed_tags({for_input: true, category: car_category, selected_tags: ['honda', 'ford']}).map(&:name)
+          names = filter_allowed_tags(for_input: true, category: car_category, selected_tags: ['honda', 'ford']).map(&:name)
           expect(names.include?('honda') && names.include?('ford')).to eq(false)
           expect(names.include?('honda') || names.include?('ford')).to eq(true)
         end

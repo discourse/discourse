@@ -31,7 +31,7 @@ const Scrolling = Ember.Mixin.create({
     opts = opts || { debounce: 100 };
 
     // So we can not call the scrolled event while transitioning
-    const router = Discourse.__container__.lookup('router:main').router;
+    const router = Discourse.__container__.lookup('router:main')._routerMicrolib;
 
     let onScrollMethod = () => {
       if (router.activeTransition) { return; }

@@ -10,14 +10,14 @@ describe SpamRule::FlagSockpuppets do
     subject(:perform) { rule.perform }
 
     it 'does nothing if flag_sockpuppets is disabled' do
-      SiteSetting.stubs(:flag_sockpuppets).returns(false)
+      SiteSetting.flag_sockpuppets = false
       rule.expects(:reply_is_from_sockpuppet?).never
       rule.expects(:flag_sockpuppet_users).never
       expect(perform).to eq(false)
     end
 
     context 'flag_sockpuppets is enabled' do
-      before { SiteSetting.stubs(:flag_sockpuppets).returns(true) }
+      before { SiteSetting.flag_sockpuppets = true }
 
       it 'flags posts when it should' do
         rule.expects(:reply_is_from_sockpuppet?).returns(:true)

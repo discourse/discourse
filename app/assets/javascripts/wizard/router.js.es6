@@ -1,7 +1,7 @@
 import getUrl from 'discourse-common/lib/get-url';
 
 const Router = Ember.Router.extend({
-  rootURL: getUrl('/wizard'),
+  rootURL: getUrl('/wizard/'),
   location: Ember.testing ? 'none': 'history'
 });
 

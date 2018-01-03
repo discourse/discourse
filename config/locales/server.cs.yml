@@ -7,9 +7,9 @@
 
 cs:
   dates:
-    short_date_no_year: "D. MMMM"
-    short_date: "D. MMMM, YYYY"
-    long_date: "D. MMMM YYYY H:mm"
+    short_date_no_year: "D MMM"
+    short_date: "D MMM, YYYY"
+    long_date: "D. MMMM, YYYY h:mm"
   datetime_formats: &datetime_formats
     formats:
       short: "%-d. %-m. %Y"
@@ -27,14 +27,18 @@ cs:
   topics: "Témata"
   posts: "příspěvky"
   loading: "Nahrávám"
+  powered_by_html: 'Systém běží na <a href="https://www.discourse.org">Discourse</a>, nejlépe funguje se zapnutým JavaScriptem'
   log_in: "Přihlásit se"
   purge_reason: "Tento účet byl automaticky smazán a deaktivován jako opuštěný"
   disable_remote_images_download_reason: "Stahování obrázků z cizích serverů bylo vypnuto protože na disku není dostatek místa."
   anonymous: "Anonymní"
   remove_posts_deleted_by_author: "Smazáno autorem"
+  themes:
+    bad_color_scheme: "Nelze aktualizovat skin (theme), neplatné barevné schéma"
+    other_error: "Něco se pokazilo při aktualizaci skinu (theme)"
   emails:
     incoming:
-      default_subject: "Toto téma vyžaduje název"
+      default_subject: "Toto téma potřebuje nadpis"
       show_trimmed_content: "Ukázat upravený obsah"
       maximum_staged_user_per_email_reached: "Dosáhli jste maximálního počtu uživatelů na jeden e-mail."
       errors:
@@ -164,6 +168,7 @@ cs:
       admins: "admins"
       moderators: "moderators"
       staff: "staff"
+      trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
@@ -187,6 +192,8 @@ cs:
     attributes:
       category:
         name: "Název kategorie"
+      topic:
+        title: 'Nadpis'
       post:
         raw: "Tělo"
       user_profile:
@@ -206,12 +213,17 @@ cs:
               common: "je jedno z 10 000 nejčastějších hesel. Použijte prosím bezpečnější heslo."
               same_as_username: "je stejné jako vaše uživatelské jméno. Zkuste vymyslet bezpečnější heslo."
               same_as_email: "je stejné jako váš email. Zkuste vymyslet bezpečnější heslo."
+              same_as_current: "je stejné jako vaše současné heslo."
+              unique_characters: "má příliš mnoho opakujících se znaků. Použijte prosím bezpečnější heslo."
             ip_address:
               signup_not_allowed: "Registrace z této adresy není povolena."
         color_scheme_color:
           attributes:
             hex:
               invalid: "není platná barva"
+        post_reply:
+          base:
+            different_topic: "Příspěvek a odpověď musí patřit ke stejnému tématu."
       <<: *errors
   user_profile:
     no_info_other: "<div class='missing-profile'>%{name} o sobě zatím žádné informace nevyplnil</div>"
@@ -221,13 +233,13 @@ cs:
   meta_category_description: "Diskutuje tento web, jeho organizaci, jak funguje a jak ho vylepšit."
   staff_category_name: "Redakce"
   staff_category_description: "Privátní kategorie pro diskuze štábu. Témata jsou viditelná pouze pro moderátory a správce."
-  assets_topic_body: "Tohle je permanentí téma, viditelné pouze redaktorům, pro uchovávání obrázků a souborů použitých v designu tohoto webu. Nemažte ho!\n\n\nTady je jak:\n\n1. Odpovězte na toto téma.\n2. Nahrajte sem všechny obrázky které chcete používat pro loga, favicony a podobně. (Použijte ikonku „nahrát“ v panelu nad editorem, nebo obrázky rovnou přetáhněte nebo „vložte“)\n3. Pošlete tuto odpověď\n4. Klikněte pravým tlačítkem na obrázky ve vašem novém příspěvku a zkopírujte si adresy, nebo klikněte na úpravu přípěvku a adresy vykopírujte tam.\n5. Vložte tyto adresy do [základního nastavení](/admin/site_settings/category/required).\n\nPokud potřebujete nahrát jiné soubory, změňte nastavení `authorized_extensions` v [nastavení souborů](/admin/site_settings/category/files)."
   discourse_welcome_topic:
     title: "Vítejte v Discourse"
   lounge_welcome:
     title: "Vítejte v Redakci"
   category:
     topic_prefix: "Definice kategorie pro %{category}"
+    post_template: "%{replace_paragraph}\n\nPoužijte následující odstavce pro delší popis, nebo pro vytvoření pokynů ke kategorii nebo pravidel:\n\n- Proč by lidé měli používat tuto kategorii? K čemu slouží?\n\nJak přesně je tato kategorie odlišná od ostatních, které již máme?\n\n- Co by měly témata v této kategorii obvykle obsahovat?\n\nPotřebujeme tuto kategorii? Můžeme ji sloučit s jinou kategorií nebo subkategorií?\n"
     errors:
       uncategorized_parent: "„Bez kategorie“ nemůže mít nadřazenou kategorii"
       self_parent: "Nadřazená kategorie nemůže zároveň být podkategorie"
@@ -587,20 +599,16 @@ cs:
     min_search_term_length: "Minimální délka hledaného výrazu ve znacích"
     allow_duplicate_topic_titles: "Povolit témata se stejným, duplicitním názvem"
     unique_posts_mins: "Kolik minut musí uplynout, než může uživatel zaslat příspěvek se stejným obsahem"
-    queue_jobs: "Zařazovat úlohy do fronty v sidekiq, není-li nastaveno, jsou úlohy vyřizovány okamžitě"
     apple_touch_icon_url: "Ikona používaná pro doteková zařízení od firmy Apple. Doporučené rozměry jsou 144px krát 144px."
     email_custom_headers: "Seznam vlastních hlaviček emailů, oddělený svislítkem"
     enable_long_polling: "'Message bus' smí používat dlouhé výzvy"
     anon_polling_interval: "Jak často se mají zasílat výzvy anonymním uživatelům v milisekundách"
-    notify_mods_when_user_blocked: "If a user is automatically blocked, send a message to all moderators."
     ga_universal_tracking_code: "Kód Google Universal Analytics (analytics.js); například UA–12345678-9; více na http://google.com/analytics"
     ga_universal_domain_name: "Doménové jméno Google Universal Analytics (analytics.js); například mojeforum.cz; více na http://google.com/analytics"
     allow_moderators_to_create_categories: "Povolit moderátorům vytváření nových kategorií."
     post_menu: "Určuje, které položky se zobrazí v menu u příspěvku a v jakém pořadí. Příklad: like|edit|flag|delete|share|bookmark|reply"
     track_external_right_clicks: "Počítat kliknutí na externí odkazy pravým tlačítkem (např. otevření do nové záložky); defaultně zakázáno kvůli přepisu URL"
     enable_badges: "Povolit odznaky"
-    port: "Používat tento HTTP port místo standardního portu 80. Nechte prázdné pro výchozí port, užitečné hlavně pro vývoj"
-    force_hostname: "Na pevno nastaví hostitele v URL. Nechte prázdné pro výchozí server, užitečné hlavně pro vývoj"
     invite_expiry_days: "Platnost uživatelských pozvánek ve dnech"
     min_password_length: "Minimální povolená délka hesla."
     min_admin_password_length: "Minimální délka heslo pro administrátora."
@@ -633,7 +641,6 @@ cs:
     privacy_policy_url: "Pokud máte dokument 'Ochrana Soukromí' hostovaný samostatně, napište sem jeho plnou URL."
     reply_by_email_address: "Šablona emailé adresy pro odpověď emailem, např. %{reply_key}@reply.myforum.com"
     delete_all_posts_max: "Maximální počet příspěvků, které mohou být smazány najednou tlačítkem 'Odstranit všechny příspěvky'. Pokud má uživatel více příspěvků než je zde nastaveno, nemohou být jeho příspěvky smazány najednou a uživatele nelze odstranit."
-    username_change_period: "Počet dní od registrace za kolik si uživatel může změnit svoje uživatelské jméno (0 pokud chcete změnu uživatelského jména úplně zakázat)."
     email_editable: "Povolit uživatelům změnit si po registraci emailovou adresu."
     digest_topics: "Maximální počet populárních témat zařazených do email přehledu."
     digest_posts: "Maximální počet populárních příspěvků zařazených do email přehledu."
@@ -678,7 +685,6 @@ cs:
     omniauth_error_unknown: "Nastala chyba při zpracování vašeho přihlášení, prosím zkuste to znovu."
   user:
     username:
-      characters: "musí obsahovat pouze písmena a číslice"
       unique: "musí být unikátní"
       blank: "nesmí být prázdný"
     email:
@@ -725,7 +731,6 @@ cs:
       join_the_discussion: "Číst dále"
       popular_posts: "Populární příspěvky"
       subject_template: "[%{email_prefix}] Přehled"
-      unsubscribe: "Přehled zaslán z webu %{site_link}, protože jsi jej již nějaký čas nenavštívil. Pro zrušení zasílání %{unsubscribe_link}."
       click_here: "klikněte zde"
       from: "%{site_name} - přehled"
       preheader: "Krátký souhrn od poslední návštěvy v %{last_seen_at}"
@@ -738,10 +743,6 @@ cs:
     recent_topics: "Nedávné"
     see_more: "Více"
     search_google: "Google"
-  login_required:
-    welcome_message: |
-      #[Vítejte na %{title}](#welcome)
-      Je vyžadován uživatelský účet. Prosím vytvořte si nový účet nebo se přihlaste.
   terms_of_service:
     title: "Podmínky používání"
     signup_form_message: 'I have read and accept the <a href="/tos" target="_blank">Terms of Service</a>.'
@@ -777,10 +778,11 @@ cs:
   privacy_topic:
     title: "Ochrana soukromí"
   badges:
+    editor:
+      long_description: |
+        Tento odznak je udělen, když poprvé upravíte jeden z Vašich příspěvků. I když nebudete moci upravovat Vaše příspěvky po určitém čase, úprava je vždy dobrý nápad - můžete své příspěvky vylepšit, opravit malé chyby nebo přidat cokoliv, co jste v původním příspěvku zapomněli. Upravujte, abyste Vaše příspěvky udělali ještě lepšími!
     welcome:
       name: Vítejte
-    autobiographer:
-      description: Vyplněné informace v <a href="/my/preferences">profilu</a>
     first_like:
       name: První "to se mi líbí"
     first_share:

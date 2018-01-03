@@ -1,19 +1,17 @@
 import { moduleForWidget, widgetTest } from 'helpers/widget-test';
 import { createWidget } from 'discourse/widgets/widget';
 import { withPluginApi } from 'discourse/lib/plugin-api';
+import hbs from 'discourse/widgets/hbs-compiler';
 
 moduleForWidget('base');
 
 widgetTest('widget attributes are passed in via args', {
   template: `{{mount-widget widget="hello-test" args=args}}`,
 
-  setup() {
+  beforeEach() {
     createWidget('hello-test', {
       tagName: 'div.test',
-
-      html(attrs) {
-        return `Hello ${attrs.name}`;
-      },
+      template: hbs`Hello {{attrs.name}}`
     });
 
     this.set('args', { name: 'Robin' });
@@ -24,10 +22,43 @@ widgetTest('widget attributes are passed in via args', {
   }
 });
 
+widgetTest("hbs template - no tagName", {
+  template: `{{mount-widget widget="hbs-test" args=args}}`,
+
+  beforeEach() {
+    createWidget('hbs-test', {
+      template: hbs`<div class='test'>Hello {{attrs.name}}</div>`
+    });
+
+    this.set('args', { name: 'Robin' });
+  },
+
+  test(assert) {
+    assert.equal(this.$('div.test').text(), "Hello Robin");
+  }
+});
+
+widgetTest("hbs template - with tagName", {
+  template: `{{mount-widget widget="hbs-test" args=args}}`,
+
+  beforeEach() {
+    createWidget('hbs-test', {
+      tagName: 'div.test',
+      template: hbs`Hello {{attrs.name}}`
+    });
+
+    this.set('args', { name: 'Robin' });
+  },
+
+  test(assert) {
+    assert.equal(this.$('div.test').text(), "Hello Robin");
+  }
+});
+
 widgetTest('buildClasses', {
   template: `{{mount-widget widget="classname-test" args=args}}`,
 
-  setup() {
+  beforeEach() {
     createWidget('classname-test', {
       tagName: 'div.test',
 
@@ -47,7 +78,7 @@ widgetTest('buildClasses', {
 widgetTest('buildAttributes', {
   template: `{{mount-widget widget="attributes-test" args=args}}`,
 
-  setup() {
+  beforeEach() {
     createWidget('attributes-test', {
       tagName: 'div.test',
 
@@ -68,7 +99,7 @@ widgetTest('buildAttributes', {
 widgetTest('buildId', {
   template: `{{mount-widget widget="id-test" args=args}}`,
 
-  setup() {
+  beforeEach() {
     createWidget('id-test', {
       buildId(attrs) {
         return `test-${attrs.id}`;
@@ -86,17 +117,14 @@ widgetTest('buildId', {
 widgetTest('widget state', {
   template: `{{mount-widget widget="state-test"}}`,
 
-  setup() {
+  beforeEach() {
     createWidget('state-test', {
       tagName: 'button.test',
       buildKey: () => `button-test`,
+      template: hbs`{{state.clicks}} clicks`,
 
       defaultState() {
         return { clicks: 0 };
-      },
-
-      html(attrs, state) {
-        return `${state.clicks} clicks`;
       },
 
       click() {
@@ -119,14 +147,17 @@ widgetTest('widget state', {
 widgetTest('widget update with promise', {
   template: `{{mount-widget widget="promise-test"}}`,
 
-  setup() {
+  beforeEach() {
     createWidget('promise-test', {
       tagName: 'button.test',
       buildKey: () => 'promise-test',
-
-      html(attrs, state) {
-        return state.name || "No name";
-      },
+      template: hbs`
+        {{#if state.name}}
+          {{state.name}}
+        {{else}}
+          No name
+        {{/if}}
+      `,
 
       click() {
         return new Ember.RSVP.Promise(resolve => {
@@ -140,11 +171,11 @@ widgetTest('widget update with promise', {
   },
 
   test(assert) {
-    assert.equal(this.$('button.test').text(), "No name");
+    assert.equal(this.$('button.test').text().trim(), "No name");
 
     click(this.$('button'));
     andThen(() => {
-      assert.equal(this.$('button.test').text(), "Robin");
+      assert.equal(this.$('button.test').text().trim(), "Robin");
     });
   }
 });
@@ -152,14 +183,12 @@ widgetTest('widget update with promise', {
 widgetTest('widget attaching', {
   template: `{{mount-widget widget="attach-test"}}`,
 
-  setup() {
+  beforeEach() {
     createWidget('test-embedded', { tagName: 'div.embedded' });
 
     createWidget('attach-test', {
       tagName: 'div.container',
-      html() {
-        return this.attach('test-embedded');
-      },
+      template: hbs`{{attach widget="test-embedded" attrs=attrs}}`
     });
   },
 
@@ -169,15 +198,78 @@ widgetTest('widget attaching', {
   }
 });
 
+widgetTest("handlebars d-icon", {
+  template: `{{mount-widget widget="hbs-icon-test" args=args}}`,
+
+  beforeEach() {
+    createWidget('hbs-icon-test', {
+      template: hbs`{{d-icon "arrow-down"}}`
+    });
+  },
+
+  test(assert) {
+    assert.equal(this.$('i.fa.fa-arrow-down').length, 1);
+  }
+});
+
+widgetTest("handlebars i18n", {
+  template: `{{mount-widget widget="hbs-i18n-test" args=args}}`,
+
+  beforeEach() {
+    createWidget('hbs-i18n-test', {
+      template: hbs`
+        <span class='string'>{{i18n "hbs_test0"}}</span>
+        <span class='var'>{{i18n attrs.key}}</span>
+        <a href title={{i18n "hbs_test0"}}>test</a>
+      `
+    });
+    I18n.extras = [ {
+      "hbs_test0": "evil",
+      "hbs_test1": "trout"
+    } ];
+    this.set('args', { key: 'hbs_test1' });
+  },
+
+  test(assert) {
+    // comin up
+    assert.equal(this.$('span.string').text(), 'evil');
+    assert.equal(this.$('span.var').text(), 'trout');
+    assert.equal(this.$('a').prop('title'), 'evil');
+  }
+});
+
+widgetTest('handlebars #each', {
+  template: `{{mount-widget widget="hbs-each-test" args=args}}`,
+
+  beforeEach() {
+    createWidget('hbs-each-test', {
+      tagName: 'ul',
+      template: hbs`
+        {{#each attrs.items as |item|}}
+          <li>{{item}}</li>
+        {{/each}}
+      `
+    });
+
+    this.set('args', {
+      items: ['one', 'two', 'three']
+    });
+  },
+
+  test(assert) {
+    assert.equal(this.$('ul li').length, 3);
+    assert.equal(this.$('ul li:eq(0)').text(), "one");
+  }
+
+});
+
 widgetTest('widget decorating', {
   template: `{{mount-widget widget="decorate-test"}}`,
 
-  setup() {
+  beforeEach() {
     createWidget('decorate-test', {
       tagName: 'div.decorate',
-      html() {
-        return "main content";
-      },
+      template: hbs`main content`
     });
 
     withPluginApi('0.1', api => {
@@ -201,17 +293,11 @@ widgetTest('widget decorating', {
 widgetTest('widget settings', {
   template: `{{mount-widget widget="settings-test"}}`,
 
-  setup() {
+  beforeEach() {
     createWidget('settings-test', {
       tagName: 'div.settings',
-
-      settings: {
-        age: 36
-      },
-
-      html() {
-        return `age is ${this.settings.age}`;
-      },
+      template: hbs`age is {{settings.age}}`,
+      settings: { age: 36 }
     });
   },
 
@@ -223,17 +309,11 @@ widgetTest('widget settings', {
 widgetTest('override settings', {
   template: `{{mount-widget widget="ov-settings-test"}}`,
 
-  setup() {
+  beforeEach() {
     createWidget('ov-settings-test', {
       tagName: 'div.settings',
-
-      settings: {
-        age: 36
-      },
-
-      html() {
-        return `age is ${this.settings.age}`;
-      },
+      template: hbs`age is {{settings.age}}`,
+      settings: { age: 36 },
     });
 
     withPluginApi('0.1', api => {

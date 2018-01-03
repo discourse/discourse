@@ -10,8 +10,8 @@ class UserStat < ActiveRecord::Base
 
   def self.reset_bounce_scores
     UserStat.where("reset_bounce_score_after < now()")
-            .where("bounce_score > 0")
-            .update_all(bounce_score: 0)
+      .where("bounce_score > 0")
+      .update_all(bounce_score: 0)
   end
 
   # Updates the denormalized view counts for all users
@@ -52,17 +52,18 @@ class UserStat < ActiveRecord::Base
     ", seen_at: last_seen
   end
 
+  # topic_reply_count is a count of posts in other users' topics
   def update_topic_reply_count
     self.topic_reply_count =
         Topic
-        .where(['id in (
+      .where(['id in (
               SELECT topic_id FROM posts p
               JOIN topics t2 ON t2.id = p.topic_id
               WHERE p.deleted_at IS NULL AND
                 t2.user_id <> p.user_id AND
                 p.user_id = ?
               )', self.user_id])
-        .count
+      .count
   end
 
   MAX_TIME_READ_DIFF = 100
@@ -71,7 +72,9 @@ class UserStat < ActiveRecord::Base
     if last_seen = last_seen_cached
       diff = (Time.now.to_f - last_seen.to_f).round
       if diff > 0 && diff < MAX_TIME_READ_DIFF
-        UserStat.where(user_id: id, time_read: time_read).update_all ["time_read = time_read + ?", diff]
+        update_args = ["time_read = time_read + ?", diff]
+        UserStat.where(user_id: id, time_read: time_read).update_all(update_args)
+        UserVisit.where(user_id: id, visited_at: Time.zone.now.to_date).update_all(update_args)
       end
     end
     cache_last_seen(Time.now.to_f)

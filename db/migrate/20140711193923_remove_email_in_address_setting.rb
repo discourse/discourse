@@ -1,4 +1,4 @@
-class RemoveEmailInAddressSetting < ActiveRecord::Migration
+class RemoveEmailInAddressSetting < ActiveRecord::Migration[4.2]
   def up
     uncat_id = ActiveRecord::Base.exec_sql("SELECT value FROM site_settings WHERE name = 'uncategorized_category_id'").first
     cat_id_r = ActiveRecord::Base.exec_sql("SELECT value FROM site_settings WHERE name = 'email_in_category'").first

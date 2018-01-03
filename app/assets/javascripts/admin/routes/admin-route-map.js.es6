@@ -54,7 +54,11 @@ export default function() {
     this.route('adminReports', { path: '/reports/:type', resetNamespace: true });
 
     this.route('adminFlags', { path: '/flags', resetNamespace: true }, function() {
-      this.route('list', { path: '/:filter' });
+      this.route('postsActive', { path: 'active' });
+      this.route('postsOld', { path: 'old' });
+      this.route('topics', { path: 'topics' }, function() {
+        this.route('show', { path: ":id" });
+      });
     });
 
     this.route('adminLogs', { path: '/logs', resetNamespace: true }, function() {
@@ -62,6 +66,14 @@ export default function() {
       this.route('screenedEmails', { path: '/screened_emails' });
       this.route('screenedIpAddresses', { path: '/screened_ip_addresses' });
       this.route('screenedUrls', { path: '/screened_urls' });
+      this.route('adminSearchLogs', { path: '/search_logs', resetNamespace: true}, function() {
+        this.route('index', { path: '/' });
+        this.route('term', { path: '/term/:term' });
+      });
+      this.route('adminWatchedWords', { path: '/watched_words', resetNamespace: true}, function() {
+        this.route('index', { path: '/' });
+        this.route('action', { path: '/action/:action_id' });
+      });
     });
 
     this.route('adminGroups', { path: '/groups', resetNamespace: true }, function() {

@@ -10,7 +10,6 @@ class DetailedUserBadgeSerializer < BasicUserBadgeSerializer
   alias :include_topic_id? :include_post_number?
   alias :include_topic_title? :include_post_number?
 
-
   def post_number
     object.post.post_number if object.post
   end

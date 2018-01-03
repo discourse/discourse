@@ -5,7 +5,7 @@ class CategoryAndTopicListsSerializer < ApplicationSerializer
 
   def users
     users = object.topic_list.topics.map do |t|
-      t.posters.map{|poster| poster.try(:user)}
+      t.posters.map { |poster| poster.try(:user) }
     end
     users.flatten!
     users.compact!

@@ -21,8 +21,8 @@ describe UserHistory do
   describe '#staff_action_records' do
     context "with some records" do
       before do
-        @change_site_setting = UserHistory.create!({action: UserHistory.actions[:change_site_setting], subject: "title", previous_value: "Old", new_value: "New"})
-        @change_trust_level  = UserHistory.create!({action: UserHistory.actions[:change_trust_level], target_user_id: Fabricate(:user).id, details: "stuff happened"})
+        @change_site_setting = UserHistory.create!(action: UserHistory.actions[:change_site_setting], subject: "title", previous_value: "Old", new_value: "New")
+        @change_trust_level  = UserHistory.create!(action: UserHistory.actions[:change_trust_level], target_user_id: Fabricate(:user).id, details: "stuff happened")
       end
 
       it "returns all records for admins" do

@@ -1,5 +1,5 @@
 class PostJobsEnqueuer
-  def initialize(post, topic, new_topic, opts={})
+  def initialize(post, topic, new_topic, opts = {})
     @post = post
     @topic = topic
     @new_topic = new_topic

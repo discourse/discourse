@@ -7,7 +7,6 @@
 
 gl:
   site_settings:
-    poll_enabled: "Queres permitir os usuarios crear enquisas?"
     poll_maximum_options: "Número máximo de opcións permitidas nunha enquisa."
   poll:
     multiple_polls_without_name: "Hai múltiples enquisas sen nome. Utiliza o atributo '<code>nome</code>' para singularizar as túas enquisas."

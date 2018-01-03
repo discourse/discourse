@@ -401,7 +401,6 @@ gl:
     suppress_uncategorized_badge: "Non mostrar a insignia para temas sen categoría nas listas de temas."
     automatically_unpin_topics: "Despegar os temas automaticamente cando o usuario chega ao fondo."
     full_name_required: "O nome completo no perfil do usuario é obrigatorio."
-    embed_username_key_from_feed: "Clave para recuperar o nome do usuario desde a fonte."
     enable_emoji: "Activar emojis"
   search:
     types:

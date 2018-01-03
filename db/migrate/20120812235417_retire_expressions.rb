@@ -1,4 +1,4 @@
-class RetireExpressions < ActiveRecord::Migration
+class RetireExpressions < ActiveRecord::Migration[4.2]
   def up
     execute 'insert into post_actions (post_action_type_id, user_id, post_id, created_at, updated_at)
 select

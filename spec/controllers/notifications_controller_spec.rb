@@ -7,12 +7,12 @@ describe NotificationsController do
 
     describe '#index' do
       it 'should succeed for recent' do
-        xhr :get, :index, recent: true
+        get :index, params: { recent: true }
         expect(response).to be_success
       end
 
       it 'should succeed for history' do
-        xhr :get, :index
+        get :index
         expect(response).to be_success
       end
 
@@ -20,7 +20,7 @@ describe NotificationsController do
         notification = Fabricate(:notification, user: user)
         expect(user.reload.unread_notifications).to eq(1)
         expect(user.reload.total_unread_notifications).to eq(1)
-        xhr :get, :index, recent: true
+        get :index, params: { recent: true }, format: :json
         expect(user.reload.unread_notifications).to eq(0)
         expect(user.reload.total_unread_notifications).to eq(1)
       end
@@ -29,14 +29,14 @@ describe NotificationsController do
         notification = Fabricate(:notification, user: user)
         expect(user.reload.unread_notifications).to eq(1)
         expect(user.reload.total_unread_notifications).to eq(1)
-        xhr :get, :index, recent: true, silent: true
+        get :index, params: { recent: true, silent: true }
         expect(user.reload.unread_notifications).to eq(1)
         expect(user.reload.total_unread_notifications).to eq(1)
       end
 
       context 'when username params is not valid' do
         it 'should raise the right error' do
-          xhr :get, :index, username: 'somedude'
+          get :index, params: { username: 'somedude' }, format: :json
 
           expect(response).to_not be_success
           expect(response.status).to eq(404)
@@ -45,14 +45,14 @@ describe NotificationsController do
     end
 
     it 'should succeed' do
-      xhr :put, :mark_read
+      put :mark_read, format: :json
       expect(response).to be_success
     end
 
     it "can update a single notification" do
       notification = Fabricate(:notification, user: user)
       notification2 = Fabricate(:notification, user: user)
-      xhr :put, :mark_read, id: notification.id
+      put :mark_read, params: { id: notification.id }, format: :json
       expect(response).to be_success
 
       notification.reload
@@ -66,7 +66,7 @@ describe NotificationsController do
       notification = Fabricate(:notification, user: user)
       expect(user.reload.unread_notifications).to eq(1)
       expect(user.reload.total_unread_notifications).to eq(1)
-      xhr :put, :mark_read
+      put :mark_read, format: :json
       user.reload
       expect(user.reload.unread_notifications).to eq(0)
       expect(user.reload.total_unread_notifications).to eq(0)
@@ -75,7 +75,9 @@ describe NotificationsController do
 
   context 'when not logged in' do
     it 'should raise an error' do
-      expect { xhr :get, :index, recent: true }.to raise_error(Discourse::NotLoggedIn)
+      expect do
+        get :index, params: { recent: true }, format: :json
+      end.to raise_error(Discourse::NotLoggedIn)
     end
   end
 

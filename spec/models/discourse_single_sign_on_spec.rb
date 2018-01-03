@@ -5,8 +5,8 @@ describe DiscourseSingleSignOn do
     @sso_url = "http://somesite.com/discourse_sso"
     @sso_secret = "shjkfdhsfkjh"
 
-    SiteSetting.enable_sso = true
     SiteSetting.sso_url = @sso_url
+    SiteSetting.enable_sso = true
     SiteSetting.sso_secret = @sso_secret
   end
 
@@ -67,15 +67,15 @@ describe DiscourseSingleSignOn do
   let(:ip_address) { "127.0.0.1" }
 
   it "can lookup or create user when name is blank" do
-    # so we can create system messages
-    Fabricate(:admin)
     sso = DiscourseSingleSignOn.new
     sso.username = "test"
     sso.name = ""
     sso.email = "test@test.com"
     sso.external_id = "A"
+    sso.suppress_welcome_message = true
     user = sso.lookup_or_create_user(ip_address)
-    expect(user).to_not be_nil
+
+    expect(user.persisted?).to eq(true)
   end
 
   it "unstaged users" do
@@ -111,6 +111,7 @@ describe DiscourseSingleSignOn do
     sso.external_id = "id"
     sso.admin = true
     sso.moderator = true
+    sso.suppress_welcome_message = true
 
     user = sso.lookup_or_create_user(ip_address)
     staff_group.reload
@@ -127,9 +128,13 @@ describe DiscourseSingleSignOn do
     add_group1 = Fabricate(:group, name: 'group1')
     add_group2 = Fabricate(:group, name: 'group2')
     existing_group = Fabricate(:group, name: 'group3')
+    add_group4 = Fabricate(:group, name: 'GROUP4')
+    existing_group2 = Fabricate(:group, name: 'GRoup5')
 
-    existing_group.add(user)
-    existing_group.save!
+    [existing_group, existing_group2].each do |g|
+      g.add(user)
+      g.save!
+    end
 
     add_group1.add(user)
     existing_group.save!
@@ -140,24 +145,31 @@ describe DiscourseSingleSignOn do
     sso.email = user.email
     sso.external_id = "A"
 
-    sso.add_groups = "#{add_group1.name},#{add_group2.name},badname"
-    sso.remove_groups = "#{existing_group.name},badname"
+    sso.add_groups = "#{add_group1.name},#{add_group2.name.capitalize},group4,badname"
+    sso.remove_groups = "#{existing_group.name},#{existing_group2.name.downcase},badname"
 
     sso.lookup_or_create_user(ip_address)
 
     existing_group.reload
     expect(existing_group.usernames).to eq("")
 
+    existing_group2.reload
+    expect(existing_group2.usernames).to eq("")
+
     add_group1.reload
     expect(add_group1.usernames).to eq(user.username)
 
     add_group2.reload
     expect(add_group2.usernames).to eq(user.username)
+
+    add_group4.reload
+    expect(add_group4.usernames).to eq(user.username)
   end
 
   it "can override name / email / username" do
     admin = Fabricate(:admin)
 
+    SiteSetting.email_editable = false
     SiteSetting.sso_overrides_name = true
     SiteSetting.sso_overrides_email = true
     SiteSetting.sso_overrides_username = true
@@ -233,14 +245,15 @@ describe DiscourseSingleSignOn do
   end
 
   context 'trusting emails' do
-    let(:sso) {
+    let(:sso) do
       sso = DiscourseSingleSignOn.new
       sso.username = "test"
       sso.name = "test"
       sso.email = "test@example.com"
       sso.external_id = "A"
+      sso.suppress_welcome_message = true
       sso
-    }
+    end
 
     it 'activates users by default' do
       user = sso.lookup_or_create_user(ip_address)
@@ -253,8 +266,26 @@ describe DiscourseSingleSignOn do
       expect(user.active).to eq(false)
     end
 
+    it 'does not deactivate user if email provided is capitalized' do
+      SiteSetting.email_editable = false
+      SiteSetting.sso_overrides_email = true
+      sso.require_activation = true
+
+      user = sso.lookup_or_create_user(ip_address)
+      expect(user.active).to eq(false)
+
+      user.update_columns(active: true)
+      user = sso.lookup_or_create_user(ip_address)
+      expect(user.active).to eq(true)
+
+      sso.email = "Test@example.com"
+      user = sso.lookup_or_create_user(ip_address)
+      expect(user.active).to eq(true)
+    end
+
     it 'deactivates accounts that have updated email address' do
 
+      SiteSetting.email_editable = false
       SiteSetting.sso_overrides_email = true
       sso.require_activation = true
 
@@ -267,7 +298,7 @@ describe DiscourseSingleSignOn do
       user = sso.lookup_or_create_user(ip_address)
       expect(user.active).to eq(true)
 
-      user.update_columns(email: 'xXx@themovie.com')
+      user.primary_email.update_columns(email: 'xXx@themovie.com')
 
       user = sso.lookup_or_create_user(ip_address)
       expect(user.email).to eq(old_email)
@@ -327,21 +358,21 @@ describe DiscourseSingleSignOn do
   end
 
   context 'setting bio for a user' do
-    let(:sso) {
+    let(:sso) do
       sso = DiscourseSingleSignOn.new
       sso.username = "test"
       sso.name = "test"
       sso.email = "test@test.com"
       sso.external_id = "100"
       sso.bio = "This **is** the bio"
+      sso.suppress_welcome_message = true
       sso
-    }
+    end
 
     it 'can set bio if supplied on new users or users with empty bio' do
       # new account
       user = sso.lookup_or_create_user(ip_address)
       expect(user.user_profile.bio_cooked).to match_html("<p>This <strong>is</strong> the bio</p>")
-
 
       # no override by default
       sso.bio = "new profile"
@@ -350,81 +381,77 @@ describe DiscourseSingleSignOn do
       expect(user.user_profile.bio_cooked).to match_html("<p>This <strong>is</strong> the bio</p>")
 
       # yes override for blank
-      user.user_profile.bio_raw = " "
-      user.user_profile.save!
+      user.user_profile.update!(bio_raw: '')
 
       user = sso.lookup_or_create_user(ip_address)
       expect(user.user_profile.bio_cooked).to match_html("<p>new profile</p>")
-
 
       # yes override if site setting
       sso.bio = "new profile 2"
       SiteSetting.sso_overrides_bio = true
 
       user = sso.lookup_or_create_user(ip_address)
-      expect(user.user_profile.bio_cooked).to match_html("<p>new profile 2</p>")
+      expect(user.user_profile.bio_cooked).to match_html("<p>new profile 2</p")
     end
 
   end
 
   context 'when sso_overrides_avatar is not enabled' do
 
-
     it "correctly handles provided avatar_urls" do
-      Sidekiq::Testing.inline! do
-        sso = DiscourseSingleSignOn.new
-        sso.external_id = 666
-        sso.email = "sam@sam.com"
-        sso.name = "sam"
-        sso.username = "sam"
-        sso.avatar_url = "http://awesome.com/image.png"
+      sso = DiscourseSingleSignOn.new
+      sso.external_id = 666
+      sso.email = "sam@sam.com"
+      sso.name = "sam"
+      sso.username = "sam"
+      sso.avatar_url = "http://awesome.com/image.png"
+      sso.suppress_welcome_message = true
 
-        FileHelper.stubs(:download).returns(file_from_fixtures("logo.png"))
-        user = sso.lookup_or_create_user(ip_address)
-        user.reload
-        avatar_id = user.uploaded_avatar_id
+      FileHelper.stubs(:download).returns(file_from_fixtures("logo.png"))
+      user = sso.lookup_or_create_user(ip_address)
+      user.reload
+      avatar_id = user.uploaded_avatar_id
 
-        # initial creation ...
-        expect(avatar_id).to_not eq(nil)
+      # initial creation ...
+      expect(avatar_id).to_not eq(nil)
 
-        # junk avatar id should be updated
-        old_id = user.uploaded_avatar_id
-        Upload.destroy(old_id)
+      # junk avatar id should be updated
+      old_id = user.uploaded_avatar_id
+      Upload.destroy(old_id)
 
-        user = sso.lookup_or_create_user(ip_address)
-        user.reload
-        avatar_id = user.uploaded_avatar_id
+      user = sso.lookup_or_create_user(ip_address)
+      user.reload
+      avatar_id = user.uploaded_avatar_id
 
-        expect(avatar_id).to_not eq(nil)
-        expect(old_id).to_not eq(avatar_id)
+      expect(avatar_id).to_not eq(nil)
+      expect(old_id).to_not eq(avatar_id)
 
-        FileHelper.stubs(:download) { raise "should not be called" }
-        sso.avatar_url = "https://some.new/avatar.png"
-        user = sso.lookup_or_create_user(ip_address)
-        user.reload
+      FileHelper.stubs(:download) { raise "should not be called" }
+      sso.avatar_url = "https://some.new/avatar.png"
+      user = sso.lookup_or_create_user(ip_address)
+      user.reload
 
-        # avatar updated but no override specified ...
-        expect(user.uploaded_avatar_id).to eq(avatar_id)
+      # avatar updated but no override specified ...
+      expect(user.uploaded_avatar_id).to eq(avatar_id)
 
-        sso.avatar_force_update = true
-        FileHelper.stubs(:download).returns(file_from_fixtures("logo-dev.png"))
-        user = sso.lookup_or_create_user(ip_address)
-        user.reload
+      sso.avatar_force_update = true
+      FileHelper.stubs(:download).returns(file_from_fixtures("logo-dev.png"))
+      user = sso.lookup_or_create_user(ip_address)
+      user.reload
 
-        # we better have a new avatar
-        expect(user.uploaded_avatar_id).not_to eq(avatar_id)
-        expect(user.uploaded_avatar_id).not_to eq(nil)
+      # we better have a new avatar
+      expect(user.uploaded_avatar_id).not_to eq(avatar_id)
+      expect(user.uploaded_avatar_id).not_to eq(nil)
 
-        avatar_id = user.uploaded_avatar_id
+      avatar_id = user.uploaded_avatar_id
 
-        sso.avatar_force_update = true
-        FileHelper.stubs(:download) { raise "not found" }
-        user = sso.lookup_or_create_user(ip_address)
-        user.reload
+      sso.avatar_force_update = true
+      FileHelper.stubs(:download) { raise "not found" }
+      user = sso.lookup_or_create_user(ip_address)
+      user.reload
 
-        # we better have the same avatar
-        expect(user.uploaded_avatar_id).to eq(avatar_id)
-      end
+      # we better have the same avatar
+      expect(user.uploaded_avatar_id).to eq(avatar_id)
     end
 
   end

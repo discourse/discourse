@@ -1,6 +1,9 @@
 {{#if icon}}
-  {{fa-icon icon}}
+  {{d-icon icon}}
 {{/if}}
 
-{{{translatedLabel}}}
+{{#if translatedLabel}}
+  <span class='d-button-label'>{{{translatedLabel}}}{{#if ellipsis}}&hellip;{{/if}}</span>
+{{/if}}
+
 {{yield}}

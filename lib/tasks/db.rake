@@ -1,22 +1,102 @@
 # we should set the locale before the migration
 task 'set_locale' do
-  I18n.locale = (SiteSetting.default_locale || :en) rescue :en
+  begin
+    I18n.locale = (SiteSetting.default_locale || :en) rescue :en
+  rescue I18n::InvalidLocale
+    I18n.locale = :en
+  end
 end
 
-# we need to run seed_fu every time we run rake db:migrate
-task 'db:migrate' => ['environment', 'set_locale'] do
-  SeedFu.seed
-  Jobs::Onceoff.enqueue_all
+task 'db:environment:set', [:multisite] => [:load_config]  do |_, args|
+  if Rails.env.test? && !args[:multisite]
+    system("MULTISITE=multisite rails db:environment:set['true'] RAILS_ENV=test")
+  end
+end
+
+task 'db:create', [:multisite] => [:load_config] do |_, args|
+  if Rails.env.test? && !args[:multisite]
+    system("MULTISITE=multisite rails db:create['true']")
+  end
+end
+
+task 'db:drop', [:multisite] => [:load_config] do |_, args|
+  if Rails.env.test? && !args[:multisite]
+    system("MULTISITE=multisite rails db:drop['true']")
+  end
+end
+
+# we need to run seed_fu every time we run rails db:migrate
+task 'db:migrate', [:multisite] => ['environment', 'set_locale'] do |_, args|
+  SeedFu.seed(DiscoursePluginRegistry.seed_paths)
+
+  if Rails.env.test? && !args[:multisite]
+    system("rails db:schema:dump")
+    system("MULTISITE=multisite rails db:schema:load")
+    system("RAILS_DB=discourse_test_multisite rails db:migrate['multisite']")
+  end
 end
 
 task 'test:prepare' => 'environment' do
   I18n.locale = SiteSetting.default_locale rescue :en
-  SeedFu.seed
+  SeedFu.seed(DiscoursePluginRegistry.seed_paths)
 end
 
 task 'db:api_test_seed' => 'environment' do
   puts "Loading test data for discourse_api"
   load Rails.root + 'db/api_test_seeds.rb'
+end
+
+def print_table(array)
+  width = array[0].keys.map { |k| k.to_s.length }
+  cols = array[0].keys.length
+
+  array.each do |row|
+    row.each_with_index do |(_, val), i|
+      width[i] = [width[i].to_i, val.to_s.length].max
+    end
+  end
+
+  array[0].keys.each_with_index do |col, i|
+    print col.to_s.ljust(width[i], ' ')
+    if i == cols - 1
+      puts
+    else
+      print ' | '
+    end
+  end
+
+  puts "-" * (width.sum + width.length)
+
+  array.each do |row|
+    row.each_with_index do |(_, val), i|
+      print val.to_s.ljust(width[i], ' ')
+      if i == cols - 1
+        puts
+      else
+        print ' | '
+      end
+    end
+  end
+end
+
+desc 'Statistics about database'
+task 'db:stats' => 'environment' do
+
+  sql = <<~SQL
+    select table_name,
+    (
+      select reltuples::bigint
+      from pg_class
+      where oid = ('public.' || table_name)::regclass
+    ) AS row_estimate,
+    pg_size_pretty(pg_relation_size(quote_ident(table_name))) size
+    from information_schema.tables
+    where table_schema = 'public'
+    order by pg_relation_size(quote_ident(table_name)) DESC
+  SQL
+
+  puts
+  print_table(Post.exec_sql(sql).to_a)
 end
 
 desc 'Rebuild indexes'

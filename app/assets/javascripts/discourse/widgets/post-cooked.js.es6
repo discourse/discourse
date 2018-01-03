@@ -1,3 +1,4 @@
+import { iconHTML } from 'discourse-common/lib/icon-library';
 import { ajax } from 'discourse/lib/ajax';
 import { isValidLink } from 'discourse/lib/click-track';
 import { number } from 'discourse/lib/formatter';
@@ -140,7 +141,7 @@ export default class PostCooked {
         $blockQuote.showHtml(div, 'fast', finished);
       }).catch((e) => {
         if (e.jqXHR.status === 404) {
-          $blockQuote.showHtml($("<div class='expanded-quote'><i class='fa fa-trash-o'></i></div>"), 'fast', finished);
+          $blockQuote.showHtml($(`<div class='expanded-quote'>${iconHTML('trash-o')}</div>`), 'fast', finished);
         }
       });
     } else {
@@ -158,27 +159,19 @@ export default class PostCooked {
   _updateQuoteElements($aside, desc) {
     let navLink = "";
     const quoteTitle = I18n.t("post.follow_quote");
-    const postNumber = $aside.data('post');
+    let postNumber = $aside.data('post');
+    let topicNumber = $aside.data('topic');
 
-    if (postNumber) {
-
-      // If we have a topic reference
-      const asideTopicId = parseInt($aside.data('topic'));
-
-      if (asideTopicId) {
-        // If it's the same topic as ours, build the URL from the topic object
-        if (this.attrs.topicId === asideTopicId) {
-          navLink = `<a href='${this._urlForPostNumber(postNumber)}' title='${quoteTitle}' class='back'></a>`;
-        }
-      } else {
-        // assume the same topic
-        navLink = `<a href='${this._urlForPostNumber(postNumber)}' title='${quoteTitle}' class='back'></a>`;
-      }
+    // If we have a post reference
+    if (topicNumber && topicNumber === this.attrs.topicId && postNumber) {
+      let icon = iconHTML('arrow-up');
+      navLink = `<a href='${this._urlForPostNumber(postNumber)}' title='${quoteTitle}' class='back'>${icon}</a>`;
     }
+
     // Only add the expand/contract control if it's not a full post
     let expandContract = "";
     if (!$aside.data('full')) {
-      expandContract = `<i class='fa fa-${desc}' title='${I18n.t("post.expand_collapse")}'></i>`;
+      expandContract = iconHTML(desc, { title: "post.expand_collapse" });
       $('.title', $aside).css('cursor', 'pointer');
     }
     $('.quote-controls', $aside).html(expandContract + navLink);
@@ -197,7 +190,8 @@ export default class PostCooked {
         // Unless it's a full quote, allow click to expand
         if (!($aside.data('full') || $title.data('has-quote-controls'))) {
           $title.on('click', e2 => {
-            if ($(e2.target).is('a')) return true;
+            let $target = $(e2.target);
+            if ($target.closest('a').length) { return true; }
             this._toggleQuote($aside);
           });
           $title.data('has-quote-controls', true);

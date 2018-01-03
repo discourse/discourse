@@ -1,0 +1,17 @@
+<td class='date'>
+  {{format-date item.created_at}}
+</td>
+<td class='history-item-action'>
+  <div class='action-name'>
+    {{i18n (concat "admin.moderation_history.actions." item.action_name)}}
+  </div>
+  <div class='action-details'>{{item.details}}</div>
+</td>
+<td class='history-item-actor'>
+  {{#if item.acting_user}}
+    {{#user-link user=item.acting_user}}
+      {{avatar item.acting_user imageSize="small"}}
+      <span>{{format-username item.acting_user.username}}</span>
+    {{/user-link}}
+  {{/if}}
+</td>

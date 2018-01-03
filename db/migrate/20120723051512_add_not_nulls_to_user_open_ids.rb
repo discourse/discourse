@@ -1,4 +1,4 @@
-class AddNotNullsToUserOpenIds < ActiveRecord::Migration
+class AddNotNullsToUserOpenIds < ActiveRecord::Migration[4.2]
   def change
     change_column :user_open_ids, :user_id, :integer, null: false
     change_column :user_open_ids, :email, :string, null: false

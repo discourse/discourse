@@ -1,4 +1,4 @@
-class DescriptionOptionalInBadgeGrouping < ActiveRecord::Migration
+class DescriptionOptionalInBadgeGrouping < ActiveRecord::Migration[4.2]
   def change
     change_column :badge_groupings, :description, :text, null: true
   end

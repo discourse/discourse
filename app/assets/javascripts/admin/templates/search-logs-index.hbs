@@ -1,0 +1,33 @@
+<p>
+  {{period-chooser period=period}}
+  {{combo-box content=searchTypeOptions value=searchType class='search-logs-filter'}}
+</p>
+<br>
+
+{{#conditional-loading-spinner condition=loading}}
+  {{#if model.length}}
+
+    <div class='table search-logs-list'>
+      <div class="heading-container">
+        <div class="col heading term">{{i18n 'admin.logs.search_logs.term'}}</div>
+        <div class="col heading">{{i18n 'admin.logs.search_logs.searches'}}</div>
+        <div class="col heading">{{i18n 'admin.logs.search_logs.click_through'}}</div>
+        <div class="col heading" title="{{i18n 'admin.logs.search_logs.unique_title'}}">{{i18n 'admin.logs.search_logs.unique'}}</div>
+      </div>
+
+      {{#each model as |item|}}
+        <div class="admin-list-item">
+          <div class="col term">
+            {{#link-to 'adminSearchLogs.term' item.term}}{{item.term}}{{/link-to}}
+          </div>
+          <div class="col">{{item.searches}}</div>
+          <div class="col">{{item.click_through}}</div>
+          <div class="col">{{item.unique}}</div>
+        </div>
+      {{/each}}
+    </div>
+
+  {{else}}
+    {{i18n 'search.no_results'}}
+  {{/if}}
+{{/conditional-loading-spinner}}

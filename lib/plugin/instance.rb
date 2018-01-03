@@ -2,7 +2,6 @@ require 'digest/sha1'
 require 'fileutils'
 require_dependency 'plugin/metadata'
 require_dependency 'plugin/auth_provider'
-require_dependency 'plugin/theme'
 
 class Plugin::CustomEmoji
   def self.cache_key
@@ -30,6 +29,7 @@ class Plugin::Instance
    :color_schemes,
    :initializers,
    :javascripts,
+   :service_workers,
    :styles,
    :themes].each do |att|
     class_eval %Q{
@@ -58,14 +58,14 @@ class Plugin::Instance
     }
   end
 
-  def initialize(metadata=nil, path=nil)
+  def initialize(metadata = nil, path = nil)
     @metadata = metadata
     @path = path
     @idx = 0
   end
 
   def add_admin_route(label, location)
-    @admin_route = {label: label, location: location}
+    @admin_route = { label: label, location: location }
   end
 
   def enabled?
@@ -74,66 +74,125 @@ class Plugin::Instance
 
   delegate :name, to: :metadata
 
-  def add_to_serializer(serializer, attr, define_include_method=true, &block)
-    klass = "#{serializer.to_s.classify}Serializer".constantize rescue "#{serializer.to_s}Serializer".constantize
+  def add_to_serializer(serializer, attr, define_include_method = true, &block)
+    reloadable_patch do |plugin|
+      klass = "#{serializer.to_s.classify}Serializer".constantize rescue "#{serializer.to_s}Serializer".constantize
 
-    klass.attributes(attr) unless attr.to_s.start_with?("include_")
+      unless attr.to_s.start_with?("include_")
+        klass.attributes(attr)
 
-    klass.send(:define_method, attr, &block)
+        if define_include_method
+          # Don't include serialized methods if the plugin is disabled
+          klass.send(:define_method, "include_#{attr}?") { plugin.enabled? }
+        end
+      end
 
-    return unless define_include_method
+      klass.send(:define_method, attr, &block)
+    end
+  end
 
-    # Don't include serialized methods if the plugin is disabled
-    plugin = self
-    klass.send(:define_method, "include_#{attr}?") { plugin.enabled? }
+  def replace_flags
+    settings = ::FlagSettings.new
+    yield settings
+
+    reloadable_patch do |plugin|
+      ::PostActionType.replace_flag_settings(settings) if plugin.enabled?
+    end
   end
 
   def whitelist_staff_user_custom_field(field)
-    User.register_plugin_staff_custom_field(field, self)
+    reloadable_patch do |plugin|
+      ::User.register_plugin_staff_custom_field(field, plugin) if plugin.enabled?
+    end
+  end
+
+  def custom_avatar_column(column)
+    reloadable_patch do |plugin|
+      AvatarLookup.lookup_columns << column
+      AvatarLookup.lookup_columns.uniq!
+    end
+  end
+
+  def add_body_class(class_name)
+    reloadable_patch do |plugin|
+      ::ApplicationHelper.extra_body_classes << class_name if plugin.enabled?
+    end
+  end
+
+  def rescue_from(exception, &block)
+    reloadable_patch do |plugin|
+      ::ApplicationController.rescue_from(exception, &block)
+    end
   end
 
   # Extend a class but check that the plugin is enabled
   # for class methods use `add_class_method`
-  def add_to_class(klass, attr, &block)
-    klass = klass.to_s.classify.constantize rescue klass.to_s.constantize
+  def add_to_class(class_name, attr, &block)
+    reloadable_patch do |plugin|
+      klass = class_name.to_s.classify.constantize rescue class_name.to_s.constantize
+      hidden_method_name = :"#{attr}_without_enable_check"
+      klass.send(:define_method, hidden_method_name, &block)
 
-    hidden_method_name = :"#{attr}_without_enable_check"
-    klass.send(:define_method, hidden_method_name, &block)
-
-    plugin = self
-    klass.send(:define_method, attr) do |*args|
-      send(hidden_method_name, *args) if plugin.enabled?
+      klass.send(:define_method, attr) do |*args|
+        send(hidden_method_name, *args) if plugin.enabled?
+      end
     end
   end
 
   # Adds a class method to a class, respecting if plugin is enabled
-  def add_class_method(klass, attr, &block)
-    klass = klass.to_s.classify.constantize rescue klass.to_s.constantize
+  def add_class_method(klass_name, attr, &block)
+    reloadable_patch do |plugin|
+      klass = klass_name.to_s.classify.constantize rescue klass_name.to_s.constantize
 
-    hidden_method_name = :"#{attr}_without_enable_check"
-    klass.send(:define_singleton_method, hidden_method_name, &block)
+      hidden_method_name = :"#{attr}_without_enable_check"
+      klass.send(:define_singleton_method, hidden_method_name, &block)
 
-    plugin = self
-    klass.send(:define_singleton_method, attr) do |*args|
-      send(hidden_method_name, *args) if plugin.enabled?
+      klass.send(:define_singleton_method, attr) do |*args|
+        send(hidden_method_name, *args) if plugin.enabled?
+      end
     end
   end
 
-  def add_model_callback(klass, callback, options = {}, &block)
-    klass = klass.to_s.classify.constantize rescue klass.to_s.constantize
-    plugin = self
+  def add_model_callback(klass_name, callback, options = {}, &block)
+    reloadable_patch do |plugin|
+      klass = klass_name.to_s.classify.constantize rescue klass_name.to_s.constantize
 
-    # generate a unique method name
-    method_name = "#{plugin.name}_#{klass.name}_#{callback}#{@idx}".underscore
-    @idx += 1
-    hidden_method_name = :"#{method_name}_without_enable_check"
-    klass.send(:define_method, hidden_method_name, &block)
+      # generate a unique method name
+      method_name = "#{plugin.name}_#{klass.name}_#{callback}#{@idx}".underscore
+      @idx += 1
+      hidden_method_name = :"#{method_name}_without_enable_check"
+      klass.send(:define_method, hidden_method_name, &block)
 
-    klass.send(callback, options) do |*args|
-      send(hidden_method_name, *args) if plugin.enabled?
+      klass.send(callback, options) do |*args|
+        send(hidden_method_name, *args) if plugin.enabled?
+      end
+
+      hidden_method_name
     end
+  end
 
-    hidden_method_name
+  def topic_view_post_custom_fields_whitelister(&block)
+    reloadable_patch do |plugin|
+      ::TopicView.add_post_custom_fields_whitelister(&block) if plugin.enabled?
+    end
+  end
+
+  def add_preloaded_group_custom_field(field)
+    reloadable_patch do |plugin|
+      ::Group.preloaded_custom_field_names << field if plugin.enabled?
+    end
+  end
+
+  def add_preloaded_topic_list_custom_field(field)
+    reloadable_patch do |plugin|
+      ::TopicList.preloaded_custom_fields << field if plugin.enabled?
+    end
+  end
+
+  def add_permitted_post_create_param(name)
+    reloadable_patch do |plugin|
+      ::Post.permitted_create_params << name if plugin.enabled?
+    end
   end
 
   # Add validation method but check that the plugin is enabled
@@ -164,7 +223,7 @@ class Plugin::Instance
   def delete_extra_automatic_assets(good_paths)
     return unless Dir.exists? auto_generated_path
 
-    filenames = good_paths.map{|f| File.basename(f)}
+    filenames = good_paths.map { |f| File.basename(f) }
     # nuke old files
     Dir.foreach(auto_generated_path) do |p|
       next if [".", ".."].include?(p)
@@ -201,17 +260,44 @@ class Plugin::Instance
 
   def notify_after_initialize
     color_schemes.each do |c|
-      ColorScheme.create_from_base(name: c[:name], colors: c[:colors]) unless ColorScheme.where(name: c[:name]).exists?
+      unless ColorScheme.where(name: c[:name]).exists?
+        ColorScheme.create_from_base(name: c[:name], colors: c[:colors])
+      end
     end
 
     initializers.each do |callback|
       begin
         callback.call(self)
       rescue ActiveRecord::StatementInvalid => e
-        # When running db:migrate for the first time on a new database, plugin initializers might
-        # try to use models. Tolerate it.
+        # When running `db:migrate` for the first time on a new database,
+        # plugin initializers might try to use models.
+        # Tolerate it.
         raise e unless e.message.try(:include?, "PG::UndefinedTable")
       end
+    end
+  end
+
+  def register_category_custom_field_type(name, type)
+    reloadable_patch do |plugin|
+      Category.register_custom_field_type(name, type) if plugin.enabled?
+    end
+  end
+
+  def register_topic_custom_field_type(name, type)
+    reloadable_patch do |plugin|
+      ::Topic.register_custom_field_type(name, type) if plugin.enabled?
+    end
+  end
+
+  def register_post_custom_field_type(name, type)
+    reloadable_patch do |plugin|
+      ::Post.register_custom_field_type(name, type) if plugin.enabled?
+    end
+  end
+
+  def register_group_custom_field_type(name, type)
+    reloadable_patch do |plugin|
+      ::Group.register_custom_field_type(name, type) if plugin.enabled?
     end
   end
 
@@ -242,29 +328,32 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_html_builder(name, &block)
   end
 
-  def register_asset(file, opts=nil)
+  def register_asset(file, opts = nil)
     full_path = File.dirname(path) << "/assets/" << file
     assets << [full_path, opts]
   end
 
+  def register_service_worker(file, opts = nil)
+    service_workers << [
+      File.join(File.dirname(path), 'assets', file),
+      opts
+    ]
+  end
+
   def register_color_scheme(name, colors)
-    color_schemes << {name: name, colors: colors}
+    color_schemes << { name: name, colors: colors }
   end
 
   def register_seed_data(key, value)
     seed_data[key] = value
   end
 
-  def register_emoji(name, url)
-    Plugin::CustomEmoji.register(name, url)
+  def register_seed_path_builder(&block)
+    DiscoursePluginRegistry.register_seed_path_builder(&block)
   end
 
-  def register_theme(name)
-    return unless enabled?
-
-    theme = Plugin::Theme.new(self, name)
-    yield theme
-    themes << theme
+  def register_emoji(name, url)
+    Plugin::CustomEmoji.register(name, url)
   end
 
   def automatic_assets
@@ -339,6 +428,8 @@ JS
 
     register_assets! unless assets.blank?
 
+    register_service_workers!
+
     seed_data.each do |key, value|
       DiscoursePluginRegistry.register_seed_data(key, value)
     end
@@ -362,13 +453,12 @@ JS
       target = Rails.root.to_s + "/public/plugins/"
 
       Discourse::Utils.execute_command('mkdir', '-p', target)
-      target << name.gsub(/\s/,"_")
+      target << name.gsub(/\s/, "_")
       # TODO a cleaner way of registering and unregistering
       Discourse::Utils.execute_command('rm', '-f', target)
       Discourse::Utils.execute_command('ln', '-s', public_data, target)
     end
   end
-
 
   def auth_provider(opts)
     provider = Plugin::AuthProvider.new
@@ -378,7 +468,6 @@ JS
     end
     auth_providers << provider
   end
-
 
   # shotgun approach to gem loading, in future we need to hack bundler
   #  to at least determine dependencies do not clash before loading
@@ -390,7 +479,7 @@ JS
     PluginGem.load(path, name, version, opts)
   end
 
-  def enabled_site_setting(setting=nil)
+  def enabled_site_setting(setting = nil)
     if setting
       @enabled_site_setting = setting
     else
@@ -421,9 +510,9 @@ JS
 
       Dir.glob("#{root_path}/**/*") do |f|
         if File.directory?(f)
-          yield [f,true]
+          yield [f, true]
         elsif f.to_s.ends_with?(".js.es6") || f.to_s.ends_with?(".hbs")
-          yield [f,false]
+          yield [f, false]
         end
       end
     end
@@ -437,13 +526,31 @@ JS
     end
   end
 
+  def register_service_workers!
+    service_workers.each do |asset, opts|
+      DiscoursePluginRegistry.register_service_worker(asset, opts)
+    end
+  end
+
   private
 
   def write_asset(path, contents)
     unless File.exists?(path)
       ensure_directory(path)
-      File.open(path,"w") { |f| f.write(contents) }
+      File.open(path, "w") { |f| f.write(contents) }
     end
+  end
+
+  def reloadable_patch(plugin = self)
+    if Rails.env.development? && defined?(ActiveSupport::Reloader)
+      ActiveSupport::Reloader.to_prepare do
+        # reload the patch
+        yield plugin
+      end
+    end
+
+    # apply the patch
+    yield plugin
   end
 
 end

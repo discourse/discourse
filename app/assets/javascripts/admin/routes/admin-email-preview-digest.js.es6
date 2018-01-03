@@ -1,16 +1,17 @@
-import EmailPreview from 'admin/models/email-preview';
+import { default as EmailPreview, oneWeekAgo } from 'admin/models/email-preview';
 
 export default Discourse.Route.extend({
 
   model() {
-    return EmailPreview.findDigest();
+    return EmailPreview.findDigest(this.currentUser.get('username'));
   },
 
   afterModel(model) {
     const controller = this.controllerFor('adminEmailPreviewDigest');
     controller.setProperties({
-      model: model,
-      lastSeen: moment().subtract(7, 'days').format('YYYY-MM-DD'),
+      model,
+      username: this.currentUser.get('username'),
+      lastSeen: oneWeekAgo(),
       showHtml: true
     });
   }

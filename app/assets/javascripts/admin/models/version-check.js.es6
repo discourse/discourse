@@ -8,18 +8,6 @@ const VersionCheck = Discourse.Model.extend({
     return updatedAt === null;
   },
 
-  @computed('updated_at', 'version_check_pending')
-  dataIsOld(updatedAt, versionCheckPending) {
-    return versionCheckPending || moment().diff(moment(updatedAt), 'hours') >= 48;
-  },
-
-  @computed('dataIsOld', 'installed_version', 'latest_version', 'missing_versions_count')
-  staleData(dataIsOld, installedVersion, latestVersion, missingVersionsCount) {
-    return dataIsOld ||
-           (installedVersion !== latestVersion && missingVersionsCount === 0) ||
-           (installedVersion === latestVersion && missingVersionsCount !== 0);
-  },
-
   @computed('missing_versions_count')
   upToDate(missingVersionsCount) {
     return missingVersionsCount === 0 || missingVersionsCount === null;

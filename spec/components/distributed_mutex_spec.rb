@@ -26,7 +26,6 @@ describe DistributedMutex do
 
     $redis.setnx "test_mutex_key", Time.now.to_i - 1
 
-
     start = Time.now.to_i
     m.synchronize do
       "nop"
@@ -41,7 +40,7 @@ describe DistributedMutex do
 
     expect {
       m.synchronize do
-        m.synchronize{}
+        m.synchronize {}
       end
     }.to raise_error(ThreadError)
   end

@@ -22,7 +22,6 @@ if defined?(Bundler)
   Bundler.require(*Rails.groups(assets: %w(development test profile)))
 end
 
-
 module Discourse
   class Application < Rails::Application
 
@@ -64,6 +63,10 @@ module Discourse
     config.autoload_paths += Dir["#{config.root}/lib/validators/"]
     config.autoload_paths += Dir["#{config.root}/app"]
 
+    if Rails.env.development? && !Sidekiq.server?
+      config.autoload_paths += Dir["#{config.root}/lib"]
+    end
+
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
     # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
@@ -79,11 +82,20 @@ module Discourse
     end]
 
     config.assets.precompile += %w{
-                                 vendor.js admin.js preload-store.js
-                                 browser-update.js break_string.js ember_jquery.js
-                                 pretty-text-bundle.js wizard-application.js
-                                 wizard-vendor.js plugin.js plugin-third-party.js
-                                 }
+      vendor.js
+      admin.js
+      preload-store.js
+      browser-update.js
+      break_string.js
+      ember_jquery.js
+      pretty-text-bundle.js
+      wizard-application.js
+      wizard-vendor.js
+      plugin.js
+      plugin-third-party.js
+      markdown-it-bundle.js
+      service-worker.js
+    }
 
     # Precompile all available locales
     Dir.glob("#{config.root}/app/assets/javascripts/locales/*.js.erb").each do |file|
@@ -130,13 +142,8 @@ module Discourse
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.2.4'
 
-    # We need to be able to spin threads
-    config.active_record.thread_safe!
-
     # see: http://stackoverflow.com/questions/11894180/how-does-one-correctly-add-custom-sql-dml-in-migrations/11894420#11894420
     config.active_record.schema_format = :sql
-
-    config.active_record.raise_in_transactional_callbacks = true
 
     # per https://www.owasp.org/index.php/Password_Storage_Cheat_Sheet
     config.pbkdf2_iterations = 64000
@@ -168,7 +175,7 @@ module Discourse
 
     # we configure rack cache on demand in an initializer
     # our setup does not use rack cache and instead defers to nginx
-    config.action_dispatch.rack_cache =  nil
+    config.action_dispatch.rack_cache = nil
 
     # ember stuff only used for asset precompliation, production variant plays up
     config.ember.variant = :development
@@ -176,7 +183,7 @@ module Discourse
     config.ember.handlebars_location = "#{Rails.root}/vendor/assets/javascripts/handlebars.js"
 
     require 'auth'
-    Discourse.activate_plugins! unless Rails.env.test? and ENV['LOAD_PLUGINS'] != "1"
+    Discourse.activate_plugins! unless Rails.env.test? && ENV['LOAD_PLUGINS'] != "1"
 
     if GlobalSetting.relative_url_root.present?
       config.relative_url_root = GlobalSetting.relative_url_root
@@ -197,6 +204,8 @@ module Discourse
       require_dependency 'post_revision'
       require_dependency 'notification'
       require_dependency 'topic_user'
+      require_dependency 'topic_view'
+      require_dependency 'topic_list'
       require_dependency 'group'
       require_dependency 'user_field'
       require_dependency 'post_action_type'
@@ -205,8 +214,22 @@ module Discourse
 
       # So open id logs somewhere sane
       OpenID::Util.logger = Rails.logger
-      if plugins = Discourse.plugins
-        plugins.each{|plugin| plugin.notify_after_initialize}
+
+      # Load plugins
+      Discourse.plugins.each(&:notify_after_initialize)
+
+      # we got to clear the pool in case plugins connect
+      ActiveRecord::Base.connection_handler.clear_active_connections!
+
+      # This nasty hack is required for not precompiling QUnit assets
+      # in test mode. see: https://github.com/rails/sprockets-rails/issues/299#issuecomment-167701012
+      ActiveSupport.on_load(:action_view) do
+        default_checker = ActionView::Base.precompiled_asset_checker
+
+        ActionView::Base.precompiled_asset_checker = -> logical_path do
+          default_checker[logical_path] ||
+            %w{qunit.js qunit.css test_helper.css test_helper.js wizard/test/test_helper.js}.include?(logical_path)
+        end
       end
     end
 

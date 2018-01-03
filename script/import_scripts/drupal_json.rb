@@ -8,7 +8,7 @@ class ImportScripts::DrupalJson < ImportScripts::Base
 
   def initialize
     super
-    @users_json  = load_json("formatted_users.json")
+    @users_json = load_json("formatted_users.json")
   end
 
   def execute
@@ -40,6 +40,6 @@ class ImportScripts::DrupalJson < ImportScripts::Base
   end
 end
 
-if __FILE__==$0
+if __FILE__ == $0
   ImportScripts::DrupalJson.new.perform
 end

@@ -9,9 +9,9 @@ describe Site do
 
     expected = Theme.where('key = :default OR user_selectable',
                     default: SiteSetting.default_theme_key)
-         .order(:name)
-         .pluck(:key, :name)
-         .map{|k,n| {"theme_key" => k, "name" => n, "default" => k == SiteSetting.default_theme_key}}
+      .order(:name)
+      .pluck(:key, :name)
+      .map { |k, n| { "theme_key" => k, "name" => n, "default" => k == SiteSetting.default_theme_key } }
 
     expect(parsed["user_themes"]).to eq(expected)
   end
@@ -46,20 +46,20 @@ describe Site do
 
     expect(Site.new(Guardian.new(user)).categories.count).to eq(2)
 
-    category.set_permissions(:everyone => :create_post)
+    category.set_permissions(everyone: :create_post)
     category.save
 
     guardian = Guardian.new(user)
 
     expect(Site.new(guardian)
         .categories
-        .keep_if{|c| c.name == category.name}
+        .keep_if { |c| c.name == category.name }
         .first
         .permission)
-        .not_to eq(CategoryGroup.permission_types[:full])
+      .not_to eq(CategoryGroup.permission_types[:full])
 
     # If a parent category is not visible, the child categories should not be returned
-    category.set_permissions(:staff => :full)
+    category.set_permissions(staff: :full)
     category.save
 
     sub_category = Fabricate(:category, parent_category_id: category.id)

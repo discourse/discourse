@@ -88,16 +88,20 @@
 
 // Unselectable (avoids unwanted selections with iPad, touch laptops, etc)
 
+@mixin user-select($mode) {
+  -webkit-user-select: $mode;
+     -moz-user-select: $mode;
+      -ms-user-select: $mode;
+}
+
 @mixin unselectable {
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
+  @include user-select(none);
 }
 
 
 // Stuff we repeat
 @mixin post-aside {
-  border-left: 5px solid dark-light-diff($primary, $secondary, 90%, -85%);
+  border-left: 5px solid $primary-low;
   background-color: blend-primary-secondary(5%);
 }
 
@@ -105,4 +109,11 @@
 @mixin transform($transforms) {
 	-webkit-transform: $transforms;
             transform: $transforms;
+}
+
+
+@mixin appearance-none() { // resets default browser styles
+  -webkit-appearance: none;
+  -moz-appearance:    none;
+  appearance:         none;
 }

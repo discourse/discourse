@@ -13,6 +13,7 @@ export default {
     const user = container.lookup('current-user:main');
     const keyValueStore = container.lookup('key-value-store:main');
     const bus = container.lookup('message-bus:main');
+    const appEvents = container.lookup('app-events:main');
 
     // clear old cached notifications, we used to store in local storage
     // TODO 2017 delete this line
@@ -32,8 +33,7 @@ export default {
       }
 
       bus.subscribe(`/notification/${user.get('id')}`, data => {
-        const store = container.lookup('store:main');
-        const appEvents = container.lookup('app-events:main');
+        const store = container.lookup('service:store');
 
         const oldUnread = user.get('unread_notifications');
         const oldPM = user.get('unread_private_messages');
@@ -95,10 +95,14 @@ export default {
 
       bus.subscribe("/client_settings", data => Ember.set(siteSettings, data.name, data.value));
 
+      bus.subscribe("/refresh_client", data => {
+        Discourse.set("assetVersion", data);
+      });
+
       if (!Ember.testing) {
         if (!site.mobileView) {
           bus.subscribe(alertChannel(user), data => onNotification(data, user));
-          initDesktopNotifications(bus);
+          initDesktopNotifications(bus, appEvents);
         }
       }
     }

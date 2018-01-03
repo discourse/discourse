@@ -33,8 +33,8 @@ class SiteSettings::DbProvider
     model ||= @model.new
 
     model.name = name
-    model.value =  value
-    model.data_type =  data_type
+    model.value = value
+    model.data_type = data_type
 
     # save! used to ensure after_commit is called
     model.save!
@@ -56,8 +56,13 @@ class SiteSettings::DbProvider
 
   # table is not in the db yet, initial migration, etc
   def table_exists?
-    @table_exists = ActiveRecord::Base.connection.table_exists? @model.table_name unless @table_exists
-    @table_exists
+    @table_exists ||= {}
+
+    unless @table_exists[current_site]
+      @table_exists[current_site] = ActiveRecord::Base.connection.table_exists?(@model.table_name)
+    end
+
+    @table_exists[current_site]
   end
 
 end

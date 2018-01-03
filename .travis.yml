@@ -10,6 +10,7 @@ env:
     - "RAILS_MASTER=0 QUNIT_RUN=0 RUN_LINT=1"
 
 addons:
+  chrome: stable
   postgresql: 9.5
   apt:
     packages:
@@ -20,8 +21,11 @@ addons:
 
 matrix:
   fast_finish: true
+  allow_failures:
+    - rvm: 2.5.0
 
 rvm:
+  - 2.5.0
   - 2.4.2
   - 2.3.4
 
@@ -44,12 +48,14 @@ before_install:
   - git clone --depth=1 https://github.com/discourse/discourse-canned-replies.git plugins/discourse-canned-replies
   - git clone --depth=1 https://github.com/discourse/discourse-chat-integration.git plugins/discourse-chat-integration
   - git clone --depth=1 https://github.com/discourse/discourse-assign.git plugins/discourse-assign
+  - git clone --depth=1 https://github.com/discourse/discourse-patreon.git plugins/discourse-patreon
   - export PATH=$HOME/.yarn/bin:$PATH
 
 install:
   - bash -c "if [ '$RAILS_MASTER' == '1' ]; then bundle update --retry=3 --jobs=3 arel rails seed-fu; fi"
   - bash -c "if [ '$RAILS_MASTER' == '0' ]; then bundle install --without development --deployment --retry=3 --jobs=3; fi"
   - bash -c "if [ '$RUN_LINT' == '1' ]; then yarn global add eslint babel-eslint; fi"
+  - bash -c "if [ '$QUNIT_RUN' == '1' ]; then yarn install --dev; fi"
 
 script:
   - |
@@ -65,7 +71,8 @@ script:
         bundle exec rake db:create db:migrate
 
         if [ '$QUNIT_RUN' == '1' ]; then
-          LOAD_PLUGINS=1 bundle exec rake qunit:test['400000']
+          bundle exec rake qunit:test['400000'] && \
+          bundle exec rake plugin:spec
         else
           bundle exec rspec && bundle exec rake plugin:spec
         fi

@@ -5,14 +5,14 @@ import { createWidget } from 'discourse/widgets/widget';
 createWidget('search-term', {
   tagName: 'input',
   buildId: () => 'search-term',
-  buildKey: (attrs) => `search-term-${attrs.id}`,
+  buildKey: () => `search-term`,
 
   defaultState() {
-    this.appEvents.on("search-autocomplete:after-complete", () => {
-      this.state.afterAutocomplete = true;
-    });
-
     return { afterAutocomplete: false };
+  },
+
+  searchAutocompleteAfterComplete() {
+    this.state.afterAutocomplete = true;
   },
 
   buildAttributes(attrs) {

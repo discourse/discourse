@@ -1,0 +1,7 @@
+<label class="btn {{if addDisabled 'disabled'}}">
+  {{d-icon "upload"}}
+  {{i18n 'admin.watched_words.form.upload'}}
+  <input disabled={{addDisabled}} type="file" accept="text/plain,text/csv" style="visibility: hidden; position: absolute;" />
+</label>
+<br/>
+<span class="instructions">One word per line</span>

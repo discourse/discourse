@@ -21,7 +21,6 @@ Benchmark.ips do |b|
   end
 
   b.report("raw") do
-    conn.exec("SELECT name FROM users LIMIT 1").getvalue(0,0)
+    conn.exec("SELECT name FROM users LIMIT 1").getvalue(0, 0)
   end
 end
-

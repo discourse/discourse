@@ -28,15 +28,13 @@ class Theme < ActiveRecord::Base
     changed_fields.each(&:save!)
     changed_fields.clear
 
-    Theme.expire_site_cache! if user_selectable_changed?
+    Theme.expire_site_cache! if saved_change_to_user_selectable? || saved_change_to_name?
 
     @dependant_themes = nil
     @included_themes = nil
-  end
 
-  after_save do
     remove_from_cache!
-    notify_scheme_change if color_scheme_id_changed?
+    notify_scheme_change if saved_change_to_color_scheme_id?
   end
 
   after_destroy do
@@ -46,16 +44,17 @@ class Theme < ActiveRecord::Base
     end
 
     if self.id
-
       ColorScheme
         .where(theme_id: self.id)
         .where("id NOT IN (SELECT color_scheme_id FROM themes where color_scheme_id IS NOT NULL)")
-               .destroy_all
+        .destroy_all
 
       ColorScheme
         .where(theme_id: self.id)
         .update_all(theme_id: nil)
     end
+
+    Theme.expire_site_cache!
   end
 
   after_commit ->(theme) do
@@ -114,7 +113,7 @@ class Theme < ActiveRecord::Base
     (@cache[cache_key] = val || "").html_safe
   end
 
-  def self.remove_from_cache!(themes=nil)
+  def self.remove_from_cache!(themes = nil)
     clear_cache!
   end
 
@@ -122,13 +121,11 @@ class Theme < ActiveRecord::Base
     @cache.clear
   end
 
-
   def self.targets
     @targets ||= Enum.new(common: 0, desktop: 1, mobile: 2)
   end
 
-
-  def notify_scheme_change(clear_manager_cache=true)
+  def notify_scheme_change(clear_manager_cache = true)
     Stylesheet::Manager.cache.clear if clear_manager_cache
     message = refresh_message_for_targets(["desktop", "mobile", "admin"], self)
     MessageBus.publish('/file-change', message)
@@ -140,7 +137,7 @@ class Theme < ActiveRecord::Base
     themes = [self] + dependant_themes
 
     message = themes.map do |theme|
-      refresh_message_for_targets([:mobile_theme,:desktop_theme], theme)
+      refresh_message_for_targets([:mobile_theme, :desktop_theme], theme)
     end.compact.flatten
     MessageBus.publish('/file-change', message)
   end
@@ -168,7 +165,7 @@ class Theme < ActiveRecord::Base
 
   def resolve_dependant_themes(direction)
 
-    select_field,where_field=nil
+    select_field, where_field = nil
 
     if direction == :up
       select_field = "parent_theme_id"
@@ -212,7 +209,7 @@ class Theme < ActiveRecord::Base
   end
 
   def resolve_baked_field(target, name)
-    list_baked_fields(target,name).map{|f| f.value_baked || f.value}.join("\n")
+    list_baked_fields(target, name).map { |f| f.value_baked || f.value }.join("\n")
   end
 
   def list_baked_fields(target, name)
@@ -221,12 +218,15 @@ class Theme < ActiveRecord::Base
 
     theme_ids = [self.id] + (included_themes.map(&:id) || [])
     fields = ThemeField.where(target_id: [Theme.targets[target], Theme.targets[:common]])
-                       .where(name: name.to_s)
-                       .includes(:theme)
-                       .joins("JOIN (
-                             SELECT #{theme_ids.map.with_index{|id,idx| "#{id} AS theme_id, #{idx} AS sort_column"}.join(" UNION ALL SELECT ")}
-                            ) as X ON X.theme_id = theme_fields.theme_id")
-                       .order('sort_column, target_id')
+      .where(name: name.to_s)
+      .includes(:theme)
+      .joins("
+        JOIN (
+          SELECT #{theme_ids.map.with_index { |id, idx| "#{id} AS theme_id, #{idx} AS sort_column" }.join(" UNION ALL SELECT ")}
+        ) as X ON X.theme_id = theme_fields.theme_id"
+      )
+      .order('sort_column, target_id')
+
     fields.each(&:ensure_baked!)
     fields
   end
@@ -254,7 +254,7 @@ class Theme < ActiveRecord::Base
 
     value ||= ""
 
-    field = theme_fields.find{|f| f.name==name && f.target_id == target_id && f.type_id == type_id}
+    field = theme_fields.find { |f| f.name == name && f.target_id == target_id && f.type_id == type_id }
     if field
       if value.blank? && !upload_id
         theme_fields.delete field.destroy
@@ -270,6 +270,18 @@ class Theme < ActiveRecord::Base
     end
   end
 
+  def all_theme_variables
+    fields = {}
+    ([self] + (included_themes || [])).each do |theme|
+      theme&.theme_fields.each do |field|
+        next unless ThemeField.theme_var_type_ids.include?(field.type_id)
+        next if fields.key?(field.name)
+        fields[field.name] = field
+      end
+    end
+    fields.values
+  end
+
   def add_child_theme!(theme)
     child_theme_relation.create!(child_theme_id: theme.id)
     @included_themes = nil
@@ -283,9 +295,9 @@ end
 # Table name: themes
 #
 #  id               :integer          not null, primary key
-#  name             :string           not null
+#  name             :string(255)      not null
 #  user_id          :integer          not null
-#  key              :string           not null
+#  key              :string(255)      not null
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #  compiler_version :integer          default(0), not null

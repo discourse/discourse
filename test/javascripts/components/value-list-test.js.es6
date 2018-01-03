@@ -30,7 +30,7 @@ componentTest('functionality', {
 
 componentTest('with string delimited values', {
   template: '{{value-list values=valueString}}',
-  setup() {
+  beforeEach() {
     this.set('valueString', "hello\nworld");
   },
 
@@ -49,7 +49,7 @@ componentTest('with string delimited values', {
 
 componentTest('with array values', {
   template: '{{value-list values=valueArray inputType="array"}}',
-  setup() {
+  beforeEach() {
     this.set('valueArray', ['abc', 'def']);
   },
 

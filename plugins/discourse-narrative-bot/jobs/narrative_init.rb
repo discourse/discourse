@@ -1,3 +1,6 @@
+require_dependency 'i18n'
+require_dependency 'user'
+
 module Jobs
   class NarrativeInit < Jobs::Base
     sidekiq_options queue: 'critical'

@@ -8,33 +8,33 @@ const template = `{{mount-widget
 widgetTest('single, not selected', {
   template,
 
-  setup() {
+  beforeEach() {
     this.set('option', { id: 'opt-id' });
     this.set('vote', []);
   },
 
   test(assert) {
-    assert.ok(find('li .fa-circle-o:eq(0)').length === 1);
+    assert.ok(find('li .d-icon-circle-o:eq(0)').length === 1);
   }
 });
 
 widgetTest('single, selected', {
   template,
 
-  setup() {
+  beforeEach() {
     this.set('option', { id: 'opt-id' });
     this.set('vote', ['opt-id']);
   },
 
   test(assert) {
-    assert.ok(find('li .fa-dot-circle-o:eq(0)').length === 1);
+    assert.ok(find('li .d-icon-dot-circle-o:eq(0)').length === 1);
   }
 });
 
 widgetTest('multi, not selected', {
   template,
 
-  setup() {
+  beforeEach() {
     this.setProperties({
       option: { id: 'opt-id' },
       isMultiple: true,
@@ -43,14 +43,14 @@ widgetTest('multi, not selected', {
   },
 
   test(assert) {
-    assert.ok(find('li .fa-square-o:eq(0)').length === 1);
+    assert.ok(find('li .d-icon-square-o:eq(0)').length === 1);
   }
 });
 
 widgetTest('multi, selected', {
   template,
 
-  setup() {
+  beforeEach() {
     this.setProperties({
       option: { id: 'opt-id' },
       isMultiple: true,
@@ -59,6 +59,6 @@ widgetTest('multi, selected', {
   },
 
   test(assert) {
-    assert.ok(find('li .fa-check-square-o:eq(0)').length === 1);
+    assert.ok(find('li .d-icon-check-square-o:eq(0)').length === 1);
   }
 });

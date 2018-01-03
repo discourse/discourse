@@ -1,6 +1,6 @@
 .placeholder-avatar {
   display: inline-block;
-  background-color: dark-light-diff($primary, $secondary, 90%, -75%);
+  background-color: $primary-low;
   width: 45px;
   height: 45px;
   border-radius: 50%;
@@ -8,7 +8,7 @@
 
 .placeholder-text {
   display: inline-block;
-  background-color: dark-light-diff($primary, $secondary, 90%, -75%);
+  background-color: $primary-low;
   width: 100%;
   height: 1.5em;
   margin-bottom: 0.6em;
@@ -23,36 +23,38 @@
 
  span {
    font-size: 0.929em;
-   padding-right: 8px;
+   margin-right: 8px;
    display: inline-block;
    max-width: 280px;
    white-space: nowrap;
    overflow: hidden;
    text-overflow: ellipsis;
    a {
-     color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
+     color: dark-light-choose($primary-high, $secondary-low);
    }
  }
  .fa {
-   font-size: 11px;
+   font-size: .786em;
    margin-left: 3px;
-   color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
+   color: dark-light-choose($primary-medium, $secondary-medium);
  }
-  .new_user a, .user-title, .user-title a {
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+ .new_user a, .user-title, .user-title a {
+    color: dark-light-choose($primary-medium, $secondary-medium);
  }
 }
 
 // global styles for the cooked HTML content in posts (and preview)
 .cooked, .d-editor-preview {
   word-wrap: break-word;
-  h1, h2, h3, h4, h5, h6 { margin: 30px 0 10px; }
-  h1 { line-height: 1em; } /* normalize.css sets h1 font size but not line height */
+  h1, h2, h3, h4, h5, h6 { 
+    margin: 30px 0 10px; 
+    line-height: 1.25; 
+  }
+  
   a { word-wrap: break-word; }
-  ins { background-color: dark-light-choose(scale-color($success, $lightness: 90%), scale-color($success, $lightness: -60%)); }
-  del { background-color: dark-light-choose(scale-color($danger, $lightness: 90%), scale-color($danger, $lightness: -60%)); }
+  ins { background-color: dark-light-choose($success-low, scale-color($success, $lightness: -60%)); }
+  del { background-color: dark-light-choose($danger-low, scale-color($danger, $lightness: -60%)); }
 }
-
 
 .cooked, .d-editor-preview {
   video {
@@ -62,6 +64,27 @@
     top: 0;
   }
 }
+
+// add staff color
+.moderator {
+  .regular > .cooked {
+    background-color: dark-light-choose($highlight-low, $highlight-medium);
+    padding: 10px;
+    img:not(.thumbnail) {
+      max-width: 100%;
+      height: auto;
+    }
+  }
+  .clearfix > .topic-meta-data > .names {
+    span.user-title {
+      background-color: dark-light-choose($highlight-low, $highlight-medium);
+      color: dark-light-choose($primary-high, $secondary-low);      
+      padding-left: 4px;
+      padding-right: 4px;
+    }
+  }
+}
+
 // we use aside to hold expandable quotes (versus, say, static blockquotes)
 aside.quote {
   margin-top: 1em;
@@ -72,7 +95,7 @@ aside.quote {
   .title {
     @include post-aside;
 
-    color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
+    color: dark-light-choose($primary-high, $secondary-low);
     // IE will screw up the blockquote underneath if bottom padding is 0px
     padding: 12px 12px 1px 12px;
     // blockquote is underneath this and has top margin
@@ -87,12 +110,12 @@ aside.quote {
   }
 }
 
-.quote-controls, .quote-controls .back:before, .quote-controls .quote-other-topic:before {
-  color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%));
+.quote-controls, .quote-controls .d-icon {
+  color: dark-light-choose($primary-low-mid, $secondary-high);
 }
 
 .cooked .highlight {
-  background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
+  background-color: $tertiary-low;
   padding: 2px;
   margin: -2px;
 }
@@ -114,42 +137,27 @@ aside.quote {
 
 .quote-controls {
   float: right;
-  a {
-    margin: 0;
-  }
-
-  .back:before, .quote-other-topic:before
-  {
-    display: inline-block;
-    margin-left: 8px;
-    font-family: "FontAwesome";
-    position: relative;
-    z-index: 20;
-    content: "\f062";
-  }
-
-  .quote-other-topic:before
-  {
-    content: "\f061";
+  display: flex;
+  .d-icon {
+    margin-left: 0.2em;
   }
 }
 
 .quote-button {
   display: none;
   position: absolute;
-  background-color: dark-light-diff($primary, $secondary, 50%, -50%);
+  background-color: blend-primary-secondary(50%);
   color: dark-light-choose($secondary, $primary);
   padding: 10px;
   z-index: 401;
   opacity: 0.9;
 
-  &:before {
-    font-family: "FontAwesome";
-    content: "\f10d\00a0\00a0";
+  .d-icon {
+    display: inline-block;
   }
 
   &:hover {
-    background-color: dark-light-diff($primary, $secondary, 40%, -40%);
+    background-color: $primary-medium;
     cursor: pointer;
   }
 }
@@ -196,7 +204,7 @@ aside.quote {
     right: -4px;
   }
   .fa {
-    font-size: 24px;
+    font-size: 1.714em;
   }
 }
 .topic-map .poster .avatar-flair {
@@ -214,7 +222,7 @@ aside.quote {
     right: 0;
   }
   .fa {
-    font-size: 14px;
+    font-size: 1em;
   }
 }
 .topic-avatar .poster-avatar-extra {
@@ -242,17 +250,18 @@ aside.quote {
 .post-info {
   &.via-email, &.whisper {
     margin-right: 5px;
-    i.fa {
+    .d-icon {
       font-size: 1em;
     }
   }
 
-  .wiki {
+  .wiki,
+  .last-wiki-edit {
     color: green !important;
   }
 
   &.via-email {
-    color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%));
+    color: dark-light-choose($primary-low-mid, $secondary-high);
   }
   &.raw-email {
     cursor: pointer;
@@ -273,7 +282,7 @@ pre {
 kbd
 {
   background-color: $secondary;
-  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  border: 1px solid $primary-low;
   border-radius: 3px;
   box-shadow: 0 1px 0 rgba(0,0,0, .8);
   color: $primary;
@@ -301,7 +310,7 @@ blockquote > *:last-child {
 
 .gap {
   padding: 0.25em 0 0.5em 4.3em;
-  color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%));
+  color: dark-light-choose($primary-medium, $secondary-high);
   cursor: pointer;
   text-transform: uppercase;
   font-weight: bold;
@@ -317,7 +326,7 @@ blockquote > *:last-child {
 }
 
 
-table.md-table {
+.cooked table, .d-editor-preview table {
   thead {
     border-bottom: 2px solid lighten($primary, 80%);
     th {
@@ -335,34 +344,41 @@ table.md-table {
 }
 
 .small-action {
+  max-width: 755px;
+  border-top: 1px solid $primary-low;
   .topic-avatar {
     padding: 5px 0 3px;
     border-top: none;
     float: left;
     i {
-      font-size: 35px;
+      font-size: 2.500em;
       width: 45px;
       text-align: center;
-      color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
+      color: dark-light-choose($primary-low-mid, $secondary-high);
     }
   }
 
-  .small-action-desc.timegap {
-      color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%));
+  .small-action.deleted {
+    background-color: dark-light-diff(rgba($danger,.7), $secondary, 50%, -60%);
   }
+
+  .small-action-desc.timegap {
+      color: dark-light-choose($primary-medium, $secondary-high);
+  }
+
   .small-action-desc {
     padding: 0.25em 0 0.5em 4.3em;
     margin-top: 6px;
     text-transform: uppercase;
     font-weight: bold;
-    font-size: 0.9em;
-    color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
+    font-size: 0.857em;
+    color: dark-light-choose($primary-low-mid, $secondary-high);
 
     .custom-message {
       text-transform: none;
       margin: 15px 0px 5px;
       font-weight: normal;
-      font-size: 14px;
+      font-size: 1.143em;
       p {
         margin: 5px 0;
       }
@@ -395,15 +411,15 @@ table.md-table {
   .topic-body {
     .cooked {
       font-style: italic;
-      color: dark-light-diff($primary, $secondary, 55%, -40%);
+      color: $primary-medium;
     }
   }
 }
 
 a.mention, a.mention-group {
   padding: 2px 4px;
-  color: dark-light-diff($primary, $secondary, 30%, -20%);
-  background: dark-light-diff($primary, $secondary, 95%, -60%);
+  color: dark-light-choose($primary-high, $secondary-low);
+  background: $primary-low;
   border-radius: 8px;
   font-weight: bold;
   font-size: 0.93em;
@@ -418,5 +434,67 @@ a.mention, a.mention-group {
 #suggested-topics {
   .topics {
     padding-bottom: 15px;
+  }
+}
+
+.large-image-placeholder {
+  > a {
+
+    &.link {
+      margin-right: 10px;
+    }
+
+    > * { overflow: hidden; }
+
+    > i.fa {
+      color: dark-light-choose($primary-medium, $secondary-medium);
+      margin-right: 6px;
+      font-size: $base-font-size;
+      line-height: $base-line-height;
+    }
+
+    > span.url {
+      display: inline-block;
+      max-width: 300px;
+      margin-right: 6px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    > span.help {
+      display: inline-block;
+      color: dark-light-choose($primary-medium, $secondary-medium);
+      font-size: 0.857em;
+      font-style: italic;
+      line-height: $base-line-height;
+      margin-bottom: 1px;
+    }
+
+    > span.badge-notification {
+      vertical-align: unset;
+    }
+  }
+}
+
+.broken-image, .large-image {
+  color: dark-light-choose($primary-low-mid, $secondary-high);
+  border: 1px solid $primary-low;
+  font-size: 2.286em;
+  padding: 16px;
+}
+
+/* below standard tablet portrait ----------- */
+
+@media all
+and (max-width : 767px) {
+  .reply-to-tab {
+    span {display: none;}
+  }
+  .names {
+    span {display: block;}
+  }
+  .user-title {
+    float: left;
+    clear: left;
   }
 }

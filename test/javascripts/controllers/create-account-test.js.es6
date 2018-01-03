@@ -1,20 +1,20 @@
 import { mapRoutes } from 'discourse/mapping-router';
 
 moduleFor("controller:create-account", "controller:create-account", {
-  setup() {
+  beforeEach() {
     this.registry.register('router:main', mapRoutes());
   },
   needs: ['controller:modal', 'controller:login']
 });
 
-test('basicUsernameValidation', function() {
+QUnit.test('basicUsernameValidation', function(assert) {
   var subject = this.subject;
 
   var testInvalidUsername = function(username, expectedReason) {
     var controller = subject({ siteSettings: Discourse.SiteSettings });
     controller.set('accountUsername', username);
-    equal(controller.get('basicUsernameValidation.failed'), true, 'username should be invalid: ' + username);
-    equal(controller.get('basicUsernameValidation.reason'), expectedReason, 'username validation reason: ' + username + ', ' + expectedReason);
+    assert.equal(controller.get('basicUsernameValidation.failed'), true, 'username should be invalid: ' + username);
+    assert.equal(controller.get('basicUsernameValidation.reason'), expectedReason, 'username validation reason: ' + username + ', ' + expectedReason);
   };
 
   testInvalidUsername('', undefined);
@@ -24,11 +24,11 @@ test('basicUsernameValidation', function() {
   var controller = subject({ siteSettings: Discourse.SiteSettings });
   controller.set('accountUsername',   'porkchops');
   controller.set('prefilledUsername', 'porkchops');
-  equal(controller.get('basicUsernameValidation.ok'), true, 'Prefilled username is valid');
-  equal(controller.get('basicUsernameValidation.reason'), I18n.t('user.username.prefilled'), 'Prefilled username is valid');
+  assert.equal(controller.get('basicUsernameValidation.ok'), true, 'Prefilled username is valid');
+  assert.equal(controller.get('basicUsernameValidation.reason'), I18n.t('user.username.prefilled'), 'Prefilled username is valid');
 });
 
-test('passwordValidation', function() {
+QUnit.test('passwordValidation', function(assert) {
   var subject = this.subject;
 
   var controller = subject({ siteSettings: Discourse.SiteSettings });
@@ -38,14 +38,14 @@ test('passwordValidation', function() {
   controller.set('prefilledUsername', 'porkchops');
 
   controller.set('accountPassword', 'b4fcdae11f9167');
-  equal(controller.get('passwordValidation.ok'), true, 'Password is ok');
-  equal(controller.get('passwordValidation.reason'), I18n.t('user.password.ok'), 'Password is valid');
+  assert.equal(controller.get('passwordValidation.ok'), true, 'Password is ok');
+  assert.equal(controller.get('passwordValidation.reason'), I18n.t('user.password.ok'), 'Password is valid');
 
   var testInvalidPassword = function(password, expectedReason) {
     var c = subject({ siteSettings: Discourse.SiteSettings });
     c.set('accountPassword', password);
-    equal(c.get('passwordValidation.failed'), true, 'password should be invalid: ' + password);
-    equal(c.get('passwordValidation.reason'), expectedReason, 'password validation reason: ' + password + ', ' + expectedReason);
+    assert.equal(c.get('passwordValidation.failed'), true, 'password should be invalid: ' + password);
+    assert.equal(c.get('passwordValidation.reason'), expectedReason, 'password validation reason: ' + password + ', ' + expectedReason);
   };
 
   testInvalidPassword('', undefined);

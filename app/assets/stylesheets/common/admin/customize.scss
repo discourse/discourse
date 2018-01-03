@@ -1,16 +1,20 @@
 // Customise area
-.customize {
+.admin-customize {
   h1 {
     margin-bottom: 10px;
     input {
       margin-bottom: 0;
+      font-size: 1rem;
+    }
+    .btn-small {
+      font-size: 1rem;
     }
   }
 
   .field-error {
     margin-top: 10px;
     margin-bottom: 10px;
-    background-color: dark-light-diff($quaternary, $secondary, 70%, -70%);
+    background-color: $quaternary-low;
     padding: 5px;
   }
 
@@ -35,7 +39,7 @@
   .select2-chosen, .color-schemes li {
     .fa {
       margin-right: 6px;
-      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      color: dark-light-choose($primary-medium, $secondary-medium);
     }
   }
   .show-current-style {
@@ -88,21 +92,27 @@
     }
 
     .nav.target {
+      margin-top: 15px;
+
       li {
         position: relative;
+
+        a {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
       }
-      margin-top: 15px;
+
       .fa {
-        margin-left: 3px;
+        margin-left: 8px;
       }
-      li.mobile a {
-        padding-right: 25px;
-      }
-      .fa-mobile {
-        position: absolute;
-        right: 10px;
-        top: 3px;
+
+      .d-icon-mobile {
+        position: relative;
+        top: -3px;
         font-size: 1.5em;
+        max-height: 20px;
       }
     }
 
@@ -173,7 +183,7 @@
     td.actions     { width: 200px; }
     .hex-input     { width: 80px; margin-bottom: 0; }
     .hex           { text-align: center; }
-    .description   { color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%)); }
+    .description   { color: dark-light-choose($primary-medium, $secondary-medium); }
 
     .invalid .hex input {
       background-color: white;
@@ -184,7 +194,7 @@
 
   .status-message {
     display: block;
-    font-size: 0.8em;
+    font-size: 0.857em;
     margin-top: 8px;
   }
 
@@ -210,4 +220,3 @@
     margin-top: 20px;
   }
 }
-

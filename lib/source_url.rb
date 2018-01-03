@@ -6,7 +6,7 @@ class SourceURL < Tilt::Template
     source = input[:data]
     context = input[:environment].context_class.new(input)
 
-    result = new(filename){source}.render(context)
+    result = new(filename) { source }.render(context)
     context.metadata.merge(data: result)
   end
 

@@ -13,6 +13,8 @@ class WebHook < ActiveRecord::Base
   validates_presence_of :last_delivery_status
   validates_presence_of :web_hook_event_types, unless: :wildcard_web_hook?
 
+  before_save :strip_url
+
   def self.content_types
     @content_types ||= Enum.new('application/json' => 1,
                                 'application/x-www-form-urlencoded' => 2)
@@ -30,8 +32,9 @@ class WebHook < ActiveRecord::Base
 
   def self.find_by_type(type)
     WebHook.where(active: true)
-           .joins(:web_hook_event_types)
-           .where("web_hooks.wildcard_web_hook = ? OR web_hook_event_types.name = ?", true, type.to_s)
+      .joins(:web_hook_event_types)
+      .where("web_hooks.wildcard_web_hook = ? OR web_hook_event_types.name = ?", true, type.to_s)
+      .uniq
   end
 
   def self.enqueue_hooks(type, opts = {})
@@ -40,12 +43,16 @@ class WebHook < ActiveRecord::Base
     end
   end
 
-  def self.enqueue_topic_hooks(event, topic, user=nil)
+  def self.enqueue_topic_hooks(event, topic, user = nil)
     WebHook.enqueue_hooks(:topic, topic_id: topic.id, category_id: topic&.category_id, event_name: event.to_s)
   end
 
-  def self.enqueue_post_hooks(event, post, user=nil)
+  def self.enqueue_post_hooks(event, post, user = nil)
     WebHook.enqueue_hooks(:post, post_id: post.id, category_id: post&.topic&.category_id, event_name: event.to_s)
+  end
+
+  def strip_url
+    self.payload_url = (payload_url || "").strip.presence
   end
 end
 

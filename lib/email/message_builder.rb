@@ -17,7 +17,7 @@ module Email
   class MessageBuilder
     attr_reader :template_args
 
-    def initialize(to, opts=nil)
+    def initialize(to, opts = nil)
       @to = to
       @opts = opts || {}
 
@@ -30,7 +30,7 @@ module Email
       }.merge!(@opts)
 
       if @template_args[:url].present?
-        @template_args[:header_instructions] = I18n.t('user_notifications.header_instructions', @template_args)
+        @template_args[:header_instructions] ||= I18n.t('user_notifications.header_instructions', @template_args)
 
         if @opts[:include_respond_instructions] == false
           @template_args[:respond_instructions] = ''
@@ -60,8 +60,7 @@ module Email
     def subject
       if @opts[:use_site_subject]
         subject = String.new(SiteSetting.email_subject)
-        subject.gsub!("%{site_name}", @template_args[:site_name])
-        subject.gsub!("%{email_prefix}", @template_args[:email_prefix])
+        subject.gsub!("%{site_name}", @template_args[:email_prefix])
         subject.gsub!("%{optional_re}", @opts[:add_re_to_subject] ? I18n.t('subject_re', @template_args) : '')
         subject.gsub!("%{optional_pm}", @opts[:private_reply] ? I18n.t('subject_pm', @template_args) : '')
         subject.gsub!("%{optional_cat}", @template_args[:show_category_in_subject] ? "[#{@template_args[:show_category_in_subject]}] " : '')
@@ -167,7 +166,6 @@ module Email
       result
     end
 
-
     protected
 
     def reply_key
@@ -196,11 +194,13 @@ module Email
 
       @reply_by_email_address = SiteSetting.reply_by_email_address.dup
       @reply_by_email_address.gsub!("%{reply_key}", reply_key)
-      @reply_by_email_address = if private_reply?
-                                  alias_email(@reply_by_email_address)
-                                else
-                                  site_alias_email(@reply_by_email_address)
-                                end
+
+      @reply_by_email_address =
+        if private_reply?
+          alias_email(@reply_by_email_address)
+        else
+          site_alias_email(@reply_by_email_address)
+        end
     end
 
     def alias_email(source)

@@ -1,0 +1,52 @@
+<div class='clearfix info'>
+  <a href={{item.userUrl}} data-user-card={{item.username}} class='avatar-link'><div class='avatar-wrapper'>{{avatar item imageSize="large" extraClasses="actor" ignoreTitle="true"}}</div></a>
+  <span class='time'>{{format-date item.created_at}}</span>
+  {{expand-post item=item}}
+  <div class='stream-topic-details'>
+    <div class='stream-topic-title'>
+      {{topic-status topic=item disableActions=true}}
+      <span class="title">
+        <a href={{item.postUrl}}>{{{item.title}}}</a>
+      </span>
+    </div>
+    <div class="category">{{category-link item.category}}</div>
+  </div>
+
+  {{#if item.deleted_by}}
+    <span class="delete-info">
+      {{d-icon "trash-o"}}
+      {{avatar item.deleted_by imageSize="tiny" extraClasses="actor" ignoreTitle="true"}}
+      {{format-date item.deleted_at leaveAgo="true"}}
+    </span>
+  {{/if}}
+
+  {{plugin-outlet name="user-stream-item-header" args=(hash item=item)}}
+</div>
+
+{{#if actionDescription}}
+  <p class='excerpt'>{{actionDescription}}</p>
+{{/if}}
+
+<p class='excerpt' data-topic-id="{{item.topic_id}}" data-post-id="{{item.post_id}}" data-user-id="{{item.user_id}}">
+  {{#if item.expandedExcerpt}}
+    {{{item.expandedExcerpt}}}
+  {{else}}
+    {{{item.excerpt}}}
+  {{/if}}
+</p>
+
+{{#each item.children as |child|}}
+  <div class='user-stream-item-actions child-actions'>{{!-- DEPRECATED: 'child-actions' class --}}
+    {{d-icon child.icon class="icon"}}
+    {{#each child.items as |grandChild|}}
+      {{#if grandChild.removableBookmark}}
+        <button class="btn btn-default remove-bookmark" {{action removeBookmark grandChild}}>
+          {{d-icon 'times'}} {{i18n "bookmarks.remove"}}
+        </button>
+      {{else}}
+          <a href={{grandChild.userUrl}} data-user-card={{grandChild.username}} class='avatar-link'><div class='avatar-wrapper'>{{avatar grandChild imageSize="tiny" extraClasses="actor" ignoreTitle="true" avatarTemplatePath="acting_avatar_template"}}</div></a>
+          {{#if grandChild.edit_reason}} &mdash; <span class="edit-reason">{{grandChild.edit_reason}}</span>{{/if}}
+      {{/if}}
+    {{/each}}
+  </div>
+{{/each}}

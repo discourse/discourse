@@ -75,6 +75,7 @@ en:
         help:
           options_count: Enter at least 2 options
           invalid_values: Minimum value must be smaller than the maximum value.
+          min_step_value: The minimum step value is 1
         poll_type:
           label: Type
           regular: Single Choice

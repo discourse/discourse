@@ -4,7 +4,7 @@ module MemoryDiagnostics
     File.exists?(snapshot_filename)
   end
 
-  def self.compare(from=nil, to=nil)
+  def self.compare(from = nil, to = nil)
 
     from ||= snapshot_filename
     if !to
@@ -38,7 +38,7 @@ module MemoryDiagnostics
       end
     end
 
-    report << summary.sort{|a,b| b[1] <=> a[1]}[0..50].map{|k,v|
+    report << summary.sort { |a, b| b[1] <=> a[1] }[0..50].map { |k, v|
       "#{k}: #{v}"
     }.join("\n")
 
@@ -59,9 +59,9 @@ module MemoryDiagnostics
     "#{snapshot_path}/#{Process.pid}.snapshot"
   end
 
-  def self.snapshot_current_process(filename=nil)
+  def self.snapshot_current_process(filename = nil)
     filename ||= snapshot_filename
-    pid=fork do
+    pid = fork do
       snapshot(filename)
     end
 
@@ -86,14 +86,13 @@ module MemoryDiagnostics
     IO.binwrite(filename, Marshal::dump(object_ids))
   end
 
-  def self.memory_report(opts={})
+  def self.memory_report(opts = {})
     begin
       # ruby 2.1
       GC.start(full_mark: true)
     rescue
       GC.start
     end
-
 
     classes = {}
     large_objects = []
@@ -113,11 +112,11 @@ module MemoryDiagnostics
           classes[:unknown] += 1
         end
       end
-      classes = classes.sort{|a,b| b[1] <=> a[1]}[0..40].map{|klass, count| "#{klass}: #{count}"}
+      classes = classes.sort { |a, b| b[1] <=> a[1] }[0..40].map { |klass, count| "#{klass}: #{count}" }
 
-      classes << "\nLarge Objects (#{large_objects.length} larger than 200 bytes total size #{large_objects.map{|x,_| x}.sum}):\n"
+      classes << "\nLarge Objects (#{large_objects.length} larger than 200 bytes total size #{large_objects.map { |x, _| x }.sum}):\n"
 
-      classes += large_objects.sort{|a,b| b[0] <=> a[0]}[0..800].map do |size,object|
+      classes += large_objects.sort { |a, b| b[0] <=> a[0] }[0..800].map do |size, object|
         rval = "#{object.class}: size #{size}"
         rval << " " << object.to_s[0..500].gsub("\n", "") if (String === object) || (Regexp === object)
         rval << "\n"
@@ -125,10 +124,8 @@ module MemoryDiagnostics
       end
     end
 
-    stats = GC.stat.map{|k,v| "#{k}: #{v}"}
-    counts = ObjectSpace.count_objects.sort{|a,b| b[1] <=> a[1] }.map{|k,v| "#{k}: #{v}"}
-
-
+    stats = GC.stat.map { |k, v| "#{k}: #{v}" }
+    counts = ObjectSpace.count_objects.sort { |a, b| b[1] <=> a[1] }.map { |k, v| "#{k}: #{v}" }
 
     <<TEXT
 #{`hostname`.strip} pid:#{Process.pid} #{`cat /proc/#{Process.pid}/cmdline`.strip.gsub(/[^a-z1-9\/]/i, ' ')}
@@ -148,7 +145,6 @@ Classes:
 TEXT
 
   end
-
 
   def self.full_gc
     # gc start may not collect everything

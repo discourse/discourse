@@ -4,6 +4,7 @@
 //= require ./ember-addons/ember-computed-decorators
 //= require ./ember-addons/fmt
 //= require_tree ./discourse-common
+//= require_tree ./select-kit
 //= require ./discourse
 //= require ./deprecated
 
@@ -27,15 +28,21 @@
 //= require ./discourse/lib/eyeline
 //= require ./discourse/lib/show-modal
 //= require ./discourse/mixins/scrolling
+//= require ./discourse/lib/ajax-error
 //= require ./discourse/models/model
 //= require ./discourse/models/rest
+//= require ./discourse/models/result-set
+//= require ./discourse/models/store
+//= require ./discourse/models/action-summary
+//= require ./discourse/models/topic
+//= require ./discourse/models/draft
+//= require ./discourse/models/composer
 //= require ./discourse/models/badge-grouping
 //= require ./discourse/models/badge
 //= require ./discourse/models/permission-type
 //= require ./discourse/models/user-action-group
 //= require ./discourse/models/category
 //= require ./discourse/models/input-validation
-//= require ./discourse/lib/ajax-error
 //= require ./discourse/lib/search
 //= require ./discourse/lib/user-search
 //= require ./discourse/lib/export-csv
@@ -44,10 +51,7 @@
 //= require ./discourse/lib/debounce
 //= require ./discourse/lib/safari-hacks
 //= require_tree ./discourse/adapters
-//= require ./discourse/models/result-set
-//= require ./discourse/models/store
 //= require ./discourse/models/post-action-type
-//= require ./discourse/models/action-summary
 //= require ./discourse/models/post
 //= require ./discourse/lib/posts-with-placeholders
 //= require ./discourse/models/post-stream
@@ -63,11 +67,8 @@
 //= require ./discourse/controllers/navigation/default
 //= require ./discourse/components/edit-category-panel
 //= require ./discourse/components/dropdown-button
-//= require ./discourse/components/notifications-button
 //= require ./discourse/lib/link-mentions
 //= require ./discourse/components/site-header
-//= require ./discourse/lib/emoji/groups
-//= require ./discourse/lib/emoji/toolbar
 //= require ./discourse/components/d-editor
 //= require ./discourse/lib/screen-track
 //= require ./discourse/routes/discourse

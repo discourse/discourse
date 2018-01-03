@@ -10,12 +10,14 @@ describe Admin::EmailController do
 
   context '.index' do
     before do
-      subject.expects(:action_mailer_settings).returns({
-        username: 'username',
-        password: 'secret'
-      })
+      subject
+        .expects(:action_mailer_settings)
+        .returns(
+          username: 'username',
+          password: 'secret'
+        )
 
-      xhr :get, :index
+      get :index, format: :json
     end
 
     it 'does not include the password in the response' do
@@ -29,7 +31,7 @@ describe Admin::EmailController do
 
   context '.sent' do
     before do
-      xhr :get, :sent
+      get :sent, format: :json
     end
 
     subject { response }
@@ -38,7 +40,7 @@ describe Admin::EmailController do
 
   context '.skipped' do
     before do
-      xhr :get, :skipped
+      get :skipped, format: :json
     end
 
     subject { response }
@@ -47,7 +49,9 @@ describe Admin::EmailController do
 
   context '.test' do
     it 'raises an error without the email parameter' do
-      expect { xhr :post, :test }.to raise_error(ActionController::ParameterMissing)
+      expect do
+        post :test, format: :json
+      end.to raise_error(ActionController::ParameterMissing)
     end
 
     context 'with an email address' do
@@ -55,18 +59,23 @@ describe Admin::EmailController do
         job_mock = mock
         Jobs::TestEmail.expects(:new).returns(job_mock)
         job_mock.expects(:execute).with(to_address: 'eviltrout@test.domain')
-        xhr :post, :test, email_address: 'eviltrout@test.domain'
+        post :test, params: { email_address: 'eviltrout@test.domain' }, format: :json
       end
     end
   end
 
   context '.preview_digest' do
     it 'raises an error without the last_seen_at parameter' do
-      expect { xhr :get, :preview_digest }.to raise_error(ActionController::ParameterMissing)
+      expect do
+        get :preview_digest, format: :json
+      end.to raise_error(ActionController::ParameterMissing)
     end
 
     it "previews the digest" do
-      xhr :get, :preview_digest, last_seen_at: 1.week.ago, username: user.username
+      get :preview_digest, params: {
+        last_seen_at: 1.week.ago, username: user.username
+      }, format: :json
+
       expect(response).to be_success
     end
   end
@@ -78,8 +87,26 @@ describe Admin::EmailController do
     end
 
     it 'should enqueue the right job' do
-      expect { xhr :post, :handle_mail, email: email('cc') }
+      expect { post :handle_mail, params: { email: email('cc') }, format: :json }
         .to change { Jobs::ProcessEmail.jobs.count }.by(1)
+    end
+  end
+
+  context '.rejected' do
+    it 'should provide a string for a blank error' do
+      Fabricate(:incoming_email, error: "")
+      get :rejected, format: :json
+      rejected = JSON.parse(response.body)
+      expect(rejected.first['error']).to eq(I18n.t("emails.incoming.unrecognized_error"))
+    end
+  end
+
+  context '.incoming' do
+    it 'should provide a string for a blank error' do
+      incoming_email = Fabricate(:incoming_email, error: "")
+      get :incoming, params: { id: incoming_email.id }, format: :json
+      incoming = JSON.parse(response.body)
+      expect(incoming['error']).to eq(I18n.t("emails.incoming.unrecognized_error"))
     end
   end
 

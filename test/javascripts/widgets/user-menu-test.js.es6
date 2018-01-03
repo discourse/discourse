@@ -11,13 +11,14 @@ widgetTest('basics', {
     assert.ok(this.$('.user-bookmarks-link').length);
     assert.ok(this.$('.user-preferences-link').length);
     assert.ok(this.$('.notifications').length);
+    assert.ok(this.$('.dismiss-link').length);
   }
 });
 
 widgetTest('log out', {
   template: '{{mount-widget widget="user-menu" logout="logout"}}',
 
-  setup() {
+  beforeEach() {
     this.on('logout', () => this.loggedOut = true);
   },
 
@@ -33,7 +34,7 @@ widgetTest('log out', {
 
 widgetTest('private messages - disabled', {
   template: '{{mount-widget widget="user-menu"}}',
-  setup() {
+  beforeEach() {
     this.siteSettings.enable_private_messages = false;
   },
 
@@ -44,7 +45,7 @@ widgetTest('private messages - disabled', {
 
 widgetTest('private messages - enabled', {
   template: '{{mount-widget widget="user-menu"}}',
-  setup() {
+  beforeEach() {
     this.siteSettings.enable_private_messages = true;
   },
 
@@ -56,7 +57,7 @@ widgetTest('private messages - enabled', {
 widgetTest('anonymous', {
   template: '{{mount-widget widget="user-menu" toggleAnonymous="toggleAnonymous"}}',
 
-  setup() {
+  beforeEach() {
     this.currentUser.setProperties({ is_anonymous: false, trust_level: 3 });
     this.siteSettings.allow_anonymous_posting = true;
     this.siteSettings.anonymous_posting_min_trust_level = 3;
@@ -76,7 +77,7 @@ widgetTest('anonymous', {
 widgetTest('anonymous - disabled', {
   template: '{{mount-widget widget="user-menu"}}',
 
-  setup() {
+  beforeEach() {
     this.siteSettings.allow_anonymous_posting = false;
   },
 
@@ -88,7 +89,7 @@ widgetTest('anonymous - disabled', {
 widgetTest('anonymous - switch back', {
   template: '{{mount-widget widget="user-menu" toggleAnonymous="toggleAnonymous"}}',
 
-  setup() {
+  beforeEach() {
     this.currentUser.setProperties({ is_anonymous: true });
     this.siteSettings.allow_anonymous_posting = true;
 
@@ -103,4 +104,3 @@ widgetTest('anonymous - switch back', {
     });
   }
 });
-

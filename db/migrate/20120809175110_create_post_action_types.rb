@@ -1,4 +1,4 @@
-class CreatePostActionTypes < ActiveRecord::Migration
+class CreatePostActionTypes < ActiveRecord::Migration[4.2]
   def change
     create_table(:post_action_types, id: false) do |t|
       t.integer :id, options: "PRIMARY KEY", null: false
@@ -8,7 +8,7 @@ class CreatePostActionTypes < ActiveRecord::Migration
       t.text :description
       t.string :icon, limit: 20
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

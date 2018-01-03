@@ -10,7 +10,7 @@ describe FlagQuery do
       admin = Fabricate(:admin)
       post = create_post(user: Discourse.system_user)
       PostAction.act(codinghorror, post, PostActionType.types[:spam])
-      posts, topics, users = FlagQuery.flagged_posts_report(admin, "")
+      posts, topics, users = FlagQuery.flagged_posts_report(admin)
 
       expect(posts).to be_blank
       expect(topics).to be_blank
@@ -29,12 +29,13 @@ describe FlagQuery do
 
       PostAction.act(codinghorror, post, PostActionType.types[:spam])
       PostAction.act(user2, post, PostActionType.types[:spam])
-      mod_message = PostAction.act(user3, post, PostActionType.types[:notify_moderators], message: "this is a 10")
+      mod_message = PostAction.act(user3, post, PostActionType.types[:notify_moderators], message: "this is a :one::zero:")
 
       PostAction.act(codinghorror, post2, PostActionType.types[:spam])
       PostAction.act(user2, post2, PostActionType.types[:spam])
 
-      posts, topics, users = FlagQuery.flagged_posts_report(admin, "")
+      posts, topics, users = FlagQuery.flagged_posts_report(admin)
+
       expect(posts.count).to eq(2)
       first = posts.first
 
@@ -47,20 +48,29 @@ describe FlagQuery do
 
       expect(second[:post_actions].count).to eq(3)
       expect(second[:post_actions].first[:permalink]).to eq(mod_message.related_post.topic.relative_url)
+      expect(second[:post_actions].first[:conversation][:response][:excerpt]).to match("<img src=")
 
-      posts, users = FlagQuery.flagged_posts_report(admin, "", 1)
+      posts, users = FlagQuery.flagged_posts_report(admin, offset: 1)
       expect(posts.count).to eq(1)
+
+      # Try by topic
+      posts = FlagQuery.flagged_posts_report(admin, topic_id: post.topic_id)
+      expect(posts).to be_present
+      posts = FlagQuery.flagged_posts_report(admin, topic_id: -1)
+      expect(posts[0]).to be_blank
 
       # chuck post in category a mod can not see and make sure its missing
       category = Fabricate(:category)
-      category.set_permissions(:admins => :full)
+      category.set_permissions(admins: :full)
       category.save
       post2.topic.category_id = category.id
       post2.topic.save
 
-      posts, users = FlagQuery.flagged_posts_report(moderator, "")
+      posts, users = FlagQuery.flagged_posts_report(moderator)
 
       expect(posts.count).to eq(1)
+
     end
+
   end
 end

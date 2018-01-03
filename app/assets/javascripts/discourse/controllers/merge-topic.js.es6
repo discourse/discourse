@@ -1,64 +1,53 @@
-import SelectedPostsCount from 'discourse/mixins/selected-posts-count';
-import ModalFunctionality from 'discourse/mixins/modal-functionality';
-import { movePosts, mergeTopic } from 'discourse/models/topic';
-import DiscourseURL from 'discourse/lib/url';
+import ModalFunctionality from "discourse/mixins/modal-functionality";
+import { movePosts, mergeTopic } from "discourse/models/topic";
+import DiscourseURL from "discourse/lib/url";
+import computed from "ember-addons/ember-computed-decorators";
 
-// Modal related to merging of topics
-export default Ember.Controller.extend(SelectedPostsCount, ModalFunctionality, {
-  topicController: Ember.inject.controller('topic'),
+export default Ember.Controller.extend(ModalFunctionality, {
+  topicController: Ember.inject.controller("topic"),
 
   saving: false,
   selectedTopicId: null,
 
-  selectedPosts: Em.computed.alias('topicController.selectedPosts'),
-  selectedReplies: Em.computed.alias('topicController.selectedReplies'),
-  allPostsSelected: Em.computed.alias('topicController.allPostsSelected'),
+  selectedPostsCount: Ember.computed.alias("topicController.selectedPostsCount"),
 
-  buttonDisabled: function() {
-    if (this.get('saving')) return true;
-    return Ember.isEmpty(this.get('selectedTopicId'));
-  }.property('selectedTopicId', 'saving'),
+  @computed("saving", "selectedTopicId")
+  buttonDisabled(saving, selectedTopicId) {
+    return saving || Ember.isEmpty(selectedTopicId);
+  },
 
-  buttonTitle: function() {
-    if (this.get('saving')) return I18n.t('saving');
-    return I18n.t('topic.merge_topic.title');
-  }.property('saving'),
+  @computed("saving")
+  buttonTitle(saving) {
+    return saving ? I18n.t("saving") : I18n.t("topic.merge_topic.title");
+  },
 
   onShow() {
-    this.set('modal.modalClass', 'split-modal');
+    this.set("modal.modalClass", "split-modal");
   },
 
   actions: {
     movePostsToExistingTopic() {
-      const topicId = this.get('model.id');
+      const topicId = this.get("model.id");
 
-      this.set('saving', true);
+      this.set("saving", true);
 
-      let promise = null;
-      if (this.get('allPostsSelected')) {
-        promise = mergeTopic(topicId, this.get('selectedTopicId'));
-      } else {
-        const postIds = this.get('selectedPosts').map(function(p) { return p.get('id'); });
-        const replyPostIds = this.get('selectedReplies').map(function(p) { return p.get('id'); });
-
-        promise = movePosts(topicId, {
-          destination_topic_id: this.get('selectedTopicId'),
-          post_ids: postIds,
-          reply_post_ids: replyPostIds
+      let promise = this.get("topicController.selectedAllPosts") ?
+        mergeTopic(topicId, this.get("selectedTopicId")) :
+        movePosts(topicId, {
+          destination_topic_id: this.get("selectedTopicId"),
+          post_ids: this.get("topicController.selectedPostIds")
         });
-      }
 
-      const self = this;
-      promise.then(function(result) {
-        // Posts moved
-        self.send('closeModal');
-        self.get('topicController').send('toggleMultiSelect');
-        Em.run.next(function() { DiscourseURL.routeTo(result.url); });
-      }).catch(function() {
-        self.flash(I18n.t('topic.merge_topic.error'));
-      }).finally(function() {
-        self.set('saving', false);
+      promise.then(result => {
+        this.send("closeModal");
+        this.get("topicController").send("toggleMultiSelect");
+        Ember.run.next(() => DiscourseURL.routeTo(result.url));
+      }).catch(() => {
+        this.flash(I18n.t("topic.merge_topic.error"));
+      }).finally(() => {
+        this.set("saving", false);
       });
+
       return false;
     }
   }

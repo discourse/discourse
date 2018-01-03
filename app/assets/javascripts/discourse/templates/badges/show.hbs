@@ -7,11 +7,15 @@
 
   <div class='show-badge-details'>
     {{badge-card badge=model size="large" count=userBadges.grant_count}}
-    <div class='badge-grant-info'>
+    <div class='badge-grant-info {{if hiddenSetTitle '' 'hidden'}}'>
       <div>
-        {{#if model.allow_title}}
+        {{#if canSelectTitle}}
           <div class='grant-info-item'>
             {{i18n 'badges.allow_title'}}
+            {{d-button
+                    class='btn btn-small pad-left no-text'
+                    action='toggleSetUserTitle'
+                    icon='pencil'}}
           </div>
         {{/if}}
         {{#if model.multiple_grant}}
@@ -21,6 +25,13 @@
         {{/if}}
       </div>
     </div>
+
+    {{#if canSelectTitle}}
+      <div class='badge-set-title {{if hiddenSetTitle 'hidden' ''}}'>
+        {{badge-title selectableUserBadges=selectableUserBadges user=user}}
+        <button class='btn btn-default close-btn' {{action "toggleSetUserTitle"}}>{{i18n 'close'}}</button>
+      </div>
+    {{/if}}
   </div>
 
   {{#if userBadges}}

@@ -3,7 +3,7 @@ module Plugin; end
 
 class Plugin::Metadata
 
-  OFFICIAL_PLUGINS = Set.new([
+  OFFICIAL_PLUGINS ||= Set.new([
     "customer-flair",
     "discourse-adplugin",
     "discourse-akismet",
@@ -14,7 +14,7 @@ class Plugin::Metadata
     "discourse-details",
     "discourse-nginx-performance-report",
     "discourse-push-notifications",
-    "discourse-slack-official",
+    "discourse-chat-integration",
     "discourse-solved",
     "Spoiler Alert!",
     "staff-notes",
@@ -25,7 +25,14 @@ class Plugin::Metadata
     "poll",
     "discourse-plugin-linkedin-auth",
     "discourse-plugin-office365-auth",
-    "discourse-oauth2-basic"
+    "discourse-oauth2-basic",
+    "discourse-math",
+    "discourse-bbcode-color",
+    "discourse-bbcode",
+    "discourse-affiliate",
+    "discourse-translator",
+    "discourse-patreon",
+    "discourse-prometheus"
   ])
 
   FIELDS ||= [:name, :about, :version, :authors, :url, :required_version]

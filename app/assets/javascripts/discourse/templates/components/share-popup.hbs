@@ -16,13 +16,13 @@
 {{#if topic.details.can_reply_as_new_topic}}
   <div class='reply-as-new-topic'>
     {{#if topic.isPrivateMessage}}
-      <a href {{action "replyAsNewTopic"}} aria-label={{i18n 'post.reply_as_new_private_message'}} title={{i18n 'post.reply_as_new_private_message'}}>{{fa-icon "plus"}}{{i18n 'user.new_private_message'}}</a>
+      <a href {{action "replyAsNewTopic"}} aria-label={{i18n 'post.reply_as_new_private_message'}} title={{i18n 'post.reply_as_new_private_message'}}>{{d-icon "plus"}}{{i18n 'user.new_private_message'}}</a>
     {{else}}
-      <a href {{action "replyAsNewTopic"}} aria-label={{i18n 'post.reply_as_new_topic'}} title={{i18n 'post.reply_as_new_topic'}}>{{fa-icon "plus"}}{{i18n 'topic.create'}}</a>
+      <a href {{action "replyAsNewTopic"}} aria-label={{i18n 'post.reply_as_new_topic'}} title={{i18n 'post.reply_as_new_topic'}}>{{d-icon "plus"}}{{i18n 'topic.create'}}</a>
     {{/if}}
   </div>
 {{/if}}
 
 <div class='link'>
-  <a href {{action "close"}} class="close-share" aria-label={{i18n 'share.close'}} title={{i18n 'share.close'}}>{{fa-icon "close"}}</a>
+  <a href {{action "close"}} class="close-share" aria-label={{i18n 'share.close'}} title={{i18n 'share.close'}}>{{d-icon "close"}}</a>
 </div>

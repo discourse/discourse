@@ -34,7 +34,7 @@ class ImportScripts::Sourceforge < ImportScripts::Base
   end
 
   def load_json
-    @json = MultiJson.load(File.read(JSON_FILE), :symbolize_keys => true)
+    @json = MultiJson.load(File.read(JSON_FILE), symbolize_keys: true)
   end
 
   def import_categories
@@ -45,8 +45,8 @@ class ImportScripts::Sourceforge < ImportScripts::Base
         id: forum[:shortname],
         name: forum[:name],
         post_create_action: proc do |category|
-          changes = {raw: forum[:description]}
-          opts = {revised_at: Time.now, bypass_bump: true}
+          changes = { raw: forum[:description] }
+          opts = { revised_at: Time.now, bypass_bump: true }
 
           post = category.topic.first_post
           post.revise(@system_user, changes, opts)

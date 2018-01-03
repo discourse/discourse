@@ -13,8 +13,13 @@ export default Discourse.Route.extend({
       });
     } else {
       // User is not logged in
-      self.session.set("shouldRedirectToUrl", window.location.href);
-      self.replaceWith('login');
+      $.cookie('destination_url', window.location.href);
+      if (Discourse.showingSignup) {
+        // We're showing the sign up modal
+        Discourse.showingSignup = false;
+      } else {
+        self.replaceWith('login');
+      }
     }
   }
 });

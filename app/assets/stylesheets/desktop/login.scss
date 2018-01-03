@@ -14,7 +14,7 @@
 
 #login-form {
   a {
-    color: dark-light-choose(scale-color($primary, $lightness: 35%), scale-color($secondary, $lightness: 65%));
+    color: dark-light-choose($primary-high, $secondary-low);
   }
 }
 
@@ -53,10 +53,14 @@
 
   .instructions {
     label {
-      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      color: dark-light-choose($primary-medium, $secondary-medium);
     }
   }
 
+  .user-fields {
+    border-top: 1px solid $primary-low;
+    padding-top: 20px;
+  }
 }
 
 .password-reset, .invites-show {
@@ -97,7 +101,13 @@
     }
   }
   form {
-    label, .input {
+    .controls, .input {
+      margin-left: 20px;
+    }
+    input, label {
+      margin-bottom: 0;
+    }
+    .user-field .control-label:not(.checkbox-label) {
       margin-left: 20px;
     }
   }

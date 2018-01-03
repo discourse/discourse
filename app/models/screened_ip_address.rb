@@ -11,7 +11,7 @@ class ScreenedIpAddress < ActiveRecord::Base
 
   validates :ip_address, ip_address_format: true, presence: true
 
-  def self.watch(ip_address, opts={})
+  def self.watch(ip_address, opts = {})
     match_for_ip_address(ip_address) || create(opts.slice(:action_type).merge(ip_address: ip_address))
   end
 
@@ -67,10 +67,10 @@ class ScreenedIpAddress < ActiveRecord::Base
     exists_for_ip_address_and_action?(ip_address, actions[:do_nothing])
   end
 
-  def self.exists_for_ip_address_and_action?(ip_address, action_type, opts={})
+  def self.exists_for_ip_address_and_action?(ip_address, action_type, opts = {})
     b = match_for_ip_address(ip_address)
-    found = (!!b and b.action_type == action_type)
-    b.record_match! if found and opts[:record_match] != false
+    found = (!!b && b.action_type == (action_type))
+    b.record_match! if found && opts[:record_match] != (false)
     found
   end
 
@@ -125,7 +125,7 @@ class ScreenedIpAddress < ActiveRecord::Base
     ScreenedIpAddress.exec_sql(star_star_subnets_query, min_count: 10, roll_up_weight: weight).values.flatten
   end
 
-  def self.roll_up(current_user=Discourse.system_user)
+  def self.roll_up(current_user = Discourse.system_user)
     # 1 - retrieve all subnets that needs roll up
     subnets = [star_subnets, star_star_subnets].flatten
 
@@ -158,9 +158,9 @@ class ScreenedIpAddress < ActiveRecord::Base
 
       # 5 - remove old matches
       ScreenedIpAddress.where(action_type: ScreenedIpAddress.actions[:block])
-                       .where("family(ip_address) = 4")
-                       .where("ip_address << ?", subnet)
-                       .delete_all
+        .where("family(ip_address) = 4")
+        .where("ip_address << ?", subnet)
+        .delete_all
     end
 
     # return the subnets

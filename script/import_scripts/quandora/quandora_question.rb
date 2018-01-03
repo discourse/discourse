@@ -4,9 +4,9 @@ require 'time'
 
 class QuandoraQuestion
 
-   def initialize question_json
-     @question = JSON.parse question_json
-   end
+  def initialize(question_json)
+    @question = JSON.parse question_json
+  end
 
    def topic
      topic = {}
@@ -24,19 +24,19 @@ class QuandoraQuestion
      users[user[:id]] = user
      replies.each do |reply|
        user = user_from_author reply[:author]
-       users[user[:id]] = user 
+       users[user[:id]] = user
      end
      users.values.to_a
    end
 
-   def user_from_author author
+   def user_from_author(author)
      email = author['email']
      email = "#{author['uid']}@noemail.com" unless email
 
      user = {}
      user[:id] = author['uid']
      user[:name] = "#{author['firstName']} #{author['lastName']}"
-     user[:email] = email 
+     user[:email] = email
      user[:staged] = true
      user
    end
@@ -55,10 +55,10 @@ class QuandoraQuestion
          posts << post_from_comment(comment, i, answer)
        end
      end
-     order_replies posts 
+     order_replies posts
    end
 
-   def order_replies posts
+   def order_replies(posts)
      posts = posts.sort_by { |p| p[:created_at] }
      posts.each_with_index do |p, i|
        p[:post_number] = i + 2
@@ -70,7 +70,7 @@ class QuandoraQuestion
      posts
    end
 
-   def post_from_answer answer
+   def post_from_answer(answer)
      post = {}
      post[:id] = answer['uid']
      post[:parent_id] = @question['uid']
@@ -81,17 +81,17 @@ class QuandoraQuestion
      post
    end
 
-   def post_from_comment comment, index, parent
+   def post_from_comment(comment, index, parent)
      if comment['created']
        created_at = Time.parse comment['created']
      else
        created_at = Time.parse parent['created']
      end
      parent_id = parent['uid']
-     parent_id = "#{parent['uid']}-#{index-1}" if index > 0
+     parent_id = "#{parent['uid']}-#{index - 1}" if index > 0
      post = {}
      id = "#{parent['uid']}-#{index}"
-     post[:id] = id 
+     post[:id] = id
      post[:parent_id] = parent_id
      post[:author] = comment['author']
      post[:author_id] = comment['author']['uid']
@@ -102,7 +102,7 @@ class QuandoraQuestion
 
    private
 
-   def unescape html
+   def unescape(html)
      return nil unless html
      CGI.unescapeHTML html
    end

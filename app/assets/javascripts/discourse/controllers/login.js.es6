@@ -71,7 +71,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
         type: 'POST'
       }).then(function (result) {
         // Successful login
-        if (result.error) {
+        if (result && result.error) {
           self.set('loggingIn', false);
           if (result.reason === 'not_activated') {
             self.send('showNotActivated', {
@@ -90,7 +90,6 @@ export default Ember.Controller.extend(ModalFunctionality, {
           // Trigger the browser's password manager using the hidden static login form:
           const $hidden_login_form = $('#hidden-login-form');
           const destinationUrl = $.cookie('destination_url');
-          const shouldRedirectToUrl = self.session.get("shouldRedirectToUrl");
           const ssoDestinationUrl = $.cookie('sso_destination_url');
           $hidden_login_form.find('input[name=username]').val(self.get('loginName'));
           $hidden_login_form.find('input[name=password]').val(self.get('loginPassword'));
@@ -103,9 +102,6 @@ export default Ember.Controller.extend(ModalFunctionality, {
             // redirect client to the original URL
             $.cookie('destination_url', null);
             $hidden_login_form.find('input[name=redirect]').val(destinationUrl);
-          } else if (shouldRedirectToUrl) {
-            self.session.set("shouldRedirectToUrl", null);
-            $hidden_login_form.find('input[name=redirect]').val(shouldRedirectToUrl);
           } else {
             $hidden_login_form.find('input[name=redirect]').val(window.location.href);
           }
@@ -222,14 +218,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
     // Reload the page if we're authenticated
     if (options.authenticated) {
       const destinationUrl = $.cookie('destination_url');
-      const shouldRedirectToUrl = self.session.get("shouldRedirectToUrl");
-      if (self.get('loginRequired') && destinationUrl) {
+      if (destinationUrl) {
         // redirect client to the original URL
         $.cookie('destination_url', null);
         window.location.href = destinationUrl;
-      } else if (shouldRedirectToUrl) {
-        self.session.set("shouldRedirectToUrl", null);
-        window.location.href = shouldRedirectToUrl;
       } else if (window.location.pathname === Discourse.getURL('/login')) {
         window.location.pathname = Discourse.getURL('/');
       } else {

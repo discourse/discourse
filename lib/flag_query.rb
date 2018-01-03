@@ -1,24 +1,32 @@
+require 'ostruct'
+
 module FlagQuery
 
-  def self.flagged_posts_report(current_user, filter, offset=0, per_page=25)
-    actions = flagged_post_actions(filter)
+  def self.flagged_posts_report(current_user, opts = nil)
+    opts ||= {}
+    offset = opts[:offset] || 0
+    per_page = opts[:per_page] || 25
+
+    actions = flagged_post_actions(opts)
 
     guardian = Guardian.new(current_user)
 
     if !guardian.is_admin?
-      actions = actions.where('category_id IN (:allowed_category_ids) OR archetype = :private_message',
+      actions = actions.where(
+        'category_id IN (:allowed_category_ids) OR archetype = :private_message',
         allowed_category_ids: guardian.allowed_category_ids,
-        private_message: Archetype.private_message)
+        private_message: Archetype.private_message
+      )
     end
 
-    post_ids = actions.limit(per_page)
-                      .offset(offset)
-                      .group(:post_id)
-                      .order('MIN(post_actions.created_at) DESC')
-                      .pluck(:post_id)
-                      .uniq
+    total_rows = actions.count
 
-    return nil if post_ids.blank?
+    post_ids = actions.limit(per_page)
+      .offset(offset)
+      .group(:post_id)
+      .order('MIN(post_actions.created_at) DESC')
+      .pluck(:post_id)
+      .uniq
 
     posts = SqlBuilder.new("
       SELECT p.id,
@@ -47,12 +55,20 @@ module FlagQuery
     end
 
     post_actions = actions.order('post_actions.created_at DESC')
-                          .includes(related_post: { topic: { ordered_posts: :user }})
-                          .where(post_id: post_ids)
+      .includes(related_post: { topic: { ordered_posts: :user } })
+      .where(post_id: post_ids)
+
+    all_post_actions = []
 
     post_actions.each do |pa|
       post = post_lookup[pa.post_id]
-      post.post_actions ||= []
+
+      if opts[:rest_api]
+        post.post_action_ids ||= []
+      else
+        post.post_actions ||= []
+      end
+
       # TODO: add serializer so we can skip this
       action = {
         id: pa.id,
@@ -91,7 +107,12 @@ module FlagQuery
         action.merge!(permalink: related_topic.relative_url, conversation: conversation)
       end
 
-      post.post_actions << action
+      if opts[:rest_api]
+        post.post_action_ids << action[:id]
+        all_post_actions << action
+      else
+        post.post_actions << action
+      end
 
       user_ids << pa.user_id
       user_ids << pa.disposed_by_id if pa.disposed_by_id
@@ -105,33 +126,81 @@ module FlagQuery
     [
       posts,
       Topic.with_deleted.where(id: topic_ids.to_a).to_a,
-      User.includes(:user_stat).where(id: user_ids.to_a).to_a
+      User.includes(:user_stat).where(id: user_ids.to_a).to_a,
+      all_post_actions,
+      total_rows
     ]
   end
 
-  def self.flagged_post_actions(filter)
-    post_actions = PostAction.flags
-                             .joins("INNER JOIN posts ON posts.id = post_actions.post_id")
-                             .joins("INNER JOIN topics ON topics.id = posts.topic_id")
-                             .joins("LEFT JOIN users ON users.id = posts.user_id")
-                             .where("posts.user_id > 0")
+  def self.flagged_post_actions(opts = nil)
+    opts ||= {}
 
-    if filter == "old"
+    post_actions = PostAction.flags
+      .joins("INNER JOIN posts ON posts.id = post_actions.post_id")
+      .joins("INNER JOIN topics ON topics.id = posts.topic_id")
+      .joins("LEFT JOIN users ON users.id = posts.user_id")
+      .where("posts.user_id > 0")
+
+    if opts[:topic_id]
+      post_actions = post_actions.where("topics.id = ?", opts[:topic_id])
+    end
+
+    if opts[:filter] == "old"
       post_actions.where("post_actions.disagreed_at IS NOT NULL OR
                           post_actions.deferred_at IS NOT NULL OR
                           post_actions.agreed_at IS NOT NULL")
     else
       post_actions.active
-                  .where("posts.deleted_at" => nil)
-                  .where("topics.deleted_at" => nil)
+        .where("posts.deleted_at" => nil)
+        .where("topics.deleted_at" => nil)
     end
 
+  end
+
+  def self.flagged_topics
+
+    results = PostAction
+      .flags
+      .active
+      .includes(post: [:user, :topic])
+      .references(:post)
+      .where("posts.user_id > 0")
+      .order('post_actions.created_at DESC')
+
+    ft_by_id = {}
+    users_by_id = {}
+    topics_by_id = {}
+
+    results.each do |pa|
+      if pa.post.present? && pa.post.topic.present?
+        ft = ft_by_id[pa.post.topic.id] ||= OpenStruct.new(
+          topic: pa.post.topic,
+          flag_counts: {},
+          user_ids: [],
+          last_flag_at: pa.created_at
+        )
+
+        topics_by_id[pa.post.topic.id] = pa.post.topic
+
+        ft.flag_counts[pa.post_action_type_id] ||= 0
+        ft.flag_counts[pa.post_action_type_id] += 1
+
+        ft.user_ids << pa.post.user_id
+        ft.user_ids.uniq!
+
+        users_by_id[pa.post.user_id] ||= pa.post.user
+      end
+    end
+
+    Topic.preload_custom_fields(topics_by_id.values, TopicList.preloaded_custom_fields)
+
+    { flagged_topics: ft_by_id.values, users: users_by_id.values }
   end
 
   private
 
     def self.excerpt(cooked)
-      excerpt = Post.excerpt(cooked, 200)
+      excerpt = Post.excerpt(cooked, 200, keep_emoji_images: true)
       # remove the first link if it's the first node
       fragment = Nokogiri::HTML.fragment(excerpt)
       if fragment.children.first == fragment.css("a:first").first && fragment.children.first

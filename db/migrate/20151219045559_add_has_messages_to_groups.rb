@@ -1,4 +1,4 @@
-class AddHasMessagesToGroups < ActiveRecord::Migration
+class AddHasMessagesToGroups < ActiveRecord::Migration[4.2]
   def up
     add_column :groups, :has_messages, :boolean, default: false, null: false
 

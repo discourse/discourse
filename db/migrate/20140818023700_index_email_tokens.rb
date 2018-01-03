@@ -1,4 +1,4 @@
-class IndexEmailTokens < ActiveRecord::Migration
+class IndexEmailTokens < ActiveRecord::Migration[4.2]
   def change
     add_index :email_tokens, [:user_id]
   end

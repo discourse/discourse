@@ -1,7 +1,7 @@
 class ExtraLocalesController < ApplicationController
 
   layout :false
-  skip_before_filter :check_xhr, :preload_json
+  skip_before_action :check_xhr, :preload_json
 
   def show
     bundle = params[:bundle]
@@ -32,6 +32,6 @@ class ExtraLocalesController < ApplicationController
       JS
     end
 
-    render text: js, content_type: "application/javascript"
+    render plain: js, content_type: "application/javascript"
   end
 end

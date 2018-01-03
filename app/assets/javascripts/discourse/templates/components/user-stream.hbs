@@ -1,0 +1,3 @@
+{{#each stream.content as |item|}}
+  {{user-stream-item item=item removeBookmark=(action "removeBookmark")}}
+{{/each}}

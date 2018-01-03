@@ -62,4 +62,3 @@ describe Badge do
   end
 
 end
-

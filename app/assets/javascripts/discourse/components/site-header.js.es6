@@ -62,6 +62,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, {
 
     this.dispatch('notifications:changed', 'user-notifications');
     this.dispatch('header:keyboard-trigger', 'header');
+    this.dispatch('search-autocomplete:after-complete', 'search-term');
 
     this.appEvents.on('dom:clean', () => {
       // For performance, only trigger a re-render if any menu panels are visible

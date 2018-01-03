@@ -1,6 +1,6 @@
 class HandleChunkUpload
 
-  def initialize(chunk, params={})
+  def initialize(chunk, params = {})
     @chunk = chunk
     @params = params
   end

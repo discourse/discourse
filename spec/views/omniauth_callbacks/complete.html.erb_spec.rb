@@ -39,5 +39,3 @@ describe "users/omniauth_callbacks/complete.html.erb" do
   end
 
 end
-
-

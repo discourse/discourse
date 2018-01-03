@@ -5,13 +5,29 @@ module Jobs
     def execute(args)
       return unless SiteSetting.clean_up_uploads?
 
+      base_url = Discourse.store.internal? ? Discourse.store.relative_base_url : Discourse.store.absolute_base_url
+      s3_hostname = URI.parse(base_url).hostname
+      s3_cdn_hostname = URI.parse(SiteSetting.Upload.s3_cdn_url || "").hostname
+
       # Any URLs in site settings are fair game
       ignore_urls = [
         SiteSetting.logo_url,
         SiteSetting.logo_small_url,
         SiteSetting.favicon_url,
-        SiteSetting.apple_touch_icon_url
-      ]
+        SiteSetting.apple_touch_icon_url,
+      ].map do |url|
+        if url.present?
+          url = url.dup
+
+          if s3_cdn_hostname.present? && s3_hostname.present?
+            url.gsub!(s3_cdn_hostname, s3_hostname)
+          end
+
+          url[base_url] && url[url.index(base_url)..-1]
+        else
+          nil
+        end
+      end.compact.uniq
 
       grace_period = [SiteSetting.clean_orphan_uploads_grace_period_hours, 1].max
 
@@ -19,7 +35,7 @@ module Jobs
         .where("uploads.created_at < ?", grace_period.hour.ago)
         .joins("LEFT JOIN post_uploads pu ON pu.upload_id = uploads.id")
         .joins("LEFT JOIN users u ON u.uploaded_avatar_id = uploads.id")
-        .joins("LEFT JOIN user_avatars ua ON (ua.gravatar_upload_id = uploads.id OR ua.custom_upload_id = uploads.id)")
+        .joins("LEFT JOIN user_avatars ua ON ua.gravatar_upload_id = uploads.id OR ua.custom_upload_id = uploads.id")
         .joins("LEFT JOIN user_profiles up ON up.profile_background = uploads.url OR up.card_background = uploads.url")
         .joins("LEFT JOIN categories c ON c.uploaded_logo_id = uploads.id OR c.uploaded_background_id = uploads.id")
         .joins("LEFT JOIN custom_emojis ce ON ce.upload_id = uploads.id")
@@ -29,13 +45,20 @@ module Jobs
         .where("ua.gravatar_upload_id IS NULL AND ua.custom_upload_id IS NULL")
         .where("up.profile_background IS NULL AND up.card_background IS NULL")
         .where("c.uploaded_logo_id IS NULL AND c.uploaded_background_id IS NULL")
-        .where("ce.upload_id IS NULL AND tf.upload_id IS NULL")
-        .where("uploads.url NOT IN (?)", ignore_urls)
+        .where("ce.upload_id IS NULL")
+        .where("tf.upload_id IS NULL")
+
+      result = result.where("uploads.url NOT IN (?)", ignore_urls) if ignore_urls.present?
 
       result.find_each do |upload|
-        next if QueuedPost.where("raw LIKE '%#{upload.sha1}%'").exists?
-        next if Draft.where("data LIKE '%#{upload.sha1}%'").exists?
-        upload.destroy
+        if upload.sha1.present?
+          encoded_sha = Base62.encode(upload.sha1.hex)
+          next if QueuedPost.where("raw LIKE '%#{upload.sha1}%' OR raw LIKE '%#{encoded_sha}%'").exists?
+          next if Draft.where("data LIKE '%#{upload.sha1}%' OR data LIKE '%#{encoded_sha}%'").exists?
+          upload.destroy
+        else
+          upload.delete
+        end
       end
     end
   end

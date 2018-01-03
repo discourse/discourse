@@ -3,6 +3,7 @@
 
   @module $.fn.autocomplete
 **/
+import { iconHTML } from 'discourse-common/lib/icon-library';
 export const CANCELLED_STATUS = "__CANCELLED";
 import { setCaretPosition, caretPosition } from 'discourse/lib/utilities';
 
@@ -105,7 +106,7 @@ export default function(options) {
     transformed = _.isArray(transformedItem) ? transformedItem : [transformedItem || item];
 
     const divs = transformed.map(itm => {
-      let d = $(`<div class='item'><span>${itm}<a class='remove' href><i class='fa fa-times'></i></a></span></div>`);
+      let d = $(`<div class='item'><span>${itm}<a class='remove' href>${iconHTML('times')}</a></span></div>`);
       const $parent = me.parent();
       const prev = $parent.find('.item:last');
 
@@ -164,7 +165,7 @@ export default function(options) {
   };
 
   if (isInput) {
-    const width = this.width();
+    const width = Math.max(this.width(), 200);
 
     if (options.updateData) {
       wrap = this.parent();
@@ -358,10 +359,22 @@ export default function(options) {
   $(this).on('keyup.autocomplete', function(e) {
     if ([keys.esc, keys.enter].indexOf(e.which) !== -1) return true;
 
-    var cp = caretPosition(me[0]);
+    let cp = caretPosition(me[0]);
+    const key = me[0].value[cp-1];
 
-    if (options.key && completeStart === null && cp > 0) {
-      var key = me[0].value[cp-1];
+    if (options.key) {
+      if (options.onKeyUp && key !== options.key) {
+        let match = options.onKeyUp(me.val(), cp);
+        if (match) {
+          completeStart = cp - match[0].length;
+          completeEnd = completeStart + match[0].length - 1;
+          let term = match[0].substring(1, match[0].length);
+          updateAutoComplete(dataSource(term, options));
+        }
+      }
+    }
+
+    if (completeStart === null && cp > 0) {
       if (key === options.key) {
         var prevChar = me.val().charAt(cp-2);
         if (checkTriggerRule() && (!prevChar || allowedLettersRegex.test(prevChar))) {
@@ -370,7 +383,7 @@ export default function(options) {
         }
       }
     } else if (completeStart !== null) {
-      var term = me.val().substring(completeStart + (options.key ? 1 : 0), cp);
+      let term = me.val().substring(completeStart + (options.key ? 1 : 0), cp);
       updateAutoComplete(dataSource(term, options));
     }
   });

@@ -99,7 +99,6 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
     // this happens after route exit, stuff could have trickled in
     this.appEvents.trigger('header:hide-topic');
     this.appEvents.off('post:highlight');
-
   },
 
   @observes('Discourse.hasFocus')

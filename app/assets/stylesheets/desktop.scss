@@ -11,6 +11,7 @@
 @import "desktop/modal";
 @import "desktop/user-card";
 @import "desktop/category-list";
+@import "desktop/latest-topic-list";
 @import "desktop/topic-list";
 @import "desktop/topic-post";
 @import "desktop/topic";
@@ -20,6 +21,9 @@
 @import "desktop/queued-posts";
 @import "desktop/menu-panel";
 @import "desktop/group";
+
+// Import all component-specific files
+@import "desktop/components/*";
 
 /* These files doesn't actually exist, they are injected by Stylesheet::Compiler. */
 

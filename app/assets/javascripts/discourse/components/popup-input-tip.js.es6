@@ -1,4 +1,4 @@
-import { iconHTML } from 'discourse-common/helpers/fa-icon';
+import { iconHTML } from 'discourse-common/lib/icon-library';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 import { bufferedRender } from 'discourse-common/lib/buffered-render';
 

@@ -15,8 +15,8 @@ module Scheduler
           return unless duration
           if duration < 1000
             "#{duration}ms"
-          elsif duration < 60*1000
-            "#{'%.2f' % (duration/1000.0)} secs"
+          elsif duration < 60 * 1000
+            "#{'%.2f' % (duration / 1000.0)} secs"
           end
         end
       end
@@ -24,7 +24,7 @@ module Scheduler
       app.get "/scheduler" do
         RailsMultisite::ConnectionManagement.with_connection("default") do
           @manager = Scheduler::Manager.without_runner
-          @schedules = Scheduler::Manager.discover_schedules.sort do |a,b|
+          @schedules = Scheduler::Manager.discover_schedules.sort do |a, b|
             a_next = a.schedule_info.next_run
             b_next = b.schedule_info.next_run
             if a_next && b_next
@@ -35,13 +35,13 @@ module Scheduler
               1
             end
           end
-          erb File.read(File.join(VIEWS, 'scheduler.erb')), locals: {view_path: VIEWS}
+          erb File.read(File.join(VIEWS, 'scheduler.erb')), locals: { view_path: VIEWS }
         end
       end
 
       app.get "/scheduler/history" do
         @scheduler_stats = SchedulerStat.order('started_at desc').limit(200)
-        erb File.read(File.join(VIEWS, 'history.erb')), locals: {view_path: VIEWS}
+        erb File.read(File.join(VIEWS, 'history.erb')), locals: { view_path: VIEWS }
       end
 
       app.post "/scheduler/:name/trigger" do
@@ -50,7 +50,7 @@ module Scheduler
         RailsMultisite::ConnectionManagement.with_connection("default") do
           klass = name.constantize
           info = klass.schedule_info
-          info.next_run = Time.now.to_f
+          info.next_run = Time.now.to_i
           info.write!
 
           redirect "#{root_path}scheduler"

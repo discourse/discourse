@@ -7,7 +7,10 @@ class PostActionCreator
   end
 
   def perform(action)
-    guardian.ensure_post_can_act!(@post, action, taken_actions: PostAction.counts_for([@post].compact, @user)[@post.try(:id)])
+    guardian.ensure_post_can_act!(@post, action, opts: {
+      taken_actions: PostAction.counts_for([@post].compact, @user)[@post&.id]
+    })
+
     PostAction.act(@user, @post, action)
   end
 

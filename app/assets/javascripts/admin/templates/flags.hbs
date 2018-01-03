@@ -1,6 +1,13 @@
 {{#admin-nav}}
-  {{nav-item route='adminFlags.list' routeParam='active' label='admin.flags.active'}}
-  {{nav-item route='adminFlags.list' routeParam='old' label='admin.flags.old'}}
+  {{#if siteSettings.flags_default_topics}}
+    {{nav-item route='adminFlags.topics' label='admin.flags.topics'}}
+    {{nav-item route='adminFlags.postsActive' label='admin.flags.active_posts'}}
+  {{else}}
+    {{nav-item route='adminFlags.postsActive' label='admin.flags.active_posts'}}
+    {{nav-item route='adminFlags.topics' label='admin.flags.topics'}}
+  {{/if}}
+
+  {{nav-item route='adminFlags.postsOld' label='admin.flags.old_posts' class='right'}}
 {{/admin-nav}}
 
 <div class="admin-container">

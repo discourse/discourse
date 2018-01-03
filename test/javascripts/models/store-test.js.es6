@@ -1,81 +1,81 @@
-module('store:main');
+QUnit.module('service:store');
 
 import createStore from 'helpers/create-store';
 
-test('createRecord', function() {
+QUnit.test('createRecord', assert => {
   const store = createStore();
   const widget = store.createRecord('widget', {id: 111, name: 'hello'});
 
-  ok(!widget.get('isNew'), 'it is not a new record');
-  equal(widget.get('name'), 'hello');
-  equal(widget.get('id'), 111);
+  assert.ok(!widget.get('isNew'), 'it is not a new record');
+  assert.equal(widget.get('name'), 'hello');
+  assert.equal(widget.get('id'), 111);
 });
 
-test('createRecord without an `id`', function() {
+QUnit.test('createRecord without an `id`', assert => {
   const store = createStore();
   const widget = store.createRecord('widget', {name: 'hello'});
 
-  ok(widget.get('isNew'), 'it is a new record');
-  ok(!widget.get('id'), 'there is no id');
+  assert.ok(widget.get('isNew'), 'it is a new record');
+  assert.ok(!widget.get('id'), 'there is no id');
 });
 
-test("createRecord doesn't modify the input `id` field", () => {
+QUnit.test("createRecord doesn't modify the input `id` field", assert => {
   const store = createStore();
   const widget = store.createRecord('widget', {id: 1, name: 'hello'});
 
   const obj = { id: 1, name: 'something' };
 
   const other = store.createRecord('widget', obj);
-  equal(widget, other, 'returns the same record');
-  equal(widget.name, 'something', 'it updates the properties');
-  equal(obj.id, 1, 'it does not remove the id from the input');
+  assert.equal(widget, other, 'returns the same record');
+  assert.equal(widget.name, 'something', 'it updates the properties');
+  assert.equal(obj.id, 1, 'it does not remove the id from the input');
 });
 
-test('createRecord without attributes', function() {
+QUnit.test('createRecord without attributes', assert => {
   const store = createStore();
   const widget = store.createRecord('widget');
 
-  ok(!widget.get('id'), 'there is no id');
-  ok(widget.get('isNew'), 'it is a new record');
+  assert.ok(!widget.get('id'), 'there is no id');
+  assert.ok(widget.get('isNew'), 'it is a new record');
 });
 
-test('createRecord with a record as attributes returns that record from the map', function() {
+QUnit.test('createRecord with a record as attributes returns that record from the map', assert => {
   const store = createStore();
   const widget = store.createRecord('widget', {id: 33});
   const secondWidget = store.createRecord('widget', {id: 33});
 
-  equal(widget, secondWidget, 'they should be the same');
+  assert.equal(widget, secondWidget, 'they should be the same');
 });
 
-test('find', function() {
+QUnit.test('find', assert => {
   const store = createStore();
   return store.find('widget', 123).then(function(w) {
-    equal(w.get('name'), 'Trout Lure');
-    equal(w.get('id'), 123);
-    ok(!w.get('isNew'), 'found records are not new');
+    assert.equal(w.get('name'), 'Trout Lure');
+    assert.equal(w.get('id'), 123);
+    assert.ok(!w.get('isNew'), 'found records are not new');
 
     // A second find by id returns the same object
     store.find('widget', 123).then(function(w2) {
-      equal(w, w2);
+      assert.equal(w, w2);
     });
   });
 });
 
-test('find with object id', function() {
+QUnit.test('find with object id', assert => {
   const store = createStore();
   return store.find('widget', {id: 123}).then(function(w) {
-    equal(w.get('firstObject.name'), 'Trout Lure');
+    assert.equal(w.get('firstObject.name'), 'Trout Lure');
   });
 });
 
-test('find with query param', function() {
+QUnit.test('find with query param', assert => {
   const store = createStore();
   return store.find('widget', {name: 'Trout Lure'}).then(function(w) {
-    equal(w.get('firstObject.id'), 123);
+    assert.equal(w.get('firstObject.id'), 123);
   });
 });
 
-test('findStale with no stale results', (assert) => {
+QUnit.test('findStale with no stale results', (assert) => {
   const store = createStore();
   const stale = store.findStale('widget', {name: 'Trout Lure'});
 
@@ -86,14 +86,14 @@ test('findStale with no stale results', (assert) => {
   });
 });
 
-test('update', function() {
+QUnit.test('update', assert => {
   const store = createStore();
   return store.update('widget', 123, {name: 'hello'}).then(function(result) {
-    ok(result);
+    assert.ok(result);
   });
 });
 
-test('update with a multi world name', function(assert) {
+QUnit.test('update with a multi world name', function(assert) {
   const store = createStore();
   return store.update('cool-thing', 123, {name: 'hello'}).then(function(result) {
     assert.ok(result);
@@ -101,17 +101,17 @@ test('update with a multi world name', function(assert) {
   });
 });
 
-test('findAll', function() {
+QUnit.test('findAll', assert => {
   const store = createStore();
   return store.findAll('widget').then(function(result) {
-    equal(result.get('length'), 2);
+    assert.equal(result.get('length'), 2);
     const w = result.findBy('id', 124);
-    ok(!w.get('isNew'), 'found records are not new');
-    equal(w.get('name'), 'Evil Repellant');
+    assert.ok(!w.get('isNew'), 'found records are not new');
+    assert.equal(w.get('name'), 'Evil Repellant');
   });
 });
 
-test('destroyRecord', function(assert) {
+QUnit.test('destroyRecord', function(assert) {
   const store = createStore();
   return store.find('widget', 123).then(function(w) {
     store.destroyRecord('widget', w).then(function(result) {
@@ -120,7 +120,7 @@ test('destroyRecord', function(assert) {
   });
 });
 
-test('destroyRecord when new', function(assert) {
+QUnit.test('destroyRecord when new', function(assert) {
   const store = createStore();
   const w = store.createRecord('widget', {name: 'hello'});
   store.destroyRecord('widget', w).then(function(result) {
@@ -128,7 +128,7 @@ test('destroyRecord when new', function(assert) {
   });
 });
 
-test('find embedded', function(assert) {
+QUnit.test('find embedded', function(assert) {
   const store = createStore();
   return store.find('fruit', 2).then(function(f) {
     assert.ok(f.get('farmer'), 'it has the embedded object');
@@ -142,7 +142,14 @@ test('find embedded', function(assert) {
   });
 });
 
-test('findAll embedded', function(assert) {
+QUnit.test('meta types', function(assert) {
+  const store = createStore();
+  return store.find('barn', 1).then(function(f) {
+    assert.equal(f.get('owner.name'), 'Old MacDonald', 'it has the embedded farmer');
+  });
+});
+
+QUnit.test('findAll embedded', function(assert) {
   const store = createStore();
   return store.findAll('fruit').then(function(fruits) {
     assert.equal(fruits.objectAt(0).get('farmer.name'), 'Old MacDonald');
@@ -157,4 +164,3 @@ test('findAll embedded', function(assert) {
     assert.equal(fruits.objectAt(2).get('farmer.name'), 'Luke Skywalker');
   });
 });
-

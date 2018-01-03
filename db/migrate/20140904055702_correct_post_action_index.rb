@@ -1,4 +1,4 @@
-class CorrectPostActionIndex < ActiveRecord::Migration
+class CorrectPostActionIndex < ActiveRecord::Migration[4.2]
 
   def up
 

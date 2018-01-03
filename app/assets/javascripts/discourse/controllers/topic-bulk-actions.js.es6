@@ -4,6 +4,9 @@ const _buttons = [];
 
 const alwaysTrue = () => true;
 
+function identity() {
+}
+
 function addBulkButton(action, key, opts) {
   opts = opts || {};
 
@@ -22,7 +25,7 @@ function addBulkButton(action, key, opts) {
 addBulkButton('showChangeCategory', 'change_category', {icon: 'pencil'});
 addBulkButton('closeTopics', 'close_topics', {icon: 'lock'});
 addBulkButton('archiveTopics', 'archive_topics', {icon: 'folder'});
-addBulkButton('showNotificationLevel', 'notification_level', {icon: 'circle-o'});
+addBulkButton('showNotificationLevel', 'notification_level', {icon: 'd-regular'});
 addBulkButton('resetRead', 'reset_read', {icon: 'backward'});
 addBulkButton('unlistTopics', 'unlist_topics', {
   icon: 'eye-slash',
@@ -72,7 +75,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     this.perform(operation).then(topics => {
       if (topics) {
         topics.forEach(cb);
-        (this.get('refreshClosure') || Ember.k)();
+        (this.get('refreshClosure') || identity)();
         this.send('closeModal');
       }
     });
@@ -80,7 +83,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   performAndRefresh(operation) {
     return this.perform(operation).then(() => {
-      (this.get('refreshClosure') || Ember.k)();
+      (this.get('refreshClosure') || identity)();
       this.send('closeModal');
     });
   },
@@ -112,7 +115,6 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
     showChangeCategory() {
       this.send('changeBulkTemplate', 'modal/bulk-change-category');
-      this.set('modal.modalClass', 'topic-bulk-actions-modal full');
     },
 
     showNotificationLevel() {
@@ -145,7 +147,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
       this.perform({type: 'change_category', category_id: categoryId}).then(topics => {
         topics.forEach(t => t.set('category', category));
-        (this.get('refreshClosure') || Ember.k)();
+        (this.get('refreshClosure') || identity)();
         this.send('closeModal');
       });
     },

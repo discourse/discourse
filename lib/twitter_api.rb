@@ -5,7 +5,7 @@ class TwitterApi
 
     def prettify_tweet(tweet)
       text = tweet["full_text"].dup
-      if entities = tweet["entities"] and urls = entities["urls"]
+      if (entities = tweet["entities"]) && (urls = entities["urls"])
         urls.each do |url|
           text.gsub!(url["url"], "<a target='_blank' href='#{url["expanded_url"]}'>#{url["display_url"]}</a>")
         end
@@ -56,7 +56,7 @@ class TwitterApi
     protected
 
     def link_handles_in(text)
-      text.scan(/\s@(\w+)/).flatten.uniq.each do |handle|
+      text.scan(/(?:^|\s)@(\w+)/).flatten.uniq.each do |handle|
         text.gsub!("@#{handle}", [
           "<a href='https://twitter.com/#{handle}' target='_blank'>",
             "@#{handle}",
@@ -68,7 +68,7 @@ class TwitterApi
     end
 
     def link_hashtags_in(text)
-      text.scan(/\s#(\w+)/).flatten.uniq.each do |hashtag|
+      text.scan(/(?:^|\s)#(\w+)/).flatten.uniq.each do |hashtag|
         text.gsub!("##{hashtag}", [
           "<a href='https://twitter.com/search?q=%23#{hashtag}' ",
           "target='_blank'>",
@@ -124,7 +124,6 @@ class TwitterApi
     def auth_uri
       URI.parse "#{BASE_URL}/oauth2/token"
     end
-
 
     def http(uri)
       Net::HTTP.new(uri.host, uri.port).tap { |http| http.use_ssl = true }

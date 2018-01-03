@@ -36,7 +36,7 @@ describe InviteRedeemer do
     let(:invite) { Fabricate(:invite) }
     let(:name) { 'john snow' }
     let(:username) { 'kingofthenorth' }
-    let(:password) { 'know5nOthiNG'}
+    let(:password) { 'know5nOthiNG' }
     let(:invite_redeemer) { InviteRedeemer.new(invite, username, name) }
 
     it "should redeem the invite if invited by staff" do
@@ -92,6 +92,29 @@ describe InviteRedeemer do
       expect(user).to have_password
       expect(user.confirm_password?(password)).to eq(true)
       expect(user.approved).to eq(true)
+    end
+
+    it "can set custom fields" do
+      required_field = Fabricate(:user_field)
+      optional_field = Fabricate(:user_field, required: false)
+      user_fields = {
+        required_field.id.to_s => 'value1',
+        optional_field.id.to_s => 'value2'
+      }
+      user = InviteRedeemer.new(invite, username, name, password, user_fields).redeem
+
+      expect(user).to be_present
+      expect(user.custom_fields["user_field_#{required_field.id}"]).to eq('value1')
+      expect(user.custom_fields["user_field_#{optional_field.id}"]).to eq('value2')
+    end
+
+    it "adds user to group" do
+      group = Fabricate(:group, grant_trust_level: 2)
+      InvitedGroup.create(group_id: group.id, invite_id: invite.id)
+      user = InviteRedeemer.new(invite, username, name, password).redeem
+
+      expect(user.group_users.count).to eq(4)
+      expect(user.trust_level).to eq(2)
     end
   end
 end

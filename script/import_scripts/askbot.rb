@@ -24,11 +24,11 @@ class ImportScripts::MyAskBot < ImportScripts::Base
     @tagmap = []
     @td = PG::TextDecoder::TimestampWithTimeZone.new
     @client = PG.connect(
-      :dbname   => DB_NAME,
-      :host     => DB_HOST,
-      :port     => DB_PORT,
-      :user     => DB_USER,
-      :password => DB_PASS
+      dbname: DB_NAME,
+      host: DB_HOST,
+      port: DB_PORT,
+      user: DB_USER,
+      password: DB_PASS
     )
   end
 
@@ -79,7 +79,7 @@ class ImportScripts::MyAskBot < ImportScripts::Base
         tid = tag["thread_id"].to_i
         tnm = tag["name"].downcase
         if @tagmap[tid]
-          @tagmap[tid].push( tnm )
+          @tagmap[tid].push(tnm)
         else
           @tagmap[tid] = [ tnm ]
         end
@@ -110,7 +110,7 @@ class ImportScripts::MyAskBot < ImportScripts::Base
 
       break if users.ntuples() < 1
 
-      next if all_records_exist? :users, users.map {|u| u["id"].to_i}
+      next if all_records_exist? :users, users.map { |u| u["id"].to_i }
 
       create_users(users, total: total_count, offset: offset) do |user|
         {
@@ -155,7 +155,7 @@ class ImportScripts::MyAskBot < ImportScripts::Base
 
       break if posts.ntuples() < 1
 
-      next if all_records_exist? :posts, posts.map {|p| p["id"].to_i}
+      next if all_records_exist? :posts, posts.map { |p| p["id"].to_i }
 
       create_posts(posts, total: post_count, offset: offset) do |post|
         pid = post["id"]
@@ -174,7 +174,7 @@ class ImportScripts::MyAskBot < ImportScripts::Base
           id: pid,
           title: post["title"],
           category: cat,
-          custom_fields: {import_id: pid, import_thread_id: tid, import_tags: tags},
+          custom_fields: { import_id: pid, import_thread_id: tid, import_tags: tags },
           user_id: user_id_from_imported_user_id(post["author_id"]) || Discourse::SYSTEM_USER_ID,
           created_at: Time.zone.at(@td.decode(post["added_at"])),
           raw: post["text"],
@@ -210,7 +210,7 @@ class ImportScripts::MyAskBot < ImportScripts::Base
 
       break if posts.ntuples() < 1
 
-      next if all_records_exist? :posts, posts.map {|p| p["id"].to_i}
+      next if all_records_exist? :posts, posts.map { |p| p["id"].to_i }
 
       create_posts(posts, total: post_count, offset: offset) do |post|
         tid = post["thread_id"].to_i
@@ -220,7 +220,7 @@ class ImportScripts::MyAskBot < ImportScripts::Base
         {
           id: pid,
           topic_id: parent[:topic_id],
-          custom_fields: {import_id: pid},
+          custom_fields: { import_id: pid },
           user_id: user_id_from_imported_user_id(post["author_id"]) || Discourse::SYSTEM_USER_ID,
           created_at: Time.zone.at(@td.decode(post["added_at"])),
           raw: post["text"]
@@ -230,47 +230,48 @@ class ImportScripts::MyAskBot < ImportScripts::Base
   end
 
   def post_process_posts
-      puts "", "Postprocessing posts..."
-      current = 0
-      max = Post.count
-      # Rewrite internal links; e.g.
-      # ask.cvxr.com/question/(\d+)/[^'"}]*
-      # I am sure this is incomplete, but we didn't make heavy use of internal
-      # links on our site.
-      tmp = Regexp.quote("http://" << OLD_SITE)
-      r1 = /"(#{tmp})?\/question\/(\d+)\/[a-zA-Z-]*\/?"/
-      r2 = /\((#{tmp})?\/question\/(\d+)\/[a-zA-Z-]*\/?\)/
-      r3 = /<?#tmp\/question\/(\d+)\/[a-zA-Z-]*\/?>?/
-      Post.find_each do |post|
-        raw = post.raw.gsub(r1) do
-          if topic = topic_lookup_from_imported_post_id($2)
-            "\"#{topic[:url]}\""
-          else
-            $&
-          end
+    puts "", "Postprocessing posts..."
+    current = 0
+    max = Post.count
+    # Rewrite internal links; e.g.
+    # ask.cvxr.com/question/(\d+)/[^'"}]*
+    # I am sure this is incomplete, but we didn't make heavy use of internal
+    # links on our site.
+    tmp = Regexp.quote("http://" << OLD_SITE)
+    r1 = /"(#{tmp})?\/question\/(\d+)\/[a-zA-Z-]*\/?"/
+    r2 = /\((#{tmp})?\/question\/(\d+)\/[a-zA-Z-]*\/?\)/
+    r3 = /<?#tmp\/question\/(\d+)\/[a-zA-Z-]*\/?>?/
+    Post.find_each do |post|
+      raw = post.raw.gsub(r1) do
+        if topic = topic_lookup_from_imported_post_id($2)
+          "\"#{topic[:url]}\""
+        else
+          $&
         end
-        raw = raw.gsub(r2) do
-          if topic = topic_lookup_from_imported_post_id($2)
-            "(#{topic[:url]})"
-          else
-            $&
-          end
-        end
-        raw = raw.gsub(r3) do
-           if topic = topic_lookup_from_imported_post_id($1)
-            trec = Topic.find_by(id: topic[:topic_id])
-            "[#{trec.title}](#{topic[:url]})"
-          else
-            $&
-          end
-        end
-        if raw != post.raw
-          post.raw = raw
-          post.save
-        end
-        print_status(current += 1, max)
       end
+      raw = raw.gsub(r2) do
+        if topic = topic_lookup_from_imported_post_id($2)
+          "(#{topic[:url]})"
+        else
+          $&
+        end
+      end
+      raw = raw.gsub(r3) do
+        if topic = topic_lookup_from_imported_post_id($1)
+          trec = Topic.find_by(id: topic[:topic_id])
+          "[#{trec.title}](#{topic[:url]})"
+        else
+          $&
+        end
+      end
+
+      if raw != post.raw
+        post.raw = raw
+        post.save
+      end
+      print_status(current += 1, max)
     end
   end
+end
 
 ImportScripts::MyAskBot.new.perform

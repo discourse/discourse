@@ -1,13 +1,14 @@
 import { createWidget } from 'discourse/widgets/widget';
 import { headerHeight } from 'discourse/components/site-header';
 import { h } from 'virtual-dom';
+import DiscourseURL from 'discourse/lib/url';
 
 export default createWidget('user-notifications', {
   tagName: 'div.notifications',
   buildKey: () => 'user-notifications',
 
   defaultState() {
-    return { notifications: [], loading: false };
+    return { notifications: [], loading: false, loaded: false };
   },
 
   notificationsChanged() {
@@ -49,12 +50,13 @@ export default createWidget('user-notifications', {
       state.notifications = [];
     }).finally(() => {
       state.loading = false;
+      state.loaded = true;
       this.scheduleRerender();
     });
   },
 
   html(attrs, state) {
-    if (!state.notifications.length) {
+    if (!state.loaded) {
       this.refreshNotifications(state);
     }
 
@@ -70,10 +72,14 @@ export default createWidget('user-notifications', {
       const items = [notificationItems];
 
       if (notificationItems.length > 5) {
-        const href = `${attrs.path}/notifications`;
-
         items.push(
-          h('li.read.last.heading', h('a', { attributes: { href } }, [I18n.t('notifications.more'), '...'])),
+          h('li.read.last.heading.show-all',
+            this.attach('button', {
+              title: 'notifications.more',
+              icon: 'chevron-down',
+              action: 'showAllNotifications',
+              className: 'btn'
+            })),
           h('hr')
         );
       }
@@ -82,5 +88,9 @@ export default createWidget('user-notifications', {
     }
 
     return result;
+  },
+
+  showAllNotifications() {
+    DiscourseURL.routeTo(`${this.attrs.path}/notifications`);
   }
 });

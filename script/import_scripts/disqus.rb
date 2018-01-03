@@ -11,7 +11,7 @@ class ImportScripts::Disqus < ImportScripts::Base
   def initialize
     abort("File '#{IMPORT_FILE}' not found") if !File.exist?(IMPORT_FILE)
 
-    @category = Category.where(name: IMPORT_CATEGORY).first 
+    @category = Category.where(name: IMPORT_CATEGORY).first
     abort("Category #{IMPORT_CATEGORY} not found") if @category.blank?
 
     @parser = DisqusSAX.new
@@ -67,7 +67,7 @@ class ImportScripts::Disqus < ImportScripts::Base
 
       puts "Creating #{title}... (#{t[:posts].size} posts)"
 
-      topic_user = User.where('email = ? OR username = ?', t[:author_email].downcase, t[:author_username]).first
+      topic_user = find_existing_user(t[:author_email], t[:author_username])
       begin
         post = TopicEmbed.import_remote(topic_user, t[:link], title: title)
         post.topic.update_column(:category_id, @category.id)
@@ -77,7 +77,7 @@ class ImportScripts::Disqus < ImportScripts::Base
 
       if post.present? && post.topic.posts_count <= 1
         (t[:posts] || []).each do |p|
-          post_user = User.where('email = ? OR username = ?', (p[:author_email] || '').downcase, p[:author_username]).first
+          post_user = find_existing_user(p[:author_email] || '', p[:author_username])
           next unless post_user.present?
 
           attrs = {
@@ -135,7 +135,7 @@ class DisqusSAX < Nokogiri::XML::SAX::Document
         thread = @threads[id]
         thread[:posts] << @post
       else
-        @thread = {id: id, posts: []}
+        @thread = { id: id, posts: [] }
       end
     when 'parent'
       if @post
@@ -194,7 +194,7 @@ class DisqusSAX < Nokogiri::XML::SAX::Document
   end
 
   def inside?(*params)
-    return !params.find{|p| !@inside[p]}
+    return !params.find { |p| !@inside[p] }
   end
 
   def normalize
@@ -203,7 +203,7 @@ class DisqusSAX < Nokogiri::XML::SAX::Document
         # Remove any threads that have no posts
         @threads.delete(id)
       else
-        t[:posts].delete_if {|p| p[:is_spam] == 'true' || p[:is_deleted] == 'true'}
+        t[:posts].delete_if { |p| p[:is_spam] == 'true' || p[:is_deleted] == 'true' }
       end
     end
 

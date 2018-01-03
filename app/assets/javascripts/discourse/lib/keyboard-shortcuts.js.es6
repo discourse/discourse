@@ -6,6 +6,7 @@ const bindings = {
   '!':               {postAction: 'showFlags'},
   '#':               {handler: 'goToPost', anonymous: true},
   '/':               {handler: 'toggleSearch', anonymous: true},
+  'ctrl+alt+f':      {handler: 'toggleSearch', anonymous: true},
   '=':               {handler: 'toggleHamburgerMenu', anonymous: true},
   '?':               {handler: 'showHelpModal', anonymous: true},
   '.':               {click: '.alert.alert-info.clickable', anonymous: true}, // show incoming/updated topics
@@ -168,7 +169,9 @@ export default {
   },
 
   createTopic() {
-    this.container.lookup('controller:composer').open({action: Composer.CREATE_TOPIC, draftKey: Composer.CREATE_TOPIC});
+    if (this.currentUser && this.currentUser.can_create_topic) {
+      this.container.lookup('controller:composer').open({action: Composer.CREATE_TOPIC, draftKey: Composer.CREATE_TOPIC});
+    }
   },
 
   pinUnpinTopic() {

@@ -2,7 +2,7 @@ import { acceptance } from "helpers/qunit-helpers";
 
 acceptance("Group Logs", {
   loggedIn: true,
-  setup() {
+  beforeEach() {
     const response = object => {
       return [
         200,
@@ -26,15 +26,15 @@ acceptance("Group Logs", {
   }
 });
 
-test("Browsing group logs", () => {
+QUnit.test("Browsing group logs", assert => {
   visit("/groups/snorlax/logs");
 
   andThen(() => {
-    ok(find('tr.group-logs-row').length === 2, 'it should display the right number of logs');
+    assert.ok(find('tr.group-logs-row').length === 2, 'it should display the right number of logs');
     click(find(".group-logs-row button")[0]);
   });
 
   andThen(() => {
-    ok(find('tr.group-logs-row').length === 1, 'it should display the right number of logs');
+    assert.ok(find('tr.group-logs-row').length === 1, 'it should display the right number of logs');
   });
 });

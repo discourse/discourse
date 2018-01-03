@@ -268,8 +268,8 @@ describe Wizard::StepUpdater do
 
   context "invites step" do
     let(:invites) {
-      return [{ email: 'regular@example.com', role: 'regular'},
-              { email: 'moderator@example.com', role: 'moderator'}]
+      return [{ email: 'regular@example.com', role: 'regular' },
+              { email: 'moderator@example.com', role: 'moderator' }]
     }
 
     it "updates the fields correctly" do

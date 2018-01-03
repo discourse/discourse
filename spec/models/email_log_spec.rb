@@ -16,7 +16,6 @@ describe EmailLog do
       # skipped emails do not matter
       Fabricate(:email_log, user: user, email_type: 'blah', post_id: post.id, to_address: user.email, user_id: user.id, skipped: true)
 
-
       ran = EmailLog.unique_email_per_post(post, user) do
         true
       end

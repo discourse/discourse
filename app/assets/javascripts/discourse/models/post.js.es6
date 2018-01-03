@@ -6,8 +6,9 @@ import { propertyEqual } from 'discourse/lib/computed';
 import Quote from 'discourse/lib/quote';
 import computed from 'ember-addons/ember-computed-decorators';
 import { postUrl } from 'discourse/lib/utilities';
-import { cook } from 'discourse/lib/text';
+import { cookAsync } from 'discourse/lib/text';
 import { userPath } from 'discourse/lib/url';
+import Composer from 'discourse/models/composer';
 
 const Post = RestModel.extend({
 
@@ -52,7 +53,11 @@ const Post = RestModel.extend({
   }.property('firstPost', 'deleted_at', 'topic.deleted_at'),
 
   url: function() {
-    return postUrl(this.get('topic.slug') || this.get('topic_slug'), this.get('topic_id'), this.get('post_number'));
+    return postUrl(
+      this.get('topic.slug') || this.get('topic_slug'),
+      this.get('topic_id') || this.get('topic.id'),
+      this.get('post_number')
+    );
   }.property('post_number', 'topic_id', 'topic.slug'),
 
   // Don't drop the /1
@@ -83,15 +88,14 @@ const Post = RestModel.extend({
   }.property('link_counts.@each.internal'),
 
   flagsAvailable: function() {
-    const post = this;
-    return Discourse.Site.currentProp('flagTypes').filter(function(item) {
-      return post.get("actionByName." + item.get('name_key') + ".can_act");
+    return this.site.get('flagTypes').filter(item => {
+      return this.get(`actionByName.${item.get('name_key')}.can_act`);
     });
   }.property('actions_summary.@each.can_act'),
 
   afterUpdate(res) {
     if (res.category) {
-      Discourse.Site.current().updateCategory(res.category);
+      this.site.updateCategory(res.category);
     }
   },
 
@@ -104,7 +108,6 @@ const Post = RestModel.extend({
 
   createProperties() {
     // composer only used once, defer the dependency
-    const Composer = require('discourse/models/composer').default;
     const data = this.getProperties(Composer.serializedFieldsForCreate());
     data.reply_to_post_number = this.get('reply_to_post_number');
     data.image_sizes = this.get('imageSizes');
@@ -122,35 +125,33 @@ const Post = RestModel.extend({
 
   // Expands the first post's content, if embedded and shortened.
   expand() {
-    const self = this;
-    return ajax("/posts/" + this.get('id') + "/expand-embed").then(function(post) {
-      self.set('cooked', "<section class='expanded-embed'>" + post.cooked + "</section>" );
+    return ajax(`/posts/${this.get('id')}/expand-embed`).then(post => {
+      this.set('cooked', `<section class="expanded-embed">${post.cooked}</section>`);
     });
   },
 
   // Recover a deleted post
   recover() {
-    const post = this,
-          initProperties = post.getProperties('deleted_at', 'deleted_by', 'user_deleted', 'can_delete');
+    const initProperties = this.getProperties('deleted_at', 'deleted_by', 'user_deleted', 'can_delete');
 
-    post.setProperties({
+    this.setProperties({
       deleted_at: null,
       deleted_by: null,
       user_deleted: false,
       can_delete: false
     });
 
-    return ajax("/posts/" + (this.get('id')) + "/recover", { type: 'PUT', cache: false }).then(function(data){
-      post.setProperties({
+    return ajax(`/posts/${this.get('id')}/recover`, { type: 'PUT', cache: false }).then(data => {
+      this.setProperties({
         cooked: data.cooked,
         raw: data.raw,
         user_deleted: false,
         can_delete: true,
         version: data.version
       });
-    }).catch(function(error) {
+    }).catch(error => {
       popupAjaxError(error);
-      post.setProperties(initProperties);
+      this.setProperties(initProperties);
     });
   },
 
@@ -159,6 +160,7 @@ const Post = RestModel.extend({
     done elsewhere.
   **/
   setDeletedState(deletedBy) {
+    let promise;
     this.set('oldCooked', this.get('cooked'));
 
     // Moderators can delete posts. Users can only trigger a deleted at message, unless delete_removed_posts_after is 0.
@@ -169,16 +171,19 @@ const Post = RestModel.extend({
         can_delete: false
       });
     } else {
-
-      this.setProperties({
-        cooked: cook(I18n.t("post.deleted_by_author", {count: Discourse.SiteSettings.delete_removed_posts_after})),
-        can_delete: false,
-        version: this.get('version') + 1,
-        can_recover: true,
-        can_edit: false,
-        user_deleted: true
+      promise = cookAsync(I18n.t("post.deleted_by_author", {count: Discourse.SiteSettings.delete_removed_posts_after})).then(cooked => {
+        this.setProperties({
+          cooked: cooked,
+          can_delete: false,
+          version: this.get('version') + 1,
+          can_recover: true,
+          can_edit: false,
+          user_deleted: true
+        });
       });
     }
+
+    return promise || Em.RSVP.Promise.resolve();
   },
 
   /**
@@ -201,10 +206,11 @@ const Post = RestModel.extend({
   },
 
   destroy(deletedBy) {
-    this.setDeletedState(deletedBy);
-    return ajax("/posts/" + this.get('id'), {
-      data: { context: window.location.pathname },
-      type: 'DELETE'
+    return this.setDeletedState(deletedBy).then(()=>{
+      return ajax("/posts/" + this.get('id'), {
+        data: { context: window.location.pathname },
+        type: 'DELETE'
+      });
     });
   },
 
@@ -321,22 +327,17 @@ Post.reopenClass({
     });
   },
 
-  deleteMany(selectedPosts, selectedReplies) {
+  deleteMany(post_ids) {
     return ajax("/posts/destroy_many", {
       type: 'DELETE',
-      data: {
-        post_ids: selectedPosts.map(function(p) { return p.get('id'); }),
-        reply_post_ids: selectedReplies.map(function(p) { return p.get('id'); })
-      }
+      data: { post_ids }
     });
   },
 
-  mergePosts(selectedPosts) {
+  mergePosts(post_ids) {
     return ajax("/posts/merge_posts", {
       type: 'PUT',
-      data: { post_ids: selectedPosts.map(p => p.get('id')) }
-    }).catch(() => {
-      self.flash(I18n.t('topic.merge_posts.error'));
+      data: { post_ids }
     });
   },
 

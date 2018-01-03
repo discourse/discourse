@@ -12,25 +12,28 @@ describe 'invite only' do
       admin = Fabricate(:admin)
       api_key = Fabricate(:api_key, user: admin)
 
-      xhr :post, '/users',
+      post '/users.json', params: {
         name: 'bob',
         username: 'bob',
         password: 'strongpassword',
         email: 'bob@bob.com',
         api_key: api_key.key,
         api_username: admin.username
+      }
 
       user_id = JSON.parse(response.body)["user_id"]
       expect(user_id).to be > 0
 
       # activate and approve
-      xhr :put, "/admin/users/#{user_id}/activate",
-          api_key: api_key.key,
-          api_username: admin.username
+      put "/admin/users/#{user_id}/activate.json", params: {
+        api_key: api_key.key,
+        api_username: admin.username
+      }
 
-      xhr :put, "/admin/users/#{user_id}/approve",
-          api_key: api_key.key,
-          api_username: admin.username
+      put "/admin/users/#{user_id}/approve.json", params: {
+        api_key: api_key.key,
+        api_username: admin.username
+      }
 
       u = User.find(user_id)
       expect(u.active).to eq(true)

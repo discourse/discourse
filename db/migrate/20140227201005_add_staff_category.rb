@@ -1,4 +1,4 @@
-class AddStaffCategory < ActiveRecord::Migration
+class AddStaffCategory < ActiveRecord::Migration[4.2]
   def up
     return if Rails.env.test?
 

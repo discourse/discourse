@@ -7,7 +7,7 @@ class Demon::Sidekiq < Demon::Base
   end
 
   def self.after_fork(&blk)
-    blk ? (@blk=blk) : @blk
+    blk ? (@blk = blk) : @blk
   end
 
   private
@@ -23,7 +23,7 @@ class Demon::Sidekiq < Demon::Base
   def after_fork
     Demon::Sidekiq.after_fork&.call
 
-    STDERR.puts "Loading Sidekiq in process id #{Process.pid}"
+    puts "Loading Sidekiq in process id #{Process.pid}"
     require 'sidekiq/cli'
     # CLI will close the logger, if we have one set we can be in big
     # trouble, if STDOUT is closed in our process all sort of weird
@@ -37,7 +37,7 @@ class Demon::Sidekiq < Demon::Base
     [['critical', 4], ['default', 2], ['low', 1]].each do |queue_name, weight|
       custom_queue_hostname = ENV["UNICORN_SIDEKIQ_#{queue_name.upcase}_QUEUE_HOSTNAME"]
 
-      if !custom_queue_hostname || custom_queue_hostname == `hostname`.strip
+      if !custom_queue_hostname || custom_queue_hostname.split(',').include?(`hostname`.strip)
         options << "-q"
         options << "#{queue_name},#{weight}"
       end

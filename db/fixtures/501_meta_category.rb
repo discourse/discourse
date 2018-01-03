@@ -17,7 +17,7 @@ unless Rails.env.test?
         raise "Failed meta topic"
       end
 
-      meta.set_permissions(:everyone => :full)
+      meta.set_permissions(everyone: :full)
       meta.topic_id = post.topic.id
       unless meta.save
         puts meta.errors.full_messages

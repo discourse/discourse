@@ -10,11 +10,10 @@ describe Admin::PluginsController do
     let!(:admin) { log_in(:admin) }
 
     it 'should return JSON' do
-      xhr :get, :index
+      get :index, format: :json
       expect(response).to be_success
       expect(::JSON.parse(response.body).has_key?('plugins')).to eq(true)
     end
   end
 
 end
-

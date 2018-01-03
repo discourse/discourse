@@ -1,4 +1,4 @@
-class AddTitleToUsers < ActiveRecord::Migration
+class AddTitleToUsers < ActiveRecord::Migration[4.2]
   def change
     add_column :users, :title, :string
   end

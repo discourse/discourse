@@ -1,11 +1,5 @@
 import { selectedText } from 'discourse/lib/utilities';
 
-// we don't want to deselect when we click on buttons that use it
-function willQuote(e) {
-  const $target = $(e.target);
-  return $target.hasClass('quote-button') || $target.closest('.create, .share, .reply-new').length;
-}
-
 export default Ember.Component.extend({
   classNames: ['quote-button'],
   classNameBindings: ['visible'],
@@ -46,8 +40,17 @@ export default Ember.Component.extend({
       }
     }
 
-    quoteState.selected(postId, selectedText());
+    const _selectedText = selectedText();
+    quoteState.selected(postId, _selectedText);
     this.set('visible', quoteState.buffer.length > 0);
+
+    // avoid hard loops in quote selection unconditionally
+    // this can happen if you triple click text in firefox
+    if (this._prevSelection === _selectedText) {
+      return;
+    }
+
+    this._prevSelection = _selectedText;
 
     // on Desktop, shows the button at the beginning of the selection
     // on Mobile, shows the button at the end of the selection
@@ -107,12 +110,14 @@ export default Ember.Component.extend({
     const onSelectionChanged = _.debounce(() => this._selectionChanged(), wait);
 
     $(document).on("mousedown.quote-button", e => {
+      this._prevSelection = null;
       this._isMouseDown = true;
       this._reselected = false;
-      if (!willQuote(e)) {
+      if ($(e.target).closest('.quote-button, .create, .share, .reply-new').length === 0) {
         this._hideButton();
       }
     }).on("mouseup.quote-button", () => {
+      this._prevSelection = null;
       this._isMouseDown = false;
       onSelectionChanged();
     }).on("selectionchange.quote-button", () => {

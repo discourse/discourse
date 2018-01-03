@@ -19,7 +19,7 @@ class DistributedMemoizer
       begin
         while Time.new < start + MAX_WAIT && !got_lock
           LOCK.synchronize do
-            got_lock = get_lock(redis,redis_lock_key)
+            got_lock = get_lock(redis, redis_lock_key)
           end
           sleep 0.001
         end
@@ -37,7 +37,6 @@ class DistributedMemoizer
 
     result
   end
-
 
   def self.redis_lock_key(key)
     "memoize_lock_" << key

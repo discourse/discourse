@@ -1,6 +1,6 @@
 export default Ember.Component.extend({
   didInsertElement() {
     this._super();
-    $('#discourse-modal').modal('hide');
+    $('.d-modal.fixed-modal').modal('hide').addClass('hidden');
   }
 });

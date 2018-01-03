@@ -1,6 +1,8 @@
 import showModal from 'discourse/lib/show-modal';
 
 export default Ember.Component.extend({
+  classNames: ['bulk-select-container'],
+
   actions: {
     showBulkActions() {
       const controller = showModal('topic-bulk-actions', {

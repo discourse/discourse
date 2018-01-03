@@ -1,7 +1,7 @@
 <div class='admin-controls'>
   <div class='span15'>
     <ul class='nav nav-pills'>
-      <li>{{#link-to 'adminUser' user}}<i class="fa fa-caret-left"></i> &nbsp;{{user.username}}{{/link-to}}</li>
+      <li>{{#link-to 'adminUser' user}}{{d-icon "caret-left"}} &nbsp;{{user.username}}{{/link-to}}</li>
     </ul>
   </div>
 </div>
@@ -16,7 +16,7 @@
     <form class="form-horizontal">
       <div>
       <label>{{i18n 'admin.badges.badge'}}</label>
-      {{combo-box valueAttribute="id" value=selectedBadgeId content=grantableBadges nameProperty="name"}}
+      {{combo-box filterable=true value=selectedBadgeId content=grantableBadges}}
       </div>
       <label>
       <label>{{i18n 'admin.badges.reason'}}</label>

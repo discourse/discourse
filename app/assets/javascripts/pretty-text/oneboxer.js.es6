@@ -3,6 +3,38 @@ const loadingQueue = [];
 const localCache = {};
 const failedCache = {};
 
+function resolveSize(img) {
+  $(img).addClass('size-resolved');
+
+  if (img.width > 0 && img.width === img.height) {
+    $(img).addClass('onebox-avatar');
+  }
+}
+
+// Detect square images and apply smaller onebox-avatar class
+function applySquareGenericOnebox($elem, normalizedUrl) {
+  if (!$elem.hasClass('whitelistedgeneric')) {
+    return;
+  }
+
+  let $img = $elem.find('.onebox-body img.thumbnail');
+  let img = $img[0];
+
+  // already resolved... skip
+  if ($img.length !== 1 || $img.hasClass('size-resolved')) {
+    return;
+  }
+
+  if (img.complete) {
+    resolveSize(img, $elem, normalizedUrl);
+  } else {
+    $img.on('load.onebox', () => {
+      resolveSize(img, $elem, normalizedUrl);
+      $img.off('load.onebox');
+    });
+  }
+}
+
 function loadNext(ajax) {
   if (loadingQueue.length === 0) {
     timeout = null;
@@ -16,18 +48,21 @@ function loadNext(ajax) {
   // Retrieve the onebox
   return ajax("/onebox", {
     dataType: 'html',
-    data: { url, refresh, user_id: userId },
+    data: { url, refresh },
     cache: true
   }).then(html => {
-    localCache[url] = html;
-    $elem.replaceWith(html);
+    let $html = $(html);
+
+    localCache[normalize(url)] = $html;
+    $elem.replaceWith($html);
+    applySquareGenericOnebox($html, normalize(url));
   }, result => {
     if (result && result.jqXHR && result.jqXHR.status === 429) {
       timeoutMs = 2000;
       removeLoading = false;
       loadingQueue.unshift({ url, refresh, $elem, userId });
     } else {
-      failedCache[url] = true;
+      failedCache[normalize(url)] = true;
     }
   }).finally(() => {
     timeout = Ember.run.later(() => loadNext(ajax), timeoutMs);
@@ -52,11 +87,11 @@ export function load(e, refresh, ajax, userId, synchronous) {
   // Unless we're forcing a refresh...
   if (!refresh) {
     // If we have it in our cache, return it.
-    const cached = localCache[url];
-    if (cached) return cached;
+    const cached = localCache[normalize(url)];
+    if (cached) return cached.prop('outerHTML');
 
     // If the request failed, don't do anything
-    const failed = failedCache[url];
+    const failed = failedCache[normalize(url)];
     if (failed) return;
   }
 
@@ -74,6 +109,13 @@ export function load(e, refresh, ajax, userId, synchronous) {
   }
 }
 
+// Sometimes jQuery will return URLs with trailing slashes when the
+// `href` didn't have them.
+function normalize(url) {
+  return url.replace(/\/$/, '');
+}
+
 export function lookupCache(url) {
-  return localCache[url];
+  const cached = localCache[normalize(url)];
+  return cached && cached.prop('outerHTML');
 }

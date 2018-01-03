@@ -3,12 +3,12 @@ require 'pg'
 require_relative 'base/uploader'
 
 =begin
- if you want to create mock users for posts made by anonymous participants, 
+ if you want to create mock users for posts made by anonymous participants,
  run the following SQL prior to importing.
 
 -- first attribute any anonymous posts to existing users (if any)
 
-UPDATE node 
+UPDATE node
 SET owner_id = p.user_id, anonymous_name = NULL
 FROM ( SELECT lower(name) AS name, user_id FROM user_ ) p
 WHERE p.name = lower(node.anonymous_name)
@@ -25,14 +25,13 @@ INSERT INTO user_ (email, name, joined, registered)
 -- then move these posts to the new users
 -- (yes, this is the same query as the first one indeed)
 
-UPDATE node 
+UPDATE node
 SET owner_id = p.user_id, anonymous_name = NULL
 FROM ( SELECT lower(name) AS name, user_id FROM user_ ) p
 WHERE p.name = lower(node.anonymous_name)
   AND owner_id IS NULL;
 
 =end
-
 
 class ImportScripts::Nabble < ImportScripts::Base
   # CHANGE THESE BEFORE RUNNING THE IMPORTER
@@ -74,7 +73,7 @@ class ImportScripts::Nabble < ImportScripts::Base
 
       break if users.ntuples() < 1
 
-      next if all_records_exist? :users, users.map {|u| u["user_id"].to_i}
+      next if all_records_exist? :users, users.map { |u| u["user_id"].to_i }
 
       create_users(users, total: total_count, offset: offset) do |row|
         {
@@ -144,7 +143,7 @@ class ImportScripts::Nabble < ImportScripts::Base
 
       break if topics.ntuples() < 1
 
-      next if all_records_exist? :posts, topics.map {|t| t['node_id'].to_i}
+      next if all_records_exist? :posts, topics.map { |t| t['node_id'].to_i }
 
       create_posts(topics, total: topic_count, offset: offset) do |t|
         raw = body_from(t)
@@ -173,7 +172,7 @@ class ImportScripts::Nabble < ImportScripts::Base
     txt.gsub! /\<quote author="(.*?)"\>/, '[quote="\1"]'
     txt.gsub! /\<\/quote\>/, '[/quote]'
     txt.gsub!(/\<raw\>(.*?)\<\/raw\>/m) do |match|
-       c = Regexp.last_match[1].indent(4);
+      c = Regexp.last_match[1].indent(4);
        "\n#{c}\n"
     end
 
@@ -246,7 +245,7 @@ class ImportScripts::Nabble < ImportScripts::Base
 
       break if posts.ntuples() < 1
 
-      next if all_records_exist? :posts, posts.map {|p| p['node_id'].to_i}
+      next if all_records_exist? :posts, posts.map { |p| p['node_id'].to_i }
 
       create_posts(posts, total: post_count, offset: offset) do |p|
         parent_id = p['parent_id']
@@ -288,6 +287,5 @@ class String
     end
   end
 end
-
 
 ImportScripts::Nabble.new.perform

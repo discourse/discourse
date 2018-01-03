@@ -10,7 +10,7 @@ module ImportScripts
       end
 
       def initialize(cols)
-        cols.each_with_index do |col,idx|
+        cols.each_with_index do |col, idx|
           self.class.send(:define_method, col.downcase.gsub(/[\W]/, '_').squeeze('_')) do
             @row[idx]
           end

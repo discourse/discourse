@@ -8,6 +8,7 @@ class CategorySerializer < BasicCategorySerializer
              :position,
              :email_in,
              :email_in_allow_strangers,
+             :mailinglist_mirror,
              :suppress_from_homepage,
              :all_topics_wiki,
              :can_delete,
@@ -35,7 +36,7 @@ class CategorySerializer < BasicCategorySerializer
   end
 
   def available_groups
-    Group.order(:name).pluck(:name) - group_permissions.map{|g| g[:group_name]}
+    Group.order(:name).pluck(:name) - group_permissions.map { |g| g[:group_name] }
   end
 
   def can_delete
@@ -43,8 +44,8 @@ class CategorySerializer < BasicCategorySerializer
   end
 
   def include_is_special?
-    [SiteSetting.lounge_category_id, SiteSetting.meta_category_id, SiteSetting.staff_category_id, SiteSetting.uncategorized_category_id]
-    .include? object.id
+    [SiteSetting.meta_category_id, SiteSetting.staff_category_id, SiteSetting.uncategorized_category_id]
+      .include? object.id
   end
 
   def is_special
@@ -76,7 +77,7 @@ class CategorySerializer < BasicCategorySerializer
   end
 
   def notification_level
-   user = scope && scope.user
+    user = scope && scope.user
    object.notification_level ||
      (user && CategoryUser.where(user: user, category: object).first.try(:notification_level))
   end

@@ -1,6 +1,5 @@
 class UserSearchData < ActiveRecord::Base
-  belongs_to :user
-  validates_presence_of :search_data
+  include HasSearchData
 end
 
 # == Schema Information
@@ -11,6 +10,7 @@ end
 #  search_data :tsvector
 #  raw_data    :text
 #  locale      :text
+#  version     :integer          default(0)
 #
 # Indexes
 #

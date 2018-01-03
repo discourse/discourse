@@ -1,4 +1,4 @@
-class RenameShaColumn < ActiveRecord::Migration
+class RenameShaColumn < ActiveRecord::Migration[4.2]
   def up
     remove_index :uploads, :sha
     rename_column :uploads, :sha, :sha1

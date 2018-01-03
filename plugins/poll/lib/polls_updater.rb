@@ -79,6 +79,7 @@ module DiscoursePoll
             if previous_option["id"] != option["id"]
               if votes_fields = post.custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD]
                 votes_fields.each do |key, value|
+                  next unless value[poll_name]
                   index = value[poll_name].index(previous_option["id"])
                   votes_fields[key][poll_name][index] = option["id"] if index
                 end
@@ -100,7 +101,7 @@ module DiscoursePoll
         post.save_custom_fields(true)
 
         # publish the changes
-        MessageBus.publish("/polls/#{post.topic_id}", { post_id: post.id, polls: polls })
+        MessageBus.publish("/polls/#{post.topic_id}", post_id: post.id, polls: polls)
       end
     end
 
@@ -129,7 +130,7 @@ module DiscoursePoll
     private
 
     def self.private_to_public_poll?(post, previous_polls, current_polls, poll_name)
-      previous_poll = previous_polls[poll_name]
+      _previous_poll = previous_polls[poll_name]
       current_poll = current_polls[poll_name]
 
       if previous_polls["public"].nil? && current_poll["public"] == "true"

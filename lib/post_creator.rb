@@ -92,14 +92,36 @@ class PostCreator
       return false
     end
 
-    # Make sure none of the users have muted the creator
-    names = @opts[:target_usernames]
-    if names.present? && !skip_validations? && !@user.staff?
-      users = User.where(username: names.split(',').flatten).pluck(:id, :username).to_h
+    if @opts[:target_usernames].present? && !skip_validations? && !@user.staff?
+      names = @opts[:target_usernames].split(',')
 
-      MutedUser.where(user_id: users.keys, muted_user_id: @user.id).pluck(:user_id).each do |m|
+      # Make sure max_allowed_message_recipients setting is respected
+      max_allowed_message_recipients = SiteSetting.max_allowed_message_recipients
+
+      if names.length > max_allowed_message_recipients
+        errors[:base] << I18n.t(:max_pm_recepients,
+          recipients_limit: max_allowed_message_recipients
+        )
+
+        return false
+      end
+
+      # Make sure none of the users have muted the creator
+      users = User.where(username: names).pluck(:id, :username).to_h
+
+      User
+        .joins("LEFT JOIN user_options ON user_options.user_id = users.id")
+        .joins("LEFT JOIN muted_users ON muted_users.muted_user_id = #{@user.id.to_i}")
+        .where("user_options.user_id IS NOT NULL")
+        .where("
+          (user_options.user_id IN (:user_ids) AND NOT user_options.allow_private_messages) OR
+          muted_users.user_id IN (:user_ids)
+        ", user_ids: users.keys)
+        .pluck(:id).each do |m|
+
         errors[:base] << I18n.t(:not_accepting_pms, username: users[m])
       end
+
       return false if errors[:base].present?
     end
 
@@ -166,7 +188,7 @@ class PostCreator
       enqueue_jobs unless @opts[:skip_jobs]
       BadgeGranter.queue_badge_grant(Badge::Trigger::PostRevision, post: @post)
 
-      trigger_after_events(@post)
+      trigger_after_events unless opts[:skip_events]
 
       auto_close unless @opts[:import_mode]
     end
@@ -195,6 +217,11 @@ class PostCreator
       import_mode: @opts[:import_mode],
       post_alert_options: @opts[:post_alert_options]
     ).enqueue_jobs
+  end
+
+  def trigger_after_events
+    DiscourseEvent.trigger(:topic_created, @post.topic, @opts, @user) unless @opts[:topic_id]
+    DiscourseEvent.trigger(:post_created, @post, @opts, @user)
   end
 
   def self.track_post_stats
@@ -233,8 +260,8 @@ class PostCreator
     return unless post.reply_to_post_number.present?
 
     reply_info = Post.where(topic_id: post.topic_id, post_number: post.reply_to_post_number)
-                     .select(:user_id, :post_type)
-                     .first
+      .select(:user_id, :post_type)
+      .first
 
     if reply_info.present?
       post.reply_to_user_id ||= reply_info.user_id
@@ -260,11 +287,6 @@ class PostCreator
         composer_open_duration_msecs: @opts[:composer_open_duration_msecs] || 0
       )
     end
-  end
-
-  def trigger_after_events(post)
-    DiscourseEvent.trigger(:topic_created, post.topic, @opts, @user) unless @opts[:topic_id]
-    DiscourseEvent.trigger(:post_created, post, @opts, @user)
   end
 
   def auto_close
@@ -310,11 +332,11 @@ class PostCreator
 
   def handle_spam
     if @spam
-      GroupMessage.create( Group[:moderators].name,
+      GroupMessage.create(Group[:moderators].name,
                            :spam_post_blocked,
-                           { user: @user,
-                             limit_once_per: 24.hours,
-                             message_params: {domains: @post.linked_hosts.keys.join(', ')} } )
+                           user: @user,
+                           limit_once_per: 24.hours,
+                           message_params: { domains: @post.linked_hosts.keys.join(', ') })
     elsif @post && errors.blank? && !skip_validations?
       SpamRulesEnforcer.enforce!(@post)
     end
@@ -333,7 +355,7 @@ class PostCreator
     unless @topic.topic_allowed_users.where(user_id: @user.id).exists?
       unless @topic.topic_allowed_groups.where('group_id IN (
                                               SELECT group_id FROM group_users where user_id = ?
-                                           )',@user.id).exists?
+                                           )', @user.id).exists?
         @topic.topic_allowed_users.create!(user_id: @user.id)
       end
     end
@@ -357,11 +379,13 @@ class PostCreator
   def find_category_id
     @opts.delete(:category) if @opts[:archetype].present? && @opts[:archetype] == Archetype.private_message
 
-    category = if (@opts[:category].is_a? Integer) || (@opts[:category] =~ /^\d+$/)
-                 Category.find_by(id: @opts[:category])
-               else
-                 Category.find_by(name_lower: @opts[:category].try(:downcase))
-               end
+    category =
+      if (@opts[:category].is_a? Integer) || (@opts[:category] =~ /^\d+$/)
+        Category.find_by(id: @opts[:category])
+      else
+        Category.find_by(name_lower: @opts[:category].try(:downcase))
+      end
+
     category&.id
   end
 
@@ -388,7 +412,8 @@ class PostCreator
       attrs[:word_count] = (@topic.word_count || 0) + @post.word_count
       attrs[:excerpt] = @post.excerpt(220, strip_links: true) if new_topic?
       attrs[:bumped_at] = @post.created_at unless @post.no_bump
-      @topic.update_attributes(attrs)
+      attrs[:updated_at] = 'now()'
+      @topic.update_columns(attrs)
     end
   end
 
@@ -449,7 +474,7 @@ class PostCreator
     end
 
     unless @post.topic.private_message?
-      @user.user_stat.post_count += 1
+      @user.user_stat.post_count += 1 if @post.post_type == Post.types[:regular] && !@post.is_first_post?
       @user.user_stat.topic_count += 1 if @post.is_first_post?
     end
 
@@ -485,7 +510,6 @@ class PostCreator
                        last_read_post_number: @post.post_number,
                        highest_seen_post_number: @post.post_number)
 
-
       # assume it took us 5 seconds of reading time to make a post
       PostTiming.record_timing(topic_id: @post.topic_id,
                                user_id: @post.user_id,
@@ -495,12 +519,9 @@ class PostCreator
 
     if @user.staged
       TopicUser.auto_notification_for_staging(@user.id, @topic.id, TopicUser.notification_reasons[:auto_watch])
-    elsif @user.user_option.notification_level_when_replying === NotificationLevels.topic_levels[:watching]
-      TopicUser.auto_notification(@user.id, @topic.id, TopicUser.notification_reasons[:created_post], NotificationLevels.topic_levels[:watching])
-    elsif @user.user_option.notification_level_when_replying === NotificationLevels.topic_levels[:regular]
-      TopicUser.auto_notification(@user.id, @topic.id, TopicUser.notification_reasons[:created_post], NotificationLevels.topic_levels[:regular])
     else
-      TopicUser.auto_notification(@user.id, @topic.id, TopicUser.notification_reasons[:created_post], NotificationLevels.topic_levels[:tracking])
+      notification_level = @user.user_option.notification_level_when_replying || NotificationLevels.topic_levels[:tracking]
+      TopicUser.auto_notification(@user.id, @topic.id, TopicUser.notification_reasons[:created_post], notification_level)
     end
   end
 

@@ -1,4 +1,4 @@
-class CreateUserProfiles < ActiveRecord::Migration
+class CreateUserProfiles < ActiveRecord::Migration[4.2]
   def up
     create_table :user_profiles, id: false do |t|
       t.references :user

@@ -6,8 +6,7 @@ const TopicTimer = RestModel.extend({});
 TopicTimer.reopenClass({
   updateStatus(topicId, time, basedOnLastPost, statusType, categoryId) {
     let data = {
-      time: time,
-      timezone_offset: (new Date().getTimezoneOffset()),
+      time,
       status_type: statusType
     };
 

@@ -36,10 +36,9 @@ describe FileStore::LocalStore do
     end
 
     it "moves the file to the tombstone" do
-      FileUtils.expects(:mkdir_p)
-      FileUtils.expects(:move)
-      File.expects(:exists?).returns(true)
+      filename = File.basename(store.path_for(upload))
       store.remove_upload(upload)
+      expect(File.exist?(store.tombstone_dir + "/" + filename))
     end
 
   end

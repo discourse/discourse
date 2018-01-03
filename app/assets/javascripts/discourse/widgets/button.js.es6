@@ -1,14 +1,26 @@
 import { createWidget } from 'discourse/widgets/widget';
-import { iconNode } from 'discourse/helpers/fa-icon-node';
+import { iconNode } from 'discourse-common/lib/icon-library';
+import { h } from 'virtual-dom';
 
-export default createWidget('button', {
-  tagName: 'button.widget-button',
+export const ButtonClass = {
+  tagName: 'button.widget-button.btn',
 
   buildClasses(attrs) {
-    const className = this.attrs.className || '';
+    let className = this.attrs.className || '';
 
-    if (!attrs.label && !attrs.contents) {
-      return className + ' no-text';
+    let hasText = attrs.label || attrs.contents;
+
+    if (!hasText) {
+      className += ' no-text';
+    }
+
+    if (attrs.icon) {
+      className += ' btn-icon';
+      if (hasText) {
+        className += '-text';
+      }
+    } else if (hasText) {
+      className += ' btn-text';
     }
 
     return className;
@@ -38,7 +50,9 @@ export default createWidget('button', {
     const contents = [];
     const left = !attrs.iconRight;
     if (attrs.icon && left) { contents.push(iconNode(attrs.icon, { class: attrs.iconClass })); }
-    if (attrs.label) { contents.push(I18n.t(attrs.label, attrs.labelOptions)); }
+    if (attrs.label) {
+      contents.push(h('span.d-button-label', I18n.t(attrs.label, attrs.labelOptions)));
+    }
     if (attrs.contents) { contents.push(attrs.contents); }
     if (attrs.icon && !left) { contents.push(iconNode(attrs.icon, { class: attrs.iconClass })); }
 
@@ -59,4 +73,10 @@ export default createWidget('button', {
     }
     return this.sendWidgetAction(attrs.action);
   }
-});
+};
+
+export default createWidget('button', ButtonClass);
+
+createWidget('flat-button', jQuery.extend(ButtonClass, {
+  tagName: 'button.widget-button.btn-flat'
+}));

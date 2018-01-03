@@ -1,4 +1,4 @@
-class CreatePermalinks < ActiveRecord::Migration
+class CreatePermalinks < ActiveRecord::Migration[4.2]
   def change
     create_table :permalinks do |t|
       t.string :url, null: false
@@ -6,7 +6,7 @@ class CreatePermalinks < ActiveRecord::Migration
       t.integer :post_id
       t.integer :category_id
 
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :permalinks, :url

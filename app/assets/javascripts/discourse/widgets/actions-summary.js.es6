@@ -1,6 +1,6 @@
 import { createWidget } from 'discourse/widgets/widget';
 import { avatarFor } from 'discourse/widgets/post';
-import { iconNode } from 'discourse/helpers/fa-icon-node';
+import { iconNode } from 'discourse-common/lib/icon-library';
 import { h } from 'virtual-dom';
 import { dateNode } from 'discourse/helpers/node';
 import { userPath } from 'discourse/lib/url';
@@ -30,7 +30,7 @@ createWidget('small-user-list', {
       let description = null;
 
       if (atts.description) {
-        description = I18n.t(atts.description, { icons: '' });
+        description = I18n.t(atts.description, { count: atts.count });
       }
 
       // oddly post_url is on the user
@@ -119,6 +119,23 @@ createWidget('actions-summary-item', {
   }
 });
 
+createWidget('deleted-post', {
+  tagName: 'div.post-action.deleted-post',
+
+  html(attrs) {
+    return [
+      iconNode('trash-o'),
+      ' ',
+      avatarFor.call(this, 'small', {
+        template: attrs.deletedByAvatarTemplate,
+        username: attrs.deletedByUsername
+      }),
+      ' ',
+      dateNode(attrs.deleted_at)
+    ];
+  }
+});
+
 export default createWidget('actions-summary', {
   tagName: 'section.post-actions',
 
@@ -131,16 +148,7 @@ export default createWidget('actions-summary', {
     });
 
     if (attrs.deleted_at) {
-      body.push(h('div.post-action', [
-        iconNode('trash-o'),
-        ' ',
-        avatarFor.call(this, 'small', {
-          template: attrs.deletedByAvatarTemplate,
-          username: attrs.deletedByUsername
-        }),
-        ' ',
-        dateNode(attrs.deleted_at)
-      ]));
+      body.push(this.attach('deleted-post', attrs));
     }
 
     return body;

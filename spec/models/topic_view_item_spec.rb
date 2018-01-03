@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe TopicViewItem do
 
-  def add(topic_id, ip, user_id=nil)
+  def add(topic_id, ip, user_id = nil)
     skip_redis = true
     TopicViewItem.add(topic_id, ip, user_id, nil, skip_redis)
   end

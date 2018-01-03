@@ -12,7 +12,7 @@ module Scheduler
 
       data = nil
 
-      if data = $redis.get(key)
+      if data = @manager.redis.get(key)
         data = JSON.parse(data)
       end
 
@@ -28,6 +28,9 @@ module Scheduler
       @next_run = @prev_run = @prev_result = @prev_duration = @current_owner = nil
     end
 
+    # this means the schedule is going to fire, it is setup correctly
+    # invalid schedules are fixed by running "schedule!"
+    # this happens automatically after if fire by the manager
     def valid?
       return false unless @next_run
       (!@prev_run && @next_run < Time.now.to_i + 5.minutes) || valid_every? || valid_daily?
@@ -42,8 +45,9 @@ module Scheduler
 
     def valid_daily?
       return false unless @klass.daily
+      return true if !@prev_run && @next_run && @next_run <= (Time.zone.now + 1.day).to_i
       !!@prev_run &&
-        @prev_run <= Time.now.to_i &&
+        @prev_run <= Time.zone.now.to_i &&
         @next_run < @prev_run + 1.day
     end
 
@@ -63,7 +67,7 @@ module Scheduler
       return if valid?
 
       at = @klass.daily[:at] || 0
-      today_begin = Time.now.midnight.to_i
+      today_begin = Time.zone.now.midnight.to_i
       today_offset = DateTime.now.seconds_since_midnight
 
       # If it's later today
@@ -96,7 +100,7 @@ module Scheduler
         current_owner: @current_owner
       }.to_json
 
-      redis.zadd queue_key, @next_run , @klass
+      redis.zadd queue_key, @next_run, @klass if @next_run
     end
 
     def del!

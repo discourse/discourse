@@ -13,7 +13,7 @@ describe CommonPasswords do
     subject { described_class.common_password? @password }
 
     it "returns false if password isn't in the common passwords list" do
-      described_class.stubs(:password_list).returns(stub_everything(:include? => false))
+      described_class.stubs(:password_list).returns(stub_everything(include?: false))
       @password = 'uncommonPassword'
       expect(subject).to eq(false)
     end
@@ -31,7 +31,7 @@ describe CommonPasswords do
     end
 
     it "returns true if password is in the common passwords list" do
-      described_class.stubs(:password_list).returns(stub_everything(:include? => true))
+      described_class.stubs(:password_list).returns(stub_everything(include?: true))
       @password = "password"
       expect(subject).to eq(true)
     end

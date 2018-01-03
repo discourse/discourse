@@ -1,4 +1,4 @@
-class RenameInvisible < ActiveRecord::Migration
+class RenameInvisible < ActiveRecord::Migration[4.2]
   def change
 
     add_column :forum_threads, :visible, :boolean, default: true, null: false

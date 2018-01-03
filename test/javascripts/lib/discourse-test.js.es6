@@ -1,7 +1,7 @@
-module("lib:discourse");
+QUnit.module("lib:discourse");
 
-test("getURL on subfolder install", function() {
+QUnit.test("getURL on subfolder install", assert => {
   Discourse.BaseUri = "/forum";
-  equal(Discourse.getURL("/"), "/forum/", "root url has subfolder");
-  equal(Discourse.getURL("/u/neil"), "/forum/u/neil", "relative url has subfolder");
+  assert.equal(Discourse.getURL("/"), "/forum/", "root url has subfolder");
+  assert.equal(Discourse.getURL("/u/neil"), "/forum/u/neil", "relative url has subfolder");
 });

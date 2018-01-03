@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+  xmlns:content="http://purl.org/rss/1.0/modules/content/"
+  xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+  xmlns:dc="http://purl.org/dc/elements/1.1/"
+  xmlns:atom="http://www.w3.org/2005/Atom"
+  xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+  xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+  xmlns:discourse="http://discourse.org/rss/modules/discourse/"
+  >
+<channel>
+  <title>Discourse</title>
+  <atom:link href="https://blog.discourse.org/feed/" rel="self" type="application/rss+xml" />
+  <link>https://blog.discourse.org</link>
+  <description>Official blog for the open source Discourse project</description>
+  <lastBuildDate>Thu, 14 Sep 2017 15:22:33 +0000</lastBuildDate>
+  <language>en-US</language>
+  <sy:updatePeriod>hourly</sy:updatePeriod>
+  <sy:updateFrequency>1</sy:updateFrequency>
+  <generator>https://wordpress.org/?v=4.8.1</generator>
+  <item>
+    <title>Poll Feed Spec Fixture</title>
+    <link>https://blog.discourse.org/2017/09/poll-feed-spec-fixture/</link>
+    <pubDate>Thu, 14 Sep 2017 15:22:33 +0000</pubDate>
+    <dc:creator><![CDATA[xrav3nz]]></dc:creator>
+    <discourse:username><![CDATA[xrav3nz]]></discourse:username>
+    <category><![CDATA[spec]]></category>
+    <guid isPermaLink="false">https://blog.discourse.org/?p=pollfeedspec</guid>
+    <description><![CDATA[Here are some random descriptions... [&#8230;]]]></description>
+    <content:encoded><![CDATA[<p>This is the body &amp; content. </p>]]></content:encoded>
+  </item>
+  </channel>
+</rss>

@@ -62,7 +62,7 @@ class CategoryUser < ActiveRecord::Base
     auto_track(user_id: user.id)
   end
 
-  def self.auto_track(opts={})
+  def self.auto_track(opts = {})
 
     builder = SqlBuilder.new <<SQL
     UPDATE topic_users tu
@@ -95,7 +95,7 @@ SQL
                  auto_track_category:  TopicUser.notification_reasons[:auto_track_category])
   end
 
-  def self.auto_watch(opts={})
+  def self.auto_watch(opts = {})
 
     builder = SqlBuilder.new <<SQL
     UPDATE topic_users tu
@@ -153,7 +153,6 @@ SQL
                  auto_watch_category:  TopicUser.notification_reasons[:auto_watch_category])
 
   end
-
 
   def self.ensure_consistency!
     exec_sql <<SQL

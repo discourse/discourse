@@ -1,6 +1,6 @@
 class ExportCsvController < ApplicationController
 
-  skip_before_filter :preload_json, :check_xhr, only: [:show]
+  skip_before_action :preload_json, :check_xhr, only: [:show]
 
   def export_entity
     guardian.ensure_can_export_entity!(export_params[:entity])
@@ -20,7 +20,7 @@ class ExportCsvController < ApplicationController
     if export_csv_path && current_user.present? && export_initiated_by_user_id == current_user.id
       send_file export_csv_path
     else
-      render nothing: true, status: 404
+      render body: nil, status: 404
     end
   end
 
@@ -29,7 +29,7 @@ class ExportCsvController < ApplicationController
     def export_params
       @_export_params ||= begin
         params.require(:entity)
-        params.permit(:entity, args: [:name, :start_date, :end_date, :category_id, :group_id, :trust_level])
+        params.permit(:entity, args: [:name, :start_date, :end_date, :category_id, :group_id, :trust_level]).to_h
       end
     end
 end

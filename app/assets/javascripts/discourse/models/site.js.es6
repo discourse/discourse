@@ -54,6 +54,14 @@ const Site = RestModel.extend({
     return result;
   },
 
+  // Returns it in the correct order, by setting
+  @computed
+  categoriesList() {
+    return this.siteSettings.fixed_category_positions ?
+      this.get('categories') :
+      this.get('sortedCategories');
+  },
+
   postActionTypeById(id) {
     return this.get("postActionByIdLookup.action" + id);
   },
@@ -94,7 +102,7 @@ Site.reopenClass(Singleton, {
 
   // The current singleton will retrieve its attributes from the `PreloadStore`.
   createCurrent() {
-    const store = Discourse.__container__.lookup('store:main');
+    const store = Discourse.__container__.lookup('service:store');
     return store.createRecord('site', PreloadStore.get('site'));
   },
 

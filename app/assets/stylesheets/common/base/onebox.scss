@@ -89,7 +89,7 @@ a.loading-onebox {
 }
 
 aside.onebox {
-  border: 5px solid dark-light-diff($primary, $secondary, 90%, -85%);
+  border: 5px solid $primary-low;
 
   padding: 12px 25px 12px 12px;
   font-size: 1em;
@@ -97,7 +97,7 @@ aside.onebox {
   header {
     margin-bottom: 8px;
     a[href] {
-      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      color: dark-light-choose($primary-medium, $secondary-medium);
       text-decoration: none;
     }
   }
@@ -118,26 +118,80 @@ aside.onebox {
     clear: both;
 
     h3, h4 {
-      font-size: 1.17em;
+      font-size: 1.143em;
       margin: 0 0 10px 0;
     }
 
     a[href] {
-      color: dark-light-choose(scale-color($tertiary, $lightness: -20%), $tertiary);
+      color: dark-light-choose($tertiary, $tertiary);
       text-decoration: none;
     }
 
     a[href]:visited {
-      color: dark-light-choose(scale-color($tertiary, $lightness: -20%), $tertiary);
+      color: dark-light-choose($tertiary, $tertiary);
     }
 
     img {
       max-height: 170px;
       max-width: 20%;
+      @media all and (max-width: 600px) {
+        max-width: 35%;
+      }
       height: auto;
       width: auto;
       float: left;
       margin-right: 10px;
+      &.onebox-full-image {
+        max-height: none;
+        max-width: none;
+        width: initial;
+        height: initial;
+      }
+    }
+
+    [style*="--aspect-ratio"] > :first-child {
+      width: 100%;
+    }
+    [style*="--aspect-ratio"] > img {
+      height: auto;
+    }
+
+    // this allows us to load all onebox images without jiggle
+    // see: http://cssmojo.com/aspect-ratio-using-custom-properties-and-calc/
+    @supports (--custom:property) {
+
+      .aspect-image {
+        max-height: 170px;
+        --magic-ratio: calc(var(--aspect-ratio) + 0.15);
+        width: calc(128px * var(--magic-ratio));
+        max-width: 20%;
+        float: left;
+        margin-right: 10px;
+        height: auto;
+
+        img {
+          width: 100%;
+          height: inherit;
+          max-width: initial;
+          max-height: initial;
+          float: none;
+          margin-right: none;
+        }
+      }
+      [style*="--aspect-ratio"] {
+        position: relative;
+      }
+      [style*="--aspect-ratio"]::before {
+        content: "";
+        display: block;
+        padding-bottom: calc(100% / (var(--aspect-ratio)));
+      }
+      [style*="--aspect-ratio"] > :first-child {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+      }
     }
 
     // tighten bottom margin on last para
@@ -197,8 +251,8 @@ aside.onebox {
 aside.onebox .onebox-body .onebox-avatar {
   max-height: none;
   max-width: none;
-  height: 90px;
-  width: 90px;
+  height: 60px;
+  width: 60px;
 }
 
 blockquote {
@@ -216,7 +270,7 @@ pre.onebox code ol.lines li:before {
   color:#AFAFAF;
   text-align:right;
   padding-right:5px;
-  font-size:12px;
+  font-size:.857em;
   line-height: 1.9em;
   content: counter(li-counter);
   counter-increment: li-counter;
@@ -277,7 +331,7 @@ pre.onebox code {
 .onebox-body .build_status
 {
   padding: 2px;
-  font-size:12px;
+  font-size:.857em;
 }
 
 .onebox-body .status_tag.open {
@@ -310,12 +364,11 @@ aside.onebox.twitterstatus .onebox-body {
   p, .tweet {
     white-space: pre-wrap;
     padding-top: 3px;
-    margin-left: 58px;
+    margin-left: 70px;
   }
   .date {
     clear: left;
-    padding-top: 5px;
-    margin-left: 58px;
+    padding-top: 10px;
   }
 }
 
@@ -326,7 +379,7 @@ aside.onebox.twitterstatus .onebox-body {
     z-index: 935;
     height: 30px;
     overflow: hidden;
-    font-size: 12px;
+    font-size: .857em;
     color: #fff;
     background-color: rgba(0, 0, 0, 0.6);
     text-overflow: ellipsis;
@@ -342,7 +395,7 @@ aside.onebox.twitterstatus .onebox-body {
 
       .album-title {
         width: 100%;
-        font-size: 13px;
+        font-size: 1.143em;
         line-height: 30px;
         color: #ccc;
         text-decoration: none;
@@ -353,7 +406,7 @@ aside.onebox.twitterstatus .onebox-body {
 
 // resize stackexchange onebox image
 aside.onebox.stackexchange .onebox-body {
-  img {
+  img:not(.onebox-avatar) {
     max-height: 60%;
     max-width: 10%;
   }
@@ -364,7 +417,7 @@ aside.onebox.stackexchange .onebox-body {
 }
 
 .onebox-metadata {
-  color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+  color: dark-light-choose($primary-medium, $secondary-medium);
 }
 
 .onebox.xkcd .onebox-body {
@@ -387,6 +440,32 @@ aside.onebox.stackexchange .onebox-body {
   .filesize {
     color: gray;
   }
+}
+
+// whitelistedgeneric twitter labels
+.onebox.whitelistedgeneric {
+  .label1, .label2 {
+    color: dark-light-choose($primary-medium, $secondary-medium);
+  }
+  .label1 {
+    float: left;
+  }
+  .label2 {
+    float: right;
+  }
+  .site-icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 3px;
+  }
+}
+
+.onebox.githubcommit {
+   pre.message {
+     clear: left;
+     padding: 0;
+     padding-top: 10px;
+   }
 }
 
 // mobile specific style

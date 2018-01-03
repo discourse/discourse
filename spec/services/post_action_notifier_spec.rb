@@ -33,24 +33,23 @@ describe PostActionNotifier do
   context 'when editing a post' do
     it 'notifies a user of the revision' do
       expect {
-        post.revise(evil_trout, { raw: "world is the new body of the message" })
+        post.revise(evil_trout, raw: "world is the new body of the message")
       }.to change(post.user.notifications, :count).by(1)
     end
 
     context "edit notifications are disabled" do
 
-      before { SiteSetting.stubs(:disable_edit_notifications).returns(true) }
-
+      before { SiteSetting.disable_edit_notifications = true }
 
       it 'notifies a user of the revision made by another user' do
         expect {
-          post.revise(evil_trout, { raw: "world is the new body of the message" })
+          post.revise(evil_trout, raw: "world is the new body of the message")
         }.to change(post.user.notifications, :count).by(1)
       end
 
       it 'does not notifiy a user of the revision made by the system user' do
         expect {
-          post.revise(Discourse.system_user, { raw: "world is the new body of the message" })
+          post.revise(Discourse.system_user, raw: "world is the new body of the message")
         }.not_to change(post.user.notifications, :count)
       end
 
@@ -60,7 +59,7 @@ describe PostActionNotifier do
 
   context 'private message' do
     let(:user) { Fabricate(:user) }
-    let(:mention_post) { Fabricate(:post, user: user, raw: 'Hello @eviltrout')}
+    let(:mention_post) { Fabricate(:post, user: user, raw: 'Hello @eviltrout') }
     let(:topic) do
       topic = mention_post.topic
       topic.update_columns archetype: Archetype.private_message, category_id: nil
@@ -86,7 +85,7 @@ describe PostActionNotifier do
 
   context 'moderator action post' do
     let(:user) { Fabricate(:user) }
-    let(:first_post) { Fabricate(:post, user: user, raw: 'A useless post for you.')}
+    let(:first_post) { Fabricate(:post, user: user, raw: 'A useless post for you.') }
     let(:topic) { first_post.topic }
 
     it 'should not notify anyone' do

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe ScreenedIpAddress do
   let(:ip_address) { '99.232.23.124' }
-  let(:valid_params) { {ip_address: ip_address} }
+  let(:valid_params) { { ip_address: ip_address } }
 
   describe 'new record' do
     it 'sets a default action_type' do
@@ -246,7 +246,7 @@ describe ScreenedIpAddress do
       end
 
       context "use_admin_ip_whitelist is true" do
-        before { SiteSetting.stubs(:use_admin_ip_whitelist).returns(true) }
+        before { SiteSetting.use_admin_ip_whitelist = true }
 
         it "returns false when user is nil" do
           expect(described_class.block_admin_login?(nil, '123.12.12.12')).to eq(false)
@@ -277,7 +277,7 @@ describe ScreenedIpAddress do
       end
 
       context "use_admin_ip_whitelist is true" do
-        before { SiteSetting.stubs(:use_admin_ip_whitelist).returns(true) }
+        before { SiteSetting.use_admin_ip_whitelist = true }
 
         it "returns false when user is nil" do
           expect(described_class.block_admin_login?(nil, @permitted_ip_address)).to eq(false)

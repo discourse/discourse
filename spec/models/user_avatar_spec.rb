@@ -23,7 +23,6 @@ describe UserAvatar do
       user.user_avatar.destroy
       user.reload
 
-
       FileHelper.stubs(:download).returns(file_from_fixtures("logo.png"))
 
       UserAvatar.import_url_for_user("logo.png", user)

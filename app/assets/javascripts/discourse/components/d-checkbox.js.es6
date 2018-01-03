@@ -3,9 +3,8 @@ import { on } from "ember-addons/ember-computed-decorators";
 export default Ember.Component.extend({
   tagName: 'label',
 
-  didInsertElement() {
-    this._super();
-
+  @on("didInsertElement")
+  _init() {
     const checked = this.get('checked');
     if (checked && checked !== "false") {
       this.$('input').prop('checked', true);
@@ -18,8 +17,7 @@ export default Ember.Component.extend({
   },
 
   @on('willDestroyElement')
-  willDestroyElement() {
-    this._super();
+  _clear() {
     this.$('input').off('click.d-checkbox');
   }
 });

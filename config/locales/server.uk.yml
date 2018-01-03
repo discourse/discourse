@@ -19,7 +19,6 @@ uk:
     incoming:
       errors:
         inactive_user_error: "Таке трапляється, якщо відправник не активний"
-        blocked_user_error: "Таке трапляється, якщо відправника було заблоковано"
   errors: &errors
     messages:
       accepted: має бути прийнятий
@@ -306,19 +305,15 @@ uk:
     min_search_term_length: "Мінімальна дозволена довжина пошукової фрази у символах"
     allow_duplicate_topic_titles: "Дозволити теми з однаковими, дублюючими назвами."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
-    queue_jobs: "ТІЛЬКИ ДЛЯ РОЗРОБНИКІВ! УВАГА! За замовчуванням, додавати завдання до черги в sidekiq. Якщо вимкнути, Ваш сайт зламається."
     crawl_images: "Отримувати зображення з віддалених адрес, щоб встановити правильні розміри ширини і висоти."
     apple_touch_icon_url: "Піктограма, що використовується для сенсорних пристроїв Apple. Рекмоендований розмір 144px на 144px."
     email_custom_headers: "Список заголовків електронної пошти, розділених вертикальною рискою"
     enable_long_polling: "Message bus used for notification can use long polling"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
-    notify_mods_when_user_blocked: "Якщо користувача автоматично заблоковано, надіслати повідомлення всім модераторам."
     ga_universal_tracking_code: "Код відстеження Google Universal Analytics (analytics.js), напр.: UA-12345678-9; див. http://google.com/analytics"
     ga_universal_domain_name: "Доменне ім'я Google Universal Analytics (analytics.js), напр.: mysite.com; див. http://google.com/analytics"
     post_menu: "Визначає, які елементи з'являються в меню допису, та в якому порядку. Наприклад, like|edit|flag|delete|share|bookmark|reply"
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
-    port: "ТІЛЬКИ ДЛЯ РОЗРОБНИКІВ! УВАГА! Використовувати цей HTTP-порт замість звичайного порту 80. Лишіть порожнім, щоб використовувати значення за замовчуванням 80."
-    force_hostname: "ТІЛЬКИ ДЛЯ РОЗРОБНИКІВ! УВАГА! Вкажіть ім'я хосту в URL. Лишіть порожнім, щоб використовувати значення за замовчуванням."
     invite_expiry_days: "Скільки днів ключі запрошення користувачів лишаються чинними"
     min_password_length: "Мінімальна довжина пароля."
     enable_yahoo_logins: "Увімкнути вхід через Yahoo"
@@ -347,7 +342,6 @@ uk:
     reply_by_email_address: "Шаблон адреси електронної скриньки у формі для відповідей через електронну пошту, наприклад: %{reply_key}@reply.myforum.com"
     email_in_min_trust: "Мінімальний рівень довіри, який потрібен користувачу для дозволу створювати нові теми через email. "
     delete_all_posts_max: "Максимальне число дописів, які можна видалити за один раз кнопкою \"Видалити всі дописи\". Якщо користувач має більше дописів, ніж це число, їх не можна буде видалити за один раз, і користувача також."
-    username_change_period: "Кількість днів після реєстрації, протягом яких новим обліковим записам можна змінювати своє ім'я користувача (0 щоб заборонити зміну імені користувача)."
     email_editable: "Дозволити користувачам змінювати свою електронну скриньку після реєстрації."
     allow_profile_backgrounds: "Дозволити користувачам завантажувати фони профілю."
     enable_mobile_theme: "Мобільні пристрої використовуватимуть тему, дружню для них, з можливістю перемикатися на повний сайт. Відключіть це, якщо хочете використовувати власну, повністю чутливу, таблицю стилів."
@@ -394,7 +388,6 @@ uk:
   user:
     username:
       short: "має бути найменше %{min} символів"
-      characters: "must only include numbers, letters and underscores"
       unique: "має бути унікальним"
       blank: "має бути наявним"
     email:

@@ -28,7 +28,26 @@ export default function(helpers) {
   });
 
   this.get('/fruits', function() {
-    return response({ __rest_serializer: "1", fruits, farmers, colors, extras: {hello: 'world'} });
+    return response({
+      __rest_serializer: "1",
+      fruits,
+      farmers,
+      colors,
+      extras: {hello: 'world'}
+    });
+  });
+
+  this.get('/barns/:id', function() {
+    return response({
+      __rest_serializer: "1",
+      meta: {
+        types: {
+          owner: "farmer"
+        }
+      },
+      barn: { id: 1234, owner_id: farmers[0].id },
+      farmers: [farmers[0]],
+    });
   });
 
   this.get('/widgets/:widget_id', function(request) {
@@ -65,10 +84,14 @@ export default function(helpers) {
       if (qp.id) { result = result.filterBy('id', parseInt(qp.id)); }
     }
 
-    return response({ widgets: result,
-                      total_rows_widgets: 4,
-                      load_more_widgets: '/load-more-widgets',
-                      refresh_widgets: '/widgets?refresh=true' });
+    return response({
+      widgets: result,
+      meta: {
+        total_rows_widgets: 4,
+        load_more_widgets: '/load-more-widgets',
+        refresh_widgets: '/widgets?refresh=true'
+      }
+    });
   });
 
   this.get('/load-more-widgets', function() {

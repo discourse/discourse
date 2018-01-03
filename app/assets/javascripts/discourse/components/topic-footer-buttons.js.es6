@@ -15,7 +15,7 @@ export default Ember.Component.extend({
 
   @computed
   showAdminButton() {
-    return !this.site.mobileView && this.currentUser.get('canManageTopic');
+    return !this.site.mobileView && this.currentUser && this.currentUser.get('canManageTopic');
   },
 
   @computed('topic.message_archived')

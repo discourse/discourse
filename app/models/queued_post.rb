@@ -51,7 +51,7 @@ class QueuedPost < ActiveRecord::Base
   end
 
   def create_options
-    opts = {raw: raw}
+    opts = { raw: raw }
     opts.merge!(post_options.symbolize_keys)
 
     opts[:cooking_options].symbolize_keys! if opts[:cooking_options]
@@ -62,11 +62,16 @@ class QueuedPost < ActiveRecord::Base
   def approve!(approved_by)
     created_post = nil
 
-    creator = PostCreator.new(user, create_options.merge(skip_validations: true, skip_jobs: true))
+    creator = PostCreator.new(user, create_options.merge(
+      skip_validations: true,
+      skip_jobs: true,
+      skip_events: true
+    ))
+
     QueuedPost.transaction do
       change_to!(:approved, approved_by)
 
-      UserBlocker.unblock(user, approved_by) if user.blocked?
+      UserSilencer.unsilence(user, approved_by) if user.silenced?
 
       created_post = creator.create
 
@@ -77,6 +82,7 @@ class QueuedPost < ActiveRecord::Base
 
     # Do sidekiq work outside of the transaction
     creator.enqueue_jobs
+    creator.trigger_after_events
 
     DiscourseEvent.trigger(:approved_post, self, created_post)
     created_post
@@ -102,7 +108,7 @@ class QueuedPost < ActiveRecord::Base
       end
 
       # Update the record in memory too, and clear the dirty flag
-      updates.each {|k, v| send("#{k}=", v) }
+      updates.each { |k, v| send("#{k}=", v) }
       changes_applied
 
       QueuedPost.broadcast_new! if visible?
@@ -115,7 +121,7 @@ end
 # Table name: queued_posts
 #
 #  id             :integer          not null, primary key
-#  queue          :string           not null
+#  queue          :string(255)      not null
 #  state          :integer          not null
 #  user_id        :integer          not null
 #  raw            :text             not null

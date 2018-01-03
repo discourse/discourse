@@ -1,3 +1,5 @@
+import Permalink from 'admin/models/permalink';
+
 export default Ember.Component.extend({
   classNames: ['permalink-form'],
   formSubmitted: false,
@@ -18,8 +20,6 @@ export default Ember.Component.extend({
 
   actions: {
     submit: function() {
-      const Permalink = require('admin/models/permalink').default;
-
       if (!this.get('formSubmitted')) {
         const self = this;
         self.set('formSubmitted', true);

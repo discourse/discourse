@@ -1,4 +1,6 @@
 # This is used in topic lists
+require_dependency 'topic_poster'
+
 class TopicPostersSummary
   attr_reader :topic, :options
 
@@ -40,7 +42,7 @@ class TopicPostersSummary
 
   def shuffle_last_poster_to_back_in(summary)
     unless last_poster_is_topic_creator?
-      summary.reject!{ |u| u.id == topic.last_post_user_id }
+      summary.reject! { |u| u.id == topic.last_post_user_id }
       summary << avatar_lookup[topic.last_post_user_id]
     end
     summary

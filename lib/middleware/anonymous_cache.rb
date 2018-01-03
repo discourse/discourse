@@ -1,5 +1,6 @@
 require_dependency "mobile_detection"
 require_dependency "crawler_detection"
+require_dependency "guardian"
 
 module Middleware
   class AnonymousCache
@@ -15,6 +16,7 @@ module Middleware
 
       def initialize(env)
         @env = env
+        @request = Rack::Request.new(@env)
       end
 
       def is_mobile=(val)
@@ -28,9 +30,9 @@ module Middleware
             # don't initialize params until later otherwise
             # you get a broken params on the request
             params = {}
-            user_agent  = @env[USER_AGENT]
+            user_agent = @env[USER_AGENT]
 
-            MobileDetection.resolve_mobile_view!(user_agent,params,session) ? :true : :false
+            MobileDetection.resolve_mobile_view!(user_agent, params, session) ? :true : :false
           end
 
         @is_mobile == :true
@@ -47,14 +49,23 @@ module Middleware
       def is_crawler?
         @is_crawler ||=
           begin
-            user_agent  = @env[USER_AGENT]
+            user_agent = @env[USER_AGENT]
             CrawlerDetection.crawler?(user_agent) ? :true : :false
           end
         @is_crawler == :true
       end
 
       def cache_key
-        @cache_key ||= "ANON_CACHE_#{@env["HTTP_ACCEPT"]}_#{@env["HTTP_HOST"]}#{@env["REQUEST_URI"]}|m=#{is_mobile?}|c=#{is_crawler?}|b=#{has_brotli?}"
+        @cache_key ||= "ANON_CACHE_#{@env["HTTP_ACCEPT"]}_#{@env["HTTP_HOST"]}#{@env["REQUEST_URI"]}|m=#{is_mobile?}|c=#{is_crawler?}|b=#{has_brotli?}|t=#{theme_key}"
+      end
+
+      def theme_key
+        key, _ = @request.cookies['theme_key']&.split(',')
+        if key && Guardian.new.allow_theme?(key)
+          key
+        else
+          nil
+        end
       end
 
       def cache_key_body
@@ -99,10 +110,10 @@ module Middleware
       #  that fills it up, this avoids a herd killing you, we can probably do this using a job or redis tricks
       #  but coordinating this is tricky
       def cache(result)
-        status,headers,response = result
+        status, headers, response = result
 
         if status == 200 && cache_duration
-          headers_stripped = headers.dup.delete_if{|k, _| ["Set-Cookie","X-MiniProfiler-Ids"].include? k}
+          headers_stripped = headers.dup.delete_if { |k, _| ["Set-Cookie", "X-MiniProfiler-Ids"].include? k }
           headers_stripped["X-Discourse-Cached"] = "true"
           parts = []
           response.each do |part|
@@ -110,12 +121,12 @@ module Middleware
           end
 
           $redis.setex(cache_key_body,  cache_duration, parts.join)
-          $redis.setex(cache_key_other, cache_duration, [status,headers_stripped].to_json)
+          $redis.setex(cache_key_other, cache_duration, [status, headers_stripped].to_json)
         else
           parts = response
         end
 
-        [status,headers,parts]
+        [status, headers, parts]
       end
 
       def clear_cache
@@ -125,7 +136,7 @@ module Middleware
 
     end
 
-    def initialize(app, settings={})
+    def initialize(app, settings = {})
       @app = app
     end
 
@@ -133,7 +144,7 @@ module Middleware
       helper = Helper.new(env)
 
       if helper.cacheable?
-        helper.cached or helper.cache(@app.call(env))
+        helper.cached || helper.cache(@app.call(env))
       else
         @app.call(env)
       end

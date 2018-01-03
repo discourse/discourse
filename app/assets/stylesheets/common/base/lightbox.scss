@@ -42,7 +42,7 @@
   .informations {
     margin: 6px;
     padding-right: 20px;
-    color: dark-light-diff($primary, $secondary, 50%, -50%);
+    color: blend-primary-secondary(50%);
     font-size: 1em;
   }
 

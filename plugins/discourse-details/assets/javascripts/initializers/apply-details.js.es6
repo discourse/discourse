@@ -11,17 +11,15 @@ function initializeDetails(api) {
     };
   });
 
-  const ComposerController = api.container.lookupFactory("controller:composer");
-  ComposerController.reopen({
+  api.modifyClass('controller:composer', {
     actions: {
       insertDetails() {
         this.get("toolbarEvent").applySurround(
-          `[details=${I18n.t("composer.details_title")}]`,
-          "[/details]",
+          "\n" + `[details="${I18n.t("composer.details_title")}"]` + "\n",
+          "\n[/details]\n",
           "details_text",
           { multiline: false }
         );
-        this.set('optionsVisible', false);
       }
     }
   });
@@ -31,6 +29,6 @@ export default {
   name: "apply-details",
 
   initialize() {
-    withPluginApi('0.5', initializeDetails);
+    withPluginApi('0.8.7', initializeDetails);
   }
 };

@@ -4,8 +4,9 @@ class BasicGroupSerializer < ApplicationSerializer
              :name,
              :display_name,
              :user_count,
-             :alias_level,
-             :visible,
+             :mentionable_level,
+             :messageable_level,
+             :visibility_level,
              :automatic_membership_email_domains,
              :automatic_membership_retroactive,
              :primary_group,
@@ -18,10 +19,12 @@ class BasicGroupSerializer < ApplicationSerializer
              :flair_color,
              :bio_raw,
              :bio_cooked,
-             :public,
+             :public_admission,
+             :public_exit,
              :allow_membership_requests,
              :full_name,
-             :default_notification_level
+             :default_notification_level,
+             :membership_request_template
 
   def include_display_name?
     object.automatic
@@ -37,7 +40,7 @@ class BasicGroupSerializer < ApplicationSerializer
     staff?
   end
 
-  def include_has_messsages
+  def include_has_messages
     staff?
   end
 

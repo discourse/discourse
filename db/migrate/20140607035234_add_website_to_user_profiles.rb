@@ -1,4 +1,4 @@
-class AddWebsiteToUserProfiles < ActiveRecord::Migration
+class AddWebsiteToUserProfiles < ActiveRecord::Migration[4.2]
   def up
     add_column :user_profiles, :website, :string
 

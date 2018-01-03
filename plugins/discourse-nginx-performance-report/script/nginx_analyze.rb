@@ -30,7 +30,7 @@ def top(cols, aggregator, count, aggregator_formatter = nil)
 
   col_just = []
 
-  col_widths = map_with_index(cols) do |name,idx|
+  col_widths = map_with_index(cols) do |name, idx|
     max_width = name.length
 
     if cols[idx].respond_to? :align
@@ -46,14 +46,14 @@ def top(cols, aggregator, count, aggregator_formatter = nil)
       row[idx] = row[idx].to_s
       max_width = row[idx].length if row[idx].length > max_width
     end
-    [max_width,80].min
+    [max_width, 80].min
   end
 
-  puts(map_with_index(cols) do |name,idx|
+  puts(map_with_index(cols) do |name, idx|
     name.ljust(col_widths[idx])
   end.join(" "))
 
-  puts(map_with_index(cols) do |name,idx|
+  puts(map_with_index(cols) do |name, idx|
     ("-" * name.length).ljust(col_widths[idx])
   end.join(" "))
 
@@ -102,7 +102,7 @@ end
 puts
 puts "Analyzed: #{analyzer.filenames.join(",")} on #{`hostname`}"
 if limit
-  puts "Limited to #{DateTime.now - (limit.to_f / (60*24.0))} - #{DateTime.now}"
+  puts "Limited to #{DateTime.now - (limit.to_f / (60 * 24.0))} - #{DateTime.now}"
 end
 puts SPACER
 puts "#{analyzer.from_time} - #{analyzer.to_time}"
@@ -121,7 +121,7 @@ puts SPACER
 puts
 puts "Top 100 routes by Server Load"
 puts
-top(["Route", "Duration", "Reqs", Column.new("Mobile", :rjust)], analyzer.route_to_rails_duration, 100, lambda{
+top(["Route", "Duration", "Reqs", Column.new("Mobile", :rjust)], analyzer.route_to_rails_duration, 100, lambda {
   |hash, name, total|
   "#{hash["mobile"] || 0} (#{"%.2f" % (((hash["mobile"] || 0) / (total + 0.0)) * 100)})%"}
 )

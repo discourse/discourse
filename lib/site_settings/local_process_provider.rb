@@ -10,7 +10,7 @@ class SiteSettings::LocalProcessProvider
     @settings[current_site] ||= {}
   end
 
-  def initialize()
+  def initialize
     @settings = {}
     self.current_site = "test"
   end

@@ -1,8 +1,9 @@
 require_dependency 'upload_creator'
+require 'base64'
 
 class Admin::ThemesController < Admin::AdminController
 
-  skip_before_filter :check_xhr, only: [:show, :preview]
+  skip_before_action :check_xhr, only: [:show, :preview]
 
   def preview
     @theme = Theme.find(params[:id])
@@ -12,13 +13,16 @@ class Admin::ThemesController < Admin::AdminController
 
   def upload_asset
     path = params[:file].path
-    File.open(path) do |file|
-      filename = params[:file]&.original_filename || File.basename(path)
-      upload = UploadCreator.new(file, filename, for_theme: true).create_for(current_user.id)
-      if upload.errors.count > 0
-        render_json_error upload
-      else
-        render json: { upload_id: upload.id }, status: :created
+
+    hijack do
+      File.open(path) do |file|
+        filename = params[:file]&.original_filename || File.basename(path)
+        upload = UploadCreator.new(file, filename, for_theme: true).create_for(current_user.id)
+        if upload.errors.count > 0
+          render_json_error upload
+        else
+          render json: { upload_id: upload.id }, status: :created
+        end
       end
     end
   end
@@ -31,7 +35,28 @@ class Admin::ThemesController < Admin::AdminController
 
       @theme = Theme.new(name: theme["name"], user_id: current_user.id)
       theme["theme_fields"]&.each do |field|
-        @theme.set_field(target: field["target"], name: field["name"], value: field["value"])
+
+        if field["raw_upload"]
+          begin
+            tmp = Tempfile.new
+            tmp.binmode
+            file = Base64.decode64(field["raw_upload"])
+            tmp.write(file)
+            tmp.rewind
+            upload = UploadCreator.new(tmp, field["filename"]).create_for(current_user.id)
+            field["upload_id"] = upload.id
+          ensure
+            tmp.unlink
+          end
+        end
+
+        @theme.set_field(
+          target: field["target"],
+          name: field["name"],
+          value: field["value"],
+          type_id: field["type_id"],
+          upload_id: field["upload_id"]
+        )
       end
 
       if @theme.save
@@ -62,7 +87,7 @@ class Admin::ThemesController < Admin::AdminController
     }
 
     respond_to do |format|
-      format.json { render json: payload}
+      format.json { render json: payload }
     end
   end
 
@@ -77,7 +102,7 @@ class Admin::ThemesController < Admin::AdminController
       if @theme.save
         update_default_theme
         log_theme_change(nil, @theme)
-        format.json { render json: @theme, status: :created}
+        format.json { render json: @theme, status: :created }
       else
         format.json { render json: @theme.errors, status: :unprocessable_entity }
       end
@@ -100,7 +125,7 @@ class Admin::ThemesController < Admin::AdminController
 
       @theme.child_theme_relation.to_a.each do |child|
         if expected.include?(child.child_theme_id)
-          expected.reject!{|id| id == child.child_theme_id}
+          expected.reject! { |id| id == child.child_theme_id }
         else
           child.destroy
         end
@@ -133,12 +158,12 @@ class Admin::ThemesController < Admin::AdminController
         update_default_theme
 
         log_theme_change(original_json, @theme)
-        format.json { render json: @theme, status: :created}
+        format.json { render json: @theme, status: :created }
       else
         format.json {
 
           error = @theme.errors[:color_scheme] ? I18n.t("themes.bad_color_scheme") : I18n.t("themes.other_error")
-          render json: {errors: [ error ]}, status: :unprocessable_entity
+          render json: { errors: [ error ] }, status: :unprocessable_entity
         }
       end
     end
@@ -168,7 +193,7 @@ class Admin::ThemesController < Admin::AdminController
 
         response.headers['Content-Disposition'] = "attachment; filename=#{@theme.name.parameterize}.dcstyle.json"
         response.sending_file = true
-        render json: ThemeSerializer.new(@theme)
+        render json: ThemeWithEmbeddedUploadsSerializer.new(@theme, root: 'theme')
       end
     end
 
@@ -178,7 +203,7 @@ class Admin::ThemesController < Admin::AdminController
 
     def update_default_theme
       if theme_params.key?(:default)
-        is_default = theme_params[:default]
+        is_default = theme_params[:default].to_s == "true"
         if @theme.key == SiteSetting.default_theme_key && !is_default
           Theme.clear_default!
         elsif is_default
@@ -192,13 +217,15 @@ class Admin::ThemesController < Admin::AdminController
         begin
           # deep munge is a train wreck, work around it for now
           params[:theme][:child_theme_ids] ||= [] if params[:theme].key?(:child_theme_ids)
-          params.require(:theme)
-            .permit(:name,
-                    :color_scheme_id,
-                    :default,
-                    :user_selectable,
-                    theme_fields: [:name, :target, :value, :upload_id, :type_id],
-                    child_theme_ids: [])
+
+          params.require(:theme).permit(
+            :name,
+            :color_scheme_id,
+            :default,
+            :user_selectable,
+            theme_fields: [:name, :target, :value, :upload_id, :type_id],
+            child_theme_ids: []
+          )
         end
     end
 

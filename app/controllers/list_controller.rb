@@ -3,9 +3,9 @@ require_dependency 'topic_list_responder'
 class ListController < ApplicationController
   include TopicListResponder
 
-  skip_before_filter :check_xhr
+  skip_before_action :check_xhr
 
-  before_filter :set_category, only: [
+  before_action :set_category, only: [
     :category_default,
     # filtered topics lists
     Discourse.filters.map { |f| :"category_#{f}" },
@@ -24,7 +24,7 @@ class ListController < ApplicationController
     :category_feed,
   ].flatten
 
-  before_filter :ensure_logged_in, except: [
+  before_action :ensure_logged_in, except: [
     :topics_by,
     # anonymous filters
     Discourse.anonymous_filters,
@@ -84,6 +84,7 @@ class ListController < ApplicationController
           else
             @title = I18n.t('js.filters.with_topics', filter: filter_title)
           end
+          @title << " - #{SiteSetting.title}"
         end
       end
 
@@ -123,7 +124,7 @@ class ListController < ApplicationController
 
   def topics_by
     list_opts = build_topic_list_options
-    target_user = fetch_user_from_params({ include_inactive: current_user.try(:staff?) }, [:user_stat, :user_option])
+    target_user = fetch_user_from_params({ include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts) }, [:user_stat, :user_option])
     list = generate_list_for("topics_by", target_user, list_opts)
     list.more_topics_url = url_for(construct_url_with(:next, list_opts))
     list.prev_topics_url = url_for(construct_url_with(:prev, list_opts))
@@ -182,11 +183,11 @@ class ListController < ApplicationController
     guardian.ensure_can_see!(@category)
     discourse_expires_in 1.minute
 
-    @title = @category.name
+    @title = "#{@category.name} - #{SiteSetting.title}"
     @link = "#{Discourse.base_url}#{@category.url}"
     @atom_link = "#{Discourse.base_url}#{@category.url}.rss"
     @description = "#{I18n.t('topics_in_category', category: @category.name)} #{@category.description}"
-    @topic_list = TopicQuery.new.list_new_in_category(@category)
+    @topic_list = TopicQuery.new(current_user).list_new_in_category(@category)
 
     render 'list', formats: [:rss]
   end
@@ -204,7 +205,7 @@ class ListController < ApplicationController
     render 'list', formats: [:rss]
   end
 
-  def top(options=nil)
+  def top(options = nil)
     options ||= {}
     period = ListController.best_period_for(current_user.try(:previous_visit_at), options[:category])
     send("top_#{period}", options)
@@ -240,7 +241,7 @@ class ListController < ApplicationController
       @rss = "top_#{period}"
 
       if use_crawler_layout?
-        @title = I18n.t("js.filters.top.#{period}.title")
+        @title = I18n.t("js.filters.top.#{period}.title") + " - #{SiteSetting.title}"
       end
 
       respond_with_list(list)
@@ -307,7 +308,7 @@ class ListController < ApplicationController
     parent_category_id = nil
     if parent_slug_or_id.present?
       parent_category_id = Category.query_parent_category(parent_slug_or_id)
-      permalink_redirect_or_not_found and return if parent_category_id.blank? && !id
+      permalink_redirect_or_not_found && (return) if parent_category_id.blank? && !id
     end
 
     @category = Category.query_category(slug_or_id, parent_category_id)
@@ -318,7 +319,7 @@ class ListController < ApplicationController
       (redirect_to category.url, status: 301) && return if category
     end
 
-    permalink_redirect_or_not_found and return if !@category
+    permalink_redirect_or_not_found && (return) if !@category
 
     @description_meta = @category.description_text
     raise Discourse::NotFound unless guardian.can_see?(@category)
@@ -330,6 +331,8 @@ class ListController < ApplicationController
 
   def build_topic_list_options
     options = {}
+    params[:page] = params[:page].to_i rescue 1
+
     TopicQuery.public_valid_options.each do |key|
       options[key] = params[key]
     end
@@ -361,23 +364,23 @@ class ListController < ApplicationController
     else # :next
       public_send(method, opts.merge(next_page_params(opts)))
     end
-    url.sub('.json?','?')
+    url.sub('.json?', '?')
   end
 
-  def get_excluded_category_ids(current_category=nil)
+  def get_excluded_category_ids(current_category = nil)
     exclude_category_ids = Category.where(suppress_from_homepage: true)
     exclude_category_ids = exclude_category_ids.where.not(id: current_category) if current_category
     exclude_category_ids.pluck(:id)
   end
 
-  def self.best_period_for(previous_visit_at, category_id=nil)
+  def self.best_period_for(previous_visit_at, category_id = nil)
     default_period = ((category_id && Category.where(id: category_id).pluck(:default_top_period).first) ||
           SiteSetting.top_page_default_timeframe).to_sym
 
     best_period_with_topics_for(previous_visit_at, category_id, default_period) || default_period
   end
 
-  def self.best_period_with_topics_for(previous_visit_at, category_id=nil, default_period=SiteSetting.top_page_default_timeframe)
+  def self.best_period_with_topics_for(previous_visit_at, category_id = nil, default_period = SiteSetting.top_page_default_timeframe)
     best_periods_for(previous_visit_at, default_period.to_sym).each do |period|
       top_topics = TopTopic.where("#{period}_score > 0")
       top_topics = top_topics.joins(:topic).where("topics.category_id = ?", category_id) if category_id
@@ -388,12 +391,12 @@ class ListController < ApplicationController
     false
   end
 
-  def self.best_periods_for(date, default_period=:all)
+  def self.best_periods_for(date, default_period = :all)
     date ||= 1.year.ago
     periods = []
     periods << default_period if :all     != default_period
-    periods << :daily         if :daily   != default_period && date >   8.days.ago
-    periods << :weekly        if :weekly  != default_period && date >  35.days.ago
+    periods << :daily         if :daily   != default_period && date > 8.days.ago
+    periods << :weekly        if :weekly  != default_period && date > 35.days.ago
     periods << :monthly       if :monthly != default_period && date > 180.days.ago
     periods << :yearly        if :yearly  != default_period
     periods

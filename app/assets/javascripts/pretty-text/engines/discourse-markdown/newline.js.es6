@@ -1,27 +1,53 @@
-// Support for the newline behavior in markdown that most expect. Look through all text nodes
-// in the tree, replace any new lines with `br`s.
+// see: https://github.com/markdown-it/markdown-it/issues/375
+//
+// we use a custom paragraph rule cause we have to signal when a
+// link starts with a space, so we can bypass a onebox
+// this is a freedom patch, so careful, may break on updates
+
+
+function newline(state, silent) {
+  var token, pmax, max, pos = state.pos;
+
+  if (state.src.charCodeAt(pos) !== 0x0A/* \n */) { return false; }
+
+  pmax = state.pending.length - 1;
+  max = state.posMax;
+
+  // '  \n' -> hardbreak
+  // Lookup in pending chars is bad practice! Don't copy to other rules!
+  // Pending string is stored in concat mode, indexed lookups will cause
+  // convertion to flat mode.
+  if (!silent) {
+    if (pmax >= 0 && state.pending.charCodeAt(pmax) === 0x20) {
+      if (pmax >= 1 && state.pending.charCodeAt(pmax - 1) === 0x20) {
+        state.pending = state.pending.replace(/ +$/, '');
+        token = state.push('hardbreak', 'br', 0);
+      } else {
+        state.pending = state.pending.slice(0, -1);
+        token = state.push('softbreak', 'br', 0);
+      }
+
+    } else {
+      token = state.push('softbreak', 'br', 0);
+    }
+  }
+
+  pos++;
+
+  // skip heading spaces for next line
+  while (pos < max && state.md.utils.isSpace(state.src.charCodeAt(pos))) {
+    if (token) {
+      token.leading_space = true;
+    }
+    pos++;
+  }
+
+  state.pos = pos;
+  return true;
+};
 
 export function setup(helper) {
-  helper.postProcessText((text, event) => {
-    const { options, insideCounts } = event;
-    if (options.traditionalMarkdownLinebreaks || (insideCounts.pre > 0)) { return; }
-
-    if (text === "\n") {
-      // If the tag is just a new line, replace it with a `<br>`
-      return [['br']];
-    } else {
-      // If the text node contains new lines, perhaps with text between them, insert the
-      // `<br>` tags.
-      const split = text.split(/\n+/);
-      if (split.length) {
-        const replacement = [];
-        for (var i=0; i<split.length; i++) {
-          if (split[i].length > 0) { replacement.push(split[i]); }
-          if (i !== split.length-1) { replacement.push(['br']); }
-        }
-
-        return replacement;
-      }
-    }
+  helper.registerPlugin(md => {
+    md.inline.ruler.at('newline', newline);
   });
 }

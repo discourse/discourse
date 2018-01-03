@@ -119,23 +119,23 @@ zh_TW:
         disabled: '於 %{when} 除名'
     topic_admin_menu: "版區管理員操作"
     emails_are_disabled: "管理員已經停用了所有外寄郵件功能。通知信件都不會寄出。"
-    bootstrap_mode_enabled: "為方便站點準備發佈，現正處於初始化模式中。所有新用戶將被授予信任等級1，並為他們設置接受每日郵件摘要。初始化模式會在用戶數超過 %{min_users} 個時關閉。"
+    bootstrap_mode_enabled: "為了讓你的新網站更容易上軌道，現正處於初始化模式中。所有新用戶將被授予信任等級1，並為他們設定接受每日郵件摘要。初始化模式將於用戶數超過 %{min_users} 位後關閉。"
     bootstrap_mode_disabled: "初始化模式將會在24小時後關閉。"
     s3:
       regions:
-        us_east_1: "美國東部 (北維珍尼亞州)"
-        us_west_1: "美國西部 (北加州)"
-        us_west_2: "美國西部 (奧勒岡州)"
-        us_gov_west_1: "AWS GovCloud (美國)"
-        eu_west_1: "歐洲 (愛爾蘭)"
-        eu_central_1: "歐洲 (法蘭克福)"
-        ap_southeast_1: "亞太地區 (新加坡)"
-        ap_southeast_2: "亞太地區 (悉尼)"
-        ap_south_1: "亞太地區 (孟買)"
         ap_northeast_1: "亞太地區 (東京)"
         ap_northeast_2: "亞太地區 (首爾)"
-        sa_east_1: "南美洲 (聖保羅)"
+        ap_south_1: "亞太地區 (孟買)"
+        ap_southeast_1: "亞太地區 (新加坡)"
+        ap_southeast_2: "亞太地區 (悉尼)"
         cn_north_1: "中國 (北京)"
+        eu_central_1: "歐洲 (法蘭克福)"
+        eu_west_1: "歐洲 (愛爾蘭)"
+        sa_east_1: "南美洲 (聖保羅)"
+        us_east_1: "美國東部 (北維珍尼亞州)"
+        us_gov_west_1: "AWS GovCloud (美國)"
+        us_west_1: "美國西部 (北加州)"
+        us_west_2: "美國西部 (奧勒岡州)"
     edit: '編輯此討論話題的標題與分類'
     not_implemented: "抱歉，此功能尚未開放。"
     no_value: "否"
@@ -317,11 +317,7 @@ zh_TW:
         full_name: '全名'
         add_members: "增加成員"
         delete_member_confirm: "從「%{group}」群組移除「%{username}」？"
-      request_membership_pm:
-        title: "請求會員資格"
-        body: "我想申請 @%{groupName} 的成員資格。"
       name_placeholder: "群組名，沒有空格，和用戶名一樣的規則"
-      public: "允許用戶自由加入/離開群組（需要群組是可見）"
       empty:
         posts: "群組成員沒有發佈帖子。"
         members: "這個團隊裡面沒有成員"
@@ -333,6 +329,7 @@ zh_TW:
       join: "加入團隊"
       leave: "離開團隊"
       request: "請求加入團隊"
+      message: "訊息"
       automatic_group: 自動群組
       closed_group: 關閉群組
       is_group_user: "你是團隊裡面的成員"
@@ -342,12 +339,9 @@ zh_TW:
       bio: "關於群組"
       selector_placeholder: "新增成員"
       owner: "擁有者"
-      visible: "群組可被所有用戶看到"
       index:
         title: "群組"
         empty: "沒有可看見的群組。"
-      title:
-        other: "群組"
       activity: "活動"
       members: "成員"
       topics: "主題"
@@ -355,7 +349,6 @@ zh_TW:
       mentions: "提及"
       messages: "訊息"
       alias_levels:
-        title: "誰可以在這個群組發送訊息和使用@提到"
         nobody: "沒有"
         only_admins: "只有管理員"
         mods_and_admins: "只有板主以及管理員"
@@ -449,7 +442,6 @@ zh_TW:
       mute: "靜音"
       edit: "編輯喜好設定"
       download_archive:
-        button_text: "下載我的文章"
         confirm: "你確定要下載你的文章嗎?"
         success: "開始下載，處理完畢後將以私人訊息通知您。"
         rate_limit_error: "帖子只能每天下載一次，請明天再重試。"
@@ -486,7 +478,6 @@ zh_TW:
       admin: "{{user}} 是管理員"
       moderator_tooltip: "此用戶為板主"
       admin_tooltip: "此用戶為管理員"
-      blocked_tooltip: "此用戶被屏蔽"
       suspended_notice: "此用戶已被停權至 {{date}}。"
       suspended_reason: "原因: "
       github_profile: "Github"
@@ -501,7 +492,7 @@ zh_TW:
         individual_no_echo: "每當有新文章時，寄給我郵件通知（除了我自己的文章）"
         many_per_day: "每當有新文章時，寄給我郵件通知（每天約有  {{dailyEmailEstimate}}  封）。"
         few_per_day: "每當有新文章時，寄給我郵件通知（每天約有 2  封）。"
-      tag_settings: "添加"
+      tag_settings: "標籤"
       watched_tags: "已觀看"
       watched_tags_instructions: "您將會自動監視所有這些添加的主題。您會收到新文章或新主題的通知，新文章數量將出現在每個主題後。"
       tracked_tags: "已追蹤"
@@ -551,6 +542,15 @@ zh_TW:
         move_to_archive: "封存"
         failed_to_move: "移動到所選郵件失敗(也許你的網絡沒有開啟)"
         select_all: "選擇全部"
+      preferences_nav:
+        account: "帳號"
+        profile: "基本資料"
+        emails: "電子郵件"
+        notifications: "通知"
+        categories: "分類"
+        tags: "標籤"
+        interface: "界面"
+        apps: "應用"
       change_password:
         success: "( 寄出的郵件 )"
         in_progress: "( 正在傳送郵件 )"
@@ -566,7 +566,6 @@ zh_TW:
         title: "修改用戶名稱"
         confirm: "確定更換用戶名？你的帖子和@提及你的引用將失效。"
         taken: "抱歉，此用戶名稱已經有人使用。"
-        error: "修改你的用戶名稱時發生錯誤。"
         invalid: "此用戶名稱無效，只能使用數字與英文字母。"
       change_email:
         title: "修改電子郵件地址"
@@ -732,10 +731,6 @@ zh_TW:
           other: "討論話題已建立"
         post_count:
           other: "帖子已建立"
-        likes_given:
-          other: "<i class='fa fa-heart'></i> 送出的"
-        likes_received:
-          other: "<i class='fa fa-heart'></i> 收到的"
         days_visited:
           other: "到訪天數"
         posts_read:
@@ -823,7 +818,6 @@ zh_TW:
     first_post: 第一篇文章
     mute: 靜音
     unmute: 取消靜音
-    last_post: 最後一篇文章
     last_reply_lowercase: 最新回覆
     replies_lowercase:
       other: 回覆
@@ -925,7 +919,6 @@ zh_TW:
       your_email: "您帳號的電郵地址是 <b>%{email}</b>"
       accept_invite: "接受邀請"
       success: "你的帳號已被建立，且您已經登入了。"
-      password_label: "設定密碼(選填)"
     password_reset:
       continue: "繼續連接至 %{site_name}"
     emoji_set:
@@ -1014,12 +1007,7 @@ zh_TW:
       olist_title: "編號清單"
       ulist_title: "符號清單"
       list_item: "清單項目"
-      heading_label: "H"
-      heading_title: "標頭"
-      heading_text: "標頭"
-      hr_title: "分隔線"
       help: "Markdown 編輯說明"
-      toggler: "隱藏或顯示編輯面板"
       modal_ok: "確定"
       modal_cancel: "取消"
       cant_send_pm: "抱歉，你不能向 %{username} 發送訊息。"
@@ -1033,26 +1021,6 @@ zh_TW:
       empty: "未找到任何通知。"
       more: "檢視較舊的通知"
       total_flagged: "所有被投訴的文章"
-      mentioned: "<i title='被提到' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
-      group_mentioned: "<i title='群組被提及' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
-      quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
-      replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      posted: "<i title='回覆' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      edited: "<i title='edited' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
-      liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
-      liked_2: "<i title='讚' class='fa fa-heart'></i><p><span>{{username}}、{{username2}}</span> {{description}}</p>"
-      liked_many:
-        other: "<i title='讚' class='fa fa-heart'></i><p><span>{{username}}、{{username2}}</span>和其他 {{count}} 人</span>{{description}}</p>"
-      private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
-      invited_to_private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
-      invited_to_topic: "<i title='邀請至主題' class='fa fa-heart'></i><p><span>{{username}}</span>{{description}}</p>"
-      invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span>已接受你的邀請</p>"
-      moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> 移動了 {{description}}</p>"
-      linked: "<i title='關聯帖子' class='fa fa-link'></i><p><span>{{username}}</span>{{description}}</p>"
-      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>獲得徽章「{{description}}」</p>"
-      watching_first_post: "<i title='近期主題' class='fa fa-dot-circle-o'></i><p><span>近期主題</span>{{description}}</p>"
-      group_message_summary:
-        other: "<i title='群組收件箱中的消息' class='fa fa-group'></i><p> {{count}} 條消息在{{group_name}}組的收件箱中</p>"
       alt:
         mentioned: "被提及"
         quoted: "引用者"
@@ -1099,8 +1067,6 @@ zh_TW:
       select_all: "選擇全部"
       clear_all: "清除全部"
       too_short: "你的搜索詞太短。"
-      result_count:
-        other: "搜索<span class='term'>“{{term}}”</span>有 {{count}} 條相關結果"
       title: "搜尋討論話題、文章、用戶或分類"
       no_results: "未找到任何結果。"
       no_more_results: "沒有找到更多的結果。"
@@ -1115,22 +1081,15 @@ zh_TW:
         title: 高級搜索
         posted_by:
           label: 發帖人
-        in_category:
-          label: 在該分類中
         in_group:
           label: 在該群組中
         with_badge:
           label: 有該徽章
-        with_tags:
-          label: 有該標籤
         filters:
-          label: 只返回主題/帖子符合...
           likes: 我給了讚的
           posted: 我參與發帖
           watching: 我正在監看
           tracking: 我正在追蹤
-          private: 在我的私信中
-          bookmarks: 我已經收藏了
           first: 是第一帖
           pinned: 是置頂的
           unpinned: 不是置頂的
@@ -1444,7 +1403,6 @@ zh_TW:
       multi_select:
         select: '選取'
         selected: '選取了 ({{count}})'
-        select_replies: '選取 + 回覆'
         delete: 刪除選取的文章
         cancel: 取消選取
         select_all: 選擇全部
@@ -1455,7 +1413,6 @@ zh_TW:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "引用"
-      edit: "編輯 {{replyAvatar}} {{username}} 發表的 {{link}}"
       edit_reason: "原因: "
       post_number: "文章 {{number}}"
       wiki_last_edited_on: "共筆最後編輯時間"
@@ -1516,11 +1473,6 @@ zh_TW:
         undelete: "復原此文章"
         share: "分享此文章的連結"
         more: "更多"
-        delete_replies:
-          confirm:
-            other: "你是否要同時刪除 {{count}} 篇針對這則文章的回覆？"
-          yes_value: "是，將回覆文章一併刪除"
-          no_value: "否，只刪除此文章"
         admin: "文章管理動作"
         wiki: "做為共筆"
         unwiki: "取消共筆"
@@ -1531,8 +1483,6 @@ zh_TW:
         change_owner: "更改作者"
       actions:
         flag: '投訴'
-        defer_flags:
-          other: "暫緩投訴"
         undo:
           off_topic: "撤回投訴"
           spam: "撤回投訴"
@@ -1592,12 +1542,6 @@ zh_TW:
             other: "{{count}} 人對此按讚"
           vote:
             other: "{{count}} 人已投票給此文章"
-      delete:
-        confirm:
-          other: "你確定要刪除這些文章?"
-      merge:
-        confirm:
-          other: "確定要合併這 {{count}} 個帖子嗎？"
       revisions:
         controls:
           first: "第一版"
@@ -1632,8 +1576,6 @@ zh_TW:
       settings: '設定'
       topic_template: "主題範本"
       tags: "標籤"
-      tags_allowed_tags: "僅在該分類內可以使用的標籤"
-      tags_allowed_tag_groups: "僅在該分類內可以使用的標籤組"
       tags_placeholder: "（可選）允許使用的標籤列表"
       tag_groups_placeholder: "（可選）允許使用的標籤組列表"
       topic_featured_link_allowed: "運行在該分類中發佈特色連結"
@@ -1905,7 +1847,6 @@ zh_TW:
         hamburger_menu: '<b>=</b> 打開漢堡菜單'
         user_profile_menu: '<b>p</b> 打開用戶菜單'
         show_incoming_updated_topics: '<b>.</b> 顯示更新主題'
-        search: '<b>/</b> 搜索'
         help: '<b> ? </b> 打開按鍵說明'
         dismiss_new_posts: '<b>x</b> 然後 <b>r</b> 解除新/帖子提示'
         dismiss_topics: '<b>x</b> 然後 <b>t</b> 解除主題提示'
@@ -1970,9 +1911,7 @@ zh_TW:
       selector_no_tags: "無標籤"
       changed: "標籤被修改："
       tags: "標籤"
-      choose_for_topic: "為此主題選擇可選標籤"
       delete_tag: "刪除標籤"
-      delete_confirm: "確定要刪除這個標籤嗎？"
       rename_tag: "重命名標籤"
       rename_instructions: "標籤的新名稱："
       sort_by: "排序方式："
@@ -2067,7 +2006,6 @@ zh_TW:
         no_problems: "未發現任何問題。"
         moderators: '板主：'
         admins: '管理員：'
-        blocked: '已封鎖：'
         suspended: '已停權:'
         private_messages_short: "訊息"
         private_messages_title: "訊息"
@@ -2100,24 +2038,12 @@ zh_TW:
         by: "由"
       flags:
         title: "投訴"
-        old: "舊的"
-        active: "待處理"
         agree: "同意"
         agree_title: "確認此投訴為有效且正確"
-        agree_flag_modal_title: "批准並且 ..."
-        agree_flag_hide_post: "批准 (隱藏文章 + 送出私人訊息)"
-        agree_flag_hide_post_title: "隱藏此文章，並自動向此用戶送出私人訊息，要求盡快修改它"
-        agree_flag_restore_post: "同意（還原文章）"
-        agree_flag_restore_post_title: "回復此文章"
-        agree_flag: "同意投訴"
-        agree_flag_title: "同意投訴且不更動文章"
-        defer_flag: "延遲"
         defer_flag_title: "移除標記；不需處理。"
         delete: "刪除"
         delete_title: "刪除此標記文章。"
-        delete_post_defer_flag: "刪除文章並且延緩檢舉"
         delete_post_defer_flag_title: "刪除文章，如果刪除的是討論話題的第一則文章，討論話題也將一併刪除"
-        delete_post_agree_flag: "刪除文章並且同意檢舉"
         delete_post_agree_flag_title: "刪除文章，如果刪除的是討論話題的第一則文章，討論話題也將一併刪除"
         delete_flag_modal_title: "刪除並且..."
         delete_spammer: "刪除垃圾文章發送者"
@@ -2132,29 +2058,16 @@ zh_TW:
         dispositions:
           agreed: "同意"
           disagreed: "不同意"
-          deferred: "之後再處理"
         flagged_by: "投訴者"
         resolved_by: "處理為"
         took_action: "採取行動"
         system: "系統"
         error: "發生了某些錯誤"
         reply_message: "回覆"
-        no_results: "沒有投訴。"
         topic_flagged: "此 <strong>討論話題</strong> 已被投訴。"
         visit_topic: "瀏覽討論話題以採取行動"
         was_edited: "文章已在第一次標記後被編輯"
         previous_flags_count: "這篇文章已經被標記  {{count}} 次。"
-        summary:
-          action_type_3:
-            other: "離題 x{{count}}"
-          action_type_4:
-            other: "不宜內容 x{{count}}"
-          action_type_6:
-            other: "自訂 x{{count}}"
-          action_type_7:
-            other: "自訂 x{{count}}"
-          action_type_8:
-            other: "垃圾內容 x{{count}}"
       groups:
         primary: "主要群組"
         no_primary: "( 沒有主要群組 )"
@@ -2238,7 +2151,6 @@ zh_TW:
           details: "當有新回覆、編輯、帖子被刪除或者恢復時。"
         user_event:
           name: "用戶事件"
-          details: "當用戶被創建、審核通過或更新時。"
         delivery_status:
           title: "分髮狀態"
           inactive: "不活躍"
@@ -2519,8 +2431,6 @@ zh_TW:
             change_category_settings: "變更分類設定"
             delete_category: "刪除分類"
             create_category: "建立分類"
-            block_user: "封鎖用戶"
-            unblock_user: "解除封鎖"
             grant_admin: "授予管理員權限"
             revoke_admin: "撤銷管理員權限"
             grant_moderation: "授予板主權限"
@@ -2587,7 +2497,6 @@ zh_TW:
           pending: "申請中"
           staff: '管理員'
           suspended: '已停權'
-          blocked: '已封鎖'
           suspect: '嫌疑'
         approved: "已批准？"
         approved_selected:
@@ -2606,7 +2515,6 @@ zh_TW:
           staff: "管理員"
           admins: '管理員'
           moderators: '板主'
-          blocked: '已封鎖的用戶'
           suspended: '已停權的用戶'
           suspect: '嫌疑使用者'
         reject_successful:
@@ -2621,18 +2529,14 @@ zh_TW:
         suspend_failed: "將此用戶停權時發生錯誤 {{error}}"
         unsuspend_failed: "恢復此用戶的權限時發生錯誤 {{error}}"
         suspend_duration: "你想將此用戶停權多久?"
-        suspend_duration_units: "(天)"
         suspend_reason_label: "你為什麼要將此用戶停權？你輸入的原因將在此用戶登入時顯示，及顯示在此用戶的基本資料頁面，且<b>任何人都可以看見</b>，請簡短說明原因。"
         suspend_reason: "原因"
         suspended_by: "將其停權者"
         delete_all_posts: "刪除所有文章"
         delete_all_posts_confirm_MF: "你將要刪除 {POSTS, plural, one {1 個帖子} other {# 個帖子}}和 {TOPICS, plural, one {1 個主題} other {# 個主題}}。確定嗎？"
-        suspend: "停權"
-        unsuspend: "恢復權限"
-        suspended: "已停權?"
         moderator: "板主？"
         admin: "管理員？"
-        blocked: "已封鎖？"
+        suspended: "已停權?"
         staged: "暫存？"
         show_admin_profile: "管理員"
         refresh_browsers: "強制瀏覽器重新整理"
@@ -2647,8 +2551,8 @@ zh_TW:
         grant_admin: '授予管理員權限'
         revoke_moderation: '撤銷板主權限'
         grant_moderation: '授予板主權限'
-        unblock: '解除封鎖'
-        block: '封鎖'
+        unsuspend: '恢復權限'
+        suspend: '停權'
         reputation: 聲望
         permissions: 權限
         activity: 活動
@@ -2692,17 +2596,12 @@ zh_TW:
         activate_failed: "啟用此帳號時發生錯誤。"
         deactivate_account: "取消帳號的啟用狀態"
         deactivate_failed: "取消此帳號的啟用狀態時發生錯誤。"
-        unblock_failed: '解除此用戶的封鎖狀態時發生錯誤。'
-        block_failed: '封鎖此用戶時發生錯誤。'
-        block_confirm: '你確定要封禁用戶嗎？他們將沒有辦法創建任何主題或者帖子。'
-        block_accept: '是的，封禁用戶'
         bounce_score: "累計退信分值"
         reset_bounce_score:
           label: "重置"
           title: "重置累計退信分值為 0"
         deactivate_explanation: "帳號的啟用狀態被取消的用戶必需重新啟用帳號。"
         suspended_explanation: "被停權的用戶無法登入。"
-        block_explanation: "被封鎖的用戶無法發表文章或建立討論話題。"
         staged_explanation: "暫存用戶只能通過郵件回覆指定主題。"
         bounce_score_explanation:
           none: "近期該郵箱沒有退信。"
@@ -2952,8 +2851,6 @@ zh_TW:
       upload: "上傳"
       uploading: "上傳中..."
       quit: "以後再說"
-      staff_count:
-        other: "你的社群中有 %{count} 位工作人員。"
       invites:
         add_user: "添加"
         none_added: "你還沒有邀請任何工作人員。你確定要繼續嗎？"

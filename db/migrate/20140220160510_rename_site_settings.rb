@@ -1,4 +1,4 @@
-class RenameSiteSettings < ActiveRecord::Migration
+class RenameSiteSettings < ActiveRecord::Migration[4.2]
 
   def up
     execute "UPDATE site_settings SET name = 'allow_restore' WHERE name = 'allow_import'"

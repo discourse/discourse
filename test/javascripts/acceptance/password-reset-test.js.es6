@@ -3,7 +3,7 @@ import PreloadStore from 'preload-store';
 import { parsePostData } from "helpers/create-pretender";
 
 acceptance("Password Reset", {
-  setup() {
+  beforeEach() {
     const response = (object) => {
       return [
         200,
@@ -27,36 +27,35 @@ acceptance("Password Reset", {
   }
 });
 
-test("Password Reset Page", () => {
+QUnit.test("Password Reset Page", assert => {
   PreloadStore.store('password_reset', {is_developer: false});
 
   visit("/u/password-reset/myvalidtoken");
   andThen(() => {
-    ok(exists(".password-reset input"), "shows the input");
+    assert.ok(exists(".password-reset input"), "shows the input");
   });
 
   fillIn('.password-reset input', 'perf3ctly5ecur3');
   andThen(() => {
-    ok(exists(".password-reset .tip.good"), "input looks good");
+    assert.ok(exists(".password-reset .tip.good"), "input looks good");
   });
 
   fillIn('.password-reset input', '123');
   andThen(() => {
-    ok(exists(".password-reset .tip.bad"), "input is not valid");
-    ok(find(".password-reset .tip.bad").html().indexOf(I18n.t('user.password.too_short')) > -1, "password too short");
+    assert.ok(exists(".password-reset .tip.bad"), "input is not valid");
+    assert.ok(find(".password-reset .tip.bad").html().indexOf(I18n.t('user.password.too_short')) > -1, "password too short");
   });
 
   fillIn('.password-reset input', 'jonesyAlienSlayer');
   click('.password-reset form button');
   andThen(() => {
-    ok(exists(".password-reset .tip.bad"), "input is not valid");
-    ok(find(".password-reset .tip.bad").html().indexOf("is the name of your cat") > -1, "server validation error message shows");
+    assert.ok(exists(".password-reset .tip.bad"), "input is not valid");
+    assert.ok(find(".password-reset .tip.bad").html().indexOf("is the name of your cat") > -1, "server validation error message shows");
   });
 
   fillIn('.password-reset input', 'perf3ctly5ecur3');
   click('.password-reset form button');
   andThen(() => {
-    ok(!exists(".password-reset form"), "form is gone");
+    assert.ok(!exists(".password-reset form"), "form is gone");
   });
 });
-

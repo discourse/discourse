@@ -1,4 +1,4 @@
-class ResolveDuplicateGroupNames < ActiveRecord::Migration
+class ResolveDuplicateGroupNames < ActiveRecord::Migration[4.2]
 
   def up
     results = Group.exec_sql 'SELECT id FROM groups
@@ -11,7 +11,7 @@ class ResolveDuplicateGroupNames < ActiveRecord::Migration
     groups  = Group.where id: results.map { |r| r['id'] }
     groups.group_by { |g| g.name.downcase }.each do |key, value|
       value.each_with_index do |dup, index|
-        dup.update! name: "#{dup.name[0..18]}_#{index+1}" if index > 0
+        dup.update! name: "#{dup.name[0..18]}_#{index + 1}" if index > 0
       end
     end
   end

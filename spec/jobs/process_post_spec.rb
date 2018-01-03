@@ -50,7 +50,7 @@ describe Jobs::ProcessPost do
 
     it "extracts links to quoted posts" do
       quoted_post = Fabricate(:post, raw: "This is a post with a link to https://www.discourse.org", post_number: 42)
-      post.update_columns(raw: "This quote is the best\n\n[quote=\"#{quoted_post.user.username}, topic:#{quoted_post.topic_id}, post:#{quoted_post.post_number}\"]#{quoted_post.excerpt}[/quote]")
+      post.update_columns(raw: "This quote is the best\n\n[quote=\"#{quoted_post.user.username}, topic:#{quoted_post.topic_id}, post:#{quoted_post.post_number}\"]\n#{quoted_post.excerpt}\n[/quote]")
       # when creating a quote, we also create the reflexion link
       expect { Jobs::ProcessPost.new.execute(post_id: post.id) }.to change { TopicLink.count }.by(2)
     end
@@ -62,6 +62,19 @@ describe Jobs::ProcessPost do
       expect { Jobs::ProcessPost.new.execute(post_id: post.id) }.to change { TopicLink.count }.by(2)
     end
 
+    it "works for posts that belong to no existing user" do
+      cooked = post.cooked
+
+      post.update_columns(cooked: "frogs", user_id: nil)
+      Jobs::ProcessPost.new.execute(post_id: post.id, cook: true)
+      post.reload
+      expect(post.cooked).to eq(cooked)
+
+      post.update_columns(cooked: "frogs", user_id: User.maximum("id") + 1)
+      Jobs::ProcessPost.new.execute(post_id: post.id, cook: true)
+      post.reload
+      expect(post.cooked).to eq(cooked)
+    end
   end
 
 end

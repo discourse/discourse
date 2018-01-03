@@ -14,14 +14,14 @@
         <li class="nav-item-privacy">{{#link-to 'privacy'}}{{i18n 'privacy'}}{{/link-to}}</li>
       </ul>
 
-      <section class='about'>
+      <section class='about description'>
         <h2>{{i18n 'about.title' title=model.title}}</h2>
         <p>{{model.description}}</p>
       </section>
 
       {{#if model.admins}}
         <section class='about admins'>
-          <h3>{{i18n 'about.our_admins'}}</h3>
+          <h3>{{d-icon "users"}} {{i18n 'about.our_admins'}}</h3>
 
           {{#each model.admins as |a|}}
             {{user-info user=a}}
@@ -33,7 +33,7 @@
 
       {{#if model.moderators}}
         <section class='about moderators'>
-          <h3>{{i18n 'about.our_moderators'}}</h3>
+          <h3>{{d-icon "users"}} {{i18n 'about.our_moderators'}}</h3>
 
           <div class='users'>
             {{#each model.moderators as |m|}}
@@ -45,7 +45,7 @@
       {{/if}}
 
       <section class='about stats'>
-        <h3>{{i18n 'about.stats'}}</h3>
+        <h3>{{d-icon "bar-chart"}}  {{i18n 'about.stats'}}</h3>
 
         <table class='table'>
           <tr>
@@ -89,7 +89,7 @@
 
       {{#if contactInfo}}
         <section class='about contact'>
-            <h3>{{i18n 'about.contact'}}</h3>
+            <h3>{{d-icon "envelope-o"}} {{i18n 'about.contact'}}</h3>
             <p>{{{contactInfo}}}</p>
         </section>
       {{/if}}

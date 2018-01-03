@@ -1,15 +1,24 @@
-discobot_username ='discobot'
-user = User.find_by(id: -2)
+discobot_username = 'discobot'
 
-if !user
+def seed_primary_email
+  UserEmail.seed do |ue|
+    ue.id = -2
+    ue.email = "discobot_email"
+    ue.primary = true
+    ue.user_id = -2
+  end
+end
+
+unless user = User.find_by(id: -2)
   suggested_username = UserNameSuggester.suggest(discobot_username)
+
+  seed_primary_email
 
   User.seed do |u|
     u.id = -2
     u.name = discobot_username
     u.username = suggested_username
     u.username_lower = suggested_username.downcase
-    u.email = "discobot_email"
     u.password = SecureRandom.hex
     u.active = true
     u.approved = true
@@ -31,7 +40,14 @@ if !user
 end
 
 bot = User.find(-2)
-bot.update!(admin:true, moderator: false)
+
+# ensure discobot has a primary email
+unless bot.primary_email
+  seed_primary_email
+  bot.reload
+end
+
+bot.update!(admin: true, moderator: false)
 
 bot.user_option.update!(
   email_private_messages: false,

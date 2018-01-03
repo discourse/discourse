@@ -1,33 +1,38 @@
-import { registerOption } from 'pretty-text/pretty-text';
-
-function tableFlattenBlocks(blocks) {
-  let result = "";
-
-  blocks.forEach(b => {
-    result += b;
-    if (b.trailing) { result += b.trailing; }
-  });
-
-  // bypass newline insertion
-  return result.replace(/[\n\r]/g, " ");
-};
-
-registerOption((siteSettings, opts) => {
-  opts.features.table = !!siteSettings.allow_html_tables;
-});
-
 export function setup(helper) {
 
-  helper.whiteList(['table', 'table.md-table', 'tbody', 'thead', 'tr', 'th', 'td']);
+  helper.registerPlugin(md => {
 
-  helper.replaceBlock({
-    start: /(<table[^>]*>)([\S\s]*)/igm,
-    stop: /<\/table>/igm,
-    rawContents: true,
-    priority: 1,
+    md.renderer.rules.table_open = function(){
+      return '<div class="md-table">\n<table>\n';
+    };
 
-    emitter(contents) {
-      return ['table', {"class": "md-table"}, tableFlattenBlocks.apply(this, [contents])];
+    md.renderer.rules.table_close = function(){
+      return '</table>\n</div>';
+    };
+  });
+
+  // we need a custom callback for style handling
+  helper.whiteList({
+    custom: function(tag,attr,val) {
+      if (tag !== 'th' && tag !== 'td') {
+        return false;
+      }
+
+      if (attr !== 'style') {
+        return false;
+      }
+
+      return (val === 'text-align:right' || val === 'text-align:left' || val === 'text-align:center');
     }
   });
+
+  helper.whiteList([
+      'table',
+      'tbody',
+      'thead',
+      'tr',
+      'th',
+      'td',
+      'div.md-table'
+  ]);
 }

@@ -3,20 +3,34 @@
     max-height: none;
   }
 
+  .select-kit {
+    width: 50%;
+  }
+
   input.date-picker, input[type="time"] {
     width: 150px;
     text-align: left;
   }
 
+  .radios {
+    margin-bottom: 10px;
+  }
+
   label {
+    vertical-align: middle;
     display: inline-block;
+    padding-right: 5px;
+
+    input {
+      vertical-align: middle;
+    }
   }
 
   .btn.pull-right {
     margin-right: 10px;
   }
 
-  .auto-update-input {
+  .future-date-input {
     input {
       margin: 0;
     }
@@ -35,7 +49,7 @@
 
       h3 {
         font-weight: normal;
-        font-size: 15px;
+        font-size: 1.143em;
       }
     }
   }

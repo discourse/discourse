@@ -21,9 +21,9 @@ if Rails.env == "development"
       end
 
       if source[0] != ?/
-       # CODE REMOVED
-       # source = compute_asset_path(source, options)
-       source = "/assets/#{source}"
+        # CODE REMOVED
+        # source = compute_asset_path(source, options)
+        source = "/assets/#{source}"
       end
 
       relative_url_root = defined?(config.relative_url_root) && config.relative_url_root

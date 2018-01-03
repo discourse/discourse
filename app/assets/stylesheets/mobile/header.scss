@@ -4,7 +4,7 @@
 
 @media only screen and (max-width: 320px) {
   #site-text-logo {
-    font-size: 18px;
+    font-size: 1.286em;
   }
 }
 
@@ -28,19 +28,18 @@
     }
   }
 
-  .icons {
-    .badge-notification {
-      top: -5px;
-      color: $secondary;
-    }
-
-    .active .icon {
-      &:after { margin-top: -1px; }
-    }
-  }
-
   button.sign-up-button {
     display:none;
+  }
+}
+
+.d-header-icons {
+  .badge-notification {
+    top: -5px;
+  }
+
+  .active .icon {
+    &:after { margin-top: -1px; }
   }
 }
 

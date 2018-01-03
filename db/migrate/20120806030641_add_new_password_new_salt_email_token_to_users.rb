@@ -1,4 +1,4 @@
-class AddNewPasswordNewSaltEmailTokenToUsers < ActiveRecord::Migration
+class AddNewPasswordNewSaltEmailTokenToUsers < ActiveRecord::Migration[4.2]
   def change
     add_column :users, :new_salt, :string, limit: 32
     add_column :users, :new_password_hash, :string, limit: 64

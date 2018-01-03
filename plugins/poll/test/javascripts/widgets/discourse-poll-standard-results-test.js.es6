@@ -8,7 +8,7 @@ const template = `{{mount-widget
 widgetTest('options in descending order', {
   template,
 
-  setup() {
+  beforeEach() {
     this.set('poll', Ember.Object.create({
       options: [{ votes: 5 }, { votes: 4 }],
       voters: 9
@@ -24,7 +24,7 @@ widgetTest('options in descending order', {
 widgetTest('options in ascending order', {
   template,
 
-  setup() {
+  beforeEach() {
     this.set('poll', Ember.Object.create({
       options: [{ votes: 4 }, { votes: 5 }],
       voters: 9
@@ -40,7 +40,7 @@ widgetTest('options in ascending order', {
 widgetTest('multiple options in descending order', {
   template,
 
-  setup() {
+  beforeEach() {
     this.set('isMultiple', true);
     this.set('poll', Ember.Object.create({
       type: 'multiple',

@@ -1,9 +1,9 @@
-class CreateDigestUnsubscribeKeys < ActiveRecord::Migration
+class CreateDigestUnsubscribeKeys < ActiveRecord::Migration[4.2]
   def up
     create_table :digest_unsubscribe_keys, id: false do |t|
       t.string :key, limit: 64, null: false
       t.integer :user_id, null: false
-      t.timestamps
+      t.timestamps null: false
     end
     execute "ALTER TABLE digest_unsubscribe_keys ADD PRIMARY KEY (key)"
     add_index :digest_unsubscribe_keys, :created_at

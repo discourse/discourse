@@ -1,0 +1,10 @@
+{{topic-notifications-options
+  value=notificationLevel
+  topic=topic
+  showFullTitle=showFullTitle}}
+
+{{#if appendReason}}
+  <p class="reason">
+    {{{topic.details.notificationReasonText}}}
+  </p>
+{{/if}}

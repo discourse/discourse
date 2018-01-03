@@ -8,7 +8,7 @@ class SecureSession
     $redis.get("#{@prefix}#{key}")
   end
 
-  def []=(key,val)
+  def []=(key, val)
     if val == nil
       $redis.del("#{@prefix}#{key}")
     else

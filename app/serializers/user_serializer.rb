@@ -66,10 +66,13 @@ class UserSerializer < BasicUserSerializer
              :topic_post_count,
              :pending_count,
              :profile_view_count,
+             :time_read,
+             :recent_time_read,
              :primary_group_name,
              :primary_group_flair_url,
              :primary_group_flair_bg_color,
-             :primary_group_flair_color
+             :primary_group_flair_color,
+             :staged
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
@@ -115,6 +118,7 @@ class UserSerializer < BasicUserSerializer
                        :bio_excerpt,
                        :location,
                        :website,
+                       :website_name,
                        :profile_background,
                        :card_background
 
@@ -124,17 +128,12 @@ class UserSerializer < BasicUserSerializer
 
   def mailing_list_posts_per_day
     val = Post.estimate_posts_per_day
-    [val,SiteSetting.max_emails_per_day_per_user].min
+    [val, SiteSetting.max_emails_per_day_per_user].min
   end
 
   def groups
-    groups = object.groups.order(:id)
-
-    if scope.is_admin? || object.id == scope.user.try(:id)
-      groups
-    else
-      groups.where(visible: true)
-    end
+    object.groups.order(:id)
+      .visible_groups(scope.user)
   end
 
   def group_users
@@ -142,20 +141,20 @@ class UserSerializer < BasicUserSerializer
   end
 
   def include_email?
-    object.id && object.id == scope.user.try(:id)
+    (object.id && object.id == scope.user.try(:id)) ||
+      (scope.is_staff? && object.staged?)
   end
 
   def can_change_bio
     !(SiteSetting.enable_sso && SiteSetting.sso_overrides_bio)
   end
 
-
   def user_api_keys
     keys = object.user_api_keys.where(revoked_at: nil).map do |k|
       {
         id: k.id,
         application_name: k.application_name,
-        scopes: k.scopes.map{|s| I18n.t("user_api_key.scopes.#{s}")},
+        scopes: k.scopes.map { |s| I18n.t("user_api_key.scopes.#{s}") },
         created_at: k.created_at
       }
     end
@@ -182,7 +181,7 @@ class UserSerializer < BasicUserSerializer
   def website_name
     uri = URI(website.to_s) rescue nil
     return if uri.nil? || uri.host.nil?
-    uri.host.sub(/^www\./,'') + uri.path
+    uri.host.sub(/^www\./, '') + uri.path
   end
 
   def include_website_name
@@ -248,15 +247,15 @@ class UserSerializer < BasicUserSerializer
   end
 
   def can_send_private_message_to_user
-    scope.can_send_private_message?(object)
+    scope.can_send_private_message?(object) && scope.current_user != object
   end
 
   def bio_excerpt
-    object.user_profile.bio_excerpt(350 , { keep_newlines: true, keep_emoji_images: true })
+    object.user_profile.bio_excerpt(350 , keep_newlines: true, keep_emoji_images: true)
   end
 
   def include_suspend_reason?
-    object.suspended?
+    scope.can_see_suspension_reason?(object) && object.suspended?
   end
 
   def include_suspended_till?
@@ -369,7 +368,7 @@ class UserSerializer < BasicUserSerializer
   end
 
   def has_title_badges
-    object.badges.where(allow_title: true).count > 0
+    object.badges.where(allow_title: true).exists?
   end
 
   def user_fields
@@ -392,7 +391,7 @@ class UserSerializer < BasicUserSerializer
     end
 
     if fields.present?
-      User.custom_fields_for_ids([object.id], fields)[object.id]
+      User.custom_fields_for_ids([object.id], fields)[object.id] || {}
     else
       {}
     end
@@ -404,6 +403,18 @@ class UserSerializer < BasicUserSerializer
 
   def profile_view_count
     object.user_profile.views
+  end
+
+  def time_read
+    object.user_stat&.time_read
+  end
+
+  def recent_time_read
+    time = object.recent_time_read
+  end
+
+  def include_staged?
+    scope.is_staff?
   end
 
 end

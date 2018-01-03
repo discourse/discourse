@@ -58,7 +58,7 @@ module ImportScripts::Mbox
         msg_id = receiver.message_id
         parsed_email = receiver.mail
         from_email, from_display_name = receiver.parse_from_field(parsed_email)
-        body, elided = receiver.select_body
+        body, elided, format = receiver.select_body
         reply_message_ids = extract_reply_message_ids(parsed_email)
 
         email = {
@@ -70,6 +70,7 @@ module ImportScripts::Mbox
           raw_message: receiver.raw_email,
           body: body,
           elided: elided,
+          format: format,
           attachment_count: receiver.attachments.count,
           charset: parsed_email.charset&.downcase,
           category: category_name,
@@ -101,10 +102,12 @@ module ImportScripts::Mbox
 
         if @split_regex.present?
           each_mail(filename) do |raw_message, first_line_number, last_line_number|
-            yield read_mail_from_string(raw_message), filename, first_line_number, last_line_number
+            receiver = read_mail_from_string(raw_message)
+            yield receiver, filename, first_line_number, last_line_number if receiver.present?
           end
         else
-          yield read_mail_from_file(filename), filename
+          receiver = read_mail_from_file(filename)
+          yield receiver, filename if receiver.present?
         end
 
         mark_as_fully_indexed(category_name, filename)
@@ -160,7 +163,7 @@ module ImportScripts::Mbox
     end
 
     def read_mail_from_string(raw_message)
-      Email::Receiver.new(raw_message)
+      Email::Receiver.new(raw_message, convert_plaintext: true) unless raw_message.blank?
     end
 
     def extract_reply_message_ids(mail)
@@ -207,7 +210,12 @@ module ImportScripts::Mbox
     end
 
     def ignored_file?(filename, checksums)
-      File.directory?(filename) || metadata_file?(filename) || fully_indexed?(filename, checksums)
+      File.directory?(filename) || hidden_file?(filename) ||
+        metadata_file?(filename) || fully_indexed?(filename, checksums)
+    end
+
+    def hidden_file?(filename)
+      File.basename(filename).start_with?('.')
     end
 
     def metadata_file?(filename)

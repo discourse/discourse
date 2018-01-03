@@ -50,8 +50,6 @@ describe PinnedCheck do
       end
     end
 
-
   end
 
 end
-

@@ -53,7 +53,7 @@ describe Post do
   end
 
   # Help us build a post with a raw body
-  def post_with_body(body, user=nil)
+  def post_with_body(body, user = nil)
     args = post_args.merge(raw: body)
     args[:user] = user if user.present?
     Fabricate.build(:post, args)
@@ -189,22 +189,26 @@ describe Post do
     end
 
     it "doesn't count favicons as images" do
+      PrettyText.stubs(:cook).returns(post_with_favicon.raw)
       expect(post_with_favicon.image_count).to eq(0)
     end
 
     it "doesn't count thumbnails as images" do
+      PrettyText.stubs(:cook).returns(post_with_thumbnail.raw)
       expect(post_with_thumbnail.image_count).to eq(0)
     end
 
     it "doesn't count whitelisted images" do
       Post.stubs(:white_listed_image_classes).returns(["classy"])
+      # I dislike this, but passing in a custom whitelist is hard
+      PrettyText.stubs(:cook).returns(post_with_two_classy_images.raw)
       expect(post_with_two_classy_images.image_count).to eq(0)
     end
 
     context "validation" do
 
       before do
-        SiteSetting.stubs(:newuser_max_images).returns(1)
+        SiteSetting.newuser_max_images = 1
       end
 
       context 'newuser' do
@@ -220,7 +224,7 @@ describe Post do
           post_no_images.user.trust_level = TrustLevel[0]
           post_no_images.save
           expect {
-            post_no_images.revise(post_no_images.user, { raw: post_two_images.raw })
+            post_no_images.revise(post_no_images.user, raw: post_two_images.raw)
             post_no_images.reload
           }.not_to change(post_no_images, :raw)
         end
@@ -252,7 +256,7 @@ describe Post do
     context "validation" do
 
       before do
-        SiteSetting.stubs(:newuser_max_attachments).returns(1)
+        SiteSetting.newuser_max_attachments = 1
       end
 
       context 'newuser' do
@@ -268,7 +272,7 @@ describe Post do
           post_no_attachments.user.trust_level = TrustLevel[0]
           post_no_attachments.save
           expect {
-            post_no_attachments.revise(post_no_attachments.user, { raw: post_two_attachments.raw })
+            post_no_attachments.revise(post_no_attachments.user, raw: post_two_attachments.raw)
             post_no_attachments.reload
           }.not_to change(post_no_attachments, :raw)
         end
@@ -287,8 +291,8 @@ describe Post do
     let(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
     let(:no_links) { post_with_body("hello world my name is evil trout", newuser) }
     let(:one_link) { post_with_body("[jlawr](http://www.imdb.com/name/nm2225369)", newuser) }
-    let(:two_links) { post_with_body("<a href='http://disneyland.disney.go.com/'>disney</a> <a href='http://reddit.com'>reddit</a>", newuser)}
-    let(:three_links) { post_with_body("http://discourse.org and http://discourse.org/another_url and http://www.imdb.com/name/nm2225369", newuser)}
+    let(:two_links) { post_with_body("<a href='http://disneyland.disney.go.com/'>disney</a> <a href='http://reddit.com'>reddit</a>", newuser) }
+    let(:three_links) { post_with_body("http://discourse.org and http://discourse.org/another_url and http://www.imdb.com/name/nm2225369", newuser) }
 
     describe "raw_links" do
       it "returns a blank collection for a post with no links" do
@@ -314,11 +318,11 @@ describe Post do
       end
 
       it "returns the host and a count for links" do
-        expect(two_links.linked_hosts).to eq({"disneyland.disney.go.com" => 1, "reddit.com" => 1})
+        expect(two_links.linked_hosts).to eq("disneyland.disney.go.com" => 1, "reddit.com" => 1)
       end
 
       it "it counts properly with more than one link on the same host" do
-        expect(three_links.linked_hosts).to eq({"discourse.org" => 1, "www.imdb.com" => 1})
+        expect(three_links.linked_hosts).to eq("discourse.org" => 1, "www.imdb.com" => 1)
       end
     end
 
@@ -339,16 +343,14 @@ describe Post do
         end
 
         it "contains the new post's links, PLUS the previous one" do
-          expect(two_links.total_hosts_usage).to eq({'disneyland.disney.go.com' => 2, 'reddit.com' => 1})
+          expect(two_links.total_hosts_usage).to eq('disneyland.disney.go.com' => 2, 'reddit.com' => 1)
         end
 
       end
 
     end
 
-
   end
-
 
   describe "maximum links" do
     let(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
@@ -376,7 +378,7 @@ describe Post do
     context "validation" do
 
       before do
-        SiteSetting.stubs(:newuser_max_links).returns(1)
+        SiteSetting.newuser_max_links = 1
       end
 
       context 'newuser' do
@@ -398,7 +400,6 @@ describe Post do
 
   end
 
-
   describe "@mentions" do
 
     context 'raw_mentions' do
@@ -414,12 +415,14 @@ describe Post do
       end
 
       it "ignores pre" do
-        post = Fabricate.build(:post, post_args.merge(raw: "<pre>@Jake</pre> @Finn"))
+        # we need to force an inline
+        post = Fabricate.build(:post, post_args.merge(raw: "p <pre>@Jake</pre> @Finn"))
         expect(post.raw_mentions).to eq(['finn'])
       end
 
       it "catches content between pre tags" do
-        post = Fabricate.build(:post, post_args.merge(raw: "<pre>hello</pre> @Finn <pre></pre>"))
+        # per common mark we need to force an inline
+        post = Fabricate.build(:post, post_args.merge(raw: "a <pre>hello</pre> @Finn <pre></pre>"))
         expect(post.raw_mentions).to eq(['finn'])
       end
 
@@ -429,7 +432,7 @@ describe Post do
       end
 
       it "ignores quotes" do
-        post = Fabricate.build(:post, post_args.merge(raw: "[quote=\"Evil Trout\"]@Jake[/quote] @Finn"))
+        post = Fabricate.build(:post, post_args.merge(raw: "[quote=\"Evil Trout\"]\n@Jake\n[/quote]\n@Finn"))
         expect(post.raw_mentions).to eq(['finn'])
       end
 
@@ -453,8 +456,8 @@ describe Post do
 
       context 'new user' do
         before do
-          SiteSetting.stubs(:newuser_max_mentions_per_post).returns(1)
-          SiteSetting.stubs(:max_mentions_per_post).returns(5)
+          SiteSetting.newuser_max_mentions_per_post = 1
+          SiteSetting.max_mentions_per_post = 5
         end
 
         it "allows a new user to have newuser_max_mentions_per_post mentions" do
@@ -468,8 +471,8 @@ describe Post do
 
       context "not a new user" do
         before do
-          SiteSetting.stubs(:newuser_max_mentions_per_post).returns(0)
-          SiteSetting.stubs(:max_mentions_per_post).returns(1)
+          SiteSetting.newuser_max_mentions_per_post = 0
+          SiteSetting.max_mentions_per_post = 1
         end
 
         it "allows vmax_mentions_per_post mentions" do
@@ -482,7 +485,6 @@ describe Post do
           expect(post_with_two_mentions).not_to be_valid
         end
       end
-
 
     end
 
@@ -500,7 +502,7 @@ describe Post do
 
   context "raw_hash" do
 
-    let(:raw) { "this is our test post body"}
+    let(:raw) { "this is our test post body" }
     let(:post) { post_with_body(raw) }
 
     it "returns a value" do
@@ -533,20 +535,20 @@ describe Post do
     it 'has no revision' do
       expect(post.revisions.size).to eq(0)
       expect(first_version_at).to be_present
-      expect(post.revise(post.user, { raw: post.raw })).to eq(false)
+      expect(post.revise(post.user, raw: post.raw)).to eq(false)
     end
 
     describe 'with the same body' do
 
       it "doesn't change version" do
-        expect { post.revise(post.user, { raw: post.raw }); post.reload }.not_to change(post, :version)
+        expect { post.revise(post.user, raw: post.raw); post.reload }.not_to change(post, :version)
       end
 
     end
 
     describe 'ninja editing & edit windows' do
 
-      before { SiteSetting.stubs(:editing_grace_period).returns(1.minute.to_i) }
+      before { SiteSetting.editing_grace_period = 1.minute.to_i }
 
       it 'works' do
         revised_at = post.updated_at + 2.minutes
@@ -592,13 +594,13 @@ describe Post do
 
       it "triggers a rate limiter" do
         EditRateLimiter.any_instance.expects(:performed!)
-        post.revise(changed_by, { raw: 'updated body' })
+        post.revise(changed_by, raw: 'updated body')
       end
     end
 
     describe 'with a new body' do
       let(:changed_by) { Fabricate(:coding_horror) }
-      let!(:result) { post.revise(changed_by, { raw: 'updated body' }) }
+      let!(:result) { post.revise(changed_by, raw: 'updated body') }
 
       it 'acts correctly' do
         expect(result).to eq(true)
@@ -672,7 +674,7 @@ describe Post do
       end
 
       it "doesn't find the quote in a different topic" do
-        reply.raw = "[quote=\"EvilTrout, post:#{post.post_number}, topic:#{post.topic_id+1}\"]hello[/quote]"
+        reply.raw = "[quote=\"EvilTrout, post:#{post.post_number}, topic:#{post.topic_id + 1}\"]hello[/quote]"
         reply.extract_quoted_post_numbers
         expect(reply.quoted_post_numbers).to be_blank
       end
@@ -683,9 +685,9 @@ describe Post do
 
       let(:topic) { Fabricate(:topic) }
       let(:other_user) { Fabricate(:coding_horror) }
-      let(:reply_text) { "[quote=\"Evil Trout, post:1\"]\nhello\n[/quote]\nHmmm!"}
+      let(:reply_text) { "[quote=\"Evil Trout, post:1\"]\nhello\n[/quote]\nHmmm!" }
       let!(:post) { PostCreator.new(topic.user, raw: Fabricate.build(:post).raw, topic_id: topic.id).create }
-      let!(:reply) { PostCreator.new(other_user, raw: reply_text, topic_id: topic.id, reply_to_post_number: post.post_number ).create }
+      let!(:reply) { PostCreator.new(other_user, raw: reply_text, topic_id: topic.id, reply_to_post_number: post.post_number).create }
 
       it 'has a quote' do
         expect(reply.quote_count).to eq(1)
@@ -708,7 +710,6 @@ describe Post do
       it 'is the child of the parent post' do
         expect(post.replies).to eq([reply])
       end
-
 
       it "doesn't change the post count when you edit the reply" do
         reply.raw = 'updated raw'
@@ -741,12 +742,11 @@ describe Post do
     let!(:p3) { Fabricate(:post, post_args.merge(score: 5, percent_rank: 0.99)) }
 
     it "returns the OP and posts above the threshold in summary mode" do
-      SiteSetting.stubs(:summary_percent_filter).returns(66)
+      SiteSetting.summary_percent_filter = 66
       expect(Post.summary.order(:post_number)).to eq([p1, p2])
     end
 
   end
-
 
   context 'sort_order' do
     context 'regular topic' do
@@ -777,6 +777,36 @@ describe Post do
 
   end
 
+  context "reply_ids" do
+
+    let!(:topic) { Fabricate(:topic) }
+    let!(:p1) { Fabricate(:post, topic: topic, post_number: 1) }
+    let!(:p2) { Fabricate(:post, topic: topic, post_number: 2, reply_to_post_number: 1) }
+    let!(:p3) { Fabricate(:post, topic: topic, post_number: 3) }
+    let!(:p4) { Fabricate(:post, topic: topic, post_number: 4, reply_to_post_number: 2) }
+    let!(:p5) { Fabricate(:post, topic: topic, post_number: 5, reply_to_post_number: 4) }
+    let!(:p6) { Fabricate(:post, topic: topic, post_number: 6) }
+
+    before {
+      PostReply.create!(post: p1, reply: p2)
+      PostReply.create!(post: p2, reply: p4)
+      PostReply.create!(post: p2, reply: p6) # simulates p6 quoting p2
+      PostReply.create!(post: p3, reply: p5) # simulates p5 quoting p3
+      PostReply.create!(post: p4, reply: p5)
+      PostReply.create!(post: p6, reply: p6) # https://meta.discourse.org/t/topic-quoting-itself-displays-reply-indicator/76085
+    }
+
+    it "returns the reply ids and their level" do
+      expect(p1.reply_ids).to eq([{ id: p2.id, level: 1 }, { id: p4.id, level: 2 }, { id: p6.id, level: 2 }])
+      expect(p2.reply_ids).to eq([{ id: p4.id, level: 1 }, { id: p6.id, level: 1 }])
+      expect(p3.reply_ids).to be_empty # has no replies
+      expect(p4.reply_ids).to be_empty # p5 replies to 2 posts (p4 and p3)
+      expect(p5.reply_ids).to be_empty # has no replies
+      expect(p6.reply_ids).to be_empty # quotes itself
+    end
+
+  end
+
   describe 'urls' do
     it 'no-ops for empty list' do
       expect(Post.urls([])).to eq({})
@@ -786,7 +816,7 @@ describe Post do
     it 'finds urls for posts presented' do
       p1 = Fabricate(:post)
       p2 = Fabricate(:post)
-      expect(Post.urls([p1.id, p2.id])).to eq({p1.id => p1.url, p2.id => p2.url})
+      expect(Post.urls([p1.id, p2.id])).to eq(p1.id => p1.url, p2.id => p2.url)
     end
   end
 
@@ -816,14 +846,14 @@ describe Post do
     end
 
     it "when tl3_links_no_follow is false, should not add nofollow for trust level 3 and higher" do
-      SiteSetting.stubs(:tl3_links_no_follow).returns(false)
+      SiteSetting.tl3_links_no_follow = false
       post.user.trust_level = 3
       post.save
       expect(post.cooked).not_to match(/nofollow/)
     end
 
     it "when tl3_links_no_follow is true, should add nofollow for trust level 3 and higher" do
-      SiteSetting.stubs(:tl3_links_no_follow).returns(true)
+      SiteSetting.tl3_links_no_follow = true
       post.user.trust_level = 3
       post.save
       expect(post.cooked).to match(/nofollow noopener/)
@@ -838,12 +868,13 @@ describe Post do
     end
   end
 
-
   describe "has_host_spam" do
-    it "correctly detects host spam" do
-      post = Fabricate(:post, raw: "hello from my site http://www.somesite.com http://#{GlobalSetting.hostname} http://#{RailsMultisite::ConnectionManagement.current_hostname}")
+    let(:raw) { "hello from my site http://www.somesite.com http://#{GlobalSetting.hostname} http://#{RailsMultisite::ConnectionManagement.current_hostname}" }
 
-      expect(post.total_hosts_usage).to eq({"www.somesite.com" => 1})
+    it "correctly detects host spam" do
+      post = Fabricate(:post, raw: raw)
+
+      expect(post.total_hosts_usage).to eq("www.somesite.com" => 1)
       post.acting_user.trust_level = 0
 
       expect(post.has_host_spam?).to eq(false)
@@ -853,6 +884,20 @@ describe Post do
       expect(post.has_host_spam?).to eq(true)
 
       SiteSetting.white_listed_spam_host_domains = "bla.com|boo.com | somesite.com "
+      expect(post.has_host_spam?).to eq(false)
+    end
+
+    it "doesn't punish staged users" do
+      SiteSetting.newuser_spam_host_threshold = 1
+      user = Fabricate(:user, staged: true, trust_level: 0)
+      post = Fabricate(:post, raw: raw, user: user)
+      expect(post.has_host_spam?).to eq(false)
+    end
+
+    it "ignores private messages" do
+      SiteSetting.newuser_spam_host_threshold = 1
+      user = Fabricate(:user, trust_level: 0)
+      post = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:private_message_topic, user: user))
       expect(post.has_host_spam?).to eq(false)
     end
   end
@@ -866,7 +911,7 @@ describe Post do
     post.save
 
     post = Post.find(post.id)
-    expect(post.custom_fields).to eq({"Tommy" => "Hanks", "Vincent" => "Vega"})
+    expect(post.custom_fields).to eq("Tommy" => "Hanks", "Vincent" => "Vega")
   end
 
   describe "#rebake!" do
@@ -908,12 +953,29 @@ describe Post do
       expect(post.user).to eq(coding_horror)
       expect(post.revisions.size).to eq(0)
     end
+
+    it "uses default locale for edit reason" do
+      I18n.locale = 'de'
+      old_username = post.user.username_lower
+
+      post.set_owner(coding_horror, Discourse.system_user)
+      post.reload
+
+      expected_reason = I18n.with_locale(SiteSetting.default_locale) do
+        I18n.t('change_owner.post_revision_text',
+               old_user: old_username,
+               new_user: coding_horror.username_lower
+        )
+      end
+
+      expect(post.edit_reason).to eq(expected_reason)
+    end
   end
 
   describe ".rebake_old" do
     it "will catch posts it needs to rebake" do
       post = create_post
-      post.update_columns(baked_at: Time.new(2000,1,1), baked_version: -1)
+      post.update_columns(baked_at: Time.new(2000, 1, 1), baked_version: -1)
       Post.rebake_old(100)
 
       post.reload
@@ -927,7 +989,7 @@ describe Post do
   end
 
   describe ".unhide!" do
-    before { SiteSetting.stubs(:unique_posts_mins).returns(5) }
+    before { SiteSetting.unique_posts_mins = 5 }
 
     it "will unhide the first post & make the topic visible" do
       hidden_topic = Fabricate(:topic, visible: false)

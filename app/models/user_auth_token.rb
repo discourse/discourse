@@ -40,7 +40,7 @@ class UserAuthToken < ActiveRecord::Base
     user_auth_token
   end
 
-  def self.lookup(unhashed_token, opts=nil)
+  def self.lookup(unhashed_token, opts = nil)
 
     mark_seen = opts && opts[:seen]
 
@@ -123,7 +123,7 @@ class UserAuthToken < ActiveRecord::Base
 
   end
 
-  def rotate!(info=nil)
+  def rotate!(info = nil)
     user_agent = (info && info[:user_agent] || self.user_agent)
     client_ip = (info && info[:client_ip] || self.client_ip)
 

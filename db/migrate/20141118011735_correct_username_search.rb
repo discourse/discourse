@@ -1,4 +1,4 @@
-class CorrectUsernameSearch < ActiveRecord::Migration
+class CorrectUsernameSearch < ActiveRecord::Migration[4.2]
   def up
     execute "update user_search_data
               set search_data = TO_TSVECTOR('simple', username_lower || ' ' || lower(name))

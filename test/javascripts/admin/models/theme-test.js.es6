@@ -1,8 +1,8 @@
 import Theme from 'admin/models/theme';
 
-module("model:theme");
+QUnit.module("model:theme");
 
-test('can add an upload correctly', function(assert) {
+QUnit.test('can add an upload correctly', function(assert) {
   let theme = Theme.create();
 
   assert.equal(theme.get("uploads.length"), 0, "uploads should be an empty array");

@@ -42,7 +42,7 @@ class PostRevisor
 
   attr_reader :category_changed
 
-  def initialize(post, topic=nil)
+  def initialize(post, topic = nil)
     @post = post
     @topic = topic || post.topic
   end
@@ -97,7 +97,6 @@ class PostRevisor
 
   track_topic_field(:featured_link) do |topic_changes, featured_link|
     if SiteSetting.topic_featured_link_enabled &&
-       featured_link.present? &&
        topic_changes.guardian.can_edit_featured_link?(topic_changes.topic.category_id)
 
       topic_changes.record_change('featured_link', topic_changes.topic.featured_link, featured_link)
@@ -112,7 +111,7 @@ class PostRevisor
   # - bypass_bump: do not bump the topic, even if last post
   # - skip_validations: ask ActiveRecord to skip validations
   # - skip_revision: do not create a new PostRevision record
-  def revise!(editor, fields, opts={})
+  def revise!(editor, fields, opts = {})
     @editor = editor
     @fields = fields.with_indifferent_access
     @opts = opts
@@ -197,7 +196,7 @@ class PostRevisor
   end
 
   def topic_changed?
-    PostRevisor.tracked_topic_fields.keys.any? {|f| @fields.has_key?(f)}
+    PostRevisor.tracked_topic_fields.keys.any? { |f| @fields.has_key?(f) }
   end
 
   def revise_post
@@ -253,15 +252,15 @@ class PostRevisor
       # UserActionCreator will create new UserAction records for the new owner
 
       UserAction.where(target_post_id: @post.id)
-                .where(user_id: prev_owner.id)
-                .where(action_type: USER_ACTIONS_TO_REMOVE)
-                .destroy_all
+        .where(user_id: prev_owner.id)
+        .where(action_type: USER_ACTIONS_TO_REMOVE)
+        .destroy_all
 
       if @post.post_number == 1
         UserAction.where(target_topic_id: @post.topic_id)
-                  .where(user_id: prev_owner.id)
-                  .where(action_type: UserAction::NEW_TOPIC)
-                  .destroy_all
+          .where(user_id: prev_owner.id)
+          .where(action_type: UserAction::NEW_TOPIC)
+          .destroy_all
       end
     end
 
@@ -283,16 +282,18 @@ class PostRevisor
     # post owner changed
     if prev_owner && new_owner && prev_owner != new_owner
       likes = UserAction.where(target_post_id: @post.id)
-                        .where(user_id: prev_owner.id)
-                        .where(action_type: UserAction::WAS_LIKED)
-                        .update_all(user_id: new_owner.id)
+        .where(user_id: prev_owner.id)
+        .where(action_type: UserAction::WAS_LIKED)
+        .update_all(user_id: new_owner.id)
 
       private_message = @post.topic.private_message?
 
       prev_owner_user_stat = prev_owner.user_stat
-      prev_owner_user_stat.post_count -= 1
-      prev_owner_user_stat.topic_count -= 1 if @post.is_first_post?
-      prev_owner_user_stat.likes_received -= likes if !private_message
+      unless private_message
+        prev_owner_user_stat.post_count -= 1 if @post.post_type == Post.types[:regular]
+        prev_owner_user_stat.topic_count -= 1 if @post.is_first_post?
+        prev_owner_user_stat.likes_received -= likes
+      end
       prev_owner_user_stat.update_topic_reply_count
 
       if @post.created_at == prev_owner.user_stat.first_post_created_at
@@ -302,9 +303,11 @@ class PostRevisor
       prev_owner_user_stat.save!
 
       new_owner_user_stat = new_owner.user_stat
-      new_owner_user_stat.post_count += 1
-      new_owner_user_stat.topic_count += 1 if @post.is_first_post?
-      new_owner_user_stat.likes_received += likes if !private_message
+      unless private_message
+        new_owner_user_stat.post_count += 1 if @post.post_type == Post.types[:regular]
+        new_owner_user_stat.topic_count += 1 if @post.is_first_post?
+        new_owner_user_stat.likes_received += likes
+      end
       new_owner_user_stat.update_topic_reply_count
       new_owner_user_stat.save!
     end
@@ -316,7 +319,7 @@ class PostRevisor
 
   def remove_flags_and_unhide_post
     return unless editing_a_flagged_and_hidden_post?
-    @post.post_actions.where(post_action_type_id: PostActionType.flag_types.values).each do |action|
+    @post.post_actions.where(post_action_type_id: PostActionType.flag_types_without_custom.values).each do |action|
       action.remove_act!(Discourse.system_user)
     end
     @post.unhide!
@@ -412,8 +415,8 @@ class PostRevisor
 
   def is_last_post?
     !Post.where(topic_id: @topic.id)
-         .where("post_number > ?", @post.post_number)
-         .exists?
+      .where("post_number > ?", @post.post_number)
+      .exists?
   end
 
   def plugin_callbacks
@@ -442,11 +445,13 @@ class PostRevisor
     doc = Nokogiri::HTML.fragment(@post.cooked)
     doc.css("img").remove
 
-    html = doc.css("p").first.inner_html.strip
-    new_description = html unless html.starts_with?(Category.post_template[0..50])
-
-    category.update_column(:description, new_description)
-    @category_changed = category
+    if html = doc.css("p").first&.inner_html&.strip
+      new_description = html unless html.starts_with?(Category.post_template[0..50])
+      category.update_column(:description, new_description)
+      @category_changed = category
+    else
+      @post.errors[:base] << I18n.t("category.errors.description_incomplete")
+    end
   end
 
   def advance_draft_sequence

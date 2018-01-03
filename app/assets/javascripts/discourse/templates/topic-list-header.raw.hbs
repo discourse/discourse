@@ -1,9 +1,11 @@
 {{#if bulkSelectEnabled}}
   <th class='star'>
-    <button class='btn bulk-select' title='{{i18n "topics.bulk.toggle"}}'><i class='fa fa-list'></i></button>
+    {{#if canBulkSelect}}
+      {{raw "flat-button" class="bulk-select" icon="list" title="topics.bulk.toggle"}}
+    {{/if}}
   </th>
 {{/if}}
-{{raw "topic-list-header-column" order='default' name='topic.title' bulkSelectEnabled=bulkSelectEnabled showBulkToggle=toggleInTitle}}
+{{raw "topic-list-header-column" order='default' name='topic.title' bulkSelectEnabled=bulkSelectEnabled showBulkToggle=toggleInTitle canBulkSelect=canBulkSelect}}
 {{#unless hideCategory}}
   {{raw "topic-list-header-column" sortable=sortable order='category' name='category_title'}}
 {{/unless}}

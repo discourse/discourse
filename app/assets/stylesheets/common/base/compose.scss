@@ -1,21 +1,293 @@
+#reply-control {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  bottom: 0;
+  height: 0;
+  right: 0;
+  left: 0;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1475px;
+  width: 100%;
+  &.hide-preview {
+    max-width:740px;  
+  }
+  @media screen and (max-width: 1200px) {
+    min-width: 0;
+  }
+  z-index: 999;
+  transition: height 250ms ease, background 250ms ease, transform 250ms ease, max-width 250ms ease;
+  background-color: $secondary;
+  box-shadow: 0 -1px 40px rgba(0,0,0, .12);
+
+  .reply-area {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .saving-text,
+  .draft-text {
+    display: none;
+    padding-left: 10px;   
+    .spinner {
+      margin-left: 5px;
+      border-color: $secondary;
+      border-right-color: transparent;
+    }
+    i {
+      color: $secondary;
+    }
+  }
+
+  &.open {
+    height: 300px;
+    &.edit-title {
+      height: 400px; // more room when editing the title
+    }
+  }
+
+  &.closed {
+    height: 0 !important;
+  }
+
+  &.draft,
+  &.saving {
+    height: 40px !important;
+    align-items: center;
+    background: $tertiary;
+    color: $secondary;
+    flex-direction: row;
+    width: 100%;
+    .composer-controls {
+      margin-left: auto;
+      display: flex;
+      padding-right: 5px;
+      .toggle-toolbar {
+        display: none;
+      }
+      .d-icon {
+        opacity: 1;
+      }
+    }
+  }
+
+  &.draft {
+    cursor: pointer;
+    display: flex;
+    .draft-text {
+      display: block;
+    }
+    .grippie, .saving-text {
+      display: none;
+    }
+  }
+
+  &.saving .saving-text {
+    display: flex;
+  }
+
+  .reply-to {
+    color: $primary-medium;
+    margin: 5px 0 10px 0;
+    display: flex;
+    align-items: center;
+    i {
+      color: $primary-medium;
+    }
+    .reply-details {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: calc(100% - 100px);
+    }
+    .composer-controls {
+      margin-left: auto;
+      margin-right: -5px;
+      button {
+        padding: 0 8px;
+      }
+    }
+  }
+
+  .whisper,
+  .display-edit-reason {
+    font-style: italic;
+  }
+
+  #edit-reason {
+    margin: 4px;
+  }
+
+  .user-selector,
+  .title-and-category {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    align-items: center;
+    margin-bottom: 5px;
+    position: relative;
+    &.with-preview {
+      width: 50%;
+    }
+  }
+
+  .title-input {
+    position: relative;
+    display: flex;
+    flex: 1 1 50%;
+
+    input {
+      flex-grow: 1;
+    }
+  }
+
+  .with-tags {
+    .title-input {
+      flex: 1 1 100%;
+    }
+  }
+
+  .category-input {
+    display: flex;
+    flex: 1 0 35%;
+    margin: 0 0 5px 10px;
+    @media screen and (max-width: 955px) {
+      flex: 1 0 100%;
+      margin-left: 0;
+    }
+    .category-chooser {
+      display: flex;
+      flex: 1;
+      width: auto;
+    }
+  }
+
+  .with-tags {
+    .category-input {
+      flex-basis: 25%;
+      margin-left: 0;
+    }
+  }
+
+  .add-warning {
+    margin-left: 1em;
+    display: flex;
+    input {
+      margin-right: 5px;
+    }
+  }
+
+  #reply-title {
+    padding: 6px 10px;
+    margin: 0 0 5px 0;
+    flex-basis: 50%;
+  }
+
+  .tag-chooser {
+    flex: 1 1 25%;
+    margin: 0 0 5px 10px;
+    border: 1px solid $primary-medium;
+    background: $secondary;
+    @media all and (max-width: 900px) {
+      margin: 0;
+      flex: 1 1 100%;
+    }
+    .select2-choices {
+      border: none;
+    }
+    &.select2-dropdown-open, &.select2-container-active {
+      border-color: $tertiary;
+    }
+  }
+
+  .wmd-controls {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-height: 0;
+  }
+
+  .d-editor-button-bar .btn {
+    padding: 3px 8px;
+    @media all and (max-width: 800px) {
+      padding: 5px;
+    }
+  }
+
+  .submit-panel {
+    display: flex;
+    flex-shrink: 0;
+    margin-top: 10px;
+  }
+
+  .save-or-cancel {
+    flex-basis: 50%;
+    display: flex;
+    align-items: center;
+    button {
+      flex: 0 0 auto;
+    }
+    .cancel {
+      margin-left: 10px;
+    }
+    #draft-status,
+    #file-uploading {
+      margin-left: 25px;
+    }
+    #file-uploading {
+      display: flex;
+      a {
+        margin-left: 5px;
+        color: $primary-medium;
+      }
+      .spinner {
+        margin-right: 5px;
+      }
+    }
+  }
+
+  .composer-bottom-right {
+    flex-basis: 50%;
+    display: flex;
+    flex-direction: row-reverse;
+    .toggle-preview {
+      order: 2;
+    }
+  }
+
+  .create {
+    margin-right: 5px;
+  }
+
+  #draft-status, #file-uploading {
+    color: $primary-medium;
+  }
+}
+
+.cooked > *:first-child {
+  margin-top: 0;
+}
+
 .autocomplete {
   z-index: 999999;
   position: absolute;
   width: 240px;
   background-color: $secondary;
-  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  border: 1px solid $primary-low;
   ul {
     list-style: none;
     padding: 0;
     margin: 0;
 
     li {
-      .fa-users {
+      .d-icon-users {
         color: lighten($primary, 40%);
         padding: 0 2px;
       }
 
-      border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+      border-bottom: 1px solid $primary-low;
 
       a {
         padding: 5px;
@@ -25,50 +297,22 @@
         text-overflow: ellipsis;
 
         span.username {
-          color: darken($primary, 40%);
+          color: $primary;
         }
         span.name {
-          font-size: 11px;
+          font-size: .857em;
           vertical-align: middle;
         }
         &.selected {
-          background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
+          background-color: $tertiary-low;
         }
         @include hover {
-          background-color: dark-light-diff($highlight, $secondary, 90%, -80%);
+          background-color: $highlight-low;
           text-decoration: none;
         }
       }
     }
   }
-}
-
-#reply-control {
-  .d-editor-textarea-wrapper .spinner {
-    z-index: 1000;
-    margin-top: 5em;
-  }
-
-  .d-editor-button-bar {
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-
-    margin: 0px;
-    padding: 5px;
-    border-bottom: 2px solid dark-light-diff($primary, $secondary, 90%, -60%);
-    height: 33px;
-  }
-
-  textarea {
-    box-shadow: none;
-  }
-}
-
-
-.saving-text .spinner {
-  display: inline-block;
-  left: 5px;
-  top: 4px;
 }
 
 div.ac-wrap.disabled {
@@ -82,16 +326,16 @@ div.ac-wrap.disabled {
 
 div.ac-wrap div.item a.remove, .remove-link {
   margin-left: 4px;
-  font-size: 11px;
+  font-size: .857em;
   line-height: 10px;
   padding: 1.5px 1.5px 1.5px 2.5px;
   border-radius: 12px;
   width: 10px;
   display: inline-block;
-  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  border: 1px solid $primary-low;
   &:hover {
-    background-color: scale-color($danger, $lightness: 75%);
-    border: 1px solid scale-color($danger, $lightness: 30%);
+    background-color: $danger-low;
+    border: 1px solid $danger-medium;
     text-decoration: none;
     color: $danger;
   }
@@ -101,8 +345,8 @@ div.ac-wrap {
   overflow: auto;
   max-height: 150px;
   background-color: $secondary;
-  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-  padding: 5px 4px 1px 4px;
+  border: 1px solid $primary-medium;
+  padding: 5px 4px 1px 10px;
   div.item {
     float: left;
     margin-bottom: 4px;
@@ -133,48 +377,12 @@ div.ac-wrap {
   }
 }
 
-.auto-update-input {
+.future-date-input {
   .examples {
-    color: lighten($primary, 40%);
+    color: $primary-medium;
   }
 }
 
-#reply-control {
-  .composer-loading {
-    position: absolute;
-    left: 48%;
-    top: 20%;
-  }
-  .whisper {
-    margin-left: 1em;
-    font-style: italic;
-  }
-}
-
-#reply-control.topic-featured-link-only.open {
-  .wmd-controls { display: none; }
-}
-
-#cancel-file-upload {
-  font-size: 1.6em;
-}
-
-#draft-status, #file-uploading {
-  color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-}
-
-.composer-bottom-right {
-  .spinner.small {
-    width: 6px;
-    height: 6px;
-  }
-}
-
-// this removes the topmost margin from the first element in the topic post
-// if we don't do this, all posts would have extra space at the top
-.d-editor-preview > *:first-child {
-  margin-top: 0;
-}
-.cooked > *:first-child {
-  margin-top: 0;
+.md-table {
+  overflow-y: auto;
 }

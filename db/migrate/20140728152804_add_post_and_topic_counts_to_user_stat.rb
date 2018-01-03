@@ -1,4 +1,4 @@
-class AddPostAndTopicCountsToUserStat < ActiveRecord::Migration
+class AddPostAndTopicCountsToUserStat < ActiveRecord::Migration[4.2]
   def up
     add_column :user_stats, :post_count, :integer, default: 0, null: false
     add_column :user_stats, :topic_count, :integer, default: 0, null: false

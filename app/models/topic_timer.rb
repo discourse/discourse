@@ -19,13 +19,16 @@ class TopicTimer < ActiveRecord::Base
     self.created_at ||= Time.zone.now if execute_at
     self.public_type = self.public_type?
 
-    if (execute_at_changed? && !execute_at_was.nil?) || user_id_changed?
+    if (will_save_change_to_execute_at? &&
+       !attribute_in_database(:execute_at).nil?) ||
+       will_save_change_to_user_id?
+
       self.send("cancel_auto_#{self.class.types[status_type]}_job")
     end
   end
 
   after_save do
-    if (execute_at_changed? || user_id_changed?)
+    if (saved_change_to_execute_at? || saved_change_to_user_id?)
       now = Time.zone.now
       time = execute_at < now ? now : execute_at
 

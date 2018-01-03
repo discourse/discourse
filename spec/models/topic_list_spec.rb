@@ -60,7 +60,7 @@ describe TopicList do
       let!(:other_topic) { Fabricate(:topic) } # uncategorized
       let!(:tag) { Fabricate(:tag, topics: [topic], categories: [category], name: "category-tag") }
       let!(:other_tag) { Fabricate(:tag, topics: [topic], name: "use-anywhere") }
-      let(:topic_list) { TopicList.new('latest', topic.user, [topic], { category: category.id, category_id: category.id }) }
+      let(:topic_list) { TopicList.new('latest', topic.user, [topic], category: category.id, category_id: category.id) }
 
       it 'should only return tags allowed in the category' do
         expect(topic_list.tags).to eq([tag.name])
@@ -73,7 +73,7 @@ describe TopicList do
       it "with another category with no tags, should return no tags" do
         other_category = Fabricate(:category)
         topic3 = Fabricate(:topic, category: other_category)
-        list = TopicList.new('latest', topic3.user, [topic3], { category: other_category.id, category_id: other_category.id })
+        list = TopicList.new('latest', topic3.user, [topic3], category: other_category.id, category_id: other_category.id)
         expect(list.tags).to be_empty
       end
     end

@@ -1,4 +1,4 @@
-import { iconHTML } from 'discourse-common/helpers/fa-icon';
+import { iconHTML } from 'discourse-common/lib/icon-library';
 import { htmlHelper } from 'discourse-common/lib/helpers';
 import { escapeExpression } from 'discourse/lib/utilities';
 

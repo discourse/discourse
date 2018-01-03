@@ -4,7 +4,6 @@ require 'topic_subtype'
 
 describe SystemMessage do
 
-
   context 'send' do
 
     it 'should create a post correctly' do
@@ -27,6 +26,5 @@ describe SystemMessage do
       expect(UserArchivedMessage.where(user_id: admin.id, topic_id: topic.id).length).to eq(1)
     end
   end
-
 
 end

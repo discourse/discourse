@@ -3,8 +3,9 @@ import Composer from 'discourse/models/composer';
 import afterTransition from 'discourse/lib/after-transition';
 import positioningWorkaround from 'discourse/lib/safari-hacks';
 import { headerHeight } from 'discourse/components/site-header';
+import KeyEnterEscape from 'discourse/mixins/key-enter-escape';
 
-export default Ember.Component.extend({
+export default Ember.Component.extend(KeyEnterEscape, {
   elementId: 'reply-control',
 
   classNameBindings: ['composer.creatingPrivateMessage:private-message',
@@ -13,7 +14,14 @@ export default Ember.Component.extend({
                       'composer.canEditTitle:edit-title',
                       'composer.createdPost:created-post',
                       'composer.creatingTopic:topic',
-                      'composer.whisper:composing-whisper'],
+                      'composer.whisper:composing-whisper',
+                      'showPreview:show-preview:hide-preview',
+                      'currentUserPrimaryGroupClass'],
+
+  @computed("currentUser.primary_group_name")
+  currentUserPrimaryGroupClass(primaryGroupName) {
+    return primaryGroupName && `group-${primaryGroupName}`;
+  },
 
   @computed('composer.composeState')
   composeState(composeState) {
@@ -34,19 +42,6 @@ export default Ember.Component.extend({
 
       const h = $('#reply-control').height() || 0;
       this.movePanels(h + "px");
-
-      // Figure out the size of the fields
-      const $fields = this.$('.composer-fields');
-      const fieldPos = $fields.position();
-      if (fieldPos) {
-        this.$('.wmd-controls').css('top', $fields.height() + fieldPos.top + 5);
-      }
-
-      // get the submit panel height
-      const submitPos = this.$('.submit-panel').position();
-      if (submitPos) {
-        this.$('.wmd-controls').css('bottom', h - submitPos.top + 7);
-      }
     });
   },
 
@@ -63,17 +58,6 @@ export default Ember.Component.extend({
       if (lastKeyUp !== this._lastKeyUp) { return; }
       this.appEvents.trigger('composer:find-similar');
     }, 1000);
-  },
-
-  keyDown(e) {
-    if (e.which === 27) {
-      this.sendAction('cancelled');
-      return false;
-    } else if (e.which === 13 && (e.ctrlKey || e.metaKey)) {
-      // CTRL+ENTER or CMD+ENTER
-      this.sendAction('save');
-      return false;
-    }
   },
 
   @observes('composeState')

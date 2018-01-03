@@ -77,14 +77,13 @@ describe JsLocaleHelper do
     end
 
     it 'can strip out message formats' do
-      hash = {"a" => "b", "c" => { "d" => {"f_MF" => "bob"} }}
-      expect(JsLocaleHelper.strip_out_message_formats!(hash)).to eq({"c.d.f_MF" => "bob"})
+      hash = { "a" => "b", "c" => { "d" => { "f_MF" => "bob" } } }
+      expect(JsLocaleHelper.strip_out_message_formats!(hash)).to eq("c.d.f_MF" => "bob")
       expect(hash["c"]["d"]).to eq({})
     end
 
     it 'handles message format special keys' do
-      JsLocaleHelper.set_translations('en', {
-        "en" => {
+      JsLocaleHelper.set_translations('en',         "en" => {
           "js" => {
             "hello" => "world",
             "test_MF" => "{HELLO} {COUNT, plural, one {1 duck} other {# ducks}}",
@@ -94,8 +93,7 @@ describe JsLocaleHelper do
           "admin_js" => {
             "foo_MF" => "{HELLO} {COUNT, plural, one {1 duck} other {# ducks}}"
           }
-        }
-      })
+        })
 
       ctx = MiniRacer::Context.new
       ctx.eval("I18n = { pluralizationRules: {} };")
@@ -118,38 +116,32 @@ describe JsLocaleHelper do
   end
 
   it 'performs fallbacks to english if a translation is not available' do
-    JsLocaleHelper.set_translations('en', {
-      "en" => {
+    JsLocaleHelper.set_translations('en',       "en" => {
         "js" => {
           "only_english"      => "1-en",
           "english_and_site"  => "3-en",
           "english_and_user"  => "5-en",
           "all_three"         => "7-en",
         }
-      }
-    })
+      })
 
-    JsLocaleHelper.set_translations('ru', {
-      "ru" => {
+    JsLocaleHelper.set_translations('ru',       "ru" => {
         "js" => {
           "only_site"         => "2-ru",
           "english_and_site"  => "3-ru",
           "site_and_user"     => "6-ru",
           "all_three"         => "7-ru",
         }
-      }
-    })
+      })
 
-    JsLocaleHelper.set_translations('uk', {
-      "uk" => {
+    JsLocaleHelper.set_translations('uk',       "uk" => {
         "js" => {
           "only_user"         => "4-uk",
           "english_and_user"  => "5-uk",
           "site_and_user"     => "6-uk",
           "all_three"         => "7-uk",
         }
-      }
-    })
+      })
 
     expected = {
       "none"              => "[uk.js.none]",

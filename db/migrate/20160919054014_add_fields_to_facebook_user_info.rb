@@ -1,4 +1,4 @@
-class AddFieldsToFacebookUserInfo < ActiveRecord::Migration
+class AddFieldsToFacebookUserInfo < ActiveRecord::Migration[4.2]
   def change
     add_column :facebook_user_infos, :about_me, :text
     add_column :facebook_user_infos, :location, :string

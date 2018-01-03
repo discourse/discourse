@@ -17,7 +17,7 @@ class Admin::ApiController < Admin::AdminController
     raise Discourse::NotFound if api_key.blank?
 
     api_key.destroy
-    render nothing: true
+    render body: nil
   end
 
   def create_master_key

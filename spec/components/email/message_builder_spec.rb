@@ -5,7 +5,7 @@ describe Email::MessageBuilder do
 
   let(:to_address) { "jake@adventuretime.ooo" }
   let(:subject) { "Tree Trunks has made some apple pie!" }
-  let(:body) { "oh my glob Jake, Tree Trunks just made the tastiest apple pie ever!"}
+  let(:body) { "oh my glob Jake, Tree Trunks just made the tastiest apple pie ever!" }
   let(:builder) { Email::MessageBuilder.new(to_address, subject: subject, body: body) }
   let(:build_args) { builder.build_args }
   let(:header_args) { builder.header_args }
@@ -199,11 +199,11 @@ describe Email::MessageBuilder do
   context "template_args" do
     let(:template_args) { builder.template_args }
 
-    it "has the email prefix as the site title when `SiteSetting.email_prefix` is not set" do
+    it "has site title as email_prefix when `SiteSetting.email_prefix` is not present" do
       expect(template_args[:email_prefix]).to eq(SiteSetting.title)
     end
 
-    it "has the email prefix as SiteSetting.email_prefix when it is set" do
+    it "has email prefix as email_prefix when `SiteSetting.email_prefix` is present" do
       SiteSetting.email_prefix = 'some email prefix'
       expect(template_args[:email_prefix]).to eq(SiteSetting.email_prefix)
     end
@@ -214,6 +214,19 @@ describe Email::MessageBuilder do
 
     it "has the user_preferences_url" do
       expect(template_args[:user_preferences_url]).to eq("#{Discourse.base_url}/my/preferences")
+    end
+  end
+
+  context "email prefix in subject" do
+    context "when use_site_subject is true" do
+      let(:message_with_email_prefix) { Email::MessageBuilder.new(to_address,
+                                                                  body: 'hello world',
+                                                                  use_site_subject: true) }
+
+      it "when email_prefix is set it should be present in subject" do
+        SiteSetting.email_prefix = 'some email prefix'
+        expect(message_with_email_prefix.subject).to match(SiteSetting.email_prefix)
+      end
     end
   end
 

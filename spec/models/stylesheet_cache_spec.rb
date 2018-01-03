@@ -15,10 +15,10 @@ describe StylesheetCache do
     end
 
     it "does nothing if digest is set and already exists" do
-      StylesheetCache.destroy_all
+      StylesheetCache.delete_all
 
-      StylesheetCache.add("a", "b", "c", "map")
-      StylesheetCache.add("a", "b", "cc", "map")
+      expect(StylesheetCache.add("a", "b", "c", "map")).to be_present
+      expect(StylesheetCache.add("a", "b", "cc", "map")).to eq(false)
 
       expect(StylesheetCache.count).to eq 1
       expect(StylesheetCache.first.content).to eq "c"

@@ -1,4 +1,4 @@
-class AddLikeScoreToPosts < ActiveRecord::Migration
+class AddLikeScoreToPosts < ActiveRecord::Migration[4.2]
   def change
     add_column :posts, :like_score, :integer, default: 0, null: false
 
@@ -15,5 +15,3 @@ class AddLikeScoreToPosts < ActiveRecord::Migration
               WHERE x.post_id = p.id"
   end
 end
-
-

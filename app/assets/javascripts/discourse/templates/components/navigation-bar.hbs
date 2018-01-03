@@ -1,5 +1,5 @@
 {{#each navItems as |navItem|}}
-  {{navigation-item content=navItem filterMode=filterMode}}
+  {{navigation-item content=navItem filterMode=filterMode category=category}}
 {{/each}}
 {{custom-html name="extraNavItem" tagName="li"}}
 {{!- this is done to avoid DIV in the UL, originally {{plugin-outlet name="extra-nav-item"}}

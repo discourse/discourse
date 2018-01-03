@@ -23,7 +23,7 @@ module ActiveSupport
         define_method(method_name) do |*args|
           # this avoids recursive locks
           found = true
-          data = cache.fetch(args){found = false}
+          data = cache.fetch(args) { found = false }
           unless found
             cache[args] = data = send(uncached, *args)
           end
@@ -56,8 +56,3 @@ module ActiveSupport
     end
   end
 end
-
-
-
-
-

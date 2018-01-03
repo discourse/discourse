@@ -2,8 +2,8 @@ require_dependency 'site_serializer'
 
 class SiteController < ApplicationController
   layout false
-  skip_before_filter :preload_json, :check_xhr
-  skip_before_filter :redirect_to_login_if_required, only: ['basic_info', 'statistics']
+  skip_before_action :preload_json, :check_xhr
+  skip_before_action :redirect_to_login_if_required, only: ['basic_info', 'statistics']
 
   def site
     render json: Site.json_for(guardian)
@@ -34,7 +34,7 @@ class SiteController < ApplicationController
       title: SiteSetting.title,
       description: SiteSetting.site_description
     }
-    results[:mobile_logo_url] = SiteSetting.mobile_logo_url if SiteSetting.mobile_logo_url.present?
+    results[:mobile_logo_url] = SiteSetting.mobile_logo_url.presence
 
     DiscourseHub.stats_fetched_at = Time.zone.now if request.user_agent == "Discourse Hub"
 

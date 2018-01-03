@@ -1,0 +1,36 @@
+<form>
+  <div class="control-group">
+    {{combo-box class="timer-type" allowInitialValueMutation=true content=timerTypes value=selection}}
+  </div>
+
+  <div>
+    {{#if showTimeOnly}}
+      {{future-date-input
+          input=topicTimer.updateTime
+          statusType=selection
+          includeWeekend=true
+          basedOnLastPost=false}}
+    {{else if publishToCategory}}
+      <div class="control-group">
+        <label>{{i18n 'topic.topic_status_update.publish_to'}}</label>
+        {{category-chooser
+          value=topicTimer.category_id
+          excludeCategoryId=excludeCategoryId}}
+      </div>
+
+      {{future-date-input
+          input=topicTimer.updateTime
+          statusType=selection
+          includeWeekend=true
+          categoryId=topicTimer.category_id
+          basedOnLastPost=false}}
+    {{else if autoClose}}
+      {{future-date-input
+          input=topicTimer.updateTime
+          statusType=selection
+          includeWeekend=true
+          basedOnLastPost=topicTimer.based_on_last_post
+          lastPostedAt=model.last_posted_at}}
+    {{/if}}
+  </div>
+</form>

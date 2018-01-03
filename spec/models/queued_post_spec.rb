@@ -38,7 +38,7 @@ describe QueuedPost do
       expect(create_options[:cooking_options]).to eq(cat: 'hat')
       expect(create_options[:cook_method]).to eq(Post.cook_methods[:raw_html])
       expect(create_options[:not_create_option]).to eq(nil)
-      expect(create_options[:image_sizes]).to eq("http://foo.bar/image.png" => {"width" => 0, "height" => 222})
+      expect(create_options[:image_sizes]).to eq("http://foo.bar/image.png" => { "width" => 0, "height" => 222 })
     end
 
     it "follows the correct workflow for approval" do
@@ -100,9 +100,8 @@ describe QueuedPost do
                                      title: 'This is the topic title to queue up',
                                      archetype: 'regular',
                                      category: category.id,
-                                     meta_data: {evil: 'trout'}
+                                     meta_data: { evil: 'trout' }
                                    }) }
-
 
       it "returns the appropriate options for creating a topic" do
         create_options = qp.create_options

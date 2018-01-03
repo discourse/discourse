@@ -1,34 +1,84 @@
 require 'rails_helper'
 
 describe PostActionUsersController do
-  let!(:post) { Fabricate(:post, user: log_in) }
+  let(:post) { Fabricate(:post, user: log_in) }
+
+  context 'with render' do
+    render_views
+    it 'always allows you to see your own actions' do
+      notify_mod = PostActionType.types[:notify_moderators]
+
+      PostAction.act(post.user, post, notify_mod, message: 'well something is wrong here!')
+      PostAction.act(Fabricate(:user), post, notify_mod, message: 'well something is not wrong here!')
+
+      get :index, params: { id: post.id, post_action_type_id: notify_mod }, format: :json
+      expect(response.status).to eq(200)
+      json = JSON.parse(response.body)
+      users = json["post_action_users"]
+
+      expect(users.length).to eq(1)
+      expect(users[0]["id"]).to eq(post.user.id)
+    end
+  end
 
   it 'raises an error without an id' do
-    expect {
-      xhr :get, :index, post_action_type_id: PostActionType.types[:like]
-    }.to raise_error(ActionController::ParameterMissing)
+    expect do
+      get :index,
+      params: { post_action_type_id: PostActionType.types[:like] },
+      format: :json
+    end.to raise_error(ActionController::ParameterMissing)
   end
 
   it 'raises an error without a post action type' do
-    expect {
-      xhr :get, :index, id: post.id
-    }.to raise_error(ActionController::ParameterMissing)
+    expect do
+      get :index, params: { id: post.id }, format: :json
+    end.to raise_error(ActionController::ParameterMissing)
   end
 
   it "fails when the user doesn't have permission to see the post" do
     Guardian.any_instance.expects(:can_see?).with(post).returns(false)
-    xhr :get, :index, id: post.id, post_action_type_id: PostActionType.types[:like]
+
+    get :index, params: {
+      id: post.id, post_action_type_id: PostActionType.types[:like]
+    }, format: :json
+
     expect(response).to be_forbidden
   end
 
-  it 'raises an error when the post action type cannot be seen' do
-    Guardian.any_instance.expects(:can_see_post_actors?).with(instance_of(Topic), PostActionType.types[:like]).returns(false)
-    xhr :get, :index, id: post.id, post_action_type_id: PostActionType.types[:like]
+  it 'raises an error when anon tries to look at an invalid action' do
+    get :index, params: {
+      id: Fabricate(:post).id,
+      post_action_type_id: PostActionType.types[:notify_moderators]
+    }, format: :json
+
     expect(response).to be_forbidden
   end
 
   it 'succeeds' do
-    xhr :get, :index, id: post.id, post_action_type_id: PostActionType.types[:like]
+    get :index, params: {
+      id: post.id, post_action_type_id: PostActionType.types[:like]
+    }
+
     expect(response).to be_success
+  end
+
+  it "paginates post actions" do
+    user_ids = []
+    5.times do
+      user = Fabricate(:user)
+      user_ids << user["id"]
+      PostAction.act(user, post, PostActionType.types[:like])
+    end
+
+    get :index, params: { id: post.id, post_action_type_id: PostActionType.types[:like], page: 1, limit: 2 }, format: :json
+    json = JSON.parse(response.body)
+
+    users = json["post_action_users"]
+    total = json["total_rows_post_action_users"]
+
+    expect(users.length).to eq(2)
+    expect(users.map { |u| u["id"] }).to eq(user_ids[2..3])
+
+    expect(total).to eq(5)
   end
 end

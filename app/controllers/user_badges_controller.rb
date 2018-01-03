@@ -1,4 +1,6 @@
 class UserBadgesController < ApplicationController
+  before_action :ensure_badges_enabled
+
   def index
     params.permit [:granted_before, :offset, :username]
 
@@ -28,17 +30,17 @@ class UserBadgesController < ApplicationController
   def username
     params.permit [:grouped]
 
-    user = fetch_user_from_params
+    user = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
     user_badges = user.user_badges
 
     if params[:grouped]
       user_badges = user_badges.group(:badge_id)
-                               .select(UserBadge.attribute_names.map {|x| "MAX(#{x}) AS #{x}" }, 'COUNT(*) AS "count"')
+        .select(UserBadge.attribute_names.map { |x| "MAX(#{x}) AS #{x}" }, 'COUNT(*) AS "count"')
     end
 
     user_badges = user_badges.includes(badge: [:badge_grouping, :badge_type])
-                             .includes(post: :topic)
-                             .includes(:granted_by)
+      .includes(post: :topic)
+      .includes(:granted_by)
 
     render_serialized(user_badges, DetailedUserBadgeSerializer, root: :user_badges)
   end
@@ -104,6 +106,10 @@ class UserBadgesController < ApplicationController
 
     def can_assign_badge_to_user?(user)
       master_api_call = current_user.nil? && is_api?
-      master_api_call or guardian.can_grant_badges?(user)
+      master_api_call || guardian.can_grant_badges?(user)
+    end
+
+    def ensure_badges_enabled
+      raise Discourse::NotFound unless SiteSetting.enable_badges?
     end
 end

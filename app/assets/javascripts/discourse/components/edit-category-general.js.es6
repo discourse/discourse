@@ -2,56 +2,69 @@ import DiscourseURL from 'discourse/lib/url';
 import { buildCategoryPanel } from 'discourse/components/edit-category-panel';
 import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 import Category from 'discourse/models/category';
+import computed from 'ember-addons/ember-computed-decorators';
 
 export default buildCategoryPanel('general', {
   foregroundColors: ['FFFFFF', '000000'],
   canSelectParentCategory: Em.computed.not('category.isUncategorizedCategory'),
 
   // background colors are available as a pipe-separated string
-  backgroundColors: function() {
-    const categories = Discourse.Category.list();
+  @computed
+  backgroundColors() {
+    const categories = this.site.get('categoriesList');
     return this.siteSettings.category_colors.split("|").map(function(i) { return i.toUpperCase(); }).concat(
                 categories.map(function(c) { return c.color.toUpperCase(); }) ).uniq();
-  }.property(),
+  },
 
-  usedBackgroundColors: function() {
-    const categories = Discourse.Category.list();
-    const category = this.get('category');
+  @computed
+  noCategoryStyle() {
+    return this.siteSettings.category_style === 'none';
+  },
+
+  @computed('category.id', 'category.color')
+  usedBackgroundColors(categoryId, categoryColor) {
+    const categories = this.site.get('categoriesList');
 
     // If editing a category, don't include its color:
     return categories.map(function(c) {
-      return (category.get('id') && category.get('color').toUpperCase() === c.color.toUpperCase()) ? null : c.color.toUpperCase();
+      return (categoryId && categoryColor.toUpperCase() === c.color.toUpperCase()) ? null : c.color.toUpperCase();
     }, this).compact();
-  }.property('category.id', 'category.color'),
+  },
 
-  parentCategories: function() {
-    return Discourse.Category.list().filter(function (c) {
-      return !c.get('parentCategory');
-    });
-  }.property(),
+  @computed
+  parentCategories() {
+    return this.site.get('categoriesList').filter(c => !c.get('parentCategory'));
+  },
 
-  categoryBadgePreview: function() {
+  @computed(
+    'category.parent_category_id',
+    'category.categoryName',
+    'category.color',
+    'category.text_color'
+  )
+  categoryBadgePreview(parentCategoryId, name, color, textColor) {
     const category = this.get('category');
     const c = Category.create({
-      name: category.get('categoryName'),
-      color: category.get('color'),
-      text_color: category.get('text_color'),
-      parent_category_id: parseInt(category.get('parent_category_id'),10),
+      name,
+      color,
+      text_color: textColor,
+      parent_category_id: parseInt(parentCategoryId),
       read_restricted: category.get('read_restricted')
     });
-    return categoryBadgeHTML(c, {link: false});
-  }.property('category.parent_category_id', 'category.categoryName', 'category.color', 'category.text_color'),
-
+    return categoryBadgeHTML(c, { link: false });
+  },
 
   // We can change the parent if there are no children
-  subCategories: function() {
-    if (Ember.isEmpty(this.get('category.id'))) { return null; }
-    return Category.list().filterBy('parent_category_id', this.get('category.id'));
-  }.property('category.id'),
+  @computed('category.id')
+  subCategories(categoryId) {
+    if (Ember.isEmpty(categoryId)) { return null; }
+    return Category.list().filterBy('parent_category_id', categoryId);
+  },
 
-  showDescription: function() {
-    return !this.get('category.isUncategorizedCategory') && this.get('category.id');
-  }.property('category.isUncategorizedCategory', 'category.id'),
+  @computed('category.isUncategorizedCategory', 'category.id')
+  showDescription(isUncategorizedCategory, categoryId) {
+    return !isUncategorizedCategory && categoryId;
+  },
 
   actions: {
     showCategoryTopic() {

@@ -2,7 +2,7 @@
 import loadScript from "discourse/lib/load-script";
 import { default as computed, on } from "ember-addons/ember-computed-decorators";
 
-export default Em.Component.extend({
+export default Ember.Component.extend({
   classNames: ["date-picker-wrapper"],
   _picker: null,
 

@@ -17,9 +17,42 @@ function updateState(state, opts) {
   };
 }
 
-export default Ember.Component.extend(bufferedProperty('post'), {
+export default Ember.Component.extend(bufferedProperty('editables'), {
   editing: propertyEqual('post', 'currentlyEditing'),
+  editables: null,
   _confirmDelete: updateState('rejected', {deleteUser: true}),
+
+  _initEditables: function() {
+    const post = this.get('post');
+    const postOptions = post.get('post_options');
+
+    this.set('editables', {});
+    this.set('editables.raw', post.get('raw'));
+    this.set('editables.category', post.get('category'));
+    this.set('editables.category_id', post.get('category.id'));
+    this.set('editables.title', postOptions.title);
+    this.set('editables.tags', postOptions.tags);
+  }.on('init'),
+
+  _categoryChanged: function() {
+    this.set('buffered.category', Discourse.Category.findById(this.get('buffered.category_id')));
+  }.observes('buffered.category_id'),
+
+  editTitleAndCategory: function() {
+    return this.get('editing') && !this.get('post.topic');
+  }.property('editing'),
+
+  tags: function() {
+    return this.get('editables.tags') || this.get('post.topic.tags') || [];
+  }.property('editables.tags'),
+
+  showTags: function() {
+    return this.siteSettings.tagging_enabled && !this.get('editing') && this.get('tags').length > 0;
+  }.property('editing', 'tags'),
+
+  editTags: function() {
+    return this.siteSettings.tagging_enabled && this.get('editing') && !this.get('post.topic');
+  }.property('editing'),
 
   actions: {
     approve: updateState('approved'),
@@ -38,7 +71,14 @@ export default Ember.Component.extend(bufferedProperty('post'), {
     },
 
     confirmEdit() {
-      this.get('post').update({ raw: this.get('buffered.raw') }).then(() => {
+      const buffered = this.get('buffered');
+
+      this.get('post').update(buffered.getProperties(
+        'raw',
+        'title',
+        'tags',
+        'category_id'
+      )).then(() => {
         this.commitBuffer();
         this.set('currentlyEditing', null);
       });

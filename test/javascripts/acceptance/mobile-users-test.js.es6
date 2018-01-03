@@ -2,9 +2,9 @@ import { acceptance } from "helpers/qunit-helpers";
 
 acceptance("User Directory - Mobile", { mobileView: true });
 
-test("Visit Page", () => {
+QUnit.test("Visit Page", assert => {
   visit("/users");
   andThen(() => {
-    ok(exists('.directory .user'), "has a list of users");
+    assert.ok(exists('.directory .user'), "has a list of users");
   });
 });

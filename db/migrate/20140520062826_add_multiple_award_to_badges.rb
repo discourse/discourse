@@ -1,4 +1,4 @@
-class AddMultipleAwardToBadges < ActiveRecord::Migration
+class AddMultipleAwardToBadges < ActiveRecord::Migration[4.2]
   def change
     add_column :badges, :multiple_grant, :boolean, default: false, null: false
 

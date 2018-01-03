@@ -8,26 +8,18 @@ describe SiteSettings::YamlLoader do
 
     def load_yaml(file_arg)
       SiteSettings::YamlLoader.new(file_arg).load do |category, name, default, opts|
-        if opts.delete(:client)
-          client_setting(category, name, default, opts)
-        else
-          setting(category, name, default, opts)
-        end
+        setting(category, name, default, opts)
       end
     end
 
     def setting(category, name, default = nil, opts = {})
       @settings ||= []
+      @client_settings ||= []
       @settings << name
       @categories ||= []
       @categories << category
       @categories.uniq!
-    end
-
-    def client_setting(category, name, default = nil)
-      @client_settings ||= []
-      @client_settings << name
-      setting(category, name, default)
+      @client_settings << name if opts.has_key?(:client)
     end
   end
 
@@ -36,7 +28,10 @@ describe SiteSettings::YamlLoader do
   let(:client)      { "#{Rails.root}/spec/fixtures/site_settings/client.yml" }
   let(:enum)        { "#{Rails.root}/spec/fixtures/site_settings/enum.yml" }
   let(:enum_client) { "#{Rails.root}/spec/fixtures/site_settings/enum_client.yml" }
-  let(:env)         { "#{Rails.root}/spec/fixtures/site_settings/env.yml" }
+  let(:deprecated_env) { "#{Rails.root}/spec/fixtures/site_settings/deprecated_env.yml" }
+  let(:deprecated_hidden) { "#{Rails.root}/spec/fixtures/site_settings/deprecated_hidden.yml" }
+  let(:locale_default) { "#{Rails.root}/spec/fixtures/site_settings/locale_default.yml" }
+  let(:nil_default) { "#{Rails.root}/spec/fixtures/site_settings/nil_default.yml" }
 
   it "loads simple settings" do
     receiver.expects(:setting).with('category1', 'title', 'My Site', {}).once
@@ -48,7 +43,7 @@ describe SiteSettings::YamlLoader do
 
   it 'can take a File argument' do
     receiver.expects(:setting).at_least_once
-    receiver.load_yaml( File.new(simple) )
+    receiver.load_yaml(File.new(simple))
   end
 
   it "maintains order of categories" do
@@ -57,27 +52,38 @@ describe SiteSettings::YamlLoader do
   end
 
   it "can load client settings" do
-    receiver.expects(:client_setting).with('category1', 'title', 'Discourse', {})
-    receiver.expects(:client_setting).with('category2', 'tos_url', '', {})
-    receiver.expects(:client_setting).with('category2', 'must_approve_users', false, {})
+    receiver.expects(:setting).with('category1', 'title', 'Discourse', client: true)
+    receiver.expects(:setting).with('category2', 'tos_url', '', client: true)
+    receiver.expects(:setting).with('category2', 'must_approve_users', false, client: true)
     receiver.load_yaml(client)
   end
 
   it "can load enum settings" do
-    receiver.expects(:setting).with('email', 'default_email_digest_frequency', 7, {enum: 'DigestEmailSiteSetting'})
+    receiver.expects(:setting).with('email', 'default_email_digest_frequency', 7, enum: 'DigestEmailSiteSetting')
     receiver.load_yaml(enum)
   end
 
   it "can load enum client settings" do
-    receiver.expects(:client_setting).with do |category, name, default, opts|
-      category == 'basics' and name == 'default_locale' and default == 'en' and opts[:enum] == 'LocaleSiteSetting'
+    receiver.expects(:setting).with do |category, name, default, opts|
+      category == ('basics') && name == ('default_locale') && default == ('en') && opts[:enum] == ('LocaleSiteSetting') && opts[:client] == true
     end
     receiver.load_yaml(enum_client)
   end
 
-  it "can load settings based on environment" do
-    receiver.expects(:setting).with('misc', 'port', '', {})
-    receiver.expects(:client_setting).with('misc', 'crawl_images', false, {})
-    receiver.load_yaml(env)
+  it "raises deprecation when load settings based on environment" do
+    expect { receiver.load_yaml(deprecated_env) }.to raise_error(Discourse::Deprecation)
+  end
+
+  it "raises deprecation when hidden property is based on environment" do
+    expect { receiver.load_yaml(deprecated_hidden) }.to raise_error(Discourse::Deprecation)
+  end
+
+  it "raises invalid parameter when default value is not present" do
+    expect { receiver.load_yaml(nil_default) }.to raise_error(StandardError)
+  end
+
+  it "can load settings with locale default" do
+    receiver.expects(:setting).with('search', 'min_search_term_length', 3, min: 2, client: true, locale_default: { zh_CN: 2, zh_TW: 2 })
+    receiver.load_yaml(locale_default)
   end
 end

@@ -10,7 +10,7 @@ class SlugSetting < EnumSiteSetting
 
   def self.values
     VALUES.map do |l|
-      {name: l, value: l}
+      { name: l, value: l }
     end
   end
 

@@ -15,7 +15,7 @@ describe "Discobot Certificate" do
       stub_request(:get, "http://test.localhost//images/d-logo-sketch-small.png")
         .to_return(status: 200)
 
-      xhr :get, '/discobot/certificate.svg', params
+      get '/discobot/certificate.svg', params: params
 
       expect(response.status).to eq(200)
     end
@@ -28,21 +28,9 @@ describe "Discobot Certificate" do
         }
 
         params.each do |key, _|
-          expect { xhr :get, '/discobot/certificate.svg', params.except(key) }
+          expect { get '/discobot/certificate.svg', params: params.except(key) }
             .to raise_error(Discourse::InvalidParameters)
         end
-      end
-    end
-
-    describe 'when date is invalid' do
-      it 'should raise the right error' do
-        expect do
-          xhr :get, '/discobot/certificate.svg',
-            name: user.name,
-            date: "<script type=\"text/javascript\">alert('This app is probably vulnerable to XSS attacks!');</script>",
-            avatar_url: 'https://somesite.com/someavatar',
-            user_id: user.id
-        end.to raise_error(ArgumentError, 'invalid date')
       end
     end
   end

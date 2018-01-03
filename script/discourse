@@ -3,8 +3,6 @@
 require "thor"
 
 class DiscourseCLI < Thor
-  class_option :verbose, default: false, aliases: :v
-
   desc "remap [--global,--regex] FROM TO", "Remap a string sequence accross all tables"
   long_desc <<-LONGDESC
     Replace a string sequence FROM with TO across all tables.
@@ -28,8 +26,8 @@ class DiscourseCLI < Thor
 
     discourse remap --regex "\[\/?color(=[^\]]*)*]" "" # removing "color" bbcodes
   LONGDESC
-  option :global, :type => :boolean
-  option :regex, :type => :boolean
+  option :global, type: :boolean
+  option :regex, type: :boolean
   def remap(from, to)
     load_rails
 
@@ -48,7 +46,7 @@ class DiscourseCLI < Thor
 
     if options[:global]
       RailsMultisite::ConnectionManagement.each_connection do |db|
-        puts "","Remapping tables on #{db}...",""
+        puts "", "Remapping tables on #{db}...", ""
         do_remap(from, to, options[:regex])
       end
     else
@@ -85,13 +83,19 @@ class DiscourseCLI < Thor
   end
 
   desc "restore", "Restore a Discourse backup"
-  def restore(filename=nil)
+  def restore(filename = nil)
+
+    if File.exist?('/usr/local/bin/discourse')
+      discourse = 'discourse'
+    else
+      discourse = './script/discourse'
+    end
 
     if !filename
       puts "You must provide a filename to restore. Did you mean one of the following?\n\n"
 
-      Dir["public/backups/default/*"].each do |f|
-        puts "script/discourse restore #{File.basename(f)}"
+      Dir["public/backups/default/*"].sort_by { |filename| File.mtime(filename) }.reverse.each do |f|
+        puts "#{discourse} restore #{File.basename(f)}"
       end
 
       return
@@ -110,7 +114,8 @@ class DiscourseCLI < Thor
       puts '', 'The filename argument was missing.', ''
       usage
     rescue BackupRestore::RestoreDisabledError
-      puts '', 'Restores are not allowed.', 'An admin needs to set allow_restore to true in the site settings before restores can be run.', ''
+      puts '', 'Restores are not allowed.', 'An admin needs to set allow_restore to true in the site settings before restores can be run.'
+      puts "Enable now with", '', "#{discourse} enable_restore", ''
       puts 'Restore cancelled.', ''
     end
 
@@ -174,14 +179,20 @@ class DiscourseCLI < Thor
     puts 'Requests sent. Clients will refresh on next navigation.'
   end
 
-  desc "export_category", "Export a category, all its topics, and all users who posted in those topics"
-  def export_category(category_id, filename=nil)
-    raise "Category id argument is missing!" unless category_id
-
+  desc "export_categories", "Export categories, all its topics, and all users who posted in those topics"
+  def export_categories(*category_ids)
+    puts "Starting export of categories...", ""
     load_rails
     load_import_export
-    ImportExport.export_category(category_id, filename)
+    ImportExport.export_categories(category_ids)
     puts "", "Done", ""
+  end
+
+  desc "export_category", "Export a category, all its topics, and all users who posted in those topics"
+  def export_category(category_id)
+    raise "Category id argument is missing!" unless category_id
+
+    export_categories([category_id])
   end
 
   desc "import_category", "Import a category, its topics and the users from the output of the export_category command"
@@ -191,7 +202,7 @@ class DiscourseCLI < Thor
     puts "Starting import from #{filename}..."
     load_rails
     load_import_export
-    ImportExport.import_category(filename)
+    ImportExport.import(filename)
     puts "", "Done", ""
   end
 
@@ -211,7 +222,7 @@ class DiscourseCLI < Thor
     puts "Starting import from #{filename}..."
     load_rails
     load_import_export
-    ImportExport.import_topics(filename)
+    ImportExport.import(filename)
     puts "", "Done", ""
   end
 
@@ -225,7 +236,7 @@ class DiscourseCLI < Thor
     require File.expand_path(File.dirname(__FILE__) + "/../lib/import_export/import_export")
   end
 
-  def do_remap(from, to, regex=false)
+  def do_remap(from, to, regex = false)
     sql = "SELECT table_name, column_name
 FROM information_schema.columns
 WHERE table_schema='public' and (data_type like 'char%' or data_type like 'text%') and is_updatable = 'YES'"
@@ -256,7 +267,6 @@ WHERE table_schema='public' and (data_type like 'char%' or data_type like 'text%
       end
     end
   end
-
 
 end
 

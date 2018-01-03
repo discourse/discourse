@@ -44,8 +44,8 @@ class Permalink < ActiveRecord::Base
 
     def normalize(url)
       return url unless @rules
-      @rules.each do |(regex,sub)|
-        url = url.sub(regex,sub)
+      @rules.each do |(regex, sub)|
+        url = url.sub(regex, sub)
       end
 
       url
@@ -56,10 +56,10 @@ class Permalink < ActiveRecord::Base
   def self.normalize_url(url)
     if url
       url = url.strip
-      url = url[1..-1] if url[0,1] == '/'
+      url = url[1..-1] if url[0, 1] == '/'
     end
 
-    normalizations =  SiteSetting.permalink_normalizations
+    normalizations = SiteSetting.permalink_normalizations
 
     @normalizer = Normalizer.new(normalizations) unless @normalizer && @normalizer.source == normalizations
     @normalizer.normalize(url)
@@ -81,10 +81,10 @@ class Permalink < ActiveRecord::Base
     nil
   end
 
-  def self.filter_by(url=nil)
+  def self.filter_by(url = nil)
     permalinks = Permalink
-                  .includes(:topic, :post, :category)
-                  .order('permalinks.created_at desc')
+      .includes(:topic, :post, :category)
+      .order('permalinks.created_at desc')
 
     permalinks.where!('url ILIKE :url OR external_url ILIKE :url', url: "%#{url}%") if url.present?
     permalinks.limit!(100)

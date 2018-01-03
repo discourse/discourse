@@ -192,22 +192,22 @@ const DiscourseURL = Ember.Object.extend({
     const oldPath = window.location.pathname;
     path = path.replace(/(https?\:)?\/\/[^\/]+/, '');
 
+    // Rewrite /my/* urls
+    if (path.indexOf(Discourse.BaseUri + '/my/') === 0) {
+      const currentUser = Discourse.User.current();
+      if (currentUser) {
+        path = path.replace(Discourse.BaseUri + '/my/', userPath(currentUser.get('username_lower') + "/"));
+      } else {
+        document.location.href = "/404";
+        return;
+      }
+    }
+
     // handle prefixes
     if (path.match(/^\//)) {
       let rootURL = (Discourse.BaseUri === undefined ? "/" : Discourse.BaseUri);
       rootURL = rootURL.replace(/\/$/, '');
       path = path.replace(rootURL, '');
-    }
-
-    // Rewrite /my/* urls
-    if (path.indexOf('/my/') === 0) {
-      const currentUser = Discourse.User.current();
-      if (currentUser) {
-        path = path.replace('/my/', userPath(currentUser.get('username_lower') + "/"));
-      } else {
-        document.location.href = "/404";
-        return;
-      }
     }
 
     path = rewritePath(path);
@@ -221,6 +221,11 @@ const DiscourseURL = Ember.Object.extend({
 
     // TODO: Extract into rules we can inject into the URL handler
     if (this.navigatedToHome(oldPath, path, opts)) { return; }
+
+    // Navigating to empty string is the same as root
+    if (path === '') {
+      path = '/';
+    }
 
     return this.handleURL(path, opts);
   },
@@ -368,7 +373,7 @@ const DiscourseURL = Ember.Object.extend({
         discoveryTopics.resetParams();
       }
 
-      router.router.updateURL(path);
+      router._routerMicrolib.updateURL(path);
     }
 
     const split = path.split('#');

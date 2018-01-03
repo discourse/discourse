@@ -1,8 +1,8 @@
 class ForumsController < ApplicationController
 
-  skip_before_filter :preload_json, :check_xhr
-  skip_before_filter :authorize_mini_profiler, only: [:status]
-  skip_before_filter :redirect_to_login_if_required, only: [:status]
+  skip_before_action :preload_json, :check_xhr
+  skip_before_action :authorize_mini_profiler, only: [:status]
+  skip_before_action :redirect_to_login_if_required, only: [:status]
 
   def status
     if $shutdown

@@ -1,7 +1,10 @@
 require 'rails_helper'
 
 describe TopMenuItem do
-  before(:each) { SiteSetting.stubs(:top_menu).returns('one,-nope|two|three,-not|four,ignored|category/xyz') }
+  before do
+    SiteSetting.top_menu = 'one,-nope|two|three,-not|four,ignored|latest|category/xyz'
+  end
+
   let(:items) { SiteSetting.top_menu_items }
 
   it 'has name' do

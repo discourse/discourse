@@ -1,4 +1,4 @@
-class AddFilterIndexesToStaffActionLogs < ActiveRecord::Migration
+class AddFilterIndexesToStaffActionLogs < ActiveRecord::Migration[4.2]
   def change
     add_index :staff_action_logs, [:action, :id]
     add_index :staff_action_logs, [:staff_user_id, :id]

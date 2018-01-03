@@ -209,10 +209,6 @@ te:
     directory:
       title: "వాడుకరులు"
     groups:
-      visible: "గుంపు అందరు సభ్యులకు కనిపిస్తుంది"
-      title:
-        one: "గుంపు"
-        other: "గుంపులు"
       members: "సభ్యులు"
       posts: "టపాలు"
       alias_levels:
@@ -314,7 +310,6 @@ te:
       change_username:
         title: "సభ్యనామం మార్చు"
         taken: "క్షమించాలి, ఆ సభ్యనామం వేరొకరు తీసుకున్నారు."
-        error: "మీ సభ్యనామం మార్చడంలో దోషం."
         invalid: "ఆ సభ్యనామం చెల్లనిది. కేవలం సంఖ్యలు, అక్షరాలు మాత్రమే కలిగి ఉండాలి. "
       change_email:
         title: "ఈమెయిల్ మార్చు"
@@ -461,7 +456,6 @@ te:
     first_post: తొలి టపా
     mute: నిశ్శబ్దం
     unmute: వినిశ్శబ్దం
-    last_post: చివరి టపా
     summary:
       enabled_description: "మీరు ఈ విషయపు సారాంశము చదువుతున్నారు. ఆసక్తికర టపాలు కమ్యునిటీ ఎంచుకుంటుంది. "
       enable: 'ఈ విషయాన్ని సంగ్రహించు'
@@ -578,25 +572,12 @@ te:
       olist_title: "సంఖ్యా జాబితా"
       ulist_title: "చుక్కల జాబితా"
       list_item: "జాబితా అంశం"
-      heading_title: "తలకట్టు"
-      heading_text: "తలకట్టు"
-      hr_title: "అడ్డు గీత"
       help: "మార్క్ డైన్ సవరణ సహాయం"
-      toggler: "దాచు లేదా చూపు కంపోజరు ఫలకం"
       admin_options_title: "ఈ విషయానికి ఐచ్చిక సిబ్బంది అమరికలు"
     notifications:
       none: "ఈ సమయంలో ప్రకటనలు చూపలేకున్నాము."
       more: "పాత ప్రకటనలు చూడు"
       total_flagged: "మొత్తం కేతనించిన టపాలు"
-      quoted: "<i title='కోట్ చేసారు' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
-      replied: "<i title='జవాబిచ్చారు' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      edited: "<i title=' సవరించారు' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
-      liked: "<i title='ఇష్టపడ్డారు' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
-      private_message: "<i title='ప్రైవేటు సందేశం' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
-      invited_to_private_message: "<i title='ప్రైవేటు సందేశం' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
-      invitee_accepted: "<i title='మీ ఆహ్వానాన్ని మన్నించారు' class='fa fa-user'></i><p><span>{{username}}</span> accepted your invitation</p>"
-      moved_post: "<i title='టపా జరిపారు' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
-      granted_badge: "<i title='బ్యాడ్జ్ ప్రసాదించారు' class='fa fa-certificate'></i><p>Earned '{{description}}'</p>"
     upload_selector:
       title: "ఒక బొమ్మ కలుపు"
       title_with_attachments: "ఒక బొమ్మ లేదా దస్త్రం కలుపు"
@@ -794,7 +775,6 @@ te:
       multi_select:
         select: 'ఎంచుకో'
         selected: 'ఎంచుకున్నవి  ({{count}})'
-        select_replies: 'ఎంచుకున్నవి +జవాబులు'
         delete: ఎంచుకున్నవి తొలగించు
         cancel: ఎంపిక రద్దు
         select_all: అన్నీ ఎంచుకో
@@ -843,12 +823,6 @@ te:
         undelete: "ఈ టపాను పునస్తాపించు"
         share: "ఈ టపా లంకెను పంచు"
         more: "మరింత"
-        delete_replies:
-          confirm:
-            one: "ఈ టపా యొక్క నేరు జవాబు కూడా తొలగించాలనుకుంటున్నారా?"
-            other: "ఈ టపా యొక్క {{count}} నేరు జవాబులు కూడా తొలగించాలనుకుంటున్నారా?"
-          yes_value: "అవును, జవాబులు కూడా తొలగించు."
-          no_value: "లేదు, కేవలం ఈ టపానే"
         admin: "టపా అధికారి చర్యలు"
         wiki: "వికీ చేయి"
         unwiki: "వికీ తొలగించు"
@@ -858,9 +832,6 @@ te:
         unhide: "చూపు"
       actions:
         flag: 'కేతనం'
-        defer_flags:
-          one: "కేతనం వాయిదావేయి"
-          other: "కేతనాలు వాయిదావేయి"
         undo:
           off_topic: "కేతనం రద్దు"
           spam: "కేతనం రద్దు"
@@ -920,10 +891,6 @@ te:
           vote:
             one: "ఒకరు దీనికి ఓటు వేశారు"
             other: "{{count}} గురు దీనికి ఓటు వేసారు"
-      delete:
-        confirm:
-          one: "మీరు నిజ్జంగా ఈ టపాను తొలగించాలనుకుంటున్నారా?"
-          other: "మీరు నిజ్జంగానే ఈ టపాలన్నీ తొలగించాలనుకుంటున్నారా?"
       revisions:
         controls:
           first: "తొలి దిద్దుబాటు"
@@ -1113,7 +1080,6 @@ te:
         no_problems: "ఎటువంటి సమస్యలూ కనిపించలేదు"
         moderators: 'నిర్వాహకులు:'
         admins: 'అధికారులు:'
-        blocked: 'నిలిపిన:'
         suspended: 'సస్పెండయిన:'
         space_free: "{{size}} ఖాలీ"
         uploads: "ఎగుమతులు"
@@ -1139,23 +1105,12 @@ te:
         by: "నుండి"
       flags:
         title: "కేతనాలు"
-        old: "పాత"
-        active: "చేతన"
         agree: "ఒప్పుకోండి"
         agree_title: "ఈ కేతనం సరైనదిగా చెప్పండి"
-        agree_flag_modal_title: "ఒప్పుకొను మరియు"
-        agree_flag_hide_post: "ఒప్పుకొని (టపా దాచు మరియు ప్రైవేటు సందేశం పంపు)"
-        agree_flag_restore_post: "ఒప్పుకొను (టపా పునస్తాపించు)"
-        agree_flag_restore_post_title: "ఈ టపా పునస్తాపించు"
-        agree_flag: "కేతనంతో ఒప్పుకో"
-        agree_flag_title: "కేతనంతో ఒప్పుకో మరియు టపాను మార్చకుండా ఉంచు"
-        defer_flag: "వాయిదావేయి"
         defer_flag_title: "ఈ కేతనం తొలగించు; ఇప్పుడు ఎటువంటి చర్య అవసరంలేదు."
         delete: "తొలగించు"
         delete_title: "ఈ కేతనం వర్తించే టపా తొలగించు"
-        delete_post_defer_flag: "టపా తొలగించు మరియు కేతనం వాయిదా వేయి"
         delete_post_defer_flag_title: "టపా తొలగించు; ఇదే తొలి టపా అయితే ఈ విషయాన్ని తొలగించు"
-        delete_post_agree_flag: "టపా తొలగించు మరియు కేతనంతో అంగీకరించు"
         delete_post_agree_flag_title: "టపా తొలగించు; తొలగి టపా అయితే, విషయాన్ని కూడా తొలగించు"
         delete_flag_modal_title: "తొలగించు మరియు..."
         delete_spammer: "స్పామరును తొలగించు"
@@ -1170,34 +1125,16 @@ te:
         dispositions:
           agreed: "ఒప్పుకున్నారు"
           disagreed: "ఒప్పుకోలేదు"
-          deferred: "వాయిదా వేసారు"
         flagged_by: "కేతనించినవారు"
         resolved_by: "సరిచేసినవారు"
         took_action: "చర్య తీసుకున్నారు"
         system: "వ్యవస్థ"
         error: "ఏదే తేడా జరిగింది"
         reply_message: "జవాబు"
-        no_results: "ఎట్టి కేతనాలూ లేవు"
         topic_flagged: "ఈ <strong>విషయం</strong> కేతనించబడింది."
         visit_topic: "చర్య తీసుకోడానికి విషయం దర్శించు"
         was_edited: "తొలి కేతనం తర్వాత టపా సవరించబడింది"
         previous_flags_count: "ఈ టపా ఇప్పటికే {{count}}  కేతనించబడింది."
-        summary:
-          action_type_3:
-            one: "విషయాంతరం"
-            other: "విషయాంతరం x{{count}}"
-          action_type_4:
-            one: "అసమంజసం "
-            other: "అసమంజసం x{{count}}"
-          action_type_6:
-            one: "అనురూపం"
-            other: "అనురూప x{{count}}"
-          action_type_7:
-            one: "అనురూపం"
-            other: "అనురూపం x{{count}}"
-          action_type_8:
-            one: "స్పాము"
-            other: "స్పామ్ x{{count}}"
       groups:
         primary: "ప్రాథమిక గుంపు"
         no_primary: "(ప్రాథమిక గుంపు లేదు)"
@@ -1458,7 +1395,6 @@ te:
           pending: "పెండింగు"
           staff: 'సిబ్బంది'
           suspended: 'సస్పెడయ్యాడు'
-          blocked: 'నిలిపాడు'
           suspect: 'అనుమానించు'
         approved: "అంగీకరించు"
         approved_selected:
@@ -1476,12 +1412,11 @@ te:
           staff: "సిబ్బంది"
           admins: 'అధికారి సభ్యులు'
           moderators: 'నిర్వాహకులు'
-          blocked: 'నిలిపిన సభ్యులు'
           suspended: 'సస్పెండయిన సభ్యులు'
           suspect: 'అనుమానిత సభ్యులు'
         reject_successful:
           one: "వినియోగదారులు విజయవంతంగా "
-          other: "వినియోగదారులు విజయవంతంగా %{సంఖ్య} తిరస్కరింపబడ్డారు.."
+          other: "వినియోగదారులు విజయవంతంగా %{count} తిరస్కరింపబడ్డారు.."
         reject_failures:
           one: "వినియోగదారులు 1 ని తిరస్కరించుటలో వైఫల్యం."
         not_verified: "ద్రువీకరించలేదు"
@@ -1490,19 +1425,15 @@ te:
           text: "చూపు"
       user:
         suspend_failed: "ఈ సభ్యుడిని సస్పెండ్ చేసేప్పుడు ఏదో తేడా జరిగింది.  {{error}}"
-        unsuspend_failed: "ఈ వినియోగదారు వలన ఏదో తొలగింపబడని తప్పు జరిగింది {{దోషం}}"
+        unsuspend_failed: "ఈ వినియోగదారు వలన ఏదో తొలగింపబడని తప్పు జరిగింది {{error}}"
         suspend_duration: "వినియోగదారు ఎంతకాలం నిలిపివేయబడ్డాడు?"
-        suspend_duration_units: "(రోజులు)"
         suspend_reason_label: "మీరు ఎందుకు తొలగించబడ్డారు? ఈ పాఠ్యం <b> వినియోగదారును ప్రొఫైల్ పుట మీద ప్రతివారికి </b> కనబడుతుంది, మరియు వినియోగదారుడు లాగిన్‌కు ప్రయత్నించినపుడు చూస్తారు.చిన్నదిగా ఉంచండి."
         suspend_reason: "కారణం"
         suspended_by: "సస్పెండు చేసినవారు"
         delete_all_posts: "అన్ని టపాలూ తొలగించు"
-        suspend: "సస్పెండు"
-        unsuspend: "సస్పెండు తొలగించు"
-        suspended: "సస్పెండయ్యాడా? "
         moderator: "నిర్వాహకుడు?"
         admin: "అధికారి?"
-        blocked: "నిలిపిన?"
+        suspended: "సస్పెండయ్యాడా? "
         show_admin_profile: "అధికారి"
         refresh_browsers: "బ్రౌజరు తాజాకరణ బలవంతంచేయి"
         refresh_browsers_message: "అన్ని క్లైంటులకు సందేశం పంపబడింది!"
@@ -1515,8 +1446,8 @@ te:
         grant_admin: 'నిర్వాహకులు సమ్మతించారు'
         revoke_moderation: 'సమన్వయం నిలిపివేశారు'
         grant_moderation: 'సమన్వయం అనుమతించారు'
-        unblock: 'అడ్డగింపలేదు'
-        block: 'నిలుపు'
+        unsuspend: 'సస్పెండు తొలగించు'
+        suspend: 'సస్పెండు'
         reputation: ప్రసిధ్ధ
         permissions: అనుమతులు
         activity: కలాపం
@@ -1550,11 +1481,8 @@ te:
         activate_failed: "సభ్యుడిని చేతనం చేయుటలో దోషం"
         deactivate_account: "ఖాతా అక్రియాశీలం చేయి"
         deactivate_failed: "వినియోగదారుని నిర్వీర్యం చేసే ఒక సమస్య ఉంది."
-        unblock_failed: 'వినియోగదారుని అనుమతించడంలో ఒక సమస్య ఉంది.'
-        block_failed: 'వినియోగదారుని ఒక సమస్య నిరోధిస్తుంది.'
         deactivate_explanation: "క్రియారహిత వినియోగదారు తప్పనిసరిగా వారి ఈ-మెయిల్ ను సరిదిద్దాలి."
         suspended_explanation: "నిలిపివేయబడ్డ వినియోగదారు లాగిన్ కాలేరు."
-        block_explanation: "అడ్డగింపబడ్డ వినియోగదారు టపాలు చేయలేరు లేదా విషయాలు మొదలుపెట్టలేరు."
         trust_level_change_failed: "వినియోగదారు నమ్మకపు స్థాయి మార్చడానికి సమస్య ఉంది."
         suspend_modal_title: "సభ్యుడిని సస్పెండు చేయి"
         trust_level_2_users: "నమ్మకం స్థాయి 2 సభ్యులు"
@@ -1678,7 +1606,7 @@ te:
         grant_badge: బ్యాడ్జి ఇవ్వు
         granted_badges: ఇచ్చిన బ్యాడ్జీలు
         grant: ఇవ్వు
-        no_user_badges: "%{పేరు} ఏ చిహ్నాలు మంజూరు చేయలేదు."
+        no_user_badges: "%{name} ఏ చిహ్నాలు మంజూరు చేయలేదు."
         no_badges: మంజూరు చేసే చిహ్నాలు లేవు.
         none_selected: "ఆరంభించడానికి ఒక బ్యాడ్జీని ఎంచుకోండి."
         allow_title: చిహ్నాన్ని శీర్షికగా వాడుకోవడానికి అనుమతి ఇవ్వండి.
@@ -1704,11 +1632,11 @@ te:
           sample: "నమూనా:"
           grant:
             with: <span class="username">%{వినియోగదారు పేరు}</span>
-            with_post: <span class="username">%{వినియోగదారు పేరు}</span> టపా కొరకు%{లంకె}
+            with_post: <span class="username">%{username}</span> టపా కొరకు%{link}
             with_post_time: <span class="సభ్యుల పేరు">%{username}</span> for post in %{link} at <span class="సమయం">%{time}</span>
       emoji:
         title: "ఇమోజి"
         add: "కొత్త ఇమోజి కలుపు"
         name: "పేరు"
         image: "బొమ్మ"
-        delete_confirm: "మీరు నిజంగా %{పేరు}: ఎమోజీ ని తొలగించాలనుకుంటున్నారా ?"
+        delete_confirm: "మీరు నిజంగా %{name}: ఎమోజీ ని తొలగించాలనుకుంటున్నారా ?"

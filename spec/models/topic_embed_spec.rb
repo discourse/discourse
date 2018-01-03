@@ -96,8 +96,8 @@ describe TopicEmbed do
 
       response = nil
 
-      before(:each) do
-        SiteSetting.stubs(:embed_classname_whitelist).returns 'emoji , foo'
+      before do
+        SiteSetting.embed_classname_whitelist = 'emoji, foo'
         file.stubs(:read).returns contents
         TopicEmbed.stubs(:open).returns file
         response = TopicEmbed.find_remote(url)
@@ -155,7 +155,7 @@ describe TopicEmbed do
       response = nil
 
       before(:each) do
-        SiteSetting.stubs(:embed_classname_whitelist).returns ' '
+        SiteSetting.embed_classname_whitelist = ''
         file.stubs(:read).returns contents
         TopicEmbed.stubs(:open).returns file
         response = TopicEmbed.find_remote(url)
@@ -186,7 +186,8 @@ describe TopicEmbed do
 
       before do
         file.stubs(:read).returns contents
-        TopicEmbed.stubs(:open).returns file
+        TopicEmbed.stubs(:open)
+          .with('http://eviltrout.com/test/%D9%85%D8%A7%D9%87%DB%8C', allow_redirections: :safe).returns file
       end
 
       it "doesn't throw an error" do
@@ -195,6 +196,41 @@ describe TopicEmbed do
       end
     end
 
+    context "encoded URL" do
+      let(:url) { 'http://example.com/hello%20world' }
+      let(:contents) { "<title>Hello World!</title><body></body>" }
+      let!(:embeddable_host) { Fabricate(:embeddable_host) }
+      let!(:file) { StringIO.new }
+
+      before do
+        file.stubs(:read).returns contents
+        TopicEmbed.stubs(:open)
+          .with('http://example.com/hello%20world', allow_redirections: :safe).returns file
+      end
+
+      it "doesn't throw an error" do
+        response = TopicEmbed.find_remote(url)
+        expect(response.title).to eq("Hello World!")
+      end
+    end
+
+    context "emails" do
+      let(:url) { 'http://example.com/foo' }
+      let(:contents) { '<p><a href="mailto:foo%40example.com">URL encoded @ symbol</a></p><p><a href="mailto:bar@example.com">normal mailto link</a></p>' }
+      let!(:embeddable_host) { Fabricate(:embeddable_host) }
+      let!(:file) { StringIO.new }
+
+      before do
+        file.stubs(:read).returns contents
+        TopicEmbed.stubs(:open).returns file
+      end
+
+      it "handles mailto links" do
+        response = TopicEmbed.find_remote(url)
+        expect(response.body).to have_tag('a', with: { href: 'mailto:foo%40example.com' })
+        expect(response.body).to have_tag('a', with: { href: 'mailto:bar@example.com' })
+      end
+    end
   end
 
 end

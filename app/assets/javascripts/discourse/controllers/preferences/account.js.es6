@@ -1,3 +1,4 @@
+import { iconHTML } from 'discourse-common/lib/icon-library';
 import CanCheckEmails from 'discourse/mixins/can-check-emails';
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
@@ -9,6 +10,7 @@ export default Ember.Controller.extend(CanCheckEmails, PreferencesTabController,
   saveAttrNames: ['name'],
 
   canEditName: setting('enable_names'),
+  canSaveUser: true,
 
   newNameInput: null,
 
@@ -77,11 +79,11 @@ export default Ember.Controller.extend(CanCheckEmails, PreferencesTabController,
         model = this.get('model'),
         buttons = [
           { label: I18n.t("cancel"),
-            class: "cancel-inline",
+            class: "d-modal-cancel",
             link:  true,
             callback: () => { this.set('deleting', false); }
           },
-          { label: '<i class="fa fa-exclamation-triangle"></i> ' + I18n.t("user.delete_account"),
+          { label: iconHTML('exclamation-triangle') + I18n.t("user.delete_account"),
             class: "btn btn-danger",
             callback() {
               model.delete().then(function() {

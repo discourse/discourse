@@ -3,9 +3,14 @@ class StylesheetCache < ActiveRecord::Base
 
   MAX_TO_KEEP = 50
 
-  def self.add(target,digest,content,source_map)
+  def self.add(target, digest, content, source_map)
+    old_logger = ActiveRecord::Base.logger
 
     return false if where(target: target, digest: digest).exists?
+
+    if Rails.env.development?
+      ActiveRecord::Base.logger = nil
+    end
 
     success = create(target: target, digest: digest, content: content, source_map: source_map)
 
@@ -13,11 +18,11 @@ class StylesheetCache < ActiveRecord::Base
     if count > MAX_TO_KEEP
 
       remove_lower = StylesheetCache
-                     .where(target: target)
-                     .limit(MAX_TO_KEEP)
-                     .order('id desc')
-                     .pluck(:id)
-                     .last
+        .where(target: target)
+        .limit(MAX_TO_KEEP)
+        .order('id desc')
+        .pluck(:id)
+        .last
 
       exec_sql("DELETE FROM stylesheet_cache where id < :id", id: remove_lower)
     end
@@ -25,6 +30,10 @@ class StylesheetCache < ActiveRecord::Base
     success
   rescue ActiveRecord::RecordNotUnique
     false
+  ensure
+    if Rails.env.development? && old_logger
+      ActiveRecord::Base.logger = old_logger
+    end
   end
 
 end
@@ -34,8 +43,8 @@ end
 # Table name: stylesheet_cache
 #
 #  id         :integer          not null, primary key
-#  target     :string           not null
-#  digest     :string           not null
+#  target     :string(255)      not null
+#  digest     :string(255)      not null
 #  content    :text             not null
 #  created_at :datetime
 #  updated_at :datetime

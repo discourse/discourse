@@ -13,10 +13,11 @@ module ImportScripts::Mbox
       @database = Database.new(@settings.data_dir, @settings.batch_size)
     end
 
-    def change_site_settings
-      super
-
-      SiteSetting.enable_staged_users = true
+    def get_site_settings_for_import
+      settings = super
+      settings[:enable_staged_users] = true
+      settings[:incoming_email_prefer_html] = @settings.prefer_html
+      settings
     end
 
     protected
@@ -64,6 +65,7 @@ module ImportScripts::Mbox
             name: row['name'],
             trust_level: @settings.trust_level,
             staged: true,
+            active: false,
             created_at: to_time(row['date_of_first_message'])
           }
         end
@@ -97,19 +99,31 @@ module ImportScripts::Mbox
 
     def map_post(row)
       user_id = user_id_from_imported_user_id(row['from_email']) || Discourse::SYSTEM_USER_ID
-      body = row['body'] || ''
-      body << map_attachments(row['raw_message'], user_id) if row['attachment_count'].positive?
-      body << Email::Receiver.elided_html(row['elided']) if row['elided'].present?
 
       {
         id: row['msg_id'],
         user_id: user_id,
         created_at: to_time(row['email_date']),
-        raw: body,
+        raw: format_raw(row, user_id),
         raw_email: row['raw_message'],
         via_email: true,
-        # cook_method: Post.cook_methods[:email] # this is slowing down the import by factor 4
+        post_create_action: proc do |post|
+          create_incoming_email(post, row)
+        end
       }
+    end
+
+    def format_raw(row, user_id)
+      body = row['body'] || ''
+      elided = row['elided']
+
+      if row['attachment_count'].positive?
+        receiver = Email::Receiver.new(row['raw_message'])
+        body = receiver.add_attachments(body, user_id)
+      end
+
+      body << Email::Receiver.elided_html(elided) if elided.present?
+      body
     end
 
     def map_first_post(row)
@@ -132,26 +146,16 @@ module ImportScripts::Mbox
       mapped
     end
 
-    def map_attachments(raw_message, user_id)
-      receiver = Email::Receiver.new(raw_message)
-      attachment_markdown = ''
-
-      receiver.attachments.each do |attachment|
-        tmp = Tempfile.new(['discourse-email-attachment', File.extname(attachment.filename)])
-
-        begin
-          File.open(tmp.path, 'w+b') { |f| f.write attachment.body.decoded }
-          upload = UploadCreator.new(tmp, attachment.filename).create_for(user_id)
-
-          if upload && upload.errors.empty?
-            attachment_markdown << "\n\n#{receiver.attachment_markdown(upload)}\n\n"
-          end
-        ensure
-          tmp.try(:close!)
-        end
-      end
-
-      attachment_markdown
+    def create_incoming_email(post, row)
+      IncomingEmail.create(
+        message_id: row['msg_id'],
+        raw: row['raw_message'],
+        subject: row['subject'],
+        from_address: row['from_email'],
+        user_id: post.user_id,
+        topic_id: post.topic_id,
+        post_id: post.id
+      )
     end
 
     def to_time(datetime)

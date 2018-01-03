@@ -14,11 +14,7 @@ class SiteSetting < ActiveRecord::Base
 
   def self.load_settings(file)
     SiteSettings::YamlLoader.new(file).load do |category, name, default, opts|
-      if opts.delete(:client)
-        client_setting(name, default, opts.merge(category: category))
-      else
-        setting(name, default, opts.merge(category: category))
-      end
+      setting(name, default, opts.merge(category: category))
     end
   end
 
@@ -34,7 +30,7 @@ class SiteSetting < ActiveRecord::Base
   client_settings << :available_locales
 
   def self.available_locales
-    LocaleSiteSetting.values.map{ |e| e[:value] }.join('|')
+    LocaleSiteSetting.values.to_json
   end
 
   def self.topic_title_length
@@ -71,8 +67,8 @@ class SiteSetting < ActiveRecord::Base
 
   def self.anonymous_homepage
     top_menu_items.map { |item| item.name }
-                  .select { |item| anonymous_menu_items.include?(item) }
-                  .first
+      .select { |item| anonymous_menu_items.include?(item) }
+      .first
   end
 
   def self.should_download_images?(src)
@@ -117,6 +113,43 @@ class SiteSetting < ActiveRecord::Base
   def self.attachment_filename_blacklist_regex
     @attachment_filename_blacklist_regex ||= Regexp.union(SiteSetting.attachment_filename_blacklist.split("|"))
   end
+
+  # helpers for getting s3 settings that fallback to global
+  class Upload
+    def self.s3_cdn_url
+      SiteSetting.enable_s3_uploads ? SiteSetting.s3_cdn_url : GlobalSetting.s3_cdn_url
+    end
+
+    def self.s3_region
+      SiteSetting.enable_s3_uploads ? SiteSetting.s3_region : GlobalSetting.s3_region
+    end
+
+    def self.s3_upload_bucket
+      SiteSetting.enable_s3_uploads ? SiteSetting.s3_upload_bucket : GlobalSetting.s3_bucket
+    end
+
+    def self.enable_s3_uploads
+      SiteSetting.enable_s3_uploads || GlobalSetting.use_s3?
+    end
+
+    def self.absolute_base_url
+      bucket = SiteSetting.enable_s3_uploads ? Discourse.store.s3_bucket_name : GlobalSetting.s3_bucket
+
+      # cf. http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
+      if SiteSetting.Upload.s3_region == "us-east-1"
+        "//#{bucket}.s3.amazonaws.com"
+      elsif SiteSetting.Upload.s3_region == 'cn-north-1'
+        "//#{bucket}.s3.cn-north-1.amazonaws.com.cn"
+      else
+        "//#{bucket}.s3-#{SiteSetting.Upload.s3_region}.amazonaws.com"
+      end
+    end
+  end
+
+  def self.Upload
+    SiteSetting::Upload
+  end
+
 end
 
 # == Schema Information
@@ -124,7 +157,7 @@ end
 # Table name: site_settings
 #
 #  id         :integer          not null, primary key
-#  name       :string           not null
+#  name       :string(255)      not null
 #  data_type  :integer          not null
 #  value      :text
 #  created_at :datetime         not null

@@ -1,5 +1,7 @@
 import { observes } from 'ember-addons/ember-computed-decorators';
 import { escapeExpression } from 'discourse/lib/utilities';
+import Group from 'discourse/models/group';
+import Badge from 'discourse/models/badge';
 
 const REGEXP_BLOCKS                = /(([^" \t\n\x0B\f\r]+)?(("[^"]+")?))/g;
 
@@ -8,13 +10,13 @@ const REGEXP_CATEGORY_PREFIX       = /^(category:|#)/ig;
 const REGEXP_GROUP_PREFIX          = /^group:/ig;
 const REGEXP_BADGE_PREFIX          = /^badge:/ig;
 const REGEXP_TAGS_PREFIX           = /^(tags?:|#(?=[a-z0-9\-]+::tag))/ig;
-const REGEXP_IN_PREFIX             = /^in:/ig;
+const REGEXP_IN_PREFIX             = /^(in|with):/ig;
 const REGEXP_STATUS_PREFIX         = /^status:/ig;
 const REGEXP_MIN_POST_COUNT_PREFIX = /^min_post_count:/ig;
 const REGEXP_POST_TIME_PREFIX      = /^(before|after):/ig;
 const REGEXP_TAGS_REPLACE          = /(^(tags?:|#(?=[a-z0-9\-]+::tag))|::tag\s?$)/ig;
 
-const REGEXP_IN_MATCH                 = /^in:(posted|watching|tracking|bookmarks|first|pinned|unpinned|wiki|unseen)/ig;
+const REGEXP_IN_MATCH                 = /^(in|with):(posted|watching|tracking|bookmarks|first|pinned|unpinned|wiki|unseen|image)/ig;
 const REGEXP_SPECIAL_IN_LIKES_MATCH   = /^in:likes/ig;
 const REGEXP_SPECIAL_IN_PRIVATE_MATCH = /^in:private/ig;
 const REGEXP_SPECIAL_IN_SEEN_MATCH    = /^in:seen/ig;
@@ -23,19 +25,24 @@ const REGEXP_CATEGORY_SLUG            = /^(\#[a-zA-Z0-9\-:]+)/ig;
 const REGEXP_CATEGORY_ID              = /^(category:[0-9]+)/ig;
 const REGEXP_POST_TIME_WHEN           = /^(before|after)/ig;
 
+const IN_OPTIONS_MAPPING = {'images': 'with'};
+
 export default Em.Component.extend({
   classNames: ['search-advanced-options'],
 
-  inOptions: [
+  inOptionsForUsers: [
     {name: I18n.t('search.advanced.filters.unseen'),  value: "unseen"},
     {name: I18n.t('search.advanced.filters.posted'),    value: "posted"},
     {name: I18n.t('search.advanced.filters.watching'),  value: "watching"},
     {name: I18n.t('search.advanced.filters.tracking'),  value: "tracking"},
     {name: I18n.t('search.advanced.filters.bookmarks'), value: "bookmarks"},
+  ],
+  inOptionsForAll: [
     {name: I18n.t('search.advanced.filters.first'),     value: "first"},
     {name: I18n.t('search.advanced.filters.pinned'),    value: "pinned"},
     {name: I18n.t('search.advanced.filters.unpinned'),  value: "unpinned"},
     {name: I18n.t('search.advanced.filters.wiki'),  value: "wiki"},
+    {name: I18n.t('search.advanced.filters.images'),  value: "images"},
   ],
   statusOptions: [
     {name: I18n.t('search.advanced.statuses.open'),        value: "open"},
@@ -77,7 +84,8 @@ export default Em.Component.extend({
             likes: false,
             private: false,
             seen: false
-          }
+          },
+          all_tags: false
         },
         status: '',
         min_post_count: '',
@@ -85,7 +93,8 @@ export default Em.Component.extend({
           when: 'before',
           days: ''
         }
-      }
+      },
+      inOptions: this.currentUser ? this.inOptionsForUsers.concat(this.inOptionsForAll) : this.inOptionsForAll
     });
   },
 
@@ -176,18 +185,18 @@ export default Em.Component.extend({
         const userInput = Discourse.Category.findBySlug(subcategories[1], subcategories[0]);
         if ((!existingInput && userInput)
           || (existingInput && userInput && existingInput.id !== userInput.id))
-          this.set('searchedTerms.category', [userInput]);
+          this.set('searchedTerms.category', userInput);
       } else
       if (isNaN(subcategories)) {
         const userInput = Discourse.Category.findSingleBySlug(subcategories[0]);
         if ((!existingInput && userInput)
           || (existingInput && userInput && existingInput.id !== userInput.id))
-          this.set('searchedTerms.category', [userInput]);
+          this.set('searchedTerms.category', userInput);
       } else {
         const userInput = Discourse.Category.findById(subcategories[0]);
         if ((!existingInput && userInput)
           || (existingInput && userInput && existingInput.id !== userInput.id))
-          this.set('searchedTerms.category', [userInput]);
+          this.set('searchedTerms.category', userInput);
       }
     } else
       this.set('searchedTerms.category', '');
@@ -230,13 +239,15 @@ export default Em.Component.extend({
 
     const match = this.filterBlocks(REGEXP_TAGS_PREFIX);
     const tags = this.get('searchedTerms.tags');
+    const contain_all_tags = this.get('searchedTerms.special.all_tags');
 
     if (match.length !== 0) {
-      const existingInput = _.isArray(tags) ? tags.join(',') : tags;
+      const join_char = contain_all_tags ? '+' : ',';
+      const existingInput = _.isArray(tags) ? tags.join(join_char) : tags;
       const userInput = match[0].replace(REGEXP_TAGS_REPLACE, '');
 
       if (existingInput !== userInput) {
-        this.set('searchedTerms.tags', (userInput.length !== 0) ? userInput.split(',') : []);
+        this.set('searchedTerms.tags', (userInput.length !== 0) ? userInput.split(join_char) : []);
       }
     } else if (tags.length !== 0) {
       this.set('searchedTerms.tags', []);
@@ -292,11 +303,11 @@ export default Em.Component.extend({
 
     const slugCategoryMatches = (match.length !== 0) ? match[0].match(REGEXP_CATEGORY_SLUG) : null;
     const idCategoryMatches = (match.length !== 0) ? match[0].match(REGEXP_CATEGORY_ID) : null;
-    if (categoryFilter && categoryFilter[0]) {
-      const id = categoryFilter[0].id;
-      const slug = categoryFilter[0].slug;
-      if (categoryFilter[0].parentCategory) {
-        const parentSlug = categoryFilter[0].parentCategory.slug;
+    if (categoryFilter) {
+      const id = categoryFilter.id;
+      const slug = categoryFilter.slug;
+      if (categoryFilter.parentCategory) {
+        const parentSlug = categoryFilter.parentCategory.slug;
         if (slugCategoryMatches)
           searchTerm = searchTerm.replace(slugCategoryMatches[0], `#${parentSlug}:${slug}`);
         else if (idCategoryMatches)
@@ -365,14 +376,16 @@ export default Em.Component.extend({
     }
   },
 
-  @observes('searchedTerms.tags')
+  @observes('searchedTerms.tags', 'searchedTerms.special.all_tags')
   updateSearchTermForTags() {
     const match = this.filterBlocks(REGEXP_TAGS_PREFIX);
     const tagFilter = this.get('searchedTerms.tags');
     let searchTerm = this.get('searchTerm') || '';
+    const contain_all_tags = this.get('searchedTerms.special.all_tags');
 
     if (tagFilter && tagFilter.length !== 0) {
-      const tags = tagFilter.join(',');
+      const join_char = contain_all_tags ? '+' : ',';
+      const tags = tagFilter.join(join_char);
 
       if (match.length !== 0) {
         searchTerm = searchTerm.replace(match[0], `tags:${tags}`);
@@ -391,13 +404,17 @@ export default Em.Component.extend({
   updateSearchTermForIn() {
     const match = this.filterBlocks(REGEXP_IN_MATCH);
     const inFilter = this.get('searchedTerms.in');
+    let keyword = 'in';
+    if(inFilter in IN_OPTIONS_MAPPING) {
+        keyword = IN_OPTIONS_MAPPING[inFilter];
+    }
     let searchTerm = this.get('searchTerm') || '';
 
     if (inFilter) {
       if (match.length !== 0) {
-        searchTerm = searchTerm.replace(match[0], `in:${inFilter}`);
+        searchTerm = searchTerm.replace(match[0], `${keyword}:${inFilter}`);
       } else {
-        searchTerm += ` in:${inFilter}`;
+        searchTerm += ` ${keyword}:${inFilter}`;
       }
 
       this.set('searchTerm', searchTerm.trim());
@@ -520,12 +537,10 @@ export default Em.Component.extend({
   },
 
   groupFinder(term) {
-    const Group = require('discourse/models/group').default;
-    return Group.findAll({search: term, ignore_automatic: false});
+    return Group.findAll({ term: term, ignore_automatic: false });
   },
 
   badgeFinder(term) {
-    const Badge = require('discourse/models/badge').default;
     return Badge.findAll({search: term});
   }
 });

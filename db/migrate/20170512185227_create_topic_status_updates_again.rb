@@ -1,6 +1,6 @@
 require 'table_migration_helper'
 
-class CreateTopicStatusUpdatesAgain < ActiveRecord::Migration
+class CreateTopicStatusUpdatesAgain < ActiveRecord::Migration[4.2]
   def up
     create_table :topic_status_updates do |t|
       t.datetime :execute_at, null: false
@@ -10,7 +10,7 @@ class CreateTopicStatusUpdatesAgain < ActiveRecord::Migration
       t.boolean :based_on_last_post, null: false, default: false
       t.datetime :deleted_at
       t.integer :deleted_by_id
-      t.timestamps
+      t.timestamps null: false
       t.integer :category_id
     end
 

@@ -1,0 +1,121 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+lv:
+  dates:
+    short_date_no_year: "D MMM"
+    short_date: "D MMM, YYYY"
+    long_date: "MMMM D, YYYY hh:mm"
+  title: "Discourse"
+  topics: "Tēmas"
+  posts: "raksti"
+  loading: "Ielāde"
+  log_in: "Ienākt"
+  anonymous: "Anonīmi"
+  emails:
+    incoming:
+      default_subject: "Šim ierakstam ir nepieciešams nosaukums"
+  embed:
+    start_discussion: "Sākt Diskusiju"
+    continue: "Turpināt Diskusiju"
+    more_replies:
+      zero: "vel %{count} atbildes"
+      one: "vel 1 atbilde"
+      other: "vel %{count} atbildes"
+    loading: "Diskusijas Ielādēšana..."
+    in_reply_to: "▶ %{username}"
+    replies:
+      zero: "%{count} atbildes"
+      one: "1 atbilde"
+      other: "%{count} atbildes"
+  next_page: "nākošo lapu →"
+  prev_page: "← iepriekšējo lapu"
+  page_num: "Lapa %{num}"
+  num_posts: "Raksti:"
+  num_participants: "Dalībnieki:"
+  read_full_topic: "Lasīt pilnu tēmu"
+  rss_description:
+    latest: "Jaunākās tēmas"
+    hot: "Aktuālas tēmas"
+  groups:
+    default_names:
+      everyone: "ikviens"
+      admins: "administratori"
+      moderators: "moderatori"
+      staff: "personāls"
+      trust_level_0: "trust_level_0"
+      trust_level_1: "trust_level_1"
+      trust_level_2: "trust_level_2"
+      trust_level_3: "trust_level_3"
+      trust_level_4: "trust_level_4"
+  education:
+    until_posts:
+      zero: "%{count} raksti"
+      one: "1 raksts"
+      other: "%{count} raksti"
+  activerecord:
+    attributes:
+      user_profile:
+        bio_raw: "Par Mani"
+  staff_category_name: "Personāls"
+  trust_levels:
+    newuser:
+      title: "jauns lietotājs"
+  post_action_types:
+    bookmark:
+      title: 'Grāmatzīmes'
+  reports:
+    visits:
+      xaxis: "Diena"
+    topics:
+      title: "Tēmas"
+      xaxis: "Diena"
+    likes:
+      title: "Patīk"
+    flags:
+      xaxis: "Diena"
+    bookmarks:
+      title: "Grāmatzīmes"
+      xaxis: "Diena"
+    starred:
+      xaxis: "Diena"
+    emails:
+      title: "E-pasti Izsūtīti "
+    user_to_user_private_messages:
+      xaxis: "Diena"
+    system_private_messages:
+      title: "Sistēma"
+      xaxis: "Diena"
+    moderator_warning_private_messages:
+      xaxis: "Diena"
+    notify_moderators_private_messages:
+      xaxis: "Diena"
+    notify_user_private_messages:
+      xaxis: "Diena"
+    top_referrers:
+      xaxis: "Lietotājs"
+      num_topics: "Tēmas"
+    top_traffic_sources:
+      xaxis: "Domēns"
+    top_referred_topics:
+      xaxis: "Tēmas"
+  site_settings:
+    errors:
+      invalid_email: "Nepareiza e-pasta adrese."
+  page_not_found:
+    popular_topics: "Populāri"
+    recent_topics: "Neseni"
+    see_more: "Vairāk"
+    search_title: "Meklēt šajā vietnē"
+    search_google: "Google"
+  terms_of_service:
+    title: "Pakalpojuma noteikumi"
+  guidelines: "Vadlīnijas"
+  guidelines_topic:
+    title: "BUJ/Vadlīnijas"
+  tos_topic:
+    title: "Pakalpojuma noteikumi"

@@ -9,8 +9,8 @@ module Jobs
 
       # clean up failed uploads
       Upload.where("created_at < ?", 1.hour.ago)
-            .where("LENGTH(COALESCE(url, '')) = 0")
-            .destroy_all
+        .where("LENGTH(COALESCE(url, '')) = 0")
+        .destroy_all
 
       # migrate uploads to new scheme
       problems = Upload.migrate_to_new_scheme(50)

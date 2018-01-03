@@ -1,0 +1,51 @@
+<div class="future-date-input">
+  <div class="control-group">
+    <label>{{displayLabel}}</label>
+    {{future-date-input-selector
+        minimumResultsForSearch=-1
+        statusType=statusType
+        value=selection
+        input=input
+        includeWeekend=includeWeekend
+        includeFarFuture=includeFarFuture
+        none="topic.auto_update_input.none"}}
+  </div>
+
+  {{#if isCustom}}
+    <div class="control-group">
+      {{d-icon "calendar"}} {{date-picker-future value=date defaultDate=date}}
+    </div>
+
+    <div class="control-group">
+      {{d-icon "clock-o"}}
+      {{input type="time" value=time}}
+    </div>
+  {{/if}}
+
+  {{#if isBasedOnLastPost}}
+    <div class="control-group">
+      <label>
+        {{i18n 'topic.topic_status_update.num_of_hours'}}
+        {{text-field value=input type="number"}}
+      </label>
+    </div>
+
+    {{#if willCloseImmediately}}
+      <div class="warning">
+        {{d-icon "warning"}}
+        {{willCloseI18n}}
+      </div>
+    {{/if}}
+  {{/if}}
+
+  {{#if showTopicStatusInfo}}
+    <div class="alert alert-info">
+      {{topic-timer-info
+          statusType=statusType
+          executeAt=executeAt
+          basedOnLastPost=basedOnLastPost
+          duration=duration
+          categoryId=categoryId}}
+    </div>
+  {{/if}}
+</div>

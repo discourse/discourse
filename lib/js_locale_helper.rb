@@ -1,12 +1,23 @@
 module JsLocaleHelper
 
+  def self.plugin_client_files(locale_str)
+    Dir["#{Rails.root}/plugins/*/config/locales/client.#{locale_str}.yml"]
+  end
+
+  def self.reloadable_plugins(locale, ctx)
+    return unless Rails.env.development?
+    plugin_client_files(locale.to_s).each do |file|
+      ctx.depend_on(file)
+    end
+  end
+
   def self.plugin_translations(locale_str)
     @plugin_translations ||= HashWithIndifferentAccess.new
 
     @plugin_translations[locale_str] ||= begin
       translations = {}
 
-      Dir["#{Rails.root}/plugins/*/config/locales/client.#{locale_str}.yml"].each do |file|
+      plugin_client_files(locale_str).each do |file|
         if plugin_translations = YAML.load_file(file)[locale_str]
           translations.deep_merge!(plugin_translations)
         end
@@ -16,20 +27,36 @@ module JsLocaleHelper
     end
   end
 
-  def self.load_translations(locale, opts=nil)
+  def self.load_translations(locale, opts = nil)
     opts ||= {}
 
     @loaded_translations = nil if opts[:force]
+    @plugin_translations = nil if opts[:force]
 
     @loaded_translations ||= HashWithIndifferentAccess.new
     @loaded_translations[locale] ||= begin
       locale_str = locale.to_s
 
       # load default translations
-      translations = YAML.load_file("#{Rails.root}/config/locales/client.#{locale_str}.yml")
+      yml_file = "#{Rails.root}/config/locales/client.#{locale_str}.yml"
+      if File.exist?(yml_file)
+        translations = YAML.load_file(yml_file)
+      else
+        # If we can't find a base file in Discourse, it might only exist in a plugin
+        # so let's start with a basic object we can merge into
+        translations = {
+          locale_str => {
+            'js' => {},
+            'admin_js' => {}
+          }
+        }
+      end
 
       # merge translations (plugin translations overwrite default translations)
-      translations[locale_str]['js'].deep_merge!(plugin_translations(locale_str)['js']) if translations[locale_str] && plugin_translations(locale_str) && plugin_translations(locale_str)['js']
+      if translations[locale_str] && plugin_translations(locale_str)
+        translations[locale_str]['js'].deep_merge!(plugin_translations(locale_str)['js']) if plugin_translations(locale_str)['js']
+        translations[locale_str]['admin_js'].deep_merge!(plugin_translations(locale_str)['admin_js']) if plugin_translations(locale_str)['admin_js']
+      end
 
       translations
     end
@@ -149,7 +176,7 @@ module JsLocaleHelper
   end
 
   def self.generate_message_format(message_formats, locale_str)
-    formats = message_formats.map { |k,v| k.inspect << " : " << compile_message_format(locale_str, v) }.join(", ")
+    formats = message_formats.map { |k, v| k.inspect << " : " << compile_message_format(locale_str, v) }.join(", ")
 
     filename = "#{Rails.root}/lib/javascripts/locale/#{locale_str}.js"
     filename = "#{Rails.root}/lib/javascripts/locale/en.js" unless File.exists?(filename)
@@ -161,6 +188,7 @@ module JsLocaleHelper
   end
 
   def self.reset_context
+    @ctx&.dispose
     @ctx = nil
   end
 

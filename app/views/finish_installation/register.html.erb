@@ -9,7 +9,9 @@
       </label>
 
       <div class='input-area'>
+        <!--email_off-->
         <%= select_tag :email, options_for_select(@allowed_emails, selected: params[:email]), class: 'combobox' %>
+        <!--/email_off-->
       </div>
     </div>
 

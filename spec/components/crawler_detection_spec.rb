@@ -3,6 +3,14 @@ require_dependency 'crawler_detection'
 
 describe CrawlerDetection do
   describe "crawler?" do
+
+    it "can be amended via site settings" do
+      SiteSetting.crawler_user_agents = 'Mooble|Kaboodle+*'
+      expect(CrawlerDetection.crawler?("Mozilla/5.0 (compatible; Kaboodle+*/2.1; +http://www.google.com/bot.html)")).to eq(true)
+      expect(CrawlerDetection.crawler?("Mozilla/5.0 (compatible; Mooble+*/2.1; +http://www.google.com/bot.html)")).to eq(true)
+      expect(CrawlerDetection.crawler?("Mozilla/5.0 (compatible; Gooble+*/2.1; +http://www.google.com/bot.html)")).to eq(false)
+    end
+
     it "returns true for crawler user agents" do
       # https://support.google.com/webmasters/answer/1061943?hl=en
       expect(described_class.crawler?("Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)")).to eq(true)

@@ -4,14 +4,14 @@ import PreloadStore from 'preload-store';
 
 acceptance("CustomHTML set");
 
-test("has no custom HTML in the top", assert => {
+QUnit.test("has no custom HTML in the top", assert => {
   visit("/static/faq");
   andThen(() => {
     assert.ok(!exists('span.custom-html-test'), 'it has no markup');
   });
 });
 
-test("renders set HTML", assert => {
+QUnit.test("renders set HTML", assert => {
   setCustomHTML('top', '<span class="custom-html-test">HTML</span>');
 
   visit("/static/faq");
@@ -20,7 +20,7 @@ test("renders set HTML", assert => {
   });
 });
 
-test("renders preloaded HTML", assert => {
+QUnit.test("renders preloaded HTML", assert => {
   PreloadStore.store('customHTML', {top: "<span class='cookie'>monster</span>"});
 
   visit("/static/faq");

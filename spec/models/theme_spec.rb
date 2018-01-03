@@ -10,8 +10,12 @@ describe Theme do
     Fabricate(:user)
   end
 
+  let(:guardian) do
+    Guardian.new(user)
+  end
+
   let :customization_params do
-    {name: 'my name', user_id: user.id, header: "my awesome header"}
+    { name: 'my name', user_id: user.id, header: "my awesome header" }
   end
 
   let :customization do
@@ -50,7 +54,6 @@ describe Theme do
     expect(Theme.lookup_field(child.key, :desktop, "header")).to eq("World\nDesktop")
     expect(Theme.lookup_field(child.key, "mobile", :header)).to eq("World\nMobile")
 
-
     child.set_field(target: :common, name: "header", value: "Worldie")
     child.save!
 
@@ -79,7 +82,6 @@ describe Theme do
 
     expect(grandchild.dependant_themes.length).to eq(2)
   end
-
 
   it 'should correct bad html in body_tag_baked and head_tag_baked' do
     theme = Theme.new(user_id: -1, name: "test")
@@ -153,6 +155,26 @@ HTML
   end
 
   context 'theme vars' do
+
+    it 'works in parent theme' do
+
+      theme = Theme.new(name: 'theme', user_id: -1)
+      theme.set_field(target: :common, name: :scss, value: 'body {color: $magic; }')
+      theme.set_field(target: :common, name: :magic, value: 'red', type: :theme_var)
+      theme.set_field(target: :common, name: :not_red, value: 'red', type: :theme_var)
+      theme.save
+
+      parent_theme = Theme.new(name: 'parent theme', user_id: -1)
+      parent_theme.set_field(target: :common, name: :scss, value: 'body {background-color: $not_red; }')
+      parent_theme.set_field(target: :common, name: :not_red, value: 'blue', type: :theme_var)
+      parent_theme.save
+      parent_theme.add_child_theme!(theme)
+
+      scss, _map = Stylesheet::Compiler.compile('@import "theme_variables"; @import "desktop_theme"; ', "theme.scss", theme_id: parent_theme.id)
+      expect(scss).to include("color:red")
+      expect(scss).to include("background-color:blue")
+    end
+
     it 'can generate scss based off theme vars' do
       theme = Theme.new(name: 'theme', user_id: -1)
       theme.set_field(target: :common, name: :scss, value: 'body {color: $magic; content: quote($content)}')
@@ -160,7 +182,7 @@ HTML
       theme.set_field(target: :common, name: :content, value: 'Sam\'s Test', type: :theme_var)
       theme.save
 
-      scss,_map = Stylesheet::Compiler.compile('@import "theme_variables"; @import "desktop_theme"; ', "theme.scss", theme_id: theme.id)
+      scss, _map = Stylesheet::Compiler.compile('@import "theme_variables"; @import "desktop_theme"; ', "theme.scss", theme_id: theme.id)
       expect(scss).to include("red")
       expect(scss).to include('"Sam\'s Test"')
     end
@@ -186,7 +208,7 @@ HTML
       theme.reload
       expect(theme.theme_fields.find_by(name: :scss).error).to eq(nil)
 
-      scss,_map = Stylesheet::Compiler.compile('@import "theme_variables"; @import "desktop_theme"; ', "theme.scss", theme_id: theme.id)
+      scss, _map = Stylesheet::Compiler.compile('@import "theme_variables"; @import "desktop_theme"; ', "theme.scss", theme_id: theme.id)
       expect(scss).to include(upload.url)
     end
   end
@@ -216,5 +238,32 @@ HTML
     expect(Theme.user_theme_keys).to eq(Set.new([]))
   end
 
+  it 'correctly caches user_themes template' do
+    Theme.destroy_all
+
+    json = Site.json_for(guardian)
+    user_themes = JSON.parse(json)["user_themes"]
+    expect(user_themes).to eq([])
+
+    theme = Theme.create!(name: "bob", user_id: -1, user_selectable: true)
+    theme.save!
+
+    json = Site.json_for(guardian)
+    user_themes = JSON.parse(json)["user_themes"].map { |t| t["name"] }
+    expect(user_themes).to eq(["bob"])
+
+    theme.name = "sam"
+    theme.save!
+
+    json = Site.json_for(guardian)
+    user_themes = JSON.parse(json)["user_themes"].map { |t| t["name"] }
+    expect(user_themes).to eq(["sam"])
+
+    Theme.destroy_all
+
+    json = Site.json_for(guardian)
+    user_themes = JSON.parse(json)["user_themes"]
+    expect(user_themes).to eq([])
+  end
 
 end

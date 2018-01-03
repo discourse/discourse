@@ -18,7 +18,7 @@
 }
 
 .menu-panel {
-  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  border: 1px solid $primary-low;
   box-shadow: 0 2px 2px rgba(0,0,0, .25);
   background-color: $secondary;
   z-index: 1100;
@@ -60,14 +60,14 @@
       padding: 0.25em 0.5em;
       display: block;
       &:hover {
-        background-color: dark-light-diff($highlight, $secondary, 50%, -55%);
+        background-color: $highlight-medium;
       }
     }
 
     .new {
-      font-size: 0.8em;
+      font-size: 0.857em;
       margin-left: 0.5em;
-      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      color: dark-light-choose($primary-medium, $secondary-medium);
     }
 
   }
@@ -79,7 +79,7 @@
     margin: 5px 5px 0 8px;
     .box {margin-top: 0;}
     .badge-notification {
-      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      color: dark-light-choose($primary-medium, $secondary-medium);
       background-color: transparent;
       display: inline;
       padding: 0;
@@ -88,9 +88,9 @@
 
   // note these topic counts only appear for anons in the category hamburger drop down
   b.topics-count {
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    color: dark-light-choose($primary-medium, $secondary-medium);
     font-weight: normal;
-    font-size: 11px;
+    font-size: .786em;
   }
 
   span.badge-category {
@@ -102,6 +102,10 @@
 }
 
 .search-menu {
+
+  .search-input {
+    position: relative;
+  }
 
   .search-context .show-help {
     float: right;
@@ -129,18 +133,14 @@
 
   .searching {
     position: absolute;
+    top: 1.15em;
+    right: 1em;
 
-    top: -3px;
-    right: 0.75em;
-    .drop-down-visible & {
-      top: 0.2em;
-      right: 1.2em;
-    }
     .spinner {
       width: 10px;
       height: 10px;
       border-width: 2px;
-      margin: 20px 0 0 0;
+      margin: 0;
     }
   }
   // I am ghetto using this to display "Show More".. be warned
@@ -148,6 +148,7 @@
     padding: 5px;
     text-align: center;
   }
+
   .filter {
     padding: 0;
     &:hover {background: transparent;}
@@ -164,7 +165,7 @@
     .topic-statuses {
       float: none;
       display: inline-block;
-      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      color: dark-light-choose($primary-medium, $secondary-medium);
       margin: 0;
       .fa {
         margin: 0;
@@ -173,7 +174,7 @@
   }
 
   li:not(.category):not(.heading) {
-    font-size: 0.929em;
+    font-size: 1em;
     line-height: 16px;
 
     .fa {
@@ -181,17 +182,19 @@
     }
 
     a {
-      display: block;
-      padding: 5px;
+      &:not(.discourse-tag) {
+        display: block;
+        padding: 5px;
+      }
       transition: all linear .15s;
 
       .user-results {
-        color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
+        color: dark-light-choose($primary-high, $secondary-low);
       }
     }
 
     &:hover a:not(.badge-notification) {
-      background-color: dark-light-diff($highlight, $secondary, 50%, -55%);
+      background-color: $highlight-medium;
     }
 
     button {margin-left: 5px;}
@@ -207,26 +210,35 @@
       margin: 0.5em 0;
     }
 
-    .fa { color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%)); }
-    .icon { color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%)); }
+    .fa { color: dark-light-choose($primary-medium, $secondary-medium); }
+    .icon { color: dark-light-choose($primary-high, $secondary-low); }
     li {
-      background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
-      padding: 0.25em 0.5em;
-      i {
-        float: left;
-        margin-right: 5px;
-        padding-top: 2px;
+      background-color: $tertiary-low;
+
+      // This is until other languages remove the HTML from within
+      // notifications. It can then be removed
+      div i.fa {
+        display: none;
       }
+
       span { color: $primary; }
-      &:hover { background-color: dark-light-diff($highlight, $secondary, 50%, -55%); }
+      &:hover { background-color: $highlight-medium; }
       a { padding: 0; }
       p {
         margin: 0;
         overflow: hidden;
       }
     }
+    li:not(.show-all) {
+      padding: 0.25em 0.5em;
+      i {
+        float: left;
+        margin-right: 5px;
+        padding-top: 2px;
+      }
+    }
     .is-warning {
-      i.fa-envelope-o {
+      .d-icon-envelope-o {
         &:before {
           content: "\f0e0";
         }
@@ -248,15 +260,32 @@
       border-width: 2px;
       margin: 0 auto;
     }
+    .show-all .btn {
+      width: 100%;
+      padding: 2px 0;
+      color: dark-light-choose($primary-medium, $secondary-high);
+      background: blend-primary-secondary(5%);
+      &:hover {
+        color: $primary;
+        background: dark-light-diff($primary, $secondary, 90%, -80%);
+      }
+    }
     /* as a big ol' click target, don't let text inside be selected */
     @include unselectable;
+  }
+
+  .logout-link, .dismiss-link {
+    display: inline-block;
+  }
+  .dismiss-link {
+    float: right;
   }
 }
 
 .notifications .logout {
   padding: 0.25em;
   &:hover {
-    background-color: dark-light-diff($highlight, $secondary, 50%, -55%);
+    background-color: $highlight-medium;
   }
 }
 
@@ -269,7 +298,7 @@ div.menu-links-header {
     display: table-row;
   }
   a:hover {
-    background-color: dark-light-diff($highlight, $secondary, 50%, -55%);
+    background-color: $highlight-medium;
   }
   a {
     padding: 0.5em;
@@ -295,13 +324,10 @@ div.menu-links-header {
     text-align: right;
   }
   .fa, a {
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    color: dark-light-choose($primary-medium, $secondary-medium);
   }
 
-  a {
-    font-size: 1.1em;
-  }
-  .fa-user {
+  .d-icon-user {
     margin-right: 0.2em;
   }
 }

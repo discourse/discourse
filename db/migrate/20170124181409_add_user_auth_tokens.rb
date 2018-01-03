@@ -1,4 +1,4 @@
-class AddUserAuthTokens < ActiveRecord::Migration
+class AddUserAuthTokens < ActiveRecord::Migration[4.2]
   def down
     execute <<SQL
       UPDATE users
@@ -22,17 +22,17 @@ SQL
       t.boolean :legacy, default: false, null: false
       t.inet    :client_ip
       t.datetime :rotated_at, null: false
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :user_auth_tokens, [:auth_token]
     add_index :user_auth_tokens, [:prev_auth_token]
 
-    execute <<SQL
-    INSERT INTO user_auth_tokens(user_id, auth_token, prev_auth_token, legacy, created_at, rotated_at)
-    SELECT id, auth_token, auth_token, true, auth_token_updated_at, auth_token_updated_at
+    execute <<~SQL
+    INSERT INTO user_auth_tokens(user_id, auth_token, prev_auth_token, legacy, updated_at, created_at, rotated_at)
+    SELECT id, auth_token, auth_token, true, auth_token_updated_at, auth_token_updated_at, auth_token_updated_at
     FROM users
     WHERE auth_token_updated_at IS NOT NULL AND auth_token IS NOT NULL
-SQL
+    SQL
   end
 end

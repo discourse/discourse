@@ -44,7 +44,7 @@ class Wizard
     end
 
     def apply_settings(*ids)
-      ids.each {|id| apply_setting(id)}
+      ids.each { |id| apply_setting(id) }
     end
 
   end

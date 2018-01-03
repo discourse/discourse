@@ -2,20 +2,31 @@ require_dependency 'letter_avatar'
 
 class UserAvatarsController < ApplicationController
 
-  skip_before_filter :preload_json, :redirect_to_login_if_required, :check_xhr, :verify_authenticity_token, only: [:show, :show_letter, :show_proxy_letter]
+  skip_before_action :preload_json, :redirect_to_login_if_required, :check_xhr, :verify_authenticity_token, only: [:show, :show_letter, :show_proxy_letter]
 
   def refresh_gravatar
     user = User.find_by(username_lower: params[:username].downcase)
     guardian.ensure_can_edit!(user)
 
     if user
-      user.create_user_avatar(user_id: user.id) unless user.user_avatar
-      user.user_avatar.update_gravatar!
+      hijack do
+        user.create_user_avatar(user_id: user.id) unless user.user_avatar
+        user.user_avatar.update_gravatar!
 
-      render json: {
-        gravatar_upload_id: user.user_avatar.gravatar_upload_id,
-        gravatar_avatar_template: User.avatar_template(user.username, user.user_avatar.gravatar_upload_id)
-      }
+        gravatar = if user.user_avatar.gravatar_upload_id
+          {
+            gravatar_upload_id: user.user_avatar.gravatar_upload_id,
+            gravatar_avatar_template: User.avatar_template(user.username, user.user_avatar.gravatar_upload_id)
+          }
+        else
+          {
+            gravatar_upload_id: nil,
+            gravatar_avatar_template: nil
+          }
+        end
+
+        render json: gravatar
+      end
     else
       raise Discourse::NotFound
     end
@@ -31,17 +42,17 @@ class UserAvatarsController < ApplicationController
     params.require(:version)
     params.require(:size)
 
-    no_cookies
+    hijack do
+      identity = LetterAvatar::Identity.new
+      identity.letter = params[:letter].to_s[0].upcase
+      identity.color = params[:color].scan(/../).map(&:hex)
+      image = LetterAvatar.generate(params[:letter].to_s, params[:size].to_i, identity: identity)
 
-    identity = LetterAvatar::Identity.new
-    identity.letter = params[:letter].to_s[0].upcase
-    identity.color = params[:color].scan(/../).map(&:hex)
-    image = LetterAvatar.generate(params[:letter].to_s, params[:size].to_i, identity: identity)
-
-    response.headers["Last-Modified"] = File.ctime(image).httpdate
-    response.headers["Content-Length"] = File.size(image).to_s
-    immutable_for(1.year)
-    send_file image, disposition: nil
+      response.headers["Last-Modified"] = File.ctime(image).httpdate
+      response.headers["Content-Length"] = File.size(image).to_s
+      immutable_for(1.year)
+      send_file image, disposition: nil
+    end
   end
 
   def show_letter
@@ -53,20 +64,22 @@ class UserAvatarsController < ApplicationController
 
     return render_blank if params[:version] != LetterAvatar.version
 
-    image = LetterAvatar.generate(params[:username].to_s, params[:size].to_i)
+    hijack do
+      image = LetterAvatar.generate(params[:username].to_s, params[:size].to_i)
 
-    response.headers["Last-Modified"] = File.ctime(image).httpdate
-    response.headers["Content-Length"] = File.size(image).to_s
-    immutable_for(1.year)
-    send_file image, disposition: nil
+      response.headers["Last-Modified"] = File.ctime(image).httpdate
+      response.headers["Content-Length"] = File.size(image).to_s
+      immutable_for(1.year)
+      send_file image, disposition: nil
+    end
   end
 
   def show
-    no_cookies
-
     # we need multisite support to keep a single origin pull for CDNs
     RailsMultisite::ConnectionManagement.with_hostname(params[:hostname]) do
-      show_in_site(params[:hostname])
+      hijack do
+        show_in_site(params[:hostname])
+      end
     end
   end
 
@@ -83,18 +96,18 @@ class UserAvatarsController < ApplicationController
     return render_blank if version != OptimizedImage::VERSION
 
     upload_id = upload_id.to_i
-    return render_blank unless upload_id > 0 && user_avatar = user.user_avatar
+    return render_blank unless upload_id > 0
 
     size = params[:size].to_i
     return render_blank if size < 8 || size > 1000
 
     if !Discourse.avatar_sizes.include?(size) && Discourse.store.external?
-      closest = Discourse.avatar_sizes.to_a.min { |a,b| (size-a).abs <=> (size-b).abs }
+      closest = Discourse.avatar_sizes.to_a.min { |a, b| (size - a).abs <=> (size - b).abs }
       avatar_url = UserAvatar.local_avatar_url(hostname, user.username_lower, upload_id, closest)
       return redirect_to cdn_path(avatar_url)
     end
 
-    upload = Upload.find_by(id: upload_id) if user_avatar.contains_upload?(upload_id)
+    upload = Upload.find_by(id: upload_id) if user&.user_avatar&.contains_upload?(upload_id)
     upload ||= user.uploaded_avatar if user.uploaded_avatar_id == upload_id
 
     if user.uploaded_avatar && !upload

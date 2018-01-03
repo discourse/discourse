@@ -4,7 +4,7 @@ class Draft < ActiveRecord::Base
   EXISTING_TOPIC = 'topic_'
 
   def self.set(user, key, sequence, data)
-    d = find_draft(user,key)
+    d = find_draft(user, key)
     if d
       return if d.sequence > sequence
       exec_sql("UPDATE drafts
@@ -18,14 +18,14 @@ class Draft < ActiveRecord::Base
   end
 
   def self.get(user, key, sequence)
-    d = find_draft(user,key)
+    d = find_draft(user, key)
     if d && d.sequence == sequence
       d.data
     end
   end
 
   def self.clear(user, key, sequence)
-    d = find_draft(user,key)
+    d = find_draft(user, key)
     if d && d.sequence <= sequence
       d.destroy
     end
@@ -59,7 +59,7 @@ end
 #
 #  id         :integer          not null, primary key
 #  user_id    :integer          not null
-#  draft_key  :string           not null
+#  draft_key  :string(255)      not null
 #  data       :text             not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null

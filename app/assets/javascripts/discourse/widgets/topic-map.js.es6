@@ -17,11 +17,16 @@ function renderParticipants(userFilters, participants) {
 
 createWidget('topic-map-show-links', {
   tagName: 'div.link-summary',
-  html(attrs) {
-    return h('a', I18n.t('topic_map.links_shown', { totalLinks: attrs.totalLinks }));
+  html() {
+    return h('span', this.attach('button', {
+      title: 'topic_map.links_shown',
+      icon: 'chevron-down',
+      action: 'showLinks',
+      className: 'btn'
+    }));
   },
 
-  click() {
+  showLinks() {
     this.sendWidgetAction('showAllLinks');
   }
 });
@@ -61,15 +66,19 @@ createWidget('topic-map-summary', {
     contents.push(h('li',
       [
         h('h4', I18n.t('created_lowercase')),
-        avatarFor('tiny', { username: attrs.createdByUsername, template: attrs.createdByAvatarTemplate }),
-        dateNode(attrs.topicCreatedAt)
+        h('div.topic-map-post.created-at', [
+          avatarFor('tiny', { username: attrs.createdByUsername, template: attrs.createdByAvatarTemplate }),
+          dateNode(attrs.topicCreatedAt)
+        ])
       ]
     ));
     contents.push(h('li',
       h('a', { attributes: { href: attrs.lastPostUrl } }, [
         h('h4', I18n.t('last_reply_lowercase')),
-        avatarFor('tiny', { username: attrs.lastPostUsername, template: attrs.lastPostAvatarTemplate }),
-        dateNode(attrs.lastPostAt)
+        h('div.topic-map-post.last-reply', [
+          avatarFor('tiny', { username: attrs.lastPostUsername, template: attrs.lastPostAvatarTemplate }),
+          dateNode(attrs.lastPostAt)
+        ])
       ])
     ));
     contents.push(h('li', [
@@ -104,7 +113,14 @@ createWidget('topic-map-summary', {
       contents.push(h('li.avatars', participants));
     }
 
-    return h('ul.clearfix', contents);
+    const nav = h('nav.buttons', this.attach('button', {
+      title: 'topic.toggle_information',
+      icon: state.collapsed ? 'chevron-down' : 'chevron-up',
+      action: 'toggleMap',
+      className: 'btn',
+    }));
+
+    return [nav, h('ul.clearfix', contents)];
   }
 });
 
@@ -120,7 +136,8 @@ createWidget('topic-map-link', {
              target: "_blank",
              'data-user-id': attrs.user_id,
              'data-ignore-post-id': 'true',
-             title: attrs.url };
+             title: attrs.url,
+             rel: 'nofollow noopener' };
   },
 
   html(attrs) {
@@ -151,17 +168,16 @@ createWidget('topic-map-expanded', {
 
     const result = [avatars];
     if (attrs.topicLinks) {
-
       const toShow = state.allLinksShown ? attrs.topicLinks : attrs.topicLinks.slice(0, LINKS_SHOWN);
-      const links = toShow.map(l => {
 
+      const links = toShow.map(l => {
         let host = '';
+
         if (l.title && l.title.length) {
-          const domain = l.domain;
-          if (domain && domain.length) {
-            const s = domain.split('.');
-            if (s[0] === 'www') s.shift();
-            host = h('span.domain', s.join('.'));
+          const rootDomain = l.root_domain;
+
+          if (rootDomain && rootDomain.length) {
+            host = h('span.domain', rootDomain);
           }
         }
 
@@ -181,7 +197,7 @@ createWidget('topic-map-expanded', {
       ];
 
       if (!state.allLinksShown && links.length < attrs.topicLinks.length) {
-        showAllLinksContent.push(this.attach('topic-map-show-links', { totalLinks: attrs.topicLinks.length }));
+        showAllLinksContent.push(this.attach('topic-map-show-links'));
       }
 
       const section = h('section.links', showAllLinksContent);
@@ -204,14 +220,7 @@ export default createWidget('topic-map', {
   },
 
   html(attrs, state) {
-    const nav = h('nav.buttons', this.attach('button', {
-      title: 'topic.toggle_information',
-      icon: state.collapsed ? 'chevron-down' : 'chevron-up',
-      action: 'toggleMap',
-      className: 'btn',
-    }));
-
-    const contents = [nav, this.attach('topic-map-summary', attrs, { state })];
+    const contents = [this.attach('topic-map-summary', attrs, { state })];
 
     if (!state.collapsed) {
       contents.push(this.attach('topic-map-expanded', attrs));

@@ -10,8 +10,6 @@ Discourse.SiteSettingsOriginal = {
   "track_external_right_clicks":false,
   "ga_universal_tracking_code":"",
   "ga_universal_domain_name":"auto",
-  "ga_tracking_code":"UA-33736483-2",
-  "ga_domain_name":"",
   "top_menu":"latest|new|unread|categories|top",
   "post_menu":"like-count|like|share|flag|edit|bookmark|delete|admin|reply",
   "post_menu_hidden_items":"flag|edit|delete|admin",
@@ -48,7 +46,6 @@ Discourse.SiteSettingsOriginal = {
   "min_private_message_title_length":2,
   "allow_uncategorized_topics":true,
   "min_title_similar_length":10,
-  "min_body_similar_length":15,
   "edit_history_visible_to_public":true,
   "delete_removed_posts_after":24,
   "traditional_markdown_linebreaks":false,
@@ -91,6 +88,7 @@ Discourse.SiteSettingsOriginal = {
   "highlighted_languages":"apache|bash|cs|cpp|css|coffeescript|diff|xml|http|ini|json|java|javascript|makefile|markdown|nginx|objectivec|ruby|perl|php|python|sql|handlebars",
   "enable_emoji":true,
   "emoji_set":"emoji_one",
-  "desktop_category_page_style":"categories_and_latest_topics"
+  "desktop_category_page_style":"categories_and_latest_topics",
+  "enable_mentions":true
 };
 Discourse.SiteSettings = jQuery.extend(true, {}, Discourse.SiteSettingsOriginal);

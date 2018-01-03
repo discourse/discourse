@@ -5,20 +5,20 @@ const HELLO   = 'javascripts/multi-test/connectors/user-profile-primary/hello';
 const GOODBYE = 'javascripts/multi-test/connectors/user-profile-primary/goodbye';
 
 acceptance("Plugin Outlet - Multi Template", {
-  setup() {
+  beforeEach() {
     clearCache();
     Ember.TEMPLATES[HELLO] = Ember.HTMLBars.compile(`<span class='hello-span'>Hello</span>`);
     Ember.TEMPLATES[GOODBYE] = Ember.HTMLBars.compile(`<span class='bye-span'>Goodbye</span>`);
   },
 
-  teardown() {
+  afterEach() {
     delete Ember.TEMPLATES[HELLO];
     delete Ember.TEMPLATES[GOODBYE];
     clearCache();
   }
 });
 
-test("Renders a template into the outlet", assert => {
+QUnit.test("Renders a template into the outlet", assert => {
   visit("/u/eviltrout");
   andThen(() => {
     assert.ok(find('.user-profile-primary-outlet.hello').length === 1, 'it has class names');

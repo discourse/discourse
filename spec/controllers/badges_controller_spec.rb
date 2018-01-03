@@ -20,7 +20,7 @@ describe BadgesController do
 
   context 'show' do
     it "should return a badge" do
-      get :show, id: badge.id, format: :json
+      get :show, params: { id: badge.id }, format: :json
       expect(response.status).to eq(200)
       parsed = JSON.parse(response.body)
       expect(parsed["badge"]).to be_present
@@ -30,8 +30,14 @@ describe BadgesController do
       log_in_user(user)
       user_badge = BadgeGranter.grant(badge, user)
       expect(user_badge.notification.read).to eq(false)
-      get :show, id: badge.id, format: :json
+      get :show, params: { id: badge.id }
       expect(user_badge.notification.reload.read).to eq(true)
+    end
+
+    it 'renders rss feed of a badge' do
+      get :show, params: { id: badge.id }, format: :rss
+      expect(response.status).to eq(200)
+      expect(response.content_type).to eq('application/rss+xml')
     end
   end
 end

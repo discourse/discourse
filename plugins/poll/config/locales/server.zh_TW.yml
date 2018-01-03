@@ -7,7 +7,6 @@
 
 zh_TW:
   site_settings:
-    poll_enabled: "允許用戶創建投票？"
     poll_maximum_options: "投票允許的最大選項數。"
     poll_edit_window_mins: "投票創建後多少分鐘內可以編輯？"
   poll:

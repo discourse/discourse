@@ -1,5 +1,5 @@
 import { registerUnbound } from 'discourse-common/lib/helpers';
-import { avatarImg } from 'discourse/lib/utilities';
+import { avatarImg, formatUsername } from 'discourse/lib/utilities';
 
 function renderAvatar(user, options) {
   options = options || {};
@@ -10,6 +10,8 @@ function renderAvatar(user, options) {
     const avatarTemplate = Em.get(user, options.avatarTemplatePath || 'avatar_template');
 
     if (!username || !avatarTemplate) { return ''; }
+
+    let formattedUsername = formatUsername(username);
 
     let title = options.title;
     if (!title && !options.ignoreTitle) {
@@ -22,7 +24,7 @@ function renderAvatar(user, options) {
         // if a description has been provided
         if (description && description.length > 0) {
           // preprend the username before the description
-          title = username + " - " + description;
+          title = formattedUsername + " - " + description;
         }
       }
     }
@@ -30,7 +32,7 @@ function renderAvatar(user, options) {
     return avatarImg({
       size: options.imageSize,
       extraClasses: Em.get(user, 'extras') || options.extraClasses,
-      title: title || username,
+      title: title || formattedUsername,
       avatarTemplate: avatarTemplate
     });
   } else {

@@ -8,7 +8,14 @@
 require 'open3'
 require 'psych'
 require 'set'
+require 'fileutils'
 require_relative '../lib/i18n/locale_file_walker'
+
+YML_DIRS = ['config/locales',
+            'plugins/poll/config/locales',
+            'plugins/discourse-narrative-bot/config/locales',
+            'plugins/discourse-presence/config/locales']
+YML_FILE_PREFIXES = ['server', 'client']
 
 if `which tx`.strip.empty?
   puts '', 'The Transifex client needs to be installed to use this script.'
@@ -34,21 +41,38 @@ def get_languages
   end
 end
 
+def yml_path(dir, prefix, language)
+  path = "../../#{dir}/#{prefix}.#{language}.yml"
+  File.expand_path(path, __FILE__)
+end
+
 languages = get_languages.select { |x| x != 'en' }.sort
+
+# ensure that all locale files exists. tx doesn't create missing locale files during pull
+YML_DIRS.each do |dir|
+  YML_FILE_PREFIXES.each do |prefix|
+    languages.each do |language|
+      filename = yml_path(dir, prefix, language)
+      FileUtils.touch(filename) unless File.exists?(filename)
+    end
+  end
+end
 
 puts 'Pulling new translations...', ''
 command = "tx pull --mode=developer --language=#{languages.join(',')} --force"
 
-Open3.popen2e(command) do |stdin, stdout_err, wait_thr|
+return_value = Open3.popen2e(command) do |_, stdout_err, wait_thr|
   while (line = stdout_err.gets)
     puts line
   end
+  wait_thr.value
 end
+
 puts ''
 
-unless $?.success?
-  puts 'Something failed. Check the output above.', ''
-  exit $?.exitstatus
+unless return_value.success?
+  STDERR.puts 'Something failed. Check the output above.', ''
+  exit return_value.exitstatus
 end
 
 YML_FILE_COMMENTS = <<END
@@ -60,22 +84,15 @@ YML_FILE_COMMENTS = <<END
 # https://www.transifex.com/projects/p/discourse-org/
 END
 
-YML_DIRS = ['config/locales',
-            'plugins/poll/config/locales',
-            'plugins/discourse-narrative-bot/config/locales',
-            'vendor/gems/discourse_imgur/lib/discourse_imgur/locale']
-YML_FILE_PREFIXES = ['server', 'client']
-
-def yml_path(dir, prefix, language)
-  path = "../../#{dir}/#{prefix}.#{language}.yml"
-  path = File.expand_path(path, __FILE__)
+def yml_path_if_exists(dir, prefix, language)
+  path = yml_path(dir, prefix, language)
   File.exists?(path) ? path : nil
 end
 
 # Add comments to the top of files and replace the language (first key in YAML file)
 def update_file_header(filename, language)
   lines = File.readlines(filename)
-  lines.collect! { |line| line =~ /^[a-z_]+:$/i ? "#{language}:" : line }
+  lines.collect! { |line| line.gsub!(/^[a-z_]+:( {})?$/i, "#{language}:\\1") || line }
 
   File.open(filename, 'w+') do |f|
     f.puts(YML_FILE_COMMENTS, '') unless lines[0][0] == '#'
@@ -92,7 +109,7 @@ class YamlAliasFinder < LocaleFileWalker
   def parse_file(filename)
     document = Psych.parse_file(filename)
     handle_document(document)
-    {anchors: @anchors, aliases: @aliases}
+    { anchors: @anchors, aliases: @aliases }
   end
 
   private
@@ -144,11 +161,11 @@ class YamlAliasSynchronizer < LocaleFileWalker
   end
 
   def add_needed_node(keys)
-    @required_keys[keys] = {mapping: nil, scalar: nil, alias: nil}
+    @required_keys[keys] = { mapping: nil, scalar: nil, alias: nil }
   end
 
   def write_yaml(stream, filename)
-    yaml = stream.to_yaml(nil, {:line_width => -1})
+    yaml = stream.to_yaml(nil, line_width: -1)
 
     File.open(filename, 'w') do |file|
       file.write(yaml)
@@ -218,7 +235,7 @@ class YamlAliasSynchronizer < LocaleFileWalker
 end
 
 def get_english_alias_data(dir, prefix)
-  filename = yml_path(dir, prefix, 'en')
+  filename = yml_path_if_exists(dir, prefix, 'en')
   filename ? YamlAliasFinder.new.parse_file(filename) : nil
 end
 
@@ -288,7 +305,7 @@ YML_DIRS.each do |dir|
     english_alias_data = get_english_alias_data(dir, prefix)
 
     languages.each do |language|
-      filename = yml_path(dir, prefix, language)
+      filename = yml_path_if_exists(dir, prefix, language)
 
       if filename
         # The following methods were added to handle a bug in Transifex's yml. Should not be needed now.
@@ -296,6 +313,7 @@ YML_DIRS.each do |dir|
         # fix_invalid_yml(filename)
 
         # TODO check if this is still needed with recent Transifex changes
+        #      Nov 14, 2017: yup, still needed
         add_anchors_and_aliases(english_alias_data, filename)
 
         update_file_header(filename, language)

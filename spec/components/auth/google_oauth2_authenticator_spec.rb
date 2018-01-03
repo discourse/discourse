@@ -14,16 +14,16 @@ describe Auth::GoogleOAuth2Authenticator do
     user = Fabricate(:user)
 
     hash = {
-      :uid => "123456789",
-      :info => {
-          :name => "John Doe",
-          :email => user.email
+      uid: "123456789",
+      info: {
+          name: "John Doe",
+          email: user.email
       },
-      :extra => {
-        :raw_info => {
-          :email => user.email,
-          :email_verified => false,
-          :name => "John Doe"
+      extra: {
+        raw_info: {
+          email: user.email,
+          email_verified: false,
+          name: "John Doe"
         }
       }
     }
@@ -39,16 +39,16 @@ describe Auth::GoogleOAuth2Authenticator do
       user = Fabricate(:user)
 
       hash = {
-        :uid => "123456789",
-        :info => {
-            :name => "John Doe",
-            :email => user.email
+        uid: "123456789",
+        info: {
+            name: "John Doe",
+            email: user.email
         },
-        :extra => {
-          :raw_info => {
-            :email => user.email,
-            :email_verified => true,
-            :name => "John Doe"
+        extra: {
+          raw_info: {
+            email: user.email,
+            email_verified: true,
+            name: "John Doe"
           }
         }
       }
@@ -60,16 +60,16 @@ describe Auth::GoogleOAuth2Authenticator do
 
     it 'can create a proper result for non existing users' do
       hash = {
-        :uid => "123456789",
-        :info => {
-            :name => "Jane Doe",
-            :email => "jane.doe@the.google.com"
+        uid: "123456789",
+        info: {
+            name: "Jane Doe",
+            email: "jane.doe@the.google.com"
         },
-        :extra => {
-          :raw_info => {
-            :email => "jane.doe@the.google.com",
-            :email_verified => true,
-            :name => "Jane Doe"
+        extra: {
+          raw_info: {
+            email: "jane.doe@the.google.com",
+            email_verified: true,
+            name: "Jane Doe"
           }
         }
       }
@@ -79,6 +79,36 @@ describe Auth::GoogleOAuth2Authenticator do
 
       expect(result.user).to eq(nil)
       expect(result.extra_data[:name]).to eq("Jane Doe")
+    end
+  end
+
+  context 'after_create_account' do
+    it 'confirms email' do
+      authenticator = Auth::GoogleOAuth2Authenticator.new
+      user = Fabricate(:user, email: 'realgoogleuser@gmail.com')
+      session = {
+        email_valid: "true",
+        extra_data: {
+          google_user_id: 1,
+          email: 'realgoogleuser@gmail.com'
+        }
+      }
+      authenticator.after_create_account(user, session)
+      expect(user.email_confirmed?).to eq(true)
+    end
+
+    it "doesn't confirm email if it was changed" do
+      authenticator = Auth::GoogleOAuth2Authenticator.new
+      user = Fabricate(:user, email: 'changed@gmail.com')
+      session = {
+        email_valid: "true",
+        extra_data: {
+          google_user_id: 1,
+          email: 'realgoogleuser@gmail.com'
+        }
+      }
+      authenticator.after_create_account(user, session)
+      expect(user.email_confirmed?).to eq(false)
     end
   end
 

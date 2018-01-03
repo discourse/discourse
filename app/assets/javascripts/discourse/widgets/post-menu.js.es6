@@ -1,4 +1,4 @@
-import { createWidget } from 'discourse/widgets/widget';
+import { applyDecorators, createWidget } from 'discourse/widgets/widget';
 import { avatarAtts } from 'discourse/widgets/actions-summary';
 import { h } from 'virtual-dom';
 
@@ -29,13 +29,26 @@ function registerButton(name, builder) {
   _builders[name] = builder;
 }
 
+export function buildButton(name, widget) {
+  let { attrs, state, siteSettings, settings } = widget;
+  let builder = _builders[name];
+  if (builder) {
+    let button = builder(attrs, state, siteSettings, settings);
+    if (button && !button.id) {
+      button.id = name;
+    }
+    return button;
+  }
+}
+
 registerButton('like', attrs => {
   if (!attrs.showLike) { return; }
+
   const className = attrs.liked ? 'toggle-like has-like fade-out' : 'toggle-like like';
 
   const button = {
     action: 'like',
-    icon: 'heart',
+    icon: attrs.liked ? 'd-liked' : 'd-unliked',
     className
   };
 
@@ -45,6 +58,7 @@ registerButton('like', attrs => {
     button.title = 'post.controls.has_liked';
     button.disabled = true;
   }
+
   return button;
 });
 
@@ -86,6 +100,35 @@ registerButton('edit', attrs => {
   }
 });
 
+registerButton('reply-small', attrs => {
+  if (!attrs.canCreatePost) { return; }
+
+  const args = {
+    action: 'replyToPost',
+    title: 'post.controls.reply',
+    icon: 'reply',
+    className: 'reply',
+  };
+
+  return args;
+});
+
+registerButton('wiki-edit', attrs => {
+  if (attrs.canEdit) {
+    const args = {
+      action: 'editPost',
+      className: 'edit create',
+      title: 'post.controls.edit',
+      icon: 'pencil-square-o',
+      alwaysShowYours: true
+    };
+    if (!attrs.mobileView) {
+      args.label = 'post.controls.edit_action';
+    }
+    return args;
+  }
+});
+
 registerButton('replies', (attrs, state, siteSettings) => {
   const replyCount = attrs.replyCount;
 
@@ -124,7 +167,7 @@ registerButton('share', attrs => {
   };
 });
 
-registerButton('reply', attrs => {
+registerButton('reply', (attrs, state, siteSettings, postMenuSettings) => {
   const args = {
     action: 'replyToPost',
     title: 'post.controls.reply',
@@ -134,7 +177,7 @@ registerButton('reply', attrs => {
 
   if (!attrs.canCreatePost) { return; }
 
-  if (!attrs.mobileView) {
+  if (postMenuSettings.showReplyTitleOnMobile || !attrs.mobileView) {
     args.label = 'topic.reply.title';
   }
 
@@ -144,20 +187,19 @@ registerButton('reply', attrs => {
 registerButton('bookmark', attrs => {
   if (!attrs.canBookmark) { return; }
 
-  let iconClass = 'read-icon';
-  let buttonClass = 'bookmark';
-  let tooltip = 'bookmarks.not_bookmarked';
+  let className = 'bookmark';
 
   if (attrs.bookmarked) {
-    iconClass += ' bookmarked';
-    buttonClass += ' bookmarked';
-    tooltip = 'bookmarks.created';
+    className += ' bookmarked';
   }
 
-  return { action: 'toggleBookmark',
-           title: tooltip,
-           className: buttonClass,
-           contents: h('div', { className: iconClass }) };
+  return {
+    id: attrs.bookmarked ? 'bookmark' : 'unbookmark',
+    action: 'toggleBookmark',
+    title: attrs.bookmarked ? "bookmarks.created" : "bookmarks.not_bookmarked",
+    className,
+    icon: 'bookmark'
+  };
 });
 
 registerButton('admin', attrs => {
@@ -170,18 +212,31 @@ registerButton('admin', attrs => {
 
 registerButton('delete', attrs => {
   if (attrs.canRecoverTopic) {
-    return { action: 'recoverPost', title: 'topic.actions.recover', icon: 'undo', className: 'recover' };
+    return { id: 'recover_topic', action: 'recoverPost', title: 'topic.actions.recover', icon: 'undo', className: 'recover' };
   } else if (attrs.canDeleteTopic) {
-    return { action: 'deletePost', title: 'topic.actions.delete', icon: 'trash-o', className: 'delete' };
+    return { id: 'delete_topic', action: 'deletePost', title: 'topic.actions.delete', icon: 'trash-o', className: 'delete' };
   } else if (attrs.canRecover) {
-    return { action: 'recoverPost', title: 'post.controls.undelete', icon: 'undo', className: 'recover' };
+    return { id: 'recover', action: 'recoverPost', title: 'post.controls.undelete', icon: 'undo', className: 'recover' };
   } else if (attrs.canDelete) {
-    return { action: 'deletePost', title: 'post.controls.delete', icon: 'trash-o', className: 'delete' };
+    return { id: 'delete', action: 'deletePost', title: 'post.controls.delete', icon: 'trash-o', className: 'delete' };
   }
 });
 
+function replaceButton(buttons, find, replace) {
+  const idx = buttons.indexOf(find);
+  if (idx !== -1) {
+    buttons[idx] = replace;
+  }
+}
+
 export default createWidget('post-menu', {
   tagName: 'section.post-menu-area.clearfix',
+
+  settings: {
+    collapseButtons: true,
+    buttonType: 'flat-button',
+    showReplyTitleOnMobile: false
+  },
 
   defaultState() {
     return { collapsed: true, likedUsers: [], adminVisible: false };
@@ -189,35 +244,57 @@ export default createWidget('post-menu', {
 
   buildKey: attrs => `post-menu-${attrs.id}`,
 
-  attachButton(name, attrs) {
-    const builder = _builders[name];
-    if (builder) {
-      const buttonAtts = builder(attrs, this.state, this.siteSettings);
-      if (buttonAtts) {
-        return this.attach('button', buttonAtts);
-      }
+  attachButton(name) {
+    let buttonAtts = buildButton(name, this);
+    if (buttonAtts) {
+      return this.attach(this.settings.buttonType, buttonAtts);
     }
   },
 
-  html(attrs, state) {
-    const { siteSettings } = this;
+  menuItems() {
+    let result = this.siteSettings.post_menu.split('|');
+    return result;
+  },
 
-    const hiddenSetting = (siteSettings.post_menu_hidden_items || '');
-    const hiddenButtons = hiddenSetting.split('|').filter(s => {
-      return !attrs.bookmarked || s !== 'bookmark';
-    });
+  html(attrs, state) {
+    const { currentUser, keyValueStore, siteSettings } = this;
+
+    const hiddenSetting = siteSettings.post_menu_hidden_items || '';
+    const hiddenButtons = hiddenSetting.split('|').filter(s => !attrs.bookmarked || s !== 'bookmark');
+
+    if (currentUser && keyValueStore) {
+      const likedPostId = keyValueStore.getInt("likedPostId");
+      if (likedPostId === attrs.id) {
+        keyValueStore.remove("likedPostId");
+        Ember.run.next(() => this.sendWidgetAction("toggleLike"));
+      }
+    }
 
     const allButtons = [];
     let visibleButtons = [];
-    siteSettings.post_menu.split('|').forEach(i => {
+
+    const orderedButtons = this.menuItems();
+
+    // If the post is a wiki, make Edit more prominent
+    if (attrs.wiki) {
+      replaceButton(orderedButtons, 'edit', 'reply-small');
+      replaceButton(orderedButtons, 'reply', 'wiki-edit');
+    }
+
+    orderedButtons.forEach(i => {
       const button = this.attachButton(i, attrs);
       if (button) {
         allButtons.push(button);
+
         if ((attrs.yours && button.attrs.alwaysShowYours) || (hiddenButtons.indexOf(i) === -1)) {
           visibleButtons.push(button);
         }
       }
     });
+
+    if (!this.settings.collapseButtons) {
+      visibleButtons = allButtons;
+    }
 
     // Only show ellipsis if there is more than one button hidden
     // if there are no more buttons, we are not collapsed
@@ -225,7 +302,7 @@ export default createWidget('post-menu', {
       visibleButtons = allButtons;
       if (state.collapsed) { state.collapsed = false; }
     } else {
-      const showMore = this.attach('button', {
+      const showMore = this.attach('flat-button', {
         action: 'showMoreActions',
         title: 'show_more',
         className: 'show-more-actions',
@@ -241,7 +318,7 @@ export default createWidget('post-menu', {
           const { position, beforeButton } = buttonAtts;
           delete buttonAtts.position;
 
-          let button = this.attach('button', buttonAtts);
+          let button = this.attach(this.settings.buttonType, buttonAtts);
 
           if (beforeButton) {
             button = h('span', [beforeButton(h), button]);
@@ -276,18 +353,21 @@ export default createWidget('post-menu', {
       postControls.push(repliesButton);
     }
 
-    postControls.push(h('div.actions', visibleButtons));
+    let extraControls = applyDecorators(this, 'extra-controls', attrs, state);
+    postControls.push(h('div.actions', visibleButtons.concat(extraControls)));
     if (state.adminVisible) {
       postControls.push(this.attach('post-admin-menu', attrs));
     }
 
     const contents = [ h('nav.post-controls.clearfix', postControls) ];
     if (state.likedUsers.length) {
+      const remaining = state.total - state.likedUsers.length;
       contents.push(this.attach('small-user-list', {
         users: state.likedUsers,
-        addSelf: attrs.liked,
+        addSelf: attrs.liked && remaining === 0,
         listClassName: 'who-liked',
-        description: 'post.actions.people.like'
+        description: remaining > 0 ? 'post.actions.people.like_capped' : 'post.actions.people.like',
+        count: remaining
       }));
     }
 
@@ -307,15 +387,18 @@ export default createWidget('post-menu', {
   },
 
   like() {
-    if (!this.currentUser) {
+    const { attrs, currentUser, keyValueStore } = this;
+
+    if (!currentUser) {
+      keyValueStore && keyValueStore.set({ key: "likedPostId", value: attrs.id });
       return this.sendWidgetAction('showLogin');
     }
-    const attrs = this.attrs;
+
     if (attrs.liked) {
       return this.sendWidgetAction('toggleLike');
     }
 
-    const $heart = $(`[data-post-id=${attrs.id}] .fa-heart`);
+    const $heart = $(`[data-post-id=${attrs.id}] .toggle-like .d-icon`);
     $heart.closest('button').addClass('has-like');
 
     if (!Ember.testing) {
@@ -343,6 +426,7 @@ export default createWidget('post-menu', {
 
     return this.store.find('post-action-user', { id: attrs.id, post_action_type_id: LIKE_ACTION }).then(users => {
       state.likedUsers = users.map(avatarAtts);
+      state.total = users.totalRows;
     });
   },
 

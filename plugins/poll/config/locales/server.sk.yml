@@ -7,7 +7,6 @@
 
 sk:
   site_settings:
-    poll_enabled: "Umožnit používaťeľom vytvárať hlasovania?"
     poll_maximum_options: "Maximálny počet povolených možností v hlasovaní."
     poll_edit_window_mins: "Počet minút po vytvorení hlasovania počas ktorých môže byť hlasovanie upravené."
   poll:

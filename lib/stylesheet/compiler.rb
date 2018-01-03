@@ -11,11 +11,12 @@ module Stylesheet
       error.gsub!("\n", '\A ')
       error.gsub!("'", '\27 ')
 
-      "footer { white-space: pre; }
-      footer:after { content: '#{error}' }"
+      "#main { display: none; }
+      body { white-space: pre; }
+      body:before { font-family: monospace; content: '#{error}' }"
     end
 
-    def self.compile_asset(asset, options={})
+    def self.compile_asset(asset, options = {})
 
       if Importer.special_imports[asset.to_s]
         filename = "theme.scss"
@@ -26,12 +27,12 @@ module Stylesheet
         file = File.read path
       end
 
-      compile(file,filename,options)
+      compile(file, filename, options)
 
     end
 
-    def self.compile(stylesheet, filename, options={})
-      source_map_file = options[:source_map_file] || "#{filename.sub(".scss","")}.css.map";
+    def self.compile(stylesheet, filename, options = {})
+      source_map_file = options[:source_map_file] || "#{filename.sub(".scss", "")}.css.map";
 
       engine = SassC::Engine.new(stylesheet,
                                  importer: Importer,
@@ -43,7 +44,6 @@ module Stylesheet
                                  theme: options[:theme],
                                  theme_field: options[:theme_field],
                                  load_paths: [ASSET_ROOT])
-
 
       result = engine.render
 

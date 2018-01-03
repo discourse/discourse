@@ -27,6 +27,7 @@ nb_NO:
   topics: "Emner"
   posts: "innlegg"
   loading: "Laster"
+  powered_by_html: 'Drives av <a href="https://www.discourse.org">Discourse</a>, og ser best ut med JavaScript aktivert'
   log_in: "Logg inn"
   purge_reason: "Automatisk slettet som som forlatt, uaktivert konto"
   disable_remote_images_download_reason: "Nedlasting av bilder ble deaktivert grunnet mangel på tilgjengelig diskplass."
@@ -37,19 +38,21 @@ nb_NO:
   emails:
     incoming:
       default_subject: "Emnet trenger en tittel"
-      show_trimmed_content: "Vis beskjært innhold"
+      show_trimmed_content: "Vis beskåret innhold"
       errors:
-        no_message_id_error: "Skjer når en e-post ikke har noen «Message-Id»-header."
-        auto_generated_email_error: "Skjer når «Precedence»-headeren er satt til list, junk, bulk eller auto_reply eller når en annen header innholder auto-submitted, auto-replied eller auto-generated."
+        empty_email_error: "Skjer når den rå e-posten vi mottok var blank."
+        no_message_id_error: "Skjer når en e-post ikke har noen «Message-ID»-hode."
+        auto_generated_email_error: "Skjer når «Presedens»-hodet er satt til list, junk, bulk eller auto_reply eller når en annen header inneholder auto-submitted, auto-replied eller auto-generated."
         no_body_detected_error: "Skjer når vi ikke kunne trekke ut meldingskroppen eller det ikke var noen vedlegg."
+        no_sender_detected_error: "Skjer når vi ikke kunne finne en gyldig adresse i Fra-hodet."
         inactive_user_error: "Skjer når senderen ikke er aktiv."
-        blocked_user_error: "Skjer når avsenderen har blitt blokkert."
         bad_destination_address: "Skjer når ingen av adressene i To-, Cc- eller Bcc-feltene passer med en konfigurert innkommende e-postadresse."
         strangers_not_allowed_error: "Skjer når en bruker forsøket å opprette et nytt emne i en kategori som han eller hun ikke er medlem av."
         insufficient_trust_level_error: "Skjer når en bruker forsøket å opprette et nytt emne i en kategori som han eller hun ikke har tillitsnivå for."
         reply_user_not_matching_error: "Skjer når et innkommende svar kommer fra en annen e-postadresse enn varselet var sendt til."
         topic_not_found_error: "Skjer når et svar blir mottatt, men det tilhørene emnet er slettet."
         topic_closed_error: "Skjer når et svar blir mottatt, men det tilhørene emnet er stengt."
+      unrecognized_error: "Ukjent feil"
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -70,6 +73,7 @@ nb_NO:
       inclusion: er ikke inkludert i listen
       invalid: er ugyldig
       is_invalid: "virker uklart, er det en komplett setning?"
+      contains_censored_words: "inneholder følgende sensurerte ord: %{censored_words}"
       less_than: må være mindre enn %{count}
       less_than_or_equal_to: må være lik eller mindre enn %{count}
       not_a_number: er ikke et nummer
@@ -115,9 +119,10 @@ nb_NO:
   not_logged_in: "Du må være logget inn for å gjøre dette."
   not_found: "Den etterspurte URL eller ressurs ble ikke funnet"
   invalid_access: "Du har ingen tilgang til denne resurssen."
+  invalid_api_credentials: "Du har ikke tillatelse til å se denne forespurte ressuresen. API-brukernavnet eller -nøkkelen er ikke gyldig."
   read_only_mode_enabled: "Siden er i skrivebeskyttet modus. Alle interaksjoner er utilgjengelige."
   reading_time: "Lesetid"
-  likes: "Kjærtegn"
+  likes: "Likes"
   too_many_replies:
     one: "Vi beklager, men nye brukere er midlertidig begrenset til 1 svar i det samme emnet."
     other: "Vi beklager, men nye brukere er midlertidig begrenset til %{count} svar i det samme emnet."
@@ -192,6 +197,7 @@ nb_NO:
     delete_reason: "Slettet via køen for innleggmoderering"
   groups:
     errors:
+      can_not_modify_automatic: "Du kan ikke modifisere en automatisk gruppe"
       member_already_exist: "'%{username}' er allerede medlem av denne gruppen."
       invalid_domain: "'%{domain}' er ikke et gyldig domene."
       invalid_incoming_email: "'%{email}' er ikke en gyldig e-postadresse."
@@ -253,6 +259,7 @@ nb_NO:
               no_user_selected: "Du må velge en gyldig bruker. "
             featured_link:
               invalid: "er ugyldig. Nettadressen bør inneholde http:// eller https://"
+              invalid_category: "kan ikke redigeres i denne kategorien."
         user:
           attributes:
             password:
@@ -267,10 +274,21 @@ nb_NO:
           attributes:
             hex:
               invalid: "er ikke en gyldig farge"
+        post_reply:
+          base:
+            different_topic: "Innlegg ogg svar må tilhøre samme emne."
         web_hook:
           attributes:
             payload_url:
               invalid: "URL-adresse er ikke gyldig. Adressen skal starte med http:// eller https:// og ingen blanke tegn er tillatt."
+        custom_emoji:
+          attributes:
+            name:
+              taken: er allerede i bruk av en annen emoji
+        topic_timer:
+          attributes:
+            execute_at:
+              in_the_past: "må være i fremtiden."
       <<: *errors
   user_profile:
     no_info_other: "<div class='missing-profile'>%{name} har ikke skrevet noe i Om meg-feltet på sin profil ennå</div>"
@@ -280,7 +298,6 @@ nb_NO:
   meta_category_description: "Diskusjon om dette nettstedet, hvordan det er organisert, hvordan det fungerer og hvordan vi kan forbedre det."
   staff_category_name: "Stab"
   staff_category_description: "Privat kategori for diskusjoner blant staben. Emner er kun synlige for administratorer og moderatorer."
-  assets_topic_body: "Dette er et permanent emne, synlig bare for staben, for å lagre bilder og filer brukt i sidens design. Ikke slett det!\n\n\nHvordan legge til nye filer:\n\n\n1. Svar på dette emnet.\n2. Last opp alle bilder du vil bruke, som logoer, favicons osv. (Bare dra bildene inn i skrivefeltet, eller bruk knappen for opplasting.)\n3. Send inn svaret ditt for å poste det.\n4. Høyreklikk på bildene i din nye post for å få lenken til de opplastede bildene, eller klikk på redigeringsikonet for å kopiere lenkene fra skrivefeltet.\n5. Lim disse lenkene inn i [basic settings](/admin/site_settings/category/required).\n\n\nHvis du trenger å tillate andre filtyper, rediger `authorized_extensions` i [file settings](/admin/site_settings/category/files)."
   discourse_welcome_topic:
     title: "Velkommen til Discourse"
   lounge_welcome:
@@ -503,7 +520,6 @@ nb_NO:
       email_title: 'Emne "%{title}" krever moderator oppmerksomhet'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Innlegget ditt har blitt rapportert av nettsamfunnet. <a href="/my/messages">Sjekk meldingene dine</a>.</p>'
     user_must_edit: '<p>Dette innlegget ble rapportert av gemenskapen og er midlertidig skjult.</p>'
   archetypes:
     regular:
@@ -551,9 +567,9 @@ nb_NO:
       xaxis: "Dag"
       yaxis: "Antall nye innlegg"
     likes:
-      title: "Kjærtegn"
+      title: "Likes"
       xaxis: "Dag"
-      yaxis: "Antall nye kjærtegn"
+      yaxis: "Antall nye likes"
     flags:
       title: "Flagg"
       xaxis: "Dag"
@@ -688,9 +704,7 @@ nb_NO:
     educate_until_posts: "Når bruker begynner å skrive på de første (n) innleggene, vis pop-up med opplæringspanelet for nye brukere i editoren."
     title: "Navnet på denne siden, slik du vil ha det i title-taggen."
     site_description: "Beskriv siden med en setning, vil brukes i beskrivelses-merkelappen."
-    contact_email: "E-post til ansvarlig kontakt for denne siden. Brukes til kritiske påminninger som uhåndterte flagg og som kontakt-adresse på /om-siden."
     contact_url: "Kontakt-URL for siden. Brukes på /om siden."
-    queue_jobs: "KUN FOR UTVIKLERE! ADVARSEL! Jobber køes som forvalg i Sidekiq. Hvis det slås av vil siden ikke fungere. "
     crawl_images: "Hent bilder fra ekstern URL for å sette inn korrekt høyde og bredde."
     download_remote_images_to_local: "Konverter eksterne bilder ved å laste de ned lokalt, dette forhindrer ødelagte bilder."
     download_remote_images_threshold: "Minimum ledig diskplass for å kunne laste ned eksterne bilder (i prosent)"
@@ -717,7 +731,7 @@ nb_NO:
     google_oauth2_client_id: "Klient-ID tilhørende din Google-søknad."
     rate_limit_create_post: "Etter et innlegg må ny brukere vente (n) sekunder før de kan skrive et nytt"
     rate_limit_new_user_create_post: "Etter et innlegg må ny brukere vente (n) sekunder før de kan skrive et nytt"
-    max_likes_per_day: "Maximum antall kjærtegn per bruker per dag"
+    max_likes_per_day: "Maximum antall likes per bruker per dag"
     max_invites_per_day: "Maksimalt antall invitasjoner en bruker kan sende hver dag."
     max_logins_per_ip_per_hour: "Maksimalt antall innlogginger som tillates for hver IP-adresse per time."
     newuser_max_links: "Hvor mange linker en ny bruker kan legge til i et innlegg."
@@ -760,6 +774,7 @@ nb_NO:
       invalid_email: "Ugyldig e-mail adresse"
       invalid_username: "Ingen bruker med det brukernavnet."
       invalid_integer_min_max: "Verdien må være mellom %{min} og %{max}."
+      invalid_integer: "Verdien må være et heltall."
       invalid_string: "Ugyldig verdi"
       invalid_string_min: "Må være minst %{min} tegn."
       invalid_string_max: "Må ikke være mer enn %{max} tegn."
@@ -848,8 +863,6 @@ nb_NO:
       subject_template: "Ny konto på vent"
     too_many_tl3_flags:
       subject_template: "Ny konto på vent"
-    unblocked:
-      subject_template: "Kontoen er ikke lenger på vent"
   unsubscribe_mailing_list: |
     Du mottar dette fordi du har slått på e-postlistemodus.
 
@@ -862,7 +875,7 @@ nb_NO:
       new_topics: "Nye emner"
       unread_messages: "Uleste meldinger"
       unread_notifications: "Uleste varslinger."
-      liked_received: "Kjærtegn mottatt"
+      liked_received: "Likes mottatt"
       new_posts: "Nye innlegg"
       new_users: "Nye brukere"
       popular_topics: "Populære emner"
@@ -870,7 +883,6 @@ nb_NO:
       join_the_discussion: "Les mer"
       popular_posts: "Populære innlegg"
       more_new: "Nytt for deg"
-      unsubscribe: "Denne oppsummeringen blir sendt fra %{site_link} når vi ikke har sett deg på en stund. For å melde deg av %{unsubscribe_link}."
       click_here: "trykk her"
       from: "%{site_name} oppsummering"
       preheader: "En kort oppsummering siden ditt siste besøk på %{last_seen_at}"
@@ -881,10 +893,6 @@ nb_NO:
     see_more: "Mer"
     search_title: "Søk i denne siden"
     search_google: "Google"
-  login_required:
-    welcome_message: |
-      #[Velkommen til %{title}](#welcome)
-      En bruker er påkrevd. Lag en bruker eller logg inn for å fortsette.
   terms_of_service:
     title: "Bruksvilkår"
     signup_form_message: 'Jeg har lest og akseptert <a href="/tos" target="_blank">Bruksvilkårene</a>.'
@@ -903,6 +911,12 @@ nb_NO:
     user_suspended: "Brukeren var suspendert"
     already_read: "bruker har allerede lest dette innlegget"
     message_blank: "meldingen er tom"
+  color_schemes:
+    default: "Lys drakt"
+    dark: "Mørk drakt"
+    default_theme_name: "Forvalg"
+    dark_theme_name: "Mørk"
+    light_theme_name: "Lys"
   about: "Om"
   guidelines: "Retningslinjer"
   privacy: "Personvern"
@@ -910,6 +924,8 @@ nb_NO:
   csv_export:
     boolean_yes: "Ja"
     boolean_no: "Nei"
+  guidelines_topic:
+    title: "O-S-S/retningslinjer"
   tos_topic:
     title: "Bruksvilkår"
   privacy_topic:
@@ -1001,6 +1017,8 @@ nb_NO:
       name: Tekstbehandler
     member:
       name: Medlem
+    welcome:
+      name: Velkommen
     anniversary:
       name: Jubileum
     good_topic:
@@ -1017,7 +1035,7 @@ nb_NO:
     appreciated:
       name: Verdsatt
     out_of_love:
-      name: Ikke mer kjærlighet å gi
+      name: Ikke flere likes å gi
     thank_you:
       name: Takk skal du ha
     gives_back:

@@ -1,5 +1,5 @@
 class PermalinksController < ApplicationController
-  skip_before_filter :check_xhr, :preload_json
+  skip_before_action :check_xhr, :preload_json
 
   def show
     url = request.fullpath

@@ -45,7 +45,6 @@ module Jobs
                            title: I18n.t('performance_report.initial_topic_title'),
                            skip_validations: true)
 
-
       unless post && post.topic_id
         raise StandardError, "Could not create or retrieve performance report topic id"
       end

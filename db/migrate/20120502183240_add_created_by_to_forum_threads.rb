@@ -1,4 +1,4 @@
-class AddCreatedByToForumThreads < ActiveRecord::Migration
+class AddCreatedByToForumThreads < ActiveRecord::Migration[4.2]
   def up
     add_column :forum_threads, :user_id, :integer
 

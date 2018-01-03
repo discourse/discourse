@@ -1,4 +1,4 @@
-class FixEmojiPathTake2 < ActiveRecord::Migration
+class FixEmojiPathTake2 < ActiveRecord::Migration[4.2]
   OLD_URL = '/plugins/emoji/images/'
   NEW_URL = '/images/emoji/'
 

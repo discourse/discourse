@@ -1,4 +1,4 @@
-class RemoveUncategorizedParents < ActiveRecord::Migration
+class RemoveUncategorizedParents < ActiveRecord::Migration[4.2]
   def up
     uncat = execute("SELECT value FROM site_settings WHERE name = 'uncategorized_category_id'")
     if uncat && uncat[0] && uncat[0]['value']

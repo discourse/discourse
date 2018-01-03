@@ -1,17 +1,17 @@
 import DiscourseURL from 'discourse/lib/url';
-import { keyDirty } from 'discourse/widgets/widget';
 import MountWidget from 'discourse/components/mount-widget';
 import { cloak, uncloak } from 'discourse/widgets/post-stream';
 import { isWorkaroundActive } from 'discourse/lib/safari-hacks';
 import offsetCalculator from 'discourse/lib/offset-calculator';
+import optionalService from 'discourse/lib/optional-service';
 
-function findTopView($posts, viewportTop, min, max) {
+function findTopView($posts, viewportTop, postsWrapperTop, min, max) {
   if (max < min) { return min; }
 
   while (max > min) {
     const mid = Math.floor((min + max) / 2);
     const $post = $($posts[mid]);
-    const viewBottom = $post.position().top + $post.height();
+    const viewBottom = ($post.offset().top - postsWrapperTop) + $post.height();
 
     if (viewBottom > viewportTop) {
       max = mid-1;
@@ -24,6 +24,7 @@ function findTopView($posts, viewportTop, min, max) {
 }
 
 export default MountWidget.extend({
+  adminTools: optionalService(),
   widget: 'post-stream',
   _topVisible: null,
   _bottomVisible: null,
@@ -64,6 +65,10 @@ export default MountWidget.extend({
     if (this.isDestroyed || this.isDestroying) { return; }
     if (isWorkaroundActive()) { return; }
 
+    // We use this because watching videos fullscreen in Chrome was super buggy
+    // otherwise. Thanks to arrendek from q23 for the technique.
+    if (document.elementFromPoint(0, 0).tagName.toUpperCase() === "IFRAME") { return; }
+
     const $w = $(window);
     const windowHeight = window.innerHeight ? window.innerHeight : $w.height();
     const slack = Math.round(windowHeight * 5);
@@ -72,9 +77,10 @@ export default MountWidget.extend({
 
     const windowTop = $w.scrollTop();
 
+    const postsWrapperTop = $('.posts-wrapper').offset().top;
     const $posts = this.$('.onscreen-post, .cloaked-post');
     const viewportTop = windowTop - slack;
-    const topView = findTopView($posts, viewportTop, 0, $posts.length-1);
+    const topView = findTopView($posts, viewportTop, postsWrapperTop, 0, $posts.length-1);
 
     let windowBottom = windowTop + windowHeight;
     let viewportBottom = windowBottom + slack;
@@ -245,13 +251,13 @@ export default MountWidget.extend({
     this.appEvents.on('post-stream:refresh', args => {
       if (args) {
         if (args.id) {
-          keyDirty(`post-${args.id}`);
+          this.dirtyKeys.keyDirty(`post-${args.id}`);
 
           if (args.refreshLikes) {
-            keyDirty(`post-menu-${args.id}`, { onRefresh: 'refreshLikes' });
+            this.dirtyKeys.keyDirty(`post-menu-${args.id}`, { onRefresh: 'refreshLikes' });
           }
         } else if (args.force) {
-          keyDirty(`*`);
+          this.dirtyKeys.forceAll();
         }
       }
       this.queueRerender();
@@ -267,6 +273,9 @@ export default MountWidget.extend({
     this.$().off('mouseleave.post-stream');
     this.appEvents.off('post-stream:refresh');
     this.appEvents.off('post-stream:posted');
-  }
+  },
 
+  showModerationHistory(post) {
+    this.get('adminTools').showModerationHistory({ filter: 'post', post_id: post.id });
+  }
 });

@@ -25,8 +25,8 @@ module Jobs
             target_group_names: Group[:moderators].name,
             archetype: Archetype.private_message,
             subtype: TopicSubtype.system_message,
-            title: I18n.t('flags_reminder.subject_template', { count: flagged_posts_count }),
-            raw: mentions + I18n.t('flags_reminder.flags_were_submitted', { count: SiteSetting.notify_about_flags_after })
+            title: I18n.t('flags_reminder.subject_template', count: flagged_posts_count),
+            raw: mentions + I18n.t('flags_reminder.flags_were_submitted', count: SiteSetting.notify_about_flags_after)
           )
 
           self.last_notified_id = flag_ids.max
@@ -35,7 +35,7 @@ module Jobs
     end
 
     def pending_flag_ids
-      FlagQuery.flagged_post_actions('active')
+      FlagQuery.flagged_post_actions(filter: 'active')
         .where('post_actions.created_at < ?', SiteSetting.notify_about_flags_after.to_i.hours.ago)
         .pluck(:id)
     end
@@ -54,10 +54,10 @@ module Jobs
 
     def active_moderator_usernames
       User.where(moderator: true)
-          .human_users
-          .order('last_seen_at DESC')
-          .limit(3)
-          .pluck(:username)
+        .human_users
+        .order('last_seen_at DESC')
+        .limit(3)
+        .pluck(:username)
     end
 
   end

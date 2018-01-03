@@ -15,7 +15,7 @@ describe Admin::PermalinksController do
       Fabricate(:permalink, url: "/discuss/topic/45")
       Fabricate(:permalink, url: "/discuss/topic/76")
 
-      xhr :get, :index, filter: "topic"
+      get :index, params: { filter: "topic" }, format: :json
 
       expect(response).to be_success
       result = JSON.parse(response.body)
@@ -28,7 +28,7 @@ describe Admin::PermalinksController do
       Fabricate(:permalink, external_url: "http://www.discourse.org")
       Fabricate(:permalink, external_url: "http://try.discourse.org")
 
-      xhr :get, :index, filter: "discourse"
+      get :index, params: { filter: "discourse" }, format: :json
 
       expect(response).to be_success
       result = JSON.parse(response.body)
@@ -41,7 +41,7 @@ describe Admin::PermalinksController do
       Fabricate(:permalink, url: "/discuss/topic/45", external_url: "http://discourse.org")
       Fabricate(:permalink, url: "/discuss/topic/76", external_url: "http://try.discourse.org")
 
-      xhr :get, :index, filter: "discourse"
+      get :index, params: { filter: "discourse" }, format: :json
 
       expect(response).to be_success
       result = JSON.parse(response.body)

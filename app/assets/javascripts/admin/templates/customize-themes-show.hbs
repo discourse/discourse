@@ -1,13 +1,13 @@
 <div class="show-current-style">
-  <h2>
+  <h1>
     {{#if editingName}}
       {{text-field value=model.name autofocus="true"}}
       {{d-button action="finishedEditingName" class="btn-primary btn-small submit-edit" icon="check"}}
       {{d-button action="cancelEditingName" class="btn-small cancel-edit" icon="times"}}
     {{else}}
-      {{model.name}} <a {{action "startEditingName"}}>{{fa-icon "pencil"}}</a>
+      {{model.name}} <a {{action "startEditingName"}}>{{d-icon "pencil"}}</a>
     {{/if}}
-  </h2>
+  </h1>
 
   {{#if model.remote_theme}}
   <p>
@@ -15,7 +15,7 @@
   </p>
   {{#if model.remote_theme.license_url}}
   <p>
-    <a href="{{model.remote_theme.license_url}}">{{i18n "admin.customize.theme.license"}} {{fa-icon "copyright"}}</a>
+    <a href="{{model.remote_theme.license_url}}">{{i18n "admin.customize.theme.license"}} {{d-icon "copyright"}}</a>
   </p>
   {{/if}}
   {{/if}}
@@ -37,10 +37,9 @@
   <h3>{{i18n "admin.customize.theme.color_scheme"}}</h3>
   <p>{{i18n "admin.customize.theme.color_scheme_select"}}</p>
   <p>{{combo-box content=colorSchemes
-                 nameProperty="name"
-                 value=colorSchemeId
-                 selectionIcon="paint-brush"
-                 valueAttribute="id"}}
+                  filterable=true
+                  value=colorSchemeId
+                  icon="paint-brush"}}
      {{#if colorSchemeChanged}}
         {{d-button action="changeScheme" class="btn-primary btn-small submit-edit" icon="check"}}
         {{d-button action="cancelChangeScheme" class="btn-small cancel-edit" icon="times"}}
@@ -123,18 +122,15 @@
     </ul>
     {{/unless}}
     {{#if selectableChildThemes}}
-      <p>{{combo-box content=selectableChildThemes
-                   nameProperty="name"
-                   value=selectedChildThemeId
-                   valueAttribute="id"}}
-
+      <p>
+        {{combo-box content=selectableChildThemes value=selectedChildThemeId}}
         {{#d-button action="addChildTheme" icon="plus"}}{{i18n "admin.customize.theme.add"}}{{/d-button}}
       </p>
     {{/if}}
   {{/if}}
 
-  <a href='{{previewUrl}}' title="{{i18n 'admin.customize.explain_preview'}}" target='_blank' class='btn'>{{fa-icon 'desktop'}}{{i18n 'admin.customize.theme.preview'}}</a>
-  <a class="btn export" target="_blank" href={{downloadUrl}}>{{fa-icon "download"}} {{i18n 'admin.export_json.button_text'}}</a>
+  <a href='{{previewUrl}}' title="{{i18n 'admin.customize.explain_preview'}}" target='_blank' class='btn'>{{d-icon 'desktop'}}{{i18n 'admin.customize.theme.preview'}}</a>
+  <a class="btn export" target="_blank" href={{downloadUrl}}>{{d-icon "download"}} {{i18n 'admin.export_json.button_text'}}</a>
 
   {{d-button action="destroy" label="admin.customize.delete" icon="trash" class="btn-danger"}}
 </div>

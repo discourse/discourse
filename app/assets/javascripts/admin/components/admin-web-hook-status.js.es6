@@ -1,5 +1,5 @@
 import computed from 'ember-addons/ember-computed-decorators';
-import { iconHTML } from 'discourse-common/helpers/fa-icon';
+import { iconHTML } from 'discourse-common/lib/icon-library';
 import { bufferedRender } from 'discourse-common/lib/buffered-render';
 
 export default Ember.Component.extend(bufferedRender({

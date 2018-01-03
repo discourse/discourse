@@ -1,9 +1,9 @@
 require_dependency 'discourse'
 
 class PostActionsController < ApplicationController
-  before_filter :ensure_logged_in
-  before_filter :fetch_post_from_params
-  before_filter :fetch_post_action_type_id_from_params
+  before_action :ensure_logged_in
+  before_action :fetch_post_from_params
+  before_action :fetch_post_action_type_id_from_params
 
   def create
     raise Discourse::NotFound if @post.blank?
@@ -13,8 +13,10 @@ class PostActionsController < ApplicationController
     guardian.ensure_post_can_act!(
       @post,
       PostActionType.types[@post_action_type_id],
-      is_warning: params[:is_warning],
-      taken_actions: taken
+      opts: {
+        is_warning: params[:is_warning],
+        taken_actions: taken
+      }
     )
 
     args = {}

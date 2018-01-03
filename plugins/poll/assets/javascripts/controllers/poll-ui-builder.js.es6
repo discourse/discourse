@@ -87,7 +87,10 @@ export default Ember.Controller.extend({
     if (isMultiple) {
       return this._comboboxOptions(pollMinInt + 1, count + 1);
     } else if (isNumber) {
-      const pollStepInt = parseInt(pollStep) || 1;
+      let pollStepInt = parseInt(pollStep, 10);
+      if (pollStepInt < 1) {
+        pollStepInt = 1;
+      }
       return this._comboboxOptions(pollMinInt + 1, pollMinInt + (this.siteSettings.poll_maximum_options * pollStepInt));
     }
   },
@@ -109,10 +112,15 @@ export default Ember.Controller.extend({
       pollHeader += ` name=poll${match.length + 1}`;
     };
 
+    let step = pollStep;
+    if (step < 1) {
+      step = 1;
+    }
+
     if (pollType) pollHeader += ` type=${pollType}`;
     if (pollMin && showMinMax) pollHeader += ` min=${pollMin}`;
     if (pollMax) pollHeader += ` max=${pollMax}`;
-    if (isNumber) pollHeader += ` step=${pollStep}`;
+    if (isNumber) pollHeader += ` step=${step}`;
     if (publicPoll) pollHeader += ' public=true';
     pollHeader += ']';
     output += `${pollHeader}\n`;
@@ -138,6 +146,17 @@ export default Ember.Controller.extend({
 
     if (pollMin >= pollMax) {
       options = { failed: true, reason: I18n.t("poll.ui_builder.help.invalid_values") };
+    }
+
+    return InputValidation.create(options);
+  },
+
+  @computed("pollStep")
+  minStepValueValidation(pollStep) {
+    let options = { ok: true };
+
+    if (pollStep < 1) {
+      options = { failed: true, reason: I18n.t("poll.ui_builder.help.min_step_value") };
     }
 
     return InputValidation.create(options);

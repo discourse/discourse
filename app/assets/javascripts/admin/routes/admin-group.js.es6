@@ -4,7 +4,7 @@ export default Discourse.Route.extend({
 
   model(params) {
     if (params.name === 'new') {
-      return Group.create({ automatic: false, visible: true });
+      return Group.create({ automatic: false, visibility_level: 0 });
     }
 
     const group = this.modelFor('adminGroupsType').findBy('name', params.name);

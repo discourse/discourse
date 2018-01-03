@@ -10,8 +10,8 @@
   }
 
   .like-count {
-    color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
-    .fa { color: $love; font-size: 12px; }
+    color: dark-light-choose($primary-medium, $secondary-medium);
+    .fa { color: $love; font-size: .857em; }
   }
 
   .badge-wrapper span.badge-category {
@@ -32,18 +32,18 @@
     margin-right: 14px;
   }
   a.search-link:visited .topic-title {
-    color: scale-color($tertiary, $lightness: 15%);
+    color: $tertiary-high;
   }
   .search-link {
     .topic-statuses, .topic-title {
-      font-size: 1.3em;
+      font-size: 1.286em;
       line-height: 25px;
     }
 
     .topic-statuses {
       float: none;
       display: inline-block;
-      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      color: dark-light-choose($primary-medium, $secondary-medium);
       font-size: 1.0em;
     }
   }
@@ -52,18 +52,18 @@
     line-height: 20px;
     word-wrap: break-word;
     max-width: 640px;
-    color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
+    color: dark-light-choose($primary-medium, $secondary-medium);
     .date {
-      color: dark-light-choose(scale-color($primary, $lightness: 60%), scale-color($secondary, $lightness: 40%));
+      color: dark-light-choose($primary-medium, $secondary-high);
     }
 
     .search-highlight {
-      color: dark-light-choose(scale-color($primary, $lightness: 10%), scale-color($secondary, $lightness: 90%));
+      color: dark-light-choose($primary, $secondary-low);
     }
   }
 
   .discourse-tag {
-    font-size: 0.8em;
+    font-size: 0.857em;
   }
 }
 
@@ -80,16 +80,22 @@
   }
   a {
     margin-right: 15px;
-    font-size: 12px;
+    font-size: .857em;
     padding: 2px 5px;
   }
 }
 
 .search.row {
   margin-bottom: 15px;
-  input {
-    height: 22px;
-    padding-left: 6px;
+
+  .search-bar {
+    display: flex; 
+    margin-bottom: 10px;
+    input {
+      height: 22px;
+      padding-left: 6px;
+      margin: 0 5px 0 0;
+    }
   }
 
   .new-topic-btn {
@@ -108,7 +114,7 @@
   }
 
   .search-advanced-options {
-    border: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
+    border: 1px solid $primary-low;
     padding: 10px;
 
     .control-group.pull-left {
@@ -121,6 +127,9 @@
   }
 }
 
+.no-results-suggestion {
+  margin-top: 30px;
+}
 .search-footer {
   margin-bottom: 30px;
 }
@@ -147,7 +156,7 @@
   }
   margin: 10px 0 15px;
   max-width: 780px;
-  border-bottom: 3px solid dark-light-diff($primary, $secondary, 90%, -75%);
+  border-bottom: 3px solid $primary-low; 
   width: 100%;
   .sort-by {
     .desc {
@@ -161,4 +170,8 @@
     float: right;
     margin-bottom: 4px;
   }
+}
+
+.google-search-form {
+  margin-top: 2em;
 }

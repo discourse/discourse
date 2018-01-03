@@ -538,7 +538,7 @@ export default RestModel.extend({
   triggerDeletedPost(postId){
     const existing = this._identityMap[postId];
 
-    if (existing) {
+    if (existing && !existing.deleted_at) {
       const url = "/posts/" + postId;
       const store = this.store;
 
@@ -741,6 +741,11 @@ export default RestModel.extend({
     const store = this.store;
     return ajax(url, {data}).then(result => {
       const posts = Ember.get(result, "post_stream.posts");
+
+      if (result.suggested_topics) {
+        this.set('topic.suggested_topics', result.suggested_topics);
+      }
+
       if (posts) {
         posts.forEach(p => this.storePost(store.createRecord('post', p)));
       }

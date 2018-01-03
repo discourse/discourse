@@ -7,7 +7,6 @@
 
 et:
   site_settings:
-    poll_enabled: "Lubada kasutajatel küsitlusi koostada?"
     poll_maximum_options: "Maksimaalne valikute arv, mis on küsitluses lubatud."
     poll_edit_window_mins: "Minutite arv peale loomist, mille jooksul saab küsitlust veel muuta."
   poll:

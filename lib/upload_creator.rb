@@ -16,12 +16,14 @@ class UploadCreator
   #  - type (string)
   #  - content_type (string)
   #  - origin (string)
-  #  - is_attachment_for_group_message (boolean)
+  #  - for_group_message (boolean)
   #  - for_theme (boolean)
+  #  - for_private_message (boolean)
+  #  - pasted (boolean)
   def initialize(file, filename, opts = {})
-    @upload = Upload.new
     @file = file
-    @filename = filename
+    @filename = filename || ''
+    @upload = Upload.new(original_filename: filename, filesize: 0)
     @opts = opts
   end
 
@@ -38,7 +40,7 @@ class UploadCreator
 
         if @filename[/\.svg$/i]
           whitelist_svg!
-        else
+        elsif !Rails.env.test?
           convert_to_jpeg! if should_convert_to_jpeg?
           downsize!        if should_downsize?
 
@@ -72,18 +74,15 @@ class UploadCreator
       @upload.sha1              = sha1
       @upload.url               = ""
       @upload.origin            = @opts[:origin][0...1000] if @opts[:origin]
+      @upload.extension         = File.extname(@filename)[1..10]
 
       if FileHelper.is_image?(@filename)
         @upload.width, @upload.height = ImageSizer.resize(*@image_info.size)
       end
 
-      if @opts[:is_attachment_for_group_message]
-        @upload.is_attachment_for_group_message = true
-      end
-
-      if @opts[:for_theme]
-        @upload.for_theme = true
-      end
+      @upload.for_private_message = true if @opts[:for_private_message]
+      @upload.for_group_message   = true if @opts[:for_group_message]
+      @upload.for_theme           = true if @opts[:for_theme]
 
       return @upload unless @upload.save
 
@@ -124,23 +123,23 @@ class UploadCreator
   MIN_PIXELS_TO_CONVERT_TO_JPEG ||= 1280 * 720
 
   def should_convert_to_jpeg?
-    TYPES_CONVERTED_TO_JPEG.include?(@image_info.type) &&
-    pixels > MIN_PIXELS_TO_CONVERT_TO_JPEG &&
-    SiteSetting.png_to_jpg_quality < 100
+    return false if !TYPES_CONVERTED_TO_JPEG.include?(@image_info.type)
+    return true  if @opts[:pasted]
+    return false if SiteSetting.png_to_jpg_quality == 100
+    pixels > MIN_PIXELS_TO_CONVERT_TO_JPEG
   end
 
   def convert_to_jpeg!
     jpeg_tempfile = Tempfile.new(["image", ".jpg"])
 
     OptimizedImage.ensure_safe_paths!(@file.path, jpeg_tempfile.path)
-    Discourse::Utils.execute_command(
-      'convert', @file.path,
-      '-auto-orient',
-      '-background', 'white',
-      '-flatten',
-      '-quality', SiteSetting.png_to_jpg_quality.to_s,
-      jpeg_tempfile.path
-    )
+
+    begin
+      execute_convert(@file, jpeg_tempfile)
+    rescue
+      # retry with debugging enabled
+      execute_convert(@file, jpeg_tempfile, true)
+    end
 
     # keep the JPEG if it's at least 15% smaller
     if File.size(jpeg_tempfile.path) < filesize * 0.85
@@ -151,6 +150,19 @@ class UploadCreator
     else
       jpeg_tempfile.close! rescue nil
     end
+  end
+
+  def execute_convert(input_file, output_file, debug = false)
+    command = ['convert', input_file.path,
+               '-auto-orient',
+               '-background', 'white',
+               '-interlace', 'none',
+               '-flatten',
+               '-quality', SiteSetting.png_to_jpg_quality.to_s]
+    command << '-debug' << 'all' if debug
+    command << output_file.path
+
+    Discourse::Utils.execute_command(*command, failure_message: I18n.t("upload.png_to_jpg_conversion_failure_message"))
   end
 
   def should_downsize?
@@ -184,6 +196,18 @@ class UploadCreator
     doc.xpath(svg_whitelist_xpath).remove
     File.write(@file.path, doc.to_s)
     @file.rewind
+  end
+
+  def should_fix_orientation?
+    # orientation is between 1 and 8, 1 being the default
+    # cf. http://www.daveperrett.com/articles/2012/07/28/exif-orientation-handling-is-a-ghetto/
+    @image_info.orientation.to_i > 1
+  end
+
+  def fix_orientation!
+    OptimizedImage.ensure_safe_paths!(@file.path)
+    Discourse::Utils.execute_command('convert', @file.path, '-auto-orient', @file.path)
+    extract_image_info!
   end
 
   def should_crop?
@@ -224,7 +248,7 @@ class UploadCreator
 
   def optimize!
     OptimizedImage.ensure_safe_paths!(@file.path)
-    ImageOptim.new.optimize_image!(@file.path)
+    FileHelper.optimize_image!(@file.path)
     extract_image_info!
   rescue ImageOptim::Worker::TimeoutExceeded
     Rails.logger.warn("ImageOptim timed out while optimizing #{@filename}")

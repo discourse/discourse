@@ -1,4 +1,4 @@
-class CreateGivenDailyLikes < ActiveRecord::Migration
+class CreateGivenDailyLikes < ActiveRecord::Migration[4.2]
   def up
     create_table :given_daily_likes, id: false, force: true do |t|
       t.integer :user_id, null: false

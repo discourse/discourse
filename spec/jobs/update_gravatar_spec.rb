@@ -8,7 +8,7 @@ describe Jobs::UpdateGravatar do
     expect(user.user_avatar.gravatar_upload_id).to eq(nil)
 
     png = Base64.decode64("R0lGODlhAQABALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//wBiZCH5BAEAAA8ALAAAAAABAAEAAAQC8EUAOw==")
-    url = "http://www.gravatar.com/avatar/d10ca8d11301c2f4993ac2279ce4b930.png?s=360&d=404"
+    url = "https://www.gravatar.com/avatar/d10ca8d11301c2f4993ac2279ce4b930.png?s=360&d=404"
     stub_request(:head, url).to_return(status: 200)
     stub_request(:get, url).to_return(body: png)
 

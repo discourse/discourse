@@ -19,13 +19,14 @@
 
 <body>
   <div class="dialog">
-    <p><%=t "login.close_window" %></p>
+    <p>
+      <%=t "login.auth_complete" %>
+      <a href="<%= Discourse.base_url.html_safe %>?authComplete=true"><%= t("login.click_to_continue") %></a>
+    </p>
 
     <script type="text/javascript">
        var authResult = <%=@auth_result.to_client_hash.to_json.html_safe%>;
 
-       // On facebook browser, just redirect and don't close
-       var ua = navigator.userAgent || navigator.vendor || window.opera;
        if (!window.opener) {
          localStorage.setItem('lastAuthResult', JSON.stringify(authResult));
          window.location.href = '<%= Discourse.base_url.html_safe %>?authComplete=true';

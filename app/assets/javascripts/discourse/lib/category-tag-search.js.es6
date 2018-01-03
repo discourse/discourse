@@ -1,5 +1,7 @@
 import { CANCELLED_STATUS } from 'discourse/lib/autocomplete';
 import Category from 'discourse/models/category';
+import { TAG_HASHTAG_POSTFIX } from 'discourse/lib/tag-hashtags';
+import { SEPARATOR } from 'discourse/lib/category-hashtags';
 
 var cache = {};
 var cacheTime;
@@ -27,7 +29,18 @@ function searchTags(term, categories, limit) {
       var returnVal = CANCELLED_STATUS;
 
       oldSearch.then((r) => {
-        var tags = r.results.map((tag) => { return { text: tag.text, count: tag.count }; });
+        const categoryNames = cats.map(c => c.model.get('name'));
+
+        const tags = r.results.map((tag) => {
+          const tagName = tag.text;
+
+          return {
+            name: tagName,
+            text: (categoryNames.includes(tagName) ? `${tagName}${TAG_HASHTAG_POSTFIX}` : tagName),
+            count: tag.count,
+          };
+        });
+
         returnVal = cats.concat(tags);
       }).always(() => {
         oldSearch = null;
@@ -55,7 +68,10 @@ export function search(term, siteSettings) {
   const limit = 5;
   var categories = Category.search(term, { limit });
   var numOfCategories = categories.length;
-  categories = categories.map((category) => { return { model: category }; });
+
+  categories = categories.map((category) => {
+    return { model: category, text: Category.slugFor(category, SEPARATOR) };
+  });
 
   if (numOfCategories !== limit && siteSettings.tagging_enabled) {
     return searchTags(term, categories, limit - numOfCategories);

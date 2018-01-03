@@ -1,4 +1,4 @@
-class FixCategoryLogoAndBackgroundUrls < ActiveRecord::Migration
+class FixCategoryLogoAndBackgroundUrls < ActiveRecord::Migration[4.2]
   def up
     return true if Discourse.asset_host.blank?
 

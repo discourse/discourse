@@ -36,32 +36,90 @@ RSpec.describe GroupActionLogger do
   end
 
   describe '#log_add_user_to_group' do
-    it 'should create the right record' do
-      subject.log_add_user_to_group(user)
+    describe 'as a group owner' do
+      it 'should create the right record' do
+        subject.log_add_user_to_group(user)
 
-      group_history = GroupHistory.last
+        group_history = GroupHistory.last
 
-      expect(group_history.action).to eq(GroupHistory.actions[:add_user_to_group])
-      expect(group_history.acting_user).to eq(group_owner)
-      expect(group_history.target_user).to eq(user)
+        expect(group_history.action).to eq(GroupHistory.actions[:add_user_to_group])
+        expect(group_history.acting_user).to eq(group_owner)
+        expect(group_history.target_user).to eq(user)
+      end
+    end
+
+    context 'as a normal user' do
+      subject { described_class.new(user, group) }
+
+      describe 'user cannot freely exit group' do
+        it 'should not be allowed to log the action' do
+          expect { subject.log_add_user_to_group(user) }
+            .to raise_error(Discourse::InvalidParameters)
+        end
+      end
+
+      describe 'user can freely exit group' do
+        before do
+          group.update!(public_admission: true)
+        end
+
+        it 'should create the right record' do
+          subject.log_add_user_to_group(user)
+
+          group_history = GroupHistory.last
+
+          expect(group_history.action).to eq(GroupHistory.actions[:add_user_to_group])
+          expect(group_history.acting_user).to eq(user)
+          expect(group_history.target_user).to eq(user)
+        end
+      end
     end
   end
 
   describe '#log_remove_user_from_group' do
-    it 'should create the right record' do
-      subject.log_remove_user_from_group(user)
+    describe 'as group owner' do
+      it 'should create the right record' do
+        subject.log_remove_user_from_group(user)
 
-      group_history = GroupHistory.last
+        group_history = GroupHistory.last
 
-      expect(group_history.action).to eq(GroupHistory.actions[:remove_user_from_group])
-      expect(group_history.acting_user).to eq(group_owner)
-      expect(group_history.target_user).to eq(user)
+        expect(group_history.action).to eq(GroupHistory.actions[:remove_user_from_group])
+        expect(group_history.acting_user).to eq(group_owner)
+        expect(group_history.target_user).to eq(user)
+      end
+    end
+
+    context 'as a normal user' do
+      subject { described_class.new(user, group) }
+
+      describe 'user cannot freely exit group' do
+        it 'should not be allowed to log the action' do
+          expect { subject.log_remove_user_from_group(user) }
+            .to raise_error(Discourse::InvalidParameters)
+        end
+      end
+
+      describe 'user can freely exit group' do
+        before do
+          group.update!(public_exit: true)
+        end
+
+        it 'should create the right record' do
+          subject.log_remove_user_from_group(user)
+
+          group_history = GroupHistory.last
+
+          expect(group_history.action).to eq(GroupHistory.actions[:remove_user_from_group])
+          expect(group_history.acting_user).to eq(user)
+          expect(group_history.target_user).to eq(user)
+        end
+      end
     end
   end
 
   describe '#log_change_group_settings' do
     it 'should create the right record' do
-      group.update_attributes!(public: true, created_at: Time.zone.now)
+      group.update_attributes!(public_admission: true, created_at: Time.zone.now)
 
       expect { subject.log_change_group_settings }.to change { GroupHistory.count }.by(1)
 
@@ -69,7 +127,7 @@ RSpec.describe GroupActionLogger do
 
       expect(group_history.action).to eq(GroupHistory.actions[:change_group_setting])
       expect(group_history.acting_user).to eq(group_owner)
-      expect(group_history.subject).to eq('public')
+      expect(group_history.subject).to eq('public_admission')
       expect(group_history.prev_value).to eq('f')
       expect(group_history.new_value).to eq('t')
     end

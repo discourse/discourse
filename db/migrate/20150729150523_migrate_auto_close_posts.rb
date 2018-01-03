@@ -1,4 +1,4 @@
-class MigrateAutoClosePosts < ActiveRecord::Migration
+class MigrateAutoClosePosts < ActiveRecord::Migration[4.2]
   def up
     I18n.overrides_disabled do
       strings = []
@@ -9,7 +9,7 @@ class MigrateAutoClosePosts < ActiveRecord::Migration
 
       sql = "UPDATE posts SET action_code = 'autoclosed.enabled', post_type = 3 "
       sql << "WHERE post_type = 2 AND ("
-      sql << strings.map {|s| "raw ~* #{ActiveRecord::Base.connection.quote(s)}" }.join(' OR ')
+      sql << strings.map { |s| "raw ~* #{ActiveRecord::Base.connection.quote(s)}" }.join(' OR ')
       sql << ")"
 
       execute sql

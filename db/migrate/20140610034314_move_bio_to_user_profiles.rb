@@ -1,4 +1,4 @@
-class MoveBioToUserProfiles < ActiveRecord::Migration
+class MoveBioToUserProfiles < ActiveRecord::Migration[4.2]
   def up
     add_column :user_profiles, :bio_raw, :text
     add_column :user_profiles, :bio_cooked, :text

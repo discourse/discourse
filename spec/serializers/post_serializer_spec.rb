@@ -9,8 +9,7 @@ describe PostSerializer do
     let(:admin) { Fabricate(:admin) }
     let(:acted_ids) {
       PostActionType.public_types.values
-        .concat([:notify_user,:spam]
-        .map{|k| PostActionType.types[k]})
+        .concat([:notify_user, :spam].map { |k| PostActionType.types[k] })
     }
 
     def visible_actions_for(user)
@@ -19,21 +18,21 @@ describe PostSerializer do
       serializer.post_actions = PostAction.counts_for([post], actor)[post.id] if user.try(:id) == actor.id
       actions = serializer.as_json[:actions_summary]
       lookup = PostActionType.types.invert
-      actions.keep_if{|a| (a[:count] || 0) > 0}.map{|a| lookup[a[:id]]}
+      actions.keep_if { |a| (a[:count] || 0) > 0 }.map { |a| lookup[a[:id]] }
     end
 
     before do
-      acted_ids.each do|id|
+      acted_ids.each do |id|
         PostAction.act(actor, post, id)
       end
       post.reload
     end
 
     it "displays the correct info" do
-      expect(visible_actions_for(actor).sort).to eq([:like,:notify_user,:spam,:vote])
-      expect(visible_actions_for(post.user).sort).to eq([:like,:vote])
-      expect(visible_actions_for(nil).sort).to eq([:like,:vote])
-      expect(visible_actions_for(admin).sort).to eq([:like,:notify_user,:spam,:vote])
+      expect(visible_actions_for(actor).sort).to eq([:like, :notify_user, :spam, :vote])
+      expect(visible_actions_for(post.user).sort).to eq([:like, :vote])
+      expect(visible_actions_for(nil).sort).to eq([:like, :vote])
+      expect(visible_actions_for(admin).sort).to eq([:like, :notify_user, :spam, :vote])
     end
 
     it "can't flag your own post to notify yourself" do
@@ -70,12 +69,12 @@ describe PostSerializer do
     let(:json) { serializer.as_json }
 
     it "returns the display_username it when `enable_names` is on" do
-      SiteSetting.stubs(:enable_names).returns(true)
+      SiteSetting.enable_names = true
       expect(json[:display_username]).to be_present
     end
 
     it "doesn't return the display_username it when `enable_names` is off" do
-      SiteSetting.stubs(:enable_names).returns(false)
+      SiteSetting.enable_names = false
       expect(json[:display_username]).to be_blank
     end
   end
@@ -144,7 +143,6 @@ describe PostSerializer do
         expect(serialized_post_for_user(Fabricate(:admin))[:can_view_edit_history]).to eq(true)
       end
     end
-
 
   end
 

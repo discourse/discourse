@@ -2,7 +2,7 @@ import DiscourseURL from 'discourse/lib/url';
 import Quote from 'discourse/lib/quote';
 import Draft from 'discourse/models/draft';
 import Composer from 'discourse/models/composer';
-import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
+import { default as computed, observes, on } from 'ember-addons/ember-computed-decorators';
 import InputValidation from 'discourse/models/input-validation';
 import { getOwner } from 'discourse-common/lib/get-owner';
 import { escapeExpression } from 'discourse/lib/utilities';
@@ -40,13 +40,18 @@ function loadDraft(store, opts) {
       draft: true,
       composerState: Composer.DRAFT,
       composerTime: draft.composerTime,
-      typingTime: draft.typingTime
+      typingTime: draft.typingTime,
+      whisper: draft.whisper
     });
     return composer;
   }
 }
 
 const _popupMenuOptionsCallbacks = [];
+
+export function clearPopupMenuOptionsCallback() {
+  _popupMenuOptionsCallbacks.length = 0;
+}
 
 export function addPopupMenuOptionsCallback(callback) {
   _popupMenuOptionsCallbacks.push(callback);
@@ -63,12 +68,32 @@ export default Ember.Controller.extend({
   showEditReason: false,
   editReason: null,
   scopedCategoryId: null,
-  optionsVisible: false,
   lastValidatedAt: null,
   isUploading: false,
   topic: null,
   linkLookup: null,
+  showPreview: true,
+  forcePreview: Ember.computed.and('site.mobileView', 'showPreview'),
   whisperOrUnlistTopic: Ember.computed.or('model.whisper', 'model.unlistTopic'),
+  categories: Ember.computed.alias('site.categoriesList'),
+
+  @on('init')
+  _setupPreview() {
+    const val = (this.site.mobileView ? false : (this.keyValueStore.get('composer.showPreview') || 'true'));
+    this.set('showPreview', val === 'true');
+  },
+
+  @computed('showPreview')
+  toggleText: function(showPreview) {
+    return showPreview ? I18n.t('composer.hide_preview') : I18n.t('composer.show_preview');
+  },
+
+  @observes('showPreview')
+  showPreviewChanged() {
+    if (!this.site.mobileView) {
+      this.keyValueStore.set({ key: 'composer.showPreview', value: this.get('showPreview') });
+    }
+  },
 
   @computed('model.replyingToTopic', 'model.creatingPrivateMessage', 'model.targetUsernames')
   focusTarget(replyingToTopic, creatingPM, usernames) {
@@ -139,11 +164,6 @@ export default Ember.Controller.extend({
     return isStaffUser && this.siteSettings.enable_whispers && action === Composer.REPLY;
   },
 
-  @computed("popupMenuOptions")
-  showPopupMenu(popupMenuOptions) {
-    return popupMenuOptions ? popupMenuOptions.some(option => option.condition) : false;
-  },
-
   _setupPopupMenuOption(callback) {
     let option = callback();
 
@@ -204,6 +224,21 @@ export default Ember.Controller.extend({
   },
 
   actions: {
+    cancelUpload() {
+      this.set('model.uploadCancelled', true);
+    },
+
+    onPopupMenuAction(action) {
+      this.send(action);
+    },
+
+    storeToolbarState(toolbarEvent) {
+      this.set('toolbarEvent', toolbarEvent);
+    },
+
+    togglePreview() {
+      this.toggleProperty('showPreview');
+    },
 
     typed() {
       this.checkReplyLength();
@@ -212,7 +247,6 @@ export default Ember.Controller.extend({
 
     cancelled() {
       this.send('hitEsc');
-      this.send('hideOptions');
     },
 
     addLinkLookup(linkLookup) {
@@ -265,23 +299,21 @@ export default Ember.Controller.extend({
       this.toggleProperty('showToolbar');
     },
 
-    showOptions(toolbarEvent, loc) {
-      this.set('toolbarEvent', toolbarEvent);
-      this.appEvents.trigger('popup-menu:open', loc);
-      this.set('optionsVisible', true);
-    },
-
-    hideOptions() {
-      this.set('optionsVisible', false);
-    },
-
     // Toggle the reply view
     toggle() {
-      this.toggle();
-    },
+      this.closeAutocomplete();
 
-    togglePreview() {
-      this.get('model').togglePreview();
+      if (Ember.isEmpty(this.get('model.reply')) && Ember.isEmpty(this.get('model.title'))) {
+        this.close();
+      } else {
+        if (this.get('model.composeState') === Composer.OPEN) {
+          this.shrink();
+        } else {
+          this.cancelComposer();
+        }
+      }
+
+      return false;
     },
 
     // Import a quote from the post
@@ -330,6 +362,11 @@ export default Ember.Controller.extend({
     },
 
     hitEsc() {
+      if (Ember.$(".emoji-picker-modal.fadeIn").length === 1) {
+        this.appEvents.trigger('emoji-picker:close');
+        return;
+      }
+
       if ((this.get('messageCount') || 0) > 0) {
         this.appEvents.trigger('composer-messages:close');
         return;
@@ -349,11 +386,22 @@ export default Ember.Controller.extend({
     groupsMentioned(groups) {
       if (!this.get('model.creatingPrivateMessage') && !this.get('model.topic.isPrivateMessage')) {
         groups.forEach(group => {
-          const body = I18n.t('composer.group_mentioned', {
-            group: "@" + group.name,
-            count: group.user_count,
-            group_link: Discourse.getURL(`/group/${group.name}/members`)
-          });
+          let body;
+
+          if (group.max_mentions < group.user_count) {
+            body = I18n.t('composer.group_mentioned_limit', {
+              group: "@" + group.name,
+              max: group.max_mentions,
+              group_link: Discourse.getURL(`/groups/${group.name}/members`)
+            });
+          } else {
+            body = I18n.t('composer.group_mentioned', {
+              group: "@" + group.name,
+              count: group.user_count,
+              group_link: Discourse.getURL(`/groups/${group.name}/members`)
+            });
+          }
+
           this.appEvents.trigger('composer-messages:create', {
             extraClass: 'custom-body',
             templateName: 'custom-body',
@@ -379,24 +427,6 @@ export default Ember.Controller.extend({
       });
     }
 
-  },
-
-  categories: function() {
-    return Discourse.Category.list();
-  }.property(),
-
-  toggle() {
-    this.closeAutocomplete();
-    if (this.get('model.composeState') === Composer.OPEN) {
-      if (Ember.isEmpty(this.get('model.reply')) && Ember.isEmpty(this.get('model.title'))) {
-        this.close();
-      } else {
-        this.shrink();
-      }
-    } else {
-      this.close();
-    }
-    return false;
   },
 
   disableSubmit: Ember.computed.or("model.loading", "isUploading"),
@@ -429,7 +459,7 @@ export default Ember.Controller.extend({
 
         let buttons = [{
           "label": I18n.t("composer.cancel"),
-          "class": "cancel",
+          "class": "d-modal-cancel",
           "link": true
         }];
 
@@ -653,7 +683,7 @@ export default Ember.Controller.extend({
       if (!splitCategory[1]) {
         category = this.site.get('categories').findBy('nameLower', splitCategory[0].toLowerCase());
       } else {
-        const categories = Discourse.Category.list();
+        const categories = this.site.get('categories');
         const mainCategory = categories.findBy('nameLower', splitCategory[0].toLowerCase());
         category = categories.find(function(item) {
           return item && item.get('nameLower') === splitCategory[1].toLowerCase() && item.get('parent_category_id') === mainCategory.id;
@@ -719,7 +749,7 @@ export default Ember.Controller.extend({
   },
 
   shrink() {
-    if (this.get('model.replyDirty')) {
+    if (this.get('model.replyDirty') || (this.get('model.canEditTitle') && this.get('model.titleDirty'))) {
       this.collapse();
     } else {
       this.close();

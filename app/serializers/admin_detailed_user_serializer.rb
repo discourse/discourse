@@ -16,7 +16,9 @@ class AdminDetailedUserSerializer < AdminUserSerializer
              :can_delete_all_posts,
              :can_be_deleted,
              :can_be_anonymized,
-             :suspend_reason,
+             :full_suspend_reason,
+             :suspended_till,
+             :silence_reason,
              :primary_group_id,
              :badge_count,
              :warnings_received_count,
@@ -28,6 +30,7 @@ class AdminDetailedUserSerializer < AdminUserSerializer
   has_one :approved_by, serializer: BasicUserSerializer, embed: :objects
   has_one :api_key, serializer: ApiKeySerializer, embed: :objects
   has_one :suspended_by, serializer: BasicUserSerializer, embed: :objects
+  has_one :silenced_by, serializer: BasicUserSerializer, embed: :objects
   has_one :tl3_requirements, serializer: TrustLevel3RequirementsSerializer, embed: :objects
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
 
@@ -69,6 +72,14 @@ class AdminDetailedUserSerializer < AdminUserSerializer
 
   def suspended_by
     object.suspend_record.try(:acting_user)
+  end
+
+  def silence_reason
+    object.silence_reason
+  end
+
+  def silenced_by
+    object.silenced_record.try(:acting_user)
   end
 
   def include_tl3_requirements?

@@ -41,7 +41,7 @@ hr {
   height: 1px;
   margin: 1em 0;
   border: 0;
-  border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  border-top: 1px solid $primary-low;
   padding: 0;
 }
 
@@ -49,7 +49,6 @@ hr {
 // --------------------------------------------------
 
 ul,
-ol,
 dd {
   margin: 0 0 9px 25px;
   padding: 0;
@@ -58,6 +57,11 @@ dd {
 
 .cooked ul, .cooked ol, .cooked dd {
   clear: both;
+}
+
+.cooked ul, .d-editor-preview ul {
+  margin: 0;
+  padding-left: 40px;
 }
 
 li {

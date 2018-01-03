@@ -6,10 +6,33 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 nl:
+  site_settings:
+    discourse_narrative_bot_enabled: 'Discourse Narrative Bot inschakelen'
+    disable_discourse_narrative_bot_welcome_post: "Discourse Narrative Bot welkomstbericht uitschakelen"
+    discourse_narrative_bot_ignored_usernames: "Gebruikersnamen die de Discourse Narrative Bot moet negeren"
+    discourse_narrative_bot_disable_public_replies: "Antwoorden door de Discourse Narrative Bot uitschakelen"
+    discourse_narrative_bot_welcome_post_type: "Wat voor soort welkomstbericht zou de Discourse Narrative Bot moeten uitsturen"
+    discourse_narrative_bot_welcome_post_delay: "Wacht (n) seconden voordat de Discourse Narrative Bot het welkomstbericht uitstuurd."
+  badges:
+    certified:
+      name: Gecertificeerd
+      description: "Doorloop onze tutorial voor nieuwe gebruikers"
+      long_description: |
+        Deze badge wordt verleend wanneer de interactieve handleiding met succes is doorlopen. Je hebt het initiatief genomen om de basis hulpmiddelen voor discussie te leren en je bent nu gecertificeerd!
+    licensed:
+      description: "Onze geavanceerde gebruikers handleiding afgerond"
   discourse_narrative_bot:
+    bio: "Hallo, ik ben geen echt persoon. Ik ben een bot die jou uitleg geeft over deze website. Om met mij te communiceren, stuur me een bericht of vermeld mij **`@%{discobot_username}`** ergens."
+    dice:
+      trigger: "gooi"
+      invalid: |-
+        Sorry, het is wiskundig onmogelijk om die combinatie te gooien. :confounded:
+      results: |-
+        > :game_die: %{results}
     quote:
       trigger: "quote"
       '1':
+        quote: "In the middle of every difficulty lies opportunity"
         author: "Albert Einstein"
       '2':
         author: "Mahatma Gandhi"
@@ -27,3 +50,31 @@ nl:
         author: "Eleanor Roosevelt"
       '9':
         author: "Bruce Lee"
+    magic_8_ball:
+      trigger: 'lot'
+      answers:
+        '1': "Het is zeker"
+        '2': "Het is zo besloten"
+        '3': "Zonder twijfel"
+        '4': "Ja zeker"
+        '5': "Daar kun je van uit gaan"
+        '6': "Zoals ik het zie, ja"
+        '7': "Zeer waarschijnlijk"
+        '9': "Ja"
+        '10': "Alle signalen wijzen naar ja"
+        '12': "Vraag later nogmaals"
+        '13': "Beter om je dat nu niet te vertellen"
+        '14': "Kan nu niet voorspellen"
+        '15': "Concentreer je en vraag opnieuw"
+        '16': "Reken er niet op"
+        '17': "Mijn antwoord is nee"
+        '18': "Mijn bronnen zeggen nee"
+        '20': "Zeer onwaarschijnlijk"
+      result: |-
+        > :crystal_ball: %{result}
+    track_selector:
+      reset_trigger: 'start'
+      skip_trigger: 'overslaan'
+      help_trigger: 'help weergeven'
+    new_user_narrative:
+      reset_trigger: "nieuwe gebruiker"

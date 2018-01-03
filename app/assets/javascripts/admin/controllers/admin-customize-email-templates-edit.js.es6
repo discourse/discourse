@@ -15,6 +15,7 @@ export default Ember.Controller.extend(bufferedProperty('emailTemplate'), {
 
   actions: {
     saveChanges() {
+      this.set('saved', false);
       const buffered = this.get('buffered');
       this.get('emailTemplate').save(buffered.getProperties('subject', 'body')).then(() => {
         this.set('saved', true);

@@ -14,11 +14,5 @@ export default Ember.Controller.extend({
   @computed
   loginRequired() {
     return Discourse.SiteSettings.login_required && !Discourse.User.current();
-  },
-
-  actions: {
-    appRouteAction(name) {
-      return this.send(name);
-    }
   }
 });

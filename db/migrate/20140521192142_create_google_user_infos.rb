@@ -1,4 +1,4 @@
-class CreateGoogleUserInfos < ActiveRecord::Migration
+class CreateGoogleUserInfos < ActiveRecord::Migration[4.2]
   def change
     create_table :google_user_infos do |t|
       t.integer :user_id, null: false
@@ -12,7 +12,7 @@ class CreateGoogleUserInfos < ActiveRecord::Migration
       t.string :profile_link
       t.string :picture
 
-      t.timestamps
+      t.timestamps null: false
     end
     add_index :google_user_infos, :user_id, unique: true
     add_index :google_user_infos, :google_user_id, unique: true

@@ -1,4 +1,4 @@
-class AddHighestPostNumberToForumThreads < ActiveRecord::Migration
+class AddHighestPostNumberToForumThreads < ActiveRecord::Migration[4.2]
   def change
     add_column :forum_threads, :highest_post_number, :integer, default: 0, null: false
 

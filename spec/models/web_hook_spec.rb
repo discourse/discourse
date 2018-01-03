@@ -35,10 +35,21 @@ describe WebHook do
   end
 
   context 'web hooks' do
-    let!(:post_hook) { Fabricate(:web_hook) }
+    let!(:post_hook) { Fabricate(:web_hook, payload_url: " https://example.com ") }
     let!(:topic_hook) { Fabricate(:topic_web_hook) }
 
+    it "removes whitspace from payload_url before saving" do
+      expect(post_hook.payload_url).to eq("https://example.com")
+    end
+
     describe '#find_by_type' do
+      it "returns unique hooks" do
+        post_hook.web_hook_event_types << WebHookEventType.find_by(name: 'topic')
+        post_hook.update!(wildcard_web_hook: true)
+
+        expect(WebHook.find_by_type(:post)).to eq([post_hook])
+      end
+
       it 'find relevant hooks' do
         expect(WebHook.find_by_type(:post)).to eq([post_hook])
         expect(WebHook.find_by_type(:topic)).to eq([topic_hook])
@@ -113,7 +124,7 @@ describe WebHook do
       Fabricate(:topic_web_hook)
 
       Sidekiq::Testing.fake! do
-        post = PostCreator.create(user, { raw: 'post', title: 'topic', skip_validations: true })
+        post = PostCreator.create(user, raw: 'post', title: 'topic', skip_validations: true)
         topic_id = post.topic_id
         job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
@@ -202,6 +213,18 @@ describe WebHook do
         job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
         expect(job_args["event_name"]).to eq("user_updated")
+        expect(job_args["user_id"]).to eq(user.id)
+
+        user.logged_out
+        job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+
+        expect(job_args["event_name"]).to eq("user_logged_out")
+        expect(job_args["user_id"]).to eq(user.id)
+
+        user.logged_in
+        job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+
+        expect(job_args["event_name"]).to eq("user_logged_in")
         expect(job_args["user_id"]).to eq(user.id)
       end
     end

@@ -16,6 +16,10 @@ class UserActivator
     @message = activator.activate
   end
 
+  def success_message
+    activator.success_message
+  end
+
   private
 
   def activator
@@ -24,10 +28,11 @@ class UserActivator
 
   def factory
     invite = Invite.find_by(email: Email.downcase(@user.email))
-    if SiteSetting.must_approve_users? && !(invite.present? && !invite.expired? && !invite.destroyed? && invite.link_valid?)
-      ApprovalActivator
-    elsif !user.active?
+
+    if !user.active?
       EmailActivator
+    elsif SiteSetting.must_approve_users? && !(invite.present? && !invite.expired? && !invite.destroyed? && invite.link_valid?)
+      ApprovalActivator
     else
       LoginActivator
     end
@@ -37,6 +42,10 @@ end
 
 class ApprovalActivator < UserActivator
   def activate
+    success_message
+  end
+
+  def success_message
     I18n.t("login.wait_approval")
   end
 end
@@ -51,6 +60,11 @@ class EmailActivator < UserActivator
       user_id: user.id,
       email_token: email_token.token
     )
+
+    success_message
+  end
+
+  def success_message
     I18n.t("login.activate_email", email: Rack::Utils.escape_html(user.email))
   end
 end
@@ -61,6 +75,10 @@ class LoginActivator < UserActivator
   def activate
     log_on_user(user)
     user.enqueue_welcome_message('welcome_user')
+    success_message
+  end
+
+  def success_message
     I18n.t("login.active")
   end
 end

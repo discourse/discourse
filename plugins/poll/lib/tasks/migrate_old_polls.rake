@@ -25,12 +25,11 @@ end
 
 desc "Migrate old polls to new syntax"
 task "poll:migrate_old_polls" => :environment do
-  require "timecop"
   # iterate over all polls
   PluginStoreRow.where(plugin_name: "poll")
-                .where("key LIKE 'poll_options_%'")
-                .pluck(:key)
-                .each do |poll_options_key|
+    .where("key LIKE 'poll_options_%'")
+    .pluck(:key)
+    .each do |poll_options_key|
     # extract the post_id
     post_id = poll_options_key["poll_options_".length..-1].to_i
     # load the post from the db
@@ -39,7 +38,7 @@ task "poll:migrate_old_polls" => :environment do
       # skip if already migrated
       next if post.custom_fields.include?("polls")
       # go back in time
-      Timecop.freeze(post.created_at + 1.minute) do
+      freeze_time(post.created_at + 1.minute) do
         raw = post.raw.gsub(/\n\n([ ]*[-\*\+] )/, "\n\\1") + "\n\n"
         # fix the RAW when needed
         if raw !~ /\[poll\]/
@@ -57,9 +56,9 @@ task "poll:migrate_old_polls" => :environment do
         options = post.custom_fields["polls"]["poll"]["options"]
         # iterate over all votes
         PluginStoreRow.where(plugin_name: "poll")
-                      .where("key LIKE 'poll_vote_#{post_id}_%'")
-                      .pluck(:key, :value)
-                      .each do |poll_vote_key, vote|
+          .where("key LIKE 'poll_vote_#{post_id}_%'")
+          .pluck(:key, :value)
+          .each do |poll_vote_key, vote|
           # extract the user_id
           user_id = poll_vote_key["poll_vote_#{post_id}_%".length..-1].to_i
           # find the selected option

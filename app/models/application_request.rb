@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class ApplicationRequest < ActiveRecord::Base
   enum req_type: %i(http_total
                     http_2xx
@@ -19,9 +20,13 @@ class ApplicationRequest < ActiveRecord::Base
   self.autoflush_seconds = 5.minutes
   self.last_flush = Time.now.utc
 
-  def self.increment!(type, opts=nil)
+  def self.increment!(type, opts = nil)
     key = redis_key(type)
     val = $redis.incr(key).to_i
+
+    # readonly mode it is going to be 0, skip
+    return if val == 0
+
     # 3.days, see: https://github.com/rails/rails/issues/21296
     $redis.expire(key, 259200)
 
@@ -36,7 +41,13 @@ class ApplicationRequest < ActiveRecord::Base
     end
   end
 
-  def self.write_cache!(date=nil)
+  GET_AND_RESET = <<~LUA
+    local val = redis.call('get', KEYS[1])
+    redis.call('set', KEYS[1], '0')
+    return val
+  LUA
+
+  def self.write_cache!(date = nil)
     if date.nil?
       write_cache!(Time.now.utc)
       write_cache!(Time.now.utc.yesterday)
@@ -49,42 +60,37 @@ class ApplicationRequest < ActiveRecord::Base
 
     # this may seem a bit fancy but in so it allows
     # for concurrent calls without double counting
-    req_types.each do |req_type,_|
-      key = redis_key(req_type,date)
-      val = $redis.get(key).to_i
+    req_types.each do |req_type, _|
+      key = redis_key(req_type, date)
 
+      namespaced_key = $redis.namespace_key(key)
+      val = $redis.without_namespace.eval(GET_AND_RESET, keys: [namespaced_key]).to_i
       next if val == 0
 
-      new_val = $redis.incrby(key, -val).to_i
-
-      if new_val < 0
-        # undo and flush next time
-        $redis.incrby(key, val)
-        next
-      end
-
-      id = req_id(date,req_type)
-
+      id = req_id(date, req_type)
       where(id: id).update_all(["count = count + ?", val])
     end
+  rescue Redis::CommandError => e
+    raise unless e.message =~ /READONLY/
+    nil
   end
 
-  def self.clear_cache!(date=nil)
+  def self.clear_cache!(date = nil)
     if date.nil?
       clear_cache!(Time.now.utc)
       clear_cache!(Time.now.utc.yesterday)
       return
     end
 
-    req_types.each do |req_type,_|
-      key = redis_key(req_type,date)
+    req_types.each do |req_type, _|
+      key = redis_key(req_type, date)
       $redis.del key
     end
   end
 
   protected
 
-  def self.req_id(date,req_type,retries=0)
+  def self.req_id(date, req_type, retries = 0)
 
     req_type_id = req_types[req_type]
 
@@ -94,13 +100,13 @@ class ApplicationRequest < ActiveRecord::Base
 
   rescue # primary key violation
     if retries == 0
-      req_id(date,req_type,1)
+      req_id(date, req_type, 1)
     else
       raise
     end
   end
 
-  def self.redis_key(req_type, time=Time.now.utc)
+  def self.redis_key(req_type, time = Time.now.utc)
     "app_req_#{req_type}#{time.strftime('%Y%m%d')}"
   end
 

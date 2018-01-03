@@ -1,8 +1,8 @@
-class CreateArchetypes < ActiveRecord::Migration
+class CreateArchetypes < ActiveRecord::Migration[4.2]
   def up
     create_table :archetypes do |t|
       t.string :name_key, null: false
-      t.timestamps
+      t.timestamps null: false
     end
     add_index :archetypes, :name_key, unique: true
 

@@ -1,9 +1,9 @@
-class AddUnreadTrackingColumns < ActiveRecord::Migration
+class AddUnreadTrackingColumns < ActiveRecord::Migration[4.2]
   def up
     # no op, no need to create all data, next migration will delete it
   end
 
   def down
-    raise "Can not be reverted"
+    raise ActiveRecord::IrreversibleMigration
   end
 end

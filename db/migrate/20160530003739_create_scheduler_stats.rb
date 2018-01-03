@@ -1,4 +1,4 @@
-class CreateSchedulerStats < ActiveRecord::Migration
+class CreateSchedulerStats < ActiveRecord::Migration[4.2]
   def change
     create_table :scheduler_stats do |t|
       t.string :name, null: false

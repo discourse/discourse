@@ -62,6 +62,12 @@
     }
   }
 
+  &.no-logos {
+    .category-box .category-box-inner > a {
+      padding: 3em 1em;
+    }
+  }
+
   .category-box-heading {
     padding: 1em 1em 0 1em;
   }
@@ -69,8 +75,8 @@
   .description {
     padding: 0 1em 1em 1em;
     text-align: center;
-    font-size: 1.05em;
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));
+    font-size: 1em;
+    color: dark-light-choose($primary-medium, $secondary-high);
     .overflow {
       max-height: 6em;
       overflow: hidden;
@@ -79,18 +85,12 @@
   }
 
   h3 {
-    font-size: 1.2em;
+    font-size: 1.286em;
     margin-bottom: 0.5em;
     margin-top: 0.25em;
     line-height: 1.1em;
     text-align: center;
     color: $primary;
-  }
-
-  &.no-logos {
-    .category-box a {
-      padding: 3em 1em;
-    }
   }
 }
 
@@ -102,7 +102,7 @@
   }
 
   h3 {
-    font-size: 1.2em;
+    font-size: 1.286em;
     text-align: center;
   }
 

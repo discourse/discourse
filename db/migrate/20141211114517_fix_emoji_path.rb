@@ -1,4 +1,4 @@
-class FixEmojiPath < ActiveRecord::Migration
+class FixEmojiPath < ActiveRecord::Migration[4.2]
   BASE_URL = '/plugins/emoji/images/'
 
   def up

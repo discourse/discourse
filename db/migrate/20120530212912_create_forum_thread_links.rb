@@ -1,4 +1,4 @@
-class CreateForumThreadLinks < ActiveRecord::Migration
+class CreateForumThreadLinks < ActiveRecord::Migration[4.2]
   def change
     create_table :forum_thread_links do |t|
       t.integer :forum_thread_id, null: false
@@ -8,7 +8,7 @@ class CreateForumThreadLinks < ActiveRecord::Migration
       t.string  :domain, limit: 100, null: false
       t.boolean :internal, null: false, default: false
       t.integer :link_forum_thread_id, null: true
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :forum_thread_links, :forum_thread_id

@@ -95,6 +95,18 @@ describe Plugin::Instance do
     end
   end
 
+  context "register service worker" do
+    it "populates the DiscoursePluginRegistry" do
+      plugin = Plugin::Instance.new nil, "/tmp/test.rb"
+      plugin.register_service_worker("test.js")
+      plugin.register_service_worker("test2.js")
+
+      plugin.send :register_service_workers!
+
+      expect(DiscoursePluginRegistry.service_workers.count).to eq(2)
+    end
+  end
+
   context "activate!" do
     it "can activate plugins correctly" do
       plugin = Plugin::Instance.new
@@ -102,7 +114,7 @@ describe Plugin::Instance do
       junk_file = "#{plugin.auto_generated_path}/junk"
 
       plugin.ensure_directory(junk_file)
-      File.open("#{plugin.auto_generated_path}/junk", "w") {|f| f.write("junk")}
+      File.open("#{plugin.auto_generated_path}/junk", "w") { |f| f.write("junk") }
       plugin.activate!
 
       expect(plugin.auth_providers.count).to eq(1)
@@ -149,6 +161,14 @@ describe Plugin::Instance do
   end
 
   context "serialized_current_user_fields" do
+    before do
+      DiscoursePluginRegistry.serialized_current_user_fields << "has_car"
+    end
+
+    after do
+      DiscoursePluginRegistry.serialized_current_user_fields.delete "has_car"
+    end
+
     it "correctly serializes custom user fields" do
       DiscoursePluginRegistry.serialized_current_user_fields << "has_car"
       user = Fabricate(:user)
@@ -157,27 +177,18 @@ describe Plugin::Instance do
 
       payload = JSON.parse(CurrentUserSerializer.new(user, scope: Guardian.new(user)).to_json)
       expect(payload["current_user"]["custom_fields"]["has_car"]).to eq("true")
-    end
-  end
 
-  context "themes" do
-    it "can register a theme" do
-      plugin = Plugin::Instance.new nil, "/tmp/test.rb"
-      plugin.register_theme('plugin') do |theme|
-        theme.set_color_scheme(
-          primary: 'ffff00',
-          secondary: '222222',
-          tertiary: '0f82af',
-          quaternary: 'c14924',
-          header_background: '111111',
-          header_primary: '333333',
-          highlight: 'a87137',
-          danger: 'e45735',
-          success: '1ca551',
-          love: 'fa6c8d'
-        )
-      end
-      expect(plugin.themes).to be_present
+      payload = JSON.parse(UserSerializer.new(user, scope: Guardian.new(user)).to_json)
+      expect(payload["user"]["custom_fields"]["has_car"]).to eq("true")
+
+      UserCustomField.destroy_all
+      user.reload
+
+      payload = JSON.parse(CurrentUserSerializer.new(user, scope: Guardian.new(user)).to_json)
+      expect(payload["current_user"]["custom_fields"]).to eq({})
+
+      payload = JSON.parse(UserSerializer.new(user, scope: Guardian.new(user)).to_json)
+      expect(payload["user"]["custom_fields"]).to eq({})
     end
   end
 
@@ -185,7 +196,7 @@ describe Plugin::Instance do
     it "can add a color scheme for the first time" do
       plugin = Plugin::Instance.new nil, "/tmp/test.rb"
       expect {
-        plugin.register_color_scheme("Purple", {primary: 'EEE0E5'})
+        plugin.register_color_scheme("Purple", primary: 'EEE0E5')
         plugin.notify_after_initialize
       }.to change { ColorScheme.count }.by(1)
       expect(ColorScheme.where(name: "Purple")).to be_present
@@ -195,7 +206,7 @@ describe Plugin::Instance do
       Fabricate(:color_scheme, name: "Halloween")
       plugin = Plugin::Instance.new nil, "/tmp/test.rb"
       expect {
-        plugin.register_color_scheme("Halloween", {primary: 'EEE0E5'})
+        plugin.register_color_scheme("Halloween", primary: 'EEE0E5')
         plugin.notify_after_initialize
       }.to_not change { ColorScheme.count }
     end

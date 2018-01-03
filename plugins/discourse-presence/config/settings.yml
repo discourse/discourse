@@ -1,0 +1,4 @@
+plugins:
+  presence_enabled:
+    default: true
+    client: true

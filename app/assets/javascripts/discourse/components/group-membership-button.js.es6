@@ -1,13 +1,16 @@
 import { default as computed } from 'ember-addons/ember-computed-decorators';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
-import DiscourseURL from 'discourse/lib/url';
+import showModal from 'discourse/lib/show-modal';
 
 export default Ember.Component.extend({
-  loading: false,
+  @computed("model.public_admission", "userIsGroupUser")
+  canJoinGroup(publicAdmission, userIsGroupUser) {
+    return publicAdmission && !userIsGroupUser;
+  },
 
-  @computed("model.public")
-  canJoinGroup(publicGroup) {
-    return publicGroup;
+  @computed("model.public_exit", "userIsGroupUser")
+  canLeaveGroup(publicExit, userIsGroupUser) {
+    return publicExit && userIsGroupUser;
   },
 
   @computed("model.is_group_user", "model.id", "groupUserIds")
@@ -51,15 +54,9 @@ export default Ember.Component.extend({
       });
     },
 
-    requestMembership() {
+    showRequestMembershipForm() {
       if (this.currentUser) {
-        this.set('loading', true);
-
-        this.get('model').requestMembership().then(result => {
-          DiscourseURL.routeTo(result.relative_url);
-        }).catch(popupAjaxError).finally(() => {
-          this.set('loading', false);
-        });
+        showModal("request-group-membership-form", { model: this.get('model') });
       } else {
         this._showLoginModal();
       }

@@ -1,4 +1,4 @@
-class AddUniqueIndexToCategoryUsers < ActiveRecord::Migration
+class AddUniqueIndexToCategoryUsers < ActiveRecord::Migration[4.2]
   def up
     execute <<SQL
 DELETE FROM category_users cu USING category_users cu1

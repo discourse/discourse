@@ -1,4 +1,4 @@
-class CreateOptimizedImages < ActiveRecord::Migration
+class CreateOptimizedImages < ActiveRecord::Migration[4.2]
   def up
     create_table :optimized_images do |t|
       t.string :sha, null: false

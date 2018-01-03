@@ -8,7 +8,8 @@ class TopicLinkSerializer < ApplicationSerializer
              :reflection,
              :clicks,
              :user_id,
-             :domain
+             :domain,
+             :root_domain,
 
   def url
     object['url']
@@ -48,6 +49,10 @@ class TopicLinkSerializer < ApplicationSerializer
 
   def domain
     object['domain']
+  end
+
+  def root_domain
+    MiniSuffix.domain(domain)
   end
 
 end

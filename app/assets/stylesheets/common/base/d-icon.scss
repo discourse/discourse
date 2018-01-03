@@ -1,0 +1,11 @@
+.d-icon.d-icon-d-regular,
+.d-icon.d-icon-d-muted,
+.d-icon.d-icon-d-watching-first,
+.d-icon.d-icon-d-watching-first-post {
+  color: dark-light-choose($primary-medium, $secondary-medium);
+}
+
+.d-icon.d-icon-d-tracking,
+.d-icon.d-icon-d-watching {
+  color: $tertiary;
+}

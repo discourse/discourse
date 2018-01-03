@@ -1,4 +1,4 @@
-class CreateTopicStatusUpdates < ActiveRecord::Migration
+class CreateTopicStatusUpdates < ActiveRecord::Migration[4.2]
   def change
     create_table :topic_status_updates do |t|
       t.datetime :execute_at, null: false
@@ -8,7 +8,7 @@ class CreateTopicStatusUpdates < ActiveRecord::Migration
       t.boolean :based_on_last_post, null: false, default: false
       t.datetime :deleted_at
       t.integer :deleted_by_id
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :topic_status_updates, :user_id

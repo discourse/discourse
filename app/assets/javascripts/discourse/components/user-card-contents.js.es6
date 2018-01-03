@@ -6,12 +6,14 @@ import { default as computed, observes } from 'ember-addons/ember-computed-decor
 import DiscourseURL from 'discourse/lib/url';
 import User from 'discourse/models/user';
 import { userPath } from 'discourse/lib/url';
+import { durationTiny } from 'discourse/lib/formatter';
+import CanCheckEmails from 'discourse/mixins/can-check-emails';
 
 const clickOutsideEventName = "mousedown.outside-user-card";
 const clickDataExpand = "click.discourse-user-card";
 const clickMention = "click.discourse-user-mention";
 
-export default Ember.Component.extend(CleansUp, {
+export default Ember.Component.extend(CleansUp, CanCheckEmails, {
   elementId: 'user-card',
   classNameBindings: ['visible:show', 'showBadges', 'hasCardBadgeImage', 'user.card_background::no-bg'],
   allowBackgrounds: setting('allow_profile_backgrounds'),
@@ -29,6 +31,7 @@ export default Ember.Component.extend(CleansUp, {
   showDelete: Ember.computed.and("viewingAdmin", "showName", "user.canBeDeleted"),
   linkWebsite: Ember.computed.not('user.isBasic'),
   hasLocationOrWebsite: Ember.computed.or('user.location', 'user.website_name'),
+  showCheckEmail: Ember.computed.and('user.staged', 'canCheckEmails'),
 
   visible: false,
   user: null,
@@ -44,6 +47,11 @@ export default Ember.Component.extend(CleansUp, {
   @computed('user.name')
   nameFirst(name) {
     return !this.siteSettings.prioritize_username_in_ux && name && name.trim().length > 0;
+  },
+
+  @computed('username', 'topicPostCount')
+  togglePostsLabel(username, count) {
+    return I18n.t("topic.filter_to", { username, count });
   },
 
   @computed('user.user_fields.@each.value')
@@ -82,14 +90,32 @@ export default Ember.Component.extend(CleansUp, {
     $this.css('background-image', bg);
   },
 
+  @computed('user.time_read', 'user.recent_time_read')
+  showRecentTimeRead(timeRead, recentTimeRead) {
+    return timeRead !== recentTimeRead && recentTimeRead !== 0;
+  },
+
+  @computed('user.recent_time_read')
+  recentTimeRead(recentTimeReadSeconds) {
+    return durationTiny(recentTimeReadSeconds);
+  },
+
+  @computed('showRecentTimeRead', 'user.time_read', 'recentTimeRead')
+  timeReadTooltip(showRecent, timeRead, recentTimeRead) {
+    if (showRecent) {
+      return I18n.t('time_read_recently_tooltip', {time_read: durationTiny(timeRead), recent_time_read: recentTimeRead});
+    } else {
+      return I18n.t('time_read_tooltip', {time_read: durationTiny(timeRead)});
+    }
+  },
+
   _show(username, $target) {
     // No user card for anon
     if (this.siteSettings.hide_user_profiles_from_public && !this.currentUser) {
       return false;
     }
 
-    // XSS protection (should be encapsulated)
-    username = username.toString().replace(/[^A-Za-z0-9_\.\-]/g, "");
+    username = Ember.Handlebars.Utils.escapeExpression(username.toString());
 
     // Don't show on mobile
     if (this.site.mobileView) {
@@ -243,6 +269,10 @@ export default Ember.Component.extend(CleansUp, {
   },
 
   actions: {
+    close() {
+      this._close();
+    },
+
     cancelFilter() {
       const postStream = this.get('postStream');
       postStream.cancelFilter();
@@ -266,6 +296,10 @@ export default Ember.Component.extend(CleansUp, {
     showUser() {
       this.sendAction('showUser', this.get('user'));
       this._close();
+    },
+
+    checkEmail(user) {
+      user.checkEmail();
     }
   }
 });

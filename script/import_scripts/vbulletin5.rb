@@ -5,7 +5,7 @@ require 'htmlentities'
 class ImportScripts::VBulletin < ImportScripts::Base
   BATCH_SIZE = 1000
   DBPREFIX = "vb_"
-  ROOT_NODE=2
+  ROOT_NODE = 2
 
   # CHANGE THESE BEFORE RUNNING THE IMPORTER
   DATABASE = "yourforum"
@@ -394,7 +394,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
       end
 
       if new_raw != post.raw
-        PostRevisor.new(post).revise!(post.user, { raw: new_raw }, { bypass_bump: true, edit_reason: 'Import attachments from vBulletin' })
+        PostRevisor.new(post).revise!(post.user, { raw: new_raw }, bypass_bump: true, edit_reason: 'Import attachments from vBulletin')
       end
 
       success_count += 1
@@ -450,15 +450,15 @@ class ImportScripts::VBulletin < ImportScripts::Base
 
     # fix whitespaces
     raw = raw.gsub(/(\\r)?\\n/, "\n")
-             .gsub("\\t", "\t")
+      .gsub("\\t", "\t")
 
     # [HTML]...[/HTML]
     raw = raw.gsub(/\[html\]/i, "\n```html\n")
-             .gsub(/\[\/html\]/i, "\n```\n")
+      .gsub(/\[\/html\]/i, "\n```\n")
 
     # [PHP]...[/PHP]
     raw = raw.gsub(/\[php\]/i, "\n```php\n")
-             .gsub(/\[\/php\]/i, "\n```\n")
+      .gsub(/\[\/php\]/i, "\n```\n")
 
     # [HIGHLIGHT="..."]
     raw = raw.gsub(/\[highlight="?(\w+)"?\]/i) { "\n```#{$1.downcase}\n" }
@@ -466,7 +466,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
     # [CODE]...[/CODE]
     # [HIGHLIGHT]...[/HIGHLIGHT]
     raw = raw.gsub(/\[\/?code\]/i, "\n```\n")
-             .gsub(/\[\/?highlight\]/i, "\n```\n")
+      .gsub(/\[\/?highlight\]/i, "\n```\n")
 
     # [SAMP]...[/SAMP]
     raw = raw.gsub(/\[\/?samp\]/i, "`")
@@ -476,12 +476,12 @@ class ImportScripts::VBulletin < ImportScripts::Base
     #  - AFTER all the "code" processing
     #  - BEFORE the "quote" processing
     raw = raw.gsub(/`([^`]+)`/im) { "`" + $1.gsub("<", "\u2603") + "`" }
-             .gsub("<", "&lt;")
-             .gsub("\u2603", "<")
+      .gsub("<", "&lt;")
+      .gsub("\u2603", "<")
 
     raw = raw.gsub(/`([^`]+)`/im) { "`" + $1.gsub(">", "\u2603") + "`" }
-             .gsub(">", "&gt;")
-             .gsub("\u2603", ">")
+      .gsub(">", "&gt;")
+      .gsub("\u2603", ">")
 
     # [URL=...]...[/URL]
     raw.gsub!(/\[url="?(.+?)"?\](.+?)\[\/url\]/i) { "<a href=\"#{$1}\">#{$2}</a>" }
@@ -489,7 +489,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
     # [URL]...[/URL]
     # [MP3]...[/MP3]
     raw = raw.gsub(/\[\/?url\]/i, "")
-             .gsub(/\[\/?mp3\]/i, "")
+      .gsub(/\[\/?mp3\]/i, "")
 
     # [MENTION]<username>[/MENTION]
     raw = raw.gsub(/\[mention\](.+?)\[\/mention\]/i) do

@@ -7,7 +7,6 @@
 
 id:
   site_settings:
-    poll_enabled: "Perbolehkan pengguna untuk membuat polling?"
     poll_maximum_options: "Nomor maksimum dari pilihan yang diperbolehkan di sebuah polling."
     poll_edit_window_mins: "Menit setelah postingan dibuat dimana polling masih bisa diedit."
   poll:

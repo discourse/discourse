@@ -1,4 +1,4 @@
-class RenameExpressionTypeId < ActiveRecord::Migration
+class RenameExpressionTypeId < ActiveRecord::Migration[4.2]
 
   def up
     add_column :expression_types, :expression_index, :integer

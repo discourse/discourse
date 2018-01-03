@@ -13,8 +13,7 @@ describe SiteSettings::LocalProcessProvider do
     SiteSettings::LocalProcessProvider.new
   end
 
-
-  def setting(name,value,data_type)
+  def setting(name, value, data_type)
     OpenStruct.new.tap do |setting|
       setting.name = name
       setting.value = value
@@ -29,13 +28,13 @@ describe SiteSettings::LocalProcessProvider do
 
     it "can allows additional settings" do
       provider.save("test", "bla", 2)
-      expect_same_setting(provider.all[0], setting("test","bla",2))
+      expect_same_setting(provider.all[0], setting("test", "bla", 2))
     end
 
     it "does not leak new stuff into list" do
       provider.save("test", "bla", 2)
       provider.save("test", "bla1", 2)
-      expect_same_setting(provider.all[0], setting("test","bla1",2))
+      expect_same_setting(provider.all[0], setting("test", "bla1", 2))
       expect(provider.all.length).to eq(1)
     end
   end
@@ -46,19 +45,19 @@ describe SiteSettings::LocalProcessProvider do
     end
 
     it "can find a new setting" do
-      provider.save("one","two",3)
-      expect_same_setting(provider.find("one"),setting("one", "two", 3))
+      provider.save("one", "two", 3)
+      expect_same_setting(provider.find("one"), setting("one", "two", 3))
     end
 
     it "can amend a setting" do
-      provider.save("one","three",4)
-      expect_same_setting(provider.find("one"),setting("one", "three", 4))
+      provider.save("one", "three", 4)
+      expect_same_setting(provider.find("one"), setting("one", "three", 4))
     end
   end
 
   describe "destroy" do
     it "can destroy a setting" do
-      provider.save("one","three",4)
+      provider.save("one", "three", 4)
       provider.destroy("one")
       expect(provider.find("one")).to eq(nil)
     end

@@ -19,7 +19,7 @@ describe UserOption do
     let!(:user) { Fabricate(:user) }
 
     it "should be redirected to top when there is a reason to" do
-      user.user_option.expects(:redirected_to_top).returns({ reason: "42" })
+      user.user_option.expects(:redirected_to_top).returns(reason: "42")
       expect(user.user_option.should_be_redirected_to_top).to eq(true)
     end
 
@@ -56,20 +56,20 @@ describe UserOption do
     let!(:user) { Fabricate(:user) }
 
     it "should have no reason when `SiteSetting.redirect_users_to_top_page` is disabled" do
-      SiteSetting.expects(:redirect_users_to_top_page).returns(false)
+      SiteSetting.redirect_users_to_top_page = false
       expect(user.user_option.redirected_to_top).to eq(nil)
     end
 
     context "when `SiteSetting.redirect_users_to_top_page` is enabled" do
-      before { SiteSetting.expects(:redirect_users_to_top_page).returns(true) }
+      before { SiteSetting.redirect_users_to_top_page = true }
 
       it "should have no reason when top is not in the `SiteSetting.top_menu`" do
-        SiteSetting.expects(:top_menu).returns("latest")
+        SiteSetting.top_menu = "latest"
         expect(user.user_option.redirected_to_top).to eq(nil)
       end
 
       context "and when top is in the `SiteSetting.top_menu`" do
-        before { SiteSetting.expects(:top_menu).returns("latest|top") }
+        before { SiteSetting.top_menu = "latest|top" }
 
         it "should have no reason when there are not enough topics" do
           SiteSetting.expects(:min_redirected_to_top_period).returns(nil)
@@ -87,10 +87,12 @@ describe UserOption do
             end
 
             it "should have a reason for the first visit" do
-              expect(user.user_option.redirected_to_top).to eq({
-                reason: I18n.t('redirected_to_top_reasons.new_user'),
-                period: :monthly
-              })
+              freeze_time do
+                delay = SiteSetting.active_user_rate_limit_secs / 2
+                Jobs.expects(:enqueue_in).with(delay, :update_top_redirection, user_id: user.id, redirected_at: Time.zone.now)
+
+                expect(user.user_option.redirected_to_top).to eq(reason: I18n.t('redirected_to_top_reasons.new_user'), period: :monthly)
+              end
             end
 
             it "should not have a reason for next visits" do
@@ -108,10 +110,8 @@ describe UserOption do
               user.last_seen_at = 2.months.ago
               user.user_option.expects(:update_last_redirected_to_top!).once
 
-              expect(user.user_option.redirected_to_top).to eq({
-                reason: I18n.t('redirected_to_top_reasons.not_seen_in_a_month'),
-                period: :monthly
-              })
+              expect(user.user_option.redirected_to_top).to eq(reason: I18n.t('redirected_to_top_reasons.not_seen_in_a_month'),
+                                                               period: :monthly)
             end
 
           end

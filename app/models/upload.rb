@@ -4,6 +4,7 @@ require_dependency "url_helper"
 require_dependency "db_helper"
 require_dependency "validators/upload_validator"
 require_dependency "file_store/local_store"
+require_dependency "base62"
 
 class Upload < ActiveRecord::Base
   belongs_to :user
@@ -13,8 +14,9 @@ class Upload < ActiveRecord::Base
 
   has_many :optimized_images, dependent: :destroy
 
-  attr_accessor :is_attachment_for_group_message
+  attr_accessor :for_group_message
   attr_accessor :for_theme
+  attr_accessor :for_private_message
 
   validates_presence_of :filesize
   validates_presence_of :original_filename
@@ -29,7 +31,7 @@ class Upload < ActiveRecord::Base
     thumbnail(width, height).present?
   end
 
-  def create_thumbnail!(width, height, crop=false)
+  def create_thumbnail!(width, height, crop = false)
     return unless SiteSetting.create_thumbnails?
 
     opts = {
@@ -52,8 +54,20 @@ class Upload < ActiveRecord::Base
     end
   end
 
-  def extension
-    File.extname(original_filename)
+  def short_url
+    "upload://#{Base62.encode(sha1.hex)}.#{extension}"
+  end
+
+  def self.sha1_from_short_url(url)
+    if url =~ /(upload:\/\/)?([a-zA-Z0-9]+)(\..*)?/
+      sha1 = Base62.decode($2).to_s(16)
+
+      if sha1.length > 40
+        nil
+      else
+        sha1.rjust(40, '0')
+      end
+    end
   end
 
   def self.generate_digest(path)
@@ -65,7 +79,7 @@ class Upload < ActiveRecord::Base
     # we store relative urls, so we need to remove any host/cdn
     url = url.sub(Discourse.asset_host, "") if Discourse.asset_host.present?
     # when using s3, we need to replace with the absolute base url
-    url = url.sub(SiteSetting.s3_cdn_url, Discourse.store.absolute_base_url) if SiteSetting.s3_cdn_url.present?
+    url = url.sub(SiteSetting.Upload.s3_cdn_url, Discourse.store.absolute_base_url) if SiteSetting.Upload.s3_cdn_url.present?
 
     # always try to get the path
     uri = URI(url) rescue nil
@@ -74,7 +88,7 @@ class Upload < ActiveRecord::Base
     Upload.find_by(url: url)
   end
 
-  def self.migrate_to_new_scheme(limit=nil)
+  def self.migrate_to_new_scheme(limit = nil)
     problems = []
 
     if SiteSetting.migrate_to_new_scheme
@@ -108,9 +122,7 @@ class Upload < ActiveRecord::Base
             upload.sha1 = Upload.generate_digest(path)
           end
           # optimize if image
-          if FileHelper.is_image?(File.basename(path))
-            ImageOptim.new.optimize_image!(path)
-          end
+          FileHelper.optimize_image!(path) if FileHelper.is_image?(File.basename(path))
           # store to new location & update the filesize
           File.open(path) do |f|
             upload.url = Discourse.store.store_upload(f, upload)
@@ -144,19 +156,21 @@ end
 #
 #  id                :integer          not null, primary key
 #  user_id           :integer          not null
-#  original_filename :string           not null
+#  original_filename :string(255)      not null
 #  filesize          :integer          not null
 #  width             :integer
 #  height            :integer
-#  url               :string           not null
+#  url               :string(255)      not null
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  sha1              :string(40)
 #  origin            :string(1000)
 #  retain_hours      :integer
+#  extension         :string(10)
 #
 # Indexes
 #
+#  index_uploads_on_extension   (lower((extension)::text))
 #  index_uploads_on_id_and_url  (id,url)
 #  index_uploads_on_sha1        (sha1) UNIQUE
 #  index_uploads_on_url         (url)

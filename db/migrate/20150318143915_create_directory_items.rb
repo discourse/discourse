@@ -1,4 +1,4 @@
-class CreateDirectoryItems < ActiveRecord::Migration
+class CreateDirectoryItems < ActiveRecord::Migration[4.2]
   def change
     create_table :directory_items, force: true do |t|
       t.integer :period_type, null: false
@@ -8,7 +8,7 @@ class CreateDirectoryItems < ActiveRecord::Migration
       t.integer :topics_entered, null: false
       t.integer :topic_count, null: false
       t.integer :post_count, null: false
-      t.timestamps
+      t.timestamps null: true
     end
 
     add_index :directory_items, :period_type

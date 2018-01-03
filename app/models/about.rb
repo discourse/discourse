@@ -35,8 +35,8 @@ class About
 
   def moderators
     @moderators ||= User.where(moderator: true, admin: false)
-                        .human_users
-                        .order(:username_lower)
+      .human_users
+      .order(:username_lower)
   end
 
   def admins

@@ -1,8 +1,12 @@
-desc "run phantomjs based smoke tests on current build"
+desc "run chrome headless smoke tests on current build"
 task "smoke:test" do
-  phantom_path = File.expand_path('~/phantomjs/bin/phantomjs')
-  phantom_path = nil unless File.exists?(phantom_path)
-  phantom_path = phantom_path || 'phantomjs'
+  unless system("command -v google-chrome >/dev/null;")
+    abort "Chrome is not installed. Download from https://www.google.com/chrome/browser/desktop/index.html"
+  end
+
+  if Gem::Version.new(`$(command -v google-chrome) --version`.match(/[\d\.]+/)[0]) < Gem::Version.new("59")
+    abort "Chrome 59 or higher is required to run smoke tests in headless mode."
+  end
 
   url = ENV["URL"]
   if !url
@@ -31,7 +35,8 @@ task "smoke:test" do
   end
 
   results = ""
-  IO.popen("#{phantom_path} #{Rails.root}/spec/phantom_js/smoke_test.js #{url}").each do |line|
+
+  IO.popen("node #{Rails.root}/test/smoke_test.js #{url}").each do |line|
     puts line
     results << line
   end

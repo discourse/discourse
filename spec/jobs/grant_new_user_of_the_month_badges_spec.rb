@@ -62,7 +62,6 @@ describe Jobs::GrantNewUserOfTheMonthBadges do
     expect(badge).to be_blank
   end
 
-
   it "does nothing if it's been awarded recently" do
     u0 = Fabricate(:user, created_at: 2.weeks.ago)
     BadgeGranter.grant(Badge.find(Badge::NewUserOfTheMonth), u0)
@@ -98,6 +97,19 @@ describe Jobs::GrantNewUserOfTheMonthBadges do
 
     it "doesn't score users who haven't posted in two topics" do
       user = Fabricate(:user, created_at: 1.week.ago)
+      p = Fabricate(:post, user: user)
+      old_user = Fabricate(:user, created_at: 6.months.ago)
+      PostAction.act(old_user, p, PostActionType.types[:like])
+      old_user = Fabricate(:user, created_at: 6.months.ago)
+      PostAction.act(old_user, p, PostActionType.types[:like])
+
+      expect(granter.scores.keys).not_to include(user.id)
+    end
+
+    it "doesn't count private topics" do
+      user = Fabricate(:user, created_at: 1.week.ago)
+      topic = Fabricate(:private_message_topic)
+      Fabricate(:post, topic: topic, user: user)
       p = Fabricate(:post, user: user)
       old_user = Fabricate(:user, created_at: 6.months.ago)
       PostAction.act(old_user, p, PostActionType.types[:like])

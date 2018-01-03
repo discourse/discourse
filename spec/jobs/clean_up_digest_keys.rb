@@ -10,4 +10,3 @@ module Jobs
   end
 
 end
-

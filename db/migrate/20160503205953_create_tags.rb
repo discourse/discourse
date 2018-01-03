@@ -1,22 +1,22 @@
-class CreateTags < ActiveRecord::Migration
+class CreateTags < ActiveRecord::Migration[4.2]
   def change
     create_table :tags do |t|
       t.string      :name,        null: false
       t.integer     :topic_count, null: false, default: 0
-      t.timestamps
+      t.timestamps null: false
     end
 
     create_table :topic_tags do |t|
       t.references :topic, null: false
       t.references :tag,   null: false
-      t.timestamps
+      t.timestamps null: false
     end
 
     create_table :tag_users do |t|
       t.references :tag,  null: false
       t.references :user, null: false
       t.integer    :notification_level, null: false
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :tags, :name, unique: true

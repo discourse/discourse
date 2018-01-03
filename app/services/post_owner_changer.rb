@@ -22,10 +22,15 @@ class PostOwnerChanger
         end
         post.topic = @topic
         post.set_owner(@new_owner, @acting_user, @skip_revision)
+        PostAction.remove_act(@new_owner, post, PostActionType.types[:like])
       end
 
       @topic.update_statistics
-      @new_owner.user_stat.update(first_post_created_at: @new_owner.posts(true).order('created_at ASC').first.try(:created_at))
+
+      @new_owner.user_stat.update(
+        first_post_created_at: @new_owner.reload.posts.order('created_at ASC').first&.created_at
+      )
+
       @topic.save!
     end
   end

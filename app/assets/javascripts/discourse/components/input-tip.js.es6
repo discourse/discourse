@@ -1,5 +1,5 @@
 import { bufferedRender } from 'discourse-common/lib/buffered-render';
-import { iconHTML } from 'discourse-common/helpers/fa-icon';
+import { iconHTML } from 'discourse-common/lib/icon-library';
 
 export default Ember.Component.extend(bufferedRender({
   classNameBindings: [':tip', 'good', 'bad'],

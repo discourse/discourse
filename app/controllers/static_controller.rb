@@ -3,8 +3,9 @@ require_dependency 'file_helper'
 
 class StaticController < ApplicationController
 
-  skip_before_filter :check_xhr, :redirect_to_login_if_required
-  skip_before_filter :verify_authenticity_token, only: [:brotli_asset, :cdn_asset, :enter, :favicon]
+  skip_before_action :check_xhr, :redirect_to_login_if_required
+  skip_before_action :verify_authenticity_token, only: [:brotli_asset, :cdn_asset, :enter, :favicon, :service_worker_asset]
+  skip_before_action :preload_json, only: [:brotli_asset, :cdn_asset, :enter, :favicon, :service_worker_asset]
 
   PAGES_WITH_EMAIL_PARAM = ['login', 'password_reset', 'signup']
 
@@ -13,9 +14,9 @@ class StaticController < ApplicationController
     return redirect_to path('/login') if SiteSetting.login_required? && current_user.nil? && (params[:id] == 'faq' || params[:id] == 'guidelines')
 
     map = {
-      "faq" => {redirect: "faq_url", topic_id: "guidelines_topic_id"},
-      "tos" => {redirect: "tos_url", topic_id: "tos_topic_id"},
-      "privacy" => {redirect: "privacy_policy_url", topic_id: "privacy_topic_id"}
+      "faq" => { redirect: "faq_url", topic_id: "guidelines_topic_id" },
+      "tos" => { redirect: "tos_url", topic_id: "tos_topic_id" },
+      "privacy" => { redirect: "privacy_policy_url", topic_id: "privacy_topic_id" }
     }
 
     @page = params[:id]
@@ -35,7 +36,7 @@ class StaticController < ApplicationController
     if map.has_key?(@page)
       @topic = Topic.find_by_id(SiteSetting.send(map[@page][:topic_id]))
       raise Discourse::NotFound unless @topic
-      @title = @topic.title
+      @title = "#{@topic.title} - #{SiteSetting.title}"
       @body = @topic.posts.first.cooked
       @faq_overriden = !SiteSetting.faq_url.blank?
       render :show, layout: !request.xhr?, formats: [:html]
@@ -100,34 +101,36 @@ class StaticController < ApplicationController
   # a huge expiry, we also cache these assets in nginx so it bypassed if needed
   def favicon
 
-    data = DistributedMemoizer.memoize('favicon' + SiteSetting.favicon_url, 60*30) do
-      begin
-        file = FileHelper.download(
-          SiteSetting.favicon_url,
-          max_file_size: 50.kilobytes,
-          tmp_file_name: "favicon.png",
-          follow_redirect: true
-        )
-        data = file.read
-        file.unlink
-        data
-      rescue => e
-        AdminDashboardData.add_problem_message('dashboard.bad_favicon_url', 1800)
-        Rails.logger.debug("Invalid favicon_url #{SiteSetting.favicon_url}: #{e}\n#{e.backtrace}")
-        ""
+    hijack do
+      data = DistributedMemoizer.memoize('favicon' + SiteSetting.favicon_url, 60 * 30) do
+        begin
+          file = FileHelper.download(
+            SiteSetting.favicon_url,
+            max_file_size: 50.kilobytes,
+            tmp_file_name: "favicon.png",
+            follow_redirect: true
+          )
+          data = file.read
+          file.unlink
+          data
+        rescue => e
+          AdminDashboardData.add_problem_message('dashboard.bad_favicon_url', 1800)
+          Rails.logger.debug("Invalid favicon_url #{SiteSetting.favicon_url}: #{e}\n#{e.backtrace}")
+          ""
+        end
       end
-    end
 
-    if data.bytesize == 0
-      @@default_favicon ||= File.read(Rails.root + "public/images/default-favicon.png")
-      response.headers["Content-Length"] = @@default_favicon.bytesize.to_s
-      render text: @@default_favicon, content_type: "image/png"
-    else
-      immutable_for 1.year
-      response.headers["Expires"] = 1.year.from_now.httpdate
-      response.headers["Content-Length"] = data.bytesize.to_s
-      response.headers["Last-Modified"] = Time.new('2000-01-01').httpdate
-      render text: data, content_type: "image/png"
+      if data.bytesize == 0
+        @@default_favicon ||= File.read(Rails.root + "public/images/default-favicon.png")
+        response.headers["Content-Length"] = @@default_favicon.bytesize.to_s
+        render body: @@default_favicon, content_type: "image/png"
+      else
+        immutable_for 1.year
+        response.headers["Expires"] = 1.year.from_now.httpdate
+        response.headers["Content-Length"] = data.bytesize.to_s
+        response.headers["Last-Modified"] = Time.new('2000-01-01').httpdate
+        render body: data, content_type: "image/png"
+      end
     end
   end
 
@@ -137,20 +140,33 @@ class StaticController < ApplicationController
     end
   end
 
-
   def cdn_asset
     serve_asset
   end
 
+  def service_worker_asset
+    respond_to do |format|
+      format.js do
+
+        # we take 1 hour to give a new service worker to all users
+        immutable_for 1.hour
+
+        render(
+          plain: Rails.application.assets_manifest.find_sources('service-worker.js').first,
+          content_type: 'application/javascript'
+        )
+      end
+    end
+  end
+
   protected
 
-  def serve_asset(suffix=nil)
+  def serve_asset(suffix = nil)
 
     path = File.expand_path(Rails.root + "public/assets/#{params[:path]}#{suffix}")
 
     # SECURITY what if path has /../
     raise Discourse::NotFound unless path.start_with?(Rails.root.to_s + "/public/assets")
-
 
     response.headers["Expires"] = 1.year.from_now.httpdate
     response.headers["Access-Control-Allow-Origin"] = params[:origin] if params[:origin]

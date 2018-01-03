@@ -1,11 +1,11 @@
 # Cross-process locking using Redis.
 class DistributedMutex
 
-  def self.synchronize(key, redis=nil, &blk)
+  def self.synchronize(key, redis = nil, &blk)
     self.new(key, redis).synchronize(&blk)
   end
 
-  def initialize(key, redis=nil)
+  def initialize(key, redis = nil)
     @key = key
     @redis = redis || $redis
     @mutex = Mutex.new

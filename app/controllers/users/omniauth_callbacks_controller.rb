@@ -14,20 +14,20 @@ class Users::OmniauthCallbacksController < ApplicationController
     Auth::InstagramAuthenticator.new
   ]
 
-  skip_before_filter :redirect_to_login_if_required
+  skip_before_action :redirect_to_login_if_required
 
-  layout false
+  layout 'no_ember'
 
   def self.types
     @types ||= Enum.new(:facebook, :instagram, :twitter, :google, :yahoo, :github, :persona, :cas)
   end
 
   # need to be able to call this
-  skip_before_filter :check_xhr
+  skip_before_action :check_xhr
 
   # this is the only spot where we allow CSRF, our openid / oauth redirect
   # will not have a CSRF token, however the payload is all validated so its safe
-  skip_before_filter :verify_authenticity_token, only: :complete
+  skip_before_action :verify_authenticity_token, only: :complete
 
   def complete
     auth = request.env["omniauth.auth"]
@@ -36,7 +36,7 @@ class Users::OmniauthCallbacksController < ApplicationController
     auth[:session] = session
 
     authenticator = self.class.find_authenticator(params[:provider])
-    provider = Discourse.auth_providers && Discourse.auth_providers.find{|p| p.name == params[:provider]}
+    provider = Discourse.auth_providers && Discourse.auth_providers.find { |p| p.name == params[:provider] }
 
     @auth_result = authenticator.after_authenticate(auth)
 
@@ -80,9 +80,8 @@ class Users::OmniauthCallbacksController < ApplicationController
 
   def failure
     flash[:error] = I18n.t("login.omniauth_error")
-    render layout: 'no_ember'
+    render 'failure'
   end
-
 
   def self.find_authenticator(name)
     BUILTIN_AUTH.each do |authenticator|
@@ -115,7 +114,10 @@ class Users::OmniauthCallbacksController < ApplicationController
     # automatically activate/unstage any account if a provider marked the email valid
     if @auth_result.email_valid && @auth_result.email == user.email
       user.update!(staged: false)
+      # ensure there is an active email token
+      user.email_tokens.create(email: user.email) unless EmailToken.where(email: user.email, confirmed: true).present? || user.email_tokens.active.where(email: user.email).exists?
       user.activate
+      user.update!(registration_ip_address: request.remote_ip) if user.registration_ip_address.blank?
     end
 
     if ScreenedIpAddress.should_block?(request.remote_ip)

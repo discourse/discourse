@@ -1,30 +1,48 @@
 require "mysql2"
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
+# Before running this script, paste these lines into your shell,
+# then use arrow keys to edit the values
+=begin
+export DB_HOST="localhost"
+export DB_NAME="mybb"
+export DB_PW=""
+export DB_USER="root"
+export TABLE_PREFIX="mybb_"
+export BASE="" #
+=end
+
 # Call it like this:
 #   RAILS_ENV=production ruby script/import_scripts/mybb.rb
 class ImportScripts::MyBB < ImportScripts::Base
 
-  MYBB_DB = "mybb_db"
-  TABLE_PREFIX = "mybb_"
+  DB_HOST ||= ENV['DB_HOST'] || "localhost"
+  DB_NAME ||= ENV['DB_NAME'] || "mybb"
+  DB_PW ||= ENV['DB_PW'] || ""
+  DB_USER ||= ENV['DB_USER'] || "root"
+  TABLE_PREFIX ||= ENV['TABLE_PREFIX'] || "mybb_"
   BATCH_SIZE = 1000
+  BASE = ""
+  QUIET = true
 
   def initialize
     super
 
     @client = Mysql2::Client.new(
-      host: "localhost",
-      username: "root",
-      #password: "",
-      database: MYBB_DB
+      host: DB_HOST,
+      username: DB_USER,
+      password: DB_PW,
+      database: DB_NAME
     )
   end
 
   def execute
+    SiteSetting.disable_emails = true
     import_users
     import_categories
     import_posts
     import_private_messages
+    create_permalinks
     suspend_users
   end
 
@@ -48,7 +66,7 @@ class ImportScripts::MyBB < ImportScripts::Base
 
       break if results.size < 1
 
-      next if all_records_exist? :users, results.map {|u| u["id"].to_i}
+      next if all_records_exist? :users, results.map { |u| u["id"].to_i }
 
       create_users(results, total: total_count, offset: offset) do |user|
         { id: user['id'],
@@ -69,7 +87,7 @@ class ImportScripts::MyBB < ImportScripts::Base
     ")
 
     create_categories(results) do |row|
-      h = {id: row['id'], name: CGI.unescapeHTML(row['name']), description: CGI.unescapeHTML(row['description'])}
+      h = { id: row['id'], name: CGI.unescapeHTML(row['name']), description: CGI.unescapeHTML(row['description']) }
       if row['parent_id'].to_i > 0
         h[:parent_category_id] = category_id_from_imported_category_id(row['parent_id'])
       end
@@ -102,7 +120,7 @@ class ImportScripts::MyBB < ImportScripts::Base
 
       break if results.size < 1
 
-      next if all_records_exist? :posts, results.map {|m| m['id'].to_i}
+      next if all_records_exist? :posts, results.map { |m| m['id'].to_i }
 
       create_posts(results, total: total_count, offset: offset) do |m|
         skip = false
@@ -214,10 +232,73 @@ class ImportScripts::MyBB < ImportScripts::Base
     s
   end
 
+  def create_permalinks
+    puts '', 'Creating redirects...', ''
+
+    SiteSetting.permalink_normalizations = '/(\\w+)-(\\d+)[-.].*/\\1-\\2.html'
+    puts '', 'Users...', ''
+    total_users = User.count
+    start_time = Time.now
+    count = 0
+    User.find_each do |u|
+      ucf = u.custom_fields
+      count += 1
+      if ucf && ucf["import_id"] && ucf["import_username"]
+        Permalink.create(url: "#{BASE}/user-#{ucf['import_id']}.html", external_url: "/u/#{u.username}") rescue nil
+      end
+      print_status(count, total_users, start_time)
+    end
+
+    puts '', 'Categories...', ''
+    total_categories = Category.count
+    start_time = Time.now
+    count = 0
+    Category.find_each do |cat|
+      ccf = cat.custom_fields
+      count += 1
+      next unless id = ccf["import_id"]
+      unless QUIET
+        puts ("forum-#{id}.html --> /c/#{cat.id}")
+      end
+      Permalink.create(url: "#{BASE}/forum-#{id}.html", category_id: cat.id) rescue nil
+      print_status(count, total_categories, start_time)
+    end
+
+    puts '', 'Topics...', ''
+    total_posts = Post.count
+    start_time = Time.now
+    count = 0
+    puts '', 'Posts...', ''
+    batches(BATCH_SIZE) do |offset|
+      results = mysql_query("
+        SELECT p.pid id,
+               p.tid topic_id
+          FROM #{TABLE_PREFIX}posts p,
+               #{TABLE_PREFIX}threads t
+         WHERE p.tid = t.tid
+           AND t.firstpost=p.pid
+      ORDER BY p.dateline
+         LIMIT #{BATCH_SIZE}
+        OFFSET #{offset};
+      ")
+      break if results.size < 1
+      results.each do |post|
+        count += 1
+        if topic = topic_lookup_from_imported_post_id(post['id'])
+          id = post['topic_id']
+          Permalink.create(url: "#{BASE}/thread-#{id}.html", topic_id: topic[:topic_id]) rescue nil
+          unless QUIET
+            puts ("#{BASE}/thread-#{id}.html --> http://localhost:3000/t/#{topic[:topic_id]}")
+          end
+          print_status(count, total_posts, start_time)
+        end
+      end
+    end
+  end
+
   def mysql_query(sql)
     @client.query(sql, cache_rows: false)
   end
 end
 
 ImportScripts::MyBB.new.perform
-

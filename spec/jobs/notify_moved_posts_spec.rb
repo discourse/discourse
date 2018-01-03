@@ -9,9 +9,8 @@ describe Jobs::NotifyMovedPosts do
   end
 
   it "raises an error without moved_by_id" do
-    expect { Jobs::NotifyMovedPosts.new.execute(post_ids: [1,2,3]) }.to raise_error(Discourse::InvalidParameters)
+    expect { Jobs::NotifyMovedPosts.new.execute(post_ids: [1, 2, 3]) }.to raise_error(Discourse::InvalidParameters)
   end
-
 
   context 'with post ids' do
     let!(:p1) { Fabricate(:post) }
@@ -32,6 +31,5 @@ describe Jobs::NotifyMovedPosts do
     end
 
   end
-
 
 end

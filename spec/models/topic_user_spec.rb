@@ -90,7 +90,7 @@ describe TopicUser do
     u
   }
 
-  let(:topic_new_user) { TopicUser.get(topic, new_user)}
+  let(:topic_new_user) { TopicUser.get(topic, new_user) }
   let(:yesterday) { DateTime.now.yesterday }
 
   def ensure_topic_user
@@ -135,12 +135,12 @@ describe TopicUser do
 
     it 'should be set to "regular" notifications, by default on non creators' do
       ensure_topic_user
-      expect(TopicUser.get(topic,user).notification_level).to eq(TopicUser.notification_levels[:regular])
+      expect(TopicUser.get(topic, user).notification_level).to eq(TopicUser.notification_levels[:regular])
     end
 
     it 'reason should reset when changed' do
       topic.notify_muted!(topic.user)
-      expect(TopicUser.get(topic,topic.user).notifications_reason_id).to eq(TopicUser.notification_reasons[:user_changed])
+      expect(TopicUser.get(topic, topic.user).notifications_reason_id).to eq(TopicUser.notification_reasons[:user_changed])
     end
 
     it 'should have the correct reason for a user change when watched' do
@@ -190,7 +190,7 @@ describe TopicUser do
 
       TopicUser.track_visit!(topic.id, user.id)
       # reload is a no go
-      topic_user = TopicUser.get(topic,user)
+      topic_user = TopicUser.get(topic, user)
       expect(topic_user.first_visited_at.to_i).to eq(yesterday.to_i)
       expect(topic_user.last_visited_at.to_i).to eq(Time.zone.now.to_i)
 
@@ -201,12 +201,12 @@ describe TopicUser do
 
     context "without auto tracking" do
 
-      let(:topic_user) { TopicUser.get(topic,user) }
+      let(:topic_user) { TopicUser.get(topic, user) }
 
       it 'should create a new record for a visit' do
         freeze_time yesterday
 
-        TopicUser.update_last_read(user, topic.id, 1, 0)
+        TopicUser.update_last_read(user, topic.id, 1, 1, 0)
 
         expect(topic_user.last_read_post_number).to eq(1)
         expect(topic_user.last_visited_at.to_i).to eq(yesterday.to_i)
@@ -218,14 +218,14 @@ describe TopicUser do
         today = Time.zone.now
         freeze_time Time.zone.now
 
-        TopicUser.update_last_read(user, topic.id, 1, 0)
+        TopicUser.update_last_read(user, topic.id, 1, 1, 0)
 
         tomorrow = 1.day.from_now
         freeze_time tomorrow
 
         Fabricate(:post, topic: topic, user: user)
-        TopicUser.update_last_read(user, topic.id, 2, 0)
-        topic_user = TopicUser.get(topic,user)
+        TopicUser.update_last_read(user, topic.id, 2, 1, 0)
+        topic_user = TopicUser.get(topic, user)
 
         expect(topic_user.last_read_post_number).to eq(2)
         expect(topic_user.last_visited_at.to_i).to eq(today.to_i)
@@ -249,7 +249,7 @@ describe TopicUser do
       let(:post_creator) { PostCreator.new(new_user, raw: Fabricate.build(:post).raw, topic_id: topic.id) }
 
       before do
-        TopicUser.update_last_read(new_user, topic.id, 2, 0)
+        TopicUser.update_last_read(new_user, topic.id, 2, 2, 0)
       end
 
       it 'should automatically track topics you reply to' do
@@ -311,13 +311,13 @@ describe TopicUser do
 
       it 'should automatically track topics after they are read for long enough' do
         expect(topic_new_user.notification_level).to eq(TopicUser.notification_levels[:regular])
-        TopicUser.update_last_read(new_user, topic.id, 2, SiteSetting.default_other_auto_track_topics_after_msecs + 1)
+        TopicUser.update_last_read(new_user, topic.id, 2, 2, SiteSetting.default_other_auto_track_topics_after_msecs + 1)
         expect(TopicUser.get(topic, new_user).notification_level).to eq(TopicUser.notification_levels[:tracking])
       end
 
       it 'should not automatically track topics after they are read for long enough if changed manually' do
         TopicUser.change(new_user, topic, notification_level: TopicUser.notification_levels[:regular])
-        TopicUser.update_last_read(new_user, topic, 2, SiteSetting.default_other_auto_track_topics_after_msecs + 1)
+        TopicUser.update_last_read(new_user, topic, 2, 2, SiteSetting.default_other_auto_track_topics_after_msecs + 1)
         expect(topic_new_user.notification_level).to eq(TopicUser.notification_levels[:regular])
       end
     end
@@ -370,7 +370,7 @@ describe TopicUser do
     TopicUser.exec_sql("UPDATE topic_users set highest_seen_post_number=1, last_read_post_number=0
                        WHERE topic_id = :topic_id AND user_id = :user_id", topic_id: p1.topic_id, user_id: p1.user_id)
 
-    [p1,p2].each do |p|
+    [p1, p2].each do |p|
       PostTiming.create(topic_id: p.topic_id, post_number: p.post_number, user_id: p.user_id, msecs: 100)
     end
 

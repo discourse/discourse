@@ -8,7 +8,7 @@ module BackupRestore
   class Restorer
     attr_reader :success
 
-    def initialize(user_id, opts={})
+    def initialize(user_id, opts = {})
       @user_id = user_id
       @client_id = opts[:client_id]
       @filename = opts[:filename]
@@ -400,7 +400,7 @@ module BackupRestore
     end
 
     def notify_user
-      if user = User.find_by(email: @user_info[:email])
+      if user = User.find_by_email(@user_info[:email])
         log "Notifying '#{user.username}' of the end of the restore..."
         status = @success ? :restore_succeeded : :restore_failed
 

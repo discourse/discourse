@@ -17,5 +17,26 @@ describe UsernameSettingValidator do
     it "returns false if value does not match a user's username" do
       expect(validator.valid_value?('no way')).to eq(false)
     end
+
+    context "regex support" do
+      let!(:darthvader) { Fabricate(:user, username: 'darthvader') }
+      let!(:luke) { Fabricate(:user, username: 'luke') }
+
+      it "returns false if regex doesn't match" do
+        v = described_class.new(regex: 'darth')
+        expect(v.valid_value?('luke')).to eq(false)
+        expect(v.valid_value?('vader')).to eq(false)
+      end
+
+      it "returns true if regex matches" do
+        v = described_class.new(regex: 'darth')
+        expect(v.valid_value?('darthvader')).to eq(true)
+      end
+
+      it "returns false if regex matches but username doesn't match a user" do
+        v = described_class.new(regex: 'darth')
+        expect(v.valid_value?('darthmaul')).to eq(false)
+      end
+    end
   end
 end

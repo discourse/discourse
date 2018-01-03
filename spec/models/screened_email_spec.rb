@@ -78,7 +78,7 @@ describe ScreenedEmail do
 
     shared_examples "when a ScreenedEmail record matches" do
       it "updates statistics" do
-        Timecop.freeze(Time.zone.now) do
+        freeze_time(Time.zone.now) do
           expect { subject }.to change { screened_email.reload.match_count }.by(1)
           expect(screened_email.last_match_at).to be_within_one_second_of(Time.zone.now)
         end

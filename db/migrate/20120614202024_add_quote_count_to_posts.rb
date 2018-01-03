@@ -1,4 +1,4 @@
-class AddQuoteCountToPosts < ActiveRecord::Migration
+class AddQuoteCountToPosts < ActiveRecord::Migration[4.2]
   def up
     add_column :posts, :quote_count, :integer, default: 0, null: false
     execute "UPDATE posts SET quote_count = 1 WHERE quoteless = 'f'"

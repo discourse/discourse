@@ -16,13 +16,13 @@ export default Ember.Mixin.create({
     return I18n.t('user.password.instructions', {count: this.get('passwordMinLength')});
   },
 
-  @computed('isDeveloper')
-  passwordMinLength() {
-    return this.get('isDeveloper') ? this.siteSettings.min_admin_password_length : this.siteSettings.min_password_length;
+  @computed('isDeveloper', 'admin')
+  passwordMinLength(isDeveloper, admin) {
+    return (isDeveloper || admin) ? this.siteSettings.min_admin_password_length : this.siteSettings.min_password_length;
   },
 
-  @computed('accountPassword', 'passwordRequired', 'rejectedPasswords.[]', 'accountUsername', 'accountEmail', 'isDeveloper')
-  passwordValidation(password, passwordRequired, rejectedPasswords, accountUsername, accountEmail, isDeveloper) {
+  @computed('accountPassword', 'passwordRequired', 'rejectedPasswords.[]', 'accountUsername', 'accountEmail', 'passwordMinLength')
+  passwordValidation(password, passwordRequired, rejectedPasswords, accountUsername, accountEmail, passwordMinLength) {
     if (!passwordRequired) {
       return InputValidation.create({ ok: true });
     }
@@ -40,8 +40,7 @@ export default Ember.Mixin.create({
     }
 
     // If too short
-    const passwordLength = isDeveloper ? this.siteSettings.min_admin_password_length : this.siteSettings.min_password_length;
-    if (password.length < passwordLength) {
+    if (password.length < passwordMinLength) {
       return InputValidation.create({
         failed: true,
         reason: I18n.t('user.password.too_short')

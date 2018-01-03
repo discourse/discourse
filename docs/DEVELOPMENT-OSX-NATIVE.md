@@ -99,6 +99,7 @@ Atlassian has a free Git client for OS X called [SourceTree](http://www.sourcetr
 ## Postgres 9.3
 
 OS X ships with Postgres 9.1.5, but you're better off going with the latest from Homebrew or [Postgres.app](http://postgresapp.com).
+Note that we currently do not support Postgres 10 [due to an issue with seed-fu](https://meta.discourse.org/t/discourse-appears-to-be-broken-with-postgres-10/71723).
 
 ### Using Postgres.app
 
@@ -114,7 +115,7 @@ unix_socket_directories = '/var/pgsql_socket'   # comma-separated list of direct
 #and
 unix_socket_permissions = 0777  # begin with 0 to use octal notation
 ```
-Then create the '/var/pgsql/' folder and set up the appropriate permission in your bash (this requires admin access)
+Then create the '/var/pgsql_socket/' folder and set up the appropriate permission in your bash (this requires admin access)
 ```
 sudo mkdir /var/pgsql_socket
 sudo chmod 770 /var/pgsql_socket
@@ -182,17 +183,19 @@ You should not need to alter `/usr/local/var/postgres/pg_hba.conf`
 
 That's about it.
 
-## PhantomJS
+## Google Chrome 59+
 
-Homebrew loves you.
+Chrome is used for running QUnit tests in headless mode.
 
-    brew install phantomjs
+Download from https://www.google.com/chrome/index.html
 
 ## ImageMagick
 
-ImageMagick is used for generating avatars (including for test fixtures).
+ImageMagick is used for generating avatars (including for test fixtures). Brew installs ImageMagick 7 by default, and this version
+doesn't work with Discourse.
 
-    brew install imagemagick
+    brew install imagemagick@6
+    brew link --force imagemagick@6
 
 ImageMagick is going to want to use the Helvetica font to generate the
 letter-avatars:
@@ -229,23 +232,14 @@ config.action_mailer.smtp_settings = { address: "localhost", port: 1025 }
 Set up [MailCatcher](https://github.com/sj26/mailcatcher) so the app can intercept
 outbound email and you can verify what is being sent.
 
-## Additional Setup Tasks
+## Additional Image Tooling
 
 In addition to ImageMagick we also need to install some other image related
 software:
 
 ```sh
-brew install gifsicle jpegoptim optipng
+brew install gifsicle jpegoptim optipng jhead
 npm install -g svgo
-```
-
-Install jhead
-
-```sh
-curl "http://www.sentex.net/~mwandel/jhead/jhead-2.97.tar.gz" | tar xzf -
-cd jhead-2.97
-make
-make install
 ```
 
 ## Setting up your Discourse
@@ -266,10 +260,13 @@ bundle install
 
 ### Prepare your database
 ```sh
-rake db:create
-rake db:migrate
-rake db:test:prepare
-rake db:seed_fu
+# run this if there was a pre-existing database
+bundle exec rake db:drop
+RAILS_ENV=test bundle exec rake db:drop
+
+# time to create the database and run migrations
+bundle exec rake db:create db:migrate
+RAILS_ENV=test bundle exec rake db:create db:migrate
 ```
 
 ## Now, test it out!

@@ -1,4 +1,4 @@
-class AddColumnSummariesToPostsAndTopics < ActiveRecord::Migration
+class AddColumnSummariesToPostsAndTopics < ActiveRecord::Migration[4.2]
   def change
     add_column :posts, :spam_count, :integer, default: 0, null: false
     add_column :topics, :spam_count, :integer, default: 0, null: false

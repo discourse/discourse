@@ -64,7 +64,7 @@
   }
 }
 .close {
-  font-size: 1.714em;
+  font-size: 1.857em;
   padding: 10px 15px 5px 5px;
   color: $primary;
 }
@@ -91,20 +91,22 @@
       width: 100%;
     }
   }
-
-  .category-combobox {
-    width: 100%;
-  }
 }
 
 .flag-modal {
   max-height: 450px;
 }
 
+@media only screen and (max-device-width: 568px) {
+  .modal .flag-modal .flag-message {
+    height: 1.2em;
+  }
+}
+
 .custom-message-length {
   margin: -4px 0 10px 20px;
-  color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
-  font-size: 85%;
+  color: dark-light-choose($primary-high, $secondary-low);
+  font-size: .857em;
 }
 
 .flag-message {
@@ -114,6 +116,7 @@
 
 .edit-category-modal {
   .modal-body {
+    box-sizing: border-box;
     position: relative;
     height: 350px;
   }
@@ -162,17 +165,8 @@
 .alert {
   padding: 5px;
   &.alert-success {
-    background-color:  scale-color($success, $lightness: 90%);
+    background-color: $success-low;
     color: $success;
-  }
-}
-
-.delete-flag-modal, .agree-flag-modal {
-  .modal-inner-container {
-    width: 300px;
-  }
-  .btn {
-    float: none !important;
   }
 }
 

@@ -1,7 +1,7 @@
 class UserSummarySerializer < ApplicationSerializer
 
-  class TopicSerializer < ApplicationSerializer
-    attributes :id, :created_at, :fancy_title, :slug, :like_count
+  class TopicSerializer < ListableTopicSerializer
+    attributes :category_id, :like_count
   end
 
   class ReplySerializer < ApplicationSerializer
@@ -32,11 +32,13 @@ class UserSummarySerializer < ApplicationSerializer
 
   attributes :likes_given,
              :likes_received,
+             :topics_entered,
              :posts_read_count,
              :days_visited,
              :topic_count,
              :post_count,
              :time_read,
+             :recent_time_read,
              :bookmark_count
 
   def include_badges?
@@ -48,6 +50,10 @@ class UserSummarySerializer < ApplicationSerializer
   end
 
   def time_read
-    AgeWords.age_words(object.time_read)
+    object.time_read
+  end
+
+  def recent_time_read
+    object.recent_time_read
   end
 end

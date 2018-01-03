@@ -3,7 +3,7 @@ import { extraConnectorClass } from 'discourse/lib/plugin-connectors';
 
 const PREFIX = "javascripts/single-test/connectors";
 acceptance("Plugin Outlet - Connector Class", {
-  setup() {
+  beforeEach() {
     extraConnectorClass('user-profile-primary/hello', {
       actions: {
         sayHello() {
@@ -28,13 +28,13 @@ acceptance("Plugin Outlet - Connector Class", {
     );
   },
 
-  teardown() {
+  afterEach() {
     delete Ember.TEMPLATES[`${PREFIX}/user-profile-primary/hello`];
     delete Ember.TEMPLATES[`${PREFIX}/user-profile-primary/dont-render`];
   }
 });
 
-test("Renders a template into the outlet", assert => {
+QUnit.test("Renders a template into the outlet", assert => {
   visit("/u/eviltrout");
   andThen(() => {
     assert.ok(find('.user-profile-primary-outlet.hello').length === 1, 'it has class names');

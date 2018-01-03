@@ -1,4 +1,4 @@
-import { iconHTML } from 'discourse-common/helpers/fa-icon';
+import { iconHTML } from 'discourse-common/lib/icon-library';
 import DropdownButton from 'discourse/components/dropdown-button';
 import computed from "ember-addons/ember-computed-decorators";
 
@@ -14,7 +14,7 @@ export default DropdownButton.extend({
       { id: 'manageGroups',
         title: I18n.t('tagging.manage_groups'),
         description: I18n.t('tagging.manage_groups_description'),
-        styleClasses: 'fa fa-wrench' }
+        icon: 'wrench' }
     ];
     return items;
   },

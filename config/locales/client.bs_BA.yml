@@ -139,19 +139,19 @@ bs_BA:
     bootstrap_mode_disabled: "Bootstrap mod će biti ugašen u sljedećih 24 sata."
     s3:
       regions:
-        us_east_1: "SAD Istok (Sjeverna Virdžinija)"
-        us_west_1: "SAD Zapad (Sjeverna Kalifornija)"
-        us_west_2: "SAD Zapad (Oregon)"
-        us_gov_west_1: "AWS GovCloud (US)"
-        eu_west_1: "EU (Irska)"
-        eu_central_1: "EU (Frankfurt)"
-        ap_southeast_1: "Azija Pacifik (Singapur)"
-        ap_southeast_2: "Azija Pacifik (Sidnej)"
-        ap_south_1: "Azija Pacifik (Mumai)"
         ap_northeast_1: "Azija Pacifik (Tokio)"
         ap_northeast_2: "Azija Pacifik (Seul)"
-        sa_east_1: "Južna Amerika (Sao Paulo)"
+        ap_south_1: "Azija Pacifik (Mumai)"
+        ap_southeast_1: "Azija Pacifik (Singapur)"
+        ap_southeast_2: "Azija Pacifik (Sidnej)"
         cn_north_1: "Kina (Peking)"
+        eu_central_1: "EU (Frankfurt)"
+        eu_west_1: "EU (Irska)"
+        sa_east_1: "Južna Amerika (Sao Paulo)"
+        us_east_1: "SAD Istok (Sjeverna Virdžinija)"
+        us_gov_west_1: "AWS GovCloud (US)"
+        us_west_1: "SAD Zapad (Sjeverna Kalifornija)"
+        us_west_2: "SAD Zapad (Oregon)"
     edit: 'izmjeni naslov i kategoriju ove teme'
     not_implemented: "That feature hasn't been implemented yet, sorry!"
     no_value: "Ne"
@@ -349,11 +349,7 @@ bs_BA:
         full_name: 'Puno ime'
         add_members: "Dodaj Članove"
         delete_member_confirm: "Ukloni '%{username}' iz '%{group}' grupe?"
-      request_membership_pm:
-        title: "Zahtjev za članstvom"
-        body: "Želio bi da apliciram u članstvo @%{groupName}."
       name_placeholder: "Ime grupe, bez razmaka, ista pravila kao za korisničko ime"
-      public: "Dozvolite korisnicima da se pridruže/napuste grupu slobodno (Zahtjeva da grupa bude vidljiva)"
       empty:
         posts: "Ne postoje postovi člana ove grupe."
         members: "Nema članova u grupi."
@@ -374,14 +370,9 @@ bs_BA:
       bio: "O grupi"
       selector_placeholder: "Dodaj članove"
       owner: "vlasnik"
-      visible: "Grupa je vidljiva svim korisnicima"
       index:
         title: "Grupe"
         empty: "Vidljive grupe još ne postoje."
-      title:
-        one: "grupa"
-        few: "grupe"
-        other: "grupe"
       activity: "Aktivnost"
       members: "Članovi"
       topics: "Teme"
@@ -389,7 +380,6 @@ bs_BA:
       mentions: "Spomenuto"
       messages: "Poruke"
       alias_levels:
-        title: "Ko može @spominjati i slati poruke ovoj grupi?"
         nobody: "Niko"
         only_admins: "Samo admini"
         mods_and_admins: "Samo moderatori i Admini"
@@ -479,7 +469,6 @@ bs_BA:
       mute: "Mutiraj"
       edit: "Uredi Postavke"
       download_archive:
-        button_text: "Preuzmite svoju objavu"
         confirm: "Da li ste sigurni da želite preuzeti svoju objavu?"
         success: "Preuzimanje je započeto, bit će te obavješteni porukom kada proces bude završen."
         rate_limit_error: "Objava može biti preuzeta samo jedanput na dan, molimo vas da pokušate sutra ponovo."
@@ -516,7 +505,6 @@ bs_BA:
       admin: "{{user}} je admin"
       moderator_tooltip: "This user is a moderator"
       admin_tooltip: "This user is an admin"
-      blocked_tooltip: "Korisnik je blokiran"
       suspended_notice: "This user is suspended until {{date}}."
       suspended_reason: "Reason: "
       github_profile: "Github"
@@ -597,7 +585,6 @@ bs_BA:
         title: "Change Username"
         confirm: "Ukoliko promijenite vaše korisničko ime, sva dosadašnja citiranja u vašim objavama te @ime spomeni će biti ugašeni/sa vašim eventualno novim nickom razdvojeni. Da li ste APSOLUTNO SIGURNI da to želite učiniti?"
         taken: "Sorry, that username is taken."
-        error: "There was an error changing your username."
         invalid: "That username is invalid. It must only include numbers and letters"
       change_email:
         title: "Change Email"
@@ -836,7 +823,6 @@ bs_BA:
     first_post: Prvi post
     mute: Mutiraj
     unmute: Odmutiraj
-    last_post: Zadnji post
     last_reply_lowercase: zadnji odgovor
     signup_cta:
       sign_up: "Registruj se"
@@ -1018,12 +1004,7 @@ bs_BA:
       olist_title: "Numbered List"
       ulist_title: "Bulleted List"
       list_item: "List item"
-      heading_label: "H"
-      heading_title: "Naslov"
-      heading_text: "Naslov"
-      hr_title: "Horizontalna Crta"
       help: "Markdown Editing Help"
-      toggler: "sakrij ili pokaži komposer"
       modal_ok: "OK"
       modal_cancel: "Otkaži"
       cant_send_pm: "Neuspješno, ne možete slati poruke ka %{username}."
@@ -1037,17 +1018,6 @@ bs_BA:
       empty: "Nema obavještenja."
       more: "pogledaj starija obaviještenja"
       total_flagged: "ukupno opomenutih postova"
-      mentioned: "<i title='spomenut' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
-      quoted: "<i title='citiran' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
-      replied: "<i title='odgovoren' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
-      edited: "<i title='izmjenjen' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
-      liked: "<i title='lajkovan' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
-      private_message: "<i title='privatna poruka' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
-      invited_to_private_message: "<i title='privatna poruka' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
-      invitee_accepted: "<i title='prihvatio pozivnicu' class='fa fa-user'></i><p><span>{{username}}</span> accepted your invitation</p>"
-      moved_post: "<i title='pomjerio post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
-      granted_badge: "<i title='bedž dobijen' class='fa fa-certificate'></i><p>Zaslužen '{{description}}'</p>"
-      watching_first_post: "<i title='new topic' class='fa fa-dot-circle-o'></i><p><span>Nova Tema</span> {{description}}</p>"
       alt:
         mentioned: "Spomenut od"
         quoted: "Citiran od"
@@ -1108,22 +1078,15 @@ bs_BA:
         title: Napredna tražilica
         posted_by:
           label: Objavljeno od
-        in_category:
-          label: U kategoriji
         in_group:
           label: U grupi
         with_badge:
           label: Sa bedžom
-        with_tags:
-          label: Sa tagovima
         filters:
-          label: Izlistaj samo teme/objave koje...
           likes: Moji lajkovi
           posted: Moje objave
           watching: Pratim
           tracking: Pratim
-          private: su u mojim porukama
-          bookmarks: Boji bookmark-ci
           first: su friške prve objave
           pinned: su okačene
           unpinned: nisu okačene
@@ -1412,14 +1375,12 @@ bs_BA:
       multi_select:
         select: 'select'
         selected: 'selected ({{count}})'
-        select_replies: 'select +replies'
         delete: delete selected
         cancel: cancel selecting
         select_all: select all
         deselect_all: deselect all
     post:
       quote_reply: "Citat"
-      edit: "Editing {{link}} by {{replyAvatar}} {{username}}"
       edit_reason: "Razlog: "
       post_number: "post {{number}}"
       last_edited_on: "post last edited on"
@@ -1458,9 +1419,6 @@ bs_BA:
         undelete: "povrati obrisan post"
         share: "podijeli link do ovog posta"
         more: "Još"
-        delete_replies:
-          yes_value: "Yes, delete the replies too"
-          no_value: "No, just this post"
         admin: "post admin actions"
         wiki: "Make Wiki"
         unwiki: "Remove Wiki"
@@ -1694,7 +1652,6 @@ bs_BA:
         no_problems: "No problems were found."
         moderators: 'Moderators:'
         admins: 'Admins:'
-        blocked: 'Blocked:'
         suspended: 'Suspended:'
         private_messages_short: "PP"
         private_messages_title: "Privatne Poruke"
@@ -1718,24 +1675,12 @@ bs_BA:
         by: "by"
       flags:
         title: "Opomene"
-        old: "Stare"
-        active: "Aktivne"
         agree: "Slažem se"
         agree_title: "Confirm this flag as valid and correct"
-        agree_flag_modal_title: "Agree and..."
-        agree_flag_hide_post: "Agree (hide post + send PM)"
-        agree_flag_hide_post_title: "Hide this post and automatically send the user a private message urging them to edit it"
-        agree_flag_restore_post: "Agree (restore post)"
-        agree_flag_restore_post_title: "Restore this post"
-        agree_flag: "Agree with flag"
-        agree_flag_title: "Agree with flag and keep the post unchanged"
-        defer_flag: "Defer"
         defer_flag_title: "Remove this flag; it requires no action at this time."
         delete: "Delete"
         delete_title: "Delete the post this flag refers to."
-        delete_post_defer_flag: "Delete post and Defer flag"
         delete_post_defer_flag_title: "Delete post; if the first post, delete the topic"
-        delete_post_agree_flag: "Delete post and Agree with flag"
         delete_post_agree_flag_title: "Delete post; if the first post, delete the topic"
         delete_flag_modal_title: "Delete and..."
         delete_spammer: "Delete Spammer"
@@ -1750,14 +1695,12 @@ bs_BA:
         dispositions:
           agreed: "agreed"
           disagreed: "disagreed"
-          deferred: "deferred"
         flagged_by: "Flagged by"
         resolved_by: "Resolved by"
         took_action: "Took action"
         system: "System"
         error: "Something went wrong"
         reply_message: "Odgovori"
-        no_results: "There are no flags."
         topic_flagged: "This <strong>topic</strong> has been flagged."
         visit_topic: "Visit the topic to take action"
         was_edited: "Post was edited after the first flag"
@@ -2033,7 +1976,6 @@ bs_BA:
           active: "Active"
           pending: "Pending"
           suspended: 'Suspended'
-          blocked: 'Blocked'
         approved: "Approved?"
         titles:
           active: 'Active Users'
@@ -2044,7 +1986,6 @@ bs_BA:
           staff: "Zaposleni"
           admins: 'Admin Users'
           moderators: 'Moderators'
-          blocked: 'Blocked Users'
           suspended: 'Suspended Users'
         not_verified: "Not verified"
         check_email:
@@ -2054,17 +1995,13 @@ bs_BA:
         suspend_failed: "Something went wrong suspending this user {{error}}"
         unsuspend_failed: "Something went wrong unsuspending this user {{error}}"
         suspend_duration: "How long will the user be suspended for?"
-        suspend_duration_units: "(days)"
         suspend_reason_label: "Why are you suspending? This text <b>will be visible to everyone</b> on this user's profile page, and will be shown to the user when they try to log in. Keep it short."
         suspend_reason: "Reason"
         suspended_by: "Suspended by"
         delete_all_posts: "Delete all posts"
-        suspend: "Suspend"
-        unsuspend: "Unsuspend"
-        suspended: "Suspended?"
         moderator: "Moderator?"
         admin: "Admin?"
-        blocked: "Blocked?"
+        suspended: "Suspended?"
         show_admin_profile: "Admin"
         refresh_browsers: "Force browser refresh"
         refresh_browsers_message: "Message sent to all clients!"
@@ -2077,8 +2014,8 @@ bs_BA:
         grant_admin: 'Grant Admin'
         revoke_moderation: 'Revoke Moderation'
         grant_moderation: 'Grant Moderation'
-        unblock: 'Unblock'
-        block: 'Block'
+        unsuspend: 'Unsuspend'
+        suspend: 'Suspend'
         reputation: Reputation
         permissions: Permissions
         activity: Activity
@@ -2111,11 +2048,8 @@ bs_BA:
         activate_failed: "There was a problem activating the user."
         deactivate_account: "Deactivate Account"
         deactivate_failed: "There was a problem deactivating the user."
-        unblock_failed: 'There was a problem unblocking the user.'
-        block_failed: 'There was a problem blocking the user.'
         deactivate_explanation: "A deactivated user must re-validate their email."
         suspended_explanation: "A suspended user can't log in."
-        block_explanation: "A blocked user can't post or start topics."
         trust_level_change_failed: "There was a problem changing the user's trust level."
         suspend_modal_title: "Suspend User"
         trust_level_2_users: "Trust Level 2 Users"
@@ -2301,10 +2235,6 @@ bs_BA:
       upload: "Učitaj"
       uploading: "Učitavanje..."
       quit: "Možda kasnije"
-      staff_count:
-        one: "Vaša zajednica ima 1 člana osoblja."
-        few: "Vaša zajednica ima 2 člana osoblja."
-        other: "Vaša zajednica ima %{count} članova osoblja."
       invites:
         add_user: "Dodaj"
         none_added: "Niste pozvali ni jednog admina/moderatora. Jeste li sigurni da želite nastaviti?"

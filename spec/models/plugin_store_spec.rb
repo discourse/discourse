@@ -2,16 +2,21 @@ require "rails_helper"
 require_dependency "plugin_store"
 
 describe PluginStore do
-  def set(k,v)
+  let(:store) { PluginStore.new("my_plugin_2") }
+
+  def set(k, v)
     PluginStore.set("my_plugin", k, v)
+    store.set(k, v)
   end
 
   def get(k)
-    PluginStore.get("my_plugin", k)
+    value = PluginStore.get("my_plugin", k)
+    value == store.get(k) ? value : "values mismatch"
   end
 
   def remove_row(k)
     PluginStore.remove("my_plugin", k)
+    store.remove(k)
   end
 
   it "sets strings correctly" do
@@ -38,10 +43,9 @@ describe PluginStore do
     expect(get("hello")).to eq(nil)
   end
 
-
   it "handles hashes correctly" do
 
-    val = {"hi" => "there", "1" => 1}
+    val = { "hi" => "there", "1" => 1 }
     set("hello", val)
     result = get("hello")
 
@@ -53,7 +57,7 @@ describe PluginStore do
 
   it "handles nested hashes correctly" do
 
-    val = {"hi" => "there", "nested" => {"a" => "b", "with list" => ["a", "b", 3] }}
+    val = { "hi" => "there", "nested" => { "a" => "b", "with list" => ["a", "b", 3] } }
     set("hello", val)
     result = get("hello")
 
@@ -67,7 +71,7 @@ describe PluginStore do
 
   it "handles arrays correctly" do
 
-    val = ["a", "b", {"hash"=> "inside", "c"=> 1}]
+    val = ["a", "b", { "hash" => "inside", "c" => 1 }]
     set("hello", val)
     result = get("hello")
 
