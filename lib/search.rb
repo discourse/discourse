@@ -458,26 +458,19 @@ class Search
     end
   end
 
-  advanced_filter(/tags?:([a-zA-Z0-9,\-_+]+)/) do |posts, match|
-    if match.include?('+')
-      tags = match.split('+')
+  advanced_filter(/tags?:([a-zA-Z0-9,\-_+~]+)/) do |posts, match|
+    if match.include?('~')
+      search_parts = match.split('~')
+      positive_part = search_parts[0]
+      negative_part = search_parts[1]
 
-      posts.where("topics.id IN (
-      SELECT tt.topic_id
-      FROM topic_tags tt, tags
-      WHERE tt.tag_id = tags.id
-      GROUP BY tt.topic_id
-      HAVING to_tsvector(#{default_ts_config}, array_to_string(array_agg(tags.name), ' ')) @@ to_tsquery(#{default_ts_config}, ?)
-      )", tags.join('&'))
+      positive_tags = search_tags(posts, positive_part)
+      negative_tags = search_tags(posts, negative_part)
+
+      positive_tags.where(["posts.id NOT IN (?)",
+                           negative_tags.pluck("id")])
     else
-      tags = match.split(",")
-
-      posts.where("topics.id IN (
-      SELECT DISTINCT(tt.topic_id)
-      FROM topic_tags tt, tags
-      WHERE tt.tag_id = tags.id
-      AND tags.name in (?)
-      )", tags)
+      search_tags(posts, match)
     end
   end
 
@@ -495,6 +488,30 @@ class Search
   end
 
   private
+
+    def search_tags(posts, match)
+      return if match.nil?
+
+      if match.include?('+')
+        tags = match.split('+')
+        posts.where("topics.id IN (
+              SELECT tt.topic_id
+              FROM topic_tags tt, tags
+              WHERE tt.tag_id = tags.id
+              GROUP BY tt.topic_id
+              HAVING to_tsvector(#{default_ts_config}, array_to_string(array_agg(tags.name), ' ')) @@ to_tsquery(#{default_ts_config}, ?)
+              )", tags.join('&'))
+      else
+        tags = match.split(",")
+
+        posts.where("topics.id IN (
+              SELECT DISTINCT(tt.topic_id)
+              FROM topic_tags tt, tags
+              WHERE tt.tag_id = tags.id
+              AND tags.name in (?)
+              )", tags)
+      end
+    end
 
     def process_advanced_search!(term)
 
