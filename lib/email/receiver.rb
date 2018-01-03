@@ -169,7 +169,7 @@ module Email
 
       email ||= @from_email
 
-      if @mail.error_status.present? && @mail.error_status.start_with?("4.")
+      if @mail.error_status.present? && Array.wrap(@mail.error_status).any? { |s| s.start_with?("4.") }
         Email::Receiver.update_bounce_score(email, SiteSetting.soft_bounce_score)
       else
         Email::Receiver.update_bounce_score(email, SiteSetting.hard_bounce_score)
