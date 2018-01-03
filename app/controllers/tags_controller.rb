@@ -19,30 +19,60 @@ class TagsController < ::ApplicationController
   before_action :set_category_from_params, except: [:index, :update, :destroy, :tag_feed, :search, :notifications, :update_notifications]
 
   def index
-    categories = Category.where("id in (select category_id from category_tags)")
-      .where("id in (?)", guardian.allowed_category_ids)
-      .preload(:tags)
-    category_tag_counts = categories.map do |c|
-      h = Tag.category_tags_by_count_query(c, limit: 300).count(Tag::COUNT_ARG)
-      h.merge!(c.tags.where.not(name: h.keys).inject({}) { |sum, t| sum[t.name] = 0; sum }) # unused tags
-      { id: c.id, tags: self.class.tag_counts_json(h) }
-    end
-
-    tag_counts = self.class.tags_by_count(guardian, limit: 300).count(Tag::COUNT_ARG)
-    @tags = self.class.tag_counts_json(tag_counts)
-
     @description_meta = I18n.t("tags.title")
     @title = @description_meta
 
     respond_to do |format|
+
       format.html do
+        tag_counts = self.class.tags_by_count(guardian, limit: 300).count(Tag::COUNT_ARG)
+        @tags = self.class.tag_counts_json(tag_counts)
         render :index
       end
+
       format.json do
-        render json: {
-          tags: @tags,
-          extras: { categories: category_tag_counts }
-        }
+        if SiteSetting.tags_listed_by_group
+          # TODO: performance is bad
+          grouped_tag_counts = TagGroup.order('name ASC').preload(:tags).map do |tag_group|
+            h = Tag.tags_by_count_query(limit: 300)
+              .joins("LEFT JOIN tag_group_memberships ON tags.id = tag_group_memberships.tag_id")
+              .where('tag_group_memberships.tag_group_id = ?', tag_group.id)
+              .count(Tag::COUNT_ARG)
+            { id: tag_group.id, name: tag_group.name, tags: self.class.tag_counts_json(h) }
+          end
+
+          ungrouped_tag_counts = guardian.filter_allowed_categories(
+            Tag.tags_by_count_query(limit: 300)
+              .where("tags.id NOT IN (select tag_id from tag_group_memberships)")
+              .count(Tag::COUNT_ARG)
+          )
+
+          render json: {
+            tags: self.class.tag_counts_json(ungrouped_tag_counts), # tags that don't belong to a group
+            extras: { tag_groups: grouped_tag_counts }
+          }
+        else
+          unrestricted_tag_counts = guardian.filter_allowed_categories(
+            Tag.tags_by_count_query(limit: 300)
+              .where("tags.id NOT IN (select tag_id from category_tags)")
+              .count(Tag::COUNT_ARG)
+          )
+
+          categories = Category.where("id in (select category_id from category_tags)")
+            .where("id in (?)", guardian.allowed_category_ids)
+            .preload(:tags)
+
+          category_tag_counts = categories.map do |c|
+            h = Tag.category_tags_by_count_query(c, limit: 300).count(Tag::COUNT_ARG)
+            h.merge!(c.tags.where.not(name: h.keys).inject({}) { |sum, t| sum[t.name] = 0; sum }) # unused tags
+            { id: c.id, tags: self.class.tag_counts_json(h) }
+          end
+
+          render json: {
+            tags: self.class.tag_counts_json(unrestricted_tag_counts),
+            extras: { categories: category_tag_counts }
+          }
+        end
       end
     end
   end

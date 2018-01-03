@@ -1584,6 +1584,7 @@ en:
     show_filter_by_tag: "Show a dropdown to filter a topic list by tag."
     max_tags_in_filter_list: "Maximum number of tags to show in the filter dropdown. The most used tags will be shown."
     tags_sort_alphabetically: "Show tags in alphabetical order. Default is to show in order of popularity."
+    tags_listed_by_group: "List tags by tag group on the Tags page (/tags)."
     tag_style: "Visual style for tag badges."
     staff_tags: "A list of tags that can only be applied by staff members"
     min_trust_level_to_tag_topics: "Minimum trust level required to tag topics"
