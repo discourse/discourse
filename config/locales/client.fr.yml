@@ -1094,6 +1094,7 @@ fr:
       saved_local_draft_tip: "sauvegardé en local"
       similar_topics: "Votre sujet est similaire à…"
       drafts_offline: "sauvegardé hors ligne"
+      group_mentioned_limit: "<b>Attention !</b> Vous avez mentionné <a href='{{group_link}}'>{{group}}</a>, cependant ce groupe a plus de membres que le nombre de mentions limite de {{max}} utilisateurs configuré par l'administrateur. Personne ne sera notifié."
       group_mentioned:
         one: "En mentionnant {{group}}, vous êtes sur le point de notifier <a href='{{group_link}}'>1 personne</a> – êtes-vous sûr ?"
         other: "En mentionnant {{group}}, vous êtes sur le point de notifier <a href='{{group_link}}'>{{count}} personnes</a> – êtes-vous sûr ?"
@@ -1250,6 +1251,9 @@ fr:
       select_all: "Sélectionner tout"
       clear_all: "Tout désélectionner"
       too_short: "Votre terme de recherche est trop court."
+      result_count:
+        one: "1 résultat pour <span class='term'>{{term}}</span>"
+        other: "{{count}}{{plus}} résultats pour <span class='term'>{{term}}</span>"
       title: "rechercher des sujets, messages, utilisateurs ou catégories"
       no_results: "Aucun résultat."
       no_more_results: "Aucun résultat supplémentaire."
@@ -3006,6 +3010,7 @@ fr:
             all_search_types: "Tous les types de recherche"
             header: "Entête"
             full_page: "Page complète"
+            click_through_only: "Tous (clics uniquement)"
         logster:
           title: "Journal d'erreurs"
       watched_words:

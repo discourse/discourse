@@ -116,6 +116,7 @@ es:
       max_username_length_range: "No puedes poner el máximo por debajo del mínimo."
       default_categories_already_selected: "No se puede seleccionar una categoría ya utilizada en otra lista."
       s3_upload_bucket_is_required: "No se pueden activar las subidas a S3 a menos que se haya proporcionado un valor a 's3_upload_bucket'."
+    conflicting_google_user_id: 'La ID de la cuenta de Google para esta cuenta ha cambiado; por motivos de seguridad, hace falta que un miembro del staff intervenga. Por favor, ponte en contacto con el staff y mándales a <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   invite:
     not_found: "El código de la invitación es inválido. Por favor, ponte en contacto con un administrador."
     user_exists: "No hay necesidad de invitar a <b>%{email}</b>, ya <a href='/u/%{username}/summary'>tiene una cuenta!</a>"
@@ -1048,6 +1049,7 @@ es:
     github_client_id: "Client id para la autenticación por Github, registrado en https://github.com/settings/applications"
     github_client_secret: "Client secret para la autenticación por Github, registrado en https://github.com/settings/applications"
     readonly_mode_during_backup: "Habilitar el modo de 'solo-lectura' mientras se hace el backup"
+    enable_backups: "Permitir a los administradores crear copias de seguridad del foro"
     allow_restore: "Permitir restauración, la cual puede sobreescribir TODOS los datos del sitio! Dejela en falso a menos que tenga planeado recuperar sus datos desde una copia de respaldo. "
     maximum_backups: "La cantidad máxima de copias de seguridad a tener en el disco. Las copias de seguridad más antiguas se eliminan automáticamente"
     automatic_backups_enabled: "Ejecutar backups automáticos definidos por la opción de frecuencia de backups"
@@ -1400,6 +1402,7 @@ es:
       enable_sso_disabled: "Debes activar primero 'enable sso' antes de activar esta opción."
       staged_users_disabled: "Primero debes habilitar 'staged users' antes, para habilitar esta configuración."
       reply_by_email_disabled: "Primero debes habilitar 'reply by email' antes de habilitar esta configuración."
+      sso_url_is_empty: "Debes establecer un valor en 'sso url' antes de activar este ajuste."
   search:
     within_post: "#%{post_number} por %{username}"
     types:
@@ -2095,6 +2098,17 @@ es:
         Por favor, [mira los reportes](%{base_url}/admin/flags). Si %{username} hubiera sido silenciado  incorrectamente, haz clic en el botón de quitar silencio en la [página de administración del usuario](%{user_url}).
 
         Esto puede ser cambiado con el ajuste `silence_new_user` en configuración del sitio.
+    spam_post_blocked:
+      title: "Post spam bloqueado"
+      subject_template: "Bloqueado nuevo usuario %{username} debido a enlaces repetidos"
+      text_body_template: |
+        Este es un mensaje automático.
+
+        El nuevo usuario [%{username}](%{user_url}) ha intentado crear múltiples posts con enlaces a %{domains}, pero han sido bloqueados para evitar spam. El usuario podrá seguir creando nuevos posts si no enlazan a %{domains}.
+
+        Por favor, [revisa el usuario](%{user_url}).
+
+        Esto puede ser modificado a través de los ajustes `newuser_spam_host_threshold` y `newuser_spam_host_threshold`.
     unsilenced:
       title: "Dejar de silenciar"
       subject_template: "Cuenta no retenida"
@@ -2504,6 +2518,7 @@ es:
     store_failure: "Falló el almacenamiento de la subida #%{upload_id} para el usuario #%{user_id}."
     file_missing: "Lo sentimos, debes incluir un archivo a subir."
     empty: "Disculpa, pero el archivo que proporcionaste está vacío."
+    png_to_jpg_conversion_failure_message: "Ha ocurrido un error al convertir de PNG a JPG."
     attachments:
       too_large: "Lo sentimos, el archivo que estás intentando subir es demasiado grande (el tamaño máximo es %{max_size_kb}%KB)."
     images:
@@ -3256,6 +3271,8 @@ es:
         description: |
           <p>Si alguna vez quieres cambiar alguno de estos ajustes, visita <a href='/admin' target='_blank'>tu sección de administrador</a>; la puedes encontrar el lado del icono de una llave inglesa en el menú de la página..</p>
           <p>Diviértete, y ¡buena suerte <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>construyendo tu nueva comunidad!</a></p>
+  search_logs:
+    graph_title: "Número de búsquedas"
   activemodel:
     errors:
       <<: *errors
