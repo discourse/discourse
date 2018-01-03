@@ -120,7 +120,7 @@ createWidget('actions-summary-item', {
 });
 
 createWidget('deleted-post', {
-  tagName: 'div.post-action',
+  tagName: 'div.post-action.deleted-post',
 
   html(attrs) {
     return [
