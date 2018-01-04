@@ -475,20 +475,21 @@ class Post < ActiveRecord::Base
     problems = []
     Post.where('baked_version IS NULL OR baked_version < ?', BAKED_VERSION)
       .order('id desc')
-      .limit(limit).each do |p|
+      .limit(limit).pluck(:id).each do |id|
       begin
-        p.rebake!
+        post = Post.find(id)
+        post.rebake!
       rescue => e
-        problems << { post: p, ex: e }
+        problems << { post: post, ex: e }
 
-        attempts = p.custom_fields["rebake_attempts"].to_i
+        attempts = post.custom_fields["rebake_attempts"].to_i
 
         if attempts > 3
-          p.update_columns(baked_version: BAKED_VERSION)
+          post.update_columns(baked_version: BAKED_VERSION)
           Discourse.warn_exception(e, message: "Can not rebake post# #{p.id} after 3 attempts, giving up")
         else
-          p.custom_fields["rebake_attempts"] = attempts + 1
-          p.save_custom_fields
+          post.custom_fields["rebake_attempts"] = attempts + 1
+          post.save_custom_fields
         end
 
       end
