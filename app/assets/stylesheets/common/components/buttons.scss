@@ -6,12 +6,13 @@
 // --------------------------------------------------
 
 .btn {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   margin: 0;
-  padding: 5px 12px;
+  padding: 6px 12px;
   font-weight: 500;
   font-size: $font-0;
-  line-height: $line-height-large;
+  line-height: $line-height-medium;
   text-align: center;
   cursor: pointer;
   transition: all .25s;
@@ -29,7 +30,6 @@
   &.no-text {
     .fa {
       margin-right: 0;
-      line-height: $line-height-large;
     }
   }
 }
@@ -62,6 +62,7 @@
 
   .d-icon {
     opacity: 0.7;
+    line-height: $line-height-medium; // Match button text line-height 
   }
   &.btn-primary .d-icon {
     opacity: 1;
