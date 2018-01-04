@@ -192,7 +192,7 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     switch (typeof none) {
     case "string":
       return this.computeContentItem(this.noneValue, {
-        name: I18n.t(none).htmlSafe()
+        name: (I18n.t(none) || "").htmlSafe()
       });
     default:
       return this.computeContentItem(none);
