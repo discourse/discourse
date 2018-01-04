@@ -446,6 +446,10 @@ module Discourse
   # report a warning maintaining backtrack for logster
   def self.warn_exception(e, message: "", env: nil)
     if Rails.logger.respond_to? :add_with_opts
+
+      env ||= {}
+      env[:current_db] ||= RailsMultisite::ConnectionManagement.current_db
+
       # logster
       Rails.logger.add_with_opts(
         ::Logger::Severity::WARN,
