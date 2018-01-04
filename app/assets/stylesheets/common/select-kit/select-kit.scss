@@ -146,7 +146,7 @@
 
   .select-box-kit-row, .select-kit-row {
     cursor: pointer;
-    line-height: normal;
+    line-height: $line-height-medium;
     outline: none;
     display: -webkit-box;
     display: -ms-flexbox;

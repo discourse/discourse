@@ -31,7 +31,6 @@
       color: $primary;
       padding: 3px;
       vertical-align: text-top;
-      margin-top: -2px; //vertical alignment fix
       display: inline-block;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -60,7 +59,6 @@
     display: inline-flex;
     align-items: baseline;
     margin-right: 5px;
-    font-size: $font-down-1;
 
     span.badge-category {
       color: $primary;
@@ -131,14 +129,16 @@
       &.badge-category {
         position: relative;
         padding: 0 5px;
-        margin-top: 2px;
+        margin: 2px 0;
       }
     }
   }
 }
 
-.extra-info-wrapper .title-wrapper .badge-wrapper.bar {
-  margin-top: 6px;
+.extra-info-wrapper .title-wrapper {
+  .badge-wrapper {
+    margin-top: 2px;
+  }
 }
 
 .autocomplete, td.category {
@@ -200,7 +200,7 @@
       }
     }
     .cat {
-        line-height: $line-height-small;
+        line-height: $line-height-large;
       }
     .badge-wrapper {
       box-sizing: border-box;
@@ -247,7 +247,7 @@
 
 .badge-notification {
   @extend %badge;
-  padding: .3em .5em;
+  padding: 3px 5px;
   vertical-align: middle;
   color: $secondary;
   font-size: $font-down-2;

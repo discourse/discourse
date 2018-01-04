@@ -376,13 +376,13 @@ aside.onebox.twitterstatus .onebox-body {
   .outer-box {
     position: absolute;
     z-index: 935;
-    height: 30px;
     overflow: hidden;
     font-size: $font-down-1;
     color: #fff;
     background-color: rgba(0, 0, 0, 0.6);
     text-overflow: ellipsis;
     max-width: 100%;
+    padding: 5px 0;
 
     .inner-box {
       padding-left: 10px;

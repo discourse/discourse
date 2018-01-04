@@ -46,6 +46,7 @@
 // global styles for the cooked HTML content in posts (and preview)
 .cooked, .d-editor-preview {
   word-wrap: break-word;
+  line-height: $line-height-large;
   h1, h2, h3, h4, h5, h6 { 
     margin: 30px 0 10px; 
     line-height: $line-height-medium; 
@@ -371,7 +372,7 @@ blockquote > *:last-child {
   max-width: 755px;
   border-top: 1px solid $primary-low;
   .topic-avatar {
-    padding: 5px 0 3px;
+    padding: 2px 0px 3px 0;
     border-top: none;
     float: left;
     i {
@@ -404,6 +405,7 @@ blockquote > *:last-child {
       font-size: $font-up-1;
       p {
         margin: 5px 0;
+        line-height: $line-height-large;
       }
     }
 

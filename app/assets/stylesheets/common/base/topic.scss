@@ -120,9 +120,6 @@
 .extra-info-wrapper {
   .badge-wrapper {
     float: left;
-    &.bullet {
-      margin-top: 5px;
-    }
   }
 
 }
@@ -166,7 +163,7 @@
   .notifications-button {
     display: inline-block;
     float: none;
-    line-height: 2em;
+    line-height: $line-height-large;
     .dropdown-toggle {
       float: none;
     }

@@ -391,8 +391,7 @@ ol.category-breadcrumb {
   height: 200px;
 
   a.badge-category {
-    line-height: 26px !important;
-    margin-bottom: 0 !important;
+    line-height: $line-height-large;
   }
 }
 

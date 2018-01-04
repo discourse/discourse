@@ -272,8 +272,7 @@ button {
 .mfp-close {
   width: 44px;
   height: 44px;
-  line-height: 44px;
-
+  line-height: $line-height-large;
   position: absolute;
   right: 0;
   top: 0;
@@ -583,7 +582,7 @@ button {
           right: 0;
           width: 35px;
           height: 35px;
-          line-height: 35px;
+          line-height: $line-height-large;
           background: rgba(0, 0, 0, 0.6);
           position: fixed;
           text-align: center;

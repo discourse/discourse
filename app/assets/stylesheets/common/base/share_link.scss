@@ -44,8 +44,9 @@
   }
   .reply-as-new-topic {
     float: left;
-    line-height: 22px;
+    line-height: $line-height-large;
     margin-left: 8px;
+    margin-top: .5em;
     .fa {
       margin-right: 5px;
     }

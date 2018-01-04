@@ -182,7 +182,7 @@
       td {
         padding: 2px;
         vertical-align: bottom;
-        line-height: 24px;
+        line-height: $line-height-large;
         &.value { text-align: right; font-size: $font-up-3; }
         &.unit  { text-align: left; }
       }
@@ -262,7 +262,7 @@ ol.category-breadcrumb {
   z-index: 100;
 
   a.badge-category, a.badge-category-parent {
-    line-height: 19px;
+    line-height: $line-height-large;
     overflow:hidden;
     margin-bottom: 0;
   }

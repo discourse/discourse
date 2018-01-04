@@ -43,12 +43,10 @@ $font-down-6: .4355em;
 
 // Common line-heights
 $line-height-small: 1;
-$line-height-medium: 1.2;
-$line-height-large: 1.4;
+$line-height-medium: 1.2; // Headings or large text
+$line-height-large: 1.4; // Normal or small text
 
 $base-line-height: $line-height-large !default;
-
-
 
 // These files don't actually exist. They're injected by Stylesheet::Compiler. 
 // --------------------------------------------------
@@ -117,7 +115,6 @@ $primary-high: dark-light-diff($primary, $secondary, 30%, -10%);
 $header_primary-low: dark-light-diff($header_primary, $secondary, 90%, -65%);
 $header_primary-medium: dark-light-diff($header_primary, $secondary, 50%, -20%);
 $header_primary-high: dark-light-diff($header_primary, $secondary, 20%, 20%);
-
 
 //secondary
 $secondary-low: dark-light-diff($secondary, $primary, 70%, -70%);

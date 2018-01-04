@@ -603,8 +603,9 @@ section.details {
 }
 
 .display-row {
-  line-height: 30px;
-  padding: 5px;
+  display: flex;
+  align-items: center;
+  padding: 10px 5px;
   &:nth-of-type(1) {
     border-top: 0;
   }
@@ -626,7 +627,7 @@ section.details {
     margin-left: 12px;
     @media (max-width: $mobile-breakpoint) {
       margin-left: 0;
-      line-height: 20px;
+      line-height: $line-height-large;
       margin-top: 5px;
     }
   }

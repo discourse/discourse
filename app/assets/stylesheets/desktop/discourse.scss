@@ -84,7 +84,7 @@ textarea {
   padding: 4px;
   margin-bottom: 9px;
   font-size: $font-0;
-  line-height: $line-height-medium;
+  line-height: $line-height-large;
   color: $primary;
 }
 
@@ -94,7 +94,7 @@ input, textarea {
 
 select,
 input[type="file"] {
-  line-height: 28px;
+  line-height: $line-height-large;
 }
 
 select {

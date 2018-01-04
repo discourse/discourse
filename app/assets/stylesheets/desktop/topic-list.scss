@@ -143,7 +143,7 @@
     a {
       color: dark-light-choose($primary-medium, $secondary-medium);
       margin-right: 3px;
-      line-height: 20px;
+      line-height: $line-height-large;
     }
   }
   .activity {
