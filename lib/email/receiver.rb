@@ -451,7 +451,7 @@ module Email
         category = destination[:obj]
 
         raise StrangersNotAllowedError    if user.staged? && !category.email_in_allow_strangers
-        raise InsufficientTrustLevelError if !user.has_trust_level?(SiteSetting.email_in_min_trust)
+        raise InsufficientTrustLevelError if !user.has_trust_level?(SiteSetting.email_in_min_trust) && !sent_to_mailinglist_mirror?
 
         create_topic(user: user,
                      raw: body,
@@ -751,6 +751,11 @@ module Email
       # only add elided part in messages
       if options[:elided].present? && (SiteSetting.always_show_trimmed_content || is_private_message)
         options[:raw] << Email::Receiver.elided_html(options[:elided])
+      end
+
+      if sent_to_mailinglist_mirror?
+        options[:skip_validations] = true
+        options[:skip_guardian] = true
       end
 
       user = options.delete(:user)
