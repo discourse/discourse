@@ -53,8 +53,7 @@ gem 'fast_xs'
 
 gem 'fast_xor'
 
-# Forked until https://github.com/sdsykes/fastimage/pull/93 is merged
-gem 'discourse_fastimage', require: 'fastimage'
+gem 'fastimage'
 
 gem 'aws-sdk-s3', require: false
 gem 'excon', require: false
