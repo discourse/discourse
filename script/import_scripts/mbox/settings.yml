@@ -8,3 +8,4 @@ split_regex: ""
 
 default_trust_level: 1
 prefer_html: false
+staged: true
