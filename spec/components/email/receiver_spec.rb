@@ -818,6 +818,16 @@ describe Email::Receiver do
       expect { process(:mailinglist_reply) }.to change { topic.posts.count }
     end
 
+    it "should skip validations for staged users" do
+      Fabricate(:user, email: "alice@foo.com", staged: true)
+      expect { process(:mailinglist_short_message) }.to change { Topic.count }
+    end
+
+    it "should skip validations for regular users" do
+      Fabricate(:user, email: "alice@foo.com")
+      expect { process(:mailinglist_short_message) }.to change { Topic.count }
+    end
+
     context "read-only category" do
       before do
         category.set_permissions(everyone: :readonly)
