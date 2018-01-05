@@ -2211,7 +2211,7 @@ it:
         one: "1 assegnato"
         other: "%{count} assegnati"
       select_badge_for_title: Seleziona un distintivo da usare come tuo titolo
-      none: "<nessuno>"
+      none: "(nessuno)"
       badge_grouping:
         getting_started:
           name: Iniziali

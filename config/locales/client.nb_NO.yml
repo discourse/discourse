@@ -2268,7 +2268,7 @@ nb_NO:
         one: "ett tildelt"
         other: "%{count} tildelt"
       select_badge_for_title: Velg et merke å bruke som din tittel
-      none: "<none>"
+      none: "(none)"
       badge_grouping:
         getting_started:
           name: Kom i gang

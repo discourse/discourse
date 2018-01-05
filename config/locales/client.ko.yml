@@ -2091,7 +2091,7 @@ ko:
       granted:
         other: "%{count}개 수여됨"
       select_badge_for_title: 타이틀로 사용할 배지 선택하기
-      none: "<none>"
+      none: "(none)"
       badge_grouping:
         getting_started:
           name: 시작하기

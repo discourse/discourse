@@ -2021,7 +2021,7 @@ ca:
         one: "1 concedit"
         other: "%{count} concedits"
       select_badge_for_title: Tria un distintiu per fer-lo servir com al teu títol
-      none: "<none>"
+      none: "(none)"
       badge_grouping:
         getting_started:
           name: Començant
