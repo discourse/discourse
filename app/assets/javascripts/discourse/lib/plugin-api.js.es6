@@ -24,7 +24,7 @@ import { replaceFormatter } from 'discourse/lib/utilities';
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = '0.8.13';
+const PLUGIN_API_VERSION = '0.8.14';
 
 class PluginApi {
   constructor(version, container) {
@@ -350,9 +350,23 @@ class PluginApi {
     ```
   **/
   onPageChange(fn) {
-    let appEvents = this.container.lookup('app-events:main');
-    appEvents.on('page:changed', data => fn(data.url, data.title));
+    this.onAppEvent('page:changed', data => fn(data.url, data.title));
   }
+
+  /**
+    Listen for a triggered `AppEvent` from Discourse.
+
+    ```javascript
+      api.onAppEvent('inserted-custom-html', () => {
+        console.log('a custom footer was rendered');
+      });
+    ```
+  **/
+  onAppEvent(name, fn) {
+    let appEvents = this.container.lookup('app-events:main');
+    appEvents.on(name, fn);
+  }
+
 
   /**
    * Changes a setting associated with a widget. For example, if
