@@ -1986,7 +1986,7 @@ tr_TR:
       granted:
         other: "%{count} izin verildi"
       select_badge_for_title: Başlık yazısı olarak kullanılacak bir rozet seçin
-      none: "<none>"
+      none: "(none)"
       badge_grouping:
         getting_started:
           name: Başlangıç

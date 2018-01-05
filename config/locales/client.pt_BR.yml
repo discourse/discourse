@@ -2126,7 +2126,7 @@ pt_BR:
         one: "1 concedido"
         other: "%{count} concedidos"
       select_badge_for_title: Selecione um emblema para usar como o seu título
-      none: "<nenhum>"
+      none: "(nenhum)"
       badge_grouping:
         getting_started:
           name: Primeiros Passos

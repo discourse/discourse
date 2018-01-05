@@ -2267,7 +2267,7 @@ de:
         one: "1-mal verliehen"
         other: "%{count}-mal verliehen"
       select_badge_for_title: Wähle ein Abzeichen als deinen Titel aus
-      none: "<keines>"
+      none: "(keines)"
       badge_grouping:
         getting_started:
           name: Erste Schritte

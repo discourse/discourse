@@ -1640,14 +1640,14 @@ describe UsersController do
         user_badge_id: user_badge.id, username: user.username
       }, format: :json
 
-      expect(user.reload.title).not_to eq(badge.name)
+      expect(user.reload.title).not_to eq(badge.display_name)
       badge.update_attributes allow_title: true
 
       put :badge_title, params: {
         user_badge_id: user_badge.id, username: user.username
       }, format: :json
 
-      expect(user.reload.title).to eq(badge.name)
+      expect(user.reload.title).to eq(badge.display_name)
       expect(user.user_profile.badge_granted_title).to eq(true)
 
       user.title = "testing"
@@ -1655,6 +1655,30 @@ describe UsersController do
       user.user_profile.reload
       expect(user.user_profile.badge_granted_title).to eq(false)
 
+    end
+  end
+
+  describe "badge_title with overrided name" do
+    let(:user) { Fabricate(:user) }
+    let(:badge) { Fabricate(:badge, name: 'Demogorgon', allow_title: true) }
+    let(:user_badge) { BadgeGranter.grant(badge, user) }
+
+    before do
+      TranslationOverride.upsert!('en', 'badges.demogorgon.name', 'Boss')
+    end
+
+    after do
+      TranslationOverride.revert!('en', ['badges.demogorgon.name'])
+    end
+
+    it "uses the badge display name as user title" do
+      log_in_user user
+
+      put :badge_title, params: {
+        user_badge_id: user_badge.id, username: user.username
+      }, format: :json
+
+      expect(user.reload.title).to eq(badge.display_name)
     end
   end
 

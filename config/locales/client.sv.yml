@@ -2022,7 +2022,7 @@ sv:
         one: "1 utfärdad"
         other: "%{count} utfärdade"
       select_badge_for_title: Välj en utmärkelse att använda som din titel
-      none: "<none>"
+      none: "(none)"
       badge_grouping:
         getting_started:
           name: Komma igång

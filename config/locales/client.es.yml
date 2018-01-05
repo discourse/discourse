@@ -2271,7 +2271,7 @@ es:
         one: "1 concedido"
         other: "%{count} concedidos"
       select_badge_for_title: Seleccionar una distinción para utilizar como tu título
-      none: "<none>"
+      none: "(none)"
       badge_grouping:
         getting_started:
           name: Primeros pasos

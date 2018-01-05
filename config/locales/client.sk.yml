@@ -1915,7 +1915,7 @@ sk:
         one: "1 udelený"
         few: "%{count} udelené"
         other: "%{count} udelených"
-      none: "<žiadne>"
+      none: "(žiadne)"
       badge_grouping:
         getting_started:
           name: Začíname

@@ -2085,7 +2085,7 @@ da:
         one: "1 tildelt"
         other: "%{count} tildelt"
       select_badge_for_title: Vælg en badge, du vil bruge som din titel
-      none: "<ingen>"
+      none: "(ingen)"
       badge_grouping:
         getting_started:
           name: Sådan kommer du i gang

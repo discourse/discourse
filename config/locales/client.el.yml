@@ -2214,7 +2214,7 @@ el:
         one: "1 χορηγήθηκε"
         other: "%{count} χορηγήθηκε"
       select_badge_for_title: Επίλεξε ένα παράσημο για να χρησιμοποιήσεις ως τίτλο
-      none: "<none>"
+      none: "(none)"
       badge_grouping:
         getting_started:
           name: Ξεκινώντας

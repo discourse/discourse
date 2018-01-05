@@ -2175,7 +2175,7 @@ nl:
         one: "1 toegekend"
         other: "%{count} toegekend"
       select_badge_for_title: Kies een badge om als uw titel te gebruiken
-      none: "<geen>"
+      none: "(geen)"
       badge_grouping:
         getting_started:
           name: Aan de slag
