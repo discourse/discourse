@@ -173,7 +173,7 @@ class Middleware::RequestTracker
         limiter60.performed!
       rescue RateLimiter::LimitExceeded
         if GlobalSetting.max_requests_per_ip_mode == "warn"
-          Rails.logger.warn("Global IP rate limit exceeded for #{ip}: #{type} second rate limit")
+          Rails.logger.warn("Global IP rate limit exceeded for #{ip}: #{type} second rate limit, uri: #{env["REQUEST_URI"]}")
           false
         else
           true
