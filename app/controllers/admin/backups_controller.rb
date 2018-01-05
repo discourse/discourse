@@ -70,7 +70,7 @@ class Admin::BackupsController < Admin::AdminController
       send_file backup.path
     else
       if @error
-        render layout: 'no_ember', status: 422
+        render template: 'admin/backups/show.html.erb', layout: 'no_ember', status: 422
       else
         render body: nil, status: 404
       end
