@@ -112,8 +112,8 @@
   }
 
   .topic-excerpt {
-    font-size: 0.929em;
-    margin-top: 8px;
+    font-size: $font-down-1;
+    margin-top: 5px;
     color: dark-light-choose($primary-medium, $secondary-medium);
     word-wrap: break-word;
     line-height: $line-height-large;
@@ -267,7 +267,7 @@ ol.category-breadcrumb {
     margin-bottom: 0;
   }
   a.badge-category, .dropdown-header {
-    font-size: 0.857em;
+    font-size: $font-down-1;
     font-weight: bold;
     float: none;
     text-transform: none;
@@ -296,7 +296,7 @@ ol.category-breadcrumb {
     float: left;
     margin: 5px 0 10px;
     .top-date-string {
-      font-size: 0.857em;
+      font-size: $font-down-1;
     }
   }
 
@@ -343,7 +343,7 @@ ol.category-breadcrumb {
         }
         .top-date-string {
           font-weight: normal;
-          font-size: 0.857em;
+          font-size: $font-down-1;
         }
         &:hover {
           background-color: $highlight-medium;

@@ -85,7 +85,7 @@
           -webkit-box-flex: 1;
               -ms-flex: 1;
                   flex: 1;
-          font-size: 0.857em;
+          font-size: $font-down-1;
           font-weight: normal;
           color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));;
           white-space: normal;

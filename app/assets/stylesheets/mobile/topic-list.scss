@@ -237,7 +237,7 @@ tr.category-topic-link {
   }
 
   .category-topic-link .main-link .age {
-    font-size: 0.857em;
+    font-size: $font-down-1;
   }
 
   .category-description td {
@@ -283,7 +283,7 @@ tr.category-topic-link {
       margin: 3px 7px 0 0;
       color: dark-light-choose($primary, $secondary-low);
       font-weight: bold;
-      font-size: 0.857em;
+      font-size: $font-down-1;
     }
     figcaption {
       display: inline;

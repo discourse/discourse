@@ -16,7 +16,7 @@
 // --------------------------------------------------
 
 .badge-wrapper {
-  font-size: 0.857em;
+  font-size: $font-down-1;
   font-weight: bold;
   white-space: nowrap;
   display: inline-block;
@@ -274,7 +274,7 @@
     background-color: transparent;
     color: $tertiary-high;
     font-weight: normal;
-    font-size: 0.929em;
+    font-size: $font-down-1;
   }
 
   &.new-topic::before {
@@ -317,6 +317,6 @@
   text-shadow: 0 1px 0 rgba($primary, 0.1);
   background-color: $primary-low;
   border-color: $primary-low;
-  font-size: 0.857em;
+  font-size: $font-down-1;
   box-shadow: inset 0 1px 0 rgba(0,0,0, 0.22);
 }

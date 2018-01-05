@@ -64,7 +64,7 @@
 
     a.last-posted-at,
     a.last-posted-at:visited {
-      font-size: 0.857em;
+      font-size: $font-down-1;
       color: dark-light-choose($primary-medium, $secondary-high);
     }
 
@@ -133,7 +133,7 @@
   }
 
   .discourse-tag {
-    font-size: 0.786em;
+    font-size: $font-down-2;
   }
 
   .topic-featured-link {

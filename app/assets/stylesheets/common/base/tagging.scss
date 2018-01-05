@@ -23,7 +23,7 @@
   }
 
   .tag-count {
-    font-size: 0.857em;
+    font-size: $font-down-1;
   }
 }
 
@@ -86,7 +86,7 @@
 $tag-color: $primary-medium;
 
 .discourse-tag-count {
-  font-size: 0.857em;
+  font-size: $font-down-1;
   color: $tag-color;
 }
 
@@ -153,7 +153,7 @@ $tag-color: $primary-medium;
 
 .topic-list-item .discourse-tags {
   display: block;
-  font-size: 0.786em;
+  font-size: $font-down-2;
   font-weight: normal;
   clear: both;
   margin-top: 5px;
@@ -170,7 +170,7 @@ $tag-color: $primary-medium;
 
 .mobile-view .topic-list-item .discourse-tags {
   display: inline-block;
-  font-size: 0.857em;
+  font-size: $font-down-1;
   margin-top: 0;
   .discourse-tag.box {
     position:relative;
@@ -185,7 +185,7 @@ $tag-color: $primary-medium;
   font-family: FontAwesome;
   color: $primary-low-mid;
   margin-right: 5px;
-  font-size: 0.786em;
+  font-size: $font-down-2;
   position:relative;
   top: -0.1em;
 }
@@ -195,7 +195,7 @@ header .discourse-tag {color: $tag-color }
 .list-tags {
   margin-right: 3px;
   display: inline;
-  font-size: 0.857em;
+  font-size: $font-down-1;
 }
 
 .tag-chooser {

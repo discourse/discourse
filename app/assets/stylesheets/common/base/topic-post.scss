@@ -22,7 +22,7 @@
  }
 
  span {
-   font-size: 0.929em;
+   font-size: $font-down-1;
    margin-right: 8px;
    display: inline-block;
    max-width: 280px;
@@ -312,7 +312,7 @@ kbd
   box-shadow: 0 1px 0 rgba(0,0,0, .8);
   color: $primary;
   display: inline-block;
-  font-size: 0.857em;
+  font-size: $font-down-1;
   line-height: $line-height-large;
   margin: 0 .1em;
   padding: .1em .6em;
@@ -339,7 +339,7 @@ blockquote > *:last-child {
   cursor: pointer;
   text-transform: uppercase;
   font-weight: bold;
-  font-size: 0.9em;
+  font-size: $font-down-1;
 }
 
 .who-liked {
@@ -395,7 +395,7 @@ blockquote > *:last-child {
     padding: .5em;
     text-transform: uppercase;
     font-weight: bold;
-    font-size: 0.857em;
+    font-size: $font-down-1;
     color: dark-light-choose($primary-low-mid, $secondary-high);
 
     .custom-message {
@@ -490,7 +490,7 @@ a.mention, a.mention-group {
     > span.help {
       display: inline-block;
       color: dark-light-choose($primary-medium, $secondary-medium);
-      font-size: 0.857em;
+      font-size: $font-down-1;
       font-style: italic;
       line-height: $line-height-large;
       margin-bottom: 1px;

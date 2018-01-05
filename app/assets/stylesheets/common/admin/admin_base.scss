@@ -131,7 +131,7 @@ $mobile-breakpoint: 700px;
 }
 
 .content-list li a span.count {
-  font-size: 0.857em;
+  font-size: $font-down-1;
   float: right;
   margin-right: 10px;
   background-color: $primary-low;
@@ -202,7 +202,7 @@ $mobile-breakpoint: 700px;
     padding: 12px 12px 5px;
 
     .powered-by {
-      font-size: 0.857em;
+      font-size: $font-down-1;
       position: absolute;
       bottom: -10px;
       left: 10px;
@@ -650,7 +650,7 @@ section.details {
     width: 800px;
     float: left;
     margin-left: 12px;
-    font-size: 0.857em;
+    font-size: $font-down-1;
 
     button {
       margin-left: 10px;
@@ -695,7 +695,7 @@ section.details {
     p.help {
       margin: 0;
       color: dark-light-choose($primary-medium, $secondary-medium);
-      font-size: 0.857em;
+      font-size: $font-down-1;
     }
   }
 
@@ -905,7 +905,7 @@ table.api-keys {
   }
 
   td.key {
-    font-size: 0.857em;
+    font-size: $font-down-1;
   }
 }
 

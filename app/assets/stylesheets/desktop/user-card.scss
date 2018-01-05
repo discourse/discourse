@@ -94,7 +94,7 @@ $user_card_background: $secondary;
   }
 
   h3 {
-    font-size: 0.929em;
+    font-size: $font-down-1;
     font-weight: normal;
     margin-top: 0;
     color: scale-color($user_card_primary, $lightness: 20%);
@@ -106,7 +106,7 @@ $user_card_background: $secondary;
   }
 
   .groups {
-    font-size: 0.929em;
+    font-size: $font-down-1;
     font-weight: normal;
     margin-top: 0;
     color: $user_card_background;

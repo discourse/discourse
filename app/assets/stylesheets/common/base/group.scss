@@ -15,7 +15,7 @@
     .time,
     .delete-info {
       color: lighten($primary, 40%);
-      font-size: 0.857em;
+      font-size: $font-down-1;
     }
 
     .group-member-info {

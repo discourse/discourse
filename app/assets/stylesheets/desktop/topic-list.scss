@@ -184,7 +184,7 @@
     padding: 0 8px 8px;
   }
   .last-user-info {
-    font-size: 0.857em;
+    font-size: $font-down-1;
   }
   .has-description {
     td.category {
@@ -222,10 +222,10 @@
     }
     a.last-posted-at, a.last-posted-at:visited {
       color: dark-light-choose($primary-medium, $secondary-medium);
-      font-size: 0.857em;
+      font-size: $font-down-1;
     }
     .badge {
-      font-size: 0.857em;
+      font-size: $font-down-1;
       top: -1px;
     }
   }
@@ -257,7 +257,7 @@
 
 .category-dropdown-menu {
   max-height: 350px;
-  min-width: 131px;
+  min-width: 134px;
 }
 
 #bulk-select {
