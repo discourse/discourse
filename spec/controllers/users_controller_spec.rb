@@ -1663,7 +1663,13 @@ describe UsersController do
     let(:badge) { Fabricate(:badge, name: 'Demogorgon', allow_title: true) }
     let(:user_badge) { BadgeGranter.grant(badge, user) }
 
-    TranslationOverride.upsert!('en', 'badges.demogorgon.name', 'Boss')
+    before do
+      TranslationOverride.upsert!('en', 'badges.demogorgon.name', 'Boss')
+    end
+
+    after do
+      TranslationOverride.revert!('en', ['badges.demogorgon.name'])
+    end
 
     it "uses the badge display name as user title" do
       log_in_user user
