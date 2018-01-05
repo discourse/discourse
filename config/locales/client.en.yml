@@ -447,6 +447,7 @@ en:
       user_count: "Number of Members"
       bio: "About Group"
       selector_placeholder: "Add members"
+      username_selector_placeholder: "enter username"
       owner: "owner"
       index:
         title: "Groups"
@@ -2732,7 +2733,6 @@ en:
         edit: "Edit Groups"
         refresh: "Refresh"
         new: "New"
-        selector_placeholder: "enter username"
         about: "Edit your group membership and names here"
         group_members: "Group members"
         delete: "Delete"
