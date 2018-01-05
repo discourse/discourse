@@ -2482,7 +2482,7 @@ en:
         one:   "1 granted"
         other: "%{count} granted"
       select_badge_for_title: Select a badge to use as your title
-      none: "<none>"
+      none: "(none)"
       badge_grouping:
         getting_started:
           name: Getting Started

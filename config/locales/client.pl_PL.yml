@@ -2430,7 +2430,7 @@ pl_PL:
         many: "%{count} przyznanych"
         other: "%{count} przyznanych"
       select_badge_for_title: Wybierz odznakę do użycia jako twój tytuł
-      none: "<brak>"
+      none: "(brak)"
       badge_grouping:
         getting_started:
           name: Pierwsze kroki

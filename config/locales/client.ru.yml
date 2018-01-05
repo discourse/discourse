@@ -2294,7 +2294,7 @@ ru:
         many: "выдано %{count}"
         other: "выдано %{count}"
       select_badge_for_title: Использовать награду в качестве Вашего титула
-      none: "<отсутствует>"
+      none: "(отсутствует)"
       badge_grouping:
         getting_started:
           name: Начало работы

@@ -2271,7 +2271,7 @@ fr:
         one: "1 décerné"
         other: "%{count} décernés"
       select_badge_for_title: Sélectionner un badge comme titre
-      none: "<aucun>"
+      none: "(aucun)"
       badge_grouping:
         getting_started:
           name: Initiation

@@ -2142,7 +2142,7 @@ zh_CN:
       granted:
         other: "%{count} 授予"
       select_badge_for_title: 选择一个徽章作为你的头衔使用
-      none: "<none>"
+      none: "(none)"
       badge_grouping:
         getting_started:
           name: 开始

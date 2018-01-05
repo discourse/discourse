@@ -2268,7 +2268,7 @@ fi:
         one: "1 myönnetty"
         other: "%{count} myönnettyä"
       select_badge_for_title: Valitse tittelisi ansiomerkeistä
-      none: "<ei mitään>"
+      none: "(ei mitään)"
       badge_grouping:
         getting_started:
           name: Ensiaskeleet
