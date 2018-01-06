@@ -22,7 +22,7 @@
  }
 
  span {
-   font-size: $font-down-1;
+   font-size: $font-0;
    margin-right: 8px;
    display: inline-block;
    max-width: 280px;
@@ -34,7 +34,7 @@
    }
  }
  .fa {
-   font-size: $font-down-2;
+   font-size: $font-down-1;
    margin-left: 3px;
    color: dark-light-choose($primary-medium, $secondary-medium);
  }
