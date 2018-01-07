@@ -142,13 +142,26 @@ class Middleware::RequestTracker
     log_request_info(env, result, info) unless env["discourse.request_tracker.skip"]
   end
 
+  PRIVATE_IP = /^(127\.)|(192\.168\.)|(10\.)|(172\.1[6-9]\.)|(172\.2[0-9]\.)|(172\.3[0-1]\.)|(::1$)|([fF][cCdD])/
+
+  def is_private_ip?(ip)
+    ip = IPAddr.new(ip) rescue nil
+    !!(ip && ip.to_s.match?(PRIVATE_IP))
+  end
+
   def rate_limit(env)
+
     if (
       GlobalSetting.max_requests_per_ip_mode == "block" ||
-      GlobalSetting.max_requests_per_ip_mode == "warn"
+      GlobalSetting.max_requests_per_ip_mode == "warn" ||
+      GlobalSetting.max_requests_per_ip_mode == "warn+block"
     )
 
       ip = Rack::Request.new(env).ip
+
+      if !GlobalSetting.max_requests_rate_limit_on_private
+        return false if is_private_ip?(ip)
+      end
 
       limiter10 = RateLimiter.new(
         nil,
@@ -172,9 +185,12 @@ class Middleware::RequestTracker
         type = 60
         limiter60.performed!
       rescue RateLimiter::LimitExceeded
-        if GlobalSetting.max_requests_per_ip_mode == "warn"
+        if (
+          GlobalSetting.max_requests_per_ip_mode == "warn" ||
+          GlobalSetting.max_requests_per_ip_mode == "warn+block"
+        )
           Rails.logger.warn("Global IP rate limit exceeded for #{ip}: #{type} second rate limit, uri: #{env["REQUEST_URI"]}")
-          false
+          !(GlobalSetting.max_requests_per_ip_mode == "warn")
         else
           true
         end
