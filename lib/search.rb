@@ -468,7 +468,7 @@ class Search
       negative_tags = search_tags(posts, negative_part)
 
       positive_tags.where(["posts.id NOT IN (?)",
-                           negative_tags.pluck("id")])
+                           negative_tags.pluck("id")]).order("id")
     else
       search_tags(posts, match)
     end
