@@ -605,7 +605,7 @@ en:
       disable_jump_reply: "Don't jump to my post after I reply"
       dynamic_favicon: "Show new / updated topic count on browser icon"
       theme_default_on_all_devices: "Make this my default theme on all my devices"
-      allow_private_messages: "Allow other users to send me private messages"
+      allow_private_messages: "Allow other users to send me personal messages"
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
       change: "change"
@@ -1334,8 +1334,8 @@ en:
         posted: "Post by"
         edited: "Edit your post by"
         liked: "Liked your post"
-        private_message: "Private message from"
-        invited_to_private_message: "Invited to a private message from"
+        private_message: "Personal message from"
+        invited_to_private_message: "Invited to a personal message from"
         invited_to_topic: "Invited to a topic from"
         invitee_accepted: "Invite accepted by"
         moved_post: "Your post was moved by"
@@ -1350,7 +1350,7 @@ en:
         quoted: '{{username}} quoted you in "{{topic}}" - {{site_title}}'
         replied: '{{username}} replied to you in "{{topic}}" - {{site_title}}'
         posted: '{{username}} posted in "{{topic}}" - {{site_title}}'
-        private_message: '{{username}} sent you a private message in "{{topic}}" - {{site_title}}'
+        private_message: '{{username}} sent you a personal message in "{{topic}}" - {{site_title}}'
         linked: '{{username}} linked to your post from "{{topic}}" - {{site_title}}'
 
     upload_selector:
@@ -1718,7 +1718,7 @@ en:
         visible: "Make Listed"
         reset_read: "Reset Read Data"
         make_public: "Make Public Topic"
-        make_private: "Make Private Message"
+        make_private: "Make Personal Message"
 
       feature:
         pin: "Pin Topic"
