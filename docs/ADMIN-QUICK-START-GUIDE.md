@@ -83,7 +83,7 @@ All new users start out in a sandbox with restrictions for everyone's safety. **
 
 - post more than 2 hyperlinks
 - post any images or file attachments
-- send private messages
+- send personal messages
 - flag posts or topics
 - have actual links in the "about me" field of their profile
 - @name mention more than 2 users in a post
