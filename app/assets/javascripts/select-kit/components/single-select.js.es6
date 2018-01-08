@@ -26,7 +26,7 @@ export default SelectKitComponent.extend({
       value = this._beforeDidComputeValue(value);
       this.didComputeContent(content);
       this.didComputeValue(value);
-      this.set("headerComputedContent", this.computeHeaderContent());
+      this._setHeaderComputedContent();
       this.didComputeAttributes();
 
       if (this.get("allowInitialValueMutation")) this.mutateAttributes();
@@ -40,7 +40,7 @@ export default SelectKitComponent.extend({
       this.mutateContent(this.get("computedContent"));
       this.mutateValue(this.get("computedValue"));
       applyOnSelectPluginApiCallbacks(this.get("pluginApiIdentifiers"), this.get("computedValue"), this);
-      this.set("headerComputedContent", this.computeHeaderContent());
+      this._setHeaderComputedContent();
     });
   },
   mutateContent() {},

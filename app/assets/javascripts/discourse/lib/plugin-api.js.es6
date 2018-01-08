@@ -24,7 +24,7 @@ import { replaceFormatter } from 'discourse/lib/utilities';
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = '0.8.14';
+const PLUGIN_API_VERSION = '0.8.15';
 
 class PluginApi {
   constructor(version, container) {
