@@ -131,9 +131,9 @@ module JsLocaleHelper
     message_formats.merge!(strip_out_message_formats!(translations[locale_str]['admin_js']))
     result = generate_message_format(message_formats, locale_str)
 
-    translations.keys.each do |locale|
-      translations[locale].keys.each do |k|
-        translations[locale].delete(k) unless k == "js"
+    translations.keys.each do |l|
+      translations[l].keys.each do |k|
+        translations[l].delete(k) unless k == "js"
       end
     end
 
