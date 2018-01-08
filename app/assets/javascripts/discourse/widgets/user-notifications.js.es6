@@ -2,6 +2,7 @@ import { createWidget } from 'discourse/widgets/widget';
 import { headerHeight } from 'discourse/components/site-header';
 import { h } from 'virtual-dom';
 import DiscourseURL from 'discourse/lib/url';
+import { ajax } from 'discourse/lib/ajax';
 
 export default createWidget('user-notifications', {
   tagName: 'div.notifications',
@@ -11,8 +12,10 @@ export default createWidget('user-notifications', {
     return { notifications: [], loading: false, loaded: false };
   },
 
-  notificationsChanged() {
-    this.refreshNotifications(this.state);
+  markRead() {
+    ajax('/notifications/mark-read', { method: 'PUT' }).then(() => {
+      this.refreshNotifications(this.state);
+    });
   },
 
   refreshNotifications(state) {
@@ -51,6 +54,10 @@ export default createWidget('user-notifications', {
     }).finally(() => {
       state.loading = false;
       state.loaded = true;
+      this.sendWidgetAction('notificationsLoaded', {
+        notifications: state.notifications,
+        markRead: () => this.markRead()
+      });
       this.scheduleRerender();
     });
   },
