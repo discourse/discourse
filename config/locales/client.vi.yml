@@ -1834,7 +1834,7 @@ vi:
       title: Huy hiệu
       badge_count:
         other: "%{count} huy hiệu"
-      none: "<none>"
+      none: "(none)"
       badge_grouping:
         getting_started:
           name: Bắt đầu

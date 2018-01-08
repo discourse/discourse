@@ -2113,7 +2113,7 @@ he:
         one: "הוענק"
         other: "%{count} הוענקו"
       select_badge_for_title: בחרו בעיטור לשימוש בכותרת שלכם
-      none: "<none>"
+      none: "(none)"
       badge_grouping:
         getting_started:
           name: מתחילים

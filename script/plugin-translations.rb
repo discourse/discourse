@@ -17,6 +17,7 @@ class PluginTxUpdater
     'discourse-assign',
     'discourse-cakeday',
     'discourse-canned-replies',
+    'discourse-characters-required',
     'discourse-chat-integration',
     'discourse-data-explorer',
     'discourse-math',

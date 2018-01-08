@@ -112,6 +112,45 @@ describe Middleware::RequestTracker do
       expect(status).to eq(200)
     end
 
+    it "blocks private IPs if not skipped" do
+      global_setting :max_requests_per_ip_per_10_seconds, 1
+      global_setting :max_requests_per_ip_mode, 'warn+block'
+      global_setting :max_requests_rate_limit_on_private, true
+
+      env1 = env("REMOTE_ADDR" => "127.0.0.2")
+
+      status, _ = middleware.call(env1)
+      status, _ = middleware.call(env1)
+
+      expect(Rails.logger.warnings).to eq(1)
+      expect(status).to eq(429)
+    end
+
+    it "does nothing for private IPs if skipped" do
+      global_setting :max_requests_per_ip_per_10_seconds, 1
+      global_setting :max_requests_per_ip_mode, 'warn+block'
+      global_setting :max_requests_rate_limit_on_private, false
+
+      env1 = env("REMOTE_ADDR" => "127.0.3.1")
+
+      status, _ = middleware.call(env1)
+      status, _ = middleware.call(env1)
+
+      expect(Rails.logger.warnings).to eq(0)
+      expect(status).to eq(200)
+    end
+
+    it "does warn if rate limiter is enabled via warn+block" do
+      global_setting :max_requests_per_ip_per_10_seconds, 1
+      global_setting :max_requests_per_ip_mode, 'warn+block'
+
+      status, _ = middleware.call(env)
+      status, _ = middleware.call(env)
+
+      expect(Rails.logger.warnings).to eq(1)
+      expect(status).to eq(429)
+    end
+
     it "does warn if rate limiter is enabled" do
       global_setting :max_requests_per_ip_per_10_seconds, 1
       global_setting :max_requests_per_ip_mode, 'warn'

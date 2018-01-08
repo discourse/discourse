@@ -130,7 +130,7 @@ class PostCreator
       return false unless skip_validations? || validate_child(topic_creator)
     else
       @topic = Topic.find_by(id: @opts[:topic_id])
-      if (@topic.blank? || !guardian.can_create?(Post, @topic))
+      unless @topic.present? && (@opts[:skip_guardian] || guardian.can_create?(Post, @topic))
         errors[:base] << I18n.t(:topic_not_found)
         return false
       end

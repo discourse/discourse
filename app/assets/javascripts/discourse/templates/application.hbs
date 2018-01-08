@@ -23,7 +23,7 @@
 
 {{plugin-outlet name="above-footer" args=(hash showFooter=showFooter)}}
 {{#if showFooter}}
-  {{custom-html name="footer"}}
+  {{custom-html name="footer" triggerAppEvent="true"}}
 {{/if}}
 {{plugin-outlet name="below-footer" args=(hash showFooter=showFooter)}}
 

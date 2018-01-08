@@ -178,7 +178,7 @@ class UsersController < ApplicationController
 
     user_badge = UserBadge.find_by(id: params[:user_badge_id])
     if user_badge && user_badge.user == user && user_badge.badge.allow_title?
-      user.title = user_badge.badge.name
+      user.title = user_badge.badge.display_name
       user.user_profile.badge_granted_title = true
       user.save!
       user.user_profile.save!
