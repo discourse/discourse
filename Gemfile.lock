@@ -246,7 +246,7 @@ GEM
     parallel (1.12.0)
     parser (2.4.0.0)
       ast (~> 2.2)
-    pg (0.20.0)
+    pg (0.21.0)
     powerpack (0.1.1)
     progress (3.3.1)
     pry (0.10.4)
