@@ -14,7 +14,7 @@ const rawOpts = {
     default_code_lang: 'auto',
     censored_pattern: '\\d{3}-\\d{4}|tech\\w*'
   },
-  censoredWords: 'shucks|whiz|whizzer|a**le',
+  censoredWords: 'shucks|whiz|whizzer|a**le|badword*',
   getURL: url => url
 };
 
@@ -604,6 +604,9 @@ QUnit.test("censoring", assert => {
   assert.cooked("I have a pen, I have an a**le",
          "<p>I have a pen, I have an ■■■■■</p>",
          "it escapes regexp chars");
+  assert.cooked("No badword or apple here plz.",
+    "<p>No ■■■■■■■ or ■■■■■ here plz.</p>",
+    "it handles * as wildcard");
 });
 
 QUnit.test("code blocks/spans hoisting", assert => {
