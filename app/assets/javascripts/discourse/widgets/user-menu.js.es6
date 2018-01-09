@@ -131,6 +131,10 @@ export default createWidget('user-menu', {
       this.attach('user-notifications', { path })
     ];
 
+    if (this.settings.showLogoutButton || this.state.hasUnread) {
+      result.push(h('hr.bottom-area'));
+    }
+
     if (this.settings.showLogoutButton) {
       result.push(
         h('div.logout-link', [
