@@ -18,6 +18,7 @@ describe Jobs::BulkInvite do
         bulk_invite.current_user = user
         bulk_invite.read_csv_file(csv_file)
         expect(Invite.where(email: "robin@outlook.com").exists?).to eq(true)
+        expect(Invite.where(email: "jeff@gmail.com").exists?).to eq(true) # handles BOM
       end
     end
 
