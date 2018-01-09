@@ -33,7 +33,7 @@ span.badge-posts {
     }
     button {
       border: none;
-      font-size: $font-up-2;
+      font-size: $font-up-1;
       padding: 8px 10px;
       vertical-align: top;
       background: transparent;
@@ -133,6 +133,7 @@ a.reply-to-tab {
   z-index: 400;
   right: 80px;
   color: dark-light-choose($primary-medium, $secondary-medium);
+  margin-top: 2px;
 }
 
 .topic-post .boxed .contents {
@@ -470,6 +471,7 @@ span.highlighted {
 
 .topic-meta-data {
   margin-left: 50px;
+  font-size: $font-down-1;
   .names {
     margin: 5px 0 0 5px;
     line-height: $line-height-medium;
@@ -479,6 +481,7 @@ span.highlighted {
     }
   }
   .post-info {
+
     float: right;
     margin: 4px 10px 0 0;
     .edits { margin-right: 5px; }

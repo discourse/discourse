@@ -30,7 +30,7 @@ h1 .topic-statuses .topic-status i {
     z-index: 400;
     font-size: $font-down-1;
     float: right;
-    margin: -1px 25px 0 0;
+    margin: -4px 25px 0 0;
     color: dark-light-choose($primary-medium, $secondary-medium);
   }
 
@@ -401,7 +401,7 @@ a.star {
       color: dark-light-choose($primary-medium, $secondary-high);
       background: blend-primary-secondary(5%);
       border-left: 1px solid $primary-low;
-      border-top: 1px solid $primary-low;
+      border-top: 1px solid transparent;
       &:hover {
         color: $primary;
         background: $primary-low;
@@ -889,7 +889,6 @@ a.attachment:before {
    display: inline-block;
    float: right;
    font-size: $font-down-1;
-   margin-top: 3px;
    a {color: dark-light-choose($primary-medium, $secondary-medium); }
  }
 
@@ -914,7 +913,7 @@ span.highlighted {
   color: $tertiary-medium;
   position: absolute;
   right: 0px;
-  top: 13px;
+  top: 15px;
   font-size: 0.571em;
 }
 

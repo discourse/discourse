@@ -48,6 +48,7 @@
   }
   .nav-pills > li {
     background: $primary-low;
+    font-size: $font-down-1;
     .d-icon-caret-down {
       margin-left: 8px;
     }
@@ -105,7 +106,6 @@
   }
 
   .topic-item-stats {
-    margin-top: 8px;
     .category, .num, .last-poster {
       float: left;
     }

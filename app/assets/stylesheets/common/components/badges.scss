@@ -57,7 +57,7 @@
 
   &.bullet { //bullet category style
     display: inline-flex;
-    align-items: baseline;
+    align-items: center;
     margin-right: 5px;
 
     span.badge-category {
@@ -65,6 +65,7 @@
       display: inline-block;
       overflow: hidden;
       text-overflow: ellipsis;
+      line-height: $line-height-medium;
 
       #search-dropdown & {
         margin-top: -2px;
