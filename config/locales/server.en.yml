@@ -403,6 +403,10 @@ en:
               unique_characters: "has too many repeated characters. Please use a more secure password."
             ip_address:
               signup_not_allowed: "Signup is not allowed from this account."
+        user_email:
+          attributes:
+            user_id:
+              reassigning_primary_email: "Reassigning a primary email to another user is not allowed."
         color_scheme_color:
           attributes:
             hex:

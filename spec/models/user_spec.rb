@@ -37,6 +37,18 @@ describe User do
           expect(user.errors.messages).to include(:primary_email)
         end
       end
+
+      describe 'when primary_email is being reassigned to another user' do
+        it "should not be valid" do
+          user2 = Fabricate.build(:user, email: nil)
+          user.save!
+          user2.primary_email = user.primary_email
+
+          expect(user2).to_not be_valid
+          expect(user2.errors.messages).to include(:primary_email)
+          expect(user2.primary_email.errors.messages).to include(:user_id)
+        end
+      end
     end
   end
 
