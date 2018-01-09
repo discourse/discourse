@@ -12,7 +12,7 @@ describe Jobs::BulkInvite do
     context '.read_csv_file' do
       let(:user) { Fabricate(:user) }
       let(:bulk_invite) { Jobs::BulkInvite.new }
-      let(:csv_file) { File.new("#{Rails.root}/spec/fixtures/csv/discourse.csv") }
+      let(:csv_file) { "#{Rails.root}/spec/fixtures/csv/discourse.csv" }
 
       it 'reads csv file' do
         bulk_invite.current_user = user
