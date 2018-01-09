@@ -103,7 +103,7 @@ componentTest('custom search icon', {
 
     andThen(() => {
       assert.ok(
-        this.get('subject').filter().icon().hasClass("fa-shower"),
+        this.get('subject').filter().icon().hasClass("d-icon-shower"),
         "it has a the correct icon"
       );
     });
@@ -530,5 +530,30 @@ componentTest('with title', {
 
   test(assert) {
     andThen(() => assert.equal(this.get('subject').header().title(), 'My title') );
+  }
+});
+
+
+componentTest('support modifying header computed content through plugin api', {
+  template: '{{single-select content=content}}',
+
+  beforeEach() {
+    withPluginApi('0.8.15', api => {
+      api.modifySelectKit("select-kit")
+        .modifyHeaderComputedContent((context, computedContent) => {
+          computedContent.title = "Not so evil";
+          return computedContent;
+        });
+    });
+
+    this.set("content", [{ id: "1", name: "robin"}]);
+  },
+
+  test(assert) {
+    andThen(() => {
+      assert.equal(this.get('subject').header().title(), "Not so evil");
+    });
+
+    andThen(() => clearCallbacks());
   }
 });
