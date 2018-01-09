@@ -86,8 +86,7 @@ export default createWidget('user-notifications', {
               icon: 'chevron-down',
               action: 'showAllNotifications',
               className: 'btn'
-            })),
-          h('hr')
+            }))
         );
       }
 
