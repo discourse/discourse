@@ -18,7 +18,7 @@ export default Ember.Component.extend({
     };
 
     const config = {
-      type: 'line',
+      type: 'bar',
       data: data,
       options: {
         responsive: true,
