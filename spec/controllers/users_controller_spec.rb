@@ -303,11 +303,9 @@ describe UsersController do
     context 'invalid token' do
       render_views
 
-      before do
-        get :password_reset, params: { token: "evil_trout!" }
-      end
-
       it 'disallows login' do
+        get :password_reset, params: { token: "evil_trout!" }
+
         expect(response).to be_success
 
         expect(CGI.unescapeHTML(response.body))
@@ -317,6 +315,16 @@ describe UsersController do
           src: '/assets/application.js'
         })
 
+        expect(session[:current_user_id]).to be_blank
+      end
+
+      it "responds with proper error message" do
+        put :password_reset, params: {
+          token: "evil_trout!", password: "awesomeSecretPassword"
+        }, format: :json
+
+        expect(response).to be_success
+        expect(JSON.parse(response.body)["message"]).to eq(I18n.t('password_reset.no_token'))
         expect(session[:current_user_id]).to be_blank
       end
     end
