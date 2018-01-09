@@ -5,7 +5,8 @@ import DomHelpersMixin from "select-kit/mixins/dom-helpers";
 import EventsMixin from "select-kit/mixins/events";
 import PluginApiMixin from "select-kit/mixins/plugin-api";
 import {
-  applyContentPluginApiCallbacks
+  applyContentPluginApiCallbacks,
+  applyHeaderContentPluginApiCallbacks
 } from "select-kit/mixins/plugin-api";
 
 export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixin, EventsMixin, {
@@ -224,6 +225,15 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     this.setProperties({ filter: "" });
   },
 
+  _setHeaderComputedContent() {
+    const headerComputedContent = applyHeaderContentPluginApiCallbacks(
+      this.get("pluginApiIdentifiers"),
+      this.computeHeaderContent(),
+      this
+    );
+    this.set("headerComputedContent", headerComputedContent);
+  },
+
   actions: {
     onToggle() {
       if (this.get("onToggle")) this.sendAction("onToggle");
@@ -231,6 +241,8 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
       if (this.get("onExpand") && this.get("isExpanded") === false) this.sendAction("onExpand");
 
       this.get("isExpanded") === true ? this.collapse() : this.expand();
+
+      this._setHeaderComputedContent();
     },
 
     onHighlight(rowComputedContent) {
