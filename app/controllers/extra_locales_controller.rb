@@ -24,7 +24,7 @@ class ExtraLocalesController < ApplicationController
 
   def self.url(bundle)
     if Rails.env == "production"
-      "#{GlobalSetting.cdn_url}#{Discourse.base_uri}/extra-locales/#{bundle}?v=#{bundle_js_hash(bundle)}"
+      "#{SiteSetting.login_required ? "" : GlobalSetting.cdn_url}#{Discourse.base_uri}/extra-locales/#{bundle}?v=#{bundle_js_hash(bundle)}"
     else
       "#{Discourse.base_uri}/extra-locales/#{bundle}"
     end
