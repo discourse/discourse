@@ -231,6 +231,7 @@ export default Ember.Controller.extend({
         }
       }else{
         setTransient('lastSearch', { searchKey, model }, 5);
+        model.grouped_search_result = results.grouped_search_result;
         this.set("model", model);
       }
     }).finally(() => {
