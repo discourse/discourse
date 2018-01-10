@@ -28,11 +28,6 @@ export default Ember.Service.extend({
     };
   },
 
-  // Can be overridden to extend the modal contents if necessary
-  beforeControlModal() {
-    return Ember.RSVP.resolve();
-  },
-
   _showControlModal(type, user, opts) {
     opts = opts || {};
 
@@ -44,11 +39,10 @@ export default Ember.Service.extend({
       controller.set('post', opts.post);
     }
 
-    return this.beforeControlModal(controller).then(() => {
-      return user.adminUserView ?
-        Ember.RSVP.resolve(user) :
-        AdminUser.find(user.get('id'));
-    }).then(loadedUser => {
+    return (user.adminUserView ?
+      Ember.RSVP.resolve(user) :
+      AdminUser.find(user.get('id'))
+    ).then(loadedUser => {
       controller.setProperties({
         user: loadedUser,
         loadingUser: false,
