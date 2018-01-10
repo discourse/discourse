@@ -52,6 +52,7 @@ class ApplicationController < ActionController::Base
   after_action  :add_readonly_header
   after_action  :perform_refresh_session
   after_action  :dont_cache_page
+  after_action  :check_force_https
 
   layout :set_layout
 
@@ -80,6 +81,23 @@ class ApplicationController < ActionController::Base
   def dont_cache_page
     if !response.headers["Cache-Control"] && response.cache_control.blank?
       response.headers["Cache-Control"] = "no-store, must-revalidate, no-cache, private"
+    end
+  end
+
+  FORCE_HTTPS_WARNING_KEY = "dashboard.force_https_warning".freeze
+
+  def self.force_https_warning
+    AdminDashboardData.problem_message_check(FORCE_HTTPS_WARNING_KEY)
+  end
+
+  def check_force_https
+    return unless request.protocol =~ /^https/
+    AdminDashboardData.add_problem_message(FORCE_HTTPS_WARNING_KEY, 3600) unless SiteSetting.force_https || ApplicationController.force_https_warning
+  end
+
+  DiscourseEvent.on(:site_setting_saved) do |site_setting|
+    if site_setting.name.to_s == "force_https"
+      AdminDashboardData.clear_problem_message(FORCE_HTTPS_WARNING_KEY) if ApplicationController.force_https_warning
     end
   end
 
