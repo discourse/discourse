@@ -25,6 +25,7 @@ function censorTree(state, censor) {
 export function setup(helper) {
   helper.registerOptions((opts, siteSettings) => {
     opts.censoredPattern = siteSettings.censored_pattern;
+    opts.watchedWordsRegularExpressions = siteSettings.watched_words_regular_expressions;
   });
 
   helper.registerPlugin(md => {
@@ -33,7 +34,7 @@ export function setup(helper) {
 
     if ((words && words.length > 0) || (patterns && patterns.length > 0)) {
       const replacement = String.fromCharCode(9632);
-      const censor = censorFn(words, patterns, replacement);
+      const censor = censorFn(words, patterns, replacement, md.options.discourse.watchedWordsRegularExpressions);
       md.core.ruler.push('censored', state => censorTree(state, censor));
     }
   });

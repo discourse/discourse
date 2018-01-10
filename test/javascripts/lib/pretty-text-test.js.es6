@@ -607,6 +607,17 @@ QUnit.test("censoring", assert => {
   assert.cooked("No badword or apple here plz.",
     "<p>No ■■■■■■■ or ■■■■■ here plz.</p>",
     "it handles * as wildcard");
+
+  assert.cookedOptions(
+    "Pleased to meet you, but pleeeease call me later, xyz123",
+    { siteSettings: {
+        watched_words_regular_expressions: true,
+        censored_pattern: null
+      },
+      censoredWords: 'xyz*|plee+ase'
+    },
+    "<p>Pleased to meet you, but ■■■■■■■■■ call me later, ■■■123</p>",
+    "supports words as regular expressions");
 });
 
 QUnit.test("code blocks/spans hoisting", assert => {

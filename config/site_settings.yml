@@ -633,6 +633,7 @@ posting:
     default: 30
     min: 1
   watched_words_regular_expressions:
+    client: true
     default: false
   enable_advanced_editor_preview_sync:
     hidden: true
