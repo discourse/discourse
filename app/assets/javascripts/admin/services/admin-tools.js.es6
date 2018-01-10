@@ -39,11 +39,10 @@ export default Ember.Service.extend({
       controller.set('post', opts.post);
     }
 
-    let promise = user.adminUserView ?
+    return (user.adminUserView ?
       Ember.RSVP.resolve(user) :
-      AdminUser.find(user.get('id'));
-
-    promise.then(loadedUser => {
+      AdminUser.find(user.get('id'))
+    ).then(loadedUser => {
       controller.setProperties({
         user: loadedUser,
         loadingUser: false,

@@ -674,7 +674,7 @@ describe Email::Receiver do
     end
   end
 
-  context "no staged users on error" do
+  context "staged users" do
     before do
       SiteSetting.enable_staged_users = true
     end
@@ -711,7 +711,7 @@ describe Email::Receiver do
       include_examples "no staged users", :unsubscribe_new_user, Email::Receiver::UnsubscribeNotAllowed
     end
 
-    context "when email address is not on whitelist" do
+    context "when From email address is not on whitelist" do
       before do
         SiteSetting.email_domains_whitelist = "example.com|bar.com"
       end
@@ -719,12 +719,36 @@ describe Email::Receiver do
       include_examples "no staged users", :blacklist_whitelist_email, Email::Receiver::EmailNotAllowed
     end
 
-    context "when email address is on blacklist" do
+    context "when From email address is on blacklist" do
       before do
         SiteSetting.email_domains_blacklist = "email.com|mail.com"
       end
 
       include_examples "no staged users", :blacklist_whitelist_email, Email::Receiver::EmailNotAllowed
+    end
+
+    context "blacklist and whitelist for To and Cc" do
+      before do
+        Fabricate(:group, incoming_email: "some_group@bar.com")
+      end
+
+      it "does not create staged users for email addresses not on whitelist" do
+        SiteSetting.email_domains_whitelist = "mail.com|example.com"
+        process(:blacklist_whitelist_email)
+
+        expect(User.find_by_email("alice@foo.com")).to be_nil
+        expect(User.find_by_email("bob@foo.com")).to be_nil
+        expect(User.find_by_email("carol@example.com")).to be_present
+      end
+
+      it "does not create staged users for email addresses on blacklist" do
+        SiteSetting.email_domains_blacklist = "email.com|foo.com"
+        process(:blacklist_whitelist_email)
+
+        expect(User.find_by_email("alice@foo.com")).to be_nil
+        expect(User.find_by_email("bob@foo.com")).to be_nil
+        expect(User.find_by_email("carol@example.com")).to be_present
+      end
     end
 
     context "when destinations aren't matching any of the incoming emails" do
