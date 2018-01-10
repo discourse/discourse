@@ -1,15 +1,21 @@
 desc "Runs the qunit test suite"
 
 task "qunit:test", [:timeout, :qunit_path] => :environment do |_, args|
-
   require "rack"
   require "socket"
+  require 'rbconfig'
 
-  unless system("command -v google-chrome >/dev/null;")
+  if RbConfig::CONFIG['host_os'][/darwin|mac os/]
+    google_chrome_cli = "/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
+  else
+    google_chrome_cli = "google-chrome"
+  end
+
+  unless system("command -v \"#{google_chrome_cli}\" >/dev/null")
     abort "Chrome is not installed. Download from https://www.google.com/chrome/browser/desktop/index.html"
   end
 
-  if Gem::Version.new(`$(command -v google-chrome) --version`.match(/[\d\.]+/)[0]) < Gem::Version.new("59")
+  if Gem::Version.new(`\"#{google_chrome_cli}\" --version`.match(/[\d\.]+/)[0]) < Gem::Version.new("59")
     abort "Chrome 59 or higher is required to run tests in headless mode."
   end
 
