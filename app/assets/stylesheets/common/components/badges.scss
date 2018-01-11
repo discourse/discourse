@@ -81,7 +81,7 @@
     height: 10px;
     margin-right: 5px;
     display: inline-block;
-    line-height: $line-height-small;
+    line-height: .8;
 
     &:before {
       content: "\a0";
@@ -160,7 +160,7 @@
       line-height: $line-height-medium;
 
       &.category-dropdown-button {
-        margin-left: -4px;
+        margin-left: -.3em;
         padding: 6px;
         width: 13px;
 

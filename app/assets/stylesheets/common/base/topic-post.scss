@@ -274,6 +274,7 @@ aside.quote {
 
 .post-info {
   &.via-email, &.whisper {
+    line-height: $line-height-medium;
     margin-right: 5px;
     .d-icon {
       font-size: $font-0;
@@ -377,6 +378,7 @@ blockquote > *:last-child {
     float: left;
     i {
       font-size: 2em;
+      margin-top: .08em;
       width: 45px;
       text-align: center;
       color: dark-light-choose($primary-low-mid, $secondary-high);
