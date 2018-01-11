@@ -60,7 +60,7 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   allowInitialValueMutation: false,
   content: null,
   computedContent: null,
-  limitMatches: 100,
+  limitMatches: null,
   nameChanges: false,
   allowContentReplacement: false,
   collectionHeader: null,

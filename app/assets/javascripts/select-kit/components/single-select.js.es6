@@ -88,7 +88,11 @@ export default SelectKitComponent.extend({
       computedContent = this.filterComputedContent(computedContent, computedValue, filter);
     }
 
-    return computedContent.slice(0, this.get("limitMatches"));
+    if (this.get("limitMatches")) {
+      return computedContent.slice(0, this.get("limitMatches"));
+    }
+
+    return computedContent;
   },
 
   @computed("computedValue", "computedContent.[]")

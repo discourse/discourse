@@ -481,7 +481,6 @@ componentTest('with title', {
   }
 });
 
-
 componentTest('support modifying header computed content through plugin api', {
   template: '{{single-select content=content}}',
 
@@ -503,5 +502,19 @@ componentTest('support modifying header computed content through plugin api', {
     });
 
     andThen(() => clearCallbacks());
+  }
+});
+
+componentTest('with limitMatches', {
+  template: '{{single-select content=content limitMatches=2}}',
+
+  beforeEach() {
+    this.set('content', ['sam', 'jeff', 'neil']);
+  },
+
+  test(assert) {
+    this.get('subject').expand();
+
+    andThen(() => assert.equal(this.get('subject').el().find(".select-kit-row").length, 2));
   }
 });
