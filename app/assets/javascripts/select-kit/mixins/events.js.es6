@@ -95,7 +95,7 @@ export default Ember.Mixin.create({
 
     this.$filterInput()
       .on("change.select-kit", (event) => {
-        this.send("onFilter", $(event.target).val());
+        this.send("filterComputedContent", $(event.target).val());
       })
       .on("keypress.select-kit", (event) => {
         event.stopPropagation();

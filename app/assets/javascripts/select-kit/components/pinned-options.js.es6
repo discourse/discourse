@@ -44,13 +44,15 @@ export default DropdownSelectBoxComponent.extend({
     ]);
   },
 
-  mutateValue(value) {
-    const topic = this.get("topic");
+  actions: {
+    onSelect() {
+      const topic = this.get("topic");
 
-    if (value === "unpinned") {
-      topic.clearPin();
-    } else {
-      topic.rePin();
+      if (this.get("computedValue") === "unpinned") {
+        topic.clearPin();
+      } else {
+        topic.rePin();
+      }
     }
   }
 });
