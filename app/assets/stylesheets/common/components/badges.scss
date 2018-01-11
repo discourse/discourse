@@ -144,7 +144,7 @@
 
 .extra-info-wrapper .title-wrapper {
   .badge-wrapper {
-    margin-top: 2px;
+    margin-top: 3px;
   }
 }
 
@@ -256,6 +256,7 @@
 .badge-notification {
   @extend %badge;
   padding: 3px 5px;
+  min-width: 8px; 
   vertical-align: middle;
   color: $secondary;
   font-size: $font-down-2;
