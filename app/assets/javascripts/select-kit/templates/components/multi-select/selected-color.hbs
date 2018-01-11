@@ -1,7 +1,7 @@
 <div class="selected-color-wrapper">
   <span class="name">
     {{#unless isLocked}}
-      <span class="delete-icon" {{action onDeselect computedContent bubbles=false}}>
+      <span class="delete-icon" {{action deselect computedContent bubbles=false}}>
         {{d-icon "times"}}
       </span>
     {{/unless}}

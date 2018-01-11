@@ -85,7 +85,6 @@ export default SelectKitComponent.extend({
     Ember.run.next(() => {
       this.mutateContent(this.get("computedContent"));
       this.mutateValues(this.get("computedValues"));
-      applyOnSelectPluginApiCallbacks(this.get("pluginApiIdentifiers"), this.get("computedValues"), this);
       this._setHeaderComputedContent();
     });
   },
@@ -107,7 +106,7 @@ export default SelectKitComponent.extend({
       return !computedValues.includes(get(c, "value"));
     });
 
-    if (this.get("shouldFilter") === true) {
+    if (this.get("shouldFilter")) {
       computedContent = this.filterComputedContent(computedContent, computedValues, filter);
     }
 
@@ -162,7 +161,7 @@ export default SelectKitComponent.extend({
         const computedContent = this._findComputedContentItemByGuid($(el).attr("data-guid"));
         if (!Ember.isNone(computedContent)) { highlightedComputedContents.push(computedContent); }
       });
-      this.send("onDeselect", highlightedComputedContents);
+      this.send("deselect", highlightedComputedContents);
       return;
     }
 
@@ -208,18 +207,18 @@ export default SelectKitComponent.extend({
 
   autoHighlight() {
     Ember.run.schedule("afterRender", () => {
-      if (this.get("isExpanded") === false) { return; }
-      if (this.get("renderedBodyOnce") === false) { return; }
-      if (!isNone(this.get("highlightedValue"))) { return; }
+      if (!this.get("isExpanded")) return;
+      if (!this.get("renderedBodyOnce")) return;
+      if (!isNone(this.get("highlightedValue"))) return;
 
       if (isEmpty(this.get("filteredComputedContent"))) {
         if (this.get("createRowComputedContent")) {
-          this.send("onHighlight", this.get("createRowComputedContent"));
-        } else if (this.get("noneRowComputedContent") && this.get("hasSelection") === true) {
-          this.send("onHighlight", this.get("noneRowComputedContent"));
+          this.send("highlight", this.get("createRowComputedContent"));
+        } else if (this.get("noneRowComputedContent") && this.get("hasSelection")) {
+          this.send("highlight", this.get("noneRowComputedContent"));
         }
       } else {
-        this.send("onHighlight", this.get("filteredComputedContent.firstObject"));
+        this.send("highlight", this.get("filteredComputedContent.firstObject"));
       }
     });
   },
@@ -227,6 +226,19 @@ export default SelectKitComponent.extend({
   didSelect() {
     this.focusFilterOrHeader();
     this.autoHighlight();
+
+    applyOnSelectPluginApiCallbacks(
+      this.get("pluginApiIdentifiers"),
+      this.get("computedValue"),
+      this
+    );
+
+    this._boundaryActionHandler("onSelect", this.get("computedValue"));
+  },
+
+  willDeselect() {
+    this.clearFilter();
+    this.set("highlightedValue", null);
   },
 
   didDeselect() {
@@ -239,27 +251,29 @@ export default SelectKitComponent.extend({
   },
 
   actions: {
-    onClear() {
-      this.get("selectedComputedContents").forEach(selectedComputedContent => {
-        this.send("onDeselect", selectedComputedContent);
-      });
+    clearSelection() {
+      this.send("deselect", this.get("selectedComputedContents"));
+      this._boundaryActionHandler("onClearSelection");
     },
 
-    onCreate(computedContentItem) {
+    create(computedContentItem) {
       if (this.validateComputedContentItem(computedContentItem)) {
         this.get("computedContent").pushObject(computedContentItem);
-        this.send("onSelect", computedContentItem);
+        this._boundaryActionHandler("onCreate");
+        this.send("select", computedContentItem);
+      } else {
+        this._boundaryActionHandler("onCreateFailure");
       }
     },
 
-    onSelect(computedContentItem) {
+    select(computedContentItem) {
       this.willSelect(computedContentItem);
       this.get("computedValues").pushObject(computedContentItem.value);
       Ember.run.next(() => this.mutateAttributes());
       Ember.run.schedule("afterRender", () => this.didSelect(computedContentItem));
     },
 
-    onDeselect(rowComputedContentItems) {
+    deselect(rowComputedContentItems) {
       rowComputedContentItems = Ember.makeArray(rowComputedContentItems);
       const generatedComputedContents = this._filterRemovableComputedContents(makeArray(rowComputedContentItems));
       this.willDeselect(rowComputedContentItems);
