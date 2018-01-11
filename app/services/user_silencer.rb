@@ -34,6 +34,17 @@ class UserSilencer
             details: details
           )
         end
+
+        DiscourseEvent.trigger(
+          :user_silenced,
+          user: @user,
+          reason: @opts[:reason],
+          message: @opts[:message_body],
+          user_history: @user_history,
+          post_id: @opts[:post_id],
+          silenced_till: @user.silenced_till,
+          silenced_at: DateTime.now
+        )
         return true
       end
     else
