@@ -7,28 +7,26 @@ module Onebox
       matches_regexp(/https?:\/\/(.+)?(wistia.com|wi.st)\/(medias|embed)\/.*/)
       always_https
 
-      def placeholder_html
-        tw = get_twitter
-        escaped_src = ::Onebox::Helpers.normalize_url_for_output(tw[:image])
-        "<img src='#{escaped_src}' height='#{tw[:player_height]}' #{Helpers.title_attr(tw)}>"
-      end
-
       def to_html
-        tw = get_twitter
-        src = tw[:url].gsub("?twitter=true", "")
-        escaped_src = ::Onebox::Helpers.normalize_url_for_output(src)
-
-        <<-HTML
-          <iframe src="#{escaped_src}"
-                  width="640"
-                  height="360"
-                  scrolling="no"
-                  frameborder="0"
-                  allowtransparency="true"
-                  allowfullscreen>
-          </iframe>
-        HTML
+        oembed_data[:html]
       end
+
+      def placeholder_html
+        return if Onebox::Helpers.blank?(oembed_data[:thumbnail_url])
+        escaped_src = ::Onebox::Helpers.normalize_url_for_output(oembed_data[:thumbnail_url])
+        "<img src='#{escaped_src}' #{Helpers.title_attr(oembed_data)}>"
+      end
+
+      private
+        def oembed_data
+          @oembed_data ||= begin
+            oembed_url = "https://fast.wistia.com/oembed?embedType=iframe&url=#{url}"
+            response = Onebox::Helpers.fetch_response(oembed_url) rescue "{}"
+            Onebox::Helpers.symbolize_keys(::MultiJson.load(response))
+          rescue
+            {}
+          end
+        end
     end
   end
 end
