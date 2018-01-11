@@ -1,10 +1,12 @@
 <div class="choices">
   {{#each computedContent.selectedComputedContents as |selectedComputedContent|}}
-    {{component selectedNameComponent onDeselect=onDeselect computedContent=selectedComputedContent}}
+    {{component selectedNameComponent
+      deselect=deselect
+      computedContent=selectedComputedContent}}
   {{/each}}
   <span class="filter choice" tabindex="-1">
     {{component "select-kit/select-kit-filter"
-      onFilter=onFilter
+      filterComputedContent=filterComputedContent
       shouldDisplayFilter=shouldDisplayFilter
       isFocused=isFocused
       filter=filter

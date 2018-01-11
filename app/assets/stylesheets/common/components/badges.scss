@@ -19,21 +19,28 @@
   font-size: $font-down-1;
   font-weight: bold;
   white-space: nowrap;
-  display: inline-block;
   position: relative;
+  display: inline-flex;
+  align-items: center;
+
+  .badge-category {
+    .d-icon {
+      margin-right: 3px;
+    }
+  }
 
   &.bar { //bar category style
     line-height: $line-height-medium;
     margin-right: 5px;
-    display: inline-flex;
 
     span.badge-category {
       color: $primary;
       padding: 3px;
-      vertical-align: text-top;
-      display: inline-block;
       overflow: hidden;
       text-overflow: ellipsis;
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
 
       .extra-info-wrapper & {
         color: $header-primary;
@@ -62,7 +69,6 @@
 
     span.badge-category {
       color: $primary;
-      display: inline-block;
       overflow: hidden;
       text-overflow: ellipsis;
       line-height: $line-height-medium;
@@ -104,9 +110,9 @@
     line-height: $line-height-large;
     margin-top: 5px;
     margin-right: 5px;
+    padding: 2px;
 
     span {
-      display: block;
       overflow: hidden;
       text-overflow: ellipsis;
 
@@ -228,6 +234,7 @@
         width: 100%;
         line-height: $line-height-small;
         vertical-align: text-top;
+        padding: 0;
         span.badge-category {
           max-width: 100px;
           padding: 5px;

@@ -5,6 +5,6 @@ export default SelectKitRowComponent.extend({
   classNames: "none",
 
   click() {
-    this.sendAction("onClear");
+    this.sendAction("clearSelection");
   }
 });

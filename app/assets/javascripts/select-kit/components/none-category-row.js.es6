@@ -5,6 +5,6 @@ export default CategoryRowComponent.extend({
   classNames: "none category-row",
 
   click() {
-    this.sendAction("onClear");
+    this.sendAction("clearSelection");
   }
 });
