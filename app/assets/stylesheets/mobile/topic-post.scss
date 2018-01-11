@@ -35,7 +35,7 @@ span.badge-posts {
       border: none;
       font-size: $font-up-1;
       padding: 8px 10px;
-      vertical-align: top;
+      vertical-align: middle;
       background: transparent;
       float: left;
       &.hidden {
@@ -232,9 +232,15 @@ a.reply-to-tab {
   }
 
   .links, .information, .avatars {
-    padding: 7px 10px;
+    padding: 10px;
     color: $primary;
     overflow: auto;
+  }
+
+  .information {
+    p {
+      margin: 0 0 10px 0;
+    }
   }
 
   .participants { // PMs //
@@ -257,14 +263,12 @@ a.reply-to-tab {
   }
 
   .buttons {
-    float: right;
     .btn {
       border: 0;
       padding: 0 15px;
       color: dark-light-choose($primary-medium, $secondary-high);
       background: blend-primary-secondary(5%);
       border-left: 1px solid $primary-low;
-      border-top: 1px solid $primary-low;
       .fa {
         margin: 0;
         font-size: $font-up-2;

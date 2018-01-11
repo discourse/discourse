@@ -46,6 +46,7 @@
   .expand-item, .collapse-item {
     float: right;
     margin-right: 0.5em;
+    line-height: $line-height-small;
     color: lighten($primary, 40%);
   }
 
