@@ -119,12 +119,12 @@
           height: 5px;
           margin: 0 2px 2px 2px;
           border-radius: 5px;
+          display: flex;
+          width: 100%;
         }
       }
 
       .selected-name {
-        align-items: center;
-        justify-content: flex-start;
         color: $primary;
         cursor: default;
         border: 1px solid $primary-medium;
@@ -136,35 +136,49 @@
         background-color: $primary-low;
         cursor: pointer;
         outline: none;
-        line-height: normal;
         overflow: hidden;
         flex: 0 1 auto;
         flex-wrap: nowrap;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+
+        .footer {
+          display: flex;
+          width: 100%;
+        }
+
+        .body {
+          width: 100%;
+          display: inline-flex;
+          align-items: center;
+
+          .locked-icon, .delete-icon {
+            justify-content: center;
+            align-items: center;
+            display: inline-flex;
+            height: 21px;
+            width: 21px;
+
+            .d-icon {
+              color: $primary-medium;
+              cursor: pointer;
+              font-size: 1em;
+              margin: 0;
+
+              &:hover {
+                color: $primary;
+              }
+            }
+          }
+        }
 
         .name {
           padding: 0 5px;
-          line-height: 18px;
         }
 
         &.is-highlighted {
           box-shadow: 0 0 2px $danger, 0 1px 0 rgba(0,0,0,0.05);
-        }
-
-        .locked-icon, .delete-icon {
-          justify-content: center;
-          align-items: center;
-          width: 21px;
-          height: 21px;
-          display: inline-flex;
-          .d-icon {
-            color: $primary-medium;
-            cursor: pointer;
-            font-size: 1em;
-
-            &:hover {
-              color: $primary;
-            }
-          }
         }
       }
     }

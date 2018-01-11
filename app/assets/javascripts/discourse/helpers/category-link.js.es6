@@ -67,9 +67,9 @@ export function categoryBadgeHTML(category, opts) {
   let categoryName = escapeExpression(get(category, 'name'));
 
   if (restricted) {
-    html += iconHTML('lock') + " " + categoryName;
+    html += `${iconHTML('lock')}<span>${categoryName}</span>`;
   } else {
-    html += categoryName;
+    html += `<span>${categoryName}</span>`;
   }
   html += "</span>";
 
