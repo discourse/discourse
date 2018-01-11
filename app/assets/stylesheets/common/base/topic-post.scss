@@ -191,6 +191,33 @@ aside.quote {
   position: relative;
 }
 
+.topic-map {
+
+  .avatars {
+    > div {
+      float: left;
+      position: relative;
+      margin: 3px 0;
+    }
+    .post-count {
+      position: absolute;
+      right: 0;
+      border-radius: 100px;
+      padding: 3px 5px;
+      text-align: center;
+      font-weight: normal;
+      font-size: $font-down-2;
+      line-height: $line-height-small;
+    }
+  }
+
+  .avatar {
+    float: left;
+    margin-right: 4px;
+  }
+
+}
+
 .topic-avatar, .avatar-flair-preview, .user-card-avatar, .topic-map .poster {
   .avatar-flair {
     display: flex;

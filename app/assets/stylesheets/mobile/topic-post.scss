@@ -5,7 +5,7 @@
 
 .topic-post article {
   border-top: 1px solid $primary-low;
-  padding: 8px 0;
+  padding: 15px 0 8px 0;
 }
 
 .post-stream {
@@ -18,10 +18,6 @@ span.badge-posts {
 
 .show-replies {
   display: none;
-}
-
-.who-liked {
-  margin-left: 10px;
 }
 
 .topic-post {
@@ -129,11 +125,11 @@ span.badge-posts {
 }
 
 a.reply-to-tab {
-  position: absolute;
   z-index: 400;
   right: 80px;
   color: dark-light-choose($primary-medium, $secondary-medium);
-  margin-top: 2px;
+  margin: -3px 10px 0 0;
+  float: right;
 }
 
 .topic-post .boxed .contents {
@@ -176,29 +172,6 @@ a.reply-to-tab {
   ul {
     margin: 0;
     list-style: none;
-  }
-
-  .avatars {
-    > div {
-      float: left;
-      position: relative;
-      margin: 3px 0;
-    }
-    .post-count {
-      position: absolute;
-      right: 0;
-      border-radius: 100px;
-      padding: 4px 5px 2px 5px;
-      text-align: center;
-      font-weight: normal;
-      font-size: $font-down-1;
-      line-height: $line-height-small;
-    }
-  }
-
-  .avatar {
-    float: left;
-    margin-right: 4px;
   }
 
   .map-collapsed {
@@ -469,7 +442,7 @@ span.highlighted {
 
 .topic-avatar {
   float: left;
-  padding-top: 5px;
+  margin-right: 10px;
   z-index:999; /* must render on top of topic-body + topic-meta-data, otherwise not tappable */
 }
 
@@ -477,7 +450,6 @@ span.highlighted {
   margin-left: 50px;
   font-size: $font-down-1;
   .names {
-    margin: 5px 0 0 5px;
     line-height: $line-height-medium;
 
     .poster-icon {
@@ -485,9 +457,7 @@ span.highlighted {
     }
   }
   .post-info {
-
     float: right;
-    margin: 4px 10px 0 0;
     .edits { margin-right: 5px; }
   }
 }

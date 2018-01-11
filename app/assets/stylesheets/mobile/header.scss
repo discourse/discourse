@@ -34,10 +34,9 @@
 }
 
 .d-header-icons {
-  .badge-notification {
-    top: -5px;
+  .d-icon {
+    line-height: $line-height-medium;
   }
-
   .active .icon {
     &:after { margin-top: -1px; }
   }
