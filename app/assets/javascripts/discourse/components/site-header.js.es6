@@ -24,7 +24,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, {
     if (this.docAt === null) {
       const outlet = $('#main-outlet');
       if (!(outlet && outlet.length === 1)) return;
-      this.docAt = outlet.offset().top;
+      this.docAt = outlet.children().offset().top;
     }
 
     const $body = $('body');
