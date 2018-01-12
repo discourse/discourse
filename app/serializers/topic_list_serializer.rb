@@ -7,7 +7,7 @@ class TopicListSerializer < ApplicationSerializer
              :draft_sequence,
              :for_period,
              :per_page,
-             :tags
+             :top_tags
 
   has_many :topics, serializer: TopicListItemSerializer, embed: :objects
 
@@ -23,7 +23,7 @@ class TopicListSerializer < ApplicationSerializer
     object.more_topics_url.present? && (object.topics.size == object.per_page)
   end
 
-  def include_tags?
+  def include_top_tags?
     Tag.include_tags?
   end
 end
