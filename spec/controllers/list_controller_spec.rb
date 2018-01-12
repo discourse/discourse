@@ -297,7 +297,8 @@ describe ListController do
 
   context 'read' do
     it 'raises an error when not logged in' do
-      expect { get :read }.to raise_error(Discourse::NotLoggedIn)
+      get :read
+      expect(response.status).to eq(404)
     end
 
     context 'when logged in' do

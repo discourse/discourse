@@ -5,9 +5,8 @@ describe OneboxController do
   let(:url) { "http://google.com" }
 
   it "requires the user to be logged in" do
-    expect do
-      get :show, params: { url: url }, format: :json
-    end.to raise_error(Discourse::NotLoggedIn)
+    get :show, params: { url: url }, format: :json
+    expect(response.status).to eq(403)
   end
 
   describe "logged in" do

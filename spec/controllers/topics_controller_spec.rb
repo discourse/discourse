@@ -9,12 +9,8 @@ def topics_controller_show_gen_perm_tests(expected, ctx)
 
     method = <<~TEXT
     it 'returns #{status} for #{sym}' do
-      begin
-        get :show, params: { #{params} }
-        expect(response.status).to eq(#{status})
-      rescue Discourse::NotLoggedIn
-        expect(302).to eq(#{status})
-      end
+      get :show, params: { #{params} }
+      expect(response.status).to eq(#{status})
     end
     TEXT
 
@@ -65,13 +61,12 @@ describe TopicsController do
 
   context 'move_posts' do
     it 'needs you to be logged in' do
-      expect do
-        post :move_posts, params: {
-          topic_id: 111,
-          title: 'blah',
-          post_ids: [1, 2, 3]
-        }, format: :json
-      end.to raise_error(Discourse::NotLoggedIn)
+      post :move_posts, params: {
+        topic_id: 111,
+        title: 'blah',
+        post_ids: [1, 2, 3]
+      }, format: :json
+      expect(response.status).to eq(403)
     end
 
     describe 'moving to a new topic' do
@@ -244,11 +239,10 @@ describe TopicsController do
 
   context "merge_topic" do
     it 'needs you to be logged in' do
-      expect do
-        post :merge_topic, params: {
-          topic_id: 111, destination_topic_id: 345
-        }, format: :json
-      end.to raise_error(Discourse::NotLoggedIn)
+      post :merge_topic, params: {
+        topic_id: 111, destination_topic_id: 345
+      }, format: :json
+      expect(response.status).to eq(403)
     end
 
     describe 'moving to a new topic' do
@@ -299,13 +293,12 @@ describe TopicsController do
 
   context 'change_post_owners' do
     it 'needs you to be logged in' do
-      expect do
-        post :change_post_owners, params: {
-          topic_id: 111,
-          username: 'user_a',
-          post_ids: [1, 2, 3]
-        }, format: :json
-      end.to raise_error(Discourse::NotLoggedIn)
+      post :change_post_owners, params: {
+        topic_id: 111,
+        username: 'user_a',
+        post_ids: [1, 2, 3]
+      }, format: :json
+      expect(response.status).to eq(403)
     end
 
     describe 'forbidden to moderators' do
@@ -402,9 +395,8 @@ describe TopicsController do
     let(:params) { { topic_id: 1, timestamp: Time.zone.now } }
 
     it 'needs you to be logged in' do
-      expect do
-        put :change_timestamps, params: params, format: :json
-      end.to raise_error(Discourse::NotLoggedIn)
+      put :change_timestamps, params: params, format: :json
+      expect(response.status).to eq(403)
     end
 
     [:moderator, :trust_level_4].each do |user|
@@ -446,9 +438,8 @@ describe TopicsController do
 
   context 'clear_pin' do
     it 'needs you to be logged in' do
-      expect do
-        put :clear_pin, params: { topic_id: 1 }, format: :json
-      end.to raise_error(Discourse::NotLoggedIn)
+      put :clear_pin, params: { topic_id: 1 }, format: :json
+      expect(response.status).to eq(403)
     end
 
     context 'when logged in' do
@@ -479,11 +470,10 @@ describe TopicsController do
 
   context 'status' do
     it 'needs you to be logged in' do
-      expect do
-        put :status, params: {
-          topic_id: 1, status: 'visible', enabled: true
-        }, format: :json
-      end.to raise_error(Discourse::NotLoggedIn)
+      put :status, params: {
+        topic_id: 1, status: 'visible', enabled: true
+      }, format: :json
+      expect(response.status).to eq(403)
     end
 
     describe 'when logged in' do
@@ -519,11 +509,10 @@ describe TopicsController do
       end
 
       it 'raises an error with a status not in the whitelist' do
-        expect do
-          put :status, params: {
-            topic_id: @topic.id, status: 'title', enabled: 'true'
-          }, format: :json
-        end.to raise_error(Discourse::InvalidParameters)
+        put :status, params: {
+          topic_id: @topic.id, status: 'title', enabled: 'true'
+        }, format: :json
+        expect(response.status).to eq(400)
       end
 
       it 'should update the status of the topic correctly' do
@@ -551,9 +540,8 @@ describe TopicsController do
   context 'delete_timings' do
 
     it 'needs you to be logged in' do
-      expect do
-        delete :destroy_timings, params: { topic_id: 1 }, format: :json
-      end.to raise_error(Discourse::NotLoggedIn)
+      delete :destroy_timings, params: { topic_id: 1 }, format: :json
+      expect(response.status).to eq(403)
     end
 
     context 'when logged in' do
@@ -575,23 +563,20 @@ describe TopicsController do
   describe 'mute/unmute' do
 
     it 'needs you to be logged in' do
-      expect do
-        put :mute, params: { topic_id: 99 }, format: :json
-      end.to raise_error(Discourse::NotLoggedIn)
+      put :mute, params: { topic_id: 99 }, format: :json
+      expect(response.status).to eq(403)
     end
 
     it 'needs you to be logged in' do
-      expect do
-        put :unmute, params: { topic_id: 99 }, format: :json
-      end.to raise_error(Discourse::NotLoggedIn)
+      put :unmute, params: { topic_id: 99 }, format: :json
+      expect(response.status).to eq(403)
     end
   end
 
   describe 'recover' do
     it "won't allow us to recover a topic when we're not logged in" do
-      expect do
-        put :recover, params: { topic_id: 1 }, format: :json
-      end.to raise_error(Discourse::NotLoggedIn)
+      put :recover, params: { topic_id: 1 }, format: :json
+      expect(response.status).to eq(403)
     end
 
     describe 'when logged in' do
@@ -622,9 +607,8 @@ describe TopicsController do
 
   describe 'delete' do
     it "won't allow us to delete a topic when we're not logged in" do
-      expect do
-        delete :destroy, params: { id: 1 }, format: :json
-      end.to raise_error(Discourse::NotLoggedIn)
+      delete :destroy, params: { id: 1 }, format: :json
+      expect(response.status).to eq(403)
     end
 
     describe 'when logged in' do
@@ -822,10 +806,10 @@ describe TopicsController do
         expected = {
           normal_topic: 200,
           secure_topic: 403,
-          private_topic: 302,
+          private_topic: 404,
           deleted_topic: 410,
           deleted_secure_topic: 403,
-          deleted_private_topic: 302,
+          deleted_private_topic: 404,
           nonexist: 404
         }
         topics_controller_show_gen_perm_tests(expected, self)
@@ -1094,9 +1078,8 @@ describe TopicsController do
 
   describe 'update' do
     it "won't allow us to update a topic when we're not logged in" do
-      expect do
-        put :update, params: { topic_id: 1, slug: 'xyz' }, format: :json
-      end.to raise_error(Discourse::NotLoggedIn)
+      put :update, params: { topic_id: 1, slug: 'xyz' }, format: :json
+      expect(response.status).to eq(403)
     end
 
     describe 'when logged in' do
@@ -1286,11 +1269,10 @@ describe TopicsController do
     end
 
     it "won't allow us to invite toa topic when we're not logged in" do
-      expect do
-        post :invite, params: {
-          topic_id: 1, email: 'jake@adventuretime.ooo'
-        }, format: :json
-      end.to raise_error(Discourse::NotLoggedIn)
+      post :invite, params: {
+        topic_id: 1, email: 'jake@adventuretime.ooo'
+      }, format: :json
+      expect(response.status).to eq(403)
     end
 
     describe 'when logged in as group manager' do
@@ -1422,9 +1404,8 @@ describe TopicsController do
 
   describe "bulk" do
     it 'needs you to be logged in' do
-      expect do
-        put :bulk, format: :json
-      end.to raise_error(Discourse::NotLoggedIn)
+      put :bulk, format: :json
+      expect(response.status).to eq(403)
     end
 
     describe "when logged in" do
@@ -1500,9 +1481,8 @@ describe TopicsController do
 
   describe 'reset_new' do
     it 'needs you to be logged in' do
-      expect do
-        put :reset_new, format: :json
-      end.to raise_error(Discourse::NotLoggedIn)
+      put :reset_new, format: :json
+      expect(response.status).to eq(403)
     end
 
     let(:user) { log_in(:user) }
@@ -1587,9 +1567,8 @@ describe TopicsController do
 
   context "convert_topic" do
     it 'needs you to be logged in' do
-      expect do
-        put :convert_topic, params: { id: 111, type: "private" }, format: :json
-      end.to raise_error(Discourse::NotLoggedIn)
+      put :convert_topic, params: { id: 111, type: "private" }, format: :json
+      expect(response.status).to eq(403)
     end
 
     describe 'converting public topic to private message' do
