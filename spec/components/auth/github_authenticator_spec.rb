@@ -17,7 +17,6 @@ def auth_token_for(user)
     },
     info: {
       email: user.email,
-      email_verified: true,
       nickname: user.username,
       name: user.name,
       image: "https://avatars3.githubusercontent.com/u/#{user.username}",
@@ -43,7 +42,6 @@ describe Auth::GithubAuthenticator do
         },
         info: {
           email: user.email,
-          email_verified: true,
           nickname: user.username,
           name: user.name,
         },
@@ -70,7 +68,6 @@ describe Auth::GithubAuthenticator do
         },
         info: {
           email: user.email,
-          email_verified: false,
           nickname: user.username,
           name: user.name,
         },
@@ -97,7 +94,6 @@ describe Auth::GithubAuthenticator do
         },
         info: {
           email: "person@example.com",
-          email_verified: true,
           nickname: "person",
           name: "Person Lastname",
         },
@@ -110,7 +106,7 @@ describe Auth::GithubAuthenticator do
       expect(result.username).to eq(hash[:info][:nickname])
       expect(result.name).to eq(hash[:info][:name])
       expect(result.email).to eq(hash[:info][:email])
-      expect(result.email_valid).to eq(hash[:info][:email_verified])
+      expect(result.email_valid).to eq(hash[:info][:email].present?)
     end
 
     it 'will skip blacklisted domains for non existing users' do
@@ -128,7 +124,6 @@ describe Auth::GithubAuthenticator do
         },
         info: {
           email: "not_allowed@blacklist.com",
-          email_verified: true,
           nickname: "person",
           name: "Person Lastname",
         },
@@ -154,7 +149,7 @@ describe Auth::GithubAuthenticator do
             verified: true,
           }, {
             email: "not_allowed@blacklist.com",
-            primary: true,
+            primary: false,
             verified: true,
           }, {
             email: "allowed@whitelist.com",
@@ -164,7 +159,6 @@ describe Auth::GithubAuthenticator do
         },
         info: {
           email: "person@example.com",
-          email_verified: true,
           nickname: "person",
           name: "Person Lastname",
         },
