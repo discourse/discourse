@@ -496,6 +496,7 @@ video {
   .topic-statuses {
     i { color: $header_primary; }
     .d-icon-envelope { color: $danger; }
+    .d-icon-lock {padding-top: .15em;}
     .unpinned { color: $header_primary; }
   }
 

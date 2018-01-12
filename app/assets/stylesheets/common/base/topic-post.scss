@@ -413,12 +413,11 @@ blockquote > *:last-child {
   max-width: 755px;
   border-top: 1px solid $primary-low;
   .topic-avatar {
-    padding: 2px 0px 3px 0;
+    padding: .67em 0;
     border-top: none;
     float: left;
     i {
       font-size: 2em;
-      margin-top: .08em;
       width: 45px;
       text-align: center;
       color: dark-light-choose($primary-low-mid, $secondary-high);
@@ -434,7 +433,7 @@ blockquote > *:last-child {
   }
 
   .small-action-desc {
-    padding: .5em;
+    padding: 1em 1em 1.25em 1em;
     text-transform: uppercase;
     font-weight: bold;
     font-size: $font-down-1;
