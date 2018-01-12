@@ -2,6 +2,9 @@
 // Discourse header
 // --------------------------------------------------
 
+#site-text-logo {
+  font-size: 1.5em;
+}
 @media only screen and (max-width: 320px) {
   #site-text-logo {
     font-size: $font-up-2;
