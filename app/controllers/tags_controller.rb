@@ -30,7 +30,7 @@ class TagsController < ::ApplicationController
 
       format.json do
         if SiteSetting.tags_listed_by_group
-          grouped_tag_counts = TagGroup.order('name ASC').includes(:tags).map do |tag_group|
+          grouped_tag_counts = TagGroup.allowed(guardian).order('name ASC').includes(:tags).map do |tag_group|
             { id: tag_group.id, name: tag_group.name, tags: self.class.tag_counts_json(tag_group.tags) }
           end
 

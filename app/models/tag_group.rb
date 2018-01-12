@@ -21,6 +21,19 @@ class TagGroup < ActiveRecord::Base
       end
     end
   end
+
+  def self.allowed(guardian)
+    if guardian.is_staff?
+      TagGroup
+    else
+      category_permissions_filter = <<~SQL
+        id IN ( SELECT tag_group_id FROM category_tag_groups WHERE category_id IN (?))
+        OR id NOT IN (SELECT tag_group_id FROM category_tag_groups)
+      SQL
+
+      TagGroup.where(category_permissions_filter, guardian.allowed_category_ids)
+    end
+  end
 end
 
 # == Schema Information
