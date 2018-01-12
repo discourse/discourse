@@ -259,6 +259,10 @@ class Auth::DefaultCurrentUserProvider
         api_key.user if !api_username || (api_key.user.username_lower == api_username.downcase)
       elsif api_username
         User.find_by(username_lower: api_username.downcase)
+      elsif user_id = request["api_user_id"]
+        User.find_by(id: user_id.to_i)
+      elsif external_id = request["api_user_external_id"]
+        SingleSignOnRecord.find_by(external_id: external_id.to_s).try(:user)
       end
     end
   end
