@@ -1,7 +1,22 @@
 require 'rails_helper'
 
 RSpec.describe PostActionsController do
+  describe '#destroy' do
+    let(:post) { Fabricate(:post, user: Fabricate(:coding_horror)) }
+
+    it 'requires you to be logged in' do
+      delete '/post_action.json', params: { id: post.id }
+      expect(response.status).to eq(404)
+    end
+  end
+
   describe '#create' do
+
+    it 'requires you to be logged in' do
+      post '/post_actions.json'
+      expect(response.status).to eq(403)
+    end
+
     describe 'as a moderator' do
       let(:user) { Fabricate(:moderator) }
       let(:post_1) { Fabricate(:post, user: Fabricate(:coding_horror)) }
@@ -11,11 +26,10 @@ RSpec.describe PostActionsController do
       end
 
       it 'raises an error when the id is missing' do
-        expect do
-          post "/post_actions.json", params: {
-            post_action_type_id: PostActionType.types[:like]
-          }
-        end.to raise_error(ActionController::ParameterMissing)
+        post "/post_actions.json", params: {
+          post_action_type_id: PostActionType.types[:like]
+        }
+        expect(response.status).to eq(400)
       end
 
       it 'fails when the id is invalid' do
@@ -27,9 +41,8 @@ RSpec.describe PostActionsController do
       end
 
       it 'raises an error when the post_action_type_id index is missing' do
-        expect do
-          post "/post_actions.json", params: { id: post_1.id }
-        end.to raise_error(ActionController::ParameterMissing)
+        post "/post_actions.json", params: { id: post_1.id }
+        expect(response.status).to eq(400)
       end
 
       it "fails when the user doesn't have permission to see the post" do

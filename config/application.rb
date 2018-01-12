@@ -158,8 +158,8 @@ module Discourse
     # supports etags (post 1.7)
     config.middleware.delete Rack::ETag
 
-    # route all exceptions via our router
-    config.exceptions_app = self.routes
+    require 'middleware/discourse_public_exceptions'
+    config.exceptions_app = Middleware::DiscoursePublicExceptions.new(Rails.public_path)
 
     # Our templates shouldn't start with 'discourse/templates'
     config.handlebars.templates_root = 'discourse/templates'

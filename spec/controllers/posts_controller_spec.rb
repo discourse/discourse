@@ -47,11 +47,10 @@ end
 
 shared_examples 'action requires login' do |method, action, params|
   it 'raises an exception when not logged in' do
-    expect do
-      options = { format: :json }
-      options.merge!(params: params) if params
-      self.public_send(method, action, options)
-    end.to raise_error(Discourse::NotLoggedIn)
+    options = { format: :json }
+    options.merge!(params: params) if params
+    self.public_send(method, action, options)
+    expect(response.status).to eq(403)
   end
 end
 
@@ -268,9 +267,8 @@ describe PostsController do
       end
 
       it "raises invalid parameters with missing ids" do
-        expect do
-          delete :destroy_many, params: { post_ids: [12345] }, format: :json
-        end.to raise_error(Discourse::InvalidParameters)
+        delete :destroy_many, params: { post_ids: [12345] }, format: :json
+        expect(response.status).to eq(400)
       end
 
       it "raises an error when the user doesn't have permission to delete the posts" do
@@ -855,11 +853,10 @@ describe PostsController do
     let(:post_revision) { Fabricate(:post_revision, post: post) }
 
     it "throws an exception when revision is < 2" do
-      expect {
-        get :revisions, params: {
-          post_id: post_revision.post_id, revision: 1
-        }, format: :json
-      }.to raise_error(Discourse::InvalidParameters)
+      get :revisions, params: {
+        post_id: post_revision.post_id, revision: 1
+      }, format: :json
+      expect(response.status).to eq(400)
     end
 
     context "when edit history is not visible to the public" do
@@ -984,10 +981,9 @@ describe PostsController do
     describe "when logged in as staff" do
       let(:logged_in_as) { log_in(:moderator) }
 
-      it "throws an exception when revision is < 2" do
-        expect {
-          put :revert, params:  { post_id: post.id, revision: 1 }, format: :json
-        }.to raise_error(Discourse::InvalidParameters)
+      it "fails when revision is < 2" do
+        put :revert, params:  { post_id: post.id, revision: 1 }, format: :json
+        expect(response.status).to eq(400)
       end
 
       it "fails when post_revision record is not found" do

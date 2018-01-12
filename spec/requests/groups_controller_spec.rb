@@ -245,11 +245,11 @@ describe GroupsController do
             public_exit: true
           )
 
-          expect { put "/groups/#{group.id}/members.json", params: { usernames: "bob" } }
-            .to raise_error(Discourse::NotLoggedIn)
+          put "/groups/#{group.id}/members.json", params: { usernames: "bob" }
+          expect(response.status).to eq(403)
 
-          expect { delete "/groups/#{group.id}/members.json", params: { username: "bob" } }
-            .to raise_error(Discourse::NotLoggedIn)
+          delete "/groups/#{group.id}/members.json", params: { username: "bob" }
+          expect(response.status).to eq(403)
         end
       end
     end
@@ -499,9 +499,8 @@ describe GroupsController do
   describe "group histories" do
     context 'when user is not signed in' do
       it 'should raise the right error' do
-        expect do
-          get "/groups/#{group.name}/logs.json"
-        end.to raise_error(Discourse::NotLoggedIn)
+        get "/groups/#{group.name}/logs.json"
+        expect(response.status).to eq(403)
       end
     end
 
@@ -587,17 +586,15 @@ describe GroupsController do
     let(:new_user) { Fabricate(:user) }
 
     it 'requires the user to log in' do
-      expect do
-        post "/groups/#{group.name}/request_membership.json"
-      end.to raise_error(Discourse::NotLoggedIn)
+      post "/groups/#{group.name}/request_membership.json"
+      expect(response.status).to eq(403)
     end
 
     it 'requires a reason' do
       sign_in(user)
 
-      expect do
-        post "/groups/#{group.name}/request_membership.json"
-      end.to raise_error(ActionController::ParameterMissing)
+      post "/groups/#{group.name}/request_membership.json"
+      expect(response.status).to eq(400)
     end
 
     it 'should create the right PM' do
@@ -649,9 +646,8 @@ describe GroupsController do
 
     context 'as an anon user' do
       it "returns the right response" do
-        expect do
-          get '/groups/search.json'
-        end.to raise_error(Discourse::NotLoggedIn)
+        get '/groups/search.json'
+        expect(response.status).to eq(403)
       end
     end
 
