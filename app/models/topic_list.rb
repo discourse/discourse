@@ -34,7 +34,7 @@ class TopicList
                 :filter,
                 :for_period,
                 :per_page,
-                :tags,
+                :top_tags,
                 :current_user
 
   def initialize(filter, current_user, topics, opts = nil)
@@ -48,7 +48,7 @@ class TopicList
     end
   end
 
-  def tags
+  def top_tags
     opts = @category ? { category: @category } : {}
     opts[:guardian] = Guardian.new(@current_user)
     Tag.top_tags(opts)
