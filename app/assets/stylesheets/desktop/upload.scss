@@ -13,8 +13,8 @@
         margin: 0 0 5px 0;
       }
       input[type="file"] {
-        font-size: 1em;
-        line-height: 18px;
+        font-size: $font-0;
+        line-height: $line-height-medium;
       }
       .description, .hint {
         color: dark-light-choose($primary-medium, $secondary-medium);
@@ -38,6 +38,6 @@
 .image-upload-controls {
   padding: 10px;
   label.btn {
-    padding: 6px 10px;
+    padding: 5px 10px;
   }
 }

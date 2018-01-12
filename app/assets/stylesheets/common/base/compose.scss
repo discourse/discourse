@@ -300,7 +300,7 @@
           color: $primary;
         }
         span.name {
-          font-size: .857em;
+          font-size: $font-down-1;
           vertical-align: middle;
         }
         &.selected {
@@ -326,8 +326,8 @@ div.ac-wrap.disabled {
 
 div.ac-wrap div.item a.remove, .remove-link {
   margin-left: 4px;
-  font-size: .857em;
-  line-height: 10px;
+  font-size: $font-down-1;
+  line-height: $line-height-small;
   padding: 1.5px 1.5px 1.5px 2.5px;
   border-radius: 12px;
   width: 10px;
@@ -354,7 +354,7 @@ div.ac-wrap {
     span {
       height: 24px;
       display: inline-block;
-      line-height: 20px;
+      line-height: $line-height-large;
     }
   }
 

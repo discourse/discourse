@@ -100,10 +100,10 @@
     bottom: 10px;
     color: $primary;
     opacity: 0.5;
-    font-size: 1.143em;
+    font-size: $font-up-1;
     &:before {
       content: 'esc';
-      font-size: 0.857em;
+      font-size: $font-down-1;
       margin-right: 0.5em;
     }
   }

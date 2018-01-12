@@ -4,15 +4,13 @@
 
   .face {
     font-size: 4.286em;
-    height: 60px;
   }
   .reason {
-    font-size: 1.857em;
-    height: 24px;
+    font-size: $font-up-4;
   }
   .url {
     font-style: italic;
-    font-size: .857em;
+    font-size: $font-down-1;
   }
   .desc {
     margin-top: 16px;

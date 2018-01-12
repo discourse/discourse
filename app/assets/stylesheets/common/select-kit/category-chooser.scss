@@ -21,8 +21,16 @@
         }
 
         .topic-count {
-          font-size: .786em;
+          font-size: $font-down-2;
           color: $primary;
+        }
+
+        .category-status {
+          color: $primary;
+          line-height: $line-height-large;          
+          -webkit-box-flex: 0;
+              -ms-flex: 1 1 auto;
+                  flex: 1 1 auto;
         }
 
         .category-desc {
@@ -30,8 +38,8 @@
               -ms-flex: 1 1 auto;
                   flex: 1 1 auto;
           color: #919191;
-          font-size: 0.857em;
-          line-height: 16px;
+          font-size: $font-down-1;
+          line-height: $line-height-large;
         }
       }
     }

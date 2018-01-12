@@ -5,7 +5,7 @@
 
 .topic-post article {
   border-top: 1px solid $primary-low;
-  padding: 8px 0;
+  padding: 15px 0 8px 0;
 }
 
 .post-stream {
@@ -20,10 +20,6 @@ span.badge-posts {
   display: none;
 }
 
-.who-liked {
-  margin-left: 10px;
-}
-
 .topic-post {
   nav.post-controls {
     clear: both;
@@ -33,9 +29,9 @@ span.badge-posts {
     }
     button {
       border: none;
-      font-size: 1.286em;
+      font-size: $font-up-1;
       padding: 8px 10px;
-      vertical-align: top;
+      vertical-align: middle;
       background: transparent;
       float: left;
       &.hidden {
@@ -60,7 +56,7 @@ span.badge-posts {
     }
 
     button.like-count {
-      font-size: 1em;
+      font-size: $font-0;
       padding: 8px 4px;
     }
   }
@@ -88,7 +84,7 @@ span.badge-posts {
   h3 {
     margin-top: 0;
     color: $primary;
-    font-size: 1em;
+    font-size: $font-0;
   }
 
   ul {
@@ -129,10 +125,11 @@ span.badge-posts {
 }
 
 a.reply-to-tab {
-  position: absolute;
   z-index: 400;
   right: 80px;
   color: dark-light-choose($primary-medium, $secondary-medium);
+  margin: -3px 10px 0 0;
+  float: right;
 }
 
 .topic-post .boxed .contents {
@@ -154,17 +151,17 @@ a.reply-to-tab {
     margin-bottom: 4px;
     margin-top: 0;
     color: dark-light-choose($primary-medium, $secondary-medium);
-    line-height: 23px;
+    line-height: $line-height-large;
     font-weight: normal;
-    font-size: 1em;
+    font-size: $font-0;
   }
 
   h4 {
     margin: 0 0 3px 0;
     color: dark-light-choose($primary-medium, $secondary-medium);
     font-weight: normal;
-    font-size: 0.857em;
-    line-height: 15px;
+    font-size: $font-down-1;
+    line-height: $line-height-medium;
   }
 
   .user {
@@ -175,29 +172,6 @@ a.reply-to-tab {
   ul {
     margin: 0;
     list-style: none;
-  }
-
-  .avatars {
-    > div {
-      float: left;
-      position: relative;
-      margin: 3px 0;
-    }
-    .post-count {
-      position: absolute;
-      right: 0;
-      border-radius: 100px;
-      padding: 4px 5px 2px 5px;
-      text-align: center;
-      font-weight: normal;
-      font-size: .857em;
-      line-height: 1;
-    }
-  }
-
-  .avatar {
-    float: left;
-    margin-right: 4px;
   }
 
   .map-collapsed {
@@ -215,11 +189,11 @@ a.reply-to-tab {
       }
     }
     a, .number {
-      line-height: 20px;
+      line-height: $line-height-large;
     }
     .number, i {
       color: dark-light-choose($primary-high, $secondary-low);
-      font-size: 1.143em;
+      font-size: $font-up-1;
     }
 
     .avatar + a {
@@ -231,9 +205,15 @@ a.reply-to-tab {
   }
 
   .links, .information, .avatars {
-    padding: 7px 10px;
+    padding: 10px;
     color: $primary;
     overflow: auto;
+  }
+
+  .information {
+    p {
+      margin: 0 0 10px 0;
+    }
   }
 
   .participants { // PMs //
@@ -256,17 +236,15 @@ a.reply-to-tab {
   }
 
   .buttons {
-    float: right;
     .btn {
       border: 0;
       padding: 0 15px;
       color: dark-light-choose($primary-medium, $secondary-high);
       background: blend-primary-secondary(5%);
       border-left: 1px solid $primary-low;
-      border-top: 1px solid $primary-low;
       .fa {
         margin: 0;
-        font-size: 1.286em;
+        font-size: $font-up-2;
         line-height: 52px;
       }
     }
@@ -312,7 +290,7 @@ a.reply-to-tab {
     }
 
    a.badge-category, a.badge-category-parent {
-    font-size: 0.857em;
+    font-size: $font-down-1;
     vertical-align: top;
     }
 }
@@ -347,8 +325,6 @@ span.post-count {
 // this prevents image overflow on deeply nested blockquotes, lists, etc
 .cooked {
   overflow: hidden;
-  font-size: $base-font-size + 1; /* let's bump post body font size on mobile slightly */
-  line-height: $base-line-height + 2; /* bump up line height to match increased font */
 }
 
 .quote-button.visible {
@@ -444,7 +420,7 @@ button.select-post {
 }
 
 .deleted-user-avatar {
-  font-size: 2.286em;
+  font-size: $font-up-5;
 }
 
 span.btn-text {display: none;}
@@ -466,15 +442,15 @@ span.highlighted {
 
 .topic-avatar {
   float: left;
-  padding-top: 5px;
+  margin-right: 10px;
   z-index:999; /* must render on top of topic-body + topic-meta-data, otherwise not tappable */
 }
 
 .topic-meta-data {
   margin-left: 50px;
+  font-size: $font-down-1;
   .names {
-    margin: 5px 0 0 5px;
-    line-height: 17px;
+    line-height: $line-height-medium;
 
     .poster-icon {
       float: right;
@@ -482,7 +458,6 @@ span.highlighted {
   }
   .post-info {
     float: right;
-    margin: 4px 10px 0 0;
     .edits { margin-right: 5px; }
   }
 }

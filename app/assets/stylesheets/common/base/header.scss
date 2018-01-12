@@ -125,8 +125,8 @@
   .d-icon {
     width: 32px;
     height: 32px;
-    font-size: 1.714em;
-    line-height: 32px;
+    font-size: $font-up-4;
+    line-height: $line-height-large;
     display: inline-block;
   }
   .notifications {
@@ -145,12 +145,12 @@
     position: absolute;
     z-index: 1;
     left: 0;
-    top: -9px;
+    top: -4px;
     min-width: 6px;
   }
   .unread-notifications {
     left: auto;
-    right: 0;
+    right: -3px;
     background-color: dark-light-choose($tertiary-medium, $tertiary);
   }
   .unread-private-messages, .ring {

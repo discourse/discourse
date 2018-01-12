@@ -15,7 +15,7 @@ a.loading-onebox {
 
   margin-top: 15px;
   padding: 12px;
-  font-size: 1em;
+  font-size: $font-0;
   > .source {
     margin-bottom: 12px;
     margin-right: 10px;
@@ -30,7 +30,7 @@ a.loading-onebox {
         padding-right: 10px;
       }
       position: absolute;
-      font-size: 1em;
+      font-size: $font-0;
       img.favicon {
         margin-right: 3px;
       }
@@ -92,7 +92,7 @@ aside.onebox {
   border: 5px solid $primary-low;
   margin-bottom: 1em;
   padding: 12px 25px 12px 12px;
-  font-size: 1em;
+  font-size: $font-0;
 
   header {
     margin-bottom: 8px;
@@ -118,7 +118,7 @@ aside.onebox {
     clear: both;
 
     h3, h4 {
-      font-size: 1.143em;
+      font-size: $font-up-1;
       margin: 0 0 10px 0;
     }
 
@@ -270,8 +270,8 @@ pre.onebox code ol.lines li:before {
   color:#AFAFAF;
   text-align:right;
   padding-right:5px;
-  font-size:.857em;
-  line-height: 1.9em;
+  font-size: $font-down-1;
+  line-height: $line-height-large;
   content: counter(li-counter);
   counter-increment: li-counter;
 }
@@ -279,7 +279,7 @@ pre.onebox code ol.lines li:before {
 
 pre.onebox code ol{
 	margin-left:0px;
-	line-height:1.5em;
+	line-height: $line-height-large;
 }
 pre.onebox code {
   background-color: dark-light-choose(#fff, #000);
@@ -331,7 +331,7 @@ pre.onebox code {
 .onebox-body .build_status
 {
   padding: 2px;
-  font-size:.857em;
+  font-size: $font-down-1;
 }
 
 .onebox-body .status_tag.open {
@@ -377,13 +377,13 @@ aside.onebox.twitterstatus .onebox-body {
   .outer-box {
     position: absolute;
     z-index: 935;
-    height: 30px;
     overflow: hidden;
-    font-size: .857em;
+    font-size: $font-down-1;
     color: #fff;
     background-color: rgba(0, 0, 0, 0.6);
     text-overflow: ellipsis;
     max-width: 100%;
+    padding: 5px 0;
 
     .inner-box {
       padding-left: 10px;
@@ -395,8 +395,8 @@ aside.onebox.twitterstatus .onebox-body {
 
       .album-title {
         width: 100%;
-        font-size: 1.143em;
-        line-height: 30px;
+        font-size: $font-up-1;
+        line-height: $line-height-large;
         color: #ccc;
         text-decoration: none;
       }

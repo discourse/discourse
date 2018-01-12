@@ -4,10 +4,10 @@
     margin-bottom: 10px;
     input {
       margin-bottom: 0;
-      font-size: 1rem;
+      font-size: $font-down-2;
     }
     .btn-small {
-      font-size: 1rem;
+      font-size: $font-down-2;
     }
   }
 
@@ -111,7 +111,7 @@
       .d-icon-mobile {
         position: relative;
         top: -3px;
-        font-size: 1.5em;
+        font-size: $font-up-3;
         max-height: 20px;
       }
     }
@@ -194,7 +194,7 @@
 
   .status-message {
     display: block;
-    font-size: 0.857em;
+    font-size:  $font-down-1;
     margin-top: 8px;
   }
 

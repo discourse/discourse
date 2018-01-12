@@ -24,7 +24,7 @@
 }
 
 .topic-list-main-link {
-  font-size: 1.143em;
+  font-size: $font-up-1;
   a.title {
     padding: 15px 0;
     word-break: break-word;
@@ -76,7 +76,7 @@
       background-color: $secondary;
       color: $danger-low;
       padding: 0px 8px;
-      font-size: 0.929em;
+      font-size: $font-down-1;
     }
   }
 
@@ -86,7 +86,7 @@
 
   th,
   td {
-    line-height: 1.25;
+    line-height: $line-height-large;
     text-align: left;
     vertical-align: middle;
 
@@ -94,13 +94,13 @@
   th {
     color: dark-light-choose($primary-medium, $secondary-medium);
     font-weight: normal;
-    font-size: 1em;
+    font-size: $font-0;
     button .d-icon {color: dark-light-choose($primary-medium, $secondary-medium);}
 
   }
   td {
     color: dark-light-choose($primary-medium, $secondary-medium);
-    font-size: 1em;
+    font-size: $font-0;
   }
 
   .main-link {
@@ -112,11 +112,11 @@
   }
 
   .topic-excerpt {
-    font-size: 0.929em;
-    margin-top: 8px;
+    font-size: $font-down-1;
+    margin-top: 5px;
     color: dark-light-choose($primary-medium, $secondary-medium);
     word-wrap: break-word;
-    line-height: 1.4;
+    line-height: $line-height-large;
     padding-right: 20px;
   }
   .topic-statuses:empty {
@@ -174,7 +174,7 @@
   }
   td.stats {
     .unit {
-      font-size: .857em;
+      font-size: $font-down-1;
     }
   }
 
@@ -182,8 +182,8 @@
       td {
         padding: 2px;
         vertical-align: bottom;
-        line-height: 24px;
-        &.value { text-align: right; font-size: 1.429em; }
+        line-height: $line-height-large;
+        &.value { text-align: right; font-size: $font-up-3; }
         &.unit  { text-align: left; }
       }
     }
@@ -217,7 +217,7 @@
     padding: 0;
     border: 0;
     color: $danger-medium;
-    font-size: 1em;
+    font-size: $font-0;
     cursor: default;
   }
 }
@@ -225,7 +225,7 @@
 .topic-list {
   .alert {
     margin-bottom: 0;
-    font-size: 1em;
+    font-size: $font-0;
   }
   .spinner {
     margin-top: 40px;
@@ -262,12 +262,12 @@ ol.category-breadcrumb {
   z-index: 100;
 
   a.badge-category, a.badge-category-parent {
-    line-height: 19px;
+    line-height: $line-height-large;
     overflow:hidden;
     margin-bottom: 0;
   }
   a.badge-category, .dropdown-header {
-    font-size: 0.857em;
+    font-size: $font-down-1;
     font-weight: bold;
     float: none;
     text-transform: none;
@@ -296,7 +296,7 @@ ol.category-breadcrumb {
     float: left;
     margin: 5px 0 10px;
     .top-date-string {
-      font-size: 0.857em;
+      font-size: $font-down-1;
     }
   }
 
@@ -310,15 +310,16 @@ ol.category-breadcrumb {
     outline: 0;
     background: transparent;
     border: 0;
-    font-size: 1.429em;
+    font-size: $font-up-3;
     padding: 5px 10px 0 10px;
+    line-height: $line-height-large;
   }
 
   #period-popup {
 
     @include unselectable;
 
-    font-size: 1.143em;
+    font-size: $font-up-1;
     border: 1px solid $primary-low;
     padding: 5px;
     background: $secondary;
@@ -342,7 +343,7 @@ ol.category-breadcrumb {
         }
         .top-date-string {
           font-weight: normal;
-          font-size: 0.857em;
+          font-size: $font-down-1;
         }
         &:hover {
           background-color: $highlight-medium;

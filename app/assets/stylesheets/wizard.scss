@@ -14,7 +14,7 @@ body.wizard {
 
   color: #444;
 
-  line-height: 1.4em;
+  line-height: $line-height-large;
 }
 
 .finish-installation {
@@ -171,12 +171,11 @@ body.wizard {
 
     span {
       position: absolute;
-      font-size: 1.071em;
+      font-size: $font-0;
       mix-blend-mode: difference;
       color: white;
       z-index: 13;
-      font-size: 0.8em;
-      left: 2em;
+      left: 1.5em;
     }
 
     .screen {
@@ -195,7 +194,7 @@ body.wizard {
 
   .wizard-btn {
     border-radius: 2px;
-    font-size: 1.0em;
+    font-size: $font-0;
     border: 0px;
     padding: 0.5em;
     transition: background-color .3s;
@@ -208,7 +207,7 @@ body.wizard {
 
     &.small {
       padding: 0.25em 0.5em;
-      font-size: 0.9em;
+      font-size: $font-down-1;
     }
 
     &:hover {
@@ -408,7 +407,7 @@ body.wizard {
 .text-field {
   input {
     width: 100%;
-    font-size: 1.2em;
+    font-size: $font-up-1;
     padding: 6px;
     border: 1px solid #ccc;
     transition: border-color .5s;
@@ -481,7 +480,7 @@ body.wizard {
 
 /* fix wizard for mobile -- iPhone 5 default width */
 @media only screen and (max-device-width: 568px) {
-  h1 { font-size: 1.3em !important; }
+  h1 { font-size: $font-up-2 !important; }
   .wizard-column { margin: auto !important; }
   .wizard-step-contents { min-height: auto !important; }
   .wizard-step-banner { width: 100% !important; margin-bottom: 1em !important; }

@@ -47,11 +47,11 @@ body {
 }
 
 big {
-  font-size: 2.286em;
+  font-size: $font-up-5;
 }
 
 small {
-  font-size: .786em;
+  font-size: $font-down-2;
 }
 
 //setting a static limit on big and small prevents nesting abuse
@@ -120,7 +120,7 @@ input {
   &[type="radio"],
   &[type="checkbox"] {
     margin: 3px 0;
-    line-height: normal;
+    line-height: $line-height-medium;
     cursor: pointer;
   }
   &[type="submit"],
@@ -190,8 +190,8 @@ input {
     height: 18px;
     padding: 4px 10px;
     margin-bottom: 9px;
-    font-size:  1em;
-    line-height: 1.25;
+    font-size:  $font-0;
+    line-height: $line-height-medium;
     color: $primary;
     background-color: $secondary;
     border: 1px solid $primary-medium;
@@ -363,7 +363,7 @@ select {
   right: 70px;
   top: 60px;
   width: 230px;
-  line-height: 30px;
+  line-height: $line-height-medium;
 }
 
 .ring {
@@ -423,7 +423,7 @@ select {
 .content-list {
   h3 {
     color: $primary-medium;
-    font-size: 1.143em;
+    font-size: $font-up-1;
     padding-left: 5px;
     margin-bottom: 10px;
   }
@@ -474,8 +474,8 @@ select {
 
   .control-label {
     font-weight: bold;
-    font-size: 1.286em;
-    line-height: 2;
+    font-size: $font-up-2;
+    line-height: $line-height-large;
   }
 
   .controls {
@@ -517,7 +517,7 @@ select {
 
 #loading-message {
   position: absolute;
-  font-size: 2.286em;
+  font-size: $font-up-5;
   text-align: center;
   top: 120px;
   left: 500px;

@@ -55,12 +55,12 @@
 .modal-header {
   h3 {
     display: inline-block;;
-    font-size: 1.429em;
+    font-size: $font-up-3;
     padding: 10px 15px 7px;
   }
 }
 .close {
-  font-size: 1.429em;
+  font-size: $font-up-3;
   text-decoration: none;
   color: dark-light-choose($primary-high, $secondary-low);
   cursor: pointer;
@@ -89,11 +89,14 @@
 
 .flag-modal {
   max-height: 450px;
+  .flag-action-type-details {
+    line-height: $line-height-large;
+  }
 }
 
 .custom-message-length {
   color: dark-light-choose($primary-low-mid, $secondary-high);
-  font-size: .857em;
+  font-size: $font-down-1;
 }
 
 .flag-message {

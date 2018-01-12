@@ -130,7 +130,7 @@
     padding: 10px 30px 10px 15px;
     background-color: $secondary;
     li > a {
-      font-size: 1em;
+      font-size: $font-0;
     }
     border-bottom: 1px solid $primary-low;
 
@@ -153,7 +153,7 @@
     }
     p {
       color: darken($primary, 40%);
-      font-size: 1em;
+      font-size: $font-0;
     }
     .archetype-option {
       margin-bottom: 20px;
@@ -180,9 +180,9 @@
           color: rgb(255,255,255);
           position: absolute;
           top: 40%;
-          font-size: 2.571em;
+          font-size: $font-up-6;
           text-align: center;
-          line-height: 38px;
+          line-height: $line-height-medium;
           margin-left: auto;
           margin-right: auto;
           left: 0;
@@ -225,7 +225,7 @@
 
   // password reset modal
   .modal-body.forgot-password-modal p {
-    font-size: 1em;
+    font-size: $font-0;
   }
 }
 
@@ -239,15 +239,15 @@
     }
     .btn {
       text-align: left;
-      font-size: 1.286em;
-      line-height: 20px;
+      font-size: $font-up-2;
+      line-height: $line-height-medium;
       width: auto;
       margin-bottom: 10px;
       display: block;
       margin-left: 0 !important; // override needed
       font-weight: bold;
       .topic-title {
-        font-size: 1em;
+        font-size: $font-0;
         font-weight: normal;
       }
       &.btn-reply-here {
@@ -268,8 +268,8 @@
     .btn {
       font-weight: normal;
       text-align: left;
-      font-size: 1em;
-      line-height: 20px;
+      font-size: $font-0;
+      line-height: $line-height-large;
       margin-bottom: 10px;
       display: inline-block;
       margin-left: 0;

@@ -136,6 +136,7 @@
         background-color: $primary-low;
         cursor: pointer;
         outline: none;
+        line-height: $line-height-medium;
         overflow: hidden;
         flex: 0 1 auto;
         flex-wrap: nowrap;
@@ -175,10 +176,28 @@
 
         .name {
           padding: 0 5px;
+          line-height: $line-height-medium;
         }
 
         &.is-highlighted {
           box-shadow: 0 0 2px $danger, 0 1px 0 rgba(0,0,0,0.05);
+        }
+
+        .locked-icon, .delete-icon {
+          justify-content: center;
+          align-items: center;
+          width: 21px;
+          height: 21px;
+          display: inline-flex;
+          .d-icon {
+            color: $primary-medium;
+            cursor: pointer;
+            font-size: $font-0;
+
+            &:hover {
+              color: $primary;
+            }
+          }
         }
       }
     }

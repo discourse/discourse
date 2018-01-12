@@ -29,7 +29,7 @@
       border-bottom: 1px solid $primary-low; 
 
       .number, .time-read {
-        font-size: 1.429em;
+        font-size: $font-up-3;
         color: $primary-medium; 
       }
     }
