@@ -1521,6 +1521,9 @@ tags:
     client: true
     default: false
     refresh: true
+  tags_listed_by_group:
+    client: true
+    default: false
   staff_tags:
     type: list
     client: true

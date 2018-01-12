@@ -72,6 +72,12 @@ class NotificationEmailer
     end
 
     def enqueue_private(type, delay = private_delay)
+
+      if notification.user.user_option.nil?
+        Rails.logger.warn("Missing user option record for user id: #{notification.user.id}")
+        return
+      end
+
       return unless notification.user.user_option.email_private_messages?
       perform_enqueue(type, delay)
     end

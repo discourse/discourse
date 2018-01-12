@@ -3,11 +3,6 @@ require 'rails_helper'
 describe PostActionsController do
 
   describe 'create' do
-    it 'requires you to be logged in' do
-      expect do
-        post :create, format: :json
-      end.to raise_error(Discourse::NotLoggedIn)
-    end
 
     context 'logged in as user' do
       let(:user) { Fabricate(:user) }
@@ -31,12 +26,6 @@ describe PostActionsController do
   context 'destroy' do
 
     let(:post) { Fabricate(:post, user: Fabricate(:coding_horror)) }
-
-    it 'requires you to be logged in' do
-      expect do
-        delete :destroy, params: { id: post.id }, format: :json
-      end.to raise_error(Discourse::NotLoggedIn)
-    end
 
     context 'logged in' do
       let!(:user) { log_in }
@@ -89,9 +78,8 @@ describe PostActionsController do
 
     context "not logged in" do
       it "should not allow them to clear flags" do
-        expect do
-          post :defer_flags, format: :json
-        end.to raise_error(Discourse::NotLoggedIn)
+        post :defer_flags, format: :json
+        expect(response.status).to eq(403)
       end
     end
 

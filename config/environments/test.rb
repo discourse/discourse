@@ -10,12 +10,15 @@ Discourse::Application.configure do
   # Configure static asset server for tests with Cache-Control for performance
   config.public_file_server.enabled = true
 
-  # Show full error reports and disable caching
-  config.consider_all_requests_local       = true
+  # don't consider reqs local so we can properly handle exceptions like we do in prd
+  config.consider_all_requests_local       = false
+
+  # disable caching
   config.action_controller.perform_caching = false
 
-  # Raise exceptions instead of rendering exception templates
-  config.action_dispatch.show_exceptions = false
+  # production has "show exceptions" on so we better have it
+  # in test as well
+  config.action_dispatch.show_exceptions = true
 
   # Disable request forgery protection in test environment
   config.action_controller.allow_forgery_protection = false

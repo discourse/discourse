@@ -10,16 +10,14 @@ RSpec.describe Admin::SearchLogsController do
 
   context "#index" do
     it "raises an error if you aren't logged in" do
-      expect do
-        get '/admin/logs/search_logs.json'
-      end.to raise_error(ActionController::RoutingError)
+      get '/admin/logs/search_logs.json'
+      expect(response.status).to eq(404)
     end
 
     it "raises an error if you aren't an admin" do
       sign_in(user)
-      expect do
-        get '/admin/logs/search_logs.json'
-      end.to raise_error(ActionController::RoutingError)
+      get '/admin/logs/search_logs.json'
+      expect(response.status).to eq(404)
     end
 
     it "should work if you are an admin" do
@@ -35,16 +33,14 @@ RSpec.describe Admin::SearchLogsController do
 
   context "#term" do
     it "raises an error if you aren't logged in" do
-      expect do
-        get '/admin/logs/search_logs/term/ruby.json'
-      end.to raise_error(ActionController::RoutingError)
+      get '/admin/logs/search_logs/term/ruby.json'
+      expect(response.status).to eq(404)
     end
 
     it "raises an error if you aren't an admin" do
       sign_in(user)
-      expect do
-        get '/admin/logs/search_logs/term/ruby.json'
-      end.to raise_error(ActionController::RoutingError)
+      get '/admin/logs/search_logs/term/ruby.json'
+      expect(response.status).to eq(404)
     end
 
     it "should work if you are an admin" do
