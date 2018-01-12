@@ -28,8 +28,8 @@ describe "Discobot Certificate" do
         }
 
         params.each do |key, _|
-          expect { get '/discobot/certificate.svg', params: params.except(key) }
-            .to raise_error(Discourse::InvalidParameters)
+          get '/discobot/certificate.svg', params: params.except(key)
+          expect(response.status).to eq(400)
         end
       end
     end

@@ -57,34 +57,34 @@ describe "DiscoursePoll endpoints" do
 
     describe 'when post_id is blank' do
       it 'should raise the right error' do
-        expect { get "/polls/voters.json", params: { poll_name: DiscoursePoll::DEFAULT_POLL_NAME } }
-          .to raise_error(ActionController::ParameterMissing)
+        get "/polls/voters.json", params: { poll_name: DiscoursePoll::DEFAULT_POLL_NAME }
+        expect(response.status).to eq(400)
       end
     end
 
     describe 'when post_id is not valid' do
       it 'should raise the right error' do
-        expect do
-          get "/polls/voters.json", params: {
-            post_id: -1,
-            poll_name: DiscoursePoll::DEFAULT_POLL_NAME
-          }
-        end.to raise_error(Discourse::InvalidParameters, 'post_id is invalid')
+        get "/polls/voters.json", params: {
+          post_id: -1,
+          poll_name: DiscoursePoll::DEFAULT_POLL_NAME
+        }
+        expect(response.status).to eq(400)
+        expect(response.body).to include('post_id is invalid')
       end
     end
 
     describe 'when poll_name is blank' do
       it 'should raise the right error' do
-        expect { get "/polls/voters.json", params: { post_id: post.id } }
-          .to raise_error(ActionController::ParameterMissing)
+        get "/polls/voters.json", params: { post_id: post.id }
+        expect(response.status).to eq(400)
       end
     end
 
     describe 'when poll_name is not valid' do
       it 'should raise the right error' do
-        expect do
-          get "/polls/voters.json", params: { post_id: post.id, poll_name: 'wrongpoll' }
-        end.to raise_error(Discourse::InvalidParameters, 'poll_name is invalid')
+        get "/polls/voters.json", params: { post_id: post.id, poll_name: 'wrongpoll' }
+        expect(response.status).to eq(400)
+        expect(response.body).to include('poll_name is invalid')
       end
     end
 
