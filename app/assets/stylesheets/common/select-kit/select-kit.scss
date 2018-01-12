@@ -129,6 +129,7 @@
               align-items: center;
       white-space: nowrap;
       overflow: hidden;
+      line-height: $line-height-medium;
 
       .d-icon {
         margin-left: 5px;
@@ -146,7 +147,7 @@
 
   .select-box-kit-row, .select-kit-row {
     cursor: pointer;
-    line-height: normal;
+    line-height: $line-height-medium;
     outline: none;
     display: -webkit-box;
     display: -ms-flexbox;

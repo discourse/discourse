@@ -63,8 +63,8 @@ $user_card_background: $secondary;
 
   h1 {
     min-width: 120px;
-    font-size: 1.857em;
-    line-height: 1.25;
+    font-size: $font-up-4;
+    line-height: $line-height-medium;
     display: block;
     max-width: 250px;
     white-space: nowrap;
@@ -74,14 +74,14 @@ $user_card_background: $secondary;
       color: $user_card_primary;
     }
     i {
-      font-size: .857em;
+      font-size: $font-down-1;
       color: $user_card_primary;
     }
   }
 
   h2 {
-    font-size: 1.143em;
-    line-height: 1.25;
+    font-size: $font-up-1;
+    line-height: $line-height-medium;
     font-weight: normal;
     display: block;
     max-width: 250px;
@@ -94,7 +94,7 @@ $user_card_background: $secondary;
   }
 
   h3 {
-    font-size: 0.929em;
+    font-size: $font-0;
     font-weight: normal;
     margin-top: 0;
     color: scale-color($user_card_primary, $lightness: 20%);
@@ -106,7 +106,7 @@ $user_card_background: $secondary;
   }
 
   .groups {
-    font-size: 0.929em;
+    font-size: $font-down-1;
     font-weight: normal;
     margin-top: 0;
     color: $user_card_background;
@@ -230,7 +230,7 @@ $user_card_background: $secondary;
 
       h3 {
         color: $user_card_background;
-        font-size: 1em;
+        font-size: $font-0;
         margin-bottom: -8px;
       }
     }
@@ -255,7 +255,7 @@ $user_card_background: $secondary;
     position: absolute;
     right: 12px;
     bottom: 12px;
-    font-size: 2.286em;
+    font-size: $font-up-5;
     i {color: $user_card_primary;}
   }
 

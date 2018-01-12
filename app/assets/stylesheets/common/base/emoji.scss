@@ -142,7 +142,7 @@ img.emoji {
 
 .emoji-picker .diversity-picker .d-icon {
   color: #fff;
-  font-size: 1em;
+  font-size: $font-0;
   text-shadow: 0.5px 1.5px 0 rgba(0,0,0,0.3);
 }
 
@@ -202,7 +202,7 @@ img.emoji {
 
 .emoji-picker .filter .d-icon-search {
   color: dark-light-choose($header_primary-medium, $header_primary);
-  font-size: 1.143em;
+  font-size: $font-up-1;
   margin-left: 5px;
   margin-right: 5px;
 }

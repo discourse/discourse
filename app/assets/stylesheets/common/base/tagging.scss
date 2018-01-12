@@ -19,11 +19,11 @@
   float: left;
 
   .discourse-tag {
-    font-size: 1em;
+    font-size: $font-0;
   }
 
   .tag-count {
-    font-size: 0.857em;
+    font-size: $font-down-1;
   }
 }
 
@@ -34,13 +34,13 @@
 
 .bullet + .topic-header-extra {
   display: block;
-  line-height: 15px;
-  font-size: .857em;
-  .list-tags { font-size: 1em; }
+  line-height: $line-height-medium;
+  font-size: $font-down-1;
+  .list-tags { font-size: $font-0; }
 }
 
 .bar + .topic-header-extra {
-  line-height: 1.25;
+  line-height: $line-height-medium;
 }
 
 .box + .topic-header-extra {
@@ -53,9 +53,9 @@
   margin-top: 5px;
 
   .topic-header-extra {
-    display: inline;
+    display: inline-block;
     vertical-align: baseline;
-    margin: 0;
+    margin: .1em 0 0 0;
   }
 
   .badge-wrapper {
@@ -86,7 +86,7 @@
 $tag-color: $primary-medium;
 
 .discourse-tag-count {
-  font-size: 0.857em;
+  font-size: $font-down-1;
   color: $tag-color;
 }
 
@@ -153,10 +153,9 @@ $tag-color: $primary-medium;
 
 .topic-list-item .discourse-tags {
   display: block;
-  font-size: 0.786em;
+  font-size: $font-down-2;
   font-weight: normal;
   clear: both;
-  margin-top: 5px;
 
   .discourse-tag.box {
     position:relative;
@@ -170,7 +169,7 @@ $tag-color: $primary-medium;
 
 .mobile-view .topic-list-item .discourse-tags {
   display: inline-block;
-  font-size: 0.857em;
+  font-size: $font-down-1;
   margin-top: 0;
   .discourse-tag.box {
     position:relative;
@@ -185,7 +184,7 @@ $tag-color: $primary-medium;
   font-family: FontAwesome;
   color: $primary-low-mid;
   margin-right: 5px;
-  font-size: 0.786em;
+  font-size: $font-down-2;
   position:relative;
   top: -0.1em;
 }
@@ -195,7 +194,7 @@ header .discourse-tag {color: $tag-color }
 .list-tags {
   margin-right: 3px;
   display: inline;
-  font-size: 0.857em;
+  font-size: $font-down-1;
 }
 
 .tag-chooser {
@@ -260,7 +259,7 @@ header .discourse-tag {color: $tag-color }
       margin-bottom: 20px;
     }
     label {
-      font-size: 1em;
+      font-size: $font-0;
       display: inline-block;
       margin-right: 10px;
     }

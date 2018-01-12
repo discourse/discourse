@@ -4,6 +4,11 @@
 // throughout the Discourse application
 
 // Base Elements
+html {
+  font-size: 15px; // Increasing overall font-size on mobile by 1px
+}
+
+
 body {
   background-color: $secondary;
 }
@@ -75,7 +80,7 @@ blockquote {
   &.preferences-nav {
     position: absolute;
     right: 0px;
-    top: -55px;
+    top: -57px;
   }
 
   a {
@@ -84,6 +89,7 @@ blockquote {
     .fa {
       margin-right: 8px;
       color: dark-light-choose($primary-medium, $secondary-medium);
+      line-height: $line-height-medium;
     }
   }
 

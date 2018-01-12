@@ -24,9 +24,10 @@ header {
   .topic-status {
     padding: 0 2px 0 0;
     margin: 0;
+    line-height: $line-height-small;
 
     i {
-        font-size: 1.071em;
+        font-size: $font-down-1;
       }
   }
 
@@ -72,9 +73,9 @@ input,
 button,
 select,
 textarea {
-  font-size: 1em;
+  font-size: $font-0;
   font-weight: normal;
-  line-height: 18px;
+  line-height: $line-height-medium;
 }
 
 select,
@@ -82,8 +83,8 @@ textarea {
   display: inline-block;
   padding: 4px;
   margin-bottom: 9px;
-  font-size: 1em;
-  line-height: 18px;
+  font-size: $font-0;
+  line-height: $line-height-large;
   color: $primary;
 }
 
@@ -93,7 +94,7 @@ input, textarea {
 
 select,
 input[type="file"] {
-  line-height: 28px;
+  line-height: $line-height-large;
 }
 
 select {
@@ -150,7 +151,7 @@ input {
       min-width: 16px;
       padding: 4px 5px;
       font-weight: normal;
-      line-height: 18px;
+      line-height: $line-height-medium;
       text-align: center;
       vertical-align: middle;
       background-color: $secondary;

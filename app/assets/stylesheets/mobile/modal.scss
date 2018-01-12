@@ -59,12 +59,12 @@
 
   h3 {
     display: inline;
-    font-size: 1.286em;
+    font-size: $font-up-2;
     margin: 0px;
   }
 }
 .close {
-  font-size: 1.857em;
+  font-size: $font-up-4;
   padding: 10px 15px 5px 5px;
   color: $primary;
 }
@@ -106,7 +106,7 @@
 .custom-message-length {
   margin: -4px 0 10px 20px;
   color: dark-light-choose($primary-high, $secondary-low);
-  font-size: .857em;
+  font-size: $font-down-1;
 }
 
 .flag-message {

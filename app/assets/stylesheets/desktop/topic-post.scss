@@ -28,9 +28,9 @@ h1 .topic-statuses .topic-status i {
 
   .reply-to-tab {
     z-index: 400;
-    font-size: 0.929em;
+    font-size: $font-down-1;
     float: right;
-    margin: 1px 25px 0 0;
+    margin: -4px 25px 0 0;
     color: dark-light-choose($primary-medium, $secondary-medium);
   }
 
@@ -105,7 +105,7 @@ nav.post-controls {
     }
     i {
       margin-left: 5px;
-      font-size: .857em;
+      font-size: $font-down-1;
     }
   }
 
@@ -120,7 +120,7 @@ nav.post-controls {
   }
 
   button {
-    font-size: 1.143em;
+    font-size: $font-up-1;
     padding: 8px 10px;
     vertical-align: top;
     background: transparent;
@@ -183,7 +183,7 @@ nav.post-controls {
     h3 {
       margin-top: 0;
       color: $primary;
-      font-size: 1em;
+      font-size: $font-0;
     }
 
     ul {
@@ -258,7 +258,7 @@ nav.post-controls {
   .topic-meta-data h5 {
     position: absolute;
     z-index: 1;
-    font-size: 0.929em;
+    font-size: $font-down-1;
     a {
       font-weight: bold;
       color: dark-light-choose($primary-low-mid, $secondary-high);
@@ -292,17 +292,17 @@ a.star {
   h3 {
     margin-bottom: 4px;
     color: dark-light-choose($primary-high, $secondary-low);
-    line-height: 23px;
+    line-height: $line-height-large;
     font-weight: normal;
-    font-size: 1em;
+    font-size: $font-0;
   }
 
   h4 {
     margin: 1px 0 2px 0;
     color: dark-light-choose($primary-medium, $secondary-medium);
     font-weight: normal;
-    font-size: 0.857em;
-    line-height: 15px;
+    font-size: $font-down-1;
+    line-height: $line-height-small;
   }
 
   ul {
@@ -311,31 +311,8 @@ a.star {
   }
 
   span.domain {
-    font-size: 0.786em;
+    font-size: $font-down-2;
     color: dark-light-choose($primary-medium, $secondary-medium);
-  }
-
-  .avatars {
-    > div {
-      float: left;
-      position: relative;
-      margin: 3px 0;
-    }
-    .post-count {
-      position: absolute;
-      right: 0;
-      border-radius: 100px;
-      padding: 4px 5px 2px 5px;
-      text-align: center;
-      font-weight: normal;
-      font-size: .786em;
-      line-height: 1;
-    }
-  }
-
-  .avatar {
-    float: left;
-    margin-right: 4px;
   }
 
   .map {
@@ -349,14 +326,18 @@ a.star {
       &:nth-child(3) { text-align:center; }
     }
     a, .number {
-      line-height: 20px;
+      line-height: $line-height-large;
     }
     .number, i {
       color: dark-light-choose($primary-high, $secondary-low);
-      font-size: 1.286em;
+      font-size: $font-up-2;
+      line-height: $line-height-medium;
     }
     .avatar  a {
       float: left;
+    }
+    .topic-map-post {
+      margin-top: 6px;
     }
   }
   .avatars,
@@ -371,7 +352,7 @@ a.star {
     .user a {
       color: dark-light-choose($primary-high, $secondary-low);
       font-weight: bold;
-      font-size: 0.929em;
+      font-size: $font-down-1;
     }
     .d-icon-times {
       color: dark-light-choose($primary-medium, $secondary-high);
@@ -397,7 +378,7 @@ a.star {
       color: dark-light-choose($primary-medium, $secondary-high);
       background: blend-primary-secondary(5%);
       border-left: 1px solid $primary-low;
-      border-top: 1px solid $primary-low;
+      border-top: 1px solid transparent;
       &:hover {
         color: $primary;
         background: $primary-low;
@@ -408,7 +389,7 @@ a.star {
       }
       .fa {
         margin: 0;
-        font-size: 1.286em;
+        font-size: $font-up-2;
         line-height: 52px;
       }
     }
@@ -425,11 +406,6 @@ a.star {
   }
 }
 
-@mixin topic-footer-buttons-text {
-  line-height: 32px;
-  color: dark-light-choose($primary-medium, $secondary-medium);
-}
-
 @mixin topic-footer-button {
   margin-bottom: 5px;
   margin-right: 10px;
@@ -439,7 +415,7 @@ a.star {
   padding: 10px 10px 0 0;
   float: left;
   p {
-    @include topic-footer-buttons-text;
+    color: dark-light-choose($primary-medium, $secondary-medium);
   }
   .btn {
     @include topic-footer-button;
@@ -520,6 +496,7 @@ video {
   .topic-statuses {
     i { color: $header_primary; }
     .d-icon-envelope { color: $danger; }
+    .d-icon-lock {padding-top: .15em;}
     .unpinned { color: $header_primary; }
   }
 
@@ -533,7 +510,6 @@ video {
 
   .topic-header-extra {
     margin: 0 0 0 5px;
-    padding-top: 5px;
   }
 }
 
@@ -541,8 +517,8 @@ video {
 .extra-info {
   h1 {
     margin: 5px 0 0 0;
-    font-size: 1.429em;
-    line-height: 1.3em;
+    font-size: $font-up-3;
+    line-height: $line-height-medium;
   }
 
   .topic-statuses {
@@ -553,7 +529,7 @@ video {
 /* override docked header CSS for topics with categories */
 .extra-info.two-rows {
   h1 {
-    line-height: 1.1em;
+    line-height: $line-height-medium;
     margin: 0;
   }
 }
@@ -591,7 +567,7 @@ video {
 }
 
 .deleted-user-avatar {
-  font-size: 2.571em;
+  font-size: $font-up-6;
 }
 
 .info-line {
@@ -695,13 +671,13 @@ $topic-avatar-width: 45px;
   box-shadow: 0 1px 5px rgba(0,0,0, .4);
   background-clip: padding-box;
   span {
-    font-size: 0.857em;
+    font-size: $font-down-1;
     color: dark-light-choose($primary-medium, $secondary-medium);
   }
   span.title {
     font-weight: bold;
     display: block;
-    font-size: 1em;
+    font-size: $font-0;
     color: $primary;
   }
 }
@@ -710,7 +686,7 @@ $topic-avatar-width: 45px;
   padding: 9px;
   clear: both;
   font-weight: normal;
-  line-height: 18px;
+  line-height: $line-height-medium;
   color: $primary;
   transition: all linear .15s;
 
@@ -738,7 +714,7 @@ $topic-avatar-width: 45px;
 .dropdown-menu .icon {
   margin-top: 3px;
   float: left;
-  font-size: 1.286em;
+  font-size: $font-up-2;
 }
 
 .open > .dropdown-menu {
@@ -776,14 +752,14 @@ $topic-avatar-width: 45px;
     margin-top: 10px;
   }
   p {
-    font-size: 0.929em;
+    font-size: $font-down-1;
     margin: 0 0 10px 0;
   }
   p.cancel {
     margin: 10px 0 0 0;
   }
   h3 {
-    font-size: 1.857em;
+    font-size: $font-up-4;
     color: $primary;
     margin-bottom: 5px;
     i {
@@ -889,8 +865,7 @@ a.attachment:before {
  .post-info  {
    display: inline-block;
    float: right;
-   font-size: 0.929em;
-   margin-top: 1px;
+   font-size: $font-down-1;
    a {color: dark-light-choose($primary-medium, $secondary-medium); }
  }
 
@@ -915,7 +890,7 @@ span.highlighted {
   color: $tertiary-medium;
   position: absolute;
   right: 0px;
-  top: 13px;
+  top: 15px;
   font-size: 0.571em;
 }
 

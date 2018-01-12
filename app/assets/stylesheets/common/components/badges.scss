@@ -16,7 +16,7 @@
 // --------------------------------------------------
 
 .badge-wrapper {
-  font-size: 0.857em;
+  font-size: $font-down-1;
   font-weight: bold;
   white-space: nowrap;
   position: relative;
@@ -30,6 +30,7 @@
   }
 
   &.bar { //bar category style
+    line-height: $line-height-medium;
     margin-right: 5px;
 
     span.badge-category {
@@ -62,13 +63,15 @@
   }
 
   &.bullet { //bullet category style
+    display: inline-flex;
+    align-items: center;
     margin-right: 5px;
-    font-size: .857em;
 
     span.badge-category {
       color: $primary;
       overflow: hidden;
       text-overflow: ellipsis;
+      line-height: $line-height-medium;
 
       #search-dropdown & {
         margin-top: -2px;
@@ -84,7 +87,7 @@
     height: 10px;
     margin-right: 5px;
     display: inline-block;
-    line-height: 1;
+    line-height: .8;
 
     &:before {
       content: "\a0";
@@ -104,6 +107,8 @@
 
 
   &.box {  //box category style (apply custom widths to the wrapper, not the children)
+    line-height: $line-height-large;
+    margin-top: 5px;
     margin-right: 5px;
     padding: 2px;
 
@@ -131,13 +136,16 @@
       &.badge-category {
         position: relative;
         padding: 0 5px;
+        margin: 2px 0;
       }
     }
   }
 }
 
-.extra-info-wrapper .title-wrapper .badge-wrapper.bar {
-  margin-top: 6px;
+.extra-info-wrapper .title-wrapper {
+  .badge-wrapper {
+    margin-top: 3px;
+  }
 }
 
 .autocomplete, td.category {
@@ -154,12 +162,12 @@
   .category-breadcrumb {
     a.badge-category, .dropdown-header {
       display: inline-block;
-      padding: 5px 8px;
-      line-height: 20px;
+      padding: 6px 8px;
+      line-height: $line-height-medium;
 
       &.category-dropdown-button {
-        margin-left: -4px;
-        padding: 5px;
+        margin-left: -.3em;
+        padding: 6px;
         width: 13px;
 
         .d-icon-caret-right {
@@ -170,7 +178,7 @@
 
     li.bar>.dropdown-header:not(.home):first-child {
       border-left: 5px solid;
-      font-size: 1em;
+      font-size: $font-0;
     }
 
     li.bar>.dropdown-header {
@@ -199,7 +207,7 @@
       }
     }
     .cat {
-        line-height: 1;
+        line-height: $line-height-large;
       }
     .badge-wrapper {
       box-sizing: border-box;
@@ -224,7 +232,7 @@
       &.box {
         margin-top: 0;
         width: 100%;
-        line-height: 1;
+        line-height: $line-height-small;
         vertical-align: text-top;
         padding: 0;
         span.badge-category {
@@ -247,11 +255,12 @@
 
 .badge-notification {
   @extend %badge;
-  padding: 4px 5px 2px 5px;
+  padding: 3px 5px;
+  min-width: 8px; 
   vertical-align: middle;
   color: $secondary;
-  font-size: .786em;
-  line-height: 1;
+  font-size: $font-down-2;
+  line-height: $line-height-small;
   text-align: center;
   background-color: dark-light-choose($primary-low-mid, $secondary-low);
   &[href] {
@@ -274,7 +283,7 @@
     background-color: transparent;
     color: $tertiary-high;
     font-weight: normal;
-    font-size: 0.929em;
+    font-size: $font-down-1;
   }
 
   &.new-topic::before {
@@ -300,8 +309,8 @@
 
 .badge-posts {
   font-weight: normal;
-  font-size: 1em;
-  line-height: 1;
+  font-size: $font-0;
+  line-height: $line-height-small;
   &[href] {
     color: dark-light-choose($primary-medium, $secondary-medium);
   }
@@ -317,6 +326,6 @@
   text-shadow: 0 1px 0 rgba($primary, 0.1);
   background-color: $primary-low;
   border-color: $primary-low;
-  font-size: 0.857em;
+  font-size: $font-down-1;
   box-shadow: inset 0 1px 0 rgba(0,0,0, 0.22);
 }

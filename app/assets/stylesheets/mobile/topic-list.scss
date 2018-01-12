@@ -48,6 +48,7 @@
   }
   .nav-pills > li {
     background: $primary-low;
+    font-size: $font-down-1;
     .d-icon-caret-down {
       margin-left: 8px;
     }
@@ -85,7 +86,7 @@
   .badge-notification, .category-topic-link td.num .badge-notification {
     position: relative;
     top: -1px;
-    font-size: 1em;
+    font-size: $font-down-1;
     padding: 4px 6px 3px 6px;
     i {color: $secondary;}
 
@@ -105,7 +106,6 @@
   }
 
   .topic-item-stats {
-    margin-top: 8px;
     .category, .num, .last-poster {
       float: left;
     }
@@ -222,7 +222,7 @@ tr.category-topic-link {
 
   h3 {
     display: inline-block;
-    font-size: 1.286em;
+    font-size: $font-up-2;
     margin: 0 0 0 10px;
     i {
       margin-right: 5px;
@@ -237,7 +237,7 @@ tr.category-topic-link {
   }
 
   .category-topic-link .main-link .age {
-    font-size: 0.857em;
+    font-size: $font-down-1;
   }
 
   .category-description td {
@@ -283,7 +283,7 @@ tr.category-topic-link {
       margin: 3px 7px 0 0;
       color: dark-light-choose($primary, $secondary-low);
       font-weight: bold;
-      font-size: 0.857em;
+      font-size: $font-down-1;
     }
     figcaption {
       display: inline;
@@ -361,7 +361,7 @@ tr.category-topic-link {
   padding: 3px 15px;
   clear: both;
   font-weight: normal;
-  line-height: 18px;
+  line-height: $line-height-medium;
   color: $primary;
 }
 .dropdown-menu li > a:hover,
@@ -391,8 +391,7 @@ ol.category-breadcrumb {
   height: 200px;
 
   a.badge-category {
-    line-height: 26px !important;
-    margin-bottom: 0 !important;
+    line-height: $line-height-large;
   }
 }
 
@@ -434,7 +433,7 @@ td .main-link {
 }
 .topic-list {
   .posts-map {
-    font-size: 1.143em;
+    font-size: $font-up-1;
   }
   // so the topic excerpt is full width
   // as the containing div is 80%

@@ -8,7 +8,7 @@
   height: 60px;
   .d-icon-home {
     padding:8px;
-    font-size: 2.1em;
+    font-size: $font-up-5;
   }
 
   .site-text-logo {
@@ -34,8 +34,8 @@ and (max-width : 570px) {
   color: dark-light-choose($primary-high, $secondary-medium);
   display: block;
   word-wrap: break-word;
-  font-size: .786em;
-  line-height: 1.3em;
+  font-size: $font-down-2;
+  line-height: $line-height-medium;
   .search-highlight {
     color: dark-light-choose($primary-high, $secondary-low);
   }
@@ -43,6 +43,7 @@ and (max-width : 570px) {
 
 header {
   #site-text-logo {
-    line-height: 40px;
+    margin-top: .4em;
+    line-height: $line-height-medium;
   }
 }

@@ -10,7 +10,7 @@
     display: inline-block;
   }
   .topic-count {
-    font-size: .786em;
+    font-size: $font-down-2;
     color: $primary;
     display: inline-block;
   }
@@ -19,7 +19,7 @@
   }
   .category-desc {
     color: $primary;
-    font-size: 0.857em;
+    font-size: $font-down-1;
     line-height: 16px;
   }
 }

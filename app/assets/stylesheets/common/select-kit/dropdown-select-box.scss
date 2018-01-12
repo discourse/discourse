@@ -45,7 +45,7 @@
         width: 30px;
 
         .d-icon {
-          font-size: 1.286em;
+          font-size: $font-up-2;
           -ms-flex-item-align: center;
               align-self: center;
           margin-right: 0;
@@ -54,7 +54,7 @@
       }
 
       .texts {
-        line-height: 18px;
+        line-height: $line-height-large;
         -webkit-box-flex: 1;
             -ms-flex: 1;
                 flex: 1;
@@ -76,7 +76,7 @@
               -ms-flex: 1;
                   flex: 1;
           font-weight: bold;
-          font-size: 1em;
+          font-size: $font-0;
           color: $primary;
           padding: 0;
         }
@@ -85,7 +85,7 @@
           -webkit-box-flex: 1;
               -ms-flex: 1;
                   flex: 1;
-          font-size: 0.857em;
+          font-size: $font-down-1;
           font-weight: normal;
           color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));;
           white-space: normal;
@@ -102,7 +102,6 @@
          -moz-box-sizing: border-box;
               box-sizing: border-box;
       border: 0;
-      height: 30px;
 
       -webkit-box-align: center;
           -ms-flex-align: center;

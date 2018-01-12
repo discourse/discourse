@@ -25,8 +25,8 @@
     width: 500px;
   }
   h1 {
-    font-size: 1.857em;
-    line-height: 1.25em;
+    font-size: $font-up-4;
+    line-height: $line-height-medium;
     overflow: hidden;
     a {color: $primary;}
   }
@@ -57,9 +57,9 @@
   width: 60%;
   margin-left: auto;
   margin-right: auto;
-  font-size: 1.857em;
+  font-size: $font-up-4;
   text-align: center;
-  line-height: 1.1em;
+  line-height: $line-height-medium;
 
   .topic-retry {
     display: block;
@@ -105,7 +105,7 @@
       display: block;
       margin-top: 2px;
       margin-bottom: 2px;
-      font-size: 1.286em;
+      font-size: $font-up-2;
     }
   }
   .jump-form {
@@ -115,7 +115,7 @@
       height: 20px;
       text-align: center;
       margin-bottom: 0;
-      font-size: 1.143em;
+      font-size: $font-up-1;
     }
     button.btn {
       float: right;
@@ -165,8 +165,8 @@
   }
   h4 {
     display: inline;
-    font-size: 1.286em;
-    line-height: 15px;
+    font-size: $font-up-2;
+    line-height: $line-height-small;
   }
   .bg {
     position: absolute;
@@ -194,7 +194,7 @@
   bottom: 0;
   position: fixed;
   width: 100%;
-  font-size: 1em;
+  font-size: $font-0;
   z-index: 495
 }
 
