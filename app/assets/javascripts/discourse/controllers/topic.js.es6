@@ -518,6 +518,11 @@ export default Ember.Controller.extend(BufferedContent, {
       this.send('changeOwner');
     },
 
+    grantBadge(post) {
+      this.set("selectedPostIds", [post.id]);
+      this.send('showGrantBadgeModal');
+    },
+
     toggleParticipant(user) {
       this.get("model.postStream")
           .toggleParticipant(user.get("username"))
