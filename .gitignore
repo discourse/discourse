@@ -123,3 +123,4 @@ vendor/bundle/*
 # ignore nodejs files
 /node_modules
 /package-lock.json
+config/deploy.rb
