@@ -1,4 +1,5 @@
 import { ajax } from 'discourse/lib/ajax';
+import { fillMissingDates } from 'discourse/lib/utilities';
 
 export default Discourse.Route.extend({
   queryParams: {
@@ -15,6 +16,13 @@ export default Discourse.Route.extend({
         search_type: params.searchType
       }
     }).then(json => {
+      // Add zero values for missing dates
+      if (json.term.data.length > 0) {
+        const startDate = (json.term.period === "all") ? moment(json.term.data[0].x).format('YYYY-MM-DD') : moment(json.term.start_date).format('YYYY-MM-DD');
+        const endDate = moment(json.term.end_date).format('YYYY-MM-DD');
+        json.term.data = fillMissingDates(json.term.data, startDate, endDate);
+      }
+
       const model = Ember.Object.create({ type: "search_log_term" });
       model.setProperties(json.term);
       return model;

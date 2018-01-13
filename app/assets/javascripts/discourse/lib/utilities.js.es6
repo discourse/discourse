@@ -450,5 +450,25 @@ export function clipboardData(e, canUpload) {
   return { clipboard, types, canUpload, canPasteHtml };
 }
 
+export function fillMissingDates(data, startDate, endDate) {
+  const startMoment = moment(startDate, "YYYY-MM-DD");
+  const endMoment = moment(endDate, "YYYY-MM-DD");
+  const countDays = endMoment.diff(startMoment, 'days');
+  let currentMoment = startMoment;
+
+  for (let i = 0; i <= countDays; i++) {
+    let date = (data[i]) ? moment(data[i].x, "YYYY-MM-DD") : null;
+    if (i === 0 && date.isAfter(startMoment)) {
+      data.splice(i, 0, { "x" : startMoment.format("YYYY-MM-DD"), 'y': 0 });
+    } else {
+      if (!date || date.isAfter(moment(currentMoment))) {
+        data.splice(i, 0, { "x" : currentMoment, 'y': 0 });
+      }
+    }
+    currentMoment = moment(currentMoment).add(1, "day").format("YYYY-MM-DD");
+  }
+  return data;
+}
+
 // This prevents a mini racer crash
 export default {};
