@@ -32,10 +32,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
       return map;
     }, {});
 
-    const isBadgeGrantable = badge => badge.get('enabled')
-      && (!granted[badge.get('id')] || badge.get('multiple_grant'));
-
-    return allBadges.filter(isBadgeGrantable);
+    return allBadges.filter(badge => {
+      return badge.get('enabled')
+        && badge.get('manually_grantable')
+        && (!granted[badge.get('id')] || badge.get('multiple_grant'));
+    });
   },
 
   noGrantableBadges: Ember.computed.empty('grantableBadges'),

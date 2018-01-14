@@ -42,7 +42,7 @@ export default Ember.Controller.extend({
   }.property('model', 'model.[]', 'model.expandedBadges.[]'),
 
   /**
-    Array of badges that have not been granted to this user.
+    Array of manually grantable badges that could be granted to the user
 
     @property grantableBadges
     @type {Boolean}
@@ -53,11 +53,10 @@ export default Ember.Controller.extend({
       granted[userBadge.get('badge_id')] = true;
     });
 
-    var badges = [];
-    this.get('badges').forEach(function(badge) {
-      if (badge.get('enabled') && (badge.get('multiple_grant') || !granted[badge.get('id')])) {
-        badges.push(badge);
-      }
+    const badges = this.get('badges').filter(badge => {
+      return badge.get('enabled')
+        && badge.get('manually_grantable')
+        && (badge.get('multiple_grant') || !granted[badge.get('id')]);
     });
 
     return _.sortBy(badges, badge => badge.get('name'));
