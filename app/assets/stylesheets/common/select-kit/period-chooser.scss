@@ -49,6 +49,12 @@
         padding: 5px;
         color: #222;
         font-size: $font-up-1;
+        align-items: center;
+        display: flex;
+
+        .period-title {
+          flex: 1;
+        }
 
         .top-date-string {
           font-weight: normal;
