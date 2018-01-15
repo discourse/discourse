@@ -177,6 +177,7 @@ RSpec.describe SearchLog, type: :model do
 
       SearchLog.where(term: 'ruby', ip_address: '127.0.0.2').update_all(search_result_id: 24)
       term_click_through_details = SearchLog.term_details("ruby", :all, :click_through_only)
+      expect(term_click_through_details[:period]).to eq("all")
       expect(term_click_through_details[:data][0][:y]).to eq(1)
     end
   end
