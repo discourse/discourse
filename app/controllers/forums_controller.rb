@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ForumsController < ApplicationController
 
   skip_before_action :preload_json, :check_xhr
