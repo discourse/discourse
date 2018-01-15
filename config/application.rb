@@ -186,6 +186,10 @@ module Discourse
 
     require 'auth'
 
+    if GlobalSetting.relative_url_root.present?
+      config.relative_url_root = GlobalSetting.relative_url_root
+    end
+
     if Rails.env == "test"
       if ENV['LOAD_PLUGINS'] == "1"
         Discourse.activate_plugins!
