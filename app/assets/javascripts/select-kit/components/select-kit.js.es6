@@ -1,4 +1,4 @@
-const { isNone } = Ember;
+const { isNone, run } = Ember;
 import computed from "ember-addons/ember-computed-decorators";
 import UtilsMixin from "select-kit/mixins/utils";
 import DomHelpersMixin from "select-kit/mixins/dom-helpers";
@@ -246,9 +246,9 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
 
   _boundaryActionHandler(actionName, ...params) {
     if (Ember.get(this.actions, actionName)) {
-      this.send(actionName, ...params);
+      run.next(() => this.send(actionName, ...params));
     } else if (this.get(actionName)) {
-      this.get(actionName)();
+      run.next(() => this.get(actionName)());
     }
   },
 
