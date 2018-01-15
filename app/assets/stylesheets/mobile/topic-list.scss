@@ -28,7 +28,7 @@
   .nav-pills .drop {
     border: 1px solid $primary-low;
     position: absolute;
-    z-index: 1000;
+    z-index: z("dropdown");
     background-color: $secondary;
     padding: 0 10px 10px 10px;
     width: 150px;
@@ -342,7 +342,7 @@ tr.category-topic-link {
   position: relative;
   top: 100%;
   left: 0;
-  z-index: 1000;
+  z-index: z("dropdown");
   display: none;
   float: left;
   width: 280px;

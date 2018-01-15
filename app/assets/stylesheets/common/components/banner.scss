@@ -7,7 +7,7 @@
   background: $tertiary-low;
   box-shadow: 0 2px 4px -1px rgba(0,0,0, .25);
   color: $primary;
-  z-index: 1001;
+  z-index: z("base") + 1;
   overflow: auto;
 
   &.overlay {

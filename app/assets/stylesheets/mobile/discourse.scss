@@ -112,7 +112,7 @@ blockquote {
       left: 0;
       display: block;
       position: absolute;
-      z-index: 10000000;
+      z-index: z("dropdown");
       background-color: $secondary;
       width: 100%;
       list-style: none;

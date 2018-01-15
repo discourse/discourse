@@ -1,12 +1,12 @@
 .modal-open {
   .dropdown-menu {
-     z-index: 2050;
+     z-index: z("modal","dropdown");
   }
   .popover {
-    z-index: 2060;
+    z-index: z("modal","popover");
   }
   .tooltip {
-    z-index: 2070;
+    z-index: z("modal","tooltip");
   }
 
 }
@@ -26,7 +26,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 1040;
+  z-index: z("modal","overlay");
   background-color: #111;
   &.fade {
     opacity: 0;
@@ -98,7 +98,7 @@
   top: 0;
   width: 100%;
   height: 100%;
-  z-index: 1050;
+  z-index: z("modal","content");
   overflow: auto;
 }
 .modal-form {
@@ -169,7 +169,7 @@
         position: relative;
       }
       .jsfu-shade {
-        z-index: 1;
+        z-index: z("base");
         position: absolute;
         top: 0;
         left: 0;

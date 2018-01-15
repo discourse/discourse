@@ -79,7 +79,7 @@ span.badge-posts {
   text-align: left;
   bottom: 0;
   left: 135px;
-  z-index: 1000;
+  z-index: z("dropdown");
 
   h3 {
     margin-top: 0;
@@ -125,7 +125,7 @@ span.badge-posts {
 }
 
 a.reply-to-tab {
-  z-index: 400;
+  z-index: z("base") + 1;
   right: 80px;
   color: dark-light-choose($primary-medium, $secondary-medium);
   margin: -3px 10px 0 0;
@@ -311,7 +311,7 @@ span.post-count {
 }
 
 #topic-title {
-  z-index: 1000;
+  z-index: z("base") + 1;
   margin: 0 0 0 0 !important;
   padding: 15px 0;
 }
@@ -329,7 +329,7 @@ span.post-count {
 
 .quote-button.visible {
   display: block;
-  z-index: 936;
+  z-index: z("tooltip");
 }
 
 iframe {
@@ -397,7 +397,7 @@ iframe {
 button.select-post {
   display: inline-block;
   position: absolute;
-  z-index: 401; // 400 is the reply-to tab
+  z-index: z("base") + 1;
   left: 200px;
   background-color: srgb-scale($tertiary, $secondary, 60%);
   color: $secondary;
@@ -443,7 +443,7 @@ span.highlighted {
 .topic-avatar {
   float: left;
   margin-right: 10px;
-  z-index:999; /* must render on top of topic-body + topic-meta-data, otherwise not tappable */
+  z-index: z("base") + 1; /* must render on top of topic-body + topic-meta-data, otherwise not tappable */
 }
 
 .topic-meta-data {

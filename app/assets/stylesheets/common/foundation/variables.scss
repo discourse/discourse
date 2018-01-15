@@ -57,16 +57,27 @@ $line-height-large: 1.4; // Normal or small text
 // --------------------------------------------------
 
 $z-layers: (
-  "max":            9001, 
+  "max":              9999, 
+  "fullscreen":       1700,
   "modal": (
-    "base":           500,
-    "close":          100,
-    "header":          50,
-    "footer":          10
+    "tooltip":        1600,   
+    "popover":        1500,
+    "dropdown":       1400,
+    "content":        1300,
+    "overlay":        1200,
   ),
-  "default":            1,
-  "min": -9000
-);
+  "mobile-composer":  1100,
+  "header":           1000,
+  "tooltip":          600,
+  "dropdown":         500,
+  "composer": (
+      "popover":      400,
+      "content":      300,
+  ),
+  "usercard":         200,
+  "timeline":         100,
+  "base":             1
+  );
 
 @function map-has-nested-keys($map, $keys...) {
   @each $key in $keys {
@@ -75,7 +86,6 @@ $z-layers: (
     }
     $map: map-get($map, $key);
   }
-  
   @return true;
 }
 
@@ -83,15 +93,13 @@ $z-layers: (
   @each $key in $keys {
     $map: map-get($map, $key);
   }
- 
   @return $map;
 }
 
 @function z($layers...) {
   @if not map-has-nested-keys($z-layers, $layers...) {
-    @warn "No layer found for `#{inspect($layers...)}` in $z-layers map. Property omitted.";
+    @warn "No layer defined for `#{inspect($layers...)}` in $z-layers map. Check variables.scss, property omitted.";
   }
- 
   @return map-deep-get($z-layers, $layers...);
 }
 

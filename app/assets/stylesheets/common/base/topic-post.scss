@@ -174,7 +174,7 @@ aside.quote {
   background-color: blend-primary-secondary(50%);
   color: dark-light-choose($secondary, $primary);
   padding: 10px;
-  z-index: 401;
+  z-index: z("dropdown");
   opacity: 0.9;
 
   .d-icon {
