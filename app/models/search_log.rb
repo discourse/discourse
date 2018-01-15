@@ -89,7 +89,10 @@ class SearchLog < ActiveRecord::Base
     return {
       type: "search_log_term",
       title: I18n.t("search_logs.graph_title"),
-      data: details
+      start_date: start_of(period),
+      end_date: Time.zone.now,
+      data: details,
+      period: period.to_s
     }
   end
 
