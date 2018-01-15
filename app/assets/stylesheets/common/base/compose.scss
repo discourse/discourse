@@ -88,12 +88,12 @@
   }
 
   .reply-to {
-    color: $primary-medium;
+    color: $primary-high;
     margin: 5px 0 10px 0;
     display: flex;
     align-items: center;
     i {
-      color: $primary-medium;
+      color: $primary-high;
     }
     .reply-details {
       overflow: hidden;
@@ -240,7 +240,7 @@
       display: flex;
       a {
         margin-left: 5px;
-        color: $primary-medium;
+        color: $primary-high;
       }
       .spinner {
         margin-right: 5px;
@@ -262,7 +262,7 @@
   }
 
   #draft-status, #file-uploading {
-    color: $primary-medium;
+    color: $primary-high;
   }
 }
 
