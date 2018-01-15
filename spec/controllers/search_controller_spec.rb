@@ -161,6 +161,10 @@ describe SearchController do
   end
 
   context "#click" do
+    before do
+      SearchLog.clear_debounce_cache!
+    end
+
     it "doesn't work wthout the necessary parameters" do
       expect do
         post :click, format: :json
