@@ -74,7 +74,9 @@ class NotificationEmailer
     def enqueue_private(type, delay = private_delay)
 
       if notification.user.user_option.nil?
-        Rails.logger.warn("Missing user option record for user id: #{notification.user.id}")
+        # this can happen if we roll back user creation really early
+        # or delete user
+        # bypass this pm
         return
       end
 
