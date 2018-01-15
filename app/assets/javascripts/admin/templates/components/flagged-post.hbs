@@ -22,6 +22,10 @@
   <div class="flagged-post-contents">
     <div class='flagged-post-user-details'>
       <a class='username' href={{user.path}} data-user-card={{flaggedPost.user.username}}>{{format-username flaggedPost.user.username}}</a>
+      {{plugin-outlet
+        name="flagged-post-controls"
+        tagName=""
+        args=(hash flaggedPost=flaggedPost actableFilter=actableFilter topic=topic)}}
     </div>
 
     <div class='flagged-post-excerpt'>
