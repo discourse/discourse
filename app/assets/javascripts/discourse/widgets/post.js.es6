@@ -299,9 +299,17 @@ createWidget('post-contents', {
 
     const repliesBelow = state.repliesBelow;
     if (repliesBelow.length) {
-      result.push(h('section.embedded-posts.bottom', repliesBelow.map(p => {
-        return this.attach('embedded-post', p, { model: this.store.createRecord('post', p) });
-      })));
+      result.push(h('section.embedded-posts.bottom', [
+        this.attach('button', {
+          title: 'post.collapse',
+          icon: 'chevron-up',
+          action: 'toggleRepliesBelow',
+          className: 'btn collapse-up'
+        }),
+        repliesBelow.map(p => {
+          return this.attach('embedded-post', p, { model: this.store.createRecord('post', p) });
+        })
+      ]));
     }
 
     return result;
@@ -376,7 +384,15 @@ createWidget('post-article', {
         return this.attach('embedded-post', p, { model: this.store.createRecord('post', p), state: { above: true } });
       });
 
-      rows.push(h('div.row', h('section.embedded-posts.top.topic-body.offset2', replies)));
+      rows.push(h('div.row', h('section.embedded-posts.top.topic-body.offset2', [
+        this.attach('button', {
+          title: 'post.collapse',
+          icon: 'chevron-down',
+          action: 'toggleReplyAbove',
+          className: 'btn collapse-down'
+        }),
+        replies
+      ])));
     }
 
     rows.push(h('div.row', [this.attach('post-avatar', attrs), this.attach('post-body', attrs)]));
