@@ -43,6 +43,7 @@ class TopicQuery
          page
          per_page
          visible
+         guardian
          no_definitions)
   end
 
@@ -90,7 +91,7 @@ class TopicQuery
     options.assert_valid_keys(TopicQuery.valid_options)
     @options = options.dup
     @user = user
-    @guardian = Guardian.new(@user)
+    @guardian = options[:guardian] || Guardian.new(@user)
   end
 
   def joined_topic_user(list = nil)
