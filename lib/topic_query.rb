@@ -820,7 +820,12 @@ class TopicQuery
 
     def random_suggested(topic, count, excluded_topic_ids = [])
       result = default_results(unordered: true, per_page: count).where(closed: false, archived: false)
-      excluded_topic_ids += Category.topic_ids.to_a
+
+      if SiteSetting.limit_suggested_to_category
+        excluded_topic_ids += Category.where(id: topic.category_id).pluck(:id)
+      else
+        excluded_topic_ids += Category.topic_ids.to_a
+      end
       result = result.where("topics.id NOT IN (?)", excluded_topic_ids) unless excluded_topic_ids.empty?
 
       result = remove_muted_categories(result, @user)
@@ -837,7 +842,8 @@ class TopicQuery
       #
       # we over select in case cache is stale
       max = (count * 1.3).to_i
-      ids = RandomTopicSelector.next(max) + RandomTopicSelector.next(max, topic.category)
+      ids = SiteSetting.limit_suggested_to_category ? [] : RandomTopicSelector.next(max)
+      ids.concat(RandomTopicSelector.next(max, topic.category))
 
       result.where(id: ids.uniq)
     end
