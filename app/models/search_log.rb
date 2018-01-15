@@ -19,42 +19,54 @@ class SearchLog < ActiveRecord::Base
     )
   end
 
+  def self.redis_key(ip_address:, user_id: nil)
+    if user_id
+      "__SEARCH__LOG_#{user_id}"
+    else
+      "__SEARCH__LOG_#{ip_address}"
+    end
+  end
+
+  # for testing
+  def self.clear_debounce_cache!
+    $redis.keys("__SEARCH__LOG_*").each do |k|
+      $redis.del(k)
+    end
+  end
+
   def self.log(term:, search_type:, ip_address:, user_id: nil)
 
     search_type = search_types[search_type]
     return [:error] unless search_type.present? && ip_address.present?
 
-    update_sql = <<~SQL
-      UPDATE search_logs
-      SET term = :term,
-        created_at = :created_at
-      WHERE created_at > :timeframe AND
-        position(term IN :term) = 1 AND
-        ((:user_id IS NULL AND ip_address = :ip_address) OR
-          (user_id = :user_id))
-      RETURNING id
-    SQL
+    key = redis_key(user_id: user_id, ip_address: ip_address)
 
-    rows = exec_sql(
-      update_sql,
-      term: term,
-      created_at: Time.zone.now,
-      timeframe: 5.seconds.ago,
-      user_id: user_id,
-      ip_address: ip_address
-    )
+    result = nil
 
-    if rows.cmd_tuples == 0
-      result = create(
+    if existing = $redis.get(key)
+      id, old_term = existing.split(",", 2)
+      if term.start_with?(old_term)
+        where(id: id.to_i).update_all(
+          created_at: Time.zone.now,
+          term: term
+        )
+        result = [:updated, id.to_i]
+      end
+    end
+
+    if !result
+      log = create(
         term: term,
         search_type: search_type,
         ip_address: ip_address,
         user_id: user_id
       )
-      [:created, result.id]
-    else
-      [:updated, rows[0]['id'].to_i]
+      result = [:created, log.id]
     end
+
+    $redis.setex(key, 5, "#{result[1]},#{term}")
+
+    result
   end
 
   def self.term_details(term, period = :weekly, search_type = :all)
