@@ -43,6 +43,9 @@
       word-wrap: break-word;
 
       .flagged-post-user-details {
+        display: flex;
+        justify-content: space-between;
+
         .username {
           font-weight: bold;
           color: $primary;
