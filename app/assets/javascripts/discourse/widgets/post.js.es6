@@ -394,11 +394,11 @@ createWidget('post-article', {
   },
 
   buildAttributes(attrs) {
-    return { 'data-post-id': attrs.id, 'data-user-id': attrs.user_id };
+    return { 'data-post-id': attrs.id, 'data-user-id': attrs.user_id, 'tabindex': '0' };
   },
 
   html(attrs, state) {
-    const rows = [h('a.tabLoc', { attributes: { href: ''} })];
+    const rows = [];
     if (state.repliesAbove.length) {
       const replies = state.repliesAbove.map(p => {
         return this.attach('embedded-post', p, { model: this.store.createRecord('post', p), state: { above: true } });
