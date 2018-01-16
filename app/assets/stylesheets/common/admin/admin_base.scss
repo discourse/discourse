@@ -237,6 +237,10 @@ $mobile-breakpoint: 700px;
     width: 200px;
     float: right;
   }
+  .header-search-results {
+    clear: both;
+    padding: 4px;
+  }
 }
 
 .admin-container .controls {
@@ -368,7 +372,7 @@ $mobile-breakpoint: 700px;
     }
 
     .d-editor-textarea-wrapper {
-      max-width: 60%; 
+      max-width: 60%;
       .d-editor-button-bar {
         overflow: hidden;
       }

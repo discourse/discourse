@@ -3258,6 +3258,7 @@ en:
             header: "Header"
             full_page: "Full Page"
             click_through_only: "All (click through only)"
+          header_search_results: "Header Search Results"
         logster:
           title: "Error Logs"
 
