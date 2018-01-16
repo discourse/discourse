@@ -229,6 +229,19 @@ nav.post-controls {
     border:  1px solid $primary-low;
   }
 
+  .collapse-down, .collapse-up {
+    position: absolute;
+    color: $primary-medium;
+    background: $secondary;
+    border:  1px solid $primary-low;
+    padding: 6px 9px 8px;
+    z-index: 99; // Needs to be higher than topic-avatar
+    &:hover {
+      background: $primary-low;
+      color: $primary;
+    }
+  }
+
   // bottom means "reply expansion" below a post
   &.bottom {
     &.hidden {
@@ -238,12 +251,7 @@ nav.post-controls {
   }
   &.bottom {
     .collapse-up {
-      position: absolute;
-      transform: translate(-50%, -170%);
-      background: $secondary;
-      border:  1px solid $primary-low;
-      padding: 6px 9px 8px;
-      z-index: 99; // Needs to be higher than topic-avatar
+      transform: translate(-50%, -164%);
     }
     .row {
       padding-bottom: .5em;
@@ -258,12 +266,7 @@ nav.post-controls {
   // top means "in reply to expansion" above a post
   &.top {
     .collapse-down {
-      position: absolute;
       transform: translate(-50%, 55%);
-      background: $secondary;
-      border:  1px solid $primary-low;
-      padding: 6px 9px 8px;
-      z-index: 99; // Needs to be higher than topic-avatar
     }
     margin-left: 56px;
     width: 701px;
