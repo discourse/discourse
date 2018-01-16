@@ -60,7 +60,11 @@ class ApplicationController < ActionController::Base
   end
 
   def use_crawler_layout?
-    @use_crawler_layout ||= (has_escaped_fragment? || CrawlerDetection.crawler?(request.user_agent) || params.key?("print"))
+    @use_crawler_layout ||=
+      request.user_agent &&
+      (request.content_type.blank? || request.content_type.include?('html')) &&
+      !['json', 'rss'].include?(params[:format]) &&
+      (has_escaped_fragment? || CrawlerDetection.crawler?(request.user_agent) || params.key?("print"))
   end
 
   def add_readonly_header
