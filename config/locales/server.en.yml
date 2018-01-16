@@ -1371,7 +1371,7 @@ en:
     reply_by_email_enabled: "Enable replying to topics via email."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "List of alternative templates for reply by email incoming email addresses. Example: %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
-    incoming_email_prefer_html: "Use the HTML instead of the text for incoming email."
+    incoming_email_prefer_html: "Use HTML instead of text for incoming email."
 
     disable_emails: "Prevent Discourse from sending any kind of emails"
 
