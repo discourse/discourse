@@ -315,9 +315,15 @@ export default {
       return;
     }
 
-    const $selected = ($articles.filter('.selected').length !== 0)
-      ? $articles.filter('.selected')
-      : $articles.filter('[data-islastviewedtopic=true]');
+    let $selected = $articles.filter(function(_, el) {
+      return el.contains(document.activeElement); // :focus
+    });
+    if ($selected.length === 0) {
+      $selected = $articles.filter('.selected');
+    }
+    if ($selected.length === 0) {
+      $selected = $articles.filter('[data-islastviewedtopic=true]');
+    }
     let index = $articles.index($selected);
 
     if ($selected.length !== 0) { //boundries check
@@ -354,10 +360,11 @@ export default {
       $article.addClass('selected');
 
       if ($article.is('.topic-post')) {
-        $('a.tabLoc', $article).focus();
+        $('article', $article).focus();
         this._scrollToPost($article);
 
       } else {
+        $article.focus();
         this._scrollList($article, direction);
       }
     }
