@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path('../boot', __FILE__)
 require 'rails/all'
 
@@ -158,8 +160,8 @@ module Discourse
     # supports etags (post 1.7)
     config.middleware.delete Rack::ETag
 
-    # route all exceptions via our router
-    config.exceptions_app = self.routes
+    require 'middleware/discourse_public_exceptions'
+    config.exceptions_app = Middleware::DiscoursePublicExceptions.new(Rails.public_path)
 
     # Our templates shouldn't start with 'discourse/templates'
     config.handlebars.templates_root = 'discourse/templates'
@@ -183,10 +185,17 @@ module Discourse
     config.ember.handlebars_location = "#{Rails.root}/vendor/assets/javascripts/handlebars.js"
 
     require 'auth'
-    Discourse.activate_plugins! unless Rails.env.test? && ENV['LOAD_PLUGINS'] != "1"
 
     if GlobalSetting.relative_url_root.present?
       config.relative_url_root = GlobalSetting.relative_url_root
+    end
+
+    if Rails.env == "test"
+      if ENV['LOAD_PLUGINS'] == "1"
+        Discourse.activate_plugins!
+      end
+    else
+      Discourse.activate_plugins!
     end
 
     require_dependency 'stylesheet/manager'

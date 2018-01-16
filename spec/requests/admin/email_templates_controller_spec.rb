@@ -19,16 +19,14 @@ RSpec.describe Admin::EmailTemplatesController do
 
   context "#index" do
     it "raises an error if you aren't logged in" do
-      expect do
-        get '/admin/customize/email_templates.json'
-      end.to raise_error(ActionController::RoutingError)
+      get '/admin/customize/email_templates.json'
+      expect(response.status).to eq(404)
     end
 
     it "raises an error if you aren't an admin" do
       sign_in(user)
-      expect do
-        get '/admin/customize/email_templates.json'
-      end.to raise_error(ActionController::RoutingError)
+      get '/admin/customize/email_templates.json'
+      expect(response.status).to eq(404)
     end
 
     it "should work if you are an admin" do
@@ -44,20 +42,18 @@ RSpec.describe Admin::EmailTemplatesController do
 
   context "#update" do
     it "raises an error if you aren't logged in" do
-      expect do
-        put '/admin/customize/email_templates/some_id', params: {
-          email_template: { subject: 'Subject', body: 'Body' }
-        }, headers: headers
-      end.to raise_error(ActionController::RoutingError)
+      put '/admin/customize/email_templates/some_id', params: {
+        email_template: { subject: 'Subject', body: 'Body' }
+      }, headers: headers
+      expect(response.status).to eq(404)
     end
 
     it "raises an error if you aren't an admin" do
       sign_in(user)
-      expect do
-        put '/admin/customize/email_templates/some_id', params: {
-          email_template: { subject: 'Subject', body: 'Body' }
-        }, headers: headers
-      end.to raise_error(ActionController::RoutingError)
+      put '/admin/customize/email_templates/some_id', params: {
+        email_template: { subject: 'Subject', body: 'Body' }
+      }, headers: headers
+      expect(response.status).to eq(404)
     end
 
     context "when logged in as admin" do
@@ -224,16 +220,14 @@ RSpec.describe Admin::EmailTemplatesController do
 
   context "#revert" do
     it "raises an error if you aren't logged in" do
-      expect do
-        delete '/admin/customize/email_templates/some_id', headers: headers
-      end.to raise_error(ActionController::RoutingError)
+      delete '/admin/customize/email_templates/some_id', headers: headers
+      expect(response.status).to eq(404)
     end
 
     it "raises an error if you aren't an admin" do
       sign_in(user)
-      expect do
-        delete '/admin/customize/email_templates/some_id', headers: headers
-      end.to raise_error(ActionController::RoutingError)
+      delete '/admin/customize/email_templates/some_id', headers: headers
+      expect(response.status).to eq(404)
     end
 
     context "when logged in as admin" do

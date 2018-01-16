@@ -60,13 +60,13 @@
       }
 
       h1 {
-        font-size: 2.286em;
+        font-size: $font-up-5;
         font-weight: normal;
         i {font-size: .8em;}
       }
 
       h2 {
-        font-size: 1.286em;
+        font-size: $font-up-2;
         font-weight: normal;
         margin-top: 10px;
         max-width: 100%;
@@ -77,7 +77,7 @@
 
       h3 {
         font-weight: normal;
-        font-size: 1em;
+        font-size: $font-0;
         margin: 5px 0;
 
         .d-icon:not(:first-of-type) {
@@ -163,11 +163,11 @@
           }
 
           h1 {
-            font-size: 1.429em;
+            font-size: $font-up-3;
           }
 
           h2 {
-            font-size: 1.143em;
+            font-size: $font-up-1;
             margin-top: 4px;
           }
 
@@ -212,7 +212,7 @@
     width: 30px;
     text-align: center;
     vertical-align: middle;
-    line-height: 30px;
+    line-height: $line-height-large;
   }
 
   .helpful-flags {
@@ -255,8 +255,8 @@
       color: dark-light-choose($primary-medium, $secondary-medium);
         margin-top: 5px;
         margin-bottom: 10px;
-        font-size: .857em;
-        line-height: 1.4em;
+        font-size: $font-down-1;
+        line-height: $line-height-large;
       }
     }
   }
@@ -267,7 +267,7 @@
     text-align: top;
     color: $danger;
     font-weight: bold;
-    font-size: 1.286em;
+    font-size: $font-up-2;
   }
 }
 
@@ -306,7 +306,7 @@
 
   h2 {
     a {
-      font-size: 1em;
+      font-size: $font-0;
       color: scale-color($tertiary, $lightness: -10%);
       cursor: pointer;
     }
@@ -402,7 +402,7 @@
 
   .value {
     font-weight: bold;
-    font-size: 1.286em;
+    font-size: $font-up-2;
   }
 
   .label {
@@ -449,7 +449,7 @@
 
 .links-section {
   .domain {
-    font-size: 0.786em;
+    font-size: $font-down-1;
     color: dark-light-choose($primary-medium, $secondary-high);
   }
 }
@@ -479,8 +479,8 @@
   .instructions {
     color: dark-light-choose($primary-medium, $secondary-medium);
     margin-bottom: 10px;
-    font-size: .857em;
-    line-height: 1.4em;
+    font-size: $font-down-1;
+    line-height: $line-height-large;
 
     a[href] {
       color: $tertiary;

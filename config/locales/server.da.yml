@@ -978,7 +978,6 @@ da:
     ignore_by_title: "Ignorér indgående emails baseret på deres titel."
     mailgun_api_key: "Mailgun Secret API key used to verify webhook messages."
     delete_all_posts_max: "Det maksimale antal indlæg der kan slettes på én gang med “Slet alle indlæg”-knappen. Hvis en bruger har mere end dette antal indlæg, kan indlæggene ikke slettes på én gang og brugeren kan ikke slettes."
-    username_change_period: "Antal dage efter oprettelsen hvor brugere kan ændre deres brugernavn (0 for ikke at tillade skift af brugernavn)."
     email_editable: "Lad brugerne skifte deres e-mail-adresse efter oprettelsen."
     digest_topics: "Maximalt antal af populære emner vist i mails med sammendrag."
     digest_posts: "Maximalt antal af populære indlæg vist i mails med sammendrag."

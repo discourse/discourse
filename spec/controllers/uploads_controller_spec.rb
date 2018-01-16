@@ -5,7 +5,8 @@ describe UploadsController do
   context '.create' do
 
     it 'requires you to be logged in' do
-      expect { post :create, format: :json }.to raise_error(Discourse::NotLoggedIn)
+      post :create, format: :json
+      expect(response.status).to eq(403)
     end
 
     context 'logged in' do

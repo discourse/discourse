@@ -126,22 +126,7 @@ describe UsersController do
           topic_post_count = JSON.parse(response.body).dig("user", "topic_post_count")
           expect(topic_post_count[topic.id.to_s]).to eq(2)
         end
-
       end
-
-    end
-
-  end
-
-  describe '.user_preferences_redirect' do
-    it 'requires the user to be logged in' do
-      expect { get :user_preferences_redirect }.to raise_error(Discourse::NotLoggedIn)
-    end
-
-    it "redirects to their profile when logged in" do
-      user = log_in
-      get :user_preferences_redirect
-      expect(response).to redirect_to("/u/#{user.username_lower}/preferences")
     end
   end
 
@@ -303,11 +288,9 @@ describe UsersController do
     context 'invalid token' do
       render_views
 
-      before do
-        get :password_reset, params: { token: "evil_trout!" }
-      end
-
       it 'disallows login' do
+        get :password_reset, params: { token: "evil_trout!" }
+
         expect(response).to be_success
 
         expect(CGI.unescapeHTML(response.body))
@@ -317,6 +300,16 @@ describe UsersController do
           src: '/assets/application.js'
         })
 
+        expect(session[:current_user_id]).to be_blank
+      end
+
+      it "responds with proper error message" do
+        put :password_reset, params: {
+          token: "evil_trout!", password: "awesomeSecretPassword"
+        }, format: :json
+
+        expect(response).to be_success
+        expect(JSON.parse(response.body)["message"]).to eq(I18n.t('password_reset.no_token'))
         expect(session[:current_user_id]).to be_blank
       end
     end
@@ -1040,9 +1033,8 @@ describe UsersController do
 
   context '#username' do
     it 'raises an error when not logged in' do
-      expect do
-        put :username, params: { username: 'somename' }, format: :json
-      end.to raise_error(Discourse::NotLoggedIn)
+      put :username, params: { username: 'somename' }, format: :json
+      expect(response.status).to eq(403)
     end
 
     context 'while logged in' do
@@ -1421,9 +1413,8 @@ describe UsersController do
   describe '#update' do
     context 'with guest' do
       it 'raises an error' do
-        expect do
-          put :update, params: { username: 'guest' }, format: :json
-        end.to raise_error(Discourse::NotLoggedIn)
+        put :update, params: { username: 'guest' }, format: :json
+        expect(response.status).to eq(403)
       end
     end
 
@@ -1640,14 +1631,14 @@ describe UsersController do
         user_badge_id: user_badge.id, username: user.username
       }, format: :json
 
-      expect(user.reload.title).not_to eq(badge.name)
+      expect(user.reload.title).not_to eq(badge.display_name)
       badge.update_attributes allow_title: true
 
       put :badge_title, params: {
         user_badge_id: user_badge.id, username: user.username
       }, format: :json
 
-      expect(user.reload.title).to eq(badge.name)
+      expect(user.reload.title).to eq(badge.display_name)
       expect(user.user_profile.badge_granted_title).to eq(true)
 
       user.title = "testing"
@@ -1655,6 +1646,30 @@ describe UsersController do
       user.user_profile.reload
       expect(user.user_profile.badge_granted_title).to eq(false)
 
+    end
+  end
+
+  describe "badge_title with overrided name" do
+    let(:user) { Fabricate(:user) }
+    let(:badge) { Fabricate(:badge, name: 'Demogorgon', allow_title: true) }
+    let(:user_badge) { BadgeGranter.grant(badge, user) }
+
+    before do
+      TranslationOverride.upsert!('en', 'badges.demogorgon.name', 'Boss')
+    end
+
+    after do
+      TranslationOverride.revert!('en', ['badges.demogorgon.name'])
+    end
+
+    it "uses the badge display name as user title" do
+      log_in_user user
+
+      put :badge_title, params: {
+        user_badge_id: user_badge.id, username: user.username
+      }, format: :json
+
+      expect(user.reload.title).to eq(badge.display_name)
     end
   end
 
@@ -1795,11 +1810,10 @@ describe UsersController do
   describe '.pick_avatar' do
 
     it 'raises an error when not logged in' do
-      expect {
-        put :pick_avatar, params: {
-          username: 'asdf', avatar_id: 1, type: "custom"
-        }, format: :json
-      }.to raise_error(Discourse::NotLoggedIn)
+      put :pick_avatar, params: {
+        username: 'asdf', avatar_id: 1, type: "custom"
+      }, format: :json
+      expect(response.status).to eq(403)
     end
 
     context 'while logged in' do
@@ -1870,11 +1884,10 @@ describe UsersController do
   describe '.destroy_user_image' do
 
     it 'raises an error when not logged in' do
-      expect do
-        delete :destroy_user_image,
-          params: { type: 'profile_background', username: 'asdf' },
-          format: :json
-      end.to raise_error(Discourse::NotLoggedIn)
+      delete :destroy_user_image,
+        params: { type: 'profile_background', username: 'asdf' },
+        format: :json
+      expect(response.status).to eq(403)
     end
 
     context 'while logged in' do
@@ -1898,11 +1911,10 @@ describe UsersController do
       end
 
       it "only allows certain `types`" do
-        expect do
-          delete :destroy_user_image,
-            params: { username: user.username, type: 'wat' },
-            format: :json
-        end.to raise_error(Discourse::InvalidParameters)
+        delete :destroy_user_image,
+          params: { username: user.username, type: 'wat' },
+          format: :json
+        expect(response.status).to eq(400)
       end
 
       it 'can clear the profile background' do
@@ -1919,9 +1931,8 @@ describe UsersController do
 
   describe '.destroy' do
     it 'raises an error when not logged in' do
-      expect do
-        delete :destroy, params: { username: 'nobody' }, format: :json
-      end.to raise_error(Discourse::NotLoggedIn)
+      delete :destroy, params: { username: 'nobody' }, format: :json
+      expect(response.status).to eq(403)
     end
 
     context 'while logged in' do
@@ -1980,9 +1991,8 @@ describe UsersController do
   describe '.check_emails' do
 
     it 'raises an error when not logged in' do
-      expect do
-        put :check_emails, params: { username: 'zogstrip' }, format: :json
-      end.to raise_error(Discourse::NotLoggedIn)
+      put :check_emails, params: { username: 'zogstrip' }, format: :json
+      expect(response.status).to eq(403)
     end
 
     context 'while logged in' do
@@ -2134,9 +2144,8 @@ describe UsersController do
 
     context 'anon' do
       it "raises an error on anon for topic_tracking_state" do
-        expect {
-          get :topic_tracking_state, params: { username: user.username }, format: :json
-        }.to raise_error(Discourse::NotLoggedIn)
+        get :topic_tracking_state, params: { username: user.username }, format: :json
+        expect(response.status).to eq(403)
       end
     end
 

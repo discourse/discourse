@@ -87,7 +87,7 @@ function selectKit(selector) { // eslint-disable-line no-unused-vars
         var type = options.type || 'keydown';
         var event = jQuery.Event(type);
         event.keyCode = keyCode;
-        if (options && options.metaKey === true) { event.metaKey = true; }
+        if (options && options.metaKey) { event.metaKey = true; }
         find(eventSelector).trigger(event);
       });
     }

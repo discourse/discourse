@@ -1,20 +1,22 @@
-{{d-editor tabindex="4"
-           value=composer.reply
-           placeholder="composer.reply_placeholder"
-           previewUpdated="previewUpdated"
-           markdownOptions=markdownOptions
-           extraButtons="extraButtons"
-           importQuote="importQuote"
-           showUploadModal="showUploadModal"
-           togglePreview="togglePreview"
-           validation=validation
-           loading=composer.loading
-           forcePreview=forcePreview
-           composerEvents=true
-           onExpandPopupMenuOptions="onExpandPopupMenuOptions"
-           onPopupMenuAction=onPopupMenuAction
-           popupMenuOptions=popupMenuOptions}}
+{{d-editor
+  tabindex="4"
+  value=composer.reply
+  placeholder="composer.reply_placeholder"
+  previewUpdated="previewUpdated"
+  markdownOptions=markdownOptions
+  extraButtons="extraButtons"
+  importQuote="importQuote"
+  showUploadModal="showUploadModal"
+  togglePreview="togglePreview"
+  validation=validation
+  loading=composer.loading
+  forcePreview=forcePreview
+  composerEvents=true
+  onExpandPopupMenuOptions="onExpandPopupMenuOptions"
+  onPopupMenuAction=onPopupMenuAction
+  popupMenuOptions=popupMenuOptions
+  outletArgs=(hash composer=composer editorType="composer")}}
 
 {{#if site.mobileView}}
-    <input type="file" id="mobile-uploader" multiple />
+  <input type="file" id="mobile-uploader" multiple>
 {{/if}}

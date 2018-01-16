@@ -1,6 +1,6 @@
 .caps-lock-warning {
   color: $danger;
-  font-size: 0.857em;
+  font-size: $font-down-1;
   font-weight: bold;
 }
 
@@ -28,7 +28,7 @@ $input-width: 220px;
   }
 
   .disclaimer {
-    font-size: 0.857em;
+    font-size: $font-down-1;
     color: dark-light-choose($primary-medium, $secondary-medium);
     clear: both;
   }
@@ -58,9 +58,9 @@ $input-width: 220px;
       .instructions {
         color: dark-light-choose($primary-medium, $secondary-medium);
         margin: 0;
-        font-size: 0.857em;
+        font-size: $font-down-1;
         font-weight: normal;
-        line-height: 18px;
+        line-height: $line-height-medium;
       }
     }
     clear: both;
@@ -100,9 +100,9 @@ $input-width: 220px;
     .instructions {
       color: dark-light-choose($primary-medium, $secondary-medium);
       margin: 0;
-      font-size: 0.857em;
+      font-size: $font-down-1;
       font-weight: normal;
-      line-height: 18px;
+      line-height: $line-height-medium;
     }
   }
 }

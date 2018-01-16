@@ -14,7 +14,8 @@ import {
   validateUploadedFiles,
   getUploadMarkdown,
   caretRowCol,
-  setCaretPosition
+  setCaretPosition,
+  fillMissingDates
 } from 'discourse/lib/utilities';
 import * as Utilities from 'discourse/lib/utilities';
 
@@ -252,4 +253,13 @@ QUnit.test("caretRowCol", assert => {
   assertResult(14, 3, 2);
 
   document.body.removeChild(textarea);
+});
+
+QUnit.test("fillMissingDates", assert => {
+  const startDate = "2017-11-12"; // YYYY-MM-DD
+  const endDate = "2017-12-12"; // YYYY-MM-DD
+  const data = '[{"x":"2017-11-12","y":3},{"x":"2017-11-27","y":2},{"x":"2017-12-06","y":9},{"x":"2017-12-11","y":2}]';
+
+  assert.equal(fillMissingDates(JSON.parse(data), startDate, endDate).length, 31,
+        "it returns a JSON array with 31 dates");
 });

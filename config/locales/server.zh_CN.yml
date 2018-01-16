@@ -1207,7 +1207,6 @@ zh_CN:
     relative_date_duration: "发表多少天内将显示相对时间（7天）而非绝对时间（2月20日）。"
     delete_user_max_post_age: "不允许删除第一个帖子发表于(x)天前的用户。"
     delete_all_posts_max: "通过删除所有帖子按钮可以删除的最大帖子数量。如果用户有比这更多的帖子，这些帖子不能一次性删除并且这个用户不能被删除。"
-    username_change_period: "用户在注册多少天内可以更改他们的用户名（0 表示禁用用户名更改）"
     email_editable: "允许用户在注册后改变他们的邮箱地址。"
     logout_redirect: "登出后重定向至的地址。（如：http://somesite.com/logout）"
     allow_uploaded_avatars: "允许用户上传自定义个人头像。"

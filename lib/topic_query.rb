@@ -43,6 +43,7 @@ class TopicQuery
          page
          per_page
          visible
+         guardian
          no_definitions)
   end
 
@@ -90,7 +91,7 @@ class TopicQuery
     options.assert_valid_keys(TopicQuery.valid_options)
     @options = options.dup
     @user = user
-    @guardian = Guardian.new(@user)
+    @guardian = options[:guardian] || Guardian.new(@user)
   end
 
   def joined_topic_user(list = nil)
@@ -511,7 +512,17 @@ class TopicQuery
         if options[:no_subcategories]
           result = result.where('categories.id = ?', category_id)
         else
-          result = result.where('categories.id = :category_id OR (categories.parent_category_id = :category_id AND categories.topic_id <> topics.id)', category_id: category_id)
+          sql = <<~SQL
+            categories.id IN (
+              SELECT c2.id FROM categories c2 WHERE c2.parent_category_id = :category_id
+              UNION ALL
+              SELECT :category_id
+            ) AND
+            topics.id NOT IN (
+              SELECT c3.topic_id FROM categories c3 WHERE c3.parent_category_id = :category_id
+            )
+          SQL
+          result = result.where(sql, category_id: category_id)
         end
         result = result.references(:categories)
 
@@ -820,7 +831,12 @@ class TopicQuery
 
     def random_suggested(topic, count, excluded_topic_ids = [])
       result = default_results(unordered: true, per_page: count).where(closed: false, archived: false)
-      excluded_topic_ids += Category.topic_ids.to_a
+
+      if SiteSetting.limit_suggested_to_category
+        excluded_topic_ids += Category.where(id: topic.category_id).pluck(:id)
+      else
+        excluded_topic_ids += Category.topic_ids.to_a
+      end
       result = result.where("topics.id NOT IN (?)", excluded_topic_ids) unless excluded_topic_ids.empty?
 
       result = remove_muted_categories(result, @user)
@@ -837,7 +853,8 @@ class TopicQuery
       #
       # we over select in case cache is stale
       max = (count * 1.3).to_i
-      ids = RandomTopicSelector.next(max) + RandomTopicSelector.next(max, topic.category)
+      ids = SiteSetting.limit_suggested_to_category ? [] : RandomTopicSelector.next(max)
+      ids.concat(RandomTopicSelector.next(max, topic.category))
 
       result.where(id: ids.uniq)
     end

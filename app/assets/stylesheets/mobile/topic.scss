@@ -17,8 +17,8 @@
   //margin-bottom: 20px;
   margin: 0 60px 10px 0;
   h1 {
-    font-size: 1.429em;
-    line-height: 1.25;
+    font-size: $font-up-3;
+    line-height: $line-height-medium;
     a {
       color: $primary;
       vertical-align: middle;
@@ -81,7 +81,7 @@
       display: block;
       margin-top: 2px;
       margin-bottom: 2px;
-      font-size: 1.286em;
+      font-size: $font-up-2;
     }
   }
   .jump-form {
@@ -90,7 +90,7 @@
       width: 45px;
       height: 20px;
       text-align: center;
-      font-size: 1.143em;
+      font-size: $font-up-1;
     }
     button.btn {
       float: right !important;
@@ -130,8 +130,8 @@
   }
   h4 {
     display: inline;
-    font-size: 1.286em;
-    line-height: 15px;
+    font-size: $font-up-2;
+    line-height: $line-height-small;
   }
   .d-icon {
     position: absolute;
@@ -155,8 +155,8 @@
   width: 90%;
   margin-left: auto;
   margin-right: auto;
-  font-size: 1.857em;
-  line-height: 1.25;
+  font-size: $font-up-4;
+  line-height: $line-height-medium;
 
   .topic-retry {
     display: block;
@@ -195,7 +195,7 @@ sup sup, sub sup, sup sub, sub sub { top: 0; }
     width: 100% !important;
   }
   .btn-small {
-    padding: 8px 12px;
+    padding: 6px 12px;
     margin: 6px 6px 0 0;
   }
 
@@ -208,7 +208,7 @@ sup sup, sub sup, sup sub, sub sub { top: 0; }
 // make mobile timeline top and bottom dates easier to select
 .topic-timeline {
   .start-date, .now-date { 
-    font-size: 1.143em; 
+    font-size: $font-up-1; 
     padding: 5px; 
   }
 }

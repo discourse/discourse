@@ -65,8 +65,8 @@ class IncomingLink < ActiveRecord::Base
     if parsed.scheme == "http" || parsed.scheme == "https"
       domain = IncomingDomain.add!(parsed)
 
-      referer = IncomingReferer.add!(path: parsed.path, incoming_domain: domain) if domain
-      self.incoming_referer_id = referer.id if referer
+      referer_record = IncomingReferer.add!(path: parsed.path, incoming_domain: domain) if domain
+      self.incoming_referer_id = referer_record.id if referer_record
     end
 
   rescue URI::InvalidURIError

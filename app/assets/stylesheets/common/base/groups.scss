@@ -22,7 +22,7 @@
     }
 
     td.groups-user-count {
-      font-size: 1.286em;
+      font-size: $font-up-2
     }
   }
 
@@ -38,7 +38,7 @@
     }
 
     .groups-info-title {
-      font-size: 0.857em;
+      font-size: $font-down-1;
       color: dark-light-choose($primary-medium, $secondary-medium);
     }
 

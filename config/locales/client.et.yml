@@ -1971,7 +1971,7 @@ et:
         one: "1 lubatud"
         other: "%{count} lubatud"
       select_badge_for_title: Vali märgis, mida kasutada oma pealkirjana
-      none: "<pole ühtegi>"
+      none: "(pole ühtegi)"
       badge_grouping:
         getting_started:
           name: Alustamine

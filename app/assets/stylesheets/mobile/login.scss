@@ -2,7 +2,7 @@
 
 .btn-social {
   width: 150px;
-  font-size: 1.143em;
+  font-size: $font-up-1;
   overflow: hidden;
   white-space: nowrap;
 }
@@ -20,7 +20,7 @@
   }
   label { float: left; display: block; }
   textarea, input, select {
-    font-size: 1.143em;
+    font-size: $font-up-1;
     clear: left;
     margin-top: 0;
     }

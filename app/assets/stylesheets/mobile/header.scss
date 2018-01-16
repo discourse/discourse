@@ -4,7 +4,7 @@
 
 @media only screen and (max-width: 320px) {
   #site-text-logo {
-    font-size: 1.286em;
+    font-size: $font-up-2;
   }
 }
 
@@ -34,10 +34,9 @@
 }
 
 .d-header-icons {
-  .badge-notification {
-    top: -5px;
+  .d-icon {
+    line-height: $line-height-medium;
   }
-
   .active .icon {
     &:after { margin-top: -1px; }
   }
@@ -52,5 +51,5 @@
 }
 
 .search-link .topic-statuses .topic-status i {
-  font-size: 1em;
+  font-size: $font-0;
 }

@@ -21,7 +21,7 @@ section.about {
     td, th {
       padding: 10px 5px 5px 5px;
       border-bottom: 1px solid lighten($primary, 70%);
-      line-height: 1.0em;
+      line-height: $line-height-small;
     }
 
     td.title {

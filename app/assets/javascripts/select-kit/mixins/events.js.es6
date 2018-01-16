@@ -38,8 +38,12 @@ export default Ember.Mixin.create({
 
     $(document)
       .on("mousedown.select-kit", event => {
+        event.stopPropagation();
+
+        if (!this.get("renderedBodyOnce")) return;
+        if (!this.get("isFocused")) return;
         if (Ember.isNone(this.get("element"))) return;
-        if (this.get("element").contains(event.target)) return;
+        if (Ember.$.contains(this.get("element"), event.target)) return;
 
         this.didClickOutside(event);
     });
@@ -91,7 +95,7 @@ export default Ember.Mixin.create({
 
     this.$filterInput()
       .on("change.select-kit", (event) => {
-        this.send("onFilter", $(event.target).val());
+        this.send("filterComputedContent", $(event.target).val());
       })
       .on("keypress.select-kit", (event) => {
         event.stopPropagation();

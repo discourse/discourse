@@ -81,8 +81,61 @@ pt_BR:
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
+      trigger: 'fortuna'
       answers:
         '1': "É certo"
+        '2': "Definitivamente sim"
         '3': "sem dúvida"
+        '4': "Sim, definitivamente"
+        '5': "Você pode contar com ele"
+        '6': "Como eu vejo, sim"
+        '7': "Provavelmente"
+        '9': "Sim"
+        '12': "Pergunte novamente depois"
+        '13': "Melhor não falar pra você agora"
+        '16': "Não conte com isso"
+        '17': "Minha resposta é não"
+        '18': "Minhas fontes dizem que não"
+        '20': "Muito duvidoso"
       result: |-
         > :crystal_ball: %{result}
+    track_selector:
+      reset_trigger: 'começar'
+      skip_trigger: 'pular'
+      help_trigger: 'mostrar ajuda'
+      random_mention:
+        reply: |-
+          Oi! Para descobrir o que eu posso fazer diga `@%{discobot_username} %{help_trigger}`.
+        tracks: |-
+          Até agora eu sei como fazer as seguintes coisas:
+
+          `@%{discobot_username} %{reset_trigger} %{default_track}`
+          >Comece com uma das seguintes narrativas: %{tracks}.
+      do_not_understand:
+        first_response: |-
+          Oi, obrigado pela resposta!
+
+          Infelizmente, como um robo mal programado, eu não posso entender isso agora. :frowning:
+        track_response: Você pode tentar novamente, ou se quiser pular esse passo, diga `%{skip_trigger}`. Ou, para começar de novo, diga `%{reset_trigger}`.
+        second_response: |-
+          Me perdoe. Mas eu não estou entendendo ainda. :anguished:
+
+          Eu sou apenas um robô, mas se você quiser falar com uma pessoal real, veja [nossa página de contato](/about).
+
+          Enquanto isso eu ficarei fora do seu caminho.
+    new_user_narrative:
+      reset_trigger: "novo usuário"
+      cert_title: "Como forma de reconhecimento por completar com sucesso o tutorial do novo usuário."
+      hello:
+        title: "Olá! :robot:"
+        message: |-
+          Obrigado por se juntar ao %{title}, e seja bem vindo!
+
+          - Eu sou um robô, mas [nossa amigável equipe](/about) também estão aqui para te ajudar, case precise falar com uma pessoa.
+
+          - Por motivos de segurança, nós temporariamente limitamos o que novos usuários podem fazer. Você vai ganhar novas habilidades (e [emblemas](/badges) ao passo que nós conhecermos melhor você.
+
+          - Nós acreditamos em um {comunidade com comportamento civilizado](/guidelines) em todos os momentos.
+      images:
+        like_not_found: |-
+          Você esqueceu de curtir :heart: meu [post?](%{url})

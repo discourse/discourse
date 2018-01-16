@@ -115,11 +115,19 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Discourse::NotLoggedIn do |e|
-    raise e if Rails.env.test?
     if (request.format && request.format.json?) || request.xhr? || !request.get?
       rescue_discourse_actions(:not_logged_in, 403, include_ember: true)
     else
       rescue_discourse_actions(:not_found, 404)
+    end
+  end
+
+  rescue_from Discourse::InvalidParameters do |e|
+    message = I18n.t('invalid_params', message: e.message)
+    if (request.format && request.format.json?) || request.xhr? || !request.get?
+      rescue_discourse_actions(:invalid_parameters, 400, include_ember: true, custom_message_translated: message)
+    else
+      rescue_discourse_actions(:not_found, 400, custom_message_translated: message)
     end
   end
 
@@ -162,18 +170,20 @@ class ApplicationController < ActionController::Base
                        (request.xhr?) ||
                        ((params[:external_id] || '').ends_with? '.json')
 
+    message = opts[:custom_message_translated] || I18n.t(opts[:custom_message] || type)
+
     if show_json_errors
       # HACK: do not use render_json_error for topics#show
       if request.params[:controller] == 'topics' && request.params[:action] == 'show'
-        return render status: status_code, layout: false, plain: (status_code == 404 || status_code == 410) ? build_not_found_page(status_code) : I18n.t(type)
+        return render status: status_code, layout: false, plain: (status_code == 404 || status_code == 410) ? build_not_found_page(status_code) : message
       end
 
-      render_json_error I18n.t(opts[:custom_message] || type), type: type, status: status_code
+      render_json_error message, type: type, status: status_code
     else
       begin
         current_user
       rescue Discourse::InvalidAccess
-        return render plain: I18n.t(opts[:custom_message] || type), status: status_code
+        return render plain: message, status: status_code
       end
 
       render html: build_not_found_page(status_code, opts[:include_ember] ? 'application' : 'no_ember')

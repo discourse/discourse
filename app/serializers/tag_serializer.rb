@@ -1,3 +1,3 @@
 class TagSerializer < ApplicationSerializer
-  attributes :id, :name
+  attributes :id, :name, :topic_count
 end

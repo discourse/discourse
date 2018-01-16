@@ -310,8 +310,10 @@ export function number(val) {
   if (val > 999999) {
     formattedNumber = I18n.toNumber(val / 1000000, {precision: 1});
     return I18n.t("number.short.millions", {number: formattedNumber});
-  }
-  if (val > 999) {
+  } else if (val > 99999) {
+    formattedNumber = I18n.toNumber(val / 1000, {precision: 0});
+    return I18n.t("number.short.thousands", {number: formattedNumber});
+  } else if (val > 999) {
     formattedNumber = I18n.toNumber(val / 1000, {precision: 1});
     return I18n.t("number.short.thousands", {number: formattedNumber});
   }

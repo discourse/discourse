@@ -65,7 +65,7 @@
     }
 
     .new {
-      font-size: 0.857em;
+      font-size: $font-down-1;
       margin-left: 0.5em;
       color: dark-light-choose($primary-medium, $secondary-medium);
     }
@@ -90,7 +90,7 @@
   b.topics-count {
     color: dark-light-choose($primary-medium, $secondary-medium);
     font-weight: normal;
-    font-size: .786em;
+    font-size: $font-down-2;
   }
 
   span.badge-category {
@@ -123,7 +123,6 @@
     box-sizing: border-box;
     width: calc(100% - 6px);
     height: 32px;
-    padding: 5px;
   }
 
   .search-context {
@@ -156,7 +155,7 @@
 
   .search-link {
     .badge-category-parent {
-      line-height: 0.8em;
+      line-height: $line-height-small;
     }
     .topic-title {
       margin-right: 6px;
@@ -174,8 +173,8 @@
   }
 
   li:not(.category):not(.heading) {
-    font-size: 1em;
-    line-height: 16px;
+    font-size: $font-0;
+    line-height: $line-height-medium;
 
     .fa {
       font-size: inherit;

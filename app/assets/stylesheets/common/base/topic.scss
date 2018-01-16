@@ -120,9 +120,6 @@
 .extra-info-wrapper {
   .badge-wrapper {
     float: left;
-    &.bullet {
-      margin-top: 5px;
-    }
   }
 
 }
@@ -147,7 +144,7 @@
 #suggested-topics h3 .badge-wrapper.bullet span.badge-category {
   // Override vertical-align: text-top from `badges.css.scss`
   vertical-align: baseline;
-  line-height: 1.2;
+  line-height: $line-height-medium;
 }
 
 #suggested-topics h3 .badge-wrapper.bullet,
@@ -166,7 +163,7 @@
   .notifications-button {
     display: inline-block;
     float: none;
-    line-height: 2em;
+    line-height: $line-height-large;
     .dropdown-toggle {
       float: none;
     }
@@ -210,7 +207,7 @@
       }
       i {
         float: left;
-        font-size: 0.857em;
+        font-size: $font-down-2;
         margin: 0.3em 0.5em 0 0;
       }
     }

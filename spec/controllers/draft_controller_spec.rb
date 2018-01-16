@@ -3,7 +3,8 @@ require 'rails_helper'
 describe DraftController do
 
   it 'requires you to be logged in' do
-    expect { post :update }.to raise_error(Discourse::NotLoggedIn)
+    post :update
+    expect(response.status).to eq(403)
   end
 
   it 'saves a draft on update' do

@@ -44,12 +44,11 @@ RSpec.describe TopicsController do
   describe '#timer' do
     context 'when a user is not logged in' do
       it 'should return the right response' do
-        expect do
-          post "/t/#{topic.id}/timer.json", params: {
-            time: '24',
-            status_type: TopicTimer.types[1]
-          }
-        end.to raise_error(Discourse::NotLoggedIn)
+        post "/t/#{topic.id}/timer.json", params: {
+          time: '24',
+          status_type: TopicTimer.types[1]
+        }
+        expect(response.status).to eq(403)
       end
     end
 
@@ -75,8 +74,6 @@ RSpec.describe TopicsController do
       end
 
       it 'should be able to create a topic status update' do
-        time = 24
-
         post "/t/#{topic.id}/timer.json", params: {
           time: 24,
           status_type: TopicTimer.types[1]
@@ -148,12 +145,12 @@ RSpec.describe TopicsController do
 
       describe 'invalid status type' do
         it 'should raise the right error' do
-          expect do
-            post "/t/#{topic.id}/timer.json", params: {
-              time: 10,
-              status_type: 'something'
-            }
-          end.to raise_error(Discourse::InvalidParameters)
+          post "/t/#{topic.id}/timer.json", params: {
+            time: 10,
+            status_type: 'something'
+          }
+          expect(response.status).to eq(400)
+          expect(response.body).to include('status_type')
         end
       end
     end

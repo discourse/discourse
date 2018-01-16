@@ -1107,7 +1107,6 @@ zh_TW:
     relative_date_duration: "發表多少天內將顯示相對時間（7天）而非絶對時間（2月20日）。"
     delete_user_max_post_age: "不允許刪除首發表文章超過 (x) 天的用戶"
     delete_all_posts_max: "通過刪除所有帖子按鈕可以刪除的最大帖子數量。如果用戶有比這更多的帖子，這些帖子不能一次性刪除並且這個用戶不能被刪除。"
-    username_change_period: "用戶在註冊多少天內可以更改他們的用戶名（0 表示禁用用戶名更改）"
     email_editable: "允許用戶在註冊後改變他們的 EMail"
     logout_redirect: "登出後重定向至的地址。（如：http://somesite.com/logout）"
     allow_uploaded_avatars: "允許用戶上傳自定義個人頭像。"

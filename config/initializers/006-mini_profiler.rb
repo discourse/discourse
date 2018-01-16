@@ -25,6 +25,7 @@ if defined?(Rack::MiniProfiler)
 
   skip = [
     /^\/message-bus/,
+    /^\/extra-locales/,
     /topics\/timings/,
     /assets/,
     /\/user_avatar\//,

@@ -2034,7 +2034,7 @@ ro:
         few: "%{count} acordate"
         other: "%{count} acordate"
       select_badge_for_title: Selectați un ecuson pentru a-l folosi ca titlu
-      none: "<niciunul>"
+      none: "(niciunul)"
       badge_grouping:
         getting_started:
           name: Cum începem

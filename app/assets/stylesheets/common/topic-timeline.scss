@@ -66,12 +66,11 @@
       .timeline-date-wrapper {
         float: right;
         text-align: right;
-        font-size: 1.1em;
       }
       .post-excerpt {
         max-width: 650px;
-        max-height: 155px;
-        line-height: 1.4em;
+        max-height: 165px;
+        line-height: $line-height-large;
         overflow: hidden;
         word-wrap: break-word;
         text-overflow: ellipsis;
@@ -98,11 +97,11 @@
           -webkit-line-clamp: 4;
           -webkit-box-orient: vertical;
           max-height: 110px;
-          line-height: 1.3em;
+          line-height: $line-height-medium;
           word-wrap: break-word;
           text-overflow: ellipsis;
           overflow: hidden;
-          font-size: 1.3em;
+          font-size: $font-up-2;
         }
         a {
           color: $primary;
@@ -186,8 +185,7 @@
     }
 
     .timeline-footer-controls {
-      margin-top: 1em;
-      line-height: 2.5em;
+      margin-top: 1.5em;
       transition: opacity 0.2s ease-in;
 
       button {

@@ -2065,7 +2065,7 @@ cs:
         few: "%{count} přidělen"
         other: "%{count} přidělen"
       select_badge_for_title: Vyberte odznak, který chcete použít jako svůj titul
-      none: "<none>"
+      none: "(none)"
       badge_grouping:
         getting_started:
           name: Jak začít?

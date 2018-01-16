@@ -1,24 +1,24 @@
 {{component headerComponent
   tabindex=tabindex
+  shouldDisplayFilter=shouldDisplayFilter
   isFocused=isFocused
   isExpanded=isExpanded
   computedContent=headerComputedContent
-  onDeselect=(action "onDeselect")
-  onToggle=(action "onToggle")
-  onFilter=(action "onFilter")
-  onClear=(action "onClear")
+  deselect=(action "deselect")
+  toggle=(action "toggle")
+  filterComputedContent=(action "filterComputedContent")
+  clearSelection=(action "clearSelection")
   options=headerComponentOptions
-  shouldDisplayFilter=shouldDisplayFilter
 }}
 
 <div class="select-kit-body">
   {{component filterComponent
-    onFilter=(action "onFilter")
+    filter=filter
     icon=filterIcon
     shouldDisplayFilter=shouldDisplayFilter
-    isFocused=isFocused
     placeholder=(i18n filterPlaceholder)
-    filter=filter
+    isFocused=isFocused
+    filterComputedContent=(action "filterComputedContent")
   }}
 
   {{#if renderedBodyOnce}}
@@ -34,10 +34,10 @@
       templateForRow=templateForRow
       templateForNoneRow=templateForNoneRow
       templateForCreateRow=templateForCreateRow
-      onClear=(action "onClear")
-      onSelect=(action "onSelect")
-      onHighlight=(action "onHighlight")
-      onCreate=(action "onCreate")
+      clearSelection=(action "clearSelection")
+      select=(action "select")
+      highlight=(action "highlight")
+      create=(action "create")
       noContentLabel=noContentLabel
       highlightedValue=highlightedValue
       computedValue=computedValue

@@ -103,7 +103,7 @@ componentTest('custom search icon', {
 
     andThen(() => {
       assert.ok(
-        this.get('subject').filter().icon().hasClass("fa-shower"),
+        this.get('subject').filter().icon().hasClass("d-icon-shower"),
         "it has a the correct icon"
       );
     });
@@ -469,58 +469,6 @@ componentTest('with collection header', {
   }
 });
 
-componentTest('with onToggle', {
-  template: '{{single-select onToggle=onToggle}}',
-
-  beforeEach() {
-    this.set("onToggle", () => $(".select-kit").append("<span class='onToggleTest'></span>"));
-  },
-
-  test(assert) {
-    andThen(() => assert.notOk(exists(".onToggleTest")));
-
-    this.get('subject').expand();
-
-    andThen(() => assert.ok(exists(".onToggleTest")));
-  }
-});
-
-componentTest('with onExpand', {
-  template: '{{single-select onExpand=onExpand}}',
-
-  beforeEach() {
-    this.set("onExpand", () => $(".select-kit").append("<span class='onExpandTest'></span>"));
-  },
-
-  test(assert) {
-    andThen(() => assert.notOk(exists(".onExpandTest")));
-
-    this.get('subject').expand();
-
-    andThen(() => assert.ok(exists(".onExpandTest")));
-  }
-});
-
-componentTest('with onCollapse', {
-  template: '{{single-select onCollapse=onCollapse}}',
-
-  beforeEach() {
-    this.set("onCollapse", () => $(".select-kit").append("<span class='onCollapseTest'></span>"));
-  },
-
-  test(assert) {
-    andThen(() => assert.notOk(exists(".onCollapseTest")));
-
-    this.get('subject').expand();
-
-    andThen(() => assert.notOk(exists(".onCollapseTest")));
-
-    this.get('subject').collapse();
-
-    andThen(() => assert.ok(exists(".onCollapseTest")));
-  }
-});
-
 componentTest('with title', {
   template: '{{single-select title=(i18n "test.title")}}',
 
@@ -530,5 +478,43 @@ componentTest('with title', {
 
   test(assert) {
     andThen(() => assert.equal(this.get('subject').header().title(), 'My title') );
+  }
+});
+
+componentTest('support modifying header computed content through plugin api', {
+  template: '{{single-select content=content}}',
+
+  beforeEach() {
+    withPluginApi('0.8.15', api => {
+      api.modifySelectKit("select-kit")
+        .modifyHeaderComputedContent((context, computedContent) => {
+          computedContent.title = "Not so evil";
+          return computedContent;
+        });
+    });
+
+    this.set("content", [{ id: "1", name: "robin"}]);
+  },
+
+  test(assert) {
+    andThen(() => {
+      assert.equal(this.get('subject').header().title(), "Not so evil");
+    });
+
+    andThen(() => clearCallbacks());
+  }
+});
+
+componentTest('with limitMatches', {
+  template: '{{single-select content=content limitMatches=2}}',
+
+  beforeEach() {
+    this.set('content', ['sam', 'jeff', 'neil']);
+  },
+
+  test(assert) {
+    this.get('subject').expand();
+
+    andThen(() => assert.equal(this.get('subject').el().find(".select-kit-row").length, 2));
   }
 });

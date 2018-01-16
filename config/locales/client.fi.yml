@@ -1251,9 +1251,6 @@ fi:
       select_all: "Valitse kaikki"
       clear_all: "Tyhjennä kaikki"
       too_short: "Hakusana on liian lyhyt."
-      result_count:
-        one: "Yksi tulos haulle <span class='term'>{{term}}</span>"
-        other: "{{count}} tulosta haulle <span class='term'>{{term}}</span>"
       title: "etsi ketjuja, viestejä, käyttäjiä tai alueita"
       no_results: "Ei tuloksia."
       no_more_results: "Enempää tuloksia ei löytynyt."
@@ -2271,7 +2268,7 @@ fi:
         one: "1 myönnetty"
         other: "%{count} myönnettyä"
       select_badge_for_title: Valitse tittelisi ansiomerkeistä
-      none: "<ei mitään>"
+      none: "(ei mitään)"
       badge_grouping:
         getting_started:
           name: Ensiaskeleet
@@ -3031,7 +3028,7 @@ fi:
           label: 'Uusi sana:'
           placeholder: 'kokonainen sana tai * jokerimerkkinä'
           placeholder_regexp: "säännöllinen lauseke"
-          add: 'Lisä'
+          add: 'Lisää'
           success: 'Onnistui'
           upload: "Lataa"
           upload_successful: "Lataus onnistui. Sanoja lisättiin."

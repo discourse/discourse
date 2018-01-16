@@ -1,11 +1,13 @@
-const { isNone } = Ember;
+const { isNone, run } = Ember;
 import computed from "ember-addons/ember-computed-decorators";
 import UtilsMixin from "select-kit/mixins/utils";
 import DomHelpersMixin from "select-kit/mixins/dom-helpers";
 import EventsMixin from "select-kit/mixins/events";
 import PluginApiMixin from "select-kit/mixins/plugin-api";
 import {
-  applyContentPluginApiCallbacks
+  applyContentPluginApiCallbacks,
+  applyHeaderContentPluginApiCallbacks,
+  applyOnSelectPluginApiCallbacks
 } from "select-kit/mixins/plugin-api";
 
 export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixin, EventsMixin, {
@@ -29,7 +31,6 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   renderedBodyOnce: false,
   renderedFilterOnce: false,
   tabindex: 0,
-  scrollableParentSelector: ".modal-body",
   none: null,
   highlightedValue: null,
   noContentLabel: "select_kit.no_content",
@@ -59,7 +60,7 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   allowInitialValueMutation: false,
   content: null,
   computedContent: null,
-  limitMatches: 100,
+  limitMatches: null,
   nameChanges: false,
   allowContentReplacement: false,
   collectionHeader: null,
@@ -68,8 +69,6 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     this._super();
 
     this.noneValue = "__none__";
-    this._previousScrollParentOverflow = "auto";
-    this._previousCSSContext = {};
     this.set("headerComponentOptions", Ember.Object.create());
     this.set("rowComponentOptions", Ember.Object.create());
     this.set("computedContent", []);
@@ -140,8 +139,8 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
 
   @computed("shouldFilter", "allowAny", "filter")
   shouldDisplayFilter(shouldFilter, allowAny, filter) {
-    if (shouldFilter === true) return true;
-    if (allowAny === true && filter.length > 0) return true;
+    if (shouldFilter) return true;
+    if (allowAny && filter.length > 0) return true;
     return false;
   },
 
@@ -152,22 +151,22 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
 
   @computed("filter", "filterable", "autoFilterable", "renderedFilterOnce")
   shouldFilter(filter, filterable, autoFilterable, renderedFilterOnce) {
-    if (renderedFilterOnce === true && filterable === true) return true;
-    if (filterable === true) return true;
-    if (autoFilterable === true && filter.length > 0) return true;
+    if (renderedFilterOnce && filterable) return true;
+    if (filterable) return true;
+    if (autoFilterable && filter.length > 0) return true;
     return false;
   },
 
   @computed("filter", "computedContent")
   shouldDisplayCreateRow(filter, computedContent) {
     if (computedContent.map(c => c.value).includes(filter)) return false;
-    if (this.get("allowAny") === true && filter.length > 0) return true;
+    if (this.get("allowAny") && filter.length > 0) return true;
     return false;
   },
 
   @computed("filter", "shouldDisplayCreateRow")
   createRowComputedContent(filter, shouldDisplayCreateRow) {
-    if (shouldDisplayCreateRow === true) {
+    if (shouldDisplayCreateRow) {
       let content = this.createContentFromInput(filter);
       return this.computeContentItem(content, { created: true });
     }
@@ -195,7 +194,7 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     switch (typeof none) {
     case "string":
       return this.computeContentItem(this.noneValue, {
-        name: I18n.t(none).htmlSafe()
+        name: (I18n.t(none) || "").htmlSafe()
       });
     default:
       return this.computeContentItem(none);
@@ -211,15 +210,24 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   didSelect() {
     this.collapse();
     this.focus();
+
+    applyOnSelectPluginApiCallbacks(
+      this.get("pluginApiIdentifiers"),
+      this.get("computedValue"),
+      this
+    );
+
+    this._boundaryActionHandler("onSelect", this.get("computedValue"));
   },
 
   willDeselect() {
     this.clearFilter();
     this.set("highlightedValue", null);
   },
-  didDeselect() {
+  didDeselect(rowComputedContentItem) {
     this.collapse();
     this.focus();
+    this._boundaryActionHandler("onDeselect", rowComputedContentItem);
   },
 
   clearFilter() {
@@ -227,26 +235,49 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     this.setProperties({ filter: "" });
   },
 
+  _setHeaderComputedContent() {
+    const headerComputedContent = applyHeaderContentPluginApiCallbacks(
+      this.get("pluginApiIdentifiers"),
+      this.computeHeaderContent(),
+      this
+    );
+    this.set("headerComputedContent", headerComputedContent);
+  },
+
+  _boundaryActionHandler(actionName, ...params) {
+    if (Ember.get(this.actions, actionName)) {
+      run.next(() => this.send(actionName, ...params));
+    } else if (this.get(actionName)) {
+      run.next(() => this.get(actionName)());
+    }
+  },
+
   actions: {
-    onToggle() {
-      if (this.get("onToggle")) this.sendAction("onToggle");
-      if (this.get("onCollapse") && this.get("isExpanded") === true) this.sendAction("onCollapse");
-      if (this.get("onExpand") && this.get("isExpanded") === false) this.sendAction("onExpand");
+    toggle() {
+      this._boundaryActionHandler("onToggle", this);
 
-      this.get("isExpanded") === true ? this.collapse() : this.expand();
+      if (this.get("isExpanded")) {
+        this._boundaryActionHandler("onCollapse", this);
+        this.collapse();
+      } else {
+        this._boundaryActionHandler("onExpand", this);
+        this.expand();
+      }
     },
 
-    onHighlight(rowComputedContent) {
+    highlight(rowComputedContent) {
       this.set("highlightedValue", rowComputedContent.value);
+      this._boundaryActionHandler("onHighlight", rowComputedContent);
     },
 
-    onFilter(filter) {
+    filterComputedContent(filter) {
       this.setProperties({
         highlightedValue: null,
         renderedFilterOnce: true,
         filter
       });
       this.autoHighlight();
+      this._boundaryActionHandler("onFilter", filter);
     }
   }
 });
