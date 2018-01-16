@@ -10,7 +10,7 @@ class Admin::SearchLogsController < Admin::AdminController
     params.require(:term)
 
     term = params[:term]
-    period = params[:period] || "yearly"
+    period = params[:period] || "quarterly"
     search_type = params[:search_type] || "all"
 
     details = SearchLog.term_details(term, period&.to_sym, search_type&.to_sym)

@@ -35,18 +35,10 @@
 .bullet + .topic-header-extra {
   display: block;
   line-height: $line-height-medium;
-  font-size: $font-down-1;
-  .list-tags { font-size: $font-0; }
-}
-
-.bar + .topic-header-extra {
-  line-height: $line-height-medium;
 }
 
 .box + .topic-header-extra {
   display: inline-block;
-  margin: 0 0 0 5px;
-  padding-top: 5px;
 }
 
 .topic-category {
@@ -55,12 +47,9 @@
   .topic-header-extra {
     display: inline-block;
     vertical-align: baseline;
-    margin: .1em 0 0 0;
   }
 
   .badge-wrapper {
-    display: inline-block;
-    vertical-align: baseline;
     margin-top: 0;
 
     &.bullet .badge-category {
@@ -133,7 +122,10 @@ $tag-color: $primary-medium;
 
 .d-header .topic-header-extra {
   display: inline-block;
-  .discourse-tags { display: inline-block; }
+  .discourse-tags { 
+    display: inline-block; 
+    font-size: $font-down-1;        
+  }
   .topic-featured-link { margin-left: 8px; }
 }
 
@@ -193,7 +185,6 @@ header .discourse-tag {color: $tag-color }
 
 .list-tags {
   margin-right: 3px;
-  display: inline;
   font-size: $font-down-1;
 }
 

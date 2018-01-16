@@ -6,6 +6,7 @@ describe Middleware::RequestTracker do
   def env(opts = {})
     {
       "HTTP_HOST" => "http://test.com",
+      "HTTP_USER_AGENT" => "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36",
       "REQUEST_URI" => "/path?bla=1",
       "REQUEST_METHOD" => "GET",
       "rack.input" => ""

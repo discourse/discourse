@@ -102,7 +102,7 @@ class IncomingLinksReport
     num_clicks.each do |topic_id, num_clicks_element|
       topic = topics.find { |t| t.id == topic_id }
       if topic
-        report.data << { topic_id: topic_id, topic_title: topic.title, topic_slug: topic.slug, num_clicks: num_clicks_element }
+        report.data << { topic_id: topic_id, topic_title: topic.title, topic_url: topic.relative_url, num_clicks: num_clicks_element }
       end
     end
     report.data
