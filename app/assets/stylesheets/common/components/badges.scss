@@ -67,6 +67,10 @@
     align-items: center;
     margin-right: 5px;
 
+    .extra-info-wrapper & {
+      margin-top: .25em;                      
+    }
+    
     span.badge-category {
       color: $primary;
       overflow: hidden;
@@ -108,9 +112,7 @@
 
   &.box {  //box category style (apply custom widths to the wrapper, not the children)
     line-height: $line-height-large;
-    margin-top: 5px;
     margin-right: 5px;
-    padding: 2px;
 
     span {
       overflow: hidden;
@@ -139,12 +141,6 @@
         margin: 2px 0;
       }
     }
-  }
-}
-
-.extra-info-wrapper .title-wrapper {
-  .badge-wrapper {
-    margin-top: 3px;
   }
 }
 
