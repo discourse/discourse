@@ -2442,6 +2442,9 @@ en:
         dismiss_new_posts: '<b>x</b>, <b>r</b> Dismiss New/Posts'
         dismiss_topics: '<b>x</b>, <b>t</b> Dismiss Topics'
         log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Log Out'
+      composing:
+        title: 'Composing'
+        return: '<b>shift</b>+<b>C</b> Return to composer'
       actions:
         title: 'Actions'
         bookmark_topic: '<b>f</b> Toggle bookmark topic'
