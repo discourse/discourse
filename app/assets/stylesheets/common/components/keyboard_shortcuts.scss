@@ -6,8 +6,10 @@
   box-shadow: -3px 0 0 $danger;
 }
 
-.mobile-view .topic-list tr.selected td:first-child, .topic-list-item.selected td:first-child, .topic-post.selected {
-  box-shadow: none;
+.mobile-view {
+  .topic-list tr.selected td:first-child, .topic-list-item.selected td:first-child, .topic-post.selected {
+    box-shadow: none;
+  }
 }
 
 .topic-list-item.selected {
