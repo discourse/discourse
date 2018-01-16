@@ -300,14 +300,15 @@ createWidget('post-contents', {
     const repliesBelow = state.repliesBelow;
     if (repliesBelow.length) {
       result.push(h('section.embedded-posts.bottom', [
+       
+        repliesBelow.map(p => {
+          return this.attach('embedded-post', p, { model: this.store.createRecord('post', p) });
+        }),
         this.attach('button', {
           title: 'post.collapse',
           icon: 'chevron-up',
           action: 'toggleRepliesBelow',
           className: 'btn collapse-up'
-        }),
-        repliesBelow.map(p => {
-          return this.attach('embedded-post', p, { model: this.store.createRecord('post', p) });
         })
       ]));
     }
