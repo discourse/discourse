@@ -89,6 +89,8 @@ export default {
         this._bindToClick(binding.click, key);
       }
     });
+
+    this._bindFocus();
   },
 
   toggleBookmark() {
@@ -306,6 +308,19 @@ export default {
     if (typeof this[func] === 'function') {
       this.keyTrapper.bind(binding, _.bind(this[func], this));
     }
+  },
+
+  _bindFocus() {
+    const addSelected = function(e, addOrRemove) {
+      const row = '.topic-post, .topic-list-item, .topic-list tbody tr';
+      const $wrapper = $(e.target).closest(row);
+      const $srcWrapper = $(e.relatedTarget).closest(row);
+      if (!$wrapper.is($srcWrapper)) $wrapper.toggleClass('selected', addOrRemove);
+    };
+
+    const $document = $(document);
+    $document.on('focusin.topic-post', e => addSelected(e, true));
+    $document.on('focusout.topic-post', e => addSelected(e, false));
   },
 
   _moveSelection(direction) {
