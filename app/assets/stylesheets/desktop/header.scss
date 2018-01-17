@@ -43,7 +43,7 @@ and (max-width : 570px) {
 
 header {
   #site-text-logo {
-    font-size: 1.5em;
+    font-size: $font-up-3;
     margin-top: .4em;
     line-height: $line-height-medium;
   }
