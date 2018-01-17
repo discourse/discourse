@@ -12,6 +12,7 @@ const bindings = {
   '.':               {click: '.alert.alert-info.clickable', anonymous: true}, // show incoming/updated topics
   'b':               {handler: 'toggleBookmark'},
   'c':               {handler: 'createTopic'},
+  'C':               {handler: 'focusComposer'},
   'ctrl+f':          {handler: 'showPageSearch', anonymous: true},
   'command+f':       {handler: 'showPageSearch', anonymous: true},
   'ctrl+p':          {handler: 'printTopic', anonymous: true},
@@ -171,6 +172,15 @@ export default {
   createTopic() {
     if (this.currentUser && this.currentUser.can_create_topic) {
       this.container.lookup('controller:composer').open({action: Composer.CREATE_TOPIC, draftKey: Composer.CREATE_TOPIC});
+    }
+  },
+
+  focusComposer() {
+    const composer = this.container.lookup('controller:composer');
+    if (composer.get('model.viewOpen')) {
+      setTimeout(() => $('textarea.d-editor-input').focus(), 0);
+    } else {
+      composer.send('openIfDraft');
     }
   },
 
