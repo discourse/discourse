@@ -97,7 +97,8 @@ module ImportScripts::Mbox
     def imported_file_checksums(category_name)
       rows = @database.fetch_imported_files(category_name)
       rows.each_with_object({}) do |row, hash|
-        hash[row['filename']] = row['checksum']
+        filename = File.basename(row['filename'])
+        hash[filename] = row['checksum']
       end
     end
 
@@ -133,7 +134,7 @@ module ImportScripts::Mbox
     def mark_as_fully_indexed(category_name, filename)
       imported_file = {
         category: category_name,
-        filename: filename,
+        filename: File.basename(filename),
         checksum: calc_checksum(filename)
       }
 
@@ -227,18 +228,18 @@ module ImportScripts::Mbox
       end
     end
 
-    def ignored_file?(filename, checksums)
-      filename = File.basename(filename)
+    def ignored_file?(path, checksums)
+      filename = File.basename(path)
 
       filename.start_with?('.') ||
         filename == METADATA_FILENAME ||
         IGNORED_FILE_EXTENSIONS.include?(File.extname(filename)) ||
-        fully_indexed?(filename, checksums)
+        fully_indexed?(path, filename, checksums)
     end
 
-    def fully_indexed?(filename, checksums)
+    def fully_indexed?(path, filename, checksums)
       checksum = checksums[filename]
-      checksum.present? && calc_checksum(filename) == checksum
+      checksum.present? && calc_checksum(path) == checksum
     end
 
     def calc_checksum(filename)
