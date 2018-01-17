@@ -254,6 +254,7 @@ export default Ember.Component.extend({
   @on('willDestroyElement')
   _shutDown() {
     if (this.get('composerEvents')) {
+      this.appEvents.off('composer:insert-block');
       this.appEvents.off('composer:insert-text');
       this.appEvents.off('composer:replace-text');
     }
