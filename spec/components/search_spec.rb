@@ -917,7 +917,7 @@ describe Search do
     end
 
     it "does not log search if search_type is not present" do
-      s = Search.new('foo bar',ip_address: '127.0.0.1')
+      s = Search.new('foo bar', ip_address: '127.0.0.1')
       results = s.execute
       expect(results.search_log_id).not_to be_present
     end

@@ -16,7 +16,7 @@ class Admin::SearchLogsController < Admin::AdminController
     details = SearchLog.term_details(term, period&.to_sym, search_type&.to_sym)
     raise Discourse::NotFound if details.blank?
 
-    result = Search.execute(params[:term], { guardian: guardian })
+    result = Search.execute(params[:term], guardian: guardian)
     details[:search_result] = serialize_data(result, GroupedSearchResultSerializer, result: result)
     render_json_dump(term: details)
   end
