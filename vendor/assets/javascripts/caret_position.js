@@ -45,7 +45,7 @@ $.fn.caretPosition = function(options) {
   };
 
   styles = getStyles(textarea[0]);
-  clone = $("<div id='caret-clone'><p></p></div>").appendTo("body");
+  clone = $("<div><p></p></div>").appendTo("body");
   p = clone.find("p");
   clone.width(textarea.width());
   clone.height(textarea.height());
@@ -54,6 +54,7 @@ $.fn.caretPosition = function(options) {
     return styles.getPropertyValue(prop);
   };
 
+  const isRTL = $('html').hasClass('rtl');
   clone.css({
     border: "1px solid black",
     padding: important("padding"),
@@ -62,7 +63,8 @@ $.fn.caretPosition = function(options) {
     "overflow-y": "auto",
     "word-wrap": "break-word",
     position: "absolute",
-    left: "-7000px"
+    left: isRTL ? "auto" : "-7000px",
+    right: isRTL ? "-7000px" : "auto"
   });
 
   p.css({
