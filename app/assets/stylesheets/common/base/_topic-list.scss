@@ -1,6 +1,6 @@
 .show-more {
   width: 100%;
-  z-index: 1;
+  z-index: z("base");
   &.has-topics {
     position: absolute;
     top: 7px;
@@ -259,7 +259,7 @@ ol.category-breadcrumb {
   position: absolute;
   border: 1px solid $primary-low;
   background-color: $secondary;
-  z-index: 100;
+  z-index: z("dropdown");
 
   a.badge-category, a.badge-category-parent {
     line-height: $line-height-large;

@@ -195,7 +195,7 @@ $mobile-breakpoint: 700px;
     position: absolute;
     width: 460px;
     right: 0px;
-    z-index: 990;
+    z-index: z("dropdown");
     box-shadow: 0 2px 6px rgba(0,0,0, .8);
     margin-top: -2px;
     background-color: $secondary;
@@ -403,7 +403,7 @@ $mobile-breakpoint: 700px;
   // The admin-nav becomes a slide-out menu at the mobile-nav breakpoint
   @media (max-width: $mobile-breakpoint) {
     position: absolute;
-    z-index: 0;
+    z-index: z("base") - 1;
     width: 50%;
   }
 }
@@ -411,7 +411,7 @@ $mobile-breakpoint: 700px;
 .admin-detail {
   width: 76.5765%;
   @media (max-width: $mobile-breakpoint) {
-    z-index: 10;
+    z-index: z("base");
     width: 100%;
   }
   background-color: $secondary;

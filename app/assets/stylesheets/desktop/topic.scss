@@ -17,7 +17,7 @@
 .edits {margin-right: 5px;}
 
 #topic-title {
-  z-index: 1000;
+  z-index: z("base");
   padding-top: 14px;
   margin-bottom: 10px;
 
@@ -81,7 +81,7 @@
   right: 50%;
   width: 0;
   bottom: 0;
-  z-index: 500;
+  z-index: z("timeline");
   &.docked {
     position: absolute;
     bottom: -70px;
@@ -155,13 +155,13 @@
     top: 9px;
     width: 100%;
     text-align: center;
-    z-index: 1;
+    z-index: z("base");
   }
   .d-icon {
     position: absolute;
     right: 8px;
     bottom: 9px;
-    z-index: 1;
+    z-index: z("base");
   }
   h4 {
     display: inline;
@@ -195,7 +195,7 @@
   position: fixed;
   width: 100%;
   font-size: $font-0;
-  z-index: 495
+  z-index: z("dropdown");
 }
 
 @media all

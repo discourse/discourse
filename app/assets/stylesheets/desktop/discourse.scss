@@ -140,7 +140,7 @@ input {
       vertical-align: middle;
 
       &:focus {
-        z-index: 2;
+        z-index: z("base") + 1;
       }
     }
 

@@ -12,7 +12,7 @@
 .bootbox.modal {
   position: fixed;
   top: 10%;
-  z-index: 1050;
+  z-index: z("modal","content");
   overflow: auto;
   width: 100%;
   height: auto;

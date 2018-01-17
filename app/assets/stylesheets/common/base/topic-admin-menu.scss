@@ -4,7 +4,7 @@
   position: fixed;
   top: 120px;
   right: 10px;
-  z-index: 999;
+  z-index: z("dropdown");
   height: 35px;
 }
 
@@ -13,7 +13,7 @@
   width: 205px;
   padding: 10px;
   border: 1px solid $primary-low; 
-  z-index: 999;
+  z-index: z("dropdown");
 
   ul {
     list-style: none;

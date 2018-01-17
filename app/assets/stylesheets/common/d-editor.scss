@@ -8,12 +8,12 @@
   position: absolute;
   background-color: black;
   opacity: 0.8;
-  z-index: 1000;
+  z-index: z("modal","overlay");
 }
 
 .d-editor-modals {
   position: absolute;
-  z-index: 1001;
+  z-index: z("modal","content");
 }
 
 .d-editor {

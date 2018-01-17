@@ -353,7 +353,7 @@ select {
   top: -18px !important;
   right: -18px !important;
   box-shadow: 0 0 0 9999px rgba($primary, 0.85);
-  z-index: 1040;
+  z-index: z("modal","overlay");
 }
 
 .ring-first-notification {

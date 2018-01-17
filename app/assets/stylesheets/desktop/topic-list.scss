@@ -268,7 +268,7 @@
     top: 130px;
     padding: 5px;
     background-color: $secondary;
-    z-index: 99999;
+    z-index: z("dropdown");
   }
 
   button.dismiss-read {

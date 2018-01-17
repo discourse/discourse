@@ -9,7 +9,7 @@
 .progress-back-container {
   position: fixed;
   bottom: 40px;
-  z-index: 950;
+  z-index: z("dropdown");
   margin-right: 0px;
   animation-duration: 0.5s;
   animation-name: button-jump-up;

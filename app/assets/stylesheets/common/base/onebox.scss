@@ -376,7 +376,7 @@ aside.onebox.twitterstatus .onebox-body {
 .onebox.imgur-album {
   .outer-box {
     position: absolute;
-    z-index: 935;
+    z-index: z("base");
     overflow: hidden;
     font-size: $font-down-1;
     color: #fff;

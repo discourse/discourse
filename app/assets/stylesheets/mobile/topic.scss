@@ -61,7 +61,7 @@
   width: 0;
   right: 0;
   bottom: 0;
-  z-index: 950;
+  z-index: z("timeline");
   margin-right: 148px;
 }
 
@@ -126,7 +126,7 @@
     top: 9px;
     width: 100%;
     text-align: center;
-    z-index: 1;
+    z-index: z("base");
   }
   h4 {
     display: inline;
@@ -137,7 +137,7 @@
     position: absolute;
     right: 8px;
     bottom: 9px;
-    z-index: 1;
+    z-index: z("base");
   }
   .bg {
     position: absolute;

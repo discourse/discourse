@@ -7,7 +7,7 @@ img.emoji {
 .emoji-picker {
   box-shadow: 0 1px 5px rgba(0,0,0,0.4);
   background-clip: padding-box;
-  z-index: 10000;
+  z-index: z("modal","content"); 
   position: fixed;
   display: none;
   flex-direction: row;
@@ -177,7 +177,7 @@ img.emoji {
 }
 
 .emoji-picker-modal.fadeIn {
-  z-index: 9999;
+  z-index: z("modal","overlay");
   position: fixed;
   left: 0;
   top: 0;
