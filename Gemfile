@@ -30,6 +30,8 @@ gem 'mime-types', require: 'mime/types/columnar'
 gem 'mini_mime'
 gem 'mini_suffix'
 
+gem 'dotenv-rails'
+
 gem 'hiredis'
 gem 'redis', require:  ["redis", "redis/connection/hiredis"]
 gem 'redis-namespace'
