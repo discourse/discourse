@@ -6,6 +6,7 @@
         {{i18n 'admin.user.show_public_profile'}}
       {{/link-to}}
     {{/if}}
+
     {{#if model.can_view_action_logs}}
       {{d-button action="viewActionLogs" actionParam=model.username icon="list-alt" label="admin.user.action_logs"}}
     {{/if}}
@@ -466,7 +467,18 @@
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n 'admin.user.flags_given_received_count'}}</div>
-    <div class='value'>{{model.flags_given_count}} / {{model.flags_received_count}}</div>
+    <div class='value'>
+      {{model.flags_given_count}} / {{model.flags_received_count}}
+    </div>
+    <div class='controls'>
+      {{#if model.flags_received_count}}
+        {{d-button
+          action=(action "showFlagsReceived")
+          label="admin.user.show_flags_received"
+          icon="flag"
+        }}
+      {{/if}}
+    </div>
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n 'admin.user.private_topics_count'}}</div>

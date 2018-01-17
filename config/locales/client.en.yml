@@ -3392,6 +3392,9 @@ en:
         grant_moderation: 'Grant Moderation'
         unsuspend: 'Unsuspend'
         suspend: 'Suspend'
+        show_flags_received: "Show Flags Received"
+        flags_received_by: "Flags Received by %{username}"
+        flags_received_none: "This user has not received any flags."
         reputation: Reputation
         permissions: Permissions
         activity: Activity

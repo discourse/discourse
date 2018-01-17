@@ -22,6 +22,11 @@ export default Post.extend({
     });
   },
 
+  @computed('post_actions')
+  hasDisposedBy() {
+    return this.get('post_actions').some(action => action.disposed_by);
+  },
+
   @computed('post_actions.@each.name_key')
   flaggedForSpam() {
     return this.get('post_actions').every(action => action.name_key === 'spam');
