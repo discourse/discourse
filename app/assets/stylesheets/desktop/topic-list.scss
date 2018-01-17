@@ -90,13 +90,11 @@
     td.category {
       line-height: $line-height-small;
     }
-    td.posters {
-      // we know there are up to 5 avatars of fixed size
-      // will be overridden by media width queries on narrow displays to 1 avatar's width
-      width: 146px;
-      height: 29px; // min-height of td with avatar glow
-    }
+
     .posters {
+    // we know there are up to 5 avatars of fixed size
+    // will be overridden by media width queries on narrow displays to 1 avatar's width
+    width: 146px;    
       > a {
         float: left;
         margin-right: 4px;
@@ -105,7 +103,9 @@
         }
       }
     }
-
+    td.posters {
+      height: 29px; // min-height of td with avatar glow
+    }
     .posters a:first-child .avatar.latest:not(.single) {
       box-shadow: 0 0 3px 1px desaturate($tertiary-medium, 35%);
       border: 2px solid desaturate($tertiary-medium, 40%);
