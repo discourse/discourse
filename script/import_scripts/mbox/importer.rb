@@ -24,9 +24,14 @@ module ImportScripts::Mbox
 
     def execute
       index_messages
-      import_categories
-      import_users
-      import_posts
+
+      if @settings.index_only
+        @skip_updates = true
+      else
+        import_categories
+        import_users
+        import_posts
+      end
     end
 
     def index_messages
