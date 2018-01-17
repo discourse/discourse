@@ -2444,7 +2444,7 @@ en:
         log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Log Out'
       composing:
         title: 'Composing'
-        return: '<b>shift</b>+<b>C</b> Return to composer'
+        return: '<b>shift</b>+<b>c</b> Return to composer'
       actions:
         title: 'Actions'
         bookmark_topic: '<b>f</b> Toggle bookmark topic'
