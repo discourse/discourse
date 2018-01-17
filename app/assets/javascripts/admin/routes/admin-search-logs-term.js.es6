@@ -24,7 +24,7 @@ export default Discourse.Route.extend({
         json.term.data = fillMissingDates(json.term.data, startDate, endDate);
       }
       if (json.term.search_result) {
-        json.term.search_result = translateResults(json.term.search_result)
+        json.term.search_result = translateResults(json.term.search_result);
       }
 
       const model = Ember.Object.create({ type: "search_log_term" });
