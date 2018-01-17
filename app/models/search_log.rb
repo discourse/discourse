@@ -36,6 +36,8 @@ class SearchLog < ActiveRecord::Base
 
   def self.log(term:, search_type:, ip_address:, user_id: nil)
 
+    return [:error] if term.blank?
+
     search_type = search_types[search_type]
     return [:error] unless search_type.present? && ip_address.present?
 
