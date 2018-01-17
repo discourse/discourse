@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'current_user'
 require_dependency 'canonical_url'
 require_dependency 'discourse'
@@ -213,12 +215,12 @@ class ApplicationController < ActionController::Base
   def clear_notifications
     if current_user && !@readonly_mode
 
-      cookie_notifications = cookies['cn'.freeze]
-      notifications = request.headers['Discourse-Clear-Notifications'.freeze]
+      cookie_notifications = cookies['cn']
+      notifications = request.headers['Discourse-Clear-Notifications']
 
       if cookie_notifications
         if notifications.present?
-          notifications += "," << cookie_notifications
+          notifications += ",#{cookie_notifications}"
         else
           notifications = cookie_notifications
         end
@@ -274,10 +276,10 @@ class ApplicationController < ActionController::Base
     session[:mobile_view] = params[:mobile_view] if params.has_key?(:mobile_view)
   end
 
-  NO_CUSTOM = "no_custom".freeze
-  NO_PLUGINS = "no_plugins".freeze
-  ONLY_OFFICIAL = "only_official".freeze
-  SAFE_MODE = "safe_mode".freeze
+  NO_CUSTOM = "no_custom"
+  NO_PLUGINS = "no_plugins"
+  ONLY_OFFICIAL = "only_official"
+  SAFE_MODE = "safe_mode"
 
   def resolve_safe_mode
     safe_mode = params[SAFE_MODE]
@@ -290,7 +292,7 @@ class ApplicationController < ActionController::Base
 
   def handle_theme
 
-    return if request.xhr? || request.format.json?
+    return if request.xhr? || request.format == "json" || request.format == "js"
     return if request.method != "GET"
 
     resolve_safe_mode
