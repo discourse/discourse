@@ -27,7 +27,7 @@ h1 .topic-statuses .topic-status i {
   }
 
   .reply-to-tab {
-    z-index: 400;
+    z-index: z("base") + 1;
     float: right;
     margin: -2px 25px 0 0;
     color: dark-light-choose($primary-medium, $secondary-medium);
@@ -177,7 +177,7 @@ nav.post-controls {
     text-align: left;
     bottom: -2px;
     right: 15px;
-    z-index: 1000;
+    z-index: z("dropdown");
 
     h3 {
       margin-top: 0;
@@ -256,7 +256,7 @@ nav.post-controls {
   }
   .topic-meta-data h5 {
     position: absolute;
-    z-index: 1;
+    z-index: z("base");
     font-size: $font-down-1;
     a {
       font-weight: bold;
@@ -613,7 +613,7 @@ $topic-avatar-width: 45px;
   width: $topic-body-width;
   float: left;
   position: relative;
-  z-index: 2;
+  z-index: z("base");
   border-top: 1px solid $primary-low;
   padding: 12px $topic-body-width-padding 15px $topic-body-width-padding;
 }
@@ -623,7 +623,7 @@ $topic-avatar-width: 45px;
   padding-top: 15px;
   width: $topic-avatar-width;
   float: left;
-  z-index: 3;
+  z-index: z("base");
 }
 
 .gap {
@@ -659,7 +659,7 @@ $topic-avatar-width: 45px;
   position: absolute;
   bottom: 115%;
   left: 0;
-  z-index: 999;
+  z-index: z("dropdown");
   display: none;
   float: left;
   width: 550px;
@@ -724,7 +724,7 @@ $topic-avatar-width: 45px;
 .selected-posts {
   width: 200px;
   position: fixed;
-  z-index: 1000;
+  z-index: z("dropdown");
   background-color: $tertiary-low;
   border: 1px solid $tertiary;
   padding: 5px;
@@ -815,7 +815,7 @@ $topic-avatar-width: 45px;
     .select-posts {
       position: absolute;
       right: 0;
-      z-index: 490;
+      z-index: z("base") + 1;
       top: 3em;
       height: 100px;
 
@@ -847,7 +847,7 @@ a.attachment:before {
   color: rgba($primary-low, .8);
   font: 6.429em/1 FontAwesome;
   content: "\f014";
-  z-index: -5;
+  z-index: z("base");
 }
 
 .topic-meta-data {

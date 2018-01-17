@@ -4,7 +4,7 @@
 
 .timeline-container {
   box-sizing: border-box;
-  z-index: 499;
+  z-index: z("timeline");
   margin-left: 757px;
 
   @media all and (min-width: 1140px) {
@@ -51,7 +51,7 @@
     border-top: 1px solid dark-light-choose($primary-low, $secondary-low);
     box-shadow: 0px -2px 4px -1px rgba(0,0,0,.25);
     padding-top: 20px;
-    z-index: 100000;
+    z-index: z("fullscreen");
     .back-button {
       display: none;
     }
@@ -225,7 +225,7 @@
       background-color: dark-light-choose($tertiary-low, $tertiary-high);
       height: 100%;
       float: left;
-      z-index: 501;
+      z-index: z("base") + 1;
     }
 
     .timeline-scroller-content {
@@ -261,7 +261,7 @@
         color: $tertiary;
         margin-right: 1em;
       }
-      z-index: 502;
+      z-index: z("base") + 2; // above timeline-handle
     }
 
     .back-button {

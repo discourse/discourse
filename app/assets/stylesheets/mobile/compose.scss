@@ -7,7 +7,7 @@
 }
 
 #reply-control {
-  z-index: 1002; //d-header is 1001
+  z-index: z("mobile-composer");
     .reply-area {
       padding: 0 10px;
       @media screen and (max-width: 374px) {
@@ -81,7 +81,7 @@
     &.show-preview {
       .d-editor-preview-wrapper {
         position: fixed;
-        z-index: 1000000;
+        z-index: z("base") + 1;
         top: 0;
         bottom: 0;
         left: 0;
@@ -99,7 +99,7 @@
         position: fixed;
         right: 5px;
         bottom: 5px;
-        z-index: 1000001;
+        z-index: z("base") + 2;
       }
     }
 

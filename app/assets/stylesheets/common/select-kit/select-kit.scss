@@ -1,5 +1,5 @@
 .mobile-view .select-kit.is-expanded {
-  z-index: 1000;
+  z-index: z("dropdown");
 }
 
 .select-box-kit, .select-kit {
@@ -30,7 +30,7 @@
   }
 
   &.is-expanded {
-    z-index: 999;
+    z-index: z("dropdown");
 
     .select-kit-body {
       display: -webkit-box;

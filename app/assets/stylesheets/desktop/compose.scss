@@ -73,7 +73,7 @@
   bottom: 10px;
   left: 51%;
   overflow-y: auto;
-  z-index: 110;
+  z-index: z("composer","popover");
   padding: 10px 10px 35px 10px;
   box-shadow: 3px 3px 3px rgba(0,0,0, 0.34);
   background: $highlight-medium;

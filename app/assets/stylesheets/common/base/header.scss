@@ -2,7 +2,7 @@
   width: 100%;
   position: absolute;
   top: 0;
-  z-index: 1001;
+  z-index: z("header");
   background-color: $header_background;
   box-shadow: 0 2px 4px -1px rgba(0,0,0, .25);
 
@@ -110,7 +110,7 @@
         position: absolute;
         top: 100%;
         left: 0;
-        z-index: 1101;
+        z-index: z("header") + 1; // Higher than .menu-panel
         width: 100%;
         height: 0;
         content: "";
@@ -135,7 +135,7 @@
   .ring {
     position: absolute;
     top: -9px;
-    z-index: 1;
+    z-index: z("base");
     margin-left: 0;
   }
   .header-dropdown-toggle {
@@ -143,7 +143,7 @@
   }
   .badge-notification {
     position: absolute;
-    z-index: 1;
+    z-index: z("base");
     left: 0;
     top: -4px;
     min-width: 6px;
