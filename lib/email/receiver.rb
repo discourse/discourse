@@ -239,7 +239,7 @@ module Email
 
       if text.present?
         text = trim_discourse_markers(text)
-        text, elided_text = EmailReplyTrimmer.trim(text, true)
+        text, elided_text = trim_reply_and_extract_elided(text)
 
         if @opts[:convert_plaintext] || sent_to_mailinglist_mirror?
           text_content_type ||= ""
@@ -255,7 +255,7 @@ module Email
       markdown, elided_markdown = if html.present?
         markdown = HtmlToMarkdown.new(html, keep_img_tags: true, keep_cid_imgs: true).to_markdown
         markdown = trim_discourse_markers(markdown)
-        EmailReplyTrimmer.trim(markdown, true)
+        trim_reply_and_extract_elided(markdown)
       end
 
       if text.blank? || (SiteSetting.incoming_email_prefer_html && markdown.present?)
@@ -263,6 +263,11 @@ module Email
       else
         return [text, elided_text, Receiver::formats[:plaintext]]
       end
+    end
+
+    def trim_reply_and_extract_elided(text)
+      return [text, ""] if @opts[:skip_trimming]
+      EmailReplyTrimmer.trim(text, true)
     end
 
     def fix_charset(mail_part)
