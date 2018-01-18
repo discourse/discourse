@@ -10,7 +10,7 @@ module Onebox
       def to_html
         opengraph = get_opengraph
 
-        src = opengraph[:video_url].gsub("?autostart=1", "")
+        src = opengraph[:video_url].gsub("autostart=1", "")
         escaped_src = ::Onebox::Helpers.normalize_url_for_output(src)
 
         <<-HTML
