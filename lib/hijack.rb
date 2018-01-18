@@ -89,7 +89,7 @@ module Hijack
           io.close if io rescue nil
 
           if request_tracker
-            status = instance.status rescue 500
+            status = response.status rescue 500
             request_tracker.log_request_info(env, [status, headers || {}, []], timings)
           end
         end
