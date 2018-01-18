@@ -35,7 +35,7 @@ and (max-width : 570px) {
   display: block;
   word-wrap: break-word;
   font-size: $font-down-2;
-  line-height: $line-height-medium;
+  line-height: $line-height-large;
   .search-highlight {
     color: dark-light-choose($primary-high, $secondary-low);
   }

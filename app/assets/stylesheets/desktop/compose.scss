@@ -142,7 +142,7 @@
   background-color: $tertiary-low;
 
   a[href] {
-    color: $primary-medium;
+    color: $primary;
   }
 
   .posts-count {
@@ -158,9 +158,12 @@
     .fa, .blurb {
       color: dark-light-choose($primary-high, $secondary-medium);
     }
+    span.topic {
+      display: flex;
+    }
   }
   .badge-wrapper {
-    padding-left: 5px;
+    margin-left: 5px;
   }
 }
 
