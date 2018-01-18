@@ -509,7 +509,7 @@ module Discourse
   def self.reset_active_record_cache_if_needed(e)
     last_cache_reset = Discourse.last_ar_cache_reset
     if e && e.message =~ /UndefinedColumn/ && (last_cache_reset.nil? || last_cache_reset < 30.seconds.ago)
-      Rails.logger.warn "Clear Active Record cache cause schema appears to have changed!"
+      Rails.logger.warn "Clearing Active Record cache, this can happen if schema changed while site is running or in a multisite various databases are running different schemas. Consider running rake multisite:migrate."
       Discourse.last_ar_cache_reset = Time.zone.now
       Discourse.reset_active_record_cache
     end
