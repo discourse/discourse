@@ -585,14 +585,22 @@ class TopicsController < ApplicationController
   end
 
   def timings
-    PostTiming.process_timings(
-      current_user,
-      topic_params[:topic_id].to_i,
-      topic_params[:topic_time].to_i,
-      (topic_params[:timings].to_h || {}).map { |post_number, t| [post_number.to_i, t.to_i] },
-      mobile: view_context.mobile_view?
-    )
-    render body: nil
+    allowed_params = topic_params
+
+    topic_id = allowed_params[:topic_id].to_i
+    topic_time = allowed_params[:topic_time].to_i
+    timings = allowed_params[:timings].to_h || {}
+
+    hijack do
+      PostTiming.process_timings(
+        current_user,
+        topic_id,
+        topic_time,
+        timings.map { |post_number, t| [post_number.to_i, t.to_i] },
+        mobile: view_context.mobile_view?
+      )
+      render body: nil
+    end
   end
 
   def feed
