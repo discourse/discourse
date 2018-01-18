@@ -97,7 +97,7 @@ class Middleware::RequestTracker
       status: status,
       is_crawler: helper.is_crawler?,
       has_auth_cookie: helper.has_auth_cookie?,
-      is_background: request.path =~ /^\/message-bus\// || request.path == /\/topics\/timings/,
+      is_background: !!(request.path =~ /^\/message-bus\// || request.path =~ /\/topics\/timings/),
       is_mobile: helper.is_mobile?,
       track_view: track_view,
       timing: timing
