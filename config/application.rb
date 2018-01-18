@@ -155,6 +155,9 @@ module Discourse
     # for some reason still seeing it in Rails 4
     config.middleware.delete Rack::Lock
 
+    # wrong place in middleware stack AND request tracker handles it
+    config.middleware.delete Rack::Runtime
+
     # ETags are pointless, we are dynamically compressing
     # so nginx strips etags, may revisit when mainline nginx
     # supports etags (post 1.7)

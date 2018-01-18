@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_dependency 'middleware/anonymous_cache'
+require_dependency 'method_profiler'
 
 class Middleware::RequestTracker
 
@@ -15,7 +16,6 @@ class Middleware::RequestTracker
   def self.register_detailed_request_logger(callback)
 
     unless @patched_instrumentation
-      require_dependency "method_profiler"
       MethodProfiler.patch(PG::Connection, [
         :exec, :async_exec, :exec_prepared, :send_query_prepared, :query
       ], :sql)
@@ -134,9 +134,13 @@ class Middleware::RequestTracker
     end
 
     env["discourse.request_tracker"] = self
-    MethodProfiler.start if @@detailed_request_loggers
+    MethodProfiler.start
     result = @app.call(env)
-    info = MethodProfiler.stop if @@detailed_request_loggers
+    info = MethodProfiler.stop
+    # possibly transferred?
+    if info
+      env["X-Runtime"] = "%0.6f" % info[:total_duration]
+    end
     result
   ensure
     log_request_info(env, result, info) unless env["discourse.request_tracker.skip"]
