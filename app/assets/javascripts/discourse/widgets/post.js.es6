@@ -299,7 +299,7 @@ createWidget('post-contents', {
 
     const repliesBelow = state.repliesBelow;
     if (repliesBelow.length) {
-      result.push(h('section.embedded-posts.bottom', [ 
+      result.push(h('section.embedded-posts.bottom', [
         repliesBelow.map(p => {
           return this.attach('embedded-post', p, { model: this.store.createRecord('post', p) });
         }),
@@ -307,6 +307,7 @@ createWidget('post-contents', {
           title: 'post.collapse',
           icon: 'chevron-up',
           action: 'toggleRepliesBelow',
+          actionParam: 'true',
           className: 'btn collapse-up'
         })
       ]));
@@ -315,9 +316,12 @@ createWidget('post-contents', {
     return result;
   },
 
-  toggleRepliesBelow() {
+  toggleRepliesBelow(goToPost = 'false') {
     if (this.state.repliesBelow.length) {
       this.state.repliesBelow = [];
+      if (goToPost === 'true') {
+        DiscourseURL.routeTo(`${this.attrs.topicUrl}/${this.attrs.post_number}`);
+      }
       return;
     }
 
@@ -389,6 +393,7 @@ createWidget('post-article', {
           title: 'post.collapse',
           icon: 'chevron-down',
           action: 'toggleReplyAbove',
+          actionParam: 'true',
           className: 'btn collapse-down'
         }),
         replies
@@ -404,7 +409,7 @@ createWidget('post-article', {
     return post ? post.get('topic.url') : null;
   },
 
-  toggleReplyAbove() {
+  toggleReplyAbove(goToPost = 'false') {
     const replyPostNumber = this.attrs.reply_to_post_number;
 
     // jump directly on mobile
@@ -418,6 +423,9 @@ createWidget('post-article', {
 
     if (this.state.repliesAbove.length) {
       this.state.repliesAbove = [];
+      if (goToPost === 'true') {
+        DiscourseURL.routeTo(`${this.attrs.topicUrl}/${this.attrs.post_number}`);
+      }
       return Ember.RSVP.Promise.resolve();
     } else {
       const topicUrl = this._getTopicUrl();
