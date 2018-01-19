@@ -235,6 +235,8 @@ class User < ActiveRecord::Base
       user.staged = false
       user.active = false
       user.custom_fields[FROM_STAGED] = true
+
+      DiscourseEvent.trigger(:user_unstaged, user)
     end
     user
   end
@@ -383,7 +385,7 @@ class User < ActiveRecord::Base
 
   def read_first_notification?
     if (trust_level > TrustLevel[1] ||
-        created_at < TRACK_FIRST_NOTIFICATION_READ_DURATION.seconds.ago)
+        (first_seen_at.present? && first_seen_at < TRACK_FIRST_NOTIFICATION_READ_DURATION.seconds.ago))
 
       return true
     end
