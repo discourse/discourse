@@ -7,6 +7,19 @@ function sanitizeName(name){
   return name.toLowerCase().replace(/[\s_-]/g,'');
 }
 
+createWidget('poster-name-title', {
+  tagName: 'span.user-title',
+
+  html(attrs) {
+    let titleContents = attrs.title;
+    if (attrs.primaryGroupName) {
+      const href = Discourse.getURL(`/groups/${attrs.primaryGroupName}`);
+      titleContents = h('a.user-group', { className: attrs.extraClasses, attributes: { href } }, attrs.title);
+    }
+    return titleContents;
+  }
+});
+
 export default createWidget('poster-name', {
   tagName: 'div.names.trigger-user-card',
 
@@ -62,14 +75,10 @@ export default createWidget('poster-name', {
       contents.push(h('span.second.' + (nameFirst ? "username" : "full-name"),
             this.userLink(attrs, nameFirst ? username : name)));
     }
+
     const title = attrs.user_title;
     if (title && title.length) {
-      let titleContents = title;
-      if (primaryGroupName) {
-        const href = Discourse.getURL(`/groups/${primaryGroupName}`);
-        titleContents = h('a.user-group', { attributes: { href } }, title);
-      }
-      contents.push(h('span.user-title', titleContents));
+      contents.push(this.attach('poster-name-title', { title, primaryGroupName }));
     }
 
     return contents;
