@@ -32,7 +32,7 @@ class Invite < ActiveRecord::Base
   def user_doesnt_already_exist
     @email_already_exists = false
     return if email.blank?
-    user = User.find_by_email(email)
+    user = Invite.find_user_by_email(email)
 
     if user && user.id != self.user_id
       @email_already_exists = true
@@ -102,7 +102,7 @@ class Invite < ActiveRecord::Base
     custom_message = opts[:custom_message]
     lower_email = Email.downcase(email)
 
-    if user = User.find_by_email(lower_email)
+    if user = find_user_by_email(lower_email)
       extend_permissions(topic, user, invited_by) if topic
       raise UserExists.new I18n.t("invite.user_exists", email: lower_email, username: user.username)
     end
@@ -148,6 +148,10 @@ class Invite < ActiveRecord::Base
 
     invite.reload
     invite
+  end
+
+  def self.find_user_by_email(email)
+    User.with_email(email).where(staged: false).first
   end
 
   def self.get_group_ids(group_names)

@@ -178,6 +178,16 @@ describe Invite do
 
   end
 
+  context 'a staged user' do
+    it 'creates an invite for a staged user' do
+      Fabricate(:staged, email: 'staged@account.com')
+      invite = Invite.invite_by_email('staged@account.com', Fabricate(:coding_horror))
+
+      expect(invite).to be_valid
+      expect(invite.email).to eq('staged@account.com')
+    end
+  end
+
   context '.redeem' do
 
     let(:invite) { Fabricate(:invite) }
