@@ -138,8 +138,8 @@ class Middleware::RequestTracker
     result = @app.call(env)
     info = MethodProfiler.stop
     # possibly transferred?
-    if info
-      env["X-Runtime"] = "%0.6f" % info[:total_duration]
+    if info && (headers = result[1])
+      headers["X-Runtime"] = "%0.6f" % info[:total_duration]
     end
     result
   ensure
