@@ -204,14 +204,15 @@ nav.post-controls {
 
 .embedded-posts {
   h1, h2, h3 { margin: 10px 0; }
-
+  border:  1px solid $primary-low;
+  
   .topic-body {
     box-sizing: border-box;
     width: calc(100% - 70px); // [100% - .topic-avatar width]
     // WARNING: overflow hide is required for quoted / embedded images
     // which expect "normal" post width, but expansions are narrower
     overflow: hidden;
-    padding: 15px 15px 0 15px;
+    padding: 15px 25px 0 15px;
   }
 
   // this is covered by .topic-body .regular on a normal post
@@ -223,10 +224,6 @@ nav.post-controls {
   .topic-avatar {
     padding-left: 25px;
     padding-top: 15px;
-  }
-
-  .row {
-    border:  1px solid $primary-low;
   }
 
   .collapse-down, .collapse-up {
@@ -244,6 +241,8 @@ nav.post-controls {
 
   // bottom means "reply expansion" below a post
   &.bottom {
+    border-top: none;
+    margin-bottom: 20px;
     &.hidden {
       display: block;
       opacity: 0;
@@ -255,8 +254,6 @@ nav.post-controls {
     }
     .row {
       padding-bottom: .5em;
-      border-top: none;
-      border-bottom: none;
       .topic-avatar, .topic-body {
         border-top: 1px solid $primary-low;
       }
@@ -265,11 +262,12 @@ nav.post-controls {
 
   // top means "in reply to expansion" above a post
   &.top {
+    border-bottom: none;
     .collapse-down {
       transform: translate(-50%, 55%);
     }
     margin-left: 56px;
-    width: 701px;
+    width: 699px;
     .row {
       border-bottom: none;
       .topic-avatar, .topic-body {
