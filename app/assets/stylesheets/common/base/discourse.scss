@@ -46,15 +46,14 @@ body {
   @include clearfix;
 }
 
+// setting a static limit on big and small prevents nesting abuse
 big {
-  font-size: $font-up-5;
+  font-size: 32px;
 }
-
 small {
-  font-size: $font-down-2;
+  font-size: 12px;
 }
 
-//setting a static limit on big and small prevents nesting abuse
 blockquote {
   @include post-aside;
   clear: both;
@@ -210,13 +209,13 @@ textarea {
   border: 1px solid $primary-medium;
   &:focus {
     border-color: $tertiary;
-    box-shadow: $tertiary 0px 0px 6px 0px;    
+    box-shadow: $tertiary 0px 0px 6px 0px;
     outline: 0;
   }
 }
 
 select {
-  border: 1px solid $primary-low;  
+  border: 1px solid $primary-low;
 }
 
 // Common Classes
