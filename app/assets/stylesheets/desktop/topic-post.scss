@@ -207,7 +207,7 @@ nav.post-controls {
 
   .topic-body {
     box-sizing: border-box;
-    width: calc(100% - 60px); // [100% - .topic-avatar width]
+    width: calc(100% - 70px); // [100% - .topic-avatar width]
     // WARNING: overflow hide is required for quoted / embedded images
     // which expect "normal" post width, but expansions are narrower
     overflow: hidden;
@@ -221,8 +221,25 @@ nav.post-controls {
   }
 
   .topic-avatar {
-    padding-left: 15px;
+    padding-left: 25px;
     padding-top: 15px;
+  }
+
+  .row {
+    border:  1px solid $primary-low;
+  }
+
+  .collapse-down, .collapse-up {
+    position: absolute;
+    color: $primary-medium;
+    background: $secondary;
+    border:  1px solid $primary-low;
+    padding: 6px 9px 8px;
+    z-index: 99; // Needs to be higher than topic-avatar
+    &:hover {
+      background: $primary-low;
+      color: $primary;
+    }
   }
 
   // bottom means "reply expansion" below a post
@@ -233,15 +250,32 @@ nav.post-controls {
     }
   }
   &.bottom {
+    .collapse-up {
+      transform: translate(-50%, -164%);
+    }
     .row {
-      padding-top: 7px;
+      padding-bottom: .5em;
+      border-top: none;
+      border-bottom: none;
+      .topic-avatar, .topic-body {
+        border-top: 1px solid $primary-low;
+      }
     }
   }
 
   // top means "in reply to expansion" above a post
   &.top {
+    .collapse-down {
+      transform: translate(-50%, 55%);
+    }
     margin-left: 56px;
     width: 701px;
+    .row {
+      border-bottom: none;
+      .topic-avatar, .topic-body {
+        border-top: 1px solid $primary-low;
+      }
+    }
   }
   &.top.topic-body {
     padding: 0;
@@ -615,7 +649,7 @@ $topic-avatar-width: 45px;
   position: relative;
   z-index: z("base");
   border-top: 1px solid $primary-low;
-  padding: 12px $topic-body-width-padding 15px $topic-body-width-padding;
+  padding: 12px $topic-body-width-padding 0 $topic-body-width-padding;
 }
 
 .topic-avatar {
@@ -635,6 +669,11 @@ $topic-avatar-width: 45px;
 .time-gap + .topic-post .topic-avatar {
   border-top: none;
 }
+
+.time-gap + .topic-post .embedded-posts.top {
+  border-bottom: 1px solid $primary-low;
+} 
+
 
 .posts-wrapper {
   position: relative;
