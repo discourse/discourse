@@ -412,49 +412,64 @@ def recover_from_tombstone
     original_setting = SiteSetting.max_image_size_kb
     SiteSetting.max_image_size_kb = 10240
     current_db = RailsMultisite::ConnectionManagement.current_db
-
     public_path = Rails.root.join("public")
     paths = Dir.glob(File.join(public_path, 'uploads', 'tombstone', current_db, '**', '*.*'))
-    max = paths.length
+    max = paths.size
 
     paths.each_with_index do |path, index|
       filename = File.basename(path)
       printf("%9d / %d (%5.1f%%)\n", (index + 1), max, (((index + 1).to_f / max.to_f) * 100).round(1))
 
-      Post.where("raw LIKE ?", "%#{filename}%").each do |post|
+      Post.where("raw LIKE ?", "%#{filename}%").find_each do |post|
         doc = Nokogiri::HTML::fragment(post.raw)
         updated = false
 
         doc.css("img[src]").each do |img|
           url = img["src"]
 
-          next unless url =~ /^\/uploads\//
+          next if !url.start_with?("/uploads/")
+          next if Upload.exists?(url: url)
 
-          upload = Upload.find_by(url: url)
+          puts "Restoring #{path}..."
+          tombstone_path = File.join(public_path, 'uploads', 'tombstone', url.gsub(/^\/uploads\//, ""))
 
-          if !upload && url
-            printf "Restoring #{path}..."
-            tombstone_path = File.join(public_path, 'uploads', 'tombstone', url.gsub(/^\/uploads\//, ""))
+          if File.exists?(tombstone_path)
+            File.open(tombstone_path) do |file|
+              new_upload = UploadCreator.new(file, File.basename(url)).create_for(Discourse::SYSTEM_USER_ID)
 
-            if File.exists?(tombstone_path)
-              File.open(tombstone_path) do |file|
-                new_upload = UploadCreator.new(file, File.basename(url)).create_for(Discourse::SYSTEM_USER_ID)
-
-                if new_upload.persisted?
-                  printf "Restored into #{new_upload.url}\n"
-                  DbHelper.remap(url, new_upload.url)
-                  updated = true
-                else
-                  puts "Failed to create upload for #{url}: #{new_upload.errors.full_messages}."
-                end
+              if new_upload.persisted?
+                puts "Restored into #{new_upload.url}"
+                DbHelper.remap(url, new_upload.url)
+                updated = true
+              else
+                puts "Failed to create upload for #{url}: #{new_upload.errors.full_messages}."
               end
-            else
-              puts "Failed to find file (#{tombstone_path}) in tombstone."
             end
+          else
+            puts "Failed to find file (#{tombstone_path}) in tombstone."
           end
         end
 
         post.rebake! if updated
+      end
+
+      sha1 = File.basename(filename, File.extname(filename))
+      short_url = "upload://#{Base62.encode(sha1.hex)}"
+
+      Post.where("raw LIKE ?", "%#{short_url}%").find_each do |post|
+        puts "Restoring #{path}..."
+
+        File.open(path) do |file|
+          new_upload = UploadCreator.new(file, filename).create_for(Discourse::SYSTEM_USER_ID)
+
+          if new_upload.persisted?
+            puts "Restored into #{new_upload.short_url}"
+            DbHelper.remap(short_url, new_upload.short_url) if short_url != new_upload.short_url
+            post.rebake!
+          else
+            puts "Failed to create upload for #{filename}: #{new_upload.errors.full_messages}."
+          end
+        end
       end
     end
   ensure
