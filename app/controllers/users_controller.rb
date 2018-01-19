@@ -312,8 +312,6 @@ class UsersController < ApplicationController
     params[:for_user_id] ? User.find(params[:for_user_id]) : current_user
   end
 
-  FROM_STAGED = "from_staged".freeze
-
   def create
     params.require(:email)
     params.permit(:user_fields)
@@ -334,14 +332,9 @@ class UsersController < ApplicationController
       return fail_with("login.reserved_username")
     end
 
-    if user = User.where(staged: true).with_email(params[:email].strip.downcase).first
-      user_params.each { |k, v| user.send("#{k}=", v) }
-      user.staged = false
-      user.active = false
-      user.custom_fields[FROM_STAGED] = true
-    else
-      user = User.new(user_params)
-    end
+    new_user_params = user_params
+    user = User.unstage(new_user_params)
+    user = User.new(new_user_params) if user.nil?
 
     # Handle API approval
     if user.approved
@@ -602,7 +595,7 @@ class UsersController < ApplicationController
       if user = User.where(id: session_user_id.to_i).first
         @account_created[:username] = user.username
         @account_created[:email] = user.email
-        @account_created[:show_controls] = !user.custom_fields[FROM_STAGED]
+        @account_created[:show_controls] = !user.from_staged?
       end
     end
 
@@ -656,11 +649,7 @@ class UsersController < ApplicationController
       @user = User.where(id: user_key.to_i).first
     end
 
-    if @user.blank? || @user.active? || current_user.present?
-      raise Discourse::InvalidAccess.new
-    end
-
-    if @user.custom_fields[FROM_STAGED]
+    if @user.blank? || @user.active? || current_user.present? || @user.from_staged?
       raise Discourse::InvalidAccess.new
     end
 
