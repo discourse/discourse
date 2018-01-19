@@ -1,12 +1,12 @@
+require "db_helper"
 require "digest/sha1"
+require "base62"
 
 ################################################################################
 #                                    gather                                    #
 ################################################################################
 
 task "uploads:gather" => :environment do
-  require "db_helper"
-
   ENV["RAILS_DB"] ? gather_uploads : gather_uploads_for_all_sites
 end
 
@@ -84,8 +84,6 @@ end
 ################################################################################
 
 task "uploads:migrate_from_s3" => :environment do
-  require "db_helper"
-
   ENV["RAILS_DB"] ? migrate_from_s3 : migrate_all_from_s3
 end
 
@@ -177,7 +175,6 @@ end
 task "uploads:migrate_to_s3" => :environment do
   require "file_store/s3_store"
   require "file_store/local_store"
-  require "db_helper"
 
   ENV["RAILS_DB"] ? migrate_to_s3 : migrate_to_s3_all_sites
 end
