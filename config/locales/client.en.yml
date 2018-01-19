@@ -1897,6 +1897,7 @@ en:
       deleted_by_author:
         one: "(post withdrawn by author, will be automatically deleted in %{count} hour unless flagged)"
         other: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
+      collapse: "collapse"
       expand_collapse: "expand/collapse"
       gap:
         one: "view 1 hidden reply"
