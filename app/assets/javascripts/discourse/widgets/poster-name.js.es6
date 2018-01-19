@@ -10,6 +10,11 @@ function sanitizeName(name){
 export default createWidget('poster-name', {
   tagName: 'div.names.trigger-user-card',
 
+  settings: {
+    showNameAndGroup: true,
+    showGlyph: true
+  },
+
   // TODO: Allow extensibility
   posterGlyph(attrs) {
     if (attrs.moderator) {
@@ -41,10 +46,18 @@ export default createWidget('poster-name', {
       classNames.push(primaryGroupName);
     }
     const nameContents = [ this.userLink(attrs, nameFirst ? name : username) ];
-    const glyph = this.posterGlyph(attrs);
-    if (glyph) { nameContents.push(glyph); }
+
+    if (this.settings.showGlyph) {
+      const glyph = this.posterGlyph(attrs);
+      if (glyph) { nameContents.push(glyph); }
+    }
 
     const contents = [h('span', { className: classNames.join(' ') }, nameContents)];
+
+    if (!this.settings.showNameAndGroup) {
+      return contents;
+    }
+
     if (name && this.siteSettings.display_name_on_posts && sanitizeName(name) !== sanitizeName(username)) {
       contents.push(h('span.second.' + (nameFirst ? "username" : "full-name"),
             this.userLink(attrs, nameFirst ? username : name)));
