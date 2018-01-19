@@ -1478,7 +1478,7 @@ describe User do
 
     describe 'when user is an old user' do
       it 'should return the right value' do
-        user.update_attributes!(created_at: 1.year.ago)
+        user.update_attributes!(first_seen_at: 1.year.ago)
 
         expect(user.read_first_notification?).to eq(true)
       end
@@ -1581,9 +1581,10 @@ describe User do
   end
 
   describe "#unstage" do
+    let!(:staged_user) { Fabricate(:staged, email: 'staged@account.com', active: true, username: 'staged1', name: 'Stage Name') }
+    let(:params) { { email: 'staged@account.com', active: true, username: 'unstaged1', name: 'Foo Bar' } }
+
     it "correctyl unstages a user" do
-      staged_user = Fabricate(:staged, email: 'staged@account.com', active: true, username: 'staged1', name: 'Stage Name')
-      params = { email: 'staged@account.com', active: true, username: 'unstaged1', name: 'Foo Bar' }
       user = User.unstage(params)
 
       expect(user.id).to eq(staged_user.id)
@@ -1597,6 +1598,14 @@ describe User do
       Fabricate(:coding_horror)
       expect(User.unstage(email: 'jeff@somewhere.com')).to be_nil
       expect(User.unstage(email: 'no@account.com')).to be_nil
+    end
+
+    it "triggers an event" do
+      unstaged_user = nil
+      event = DiscourseEvent.track_events { unstaged_user = User.unstage(params) }.first
+
+      expect(event[:event_name]).to eq(:user_unstaged)
+      expect(event[:params].first).to eq(unstaged_user)
     end
   end
 

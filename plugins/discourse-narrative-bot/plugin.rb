@@ -112,6 +112,10 @@ after_initialize do
     end
   end
 
+  self.on(:user_unstaged) do |user|
+    user.enqueue_bot_welcome_post
+  end
+
   self.add_to_class(:user, :enqueue_bot_welcome_post) do
     return if SiteSetting.disable_discourse_narrative_bot_welcome_post
 
