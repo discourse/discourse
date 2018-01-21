@@ -56,7 +56,6 @@ module Jobs
 
     def build_web_hook_body(args, web_hook)
       body = {}
-      guardian = Guardian.new(Discourse.system_user)
       event_type = args[:event_type].to_s
 
       if ping_event?(event_type)
