@@ -1,10 +1,11 @@
 import computed from "ember-addons/ember-computed-decorators";
 import { extractError } from 'discourse/lib/ajax-error';
 import ModalFunctionality from "discourse/mixins/modal-functionality";
+import GrantBadgeController from "discourse/mixins/grant-badge-controller";
 import Badge from 'discourse/models/badge';
 import UserBadge from 'discourse/models/user-badge';
 
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Ember.Controller.extend(ModalFunctionality, GrantBadgeController, {
   topicController: Ember.inject.controller("topic"),
   loading: true,
   saving: false,
@@ -23,27 +24,6 @@ export default Ember.Controller.extend(ModalFunctionality, {
     const protocolAndHost = window.location.protocol + '//' + window.location.host;
 
     return url.indexOf('/') === 0 ? protocolAndHost + url : url;
-  },
-
-  @computed('allBadges.[]', 'userBadges.[]')
-  grantableBadges(allBadges, userBadges) {
-    const granted = userBadges.reduce((map, badge) => {
-      map[badge.get('badge_id')] = true;
-      return map;
-    }, {});
-
-    return allBadges.filter(badge => {
-      return badge.get('enabled')
-        && badge.get('manually_grantable')
-        && (!granted[badge.get('id')] || badge.get('multiple_grant'));
-    });
-  },
-
-  noGrantableBadges: Ember.computed.empty('grantableBadges'),
-
-  @computed('selectedBadgeId', 'grantableBadges')
-  selectedBadgeGrantable(selectedBadgeId, grantableBadges) {
-    return grantableBadges && grantableBadges.find(badge => badge.get('id') === selectedBadgeId);
   },
 
   @computed("saving", "selectedBadgeGrantable")
@@ -66,17 +46,13 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   actions: {
     grantBadge() {
-      const username = this.get('post.username');
-
       this.set('saving', true);
 
-      UserBadge.grant(this.get('selectedBadgeId'), username, this.get('badgeReason'))
+      this.grantBadge(this.get('selectedBadgeId'), this.get('post.username'), this.get('badgeReason'))
         .then(newBadge => {
-          this.get('userBadges').pushObject(newBadge);
           this.set('selectedBadgeId', null);
           this.flash(I18n.t(
-            'badges.successfully_granted',
-            { username: username, badge: newBadge.get('badge.name') }
+            'badges.successfully_granted', { username: this.get('post.username'), badge: newBadge.get('badge.name') }
           ), 'success');
         }, error => {
           this.flash(extractError(error), 'error');
