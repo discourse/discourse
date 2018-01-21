@@ -114,6 +114,16 @@ describe Hijack do
     expect(headers).to eq(expected)
   end
 
+  it "handles transfers headers" do
+    tester.response.headers["Hello-World"] = "sam"
+    tester.hijack_test do
+      expires_in 1.year
+      render body: "hello world", status: 402
+    end
+
+    expect(tester.io.string).to include("Hello-World: sam")
+  end
+
   it "handles expires_in" do
     tester.hijack_test do
       expires_in 1.year

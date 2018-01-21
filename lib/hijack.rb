@@ -23,6 +23,8 @@ module Hijack
 
       io = hijack.call
 
+      original_headers = response.headers
+
       Scheduler::Defer.later("hijack #{params["controller"]} #{params["action"]}") do
 
         MethodProfiler.start(transfer_timings)
@@ -39,6 +41,12 @@ module Hijack
           instance.response = response
 
           instance.request = request_copy
+          original_headers&.each do |k, v|
+            # hash special handling so skip
+            if k != "Cache-Control"
+              instance.response.headers[k] = v
+            end
+          end
 
           begin
             instance.instance_eval(&blk)
@@ -68,13 +76,13 @@ module Hijack
           status_string = Rack::Utils::HTTP_STATUS_CODES[response.status.to_i] || "Unknown"
           io.write "#{response.status} #{status_string}\r\n"
 
-          headers.each do |name, val|
-            io.write "#{name}: #{val}\r\n"
-          end
-
           timings = MethodProfiler.stop
           if timings && duration = timings[:total_duration]
-            io.write "X-Runtime: #{"%0.6f" % duration}\r\n"
+            headers["X-Runtime"] = "#{"%0.6f" % duration}"
+          end
+
+          headers.each do |name, val|
+            io.write "#{name}: #{val}\r\n"
           end
 
           io.write "\r\n"
