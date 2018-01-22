@@ -1600,6 +1600,16 @@ describe User do
       expect(User.unstage(email: 'no@account.com')).to be_nil
     end
 
+    it "removes all previous notifications during unstaging" do
+      Fabricate(:notification, user: user)
+      Fabricate(:private_message_notification, user: user)
+      user.reload
+
+      expect(user.total_unread_notifications).to eq(2)
+      user = User.unstage(params)
+      expect(user.total_unread_notifications).to eq(0)
+    end
+
     it "triggers an event" do
       unstaged_user = nil
       event = DiscourseEvent.track_events { unstaged_user = User.unstage(params) }.first

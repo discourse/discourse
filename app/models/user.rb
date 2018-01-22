@@ -235,6 +235,7 @@ class User < ActiveRecord::Base
       user.staged = false
       user.active = false
       user.custom_fields[FROM_STAGED] = true
+      user.notifications.destroy_all
 
       DiscourseEvent.trigger(:user_unstaged, user)
     end
