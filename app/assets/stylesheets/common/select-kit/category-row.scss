@@ -2,9 +2,16 @@
   .category-row {
     .category-status {
       display: flex;
+      flex-wrap: wrap;
+      align-items: center;
       -webkit-box-flex: 0;
           -ms-flex: 1 1 auto;
               flex: 1 1 auto;
+
+      .badge-wrapper.box {
+        margin-bottom: 1px;
+        margin-top: 1px;
+      }
     }
   }
 }
