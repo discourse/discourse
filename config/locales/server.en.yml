@@ -3500,7 +3500,9 @@ en:
 
   admin_login:
     success: "Email Sent"
-    error: "Error!"
+    errors:
+      unknown_email_address: "Unknown email address."
+      invalid_token: "Invalid token."
     email_input: "Admin Email"
     submit_button: "Send Email"
 

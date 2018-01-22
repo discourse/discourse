@@ -543,35 +543,30 @@ class UsersController < ApplicationController
   end
 
   def admin_login
-    if current_user
-      return redirect_to path("/")
-    end
+    return redirect_to(path("/")) if current_user
 
     if request.put?
       RateLimiter.new(nil, "admin-login-hr-#{request.remote_ip}", 6, 1.hour).performed!
       RateLimiter.new(nil, "admin-login-min-#{request.remote_ip}", 3, 1.minute).performed!
 
-      user = User.with_email(params[:email]).where(admin: true).human_users.first
-      if user
+      if user = User.with_email(params[:email]).admins.human_users.first
         email_token = user.email_tokens.create(email: user.email)
         Jobs.enqueue(:critical_user_email, type: :admin_login, user_id: user.id, email_token: email_token.token)
         @message = I18n.t("admin_login.success")
       else
-        @message = I18n.t("admin_login.error")
+        @message = I18n.t("admin_login.errors.unknown_email_address")
       end
     elsif params[:token].present?
-      # token recieved, try to login
       if EmailToken.valid_token_format?(params[:token])
         @user = EmailToken.confirm(params[:token])
-        if @user && @user.admin?
-          # Log in user
+        if @user&.admin?
           log_on_user(@user)
           return redirect_to path("/")
         else
-          @message = I18n.t("admin_login.error")
+          @message = I18n.t("admin_login.errors.unknown_email_address")
         end
       else
-        @message = I18n.t("admin_login.error")
+        @message = I18n.t("admin_login.errors.invalid_token")
       end
     end
 
