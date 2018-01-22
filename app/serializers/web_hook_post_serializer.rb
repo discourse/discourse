@@ -19,7 +19,7 @@ class WebHookPostSerializer < PostSerializer
   end
 
   def topic_posts_count
-    object.topic && object.topic.posts_count
+    object.topic ? object.topic.posts_count : 0
   end
 
 end
