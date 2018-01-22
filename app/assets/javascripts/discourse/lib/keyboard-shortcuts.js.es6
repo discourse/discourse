@@ -68,6 +68,12 @@ export default {
     this.searchService = this.container.lookup('search-service:main');
     this.appEvents = this.container.lookup('app-events:main');
     this.currentUser = this.container.lookup('current-user:main');
+    let siteSettings = this.container.lookup('site-settings:main');
+
+    // Disable the shortcut if private messages are disabled
+    if (!siteSettings.enable_private_messages) {
+      delete bindings['g m'];
+    }
 
     Object.keys(bindings).forEach(key => {
       const binding = bindings[key];

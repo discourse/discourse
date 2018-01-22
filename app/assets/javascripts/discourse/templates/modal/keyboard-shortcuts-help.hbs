@@ -11,7 +11,9 @@
         <li>{{{i18n 'keyboard_shortcuts_help.jump_to.top'}}}</li>
         <li>{{{i18n 'keyboard_shortcuts_help.jump_to.bookmarks'}}}</li>
         <li>{{{i18n 'keyboard_shortcuts_help.jump_to.profile'}}}</li>
-        <li>{{{i18n 'keyboard_shortcuts_help.jump_to.messages'}}}</li>
+        {{#if siteSettings.enable_private_messages}}
+          <li>{{{i18n 'keyboard_shortcuts_help.jump_to.messages'}}}</li>
+        {{/if}}
       </ul>
       <h4>{{i18n 'keyboard_shortcuts_help.navigation.title'}}</h4>
       <ul>
