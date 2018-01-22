@@ -47,38 +47,40 @@
 .cooked, .d-editor-preview {
   word-wrap: break-word;
   line-height: $line-height-large;
-  h1, h2, h3, h4, h5, h6 { 
-    margin: 30px 0 10px; 
-    line-height: $line-height-medium; 
+  h1, h2, h3, h4, h5, h6 {
+    margin: 30px 0 10px;
+    line-height: $line-height-medium;
   }
 
   h1 {
     font-size: $font-up-4;
   }
-  
+
   h2 {
     font-size: $font-up-3;
   }
-  
+
   h3 {
     font-size: $font-up-2;
   }
-  
+
   h4 {
     font-size: $font-up-1;
   }
-  
+
   h5 {
     font-size: $font-0;
   }
-  
+
   h6 {
     font-size: $font-down-1;
   }
-  
+
   a { word-wrap: break-word; }
   ins { background-color: dark-light-choose($success-low, scale-color($success, $lightness: -60%)); }
   del { background-color: dark-light-choose($danger-low, scale-color($danger, $lightness: -60%)); }
+  big { font-size: 2rem; }
+  small { font-size: 0.75rem; }
 }
 
 .cooked, .d-editor-preview {
