@@ -153,7 +153,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  rescue_from Discourse::NotFound, PluginDisabled  do
+  rescue_from Discourse::NotFound, PluginDisabled, ActionController::RoutingError  do
     rescue_discourse_actions(:not_found, 404)
   end
 
