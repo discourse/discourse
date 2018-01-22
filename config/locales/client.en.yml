@@ -1979,6 +1979,7 @@ en:
         rebake: "Rebuild HTML"
         unhide: "Unhide"
         change_owner: "Change Ownership"
+        grant_badge: "Grant Badge"
 
       actions:
         flag: 'Flag'
@@ -2487,6 +2488,7 @@ en:
         other: "%{count} granted"
       select_badge_for_title: Select a badge to use as your title
       none: "(none)"
+      successfully_granted: "Successfully granted %{badge} to %{username}"
       badge_grouping:
         getting_started:
           name: Getting Started

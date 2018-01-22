@@ -219,6 +219,10 @@ class Badge < ActiveRecord::Base
     Slug.for(self.display_name, '-')
   end
 
+  def manually_grantable?
+    query.blank? && !system?
+  end
+
   protected
 
     def ensure_not_system
