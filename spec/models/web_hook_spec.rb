@@ -145,6 +145,24 @@ describe WebHook do
       end
     end
 
+    describe 'when topic has been deleted' do
+      it 'should not enqueue a post/topic edited hooks' do
+        topic.trash!
+        post.reload
+
+        PostRevisor.new(post, topic).revise!(
+          post.user,
+          {
+            category_id: Category.last.id,
+            raw: "#{post.raw} new"
+          },
+          {}
+        )
+
+        expect(Jobs::EmitWebHookEvent.jobs.count).to eq(0)
+      end
+    end
+
     it 'should enqueue the right hooks for post events' do
       Fabricate(:web_hook)
 
@@ -188,7 +206,7 @@ describe WebHook do
     end
 
     it 'should enqueue the right hooks for user events' do
-      _user_web_hook = Fabricate(:user_web_hook, active: true)
+      Fabricate(:user_web_hook, active: true)
 
       Sidekiq::Testing.fake! do
         user
