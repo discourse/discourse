@@ -18,8 +18,13 @@ end
 end
 
 DiscourseEvent.on(:post_edited) do |post, topic_changed|
-  WebHook.enqueue_post_hooks(:post_edited, post)
-  WebHook.enqueue_topic_hooks(:topic_edited, post.topic) if post.is_first_post? && topic_changed
+  if post.topic
+    WebHook.enqueue_post_hooks(:post_edited, post)
+
+    if post.is_first_post? && topic_changed
+      WebHook.enqueue_topic_hooks(:topic_edited, post.topic)
+    end
+  end
 end
 
 %i(
