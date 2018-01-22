@@ -7,6 +7,7 @@ import Draft from 'discourse/models/draft';
 import computed from 'ember-addons/ember-computed-decorators';
 import { escapeExpression, tinyAvatar } from 'discourse/lib/utilities';
 import { emojiUnescape } from 'discourse/lib/text';
+import PermissionType from 'discourse/models/permission-type';
 
 const CLOSED = 'closed',
       SAVING = 'saving',
@@ -490,7 +491,14 @@ const Composer = RestModel.extend({
     });
 
     // We set the category id separately for topic templates on opening of composer
-    this.set('categoryId', opts.categoryId || this.get('topic.category.id'));
+    if (opts.categoryId) {
+      const categories = this.site.get('categories');
+      const currentCategory = categories.findBy('id', opts.categoryId);
+      if (currentCategory.get('permission') === PermissionType.FULL)
+        this.set('categoryId', opts.categoryId);
+    } else {
+      this.set('categoryId', this.get('topic.category.id'));
+    }
 
     if (!this.get('categoryId') && this.get('creatingTopic')) {
       const categories = this.site.get('categories');
