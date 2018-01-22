@@ -393,10 +393,8 @@ class ApplicationController < ActionController::Base
   end
 
   def post_ids_including_replies
-    post_ids = params[:post_ids].map { |p| p.to_i }
-    if params[:reply_post_ids]
-      post_ids |= PostReply.where(post_id: params[:reply_post_ids].map { |p| p.to_i }).pluck(:reply_id)
-    end
+    post_ids  = params[:post_ids].map(&:to_i)
+    post_ids |= PostReply.where(post_id: params[:reply_post_ids]).pluck(:reply_id) if params[:reply_post_ids]
     post_ids
   end
 

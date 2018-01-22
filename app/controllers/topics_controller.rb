@@ -521,12 +521,17 @@ class TopicsController < ApplicationController
   end
 
   def move_posts
-    params.require(:post_ids)
-    params.require(:topic_id)
+    post_ids = params.require(:post_ids)
+    topic_id = params.require(:topic_id)
     params.permit(:category_id)
 
-    topic = Topic.with_deleted.find_by(id: params[:topic_id])
+    topic = Topic.with_deleted.find_by(id: topic_id)
     guardian.ensure_can_move_posts!(topic)
+
+    # when creating a new topic, ensure the 1st post is a regular post
+    if params[:title].present? && Post.where(topic: topic, id: post_ids).order(:post_number).pluck(:post_type).first != Post.types[:regular]
+      return render_json_error("When moving posts to a new topic, the first post must be a regular post.")
+    end
 
     dest_topic = move_posts_to_destination(topic)
     render_topic_changes(dest_topic)
