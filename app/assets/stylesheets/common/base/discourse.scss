@@ -48,10 +48,10 @@ body {
 
 // setting a static limit on big and small prevents nesting abuse
 big {
-  font-size: 32px;
+  font-size: $font-up-5;
 }
 small {
-  font-size: 12px;
+  font-size: $font-down-2;
 }
 
 blockquote {
