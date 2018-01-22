@@ -71,10 +71,10 @@ describe TopicsController do
 
     describe 'moving to a new topic' do
       let(:user) { log_in(:moderator) }
-      let(:p1) { Fabricate(:post, user: user) }
+      let(:p1) { Fabricate(:post, user: user, post_number: 1) }
       let(:topic) { p1.topic }
 
-      it "raises an error without postIds" do
+      it "raises an error without post_ids" do
         expect do
           post :move_posts, params: {
             topic_id: topic.id, title: 'blah'
@@ -90,6 +90,19 @@ describe TopicsController do
         }, format: :json
 
         expect(response).to be_forbidden
+      end
+
+      it "raises an error when the OP is not a regular post" do
+        p2 = Fabricate(:post, topic: topic, post_number: 2, post_type: Post.types[:whisper])
+        p3 = Fabricate(:post, topic: topic, post_number: 3)
+
+        post :move_posts, params: {
+          topic_id: topic.id, title: 'blah', post_ids: [p2.id, p3.id]
+        }, format: :json
+
+        result = ::JSON.parse(response.body)
+
+        expect(result['errors']).to_not be_empty
       end
 
       context 'success' do
@@ -142,7 +155,7 @@ describe TopicsController do
       end
 
       context 'failure' do
-        let(:p2) { Fabricate(:post, user: user) }
+        let(:p2) { Fabricate(:post, topic: topic, user: user) }
 
         before do
           Topic.any_instance.expects(:move_posts).with(user, [p2.id], title: 'blah').returns(nil)
