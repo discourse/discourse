@@ -112,7 +112,7 @@ def migrate_from_s3
   require "file_store/s3_store"
 
   # make sure S3 is disabled
-  if SiteSetting.Uploads.enable_s3_uploads
+  if SiteSetting.Upload.enable_s3_uploads
     puts "You must disable S3 uploads before running that task."
     return
   end
