@@ -97,7 +97,6 @@ $tag-color: $primary-medium;
 }
 
 .discourse-tag {
-  padding: 4px;
   margin: 0;
   color: $tag-color;
 
@@ -146,6 +145,9 @@ $tag-color: $primary-medium;
   border: 0;
   border-radius: 0;
   background-color: transparent;
+  .discourse-tag {
+    padding: 4px;
+  }
 }
 
 
