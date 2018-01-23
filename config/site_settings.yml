@@ -507,6 +507,8 @@ posting:
   enable_private_messages:
     default: true
     client: true
+  enable_system_message_replies:
+    default: true
   enable_private_email_messages:
     default: false
     client: true
