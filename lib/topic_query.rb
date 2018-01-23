@@ -100,7 +100,11 @@ class TopicQuery
 
   # Return a list of suggested topics for a topic
   def list_suggested_for(topic)
-    return if topic.private_message? && !@user
+
+    # Don't suggest messages unless we have a user, and private messages are
+    # enabled.
+    return if topic.private_message? &&
+      (@user.blank? || !SiteSetting.enable_private_messages?)
 
     builder = SuggestedTopicsBuilder.new(topic)
 
