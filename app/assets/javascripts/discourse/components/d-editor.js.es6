@@ -735,6 +735,11 @@ export default Ember.Component.extend({
 
     showLinkModal() {
       this._lastSel = this._getSelected();
+
+      if (this._lastSel) {
+        this.set("linkText", this._lastSel.value);
+      }
+
       this.set('insertLinkHidden', false);
     },
 
