@@ -10,10 +10,10 @@ class OptimizedImage < ActiveRecord::Base
   VERSION = 1
 
   def self.lock(upload_id, width, height)
-    # note, the extra lock here ensures we only optimize one image per process
+    @hostname ||= `hostname`.strip rescue "unknown"
+    # note, the extra lock here ensures we only optimize one image per machine
     # this can very easily lead to runaway CPU so slowing it down is beneficial
-    @mutex ||= Mutex.new
-    @mutex.synchronize do
+    DistributedMutex.synchronize("optimized_image_host_#{@hostname}") do
       DistributedMutex.synchronize("optimized_image_#{upload_id}_#{width}_#{height}") do
         yield
       end
