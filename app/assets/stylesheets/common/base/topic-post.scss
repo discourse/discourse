@@ -79,8 +79,13 @@
   a { word-wrap: break-word; }
   ins { background-color: dark-light-choose($success-low, scale-color($success, $lightness: -60%)); }
   del { background-color: dark-light-choose($danger-low, scale-color($danger, $lightness: -60%)); }
+  // Prevents users from breaking posts with tag nesting
   big { font-size: 2rem; }
   small { font-size: 0.75rem; }
+  small small { font-size: .75em; }
+  big big { font-size: 1em; } 
+  sub sub sub {bottom: 0;}
+  sup sup sup {top: 0;}
 }
 
 .cooked, .d-editor-preview {
