@@ -117,51 +117,42 @@ def migrate_from_s3
     return
   end
 
-  # make sure S3 bucket is set
-  if SiteSetting.Upload.s3_upload_bucket.blank?
-    puts "The S3 upload bucket must be set before running that task."
-    return
-  end
-
   db = RailsMultisite::ConnectionManagement.current_db
 
   puts "Migrating uploads from S3 to local storage for '#{db}'..."
 
-  s3_base_url = FileStore::S3Store.new.absolute_base_url
   max_file_size_kb = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
 
-  Post.unscoped.find_each do |post|
-    if post.raw[s3_base_url]
-      post.raw.scan(/(#{Regexp.escape(s3_base_url)}\/(\d+)(\h{40})\.\w+)/).each do |url, id, sha|
+  Post.where("raw LIKE '%.s3%.amazonaws.com/%'").find_each do |post|
+    begin
+      updated = false
+
+      post.raw.gsub(/(\/\/[\w.-]+amazonaws\.com\/(original|optimized)\/([a-z0-9]+\/)+\h{40}([\w.-]+)?)/i) do |url|
         begin
-          puts "POST ID: #{post.id}"
-          puts "UPLOAD ID: #{id}"
-          puts "UPLOAD SHA: #{sha}"
-          puts "UPLOAD URL: #{url}"
           if filename = guess_filename(url, post.raw)
-            puts "FILENAME: #{filename}"
-            file = FileHelper.download(
-              "http:#{url}",
-              max_file_size: 20.megabytes,
-              tmp_file_name: "from_s3",
-              follow_redirect: true
-            )
-            if upload = UploadCreator.new(file, filename).create_for(post.user_id || -1)
-              post.raw = post.raw.gsub(/(https?:)?#{Regexp.escape(url)}/, upload.url)
-              post.save
-              post.rebake!
-              puts "OK :)"
-            else
-              puts "KO :("
+            file = FileHelper.download("http:#{url}", max_file_size: 20.megabytes, tmp_file_name: "from_s3", follow_redirects: true)
+            new_upload = UploadCreator.new(file, filename).create_for(post.user_id || -1)
+            if new_upload&.save
+              updated = true
+              return new_upload.url
             end
-            puts post.full_url, ""
-          else
-            puts "NO FILENAME :("
           end
-        rescue => e
-          puts "EXCEPTION: #{e.message}"
+
+          url
+        rescue
+          url
         end
       end
+
+      if updated
+        post.save!
+        post.rebake!
+        putc "#"
+      else
+        putc "."
+      end
+    rescue
+      putc "X"
     end
   end
 
