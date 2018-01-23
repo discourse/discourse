@@ -354,15 +354,21 @@
       .posts {
         width: 50px;
       }
+      .posters {
+        width: 30px;  
+        text-align: center;      
+      }
       // show only the first poster
       td.posters {
-        width: 50px;
         a:not(.latest) {
           display: none;
           }
         a.latest {
-          padding: 0 8px;
+          width: 100%;
+          img {
+            margin: 0 auto;
           }
+        }
       }
     }
   }
