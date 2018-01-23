@@ -857,6 +857,25 @@ describe Guardian do
         end
       end
 
+      context "system message" do
+        let(:private_message) {
+          Fabricate(
+            :topic,
+            archetype: Archetype.private_message,
+            subtype: 'system_message',
+            category_id: nil
+          )
+        }
+
+        before { user.save! }
+        it "allows the user to reply to system messages" do
+          expect(Guardian.new(user).can_create_post?(private_message)).to eq(true)
+          SiteSetting.enable_system_message_replies = false
+          expect(Guardian.new(user).can_create_post?(private_message)).to eq(false)
+        end
+
+      end
+
       context "private message" do
         let(:private_message) { Fabricate(:topic, archetype: Archetype.private_message, category_id: nil) }
 

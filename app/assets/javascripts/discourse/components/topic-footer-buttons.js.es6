@@ -6,6 +6,16 @@ export default Ember.Component.extend({
   // Allow us to extend it
   layoutName: 'components/topic-footer-buttons',
 
+  @computed('topic.isPrivateMessage')
+  canArchive(isPM) {
+    return this.siteSettings.enable_private_messages && isPM;
+  },
+
+  @computed('topic.isPrivateMessage')
+  showNotificationsButton(isPM) {
+    return (!isPM) || this.siteSettings.enable_private_messages;
+  },
+
   @computed('topic.details.can_invite_to')
   canInviteTo(result) {
     return !this.site.mobileView && result;
