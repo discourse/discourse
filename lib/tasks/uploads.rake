@@ -123,18 +123,28 @@ def migrate_from_s3
 
   max_file_size_kb = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
 
-  Post.where("raw LIKE '%.s3%.amazonaws.com/%'").find_each do |post|
+  Post.where("user_id > 0 AND raw LIKE '%.s3%.amazonaws.com/%'").find_each do |post|
     begin
       updated = false
 
-      post.raw.gsub(/(\/\/[\w.-]+amazonaws\.com\/(original|optimized)\/([a-z0-9]+\/)+\h{40}([\w.-]+)?)/i) do |url|
+      post.raw.gsub!(/(\/\/[\w.-]+amazonaws\.com\/(original|optimized)\/([a-z0-9]+\/)+\h{40}([\w.-]+)?)/i) do |url|
         begin
           if filename = guess_filename(url, post.raw)
-            file = FileHelper.download("http:#{url}", max_file_size: 20.megabytes, tmp_file_name: "from_s3", follow_redirects: true)
-            new_upload = UploadCreator.new(file, filename).create_for(post.user_id || -1)
+            file = FileHelper.download("http:#{url}", max_file_size: 20.megabytes, tmp_file_name: "from_s3", follow_redirect: true)
+            sha1 = Upload.generate_digest(file)
+            origin = nil
+
+            existing_upload = Upload.find_by(sha1: sha1)
+            if existing_upload&.url&.start_with?("//")
+              filename = existing_upload.original_filename
+              origin = existing_upload.origin
+              existing_upload.destroy
+            end
+
+            new_upload = UploadCreator.new(file, filename, origin: origin).create_for(post.user_id || -1)
             if new_upload&.save
               updated = true
-              return new_upload.url
+              url = new_upload.url
             end
           end
 
@@ -151,6 +161,7 @@ def migrate_from_s3
       else
         putc "."
       end
+
     rescue
       putc "X"
     end
