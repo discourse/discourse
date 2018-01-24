@@ -737,7 +737,7 @@ export default Ember.Component.extend({
       this._lastSel = this._getSelected();
 
       if (this._lastSel) {
-        this.set("linkText", this._lastSel.value);
+        this.set("linkText", this._lastSel.value.trim());
       }
 
       this.set('insertLinkHidden', false);
