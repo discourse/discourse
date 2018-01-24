@@ -1,13 +1,15 @@
 .select-kit {
   .category-row {
-    .category-status {
+    .category-status, .category-desc {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       -webkit-box-flex: 0;
           -ms-flex: 1 1 auto;
               flex: 1 1 auto;
+    }
 
+    .category-status {
       .badge-wrapper.box {
         margin-bottom: 1px;
         margin-top: 1px;
