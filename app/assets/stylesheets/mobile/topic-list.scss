@@ -309,12 +309,6 @@ tr.category-topic-link {
 
 // Misc. stuff
 // --------------------------------------------------
-.list-controls {
-  .category-dropdown-button {
-    padding: 4px 10px 4px 8px;
-  }
-}
-
 .btn-group .dropdown-toggle:active,
 .btn-group.open .dropdown-toggle {
   outline: 0;
@@ -385,14 +379,6 @@ tr.category-topic-link {
 
 ol.category-breadcrumb {
   margin: 5px 10px 0 0;
-}
-
-.category-dropdown-menu {
-  height: 200px;
-
-  a.badge-category {
-    line-height: $line-height-large;
-  }
 }
 
 .top-lists {

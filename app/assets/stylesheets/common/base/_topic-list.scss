@@ -199,11 +199,6 @@
 }
 
 .list-controls {
-  .category-dropdown-menu .home {
-    color: $primary;
-    margin-left: 8px;
-  }
-
   clear: both;
 }
 
@@ -250,29 +245,6 @@ ol.category-breadcrumb {
 
   .bread-crumbs-right-outlet {
     float: left;
-  }
-}
-
-.list-controls .category-dropdown-menu {
-  overflow-x: hidden;
-  overflow-y: auto;
-  position: absolute;
-  border: 1px solid $primary-low;
-  background-color: $secondary;
-  z-index: z("dropdown");
-
-  a.badge-category, a.badge-category-parent {
-    line-height: $line-height-large;
-    overflow:hidden;
-    margin-bottom: 0;
-  }
-  a.badge-category, .dropdown-header {
-    font-size: $font-down-1;
-    font-weight: bold;
-    float: none;
-    text-transform: none;
-    max-width:200px;
-    text-overflow:ellipsis;
   }
 }
 

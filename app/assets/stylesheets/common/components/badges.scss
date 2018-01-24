@@ -68,9 +68,9 @@
     margin-right: 12px;
 
     .extra-info-wrapper & {
-      margin-top: .25em;                      
+      margin-top: .25em;
     }
-    
+
     span.badge-category {
       color: $primary;
       overflow: hidden;
@@ -158,95 +158,13 @@
 
 .list-controls {
   .category-breadcrumb {
-    a.badge-category, .dropdown-header {
+    a.badge-category {
       display: inline-block;
       padding: 6px 8px;
       line-height: $line-height-medium;
-
-      &.category-dropdown-button {
-        margin-left: -.3em;
-        padding: 6px;
-        width: 13px;
-
-        .d-icon-caret-right {
-          margin-left: 2px;
-        }
-      }
-    }
-
-    li.bar>.dropdown-header:not(.home):first-child {
-      border-left: 5px solid;
-      font-size: $font-0;
-    }
-
-    li.bar>.dropdown-header {
-      background: $primary-low;
-      color: $primary;
-    }
-
-    li.bullet>.dropdown-header {
-      background: $primary-low;
-      color: $primary;
-
-      .badge-category-bg {
-        width: 10px;
-        height: 10px;
-        display: inline-block;
-        margin: 0 2px;
-      }
     }
   }
-
-  .category-dropdown-menu {
-    .dropdown-header {
-      &.home {
-        margin-left: 4px;
-        padding-left: 0;
-      }
-    }
-    .cat {
-        line-height: $line-height-large;
-      }
-    .badge-wrapper {
-      box-sizing: border-box;
-
-      &.bar {
-        padding: 5px 0;
-        width: 100%;
-        .badge-category {
-          max-width: 100px;
-        }
-      }
-      &.none {
-        padding: 5px;
-      }
-      &.bullet {
-        padding: 5px;
-        width: 100%;
-        .badge-category {
-          max-width: 100px;
-        }
-      }
-      &.box {
-        margin-top: 0;
-        width: 100%;
-        line-height: $line-height-small;
-        vertical-align: text-top;
-        padding: 0;
-        span.badge-category {
-          max-width: 100px;
-          padding: 5px;
-        }
-      }
-
-    }
-
-  }
-
 }
-
-
-
 
 // Notification badge
 // --------------------------------------------------
@@ -254,7 +172,7 @@
 .badge-notification {
   @extend %badge;
   padding: 3px 5px;
-  min-width: 8px; 
+  min-width: 8px;
   vertical-align: middle;
   color: $secondary;
   font-size: $font-down-2;
