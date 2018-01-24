@@ -164,8 +164,12 @@ QUnit.test("canDeleteSelected", function(assert) {
 
 QUnit.test("Can split/merge topic", function(assert) {
   const postStream = {
-    posts: [{ id: 1 }, { id: 2 }],
-    stream: [1, 2]
+    posts: [
+      { id: 1, post_number: 1, post_type: 1 },
+      { id: 2, post_number: 2, post_type: 4 },
+      { id: 3, post_number: 3, post_type: 1 }
+    ],
+    stream: [1, 2, 3]
   };
 
   const model = Topic.create({ postStream, details: { can_move_posts: false } });
@@ -185,7 +189,13 @@ QUnit.test("Can split/merge topic", function(assert) {
   assert.ok(controller.get("canSplitTopic"), "can split topic");
   assert.ok(controller.get("canMergeTopic"), "can merge topic");
 
+  selectedPostIds.removeObject(1);
   selectedPostIds.pushObject(2);
+
+  assert.not(controller.get("canSplitTopic"), "can't split topic when 1st post is not a regular post");
+  assert.ok(controller.get("canMergeTopic"), "can merge topic when 1st post is not a regular post");
+
+  selectedPostIds.pushObject(3);
 
   assert.not(controller.get("canSplitTopic"), "can't split topic when all posts are selected");
   assert.ok(controller.get("canMergeTopic"), "can merge topic when all posts are selected");

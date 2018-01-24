@@ -1,0 +1,14 @@
+{{#d-modal-body rawTitle=(i18n "admin.user.flags_received_by" username=model.username)}}
+  {{#conditional-loading-spinner condition=loadingFlags}}
+    {{#each flaggedPosts as |flaggedPost|}}
+      <div class='received-flag flagged-post'>
+        <div class='flagged-post-excerpt'>
+          {{flagged-post-title flaggedPost=flaggedPost}}
+        </div>
+        {{flag-user-lists flaggedPost=flaggedPost showResolvedBy=flaggedPost.hasDisposedBy}}
+      </div>
+    {{else}}
+      {{i18n "admin.user.flags_received_none"}}
+    {{/each}}
+  {{/conditional-loading-spinner}}
+{{/d-modal-body}}

@@ -38,3 +38,23 @@ export function startPageTracking(router, appEvents) {
   });
   _started = true;
 }
+
+const _gtmPageChangedCallbacks = [];
+
+export function addGTMPageChangedCallback(callback) {
+  _gtmPageChangedCallbacks.push(callback);
+}
+
+export function googleTagManagerPageChanged(data) {
+  let gtmData = {
+    'event': 'virtualPageView',
+    'page': {
+      'title': data.title,
+      'url': data.url
+    }
+  };
+
+  _.each(_gtmPageChangedCallbacks, callback => callback(gtmData));
+
+  window.dataLayer.push(gtmData);
+}

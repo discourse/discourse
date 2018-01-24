@@ -291,13 +291,13 @@ function isGUID(value) {
 
 function imageNameFromFileName(fileName) {
   const split = fileName.split('.');
-  const name = split[split.length-2];
+  let name = split[split.length - 2];
 
   if (exports.isAppleDevice() && isGUID(name)) {
-    return I18n.t('upload_selector.default_image_alt_text');
+    name = I18n.t('upload_selector.default_image_alt_text');
   }
 
-  return name;
+  return encodeURIComponent(name);
 }
 
 export function allowsImages() {

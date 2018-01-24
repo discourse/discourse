@@ -21,7 +21,7 @@
   border: 1px solid $primary-low;
   box-shadow: 0 2px 2px rgba(0,0,0, .25);
   background-color: $secondary;
-  z-index: 1100;
+  z-index: z("header");
   padding: 0.5em;
   width: 300px;
 

@@ -71,7 +71,7 @@ export const ButtonClass = {
     if (attrs.sendActionEvent) {
       return this.sendWidgetAction(attrs.action, e);
     }
-    return this.sendWidgetAction(attrs.action);
+    return this.sendWidgetAction(attrs.action, attrs.actionParam);
   }
 };
 

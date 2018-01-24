@@ -22,9 +22,10 @@ import { registerIconRenderer, replaceIcon } from 'discourse-common/lib/icon-lib
 import { addNavItem } from 'discourse/models/nav-item';
 import { replaceFormatter } from 'discourse/lib/utilities';
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
+import { addGTMPageChangedCallback } from 'discourse/lib/page-tracker';
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = '0.8.15';
+const PLUGIN_API_VERSION = '0.8.16';
 
 class PluginApi {
   constructor(version, container) {
@@ -618,6 +619,20 @@ class PluginApi {
   */
   modifySelectKit(pluginApiKey) {
     return modifySelectKit(pluginApiKey);
+  }
+
+  /**
+  *
+  * Registers a function that can inspect and modify the data that
+  * will be sent to Google Tag Manager when a page changed event is triggered.
+  *
+  * Example:
+  *
+  * addGTMPageChangedCallback( gtmData => gtmData.locale = I18n.currentLocale() )
+  *
+  */
+  addGTMPageChangedCallback(fn) {
+    addGTMPageChangedCallback(fn);
   }
 }
 

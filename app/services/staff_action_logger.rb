@@ -1,3 +1,5 @@
+require_dependency 'staff_message_format'
+
 # Responsible for logging the actions of admins and moderators.
 class StaffActionLogger
 
@@ -170,8 +172,7 @@ class StaffActionLogger
   def log_user_suspend(user, reason, opts = {})
     raise Discourse::InvalidParameters.new(:user) unless user
 
-    details = (reason || '').dup
-    details << "\n\n#{opts[:message]}" if opts[:message].present?
+    details = StaffMessageFormat.new(:suspend, reason, opts[:message]).format
 
     args = params(opts).merge(
       action: UserHistory.actions[:suspend_user],

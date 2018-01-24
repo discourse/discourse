@@ -117,6 +117,7 @@ basic:
     default: "latest|new|unread|top|categories"
     regex: "latest"
     regex_error: "site_settings.errors.must_include_latest"
+    validator: RegexPresenceValidator
     choices:
      - latest
      - new
@@ -506,6 +507,8 @@ posting:
   enable_private_messages:
     default: true
     client: true
+  enable_system_message_replies:
+    default: true
   enable_private_email_messages:
     default: false
     client: true
@@ -596,6 +599,9 @@ posting:
     refresh: true
     type: regex
   enable_emoji:
+    default: true
+    client: true
+  enable_emoji_shortcuts:
     default: true
     client: true
   emoji_set:

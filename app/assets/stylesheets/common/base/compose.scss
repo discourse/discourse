@@ -16,7 +16,7 @@
   @media screen and (max-width: 1200px) {
     min-width: 0;
   }
-  z-index: 999;
+  z-index: z("composer","content");
   transition: height 250ms ease, background 250ms ease, transform 250ms ease, max-width 250ms ease;
   background-color: $secondary;
   box-shadow: 0 -1px 40px rgba(0,0,0, .12);
@@ -271,7 +271,7 @@
 }
 
 .autocomplete {
-  z-index: 999999;
+  z-index: z("dropdown");
   position: absolute;
   width: 240px;
   background-color: $secondary;

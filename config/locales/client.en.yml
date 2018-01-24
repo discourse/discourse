@@ -1897,6 +1897,7 @@ en:
       deleted_by_author:
         one: "(post withdrawn by author, will be automatically deleted in %{count} hour unless flagged)"
         other: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
+      collapse: "collapse"
       expand_collapse: "expand/collapse"
       gap:
         one: "view 1 hidden reply"
@@ -1978,6 +1979,7 @@ en:
         rebake: "Rebuild HTML"
         unhide: "Unhide"
         change_owner: "Change Ownership"
+        grant_badge: "Grant Badge"
 
       actions:
         flag: 'Flag'
@@ -2442,6 +2444,9 @@ en:
         dismiss_new_posts: '<b>x</b>, <b>r</b> Dismiss New/Posts'
         dismiss_topics: '<b>x</b>, <b>t</b> Dismiss Topics'
         log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Log Out'
+      composing:
+        title: 'Composing'
+        return: '<b>shift</b>+<b>c</b> Return to composer'
       actions:
         title: 'Actions'
         bookmark_topic: '<b>f</b> Toggle bookmark topic'
@@ -2483,6 +2488,7 @@ en:
         other: "%{count} granted"
       select_badge_for_title: Select a badge to use as your title
       none: "(none)"
+      successfully_granted: "Successfully granted %{badge} to %{username}"
       badge_grouping:
         getting_started:
           name: Getting Started
@@ -2672,8 +2678,8 @@ en:
         agree_flag_restore_post_title: "Restore the post so that all users can see it."
         agree_flag: "Agree and Keep Post"
         agree_flag_title: "Agree with flag and keep the post unchanged."
-        defer_flag: "Ignore"
-        defer_flag_title: "Remove this flag; it requires no action at this time."
+        ignore_flag: "Ignore"
+        ignore_flag_title: "Remove this flag; it requires no action at this time."
         delete: "Delete"
         delete_title: "Delete the post this flag refers to."
         delete_post_defer_flag: "Delete Post and Ignore flag"
@@ -3255,6 +3261,7 @@ en:
             header: "Header"
             full_page: "Full Page"
             click_through_only: "All (click through only)"
+          header_search_results: "Header Search Results"
         logster:
           title: "Error Logs"
 
@@ -3388,6 +3395,9 @@ en:
         grant_moderation: 'Grant Moderation'
         unsuspend: 'Unsuspend'
         suspend: 'Suspend'
+        show_flags_received: "Show Flags Received"
+        flags_received_by: "Flags Received by %{username}"
+        flags_received_none: "This user has not received any flags."
         reputation: Reputation
         permissions: Permissions
         activity: Activity

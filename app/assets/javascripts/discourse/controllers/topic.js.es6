@@ -518,6 +518,11 @@ export default Ember.Controller.extend(BufferedContent, {
       this.send('changeOwner');
     },
 
+    grantBadge(post) {
+      this.set("selectedPostIds", [post.id]);
+      this.send('showGrantBadgeModal');
+    },
+
     toggleParticipant(user) {
       this.get("model.postStream")
           .toggleParticipant(user.get("username"))
@@ -767,9 +772,12 @@ export default Ember.Controller.extend(BufferedContent, {
     return selectedPostsCount > 0 && (selectedAllPosts || selectedPosts.every(p => p.can_delete));
   },
 
-  @computed('canMergeTopic', 'selectedAllPosts')
-  canSplitTopic(canMergeTopic, selectedAllPosts) {
-    return canMergeTopic && !selectedAllPosts;
+  @computed('canMergeTopic', 'selectedAllPosts', 'selectedPosts', 'selectedPosts.[]')
+  canSplitTopic(canMergeTopic, selectedAllPosts, selectedPosts) {
+    return canMergeTopic &&
+           !selectedAllPosts &&
+           selectedPosts.length > 0 &&
+           selectedPosts.sort((a, b) => a.post_number - b.post_number)[0].post_type === 1;
   },
 
   @computed('model.details.can_move_posts', 'selectedPostsCount')

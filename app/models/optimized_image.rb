@@ -9,11 +9,22 @@ class OptimizedImage < ActiveRecord::Base
   # BUMP UP if optimized image algorithm changes
   VERSION = 1
 
+  def self.lock(upload_id, width, height)
+    @hostname ||= `hostname`.strip rescue "unknown"
+    # note, the extra lock here ensures we only optimize one image per machine
+    # this can very easily lead to runaway CPU so slowing it down is beneficial
+    DistributedMutex.synchronize("optimized_image_host_#{@hostname}") do
+      DistributedMutex.synchronize("optimized_image_#{upload_id}_#{width}_#{height}") do
+        yield
+      end
+    end
+  end
+
   def self.create_for(upload, width, height, opts = {})
     return unless width > 0 && height > 0
     return if upload.try(:sha1).blank?
 
-    DistributedMutex.synchronize("optimized_image_#{upload.id}_#{width}_#{height}") do
+    lock(upload.id, width, height) do
       # do we already have that thumbnail?
       thumbnail = find_by(upload_id: upload.id, width: width, height: height)
 

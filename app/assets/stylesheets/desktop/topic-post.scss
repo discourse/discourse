@@ -27,7 +27,7 @@ h1 .topic-statuses .topic-status i {
   }
 
   .reply-to-tab {
-    z-index: 400;
+    z-index: z("base") + 1;
     float: right;
     margin: -2px 25px 0 0;
     color: dark-light-choose($primary-medium, $secondary-medium);
@@ -177,7 +177,7 @@ nav.post-controls {
     text-align: left;
     bottom: -2px;
     right: 15px;
-    z-index: 1000;
+    z-index: z("dropdown");
 
     h3 {
       margin-top: 0;
@@ -204,14 +204,15 @@ nav.post-controls {
 
 .embedded-posts {
   h1, h2, h3 { margin: 10px 0; }
-
+  border:  1px solid $primary-low;
+  
   .topic-body {
     box-sizing: border-box;
-    width: calc(100% - 60px); // [100% - .topic-avatar width]
+    width: calc(100% - 70px); // [100% - .topic-avatar width]
     // WARNING: overflow hide is required for quoted / embedded images
     // which expect "normal" post width, but expansions are narrower
     overflow: hidden;
-    padding: 15px 15px 0 15px;
+    padding: 15px 25px 0 15px;
   }
 
   // this is covered by .topic-body .regular on a normal post
@@ -221,27 +222,58 @@ nav.post-controls {
   }
 
   .topic-avatar {
-    padding-left: 15px;
+    padding-left: 25px;
     padding-top: 15px;
+  }
+
+  .collapse-down, .collapse-up {
+    position: absolute;
+    color: $primary-medium;
+    background: $secondary;
+    border:  1px solid $primary-low;
+    padding: 6px 9px 8px;
+    z-index: 99; // Needs to be higher than topic-avatar
+    &:hover {
+      background: $primary-low;
+      color: $primary;
+    }
   }
 
   // bottom means "reply expansion" below a post
   &.bottom {
+    border-top: none;
+    margin-bottom: 20px;
     &.hidden {
       display: block;
       opacity: 0;
     }
   }
   &.bottom {
+    .collapse-up {
+      transform: translate(-50%, -164%);
+    }
     .row {
-      padding-top: 7px;
+      padding-bottom: .5em;
+      .topic-avatar, .topic-body {
+        border-top: 1px solid $primary-low;
+      }
     }
   }
 
   // top means "in reply to expansion" above a post
   &.top {
+    border-bottom: none;
+    .collapse-down {
+      transform: translate(-50%, 55%);
+    }
     margin-left: 56px;
-    width: 701px;
+    width: 699px;
+    .row {
+      border-bottom: none;
+      .topic-avatar, .topic-body {
+        border-top: 1px solid $primary-low;
+      }
+    }
   }
   &.top.topic-body {
     padding: 0;
@@ -256,7 +288,7 @@ nav.post-controls {
   }
   .topic-meta-data h5 {
     position: absolute;
-    z-index: 1;
+    z-index: z("base");
     font-size: $font-down-1;
     a {
       font-weight: bold;
@@ -279,7 +311,7 @@ a.star {
 }
 
 .topic-map {
-  margin: 20px 0 0 0;
+  margin: 20px 0;
   background: blend-primary-secondary(5%);
   border: 1px solid $primary-low;
   border-top: none; // would cause double top border
@@ -613,9 +645,9 @@ $topic-avatar-width: 45px;
   width: $topic-body-width;
   float: left;
   position: relative;
-  z-index: 2;
+  z-index: z("base");
   border-top: 1px solid $primary-low;
-  padding: 12px $topic-body-width-padding 15px $topic-body-width-padding;
+  padding: 12px $topic-body-width-padding 0 $topic-body-width-padding;
 }
 
 .topic-avatar {
@@ -623,7 +655,7 @@ $topic-avatar-width: 45px;
   padding-top: 15px;
   width: $topic-avatar-width;
   float: left;
-  z-index: 3;
+  z-index: z("base") + 1;
 }
 
 .gap {
@@ -635,6 +667,11 @@ $topic-avatar-width: 45px;
 .time-gap + .topic-post .topic-avatar {
   border-top: none;
 }
+
+.time-gap + .topic-post .embedded-posts.top {
+  border-bottom: 1px solid $primary-low;
+} 
+
 
 .posts-wrapper {
   position: relative;
@@ -659,7 +696,7 @@ $topic-avatar-width: 45px;
   position: absolute;
   bottom: 115%;
   left: 0;
-  z-index: 999;
+  z-index: z("dropdown");
   display: none;
   float: left;
   width: 550px;
@@ -724,7 +761,7 @@ $topic-avatar-width: 45px;
 .selected-posts {
   width: 200px;
   position: fixed;
-  z-index: 1000;
+  z-index: z("dropdown");
   background-color: $tertiary-low;
   border: 1px solid $tertiary;
   padding: 5px;
@@ -815,7 +852,7 @@ $topic-avatar-width: 45px;
     .select-posts {
       position: absolute;
       right: 0;
-      z-index: 490;
+      z-index: z("base") + 1;
       top: 3em;
       height: 100px;
 
@@ -847,7 +884,7 @@ a.attachment:before {
   color: rgba($primary-low, .8);
   font: 6.429em/1 FontAwesome;
   content: "\f014";
-  z-index: -5;
+  z-index: z("base");
 }
 
 .topic-meta-data {

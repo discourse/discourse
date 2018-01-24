@@ -37,6 +37,10 @@ class MethodProfiler
     }
   end
 
+  def self.clear
+    Thread.current[:_method_profiler] = nil
+  end
+
   def self.stop
     finish = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     if data = Thread.current[:_method_profiler]

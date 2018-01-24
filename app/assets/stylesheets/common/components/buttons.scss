@@ -118,9 +118,12 @@
 // --------------------------------------------------
 
 .btn-social {
-  color: $secondary;
+  color: #fff;
   text-shadow: 0 1px 0 rgba($primary, 0.2);
   box-shadow: inset 0 1px 0 rgba(0,0,0, 0.1);
+  &:hover {
+    color: #fff;
+  }
   &[href] {
     color: $secondary;
   }

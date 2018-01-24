@@ -1,6 +1,6 @@
 .show-more {
   width: 100%;
-  z-index: 1;
+  z-index: z("base");
   &.has-topics {
     position: absolute;
     top: 7px;
