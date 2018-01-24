@@ -25,8 +25,8 @@ RSpec.describe Admin::BackupsController do
     end
 
     it 'should not allow rollback via a GET request' do
-      expect { get "/admin/backups/rollback.json" }
-        .to raise_error(ActionController::RoutingError)
+      get "/admin/backups/rollback.json"
+      expect(response.status).to eq(404)
     end
   end
 
@@ -40,8 +40,8 @@ RSpec.describe Admin::BackupsController do
     end
 
     it 'should not allow cancel via a GET request' do
-      expect { get "/admin/backups/cancel.json" }
-        .to raise_error(ActionController::RoutingError)
+      get "/admin/backups/cancel.json"
+      expect(response.status).to eq(404)
     end
   end
 

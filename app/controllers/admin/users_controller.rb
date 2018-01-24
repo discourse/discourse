@@ -82,10 +82,22 @@ class Admin::UsersController < Admin::AdminController
       )
     end
 
+    DiscourseEvent.trigger(
+      :user_suspended,
+      user: @user,
+      reason: params[:reason],
+      message: message,
+      user_history: user_history,
+      post_id: params[:post_id],
+      suspended_till: params[:suspend_until],
+      suspended_at: DateTime.now
+    )
+
     render_json_dump(
       suspension: {
         suspended: true,
         suspend_reason: params[:reason],
+        full_suspend_reason: user_history.try(:details),
         suspended_till: @user.suspended_till,
         suspended_at: @user.suspended_at
       }
@@ -289,7 +301,7 @@ class Admin::UsersController < Admin::AdminController
     render_json_dump(
       silence: {
         silenced: true,
-        silence_reason: params[:reason],
+        silence_reason: silencer.user_history.try(:details),
         silenced_till: @user.silenced_till,
         suspended_at: @user.silenced_at
       }

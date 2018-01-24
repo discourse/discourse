@@ -5,14 +5,12 @@ module Stylesheet
   class Importer < SassC::Importer
     include GlobalPath
 
-    @special_imports = {}
-
     def self.special_imports
-      @special_imports
+      @special_imports ||= {}
     end
 
     def self.register_import(name, &blk)
-      @special_imports[name] = blk
+      special_imports[name] = blk
     end
 
     register_import "theme_field" do

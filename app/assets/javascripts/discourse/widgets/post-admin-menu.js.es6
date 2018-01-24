@@ -64,6 +64,13 @@ export function buildManageButtons(attrs, currentUser) {
       action: 'changePostOwner',
       className: 'change-owner'
     });
+
+    contents.push({
+      icon: 'certificate',
+      label: 'post.controls.grant_badge',
+      action: 'grantBadge',
+      className: 'grant-badge'
+    });
   }
 
   if (attrs.canManage || attrs.canWiki) {

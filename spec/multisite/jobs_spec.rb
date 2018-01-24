@@ -5,18 +5,11 @@ RSpec.describe "Running Sidekiq Jobs in Multisite" do
 
   before do
     conn.config_filename = "spec/fixtures/multisite/two_dbs.yml"
-    conn.load_settings!
-    conn.remove_class_variable(:@@current_db)
+    SiteSetting.defaults.refresh_site_locale!
   end
 
   after do
     conn.clear_settings!
-
-    [:@@db_spec_cache, :@@host_spec_cache, :@@default_spec].each do |class_variable|
-      conn.remove_class_variable(class_variable)
-    end
-
-    conn.set_current_db
   end
 
   it 'should revert back to the default connection' do

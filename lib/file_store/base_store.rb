@@ -131,7 +131,7 @@ module FileStore
       FileUtils.mkdir_p(dir) unless Dir[dir].present?
       FileUtils.cp(file.path, path)
       # keep latest 500 files
-      `ls -tr #{CACHE_DIR} | head -n +#{CACHE_MAXIMUM_SIZE} | xargs rm -f`
+      `ls -tr #{CACHE_DIR} | head -n -#{CACHE_MAXIMUM_SIZE} | xargs rm -f`
     end
 
     private

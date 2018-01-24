@@ -35,10 +35,10 @@
     text-align: right;
 
     .value {
-      font-size: 1.143em;
+      font-size: $font-up-1;
     }
     .unit {
-      font-size: .857em;
+      font-size: $font-down-1;
     }
     .badge-notification {
       display: block;
@@ -46,11 +46,6 @@
       padding-right: 0;
       margin-top: 5px;
     }
-  }
-
-  .category-description,
-  .subcategories {
-    margin-top: 10px;
   }
 
   .subcategories {
@@ -69,7 +64,7 @@
 
     a.last-posted-at,
     a.last-posted-at:visited {
-      font-size: 0.857em;
+      font-size: $font-down-1;
       color: dark-light-choose($primary-medium, $secondary-high);
     }
 
@@ -98,7 +93,8 @@
     .category {
       border-left: 6px solid;
       h3 {
-        font-size: 1.286em;
+        font-size: $font-up-2;
+        line-height: $line-height-medium;
         a[href] {
           color: $primary;
         }
@@ -137,7 +133,7 @@
   }
 
   .discourse-tag {
-    font-size: 0.786em;
+    font-size: $font-down-2;
   }
 
   .topic-featured-link {

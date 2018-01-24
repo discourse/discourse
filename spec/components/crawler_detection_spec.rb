@@ -6,9 +6,9 @@ describe CrawlerDetection do
 
     it "can be amended via site settings" do
       SiteSetting.crawler_user_agents = 'Mooble|Kaboodle+*'
-      expect(CrawlerDetection.crawler?("Mozilla/5.0 (compatible; Kaboodle+*/2.1; +http://www.google.com/bot.html)")).to eq(true)
-      expect(CrawlerDetection.crawler?("Mozilla/5.0 (compatible; Mooble+*/2.1; +http://www.google.com/bot.html)")).to eq(true)
-      expect(CrawlerDetection.crawler?("Mozilla/5.0 (compatible; Gooble+*/2.1; +http://www.google.com/bot.html)")).to eq(false)
+      expect(CrawlerDetection.crawler?("Mozilla/5.0 Safari (compatible; Kaboodle+*/2.1; +http://www.google.com/bot.html)")).to eq(true)
+      expect(CrawlerDetection.crawler?("Mozilla/5.0 Safari (compatible; Mooble+*/2.1; +http://www.google.com/bot.html)")).to eq(true)
+      expect(CrawlerDetection.crawler?("Mozilla/5.0 Safari (compatible; Gooble+*/2.1; +http://www.google.com/bot.html)")).to eq(false)
     end
 
     it "returns true for crawler user agents" do
@@ -37,6 +37,12 @@ describe CrawlerDetection do
       expect(described_class.crawler?("Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5355d Safari/8536.25")).to eq(false)
       expect(described_class.crawler?("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")).to eq(false)
       expect(described_class.crawler?("Mozilla/5.0 (Linux; U; Android 4.0.3; ko-kr; LG-L160L Build/IML74K) AppleWebkit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30")).to eq(false)
+
+      expect(described_class.crawler?("DiscourseAPI Ruby Gem 0.19.0")).to eq(true)
+      expect(described_class.crawler?("Pingdom.com_bot_version_1.4_(http://www.pingdom.com/)")).to eq(true)
+      expect(described_class.crawler?("LogicMonitor SiteMonitor/1.0")).to eq(true)
+      expect(described_class.crawler?("Java/1.8.0_151")).to eq(true)
+      expect(described_class.crawler?("Mozilla/5.0 (compatible; Yahoo! Slurp; http://help.yahoo.com/help/us/ysearch/slurp)")).to eq(true)
     end
 
   end

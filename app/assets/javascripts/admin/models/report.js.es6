@@ -1,6 +1,7 @@
 import { ajax } from 'discourse/lib/ajax';
 import round from "discourse/lib/round";
 import { fmt } from 'discourse/lib/computed';
+import { fillMissingDates } from 'discourse/lib/utilities';
 
 const Report = Discourse.Model.extend({
   reportUrl: fmt("type", "/admin/reports/%@"),
@@ -142,14 +143,13 @@ Report.reopenClass({
         group_id: groupId
       }
     }).then(json => {
-      // Add a percent field to each tuple
-      let maxY = 0;
-      json.report.data.forEach(row => {
-        if (row.y > maxY) maxY = row.y;
-      });
-      if (maxY > 0) {
-        json.report.data.forEach(row => row.percentage = Math.round((row.y / maxY) * 100));
+      // Add zero values for missing dates
+      if (json.report.data.length > 0) {
+        const startDateFormatted = moment(json.report.start_date).format('YYYY-MM-DD');
+        const endDateFormatted = moment(json.report.end_date).format('YYYY-MM-DD');
+        json.report.data = fillMissingDates(json.report.data, startDateFormatted, endDateFormatted);
       }
+
       const model = Report.create({ type: type });
       model.setProperties(json.report);
       return model;

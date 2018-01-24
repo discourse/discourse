@@ -17,6 +17,10 @@ export default Ember.Service.extend({
     this.siteSettings = getOwner(this).lookup('site-settings:main');
   },
 
+  showFlagsReceived(user) {
+    showModal(`admin-flags-received`, { admin: true, model: user });
+  },
+
   checkSpammer(userId) {
     return AdminUser.find(userId).then(au => this.spammerDetails(au));
   },

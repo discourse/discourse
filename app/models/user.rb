@@ -218,6 +218,7 @@ class User < ActiveRecord::Base
   end
 
   EMAIL = %r{([^@]+)@([^\.]+)}
+  FROM_STAGED = "from_staged".freeze
 
   def self.new_from_params(params)
     user = User.new
@@ -225,6 +226,16 @@ class User < ActiveRecord::Base
     user.email = params[:email]
     user.password = params[:password]
     user.username = params[:username]
+    user
+  end
+
+  def self.unstage(params)
+    if user = User.where(staged: true).with_email(params[:email].strip.downcase).first
+      params.each { |k, v| user.send("#{k}=", v) }
+      user.staged = false
+      user.active = false
+      user.custom_fields[FROM_STAGED] = true
+    end
     user
   end
 
@@ -985,6 +996,10 @@ class User < ActiveRecord::Base
     self.created_at && self.created_at < 60.days.ago ?
       self.user_visits.where('visited_at >= ?', 60.days.ago).sum(:time_read) :
       self.user_stat&.time_read
+  end
+
+  def from_staged?
+    custom_fields[User::FROM_STAGED]
   end
 
   protected

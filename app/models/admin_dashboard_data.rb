@@ -39,6 +39,10 @@ class AdminDashboardData
   end
   class << self; attr_reader :problem_syms, :problem_blocks, :problem_messages; end
 
+  def initialize(opts = {})
+    @opts = opts
+  end
+
   def problems
     problems = []
     AdminDashboardData.problem_syms.each do |sym|
@@ -90,7 +94,7 @@ class AdminDashboardData
       'dashboard.poll_pop3_auth_error'
     ]
 
-    add_problem_check :rails_env_check, :host_names_check,
+    add_problem_check :rails_env_check, :host_names_check, :force_https_check,
                       :ram_check, :google_oauth2_config_check,
                       :facebook_config_check, :twitter_config_check,
                       :github_config_check, :s3_config_check, :image_magick_check,
@@ -112,8 +116,8 @@ class AdminDashboardData
     'dash-stats'
   end
 
-  def self.fetch_problems
-    AdminDashboardData.new.problems
+  def self.fetch_problems(opts = {})
+    AdminDashboardData.new(opts).problems
   end
 
   def self.problem_message_check(i18n_key)
@@ -232,6 +236,11 @@ class AdminDashboardData
     return unless ActionMailer::Base.smtp_settings[:address]["smtp.mailgun.org"]
     return unless SiteSetting.mailgun_api_key.blank?
     I18n.t('dashboard.missing_mailgun_api_key')
+  end
+
+  def force_https_check
+    return unless @opts[:check_force_https]
+    I18n.t('dashboard.force_https_warning') unless SiteSetting.force_https
   end
 
 end

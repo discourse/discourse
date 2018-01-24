@@ -20,14 +20,14 @@ div.tagsinput span.tag {
   margin-right: 5px;
   margin-bottom:5px;
   font-family: helvetica;
-  font-size: .929em;
+  font-size: $font-down-1;
 }
 
-div.tagsinput span.tag a { font-weight: bold; color: #82ad2b; text-decoration:none; font-size: .786em;  }
+div.tagsinput span.tag a { font-weight: bold; color: #82ad2b; text-decoration:none; font-size: $font-down-2; }
 div.tagsinput input {
   width:80px;
   font-family: helvetica;
-  font-size: 0.929em;
+  font-size: $font-down-1;
   border:1px solid transparent;
   padding:2px 5px;
   background: transparent;

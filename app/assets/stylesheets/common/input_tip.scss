@@ -5,7 +5,7 @@
   position: absolute;
   display: block;
   padding: 5px 10px;
-  z-index: 101;
+  z-index: z("tooltip");
   &.bad {
     background: $danger-medium;
     color: white;
@@ -18,7 +18,7 @@
     float: right;
     color: $primary;
     opacity: 0.5;
-    font-size: 1.071em;
+    font-size: $font-0;
     margin: 0 0 0 4px;
     cursor: pointer;
   }

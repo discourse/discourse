@@ -16,7 +16,7 @@
   @media screen and (max-width: 1200px) {
     min-width: 0;
   }
-  z-index: 999;
+  z-index: z("composer","content");
   transition: height 250ms ease, background 250ms ease, transform 250ms ease, max-width 250ms ease;
   background-color: $secondary;
   box-shadow: 0 -1px 40px rgba(0,0,0, .12);
@@ -88,12 +88,12 @@
   }
 
   .reply-to {
-    color: $primary-medium;
+    color: $primary-high;
     margin: 5px 0 10px 0;
     display: flex;
     align-items: center;
     i {
-      color: $primary-medium;
+      color: $primary-high;
     }
     .reply-details {
       overflow: hidden;
@@ -240,7 +240,7 @@
       display: flex;
       a {
         margin-left: 5px;
-        color: $primary-medium;
+        color: $primary-high;
       }
       .spinner {
         margin-right: 5px;
@@ -262,7 +262,7 @@
   }
 
   #draft-status, #file-uploading {
-    color: $primary-medium;
+    color: $primary-high;
   }
 }
 
@@ -271,7 +271,7 @@
 }
 
 .autocomplete {
-  z-index: 999999;
+  z-index: z("dropdown");
   position: absolute;
   width: 240px;
   background-color: $secondary;
@@ -300,7 +300,7 @@
           color: $primary;
         }
         span.name {
-          font-size: .857em;
+          font-size: $font-down-1;
           vertical-align: middle;
         }
         &.selected {
@@ -326,8 +326,8 @@ div.ac-wrap.disabled {
 
 div.ac-wrap div.item a.remove, .remove-link {
   margin-left: 4px;
-  font-size: .857em;
-  line-height: 10px;
+  font-size: $font-down-1;
+  line-height: $line-height-small;
   padding: 1.5px 1.5px 1.5px 2.5px;
   border-radius: 12px;
   width: 10px;
@@ -354,7 +354,7 @@ div.ac-wrap {
     span {
       height: 24px;
       display: inline-block;
-      line-height: 20px;
+      line-height: $line-height-large;
     }
   }
 

@@ -1,0 +1,5 @@
+{{#if flaggedPost.topic.isPrivateMessage}}
+  <span class="private-message-glyph">{{d-icon "envelope"}}</span>
+{{/if}}
+{{topic-status topic=flaggedPost.topic}}
+<a href='{{unbound flaggedPost.url}}'>{{{unbound flaggedPost.topic.fancyTitle}}}</a>

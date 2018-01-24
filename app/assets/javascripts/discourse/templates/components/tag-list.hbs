@@ -4,6 +4,9 @@
 {{#if category}}
   {{category-title-link category=category}}
 {{/if}}
+{{#if tagGroupName}}
+  <h3>{{tagGroupName}}</h3>
+{{/if}}
 {{#each sortedTags as |tag|}}
   <div class='tag-box'>
     {{#if tag.count}}

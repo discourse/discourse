@@ -201,7 +201,7 @@ createWidget('post-meta-data', {
       attributes["class"] += " last-wiki-edit";
     }
 
-    result.push(h('div.post-info', h('a', { attributes }, date)));
+    result.push(h('div.post-info.post-date', h('a', { attributes }, date)));
 
     if (attrs.via_email) {
       result.push(this.attach('post-email-indicator', attrs));
@@ -299,17 +299,29 @@ createWidget('post-contents', {
 
     const repliesBelow = state.repliesBelow;
     if (repliesBelow.length) {
-      result.push(h('section.embedded-posts.bottom', repliesBelow.map(p => {
-        return this.attach('embedded-post', p, { model: this.store.createRecord('post', p) });
-      })));
+      result.push(h('section.embedded-posts.bottom', [
+        repliesBelow.map(p => {
+          return this.attach('embedded-post', p, { model: this.store.createRecord('post', p) });
+        }),
+        this.attach('button', {
+          title: 'post.collapse',
+          icon: 'chevron-up',
+          action: 'toggleRepliesBelow',
+          actionParam: 'true',
+          className: 'btn collapse-up'
+        })
+      ]));
     }
 
     return result;
   },
 
-  toggleRepliesBelow() {
+  toggleRepliesBelow(goToPost = 'false') {
     if (this.state.repliesBelow.length) {
       this.state.repliesBelow = [];
+      if (goToPost === 'true') {
+        DiscourseURL.routeTo(`${this.attrs.topicUrl}/${this.attrs.post_number}`);
+      }
       return;
     }
 
@@ -332,10 +344,11 @@ createWidget('post-contents', {
 createWidget('post-body', {
   tagName: 'div.topic-body.clearfix',
 
-  html(attrs) {
+  html(attrs, state) {
     const postContents = this.attach('post-contents', attrs);
-    const result = [this.attach('post-meta-data', attrs), postContents];
-
+    let result = [this.attach('post-meta-data', attrs)];
+    result = result.concat(applyDecorators(this, 'after-meta-data', attrs, state));
+    result.push(postContents);
     result.push(this.attach('actions-summary', attrs));
     result.push(this.attach('post-links', attrs));
     if (attrs.showTopicMap) {
@@ -376,7 +389,16 @@ createWidget('post-article', {
         return this.attach('embedded-post', p, { model: this.store.createRecord('post', p), state: { above: true } });
       });
 
-      rows.push(h('div.row', h('section.embedded-posts.top.topic-body.offset2', replies)));
+      rows.push(h('div.row', h('section.embedded-posts.top.topic-body.offset2', [
+        this.attach('button', {
+          title: 'post.collapse',
+          icon: 'chevron-down',
+          action: 'toggleReplyAbove',
+          actionParam: 'true',
+          className: 'btn collapse-down'
+        }),
+        replies
+      ])));
     }
 
     rows.push(h('div.row', [this.attach('post-avatar', attrs), this.attach('post-body', attrs)]));
@@ -388,7 +410,7 @@ createWidget('post-article', {
     return post ? post.get('topic.url') : null;
   },
 
-  toggleReplyAbove() {
+  toggleReplyAbove(goToPost = 'false') {
     const replyPostNumber = this.attrs.reply_to_post_number;
 
     // jump directly on mobile
@@ -402,6 +424,9 @@ createWidget('post-article', {
 
     if (this.state.repliesAbove.length) {
       this.state.repliesAbove = [];
+      if (goToPost === 'true') {
+        DiscourseURL.routeTo(`${this.attrs.topicUrl}/${this.attrs.post_number}`);
+      }
       return Ember.RSVP.Promise.resolve();
     } else {
       const topicUrl = this._getTopicUrl();

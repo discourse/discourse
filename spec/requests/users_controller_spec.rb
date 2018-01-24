@@ -327,4 +327,17 @@ RSpec.describe UsersController do
       end
     end
   end
+
+  describe '.user_preferences_redirect' do
+    it 'requires the user to be logged in' do
+      get '/user_preferences'
+      expect(response.status).to eq(404)
+    end
+
+    it "redirects to their profile when logged in" do
+      sign_in(user)
+      get '/user_preferences'
+      expect(response).to redirect_to("/u/#{user.username_lower}/preferences")
+    end
+  end
 end

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_dependency 'middleware/anonymous_cache'
+require_dependency 'method_profiler'
 
 class Middleware::RequestTracker
 
@@ -15,7 +16,6 @@ class Middleware::RequestTracker
   def self.register_detailed_request_logger(callback)
 
     unless @patched_instrumentation
-      require_dependency "method_profiler"
       MethodProfiler.patch(PG::Connection, [
         :exec, :async_exec, :exec_prepared, :send_query_prepared, :query
       ], :sql)
@@ -97,7 +97,7 @@ class Middleware::RequestTracker
       status: status,
       is_crawler: helper.is_crawler?,
       has_auth_cookie: helper.has_auth_cookie?,
-      is_background: request.path =~ /^\/message-bus\// || request.path == /\/topics\/timings/,
+      is_background: !!(request.path =~ /^\/message-bus\// || request.path =~ /\/topics\/timings/),
       is_mobile: helper.is_mobile?,
       track_view: track_view,
       timing: timing
@@ -134,9 +134,13 @@ class Middleware::RequestTracker
     end
 
     env["discourse.request_tracker"] = self
-    MethodProfiler.start if @@detailed_request_loggers
+    MethodProfiler.start
     result = @app.call(env)
-    info = MethodProfiler.stop if @@detailed_request_loggers
+    info = MethodProfiler.stop
+    # possibly transferred?
+    if info && (headers = result[1])
+      headers["X-Runtime"] = "%0.6f" % info[:total_duration]
+    end
     result
   ensure
     log_request_info(env, result, info) unless env["discourse.request_tracker.skip"]
@@ -152,21 +156,21 @@ class Middleware::RequestTracker
   def rate_limit(env)
 
     if (
-      GlobalSetting.max_requests_per_ip_mode == "block" ||
-      GlobalSetting.max_requests_per_ip_mode == "warn" ||
-      GlobalSetting.max_requests_per_ip_mode == "warn+block"
+      GlobalSetting.max_reqs_per_ip_mode == "block" ||
+      GlobalSetting.max_reqs_per_ip_mode == "warn" ||
+      GlobalSetting.max_reqs_per_ip_mode == "warn+block"
     )
 
       ip = Rack::Request.new(env).ip
 
-      if !GlobalSetting.max_requests_rate_limit_on_private
+      if !GlobalSetting.max_reqs_rate_limit_on_private
         return false if is_private_ip?(ip)
       end
 
       limiter10 = RateLimiter.new(
         nil,
         "global_ip_limit_10_#{ip}",
-        GlobalSetting.max_requests_per_ip_per_10_seconds,
+        GlobalSetting.max_reqs_per_ip_per_10_seconds,
         10,
         global: true
       )
@@ -174,7 +178,7 @@ class Middleware::RequestTracker
       limiter60 = RateLimiter.new(
         nil,
         "global_ip_limit_60_#{ip}",
-        GlobalSetting.max_requests_per_ip_per_10_seconds,
+        GlobalSetting.max_reqs_per_ip_per_10_seconds,
         10,
         global: true
       )
@@ -186,11 +190,11 @@ class Middleware::RequestTracker
         limiter60.performed!
       rescue RateLimiter::LimitExceeded
         if (
-          GlobalSetting.max_requests_per_ip_mode == "warn" ||
-          GlobalSetting.max_requests_per_ip_mode == "warn+block"
+          GlobalSetting.max_reqs_per_ip_mode == "warn" ||
+          GlobalSetting.max_reqs_per_ip_mode == "warn+block"
         )
           Rails.logger.warn("Global IP rate limit exceeded for #{ip}: #{type} second rate limit, uri: #{env["REQUEST_URI"]}")
-          !(GlobalSetting.max_requests_per_ip_mode == "warn")
+          !(GlobalSetting.max_reqs_per_ip_mode == "warn")
         else
           true
         end

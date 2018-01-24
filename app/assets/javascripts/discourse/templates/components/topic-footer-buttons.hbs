@@ -50,8 +50,8 @@
                disabled=inviteDisabled}}
   {{/if}}
 
-  {{#if topic.isPrivateMessage}}
-    {{d-button class="standard"
+  {{#if canArchive}}
+    {{d-button class="standard archive-topic"
                title=archiveTitle
                label=archiveLabel
                icon=archiveIcon
@@ -79,7 +79,9 @@
   {{pinned-button pinned=topic.pinned topic=topic}}
 </div>
 
-{{topic-notifications-button notificationLevel=topic.details.notification_level topic=topic}}
+{{#if showNotificationsButton}}
+  {{topic-notifications-button notificationLevel=topic.details.notification_level topic=topic}}
+{{/if}}
 
 {{plugin-outlet name="after-topic-footer-buttons"
                 args=(hash topic=topic)

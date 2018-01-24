@@ -117,6 +117,7 @@ basic:
     default: "latest|new|unread|top|categories"
     regex: "latest"
     regex_error: "site_settings.errors.must_include_latest"
+    validator: RegexPresenceValidator
     choices:
      - latest
      - new
@@ -506,6 +507,8 @@ posting:
   enable_private_messages:
     default: true
     client: true
+  enable_system_message_replies:
+    default: true
   enable_private_email_messages:
     default: false
     client: true
@@ -596,6 +599,9 @@ posting:
     refresh: true
     type: regex
   enable_emoji:
+    default: true
+    client: true
+  enable_emoji_shortcuts:
     default: true
     client: true
   emoji_set:
@@ -939,9 +945,13 @@ security:
   enable_escaped_fragments: true
   allow_index_in_robots_txt: true
   allow_moderators_to_create_categories: false
+  non_crawler_user_agents:
+    hidden: true
+    default: 'trident|webkit|gecko|chrome|safari|msie|opera'
+    type: list
   crawler_user_agents:
     hidden: true
-    default: 'Googlebot|Mediapartners|AdsBot|curl|HTTrack|Twitterbot|facebookexternalhit|bingbot|Baiduspider|ia_archiver|archive.org_bot|Wayback Save Page|360Spider|Swiftbot|YandexBot'
+    default: 'rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor'
     type: list
   cors_origins:
     default: ''
@@ -1521,6 +1531,9 @@ tags:
     client: true
     default: false
     refresh: true
+  tags_listed_by_group:
+    client: true
+    default: false
   staff_tags:
     type: list
     client: true

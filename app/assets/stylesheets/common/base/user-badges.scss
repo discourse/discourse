@@ -3,7 +3,7 @@
   padding: 3px 8px;
   color: $primary;
   border: 1px solid $primary-low;
-  line-height: 19px;
+  line-height: $line-height-large;
   display: inline-block;
   background-color: $secondary;
   margin: 0 0 3px;
@@ -68,7 +68,7 @@
 
 .show-badge .badge-user-info {
   .earned {
-    font-size: 1.286em;
+    font-size: $font-up-2;
     margin-bottom: 1em;
   }
 }
@@ -79,7 +79,7 @@
   .load-more {
     padding-top: 30px;
     display: block;
-    font-size: 1.286em;
+    font-size: $font-up-2;
   }
 }
 
@@ -94,11 +94,11 @@
   }
   .date {
     display: inline-block;
-    font-size: 1.143em;
+    font-size: $font-up-1;
     margin-left: 10px;
   }
   .post-link {
-    font-size: 1.286em;
+    font-size: $font-up-2;
     width: 500px;
     margin: 0;
     padding: 0;
@@ -138,7 +138,7 @@
     top: 5px;
     font-weight: bold;
     color: $primary-medium;
-    font-size: 1.286em;
+    font-size: $font-up-2;
   }
 
   .badge-contents {

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'current_user'
 require_dependency 'canonical_url'
 require_dependency 'discourse'
@@ -60,7 +62,11 @@ class ApplicationController < ActionController::Base
   end
 
   def use_crawler_layout?
-    @use_crawler_layout ||= (has_escaped_fragment? || CrawlerDetection.crawler?(request.user_agent) || params.key?("print"))
+    @use_crawler_layout ||=
+      request.user_agent &&
+      (request.content_type.blank? || request.content_type.include?('html')) &&
+      !['json', 'rss'].include?(params[:format]) &&
+      (has_escaped_fragment? || CrawlerDetection.crawler?(request.user_agent) || params.key?("print"))
   end
 
   def add_readonly_header
@@ -115,11 +121,19 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Discourse::NotLoggedIn do |e|
-    raise e if Rails.env.test?
     if (request.format && request.format.json?) || request.xhr? || !request.get?
       rescue_discourse_actions(:not_logged_in, 403, include_ember: true)
     else
       rescue_discourse_actions(:not_found, 404)
+    end
+  end
+
+  rescue_from Discourse::InvalidParameters do |e|
+    message = I18n.t('invalid_params', message: e.message)
+    if (request.format && request.format.json?) || request.xhr? || !request.get?
+      rescue_discourse_actions(:invalid_parameters, 400, include_ember: true, custom_message_translated: message)
+    else
+      rescue_discourse_actions(:not_found, 400, custom_message_translated: message)
     end
   end
 
@@ -139,7 +153,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  rescue_from Discourse::NotFound, PluginDisabled  do
+  rescue_from Discourse::NotFound, PluginDisabled, ActionController::RoutingError  do
     rescue_discourse_actions(:not_found, 404)
   end
 
@@ -162,18 +176,20 @@ class ApplicationController < ActionController::Base
                        (request.xhr?) ||
                        ((params[:external_id] || '').ends_with? '.json')
 
+    message = opts[:custom_message_translated] || I18n.t(opts[:custom_message] || type)
+
     if show_json_errors
       # HACK: do not use render_json_error for topics#show
       if request.params[:controller] == 'topics' && request.params[:action] == 'show'
-        return render status: status_code, layout: false, plain: (status_code == 404 || status_code == 410) ? build_not_found_page(status_code) : I18n.t(type)
+        return render status: status_code, layout: false, plain: (status_code == 404 || status_code == 410) ? build_not_found_page(status_code) : message
       end
 
-      render_json_error I18n.t(opts[:custom_message] || type), type: type, status: status_code
+      render_json_error message, type: type, status: status_code
     else
       begin
         current_user
       rescue Discourse::InvalidAccess
-        return render plain: I18n.t(opts[:custom_message] || type), status: status_code
+        return render plain: message, status: status_code
       end
 
       render html: build_not_found_page(status_code, opts[:include_ember] ? 'application' : 'no_ember')
@@ -199,12 +215,12 @@ class ApplicationController < ActionController::Base
   def clear_notifications
     if current_user && !@readonly_mode
 
-      cookie_notifications = cookies['cn'.freeze]
-      notifications = request.headers['Discourse-Clear-Notifications'.freeze]
+      cookie_notifications = cookies['cn']
+      notifications = request.headers['Discourse-Clear-Notifications']
 
       if cookie_notifications
         if notifications.present?
-          notifications += "," << cookie_notifications
+          notifications += ",#{cookie_notifications}"
         else
           notifications = cookie_notifications
         end
@@ -260,10 +276,10 @@ class ApplicationController < ActionController::Base
     session[:mobile_view] = params[:mobile_view] if params.has_key?(:mobile_view)
   end
 
-  NO_CUSTOM = "no_custom".freeze
-  NO_PLUGINS = "no_plugins".freeze
-  ONLY_OFFICIAL = "only_official".freeze
-  SAFE_MODE = "safe_mode".freeze
+  NO_CUSTOM = "no_custom"
+  NO_PLUGINS = "no_plugins"
+  ONLY_OFFICIAL = "only_official"
+  SAFE_MODE = "safe_mode"
 
   def resolve_safe_mode
     safe_mode = params[SAFE_MODE]
@@ -276,7 +292,7 @@ class ApplicationController < ActionController::Base
 
   def handle_theme
 
-    return if request.xhr? || request.format.json?
+    return if request.xhr? || request.format == "json" || request.format == "js"
     return if request.method != "GET"
 
     resolve_safe_mode
@@ -377,10 +393,8 @@ class ApplicationController < ActionController::Base
   end
 
   def post_ids_including_replies
-    post_ids = params[:post_ids].map { |p| p.to_i }
-    if params[:reply_post_ids]
-      post_ids |= PostReply.where(post_id: params[:reply_post_ids].map { |p| p.to_i }).pluck(:reply_id)
-    end
+    post_ids  = params[:post_ids].map(&:to_i)
+    post_ids |= PostReply.where(post_id: params[:reply_post_ids]).pluck(:reply_id) if params[:reply_post_ids]
     post_ids
   end
 

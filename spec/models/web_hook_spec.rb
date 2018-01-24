@@ -188,7 +188,7 @@ describe WebHook do
     end
 
     it 'should enqueue the right hooks for user events' do
-      user_web_hook = Fabricate(:user_web_hook, active: true)
+      _user_web_hook = Fabricate(:user_web_hook, active: true)
 
       Sidekiq::Testing.fake! do
         user

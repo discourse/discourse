@@ -24,11 +24,11 @@
   .main-link {
     @extend .topic-list-main-link;
     flex: 15;
-    font-size: 1em;
+    font-size: $font-0;
 
     .top-row {
       margin-bottom: 0.1em;
-      font-size: 1.143em;
+      font-size: $font-up-1;
     }
   }
   .topic-stats {
