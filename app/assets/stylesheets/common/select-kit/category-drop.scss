@@ -69,7 +69,7 @@
         flex-direction: column;
         padding: 0;
         min-width: 100px;
-        max-height: 250px;
+        max-height: 300px;
 
         .collection-header {
           .category-filter {
@@ -106,7 +106,6 @@
 
         .category-desc {
           font-weight: normal;
-          margin-top: 3px;
           color: $primary-medium;
         }
 
@@ -142,7 +141,7 @@
         margin: 2.5px;
       }
 
-      .select-kit-wrapper {
+      &.is-expanded .select-kit-wrapper, .select-kit-wrapper {
         display: none;
       }
     }
