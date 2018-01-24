@@ -520,7 +520,7 @@ en:
 
     categories:
       all: "all categories"
-      all_subcategories: "all"
+      all_subcategories: "all in %{categoryName}"
       no_subcategory: "none"
       category: "Category"
       category_list: "Display category list"
