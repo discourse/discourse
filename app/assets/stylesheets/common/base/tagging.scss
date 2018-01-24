@@ -61,7 +61,7 @@
     &.box, &.bullet {
       vertical-align: middle;
     }
-
+    
     &.box + .topic-header-extra,
     &.bullet + .topic-header-extra,
     &.bar + .topic-header-extra {
@@ -147,6 +147,10 @@ $tag-color: $primary-medium;
   background-color: transparent;
   .discourse-tag {
     padding: 4px;
+    &.box {
+      padding: 1px 8px;
+      margin: 3px 5px;
+    }
   }
 }
 
@@ -182,15 +186,16 @@ $tag-color: $primary-medium;
 }
 
 
-
-.discourse-tag.bullet:before {
-  content: "\f04d";
-  font-family: FontAwesome;
-  color: $primary-low-mid;
-  margin-right: 5px;
-  font-size: $font-down-2;
-  position:relative;
-  top: -0.1em;
+.discourse-tag.bullet {
+  margin-right: .25em;
+  &:before {
+    content: "\f04d";
+    font-family: FontAwesome;
+    color: $primary-low-mid;
+    margin-right: 5px;
+    font-size: $font-down-2;
+    position:relative;
+  }
 }
 
 header .discourse-tag {color: $tag-color }
