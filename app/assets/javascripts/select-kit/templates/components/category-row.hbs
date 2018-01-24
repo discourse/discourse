@@ -1,8 +1,11 @@
 {{#if category}}
     {{#if hasParentCategory}}
       <div class="category-status">
-        {{badgeForParentCategory}} {{badgeForCategory}}
-        <span class="topic-count">&times; {{topicCount}}</span>
+        {{#unless hideParentCategory}}
+          {{badgeForParentCategory}}
+        {{/unless}}
+        {{badgeForCategory}}
+        <span class="topic-count">{{topicCount}}</span>
       </div>
     {{else}}
       <div class="category-status">
