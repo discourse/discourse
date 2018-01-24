@@ -460,7 +460,7 @@ fr:
       '14': "En attente"
     categories:
       all: "toutes les catégories"
-      all_subcategories: "toutes"
+      all_subcategories: "toutes dans %{categoryName}"
       no_subcategory: "aucune"
       category: "Catégorie"
       category_list: "Afficher la liste des catégories"
