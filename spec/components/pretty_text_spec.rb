@@ -746,6 +746,20 @@ describe PrettyText do
       expect(PrettyText.cook("💣")).not_to match(/\:bomb\:/)
     end
 
+    it "doesn't replace emoji if emoji is disabled" do
+      SiteSetting.enable_emoji = false
+      expect(PrettyText.cook(":bomb:")).to eq("<p>:bomb:</p>")
+    end
+
+    it "doesn't replace shortcuts if disabled" do
+      SiteSetting.enable_emoji_shortcuts = false
+      expect(PrettyText.cook(":)")).to eq("<p>:)</p>")
+    end
+
+    it "does replace shortcuts if enabled" do
+      expect(PrettyText.cook(":)")).to match("smile")
+    end
+
     it "replaces skin toned emoji" do
       expect(PrettyText.cook("hello 👱🏿‍♀️")).to eq("<p>hello <img src=\"/images/emoji/twitter/blonde_woman/6.png?v=5\" title=\":blonde_woman:t6:\" class=\"emoji\" alt=\":blonde_woman:t6:\"></p>")
       expect(PrettyText.cook("hello 👩‍🎤")).to eq("<p>hello <img src=\"/images/emoji/twitter/woman_singer.png?v=5\" title=\":woman_singer:\" class=\"emoji\" alt=\":woman_singer:\"></p>")

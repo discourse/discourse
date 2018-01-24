@@ -601,6 +601,9 @@ posting:
   enable_emoji:
     default: true
     client: true
+  enable_emoji_shortcuts:
+    default: true
+    client: true
   emoji_set:
     default: 'twitter'
     client: true
