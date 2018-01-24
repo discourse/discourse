@@ -23,7 +23,7 @@
       float: none;
     }
 
-    a.badge-category, .dropdown-header {
+    a.badge-category {
       padding: 3px 12px;
       font-size: $font-up-1;
     }
@@ -255,11 +255,6 @@
         padding: 12px 35px 12px 14px;
       }
     }
-  }
-
-  .category-dropdown-menu {
-    max-height: 350px;
-    min-width: 134px;
   }
 
   #bulk-select {
