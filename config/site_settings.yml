@@ -1271,12 +1271,6 @@ uncategorized:
   summary_percent_filter: 20
   summary_max_results: 100
 
-  service_worker_user_agents:
-    hidden: true
-    default: 'android'
-    type: list
-    client: true
-
   # View heat thresholds
   topic_views_heat_low:
     client: true
