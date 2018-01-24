@@ -197,7 +197,7 @@ input {
     border-radius: 0;
     &:focus {
       border-color: $tertiary;
-      box-shadow: $tertiary 0px 0px 6px 0px;
+      box-shadow: $tertiary 0 0 6px 0px;
       outline: 0;
     }
   }
@@ -209,7 +209,7 @@ textarea {
   border: 1px solid $primary-medium;
   &:focus {
     border-color: $tertiary;
-    box-shadow: $tertiary 0px 0px 6px 0px;
+    box-shadow: $tertiary 0 0 6px 0px;
     outline: 0;
   }
 }

@@ -54,7 +54,7 @@ img.emoji {
 .emoji-picker .list {
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
-  padding: 0px;
+  padding: 0;
   flex: 1;
   flex-direction: column;
 }
@@ -100,7 +100,6 @@ img.emoji {
 
 .emoji-picker .info {
   text-overflow: ellipsis;
-  max-width: 232px;
   padding-left: 8px;
   white-space: nowrap;
   overflow: hidden;
@@ -155,8 +154,6 @@ img.emoji {
   -moz-box-sizing: content-box;
   box-sizing: content-box;
   height: 20px;
-  margin: 0;
-  padding: 0;
   border: 0;
   vertical-align: top;
   width: 20px;
