@@ -22,7 +22,8 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     "isAbove",
     "isBelow",
     "isLeftAligned",
-    "isRightAligned"
+    "isRightAligned",
+    "hasSelection",
   ],
   isDisabled: false,
   isExpanded: false,
@@ -64,6 +65,7 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   nameChanges: false,
   allowContentReplacement: false,
   collectionHeader: null,
+  allowAutoSelectFirst: false,
 
   init() {
     this._super();

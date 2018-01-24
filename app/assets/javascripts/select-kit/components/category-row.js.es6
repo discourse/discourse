@@ -7,6 +7,10 @@ export default SelectKitRowComponent.extend({
   layoutName: "select-kit/templates/components/category-row",
   classNames: "category-row",
 
+  hideParentCategory: Ember.computed.bool("options.hideParentCategory"),
+  allowUncategorized: Ember.computed.bool("options.allowUncategorized"),
+  categoryLink: Ember.computed.bool("options.categoryLink"),
+
   @computed("options.displayCategoryDescription")
   displayCategoryDescription(displayCategoryDescription) {
     if (Ember.isNone(displayCategoryDescription)) {
@@ -31,9 +35,9 @@ export default SelectKitRowComponent.extend({
   @computed("category")
   badgeForCategory(category) {
     return categoryBadgeHTML(category, {
-      link: false,
-      allowUncategorized: true,
-      hideParent: true
+      link: this.get("categoryLink"),
+      allowUncategorized: this.get("allowUncategorized"),
+      hideParent: this.get("hideParentCategory")
     }).htmlSafe();
   },
 
@@ -57,7 +61,10 @@ export default SelectKitRowComponent.extend({
     return category.get("parent_category_id");
   },
 
-  topicCount: Ember.computed.alias("category.topic_count"),
+  @computed("category.topic_count")
+  topicCount(topicCount) {
+    return `&times; ${topicCount}`.htmlSafe();
+  },
 
   @computed("displayCategoryDescription", "category.description")
   shouldDisplayDescription(displayCategoryDescription, description) {
