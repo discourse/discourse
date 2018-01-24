@@ -65,7 +65,7 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   nameChanges: false,
   allowContentReplacement: false,
   collectionHeader: null,
-  allowAutoSelectFirst: false,
+  allowAutoSelectFirst: true,
 
   init() {
     this._super();
