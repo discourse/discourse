@@ -15,6 +15,14 @@ export default ComboBoxComponent.extend({
   noneRowComponent: "none-category-row",
   allowSubCategories: true,
 
+  init() {
+    this._super();
+
+    this.get("rowComponentOptions").setProperties({
+      allowUncategorized: this.get("allowUncategorized"),
+    });
+  },
+
   filterComputedContent(computedContent, computedValue, filter) {
     if (isEmpty(filter)) { return computedContent; }
 
