@@ -18,6 +18,7 @@ export default ComboBoxComponent.extend({
   categoryStyle: Ember.computed.alias("siteSettings.category_style"),
   noCategoriesLabel: I18n.t("categories.no_subcategory"),
   mutateAttributes() {},
+  fullWidthOnMobile: true,
 
   init() {
     this._super();

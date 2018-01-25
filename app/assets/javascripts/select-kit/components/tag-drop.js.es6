@@ -19,6 +19,7 @@ export default ComboBoxComponent.extend({
   tagId: null,
   categoryStyle: Ember.computed.alias("siteSettings.category_style"),
   mutateAttributes() {},
+  fullWidthOnMobile: true,
 
   @computed("tagId")
   noTagsSelected() {
