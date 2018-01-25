@@ -145,3 +145,17 @@ componentTest('interactions', {
     });
   }
 });
+
+componentTest('with limitMatches', {
+  template: '{{multi-select content=content limitMatches=2}}',
+
+  beforeEach() {
+    this.set('content', ['sam', 'jeff', 'neil']);
+  },
+
+  test(assert) {
+    this.get('subject').expand();
+
+    andThen(() => assert.equal(this.get('subject').el().find(".select-kit-row").length, 2));
+  }
+});

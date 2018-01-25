@@ -2009,7 +2009,7 @@ fa_IR:
       granted:
         other: "%{count} اعطا شده"
       select_badge_for_title: انتخاب یک نشان برای استفاده در عنوان خود
-      none: "<none>"
+      none: "(none)"
       badge_grouping:
         getting_started:
           name: شروع

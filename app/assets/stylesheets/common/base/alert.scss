@@ -7,9 +7,9 @@
     position: relative;
     top: -2px;
     right: -21px;
-    line-height: 18px;
+    line-height: $line-height-small;
     float: right;
-    font-size: 1.429em;
+    font-size: $font-up-3;
     font-weight: bold;
     color: $primary;
     opacity: 0.2;

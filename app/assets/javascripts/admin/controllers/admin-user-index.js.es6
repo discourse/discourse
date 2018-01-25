@@ -64,6 +64,9 @@ export default Ember.Controller.extend(CanCheckEmails, {
     anonymize() { return this.get('model').anonymize(); },
     destroy() { return this.get('model').destroy(); },
 
+    showFlagsReceived() {
+      this.get('adminTools').showFlagsReceived(this.get('model'));
+    },
     showSuspendModal() {
       this.get('adminTools').showSuspendModal(this.get('model'));
     },

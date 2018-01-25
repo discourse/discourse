@@ -117,8 +117,11 @@ bundler_stubs/*
 vendor/bundle/*
 *.db
 
-#ignore jetbrains ide file
+# ignore jetbrains ide file
 *.iml
+
+# vim swap
+*.swn
 
 # ignore nodejs files
 /node_modules

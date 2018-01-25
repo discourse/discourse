@@ -31,6 +31,7 @@ class ImportScripts::Base
     @site_settings_during_import = {}
     @old_site_settings = {}
     @start_times = { import: Time.now }
+    @skip_updates = false
   end
 
   def preload_i18n
@@ -46,14 +47,16 @@ class ImportScripts::Base
 
     puts ""
 
-    update_bumped_at
-    update_last_posted_at
-    update_last_seen_at
-    update_user_stats
-    update_feature_topic_users
-    update_category_featured_topics
-    update_topic_count_replies
-    reset_topic_counters
+    unless @skip_updates
+      update_bumped_at
+      update_last_posted_at
+      update_last_seen_at
+      update_user_stats
+      update_feature_topic_users
+      update_category_featured_topics
+      update_topic_count_replies
+      reset_topic_counters
+    end
 
     elapsed = Time.now - @start_times[:import]
     puts '', '', 'Done (%02dh %02dmin %02dsec)' % [elapsed / 3600, elapsed / 60 % 60, elapsed % 60]
@@ -319,8 +322,12 @@ class ImportScripts::Base
       User.transaction do
         u.save!
         if bio_raw.present? || website.present? || location.present?
+          if website.present?
+            u.user_profile.website = website
+            u.user_profile.website = nil unless u.user_profile.valid?
+          end
+
           u.user_profile.bio_raw = bio_raw[0..2999] if bio_raw.present?
-          u.user_profile.website = website unless website.blank? || website !~ UserProfile::WEBSITE_REGEXP
           u.user_profile.location = location if location.present?
           u.user_profile.save!
         end

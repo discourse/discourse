@@ -1148,7 +1148,6 @@ ko:
     relative_date_duration: "절대적 날짜(9월 3일) 대신 상대적 날짜(7일 전)가 사용될 일 수 (글타래가 작성된 이후부터)"
     delete_user_max_post_age: "(x)일 이전의 첫 글가 있는 유저는 삭제할 수 없음."
     delete_all_posts_max: "전체 글 지우기 버튼을 통해 한번에 삭제할 수 있는 최대 글 수. 만약 사용자가 이것보다 많은 글을 가지고 있으면 한번에 삭제 할 수 없다."
-    username_change_period: "등록 후 사용자 이름 최소 유지 일 수(0은 사용자 이름 변경을 막음)"
     email_editable: "가입 후 이메일 주소 변경 허용"
     logout_redirect: "로그아웃 후에 리디렉션할 위치 (예: http://somesite.com/logout)"
     allow_uploaded_avatars: "사용자가 커스텀 프로필 사진을 올릴 수 있도록 허용."

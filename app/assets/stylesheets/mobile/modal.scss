@@ -12,7 +12,7 @@
 .bootbox.modal {
   position: fixed;
   top: 10%;
-  z-index: 1050;
+  z-index: z("modal","content");
   overflow: auto;
   width: 100%;
   height: auto;
@@ -55,16 +55,16 @@
 }
 
 .modal-header {
-  padding: 10px 0px 10px 10px;
+  padding: 10px 0 10px 10px;
 
   h3 {
     display: inline;
-    font-size: 1.286em;
-    margin: 0px;
+    font-size: $font-up-2;
+    margin: 0;
   }
 }
 .close {
-  font-size: 1.857em;
+  font-size: $font-up-4;
   padding: 10px 15px 5px 5px;
   color: $primary;
 }
@@ -106,7 +106,7 @@
 .custom-message-length {
   margin: -4px 0 10px 20px;
   color: dark-light-choose($primary-high, $secondary-low);
-  font-size: .857em;
+  font-size: $font-down-1;
 }
 
 .flag-message {

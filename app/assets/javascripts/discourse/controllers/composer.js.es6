@@ -224,6 +224,10 @@ export default Ember.Controller.extend({
   },
 
   actions: {
+    cancelUpload() {
+      this.set('model.uploadCancelled', true);
+    },
+
     onPopupMenuAction(action) {
       this.send(action);
     },

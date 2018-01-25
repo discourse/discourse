@@ -17,6 +17,10 @@ export default Ember.Service.extend({
     this.siteSettings = getOwner(this).lookup('site-settings:main');
   },
 
+  showFlagsReceived(user) {
+    showModal(`admin-flags-received`, { admin: true, model: user });
+  },
+
   checkSpammer(userId) {
     return AdminUser.find(userId).then(au => this.spammerDetails(au));
   },
@@ -39,11 +43,10 @@ export default Ember.Service.extend({
       controller.set('post', opts.post);
     }
 
-    let promise = user.adminUserView ?
+    return (user.adminUserView ?
       Ember.RSVP.resolve(user) :
-      AdminUser.find(user.get('id'));
-
-    promise.then(loadedUser => {
+      AdminUser.find(user.get('id'))
+    ).then(loadedUser => {
       controller.setProperties({
         user: loadedUser,
         loadingUser: false,

@@ -237,7 +237,8 @@ class CookedPostProcessor
     return unless SiteSetting.crawl_images? || Discourse.store.has_been_uploaded?(url)
 
     @size_cache[url] = FastImage.size(absolute_url)
-  rescue Zlib::BufError # FastImage.size raises BufError for some gifs
+  rescue Zlib::BufError, URI::InvalidURIError, URI::InvalidComponentError
+    # FastImage.size raises BufError for some gifs, leave it.
   end
 
   def is_valid_image_url?(url)

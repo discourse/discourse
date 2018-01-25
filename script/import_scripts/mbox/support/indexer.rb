@@ -8,12 +8,12 @@ module ImportScripts::Mbox
     # @param settings [ImportScripts::Mbox::Settings]
     def initialize(database, settings)
       @database = database
-      @root_directory = settings.data_dir
+      @settings = settings
       @split_regex = settings.split_regex
     end
 
     def execute
-      directories = Dir.glob(File.join(@root_directory, '*'))
+      directories = Dir.glob(File.join(@settings.data_dir, '*'))
       directories.select! { |f| File.directory?(f) }
       directories.sort!
 
@@ -24,14 +24,21 @@ module ImportScripts::Mbox
       end
 
       puts '', 'indexing replies and users'
-      @database.update_in_reply_to_of_emails
-      @database.sort_emails
+      if @settings.group_messages_by_subject
+        @database.sort_emails_by_subject
+        @database.update_in_reply_to_by_email_subject
+      else
+        @database.update_in_reply_to_of_emails
+        @database.sort_emails_by_date_and_reply_level
+      end
+
       @database.fill_users_from_emails
     end
 
     private
 
     METADATA_FILENAME = 'metadata.yml'.freeze
+    IGNORED_FILE_EXTENSIONS = ['.dbindex', '.dbnames', '.digest', '.subjects']
 
     def index_category(directory)
       metadata_file = File.join(directory, METADATA_FILENAME)
@@ -54,7 +61,7 @@ module ImportScripts::Mbox
     end
 
     def index_emails(directory, category_name)
-      all_messages(directory, category_name) do |receiver, filename, first_line_number, last_line_number|
+      all_messages(directory, category_name) do |receiver, filename, opts|
         msg_id = receiver.message_id
         parsed_email = receiver.mail
         from_email, from_display_name = receiver.parse_from_field(parsed_email)
@@ -75,19 +82,23 @@ module ImportScripts::Mbox
           charset: parsed_email.charset&.downcase,
           category: category_name,
           filename: File.basename(filename),
-          first_line_number: first_line_number,
-          last_line_number: last_line_number
+          first_line_number: opts[:first_line_number],
+          last_line_number: opts[:last_line_number],
+          index_duration: (monotonic_time - opts[:start_time]).round(4)
         }
 
-        @database.insert_email(email)
-        @database.insert_replies(msg_id, reply_message_ids) unless reply_message_ids.empty?
+        @database.transaction do |db|
+          db.insert_email(email)
+          db.insert_replies(msg_id, reply_message_ids) unless reply_message_ids.empty?
+        end
       end
     end
 
     def imported_file_checksums(category_name)
       rows = @database.fetch_imported_files(category_name)
       rows.each_with_object({}) do |row, hash|
-        hash[row['filename']] = row['checksum']
+        filename = File.basename(row['filename'])
+        hash[filename] = row['checksum']
       end
     end
 
@@ -102,12 +113,18 @@ module ImportScripts::Mbox
 
         if @split_regex.present?
           each_mail(filename) do |raw_message, first_line_number, last_line_number|
+            opts = {
+              first_line_number: first_line_number,
+              last_line_number: last_line_number,
+              start_time: monotonic_time
+            }
             receiver = read_mail_from_string(raw_message)
-            yield receiver, filename, first_line_number, last_line_number if receiver.present?
+            yield receiver, filename, opts if receiver.present?
           end
         else
+          opts = { start_time: monotonic_time }
           receiver = read_mail_from_file(filename)
-          yield receiver, filename if receiver.present?
+          yield receiver, filename, opts if receiver.present?
         end
 
         mark_as_fully_indexed(category_name, filename)
@@ -117,7 +134,7 @@ module ImportScripts::Mbox
     def mark_as_fully_indexed(category_name, filename)
       imported_file = {
         category: category_name,
-        filename: filename,
+        filename: File.basename(filename),
         checksum: calc_checksum(filename)
       }
 
@@ -132,10 +149,12 @@ module ImportScripts::Mbox
       each_line(filename) do |line|
         line = line.scrub
 
-        if line =~ @split_regex && last_line_number.positive?
-          yield raw_message, first_line_number, last_line_number
-          raw_message = ''
-          first_line_number = last_line_number + 1
+        if line =~ @split_regex
+          if last_line_number > 0
+            yield raw_message, first_line_number, last_line_number
+            raw_message = ''
+            first_line_number = last_line_number + 1
+          end
         else
           raw_message << line
         end
@@ -163,7 +182,7 @@ module ImportScripts::Mbox
     end
 
     def read_mail_from_string(raw_message)
-      Email::Receiver.new(raw_message, convert_plaintext: true) unless raw_message.blank?
+      Email::Receiver.new(raw_message, convert_plaintext: true, skip_trimming: false) unless raw_message.blank?
     end
 
     def extract_reply_message_ids(mail)
@@ -209,26 +228,26 @@ module ImportScripts::Mbox
       end
     end
 
-    def ignored_file?(filename, checksums)
-      File.directory?(filename) || hidden_file?(filename) ||
-        metadata_file?(filename) || fully_indexed?(filename, checksums)
+    def ignored_file?(path, checksums)
+      filename = File.basename(path)
+
+      filename.start_with?('.') ||
+        filename == METADATA_FILENAME ||
+        IGNORED_FILE_EXTENSIONS.include?(File.extname(filename)) ||
+        fully_indexed?(path, filename, checksums)
     end
 
-    def hidden_file?(filename)
-      File.basename(filename).start_with?('.')
-    end
-
-    def metadata_file?(filename)
-      File.basename(filename) == METADATA_FILENAME
-    end
-
-    def fully_indexed?(filename, checksums)
+    def fully_indexed?(path, filename, checksums)
       checksum = checksums[filename]
-      checksum.present? && calc_checksum(filename) == checksum
+      checksum.present? && calc_checksum(path) == checksum
     end
 
     def calc_checksum(filename)
       Digest::SHA256.file(filename).hexdigest
+    end
+
+    def monotonic_time
+      Process.clock_gettime(Process::CLOCK_MONOTONIC)
     end
   end
 end

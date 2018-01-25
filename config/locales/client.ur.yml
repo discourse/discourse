@@ -1980,7 +1980,7 @@ ur:
         one: "1 عطا کیا گیا"
         other: "%{count} عطا کیے گئے"
       select_badge_for_title: اپنے عنوان کے طور پر استعمال کرنے کے لئے ایک بیج منتخب کریں
-      none: "<none>"
+      none: "(none)"
       badge_grouping:
         getting_started:
           name: شروعات

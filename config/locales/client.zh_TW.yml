@@ -1884,7 +1884,7 @@ zh_TW:
       granted:
         other: "%{count} 授予"
       select_badge_for_title: 選擇一個徽章作為你的頭銜使用
-      none: "<none>"
+      none: "(none)"
       badge_grouping:
         getting_started:
           name: 開始

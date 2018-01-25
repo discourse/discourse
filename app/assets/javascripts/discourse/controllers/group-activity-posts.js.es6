@@ -24,7 +24,7 @@ export default Ember.Controller.extend({
 
         group.findPosts(opts).then(newPosts => {
           posts.addObjects(newPosts);
-          if(newPosts.length === 0) {
+          if (newPosts.length === 0) {
             this.set('canLoadMore', false);
           }
         }).finally(() => {

@@ -15,7 +15,7 @@
     .time,
     .delete-info {
       color: lighten($primary, 40%);
-      font-size: 0.857em;
+      font-size: $font-down-1;
     }
 
     .group-member-info {
@@ -29,7 +29,7 @@
     width: 100%;
     justify-content: space-between;
     .group-post-title {
-      font-size: 1.143em;
+      font-size: $font-up-1;
     }
   }
 
@@ -47,13 +47,13 @@
   width: 100%;
 
   .group-info-name {
-    font-size: 1.429em;
+    font-size: $font-up-3;
     font-weight: bold;
     color: $primary;
   }
 
   .group-info-full-name {
-    font-size: 1.286em;
+    font-size: $font-up-2;
     color: dark-light-choose($primary-high, $secondary-low);
   }
 
@@ -95,11 +95,11 @@ table.group-logs {
 
   th {
     text-align: left;
-    padding: 5px 0px;
+    padding: 5px 0;
   }
 
   td {
-    padding: 10px 0px;
+    padding: 10px 0;
   }
 
   .group-logs-expand-details {
@@ -131,7 +131,7 @@ table.group-members {
   th {
     border-bottom: 3px solid $primary-low;
     text-align: center;
-    padding: 5px 0px 5px 5px;
+    padding: 5px 0 5px 5px;
     color: dark-light-choose($primary-medium, $secondary-medium);
     font-weight: normal;
   }

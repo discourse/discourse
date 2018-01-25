@@ -178,7 +178,7 @@ class UsersController < ApplicationController
 
     user_badge = UserBadge.find_by(id: params[:user_badge_id])
     if user_badge && user_badge.user == user && user_badge.badge.allow_title?
-      user.title = user_badge.badge.name
+      user.title = user_badge.badge.display_name
       user.user_profile.badge_granted_title = true
       user.save!
       user.user_profile.save!
@@ -312,8 +312,6 @@ class UsersController < ApplicationController
     params[:for_user_id] ? User.find(params[:for_user_id]) : current_user
   end
 
-  FROM_STAGED = "from_staged".freeze
-
   def create
     params.require(:email)
     params.permit(:user_fields)
@@ -334,14 +332,9 @@ class UsersController < ApplicationController
       return fail_with("login.reserved_username")
     end
 
-    if user = User.where(staged: true).with_email(params[:email].strip.downcase).first
-      user_params.each { |k, v| user.send("#{k}=", v) }
-      user.staged = false
-      user.active = false
-      user.custom_fields[FROM_STAGED] = true
-    else
-      user = User.new(user_params)
-    end
+    new_user_params = user_params
+    user = User.unstage(new_user_params)
+    user = User.new(new_user_params) if user.nil?
 
     # Handle API approval
     if user.approved
@@ -504,8 +497,8 @@ class UsersController < ApplicationController
               success: false,
               message: @error,
               errors: @user&.errors&.to_hash,
-              is_developer: UsernameCheckerService.is_developer?(@user.email),
-              admin: @user.admin?
+              is_developer: UsernameCheckerService.is_developer?(@user&.email),
+              admin: @user&.admin?
             }
           else
             render json: {
@@ -543,35 +536,30 @@ class UsersController < ApplicationController
   end
 
   def admin_login
-    if current_user
-      return redirect_to path("/")
-    end
+    return redirect_to(path("/")) if current_user
 
     if request.put?
       RateLimiter.new(nil, "admin-login-hr-#{request.remote_ip}", 6, 1.hour).performed!
       RateLimiter.new(nil, "admin-login-min-#{request.remote_ip}", 3, 1.minute).performed!
 
-      user = User.with_email(params[:email]).where(admin: true).human_users.first
-      if user
+      if user = User.with_email(params[:email]).admins.human_users.first
         email_token = user.email_tokens.create(email: user.email)
         Jobs.enqueue(:critical_user_email, type: :admin_login, user_id: user.id, email_token: email_token.token)
         @message = I18n.t("admin_login.success")
       else
-        @message = I18n.t("admin_login.error")
+        @message = I18n.t("admin_login.errors.unknown_email_address")
       end
     elsif params[:token].present?
-      # token recieved, try to login
       if EmailToken.valid_token_format?(params[:token])
         @user = EmailToken.confirm(params[:token])
-        if @user && @user.admin?
-          # Log in user
+        if @user&.admin?
           log_on_user(@user)
           return redirect_to path("/")
         else
-          @message = I18n.t("admin_login.error")
+          @message = I18n.t("admin_login.errors.unknown_email_address")
         end
       else
-        @message = I18n.t("admin_login.error")
+        @message = I18n.t("admin_login.errors.invalid_token")
       end
     end
 
@@ -607,7 +595,7 @@ class UsersController < ApplicationController
       if user = User.where(id: session_user_id.to_i).first
         @account_created[:username] = user.username
         @account_created[:email] = user.email
-        @account_created[:show_controls] = !user.custom_fields[FROM_STAGED]
+        @account_created[:show_controls] = !user.from_staged?
       end
     end
 
@@ -661,11 +649,7 @@ class UsersController < ApplicationController
       @user = User.where(id: user_key.to_i).first
     end
 
-    if @user.blank? || @user.active? || current_user.present?
-      raise Discourse::InvalidAccess.new
-    end
-
-    if @user.custom_fields[FROM_STAGED]
+    if @user.blank? || @user.active? || current_user.present? || @user.from_staged?
       raise Discourse::InvalidAccess.new
     end
 

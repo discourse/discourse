@@ -88,6 +88,19 @@ describe Auth::DefaultCurrentUserProvider do
       expect(provider("/?api_key=hello&api_username=#{user.username.downcase}").current_user.id).to eq(user.id)
     end
 
+    it "finds a user for a correct system api key with external id" do
+      user = Fabricate(:user)
+      ApiKey.create!(key: "hello", created_by_id: -1)
+      SingleSignOnRecord.create(user_id: user.id, external_id: "abc", last_payload: '')
+      expect(provider("/?api_key=hello&api_user_external_id=abc").current_user.id).to eq(user.id)
+    end
+
+    it "finds a user for a correct system api key with id" do
+      user = Fabricate(:user)
+      ApiKey.create!(key: "hello", created_by_id: -1)
+      expect(provider("/?api_key=hello&api_user_id=#{user.id}").current_user.id).to eq(user.id)
+    end
+
     context "rate limiting" do
       before do
         RateLimiter.enable

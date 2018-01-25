@@ -254,6 +254,7 @@ export default Ember.Component.extend({
   @on('willDestroyElement')
   _shutDown() {
     if (this.get('composerEvents')) {
+      this.appEvents.off('composer:insert-block');
       this.appEvents.off('composer:insert-text');
       this.appEvents.off('composer:replace-text');
     }
@@ -734,6 +735,11 @@ export default Ember.Component.extend({
 
     showLinkModal() {
       this._lastSel = this._getSelected();
+
+      if (this._lastSel) {
+        this.set("linkText", this._lastSel.value.trim());
+      }
+
       this.set('insertLinkHidden', false);
     },
 

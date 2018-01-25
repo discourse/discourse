@@ -129,7 +129,6 @@ input[type="submit"].btn::-moz-focus-inner {
   margin: 1px 0 0;
   list-style: none;
   background-color: #ffffff;
-  border: 1px solid #ccc;
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 5px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
@@ -190,11 +189,11 @@ body {
     line-height: 36px;
   }
   h2 {
-    font-size: 1.714em;
+    font-size: 1.7511em;
     line-height: 36px;
   }
   h3 {
-    font-size: 1.286em;
+    font-size: 1.3195em;
     line-height: 27px;
   }
   h4, h5, h6 {
@@ -213,7 +212,7 @@ body {
 
   // this removes the unwanted top margin on a paragraph under a heading
   h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
-    margin-top:0px;
+    margin-top:0;
   }
 
   blockquote {
@@ -228,7 +227,6 @@ body {
   label, input, button, select, textarea {
     font-size: 0.929em;
     font-weight: normal;
-    line-height: 18px;
   }
   input, button, select, textarea {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;

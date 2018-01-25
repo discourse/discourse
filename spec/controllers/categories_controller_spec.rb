@@ -4,7 +4,8 @@ describe CategoriesController do
   describe "create" do
 
     it "requires the user to be logged in" do
-      expect { post :create, format: :json }.to raise_error(Discourse::NotLoggedIn)
+      post :create, format: :json
+      expect(response.status).to eq(403)
     end
 
     describe "logged in" do
@@ -90,8 +91,8 @@ describe CategoriesController do
   describe "destroy" do
 
     it "requires the user to be logged in" do
-      expect { delete :destroy, params: { id: "category" }, format: :json }
-        .to raise_error(Discourse::NotLoggedIn)
+      delete :destroy, params: { id: "category" }, format: :json
+      expect(response.status).to eq(403)
     end
 
     describe "logged in" do
@@ -158,7 +159,8 @@ describe CategoriesController do
   describe "update" do
 
     it "requires the user to be logged in" do
-      expect { put :update, params: { id: 'category' }, format: :json }.to raise_error(Discourse::NotLoggedIn)
+      put :update, params: { id: 'category' }, format: :json
+      expect(response.status).to eq(403)
     end
 
     describe "logged in" do
@@ -302,9 +304,8 @@ describe CategoriesController do
 
   describe 'update_slug' do
     it 'requires the user to be logged in' do
-      expect do
-        put :update_slug, params: { category_id: 'category' }, format: :json
-      end.to raise_error(Discourse::NotLoggedIn)
+      put :update_slug, params: { category_id: 'category' }, format: :json
+      expect(response.status).to eq(403)
     end
 
     describe 'logged in' do

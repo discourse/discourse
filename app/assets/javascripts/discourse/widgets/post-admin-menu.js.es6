@@ -66,6 +66,15 @@ export function buildManageButtons(attrs, currentUser) {
     });
   }
 
+  if (currentUser.staff) {
+    contents.push({
+      icon: 'certificate',
+      label: 'post.controls.grant_badge',
+      action: 'grantBadge',
+      className: 'grant-badge'
+    });
+  }
+
   if (attrs.canManage || attrs.canWiki) {
     if (attrs.wiki) {
       contents.push({

@@ -15,6 +15,6 @@ export default NotificationOptionsComponent.extend({
 
   @computed("iconForSelectedDetails")
   headerIcon(iconForSelectedDetails) {
-    return [iconForSelectedDetails, "caret-down"];
+    return [iconForSelectedDetails];
   }
 });

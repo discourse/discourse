@@ -1883,7 +1883,7 @@ sq:
         one: "1 e akorduar"
         other: "%{count} të akorduara"
       select_badge_for_title: Zgjidhni një stemë për ta përdorur si titullin tuaj
-      none: "<asnjë>"
+      none: "(asnjë)"
       badge_grouping:
         getting_started:
           name: Fillestar

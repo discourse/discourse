@@ -11,7 +11,7 @@
 
   .like-count {
     color: dark-light-choose($primary-medium, $secondary-medium);
-    .fa { color: $love; font-size: .857em; }
+    .fa { color: $love; font-size: $font-down-1; }
   }
 
   .badge-wrapper span.badge-category {
@@ -36,20 +36,20 @@
   }
   .search-link {
     .topic-statuses, .topic-title {
-      font-size: 1.286em;
-      line-height: 25px;
+      font-size: $font-up-2;
+      line-height: $line-height-large;
     }
 
     .topic-statuses {
       float: none;
       display: inline-block;
       color: dark-light-choose($primary-medium, $secondary-medium);
-      font-size: 1.0em;
+      font-size: $font-0;
     }
   }
   .blurb {
-    font-size: 1.0em;
-    line-height: 20px;
+    font-size: $font-0;
+    line-height: $line-height-large;
     word-wrap: break-word;
     max-width: 640px;
     color: dark-light-choose($primary-medium, $secondary-medium);
@@ -63,7 +63,7 @@
   }
 
   .discourse-tag {
-    font-size: 0.857em;
+    font-size: $font-down-1;
   }
 }
 
@@ -80,7 +80,7 @@
   }
   a {
     margin-right: 15px;
-    font-size: .857em;
+    font-size: $font-down-1;
     padding: 2px 5px;
   }
 }
@@ -148,7 +148,7 @@
   .result-count {
     float: left;
     span {
-      line-height: 28px;
+      line-height: $line-height-large;
       height: 28px;
       display: inline-block;
     }

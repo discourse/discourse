@@ -31,9 +31,24 @@ class Tag < ActiveRecord::Base
     q
   end
 
-  def self.category_tags_by_count_query(category, opts = {})
-    tags_by_count_query(opts).where("tags.id in (select tag_id from category_tags where category_id = ?)", category.id)
-      .where("topics.category_id = ?", category.id)
+  def self.ensure_consistency!
+    update_topic_counts # topic_count counter cache can miscount
+  end
+
+  def self.update_topic_counts
+    Category.exec_sql <<~SQL
+      UPDATE tags t
+      SET topic_count = x.topic_count
+      FROM (
+        SELECT COUNT(topics.id) AS topic_count, tags.id AS tag_id
+        FROM tags
+        LEFT JOIN topic_tags ON tags.id = topic_tags.tag_id
+        LEFT JOIN topics ON topics.id = topic_tags.topic_id AND topics.deleted_at IS NULL
+        GROUP BY tags.id
+      ) x
+      WHERE x.tag_id = t.id
+        AND x.topic_count <> t.topic_count
+    SQL
   end
 
   def self.top_tags(limit_arg: nil, category: nil, guardian: nil)

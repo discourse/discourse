@@ -45,7 +45,7 @@ export default ComboBoxComponent.extend({
       return;
     }
 
-    const refresh = () => this.send("onDeselect", value);
+    const refresh = () => this.send("deselect", value);
 
     switch(value) {
       case "invite":

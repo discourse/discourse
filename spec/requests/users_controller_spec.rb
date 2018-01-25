@@ -278,7 +278,9 @@ RSpec.describe UsersController do
           }
 
           expect(response).to be_success
-          expect(JSON.parse(response.body)["groups"].last['name']).to eq(messageable_group.name)
+
+          expect(JSON.parse(response.body)["groups"].map { |group| group['name'] })
+            .to contain_exactly(messageable_group.name, Group.find(Group::AUTO_GROUPS[:moderators]).name)
         end
 
         it 'searches for mentionable groups' do
@@ -323,6 +325,19 @@ RSpec.describe UsersController do
           expect(JSON.parse(response.body)).not_to have_key(:groups)
         end
       end
+    end
+  end
+
+  describe '.user_preferences_redirect' do
+    it 'requires the user to be logged in' do
+      get '/user_preferences'
+      expect(response.status).to eq(404)
+    end
+
+    it "redirects to their profile when logged in" do
+      sign_in(user)
+      get '/user_preferences'
+      expect(response).to redirect_to("/u/#{user.username_lower}/preferences")
     end
   end
 end

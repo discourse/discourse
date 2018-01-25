@@ -1,7 +1,7 @@
 export default Ember.Controller.extend({
   loading: false,
   term: null,
-  period: "yearly",
+  period: "quarterly",
   searchType: "all",
 
   searchTypeOptions: [

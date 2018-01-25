@@ -1234,9 +1234,6 @@ el:
       select_all: "Επιλογή Όλων"
       clear_all: "Καθαρισμός Όλων"
       too_short: "Ο όρος αναζήτησής σου είναι πολύ μικρός."
-      result_count:
-        one: "1 αποτέλεσμα για <span class='term'>{{term}}</span>"
-        other: "{{count}} αποτελέσματα για <span class='term'>{{term}}</span>"
       title: "ψάξε σε νήματα, αναρτήσεις, χρήστες ή κατηγορίες"
       no_results: "Δε βρέθηκαν αποτελέσματα."
       no_more_results: "Δε βρέθηκαν άλλα αποτελέσματα"
@@ -2217,7 +2214,7 @@ el:
         one: "1 χορηγήθηκε"
         other: "%{count} χορηγήθηκε"
       select_badge_for_title: Επίλεξε ένα παράσημο για να χρησιμοποιήσεις ως τίτλο
-      none: "<none>"
+      none: "(none)"
       badge_grouping:
         getting_started:
           name: Ξεκινώντας

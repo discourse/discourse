@@ -53,6 +53,14 @@ const path = require('path');
 
   page.on('console', msg => console.log(`PAGE LOG: ${msg.text}`));
 
+  if (process.env.AUTH_USER && process.env.AUTH_PASSWORD) {
+    await exec("basic authentication", () => {
+      return page.setExtraHTTPHeaders({
+        'Authorization': `Basic ${new Buffer(`${process.env.AUTH_USER}:${process.env.AUTH_PASSWORD}`).toString('base64')}`
+      });
+    });
+  }
+
   await exec("go to site", () => {
     return page.goto(url);
   });

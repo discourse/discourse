@@ -1,15 +1,18 @@
 function escapeRegexp(text) {
-  return text.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+  return text.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&').replace(/\*/g, "\S*");
 }
 
-export function censorFn(censoredWords, censoredPattern, replacementLetter) {
+export function censorFn(censoredWords, censoredPattern, replacementLetter, watchedWordsRegularExpressions) {
 
   let patterns = [];
 
   replacementLetter = replacementLetter || "&#9632;";
 
   if (censoredWords && censoredWords.length) {
-    patterns = censoredWords.split("|").map(t => `(${escapeRegexp(t)})`);
+    patterns = censoredWords.split("|");
+    if (!watchedWordsRegularExpressions) {
+      patterns = patterns.map(t => `(${escapeRegexp(t)})`);
+    }
   }
 
   if (censoredPattern && censoredPattern.length > 0) {
@@ -20,7 +23,11 @@ export function censorFn(censoredWords, censoredPattern, replacementLetter) {
     let censorRegexp;
 
     try {
-      censorRegexp = new RegExp("(\\b(?:" + patterns.join("|") + ")\\b)(?![^\\(]*\\))", "ig");
+      if (watchedWordsRegularExpressions) {
+        censorRegexp = new RegExp("((?:" + patterns.join("|") + "))(?![^\\(]*\\))", "ig");
+      } else {
+        censorRegexp = new RegExp("(\\b(?:" + patterns.join("|") + ")\\b)(?![^\\(]*\\))", "ig");
+      }
 
       if (censorRegexp) {
 
@@ -29,11 +36,16 @@ export function censorFn(censoredWords, censoredPattern, replacementLetter) {
 
           try {
             let m = censorRegexp.exec(text);
+            const fourCharReplacement = new Array(5).join(replacementLetter);
 
             while (m && m[0]) {
               if (m[0].length > original.length) { return original; } // regex is dangerous
-              const replacement = new Array(m[0].length+1).join(replacementLetter);
-              text = text.replace(new RegExp(`(\\b${escapeRegexp(m[0])}\\b)(?![^\\(]*\\))`, "ig"), replacement);
+              if (watchedWordsRegularExpressions) {
+                text = text.replace(censorRegexp, fourCharReplacement);
+              } else {
+                const replacement = new Array(m[0].length+1).join(replacementLetter);
+                text = text.replace(new RegExp(`(\\b${escapeRegexp(m[0])}\\b)(?![^\\(]*\\))`, "ig"), replacement);
+              }
               m = censorRegexp.exec(text);
             }
 

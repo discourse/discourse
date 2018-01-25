@@ -18,6 +18,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     @keep_onebox_source = options[:keep_onebox_source] == true
     @remap_emoji = options[:remap_emoji] == true
     @start_excerpt = false
+    @in_details_depth = 0
     @summary_contents = ""
     @detail_contents = ""
   end
@@ -91,31 +92,37 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
 
     when "aside"
       attributes = Hash[*attributes.flatten]
+      unless @keep_onebox_source && attributes['class'].include?('onebox')
+        @in_quote = true
+      end
 
-        unless @keep_onebox_source && attributes['class'].include?('onebox')
-          @in_quote = true
-        end
     when 'article'
       if @keep_onebox_source && attributes.include?(['class', 'onebox-body'])
         @in_quote = true
       end
+
     when "div", "span"
       if attributes.include?(["class", "excerpt"])
         @excerpt = ""
         @current_length = 0
         @start_excerpt = true
       end
-        # Preserve spoilers
-        if attributes.include?(["class", "spoiler"])
-          include_tag("span", attributes)
-          @in_spoiler = true
-        end
+      # Preserve spoilers
+      if attributes.include?(["class", "spoiler"])
+        include_tag("span", attributes)
+        @in_spoiler = true
+      end
+
     when "details"
-      @detail_contents = ""
-      @in_details = true
+      @detail_contents = "" if @in_details_depth == 0
+      @in_details_depth += 1
+
     when "summary"
-      @summary_contents = ""
-      @in_summary = true
+      if @in_details_depth == 1 && !@in_summary
+        @summary_contents = ""
+        @in_summary = true
+      end
+
     end
   end
 
@@ -135,16 +142,17 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     when "aside"
       @in_quote = false
     when "details"
-      @in_details = false
-      full = "<details><summary>#{clean(@summary_contents)}</summary>#{clean(@detail_contents)}</details>"
-      if @current_length + full.length > @length
-        @excerpt << "<details class='disabled'><summary>#{@summary_contents[0..@length]}</summary></details>"
-      else
-        @excerpt << full
+      @in_details_depth -= 1
+      if @in_details_depth == 0
+        full = "<details><summary>#{clean(@summary_contents)}</summary>#{clean(@detail_contents)}</details>"
+        if @current_length + full.length > @length
+          @excerpt << "<details class='disabled'><summary>#{@summary_contents[0..@length]}</summary></details>"
+        else
+          @excerpt << full
+        end
       end
-
     when "summary"
-      @in_summary = false
+      @in_summary = false if @in_details_depth == 1
     when "div", "span"
       throw :done if @start_excerpt
       characters("</span>", false, false, false) if @in_spoiler
@@ -161,7 +169,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
 
     # we call length on this so might as well ensure we have a string
     string = string.to_s
-    if @in_details
+    if @in_details_depth > 0
       if @in_summary
         @summary_contents << string
       else

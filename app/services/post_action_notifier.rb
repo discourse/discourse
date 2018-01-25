@@ -13,7 +13,7 @@ class PostActionNotifier
   end
 
   def self.refresh_like_notification(post, read)
-    return unless post && post.user_id
+    return unless post && post.user_id && post.topic
 
     usernames = post.post_actions.where(post_action_type_id: PostActionType.types[:like])
       .joins(:user)

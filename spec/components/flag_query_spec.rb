@@ -59,6 +59,12 @@ describe FlagQuery do
       posts = FlagQuery.flagged_posts_report(admin, topic_id: -1)
       expect(posts[0]).to be_blank
 
+      # Try by user
+      posts = FlagQuery.flagged_posts_report(admin, user_id: post.user_id)
+      expect(posts).to be_present
+      posts = FlagQuery.flagged_posts_report(admin, user_id: -1000)
+      expect(posts[0]).to be_blank
+
       # chuck post in category a mod can not see and make sure its missing
       category = Fabricate(:category)
       category.set_permissions(admins: :full)

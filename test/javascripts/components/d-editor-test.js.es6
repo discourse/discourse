@@ -248,6 +248,9 @@ testCase('link modal (simple link) with selected text', function(assert, textare
   textarea.selectionEnd = 12;
 
   click('button.link');
+  andThen(() => {
+    assert.equal(this.$('input.link-text')[0].value, 'hello world.');
+  });
   fillIn('.insert-link input.link-url', 'http://eviltrout.com');
   click('.insert-link button.btn-primary');
   andThen(() => {

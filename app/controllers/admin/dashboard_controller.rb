@@ -9,6 +9,6 @@ class Admin::DashboardController < Admin::AdminController
   end
 
   def problems
-    render_json_dump(problems: AdminDashboardData.fetch_problems)
+    render_json_dump(problems: AdminDashboardData.fetch_problems(check_force_https: request.ssl?))
   end
 end
