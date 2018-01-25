@@ -194,7 +194,7 @@ $mobile-breakpoint: 700px;
   .location-box {
     position: absolute;
     width: 460px;
-    right: 0px;
+    right: 0;
     z-index: z("dropdown");
     box-shadow: 0 2px 6px rgba(0,0,0, .8);
     margin-top: -2px;
@@ -518,7 +518,7 @@ $mobile-breakpoint: 700px;
 
       li.sortable-placeholder {
         padding: 3px 5px 3px 18px;
-        margin: 3px 0px 3px 5px;
+        margin: 3px 0 3px 5px;
         position: relative;
         line-height: $line-height-small;
         cursor: default;

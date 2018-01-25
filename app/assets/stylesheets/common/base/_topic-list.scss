@@ -68,14 +68,14 @@
     td {
       border-bottom: 1px solid $danger-low;
       line-height: 0.1em;
-      padding: 0px;
+      padding: 0;
       text-align: center;
     }
 
     td span {
       background-color: $secondary;
       color: $danger-low;
-      padding: 0px 8px;
+      padding: 0 8px;
       font-size: $font-down-1;
     }
   }

@@ -45,7 +45,7 @@
       top: 0;
     }
 
-    .select-kit-collection, {
+    .select-kit-collection {
       border-radius: inherit;
     }
   }
@@ -91,7 +91,6 @@
             flex-direction: row;
     -webkit-box-pack: justify;
         -ms-flex-pack: justify;
-            justify-content: space-between;
 
     .selected-name {
       text-align: left;
@@ -106,7 +105,7 @@
     }
 
     .btn-clear {
-      padding: 0px 10px;
+      padding: 0 10px;
       border: 0;
       background: none;
     }
@@ -261,8 +260,8 @@
       overflow: hidden;
       position: fixed;
       outline: 0;
-      left: 0px;
-      top: 0px;
+      left: 0;
+      top: 0;
     }
   }
 

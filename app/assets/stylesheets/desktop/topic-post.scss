@@ -908,7 +908,7 @@ a.attachment:before {
 
 .who-liked {
   margin-top: 20px;
-  margin-bottom: 0px;
+  margin-bottom: 0;
   width: 100%;
   text-align: right;
 }
@@ -924,7 +924,7 @@ span.highlighted {
 .read-state {
   color: $tertiary-medium;
   position: absolute;
-  right: 0px;
+  right: 0;
   top: 2em;
   font-size: 0.571em;
 }
