@@ -15,6 +15,7 @@ I18n.pluralizationRules = {
 
 // Set current locale to null
 I18n.locale = null;
+I18n.fallbackLocale = null;
 
 // Set the placeholder format. Accepts `{{placeholder}}` and `%{placeholder}`.
 I18n.PLACEHOLDER = /(?:\{\{|%\{)(.*?)(?:\}\}?)/gm;
@@ -143,6 +144,10 @@ I18n.translate = function(scope, options) {
   var translation = this.lookup(scope, options);
 
   if (!this.noFallbacks) {
+    if (!translation && this.fallbackLocale) {
+      options.locale = this.fallbackLocale;
+      translation = this.lookup(scope, options);
+    }
     if (!translation && this.currentLocale() !== this.defaultLocale) {
       options.locale = this.defaultLocale;
       translation = this.lookup(scope, options);
