@@ -292,5 +292,33 @@ I18n.currentLocale = function() {
   return I18n.locale || I18n.defaultLocale;
 };
 
+I18n.enableVerboseLocalization = function() {
+  var counter = 0;
+  var keys = {};
+  var t = I18n.t;
+
+  I18n.noFallbacks = true;
+
+  I18n.t = I18n.translate = function(scope, value){
+    var current = keys[scope];
+    if (!current) {
+      current = keys[scope] = ++counter;
+      var message = "Translation #" + current + ": " + scope;
+      if (!_.isEmpty(value)) {
+        message += ", parameters: " + JSON.stringify(value);
+      }
+      Em.Logger.info(message);
+    }
+    return t.apply(I18n, [scope, value]) + " (#" + current + ")";
+  };
+};
+
+I18n.enableVerboseLocalizationSession = function() {
+  sessionStorage.setItem("verbose_localization", "true");
+  I18n.enableVerboseLocalization();
+
+  return 'Verbose localization is enabled. Close the browser tab to turn it off. Reload the page to see the translation keys.';
+};
+
 // shortcuts
 I18n.t = I18n.translate;
