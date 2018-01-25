@@ -17,13 +17,19 @@ module Hijack
 
       # in the past unicorn would recycle env, this is not longer the case
       env = request.env
+
+      # rack may clean up tempfiles unless we trick it and take control
+      tempfiles = env[Rack::RACK_TEMPFILES]
+      env[Rack::RACK_TEMPFILES] = nil
       request_copy = ActionDispatch::Request.new(env)
 
       transfer_timings = MethodProfiler.transfer
 
       io = hijack.call
 
-      original_headers = response.headers
+      # duplicate headers so other middleware does not mess with it
+      # on the way down the stack
+      original_headers = response.headers.dup
 
       Scheduler::Defer.later("hijack #{params["controller"]} #{params["action"]}") do
 
@@ -42,10 +48,7 @@ module Hijack
 
           instance.request = request_copy
           original_headers&.each do |k, v|
-            # hash special handling so skip
-            if k != "Cache-Control"
-              instance.response.headers[k] = v
-            end
+            instance.response.headers[k] = v
           end
 
           begin
@@ -100,6 +103,8 @@ module Hijack
             status = response.status rescue 500
             request_tracker.log_request_info(env, [status, headers || {}, []], timings)
           end
+
+          tempfiles&.each(&:close!)
         end
       end
       # not leaked out, we use 418 ... I am a teapot to denote that we are hijacked
