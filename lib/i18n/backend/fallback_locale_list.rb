@@ -3,7 +3,8 @@ module I18n
     # Configure custom fallback order
     class FallbackLocaleList < Hash
       def [](locale)
-        [locale, SiteSetting.default_locale.to_sym, :en].uniq.compact
+        fallback_locale = LocaleSiteSetting.fallback_locale(locale)
+        [locale, fallback_locale, SiteSetting.default_locale.to_sym, :en].uniq.compact
       end
     end
   end
