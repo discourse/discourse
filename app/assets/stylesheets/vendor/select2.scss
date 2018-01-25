@@ -402,7 +402,6 @@ disabled look for disabled choices in the results dropdown
 
 .select2-container-multi .select2-choices {
     height: auto !important;
-    height: 1%;
     margin: 0;
     padding: 0 5px 0 0;
     position: relative;
@@ -558,8 +557,8 @@ html[dir="rtl"] .select2-search-choice-close {
     overflow: hidden !important;
     position: absolute !important;
     outline: 0 !important;
-    left: 0px !important;
-    top: 0px !important;
+    left: 0 !important;
+    top: 0 !important;
 }
 
 .select2-display-none {
