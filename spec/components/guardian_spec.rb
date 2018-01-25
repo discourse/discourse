@@ -2,6 +2,7 @@ require 'rails_helper';
 
 require 'guardian'
 require_dependency 'post_destroyer'
+require_dependency 'post_locker'
 
 describe Guardian do
 
@@ -1091,6 +1092,11 @@ describe Guardian do
         expect(Guardian.new(post.user).can_edit?(post)).to be_truthy
       end
 
+      it 'returns false if you try to edit a locked post' do
+        post.locked_by_id = moderator.id
+        expect(Guardian.new(post.user).can_edit?(post)).to be_falsey
+      end
+
       it "returns false if the post is hidden due to flagging and it's too soon" do
         post.hidden = true
         post.hidden_at = Time.now
@@ -1161,6 +1167,11 @@ describe Guardian do
       end
 
       it 'returns true as a moderator' do
+        expect(Guardian.new(moderator).can_edit?(post)).to be_truthy
+      end
+
+      it 'returns true as a moderator, even if locked' do
+        post.locked_by_id = admin.id
         expect(Guardian.new(moderator).can_edit?(post)).to be_truthy
       end
 

@@ -1900,6 +1900,7 @@ en:
         other: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
       collapse: "collapse"
       expand_collapse: "expand/collapse"
+      locked: "a staff member has locked this post from being edited"
       gap:
         one: "view 1 hidden reply"
         other: "view {{count}} hidden replies"
@@ -1981,6 +1982,10 @@ en:
         unhide: "Unhide"
         change_owner: "Change Ownership"
         grant_badge: "Grant Badge"
+        lock_post: "Lock Post"
+        lock_post_description: "prevent the poster from editing this post"
+        unlock_post: "Unlock Post"
+        unlock_post_description: "allow the poster to edit this post"
 
       actions:
         flag: 'Flag'
@@ -3220,6 +3225,8 @@ en:
             backup_destroy: "destroy backup"
             reviewed_post: "reviewed post"
             custom_staff: "plugin custom action"
+            post_locked: "post locked"
+            post_unlocked: "post unlocked"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
