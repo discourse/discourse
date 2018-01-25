@@ -64,7 +64,9 @@ export function buildManageButtons(attrs, currentUser) {
       action: 'changePostOwner',
       className: 'change-owner'
     });
+  }
 
+  if (currentUser.staff) {
     contents.push({
       icon: 'certificate',
       label: 'post.controls.grant_badge',
