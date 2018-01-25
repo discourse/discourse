@@ -63,7 +63,9 @@ class UserHistory < ActiveRecord::Base
                           backup_download: 45,
                           backup_destroy: 46,
                           notified_about_get_a_room: 47,
-                          change_name: 48)
+                          change_name: 48,
+                          post_locked: 49,
+                          post_unlocked: 50)
   end
 
   # Staff actions is a subset of all actions, used to audit actions taken by staff users.
@@ -104,7 +106,9 @@ class UserHistory < ActiveRecord::Base
                         :activate_user,
                         :change_readonly_mode,
                         :backup_download,
-                        :backup_destroy]
+                        :backup_destroy,
+                        :post_locked,
+                        :post_unlocked]
   end
 
   def self.staff_action_ids

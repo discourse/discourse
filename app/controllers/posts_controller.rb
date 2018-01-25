@@ -4,12 +4,34 @@ require_dependency 'post_destroyer'
 require_dependency 'post_merger'
 require_dependency 'distributed_memoizer'
 require_dependency 'new_post_result_serializer'
+require_dependency 'post_locker'
 
 class PostsController < ApplicationController
 
-  before_action :ensure_logged_in, except: [:show, :replies, :by_number, :short_link, :reply_history, :replyIids, :revisions, :latest_revision, :expand_embed, :markdown_id, :markdown_num, :cooked, :latest, :user_posts_feed]
+  before_action :ensure_logged_in, except: [
+    :show,
+    :replies,
+    :by_number,
+    :short_link,
+    :reply_history,
+    :replyIids,
+    :revisions,
+    :latest_revision,
+    :expand_embed,
+    :markdown_id,
+    :markdown_num,
+    :cooked,
+    :latest,
+    :user_posts_feed
+  ]
 
-  skip_before_action :preload_json, :check_xhr, only: [:markdown_id, :markdown_num, :short_link, :latest, :user_posts_feed]
+  skip_before_action :preload_json, :check_xhr, only: [
+    :markdown_id,
+    :markdown_num,
+    :short_link,
+    :latest,
+    :user_posts_feed
+  ]
 
   def markdown_id
     markdown Post.find(params[:id].to_i)
@@ -379,6 +401,13 @@ class PostsController < ApplicationController
     end
 
     render_json_dump(result)
+  end
+
+  def locked
+    post = find_post_from_params
+    locker = PostLocker.new(post, current_user)
+    params[:locked] === "true" ? locker.lock : locker.unlock
+    render_json_dump(locked: post.locked?)
   end
 
   def bookmark

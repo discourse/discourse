@@ -46,6 +46,10 @@ module PostGuardian
     !!result
   end
 
+  def can_lock_post?(post)
+    can_see_post?(post) && is_staff?
+  end
+
   def can_defer_flags?(post)
     can_see_post?(post) && is_staff? && post
   end
@@ -98,6 +102,9 @@ module PostGuardian
 
     return true if is_admin?
 
+    # Must be staff to edit a locked post
+    return false if post.locked? && !is_staff?
+
     if is_staff? || @user.has_trust_level?(TrustLevel[4])
       return can_create_post?(post.topic)
     end
@@ -106,6 +113,7 @@ module PostGuardian
       return false
     end
 
+
     if post.wiki && (@user.trust_level >= SiteSetting.min_trust_to_edit_wiki_post.to_i)
       return can_create_post?(post.topic)
     end
@@ -113,6 +121,7 @@ module PostGuardian
     if @user.trust_level < SiteSetting.min_trust_to_edit_post
       return false
     end
+
 
     if is_my_own?(post)
       if post.hidden?

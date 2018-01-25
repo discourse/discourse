@@ -518,6 +518,14 @@ export default Ember.Controller.extend(BufferedContent, {
       this.send('changeOwner');
     },
 
+    lockPost(post) {
+      return post.updatePostField('locked', true);
+    },
+
+    unlockPost(post) {
+      return post.updatePostField('locked', false);
+    },
+
     grantBadge(post) {
       this.set("selectedPostIds", [post.id]);
       this.send('showGrantBadgeModal');

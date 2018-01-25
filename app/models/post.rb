@@ -735,6 +735,10 @@ class Post < ActiveRecord::Base
     UserActionCreator.log_post(self)
   end
 
+  def locked?
+    locked_by_id.present?
+  end
+
   private
 
   def parse_quote_into_arguments(quote)

@@ -320,8 +320,11 @@ aside.quote {
 }
 
 .post-info {
+
   &.via-email, &.whisper {
     line-height: $line-height-medium;
+  }
+  &.via-email, &.whisper, &.post-locked {
     margin-right: 5px;
     .d-icon {
       font-size: $font-0;
