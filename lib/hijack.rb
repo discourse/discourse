@@ -69,8 +69,8 @@ module Hijack
             Discourse::Cors.apply_headers(cors_origins, env, headers)
           end
 
+          headers['Content-Type'] ||= response.content_type || "text/plain"
           headers['Content-Length'] = body.bytesize
-          headers['Content-Type'] = response.content_type || "text/plain"
           headers['Connection'] = "close"
 
           status_string = Rack::Utils::HTTP_STATUS_CODES[response.status.to_i] || "Unknown"

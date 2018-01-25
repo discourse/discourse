@@ -157,7 +157,7 @@ describe Hijack do
       redirect_to 'http://awesome.com'
     end
 
-    result = "HTTP/1.1 302 Found\r\nLocation: http://awesome.com\r\nContent-Type: text/html\r\nContent-Length: 84\r\nConnection: close\r\nX-Runtime: 1.000000\r\n\r\n<html><body>You are being <a href=\"http://awesome.com\">redirected</a>.</body></html>"
+    result = "HTTP/1.1 302 Found\r\nLocation: http://awesome.com\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: 84\r\nConnection: close\r\nX-Runtime: 1.000000\r\n\r\n<html><body>You are being <a href=\"http://awesome.com\">redirected</a>.</body></html>"
     expect(tester.io.string).to eq(result)
   end
 
@@ -168,7 +168,7 @@ describe Hijack do
       render body: nil
     end
 
-    result = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 0\r\nConnection: close\r\nX-Runtime: 1.000000\r\n\r\n"
+    result = "HTTP/1.1 200 OK\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Length: 0\r\nConnection: close\r\nX-Runtime: 1.000000\r\n\r\n"
     expect(tester.io.string).to eq(result)
   end
 
@@ -179,7 +179,7 @@ describe Hijack do
       render plain: "hello world"
     end
 
-    result = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 11\r\nConnection: close\r\nX-Runtime: 1.000000\r\n\r\nhello world"
+    result = "HTTP/1.1 200 OK\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Length: 11\r\nConnection: close\r\nX-Runtime: 1.000000\r\n\r\nhello world"
     expect(tester.io.string).to eq(result)
   end
 
@@ -187,7 +187,7 @@ describe Hijack do
     Process.stubs(:clock_gettime).returns(1.0)
     tester.hijack_test
 
-    expected = "HTTP/1.1 500 Internal Server Error\r\nContent-Type: text/html\r\nContent-Length: 0\r\nConnection: close\r\nX-Runtime: 0.000000\r\n\r\n"
+    expected = "HTTP/1.1 500 Internal Server Error\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: 0\r\nConnection: close\r\nX-Runtime: 0.000000\r\n\r\n"
     expect(tester.io.string).to eq(expected)
   end
 
