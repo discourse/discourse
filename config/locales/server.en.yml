@@ -363,7 +363,7 @@ en:
     reviving_old_topic: |
       ### Revive this topic?
 
-      The last reply to this topic was **%{days}** days ago. Your reply will bump the topic to the top of its list and notify anyone previously involved in the conversation.
+      The last reply to this topic was **%{time_ago}**. Your reply will bump the topic to the top of its list and notify anyone previously involved in the conversation.
 
       Are you sure you want to continue this old conversation?
 
