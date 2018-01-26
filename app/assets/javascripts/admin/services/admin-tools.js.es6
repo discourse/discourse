@@ -17,12 +17,24 @@ export default Ember.Service.extend({
     this.siteSettings = getOwner(this).lookup('site-settings:main');
   },
 
+  showActionLogs(target, filters) {
+    const controller = getOwner(target).lookup('controller:adminLogs.staffActionLogs');
+    target.transitionToRoute('adminLogs.staffActionLogs').then(() => {
+      controller.set('filters', Ember.Object.create());
+      controller._changeFilters(filters);
+    });
+  },
+
   showFlagsReceived(user) {
     showModal(`admin-flags-received`, { admin: true, model: user });
   },
 
   checkSpammer(userId) {
     return AdminUser.find(userId).then(au => this.spammerDetails(au));
+  },
+
+  deleteUser(id) {
+    AdminUser.find(id).then(user => user.destroy({ deletePosts: true }));
   },
 
   spammerDetails(adminUser) {
