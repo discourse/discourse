@@ -107,6 +107,9 @@ class UsersController < ApplicationController
     guardian.ensure_can_edit!(user)
     attributes = user_params.merge!(custom_fields: params[:custom_fields])
 
+    # We can't update the username via this route. Use the username route
+    attributes.delete(:username)
+
     if params[:user_fields].present?
       attributes[:custom_fields] = {} unless params[:custom_fields].present?
 
