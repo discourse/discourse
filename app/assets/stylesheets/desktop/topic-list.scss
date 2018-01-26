@@ -65,20 +65,15 @@
     }
     button.bulk-select {
       padding: 0;
-      margin-right: 0.3em;
     }
 
-    .star {
-      width: 20px;
-      padding-right: 0;
-      .d-icon-star {
-        position: relative;
-      }
+    td.bulk-select {
+      padding: 10px;
       + .main-link {
-        padding-left: 5px;
+        padding-left: 0;
       }
     }
-
+    
     .badge-notification {
       position: relative;
       top: -2px;
@@ -163,11 +158,6 @@
     .with-year {
       white-space: nowrap;
     }
-  }
-
-  .topic-list tbody tr.has-excerpt .star {
-    vertical-align: top;
-    margin-top: 3px;
   }
 
   .topic-list.categories {
