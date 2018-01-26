@@ -26,7 +26,10 @@
       }
 
       &.bullet.has-selection .category-drop-header {
-        padding: 5.25px 10px;
+        padding: 3.5px 10px;
+        span.badge-category {
+          line-height: $line-height-large;
+        }
       }
 
       &.box.has-selection .category-drop-header {
