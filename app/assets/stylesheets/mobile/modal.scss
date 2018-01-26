@@ -10,18 +10,8 @@
 
 // Hardcode to be the same as before for now. I would recommend not using bootbox, or finding a way so the html structure can be the same
 .bootbox.modal {
-  position: fixed;
   top: 10%;
-  z-index: z("modal","content");
-  overflow: auto;
   width: 100%;
-  height: auto;
-  background-color: $secondary;
-  border: 1px solid rgba(0, 0, 0, 0.3);
-
-  @include border-radius-all (6px);
-  box-shadow: 0 3px 7px rgba(0,0,0, 0.3);
-  background-clip: padding-box;
 }
 
 .modal.fade {
