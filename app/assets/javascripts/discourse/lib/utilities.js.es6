@@ -193,6 +193,8 @@ export function validateUploadedFiles(files, opts) {
 }
 
 export function validateUploadedFile(file, opts) {
+  if (!authorizesOneOrMoreExtensions()) return false;
+
   opts = opts || {};
 
   const name = file && file.name;
@@ -275,6 +277,21 @@ export function authorizedImagesExtensions() {
 
 export function authorizesAllExtensions() {
   return Discourse.SiteSettings.authorized_extensions.indexOf("*") >= 0;
+}
+
+export function authorizesOneOrMoreExtensions() {
+  if (authorizesAllExtensions()) return true;
+
+  return Discourse.SiteSettings.authorized_extensions
+          .split("|")
+          .filter(ext => ext)
+          .length > 0;
+}
+
+export function authorizesOneOrMoreImageExtensions() {
+  if (authorizesAllExtensions()) return true;
+
+  return imagesExtensions().length > 0;
 }
 
 export function isAnImage(path) {
