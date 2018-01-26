@@ -391,6 +391,66 @@ describe PostRevisor do
       end
     end
 
+    context "staff_edit_locks_post" do
+
+      context "disabled" do
+        before do
+          SiteSetting.staff_edit_locks_post = false
+        end
+
+        it "does not lock the post when revised" do
+          result = subject.revise!(
+            Fabricate(:moderator),
+            raw: "lets totally update the body"
+          )
+          expect(result).to eq(true)
+          post.reload
+          expect(post).not_to be_locked
+        end
+      end
+
+      context "enabled" do
+        let(:moderator) { Fabricate(:moderator) }
+
+        before do
+          SiteSetting.staff_edit_locks_post = true
+        end
+
+        it "locks the post when revised by staff" do
+          result = subject.revise!(
+            moderator,
+            raw: "lets totally update the body"
+          )
+          expect(result).to eq(true)
+          post.reload
+          expect(post).to be_locked
+        end
+
+        it "doesn't lock the post when revised by a regular user" do
+          result = subject.revise!(
+            Fabricate(:user),
+            raw: "lets totally update the body"
+          )
+          expect(result).to eq(true)
+          post.reload
+          expect(post).not_to be_locked
+        end
+
+        it "doesn't lock a staff member's post" do
+          staff_post = Fabricate(:post, user: moderator)
+          revisor = PostRevisor.new(staff_post)
+
+          result = revisor.revise!(
+            moderator,
+            raw: "lets totally update the body"
+          )
+          expect(result).to eq(true)
+          staff_post.reload
+          expect(staff_post).not_to be_locked
+        end
+      end
+    end
+
     context "tagging" do
       context "tagging disabled" do
         before do
