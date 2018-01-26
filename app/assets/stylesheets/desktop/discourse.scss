@@ -401,25 +401,7 @@ input {
   }
 }
 
-// Special elements
-#main {
-  a.star {
-    color: $secondary-medium;
 
-    &:before {
-      font-family: "FontAwesome";
-      content: "\f005";
-    }
-
-    @include hover {
-      opacity: 0.6;
-    }
-
-    &:active {
-      opacity: 1;
-    }
-  }
-}
 
 // Media Queries
 @media all
