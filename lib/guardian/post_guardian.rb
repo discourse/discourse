@@ -113,7 +113,6 @@ module PostGuardian
       return false
     end
 
-
     if post.wiki && (@user.trust_level >= SiteSetting.min_trust_to_edit_wiki_post.to_i)
       return can_create_post?(post.topic)
     end
@@ -121,7 +120,6 @@ module PostGuardian
     if @user.trust_level < SiteSetting.min_trust_to_edit_post
       return false
     end
-
 
     if is_my_own?(post)
       if post.hidden?
