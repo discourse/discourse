@@ -1247,6 +1247,7 @@ en:
       topic_featured_link_placeholder: "Enter link shown with title."
       remove_featured_link: "Remove link from topic."
       reply_placeholder: "Type here. Use Markdown, BBCode, or HTML to format. Drag or paste images."
+      reply_placeholder_no_images: "Type here. Use Markdown, BBCode, or HTML to format."
       view_new_post: "View your new post."
       saving: "Saving"
       saved: "Saved!"
