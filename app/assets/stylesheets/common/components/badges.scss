@@ -91,7 +91,7 @@
     height: 10px;
     margin-right: 5px;
     display: inline-block;
-    line-height: .8;
+    line-height: $line-height-small;
 
     &:before {
       content: "\a0";
