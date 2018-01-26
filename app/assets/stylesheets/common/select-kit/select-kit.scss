@@ -94,9 +94,9 @@
 
     .selected-name {
       text-align: left;
-      -webkit-box-flex: 1 100%;
-              -ms-flex: 1 100%;
-                  flex: 1 100%;
+      -webkit-box-flex: 1 1 auto;
+              -ms-flex: 1 1 auto;
+                  flex: 1 1 auto;
       -o-text-overflow: ellipsis;
          text-overflow: ellipsis;
       white-space: nowrap;

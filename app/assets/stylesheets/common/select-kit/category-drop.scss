@@ -70,6 +70,7 @@
         padding: 0;
         min-width: 100px;
         max-height: 300px;
+        max-width: 30em;
 
         .collection-header {
           .category-filter {
@@ -129,7 +130,7 @@
         .badge-wrapper {
           margin: 0;
           display: flex;
-          flex: 1;
+          flex: 1 1 auto;
         }
       }
 
