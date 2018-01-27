@@ -379,6 +379,13 @@ class StaffActionLogger
                                     new_value: state))
   end
 
+  def log_check_personal_message(topic, opts = {})
+    raise Discourse::InvalidParameters.new(:topic) unless topic && topic.is_a?(Topic)
+    UserHistory.create(params(opts).merge(action: UserHistory.actions[:check_personal_message],
+                                          topic_id: topic.id,
+                                          context: topic.relative_url))
+  end
+
   private
 
     def params(opts = nil)

@@ -3227,6 +3227,7 @@ en:
             custom_staff: "plugin custom action"
             post_locked: "post locked"
             post_unlocked: "post unlocked"
+            check_personal_message: "check personal message"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
