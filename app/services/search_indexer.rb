@@ -14,6 +14,9 @@ class SearchIndexer
     HtmlScrubber.scrub(html)
   end
 
+  # @param raw_entries The list of entries to index. When more than one entry is provided, they will get a weight. The
+  # first one will have a priority A; he second one a priority B, etc.
+  # When only 1 entry is provided, no weights will be used.
   def self.update_index(table, id, *raw_entries)
     raw_data = Search.prepare_data(raw_entries.join(' '), :index)
 
