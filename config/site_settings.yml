@@ -425,6 +425,7 @@ users:
   hide_suspension_reasons:
     default: false
     client: true
+  log_personal_messages_views: false
 
 groups:
   enable_group_directory:

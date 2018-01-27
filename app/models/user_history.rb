@@ -65,7 +65,8 @@ class UserHistory < ActiveRecord::Base
                           notified_about_get_a_room: 47,
                           change_name: 48,
                           post_locked: 49,
-                          post_unlocked: 50)
+                          post_unlocked: 50,
+                          check_personal_message: 51)
   end
 
   # Staff actions is a subset of all actions, used to audit actions taken by staff users.
@@ -108,7 +109,8 @@ class UserHistory < ActiveRecord::Base
                         :backup_download,
                         :backup_destroy,
                         :post_locked,
-                        :post_unlocked]
+                        :post_unlocked,
+                        :check_personal_message]
   end
 
   def self.staff_action_ids

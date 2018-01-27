@@ -1463,6 +1463,9 @@ en:
     show_inactive_accounts: "Allow logged in users to browse profiles of inactive accounts."
 
     hide_suspension_reasons: "Don't display suspension reasons publically on user profiles."
+
+    log_personal_messages_views: "Log personal message views by Admin for other users/groups."
+
     user_website_domains_whitelist: "User website will be verified against these domains. Pipe-delimited list."
 
     allow_profile_backgrounds: "Allow users to upload profile backgrounds."
