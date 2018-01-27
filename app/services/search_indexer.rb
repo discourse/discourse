@@ -24,7 +24,7 @@ class SearchIndexer
     foreign_key = "#{table}_id"
     stemmer = stemmer_from_table(table)
 
-    indexable_entries = raw_entries.collect{|raw_entry| prepare_entry_for_indexing(raw_entry)}
+    indexable_entries = raw_entries.collect { |raw_entry| prepare_entry_for_indexing(raw_entry) }
 
     # Would be nice to use AR here but not sure how to execut Postgres functions
     # when inserting data like this.
