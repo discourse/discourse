@@ -773,7 +773,7 @@ class Search
   end
 
   def self.default_ts_config
-      "'#{Search.ts_config}'"
+    "'#{Search.ts_config}'"
     end
 
     def default_ts_config
