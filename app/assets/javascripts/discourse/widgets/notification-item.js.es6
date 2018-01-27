@@ -27,6 +27,8 @@ createWidget('notification-item', {
     const attrs = this.attrs;
     const data = attrs.data;
 
+    if (data.external_url) { return data.external_url; }
+
     const badgeId = data.badge_id;
     if (badgeId) {
       let badgeSlug = data.badge_slug;
@@ -102,7 +104,7 @@ createWidget('notification-item', {
     let { data } = attrs;
     let infoKey = notName === 'custom' ? data.message : notName;
     let title = I18n.t(`notifications.alt.${infoKey}`);
-    let icon = iconNode(`notification.${infoKey}`, { title });
+    let icon = iconNode(data.icon || `notification.${infoKey}`, { title });
 
     let text = emojiUnescape(this.text(notificationType, notName));
 
@@ -113,7 +115,8 @@ createWidget('notification-item', {
     let contents = [ icon, html ];
 
     const href = this.url();
-    return href ? h('a', { attributes: { href, title, 'data-auto-route': true } }, contents) : contents;
+    const autoRoute = data.external_url ? false : true;
+    return href ? h('a', { attributes: { href, title, 'data-auto-route': autoRoute } }, contents) : contents;
   },
 
   click(e) {
@@ -127,6 +130,8 @@ createWidget('notification-item', {
     e.preventDefault();
 
     this.sendWidgetEvent('linkClicked');
-    DiscourseURL.routeTo(this.url());
+
+    const externalUrl = this.attrs.data.external_url;
+    externalUrl ? (window.location = externalUrl) : DiscourseURL.routeTo(this.url());
   }
 });

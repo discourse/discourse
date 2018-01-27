@@ -489,11 +489,14 @@ Discourse::Application.routes.draw do
     end
   end
 
-  get 'notifications' => 'notifications#index'
-  put 'notifications/mark-read' => 'notifications#mark_read'
-  # creating an alias cause the api was extended to mark a single notification
-  # this allows us to cleanly target it
-  put 'notifications/read' => 'notifications#mark_read'
+  resources :notifications, except: :show do
+    collection do
+      put 'mark-read' => 'notifications#mark_read'
+      # creating an alias cause the api was extended to mark a single notification
+      # this allows us to cleanly target it
+      put 'read' => 'notifications#mark_read'
+    end
+  end
 
   match "/auth/:provider/callback", to: "users/omniauth_callbacks#complete", via: [:get, :post]
   match "/auth/failure", to: "users/omniauth_callbacks#failure", via: [:get, :post]
