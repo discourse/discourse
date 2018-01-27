@@ -14,15 +14,48 @@ class SearchIndexer
     HtmlScrubber.scrub(html)
   end
 
-  def self.update_index(table, id, raw_data)
-    raw_data = Search.prepare_data(raw_data, :index)
+  def self.update_index(table, id, *raw_entries)
+    raw_data = Search.prepare_data(raw_entries.join(' '), :index)
 
     table_name = "#{table}_search_data"
     foreign_key = "#{table}_id"
+    stemmer = stemmer_from_table(table)
 
-    # insert some extra words for I.am.a.word so "word" is tokenized
-    # I.am.a.word becomes I.am.a.word am a word
-    search_data = raw_data.gsub(/[^[:space:]]*[\.]+[^[:space:]]*/) do |with_dot|
+    indexable_entries = raw_entries.collect{|raw_entry| prepare_entry_for_indexing(raw_entry)}
+
+    # Would be nice to use AR here but not sure how to execut Postgres functions
+    # when inserting data like this.
+    statement_params = params_for_update_index_statement(id, indexable_entries, raw_data)
+    ts_vector = build_ts_vector(stemmer, indexable_entries)
+
+    rows = Post.exec_sql_row_count("UPDATE #{table_name}
+                                   SET
+                                      raw_data = :raw_data,
+                                      locale = :locale,
+                                      search_data = #{ts_vector},
+                                      version = :version
+                                   WHERE #{foreign_key} = :id",
+                                    statement_params)
+    if rows == 0
+      Post.exec_sql("INSERT INTO #{table_name}
+                    (#{foreign_key}, search_data, locale, raw_data, version)
+                    VALUES (:id, #{ts_vector}, :locale, :raw_data, :version)",
+                                      statement_params)
+    end
+
+    rescue
+    # don't allow concurrency to mess up saving a post
+  end
+
+  # for user login and name use "simple" lowercase stemmer
+  def self.stemmer_from_table(table)
+    table == "user" ? "simple" : Search.ts_config
+  end
+
+  # insert some extra words for I.am.a.word so "word" is tokenized
+  # I.am.a.word becomes I.am.a.word am a word
+  def self.prepare_entry_for_indexing(raw_data)
+    raw_data.gsub(/[^[:space:]]*[\.]+[^[:space:]]*/) do |with_dot|
       split = with_dot.split(".")
       if split.length > 1
         with_dot + (" " << split[1..-1].join(" "))
@@ -30,41 +63,50 @@ class SearchIndexer
         with_dot
       end
     end
+  end
 
-    # for user login and name use "simple" lowercase stemmer
-    stemmer = table == "user" ? "simple" : Search.ts_config
+  def self.params_for_update_index_statement(id, indexable_entries, raw_data)
+    statement_params = {
+      raw_data: raw_data,
+      id: id,
+      locale: SiteSetting.default_locale,
+      version: Search::INDEX_VERSION
+    }
 
-    # Would be nice to use AR here but not sure how to execut Postgres functions
-    # when inserting data like this.
-    rows = Post.exec_sql_row_count("UPDATE #{table_name}
-                                   SET
-                                      raw_data = :raw_data,
-                                      locale = :locale,
-                                      search_data = TO_TSVECTOR('#{stemmer}', :search_data),
-                                      version = :version
-                                   WHERE #{foreign_key} = :id",
-                                    raw_data: raw_data,
-                                    search_data: search_data,
-                                    id: id,
-                                    locale: SiteSetting.default_locale,
-                                    version: Search::INDEX_VERSION)
-    if rows == 0
-      Post.exec_sql("INSERT INTO #{table_name}
-                    (#{foreign_key}, search_data, locale, raw_data, version)
-                    VALUES (:id, TO_TSVECTOR('#{stemmer}', :search_data), :locale, :raw_data, :version)",
-                                    raw_data: raw_data,
-                                    search_data: search_data,
-                                    id: id,
-                                    locale: SiteSetting.default_locale,
-                                    version: Search::INDEX_VERSION)
+    indexable_entries.each.with_index do |indexable_entry, index|
+      statement_params[update_index_param_name_for(index)] = indexable_entry
     end
-  rescue
-    # don't allow concurrency to mess up saving a post
+
+    statement_params
+  end
+
+  def self.update_index_param_name_for(index)
+    "indexable_fragment_#{index}".to_sym
+  end
+
+  def self.build_ts_vector(stemmer, indexable_entries)
+    raise ArgumentError, "The max number of entries to index is 4 to match the number of weights supported by PostgreSQL (A, B, C, D)" unless indexable_entries.length.between?(1, 4)
+
+    ts_vectors = indexable_entries.collect.with_index do |_, index|
+      "TO_TSVECTOR('#{stemmer}', :#{update_index_param_name_for(index)})"
+    end
+
+    if indexable_entries.length == 1
+      # index without weights
+      ts_vectors.first
+    else
+      weight_letters = ('A'..'D').to_a
+      ts_vectors.collect.with_index do |ts_vector, index|
+        weight_letter = weight_letters[index]
+        "setweight(#{ts_vector}, '#{weight_letter}')"
+      end.join(" || ")
+    end
   end
 
   def self.update_topics_index(topic_id, title, cooked)
-    search_data = title.dup << " " << scrub_html_for_search(cooked)[0...Topic::MAX_SIMILAR_BODY_LENGTH]
-    update_index('topic', topic_id, search_data)
+    indexable_title = title.dup
+    indexable_cooked = scrub_html_for_search(cooked)[0...Topic::MAX_SIMILAR_BODY_LENGTH]
+    update_index('topic', topic_id, indexable_title, indexable_cooked)
   end
 
   def self.update_posts_index(post_id, cooked, title, category)
