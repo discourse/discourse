@@ -444,19 +444,7 @@ export default Em.Component.extend({
 
   @observes('searchedTerms.special.in.likes')
   updateSearchTermForSpecialInLikes() {
-    const match = this.filterBlocks(REGEXP_SPECIAL_IN_LIKES_MATCH);
-    const inFilter = this.get('searchedTerms.special.in.likes');
-    let searchTerm = this.get('searchTerm') || '';
-
-    if (inFilter) {
-      if (match.length === 0) {
-        searchTerm += ` in:likes`;
-        this.set('searchTerm', searchTerm.trim());
-      }
-    } else if (match.length !== 0) {
-      searchTerm = searchTerm.replace(match, '');
-      this.set('searchTerm', searchTerm.trim());
-    }
+    this.updateSearchTermForSpecialIn('likes', REGEXP_SPECIAL_IN_LIKES_MATCH);
   },
 
   @observes('searchedTerms.special.in.title')
@@ -466,36 +454,12 @@ export default Em.Component.extend({
 
   @observes('searchedTerms.special.in.private')
   updateSearchTermForSpecialInPrivate() {
-    const match = this.filterBlocks(REGEXP_SPECIAL_IN_PRIVATE_MATCH);
-    const inFilter = this.get('searchedTerms.special.in.private');
-    let searchTerm = this.get('searchTerm') || '';
-
-    if (inFilter) {
-      if (match.length === 0) {
-        searchTerm += ` in:private`;
-        this.set('searchTerm', searchTerm.trim());
-      }
-    } else if (match.length !== 0) {
-      searchTerm = searchTerm.replace(match, '');
-      this.set('searchTerm', searchTerm.trim());
-    }
+    this.updateSearchTermForSpecialIn('private', REGEXP_SPECIAL_IN_PRIVATE_MATCH);
   },
 
   @observes('searchedTerms.special.in.seen')
   updateSearchTermForSpecialInSeen() {
-    const match = this.filterBlocks(REGEXP_SPECIAL_IN_SEEN_MATCH);
-    const inFilter = this.get('searchedTerms.special.in.seen');
-    let searchTerm = this.get('searchTerm') || '';
-
-    if (inFilter) {
-      if (match.length === 0) {
-        searchTerm += ` in:seen`;
-        this.set('searchTerm', searchTerm.trim());
-      }
-    } else if (match.length !== 0) {
-      searchTerm = searchTerm.replace(match, '');
-      this.set('searchTerm', searchTerm.trim());
-    }
+    this.updateSearchTermForSpecialIn('seen', REGEXP_SPECIAL_IN_SEEN_MATCH);
   },
 
   @observes('searchedTerms.status')
