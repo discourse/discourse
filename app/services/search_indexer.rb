@@ -104,15 +104,16 @@ class SearchIndexer
   end
 
   def self.update_topics_index(topic_id, title, cooked)
-    indexable_title = title.dup
-    indexable_cooked = scrub_html_for_search(cooked)[0...Topic::MAX_SIMILAR_BODY_LENGTH]
-    update_index('topic', topic_id, indexable_title, indexable_cooked)
+    title_entry = title.dup
+    cooked_entry = scrub_html_for_search(cooked)[0...Topic::MAX_SIMILAR_BODY_LENGTH]
+    update_index('topic', topic_id, title_entry, cooked_entry)
   end
 
   def self.update_posts_index(post_id, cooked, title, category)
-    search_data = scrub_html_for_search(cooked) << " " << title.dup.force_encoding('UTF-8')
-    search_data << " " << category if category
-    update_index('post', post_id, search_data)
+    title_entry = title.dup.force_encoding('UTF-8')
+    cooked_entry = scrub_html_for_search(cooked)
+    entries = [title_entry, cooked_entry, (category if category)].compact
+    update_index('post', post_id, *entries)
   end
 
   def self.update_users_index(user_id, username, name)
