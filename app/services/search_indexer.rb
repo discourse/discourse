@@ -88,7 +88,7 @@ class SearchIndexer
   end
 
   def self.build_ts_vector(stemmer, indexable_entries)
-    raise ArgumentError, "The max number of entries to index is 4 to match the number of weights supported by PostgreSQL (A, B, C, D)" unless indexable_entries.length.between?(1, 4)
+    raise ArgumentError, "The max number of entries to index is 4 since the weights supported by PostgreSQL are A, B, C, D" unless indexable_entries.length.between?(1, 4)
 
     ts_vectors = indexable_entries.collect.with_index do |_, index|
       "TO_TSVECTOR('#{stemmer}', :#{update_index_param_name_for(index)})"
