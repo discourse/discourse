@@ -83,7 +83,7 @@ class SearchIndexer
   end
 
   def self.update_index_param_name_for(index)
-    "indexable_fragment_#{index}".to_sym
+    "indexable_entry_#{index}".to_sym
   end
 
   def self.build_ts_vector(stemmer, indexable_entries)
