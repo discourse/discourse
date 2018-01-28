@@ -1,7 +1,7 @@
 require_dependency 'search/grouped_search_results'
 
 class Search
-  INDEX_VERSION = 1.freeze
+  INDEX_VERSION = 2
 
   def self.per_facet
     5
