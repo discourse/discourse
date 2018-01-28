@@ -746,9 +746,8 @@ class Search
           posts = posts.order("posts.like_count DESC")
         end
       else
-        posts = posts.order("TS_RANK_CD(TO_TSVECTOR(#{default_ts_config}, topics.title), #{ts_query}) DESC")
-
-        data_ranking = "TS_RANK_CD(post_search_data.search_data, #{ts_query})"
+        # Making title's weight 10 times body's for bumping titles
+        data_ranking = "TS_RANK_CD('{0.025, 0.05, 0.1, 1.0}', post_search_data.search_data, #{ts_query})"
         if opts[:aggregate_search]
           posts = posts.order("SUM(#{data_ranking}) DESC")
         else
