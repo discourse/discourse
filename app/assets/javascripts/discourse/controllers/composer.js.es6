@@ -5,7 +5,7 @@ import Composer from 'discourse/models/composer';
 import { default as computed, observes, on } from 'ember-addons/ember-computed-decorators';
 import InputValidation from 'discourse/models/input-validation';
 import { getOwner } from 'discourse-common/lib/get-owner';
-import { escapeExpression } from 'discourse/lib/utilities';
+import { escapeExpression, authorizesOneOrMoreExtensions } from 'discourse/lib/utilities';
 import { emojiUnescape } from 'discourse/lib/text';
 import { shortDate } from 'discourse/lib/formatter';
 
@@ -70,6 +70,7 @@ export default Ember.Controller.extend({
   scopedCategoryId: null,
   lastValidatedAt: null,
   isUploading: false,
+  allowUpload: false,
   topic: null,
   linkLookup: null,
   showPreview: true,
@@ -221,6 +222,11 @@ export default Ember.Controller.extend({
   @computed('model.topic')
   draftTitle(topic) {
     return emojiUnescape(escapeExpression(topic.get('title')));
+  },
+
+  @computed
+  allowUpload() {
+    return authorizesOneOrMoreExtensions();
   },
 
   actions: {

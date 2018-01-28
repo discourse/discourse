@@ -85,6 +85,7 @@
                             popupMenuOptions=popupMenuOptions
                             draftStatus=model.draftStatus
                             isUploading=isUploading
+                            allowUpload=allowUpload
                             isCancellable=isCancellable
                             uploadProgress=uploadProgress
                             groupsMentioned="groupsMentioned"
@@ -131,7 +132,9 @@
 
             <div class="composer-bottom-right">
               {{#if site.mobileView}}
-                <a class="mobile-file-upload {{if isUploading 'hidden'}}">{{i18n 'upload'}}</a>
+                {{#if allowUpload}}
+                  <a class="mobile-file-upload {{if isUploading 'hidden'}}">{{i18n 'upload'}}</a>
+                {{/if}}
 
                 {{#if showPreview}}
                   {{d-button action='togglePreview' class='hide-preview' label='composer.hide_preview'}}

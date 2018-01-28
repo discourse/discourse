@@ -13,7 +13,6 @@ import { tinyAvatar,
          displayErrorForUpload,
          getUploadMarkdown,
          validateUploadedFiles,
-         authorizesOneOrMoreExtensions,
          authorizesOneOrMoreImageExtensions,
          formatUsername,
          clipboardData
@@ -670,7 +669,7 @@ export default Ember.Component.extend({
         unshift: true
       });
 
-      if (authorizesOneOrMoreExtensions()) {
+      if (this.get('allowUpload')) {
         toolbar.addButton({
           id: 'upload',
           group: 'insertions',
