@@ -746,7 +746,7 @@ class Search
           posts = posts.order("posts.like_count DESC")
         end
       else
-        # Making title's weight 10 times body's for bumping titles
+        # Making title's weight much bigger than body's for really bumping titles in results
         data_ranking = "TS_RANK_CD('{0.025, 0.05, 0.1, 1.0}', post_search_data.search_data, #{ts_query})"
         if opts[:aggregate_search]
           posts = posts.order("SUM(#{data_ranking}) DESC")
