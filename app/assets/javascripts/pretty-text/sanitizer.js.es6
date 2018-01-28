@@ -72,7 +72,10 @@ export function sanitize(text, whiteLister) {
   let extraHrefMatchers = null;
 
   if (allowedHrefSchemes && allowedHrefSchemes.length > 0) {
-    extraHrefMatchers = [new RegExp('^(' + allowedHrefSchemes.join('|') + '):\/\/\\+?[\\w\\.\\-]+','i')];
+    extraHrefMatchers = [new RegExp('^(' + allowedHrefSchemes.join('|') + '):\/\/[\\w\\.\\-]+','i')];
+    if (allowedHrefSchemes.includes('tel')) {
+      extraHrefMatchers.push(new RegExp('^tel:\/\/\\+?[\\w\\.\\-]+','i'))
+    }
   }
 
   let result = xss(text, {
