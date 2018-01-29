@@ -268,6 +268,12 @@ class ApplicationController < ActionController::Base
     resolve_safe_mode
     return if request.env[NO_CUSTOM]
 
+    # damingo (Github ID), 2017-01-29, #theme
+    if request.host.present? && (theme = Theme.find_by(name: request.host))
+      @theme_key = request.env[:resolved_theme_key] = theme.key
+      return
+    end
+
     theme_key = flash[:preview_theme_key]
 
     user_option = current_user&.user_option
