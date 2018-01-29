@@ -1,6 +1,12 @@
 let _cache = {};
 
 export function applyInlineOneboxes(inline, ajax) {
+
+  Object.keys(inline).forEach(url => {
+    // cache a blank locally, so we never trigger a lookup
+    _cache[url] = {};
+  });
+
   return ajax("/inline-onebox", {
     data: { urls: Object.keys(inline) },
   }).then(result => {
