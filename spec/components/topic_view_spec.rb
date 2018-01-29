@@ -109,17 +109,35 @@ describe TopicView do
       expect { TopicView.new(topic.id, nil) }.to raise_error(Discourse::NotLoggedIn)
     end
 
-    it "logs personal message views if log_check_personal_message is enabled" do
-      SiteSetting.log_personal_messages_views = true
-      private_message = Fabricate(:private_message_topic)
-      allowed_user = private_message.topic_allowed_users.first.user
+    context 'log_check_personal_message is enabled' do
+      let(:group) { Fabricate(:group) }
+      let(:private_message) { Fabricate(:private_message_topic, allowed_groups: [group]) }
 
-      TopicView.new(private_message.id, allowed_user)
-      expect(UserHistory.where(action: UserHistory.actions[:check_personal_message]).count).to eq(0)
+      before do
+        SiteSetting.log_personal_messages_views = true
+        evil_trout.admin = true
+      end
 
-      evil_trout.admin = true
-      TopicView.new(private_message.id, evil_trout)
-      expect(UserHistory.where(action: UserHistory.actions[:check_personal_message]).count).to eq(1)
+      it "logs view if Admin views personal message for other user/group" do
+        allowed_user = private_message.topic_allowed_users.first.user
+        TopicView.new(private_message.id, allowed_user)
+        expect(UserHistory.where(action: UserHistory.actions[:check_personal_message]).count).to eq(0)
+
+        TopicView.new(private_message.id, evil_trout)
+        expect(UserHistory.where(action: UserHistory.actions[:check_personal_message]).count).to eq(1)
+      end
+
+      it "does not log personal message view for group he belongs to" do
+        group.users << evil_trout
+        TopicView.new(private_message.id, evil_trout)
+        expect(UserHistory.where(action: UserHistory.actions[:check_personal_message]).count).to eq(0)
+      end
+
+      it "does not log personal message view for his own personal message" do
+        private_message.allowed_users << evil_trout
+        TopicView.new(private_message.id, evil_trout)
+        expect(UserHistory.where(action: UserHistory.actions[:check_personal_message]).count).to eq(0)
+      end
     end
 
     it "provides an absolute url" do
