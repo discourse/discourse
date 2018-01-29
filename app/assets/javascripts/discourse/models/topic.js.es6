@@ -63,7 +63,7 @@ const Topic = RestModel.extend({
 
     if (Discourse.SiteSettings.support_mixed_text_direction) {
       let titleDir = isRTL(title) ? 'rtl' : 'ltr';
-      return '<span dir="' + titleDir + '">' + fancyTitle + '</span>';
+      return `<span dir="${titleDir}">${fancyTitle}</span>`;
     }
     return fancyTitle;
   },
