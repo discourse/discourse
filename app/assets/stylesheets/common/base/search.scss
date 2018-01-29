@@ -103,30 +103,6 @@
   }
 }
 
-.search-advanced {
-  margin-bottom: 15px;
-
-  .search-advanced-btn {
-    padding: 8px 10px;
-    width: 100%;
-    text-align: left;
-    font-weight: bold;
-  }
-
-  .search-advanced-options {
-    border: 1px solid $primary-low;
-    padding: 10px;
-
-    .control-group.pull-left {
-      width: 50%;
-    }
-
-    input[type="checkbox"] {
-      height: auto;
-    }
-  }
-}
-
 .no-results-suggestion {
   margin-top: 30px;
 }
@@ -174,4 +150,20 @@
 
 .google-search-form {
   margin-top: 2em;
+}
+
+.search-advanced {
+  display: flex;
+  flex-wrap: wrap;
+  .search-advanced-btn {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+  .container {
+    display: flex;
+    flex: 1 1 100%;
+    .control-group {
+      flex: 1 1 auto;
+    }
+  }
 }
