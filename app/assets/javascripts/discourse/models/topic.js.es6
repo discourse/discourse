@@ -3,6 +3,7 @@ import { flushMap } from 'discourse/models/store';
 import RestModel from 'discourse/models/rest';
 import { propertyEqual } from 'discourse/lib/computed';
 import { longDate } from 'discourse/lib/formatter';
+import { isRTL } from 'discourse/lib/text-direction';
 import computed from 'ember-addons/ember-computed-decorators';
 import ActionSummary from 'discourse/models/action-summary';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
@@ -58,7 +59,13 @@ const Topic = RestModel.extend({
 
   @computed('fancy_title')
   fancyTitle(title) {
-    return censor(emojiUnescape(title || ""), Discourse.Site.currentProp('censored_words'));
+    let fancyTitle = censor(emojiUnescape(title || ""), Discourse.Site.currentProp('censored_words'));
+
+    if (Discourse.SiteSettings.support_mixed_text_direction) {
+      let titleDir = isRTL(title) ? 'rtl' : 'ltr';
+      return '<span dir="' + titleDir + '">' + fancyTitle + '</span>';
+    }
+    return fancyTitle;
   },
 
   // returns createdAt if there's no bumped date
