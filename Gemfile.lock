@@ -424,7 +424,7 @@ DEPENDENCIES
   email_reply_trimmer (= 0.1.9)
   ember-handlebars-template (= 0.7.5)
   ember-rails (= 0.18.5)
-  ember-source
+  ember-source (= 2.13.3)
   excon
   execjs
   fabrication (= 2.9.8)
@@ -471,7 +471,7 @@ DEPENDENCIES
   omniauth-twitter
   onebox (= 1.8.36)
   openid-redis-store
-  pg
+  pg (~> 0.21.0)
   pry-nav
   pry-rails
   puma
