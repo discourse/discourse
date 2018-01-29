@@ -51,10 +51,15 @@ class FinalDestination
     @cookie = nil
     @limited_ips = []
     @verbose = @opts[:verbose] || false
+    @timeout = @opts[:timeout] || nil
   end
 
   def self.connection_timeout
     20
+  end
+
+  def timeout
+    @timeout || FinalDestination.connection_timeout
   end
 
   def redirected?
@@ -75,9 +80,55 @@ class FinalDestination
 
   def small_get(headers)
     Net::HTTP.start(@uri.host, @uri.port, use_ssl: @uri.is_a?(URI::HTTPS)) do |http|
-      http.open_timeout = FinalDestination.connection_timeout
-      http.read_timeout = FinalDestination.connection_timeout
+      http.open_timeout = timeout
+      http.read_timeout = timeout
       http.request_get(@uri.request_uri, headers)
+    end
+  end
+
+  # this is a new interface for simply getting
+  # N bytes accounting for all internal logic
+  def get(uri = @uri, redirects = @limit, extra_headers: {}, &blk)
+    raise "Must specify block" unless block_given?
+
+    if uri && uri.port == 80 && FinalDestination.is_https_domain?(uri.hostname)
+      uri.scheme = "https"
+      uri = URI(uri.to_s)
+    end
+
+    unless validate_uri
+      return nil
+    end
+
+    result, (location, cookie) = safe_get(uri, &blk)
+
+    if result == :redirect && (redirects == 0 || !location)
+      return nil
+    end
+
+    if result == :redirect
+      old_port = uri.port
+
+      location = "#{uri.scheme}://#{uri.host}#{location}" if location[0] == "/"
+      uri = URI(location) rescue nil
+
+      # https redirect, so just cache that whole new domain is https
+      if old_port == 80 && uri&.port == 443 && (URI::HTTPS === uri)
+        FinalDestination.cache_https_domain(uri.hostname)
+      end
+
+      return nil if !uri
+
+      extra = nil
+      if cookie
+        extra = { 'Cookie' => cookie }
+      end
+
+      get(uri, redirects - 1, extra_headers: extra, &blk)
+    elsif result == :ok
+      uri.to_s
+    else
+      nil
     end
   end
 
@@ -108,7 +159,7 @@ class FinalDestination
     headers = request_headers
     response = Excon.public_send(@http_verb,
       @uri.to_s,
-      read_timeout: FinalDestination.connection_timeout,
+      read_timeout: timeout,
       headers: headers
     )
 
@@ -135,7 +186,7 @@ class FinalDestination
         headers['set-cookie'] = cookie_val.join
       end
 
-      # TODO this is confusing why grap location for anything not
+      # TODO this is confusing why grab location for anything not
       # between 300-400 ?
       if location_val = get_response.get_fields('location')
         headers['location'] = location_val.join
@@ -277,6 +328,71 @@ class FinalDestination
     IPSocket::getaddress(host)
   rescue SocketError
     nil
+  end
+
+  protected
+
+  def safe_get(uri)
+
+    result = nil
+    unsafe_close = false
+
+    safe_session(uri) do |http|
+
+      headers = request_headers.merge(
+        'Accept-Encoding' => 'gzip',
+        'Host' => uri.host
+      )
+
+      req = Net::HTTP::Get.new(uri.request_uri, headers)
+
+      http.request(req) do |resp|
+        if Net::HTTPRedirection === resp
+          result = :redirect, [resp['location'], resp['Set-Cookie']]
+        end
+
+        if Net::HTTPSuccess === resp
+
+          resp.decode_content = true
+          resp.read_body { |chunk|
+            read_next = true
+
+            catch(:done) do
+              if read_next
+                read_next = false
+                yield resp, chunk, uri
+                read_next = true
+              end
+            end
+
+            # no clean way of finishing abruptly cause
+            # response likes reading till the end
+            if !read_next
+              unsafe_close = true
+              http.finish
+              raise StandardError
+            end
+          }
+          result = :ok
+        end
+      end
+    end
+
+    result
+  rescue StandardError
+    if unsafe_close
+      :ok
+    else
+      raise
+    end
+  end
+
+  def safe_session(uri)
+    Net::HTTP.start(uri.host, uri.port, use_ssl: (uri.scheme == "https")) do |http|
+      http.read_timeout = timeout
+      http.open_timeout = timeout
+      yield http
+    end
   end
 
 end

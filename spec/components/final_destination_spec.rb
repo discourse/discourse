@@ -207,6 +207,32 @@ describe FinalDestination do
     end
   end
 
+  describe '.get' do
+
+    it "can correctly stream with a redirect" do
+
+      FinalDestination.clear_https_cache!("wikipedia.com")
+
+      stub_request(:get, "http://wikipedia.com/").
+        to_return(status: 302, body: "" , headers: { "location" => "https://wikipedia.com/" })
+
+      # webmock does not do chunks
+      stub_request(:get, "https://wikipedia.com/").
+        to_return(status: 200, body: "<html><head>" , headers: {})
+
+      result = nil
+      chunk = nil
+
+      result = FinalDestination.new("http://wikipedia.com", opts).get do |resp, c|
+        chunk = c
+        throw :done
+      end
+
+      expect(result).to eq("https://wikipedia.com/")
+      expect(chunk).to eq("<html><head>")
+    end
+  end
+
   describe '.validate_uri' do
     context "host lookups" do
       it "works for various hosts" do
