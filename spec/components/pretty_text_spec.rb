@@ -811,6 +811,17 @@ describe PrettyText do
     expect(cooked).to eq(n expected)
   end
 
+  it 'allows only tel URL scheme to start with a plus character' do
+    SiteSetting.allowed_href_schemes = "tel|steam"
+    cooked = cook("[Tel URL Scheme](tel://+452530579785)")
+    expected = '<p><a href="tel://+452530579785" rel="nofollow noopener">Tel URL Scheme</a></p>'
+    expect(cooked).to eq(n expected)
+
+    cooked2 = cook("[Steam URL Scheme](steam://+store/452530)")
+    expected2 = '<p><a>Steam URL Scheme</a></p>'
+    expect(cooked2).to eq(n expected2)
+  end
+
   it "produces hashtag links" do
     category = Fabricate(:category, name: 'testing')
     category2 = Fabricate(:category, name: 'known')
