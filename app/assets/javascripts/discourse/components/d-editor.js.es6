@@ -8,6 +8,7 @@ import { emojiSearch, isSkinTonableEmoji } from 'pretty-text/emoji';
 import { emojiUrlFor } from 'discourse/lib/text';
 import { getRegister } from 'discourse-common/lib/get-owner';
 import { findRawTemplate } from 'discourse/lib/raw-templates';
+import { siteDir } from 'discourse/lib/text-direction';
 import { determinePostReplaceSelection, clipboardData } from 'discourse/lib/utilities';
 import toMarkdown from 'discourse/lib/to-markdown';
 import deprecated from 'discourse-common/lib/deprecated';
@@ -106,6 +107,17 @@ class Toolbar {
       title: 'composer.olist_title',
       perform: e => e.applyList(i => !i ? "1. " : `${parseInt(i) + 1}. `, 'list_item')
     });
+
+    if (Discourse.SiteSettings.support_mixed_text_direction) {
+      this.addButton({
+        id: 'toggle-direction',
+        group: 'extras',
+        icon: 'arrows-h',
+        shortcut: 'Shift+6',
+        title: 'composer.toggle_direction',
+        perform: e => e.toggleDirection(),
+      });
+    }
 
     if (site.mobileView) {
       this.groups.push({group: 'mobileExtras', buttons: []});
@@ -647,6 +659,14 @@ export default Ember.Component.extend({
     return null;
   },
 
+  _toggleDirection() {
+    const $textArea = $(".d-editor-input");
+    let currentDir = $textArea.attr('dir') ? $textArea.attr('dir') : siteDir(),
+        newDir = currentDir === 'ltr' ? 'rtl' : 'ltr';
+
+    $textArea.attr('dir', newDir).focus();
+  },
+
   paste(e) {
     if (!$(".d-editor-input").is(":focus")) {
       return;
@@ -724,6 +744,7 @@ export default Ember.Component.extend({
         addText: text => this._addText(selected, text),
         replaceText: text => this._addText({pre: '', post: ''}, text),
         getText: () => this.get('value'),
+        toggleDirection: () => this._toggleDirection(),
       };
 
       if (button.sendAction) {

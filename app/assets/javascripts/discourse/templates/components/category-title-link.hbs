@@ -3,7 +3,7 @@
     {{d-icon 'lock'}}
   {{/if}}
 
-  <span class="category-name">{{category.name}}</span>
+  <span class="category-name">{{dir-span category.name}}</span>
 
   {{#if category.uploaded_logo.url}}
     <div>{{cdn-img src=category.uploaded_logo.url class="category-logo"}}</div>
