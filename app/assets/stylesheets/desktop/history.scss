@@ -64,9 +64,10 @@
       white-space: pre-wrap;
     }
   }
-  .span8, .markdown {
+  .revision-content, .markdown {
     img {
-      max-width: 400px;
+      max-width: 100%;
+      box-sizing: border-box;
     }
   }
   .modal-header {
