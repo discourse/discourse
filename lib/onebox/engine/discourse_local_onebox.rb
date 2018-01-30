@@ -14,7 +14,7 @@ module Onebox
 
         route = Discourse.route_for(url)
 
-        !!(route[:controller] =~ /topics|uploads/)
+        !!(route[:controller] =~ /topics|uploads|users/)
       rescue ActionController::RoutingError
         false
       end
@@ -27,6 +27,7 @@ module Onebox
         case route[:controller]
         when "uploads" then upload_html(path)
         when "topics"  then topic_html(route)
+        when "users"   then user_html(route)
         end
       end
 
@@ -79,6 +80,33 @@ module Onebox
 
             template = File.read("#{Rails.root}/lib/onebox/templates/discourse_topic_onebox.hbs")
             Mustache.render(template, args)
+          end
+        end
+
+        def user_html(route)
+          link = "<a href='#{@url}'>#{@url}</a>"
+          username = route[:username] || ''
+          user = User.find_by(username_lower: username.downcase)
+
+          if user
+            args = {
+              user_id: user.id,
+              username: user.username,
+              avatar: PrettyText.avatar_img(user.avatar_template, "extra_large"),
+              name: user.name,
+              bio: user.user_profile.bio_excerpt(230),
+              location: user.user_profile.location,
+              joined: I18n.t('joined'),
+              created_at: user.created_at.strftime(I18n.t('datetime_formats.formats.date_only')),
+              website: user.user_profile.website,
+              website_name: UserSerializer.new(user).website_name,
+              original_url: @url
+            }
+
+            template = File.read("#{Rails.root}/lib/onebox/templates/discourse_user_onebox.hbs")
+            Mustache.render(template, args)
+          else
+            return link
           end
         end
 
