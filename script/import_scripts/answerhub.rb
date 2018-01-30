@@ -7,6 +7,30 @@ begin
 rescue LoadError
   puts
 
+  # https://community.auth0.com/
+
+  # TODO users, categories ("spaces"), questions & comments (as Discourse
+  # replies to the topic original post), answers (as replies to the
+  # original post) and comments (as Discourse replies to the AnswerHub
+  # reply).
+
+  # DONE merge users
+
+  # TODO Import answerhub "topics" as Discourse tags.
+
+  # TODO Mark the "best answer" as "solved" using the Discourse Solved plugin.
+
+  # TODO 301 redirects for questions of form:
+  # https://community.auth0.com/questions/12997/are-we-supposed-to-always-send-a-request-to-auth0c
+
+  # TODO import badges (stub function import_badges created)
+
+  # TODO: Import spaces/20 (Ideas) into existing Discourse category feature-request
+
+  # TODO: Re-map AnswerHub spaces to different Discourse categories.
+  # You'll provide the Space IDs of the space and the space to which
+  # they should be moved. (DO I HAVE MAP?)
+
 class ImportScripts::AnswerHub < ImportScripts::Base
   BATCH_SIZE = 1000
 
@@ -153,6 +177,12 @@ EOM
       before = users.size
       users.reject! { |u| @lookup.user_already_imported?(u["userid"].to_i) }
 
+      if existing_user = User.find_by_email(u['email'])
+        user.custom_fields['import_id'] = u['contributorName']
+        user.save
+        next
+      end
+
       create_users(users, total: user_count, offset: offset) do |user|
         next if user_id_from_imported_user_id(user['userid'])
         {
@@ -259,53 +289,59 @@ EOM
   end
 
   def import_categories
-    puts "", "importing top level categories..."
+    # 'topic'
+    # 'question'
+    # 'idea'
+    # 'kbentry'
+    # 'answer'
+    # 'comment'
+    # 'idea-comment'
 
-    categories = mysql_query("SELECT forumid, title, description, displayorder, parentid FROM #{TABLE_PREFIX}forum ORDER BY forumid").to_a
+    puts "", "importing top level categories (aka spaces & containers)..."
+    categories = mysql_query("SELECT
+                              c_id id,
+                              c_name name,
+                              c_parent parentid,
+                              c_site site,
+                              c_plug slug,
+                         FROM containers
+                        WHERE c_type='space'
+                     ORDER BY c_id").to_a
 
-    top_level_categories = categories.select { |c| c["parentid"] == -1 }
+    top_level_categories = categories.select { |c| c["parentid"] != nil }
 
     create_categories(top_level_categories) do |category|
       {
-        id: category["forumid"],
-        name: @htmlentities.decode(category["title"]).strip,
-        position: category["displayorder"],
-        description: @htmlentities.decode(category["description"]).strip
+        id: category["id"],
+        name: category['name'],
+        read_restricted: category['active'] != 1,
+        slug: category['slug']
       }
     end
 
     puts "", "importing children categories..."
 
-    children_categories = categories.select { |c| c["parentid"] != -1 }
-    top_level_category_ids = Set.new(top_level_categories.map { |c| c["forumid"] })
+    children_categories = categories.select { |c| c["parentid"] != nil }
+    top_level_category_ids = Set.new(top_level_categories.map { |c| c["id"] })
 
     # cut down the tree to only 2 levels of categories
     children_categories.each do |cc|
       while !top_level_category_ids.include?(cc["parentid"])
-        cc["parentid"] = categories.detect { |c| c["forumid"] == cc["parentid"] }["parentid"]
+        cc["parentid"] = categories.detect { |c| c["id"] == cc["parentid"] }["parentid"]
       end
     end
 
     create_categories(children_categories) do |category|
       {
-        id: category["forumid"],
-        name: @htmlentities.decode(category["title"]).strip,
-        position: category["displayorder"],
-        description: @htmlentities.decode(category["description"]).strip,
+        id: category["id"],
         parent_category_id: category_id_from_imported_category_id(category["parentid"])
+        name: category['name'],
+        read_restricted: category['active'] != 1
       }
     end
   end
 
   def import_topics
-# 'topic'
-# 'question'
-# 'idea'
-# 'kbentry'
-# 'answer'
-# 'comment'
-# 'idea-comment'
-
     puts "", "importing topics..."
 
     topic_count = mysql_query("SELECT COUNT(threadid) count FROM #{TABLE_PREFIX}thread
@@ -1012,6 +1048,35 @@ EOM
       end
     end
   end
+
+  def import_badges
+    # Map a set of AH badges to Discourse badges:
+
+    # AH Badge ID	D Badge ID
+    # 339	38
+    # 353	37
+    # 368	36
+    # 378	36
+    # 350	34
+    # 340	33
+    # 341	33
+    # 367	31
+    # 544	31
+    # 355	31
+    # 359	23
+    # 360	23
+    # 358	22
+    # 342	20
+    # 370	19
+    # 352	18
+    # 346	13
+    # 345	11
+    # 348	10
+    # 362	9
+    # 369	7
+    # 354	6
+  end
+
 
   def suspend_users
     puts '', "updating banned users"
