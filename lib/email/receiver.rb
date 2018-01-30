@@ -39,6 +39,8 @@ module Email
     attr_reader :mail
     attr_reader :message_id
 
+    COMMON_ENCODINGS ||= [-"utf-8", -"windows-1252", -"iso-8859-1"]
+
     def self.formats
       @formats ||= Enum.new(plaintext: 1,
                             markdown: 2)
@@ -47,7 +49,11 @@ module Email
     def initialize(mail_string, opts = {})
       raise EmptyEmailError if mail_string.blank?
       @staged_users = []
-      @raw_email = try_to_encode(mail_string, "UTF-8") || try_to_encode(mail_string, "ISO-8859-1") || mail_string
+      @raw_email = mail_string
+      COMMON_ENCODINGS.each do |encoding|
+        fixed = try_to_encode(mail_string, encoding)
+        break @raw_email = fixed if fixed.present?
+      end
       @mail = Mail.new(@raw_email)
       @message_id = @mail.message_id.presence || Digest::MD5.hexdigest(mail_string)
       @opts = opts
@@ -278,7 +284,7 @@ module Email
       return nil if string.blank?
 
       # common encodings
-      encodings = ["UTF-8", "ISO-8859-1"]
+      encodings = COMMON_ENCODINGS.dup
       encodings.unshift(mail_part.charset) if mail_part.charset.present?
 
       # mail (>=2.5) decodes mails with 8bit transfer encoding to utf-8, so
