@@ -4,11 +4,11 @@
   {{/admin-form-row}}
 
   {{#admin-form-row label="admin.user_fields.name"}}
-    {{input value=buffered.name class="user-field-name"}}
+    {{input value=buffered.name class="user-field-name" maxlength="255"}}
   {{/admin-form-row}}
 
   {{#admin-form-row label="admin.user_fields.description"}}
-    {{input value=buffered.description class="user-field-desc"}}
+    {{input value=buffered.description class="user-field-desc" maxlength="255"}}
   {{/admin-form-row}}
 
   {{#if bufferedFieldType.hasOptions}}
