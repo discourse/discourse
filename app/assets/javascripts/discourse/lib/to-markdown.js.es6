@@ -2,7 +2,7 @@ import parseHTML from 'discourse/helpers/parse-html';
 
 const trimLeft = text => text.replace(/^\s+/,"");
 const trimRight = text => text.replace(/\s+$/,"");
-const countPipes = text => text.replace(/\\\|/,"").match(/\|/g).length;
+const countPipes = text => (text.replace(/\\\|/,"").match(/\|/g) || []).length;
 
 class Tag {
   constructor(name, prefix = "", suffix = "", inline = false) {
@@ -189,8 +189,14 @@ class Tag {
       toMarkdown() {
         const text = this.element.innerMarkdown().trim();
 
-        if (text.includes("\n")) {
-          throw "Unsupported format inside Markdown table cells";
+        if(text.includes("\n")) {  // Unsupported format inside Markdown table cells
+          let e = this.element;
+          while(e = e.parent) {
+            if (e.name === "table") {
+              e.tag().invalid();
+              break;
+            }
+          }
         }
 
         return this.decorate(text);
@@ -242,20 +248,37 @@ class Tag {
 
   static table() {
     return class extends Tag.block("table") {
+      constructor() {
+        super();
+        this.isValid = true;
+      }
+
+      invalid() {
+        this.isValid = false;
+        if (this.element.parentNames.includes("table")) {
+          let e = this.element;
+          while(e = e.parent) {
+            if (e.name === "table") {
+              e.tag().invalid();
+              break;
+            }
+          }
+        }
+      }
+
       decorate(text) {
         text = super.decorate(text).replace(/\|\n{2,}\|/g, "|\n|");
         const rows = text.trim().split("\n");
         const pipeCount = countPipes(rows[0]);
-        const isValid = rows.length > 1 &&
-                        pipeCount > 2 &&
-                        rows.reduce((a, c) => a && countPipes(c) <= pipeCount);
+        this.isValid =  this.isValid && rows.length > 1 && pipeCount > 2 && rows.reduce((a, c) => a && countPipes(c) <= pipeCount);  // Unsupported table format for Markdown conversion
 
-        if (!isValid) {
-          throw "Unsupported table format for Markdown conversion";
+        if (this.isValid) {
+          const splitterRow = [...Array(pipeCount-1)].map(() => "| --- ").join("") + "|\n";
+          text = text.replace("|\n", "|\n" + splitterRow);
+        } else {
+          text = text.replace(/\|/g, " ");
+          this.invalid();
         }
-
-        const splitterRow = [...Array(pipeCount-1)].map(() => "| --- ").join("") + "|\n";
-        text = text.replace("|\n", "|\n" + splitterRow);
 
         return text;
       }
