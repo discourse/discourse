@@ -85,7 +85,7 @@ class DiscourseDiff
       i += 1
     end
 
-    "<div class=\"span8\">#{left.join}</div><div class=\"span8 offset1\">#{right.join}</div>"
+    "<div class=\"revision-content\">#{left.join}</div><div class=\"revision-content\">#{right.join}</div>"
   end
 
   def side_by_side_markdown

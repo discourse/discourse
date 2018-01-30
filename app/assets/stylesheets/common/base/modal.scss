@@ -115,8 +115,11 @@
   margin-bottom: 0;
 }
 .modal-footer {
-  padding: 14px 15px 15px;
+  padding: 14px 15px 10px;
   border-top: 1px solid $primary-low;
+  .btn {
+  margin: 0 5px 5px 0;
+  }
 }
 .modal-footer:before,
 .modal-footer:after {
@@ -151,6 +154,8 @@
   }
 
   .modal-body {
+    box-sizing: border-box;
+    width: 100%;
     &.full-height-modal {
       max-height: calc(100vh - 150px);
     }

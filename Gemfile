@@ -41,7 +41,7 @@ gem 'onebox', '1.8.36'
 gem 'http_accept_language', '~>2.0.5', require: false
 
 gem 'ember-rails', '0.18.5'
-gem 'ember-source'
+gem 'ember-source', '2.13.3'
 gem 'ember-handlebars-template', '0.7.5'
 gem 'barber'
 
@@ -82,7 +82,7 @@ gem 'omniauth-oauth2', require: false
 
 gem 'omniauth-google-oauth2'
 gem 'oj'
-gem 'pg'
+gem 'pg', '~> 0.21.0'
 gem 'pry-rails', require: false
 gem 'r2', '~> 0.2.5', require: false
 gem 'rake'

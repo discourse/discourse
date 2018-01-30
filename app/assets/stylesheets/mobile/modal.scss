@@ -30,13 +30,7 @@
 // we need a little extra room on mobile for the
 // stuff inside the footer to fit
 .modal-footer {
-  padding-left: 7px;
-  padding-right: 7px;
-}
-
-.modal-footer .btn + .btn {
-  margin-left: 5px;
-  margin-bottom: 0;
+  padding: 15px 7px 10px 7px;
 }
 
 .modal-close {
