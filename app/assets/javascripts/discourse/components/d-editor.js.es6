@@ -112,7 +112,7 @@ class Toolbar {
       this.addButton({
         id: 'toggle-direction',
         group: 'extras',
-        icon: 'arrows-h',
+        icon: 'exchange',
         shortcut: 'Shift+6',
         title: 'composer.toggle_direction',
         perform: e => e.toggleDirection(),

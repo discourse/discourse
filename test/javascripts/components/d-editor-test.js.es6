@@ -715,6 +715,26 @@ testCase(`list button with line sequence`, function(assert, textarea) {
   });
 });
 
+componentTest('clicking the toggle-direction button toggles the direction', {
+  template: '{{d-editor value=value}}',
+  beforeEach() {
+    this.siteSettings.support_mixed_text_direction = true;
+    this.siteSettings.default_locale = "en";
+  },
+
+  test(assert) {
+    const textarea = this.$('textarea.d-editor-input');
+    click('button.toggle-direction');
+    andThen(() => {
+      assert.equal(textarea.attr('dir'), 'rtl');
+    });
+    click('button.toggle-direction');
+    andThen(() => {
+      assert.equal(textarea.attr('dir'), 'ltr');
+    });
+  }
+});
+
 testCase(`doesn't jump to bottom with long text`, function(assert, textarea) {
 
   let longText = 'hello world.';
