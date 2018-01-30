@@ -84,6 +84,7 @@ module Onebox
         end
 
         def user_html(route)
+          link = "<a href='#{@url}'>#{@url}</a>"
           username = route[:username] || ''
           user = User.find_by(username_lower: username.downcase)
 
@@ -104,6 +105,8 @@ module Onebox
 
             template = File.read("#{Rails.root}/lib/onebox/templates/discourse_user_onebox.hbs")
             Mustache.render(template, args)
+          else
+            return link
           end
         end
 
