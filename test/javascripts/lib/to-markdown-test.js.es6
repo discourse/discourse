@@ -119,7 +119,7 @@ QUnit.test("converts table tags", assert => {
   assert.equal(toMarkdown(html), markdown);
 });
 
-QUnit.test("returns empty string if table format not supported", assert => {
+QUnit.test("replace pipes with spaces if table format not supported", assert => {
   let html = `<table>
     <thead> <tr><th>Headi<br><br>ng 1</th><th>Head 2</th></tr> </thead>
       <tbody>
@@ -127,7 +127,8 @@ QUnit.test("returns empty string if table format not supported", assert => {
         <tr><td><a href="http://example.com"><img src="http://dolor.com/image.png" /></a></td> <td><i>sit amet</i></td></tr></tbody>
 </table>
   `;
-  assert.equal(toMarkdown(html), "");
+  let markdown = `Headi\n\nng 1 Head 2\nLorem ipsum\n[![](http://dolor.com/image.png)](http://example.com) *sit amet*`;
+  assert.equal(toMarkdown(html), markdown);
 
   html = `<table>
     <thead> <tr><th>Heading 1</th></tr> </thead>
@@ -136,10 +137,12 @@ QUnit.test("returns empty string if table format not supported", assert => {
         <tr><td><i>sit amet</i></td></tr></tbody>
 </table>
   `;
-  assert.equal(toMarkdown(html), "");
+  markdown = `Heading 1\nLorem\n*sit amet*`;
+  assert.equal(toMarkdown(html), markdown);
 
-  html = `<table><tr><td>Lorem</td><td><i>sit amet</i></td></tr></table>`;
-  assert.equal(toMarkdown(html), "");
+  html = `<table><tr><td>Lorem</td><td><strong>sit amet</strong></td></tr></table>`;
+  markdown = `Lorem **sit amet**`;
+  assert.equal(toMarkdown(html), markdown);
 });
 
 QUnit.test("converts img tag", assert => {
