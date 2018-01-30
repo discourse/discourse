@@ -1,4 +1,4 @@
-import { isRTL, isLTR, setTextDirections, siteDir } from 'discourse/lib/text-direction';
+import { isRTL, isLTR } from 'discourse/lib/text-direction';
 
 QUnit.module('lib:text-direction');
 
