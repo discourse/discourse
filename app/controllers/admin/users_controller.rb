@@ -93,6 +93,8 @@ class Admin::UsersController < Admin::AdminController
       suspended_at: DateTime.now
     )
 
+    perform_post_action
+
     render_json_dump(
       suspension: {
         suspended: true,
@@ -297,6 +299,7 @@ class Admin::UsersController < Admin::AdminController
         user_history_id: silencer.user_history.id
       )
     end
+    perform_post_action
 
     render_json_dump(
       silence: {
@@ -466,6 +469,27 @@ class Admin::UsersController < Admin::AdminController
   end
 
   private
+
+    def perform_post_action
+      return unless params[:post_id].present? &&
+        params[:post_action].present?
+
+      if post = Post.where(id: params[:post_id]).first
+        case params[:post_action]
+        when 'delete'
+          PostDestroyer.new(current_user, post).destroy
+        when 'edit'
+          revisor = PostRevisor.new(post)
+
+          # Take what the moderator edited in as gospel
+          revisor.revise!(
+            current_user,
+            { raw:  params[:post_edit] },
+            skip_validations: true, skip_revision: true
+          )
+        end
+      end
+    end
 
     def fetch_user
       @user = User.find_by(id: params[:user_id])

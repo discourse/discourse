@@ -2695,7 +2695,12 @@ en:
         agree_flag_hide_post_title: "Hide this post and automatically send the user a message urging them to edit it."
         agree_flag_restore_post: "Agree and Restore Post"
         agree_flag_restore_post_title: "Restore the post so that all users can see it."
-        agree_flag: "Agree and Keep Post"
+        agree_flag_suspend: "Suspend User"
+        agree_flag_suspend_title: "Agree with flag and suspend the user."
+        agree_flag_silence: "Silence User"
+        agree_flag_silence_title: "Agree with flag and silence the user."
+
+        agree_flag: "Keep Post"
         agree_flag_title: "Agree with flag and keep the post unchanged."
         ignore_flag: "Ignore"
         ignore_flag_title: "Remove this flag; it requires no action at this time."
@@ -2729,7 +2734,6 @@ en:
         system: "System"
         error: "Something went wrong"
         reply_message: "Reply"
-        suspended_for_post: "The user was suspended for this post."
         no_results: "There are no flagged posts."
         topic_flagged: "This <strong>topic</strong> has been flagged."
         show_full: "show full post"
@@ -3392,6 +3396,10 @@ en:
         suspended_until: "(until %{until})"
         cant_suspend: "This user cannot be suspended."
         delete_all_posts: "Delete all posts"
+        penalty_post_actions: "What would you like to do with the associated post?"
+        penalty_post_delete: "Delete the post"
+        penalty_post_edit: "Edit the post"
+        penalty_post_none: "Do nothing"
 
         # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
         delete_all_posts_confirm_MF: "You are about to delete {POSTS, plural, one {1 post} other {# posts}} and {TOPICS, plural, one {1 topic} other {# topics}}. Are you sure?"

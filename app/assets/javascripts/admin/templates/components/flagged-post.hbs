@@ -68,12 +68,6 @@
 
     {{flag-user-lists flaggedPost=flaggedPost showResolvedBy=showResolvedBy}}
 
-    {{#if suspended}}
-      <div class='suspended-message'>
-        {{i18n "admin.flags.suspended_for_post"}}
-      </div>
-    {{/if}}
-
     <div class='flagged-post-controls'>
       {{#if canAct}}
         {{admin-agree-flag-dropdown
@@ -106,15 +100,6 @@
         {{admin-delete-flag-dropdown
           post=flaggedPost
           removeAfter=(action "removeAfter")}}
-
-        {{#unless suspended}}
-          {{d-button
-            class="btn-danger suspend-user"
-            icon="ban"
-            label="admin.flags.suspend_user"
-            title="admin.flags.suspend_user_title"
-            action=(action "showSuspendModal")}}
-        {{/unless}}
       {{/if}}
 
       {{d-button
