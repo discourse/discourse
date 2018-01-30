@@ -96,15 +96,15 @@ function applyOnebox(state, silent) {
 
             if (!isTopLevel(href)) {
               let onebox = cachedInlineOnebox(href);
-
               let options = state.md.options.discourse;
+
               if (options.lookupInlineOnebox) {
                 onebox = options.lookupInlineOnebox(href);
               }
 
-              if (onebox) {
+              if (onebox && onebox.title) {
                 text.content = onebox.title;
-              } else if (state.md.options.discourse.previewing) {
+              } else if (state.md.options.discourse.previewing && !onebox) {
                 attrs.push(["class", "inline-onebox-loading"]);
               }
             }

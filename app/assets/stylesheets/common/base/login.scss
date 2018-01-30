@@ -38,7 +38,7 @@ $input-width: 220px;
   }
 
   .user-field {
-    label {
+    > label {
       width: $label-width;
       float: left;
     }

@@ -67,6 +67,6 @@ module RetrieveTitle
         title = extract_title(current)
         throw :done if title || max_size < current.length
       end
-      return title || ""
+      return title
     end
 end

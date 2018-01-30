@@ -77,6 +77,23 @@ describe Onebox::Engine::DiscourseLocalOnebox do
     end
   end
 
+  context "for a link to a user profile" do
+    let(:user)   { Fabricate(:user) }
+
+    it "returns a link if user isn't found" do
+      url = "#{Discourse.base_url}/u/none"
+      expect(Onebox.preview(url).to_s).to eq(build_link(url))
+    end
+
+    it "returns some onebox goodness if user exists" do
+      html = Onebox.preview("#{Discourse.base_url}/u/#{user.username}").to_s
+      expect(html).to include(user.username)
+      expect(html).to include(user.name)
+      expect(html).to include(user.created_at.strftime("%B %-d, %Y"))
+      expect(html).to include('<aside class="onebox">')
+    end
+  end
+
   context "for a link to an internal audio or video file" do
 
     let(:sha) { Digest::SHA1.hexdigest("discourse") }
