@@ -103,7 +103,9 @@
           icon="external-link"
           label="admin.flags.ignore_flag"}}
 
-        {{admin-delete-flag-dropdown post=flaggedPost removeAfter=(action "removeAfter")}}
+        {{admin-delete-flag-dropdown
+          post=flaggedPost
+          removeAfter=(action "removeAfter")}}
 
         {{#unless suspended}}
           {{d-button
