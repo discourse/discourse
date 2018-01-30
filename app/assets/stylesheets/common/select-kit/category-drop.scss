@@ -26,7 +26,10 @@
       }
 
       &.bullet.has-selection .category-drop-header {
-        padding: 5.25px 10px;
+        padding: 3.5px 10px;
+        span.badge-category {
+          line-height: $line-height-large;
+        }
       }
 
       &.box.has-selection .category-drop-header {
@@ -70,6 +73,7 @@
         padding: 0;
         min-width: 100px;
         max-height: 300px;
+        max-width: 30em;
 
         .collection-header {
           .category-filter {
@@ -129,7 +133,7 @@
         .badge-wrapper {
           margin: 0;
           display: flex;
-          flex: 1;
+          flex: 1 1 auto;
         }
       }
 

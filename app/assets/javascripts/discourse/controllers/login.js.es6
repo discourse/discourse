@@ -217,7 +217,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
     // Reload the page if we're authenticated
     if (options.authenticated) {
-      const destinationUrl = $.cookie('destination_url');
+      const destinationUrl = $.cookie('destination_url') || options.destination_url;
       if (destinationUrl) {
         // redirect client to the original URL
         $.cookie('destination_url', null);

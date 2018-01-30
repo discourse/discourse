@@ -212,6 +212,16 @@ aside.onebox {
       }
     }
 
+    &.user-onebox {
+      .fa {
+        margin-right: 5px;
+      }
+      .full-name,
+      .location {
+        margin-right: 10px;
+      }
+    }
+
   }
 }
 

@@ -26,6 +26,7 @@ export default SelectKitComponent.extend({
 
       if (this.get("allowInitialValueMutation")) this.mutateAttributes();
 
+      this._setCollectionHeaderComputedContent();
       this._setHeaderComputedContent();
     });
   },
@@ -36,6 +37,7 @@ export default SelectKitComponent.extend({
     run.next(() => {
       this.mutateContent(this.get("computedContent"));
       this.mutateValue(this.get("computedValue"));
+      this._setCollectionHeaderComputedContent();
       this._setHeaderComputedContent();
     });
   },

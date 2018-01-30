@@ -1,12 +1,14 @@
 import CanCheckEmails from 'discourse/mixins/can-check-emails';
 import computed from 'ember-addons/ember-computed-decorators';
 import User from 'discourse/models/user';
+import optionalService from 'discourse/lib/optional-service';
 
 export default Ember.Controller.extend(CanCheckEmails, {
   indexStream: false,
   application: Ember.inject.controller(),
   userNotifications: Ember.inject.controller('user-notifications'),
   currentPath: Ember.computed.alias('application.currentPath'),
+  adminTools: optionalService(),
 
   @computed("content.username")
   viewingSelf(username) {
@@ -93,11 +95,15 @@ export default Ember.Controller.extend(CanCheckEmails, {
       this.set('forceExpand', true);
     },
 
-    adminDelete() {
-      // I really want this deferred, don't want to bring in all this code till used
-      const AdminUser = requirejs('admin/models/admin-user').default;
-      AdminUser.find(this.get('model.id')).then(user => user.destroy({deletePosts: true}));
+    showSuspensions() {
+      this.get('adminTools').showActionLogs(this, {
+        target_user: this.get('model.username'),
+        action_name: 'suspend_user'
+      });
     },
 
+    adminDelete() {
+      this.get('adminTools').deleteUser(this.get('model.id'));
+    }
   }
 });

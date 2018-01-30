@@ -46,6 +46,10 @@ module PostGuardian
     !!result
   end
 
+  def can_lock_post?(post)
+    can_see_post?(post) && is_staff?
+  end
+
   def can_defer_flags?(post)
     can_see_post?(post) && is_staff? && post
   end
@@ -97,6 +101,9 @@ module PostGuardian
     end
 
     return true if is_admin?
+
+    # Must be staff to edit a locked post
+    return false if post.locked? && !is_staff?
 
     if is_staff? || @user.has_trust_level?(TrustLevel[4])
       return can_create_post?(post.topic)

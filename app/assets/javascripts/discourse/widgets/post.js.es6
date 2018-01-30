@@ -7,6 +7,7 @@ import { h } from 'virtual-dom';
 import DiscourseURL from 'discourse/lib/url';
 import { dateNode } from 'discourse/helpers/node';
 import { translateSize, avatarUrl, formatUsername } from 'discourse/lib/utilities';
+import hbs from 'discourse/widgets/hbs-compiler';
 
 export function avatarImg(wanted, attrs) {
   const size = translateSize(wanted);
@@ -139,6 +140,12 @@ createWidget('post-avatar', {
   }
 });
 
+createWidget('post-locked-indicator', {
+  tagName: 'div.post-info.post-locked',
+  template: hbs`{{d-icon "lock"}}`,
+  title: () => I18n.t("post.locked")
+});
+
 createWidget('post-email-indicator', {
   tagName: 'div.post-info.via-email',
 
@@ -205,6 +212,10 @@ createWidget('post-meta-data', {
 
     if (attrs.via_email) {
       result.push(this.attach('post-email-indicator', attrs));
+    }
+
+    if (attrs.locked) {
+      result.push(this.attach('post-locked-indicator', attrs));
     }
 
     if (attrs.version > 1 || attrs.wiki) {

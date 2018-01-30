@@ -11,6 +11,16 @@
 
 }
 
+.bootbox.modal {
+  position: fixed;
+  z-index: z("modal","content");
+  overflow: auto;
+  height: auto;
+  background-color: $secondary;
+  box-shadow: 0 2px 2px rgba(0,0,0, .25);
+  background-clip: padding-box;
+}
+
 .input-hint-text {
   margin-left: 0.5em;
   color: $secondary-high;
@@ -105,8 +115,11 @@
   margin-bottom: 0;
 }
 .modal-footer {
-  padding: 14px 15px 15px;
+  padding: 14px 15px 10px;
   border-top: 1px solid $primary-low;
+  .btn {
+  margin: 0 5px 5px 0;
+  }
 }
 .modal-footer:before,
 .modal-footer:after {
@@ -141,6 +154,8 @@
   }
 
   .modal-body {
+    box-sizing: border-box;
+    width: 100%;
     &.full-height-modal {
       max-height: calc(100vh - 150px);
     }

@@ -41,6 +41,7 @@ class Users::OmniauthCallbacksController < ApplicationController
     @auth_result = authenticator.after_authenticate(auth)
 
     origin = request.env['omniauth.origin']
+
     if cookies[:destination_url].present?
       origin = cookies[:destination_url]
       cookies.delete(:destination_url)
@@ -53,8 +54,10 @@ class Users::OmniauthCallbacksController < ApplicationController
       end
     end
 
-    unless @origin.present?
+    if @origin.blank?
       @origin = Discourse.base_uri("/")
+    else
+      @auth_result.destination_url = origin
     end
 
     if @auth_result.failed?

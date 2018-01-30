@@ -475,6 +475,7 @@ Discourse::Application.routes.draw do
     put "post_type"
     put "rebake"
     put "unhide"
+    put "locked"
     get "replies"
     get "revisions/latest" => "posts#latest_revision"
     get "revisions/:revision" => "posts#revisions", constraints: { revision: /\d+/ }

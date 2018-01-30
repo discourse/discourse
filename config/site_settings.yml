@@ -425,6 +425,7 @@ users:
   hide_suspension_reasons:
     default: false
     client: true
+  log_personal_messages_views: false
 
 groups:
   enable_group_directory:
@@ -514,6 +515,7 @@ posting:
     client: true
     validator: "EnablePrivateEmailMessagesValidator"
   editing_grace_period: 300
+  staff_edit_locks_post: false
   post_edit_time_limit:
     default: 86400
     max: 525600
