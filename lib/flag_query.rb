@@ -31,6 +31,7 @@ module FlagQuery
     posts = SqlBuilder.new("
       SELECT p.id,
              p.cooked,
+             p.raw,
              p.user_id,
              p.topic_id,
              p.post_number,

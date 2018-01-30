@@ -21,3 +21,13 @@
     float: right;
   }
 }
+
+.modal-body {
+  .penalty-post-edit {
+    margin-top: 1em;
+
+    textarea {
+      height: 10em;
+    }
+  }
+}
