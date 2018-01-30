@@ -1,19 +1,28 @@
 <meta name="author" content="">
 <meta name="generator" content="Discourse <%= Discourse::VERSION::STRING %> - https://github.com/discourse/discourse version <%= Discourse.git_version %>">
-<%- if SiteSetting.favicon_url.present? %>
-<link rel="icon" type="image/png" href="<%=SiteSetting.favicon_url%>">
+
+<%# damingo (Github ID), 2017-01-30, #theme %>
+<%- if request.host.present? && Theme.exists?(name: request.host) %>
+    <link rel="icon" type="image/png" href="/images/favicon.<%= request.host %>.png">
+    <link rel="apple-touch-icon" type="image/png" href="/images/apple-touch-icon.<%= request.host %>.png">
+    <link rel="icon" sizes="144x144" href="/images/apple-touch-icon.<%= request.host %>.png">
+<%- else %>
+    <%- if SiteSetting.favicon_url.present? %>
+        <link rel="icon" type="image/png" href="<%= SiteSetting.favicon_url %>">
+    <%- end %>
+    <%- if SiteSetting.apple_touch_icon_url.present? %>
+        <link rel="apple-touch-icon" type="image/png" href="<%= SiteSetting.apple_touch_icon_url %>">
+    <%- end %>
+    <%- if (SiteSetting.apple_touch_icon_url != "/images/default-apple-touch-icon.png") && SiteSetting.apple_touch_icon_url.present? %>
+        <link rel="icon" sizes="144x144" href="<%= SiteSetting.apple_touch_icon_url %>">
+    <%- end %>
 <%- end %>
-<%- if SiteSetting.apple_touch_icon_url.present? %>
-<link rel="apple-touch-icon" type="image/png" href="<%=SiteSetting.apple_touch_icon_url%>">
-<%- end %>
-<%- if (SiteSetting.apple_touch_icon_url != "/images/default-apple-touch-icon.png") && SiteSetting.apple_touch_icon_url.present? %>
-<link rel="icon" sizes="144x144" href="<%=SiteSetting.apple_touch_icon_url%>">
-<%- end %>
+
 <meta name="theme-color" content="#<%= ColorScheme.hex_for_name('header_background') %>">
 <% if mobile_view? %>
-<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <% else %>
-<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=yes">
 <% end %>
 <%= canonical_link_tag %>
 <%= render_sitelinks_search_tag %>
