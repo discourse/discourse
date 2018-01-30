@@ -308,7 +308,6 @@ EOM
     end
   end
 
-
   def import_categories
     puts "", "importing categories..."
 
@@ -785,7 +784,7 @@ EOM
     raw.gsub!(/<br>/, "\n\n")
     raw.gsub!(/<br \/>/, "\n\n")
     raw.gsub!(/<p>&nbsp;<\/p>/, "\n\n")
-     raw.gsub!(/\[hr\]/,"\n***\n")
+    raw.gsub!(/\[hr\]/, "\n***\n")
     raw.gsub!(/&#39;/, "'")
     raw.gsub!(/\[url="(.+?)"\]http.+?\[\/url\]/, "\\1\n")
     raw.gsub!(/\[media\](.+?)\[\/media\]/, "\n\\1\n\n")
@@ -894,7 +893,6 @@ EOM
       b.content = quote + b.content + "\n[/quote]\n"
       b.name = 'div'
     end
-
 
     @doc.css('object param embed').each do |embed|
       embed.replace("\n#{embed['src']}\n")
