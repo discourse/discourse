@@ -660,7 +660,7 @@ email:
   email_time_window_mins:
     default: 10
     client: true
-  private_email_time_window_seconds: 20
+  personal_email_time_window_seconds: 20
   email_posts_context: 5
   digest_min_excerpt_length:
     default: 100
