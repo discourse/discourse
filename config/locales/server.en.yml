@@ -271,6 +271,7 @@ en:
     not_found: "Post not found or already updated."
 
   groups:
+    title: "Groups"
     success:
       bulk_add: "%{users_added} users have been added to the group."
     errors:

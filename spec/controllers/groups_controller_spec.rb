@@ -17,6 +17,12 @@ describe GroupsController do
       expect(::JSON.parse(response.body)['basic_group']['id']).to eq(group.id)
     end
 
+    it "responds with HTML" do
+      Guardian.any_instance.expects(:can_see?).with(group).returns(true)
+      get :show, params: { id: group.name }, format: :html
+      expect(response).to be_success
+    end
+
     it "works even with an upper case group name" do
       Guardian.any_instance.expects(:can_see?).with(group).returns(true)
       get :show, params: { id: group.name.upcase }, format: :json
