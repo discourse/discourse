@@ -7,6 +7,10 @@ begin
 rescue LoadError
   puts
 
+  # self-hosting
+
+  # wed 28th do penultimate import
+
   # https://community.auth0.com/
 
   # TODO users, categories ("spaces"), questions & comments (as Discourse
@@ -20,7 +24,7 @@ rescue LoadError
 
   # TODO Mark the "best answer" as "solved" using the Discourse Solved plugin.
 
-  # TODO 301 redirects for questions of form:
+  # TODO 301 redirects for questions of form: permalinks
   # https://community.auth0.com/questions/12997/are-we-supposed-to-always-send-a-request-to-auth0c
 
   # TODO import badges (stub function import_badges created)
@@ -30,6 +34,17 @@ rescue LoadError
   # TODO: Re-map AnswerHub spaces to different Discourse categories.
   # You'll provide the Space IDs of the space and the space to which
   # they should be moved. (DO I HAVE MAP?)
+
+  # TODO merge categories:
+  # 9 - everything in this space goes to “Internal” category
+  # 15 - "ADR/Pre-Sales"
+  # 17 - "Engineering"
+  # 16 - “DSE/Support”
+
+  # Those need to only be visible by the group “Auth0_Employees”
+
+
+
 
 class ImportScripts::AnswerHub < ImportScripts::Base
   BATCH_SIZE = 1000
@@ -289,23 +304,16 @@ EOM
   end
 
   def import_categories
-    # 'topic'
-    # 'question'
-    # 'idea'
-    # 'kbentry'
-    # 'answer'
-    # 'comment'
-    # 'idea-comment'
-
     puts "", "importing top level categories (aka spaces & containers)..."
     categories = mysql_query("SELECT
                               c_id id,
                               c_name name,
                               c_parent parentid,
                               c_site site,
-                              c_plug slug,
+                              c_plug slug
                          FROM containers
                         WHERE c_type='space'
+                          AND c_active=1
                      ORDER BY c_id").to_a
 
     top_level_categories = categories.select { |c| c["parentid"] != nil }
@@ -341,22 +349,40 @@ EOM
     end
   end
 
-  def import_topics
+  def import_topics_and_posts
+    # 'question'
+    # 'answer'
+    # 'comment'
+    # 'idea'
+    # 'idea-comment'
+    # 'kbentry' -- ignore
+    # 'topic' ---> tags
+
     puts "", "importing topics..."
 
-    topic_count = mysql_query("SELECT COUNT(threadid) count FROM #{TABLE_PREFIX}thread
-                               WHERE dateline > UNIX_TIMESTAMP(STR_TO_DATE('#{IMPORT_AFTER}', '%Y-%m-%d'))").first["count"]
+    topic_count = mysql_query("SELECT COUNT(c_id) count FROM network6_nodes
+                               WHERE creation_date > '#{IMPORT_AFTER}'").first["count"]
 
     last_topic_id = -1
 
     batches(BATCH_SIZE) do |offset|
       topics = mysql_query(<<-SQL
-          SELECT t.threadid threadid, t.title title, forumid, open, postuserid, t.dateline dateline, views, t.visible visible, sticky,
-                 p.pagetext raw
-            FROM #{TABLE_PREFIX}thread t
-            JOIN #{TABLE_PREFIX}post p ON p.postid = t.firstpostid
-           WHERE t.threadid > #{last_topic_id}
-             AND t.dateline > UNIX_TIMESTAMP(STR_TO_DATE('#{IMPORT_AFTER}', '%Y-%m-%d'))
+SELECT c_type type,
+c_id id,
+c_body raw,
+c_creation_date created_at,
+c_locale locale,
+c_plug slug,
+c_title title,
+c_topic_names tags,
+c_primaryContainer category_id,
+c_author user_id,
+c_parent parent,
+            FROM network6_nodes
+           WHERE c_id > #{last_topic_id}
+             AND creation_date > '#{IMPORT_AFTER}'
+             AND c_type != 'topic'
+AND c_visibility != 'deleted'
         ORDER BY t.threadid
            LIMIT #{BATCH_SIZE}
       SQL
@@ -368,33 +394,40 @@ EOM
       topics.reject! { |t| @lookup.post_already_imported?("thread-#{t["threadid"]}") }
 
       create_posts(topics, total: topic_count, offset: offset) do |topic|
+        skip = false
         raw = preprocess_post_raw(topic["raw"]) rescue nil
-        category = category_id_from_imported_category_id(topic["forumid"])
         next unless category
         next if raw.blank?
-        topic_id = "thread-#{topic["threadid"]}"
-        title = topic["title"]
+        topic_id = "topic['id']"
         t = {
           id: topic_id,
-          user_id: user_id_from_imported_user_id(topic["postuserid"]) || Discourse::SYSTEM_USER_ID,
-          title: @htmlentities.decode(title).strip[0...255],
-          category: category,
+          user_id: user_id_from_imported_user_id(topic["user_id"]) || Discourse::SYSTEM_USER_ID,
+          title: topic["title"],
           raw: raw,
-          created_at: parse_timestamp(topic["dateline"]),
-          visible: topic["visible"].to_i == 1,
-          views: topic["views"],
+          created_at: parse_timestamp(topic["created_at"]),
           post_create_action: proc do |post|
-            Permalink.create(url: "/showthread/#{topic['threadid']}", topic_id: post[:topic_id])
-            if @import_tags
-              if tag_names = @tag_map[topic['forumid']]
-                DiscourseTagging.tag_topic_by_names(post.topic, staff_guardian, tag_names)
-              else
-                puts "Can't find tag for #{category}"
-              end
+            if topic['type'] == 'question'
+              Permalink.create(url: "/questions/#{topic['id']}", topic_id: post[:topic_id])
+            end
+            if topic['tags']
+              tag_names = topic['tags'].split(',')
+              DiscourseTagging.tag_topic_by_names(post.topic, staff_guardian, tag_names)
             end
           end
         }
-        t[:pinned_at] = t[:created_at] if topic["sticky"].to_i == 1
+        if ['question','idea'].include? topic["post_type"]
+          post[:category] = category_id_from_imported_category_id(topic["category_id"])
+          post[:title] = topic["title"])
+        else
+          if parent = topic_lookup_from_imported_post_id(p["post_parent"])
+        category = category_id_from_imported_category_id(topic["category_id"])
+            post[:topic_id] = parent[:topic_id]
+            post[:reply_to_post_number] = parent[:post_number] if parent[:post_number] > 1
+          else
+            puts "Skipping #{p["id"]}: #{p["post_content"][0..40]}"
+            skip = true
+          end
+        end
         t
       end
 
@@ -409,58 +442,6 @@ EOM
       #   end
       # end
 
-    end
-  end
-
-  def import_posts
-    puts "", "importing posts..."
-
-    post_count = mysql_query(<<-SQL
-      SELECT COUNT(postid) count
-        FROM #{TABLE_PREFIX}post p
-        JOIN #{TABLE_PREFIX}thread t ON t.threadid = p.threadid
-       WHERE t.firstpostid <> p.postid
-         AND t.dateline > UNIX_TIMESTAMP(STR_TO_DATE('#{IMPORT_AFTER}', '%Y-%m-%d'))
-    SQL
-                            ).first["count"]
-
-    last_post_id = -1
-
-    batches(BATCH_SIZE) do |offset|
-      posts = mysql_query(<<-SQL
-          SELECT p.postid, p.userid, p.threadid, p.pagetext raw, p.dateline, p.visible, p.parentid
-            FROM #{TABLE_PREFIX}post p
-            JOIN #{TABLE_PREFIX}thread t ON t.threadid = p.threadid
-           WHERE t.firstpostid <> p.postid
-             AND p.postid > #{last_post_id}
-         AND t.dateline > UNIX_TIMESTAMP(STR_TO_DATE('#{IMPORT_AFTER}', '%Y-%m-%d'))
-        ORDER BY p.postid
-           LIMIT #{BATCH_SIZE}
-      SQL
-                         ).to_a
-
-      break if posts.empty?
-
-      last_post_id = posts[-1]["postid"]
-      posts.reject! { |p| @lookup.post_already_imported?(p["postid"].to_i) }
-
-      create_posts(posts, total: post_count, offset: offset) do |post|
-        raw = preprocess_post_raw(post["raw"]) rescue nil
-        next if raw.blank?
-        next unless topic = topic_lookup_from_imported_post_id("thread-#{post["threadid"]}")
-        p = {
-          id: post["postid"],
-          user_id: user_id_from_imported_user_id(post["userid"]) || Discourse::SYSTEM_USER_ID,
-          topic_id: topic[:topic_id],
-          raw: raw,
-          created_at: parse_timestamp(post["dateline"]),
-          hidden: post["visible"].to_i == 0,
-        }
-        if parent = topic_lookup_from_imported_post_id(post["parentid"])
-          p[:reply_to_post_number] = parent[:post_number]
-        end
-        p
-      end
     end
   end
 
@@ -1050,6 +1031,7 @@ EOM
   end
 
   def import_badges
+    # SELECT * FROM auth0answerhub.network6_awards;
     # Map a set of AH badges to Discourse badges:
 
     # AH Badge ID	D Badge ID
