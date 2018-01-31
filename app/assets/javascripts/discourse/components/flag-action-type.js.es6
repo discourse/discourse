@@ -34,13 +34,13 @@ export default Ember.Component.extend({
 
   @computed('message.length')
   customMessageLengthClasses(messageLength) {
-    return (messageLength < Discourse.SiteSettings.min_private_message_post_length) ? "too-short" : "ok";
+    return (messageLength < Discourse.SiteSettings.min_personal_message_post_length) ? "too-short" : "ok";
   },
 
   @computed('message.length')
   customMessageLength(messageLength) {
     const len = messageLength || 0;
-    const minLen = Discourse.SiteSettings.min_private_message_post_length;
+    const minLen = Discourse.SiteSettings.min_personal_message_post_length;
     if (len === 0) {
       return I18n.t("flagging.custom_message.at_least", { count: minLen });
     } else if (len < minLen) {

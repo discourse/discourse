@@ -215,11 +215,11 @@ describe Topic do
   context 'private message title' do
     before do
       SiteSetting.min_topic_title_length = 15
-      SiteSetting.min_private_message_title_length = 3
+      SiteSetting.min_personal_message_title_length = 3
     end
 
     it 'allows shorter titles' do
-      pm = Fabricate.build(:private_message_topic, title: 'a' * SiteSetting.min_private_message_title_length)
+      pm = Fabricate.build(:private_message_topic, title: 'a' * SiteSetting.min_personal_message_title_length)
       expect(pm).to be_valid
     end
 
