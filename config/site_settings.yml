@@ -447,7 +447,7 @@ posting:
     locale_default:
       zh_CN: 8
       zh_TW: 8
-  min_private_message_post_length:
+  min_personal_message_post_length:
     client: true
     min: 1
     default: 10
@@ -490,7 +490,7 @@ posting:
       zh_CN: false
       zh_TW: false
   title_fancy_entities: true
-  min_private_message_title_length:
+  min_personal_message_title_length:
     client: true
     default: 2
     min: 1
