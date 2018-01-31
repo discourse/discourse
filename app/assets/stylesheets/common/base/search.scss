@@ -168,10 +168,10 @@
     .date-picker-wrapper {
       vertical-align: top;
     }
-    @media screen and (max-width: 600px) {
+    @media screen and (max-width: 715px) {
       padding: 0 10px;
-      .date-picker {
-        margin-top: 5px;
+      #postTime {
+        margin: 0 0 5px 0;
       }
     }
   }
@@ -200,6 +200,9 @@
       flex: 1 1 100%;
       @media screen and (max-width: 600px) {
         margin: 0;
+        &:nth-of-type(2) {
+          margin-top: 5px;
+        }
       }
     }
   }

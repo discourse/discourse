@@ -324,7 +324,7 @@ div.ac-wrap div.item a.remove, .remove-link {
   margin-left: 4px;
   font-size: $font-down-1;
   line-height: $line-height-small;
-  padding: 1.5px 3.5px;
+  padding: 1px 3.5px;
   border-radius: 12px;
   box-sizing: border-box;
   border: 1px solid $primary-low;
@@ -340,12 +340,13 @@ div.ac-wrap {
   overflow: auto;
   max-height: 150px;
   display: flex;
+  flex-wrap: wrap;
   background-color: $secondary;
   border: 1px solid $primary-medium;
   div.item {
     float: left;
-    padding: 6px 10px;
-    line-height: $line-height-medium;
+    padding: 4px 10px;
+    line-height: $line-height-large;
     span {
       display: inline-block;
       line-height: $line-height-medium;
