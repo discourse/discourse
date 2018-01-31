@@ -5,19 +5,8 @@
 .search-advanced {
   .search-advanced-options {
     .control-group {
-      padding-bottom: 10px;
-
-      &.pull-left {
-        float: none;
-        width: auto;
-      }
-
+      margin-bottom: 10px;
       .controls {
-        label {
-          display: block;
-          margin-bottom: 5px;
-        }
-
         input:not([type="checkbox"]),select {
           width: 75%;
         }
@@ -26,13 +15,23 @@
   }
 }
 
+.search-title {
+  .sort-by {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    .select-kit {
+      flex: 1 1 auto;
+    }
+  }
+}
+
 .search.row {
-  margin-top: 5px;
+  margin-top: 10px;
 }
 
 .search.row input.search {
   height: 25px;
-  width: 69%;
 }
 
 .fps-search-context {

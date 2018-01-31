@@ -339,6 +339,7 @@ div.ac-wrap div.item a.remove, .remove-link {
 div.ac-wrap {
   overflow: auto;
   max-height: 150px;
+  display: flex;
   background-color: $secondary;
   border: 1px solid $primary-medium;
   div.item {
