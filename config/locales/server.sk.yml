@@ -31,6 +31,9 @@ sk:
   disable_remote_images_download_reason: "Sťahovanie vzdialených obrázkov je vypnuté kvôli nedostatku diskového priestoru."
   anonymous: "Anonymný"
   remove_posts_deleted_by_author: "Zmazané autorom"
+  themes:
+    bad_color_scheme: "Nepodarilo sa aktualizovať tému, neplatná farebná schéma"
+    other_error: "počas aktualizácie tému sa niečo nepodarilo"
   emails:
     incoming:
       default_subject: "Táto téma musí mať názov"
@@ -40,8 +43,11 @@ sk:
         empty_email_error: "Nastane, keď prijmeme úplne prázdny mail."
         no_message_id_error: "Nastane, keď v maili chýba hlavička 'Message-Id'."
         inactive_user_error: "Nastane, keď odosielateľ nie je aktívny."
+        silenced_user_error: "Nastane, keď odosielateľ bol stíšený."
         insufficient_trust_level_error: "Nastane, keď sa používateľ pokúsi vytvoriť novú tému v kategórii, na ktorú nemajú dostatočný stupeň dôvery."
         topic_closed_error: "Nastane, keď príde odpoveď na uzavretú tému."
+        bounced_email_error: "Email report bol odoslaný emailom"
+      unrecognized_error: "Chyba nebola rozpoznaná."
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -61,6 +67,8 @@ sk:
       has_already_been_used: "je už použité"
       inclusion: nie je v zozname
       invalid: je nesprávne
+      is_invalid: "je to nejasné, je to kompletná veta?"
+      contains_censored_words: "obsahuje nasledujúce cenzúrované slová %{censored_words}"
       less_than: musí byť menej ako %{count}
       less_than_or_equal_to: musí byť menej alebo rovné %{count}
       not_a_number: nie je číslo
@@ -98,6 +106,11 @@ sk:
       max_username_length_range: "Nemôžete nastaviť maximum menšie ako minimum."
       default_categories_already_selected: "Nemôžete vybrať kategóriu použitú v inom zozname."
       s3_upload_bucket_is_required: "Nemôžete nahrávať na S3 pokiaľ ste nezadali 's3_upload_bucket'."
+  invite:
+    not_found: "Tvoj pozívací token je nesprávny. Prosím, kontaktujte administrátora stránky."
+  bulk_invite:
+    file_should_be_csv: "Nahrávaný súbor by mal byť typu CSV."
+    error: "Počas nahrávanie súboru sa vyskytla chyba. Prosím, vyskúšajte ho nahraď znovu neskôr."
   backup:
     operation_already_running: "Prebieha spracovanie inej operácie. Momentálne sa nová úloha nedá spustiť. "
     backup_file_should_be_tar_gz: "Záložný súbor musí byť archív .tar.gz"
@@ -173,8 +186,11 @@ sk:
     latest: "Najnovšie témy"
     hot: "Horúce témy"
     top: "Top témy"
+    top_monthly: "Mesačné najčastejšie témy"
+    top_weekly: "Týždenné najčastejšie témy"
+    top_daily: "Denné najčastejšie témy"
     posts: "Najnovšie príspevky"
-    private_posts: "Najnovšie súkromné správy"
+    private_posts: "Posledné osobné správy"
     group_posts: "Najnovšie príspevky od %{group_name}"
     group_mentions: "Najnovšie zmienky od %{group_name}"
     user_posts: "Najnovšie príspevky od @%{username}"
@@ -249,9 +265,7 @@ sk:
         topic:
           attributes:
             base:
-              warning_requires_pm: "Výstraha môže byť pripojená len k súkromným spravam"
               too_many_users: "Výstraha môže byť zaslaná len jednej osobe"
-              cant_send_pm: "Ľutujeme, nemôžete zaslať súkromnú správu tomuto používateľovi"
               no_user_selected: "Musíte zadať existujúceho používateľa"
         user:
           attributes:
@@ -266,6 +280,10 @@ sk:
           attributes:
             hex:
               invalid: "nesprávna farba"
+        watched_word:
+          attributes:
+            word:
+              too_many: "Príliš veľa slov k tej akcii"
       <<: *errors
   user_profile:
     no_info_other: "<div class='missing-profile'>%{name} nevložil zatiaľ nič do profilu \"O mne\"</div>"
@@ -275,6 +293,8 @@ sk:
   meta_category_description: "Diskusia o stránke, organizácii, ako funguje a ako ju môžme vylepšit"
   staff_category_name: "Zamestnanci"
   staff_category_description: "Súkromna kategória pre zamestnaneckú diskusiu. Témy su viditeľné len pre správcov a moderátorov diskusie"
+  discourse_welcome_topic:
+    title: "Vitajte v Discourse"
   lounge_welcome:
     title: "Vítajte v Salóne"
     body: |2
@@ -330,6 +350,9 @@ sk:
     leader:
       title: "vodca"
     change_failed_explanation: "Pokúsili  ste sa znížiť úroveň %{user_name} na '%{new_trust_level}'. Ale jeho/jej aktuálna úroveň už je '%{current_trust_level}'. %{user_name} zostane na úrovni '%{current_trust_level}' - Ak chcete znížiť úroveň používateľa, najskôr uzamknite úroveň"
+  post:
+    image_placeholder:
+      broken: "Tento obrázok je poškodený"
   rate_limiter:
     slow_down: "Vykonali ste túto akciu príliš veľa krát, skúste neskôr"
     too_many_requests: "Na vykonávanie tejto akcie máme nastavený denný limit. Prosím počkajte %{time_left} než skúsite znovu."
@@ -449,6 +472,8 @@ sk:
         other: "pred takmer %{count} rokmi"
   password_reset:
     no_token: "Ľutujeme, tento odkaz na zmenu hesla je už príliš starý. Stlačte tlačidlo Prihlásiť a použite \"Zabudol som heslo\" pre vytvorenie nového odkazu."
+    choose_new: "Napíš nové heslo"
+    choose: "Napíš heslo"
     update: 'Aktualizujte heslo'
     save: 'Nastavte heslo'
     title: 'Obnoviť heslo'
@@ -466,6 +491,9 @@ sk:
     continue_button: "Pokračujte na %{site_name}"
     welcome_to: "Vitajte na %{site_name}!"
     approval_required: "Moderátor musí manuálne povoliť Váš prístup na toto fórum.  O schválení prístupu budete upovedomení emailom."
+    admin_confirm:
+      title: "Potvrď admin účet"
+      back_to: "Vráť sa na %{title}"
   post_action_types:
     off_topic:
       title: 'Mimo témy'
@@ -504,6 +532,9 @@ sk:
       title: 'Hlasovať'
       description: 'Hlasovať pre tento príspevok'
       long_form: 'hlasoval pre tento príspevok'
+  user_activity:
+    no_default:
+      others: "Žiadna aktivita"
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -697,7 +728,6 @@ sk:
   site_settings:
     censored_words: "Slová, ktoré budu automatický nahradené znakmi &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Automatické zmazanie príspevkov, ktoré ostali skryté viac ako 30 dní"
-    default_locale: "Predvolený jazyk tejto inštancie Discourse je (ISO 639-1 Code)"
     allow_user_locale: "Povoliť používateľom zvoliť si vlastný jazyk"
     min_post_length: "Minimálny povolený počet znakov v príspevkoch"
     min_first_post_length: "Minimálny povolený počet znakov pre prvý príspevok (obsah témy)"
@@ -849,7 +879,6 @@ sk:
     clean_orphan_uploads_grace_period_hours: "Doba (v hodinách) pred odstránením opustených nahraných súborov."
     purge_deleted_uploads_grace_period_days: "Doba (v dňoch) pred úplným vymazaním odstráneného nahraného súboru."
     enable_s3_uploads: "Ukladať nahrávané súbory na úložište S3. DÔLEŽITÉ: vyžaduje platné prístupové údaje S3 (id prístupového kľúča (access key id) a tajný prístupový kľúč (secret access key))."
-    s3_use_iam_profile: 'Použiť rolu AWS EC2 IAM na načítanie kľúčov. POZNÁMKA: zapnutie prepíše nastavený "s3 prístupový kľúč id (s3 access key id)" a "s3 tajný prístupový kľúč (s3 secret access key)".'
     s3_upload_bucket: "Amazon S3 bucket name, do ktorého budú nahraté súbory. POZOR: musí byť malými písmenami, žiadne bodky a žiadne podtržítka."
     s3_access_key_id: "Amazon S3 access key id, ktoré bude použité pre nahrávanie obrázkov."
     s3_secret_access_key: "Amazon S3 secret access key, ktorý bude použitý pre nahrávanie obrázkov."
@@ -878,7 +907,6 @@ sk:
     min_trust_to_create_topic: "MInimálna úroveň dôvery na vytvorenie novej témy."
     min_trust_to_edit_wiki_post: "MInimálna úroveň dôvery na úpravu wiki príspevku."
     min_trust_to_allow_self_wiki: "MInimálna úroveň dôvery k tomu aby mohol používateľ svoje témy meniť na wiki."
-    min_trust_to_send_messages: "MInimálna úroveň dôvery na vytvorenie novej osobnej správy."
     newuser_max_links: "Koľko odkazov môže nový používateľ pridať do príspevku."
     newuser_max_images: "Koľko obrázkov môže nový používateľ pridať do príspevku."
     newuser_max_attachments: "Koľko príloh môže nový používateľ pridať do príspevku."
@@ -1305,7 +1333,6 @@ sk:
       long_description: Tento odznak je udelený, keď prvýkrát zmienite niekoho @meno vo Vašom príspevku. Každá zmienka generuje upozornenie danej osobe, takže bude vedieť o Vašom príspevku. Jednoducho začnite písať @ (zavináč) aby ste zmienili používateľa alebo, ak je to povolené, skupinu - Je to pohodlný spôsob ako upútať ich pozornosť.
   admin_login:
     success: "Email odoslaný"
-    error: "Chyba !"
     email_input: "Email administrátora"
     submit_button: "Poslať email"
   performance_report:

@@ -409,7 +409,6 @@ sq:
       '14': "Në pritje"
     categories:
       all: "kategoritë"
-      all_subcategories: "të gjitha"
       no_subcategory: "asnjë"
       category: "Kategori"
       category_list: "Trego listën e kategorive"
@@ -692,7 +691,6 @@ sq:
         title: "Ftesat"
         user: "Anëtari i ftuar"
         sent: "Dërguar"
-        none: "Nuk keni asnjë ftesë në pritje. "
         truncated:
           one: "Po afishohet ftesa e parë."
           other: "Po afishohen {{count}} ftesat e para."
@@ -1042,8 +1040,6 @@ sq:
         posted: "Postim nga"
         edited: "Redakto postimin tuaj"
         liked: "Pëlqeu postimin tuaj"
-        private_message: "Mesazh privat nga"
-        invited_to_private_message: "I/e ftuar në një mesazh privat nga"
         invited_to_topic: "I/e ftuar në temë nga"
         invitee_accepted: "Ftesa u pranua nga"
         moved_post: "Postimi juaj u transferua nga"
@@ -1056,7 +1052,6 @@ sq:
         quoted: '{{username}} ju ka cituar në "{{topic}}" - {{site_title}}'
         replied: '{{username}} ju u përgjigj në "{{topic}}" - {{site_title}}'
         posted: '{{username}} postoi në "{{topic}}" - {{site_title}}'
-        private_message: '{{username}} ju dërgoi një mesazh privat nga "{{topic}}" - {{site_title}}'
         linked: '{{username}} vendosi një lidhje për postimin tuaj nga "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Shto një imazh"
@@ -1283,7 +1278,6 @@ sq:
         invisible: "Hiqeni nga Listat"
         visible: "Listojeni"
         make_public: "Bëje temën publike"
-        make_private: "Bëje mesazh privat"
       feature:
         pin: "Ngjite temën"
         unpin: "Çngjite temën"
@@ -1883,7 +1877,6 @@ sq:
         one: "1 e akorduar"
         other: "%{count} të akorduara"
       select_badge_for_title: Zgjidhni një stemë për ta përdorur si titullin tuaj
-      none: "(asnjë)"
       badge_grouping:
         getting_started:
           name: Fillestar
@@ -2031,7 +2024,6 @@ sq:
         title: "Sinjalizimet"
         agree: "Pranoj"
         agree_title: "Konfirmo këtë sinjalizim si të vlefshëm do korrekt"
-        defer_flag_title: "Hiqe këtë sinjalizim; nuk ka nevojë për veprime në këtë moment. "
         delete: "Fshij"
         delete_title: "Fshini postimin e sinjalizuar."
         delete_post_defer_flag_title: "Fshini postimin; në qoftë postim i parë, fshihet tema"

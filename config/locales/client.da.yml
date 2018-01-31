@@ -448,7 +448,6 @@ da:
       '14': "Afventer"
     categories:
       all: "alle kategorier"
-      all_subcategories: "Alle"
       no_subcategory: "ingen"
       category: "Kategori"
       category_list: "Vis liste over kategorier"
@@ -527,7 +526,6 @@ da:
       disable_jump_reply: "Ikke hop til mit indlæg efter jeg svarer"
       dynamic_favicon: "Vis nyt / opdateret emnetal på browserikon"
       theme_default_on_all_devices: "Gør dette til mit standard design på alle mine enheder"
-      allow_private_messages: "Tillad andre brugere at sende mig private beskeder"
       external_links_in_new_tab: "Åbn alle eksterne links i en ny fane"
       enable_quoting: "Tillad citering af markeret tekst"
       change: "skift"
@@ -748,7 +746,6 @@ da:
         title: "Invitationer"
         user: "Inviteret bruger"
         sent: "Sendt"
-        none: "Der er ingen afventende invitationer."
         truncated:
           one: "Viser den første invitation."
           other: "Viser de første {{count}} invitationer."
@@ -1109,8 +1106,6 @@ da:
         posted: "Indlæg af"
         edited: "Rediger dit indlæg af"
         liked: "Likede dit indlæg"
-        private_message: "Privat besked fra"
-        invited_to_private_message: "Inviteret til en privat besked fra"
         invited_to_topic: "Inviteret til et indlæg fra"
         invitee_accepted: "Invitation accepteret af"
         moved_post: "Dit indlæg blev flyttet af"
@@ -1123,7 +1118,6 @@ da:
         quoted: '{{username}} citerede dig i "{{topic}}" - {{site_title}}'
         replied: '{{username}} svarede dig i "{{topic}}" - {{site_title}}'
         posted: '{{username}} skrev i "{{topic}}" - {{site_title}}'
-        private_message: '{{username}} sendte dig en privat besked i "{{topic}}" - {{site_title}}'
         linked: '{{username}} linkede til dit indlæg fra "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Indsæt billede"
@@ -1419,7 +1413,6 @@ da:
         visible: "Går listet"
         reset_read: "Glem hvilke emner jeg har læst"
         make_public: "Gør til offentligt emne"
-        make_private: "Gør til privat besked"
       feature:
         pin: "Fastgør Emne"
         unpin: "Fjern Fastgøring af Emne"
@@ -2085,7 +2078,6 @@ da:
         one: "1 tildelt"
         other: "%{count} tildelt"
       select_badge_for_title: Vælg en badge, du vil bruge som din titel
-      none: "(ingen)"
       badge_grouping:
         getting_started:
           name: Sådan kommer du i gang
@@ -2241,7 +2233,6 @@ da:
         title: "Flag"
         agree: "Enig"
         agree_title: "Bekræft dette flag er gyldigt og korrekt"
-        defer_flag_title: "Fjern dette flag; Det kræver ingen handling på nuværende tidspunkt."
         delete: "Slet"
         delete_title: "Slet det indlæg, som flaget refererer til."
         delete_post_defer_flag_title: "Slet indlægget; hvis det er det første, så slet hele emnet"
@@ -2419,7 +2410,6 @@ da:
           label: "Upload"
           title: "Upload en backup til denne instans"
           uploading: "Uploader..."
-          success: "'{{filename}}' er blevet uploaded."
           error: "Der skete en fejl da filen '{{filename}}' blev forsøgt uploaded: {{message}}"
         operations:
           is_running: "Der kører allerede en operation..."

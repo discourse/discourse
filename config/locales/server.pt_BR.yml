@@ -188,7 +188,6 @@ pt_BR:
     hot: "Tópicos quentes"
     top: "Principais tópicos"
     posts: "Últimos tópicos"
-    private_posts: "Últimas mensagens privadas"
     group_posts: "Últimos posts de %{group_name}"
     group_mentions: "Últimas citações de %{group_name}"
     user_posts: "Últimos posts por @%{username}"
@@ -269,12 +268,6 @@ pt_BR:
       Sentimos muito, mas novos usuários são temporariamente limitados a %{newuser_max_replies_per_topic} respostas no mesmo tópico.
 
       Em vez de adicionar outra resposta, por favor considere editar suas respostas anteriores, ou visite outros tópicos.
-    reviving_old_topic: |
-      ### Reviver este tópico?
-
-      A última resposta deste tópico foi feita há **%{days}** dias atrás. Sua resposta jogará o tópico para o topo da sua lista e notificará as pessoas que foram envolvidas na conversa.
-
-      Tem certeza que deseja continuar essa velha conversa?
   activerecord:
     attributes:
       category:
@@ -291,9 +284,7 @@ pt_BR:
         topic:
           attributes:
             base:
-              warning_requires_pm: "Você só pode anexar avisos em mensagens privadas."
               too_many_users: "Você só pode enviar avisos para um usuário de cada vez."
-              cant_send_pm: "Desculpe, você não pode enviar uma mensagem privada para este usuário."
               no_user_selected: "Você deve escolher um usuário válido."
             featured_link:
               invalid: "é inválida. A URL deve conter http:// ou https://."
@@ -798,7 +789,6 @@ pt_BR:
     censored_words: "Palavras que serão substituídos automaticamente por &#9632;&#9632;&#9632;&#9632;"
     censored_pattern: "Padrão de expressão regular que será automaticamente substituído por &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-apagar todas as mensagens ocultas que ficar oculta por mais de 30 dias."
-    default_locale: "Idioma padrão para esta instância do Discourse (ISO 639-1 Code)"
     allow_user_locale: "Permitir que os usuários escolham suas próprias preferências de idioma de interface"
     set_locale_from_accept_language_header: "define a língua da interface para os usuários anônimos de acordo com os cabeçalhos de língua de seus navegadores. (EXPERIMENTAL, não funciona com cache anônimo)"
     min_post_length: "Comprimento mínimo permitido do post em caracteres"
@@ -980,7 +970,6 @@ pt_BR:
     clean_orphan_uploads_grace_period_hours: "Carência (em horas) antes de um upload órfão ser removido."
     purge_deleted_uploads_grace_period_days: "Carência (em dias) antes que um upload excluído seja apagado."
     enable_s3_uploads: "Colocar uploads no armazenamento da Amazon S3. IMPORTANTE: exige credenciais válidas da S3 (ambos id da chave de acesso & segredo da chave de acesso)."
-    s3_use_iam_profile: 'Usar papel AWS EC2 IAM para recuperar chaves. OBS: habilitar irá substituir configurações "s3 access key id" e "s3 secret access key".'
     s3_upload_bucket: "Nome do bucket da Amazon S3 no qual os arquivos serão enviados. AVISO: precisa ser em minúsculas, sem pontos, sem underscores."
     s3_access_key_id: "A id da chave de acesso da Amazon S3 que será usada para fazer upload de imagens."
     s3_secret_access_key: "O segredo da chave de acesso da Amazon S3 que será usada para fazer upload de imagens."
@@ -1663,7 +1652,6 @@ pt_BR:
       name: Primeira Resposta por email
   admin_login:
     success: "Email Enviado"
-    error: "Erro!"
     email_input: "Email do Administrador"
     submit_button: "Enviar Email"
   performance_report:

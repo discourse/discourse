@@ -209,7 +209,6 @@ it:
     top_weekly: "Argomenti di punta settimanali"
     top_daily: "Argomenti di punta giornalieri"
     posts: "Ultimi messaggi"
-    private_posts: "Ultimi messaggi privati"
     group_posts: "Ultimi messaggi da %{group_name}"
     group_mentions: "Ultime menzioni da %{group_name}"
     user_posts: "Ultimi messaggi di @%{username}"
@@ -306,13 +305,6 @@ it:
 
       Invece di aggiungere un'altra risposta, per favore considera di modificare le tue precedenti risposte o di visitare altri argomenti.
 
-    reviving_old_topic: |+
-      ### Resuscitare questo argomento?
-
-      L'ultima risposta a questo argomento è vecchia di %{days} giorni. La tua risposta farà tornare l'argomento in cima alla lista e tutti gli utenti coinvolti verranno notificati.
-
-      Sei davvero sicuro di voler continuare questa vecchia conversazione?
-
   activerecord:
     attributes:
       category:
@@ -329,9 +321,7 @@ it:
         topic:
           attributes:
             base:
-              warning_requires_pm: "Puoi allegare solo avvertimenti ai messaggi privati."
               too_many_users: "Puoi inviare avvertimenti ad un solo utente per volta."
-              cant_send_pm: "Spiacenti, non puoi inviare un messaggio privato a quell'utente."
               no_user_selected: "Seleziona un utente valido."
               reply_by_email_disabled: "La risposta via email è stata disabilitata."
             featured_link:
@@ -870,7 +860,6 @@ it:
     censored_words: "Parole che saranno automaticamente sostituite con &#9632;&#9632;&#9632;&#9632;"
     censored_pattern: "Pattern regex che sarà automaticamente sostituito con &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Cancella automaticamente tutti i messaggi nascosti che restano nascosti per più di 30 giorni."
-    default_locale: "Il linguaggio di default di questa istanza Discourse (ISO 639-1 Code)"
     allow_user_locale: "Permetti agli utenti di personalizzare la lingua dell'interfaccia"
     set_locale_from_accept_language_header: "imposta la lingua di interfaccia per gli utenti anonimi in base ai language header del loro browser.\n(SPERIMENTALE, non funziona con cache anonima)"
     min_post_length: "Lunghezza minima dei messaggi in caratteri"
@@ -1086,7 +1075,6 @@ it:
     purge_deleted_uploads_grace_period_days: "Dopo quanti giorni un caricamento cancellato viene rimosso."
     purge_unactivated_users_grace_period_days: "Il periodo di grazia (in giorni) prima che un utente che non ha attivato il suo account venga eliminato. Impostare su 0 per non eliminare mai gli utenti non attivati."
     enable_s3_uploads: "Mette i caricamenti sullo spazio disco Amazon S3. IMPORTANTE: richiede che siano inserite valide credenziali S3 (sia l'access key id sia l'access key secret)."
-    s3_use_iam_profile: 'Usa il ruolo AWS EC2 IAM per recuperare le chiavi. NOTA: abilitarla sovrascriverà le impostazioni "s3 access key id" e "s3 secret access key". '
     s3_upload_bucket: "Il nome del bucket Amazon S3 sul quale verranno caricati i file. ATTENZIONE: deve essere tutto minuscolo, senza punti, senza trattini bassi."
     s3_access_key_id: "La access key id Amazon S3 che verrà usata per caricare le immagini."
     s3_secret_access_key: "La access key secret Amazon S3 che verrà usata per caricare le immagini."
@@ -1132,8 +1120,6 @@ it:
     min_trust_to_edit_wiki_post: "Livello minimo richiesto per modificare un argomento segnato come wiki."
     min_trust_to_edit_post: "Il livello di esperienza minimo richiesto per modificare i messaggi."
     min_trust_to_allow_self_wiki: "Il livello di esperienza minimo richiesto per consentire agli utenti di pubblicare una propria wiki."
-    min_trust_to_send_messages: "Il livello di esperienza minimo richiesto per creare nuovi messaggi privati."
-    min_trust_to_send_email_messages: " Il livello di esperienza minimo richiesto per inviare nuovi messaggi privati via email (a utenti temporanei)."
     newuser_max_links: "Quanti collegamenti può aggiungere a un messaggio un nuovo utente ."
     newuser_max_images: "Quante immagini può aggiungere ad un messaggio un nuovo utente."
     newuser_max_attachments: "Quanti allegati può aggiungere ad un messaggio un nuovo utente."
@@ -1200,7 +1186,6 @@ it:
     reply_by_email_enabled: "Abilita la possibilità di rispondere ai messaggi tramite email."
     reply_by_email_address: "Modello per rispondere via email, per esempio: %{reply_key}@risposta.esempio.com o risposte+%{reply_key}@esempio.com"
     alternative_reply_by_email_addresses: "Elenco dei template alternativi per la risposta via email in arrivo da indirizzi email. Esempio: %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
-    incoming_email_prefer_html: "Usa l'HTML invece del testo per le email in arrivo."
     disable_emails: "Evita che Discourse invii qualunque tipo di email"
     strip_images_from_short_emails: "Elimina le immagini dalle email aventi dimensione inferiore a 2800 Byte."
     short_email_length: "Lunghezza delle email brevi in Byte"
@@ -1303,7 +1288,6 @@ it:
     allowed_href_schemes: "Schemi consentiti nei collegamenti in aggiunta a http e https."
     embed_post_limit: "Numero massimo di messaggi da incorporare."
     embed_username_required: "E' richiesto il nome utente per la creazione di argomenti."
-    notify_about_flags_after: "Se ci sono segnalazioni che non sono state revisionate dopo un tale numero di ore, invia un messaggio privato allo staff. Imposta a 0 per disattivare. "
     show_create_topics_notice: "Se il sito ha meno di 5 argomenti pubblici, mostra un avviso chiedendo agli amministratori di creare qualche argomento."
     delete_drafts_older_than_n_days: Elimina bozze più vecchie di (n) giorni.
     bootstrap_mode_min_users: "Numero minimo di utenti richiesto per disabilitare la modalità bootstrap (imposta a 0 per disattivare)"
@@ -1315,7 +1299,6 @@ it:
     approve_post_count: "La quantità di messaggi di un utente nuovo o di base che deve essere approvata"
     approve_unless_trust_level: "I messaggi degli utenti al di sotto di questo livello di esperienza devono essere approvati"
     approve_new_topics_unless_trust_level: "I nuovi argomenti degli utenti al di sotto di questo livello di esperienza devono essere approvati"
-    notify_about_queued_posts_after: "Se ci sono messaggi che devono essere revisionati dopo un tale numero di ore, una email verrà inviata a contact_email. Imposta a 0 per disattivare queste email."
     auto_close_messages_post_count: "Numero massimo di messaggi consentiti in un messaggio privato prima di essere automaticamente chiuso (0 per disabilitare)"
     auto_close_topics_post_count: "Numero massimo di messaggi consentiti in un argomento prima di essere automaticamente chiuso (0 per disabilitare)"
     code_formatting_style: "Il pulsante del testo preformattato nel composer verrà predefinito a questo stile di formattazione del codice"
@@ -2545,141 +2528,6 @@ it:
       Sì, l'avvocatese è noioso, ma ci dobbiamo proteggere &ndash; e, per estensione, proteggere anche te ed i tuoi dati &ndash; contro persone non amichevoli. Abbiamo dei [Termini di Servizio](/tos) che descrivono il tuo (e il nostro) comportamento ed i diritti che riguardano i contenuti, la privacy e le leggi. Per poter usare questo servizio, devi accettare i nostri [TDS](/tos)
   tos_topic:
     title: "Termini del Servizio"
-    body: |
-      I seguenti termini e condizioni regolano l’uso del sito web %{company_domain} e di tutti i contenuti, i servizi e i prodotti disponibili direttamente sul sito web e mediante di esso, compresi, ma non limitatamente a, il Software Forum di %{company_domain}, il Forum di Supporto di %{company_domain} e il Servizio Hosting ("Hosting") di %{company_domain} (collettivamente chiamati nel seguito il Sito). Il Sito è di proprietà ed è gestito da %{company_full_name} ("%{company_name}"). L’uso del Sito è soggetto all’accettazione incondizionata di tutti i termini e le condizioni previsti nel presente documento e di tutte le altre regole operative, le politiche (incluse, senza limitazione, la [Politica sulla Privacy](/privacy) di %{company_domain}e le [Linee guida della comunità](/faq)) e le procedure che possono essere pubblicate di volta in volta su questo Sito da %{company_name} (nel seguito, il “Contratto”).
-
-      Leggi il presente Contratto prima di accedere o utilizzare il Sito. L’accesso o l’utilizzo di qualsiasi parte del Sito implica l’accettazione dei termini e delle condizioni del presente contratto. In caso di mancata accettazione di tutti i termini e le condizioni del presente contratto, l’accesso al Sito o l’uso di qualsiasi servizio potrebbe non essere consentito. Se questi termini e condizioni sono considerati un’offerta di %{company_name}, l’accettazione è espressamente limitata ai presenti termini. Il Sito è disponibile solo per gli utenti con almeno 13 anni di età.
-
-      <a name="1"></a>
-
-      ## [1. Il tuo Account su %{company_domain}](#1)
-
-      Se crei un account sul Sito, è tua responsabilità mantenere la sicurezza dell’account e sei interamente responsabile di tutte le attività eseguite con l’account. L’utente è tenuto a notificare immediatamente a %{company_name} usi non autorizzati dell’account o altre violazioni della sicurezza. %{company_name} non sarà responsabile per qualsiasi atto od omissione da parte tua, inclusi eventuali danni di qualsiasi tipo derivanti da tali atti o omissioni.
-
-      <a name="2"></a>
-
-      ## [2. Responsabilità dei Collaboratori](#2)
-
-      Se pubblichi materiale o inserisci collegamenti sul Sito o rendi disponibile in altro modo (o consenti a terzi di rendere disponibile) materiale mediante il Sito (qualsiasi materiale di questo tipo, nel seguito chiamato il “Contenuto”), sei interamente responsabile del Contenuto e di qualsiasi danno risultante da tale Contenuto. Ciò è valido indipendentemente dalla circostanza in cui il Contenuto in questione sia costituito da testo, grafica, file audio o software informatico. Rendendo disponibile il Contenuto, l’utente dichiara e garantisce che:
-
-      *   il download, la copia e l’uso del Contenuto non viola i diritti di proprietà, inclusi ma non limitatamente a, il copyright, i brevetti, i diritti di marchi di fabbrica o di segreti commerciali di terze parti;
-      *   se il tuo datore di lavoro è titolare dei diritti sulla proprietà intellettuale creata da te, allora delle due l’una, o (i) hai ottenuto il permesso dal datore di lavoro di pubblicare o rendere disponibile il Contenuto, incluso ma non limitatamente a, qualsiasi software oppure (ii) che hai ottenuto dal datore di lavoro una rinuncia relativamente a tutti i diritti sul Contenuto o in riferimento ad esso;
-      *   sei pienamente in regola con le licenze di terze parti in relazione al Contenuto e che sono state adottate tutte le azioni necessarie per trasferire con esito positivo qualsiasi condizione richiesta agli utenti finali;
-      *   il Contenuto non contiene né installa alcun virus, worm, malware, cavalli di Troia o altri contenuti dannosi o distruttivi;
-      *   il Contenuto non costituisce spam, non è generato da macchina o in modo casuale e non contiene contenuto commerciale indesiderato o immorale finalizzato a indirizzare il traffico verso siti di terze parti o a migliorare il posizionamento nei motori di ricerca di siti di terze parti o per altri atti illeciti (ad esempio, il phishing) o per indurre in errore i destinatari in relazione all’origine del materiale (ad esempio, lo spoofing);
-      *   il Contenuto non ha carattere pornografico, non contiene minacce e non incita alla violenza e non viola i diritti di privacy o pubblicitari di terze parti;
-      *   il Contenuto non viene pubblicizzato tramite messaggi elettronici indesiderati, come collegamenti spam verso a newsgroup, elenchi email, altri blog e siti web e analoghi metodi promozionali non richiesti;
-      *   il Contenuto non è presentato in modo da indurre gli utenti a errori di identità con altri utenti o aziende; e
-      *   nel caso di Contenuto contenente codice informatico, hai classificato e/o descritto in modo accurato il tipo, la natura, gli usi e gli effetti dei materiali, se richiesto da %{company_name} o in altro modo.
-
-      <a name="3"></a>
-
-      ## [3. Licenza sui contenuti utente](#3)
-
-      I contributi degli utenti sono resi disponibili ai sensi di una [Licenza Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Senza alcuna limitazione di tali dichiarazioni o garanzie, %{company_name} ha il diritto (sebbene non l’obbligo), a discrezione di %{company_name} (i), di rifiutare o rimuovere qualsiasi contenuto che, nella ragionevole opinione di %{company_name}, viola qualsiasi politica di %{company_name} o è in altro modo dannoso o sgradevole, o (ii) di cessare o negare l’accesso e l’utilizzo del Sito a qualsiasi singolo utente o entità per qualsiasi motivo, a sola discrezione di %{company_name}. %{company_name} non ha alcun obbligo di rimborsare eventuali somme pagate in precedenza.
-
-
-      <a name="4"></a>
-
-      ## [4. Pagamento e rinnovo](#4)
-
-      ### Termini Generali
-
-      Potrebbero essere disponibili sul Sito servizi opzionali o aggiornamenti a pagamento. Quando si utilizza un servizio opzionale o aggiornamento a pagamento, acconsenti a pagare a %{company_name} le commissioni per l’abbonamento mensile o annuale indicate per tale servizio. Le somme verranno addebitate con pagamento anticipato il giorno dell’abbonamento al servizio o aggiornamento e riguarderanno l’uso di tale servizio o aggiornamento per un periodo di abbonamento mensile o annuale, come indicato. Le commissioni non sono rimborsabili.
-
-      ### Rinnovo Automatico
-
-      A meno che non invii una notifica a %{company_name} prima della scadenza del periodo di abbonamento applicabile da annullare, l’abbonamento si rinnoverà automaticamente e tu ci autorizzi a riscuotere le commissioni dell’abbonamento annuale o mensile applicabili in quel momento per tale abbonamento (così come eventuali tasse) utilizzando qualsiasi carta di credito o altro meccanismo di pagamento registrato. Gli abbonamenti possono essere annullati in qualsiasi momento.
-
-      <a name="5"></a>
-
-      ## [5. Servizi](#5)
-
-      ### Servizi di Hosting e di supporto
-
-      Possono essere forniti da %{company_name} servizi opzionali di Hosting e di supporto, ai sensi dei termini e delle condizioni specifici per ogni servizio. Con la sottoscrizione a un account di servizi di hosting o supporto, accetti di rispettare i termini e le condizioni previsti.
-
-      <a name="6"></a>
-
-      ## [6. Responsabilità dei visitatori del Sito](#6)
-
-      %{company_name} non ha rivisto e non può rivedere tutto il materiale, compreso il software informatico, pubblicato sul Sito e pertanto non può essere considerata responsabile per il contenuto, l’uso o gli effetti di tale materiale. Gestendo il Sito, %{company_name} non dichiara né implica che approva il materiale pubblicato o che ritiene che tale materiale sia accurato, utile o non nocivo. L’utente deve adottare le precauzioni necessarie per proteggere se stesso e i sistemi informatici da virus, worm, cavalli di Troia e altri contenuti dannosi o distruttivi. Il Sito potrebbe includere contenuto offensivo, indecente, o altrimenti discutibile, così come contenuto contenente imprecisioni tecniche, errori tipografici e altri errori. Il Sito potrebbe inoltre contenere materiale che viola i diritti pubblicitari o di privacy, o violare la proprietà intellettuale e altri diritti proprietari di terzi, o il cui download, la copia o l’utilizzo siano soggetti a ulteriori termini e condizioni, dichiarati o non dichiarati. %{company_name} declina ogni responsabilità per qualsiasi danno derivante dall’uso da parte di visitatori del Sito, o da qualsiasi download eseguito da tali visitatori del contenuto pubblicato.
-
-      <a name="7"></a>
-
-      ## [7. Contenuto pubblicato su altri siti Web](#7)
-
-      Non abbiamo rivisto e non possiamo rivedere tutto il materiale, compreso il software informatico, reso disponibile mediante i siti e le pagine Web che contengono link a %{company_domain} e dal sito %{company_domain}. %{company_name} non esercita alcun controllo su tali siti e pagine Web non %{company_domain} e non è responsabile del loro contenuto o utilizzo. Con il collegamento a un sito o a una pagina Web non %{company_domain}, %{company_name} non dichiara né ammette implicitamente che approva tale sito o pagina Web. L’utente deve adottare le precauzioni necessarie per proteggere se stesso e i sistemi informatici da virus, worm, cavalli di Troia e altri contenuti dannosi o distruttivi. %{company_name} declina ogni responsabilità per eventuali danni risultanti dall’uso di siti e pagine Web non %{company_domain}.
-
-      <a name="8"></a>
-
-      ## [8. Violazione del copyright e della politica DMCA](#8)
-
-      %{company_name} chiede agli altri di rispettare i propri diritti di proprietà intellettuale e a sua volta rispetta i diritti di proprietà intellettuale di terzi. Se l’utente ritiene che il materiale presente o a cui accede mediante link dal sito %{company_domain} violi il proprio copyright, è invitato a inviare una notifica a %{company_name} in conformità alla politica [Digital Millennium Copyright Act] (http://en.wikipedia.org/wiki/Digital_Millennium_Copyright_Act) (“DMCA”) di %{company_name}. %{company_name} risponderà a tutte le notifiche includendo, in base alle misure necessarie o appropriate, la rimozione del materiale che genera la violazione o la disabilitazione di tutti i link al materiale in presunta violazione. %{company_name} non consentirà più l’accesso e l’utilizzo del Sito al visitatore se, in circostanze appropriate, il visitatore si comporta come trasgressore recidivo del copyright o di altri diritti di proprietà intellettuale di %{company_name} o di terzi. In caso di rescissione, %{company_name} non avrà alcun obbligo di rimborsare eventuali somme pagate in precedenza a  %{company_name}.
-
-      <a name="9"></a>
-
-      ## [9. Proprietà intellettuale](#9)
-
-      Il presente Contratto non trasferisce da %{company_name} all’utente qualsiasi proprietà intellettuale di %{company_name} o di terzi e tutti i diritti, la titolarità e l’interesse nel e su tale proprietà rimarranno (fra le parti) esclusivamente di %{company_name}. %{company_name}, %{company_domain}, il logo %{company_domain} e tutti gli altri marchi commerciali, marchi di servizio, grafica e logo utilizzati in connessione a %{company_domain} o il Sito sono marchi commerciali o marchi commerciali registrati di %{company_name} o dei licenziatari di %{company_name}. Altri marchi, marchi di servizio, grafica e logo utilizzati in connessione con il Sito possono essere marchi di terzi. L’utilizzo del Sito non implica per l’utente alcun diritto o licenza di riprodurre o utilizzare in altro modo qualsiasi marchio commerciale di %{company_name} o di terzi.
-
-      <a name="10"></a>
-
-      ## [10. Annunci pubblicitari](#10)
-
-      %{company_name} si riserva il diritto di visualizzare annunci pubblicitari sul tuo contenuto, a meno che tu non abbia acquistato un Upgrade o un account di servizi senza pubblicità.
-
-      <a name="11"></a>
-
-      ## [11. Attribuzione](#11)
-
-      %{company_name} si riserva il diritto di visualizzare link di attribuzione come “Powered by %{company_domain}”, autore del tema e attribuzione dei caratteri nel piè di pagina o la barra degli strumenti del tuo contenuto. I crediti a piè di pagina e la barra degli strumenti %{company_domain} non possono essere alterati o rimossi indipendentemente dagli upgrade acquistati.
-
-      <a name="12"></a>
-
-      ## [12. Modifiche](#12)
-
-      %{company_name} si riserva il diritto, a sua unica discrezione, di modificare o rimpiazzare qualunque parte di questo Contratto. E’ tua responsabilità controllare questo Contratto periodicamente per prendere atto dei cambiamenti. L’uso continuato e l'accesso al sito web implica l’accettazione di tali cambiamenti. %{company_name} può, in futuro, offrire nuovi servizi e/o funzionalità attraverso il Sito (incluso il rilascio di nuovi strumenti e risorse). Tali nuovi servizi e/o funzionalità saranno soggetti ai termini e condizioni di questo Contratto.
-
-      <a name="13"></a>
-
-      ## [13. Rescissione del contratto](#13)
-
-      %{company_name} può interrompere l’accesso a tutto o a parte del Sito in qualsiasi momento, con o senza causa, con o senza preavviso, con efficacia immediata. Se desideri rescindere dal presente Contratto o dall’account %{company_domain} (se disponibile), puoi semplicemente interrompere l’utilizzo del Sito. Tutte le disposizioni del presente Contratto che, per loro natura, devono permanere dopo la rescissione permarranno, incluse, senza limitazione, le disposizioni di proprietà, le esclusioni di garanzia, le indennità e le limitazioni di responsabilità.
-
-      <a name="14"></a>
-
-      ## [14. Esclusione di garanzie](#14)
-
-      Il Sito è fornito “così com’è”. Con la presente, %{company_name}, i suoi fornitori e licenziatari declinano tutte le garanzie di qualsiasi tipo, espresse o implicite, incluse, senza limitazione, le garanzie di commerciabilità, idoneità per un particolare scopo e non violazione. Né %{company_name} né i suoi fornitori e licenziatari concedono alcuna garanzia che il Sito sia privo di errori o che l’accesso ad essi sarà continuo o ininterrotto. Se stai leggendo queste informazioni, ecco un [chiarimento] (http://www.newyorker.com/online/blogs/shouts/2012/12/the-hundred-best-lists-of-all-time.html). Tu comprendi che scaricare o ottenere in altro modo i contenuti o i servizi mediante il Sito, a tua discrezione e a tuo rischio.
-
-      <a name="15"></a>
-
-      ## [15. Limitazione di responsabilità](#15)
-
-      In nessun caso %{company_name}, o suoi fornitori o licenziatari, saranno responsabili per qualsiasi aspetto oggetto del presente contratto ai sensi di qualsiasi accordo, negligenza, responsabilità oggettiva o altra dottrina legale o equitativa: (i) per qualsiasi danno speciale, incidentale o consequenziale; (ii) per il costo di approvvigionamento dei prodotti o dei servizi sostitutivi; (iii) per l’interruzione dell’utilizzo oppure la perdita o il danneggiamento di dati; o (iv) per gli importi che superano le commissioni versate a %{company_name} ai sensi del presente contratto nel corso del periodo di dodici (12) mesi precedenti alla causa dell’azione. %{company_name} non sarà responsabile per qualsiasi errore o ritardo dovuto a cause al di fuori del proprio ragionevole controllo. Quanto precede non si applica nella misura vietata dalla legge applicabile.
-
-      <a name="16"></a>
-
-      ## [16. Garanzia e dichiarazione generale](#16)
-
-      Tu dichiari e garantisci che (i) l’utilizzo del Sito avverrà in stretta conformità alla [Politica sulla Privacy] (/privacy) di %{company_name}, alle [Linee Guida](/guidelines), al presente Contratto e a tutti i regolamenti e le leggi (inclusi senza limitazioni le leggi o i regolamenti locali in vigore nel paese, nello stato, nella città o in altra area governativa di appartenenza, per quanto riguarda la condotta online e il contenuto accettabile, e comprese tutte le leggi applicabili in materia di trasmissione di dati tecnici esportati dal paese di residenza del Sito o del tuo) e (ii) l’uso del Sito non viola o non si appropria indebitamente dei diritti di proprietà intellettuale di terze parti.
-
-      <a name="17"></a>
-
-      ## [17. Indennizzo](#17)
-
-      Tu accetti di indennizzare e manlevare %{company_name}, i suoi contraenti e i suoi licenziatari, e i rispettivi direttori, funzionari, dipendenti e agenti da e contro tutte le richieste di risarcimento e le spese, inclusi gli onorari, derivanti dall’uso del Sito, inclusa ma non limitatamente alla violazione dell’utente del presente Contratto.
-
-      <a name="18"></a>
-
-      ## [18. Varie](#18)
-
-      Il presente Contratto costituisce l’intero contratto tra te e %{company_name} riguardo l’argomento oggetto del contratto, e può essere modificato solo da un emendamento scritto e firmato da un dirigente autorizzato di %{company_name}, o mediante l’invio da parte di %{company_name} di una versione riveduta. Salvo diversa disposizione nel presente Contratto nei limiti consentiti dalla legge applicabile, se disponibile, qualsiasi accesso a o utilizzo del sito sarà disciplinato dalle leggi dello stato italiano, con esclusione delle disposizioni in materia di conflitto di leggi, il foro competente per qualsiasi controversia derivante dal presente contratto o collegata allo stesso è il tribunale di Roma. Fatta eccezione per le richieste di risarcimento ingiuntivo o per via equitativa o richieste di risarcimento relative ai diritti di proprietà intellettuale (che possono essere avanzate in qualsiasi tribunale competente senza prestare garanzie), qualsiasi controversia derivante dal presente contratto sarà risolta in conformità alle leggi italiane (Italia). La parte vincente in qualsiasi azione o procedimento per l’applicazione del presente Contratto avrà diritto di ottenere il rimborso delle spese e degli onorari legali. Nel caso in cui una parte del presente Contratto venga ritenuta non valida o non applicabile, tale parte verrà interpretata in modo da riflettere le intenzioni originali delle parti e le altre disposizioni rimarranno attive ed efficaci. Il mancato esercizio da parte di qualsiasi parte di qualsiasi termine o condizione del presente Contratto o qualsiasi violazione dello stesso, in qualsiasi unica istanza, non implicherà la rinuncia a tale termine o condizione oppure a successive violazioni. Tu puoi assegnare diritti ai sensi del presente Contratto a qualsiasi parte che acconsenta e accetti di essere vincolata dai suoi termini e condizioni; %{company_name} può assegnare i suoi diritti ai sensi del presente Contratto senza condizioni. Il presente Contratto sarà vincolante e avrà effetto a beneficio delle parti, dei subentranti e degli assegnatari autorizzati.
-
-      Questo documento è CC-BY-SA. Ultimo aggiornamento 31 maggio 2013.
-
-      Adattamento dal contratto originale [Termini di Servizio WordPress](http://en.wordpress.com/tos/).
   privacy_topic:
     title: "Politica della Privacy"
     body: |
@@ -2998,7 +2846,6 @@ it:
     badge_title_metadata: "%{display_name}distintivo su %{site_title}"
   admin_login:
     success: "email Inviata"
-    error: "Errore!"
     email_input: "Email Amministratore"
     submit_button: "Invia Email"
   performance_report:

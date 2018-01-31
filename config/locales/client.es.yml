@@ -106,7 +106,7 @@ es:
           one: "%{count} año después"
           other: "%{count} años después"
       previous_month: 'Mes anterior'
-      next_month: 'Próximo mes'
+      next_month: 'Mes siguiente'
       placeholder: fecha
     share:
       topic: 'comparte un enlace a este tema'
@@ -144,7 +144,7 @@ es:
         enabled: 'listado %{when}'
         disabled: 'quitado de la lista, invisible %{when}'
       banner:
-        enabled: 'hazlo un banner %{when}. Aparecerá arriba en cada página hasta que el usuario lo deje de destacar.'
+        enabled: 'hizo este tema un banner %{when}. Aparecerá arriba en cada página hasta que el usuario lo deje de destacar.'
         disabled: 'eliminar este banner %{when}. Ya no aparecerá en la parte superior de cada página.'
     topic_admin_menu: "acciones de administrador para el tema"
     wizard_required: "¡Bienvenido a tu nuevo Discourse! Empezaremos con <a href='%{url}' data-auto-route='true'>el asistente de configuración</a>  ✨"
@@ -460,7 +460,7 @@ es:
       '14': "Pendiente"
     categories:
       all: "Categorías"
-      all_subcategories: "todas"
+      all_subcategories: "todo en %{categoryName}"
       no_subcategory: "ninguna"
       category: "Categoría"
       category_list: "Mostrar lista de categorías"
@@ -540,7 +540,7 @@ es:
       disable_jump_reply: "No dirigirme a mi post cuando responda"
       dynamic_favicon: "Mostrar contador de temas nuevos/actualizados en el favicon"
       theme_default_on_all_devices: "Hacer éste mi theme por defecto en todos mis dispositivos"
-      allow_private_messages: "Permitir a otros usuarios enviarme mensajes privados"
+      allow_private_messages: "Permitir a otros usuarios enviarme mensajes personales"
       external_links_in_new_tab: "Abrir todos los enlaces externos en una nueva pestaña"
       enable_quoting: "Activar respuesta citando el texto resaltado"
       change: "cambio"
@@ -764,7 +764,6 @@ es:
         title: "Invitaciones"
         user: "Invitar Usuario"
         sent: "Enviadas"
-        none: "No hay ninguna invitación pendiente que mostrar."
         truncated:
           one: "Mostrando la primera invitación."
           other: "Mostrando las primeras {{count}} invitaciones."
@@ -1127,6 +1126,7 @@ es:
       topic_featured_link_placeholder: "Introduce el enlace mostrado con el título."
       remove_featured_link: "Eliminar enlace del tema."
       reply_placeholder: "Escribe aquí. Usa Markdown, BBCode o HTML para darle formato. Arrastra o pega imágenes."
+      reply_placeholder_no_images: "Escribe aquí. Usa Markdown, BBCode o HTML para dar formato."
       view_new_post: "Ver tu nuevo post."
       saving: "Guardando"
       saved: "¡Guardado!"
@@ -1209,8 +1209,8 @@ es:
         posted: "Publicado por"
         edited: "Editado tu post por"
         liked: "Gustado tu post"
-        private_message: "Mensaje privado de"
-        invited_to_private_message: "Invitado a un mensaje privado de"
+        private_message: "Mensaje personal de"
+        invited_to_private_message: "Invitado a un mensaje personal de"
         invited_to_topic: "Invitado a un tema de"
         invitee_accepted: "Invitación aceptada por"
         moved_post: "Tu post fue eliminado por"
@@ -1224,7 +1224,7 @@ es:
         quoted: '{{username}} te citó en "{{topic}}" - {{site_title}}'
         replied: '{{username}} te respondió en "{{topic}}" - {{site_title}}'
         posted: '{{username}} publicó en "{{topic}}" - {{site_title}}'
-        private_message: '{{username}} te envió un mensaje privado en "{{topic}}" - {{site_title}}'
+        private_message: '{{username}} te ha enviado un mensaje personal en "{{topic}}" - {{site_title}}'
         linked: '{{username}} enlazó tu publicación desde "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Añadir imagen"
@@ -1561,7 +1561,7 @@ es:
         visible: "Hacer visible"
         reset_read: "Restablecer datos de lectura"
         make_public: "Convertir en tema público"
-        make_private: "Convertir en Mensaje Privado"
+        make_private: "Redactar mensaje personal"
       feature:
         pin: "Destacar tema"
         unpin: "Dejar de destacar tema"
@@ -1719,7 +1719,9 @@ es:
       deleted_by_author:
         one: "(post retirado por el autor. Será borrado automáticamente en %{count} hora si no es reportado)"
         other: "(post retirado por el autor. Será borrado automáticamente en %{count} horas si no es reportado)"
+      collapse: "colapsar"
       expand_collapse: "expandir/contraer"
+      locked: "un miembro del staff ha bloqueado este mensaje y no se puede editar"
       gap:
         one: "ver 1 post oculto"
         other: "ver {{count}} posts ocultos"
@@ -1790,6 +1792,11 @@ es:
         rebake: "Reconstruir HTML"
         unhide: "Deshacer ocultar"
         change_owner: "Cambiar dueño"
+        grant_badge: "Conceder distintivo"
+        lock_post: "Bloquear mensaje"
+        lock_post_description: "evitar que el autor edite este mensaje"
+        unlock_post: "Desbloquear mensaje"
+        unlock_post_description: "permitir al autor editar este mensaje"
       actions:
         flag: 'Reportar'
         defer_flags:
@@ -2232,6 +2239,8 @@ es:
         dismiss_new_posts: '<b>x</b>, <b>r</b> Descartar Nuevos/Posts'
         dismiss_topics: '<b>x</b>, <b>t</b> Descartar temas'
         log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Cerrar sesión'
+      composing:
+        return: '<b>shift</b>+<b>c</b> Volver al editor'
       actions:
         title: 'Acciones'
         bookmark_topic: '<b>f</b> Guardar/Quitar el tema de marcadores'
@@ -2271,7 +2280,7 @@ es:
         one: "1 concedido"
         other: "%{count} concedidos"
       select_badge_for_title: Seleccionar una distinción para utilizar como tu título
-      none: "(none)"
+      none: "(ninguno)"
       badge_grouping:
         getting_started:
           name: Primeros pasos
@@ -2294,6 +2303,7 @@ es:
       </p>
     tagging:
       all_tags: "Etiquetas"
+      other_tags: "Otras etiquetas"
       selector_all_tags: "etiquetas"
       selector_no_tags: "sin etiquetas"
       changed: "etiquetas cambiadas:"
@@ -2443,8 +2453,8 @@ es:
         agree_flag_restore_post_title: "Restaurar el post para que todos los usuarios puedan verlo."
         agree_flag: "Estar de acuerdo y mantener post"
         agree_flag_title: "Estar de acuerdo con el reporte y mantener la publicación intacta."
-        defer_flag: "Ignorar"
-        defer_flag_title: "Eliminar este indicador; no es necesaria ninguna acción en este momento."
+        ignore_flag: "Ignorar"
+        ignore_flag_title: "Quitar este reporte; no requiere tomar medidas en este momento."
         delete: "Eliminar"
         delete_title: "Eliminar el post referido por este indicador."
         delete_post_defer_flag: "Eliminar post e ignorar reporte"
@@ -2644,7 +2654,6 @@ es:
           label: "Subir"
           title: "Subir un backup a esta instancia"
           uploading: "Subiendo..."
-          success: "El archivo '{{filename}}' se ha subido correctamente."
           error: "Ha ocurrido un error al subir el archivo '{{filename}}': {{message}}"
         operations:
           is_running: "Actualmente una operación se está procesando..."
@@ -2969,6 +2978,9 @@ es:
             backup_destroy: "destruir copia de seguridad"
             reviewed_post: "posts revisados"
             custom_staff: "acción personalizada por plugin"
+            post_locked: "mensaje bloqueado"
+            post_unlocked: "mensaje desbloqueado"
+            check_personal_message: "comprobar mensaje personal"
         screened_emails:
           title: "Correos bloqueados"
           description: "Cuando alguien trata de crear una cuenta nueva, los siguientes correos serán revisados y el registro será bloqueado, o alguna otra acción será realizada."
@@ -3138,6 +3150,9 @@ es:
         grant_moderation: 'Conceder moderación'
         unsuspend: 'Quitar suspensión'
         suspend: 'Suspender'
+        show_flags_received: "Mostrar reportes recibidos"
+        flags_received_by: "Reportes recibidos por %{username}"
+        flags_received_none: "Este usuario no ha recibido ningún reporte."
         reputation: Reputación
         permissions: Permisos
         activity: Actividad

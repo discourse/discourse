@@ -191,7 +191,6 @@ ko:
     top_weekly: "주간 인기 토픽"
     top_daily: "일간 인기 토픽"
     posts: "최근 글"
-    private_posts: "최신 개인 메시지"
     group_posts: "%{group_name}의 최신 게시글"
     group_mentions: "%{group_name}의 최신 멘션"
     user_posts: "@%{username}님의 최신 포스트"
@@ -285,12 +284,6 @@ ko:
       죄송하지만, 새로운 사용자는 한 토픽 당%{newuser_max_replies_per_topic}개의 답글만 쓸 수 있습니다.
 
       새 답글을 다는 대신에, 전에 쓴 답글을 수정하거나 다른 토픽을 구경해보세요.
-    reviving_old_topic: |
-      ### 이 토픽을 다시 살려보고 싶으세요?
-
-      마지막으로 답글이 달린 지 **%{days}** 일이 지났습니다. 여기에 답글을 쓰시면 토픽이 리스트의 상단으로 껑충 뛰어오르고, 이 토픽과 관련된 사람들에게 알림이 가게 됩니다.
-
-      이 오래된 대화를 이어가고 싶은 것이 확실하신가요?
   activerecord:
     attributes:
       category:
@@ -307,9 +300,7 @@ ko:
         topic:
           attributes:
             base:
-              warning_requires_pm: "개인 메시지를 통해 경고를 보낼 수 있습니다."
               too_many_users: "한 번에 한 명의 사용자에게 경고를 보낼 수 있습니다."
-              cant_send_pm: "죄송합니다. 그 사용자에게 개인 메세지를 보낼 수 없습니다."
               no_user_selected: "유효한 사용자를 선택해주십시오"
               reply_by_email_disabled: "이메일로 답글쓰기가 비활성화되었습니다."
             featured_link:
@@ -798,7 +789,6 @@ ko:
     censored_words: "단어는 자동적으로 `&#9632;&#9632;&#9632;&#9632;` 로 대체 됩니다."
     censored_pattern: "자동으로 `&#9632;&#9632;&#9632;&#9632;` 로 대체되는 정규표현식"
     delete_old_hidden_posts: "30일이 지난 숨겨진 글은 자동으로 삭제됩니다."
-    default_locale: "Discourse 인스턴스가 사용하는 기본 언어 (ISO 639-1 Code)"
     allow_user_locale: "사용자에게 자신이 원하는 언어를 선택 허용"
     set_locale_from_accept_language_header: "익명 사용자의 인터페이스 언어를 웹브라우저 언어 헤더를 기준으로 변경하기(실험적인 기능입니다. 익명 cache와 동작하지 않습니다.)"
     min_post_length: "글의 최소 글자 수"
@@ -998,7 +988,6 @@ ko:
     clean_orphan_uploads_grace_period_hours: "참조되지 않은 업로드 파일을 제거하기 전 기간(시간)"
     purge_deleted_uploads_grace_period_days: "참조되지 않은 업로드 파일을 완전 삭제하지 전 기간(일)"
     enable_s3_uploads: "Amazon S3 storage에 업로드해주세요. 중요: 올바른 S3 계정이 필요합니다.(access key id와 secret access key 둘다)"
-    s3_use_iam_profile: 'AWS EC2 IAM role로 key를 받음. 정보: 활성화하면 "s3 access key id"와 "s3 secret access key" 설정도 같이 변경됩니다.'
     s3_upload_bucket: "파일이 업로드 될 위치의 Amazon S3 bucket name.  경고: 소문자 알파벳만 허용되며 점 . 이나 밑줄문자 _ 가 없어야 함."
     s3_access_key_id: "이미지를 업로드 할 때 사용할 Amazon S3의 access key id"
     s3_secret_access_key: "이미지를 업로드 할 때 사용할 Amazon S3의 secret access key"
@@ -1043,7 +1032,6 @@ ko:
     min_trust_to_edit_wiki_post: "위키로 설정된 글 수정할 수 있는 최소 회원등급"
     min_trust_to_edit_post: "포스트를 편집하기 위한 최소 신뢰도"
     min_trust_to_allow_self_wiki: "사용자의 포스트 위키를 만들기 위한 최소 신뢰도"
-    min_trust_to_send_messages: "새로운 개인 메시지를 보내기 위한 최소 신뢰도"
     newuser_max_links: "새로운 사용자가 글에 붙일 수 있는 최대 링크 개수"
     newuser_max_images: "새로운 사용자가 글에 붙일 수 있는 최대 이미지 개수"
     newuser_max_attachments: "새로운 사용자가 포스트에 첨부할 수 있는 최대 파일 개수"
@@ -1106,7 +1094,6 @@ ko:
     reply_by_email_enabled: "이메일을 통해 주제에 답글을 달 수 있음."
     reply_by_email_address: "이메일 주소로 답글을 다는 템플릿. 예: %{reply_key}@reply.myforum.com"
     alternative_reply_by_email_addresses: "수신된 이메일에 대한 답장메일의 대체 템플릿 목록. 예: %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
-    incoming_email_prefer_html: "수신 이메일에 text 대신 HTML을 사용"
     disable_emails: "Discourse가 어떤 메일로 보내지 못하도록 합니다."
     strip_images_from_short_emails: "2800바이트, 즉 2.73 KB 이내 사이즈를 가지도록 이미지를 빼주세요."
     short_email_length: "짦은 이메일 바이트 길이"
@@ -1728,7 +1715,6 @@ ko:
     badge_title_metadata: "%{site_title}의 %{display_name} 배지"
   admin_login:
     success: "이메일 보냄"
-    error: "에러!"
     email_input: "관리자 이메일"
     submit_button: "이메일 보내기"
   performance_report:

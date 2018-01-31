@@ -191,7 +191,6 @@ fa_IR:
     top_weekly: "برترین موضوعات هفتگی"
     top_daily: "برتین موضوعات روزانه"
     posts: "آخرین نوشته‌ها"
-    private_posts: "آخرین پیام‌های خصوصی"
     group_posts: "آخرین نوشته‌ها در گروه %{group_name}"
     group_mentions: "آخرین اشاره‌ها از %{group_name}"
     user_posts: "آخرین نوشته ها توسط @%{username}"
@@ -284,12 +283,6 @@ fa_IR:
       با عرض پوزش، محدودیت %{newuser_max_replies_per_topic} پاسخ در هر موضوع برای کاربران جدید وجود دارد.
 
       به جای افزودن پاسخ‌های دیگر پاسخ‌های قبلی را ویرایش کنید یا موضوعات دیگر را ببینید
-    reviving_old_topic: |
-      ### می‌خواهید موضوع را احیا کنید؟
-
-      آخرین پاسخ **%{days}** روز قبل بوده. نوشته‌ی شما موضوع را به بالای لیست خواهد آورد و تمام افرادی که در این بحث شرکت کردند متوجه خواهند شد.
-
-      آیا ادامه می‌دهید؟
   activerecord:
     attributes:
       category:
@@ -306,9 +299,7 @@ fa_IR:
         topic:
           attributes:
             base:
-              warning_requires_pm: "شما فقط قادر به ضمیمه کردن اخطار در پیام‌های خصوصی هستید."
               too_many_users: "شما در هر بار می توانید به یک کاربر اخطار ارسال نمایید."
-              cant_send_pm: "متأسفانه ، شما نمی‌توانید به این کاربر پیام‌خصوصی بفرستید."
               no_user_selected: "باید یک کاربر معتبر انتخاب کنید"
               reply_by_email_disabled: "پاسخ با ایمیل از کار انداخته شده است."
             featured_link:
@@ -814,7 +805,6 @@ fa_IR:
     censored_words: "کلماتی که به صورت خودکار جایگزین می شوند با  &#9632;&#9632;&#9632;&#9632;"
     censored_pattern: "الگوی Regex به صورت خودکار با &#9632;&#9632;&#9632;&#9632; جا به جا می‌شود."
     delete_old_hidden_posts: "پاک کردن خودکار تمام نوشته‌هایی که بیش از 30 روز بصورت پنهان باقی می‌مانند. "
-    default_locale: "زبان پیشفرض برای دیسکورس  (ISO 639-1 کد)"
     allow_user_locale: "اجازه انتخاب زبان به کاربران داده شود."
     set_locale_from_accept_language_header: "تنظیم زبان برای رابط کاربری کاربران ناشناس که از هدر مرورگر دریافت می‌شود. (تجربی، با کش ناشناس کار نمی‌کند)"
     min_post_length: "حداقل طول مجاز نوشته به نویسه"
@@ -1011,7 +1001,6 @@ fa_IR:
     clean_orphan_uploads_grace_period_hours: "دوره معافیت (واحد ساعت) قبل از اینکه بارگذاری‌های بدون ریشه پاک شوند. "
     purge_deleted_uploads_grace_period_days: "دوره معافیت (واحد روز) قبل از اینکه بارگذاری‌های پاک شده حذف شوند. "
     enable_s3_uploads: "مکان بارگزاری ها در فضای Amazon S3. مهم: به اطلاعات ورود S3 صحیح معتبر نیاز است (a3 access key id و s3 secret key)"
-    s3_use_iam_profile: 'از نقش AWS EC2 IAM  برای بازیابی کلید‌ها استفاده کن. نکته: بکارگیری این مورد موجب باطل کردن  تنظیمات "s3 access key id"  و "s3 secret access key" می شود. '
     s3_upload_bucket: "نام میزبان Amazon S3 که فایل‌ها در آنجا بارگذاری می شود. اخطار: باید حروف کوچک باشد٬ بدون دوره٬‌ بدون زیرخط"
     s3_access_key_id: "ID کلید درسترسی Amazon S3 که برای بارگذاری عکس‌ها استفاده می‌شود."
     s3_secret_access_key: "کلید درسترسی مخفی Amazon S3 که برای بارگذاری عکس‌ها استفاده می‌شود."
@@ -1057,7 +1046,6 @@ fa_IR:
     min_trust_to_edit_wiki_post: "حداقل سطح اعتماد برای ویرایش نوشته ای که به‌عنوان دانشنامه نشانه‌گزاری شده است. "
     min_trust_to_edit_post: "حداقل سطح اعتماد برای ویرایش نوشته مورد نیاز است."
     min_trust_to_allow_self_wiki: "حداقل سطح اعتماد برای تبدیل نوشته‌ی خود به دانش‌نامه نیاز است."
-    min_trust_to_send_messages: "حداقل سطح اعتماد برای ایجاد پیام خصوصی جدید نیاز است."
     newuser_max_links: "کاربر جدید می تواند چند پیوند به نوشته اضافه کند. "
     newuser_max_images: "کاربر جدید می تواند چند عکس به نوشته اضافه کند."
     newuser_max_attachments: "کاربر جدید می تواند چند پیوست اضافه کند به پست. "
@@ -1120,7 +1108,6 @@ fa_IR:
     reply_by_email_enabled: "Enable replying to topics via email."
     reply_by_email_address: "نمونه برای پاسخ به ایمیل، آدرس‌های ایمیل آمده برای مثال: %{reply_key}@reply.example.com یا replies+%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "لیست قالب‌های مشابه برای پاسخ به ایمیل‌های دریافتی. مثال:\n%{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
-    incoming_email_prefer_html: "استفاده از HTML به جای متن در ایمیل‌های ورودی."
     disable_emails: "به discourse اجازه ارسال هیچ گونه ایمیلی را نده"
     strip_images_from_short_emails: "محروم کردن تصاویر از ایمیل‌هایی با حجم کمتر از 2800 بایت"
     short_email_length: "طول ایمیل کوتاه به بایت"
@@ -1218,7 +1205,6 @@ fa_IR:
     allowed_href_schemes: "طرح‌ها در لینک‌های http و https مجازند"
     embed_post_limit: "حداکثر تعداد نوشته‌هایی که می‌توانید جا‌سازی کنید. "
     embed_username_required: "نام‌کاربری برای ایجاد تاپیک مورد نیاز است."
-    notify_about_flags_after: "اگر پرچم‌ها بعد از چند ساعت حل نشدند، یک پیام خصوصی به کارمندان ارسال کن. 0 برای غیرفعال"
     show_create_topics_notice: "اگر سایت کمتر از 5 موضوع عمومی دارد٬ مدیران اطلاع بده تا موضوعات بیشتری بسازند."
     delete_drafts_older_than_n_days: پیش‌نویس‌های قدیمی‌تر از (n) روز را حذف کن
     bootstrap_mode_min_users: "حداقل تعداد کاربرانی که نیاز است تا حالت خود‌راه‌انداز غیر‌فعال شود (0 برای غیر‌فعال)"
@@ -1230,7 +1216,6 @@ fa_IR:
     approve_post_count: "تعداد نوشته‌های کاربر جدید که باید تایید شود."
     approve_unless_trust_level: "نوشته‌ها برای کاربران پایین تر از این سطح اعتماد نیاز به تایید دارد. "
     approve_new_topics_unless_trust_level: "موضوعات جدید برای کاربرانی با کمتر از این سطح اعتماد باید تایید شود"
-    notify_about_queued_posts_after: "در صورتی که نوشته‌هایی بیش از این مقدار ساعت منتظر تایید باشند یک ایمیل به contact_email ارسال می‌شود. تنظیم به 0 برای غیرفعال‌سازی ایمیل ها."
     auto_close_messages_post_count: "حداکثر تعداد نوشته‌های مجاز برای پیام‌خصوصی قبل از اینکه به صورت خودکار بسته شود (0 برای غیر فعال)"
     auto_close_topics_post_count: "حداکثر تعداد نوشته‌های مجاز برای موضوع قبل از اینکه به صورت خودکار بسته شود (0 برای غیر فعال)"
     code_formatting_style: "کد دکمه در composer به صورت پیشفرض این حالت خواهد بود"
@@ -2322,7 +2307,6 @@ fa_IR:
     badge_title_metadata: "نشان %{display_name} در %{site_title}"
   admin_login:
     success: "ایمیل ارسال شد "
-    error: "خطا!"
     email_input: "ایمیل مدیر ارشد"
     submit_button: "ارسال ایمیل "
   performance_report:

@@ -450,7 +450,6 @@ ro:
       '14': "În așteptare"
     categories:
       all: "Toate categoriile"
-      all_subcategories: "Toate"
       no_subcategory: "Niciuna"
       category: "Categorie"
       category_list: "Afișează lista de categorii"
@@ -732,7 +731,6 @@ ro:
         title: "Invitații"
         user: "Utilizator invitat"
         sent: "Trimis(e)"
-        none: "Nu sunt invitații în așteptare."
         truncated:
           one: "Se afișează prima invitație."
           few: "Se afișează primele {{count}} invitații."
@@ -1083,8 +1081,6 @@ ro:
         posted: "Postat de"
         edited: "Editează postarea prin"
         liked: "V-a apreciat postarea"
-        private_message: "Mesaj privat de la"
-        invited_to_private_message: "Invitat la un mesaj privat de către"
         invited_to_topic: "Invitat la un subiect de către"
         invitee_accepted: "Invitație acceptată de către"
         moved_post: "Postarea ta a fost mutată de către"
@@ -1097,7 +1093,6 @@ ro:
         quoted: '{{username}} te-a citat în "{{topic}}" - {{site_title}}'
         replied: '{{username}} ți-a răspuns la "{{topic}}" - {{site_title}}'
         posted: '{{username}} a postat în "{{topic}}" - {{site_title}}'
-        private_message: '{{username}} ți-a trimis un mesaj privat în "{{topic}}" - {{site_title}}'
         linked: '{{username}} a pus un link către postarea ta din "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Adaugă o imagine"
@@ -1362,7 +1357,6 @@ ro:
         visible: "Fă vizibil"
         reset_read: "Resetează datele despre subiecte citite"
         make_public: "Transformă în subiect public"
-        make_private: "Transformă în mesaj privat"
       feature:
         pin: "Fixează subiectul"
         unpin: "Anulează subiect fixat"
@@ -2034,7 +2028,6 @@ ro:
         few: "%{count} acordate"
         other: "%{count} acordate"
       select_badge_for_title: Selectați un ecuson pentru a-l folosi ca titlu
-      none: "(niciunul)"
       badge_grouping:
         getting_started:
           name: Cum începem
@@ -2188,7 +2181,6 @@ ro:
         title: "Marcaje de avertizare"
         agree: "De acord"
         agree_title: "Confirmă acest marcaj ca valid și corect"
-        defer_flag_title: "Scoate marcajul de avertizare; Nu necesită nicio acțiune deocamdată."
         delete: "Șterge"
         delete_title: "Șterge postarea la care se referă marcajul de avertizare."
         delete_post_defer_flag_title: "Șterge postarea; dacă este prima, șterge subiectul"
@@ -2364,7 +2356,6 @@ ro:
           label: "Încarcă"
           title: "Încarcă un backup în această instanță."
           uploading: "Se încarcă..."
-          success: "fișierul '{{filename}}' a fost încărcat cu succes."
           error: "A apărut o eroare la încărcarea fișierului '{{filename}}': {{message}}"
         operations:
           is_running: "O altă operație este în desfășurare..."

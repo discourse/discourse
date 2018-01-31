@@ -188,7 +188,6 @@ sv:
     hot: "Heta ämnen"
     top: "Toppämnen"
     posts: "Senaste inläggen"
-    private_posts: "Senaste privata meddelanden"
     group_posts: "Senaste inläggen från %{group_name}"
     group_mentions: "Senaste omnämningarna från %{group_name}"
     user_posts: "Senaste inlägggen av @%{username}"
@@ -257,9 +256,7 @@ sv:
         topic:
           attributes:
             base:
-              warning_requires_pm: "Du kan endast bifoga varningar till privata meddelanden."
               too_many_users: "Du kan endast skicka varningar till en användare åt gången."
-              cant_send_pm: "Tyvärr, du kan inte skicka ett privat medelande till den användaren. "
               no_user_selected: "Du måste välja en giltig användare."
             featured_link:
               invalid: "är ogiltig. URL måste innehålla http:// eller http://."
@@ -735,7 +732,6 @@ sv:
   site_settings:
     censored_words: "Ord som automatiskt ersätts med &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-radera alla dolda inlägg som varit dolda i mer än 30 dagar."
-    default_locale: "Standardspråk för den här instansen av Discourse (ISO 639-1-kod)"
     allow_user_locale: "Tillåt användare att själva välja språk"
     set_locale_from_accept_language_header: "sätt gränssnittets språk för anonyma användare från deras webbläsares rubriks språk. (EXPERIMENTELLT, det fungerar inte med anonym cache)"
     min_post_length: "Minsta tillåtna inläggslängd i antal tecken"
@@ -918,7 +914,6 @@ sv:
     clean_orphan_uploads_grace_period_hours: "Nådefrist (i timmar) innan en föräldralös uppladdning raderas."
     purge_deleted_uploads_grace_period_days: "Nådefrist (i dagar) innan en borttagen uppladdning raderas."
     enable_s3_uploads: "Lägg uppladdningar i Amazon S3 lagring. VIKTIGT: kräver giltiga S3-kreditiv (både åtkomstnyckelns ID och den hemliga åtkomstnyckeln)."
-    s3_use_iam_profile: 'Använd AWS EC2 IAM roll för att återfå nycklar. OBS: aktivering kommer att åsidosätta inställningarna "s3 access key id" och "s3 secret access key". '
     s3_upload_bucket: "Namnet på Amazon S3 behållaren som filerna kommer att laddas upp i. VARNING: måste vara gemener, inga punkter och inga understreck."
     s3_access_key_id: "ID för åtkomstnyckeln till Amazon S3 som kommer att användas för att ladda upp bilder."
     s3_secret_access_key: "Den hemliga åtkomstnyckeln till Amazon S3 som kommer att användas för att ladda upp bilder."
@@ -959,7 +954,6 @@ sv:
     min_trust_to_edit_wiki_post: "Lägsta förtroendenivå som krävs för att redigera inlägg markerade som wiki. "
     min_trust_to_edit_post: "Lägsta förtroende nivån som krävs för att skapa ett inlägg."
     min_trust_to_allow_self_wiki: "Lägsta förtroendenivå som krävs för att göra användares egna inlägg wiki."
-    min_trust_to_send_messages: "Lägsta förtroendenivå som krävs för att skapa nya privata meddelanden."
     newuser_max_links: "Antalet länkar en ny användare kan lägga till i ett inlägg."
     newuser_max_images: "Antalet bilder en ny användare kan lägga till i ett inlägg."
     newuser_max_attachments: "Antalet bilagor en ny användare kan lägga till i ett inlägg."
@@ -1120,7 +1114,6 @@ sv:
     approve_post_count: "Antalet inlägg från en ny användare eller basanvändare som måste godkännas"
     approve_unless_trust_level: "Inlägg för användare under den här förtroendenivån måste godkännas"
     approve_new_topics_unless_trust_level: "Nya ämnen för användare under denna förtroendenivå måste bli godkända"
-    notify_about_queued_posts_after: "Om det finns inlägg som väntat på att granskas i fler än så här många timmar så skickas ett e-postmeddelande till contact_email. Ange 0 för att inaktivera de här e-postmeddelandena."
     auto_close_messages_post_count: "Högsta antal inlägg som tillåts i ett meddelande innan det automatiskt stängs (ange 0 för att inaktivera)"
     auto_close_topics_post_count: "Högsta antal inlägg som tillåts i ett ämne innan det automatiskt stängs (ange 0 för att inaktivera)"
     code_formatting_style: "Kodknappen i redigeraren kommer att använda den här kodformatteringsstilen som standard"
@@ -1910,7 +1903,6 @@ sv:
         Den här utmärkelsen beviljas när du för första gången svarar på ett inlägg via e-post :e-mail:.
   admin_login:
     success: "E-post skickat"
-    error: "Fel!"
     email_input: "E-post till administratör"
     submit_button: "Skicka e-post"
   performance_report:

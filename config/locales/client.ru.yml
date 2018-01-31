@@ -498,7 +498,6 @@ ru:
       '14': "Ожидает одобрения"
     categories:
       all: "Все разделы"
-      all_subcategories: "Все подкатегории"
       no_subcategory: "Вне подкатегорий"
       category: "Раздел"
       category_list: "Показать список разделов"
@@ -799,7 +798,6 @@ ru:
         title: "Приглашения"
         user: "Кто приглашен"
         sent: "Когда"
-        none: "Приглашения, ожидающие одобрения, отсутствуют."
         truncated:
           one: "Первое приглашение"
           few: "Первые {{count}} приглашения"
@@ -1100,6 +1098,8 @@ ru:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    select_kit:
+      default_header_text: Выбрать...
     emoji_picker:
       filter_placeholder: Искать emoji
       people: People
@@ -1126,6 +1126,7 @@ ru:
       saved_local_draft_tip: "Сохранено локально"
       similar_topics: "Ваша тема похожа на..."
       drafts_offline: "Черновики, сохраненные в офлайн"
+      group_mentioned_limit: "<b>Внимание!</b> Вы упомянули <a href='{{group_link}}'>{{group}}</a>, в которой больше участников, чем установленный администратором лимит упоминаний на {{max}} пользователей. Никто не получит оповещение."
       group_mentioned:
         one: "Упоминая группу {{group}}, вы тем самым отправите уведомление <a href='{{group_link}}'>1му пользователю</a> – вы уверены?"
         few: "Упоминая группу {{group}}, вы тем самым отправите уведомление <a href='{{group_link}}'>{{count}} пользователям</a> – вы уверены?"
@@ -1150,6 +1151,7 @@ ru:
       cancel: "Отмена"
       create_topic: "Создать тему"
       create_pm: "Отправить личное сообщение"
+      create_whisper: "Внутреннее сообщение"
       title: "Или нажмите Ctrl+Enter"
       users_placeholder: "Добавить пользователя"
       title_placeholder: "Название: суть темы коротким предложением"
@@ -1209,8 +1211,6 @@ ru:
         posted: "Опубликовано"
         edited: "Изменил ваше сообщение"
         liked: "Понравилось ваше сообщение"
-        private_message: "Личное сообщение от"
-        invited_to_private_message: "Приглашение в личную беседе от"
         invited_to_topic: "Приглашение в тему от"
         invitee_accepted: "Приглашение принято"
         moved_post: "Ваша тема перенесена участником "
@@ -1223,7 +1223,6 @@ ru:
         quoted: '{{username}} процитировал Вас в "{{topic}}" - {{site_title}}'
         replied: '{{username}} ответил вам в "{{topic}}" - {{site_title}}'
         posted: '{{username}} написал в "{{topic}}" - {{site_title}}'
-        private_message: '{{username}} отправил вам личное сообщение в "{{topic}}" - {{site_title}}'
         linked: '{{username}} ссылается на ваш пост в теме: "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Add an image"
@@ -1537,7 +1536,6 @@ ru:
         visible: "Включить в списки"
         reset_read: "Сбросить счетчики"
         make_public: "Сделать тему публичной"
-        make_private: "Сделать тему приватной"
       feature:
         pin: "Закрепить тему"
         unpin: "Открепить тему"
@@ -1669,6 +1667,16 @@ ru:
       multi_select:
         select: 'выбрать'
         selected: 'выбрано ({{count}})'
+        select_post:
+          label: 'выбрать'
+        selected_post:
+          label: 'выбранный'
+        select_replies:
+          label: 'выбрать + ответы'
+          title: 'Добавить запись и все ответы для выбора'
+        select_below:
+          label: 'выбрать + все ниже'
+          title: 'Добавить запись и все ответы для выбора'
         delete: удалить выбранные
         cancel: отменить выделение
         select_all: выбрать все
@@ -2294,7 +2302,6 @@ ru:
         many: "выдано %{count}"
         other: "выдано %{count}"
       select_badge_for_title: Использовать награду в качестве Вашего титула
-      none: "(отсутствует)"
       badge_grouping:
         getting_started:
           name: Начало работы
@@ -2451,7 +2458,6 @@ ru:
         moderation_history: "История модерации"
         agree: "Принять"
         agree_title: "Подтвердить корректность жалобы"
-        defer_flag_title: "Удалить эту жалобу — никаких действий на данный момент не требуется."
         delete: "Удалить"
         delete_title: "Удалить обжалованное сообщение."
         delete_post_defer_flag_title: "Удалить сообщение; если это первое сообщение, удалить тему целиком"
@@ -2634,7 +2640,6 @@ ru:
           label: "Загрузить"
           title: "Загрузить копию на сервер"
           uploading: "Загрузка..."
-          success: "'{{filename}}' был успешно загружен."
           error: "При загрузке '{{filename}}' произошла ошибка: {{message}}"
         operations:
           is_running: "Операция в данный момент исполняется..."
@@ -2971,11 +2976,18 @@ ru:
           roll_up:
             text: "Группировка"
             title: "Создание новой записи бана целой подсети если уже имеется хотя бы 'min_ban_entries_for_roll_up' записей отдельных IP адресов."
+        search_logs:
+          types:
+            all_search_types: "Все типы поиска"
+            header: "Шапка"
         logster:
           title: "Журнал ошибок"
       watched_words:
+        actions:
+          flag: 'Жалоба'
         form:
           placeholder_regexp: "Регулярное выражение"
+          add: 'Добавить'
       impersonate:
         title: "Войти от имени пользователя"
         help: "Используйте этот инструмент, чтобы войти от имени пользователя. Может быть полезно для отладки. После этого необходимо выйти и зайти под своей учетной записью снова."
@@ -3379,6 +3391,11 @@ ru:
       upload: "Загрузить"
       uploading: "Загрузка..."
       quit: "Может быть позже"
+      staff_count:
+        one: "В вашем сообществе 1 сотрудник (это вы)."
+        few: "В вашем сообществе %{count} сотрудника, включая вас."
+        many: "В вашем сообществе %{count} сотрудников, включая вас."
+        other: "В вашем сообществе %{count} сотрудников, включая вас."
       invites:
         add_user: "добавить"
         none_added: "Вы ещё не пригласили сотрудников. Вы уверены, что хотите продолжить?"

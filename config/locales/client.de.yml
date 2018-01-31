@@ -411,7 +411,7 @@ de:
         owners: "Gruppenbesitzer und Admins"
       alias_levels:
         mentionable: "Wer kann diese Gruppe @erwähnen?"
-        messageable: "Wer cann dieser Gruppe eine Nachricht schicken?"
+        messageable: "Wer kann dieser Gruppe eine Nachricht schicken?"
         nobody: "Niemand"
         only_admins: "Nur Administratoren"
         mods_and_admins: "Nur Moderatoren und Administratoren"
@@ -460,7 +460,6 @@ de:
       '14': "Ausstehend"
     categories:
       all: "Alle Kategorien"
-      all_subcategories: "alle"
       no_subcategory: "keine"
       category: "Kategorie"
       category_list: "Kategorieliste anzeigen"
@@ -540,7 +539,6 @@ de:
       disable_jump_reply: "Springe nicht zu meinem Beitrag, nachdem ich geantwortet habe"
       dynamic_favicon: "Zeige die Anzahl der neuen und geänderten Themen im Browser-Symbol an"
       theme_default_on_all_devices: "Übernehme dieses Theme für alle meine Geräte."
-      allow_private_messages: "Erlaube anderen Benutzern, mir Nachrichten zu schicken"
       external_links_in_new_tab: "Öffne alle externen Links in einem neuen Tab"
       enable_quoting: "Aktiviere Zitatantwort mit dem hervorgehobenen Text"
       change: "ändern"
@@ -764,7 +762,6 @@ de:
         title: "Einladungen"
         user: "Eingeladener Benutzer"
         sent: "Gesendet"
-        none: "Es gibt keine ausstehenden Einladungen."
         truncated:
           one: "Zeige die erste Einladung."
           other: "Zeige die ersten {{count}} Einladungen."
@@ -1209,8 +1206,6 @@ de:
         posted: "Beitrag von"
         edited: "Beitrag bearbeitet von"
         liked: "Gefällt dein Beitrag"
-        private_message: "Nachricht von"
-        invited_to_private_message: "Zu Unterhaltung eingeladen von"
         invited_to_topic: "Zu Thema eingeladen von"
         invitee_accepted: "Einladung angenommen von"
         moved_post: "Dein Beitrag wurde verschoben von"
@@ -1224,7 +1219,6 @@ de:
         quoted: '{{username}} hat dich in "{{topic}}" - {{site_title}} zitiert'
         replied: '{{username}} hat dir in "{{topic}}" - {{site_title}} geantwortet'
         posted: '{{username}} hat in "{{topic}}" - {{site_title}} einen Beitrag verfasst'
-        private_message: '{{username}} hat dir in "{{topic}}" - {{site_title}} eine Nachricht geschickt'
         linked: '{{username}} hat in "{{topic}}" - {{site_title}} einen Beitrag von dir verlinkt'
     upload_selector:
       title: "Ein Bild hinzufügen"
@@ -1561,7 +1555,6 @@ de:
         visible: "Sichtbar machen"
         reset_read: "„Gelesen“ zurücksetzen"
         make_public: "Umwandeln in öffentliches Thema"
-        make_private: "Umwandeln in Nachricht"
       feature:
         pin: "Thema anheften"
         unpin: "Thema loslösen"
@@ -2267,7 +2260,7 @@ de:
         one: "1-mal verliehen"
         other: "%{count}-mal verliehen"
       select_badge_for_title: Wähle ein Abzeichen als deinen Titel aus
-      none: "(keines)"
+      none: "(keine)"
       badge_grouping:
         getting_started:
           name: Erste Schritte
@@ -2439,8 +2432,6 @@ de:
         agree_flag_restore_post_title: "Beitrag wiederherstellen, sodass alle Benutzer/-innen ihn sehen können."
         agree_flag: "Zustimmen und Beitrag behalten"
         agree_flag_title: "Meldung zustimmen und den Beitrag unbearbeitet lassen."
-        defer_flag: "Ignorieren"
-        defer_flag_title: "Entferne diese Meldung. Derzeit besteht kein Handlungsbedarf."
         delete: "Löschen"
         delete_title: "Lösche den Beitrag, auf den diese Meldung verweist."
         delete_post_defer_flag: "Beitrag löschen und Meldung ignorieren"
@@ -2640,7 +2631,6 @@ de:
           label: "Hochladen"
           title: "Eine Sicherung zu dieser Instanz hochladen"
           uploading: "Wird hochgeladen…"
-          success: "'{{filename}}' wurde erfolgreich hochgeladen."
           error: "Beim Hochladen der Datei '{{filename}}' ist ein Fehler aufgetreten: {{message}}"
         operations:
           is_running: "Ein Vorgang läuft gerade…"
@@ -2996,7 +2986,7 @@ de:
             text: "Zusammenfassen"
             title: "Erzeugt neue Einträge zum Blockieren von Subnetzen, wenn mindestens 'min_ban_entries_for_roll_up' Einträge vorhanden sind."
         search_logs:
-          title: "Protokolle durchsuchen"
+          title: "Suchprotokolle"
           term: "Suchbegriff"
           searches: "Suchen"
           click_through: "Durchklicken"
@@ -3025,7 +3015,7 @@ de:
         action_descriptions:
           block: 'Verhindert, dass Beiträge mit diesen Wörtern abgeschickt werden. Benutzer werden eine Fehlermeldung sehen, wenn sie ihren Beitrag abschicken.'
           censor: 'Erlaube Beiträge mit diesen Wörtern, aber ersetze sie mit Zeichen, die die zensierten Wörter verstecken.'
-          require_approval: 'Beitärge mit diesen Wörtern werden eine Genehmigung vom Team erfordern, bevor sie sichtbar sind.'
+          require_approval: 'Beiträge mit diesen Wörtern werden eine Genehmigung vom Team erfordern, bevor sie sichtbar sind.'
           flag: 'Erlaube Beiträge mit diesen Wörtern, aber markiere sie als unangemessen, damit Moderatoren sie überprüfen können.'
         form:
           label: 'Neues Wort:'

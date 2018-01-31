@@ -25,7 +25,7 @@ nb_NO:
       long_description: |
         Dette merket er tildelt ved fullførelse av den interaktive opplæringen for avanserte brukere. Du har mestret de avanserte verktøyene for diskusjoner — og er nå fullstendig lisensiert!
   discourse_narrative_bot:
-    bio: "Hei, jeg er ikke en virkelig person. Jeg er en robot som kan lære deg om dette nettstedet. For å kommunisere med meg, send meg en melding eller nevn **`@%{discobot_username}`** hvor som helst."
+    bio: "Hei, jeg er ikke en virkelig person. Jeg er en robot som kan lære deg om dette nettstedet. For å kommunisere med meg send meg en melding eller nevn **`@%{discobot_username}`** hvor som helst."
     timeout:
       message: |-
         Hei @%{username}, jeg bare sjekker opp på deg fordi jeg har ikke hørt fra deg på en stund.
@@ -104,6 +104,11 @@ nb_NO:
       quoting:
         reply: |-
           Godt jobbet, du valgte mitt  favorittsitat! :left_speech_bubble:
+      mention:
+        instructions: |-
+          Av og til ønsker du kanskje tiltrekke noens oppmerksomhet selv om du ikke svarer dem direkte. Skriv `@` og fullfør deretter brukernavnet deres for å nevne dem.
+
+          Kan du nevne **`@%{discobot_username}`** i svaret ditt?
     advanced_user_narrative:
       reset_trigger: 'avansert bruker'
       title: ':arrow_up: Avanserte brukerfunksjoner'

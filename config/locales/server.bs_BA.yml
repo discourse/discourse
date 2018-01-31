@@ -116,7 +116,6 @@ bs_BA:
         topic:
           attributes:
             base:
-              warning_requires_pm: "You can only attach warnings to private messages."
               too_many_users: "You can only send warnings to one user at a time."
         user:
           attributes:
@@ -356,7 +355,6 @@ bs_BA:
   site_settings:
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-delete any hidden posts that stay hidden for more than 30 days."
-    default_locale: "The default language of this Discourse instance (ISO 639-1 Code)"
     allow_user_locale: "Allow users to choose their own language interface preference"
     min_post_length: "Minimum allowed post length in characters"
     min_private_message_post_length: "Minimum allowed post length in characters for private messages"
@@ -470,7 +468,6 @@ bs_BA:
     clean_orphan_uploads_grace_period_hours: "Grace period (in hours) before an orphan upload is removed."
     purge_deleted_uploads_grace_period_days: "Grace period (in days) before a deleted upload is erased."
     enable_s3_uploads: "Place uploads on Amazon S3 storage. IMPORTANT: requires valid S3 credentials (both access key id & secret access key)."
-    s3_use_iam_profile: 'Use AWS EC2 IAM role to retrieve keys. NOTE: enabling will override "s3 access key id" and "s3 secret access key" settings.'
     s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into. WARNING: must be lowercase, no periods."
     s3_access_key_id: "The Amazon S3 access key id that will be used to upload images."
     s3_secret_access_key: "The Amazon S3 secret access key that will be used to upload images."

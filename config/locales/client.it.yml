@@ -50,7 +50,7 @@ it:
           other: "%{count}s"
         less_than_x_minutes:
           one: "< 1m"
-          other: "< %{count}m"
+          other: "< %{count}min"
         x_minutes:
           one: "1m"
           other: "%{count}m"
@@ -61,7 +61,7 @@ it:
           one: "1g"
           other: "%{count}gg"
         x_months:
-          one: "1mese"
+          one: "1 mese"
           other: "%{count}mesi"
         about_x_years:
           one: "1a"
@@ -121,6 +121,7 @@ it:
       split_topic: "ha separato questo argomento %{when}"
       invited_user: "Invitato %{who} %{when}"
       invited_group: "invitato %{who} %{when}"
+      user_left: "%{who}ha rimosso se stesso da questo messaggio %{when} "
       removed_user: "rimosso %{who} %{when}"
       removed_group: "cancellato %{who} %{when}"
       autoclosed:
@@ -457,7 +458,6 @@ it:
       '14': "In Attesa"
     categories:
       all: "tutte le categorie"
-      all_subcategories: "tutte"
       no_subcategory: "nessuno"
       category: "Categoria"
       category_list: "Visualizza l'elenco delle categorie"
@@ -537,7 +537,6 @@ it:
       disable_jump_reply: "Non saltare al mio messaggio dopo la mia risposta"
       dynamic_favicon: "Visualizza il conteggio degli argomenti nuovi / aggiornati sull'icona del browser"
       theme_default_on_all_devices: "Rendi questo il mio tema di default su tutti i miei dispositivi"
-      allow_private_messages: "Consenti agli altri utenti di inviarmi messaggi privati"
       external_links_in_new_tab: "Apri tutti i link esterni in nuove schede"
       enable_quoting: "Abilita \"rispondi quotando\" per il testo evidenziato"
       change: "cambia"
@@ -651,6 +650,7 @@ it:
         title: "Cambia l'immagine del tuo profilo"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basato su"
         gravatar_title: "Cambia il tuo avatar sul sito Gravatar"
+        gravatar_failed: "Impossibile recuperare il Gravatar. Ce n'è uno associato a questo indirizzo email?"
         refresh_gravatar_title: "Ricarica il tuo Gravatar"
         letter_based: "Immagine del profilo assegnata dal sistema"
         uploaded_avatar: "Immagine personalizzata"
@@ -760,7 +760,6 @@ it:
         title: "Inviti"
         user: "Utente Invitato"
         sent: "Spedito"
-        none: "Non ci sono inviti in sospeso da visualizzare."
         truncated:
           one: "Mostro il primo invito."
           other: "Mostro i primi {{count}} inviti."
@@ -1090,6 +1089,7 @@ it:
       saved_local_draft_tip: "salvato in locale"
       similar_topics: "Il tuo argomento è simile a..."
       drafts_offline: "bozze offline"
+      group_mentioned_limit: "<b>Attenzione!</b> Hai menzionato <a href='{{group_link}}'>{{group}}</a>, tuttavia questo gruppo ha più membri del limite per le menzioni configurato dagli amministratori di {{max}} utenti. Nessuna notifica verrà inviata. "
       group_mentioned:
         one: "Menzionando {{group}}, verrà notificata <a href='{{group_link}}'>1 persona</a> – sei sicuro?"
         other: "Menzionando {{group}}, verranno notificate <a href='{{group_link}}'>{{count}} persone</a> – sei sicuro?"
@@ -1152,6 +1152,8 @@ it:
       ulist_title: "Elenco Puntato"
       list_item: "Elemento lista"
       help: "Aiuto Inserimento Markdown"
+      collapse: "minimizza il pannello del composer"
+      abandon: "chiudi il composer e scarta la bozza"
       modal_ok: "OK"
       modal_cancel: "Annulla"
       cant_send_pm: "Spiacenti, non puoi inviare un messaggio a %{username}."
@@ -1160,6 +1162,13 @@ it:
         body: "Per ora il messaggio sarà inviato solo a te stesso!"
       admin_options_title: "Impostazioni dello staff opzionali per l'argomento"
     notifications:
+      tooltip:
+        regular:
+          one: "1 notifica non visualizzata"
+          other: "{{count}} notifiche non visualizzate"
+        message:
+          one: "1 messaggio non letto"
+          other: "{{count}} messaggi non letti"
       title: "notifiche di menzioni @nome, risposte ai tuoi messaggi e argomenti ecc."
       none: "Impossibile caricare le notifiche al momento."
       empty: "Nessuna notifica trovata."
@@ -1195,21 +1204,19 @@ it:
         posted: "Messaggio da"
         edited: "Modifica il tuo messaggio da"
         liked: "Ha assegnato un \"Mi piace\" al tuo messaggio"
-        private_message: "Messaggio privato da"
-        invited_to_private_message: "Invitato a un messaggio privato da"
         invited_to_topic: "Invitato a un argomento da"
         invitee_accepted: "Invito accettato da"
         moved_post: "Il tuo messaggio è stato spostato da"
         linked: "Collegamento al tuo messaggio"
         granted_badge: "Distintivo assegnato"
         group_message_summary: "Messaggi nel gruppo in arrivo"
+        topic_reminder: "Un promemoria"
       popup:
         mentioned: '{{username}} ti ha menzionato in "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} ti ha menzionato in "{{topic}}" - {{site_title}}'
         quoted: '{{username}} ti ha citato in "{{topic}}" - {{site_title}}'
         replied: '{{username}} ti ha risposto in "{{topic}}" - {{site_title}}'
         posted: '{{username}} ha pubblicato in "{{topic}}" - {{site_title}}'
-        private_message: '{{username}} ti ha inviato un messaggio privato in "{{topic}}" - {{site_title}}'
         linked: '{{username}} ha aggiunto un collegamento a un tuo messaggio da "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Aggiungi un'immagine"
@@ -1225,6 +1232,7 @@ it:
       uploading: "In caricamento"
       select_file: "Seleziona File"
       image_link: "collegamento a cui la tua immagine punterà"
+      default_image_alt_text: immagine
     search:
       sort_by: "Ordina per"
       relevance: "Rilevanza"
@@ -1235,6 +1243,9 @@ it:
       select_all: "Seleziona Tutto"
       clear_all: "Cancella Tutto"
       too_short: "La tua chiave di ricerca è troppo corta."
+      result_count:
+        one: "1 risultato per <span class='term'>{{term}}</span>"
+        other: "{{count}}{{plus}} risultati per <span class='term'>{{term}}</span>"
       title: "cerca argomenti, messaggi, utenti o categorie"
       no_results: "Nessun risultato trovato."
       no_more_results: "Nessun altro risultato trovato."
@@ -1261,16 +1272,24 @@ it:
           label: Nel Gruppo
         with_badge:
           label: Con Distintivo
+        with_tags:
+          label: Con etichetta
         filters:
+          label: Mostra solamente argomenti/messaggi...
           likes: su cui ho messo "Mi Piace"
           posted: ho pubblicato in
           watching: sto osservando
           tracking: sto seguendo
+          private: Nei miei messaggi privati
+          bookmarks: Aggiunti ai segnalibri
           first: sono il primissimo post
           pinned: sono appuntati
           unpinned: non sono appuntati
+          seen: Che ho letto
           unseen: non ho letto
           wiki: sono wiki
+          images: che includono immagini
+          all_tags: Tutte le etichette sopra
         statuses:
           label: In cui gli argomenti
           open: sono aperti
@@ -1532,7 +1551,6 @@ it:
         visible: "Rendi Visibile"
         reset_read: "Reimposta Dati Letti"
         make_public: "Rendi Argomento Pubblico"
-        make_private: "Rendi Privato il Messaggio "
       feature:
         pin: "Appunta Argomento"
         unpin: "Spunta Argomento"
@@ -1653,6 +1671,18 @@ it:
       multi_select:
         select: 'scegli'
         selected: 'selezionati ({{count}})'
+        select_post:
+          label: 'seleziona'
+          title: 'Aggiungi il messaggio alla selezione'
+        selected_post:
+          label: 'selezionato'
+          title: 'Clicca per rimuovere un messaggio dalla selezione'
+        select_replies:
+          label: 'seleziona +risposte'
+          title: 'Aggiungi il messaggio e tutte le risposte alla selezione'
+        select_below:
+          label: 'seleziona +seguenti'
+          title: 'Aggiungi questo messaggio e tutti quelli seguenti alla selezione'
         delete: elimina i selezionati
         cancel: annulla selezione
         select_all: seleziona tutto
@@ -2211,7 +2241,6 @@ it:
         one: "1 assegnato"
         other: "%{count} assegnati"
       select_badge_for_title: Seleziona un distintivo da usare come tuo titolo
-      none: "(nessuno)"
       badge_grouping:
         getting_started:
           name: Iniziali
@@ -2240,7 +2269,7 @@ it:
       tags: "Etichette"
       delete_tag: "Cancella Etichetta"
       delete_confirm:
-        one: "Sei sicuro di voler eliminare questa etichetta e rimuoverla da {{count}} argomenti a cui è assegnata?"
+        one: "Sei sicuro di voler eliminare questa etichetta e rimuoverla da 1 argomento a cui è assegnata?"
         other: "Sei sicuro di voler eliminare questa etichetta e rimuoverla da {{count}} argomenti a cui è assegnata?"
       delete_confirm_no_topics: "Sei sicuro di voler eliminare questa etichetta?"
       rename_tag: "Rinomina Etichetta"
@@ -2381,8 +2410,6 @@ it:
         agree_flag_restore_post_title: "Ripristina il messaggio in modo che tutti gli utenti possano vederlo."
         agree_flag: "Accetto e Mantieni il Messaggio"
         agree_flag_title: "Accetta la segnalazione e mantieni invariato il messaggio."
-        defer_flag: "Ignora"
-        defer_flag_title: "Rimuovi segnalazione; non è necessaria alcuna azione questa volta."
         delete: "Cancella"
         delete_title: "Cancella il messaggio a cui si riferisce la segnalazione."
         delete_post_defer_flag: "Elimina il Messaggio e Ignora la segnalazione"
@@ -2581,7 +2608,6 @@ it:
           label: "Carica"
           title: "Carica un backup su questa istanza"
           uploading: "In caricamento..."
-          success: "'{{filename}}' è stato caricato con successo."
           error: "Si è verificato un errore durante il caricamento {{filename}}': {{message}}"
         operations:
           is_running: "Un'operazione è attualmente in esecuzione..."

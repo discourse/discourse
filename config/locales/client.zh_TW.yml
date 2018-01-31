@@ -397,7 +397,6 @@ zh_TW:
       '14': "等待中"
     categories:
       all: "所有分類"
-      all_subcategories: "所有"
       no_subcategory: "無"
       category: "分類"
       category_list: "顯示分類列表"
@@ -684,7 +683,6 @@ zh_TW:
         title: "邀請"
         user: "受邀請的用戶"
         sent: "送出"
-        none: "沒有未接受狀態的邀請。"
         truncated:
           other: "只顯示前 {{count}} 個邀請。"
         redeemed: "已接受的邀請"
@@ -1028,8 +1026,6 @@ zh_TW:
         posted: "發自"
         edited: "編輯你的帖子"
         liked: "讚了你的帖子"
-        private_message: "私信來自"
-        invited_to_private_message: "私信邀請自"
         invited_to_topic: "主題邀請自"
         invitee_accepted: "介紹邀請自"
         moved_post: "你的帖子被移動自"
@@ -1042,7 +1038,6 @@ zh_TW:
         quoted: '{{username}}在“{{topic}}”引用了你的帖子 - {{site_title}}'
         replied: '{{username}}在“{{topic}}”回覆了你 - {{site_title}}'
         posted: '{{username}}在“{{topic}}”中發佈了帖子 - {{site_title}}'
-        private_message: '{{username}}在“{{topic}}”中給你發送了一個私信 - {{site_title}}'
         linked: '{{username}}在“{{topic}}”中連結了你的帖子 - {{site_title}}'
     upload_selector:
       title: "加入一張圖片"
@@ -1290,7 +1285,6 @@ zh_TW:
         visible: "出現在列表上"
         reset_read: "重置讀取資料"
         make_public: "設置為公共主題"
-        make_private: "設置為私信"
       feature:
         pin: "置頂主題"
         unpin: "取消置頂主題"
@@ -1884,7 +1878,6 @@ zh_TW:
       granted:
         other: "%{count} 授予"
       select_badge_for_title: 選擇一個徽章作為你的頭銜使用
-      none: "(none)"
       badge_grouping:
         getting_started:
           name: 開始
@@ -2040,7 +2033,6 @@ zh_TW:
         title: "投訴"
         agree: "同意"
         agree_title: "確認此投訴為有效且正確"
-        defer_flag_title: "移除標記；不需處理。"
         delete: "刪除"
         delete_title: "刪除此標記文章。"
         delete_post_defer_flag_title: "刪除文章，如果刪除的是討論話題的第一則文章，討論話題也將一併刪除"
@@ -2213,7 +2205,6 @@ zh_TW:
           label: "上傳"
           title: "上傳備份"
           uploading: "上傳中..."
-          success: "'{{filename}}' 已成功被上載"
           error: "上載時發生問題： '{{filename}}': {{message}}"
         operations:
           is_running: "指令執行中..."

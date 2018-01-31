@@ -101,6 +101,7 @@ nl:
           other: "%{count} jaar later"
       previous_month: 'Vorige maand'
       next_month: 'Volgende maand'
+      placeholder: datum
     share:
       topic: 'een koppeling naar dit topic delen'
       post: 'bericht #%{postNumber}'
@@ -451,7 +452,6 @@ nl:
       '14': "In wachtrij"
     categories:
       all: "Alle categorieën"
-      all_subcategories: "alle"
       no_subcategory: "geen"
       category: "Categorie"
       category_list: "Categorielijst weergeven"
@@ -749,7 +749,6 @@ nl:
         title: "Uitnodigingen"
         user: "Uitgenodigde gebruiker"
         sent: "Verzonden"
-        none: "Er zijn geen uitstaande uitnodigingen om weer te geven."
         truncated:
           one: "De eerste uitnodiging wordt getoond."
           other: "De eerste {{count}} uitnodigingen worden getoond."
@@ -1167,8 +1166,6 @@ nl:
         posted: "Geplaatst door"
         edited: "Uw bericht bewerkt door"
         liked: "Heeft uw bericht geliket"
-        private_message: "Privébericht van"
-        invited_to_private_message: "Uitgenodigd voor een privébericht van"
         invited_to_topic: "Uitgenodigd voor een topic door"
         invitee_accepted: "Uitnodiging geaccepteerd door"
         moved_post: "Uw bericht is verplaatst door"
@@ -1181,7 +1178,6 @@ nl:
         quoted: '{{username}} heeft u geciteerd in ''{{topic}}'' - {{site_title}}'
         replied: '{{username}} heeft op u geantwoord in ''{{topic}}'' - {{site_title}}'
         posted: '{{username}} heeft een bericht geplaatst in ''{{topic}}'' - {{site_title}}'
-        private_message: '{{username}} heeft u een privébericht gestuurd in ''{{topic}}'' - {{site_title}}'
         linked: '{{username}} heeft een koppeling naar uw bericht geplaatst vanaf ''{{topic}}'' - {{site_title}}'
     upload_selector:
       title: "Een afbeelding toevoegen"
@@ -1499,7 +1495,6 @@ nl:
         visible: "Zichtbaar maken"
         reset_read: "Leesgegevens herinitialiseren"
         make_public: "Topic openbaar maken"
-        make_private: "Nieuw privébericht"
       feature:
         pin: "Topic vastmaken"
         unpin: "Topic losmaken"
@@ -2175,7 +2170,6 @@ nl:
         one: "1 toegekend"
         other: "%{count} toegekend"
       select_badge_for_title: Kies een badge om als uw titel te gebruiken
-      none: "(geen)"
       badge_grouping:
         getting_started:
           name: Aan de slag
@@ -2338,7 +2332,6 @@ nl:
         topics: "Gemarkeerde Topics"
         agree: "Akkoord"
         agree_title: "Bevestig dat deze melding geldig en correct is"
-        defer_flag_title: "Deze melding verwijderen; er is nu geen actie nodig."
         delete: "Verwijderen"
         delete_title: "Het bericht waarnaar deze melding verwijst verwijderen."
         delete_post_defer_flag_title: "Bericht verwijderen; als dit het eerste bericht is, het topic verwijderen"
@@ -2527,7 +2520,6 @@ nl:
           label: "Uploaden"
           title: "Een back-up naar deze instantie uploaden"
           uploading: "Uploaden..."
-          success: "'{{filename}}' is geupload."
           error: "Er is een fout opgetreden bij het uploaden van '{{filename}}': {{message}}"
         operations:
           is_running: "Er wordt al een bewerking uitgevoerd..."
@@ -3154,6 +3146,7 @@ nl:
           developer: 'Ontwikkelaar'
           embedding: "Embedden"
           legal: "Juridisch"
+          api: 'API'
           user_api: 'Gebruikers-API'
           uncategorized: 'Overige'
           backups: "Backups"

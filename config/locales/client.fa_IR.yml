@@ -418,7 +418,6 @@ fa_IR:
       '14': "در انتظار"
     categories:
       all: "همه‌ی دسته‌بندی‌ها"
-      all_subcategories: "همه"
       no_subcategory: "هیچی"
       category: "دسته‌بندی"
       category_list: "نمایش فهرست دسته‌بندی"
@@ -710,7 +709,6 @@ fa_IR:
         title: "دعوت‌ها"
         user: "کاربر دعوت شده"
         sent: "ارسال شده"
-        none: "هیچ دعوت در انتظاری برای نمایش موجود نیست."
         truncated:
           other: "نمایش {{count}} دعوت اول."
         redeemed: "دعوت‌نامه‌های استفاده شده"
@@ -1027,6 +1025,7 @@ fa_IR:
       edit_reason_placeholder: "چرا ویرایش می‌کنید؟"
       show_edit_reason: "(افزودن دلیل ویرایش)"
       topic_featured_link_placeholder: "پیوندی که با عنوان نمایش داده می‌شود را وارد کنید."
+      remove_featured_link: "حذف لینک از موضوع"
       reply_placeholder: "اینجا بنویسید. از Markdown, BBCode و یا HTML برای قالب‌بندی متن استفاده کنید. عکس ها را بکشید و یا بچسبانید کنید."
       view_new_post: "نوشته جدیدتان را ببینید."
       saving: "در‌حال ذخیره"
@@ -1058,6 +1057,8 @@ fa_IR:
       ulist_title: "فهرست نقطه‌ای"
       list_item: "فهرست موارد"
       help: "راهنمای ویرایش با Markdown"
+      collapse: "کوچک سازی پنل نوشتن"
+      abandon: "پنل نوشتن را ببند و پیش‌نویس را حذف کن"
       modal_ok: "تایید"
       modal_cancel: "لغو"
       cant_send_pm: "متاسفانه , شما نمیتوانید به %{username}  پیام بفرستید."
@@ -1066,6 +1067,11 @@ fa_IR:
         body: "در حال حاضر این پیام فقط به خود شما ارسال می‌شود!"
       admin_options_title: "تنظیمات اختیاری مدیران برای این موضوع"
     notifications:
+      tooltip:
+        regular:
+          other: "{{count}} اعلان دیده نشده"
+        message:
+          other: "{{count}} خوانده نشده"
       title: "اطلاع رسانی با اشاره به @نام، پاسخ ها به نوشته‌های شما و موضوعات شما، پیام‌های شما و ..."
       none: "قادر به بارگیری اعلان‌ها در این زمان نیستیم."
       empty: "اعلانی پیدا نشد."
@@ -1078,8 +1084,6 @@ fa_IR:
         posted: "نوشته شده توسط"
         edited: "نوشته‌تان را ویرایش کنید توسط"
         liked: "ارسال شما را پسندید"
-        private_message: "پیام خصوصی از"
-        invited_to_private_message: "دعوت شد به یک پیام خصوصی توسط"
         invited_to_topic: "دعوت شده به یک موضوع توسط"
         invitee_accepted: "دعوت قبول شد توسط"
         moved_post: "نوشته‌ی شما منتقل شد توسط"
@@ -1092,7 +1096,6 @@ fa_IR:
         quoted: '{{username}} از شما در "{{topic}}" - {{site_title}} نقل قول کرد '
         replied: '{{username}} در "{{topic}}" - {{site_title}} به شما پاسخ داد'
         posted: '{{username}} در "{{topic}}" - {{site_title}} مطلبی نوشت'
-        private_message: '{{username}} یک پیام خصوصی در "{{topic}}" - {{site_title}} به شما فرستاد'
         linked: '{{username}} در "{{topic}}" - {{site_title}} به نوشته‌ی شما پیوندی قرار داد'
     upload_selector:
       title: "افزودن تصویر"
@@ -1389,7 +1392,6 @@ fa_IR:
         visible: "وارد کردن به فهرست"
         reset_read: "تنظیم مجدد خواندن داده ها"
         make_public: "ایجاد موضوع عمومی"
-        make_private: "ایجاد پیام خصوصی"
       feature:
         pin: "سنجاق زدن موضوع"
         unpin: "برداشتن سنجاق موضوع"
@@ -2009,7 +2011,6 @@ fa_IR:
       granted:
         other: "%{count} اعطا شده"
       select_badge_for_title: انتخاب یک نشان برای استفاده در عنوان خود
-      none: "(none)"
       badge_grouping:
         getting_started:
           name: شروع
@@ -2165,8 +2166,6 @@ fa_IR:
         title: "پرچم‌ها"
         agree: "موافقت کردن"
         agree_title: "تایید این پرچم به عنوان معتبر و صحیح"
-        defer_flag: "چشم پوشی"
-        defer_flag_title: "حذف این پرچم; بدون نیاز به اقدام در این زمان"
         delete: "حذف"
         delete_title: "نوشته‌ای که پرچم به آن اشاره دارد حذف کن."
         delete_post_defer_flag_title: "حذف نوشته; اگر اولین نوشته است، موضوع را حذف نمایید."
@@ -2343,7 +2342,6 @@ fa_IR:
           label: "بار گذاری"
           title: "آپلود یک نسخه پشتیبان برای نمونه"
           uploading: "در حال بار گذاری ..."
-          success: "'{{filename}}' با موفقیت بارگذاری شد."
           error: "هنگام آپلود خطایی رخ می دهد '{{filename}}': {{message}}"
         operations:
           is_running: "عملیاتی در جریان است..."

@@ -413,7 +413,6 @@ vi:
       '14': "Đang chờ xử lý"
     categories:
       all: "tất cả chuyên mục"
-      all_subcategories: "Tất cả"
       no_subcategory: "không có gì"
       category: "Chuyên mục"
       category_list: "Hiễn thị danh sách chuyên mục"
@@ -701,7 +700,6 @@ vi:
         title: "Lời mời"
         user: "User được mời"
         sent: "Đã gửi"
-        none: "Không có thư mời nào đang chờ để hiển thị"
         truncated:
           other: "Hiện {{count}} thư mời đầu tiên"
         redeemed: "Lời mời bù lại"
@@ -1039,8 +1037,6 @@ vi:
         posted: "Đăng bởi"
         edited: "Bài viết của bạn được sửa bởi"
         liked: "Bạn đã like bài viết"
-        private_message: "Tin nhắn riêng từ"
-        invited_to_private_message: "Lời mời thảo luận riêng từ"
         invited_to_topic: "Lời mời tham gia chủ đề từ"
         invitee_accepted: "Lời mời được chấp nhận bởi"
         moved_post: "Bài viết của bạn đã được di chuyển bởi"
@@ -1053,7 +1049,6 @@ vi:
         quoted: '{{username}} trích lời bạn trong "{{topic}}" - {{site_title}}'
         replied: '{{username}} trả lời cho bạn trong "{{topic}}" - {{site_title}}'
         posted: '{{username}} gửi bài trong "{{topic}}" - {{site_title}}'
-        private_message: '{{username}} đã gửi cho bạn một tin nhắn trong "{{topic}}" - {{site_title}}'
         linked: '{{username}} liên quan đến bài viết của bạn từ "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Thêm một ảnh"
@@ -1834,7 +1829,6 @@ vi:
       title: Huy hiệu
       badge_count:
         other: "%{count} huy hiệu"
-      none: "(none)"
       badge_grouping:
         getting_started:
           name: Bắt đầu
@@ -1931,7 +1925,6 @@ vi:
         title: "Gắn cờ"
         agree: "Đồng ý"
         agree_title: "Xác nhận đánh dấu này hợp lệ và chính xác"
-        defer_flag_title: "Xóa cờ này; nó yêu cầu không có hành động nào vào thời điểm này."
         delete: "Xóa"
         delete_title: "Xóa bài viết đánh dấu này đề cập đến."
         delete_post_defer_flag_title: "Xóa bài viết; nếu là bài viết đầu tiên, xóa chủ đề này"
@@ -2038,7 +2031,6 @@ vi:
           label: "Tải lên"
           title: "Tải lên bản sao lưu cho phiên bản này"
           uploading: "Đang tải lên..."
-          success: "'{{filename}}' đã tải lên thành công."
           error: "Có lõi trong quá trình tải lên '{{filename}}': {{message}}"
         operations:
           is_running: "Tác vụ đang chạy..."

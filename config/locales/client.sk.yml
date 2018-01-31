@@ -51,6 +51,10 @@ sk:
           one: "1s"
           few: "1s"
           other: "%{count}s"
+        less_than_x_minutes:
+          one: "< 1m"
+          few: "< 1m"
+          other: "< %{count}m"
         x_minutes:
           one: "1m"
           few: "%{count}m"
@@ -160,17 +164,22 @@ sk:
     emails_are_disabled: "Odosielanie emailov bolo globálne vypnuté administrátorom. Žiadne emailové notifikácie nebudú odoslané."
     bootstrap_mode_enabled: "Pre zjednodušenie spustenia Vašej novej stránky sa nachádzate v zavádzacom režime. Všetci noví používatelia budú mať pridelený stupeň dôvery 1 a budú mať zapnutý denný emailový výber aktualít. Toto bude automaticky vypnuté keď celkový počet používateľov presiahne %{min_users}."
     bootstrap_mode_disabled: "Zavádzací režim bude zrušený v priebehu nasledujúcich 24 hodín."
+    themes:
+      default_description: "Predvolené"
     s3:
       regions:
         ap_northeast_1: "Ázia Tichomorie (Tokio)"
         ap_northeast_2: "Asia Pacific (Soul)"
+        ap_south_1: "Asia Pacific (Mumbai)"
         ap_southeast_1: "Ázia Tichomorie (Singapur)"
         ap_southeast_2: "Ázia Tichomorie (Sydney)"
         cn_north_1: "Čína (Peking)"
         eu_central_1: "EU (Frankfurt)"
         eu_west_1: "EU (Írsko)"
+        eu_west_2: "EU (Londýn)"
         sa_east_1: "Južná Amerika (Sao Paulo)"
         us_east_1: "USA Východ (S. Virginia)"
+        us_east_2: "USA Východ (Ohio)"
         us_gov_west_1: "AWS GovCloud (USA)"
         us_west_1: "USA Západ (S. Kalifornia)"
         us_west_2: "USA Západ (Oregon)"
@@ -274,6 +283,7 @@ sk:
     uploading: "Upload prebieha..."
     uploading_filename: "Nahrávám {{filename}}..."
     uploaded: "Upload úspešne dokončený."
+    pasting: "Vkladám..."
     enable: "Zapnúť"
     disable: "Vypnúť"
     undo: "Späť"
@@ -370,6 +380,9 @@ sk:
         full_name: 'Celé meno'
         add_members: "Pridať používateľov"
       add: "Pridať"
+      join: "Pridať sa do skupiny"
+      leave: "Opustiť skupinu"
+      request: "Požiadať o pridanie do skupiny"
       closed_group: Uzavretá skupina
       membership: "Členstvo"
       name: "Meno"
@@ -380,6 +393,10 @@ sk:
       index:
         title: "Skupiny"
         empty: "Nenašli sa viditeľné skupiny."
+      title:
+        one: "Skupina"
+        few: "Skupiny"
+        other: "Skupiny"
       activity: "Aktivita"
       members: "Členovia"
       topics: "Témy"
@@ -426,7 +443,6 @@ sk:
       '14': "Čakajúce správy"
     categories:
       all: "všetky kategórie"
-      all_subcategories: "všetky"
       no_subcategory: "žiadne"
       category: "Kategória"
       category_list: "Zobraziť zoznam kategórií"
@@ -475,6 +491,7 @@ sk:
       mute: "Ignorovať"
       edit: "Upraviť nastavenia"
       download_archive:
+        button_text: "Stiahnuť všetko"
         confirm: "Si si istý, že si chceš uložiť svoje príspevky na disk?"
         success: "Sťahovanie bolo spustené, o jeho ukončení budeš informovaný správou."
         rate_limit_error: "Príspevky možu byť stiahnuté len raz za deň. Skús opäť zajtra prosím."
@@ -499,6 +516,7 @@ sk:
         disable: "Zakázať upozornenia"
         enable: "Povoliť upozornenia"
         each_browser_note: "Poznámka: Toto nastavenie musíte zmeniť v každom používanom prehliadači."
+      dismiss: 'Zahodiť'
       dismiss_notifications: "Zahodiť všetko"
       dismiss_notifications_tooltip: "Označiť všetky neprečítané upozornenia ako prečítané"
       disable_jump_reply: "Neskočiť na môj príspevok po odpovedi"
@@ -700,7 +718,6 @@ sk:
         title: "Pozvánky"
         user: "Pozvaný používateľ"
         sent: "Odoslané"
-        none: "Nemáte žiadne čakajúce pozvánky."
         truncated:
           one: "Zobrazuje sa prvá pozvánka."
           few: "Zobrazujú sa prvé {{count}} pozvánky."
@@ -1030,8 +1047,6 @@ sk:
         posted: "Príspevok od"
         edited: "Upravte Váš príspevok do"
         liked: "Váš príspevok sa páčil"
-        private_message: "Súkromná správa od"
-        invited_to_private_message: "Pozvaný na súkromné správy od"
         invited_to_topic: "Pozvaný k téme od"
         invitee_accepted: "Pozvánka akceptovaná "
         moved_post: "Váš príspevok bol presunutý "
@@ -1044,7 +1059,6 @@ sk:
         quoted: '{{username}} vás citoval v "{{topic}}" - {{site_title}}'
         replied: '{{username}} vám odpovedal v "{{topic}}" - {{site_title}}'
         posted: '{{username}} prispel v "{{topic}}" - {{site_title}}'
-        private_message: '{{username}} vám poslal súkromnú správu v "{{topic}}" - {{site_title}}'
         linked: '{{username}} odkázal na váš príspevok z "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Pridať obrázok"
@@ -1286,7 +1300,6 @@ sk:
         visible: "Zobraziť"
         reset_read: "Zrušiť načítané údaje"
         make_public: "Spraviť verejnou témou"
-        make_private: "Spraviť súkromnou správou"
       feature:
         pin: "Pripni tému"
         unpin: "Odopni tému"
@@ -1915,7 +1928,6 @@ sk:
         one: "1 udelený"
         few: "%{count} udelené"
         other: "%{count} udelených"
-      none: "(žiadne)"
       badge_grouping:
         getting_started:
           name: Začíname
@@ -2050,7 +2062,6 @@ sk:
         title: "Označenia"
         agree: "Súhlasiť"
         agree_title: "Akceptovať toto označenie ako platné a správne"
-        defer_flag_title: "Zrušíť označenie. Žiadna akcia nie je nateraz potrebná."
         delete: "Odstrániť"
         delete_title: "Zmazať príspevok na ktorý označenie odkazuje ."
         delete_post_defer_flag_title: "Zmazať prípspevok; ak ide o prvý príspevok, zmazať aj tému"
@@ -2157,7 +2168,6 @@ sk:
           label: "Upload"
           title: "Nahrať zálohu do tejto inštancie"
           uploading: "Upload prebieha..."
-          success: "'{{filename}}' bol úspešne nahratý."
           error: "Počas nahrávania '{{filename}}' nastala chyba: {{message}}"
         operations:
           is_running: "Operácia práve prebieha..."

@@ -27,13 +27,13 @@ ca:
         millions: "{{number}}M"
     dates:
       time: "h:mm a"
-      timeline_date: "MMM AAAA"
+      timeline_date: "MMM YYYY"
       long_no_year: "MMM D h:mm a"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
-      long_with_year: "MMM D, AAAA h:mm a"
-      long_with_year_no_time: "MMM D, AAAA"
-      full_with_year_no_time: "MMMM Do, AAAA"
+      long_with_year: "MMM D, YYYY h:mm a"
+      long_with_year_no_time: "MMM D, YYYY"
+      full_with_year_no_time: "MMMM Do, YYYY"
       long_date_with_year: "MMM D, 'YY LT"
       long_date_without_year: "MMM D, LT"
       long_date_with_year_without_time: "MMM D, 'YY"
@@ -73,7 +73,7 @@ ca:
           one: "1a"
           other: "%{count}a"
         date_month: "MMM D"
-        date_year: "MMM 'AA"
+        date_year: "MMM 'YY"
       medium:
         x_minutes:
           one: "1 min"
@@ -84,7 +84,7 @@ ca:
         x_days:
           one: "1 dia"
           other: "%{count} dies"
-        date_year: "MMM D, 'AA"
+        date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
           one: "fa 1 min"
@@ -445,7 +445,6 @@ ca:
       '14': "Pendents"
     categories:
       all: "totes les categories"
-      all_subcategories: "tot"
       no_subcategory: "cap"
       category: "Categoria"
       category_list: "Mostra la llista de categories"
@@ -737,7 +736,6 @@ ca:
         title: "Invitacions"
         user: "Persona usuària convidada"
         sent: "Enviat"
-        none: "No hi ha invitacions pendents per mostrar"
         truncated:
           one: "Mostrant la primera invitació."
           other: "Mostrant les primeres {{count}} invitacions."
@@ -1106,8 +1104,6 @@ ca:
         posted: "Publicat per"
         edited: "Edita la teva publicació per"
         liked: "Ha agradat la teva publicació"
-        private_message: "Missatge privat de"
-        invited_to_private_message: "Ha convidat a un missatge privat de"
         invited_to_topic: "Ha convidat a un tema de"
         invitee_accepted: "Invitació acceptada per"
         moved_post: "La teva publicació ha estat moguda per"
@@ -1120,7 +1116,6 @@ ca:
         quoted: '{{username}} t''ha citat a "{{topic}}" - {{site_title}}'
         replied: '{{username}} t''ha respost a "{{topic}}" - {{site_title}}'
         posted: '{{username}} publicat a "{{topic}}" - {{site_title}}'
-        private_message: '{{username}} t''ha enviat un missatge privat a "{{topic}}" - {{site_title}}'
         linked: 'A {{username}} li ha agradat la teva publicació de "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Afegeix una imatge"
@@ -1306,6 +1301,11 @@ ca:
       jump_reply_up: salta a la resposta anterior
       jump_reply_down: salta a la darrera resposta
       deleted: "El tema ha estat esborrat"
+      auto_update_input:
+        next_month: "El mes següent"
+        three_months: "Tres mesos"
+        six_months: "Sis mesos"
+        one_year: "Un any"
       auto_close_title: 'Configuració del tancament automàtic'
       auto_close_immediate:
         one: "La darrera publicació al tema ja té 1 hora, per això el tema es tancarà immediatament."
@@ -1379,7 +1379,6 @@ ca:
         visible: "Fes llistats"
         reset_read: "Reinicia la lectura de dades"
         make_public: "Fes públic el tema"
-        make_private: "Fes un missatge privat"
       feature:
         pin: "Clava tema"
         unpin: "Desclava tema"
@@ -2021,7 +2020,6 @@ ca:
         one: "1 concedit"
         other: "%{count} concedits"
       select_badge_for_title: Tria un distintiu per fer-lo servir com al teu títol
-      none: "(none)"
       badge_grouping:
         getting_started:
           name: Començant
@@ -2177,7 +2175,6 @@ ca:
         title: "Avisos"
         agree: "D'acord"
         agree_title: "Confirma aquesta bandera com a vàlida i correcta"
-        defer_flag_title: "Esborra aquesta bandera; no necessita cap acció hores d'ara."
         delete: "Esborra"
         delete_title: "Esborra la publicació a la qual es refereix aquesta bandera."
         delete_post_defer_flag_title: "Esborra la publicació; si és la primera publicació, esborra el tema"
@@ -2352,7 +2349,6 @@ ca:
           label: "Carrega"
           title: "Carrega una còpia de seguretat a aquesta instància"
           uploading: "Carregant..."
-          success: "S'ha carregat '{{filename}}' amb èxit."
           error: "S'ha produït un error en carregar '{{filename}}': {{message}}"
         operations:
           is_running: "Ara hi ha una operació en marxa..."

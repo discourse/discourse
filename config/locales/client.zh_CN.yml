@@ -431,7 +431,6 @@ zh_CN:
       '14': "待定"
     categories:
       all: "所有分类"
-      all_subcategories: "全部"
       no_subcategory: "无"
       category: "分类"
       category_list: "显示分类列表"
@@ -509,7 +508,6 @@ zh_CN:
       disable_jump_reply: "回复后不跳转至新帖子"
       dynamic_favicon: "在浏览器图标中显示主题更新数量"
       theme_default_on_all_devices: "将其设为我所有设备上的默认主题"
-      allow_private_messages: "允许其他用户发送私信给我"
       external_links_in_new_tab: "在新标签页打开外部链接"
       enable_quoting: "在选择文字时显示引用回复按钮"
       change: "修改"
@@ -732,7 +730,6 @@ zh_CN:
         title: "邀请"
         user: "邀请用户"
         sent: "已发送"
-        none: "没有未接受状态的邀请。"
         truncated:
           other: "只显示前 {{count}} 个邀请。"
         redeemed: "确认邀请"
@@ -1160,8 +1157,6 @@ zh_CN:
         posted: "发自"
         edited: "编辑你的帖子"
         liked: "赞了你的帖子"
-        private_message: "私信来自"
-        invited_to_private_message: "私信邀请自"
         invited_to_topic: "主题邀请自"
         invitee_accepted: "介绍邀请自"
         moved_post: "你的帖子被移动自"
@@ -1175,7 +1170,6 @@ zh_CN:
         quoted: '{{username}}在“{{topic}}”引用了你的帖子 - {{site_title}}'
         replied: '{{username}}在“{{topic}}”回复了你 - {{site_title}}'
         posted: '{{username}}在“{{topic}}”中发布了帖子 - {{site_title}}'
-        private_message: '{{username}}在“{{topic}}”中给你发送了一个私信 - {{site_title}}'
         linked: '{{username}}在“{{topic}}”中链接了你的帖子 - {{site_title}}'
     upload_selector:
       title: "插入图片"
@@ -1500,7 +1494,6 @@ zh_CN:
         visible: "取消隐藏主题"
         reset_read: "重置阅读数据"
         make_public: "设置为公共主题"
-        make_private: "设置为私信"
       feature:
         pin: "置顶主题"
         unpin: "取消置顶主题"
@@ -2142,7 +2135,6 @@ zh_CN:
       granted:
         other: "%{count} 授予"
       select_badge_for_title: 选择一个徽章作为你的头衔使用
-      none: "(none)"
       badge_grouping:
         getting_started:
           name: 开始
@@ -2313,8 +2305,6 @@ zh_CN:
         agree_flag_restore_post_title: "恢复帖子为所有用户可见。"
         agree_flag: "确认并保持帖子"
         agree_flag_title: "确认标记并保持帖子不变。"
-        defer_flag: "忽略"
-        defer_flag_title: "移除标记；这次不处理。"
         delete: "删除"
         delete_title: "删除标记指向的帖子。"
         delete_post_defer_flag: "删除帖子并忽略标记"
@@ -2511,7 +2501,6 @@ zh_CN:
           label: "上传"
           title: "上传备份至实例"
           uploading: "上传中..."
-          success: "“{{filename}}”已成功上传。"
           error: "上传“{{filename}}”时出错：{{message}}"
         operations:
           is_running: "已有操作正在执行"

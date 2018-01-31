@@ -460,7 +460,6 @@ fr:
       '14': "En attente"
     categories:
       all: "toutes les catégories"
-      all_subcategories: "toutes dans %{categoryName}"
       no_subcategory: "aucune"
       category: "Catégorie"
       category_list: "Afficher la liste des catégories"
@@ -540,7 +539,6 @@ fr:
       disable_jump_reply: "Ne pas aller à mon nouveau message après avoir répondu"
       dynamic_favicon: "Faire apparaître le nombre de sujets récemment créés ou mis à jour sur l'icône navigateur"
       theme_default_on_all_devices: "En faire mon thème par défaut sur tous mes périphériques"
-      allow_private_messages: "Autoriser les autres utilisateurs à m'envoyer des messages privés"
       external_links_in_new_tab: "Ouvrir tous les liens externes dans un nouvel onglet"
       enable_quoting: "Proposer de citer le texte sélectionné"
       change: "modifier"
@@ -764,7 +762,6 @@ fr:
         title: "Invitations"
         user: "Utilisateurs"
         sent: "Envoyé"
-        none: "Il n'y a pas d'invitations en attente à afficher."
         truncated:
           one: "Afficher la première invitation."
           other: "Afficher les {{count}} premières invitations."
@@ -1209,8 +1206,6 @@ fr:
         posted: "Message par"
         edited: "Modifier votre message par"
         liked: "A aimé votre message"
-        private_message: "Message privé de"
-        invited_to_private_message: "Invité pour un message privé par"
         invited_to_topic: "Invité à un sujet par"
         invitee_accepted: "Invitation acceptée par"
         moved_post: "Votre message a été déplacé par"
@@ -1224,7 +1219,6 @@ fr:
         quoted: '{{username}} vous a cité dans « {{topic}} » - {{site_title}}'
         replied: '{{username}} vous a répondu dans « {{topic}} » - {{site_title}}'
         posted: '{{username}} a posté dans « {{topic}} » - {{site_title}}'
-        private_message: '{{username}} vous a envoyé un message privé dans « {{topic}} » - {{site_title}}'
         linked: '{{username}} a créé un lien vers votre message posté dans « {{topic}} » - {{site_title}}'
     upload_selector:
       title: "Ajouter une image"
@@ -1561,7 +1555,6 @@ fr:
         visible: "Rendre visible"
         reset_read: "Réinitialiser les données de lecture"
         make_public: "Rendre le sujet public"
-        make_private: "Rendre le sujet privé"
       feature:
         pin: "Épingler le sujet"
         unpin: "Désépingler le sujet"
@@ -2271,7 +2264,6 @@ fr:
         one: "1 décerné"
         other: "%{count} décernés"
       select_badge_for_title: Sélectionner un badge comme titre
-      none: "(aucun)"
       badge_grouping:
         getting_started:
           name: Initiation
@@ -2443,8 +2435,6 @@ fr:
         agree_flag_restore_post_title: "Rétablir le message afin que tous les utilisateurs puissent le voir."
         agree_flag: "Accepter et conserver le message"
         agree_flag_title: "Accepter le signalement et conserver le message tel quel."
-        defer_flag: "Ignorer"
-        defer_flag_title: "Retirer le signalement ; il ne nécessite aucune action pour le moment."
         delete: "Supprimer"
         delete_title: "Supprimer le message signalé."
         delete_post_defer_flag: "Supprimer le message et ignorer le signalement"
@@ -2644,7 +2634,6 @@ fr:
           label: "Envoyer"
           title: "Envoyer une sauvegarde à cette instance"
           uploading: "Envoi en cours…"
-          success: "« {{filename}} » a été envoyé avec succès."
           error: "Il y a eu une erreur lors de l'envoi de « {{filename}} » : {{message}}"
         operations:
           is_running: "Une opération est en cours d'exécution…"
@@ -3000,7 +2989,7 @@ fr:
             text: "Consolider"
             title: "Créer de nouvelles plages de sous réseaux à bannir s'il y a au moins 'min_ban_entries_for_roll_up' entrées."
         search_logs:
-          title: "Rechercher dans les journaux"
+          title: "Journaux de recherche"
           term: "Terme"
           searches: "Recherches"
           click_through: "Taux de clics"
