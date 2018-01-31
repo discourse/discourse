@@ -438,7 +438,6 @@ pt:
       '14': "Pendente"
     categories:
       all: "todas as categorias"
-      all_subcategories: "todas"
       no_subcategory: "nenhuma"
       category: "Categoria"
       category_list: "Exibir lista de categorias"
@@ -733,7 +732,6 @@ pt:
         title: "Convites"
         user: "Utilizadores Convidados"
         sent: "Enviado"
-        none: "Não há convites pendentes para mostrar."
         truncated:
           one: "A exibir o primeiro convite."
           other: "A exibir os primeiros {{count}} convites."
@@ -1107,8 +1105,6 @@ pt:
         posted: "Publicado por"
         edited: "Edição da sua publicação por"
         liked: "Gostou da sua publicação"
-        private_message: "Mensagem privada de"
-        invited_to_private_message: "Convidado para uma mensagem privada de"
         invited_to_topic: "Convidado para um tópico de"
         invitee_accepted: "Convite aceite por"
         moved_post: "A sua publicação foi movida por"
@@ -1121,7 +1117,6 @@ pt:
         quoted: '{{username}} citou-o em "{{topic}}" - {{site_title}}'
         replied: '{{username}} respondeu-lhe em "{{topic}}" - {{site_title}}'
         posted: '{{username}} publicou em "{{topic}}" - {{site_title}}'
-        private_message: '{{username}} enviou-lhe uma mensagem privada em "{{topic}}" - {{site_title}}'
         linked: '{{username}} ligou à sua publicação de "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Adicionar uma imagem"
@@ -1394,7 +1389,6 @@ pt:
         visible: "Tornar Listado"
         reset_read: "Repor Data de Leitura"
         make_public: "Criar tópico publico"
-        make_private: "Criar mensagem privada"
       feature:
         pin: "Fixar Tópico"
         unpin: "Desafixar Tópico"
@@ -2024,7 +2018,6 @@ pt:
         one: "1 concedido"
         other: "%{count} concedidos"
       select_badge_for_title: Selecionar um distintivo para usar como seu título
-      none: "(none)"
       badge_grouping:
         getting_started:
           name: Começar
@@ -2178,7 +2171,6 @@ pt:
         title: "Denúncias"
         agree: "Aceitar"
         agree_title: "Confirmar esta denúncia como válida e correta"
-        defer_flag_title: "Remover esta denúncia; não requer qualquer ação de momento."
         delete: "Eliminar"
         delete_title: "Eliminar a publicação associada a esta denúncia."
         delete_post_defer_flag_title: "Eliminar publicação; se é a primeira do tópico então eliminar o tópico"
@@ -2352,7 +2344,6 @@ pt:
           label: "Carregar"
           title: "Carregar uma cópia de segurança para esta instância"
           uploading: "A carregar…"
-          success: "'{{filename}}' foi carregado com sucesso."
           error: "Verificou-se um erro no carregamento de '{{filename}}': {{message}}"
         operations:
           is_running: "Existe atualmente uma operação em execução..."

@@ -174,6 +174,7 @@ da:
   user_is_suspended: "Suspenderede brugere tilllades ikke at oprette indlæg."
   topic_not_found: "Der er gået noget galt. Måske er emnet blevet lukket eller slettet mens du kiggede på det?"
   not_accepting_pms: "Beklager, %{username} tager ikke imod beskeder i øjeblikket."
+  max_pm_recepients: "Du kan desværre kun sende til %{recipients_limit} modtagere."
   just_posted_that: "ligner et andet indlæg, som du har skrevet for nyligt, for meget"
   invalid_characters: "indeholder ugyldige tegn"
   is_invalid: "lader til at være uklart - er det en komplet sætning?"
@@ -200,7 +201,7 @@ da:
     top_weekly: "Top-emner per uge"
     top_daily: "Top-emner per dag"
     posts: "Seneste indlæg"
-    private_posts: "Seneste private beskeder"
+    private_posts: "Seneste personlige beskeder"
     group_posts: "Seneste indlæg fra %{group_name}"
     group_mentions: "Seneste nævnelser fra %{group_name}"
     user_posts: "Seneste indlæg af @%{username}"
@@ -292,12 +293,6 @@ da:
       Beklager, men nye brugere er begrænset til %{newuser_max_replies_per_topic} svar inden for samme emne.
 
       I stedet for at tilføje endnu et svar, bør du overveje at redigere et af dine eksisterende svar eller at besøge andre emner.
-    reviving_old_topic: |
-      ### Genopliv dette emne?
-
-      Det seneste svar på dette emne er nu over **%{days}** gammelt. Dit svar vil trække dette emne til toppen af listen og vil påminde alle der tidligere have været med i samtalen.
-
-      Er du sikker på du vil vække dette emne til live igen?
   activerecord:
     attributes:
       category:
@@ -314,10 +309,9 @@ da:
         topic:
           attributes:
             base:
-              warning_requires_pm: "Du kan kun vedhæfte advarsler til private beskeder."
               too_many_users: "Du kan kun sende advarsler til en bruger ad gangen."
-              cant_send_pm: "Beklager, du kan ikke sende en privat besked til den bruger."
               no_user_selected: "Du skal vælge en gyldig bruger."
+              reply_by_email_disabled: "Svar via email er slået fra"
             featured_link:
               invalid: "er ugyldig. URL'en skal indeholde http:// eller https://. "
               invalid_category: "kan ikke redigeres i denne kategori."
@@ -821,7 +815,6 @@ da:
     censored_words: "Ord der automatisk vil blive erstattet med &#9632;&#9632;&#9632;&#9632;"
     censored_pattern: "Regex-mønster som automatisk vil blive erstattet med &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Slet automatisk skjulte indlæg der forbliver skjulte i mere end 30 dage."
-    default_locale: "Standardsproget for denne Discourse-instans (ISO 639-1 kode)."
     allow_user_locale: "Tillad brugere at vælge egne sprog præferencer på site"
     set_locale_from_accept_language_header: "set interface language for anonymous users from their web browser's language headers. (EXPERIMENTAL, does not work with anonymous cache)"
     min_post_length: "Minimumlængde tilladt for indlæg i tegn"
@@ -1609,7 +1602,6 @@ da:
         Dette emblem gives første gang du svarer til et indlæg via email  :e-mail:.
   admin_login:
     success: "Email sendt"
-    error: "Fejl!"
     email_input: "Admin email"
     submit_button: "Send email"
   performance_report:

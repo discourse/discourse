@@ -420,7 +420,6 @@ tr_TR:
       '14': "Bekleyen"
     categories:
       all: "tüm kategoriler"
-      all_subcategories: "hepsi"
       no_subcategory: "hiçbiri"
       category: "Kategori"
       category_list: "Kategori listesini göster"
@@ -497,7 +496,6 @@ tr_TR:
       disable_jump_reply: "Cevapladıktan sonra gönderime atlama"
       dynamic_favicon: "Tarayıcı simgesinde yeni / güncellenen konu sayısını göster"
       theme_default_on_all_devices: "Seçilen temayı bütün cihazlarımda varsayılan yap"
-      allow_private_messages: "Diğer kullanıcıların bana özel mesaj göndermelerine izin ver"
       external_links_in_new_tab: "Tüm dış bağlantıları yeni sekmede aç"
       enable_quoting: "Vurgulanan yazıyı alıntılayarak cevaplama özelliğini etkinleştir"
       change: "değiştir"
@@ -718,7 +716,6 @@ tr_TR:
         title: "Davetler"
         user: "Davet Edilen Kullanıcı"
         sent: "Gönderildi"
-        none: "Bekleyen davet yok."
         truncated:
           other: "İlk {{count}} davet gösteriliyor."
         redeemed: "Kabul Edilen Davetler"
@@ -1102,8 +1099,6 @@ tr_TR:
         posted: "Gönderildi, şu kişi tarafından"
         edited: "Gönderiniz düzenlendi, şu kişi tarafından"
         liked: "Gönderiniz beğenildi"
-        private_message: "Özel ileti, şu kişiden"
-        invited_to_private_message: "Şu kişi tarafından özel iletiyle davet edildiniz"
         invited_to_topic: "Bir konuya davet edildiniz, şu kişi tarafından"
         invitee_accepted: "Davet kabul edildi, şu kişi tarafından"
         moved_post: "Gönderiniz taşındı, şu kişi tarafından"
@@ -1116,7 +1111,6 @@ tr_TR:
         quoted: '{{username}}, "{{topic}}" başlıklı konuda sizden alıntı yaptı - {{site_title}}'
         replied: '{{username}}, "{{topic}}" başlıklı konuda size cevap verdi - {{site_title}}'
         posted: '{{username}}, "{{topic}}" başlıklı konuya yazdı - {{site_title}}'
-        private_message: '{{username}}, "{{topic}}" başlıklı konuda size özel ileti gönderdi - {{site_title}}'
         linked: '{{username}}, "{{topic}}" başlıklı konudaki gönderinize bağlantı yaptı - {{site_title}}'
     upload_selector:
       title: "Resim ekle"
@@ -1388,7 +1382,6 @@ tr_TR:
         visible: "Görünür Yap"
         reset_read: "Görüntüleme Verilerini Sıfırla"
         make_public: "Herkese Açık Konu Yap"
-        make_private: "Özel İleti Oluştur"
       feature:
         pin: "Başa Tuttur"
         unpin: "Baştan Kaldır"
@@ -1986,7 +1979,6 @@ tr_TR:
       granted:
         other: "%{count} izin verildi"
       select_badge_for_title: Başlık yazısı olarak kullanılacak bir rozet seçin
-      none: "(none)"
       badge_grouping:
         getting_started:
           name: Başlangıç
@@ -2142,8 +2134,6 @@ tr_TR:
         title: "Bildirilenler"
         agree: "Onayla"
         agree_title: "Bu bildirimi geçerli ve doğru olarak onayla"
-        defer_flag: "Yoksay"
-        defer_flag_title: "Bu bildirimi kaldır; şu an için bir şey yapmak gerekmiyor."
         delete: "Sil"
         delete_title: "Bu bildirimin ait olduğu gönderiyi sil."
         delete_post_defer_flag_title: "Gönderiyi sil; başka gönderi yoksa, konuyu da sil."
@@ -2328,7 +2318,6 @@ tr_TR:
           label: "Yedek Yükle"
           title: "Bu oluşuma bir yedek yükle"
           uploading: "Yükleniyor..."
-          success: "'{{filename}}' başarıyla yüklendi."
           error: "'{{filename}}': {{message}} yüklenirken bir hata oluştu"
         operations:
           is_running: "İşlem devam ediyor..."

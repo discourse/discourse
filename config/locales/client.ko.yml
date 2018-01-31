@@ -428,7 +428,6 @@ ko:
       '14': "대기"
     categories:
       all: "전체 카테고리"
-      all_subcategories: "모든 하위 카테고리"
       no_subcategory: "없음"
       category: "카테고리"
       category_list: "카테고리 목록 표시"
@@ -506,7 +505,6 @@ ko:
       disable_jump_reply: "댓글을 작성했을 때, 새로 작성한 댓글로 화면을 이동하지 않습니다."
       dynamic_favicon: "새 글이나 업데이트된 글 수를 브라우저 아이콘에 보이기"
       theme_default_on_all_devices: "이 테마를 모든 기기의 기본 테마로 설정합니다."
-      allow_private_messages: "다른 사용자가 개인 메시지를 보내도록 허용합니다."
       external_links_in_new_tab: "모든 외부 링크를 새 탭에 열기"
       enable_quoting: "강조 표시된 텍스트에 대한 알림을 사용합니다"
       change: "변경"
@@ -728,7 +726,6 @@ ko:
         title: "초대"
         user: "사용자 초대"
         sent: "보냄"
-        none: "승인을 기다리는 초대가 더이상 없습니다."
         truncated:
           other: "앞 {{count}}개의 초대를 보여줍니다."
         redeemed: "초대를 받았습니다."
@@ -1139,8 +1136,6 @@ ko:
         posted: "포스트 by"
         edited: "당신 글이 다음 이용자에 의해 수정"
         liked: "당신의 글을 좋아했음."
-        private_message: "다음 사람에게서온 개인 메시지"
-        invited_to_private_message: "다음 사람으로부터 개인 메시지가 초대됨"
         invited_to_topic: "다음 사람으로부터 한 주제로 초대됨"
         invitee_accepted: "다음 사람에 의해 초대가 수락됨."
         moved_post: "다음 사람에 의해서 당신의 글이 이동됨"
@@ -1153,7 +1148,6 @@ ko:
         quoted: '"{{topic}}" - {{site_title}}에서 {{username}} 님이 나를 인용했습니다'
         replied: '"{{topic}}" - {{site_title}}에서 {{username}} 님이 내게 답글을 달았습니다'
         posted: '"{{topic}}" - {{site_title}}에서 {{username}}님이 글을 게시하였습니다'
-        private_message: '{{username}}가 비공개 메시지를 "{{topic}}" - {{site_title}} 에 작성했습니다'
         linked: '{{username}}님이  "{{topic}}" - {{site_title}}에 내 글을 링크했습니다'
     upload_selector:
       title: "이미지 추가하기"
@@ -1463,7 +1457,6 @@ ko:
         visible: "목록에 넣기"
         reset_read: "값 재설정"
         make_public: "공개 토픽으로 만들기"
-        make_private: "비공개 메시지 만들기"
       feature:
         pin: "주제 고정"
         unpin: "주제 고정 취소"
@@ -2091,7 +2084,6 @@ ko:
       granted:
         other: "%{count}개 수여됨"
       select_badge_for_title: 타이틀로 사용할 배지 선택하기
-      none: "(none)"
       badge_grouping:
         getting_started:
           name: 시작하기
@@ -2253,7 +2245,6 @@ ko:
         topics: "신고된 토픽"
         agree: "동의"
         agree_title: "이 신고가 올바르고 타당함을 확인합니다"
-        defer_flag_title: "신고 제거하기. 별도추가조치는 더이상 필요없습니다"
         delete: "삭제"
         delete_title: "신고에서 멘션된 글 삭제하기"
         delete_post_defer_flag_title: "글을 삭제하고 첫번째 글이면 주제 삭제하기"
@@ -2446,7 +2437,6 @@ ko:
           label: "업로드"
           title: "백업을 업로드"
           uploading: "업로드 중..."
-          success: "'{{filename}}' 파일이 성공적으로 업로드 되었습니다."
           error: "'{{filename}}' 파일 업로드중 에러가 발생하였습니다. ({{message}})"
         operations:
           is_running: "실행 중입니다."

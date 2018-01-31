@@ -128,7 +128,6 @@ gl:
         topic:
           attributes:
             base:
-              warning_requires_pm: "Só podes anexar avisos a mensaxes privadas."
               no_user_selected: "Debes seleccionar un usuario correcto."
         user:
           attributes:
@@ -386,7 +385,6 @@ gl:
       yaxis: "Número de visitas"
   site_settings:
     delete_old_hidden_posts: "Eliminar automaticamente as publicacións ocultas durante máis de 30 días."
-    default_locale: "Idioma predeterminado desta instancia (código ISO 639-1)"
     allow_user_locale: "Permitir os usuarios escoller o idioma da interface"
     min_post_length: "Número mínimo de caracteres permitido para unha publicación"
     min_first_post_length: "Número mínimo de caracteres (corpo do tema) permitido para unha primeira publicación"
@@ -447,7 +445,6 @@ gl:
   privacy_topic:
     title: "Política de intimidade"
   admin_login:
-    error: "Erro!"
     submit_button: "Enviar correo-e"
   time:
     <<: *datetime_formats

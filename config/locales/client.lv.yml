@@ -467,7 +467,6 @@ lv:
       '14': "Gaida apstiprinājumu"
     categories:
       all: "visas sadaļas"
-      all_subcategories: "viss"
       no_subcategory: "nekas"
       category: "Sadaļa"
       category_list: "Parādīt sadaļu sarakstu"
@@ -765,7 +764,6 @@ lv:
         title: "Ielūgumi"
         user: "Ielūgtie lietotāji"
         sent: "Nosūtīts"
-        none: "Ielūgumu, kas gaidītu apstiprinājumu, nav."
         truncated:
           zero: "Nav ielūgumu."
           one: "Pirmais ielūgums."
@@ -1163,8 +1161,6 @@ lv:
         posted: "Ieraksts"
         edited: "Korektētēja"
         liked: "Pauda atzinību jūsu ierakstam"
-        private_message: "Privāta ziņa no"
-        invited_to_private_message: "Ielūgums uz privāto ziņu no"
         invited_to_topic: "Ielūgums uz tēmu no"
         invitee_accepted: "Ielūgumu pieņēma "
         moved_post: "Jūsu ierakstu pārvietoja"
@@ -1177,7 +1173,6 @@ lv:
         quoted: '{{username}} citēja jūs "{{topic}}" - {{site_title}}'
         replied: '{{username}} atbildēja jums "{{topic}}" - {{site_title}}'
         posted: '{{username}} ierakstīja "{{topic}}" - {{site_title}}'
-        private_message: '{{username}} nosūtīja jums privātu ziņu "{{topic}}" - {{site_title}}'
         linked: '{{username}} ievietoja saiti uz jūsu ierakstu no "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Pievienot attēlu"
@@ -1493,7 +1488,6 @@ lv:
         visible: "Atgriezt tēmu sarakstos"
         reset_read: "Atstatīt visu kā nelasītu"
         make_public: "Izveidot publisku tēmu"
-        make_private: "Izveidot privātu ziņu"
       feature:
         pin: "Piespraust tēmu"
         unpin: "Atspraust tēmu"
@@ -2199,7 +2193,6 @@ lv:
         one: "1 piešķirts"
         other: "%{count} piešķirti"
       select_badge_for_title: Izvēlieties žetonu, ko lietot kā jūsu titulu
-      none: "(none)"
       badge_grouping:
         getting_started:
           name: Uzsākt darbu
@@ -2354,7 +2347,6 @@ lv:
         title: "Sūdzības"
         agree: "Piekrist"
         agree_title: "Apstiprināt šo ziņojumu kā pamatotu un korektu"
-        defer_flag_title: "Dzēst šo sūdzību; šoreiz nav jāveic nekādas darbības."
         delete: "Dzēst"
         delete_title: "Dzēst ierakstu, par ko ir šī sūdzība."
         delete_post_defer_flag_title: "Dzēst ierakstu; ja tas ir tēmas pirmais ieraksts, dzēst arī tēmu"
@@ -2515,7 +2507,6 @@ lv:
           label: "Augšupielādēt"
           title: "Augšupielādēt rezerves kopiju uz šo instanci"
           uploading: "Augšupielādē..."
-          success: "'{{filename}}' ir veiksmīgi augšupielādēts."
           error: "Augšupielādējot '{{filename}}', notika kļūda: {{message}}"
         operations:
           failed: "{{operation}} neizdevās. Lūdzu pārbaudīt žurnāla ierakstus."

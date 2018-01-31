@@ -223,7 +223,6 @@ pl_PL:
     top_weekly: "Najpopularniejsze tematy w tym tygodniu"
     top_daily: "Najpopularniejsze tematy dzisiaj"
     posts: "Aktualne wpisy"
-    private_posts: "Najnowsze prywatne wiadomości"
     group_posts: "Ostatni post z %{group_name}"
     group_mentions: "Ostatnie wspomnienie z %{group_name}"
     user_posts: "Ostatnie posty @%{username}"
@@ -324,12 +323,6 @@ pl_PL:
       Przepraszamy, ale nowi użytkownicy są obecnie ograniczeni do %{newuser_max_replies_per_topic} odpowiedzi w tym samym temacie.
 
       Zamiast dodawać kolejną odpowiedź, rozważ edycję swoich poprzednich odpowiedzi lub odwiedzenie innych tematów.
-    reviving_old_topic: |
-      ### Ożywić ten temat?
-
-      Ostatnia odpowiedź w tym temacie ma ponad %{days} dni. Twoja odpowiedź przesunie temat na górę listy i spowoduje powiadomienie wszystkich wcześniej uczestniczących w rozmowie.
-
-      Czy na pewno chcesz kontynuować tę starą rozmowę?
   activerecord:
     attributes:
       category:
@@ -346,9 +339,7 @@ pl_PL:
         topic:
           attributes:
             base:
-              warning_requires_pm: "Ostrzeżenie można dołączać jedynie do prywatnych wiadomości."
               too_many_users: "Jedno ostrzeżenie możesz wysłać tylko do pojedynczego użytkownika."
-              cant_send_pm: "Przepraszamy, niestety nie możesz wysłać prywatnej wiadomości temu użytkownikowi."
               no_user_selected: "Musisz wybrać poprawnego użytkownika,"
               reply_by_email_disabled: "Odpowiedź przez e-mail została wyłączona."
             featured_link:
@@ -940,7 +931,6 @@ pl_PL:
     censored_words: "Wskazane słowa będą automatycznie zamieniane na  &#9632;&#9632;&#9632;&#9632;"
     censored_pattern: "Wzorzec Regex który będzie automatycznie zamieniany na  &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Automatycznie kasuj wpisy ukryte dłużej niż 30 dni."
-    default_locale: "Domyślny język tej instancji Discourse (kod ISO 639-1)"
     allow_user_locale: "Zezwól użytkownikom na zmianę języka interfejsu we własnych  ustawieniach"
     set_locale_from_accept_language_header: "ustaw język interfejsu dla niezalogowanych użytkowników na podstawie języka w nagłówku ich przeglądarki. (EKSPERYMENTALNE, nie działa z anonimowym cache)"
     min_post_length: "Minimalna długość wpisu w znakach"
@@ -1144,7 +1134,6 @@ pl_PL:
     clean_orphan_uploads_grace_period_hours: "Okres karencji (w dniach) przed wysłaniem sierot zostanie skasowany."
     purge_deleted_uploads_grace_period_days: "Okres karencji (w dniach) przed usunięciem upload zostanie skasowany."
     enable_s3_uploads: "Umieść przesyły w pamięci Amazon S3. Ważne: wymaga ważnych danych uwierzytelniających (zarówno klucza id i tajnego klucza dostępu)"
-    s3_use_iam_profile: 'Użyj AWS EC2 IAM aby odzyskać klucze. Pamiętaj: włączenie spowoduje nadpisanie ustawień "id klucza dostępu s3" i "tajnego klucza dostępu s3" '
     s3_upload_bucket: "Nazwa koszyka Amazon S3, do którego zostaną przesłane pliki. Ostrzeżenie: bez wielkich liter, kropek czy podkreślenia."
     s3_access_key_id: "Klucz dostępu Amazon S3, który zostanie użyty do przesyłania zdjęć."
     s3_secret_access_key: "Tajny klucz dostępu Amazon S3, który zostanie użyty do przesyłania zdjęć."
@@ -1190,7 +1179,6 @@ pl_PL:
     min_trust_to_edit_wiki_post: "Minimalny poziom zaufania wymagany do edycji posta oznaczonego jako wiki."
     min_trust_to_edit_post: "Minimalny poziom zaufania potrzebny do edytowania postów."
     min_trust_to_allow_self_wiki: "Wymagany poziom zaufania, by post użytkownika uczynić wiki."
-    min_trust_to_send_messages: "Minimalny poziom zaufania wymagany do tworzenia nowych prywatnych wiadomości."
     newuser_max_links: "Ile linków może dodać nowy użytkownik do posta."
     newuser_max_images: "Ile obrazów może dodać nowy użytkownik do posta."
     newuser_max_attachments: "Ile załączników może dodać nowy użytkownik do posta."
@@ -1253,7 +1241,6 @@ pl_PL:
     reply_by_email_enabled: "Włącz możliwość odpowiadania na wpisy poprzez email."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Lista alternatywnych szablonów do odpowiedzi przez adres email. Przykład: %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
-    incoming_email_prefer_html: "Używaj HTML zamiast tekstu dla emaili przychodzących."
     disable_emails: "Powstrzymaj Discourse przed wysyłaniem jakichkolwiek emaili."
     strip_images_from_short_emails: "Pasek zdjęć z emaila o rozmiarze mniejszym niż 2800 bajtów"
     short_email_length: "Długość krótkiego emaila w bajtach"
@@ -1352,7 +1339,6 @@ pl_PL:
     allowed_href_schemes: "Projekty dozwolone w linkach jako dodatek do http i https."
     embed_post_limit: "Maksymalna liczba postów do osadzenia."
     embed_username_required: "W celu stworzenia tematu potrzebna jest nazwa użytkownika."
-    notify_about_flags_after: "Jeśli istnieją oflagowania, które nie zostały przejrzane po tylu godzinach, wyślij wiadomość prywatną do obsługi. Ustaw 0, aby wyłączyć."
     show_create_topics_notice: "Jeśli na stronie jest mniej niż 5 publicznych tematów, pokaż powiadomienie proszące adminów, aby stworzyli nowe wątki."
     delete_drafts_older_than_n_days: Usuń projekty starsze niż (n) dni.
     bootstrap_mode_min_users: "Minimalna liczba użytkowników potrzebnych do wyłączenia trybu rozruchowego (ustaw 0, aby wyłączyć)"
@@ -1364,7 +1350,6 @@ pl_PL:
     approve_post_count: "Liczba postów od nowego lub podstawowego użytkownika, które muszą zostać zatwierdzone"
     approve_unless_trust_level: "Posty użytkowników poniżej tego poziomu zaufania muszą być zatwierdzane"
     approve_new_topics_unless_trust_level: "Nowe wątki dodawane przez użytkowników z poziomem zaufania poniżej muszą zostać zaakceptowane"
-    notify_about_queued_posts_after: "Jeśli są posty, które czekają na przejrzenie przez więcej niż tak wiele godzin, zostanie wysłany email do contact_email. Ustaw 0, aby wyłączyć te emaile."
     auto_close_messages_post_count: "Maksymalna liczba postów dozwolonych w wiadomości przed automatycznym zamknięciem (0 aby wyłączyć)"
     auto_close_topics_post_count: "Maksymalna liczba postów dozwolona w temacie przed automatycznym zamknięciem (0 aby wyłączyć)"
     code_formatting_style: "Przycisk kodu w kompozytorze narzuci domyśl styl formatowania dla tego kodu"
@@ -2771,7 +2756,6 @@ pl_PL:
     badge_title_metadata: "%{display_name} odznaka na %{site_title}"
   admin_login:
     success: "Email wysłany"
-    error: "Błąd!"
     email_input: "Email administratora. "
     submit_button: "Wyślij Email. "
   performance_report:

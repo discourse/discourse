@@ -428,7 +428,6 @@ bs_BA:
       '14': "Na čekanju."
     categories:
       all: "Sve kategorije"
-      all_subcategories: "sve"
       no_subcategory: "nijedna"
       category: "Kategorija"
       category_list: "Prikaži listu kategorija"
@@ -705,7 +704,6 @@ bs_BA:
         title: "Pozivnice"
         user: "Pozvan Korisnik"
         sent: "poslano"
-        none: "Nema poziva na čekanju"
         redeemed: "Redeemed Invites"
         redeemed_tab: "Iskorišteno"
         redeemed_tab_with_count: "Iskorišteno ({{count}})"
@@ -1025,8 +1023,6 @@ bs_BA:
         posted: "Post od"
         edited: "Editujte vaš post"
         liked: "Vole vaš post"
-        private_message: "Privatna poruka od"
-        invited_to_private_message: "Pozvani na privatnu poruku od "
         invited_to_topic: "Pozvani na temu od"
         invitee_accepted: "Pozivnica prihvaćena od"
         moved_post: "Vaša objava je premještena od strane "
@@ -1039,7 +1035,6 @@ bs_BA:
         quoted: '{{username}} vas je citirao/la u "{{topic}}" - {{site_title}}'
         replied: '{{username}} vam je odgovorio/la u "{{topic}}" - {{site_title}}'
         posted: '{{username}} je objavio/la "{{topic}}" - {{site_title}}'
-        private_message: '{{username}} vam je poslao/la privatnu poruku u "{{topic}}" - {{site_title}}'
         linked: '{{username}} je linkao/la vašu objavu "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Dodaj sliku"
@@ -1277,7 +1272,6 @@ bs_BA:
         visible: "Make Listed"
         reset_read: "Reset Read Data"
         make_public: "Napiši temu javno"
-        make_private: "Napiši privatnu poruku"
       feature:
         pin: "Prikači temu"
         unpin: "Otkači temu"
@@ -1677,7 +1671,6 @@ bs_BA:
         title: "Opomene"
         agree: "Slažem se"
         agree_title: "Confirm this flag as valid and correct"
-        defer_flag_title: "Remove this flag; it requires no action at this time."
         delete: "Delete"
         delete_title: "Delete the post this flag refers to."
         delete_post_defer_flag_title: "Delete post; if the first post, delete the topic"
@@ -1760,7 +1753,6 @@ bs_BA:
           size: "Size"
         upload:
           uploading: "Uploading..."
-          success: "'{{filename}}' has successfully been uploaded."
           error: "There has been an error while uploading '{{filename}}': {{message}}"
         operations:
           is_running: "An operation is currently running..."

@@ -430,7 +430,6 @@ sv:
       '14': "Väntar"
     categories:
       all: "alla kategorier"
-      all_subcategories: "alla"
       no_subcategory: "ingen"
       category: "Kategori"
       category_list: "Visa kategori-lista"
@@ -712,7 +711,6 @@ sv:
         title: "Inbjudningar"
         user: "Inbjuden Användare"
         sent: "Skickat"
-        none: "Det finns inga pågående inbjudningar att visa."
         truncated:
           one: "Visar den första inbjudningen."
           other: "Visar de första {{count}} inbjudningarna."
@@ -1070,8 +1068,6 @@ sv:
         posted: "Skrivet av"
         edited: "Redigera ditt inlägg genom"
         liked: "Gillade ditt inlägg"
-        private_message: "Privat meddelande från"
-        invited_to_private_message: "Inbjudan till ett privat meddelande från "
         invited_to_topic: "Inbjudan till ett ämne från"
         invitee_accepted: "Inbjudan accepterades av"
         moved_post: "Ditt inlägg blev flyttad av"
@@ -1084,7 +1080,6 @@ sv:
         quoted: '{{username}} citerade dig i "{{topic}}" - {{site_title}}'
         replied: '{{username}} svarade dig i "{{topic}}" - {{site_title}}'
         posted: '{{username}} skrev i "{{topic}}" - {{site_title}}'
-        private_message: '{{username}} skickade dig ett privat meddelande i "{{topic}}" - {{site_title}}'
         linked: '{{username}} länkade till ett inlägg du gjort från "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Lägg till en bild"
@@ -1364,7 +1359,6 @@ sv:
         visible: "Markera listad"
         reset_read: "Återställ läsdata"
         make_public: "Skapa allmänt ämne"
-        make_private: "Skapa privat meddelande"
       feature:
         pin: "Klistra ämne"
         unpin: "Avklistra ämne"
@@ -2022,7 +2016,6 @@ sv:
         one: "1 utfärdad"
         other: "%{count} utfärdade"
       select_badge_for_title: Välj en utmärkelse att använda som din titel
-      none: "(none)"
       badge_grouping:
         getting_started:
           name: Komma igång
@@ -2178,7 +2171,6 @@ sv:
         title: "Flaggningar"
         agree: "Godkänn"
         agree_title: "Bekräfta att den här flaggan är giltig och korrekt"
-        defer_flag_title: "Ta bort den här flaggan; den kräver ingen åtgärd för tillfället."
         delete: "Ta bort"
         delete_title: "Ta bort inlägget som den här flaggan refererar till."
         delete_post_defer_flag_title: "Ta bort inlägg; om det är det första inlägget, ta bort ämnet"
@@ -2354,7 +2346,6 @@ sv:
           label: "Ladda upp"
           title: "Ladda upp en säkerhetskopia till denna instans"
           uploading: "Laddar upp..."
-          success: "'{{filename}}' har laddats upp."
           error: "Ett fel har uppstått vid uppladdning av '{{filename}}': {{message}}"
         operations:
           is_running: "En operation körs just nu..."

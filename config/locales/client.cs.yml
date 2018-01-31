@@ -51,6 +51,10 @@ cs:
           one: "1s"
           few: "%{count}s"
           other: "%{count}s"
+        less_than_x_minutes:
+          one: "< 1m"
+          few: "< %{count}m"
+          other: "< %{count}m"
         x_minutes:
           one: "1m"
           few: "%{count}m"
@@ -119,6 +123,7 @@ cs:
           other: "za %{count} let"
       previous_month: 'Předchozí měsíc'
       next_month: 'Další měsíc'
+      placeholder: datum
     share:
       topic: 'sdílet odkaz na toto téma'
       post: 'příspěvek #%{postNumber}'
@@ -378,6 +383,7 @@ cs:
       join: "Přidat se ke skupině"
       leave: "Opustit skupinu"
       request: "Požádat o členství ve skupině"
+      message: "Zpráva"
       automatic_group: Automatická skupina
       closed_group: Uzavřená skupina
       is_group_user: "Jsi členem této skupiny"
@@ -420,7 +426,7 @@ cs:
           title: "Sledování"
           description: "Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek a zobrazí se vám počet nových odpovědí."
         regular:
-          title: "Normalní"
+          title: "Normální"
           description: "Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek."
         muted:
           title: "Ztišený"
@@ -442,7 +448,6 @@ cs:
       '14': "Čeká na schválení"
     categories:
       all: "všechny kategorie"
-      all_subcategories: "vše"
       no_subcategory: "žádné"
       category: "Kategorie"
       category_list: "Zobrazit seznam kategorií"
@@ -476,7 +481,7 @@ cs:
       organisation: Organizace
       phone: Telefon
       other_accounts: "Další účty s touto IP adresou:"
-      delete_other_accounts: "Smazat"
+      delete_other_accounts: "Smazat %{count}"
       username: "uživatelské jméno"
       trust_level: "Důvěra"
       read_time: "čas k přečtení"
@@ -529,7 +534,9 @@ cs:
       admin: "{{user}} je administrátor"
       moderator_tooltip: "Tento uživatel je moderátor"
       admin_tooltip: "Tento uživatel je admi"
+      silenced_tooltip: "Tento uživatel je ztišen."
       suspended_notice: "Uživatel je suspendován do {{date}}."
+      suspended_permanently: "Tento uživatel je suspendován."
       suspended_reason: "Důvod: "
       github_profile: "Github"
       email_activity_summary: "Souhrn aktivit"
@@ -642,6 +649,7 @@ cs:
         instructions: "Obrázky pozadí jsou zarovnány a mají výchozí šířku 590px. "
       email:
         title: "Emailová adresa"
+        instructions: "není veřejný"
         ok: "Pro potvrzení vám pošleme email."
         invalid: "Zadejte prosím správnou emailovou adresu"
         authenticated: "Vaše emailová adresa byla autorizována přes službu {{provider}}."
@@ -735,7 +743,6 @@ cs:
         title: "Pozvánky"
         user: "Pozvaný uživatel"
         sent: "Odeslané"
-        none: "Nemáte žádně nevyřízené pozvánky na zobrazení."
         truncated:
           one: "Zobrazena první pozvánka."
           few: "Zobrazeno prvních {{count}} pozvánek."
@@ -879,6 +886,8 @@ cs:
     first_post: První příspěvek
     mute: Ignorovat
     unmute: Zrušit ignorování
+    last_post: Přidáno
+    time_read: Přečteno
     last_reply_lowercase: poslední odpověď
     replies_lowercase:
       one: odpověď
@@ -905,6 +914,7 @@ cs:
     private_message_info:
       title: "Zpráva"
       invite: "pozvat účastníka"
+      leave_message: "Opravdu chcete opustit tuto zprávu?"
       remove_allowed_user: "Určitě chcete odstranit {{name}} z této zprávy?"
       remove_allowed_group: "Opravdu chcete odstranit {{name}} z této zprávy?"
     email: 'Email'
@@ -915,6 +925,7 @@ cs:
     trust_level: 'Důvěryhodnost'
     search_hint: 'uživatelské jméno, email nebo IP adresa'
     create_account:
+      disclaimer: "Registrací souhlasíš s <a href='{{privacy_link}}'>podmínkami soukromí</a> a <a href='{{tos_link}}'>podmínkami užívání</a>."
       title: "Vytvořit nový účet"
       failed: "Něco se nepovedlo, možná je tato e-mailová adresa již použita. Zkuste použít formulář pro obnovení hesla."
     forgot_password:
@@ -949,6 +960,8 @@ cs:
       not_allowed_from_ip_address: "Z této IP adresy se nemůžete přihlásit."
       admin_not_allowed_from_ip_address: "Z této IP adresy se nemůžete přihlásit jako administrátor."
       resend_activation_email: "Klikněte sem pro zaslání aktivačního emailu."
+      resend_title: "Znovu odeslat aktivační email"
+      change_email: "Změnit emailovou adresu"
       submit_new_email: "Aktualizovat emailovou adresu"
       sent_activation_email_again: "Zaslali jsme vám další aktivační email na <b>{{currentEmail}}</b>. Může trvat několik minut, než vám dorazí. Zkontrolujte také vaši složku s nevyžádanou pošlou."
       to_continue: "Přihlaš se, prosím"
@@ -1001,6 +1014,12 @@ cs:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    select_kit:
+      filter_placeholder: Hledat...
+    emoji_picker:
+      nature: Příroda
+      travel: Cestování
+      recent: Nedávno použité
     composer:
       emoji: "Smajlíky :)"
       more_emoji: "více..."
@@ -1036,6 +1055,7 @@ cs:
       cancel: "Zrušit"
       create_topic: "Vytvořit téma"
       create_pm: "Zpráva"
+      create_whisper: "Šeptat"
       title: "Nebo zmáčkněte Ctrl+Enter"
       users_placeholder: "Přidat uživatele"
       title_placeholder: "O čem je ve zkratce tato diskuze?"
@@ -1093,21 +1113,19 @@ cs:
         posted: "Příspěvek od"
         edited: "Editovat váš příspěvek od"
         liked: "Líbil se tvůj příspěvek"
-        private_message: "Soukromá zpráva od"
-        invited_to_private_message: "Pozván k soukromé zprávě od"
         invited_to_topic: "Pozván k tématu od"
         invitee_accepted: "Pozvánka přijata od"
         moved_post: "Tvůj příspěvek přesunul"
         linked: "Odkaz na tvůj příspěvek"
         granted_badge: "Odznak přidělen"
         group_message_summary: "Zprávy ve skupinové schránce"
+        topic_reminder: "Připomenutí"
       popup:
         mentioned: '{{username}} vás zmínil v "{{topic}}" - {{site_title}}'
         group_mentioned: 'Uživatel {{username}} vás zmínil v "{{topic}}" - {{site_title}}'
         quoted: '{{username}} vás citoval v "{{topic}}" - {{site_title}}'
         replied: '{{username}} vám odpověděl v "{{topic}}" - {{site_title}}'
         posted: '{{username}} přispěl do "{{topic}}" - {{site_title}}'
-        private_message: '{{username}} vám poslal soukromou zprávu v "{{topic}}" - {{site_title}}'
         linked: '{{username}} odkázal na vás příspěvek v "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Vložit obrázek"
@@ -1123,6 +1141,7 @@ cs:
       uploading: "Nahrávám"
       select_file: "Vyberte soubor"
       image_link: "adresa na kterou má váš obrázek odkazovat"
+      default_image_alt_text: obrázek
     search:
       sort_by: "Seřadil"
       relevance: "Relevance"
@@ -1138,6 +1157,9 @@ cs:
       no_more_results: "Nenalezeny žádné další výsledky."
       searching: "Hledám ..."
       post_format: "#{{post_number}} od {{username}}"
+      cant_find: "Nemůžete najít, co hledáte?"
+      start_new_topic: "Možná vytvořte nové téma?"
+      search_google_button: "Google"
       context:
         user: "Vyhledat příspěvky od @{{username}}"
         category: "Hledat v kategorii #{{category}}"
@@ -1147,10 +1169,14 @@ cs:
         title: Pokročilé hledání
         posted_by:
           label: Zaslal
+        in_category:
+          label: V kategorii
         in_group:
           label: Ve skupině
         with_badge:
           label: S odznakem
+        with_tags:
+          label: Se štítkem
         filters:
           likes: líbí se mi
           posted: Přidal jsem příspěvek
@@ -1375,7 +1401,6 @@ cs:
         visible: "Zviditelnit"
         reset_read: "Vynulovat počet čtení"
         make_public: "Vytvořit Veřejné Téma"
-        make_private: "Vytvořit Soukromou zprávu"
       feature:
         pin: "Připevnit téma"
         unpin: "Odstranit připevnění"
@@ -1499,6 +1524,15 @@ cs:
       multi_select:
         select: 'vybrat'
         selected: 'vybráno ({{count}})'
+        select_post:
+          label: 'označit'
+          title: 'Přidat příspěvek do výběru'
+        selected_post:
+          label: 'vybrané'
+          title: 'Kliknutím odstraníte příspěvek z výběru'
+        select_replies:
+          label: 'vybrat +odpovědi'
+          title: 'Přidej příspěvek a všechny jeho odpovědi do výběru'
         delete: smazat označené
         cancel: zrušit označování
         select_all: vybrat vše
@@ -1908,6 +1942,7 @@ cs:
     history: "Historie"
     changed_by: "od uživatele {{author}}"
     raw_email:
+      title: "Příchozí email"
       not_available: "Není k dispozici!"
     categories_list: "Seznam kategorií"
     filters:
@@ -2065,7 +2100,6 @@ cs:
         few: "%{count} přidělen"
         other: "%{count} přidělen"
       select_badge_for_title: Vyberte odznak, který chcete použít jako svůj titul
-      none: "(none)"
       badge_grouping:
         getting_started:
           name: Jak začít?
@@ -2092,6 +2126,7 @@ cs:
       selector_no_tags: "bez štítků"
       changed: "změněné štítky:"
       tags: "Štítky"
+      choose_for_topic: "volitelné štítky"
       delete_tag: "Smaž štítek"
       rename_tag: "Přejmenovat štítek"
       rename_instructions: "Vyber název nového štítku:"
@@ -2214,7 +2249,6 @@ cs:
         title: "Nahlášení"
         agree: "Schválit"
         agree_title: "Potvrdit toto hlášení jako právoplatné a korektní"
-        defer_flag_title: "Odstranit nahlášení; teď nevyžaduje žádné opatření."
         delete: "Smazat"
         delete_title: "Smazat příspěvek, na který toto hlášení odkazuje."
         delete_post_defer_flag_title: "Smazat příspěvek; pokud je to první příspěvek, tak smazat téma"
@@ -2229,6 +2263,7 @@ cs:
         clear_topic_flags: "Hotovo"
         clear_topic_flags_title: "The topic has been investigated and issues have been resolved. Click Done to remove the flags."
         more: "(více odpovědí...)"
+        suspend_user: "Zakázat uživatele"
         dispositions:
           agreed: "schváleno"
           disagreed: "neschváleno"
@@ -2239,9 +2274,15 @@ cs:
         error: "Něco se pokazilo"
         reply_message: "Odpovědět"
         topic_flagged: "Tohle <strong>téma</strong> bylo označeno."
+        show_full: "Zobrazit celý příspěvek"
         visit_topic: "Zobrazit téma pro přijmutí opatření."
         was_edited: "Příspěvek byl upraven po prvním nahlášení"
         previous_flags_count: "Tento příspěvek byl již nahlášen {{count}} krát."
+        details: "podrobnosti"
+        flagged_topics:
+          topic: "Téma"
+          type: "Typ"
+          users: "Uživatelé"
       groups:
         primary: "Hlavní skupina"
         no_primary: "(žádná hlavní skupina)"
@@ -2352,7 +2393,6 @@ cs:
           label: "Nahrát"
           title: "Nahrát zálohu do téhle instance"
           uploading: "Nahrávání..."
-          success: "'{{filename}}' has successfully been uploaded."
           error: "There has been an error while uploading '{{filename}}': {{message}}"
         operations:
           is_running: "An operation is currently running..."

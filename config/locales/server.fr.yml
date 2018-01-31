@@ -209,7 +209,6 @@ fr:
     top_weekly: "Meilleurs sujets de la semaine"
     top_daily: "Meilleurs sujets du jour"
     posts: "Messages récents"
-    private_posts: "Derniers messages privés"
     group_posts: "Derniers messages de %{group_name}"
     group_mentions: "Dernières mentions de %{group_name}"
     user_posts: "Derniers messages par @%{username}"
@@ -305,12 +304,6 @@ fr:
       Nous sommes désolés, les nouveaux membres sont limités temporairement à %{newuser_max_replies_per_topic} réponses dans un même topic.
 
       Plutôt que d'ajouter une nouvelle réponse, vous pouvez éditer vos messages précédents ou visiter d'autres topics.
-    reviving_old_topic: |
-      ### Déterrer ce sujet ?
-
-      La dernière réponse à ce sujet date d'il y a plus de %{days} jours. Votre réponse va faire remonter ce sujet en haut de la liste et notifier chaque personne qui suit cette conversation.
-
-      Êtes-vous sûr de vouloir continuer cette conversation ?
   activerecord:
     attributes:
       category:
@@ -327,9 +320,7 @@ fr:
         topic:
           attributes:
             base:
-              warning_requires_pm: "Vous ne pouvez joindre des avertissements qu'aux messages privés."
               too_many_users: "Vous ne pouvez envoyer des avertissements qu'à un utilisateur à la fois."
-              cant_send_pm: "Désolé, vous ne pouvez pas envoyer de message privé à cet utilisateur."
               no_user_selected: "Vous devez choisir un utilisateur valide."
               reply_by_email_disabled: "Réponse par courriel désactivée."
             featured_link:
@@ -872,7 +863,6 @@ fr:
     censored_words: "Mots qui seront automatiquement remplacés par &#9632;&#9632;&#9632;&#9632;"
     censored_pattern: "Expressions régulières qui seront automatiquement remplacées par &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Supprimer automatiquement les messages cachés plus de 30 jours."
-    default_locale: "La langue par défaut de cette instance de Discourse (code ISO 639-1)"
     allow_user_locale: "Autoriser les utilisateurs à choisir la langue de l'interface dans leurs préférences"
     set_locale_from_accept_language_header: "configurer la langue de l'interface pour les visiteurs à partir des entêtes de langue de leur navigateur. (EXPÉRIMENTAL, ne fonctionne pas avec le cache anonyme)"
     min_post_length: "Longueur minimale autorisée des messages en nombre de caractères"
@@ -1073,7 +1063,6 @@ fr:
     clean_orphan_uploads_grace_period_hours: "La période de grâce (en heures) avant qu'un fichier envoyé orphelin soit retiré."
     purge_deleted_uploads_grace_period_days: "La période de grâce (en jours) avant qu'un fichier envoyé et supprimé soit effacé."
     enable_s3_uploads: "Placez les fichiers envoyés sur un stockage Amazon S3. IMPORTANT: nécessite un accès valide à S3  (l'identifiant et la clé secrète)."
-    s3_use_iam_profile: 'Utiliser un role AWS EC2 IAM pour la récupération des clés. NOTE: si activé, surcharge les paramètres "s3 access key id" et "s3 secret access key".'
     s3_upload_bucket: "Le nom du bucket Amazon S3 qui contiendra les fichiers téléchargés. ATTENTION : doit être en minuscule, sans points et sans caractères de soulignement."
     s3_access_key_id: "L' access key Amazon S3 qui sera utilisée pour uploader les images."
     s3_secret_access_key: "La clé secrète Amazon S3 qui va être utilisée pour uploader des images."
@@ -1119,8 +1108,6 @@ fr:
     min_trust_to_edit_wiki_post: "Le niveau de confiance minimum requis pour modifier les messages de type wiki."
     min_trust_to_edit_post: "Le niveau de confiance minimum requis pour modifier des messages."
     min_trust_to_allow_self_wiki: "Le niveau de confiance minimum requis pour transformer ses propres messages en type wiki."
-    min_trust_to_send_messages: "Le niveau de confiance minimum pour être autorisé à créer des nouveaux messages privés."
-    min_trust_to_send_email_messages: "Le niveau de confiance minimum requis pour envoyer de nouveaux messages privés par courriel (aux utilisateurs générés)."
     newuser_max_links: "Combien de liens un nouvel utilisateur peut-il ajouter à un message."
     newuser_max_images: "Combien d'images un nouvel utilisateur peut-il ajouter à un message."
     newuser_max_attachments: "Combien de fichiers un nouvel utilisateur peut-il ajouter à un message."
@@ -1185,7 +1172,6 @@ fr:
     reply_by_email_enabled: "Activer les réponses aux sujets via courriel."
     reply_by_email_address: "Modèle pour la réponse par courriel entrant; exemple : %{reply_key}@reply.example.com ou replies+%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Liste des templates alternatifs pour les adresses des courriels entrants de la réponse par courriel. Exemple : %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
-    incoming_email_prefer_html: "Utilisez le HTML plutôt que le texte pour les emails entrants."
     disable_emails: "Désactiver l'envoi de les courriels depuis Discourse."
     strip_images_from_short_emails: "Retirer les images des courriels dont la taille est inférieur à 2800 Octets"
     short_email_length: "Taille des courriels courts en Octets"
@@ -1284,7 +1270,6 @@ fr:
     allowed_href_schemes: "Préfixes autorisés dans les liens en plus de http et https."
     embed_post_limit: "Nombre maximum de messages à embarquer."
     embed_username_required: "Un pseudo d'utilisateur pour la création du sujet est nécessaire."
-    notify_about_flags_after: "S'il y a des signalements qui n'ont pas été traités après ce nombre d'heures, envoyer un message privé aux responsables. Mettre 0 pour désactiver."
     show_create_topics_notice: "Si le site contient moins de 5 sujets publics, afficher un message pour demander aux administrateurs de créer d'autres sujets."
     delete_drafts_older_than_n_days: Supprimer les brouillons plus vieux que (n) jours.
     bootstrap_mode_min_users: "Nombre minimum d'utilisateurs nécessaire pour désactiver le mode de démarrage (mettre à 0 pour désactiver)"
@@ -1296,7 +1281,6 @@ fr:
     approve_post_count: "Le nombre de messages d'un utilisateur nouveau ou basique devant être approuvés"
     approve_unless_trust_level: "Les messages des utilisateurs qui n'ont pas atteint ce niveau de confiance doivent être approuvés"
     approve_new_topics_unless_trust_level: "Les nouveaux sujets des utilisateurs en dessous de ce niveau de confiance doivent être approuvés"
-    notify_about_queued_posts_after: "Si des messages sont en attente de modération depuis ce nombre d'heures, un courriel sera envoyé à l'email de contact. Mettre 0 pour désactiver ces courriels."
     auto_close_messages_post_count: "Nombre maximum de messages dans un message privé avant qu'il ne soit automatiquement fermé (0 pour désactiver)"
     auto_close_topics_post_count: "Nombre maximum de messages dans un sujet avant qu'il ne soit automatiquement fermé (0 pour désactiver)"
     code_formatting_style: "Le bouton Code dans l'éditeur utilisera ce style de formatage par défaut"
@@ -2659,19 +2643,18 @@ fr:
     enthusiast:
       name: Passionné
       description: A visité 10 jours
-      long_description: Ce badge est décerné pour avoir visiter 10 jours consécutifs. Merci d'être resté avec nous pendant plus d'une semaine !
+      long_description: Ce badge est décerné pour avoir visité 10 jours consécutifs. Merci d'être resté avec nous pendant plus d'une semaine !
     aficionado:
       name: Aficionado
       description: A visité 100 jours
-      long_description: Ce badge est décerné pour avoir visiter 100 jours consécutifs. C'est plus de trois mois !
+      long_description: Ce badge est décerné pour avoir visité 100 jours consécutifs. C'est plus de trois mois !
     devotee:
       name: Adepte
       description: A visité 365 jours
-      long_description: Ce badge est décerné pour avoir visiter 365 jours consécutifs. Waouh, une année entière !
+      long_description: Ce badge est décerné pour avoir visité 365 jours consécutifs. Waouh, une année entière !
     badge_title_metadata: "%{display_name} badge sur %{site_title}"
   admin_login:
     success: "Courriel envoyé"
-    error: "Erreur !"
     email_input: "Courriel de l'administrateur"
     submit_button: "Envoyer un courriel"
   performance_report:

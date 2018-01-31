@@ -161,7 +161,6 @@ tr_TR:
     top_weekly: "Haftalık en iyi konular"
     top_daily: "Günlük en iyi konular"
     posts: "Son gönderiler"
-    private_posts: "Son özel iletiler"
     group_posts: "%{group_name} tarafından son gönderiler"
     group_mentions: "%{group_name} tarafından son bahsetmeler"
     user_posts: "@%{username} tarafından son gönderiler"
@@ -228,9 +227,7 @@ tr_TR:
         topic:
           attributes:
             base:
-              warning_requires_pm: "Özel iletilere sadece uyarı ekleyebilirsiniz. "
               too_many_users: "Uyarıları aynı anda sadece bir kişiye gönderebilirsiniz."
-              cant_send_pm: "Üzgünüz, seçtiğiniz kullanıcıya özel ileti gönderemezsiniz."
               no_user_selected: "Geçerli bir kullanıcı seçmelisiniz."
         user:
           attributes:
@@ -640,7 +637,6 @@ tr_TR:
   site_settings:
     censored_words: "kelime yerine otomatik olarak &#9632;&#9632;&#9632;&#9632; kullanılacak kelimeler"
     delete_old_hidden_posts: "30 günden fazla süreyle gizli kalan gizlenmiş gönderileri otomatik olarak sil."
-    default_locale: "Bu Discourse yüklemesinin  (ISO 639-1 Code) öntanımlı dili"
     allow_user_locale: "Kullanıcıların arayüz için kendi istedikleri dili seçmesine izin ver"
     set_locale_from_accept_language_header: "anonim kullanıcıların arayüz dilini tarayıcılarının dil başlığından al. (DENEYSELDİR, anonim önbellek ile çalışmaz)"
     min_post_length: "Gönderide olması gereken en az karakter sayısı"
@@ -809,7 +805,6 @@ tr_TR:
     clean_orphan_uploads_grace_period_hours: "Artık yüklemeler kaldırılmadan önce tanınan süre (saat olarak)."
     purge_deleted_uploads_grace_period_days: "Silinen yüklemelerin kaldırılması için tanınan süre (gün olarak)."
     enable_s3_uploads: "Yüklemeleri Amazon S3 belleklerinde sakla. ÖNEMLİ: Doğru S3 bilgileri (erişim anahtarı id & gizli erişim anahtarı) gerektirir"
-    s3_use_iam_profile: 'Anahtarları almak için AWS EC2 IAM rolünü kullan. NOT: Etkinleştirilmesi "s3 access key id" and "s3 secret access key" ayarlarının üzerine yazacaktır.'
     s3_upload_bucket: "Dosyaların yükleneceği Amazon S3 biriktirme yeri adı. DİKKAT: büyük harfler, nokta ve altçizgi karakterleri kullanılmamalı."
     s3_access_key_id: "Resimleri yüklemek için kullanılacak olan Amazon S3 access key id."
     s3_secret_access_key: "Resimleri yüklemek için kullanılacak olan Amazon S3 secret access key."
@@ -848,7 +843,6 @@ tr_TR:
     min_trust_to_edit_wiki_post: "Wiki olarak işaretlenmiş bir gönderiyi düzenleyebilmek için gereken en az güven seviyesi."
     min_trust_to_edit_post: "Gönderilerin düzenlenebilmesi için gereken en düşük güven seviyesi."
     min_trust_to_allow_self_wiki: "Kullanıcının kendi wiki gönderisini oluşturabilmesi için gereken güven seviyesi."
-    min_trust_to_send_messages: "Özel bir ileti oluşturabilmek için gerekli olan güven seviyesi."
     newuser_max_links: "Yeni bir kullanıcının bir gönderiye ekleyebileceği bağlantı sayısı."
     newuser_max_images: "Yeni bir kullanıcının bir gönderiye ekleyebileceği resim sayısı."
     newuser_max_attachments: "Yeni bir kullanıcının bir gönderiye ekleyebileceği dosya sayısı."
@@ -1643,7 +1637,6 @@ tr_TR:
         Bu rozet ilk defa bir gönderiye mail yoluyla cevap verdiğiniz için verilmiştir :e-mail:.
   admin_login:
     success: "E-posta Gönderildi"
-    error: "Hata!"
     email_input: "Yönetici e-postası"
     submit_button: "E-posta Gönder"
   performance_report:

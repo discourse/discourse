@@ -444,7 +444,6 @@ pt_BR:
       '14': "Pendente"
     categories:
       all: "todas as categorias"
-      all_subcategories: "todos"
       no_subcategory: "nenhum"
       category: "Categoria"
       category_list: "Exibir lista de categorias."
@@ -523,7 +522,6 @@ pt_BR:
       disable_jump_reply: "Não pular para o meu tópico depois que eu respondo"
       dynamic_favicon: "Exibir ícone no navegador de tópicos novos / atualizados."
       theme_default_on_all_devices: "Definir este tema como padrão em todos os meus dispositivos"
-      allow_private_messages: "Permitir que outros usuários me mandem mensagens privadas"
       external_links_in_new_tab: "Abrir todos os links externos em uma nova aba"
       enable_quoting: "Ativar resposta citando o texto destacado"
       change: "alterar"
@@ -742,7 +740,6 @@ pt_BR:
         title: "Convites"
         user: "Usuários convidados"
         sent: "Enviado"
-        none: "Não existem convites pendentes para exibir."
         truncated:
           one: "Mostrando os primeiro convite."
           other: "Mostrando os primeiros {{count}} convites."
@@ -1143,8 +1140,6 @@ pt_BR:
         posted: "Mensagem por"
         edited: "Edição na sua mensagem por"
         liked: "Curtiu sua mensagem"
-        private_message: "Mensagem privada de"
-        invited_to_private_message: "Convidou para uma mensagem privada"
         invited_to_topic: "Convite para um tópico de"
         invitee_accepted: "Convite aceito por"
         moved_post: "Seu tópico foi movido por"
@@ -1158,7 +1153,6 @@ pt_BR:
         quoted: '{{username}} citou você em "{{topic}}" - {{site_title}}'
         replied: '{{username}} respondeu para você em "{{topic}}" - {{site_title}}'
         posted: '{{username}} postou em "{{topic}}" - {{site_title}}'
-        private_message: '{{username}} enviou uma mensagem particular para você em "{{topic}}" - {{site_title}}'
         linked: '{{username}} linkou o seu post de "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Adicionar uma imagem"
@@ -1461,7 +1455,6 @@ pt_BR:
         visible: "Tornar Visível"
         reset_read: "Repor data de leitura"
         make_public: "Transformar em Tópico Público"
-        make_private: "Transformar em Mensagem Privada"
       feature:
         pin: "Fixar Tópico"
         unpin: "Desafixar Tópico"
@@ -2126,7 +2119,6 @@ pt_BR:
         one: "1 concedido"
         other: "%{count} concedidos"
       select_badge_for_title: Selecione um emblema para usar como o seu título
-      none: "(nenhum)"
       badge_grouping:
         getting_started:
           name: Primeiros Passos
@@ -2283,8 +2275,6 @@ pt_BR:
         title: "Sinalizações"
         agree: "Concordo"
         agree_title: "Confirmar esta marcação como válida e correta"
-        defer_flag: "Ignorar"
-        defer_flag_title: "Remover esta marcação; ela não requer nenhuma ação neste momento."
         delete: "Apagar"
         delete_title: "Apagar o post ao qual a marcação se refere."
         delete_post_defer_flag_title: "Apaga a resposta; se for a primeira, apagar o tópico"
@@ -2470,7 +2460,6 @@ pt_BR:
           label: "Enviar"
           title: "Carregar um backup para esta instância"
           uploading: "Subindo..."
-          success: "'{{filename}}' foi carregado com sucesso."
           error: "Houve um erro ao carregar '{{filename}}': {{message}}"
         operations:
           is_running: "Uma operação está sendo executada..."

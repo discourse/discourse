@@ -130,6 +130,7 @@ de:
     backup_file_should_be_tar_gz: "Die Sicherungsdatei sollte ein .tar.gz-Archiv sein."
     not_enough_space_on_disk: "Es gibt nicht genügend freien Festplattenspeicher, um dieses Backup hochzuladen."
     invalid_filename: "Der Dateiname für das Backup enthält ungültige Zeichen. Gültig sind: a-z 0-9 . - _."
+  invalid_params: "Du hast bei der Anfrage ungültige Parameter angegeben: %{message}"
   not_logged_in: "Dazu musst du angemeldet sein."
   not_found: "Die angeforderte URL oder Ressource konnte nicht gefunden werden."
   invalid_access: "Du hast nicht die Erlaubnis, die angeforderte Ressource zu betrachten."
@@ -210,7 +211,6 @@ de:
     top_weekly: "Top-Themen der letzten Woche"
     top_daily: "Top-Themen der letzten 24 Stunden"
     posts: "Letzte Beiträge"
-    private_posts: "Neueste private Nachricht"
     group_posts: "Letzte Beiträge von %(Gruppen_name)"
     group_mentions: "Neueste Nennungen von %{group_name}"
     user_posts: "Neueste Beiträge von @%{username}"
@@ -306,12 +306,6 @@ de:
       Entschuldige, aber neue Benutzer sind vorübergehend auf %{newuser_max_replies_per_topic} Antworten im gleichen Thema beschränkt.
 
       Anstatt eine weitere Antwort hinzuzufügen, denke darüber nach, deine vorherigen Antworten zu bearbeiten oder andere Themen zu besuchen.
-    reviving_old_topic: |
-      ### Dieses Thema neu beleben?
-
-      Die letzte Antwort auf dieses Thema war vor **%{days}** Tagen. Deine Antwort wird das Thema wieder ans obere Ende der Liste befördern und jeden benachrichtigen, der zuvor in der Unterhaltung beteiligt war.
-
-      Bist du sicher, dass du diese alte Unterhaltung fortsetzen möchtest?
   activerecord:
     attributes:
       category:
@@ -328,9 +322,7 @@ de:
         topic:
           attributes:
             base:
-              warning_requires_pm: "Du kannst eine Warnung nur an eine Nachricht zugleich anhängen."
               too_many_users: "Du kannst eine Warnung nur an einen Benutzer zugleich anhängen."
-              cant_send_pm: "Entschuldigung, du kannst diesem Benutzer keine Direktnachricht schicken."
               no_user_selected: "Du musst einen gültigen Benutzer auswählen."
               reply_by_email_disabled: "Antwort per E-Mail ist deaktiviert."
             featured_link:
@@ -346,6 +338,10 @@ de:
               unique_characters: "hat zu viele sich wiederholende Zeichen. Bitte verwende ein sichereres Passwort."
             ip_address:
               signup_not_allowed: "Eine Registrierung ist von diesem Konto nicht erlaubt."
+        user_email:
+          attributes:
+            user_id:
+              reassigning_primary_email: "Eine primäre E-Mail Adresse einem weiteren Benutzer zuzuordnen ist nicht erlaubt."
         color_scheme_color:
           attributes:
             hex:
@@ -873,7 +869,6 @@ de:
     censored_words: "Wörter, die automatisch durch &#9632;&#9632;&#9632;&#9632; ersetzt werden"
     censored_pattern: "Regex-Muster das automatisch ersetzt wird mit &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Automatisch alle Beiträge löschen, die länger als 30 Tage versteckt bleiben."
-    default_locale: "Die Standardsprache dieser Discourse-Instanz (kodiert in ISO 639-1)."
     allow_user_locale: "Erlaube Benutzern, ihre eigene Oberflächensprache zu wählen"
     set_locale_from_accept_language_header: "Sprache der Benutzeroberfläche für anonyme Benutzer an Hand der Spracheinstellung ihres Browsers wählen (EXPERIMENTELL, funktioniert nicht mit Caches für anonyme Benutzer)"
     min_post_length: "Minimal zulässige Beitragslänge in Zeichen."
@@ -933,7 +928,7 @@ de:
     email_custom_headers: "Eine durch senkrechte Striche getrennte Liste von eigenen E-Mail Headerzeilen"
     email_subject: "Format der Betreffzeile in Standard-E-Mails. Siehe https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
     force_https: "Erzwinge HTTPS für deine Site. ACHTUNG: Aktiviere dies nicht, bevor HTTPS nicht vollständig eingerichtet ist und auf jeden Fall überall funktioniert! Hast du alle CDN-Netzwerke, alle Logins über Soziale Netzwerke, alle externe Logos / Abhängigkeiten geprüft, um sicherzustellen, dass sie auch alle HTTPS-kompatibel sind?"
-    same_site_cookies: "Verwende Same-Site-Cookies, die alle Angriffsszenarien für Cross-Site-Request-Forgery in unterstützten Browsern (lax oder strict). Warnung: Strict wird nur auf Seiten funktionieren, die Login erzwingen und SSO verwenden."
+    same_site_cookies: "Verwende Same-Site-Cookies, die alle Angriffsszenarien für Cross-Site-Request-Forgery in unterstützten Browsern verhindern. Warnung: Strikt wird nur auf Seiten funktionieren, die Login erzwingen und SSO verwenden."
     summary_score_threshold: "Mindestpunktzahl, die ein Beitrag benötigt, um in der \"Thema zusammenfassen\"-Ansicht zu erscheinen."
     summary_posts_required: "Mindestanzahl an Beiträgen in einem Thema, bevor die \"Thema zusammenfassen\"-Funktion aktiviert wird."
     summary_likes_required: "Mindestanzahl an Likes in einem Thema, bevor die \"Thema zusammenfassen\" Funktion aktiviert wird."
@@ -1091,7 +1086,6 @@ de:
     purge_deleted_uploads_grace_period_days: "Schonfrist (in Tagen), bevor ein entfernter Upload endgültig gelöscht wird."
     purge_unactivated_users_grace_period_days: "Frist (in Tagen), bevor ein Benutzer gelöscht wird, der sein Konto nicht aktiviert hat. Setze sie auf 0, um nicht aktivierte Benutzer nie zu bereinigen."
     enable_s3_uploads: "Speichere hochgeladene Dateien auf Amazon S3. WICHTIG: benötigt gültige S3 Anmeldedaten (sowohl access_key_id als auch secret_access_key)."
-    s3_use_iam_profile: 'Benutze die AWS EC2 IAM Rolle zum Abrufen von Keys. ANMERKUNG: Das Aktivieren überschreibt die Einstellungen „s3 access key id“ und „s3 secret access key“.'
     s3_upload_bucket: "Der Name des Amazon S3 Buckets, in dem hochgeladene Dateien gespeichert werden sollen. ACHTUNG: nur Kleinbuchstaben, keine Punkte, keine Unterstriche."
     s3_access_key_id: "The Amazon S3 access key id that will be used to upload images"
     s3_secret_access_key: "Der geheime Schlüssel von Amazon S3 welcher für das Hochladen verwendet wird"
@@ -1137,8 +1131,6 @@ de:
     min_trust_to_edit_wiki_post: "Die minimal benötigte Vertrauensstufe, um als Wiki markierte Beiträge bearbeiten zu können."
     min_trust_to_edit_post: "Die minimal benötigte Vertrauensstufe, um Beiträge bearbeiten zu können."
     min_trust_to_allow_self_wiki: "Die minimale Vertrauensstufe, die ein Benutzer haben muss, um einen eigenen Wiki Eintrag zu erstellen."
-    min_trust_to_send_messages: "Benötigte Vertrauensstufe um neue private Nachrichten erstellen zu dürfen."
-    min_trust_to_send_email_messages: "Mindestvertrauensstufe, die nötig ist, um neue private Nachrichten per E-Mail (an vorbereitete Benutzer) zu schicken."
     newuser_max_links: "Maximale Anzahl der Links, die neue Benutzer Beiträgen hinzufügen dürfen."
     newuser_max_images: "Maximale Anzahl der Bilder, die neue Benutzer Beiträgen hinzufügen dürfen."
     newuser_max_attachments: "Maximale Anzahl der Dateien, die neue Benutzer Beiträgen hinzufügen dürfen."
@@ -1206,7 +1198,6 @@ de:
     reply_by_email_enabled: "Aktviere das Antworten auf Themen via E-Mail."
     reply_by_email_address: "Vorlage für die Antwort einer per E-Mail eingehender E-Mail-Adresse, zum Beispiel: %{reply_key}@reply.example.com oder replies+%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Liste alternativer Vorlagen für eingehende E-Mail-Adressen für das Antworten per E-Mail. Beispiel: %{reply_key}@antwort.example.com|antworten+%{reply_key}@example.com"
-    incoming_email_prefer_html: "Verwende das HTML statt dem Text für eingehende E-Mails."
     disable_emails: "Discourse daran hindern jegliche E-Mails zu verschicken"
     strip_images_from_short_emails: "Entferne Bilder aus E-Mails kleiner als 2800 Bytes."
     short_email_length: "Kurze E-Mail-Länge in Bytes"
@@ -1311,7 +1302,6 @@ de:
     allowed_href_schemes: "URI-Schemas, die in Links zusätzlich zu http und https erlaubt sind."
     embed_post_limit: "Maximale Anzahl der Beiträge die eingebettet werden."
     embed_username_required: "Der Benutzername ist für die Themenerstellung notwendig"
-    notify_about_flags_after: "Wenn es Meldungen gibt, die nicht innerhalb der angegebenen Anzahl von Stunden behandelt wurden, sende eine Nachricht an das Team. Ein Wert von 0 deaktiviert die Funktion."
     show_create_topics_notice: "Administratoren eine Warnmeldung anzeigen, wenn im Forum weniger als 5 öffentlich sichtbare Themen existieren."
     delete_drafts_older_than_n_days: Lösche Entwürfe, die mehr als (n) Tage alt sind.
     bootstrap_mode_min_users: "Erforderliche Benutzeranzahl, um den Starthilfe-Modus zu deaktivieren (0 = ausgeschaltet)"
@@ -1323,7 +1313,6 @@ de:
     approve_post_count: "Anzahl der Beiträge eines neuen Benutzer oder Anwärters, die genehmigt werden müssen"
     approve_unless_trust_level: "Beiträge von Benutzer unterhalb dieser Vertrauensstufe müssen genehmigt werden"
     approve_new_topics_unless_trust_level: "Beiträge von Benutzer unterhalb dieser Vertrauensstufe müssen genehmigt werden"
-    notify_about_queued_posts_after: "Wenn es Beiträge gibt, die länger als diese Anzahl von Stunden auf ihre Überprüfung gewartet haben, sende eine E-Mail an contact_email. Setze sie auf 0, um diese E-Mails zu deaktivieren."
     auto_close_messages_post_count: "Maximale Anzahl von Beiträgen, die in einer Nachricht erlaubt sind, bevor sie automatisch geschlossen wird (0 = ausgeschaltet)"
     auto_close_topics_post_count: "Maximale Anzahl von Beiträgen, die in einem Thema erlaubt sind, bevor es automatisch geschlossen wird (0 = ausgeschaltet)"
     code_formatting_style: "Code-Schaltfläche im Editor wird standardmäßig diesen Formatierungsstil anwenden"
@@ -2664,143 +2653,6 @@ de:
       Ja, die rechtliche Seite ist langweilig, aber wir müssen uns selbst schützen &ndash; und im erweiterten Sinne auch dich und deine Daten &ndash; vor unfreundlichen Leuten. Wir haben [Nutzungsbedingungen](/tos), die deines (und unser) Verhalten und unsere Rechte bezüglich des Inhalts, der Privatsphäre und den Gesetzen beschreiben. Um diesen Dienst zu nutzen, musst du dich mit unseren [Nutzungsbedingungen](/tos) einverstanden erklären.
   tos_topic:
     title: "Nutzungsbedingungen"
-    body: |
-      Die folgenden Geschäftsbedingungen sind maßgebend für die gesamte %{company_domain} Webseite und aller Inhalte, Dienstleistungen und Produkte, die auf oder über die Webseite zur Verfügung gestellt werden, einschließlich, aber nicht beschränkt auf die %{company_domain} Foren-Software, die %{company_domain} Support-Foren und den %{company_domain} Hosting-Dienst ("Hosting"), (zusammengefasst: die „Webseite“). Die Webseite gehört und wird betrieben von %{company_full_name} („%{company_name}“). Die Website wird angeboten vorbehaltlich der uneingeschränkten Zustimmung aller hierin enthaltenen Bedingungen und aller anderen sonstigen betrieblichen Regeln, Richtlinien (einschließlich, ohne Einschränkung, der [Datenschutzrichtlinien](/privacy) and [Community-Richtlinien](/faq)) von %{company_domain} und Verfahren, die von Zeit zu Zeit auf dieser Webseite von %{company_name} veröffentlicht werden können (zusammen die „Vereinbarung“).
-
-      Bitte lies diese Vereinbarung sorgfältig durch, bevor du die Webseite verwendest oder darauf zugreifst. Durch die Benutzung oder den Zugriff auf einen Teil der Webseite stimmst du den Geschäftsbedingungen dieser Vereinbarung zu. Wenn du nicht allen Geschäftsbedingungen in dieser Vereinbarung zustimmst, dann darfst du weder auf die Seite zugreifen noch irgendwelche Dienstleistungen in Anspruch nehmen. Wenn diese Geschäftsbedingungen als Angebot von %{company_name} erachtet werden, beschränkt sich die Zustimmung ausdrücklich auf diese Bedingungen. Die Website wird nur für Benutzer angeboten, die mindestens 13 Jahre alt sind.
-
-      <a name="1"></a>
-
-      ## [1. Dein %{company_domain}-Konto](#1)
-
-      Wenn du eine Konto auf der Webseite erstellst, bist du verantwortlich, die Sicherheit deines Kontos aufrecht zu erhalten und du bist verantwortlich für alle Aktivitäten, die mit deinem Konto durchgeführt werden. Du musst %{company_name} umgehend über eine unbefugte Benutzung deines Kontos oder über jeden anderen Sicherheitsverstoß informieren. %{company_name} haftet nicht für Handlungen oder Unterlassungen deinerseits, einschließlich Schäden jeglicher Art, die infolge solcher Handlungen oder Unterlassungen eingetreten sind.
-
-      <a name="2"></a>
-
-      ## [2. Pflichten der Mitwirkenden](#2)
-
-      Wenn du Material, oder Links auf der Webseite veröffentlichst, anderweitig Material über die Webseite zur Verfügung stellst (oder Dritte dazu berrechtigst) (ajegliches Material als „Inhalt“), bist du für dessen Inhalt und den aus diesem Inhalt resultierenden Schaden in vollem Umfang verantwortlich. Dies gilt unabhängig davon, in welcher Form der Inhalt präsentiert wird, einschließlich, aber nicht beschränkt auf Text, Foto, Video, Audio oder Computer-Software. Indem du Inhalt zur Verfügung stellst, versicherst und garantierst du, dass:
-
-      * das Herunterladen, Kopieren und die Benutzung des Inhalts keine proprietären Rechte verletzt, einschließlich, aber nicht beschränkt auf Urheberrecht, Patente, Schutzmarken oder Betriebsgeheimnissen irgendeines Dritten;
-      * sofern dein Arbeitgeber die Rechte an geistigem Eigentum hat, die du erstellst, entweder (i) du die Erlaubnis von deinem Arbeitgeber hast, den Inhalt zu einzustellen bzw. verfügbar zu machen, einschließlich, aber nicht beschränkt auf Software, oder (ii) deinem Arbeitgeber dir einen Verzicht auf alle Rechte an dem Inhalt versichert hat;
-      * du Fremdlizenzen im Zusammenhang mit dem Inhalt vollständig nachgekommen bist und dass du alle notwendigen Dinge unternommen hast, um erforderliche Bedingungen erfolgreich an die Endbenutzer weiterzureichen;
-      * der Inhalt keine Viren, Würmer, Malware, Trojaner oder anderen schädliche oder zerstörenden Inhalt enthält oder installiert;
-      * der Inhalt kein Spam und nicht von einer Maschine oder zufallsgeneriert ist und dass er keine sittenwidrigen oder unerwünschte kommerzielle Inhalte enthält, die darauf ausgerichtet sind, Zugriffe auf dritte Seiten zu lenken oder die Suchmaschinenplatzierung fördern, oder sonstige unerlaubte Handlungen (wie etwa Phishing) darstellen oder Empfänger hinsichtlich der Quelle des Materials täuschen (wie etwa Spoofing);
-      * der Inhalt nicht pornografisch ist, keine Bedrohungen enthält oder zu Gewalt auffordert, und dass er nicht gegen die Privatsprähe oder Persönlichkeitsrechte Dritter verstößt;
-      * dein Inhalt nicht über unerwünschte elektronische Nachrichten wie Spam-Links in Newsgroups, E-Mail-Verteilern, Blogs und Webseiten oder ähnliche unaufgeforderte Werbemaßnahmen beworben wird;
-      * dein Inhalt in keiner Weise bezeichnet ist, die die Leser täuschen zu glauben, dass du eine andree Person oder Firma bist; und
-      * dass du, im Falle von Inhalt, der Quelltext enthält, deren Art, Natur, Nutzen und Auswirkungen genau kategorisiert und/oder beschreibst, egal ob du dazu von %{company_name} aufgefordert wirst oder nicht.
-
-      <a name="3"></a>
-
-      ## [3. Lizenz von Benutzerinhalten](#3)
-
-      Benutzerbeiträge werden unter eine [Creative Commons Namensnennung - Nicht-kommerziell - Weitergabe unter gleichen Bedingungen 3.0 Unported - Lizenz](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.de) gestellt. Ohne Einschränkung dieser Darstellungen und Garantien, hat %{company_name} das Recht (jedoch nicht die Pflicht) dazu, nach dem Ermessen von %{company_name} (i) jeglichen Inhalt abzulehnen oder zu entfernen der, refuse or remove any content that, nach eigenem Ermessen von %{company_name}, gegen eine Richtlinie von %{company_name} verstößt oder in einer anderen Weise schädlich oder bedenklich ist, oder (ii) einer Person oder juristischen Person den Zugriff auf und die Benutzung der Seite zu beenden oder zu verweigern, gleich aus welchem Grund, nach eigenem Ermessen von %{company_name}. %{company_name} hat keine Verpflichtigung, Beiträge zu erstatten, die vorher bezahlt wurden.
-
-
-      <a name="4"></a>
-
-      ## [4. Zahlung und Verlängerung](#4)
-
-      ### Allgemeine Bedingungen
-
-      Optionale, kostenpflichtige Dienstleistungen oder Upgrades können auf der Webseite zur Verfügung stehen. Durch die Wahl optionaler, kostenpflichtigen Dienstleistungen oder Upgrades stimmst du der monatlichen oder jährlichen Zahlung der ausgewiesenen Gebühren an %{company_name} zu. Die Zahlungen werden im Voraus am Tag der Anmeldung für die Dienstleistungen oder Upgrades fällig und decken die Benutzung dieser Dienstleistung wie angegeben für einen Monats- oder Jahreszeitraum ab. Diese Gebühren sind nicht erstattungsfähig.
-
-      ### Automatische Verlängerung
-
-      Sofern du %{company_name} nicht vor Ablauf des jeweiligen Abonnementzeitraums darüber informierst, dass du eine Dienstleistung oder ein Upgrade kündigen möchtest, wird dein Abonnement automatisch verlängert und du ermächtigst uns, die zu diesem Zeitpunkt geltenden Gebühren für ein Jahres- oder Monatsabonnement (einschließlich aller Steuern) für mittels einer Kreditkarte oder sonstiger Zahlungsmittel einzuziehen, die du bei der Anmeldung angegeben hast. Dienstleistungen und Upgrades können jederzeit gekündigt werden.
-
-      <a name="5"></a>
-
-      ## [5. Dienstleistungen](#5)
-
-      ### Hosting, Support-Dienstleistungen
-
-      Optionales Hosting und Support-Dienstleistungen können gemäß den Geschäftsbedingungen von %{company_name} für einen solchen Dienstleistung zur Verfügung gestellt werden. Durch die Registrierung eines Kontos für Hosting oder Support-Dienstleistungen, stimmst du diesen Geschäftsbedingungen zu.
-
-      <a name="6"></a>
-
-      ## [6. Pflichten der Website-Besucher](#6)
-
-      %{company_name} hat und kann nicht alle Materialien, einschließlich Computer-Software, die auf der Webseite veröffentlicht werden, überprüft/überprüfen, und kann deshalb nicht für die Inhalte, Verwendung oder Auswirkung dieses Materials haftbar gemacht werden. Durch den Betrieb der Webseite versichert oder impliziert %{company_name} nicht, dass das dort veröffentlichte Material gutgeheißen wird oder dass ein solches Material für zutreffend, nützlich oder ungefährlich gehalten wird. Du bist dafür verantwortlich, die notwendigen Sicherheitsvorkehrungen zu treffen, um dich und dein Computersystem vor Viren, Würmern, Trojanern und anderen schädlichen oder zerstörerischen Inhalten zu schützen. Die Webseite kann Inhalte enthalten, die beleidigend, unanständig oder anderweitig anstößig sind, sowie Inhalte, die technische Ungenauigkeiten, Schreibfehler und sonstige Fehler aufweisen. Diese Webseite kann auch Material enthalten, das gegen Eigentums- oder Veröffentlichungsrechte verstößt oder die Rechte an geistigem Eigentum oder sonstige Eigentumsrechte Dritter verletzt. Das Herunterladen, Kopieren oder Nutzen des Materials kann außerdem zusätzlichen genannten oder ungenannten Geschäftsbedingungen unterliegen. %{company_name} schließt jegliche Verantwortung für einen Schaden infolge der Benutzung durch Benutzer der Webseite oder infolge des Herunterladens der dort veröffentlichten Inhalte durch solche Benutzer aus.
-
-      <a name="7"></a>
-
-      ## [7. Inhalt, der auf anderen Websites veröffentlicht wird](#7)
-
-      Wir haben nicht alle Materialien, einschließlich Computer-Software, die auf den Webseiten und Seiten zur Verfügung gestellt, auf die %{company_domain} verlinkt oder die auf %{company_domain} verlinken, überprüft und können dies auch nicht tun. %{company_name} hat keine Kontrolle über diese Nicht-%{company_domain}-Webseiten und -Seiten und ist nicht verantwortlich für deren Inhalte oder Benutzung. DDu bist dafür verantwortlich, die notwendigen Sicherheitsvorkehrungen zu treffen, um dich und dein Computersystem vor Viren, Würmern, Trojanern und anderen schädlichen oder zerstörerischen Inhalten zu schützen. %{company_name} schließt jegliche Verantwortung für einen Schaden infolge der Benutzung von Nicht-%{company_domain}-Webseiten und -Seiten aus.
-
-      <a name="8"></a>
-
-      ## [8. Verstoß gegen das Urheberrecht und DMCA-Richtlinien](#8)
-
-      Genauso wie %{company_name} andere auffordert, Rechte an geistigem Eigentum zu respektieren, so respektiert auch %{company_name} die Rechte an geistigem Eigentum anderer. Wenn du der Ansicht bist, dass Material, das sich auf %{company_domain} befindet oder das von %{company_domain} verlinkt wird, gegen dein Urheberrecht verstößt, wirst du gebeten, %{company_name} gemäß der Richtlinie zum [Digital Millennium Copyright Act ("DMCA")]https://de.wikipedia.org/wiki/Digital_Millennium_Copyright_Act) von %{company_name} zu benachrichtigen. %{company_name} wird alle derartigen Mitteilungen beantworten und das verletztende Material wie erforderlich oder angemessen löschen oder alle Links auf das verletztende Material deaktivieren. %{company_name} wird den Zugang eines Besuchers auf und die Benutzung der Webseite kündigen, wenn unter entsprechenden Umständen der Benutzer nachweislich wiederholt gegen das Urheberrecht oder andere Rechte an geistigem Eigentum von %{company_name} oder anderen verstößt. Im Falle einer solchen Kündigung ist %{company_name} nicht verpflichtet, jegliche zuvor an %{company_name} bezahlten Beträge zu erstatten.
-
-      <a name="9"></a>
-
-      ## [9. Geistiges Eigentum](#9)
-
-      Durch diese Vereinbarung wird kein geistiges Eigentum von %{company_name} oder Dritten von %{company_name} auf dich übertragen, und alle Rechte, Titel und Rechtsansprüche an einem solchen Eigentum bleiben bei %{company_name} (wie zwischen den Parteien). %{company_name}, %{company_domain}, das %{company_domain}-Logo und alle anderen Marken, Dienstleistungsmarken, Grafiken und Logos, die in Verbindung mit %{company_domain} oder der Website verwendet werden, sind Marken oder eingetragene Marken von %{company_name} oder %{company_name}-Lizenznehmern. Andere Marken, Dienstleistungsmarken, Grafiken und Logos, die in Verbindung mit der Website verwendet werden, können die Marken anderer Dritter sein. Durch deine Benutzung der Website werden dir keine Rechte oder Lizenzen zur Vervielfältigung oder anderweitigen Benutzung jeglicher Marken von %{company_name} oder Dritten gewährt.
-
-      <a name="10"></a>
-
-      ## [10. Werbeanzeigen](#10)
-
-      %{company_name} behält sich das Recht vor, Werbeanzeigen auf deinem Inhalt anzuzeigen, sofern du kein „Keine Werbeanzeigen“-Upgrade erworben haben.
-
-      <a name="11"></a>
-
-      ## [11. Namensnennung](#11)
-
-      %{company_name} behält sich das Recht vor, Namensnennung-Links, wie z. B. „Powered by %{company_domain}“, Theme-Autor und Schriftartnennung in der Fußzeile oder der Werkzeugleiste anzuzeigen. Informationen in der Fußzeile und in der %{company_domain}-Werkzeugleiste dürfen ungeachtet der gekauften Upgrades nicht geändert oder gelöscht werden.
-
-      <a name="12"></a>
-
-      ## [12. Änderungen](#12)
-
-      %{company_name} behält sich das Recht vor, jeden Teil dieser Bestimmungen nach eigenem Ermessen zu verändern oder zu ersetzen. Du bist dafür verantwortlich, diese Bestimmungen regelmäßig auf Änderungen zu überprüfen. Deine weitere Benutzung or dein Zugang zur Webseite nach einer Änderung dieser Bestimmungen stellt eine Zustimmung dieser Änderungen dar. %{company_name} kann in der Zukunft auch neue Dienste und Funktionen über die Webseite (einschließlich der Veröffentlichung neuer Werkzeuge und Ressourcen) anbieten. Solche neuen Funktionen und Dienste unterliegen den Bedingungen dieser Geschäftsbedingungen.
-
-      <a name="13"></a>
-
-      ## [13. Kündigung](#13)
-
-      %{company_name} kann deinen Zugang zur gesamten Website oder einem Teil hiervon jederzeit und mit oder ohne Angabe eines Grundes, mit oder ohne Kündigungsfrist und mit sofortiger Wirkung kündigen. Wenn du diese Vereinbarung oder dein Konto auf %{company_domain} (falls du eines besitzt) kündigen möchtest, kannst du auch einfach die Benutzung der Webseite einstellen. Alle Bestimmungen dieser Vereinbarung, die gemäß ihrer Art die Kündigung überdauern sollten, überdauern die Kündigung, einschließlich, aber nicht beschränkt auf Eigentumsbestimmungen, Haftungsausschlüsse, Entschädigungen und Haftungsbeschränkungen.
-
-
-      <a name="14"></a>
-
-      ## [14. Haftungsausschluss](#14)
-
-      Die Webseite wird „so wie sie ist“ zur Verfügung gestellt. %{company_name}, Vertragspartner und Lizenznehmer schließen hiermit sämtliche Gewährleistungen, ausdrücklich oder implizit, aus, einschließlich, aber nicht beschränkt auf die Gewährleistungen der Marktgängigkeit, der Eignung für einen bestimmten Zweck oder der Nichtverletzung von Rechten. Weder %{company_name} noch Vertragspartner und Lizenznehmer übernehmen jedwede Gewährleistung, dass die Website fehlerfrei ist oder dass der Zugang fortlaufend oder unterbrechungsfrei erfolgt. Wenn du dies tatsächlich liest, findest du hier [eine Belohnung](http://www.newyorker.com/online/blogs/shouts/2012/12/the-hundred-best-lists-of-all-time.html). Du verstehst, dass du nach eigenem Ermessen und auf eigene Gefahr Inhalte oder Leistungen von der Website herunterlädst oder über die Webseite einholst.
-
-
-      <a name="15"></a>
-
-      ## [15. Haftungsbeschränkung](#15)
-
-      In keinem Fall haften %{company_name}, Vertragspartner oder Lizenznehmer in Bezug auf einen Gegenstand dieser Vereinbarung aufgrund eines Vertrages, aufgrund von Fahrlässigkeit, Gefährdungshaftung oder einer sonstigen Billigkeitstheorie für: (i) jegliche beiläufig entstandene Schäden, Folgeschäden oder sonstige Schäden; (ii) die Kosten für die Beschaffung von Ersatzprodukten oder Leistungen; (iii) die Benutzungsunterbrechung oder den Verlust oder die Beschädigung von Daten; oder (iv) für jegliche Beträge, die Gebühren übersteigen, die von dir an %{company_name} gemäß dieser Vereinbarung während eines Zeitraums von zwölf (12) Monaten vor dem Klageanspruch bezahlt wurden. %{company_name} übernimmt keine Haftung für einen Ausfall oder eine Verzögerung aufgrund von Tatsachen, die nach vernünftigem Ermessen über seine Kontrolle hinausgehen. Das Vorstehende gilt nicht, soweit nach anwendbarem Recht unzulässig.
-
-      <a name="16"></a>
-
-      ## [16. Allgemeine Zusicherung und Gewährleistung](#16)
-
-      Du versicherst und garantierst, dass (i) deine Benutzung der Webseite gemäß der [Datenschutzrichtlinie](/privacy) von %{company_name}, der [Community-Richtlinie](/guidelines), dieser Vereinbarung und allen geltenden Gesetzen und Bestimmungen erfolgt (einschließlich, aber nicht beschränkt auf jegliche lokale Gesetze oder Bestimmungen in Ihrem Land, Bundesland, Ihrer Stadt oder einem anderen Regierungsgebiet, hinsichtlich des Online-Verhaltens und zulässiger Inhalte, und einschließlich aller geltender Gesetze hinsichtlich der Übertragung technischer Daten, die aus den USA oder dieinem Wohnsitzland exportiert wurden) und (ii) deine Benutzung der Website nicht gegen die Rechte an geistigem Eigentum Dritter verstößt oder diese falsch anwendet.
-
-      <a name="17"></a>
-
-      ## [17. Schadloshaltung](#17)
-
-      Du stimmst zu, %{company_name}, Vertragspartnern und Lizenznehmern, und jeweiligen Vorstandsmitglieder, Amtsträger, Team-Mitglieder und Vertreter gegen jegliche Haftungsfälle, Ansprüche und Ausgaben schadlos zu halten, einschließlich angemessener Anwaltskosten, die den schadlos gehaltenen Parteien im Zusammenhang mit jeglichen Ansprüchen entstehen, die sich aus jeglicher Verletzung dieser Vereinbarung ergeben.
-
-      <a name="18"></a>
-
-      ## [18. Verschiedenes](#18)
-
-      Diese Vereinbarung stellt die gesamte Vereinbarung zwischen %{company_name} und dir bezüglich des Gegenstands dieser Geschäftsbedingungen dar, und sie kann nur durch eine schriftliche, durch einen befugten Vertreter von %{company_name} unterzeichnet oder durch die Veröffentlichung einer überarbeiteten Version durch %{company_name} geändert werden. Vorbehaltlich eventuell anwendbarer anders lautender gesetzlicher Bestimmungen, unterliegt diese Vereinbarung, der Zugang zu und die Benutzung der Website den Gesetzen des Staates Kalifornien, USA unter Ausschluss des Kollisionsrechts. Gerichtsstand für alle Streitigkeiten aus oder im Zusammenhang mit derselben ist der Staat und die Bundesgerichte in San Francisco County, Kalifornien. Mit Ausnahme der Ansprüche auf jede Unterlassung oder jeden Rechtsbehelf oder Ansprüche hinsichtlich der Rechte an geistigem Eigentum (die vor ein ordentliches Gericht ohne die Hinterlegung einer Einlage gebracht werden können) wird jeder Rechtsstreit, der gemäß dieser Vereinbarung entsteht, endgültig durch umfassende Schiedsregelungen des Judicial Arbitration and Mediation Service, Inc. („JAMS“) von drei Schlichtern, die gemäß solcher Regeln ernannt werden, beigelegt werden. Das Schiedsverfahren findet in San Francisco, Kalifornien in englischer Sprache statt, und die Schiedsentscheidung kann vor jedem Gericht durchgesetzt werden. Die obsiegende Partei im Rahmen einer Verhandlung oder eines Verfahrens zur Durchsetzung dieser Vereinbarung ist berechtigt, Unkosten und Anwaltsgebühren in Rechnung zu stellen. Wenn ein Teil dieser Vereinbarung für ungültig oder nicht einklagbar erachtet wird, wird dieser Teil so ausgelegt, dass die ursprüngliche Absicht der Parteien widergespiegelt wird, und die restlichen Abschnitte vollständig gültig bleiben. Eine Verzichtserklärung einer der Parteien hinsichtlich einer Bedingung oder Kondition dieser Vereinbarung oder ein Verstoß gegen eine solche Bedingung in einer anderen Instanz stellt keinen Verzicht auf eine solche Bestimmung oder eine nachfolgende Nichterfüllung einer solchen Bestimmung dar. Du kannst deine Rechte gemäß dieser Vereinbarung auf eine Partei übertragen, die sich mit folgenden Benutzungsbedingungen einverstanden erklärt und bestätigt, dass sie sich an die Geschäftsbedingungen halten wird; %{company_name} kann seine Rechte gemäß dieser Vereinbarung bedingungslos übertragen. Diese Vereinbarung ist bindend und wird zugunsten der Parteien und ihrer entsprechenden Erben und Rechtsnachfolger wirksam.
-
-      Dieses Dokument ist als CC-BY-SA lizensiert. Es wurde zuletzt aktualisiert am am 31. Mai 2013.
-
-      Basiert ursprünglich auf den [WordPress-Geschäftsbedingungen](https://de.wordpress.com/tos/).
   privacy_topic:
     title: "Datenschutzrichtlinie"
     body: |
@@ -3119,7 +2971,6 @@ de:
     badge_title_metadata: "%{display_name} Abzeichen auf %{site_title}"
   admin_login:
     success: "E-Mail gesendet"
-    error: "Fehler!"
     email_input: "Administrator-E-Mail"
     submit_button: "E-Mail senden"
   performance_report:

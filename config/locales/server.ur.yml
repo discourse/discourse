@@ -6,10 +6,137 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 ur:
+  dates:
+    short_date_no_year: "D MMM"
+    short_date: "D MMM, YYYY"
+    long_date: "MMMM D, YYYY h:mma"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "٪m-%d-٪Y"
+      short_no_year: "٪B %-d"
+      date_only: "٪B %-d، ٪Y"
   title: "ڈسکورس"
+  topics: "ٹاپک"
+  posts: "پوسٹ`"
+  loading: "لوڈ ہو رہا ہے"
+  powered_by_html: '<a href="https://www.discourse.org">ڈِسکورس</a>کے مرہونِ مِنَّت، جاوااسکرپٹ کے ساتھ بہترین نظر آئے گا'
+  log_in: "لاگ اِن"
+  purge_reason: "ترک کردہ، غیر فعال اکاؤنٹ کے طور پر خود کار طریقے سے حذف کر دیا گیا"
+  disable_remote_images_download_reason: "ریمَوٹ تصاویر کا ڈاؤن لوڈ غیر فعال کردیا گیا تھا کیونکہ ڈِسک میں کافی جگہ دستیاب نہیں تھی۔"
+  anonymous: "گمنام"
+  remove_posts_deleted_by_author: "مصنف کی طرف سے حذف کر دیا گیا"
+  themes:
+    bad_color_scheme: "تِھیم اَپ ڈَیٹ نہیں ہو سکی، غلط رنگ سکیم"
+    other_error: "تِھیم اَپ ڈَیٹ کرتے ہوے کچھ غلط ہو گیا"
+  emails:
+    incoming:
+      default_subject: "یہ ٹاپک کو ایک عنوان کی ضرورت ہے"
+      show_trimmed_content: "کٹا ہوا مواد دکھائیں"
+      maximum_staged_user_per_email_reached: "فی اِی میل بنائے گئے سٹَیجڈ صارفین کی زیادہ سے زیادہ تعداد تک پہنچ گئے ہیں۔"
+      errors:
+        empty_email_error: "ہو جاتا ہے جب موصول ہونے والی راء میل خالی ہوتی ہے۔"
+        no_message_id_error: "ہو جاتا ہے جب میل کا 'Message-Id' ہیڈر نہ ہو۔"
+        auto_generated_email_error: "جب 'precedence' ہیڈر سَیٹ کیا جائے: list ،junk ،bulk یا auto_reply، پر یا جب کسی اور ہیڈر میں شامل ہو: auto-submitted ،auto-replied یا auto-generated۔"
+        no_body_detected_error: "ہو جاتا ہے جب ہم متن کو نکال نہ سکیں اور کوئی اٹَیچمنٹس نہ ہوں۔"
+        no_sender_detected_error: "ہو جاتا ہے جب ہم فرام ہیڈر میں ایک درست ای میل ایڈریس نہ تلاش کر سکیں۔"
+        inactive_user_error: "ہو جاتا ہے جب بھیجنے والا سرگرم نہ ہو۔"
+        silenced_user_error: "ہو جاتا ہے جب بھیجنے والا خاموش کیا گیا ہو۔"
+        bad_destination_address: "ہو جاتا ہے جب To/Cc/Bcc فیلڈز میں کوئی بھی ای میل ایڈریس ترتیب کردہ آنے والے ای میل ایڈریسوں سے مَیچ نہ کرے۔"
+        strangers_not_allowed_error: "ہو جاتا ہے جب کسی صارف نے ایک ایسے زُمرہ میں نیا ٹاپک بنانے کی کوشش کی ہو جس کا وہ رکن نہ ہوں۔"
+        insufficient_trust_level_error: "ہو جاتا ہے جب کسی صارف نے ایک ایسے زُمرہ میں نیا ٹاپک بنانے کی کوشش کی ہو جس پر اُن کے پاس مطلوبہ ٹرسٹ لَیول نہ ہو۔"
+        reply_user_not_matching_error: "ہو جاتا ہے جب جواب ایک ایسے ای میل ایڈریس سے آیا ہو جو اطلاع بھیجے جانے والے ایڈریس سے مختلف ہو۔"
+        topic_not_found_error: "ہو جاتا ہے جب جواب آجائے لیکن متعلقہ ٹاپک حذف کر دیا گیا ہو۔"
+        topic_closed_error: "ہو جاتا ہے جب جواب آجائے لیکن متعلقہ ٹاپک بند کر دیا گیا ہو۔"
+        bounced_email_error: "یہ ای میل ایک لوٹا دیئے جانے والی ای میل کی رپورٹ ہے۔"
+        screened_email_error: "ہو جاتا ہے جب بھیجنے والے کا ای میل ایڈریس پہلے سے ہی سکرین ہوا ہو۔"
+        unsubscribe_not_allowed: "ہو جاتا ہے جب اِس صارف کیلئے ای میل کے ذریعے سبسکرِپشن ختم کرنے کی اجازت نہ ہو۔"
+        email_not_allowed: "جب ای میل ایڈریس وائٹ لِسٹ میں نہ ہو یا بلیک لِسٹ پر ہو۔"
+      unrecognized_error: "نامعلوم خرابی"
   errors: &errors
+    format: '%{attribute} %{message}'
+    format_with_full_message: '<b>%{attribute}</b>: %{message}'
     messages:
-      empty: ھالی نہیں ھو سکتا
+      too_long_validation: "%{max} حروف تک محدود ہے؛ آپ نے %{length} درج کیے۔"
+      invalid_boolean: "غلط بُولِیَّن۔"
+      taken: "پہلے سے ہی لیا جا چکا ہے"
+      accepted: منظور کرنا لازمی ہے
+      blank: خالی نہیں ہو سکتا
+      present: خالی ہونا لازمی ہے
+      confirmation: "%{attribute}کے ساتھ مماثلت نہیں رکھتا "
+      empty: خالی نہیں ہو سکتا
+      equal_to: '%{count} کے برابر ہونا لازمی ہے'
+      even: غیر طاق ہونا لازمی ہے
+      exclusion: مخصوص ہے
+      greater_than: '%{count}سے زیادہ ہونا لازمی ہے '
+      greater_than_or_equal_to: '%{count}سے زیادہ یا اُس کے برابر ہونا لازمی ہے '
+      has_already_been_used: "پہلے سے ہی استعمال کیا جا چکا ہے"
+      inclusion: فہرست میں شامل نہیں ہے
+      invalid: غلط ہے
+      is_invalid: "واضح نہیں لگتا، کیا یہ ایک مکمل جملہ ہے؟"
+      contains_censored_words: "درج ذیل سَینسَر کیے گئے الفاظ پر مشتمل ہے: %{censored_words}"
+      matches_censored_pattern: "درج ذیل الفاظ پر مشتمل ہے جو سائٹ کے سَینسَر کیے ہوے رَیج اَیکس سے مَیچ کرتے ہیں: %{censored_words}"
+      less_than: '%{count}سے کم ہونا لازمی ہے '
+      less_than_or_equal_to: '%{count}سے کم یا اُس کے برابر ہونا لازمی ہے '
+      not_a_number: نمبر نہیں ہے
+      not_an_integer: اِنٹیجَر ہونا لازمی ہے
+      odd: طاق ہونا لازمی ہے
+      record_invalid: 'توثیق ناکام ہو گئی: %{errors}'
+      restrict_dependent_destroy:
+        one: "ریکارڈ حذف نہیں کیا جا سکتا کیونکہ ایک انحصار %{record} موجود ہے"
+        many: "ریکارڈ حذف نہیں کیا جا سکتا کیونکہ ایک انحصار %{record} موجود ہے"
+      too_long:
+        one: بہت لمبا ہے (زیادہ سے زیادہ 1 حرف ہو سکتا ہے)
+        other: بہت لمبا ہے (زیادہ سے زیادہ %{count} حروف ہو سکتے ہیں)
+      too_short:
+        one: بہت مختصر ہے (کم از کم 1 حرف ہو سکتا ہے)
+        other: بہت مختصر ہے (کم از کم %{count} حروف ہو سکتے ہیں)
+      wrong_length:
+        one: غلط لمبائی ہے (1 حرف لمبا ہونا چاہئے)
+        other: غلط لمبائی ہے (%{count} حروف لمبا ہونا چاہئے)
+      other_than: "%{count}کے علاوہ ہونا لازمی ہے "
+    template:
+      body: 'درج ذیل خانوں کے ساتھ مسائل تھے:'
+      header:
+        one: 1 خرابی نے اِس %{model} کو محفوظ ہونے سے روک دیا
+        other: '%{count}خرابیوں نے اِس %{model} کو محفوظ ہونے سے روک دیا'
+    embed:
+      load_from_remote: "اُس پوسٹ کو لوڈ کرنے میں ایک خرابی کا سامنا کرنا پڑا۔"
+    site_settings:
+      min_username_length_exists: "آپ صارف نام کی کم از کم لمبائی، سب سے مختصر صارف نام کی لمبائی سے کم مقرر نہیں کرسکتے۔"
+      min_username_length_range: "آپ کم از کم، زیادہ سے زیادہ سے اوپر مقرر نہیں کرسکتے۔"
+      max_username_length_exists: "آپ صارف نام کی زیادہ سے زیادہ لمبائی، سب سے طویل صارف نام کی لمبائی سے کم مقرر نہیں کرسکتے۔"
+      max_username_length_range: "آپ زیادہ سے زیادہ، کم از کم سے نیچے مقرر نہیں کرسکتے۔"
+      default_categories_already_selected: "آپ کسی دوسری فہرست میں استعمال کردہ زُمرَہ کا انتخاب نہیں کرسکتے۔"
+      s3_upload_bucket_is_required: "آپ S3 پر اَپ لوڈز فعال نہیں کرسکتے جب تک کہ آپ نے 's3_upload_bucket' فراہم نہیں کیا۔"
+    conflicting_google_user_id: 'اِس اکاؤنٹ کے لئے گُوگَل اکاؤنٹ ID تبدیل ہوگئی ہے؛ سیکیورٹی وجوہات کی بناہ پر اسٹاف کی مداخلت کی ضرورت ہے۔ براہ مہربانی اسٹاف سے رابطہ کریں اور اُنہیں اشارہ کریں <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
+  invite:
+    not_found: "آپ کا دعوتی ٹوکن غلط ہے۔ براہ کرم سائٹ کے ایڈمِنِسٹریٹر سے رابطہ کریں۔"
+    user_exists: "<b>%{email}</b>کو مدعو کرنے کی کوئی ضرورت نہیں ہے، اُن کا <a href='/u/%{username}/summary'>پہلے سے ہی ایک اکاؤنٹ ہے!</a>"
+  bulk_invite:
+    file_should_be_csv: "اَپ لوڈ شدہ فائل CSV فارمیٹ میں ہونی چاہئے۔"
+    error: "یہ فائل اَپ لوڈ کرنے میں ایک خرابی کا سامنا کرنا پڑا۔  براہ مہربانی کچھ دیر بعد دوبارہ کوشش کریں۔"
+  topic_invite:
+    user_exists: "معذرت، وہ صارف پہلے ہی مدعو کیا جا چکا ہے۔ آپ صارف کو ایک ٹاپک پر صرف ایک ہی دفعہ مدعو کرسکتے ہیں۔"
+  backup:
+    operation_already_running: "ایک کارروائی اِس وقت چل رہی ہے۔ ابھی ایک نیا کام شروع نہیں کیا جا سکتا۔"
+    backup_file_should_be_tar_gz: "بیک اَپ فائل کو .tar.gz آرکائیو ہونا چاہئے۔"
+    not_enough_space_on_disk: "اس بیک اَپ کو اَپ لوڈ کرنے کیلئے ڈِسک میں کافی جگہ نہیں ہے۔"
+    invalid_filename: " بیک اَپ فائل کے نام میں غلط حروف شامل ہیں۔ درست حروف a-z 0-9 . - _ ہیں۔"
+  invalid_params: "آپ نے درخواست پر غلط پیرامیٹرز فراہم کیے ہیں: %{message}"
+  not_logged_in: "آپ کو یہ کرنے کیلئے لاگ اِن ہونا ضروری ہے۔"
+  not_found: "مطلوبہ URL یا ریسورس نہیں مل سکی۔"
+  invalid_access: "آپ کو درخواست کردہ ریسورس کو دیکھنے کی اجازت نہیں ہے۔"
+  invalid_api_credentials: "آپ کو درخواست کردہ ریسورس کو دیکھنے کی اجازت نہیں ہے۔ API کا صارف نام یا کِی غلط ہے۔"
+  read_only_mode_enabled: "یہ سائٹ صرف پڑھنے کے مَوڈ میں ہے۔ اِنٹرَیکشنز غیر فعال ہیں۔"
+  reading_time: "پڑھنے کیلئے وقت"
+  likes: "لائیکس"
+  too_many_replies:
+    one: "ہم معذرت خواہ ہیں، لیکن نئے صارفین کو عارضی طور پر ایک ٹاپک میں 1 جواب تک محدود کیا گیا ہے۔"
+    other: "ہم معذرت خواہ ہیں، لیکن نئے صارفین کو عارضی طور پر ایک ٹاپک میں %{count} جوابات تک محدود کیا گیا ہے۔"
+  date:
+    <<: *datetime_formats
+  time:
+    <<: *datetime_formats
   activemodel:
     errors:
       <<: *errors

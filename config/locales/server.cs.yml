@@ -101,6 +101,8 @@ cs:
       default_categories_already_selected: "Nemůžeš vybrat kategorii používanou v jiném seznamu."
   invite:
     user_exists: "Netřeba posílat pozvánku na <b>%{email}</b>. Tento email <a href='/u/%{username}/summary'>je veden u tohoto účtu!</a>"
+  bulk_invite:
+    file_should_be_csv: "Nahraný soubor by měl být ve formátu csv."
   backup:
     operation_already_running: "Právě probíhá operace %{operation}. V tuto chvíli nelze zahájit novou operaci %{operation}."
     backup_file_should_be_tar_gz: "Záloha by měla být archiv s příponou .tar.gz."
@@ -130,10 +132,15 @@ cs:
       few: "%{count} reakce"
       other: "%{count} reakcí"
   no_mentions_allowed: "Bohužel, nemůžete zmiňovat ostatní uživatele."
+  too_many_mentions:
+    one: "Bohužel, můžete zmínit jen jednoho uživatele v jednom příspěvku."
+    few: "Bohužel, můžete zmínit jen %{count} uživatele v jednom příspěvku."
+    other: "Bohužel, můžete zmínit jen %{count} uživatelů v jednom příspěvku."
   no_mentions_allowed_newuser: "Bohužel, noví uživatelé nemohou zmiňovat ostatní uživatele."
   no_images_allowed: "Bohužel, noví uživatelé nemohou vkládat obrázky do příspěvků."
   no_attachments_allowed: "Bohužel, noví uživatelé nemohou do příspěvků vkládat přílohy."
   no_links_allowed: "Bohužel, noví uživatelé nemohou vkládat odkazy do příspěvků."
+  contains_blocked_words: "Tvůj příspěvek obsahuje slova, která nejsou povolena."
   spamming_host: "Bohužel, na tento server nemůžete odkazovat."
   user_is_suspended: "Vyloučení uživatelé nemohou přidávat příspěvky."
   not_accepting_pms: "Bohužel, %{username} v současnosti nepřijímá zprávy."
@@ -154,6 +161,7 @@ cs:
   rss_description:
     latest: "Poslední témata"
     hot: "Populární témata"
+    top: "Nejlepší témata"
     posts: "Poslední příspěveky"
     group_posts: "Poslední příspěvky z @{group_name}"
     user_posts: "Poslední příspěvky od @{username}"
@@ -178,6 +186,16 @@ cs:
       one: "příspěvek"
       few: "%{count} příspěvky"
       other: "%{count} příspěvků"
+    new-topic: |
+      Vítej na %{site_name} &mdash; **díky za nový příspěvek!**
+
+      - Zní název zajímavě, když si jej přečteš nahlas? Je to dobré shrnutí daného tématu?
+
+      - Koho by to mohlo zajímat? Proč na tom záleží? Jaké typy odpovědí očekáváš?
+
+      - Používej ve svém tématu klíčová slova, aby jej ostatní mohli *najít*. Pro zařažení svého tématu pro něj vyber kategorii.
+
+      Více se dozvíš v [pravidlech komunity](/guidelines). Tenhle panel se zobrazí pouze pro vaše první %{education_posts_text}.
     new-reply: |
       Vítejte na %{site_name} &mdash; **díky za přispívání!**
 
@@ -203,9 +221,7 @@ cs:
         topic:
           attributes:
             base:
-              warning_requires_pm: "Varování můžete přidat pouze k soukromým zprávám."
               too_many_users: "Varování můžete najednou poslat pouze jednomu uživateli."
-              cant_send_pm: "Bohužel, tomuto uživateli nemůžete poslat soukromou zprávu."
               no_user_selected: "Musíte vybrat platného uživatele."
         user:
           attributes:
@@ -260,6 +276,9 @@ cs:
       title: "základní uživatel"
     member:
       title: "člen"
+  post:
+    image_placeholder:
+      broken: "Tento obrázek je rozbitý"
   rate_limiter:
     too_many_requests: "Děláte tuto akci příliš často. Prosím počkejte %{time_left} a zkuste to znovu."
     by_type:
@@ -370,6 +389,7 @@ cs:
         few: "téměř před %{count} roky"
         other: "téměř před %{count} roky"
   password_reset:
+    choose_new: "Vyber si nové heslo"
     choose: "Vybrat heslo"
     update: 'změnit heslo'
     save: 'Nastavit heslo'
@@ -381,6 +401,7 @@ cs:
     please_continue: "Pokračovat na %{site_name}"
     error: "Nastala chyba běhěm změny emailové adresy. Není nová adresa již někým používána?"
   activation:
+    action: "Klikni sem pro aktivaci svého účtu"
     already_done: "Bohužel, tento odkaz pro aktivaci účtu již není platný. Není váš účet jíž aktivní?"
     please_continue: "Váš účet je aktivovaný; budete přesměrování na výchozí stránku."
     continue_button: "Pokračovat na %{site_name}"
@@ -390,6 +411,7 @@ cs:
     off_topic:
       title: 'Off-Topic'
       description: 'Tento příspěvek se nevztahuje k diskuzi definované názvem a obsahem prvního příspěvku a měl by asi být přesunut jinam.'
+      short_description: 'Není relevantní k diskuzi'
       long_form: 'označil příspěvek jako off-topic'
     spam:
       title: 'Spam'
@@ -400,6 +422,7 @@ cs:
       title: 'Nevhodné'
       long_form: 'nahlášeno jako nevhodné'
     notify_user:
+      title: 'Poslat @{{username}} zprávu'
       long_form: 'obeslaný uživatel'
       email_title: 'Váš příspěvek v „%{title}“'
       email_body: "%{link}\\\n\\\n%{message}\n"
@@ -409,18 +432,25 @@ cs:
     bookmark:
       title: 'Záložka'
       description: 'Přidat záložku k tomuto příspěvku'
+      short_description: 'Přidat záložku k tomuto příspěvku'
       long_form: 'přidal záložku k tomuto příspěvku'
     like:
       title: 'To se mi líbí'
       description: 'Tento příspěvek se mi líbí'
+      short_description: 'Tento příspěvek se mi líbí'
       long_form: 'se líbí'
     vote:
       title: 'Hlasovat'
       description: 'Hlasujte pro tento příspěvek'
+      short_description: 'Hlasujte pro tento příspěvek'
       long_form: 'hlasoval pro tento příspěvek'
   user_activity:
     no_bookmarks:
       others: "Žádné záložky."
+    no_likes_given:
+      self: "Zatím se ti nelíbil žádný příspěvek."
+    no_replies:
+      others: "Žádné odpovědi."
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -448,6 +478,7 @@ cs:
     title: "Odhlášení"
     stop_watching_topic: "Přestat sledovat toto téma, %{link}"
     disable_digest_emails: "Zrušit zasílání souhrnných emailů"
+    log_out: "Odhlásit se"
   user_api_key:
     scopes:
       session_info: "Číst user session info"
@@ -594,7 +625,6 @@ cs:
     github_config_warning: 'Server je nakonfigurován, aby povoloval registraci a přihlášení přes GitHub (enable_github_logins), ale nejsou nastaveny hodnoty "client id" a "secret". Navštivte <a href="/admin/site_settings">nastevení webu</a> a opravte nastavení. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">Pro více informací si přečtěte tento návod</a>.'
     image_magick_warning: 'Server je nakonfigurován, aby vytvářel náhledy velkých obrázků, ale není nainstalován ImageMagick. Nainstalujte ImageMagick pomocí vašeho oblíbeného balíčkovače, nebo navštivte <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">web ImageMagick pro stažení aktuální verze</a>.'
   site_settings:
-    default_locale: "Výchozí jazyk této Discourse instance (kód ve formátu ISO 639-1)"
     allow_user_locale: "Povolit uživatelům nastavit si jazyk fóra"
     min_search_term_length: "Minimální délka hledaného výrazu ve znacích"
     allow_duplicate_topic_titles: "Povolit témata se stejným, duplicitním názvem"
@@ -793,7 +823,6 @@ cs:
       name: Obdivovaný
   admin_login:
     success: "E-mail odeslán"
-    error: "Chyba!"
     submit_button: "Odeslat e-mail"
   wizard:
     step:

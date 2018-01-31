@@ -511,7 +511,6 @@ pl_PL:
       '14': "Oczekujące"
     categories:
       all: "wszystkie kategorie"
-      all_subcategories: "wszystkie"
       no_subcategory: "żadne"
       category: "Kategoria"
       category_list: "Wyświetl listę kategorii"
@@ -595,7 +594,6 @@ pl_PL:
       disable_jump_reply: "Po odpowiedzi nie przechodź do nowego wpisu"
       dynamic_favicon: "Pokazuj licznik powiadomień na karcie jako dynamiczny favicon"
       theme_default_on_all_devices: "Ustaw ten motyw jako domyślny na wszystkich moich urządzeniach"
-      allow_private_messages: "Zezwól aby użytkownicy wysyłali mi wiadomości prywatne"
       external_links_in_new_tab: "Otwieraj wszystkie zewnętrzne odnośniki w nowej karcie"
       enable_quoting: "Włącz cytowanie zaznaczonego tekstu"
       change: "zmień"
@@ -818,7 +816,6 @@ pl_PL:
         title: "Zaproszenia"
         user: "Zaproszony(-a) użytkownik(-czka)"
         sent: "Wysłane"
-        none: "Nie ma żadnych zaproszeń do wyświetlenia."
         truncated:
           one: "Wyświetlanie pierwszego zaproszenia."
           few: "Wyświetlanie {{count}} pierwszych zaproszeń."
@@ -1281,8 +1278,6 @@ pl_PL:
         posted: "Autor wpisu"
         edited: "Edycja twojego wpisu"
         liked: "Lajk twojego wpisu"
-        private_message: "Prywatna wiadomość od"
-        invited_to_private_message: "Zaproszenie do prywatnej wiadomości od"
         invited_to_topic: "Zaproszenie do tematu od"
         invitee_accepted: "Zaproszenie zaakceptowane przez"
         moved_post: "Twój wpis został przeniesiony przez"
@@ -1296,7 +1291,6 @@ pl_PL:
         quoted: '{{username}} cytuje cie w "{{topic}}" - {{site_title}}'
         replied: '{{username}} odpowiada na twój wpis w "{{topic}}" - {{site_title}}'
         posted: '{{username}} pisze w "{{topic}}" - {{site_title}}'
-        private_message: '{{username}} wysyła ci prywatną wiadomość w "{{topic}}" - {{site_title}}'
         linked: '{{username}} linkuje do twojego wpisu z "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Dodaj obraz"
@@ -1642,7 +1636,6 @@ pl_PL:
         visible: "Ustaw jako widoczny"
         reset_read: "Zresetuj przeczytane dane"
         make_public: "Upublicznij temat"
-        make_private: "Utwórz prywatną wiadomość"
       feature:
         pin: "Przypnij temat"
         unpin: "Odepnij temat"
@@ -2430,7 +2423,6 @@ pl_PL:
         many: "%{count} przyznanych"
         other: "%{count} przyznanych"
       select_badge_for_title: Wybierz odznakę do użycia jako twój tytuł
-      none: "(brak)"
       badge_grouping:
         getting_started:
           name: Pierwsze kroki
@@ -2594,8 +2586,6 @@ pl_PL:
         agree_flag_hide_post: "Potwierdź i ukryj post"
         agree_flag_restore_post: "Potwierdź i przywróć post"
         agree_flag: "Potwierdź i zachowaj post"
-        defer_flag: "Ignoruj"
-        defer_flag_title: "Usunięcie flagi z twojej listy, nie wymaga dalszych działań."
         delete: "Usuń"
         delete_title: "Usuń wpis do którego odnosi się flaga."
         delete_post_defer_flag: "Usuń post i ignoruj flagę"
@@ -2796,7 +2786,6 @@ pl_PL:
           label: "Wyślij"
           title: "Wyślij kopię zapasową do tej instancji"
           uploading: "Wysyłanie…"
-          success: "'{{filename}}' został pomyślnie przesłany."
           error: "Podczas przesyłania pliku wystąpił błąd '{{filename}}': {{message}}"
         operations:
           is_running: "Proces jest w trakcie działania…"

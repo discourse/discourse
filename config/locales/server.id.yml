@@ -138,7 +138,6 @@ id:
     hot: "Topik Terpanas"
     top: "Topik unggulan"
     posts: "Pos terbaru"
-    private_posts: "pesan pribadi terkini"
     group_posts: "Posting terkini dari %{group_name}"
     group_mentions: "Mention terkini dari %{group_name}"
     user_topics: "Topik terakhir oleh @%{username}"
@@ -179,8 +178,6 @@ id:
         topic:
           attributes:
             base:
-              warning_requires_pm: "Anda hanya dapat melampirkan peringatan pada pesan pribadi."
-              cant_send_pm: "Mohon maaf, Anda tidak dapat mengirimkan pesan pribadi pada pengguna tersebut."
               no_user_selected: "Anda harus memilih pengguna yang valid."
         user:
           attributes:

@@ -202,7 +202,6 @@ nl:
     top_weekly: "Wekelijkse toptopics"
     top_daily: "Dagelijkse toptopics"
     posts: "Nieuwste berichten"
-    private_posts: "Nieuwste privéberichten"
     group_posts: "Nieuwste berichten van %{group_name}"
     group_mentions: "Nieuwste vermeldingen van %{group_name}"
     user_posts: "Nieuwste berichten van @%{username}"
@@ -296,12 +295,6 @@ nl:
       Het spijt ons, maar nieuwe gebruikers hebben een tijdelijke beperking van %{newuser_max_replies_per_topic} antwoorden in hetzelfde topic.
 
       Overweeg uw eerdere antwoorden te bewerken of andere topics te bezoeken in plaats van nog een antwoord toe te voegen.
-    reviving_old_topic: |
-      ### Dit topic nieuw leven inblazen?
-
-      Het laatste antwoord op dit topic was **%{days}** dagen geleden. Uw antwoord zal het topic naar de bovenkant van de bijbehorende lijst verplaatsen en iedereen die eerder bij de conversatie was betrokken op de hoogte brengen.
-
-      Weet u zeker dat u deze oude conversatie wilt voortzetten?
   activerecord:
     attributes:
       category:
@@ -318,9 +311,7 @@ nl:
         topic:
           attributes:
             base:
-              warning_requires_pm: "U kunt alleen waarschuwingen aan privéberichten toevoegen."
               too_many_users: "U kunt alleen waarschuwingen naar één gebruiker tegelijk sturen."
-              cant_send_pm: "Sorry, u kunt geen privébericht naar die gebruiker sturen."
               no_user_selected: "U moet een geldige gebruiker selecteren."
               reply_by_email_disabled: "Antwoorden met een email is uitgeschakeld."
             featured_link:
@@ -851,7 +842,6 @@ nl:
     censored_words: "Woorden die automatisch door &#9632;&#9632;&#9632;&#9632; zullen worden vervangen"
     censored_pattern: "Regex-patroon dat automatisch door &#9632;&#9632;&#9632;&#9632; zal worden vervangen"
     delete_old_hidden_posts: "Verborgen berichten die meer dan 30 dagen verborgen blijven automatisch verwijderen"
-    default_locale: "De standaardtaal van dit Discourse-forum (ISO 639-1-code)"
     allow_user_locale: "Gebruikers toestaan om een eigen voorkeur voor de interfacetaal te kiezen"
     set_locale_from_accept_language_header: "Taal van interface voor anonieme gebruikers instellen op basis van de taalheaders van hun webbrowser. (EXPERIMENTEEL, werkt niet met anonieme cache)"
     min_post_length: "Minimaal toegestane lengte van een bericht in tekens"
@@ -1026,7 +1016,6 @@ nl:
     purge_deleted_uploads_grace_period_days: "Na hoeveel uur een weesbestand definitief verwijderd wordt."
     purge_unactivated_users_grace_period_days: "Periode (in dagen) voordat een gebruiker die zijn account niet heeft geactiveerd wordt verwijderd. Zet op 0 om gebruikers nooit te verwijderen."
     enable_s3_uploads: "Uploads plaatsen op Amazon S3 storage. LET OP: vereist geldige S3 inloggegevens (zowel acces key id als secret access key)"
-    s3_use_iam_profile: 'Gebruik AWS EC2 IAM rol om keys binnen te halen. LET OP: na inschakelen dit gebruikt i.p.v. de instellingen voor "s3 access key id" en "s3 secret access key".'
     s3_upload_bucket: "De naam van de Amazon S3 bucket waar bestanden naar worden geüpload. LET OP: moet bestaan uit kleine letters, zonder puntjes en geen underscores."
     s3_access_key_id: "Het Amazon S3 access key id dat wordt gebruikt voor het uploaden van afbeeldingen."
     s3_secret_access_key: "De Amazon S3 secret access key die wordt gebruikt voor het uploaden van afbeeldingen."
@@ -1059,7 +1048,6 @@ nl:
     min_trust_to_create_topic: "Het minimale trust level dat nodig is om een topic te mogen maken."
     min_trust_to_edit_wiki_post: "Het minimale trust level dat nodig is om een bericht te wijzigen dat als wiki gemarkeerd is."
     min_trust_to_edit_post: "Het minimale vertrouwensniveau dat nodig is om het bericht te bewerken."
-    min_trust_to_send_messages: "Het minimum vertrouwensniveau dat nodig is om nieuwe private berichten aan te maken."
     newuser_max_links: "Hoeveel links een nieuw lid in een bericht kan plaatsen."
     newuser_max_images: "Hoeveel afbeeldingen een nieuw lid in een bericht kan plaatsen."
     newuser_max_attachments: "Hoeveel bestanden een nieuw lid in een bericht kan plaatsen."
@@ -1116,7 +1104,6 @@ nl:
     min_first_post_typing_time: "Minimum tijd in milliseconden dat een gebruiker moet typen tijdens een eerste post, als de drempelwaarde niet wordt bereikt zal de post automatisch in de wachtrij voor goedkeuring gezet worden. Zet op 0 om uit te schakelen (niet aanbevolen)"
     reply_by_email_enabled: "Mogelijk inschakelen om te antwoorden per e-mail."
     reply_by_email_address: "Template voor antwoorden per e-mail, bijvoorbeeld: %{reply_key}@reageer.mijnforum.nl"
-    incoming_email_prefer_html: "De HTML gebruiken in plaats van de tekst voor inkomende e-mail"
     disable_emails: "Voorkomt dat Discourse e-mails van welke soort dan ook verstuurd."
     strip_images_from_short_emails: "Verwijder afbeeldingen met grootte van minder dan 2800 Bytes uit e-mails."
     short_email_length: "Korte e-mail lengte in Bytes"
@@ -1183,7 +1170,6 @@ nl:
     embed_truncate: "Kort de geembedde berichten in"
     embed_post_limit: "Maximale aantal te embedden berichten."
     embed_username_required: "De gebruikersnaam om topics aan te maken is vereist."
-    notify_about_flags_after: "Als er na dit aantal uren markeringen zijn die nog niet zijn afgehandeld, een privébericht naar stafleden sturen. Gebruik 0 om dit uit te schakelen."
     show_create_topics_notice: "Als de site minder dan 5 publieke topics heeft, toon dan een melding waarin admins gevraagd wordt om een aantal topics te creëren."
     delete_drafts_older_than_n_days: Verwijder concepten ouder dan (n) dagen.
     prevent_anons_from_downloading_files: "Voorkom dat anonieme gebruikers bijlagen mogen downloaden. WAARSCHUWING: hierdoor zullen website onderdelen, anders dan afbeeldingen, die zijn gepost als bijlage niet langer werken."
@@ -1556,7 +1542,6 @@ nl:
       name: Richtlijnen gelezen
   admin_login:
     success: "E-mail verstuurd"
-    error: "Fout!"
     email_input: "E-mailadres van beheerder"
     submit_button: "E-mail versturen"
   performance_report:
