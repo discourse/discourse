@@ -1550,7 +1550,7 @@ en:
 
     default_email_digest_frequency: "How often users receive summary emails by default."
     default_include_tl0_in_digests: "Include posts from new users in summary emails by default. Users can change this in their preferences."
-    default_email_private_messages: "Send an email when someone messages the user by default."
+    default_email_personal_messages: "Send an email when someone messages the user by default."
     default_email_direct: "Send an email when someone quotes/replies to/mentions or invites the user by default."
     default_email_mailing_list_mode: "Send an email for every new post by default."
     default_email_mailing_list_mode_frequency: "Users who enable mailing list mode will receive emails this often by default."
