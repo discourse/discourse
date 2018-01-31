@@ -505,7 +505,7 @@ posting:
     locale_default:
       zh_CN: 4
       zh_TW: 4
-  enable_private_messages:
+  enable_personal_messages:
     default: true
     client: true
   enable_system_message_replies:
