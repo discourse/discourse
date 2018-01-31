@@ -40,7 +40,7 @@ createWidget('user-menu-links', {
                       icon: 'bookmark',
                       href: `${path}/activity/bookmarks` });
 
-    if (siteSettings.enable_private_messages) {
+    if (siteSettings.enable_personal_messages) {
       glyphs.push({ label: 'user.private_messages',
                     className: 'user-pms-link',
                     icon: 'envelope',
