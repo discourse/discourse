@@ -852,7 +852,7 @@ en:
         title: "Invites"
         user: "Invited User"
         sent: "Sent"
-        none: "There are no pending invites to display."
+        none: "No invites to display."
         truncated:
           one: "Showing the first invite."
           other: "Showing the first {{count}} invites."
