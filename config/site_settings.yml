@@ -510,7 +510,7 @@ posting:
     client: true
   enable_system_message_replies:
     default: true
-  enable_private_email_messages:
+  enable_personal_email_messages:
     default: false
     client: true
     validator: "EnablePrivateEmailMessagesValidator"

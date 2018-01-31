@@ -320,7 +320,7 @@ class Guardian
     # User is trusted enough
     @user.has_trust_level?(SiteSetting.min_trust_to_send_email_messages) &&
     # PMs to email addresses are enabled
-    (is_staff? || SiteSetting.enable_private_email_messages)
+    (is_staff? || SiteSetting.enable_personal_email_messages)
   end
 
   def can_see_emails?
