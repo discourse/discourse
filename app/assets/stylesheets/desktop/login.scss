@@ -16,6 +16,9 @@
   a {
     color: dark-light-choose($primary-high, $secondary-low);
   }
+  td {
+    padding-right: 5px;
+  }
 }
 
 // Create account
