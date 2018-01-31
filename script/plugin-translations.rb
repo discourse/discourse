@@ -23,7 +23,7 @@ class PluginTxUpdater
     'discourse-math',
     'discourse-oauth2-basic',
     'discourse-patreon',
-    # 'discourse-saved-searches', # TODO
+    'discourse-saved-searches',
     'discourse-solved',
     'discourse-staff-notes',
     'discourse-voting'
