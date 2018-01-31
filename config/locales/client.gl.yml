@@ -363,7 +363,6 @@ gl:
       '14': "Pendente"
     categories:
       all: "todas as categorías"
-      all_subcategories: "todo"
       no_subcategory: "ningunha"
       category: "Categoría"
       category_list: "Amosar a lista de categorías"
@@ -594,7 +593,6 @@ gl:
         title: "Convites"
         user: "Usuario convidado"
         sent: "Enviado"
-        none: "Non hai convites pendentes de ver."
         truncated:
           one: "Amosando o primeiro convite."
           other: "Amosando os primeiros {{count}} convites."
@@ -866,8 +864,6 @@ gl:
         posted: "Publicado por"
         edited: "A túa publicación ediotuna"
         liked: "Gustoulles a túa publicación"
-        private_message: "Mensaxe privada de"
-        invited_to_private_message: "Convidado a unha mensaxe privada de"
         invited_to_topic: "Convidado a un tema de"
         invitee_accepted: "Convite aceptado por"
         moved_post: "A túa publicación foi movida por"
@@ -880,7 +876,6 @@ gl:
         quoted: '{{username}} citoute en "{{topic}}" - {{site_title}}'
         replied: '{{username}} respondeute en "{{topic}}" - {{site_title}}'
         posted: '{{username}} publicou en "{{topic}}" - {{site_title}}'
-        private_message: '{{username}} enviouche unha mensaxe privada en "{{topic}}" - {{site_title}}'
         linked: '{{username}} ligou a túa publicación desde "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Engadir unha imaxe"
@@ -1634,7 +1629,6 @@ gl:
         title: "Denuncias"
         agree: "Aceptar"
         agree_title: "Confirmar esta denuncia como válida"
-        defer_flag_title: "Eliminar esta denuncia; non precisa medidas neste momento."
         delete: "Eliminar"
         delete_title: "Eliminar a publicación á que se refire esta denuncia."
         delete_post_defer_flag_title: "Eliminar publicación. Se é a inicial, eliminar tamén o tema"
@@ -1733,7 +1727,6 @@ gl:
           label: "Enviar"
           title: "Subir unha copia de seguranza a esta instancia"
           uploading: "Enviando..."
-          success: "«{{filename}}» subiuse correctamente."
           error: "Produciuse un erro durante o envío de «{{filename}}»: {{message}}"
         operations:
           is_running: "Estase executando unha operación..."

@@ -10,9 +10,8 @@ describe WizardController do
     end
 
     it 'needs you to be logged in' do
-      expect do
-        get :index, format: :json
-      end.to raise_error(Discourse::NotLoggedIn)
+      get :index, format: :json
+      expect(response.status).to eq(403)
     end
 
     it "raises an error if you aren't an admin" do

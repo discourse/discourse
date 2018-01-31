@@ -117,6 +117,7 @@ basic:
     default: "latest|new|unread|top|categories"
     regex: "latest"
     regex_error: "site_settings.errors.must_include_latest"
+    validator: RegexPresenceValidator
     choices:
      - latest
      - new
@@ -424,6 +425,7 @@ users:
   hide_suspension_reasons:
     default: false
     client: true
+  log_personal_messages_views: false
 
 groups:
   enable_group_directory:
@@ -506,11 +508,14 @@ posting:
   enable_private_messages:
     default: true
     client: true
+  enable_system_message_replies:
+    default: true
   enable_private_email_messages:
     default: false
     client: true
     validator: "EnablePrivateEmailMessagesValidator"
   editing_grace_period: 300
+  staff_edit_locks_post: false
   post_edit_time_limit:
     default: 86400
     max: 525600
@@ -598,6 +603,9 @@ posting:
   enable_emoji:
     default: true
     client: true
+  enable_emoji_shortcuts:
+    default: true
+    client: true
   emoji_set:
     default: 'twitter'
     client: true
@@ -633,6 +641,7 @@ posting:
     default: 30
     min: 1
   watched_words_regular_expressions:
+    client: true
     default: false
   enable_advanced_editor_preview_sync:
     hidden: true
@@ -938,9 +947,13 @@ security:
   enable_escaped_fragments: true
   allow_index_in_robots_txt: true
   allow_moderators_to_create_categories: false
+  non_crawler_user_agents:
+    hidden: true
+    default: 'trident|webkit|gecko|chrome|safari|msie|opera'
+    type: list
   crawler_user_agents:
     hidden: true
-    default: 'Googlebot|Mediapartners|AdsBot|curl|HTTrack|Twitterbot|facebookexternalhit|bingbot|Baiduspider|ia_archiver|archive.org_bot|Wayback Save Page|360Spider|Swiftbot|YandexBot'
+    default: 'rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor'
     type: list
   cors_origins:
     default: ''
@@ -956,7 +969,7 @@ security:
     default: ''
     type: list
   allowed_iframes:
-    default: 'https://www.google.com/maps/embed?|https://www.openstreetmap.org/export/embed.html?'
+    default: 'https://www.google.com/maps/embed?|https://www.openstreetmap.org/export/embed.html?|https://calendar.google.com/calendar/embed?'
     type: list
     client: true
 
@@ -1520,6 +1533,9 @@ tags:
     client: true
     default: false
     refresh: true
+  tags_listed_by_group:
+    client: true
+    default: false
   staff_tags:
     type: list
     client: true

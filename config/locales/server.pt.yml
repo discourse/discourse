@@ -198,7 +198,6 @@ pt:
     top_weekly: "Melhores tópicos da semana"
     top_daily: "Melhores tópicos do dia"
     posts: "Últimas mensagens"
-    private_posts: "Mensagens privadas recentes"
     group_posts: "Mensagens recentes em %{group_name}"
     group_mentions: "Menções recentes em %{group_name}"
     user_posts: "Mensagens recentes criadas por @%{username}"
@@ -272,9 +271,7 @@ pt:
         topic:
           attributes:
             base:
-              warning_requires_pm: "Apenas pode anexar avisos a mensagens privadas."
               too_many_users: "Apenas pode enviar avisos a um utilizador de cada vez."
-              cant_send_pm: "Pedimos desculpa, não pode enviar uma mensagem privada a esse utilizador."
               no_user_selected: "Tem que selecionar um utilizador válido."
             featured_link:
               invalid: "é inválida. URL deve incluir http:// ou https://."
@@ -780,7 +777,6 @@ pt:
     censored_words: "Palavras que serão automaticamente substituídas por &#9632;&#9632;&#9632;&#9632;"
     censored_pattern: "Expressão regular que será automaticamente substituída por &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Eliminar automaticamente quaisquer mensagens ocultas que permaneçam escondidas por mais de 30 dias."
-    default_locale: "Idioma padrão para esta instância do Discourse (ISO 639-1 Code)"
     allow_user_locale: "Permitir aos utilizadores escolherem a sua própria língua preferencial para a interface."
     set_locale_from_accept_language_header: "defina a língua de interface para utilizadores anónimos com base nos cabeçalhos de língua dos seus navegadores. (EXPERIMENTAL, não funciona com cache anónima)"
     min_post_length: "Tamanho mínimo permitido por mensagem, em caracteres"
@@ -966,7 +962,6 @@ pt:
     clean_orphan_uploads_grace_period_hours: "Período de carência (em horas) antes de um carregamento orfão ser removido."
     purge_deleted_uploads_grace_period_days: "Período de carência (em dias) antes de um carregamento eliminado ser apagado."
     enable_s3_uploads: "Coloca os carregamentos no armazenamento Amazon S3. IMPORTANTE: requer credenciais S3 válidas (tanto id de chave de acesso como a chave de acesso secreta)."
-    s3_use_iam_profile: 'Utiliza AWS EC2 IAM para recuperar chaves. NOTA: a ativação irá substituir as configurações de "id da chave de acesso s3" e a "chave de acesso secreta s3".'
     s3_upload_bucket: "Nome do balde da Amazon S3 que contém os ficheiros carregados. AVISO: tem que ser minúsculo, sem pontos e sem sublinhados."
     s3_access_key_id: "Id da chave de acesso Amazon S3 que será usada para carregar imagens."
     s3_secret_access_key: "Chave de acesso secreta Amazon S3 que será usada para carregar imagens."
@@ -1009,7 +1004,6 @@ pt:
     min_trust_to_edit_wiki_post: "O nível mínimo de confiança necessário para editar mensagens marcadas como wiki."
     min_trust_to_edit_post: "O nível mínimo de confiança necessário para editar publicações."
     min_trust_to_allow_self_wiki: "O nível mínimo de confiança necessário para o utilizador criar as suas publicações wiki."
-    min_trust_to_send_messages: "O nível de confiança mínimo necessário para criar mensagens privadas."
     newuser_max_links: "Quantas hiperligações um novo utilizador pode adicionar a uma mensagem."
     newuser_max_images: "Quantas imagens um novo utilizador pode adicionar a uma mensagem."
     newuser_max_attachments: "Quantos anexos um novo utilizador pode adicionar a uma mensagem."
@@ -1070,7 +1064,6 @@ pt:
     reply_by_email_enabled: "Ativar respostas aos tópicos por email."
     reply_by_email_address: "Modelo para endereços emails recebidos com função resposta por email, por exemplo: %{reply_key}@resposta.exemplo.com ou resposta+%{reply_key}@exemplo.com"
     alternative_reply_by_email_addresses: "Lista de modelos alternativos para respostas via email. Exemplo: %{reply_key}@resposta.exemplo.com ou resposta+%{reply_key}@exemplo.com"
-    incoming_email_prefer_html: "Utilize HTML em vez de texto para o correio a receber."
     disable_emails: "Impedir que Discourse envie qualquer tipo de emails"
     strip_images_from_short_emails: "Remover imagens de emails cujo tamanho seja inferior a 2800 Bytes"
     short_email_length: "Comprimento de email curto, em Bytes"
@@ -1172,7 +1165,6 @@ pt:
     approve_post_count: "A quantidade de publicações de um novo utilizador ou utilizador básico que devem ser aprovadas"
     approve_unless_trust_level: "Mensagens para utilizadores abaixo deste nível de confiança devem ser aprovados"
     approve_new_topics_unless_trust_level: "Novos tópicos para utilizadores abaixo deste nível de confiança devem ser aprovados"
-    notify_about_queued_posts_after: "Se houver publicações a aguardar revisão após tantas horas, enviar email para `contact_email`. Configurar a 0 para desactivar."
     auto_close_messages_post_count: "Número máximo de publicações numa mensagem  antes de a fechar automáticamente (configurar a 0 para desactivar)"
     auto_close_topics_post_count: "Número máximo de publicações num tópico antes de o fechar automáticamente (configurar a 0 para desactivar)"
     code_formatting_style: "Botão de código no compositor por defeito usa este estilo de formatação"
@@ -1794,140 +1786,6 @@ pt:
     title: "FAQ/Orientações"
   tos_topic:
     title: "Termos de Serviço"
-    body: |
-      Os seguintes termos e condições governam todo o uso do sítio %{company_domain} e todo o conteúdo, serviços e produtos disponíveis no ou através do sítio, incluindo mas não limitado a, Software do Fórum de %{company_domain}, Fóruns de Suporte de %{company_domain} e serviço de alojamento de %{company_domain} ("Alojamento"), (em conjunto, o Sítio). O Sítio é propriedade e operado por %{company_full_name} ("%{company_name}"). O Sítio oferecido está sujeito à sua aprovação sem nenhuma modificação de todos os termos e condições contidos aqui e todas as outras regras de operação políticas (incluindo, sem limitação, a [Política de Privacidade](/privacy) e [Orientações da Comunidade](/faq) de %{company_domain}) e procedimentos que possam ser publicados esporadicamente neste Sítio por %{company_name} (coletivamente, o "Acordo").
-
-      Por favor leia este Acordo com cuidado antes de aceder ou usar o Sítio. Ao aceder ou usar qualquer parte do Sítio, concorda em estar limitado pelos termos e condições deste acordo. Se não concorda com todos os termos e condições deste acordo, então não deve aceder ao Sítio ou usar qualquer um dos serviços. Se estes termos e condições são considerados uma oferta de %{company_name}, a sua aceitação é expressamente limitada a estes termos. O Sítio está disponível apenas a indíviduos que têm pelo menos 13 anos de idade.
-
-      <a name="1"></a>
-
-      ## [1. A Sua Conta em %{company_domain}](#1)
-
-      Se criar uma conta no Sítio, será responsável por manter a segurança da sua conta e será totalmente responsável por todas as atividades que ocorrerem sob a sua conta. Deve notificar imediatamente %{company_name} de qualquer uso não autorizado da sua conta ou qualquer outra falha de segurança. %{company_name} não será passível de quaisquer atos ou omissões da sua parte, incluindo danos de qualquer tipo que incorram como resultado de tais atos ou omissões.
-
-      <a name="2"></a>
-
-      ## [2.Responsabilidade dos Participantes](#2)
-
-      Se publicar material no Sítio, publicar ligações no Sítio, ou de outra maneira disponibilizar (ou permitir que qualquer terceiro o faça) material disponível por meios do Sítio (qualquer material, “Conteúdo”), será inteiramente responsável pelo conteúdo de, e qualquer dano resultante de, tal Conteúdo. Esse é o caso independentemente de o Conteúdo em questão constituir texto, gráficos, ficheiros áudio, ou programas de computador. Ao tornar o Conteúdo disponível, está a representar e garantir que:
-
-      *   o descarregamento, cópia e uso do Conteúdo não irá infringir os direitos do proprietário, incluindo mas não limitado aos direitos de autor, patentes, marcas registadas ou direitos de segredos de troca, de qualquer terceiro;
-      *   se o seu empregado tem direitos sob a propriedade intelectual que criou, terá que (i) ou ter recebido permissões do seu empregado para publicar ou tornar o Conteúdo disponível, incluindo mas não limitado a qualquer software, ou (ii) ter garantido uma renúncia do seu empregador a todos os direitos no e ao Conteúdo;
-      *   está de acordo com licenças de qualquer terceiro relacionado com o Conteúdo, e fez tudo o necessário para passar corretamente quaisquer termos requeridos aos utilizadores finais;
-      *   o Conteúdo não contém ou instala quaisquer vírus, minhocas ou malware, cavalos de Tróia ou outro conteúdo nocivo ou destrutivo;
-      *   o Conteúdo não é spam, não é gerado por máquinas ou aleatóriamente gerado, e não contém conteúdo indesejado sem ética ou comercial com intuito de conduzir o tráfico de sítios terceiros ou aumentar a posição de sítios terceiros em motores de pesquisa, ou ainda outros atos ilegais (tais como phishing) ou destinatários enganadores relativamente à origem do material (tais como spoofing);
-      *   o Conteúdo não é pornográfico, nem contém ameaças ou incita à violência, e não viola os direitos de privacidade ou publicidade de qualquer terceiro;
-      *   o conteúdo não está a ser anunciado através de quaisquer mensagens eletrónicas indesejadas tais como ligações de spam em grupos de notícias, listas de email, blogs e sítios, e similares métodos promocionais não solicitados;
-      *   o seu conteúdo não está nomeado de nenhuma maneira que leve os seus leitores a pensarem que é outra pessoa ou empresa; e
-      *   terá, no caso do Conteúdo incluir código de computador, categorizado e/ou descrito o tipo, natureza, uso e efeito dos materiais, quer tenha sido pedido para fazê-lo por %{company_name} ou não.
-
-      <a name="3"></a>
-
-      ## [3. Licença do Conteúdo do Utilizador](#3)
-
-      As contribuições dos utilizadores estão licenciadas sob a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Sem qualquer limitação de qualquer dessas representações ou garantias, %{company_name} tem o direito (embora não tenha a obrigação) de, em critério exclusivo de %{company_name} (i) recusar ou remover qualquer conteúdo que, na sensata opinião de %{company_name} viola qualquer política de %{company_name} ou é de alguma maneira prejudicial ou questionável, ou (ii) terminar ou negar acesso ao Sítio e ao uso do mesmo a qualquer indivíduo ou entidade por qualquer razão, em critério exclusivo de %{company_name}. %{company_name} não terá obrigação de fornecer reembolsos de quaisquer montantes previamente pagos.
-
-      <a name="4"></a>
-
-      ## [4. Pagamento e Renovação](#4)
-
-      ### Termos Gerais
-
-      Atualizações ou serviços opcionais pagos poderão estar disponíveis no Sítio. Ao utilizar uma atualização ou serviço opcional pago, está a concordar em pagar a %{company_name} as taxas de subscrição mensais ou anuais indicadas. Os pagamentos serão cobrados numa base pré-paga no dia em que começa a utilizar o serviço ou a atualização e irá cobrir o uso desse serviço ou atualização por um período de subscrição mensal ou anual tal como indicado. Estas taxas não são reembolsáveis.
-
-      ### Renovação Automática
-
-      A não ser que notifique %{company_name} antes do final do período da subscrição que quer cancelar, a sua subscrição será automaticamente renovada e você autoriza-nos a colecionar as taxas anuais ou mensais (assim como outras taxas) usando qualquer cartão de crédito ou outro mecanismo de pagamento que tivermos no seu registo. As subscrições podem ser canceladas em qualquer altura.
-
-      <a name="5"></a>
-
-      ## [5. Serviços](#5)
-
-      ### Serviços de Alojamento, Suporte
-
-      Serviços opcionais de Alojamento e Suporte podem ser fornecidos por %{company_name} sob os termos e condições para cada serviço. Ao inscrever-se numa conta com serviços de Alojamento ou Suporte, irá concordar e agir sob tais termos e condições.
-
-      <a name="6"></a>
-
-      ## [6. Responsabilidade dos Visitantes do Sítio](#6)
-
-      %{company_name} não reviu, nem pode rever, todo o material, incluindo programas de computador, publicado no Sítio, e não pode portanto ser responsável pelo conteúdo do mesmo, pelo seu uso ou efeitos. Ao operar o Sítio, %{company_name} não representa ou implica que corrobora com o material publicado, ou que acredita que o material seja preciso, útil e não prejudicial. Será responsável por tomar as precauções necessárias para proteger-se a si próprio e o seu sistema computacional de vírus, minhocas, cavalos de Tróia e outros conteúdos nocivos ou destrutivos. O Sítio pode ter conteúdo ofensivo, indecente, ou questionável de outra maneira, assim como também imprecisões técnicas, erros tipográficos, e outros erros. O Sítio pode também ter material que viola os direitos de privacidade e publicidade, ou que infringe a propriedade intelectual e outros direitos do proprietário, de terceiros, ou o descarregamento, cópia ou uso que é sujeito a termos e condições adicionais, estabelecidos ou não. %{company_name} está isenta de qualquer responsabilidade de qualquer dano resultante do uso por parte dos visitantes do Sítio, ou de qualquer descarregamento feito por esses visitantes do conteúdo lá publicado.
-
-      <a name="7"></a>
-
-      ## [7. Conteúdo Publicado Noutros Sítios](#7)
-
-      Não revimos nem podemos rever todo o material, incluindo programas de computador, disponibilizado através de sítios e páginas em %{company_domain} no qual existem ligações e que se ligam a %{company_domain}. %{company_name} não tem qualquer controlo dos sítios e páginas não-%{company_domain}, e não é responsável pelo seu conteúdo ou o seu uso. Ao clicar num sítio ou página não-%{company_domain}, %{company_name} não representa ou implica que corrobora com tais sítios ou páginas. Você é responsável por tomar ações necessárias para proteger-se a si próprio ou o seu sistema computacional de vírus, minhocas, cavalos de Tróia e outros conteúdos nocivos ou destrutivos. %{company_name} renuncia qualquer responsabilidade por qualquer dano resultante do uso de sítios e páginas não-%{company_domain}.
-
-      <a name="8"></a>
-
-      ## [8. Violação de Direitos de Autor e Política DCMA](#8)
-
-      Assim como %{company_name} pede aos outros para respeitarem os direitos de propriedade intelectual, a mesma respeita os direitos de propriedade intelectual dos outros. Se acredita que material localizado em ou com ligação por %{company_domain} viola os seus direitos de autor, e se este sítio reside nos EUA, encorajamo-lo a notificar a %{company_name} em concordância com a Política (“DMCA”) [Digital Millennium Copyright Act](http://en.wikipedia.org/wiki/Digital_Millennium_Copyright_Act) da %{company_name}. %{company_name} irá responder a todos tais avisos, incluindo, tal como requerido ou apropriado, por remover o material ilícito ou desativando as ligações para o material ilícito. %{company_name} irá terminar o acesso a e o uso do Sítio por um visitante se, sob circunstâncias apropriadas, o visitante é determinado como sendo um infrator reincidente dos direitos de autor e de outros direitos de propriedade intelectual de %{company_name} ou outros. No caso de tal terminação, %{company_name} não terá qualquer obrigação de fornecer um reembolso de quaisquer valores previamente pagos a %{company_name}.
-
-      <a name="9"></a>
-
-      ## [9. Propriedade Intelectual](#9)
-
-      Este Acordo não transfere de %{company_name} para si qualquer propriedade intelectual de %{company_name} ou de terceiros, e todos os direitos, títulos e interesse na e à propriedade irão permanecer (como entre as partes) apenas com %{company_name}. %{company_name}, %{company_domain}, o logótipo %{company_domain} e todos as outras marcas, marcas de serviço, gráficos, logótipos usados na ligação com %{company_domain}, ou o Sítio é marca registada de %{company_name} ou licenciadores de %{company_name}. Outras marcas, marcas de serviço, gráficos e logótipos usados em conexão com o Sítio podem ser marcas de terceiros. O seu uso do Sítio não lhe concede direitos ou licença para reproduzir ou de outra forma usar quaisquer marcas de %{company_name} ou de terceiros.
-
-      <a name="10"></a>
-
-      ## [10. Anúncios](#10)
-
-      %{company_name} reserva-se ao direito de mostrar anúncios no seu conteúdo a não ser que tenha comprado a Atualização Ad-free ou uma conta de Serviços.
-
-      <a name="11"></a>
-
-      ## [11. Atribuição](#11)
-
-      %{company_name} reserva-se ao direito de mostrar ligações de atribuição tais como ‘Suportado por %{company_domain},’ autor do tema, e atribuição das fontes tipográficas ao conteúdo do rodapé ou da sua ferramenta. Os créditos do rodapé e a ferramenta de %{company_domain} não poderão ser removidas independentemente das atualizações compradas.
-
-      <a name="12"></a>
-
-      ## [12. Alterações](#12)
-
-      %{company_name} reserva-se ao direito, por critério exclusivo, de modificar ou substituir qualquer parte deste Acordo. É sua responsabilidade verificar periodicamente o Acordo e verificar as suas alterações. O seu uso ou acesso contínuo ao Sítio seguido da publicação de qualquer alteração a este Acordo constitui aceitação a essas mudanças. %{company_name} pode também, no futuro, oferecer novos serviços e/ou funcionalidades através do Sítio (incluindo, o lançamento de novas ferramentas e recursos). Estas novas funcionalidades e/ou serviços serão sujeitos aos termos e condições deste Acordo.
-
-      <a name="13"></a>
-
-      ## [13. Terminação](#13)
-
-      %{company_name} pode terminar o seu acesso a todas ou alguma parte do Sítio em qualquer altura, com ou sem motivo, com ou sem aviso, com efeitos imediatos. Se desejar terminar este Acordo ou a sua conta %{company_domain} (se tiver uma), pode simplesmente deixar de usar o Sítio. Todas as provisões para este Acordo que pela sua natureza deverão sobreviver à terminação sobreviverão à sua terminação, incluindo, sem limitações, provisões de propriedade, isenções de garantia, indemnizações e limitações de responsabilidade.
-
-      <a name="14"></a>
-
-      ## [14. Isenção de Garantias](#14)
-
-      O Sítio é fornecido “tal como está”. %{company_name} e os seus fornecedores e licenciadores ficam aqui isentos de garantias de qualquer tipo, expressas ou implícitas, sem limitação, as garantias de comerciabilidade, adequabilidade a uma finalidade específica e não-infrigimento. Nem %{company_name} nem os seus fornecedores e licenciadores, garantem que o Sítio está livre de erros ou que o acesso seja contínuo e ininterrupto. Se está realmente a ler isto, aqui está [um presente] (http://www.newyorker.com/humor/daily-shouts/the-hundred-best-lists-of-all-time). Compreende que descarregou de, ou de outra maneira obteve conteúdo ou serviços através do Sítio a seu próprio risco e descrição.
-
-      <a name="15"></a>
-
-      ## [15. Limitação da Responsabilidade](#15)
-
-      Em nenhum evento %{company_name} ou os seus fornecedores ou licenciadores, serão responsáveis em respeito a qualquer assunto deste acordo sob qualquer contrato, negligência, estrita responsabilidade ou outras teorias legais para: (i) quaisquer danos especiais, incidentes ou consequenciais; (ii) o custo de procura de produtos ou serviços substitutos; (iii) por interrupção do uso, perda ou corrupção dos dados; ou (iv) por quaisquer valores que excedem as taxas pagas por si a %{company_name} sob este acordo durante um período de doze (12) meses anterior à causa da ação. %{company_name} não deverá ter qualquer responsabilidade por qualquer falha ou atraso devido a assuntos para além do seu controlo razoável. O disposto neste artigo não se aplica nas medidas proibidas pela lei aplicável.
-
-      <a name="16"></a>
-
-      ## [16. Representações Gerais e Garantia](#16)
-
-      Representa e garante que (i) o seu uso do Sítio irá estar em estrita concordância com a [Política de Privacidade](/privacy) e das [Orientações da Comunidade](/guidelines) da %{company_name}, com este Acordo e com as leis e regulações aplicáveis (incluindo sem limitação de quaisquer leis ou regulações locais no seu país, estado, cidade ou outras áreas governamentais, relativamente à conduta online e ao conteúdo aceitável, e incluindo quaisquer leis aplicáveis relativamente à transmissão de dados técnicos exportados do país em que o sítio reside ou do país em que você reside) e (ii) o seu uso do Sítio não irá infringir os direitos de propriedade intelectual de qualquer terceiro.
-
-      <a name="17"></a>
-
-      ## [17. Indemnização](#17)
-
-      Concorda em indemnizar e não prejudicar %{company_name}, os seus contratados, e os seus licenciadores, os seus respetivos diretores, empregados e agentes de e contra quaisquer reivindicações e despesas, incluindo taxas de advogados, decorrentes do seu uso do Sítio, incluindo mas não limitado à sua violação deste Acordo.
-
-      <a name="18"></a>
-
-      ## [18. Diversos](#18)
-
-      Este Acordo constitui o acordo integral entre si e %{company_name} em relação ao assunto em questão, e poderá ser modificado apenas por uma emenda escrita assinada por um executivo autorizado da %{company_name}, ou pela publicação por parte da %{company_name} de uma versão revista. Excepto se existirem disposições opostas na leis aplicáveis, o presente Acordo, qualquer acesso ou uso do sítio será governado pelas leis do estado da Califórnia, E.U.A, excluindo os conflitos das disposições da lei, e a local próprio para qualquer disputa emergente de ou relativa a qualquer do mesmo será o tribunal federal e estatal localizado em São Francisco, Califórnia. Exceto para os pedidos de medida cautelar ou equitativa ou reclamações relativas aos direitos de propriedade intelectual (que podem ser introduzidos em qualquer tribunal competente, sem a prestação de uma caução), qualquer litígio decorrente do presente acordo será resolvido de acordo com as Regras de Arbitragem de "Judicial Arbitration and Mediation Service, Inc.” (“JAMS”) por três árbitros apontados em concordância com tais Regras. A arbitragem deverá ter lugar em São Francisco, Califórnia, em língua Inglesa e a decisão arbitral pode ser feita em qualquer tribunal. A parte prevalecente em qualquer ação ou processo para executar este Acordo terá direito a custos e honorários dos advogados. Se qualquer parte deste Acordo for considerada inválida ou inexequível, essa parte será interpretada de forma a refletir a intenção original das partes e as porções restantes permanecerão em pleno vigor e efeito. A renúncia por qualquer das partes de qualquer termo ou condição deste Acordo ou qualquer violação dos mesmos, em qualquer instância, não renuncia tal termo ou condição ou qualquer violação subsequente. Pode atribuir os seus direitos sob este acordo a qualquer parte que consente a, e concorda em ficar vinculado por, os seus termos e condições; %{company_name} pode atribuir os seus direitos sob este Acordo sem condição. O presente Acordo será vinculativo e reverterá em benefício das partes, dos seus sucessores e signatários autorizados.
-
-      Este documento é CC-BY-SA. Foi atualizado pela última vez em 31 de Maio de 2013.
-
-      Originalmente adaptado de [Termos de Serviço WordPress](http://en.wordpress.com/tos/).
   privacy_topic:
     title: "Política de Privacidade"
     body: |
@@ -2221,7 +2079,6 @@ pt:
         Este distintivo é concedido pela primeira vez que responde a uma publicação por email :e-mail:.
   admin_login:
     success: "Email Enviado"
-    error: "Erro!"
     email_input: "Email Administração"
     submit_button: "Enviar Email"
   performance_report:

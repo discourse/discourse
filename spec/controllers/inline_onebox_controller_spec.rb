@@ -3,9 +3,8 @@ require 'rails_helper'
 describe InlineOneboxController do
 
   it "requires the user to be logged in" do
-    expect do
-      get :show, params: { urls: [] }, format: :json
-    end.to raise_error(Discourse::NotLoggedIn)
+    get :show, params: { urls: [] }, format: :json
+    expect(response.status).to eq(403)
   end
 
   context "logged in" do

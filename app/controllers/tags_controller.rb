@@ -19,30 +19,43 @@ class TagsController < ::ApplicationController
   before_action :set_category_from_params, except: [:index, :update, :destroy, :tag_feed, :search, :notifications, :update_notifications]
 
   def index
-    categories = Category.where("id in (select category_id from category_tags)")
-      .where("id in (?)", guardian.allowed_category_ids)
-      .preload(:tags)
-    category_tag_counts = categories.map do |c|
-      h = Tag.category_tags_by_count_query(c, limit: 300).count(Tag::COUNT_ARG)
-      h.merge!(c.tags.where.not(name: h.keys).inject({}) { |sum, t| sum[t.name] = 0; sum }) # unused tags
-      { id: c.id, tags: self.class.tag_counts_json(h) }
-    end
-
-    tag_counts = self.class.tags_by_count(guardian, limit: 300).count(Tag::COUNT_ARG)
-    @tags = self.class.tag_counts_json(tag_counts)
-
     @description_meta = I18n.t("tags.title")
     @title = @description_meta
 
     respond_to do |format|
+
       format.html do
         render :index
       end
+
       format.json do
-        render json: {
-          tags: @tags,
-          extras: { categories: category_tag_counts }
-        }
+        if SiteSetting.tags_listed_by_group
+          grouped_tag_counts = TagGroup.allowed(guardian).order('name ASC').includes(:tags).map do |tag_group|
+            { id: tag_group.id, name: tag_group.name, tags: self.class.tag_counts_json(tag_group.tags) }
+          end
+
+          ungrouped_tags = Tag.where("tags.id NOT IN (select tag_id from tag_group_memberships)")
+
+          render json: {
+            tags: self.class.tag_counts_json(ungrouped_tags), # tags that don't belong to a group
+            extras: { tag_groups: grouped_tag_counts }
+          }
+        else
+          unrestricted_tags = Tag.where("tags.id NOT IN (select tag_id from category_tags)")
+
+          categories = Category.where("id in (select category_id from category_tags)")
+            .where("id in (?)", guardian.allowed_category_ids)
+            .includes(:tags)
+
+          category_tag_counts = categories.map do |c|
+            { id: c.id, tags: self.class.tag_counts_json(c.tags) }
+          end
+
+          render json: {
+            tags: self.class.tag_counts_json(unrestricted_tags),
+            extras: { categories: category_tag_counts }
+          }
+        end
       end
     end
   end
@@ -130,7 +143,7 @@ class TagsController < ::ApplicationController
     category = params[:categoryId] ? Category.find_by_id(params[:categoryId]) : nil
 
     tags_with_counts = DiscourseTagging.filter_allowed_tags(
-      Tag.tags_by_count_query(params.slice(:limit)),
+      Tag.order('topic_count DESC').limit(params[:limit]),
       guardian,
       for_input: params[:filterForInput],
       term: params[:q],
@@ -138,7 +151,7 @@ class TagsController < ::ApplicationController
       selected_tags: params[:selected_tags]
     )
 
-    tags = tags_with_counts.count(Tag::COUNT_ARG).map { |t, c| { id: t, text: t, count: c } }
+    tags = self.class.tag_counts_json(tags_with_counts)
 
     json_response = { results: tags }
 
@@ -181,12 +194,8 @@ class TagsController < ::ApplicationController
       raise Discourse::NotFound unless SiteSetting.tagging_enabled?
     end
 
-    def self.tags_by_count(guardian, opts = {})
-      guardian.filter_allowed_categories(Tag.tags_by_count_query(opts))
-    end
-
-    def self.tag_counts_json(tag_counts)
-      tag_counts.map { |t, c| { id: t, text: t, count: c } }
+    def self.tag_counts_json(tags)
+      tags.map { |t| { id: t.name, text: t.name, count: t.topic_count } }
     end
 
     def set_category_from_params

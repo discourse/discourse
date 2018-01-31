@@ -521,12 +521,17 @@ class TopicsController < ApplicationController
   end
 
   def move_posts
-    params.require(:post_ids)
-    params.require(:topic_id)
+    post_ids = params.require(:post_ids)
+    topic_id = params.require(:topic_id)
     params.permit(:category_id)
 
-    topic = Topic.with_deleted.find_by(id: params[:topic_id])
+    topic = Topic.with_deleted.find_by(id: topic_id)
     guardian.ensure_can_move_posts!(topic)
+
+    # when creating a new topic, ensure the 1st post is a regular post
+    if params[:title].present? && Post.where(topic: topic, id: post_ids).order(:post_number).pluck(:post_type).first != Post.types[:regular]
+      return render_json_error("When moving posts to a new topic, the first post must be a regular post.")
+    end
 
     dest_topic = move_posts_to_destination(topic)
     render_topic_changes(dest_topic)
@@ -585,14 +590,22 @@ class TopicsController < ApplicationController
   end
 
   def timings
-    PostTiming.process_timings(
-      current_user,
-      topic_params[:topic_id].to_i,
-      topic_params[:topic_time].to_i,
-      (topic_params[:timings].to_h || {}).map { |post_number, t| [post_number.to_i, t.to_i] },
-      mobile: view_context.mobile_view?
-    )
-    render body: nil
+    allowed_params = topic_params
+
+    topic_id = allowed_params[:topic_id].to_i
+    topic_time = allowed_params[:topic_time].to_i
+    timings = allowed_params[:timings].to_h || {}
+
+    hijack do
+      PostTiming.process_timings(
+        current_user,
+        topic_id,
+        topic_time,
+        timings.map { |post_number, t| [post_number.to_i, t.to_i] },
+        mobile: view_context.mobile_view?
+      )
+      render body: nil
+    end
   end
 
   def feed

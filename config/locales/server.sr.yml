@@ -106,10 +106,6 @@ sr:
         bio_raw: "O meni"
     errors:
       models:
-        topic:
-          attributes:
-            base:
-              cant_send_pm: "Žao nam je, ne možete slati privatne poruke tom korisniku."
         user:
           attributes:
             password:
@@ -135,7 +131,6 @@ sr:
     topic_views_heat_high: "Nakon ovoliko pregleda, polje pregleda je jako označeno."
     num_hours_to_close_topic: "Broj sati za pauziranje teme radi intervencije."
     reply_by_email_enabled: "Omogući odgovore na teme putem email poruka."
-    incoming_email_prefer_html: "Koristi HTML umesto tekstualnog formata za dolazne email poruke."
     disable_emails: "Spreči Discourse da šalje bilo kakve email poruke"
     delete_email_logs_after_days: "Obriši email logove posle (N) dana. Uneti 0 za neograničeno čuvanje."
     block_auto_generated_emails: "Blokiraj dolazne email poruke prepoznate kao automatski generisane."

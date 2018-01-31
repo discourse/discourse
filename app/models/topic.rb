@@ -1273,7 +1273,7 @@ SQL
   end
 
   def featured_link_root_domain
-    MiniSuffix.domain(URI.parse(self.featured_link).hostname)
+    MiniSuffix.domain(URI.parse(URI.encode(self.featured_link)).hostname)
   end
 
   private

@@ -26,7 +26,7 @@ QUnit.test("Regular categoryBadge", assert => {
   const label = tag.children[1];
   assert.equal(label.attributes.title, 'cool description', 'it has the correct title');
 
-  assert.equal(label.children[0].data, 'hello', 'it has the category name');
+  assert.equal(label.children[0].children[0].data, 'hello', 'it has the category name');
 });
 
 QUnit.test("undefined color", assert => {

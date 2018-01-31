@@ -1,14 +1,24 @@
 .modal-open {
   .dropdown-menu {
-     z-index: 2050;
+     z-index: z("modal","dropdown");
   }
   .popover {
-    z-index: 2060;
+    z-index: z("modal","popover");
   }
   .tooltip {
-    z-index: 2070;
+    z-index: z("modal","tooltip");
   }
 
+}
+
+.bootbox.modal {
+  position: fixed;
+  z-index: z("modal","content");
+  overflow: auto;
+  height: auto;
+  background-color: $secondary;
+  box-shadow: 0 2px 2px rgba(0,0,0, .25);
+  background-clip: padding-box;
 }
 
 .input-hint-text {
@@ -26,7 +36,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 1040;
+  z-index: z("modal","overlay");
   background-color: #111;
   &.fade {
     opacity: 0;
@@ -98,15 +108,18 @@
   top: 0;
   width: 100%;
   height: 100%;
-  z-index: 1050;
+  z-index: z("modal","content");
   overflow: auto;
 }
 .modal-form {
   margin-bottom: 0;
 }
 .modal-footer {
-  padding: 14px 15px 15px;
+  padding: 14px 15px 10px;
   border-top: 1px solid $primary-low;
+  .btn {
+  margin: 0 5px 5px 0;
+  }
 }
 .modal-footer:before,
 .modal-footer:after {
@@ -130,7 +143,7 @@
     padding: 10px 30px 10px 15px;
     background-color: $secondary;
     li > a {
-      font-size: 1em;
+      font-size: $font-0;
     }
     border-bottom: 1px solid $primary-low;
 
@@ -141,6 +154,8 @@
   }
 
   .modal-body {
+    box-sizing: border-box;
+    width: 100%;
     &.full-height-modal {
       max-height: calc(100vh - 150px);
     }
@@ -153,7 +168,7 @@
     }
     p {
       color: darken($primary, 40%);
-      font-size: 1em;
+      font-size: $font-0;
     }
     .archetype-option {
       margin-bottom: 20px;
@@ -169,7 +184,7 @@
         position: relative;
       }
       .jsfu-shade {
-        z-index: 1;
+        z-index: z("base");
         position: absolute;
         top: 0;
         left: 0;
@@ -180,9 +195,9 @@
           color: rgb(255,255,255);
           position: absolute;
           top: 40%;
-          font-size: 2.571em;
+          font-size: $font-up-6;
           text-align: center;
-          line-height: 38px;
+          line-height: $line-height-medium;
           margin-left: auto;
           margin-right: auto;
           left: 0;
@@ -225,7 +240,7 @@
 
   // password reset modal
   .modal-body.forgot-password-modal p {
-    font-size: 1em;
+    font-size: $font-0;
   }
 }
 
@@ -239,15 +254,15 @@
     }
     .btn {
       text-align: left;
-      font-size: 1.286em;
-      line-height: 20px;
+      font-size: $font-up-2;
+      line-height: $line-height-medium;
       width: auto;
       margin-bottom: 10px;
       display: block;
       margin-left: 0 !important; // override needed
       font-weight: bold;
       .topic-title {
-        font-size: 1em;
+        font-size: $font-0;
         font-weight: normal;
       }
       &.btn-reply-here {
@@ -259,7 +274,7 @@
   }
 }
 .d-modal-cancel {
-  margin-left: 5px;
+  margin-left: 1em;
   color: $primary-medium;
 }
 
@@ -268,8 +283,8 @@
     .btn {
       font-weight: normal;
       text-align: left;
-      font-size: 1em;
-      line-height: 20px;
+      font-size: $font-0;
+      line-height: $line-height-large;
       margin-bottom: 10px;
       display: inline-block;
       margin-left: 0;
@@ -379,7 +394,7 @@
     textarea {
       font-family: monospace;
       resize: none;
-      border-radius: 0px;
+      border-radius: 0;
       box-shadow: none;
     }
     .incoming-email-html-part {

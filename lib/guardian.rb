@@ -70,12 +70,13 @@ class Guardian
   def is_developer?
     @user &&
     is_admin? &&
-    (Rails.env.development? ||
+    (
+      Rails.env.development? ||
+      Developer.user_ids.include?(@user.id) ||
       (
         Rails.configuration.respond_to?(:developer_emails) &&
         Rails.configuration.developer_emails.include?(@user.email)
-      ) ||
-      Developer.user_ids.include?(@user.id)
+      )
     )
   end
 

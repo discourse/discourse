@@ -129,7 +129,8 @@ export default {
     }
 
     // Otherwise, use a custom URL with a redirect
-    if (Discourse.User.currentProp('external_links_in_new_tab')) {
+    // consider CTRL+mouse-left-click / CMD+mouse-left-click or mouse-middle-click as well
+    if (Discourse.User.currentProp('external_links_in_new_tab') || ((e.ctrlKey || e.metaKey) && (e.which === 1)) || (e.which === 2)) {
       window.open(destUrl, '_blank').focus();
     } else {
       DiscourseURL.redirectTo(destUrl);

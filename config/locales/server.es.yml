@@ -80,7 +80,7 @@ es:
       has_already_been_used: "ya se está utilizando"
       inclusion: no está incluido en la lista
       invalid: no es válido
-      is_invalid: "parece poco claro, es una oración completa?"
+      is_invalid: "parece poco claro, ¿es una oración completa?"
       contains_censored_words: "contiene las siguientes palabras censuradas: %{censored_words}"
       matches_censored_pattern: "contiene las siguientes palabras que coinciden con el regexp de censuras: %{censored_words}"
       less_than: debe ser menor que %{count}
@@ -141,8 +141,8 @@ es:
     one: "Lo sentimos, pero los usuarios nuevos están limitados a 1 respuesta en el mismo tema."
     other: "Lo sentimos, pero los usuarios nuevos están limitados a %{count} respuestas en el mismo tema."
   embed:
-    start_discussion: "Empezar discusión"
-    continue: "Continuar discusión"
+    start_discussion: "Empezar debate"
+    continue: "Continuar debate"
     error: "Error al insertar"
     referer: "Referente:"
     mismatch: "El referente no ha coincidido con ninguno de los siguientes hosts:"
@@ -178,7 +178,7 @@ es:
   too_many_links:
     one: "Lo sentimos, los nuevos usuarios solo pueden poner un link en un post."
     other: "Lo sentimos, los nuevos usuarios solo pueden poner %{count} enlaces en un post."
-  contains_blocked_words: "Tu post contiene palabras que no son permitidas."
+  contains_blocked_words: "Tu post contiene palabras que no están permitidas."
   spamming_host: "Lo sentimos, no puedes publicar un enlace a esa web."
   user_is_suspended: "A los usuarios suspendidos no se les permite publicar."
   topic_not_found: "Algo ha salido mal. ¿Tal vez este tema ha sido cerrado o eliminado mientras estabas lo estabas mirando?"
@@ -186,7 +186,7 @@ es:
   max_pm_recepients: "Lo sentimos, puedes enviar un mensaje a un máximo de %{recipients_limit} destinatarios."
   just_posted_that: "es demasiado parecido a lo que has publicado recientemente"
   invalid_characters: "contiene caracteres no válidos"
-  is_invalid: "parece poco claro, es una oración completa?"
+  is_invalid: "parece poco claro, ¿es una oración completa?"
   next_page: "siguiente página →"
   prev_page: "← página anterior"
   page_num: "Página %{num}"
@@ -210,7 +210,7 @@ es:
     top_weekly: "Semanal: Temas Top"
     top_daily: "Diario: Temas Top"
     posts: "Últimos posts"
-    private_posts: "Últimos mensajes privados"
+    private_posts: "Últimos mensajes personale"
     group_posts: "Últimos posts de %{group_name}"
     group_mentions: "Últimas menciones de %{group_name}"
     user_posts: "Posts recientes por @%{username}"
@@ -221,11 +221,11 @@ es:
   revert_version_same: "La versión actual es la misma que la versión a la que intentas volver."
   excerpt_image: "imagen"
   queue:
-    delete_reason: "Eliminado vía moderación"
-    not_found: "Post no encontrado o ya se actualizó."
+    delete_reason: "Eliminado vía cola de moderación de posts"
+    not_found: "Post no encontrado o ya actualizado."
   groups:
     success:
-      bulk_add: "usuarios %{users_added} han sido agregado al grupo."
+      bulk_add: "%{users_added} usuarios han sido agregados al grupo."
     errors:
       can_not_modify_automatic: "No se puede modificar un grupo automático"
       member_already_exist: "'%{username}' ya es miembro de este grupo."
@@ -251,7 +251,7 @@ es:
       one: "1 post"
       other: "%{count} posts"
     new-topic: |
-      Bienvenido a %{site_name} &mdash; **¡gracias por comenzar una nueva conversación!**
+      Bienvenido a %{site_name} &mdash; **¡gracias por empezar una nueva conversación!**
 
       - ¿El título describe de forma precisa tu tema? ¿Suena interesante?
 
@@ -273,11 +273,11 @@ es:
     avatar: |
       ### Por qué no una imagen para tu cuenta?
 
-      Has publicado pocos temas y respuestas, pero tu imagen de perfil no es único como lo eres tú., es sólo una letra.
+      Has publicado unos cuantos temas y respuestas, pero tu imagen de perfil no es único como lo eres tú., es sólo una letra.
 
-      Has considerado **[visitar tu perfil](%{profile_path})** y subir una imagen que te represente?
+      ¿Has considerado **[visitar tu perfil](%{profile_path})** y subir una imagen que te represente?
 
-      Es más fácil seguir debates y encontrar personas interesantes en las conversaciones cuando todos tienen una imagen de perfil única!
+      ¡Es más fácil seguir debates y encontrar personas interesantes en las conversaciones cuando todos tienen una imagen de perfil única!
     sequential_replies: |
       ### Considera la posibilidad de responder a varios posts a la vez
 
@@ -297,7 +297,7 @@ es:
 
       Has respondido %{count} veces a @%{reply_username} sólo en este tema.
 
-      Has considerado que puedes responder a las *otras* personas en el debate también? Una buena conversación incluye muchas respuestas y perspectivas.
+      ¿Has considerado que puedes responder a las *otras* personas en el debate también? Una buena conversación incluye muchas respuestas y perspectivas.
 
       Si necesitas mantener la conversación con ese usuario en particular, puedes [enviarle un mensaje privado](/u/%{reply_username}).
     too_many_replies: |
@@ -309,9 +309,9 @@ es:
     reviving_old_topic: |
       ### ¿Revivir este tema?
 
-      La última respuesta a este tema fue hace %{days} días. Tu post reactivará el tema subiéndolo a las primeras posiciones de la lista y notificará a aquellos involucrados en la conversación previa.
+      La última respuesta a este tema fue **%{time_ago}**. Tu respuesta revivirá el tema y lo subirá al principio de la lista, notificando a los que hayan participado anteriormente.
 
-      ¿Estás seguro de que quieres continuar esta conversación antigua?
+      ¿Seguro que quieres continuar este conversación antigua?
   activerecord:
     attributes:
       category:
@@ -328,9 +328,9 @@ es:
         topic:
           attributes:
             base:
-              warning_requires_pm: "Solamente puedes enviar advertencias por mensajes privado."
+              warning_requires_pm: "Solo puedes adjuntar advertencias a mensajes personales."
               too_many_users: "Solamente puedes enviar advertencias a un usuario a la vez."
-              cant_send_pm: "Lo sentimos, no puedes enviar un mensaje privado a este usuario."
+              cant_send_pm: "Lo sentimos, no puedes enviarle mensajes personales a ese usuario."
               no_user_selected: "Debes seleccionar un usuario válido."
               reply_by_email_disabled: "Respuestas por email han sido desactivadas."
             featured_link:
@@ -341,11 +341,15 @@ es:
             password:
               common: "es una de las 10000 contraseñas más comunes. Por favor usa una contraseña más segura"
               same_as_username: "es la misma que tu nombre de usuario. Por favor, escoge una contraseña más segura."
-              same_as_email: "es el mismo que tu email. Por favor, utiliza una contraseña más segura."
+              same_as_email: "es la misma que tu email. Por favor, utiliza una contraseña más segura."
               same_as_current: "es la misma que tu contraseña actual."
               unique_characters: "tiene demasiados caracteres repetidos. Por favor usa una contraseña más segura."
             ip_address:
               signup_not_allowed: "El registro no está permitido para esta cuenta."
+        user_email:
+          attributes:
+            user_id:
+              reassigning_primary_email: "No se puede reasignar un correo primario a otro usuario."
         color_scheme_color:
           attributes:
             hex:
@@ -384,9 +388,9 @@ es:
   staff_category_name: "Staff"
   staff_category_description: "Categoría privada para debates entre moderadores y administradores. Los temas solo serán visibles para miembros del staff."
   assets_topic_title: "Recursos para el diseño del sitio"
-  assets_topic_body: "Este tema, es visible únicamente para miembros del staff, con el fin de almacenar las imágenes y archivos utilizados en el diseño del sitio. ¡No lo elimines!\n\n\nCómo hacerlo:\n\n\n1. Responde a este tema.\n2. Sube todas las imágenes que desees para los logos, favicons y demás aquí. (Usa el icono de la barra de herramientas en el editor o arrastra y suelta las imágenes o pégalas). \n3. Publica tu respuesta.\n4. Haz clic con el botón derecho en las imágenes de tu nuevo post para obtener la ruta donde están subidas, o haz clic en el icono de editar para ver estas rutas en el panel de edición. Copia las rutas.\n5. Pega las rutas a las imágenes en [ajustes básicos](/admin/site_settings/category/required).\n\n\nSi necesitas habilitar la subida de diferentes tipos de archivo, edita `authorized_extensions` en las opciones de [archivos](/admin/site_settings/category/files)."
+  assets_topic_body: "Este tema, visible únicamente para miembros del staff,  tiene como fin el almacenar las imágenes y archivos utilizados en el diseño del sitio. ¡No lo elimines!\n\n\nCómo hacerlo:\n\n\n1. Responde a este tema.\n2. Sube todas las imágenes que desees para los logos, favicons y demás aquí. (Usa el icono de la barra de herramientas en el editor o arrastra y suelta las imágenes o pégalas). \n3. Publica tu respuesta.\n4. Haz clic con el botón derecho en las imágenes de tu nuevo post para obtener la ruta donde están subidas, o haz clic en el icono de editar para ver estas rutas en el panel de edición. Copia las rutas.\n5. Pega las rutas a las imágenes en [ajustes básicos](/admin/site_settings/category/required).\n\n\nSi necesitas habilitar la subida de diferentes tipos de archivo, edita `authorized_extensions` en las opciones de [archivos](/admin/site_settings/category/files)."
   discourse_welcome_topic:
-    title: "Bienvenido a Discourse"
+    title: "Te damos la bienvenida a Discourse"
     body: |2
 
       El primer párrafo de este tema destacado (tema fijo) será visible para todos los usuarios como mensaje de bienvenida en tu página principal. Es importante!
@@ -508,20 +512,20 @@ es:
         one: "1d"
         other: "%{count}d"
       about_x_months:
-        one: "1mon"
-        other: "%{count}mon"
+        one: "1mes"
+        other: "%{count}mes"
       x_months:
-        one: "1mon"
-        other: "%{count}mon"
+        one: "1mes"
+        other: "%{count}mes"
       about_x_years:
-        one: "1y"
-        other: "%{count}y"
+        one: "1a"
+        other: "%{count}a"
       over_x_years:
-        one: "> 1y"
-        other: "> %{count}y"
+        one: "> 1a"
+        other: "> %{count}a"
       almost_x_years:
-        one: "1y"
-        other: "%{count}y"
+        one: "1a"
+        other: "%{count}a"
     distance_in_words_verbose:
       half_a_minute: "ahora mismo"
       less_than_x_seconds:
@@ -560,7 +564,7 @@ es:
   password_reset:
     no_token: "Lo sentimos, ese enlace para cambiar la contraseña es demasiado antiguo. Haz clic en el botón Iniciar sesión y utiliza el 'olvidé mi contraseña' para obtener un nuevo enlace. "
     choose_new: "Escoge una nueva contraseña"
-    choose: "Escoge una contraseñ"
+    choose: "Escoge una contraseña"
     update: 'Actualizar contraseña'
     save: 'Establecer contraseña'
     title: 'Restablecer contraseña'
@@ -580,22 +584,22 @@ es:
     already_done: "Lo sentimos, este link de confirmación de cuenta ya no es válido. ¿Quizás tu cuenta ya está activa?"
     please_continue: "Tu nueva cuenta está confirmada; se te redirigirá a la página de inicio."
     continue_button: "Continuar a %{site_name}"
-    welcome_to: "Bienvenido a %{site_name}!"
-    approval_required: "Un moderador debe aprobar manualmente tu nueva cuenta antes de que puedas acceder a este foro. ¡Recibirás un email cuando tu cuenta sea aprobada!"
-    missing_session: "No hemos podido detectar si tu cuenta fue creada. Por favor, asegúrate de tener activadas las cookies en tu navegador."
+    welcome_to: "¡Te damos la bienvenida a %{site_name}!"
+    approval_required: "Un moderador o moderadora debe aprobar manualmente tu nueva cuenta antes de que puedas acceder a este foro. ¡Recibirás un email cuando tu cuenta sea aprobada!"
+    missing_session: "No hemos podido detectar si tu cuenta ha sido creada. Por favor, asegúrate de tener activadas las cookies en tu navegador."
     activated: "Disculpa, esta cuenta ya ha sido activada."
     admin_confirm:
-      title: "Confirmar Cuenta Administrador"
+      title: "Confirmar cuenta administrativa"
       description: "Estás seguro que quieres que <b>%{target_username}</b> sea un administrador?"
-      grant: "Conceder acceso de Admin"
+      grant: "Conceder acceso de administración"
       complete: "<b>%{target_username}</b> es ahora un administrador."
       back_to: "Volver al %{title}"
   post_action_types:
     off_topic:
-      title: 'Off-Topic'
+      title: 'Fuera de tema'
       description: 'Este post se desvía demasiado o no es relevante para el tema en cuestión (definido por el título del tema y su primer post), probablemente debería ser movido a otro hilo.'
-      short_description: 'No es relevante para la discusión'
-      long_form: 'reportado como off-topic'
+      short_description: 'No es relevante para el debate'
+      long_form: 'reportado como fuera de tema'
     spam:
       title: 'Spam'
       description: 'Este post es publicidad, o vandalismo. No es útil o relevante para el tema.'
@@ -628,7 +632,7 @@ es:
       short_description: 'Guarda este post'
       long_form: 'Post marcado'
     like:
-      title: 'Like'
+      title: 'Me gusta'
       description: 'Te gusta este post'
       short_description: 'Te gusta este post'
       long_form: 'Te gusta esto'
@@ -636,7 +640,7 @@ es:
       title: 'Vota'
       description: 'Vota por este post'
       short_description: 'Vota por este post'
-      long_form: 'Votado para este post'
+      long_form: 'votado por este post'
   user_activity:
     no_default:
       self: "No tienes actividad aún."
@@ -672,13 +676,13 @@ es:
     regular:
       title: "Tema normal"
     banner:
-      title: "Tema de Encabezado"
+      title: "Tema de encabezado"
       message:
         make: "Este tema se utiliza ahora como banner. Aparecerá en la parte superior de cada página hasta que sea descartada por el usuario."
         remove: "Este tema ya no se utiliza como banner. Ya no aparecerá en la parte superior de cada página."
   unsubscribed:
     title: "¡Suscripción cancelada!"
-    description: "<b>%{email}</b> ha sido desuscrito. Para cambiar la configuración del email <a href='%{url}'>visita las preferencias del usuario</a>."
+    description: "<b>%{email}</b> se ha desuscrito. Para cambiar la configuración del email, <a href='%{url}'>visita las preferencias del usuario</a>."
     topic_description: "Para volver a suscribirte a %{link}, utiliza el desplegable de notificación al pie o en la parte derecha del tema."
   unsubscribe:
     title: "Cancelar suscripción"
@@ -873,7 +877,6 @@ es:
     censored_words: "Las palabras serán reemplazadas con &#9632;&#9632;&#9632;&#9632;"
     censored_pattern: "Patrones de Regex serán automáticamente reemplazados con &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-borrar cualquier post que se quede oculto por mas de 30 días."
-    default_locale: "El idioma por defecto de Discourse (ISO 639-1 Code)"
     allow_user_locale: "Permitir que los usuarios escojan su propio idioma para la interfaz"
     set_locale_from_accept_language_header: "Establece el lenguaje de la interfaz para usuarios anónimos desde el lenguaje declarado por su navegador web. (EXPERIMENTAL, no funciona con caché anónimo)"
     min_post_length: "Extensión mínima de los posts, en número de caracteres"
@@ -905,6 +908,7 @@ es:
     download_remote_images_max_days_old: "No descargar imágenes remotas de posts que sean más antiguos de n días."
     disabled_image_download_domains: "Las imágenes remotas que provengan de estos dominios no serán descargadas. Lista delimitada por barras."
     editing_grace_period: "Durante (n) segundos después de publicar un post, se puede editar ese post sin crear una nueva versión en el historial."
+    staff_edit_locks_post: "Los mensajes serán bloqueados y no podrán ser editados por usuarios si son editados por miembros del staff."
     post_edit_time_limit: "El autor puede editar o eliminar su post durante (n) minutos después de publicarlo. Pon un 0 para que pueda hacerlo siempre."
     edit_history_visible_to_public: "Permitir a todos ver las versiones previas de un post editado. Si se deshabilita, solo los miembros del staff podrán verlas."
     delete_removed_posts_after: "Los posts borrados por su autor serán automáticamente eliminados después de (n) horas. Si se establece este valor a 0, los posts serán eliminados automáticamente."
@@ -1091,7 +1095,6 @@ es:
     purge_deleted_uploads_grace_period_days: "Período de gracia (en días) antes de que una subida eliminada sea borrada totalmente."
     purge_unactivated_users_grace_period_days: "Periodo de gracia (en días) antes de que un usuario que no ha activado su cuenta sea borrado. Configurar a 0 para que nunca se purgue a usuarios no activados."
     enable_s3_uploads: "Coloca los archivos subidos en el almacén Amazon S3. IMPORTANTE: requiere de credenciales de S3 validas. (ambas clave de acceso y clave de acceso secreta)."
-    s3_use_iam_profile: 'Usar el rol de AWS EC2 IAM para descargar las llaves. NOTA: habilitando esta opción ignorará la "llave de acceso s3" y "la llave de acceso secreta s3".'
     s3_upload_bucket: "El nombre del bucket Amazon S3 donde se subirán los archivos. AVISO: debe ser en minúsculas, sin puntos ni guiones bajos."
     s3_access_key_id: "La clave id de acceso de Amazon S3 que se utilizará para subir imágenes."
     s3_secret_access_key: "La clave secreta de acceso de Amazon S3 que se utilizará para subir imágenes."
@@ -1137,8 +1140,6 @@ es:
     min_trust_to_edit_wiki_post: "El mínimo nivel de confianza requerido para editar un post marcado como wiki."
     min_trust_to_edit_post: "El mínimo nivel de confianza requerido para editar posts."
     min_trust_to_allow_self_wiki: "El mínimo nivel de confianza requerido para que un usuario convierta sus propios posts a wiki."
-    min_trust_to_send_messages: "Mínimo nivel de confianza requerido para crear nuevos mensajes directos."
-    min_trust_to_send_email_messages: "El nivel de confianza mínimo necesario para enviar nuevos mensajes privados por correo electrónico (a los usuarios en escena)."
     newuser_max_links: "Cuántos enlaces puede un nuevo usuario añadir a un post."
     newuser_max_images: "Cuántas imágenes puede un nuevo usuario añadir a un post."
     newuser_max_attachments: "Cuántos adjuntos puede un nuevo usuario añadir a un post."
@@ -1206,8 +1207,7 @@ es:
     reply_by_email_enabled: "Habilitar la respuesta a temas por email."
     reply_by_email_address: "Plantilla para la dirección de email que aparecerá al recibir correos con la función de respuesta por email: %{reply_key}@respuesta.ejemplo.com o respuestas+%{reply_key}@ejemplo.com"
     alternative_reply_by_email_addresses: "Lista de plantillas alternativa para las direcciones de respuesta por email. Ejemplo: %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
-    incoming_email_prefer_html: "Usar el HTML en vez del texto del email entrante."
-    disable_emails: "Impedir que Discourse envié cualquier tipo de e-mail."
+    disable_emails: "Impedir que Discourse envíe cualquier tipo de emails"
     strip_images_from_short_emails: "Remover imágenes de e-mails que tengan un tamaño menor a 2800 Bytes"
     short_email_length: "e-mail corto longitud en Bytes"
     display_name_on_email_from: "Mostrar nombres completos en los campos de remitente de emails"
@@ -1311,7 +1311,6 @@ es:
     allowed_href_schemes: "Esquemas permitidos en enlaces además de http y https."
     embed_post_limit: "Número máximo de posts a embeber."
     embed_username_required: "Se requiere el nombre de usuario para la creación de temas."
-    notify_about_flags_after: "Si hay reportes que no han sido revisados después de este número de horas, enviar un correo electrónico al staff. Deshabilita esta opción introduciendo el valor 0."
     show_create_topics_notice: "Si el sitio tiene menos de 5 temas abiertos al público, mostrar un aviso pidiendo a los administradores crear más temas."
     delete_drafts_older_than_n_days: Eliminar borradores de más de (n) días de antigüedad.
     bootstrap_mode_min_users: "Mínimo número de usuarios requerido para desactivar el modo bootstrap (pon 0 para desactivar esta opción)"
@@ -1323,7 +1322,6 @@ es:
     approve_post_count: "La cantidad de posts que deben ser aprobados de usuarios nuevos o de nivel básico"
     approve_unless_trust_level: "Los posts de usuarios con un nivel de confianza inferior a este deberán ser aprobados"
     approve_new_topics_unless_trust_level: "Los nuevos temas de usuarios por debajo de este nivel de confianza deben ser aprobados"
-    notify_about_queued_posts_after: "Si hay publicaciones que han estado esperando para ser revisadas por más de este número de horas, se enviará un email a la dirección de contacto del sitio. Pon 0 para desactivar estos emails."
     auto_close_messages_post_count: "Máximo número de publicaciones permitidas en un mensaje antes de que sea cerrado automáticamente (0 para desactivar)"
     auto_close_topics_post_count: "Máximo número de publicaciones permitidas en un tema antes de que sea cerrado automáticamente (0 para desactivar)"
     code_formatting_style: "El botón de código en el editor se establecerá por defecto a este estilo de formato de código"
@@ -1423,8 +1421,8 @@ es:
   most_recent_poster: "Autor más reciente"
   frequent_poster: "Autor frecuente"
   redirected_to_top_reasons:
-    new_user: "¡Bienvenido a nuestra comunidad! Estos son los temas recientes mas populares."
-    not_seen_in_a_month: "¡Bienvenido de vuelta! No te habíamos visto en un tiempo. Estos son los temas mas populares desde que no has estado."
+    new_user: "¡Bienvenido a nuestra comunidad! Estos son los temas recientes más populares."
+    not_seen_in_a_month: "¡Bienvenido de vuelta! No te habíamos visto en un tiempo. Estos son los temas más populares desde estuviste por aquí."
   merge_posts:
     edit_reason:
       one: "Un tema fue juntado por %{username}"
@@ -1524,7 +1522,7 @@ es:
     click_to_continue: "Clic aquí para continuar."
     already_logged_in: "Ups, parece que estás intentando aceptar una invitación dirigida a otro usuariol. Si no eres %{current_user}, por favor cierra sesión e inténtalo de nuevo."
   user:
-    no_accounts_associated: "No hay cuentas relacionadas."
+    no_accounts_associated: "No hay cuentas asociadas"
     deactivated: "Ha sido desactivado a causa de muchos rebotes al email '%{email}'."
     deactivated_by_staff: "Desactivado por el staff"
     activated_by_staff: "Activado por el staff"
@@ -1796,7 +1794,7 @@ es:
 
         ¡Disfruta de tu estancia!
     welcome_invite:
-      title: "Bienvenido Invitado"
+      title: "Bienvenido, Invitado"
       subject_template: "¡Bienvenido a %{site_name}!"
       text_body_template: |
         Gracias por aceptar tu invitación a %{site_name} -- ¡Te damos la bienvenida!
@@ -1816,7 +1814,7 @@ es:
         [prefs]: %{user_preferences_url}
     backup_succeeded:
       title: "Copia de seguridad completada con éxito"
-      subject_template: "La copia de seguridad se completo exitosamente"
+      subject_template: "La copia de seguridad se ha completado con éxito"
       text_body_template: |+
         Copia de seguridad realizada con éxito.
 
@@ -1830,7 +1828,7 @@ es:
 
     backup_failed:
       title: "Error en la copia de seguridad"
-      subject_template: "La copia de seguridad falló"
+      subject_template: "La copia de seguridad ha fallado"
       text_body_template: |
         La copia de seguridad ha fallado.
 
@@ -1841,7 +1839,7 @@ es:
         ```
     restore_succeeded:
       title: "Restauración completada con éxito"
-      subject_template: "Restauración completada exitosamente."
+      subject_template: "Restauración completada con éxito"
       text_body_template: |
         La restauración se ha completado con éxito.
 
@@ -1852,7 +1850,7 @@ es:
         ```
     restore_failed:
       title: "Error en la restauración"
-      subject_template: "La restauración falló."
+      subject_template: "La restauración ha fallado."
       text_body_template: |
         La restauración ha fallado.
 
@@ -2062,7 +2060,7 @@ es:
 
         Esto es un mensaje automático de %{site_name} para hacerte saber que tus mensajes han sido ocultados temporalmente porque han sido reportados muchas veces por la comunidad.
 
-        Como medida cautelar, tu cuenta nueva ha sido silenciada de crear nuevas respuestas o debates hasta que un miembro del staff la revise tu cuenta. Sentimos las molestias ocasionadas.
+        Como medida cautelar, tu cuenta nueva ha sido silenciada y no puede crear nuevas respuestas o debates hasta que un miembro del staff la revise. Sentimos las molestias ocasionadas.
 
         Para más información sobre lo que consideramos adecuado, lee las [directrices de la comunidad](%{base_url}/guidelines).
     too_many_tl3_flags:
@@ -2071,13 +2069,13 @@ es:
       text_body_template: |
         Hola,
 
-        Esto es un mensaje automático de %{site_name} para hacerte saber que tu cuenta ha sido retenida porque ha sido reportada muchas veces por la comunidad.
+        Este es un mensaje automático de %{site_name} para hacerte saber que tu cuenta ha sido retenida porque ha sido reportada muchas veces por la comunidad.
 
-        Como medida cautelar, tu cuenta nueva ha sido silenciada de crear nuevas respuestas o debates hasta que un miembro del staff la revise tu cuenta. Sentimos las molestias ocasionadas.
+        Como medida cautelar, tu cuenta nueva ha sido silenciada y no puede crear nuevas respuestas o debates hasta que un miembro del staff la revise. Sentimos las molestias ocasionadas.
 
         Para más información, por favor lee las [directrices de la comunidad](%{base_url}/guidelines).
     silenced_by_staff:
-      title: "Silenciado por Staff"
+      title: "Silenciado por el Staff"
       subject_template: "Cuenta temporalmente retenida"
       text_body_template: |
         Hola,
@@ -2111,11 +2109,11 @@ es:
         Esto puede ser modificado a través de los ajustes `newuser_spam_host_threshold` y `newuser_spam_host_threshold`.
     unsilenced:
       title: "Dejar de silenciar"
-      subject_template: "Cuenta no retenida"
+      subject_template: "Tu cuenta ya no está retenida"
       text_body_template: |
         Hola,
 
-        Este es un mensaje automático desde %{site_name} para informarte que tu cuenta no se encuentra retenida debido a la revisión de miembros del staff.
+        Este es un mensaje automático de %{site_name} para informarte que tu cuenta ya no se encuentra retenida y ha sido revisada por miembros del staff.
 
         Ahora puedes crear temas, y responder a otros usuarios. Gracias por tu paciencia.
     pending_users_reminder:
@@ -2142,7 +2140,7 @@ es:
       title: "¡Eres el Nuevo Usuario del Mes!"
       subject_template: "¡Eres el Nuevo Usuario del Mes!"
       text_body_template: |
-        ¡Felicitaciones, has ganado el **premio Nuevo Usuario del Mes para %{month_year}**. :trophy: !
+        ¡Felicitaciones, has ganado el **premio Nuevo Usuario del Mes para %{month_year}**. :trophy:!
 
         Este premio solo lo ganan dos de los nuevos miembros por mes, y será visible permanentemente en [la página de distintivos](%{url}).
 
@@ -2669,144 +2667,9 @@ es:
 
       Sí, estos temas aburren, pero debemos protegernos &ndash; y, por extensión, a ti y a tus datos &ndash; frente a gente poco amigable. Tenemos unos [Términos del Servicio](/tos) que describen nuestra forma de actuar (y la tuya), y los derechos con relación al contenido, la privacidad y las leyes, Para usar nuestros servicios, debes aceptar nuestros [Términos y Condiciones](/tos).
   tos_topic:
-    title: "Términos de Servicio"
-    body: |
-      The following terms and conditions govern all use of the %{company_domain} website and all content, services and products available at or through the website, including, but not limited to, %{company_domain} Forum Software, %{company_domain} Support Forums and the %{company_domain} Hosting service ("Hosting"), (taken together, the Website). The Website is owned and operated by %{company_full_name} ("%{company_name}"). The Website is offered subject to your acceptance without modification of all of the terms and conditions contained herein and all other operating rules, policies (including, without limitation, %{company_domain}’s [Privacy Policy](/privacy) and [Community Guidelines](/faq)) and procedures that may be published from time to time on this Site by %{company_name} (collectively, the "Agreement").
-
-      Please read this Agreement carefully before accessing or using the Website. By accessing or using any part of the web site, you agree to become bound by the terms and conditions of this agreement. If you do not agree to all the terms and conditions of this agreement, then you may not access the Website or use any services. If these terms and conditions are considered an offer by %{company_name}, acceptance is expressly limited to these terms. The Website is available only to individuals who are at least 13 years old.
-
-      <a name="1"></a>
-
-      ## [1. Your %{company_domain} Account](#1)
-
-      If you create an account on the Website, you are responsible for maintaining the security of your account and you are fully responsible for all activities that occur under the account. You must immediately notify %{company_name} of any unauthorized uses of your account or any other breaches of security. %{company_name} will not be liable for any acts or omissions by you, including any damages of any kind incurred as a result of such acts or omissions.
-
-      <a name="2"></a>
-
-      ## [2. Responsibility of Contributors](#2)
-
-      If you post material to the Website, post links on the Website, or otherwise make (or allow any third party to make) material available by means of the Website (any such material, "Content"), You are entirely responsible for the content of, and any harm resulting from, that Content. That is the case regardless of whether the Content in question constitutes text, graphics, an audio file, or computer software. By making Content available, you represent and warrant that:
-
-      *   the downloading, copying and use of the Content will not infringe the proprietary rights, including but not limited to the copyright, patent, trademark or trade secret rights, of any third party;
-      *   if your employer has rights to intellectual property you create, you have either (i) received permission from your employer to post or make available the Content, including but not limited to any software, or (ii) secured from your employer a waiver as to all rights in or to the Content;
-      *   you have fully complied with any third-party licenses relating to the Content, and have done all things necessary to successfully pass through to end users any required terms;
-      *   the Content does not contain or install any viruses, worms, malware, Trojan horses or other harmful or destructive content;
-      *   the Content is not spam, is not machine- or randomly-generated, and does not contain unethical or unwanted commercial content designed to drive traffic to third party sites or boost the search engine rankings of third party sites, or to further unlawful acts (such as phishing) or mislead recipients as to the source of the material (such as spoofing);
-      *   the Content is not pornographic, does not contain threats or incite violence, and does not violate the privacy or publicity rights of any third party;
-      *   your content is not getting advertised via unwanted electronic messages such as spam links on newsgroups, email lists, blogs and web sites, and similar unsolicited promotional methods;
-      *   your content is not named in a manner that misleads your readers into thinking that you are another person or company; and
-      *   you have, in the case of Content that includes computer code, accurately categorized and/or described the type, nature, uses and effects of the materials, whether requested to do so by %{company_name} or otherwise.
-
-      <a name="3"></a>
-
-      ## [3. User Content License](#3)
-
-      User contributions are licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Without limiting any of those representations or warranties, %{company_name} has the right (though not the obligation) to, in %{company_name}’s sole discretion (i) refuse or remove any content that, in %{company_name}’s reasonable opinion, violates any %{company_name} policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in %{company_name}’s sole discretion. %{company_name} will have no obligation to provide a refund of any amounts previously paid.
-
-
-      <a name="4"></a>
-
-      ## [4. Payment and Renewal](#4)
-
-      ### General Terms
-
-      Optional paid services or upgrades may be available on the Website. When utilizing an optional paid service or upgrade, you agree to pay %{company_name} the monthly or annual subscription fees indicated. Payments will be charged on a pre-pay basis on the day you begin utilizing the service or upgrade and will cover the use of that service or upgrade for a monthly or annual subscription period as indicated. These fees are not refundable.
-
-      ### Automatic Renewal
-
-      Unless you notify %{company_name} before the end of the applicable subscription period that you want to cancel a service or upgrade, your subscription will automatically renew and you authorize us to collect the then-applicable annual or monthly subscription fee (as well as any taxes) using any credit card or other payment mechanism we have on record for you. Subscriptions can be canceled at any time.
-
-      <a name="5"></a>
-
-      ## [5. Services](#5)
-
-      ### Hosting, Support Services
-
-      Optional Hosting and Support services may be provided by %{company_name} under the terms and conditions for each such service. By signing up for a Hosting/Support or Support services account, you agree to abide by such terms and conditions.
-
-      <a name="6"></a>
-
-      ## [6. Responsibility of Website Visitors](#6)
-
-      %{company_name} has not reviewed, and cannot review, all of the material, including computer software, posted to the Website, and cannot therefore be responsible for that material’s content, use or effects. By operating the Website, %{company_name} does not represent or imply that it endorses the material there posted, or that it believes such material to be accurate, useful or non-harmful. You are responsible for taking precautions as necessary to protect yourself and your computer systems from viruses, worms, Trojan horses, and other harmful or destructive content. The Website may contain content that is offensive, indecent, or otherwise objectionable, as well as content containing technical inaccuracies, typographical mistakes, and other errors. The Website may also contain material that violates the privacy or publicity rights, or infringes the intellectual property and other proprietary rights, of third parties, or the downloading, copying or use of which is subject to additional terms and conditions, stated or unstated. %{company_name} disclaims any responsibility for any harm resulting from the use by visitors of the Website, or from any downloading by those visitors of content there posted.
-
-      <a name="7"></a>
-
-      ## [7. Content Posted on Other Websites](#7)
-
-      We have not reviewed, and cannot review, all of the material, including computer software, made available through the websites and webpages to which %{company_domain} links, and that link to %{company_domain}. %{company_name} does not have any control over those non-%{company_domain} websites and webpages, and is not responsible for their contents or their use. By linking to a non-%{company_domain} website or webpage, %{company_name} does not represent or imply that it endorses such website or webpage. You are responsible for taking precautions as necessary to protect yourself and your computer systems from viruses, worms, Trojan horses, and other harmful or destructive content. %{company_name} disclaims any responsibility for any harm resulting from your use of non-%{company_domain} websites and webpages.
-
-      <a name="8"></a>
-
-      ## [8. Copyright Infringement and DMCA Policy](#8)
-
-      As %{company_name} asks others to respect its intellectual property rights, it respects the intellectual property rights of others. If you believe that material located on or linked to by %{company_domain} violates your copyright, and if this website resides in the USA, you are encouraged to notify %{company_name} in accordance with %{company_name}’s [Digital Millennium Copyright Act](http://en.wikipedia.org/wiki/Digital_Millennium_Copyright_Act) ("DMCA") Policy. %{company_name} will respond to all such notices, including as required or appropriate by removing the infringing material or disabling all links to the infringing material. %{company_name} will terminate a visitor’s access to and use of the Website if, under appropriate circumstances, the visitor is determined to be a repeat infringer of the copyrights or other intellectual property rights of %{company_name} or others. In the case of such termination, %{company_name} will have no obligation to provide a refund of any amounts previously paid to %{company_name}.
-
-      <a name="9"></a>
-
-      ## [9. Intellectual Property](#9)
-
-      This Agreement does not transfer from %{company_name} to you any %{company_name} or third party intellectual property, and all right, title and interest in and to such property will remain (as between the parties) solely with %{company_name}. %{company_name}, %{company_domain}, the %{company_domain} logo, and all other trademarks, service marks, graphics and logos used in connection with %{company_domain}, or the Website are trademarks or registered trademarks of %{company_name} or %{company_name}’s licensors. Other trademarks, service marks, graphics and logos used in connection with the Website may be the trademarks of other third parties. Your use of the Website grants you no right or license to reproduce or otherwise use any %{company_name} or third-party trademarks.
-
-      <a name="10"></a>
-
-      ## [10. Advertisements](#10)
-
-      %{company_name} reserves the right to display advertisements on your content unless you have purchased an Ad-free Upgrade or a Services account.
-
-      <a name="11"></a>
-
-      ## [11. Attribution](#11)
-
-      %{company_name} reserves the right to display attribution links such as ‘Powered by %{company_domain},’ theme author, and font attribution in your content footer or toolbar. Footer credits and the %{company_domain} toolbar may not be removed regardless of upgrades purchased.
-
-      <a name="12"></a>
-
-      ## [12. Changes](#12)
-
-      %{company_name} reserves the right, at its sole discretion, to modify or replace any part of this Agreement. It is your responsibility to check this Agreement periodically for changes. Your continued use of or access to the Website following the posting of any changes to this Agreement constitutes acceptance of those changes. %{company_name} may also, in the future, offer new services and/or features through the Website (including, the release of new tools and resources). Such new features and/or services shall be subject to the terms and conditions of this Agreement.
-
-      <a name="13"></a>
-
-      ## [13. Termination](#13)
-
-      %{company_name} may terminate your access to all or any part of the Website at any time, with or without cause, with or without notice, effective immediately. If you wish to terminate this Agreement or your %{company_domain} account (if you have one), you may simply discontinue using the Website. All provisions of this Agreement which by their nature should survive termination shall survive termination, including, without limitation, ownership provisions, warranty disclaimers, indemnity and limitations of liability.
-
-      <a name="14"></a>
-
-      ## [14. Disclaimer of Warranties](#14)
-
-      The Website is provided "as is". %{company_name} and its suppliers and licensors hereby disclaim all warranties of any kind, express or implied, including, without limitation, the warranties of merchantability, fitness for a particular purpose and non-infringement. Neither %{company_name} nor its suppliers and licensors, makes any warranty that the Website will be error free or that access thereto will be continuous or uninterrupted. If you’re actually reading this, here’s [a treat](http://www.newyorker.com/online/blogs/shouts/2012/12/the-hundred-best-lists-of-all-time.html). You understand that you download from, or otherwise obtain content or services through, the Website at your own discretion and risk.
-
-      <a name="15"></a>
-
-      ## [15. Limitation of Liability](#15)
-
-      In no event will %{company_name}, or its suppliers or licensors, be liable with respect to any subject matter of this agreement under any contract, negligence, strict liability or other legal or equitable theory for: (i) any special, incidental or consequential damages; (ii) the cost of procurement for substitute products or services; (iii) for interruption of use or loss or corruption of data; or (iv) for any amounts that exceed the fees paid by you to %{company_name} under this agreement during the twelve (12) month period prior to the cause of action. %{company_name} shall have no liability for any failure or delay due to matters beyond their reasonable control. The foregoing shall not apply to the extent prohibited by applicable law.
-
-      <a name="16"></a>
-
-      ## [16. General Representation and Warranty](#16)
-
-      You represent and warrant that (i) your use of the Website will be in strict accordance with the %{company_name} [Privacy Policy](/privacy), [Community Guidelines](/guidelines), with this Agreement and with all applicable laws and regulations (including without limitation any local laws or regulations in your country, state, city, or other governmental area, regarding online conduct and acceptable content, and including all applicable laws regarding the transmission of technical data exported from the country in which this website resides or the country in which you reside) and (ii) your use of the Website will not infringe or misappropriate the intellectual property rights of any third party.
-
-      <a name="17"></a>
-
-      ## [17. Indemnification](#17)
-
-      You agree to indemnify and hold harmless %{company_name}, its contractors, and its licensors, and their respective directors, officers, employees and agents from and against any and all claims and expenses, including attorneys’ fees, arising out of your use of the Website, including but not limited to your violation of this Agreement.
-
-      <a name="18"></a>
-
-      ## [18. Miscellaneous](#18)
-
-      This Agreement constitutes the entire agreement between %{company_name} and you concerning the subject matter hereof, and they may only be modified by a written amendment signed by an authorized executive of %{company_name}, or by the posting by %{company_name} of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the Website will be governed by the laws of the state of California, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes arising out of or relating to any of the same will be the state and federal courts located in San Francisco County, California. Except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (“JAMS”) by three arbitrators appointed in accordance with such Rules. The arbitration shall take place in San Francisco, California, in the English language and the arbitral decision may be enforced in any court. The prevailing party in any action or proceeding to enforce this Agreement shall be entitled to costs and attorneys’ fees. If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties’ original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; %{company_name} may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns.
-
-      This document is CC-BY-SA. It was last updated May 31, 2013.
-
-      Originally adapted from the [WordPress Terms of Service](http://en.wordpress.com/tos/).
+    title: "Términos del servicio"
   privacy_topic:
-    title: "Políticas de Privacidad"
+    title: "Política de privacidad"
     body: |
       <a name="collect"></a>
 
@@ -3126,7 +2989,6 @@ es:
     badge_title_metadata: "%{display_name} distintivo en %{site_title}"
   admin_login:
     success: "Email enviado"
-    error: "¡Error!"
     email_input: "Email de admin"
     submit_button: "Enviar email"
   performance_report:

@@ -281,7 +281,6 @@ uk:
       '14': "Очікують"
     categories:
       all: "всі категорії"
-      all_subcategories: "все"
       no_subcategory: "немає"
       category: "Категорія"
       reorder:
@@ -1242,7 +1241,6 @@ uk:
         upload:
           label: "Вивантажити"
           uploading: "Вивантаження..."
-          success: "'{{filename}}' has successfully been uploaded."
           error: "There has been an error while uploading '{{filename}}': {{message}}"
         operations:
           is_running: "An operation is currently running..."

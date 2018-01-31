@@ -199,4 +199,23 @@ RSpec.describe PostsController do
       end
     end
   end
+
+  describe "#locked" do
+    before do
+      sign_in(Fabricate(:moderator))
+    end
+
+    it 'can lock and unlock the post' do
+      put "/posts/#{public_post.id}/locked.json", params: { locked: "true" }
+      expect(response).to be_success
+      public_post.reload
+      expect(public_post).to be_locked
+
+      put "/posts/#{public_post.id}/locked.json", params: { locked: "false" }
+      expect(response).to be_success
+      public_post.reload
+      expect(public_post).not_to be_locked
+    end
+  end
+
 end

@@ -97,11 +97,11 @@
 
       h1 {
         margin: 0;
-        line-height: 1;
+        line-height: $line-height-small;
       }
 
       h2 {
-        line-height: normal;
+        line-height: $line-height-medium;
       }
 
       .primary {

@@ -55,7 +55,7 @@ vi:
       confirmation: "%{attribute} không khớp"
       empty: không thể để trống
       equal_to: phải bằng %{count}
-      even: phải là chắn
+      even: phải là số chẵn
       exclusion: được dành riêng
       greater_than: phải lớn hơn %{count}
       greater_than_or_equal_to: phải lớn hơn hoặc bằng %{count}
@@ -153,7 +153,6 @@ vi:
     hot: "Chủ đề nóng nhất"
     top: "Top chủ đề"
     posts: "Bài viết mới nhất"
-    private_posts: "Tin nhắn mới nhất"
     group_posts: "Bài viết mới từ %{group_name}"
     group_mentions: "Đề cập mới từ %{group_name}"
     user_posts: "Bài viết mới của @%{username}"
@@ -220,9 +219,7 @@ vi:
         topic:
           attributes:
             base:
-              warning_requires_pm: "Bạn chỉ có thể đính kèm cảnh báo qua tin nhắn cá nhân"
               too_many_users: "Bạn chỉ có thể gửi một cảnh báo tới một người dùng mỗi lần."
-              cant_send_pm: "Xin lỗi, bạn không thể gửi tin nhắn tới thành viên này"
               no_user_selected: "Bạn phải chọn một thành viên phù hợp."
         user:
           attributes:
@@ -615,7 +612,6 @@ vi:
   site_settings:
     censored_words: "Từ sẽ tự động thay thế bằng &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Tự động ẩn bất kỳ bài viết ở ẩn hơn 30 ngày."
-    default_locale: "Ngôn ngữ mặc định của Discourse (Mã ISO 639-1)"
     allow_user_locale: "Cho phép thành viên chọn ngôn ngữ của riêng trong thiết lập giao diện."
     set_locale_from_accept_language_header: "đặt ngôn ngữ giao diện cho người dùng ẩn danh từ tiêu đề ngôn ngữ trình duyệt web của họ. (KINH NGHIỆM, không hoạt động với bộ nhớ cache ẩn danh)"
     min_post_length: "Số kí tự tối thiểu trong bài đăng."
@@ -776,7 +772,6 @@ vi:
     clean_orphan_uploads_grace_period_hours: "Thời gian gia hạn (theo giờ) trước khi dòng mồ côi upload được loại bỏ."
     purge_deleted_uploads_grace_period_days: "Thời gian gia hạn (theo ngày) trước khi upload cần xóa được xóa."
     enable_s3_uploads: "Đặt thư mục upload trên Amazon S3. QUAN TRỌNG: yêu cầu chứng thực S3 (cả ID khóa truy cập & khóa bảo mật)."
-    s3_use_iam_profile: 'Sử dụng AWS EC2 IAM để lấy khóa. LƯU Ý: bật thiết lập này sẽ ghi đè thiết lập "s3 access key id" và "s3 secret access key".'
     s3_upload_bucket: "Tên Amazon S3 để lưu trữ các file sẽ được upload. CHÚ Ý: phải là chữ thường, không cách và không gạch dưới."
     s3_access_key_id: "Amazon S3 access key id này sẽ được sử dụng để tải lên ảnh."
     s3_secret_access_key: "Amazon S3 secret access key này sẽ được sử dụng để tải lên ảnh."
@@ -814,7 +809,6 @@ vi:
     min_trust_to_create_topic: "Bậc tin tưởng tối thiểu để tạo một chủ đề mới."
     min_trust_to_edit_wiki_post: "Bậc tin cậy tối thiểu cần thiết để có thể sửa bài viết được đánh dấu là wiki."
     min_trust_to_allow_self_wiki: "Bậc tin cậy tối thiểu cần thiết để người dùng có thể đánh dấu bài viết của họ là wiki."
-    min_trust_to_send_messages: "Bậc tin cậy tối thiểu cần thiết để có thể tạo hội thoại riêng."
     newuser_max_links: "Bao nhiêu liên kết tài khoản mới có thể thêm vào bài viết."
     newuser_max_images: "Bao nhiêu hình tài khoản mới có thể thêm vào bài viết."
     newuser_max_attachments: "Bao nhiêu đính kèm tài khoản mới có thể thêm vào bài viết"
@@ -940,7 +934,6 @@ vi:
     enforce_square_emoji: "Sử dụng kích thước vuông cho tất cả các emoji."
     approve_post_count: "Số lượng bài viết từ một thành viên mới hoặc thành viên cũ phải được duyệt"
     approve_unless_trust_level: "Bài viết của thành viên dưới cấp độ tin cậy này phải được duyệt"
-    notify_about_queued_posts_after: "Nếu những bài viết đang chờ duyệt có thời gian cũ hơn số giờ thiết lập ở đây, một email sẽ được gửi đến contact_email. Đặt là 0 để vô hiệu hóa email này."
     default_email_private_messages: "Gửi email khi ai đó nhắn tin cho thành viên theo mặc định."
     default_email_direct: "Gửi email khi ai đó trích dẫn/trả lời/đề cập hoặc mời thành viên theo mặc định."
     default_email_mailing_list_mode: "Mặc định gửi email cho mỗi bài viết mới."
@@ -1433,7 +1426,6 @@ vi:
       name: Đề cập đầu tiên
   admin_login:
     success: "Gửi mail lỗi"
-    error: "Lỗi!"
     email_input: "Email quản trị"
     submit_button: "Gửi email"
   performance_report:

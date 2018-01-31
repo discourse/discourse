@@ -42,9 +42,13 @@
         {{else}}
           <h1>
             {{#unless model.is_warning}}
-              <a href={{pmPath}}>
+              {{#if siteSettings.enable_private_messages}}
+                <a href={{pmPath}}>
+                  <span class="private-message-glyph">{{d-icon "envelope"}}</span>
+                </a>
+              {{else}}
                 <span class="private-message-glyph">{{d-icon "envelope"}}</span>
-              </a>
+              {{/if}}
             {{/unless}}
 
             {{#if model.details.loaded}}
@@ -170,6 +174,9 @@
                 togglePostType=(action "togglePostType")
                 rebakePost=(action "rebakePost")
                 changePostOwner=(action "changePostOwner")
+                grantBadge=(action "grantBadge")
+                lockPost=(action "lockPost")
+                unlockPost=(action "unlockPost")
                 unhidePost=(action "unhidePost")
                 replyToPost=(action "replyToPost")
                 toggleWiki=(action "toggleWiki")

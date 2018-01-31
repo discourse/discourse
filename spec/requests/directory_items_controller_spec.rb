@@ -4,9 +4,8 @@ describe DirectoryItemsController do
   let!(:user) { Fabricate(:user) }
 
   it "requires a `period` param" do
-    expect do
-      get '/directory_items.json'
-    end.to raise_error(ActionController::ParameterMissing)
+    get '/directory_items.json'
+    expect(response.status).to eq(400)
   end
 
   it "requires a proper `period` param" do

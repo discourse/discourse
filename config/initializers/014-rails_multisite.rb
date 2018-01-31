@@ -12,8 +12,8 @@ end
 
 if Rails.configuration.multisite
   Rails.configuration.middleware.swap(
-    RailsMultisite::ConnectionManagement,
-    RailsMultisite::ConnectionManagement,
+    RailsMultisite::Middleware,
+    RailsMultisite::Middleware,
     RailsMultisite::DiscoursePatches.config
   )
 end

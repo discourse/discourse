@@ -63,6 +63,8 @@ en:
       default_subject: "This topic needs a title"
       show_trimmed_content: "Show trimmed content"
       maximum_staged_user_per_email_reached: "Reached maximum number of staged users created per email."
+      no_subject: "(no subject)"
+      no_body: "(no body)"
       errors:
         empty_email_error: "Happens when the raw mail we received was blank."
         no_message_id_error: "Happens when the mail has no 'Message-Id' header."
@@ -162,6 +164,7 @@ en:
     not_enough_space_on_disk: "There is not enough space on disk to upload this backup."
     invalid_filename: "The backup filename contains invalid characters. Valid characters are a-z 0-9 . - _."
 
+  invalid_params: "You supplied invalid parameters to the request: %{message}"
   not_logged_in: "You need to be logged in to do that."
   not_found: "The requested URL or resource could not be found."
   invalid_access: "You are not permitted to view the requested resource."
@@ -250,7 +253,7 @@ en:
     top_weekly: "Weekly top topics"
     top_daily: "Daily top topics"
     posts: "Latest posts"
-    private_posts: "Latest private messages"
+    private_posts: "Latest personal messages"
     group_posts: "Latest posts from %{group_name}"
     group_mentions: "Latest mentions from %{group_name}"
     user_posts: "Latest posts by @%{username}"
@@ -362,7 +365,7 @@ en:
     reviving_old_topic: |
       ### Revive this topic?
 
-      The last reply to this topic was **%{days}** days ago. Your reply will bump the topic to the top of its list and notify anyone previously involved in the conversation.
+      The last reply to this topic was **%{time_ago}**. Your reply will bump the topic to the top of its list and notify anyone previously involved in the conversation.
 
       Are you sure you want to continue this old conversation?
 
@@ -385,9 +388,9 @@ en:
         topic:
           attributes:
             base:
-              warning_requires_pm: "You can only attach warnings to private messages."
+              warning_requires_pm: "You can only attach warnings to personal messages."
               too_many_users: "You can only send warnings to one user at a time."
-              cant_send_pm: "Sorry, you cannot send a private message to that user."
+              cant_send_pm: "Sorry, you cannot send a personal message to that user."
               no_user_selected: "You must select a valid user."
               reply_by_email_disabled: "Reply by email has been disabled."
             featured_link:
@@ -403,6 +406,10 @@ en:
               unique_characters: "has too many repeated characters. Please use a more secure password."
             ip_address:
               signup_not_allowed: "Signup is not allowed from this account."
+        user_email:
+          attributes:
+            user_id:
+              reassigning_primary_email: "Reassigning a primary email to another user is not allowed."
         color_scheme_color:
           attributes:
             hex:
@@ -952,12 +959,13 @@ en:
     bad_favicon_url: "The favicon is failing to load. Check your favicon_url setting in <a href='/admin/site_settings'>Site Settings</a>."
     poll_pop3_timeout: "Connection to the POP3 server is timing out. Incoming email could not be retrieved. Please check your <a href='/admin/site_settings/category/email'>POP3 settings</a> and service provider."
     poll_pop3_auth_error: "Connection to the POP3 server is failing with an authentication error. Please check your <a href='/admin/site_settings/category/email'>POP3 settings</a>."
+    force_https_warning: "Your website is using SSL. But `<a href='/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` is not yet enabled in your site settings."
 
   site_settings:
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
     censored_pattern: "Regex pattern that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-delete any hidden posts that stay hidden for more than 30 days."
-    default_locale: "The default language of this Discourse instance (ISO 639-1 Code)"
+    default_locale: "The default language of this Discourse instance"
     allow_user_locale: "Allow users to choose their own language interface preference"
     set_locale_from_accept_language_header: "set interface language for anonymous users from their web browser's language headers. (EXPERIMENTAL, does not work with anonymous cache)"
     min_post_length: "Minimum allowed post length in characters"
@@ -989,6 +997,7 @@ en:
     download_remote_images_max_days_old: "Don't download remote images for posts that are more than n days old."
     disabled_image_download_domains: "Remote images will never be downloaded from these domains. Pipe-delimited list."
     editing_grace_period: "For (n) seconds after posting, editing will not create a new version in the post history."
+    staff_edit_locks_post: "Posts will be locked from editing if they are edited by staff members"
     post_edit_time_limit: "The author can edit or delete their post for (n) minutes after posting. Set to 0 for forever."
     edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view."
     delete_removed_posts_after: "Posts removed by the author will be automatically deleted after (n) hours. If set to 0, posts will be deleted immediately."
@@ -1028,6 +1037,7 @@ en:
     summary_max_results: "Maximum posts returned by 'Summary This Topic'"
 
     enable_private_messages: "Allow trust level 1 (configurable via min trust level to send messages) users to create messages and reply to messages. Note that staff can always send messages no matter what."
+    enable_system_message_replies: "Allows users to reply to system messages, even if private messages are disabled"
     enable_private_email_messages: "Allow trust level 4 (configurable via min trust level to send messages) users to send private email messages. Note that staff can always send messages no matter what."
 
     enable_long_polling: "Message bus used for notification can use long polling"
@@ -1211,7 +1221,7 @@ en:
     purge_deleted_uploads_grace_period_days: "Grace period (in days) before a deleted upload is erased."
     purge_unactivated_users_grace_period_days: "Grace period (in days) before a user who has not activated their account is deleted. Set to 0 to never purge unactivated users."
     enable_s3_uploads: "Place uploads on Amazon S3 storage. IMPORTANT: requires valid S3 credentials (both access key id & secret access key)."
-    s3_use_iam_profile: 'Use AWS EC2 IAM role to retrieve keys. NOTE: enabling will override "s3 access key id" and "s3 secret access key" settings.'
+    s3_use_iam_profile: 'Use an <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html">AWS EC2 instance profile</a> to grant access to the S3 bucket. NOTE: enabling this requires Discourse to be running in an appropriately-configured EC2 instance, and overrides the "s3 access key id" and "s3 secret access key" settings.'
     s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into. WARNING: must be lowercase, no periods, no underscores."
     s3_access_key_id: "The Amazon S3 access key id that will be used to upload images."
     s3_secret_access_key: "The Amazon S3 secret access key that will be used to upload images."
@@ -1274,9 +1284,9 @@ en:
 
     min_trust_to_allow_self_wiki: "The minimum trust level required to make user's own post wiki."
 
-    min_trust_to_send_messages: "The minimum trust level required to create new private messages."
+    min_trust_to_send_messages: "The minimum trust level required to create new personal messages."
 
-    min_trust_to_send_email_messages: "The minimum trust level required to send new private messages via email (to staged users)."
+    min_trust_to_send_email_messages: "The minimum trust level required to send new personal messages via email (to staged users)."
 
     newuser_max_links: "How many links a new user can add to a post."
     newuser_max_images: "How many images a new user can add to a post."
@@ -1365,7 +1375,7 @@ en:
     reply_by_email_enabled: "Enable replying to topics via email."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "List of alternative templates for reply by email incoming email addresses. Example: %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
-    incoming_email_prefer_html: "Use the HTML instead of the text for incoming email."
+    incoming_email_prefer_html: "Use HTML instead of text for incoming email."
 
     disable_emails: "Prevent Discourse from sending any kind of emails"
 
@@ -1455,6 +1465,9 @@ en:
     show_inactive_accounts: "Allow logged in users to browse profiles of inactive accounts."
 
     hide_suspension_reasons: "Don't display suspension reasons publically on user profiles."
+
+    log_personal_messages_views: "Log personal message views by Admin for other users/groups."
+
     user_website_domains_whitelist: "User website will be verified against these domains. Pipe-delimited list."
 
     allow_profile_backgrounds: "Allow users to upload profile backgrounds."
@@ -1505,7 +1518,7 @@ en:
     allowed_href_schemes: "Schemes allowed in links in addition to http and https."
     embed_post_limit: "Maximum number of posts to embed."
     embed_username_required: "The username for topic creation is required."
-    notify_about_flags_after: "If there are flags that haven't been handled after this many hours, send a private message to staff. Set to 0 to disable."
+    notify_about_flags_after: "If there are flags that haven't been handled after this many hours, send a personal message to staff. Set to 0 to disable."
     show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
 
     delete_drafts_older_than_n_days: Delete drafts older than (n) days.
@@ -1517,13 +1530,14 @@ en:
     slug_generation_method: "Choose a slug generation method. 'encoded' will generate percent encoding string. 'none' will disable slug at all."
 
     enable_emoji: "Enable emoji"
+    enable_emoji_shortcuts: "Common smiley text such as :) :p :( will be converted to emojis"
     emoji_set: "How would you like your emoji?"
     enforce_square_emoji: "Force a square aspect ratio to all emojis."
 
     approve_post_count: "The amount of posts from a new or basic user that must be approved"
     approve_unless_trust_level: "Posts for users below this trust level must be approved"
     approve_new_topics_unless_trust_level: "New topics for users below this trust level must be approved"
-    notify_about_queued_posts_after: "If there are posts that have been waiting to be reviewed for more than this many hours, an email will be sent to the contact_email. Set to 0 to disable these emails."
+    notify_about_queued_posts_after: "If there are posts that have been waiting to be reviewed for more than this many hours, send a notification to all moderators. Set to 0 to disable these notifications."
     auto_close_messages_post_count: "Maximum number of posts allowed in a message before it is automatically closed (0 to disable)"
     auto_close_topics_post_count: "Maximum number of posts allowed in a topic before it is automatically closed (0 to disable)"
 
@@ -1578,6 +1592,7 @@ en:
     show_filter_by_tag: "Show a dropdown to filter a topic list by tag."
     max_tags_in_filter_list: "Maximum number of tags to show in the filter dropdown. The most used tags will be shown."
     tags_sort_alphabetically: "Show tags in alphabetical order. Default is to show in order of popularity."
+    tags_listed_by_group: "List tags by tag group on the Tags page (/tags)."
     tag_style: "Visual style for tag badges."
     staff_tags: "A list of tags that can only be applied by staff members"
     min_trust_level_to_tag_topics: "Minimum trust level required to tag topics"
@@ -3169,7 +3184,7 @@ en:
 
       This Agreement constitutes the entire agreement between %{company_name} and you concerning the subject matter hereof, and they may only be modified by a written amendment signed by an authorized executive of %{company_name}, or by the posting by %{company_name} of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the Website will be governed by the laws of the state of California, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes arising out of or relating to any of the same will be the state and federal courts located in San Francisco County, California. Except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (“JAMS”) by three arbitrators appointed in accordance with such Rules. The arbitration shall take place in San Francisco, California, in the English language and the arbitral decision may be enforced in any court. The prevailing party in any action or proceeding to enforce this Agreement shall be entitled to costs and attorneys’ fees. If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties’ original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; %{company_name} may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns.
 
-      This document is CC-BY-SA. It was last updated January 1, 2017.
+      This document is CC-BY-SA. It was last updated January 1, 2018.
 
       Originally adapted from the [WordPress Terms of Service](http://en.wordpress.com/tos/).
 
@@ -3493,7 +3508,9 @@ en:
 
   admin_login:
     success: "Email Sent"
-    error: "Error!"
+    errors:
+      unknown_email_address: "Unknown email address."
+      invalid_token: "Invalid token."
     email_input: "Admin Email"
     submit_button: "Send Email"
 
@@ -3669,3 +3686,5 @@ en:
 
   search_logs:
     graph_title: "Search Count"
+
+  joined: "Joined"

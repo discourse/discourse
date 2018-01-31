@@ -66,6 +66,24 @@ export function buildManageButtons(attrs, currentUser) {
     });
   }
 
+  if (currentUser.staff) {
+    contents.push({
+      icon: 'certificate',
+      label: 'post.controls.grant_badge',
+      action: 'grantBadge',
+      className: 'grant-badge'
+    });
+
+    const action = attrs.locked ? "unlock" : "lock";
+    contents.push({
+      icon: action,
+      label: `post.controls.${action}_post`,
+      action: `${action}Post`,
+      title: `post.controls.${action}_post_description`,
+      className: `${action}-post`
+    });
+  }
+
   if (attrs.canManage || attrs.canWiki) {
     if (attrs.wiki) {
       contents.push({

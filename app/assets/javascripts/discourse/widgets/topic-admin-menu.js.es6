@@ -63,8 +63,13 @@ createWidget('topic-admin-menu-button', {
 
     const $button = $(e.target).closest('button');
     const position = $button.position();
+    const rtl = $('html').hasClass('rtl');
     position.left = position.left;
     position.outerHeight = $button.outerHeight();
+
+    if (rtl) {
+        position.left -= 217 - $button.outerWidth();
+    }
 
     if (this.attrs.fixed) {
       position.left += $button.width() - 203;

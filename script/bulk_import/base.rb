@@ -122,13 +122,13 @@ class BulkImport::Base
 
   def fix_primary_keys
     puts "Updating primary key sequences..."
-    @raw_connection.exec("SELECT setval('#{Group.sequence_name}', #{@last_group_id})")
-    @raw_connection.exec("SELECT setval('#{User.sequence_name}', #{@last_user_id})")
-    @raw_connection.exec("SELECT setval('#{UserEmail.sequence_name}', #{@last_user_email_id})")
-    @raw_connection.exec("SELECT setval('#{Category.sequence_name}', #{@last_category_id})")
-    @raw_connection.exec("SELECT setval('#{Topic.sequence_name}', #{@last_topic_id})")
-    @raw_connection.exec("SELECT setval('#{Post.sequence_name}', #{@last_post_id})")
-    @raw_connection.exec("SELECT setval('#{PostAction.sequence_name}', #{@last_post_action_id})")
+    @raw_connection.exec("SELECT setval('#{Group.sequence_name}', #{@last_group_id})") if @last_group_id > 0
+    @raw_connection.exec("SELECT setval('#{User.sequence_name}', #{@last_user_id})") if @last_user_id > 0
+    @raw_connection.exec("SELECT setval('#{UserEmail.sequence_name}', #{@last_user_email_id})") if @last_user_email_id > 0
+    @raw_connection.exec("SELECT setval('#{Category.sequence_name}', #{@last_category_id})") if @last_category_id > 0
+    @raw_connection.exec("SELECT setval('#{Topic.sequence_name}', #{@last_topic_id})") if @last_topic_id > 0
+    @raw_connection.exec("SELECT setval('#{Post.sequence_name}', #{@last_post_id})") if @last_post_id > 0
+    @raw_connection.exec("SELECT setval('#{PostAction.sequence_name}', #{@last_post_action_id})") if @last_post_action_id > 0
   end
 
   def group_id_from_imported_id(id); @groups[id.to_s]; end

@@ -560,7 +560,6 @@ ar:
       '14': "قيد الانتظار"
     categories:
       all: "كل الأقسام"
-      all_subcategories: "الكل"
       no_subcategory: "لا شيء"
       category: "قسم"
       category_list: "أعرض قائمة الأقسام"
@@ -648,7 +647,6 @@ ar:
       disable_jump_reply: "لا تنتقل إلى منشوري بعد النشر"
       dynamic_favicon: "أظهر عدد الموضوعات الجديدة/المحدّثة في أيقونة المتصفح"
       theme_default_on_all_devices: "اجعل هذة الواجهة افتراضية على جميع اجهزتي"
-      allow_private_messages: "السماح للأعضاء الاخرين بإرسال رسالة خاصة لي"
       external_links_in_new_tab: "فتح الروابط الخارجية في تبويب جديد"
       enable_quoting: "فعل خاصية إقتباس النصوص المظللة"
       change: "غيّر"
@@ -872,7 +870,6 @@ ar:
         title: "الدّعوات"
         user: "المستخدمين المدعويين"
         sent: "تم الإرسال"
-        none: "لا توجد دعوات معلقة لعرضها."
         truncated:
           zero: "لا يوجد دعوات لعرضها."
           one: "عرض الدعوة الأولى."
@@ -1335,8 +1332,6 @@ ar:
         posted: "منشور من"
         edited: "تم تعديل منشورك من"
         liked: "أُعجب بمنشورك"
-        private_message: "رسالة خاصة من"
-        invited_to_private_message: "تمت دعوتك لرسالة خاصة من "
         invited_to_topic: "تمت دعوتك لموضوع من "
         invitee_accepted: "قبلت دعوتك من"
         moved_post: "منشورك نقل بواسطة"
@@ -1350,7 +1345,6 @@ ar:
         quoted: 'اقتبس {{username}} كلامك في "{{topic}}" - {{site_title}}'
         replied: 'ردّ {{username}} عليك في "{{topic}}" - {{site_title}}'
         posted: 'نشر {{username}} في "{{topic}}" - {{site_title}}'
-        private_message: 'أرسل {{username}} إليك رسالة خاصة في "{{topic}}" - {{site_title}}'
         linked: '{{username}} وضع رابطا لمنشورك في "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "أضف صورة"
@@ -1705,7 +1699,6 @@ ar:
         visible: "إضاف إلي القائمة"
         reset_read: "تصفير بيانات القراءة"
         make_public: "اجعل الموضوع للعموم"
-        make_private: "اجعل الرسالة خاصة"
       feature:
         pin: "تثبيت الموضوع"
         unpin: "إلغاء تثبيت الموضوع"
@@ -2577,7 +2570,6 @@ ar:
         many: "%{count} ممنوح."
         other: "%{count} ممنوح."
       select_badge_for_title: اختر شارة لتستخدمها كلقب لك.
-      none: "لا شئ"
       badge_grouping:
         getting_started:
           name: الاساسية
@@ -2744,7 +2736,6 @@ ar:
         topics: "الموشوعات المبلغ عنها "
         agree: "أوافق"
         agree_title: "أكد هذا البلاغ كونه صحيح وصالح"
-        defer_flag_title: "ازل هذا البلاغ، لا يتطلب منك إجراء في الوقت الحالي."
         delete: "احذف"
         delete_title: "احذف المنشور المرتبط بهذا البلاغ"
         delete_post_defer_flag_title: "احذف المنشور. اذا كان المنشور الاول, احذف الموضوع"
@@ -2926,7 +2917,6 @@ ar:
           label: "رفع"
           title: "رفع نسخة احتياطية لهذه الحالة."
           uploading: "يرفع..."
-          success: "تم رفع '{{filename}}' بنجاح."
           error: "حصلت مشكلة أثناء رفع '{{filename}}': {{message}}"
         operations:
           is_running: "هناك عمليّة تجري حاليًّا..."

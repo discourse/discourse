@@ -30,6 +30,18 @@ describe InviteRedeemer do
       expect(error).to be_present
       expect(error.record.errors[:password]).to be_present
     end
+
+    it "should unstage user" do
+      staged_user = Fabricate(:staged, email: 'staged@account.com', active: true, username: 'staged1', name: 'Stage Name')
+      user = InviteRedeemer.create_user_from_invite(Fabricate(:invite, email: 'staged@account.com'), 'walter', 'Walter White')
+
+      expect(user.id).to eq(staged_user.id)
+      expect(user.username).to eq('walter')
+      expect(user.name).to eq('Walter White')
+      expect(user.active).to eq(false)
+      expect(user.email).to eq('staged@account.com')
+      expect(user.approved).to eq(true)
+    end
   end
 
   describe "#redeem" do

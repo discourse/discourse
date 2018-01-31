@@ -22,7 +22,7 @@
  }
 
  span {
-   font-size: 0.929em;
+   font-size: $font-0;
    margin-right: 8px;
    display: inline-block;
    max-width: 280px;
@@ -34,7 +34,7 @@
    }
  }
  .fa {
-   font-size: .786em;
+   font-size: $font-down-1;
    margin-left: 3px;
    color: dark-light-choose($primary-medium, $secondary-medium);
  }
@@ -46,14 +46,46 @@
 // global styles for the cooked HTML content in posts (and preview)
 .cooked, .d-editor-preview {
   word-wrap: break-word;
-  h1, h2, h3, h4, h5, h6 { 
-    margin: 30px 0 10px; 
-    line-height: 1.25; 
+  line-height: $line-height-large;
+  h1, h2, h3, h4, h5, h6 {
+    margin: 30px 0 10px;
+    line-height: $line-height-medium;
   }
-  
+
+  h1 {
+    font-size: $font-up-4;
+  }
+
+  h2 {
+    font-size: $font-up-3;
+  }
+
+  h3 {
+    font-size: $font-up-2;
+  }
+
+  h4 {
+    font-size: $font-up-1;
+  }
+
+  h5 {
+    font-size: $font-0;
+  }
+
+  h6 {
+    font-size: $font-down-1;
+  }
+
   a { word-wrap: break-word; }
   ins { background-color: dark-light-choose($success-low, scale-color($success, $lightness: -60%)); }
   del { background-color: dark-light-choose($danger-low, scale-color($danger, $lightness: -60%)); }
+  // Prevents users from breaking posts with tag nesting
+  big { font-size: 2rem; }
+  small { font-size: 0.75rem; }
+  small small { font-size: .75em; }
+  big big { font-size: 1em; } 
+  sub sub sub {bottom: 0;}
+  sup sup sup {top: 0;}
 }
 
 .cooked, .d-editor-preview {
@@ -149,7 +181,7 @@ aside.quote {
   background-color: blend-primary-secondary(50%);
   color: dark-light-choose($secondary, $primary);
   padding: 10px;
-  z-index: 401;
+  z-index: z("dropdown");
   opacity: 0.9;
 
   .d-icon {
@@ -164,6 +196,33 @@ aside.quote {
 
 .topic-avatar, .user-card-avatar {
   position: relative;
+}
+
+.topic-map {
+
+  .avatars {
+    > div {
+      float: left;
+      position: relative;
+      margin: 3px 0;
+    }
+    .post-count {
+      position: absolute;
+      right: 0;
+      border-radius: 100px;
+      padding: 3px 5px;
+      text-align: center;
+      font-weight: normal;
+      font-size: $font-down-2;
+      line-height: $line-height-small;
+    }
+  }
+
+  .avatar {
+    float: left;
+    margin-right: 4px;
+  }
+
 }
 
 .topic-avatar, .avatar-flair-preview, .user-card-avatar, .topic-map .poster {
@@ -204,7 +263,7 @@ aside.quote {
     right: -4px;
   }
   .fa {
-    font-size: 1.714em;
+    font-size: $font-up-4;
   }
 }
 .topic-map .poster .avatar-flair {
@@ -222,11 +281,24 @@ aside.quote {
     right: 0;
   }
   .fa {
-    font-size: 1em;
+    font-size: $font-0;
   }
 }
 .topic-avatar .poster-avatar-extra {
   display: none;
+}
+
+.map {
+  &:first-of-type {
+    display: flex;
+    .buttons {
+      margin-left: auto;
+      order: 15;
+      .btn {
+        height: 100%;
+      }
+    }
+  }
 }
 
 .topic-body {
@@ -248,10 +320,14 @@ aside.quote {
 }
 
 .post-info {
+
   &.via-email, &.whisper {
+    line-height: $line-height-medium;
+  }
+  &.via-email, &.whisper, &.post-locked {
     margin-right: 5px;
     .d-icon {
-      font-size: 1em;
+      font-size: $font-0;
     }
   }
 
@@ -287,8 +363,8 @@ kbd
   box-shadow: 0 1px 0 rgba(0,0,0, .8);
   color: $primary;
   display: inline-block;
-  font-size: 0.857em;
-  line-height: 1.4;
+  font-size: $font-down-1;
+  line-height: $line-height-large;
   margin: 0 .1em;
   padding: .1em .6em;
 
@@ -314,7 +390,7 @@ blockquote > *:last-child {
   cursor: pointer;
   text-transform: uppercase;
   font-weight: bold;
-  font-size: 0.9em;
+  font-size: $font-down-1;
 }
 
 .who-liked {
@@ -347,11 +423,11 @@ blockquote > *:last-child {
   max-width: 755px;
   border-top: 1px solid $primary-low;
   .topic-avatar {
-    padding: 5px 0 3px;
+    padding: .67em 0;
     border-top: none;
     float: left;
     i {
-      font-size: 2.500em;
+      font-size: 2em;
       width: 45px;
       text-align: center;
       color: dark-light-choose($primary-low-mid, $secondary-high);
@@ -367,20 +443,20 @@ blockquote > *:last-child {
   }
 
   .small-action-desc {
-    padding: 0.25em 0 0.5em 4.3em;
-    margin-top: 6px;
+    padding: 1em;
     text-transform: uppercase;
     font-weight: bold;
-    font-size: 0.857em;
+    font-size: $font-down-1;
     color: dark-light-choose($primary-low-mid, $secondary-high);
 
     .custom-message {
       text-transform: none;
-      margin: 15px 0px 5px;
+      margin: 15px 0 5px;
       font-weight: normal;
-      font-size: 1.143em;
+      font-size: $font-up-1;
       p {
         margin: 5px 0;
+        line-height: $line-height-large;
       }
     }
 
@@ -399,6 +475,7 @@ blockquote > *:last-child {
     background: transparent;
     border: 0;
     float: right;
+    margin-top: -2px;
   }
 
   clear: both;
@@ -449,8 +526,8 @@ a.mention, a.mention-group {
     > i.fa {
       color: dark-light-choose($primary-medium, $secondary-medium);
       margin-right: 6px;
-      font-size: $base-font-size;
-      line-height: $base-line-height;
+      font-size: $font-0;
+      line-height: $line-height-large;
     }
 
     > span.url {
@@ -464,9 +541,9 @@ a.mention, a.mention-group {
     > span.help {
       display: inline-block;
       color: dark-light-choose($primary-medium, $secondary-medium);
-      font-size: 0.857em;
+      font-size: $font-down-1;
       font-style: italic;
-      line-height: $base-line-height;
+      line-height: $line-height-large;
       margin-bottom: 1px;
     }
 
@@ -479,7 +556,7 @@ a.mention, a.mention-group {
 .broken-image, .large-image {
   color: dark-light-choose($primary-low-mid, $secondary-high);
   border: 1px solid $primary-low;
-  font-size: 2.286em;
+  font-size: $font-up-5;
   padding: 16px;
 }
 

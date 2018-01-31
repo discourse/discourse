@@ -46,6 +46,10 @@ module PostGuardian
     !!result
   end
 
+  def can_lock_post?(post)
+    can_see_post?(post) && is_staff?
+  end
+
   def can_defer_flags?(post)
     can_see_post?(post) && is_staff? && post
   end
@@ -80,6 +84,9 @@ module PostGuardian
 
   # Creating Method
   def can_create_post?(parent)
+
+    return false if !SiteSetting.enable_system_message_replies? && parent.try(:subtype) == "system_message"
+
     (!SpamRule::AutoSilence.silence?(@user) || (!!parent.try(:private_message?) && parent.allowed_users.include?(@user))) && (
       !parent ||
       !parent.category ||
@@ -94,6 +101,9 @@ module PostGuardian
     end
 
     return true if is_admin?
+
+    # Must be staff to edit a locked post
+    return false if post.locked? && !is_staff?
 
     if is_staff? || @user.has_trust_level?(TrustLevel[4])
       return can_create_post?(post.topic)

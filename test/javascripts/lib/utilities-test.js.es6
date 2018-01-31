@@ -14,7 +14,8 @@ import {
   validateUploadedFiles,
   getUploadMarkdown,
   caretRowCol,
-  setCaretPosition
+  setCaretPosition,
+  fillMissingDates
 } from 'discourse/lib/utilities';
 import * as Utilities from 'discourse/lib/utilities';
 
@@ -122,6 +123,7 @@ var testUploadMarkdown = function(filename) {
 
 QUnit.test("getUploadMarkdown", assert => {
   assert.equal(testUploadMarkdown("lolcat.gif"),'![lolcat|100x200](/uploads/123/abcdef.ext)');
+  assert.equal(testUploadMarkdown("[foo|bar].png"),'![%5Bfoo%7Cbar%5D|100x200](/uploads/123/abcdef.ext)');
   assert.ok(testUploadMarkdown("important.txt") === '<a class="attachment" href="/uploads/123/abcdef.ext">important.txt</a> (42 Bytes)\n');
 });
 
@@ -252,4 +254,13 @@ QUnit.test("caretRowCol", assert => {
   assertResult(14, 3, 2);
 
   document.body.removeChild(textarea);
+});
+
+QUnit.test("fillMissingDates", assert => {
+  const startDate = "2017-11-12"; // YYYY-MM-DD
+  const endDate = "2017-12-12"; // YYYY-MM-DD
+  const data = '[{"x":"2017-11-12","y":3},{"x":"2017-11-27","y":2},{"x":"2017-12-06","y":9},{"x":"2017-12-11","y":2}]';
+
+  assert.equal(fillMissingDates(JSON.parse(data), startDate, endDate).length, 31,
+        "it returns a JSON array with 31 dates");
 });

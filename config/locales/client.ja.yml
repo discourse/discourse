@@ -239,6 +239,7 @@ ja:
     uploading: "アップロード中..."
     uploading_filename: "{{filename}} をアップロードしています..."
     uploaded: "アップロードしました"
+    pasting: "貼り付け"
     enable: "有効にする"
     disable: "無効にする"
     undo: "取り消す"
@@ -429,7 +430,6 @@ ja:
       '14': "保留"
     categories:
       all: "すべてのカテゴリ"
-      all_subcategories: "すべてのサブカテゴリ"
       no_subcategory: "サブカテゴリなし"
       category: "カテゴリ"
       category_list: "カテゴリリストを表示"
@@ -500,6 +500,7 @@ ja:
         disable: "通知を無効にする"
         enable: "通知を有効にする"
         each_browser_note: "注意: 利用するすべてのブラウザでこの設定を変更する必要があります"
+      dismiss: '閉じる'
       dismiss_notifications: "すべて既読にする"
       dismiss_notifications_tooltip: "全ての未読の通知を既読にします"
       first_notification: "最初の通知です! 始めるために選択してください。"
@@ -513,7 +514,9 @@ ja:
       admin: "{{user}} は管理者です"
       moderator_tooltip: "このユーザーはモデレータです"
       admin_tooltip: "このユーザーは管理者です"
+      silenced_tooltip: "このユーザーは消音状態です"
       suspended_notice: "このユーザーは {{date}} まで凍結状態です。"
+      suspended_permanently: "このユーザーは凍結されています"
       suspended_reason: "理由: "
       github_profile: "Github"
       email_activity_summary: "アクティビティの情報"
@@ -530,6 +533,8 @@ ja:
       tag_settings: "タグ"
       watched_tags: "ウォッチ中"
       watched_tags_instructions: "自動的にこれらのタグが付いた全てのトピックをウォッチします。全ての新規投稿と新規トピックが通知されまた、新規投稿数がトピックの隣に表示されます。"
+      tracked_tags: "追跡"
+      tracked_tags_instructions: "これらのタグのすべてのトピックを自動的に追跡します。 新しい投稿の数がトピックの横に表示されます。"
       muted_tags: "通知しない"
       muted_tags_instructions: "これらのタグが付いたトピックについて何も通知されず、また新着にも表示されません。"
       watched_categories: "ウォッチ中"
@@ -561,6 +566,8 @@ ja:
       undo_revoke_access: "アクセス解除をやめる"
       api_approved: "承認されました:"
       theme: "テーマ"
+      home: "デフォルトホームページ"
+      staged: "段階"
       staff_counters:
         flags_given: "役に立った通報"
         flagged_posts: "通報された投稿"
@@ -721,7 +728,6 @@ ja:
         title: "招待"
         user: "招待したユーザ"
         sent: "送信済み"
-        none: "保留中の招待はありません。"
         truncated:
           other: "{{count}} 件の招待を表示しています。"
         redeemed: "招待を確認する"
@@ -859,6 +865,7 @@ ja:
     first_post: 最初の投稿
     mute: ミュート
     unmute: ミュート解除
+    last_post: 最終投稿
     last_reply_lowercase: 最後の返信
     replies_lowercase:
       other: 返信
@@ -989,6 +996,11 @@ ja:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    select_kit:
+      default_header_text: 選択...
+      no_content: 一致する項目が見つかりませんでした
+      filter_placeholder: 検索...
+      create: "{{content}} を作成"
     emoji_picker:
       filter_placeholder: 絵文字を探す
       people: ピープル
@@ -1050,6 +1062,7 @@ ja:
       edit_reason_placeholder: "編集する理由は何ですか?"
       show_edit_reason: "(編集理由を追加)"
       topic_featured_link_placeholder: "タイトルにリンクを入力してください。"
+      remove_featured_link: "トピックからリンクを削除する。"
       reply_placeholder: "文章を入力してください。 Markdown, BBコード, HTMLが使用出来ます。 画像はドラッグアンドドロップで貼り付けられます。"
       view_new_post: "新しい投稿を見る。"
       saving: "保存中"
@@ -1122,8 +1135,6 @@ ja:
         posted: "投稿者 "
         edited: "投稿の編集者: "
         liked: "あなたの投稿をいいねしました"
-        private_message: "プライベートメッセージを受け取りました: "
-        invited_to_private_message: "プライベートメッセージへ招待されました: "
         invited_to_topic: "トピックに招待されました: "
         invitee_accepted: "招待が承認されました: "
         moved_post: "投稿を移動しました: "
@@ -1136,7 +1147,6 @@ ja:
         quoted: '"{{topic}}"で{{username}}が引用しました - {{site_title}}'
         replied: '{{username}}が"{{topic}}"へ返信しました - {{site_title}}'
         posted: '{{username}} が投稿しました "{{topic}}" - {{site_title}}'
-        private_message: '"{{topic}}"で{{username}}からプライベートメッセージが届きました - {{site_title}}'
         linked: '"{{topic}}"にあるあなたの投稿に{{username}}がリンクしました - {{site_title}}'
     upload_selector:
       title: "画像のアップロード"
@@ -1436,7 +1446,6 @@ ja:
         visible: "リストに表示"
         reset_read: "読み込みデータをリセット"
         make_public: "公開トピックへ変更"
-        make_private: "プライベートメッセージへ変更"
       feature:
         pin: "トピックを固定表示"
         unpin: "トピックの固定表示を解除"
@@ -1793,6 +1802,13 @@ ja:
           description: "他のユーザからメンションされた場合や、投稿に返信された場合に通知されます。"
         muted:
           title: "ミュート中"
+      sort_options:
+        views: "表示"
+        posts: "投稿"
+        activity: "アクティビティー"
+        posters: "投稿者"
+        category: "カテゴリ"
+        created: "作成者"
     flagging:
       title: '報告していただきありがとうございます。'
       action: '投稿を通報'
@@ -2036,11 +2052,33 @@ ja:
         watching_first_post:
           title: "最初の投稿をウォッチする"
           description: "このタグの新規トピックに対する最初の投稿のみ通知されます。"
+      groups:
+        parent_tag_label: "親タグ:"
+        parent_tag_placeholder: "任意"
+        save: "保存する"
+        delete: "削除する"
+        confirm_delete: "このタググループを削除してもよろしいですか？"
       topics:
         none:
+          unread: "未読のトピックはありません。"
+          new: "新着トピックはありません。"
+          read: "あなたはまだ、どのトピックも読んでいません。"
+          posted: "あなたはまだ、どのトピックにも投稿していません。"
           latest: "最新のトピックはありません。"
+          hot: "ホットなトピックはありません。"
+          bookmarks: "ブックマークしたトピックはありません。"
+          top: "トップトピックはありません。"
+          search: "検索結果はありません。"
         bottom:
           latest: "最新のトピックは以上です。"
+          hot: "ホットなトピックは以上です。"
+          posted: "投稿のあるトピックは以上です。"
+          read: "既読のトピックは以上です。"
+          new: "新着トピックは以上です。"
+          unread: "未読のトピックは以上です。"
+          top: "トップトピックは以上です。"
+          bookmarks: "ブックマーク済みのトピックは以上です。"
+          search: "検索結果は以上です。"
   admin_js:
     type_to_filter: "設定項目を検索..."
     admin:
@@ -2098,7 +2136,6 @@ ja:
         title: "通報"
         agree: "賛成する"
         agree_title: "この通報が有効で正しいことを確認してください"
-        defer_flag_title: "通報を削除します。何も行いません。"
         delete: "削除する"
         delete_title: "この通報で通報されている投稿を削除します"
         delete_post_defer_flag_title: "投稿を削除します。最初の投稿を削除した場合、トピックも削除されます。"
@@ -2129,6 +2166,8 @@ ja:
         visit_topic: "トピックを確認"
         was_edited: "最初の通報後に編集された投稿"
         previous_flags_count: "この投稿は既に {{count}} 回通報されています"
+        flagged_topics:
+          topic: "トピック"
       groups:
         primary: "プライマリーグループ"
         no_primary: "（プライマリーグループなし）"
@@ -2211,7 +2250,6 @@ ja:
           label: "アップロード"
           title: "このインスタンスにバックアップをアップロード"
           uploading: "アップロード中..."
-          success: "ファイル'{{filename}}' がアップロードされました。"
           error: "ファイル '{{filename}}'アップロードエラー: {{message}}"
         operations:
           is_running: "バックアップ作業を実行中..."
@@ -2557,6 +2595,15 @@ ja:
         suspend_reason: "理由"
         suspend_reason_placeholder: "凍結理由"
         suspended_by: "凍結したユーザ"
+        silence_reason: "理由"
+        silenced_by: "消音化したユーザ"
+        silence_duration: "ユーザーはどのくらいの間、消音化されますか？"
+        silence_reason_label: "なぜあなたはこのユーザーを消音化させますか？"
+        silence_reason_placeholder: "消音化の理由"
+        silence_message: "メールメッセージ"
+        silence_message_placeholder: "(デフォルトのメッセージを送信する場合は空白のままにします)"
+        suspended_until: "(%{until}まで)"
+        cant_suspend: "このユーザーは凍結できません。"
         delete_all_posts: "全ての投稿を削除"
         moderator: "モデレータ権限の所有"
         admin: "管理者権限の所有"

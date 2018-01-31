@@ -184,7 +184,6 @@ et:
     hot: "Populaarsed teemad"
     top: "Parimad teemad"
     posts: "Viimased postitused"
-    private_posts: "Viimased privaatsõnumid"
     group_posts: "Viimased postitused grupilt %{group_name}"
     group_mentions: "Viimati mainitud grupis %{group_name}"
     user_posts: "Viimased postitused kasutajalt @%{username}"
@@ -253,9 +252,7 @@ et:
         topic:
           attributes:
             base:
-              warning_requires_pm: "Saad hoiatusi lisada vaid privaatsõnumitele."
               too_many_users: "Saad hoiatusi saata vaid ühele kasutajale korraga."
-              cant_send_pm: "Vabanda, sa ei saa sellele kasutajale privaatsõnumit saata."
               no_user_selected: "Pead valima sobiva kasutaja."
             featured_link:
               invalid: "on vigane. URL peab sisaldama http:// või https://."
@@ -882,7 +879,6 @@ et:
       name: Esimene vastamine meiliga
   admin_login:
     success: "Kiri saadetud"
-    error: "Viga!"
     email_input: "Admini kiri"
     submit_button: "Saada kiri"
   tags:

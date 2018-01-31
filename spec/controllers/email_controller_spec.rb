@@ -5,7 +5,8 @@ describe EmailController do
   context '.preferences_redirect' do
 
     it 'requires you to be logged in' do
-      expect { get :preferences_redirect, format: :json }.to raise_error(Discourse::NotLoggedIn)
+      get :preferences_redirect, format: :json
+      expect(response.status).to eq(403)
     end
 
     context 'when logged in' do

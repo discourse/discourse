@@ -370,7 +370,6 @@ th:
       '14': "อยู่ระหว่างการพิจารณา"
     categories:
       all: "ดูทุกหมวดหมู่"
-      all_subcategories: "ทั้งหมด"
       no_subcategory: "ไม่มี"
       category: "หมวดหมู่"
       category_list: "แสดงหมวดหมู่ทั้งหมด"
@@ -615,7 +614,6 @@ th:
         title: "เชิญชวน"
         user: "เชิญชวนผู้ใช้"
         sent: "ส่ง"
-        none: "ไม่มีคำเชิญที่รออยู่ให้แสดง"
         truncated:
           other: "กำลังแสดงคำเชิญ {{count}} รายการแรก"
         redeemed: "ยืนยันการเชิญชวน"
@@ -909,8 +907,6 @@ th:
         posted: "โพสโดย"
         edited: "แก้ไขโพสของคุณโดย"
         liked: "ได้ถูกใจโพสของคุณ"
-        private_message: "ข้อความส่วนตัวจาก"
-        invited_to_private_message: "ได้รับคำเชิญเพื่อข้อความส่วนตัวจาก"
         invited_to_topic: "เชิญไปยังกระทู้จาก"
         invitee_accepted: "การเชิญได้ตอบรับโดย"
         moved_post: "โพสของคุณได้ถูกย้ายโดย"
@@ -923,7 +919,6 @@ th:
         quoted: '{{username}} อ้างอิงถึงคุณใน "{{topic}}" - {{site_title}}'
         replied: '{{username}} ตอบคุณใน "{{topic}}" - {{site_title}}'
         posted: '{{username}} โพสท์ใน "{{topic}}" - {{site_title}}'
-        private_message: '{{username}} ส่งข้อความส่วนตัวถึงคุณใน "{{topic}}" - {{site_title}}'
         linked: '{{username}} ลิงค์โพสของคุณจาก "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "เพิ่มรูปภาพ"
@@ -1072,7 +1067,6 @@ th:
         visible: "ทำให้แสดงในรายชื่อ"
         reset_read: "ล้างข้อมูลวันที่"
         make_public: "ทำให้กระทู้เป็นสาธารณะ"
-        make_private: "ทำเป็นข้อความส่วนตัว"
       feature:
         pin: "ปักหมุดกระทู้"
         unpin: "ยกเลิกปักหมุดกระทู้"

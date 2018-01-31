@@ -370,7 +370,6 @@ id:
       '14': "tertunda"
     categories:
       all: "Semua kategori"
-      all_subcategories: "Semua"
       no_subcategory: "Tak ada"
       category: "Kategori"
       category_list: "Tampilan daftar kategori"
@@ -807,8 +806,6 @@ id:
         mentioned: "Disebut oleh"
         replied: "Telah dibalas"
         posted: "Tulisan oleh"
-        private_message: "Pesan pribadi dari"
-        invited_to_private_message: "Diundang untuk pesan pribadi dari"
         linked: "Tautkan pada tulisan anda"
         group_message_summary: "Pesan di kotak pesan grup"
     new_item: "baru"

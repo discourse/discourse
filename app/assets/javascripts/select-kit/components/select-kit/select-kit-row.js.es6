@@ -57,14 +57,14 @@ export default Ember.Component.extend(UtilsMixin, {
   },
 
   mouseEnter() {
-    this.set("hoverDebounce", run.debounce(this, this._sendOnHighlightAction, 32));
+    this.set("hoverDebounce", run.debounce(this, this._sendHighlightAction, 32));
   },
 
   click() {
-    this.sendAction("onSelect", this.get("computedContent"));
+    this.sendAction("select", this.get("computedContent"));
   },
 
-  _sendOnHighlightAction() {
-    this.sendAction("onHighlight", this.get("computedContent"));
+  _sendHighlightAction() {
+    this.sendAction("highlight", this.get("computedContent"));
   }
 });

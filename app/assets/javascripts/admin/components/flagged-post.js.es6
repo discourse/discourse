@@ -13,15 +13,18 @@ export default Ember.Component.extend({
     'flaggedPost.deleted'
   ],
 
+  canAct: Ember.computed.alias('actableFilter'),
+
   @computed('filter')
-  canAct(filter) {
+  actableFilter(filter) {
     return filter === 'active';
   },
 
   removeAfter(promise) {
     return promise.then(() => {
       this.attrs.removePost();
-    }).catch(() => {
+    }).catch(error => {
+      if (error._discourse_displayed) { return; }
       bootbox.alert(I18n.t("admin.flags.error"));
     });
   },

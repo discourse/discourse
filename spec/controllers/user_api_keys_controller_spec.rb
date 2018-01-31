@@ -55,9 +55,8 @@ describe UserApiKeysController do
   context 'create' do
 
     it "does not allow anon" do
-      expect {
-        post :create, params: args, format: :json
-      }.to raise_error(Discourse::NotLoggedIn)
+      post :create, params: args, format: :json
+      expect(response.status).to eq(403)
     end
 
     it "refuses to redirect to disallowed place" do

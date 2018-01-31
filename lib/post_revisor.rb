@@ -1,4 +1,5 @@
 require "edit_rate_limiter"
+require 'post_locker'
 
 class PostRevisor
 
@@ -161,6 +162,13 @@ class PostRevisor
 
       revise_topic
       advance_draft_sequence
+    end
+
+    # Lock the post by default if the appropriate setting is true
+    if SiteSetting.staff_edit_locks_post? &&
+        @editor.staff? &&
+        !@post.user.staff?
+      PostLocker.new(@post, @editor).lock
     end
 
     # WARNING: do not pull this into the transaction
@@ -475,6 +483,7 @@ class PostRevisor
   end
 
   def alert_users
+    return if @editor.id == Discourse::SYSTEM_USER_ID
     PostAlerter.new.after_save_post(@post)
   end
 

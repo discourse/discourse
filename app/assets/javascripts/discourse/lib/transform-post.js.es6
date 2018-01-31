@@ -77,6 +77,7 @@ export function transformBasicPost(post) {
     cooked_hidden: !!post.cooked_hidden,
     expandablePost: false,
     replyCount: post.reply_count,
+    locked: post.locked
   };
 
   _additionalAttributes.forEach(a => postAtts[a] = post[a]);

@@ -131,7 +131,6 @@ ja:
     latest: "最新のトピック"
     hot: "ホットトピック"
     posts: "最近の投稿"
-    private_posts: "最新のプライベートメッセージ"
     group_posts: "%{group_name}からの最新投稿"
     group_mentions: "%{group_name}からの最新メンション"
     user_posts: "@%{username}からの最新投稿"
@@ -183,9 +182,7 @@ ja:
         topic:
           attributes:
             base:
-              warning_requires_pm: "プライベートメッセージでのみ警告を送ることができます"
               too_many_users: "一度に1ユーザーにしか警告を送る事はできません"
-              cant_send_pm: "申し訳ありません。このユーザーにはプライベートメッセージを送る事ができません"
               no_user_selected: "有効なユーザーを選択してください"
         user:
           attributes:
@@ -552,7 +549,6 @@ ja:
   site_settings:
     censored_words: "自動的に &#9632;&#9632;&#9632;&#9632; で置換されます"
     delete_old_hidden_posts: "30日以上非表示になっている投稿を自動で削除します"
-    default_locale: "この Discourse インスタンスのデフォルト言語 (ISO 639-1 Code)"
     allow_user_locale: "ユーザーが言語を選択できるようにする"
     min_post_length: "投稿を許可する最少の文字数"
     min_first_post_length: "最初の投稿(投稿本文)を許可する最少の文字数"
@@ -689,7 +685,6 @@ ja:
     clean_orphan_uploads_grace_period_hours: "どこからもリンクされていないアップロードファイルを削除するまでの猶予期間 (単位：時間)。"
     purge_deleted_uploads_grace_period_days: "削除されたアップロードファイルが完全削除されるまでの猶予期間 (単位：日)。"
     enable_s3_uploads: "Amazon S3にアップロードします。重要: 有効なS3 credentials(access key id & secret access key)が必要です"
-    s3_use_iam_profile: 'キーの取得にAWS EC2 IAM roleを使用する 注意: 有効にすると、s3 access key id" と "s3 secret access key"の設定を上書きします'
     s3_upload_bucket: "ファイルをアップロードする Amazon S3のバケット名。　警告: 小文字である必要があり、ピリオドとアンダースコアを含むことはできません"
     s3_access_key_id: "画像をアップロードするAmazonS3のaccess key id"
     s3_secret_access_key: "画像をアップロードする Amazon S3 の secret access key"
@@ -1191,7 +1186,6 @@ ja:
       name: はじめての絵文字
   admin_login:
     success: "メールを送信しました"
-    error: "エラー！"
     email_input: "アドミンメール"
     submit_button: "メールを送信する"
   performance_report:
