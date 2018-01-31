@@ -10,6 +10,7 @@ class RenamePrivatePersonal < ActiveRecord::Migration[5.1]
     setting :enable_private_messages, :enable_personal_messages
     setting :enable_private_email_messages, :enable_personal_email_messages
     setting :private_email_time_window_seconds, :personal_email_time_window_seconds
+    setting :max_private_messages_per_day, :max_personal_messages_per_day
   end
 
   def down
@@ -18,5 +19,6 @@ class RenamePrivatePersonal < ActiveRecord::Migration[5.1]
     setting :enable_private_messages, :enable_personal_messages
     setting :enable_private_email_messages, :enable_personal_email_messages
     setting :private_email_time_window_seconds, :personal_email_time_window_seconds
+    setting :max_private_messages_per_day, :max_personal_messages_per_day
   end
 end

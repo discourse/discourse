@@ -1041,7 +1041,7 @@ rate_limits:
   rate_limit_new_user_create_topic: 120
   rate_limit_new_user_create_post: 30
   max_topics_per_day: 20
-  max_private_messages_per_day: 20
+  max_personal_messages_per_day: 20
   max_likes_per_day: 50
   max_bookmarks_per_day: 20
   max_flags_per_day: 20

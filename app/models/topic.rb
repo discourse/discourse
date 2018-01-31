@@ -310,7 +310,7 @@ class Topic < ActiveRecord::Base
 
   def limit_private_messages_per_day
     return unless private_message?
-    apply_per_day_rate_limit_for("pms", :max_private_messages_per_day)
+    apply_per_day_rate_limit_for("pms", :max_personal_messages_per_day)
   end
 
   def self.fancy_title(title)
