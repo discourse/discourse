@@ -12,6 +12,7 @@ class GroupsController < ApplicationController
   ]
 
   skip_before_action :preload_json, :check_xhr, only: [:posts_feed, :mentions_feed]
+  skip_before_action :check_xhr, only: [:show]
 
   def index
     unless SiteSetting.enable_group_directory?
@@ -48,7 +49,19 @@ class GroupsController < ApplicationController
   end
 
   def show
-    render_serialized(find_group(:id), GroupShowSerializer, root: 'basic_group')
+    respond_to do |format|
+      group = find_group(:id)
+
+      format.html do
+        @title = group.full_name.present? ? group.full_name.capitalize : group.name
+        @description_meta = group.bio_cooked.present? ? PrettyText.excerpt(group.bio_cooked, 300) : @title
+        render :show
+      end
+
+      format.json do
+        render_serialized(group, GroupShowSerializer, root: 'basic_group')
+      end
+    end
   end
 
   def edit
