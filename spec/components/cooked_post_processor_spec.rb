@@ -180,7 +180,7 @@ describe CookedPostProcessor do
         SiteSetting.create_thumbnails = true
 
         Upload.expects(:get_from_url).returns(upload)
-        FastImage.expects(:size).returns([860, 1900])
+        FastImage.expects(:size).returns([860, 2000])
         OptimizedImage.expects(:resize).never
         OptimizedImage.expects(:crop).returns(true)
 
