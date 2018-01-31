@@ -87,10 +87,14 @@
 
 .search.row {
   margin-bottom: 15px;
+  .input-xxlarge {
+    width: 100%;
+  }
 
   .search-bar {
     display: flex; 
     margin-bottom: 10px;
+    max-width: 780px;
     input {
       height: 22px;
       padding-left: 6px;
@@ -100,30 +104,6 @@
 
   .new-topic-btn {
     float:right;
-  }
-}
-
-.search-advanced {
-  margin-bottom: 15px;
-
-  .search-advanced-btn {
-    padding: 8px 10px;
-    width: 100%;
-    text-align: left;
-    font-weight: bold;
-  }
-
-  .search-advanced-options {
-    border: 1px solid $primary-low;
-    padding: 10px;
-
-    .control-group.pull-left {
-      width: 50%;
-    }
-
-    input[type="checkbox"] {
-      height: auto;
-    }
   }
 }
 
@@ -139,26 +119,28 @@
 }
 
 .search-title {
-
+  position: relative;
+  margin: 10px 0 15px;
+  max-width: 780px;
+  border-bottom: 3px solid $primary-low; 
+  width: 100%;
   .term {
     font-weight: bold;
   }
 
-  position: relative;
   .result-count {
     float: left;
+    margin-bottom: 4px;    
     span {
       line-height: $line-height-large;
       height: 28px;
       display: inline-block;
     }
-    margin-bottom: 4px;
   }
-  margin: 10px 0 15px;
-  max-width: 780px;
-  border-bottom: 3px solid $primary-low; 
-  width: 100%;
+
   .sort-by {
+    float: right;
+    margin-bottom: 4px;
     .desc {
       margin-right: 5px;
     }
@@ -167,11 +149,61 @@
       width: auto;
       min-width: 150px;
     }
-    float: right;
-    margin-bottom: 4px;
   }
 }
 
 .google-search-form {
   margin-top: 2em;
+}
+
+.search-advanced {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  max-width: 780px;
+  .search-advanced-options {
+    border: 1px solid $primary-low;
+    padding: 0 20px;    
+    width: 100%;
+    .date-picker-wrapper {
+      vertical-align: top;
+    }
+    @media screen and (max-width: 715px) {
+      padding: 0 10px;
+      #postTime {
+        margin: 0 0 5px 0;
+      }
+    }
+  }
+
+  .search-advanced-btn {
+    flex: 1 1 100%;
+    width: 100%;
+    text-align: left;
+    font-weight: bold;
+  }
+
+  .container {
+    display: flex;
+    flex: 1 1 100%;
+    padding: 15px 0 10px 0;
+    .all-tags {
+      margin-bottom: 0;
+    }
+    @media screen and (max-width: 600px) {
+      flex-wrap: wrap;
+    }
+    &:not(:first-of-type) {
+      border-top: 1px solid $primary-low;
+    }
+    .control-group {
+      flex: 1 1 100%;
+      @media screen and (max-width: 600px) {
+        margin: 0;
+        &:nth-of-type(2) {
+          margin-top: 5px;
+        }
+      }
+    }
+  }
 }
