@@ -215,9 +215,11 @@ export function setup(opts, siteSettings, state) {
     html: true,
     breaks: opts.discourse.features.newline,
     xhtmlOut: false,
-    linkify: opts.discourse.features.linkify,
+    linkify: siteSettings.enable_markdown_linkify,
     typographer: siteSettings.enable_markdown_typographer
   });
+
+  opts.engine.linkify.tlds(siteSettings.markdown_linkify_tlds.split('|'));
 
   setupUrlDecoding(opts.engine);
   setupHoister(opts.engine);
