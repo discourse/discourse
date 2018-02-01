@@ -6,15 +6,16 @@
         background: none;
         outline: none;
         padding: 0;
+        margin-right: 5px;
 
         .d-icon {
           border: 1px solid $primary-low;
           padding: 5px;
-          margin: 0;
+          margin: 0!important;
+        }
 
-          &:hover {
-            background: $primary-low;
-          }
+        &:hover {
+          background: $primary-low;
         }
       }
     }
