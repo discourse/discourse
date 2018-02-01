@@ -4,7 +4,8 @@ acceptance("Composer topic featured links", {
   loggedIn: true,
   settings: {
     topic_featured_link_enabled: true,
-    max_topic_title_length: 80
+    max_topic_title_length: 80,
+    enable_markdown_linkify: true,
   }
 });
 
