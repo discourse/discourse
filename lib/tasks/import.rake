@@ -164,7 +164,7 @@ def insert_user_options
                   , #{SiteSetting.default_email_mailing_list_mode}
                   , #{SiteSetting.default_email_mailing_list_mode_frequency}
                   , #{SiteSetting.default_email_direct}
-                  , #{SiteSetting.default_email_private_messages}
+                  , #{SiteSetting.default_email_personal_messages}
                   , #{SiteSetting.default_email_previous_replies}
                   , #{SiteSetting.default_email_in_reply_to}
                   , #{SiteSetting.default_email_digest_frequency.to_i > 0}

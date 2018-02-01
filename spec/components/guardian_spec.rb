@@ -70,14 +70,14 @@ describe Guardian do
     end
 
     it "returns false for notify_user if private messages are disabled" do
-      SiteSetting.enable_private_messages = false
+      SiteSetting.enable_personal_messages = false
       user.trust_level = TrustLevel[2]
       expect(Guardian.new(user).post_can_act?(post, :notify_user)).to be_falsey
       expect(Guardian.new(user).post_can_act?(post, :notify_moderators)).to be_falsey
     end
 
     it "returns false for notify_user and notify_moderators if private messages are enabled but threshold not met" do
-      SiteSetting.enable_private_messages = true
+      SiteSetting.enable_personal_messages = true
       SiteSetting.min_trust_to_send_messages = 2
       user.trust_level = TrustLevel[1]
       expect(Guardian.new(user).post_can_act?(post, :notify_user)).to be_falsey
@@ -170,8 +170,8 @@ describe Guardian do
       expect(Guardian.new(user).can_send_private_message?(another_user)).to be_falsey
     end
 
-    context "enable_private_messages is false" do
-      before { SiteSetting.enable_private_messages = false }
+    context "enable_personal_messages is false" do
+      before { SiteSetting.enable_personal_messages = false }
 
       it "returns false if user is not staff member" do
         expect(Guardian.new(trust_level_4).can_send_private_message?(another_user)).to be_falsey
@@ -451,7 +451,7 @@ describe Guardian do
 
       context "when private messages are disabled" do
         before do
-          SiteSetting.enable_private_messages = false
+          SiteSetting.enable_personal_messages = false
         end
 
         it "doesn't allow a regular user to invite" do

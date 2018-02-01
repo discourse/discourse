@@ -302,7 +302,7 @@ const Composer = RestModel.extend({
   @computed('privateMessage')
   minimumTitleLength(privateMessage) {
     if (privateMessage) {
-      return this.siteSettings.min_private_message_title_length;
+      return this.siteSettings.min_personal_message_title_length;
     } else {
       return this.siteSettings.min_topic_title_length;
     }
@@ -325,7 +325,7 @@ const Composer = RestModel.extend({
     if (pmWithNonHumanUser) {
       return 1;
     } else if (privateMessage) {
-      return this.siteSettings.min_private_message_post_length;
+      return this.siteSettings.min_personal_message_post_length;
     } else if (topicFirstPost) {
       // first post (topic body)
       return this.siteSettings.min_first_post_length;

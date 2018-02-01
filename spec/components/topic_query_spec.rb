@@ -696,7 +696,7 @@ describe TopicQuery do
         eq([new_pm.id, unread_pm.id, related_by_user_pm.id])
       )
 
-      SiteSetting.enable_private_messages = false
+      SiteSetting.enable_personal_messages = false
       expect(TopicQuery.new(user).list_suggested_for(pm_to_group)).to be_blank
       expect(TopicQuery.new(user).list_suggested_for(pm_to_user)).to be_blank
     end

@@ -118,7 +118,7 @@ sr:
   site_settings:
     min_topic_title_length: "Minimalna dozvoljena dužina naslova teme u znakovima"
     max_topic_title_length: "Maksimalna dozvoljena dužina naslova teme u znakovima"
-    min_private_message_title_length: "Minimalna dozvoljena dužina naslova poruke u znakovima"
+    min_personal_message_title_length: "Minimalna dozvoljena dužina naslova poruke u znakovima"
     min_search_term_length: "Minimalna dozvoljena dužina termina za pretragu u znakovima"
     apple_touch_icon_url: "Ikonica koja se koristi za Apple touch uređaje. Preporučena veličina 144px sa 144px."
     max_replies_in_first_day: "Maksimalan broj odgovora koje korisnik može da kreira u prvih 24 sata nakon kreiranja svoje prve poruke."
