@@ -10,7 +10,7 @@ createWidget('post-admin-menu-button', jQuery.extend(ButtonClass, {
   }
 }));
 
-export function buildManageButtons(attrs, currentUser) {
+export function buildManageButtons(attrs, currentUser, siteSettings) {
   if (!currentUser) {
     return [];
   }
@@ -67,12 +67,14 @@ export function buildManageButtons(attrs, currentUser) {
   }
 
   if (currentUser.staff) {
-    contents.push({
-      icon: 'certificate',
-      label: 'post.controls.grant_badge',
-      action: 'grantBadge',
-      className: 'grant-badge'
-    });
+    if (siteSettings.enable_badges) {
+      contents.push({
+        icon: 'certificate',
+        label: 'post.controls.grant_badge',
+        action: 'grantBadge',
+        className: 'grant-badge'
+      });
+    }
 
     const action = attrs.locked ? "unlock" : "lock";
     contents.push({
@@ -112,7 +114,7 @@ export default createWidget('post-admin-menu', {
     const contents = [];
     contents.push(h('h3', I18n.t('admin_title')));
 
-    buildManageButtons(this.attrs, this.currentUser).forEach(b => {
+    buildManageButtons(this.attrs, this.currentUser, this.siteSettings).forEach(b => {
       contents.push(this.attach('post-admin-menu-button', b));
     });
 
