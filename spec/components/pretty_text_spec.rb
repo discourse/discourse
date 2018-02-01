@@ -1237,4 +1237,44 @@ HTML
 
   end
 
+  it "You can disable linkify" do
+    md = "www.cnn.com test.it http://test.com https://test.ab https://a"
+    cooked = PrettyText.cook(md)
+
+    html = <<~HTML
+      <p><a href="http://www.cnn.com" rel="nofollow noopener">www.cnn.com</a> test.it <a href="http://test.com" rel="nofollow noopener">http://test.com</a> <a href="https://test.ab" rel="nofollow noopener">https://test.ab</a> <a href="https://a" rel="nofollow noopener">https://a</a></p>
+    HTML
+
+    expect(cooked).to eq(html.strip)
+
+    # notice how cnn.com is no longer linked but it is
+    SiteSetting.markdown_linkify_tlds = "not_com|it"
+
+    cooked = PrettyText.cook(md)
+    html = <<~HTML
+    <p>www.cnn.com <a href="http://test.it" rel="nofollow noopener">test.it</a> <a href="http://test.com" rel="nofollow noopener">http://test.com</a> <a href="https://test.ab" rel="nofollow noopener">https://test.ab</a> <a href="https://a" rel="nofollow noopener">https://a</a></p>
+    HTML
+
+    expect(cooked).to eq(html.strip)
+
+    # no tlds anymore
+    SiteSetting.markdown_linkify_tlds = ""
+
+    cooked = PrettyText.cook(md)
+    html = <<~HTML
+      <p>www.cnn.com test.it <a href="http://test.com" rel="nofollow noopener">http://test.com</a> <a href="https://test.ab" rel="nofollow noopener">https://test.ab</a> <a href="https://a" rel="nofollow noopener">https://a</a></p>
+    HTML
+
+    expect(cooked).to eq(html.strip)
+
+    # lastly ... what about no linkify
+    SiteSetting.enable_markdown_linkify = false
+
+    cooked = PrettyText.cook(md)
+
+    html = <<~HTML
+      <p>www.cnn.com test.it http://test.com https://test.ab https://a</p>
+    HTML
+  end
+
 end

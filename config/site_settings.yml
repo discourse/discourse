@@ -531,6 +531,13 @@ posting:
   enable_markdown_typographer:
     client: true
     default: true
+  enable_markdown_linkify:
+    client: true
+    default: true
+  markdown_linkify_tlds:
+    client: true
+    type: list
+    default: 'com|gov|net'
   enable_rich_text_paste:
     client: true
     default: false
