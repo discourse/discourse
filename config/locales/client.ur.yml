@@ -1443,8 +1443,6 @@ ur:
           one: آپ نے <b>1</b> پوسٹ منتخب کی ہے۔
           other: آپ نے <b>{{count}}</b> پوسٹس منتخب کی ہیں۔
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "اقتباس کریں"
       edit_reason: "وجہ:"
       post_number: "پوسٹ {{number}}"

@@ -1,0 +1,22 @@
+.select-kit {
+  &.dropdown-select-box {
+    &.composer-actions {
+      margin: 0;
+      .select-kit-header {
+        background: none;
+        outline: none;
+        padding: 0;
+
+        .d-icon {
+          border: 1px solid $primary-low;
+          padding: 5px;
+          margin: 0;
+
+          &:hover {
+            background: $primary-low;
+          }
+        }
+      }
+    }
+  }
+}

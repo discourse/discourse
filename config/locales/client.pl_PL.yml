@@ -1784,8 +1784,6 @@ pl_PL:
           many: Wybrano <b>{{count}}</b> wpisów.
           other: Wybrano <b>{{count}}</b> wpisów.
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Cytuj"
       edit_reason: "Powód"
       post_number: "wpis {{number}}"

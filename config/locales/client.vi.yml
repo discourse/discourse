@@ -1414,8 +1414,6 @@ vi:
         description:
           other: Bạn đã chọn <b>{{count}}</b> bài viết.
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Trích dẫn"
       edit_reason: "Lý do: "
       post_number: "bài viết {{number}}"

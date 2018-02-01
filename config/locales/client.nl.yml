@@ -1623,8 +1623,6 @@ nl:
           one: U hebt <b>1</b> bericht geselecteerd.
           other: U hebt <b>{{count}}</b> berichten geselecteerd.
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Citeren"
       edit_reason: "Reden: "
       post_number: "bericht {{number}}"

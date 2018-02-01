@@ -1687,8 +1687,6 @@ ru:
           many: Вы выбрали <b>{{count}}</b> сообщений.
           other: Вы выбрали <b>{{count}}</b> сообщений.
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Цитата"
       edit_reason: "Причина:"
       post_number: "сообщение {{number}}"

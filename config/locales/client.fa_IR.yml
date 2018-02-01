@@ -1512,8 +1512,6 @@ fa_IR:
         description:
           other: شما <b>{{count}}</b> نوشته انتخاب کرده اید
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "نقل‌قول"
       edit_reason: "دلیل:"
       post_number: "نوشته {{number}}"

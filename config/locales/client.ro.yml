@@ -1487,8 +1487,6 @@ ro:
           few: Ai selectat <b>{{count}}</b> mesaje.
           other: Ai selectat <b>{{count}}</b> de mesaje.
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Citează"
       edit_reason: "Motivul edit[rii: "
       post_number: "postarea {{number}}"

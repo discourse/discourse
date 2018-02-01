@@ -1599,8 +1599,6 @@ et:
           one: Oled valinud <b>1</b> postituse.
           other: Oled valinud <b>{{count}}</b> postitust.
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Tsitaat"
       edit_reason: "Põhjus:"
       post_number: "postitus {{number}}"

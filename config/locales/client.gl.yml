@@ -1188,8 +1188,6 @@ gl:
           one: Seleccionaches <b>unha</b> publicación.
           other: Seleccionaches <b>{{count}}</b> publicacións.
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       edit_reason: "Razón:"
       post_number: "publicación {{number}}"
       last_edited_on: "última edición da publicación"
