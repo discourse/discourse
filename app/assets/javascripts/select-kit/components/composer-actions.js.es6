@@ -7,7 +7,6 @@ export default DropdownSelectBoxComponent.extend({
   pluginApiIdentifiers: ["composer-actions"],
   classNames: "composer-actions",
   fullWidthOnMobile: true,
-  collectionHeight: "auto",
   autofilterable: false,
   filterable: false,
   allowInitialValueMutation: false,
