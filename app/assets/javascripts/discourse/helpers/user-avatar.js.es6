@@ -1,6 +1,23 @@
 import { registerUnbound } from 'discourse-common/lib/helpers';
 import { avatarImg, formatUsername } from 'discourse/lib/utilities';
 
+let _customAvatarHelpers;
+
+export function registerCustomAvatarHelper(fn) {
+  _customAvatarHelpers = _customAvatarHelpers || [];
+  _customAvatarHelpers.push(fn);
+}
+
+export function classesForUser(u) {
+  let result = [];
+  if (_customAvatarHelpers) {
+    for (let i=0; i<_customAvatarHelpers.length; i++) {
+      result = result.concat(_customAvatarHelpers[i](u));
+    }
+  }
+  return result;
+}
+
 function renderAvatar(user, options) {
   options = options || {};
 
