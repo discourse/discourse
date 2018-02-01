@@ -219,7 +219,7 @@ export function setup(opts, siteSettings, state) {
     typographer: siteSettings.enable_markdown_typographer
   });
 
-  opts.engine.linkify.tlds(siteSettings.markdown_linkify_tlds.split('|'));
+  opts.engine.linkify.tlds((siteSettings.markdown_linkify_tlds || '').split('|'));
 
   setupUrlDecoding(opts.engine);
   setupHoister(opts.engine);
