@@ -1,7 +1,9 @@
 require_dependency 'rate_limiter'
 
 class AboutController < ApplicationController
-  prepend_before_action :check_xhr, :ensure_logged_in, only: [:live_post_counts]
+
+  requires_login only: [:live_post_counts]
+
   skip_before_action :check_xhr, only: [:index]
 
   def index

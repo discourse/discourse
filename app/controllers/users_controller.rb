@@ -9,7 +9,7 @@ class UsersController < ApplicationController
 
   skip_before_action :authorize_mini_profiler, only: [:avatar]
 
-  prepend_before_action :check_xhr, :ensure_logged_in, only: [
+  requires_login only: [
     :username, :update, :user_preferences_redirect, :upload_user_image,
     :pick_avatar, :destroy_user_image, :destroy, :check_emails, :topic_tracking_state,
     :preferences

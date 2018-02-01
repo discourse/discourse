@@ -2,7 +2,7 @@ require_dependency 'rate_limiter'
 
 class InvitesController < ApplicationController
 
-  prepend_before_action :check_xhr, :ensure_logged_in, only: [
+  requires_login only: [
     :destroy, :create, :create_invite_link, :rescind_all_invites,
     :resend_invite, :resend_all_invites, :upload_csv
   ]

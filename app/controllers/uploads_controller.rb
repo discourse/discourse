@@ -2,7 +2,8 @@ require "mini_mime"
 require_dependency 'upload_creator'
 
 class UploadsController < ApplicationController
-  prepend_before_action :check_xhr, :ensure_logged_in, except: [:show]
+  requires_login except: [:show]
+
   skip_before_action :preload_json, :check_xhr, :redirect_to_login_if_required, only: [:show]
 
   def create

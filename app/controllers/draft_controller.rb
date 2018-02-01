@@ -1,5 +1,6 @@
 class DraftController < ApplicationController
-  prepend_before_action :ensure_logged_in
+  requires_login
+
   skip_before_action :check_xhr, :preload_json
 
   def show

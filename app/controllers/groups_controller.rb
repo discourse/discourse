@@ -1,6 +1,6 @@
 class GroupsController < ApplicationController
 
-  prepend_before_action :check_xhr, :ensure_logged_in, only: [
+  requires_login only: [
     :set_notifications,
     :mentionable,
     :messageable,
