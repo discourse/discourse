@@ -19,7 +19,7 @@ QUnit.test('replying to post', assert => {
     assert.equal(composerActions.rowByIndex(0).value(), 'reply_as_new_topic');
     assert.equal(composerActions.rowByIndex(1).value(), 'reply_as_private_message');
     assert.equal(composerActions.rowByIndex(2).value(), 'reply_to_topic');
-    assert.equal(composerActions.rowByIndex(3).value(), 'reply_as_whisper');
+    assert.equal(composerActions.rowByIndex(3).value(), 'toggle_whisper');
   });
 });
 
@@ -51,32 +51,18 @@ QUnit.test('replying to post - reply_to_topic', assert => {
   });
 });
 
-QUnit.test('replying to post - reply_as_whisper', assert => {
+QUnit.test('replying to post - toggle_whisper', assert => {
   const composerActions = selectKit('.composer-actions');
 
   visit('/t/internationalization-localization/280');
   click('article#post_3 button.reply');
   fillIn('.d-editor-input', 'test replying as whisper to topic when intially not a whisper');
-  composerActions.expand().selectRowByValue('reply_as_whisper');
+  composerActions.expand().selectRowByValue('toggle_whisper');
 
   andThen(() => {
-    assert.ok(exists(find('.topic-post:last .post-info.whisper')));
-    assert.equal(find('.topic-post:last .cooked p').html().trim(), 'test replying as whisper to topic when intially not a whisper');
-  });
-});
-
-QUnit.test('replying to post - reply_as_not_whisper', assert => {
-  const composerActions = selectKit('.composer-actions');
-
-  visit('/t/internationalization-localization/280');
-  click('article#post_3 button.reply');
-  fillIn('.d-editor-input', 'test replying as not a whisper to topic when intially a whisper');
-  selectKit('.toolbar-popup-menu-options').expand().selectRowByValue('toggleWhisper');
-  composerActions.expand().selectRowByValue('reply_as_not_whisper');
-
-  andThen(() => {
-    assert.notOk(exists(find('.topic-post:last .post-info.whisper')));
-    assert.equal(find('.topic-post:last .cooked p').html().trim(), 'test replying as not a whisper to topic when intially a whisper');
+    assert.ok(
+      find('.composer-fields .whisper').text().indexOf(I18n.t("composer.whisper")) > 0
+    );
   });
 });
 
