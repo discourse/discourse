@@ -36,6 +36,11 @@ export default ComboBoxComponent.extend({
     });
   },
 
+  @computed("content")
+  filterable(content) {
+    return content.length >= 15;
+  },
+
   @computed("allCategoriesUrl", "allCategoriesLabel", "noCategoriesUrl", "noCategoriesLabel")
   collectionHeader(allCategoriesUrl, allCategoriesLabel, noCategoriesUrl, noCategoriesLabel) {
     let shortcuts = "";
