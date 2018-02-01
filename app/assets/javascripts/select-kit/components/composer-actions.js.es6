@@ -28,8 +28,8 @@ export default DropdownSelectBoxComponent.extend({
     return content;
   },
 
-  @computed("options", "canWhisper", "whispering", "composerModel.post.username")
-  content(options, canWhisper, whispering, postUsername) {
+  @computed("options", "canWhisper", "composerModel.post.username")
+  content(options, canWhisper, postUsername) {
     let items = [
       {
         name: I18n.t("composer.composer_actions.reply_as_new_topic.label"),
@@ -58,21 +58,12 @@ export default DropdownSelectBoxComponent.extend({
     }
 
     if (canWhisper) {
-      if (whispering) {
-        items.push({
-          name: I18n.t("composer.composer_actions.reply_as_not_whisper.label"),
-          description: I18n.t("composer.composer_actions.reply_as_not_whisper.desc"),
-          icon: "eye",
-          id: "reply_as_not_whisper"
-        });
-      } else {
-        items.push({
-          name: I18n.t("composer.composer_actions.reply_as_whisper.label"),
-          description: I18n.t("composer.composer_actions.reply_as_whisper.desc"),
-          icon: "eye-slash",
-          id: "reply_as_whisper"
-        });
-      }
+      items.push({
+        name: I18n.t("composer.composer_actions.toggle_whisper.label"),
+        description: I18n.t("composer.composer_actions.toggle_whisper.desc"),
+        icon: "eye-slash",
+        id: "toggle_whisper"
+      });
     }
 
     return items;
@@ -92,14 +83,8 @@ export default DropdownSelectBoxComponent.extend({
   actions: {
     onSelect(value) {
       switch(value) {
-        case "reply_as_whisper":
-          this.set("composerModel.whisper", true);
-          this.get("composerController").save();
-          break;
-
-        case "reply_as_not_whisper":
-          this.set("composerModel.whisper", false);
-          this.get("composerController").save();
+        case "toggle_whisper":
+          this.set("composerModel.whisper", !this.get("composerModel.whisper"));
           break;
 
         case "reply_to_topic":
