@@ -1514,8 +1514,6 @@ pt:
           one: Selecionou <b>1</b> publicação.
           other: Selecionou <b>{{count}}</b> publicações.
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Citar"
       edit_reason: "Motivo:"
       post_number: "publicação {{number}}"

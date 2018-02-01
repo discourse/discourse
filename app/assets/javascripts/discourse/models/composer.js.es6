@@ -1,4 +1,3 @@
-import { iconHTML } from 'discourse-common/lib/icon-library';
 import RestModel from 'discourse/models/rest';
 import Topic from 'discourse/models/topic';
 import { throwAjaxError } from 'discourse/lib/ajax-error';
@@ -6,45 +5,45 @@ import Quote from 'discourse/lib/quote';
 import Draft from 'discourse/models/draft';
 import computed from 'ember-addons/ember-computed-decorators';
 import { escapeExpression, tinyAvatar } from 'discourse/lib/utilities';
-import { emojiUnescape } from 'discourse/lib/text';
+
+// The actions the composer can take
+export const
+  CREATE_TOPIC = 'createTopic',
+  PRIVATE_MESSAGE = 'privateMessage',
+  NEW_PRIVATE_MESSAGE_KEY = 'new_private_message',
+  REPLY = 'reply',
+  EDIT = 'edit',
+  REPLY_AS_NEW_TOPIC_KEY = "reply_as_new_topic",
+  REPLY_AS_NEW_PRIVATE_MESSAGE_KEY = "reply_as_new_private_message";
 
 const CLOSED = 'closed',
-      SAVING = 'saving',
-      OPEN = 'open',
-      DRAFT = 'draft',
+  SAVING = 'saving',
+  OPEN = 'open',
+  DRAFT = 'draft',
 
-      // The actions the composer can take
-      CREATE_TOPIC = 'createTopic',
-      PRIVATE_MESSAGE = 'privateMessage',
-      NEW_PRIVATE_MESSAGE_KEY = 'new_private_message',
-      REPLY = 'reply',
-      EDIT = 'edit',
-      REPLY_AS_NEW_TOPIC_KEY = "reply_as_new_topic",
-      REPLY_AS_NEW_PRIVATE_MESSAGE_KEY = "reply_as_new_private_message",
+  // When creating, these fields are moved into the post model from the composer model
+  _create_serializer = {
+    raw: 'reply',
+    title: 'title',
+    unlist_topic: 'unlistTopic',
+    category: 'categoryId',
+    topic_id: 'topic.id',
+    is_warning: 'isWarning',
+    whisper: 'whisper',
+    archetype: 'archetypeId',
+    target_usernames: 'targetUsernames',
+    typing_duration_msecs: 'typingTime',
+    composer_open_duration_msecs: 'composerTime',
+    tags: 'tags',
+    featured_link: 'featuredLink'
+  },
 
-      // When creating, these fields are moved into the post model from the composer model
-      _create_serializer = {
-        raw: 'reply',
-        title: 'title',
-        unlist_topic: 'unlistTopic',
-        category: 'categoryId',
-        topic_id: 'topic.id',
-        is_warning: 'isWarning',
-        whisper: 'whisper',
-        archetype: 'archetypeId',
-        target_usernames: 'targetUsernames',
-        typing_duration_msecs: 'typingTime',
-        composer_open_duration_msecs: 'composerTime',
-        tags: 'tags',
-        featured_link: 'featuredLink'
-      },
-
-      _edit_topic_serializer = {
-        title: 'topic.title',
-        categoryId: 'topic.category.id',
-        tags: 'topic.tags',
-        featuredLink: 'topic.featured_link'
-      };
+  _edit_topic_serializer = {
+    title: 'topic.title',
+    categoryId: 'topic.category.id',
+    tags: 'topic.tags',
+    featuredLink: 'topic.featured_link'
+  };
 
 const _saveLabels = {};
 _saveLabels[EDIT] = 'composer.save_edit';
@@ -167,52 +166,55 @@ const Composer = RestModel.extend({
     return this.get('canEditTopicFeaturedLink') ? 'composer.title_or_link_placeholder' : 'composer.title_placeholder';
   },
 
-  // Determine the appropriate title for this action
-  actionTitle: function() {
-    const topic = this.get('topic');
+  @computed("action", "post", "topic", "topic.title")
+  replyOptions(action, post, topic, topicTitle) {
+    let options = {
+      userLink: null,
+      topicLink: null,
+      postLink: null,
+      userAvatar: null,
+      originalUser: null
+    };
 
-    let postLink, topicLink, usernameLink;
     if (topic) {
-      const postNumber = this.get('post.post_number');
-      postLink = "<a href='" + (topic.get('url')) + "/" + postNumber + "'>" +
-        I18n.t("post.post_number", { number: postNumber }) + "</a>";
-
-      let title = topic.get('fancy_title') || escapeExpression(topic.get('title'));
-
-      topicLink = "<a href='" + (topic.get('url')) + "'> " + title + "</a>";
-      usernameLink = "<a href='" + (topic.get('url')) + "/" + postNumber + "'>" + this.get('post.username') + "</a>";
+      options.topicLink = {
+        href: topic.get("url"),
+        anchor: topic.get("fancy_title") || escapeExpression(topicTitle)
+      };
     }
 
-    let postDescription;
-    const post = this.get('post');
-
     if (post) {
-      postDescription = I18n.t('post.' +  this.get('action'), {
-        link: postLink,
-        replyAvatar: tinyAvatar(post.get('avatar_template')),
-        username: this.get('post.username'),
-        usernameLink
-      });
+      options.label =  I18n.t(`post.${action}`);
+      options.userAvatar = tinyAvatar(post.get("avatar_template"));
 
       if (!this.site.mobileView) {
-        const replyUsername = post.get('reply_to_user.username');
-        const replyAvatarTemplate = post.get('reply_to_user.avatar_template');
-        if (replyUsername && replyAvatarTemplate && this.get('action') === EDIT) {
-          postDescription += ` ${iconHTML('mail-forward', { class: 'reply-to-glyph' })} ` + tinyAvatar(replyAvatarTemplate) + " " + replyUsername;
+        const originalUserName = post.get('reply_to_user.username');
+        const originalUserAvatar = post.get('reply_to_user.avatar_template');
+        if (originalUserName && originalUserAvatar && action === EDIT) {
+          options.originalUser = {
+            username: originalUserName,
+            avatar: tinyAvatar(originalUserAvatar)
+          };
         }
       }
     }
 
-    switch (this.get('action')) {
-      case PRIVATE_MESSAGE: return I18n.t('topic.private_message');
-      case CREATE_TOPIC: return I18n.t('topic.create_long');
-      case REPLY:
-      case EDIT:
-        if (postDescription) return postDescription;
-        if (topic) return emojiUnescape(I18n.t('post.reply_topic', { link: topicLink }));
+    if (topic && post) {
+      const postNumber = post.get("post_number");
+
+      options.postLink = {
+        href: `${topic.get("url")}/${postNumber}`,
+        anchor: I18n.t("post.post_number", { number: postNumber })
+      };
+
+      options.userLink = {
+        href: `${topic.get("url")}/${postNumber}`,
+        anchor: post.get("username")
+      };
     }
 
-  }.property('action', 'post', 'topic', 'topic.title'),
+    return options;
+  },
 
   // whether to disable the post button
   cantSubmitPost: function() {

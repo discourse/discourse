@@ -16,7 +16,7 @@
             {{plugin-outlet name="composer-open" args=(hash model=model)}}
             <div class='reply-to'>
               <div class="reply-details">
-                {{{model.actionTitle}}}
+                {{composer-action-title model=model canWhisper=canWhisper}}
 
                 {{#unless site.mobileView}}
                   {{#if whisperOrUnlistTopicText}}

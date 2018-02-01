@@ -1578,8 +1578,6 @@ ko:
         description:
           other: <b>{{count}}</b>개의 개시글을 선택하셨어요.
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "인용하기"
       edit_reason: "Reason: "
       post_number: "{{number}}번째 글"

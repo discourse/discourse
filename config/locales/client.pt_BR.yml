@@ -1581,8 +1581,6 @@ pt_BR:
           one: <b>1</b> resposta selecionada.
           other: <b>{{count}}</b> respostas selecionadas.
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Citação"
       edit_reason: "Motivo:"
       post_number: "resposta {{number}}"

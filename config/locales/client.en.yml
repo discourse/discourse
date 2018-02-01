@@ -1291,6 +1291,23 @@ en:
 
       admin_options_title: "Optional staff settings for this topic"
 
+      composer_actions:
+        reply_as_new_topic:
+          label: Reply as linked topic
+          desc: Create a new topic
+        reply_as_private_message:
+          label: New message
+          desc: Create a private message
+        reply_to_topic:
+          label: Reply to topic
+          desc: Reply to the original post without replying to a specific post
+        reply_as_whisper:
+          label: Reply as whipser
+          desc: This message will only be visible by staff members
+        reply_as_not_whisper:
+          label: Reply as not whisher
+          desc: This message will be visible by anyone
+
     notifications:
       tooltip:
         regular:
@@ -1882,8 +1899,6 @@ en:
           other: "You have selected <b>{{count}}</b> posts."
 
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Quote"
       edit: "<i class='fa fa-pencil'></i> {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Reason: "

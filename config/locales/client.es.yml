@@ -1702,8 +1702,6 @@ es:
           one: Has seleccionado <b>1</b> post.
           other: Has seleccionado <b>{{count}}</b> posts.
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Citar"
       edit: "<i class='fa fa-pencil'></i>{{link}} {{replyAvatar}} {{username}} "
       edit_reason: "Motivo:"

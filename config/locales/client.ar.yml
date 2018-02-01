@@ -1855,8 +1855,6 @@ ar:
           many: لقد حدّدت <b>{{count}}</b> منشور.
           other: لقد حدّدت <b>{{count}}</b> منشور.
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "اقتبس"
       edit_reason: "السبب:"
       post_number: "المنشور {{number}}"

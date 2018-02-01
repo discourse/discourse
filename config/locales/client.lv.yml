@@ -1623,8 +1623,6 @@ lv:
           one: Jūs esat izvēlējies <b>1</b> ierakstu.
           other: Jūs esat izvēlējies <b>{{count}}</b> ierakstus.
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Citāts"
       edit_reason: "Iemesls:"
       post_number: "ieraksts {{number}}"

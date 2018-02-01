@@ -1404,8 +1404,6 @@ zh_TW:
         description:
           other: 你已選擇了 <b>{{count}}</b> 篇文章。
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "引用"
       edit_reason: "原因: "
       post_number: "文章 {{number}}"

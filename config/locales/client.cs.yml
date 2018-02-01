@@ -1542,8 +1542,6 @@ cs:
           few: Máte označeny <b>{{count}}</b> příspěvky.
           other: Máte označeno <b>{{count}}</b> příspěvků.
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Cituj"
       edit_reason: "Důvod: "
       post_number: "příspěvek č. {{number}}"

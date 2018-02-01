@@ -1654,8 +1654,6 @@ el:
           one: Έχεις επιλέξει <b>1</b> ανάρτηση.
           other: Έχεις επιλέξει <b>{{count}}</b> αναρτήσεις.
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Παράθεση"
       edit_reason: "Αιτία:"
       post_number: "ανάρτηση {{number}}"

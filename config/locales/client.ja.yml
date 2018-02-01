@@ -1567,8 +1567,6 @@ ja:
         description:
           other: <b>{{count}}</b>個の投稿を選択中。
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "引用"
       edit_reason: "理由: "
       post_number: "投稿{{number}}"

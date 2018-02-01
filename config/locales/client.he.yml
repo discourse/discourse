@@ -1561,8 +1561,6 @@ he:
           one: בחרתם פוסט אחד.
           other: בחרתם <b>{{count}}</b> פוסטים.
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "ציטוט"
       edit_reason: "סיבה: "
       post_number: "פוסט {{number}}"

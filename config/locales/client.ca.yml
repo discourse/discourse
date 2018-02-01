@@ -1505,8 +1505,6 @@ ca:
           one: Has seleccionat <b>1</b> publicació
           other: Has seleccionat <b>{{count}}</b> publicacions.
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Cita"
       edit_reason: "Motiu:"
       post_number: "publicació {{number}}"

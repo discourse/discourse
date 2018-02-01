@@ -1691,8 +1691,6 @@ it:
           one: Hai selezionato <b>1</b> messaggio.
           other: Hai selezionato <b>{{count}}</b> messaggi.
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Cita"
       edit_reason: "Motivo:"
       post_number: "messaggio {{number}}"
