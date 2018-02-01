@@ -1699,8 +1699,6 @@ fi:
           one: Olet valinnut <b>yhden</b> viestin.
           other: Olet valinnut <b>{{count}}</b> viestiä.
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Lainaa"
       edit: "<i class='fa fa-pencil'></i> {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Syy:"

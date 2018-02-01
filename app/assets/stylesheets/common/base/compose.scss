@@ -11,7 +11,7 @@
   max-width: 1475px;
   width: 100%;
   &.hide-preview {
-    max-width:740px;  
+    max-width:740px;
   }
   @media screen and (max-width: 1200px) {
     min-width: 0;
@@ -29,7 +29,7 @@
   .saving-text,
   .draft-text {
     display: none;
-    padding-left: 10px;   
+    padding-left: 10px;
     .spinner {
       margin-left: 5px;
       border-color: $secondary;
@@ -96,10 +96,24 @@
       color: $primary-high;
     }
     .reply-details {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
       max-width: calc(100% - 100px);
+    }
+    .composer-action-title {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .topic-link, .user-link, .username {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: calc(100%-125px);
+        margin-right: 5px;
+      }
+
+      .d-icon {
+        margin-right: 5px;
+      }
     }
     .composer-controls {
       margin-left: auto;
