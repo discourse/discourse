@@ -1,5 +1,5 @@
 class CategoryHashtagsController < ApplicationController
-  before_action :ensure_logged_in
+  prepend_before_action :check_xhr, :ensure_logged_in
 
   def check
     category_slugs = params[:category_slugs]

@@ -1,7 +1,7 @@
 require_dependency 'inline_oneboxer'
 
 class InlineOneboxController < ApplicationController
-  before_action :ensure_logged_in
+  prepend_before_action :check_xhr, :ensure_logged_in
 
   def show
     oneboxes = InlineOneboxer.new(params[:urls] || []).process

@@ -1,7 +1,7 @@
 class Admin::AdminController < ApplicationController
 
-  before_action :ensure_logged_in
-  before_action :ensure_staff
+  prepend_before_action :check_xhr, :ensure_logged_in
+  prepend_before_action :check_xhr, :ensure_staff
 
   def index
     render body: nil

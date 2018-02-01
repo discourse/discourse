@@ -8,7 +8,7 @@ require_dependency 'post_locker'
 
 class PostsController < ApplicationController
 
-  before_action :ensure_logged_in, except: [
+  prepend_before_action :check_xhr, :ensure_logged_in, except: [
     :show,
     :replies,
     :by_number,

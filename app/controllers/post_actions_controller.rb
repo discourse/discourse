@@ -1,7 +1,7 @@
 require_dependency 'discourse'
 
 class PostActionsController < ApplicationController
-  before_action :ensure_logged_in
+  prepend_before_action :check_xhr, :ensure_logged_in
   before_action :fetch_post_from_params
   before_action :fetch_post_action_type_id_from_params
 

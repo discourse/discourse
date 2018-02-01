@@ -7,8 +7,7 @@ class TagsController < ::ApplicationController
 
   before_action :ensure_tags_enabled
 
-  skip_before_action :check_xhr, only: [:tag_feed, :show, :index]
-  before_action :ensure_logged_in, except: [
+  prepend_before_action :check_xhr, :ensure_logged_in, except: [
     :index,
     :show,
     :tag_feed,
@@ -16,7 +15,11 @@ class TagsController < ::ApplicationController
     :check_hashtag,
     Discourse.anonymous_filters.map { |f| :"show_#{f}" }
   ].flatten
-  before_action :set_category_from_params, except: [:index, :update, :destroy, :tag_feed, :search, :notifications, :update_notifications]
+
+  skip_before_action :check_xhr, only: [:tag_feed, :show, :index]
+
+  before_action :set_category_from_params, except: [:index, :update, :destroy,
+    :tag_feed, :search, :notifications, :update_notifications]
 
   def index
     @description_meta = I18n.t("tags.title")
