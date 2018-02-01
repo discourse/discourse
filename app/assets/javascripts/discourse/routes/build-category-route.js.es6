@@ -88,6 +88,20 @@ export default (filterArg, params) => {
             canCreateTopicOnCategory = category.get('permission') === PermissionType.FULL,
             filter = this.filter(category);
 
+      // if user has permission to create topic in subcategory, enable New Topic button
+      if (category.has_children && !canCreateTopicOnCategory) {
+        CategoryList.listForParent(this.store, category).then(list => {
+          list.categories.content.some(c => {
+            if (c.get('permission') === PermissionType.FULL) {
+              this.controllerFor('navigation/category').setProperties({
+                cannotCreateTopicOnCategory: false
+              });
+              return;
+            }
+          });
+        });
+      }
+
       this.controllerFor('navigation/category').setProperties({
         canCreateTopicOnCategory: canCreateTopicOnCategory,
         cannotCreateTopicOnCategory: !canCreateTopicOnCategory,
