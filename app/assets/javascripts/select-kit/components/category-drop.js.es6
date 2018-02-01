@@ -9,7 +9,6 @@ export default ComboBoxComponent.extend({
   classNameBindings: ["categoryStyle"],
   classNames: "category-drop",
   verticalOffset: 3,
-  collectionHeight: "200",
   content: Ember.computed.alias("categories"),
   rowComponent: "category-row",
   headerComponent: "category-drop/category-drop-header",
