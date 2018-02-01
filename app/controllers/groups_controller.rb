@@ -62,7 +62,7 @@ class GroupsController < ApplicationController
     respond_to do |format|
       format.html do
         group = find_group(:id)
-        @title = group.full_name.present? ? group.full_name : group.name
+        @title = group.full_name.present? ? group.full_name.capitalize : group.name
         @description_meta = group.bio_cooked.present? ? PrettyText.excerpt(group.bio_cooked, 300) : @title
         render :show
       end
