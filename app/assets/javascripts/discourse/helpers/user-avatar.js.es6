@@ -8,6 +8,14 @@ export function registerCustomAvatarHelper(fn) {
   _customAvatarHelpers.push(fn);
 }
 
+export function addExtraUserClasses(u, args) {
+  let extraClasses = classesForUser(u).join(' ');
+  if (extraClasses && extraClasses.length) {
+    args.extraClasses = extraClasses;
+  }
+  return args;
+}
+
 export function classesForUser(u) {
   let result = [];
   if (_customAvatarHelpers) {
