@@ -1,5 +1,4 @@
 import PreloadStore from 'preload-store';
-import { withPluginApi } from 'discourse/lib/plugin-api';
 
 export default {
   name: "banner",
