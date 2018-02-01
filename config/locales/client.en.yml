@@ -1302,10 +1302,10 @@ en:
           label: Reply to topic
           desc: Reply to the original post without replying to a specific post
         reply_as_whisper:
-          label: Reply as whipser
+          label: Reply as whisper
           desc: This message will only be visible by staff members
         reply_as_not_whisper:
-          label: Reply as not whisher
+          label: Reply as not whisper
           desc: This message will be visible by anyone
 
     notifications:
