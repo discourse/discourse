@@ -80,7 +80,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
     if (selected.get('is_custom_flag')) {
       const len = this.get('message.length') || 0;
-      return len >= Discourse.SiteSettings.min_private_message_post_length &&
+      return len >= Discourse.SiteSettings.min_personal_message_post_length &&
              len <= MAX_MESSAGE_LENGTH;
     }
     return true;

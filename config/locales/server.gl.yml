@@ -388,7 +388,7 @@ gl:
     allow_user_locale: "Permitir os usuarios escoller o idioma da interface"
     min_post_length: "Número mínimo de caracteres permitido para unha publicación"
     min_first_post_length: "Número mínimo de caracteres (corpo do tema) permitido para unha primeira publicación"
-    min_private_message_post_length: "Número mínimo de caracteres permitido para unha mensaxe"
+    min_personal_message_post_length: "Número mínimo de caracteres permitido para unha mensaxe"
     max_post_length: "Número máximo de caracteres permitido para unha publicación"
     post_undo_action_window_mins: "Número de minutos que os usuarios teñen para desfacer accións recentes nunha publicación (gústames, denuncias, etc)."
     enable_badges: "Activar o sistema de insignias"

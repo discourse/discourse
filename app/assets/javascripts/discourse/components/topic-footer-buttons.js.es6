@@ -8,12 +8,12 @@ export default Ember.Component.extend({
 
   @computed('topic.isPrivateMessage')
   canArchive(isPM) {
-    return this.siteSettings.enable_private_messages && isPM;
+    return this.siteSettings.enable_personal_messages && isPM;
   },
 
   @computed('topic.isPrivateMessage')
   showNotificationsButton(isPM) {
-    return (!isPM) || this.siteSettings.enable_private_messages;
+    return (!isPM) || this.siteSettings.enable_personal_messages;
   },
 
   @computed('topic.details.can_invite_to')

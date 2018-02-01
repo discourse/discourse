@@ -42,7 +42,7 @@
         {{else}}
           <h1>
             {{#unless model.is_warning}}
-              {{#if siteSettings.enable_private_messages}}
+              {{#if siteSettings.enable_personal_messages}}
                 <a href={{pmPath}}>
                   <span class="private-message-glyph">{{d-icon "envelope"}}</span>
                 </a>

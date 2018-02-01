@@ -17,7 +17,7 @@ module PostGuardian
     result = if authenticated? && post && !@user.anonymous?
 
       return false if [:notify_user, :notify_moderators].include?(action_key) &&
-        !SiteSetting.enable_private_messages?
+        !SiteSetting.enable_personal_messages?
 
       # we allow flagging for trust level 1 and higher
       # always allowed for private messages

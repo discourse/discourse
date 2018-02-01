@@ -1366,7 +1366,7 @@ describe User do
 
     before do
       SiteSetting.default_email_digest_frequency = 1440 # daily
-      SiteSetting.default_email_private_messages = false
+      SiteSetting.default_email_personal_messages = false
       SiteSetting.default_email_direct = false
       SiteSetting.default_email_mailing_list_mode = true
       SiteSetting.default_email_always = true

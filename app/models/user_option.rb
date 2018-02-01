@@ -27,7 +27,7 @@ class UserOption < ActiveRecord::Base
     self.mailing_list_mode_frequency = SiteSetting.default_email_mailing_list_mode_frequency
     self.email_direct = SiteSetting.default_email_direct
     self.automatically_unpin_topics = SiteSetting.default_topics_automatic_unpin
-    self.email_private_messages = SiteSetting.default_email_private_messages
+    self.email_private_messages = SiteSetting.default_email_personal_messages
     self.email_previous_replies = SiteSetting.default_email_previous_replies
     self.email_in_reply_to = SiteSetting.default_email_in_reply_to
 
