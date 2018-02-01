@@ -17,9 +17,13 @@ export function avatarImg(wanted, attrs) {
   if (!url || url.length === 0) { return; }
   const title = formatUsername(attrs.username);
 
+  let className = 'avatar' + (
+    attrs.extraClasses ? " " + attrs.extraClasses : ""
+  );
+
   const properties = {
     attributes: { alt: '', width: size, height: size, src: Discourse.getURLWithCDN(url), title },
-    className: 'avatar'
+    className
   };
 
   return h('img', properties);
