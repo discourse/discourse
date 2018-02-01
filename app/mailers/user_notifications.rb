@@ -22,7 +22,6 @@ class UserNotifications < ActionMailer::Base
     build_email(user.email,
                 template: 'user_notifications.signup_after_approval',
                 locale: user_locale(user),
-                email_token: opts[:email_token],
                 new_user_tips: I18n.t('system_messages.usage_tips.text_body_template', base_url: Discourse.base_url, locale: locale))
   end
 
