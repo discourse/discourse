@@ -79,6 +79,9 @@ basic:
   set_locale_from_accept_language_header:
     default: false
     validator: "AllowUserLocaleEnabledValidator"
+  support_mixed_text_direction:
+    client: true
+    default: false
   categories_topics:
     default: 20
     min: 5
