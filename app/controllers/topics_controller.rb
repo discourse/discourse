@@ -6,31 +6,32 @@ require_dependency 'discourse_event'
 require_dependency 'rate_limiter'
 
 class TopicsController < ApplicationController
-  before_action :ensure_logged_in, only: [:timings,
-                                          :destroy_timings,
-                                          :update,
-                                          :star,
-                                          :destroy,
-                                          :recover,
-                                          :status,
-                                          :invite,
-                                          :mute,
-                                          :unmute,
-                                          :set_notifications,
-                                          :move_posts,
-                                          :merge_topic,
-                                          :clear_pin,
-                                          :re_pin,
-                                          :status_update,
-                                          :timer,
-                                          :bulk,
-                                          :reset_new,
-                                          :change_post_owners,
-                                          :change_timestamps,
-                                          :archive_message,
-                                          :move_to_inbox,
-                                          :convert_topic,
-                                          :bookmark]
+  prepend_before_action :check_xhr, :ensure_logged_in, only: [
+    :timings,
+    :destroy_timings,
+    :update,
+    :destroy,
+    :recover,
+    :status,
+    :invite,
+    :mute,
+    :unmute,
+    :set_notifications,
+    :move_posts,
+    :merge_topic,
+    :clear_pin,
+    :re_pin,
+    :status_update,
+    :timer,
+    :bulk,
+    :reset_new,
+    :change_post_owners,
+    :change_timestamps,
+    :archive_message,
+    :move_to_inbox,
+    :convert_topic,
+    :bookmark
+  ]
 
   before_action :consider_user_for_promotion, only: :show
 
