@@ -2,7 +2,8 @@ require_dependency 'category_serializer'
 
 class CategoriesController < ApplicationController
 
-  prepend_before_action :check_xhr, :ensure_logged_in, except: [:index, :categories_and_latest, :show, :redirect, :find_by_slug]
+  requires_login except: [:index, :categories_and_latest, :show, :redirect, :find_by_slug]
+
   before_action :fetch_category, only: [:show, :update, :destroy]
   before_action :initialize_staff_action_logger, only: [:create, :update, :destroy]
   skip_before_action :check_xhr, only: [:index, :categories_and_latest, :redirect]

@@ -7,7 +7,7 @@ class TagsController < ::ApplicationController
 
   before_action :ensure_tags_enabled
 
-  prepend_before_action :check_xhr, :ensure_logged_in, except: [
+  requires_login except: [
     :index,
     :show,
     :tag_feed,

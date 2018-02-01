@@ -1,5 +1,6 @@
 class TagGroupsController < ApplicationController
-  prepend_before_action :check_xhr, :ensure_logged_in, except: [:index, :show]
+  requires_login except: [:index, :show]
+
   skip_before_action :check_xhr, only: [:index, :show]
   before_action :fetch_tag_group, only: [:show, :update, :destroy]
 

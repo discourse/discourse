@@ -4,7 +4,7 @@ require_dependency 'email_updater'
 
 class UsersEmailController < ApplicationController
 
-  prepend_before_action :check_xhr, :ensure_logged_in, only: [:index, :update]
+  requires_login only: [:index, :update]
 
   skip_before_action :check_xhr, only: [:confirm]
   skip_before_action :redirect_to_login_if_required, only: [:confirm]

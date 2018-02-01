@@ -2,7 +2,7 @@ class UserApiKeysController < ApplicationController
 
   layout 'no_ember'
 
-  prepend_before_action :check_xhr, :ensure_logged_in, only: [:create, :revoke, :undo_revoke]
+  requires_login only: [:create, :revoke, :undo_revoke]
   skip_before_action :redirect_to_login_if_required, only: [:new]
   skip_before_action :check_xhr, :preload_json
 

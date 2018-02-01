@@ -2,8 +2,9 @@ require_dependency 'wizard'
 require_dependency 'wizard/builder'
 
 class WizardController < ApplicationController
-  prepend_before_action :check_xhr, :ensure_admin, except: [:qunit]
-  prepend_before_action :check_xhr, :ensure_logged_in, except: [:qunit]
+  requires_login except: [:qunit]
+
+  before_action :ensure_admin, except: [:qunit]
   before_action :ensure_wizard_enabled, only: [:index]
   skip_before_action :check_xhr, :preload_json
 

@@ -6,7 +6,7 @@ require_dependency 'discourse_event'
 require_dependency 'rate_limiter'
 
 class TopicsController < ApplicationController
-  prepend_before_action :check_xhr, :ensure_logged_in, only: [
+  requires_login only: [
     :timings,
     :destroy_timings,
     :update,
