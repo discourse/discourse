@@ -158,23 +158,6 @@ componentTest('doesn’t render collection content before first expand', {
   }
 });
 
-componentTest('supports options to limit size', {
-  template: '{{single-select collectionHeight=20 content=content}}',
-
-  beforeEach() {
-    this.set("content", ["robin", "régis"]);
-  },
-
-  test(assert) {
-    this.get('subject').expand();
-
-    andThen(() => {
-      const height = find(".select-kit-collection").height();
-      assert.equal(parseInt(height, 10), 20, "it limits the height");
-    });
-  }
-});
-
 componentTest('dynamic headerText', {
   template: '{{single-select value=1 content=content}}',
 
