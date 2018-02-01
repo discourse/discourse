@@ -2836,8 +2836,8 @@ en:
 
         A staff member approved your account on %{site_name}.
 
-        Click the following link to confirm and activate your new account:
-        %{base_url}/u/activate-account/%{email_token}
+        You can now access your new account by logging in at:
+        %{base_url}
 
         If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
 
