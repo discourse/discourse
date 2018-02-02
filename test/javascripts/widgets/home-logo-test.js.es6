@@ -51,7 +51,7 @@ widgetTest('no logo', {
   },
 
   test(assert) {
-    assert.ok(this.$('h2#site-text-logo.text-logo').length === 1);
+    assert.ok(this.$('h1#site-text-logo.text-logo').length === 1);
     assert.equal(this.$('#site-text-logo').text(), title);
   }
 });

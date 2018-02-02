@@ -7,8 +7,10 @@
 
 sk:
   site_settings:
+    poll_enabled: "Povoliť hlasovania?"
     poll_maximum_options: "Maximálny počet povolených možností v hlasovaní."
     poll_edit_window_mins: "Počet minút po vytvorení hlasovania počas ktorých môže byť hlasovanie upravené."
+    poll_minimum_trust_level_to_create: "Definuj minimálny stupeň dôvery na vytvorenie hlasonia."
   poll:
     multiple_polls_without_name: "Existujú viaceré hlasovania bez mena. Použite atribút '<code>meno</code>', aby ste hlasovanie jednoznačne rozlíšili."
     multiple_polls_with_same_name: "Existujú viaceré hlasovania s rovnakým menom: <strong>%{name}</strong>. Použite atribút '<code>meno</code>', aby ste hlasovanie jednoznačne rozlíšili."
@@ -40,5 +42,6 @@ sk:
     poll_must_be_open_to_vote: "Na odovzdanie hlasu musí byť hlasovanie otvorené."
     topic_must_be_open_to_toggle_status: "Na zmenu stavu musí byť téma otvorená."
     only_staff_or_op_can_toggle_status: "Zmeniť stav hlasovania môže iba zamestnanec alebo pôvodný prispievateľ."
+    insufficient_rights_to_create: "Nemáš povolenie na vytvorenie hlasovania."
     email:
       link_to_poll: "Kliknite na zobrazenie hlasovania."

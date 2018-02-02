@@ -155,8 +155,10 @@ class PostAlerter
     user_ids -= [post.user_id]
 
     users = User.where(id: user_ids)
+
     DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
-    users.each do |u|
+    user_ids.each do |id|
+      u = User.find_by(id: id)
       create_notification(u, Notification.types[:watching_first_post], post)
     end
   end
@@ -402,18 +404,20 @@ class PostAlerter
     end
 
     # Create the notification
-    user.notifications.create(notification_type: type,
-                              topic_id: post.topic_id,
-                              post_number: post.post_number,
-                              post_action_id: opts[:post_action_id],
-                              data: notification_data.to_json,
-                              skip_send_email: skip_send_email)
+    created = user.notifications.create(
+      notification_type: type,
+      topic_id: post.topic_id,
+      post_number: post.post_number,
+      post_action_id: opts[:post_action_id],
+      data: notification_data.to_json,
+      skip_send_email: skip_send_email
+    )
 
-   if !existing_notification && NOTIFIABLE_TYPES.include?(type) && !user.suspended?
-     # we may have an invalid post somehow, dont blow up
-     post_url = original_post.url rescue nil
-     if post_url
-       payload = {
+    if created.id && !existing_notification && NOTIFIABLE_TYPES.include?(type) && !user.suspended?
+      # we may have an invalid post somehow, dont blow up
+      post_url = original_post.url rescue nil
+      if post_url
+        payload = {
          notification_type: type,
          post_number: original_post.post_number,
          topic_title: original_post.topic.title,
@@ -421,14 +425,14 @@ class PostAlerter
          excerpt: original_post.excerpt(400, text_entities: true, strip_links: true, remap_emoji: true),
          username: original_username,
          post_url: post_url
-       }
+        }
 
         MessageBus.publish("/notification-alert/#{user.id}", payload, user_ids: [user.id])
         push_notification(user, payload)
         DiscourseEvent.trigger(:post_notification_alert, user, payload)
-     end
-   end
-
+      end
+    end
+    created.id ? created : nil
   end
 
   def contains_email_address?(addresses, user)
@@ -547,7 +551,9 @@ SQL
     notify = notify.where("id NOT IN (?)", exclude_user_ids) if exclude_user_ids.present?
 
     DiscourseEvent.trigger(:before_create_notifications_for_users, notify, post)
-    notify.each do |user|
+
+    notify.pluck(:id).each do |user_id|
+      user = User.find_by(id: user_id)
       create_notification(user, Notification.types[:posted], post)
     end
   end

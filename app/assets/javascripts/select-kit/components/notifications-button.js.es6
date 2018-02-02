@@ -8,7 +8,6 @@ export default DropdownSelectBoxComponent.extend({
   nameProperty: "key",
   fullWidthOnMobile: true,
   content: allLevels,
-  collectionHeight: "auto",
   castInteger: true,
   autofilterable: false,
   filterable: false,

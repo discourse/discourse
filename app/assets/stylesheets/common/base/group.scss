@@ -95,11 +95,11 @@ table.group-logs {
 
   th {
     text-align: left;
-    padding: 5px 0px;
+    padding: 5px 0;
   }
 
   td {
-    padding: 10px 0px;
+    padding: 10px 0;
   }
 
   .group-logs-expand-details {
@@ -131,7 +131,7 @@ table.group-members {
   th {
     border-bottom: 3px solid $primary-low;
     text-align: center;
-    padding: 5px 0px 5px 5px;
+    padding: 5px 0 5px 5px;
     color: dark-light-choose($primary-medium, $secondary-medium);
     font-weight: normal;
   }

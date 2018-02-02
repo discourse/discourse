@@ -7,7 +7,8 @@ import PluginApiMixin from "select-kit/mixins/plugin-api";
 import {
   applyContentPluginApiCallbacks,
   applyHeaderContentPluginApiCallbacks,
-  applyOnSelectPluginApiCallbacks
+  applyOnSelectPluginApiCallbacks,
+  applyCollectionHeaderCallbacks
 } from "select-kit/mixins/plugin-api";
 
 export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixin, EventsMixin, {
@@ -22,7 +23,8 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     "isAbove",
     "isBelow",
     "isLeftAligned",
-    "isRightAligned"
+    "isRightAligned",
+    "hasSelection",
   ],
   isDisabled: false,
   isExpanded: false,
@@ -50,8 +52,8 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   headerComponent: "select-kit/select-kit-header",
   headerComponentOptions: null,
   headerComputedContent: null,
+  collectionHeaderComputedContent: null,
   collectionComponent: "select-kit/select-kit-collection",
-  collectionHeight: 200,
   verticalOffset: 0,
   horizontalOffset: 0,
   fullWidthOnMobile: false,
@@ -64,6 +66,7 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   nameChanges: false,
   allowContentReplacement: false,
   collectionHeader: null,
+  allowAutoSelectFirst: true,
 
   init() {
     this._super();
@@ -233,6 +236,15 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   clearFilter() {
     this.$filterInput().val("");
     this.setProperties({ filter: "" });
+  },
+
+  _setCollectionHeaderComputedContent() {
+    const collectionHeaderComputedContent = applyCollectionHeaderCallbacks(
+      this.get("pluginApiIdentifiers"),
+      this.get("collectionHeader"),
+      this
+    );
+    this.set("collectionHeaderComputedContent", collectionHeaderComputedContent);
   },
 
   _setHeaderComputedContent() {

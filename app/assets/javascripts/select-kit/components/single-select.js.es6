@@ -1,6 +1,5 @@
 import SelectKitComponent from "select-kit/components/select-kit";
-import { on } from "ember-addons/ember-computed-decorators";
-import computed from "ember-addons/ember-computed-decorators";
+import { default as computed, on } from 'ember-addons/ember-computed-decorators';
 const { get, isNone, isEmpty, isPresent, run } = Ember;
 
 export default SelectKitComponent.extend({
@@ -27,6 +26,7 @@ export default SelectKitComponent.extend({
 
       if (this.get("allowInitialValueMutation")) this.mutateAttributes();
 
+      this._setCollectionHeaderComputedContent();
       this._setHeaderComputedContent();
     });
   },
@@ -37,6 +37,7 @@ export default SelectKitComponent.extend({
     run.next(() => {
       this.mutateContent(this.get("computedContent"));
       this.mutateValue(this.get("computedValue"));
+      this._setCollectionHeaderComputedContent();
       this._setHeaderComputedContent();
     });
   },
@@ -46,8 +47,11 @@ export default SelectKitComponent.extend({
   },
 
   _beforeWillComputeValue(value) {
-    if (!isEmpty(this.get("content")) && isEmpty(value) && isNone(this.get("none"))) {
-      value = this.valueForContentItem(get(this.get("content"), "firstObject"));
+    if (!isEmpty(this.get("content")) &&
+      isEmpty(value) &&
+      isNone(this.get("none")) &&
+      this.get("allowAutoSelectFirst")) {
+        value = this.valueForContentItem(get(this.get("content"), "firstObject"));
     }
 
     switch (typeof value) {
@@ -84,7 +88,7 @@ export default SelectKitComponent.extend({
 
   @computed("computedContent.[]", "computedValue", "filter", "shouldFilter")
   filteredComputedContent(computedContent, computedValue, filter, shouldFilter) {
-    if (shouldFilter === true) {
+    if (shouldFilter) {
       computedContent = this.filterComputedContent(computedContent, computedValue, filter);
     }
 
@@ -113,7 +117,7 @@ export default SelectKitComponent.extend({
 
   autoHighlight() {
     run.schedule("afterRender", () => {
-      if (!isNone(this.get("highlightedValue"))) { return; }
+      if (!isNone(this.get("highlightedValue"))) return;
 
       const filteredComputedContent = this.get("filteredComputedContent");
       const displayCreateRow = this.get("shouldDisplayCreateRow");
@@ -129,13 +133,13 @@ export default SelectKitComponent.extend({
         return;
       }
 
-      if (displayCreateRow === true && isEmpty(filteredComputedContent)) {
+      if (displayCreateRow && isEmpty(filteredComputedContent)) {
         this.send("highlight", this.get("createRowComputedContent"));
       }
       else if (!isEmpty(filteredComputedContent)) {
         this.send("highlight", get(filteredComputedContent, "firstObject"));
       }
-      else if (isEmpty(filteredComputedContent) && isPresent(none) && displayCreateRow === false) {
+      else if (isEmpty(filteredComputedContent) && isPresent(none) && !displayCreateRow) {
         this.send("highlight", none);
       }
     });

@@ -43,7 +43,7 @@ h1.page-not-found {
       display: none;
     }
   }
-  .badge-wrapper {
+  a:not(.badge-wrapper) {
     flex-basis: 100%;
   }
 }

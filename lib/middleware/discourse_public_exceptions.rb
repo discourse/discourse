@@ -17,12 +17,22 @@ module Middleware
       response = ActionDispatch::Response.new
 
       if exception
-        fake_controller = ApplicationController.new
-        fake_controller.response = response
+        begin
+          fake_controller = ApplicationController.new
+          fake_controller.response = response
+          fake_controller.request = ActionDispatch::Request.new(env)
 
-        if ApplicationController.rescue_with_handler(exception, object: fake_controller)
-          return [response.status, response.headers, response.body]
+          if ApplicationController.rescue_with_handler(exception, object: fake_controller)
+            body = response.body
+            if String === body
+              body = [body]
+            end
+            return [response.status, response.headers, body]
+          end
+        rescue => e
+          Discourse.warn_exception(e, message: "Failed to handle exception in exception app middleware")
         end
+
       end
       super
     end

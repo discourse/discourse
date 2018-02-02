@@ -99,7 +99,7 @@ class NotificationEmailer
     end
 
     def private_delay
-      SiteSetting.private_email_time_window_seconds
+      SiteSetting.personal_email_time_window_seconds
     end
 
     def post_type

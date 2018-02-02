@@ -434,4 +434,22 @@ describe StaffActionLogger do
       expect(user_history.previous_value).to eq('t')
     end
   end
+
+  describe 'log_check_personal_message' do
+    let(:personal_message) { Fabricate(:private_message_topic) }
+
+    subject(:log_check_personal_message) { described_class.new(admin).log_check_personal_message(personal_message) }
+
+    it 'raises an error when topic is nil' do
+      expect { logger.log_check_personal_message(nil) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it 'raises an error when topic is not a Topic' do
+      expect { logger.log_check_personal_message(1) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it 'creates a new UserHistory record' do
+      expect { log_check_personal_message }.to change { UserHistory.count }.by(1)
+    end
+  end
 end

@@ -1366,7 +1366,7 @@ describe User do
 
     before do
       SiteSetting.default_email_digest_frequency = 1440 # daily
-      SiteSetting.default_email_private_messages = false
+      SiteSetting.default_email_personal_messages = false
       SiteSetting.default_email_direct = false
       SiteSetting.default_email_mailing_list_mode = true
       SiteSetting.default_email_always = true
@@ -1478,7 +1478,7 @@ describe User do
 
     describe 'when user is an old user' do
       it 'should return the right value' do
-        user.update_attributes!(created_at: 1.year.ago)
+        user.update_attributes!(first_seen_at: 1.year.ago)
 
         expect(user.read_first_notification?).to eq(true)
       end
@@ -1577,6 +1577,45 @@ describe User do
         expect(User.not_silenced).to include(user0)
         expect(User.not_silenced).to_not include(user1)
       end
+    end
+  end
+
+  describe "#unstage" do
+    let!(:staged_user) { Fabricate(:staged, email: 'staged@account.com', active: true, username: 'staged1', name: 'Stage Name') }
+    let(:params) { { email: 'staged@account.com', active: true, username: 'unstaged1', name: 'Foo Bar' } }
+
+    it "correctyl unstages a user" do
+      user = User.unstage(params)
+
+      expect(user.id).to eq(staged_user.id)
+      expect(user.username).to eq('unstaged1')
+      expect(user.name).to eq('Foo Bar')
+      expect(user.active).to eq(false)
+      expect(user.email).to eq('staged@account.com')
+    end
+
+    it "returns nil when the user cannot be unstaged" do
+      Fabricate(:coding_horror)
+      expect(User.unstage(email: 'jeff@somewhere.com')).to be_nil
+      expect(User.unstage(email: 'no@account.com')).to be_nil
+    end
+
+    it "removes all previous notifications during unstaging" do
+      Fabricate(:notification, user: user)
+      Fabricate(:private_message_notification, user: user)
+      user.reload
+
+      expect(user.total_unread_notifications).to eq(2)
+      user = User.unstage(params)
+      expect(user.total_unread_notifications).to eq(0)
+    end
+
+    it "triggers an event" do
+      unstaged_user = nil
+      event = DiscourseEvent.track_events { unstaged_user = User.unstage(params) }.first
+
+      expect(event[:event_name]).to eq(:user_unstaged)
+      expect(event[:params].first).to eq(unstaged_user)
     end
   end
 

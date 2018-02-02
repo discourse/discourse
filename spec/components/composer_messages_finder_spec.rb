@@ -442,7 +442,9 @@ describe ComposerMessagesFinder do
 
         it "notifies if last post is old" do
           topic = Fabricate(:topic, last_posted_at: 181.days.ago)
-          expect(described_class.new(user, composer_action: 'reply', topic_id: topic.id).check_reviving_old_topic).not_to be_blank
+          message = described_class.new(user, composer_action: 'reply', topic_id: topic.id).check_reviving_old_topic
+          expect(message).not_to be_blank
+          expect(message[:body]).to match(/6 months ago/)
         end
       end
 

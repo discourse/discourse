@@ -52,7 +52,6 @@ body.stop-scrolling {
   .sweet-alert p {
     color: #797979;
     font-size: 16px;
-    text-align: center;
     font-weight: 300;
     position: relative;
     text-align: inherit;
@@ -132,14 +131,14 @@ body.stop-scrolling {
     margin-top: 10px;
     margin-bottom: 17px;
     font-size: 18px;
-    box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.06);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.06);
     padding: 0 12px;
     display: none;
     -webkit-transition: all 0.3s;
     transition: all 0.3s; }
     .sweet-alert input:focus {
       outline: none;
-      box-shadow: 0px 0px 3px #c4e6f5;
+      box-shadow: 0 0 3px #c4e6f5;
       border: 1px solid #b4dbed; }
       .sweet-alert input:focus::-moz-placeholder {
         transition: opacity 0.3s 0.03s ease;
@@ -195,7 +194,7 @@ body.stop-scrolling {
       .sweet-alert button.cancel:active {
         background-color: #a8a8a8; }
       .sweet-alert button.cancel:focus {
-        box-shadow: rgba(197, 205, 211, 0.8) 0px 0px 2px, rgba(0, 0, 0, 0.0470588) 0px 0px 0px 1px inset !important; }
+        box-shadow: rgba(197, 205, 211, 0.8) 0 0 2px, rgba(0, 0, 0, 0.0470588) 0 0 0 1px inset !important; }
     .sweet-alert button[disabled] {
       opacity: .6;
       cursor: default; }
@@ -216,7 +215,6 @@ body.stop-scrolling {
     height: 80px;
     border: 4px solid gray;
     -webkit-border-radius: 40px;
-    border-radius: 40px;
     border-radius: 50%;
     margin: 20px auto;
     padding: 0;
@@ -291,7 +289,6 @@ body.stop-scrolling {
       .sweet-alert .sa-icon.sa-success::before, .sweet-alert .sa-icon.sa-success::after {
         content: '';
         -webkit-border-radius: 40px;
-        border-radius: 40px;
         border-radius: 50%;
         position: absolute;
         width: 60px;
@@ -315,14 +312,13 @@ body.stop-scrolling {
         left: 30px;
         -webkit-transform: rotate(-45deg);
         transform: rotate(-45deg);
-        -webkit-transform-origin: 0px 60px;
-        transform-origin: 0px 60px; }
+        -webkit-transform-origin: 0 60px;
+        transform-origin: 0 60px; }
       .sweet-alert .sa-icon.sa-success .sa-placeholder {
         width: 80px;
         height: 80px;
         border: 4px solid rgba(165, 220, 134, 0.2);
         -webkit-border-radius: 40px;
-        border-radius: 40px;
         border-radius: 50%;
         box-sizing: content-box;
         position: absolute;
@@ -414,13 +410,13 @@ body.stop-scrolling {
 
 @-webkit-keyframes slideFromTop {
   0% {
-    top: 0%; }
+    top: 0; }
   100% {
     top: 50%; } }
 
 @keyframes slideFromTop {
   0% {
-    top: 0%; }
+    top: 0; }
   100% {
     top: 50%; } }
 
@@ -428,13 +424,13 @@ body.stop-scrolling {
   0% {
     top: 50%; }
   100% {
-    top: 0%; } }
+    top: 0; } }
 
 @keyframes slideToTop {
   0% {
     top: 50%; }
   100% {
-    top: 0%; } }
+    top: 0; } }
 
 @-webkit-keyframes slideFromBottom {
   0% {
@@ -547,7 +543,7 @@ body.stop-scrolling {
     top: 54px; }
   84% {
     width: 55px;
-    right: 0px;
+    right: 0;
     top: 35px; }
   100% {
     width: 47px;
@@ -565,7 +561,7 @@ body.stop-scrolling {
     top: 54px; }
   84% {
     width: 55px;
-    right: 0px;
+    right: 0;
     top: 35px; }
   100% {
     width: 47px;

@@ -46,6 +46,7 @@ export default SelectKitComponent.extend({
       values = this.computeValues(values);
       values = this._beforeDidComputeValues(values);
       this._setHeaderComputedContent();
+      this._setCollectionHeaderComputedContent();
       this.didComputeContent(content);
       this.didComputeValues(values);
       this.didComputeAttributes();
@@ -85,6 +86,7 @@ export default SelectKitComponent.extend({
     Ember.run.next(() => {
       this.mutateContent(this.get("computedContent"));
       this.mutateValues(this.get("computedValues"));
+      this._setCollectionHeaderComputedContent();
       this._setHeaderComputedContent();
     });
   },

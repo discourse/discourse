@@ -193,6 +193,8 @@ export function validateUploadedFiles(files, opts) {
 }
 
 export function validateUploadedFile(file, opts) {
+  if (!authorizesOneOrMoreExtensions()) return false;
+
   opts = opts || {};
 
   const name = file && file.name;
@@ -277,6 +279,21 @@ export function authorizesAllExtensions() {
   return Discourse.SiteSettings.authorized_extensions.indexOf("*") >= 0;
 }
 
+export function authorizesOneOrMoreExtensions() {
+  if (authorizesAllExtensions()) return true;
+
+  return Discourse.SiteSettings.authorized_extensions
+          .split("|")
+          .filter(ext => ext)
+          .length > 0;
+}
+
+export function authorizesOneOrMoreImageExtensions() {
+  if (authorizesAllExtensions()) return true;
+
+  return imagesExtensions().length > 0;
+}
+
 export function isAnImage(path) {
   return (/\.(png|jpe?g|gif|bmp|tiff?|svg|webp|ico)$/i).test(path);
 }
@@ -291,13 +308,13 @@ function isGUID(value) {
 
 function imageNameFromFileName(fileName) {
   const split = fileName.split('.');
-  const name = split[split.length-2];
+  let name = split[split.length - 2];
 
   if (exports.isAppleDevice() && isGUID(name)) {
-    return I18n.t('upload_selector.default_image_alt_text');
+    name = I18n.t('upload_selector.default_image_alt_text');
   }
 
-  return name;
+  return encodeURIComponent(name);
 }
 
 export function allowsImages() {

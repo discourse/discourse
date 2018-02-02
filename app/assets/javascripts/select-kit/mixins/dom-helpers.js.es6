@@ -42,7 +42,6 @@ export default Ember.Mixin.create({
 
   @on("didRender")
   _adjustPosition() {
-    this.$collection().css("max-height", this.get("collectionHeight"));
     this._applyFixedPosition();
     this._applyDirection();
     this._positionWrapper();
@@ -80,6 +79,7 @@ export default Ember.Mixin.create({
     this.setProperties({ isExpanded: true, renderedBodyOnce: true, isFocused: true });
     this.focusFilterOrHeader();
     this.autoHighlight();
+    this._setCollectionHeaderComputedContent();
     this._setHeaderComputedContent();
   },
 

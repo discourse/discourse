@@ -139,7 +139,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, {
         if ($panelBody.height() !== contentHeight) {
           $panelBody.height(contentHeight);
         }
-        $('body').addClass('drop-down-visible');
+        $('body').addClass('drop-down-mode');
       } else {
         const menuTop = headerHeight();
 
@@ -157,7 +157,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, {
         if (style.top !== menuTop + "px" || style.height !== height) {
           $panel.css({ top: menuTop + "px", height });
         }
-        $('body').removeClass('drop-down-visible');
+        $('body').removeClass('drop-down-mode');
       }
 
       $panel.width(width);

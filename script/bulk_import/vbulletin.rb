@@ -6,44 +6,6 @@ require "htmlentities"
 class BulkImport::VBulletin < BulkImport::Base
 
   SUSPENDED_TILL ||= Date.new(3000, 1, 1)
-  CHARSET_MAP = {
-    "armscii8" => nil,
-    "ascii"    => Encoding::US_ASCII,
-    "big5"     => Encoding::Big5,
-    "binary"   => Encoding::ASCII_8BIT,
-    "cp1250"   => Encoding::Windows_1250,
-    "cp1251"   => Encoding::Windows_1251,
-    "cp1256"   => Encoding::Windows_1256,
-    "cp1257"   => Encoding::Windows_1257,
-    "cp850"    => Encoding::CP850,
-    "cp852"    => Encoding::CP852,
-    "cp866"    => Encoding::IBM866,
-    "cp932"    => Encoding::Windows_31J,
-    "dec8"     => nil,
-    "eucjpms"  => Encoding::EucJP_ms,
-    "euckr"    => Encoding::EUC_KR,
-    "gb2312"   => Encoding::EUC_CN,
-    "gbk"      => Encoding::GBK,
-    "geostd8"  => nil,
-    "greek"    => Encoding::ISO_8859_7,
-    "hebrew"   => Encoding::ISO_8859_8,
-    "hp8"      => nil,
-    "keybcs2"  => nil,
-    "koi8r"    => Encoding::KOI8_R,
-    "koi8u"    => Encoding::KOI8_U,
-    "latin1"   => Encoding::ISO_8859_1,
-    "latin2"   => Encoding::ISO_8859_2,
-    "latin5"   => Encoding::ISO_8859_9,
-    "latin7"   => Encoding::ISO_8859_13,
-    "macce"    => Encoding::MacCentEuro,
-    "macroman" => Encoding::MacRoman,
-    "sjis"     => Encoding::SHIFT_JIS,
-    "swe7"     => nil,
-    "tis620"   => Encoding::TIS_620,
-    "ucs2"     => Encoding::UTF_16BE,
-    "ujis"     => Encoding::EucJP_ms,
-    "utf8"     => Encoding::UTF_8,
-  }
 
   def initialize
     super
@@ -500,15 +462,6 @@ class BulkImport::VBulletin < BulkImport::Base
 
   def extract_pm_title(title)
     normalize_text(title).scrub.gsub(/^Re\s*:\s*/i, "")
-  end
-
-  def normalize_text(text)
-    @html_entities.decode(normalize_charset(text.presence || "").scrub)
-  end
-
-  def normalize_charset(text)
-    return text if @encoding == Encoding::UTF_8
-    return text && text.encode(@encoding).force_encoding(Encoding::UTF_8)
   end
 
   def parse_birthday(birthday)

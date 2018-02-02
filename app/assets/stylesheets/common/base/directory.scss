@@ -32,6 +32,9 @@
         font-size: $font-up-3;
         color: $primary-medium; 
       }
+      .time-read {
+        white-space: nowrap;
+      }
     }
 
     tr.me {
@@ -39,7 +42,7 @@
         background-color: dark-light-choose($highlight-low, $highlight-medium);
 
         .username a, .name, .title, .number, .time-read {
-          color: $primary-medium;           
+          color: $primary-medium;
         }
       }
     }

@@ -53,6 +53,56 @@ $line-height-large: 1.4; // Normal or small text
 @import "plugins_variables";
 @import "common/foundation/math";
 
+// Z-index
+// --------------------------------------------------
+
+$z-layers: (
+  "max":              9999, 
+  "fullscreen":       1700,
+  "modal": (
+    "tooltip":        1600,   
+    "popover":        1500,
+    "dropdown":       1400,
+    "content":        1300,
+    "overlay":        1200,
+  ),
+  "mobile-composer":  1100,
+  "header":           1000,
+  "tooltip":          600,
+  "composer": (
+      "popover":      500,
+      "content":      400,
+  ),
+  "dropdown":         300,  
+  "usercard":         200,
+  "timeline":         100,
+  "base":             1
+  );
+
+@function map-has-nested-keys($map, $keys...) {
+  @each $key in $keys {
+    @if not map-has-key($map, $key) {
+      @return false;
+    }
+    $map: map-get($map, $key);
+  }
+  @return true;
+}
+
+@function map-deep-get($map, $keys...) {
+  @each $key in $keys {
+    $map: map-get($map, $key);
+  }
+  @return $map;
+}
+
+@function z($layers...) {
+  @if not map-has-nested-keys($z-layers, $layers...) {
+    @warn "No layer defined for `#{inspect($layers...)}` in $z-layers map. Check variables.scss, property omitted.";
+  }
+  @return map-deep-get($z-layers, $layers...);
+}
+
 // Color utilities
 // --------------------------------------------------
 

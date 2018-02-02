@@ -2,7 +2,7 @@ require_dependency 'html_to_markdown'
 
 class ComposerController < ApplicationController
 
-  before_action :ensure_logged_in
+  requires_login
 
   def parse_html
     markdown_text = HtmlToMarkdown.new(params[:html]).to_markdown

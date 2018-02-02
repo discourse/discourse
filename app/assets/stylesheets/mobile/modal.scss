@@ -10,18 +10,8 @@
 
 // Hardcode to be the same as before for now. I would recommend not using bootbox, or finding a way so the html structure can be the same
 .bootbox.modal {
-  position: fixed;
   top: 10%;
-  z-index: 1050;
-  overflow: auto;
   width: 100%;
-  height: auto;
-  background-color: $secondary;
-  border: 1px solid rgba(0, 0, 0, 0.3);
-
-  @include border-radius-all (6px);
-  box-shadow: 0 3px 7px rgba(0,0,0, 0.3);
-  background-clip: padding-box;
 }
 
 .modal.fade {
@@ -40,13 +30,7 @@
 // we need a little extra room on mobile for the
 // stuff inside the footer to fit
 .modal-footer {
-  padding-left: 7px;
-  padding-right: 7px;
-}
-
-.modal-footer .btn + .btn {
-  margin-left: 5px;
-  margin-bottom: 0;
+  padding: 15px 7px 10px 7px;
 }
 
 .modal-close {
@@ -55,12 +39,12 @@
 }
 
 .modal-header {
-  padding: 10px 0px 10px 10px;
+  padding: 10px 0 10px 10px;
 
   h3 {
     display: inline;
     font-size: $font-up-2;
-    margin: 0px;
+    margin: 0;
   }
 }
 .close {

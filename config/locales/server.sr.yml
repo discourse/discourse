@@ -106,10 +106,6 @@ sr:
         bio_raw: "O meni"
     errors:
       models:
-        topic:
-          attributes:
-            base:
-              cant_send_pm: "Žao nam je, ne možete slati privatne poruke tom korisniku."
         user:
           attributes:
             password:
@@ -122,7 +118,7 @@ sr:
   site_settings:
     min_topic_title_length: "Minimalna dozvoljena dužina naslova teme u znakovima"
     max_topic_title_length: "Maksimalna dozvoljena dužina naslova teme u znakovima"
-    min_private_message_title_length: "Minimalna dozvoljena dužina naslova poruke u znakovima"
+    min_personal_message_title_length: "Minimalna dozvoljena dužina naslova poruke u znakovima"
     min_search_term_length: "Minimalna dozvoljena dužina termina za pretragu u znakovima"
     apple_touch_icon_url: "Ikonica koja se koristi za Apple touch uređaje. Preporučena veličina 144px sa 144px."
     max_replies_in_first_day: "Maksimalan broj odgovora koje korisnik može da kreira u prvih 24 sata nakon kreiranja svoje prve poruke."
@@ -135,7 +131,6 @@ sr:
     topic_views_heat_high: "Nakon ovoliko pregleda, polje pregleda je jako označeno."
     num_hours_to_close_topic: "Broj sati za pauziranje teme radi intervencije."
     reply_by_email_enabled: "Omogući odgovore na teme putem email poruka."
-    incoming_email_prefer_html: "Koristi HTML umesto tekstualnog formata za dolazne email poruke."
     disable_emails: "Spreči Discourse da šalje bilo kakve email poruke"
     delete_email_logs_after_days: "Obriši email logove posle (N) dana. Uneti 0 za neograničeno čuvanje."
     block_auto_generated_emails: "Blokiraj dolazne email poruke prepoznate kao automatski generisane."

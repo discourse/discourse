@@ -746,6 +746,20 @@ describe PrettyText do
       expect(PrettyText.cook("💣")).not_to match(/\:bomb\:/)
     end
 
+    it "doesn't replace emoji if emoji is disabled" do
+      SiteSetting.enable_emoji = false
+      expect(PrettyText.cook(":bomb:")).to eq("<p>:bomb:</p>")
+    end
+
+    it "doesn't replace shortcuts if disabled" do
+      SiteSetting.enable_emoji_shortcuts = false
+      expect(PrettyText.cook(":)")).to eq("<p>:)</p>")
+    end
+
+    it "does replace shortcuts if enabled" do
+      expect(PrettyText.cook(":)")).to match("smile")
+    end
+
     it "replaces skin toned emoji" do
       expect(PrettyText.cook("hello 👱🏿‍♀️")).to eq("<p>hello <img src=\"/images/emoji/twitter/blonde_woman/6.png?v=5\" title=\":blonde_woman:t6:\" class=\"emoji\" alt=\":blonde_woman:t6:\"></p>")
       expect(PrettyText.cook("hello 👩‍🎤")).to eq("<p>hello <img src=\"/images/emoji/twitter/woman_singer.png?v=5\" title=\":woman_singer:\" class=\"emoji\" alt=\":woman_singer:\"></p>")
@@ -795,6 +809,17 @@ describe PrettyText do
     cooked = cook("[Steam URL Scheme](steam://store/452530)")
     expected = '<p><a>Steam URL Scheme</a></p>'
     expect(cooked).to eq(n expected)
+  end
+
+  it 'allows only tel URL scheme to start with a plus character' do
+    SiteSetting.allowed_href_schemes = "tel|steam"
+    cooked = cook("[Tel URL Scheme](tel://+452530579785)")
+    expected = '<p><a href="tel://+452530579785" rel="nofollow noopener">Tel URL Scheme</a></p>'
+    expect(cooked).to eq(n expected)
+
+    cooked2 = cook("[Steam URL Scheme](steam://+store/452530)")
+    expected2 = '<p><a>Steam URL Scheme</a></p>'
+    expect(cooked2).to eq(n expected2)
   end
 
   it "produces hashtag links" do
@@ -1210,6 +1235,46 @@ HTML
 
     expect(cooked).to eq(html.strip)
 
+  end
+
+  it "You can disable linkify" do
+    md = "www.cnn.com test.it http://test.com https://test.ab https://a"
+    cooked = PrettyText.cook(md)
+
+    html = <<~HTML
+      <p><a href="http://www.cnn.com" rel="nofollow noopener">www.cnn.com</a> test.it <a href="http://test.com" rel="nofollow noopener">http://test.com</a> <a href="https://test.ab" rel="nofollow noopener">https://test.ab</a> <a href="https://a" rel="nofollow noopener">https://a</a></p>
+    HTML
+
+    expect(cooked).to eq(html.strip)
+
+    # notice how cnn.com is no longer linked but it is
+    SiteSetting.markdown_linkify_tlds = "not_com|it"
+
+    cooked = PrettyText.cook(md)
+    html = <<~HTML
+    <p>www.cnn.com <a href="http://test.it" rel="nofollow noopener">test.it</a> <a href="http://test.com" rel="nofollow noopener">http://test.com</a> <a href="https://test.ab" rel="nofollow noopener">https://test.ab</a> <a href="https://a" rel="nofollow noopener">https://a</a></p>
+    HTML
+
+    expect(cooked).to eq(html.strip)
+
+    # no tlds anymore
+    SiteSetting.markdown_linkify_tlds = ""
+
+    cooked = PrettyText.cook(md)
+    html = <<~HTML
+      <p>www.cnn.com test.it <a href="http://test.com" rel="nofollow noopener">http://test.com</a> <a href="https://test.ab" rel="nofollow noopener">https://test.ab</a> <a href="https://a" rel="nofollow noopener">https://a</a></p>
+    HTML
+
+    expect(cooked).to eq(html.strip)
+
+    # lastly ... what about no linkify
+    SiteSetting.enable_markdown_linkify = false
+
+    cooked = PrettyText.cook(md)
+
+    html = <<~HTML
+      <p>www.cnn.com test.it http://test.com https://test.ab https://a</p>
+    HTML
   end
 
 end

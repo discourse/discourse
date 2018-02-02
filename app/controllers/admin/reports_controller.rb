@@ -7,8 +7,8 @@ class Admin::ReportsController < Admin::AdminController
 
     raise Discourse::NotFound unless report_type =~ /^[a-z0-9\_]+$/
 
-    start_date = params[:start_date].present? ? Time.parse(params[:start_date]) : 30.days.ago
-    end_date = params[:end_date].present? ? Time.parse(params[:end_date]) : start_date + 30.days
+    start_date = (params[:start_date].present? ? Time.zone.parse(params[:start_date]) : 30.days.ago).beginning_of_day
+    end_date = (params[:end_date].present? ? Time.zone.parse(params[:end_date]) : start_date + 30.days).end_of_day
 
     if params.has_key?(:category_id) && params[:category_id].to_i > 0
       category_id = params[:category_id].to_i

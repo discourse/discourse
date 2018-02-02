@@ -60,7 +60,7 @@ h4,
 h5,
 h6 {
   + p {
-    margin-top:0px;
+    margin-top:0;
   }
 }
 
@@ -140,7 +140,7 @@ input {
       vertical-align: middle;
 
       &:focus {
-        z-index: 2;
+        z-index: z("base") + 1;
       }
     }
 
@@ -401,25 +401,7 @@ input {
   }
 }
 
-// Special elements
-#main {
-  a.star {
-    color: $secondary-medium;
 
-    &:before {
-      font-family: "FontAwesome";
-      content: "\f005";
-    }
-
-    @include hover {
-      opacity: 0.6;
-    }
-
-    &:active {
-      opacity: 1;
-    }
-  }
-}
 
 // Media Queries
 @media all

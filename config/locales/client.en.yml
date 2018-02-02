@@ -520,7 +520,7 @@ en:
 
     categories:
       all: "all categories"
-      all_subcategories: "all"
+      all_subcategories: "all in %{categoryName}"
       no_subcategory: "none"
       category: "Category"
       category_list: "Display category list"
@@ -852,7 +852,7 @@ en:
         title: "Invites"
         user: "Invited User"
         sent: "Sent"
-        none: "There are no pending invites to display."
+        none: "No invites to display."
         truncated:
           one: "Showing the first invite."
           other: "Showing the first {{count}} invites."
@@ -1247,6 +1247,7 @@ en:
       topic_featured_link_placeholder: "Enter link shown with title."
       remove_featured_link: "Remove link from topic."
       reply_placeholder: "Type here. Use Markdown, BBCode, or HTML to format. Drag or paste images."
+      reply_placeholder_no_images: "Type here. Use Markdown, BBCode, or HTML to format."
       view_new_post: "View your new post."
       saving: "Saving"
       saved: "Saved!"
@@ -1277,6 +1278,7 @@ en:
       olist_title: "Numbered List"
       ulist_title: "Bulleted List"
       list_item: "List item"
+      toggle_direction: "Toggle Direction"
       help: "Markdown Editing Help"
       collapse: "minimize the composer panel"
       abandon: "close composer and discard draft"
@@ -1288,6 +1290,20 @@ en:
         body: "Right now this message is only being sent to yourself!"
 
       admin_options_title: "Optional staff settings for this topic"
+
+      composer_actions:
+        reply_as_new_topic:
+          label: Reply as linked topic
+          desc: Create a new topic
+        reply_as_private_message:
+          label: New message
+          desc: Create a private message
+        reply_to_topic:
+          label: Reply to topic
+          desc: Reply to the original post without replying to a specific post
+        toggle_whisper:
+          label: Toggle whipser
+          desc: Whispers will only be visible by staff members
 
     notifications:
       tooltip:
@@ -1880,8 +1896,6 @@ en:
           other: "You have selected <b>{{count}}</b> posts."
 
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Quote"
       edit: "<i class='fa fa-pencil'></i> {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Reason: "
@@ -1897,7 +1911,9 @@ en:
       deleted_by_author:
         one: "(post withdrawn by author, will be automatically deleted in %{count} hour unless flagged)"
         other: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
+      collapse: "collapse"
       expand_collapse: "expand/collapse"
+      locked: "a staff member has locked this post from being edited"
       gap:
         one: "view 1 hidden reply"
         other: "view {{count}} hidden replies"
@@ -1978,6 +1994,11 @@ en:
         rebake: "Rebuild HTML"
         unhide: "Unhide"
         change_owner: "Change Ownership"
+        grant_badge: "Grant Badge"
+        lock_post: "Lock Post"
+        lock_post_description: "prevent the poster from editing this post"
+        unlock_post: "Unlock Post"
+        unlock_post_description: "allow the poster to edit this post"
 
       actions:
         flag: 'Flag'
@@ -2442,6 +2463,9 @@ en:
         dismiss_new_posts: '<b>x</b>, <b>r</b> Dismiss New/Posts'
         dismiss_topics: '<b>x</b>, <b>t</b> Dismiss Topics'
         log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Log Out'
+      composing:
+        title: 'Composing'
+        return: '<b>shift</b>+<b>c</b> Return to composer'
       actions:
         title: 'Actions'
         bookmark_topic: '<b>f</b> Toggle bookmark topic'
@@ -2483,6 +2507,7 @@ en:
         other: "%{count} granted"
       select_badge_for_title: Select a badge to use as your title
       none: "(none)"
+      successfully_granted: "Successfully granted %{badge} to %{username}"
       badge_grouping:
         getting_started:
           name: Getting Started
@@ -2666,14 +2691,19 @@ en:
 
         agree: "Agree"
         agree_title: "Confirm this flag as valid and correct"
-        agree_flag_hide_post: "Agree and Hide Post"
+        agree_flag_hide_post: "Hide Post"
         agree_flag_hide_post_title: "Hide this post and automatically send the user a message urging them to edit it."
         agree_flag_restore_post: "Agree and Restore Post"
         agree_flag_restore_post_title: "Restore the post so that all users can see it."
-        agree_flag: "Agree and Keep Post"
+        agree_flag_suspend: "Suspend User"
+        agree_flag_suspend_title: "Agree with flag and suspend the user."
+        agree_flag_silence: "Silence User"
+        agree_flag_silence_title: "Agree with flag and silence the user."
+
+        agree_flag: "Keep Post"
         agree_flag_title: "Agree with flag and keep the post unchanged."
-        defer_flag: "Ignore"
-        defer_flag_title: "Remove this flag; it requires no action at this time."
+        ignore_flag: "Ignore"
+        ignore_flag_title: "Remove this flag; it requires no action at this time."
         delete: "Delete"
         delete_title: "Delete the post this flag refers to."
         delete_post_defer_flag: "Delete Post and Ignore flag"
@@ -2881,7 +2911,7 @@ en:
           label: "Upload"
           title: "Upload a backup to this instance"
           uploading: "Uploading..."
-          success: "'{{filename}}' has successfully been uploaded."
+          success: "'{{filename}}' has successfully been uploaded. The file is now being processed and will take up to a minute to show up in the list."
           error: "There has been an error while uploading '{{filename}}': {{message}}"
         operations:
           is_running: "An operation is currently running..."
@@ -3219,6 +3249,9 @@ en:
             backup_destroy: "destroy backup"
             reviewed_post: "reviewed post"
             custom_staff: "plugin custom action"
+            post_locked: "post locked"
+            post_unlocked: "post unlocked"
+            check_personal_message: "check personal message"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -3261,6 +3294,7 @@ en:
             header: "Header"
             full_page: "Full Page"
             click_through_only: "All (click through only)"
+          header_search_results: "Header Search Results"
         logster:
           title: "Error Logs"
 
@@ -3368,6 +3402,10 @@ en:
         suspended_until: "(until %{until})"
         cant_suspend: "This user cannot be suspended."
         delete_all_posts: "Delete all posts"
+        penalty_post_actions: "What would you like to do with the associated post?"
+        penalty_post_delete: "Delete the post"
+        penalty_post_edit: "Edit the post"
+        penalty_post_none: "Do nothing"
 
         # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
         delete_all_posts_confirm_MF: "You are about to delete {POSTS, plural, one {1 post} other {# posts}} and {TOPICS, plural, one {1 topic} other {# topics}}. Are you sure?"
@@ -3394,6 +3432,9 @@ en:
         grant_moderation: 'Grant Moderation'
         unsuspend: 'Unsuspend'
         suspend: 'Suspend'
+        show_flags_received: "Show Flags Received"
+        flags_received_by: "Flags Received by %{username}"
+        flags_received_none: "This user has not received any flags."
         reputation: Reputation
         permissions: Permissions
         activity: Activity

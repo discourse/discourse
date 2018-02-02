@@ -25,6 +25,7 @@
 //= require ./discourse/lib/key-value-store
 //= require ./discourse/lib/computed
 //= require ./discourse/lib/formatter
+//= require ./discourse/lib/text-direction
 //= require ./discourse/lib/eyeline
 //= require ./discourse/lib/show-modal
 //= require ./discourse/mixins/scrolling
@@ -60,9 +61,9 @@
 //= require ./discourse/models/user-action
 //= require ./discourse/models/draft
 //= require ./discourse/models/composer
+//= require ./discourse/models/user-badge
 //= require_tree ./discourse/mixins
 //= require ./discourse/models/invite
-//= require ./discourse/models/user-badge
 //= require ./discourse/controllers/discovery-sortable
 //= require ./discourse/controllers/navigation/default
 //= require ./discourse/components/edit-category-panel

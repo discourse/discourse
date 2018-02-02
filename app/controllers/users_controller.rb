@@ -8,10 +8,18 @@ require_dependency 'admin_confirmation'
 class UsersController < ApplicationController
 
   skip_before_action :authorize_mini_profiler, only: [:avatar]
-  skip_before_action :check_xhr, only: [:show, :badges, :password_reset, :update, :account_created, :activate_account, :perform_account_activation, :user_preferences_redirect, :avatar, :my_redirect, :toggle_anon, :admin_login, :confirm_admin]
 
-  before_action :ensure_logged_in, only: [:username, :update, :user_preferences_redirect, :upload_user_image,
-                                          :pick_avatar, :destroy_user_image, :destroy, :check_emails, :topic_tracking_state]
+  requires_login only: [
+    :username, :update, :user_preferences_redirect, :upload_user_image,
+    :pick_avatar, :destroy_user_image, :destroy, :check_emails, :topic_tracking_state,
+    :preferences
+  ]
+
+  skip_before_action :check_xhr, only: [
+    :show, :badges, :password_reset, :update, :account_created,
+    :activate_account, :perform_account_activation, :user_preferences_redirect, :avatar,
+    :my_redirect, :toggle_anon, :admin_login, :confirm_admin
+  ]
 
   before_action :respond_to_suspicious_request, only: [:create]
 
@@ -106,6 +114,9 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
     attributes = user_params.merge!(custom_fields: params[:custom_fields])
+
+    # We can't update the username via this route. Use the username route
+    attributes.delete(:username)
 
     if params[:user_fields].present?
       attributes[:custom_fields] = {} unless params[:custom_fields].present?
@@ -312,8 +323,6 @@ class UsersController < ApplicationController
     params[:for_user_id] ? User.find(params[:for_user_id]) : current_user
   end
 
-  FROM_STAGED = "from_staged".freeze
-
   def create
     params.require(:email)
     params.permit(:user_fields)
@@ -334,14 +343,9 @@ class UsersController < ApplicationController
       return fail_with("login.reserved_username")
     end
 
-    if user = User.where(staged: true).with_email(params[:email].strip.downcase).first
-      user_params.each { |k, v| user.send("#{k}=", v) }
-      user.staged = false
-      user.active = false
-      user.custom_fields[FROM_STAGED] = true
-    else
-      user = User.new(user_params)
-    end
+    new_user_params = user_params
+    user = User.unstage(new_user_params)
+    user = User.new(new_user_params) if user.nil?
 
     # Handle API approval
     if user.approved
@@ -543,35 +547,30 @@ class UsersController < ApplicationController
   end
 
   def admin_login
-    if current_user
-      return redirect_to path("/")
-    end
+    return redirect_to(path("/")) if current_user
 
     if request.put?
       RateLimiter.new(nil, "admin-login-hr-#{request.remote_ip}", 6, 1.hour).performed!
       RateLimiter.new(nil, "admin-login-min-#{request.remote_ip}", 3, 1.minute).performed!
 
-      user = User.with_email(params[:email]).where(admin: true).human_users.first
-      if user
+      if user = User.with_email(params[:email]).admins.human_users.first
         email_token = user.email_tokens.create(email: user.email)
         Jobs.enqueue(:critical_user_email, type: :admin_login, user_id: user.id, email_token: email_token.token)
         @message = I18n.t("admin_login.success")
       else
-        @message = I18n.t("admin_login.error")
+        @message = I18n.t("admin_login.errors.unknown_email_address")
       end
     elsif params[:token].present?
-      # token recieved, try to login
       if EmailToken.valid_token_format?(params[:token])
         @user = EmailToken.confirm(params[:token])
-        if @user && @user.admin?
-          # Log in user
+        if @user&.admin?
           log_on_user(@user)
           return redirect_to path("/")
         else
-          @message = I18n.t("admin_login.error")
+          @message = I18n.t("admin_login.errors.unknown_email_address")
         end
       else
-        @message = I18n.t("admin_login.error")
+        @message = I18n.t("admin_login.errors.invalid_token")
       end
     end
 
@@ -607,7 +606,7 @@ class UsersController < ApplicationController
       if user = User.where(id: session_user_id.to_i).first
         @account_created[:username] = user.username
         @account_created[:email] = user.email
-        @account_created[:show_controls] = !user.custom_fields[FROM_STAGED]
+        @account_created[:show_controls] = !user.from_staged?
       end
     end
 
@@ -661,11 +660,7 @@ class UsersController < ApplicationController
       @user = User.where(id: user_key.to_i).first
     end
 
-    if @user.blank? || @user.active? || current_user.present?
-      raise Discourse::InvalidAccess.new
-    end
-
-    if @user.custom_fields[FROM_STAGED]
+    if @user.blank? || @user.active? || current_user.present? || @user.from_staged?
       raise Discourse::InvalidAccess.new
     end
 

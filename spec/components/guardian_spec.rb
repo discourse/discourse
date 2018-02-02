@@ -2,6 +2,7 @@ require 'rails_helper';
 
 require 'guardian'
 require_dependency 'post_destroyer'
+require_dependency 'post_locker'
 
 describe Guardian do
 
@@ -69,14 +70,14 @@ describe Guardian do
     end
 
     it "returns false for notify_user if private messages are disabled" do
-      SiteSetting.enable_private_messages = false
+      SiteSetting.enable_personal_messages = false
       user.trust_level = TrustLevel[2]
       expect(Guardian.new(user).post_can_act?(post, :notify_user)).to be_falsey
       expect(Guardian.new(user).post_can_act?(post, :notify_moderators)).to be_falsey
     end
 
     it "returns false for notify_user and notify_moderators if private messages are enabled but threshold not met" do
-      SiteSetting.enable_private_messages = true
+      SiteSetting.enable_personal_messages = true
       SiteSetting.min_trust_to_send_messages = 2
       user.trust_level = TrustLevel[1]
       expect(Guardian.new(user).post_can_act?(post, :notify_user)).to be_falsey
@@ -169,8 +170,8 @@ describe Guardian do
       expect(Guardian.new(user).can_send_private_message?(another_user)).to be_falsey
     end
 
-    context "enable_private_messages is false" do
-      before { SiteSetting.enable_private_messages = false }
+    context "enable_personal_messages is false" do
+      before { SiteSetting.enable_personal_messages = false }
 
       it "returns false if user is not staff member" do
         expect(Guardian.new(trust_level_4).can_send_private_message?(another_user)).to be_falsey
@@ -450,7 +451,7 @@ describe Guardian do
 
       context "when private messages are disabled" do
         before do
-          SiteSetting.enable_private_messages = false
+          SiteSetting.enable_personal_messages = false
         end
 
         it "doesn't allow a regular user to invite" do
@@ -857,6 +858,25 @@ describe Guardian do
         end
       end
 
+      context "system message" do
+        let(:private_message) {
+          Fabricate(
+            :topic,
+            archetype: Archetype.private_message,
+            subtype: 'system_message',
+            category_id: nil
+          )
+        }
+
+        before { user.save! }
+        it "allows the user to reply to system messages" do
+          expect(Guardian.new(user).can_create_post?(private_message)).to eq(true)
+          SiteSetting.enable_system_message_replies = false
+          expect(Guardian.new(user).can_create_post?(private_message)).to eq(false)
+        end
+
+      end
+
       context "private message" do
         let(:private_message) { Fabricate(:topic, archetype: Archetype.private_message, category_id: nil) }
 
@@ -1072,6 +1092,11 @@ describe Guardian do
         expect(Guardian.new(post.user).can_edit?(post)).to be_truthy
       end
 
+      it 'returns false if you try to edit a locked post' do
+        post.locked_by_id = moderator.id
+        expect(Guardian.new(post.user).can_edit?(post)).to be_falsey
+      end
+
       it "returns false if the post is hidden due to flagging and it's too soon" do
         post.hidden = true
         post.hidden_at = Time.now
@@ -1142,6 +1167,11 @@ describe Guardian do
       end
 
       it 'returns true as a moderator' do
+        expect(Guardian.new(moderator).can_edit?(post)).to be_truthy
+      end
+
+      it 'returns true as a moderator, even if locked' do
+        post.locked_by_id = admin.id
         expect(Guardian.new(moderator).can_edit?(post)).to be_truthy
       end
 

@@ -3,11 +3,11 @@
 }
 
 .group-header {
-  margin: 0px;
+  margin: 0;
 }
 
 .group-name {
-  margin: 5px 0px 0px 0px;
+  margin: 5px 0 0 0;
 }
 
 .group-nav {
@@ -29,7 +29,7 @@
 
 .group-activity-nav.mobile-nav {
   position: absolute;
-  right: 0px;
+  right: 0;
   top: -55px;
 }
 
@@ -44,7 +44,7 @@
 
   .group-flair-inputs {
     .group-flair-right {
-      margin: 0px
+      margin: 0
     }
   }
 }

@@ -90,7 +90,6 @@ uk:
     latest: "Останні теми"
     hot: "Гарячі теми"
     posts: "Останні дописи"
-    private_posts: "Останні приватні повідомлення"
     group_posts: "Останні дописи від %{group_name}"
     user_posts: "Останні дописи @%{username}"
     user_topics: "Останні теми @%{username}"
@@ -300,7 +299,6 @@ uk:
     github_config_warning: 'The server is configured to allow signup and log in with GitHub (enable_github_logins), but the client id and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">See this guide to learn more</a>.'
     image_magick_warning: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download the latest release</a>.'
   site_settings:
-    default_locale: "Мова за замовчуванням для цього екземпляра Discourse (Код ISO 639-1)"
     allow_user_locale: "Allow users to choose their own language interface preference"
     min_search_term_length: "Мінімальна дозволена довжина пошукової фрази у символах"
     allow_duplicate_topic_titles: "Дозволити теми з однаковими, дублюючими назвами."
