@@ -26,14 +26,14 @@
       }
 
       &.bullet.has-selection .category-drop-header {
-        padding: 3.5px 10px;
+        padding: 4.5px 10px;
         span.badge-category {
           line-height: $line-height-large;
         }
       }
 
       &.box.has-selection .category-drop-header {
-        padding: 4.5px 10px;
+        padding: 3px 10px;
       }
 
       &.none.has-selection .category-drop-header {
@@ -132,13 +132,7 @@
 
         .badge-wrapper {
           margin: 0;
-          display: flex;
-          flex: 1 1 auto;
         }
-      }
-
-      .select-kit-row .badge-wrapper.box {
-        padding: 2.5px 0;
       }
 
       .select-kit-row .badge-wrapper.bullet, .select-kit-row .badge-wrapper.none {
