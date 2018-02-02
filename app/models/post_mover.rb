@@ -47,7 +47,7 @@ class PostMover
     notify_users_that_posts_have_moved
     update_statistics
     update_user_actions
-    set_last_post_user_id(destination_topic)
+    update_last_post_stats
 
     if moving_all_posts
       @original_topic.update_status('closed', true, @user)
@@ -204,9 +204,15 @@ class PostMover
     end
   end
 
-  def set_last_post_user_id(topic)
-    user_id = topic.posts.last.user_id rescue nil
-    return if user_id.nil?
-    topic.update_attribute :last_post_user_id, user_id
+  def update_last_post_stats
+    post = destination_topic.posts.where.not(post_type: Post.types[:whisper]).last
+    if post && post_ids.include?(post.id)
+      attrs = {}
+      attrs[:last_posted_at] = post.created_at
+      attrs[:last_post_user_id] = post.user_id
+      attrs[:bumped_at] = post.created_at unless post.no_bump
+      attrs[:updated_at] = 'now()'
+      destination_topic.update_columns(attrs)
+    end
   end
 end
