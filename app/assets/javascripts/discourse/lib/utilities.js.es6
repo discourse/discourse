@@ -49,7 +49,6 @@ export function avatarImg(options, getURL) {
   getURL = getURL || Discourse.getURLWithCDN;
 
   const size = translateSize(options.size);
-  console.log(size);
   const url = avatarUrl(options.avatarTemplate, size);
 
   // We won't render an invalid url
