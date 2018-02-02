@@ -45,6 +45,7 @@
 
 .topic-category {
   display: flex;
+  flex-wrap: wrap;
 
   .topic-header-extra {
     display: inline-block;
@@ -172,9 +173,12 @@ $tag-color: $primary-medium;
 }
 
 .mobile-view .topic-list-item .discourse-tags {
-  display: inline-block;
+  display: inline-flex;
   font-size: $font-down-1;
   margin-top: 0;
+  .discourse-tag {
+    margin-right: .2em;
+  }
   .discourse-tag.box {
     position:relative;
     top: 0;

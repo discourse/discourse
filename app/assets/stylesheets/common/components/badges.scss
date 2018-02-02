@@ -40,14 +40,10 @@
       }
     }
    .badge-category-parent-bg, .badge-category-bg {
-    width: 10px;
-    height: 10px;
+    width: 9px;
+    height: 9px;
     margin-right: 5px;
     display: inline-block;
-    vertical-align: sub;
-      &:before {
-        content: "\a0";
-      }
     }
     .badge-category-parent-bg { // Subcategories
       width: 5px;
