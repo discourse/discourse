@@ -33,7 +33,7 @@ export default ComboBoxComponent.extend({
 
   @computed("content")
   filterable(content) {
-    return content.length >= 15;
+    return content && content.length >= 15;
   },
 
   computeHeaderContent() {
