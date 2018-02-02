@@ -1,6 +1,8 @@
 require_dependency 'distributed_cache'
 require_dependency 'stylesheet/compiler'
 require_dependency 'stylesheet/manager'
+require_dependency 'theme_settings_parser'
+require_dependency 'theme_settings_manager'
 
 class Theme < ActiveRecord::Base
 
@@ -8,6 +10,7 @@ class Theme < ActiveRecord::Base
 
   belongs_to :color_scheme
   has_many :theme_fields, dependent: :destroy
+  has_many :theme_settings, dependent: :destroy
   has_many :child_theme_relation, class_name: 'ChildTheme', foreign_key: 'parent_theme_id', dependent: :destroy
   has_many :child_themes, through: :child_theme_relation, source: :child_theme
   has_many :color_schemes
@@ -34,11 +37,13 @@ class Theme < ActiveRecord::Base
     @included_themes = nil
 
     remove_from_cache!
+    clear_cached_settings!
     notify_scheme_change if saved_change_to_color_scheme_id?
   end
 
   after_destroy do
     remove_from_cache!
+    clear_cached_settings!
     if SiteSetting.default_theme_key == self.key
       Theme.clear_default!
     end
@@ -122,7 +127,7 @@ class Theme < ActiveRecord::Base
   end
 
   def self.targets
-    @targets ||= Enum.new(common: 0, desktop: 1, mobile: 2)
+    @targets ||= Enum.new(common: 0, desktop: 1, mobile: 2, settings: 3)
   end
 
   def notify_scheme_change(clear_manager_cache = true)
@@ -287,6 +292,50 @@ class Theme < ActiveRecord::Base
     @included_themes = nil
     child_themes.reload
     save!
+  end
+
+  def settings
+    field = theme_fields.where(target_id: Theme.targets[:settings], name: "yaml").first
+    return [] unless field && field.error.nil?
+
+    settings = []
+    ThemeSettingsParser.new(field).load do |name, default, type, opts|
+      settings << ThemeSettingsManager.create(name, default, type, self, opts)
+    end
+    settings
+  end
+
+  def cached_settings
+    Rails.cache.fetch("settings_for_theme_#{self.key}", expires_in: 30.minutes) do
+      hash = {}
+      self.settings.each do |setting|
+        hash[setting.name] = setting.value
+      end
+      hash
+    end
+  end
+
+  def clear_cached_settings!
+    Rails.cache.delete("settings_for_theme_#{self.key}")
+  end
+
+  def self.settings_for_client(key)
+    settings = {}
+    theme = Theme.find_by(key: key)
+    return settings.to_json unless theme
+
+    theme.included_themes.each do |child|
+      settings.merge!(child.cached_settings)
+    end
+    settings.merge!(theme.cached_settings)
+    settings.to_json
+  end
+
+  def update_setting(setting_name, new_value)
+    target_setting = settings.find { |setting| setting.name == setting_name }
+    raise Discourse::NotFound unless target_setting
+
+    target_setting.value = new_value
   end
 end
 
