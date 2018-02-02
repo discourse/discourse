@@ -73,9 +73,9 @@ export function categoryBadgeHTML(category, opts) {
   }
 
   if (restricted) {
-    html += `${iconHTML('lock')}<span ${categoryDir}>${categoryName}</span>`;
+    html += `${iconHTML('lock')}<span class="category-name" ${categoryDir}>${categoryName}</span>`;
   } else {
-    html += `<span ${categoryDir}>${categoryName}</span>`;
+    html += `<span class="category-name" ${categoryDir}>${categoryName}</span>`;
   }
   html += "</span>";
 
