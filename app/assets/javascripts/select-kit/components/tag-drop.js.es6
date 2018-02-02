@@ -31,6 +31,11 @@ export default ComboBoxComponent.extend({
     return true;
   },
 
+  @computed("content")
+  filterable(content) {
+    return content && content.length >= 15;
+  },
+
   computeHeaderContent() {
     let content = this.baseHeaderComputedContent();
 

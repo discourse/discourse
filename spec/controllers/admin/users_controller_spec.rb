@@ -148,24 +148,42 @@ describe Admin::UsersController do
         expect(log.details).to match(/because I said so/)
       end
 
-      it "can have an associated post" do
-        post = Fabricate(:post)
-
-        put(
-          :suspend,
-          params: {
-            user_id: user.id,
+      context "with an associated post" do
+        let(:post) { Fabricate(:post) }
+        let(:suspend_params) do
+          { user_id: user.id,
             suspend_until: 5.hours.from_now,
             reason: "because of this post",
             post_id: post.id,
-            format: :json
-          }
-        )
-        expect(response).to be_success
+            format: :json }
+        end
 
-        log = UserHistory.where(target_user_id: user.id).order('id desc').first
-        expect(log).to be_present
-        expect(log.post_id).to eq(post.id)
+        it "can have an associated post" do
+          put(:suspend, params: suspend_params)
+          expect(response).to be_success
+
+          log = UserHistory.where(target_user_id: user.id).order('id desc').first
+          expect(log).to be_present
+          expect(log.post_id).to eq(post.id)
+        end
+
+        it "can delete an associated post" do
+          put(:suspend, params: suspend_params.merge(post_action: 'delete'))
+          post.reload
+          expect(post.deleted_at).to be_present
+          expect(response).to be_success
+        end
+
+        it "can edit an associated post" do
+          put(:suspend, params: suspend_params.merge(
+            post_action: 'edit',
+            post_edit: 'this is the edited content'
+          ))
+          post.reload
+          expect(post.deleted_at).to be_blank
+          expect(post.raw).to eq("this is the edited content")
+          expect(response).to be_success
+        end
       end
 
       it "can send a message to the user" do

@@ -36,6 +36,11 @@ export default ComboBoxComponent.extend({
     });
   },
 
+  @computed("content")
+  filterable(content) {
+    return content && content.length >= 15;
+  },
+
   @computed("allCategoriesUrl", "allCategoriesLabel", "noCategoriesUrl", "noCategoriesLabel")
   collectionHeader(allCategoriesUrl, allCategoriesLabel, noCategoriesUrl, noCategoriesLabel) {
     let shortcuts = "";
@@ -69,9 +74,9 @@ export default ComboBoxComponent.extend({
       }).htmlSafe();
     } else {
       if (this.get("noSubcategories")) {
-        content.label = this.get("noCategoriesLabel");
+        content.label = `<span class="category-name">${this.get("noCategoriesLabel")}</span>`;
       } else {
-        content.label = this.get("allCategoriesLabel");
+        content.label = `<span class="category-name">${this.get("allCategoriesLabel")}</span>`;
       }
     }
 
