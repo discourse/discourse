@@ -74,9 +74,9 @@ export default ComboBoxComponent.extend({
       }).htmlSafe();
     } else {
       if (this.get("noSubcategories")) {
-        content.label = this.get("noCategoriesLabel");
+        content.label = `<span class="category-name">${this.get("noCategoriesLabel")}</span>`;
       } else {
-        content.label = this.get("allCategoriesLabel");
+        content.label = `<span class="category-name">${this.get("allCategoriesLabel")}</span>`;
       }
     }
 
