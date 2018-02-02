@@ -540,7 +540,7 @@ posting:
   markdown_linkify_tlds:
     client: true
     type: list
-    default: 'com|gov|net'
+    default: 'com|gov|net|org'
   enable_rich_text_paste:
     client: true
     default: false
