@@ -6,6 +6,9 @@ export default Ember.Controller.extend({
 
   @computed('model.is_group_user')
   showGroupMessages(isGroupUser) {
+    if (!this.siteSettings.enable_personal_messages) {
+      return false;
+    }
     return isGroupUser || (this.currentUser && this.currentUser.admin);
   }
 });
