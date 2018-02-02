@@ -1,10 +1,10 @@
 import BufferedContent from 'discourse/mixins/buffered-content';
-import SiteSetting from 'admin/models/site-setting';
 import SettingComponent from 'admin/mixins/setting-component';
+import Theme from 'admin/models/theme';
 
 export default Ember.Component.extend(BufferedContent, SettingComponent, {
+  layoutName: 'admin/templates/components/site-setting',
   _save() {
-    const setting = this.get('buffered');
-    return SiteSetting.update(setting.get('setting'), setting.get('value'));
+    return this.get('model').saveSettings(this.get('setting.setting'), this.get('buffered.value'));
   }
 });

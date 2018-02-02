@@ -1,0 +1,12 @@
+no_match_setting:
+  type: bool
+  default: "string value"
+
+no_default_setting:
+  type: string
+
+invalid_type_setting:
+  type: listt
+  default: "name|age|last name"
+
+unsupported_setting: 2.5
