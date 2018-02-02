@@ -19,6 +19,7 @@ task "import:ensure_consistency" => :environment do
   update_categories
   update_users
   update_groups
+  update_tag_stats
 
   log "Done!"
 end
@@ -417,6 +418,10 @@ def update_groups
      WHERE id = X.group_id
        AND user_count <> X.count
   SQL
+end
+
+def update_tag_stats
+  Tag.ensure_consistency!
 end
 
 def log(message)
