@@ -63,6 +63,8 @@
     </div>
   {{/if}}
 
+  {{plugin-outlet name="full-page-search-result"}}
+
   {{#load-more selector=".fps-result" action="loadMore"}}
     {{#each model.posts as |result|}}
       <div class='fps-result'>
