@@ -46,6 +46,7 @@
 .topic-category {
   display: flex;
   flex-wrap: wrap;
+  align-items: flex-end;
 
   .topic-header-extra {
     display: inline-block;
