@@ -26,7 +26,7 @@ class ThemeSettingsParser
       raise InvalidYaml.new(e.message)
     end
     raise InvalidYaml.new(I18n.t("themes.settings_errors.invalid_yaml")) unless parsed.is_a?(Hash)
-      
+
     parsed.deep_symbolize_keys!
 
     parsed.each_pair do |setting, value|
