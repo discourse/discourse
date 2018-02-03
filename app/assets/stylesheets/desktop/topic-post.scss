@@ -536,7 +536,6 @@ video {
 
   .topic-header-extra {
     margin: 0 0 0 5px;
-    flex: 1 1 90%;
   }
 }
 
@@ -558,6 +557,7 @@ video {
   h1 {
     line-height: $line-height-medium;
     margin: 0;
+    width: 100%;
   }
 }
 
