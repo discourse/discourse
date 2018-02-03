@@ -20,104 +20,49 @@
   font-weight: bold;
   white-space: nowrap;
   position: relative;
-  display: inline-flex;
-  align-items: center;
-
+  
   .badge-category {
     .d-icon {
       margin-right: 3px;
     }
   }
 
-  &.bar { //bar category style
-    line-height: $line-height-medium;
-    margin-right: 5px;
+  // ----- Bullet 
 
-    span.badge-category {
-      color: $primary;
-      padding: 3px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: inline-flex;
-      align-items: center;
-      justify-content: space-between;
-
-      .extra-info-wrapper & {
-        color: $header-primary;
-      }
-    }
-
-    .badge-category-parent-bg, .badge-category-bg {
-      display: inline-block;
-      padding: 1px;
-
-      &:before {
-        content: "\a0";
-      }
-    }
-  }
-
-  &.none { // no category style
-    color: $primary;
-    margin-right: 5px;
-  }
-
-  &.bullet { //bullet category style
-    display: inline-flex;
-    align-items: center;
+  &.bullet { 
     margin-right: 12px;
-
-    .extra-info-wrapper & {
-      margin-top: .25em;
-    }
-
     span.badge-category {
       color: $primary;
       overflow: hidden;
       text-overflow: ellipsis;
-      line-height: $line-height-medium;
-
-      #search-dropdown & {
-        margin-top: -2px;
-      }
-
       .extra-info-wrapper & {
         color: $header-primary;
       }
     }
-
    .badge-category-parent-bg, .badge-category-bg {
-    width: 10px;
-    height: 10px;
+    width: 9px;
+    height: 9px;
     margin-right: 5px;
     display: inline-block;
-    line-height: $line-height-small;
-
-    &:before {
-      content: "\a0";
     }
-  }
-
-  span {
-      &.badge-category-parent-bg { //subcategory style
+    .badge-category-parent-bg { // Subcategories
+      width: 5px;
+      margin-right: 0;
+      +.badge-category-bg {
         width: 5px;
-        margin-right: 0;
-        & + .badge-category-bg {
-          width: 5px;
-        }
       }
     }
   }
 
+  // ----- Box 
 
-  &.box {  //box category style (apply custom widths to the wrapper, not the children)
-    line-height: $line-height-large;
+  &.box {  
     margin-right: 5px;
-
+    padding: 2px 4px 1px 4px;
+    display: inline-flex;
     span {
       overflow: hidden;
       text-overflow: ellipsis;
-
       &.badge-category-bg, &.badge-category-parent-bg {
         position: absolute;
         top: 0;
@@ -126,7 +71,7 @@
         left: 0;
       }
 
-      &.badge-category-parent-bg { //subcategory style
+      &.badge-category-parent-bg { // Subcategories 
         width: calc(100% - 5px);
         & + .badge-category-bg {
           left: 5px;
@@ -139,22 +84,51 @@
 
       &.badge-category {
         position: relative;
-        padding: 0 5px;
-        margin: 2px 0;
+      }
+    }
+    + .topic-header-extra {
+      padding: 2px 4px 1px 4px;      
+    }
+  }
+
+  // ----- Bar 
+
+  &.bar { 
+    margin-right: 5px;
+
+    span.badge-category {
+      color: $primary;
+      padding: 3px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      .extra-info-wrapper & {
+        color: $header-primary;
+      }
+    }
+
+    .badge-category-parent-bg, .badge-category-bg { // Subcategories
+      display: inline-block;
+      padding: 0 1px;
+
+      &:before {
+        content: "\a0";
       }
     }
   }
+
+  // ----- No category style 
+
+  &.none { 
+    color: $primary;
+    margin-right: 5px;
+  }
+
 }
 
-.autocomplete, td.category {
-  .badge-wrapper {
-    max-width: 230px;
-  }
-}
 
 // Category badge dropdown
 // --------------------------------------------------
-
 
 .list-controls {
   .category-breadcrumb {
