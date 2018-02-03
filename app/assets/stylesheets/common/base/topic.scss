@@ -45,18 +45,40 @@
   }
 }
 
+.title-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  width: 90%;
+
+  .btn-small {
+    margin: 0 6px 0 0;
+  }
+
+  a.topic-featured-link {
+    display: inline-block;
+  }
+}
+
+h1 {
+  margin: 0 0 4px 0;
+  width: 90%;
+}
+
+a.badge-category {
+  margin-top: 5px;
+}
+
+
+
 
 #topic-title {
   .title-wrapper {
-    float: left;
+    display: flex;
+    flex-wrap: wrap;
     width: 90%;
 
     .btn-small {
       margin: 0 6px 0 0;
-    }
-
-    .badge-wrapper {
-      margin-right: 12px;
     }
 
     a.topic-featured-link {
@@ -66,6 +88,7 @@
 
   h1 {
     margin: 0 0 4px 0;
+    width: 90%;
   }
 
   a.badge-category {
