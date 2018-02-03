@@ -288,7 +288,7 @@ function isAuthorizedImage(fileName){
 
 export function authorizedExtensions() {
   const exts = Discourse.User.currentProp('staff') ? [...extensions(), ...staffExtensions()] : extensions();
-  return exts.join(", ");
+  return exts.filter(ext => ext.length > 0).join(", ");
 }
 
 export function authorizedImagesExtensions() {

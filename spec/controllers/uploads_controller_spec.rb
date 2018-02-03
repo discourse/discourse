@@ -153,13 +153,11 @@ describe UploadsController do
         SiteSetting.authorized_extensions_for_staff = "*"
         @user.update_columns(moderator: true)
 
-        message = MessageBus.track_publish('/uploads/composer') do
-          post :create, params: {
-            file: text_file,
-            type: "composer",
-            format: :json
-          }
-        end.first
+        post :create, params: {
+          file: text_file,
+          type: "composer",
+          format: :json
+        }
 
         expect(response).to be_success
         data = JSON.parse(response.body)

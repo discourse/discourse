@@ -80,7 +80,7 @@ class Validators::UploadValidator < ActiveModel::Validator
       return true if SiteSetting.authorized_extensions_for_staff.include?("*")
     end
     extensions = upload.for_theme ? SiteSetting.theme_authorized_extensions : SiteSetting.authorized_extensions
-    return extensions.include?("*")
+    extensions.include?("*")
   end
 
   def extension_authorized?(upload, extension, extensions)
