@@ -168,13 +168,11 @@ describe UploadsController do
         SiteSetting.authorized_extensions = ""
         SiteSetting.authorized_extensions_for_staff = "*"
 
-        message = MessageBus.track_publish('/uploads/composer') do
-          post :create, params: {
-            file: text_file,
-            type: "composer",
-            format: :json
-          }
-        end.first
+        post :create, params: {
+          file: text_file,
+          type: "composer",
+          format: :json
+        }
 
         data = JSON.parse(response.body)
         expect(data["errors"].first).to eq(I18n.t("upload.unauthorized", authorized_extensions: ''))
