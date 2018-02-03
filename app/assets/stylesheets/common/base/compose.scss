@@ -96,19 +96,36 @@
       color: $primary-high;
     }
     .reply-details {
-      max-width: calc(100% - 100px);
+      max-width: calc(100% - 175px);
+      flex: 1 1 auto;
+      white-space: nowrap;
     }
     .composer-action-title {
       display: inline-flex;
       align-items: center;
-      justify-content: space-between;
+      width: auto;
+      max-width: 100%;
+      
+      .avatar {
+        width: 20px;
+      }
 
-      .topic-link, .user-link, .username {
+      .topic-link, .user-link {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        max-width: calc(100%-125px);
         margin-right: 5px;
+      }
+
+      .username {
+        margin-right: 5px;
+        max-width: 100px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        @media screen and (max-width: 500px) {
+          display: none;
+        }
       }
 
       .d-icon {
