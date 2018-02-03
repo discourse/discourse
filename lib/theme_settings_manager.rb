@@ -61,7 +61,6 @@ class ThemeSettingsManager
     true
   end
 
-
   class String  < self; end
   class List    < self; end
 
