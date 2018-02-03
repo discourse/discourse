@@ -4,6 +4,7 @@ describe EmbedController do
 
   let(:host) { "eviltrout.com" }
   let(:embed_url) { "http://eviltrout.com/2013/02/10/why-discourse-uses-emberjs.html" }
+  let(:embed_url_secure) { "https://eviltrout.com/2013/02/10/why-discourse-uses-emberjs.html" }
   let(:discourse_username) { "eviltrout" }
 
   it "is 404 without an embed_url" do
@@ -95,7 +96,7 @@ describe EmbedController do
       it "displays the right view" do
         topic_embed = Fabricate(:topic_embed, embed_url: embed_url)
 
-        get '/embed/comments', params: { embed_url: embed_url }, headers: headers
+        get '/embed/comments', params: { embed_url: embed_url_secure }, headers: headers
 
         expect(response.body).to match(I18n.t('embed.start_discussion'))
       end

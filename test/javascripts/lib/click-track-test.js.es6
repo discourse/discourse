@@ -70,7 +70,8 @@ QUnit.test("does not track clicks on back buttons", function(assert) {
 });
 
 QUnit.test("does not track clicks in quotes", function(assert) {
-  assert.ok(track(generateClickEventOn('.inside-quote')));
+  track(generateClickEventOn('.inside-quote'));
+  assert.ok(DiscourseURL.redirectTo.calledWith("http://discuss.domain.com"));
 });
 
 QUnit.test("does not track clicks on category badges", assert => {

@@ -38,6 +38,10 @@ function addMention(buffer, matches, state) {
 }
 
 export function setup(helper) {
+  helper.registerOptions((opts, siteSettings) => {
+    opts.features.mentions = !!siteSettings.enable_mentions;
+  });
+
   helper.registerPlugin(md => {
 
     const rule = {

@@ -14,6 +14,15 @@ export default ComboBoxComponent.extend({
   rowComponent: "category-row",
   noneRowComponent: "none-category-row",
   allowSubCategories: true,
+  permissionType: PermissionType.FULL,
+
+  init() {
+    this._super();
+
+    this.get("rowComponentOptions").setProperties({
+      allowUncategorized: this.get("allowUncategorized"),
+    });
+  },
 
   filterComputedContent(computedContent, computedValue, filter) {
     if (isEmpty(filter)) { return computedContent; }
@@ -86,7 +95,11 @@ export default ComboBoxComponent.extend({
         return false;
       }
 
-      return get(c, "permission") === PermissionType.FULL;
+      if (this.get("permissionType")) {
+        return this.get("permissionType") === get(c, "permission");
+      }
+
+      return true;
     });
   }
 });

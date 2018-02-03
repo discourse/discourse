@@ -357,7 +357,12 @@ module ApplicationHelper
 
   # If there is plugin HTML return that, otherwise yield to the template
   def replace_plugin_html(name)
-    build_plugin_html(name).presence || yield
+    if (html = build_plugin_html(name)).present?
+      html
+    else
+      yield
+      nil
+    end
   end
 
   def theme_lookup(name)

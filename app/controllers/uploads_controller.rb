@@ -2,7 +2,8 @@ require "mini_mime"
 require_dependency 'upload_creator'
 
 class UploadsController < ApplicationController
-  before_action :ensure_logged_in, except: [:show]
+  requires_login except: [:show]
+
   skip_before_action :preload_json, :check_xhr, :redirect_to_login_if_required, only: [:show]
 
   def create
@@ -26,17 +27,22 @@ class UploadsController < ApplicationController
     # note, atm hijack is processed in its own context and has not access to controller
     # longer term we may change this
     hijack do
-      info = UploadsController.create_upload(
-        current_user: me,
-        file: file,
-        url: url,
-        type: type,
-        for_private_message: for_private_message,
-        pasted: pasted,
-        is_api: is_api,
-        retain_hours: retain_hours
-      )
-      render json: UploadsController.serialize_upload(info), status: Upload === info ? 200 : 422
+      begin
+        info = UploadsController.create_upload(
+          current_user: me,
+          file: file,
+          url: url,
+          type: type,
+          for_private_message: for_private_message,
+          pasted: pasted,
+          is_api: is_api,
+          retain_hours: retain_hours
+        )
+      rescue => e
+        render json: failed_json.merge(message: e.message&.split("\n")&.first), status: 422
+      else
+        render json: UploadsController.serialize_upload(info), status: Upload === info ? 200 : 422
+      end
     end
   end
 

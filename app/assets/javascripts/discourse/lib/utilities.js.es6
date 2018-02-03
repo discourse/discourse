@@ -193,6 +193,8 @@ export function validateUploadedFiles(files, opts) {
 }
 
 export function validateUploadedFile(file, opts) {
+  if (!authorizesOneOrMoreExtensions()) return false;
+
   opts = opts || {};
 
   const name = file && file.name;
@@ -299,6 +301,21 @@ export function authorizesAllExtensions() {
          Discourse.User.currentProp('staff'));
 }
 
+export function authorizesOneOrMoreExtensions() {
+  if (authorizesAllExtensions()) return true;
+
+  return Discourse.SiteSettings.authorized_extensions
+          .split("|")
+          .filter(ext => ext)
+          .length > 0;
+}
+
+export function authorizesOneOrMoreImageExtensions() {
+  if (authorizesAllExtensions()) return true;
+
+  return imagesExtensions().length > 0;
+}
+
 export function isAnImage(path) {
   return (/\.(png|jpe?g|gif|bmp|tiff?|svg|webp|ico)$/i).test(path);
 }
@@ -313,13 +330,13 @@ function isGUID(value) {
 
 function imageNameFromFileName(fileName) {
   const split = fileName.split('.');
-  const name = split[split.length-2];
+  let name = split[split.length - 2];
 
   if (exports.isAppleDevice() && isGUID(name)) {
-    return I18n.t('upload_selector.default_image_alt_text');
+    name = I18n.t('upload_selector.default_image_alt_text');
   }
 
-  return name;
+  return encodeURIComponent(name);
 }
 
 export function allowsImages() {
@@ -356,27 +373,27 @@ export function getUploadMarkdown(upload) {
 }
 
 export function displayErrorForUpload(data) {
-  // deal with meaningful errors first
   if (data.jqXHR) {
     switch (data.jqXHR.status) {
       // cancelled by the user
-      case 0: return;
+      case 0:
+        return;
 
-              // entity too large, usually returned from the web server
+      // entity too large, usually returned from the web server
       case 413:
-              var type = uploadTypeFromFileName(data.files[0].name);
-              var maxSizeKB = Discourse.SiteSettings['max_' + type + '_size_kb'];
-              bootbox.alert(I18n.t('post.errors.file_too_large', { max_size_kb: maxSizeKB }));
-              return;
+        const type = uploadTypeFromFileName(data.files[0].name);
+        const max_size_kb = Discourse.SiteSettings[`max_${type}_size_kb`];
+        bootbox.alert(I18n.t('post.errors.file_too_large', { max_size_kb }));
+        return;
 
-              // the error message is provided by the server
+      // the error message is provided by the server
       case 422:
-              if (data.jqXHR.responseJSON.message) {
-                bootbox.alert(data.jqXHR.responseJSON.message);
-              } else {
-                bootbox.alert(data.jqXHR.responseJSON.join("\n"));
-              }
-              return;
+        if (data.jqXHR.responseJSON.message) {
+          bootbox.alert(data.jqXHR.responseJSON.message);
+        } else {
+          bootbox.alert(data.jqXHR.responseJSON.join("\n"));
+        }
+        return;
     }
   } else if (data.errors && data.errors.length > 0) {
     bootbox.alert(data.errors.join("\n"));
@@ -441,6 +458,55 @@ export function isAppleDevice() {
   return navigator.userAgent.match(/(iPad|iPhone|iPod)/g) &&
     navigator.userAgent.match(/Safari/g) &&
     !navigator.userAgent.match(/Trident/g);
+}
+
+const toArray = items => {
+  items = items || [];
+
+  if (!Array.isArray(items)) {
+    return Array.from(items);
+  }
+
+  return items;
+};
+
+export function clipboardData(e, canUpload) {
+  const clipboard = e.clipboardData ||
+                      e.originalEvent.clipboardData ||
+                      e.delegatedEvent.originalEvent.clipboardData;
+
+  const types = toArray(clipboard.types);
+  let files = toArray(clipboard.files);
+
+  if (types.includes("Files") && files.length === 0) { // for IE
+    files = toArray(clipboard.items).filter(i => i.kind === "file");
+  }
+
+  canUpload = files && canUpload && !types.includes("text/plain");
+  const canUploadImage = canUpload && files.filter(f => f.type.match('^image/'))[0];
+  const canPasteHtml = Discourse.SiteSettings.enable_rich_text_paste && types.includes("text/html") && !canUploadImage;
+
+  return { clipboard, types, canUpload, canPasteHtml };
+}
+
+export function fillMissingDates(data, startDate, endDate) {
+  const startMoment = moment(startDate, "YYYY-MM-DD");
+  const endMoment = moment(endDate, "YYYY-MM-DD");
+  const countDays = endMoment.diff(startMoment, 'days');
+  let currentMoment = startMoment;
+
+  for (let i = 0; i <= countDays; i++) {
+    let date = (data[i]) ? moment(data[i].x, "YYYY-MM-DD") : null;
+    if (i === 0 && date.isAfter(startMoment)) {
+      data.splice(i, 0, { "x" : startMoment.format("YYYY-MM-DD"), 'y': 0 });
+    } else {
+      if (!date || date.isAfter(moment(currentMoment))) {
+        data.splice(i, 0, { "x" : currentMoment, 'y': 0 });
+      }
+    }
+    currentMoment = moment(currentMoment).add(1, "day").format("YYYY-MM-DD");
+  }
+  return data;
 }
 
 // This prevents a mini racer crash

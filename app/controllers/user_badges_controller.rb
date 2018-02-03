@@ -30,7 +30,7 @@ class UserBadgesController < ApplicationController
   def username
     params.permit [:grouped]
 
-    user = fetch_user_from_params
+    user = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
     user_badges = user.user_badges
 
     if params[:grouped]

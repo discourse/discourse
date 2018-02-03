@@ -7,9 +7,10 @@
 
 de:
   site_settings:
-    poll_enabled: "Benutzern das Erstellen von Umfragen erlauben?"
+    poll_enabled: "Umfragen erlauben?"
     poll_maximum_options: "Maximale Anzahl der in einer Umfrage erlaubten Optionen."
     poll_edit_window_mins: "Anzahl Minuten nach der Erstellung eines Beitrags, in denen Umfragen bearbeitet werden können."
+    poll_minimum_trust_level_to_create: "Erforderliche Vertrauensstufe, um Umfragen zu erstellen. "
   poll:
     multiple_polls_without_name: "Es gibt mehrere namenlose Umfragen. Benutze das Attribute '<code>name</code>', um deine Umfragen eindeutig identifizierbar zu machen."
     multiple_polls_with_same_name: "Es gibt mehre Umfragen mit dem selben Namen: <strong>%{name}</strong>. Benutze das Attribute '<code>name</code>', um deine Umfragen eindeutig identifizierbar zu machen."
@@ -39,5 +40,6 @@ de:
     poll_must_be_open_to_vote: "Die Umfrage muss zum Abstimmen gestartet sein."
     topic_must_be_open_to_toggle_status: "Damit du den Status ändern kannst, muss das Thema geöffnet sein."
     only_staff_or_op_can_toggle_status: "Nur ein Team-Mitglied und der Autor des Beitrags können den Status der Umfrage ändern."
+    insufficient_rights_to_create: "Du darfst keine Umfragen erstellen."
     email:
       link_to_poll: "Klicke hier, um die Umfrage zu sehen."

@@ -1,0 +1,25 @@
+<div class='reason-controls'>
+  <label>
+    <div class='suspend-reason-label'>
+      {{#if siteSettings.hide_suspension_reasons}}
+        {{{i18n 'admin.user.suspend_reason_hidden_label'}}}
+      {{else}}
+        {{{i18n 'admin.user.suspend_reason_label'}}}
+      {{/if}}
+    </div>
+  </label>
+  {{text-field
+    value=reason
+    class="suspend-reason"
+    placeholderKey="admin.user.suspend_reason_placeholder"}}
+</div>
+
+<label>
+  <div class='suspend-message-label'>
+    {{i18n "admin.user.suspend_message"}}
+  </div>
+</label>
+{{textarea
+  value=message
+  class="suspend-message"
+  placeholder=(i18n "admin.user.suspend_message_placeholder")}}

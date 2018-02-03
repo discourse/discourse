@@ -765,7 +765,7 @@ describe PostCreator do
     let(:target_user1) { Fabricate(:coding_horror) }
     let(:target_user2) { Fabricate(:moderator) }
     let(:group) do
-      g = Fabricate.build(:group)
+      g = Fabricate.build(:group, messageable_level: Group::ALIAS_LEVELS[:everyone])
       g.add(target_user1)
       g.add(target_user2)
       g.save
@@ -773,10 +773,12 @@ describe PostCreator do
     end
     let(:unrelated) { Fabricate(:user) }
     let(:post) do
-      PostCreator.create(user, title: 'hi there welcome to my topic',
-                               raw: "this is my awesome message @#{unrelated.username_lower}",
-                               archetype: Archetype.private_message,
-                               target_group_names: group.name)
+      PostCreator.create!(user,
+        title: 'hi there welcome to my topic',
+        raw: "this is my awesome message @#{unrelated.username_lower}",
+        archetype: Archetype.private_message,
+        target_group_names: group.name
+      )
     end
 
     it 'can post to a group correctly' do

@@ -36,12 +36,12 @@ gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox', '1.8.28'
+gem 'onebox', '1.8.36'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 
 gem 'ember-rails', '0.18.5'
-gem 'ember-source'
+gem 'ember-source', '2.13.3'
 gem 'ember-handlebars-template', '0.7.5'
 gem 'barber'
 
@@ -53,14 +53,13 @@ gem 'fast_xs'
 
 gem 'fast_xor'
 
-# Forked until https://github.com/sdsykes/fastimage/pull/93 is merged
-gem 'discourse_fastimage', require: 'fastimage'
+gem 'fastimage'
 
 gem 'aws-sdk-s3', require: false
 gem 'excon', require: false
 gem 'unf', require: false
 
-gem 'email_reply_trimmer', '0.1.8'
+gem 'email_reply_trimmer', '0.1.9'
 
 # Forked until https://github.com/toy/image_optim/pull/149 is merged
 gem 'discourse_image_optim', require: 'image_optim'
@@ -83,7 +82,7 @@ gem 'omniauth-oauth2', require: false
 
 gem 'omniauth-google-oauth2'
 gem 'oj'
-gem 'pg'
+gem 'pg', '~> 0.21.0'
 gem 'pry-rails', require: false
 gem 'r2', '~> 0.2.5', require: false
 gem 'rake'
@@ -166,7 +165,6 @@ gem 'gc_tracer', require: false, platform: :mri
 
 # required for feed importing and embedding
 gem 'ruby-readability', require: false
-gem 'simple-rss', require: false
 
 gem 'stackprof', require: false, platform: :mri
 gem 'memory_profiler', require: false, platform: :mri

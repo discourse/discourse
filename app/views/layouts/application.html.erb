@@ -36,7 +36,7 @@
     <%- end %>
 
     <%- if staff? %>
-      <script src="<%= Discourse.base_uri %>/extra-locales/admin"></script>
+      <script src="<%= ExtraLocalesController.url('admin') %>"></script>
       <%= preload_script "admin" %>
     <%- end %>
 

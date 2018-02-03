@@ -1,6 +1,5 @@
 #reply-control {
   .reply-area {
-    max-width: 1500px;
     margin: 0 auto;
     padding: 5px 15px;
     box-sizing: border-box;
@@ -18,21 +17,19 @@
 }
 
 .edit-title {
-  .d-editor-preview {
+  .d-editor-preview-wrapper {
     margin-top: -43px;
   }
   &:not(.private-message) {
-    .d-editor-preview {
+    .d-editor-preview-wrapper {
       @media screen and (max-width: 955px) {
         margin-top: -79px;
       }
     }
   }
   
-  
-  
   .with-tags {
-    .d-editor-preview {
+    .d-editor-preview-wrapper {
       margin-top: -79px;
       @media screen and (max-width: 900px) {
         margin-top: -116px;
@@ -50,7 +47,7 @@
 .open {
   .grippie {
     cursor: row-resize;
-    padding: 4px 0px;
+    padding: 4px 0;
     background: $tertiary;
     &:before {
       content: '';
@@ -76,7 +73,7 @@
   bottom: 10px;
   left: 51%;
   overflow-y: auto;
-  z-index: 110;
+  z-index: z("composer","popover");
   padding: 10px 10px 35px 10px;
   box-shadow: 3px 3px 3px rgba(0,0,0, 0.34);
   background: $highlight-medium;
@@ -103,10 +100,10 @@
     bottom: 10px;
     color: $primary;
     opacity: 0.5;
-    font-size: 1.071em;
+    font-size: $font-up-1;
     &:before {
       content: 'esc';
-      font-size: 0.85em;
+      font-size: $font-down-1;
       margin-right: 0.5em;
     }
   }
@@ -145,7 +142,7 @@
   background-color: $tertiary-low;
 
   a[href] {
-    color: $primary-medium;
+    color: $primary;
   }
 
   .posts-count {
@@ -161,9 +158,13 @@
     .fa, .blurb {
       color: dark-light-choose($primary-high, $secondary-medium);
     }
+    span.topic {
+      display: flex;
+      flex-wrap: wrap;
+    }
   }
   .badge-wrapper {
-    padding-left: 5px;
+    margin-left: 5px;
   }
 }
 
@@ -174,7 +175,7 @@
 
 .composer-bottom-right {
   a {
-    color: $primary-medium;
+    color: $primary-high;
     &:hover {
       color: $tertiary;
     }

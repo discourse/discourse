@@ -306,6 +306,10 @@ export default function() {
       return response(200, [ { id: 2222, post_number: 2222 } ]);
     });
 
+    this.get("/posts/:post_id/reply-ids.json", () => {
+      return response(200, { direct_reply_ids: [45], all_reply_ids: [45, 100] });
+    });
+
     this.post('/user_badges', () => response(200, fixturesByUrl['/user_badges']));
     this.delete('/user_badges/:badge_id', success);
 
@@ -395,6 +399,12 @@ export default function() {
       return response(200, [
         {"term":"foobar","searches":35,"click_through":6,"unique":16}
       ]);
+    });
+
+    this.get('/admin/logs/search_logs/term/ruby.json', () => {
+      return response(200, {
+        "term":{"type":"search_log_term","title":"Search Count","data":[{"x":"2017-07-20","y":2}]}
+      });
     });
 
     this.get('/onebox', request => {

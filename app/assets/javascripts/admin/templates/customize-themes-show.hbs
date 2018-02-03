@@ -1,5 +1,5 @@
 <div class="show-current-style">
-  <h2>
+  <h1>
     {{#if editingName}}
       {{text-field value=model.name autofocus="true"}}
       {{d-button action="finishedEditingName" class="btn-primary btn-small submit-edit" icon="check"}}
@@ -7,7 +7,7 @@
     {{else}}
       {{model.name}} <a {{action "startEditingName"}}>{{d-icon "pencil"}}</a>
     {{/if}}
-  </h2>
+  </h1>
 
   {{#if model.remote_theme}}
   <p>

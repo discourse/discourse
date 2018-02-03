@@ -10,7 +10,7 @@ createWidget('admin-menu-button', {
       className,
       action: attrs.action,
       icon: attrs.icon,
-      label: `topic.${attrs.label}`,
+      label: attrs.fullLabel || `topic.${attrs.label}`,
       secondaryAction: 'hideAdminMenu'
     }));
   }
@@ -63,8 +63,13 @@ createWidget('topic-admin-menu-button', {
 
     const $button = $(e.target).closest('button');
     const position = $button.position();
+    const rtl = $('html').hasClass('rtl');
     position.left = position.left;
     position.outerHeight = $button.outerHeight();
+
+    if (rtl) {
+        position.left -= 217 - $button.outerWidth();
+    }
 
     if (this.attrs.fixed) {
       position.left += $button.width() - 203;
@@ -114,6 +119,7 @@ export default createWidget('topic-admin-menu', {
 
     const topic = attrs.topic;
     const details = topic.get('details');
+
     if (details.get('can_delete')) {
       buttons.push({ className: 'topic-admin-delete',
                      buttonClass: 'btn-danger',
@@ -182,6 +188,14 @@ export default createWidget('topic-admin-menu', {
                      action: isPrivateMessage ? 'convertToPublicTopic' : 'convertToPrivateMessage',
                      icon: isPrivateMessage ? 'comment' : 'envelope',
                      label: isPrivateMessage ? 'actions.make_public' : 'actions.make_private' });
+    }
+
+    if (this.currentUser.get('staff')) {
+      buttons.push({
+        action: 'showModerationHistory',
+        icon: 'list',
+        fullLabel: 'admin.flags.moderation_history'
+      });
     }
 
     const extraButtons = applyDecorators(this, 'adminMenuButtons', this.attrs, this.state);

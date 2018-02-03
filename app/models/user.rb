@@ -166,9 +166,12 @@ class User < ActiveRecord::Base
     SiteSetting.min_username_length.to_i..SiteSetting.max_username_length.to_i
   end
 
-  def self.username_available?(username)
+  def self.username_available?(username, email = nil)
     lower = username.downcase
-    !reserved_username?(lower) && !User.where(username_lower: lower).exists?
+    return false if reserved_username?(lower)
+    return true  if !User.exists?(username_lower: lower)
+    # staged users can use the same username since they will take over the account
+    email.present? && User.joins(:user_emails).exists?(staged: true, username_lower: lower, user_emails: { primary: true, email: email })
   end
 
   def self.reserved_username?(username)
@@ -215,6 +218,7 @@ class User < ActiveRecord::Base
   end
 
   EMAIL = %r{([^@]+)@([^\.]+)}
+  FROM_STAGED = "from_staged".freeze
 
   def self.new_from_params(params)
     user = User.new
@@ -222,6 +226,19 @@ class User < ActiveRecord::Base
     user.email = params[:email]
     user.password = params[:password]
     user.username = params[:username]
+    user
+  end
+
+  def self.unstage(params)
+    if user = User.where(staged: true).with_email(params[:email].strip.downcase).first
+      params.each { |k, v| user.send("#{k}=", v) }
+      user.staged = false
+      user.active = false
+      user.custom_fields[FROM_STAGED] = true
+      user.notifications.destroy_all
+
+      DiscourseEvent.trigger(:user_unstaged, user)
+    end
     user
   end
 
@@ -309,6 +326,7 @@ class User < ActiveRecord::Base
     @unread_notifications = nil
     @unread_total_notifications = nil
     @unread_pms = nil
+    @user_fields = nil
     super
   end
 
@@ -368,7 +386,7 @@ class User < ActiveRecord::Base
 
   def read_first_notification?
     if (trust_level > TrustLevel[1] ||
-        created_at < TRACK_FIRST_NOTIFICATION_READ_DURATION.seconds.ago)
+        (first_seen_at.present? && first_seen_at < TRACK_FIRST_NOTIFICATION_READ_DURATION.seconds.ago))
 
       return true
     end
@@ -684,8 +702,16 @@ class User < ActiveRecord::Base
     UserHistory.for(self, :suspend_user).order('id DESC').first
   end
 
+  def full_suspend_reason
+    return suspend_record.try(:details) if suspended?
+  end
+
   def suspend_reason
-    suspend_record.try(:details) if suspended?
+    if details = full_suspend_reason
+      return details.split("\n")[0]
+    end
+
+    nil
   end
 
   # Use this helper to determine if the user has a particular trust level.
@@ -975,6 +1001,10 @@ class User < ActiveRecord::Base
       self.user_stat&.time_read
   end
 
+  def from_staged?
+    custom_fields[User::FROM_STAGED]
+  end
+
   protected
 
   def badge_grant
@@ -1066,8 +1096,7 @@ class User < ActiveRecord::Base
     if SiteSetting.must_approve_users
       Jobs.enqueue(:critical_user_email,
         type: :signup_after_approval,
-        user_id: id,
-        email_token: email_tokens.first.token
+        user_id: id
       )
     end
   end
@@ -1145,7 +1174,7 @@ end
 #  username                  :string(60)       not null
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
-#  name                      :string
+#  name                      :string(255)
 #  seen_notification_id      :integer          default(0), not null
 #  last_posted_at            :datetime
 #  password_hash             :string(64)
@@ -1167,15 +1196,13 @@ end
 #  flag_level                :integer          default(0), not null
 #  ip_address                :inet
 #  moderator                 :boolean          default(FALSE)
-#  title                     :string
+#  title                     :string(255)
 #  uploaded_avatar_id        :integer
-#  locale                    :string(10)
 #  primary_group_id          :integer
+#  locale                    :string(10)
 #  registration_ip_address   :inet
-#  trust_level_locked        :boolean          default(FALSE), not null
 #  staged                    :boolean          default(FALSE), not null
 #  first_seen_at             :datetime
-#  blizzard_avatar           :string
 #  silenced_till             :datetime
 #  group_locked_trust_level  :integer
 #  manual_locked_trust_level :integer

@@ -107,7 +107,7 @@ fr:
           other: "%{count} années plus tard"
       previous_month: 'Mois précédent'
       next_month: 'Mois suivant'
-      placeholder: Sélectionner une date
+      placeholder: date
     share:
       topic: 'partager ce sujet'
       post: 'message #%{postNumber}'
@@ -265,6 +265,7 @@ fr:
     uploading: "Envoi en cours…"
     uploading_filename: "Envoi de {{filename}}…"
     uploaded: "Envoyé !"
+    pasting: "Coller..."
     enable: "Activer"
     disable: "Désactiver"
     undo: "Annuler"
@@ -459,7 +460,6 @@ fr:
       '14': "En attente"
     categories:
       all: "toutes les catégories"
-      all_subcategories: "toutes"
       no_subcategory: "aucune"
       category: "Catégorie"
       category_list: "Afficher la liste des catégories"
@@ -539,7 +539,6 @@ fr:
       disable_jump_reply: "Ne pas aller à mon nouveau message après avoir répondu"
       dynamic_favicon: "Faire apparaître le nombre de sujets récemment créés ou mis à jour sur l'icône navigateur"
       theme_default_on_all_devices: "En faire mon thème par défaut sur tous mes périphériques"
-      allow_private_messages: "Autoriser les autres utilisateurs à m'envoyer des messages privés"
       external_links_in_new_tab: "Ouvrir tous les liens externes dans un nouvel onglet"
       enable_quoting: "Proposer de citer le texte sélectionné"
       change: "modifier"
@@ -653,6 +652,7 @@ fr:
         title: "Modifier votre image de profil"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basé sur"
         gravatar_title: "Modifier votre avatar sur le site de Gravatar"
+        gravatar_failed: "Impossible de récupérer le Gravatar. En existe-t-il un associé à cette adresse courriel ?"
         refresh_gravatar_title: "Actualiser votre Gravatar"
         letter_based: "Image de profil attribuée par le système"
         uploaded_avatar: "Avatar personnalisé"
@@ -762,7 +762,6 @@ fr:
         title: "Invitations"
         user: "Utilisateurs"
         sent: "Envoyé"
-        none: "Il n'y a pas d'invitations en attente à afficher."
         truncated:
           one: "Afficher la première invitation."
           other: "Afficher les {{count}} premières invitations."
@@ -1092,6 +1091,7 @@ fr:
       saved_local_draft_tip: "sauvegardé en local"
       similar_topics: "Votre sujet est similaire à…"
       drafts_offline: "sauvegardé hors ligne"
+      group_mentioned_limit: "<b>Attention !</b> Vous avez mentionné <a href='{{group_link}}'>{{group}}</a>, cependant ce groupe a plus de membres que le nombre de mentions limite de {{max}} utilisateurs configuré par l'administrateur. Personne ne sera notifié."
       group_mentioned:
         one: "En mentionnant {{group}}, vous êtes sur le point de notifier <a href='{{group_link}}'>1 personne</a> – êtes-vous sûr ?"
         other: "En mentionnant {{group}}, vous êtes sur le point de notifier <a href='{{group_link}}'>{{count}} personnes</a> – êtes-vous sûr ?"
@@ -1154,7 +1154,8 @@ fr:
       ulist_title: "Liste à puces"
       list_item: "Élément"
       help: "Aide Markdown"
-      toggler: "cacher ou afficher le panneau d'édition"
+      collapse: "réduire le panneau d'édition"
+      abandon: "fermer le panneau d'édition et supprimer le brouillon"
       modal_ok: "OK"
       modal_cancel: "Annuler"
       cant_send_pm: "Désolé, vous ne pouvez pas envoyer de message à l'utilisateur %{username}."
@@ -1163,6 +1164,13 @@ fr:
         body: "Pour le moment, ce message est uniquement envoyé à vous-même !"
       admin_options_title: "Paramètres optionnels pour ce sujet"
     notifications:
+      tooltip:
+        regular:
+          one: "1 notification non vue"
+          other: "{{count}} notifications non vues"
+        message:
+          one: "1 message non lu"
+          other: "{{count}} messages non lus"
       title: "notifications des mentions de votre @pseudo, des réponses à vos messages, à vos sujets, etc."
       none: "Impossible de charger les notifications pour le moment."
       empty: "Aucune notification trouvée."
@@ -1198,8 +1206,6 @@ fr:
         posted: "Message par"
         edited: "Modifier votre message par"
         liked: "A aimé votre message"
-        private_message: "Message privé de"
-        invited_to_private_message: "Invité pour un message privé par"
         invited_to_topic: "Invité à un sujet par"
         invitee_accepted: "Invitation acceptée par"
         moved_post: "Votre message a été déplacé par"
@@ -1213,7 +1219,6 @@ fr:
         quoted: '{{username}} vous a cité dans « {{topic}} » - {{site_title}}'
         replied: '{{username}} vous a répondu dans « {{topic}} » - {{site_title}}'
         posted: '{{username}} a posté dans « {{topic}} » - {{site_title}}'
-        private_message: '{{username}} vous a envoyé un message privé dans « {{topic}} » - {{site_title}}'
         linked: '{{username}} a créé un lien vers votre message posté dans « {{topic}} » - {{site_title}}'
     upload_selector:
       title: "Ajouter une image"
@@ -1229,6 +1234,7 @@ fr:
       uploading: "En cours d'envoi"
       select_file: "Sélectionner un fichier"
       image_link: "lien vers lequel l'image pointera"
+      default_image_alt_text: image
     search:
       sort_by: "Trier par"
       relevance: "Pertinence"
@@ -1241,7 +1247,7 @@ fr:
       too_short: "Votre terme de recherche est trop court."
       result_count:
         one: "1 résultat pour <span class='term'>{{term}}</span>"
-        other: "{{count}} résultats pour <span class='term'>{{term}}</span>"
+        other: "{{count}}{{plus}} résultats pour <span class='term'>{{term}}</span>"
       title: "rechercher des sujets, messages, utilisateurs ou catégories"
       no_results: "Aucun résultat."
       no_more_results: "Aucun résultat supplémentaire."
@@ -1283,10 +1289,10 @@ fr:
           first: qui sont les premiers messages
           pinned: qui sont épinglés
           unpinned: qui ne sont pas épinglés
-          seen: j'ai lu
+          seen: que j'ai lu
           unseen: je n'ai pas lu
           wiki: qui sont des wikis
-          images: y compris les images
+          images: inclure le(s) images(s)
           all_tags: Contient tous les tags
         statuses:
           label: Dont les sujets
@@ -1549,7 +1555,6 @@ fr:
         visible: "Rendre visible"
         reset_read: "Réinitialiser les données de lecture"
         make_public: "Rendre le sujet public"
-        make_private: "Rendre le sujet privé"
       feature:
         pin: "Épingler le sujet"
         unpin: "Désépingler le sujet"
@@ -1670,7 +1675,18 @@ fr:
       multi_select:
         select: 'sélectionner'
         selected: 'sélectionnés ({{count}})'
-        select_replies: 'selectionner +réponses'
+        select_post:
+          label: 'sélectionner'
+          title: 'Ajouter le message à la sélection'
+        selected_post:
+          label: 'sélectionné'
+          title: 'Cliquer pour retirer le message de la sélection'
+        select_replies:
+          label: 'sélectionner + les réponses'
+          title: 'Ajouter le message et toutes ses réponses à la sélection'
+        select_below:
+          label: 'sélectionner + le reste'
+          title: 'Ajouter un message et tout ceux qui suivent à la sélection'
         delete: supprimer la sélection
         cancel: annuler la sélection
         select_all: tout sélectionner
@@ -1679,10 +1695,8 @@ fr:
           one: vous avez sélectionné <b>1</b> message.
           other: Vous avez sélectionné <b>{{count}}</b> messages.
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Citer"
-      edit: "Modifier {{link}} par {{replyAvatar}} {{username}}"
+      edit: "<i class='fa fa-pencil'></i> {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Raison :"
       post_number: "message {{number}}"
       wiki_last_edited_on: "Wiki dernièrement modifié le"
@@ -1751,11 +1765,14 @@ fr:
         share: "partager ce message"
         more: "Plus"
         delete_replies:
-          confirm:
-            one: "Voulez-vous aussi supprimer la réponse qui suit directement ce message ?"
-            other: "Voulez-vous aussi supprimer les  {{count}} réponses qui suivent directement ce message ?"
-          yes_value: "Oui, supprimer les réponses également"
-          no_value: "Non, juste ce message"
+          confirm: "Voulez-vous aussi supprimer les réponses à ce message ?"
+          direct_replies:
+            one: "Oui et 1 réponse directe"
+            other: "Oui et {{count}} réponses directes"
+          all_replies:
+            one: "Oui et la réponse"
+            other: "Oui et les {{count}} réponses"
+          just_the_post: "Non, uniquement ce message"
         admin: "actions d'administration sur le message"
         wiki: "Basculer en mode Wiki"
         unwiki: "Retirer le mode Wiki"
@@ -1850,7 +1867,7 @@ fr:
       delete:
         confirm:
           one: "Êtes-vous sûr de vouloir supprimer ce message ?"
-          other: "Êtes-vous sûr de vouloir supprimer tous ces messages ?"
+          other: "Êtes-vous sûr de vouloir supprimer ces {{count}} messages ?"
       merge:
         confirm:
           one: "Êtes-vous sûr de vouloir fusionner ces messages ?"
@@ -2245,7 +2262,6 @@ fr:
         one: "1 décerné"
         other: "%{count} décernés"
       select_badge_for_title: Sélectionner un badge comme titre
-      none: "<aucun>"
       badge_grouping:
         getting_started:
           name: Initiation
@@ -2272,7 +2288,7 @@ fr:
       selector_no_tags: "aucun tag"
       changed: "tags modifiés :"
       tags: "Tags"
-      choose_for_topic: "choisir des tags optionnels pour ce sujet"
+      choose_for_topic: "tags optionnels"
       delete_tag: "Supprimer le tag"
       delete_confirm:
         one: "Êtes-vous sûr de vouloir supprimer ce tag et l'enlever de 1 sujet auquel il est assigné ?"
@@ -2408,6 +2424,7 @@ fr:
         active_posts: "Messages signalés"
         old_posts: "Anciens messages signalés"
         topics: "Sujets signalés"
+        moderation_history: "Historique de la modération"
         agree: "Accepter"
         agree_title: "Confirmer que le signalement est valide et correcte"
         agree_flag_hide_post: "Accepter et cacher le message"
@@ -2416,8 +2433,6 @@ fr:
         agree_flag_restore_post_title: "Rétablir le message afin que tous les utilisateurs puissent le voir."
         agree_flag: "Accepter et conserver le message"
         agree_flag_title: "Accepter le signalement et conserver le message tel quel."
-        defer_flag: "Ignorer"
-        defer_flag_title: "Retirer le signalement ; il ne nécessite aucune action pour le moment."
         delete: "Supprimer"
         delete_title: "Supprimer le message signalé."
         delete_post_defer_flag: "Supprimer le message et ignorer le signalement"
@@ -2552,7 +2567,7 @@ fr:
           details: "Quand il y a une réponse nouvelle, modifiée, supprimée ou rétablie."
         user_event:
           name: "Événement d'utilisateur"
-          details: "Quand un utilisateur est créé, approuvé ou mis à jour."
+          details: "Quand un utilisateur se connecte, se déconnecte, est créé, approuvé ou mis à jour."
         delivery_status:
           title: "État de l'envoi"
           inactive: "Inactif"
@@ -2617,7 +2632,6 @@ fr:
           label: "Envoyer"
           title: "Envoyer une sauvegarde à cette instance"
           uploading: "Envoi en cours…"
-          success: "« {{filename}} » a été envoyé avec succès."
           error: "Il y a eu une erreur lors de l'envoi de « {{filename}} » : {{message}}"
         operations:
           is_running: "Une opération est en cours d'exécution…"
@@ -2859,6 +2873,15 @@ fr:
             type_placeholder: "résumé, inscription…"
             reply_key_placeholder: "clé de réponse"
             skipped_reason_placeholder: "raison"
+      moderation_history:
+        performed_by: "Réalisé par"
+        no_results: "Il n'y a pas d'historique de modération disponible."
+        actions:
+          delete_user: "Utilisateur Supprimé"
+          suspend_user: "Utilisateur Suspendu"
+          silence_user: "Utilisateur mis sous silence"
+          delete_post: "Message Supprimé"
+          delete_topic: "Sujet supprimé"
       logs:
         title: "Journaux"
         action: "Action"
@@ -2964,12 +2987,17 @@ fr:
             text: "Consolider"
             title: "Créer de nouvelles plages de sous réseaux à bannir s'il y a au moins 'min_ban_entries_for_roll_up' entrées."
         search_logs:
-          title: "Rechercher dans les journaux"
+          title: "Journaux de recherche"
           term: "Terme"
           searches: "Recherches"
           click_through: "Taux de clics"
-          most_viewed_topic: "Sujet le plus vu"
           unique: "Unique"
+          unique_title: "utilisateurs uniques ayant recherché"
+          types:
+            all_search_types: "Tous les types de recherche"
+            header: "Entête"
+            full_page: "Page complète"
+            click_through_only: "Tous (clics uniquement)"
         logster:
           title: "Journal d'erreurs"
       watched_words:

@@ -2,15 +2,42 @@ class CategoryFeaturedTopic < ActiveRecord::Base
   belongs_to :category
   belongs_to :topic
 
-  # Populates the category featured topics
-  def self.feature_topics
+  NEXT_CATEGORY_ID_KEY = 'category-featured-topic:next-category-id'.freeze
+  DEFAULT_BATCH_SIZE = 100
+
+  # Populates the category featured topics.
+  def self.feature_topics(batched: false, batch_size: nil)
     current = {}
     CategoryFeaturedTopic.select(:topic_id, :category_id).order(:rank).each do |f|
       (current[f.category_id] ||= []) << f.topic_id
     end
-    Category.select(:id, :topic_id, :num_featured_topics).find_each do |c|
+
+    batch_size ||= DEFAULT_BATCH_SIZE
+
+    next_category_id = batched ? $redis.get(NEXT_CATEGORY_ID_KEY).to_i : 0
+
+    categories = Category.select(:id, :topic_id, :num_featured_topics)
+      .where('id >= ?', next_category_id)
+      .order('id ASC')
+      .limit(batch_size)
+      .to_a
+
+    if batched
+      if categories.length == batch_size
+        next_id = Category.where('id > ?', categories.last.id).order('id asc').limit(1).pluck(:id)[0]
+        next_id ? $redis.setex(NEXT_CATEGORY_ID_KEY, 1.day, next_id) : clear_batch!
+      else
+        clear_batch!
+      end
+    end
+
+    categories.each do |c|
       CategoryFeaturedTopic.feature_topics_for(c, current[c.id] || [])
     end
+  end
+
+  def self.clear_batch!
+    $redis.del(NEXT_CATEGORY_ID_KEY)
   end
 
   def self.feature_topics_for(c, existing = nil)

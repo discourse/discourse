@@ -89,6 +89,26 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(user.email_confirmed?).to eq(true)
       end
 
+      it "should activate/unstage staged user" do
+        user.update!(staged: true, registration_ip_address: nil)
+
+        user.reload
+        expect(user.staged).to eq(true)
+        expect(user.registration_ip_address).to eq(nil)
+
+        events = DiscourseEvent.track_events do
+          get "/auth/google_oauth2/callback.json"
+        end
+
+        expect(events.map { |event| event[:event_name] }).to include(:user_logged_in, :user_first_logged_in)
+
+        expect(response).to be_success
+
+        user.reload
+        expect(user.staged).to eq(false)
+        expect(user.registration_ip_address).to be_present
+      end
+
       context 'when user has not verified his email' do
         before do
           GoogleUserInfo.create!(google_user_id: '12345', user: user)

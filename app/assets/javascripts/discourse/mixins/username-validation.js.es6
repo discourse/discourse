@@ -25,7 +25,7 @@ export default Ember.Mixin.create({
     this.set('uniqueUsernameValidation', null);
 
 
-    if (accountUsername === this.get('prefilledUsername')) {
+    if (accountUsername && accountUsername === this.get('prefilledUsername')) {
       return InputValidation.create({
         ok: true,
         reason: I18n.t('user.username.prefilled')

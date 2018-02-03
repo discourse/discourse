@@ -1,7 +1,7 @@
 class EmailController < ApplicationController
-  skip_before_action :check_xhr, :preload_json, :redirect_to_login_if_required
   layout 'no_ember'
 
+  skip_before_action :check_xhr, :preload_json, :redirect_to_login_if_required
   before_action :ensure_logged_in, only: :preferences_redirect
 
   def preferences_redirect
@@ -97,7 +97,7 @@ class EmailController < ApplicationController
     end
 
     unless updated
-      redirect_to :back
+      redirect_back fallback_location: path("/")
     else
       if topic
         redirect_to path("/email/unsubscribed?topic_id=#{topic.id}&email=#{user.email}")

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency "auth/current_user_provider"
 require_dependency "rate_limiter"
 
@@ -37,7 +39,7 @@ class Auth::DefaultCurrentUserProvider
     request = @request
 
     user_api_key = @env[USER_API_KEY]
-    api_key = request[API_KEY]
+    api_key = @env.blank? ? nil : request[API_KEY]
 
     auth_token = request.cookies[TOKEN_COOKIE] unless user_api_key || api_key
 
@@ -79,13 +81,16 @@ class Auth::DefaultCurrentUserProvider
       raise Discourse::InvalidAccess.new(I18n.t('invalid_api_credentials'), nil, custom_message: "invalid_api_credentials") unless current_user
       raise Discourse::InvalidAccess if current_user.suspended? || !current_user.active
       @env[API_KEY_ENV] = true
+
+      limiter_min = RateLimiter.new(nil, "admin_api_min_#{api_key}", GlobalSetting.max_admin_api_reqs_per_key_per_minute, 60)
+      limiter_min.performed!
     end
 
     # user api key handling
     if user_api_key
 
-      limiter_min = RateLimiter.new(nil, "user_api_min_#{user_api_key}", SiteSetting.max_user_api_reqs_per_minute, 60)
-      limiter_day = RateLimiter.new(nil, "user_api_day_#{user_api_key}", SiteSetting.max_user_api_reqs_per_day, 86400)
+      limiter_min = RateLimiter.new(nil, "user_api_min_#{user_api_key}", GlobalSetting.max_user_api_reqs_per_minute, 60)
+      limiter_day = RateLimiter.new(nil, "user_api_day_#{user_api_key}", GlobalSetting.max_user_api_reqs_per_day, 86400)
 
       unless limiter_day.can_perform?
         limiter_day.performed!
@@ -254,6 +259,10 @@ class Auth::DefaultCurrentUserProvider
         api_key.user if !api_username || (api_key.user.username_lower == api_username.downcase)
       elsif api_username
         User.find_by(username_lower: api_username.downcase)
+      elsif user_id = request["api_user_id"]
+        User.find_by(id: user_id.to_i)
+      elsif external_id = request["api_user_external_id"]
+        SingleSignOnRecord.find_by(external_id: external_id.to_s).try(:user)
       end
     end
   end

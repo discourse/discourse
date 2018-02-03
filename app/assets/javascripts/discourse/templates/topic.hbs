@@ -12,38 +12,43 @@
     {{#if model.postStream.firstPostPresent}}
       {{#topic-title cancelled="cancelEditingTopic" save="finishedEditingTopic" model=model}}
         {{#if editingTopic}}
+          <div class="edit-topic-title">
           {{#if model.isPrivateMessage}}
             <span class="private-message-glyph">{{d-icon "envelope"}}</span>
           {{/if}}
-
-          {{text-field id="edit-title" value=buffered.title maxlength=siteSettings.max_topic_title_length autofocus="true"}}
-          {{#if showCategoryChooser}}
-            {{category-chooser class="small" value=buffered.category_id}}
-          {{/if}}
-
-          {{#if canEditTags}}
-            {{tag-chooser tags=buffered.tags categoryId=buffered.category_id}}
-          {{/if}}
-
-          {{plugin-outlet name="edit-topic" args=(hash model=model buffered=buffered)}}
-
-          <div class="edit-controls">
-            {{d-button action="finishedEditingTopic" class="btn-primary btn-small submit-edit" icon="check"}}
-            {{d-button action="cancelEditingTopic" class="btn-small cancel-edit" icon="times"}}
-
-            {{#if canRemoveTopicFeaturedLink}}
-              <a href {{action "removeFeaturedLink"}} class="remove-featured-link" title="{{i18n "composer.remove_featured_link"}}">
-                {{d-icon "times-circle"}}
-                {{featuredLinkDomain}}
-              </a>
+            {{text-field id="edit-title" value=buffered.title maxlength=siteSettings.max_topic_title_length autofocus="true"}}
+            {{#if showCategoryChooser}}
+              {{category-chooser class="small" value=buffered.category_id}}
             {{/if}}
+
+            {{#if canEditTags}}
+              {{tag-chooser tags=buffered.tags categoryId=buffered.category_id}}
+            {{/if}}
+
+            {{plugin-outlet name="edit-topic" args=(hash model=model buffered=buffered)}}
+            <div class="edit-controls">
+              {{d-button action="finishedEditingTopic" class="btn-primary btn-small submit-edit" icon="check"}}
+              {{d-button action="cancelEditingTopic" class="btn-small cancel-edit" icon="times"}}
+
+              {{#if canRemoveTopicFeaturedLink}}
+                <a href {{action "removeFeaturedLink"}} class="remove-featured-link" title="{{i18n "composer.remove_featured_link"}}">
+                  {{d-icon "times-circle"}}
+                  {{featuredLinkDomain}}
+                </a>
+              {{/if}}
+            </div>
           </div>
+
         {{else}}
           <h1>
             {{#unless model.is_warning}}
-              <a href={{pmPath}}>
+              {{#if siteSettings.enable_personal_messages}}
+                <a href={{pmPath}}>
+                  <span class="private-message-glyph">{{d-icon "envelope"}}</span>
+                </a>
+              {{else}}
                 <span class="private-message-glyph">{{d-icon "envelope"}}</span>
-              </a>
+              {{/if}}
             {{/unless}}
 
             {{#if model.details.loaded}}
@@ -169,6 +174,9 @@
                 togglePostType=(action "togglePostType")
                 rebakePost=(action "rebakePost")
                 changePostOwner=(action "changePostOwner")
+                grantBadge=(action "grantBadge")
+                lockPost=(action "lockPost")
+                unlockPost=(action "unlockPost")
                 unhidePost=(action "unhidePost")
                 replyToPost=(action "replyToPost")
                 toggleWiki=(action "toggleWiki")
@@ -180,8 +188,9 @@
                 currentPostChanged=(action "currentPostChanged")
                 currentPostScrolled=(action "currentPostScrolled")
                 bottomVisibleChanged=(action "bottomVisibleChanged")
-                selectPost=(action "toggledSelectedPost")
-                selectReplies=(action "toggledSelectedPostReplies")
+                togglePostSelection=(action "togglePostSelection")
+                selectReplies=(action "selectReplies")
+                selectBelow=(action "selectBelow")
                 fillGapBefore=(action "fillGapBefore")
                 fillGapAfter=(action "fillGapAfter")}}
             {{/unless}}
@@ -225,6 +234,8 @@
                 {{signup-cta}}
               {{else}}
                 {{#if currentUser}}
+                  {{plugin-outlet name="topic-above-footer-buttons" args=(hash model=model)}}
+
                   {{topic-footer-buttons
                     topic=model
                     toggleMultiSelect=(action "toggleMultiSelect")

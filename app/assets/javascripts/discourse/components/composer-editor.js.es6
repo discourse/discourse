@@ -1,5 +1,5 @@
 import userSearch from 'discourse/lib/user-search';
-import { default as computed, on } from 'ember-addons/ember-computed-decorators';
+import { default as computed, observes, on } from 'ember-addons/ember-computed-decorators';
 import { linkSeenMentions, fetchUnseenMentions } from 'discourse/lib/link-mentions';
 import { linkSeenCategoryHashtags, fetchUnseenCategoryHashtags } from 'discourse/lib/link-category-hashtags';
 import { linkSeenTagHashtags, fetchUnseenTagHashtags } from 'discourse/lib/link-tag-hashtag';
@@ -13,7 +13,9 @@ import { tinyAvatar,
          displayErrorForUpload,
          getUploadMarkdown,
          validateUploadedFiles,
-         formatUsername
+         authorizesOneOrMoreImageExtensions,
+         formatUsername,
+         clipboardData
 } from 'discourse/lib/utilities';
 import { cacheShortUploadUrl, resolveAllShortUrls } from 'pretty-text/image-short-url';
 
@@ -33,6 +35,24 @@ export default Ember.Component.extend({
   @computed
   uploadPlaceholder() {
     return `[${I18n.t('uploading')}]() `;
+  },
+
+  @computed()
+  replyPlaceholder() {
+    const key = authorizesOneOrMoreImageExtensions() ? "reply_placeholder" : "reply_placeholder_no_images";
+    return `composer.${key}`;
+  },
+
+  @observes('composer.uploadCancelled')
+  _cancelUpload() {
+    if (!this.get('composer.uploadCancelled')) { return; }
+    this.set('composer.uploadCancelled', false);
+
+    if (this._xhr) {
+      this._xhr._userCancelled = true;
+      this._xhr.abort();
+    }
+    this._resetUpload(true);
   },
 
   @computed
@@ -74,20 +94,31 @@ export default Ember.Component.extend({
   _composerEditorInit() {
     const topicId = this.get('topic.id');
     const $input = this.$('.d-editor-input');
-    const $preview = this.$('.d-editor-preview');
+    const $preview = this.$('.d-editor-preview-wrapper');
 
-    $input.autocomplete({
-      template: findRawTemplate('user-selector-autocomplete'),
-      dataSource: term => userSearch({
-        term,
-        topicId,
-        includeMentionableGroups: true
-      }),
-      key: "@",
-      transformComplete: v => v.username || v.name
-    });
+    if (this.siteSettings.enable_mentions) {
+      $input.autocomplete({
+        template: findRawTemplate('user-selector-autocomplete'),
+        dataSource: term => userSearch({
+          term,
+          topicId,
+          includeMentionableGroups: true
+        }),
+        key: "@",
+        transformComplete: v => v.username || v.name
+      });
+    }
 
-    this._initInputPreviewSync($input, $preview);
+    if (this._enableAdvancedEditorPreviewSync()) {
+      this._initInputPreviewSync($input, $preview);
+    } else {
+      $input.on('scroll', () => Ember.run.throttle(this,
+        this._syncEditorAndPreviewScroll,
+        $input,
+        $preview,
+        20
+      ));
+    }
 
     // Focus on the body unless we have a title
     if (!this.get('composer.canEditTitle') && !this.capabilities.isIOS) {
@@ -96,14 +127,6 @@ export default Ember.Component.extend({
 
     this._bindUploadTarget();
     this.appEvents.trigger('composer:will-open');
-
-    if (this.site.mobileView) {
-      $(window).on('resize.composer-popup-menu', () => {
-        if (this.get('optionsVisible')) {
-          this.appEvents.trigger('popup-menu:open', this._optionsLocation());
-        }
-      });
-    }
   },
 
   @computed('composer.reply', 'composer.replyLength', 'composer.missingReplyCharacters', 'composer.minimumPostLength', 'lastValidatedAt')
@@ -125,6 +148,10 @@ export default Ember.Component.extend({
     if (reason) {
       return InputValidation.create({ failed: true, reason, lastShownAt: lastValidatedAt });
     }
+  },
+
+  _enableAdvancedEditorPreviewSync() {
+    return this.siteSettings.enable_advanced_editor_preview_sync;
   },
 
   _resetShouldBuildScrollMap() {
@@ -166,7 +193,7 @@ export default Ember.Component.extend({
   },
 
   _teardownInputPreviewSync() {
-    [this.$('.d-editor-input'), this.$('.d-editor-preview')].forEach($element => {
+    [this.$('.d-editor-input'), this.$('.d-editor-preview-wrapper')].forEach($element => {
       $element.off("mouseenter touchstart");
       $element.off("scroll");
     });
@@ -253,21 +280,44 @@ export default Ember.Component.extend({
   },
 
   _syncEditorAndPreviewScroll($input, $preview, scrollMap) {
-    let scrollTop;
-    const inputHeight = $input.height();
-    const inputScrollHeight = $input[0].scrollHeight;
-    const inputClientHeight = $input[0].clientHeight;
-    const scrollable = inputScrollHeight > inputClientHeight;
+    if (this._enableAdvancedEditorPreviewSync()) {
+      let scrollTop;
+      const inputHeight = $input.height();
+      const inputScrollHeight = $input[0].scrollHeight;
+      const inputClientHeight = $input[0].clientHeight;
+      const scrollable = inputScrollHeight > inputClientHeight;
 
-    if (scrollable && ((inputHeight + $input.scrollTop() + 100) > inputScrollHeight)) {
-      scrollTop = $preview[0].scrollHeight;
+      if (scrollable && ((inputHeight + $input.scrollTop() + 100) > inputScrollHeight)) {
+        scrollTop = $preview[0].scrollHeight;
+      } else {
+        const lineHeight = parseFloat($input.css('line-height'));
+        const lineNumber = Math.floor($input.scrollTop() / lineHeight);
+        scrollTop = scrollMap[lineNumber];
+      }
+
+      $preview.stop(true).animate({ scrollTop }, 100, 'linear');
     } else {
-      const lineHeight = parseFloat($input.css('line-height'));
-      const lineNumber = Math.floor($input.scrollTop() / lineHeight);
-      scrollTop = scrollMap[lineNumber];
-    }
+      if (!$input) { return; }
 
-    $preview.stop(true).animate({ scrollTop }, 100, 'linear');
+      if ($input.scrollTop() === 0) {
+        $preview.scrollTop(0);
+        return;
+      }
+
+      const inputHeight = $input[0].scrollHeight;
+      const previewHeight = $preview[0].scrollHeight;
+
+      if (($input.height() + $input.scrollTop() + 100) > inputHeight) {
+        // cheat, special case for bottom
+        $preview.scrollTop(previewHeight);
+        return;
+      }
+
+      const scrollPosition = $input.scrollTop();
+      const factor = previewHeight / inputHeight;
+      const desired = scrollPosition * factor;
+      $preview.scrollTop(desired + 50);
+    }
   },
 
   _syncPreviewAndEditorScroll($input, $preview, scrollMap) {
@@ -332,7 +382,7 @@ export default Ember.Component.extend({
         const $e = $(e);
         var name = $e.data('name');
         if (found.indexOf(name) === -1){
-          this.sendAction('groupsMentioned', [{name: name, user_count: $e.data('mentionable-user-count')}]);
+          this.sendAction('groupsMentioned', [{name: name, user_count: $e.data('mentionable-user-count'), max_mentions: $e.data('max-mentions')}]);
           found.push(name);
         }
       });
@@ -370,7 +420,9 @@ export default Ember.Component.extend({
   },
 
   _resetUpload(removePlaceholder) {
-    this._validUploads--;
+    if (this._validUploads > 0) {
+      this._validUploads--;
+    }
     if (this._validUploads === 0) {
       this.setProperties({ uploadProgress: 0, isUploading: false, isCancellable: false });
     }
@@ -394,7 +446,19 @@ export default Ember.Component.extend({
       pasteZone: $element,
     });
 
-    $element.on('fileuploadpaste', () => this._pasted = true);
+    $element.on('fileuploadpaste', (e) => {
+      this._pasted = true;
+
+      if (!$(".d-editor-input").is(":focus")) {
+        return;
+      }
+
+      const { canUpload, canPasteHtml } = clipboardData(e, true);
+
+      if (!canUpload || canPasteHtml) {
+        e.preventDefault();
+      }
+    });
 
     $element.on('fileuploadsubmit', (e, data) => {
       const isPrivateMessage = this.get("composer.privateMessage");
@@ -450,7 +514,7 @@ export default Ember.Component.extend({
       this._xhr = null;
 
       if (!userCancelled) {
-        displayErrorForUpload(data.jqXHR.responseJSON);
+        displayErrorForUpload(data);
       }
     });
 
@@ -462,34 +526,6 @@ export default Ember.Component.extend({
     }
 
     this._firefoxPastingHack();
-  },
-
-  _optionsLocation() {
-    const composer = $("#reply-control");
-    const composerOffset = composer.offset();
-    const composerPosition = composer.position();
-
-    const buttonBarOffset = $('#reply-control .d-editor-button-bar').offset();
-    const optionsButton = $('#reply-control .d-editor-button-bar .options');
-
-    const popupMenu = $("#reply-control .popup-menu");
-    const popupWidth = popupMenu.outerWidth();
-    const popupHeight = popupMenu.outerHeight();
-
-    const headerHeight = $(".d-header").outerHeight();
-
-    let left = optionsButton.offset().left - composerOffset.left;
-    let top = buttonBarOffset.top - composerOffset.top - popupHeight + popupMenu.innerHeight();
-
-    if (top + composerPosition.top - headerHeight - popupHeight < 0) {
-      top += popupHeight + optionsButton.outerHeight();
-    }
-
-    if (left + popupWidth > composer.width()) {
-      left -= popupWidth - optionsButton.outerWidth();
-    }
-
-    return { position: "absolute", left, top };
   },
 
   // Believe it or not pasting an image in Firefox doesn't work without this code
@@ -601,11 +637,7 @@ export default Ember.Component.extend({
       Ember.run.later(() => this.appEvents.trigger("composer:closed"), 400);
     });
 
-    this._teardownInputPreviewSync();
-
-    if (this.site.mobileView) {
-      $(window).off('resize.composer-popup-menu');
-    }
+    if (this._enableAdvancedEditorPreviewSync()) this._teardownInputPreviewSync();
   },
 
   actions: {
@@ -613,23 +645,10 @@ export default Ember.Component.extend({
       this.sendAction('importQuote', toolbarEvent);
     },
 
-    cancelUpload() {
-      if (this._xhr) {
-        this._xhr._userCancelled = true;
-        this._xhr.abort();
-      }
-      this._resetUpload(true);
-    },
-
-    toggleOptions(toolbarEvent) {
-      if (this.get('optionsVisible')) {
-        this.sendAction('hideOptions');
-      } else {
-        const selected = toolbarEvent.selected;
-        toolbarEvent.selectText(selected.start, selected.end - selected.start);
-
-        this.sendAction('showOptions', toolbarEvent, this._optionsLocation());
-      }
+    onExpandPopupMenuOptions(toolbarEvent) {
+      const selected = toolbarEvent.selected;
+      toolbarEvent.selectText(selected.start, selected.end - selected.start);
+      this.sendAction('storeToolbarState', toolbarEvent);
     },
 
     togglePreview() {
@@ -650,23 +669,24 @@ export default Ember.Component.extend({
         unshift: true
       });
 
-      toolbar.addButton({
-        id: 'upload',
-        group: 'insertions',
-        icon: 'upload',
-        title: 'upload',
-        sendAction: 'showUploadModal'
-      });
-
-      if (this.get("showPopupMenu")) {
+      if (this.get('allowUpload')) {
         toolbar.addButton({
-          id: 'options',
-          group: 'extras',
-          icon: 'gear',
-          title: 'composer.options',
-          sendAction: 'toggleOptions'
+          id: 'upload',
+          group: 'insertions',
+          icon: 'upload',
+          title: 'upload',
+          sendAction: 'showUploadModal'
         });
       }
+
+      toolbar.addButton({
+        id: 'options',
+        group: 'extras',
+        icon: 'gear',
+        title: 'composer.options',
+        sendAction: 'onExpandPopupMenuOptions',
+        popupMenu: true
+      });
 
       if (this.site.mobileView) {
         toolbar.addButton({
@@ -724,7 +744,14 @@ export default Ember.Component.extend({
         Ember.run.debounce(this, this._loadInlineOneboxes, inline, 450);
       }
 
-      this._syncScroll(this._syncEditorAndPreviewScroll, this.$('.d-editor-input'), $preview);
+      if (this._enableAdvancedEditorPreviewSync()) {
+        this._syncScroll(
+          this._syncEditorAndPreviewScroll,
+          this.$('.d-editor-input'),
+          $preview
+        );
+      }
+
       this.trigger('previewRefreshed', $preview);
       this.sendAction('afterRefresh', $preview);
     },

@@ -30,7 +30,7 @@ module Email
       }.merge!(@opts)
 
       if @template_args[:url].present?
-        @template_args[:header_instructions] = I18n.t('user_notifications.header_instructions', @template_args)
+        @template_args[:header_instructions] ||= I18n.t('user_notifications.header_instructions', @template_args)
 
         if @opts[:include_respond_instructions] == false
           @template_args[:respond_instructions] = ''

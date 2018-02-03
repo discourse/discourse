@@ -7,9 +7,10 @@
 
 zh_CN:
   site_settings:
-    poll_enabled: "允许用户创建投票？"
+    poll_enabled: "允许投票？"
     poll_maximum_options: "投票允许的最大选项数。"
     poll_edit_window_mins: "投票创建后多少分钟内可以编辑？"
+    poll_minimum_trust_level_to_create: "创建投票所需的最小信任等级。"
   poll:
     multiple_polls_without_name: "有多个投票没有名字。使用“<code>name</code>”属性区分各投票。"
     multiple_polls_with_same_name: "有多个投票的名字相同：<strong>%{name}</strong>。使用“<code>name</code>”属性区分各投票。"
@@ -37,5 +38,6 @@ zh_CN:
     poll_must_be_open_to_vote: "投票必须开启。"
     topic_must_be_open_to_toggle_status: "主题必须未被锁定才能改变状态。"
     only_staff_or_op_can_toggle_status: "只有管理人员或者发布投票的人才能改变投票状态。"
+    insufficient_rights_to_create: "您不能创建投票。"
     email:
       link_to_poll: "点击查看投票。"

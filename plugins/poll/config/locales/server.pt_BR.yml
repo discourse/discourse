@@ -7,7 +7,6 @@
 
 pt_BR:
   site_settings:
-    poll_enabled: "Permitir que usuários criem enquetes?"
     poll_maximum_options: "Número máximo de opções permitidas em uma enquete."
     poll_edit_window_mins: "Número de minutos após a criação de uma postagem em que as enquetes podem ser editadas."
   poll:

@@ -62,7 +62,12 @@ class QueuedPost < ActiveRecord::Base
   def approve!(approved_by)
     created_post = nil
 
-    creator = PostCreator.new(user, create_options.merge(skip_validations: true, skip_jobs: true))
+    creator = PostCreator.new(user, create_options.merge(
+      skip_validations: true,
+      skip_jobs: true,
+      skip_events: true
+    ))
+
     QueuedPost.transaction do
       change_to!(:approved, approved_by)
 
@@ -77,6 +82,7 @@ class QueuedPost < ActiveRecord::Base
 
     # Do sidekiq work outside of the transaction
     creator.enqueue_jobs
+    creator.trigger_after_events
 
     DiscourseEvent.trigger(:approved_post, self, created_post)
     created_post
@@ -115,7 +121,7 @@ end
 # Table name: queued_posts
 #
 #  id             :integer          not null, primary key
-#  queue          :string           not null
+#  queue          :string(255)      not null
 #  state          :integer          not null
 #  user_id        :integer          not null
 #  raw            :text             not null
@@ -125,8 +131,8 @@ end
 #  approved_at    :datetime
 #  rejected_by_id :integer
 #  rejected_at    :datetime
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
+#  created_at     :datetime
+#  updated_at     :datetime
 #
 # Indexes
 #

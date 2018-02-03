@@ -11,6 +11,22 @@ describe Topic do
   context 'validations' do
     let(:topic) { Fabricate.build(:topic) }
 
+    context "#featured_link" do
+      describe 'when featured_link contains more than a URL' do
+        it 'should not be valid' do
+          topic.featured_link = 'http://meta.discourse.org TEST'
+          expect(topic).to_not be_valid
+        end
+      end
+
+      describe 'when featured_link is a valid URL' do
+        it 'should be valid' do
+          topic.featured_link = 'http://meta.discourse.org'
+          expect(topic).to be_valid
+        end
+      end
+    end
+
     context "#title" do
       it { is_expected.to validate_presence_of :title }
 
@@ -199,11 +215,11 @@ describe Topic do
   context 'private message title' do
     before do
       SiteSetting.min_topic_title_length = 15
-      SiteSetting.min_private_message_title_length = 3
+      SiteSetting.min_personal_message_title_length = 3
     end
 
     it 'allows shorter titles' do
-      pm = Fabricate.build(:private_message_topic, title: 'a' * SiteSetting.min_private_message_title_length)
+      pm = Fabricate.build(:private_message_topic, title: 'a' * SiteSetting.min_personal_message_title_length)
       expect(pm).to be_valid
     end
 
@@ -579,7 +595,7 @@ describe Topic do
 
     it "rate limits topic invitations" do
       SiteSetting.max_topic_invitations_per_day = 2
-      RateLimiter.stubs(:disabled?).returns(false)
+      RateLimiter.enable
       RateLimiter.clear_all!
 
       start = Time.now.tomorrow.beginning_of_day
@@ -1236,21 +1252,9 @@ describe Topic do
       expect(topic.topic_timers.first.execute_at).to eq(3.days.from_now)
     end
 
-    it 'can take a number of hours as an integer, with timezone offset' do
-      freeze_time now
-      topic.set_or_create_timer(TopicTimer.types[:close], 72, by_user: admin, timezone_offset: 240)
-      expect(topic.topic_timers.first.execute_at).to eq(3.days.from_now)
-    end
-
     it 'can take a number of hours as a string' do
       freeze_time now
       topic.set_or_create_timer(TopicTimer.types[:close], '18', by_user: admin)
-      expect(topic.topic_timers.first.execute_at).to eq(18.hours.from_now)
-    end
-
-    it 'can take a number of hours as a string, with timezone offset' do
-      freeze_time now
-      topic.set_or_create_timer(TopicTimer.types[:close], '18', by_user: admin, timezone_offset: 240)
       expect(topic.topic_timers.first.execute_at).to eq(18.hours.from_now)
     end
 
@@ -1264,12 +1268,6 @@ describe Topic do
       freeze_time now
       topic.set_or_create_timer(TopicTimer.types[:close], '2013-11-22 5:00', by_user: admin)
       expect(topic.topic_timers.first.execute_at).to eq(Time.zone.local(2013, 11, 22, 5, 0))
-    end
-
-    it "can take a timestamp for a future time, with timezone offset" do
-      freeze_time now
-      topic.set_or_create_timer(TopicTimer.types[:close], '2013-11-22 5:00', by_user: admin, timezone_offset: 240)
-      expect(topic.topic_timers.first.execute_at).to eq(Time.zone.local(2013, 11, 22, 9, 0))
     end
 
     it "sets a validation error when given a timestamp in the past" do
@@ -1694,7 +1692,7 @@ describe Topic do
       SiteSetting.max_replies_in_first_day = 1
       SiteSetting.stubs(:client_settings_json).returns(SiteSetting.client_settings_json_uncached)
       RateLimiter.stubs(:rate_limit_create_topic).returns(100)
-      RateLimiter.stubs(:disabled?).returns(false)
+      RateLimiter.enable
       RateLimiter.clear_all!
     end
 
@@ -2099,12 +2097,13 @@ describe Topic do
   describe '#featured_link_root_domain' do
     let(:topic) { Fabricate.build(:topic) }
 
-    it 'should extract the root domain correctly' do
-      [
-        "https://meta.discourse.org",
-        "https://meta.discourse.org/",
-        "https://meta.discourse.org/?filter=test"
-      ].each do |featured_link|
+    [
+      "https://meta.discourse.org",
+      "https://meta.discourse.org/",
+      "https://meta.discourse.org/?filter=test",
+      "https://meta.discourse.org/t/中國/1",
+    ].each do |featured_link|
+      it "should extract the root domain from #{featured_link} correctly" do
         topic.featured_link = featured_link
         expect(topic.featured_link_root_domain).to eq("discourse.org")
       end

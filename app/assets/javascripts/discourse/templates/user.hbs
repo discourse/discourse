@@ -3,31 +3,37 @@
 
     <section class="{{if collapsedInfo 'collapsed-info'}} about {{if hasProfileBackground 'has-background' 'no-background'}}"  style={{model.profileBackground}}>
     {{#unless collapsedInfo}}
-    <div class='staff-counters'>
-      {{#if model.number_of_flags_given}}
-        <div><span class="helpful-flags">{{model.number_of_flags_given}}</span>&nbsp;{{i18n 'user.staff_counters.flags_given'}}</div>
-      {{/if}}
-      {{#if model.number_of_flagged_posts}}
-        <div>
-          {{#link-to 'user.flaggedPosts' model}}
-            <span class="flagged-posts">{{model.number_of_flagged_posts}}</span>&nbsp;{{i18n 'user.staff_counters.flagged_posts'}}
-          {{/link-to}}
+      {{#if showStaffCounters}}
+        <div class='staff-counters'>
+          {{#if model.number_of_flags_given}}
+            <div><span class="helpful-flags">{{model.number_of_flags_given}}</span>{{i18n 'user.staff_counters.flags_given'}}</div>
+          {{/if}}
+          {{#if model.number_of_flagged_posts}}
+            <div>
+              {{#link-to 'user.flaggedPosts' model}}
+                <span class="flagged-posts">{{model.number_of_flagged_posts}}</span>{{i18n 'user.staff_counters.flagged_posts'}}
+              {{/link-to}}
+            </div>
+          {{/if}}
+          {{#if model.number_of_deleted_posts}}
+            <div>
+              {{#link-to 'user.deletedPosts' model}}
+                <span class="deleted-posts">{{model.number_of_deleted_posts}}</span>{{i18n 'user.staff_counters.deleted_posts'}}
+              {{/link-to}}
+            </div>
+          {{/if}}
+          {{#if model.number_of_suspensions}}
+            <div>
+              <a {{action "showSuspensions"}}>
+                <span class="suspensions">{{model.number_of_suspensions}}</span>{{i18n 'user.staff_counters.suspensions'}}
+              </a>
+            </div>
+          {{/if}}
+          {{#if model.warnings_received_count}}
+            <div><span class="warnings-received">{{model.warnings_received_count}}</span>{{i18n 'user.staff_counters.warnings_received'}}</div>
+          {{/if}}
         </div>
       {{/if}}
-      {{#if model.number_of_deleted_posts}}
-        <div>
-          {{#link-to 'user.deletedPosts' model}}
-            <span class="deleted-posts">{{model.number_of_deleted_posts}}</span>&nbsp;{{i18n 'user.staff_counters.deleted_posts'}}
-          {{/link-to}}
-        </div>
-      {{/if}}
-      {{#if model.number_of_suspensions}}
-        <div><span class="suspensions">{{model.number_of_suspensions}}</span>&nbsp;{{i18n 'user.staff_counters.suspensions'}}</div>
-      {{/if}}
-      {{#if model.warnings_received_count}}
-        <div><span class="warnings-received">{{model.warnings_received_count}}</span>&nbsp;{{i18n 'user.staff_counters.warnings_received'}}</div>
-      {{/if}}
-    </div>
     {{/unless}}
 
       <div class='profile-image'></div>
@@ -140,7 +146,9 @@
           {{#if model.invited_by}}
             <dt class="invited-by">{{i18n 'user.invited_by'}}</dt><dd class="invited-by">{{#link-to 'user' model.invited_by}}{{model.invited_by.username}}{{/link-to}}</dd>
           {{/if}}
-          <dt class="trust-level">{{i18n 'user.trust_level'}}</dt><dd class="trust-level">{{model.trustLevel.name}}</dd>
+          {{#if model.trust_level}}
+            <dt class="trust-level">{{i18n 'user.trust_level'}}</dt><dd class="trust-level">{{model.trustLevel.name}}</dd>
+          {{/if}}
           {{#if canCheckEmails}}
             <dt>{{i18n 'user.email.title'}}</dt>
             <dd title={{model.email}}>
@@ -187,7 +195,7 @@
       {{#if showBadges}}
         <li>{{#link-to 'user.badges'}}{{d-icon "certificate"}}{{i18n 'badges.title'}}{{/link-to}}</li>
       {{/if}}
-      {{plugin-outlet name="user-main-nav" connectorTagName='li' args=(hash model=model)}}
+      {{plugin-outlet name="user-main-nav" tagName='' connectorTagName='li' args=(hash model=model)}}
       {{#if model.can_edit}}
         <li>{{#link-to 'preferences'}}{{d-icon "cog"}}{{i18n 'user.preferences'}}{{/link-to}}</li>
       {{/if}}

@@ -35,7 +35,11 @@ if Rails.env.production?
     /^ActionController::BadRequest/,
 
     # we can't do anything about invalid parameters
-    /Rack::QueryParser::InvalidParameterError/
+    /Rack::QueryParser::InvalidParameterError/,
+
+    # we handle this cleanly in the message bus middleware
+    # no point logging to logster
+    /RateLimiter::LimitExceeded.*/m
   ]
 end
 

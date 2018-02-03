@@ -23,7 +23,8 @@ describe ::Presence::PresencesController do
 
   context 'when not logged in' do
     it 'should raise the right error' do
-      expect { post '/presence/publish.json' }.to raise_error(Discourse::NotLoggedIn)
+      post '/presence/publish.json'
+      expect(response.status).to eq(403)
     end
   end
 
@@ -85,7 +86,7 @@ describe ::Presence::PresencesController do
       expect(data).to eq({})
     end
 
-    it "doesn't send duplicate messagebus messages" do
+    it "does send duplicate messagebus messages" do
       messages = MessageBus.track_publish do
         post '/presence/publish.json', params: {
           current: { compose_state: 'open', action: 'edit', post_id: post1.id }
@@ -100,7 +101,8 @@ describe ::Presence::PresencesController do
         }
       end
 
-      expect(messages.count).to eq(0)
+      # we do this cause we also publish time
+      expect(messages.count).to eq(1)
     end
 
     it "clears 'previous' state when supplied" do

@@ -4,13 +4,34 @@ require_dependency 'post_destroyer'
 require_dependency 'post_merger'
 require_dependency 'distributed_memoizer'
 require_dependency 'new_post_result_serializer'
+require_dependency 'post_locker'
 
 class PostsController < ApplicationController
 
-  # Need to be logged in for all actions here
-  before_action :ensure_logged_in, except: [:show, :replies, :by_number, :short_link, :reply_history, :revisions, :latest_revision, :expand_embed, :markdown_id, :markdown_num, :cooked, :latest, :user_posts_feed]
+  requires_login except: [
+    :show,
+    :replies,
+    :by_number,
+    :short_link,
+    :reply_history,
+    :replyIids,
+    :revisions,
+    :latest_revision,
+    :expand_embed,
+    :markdown_id,
+    :markdown_num,
+    :cooked,
+    :latest,
+    :user_posts_feed
+  ]
 
-  skip_before_action :preload_json, :check_xhr, only: [:markdown_id, :markdown_num, :short_link, :latest, :user_posts_feed]
+  skip_before_action :preload_json, :check_xhr, only: [
+    :markdown_id,
+    :markdown_num,
+    :short_link,
+    :latest,
+    :user_posts_feed
+  ]
 
   def markdown_id
     markdown Post.find(params[:id].to_i)
@@ -133,7 +154,6 @@ class PostsController < ApplicationController
   end
 
   def create
-
     @manager_params = create_params
     @manager_params[:first_post_checks] = !is_api?
 
@@ -223,6 +243,11 @@ class PostsController < ApplicationController
   def reply_history
     post = find_post_from_params
     render_serialized(post.reply_history(params[:max_replies].to_i, guardian), PostSerializer)
+  end
+
+  def reply_ids
+    post = find_post_from_params
+    render json: post.reply_ids(guardian).to_json
   end
 
   def destroy
@@ -376,6 +401,13 @@ class PostsController < ApplicationController
     end
 
     render_json_dump(result)
+  end
+
+  def locked
+    post = find_post_from_params
+    locker = PostLocker.new(post, current_user)
+    params[:locked] === "true" ? locker.lock : locker.unlock
+    render_json_dump(locked: post.locked?)
   end
 
   def bookmark

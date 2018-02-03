@@ -24,7 +24,7 @@ RSpec.describe Jobs::FixPrimaryEmailsForStagedUsers do
       .to change { User.count }.by(-2)
       .and change { staged_user.posts.count }.by(3)
 
-    expect(User.all).to contain_exactly(Discourse.system_user, staged_user, active_user)
+    expect(User.where('id > -2')).to contain_exactly(Discourse.system_user, staged_user, active_user)
     expect(staged_user.posts.all).to contain_exactly(post1, post2, post3)
     expect(staged_user.reload.email).to eq(common_email)
   end

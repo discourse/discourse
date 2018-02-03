@@ -3,6 +3,12 @@ import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
 
 createWidget('menu-links', {
+  buildClasses(attrs) {
+    if (attrs.name && attrs.name.length) {
+      return `menu-container-${attrs.name}`;
+    }
+  },
+
   html(attrs) {
     const links = [].concat(attrs.contents());
     const liOpts = {};

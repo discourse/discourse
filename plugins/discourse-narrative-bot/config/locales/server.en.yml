@@ -233,7 +233,7 @@ en:
 
       bookmark:
         instructions: |-
-          If you’d like to learn more, select <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> below  and <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **bookmark this private message**.  If you do, there may be a :gift: in your future!
+          If you’d like to learn more, select <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> below  and <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **bookmark this personal message**.  If you do, there may be a :gift: in your future!
         reply: |-
           Excellent! Now you can easily find your way back to our private conversation any time, right from [the bookmarks tab on your profile](%{profile_page_url}/activity/bookmarks). Just select your profile picture at the upper right &#8599;
         not_found: |-
@@ -385,7 +385,7 @@ en:
         instructions: |-
           Every topic has a notification level. It starts at 'normal', which means you’ll normally only be notified when someone is speaking directly to you.
 
-          By default, the notification level for a private message is set to the highest level of 'watching', which means you you’ll be notified of every new reply.  But you can override the notification level for _any_ topic to 'watch', 'tracking' or 'muted'.
+          By default, the notification level for a private message is set to the highest level of 'watching', which means you’ll be notified of every new reply.  But you can override the notification level for _any_ topic to 'watch', 'tracking' or 'muted'.
 
           Let’s try changing the notification level for this topic. At the bottom of the topic, you’ll find a button which shows that you’re **watching** this topic. Can you change the notification level to **tracking**?
         not_found: |-
@@ -420,7 +420,7 @@ en:
         instructions: |-
           Sometimes you may wish to **hide details** in your replies:
 
-          - When you’re discussing plot points of a movie or TV show that would be a considered a spoiler.
+          - When you’re discussing plot points of a movie or TV show that would be considered a spoiler.
 
           - When your post needs lots of optional details that may be overwhelming when read all at once.
 

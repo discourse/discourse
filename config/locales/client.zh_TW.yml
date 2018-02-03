@@ -397,7 +397,6 @@ zh_TW:
       '14': "等待中"
     categories:
       all: "所有分類"
-      all_subcategories: "所有"
       no_subcategory: "無"
       category: "分類"
       category_list: "顯示分類列表"
@@ -684,7 +683,6 @@ zh_TW:
         title: "邀請"
         user: "受邀請的用戶"
         sent: "送出"
-        none: "沒有未接受狀態的邀請。"
         truncated:
           other: "只顯示前 {{count}} 個邀請。"
         redeemed: "已接受的邀請"
@@ -731,10 +729,6 @@ zh_TW:
           other: "討論話題已建立"
         post_count:
           other: "帖子已建立"
-        likes_given:
-          other: "<i class='fa fa-heart'></i> 送出的"
-        likes_received:
-          other: "<i class='fa fa-heart'></i> 收到的"
         days_visited:
           other: "到訪天數"
         posts_read:
@@ -822,7 +816,6 @@ zh_TW:
     first_post: 第一篇文章
     mute: 靜音
     unmute: 取消靜音
-    last_post: 最後一篇文章
     last_reply_lowercase: 最新回覆
     replies_lowercase:
       other: 回覆
@@ -1013,7 +1006,6 @@ zh_TW:
       ulist_title: "符號清單"
       list_item: "清單項目"
       help: "Markdown 編輯說明"
-      toggler: "隱藏或顯示編輯面板"
       modal_ok: "確定"
       modal_cancel: "取消"
       cant_send_pm: "抱歉，你不能向 %{username} 發送訊息。"
@@ -1034,8 +1026,6 @@ zh_TW:
         posted: "發自"
         edited: "編輯你的帖子"
         liked: "讚了你的帖子"
-        private_message: "私信來自"
-        invited_to_private_message: "私信邀請自"
         invited_to_topic: "主題邀請自"
         invitee_accepted: "介紹邀請自"
         moved_post: "你的帖子被移動自"
@@ -1048,7 +1038,6 @@ zh_TW:
         quoted: '{{username}}在“{{topic}}”引用了你的帖子 - {{site_title}}'
         replied: '{{username}}在“{{topic}}”回覆了你 - {{site_title}}'
         posted: '{{username}}在“{{topic}}”中發佈了帖子 - {{site_title}}'
-        private_message: '{{username}}在“{{topic}}”中給你發送了一個私信 - {{site_title}}'
         linked: '{{username}}在“{{topic}}”中連結了你的帖子 - {{site_title}}'
     upload_selector:
       title: "加入一張圖片"
@@ -1087,22 +1076,15 @@ zh_TW:
         title: 高級搜索
         posted_by:
           label: 發帖人
-        in_category:
-          label: 在該分類中
         in_group:
           label: 在該群組中
         with_badge:
           label: 有該徽章
-        with_tags:
-          label: 有該標籤
         filters:
-          label: 只返回主題/帖子符合...
           likes: 我給了讚的
           posted: 我參與發帖
           watching: 我正在監看
           tracking: 我正在追蹤
-          private: 在我的私信中
-          bookmarks: 我已經收藏了
           first: 是第一帖
           pinned: 是置頂的
           unpinned: 不是置頂的
@@ -1303,7 +1285,6 @@ zh_TW:
         visible: "出現在列表上"
         reset_read: "重置讀取資料"
         make_public: "設置為公共主題"
-        make_private: "設置為私信"
       feature:
         pin: "置頂主題"
         unpin: "取消置頂主題"
@@ -1416,7 +1397,6 @@ zh_TW:
       multi_select:
         select: '選取'
         selected: '選取了 ({{count}})'
-        select_replies: '選取 + 回覆'
         delete: 刪除選取的文章
         cancel: 取消選取
         select_all: 選擇全部
@@ -1424,10 +1404,7 @@ zh_TW:
         description:
           other: 你已選擇了 <b>{{count}}</b> 篇文章。
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "引用"
-      edit: "編輯 {{replyAvatar}} {{username}} 發表的 {{link}}"
       edit_reason: "原因: "
       post_number: "文章 {{number}}"
       wiki_last_edited_on: "共筆最後編輯時間"
@@ -1488,11 +1465,6 @@ zh_TW:
         undelete: "復原此文章"
         share: "分享此文章的連結"
         more: "更多"
-        delete_replies:
-          confirm:
-            other: "你是否要同時刪除 {{count}} 篇針對這則文章的回覆？"
-          yes_value: "是，將回覆文章一併刪除"
-          no_value: "否，只刪除此文章"
         admin: "文章管理動作"
         wiki: "做為共筆"
         unwiki: "取消共筆"
@@ -1503,8 +1475,6 @@ zh_TW:
         change_owner: "更改作者"
       actions:
         flag: '投訴'
-        defer_flags:
-          other: "暫緩投訴"
         undo:
           off_topic: "撤回投訴"
           spam: "撤回投訴"
@@ -1564,9 +1534,6 @@ zh_TW:
             other: "{{count}} 人對此按讚"
           vote:
             other: "{{count}} 人已投票給此文章"
-      delete:
-        confirm:
-          other: "你確定要刪除這些文章?"
       revisions:
         controls:
           first: "第一版"
@@ -1909,7 +1876,6 @@ zh_TW:
       granted:
         other: "%{count} 授予"
       select_badge_for_title: 選擇一個徽章作為你的頭銜使用
-      none: "<none>"
       badge_grouping:
         getting_started:
           name: 開始
@@ -1936,9 +1902,7 @@ zh_TW:
       selector_no_tags: "無標籤"
       changed: "標籤被修改："
       tags: "標籤"
-      choose_for_topic: "為此主題選擇可選標籤"
       delete_tag: "刪除標籤"
-      delete_confirm: "確定要刪除這個標籤嗎？"
       rename_tag: "重命名標籤"
       rename_instructions: "標籤的新名稱："
       sort_by: "排序方式："
@@ -2065,24 +2029,11 @@ zh_TW:
         by: "由"
       flags:
         title: "投訴"
-        old: "舊的"
-        active: "待處理"
         agree: "同意"
         agree_title: "確認此投訴為有效且正確"
-        agree_flag_modal_title: "批准並且 ..."
-        agree_flag_hide_post: "批准 (隱藏文章 + 送出私人訊息)"
-        agree_flag_hide_post_title: "隱藏此文章，並自動向此用戶送出私人訊息，要求盡快修改它"
-        agree_flag_restore_post: "同意（還原文章）"
-        agree_flag_restore_post_title: "回復此文章"
-        agree_flag: "同意投訴"
-        agree_flag_title: "同意投訴且不更動文章"
-        defer_flag: "延遲"
-        defer_flag_title: "移除標記；不需處理。"
         delete: "刪除"
         delete_title: "刪除此標記文章。"
-        delete_post_defer_flag: "刪除文章並且延緩檢舉"
         delete_post_defer_flag_title: "刪除文章，如果刪除的是討論話題的第一則文章，討論話題也將一併刪除"
-        delete_post_agree_flag: "刪除文章並且同意檢舉"
         delete_post_agree_flag_title: "刪除文章，如果刪除的是討論話題的第一則文章，討論話題也將一併刪除"
         delete_flag_modal_title: "刪除並且..."
         delete_spammer: "刪除垃圾文章發送者"
@@ -2097,29 +2048,16 @@ zh_TW:
         dispositions:
           agreed: "同意"
           disagreed: "不同意"
-          deferred: "之後再處理"
         flagged_by: "投訴者"
         resolved_by: "處理為"
         took_action: "採取行動"
         system: "系統"
         error: "發生了某些錯誤"
         reply_message: "回覆"
-        no_results: "沒有投訴。"
         topic_flagged: "此 <strong>討論話題</strong> 已被投訴。"
         visit_topic: "瀏覽討論話題以採取行動"
         was_edited: "文章已在第一次標記後被編輯"
         previous_flags_count: "這篇文章已經被標記  {{count}} 次。"
-        summary:
-          action_type_3:
-            other: "離題 x{{count}}"
-          action_type_4:
-            other: "不宜內容 x{{count}}"
-          action_type_6:
-            other: "自訂 x{{count}}"
-          action_type_7:
-            other: "自訂 x{{count}}"
-          action_type_8:
-            other: "垃圾內容 x{{count}}"
       groups:
         primary: "主要群組"
         no_primary: "( 沒有主要群組 )"
@@ -2203,7 +2141,6 @@ zh_TW:
           details: "當有新回覆、編輯、帖子被刪除或者恢復時。"
         user_event:
           name: "用戶事件"
-          details: "當用戶被創建、審核通過或更新時。"
         delivery_status:
           title: "分髮狀態"
           inactive: "不活躍"
@@ -2266,7 +2203,6 @@ zh_TW:
           label: "上傳"
           title: "上傳備份"
           uploading: "上傳中..."
-          success: "'{{filename}}' 已成功被上載"
           error: "上載時發生問題： '{{filename}}': {{message}}"
         operations:
           is_running: "指令執行中..."

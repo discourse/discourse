@@ -7,7 +7,7 @@ img.emoji {
 .emoji-picker {
   box-shadow: 0 1px 5px rgba(0,0,0,0.4);
   background-clip: padding-box;
-  z-index: 10000;
+  z-index: z("modal","content"); 
   position: fixed;
   display: none;
   flex-direction: row;
@@ -54,7 +54,7 @@ img.emoji {
 .emoji-picker .list {
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
-  padding: 0px;
+  padding: 0;
   flex: 1;
   flex-direction: column;
 }
@@ -100,7 +100,6 @@ img.emoji {
 
 .emoji-picker .info {
   text-overflow: ellipsis;
-  max-width: 232px;
   padding-left: 8px;
   white-space: nowrap;
   overflow: hidden;
@@ -142,7 +141,7 @@ img.emoji {
 
 .emoji-picker .diversity-picker .d-icon {
   color: #fff;
-  font-size: 12px;
+  font-size: $font-0;
   text-shadow: 0.5px 1.5px 0 rgba(0,0,0,0.3);
 }
 
@@ -155,8 +154,6 @@ img.emoji {
   -moz-box-sizing: content-box;
   box-sizing: content-box;
   height: 20px;
-  margin: 0;
-  padding: 0;
   border: 0;
   vertical-align: top;
   width: 20px;
@@ -177,7 +174,7 @@ img.emoji {
 }
 
 .emoji-picker-modal.fadeIn {
-  z-index: 9999;
+  z-index: z("modal","overlay");
   position: fixed;
   left: 0;
   top: 0;
@@ -194,11 +191,15 @@ img.emoji {
   display: flex;
   position: relative;
   align-items: center;
+
+  input[type="text"] {
+    width: auto!important;
+  }
 }
 
 .emoji-picker .filter .d-icon-search {
   color: dark-light-choose($header_primary-medium, $header_primary);
-  font-size: 16px;
+  font-size: $font-up-1;
   margin-left: 5px;
   margin-right: 5px;
 }

@@ -192,8 +192,11 @@ describe PostMover do
           new_topic.reload
           expect(new_topic.posts_count).to eq(2)
           expect(new_topic.highest_post_number).to eq(2)
-          expect(new_topic.last_post_user_id).to eq(new_topic.posts.last.user_id)
-          expect(new_topic.last_posted_at).to be_present
+
+          last_post = new_topic.posts.last
+          expect(new_topic.last_post_user_id).to eq(last_post.user_id)
+          expect(new_topic.last_posted_at).to eq(last_post.created_at)
+          expect(new_topic.bumped_at).to eq(last_post.created_at)
 
           p2.reload
           expect(p2.sort_order).to eq(1)

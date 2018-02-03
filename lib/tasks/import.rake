@@ -19,6 +19,7 @@ task "import:ensure_consistency" => :environment do
   update_categories
   update_users
   update_groups
+  update_tag_stats
 
   log "Done!"
 end
@@ -164,7 +165,7 @@ def insert_user_options
                   , #{SiteSetting.default_email_mailing_list_mode}
                   , #{SiteSetting.default_email_mailing_list_mode_frequency}
                   , #{SiteSetting.default_email_direct}
-                  , #{SiteSetting.default_email_private_messages}
+                  , #{SiteSetting.default_email_personal_messages}
                   , #{SiteSetting.default_email_previous_replies}
                   , #{SiteSetting.default_email_in_reply_to}
                   , #{SiteSetting.default_email_digest_frequency.to_i > 0}
@@ -417,6 +418,10 @@ def update_groups
      WHERE id = X.group_id
        AND user_count <> X.count
   SQL
+end
+
+def update_tag_stats
+  Tag.ensure_consistency!
 end
 
 def log(message)

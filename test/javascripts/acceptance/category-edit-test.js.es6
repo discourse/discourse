@@ -59,6 +59,8 @@ QUnit.test("Error Saving", assert => {
 });
 
 QUnit.test("Subcategory list settings", assert => {
+  const categoryChooser = selectKit('.edit-category-tab-general .category-chooser');
+
   visit("/c/bug");
 
   click('.edit-category');
@@ -69,17 +71,15 @@ QUnit.test("Subcategory list settings", assert => {
   });
 
   click(".show-subcategory-list-field input[type=checkbox]");
+
   andThen(() => {
     assert.ok(visible(".subcategory-list-style-field"), "subcategory list style is shown if show subcategory list is checked");
   });
 
   click('.edit-category-general');
-
-  expandSelectKit('.edit-category-tab-general .category-chooser');
-
-  selectKitSelectRow(3, {selector: '.edit-category-tab-general .category-chooser'});
-
+  categoryChooser.expand().selectRowByValue(3);
   click('.edit-category-settings');
+
   andThen(() => {
     assert.ok(!visible(".show-subcategory-list-field"), "show subcategory list isn't visible for child categories");
     assert.ok(!visible(".subcategory-list-style-field"), "subcategory list style isn't visible for child categories");

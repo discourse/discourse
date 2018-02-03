@@ -1,3 +1,4 @@
+import { default as computed } from 'ember-addons/ember-computed-decorators';
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
 import { default as NavItem, extraNavItemProperties, customNavItemHref } from 'discourse/models/nav-item';
 
@@ -60,6 +61,11 @@ export default Ember.Controller.extend(BulkTopicSelection, {
 
   categories: Ember.computed.alias('site.categoriesList'),
 
+  @computed('canCreateTopic', 'category', 'canCreateTopicOnCategory')
+  createTopicDisabled(canCreateTopic, category, canCreateTopicOnCategory) {
+    return !canCreateTopic || (category && !canCreateTopicOnCategory);
+  },
+
   queryParams: ['order', 'ascending', 'status', 'state', 'search', 'max_posts', 'q'],
 
   navItems: function() {
@@ -113,8 +119,8 @@ export default Ember.Controller.extend(BulkTopicSelection, {
 
     deleteTag() {
       const self = this;
-      const topicsLength = this.get('list.topic_list.topics.length');
-      const confirmText = topicsLength === 0 ? I18n.t("tagging.delete_confirm_no_topics") : I18n.t("tagging.delete_confirm", {count: topicsLength});
+      const numTopics = this.get('list.topic_list.tags.firstObject.topic_count') || 0;
+      const confirmText = numTopics === 0 ? I18n.t("tagging.delete_confirm_no_topics") : I18n.t("tagging.delete_confirm", {count: numTopics});
       bootbox.confirm(confirmText, function(result) {
         if (!result) { return; }
 

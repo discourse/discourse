@@ -50,7 +50,18 @@ describe ClicksController do
       context 'with a post_id' do
         it 'redirects' do
           TopicLinkClick.expects(:create_from).with('url' => url, 'post_id' => '123', 'ip' => '192.168.0.1').returns(url)
+
           get :track, params: { url: url, post_id: 123, format: :json }
+
+          expect(response).to redirect_to(url)
+        end
+
+        it "redirects links in whispers to staff members" do
+          log_in(:admin)
+          whisper = Fabricate(:post, post_type: Post.types[:whisper])
+
+          get :track, params: { url: url, post_id: whisper.id, format: :json }
+
           expect(response).to redirect_to(url)
         end
 
@@ -63,7 +74,6 @@ describe ClicksController do
 
           expect(response).not_to be_redirect
         end
-
       end
 
       context 'with a topic_id' do

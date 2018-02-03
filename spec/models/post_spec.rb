@@ -777,6 +777,36 @@ describe Post do
 
   end
 
+  context "reply_ids" do
+
+    let!(:topic) { Fabricate(:topic) }
+    let!(:p1) { Fabricate(:post, topic: topic, post_number: 1) }
+    let!(:p2) { Fabricate(:post, topic: topic, post_number: 2, reply_to_post_number: 1) }
+    let!(:p3) { Fabricate(:post, topic: topic, post_number: 3) }
+    let!(:p4) { Fabricate(:post, topic: topic, post_number: 4, reply_to_post_number: 2) }
+    let!(:p5) { Fabricate(:post, topic: topic, post_number: 5, reply_to_post_number: 4) }
+    let!(:p6) { Fabricate(:post, topic: topic, post_number: 6) }
+
+    before {
+      PostReply.create!(post: p1, reply: p2)
+      PostReply.create!(post: p2, reply: p4)
+      PostReply.create!(post: p2, reply: p6) # simulates p6 quoting p2
+      PostReply.create!(post: p3, reply: p5) # simulates p5 quoting p3
+      PostReply.create!(post: p4, reply: p5)
+      PostReply.create!(post: p6, reply: p6) # https://meta.discourse.org/t/topic-quoting-itself-displays-reply-indicator/76085
+    }
+
+    it "returns the reply ids and their level" do
+      expect(p1.reply_ids).to eq([{ id: p2.id, level: 1 }, { id: p4.id, level: 2 }, { id: p6.id, level: 2 }])
+      expect(p2.reply_ids).to eq([{ id: p4.id, level: 1 }, { id: p6.id, level: 1 }])
+      expect(p3.reply_ids).to be_empty # has no replies
+      expect(p4.reply_ids).to be_empty # p5 replies to 2 posts (p4 and p3)
+      expect(p5.reply_ids).to be_empty # has no replies
+      expect(p6.reply_ids).to be_empty # quotes itself
+    end
+
+  end
+
   describe 'urls' do
     it 'no-ops for empty list' do
       expect(Post.urls([])).to eq({})

@@ -38,7 +38,12 @@ class CurrentUserSerializer < BasicUserSerializer
              :previous_visit_at,
              :seen_notification_id,
              :primary_group_id,
-             :primary_group_name
+             :primary_group_name,
+             :can_create_topic
+
+  def can_create_topic
+    scope.can_create_topic?(nil)
+  end
 
   def include_site_flagged_posts_count?
     object.staff?

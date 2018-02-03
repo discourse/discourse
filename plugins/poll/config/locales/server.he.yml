@@ -7,7 +7,6 @@
 
 he:
   site_settings:
-    poll_enabled: "אפשר למשתמשים ליצור סקרים?"
     poll_maximum_options: "מספר האפשרויות המירבי המותר בסקר"
     poll_edit_window_mins: "מספר דקות אחרי יצירת פוסט במהלכן ניתן לערוך סקרים."
   poll:

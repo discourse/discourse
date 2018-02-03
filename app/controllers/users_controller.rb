@@ -8,10 +8,18 @@ require_dependency 'admin_confirmation'
 class UsersController < ApplicationController
 
   skip_before_action :authorize_mini_profiler, only: [:avatar]
-  skip_before_action :check_xhr, only: [:show, :badges, :password_reset, :update, :account_created, :activate_account, :perform_account_activation, :user_preferences_redirect, :avatar, :my_redirect, :toggle_anon, :admin_login, :confirm_admin]
 
-  before_action :ensure_logged_in, only: [:username, :update, :user_preferences_redirect, :upload_user_image,
-                                          :pick_avatar, :destroy_user_image, :destroy, :check_emails, :topic_tracking_state]
+  requires_login only: [
+    :username, :update, :user_preferences_redirect, :upload_user_image,
+    :pick_avatar, :destroy_user_image, :destroy, :check_emails, :topic_tracking_state,
+    :preferences
+  ]
+
+  skip_before_action :check_xhr, only: [
+    :show, :badges, :password_reset, :update, :account_created,
+    :activate_account, :perform_account_activation, :user_preferences_redirect, :avatar,
+    :my_redirect, :toggle_anon, :admin_login, :confirm_admin
+  ]
 
   before_action :respond_to_suspicious_request, only: [:create]
 
@@ -39,7 +47,7 @@ class UsersController < ApplicationController
     return redirect_to path('/login') if SiteSetting.hide_user_profiles_from_public && !current_user
 
     @user = fetch_user_from_params(
-      { include_inactive: current_user.try(:staff?) },
+      { include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts) },
       [{ user_profile: :card_image_badge }]
     )
 
@@ -107,13 +115,19 @@ class UsersController < ApplicationController
     guardian.ensure_can_edit!(user)
     attributes = user_params.merge!(custom_fields: params[:custom_fields])
 
+    # We can't update the username via this route. Use the username route
+    attributes.delete(:username)
+
     if params[:user_fields].present?
       attributes[:custom_fields] = {} unless params[:custom_fields].present?
 
       fields = UserField.all
       fields = fields.where(editable: true) unless current_user.staff?
       fields.each do |f|
-        val = params[:user_fields][f.id.to_s]
+        field_id = f.id.to_s
+        next unless params[:user_fields].has_key?(field_id)
+
+        val = params[:user_fields][field_id]
         val = nil if val === "false"
         val = val[0...UserField.max_length] if val
 
@@ -175,7 +189,7 @@ class UsersController < ApplicationController
 
     user_badge = UserBadge.find_by(id: params[:user_badge_id])
     if user_badge && user_badge.user == user && user_badge.badge.allow_title?
-      user.title = user_badge.badge.name
+      user.title = user_badge.badge.display_name
       user.user_profile.badge_granted_title = true
       user.save!
       user.user_profile.save!
@@ -203,14 +217,14 @@ class UsersController < ApplicationController
   end
 
   def summary
-    user = fetch_user_from_params
+    user = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
     summary = UserSummary.new(user, guardian)
     serializer = UserSummarySerializer.new(summary, scope: guardian)
     render_json_dump(serializer)
   end
 
   def invited
-    inviter = fetch_user_from_params
+    inviter = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
     offset = params[:offset].to_i || 0
     filter_by = params[:filter]
 
@@ -226,7 +240,7 @@ class UsersController < ApplicationController
   end
 
   def invited_count
-    inviter = fetch_user_from_params
+    inviter = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
 
     pending_count = Invite.find_pending_invites_count(inviter)
     redeemed_count = Invite.find_redeemed_invites_count(inviter)
@@ -245,7 +259,12 @@ class UsersController < ApplicationController
         Group.mentionable(current_user)
           .where(name: usernames)
           .pluck(:name, :user_count)
-          .map { |name, user_count| { name: name, user_count: user_count } }
+          .map do |name, user_count|
+          {
+            name: name,
+            user_count: user_count
+          }
+        end
       end
 
     usernames -= groups
@@ -264,7 +283,13 @@ class UsersController < ApplicationController
       .where(username_lower: usernames)
       .pluck(:username_lower)
 
-    render json: { valid: result, valid_groups: groups, mentionable_groups: mentionable_groups, cannot_see: cannot_see }
+    render json: {
+      valid: result,
+      valid_groups: groups,
+      mentionable_groups: mentionable_groups,
+      cannot_see: cannot_see,
+      max_users_notified_per_group_mention: SiteSetting.max_users_notified_per_group_mention
+    }
   end
 
   def render_available_true
@@ -318,12 +343,9 @@ class UsersController < ApplicationController
       return fail_with("login.reserved_username")
     end
 
-    if user = User.where(staged: true).with_email(params[:email].strip.downcase).first
-      user_params.each { |k, v| user.send("#{k}=", v) }
-      user.staged = false
-    else
-      user = User.new(user_params)
-    end
+    new_user_params = user_params
+    user = User.unstage(new_user_params)
+    user = User.new(new_user_params) if user.nil?
 
     # Handle API approval
     if user.approved
@@ -485,9 +507,9 @@ class UsersController < ApplicationController
             render json: {
               success: false,
               message: @error,
-              errors: @user&.errors.to_hash,
-              is_developer: UsernameCheckerService.is_developer?(@user.email),
-              admin: @user.admin?
+              errors: @user&.errors&.to_hash,
+              is_developer: UsernameCheckerService.is_developer?(@user&.email),
+              admin: @user&.admin?
             }
           else
             render json: {
@@ -525,35 +547,30 @@ class UsersController < ApplicationController
   end
 
   def admin_login
-    if current_user
-      return redirect_to path("/")
-    end
+    return redirect_to(path("/")) if current_user
 
     if request.put?
       RateLimiter.new(nil, "admin-login-hr-#{request.remote_ip}", 6, 1.hour).performed!
       RateLimiter.new(nil, "admin-login-min-#{request.remote_ip}", 3, 1.minute).performed!
 
-      user = User.with_email(params[:email]).where(admin: true).human_users.first
-      if user
+      if user = User.with_email(params[:email]).admins.human_users.first
         email_token = user.email_tokens.create(email: user.email)
         Jobs.enqueue(:critical_user_email, type: :admin_login, user_id: user.id, email_token: email_token.token)
         @message = I18n.t("admin_login.success")
       else
-        @message = I18n.t("admin_login.error")
+        @message = I18n.t("admin_login.errors.unknown_email_address")
       end
     elsif params[:token].present?
-      # token recieved, try to login
       if EmailToken.valid_token_format?(params[:token])
         @user = EmailToken.confirm(params[:token])
-        if @user && @user.admin?
-          # Log in user
+        if @user&.admin?
           log_on_user(@user)
           return redirect_to path("/")
         else
-          @message = I18n.t("admin_login.error")
+          @message = I18n.t("admin_login.errors.unknown_email_address")
         end
       else
-        @message = I18n.t("admin_login.error")
+        @message = I18n.t("admin_login.errors.invalid_token")
       end
     end
 
@@ -589,7 +606,7 @@ class UsersController < ApplicationController
       if user = User.where(id: session_user_id.to_i).first
         @account_created[:username] = user.username
         @account_created[:email] = user.email
-        @account_created[:show_controls] = true
+        @account_created[:show_controls] = !user.from_staged?
       end
     end
 
@@ -643,7 +660,7 @@ class UsersController < ApplicationController
       @user = User.where(id: user_key.to_i).first
     end
 
-    if @user.blank? || @user.active? || current_user.present?
+    if @user.blank? || @user.active? || current_user.present? || @user.from_staged?
       raise Discourse::InvalidAccess.new
     end
 

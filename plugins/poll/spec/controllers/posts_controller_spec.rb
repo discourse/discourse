@@ -336,4 +336,96 @@ describe PostsController do
 
   end
 
+  describe "disabled polls" do
+    before do
+      SiteSetting.poll_enabled = false
+    end
+
+    it "doesn’t cook the poll" do
+      log_in_user(Fabricate(:user, admin: true, trust_level: 4))
+
+      post :create, params: {
+        title: title, raw: "[poll]\n- A\n- B\n[/poll]"
+      }, format: :json
+
+      expect(response).to be_success
+      json = ::JSON.parse(response.body)
+      expect(json["cooked"]).to eq("<p>[poll]</p>\n<ul>\n<li>A</li>\n<li>B<br>\n[/poll]</li>\n</ul>")
+    end
+  end
+
+  describe "regular user with insufficient trust level" do
+    before do
+      SiteSetting.poll_minimum_trust_level_to_create = 2
+    end
+
+    it "invalidates the post" do
+      log_in_user(Fabricate(:user, trust_level: 1))
+
+      post :create, params: {
+        title: title, raw: "[poll]\n- A\n- B\n[/poll]"
+      }, format: :json
+
+      expect(response).not_to be_success
+      json = ::JSON.parse(response.body)
+      expect(json["errors"][0]).to eq(I18n.t("poll.insufficient_rights_to_create"))
+    end
+  end
+
+  describe "regular user with equal trust level" do
+    before do
+      SiteSetting.poll_minimum_trust_level_to_create = 2
+    end
+
+    it "validates the post" do
+      log_in_user(Fabricate(:user, trust_level: 2))
+
+      post :create, params: {
+        title: title, raw: "[poll]\n- A\n- B\n[/poll]"
+      }, format: :json
+
+      expect(response).to be_success
+      json = ::JSON.parse(response.body)
+      expect(json["cooked"]).to match("data-poll-")
+      expect(json["polls"]["poll"]).to be
+    end
+  end
+
+  describe "regular user with superior trust level" do
+    before do
+      SiteSetting.poll_minimum_trust_level_to_create = 2
+    end
+
+    it "validates the post" do
+      log_in_user(Fabricate(:user, trust_level: 3))
+
+      post :create, params: {
+        title: title, raw: "[poll]\n- A\n- B\n[/poll]"
+      }, format: :json
+
+      expect(response).to be_success
+      json = ::JSON.parse(response.body)
+      expect(json["cooked"]).to match("data-poll-")
+      expect(json["polls"]["poll"]).to be
+    end
+  end
+
+  describe "staff with insufficient trust level" do
+    before do
+      SiteSetting.poll_minimum_trust_level_to_create = 2
+    end
+
+    it "validates the post" do
+      log_in_user(Fabricate(:user, moderator: true, trust_level: 1))
+
+      post :create, params: {
+        title: title, raw: "[poll]\n- A\n- B\n[/poll]"
+      }, format: :json
+
+      expect(response).to be_success
+      json = ::JSON.parse(response.body)
+      expect(json["cooked"]).to match("data-poll-")
+      expect(json["polls"]["poll"]).to be
+    end
+  end
 end

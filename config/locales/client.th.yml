@@ -370,7 +370,6 @@ th:
       '14': "อยู่ระหว่างการพิจารณา"
     categories:
       all: "ดูทุกหมวดหมู่"
-      all_subcategories: "ทั้งหมด"
       no_subcategory: "ไม่มี"
       category: "หมวดหมู่"
       category_list: "แสดงหมวดหมู่ทั้งหมด"
@@ -615,7 +614,6 @@ th:
         title: "เชิญชวน"
         user: "เชิญชวนผู้ใช้"
         sent: "ส่ง"
-        none: "ไม่มีคำเชิญที่รออยู่ให้แสดง"
         truncated:
           other: "กำลังแสดงคำเชิญ {{count}} รายการแรก"
         redeemed: "ยืนยันการเชิญชวน"
@@ -658,10 +656,6 @@ th:
           other: "กระทู้สร้าง"
         post_count:
           other: "โพสถูกสร้าง"
-        likes_given:
-          other: "<i class='fa fa-heart'></i> ให้"
-        likes_received:
-          other: "<i class='fa fa-heart'></i> ได้รับ"
         days_visited:
           other: "วันที่ดู"
         posts_read:
@@ -742,7 +736,6 @@ th:
     first_post: โพสแรก
     mute: ปิดเสียง
     unmute: เลิกปิดเสียง
-    last_post: โพสสุดท้าย
     last_reply_lowercase: การตอบล่าสุด
     replies_lowercase:
       other: ตอบ
@@ -898,7 +891,6 @@ th:
       ulist_title: "รายการดอกจันทร์"
       list_item: "รายการ"
       help: "ช่วยเหลือการจัดรูปแบบ"
-      toggler: "ซ่อนหรือแสดงแผงตกแต่ง"
       modal_ok: "ตกลง"
       modal_cancel: "ยกเลิก"
       cant_send_pm: "ขอโทษด้วย คุณไม่สามารถส่งข้อความหา %{username} ได้"
@@ -915,8 +907,6 @@ th:
         posted: "โพสโดย"
         edited: "แก้ไขโพสของคุณโดย"
         liked: "ได้ถูกใจโพสของคุณ"
-        private_message: "ข้อความส่วนตัวจาก"
-        invited_to_private_message: "ได้รับคำเชิญเพื่อข้อความส่วนตัวจาก"
         invited_to_topic: "เชิญไปยังกระทู้จาก"
         invitee_accepted: "การเชิญได้ตอบรับโดย"
         moved_post: "โพสของคุณได้ถูกย้ายโดย"
@@ -929,7 +919,6 @@ th:
         quoted: '{{username}} อ้างอิงถึงคุณใน "{{topic}}" - {{site_title}}'
         replied: '{{username}} ตอบคุณใน "{{topic}}" - {{site_title}}'
         posted: '{{username}} โพสท์ใน "{{topic}}" - {{site_title}}'
-        private_message: '{{username}} ส่งข้อความส่วนตัวถึงคุณใน "{{topic}}" - {{site_title}}'
         linked: '{{username}} ลิงค์โพสของคุณจาก "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "เพิ่มรูปภาพ"
@@ -1078,7 +1067,6 @@ th:
         visible: "ทำให้แสดงในรายชื่อ"
         reset_read: "ล้างข้อมูลวันที่"
         make_public: "ทำให้กระทู้เป็นสาธารณะ"
-        make_private: "ทำเป็นข้อความส่วนตัว"
       feature:
         pin: "ปักหมุดกระทู้"
         unpin: "ยกเลิกปักหมุดกระทู้"
@@ -1134,7 +1122,6 @@ th:
       multi_select:
         select: 'เลือก'
         selected: 'เลือกแล้ว ({{count}})'
-        select_replies: 'เลือก +ตอบ'
         delete: ลบที่เลือก
         cancel: ยกเลิกการเลือก
         select_all: เลือกทั้งหมด
@@ -1142,9 +1129,6 @@ th:
         description:
           other: คุณได้เลือก <b>{{count}}</b> โพสต์.
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      edit: "แก้ไข {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "เหตุผล:"
       post_number: "โพสต์ {{number}}"
       last_edited_on: "โพสแก้ไขล่าสุดเมื่อ"
@@ -1188,11 +1172,6 @@ th:
         delete: "ลบโพสนี้"
         undelete: "เลือกลบโพสนี้"
         more: "อื่น"
-        delete_replies:
-          confirm:
-            other: "คุณต้องการที่จะลบคำตอบจำนวน {{count}} คำตอบซึ่งตอบมายังหัวข้อนี้ด้วยหรือไม่?"
-          yes_value: "ใช่ ลบการตอบด้วย"
-          no_value: "ไม่, แค่โพสนี้พอ"
         unhide: "เลิกซ่อน"
       actions:
         undo:
@@ -1205,9 +1184,6 @@ th:
         by_others:
           bookmark:
             other: "{{count}} คน ได้บุ๊คมาร์คโพสนี้"
-      delete:
-        confirm:
-          other: "คุณแน่ใจหรือว่าจะลบโพสเหล่านั้นออก?"
     category:
       delete: 'ลบหมวดหมู่'
       delete_confirm: "คุณแน่ใจหรือว่าจะลบหมวดหมู่นี้ออก?"
@@ -1376,20 +1352,11 @@ th:
         by: "โดย"
       flags:
         title: "ธง"
-        old: "เก่า"
-        active: "ใช้งาน"
         agree: "เห็นด้วย"
         agree_title: "ยืนยันว่าธงนี้ว่าถูกต้อง"
-        agree_flag_modal_title: "เห็นด้วยและ..."
-        agree_flag_hide_post: "เห็นด้วย (ซ่อนโพส + ส่งหลังไมค์)"
-        agree_flag_restore_post: "เห็นด้วย (เรียกโพสคืน)"
-        agree_flag_restore_post_title: "เรียกคืนโพสนี้"
-        agree_flag: "เห็นด้วยกับธงนี้"
         delete: "ลบ"
         delete_title: "ลบโพสที่ถูกติดป้ายแสดงไว้"
-        delete_post_defer_flag: "ลบโพสและลบธง"
         delete_post_defer_flag_title: "ลบโพส ถ้าโพสนั้นเป็นโพสแรกให้ลบหัวข้อออก"
-        delete_post_agree_flag: "ลบโพสและเห็นด้วยกับธง"
         delete_post_agree_flag_title: "ลบโพส ถ้าเป็นโพสแรกให้ลบหัวข้อออก"
         delete_flag_modal_title: "ลบและ..."
         delete_spammer: "ลบสแปมเมอร์"
@@ -1402,7 +1369,6 @@ th:
         system: "ระบบ"
         error: "มีบางอย่างผิดปกติไป"
         reply_message: "ตอบ"
-        no_results: "ไม่มีธง"
         topic_flagged: "ใน <strong>หัวข้อนี้</strong> ถูกปักธงแล้ว"
         visit_topic: "ดูหัวข้อเพื่อกระทำบางอย่าง"
       groups:

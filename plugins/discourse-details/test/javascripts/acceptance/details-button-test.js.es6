@@ -1,17 +1,24 @@
 import { acceptance } from "helpers/qunit-helpers";
+import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
 
-acceptance('Details Button', { loggedIn: true });
+acceptance('Details Button', {
+  loggedIn: true,
+  beforeEach: function() {
+    clearPopupMenuOptionsCallback();
+  }
+});
 
 function findTextarea() {
   return find(".d-editor-input")[0];
 }
 
 test('details button', (assert) => {
-  visit("/");
+  const popupMenu = selectKit('.toolbar-popup-menu-options');
 
+  visit("/");
   click('#create-topic');
-  click('button.options');
-  click('.popup-menu .d-icon-caret-right');
+
+  popupMenu.expand().selectRowByValue('insertDetails');
 
   andThen(() => {
     assert.equal(
@@ -29,8 +36,7 @@ test('details button', (assert) => {
     textarea.selectionEnd = textarea.value.length;
   });
 
-  click('button.options');
-  click('.popup-menu .d-icon-caret-right');
+  popupMenu.expand().selectRowByValue('insertDetails');
 
   andThen(() => {
     assert.equal(
@@ -52,8 +58,7 @@ test('details button', (assert) => {
     textarea.selectionEnd = 28;
   });
 
-  click('button.options');
-  click('.popup-menu .d-icon-caret-right');
+  popupMenu.expand().selectRowByValue('insertDetails');
 
   andThen(() => {
     assert.equal(
@@ -75,8 +80,7 @@ test('details button', (assert) => {
     textarea.selectionEnd = 29;
   });
 
-  click('button.options');
-  click('.popup-menu .d-icon-caret-right');
+  popupMenu.expand().selectRowByValue('insertDetails');
 
   andThen(() => {
     assert.equal(
@@ -93,6 +97,7 @@ test('details button', (assert) => {
 
 test('details button surrounds all selected text in a single details block', (assert) => {
   const multilineInput = 'first line\n\nsecond line\n\nthird line';
+  const popupMenu = selectKit('.toolbar-popup-menu-options');
 
   visit("/");
   click('#create-topic');
@@ -104,8 +109,7 @@ test('details button surrounds all selected text in a single details block', (as
     textarea.selectionEnd = textarea.value.length;
   });
 
-  click('button.options');
-  click('.popup-menu .d-icon-caret-right');
+  popupMenu.expand().selectRowByValue('insertDetails');
 
   andThen(() => {
     assert.equal(

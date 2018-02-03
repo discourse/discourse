@@ -1,4 +1,5 @@
 import { registerUnbound } from 'discourse-common/lib/helpers';
+import { isRTL } from "discourse/lib/text-direction";
 import { iconHTML } from 'discourse-common/lib/icon-library';
 
 var get = Em.get,
@@ -38,6 +39,7 @@ export function categoryBadgeHTML(category, opts) {
   let color = get(category, 'color');
   let html = "";
   let parentCat = null;
+  let categoryDir = "";
 
   if (!opts.hideParent) {
     parentCat = Discourse.Category.findById(get(category, 'parent_category_id'));
@@ -66,10 +68,14 @@ export function categoryBadgeHTML(category, opts) {
 
   let categoryName = escapeExpression(get(category, 'name'));
 
+  if (Discourse.SiteSettings.support_mixed_text_direction) {
+    categoryDir = isRTL(categoryName) ? 'dir="rtl"' : 'dir="ltr"';
+  }
+
   if (restricted) {
-    html += iconHTML('lock') + " " + categoryName;
+    html += `${iconHTML('lock')}<span class="category-name" ${categoryDir}>${categoryName}</span>`;
   } else {
-    html += categoryName;
+    html += `<span class="category-name" ${categoryDir}>${categoryName}</span>`;
   }
   html += "</span>";
 

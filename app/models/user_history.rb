@@ -63,7 +63,10 @@ class UserHistory < ActiveRecord::Base
                           backup_download: 45,
                           backup_destroy: 46,
                           notified_about_get_a_room: 47,
-                          change_name: 48)
+                          change_name: 48,
+                          post_locked: 49,
+                          post_unlocked: 50,
+                          check_personal_message: 51)
   end
 
   # Staff actions is a subset of all actions, used to audit actions taken by staff users.
@@ -104,7 +107,10 @@ class UserHistory < ActiveRecord::Base
                         :activate_user,
                         :change_readonly_mode,
                         :backup_download,
-                        :backup_destroy]
+                        :backup_destroy,
+                        :post_locked,
+                        :post_unlocked,
+                        :check_personal_message]
   end
 
   def self.staff_action_ids
@@ -176,23 +182,23 @@ end
 #  details        :text
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
-#  context        :string
-#  ip_address     :string
-#  email          :string
+#  context        :string(255)
+#  ip_address     :string(255)
+#  email          :string(255)
 #  subject        :text
 #  previous_value :text
 #  new_value      :text
 #  topic_id       :integer
 #  admin_only     :boolean          default(FALSE)
 #  post_id        :integer
-#  custom_type    :string
+#  custom_type    :string(255)
 #  category_id    :integer
 #
 # Indexes
 #
+#  index_staff_action_logs_on_action_and_id                  (action,id)
+#  index_staff_action_logs_on_subject_and_id                 (subject,id)
+#  index_staff_action_logs_on_target_user_id_and_id          (target_user_id,id)
 #  index_user_histories_on_acting_user_id_and_action_and_id  (acting_user_id,action,id)
-#  index_user_histories_on_action_and_id                     (action,id)
 #  index_user_histories_on_category_id                       (category_id)
-#  index_user_histories_on_subject_and_id                    (subject,id)
-#  index_user_histories_on_target_user_id_and_id             (target_user_id,id)
 #

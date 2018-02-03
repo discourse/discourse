@@ -83,7 +83,6 @@ vi:
           other: "còn %{count} năm"
       previous_month: 'Tháng trước'
       next_month: 'Tháng sau'
-      placeholder: Chọn một ngày
     share:
       topic: 'chia sẻ chủ đề này'
       post: 'đăng #%{postNumber}'
@@ -414,7 +413,6 @@ vi:
       '14': "Đang chờ xử lý"
     categories:
       all: "tất cả chuyên mục"
-      all_subcategories: "Tất cả"
       no_subcategory: "không có gì"
       category: "Chuyên mục"
       category_list: "Hiễn thị danh sách chuyên mục"
@@ -702,7 +700,6 @@ vi:
         title: "Lời mời"
         user: "User được mời"
         sent: "Đã gửi"
-        none: "Không có thư mời nào đang chờ để hiển thị"
         truncated:
           other: "Hiện {{count}} thư mời đầu tiên"
         redeemed: "Lời mời bù lại"
@@ -831,7 +828,6 @@ vi:
     first_post: Bài viết đầu tiên
     mute: Im lặng
     unmute: Bỏ im lặng
-    last_post: Bài viết cuối cùng
     last_reply_lowercase: trả lời cuối cùng
     replies_lowercase:
       other: trả lời
@@ -951,10 +947,6 @@ vi:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
-    select_kit:
-      default_header_text: Chọn...
-      no_content: Không tìm thấy
-      filter_placeholder: Tìm kiến...
     emoji_picker:
       people: Mọi ng
       food: 'Thức '
@@ -1026,7 +1018,6 @@ vi:
       ulist_title: "Danh sách kiểu ký hiệu"
       list_item: "Danh sách các mục"
       help: "Trợ giúp soạn thảo bằng Markdown"
-      toggler: "ẩn hoặc hiển thị bảng điều khiển soạn thảo"
       modal_ok: "OK"
       modal_cancel: "Hủy"
       cant_send_pm: "Xin lỗi, bạn không thể gởi tin nhắn đến %{username}."
@@ -1046,8 +1037,6 @@ vi:
         posted: "Đăng bởi"
         edited: "Bài viết của bạn được sửa bởi"
         liked: "Bạn đã like bài viết"
-        private_message: "Tin nhắn riêng từ"
-        invited_to_private_message: "Lời mời thảo luận riêng từ"
         invited_to_topic: "Lời mời tham gia chủ đề từ"
         invitee_accepted: "Lời mời được chấp nhận bởi"
         moved_post: "Bài viết của bạn đã được di chuyển bởi"
@@ -1060,7 +1049,6 @@ vi:
         quoted: '{{username}} trích lời bạn trong "{{topic}}" - {{site_title}}'
         replied: '{{username}} trả lời cho bạn trong "{{topic}}" - {{site_title}}'
         posted: '{{username}} gửi bài trong "{{topic}}" - {{site_title}}'
-        private_message: '{{username}} đã gửi cho bạn một tin nhắn trong "{{topic}}" - {{site_title}}'
         linked: '{{username}} liên quan đến bài viết của bạn từ "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Thêm một ảnh"
@@ -1091,7 +1079,6 @@ vi:
       no_more_results: "Không tìm thấy kết quả"
       searching: "Đang tìm ..."
       post_format: "#{{post_number}} bởi {{username}}"
-      results_page: "Kết quả tìm kiếm"
       search_google_button: "G"
       search_google_title: "Tìm trong trang n"
       context:
@@ -1102,25 +1089,17 @@ vi:
         title: Tìm kiếm nâng cao
         posted_by:
           label: Gửi bởi
-        in_category:
-          label: Trong chuyên mục
         in_group:
           label: Trong nhóm
         with_badge:
           label: Với huy hiệu
-        with_tags:
-          label: Với thẻ
         filters:
           likes: Tôi đã thích
           posted: Tôi đã gửi trong
-          private: trong tin nhắn của tôi
-          bookmarks: Tôi đã đánh dấu
           pinned: được gim
           unpinned: không được gim
-          seen: Tôi đã đọc
           unseen: Tôi chưa đọc
           wiki: là wiki
-          images: 'gồm hình '
         statuses:
           open: mở
           closed: bị đóng
@@ -1428,7 +1407,6 @@ vi:
       multi_select:
         select: 'chọn'
         selected: 'đã chọn ({{count}})'
-        select_replies: 'chọn + trả lời'
         delete: xóa lựa chọn
         cancel: hủy lựa chọn
         select_all: chọn tất cả
@@ -1436,10 +1414,7 @@ vi:
         description:
           other: Bạn đã chọn <b>{{count}}</b> bài viết.
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Trích dẫn"
-      edit: "Đang sửa {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Lý do: "
       post_number: "bài viết {{number}}"
       last_edited_on: "đã sửa bài viết lần cuối lúc"
@@ -1494,11 +1469,6 @@ vi:
         undelete: "hủy xóa bài viết này"
         share: "chia sẻ liên kết đến bài viết này"
         more: "Thêm"
-        delete_replies:
-          confirm:
-            other: "Bạn muốn xóa {{count}} trả lời cho bài viết này?"
-          yes_value: "Đồng ý, xóa những trả lời"
-          no_value: "Không, chỉ xóa chủ đề"
         admin: "quản lý bài viết"
         wiki: "Tạo Wiki"
         unwiki: "Xóa Wiki"
@@ -1509,8 +1479,6 @@ vi:
         change_owner: "Đổi chủ sở hữu"
       actions:
         flag: 'Gắn cờ'
-        defer_flags:
-          other: "Đánh dấu hoãn"
         undo:
           off_topic: "Hủy gắn cờ"
           spam: "Hủy gắn cờ"
@@ -1570,9 +1538,6 @@ vi:
             other: "{count}} người đã thích cái này"
           vote:
             other: "{{count}} người đã bình chọn cho bài viết này"
-      delete:
-        confirm:
-          other: "Bạn muốn xóa những bài viết này?"
       revisions:
         controls:
           first: "Sửa đổi đầu tiên"
@@ -1862,7 +1827,6 @@ vi:
       title: Huy hiệu
       badge_count:
         other: "%{count} huy hiệu"
-      none: "<none>"
       badge_grouping:
         getting_started:
           name: Bắt đầu
@@ -1880,9 +1844,7 @@ vi:
       selector_no_tags: "không có thẻ"
       changed: "thẻ đã đổi:"
       tags: "Thẻ"
-      choose_for_topic: "tuỳ chọn thẻ cho chủ đề này"
       delete_tag: "Xoá thẻ"
-      delete_confirm: "Bạn có chắc là muốn xoá thẻ đó ?"
       rename_tag: "Đổi tên thẻ"
       rename_instructions: "Chọn tên mới cho thẻ:"
       sort_by: "Xếp theo:"
@@ -1959,24 +1921,11 @@ vi:
         by: "bởi"
       flags:
         title: "Gắn cờ"
-        old: "Cũ"
-        active: "Kích hoạt"
         agree: "Đồng ý"
         agree_title: "Xác nhận đánh dấu này hợp lệ và chính xác"
-        agree_flag_modal_title: "Đồng ý và..."
-        agree_flag_hide_post: "Đồng ý (ẩn bài viết + gửi PM)"
-        agree_flag_hide_post_title: "Ẩn bài viết này và tự động gửi tin nhắn đến người dùng hối thúc họ sửa nó"
-        agree_flag_restore_post: "Đồng ý (khôi phục bài viết)"
-        agree_flag_restore_post_title: "Khôi phục bài viết này"
-        agree_flag: "Đống ý với cờ này"
-        agree_flag_title: "Đồng ý với cờ này và giữ bài viết không thay đổi"
-        defer_flag: "Hoãn"
-        defer_flag_title: "Xóa cờ này; nó yêu cầu không có hành động nào vào thời điểm này."
         delete: "Xóa"
         delete_title: "Xóa bài viết đánh dấu này đề cập đến."
-        delete_post_defer_flag: "Xóa bài viết và Hoãn đánh dấu"
         delete_post_defer_flag_title: "Xóa bài viết; nếu là bài viết đầu tiên, xóa chủ đề này"
-        delete_post_agree_flag: "Xóa bài viết và Đồng ý với cờ"
         delete_post_agree_flag_title: "Xóa bài viết; nếu là bài viết đầu tiên, xóa chủ đề này"
         delete_flag_modal_title: "Xóa và..."
         delete_spammer: "Xóa người Spam"
@@ -1991,29 +1940,16 @@ vi:
         dispositions:
           agreed: "đồng ý"
           disagreed: "không đồng ý"
-          deferred: "hoãn"
         flagged_by: "Gắn cờ bởi"
         resolved_by: "Xử lý bởi"
         took_action: "Thực hiện"
         system: "Hệ thống"
         error: "Có lỗi xảy ra"
         reply_message: "Trả lời "
-        no_results: "Không được gắn cờ"
         topic_flagged: "<strong>Chủ đề này</strong> đã được đánh dấu."
         visit_topic: "Tới chủ đề để thực hiện"
         was_edited: "Bài viết đã được chỉnh sửa sau khi đánh dấu đầu tiên"
         previous_flags_count: "Bài viết này đã được đánh dấu {{count}} lần."
-        summary:
-          action_type_3:
-            other: "sai chủ đề x{{count}}"
-          action_type_4:
-            other: "Không phù hợp x{{count}}"
-          action_type_6:
-            other: "tùy chỉnh x{{count}}"
-          action_type_7:
-            other: "tùy chỉnh x{{count}}"
-          action_type_8:
-            other: "spam x{{count}}"
       groups:
         primary: "Nhóm Chính"
         no_primary: "(không có nhóm chính)"
@@ -2093,7 +2029,6 @@ vi:
           label: "Tải lên"
           title: "Tải lên bản sao lưu cho phiên bản này"
           uploading: "Đang tải lên..."
-          success: "'{{filename}}' đã tải lên thành công."
           error: "Có lõi trong quá trình tải lên '{{filename}}': {{message}}"
         operations:
           is_running: "Tác vụ đang chạy..."

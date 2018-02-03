@@ -7,7 +7,6 @@
 
 cs:
   site_settings:
-    poll_enabled: "Povolit uživatelům vytvářet hlasování?"
     poll_maximum_options: "Maximální počet možností povolených v hlasování."
     poll_edit_window_mins: "Počet minut po vytvoření příspěvku, po kterých je ještě možné upravit hlasování."
   poll:

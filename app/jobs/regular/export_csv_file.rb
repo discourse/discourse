@@ -142,10 +142,10 @@ module Jobs
     def report_export
       return enum_for(:report_export) unless block_given?
 
-      @extra[:start_date]  = @extra[:start_date].to_date if @extra[:start_date].is_a?(String)
-      @extra[:end_date]    = @extra[:end_date].to_date   if @extra[:end_date].is_a?(String)
-      @extra[:category_id] = @extra[:category_id].to_i   if @extra[:category_id]
-      @extra[:group_id]    = @extra[:group_id].to_i      if @extra[:group_id]
+      @extra[:start_date] = @extra[:start_date].to_date if @extra[:start_date].is_a?(String)
+      @extra[:end_date] = @extra[:end_date].to_date if @extra[:end_date].is_a?(String)
+      @extra[:category_id] = @extra[:category_id].present? ? @extra[:category_id].to_i : nil
+      @extra[:group_id] = @extra[:group_id].present? ? @extra[:group_id].to_i : nil
       Report.find(@extra[:name], @extra).data.each do |row|
         yield [row[:x].to_s(:db), row[:y].to_s(:db)]
       end

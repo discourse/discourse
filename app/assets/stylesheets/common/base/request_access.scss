@@ -4,10 +4,10 @@
   input[type=text] {
     width: 320px;
     height: 30px;
-    font-size: 1.571em;
+    font-size: $font-up-3;
   }
   input[type=submit] {
-    font-size: 1.571em;
+    font-size: $font-up-3;
     padding: 10px;
   }
 }

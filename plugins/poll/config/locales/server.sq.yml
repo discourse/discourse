@@ -7,7 +7,6 @@
 
 sq:
   site_settings:
-    poll_enabled: "Lejo përdoruesit të hapin sondazhe?"
     poll_maximum_options: "Numri maksimal i opsioneve të lejuara në një sondazh."
     poll_edit_window_mins: "Numri i minutave pas krijimit të postimit gjatë të cilave sondazhet mund të ndryshohen."
   poll:

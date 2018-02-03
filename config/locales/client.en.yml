@@ -149,7 +149,7 @@ en:
       split_topic: "split this topic %{when}"
       invited_user: "invited %{who} %{when}"
       invited_group: "invited %{who} %{when}"
-      user_left: "%{who} left this message %{when}"
+      user_left: "%{who} removed themselves from this message %{when}"
       removed_user: "removed %{who} %{when}"
       removed_group: "removed %{who} %{when}"
       autoclosed:
@@ -308,6 +308,8 @@ en:
     uploading: "Uploading..."
     uploading_filename: "Uploading {{filename}}..."
     uploaded: "Uploaded!"
+
+    pasting: "Pasting..."
 
     enable: "Enable"
     disable: "Disable"
@@ -518,7 +520,7 @@ en:
 
     categories:
       all: "all categories"
-      all_subcategories: "all"
+      all_subcategories: "all in %{categoryName}"
       no_subcategory: "none"
       category: "Category"
       category_list: "Display category list"
@@ -603,7 +605,7 @@ en:
       disable_jump_reply: "Don't jump to my post after I reply"
       dynamic_favicon: "Show new / updated topic count on browser icon"
       theme_default_on_all_devices: "Make this my default theme on all my devices"
-      allow_private_messages: "Allow other users to send me private messages"
+      allow_private_messages: "Allow other users to send me personal messages"
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
       change: "change"
@@ -850,7 +852,7 @@ en:
         title: "Invites"
         user: "Invited User"
         sent: "Sent"
-        none: "There are no pending invites to display."
+        none: "No invites to display."
         truncated:
           one: "Showing the first invite."
           other: "Showing the first {{count}} invites."
@@ -1209,6 +1211,7 @@ en:
       similar_topics: "Your topic is similar to..."
       drafts_offline: "drafts offline"
 
+      group_mentioned_limit: "<b>Warning!</b> You mentioned <a href='{{group_link}}'>{{group}}</a>, however this group has more members than the administrator configured mention limit of {{max}} users. Nobody will be notified. "
       group_mentioned:
         one: "By mentioning {{group}}, you are about to notify <a href='{{group_link}}'>1 person</a> – are you sure?"
         other: "By mentioning {{group}}, you are about to notify <a href='{{group_link}}'>{{count}} people</a> – are you sure?"
@@ -1244,6 +1247,7 @@ en:
       topic_featured_link_placeholder: "Enter link shown with title."
       remove_featured_link: "Remove link from topic."
       reply_placeholder: "Type here. Use Markdown, BBCode, or HTML to format. Drag or paste images."
+      reply_placeholder_no_images: "Type here. Use Markdown, BBCode, or HTML to format."
       view_new_post: "View your new post."
       saving: "Saving"
       saved: "Saved!"
@@ -1274,6 +1278,7 @@ en:
       olist_title: "Numbered List"
       ulist_title: "Bulleted List"
       list_item: "List item"
+      toggle_direction: "Toggle Direction"
       help: "Markdown Editing Help"
       collapse: "minimize the composer panel"
       abandon: "close composer and discard draft"
@@ -1285,6 +1290,20 @@ en:
         body: "Right now this message is only being sent to yourself!"
 
       admin_options_title: "Optional staff settings for this topic"
+
+      composer_actions:
+        reply_as_new_topic:
+          label: Reply as linked topic
+          desc: Create a new topic
+        reply_as_private_message:
+          label: New message
+          desc: Create a private message
+        reply_to_topic:
+          label: Reply to topic
+          desc: Reply to the original post without replying to a specific post
+        toggle_whisper:
+          label: Toggle whipser
+          desc: Whispers will only be visible by staff members
 
     notifications:
       tooltip:
@@ -1331,8 +1350,8 @@ en:
         posted: "Post by"
         edited: "Edit your post by"
         liked: "Liked your post"
-        private_message: "Private message from"
-        invited_to_private_message: "Invited to a private message from"
+        private_message: "Personal message from"
+        invited_to_private_message: "Invited to a personal message from"
         invited_to_topic: "Invited to a topic from"
         invitee_accepted: "Invite accepted by"
         moved_post: "Your post was moved by"
@@ -1347,7 +1366,7 @@ en:
         quoted: '{{username}} quoted you in "{{topic}}" - {{site_title}}'
         replied: '{{username}} replied to you in "{{topic}}" - {{site_title}}'
         posted: '{{username}} posted in "{{topic}}" - {{site_title}}'
-        private_message: '{{username}} sent you a private message in "{{topic}}" - {{site_title}}'
+        private_message: '{{username}} sent you a personal message in "{{topic}}" - {{site_title}}'
         linked: '{{username}} linked to your post from "{{topic}}" - {{site_title}}'
 
     upload_selector:
@@ -1378,7 +1397,7 @@ en:
       too_short: "Your search term is too short."
       result_count:
         one: "1 result for <span class='term'>{{term}}</span>"
-        other: "{{count}} results for <span class='term'>{{term}}</span>"
+        other: "{{count}}{{plus}} results for <span class='term'>{{term}}</span>"
       title: "search topics, posts, users, or categories"
       no_results: "No results found."
       no_more_results: "No more results found."
@@ -1715,7 +1734,7 @@ en:
         visible: "Make Listed"
         reset_read: "Reset Read Data"
         make_public: "Make Public Topic"
-        make_private: "Make Private Message"
+        make_private: "Make Personal Message"
 
       feature:
         pin: "Pin Topic"
@@ -1856,7 +1875,18 @@ en:
       multi_select:
         select: 'select'
         selected: 'selected ({{count}})'
-        select_replies: 'select +replies'
+        select_post:
+          label: 'select'
+          title: 'Add post to selection'
+        selected_post:
+          label: 'selected'
+          title: 'Click to remove post from selection'
+        select_replies:
+          label: 'select +replies'
+          title: 'Add post and all its replies to selection'
+        select_below:
+          label: 'select +below'
+          title: 'Add post and all after it to selection'
         delete: delete selected
         cancel: cancel selecting
         select_all: select all
@@ -1866,10 +1896,8 @@ en:
           other: "You have selected <b>{{count}}</b> posts."
 
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Quote"
-      edit: "Editing {{link}} {{replyAvatar}} {{username}}"
+      edit: "<i class='fa fa-pencil'></i> {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Reason: "
       post_number: "post {{number}}"
       wiki_last_edited_on: "wiki last edited on"
@@ -1883,7 +1911,9 @@ en:
       deleted_by_author:
         one: "(post withdrawn by author, will be automatically deleted in %{count} hour unless flagged)"
         other: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
+      collapse: "collapse"
       expand_collapse: "expand/collapse"
+      locked: "a staff member has locked this post from being edited"
       gap:
         one: "view 1 hidden reply"
         other: "view {{count}} hidden replies"
@@ -1948,11 +1978,14 @@ en:
         share: "share a link to this post"
         more: "More"
         delete_replies:
-          confirm:
-            one: "Do you also want to delete the direct reply to this post?"
-            other: "Do you also want to delete the {{count}} direct replies to this post?"
-          yes_value: "Yes, delete the replies too"
-          no_value: "No, just this post"
+          confirm: "Do you also want to delete the replies to this post?"
+          direct_replies:
+            one: "Yes, and 1 direct reply"
+            other: "Yes, and {{count}} direct replies"
+          all_replies:
+            one: "Yes, and 1 reply"
+            other: "Yes, and all {{count}} replies"
+          just_the_post: "No, just this post"
         admin: "post admin actions"
         wiki: "Make Wiki"
         unwiki: "Remove Wiki"
@@ -1961,6 +1994,11 @@ en:
         rebake: "Rebuild HTML"
         unhide: "Unhide"
         change_owner: "Change Ownership"
+        grant_badge: "Grant Badge"
+        lock_post: "Lock Post"
+        lock_post_description: "prevent the poster from editing this post"
+        unlock_post: "Unlock Post"
+        unlock_post_description: "allow the poster to edit this post"
 
       actions:
         flag: 'Flag'
@@ -2049,7 +2087,7 @@ en:
       delete:
         confirm:
           one: "Are you sure you want to delete that post?"
-          other: "Are you sure you want to delete all those posts?"
+          other: "Are you sure you want to delete those {{count}} posts?"
 
       merge:
         confirm:
@@ -2139,7 +2177,7 @@ en:
       email_in_allow_strangers: "Accept emails from anonymous users with no accounts"
       email_in_disabled: "Posting new topics via email is disabled in the Site Settings. To enable posting new topics via email, "
       email_in_disabled_click: 'enable the "email in" setting.'
-      mailinglist_mirror: "Category mirrors a mailinglist"
+      mailinglist_mirror: "Category mirrors a mailing list"
       suppress_from_homepage: "Suppress this category from the homepage."
       show_subcategory_list: "Show subcategory list above topics in this category."
       num_featured_topics: "Number of topics shown on the categories page:"
@@ -2425,6 +2463,9 @@ en:
         dismiss_new_posts: '<b>x</b>, <b>r</b> Dismiss New/Posts'
         dismiss_topics: '<b>x</b>, <b>t</b> Dismiss Topics'
         log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Log Out'
+      composing:
+        title: 'Composing'
+        return: '<b>shift</b>+<b>c</b> Return to composer'
       actions:
         title: 'Actions'
         bookmark_topic: '<b>f</b> Toggle bookmark topic'
@@ -2465,7 +2506,8 @@ en:
         one:   "1 granted"
         other: "%{count} granted"
       select_badge_for_title: Select a badge to use as your title
-      none: "<none>"
+      none: "(none)"
+      successfully_granted: "Successfully granted %{badge} to %{username}"
       badge_grouping:
         getting_started:
           name: Getting Started
@@ -2490,6 +2532,7 @@ en:
 
     tagging:
       all_tags: "All Tags"
+      other_tags: "Other Tags"
       selector_all_tags: "all tags"
       selector_no_tags: "no tags"
       changed: "tags changed:"
@@ -2644,17 +2687,23 @@ en:
         active_posts: "Flagged Posts"
         old_posts: "Old Flagged Posts"
         topics: "Flagged Topics"
+        moderation_history: "Moderation History"
 
         agree: "Agree"
         agree_title: "Confirm this flag as valid and correct"
-        agree_flag_hide_post: "Agree and Hide Post"
+        agree_flag_hide_post: "Hide Post"
         agree_flag_hide_post_title: "Hide this post and automatically send the user a message urging them to edit it."
         agree_flag_restore_post: "Agree and Restore Post"
         agree_flag_restore_post_title: "Restore the post so that all users can see it."
-        agree_flag: "Agree and Keep Post"
+        agree_flag_suspend: "Suspend User"
+        agree_flag_suspend_title: "Agree with flag and suspend the user."
+        agree_flag_silence: "Silence User"
+        agree_flag_silence_title: "Agree with flag and silence the user."
+
+        agree_flag: "Keep Post"
         agree_flag_title: "Agree with flag and keep the post unchanged."
-        defer_flag: "Ignore"
-        defer_flag_title: "Remove this flag; it requires no action at this time."
+        ignore_flag: "Ignore"
+        ignore_flag_title: "Remove this flag; it requires no action at this time."
         delete: "Delete"
         delete_title: "Delete the post this flag refers to."
         delete_post_defer_flag: "Delete Post and Ignore flag"
@@ -2796,7 +2845,7 @@ en:
           details: "When there is a new reply, edit, deleted or recovered."
         user_event:
           name: "User Event"
-          details: "When a user is created, approved or updated."
+          details: "When a user logs in, logs out, is created, approved or updated."
         delivery_status:
           title: "Delivery Status"
           inactive: "Inactive"
@@ -2862,7 +2911,7 @@ en:
           label: "Upload"
           title: "Upload a backup to this instance"
           uploading: "Uploading..."
-          success: "'{{filename}}' has successfully been uploaded."
+          success: "'{{filename}}' has successfully been uploaded. The file is now being processed and will take up to a minute to show up in the list."
           error: "There has been an error while uploading '{{filename}}': {{message}}"
         operations:
           is_running: "An operation is currently running..."
@@ -3110,6 +3159,16 @@ en:
             reply_key_placeholder: "reply key"
             skipped_reason_placeholder: "reason"
 
+      moderation_history:
+        performed_by: "Performed By"
+        no_results: "There is no moderation history available."
+        actions:
+          delete_user: "User Deleted"
+          suspend_user: "User Suspended"
+          silence_user: "User Silenced"
+          delete_post: "Post Deleted"
+          delete_topic: "Topic Deleted"
+
       logs:
         title: "Logs"
         action: "Action"
@@ -3184,6 +3243,9 @@ en:
             backup_destroy: "destroy backup"
             reviewed_post: "reviewed post"
             custom_staff: "plugin custom action"
+            post_locked: "post locked"
+            post_unlocked: "post unlocked"
+            check_personal_message: "check personal message"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -3225,6 +3287,8 @@ en:
             all_search_types: "All search types"
             header: "Header"
             full_page: "Full Page"
+            click_through_only: "All (click through only)"
+          header_search_results: "Header Search Results"
         logster:
           title: "Error Logs"
 
@@ -3332,6 +3396,10 @@ en:
         suspended_until: "(until %{until})"
         cant_suspend: "This user cannot be suspended."
         delete_all_posts: "Delete all posts"
+        penalty_post_actions: "What would you like to do with the associated post?"
+        penalty_post_delete: "Delete the post"
+        penalty_post_edit: "Edit the post"
+        penalty_post_none: "Do nothing"
 
         # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
         delete_all_posts_confirm_MF: "You are about to delete {POSTS, plural, one {1 post} other {# posts}} and {TOPICS, plural, one {1 topic} other {# topics}}. Are you sure?"
@@ -3358,6 +3426,9 @@ en:
         grant_moderation: 'Grant Moderation'
         unsuspend: 'Unsuspend'
         suspend: 'Suspend'
+        show_flags_received: "Show Flags Received"
+        flags_received_by: "Flags Received by %{username}"
+        flags_received_none: "This user has not received any flags."
         reputation: Reputation
         permissions: Permissions
         activity: Activity

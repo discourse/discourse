@@ -209,7 +209,6 @@ fr:
     top_weekly: "Meilleurs sujets de la semaine"
     top_daily: "Meilleurs sujets du jour"
     posts: "Messages récents"
-    private_posts: "Derniers messages privés"
     group_posts: "Derniers messages de %{group_name}"
     group_mentions: "Dernières mentions de %{group_name}"
     user_posts: "Derniers messages par @%{username}"
@@ -221,6 +220,7 @@ fr:
   excerpt_image: "image"
   queue:
     delete_reason: "Supprimé depuis la liste des messages en attente de validation"
+    not_found: "Message non trouvé ou déjà mis à jour."
   groups:
     success:
       bulk_add: "%{users_added} utilisateurs ont bien été ajoutés au groupe."
@@ -304,12 +304,6 @@ fr:
       Nous sommes désolés, les nouveaux membres sont limités temporairement à %{newuser_max_replies_per_topic} réponses dans un même topic.
 
       Plutôt que d'ajouter une nouvelle réponse, vous pouvez éditer vos messages précédents ou visiter d'autres topics.
-    reviving_old_topic: |
-      ### Déterrer ce sujet ?
-
-      La dernière réponse à ce sujet date d'il y a plus de %{days} jours. Votre réponse va faire remonter ce sujet en haut de la liste et notifier chaque personne qui suit cette conversation.
-
-      Êtes-vous sûr de vouloir continuer cette conversation ?
   activerecord:
     attributes:
       category:
@@ -326,9 +320,7 @@ fr:
         topic:
           attributes:
             base:
-              warning_requires_pm: "Vous ne pouvez joindre des avertissements qu'aux messages privés."
               too_many_users: "Vous ne pouvez envoyer des avertissements qu'à un utilisateur à la fois."
-              cant_send_pm: "Désolé, vous ne pouvez pas envoyer de message privé à cet utilisateur."
               no_user_selected: "Vous devez choisir un utilisateur valide."
               reply_by_email_disabled: "Réponse par courriel désactivée."
             featured_link:
@@ -366,7 +358,7 @@ fr:
         translation_overrides:
           attributes:
             value:
-              missing_interpolation_keys: 'Les clés d''interpolation suivantes sont absentes : « %{keys} »'
+              invalid_interpolation_keys: 'Les clés d''interpolation suivantes sont invalides : « %{keys} »'
         watched_word:
           attributes:
             word:
@@ -457,7 +449,6 @@ fr:
   post:
     image_placeholder:
       broken: "Cette image ne fonctionne pas"
-      large: "Cette image est trop grande pour l'afficher ici ; cliquer pour voir"
   rate_limiter:
     slow_down: "Vous avez réalisé cette action un trop grand nombre de fois, essayez à nouveau plus tard."
     too_many_requests: "Nous avons une limite journalière du nombre d'actions qui peuvent être effectuées. Veuillez patienter %{time_left} avant de recommencer."
@@ -872,18 +863,17 @@ fr:
     censored_words: "Mots qui seront automatiquement remplacés par &#9632;&#9632;&#9632;&#9632;"
     censored_pattern: "Expressions régulières qui seront automatiquement remplacées par &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Supprimer automatiquement les messages cachés plus de 30 jours."
-    default_locale: "La langue par défaut de cette instance de Discourse (code ISO 639-1)"
     allow_user_locale: "Autoriser les utilisateurs à choisir la langue de l'interface dans leurs préférences"
     set_locale_from_accept_language_header: "configurer la langue de l'interface pour les visiteurs à partir des entêtes de langue de leur navigateur. (EXPÉRIMENTAL, ne fonctionne pas avec le cache anonyme)"
     min_post_length: "Longueur minimale autorisée des messages en nombre de caractères"
     min_first_post_length: "Longueur minimale d'un premier message (corps de sujet) en nombre de caractères"
-    min_private_message_post_length: "Longueur minimale des messages en nombre de caractères"
+    min_personal_message_post_length: "Longueur minimale des messages en nombre de caractères"
     max_post_length: "Longueur maximale autorisée des messages en nombres de caractères"
     topic_featured_link_enabled: "Activer la création de sujets avec lien"
     show_topic_featured_link_in_digest: "Afficher les sujets avec lien dans le résumé par courriel."
     min_topic_title_length: "Longueur minimale autorisée des titres de sujet en nombre de caractères"
     max_topic_title_length: "Longueur maximale autorisée des titres de sujet en nombre de caractères"
-    min_private_message_title_length: "Longueur minimale pour un titre de message en nombre de caractères"
+    min_personal_message_title_length: "Longueur minimale pour un titre de message en nombre de caractères"
     min_search_term_length: "Longueur minimale autorisée du texte saisie avant de lancer une recherche en nombre de caractères"
     search_tokenize_chinese_japanese_korean: "Forcer la tokenisation dans la recherche chinois/japonais/koréen, même sur des sites non-CJK."
     search_prefer_recent_posts: "Si la recherche dans votre forum est lente, cette option tente l'indéxation des messages les plus récents en premier"
@@ -935,7 +925,7 @@ fr:
     summary_likes_required: "Nombre de J'aime minimum dans un sujet avant que le 'Résumé du sujet' soit activé"
     summary_percent_filter: "Quand un utilisateur clique sur « Résumer ce sujet », montrer le top % des messages"
     summary_max_results: "Nombre maximum de messages retournés par « Résumer ce sujet »"
-    enable_private_messages: "Autoriser les utilisateurs de niveau de confiance 1 à créer des messages et à répondre (configurable via le niveau de confiance minimum pour envoyer des messages). Notez que les responsables peuvent toujours envoyer des messages."
+    enable_personal_messages: "Autoriser les utilisateurs de niveau de confiance 1 à créer des messages et à répondre (configurable via le niveau de confiance minimum pour envoyer des messages). Notez que les responsables peuvent toujours envoyer des messages."
     enable_long_polling: "Utiliser les requêtes longues pour le flux de notifications."
     long_polling_base_url: "Racine de l'URL utilisée pour les requêtes longues (dans le cas de l'utilisation d'un CDN pour fournir du contenu dynamique, pensez à le configurer en mode \"origin pull\") par exemple : http://origin.site.com"
     long_polling_interval: "Délai d'attente du serveur avant de répondre aux clients lorsqu'il n'y a pas de données à envoyer\n(réservé aux utilisateurs connectés)"
@@ -988,7 +978,6 @@ fr:
     allow_index_in_robots_txt: "Préciser dans robots.txt que le site est autorisé à être indexé par les robots des moteurs de recherche."
     email_domains_blacklist: "Liste des domaines de courriel qui ne sont pas autorisés lors de la création de compte, délimitée par des pipes. Exemple : mailinator.com|trashmail.net"
     email_domains_whitelist: "Liste des domaines de courriel avec lesquelles les utilisateurs DOIVENT s'enregistrer, délimités par un pipe. ATTENTION : les utilisateurs ayant une adresse de courriel sur un autre domaine ne pourront pas s'enregistrer."
-    hide_email_address_taken: "Ne pas mentionner l'existence d'un compte utilisateur quand un utilisateur utilise le formulaire d'oubli de mot de passe."
     log_out_strict: "Lors de la déconnexion, déconnecter TOUTES les sessions pour l'utilisateur sur tous les appareils"
     version_checks: "Ping les serveurs de Discourse afin d'obtenir les mises à jours et affiche les nouveaux messages d'information dans le tableau de bord /admin"
     new_version_emails: "Envoyer un courriel à contact_email quand une nouvelle version de Discourse est disponible."
@@ -1059,7 +1048,7 @@ fr:
     max_bookmarks_per_day: "Nombre maximum de signets par utilisateur et par jour."
     max_edits_per_day: "Nombre maximum de modifications par utilisateur chaque jour."
     max_topics_per_day: "Nombre maximum de sujet qu'utilisateur peut créer par jour."
-    max_private_messages_per_day: "Nombre maximum de messages que les utilisateurs peuvent créer chaque jour."
+    max_personal_messages_per_day: "Nombre maximum de messages que les utilisateurs peuvent créer chaque jour."
     max_invites_per_day: "Nombre maximum d'invitations qu'un utilisateur peut envoyer par jour."
     max_topic_invitations_per_day: "Nombre maximum d'invitations à un sujet qu'un utilisateur peut envoyer par jour."
     max_logins_per_ip_per_hour: "Nombre maximum de connexions autorisées par adresse IP et par heure"
@@ -1074,7 +1063,6 @@ fr:
     clean_orphan_uploads_grace_period_hours: "La période de grâce (en heures) avant qu'un fichier envoyé orphelin soit retiré."
     purge_deleted_uploads_grace_period_days: "La période de grâce (en jours) avant qu'un fichier envoyé et supprimé soit effacé."
     enable_s3_uploads: "Placez les fichiers envoyés sur un stockage Amazon S3. IMPORTANT: nécessite un accès valide à S3  (l'identifiant et la clé secrète)."
-    s3_use_iam_profile: 'Utiliser un role AWS EC2 IAM pour la récupération des clés. NOTE: si activé, surcharge les paramètres "s3 access key id" et "s3 secret access key".'
     s3_upload_bucket: "Le nom du bucket Amazon S3 qui contiendra les fichiers téléchargés. ATTENTION : doit être en minuscule, sans points et sans caractères de soulignement."
     s3_access_key_id: "L' access key Amazon S3 qui sera utilisée pour uploader les images."
     s3_secret_access_key: "La clé secrète Amazon S3 qui va être utilisée pour uploader des images."
@@ -1120,8 +1108,6 @@ fr:
     min_trust_to_edit_wiki_post: "Le niveau de confiance minimum requis pour modifier les messages de type wiki."
     min_trust_to_edit_post: "Le niveau de confiance minimum requis pour modifier des messages."
     min_trust_to_allow_self_wiki: "Le niveau de confiance minimum requis pour transformer ses propres messages en type wiki."
-    min_trust_to_send_messages: "Le niveau de confiance minimum pour être autorisé à créer des nouveaux messages privés."
-    min_trust_to_send_email_messages: "Le niveau de confiance minimum requis pour envoyer de nouveaux messages privés par courriel (aux utilisateurs générés)."
     newuser_max_links: "Combien de liens un nouvel utilisateur peut-il ajouter à un message."
     newuser_max_images: "Combien d'images un nouvel utilisateur peut-il ajouter à un message."
     newuser_max_attachments: "Combien de fichiers un nouvel utilisateur peut-il ajouter à un message."
@@ -1131,7 +1117,7 @@ fr:
     max_users_notified_per_group_mention: "Nombre maximum d'utilisateurs qui peuvent recevoir une notification si un groupe est mentionné (si le seuil est atteint, aucune notification ne sera envoyée)"
     create_thumbnails: "Créer un aperçu pour les images imbriquées qui sont trop large pour le message."
     email_time_window_mins: "Attendre (n) minutes avant l'envoi des courriels de notification, afin de laisser une chance aux utilisateurs de modifier ou finaliser leurs messages."
-    private_email_time_window_seconds: "Attendre (n) secondes avant d'envoyer des courriels de notification privés, afin de donner aux utilisateurs la chance d'éditer et de finaliser leurs messages."
+    personal_email_time_window_seconds: "Attendre (n) secondes avant d'envoyer des courriels de notification privés, afin de donner aux utilisateurs la chance d'éditer et de finaliser leurs messages."
     email_posts_context: "Combien de réponses précédentes doit-on inclure dans les courriels de notifications pour situer le contexte."
     flush_timings_secs: "À quelle fréquence les données de timing doivent être vider, en secondes."
     title_max_word_length: "Le nombre maximum de caractères dans le titre d'un sujet."
@@ -1186,7 +1172,6 @@ fr:
     reply_by_email_enabled: "Activer les réponses aux sujets via courriel."
     reply_by_email_address: "Modèle pour la réponse par courriel entrant; exemple : %{reply_key}@reply.example.com ou replies+%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Liste des templates alternatifs pour les adresses des courriels entrants de la réponse par courriel. Exemple : %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
-    incoming_email_prefer_html: "Utilisez le HTML plutôt que le texte pour les emails entrants."
     disable_emails: "Désactiver l'envoi de les courriels depuis Discourse."
     strip_images_from_short_emails: "Retirer les images des courriels dont la taille est inférieur à 2800 Octets"
     short_email_length: "Taille des courriels courts en Octets"
@@ -1228,7 +1213,6 @@ fr:
     relative_date_duration: "Nombre de jours après la création d'un message à partir desquels les dates seront affichées en absolu (20 Fév) plutôt qu'en relatif (7j)"
     delete_user_max_post_age: "Interdire la suppression des utilisateurs dont le premier message est date de plus de (n) jours."
     delete_all_posts_max: "Le nombre maximum de messages qui peuvent être supprimés en une seule fois avec le bouton Supprimer tous les messages. Si un utilisateur a plus que ce nombre de messages, ses messages ne pourront pas être supprimés en une seule fois et l'utilisateur ne pourra pas être supprimé."
-    username_change_period: "Le nombre de jours après l'enregistrement pour pouvoir modifier le pseudo (0 pour empêcher la modification de pseudo)."
     email_editable: "Autoriser les utilisateurs à modifier leur adresse de courriel après l'inscription."
     logout_redirect: "URL vers laquelle rediriger le navigateur après déconnexion (par exemple : http://unsite.com/deconnexion)"
     allow_uploaded_avatars: "Autoriser les utilisateurs à télécharger une photo de profil personnalisé."
@@ -1243,7 +1227,6 @@ fr:
     suppress_digest_email_after_days: "Ne pas envoyer de résumés par courriel aux utilisateurs qui n'ont pas visité le site depuis plus de (n) jours."
     digest_suppress_categories: "Ne pas inclure ces catégories dans les résumés par courriel."
     disable_digest_emails: "Désactiver les résumés par courriel pour tous les utilisateurs."
-    email_accent_bg_color: "La couleur d'accentuation utilisée comme arrière-plan de certains éléments des courriels HTML. Entrez un nom de couleur (« red ») ou une valeur hexadécimale (« #FF0000 »)."
     email_accent_fg_color: "La couleur des textes rendus sur la couleur d'arrière-plan des courriels HTML. Entrez un nom de couleur (« white ») ou une valeur hexadécimale (« #FFFFFF »)."
     email_link_color: "La couleur des liens dans les courriels HTML. Entrez un nom de couleur (« blue ») ou une valeur hexadécimale (« #0000FF »)."
     detect_custom_avatars: "Vérifier ou non si les utilisateurs ont envoyé une photo de profil personnalisée."
@@ -1287,7 +1270,6 @@ fr:
     allowed_href_schemes: "Préfixes autorisés dans les liens en plus de http et https."
     embed_post_limit: "Nombre maximum de messages à embarquer."
     embed_username_required: "Un pseudo d'utilisateur pour la création du sujet est nécessaire."
-    notify_about_flags_after: "S'il y a des signalements qui n'ont pas été traités après ce nombre d'heures, envoyer un message privé aux responsables. Mettre 0 pour désactiver."
     show_create_topics_notice: "Si le site contient moins de 5 sujets publics, afficher un message pour demander aux administrateurs de créer d'autres sujets."
     delete_drafts_older_than_n_days: Supprimer les brouillons plus vieux que (n) jours.
     bootstrap_mode_min_users: "Nombre minimum d'utilisateurs nécessaire pour désactiver le mode de démarrage (mettre à 0 pour désactiver)"
@@ -1299,7 +1281,6 @@ fr:
     approve_post_count: "Le nombre de messages d'un utilisateur nouveau ou basique devant être approuvés"
     approve_unless_trust_level: "Les messages des utilisateurs qui n'ont pas atteint ce niveau de confiance doivent être approuvés"
     approve_new_topics_unless_trust_level: "Les nouveaux sujets des utilisateurs en dessous de ce niveau de confiance doivent être approuvés"
-    notify_about_queued_posts_after: "Si des messages sont en attente de modération depuis ce nombre d'heures, un courriel sera envoyé à l'email de contact. Mettre 0 pour désactiver ces courriels."
     auto_close_messages_post_count: "Nombre maximum de messages dans un message privé avant qu'il ne soit automatiquement fermé (0 pour désactiver)"
     auto_close_topics_post_count: "Nombre maximum de messages dans un sujet avant qu'il ne soit automatiquement fermé (0 pour désactiver)"
     code_formatting_style: "Le bouton Code dans l'éditeur utilisera ce style de formatage par défaut"
@@ -1307,7 +1288,7 @@ fr:
     watched_words_regular_expressions: "Les mots surveillés sont des expressions régulières."
     default_email_digest_frequency: "Par défaut, à quelle fréquence les utilisateurs reçoivent les résumés par courriel."
     default_include_tl0_in_digests: "Par défaut, inclure les messages des nouveaux utilisateurs dans les résumés par courriel. Les utilisateurs peuvent changer cela dans leurs préférences."
-    default_email_private_messages: "Envoyer un courriel quand quelqu'un envoie un message à un utilisateur."
+    default_email_personal_messages: "Envoyer un courriel quand quelqu'un envoie un message à un utilisateur."
     default_email_direct: "Envoyer un courriel quand quelqu'un cite/répond à/mentionne ou invite un utilisateur."
     default_email_mailing_list_mode: "Envoyer un courriel pour chaque nouveau message."
     default_email_mailing_list_mode_frequency: "Par défaut, les utilisateurs ayant activé la liste de diffusion recevront des courriels à cette fréquence."
@@ -1329,8 +1310,6 @@ fr:
     default_categories_muted: "Liste de catégories silencées par défaut."
     default_categories_watching_first_post: "Liste des catégories dont le premier message de chaque nouveau sujet sera surveillé par défaut."
     retain_web_hook_events_period_days: "Nombre de jours de conservation des événement des Web hooks."
-    max_user_api_reqs_per_day: "Nombre maximum de requêtes de l'API utilisateur par clé et par jour"
-    max_user_api_reqs_per_minute: "Nombre maximum de requêtes de l'API utilisateur par clé et par minute"
     allow_user_api_keys: "Autoriser la génération des clés de l'API utilisateur"
     allow_user_api_key_scopes: "Liste des champs d'action autorisés pour les clés de l'API utilisateur"
     max_api_keys_per_user: "Nombre maximum de clés de l'API utilisateur par utilisateur"
@@ -1542,72 +1521,12 @@ fr:
       Si vous souhaitez continuer à recevoir ces emails, vous pouvez ignorer ce message.
   invite_mailer:
     title: "Invitiation"
-    subject_template: "%{invitee_name} vous a invité(e) à participer à « %{topic_title} » sur %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} vous a invité(e) à une discussion
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      sur
-
-      > %{site_title} -- %{site_description}
-
-      Si cela vous intéresse, cliquez sur le lien ci-dessous :
-
-      %{invite_link}
   custom_invite_mailer:
     title: "Invitation personnalisée"
-    subject_template: "%{invitee_name} vous a invité(e) à participer à « %{topic_title} » sur %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} vous a invité(e) à une discussion
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      sur
-
-      > %{site_title} -- %{site_description}
-
-      Avec cette note
-
-      > %{user_custom_message}
-
-      Si cela vous intéresse, cliquez sur le lien ci-dessous :
-
-      %{invite_link}
   invite_forum_mailer:
     title: "Invitation sur le forum"
-    subject_template: "%{invitee_name} vous a invité(e) à rejoindre %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} vous invite à rejoindre :
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      Si cela vous intéresse, cliquez sur le lien ci-dessous :
-
-      %{invite_link}
   custom_invite_forum_mailer:
     title: "Invitation personnalisée sur le forum"
-    subject_template: "%{invitee_name} vous a invité(e) à rejoindre %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} vous invite à rejoindre :
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      Avec ce message :
-
-      > %{user_custom_message}
-
-      Si cela vous intéresse, cliquez sur le lien ci-dessous :
-
-      %{invite_link}
   invite_password_instructions:
     title: "Instructions du mot de passe d'invité"
     subject_template: "Renseignez le mot de passe pour votre compte utilisateur %{site_name} "
@@ -1690,11 +1609,11 @@ fr:
       Votre version : %{installed_version}
       Nouvelle version : **%{new_version}**
 
-      - Mettez à jour depuis votre navigateur sur [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
+      - Mettez à jour depuis le navigateur avec notre **[mise à jour en 1 clic](%{base_url}/admin/upgrade)**
 
-      - Consultez les nouveautés sur l'historique [GitHub](https://github.com/discourse/discourse/commits/master).
+      - Consultez les nouveautés dans les [notes de version](https://meta.discourse.org/tags/release-notes) ou l'[historique GitHub](https://github.com/discourse/discourse/commits/master).
 
-      - Visitez [meta.discourse.org](https://meta.discourse.org) pour des nouvelles, des discussions, et de l'aide concernant Discourse.
+      - Visitez [meta.discourse.org](https://meta.discourse.org) pour des nouvelles, des discussions et de l'aide concernant Discourse
 
   new_version_mailer_with_notes:
     title: "Nouvelle version avec notes"
@@ -1705,11 +1624,11 @@ fr:
       Votre version : %{installed_version}
       Nouvelle version : **%{new_version}**
 
-      - Mettez à jour depuis votre navigateur sur [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade).
+      - Mettez à jour depuis le navigateur avec notre **[mise à jour en 1 clic](/admin/upgrade)**
 
-      - Consultez les nouveautés sur l'historique [GitHub](https://github.com/discourse/discourse/commits/master).
+      - Consultez les nouveautés dans les [notes de version](https://meta.discourse.org/tags/release-notes) ou l'[historique GitHub](https://github.com/discourse/discourse/commits/master).
 
-      - Visitez [meta.discourse.org](https://meta.discourse.org) pour des nouvelles, des discussions, et de l'aide concernant Discourse.
+      - Visitez [meta.discourse.org](https://meta.discourse.org) pour des nouvelles, des discussions et de l'aide concernant Discourse
 
       ### Notes de version
 
@@ -1963,17 +1882,6 @@ fr:
         Merci de [vérifier les signalements](%{base_url}/admin/flags). Si %{username} a été injustement mis sous silence, cliquez sur le bouton d'annulation de la mise sous silence sur la [page d'administration de cet utilisateur](%{user_url}).
 
         Ce seuil peut être changé par le paramètre `silence_new_user`.
-    spam_post_silenced:
-      title: "Message de spam mis sous silence"
-      subject_template: "Messages du nouvel utilisateur %{username} mis sous silence pour des liens répétés."
-      text_body_template: |
-        Ceci est un message automatique.
-
-        Le nouvel utilisateur [%{username}](%{user_url}) a tenté de créer plusieurs messages avec des liens vers %{domains}, mais ces messages ont été mis sous silence pour éviter le spam. Cet utilisateur est toujours capable de créer des messages qui ne contiennent pas de liens vers %{domains}.
-
-        Veuillez [vérifier cet utilisateur](%{user_url}).
-
-        Ceci peut être modifier via les paramètres `newuser_spam_host_threshold` et `white_listed_spam_host_domains`.
     unsilenced:
       title: "Mise sous silence annulée"
       subject_template: "Compte débloqué"
@@ -2735,19 +2643,18 @@ fr:
     enthusiast:
       name: Passionné
       description: A visité 10 jours
-      long_description: Ce badge est décerné pour avoir visiter 10 jours consécutifs. Merci d'être resté avec nous pendant plus d'une semaine !
+      long_description: Ce badge est décerné pour avoir visité 10 jours consécutifs. Merci d'être resté avec nous pendant plus d'une semaine !
     aficionado:
       name: Aficionado
       description: A visité 100 jours
-      long_description: Ce badge est décerné pour avoir visiter 100 jours consécutifs. C'est plus de trois mois !
+      long_description: Ce badge est décerné pour avoir visité 100 jours consécutifs. C'est plus de trois mois !
     devotee:
       name: Adepte
       description: A visité 365 jours
-      long_description: Ce badge est décerné pour avoir visiter 365 jours consécutifs. Waouh, une année entière !
+      long_description: Ce badge est décerné pour avoir visité 365 jours consécutifs. Waouh, une année entière !
     badge_title_metadata: "%{display_name} badge sur %{site_title}"
   admin_login:
     success: "Courriel envoyé"
-    error: "Erreur !"
     email_input: "Courriel de l'administrateur"
     submit_button: "Envoyer un courriel"
   performance_report:

@@ -7,7 +7,8 @@ const ADMIN_MODELS = [
   'embeddable-host',
   'web-hook',
   'web-hook-event',
-  'flagged-topic'
+  'flagged-topic',
+  'moderation-history'
 ];
 
 export function Result(payload, responseJson) {

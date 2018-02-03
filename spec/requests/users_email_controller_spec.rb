@@ -67,9 +67,8 @@ describe UsersEmailController do
     let(:new_email) { 'bubblegum@adventuretime.ooo' }
 
     it "requires you to be logged in" do
-      expect do
-        put "/u/asdf/preferences/email.json"
-      end.to raise_error(Discourse::NotLoggedIn)
+      put "/u/asdf/preferences/email.json"
+      expect(response.status).to eq(403)
     end
 
     context 'when logged in' do
@@ -80,9 +79,8 @@ describe UsersEmailController do
       end
 
       it 'raises an error without an email parameter' do
-        expect do
-          put "/u/#{user.username}/preferences/email.json"
-        end.to raise_error(ActionController::ParameterMissing)
+        put "/u/#{user.username}/preferences/email.json"
+        expect(response.status).to eq(400)
       end
 
       it "raises an error if you can't edit the user's email" do

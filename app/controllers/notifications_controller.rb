@@ -2,7 +2,7 @@ require_dependency 'notification_serializer'
 
 class NotificationsController < ApplicationController
 
-  before_action :ensure_logged_in
+  requires_login
 
   def index
     user =

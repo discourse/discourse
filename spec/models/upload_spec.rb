@@ -51,6 +51,13 @@ describe Upload do
     expect(created_upload.extension).to eq("png")
   end
 
+  it "should create an invalid upload when the filename is blank" do
+    SiteSetting.authorized_extensions = "*"
+
+    created_upload = UploadCreator.new(image, nil).create_for(user_id)
+    expect(created_upload.valid?).to eq(false)
+  end
+
   context ".get_from_url" do
     let(:url) { "/uploads/default/original/3X/1/0/10f73034616a796dfd70177dc54b6def44c4ba6f.png" }
     let(:upload) { Fabricate(:upload, url: url) }
@@ -103,6 +110,22 @@ describe Upload do
         SiteSetting.s3_cdn_url = s3_cdn_url
 
         expect(Upload.get_from_url(URI.join(s3_cdn_url, path).to_s)).to eq(upload)
+      end
+
+      it "should return the right upload when using one CDN for both s3 and assets" do
+        begin
+          original_asset_host = Rails.configuration.action_controller.asset_host
+          cdn_url = 'http://my.cdn.com'
+          Rails.configuration.action_controller.asset_host = cdn_url
+          SiteSetting.s3_cdn_url = cdn_url
+          upload
+
+          expect(Upload.get_from_url(
+            URI.join(cdn_url, path).to_s
+          )).to eq(upload)
+        ensure
+          Rails.configuration.action_controller.asset_host = original_asset_host
+        end
       end
     end
   end

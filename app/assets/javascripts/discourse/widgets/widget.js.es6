@@ -310,7 +310,7 @@ export default class Widget {
         view.sendAction(method, param);
         promise = Ember.RSVP.resolve();
       } else {
-        const target = view.get('targetObject');
+        const target = view.get('targetObject') || view;
         promise = method.call(target, param);
         if (!promise || !promise.then) {
           promise = Ember.RSVP.resolve(promise);

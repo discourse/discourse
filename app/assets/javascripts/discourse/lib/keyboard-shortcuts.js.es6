@@ -12,6 +12,7 @@ const bindings = {
   '.':               {click: '.alert.alert-info.clickable', anonymous: true}, // show incoming/updated topics
   'b':               {handler: 'toggleBookmark'},
   'c':               {handler: 'createTopic'},
+  'C':               {handler: 'focusComposer'},
   'ctrl+f':          {handler: 'showPageSearch', anonymous: true},
   'command+f':       {handler: 'showPageSearch', anonymous: true},
   'ctrl+p':          {handler: 'printTopic', anonymous: true},
@@ -67,6 +68,12 @@ export default {
     this.searchService = this.container.lookup('search-service:main');
     this.appEvents = this.container.lookup('app-events:main');
     this.currentUser = this.container.lookup('current-user:main');
+    let siteSettings = this.container.lookup('site-settings:main');
+
+    // Disable the shortcut if private messages are disabled
+    if (!siteSettings.enable_personal_messages) {
+      delete bindings['g m'];
+    }
 
     Object.keys(bindings).forEach(key => {
       const binding = bindings[key];
@@ -169,7 +176,18 @@ export default {
   },
 
   createTopic() {
-    this.container.lookup('controller:composer').open({action: Composer.CREATE_TOPIC, draftKey: Composer.CREATE_TOPIC});
+    if (this.currentUser && this.currentUser.can_create_topic) {
+      this.container.lookup('controller:composer').open({action: Composer.CREATE_TOPIC, draftKey: Composer.CREATE_TOPIC});
+    }
+  },
+
+  focusComposer() {
+    const composer = this.container.lookup('controller:composer');
+    if (composer.get('model.viewOpen')) {
+      setTimeout(() => $('textarea.d-editor-input').focus(), 0);
+    } else {
+      composer.send('openIfDraft');
+    }
   },
 
   pinUnpinTopic() {

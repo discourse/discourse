@@ -13,7 +13,7 @@
     float: left;
     width: 70%;
     padding-left: 5px;
-    font-size: 13px;
+    font-size: $font-down-1;
 
     .name-line {
       white-space: nowrap;
@@ -39,6 +39,9 @@
 
   &.small {
     width: 333px;
+    @media screen and (max-width: 600px) {
+      width: 100%;
+    }
   }
 
   &.medium {

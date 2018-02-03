@@ -40,7 +40,8 @@ flushMap();
 
 export default Ember.Object.extend({
   _plurals: {'post-reply': 'post-replies',
-             'post-reply-history': 'post_reply_histories'},
+             'post-reply-history': 'post_reply_histories',
+             'moderation-history': 'moderation_history'},
 
   init() {
     this._super();

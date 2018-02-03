@@ -71,6 +71,17 @@ describe Search do
     expect(search.clean_term).to eq('capybara')
   end
 
+  it 'replaces curly quotes to regular quotes in search terms' do
+    term = '“discourse”'
+
+    expect(term == '"discourse"').to eq(false)
+
+    search = Search.new(term)
+    expect(search.valid?).to eq(true)
+    expect(search.term).to eq('"discourse"')
+    expect(search.clean_term).to eq('"discourse"')
+  end
+
   it 'does not search when the search term is too small' do
     search = Search.new('evil', min_search_term_length: 5)
     search.execute
@@ -749,8 +760,9 @@ describe Search do
     end
 
     it 'can tokanize website names correctly' do
-      post = Fabricate(:post, raw: 'i like wb.camra.org.uk so yay')
-      expect(Search.execute('wb.camra.org.uk').posts.map(&:id)).to eq([post.id])
+      post = Fabricate(:post, raw: 'i like http://wb.camra.org.uk/latest#test so yay')
+      expect(Search.execute('http://wb.camra.org.uk/latest#test').posts.map(&:id)).to eq([post.id])
+      expect(Search.execute('camra').posts.map(&:id)).to eq([post.id])
     end
 
     it 'supports category slug and tags' do
@@ -902,6 +914,12 @@ describe Search do
       )
       results = s.execute
       expect(results.search_log_id).to be_present
+    end
+
+    it "does not log search if search_type is not present" do
+      s = Search.new('foo bar', ip_address: '127.0.0.1')
+      results = s.execute
+      expect(results.search_log_id).not_to be_present
     end
   end
 

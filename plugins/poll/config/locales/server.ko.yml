@@ -7,7 +7,6 @@
 
 ko:
   site_settings:
-    poll_enabled: "사용자가 투표를 생성할 수 있도록 허가하시겠습니까?"
     poll_maximum_options: "한 투표 당 설정할 수 있는 최대 투표 항목 수"
     poll_edit_window_mins: "포스트 생성 이후 투표를 편집할 수 있는 시간(분)"
   poll:

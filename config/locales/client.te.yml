@@ -83,10 +83,10 @@ te:
       topic: 'ఈ విషయానికి ఒక లంకెను పంచండి'
       post: '#%{postNumber} టపా'
       close: 'మూసివేయి'
-      twitter: 'ట్విట్టరుపై లంకెను పంచు'
-      facebook: 'ఫేస్ బుక్ పై లంకెను పంచు'
-      google+: 'గూగుల్ ప్లస్ పై లంకెను పంచు'
-      email: 'ఈ లంకెను ఈమెయిల్ ద్వారా పంచు'
+      twitter: 'ఈ లింక్ ను ట్విట్టరు లో పంచుకొండి'
+      facebook: 'ఈ లింక్ ను ఫేస్ బుక్ లో పంచుకొండి'
+      google+: 'ఈ లింక్ ను గూగుల్ ప్లస్ లో పంచుకొండి'
+      email: 'ఈ లింక్ ను ఈమెయిల్ లో పంచుకొండి'
     topic_admin_menu: "విషయపు అధికార చర్యలు"
     emails_are_disabled: "బయటకు వెళ్లే అన్ని ఈమెయిల్లూ అధికారి నిశేధించాడు. ఇప్పుడు ఎటువంటి ఈమెయిల్ ప్రకటనలూ పంపవీలవదు."
     edit: 'ఈ విషయపు శీర్షిక మరియు వర్గం సవరించు'
@@ -229,7 +229,6 @@ te:
       '13': "ఇన్ బాక్స్"
     categories:
       all: "అన్ని వర్గాలు"
-      all_subcategories: "అన్నీ"
       no_subcategory: "ఏదీకాదు"
       category: "వర్గం"
       posts: "టపాలు"
@@ -456,7 +455,6 @@ te:
     first_post: తొలి టపా
     mute: నిశ్శబ్దం
     unmute: వినిశ్శబ్దం
-    last_post: చివరి టపా
     summary:
       enabled_description: "మీరు ఈ విషయపు సారాంశము చదువుతున్నారు. ఆసక్తికర టపాలు కమ్యునిటీ ఎంచుకుంటుంది. "
       enable: 'ఈ విషయాన్ని సంగ్రహించు'
@@ -574,7 +572,6 @@ te:
       ulist_title: "చుక్కల జాబితా"
       list_item: "జాబితా అంశం"
       help: "మార్క్ డైన్ సవరణ సహాయం"
-      toggler: "దాచు లేదా చూపు కంపోజరు ఫలకం"
       admin_options_title: "ఈ విషయానికి ఐచ్చిక సిబ్బంది అమరికలు"
     notifications:
       none: "ఈ సమయంలో ప్రకటనలు చూపలేకున్నాము."
@@ -777,7 +774,6 @@ te:
       multi_select:
         select: 'ఎంచుకో'
         selected: 'ఎంచుకున్నవి  ({{count}})'
-        select_replies: 'ఎంచుకున్నవి +జవాబులు'
         delete: ఎంచుకున్నవి తొలగించు
         cancel: ఎంపిక రద్దు
         select_all: అన్నీ ఎంచుకో
@@ -826,12 +822,6 @@ te:
         undelete: "ఈ టపాను పునస్తాపించు"
         share: "ఈ టపా లంకెను పంచు"
         more: "మరింత"
-        delete_replies:
-          confirm:
-            one: "ఈ టపా యొక్క నేరు జవాబు కూడా తొలగించాలనుకుంటున్నారా?"
-            other: "ఈ టపా యొక్క {{count}} నేరు జవాబులు కూడా తొలగించాలనుకుంటున్నారా?"
-          yes_value: "అవును, జవాబులు కూడా తొలగించు."
-          no_value: "లేదు, కేవలం ఈ టపానే"
         admin: "టపా అధికారి చర్యలు"
         wiki: "వికీ చేయి"
         unwiki: "వికీ తొలగించు"
@@ -841,9 +831,6 @@ te:
         unhide: "చూపు"
       actions:
         flag: 'కేతనం'
-        defer_flags:
-          one: "కేతనం వాయిదావేయి"
-          other: "కేతనాలు వాయిదావేయి"
         undo:
           off_topic: "కేతనం రద్దు"
           spam: "కేతనం రద్దు"
@@ -903,10 +890,6 @@ te:
           vote:
             one: "ఒకరు దీనికి ఓటు వేశారు"
             other: "{{count}} గురు దీనికి ఓటు వేసారు"
-      delete:
-        confirm:
-          one: "మీరు నిజ్జంగా ఈ టపాను తొలగించాలనుకుంటున్నారా?"
-          other: "మీరు నిజ్జంగానే ఈ టపాలన్నీ తొలగించాలనుకుంటున్నారా?"
       revisions:
         controls:
           first: "తొలి దిద్దుబాటు"
@@ -1121,23 +1104,11 @@ te:
         by: "నుండి"
       flags:
         title: "కేతనాలు"
-        old: "పాత"
-        active: "చేతన"
         agree: "ఒప్పుకోండి"
         agree_title: "ఈ కేతనం సరైనదిగా చెప్పండి"
-        agree_flag_modal_title: "ఒప్పుకొను మరియు"
-        agree_flag_hide_post: "ఒప్పుకొని (టపా దాచు మరియు ప్రైవేటు సందేశం పంపు)"
-        agree_flag_restore_post: "ఒప్పుకొను (టపా పునస్తాపించు)"
-        agree_flag_restore_post_title: "ఈ టపా పునస్తాపించు"
-        agree_flag: "కేతనంతో ఒప్పుకో"
-        agree_flag_title: "కేతనంతో ఒప్పుకో మరియు టపాను మార్చకుండా ఉంచు"
-        defer_flag: "వాయిదావేయి"
-        defer_flag_title: "ఈ కేతనం తొలగించు; ఇప్పుడు ఎటువంటి చర్య అవసరంలేదు."
         delete: "తొలగించు"
         delete_title: "ఈ కేతనం వర్తించే టపా తొలగించు"
-        delete_post_defer_flag: "టపా తొలగించు మరియు కేతనం వాయిదా వేయి"
         delete_post_defer_flag_title: "టపా తొలగించు; ఇదే తొలి టపా అయితే ఈ విషయాన్ని తొలగించు"
-        delete_post_agree_flag: "టపా తొలగించు మరియు కేతనంతో అంగీకరించు"
         delete_post_agree_flag_title: "టపా తొలగించు; తొలగి టపా అయితే, విషయాన్ని కూడా తొలగించు"
         delete_flag_modal_title: "తొలగించు మరియు..."
         delete_spammer: "స్పామరును తొలగించు"
@@ -1152,34 +1123,16 @@ te:
         dispositions:
           agreed: "ఒప్పుకున్నారు"
           disagreed: "ఒప్పుకోలేదు"
-          deferred: "వాయిదా వేసారు"
         flagged_by: "కేతనించినవారు"
         resolved_by: "సరిచేసినవారు"
         took_action: "చర్య తీసుకున్నారు"
         system: "వ్యవస్థ"
         error: "ఏదే తేడా జరిగింది"
         reply_message: "జవాబు"
-        no_results: "ఎట్టి కేతనాలూ లేవు"
         topic_flagged: "ఈ <strong>విషయం</strong> కేతనించబడింది."
         visit_topic: "చర్య తీసుకోడానికి విషయం దర్శించు"
         was_edited: "తొలి కేతనం తర్వాత టపా సవరించబడింది"
         previous_flags_count: "ఈ టపా ఇప్పటికే {{count}}  కేతనించబడింది."
-        summary:
-          action_type_3:
-            one: "విషయాంతరం"
-            other: "విషయాంతరం x{{count}}"
-          action_type_4:
-            one: "అసమంజసం "
-            other: "అసమంజసం x{{count}}"
-          action_type_6:
-            one: "అనురూపం"
-            other: "అనురూప x{{count}}"
-          action_type_7:
-            one: "అనురూపం"
-            other: "అనురూపం x{{count}}"
-          action_type_8:
-            one: "స్పాము"
-            other: "స్పామ్ x{{count}}"
       groups:
         primary: "ప్రాథమిక గుంపు"
         no_primary: "(ప్రాథమిక గుంపు లేదు)"
@@ -1232,7 +1185,6 @@ te:
           size: "పరిమాణం"
         upload:
           uploading: "ఎగుమతవుతోంది..."
-          success: "'{{filename}}' విజయవంతంగా ఎగుమతయింది."
           error: "'{{filename}}' ఎగుమతించుటలో దోషం: {{message}}"
         operations:
           is_running: "ఒక కార్యం ప్రస్తుతం నడుస్తోంది..."

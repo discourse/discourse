@@ -191,7 +191,6 @@ ko:
     top_weekly: "주간 인기 토픽"
     top_daily: "일간 인기 토픽"
     posts: "최근 글"
-    private_posts: "최신 개인 메시지"
     group_posts: "%{group_name}의 최신 게시글"
     group_mentions: "%{group_name}의 최신 멘션"
     user_posts: "@%{username}님의 최신 포스트"
@@ -285,12 +284,6 @@ ko:
       죄송하지만, 새로운 사용자는 한 토픽 당%{newuser_max_replies_per_topic}개의 답글만 쓸 수 있습니다.
 
       새 답글을 다는 대신에, 전에 쓴 답글을 수정하거나 다른 토픽을 구경해보세요.
-    reviving_old_topic: |
-      ### 이 토픽을 다시 살려보고 싶으세요?
-
-      마지막으로 답글이 달린 지 **%{days}** 일이 지났습니다. 여기에 답글을 쓰시면 토픽이 리스트의 상단으로 껑충 뛰어오르고, 이 토픽과 관련된 사람들에게 알림이 가게 됩니다.
-
-      이 오래된 대화를 이어가고 싶은 것이 확실하신가요?
   activerecord:
     attributes:
       category:
@@ -307,9 +300,7 @@ ko:
         topic:
           attributes:
             base:
-              warning_requires_pm: "개인 메시지를 통해 경고를 보낼 수 있습니다."
               too_many_users: "한 번에 한 명의 사용자에게 경고를 보낼 수 있습니다."
-              cant_send_pm: "죄송합니다. 그 사용자에게 개인 메세지를 보낼 수 없습니다."
               no_user_selected: "유효한 사용자를 선택해주십시오"
               reply_by_email_disabled: "이메일로 답글쓰기가 비활성화되었습니다."
             featured_link:
@@ -344,10 +335,6 @@ ko:
           attributes:
             execute_at:
               in_the_past: "미래값으로 설정되어야 합니다."
-        translation_overrides:
-          attributes:
-            value:
-              missing_interpolation_keys: '다음 interpolation key가 없습니다: "%{keys}"'
         watched_word:
           attributes:
             word:
@@ -597,7 +584,6 @@ ko:
       email_title: '글타래 "%{title}" 은 운영자의 확인이 필요합니다'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>회원님의 글이 신고되었습니다. <a href="/my/messages">메세지를 확인</a> 해주세요.</p>'
     user_must_edit: '<p>글이 신고되었기 때문에 일시적으로 보이지 않습니다.</p>'
   archetypes:
     regular:
@@ -803,18 +789,17 @@ ko:
     censored_words: "단어는 자동적으로 `&#9632;&#9632;&#9632;&#9632;` 로 대체 됩니다."
     censored_pattern: "자동으로 `&#9632;&#9632;&#9632;&#9632;` 로 대체되는 정규표현식"
     delete_old_hidden_posts: "30일이 지난 숨겨진 글은 자동으로 삭제됩니다."
-    default_locale: "Discourse 인스턴스가 사용하는 기본 언어 (ISO 639-1 Code)"
     allow_user_locale: "사용자에게 자신이 원하는 언어를 선택 허용"
     set_locale_from_accept_language_header: "익명 사용자의 인터페이스 언어를 웹브라우저 언어 헤더를 기준으로 변경하기(실험적인 기능입니다. 익명 cache와 동작하지 않습니다.)"
     min_post_length: "글의 최소 글자 수"
     min_first_post_length: "첫 글 (내용)의 최소 길이"
-    min_private_message_post_length: "메세지 내용의 최소 길이"
+    min_personal_message_post_length: "메세지 내용의 최소 길이"
     max_post_length: "글의 최대 글자 수"
     topic_featured_link_enabled: "토픽에 링크 게시글 달기 활성화"
     show_topic_featured_link_in_digest: "요약 메일에 토픽 주요 링크 보이게 하기."
     min_topic_title_length: "글타래 제목의 최소 글자 수"
     max_topic_title_length: "글타래 제목의 최대 글자 수"
-    min_private_message_title_length: "메세지 제목의 최소 길이"
+    min_personal_message_title_length: "메세지 제목의 최소 길이"
     min_search_term_length: "검색을 하기 위한 최소 글자 수"
     search_tokenize_chinese_japanese_korean: "CJK(한중일) 설정이 되어 있지 않은 사이트라도, 검색시 한중일 언어를 토크나이징하도록 강제합니다."
     search_prefer_recent_posts: "이 옵션을 켜면, 포럼이 너무 커서 검색이 느리게 작동할 때 최근의 포스트부터 먼저 검색합니다."
@@ -852,7 +837,6 @@ ko:
     digest_logo_url: "대체 로고 이미지는 사이트 요약 메일의 상단에 위치하게 됩니다. 옆으로 넓은 사각형 모양이어야 하며, SVG이미지는 사용할 수 없습니다. 빈칸으로 두시면 `logo_url`이 사용됩니다."
     logo_small_url: "사이트의 좌측 상단에 위치할 작은 로고입니다. 정사각형이어야 하며, 스크롤을 내릴때 보이게 됩니다. 비워두시면 홈 글리프가 보이게 됩니다."
     favicon_url: "사이트의 파비콘 입니다. http://en.wikipedia.org/wiki/Favicon를 확인하세요. CDN을 통해 설정하려면 png 파일을 설정해야 합니다."
-    mobile_logo_url: "고정위치 로고는 모바일 사이트의 좌측 상단에 위치하게 됩니다. 정사각형 모양이어야 하며, 비워두시면 `logo_url`이 사용됩니다. 예: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "애플 디바이스는 144px의 아이콘을 사용함. 144px X 144px 사이즈를 추천함"
     notification_email: "The from: 이 이메일 주소는 모든 기본 시스템 메일을 보내는데 사용됩니다. 여기에 명시된 도메인은 SPF, DKIM가 적용되어 있어야하며, reverse PTR 레코드가 제대로 설정되어 있어야 메일이 도착 할 수 있습니다."
     email_custom_headers: "커스텀 이메일 해더의 pipe-delimited"
@@ -864,7 +848,7 @@ ko:
     summary_likes_required: "하나의 글타래에 대하여 요약본 보기 모드가 활성화되기 전까지 요구되는 최소 좋아요 수"
     summary_percent_filter: "요약본 보기를 클릭시, 글 중에 몇 %의 상위 글을 보여줄 것인가?"
     summary_max_results: "이 주제에 대한 요약 글 최대 갯수"
-    enable_private_messages: "신뢰도 1 사용자(메시지 전송을 위한 최소 신뢰도로 설정가능)가 메시지를 작성하고 답장을 쓸 수 있도록 허용합니다. 운영진은 언제나 메시지를 보낼 수 있음을 참고하세요."
+    enable_personal_messages: "신뢰도 1 사용자(메시지 전송을 위한 최소 신뢰도로 설정가능)가 메시지를 작성하고 답장을 쓸 수 있도록 허용합니다. 운영진은 언제나 메시지를 보낼 수 있음을 참고하세요."
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_base_url: "long polling에 사용 될 Base URL (CDN이 동적 콘텐트를 제공할 시에는 origin pull로 설정) eg: http://origin.site.com"
     long_polling_interval: "보낼 데이터가 없을 때 응답 전에 서버가 기다려야하는 시간 (로그인된 유저 전용)"
@@ -917,7 +901,6 @@ ko:
     allow_index_in_robots_txt: "이 사이트가 검색엔진에 의해 인덱스되는 것을 허용합니다.(robots.txt 수정)"
     email_domains_blacklist: "가입 금지된 이메일 도메인 목록, 파이프 기호로 구분. 예: mailinator.com|trashmail.net"
     email_domains_whitelist: "가입하려면 반드시 사용해야하는 이메일 도메인 목록, 파이프 기호로 구분. 경고: 이 목록외의 도메인으로는 가입이 안됩니다!"
-    hide_email_address_taken: "비밀번호 찾기 창에서 사용자 계정의 존재 여부를 알리지 않음."
     log_out_strict: "로그아웃 할때, 모든 장치에서 다같이 로그아웃"
     version_checks: "Dicousre Hub에 ping을 날려 버전 업데이트와 새 버전 알림을 /admin 대시보드에 보이게 합니다."
     new_version_emails: "사용가능한 새로운 업데이트가 있으면 등록된 contact_email 주소로 메일을 발송하여 알려줍니다."
@@ -990,7 +973,7 @@ ko:
     max_bookmarks_per_day: "사용자가 하루동안 할 수 있는 최대 북마크 개수"
     max_edits_per_day: "사용자가 하루동안 할 수 있는 최대 편집 수"
     max_topics_per_day: "사용자가 하루동안 생성할 수 있는 최대 글타래 개수"
-    max_private_messages_per_day: "하루에 유저가 쓸 수 있는 최대 메세지 갯수"
+    max_personal_messages_per_day: "하루에 유저가 쓸 수 있는 최대 메세지 갯수"
     max_invites_per_day: "하루에 보낼 수 있는 초대장의 최대치입니다."
     max_topic_invitations_per_day: "하루에 유저가 최대로 보낼 수 있는 글타래 초대장 수"
     max_logins_per_ip_per_hour: "시간 당 동일 IP에서 로그인할 수 있는 최대 사용자 수"
@@ -1005,7 +988,6 @@ ko:
     clean_orphan_uploads_grace_period_hours: "참조되지 않은 업로드 파일을 제거하기 전 기간(시간)"
     purge_deleted_uploads_grace_period_days: "참조되지 않은 업로드 파일을 완전 삭제하지 전 기간(일)"
     enable_s3_uploads: "Amazon S3 storage에 업로드해주세요. 중요: 올바른 S3 계정이 필요합니다.(access key id와 secret access key 둘다)"
-    s3_use_iam_profile: 'AWS EC2 IAM role로 key를 받음. 정보: 활성화하면 "s3 access key id"와 "s3 secret access key" 설정도 같이 변경됩니다.'
     s3_upload_bucket: "파일이 업로드 될 위치의 Amazon S3 bucket name.  경고: 소문자 알파벳만 허용되며 점 . 이나 밑줄문자 _ 가 없어야 함."
     s3_access_key_id: "이미지를 업로드 할 때 사용할 Amazon S3의 access key id"
     s3_secret_access_key: "이미지를 업로드 할 때 사용할 Amazon S3의 secret access key"
@@ -1050,7 +1032,6 @@ ko:
     min_trust_to_edit_wiki_post: "위키로 설정된 글 수정할 수 있는 최소 회원등급"
     min_trust_to_edit_post: "포스트를 편집하기 위한 최소 신뢰도"
     min_trust_to_allow_self_wiki: "사용자의 포스트 위키를 만들기 위한 최소 신뢰도"
-    min_trust_to_send_messages: "새로운 개인 메시지를 보내기 위한 최소 신뢰도"
     newuser_max_links: "새로운 사용자가 글에 붙일 수 있는 최대 링크 개수"
     newuser_max_images: "새로운 사용자가 글에 붙일 수 있는 최대 이미지 개수"
     newuser_max_attachments: "새로운 사용자가 포스트에 첨부할 수 있는 최대 파일 개수"
@@ -1060,7 +1041,7 @@ ko:
     max_users_notified_per_group_mention: "그룹이 멘션을 받으면 알림을 받는 최대사용자의 수(최대치에 도달하면 알림이 전송되지 않음)"
     create_thumbnails: "글의 너무 큰 크기의 이미지는 thumnails와 lightbox를 만든다."
     email_time_window_mins: "알림 메일을 보내기 전 대기 기간(분), 사용자에게 글의 변경하고 완료할 수 있는 기회를 준다."
-    private_email_time_window_seconds: "사용자가 메시지를 재편집할 기회를 주기 위하여 개인 알림 메일을 보내기 이전에 설정한 시간만큼 대기합니다."
+    personal_email_time_window_seconds: "사용자가 메시지를 재편집할 기회를 주기 위하여 개인 알림 메일을 보내기 이전에 설정한 시간만큼 대기합니다."
     email_posts_context: "알림메일의 내용에 추가할 기존 답글 수"
     flush_timings_secs: "사용자의 이용 시간 데이터를 서버로 보내는 기간(초)"
     title_max_word_length: "글타래 제목안에 단어들의 최대 길이"
@@ -1113,7 +1094,6 @@ ko:
     reply_by_email_enabled: "이메일을 통해 주제에 답글을 달 수 있음."
     reply_by_email_address: "이메일 주소로 답글을 다는 템플릿. 예: %{reply_key}@reply.myforum.com"
     alternative_reply_by_email_addresses: "수신된 이메일에 대한 답장메일의 대체 템플릿 목록. 예: %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
-    incoming_email_prefer_html: "수신 이메일에 text 대신 HTML을 사용"
     disable_emails: "Discourse가 어떤 메일로 보내지 못하도록 합니다."
     strip_images_from_short_emails: "2800바이트, 즉 2.73 KB 이내 사이즈를 가지도록 이미지를 빼주세요."
     short_email_length: "짦은 이메일 바이트 길이"
@@ -1155,7 +1135,6 @@ ko:
     relative_date_duration: "절대적 날짜(9월 3일) 대신 상대적 날짜(7일 전)가 사용될 일 수 (글타래가 작성된 이후부터)"
     delete_user_max_post_age: "(x)일 이전의 첫 글가 있는 유저는 삭제할 수 없음."
     delete_all_posts_max: "전체 글 지우기 버튼을 통해 한번에 삭제할 수 있는 최대 글 수. 만약 사용자가 이것보다 많은 글을 가지고 있으면 한번에 삭제 할 수 없다."
-    username_change_period: "등록 후 사용자 이름 최소 유지 일 수(0은 사용자 이름 변경을 막음)"
     email_editable: "가입 후 이메일 주소 변경 허용"
     logout_redirect: "로그아웃 후에 리디렉션할 위치 (예: http://somesite.com/logout)"
     allow_uploaded_avatars: "사용자가 커스텀 프로필 사진을 올릴 수 있도록 허용."
@@ -1170,7 +1149,6 @@ ko:
     suppress_digest_email_after_days: "(n) 일 이상 사이트를 방문하지 않은 사용자에게는 요약 이메일 보내지 않기."
     digest_suppress_categories: "요약 이메일에서 이 카테고리 숨기기."
     disable_digest_emails: "모든 사용자에게 요약 이메일 전송 해제하기"
-    email_accent_bg_color: "강조 색상은 HTML 이메일의 몇몇 요소의 배경색상으로 사용됩니다. 색상명('red')이나 hex 값('#FF0000')을 입력하세요."
     email_accent_fg_color: "텍스트 컬러는 HTML 이메일의 배경색상으로 렌더링됩니다. 색상명('white')나 hex값('#FFFFFF')을 입력하세요."
     email_link_color: "HTML 이메일의 링크 색상. 색상명('blue')나 hex값('#0000FF')를 입력하세요."
     detect_custom_avatars: "사용자가 커스텀 프로필 사진을 올렸는지의 체크 여부."
@@ -1302,7 +1280,6 @@ ko:
     new_registrations_disabled: "지금은 새로 가입할 수 없습니다."
     password_too_long: "비밀번호는 200글자 이내만 허용됩니다."
     missing_user_field: "사용자 정보 입력을 덜 끝마쳤습니다."
-    close_window: "사용자 인증 완료. 계속하기 위해 브라우저 창을 닫으세요."
   user:
     no_accounts_associated: "연계된 계정이 없음"
     deactivated_by_staff: "운영진에 의해 비활성화됨"
@@ -1312,7 +1289,6 @@ ko:
     username:
       short: "최소 %{min}자 이상이어야 합니다."
       long: "%{max}자 이상 사용할 수 없습니다."
-      characters: "문자나 숫자만 사용해야 합니다."
       unique: "이미 사용중입니다."
       blank: "공백이 없어야 합니다."
       must_begin_with_alphanumeric_or_underscore: "첫글자는 알파벳, 숫자, 언더바만 쓸 수 있습니다."
@@ -1333,10 +1309,6 @@ ko:
       other: "%{count}개의 신고가 접수 대기 중"
   unsubscribe_mailer:
     title: "메일링 구독해지"
-  invite_mailer:
-    subject_template: "%{invitee_name} 회원님이 %{site_domain_name} 에 '%{topic_title}'에 초대하였습니다."
-  invite_forum_mailer:
-    subject_template: "%{site_domain_name}의 %{invitee_name}님께서 당신을 초대하였습니다."
   invite_password_instructions:
     subject_template: "%{site_name} 계정을 위해 비밀번호 설정"
   flag_reasons:
@@ -1560,9 +1532,6 @@ ko:
         이 배지는 당신이 쓴 포스트에 좋아요를 처음받았을 때 수여됩니다. 축하드립니다. 동료 커뮤니티 사용자들이 흥미를 느끼는 훌륭한 포스트를 올리셨군요!
     autobiographer:
       name: 자서전 작가
-      description: <a href="/my/preferences">프로필</a> 정보를 채워넣었습니다.
-      long_description: |
-        이 배지는 <a href="/my/preferences">사용자 프로필</a>을 채워 넣고 프로필 사진을 올렸을 때 수여됩니다. 커뮤니티에 당신이 누구인지 무엇에 흥미를 느끼는지를 알려주면, 커뮤니티를 더 끈끈하게 만드는데 도움이 됩니다. 같이 갑시다!
     anniversary:
       name: 1주년
       description: 1년동안 활동하고 글도 1개이상 썼습니다
@@ -1655,9 +1624,6 @@ ko:
         이 배지는 답글을 쓸 때 처음으로 인용을 했을 때 수여됩니다. 앞선 포스트의 관련있는 부분을 인용하면 대화가 토픽과 다른 포스트끼리 연결되는데 도움이 됩니다. 인용을 하는 가장 쉬운 방법은 포스트의 특정 내용을 마우스로 드래그하고 답글 버튼을 누르는 것입니다. 아낌없이 인용해보세요!
     read_guidelines:
       name: 가이드라인을 읽었어요
-      description: <a href="/guidelines">커뮤니티 가이드라인</a> 을 읽었습니다
-      long_description: |
-        이 배지는 <a href="/guidelines">커뮤니티 가이드라인</a>을 읽은 사용자에게 수여됩니다. 이 단순한 가이드라인을 따르는 것만으로 모두에게 안전하고, 즐겁고, 지속가능한 커뮤니티가 되는데 도움이 됩니다. 이 화면 너머에 다른 사람이 있다는 것을 명심합시다. 착하게 살아요!
     reader:
       name: 독서가
       description: 100개가 넘는 답글이 달린 토픽의 답글을 모두 읽었습니다
@@ -1749,7 +1715,6 @@ ko:
     badge_title_metadata: "%{site_title}의 %{display_name} 배지"
   admin_login:
     success: "이메일 보냄"
-    error: "에러!"
     email_input: "관리자 이메일"
     submit_button: "이메일 보내기"
   performance_report:

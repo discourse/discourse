@@ -187,7 +187,7 @@ end
 # Table name: color_schemes
 #
 #  id             :integer          not null, primary key
-#  name           :string           not null
+#  name           :string(255)      not null
 #  version        :integer          default(1), not null
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null

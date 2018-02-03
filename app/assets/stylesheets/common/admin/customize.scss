@@ -4,6 +4,10 @@
     margin-bottom: 10px;
     input {
       margin-bottom: 0;
+      font-size: $font-down-2;
+    }
+    .btn-small {
+      font-size: $font-down-2;
     }
   }
 
@@ -57,7 +61,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 100000;
+    z-index: z("fullscreen");
     background-color: white;
     width: 100%;
     padding: 0;
@@ -107,7 +111,7 @@
       .d-icon-mobile {
         position: relative;
         top: -3px;
-        font-size: 1.5em;
+        font-size: $font-up-3;
         max-height: 20px;
       }
     }
@@ -190,7 +194,7 @@
 
   .status-message {
     display: block;
-    font-size: 0.8em;
+    font-size:  $font-down-1;
     margin-top: 8px;
   }
 

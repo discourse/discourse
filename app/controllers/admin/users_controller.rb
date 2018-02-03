@@ -82,10 +82,24 @@ class Admin::UsersController < Admin::AdminController
       )
     end
 
+    DiscourseEvent.trigger(
+      :user_suspended,
+      user: @user,
+      reason: params[:reason],
+      message: message,
+      user_history: user_history,
+      post_id: params[:post_id],
+      suspended_till: params[:suspend_until],
+      suspended_at: DateTime.now
+    )
+
+    perform_post_action
+
     render_json_dump(
       suspension: {
         suspended: true,
         suspend_reason: params[:reason],
+        full_suspend_reason: user_history.try(:details),
         suspended_till: @user.suspended_till,
         suspended_at: @user.suspended_at
       }
@@ -285,11 +299,12 @@ class Admin::UsersController < Admin::AdminController
         user_history_id: silencer.user_history.id
       )
     end
+    perform_post_action
 
     render_json_dump(
       silence: {
         silenced: true,
-        silence_reason: params[:reason],
+        silence_reason: silencer.user_history.try(:details),
         silenced_till: @user.silenced_till,
         suspended_at: @user.silenced_at
       }
@@ -454,6 +469,27 @@ class Admin::UsersController < Admin::AdminController
   end
 
   private
+
+    def perform_post_action
+      return unless params[:post_id].present? &&
+        params[:post_action].present?
+
+      if post = Post.where(id: params[:post_id]).first
+        case params[:post_action]
+        when 'delete'
+          PostDestroyer.new(current_user, post).destroy
+        when 'edit'
+          revisor = PostRevisor.new(post)
+
+          # Take what the moderator edited in as gospel
+          revisor.revise!(
+            current_user,
+            { raw:  params[:post_edit] },
+            skip_validations: true, skip_revision: true
+          )
+        end
+      end
+    end
 
     def fetch_user
       @user = User.find_by(id: params[:user_id])

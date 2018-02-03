@@ -12,6 +12,8 @@ class UserEmail < ActiveRecord::Base
   validates :email, email: true, format: { with: EmailValidator.email_regex },
                     if: :validate_email?
 
+  validate :user_id_not_changed, if: :primary
+
   validates :primary, uniqueness: { scope: [:user_id] }
 
   private
@@ -27,6 +29,14 @@ class UserEmail < ActiveRecord::Base
     return false if self.skip_validate_email
     email_changed?
   end
+
+  def user_id_not_changed
+    if self.will_save_change_to_user_id? && self.persisted?
+      self.errors.add(:user_id, I18n.t(
+        'active_record.errors.model.user_email.attributes.user_id.reassigning_primary_email')
+      )
+    end
+  end
 end
 
 # == Schema Information
@@ -37,8 +47,8 @@ end
 #  user_id    :integer          not null
 #  email      :string(513)      not null
 #  primary    :boolean          default(FALSE), not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  created_at :datetime
+#  updated_at :datetime
 #
 # Indexes
 #

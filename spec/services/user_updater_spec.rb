@@ -112,6 +112,7 @@ describe UserUpdater do
 
     context 'when sso overrides bio' do
       it 'does not change bio' do
+        SiteSetting.sso_url = "https://www.example.com/sso"
         SiteSetting.enable_sso = true
         SiteSetting.sso_overrides_bio = true
 

@@ -4,10 +4,11 @@ import Group from 'discourse/models/group';
 export default Discourse.Route.extend({
 
   beforeModel(transition) {
+    const self = this;
     const params = transition.queryParams;
 
-    if (this.currentUser) {
-      this.replaceWith("discovery.latest").then(e => {
+    if (self.currentUser) {
+      self.replaceWith("discovery.latest").then(e => {
         if (params.username) {
           // send a message to a user
           User.findByUsername(params.username).then(user => {

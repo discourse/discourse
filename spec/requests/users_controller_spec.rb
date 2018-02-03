@@ -3,6 +3,48 @@ require 'rails_helper'
 RSpec.describe UsersController do
   let(:user) { Fabricate(:user) }
 
+  def honeypot_magic(params)
+    get '/u/hp.json'
+    json = JSON.parse(response.body)
+    params[:password_confirmation] = json["value"]
+    params[:challenge] = json["challenge"].reverse
+    params
+  end
+
+  describe '#create' do
+
+    context "when taking over a staged account" do
+      let!(:staged) { Fabricate(:staged, email: "staged@account.com", active: true) }
+
+      it "succeeds" do
+        post '/u.json', params: honeypot_magic(
+          email: staged.email,
+          username: "zogstrip",
+          password: "P4ssw0rd$$"
+        )
+
+        expect(response.status).to eq(200)
+        result = ::JSON.parse(response.body)
+        expect(result["success"]).to eq(true)
+
+        created_user = User.find_by_email(staged.email)
+        expect(created_user.staged).to eq(false)
+        expect(created_user.active).to eq(false)
+        expect(created_user.registration_ip_address).to be_present
+        expect(!!created_user.custom_fields["from_staged"]).to eq(true)
+
+        # do not allow emails changes please
+
+        put "/u/update-activation-email.json", params: { email: 'bob@bob.com' }
+
+        created_user.reload
+        expect(created_user.email).to eq("staged@account.com")
+        expect(response.status).not_to eq(200)
+      end
+    end
+
+  end
+
   describe '#show' do
 
     it "should be able to view a user" do
@@ -236,7 +278,9 @@ RSpec.describe UsersController do
           }
 
           expect(response).to be_success
-          expect(JSON.parse(response.body)["groups"].first['name']).to eq(messageable_group.name)
+
+          expect(JSON.parse(response.body)["groups"].map { |group| group['name'] })
+            .to contain_exactly(messageable_group.name, Group.find(Group::AUTO_GROUPS[:moderators]).name)
         end
 
         it 'searches for mentionable groups' do
@@ -281,6 +325,19 @@ RSpec.describe UsersController do
           expect(JSON.parse(response.body)).not_to have_key(:groups)
         end
       end
+    end
+  end
+
+  describe '.user_preferences_redirect' do
+    it 'requires the user to be logged in' do
+      get '/user_preferences'
+      expect(response.status).to eq(404)
+    end
+
+    it "redirects to their profile when logged in" do
+      sign_in(user)
+      get '/user_preferences'
+      expect(response).to redirect_to("/u/#{user.username_lower}/preferences")
     end
   end
 end

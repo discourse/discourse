@@ -7,7 +7,6 @@
 
 ar:
   site_settings:
-    poll_enabled: "السماح للاعضاء بإنشاء تصويتات؟"
     poll_maximum_options: "أقصى عدد للخيارات في كلّ تصويت."
     poll_edit_window_mins: "عدد الدقائق بعد نشر المنشور المسموح فيها بتعديل التصويت."
   poll:

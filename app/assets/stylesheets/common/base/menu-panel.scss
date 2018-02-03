@@ -21,7 +21,7 @@
   border: 1px solid $primary-low;
   box-shadow: 0 2px 2px rgba(0,0,0, .25);
   background-color: $secondary;
-  z-index: 1100;
+  z-index: z("header");
   padding: 0.5em;
   width: 300px;
 
@@ -65,7 +65,7 @@
     }
 
     .new {
-      font-size: 0.8em;
+      font-size: $font-down-1;
       margin-left: 0.5em;
       color: dark-light-choose($primary-medium, $secondary-medium);
     }
@@ -90,7 +90,7 @@
   b.topics-count {
     color: dark-light-choose($primary-medium, $secondary-medium);
     font-weight: normal;
-    font-size: 11px;
+    font-size: $font-down-2;
   }
 
   span.badge-category {
@@ -102,6 +102,10 @@
 }
 
 .search-menu {
+
+  .search-input {
+    position: relative;
+  }
 
   .search-context .show-help {
     float: right;
@@ -119,7 +123,6 @@
     box-sizing: border-box;
     width: calc(100% - 6px);
     height: 32px;
-    padding: 5px;
   }
 
   .search-context {
@@ -129,14 +132,14 @@
 
   .searching {
     position: absolute;
-    top: 0.25em;
-    right: 1.5em;
+    top: 1.15em;
+    right: 1em;
 
     .spinner {
       width: 10px;
       height: 10px;
       border-width: 2px;
-      margin: 20px 0 0 0;
+      margin: 0;
     }
   }
   // I am ghetto using this to display "Show More".. be warned
@@ -152,7 +155,7 @@
 
   .search-link {
     .badge-category-parent {
-      line-height: 0.8em;
+      line-height: $line-height-small;
     }
     .topic-title {
       margin-right: 6px;
@@ -170,8 +173,8 @@
   }
 
   li:not(.category):not(.heading) {
-    font-size: 0.929em;
-    line-height: 16px;
+    font-size: $font-0;
+    line-height: $line-height-medium;
 
     .fa {
       font-size: inherit;
@@ -323,9 +326,6 @@ div.menu-links-header {
     color: dark-light-choose($primary-medium, $secondary-medium);
   }
 
-  a {
-    font-size: 1.1em;
-  }
   .d-icon-user {
     margin-right: 0.2em;
   }

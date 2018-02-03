@@ -17,9 +17,10 @@ export default DropdownSelectBoxComponent.extend({
     const state = pinned ? `pinned${globally}` : "unpinned";
     const title = I18n.t(`topic_statuses.${state}.title`);
 
-    content.name = `${title}${iconHTML("caret-down")}`.htmlSafe();
-    content.dataName = title;
-    content.icon = `thumb-tack ${state === "unpinned" ? "unpinned" : null}`;
+    content.label = `${title}${iconHTML("caret-down")}`.htmlSafe();
+    content.title = title;
+    content.name = state;
+    content.icon = `thumb-tack${state === "unpinned" ? " unpinned" : ''}`;
     return content;
   },
 
@@ -43,13 +44,15 @@ export default DropdownSelectBoxComponent.extend({
     ]);
   },
 
-  mutateValue(value) {
-    const topic = this.get("topic");
+  actions: {
+    onSelect() {
+      const topic = this.get("topic");
 
-    if (value === "unpinned") {
-      topic.clearPin();
-    } else {
-      topic.rePin();
+      if (this.get("computedValue") === "unpinned") {
+        topic.clearPin();
+      } else {
+        topic.rePin();
+      }
     }
   }
 });

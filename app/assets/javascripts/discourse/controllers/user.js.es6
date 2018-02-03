@@ -1,12 +1,14 @@
 import CanCheckEmails from 'discourse/mixins/can-check-emails';
 import computed from 'ember-addons/ember-computed-decorators';
 import User from 'discourse/models/user';
+import optionalService from 'discourse/lib/optional-service';
 
 export default Ember.Controller.extend(CanCheckEmails, {
   indexStream: false,
   application: Ember.inject.controller(),
   userNotifications: Ember.inject.controller('user-notifications'),
   currentPath: Ember.computed.alias('application.currentPath'),
+  adminTools: optionalService(),
 
   @computed("content.username")
   viewingSelf(username) {
@@ -22,6 +24,14 @@ export default Ember.Controller.extend(CanCheckEmails, {
   collapsedInfo(indexStream, viewingSelf, forceExpand){
     return (!indexStream || viewingSelf) && !forceExpand;
   },
+
+  hasGivenFlags: Ember.computed.gt('model.number_of_flags_given', 0),
+  hasFlaggedPosts: Ember.computed.gt('model.number_of_flagged_posts', 0),
+  hasDeletedPosts: Ember.computed.gt('model.number_of_deleted_posts', 0),
+  hasBeenSuspended: Ember.computed.gt('model.number_of_suspensions', 0),
+  hasReceivedWarnings: Ember.computed.gt('model.warnings_received_count', 0),
+
+  showStaffCounters: Ember.computed.or('hasGivenFlags', 'hasFlaggedPosts', 'hasDeletedPosts', 'hasBeenSuspended', 'hasReceivedWarnings'),
 
   @computed('model.isSuspended', 'currentUser.staff')
   isNotSuspendedOrIsStaff(isSuspended, isStaff) {
@@ -42,7 +52,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
   @computed('viewingSelf', 'currentUser.admin')
   showPrivateMessages(viewingSelf, isAdmin) {
-    return this.siteSettings.enable_private_messages && (viewingSelf || isAdmin);
+    return this.siteSettings.enable_personal_messages && (viewingSelf || isAdmin);
   },
 
   @computed('viewingSelf', 'currentUser.staff')
@@ -85,11 +95,15 @@ export default Ember.Controller.extend(CanCheckEmails, {
       this.set('forceExpand', true);
     },
 
-    adminDelete() {
-      // I really want this deferred, don't want to bring in all this code till used
-      const AdminUser = requirejs('admin/models/admin-user').default;
-      AdminUser.find(this.get('model.id')).then(user => user.destroy({deletePosts: true}));
+    showSuspensions() {
+      this.get('adminTools').showActionLogs(this, {
+        target_user: this.get('model.username'),
+        action_name: 'suspend_user'
+      });
     },
 
+    adminDelete() {
+      this.get('adminTools').deleteUser(this.get('model.id'));
+    }
   }
 });

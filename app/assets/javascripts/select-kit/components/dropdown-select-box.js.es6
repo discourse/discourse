@@ -21,7 +21,7 @@ export default SingleSelectComponent.extend({
   },
 
   didClickOutside() {
-    if (this.get("isExpanded") === false) { return; }
+    if (this.get("isExpanded") === false) return;
     this.close();
   },
 

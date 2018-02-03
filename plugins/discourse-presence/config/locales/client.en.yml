@@ -3,3 +3,6 @@ en:
     presence:
       replying: "replying"
       editing: "editing"
+      replying_to_topic:
+        one: "is replying"
+        other: "are replying"

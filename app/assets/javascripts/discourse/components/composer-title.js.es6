@@ -17,6 +17,10 @@ export default Ember.Component.extend({
         $input.putCursorAtEnd();
       });
     }
+
+    if (this.get('composer.titleLength') > 0) {
+      Ember.run.debounce(this, this._titleChanged, 10);
+    }
   },
 
   @computed('composer.titleLength', 'composer.missingTitleCharacters', 'composer.minimumTitleLength', 'lastValidatedAt')
@@ -124,7 +128,7 @@ export default Ember.Component.extend({
 
   @computed('composer.title', 'composer.titleLength')
   isAbsoluteUrl(title, titleLength) {
-    return titleLength > 0 && /^(https?:)?\/\/[\w\.\-]+/i.test(title);
+    return titleLength > 0 && /^(https?:)?\/\/[\w\.\-]+/i.test(title) && !/\s/.test(title);
   },
 
   bodyIsDefault() {

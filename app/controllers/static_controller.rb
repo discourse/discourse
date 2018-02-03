@@ -5,6 +5,8 @@ class StaticController < ApplicationController
 
   skip_before_action :check_xhr, :redirect_to_login_if_required
   skip_before_action :verify_authenticity_token, only: [:brotli_asset, :cdn_asset, :enter, :favicon, :service_worker_asset]
+  skip_before_action :preload_json, only: [:brotli_asset, :cdn_asset, :enter, :favicon, :service_worker_asset]
+  skip_before_action :handle_theme, only: [:brotli_asset, :cdn_asset, :enter, :favicon, :service_worker_asset]
 
   PAGES_WITH_EMAIL_PARAM = ['login', 'password_reset', 'signup']
 
@@ -146,6 +148,10 @@ class StaticController < ApplicationController
   def service_worker_asset
     respond_to do |format|
       format.js do
+
+        # we take 1 hour to give a new service worker to all users
+        immutable_for 1.hour
+
         render(
           plain: Rails.application.assets_manifest.find_sources('service-worker.js').first,
           content_type: 'application/javascript'

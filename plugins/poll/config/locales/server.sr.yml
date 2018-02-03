@@ -1,0 +1,24 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+sr:
+  site_settings:
+    poll_maximum_options: "Najveći broj opcija dostupan u anketi."
+  poll:
+    multiple_polls_without_name: "Postoji više anketa bez imena. Koristite '<code>name</code>' pridev kako bi jedinstveno identifikovali vašu anketu."
+    multiple_polls_with_same_name: "Postoji više anketa sa istim imenom: <strong>%{name}</strong>. Koristite '<code>name</code>' pridev kako bi jedinstveno identifikovali vašu anketu."
+    default_poll_must_have_at_least_2_options: "Anketa mora imati najmanje 2 opcije."
+    named_poll_must_have_at_least_2_options: "Anketa imena <strong>%{name}</strong> mora imati najmanje 2 opcije."
+    default_poll_must_have_less_options:
+      one: "Anketa mora imati manje od %{count} opcije."
+      few: "Anketa mora imati manje od %{count} opcije."
+      other: "Anketa mora imati manje od %{count} opcij(a/e)."
+    named_poll_must_have_less_options:
+      one: "Anketa imena <strong>%{name}</strong> mora imati manje od %{count} opcije."
+      few: "Anketa imena <strong>%{name}</strong> mora imati manje od %{count} opcija."
+      other: "Anketa imena <strong>%{name}</strong> mora imati manje od %{count} opcij(a/e)."
+    default_poll_must_have_different_options: "Anketa mora imati različite opcije."

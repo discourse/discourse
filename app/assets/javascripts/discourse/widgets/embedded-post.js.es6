@@ -6,6 +6,8 @@ import DiscourseURL from 'discourse/lib/url';
 import hbs from 'discourse/widgets/hbs-compiler';
 
 createWidget('post-link-arrow', {
+  tagName: 'div.post-link-arrow',
+
   template: hbs`
     {{#if attrs.above}}
       <a class="post-info arrow" title={{i18n "topic.jump_reply_up"}}>

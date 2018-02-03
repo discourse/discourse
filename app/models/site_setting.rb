@@ -30,7 +30,7 @@ class SiteSetting < ActiveRecord::Base
   client_settings << :available_locales
 
   def self.available_locales
-    LocaleSiteSetting.values.map { |e| e[:value] }.join('|')
+    LocaleSiteSetting.values.to_json
   end
 
   def self.topic_title_length
@@ -38,7 +38,7 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.private_message_title_length
-    min_private_message_title_length..max_topic_title_length
+    min_personal_message_title_length..max_topic_title_length
   end
 
   def self.post_length
@@ -50,7 +50,7 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.private_message_post_length
-    min_private_message_post_length..max_post_length
+    min_personal_message_post_length..max_post_length
   end
 
   def self.top_menu_items
@@ -157,7 +157,7 @@ end
 # Table name: site_settings
 #
 #  id         :integer          not null, primary key
-#  name       :string           not null
+#  name       :string(255)      not null
 #  data_type  :integer          not null
 #  value      :text
 #  created_at :datetime         not null

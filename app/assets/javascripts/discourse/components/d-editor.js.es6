@@ -8,7 +8,9 @@ import { emojiSearch, isSkinTonableEmoji } from 'pretty-text/emoji';
 import { emojiUrlFor } from 'discourse/lib/text';
 import { getRegister } from 'discourse-common/lib/get-owner';
 import { findRawTemplate } from 'discourse/lib/raw-templates';
-import { determinePostReplaceSelection } from 'discourse/lib/utilities';
+import { siteDir } from 'discourse/lib/text-direction';
+import { determinePostReplaceSelection, clipboardData } from 'discourse/lib/utilities';
+import toMarkdown from 'discourse/lib/to-markdown';
 import deprecated from 'discourse-common/lib/deprecated';
 
 // Our head can be a static string or a function that returns a string
@@ -35,6 +37,11 @@ const OP = {
 const FOUR_SPACES_INDENT = '4-spaces-indent';
 
 const _createCallbacks = [];
+
+const isInside = (text, regex) => {
+  const matches = text.match(regex);
+  return matches && (matches.length % 2);
+};
 
 class Toolbar {
 
@@ -101,6 +108,17 @@ class Toolbar {
       perform: e => e.applyList(i => !i ? "1. " : `${parseInt(i) + 1}. `, 'list_item')
     });
 
+    if (Discourse.SiteSettings.support_mixed_text_direction) {
+      this.addButton({
+        id: 'toggle-direction',
+        group: 'extras',
+        icon: 'exchange',
+        shortcut: 'Shift+6',
+        title: 'composer.toggle_direction',
+        perform: e => e.toggleDirection(),
+      });
+    }
+
     if (site.mobileView) {
       this.groups.push({group: 'mobileExtras', buttons: []});
     }
@@ -121,7 +139,8 @@ class Toolbar {
       icon: button.label ? null : button.icon || button.id,
       action: button.action || 'toolbarButton',
       perform: button.perform || function() { },
-      trimLeading: button.trimLeading
+      trimLeading: button.trimLeading,
+      popupMenu: button.popupMenu || false
     };
 
     if (button.sendAction) {
@@ -247,6 +266,7 @@ export default Ember.Component.extend({
   @on('willDestroyElement')
   _shutDown() {
     if (this.get('composerEvents')) {
+      this.appEvents.off('composer:insert-block');
       this.appEvents.off('composer:insert-text');
       this.appEvents.off('composer:replace-text');
     }
@@ -272,6 +292,7 @@ export default Ember.Component.extend({
     const markdownOptions = this.get('markdownOptions') || {};
 
     cookAsync(value, markdownOptions).then(cooked => {
+      if (this.get('isDestroyed')) { return; }
       this.set('preview', cooked);
       Ember.run.scheduleOnce('afterRender', () => {
         if (this._state !== "inDOM") { return; }
@@ -616,6 +637,87 @@ export default Ember.Component.extend({
     Ember.run.scheduleOnce("afterRender", () => $textarea.focus());
   },
 
+  _extractTable(text) {
+    if (text.endsWith("\n")) {
+      text = text.substring(0, text.length - 1);
+    }
+
+    let rows = text.split("\n");
+
+    if (rows.length > 1) {
+      const columns = rows.map(r => r.split("\t").length);
+      const isTable = columns.reduce((a, b) => a && columns[0] === b && b > 1) &&
+                      !(columns[0] === 2 && rows[0].split("\t")[0].match(/^•$|^\d+.$/)); // to skip tab delimited lists
+
+      if (isTable) {
+        const splitterRow = [...Array(columns[0])].map(() => "---").join("\t");
+        rows.splice(1, 0, splitterRow);
+
+        return "|" + rows.map(r => r.split("\t").join("|")).join("|\n|") + "|\n";
+      }
+    }
+    return null;
+  },
+
+  _toggleDirection() {
+    const $textArea = $(".d-editor-input");
+    let currentDir = $textArea.attr('dir') ? $textArea.attr('dir') : siteDir(),
+        newDir = currentDir === 'ltr' ? 'rtl' : 'ltr';
+
+    $textArea.attr('dir', newDir).focus();
+  },
+
+  paste(e) {
+    if (!$(".d-editor-input").is(":focus")) {
+      return;
+    }
+
+    const isComposer = $("#reply-control .d-editor-input").is(":focus");
+    let { clipboard, canPasteHtml } = clipboardData(e, isComposer);
+
+    let plainText = clipboard.getData("text/plain");
+    let html = clipboard.getData("text/html");
+    let handled = false;
+
+    if (plainText) {
+      plainText = plainText.trim().replace(/\r/g,"");
+      const table = this._extractTable(plainText);
+      if (table) {
+        this.appEvents.trigger('composer:insert-text', table);
+        handled = true;
+      }
+    }
+
+    const { pre, lineVal } = this._getSelected(null, {lineVal: true});
+    const isInlinePasting = pre.match(/[^\n]$/);
+
+    if (canPasteHtml && plainText) {
+      if (isInlinePasting) {
+        canPasteHtml = !(lineVal.match(/^```/) || isInside(pre, /`/g) || lineVal.match(/^    /));
+      } else {
+        canPasteHtml = !isInside(pre, /(^|\n)```/g);
+      }
+    }
+
+    if (canPasteHtml && !handled) {
+      let markdown = toMarkdown(html);
+
+      if (!plainText || plainText.length < markdown.length) {
+        if(isInlinePasting) {
+          markdown = markdown.replace(/^#+/, "").trim();
+          markdown = pre.match(/\S$/) ? ` ${markdown}` : markdown;
+        }
+
+        this.appEvents.trigger('composer:insert-text', markdown);
+        handled = true;
+      }
+    }
+
+    if (handled) {
+      e.preventDefault();
+    }
+  },
+
   actions: {
     emojiSelected(code) {
       let selected = this._getSelected();
@@ -642,6 +744,7 @@ export default Ember.Component.extend({
         addText: text => this._addText(selected, text),
         replaceText: text => this._addText({pre: '', post: ''}, text),
         getText: () => this.get('value'),
+        toggleDirection: () => this._toggleDirection(),
       };
 
       if (button.sendAction) {
@@ -653,6 +756,11 @@ export default Ember.Component.extend({
 
     showLinkModal() {
       this._lastSel = this._getSelected();
+
+      if (this._lastSel) {
+        this.set("linkText", this._lastSel.value.trim());
+      }
+
       this.set('insertLinkHidden', false);
     },
 

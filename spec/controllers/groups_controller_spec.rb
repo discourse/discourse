@@ -83,6 +83,12 @@ describe GroupsController do
       expect(response).to be_success
       expect(response.content_type).to eq('application/rss+xml')
     end
+
+    it 'fails when disabled' do
+      SiteSetting.enable_mentions = false
+      get :mentions_feed, params: { group_id: group.name }, format: :rss
+      expect(response).not_to be_success
+    end
   end
 
 end

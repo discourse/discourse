@@ -8,12 +8,12 @@
   position: absolute;
   background-color: black;
   opacity: 0.8;
-  z-index: 1000;
+  z-index: z("modal","overlay");
 }
 
 .d-editor-modals {
   position: absolute;
-  z-index: 1001;
+  z-index: z("modal","content");
 }
 
 .d-editor {
@@ -64,7 +64,6 @@
   margin-left: 1%;
   display: flex;
   flex-direction: column;
-  background: $secondary;
 }
 
 .d-editor-button-bar {
@@ -81,7 +80,7 @@
   }
 
   .btn:not(.no-text) {
-    font-size: 1.2em;
+    font-size: $font-up-1;
   }
 
   .btn.bold {
@@ -101,15 +100,19 @@
   display: inline-block;
 }
 
+.d-editor-preview-wrapper {
+  overflow: auto;
+  cursor: default;
+}
+
 .d-editor-input,
 .d-editor-preview {
   box-sizing: border-box;
-  height: 100%;
+  flex: 1 1 100%;  
+  width: 100%;  
   margin: 0;
   min-height: auto;
-  width: 100%;
   word-wrap: break-word;
-  flex-grow: 1;
   -webkit-appearance: none;
   border-radius: 0;  
   &:focus {
@@ -119,22 +122,22 @@
   }
 }
 
-.d-editor-plugin {
-  display: flex;
-  overflow: auto;
-}
-
 .d-editor-input {
   border: 0;
   padding: 10px;
+  height: 100%;
   overflow-x: hidden;
-  resize: none;  
+  resize: none; 
 }
 
 .d-editor-preview {
+  height: auto;
+}
+
+.d-editor-plugin {
+  display: flex;
+  flex: 1 1;
   overflow: auto;
-  cursor: default;
-  padding: 0 10px;
 }
 
 .composing-whisper .d-editor-preview {
@@ -161,6 +164,10 @@
   }
   .d-editor-textarea-wrapper {
     border: 1px solid $primary-low;
+    min-height: 14em;
+  }
+  .d-editor-button-bar .btn {
+    padding: 6px 8px;
   }
   .d-editor-preview-wrapper {
     max-width: 100%;
@@ -168,6 +175,7 @@
   }
   .d-editor-preview {
     background-color: $primary-very-low;
+    padding: 5px;
   }
 }
 

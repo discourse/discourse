@@ -275,9 +275,11 @@ class TopicView
     end
   end
 
+  MAX_PARTICIPANTS = 24
+
   def post_counts_by_user
     @post_counts_by_user ||= begin
-      post_ids = unfiltered_posts.pluck(:id)
+      post_ids = unfiltered_post_ids
 
       return {} if post_ids.blank?
 
@@ -288,11 +290,28 @@ class TopicView
            AND user_id IS NOT NULL
       GROUP BY user_id
       ORDER BY count_all DESC
-         LIMIT 24
+         LIMIT #{MAX_PARTICIPANTS}
       SQL
 
       Hash[Post.exec_sql(sql, post_ids: post_ids).values]
     end
+  end
+
+  def participant_count
+    @participant_count ||=
+      begin
+        if participants.size == MAX_PARTICIPANTS
+          sql = <<~SQL
+            SELECT COUNT(DISTINCT user_id)
+            FROM posts
+            WHERE id IN (:post_ids)
+            AND user_id IS NOT NULL
+          SQL
+          Post.exec_sql(sql, post_ids: unfiltered_post_ids).getvalue(0, 0).to_i
+        else
+          participants.size
+        end
+      end
   end
 
   def participants
@@ -352,6 +371,17 @@ class TopicView
 
   def filtered_post_ids
     @filtered_post_ids ||= filtered_post_stream.map { |tuple| tuple[0] }
+  end
+
+  def unfiltered_post_ids
+    @unfiltered_post_ids ||=
+      begin
+        if @contains_gaps
+          unfiltered_posts.pluck(:id)
+        else
+          filtered_post_ids
+        end
+      end
   end
 
   protected
@@ -459,8 +489,9 @@ class TopicView
     raise Discourse::NotFound if @topic.blank?
     # Special case: If the topic is private and the user isn't logged in, ask them
     # to log in!
-    if @topic.present? && @topic.private_message? && @user.blank?
-      raise Discourse::NotLoggedIn.new
+    if @topic.present? && @topic.private_message?
+      raise Discourse::NotLoggedIn.new if @user.blank?
+      StaffActionLogger.new(@user).log_check_personal_message(@topic) if SiteSetting.log_personal_messages_views && @topic.all_allowed_users.where(id: @user.id).blank?
     end
     raise Discourse::InvalidAccess.new("can't see #{@topic}", @topic) unless @guardian.can_see?(@topic)
   end

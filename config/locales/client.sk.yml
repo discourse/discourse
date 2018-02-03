@@ -51,6 +51,10 @@ sk:
           one: "1s"
           few: "1s"
           other: "%{count}s"
+        less_than_x_minutes:
+          one: "< 1m"
+          few: "< 1m"
+          other: "< %{count}m"
         x_minutes:
           one: "1m"
           few: "%{count}m"
@@ -119,7 +123,7 @@ sk:
           other: "%{count} rokov neskôr"
       previous_month: 'Predchádzajúci mesiac'
       next_month: 'Nasledujúci mesiac'
-      placeholder: Zvoľte dátum
+      placeholder: Dátum
     share:
       topic: 'zdieľaj odkaz na túto tému'
       post: 'príspevok #%{postNumber}'
@@ -129,9 +133,13 @@ sk:
       google+: 'zdieľaj odkaz na Google+'
       email: 'pošli odkaz emailom'
     action_codes:
+      public_topic: "téma je verejná%{when}"
+      private_topic: "téma je súkromná  %{when}"
       split_topic: "rozdeľ tému %{when}"
       invited_user: "pozvaný %{who} %{when}"
+      invited_group: "pozvaný %{who} %{when}"
       removed_user: "odstránený %{who} %{when}"
+      removed_group: "odstránený %{who} %{when}"
       autoclosed:
         enabled: 'uzavreté %{when}'
         disabled: 'otvorené %{when}'
@@ -150,21 +158,28 @@ sk:
       visible:
         enabled: 'zverejnené %{when}'
         disabled: 'stiahnuté %{when}'
+      banner:
+        enabled: 'Téma je odteraz baner %{when} Bude sa zobrazovať navrchu každej stránky, pokiaľ ju používateľ nezavrie.'
     topic_admin_menu: "akcie administrátora témy"
     emails_are_disabled: "Odosielanie emailov bolo globálne vypnuté administrátorom. Žiadne emailové notifikácie nebudú odoslané."
     bootstrap_mode_enabled: "Pre zjednodušenie spustenia Vašej novej stránky sa nachádzate v zavádzacom režime. Všetci noví používatelia budú mať pridelený stupeň dôvery 1 a budú mať zapnutý denný emailový výber aktualít. Toto bude automaticky vypnuté keď celkový počet používateľov presiahne %{min_users}."
     bootstrap_mode_disabled: "Zavádzací režim bude zrušený v priebehu nasledujúcich 24 hodín."
+    themes:
+      default_description: "Predvolené"
     s3:
       regions:
         ap_northeast_1: "Ázia Tichomorie (Tokio)"
         ap_northeast_2: "Asia Pacific (Soul)"
+        ap_south_1: "Asia Pacific (Mumbai)"
         ap_southeast_1: "Ázia Tichomorie (Singapur)"
         ap_southeast_2: "Ázia Tichomorie (Sydney)"
         cn_north_1: "Čína (Peking)"
         eu_central_1: "EU (Frankfurt)"
         eu_west_1: "EU (Írsko)"
+        eu_west_2: "EU (Londýn)"
         sa_east_1: "Južná Amerika (Sao Paulo)"
         us_east_1: "USA Východ (S. Virginia)"
+        us_east_2: "USA Východ (Ohio)"
         us_gov_west_1: "AWS GovCloud (USA)"
         us_west_1: "USA Západ (S. Kalifornia)"
         us_west_2: "USA Západ (Oregon)"
@@ -268,6 +283,7 @@ sk:
     uploading: "Upload prebieha..."
     uploading_filename: "Nahrávám {{filename}}..."
     uploaded: "Upload úspešne dokončený."
+    pasting: "Vkladám..."
     enable: "Zapnúť"
     disable: "Vypnúť"
     undo: "Späť"
@@ -364,6 +380,9 @@ sk:
         full_name: 'Celé meno'
         add_members: "Pridať používateľov"
       add: "Pridať"
+      join: "Pridať sa do skupiny"
+      leave: "Opustiť skupinu"
+      request: "Požiadať o pridanie do skupiny"
       closed_group: Uzavretá skupina
       membership: "Členstvo"
       name: "Meno"
@@ -374,6 +393,10 @@ sk:
       index:
         title: "Skupiny"
         empty: "Nenašli sa viditeľné skupiny."
+      title:
+        one: "Skupina"
+        few: "Skupiny"
+        other: "Skupiny"
       activity: "Aktivita"
       members: "Členovia"
       topics: "Témy"
@@ -420,7 +443,6 @@ sk:
       '14': "Čakajúce správy"
     categories:
       all: "všetky kategórie"
-      all_subcategories: "všetky"
       no_subcategory: "žiadne"
       category: "Kategória"
       category_list: "Zobraziť zoznam kategórií"
@@ -469,6 +491,7 @@ sk:
       mute: "Ignorovať"
       edit: "Upraviť nastavenia"
       download_archive:
+        button_text: "Stiahnuť všetko"
         confirm: "Si si istý, že si chceš uložiť svoje príspevky na disk?"
         success: "Sťahovanie bolo spustené, o jeho ukončení budeš informovaný správou."
         rate_limit_error: "Príspevky možu byť stiahnuté len raz za deň. Skús opäť zajtra prosím."
@@ -493,6 +516,7 @@ sk:
         disable: "Zakázať upozornenia"
         enable: "Povoliť upozornenia"
         each_browser_note: "Poznámka: Toto nastavenie musíte zmeniť v každom používanom prehliadači."
+      dismiss: 'Zahodiť'
       dismiss_notifications: "Zahodiť všetko"
       dismiss_notifications_tooltip: "Označiť všetky neprečítané upozornenia ako prečítané"
       disable_jump_reply: "Neskočiť na môj príspevok po odpovedi"
@@ -694,7 +718,6 @@ sk:
         title: "Pozvánky"
         user: "Pozvaný používateľ"
         sent: "Odoslané"
-        none: "Nemáte žiadne čakajúce pozvánky."
         truncated:
           one: "Zobrazuje sa prvá pozvánka."
           few: "Zobrazujú sa prvé {{count}} pozvánky."
@@ -742,14 +765,6 @@ sk:
           one: "vytvorený príspevok"
           few: "vytvorené príspevky"
           other: "vytvorených príspevkov"
-        likes_given:
-          one: "<i class='fa fa-heart'></i> rozdaný"
-          few: "<i class='fa fa-heart'></i> rozdané"
-          other: "<i class='fa fa-heart'></i> rozdaných"
-        likes_received:
-          one: "<i class='fa fa-heart'></i> získaný"
-          few: "<i class='fa fa-heart'></i> získané"
-          other: "<i class='fa fa-heart'></i> získaných"
         days_visited:
           one: "deň na stránke"
           few: "dni na stránke"
@@ -838,7 +853,6 @@ sk:
     first_post: Prvý príspevok
     mute: Ignorovať
     unmute: Prestať ignorovať
-    last_post: Posledný príspevok
     last_reply_lowercase: posledná odpoveď
     replies_lowercase:
       one: odpoveď
@@ -1016,7 +1030,6 @@ sk:
       ulist_title: "Odrážky"
       list_item: "Položka zoznamu"
       help: "Nápoveda úprav pre Markdown"
-      toggler: "skryť alebo zobraziť panel úprav"
       modal_ok: "OK"
       modal_cancel: "Zrušiť"
       cant_send_pm: "Ľutujeme, nemôžete poslať správu používateľovi %{username}."
@@ -1034,8 +1047,6 @@ sk:
         posted: "Príspevok od"
         edited: "Upravte Váš príspevok do"
         liked: "Váš príspevok sa páčil"
-        private_message: "Súkromná správa od"
-        invited_to_private_message: "Pozvaný na súkromné správy od"
         invited_to_topic: "Pozvaný k téme od"
         invitee_accepted: "Pozvánka akceptovaná "
         moved_post: "Váš príspevok bol presunutý "
@@ -1048,7 +1059,6 @@ sk:
         quoted: '{{username}} vás citoval v "{{topic}}" - {{site_title}}'
         replied: '{{username}} vám odpovedal v "{{topic}}" - {{site_title}}'
         posted: '{{username}} prispel v "{{topic}}" - {{site_title}}'
-        private_message: '{{username}} vám poslal súkromnú správu v "{{topic}}" - {{site_title}}'
         linked: '{{username}} odkázal na váš príspevok z "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Pridať obrázok"
@@ -1087,18 +1097,11 @@ sk:
         title: Rozširené vyhľadávanie
         posted_by:
           label: Autor príspevku
-        in_category:
-          label: V kategórii
-        with_tags:
-          label: Má štítky
         filters:
-          label: Hľadaj iba v témach/prispevkoch, ktoré...
           likes: sa mi páčia
           posted: obsahujú môj príspevok
           watching: Sledujem
           tracking: Pozorujem
-          private: sú v mojich správach
-          seen: som čítal
           unseen: som nečítal
         statuses:
           label: Kde témy
@@ -1297,7 +1300,6 @@ sk:
         visible: "Zobraziť"
         reset_read: "Zrušiť načítané údaje"
         make_public: "Spraviť verejnou témou"
-        make_private: "Spraviť súkromnou správou"
       feature:
         pin: "Pripni tému"
         unpin: "Odopni tému"
@@ -1417,7 +1419,6 @@ sk:
       multi_select:
         select: 'označ'
         selected: 'označených ({{count}})'
-        select_replies: 'označ +odpovede'
         delete: zmaž označené
         cancel: zrušiť výber
         select_all: označ všetko
@@ -1427,10 +1428,7 @@ sk:
           few: Označili ste <b>{{count}}</b> príspevky
           other: Označili ste <b>{{count}}</b> príspevkov
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Citácia"
-      edit: "Upravujete {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Dôvod:"
       post_number: "príspevok {{number}}"
       last_edited_on: "príspevok naposledy upravený"
@@ -1496,13 +1494,6 @@ sk:
         undelete: "vrátiť späť odstránenie príspevku"
         share: "zdieľať odkaz na tento príspevok"
         more: "Viac"
-        delete_replies:
-          confirm:
-            one: "Chcete tiež odstrániť {{count}} priamu reakciu na tento príspevok?"
-            few: "Chcete tiež odstrániť {{count}} priame reakcie na tento príspevok?"
-            other: "Chcete tiež odstrániť {{count}} priamych reakcií na tento príspevok?"
-          yes_value: "Áno, odstrániť aj reakcie."
-          no_value: "Nie, len tento príspevok."
         admin: "akcie administrátora príspevku"
         wiki: "Spraviť Wiki"
         unwiki: "Odstrániť Wiki"
@@ -1513,10 +1504,6 @@ sk:
         change_owner: "Zmeniť vlastníctvo"
       actions:
         flag: 'Označ'
-        defer_flags:
-          one: "Zrušiť označenie"
-          few: "Zrušiť označenia"
-          other: "Zrušiť označenia"
         undo:
           off_topic: "Zruš označenie"
           spam: "Zruš označenie"
@@ -1601,11 +1588,6 @@ sk:
             one: "1 osoba hlasovala za tento príspevok"
             few: "{{count}} osoby hlasovali za tento príspevok"
             other: "{{count}} osôb hlasovalo za tento príspevok"
-      delete:
-        confirm:
-          one: "Ste si istý že chcete zmazať tento príspevok?"
-          few: "Ste si istý že chcete zmazať všetky tieto príspevky?"
-          other: "Ste si istý že chcete zmazať všetky tieto príspevky?"
       revisions:
         controls:
           first: "Prvá revízia"
@@ -1944,7 +1926,6 @@ sk:
         one: "1 udelený"
         few: "%{count} udelené"
         other: "%{count} udelených"
-      none: "<žiadne>"
       badge_grouping:
         getting_started:
           name: Začíname
@@ -1962,9 +1943,7 @@ sk:
       selector_no_tags: "žiadne štítky"
       changed: "zmenené štítky:"
       tags: "Štítky"
-      choose_for_topic: "Zvoľte voliteľné štítky pre túto tému"
       delete_tag: "Zmazať štítok"
-      delete_confirm: "Ste si istý, že chcete zmazať tento štítok?"
       rename_tag: "Premenovať štítok"
       rename_instructions: "Vyberte nové meno pre štítok:"
       sort_by: "Zoradiť podľa:"
@@ -2079,24 +2058,11 @@ sk:
         by: "podľa"
       flags:
         title: "Označenia"
-        old: "Staré"
-        active: "Aktívny"
         agree: "Súhlasiť"
         agree_title: "Akceptovať toto označenie ako platné a správne"
-        agree_flag_modal_title: "Súhlasiť a ...."
-        agree_flag_hide_post: "Súhlasiť (skryť príspevok a poslať súkromnú správu)"
-        agree_flag_hide_post_title: "Skryť tento príspevok a automaticky poslať súkromnú správu s výzvou na úpravu príspevku."
-        agree_flag_restore_post: "Súhlasiť (obnoviť príspevok)"
-        agree_flag_restore_post_title: "Obnoviť tento príspevok"
-        agree_flag: "Súhlasiť s označením"
-        agree_flag_title: "Súhlasiť s označením, ale nemeníť príspevok"
-        defer_flag: "Odložiť"
-        defer_flag_title: "Zrušíť označenie. Žiadna akcia nie je nateraz potrebná."
         delete: "Odstrániť"
         delete_title: "Zmazať príspevok na ktorý označenie odkazuje ."
-        delete_post_defer_flag: "Zmazať príspevok a zrušiť označenie"
         delete_post_defer_flag_title: "Zmazať prípspevok; ak ide o prvý príspevok, zmazať aj tému"
-        delete_post_agree_flag: "Zmazať príspevok a súhlasiť s označením"
         delete_post_agree_flag_title: "Zmazať prípspevok; ak ide o prvý príspevok, zmazať aj tému"
         delete_flag_modal_title: "Zmazať a..."
         delete_spammer: "Zmazať spammera"
@@ -2111,39 +2077,16 @@ sk:
         dispositions:
           agreed: "odsúhlasené"
           disagreed: "neodsúhlasené"
-          deferred: "odložené"
         flagged_by: "Označené "
         resolved_by: "Vyriešené"
         took_action: "Prijal opatrenia"
         system: "Systém"
         error: "Niečo sa pokazilo"
         reply_message: "Odpovedať"
-        no_results: "Žiadne označenia."
         topic_flagged: "Táto <strong>téma</strong> bola označená. "
         visit_topic: "Navšťívte tému pre prijatie opatrení"
         was_edited: "Príspevok bol upravený po prvom označení"
         previous_flags_count: "Tento príspevok bol už označený {{count}} krát."
-        summary:
-          action_type_3:
-            one: "mimo tému"
-            few: "mimo tému x{{count}}"
-            other: "mimo tému x{{count}}"
-          action_type_4:
-            one: "nevhodný"
-            few: "nevhodné x{{count}}"
-            other: "nevhodných x{{count}}"
-          action_type_6:
-            one: "vlastná"
-            few: "vlastné x{{count}}"
-            other: "vlastných x{{count}}"
-          action_type_7:
-            one: "vlastný"
-            few: "vlastné x{{count}}"
-            other: "vlastných x{{count}}"
-          action_type_8:
-            one: "spam"
-            few: "spam x{{count}}"
-            other: "spam x{{count}}"
       groups:
         primary: "Hlavná skupina"
         no_primary: "(bez hlavnej skupiny)"
@@ -2223,7 +2166,6 @@ sk:
           label: "Upload"
           title: "Nahrať zálohu do tejto inštancie"
           uploading: "Upload prebieha..."
-          success: "'{{filename}}' bol úspešne nahratý."
           error: "Počas nahrávania '{{filename}}' nastala chyba: {{message}}"
         operations:
           is_running: "Operácia práve prebieha..."

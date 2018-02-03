@@ -1,0 +1,62 @@
+<p>
+  {{period-chooser period=period}}
+  {{combo-box content=searchTypeOptions value=searchType class='search-logs-filter'}}
+</p>
+<br>
+
+<h2>
+  {{#link-to 'full-page-search' (query-params q=term)}}{{term}}{{/link-to}}
+</h2>
+
+{{#conditional-loading-spinner condition=refreshing}}
+  {{admin-graph model=model}}
+
+  <br><br>
+  <h2> {{i18n "admin.logs.search_logs.header_search_results"}} </h2>
+  <br>
+
+  <div class='header-search-results'>
+  {{#each model.search_result.posts as |result|}}
+    <div class='fps-result'>
+      <div class='author'>
+        <a href={{result.userPath}} data-user-card="{{unbound result.username}}">
+          {{avatar result imageSize="large"}}
+        </a>
+      </div>
+
+      <div class='fps-topic'>
+        <div class='topic'>
+          <a class='search-link' href='{{unbound result.url}}'>
+            {{topic-status topic=result.topic disableActions=true}}<span class='topic-title'>{{#highlight-text highlight=term}}{{{unbound result.topic.fancyTitle}}}{{/highlight-text}}</span>
+          </a>
+
+          <div class='search-category'>
+            {{#if result.topic.category.parentCategory}}
+              {{category-link result.topic.category.parentCategory}}
+            {{/if}}
+            {{category-link result.topic.category hideParent=true}}
+            {{#each result.topic.tags as |tag|}}
+              {{discourse-tag tag}}
+            {{/each}}
+          </div>
+        </div>
+
+        <div class='blurb container'>
+          <span class='date'>
+            {{format-age result.created_at}}
+            {{#if result.blurb}}
+              -
+            {{/if}}
+          </span>
+
+          {{#if result.blurb}}
+            {{#highlight-text highlight=term}}
+              {{{unbound result.blurb}}}
+            {{/highlight-text}}
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  {{/each}}
+  </div>
+{{/conditional-loading-spinner}}

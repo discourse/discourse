@@ -131,7 +131,6 @@ ja:
     latest: "最新のトピック"
     hot: "ホットトピック"
     posts: "最近の投稿"
-    private_posts: "最新のプライベートメッセージ"
     group_posts: "%{group_name}からの最新投稿"
     group_mentions: "%{group_name}からの最新メンション"
     user_posts: "@%{username}からの最新投稿"
@@ -183,9 +182,7 @@ ja:
         topic:
           attributes:
             base:
-              warning_requires_pm: "プライベートメッセージでのみ警告を送ることができます"
               too_many_users: "一度に1ユーザーにしか警告を送る事はできません"
-              cant_send_pm: "申し訳ありません。このユーザーにはプライベートメッセージを送る事ができません"
               no_user_selected: "有効なユーザーを選択してください"
         user:
           attributes:
@@ -383,7 +380,6 @@ ja:
       email_title: 'トピック"%{title}" は不適切な可能性があるため、管理人による確認を必要とする。'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>投稿が他のユーザーから通報されました。<a href="/my/messages">投稿したメッセージ</a>を確認してください。</p>'
     user_must_edit: '<p>この投稿は他のユーザーから通報されたため、非表示にされています。</p>'
   archetypes:
     regular:
@@ -553,15 +549,14 @@ ja:
   site_settings:
     censored_words: "自動的に &#9632;&#9632;&#9632;&#9632; で置換されます"
     delete_old_hidden_posts: "30日以上非表示になっている投稿を自動で削除します"
-    default_locale: "この Discourse インスタンスのデフォルト言語 (ISO 639-1 Code)"
     allow_user_locale: "ユーザーが言語を選択できるようにする"
     min_post_length: "投稿を許可する最少の文字数"
     min_first_post_length: "最初の投稿(投稿本文)を許可する最少の文字数"
-    min_private_message_post_length: "メッセージに投稿可能な最少の文字数"
+    min_personal_message_post_length: "メッセージに投稿可能な最少の文字数"
     max_post_length: "投稿を許可する最大の文字数"
     min_topic_title_length: "トピックタイトルとして許可する最小の文字数"
     max_topic_title_length: "トピックタイトルとして許可する最大の文字数"
-    min_private_message_title_length: "プライベートメッセージのタイトルとして許容する最小の文字数"
+    min_personal_message_title_length: "プライベートメッセージのタイトルとして許容する最小の文字数"
     min_search_term_length: "検索ワードとして有効にする最小の文字数"
     allow_uncategorized_topics: "カテゴリなしのトピック作成を許可するか。警告：未分類のトピックがある場合は、これをオフにする前に、再分類する必要があります。"
     allow_duplicate_topic_titles: "トピックタイトルの重複を許可"
@@ -586,7 +581,6 @@ ja:
     post_onebox_maxlength: "Discourse OneBox投稿の最大文字数"
     logo_url: "サイトの左上に表示されるロゴ画像です。横幅の大きい長方形にする必要があります。空欄の場合、サイトタイトルが表示されます"
     logo_small_url: "サイトの左上に表示される小さいロゴ画像です。正方形である必要があります。下にスクロールすると表示されます。空欄の場合、ホームアイコンが表示されます"
-    mobile_logo_url: "モバイルサイトの左上に固定で表示されるロゴ画像です。正方形である必要があります。空欄の場合 `logo_url` が利用されます 例: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Apple のタッチデバイス用のアイコン。推奨サイズは 144px x 144px"
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
     email_custom_headers: "カスタムメールヘッダのリスト (パイプ(バーティカルバー) 区切り)"
@@ -682,7 +676,7 @@ ja:
     max_bookmarks_per_day: "ユーザが一日にブックマークできる最大数"
     max_edits_per_day: "ユーザが一日に編集できる最大数"
     max_topics_per_day: "ユーザが一日に作成できるトピックの最大数"
-    max_private_messages_per_day: "ユーザが一日に作成できるメッセージの最大数"
+    max_personal_messages_per_day: "ユーザが一日に作成できるメッセージの最大数"
     max_invites_per_day: "ユーザが一日に招待できる最大数"
     max_topic_invitations_per_day: "ユーザが一日にトピックに招待できる最大数"
     suggested_topics: "トピック下部に表示されるおすすめトピックの数"
@@ -691,7 +685,6 @@ ja:
     clean_orphan_uploads_grace_period_hours: "どこからもリンクされていないアップロードファイルを削除するまでの猶予期間 (単位：時間)。"
     purge_deleted_uploads_grace_period_days: "削除されたアップロードファイルが完全削除されるまでの猶予期間 (単位：日)。"
     enable_s3_uploads: "Amazon S3にアップロードします。重要: 有効なS3 credentials(access key id & secret access key)が必要です"
-    s3_use_iam_profile: 'キーの取得にAWS EC2 IAM roleを使用する 注意: 有効にすると、s3 access key id" と "s3 secret access key"の設定を上書きします'
     s3_upload_bucket: "ファイルをアップロードする Amazon S3のバケット名。　警告: 小文字である必要があり、ピリオドとアンダースコアを含むことはできません"
     s3_access_key_id: "画像をアップロードするAmazonS3のaccess key id"
     s3_secret_access_key: "画像をアップロードする Amazon S3 の secret access key"
@@ -789,7 +782,6 @@ ja:
     relative_date_duration: "ポスト投稿後、ポスト投稿日が相対表示 (例: 7d)から絶対表示(例: Feb 20)に変わるまでの日数"
     delete_user_max_post_age: "最初のポストが(x)日よりも古いユーザは削除しない"
     delete_all_posts_max: "すべてのポストを削除ボタンで一度に削除可能な最大ポスト数。ユーザがここで指定した以上のポストを投稿していた場合は、一度に全ポストを削除することができません。またユーザも削除されません。"
-    username_change_period: "ユーザ名の変更が可能になるまでの登録日からの日数 (0を指定でユーザ名の変更自体を無効化)。"
     email_editable: "登録後、ユーザによるメールアドレスの変更を許可する。"
     allow_uploaded_avatars: "プロフィール画像のアップロードを許可"
     allow_animated_avatars: "プロフィール画像としてアニメgifをアップロードするのを許可。警告: この設定を変更した場合 avatars:refresh rakeタスクを実行すること"
@@ -910,13 +902,11 @@ ja:
     email_too_long: "メールアドレスが長過ぎます。アドレス部は254文字以内に、ドメイン部は253文字以内にする必要があります"
     reserved_username: "そのユーザー名は許可されていません"
     missing_user_field: "全てのユーザーフィールドの入力が終わっていません"
-    close_window: "ログインは完了しました。このウィンドウを閉じて続けてください"
   user:
     no_accounts_associated: "関連づけられたアカウントはありませんでした"
     username:
       short: "少なくとも%{min}文字は必要です"
       long: "%{max}文字以下である必要があります"
-      characters: "英数字/アンダースコア/ハイフン/ドットのみ使用できます"
       unique: "はユニークである必要があります"
       blank: "は空であってはなりません"
     email:
@@ -928,10 +918,6 @@ ja:
   flags_reminder:
     subject_template:
       other: "%{count}件の通報が対応待ちです"
-  invite_mailer:
-    subject_template: "%{invitee_name} があなたを %{site_domain_name}の'%{topic_title}'に招待しました"
-  invite_forum_mailer:
-    subject_template: "%{invitee_name} あなたを %{site_domain_name}に招待しました。"
   invite_password_instructions:
     subject_template: "%{site_name} アカウントのパスワードを設定"
   flag_reasons:
@@ -1157,9 +1143,6 @@ ja:
         このバッジは投稿に対して初めていいね!された時に授与されます。おめでとうございます、投稿した内容についてあなたのコミュニティメンバーは興味深く、クールで有能です!
     autobiographer:
       name: あなたはだれ？
-      description: <a href="/my/preferences">プロフィール</a>をすべて書く
-      long_description: |
-        このバッジは<a href="/my/preferences">ご自身のユーザープロフィール</a>を記入またはプロフィール写真を選択すると授与されます。コミュニティに対してあなたがどういう人物であるか、また改善について興味がある物をもう少し詳しくお知らせ頂き、更に結びつきのあるコミュニティへ。連携しましょう!
     anniversary:
       long_description: |
         このバッジは一年間メンバーで有り続け、少なくともその年に一回は投稿したときに授与されます。サイトに出入りして下さったり、我々のコミュニティに貢献して下さり有難うございます。我々はあなたを必要としています。
@@ -1193,8 +1176,6 @@ ja:
     first_flag:
       name: はじめの通報
       description: 通報した投稿
-    read_guidelines:
-      description: <a href="/guidelines">ガイドライン</a>を読む
     popular_link:
       name: 人気のリンク
     hot_link:
@@ -1205,7 +1186,6 @@ ja:
       name: はじめての絵文字
   admin_login:
     success: "メールを送信しました"
-    error: "エラー！"
     email_input: "アドミンメール"
     submit_button: "メールを送信する"
   performance_report:

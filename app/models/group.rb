@@ -248,7 +248,12 @@ class Group < ActiveRecord::Base
 
     unless group = self.lookup_group(name)
       group = Group.new(name: name.to_s, automatic: true)
-      group.default_notification_level = 2 if AUTO_GROUPS[:moderators] == id
+
+      if AUTO_GROUPS[:moderators] == id
+        group.default_notification_level = 2
+        group.messageable_level = ALIAS_LEVELS[:everyone]
+      end
+
       group.id = id
       group.save!
     end
@@ -263,23 +268,26 @@ class Group < ActiveRecord::Base
 
     # the everyone group is special, it can include non-users so there is no
     # way to have the membership in a table
-    if name == :everyone
+    case name
+    when :everyone
       group.visibility_level = Group.visibility_levels[:owners]
       group.save!
       return group
+    when :moderators
+      group.update!(messageable_level: ALIAS_LEVELS[:everyone])
     end
 
     # Remove people from groups they don't belong in.
     remove_subquery =
       case name
       when :admins
-        "SELECT id FROM users WHERE NOT admin"
+        "SELECT id FROM users WHERE id <= 0 OR NOT admin"
       when :moderators
-        "SELECT id FROM users WHERE NOT moderator"
+        "SELECT id FROM users WHERE id <= 0 OR NOT moderator"
       when :staff
-        "SELECT id FROM users WHERE NOT admin AND NOT moderator"
+        "SELECT id FROM users WHERE id <= 0 OR (NOT admin AND NOT moderator)"
       when :trust_level_0, :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
-        "SELECT id FROM users WHERE trust_level < #{id - 10}"
+        "SELECT id FROM users WHERE id <= 0 OR trust_level < #{id - 10}"
       end
 
     exec_sql <<-SQL
@@ -293,15 +301,15 @@ class Group < ActiveRecord::Base
     insert_subquery =
       case name
       when :admins
-        "SELECT id FROM users WHERE admin"
+        "SELECT id FROM users WHERE id > 0 AND admin"
       when :moderators
-        "SELECT id FROM users WHERE moderator"
+        "SELECT id FROM users WHERE id > 0 AND moderator"
       when :staff
-        "SELECT id FROM users WHERE moderator OR admin"
+        "SELECT id FROM users WHERE id > 0 AND (moderator OR admin)"
       when :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
-        "SELECT id FROM users WHERE trust_level >= #{id - 10}"
+        "SELECT id FROM users WHERE id > 0 AND trust_level >= #{id - 10}"
       when :trust_level_0
-        "SELECT id FROM users"
+        "SELECT id FROM users WHERE id > 0"
       end
 
     exec_sql <<-SQL
@@ -653,17 +661,15 @@ end
 # Table name: groups
 #
 #  id                                 :integer          not null, primary key
-#  name                               :string           not null
+#  name                               :string(255)      not null
 #  created_at                         :datetime         not null
 #  updated_at                         :datetime         not null
 #  automatic                          :boolean          default(FALSE), not null
 #  user_count                         :integer          default(0), not null
-#  mentionable_level                  :integer          default(0)
-#  messageable_level                  :integer          default(0)
 #  automatic_membership_email_domains :text
 #  automatic_membership_retroactive   :boolean          default(FALSE)
 #  primary_group                      :boolean          default(FALSE), not null
-#  title                              :string
+#  title                              :string(255)
 #  grant_trust_level                  :integer
 #  incoming_email                     :string
 #  has_messages                       :boolean          default(FALSE), not null
@@ -679,6 +685,8 @@ end
 #  public_exit                        :boolean          default(FALSE), not null
 #  public_admission                   :boolean          default(FALSE), not null
 #  membership_request_template        :text
+#  messageable_level                  :integer          default(0)
+#  mentionable_level                  :integer          default(0)
 #
 # Indexes
 #

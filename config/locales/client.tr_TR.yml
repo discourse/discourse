@@ -83,7 +83,6 @@ tr_TR:
           other: "%{count} yıl sonra"
       previous_month: 'Önceki Ay'
       next_month: 'Sonraki Ay'
-      placeholder: Tarih seç
     share:
       topic: 'bu konunun bağlantısını paylaşın'
       post: '#%{postNumber} numaralı gönderiyi paylaşın'
@@ -98,7 +97,6 @@ tr_TR:
       split_topic: "bu konuyu %{when} ayırdı"
       invited_user: "%{when} %{who} davet edildi"
       invited_group: "%{who} %{when} davet edildi"
-      user_left: "%{who} bu iletiden ayrıldı %{when}"
       removed_user: "%{when} %{who} silindi"
       removed_group: "%{who} %{when} kaldırıldı"
       autoclosed:
@@ -372,6 +370,7 @@ tr_TR:
         staff: "Grup sahipleri ve yetkili"
         owners: "Grup sahipleri ve yöneticileri"
       alias_levels:
+        mentionable: "Bu gruptan kimler @bahsedebilir?"
         messageable: "Bu gruba kimler ileti gönderebilir?"
         nobody: " Hiç Kimse"
         only_admins: "Sadece Yöneticiler"
@@ -421,7 +420,6 @@ tr_TR:
       '14': "Bekleyen"
     categories:
       all: "tüm kategoriler"
-      all_subcategories: "hepsi"
       no_subcategory: "hiçbiri"
       category: "Kategori"
       category_list: "Kategori listesini göster"
@@ -498,7 +496,6 @@ tr_TR:
       disable_jump_reply: "Cevapladıktan sonra gönderime atlama"
       dynamic_favicon: "Tarayıcı simgesinde yeni / güncellenen konu sayısını göster"
       theme_default_on_all_devices: "Seçilen temayı bütün cihazlarımda varsayılan yap"
-      allow_private_messages: "Diğer kullanıcıların bana özel mesaj göndermelerine izin ver"
       external_links_in_new_tab: "Tüm dış bağlantıları yeni sekmede aç"
       enable_quoting: "Vurgulanan yazıyı alıntılayarak cevaplama özelliğini etkinleştir"
       change: "değiştir"
@@ -506,6 +503,7 @@ tr_TR:
       admin: "{{user}} bir yöneticidir"
       moderator_tooltip: "Bu kullanıcı bir moderatör"
       admin_tooltip: "Bu kullanıcı bir yönetici."
+      silenced_tooltip: "Bu kullanıcı susturuldu"
       suspended_notice: "Bu kullanıcı {{tarih}} tarihine kadar uzaklaştırıldı."
       suspended_permanently: "Bu kullanıcı askıya alındı."
       suspended_reason: "Neden:"
@@ -605,6 +603,7 @@ tr_TR:
         taken: "Üzgünüz, bu e-posta kullanılabilir değil."
         error: "E-posta adresinizi değiştirirken bir hata oluştu. Belki bu adres zaten kullanımdadır?"
         success: "Adresinize bir e-posta gönderdik. Lütfen onaylama talimatlarını uygulayınız."
+        success_staff: "Şu anki adresinize bir eposta gönderdik. Lütfen doğrulama yönergelerini takip edin."
       change_avatar:
         title: "Profil görselinizi değiştirin"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, baz alındı"
@@ -717,7 +716,6 @@ tr_TR:
         title: "Davetler"
         user: "Davet Edilen Kullanıcı"
         sent: "Gönderildi"
-        none: "Bekleyen davet yok."
         truncated:
           other: "İlk {{count}} davet gösteriliyor."
         redeemed: "Kabul Edilen Davetler"
@@ -990,10 +988,10 @@ tr_TR:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
-    select_box:
-      default_header_text: Seç...
+    select_kit:
       no_content: Hiçbir sonuç bulunamadı
       filter_placeholder: Ara...
+      create: "{{content}} oluştur"
     emoji_picker:
       filter_placeholder: Emoji ara
       people: İnsanlar
@@ -1003,6 +1001,9 @@ tr_TR:
       travel: Seyahat
       celebration: Kutlama
       recent: Son zamanlarda kullanılmış
+      default_tone: Cilt rengi yok
+      light_tone: Açık cilt tonu
+      dark_tone: Koyu cilt tonu
     composer:
       emoji: "Emoji :)"
       more_emoji: "dahası..."
@@ -1039,6 +1040,7 @@ tr_TR:
       cancel: "İptal et"
       create_topic: "Konu Oluştur"
       create_pm: "İleti"
+      create_whisper: "Fısılda"
       title: "Ya da Ctrl+Enter'a bas"
       users_placeholder: "Kullanıcı ekle"
       title_placeholder: "Bir cümlede açıklamak gerekirse bu tartışmanın konusu nedir?"
@@ -1077,7 +1079,6 @@ tr_TR:
       ulist_title: "Madde İşaretli Liste"
       list_item: "Liste öğesi"
       help: "Markdown Düzenleme Yardımı"
-      toggler: "yazım alanını gizle veya göster"
       modal_ok: "Tamam"
       modal_cancel: "İptal"
       cant_send_pm: "Üzgünüz, %{username} kullanıcısına ileti gönderemezsiniz."
@@ -1098,8 +1099,6 @@ tr_TR:
         posted: "Gönderildi, şu kişi tarafından"
         edited: "Gönderiniz düzenlendi, şu kişi tarafından"
         liked: "Gönderiniz beğenildi"
-        private_message: "Özel ileti, şu kişiden"
-        invited_to_private_message: "Şu kişi tarafından özel iletiyle davet edildiniz"
         invited_to_topic: "Bir konuya davet edildiniz, şu kişi tarafından"
         invitee_accepted: "Davet kabul edildi, şu kişi tarafından"
         moved_post: "Gönderiniz taşındı, şu kişi tarafından"
@@ -1112,7 +1111,6 @@ tr_TR:
         quoted: '{{username}}, "{{topic}}" başlıklı konuda sizden alıntı yaptı - {{site_title}}'
         replied: '{{username}}, "{{topic}}" başlıklı konuda size cevap verdi - {{site_title}}'
         posted: '{{username}}, "{{topic}}" başlıklı konuya yazdı - {{site_title}}'
-        private_message: '{{username}}, "{{topic}}" başlıklı konuda size özel ileti gönderdi - {{site_title}}'
         linked: '{{username}}, "{{topic}}" başlıklı konudaki gönderinize bağlantı yaptı - {{site_title}}'
     upload_selector:
       title: "Resim ekle"
@@ -1155,30 +1153,20 @@ tr_TR:
         title: Gelişmiş Arama
         posted_by:
           label: Gönderen
-        in_category:
-          label: Şu Kategoride
         in_group:
           label: Şu Grupta
         with_badge:
           label: Rozetle
-        with_tags:
-          label: Şu Etiketli
         filters:
-          label: Yalnızca bu özelliğe sahip konuları/gönderileri göster...
           likes: beğendiğim
           posted: gönderide bulunduğum
           watching: gözlediğim
           tracking: takip ettiğim
-          private: iletilerimde olan
-          bookmarks: imlediğim
           first: en ilk gönderidir.
           pinned: tutturulmuş
           unpinned: tutturulmamış
-          seen: Okudum
           unseen: Okumadım
           wiki: wiki olan
-          images: resim(ler) aktar
-          all_tags: Tüm etiketleri içerir
         statuses:
           label: Şöyle olan konular
           open: açık
@@ -1311,8 +1299,13 @@ tr_TR:
         private_timer_types: Kullanıcı Konusu Zamanlayıcılar
       auto_update_input:
         none: "Bir zaman çerçevesi seçin"
+        tomorrow: "Yarın"
+        this_weekend: "Bu hafta sonu"
+        next_week: "Gelecek hafta"
+        next_month: "Gelecek ay"
         one_year: "Bir Yıl"
         forever: "Sonsuza dek"
+        pick_date_and_time: "Tarih ve saat seç"
       auto_close:
         error: "Lütfen geçerli bir değer giriniz."
       reminder:
@@ -1389,7 +1382,6 @@ tr_TR:
         visible: "Görünür Yap"
         reset_read: "Görüntüleme Verilerini Sıfırla"
         make_public: "Herkese Açık Konu Yap"
-        make_private: "Özel İleti Oluştur"
       feature:
         pin: "Başa Tuttur"
         unpin: "Baştan Kaldır"
@@ -1502,7 +1494,6 @@ tr_TR:
       multi_select:
         select: 'seç'
         selected: '({{count}}) seçildi'
-        select_replies: 'cevaplarıyla seç'
         delete: seçilenleri sil
         cancel: seçimi iptal et
         select_all: hepsini seç
@@ -1510,10 +1501,7 @@ tr_TR:
         description:
           other: <b>{{count}}</b> gönderi seçtiniz.
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Alıntı"
-      edit: "{{link}} {{replyAvatar}} {{username}} düzenleniyor"
       edit_reason: "Neden: "
       post_number: "gönderi {{number}}"
       wiki_last_edited_on: "wiki en son düzenlendi"
@@ -1575,11 +1563,6 @@ tr_TR:
         undelete: "bu gönderinin silinmesini geri al"
         share: "bu gönderinin bağlantısını paylaşın"
         more: "Daha fazla"
-        delete_replies:
-          confirm:
-            other: "Bu gönderiye verilen {{count}} direk cevabı da silmek istiyor musunuz?"
-          yes_value: "Evet, cevapları da sil"
-          no_value: "Hayır, sadece bu gönderiyi"
         admin: "gönderiyle alakalı yönetici eylemleri"
         wiki: "Wiki Yap"
         unwiki: "Wiki'yi Kaldır"
@@ -1590,8 +1573,6 @@ tr_TR:
         change_owner: "Sahipliğini Değiştir"
       actions:
         flag: 'Bildir'
-        defer_flags:
-          other: "Bildirimi ertele"
         undo:
           off_topic: "Bildirimi geri al"
           spam: "Bildirimi geri al"
@@ -1651,9 +1632,6 @@ tr_TR:
             other: "{{count}} kişi bunu beğendi"
           vote:
             other: "{{count}} kişi bu gönderiyi oyladı"
-      delete:
-        confirm:
-          other: "Tüm bu gönderileri silmek istediğinize emin misiniz?"
       revisions:
         controls:
           first: "İlk revizyon"
@@ -1999,7 +1977,6 @@ tr_TR:
       granted:
         other: "%{count} izin verildi"
       select_badge_for_title: Başlık yazısı olarak kullanılacak bir rozet seçin
-      none: "<none>"
       badge_grouping:
         getting_started:
           name: Başlangıç
@@ -2026,9 +2003,7 @@ tr_TR:
       selector_no_tags: "etiket yok"
       changed: "değişen etiketler:"
       tags: "Etiketler"
-      choose_for_topic: "bu konu için etiket seçiniz"
       delete_tag: "Etiketi Sil"
-      delete_confirm: "Bu etiketi silmek istiyor musunuz?"
       rename_tag: "Etiketi Yeniden Adlandır"
       rename_instructions: "Bu etiket için yeni bir ad seçin:"
       sort_by: "Sırala:"
@@ -2155,24 +2130,11 @@ tr_TR:
         by: "tarafından"
       flags:
         title: "Bildirilenler"
-        old: "Eski"
-        active: "Etkin"
         agree: "Onayla"
         agree_title: "Bu bildirimi geçerli ve doğru olarak onayla"
-        agree_flag_modal_title: "Onayla ve..."
-        agree_flag_hide_post: "Onayla (gönderiyi gizle + özel ileti yolla)"
-        agree_flag_hide_post_title: "Bu gönderiyi gizle ve otomatik olarak kullanıcıya acilen düzenleme yapmasını belirten bir ileti gönder"
-        agree_flag_restore_post: "Kabul ediyorum (gönderiyi geri getir)"
-        agree_flag_restore_post_title: "Gönderiyi geri getir"
-        agree_flag: "Bildirimi onayla"
-        agree_flag_title: "Bildirimi onayla ve gönderide değişiklik yapma"
-        defer_flag: "Ertele"
-        defer_flag_title: "Bu bildirimi kaldır; şu an için bir şey yapmak gerekmiyor."
         delete: "Sil"
         delete_title: "Bu bildirimin ait olduğu gönderiyi sil."
-        delete_post_defer_flag: "Gönderiyi sil ve bildirimi ertele"
         delete_post_defer_flag_title: "Gönderiyi sil; başka gönderi yoksa, konuyu da sil."
-        delete_post_agree_flag: "Gönderiyi sil ve bildirimi onayla"
         delete_post_agree_flag_title: "Gönderiyi sil; başka gönderi yoksa, konuyu da sil."
         delete_flag_modal_title: "Sil ve..."
         delete_spammer: "Spamcıyı Sil"
@@ -2292,7 +2254,6 @@ tr_TR:
           details: "Yeni bir cevap oluşturulduğunda, düzenlendiğinde veya silindiğinde."
         user_event:
           name: "Kullanıcı Olayı"
-          details: "Bir kullanıcı oluşturulduğunda, onaylandığında veya güncellendiğinde"
         delivery_status:
           title: "Teslim Durumu"
           inactive: "Etkin Değil"
@@ -2355,7 +2316,6 @@ tr_TR:
           label: "Yedek Yükle"
           title: "Bu oluşuma bir yedek yükle"
           uploading: "Yükleniyor..."
-          success: "'{{filename}}' başarıyla yüklendi."
           error: "'{{filename}}': {{message}} yüklenirken bir hata oluştu"
         operations:
           is_running: "İşlem devam ediyor..."

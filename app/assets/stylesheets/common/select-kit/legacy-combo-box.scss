@@ -1,8 +1,8 @@
 // DO NOT MODIFY
 // TODO: remove when all select2 instances are gone
 .select2-results .select2-highlighted {
-    background: $highlight-medium;
-    color: $primary;
+  background: $highlight-medium;
+  color: $primary;
 }
 
 .select2-drop {
@@ -10,7 +10,7 @@
     display: inline-block;
   }
   .topic-count {
-    font-size: 11px;
+    font-size: $font-down-2;
     color: $primary;
     display: inline-block;
   }
@@ -19,7 +19,7 @@
   }
   .category-desc {
     color: $primary;
-    font-size: 0.857em;
+    font-size: $font-down-1;
     line-height: 16px;
   }
 }
@@ -36,9 +36,8 @@
 }
 
 .select2-container {
-  border: 1px solid $primary-low;
   min-width: 200px;
-
+  
   &.select2-dropdown-open {
     border: 0;
     margin-bottom: 2px;
@@ -51,11 +50,12 @@
   }
 }
 
-.select2-container-multi .select2-choices {
-  background-color: $secondary;
-}
 .select2-container-multi .select2-choices .select2-search-field input.select2-active {
   background: $secondary image-url("select2-spinner.gif") no-repeat 100% !important;
+}
+
+.select2-container-multi .select2-choices {
+  border: 1px solid $primary-medium;  
 }
 
 .select2-container a.select2-choice {
@@ -79,7 +79,7 @@
 }
 
 .select2-container-active {
-  box-shadow:  $tertiary 0px 0px 6px 0px;
+  box-shadow:  $tertiary 0 0 6px 0px;
 }
 
 .select2-results .select2-no-results, .select2-results .select2-searching, .select2-results .select2-selection-limit {

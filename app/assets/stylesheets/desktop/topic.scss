@@ -2,6 +2,7 @@
   @include unselectable;
   clear: both;
   text-align: right;
+  margin-bottom: 10px;
   .post-action {
     display: inline-block;
     margin-left: 10px;
@@ -10,28 +11,22 @@
 }
 
 .post-menu-area {
-  margin-bottom: 10px;
-  margin-top: 20px;
+  margin: 20px 0;
 }
 
 .edits {margin-right: 5px;}
 
 #topic-title {
-  z-index: 1000;
+  z-index: z("base");
   padding-top: 14px;
   margin-bottom: 10px;
 
-  .star {
-    font-size: 1.429em;
-    margin-top: 6px;
-    margin-right: 6px;
-  }
   #edit-title, .category-chooser, .edit-controls {
     width: 500px;
   }
   h1 {
-    font-size: 1.8em;
-    line-height: 1.2em;
+    font-size: $font-up-4;
+    line-height: $line-height-medium;
     overflow: hidden;
     a {color: $primary;}
   }
@@ -46,14 +41,14 @@
     float: right;
     text-transform: lowercase;
     color: dark-light-choose($primary-medium, $secondary-medium);
-    font-size: 0.875rem;
+    font-size: 0.857rem;
   }
 }
 
 .private-message-glyph {
   color: dark-light-choose($primary-low-mid, $secondary-high);
   float: left;
-  margin: 0 5px 0 0;
+  margin-right: 5px;
 }
 .private_message #topic-title .private-message-glyph { display: inline; }
 
@@ -62,9 +57,9 @@
   width: 60%;
   margin-left: auto;
   margin-right: auto;
-  font-size: 1.714em;
+  font-size: $font-up-4;
   text-align: center;
-  line-height: 1.1em;
+  line-height: $line-height-medium;
 
   .topic-retry {
     display: block;
@@ -76,7 +71,7 @@
 
 .topic-status-info {
   border-top: 1px solid $primary-low;
-  padding: 10px 0px;
+  padding: 10px 0;
   height: 20px;
   max-width: 757px;
 }
@@ -86,7 +81,7 @@
   right: 50%;
   width: 0;
   bottom: 0;
-  z-index: 500;
+  z-index: z("timeline");
   &.docked {
     position: absolute;
     bottom: -70px;
@@ -101,7 +96,6 @@
   position: relative;
   left: 340px;
   width: 135px;
-  padding: 5px;
 
   button.full {
     width: 100%;
@@ -110,7 +104,7 @@
       display: block;
       margin-top: 2px;
       margin-bottom: 2px;
-      font-size: 1.286em;
+      font-size: $font-up-2;
     }
   }
   .jump-form {
@@ -120,7 +114,7 @@
       height: 20px;
       text-align: center;
       margin-bottom: 0;
-      font-size: 1.143em;
+      font-size: $font-up-1;
     }
     button.btn {
       float: right;
@@ -160,18 +154,18 @@
     top: 9px;
     width: 100%;
     text-align: center;
-    z-index: 1;
+    z-index: z("base");
   }
   .d-icon {
     position: absolute;
     right: 8px;
     bottom: 9px;
-    z-index: 1;
+    z-index: z("base");
   }
   h4 {
     display: inline;
-    font-size: 1.286em;
-    line-height: 15px;
+    font-size: $font-up-2;
+    line-height: $line-height-small;
   }
   .bg {
     position: absolute;
@@ -199,8 +193,8 @@
   bottom: 0;
   position: fixed;
   width: 100%;
-  font-size: 1.071em;
-  z-index: 495
+  font-size: $font-0;
+  z-index: z("dropdown");
 }
 
 @media all

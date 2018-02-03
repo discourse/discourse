@@ -79,6 +79,9 @@ basic:
   set_locale_from_accept_language_header:
     default: false
     validator: "AllowUserLocaleEnabledValidator"
+  support_mixed_text_direction:
+    client: true
+    default: false
   categories_topics:
     default: 20
     min: 5
@@ -117,6 +120,7 @@ basic:
     default: "latest|new|unread|top|categories"
     regex: "latest"
     regex_error: "site_settings.errors.must_include_latest"
+    validator: RegexPresenceValidator
     choices:
      - latest
      - new
@@ -291,6 +295,7 @@ login:
   enable_sso:
     client: true
     default: false
+    validator: "EnableSsoValidator"
   sso_allows_all_return_paths: false
   enable_sso_provider: false
   verbose_sso_logging: false
@@ -415,12 +420,15 @@ users:
   hide_user_profiles_from_public:
     default: false
     client: true
+  show_inactive_accounts:
+    default: false
   user_website_domains_whitelist:
     default: ''
     type: list
   hide_suspension_reasons:
     default: false
     client: true
+  log_personal_messages_views: false
 
 groups:
   enable_group_directory:
@@ -442,7 +450,7 @@ posting:
     locale_default:
       zh_CN: 8
       zh_TW: 8
-  min_private_message_post_length:
+  min_personal_message_post_length:
     client: true
     min: 1
     default: 10
@@ -485,7 +493,7 @@ posting:
       zh_CN: false
       zh_TW: false
   title_fancy_entities: true
-  min_private_message_title_length:
+  min_personal_message_title_length:
     client: true
     default: 2
     min: 1
@@ -500,14 +508,17 @@ posting:
     locale_default:
       zh_CN: 4
       zh_TW: 4
-  enable_private_messages:
+  enable_personal_messages:
     default: true
     client: true
-  enable_private_email_messages:
+  enable_system_message_replies:
+    default: true
+  enable_personal_email_messages:
     default: false
     client: true
     validator: "EnablePrivateEmailMessagesValidator"
   editing_grace_period: 300
+  staff_edit_locks_post: false
   post_edit_time_limit:
     default: 86400
     max: 525600
@@ -523,6 +534,16 @@ posting:
   enable_markdown_typographer:
     client: true
     default: true
+  enable_markdown_linkify:
+    client: true
+    default: true
+  markdown_linkify_tlds:
+    client: true
+    type: list
+    default: 'com|gov|net|org'
+  enable_rich_text_paste:
+    client: true
+    default: false
   suppress_reply_directly_below:
     client: true
     default: true
@@ -535,6 +556,9 @@ posting:
     default: 1
     client: true
   post_undo_action_window_mins: 10
+  enable_mentions:
+    default: true
+    client: true
   max_mentions_per_post: 10
   max_users_notified_per_group_mention: 100
   newuser_max_replies_per_topic: 3
@@ -589,6 +613,9 @@ posting:
   enable_emoji:
     default: true
     client: true
+  enable_emoji_shortcuts:
+    default: true
+    client: true
   emoji_set:
     default: 'twitter'
     client: true
@@ -624,13 +651,19 @@ posting:
     default: 30
     min: 1
   watched_words_regular_expressions:
+    client: true
     default: false
+  enable_advanced_editor_preview_sync:
+    hidden: true
+    default: false
+    client: true
+    shadowed_by_global: true
 
 email:
   email_time_window_mins:
     default: 10
     client: true
-  private_email_time_window_seconds: 20
+  personal_email_time_window_seconds: 20
   email_posts_context: 5
   digest_min_excerpt_length:
     default: 100
@@ -732,7 +765,7 @@ email:
     default: "pkcs7|x-vcard"
   attachment_filename_blacklist:
     type: list
-    default: "smime.p7s|signature.asc"
+    default: "smime.p7s|signature.asc|winmail.dat"
   enable_forwarded_emails: false
   always_show_trimmed_content: false
   private_email: false
@@ -929,8 +962,13 @@ security:
   enable_escaped_fragments: true
   allow_index_in_robots_txt: true
   allow_moderators_to_create_categories: false
+  non_crawler_user_agents:
+    hidden: true
+    default: 'trident|webkit|gecko|chrome|safari|msie|opera'
+    type: list
   crawler_user_agents:
-    default: 'Googlebot|Mediapartners|AdsBot|curl|HTTrack|Twitterbot|facebookexternalhit|bingbot|Baiduspider|ia_archiver|archive.org_bot|Wayback Save Page|360Spider|Swiftbot|YandexBot'
+    hidden: true
+    default: 'rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor'
     type: list
   cors_origins:
     default: ''
@@ -946,7 +984,7 @@ security:
     default: ''
     type: list
   allowed_iframes:
-    default: 'https://www.google.com/maps/embed?|https://www.openstreetmap.org/export/embed.html?'
+    default: 'https://www.google.com/maps/embed?|https://www.openstreetmap.org/export/embed.html?|https://calendar.google.com/calendar/embed?'
     type: list
     client: true
 
@@ -1011,7 +1049,7 @@ rate_limits:
   rate_limit_new_user_create_topic: 120
   rate_limit_new_user_create_post: 30
   max_topics_per_day: 20
-  max_private_messages_per_day: 20
+  max_personal_messages_per_day: 20
   max_likes_per_day: 50
   max_bookmarks_per_day: 20
   max_flags_per_day: 20
@@ -1086,7 +1124,7 @@ developer:
   top_topics_formula_least_likes_per_post_multiplier:
     default: 3
   rebake_old_posts_count:
-    default: 250
+    default: 100
     min: 1
   migrate_to_new_scheme:
     hidden: true
@@ -1159,6 +1197,10 @@ legal:
     default: ''
 
 backups:
+  enable_backups:
+    default: true
+    shadowed_by_global: true
+    client: true
   readonly_mode_during_backup:
     default: false
   allow_restore:
@@ -1370,7 +1412,9 @@ uncategorized:
       zh_CN: 350
       zh_TW: 350
 
-  topic_page_title_includes_category: true
+  topic_page_title_includes_category:
+    default: true
+    client: true
 
   native_app_install_banner: false
 
@@ -1385,7 +1429,7 @@ user_preferences:
     enum: 'DigestEmailSiteSetting'
     default: 10080
   default_include_tl0_in_digests: false
-  default_email_private_messages: true
+  default_email_personal_messages: true
   default_email_direct: true
   default_email_mailing_list_mode: false
   default_email_mailing_list_mode_frequency:
@@ -1440,10 +1484,6 @@ api:
     default: 30
 
 user_api:
-  max_user_api_reqs_per_day:
-    default: 2880
-  max_user_api_reqs_per_minute:
-    default: 20
   allow_user_api_keys:
     default: true
   allow_user_api_key_scopes:
@@ -1508,6 +1548,9 @@ tags:
     client: true
     default: false
     refresh: true
+  tags_listed_by_group:
+    client: true
+    default: false
   staff_tags:
     type: list
     client: true

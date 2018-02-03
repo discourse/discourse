@@ -107,7 +107,7 @@ el:
           other: "%{count} χρόνια μετά"
       previous_month: 'Προηγούμενος μήνας'
       next_month: 'Επόμενος μήνας'
-      placeholder: Επιλέξτε ημερομηνία
+      placeholder: ημερομηνία
     share:
       topic: 'κοινοποίησε έναν σύνδεσμο προς αυτό το νήμα'
       post: 'ανάρτηση #%{postNumber}'
@@ -122,7 +122,6 @@ el:
       split_topic: "διαχώρισε αυτό το νήμα %{when}"
       invited_user: "προσκάλεσε τον χρήστη %{who} στις %{when}"
       invited_group: "προσκάλεσε την ομάδα %{who} στις %{when}"
-      user_left: "%{who} άφησε αυτό το μήνυμα στις %{when}"
       removed_user: "αφαίρεσε τον χρήστη %{who} στις %{when}"
       removed_group: "αφαίρεσε την ομάδα %{who} στις %{when}"
       autoclosed:
@@ -459,7 +458,6 @@ el:
       '14': "Εκκρεμή"
     categories:
       all: "όλες οι κατηγορίες"
-      all_subcategories: "όλα"
       no_subcategory: "κανένα"
       category: "Κατηγορία"
       category_list: "Εμφάνισε τη λίστα κατηγοριών"
@@ -539,7 +537,6 @@ el:
       disable_jump_reply: "Να μην εστιάζεται η ανάρτηση μου αφού απαντήσω"
       dynamic_favicon: "Δείξε τον αριθμό νέων/ενημερωμένων νημάτων στο εικονίδιο του προγράμματος περιήγησης"
       theme_default_on_all_devices: "Αυτό να γίνει το προεπιλεγμένο θέμα σε όλες μου τις συσκευές"
-      allow_private_messages: "Επίτρεψε στους χρήστες να μου στέλνουν προσωπικά μηνύματα"
       external_links_in_new_tab: "Άνοιγε όλους τους εξωτερικούς συνδέσμους σε νέα καρτέλα"
       enable_quoting: "Το κείμενο που επισημαίνεται να παρατίθεται στην απάντηση "
       change: "αλλαγή"
@@ -652,6 +649,7 @@ el:
         title: "Αλλαγή της φωτογραφίας του προφίλ σου"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, που βασίζεται σε"
         gravatar_title: "Άλλαξε το άβατάρ σου στην ιστοσελίδα Gravatar "
+        gravatar_failed: "Δεν μπόρεσε να ληφθεί το Gravatar. Υπάρχει κάποιο συνδεδεμένο με αυτό το email;"
         refresh_gravatar_title: "Ανανέωσε το Gravatar σου"
         letter_based: "Εικόνα προφίλ που ανέθεσε το σύστημα"
         uploaded_avatar: "Προσαρμοσμένη εικόνα"
@@ -761,7 +759,6 @@ el:
         title: "Προσκλήσεις"
         user: "Προσκεκλημένος Χρήστης"
         sent: "Απεσταλμένα"
-        none: "Δεν υπάρχουν προσκλήσεις σε εκκρεμότητα για προβολή."
         truncated:
           one: "Δείχνοντας την πρώτη πρόσκληση."
           other: "Προβάλονται οι πρώτες {{count}} προσκλήσεις."
@@ -919,7 +916,7 @@ el:
     last_post: Αναρτήθηκε
     time_read: Διαβάστηκε
     time_read_recently: '%{time_read} πρόσφατα'
-    time_read_tooltip: '%{time_read}συνολικός χρόνος ανάγνωσης'
+    time_read_tooltip: '%{time_read} συνολικός χρόνος ανάγνωσης'
     time_read_recently_tooltip: '%{time_read}συνολικός χρόνος ανάγνωσης (%{recent_time_read} τις τελευταίες 60 ημέρες)'
     last_reply_lowercase: τελευταία απάντηση
     replies_lowercase:
@@ -1152,7 +1149,6 @@ el:
       ulist_title: "Κουκίδες"
       list_item: "Στοιχείο Λίστας"
       help: "Βοήθεια Επεξεργασίας Markdown"
-      toggler: "εμφάνιση ή απόκρυψη του παραθύρου σύνθεσης"
       modal_ok: "OK"
       modal_cancel: "Ακύρωση"
       cant_send_pm: "Λυπούμαστε, δεν μπορείτε να στείλετε μήνυμα στο χρήστη %{username}."
@@ -1196,8 +1192,6 @@ el:
         posted: "Ανάρτηση από"
         edited: "Επεξεργασία της ανάρτησής σου από"
         liked: "Η ανάρτησή σου έχει \"μου αρέσει\""
-        private_message: "Προσωπικό μήνυμα από"
-        invited_to_private_message: "Προσκλήθηκε σε προσωπικό μήνυμα από"
         invited_to_topic: "Προσκλήθηκε στο νήμα από"
         invitee_accepted: "Η πρόσκληση έγινε δεκτή από"
         moved_post: "Η ανάρτησή σου μετακινήθηκε από"
@@ -1210,7 +1204,6 @@ el:
         quoted: '{{username}} σε παράθεσε στο "{{topic}}" - {{site_title}}'
         replied: '{{username}} σου απάντησε στο "{{topic}}" - {{site_title}}'
         posted: '{{username}} ανάρτησε στο "{{topic}}" - {{site_title}}'
-        private_message: '{{username}} σου έστειλε ένα προσωπικό μήνυμα στο "{{topic}}" - {{site_title}}'
         linked: '{{username}} έκανε μια σύνδεση στην ανάρτηση που έκανες στο νήμα "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Προσθήκη εικόνας"
@@ -1236,9 +1229,6 @@ el:
       select_all: "Επιλογή Όλων"
       clear_all: "Καθαρισμός Όλων"
       too_short: "Ο όρος αναζήτησής σου είναι πολύ μικρός."
-      result_count:
-        one: "1 αποτέλεσμα για <span class='term'>{{term}}</span>"
-        other: "{{count}} αποτελέσματα για <span class='term'>{{term}}</span>"
       title: "ψάξε σε νήματα, αναρτήσεις, χρήστες ή κατηγορίες"
       no_results: "Δε βρέθηκαν αποτελέσματα."
       no_more_results: "Δε βρέθηκαν άλλα αποτελέσματα"
@@ -1261,30 +1251,20 @@ el:
         title: Προηγμένη Αναζήτηση
         posted_by:
           label: Αναρτήθηκε από
-        in_category:
-          label: Σε κατηγορία
         in_group:
           label: Σε ομάδα
         with_badge:
           label: Με Παράσημο
-        with_tags:
-          label: Με Ετικέτες
         filters:
-          label: Να επιστρέψεις μόνο νήματα/αναρτήσεις που...
           likes: μου άρεσαν
           posted: απάντησα
           watching: επιτηρώ
           tracking: παρακολουθώ
-          private: είναι στα μηνύματα μου
-          bookmarks: εχω βάλει σελιδοδείκτη
           first: είναι η πρώτη ανάρτηση
           pinned: είναι καρφιτσωμένα
           unpinned: δεν είναι καρφιτσωμένα
-          seen: διάβασα
           unseen: δεν διάβασα
           wiki: ' είναι βίκι'
-          images: περιλαμβάνουν εικόνες
-          all_tags: Πειρέχει όλες τις ετικέτες
         statuses:
           label: Τα οποία νήματα
           open: είναι ανοιχτά
@@ -1546,7 +1526,6 @@ el:
         visible: "Εμφάνιση Νήματος"
         reset_read: "Μηδενισμός Διαβασμένων"
         make_public: "Κάνε Δημόσιο το Νήμα"
-        make_private: "Κάνε Προσωπικό Μήνυμα"
       feature:
         pin: "Καρφίτσωμα Νήματος"
         unpin: "Ξεκαρφίτσωμα Νήματος"
@@ -1667,7 +1646,6 @@ el:
       multi_select:
         select: 'επίλεξε'
         selected: 'επιλεγμένες ({{count}})'
-        select_replies: 'επίλεξε +απαντήσεις'
         delete: διαγραφή επιλεγμένων
         cancel: ακύρωση επιλογής
         select_all: επιλογή όλων
@@ -1676,10 +1654,7 @@ el:
           one: Έχεις επιλέξει <b>1</b> ανάρτηση.
           other: Έχεις επιλέξει <b>{{count}}</b> αναρτήσεις.
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Παράθεση"
-      edit: "Επεξεργασία του {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Αιτία:"
       post_number: "ανάρτηση {{number}}"
       wiki_last_edited_on: "το βίκι επεξεργάστηκε τελευταία φορά στις"
@@ -1747,12 +1722,6 @@ el:
         undelete: "επαναφορά ανάρτησης"
         share: "κοινοποίησε έναν σύνδεσμο προς αυτή την ανάρτηση "
         more: "Περισσότερα"
-        delete_replies:
-          confirm:
-            one: "Θέλεις επίσης να σβήσεις την άμεση απάντηση σε αυτή την ανάρτηση;"
-            other: "Θέλεις επίσης να σβήσεις τις {{count}} άμεσες απαντήσεις σε αυτή την ανάρτηση;"
-          yes_value: "Ναι, σβήσε και τις απαντήσεις"
-          no_value: "Όχι, σβήσε μόνο την ανάρτηση"
         admin: "ενέργειες διαχειριστή ανάρτησης"
         wiki: "Δημιουργία Βίκι"
         unwiki: "Αφαίρεση Βίκι"
@@ -1844,10 +1813,6 @@ el:
           vote:
             one: "Ένα άτομο ψήφισε για την ανάρτηση"
             other: "{{count}} άτομα ψήφισαν για την ανάρτηση"
-      delete:
-        confirm:
-          one: "Είσαι σίγουρος ότι θέλεις να σβήσεις αυτή την ανάρτηση;"
-          other: "Είσαι σίγουρος ότι θέλεις να σβήσεις όλες αυτές τις αναρτήσεις;"
       merge:
         confirm:
           one: "Είσαι σίγουρος πως θέλεις να συγχωνεύσεις αυτές τις δημοσιεύσεις;"
@@ -2241,7 +2206,6 @@ el:
         one: "1 χορηγήθηκε"
         other: "%{count} χορηγήθηκε"
       select_badge_for_title: Επίλεξε ένα παράσημο για να χρησιμοποιήσεις ως τίτλο
-      none: "<none>"
       badge_grouping:
         getting_started:
           name: Ξεκινώντας
@@ -2268,7 +2232,6 @@ el:
       selector_no_tags: "καμία ετικέτα"
       changed: "αλλαγμένες ετικέτες:"
       tags: "Ετικέτες"
-      choose_for_topic: "επίλεξε προαιρετικές ετικέτες για αυτό το νήμα"
       delete_tag: "Αφαίρεση Ετικέτας"
       delete_confirm:
         one: "Είσαι βέβαιος πως θέλεις να διαγράψεις αυτήν την ετικέτα και να την αφαιρέσεις από το 1 νήμα στο οποίο είναι προσαρτημένη;"
@@ -2412,8 +2375,6 @@ el:
         agree_flag_restore_post_title: "Επαναφορά της ανάρτησης ώστε όλοι οι χρήστες να μπορούν να το δουν."
         agree_flag: "Αποδοχή και διατήρηση της ανάρτησης"
         agree_flag_title: "Αποδοχή επισήμανσης και διατήρηση της ανάρτησης αμετάβλητης."
-        defer_flag: "Αγνόηση"
-        defer_flag_title: "Αφαίρεσε αυτή την επισήμανση. Δεν χρειάζεται να γίνει κάποια ενέργεια αυτή τη στιγμή"
         delete: "Διαγραφή"
         delete_title: "Διέγραψε την ανάρτηση στην οποία αναφέρεται αυτή η επισήμανση."
         delete_post_defer_flag: "Διαγραφή ανάρτησης και αγνόηση επισήμανσης"
@@ -2548,7 +2509,6 @@ el:
           details: "Όταν υπάρχει μια καινούρια απάντηση, επεξεργασμένη, διαγραμμένη ή ανακτημένη."
         user_event:
           name: "Γεγονός Χρήστη"
-          details: "Όταν ένας χρήστης δημιουργείται, εγκρίνεται ή ενημερώνεται."
         delivery_status:
           title: "Κατάσταση διανομής"
           inactive: "Ανενεργό"
@@ -2613,7 +2573,6 @@ el:
           label: "Ανέβασμα"
           title: "Ανέβασε ένα αντίγραφο ασφαλείας για αυτό το στιγμιότυπο"
           uploading: "Ανεβαίνει..."
-          success: "Το '{{filename}}' ανέβηκε επιτυχώς."
           error: "Παρουσιάστηκε ένα σφάλμα κατά το ανέβασμα του '{{filename}}': {{message}}"
         operations:
           is_running: "Αυτή τη στιγμή εκτελείται μια λειτουργία..."
@@ -2963,7 +2922,6 @@ el:
           title: "Αναζήτηση καταγραφών"
           term: "Όρος"
           searches: "Αναζητήσεις"
-          most_viewed_topic: "Περισσότερο προβεβλημένο νήμα"
           unique: "Μοναδικό"
         logster:
           title: "Error Logs"

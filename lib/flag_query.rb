@@ -31,6 +31,7 @@ module FlagQuery
     posts = SqlBuilder.new("
       SELECT p.id,
              p.cooked,
+             p.raw,
              p.user_id,
              p.topic_id,
              p.post_number,
@@ -143,6 +144,16 @@ module FlagQuery
 
     if opts[:topic_id]
       post_actions = post_actions.where("topics.id = ?", opts[:topic_id])
+    end
+
+    if opts[:user_id]
+      post_actions = post_actions.where("posts.user_id = ?", opts[:user_id])
+    end
+
+    if opts[:filter] == 'without_custom'
+      return post_actions.where(
+        'post_action_type_id' => PostActionType.flag_types_without_custom.values
+      )
     end
 
     if opts[:filter] == "old"

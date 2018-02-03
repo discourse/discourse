@@ -38,6 +38,14 @@ describe Jobs::NotifyMailingListSubscribers do
   context "when mailing list mode is globally enabled" do
     before { SiteSetting.disable_mailing_list_mode = false }
 
+    context "when site requires approval and user is not approved" do
+      before do
+        SiteSetting.login_required = true
+        SiteSetting.must_approve_users = true
+      end
+      include_examples "no emails"
+    end
+
     context "with an invalid post_id" do
       before { post.update(deleted_at: Time.now) }
       include_examples "no emails"

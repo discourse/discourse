@@ -124,7 +124,7 @@ class ListController < ApplicationController
 
   def topics_by
     list_opts = build_topic_list_options
-    target_user = fetch_user_from_params({ include_inactive: current_user.try(:staff?) }, [:user_stat, :user_option])
+    target_user = fetch_user_from_params({ include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts) }, [:user_stat, :user_option])
     list = generate_list_for("topics_by", target_user, list_opts)
     list.more_topics_url = url_for(construct_url_with(:next, list_opts))
     list.prev_topics_url = url_for(construct_url_with(:prev, list_opts))

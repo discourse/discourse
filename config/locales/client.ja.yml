@@ -45,12 +45,16 @@ ja:
           other: "%{count}秒未満"
         x_seconds:
           other: "%{count}秒"
+        less_than_x_minutes:
+          other: "%{count}分以内"
         x_minutes:
           other: "%{count}分"
         about_x_hours:
           other: "%{count}時間"
         x_days:
           other: "%{count}日"
+        x_months:
+          other: "%{count}月"
         about_x_years:
           other: "%{count}年"
         over_x_years:
@@ -83,7 +87,7 @@ ja:
           other: "%{count}年後"
       previous_month: '前の月'
       next_month: '次の月'
-      placeholder: 日時を選択
+      placeholder: 日付
     share:
       topic: 'このトピックのリンクをシェアする'
       post: '投稿 #%{postNumber}'
@@ -235,6 +239,7 @@ ja:
     uploading: "アップロード中..."
     uploading_filename: "{{filename}} をアップロードしています..."
     uploaded: "アップロードしました"
+    pasting: "貼り付け"
     enable: "有効にする"
     disable: "無効にする"
     undo: "取り消す"
@@ -425,7 +430,6 @@ ja:
       '14': "保留"
     categories:
       all: "すべてのカテゴリ"
-      all_subcategories: "すべてのサブカテゴリ"
       no_subcategory: "サブカテゴリなし"
       category: "カテゴリ"
       category_list: "カテゴリリストを表示"
@@ -496,6 +500,7 @@ ja:
         disable: "通知を無効にする"
         enable: "通知を有効にする"
         each_browser_note: "注意: 利用するすべてのブラウザでこの設定を変更する必要があります"
+      dismiss: '閉じる'
       dismiss_notifications: "すべて既読にする"
       dismiss_notifications_tooltip: "全ての未読の通知を既読にします"
       first_notification: "最初の通知です! 始めるために選択してください。"
@@ -509,7 +514,9 @@ ja:
       admin: "{{user}} は管理者です"
       moderator_tooltip: "このユーザーはモデレータです"
       admin_tooltip: "このユーザーは管理者です"
+      silenced_tooltip: "このユーザーは消音状態です"
       suspended_notice: "このユーザーは {{date}} まで凍結状態です。"
+      suspended_permanently: "このユーザーは凍結されています"
       suspended_reason: "理由: "
       github_profile: "Github"
       email_activity_summary: "アクティビティの情報"
@@ -526,6 +533,8 @@ ja:
       tag_settings: "タグ"
       watched_tags: "ウォッチ中"
       watched_tags_instructions: "自動的にこれらのタグが付いた全てのトピックをウォッチします。全ての新規投稿と新規トピックが通知されまた、新規投稿数がトピックの隣に表示されます。"
+      tracked_tags: "追跡"
+      tracked_tags_instructions: "これらのタグのすべてのトピックを自動的に追跡します。 新しい投稿の数がトピックの横に表示されます。"
       muted_tags: "通知しない"
       muted_tags_instructions: "これらのタグが付いたトピックについて何も通知されず、また新着にも表示されません。"
       watched_categories: "ウォッチ中"
@@ -557,6 +566,8 @@ ja:
       undo_revoke_access: "アクセス解除をやめる"
       api_approved: "承認されました:"
       theme: "テーマ"
+      home: "デフォルトホームページ"
+      staged: "段階"
       staff_counters:
         flags_given: "役に立った通報"
         flagged_posts: "通報された投稿"
@@ -717,7 +728,6 @@ ja:
         title: "招待"
         user: "招待したユーザ"
         sent: "送信済み"
-        none: "保留中の招待はありません。"
         truncated:
           other: "{{count}} 件の招待を表示しています。"
         redeemed: "招待を確認する"
@@ -768,10 +778,6 @@ ja:
           other: "つのトピックを作成"
         post_count:
           other: "つの投稿"
-        likes_given:
-          other: "あげた <i class='fa fa-heart'></i>"
-        likes_received:
-          other: "もらった <i class='fa fa-heart'></i>"
         days_visited:
           other: "訪問日数"
         posts_read:
@@ -859,7 +865,7 @@ ja:
     first_post: 最初の投稿
     mute: ミュート
     unmute: ミュート解除
-    last_post: 最終投稿時刻
+    last_post: 最終投稿
     last_reply_lowercase: 最後の返信
     replies_lowercase:
       other: 返信
@@ -992,8 +998,9 @@ ja:
       alt: 'Alt'
     select_kit:
       default_header_text: 選択...
-      no_content: 一致する結果が見つかりませんでした。
+      no_content: 一致する項目が見つかりませんでした
       filter_placeholder: 検索...
+      create: "{{content}} を作成"
     emoji_picker:
       filter_placeholder: 絵文字を探す
       people: ピープル
@@ -1055,6 +1062,7 @@ ja:
       edit_reason_placeholder: "編集する理由は何ですか?"
       show_edit_reason: "(編集理由を追加)"
       topic_featured_link_placeholder: "タイトルにリンクを入力してください。"
+      remove_featured_link: "トピックからリンクを削除する。"
       reply_placeholder: "文章を入力してください。 Markdown, BBコード, HTMLが使用出来ます。 画像はドラッグアンドドロップで貼り付けられます。"
       view_new_post: "新しい投稿を見る。"
       saving: "保存中"
@@ -1086,7 +1094,6 @@ ja:
       ulist_title: "箇条書き"
       list_item: "リストアイテム"
       help: "Markdown 編集のヘルプ"
-      toggler: "編集パネルの表示/非表示"
       modal_ok: "OK"
       modal_cancel: "キャンセル"
       cant_send_pm: "%{username}へメッセージを送ることはできません。"
@@ -1128,8 +1135,6 @@ ja:
         posted: "投稿者 "
         edited: "投稿の編集者: "
         liked: "あなたの投稿をいいねしました"
-        private_message: "プライベートメッセージを受け取りました: "
-        invited_to_private_message: "プライベートメッセージへ招待されました: "
         invited_to_topic: "トピックに招待されました: "
         invitee_accepted: "招待が承認されました: "
         moved_post: "投稿を移動しました: "
@@ -1142,7 +1147,6 @@ ja:
         quoted: '"{{topic}}"で{{username}}が引用しました - {{site_title}}'
         replied: '{{username}}が"{{topic}}"へ返信しました - {{site_title}}'
         posted: '{{username}} が投稿しました "{{topic}}" - {{site_title}}'
-        private_message: '"{{topic}}"で{{username}}からプライベートメッセージが届きました - {{site_title}}'
         linked: '"{{topic}}"にあるあなたの投稿に{{username}}がリンクしました - {{site_title}}'
     upload_selector:
       title: "画像のアップロード"
@@ -1168,14 +1172,11 @@ ja:
       select_all: "すべて選択する"
       clear_all: "すべてクリア"
       too_short: "検索文字が短すぎます。"
-      result_count:
-        other: "<span class='term'>{{term}}</span> について、{{count}} 件が見つかりました"
       title: "トピック、投稿、ユーザ、カテゴリを探す"
       no_results: "何も見つかりませんでした。"
       no_more_results: "検索結果は以上です。"
       searching: "検索中..."
       post_format: "#{{post_number}}  {{username}}から"
-      results_page: "検索結果"
       more_results: "検索結果が多数あります。検索条件を絞ってください。"
       cant_find: "探しているものが見つかりませんか？"
       start_new_topic: "新しいトピックを始めてみては？"
@@ -1192,29 +1193,19 @@ ja:
         title: 高度な検索
         posted_by:
           label: 投稿者
-        in_category:
-          label: カテゴリー内
         in_group:
           label: グループ内
         with_badge:
           label: バッヂ指定
-        with_tags:
-          label: タグ指定
         filters:
-          label: トピック/投稿のうち...
           likes: 「いいね！」したもの
           posted: 投稿済
           watching: ウォッチ中
-          private: メッセージにあるもの
-          bookmarks: ブックマーク済
           first: 最初の投稿
           pinned: 固定表示されている
           unpinned: 固定表示されていない
-          seen: 既読
           unseen: 未読
           wiki: wiki
-          images: 画像を含む
-          all_tags: 指定した全てのタグを含む
         statuses:
           label: トピックのうち
           open: オープンされている
@@ -1342,7 +1333,6 @@ ja:
       jump_reply_down: 以後の返信へジャンプ
       deleted: "トピックは削除されました"
       topic_status_update:
-        title: "トピックにタイマーをセット"
         save: "タイマーをセットする"
         num_of_hours: "時間数"
         remove: "タイマーをはずす"
@@ -1456,7 +1446,6 @@ ja:
         visible: "リストに表示"
         reset_read: "読み込みデータをリセット"
         make_public: "公開トピックへ変更"
-        make_private: "プライベートメッセージへ変更"
       feature:
         pin: "トピックを固定表示"
         unpin: "トピックの固定表示を解除"
@@ -1571,7 +1560,6 @@ ja:
       multi_select:
         select: '選択'
         selected: '選択中 ({{count}})'
-        select_replies: '返信と選択'
         delete: 選択中のものを削除
         cancel: 選択を外す
         select_all: すべて選択する
@@ -1579,10 +1567,7 @@ ja:
         description:
           other: <b>{{count}}</b>個の投稿を選択中。
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "引用"
-      edit: "編集中 {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "理由: "
       post_number: "投稿{{number}}"
       wiki_last_edited_on: "wikiの最終編集日"
@@ -1642,11 +1627,6 @@ ja:
         undelete: "投稿を元に戻す"
         share: "投稿のリンクを共有する"
         more: "もっと読む"
-        delete_replies:
-          confirm:
-            other: "この投稿への{{count}}件の返信を削除しますか?"
-          yes_value: "返信も一緒に削除します"
-          no_value: "投稿のみを削除する"
         admin: "投稿の管理"
         wiki: "wiki投稿にする"
         unwiki: "wiki投稿から外す"
@@ -1657,8 +1637,6 @@ ja:
         change_owner: "オーナーシップを変更"
       actions:
         flag: '通報'
-        defer_flags:
-          other: "取り下げた通報"
         undo:
           off_topic: "通報を取り消す"
           spam: "通報を取り消す"
@@ -1718,9 +1696,6 @@ ja:
             other: "{{count}}人のユーザが「いいね！」しました"
           vote:
             other: "{{count}}人のユーザがこのポストに投票しました"
-      delete:
-        confirm:
-          other: "これらの投稿を削除してもよろしいですか？"
       merge:
         confirm:
           other: "これらの{{count}}の投稿を統合したいですか?"
@@ -1825,6 +1800,13 @@ ja:
           description: "他のユーザからメンションされた場合や、投稿に返信された場合に通知されます。"
         muted:
           title: "ミュート中"
+      sort_options:
+        views: "表示"
+        posts: "投稿"
+        activity: "アクティビティー"
+        posters: "投稿者"
+        category: "カテゴリ"
+        created: "作成者"
     flagging:
       title: '報告していただきありがとうございます。'
       action: '投稿を通報'
@@ -2022,7 +2004,6 @@ ja:
         hamburger_menu: '<b>=</b> メニューを開く'
         user_profile_menu: '<b>p</b> ユーザーメニューを開く'
         show_incoming_updated_topics: '<b>.</b> 更新されたトピックを表示する'
-        search: '<b>/</b> or <b>ctrl</b>+<b>shift</b>+<b>s</b> 検索'
         help: '<b>?</b> キーボードヘルプを表示する'
         dismiss_new_posts: '<b>x</b>, <b>r</b> 新規投稿を非表示にする'
         dismiss_topics: '<b>x</b>, <b>t</b> トピックを既読にする'
@@ -2069,11 +2050,33 @@ ja:
         watching_first_post:
           title: "最初の投稿をウォッチする"
           description: "このタグの新規トピックに対する最初の投稿のみ通知されます。"
+      groups:
+        parent_tag_label: "親タグ:"
+        parent_tag_placeholder: "任意"
+        save: "保存する"
+        delete: "削除する"
+        confirm_delete: "このタググループを削除してもよろしいですか？"
       topics:
         none:
+          unread: "未読のトピックはありません。"
+          new: "新着トピックはありません。"
+          read: "あなたはまだ、どのトピックも読んでいません。"
+          posted: "あなたはまだ、どのトピックにも投稿していません。"
           latest: "最新のトピックはありません。"
+          hot: "ホットなトピックはありません。"
+          bookmarks: "ブックマークしたトピックはありません。"
+          top: "トップトピックはありません。"
+          search: "検索結果はありません。"
         bottom:
           latest: "最新のトピックは以上です。"
+          hot: "ホットなトピックは以上です。"
+          posted: "投稿のあるトピックは以上です。"
+          read: "既読のトピックは以上です。"
+          new: "新着トピックは以上です。"
+          unread: "未読のトピックは以上です。"
+          top: "トップトピックは以上です。"
+          bookmarks: "ブックマーク済みのトピックは以上です。"
+          search: "検索結果は以上です。"
   admin_js:
     type_to_filter: "設定項目を検索..."
     admin:
@@ -2131,20 +2134,9 @@ ja:
         title: "通報"
         agree: "賛成する"
         agree_title: "この通報が有効で正しいことを確認してください"
-        agree_flag_modal_title: "Agree and..."
-        agree_flag_hide_post: "賛成(ポスト非表示 + プライベートメッセージ送信)"
-        agree_flag_hide_post_title: "この投稿を非表示にし、編集を促すプライベートメッセージを自動的に送信する"
-        agree_flag_restore_post: "賛成(投稿を復元)"
-        agree_flag_restore_post_title: "この投稿を復元"
-        agree_flag: "通報に賛成"
-        agree_flag_title: "投稿を変更できなくする事に賛成"
-        defer_flag: "取り下げる"
-        defer_flag_title: "通報を削除します。何も行いません。"
         delete: "削除する"
         delete_title: "この通報で通報されている投稿を削除します"
-        delete_post_defer_flag: "投稿を削除し、通報を取り下げます"
         delete_post_defer_flag_title: "投稿を削除します。最初の投稿を削除した場合、トピックも削除されます。"
-        delete_post_agree_flag: "投稿を削除することに賛成します"
         delete_post_agree_flag_title: "投稿を削除します。最初の投稿を削除した場合、トピックも削除されます。"
         delete_flag_modal_title: "Delete and..."
         delete_spammer: "スパムユーザーを削除"
@@ -2161,7 +2153,6 @@ ja:
         dispositions:
           agreed: "賛成しました。"
           disagreed: "反対する"
-          deferred: "取り下げられた"
         flagged_by: "通報者: "
         resolved_by: "解決方法"
         took_action: "Took action"
@@ -2173,17 +2164,8 @@ ja:
         visit_topic: "トピックを確認"
         was_edited: "最初の通報後に編集された投稿"
         previous_flags_count: "この投稿は既に {{count}} 回通報されています"
-        summary:
-          action_type_3:
-            other: "オフトピック x{{count}}"
-          action_type_4:
-            other: "不適切 x{{count}}"
-          action_type_6:
-            other: "カスタム x{{count}}"
-          action_type_7:
-            other: "カスタム x{{count}}"
-          action_type_8:
-            other: "スパム x{{count}}"
+        flagged_topics:
+          topic: "トピック"
       groups:
         primary: "プライマリーグループ"
         no_primary: "（プライマリーグループなし）"
@@ -2266,7 +2248,6 @@ ja:
           label: "アップロード"
           title: "このインスタンスにバックアップをアップロード"
           uploading: "アップロード中..."
-          success: "ファイル'{{filename}}' がアップロードされました。"
           error: "ファイル '{{filename}}'アップロードエラー: {{message}}"
         operations:
           is_running: "バックアップ作業を実行中..."
@@ -2612,6 +2593,15 @@ ja:
         suspend_reason: "理由"
         suspend_reason_placeholder: "凍結理由"
         suspended_by: "凍結したユーザ"
+        silence_reason: "理由"
+        silenced_by: "消音化したユーザ"
+        silence_duration: "ユーザーはどのくらいの間、消音化されますか？"
+        silence_reason_label: "なぜあなたはこのユーザーを消音化させますか？"
+        silence_reason_placeholder: "消音化の理由"
+        silence_message: "メールメッセージ"
+        silence_message_placeholder: "(デフォルトのメッセージを送信する場合は空白のままにします)"
+        suspended_until: "(%{until}まで)"
+        cant_suspend: "このユーザーは凍結できません。"
         delete_all_posts: "全ての投稿を削除"
         moderator: "モデレータ権限の所有"
         admin: "管理者権限の所有"

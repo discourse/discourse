@@ -744,12 +744,6 @@ ur:
         post_count:
           one: "بنائی گئی پوسٹ"
           other: "بنائی گئیں پوسٹ"
-        likes_given:
-          one: "<i class='fa fa-heart'></i> دیا گیا"
-          other: "<i class='fa fa-heart'></i> دیا گیا"
-        likes_received:
-          one: "<i class='fa fa-heart'></i> موصول ہوئے"
-          other: "<i class='fa fa-heart'></i> موصول ہوئے"
         days_visited:
           one: "دن جس میں دورہ کیا گیا"
           other: "دن جن میں دورہ کیا گیا"
@@ -841,7 +835,6 @@ ur:
     first_post: پہلی پوسٹ
     mute: خاموش کریں
     unmute: آواز چالو کریں
-    last_post: آخری پوسٹ
     last_reply_lowercase: آخری جواب
     replies_lowercase:
       one: جواب
@@ -1033,7 +1026,6 @@ ur:
       ulist_title: "بلٹ والی لسٹ"
       list_item: "فہرست آئٹم"
       help: "مارکڈائون ترمیم میں مدد"
-      toggler: "کمپوزر پینل چھپائیں یا دکھائیں"
       modal_ok: "ٹھیک"
       modal_cancel: "منسوخ"
       cant_send_pm: "معذرت، آپ ٪{username} کو پیغام نہیں بھیج سکتے۔"
@@ -1107,26 +1099,18 @@ ur:
         title: اعلی درجے کی تلاشی
         posted_by:
           label: کی طرف سے پوسٹ کیا گیا
-        in_category:
-          label: زمرہ میں
         in_group:
           label: گروپ میں
         with_badge:
           label: بَیج کے ساتھ
-        with_tags:
-          label: ٹیگز کے ساتھ
         filters:
-          label: صرف وہ ٹاپک/پوسٹس دکھائیں جو
           likes: جو میں نے لائیک کیے
           posted: جن میں میں نے پوسٹ کیا
           watching: جو میں دیکھ رہا ہوں
           tracking: جو میں ٹریک کر رہا ہوں
-          private: جو میرے پیغامات میں ہے
-          bookmarks: جو میں نے بُک مارک کیے ہیں
           first: جو سب سے پہلی پوسٹ ہو
           pinned: جو پِن ہوا ہو
           unpinned: جو پِن نہ ہوا ہو
-          seen: جو میں نے پڑھ لیا ہو
           unseen: جو میں نے نہ پڑھا ہو
           wiki: جو وِیکی ہو
         statuses:
@@ -1451,7 +1435,6 @@ ur:
       multi_select:
         select: 'منتخب'
         selected: 'منتخب کیے گئے ({{count}})'
-        select_replies: 'منتخب+جوابات'
         delete: منتخب کیے ہوں کو حذف کریں
         cancel: انتخاب کرنا منسوخ کریں
         select_all: تمام منتخب کریں
@@ -1460,10 +1443,7 @@ ur:
           one: آپ نے <b>1</b> پوسٹ منتخب کی ہے۔
           other: آپ نے <b>{{count}}</b> پوسٹس منتخب کی ہیں۔
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "اقتباس کریں"
-      edit: "ترمیم {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "وجہ:"
       post_number: "پوسٹ {{number}}"
       wiki_last_edited_on: "وِکی کو آخری بار ترمیم کیا گیا"
@@ -1530,12 +1510,6 @@ ur:
         undelete: " اِس پوسٹ کو واپس لائیں"
         share: "اس پوسٹ کا لنک شیئرکریں"
         more: "مزید "
-        delete_replies:
-          confirm:
-            one: "کیا آپ اِس پوسٹ پر براہِ راست جواب حذف کرنا چاہتے ہیں؟"
-            other: "کیا آپ اِس پوسٹ پر {{count}} براہِ راست جوابات حذف کرنا چاہتے ہیں؟"
-          yes_value: "جی ہاں، جوابات کو بھی حذف کردیں"
-          no_value: "نہیں، صرف یہ پوسٹ"
         admin: "پوسٹ ایڈمن کے ایکشن"
         wiki: "وِیکی بنائیں"
         unwiki: "وِیکی ختم کریں"
@@ -1546,9 +1520,6 @@ ur:
         change_owner: "پوسٹس کے مالک کو تبدیل کریں"
       actions:
         flag: 'فلَیگ'
-        defer_flags:
-          one: "فلَیگ ملتوی کریں"
-          other: "فلَیگز ملتوی کریں"
         undo:
           off_topic: "فلَیگ کالعدم کریں"
           spam: "فلَیگ کالعدم کریں"
@@ -1624,10 +1595,6 @@ ur:
           vote:
             one: "1 شخص نے اِس پوسٹ کے لیے ووٹ کیا"
             other: "{{count}} لوگوں نے اِس پوسٹ کے لیے ووٹ کیا"
-      delete:
-        confirm:
-          one: "کیا آپ واقعی اِس پوسٹ کو حذف کرنا چاہتے ہیں؟"
-          other: "کیا آپ واقعی اِن تمام پوسٹس کو حذف کرنا چاہتے ہیں؟"
       revisions:
         controls:
           first: "پہلی رَوِیژن"
@@ -2011,7 +1978,7 @@ ur:
         one: "1 عطا کیا گیا"
         other: "%{count} عطا کیے گئے"
       select_badge_for_title: اپنے عنوان کے طور پر استعمال کرنے کے لئے ایک بیج منتخب کریں
-      none: "<none>"
+      none: "(none)"
       badge_grouping:
         getting_started:
           name: شروعات
@@ -2038,9 +2005,7 @@ ur:
       selector_no_tags: "کوئی ٹیگ نہیں"
       changed: "تبدیل کیے گئے ٹیگ:"
       tags: "ٹیگز"
-      choose_for_topic: "اِس ٹاپک کے لئے اختیاری ٹیگز منتخب کریں"
       delete_tag: "ٹیگ حذف کریں"
-      delete_confirm: "کیا آپ واقعی اِس ٹیگ کو حذف کرنا چاہتے ہیں؟"
       rename_tag: "ٹیگ کا نام تبدیل کریں"
       rename_instructions: "ٹیگ کے لیے نئے نام کا انتخاب کریں:"
       sort_by: "ترتیب بہ:"
@@ -2167,24 +2132,12 @@ ur:
         by: "تک"
       flags:
         title: "فلَیگز"
-        old: "پرانے"
-        active: "فعال"
         agree: "اتفاق کریں"
         agree_title: "اِس فلَیگ کے درست اور صحیح ہونے کی تصدیق کریں"
-        agree_flag_modal_title: "اتفاق کریں اور..."
-        agree_flag_hide_post: "اتفاق کریں (پوسٹ چھپائیں + PM بھیجیں)"
-        agree_flag_hide_post_title: "اِس پوسٹ کو چھپائیں اور صارف کو اِس میں ترمیم کرنے پر زور ڈالنے کیلئے پیغام بھیجیں"
-        agree_flag_restore_post: "اتفاق کریں (پوسٹ بحال کریں)"
-        agree_flag_restore_post_title: "اِس پوسٹ کو بحال کریں"
-        agree_flag: "فلَیگ کے ساتھ اتفاق کریں"
-        agree_flag_title: "فلَیگ کے ساتھ اتفاق کریں اور پوسٹ کو ویسا ہی رہنے دیں"
-        defer_flag: "ملتوی کریں"
         defer_flag_title: "اس فلَیگ کو ہٹا دیں؛ اِسے اِس وقت کسی کارروائی کی ضرورت نہیں۔"
         delete: "حذف کریں"
         delete_title: "یہ فلَیگ جس پوسٹ سے متعلق ہے اُسے حذف کریں۔"
-        delete_post_defer_flag: "پوسٹ حذف اور فلَیگ ملتوی کریں"
         delete_post_defer_flag_title: "پوسٹ حذف کریں؛ اگر پہلی پوسٹ، تو ٹاپک بھی ساتھ حذف کریں"
-        delete_post_agree_flag: "پوسٹ حذف کریں اور فلَیگ کے ساتھ اتفاق کریں"
         delete_post_agree_flag_title: "پوسٹ حذف کریں؛ اگر پہلی پوسٹ، تو ٹاپک بھی ساتھ حذف کریں"
         delete_flag_modal_title: "حذف کریں اور..."
         delete_spammer: "سپیم کرنے والے کو حذف کریں"
@@ -2199,34 +2152,16 @@ ur:
         dispositions:
           agreed: "اتفاق کیا"
           disagreed: "اختلاف کیا"
-          deferred: "ملتوی کیا"
         flagged_by: "کی طرف سے فلَیگ کیا گیا"
         resolved_by: "کی طرف سے حل کیا گیا"
         took_action: "کارروائی کی"
         system: "سِسٹَم"
         error: "کچھ غلط ہو گیا"
         reply_message: "جواب"
-        no_results: "کوئی فلَیگز موجود نہیں ہیں۔"
         topic_flagged: "اِس <strong>ٹاپک</strong> کو فلَیگ کر دیا گیا ہے۔"
         visit_topic: "کارروائی کرنے کیلئے ٹاپک کو وزٹ کریں"
         was_edited: "پہلے فلَیگ کے بعد پوسٹ میں ترمیم ہوئی تھی"
         previous_flags_count: "اس پوسٹ کو پہلے ہی سے {{count}} دفعہ فلَیگ کیا جا چکا ہے۔"
-        summary:
-          action_type_3:
-            one: "موضوع سے ہٹ کر"
-            other: "موضوع سے ہٹ کر x{{count}}"
-          action_type_4:
-            one: "نامناسب"
-            other: "نامناسب x{{count}}"
-          action_type_6:
-            one: "اپنی مرضی کا"
-            other: "اپنی مرضی کا x{{count}}"
-          action_type_7:
-            one: "اپنی مرضی کا"
-            other: "اپنی مرضی کا x{{count}}"
-          action_type_8:
-            one: "سپَیم"
-            other: "سپَیم x{{count}}"
       groups:
         primary: "پرائمری گروپ"
         no_primary: "(کوئی پرائمری گروپ نہیں)"
@@ -2312,7 +2247,6 @@ ur:
           details: "جب ایک نیا جواب، ترمیم، حذف یا رِِیکور کیا جائے۔"
         user_event:
           name: "صارف واقعہ"
-          details: "جب ایک صارف بنایا، منظور یا اَپ ڈیٹ کیا جاتا ہے۔"
         delivery_status:
           title: "موصول ہونے کی آگاہی"
           inactive: "غیر فعال"

@@ -22,9 +22,7 @@ class SearchIndexer
 
     # insert some extra words for I.am.a.word so "word" is tokenized
     # I.am.a.word becomes I.am.a.word am a word
-    # uses \p{L} which matchs a single code point in category letter
-    # uses \p{N} which matchs a single code point in category number
-    search_data = raw_data.gsub(/(\p{L}|\p{N}|_|-|\.)*\.(\p{L}|\p{N}|_|-|\.)*/) do |with_dot|
+    search_data = raw_data.gsub(/[^[:space:]]*[\.]+[^[:space:]]*/) do |with_dot|
       split = with_dot.split(".")
       if split.length > 1
         with_dot + (" " << split[1..-1].join(" "))

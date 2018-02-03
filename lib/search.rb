@@ -129,6 +129,8 @@ class Search
 
     # Removes any zero-width characters from search terms
     term.to_s.gsub!(/[\u200B-\u200D\uFEFF]/, '')
+    # Replace curly quotes to regular quotes
+    term.to_s.gsub!(/[\u201c\u201d]/, '"')
     @clean_term = term.to_s.dup
 
     term = process_advanced_search!(term)
@@ -178,7 +180,7 @@ class Search
 
   # Query a term
   def execute
-    if SiteSetting.log_search_queries?
+    if SiteSetting.log_search_queries? && @opts[:search_type].present?
       status, search_log_id = SearchLog.log(
         term: @term,
         search_type: @opts[:search_type],

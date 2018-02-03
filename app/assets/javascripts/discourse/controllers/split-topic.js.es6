@@ -1,68 +1,58 @@
-import SelectedPostsCount from 'discourse/mixins/selected-posts-count';
-import ModalFunctionality from 'discourse/mixins/modal-functionality';
-import { extractError } from 'discourse/lib/ajax-error';
-import { movePosts } from 'discourse/models/topic';
-import DiscourseURL from 'discourse/lib/url';
+import ModalFunctionality from "discourse/mixins/modal-functionality";
+import { extractError } from "discourse/lib/ajax-error";
+import { movePosts } from "discourse/models/topic";
+import DiscourseURL from "discourse/lib/url";
+import { default as computed } from "ember-addons/ember-computed-decorators";
 
-// Modal related to auto closing of topics
-export default Ember.Controller.extend(SelectedPostsCount, ModalFunctionality, {
+export default Ember.Controller.extend(ModalFunctionality, {
   topicName: null,
   saving: false,
   categoryId: null,
 
-  topicController: Ember.inject.controller('topic'),
-  selectedPosts: Em.computed.alias('topicController.selectedPosts'),
-  selectedReplies: Em.computed.alias('topicController.selectedReplies'),
-  allPostsSelected: Em.computed.alias('topicController.allPostsSelected'),
+  topicController: Ember.inject.controller("topic"),
+  selectedPostsCount: Ember.computed.alias("topicController.selectedPostsCount"),
 
-  buttonDisabled: function() {
-    if (this.get('saving')) return true;
-    return Ember.isEmpty(this.get('topicName'));
-  }.property('saving', 'topicName'),
+  @computed("saving", "topicName")
+  buttonDisabled(saving, topicName) {
+    return saving || Ember.isEmpty(topicName);
+  },
 
-  buttonTitle: function() {
-    if (this.get('saving')) return I18n.t('saving');
-    return I18n.t('topic.split_topic.action');
-  }.property('saving'),
+  @computed("saving")
+  buttonTitle(saving) {
+    return saving ? I18n.t("saving") : I18n.t("topic.split_topic.action");
+  },
 
   onShow() {
     this.setProperties({
-      'modal.modalClass': 'split-modal',
+      "modal.modalClass": "split-modal",
       saving: false,
       categoryId: null,
-      topicName: ''
+      topicName: ""
     });
   },
 
   actions: {
     movePostsToNewTopic() {
-      this.set('saving', true);
+      this.set("saving", true);
 
-      const postIds = this.get('selectedPosts').map(function(p) { return p.get('id'); }),
-            replyPostIds = this.get('selectedReplies').map(function(p) { return p.get('id'); }),
-            self = this,
-            categoryId = this.get('categoryId'),
-            saveOpts = {
-              title: this.get('topicName'),
-              post_ids: postIds,
-              reply_post_ids: replyPostIds
-            };
+      const options = {
+        title: this.get("topicName"),
+        post_ids: this.get("topicController.selectedPostIds"),
+        category_id: this.get("categoryId")
+      };
 
-      if (!Ember.isNone(categoryId)) { saveOpts.category_id = categoryId; }
-
-      movePosts(this.get('model.id'), saveOpts).then(function(result) {
-        // Posts moved
-        self.send('closeModal');
-        self.get('topicController').send('toggleMultiSelect');
-        Ember.run.next(function() { DiscourseURL.routeTo(result.url); });
-      }).catch(function(xhr) {
-        self.flash(extractError(xhr, I18n.t('topic.split_topic.error')));
-      }).finally(function() {
-        self.set('saving', false);
+      movePosts(this.get("model.id"), options).then(result => {
+        this.send("closeModal");
+        this.get("topicController").send("toggleMultiSelect");
+        Ember.run.next(() => DiscourseURL.routeTo(result.url));
+      }).catch(xhr => {
+        this.flash(extractError(xhr, I18n.t("topic.split_topic.error")));
+      }).finally(() => {
+        this.set("saving", false);
       });
+
       return false;
     }
   }
-
 
 });

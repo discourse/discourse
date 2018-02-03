@@ -33,76 +33,104 @@ describe UserAction do
       }.merge(opts))
     end
 
-    before do
-      # Create some test data using a helper
-      log_test_action
-      log_test_action(action_type: UserAction::GOT_PRIVATE_MESSAGE)
-      log_test_action(action_type: UserAction::NEW_TOPIC, target_topic_id: public_topic.id, target_post_id: public_post.id)
-      log_test_action(action_type: UserAction::BOOKMARK)
+    describe "integration" do
+      before do
+        # Create some test data using a helper
+        log_test_action
+        log_test_action(action_type: UserAction::GOT_PRIVATE_MESSAGE)
+        log_test_action(action_type: UserAction::NEW_TOPIC, target_topic_id: public_topic.id, target_post_id: public_post.id)
+        log_test_action(action_type: UserAction::BOOKMARK)
+      end
+
+      def stats_for_user(viewer = nil)
+        UserAction.stats(user.id, Guardian.new(viewer)).map { |r| r["action_type"].to_i }.sort
+      end
+
+      def stream_count(viewer = nil)
+        UserAction.stream(user_id: user.id, guardian: Guardian.new(viewer)).count
+      end
+
+      it 'includes the events correctly' do
+        PostActionNotifier.enable
+
+        mystats = stats_for_user(user)
+        expecting = [UserAction::NEW_TOPIC, UserAction::NEW_PRIVATE_MESSAGE, UserAction::GOT_PRIVATE_MESSAGE, UserAction::BOOKMARK].sort
+        expect(mystats).to eq(expecting)
+        expect(stream_count(user)).to eq(4)
+
+        other_stats = stats_for_user
+        expecting = [UserAction::NEW_TOPIC]
+        expect(stream_count).to eq(1)
+
+        expect(other_stats).to eq(expecting)
+
+        public_topic.trash!(user)
+        expect(stats_for_user).to eq([])
+        expect(stream_count).to eq(0)
+
+        # groups
+        category = Fabricate(:category, read_restricted: true)
+
+        public_topic.recover!
+        public_topic.category = category
+        public_topic.save
+
+        expect(stats_for_user).to eq([])
+        expect(stream_count).to eq(0)
+
+        group = Fabricate(:group)
+        u = Fabricate(:coding_horror)
+        group.add(u)
+        group.save
+
+        category.set_permissions(group => :full)
+        category.save
+
+        expect(stats_for_user(u)).to eq([UserAction::NEW_TOPIC])
+        expect(stream_count(u)).to eq(1)
+
+        # duplicate should not exception out
+        log_test_action
+
+        # recategorize belongs to the right user
+        category2 = Fabricate(:category)
+        admin = Fabricate(:admin)
+        public_post.revise(admin, category_id: category2.id)
+
+        action = UserAction.stream(user_id: public_topic.user_id, guardian: Guardian.new)[0]
+        expect(action.acting_user_id).to eq(admin.id)
+        expect(action.action_type).to eq(UserAction::EDIT)
+      end
     end
 
-    def stats_for_user(viewer = nil)
-      UserAction.stats(user.id, Guardian.new(viewer)).map { |r| r["action_type"].to_i }.sort
-    end
+    describe "mentions" do
+      before do
+        log_test_action(action_type: UserAction::MENTION)
+      end
 
-    def stream_count(viewer = nil)
-      UserAction.stream(user_id: user.id, guardian: Guardian.new(viewer)).count
-    end
+      let(:stream) do
+        UserAction.stream(
+          user_id: user.id,
+          guardian: Guardian.new(user)
+        )
+      end
 
-    it 'includes the events correctly' do
-      PostActionNotifier.enable
+      it "is returned by the stream" do
+        expect(stream).to be_present
+      end
 
-      mystats = stats_for_user(user)
-      expecting = [UserAction::NEW_TOPIC, UserAction::NEW_PRIVATE_MESSAGE, UserAction::GOT_PRIVATE_MESSAGE, UserAction::BOOKMARK].sort
-      expect(mystats).to eq(expecting)
-      expect(stream_count(user)).to eq(4)
-
-      other_stats = stats_for_user
-      expecting = [UserAction::NEW_TOPIC]
-      expect(stream_count).to eq(1)
-
-      expect(other_stats).to eq(expecting)
-
-      public_topic.trash!(user)
-      expect(stats_for_user).to eq([])
-      expect(stream_count).to eq(0)
-
-      # groups
-      category = Fabricate(:category, read_restricted: true)
-
-      public_topic.recover!
-      public_topic.category = category
-      public_topic.save
-
-      expect(stats_for_user).to eq([])
-      expect(stream_count).to eq(0)
-
-      group = Fabricate(:group)
-      u = Fabricate(:coding_horror)
-      group.add(u)
-      group.save
-
-      category.set_permissions(group => :full)
-      category.save
-
-      expect(stats_for_user(u)).to eq([UserAction::NEW_TOPIC])
-      expect(stream_count(u)).to eq(1)
-
-      # duplicate should not exception out
-      log_test_action
-
-      # recategorize belongs to the right user
-      category2 = Fabricate(:category)
-      admin = Fabricate(:admin)
-      public_post.revise(admin, category_id: category2.id)
-
-      action = UserAction.stream(user_id: public_topic.user_id, guardian: Guardian.new)[0]
-      expect(action.acting_user_id).to eq(admin.id)
-      expect(action.action_type).to eq(UserAction::EDIT)
+      it "isn't returned when mentions aren't enabled" do
+        SiteSetting.enable_mentions = false
+        expect(stream).to be_blank
+      end
     end
 
   end
 
+  describe "mentions" do
+    it "returns the mention in the stream" do
+    end
+  end
   describe 'when user likes' do
 
     let(:post) { Fabricate(:post) }

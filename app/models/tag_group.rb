@@ -21,6 +21,19 @@ class TagGroup < ActiveRecord::Base
       end
     end
   end
+
+  def self.allowed(guardian)
+    if guardian.is_staff?
+      TagGroup
+    else
+      category_permissions_filter = <<~SQL
+        id IN ( SELECT tag_group_id FROM category_tag_groups WHERE category_id IN (?))
+        OR id NOT IN (SELECT tag_group_id FROM category_tag_groups)
+      SQL
+
+      TagGroup.where(category_permissions_filter, guardian.allowed_category_ids)
+    end
+  end
 end
 
 # == Schema Information
@@ -29,8 +42,8 @@ end
 #
 #  id            :integer          not null, primary key
 #  name          :string           not null
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
+#  created_at    :datetime
+#  updated_at    :datetime
 #  parent_tag_id :integer
 #  one_per_topic :boolean          default(FALSE)
 #

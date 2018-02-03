@@ -167,6 +167,18 @@ SQL
     offset = opts[:offset] || 0
     limit = opts[:limit] || 60
 
+    # Acting user columns. Can be extended by plugins to include custom avatar
+    # columns
+    acting_cols = [
+      'u.id AS acting_user_id',
+      'u.name AS acting_name'
+    ]
+
+    AvatarLookup.lookup_columns.each do |c|
+      next if c == :id || c['.']
+      acting_cols << "u.#{c} AS acting_#{c}"
+    end
+
     # The weird thing is that target_post_id can be null, so it makes everything
     #  ever so more complex. Should we allow this, not sure.
     builder = SqlBuilder.new <<-SQL
@@ -179,8 +191,7 @@ SQL
         p.reply_to_post_number,
         pu.username, pu.name, pu.id user_id,
         pu.uploaded_avatar_id,
-        u.username acting_username, u.name acting_name, u.id acting_user_id,
-        u.uploaded_avatar_id acting_uploaded_avatar_id,
+        #{acting_cols.join(', ')},
         coalesce(p.cooked, p2.cooked) cooked,
         CASE WHEN coalesce(p.deleted_at, p2.deleted_at, t.deleted_at) IS NULL THEN false ELSE true END deleted,
         p.hidden,
@@ -209,6 +220,11 @@ SQL
     else
       builder.where("a.user_id = :user_id", user_id: user_id.to_i)
       builder.where("a.action_type in (:action_types)", action_types: action_types) if action_types && action_types.length > 0
+
+      unless SiteSetting.enable_mentions?
+        builder.where("a.action_type <> :mention_type", mention_type: UserAction::MENTION)
+      end
+
       builder
         .order_by("a.created_at desc")
         .offset(offset.to_i)
@@ -412,9 +428,9 @@ end
 #
 # Indexes
 #
-#  idx_unique_rows                                (action_type,user_id,target_topic_id,target_post_id,acting_user_id) UNIQUE
-#  idx_user_actions_speed_up_user_all             (user_id,created_at,action_type)
-#  index_user_actions_on_acting_user_id           (acting_user_id)
-#  index_user_actions_on_target_post_id           (target_post_id)
-#  index_user_actions_on_user_id_and_action_type  (user_id,action_type)
+#  idx_unique_rows                           (action_type,user_id,target_topic_id,target_post_id,acting_user_id) UNIQUE
+#  idx_user_actions_speed_up_user_all        (user_id,created_at,action_type)
+#  index_actions_on_acting_user_id           (acting_user_id)
+#  index_actions_on_user_id_and_action_type  (user_id,action_type)
+#  index_user_actions_on_target_post_id      (target_post_id)
 #

@@ -1,5 +1,4 @@
 import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
-import { default as computed } from "ember-addons/ember-computed-decorators";
 import { NotificationLevels } from 'discourse/lib/notification-levels';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 
@@ -13,11 +12,6 @@ export default Ember.Controller.extend(PreferencesTabController, {
     'like_notification_frequency',
     'allow_private_messages',
   ],
-
-  @computed("model.watchedCategories", "model.trackedCategories", "model.mutedCategories")
-  selectedCategories(watched, tracked, muted) {
-    return [].concat(watched, tracked, muted);
-  },
 
   likeNotificationFrequencies: [{ name: I18n.t('user.like_notification_frequency.always'), value: 0 },
                       { name: I18n.t('user.like_notification_frequency.first_time_and_daily'), value: 1 },

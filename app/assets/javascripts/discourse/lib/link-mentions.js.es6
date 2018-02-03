@@ -2,13 +2,15 @@ import { ajax } from 'discourse/lib/ajax';
 import { userPath } from 'discourse/lib/url';
 import { formatUsername } from 'discourse/lib/utilities';
 
+let maxGroupMention;
+
 function replaceSpan($e, username, opts) {
   let extra = "";
   let extraClass = "";
 
   if (opts && opts.group) {
     if (opts.mentionable) {
-      extra = `data-name='${username}' data-mentionable-user-count='${opts.mentionable.user_count}'`;
+      extra = `data-name='${username}' data-mentionable-user-count='${opts.mentionable.user_count}' data-max-mentions='${maxGroupMention}'`;
       extraClass = "notify";
     }
     $e.replaceWith(`<a href='${Discourse.getURL("/groups/") + username}' class='mention-group ${extraClass}' ${extra}>@${username}</a>`);
@@ -61,6 +63,7 @@ export function fetchUnseenMentions(usernames, topic_id) {
     r.valid_groups.forEach(vg => foundGroups[vg] = true);
     r.mentionable_groups.forEach(mg => mentionableGroups[mg.name] = mg);
     r.cannot_see.forEach(cs => cannotSee[cs] = true);
+    maxGroupMention = r.max_users_notified_per_group_mention;
     usernames.forEach(u => checked[u] = true);
     return r;
   });

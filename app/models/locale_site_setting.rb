@@ -7,9 +7,12 @@ class LocaleSiteSetting < EnumSiteSetting
   end
 
   def self.values
-    supported_locales.map do |l|
-      lang = language_names[l] || language_names[l[0..1]]
-      { name: lang ? lang['nativeName'] : l, value: l }
+    @values ||= supported_locales.map do |locale|
+      lang = language_names[locale] || language_names[locale.split("_")[0]]
+      {
+        name: lang ? lang['nativeName'] : locale,
+        value: locale
+      }
     end
   end
 
@@ -19,26 +22,41 @@ class LocaleSiteSetting < EnumSiteSetting
     return @language_names if @language_names
 
     @lock.synchronize do
-      @language_names ||= YAML.load(File.read(File.join(Rails.root, 'config', 'locales', 'names.yml')))
+      @language_names ||= begin
+        names = YAML.load(File.read(File.join(Rails.root, 'config', 'locales', 'names.yml')))
+
+        DiscoursePluginRegistry.locales.each do |locale, options|
+          if !names.key?(locale) && options[:name] && options[:nativeName]
+            names[locale] = { "name" => options[:name], "nativeName" => options[:nativeName] }
+          end
+        end
+
+        names
+      end
     end
   end
 
   def self.supported_locales
     @lock.synchronize do
       @supported_locales ||= begin
-        app_client_files = Dir.glob(
+        locales = Dir.glob(
           File.join(Rails.root, 'config', 'locales', 'client.*.yml')
-        )
+        ).map { |x| x.split('.')[-2] }
 
-        unless Rails.env.test? && ENV['LOAD_PLUGINS'] != "1"
-          app_client_files += Dir.glob(
-            File.join(Rails.root, 'plugins', '*', 'config', 'locales', 'client.*.yml')
-          )
-        end
-
-        app_client_files.map { |x| x.split('.')[-2] }.uniq.sort
+        locales += DiscoursePluginRegistry.locales.keys
+        locales.uniq.sort
       end
     end
   end
 
+  def self.reset!
+    @lock.synchronize do
+      @values = @language_names = @supported_locales = nil
+    end
+  end
+
+  def self.fallback_locale(locale)
+    plugin_locale = DiscoursePluginRegistry.locales[locale.to_s]
+    plugin_locale ? plugin_locale[:fallbackLocale]&.to_sym : nil
+  end
 end

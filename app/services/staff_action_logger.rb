@@ -1,3 +1,5 @@
+require_dependency 'staff_message_format'
+
 # Responsible for logging the actions of admins and moderators.
 class StaffActionLogger
 
@@ -93,6 +95,14 @@ class StaffActionLogger
                                            target_user_id: user.id))
   end
 
+  def log_post_lock(post, opts = {})
+    raise Discourse::InvalidParameters.new(:post) unless post && post.is_a?(Post)
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[opts[:locked] ? :post_locked : :post_unlocked],
+      post_id: post.id)
+    )
+  end
+
   def log_site_setting_change(setting_name, previous_value, new_value, opts = {})
     raise Discourse::InvalidParameters.new(:setting_name) unless setting_name.present? && SiteSetting.respond_to?(setting_name)
     UserHistory.create(params(opts).merge(action: UserHistory.actions[:change_site_setting],
@@ -170,8 +180,7 @@ class StaffActionLogger
   def log_user_suspend(user, reason, opts = {})
     raise Discourse::InvalidParameters.new(:user) unless user
 
-    details = (reason || '').dup
-    details << "\n\n#{opts[:message]}" if opts[:message].present?
+    details = StaffMessageFormat.new(:suspend, reason, opts[:message]).format
 
     args = params(opts).merge(
       action: UserHistory.actions[:suspend_user],
@@ -368,6 +377,13 @@ class StaffActionLogger
     UserHistory.create(params.merge(action: UserHistory.actions[:change_readonly_mode],
                                     previous_value: !state,
                                     new_value: state))
+  end
+
+  def log_check_personal_message(topic, opts = {})
+    raise Discourse::InvalidParameters.new(:topic) unless topic && topic.is_a?(Topic)
+    UserHistory.create(params(opts).merge(action: UserHistory.actions[:check_personal_message],
+                                          topic_id: topic.id,
+                                          context: topic.relative_url))
   end
 
   private

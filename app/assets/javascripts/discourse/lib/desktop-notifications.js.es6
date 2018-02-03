@@ -1,5 +1,6 @@
 import DiscourseURL from 'discourse/lib/url';
 import KeyValueStore from 'discourse/lib/key-value-store';
+import { formatUsername } from 'discourse/lib/utilities';
 
 let primaryTab = false;
 let liveEnabled = false;
@@ -104,7 +105,7 @@ function onNotification(data) {
   const notificationTitle = I18n.t(i18nKey(data.notification_type), {
      site_title: Discourse.SiteSettings.title,
      topic: data.topic_title,
-     username: data.username
+     username: formatUsername(data.username)
   });
 
   const notificationBody = data.excerpt;

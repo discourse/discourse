@@ -5,6 +5,7 @@
 
 @import "common/admin/customize";
 @import "common/admin/flagging";
+@import "common/admin/moderation_history";
 @import "common/admin/suspend";
 
 $mobile-breakpoint: 700px;
@@ -73,7 +74,7 @@ $mobile-breakpoint: 700px;
 
     .site-text-search {
       padding: 0.5em;
-      font-size: 1em;
+      font-size: $font-0;
       width: 50%;
     }
 
@@ -100,7 +101,7 @@ $mobile-breakpoint: 700px;
 
     h3 {
       font-weight: normal;
-      font-size: 1.1em;
+      font-size: $font-0;
     }
 
     button.edit {
@@ -130,7 +131,7 @@ $mobile-breakpoint: 700px;
 }
 
 .content-list li a span.count {
-  font-size: 0.857em;
+  font-size: $font-down-1;
   float: right;
   margin-right: 10px;
   background-color: $primary-low;
@@ -176,6 +177,10 @@ $mobile-breakpoint: 700px;
   }
 }
 
+.full-reason {
+  white-space: pre-wrap;
+}
+
 .admin-users .users-list {
   .username .fa {
     color: dark-light-choose($primary-medium, $secondary-medium);
@@ -189,15 +194,15 @@ $mobile-breakpoint: 700px;
   .location-box {
     position: absolute;
     width: 460px;
-    right: 0px;
-    z-index: 990;
+    right: 0;
+    z-index: z("dropdown");
     box-shadow: 0 2px 6px rgba(0,0,0, .8);
     margin-top: -2px;
     background-color: $secondary;
     padding: 12px 12px 5px;
 
     .powered-by {
-      font-size: 0.80em;
+      font-size: $font-down-1;
       position: absolute;
       bottom: -10px;
       left: 10px;
@@ -232,6 +237,10 @@ $mobile-breakpoint: 700px;
     width: 200px;
     float: right;
   }
+  .header-search-results {
+    clear: both;
+    padding: 4px;
+  }
 }
 
 .admin-container .controls {
@@ -262,8 +271,8 @@ $mobile-breakpoint: 700px;
     }
   }
   h1 {
-    font-size: 1.429em;
-    line-height: 25px;
+    font-size: $font-up-3;
+    line-height: $line-height-medium;
     color: $primary;
   }
   .controls {
@@ -273,7 +282,6 @@ $mobile-breakpoint: 700px;
   .controls .menu-toggle {
     display: none;
     float: left;
-    font-size: 24px;
     padding: 3px 6px;
     margin-right: 32px;
     border: 1px solid lighten($primary, 40%);
@@ -359,12 +367,15 @@ $mobile-breakpoint: 700px;
 
 .groups, .badges, .web-hook-container {
   .form-horizontal {
-    label {
-      font-weight: bold;
+    & > div {
+      margin-bottom: 20px;
     }
 
-    & > div {
-      margin-top: 10px;
+    .d-editor-textarea-wrapper {
+      max-width: 60%;
+      .d-editor-button-bar {
+        overflow: hidden;
+      }
     }
 
     input, textarea, select, .select-box {
@@ -396,7 +407,7 @@ $mobile-breakpoint: 700px;
   // The admin-nav becomes a slide-out menu at the mobile-nav breakpoint
   @media (max-width: $mobile-breakpoint) {
     position: absolute;
-    z-index: 0;
+    z-index: z("base") - 1;
     width: 50%;
   }
 }
@@ -404,7 +415,7 @@ $mobile-breakpoint: 700px;
 .admin-detail {
   width: 76.5765%;
   @media (max-width: $mobile-breakpoint) {
-    z-index: 10;
+    z-index: z("base");
     width: 100%;
   }
   background-color: $secondary;
@@ -507,9 +518,9 @@ $mobile-breakpoint: 700px;
 
       li.sortable-placeholder {
         padding: 3px 5px 3px 18px;
-        margin: 3px 0px 3px 5px;
+        margin: 3px 0 3px 5px;
         position: relative;
-        line-height: 13px;
+        line-height: $line-height-small;
         cursor: default;
         border: 1px dashed #AAA;
         border-radius: 3px;
@@ -524,8 +535,8 @@ $mobile-breakpoint: 700px;
 
     .desc, .validation-error {
       padding-top: 3px;
-      font-size: 80%;
-      line-height: 1.4em;
+      font-size: $font-down-1;
+      line-height: $line-height-large;
     }
 
     .validation-error {
@@ -537,7 +548,7 @@ $mobile-breakpoint: 700px;
     }
 
     h3 {
-      font-size: 0.929em;
+      font-size: $font-0;
       font-weight: normal;
     }
   }
@@ -557,7 +568,7 @@ $mobile-breakpoint: 700px;
 
 section.details {
   h1 {
-    font-size: 1.286em;
+    font-size: $font-up-3;
     color: $primary;
     padding: 5px 10px;
     margin: 30px 0 5px 0;
@@ -596,8 +607,9 @@ section.details {
 }
 
 .display-row {
-  line-height: 30px;
-  padding: 5px;
+  display: flex;
+  align-items: center;
+  padding: 10px 5px;
   &:nth-of-type(1) {
     border-top: 0;
   }
@@ -619,7 +631,7 @@ section.details {
     margin-left: 12px;
     @media (max-width: $mobile-breakpoint) {
       margin-left: 0;
-      line-height: 20px;
+      line-height: $line-height-large;
       margin-top: 5px;
     }
   }
@@ -642,7 +654,7 @@ section.details {
     width: 800px;
     float: left;
     margin-left: 12px;
-    font-size: 0.929em;
+    font-size: $font-down-1;
 
     button {
       margin-left: 10px;
@@ -672,7 +684,7 @@ section.details {
 
     .list-badge {
       float: right;
-      font-size: 11px;
+      font-size: $font-down-1;
       font-weight: normal;
       padding: 0 6px;
       color: $secondary;
@@ -687,7 +699,7 @@ section.details {
     p.help {
       margin: 0;
       color: dark-light-choose($primary-medium, $secondary-medium);
-      font-size: 0.9em;
+      font-size: $font-down-1;
     }
   }
 
@@ -758,15 +770,15 @@ section.details {
   }
 
   .badge-errors {
-    font-size: 1em;
-    line-height: 16px;
+    font-size: $font-0;
+    line-height: $line-height-medium;
     padding: 4px;
     background-color: $primary-low;
   }
 
   .badge-query-plan {
-    font-size: 0.857em;
-    line-height: 13px;
+    font-size: $font-down-1;
+    line-height: $line-height-medium;
     padding: 4px;
     background-color: $primary-low;
   }
@@ -843,8 +855,9 @@ section.details {
   }
 
   .version-number {
-    font-size: 1.286em;
+    font-size: $font-up-3;
     font-weight: bold;
+    line-height: $line-height-medium;
   }
 
   .face {
@@ -863,7 +876,7 @@ section.details {
   }
 
   .fa {
-    font-size: 1.857em;
+    font-size: $font-up-4;
   }
 
   .up-to-date {
@@ -879,7 +892,7 @@ section.details {
 
 .update-nag {
   .d-icon {
-    font-size: 1.429em;
+    font-size: $font-up-3;
   }
 }
 
@@ -897,7 +910,7 @@ table.api-keys {
   }
 
   td.key {
-    font-size: 0.857em;
+    font-size: $font-down-1;
   }
 }
 
@@ -982,7 +995,7 @@ table.api-keys {
       margin: 20px 10px 0 10px;
 
       .fa {
-        font-size: 2.286em;
+        font-size: $font-up-5;
         vertical-align: middle;
         color: $primary
       }
@@ -1387,9 +1400,6 @@ and (max-width : 500px) {
       .setting-value {
         width: 100%;
         }
-      label {
-        font-size: 0.929em;
-        }
     }
   }
 
@@ -1608,7 +1618,7 @@ table#user-badges {
   }
   .reply-key {
     display: block;
-    font-size: 12px;
+    font-size: $font-down-1;
     color: dark-light-choose($primary-medium, $secondary-high);
   }
   .username div {
@@ -1638,7 +1648,7 @@ table#user-badges {
   }
   .error-description {
     color: #919191;
-    font-size: 90%;
+    font-size: $font-down-1;
   }
   hr {
     margin: 0;
@@ -1740,7 +1750,7 @@ table#user-badges {
     margin-top: 10px;
   }
   label {
-    font-size: 1.05em;
+    font-size: $font-0;
   }
 }
 
@@ -1797,7 +1807,7 @@ table#user-badges {
   float: right;
   text-align: right;
   .instructions {
-    font-size: 12px;
+    font-size: $font-down-1;
   }
 }
 .watched-words-detail {

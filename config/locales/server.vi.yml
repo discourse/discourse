@@ -33,7 +33,7 @@ vi:
     incoming:
       show_trimmed_content: "Hiện nội dung đã cắt"
       errors:
-        empty_email_error: "Xảy ra khi thư nguồn hệ thống nhận được là trống."
+        empty_email_error: "Xảy ra khi thư nguồn hệ thống nhận được trống."
         no_message_id_error: "Xảy ra khi thư không có tiêu đề."
         auto_generated_email_error: "Xảy ra khi tiêu đề 'ưu tiên' được đặt là: danh sách, rác, theo lô hoặc tự động trả lời, hoặc khi có tiêu đề khác bao gồm: tự động gửi, tự động trả lời hoặc tự động tạo."
         inactive_user_error: "Xảy ra khi người gửi không hoạt động."
@@ -55,7 +55,7 @@ vi:
       confirmation: "%{attribute} không khớp"
       empty: không thể để trống
       equal_to: phải bằng %{count}
-      even: phải là chắn
+      even: phải là số chẵn
       exclusion: được dành riêng
       greater_than: phải lớn hơn %{count}
       greater_than_or_equal_to: phải lớn hơn hoặc bằng %{count}
@@ -153,7 +153,6 @@ vi:
     hot: "Chủ đề nóng nhất"
     top: "Top chủ đề"
     posts: "Bài viết mới nhất"
-    private_posts: "Tin nhắn mới nhất"
     group_posts: "Bài viết mới từ %{group_name}"
     group_mentions: "Đề cập mới từ %{group_name}"
     user_posts: "Bài viết mới của @%{username}"
@@ -220,9 +219,7 @@ vi:
         topic:
           attributes:
             base:
-              warning_requires_pm: "Bạn chỉ có thể đính kèm cảnh báo qua tin nhắn cá nhân"
               too_many_users: "Bạn chỉ có thể gửi một cảnh báo tới một người dùng mỗi lần."
-              cant_send_pm: "Xin lỗi, bạn không thể gửi tin nhắn tới thành viên này"
               no_user_selected: "Bạn phải chọn một thành viên phù hợp."
         user:
           attributes:
@@ -446,7 +443,6 @@ vi:
       email_title: 'Chủ đề "%{title}" cần được ban điều hành quan tâm'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Bài viết của bạn đã được gắn cờ bở cộng đồng. Vui lòng<a href="/my/messages">xem tin nhắn của bạn</a>.</p>'
     user_must_edit: '<p>Bài viết này đã bị đánh dấu bởi cộng đồng và đang được ẩn tạm thời.</p>'
   archetypes:
     regular:
@@ -616,16 +612,15 @@ vi:
   site_settings:
     censored_words: "Từ sẽ tự động thay thế bằng &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Tự động ẩn bất kỳ bài viết ở ẩn hơn 30 ngày."
-    default_locale: "Ngôn ngữ mặc định của Discourse (Mã ISO 639-1)"
     allow_user_locale: "Cho phép thành viên chọn ngôn ngữ của riêng trong thiết lập giao diện."
     set_locale_from_accept_language_header: "đặt ngôn ngữ giao diện cho người dùng ẩn danh từ tiêu đề ngôn ngữ trình duyệt web của họ. (KINH NGHIỆM, không hoạt động với bộ nhớ cache ẩn danh)"
     min_post_length: "Số kí tự tối thiểu trong bài đăng."
     min_first_post_length: "Chiều dài tối thiểu cho bài viết đầu tiên (nội dung chủ đề) tính theo ký tự."
-    min_private_message_post_length: "Số kí tự tối thiểu trong tin nhắn."
+    min_personal_message_post_length: "Số kí tự tối thiểu trong tin nhắn."
     max_post_length: "Số kí tự tối đa trong bài đăng."
     min_topic_title_length: "Số kí tự tối thiểu trong tiêu đề chủ đề."
     max_topic_title_length: "Số kí tự tối đa trong tiêu đề chủ đề."
-    min_private_message_title_length: "Chiều dài tối thiểu cho phép theo số kí tự của một thông điệp"
+    min_personal_message_title_length: "Chiều dài tối thiểu cho phép theo số kí tự của một thông điệp"
     min_search_term_length: "Số kí tự tối thiểu trong từ khóa tìm kiếm."
     search_tokenize_chinese_japanese_korean: "Bắt buộc tìm kiếm tách từ Chinese/Japanese/Korean ngay cả trên các site không phải là CJK"
     allow_uncategorized_topics: "Cho phép các chủ đề được tạo ra mà không gán chuyên mục. LƯU Ý: Nếu có bất kỳ chủ đề nào chưa gán chuyên mục, bạn phải phân loại chúng trước khi thay đổi."
@@ -653,7 +648,6 @@ vi:
     logo_url: "Logo ở vị trí trên cùng của website nên là hình chữ nhật, nếu để trống thì tên website sẽ hiển thị."
     logo_small_url: "Logo nhỏ ở vị trí trên cùng của website hiển thị khi cuộn xuống nên là hình vuông, nếu để trống thì icon trang chủ sẽ hiển thị."
     favicon_url: "Favicon cho trang của bạn, xem tại http://en.wikipedia.org/wiki/Favicon, để chạy được với CDN ảnh phải là png"
-    mobile_logo_url: "Cố định vị trí hình logo sử dụng tại phía trên bên trái trang mobile của bạn. Nên là hình vuông. Nếu để trống, sẽ sử dụng `logo_url`. Ví dụ: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Biểu tượng sử dụng trong các thiết bị cảm ứng của Apple. Kích thước gợi ý 144px x 144px"
     notification_email: "Địa chỉ email 'Từ:' được dùng để gửi các email thiết yếu của hệ thống. Các tên miền quy định ở đây phải có SPF, DKIM và bản ghi PTR phải được thiết lập chính xác cho email đến."
     email_custom_headers: "Danh sách xác định email header tùy chỉnh"
@@ -767,7 +761,7 @@ vi:
     max_bookmarks_per_day: "Số tối đa người dùng có thể đánh dấu mỗi ngày."
     max_edits_per_day: "Số tối đa người dùng có thể chỉnh sửa mỗi ngày."
     max_topics_per_day: "Số chủ đề tối đa người dùng có thể tạo mỗi ngày."
-    max_private_messages_per_day: "Số tin nhắn tối đa người dùng có thể tạo mỗi ngày."
+    max_personal_messages_per_day: "Số tin nhắn tối đa người dùng có thể tạo mỗi ngày."
     max_invites_per_day: "Số tối đa người dùng có thể gửi lời mời mỗi ngày."
     max_topic_invitations_per_day: "Số tối đa lời mời chủ đề thành viên có thể gửi mỗi ngày."
     alert_admins_if_errors_per_minute: "Số lỗi trong một phút để kích hoạt cảnh báo admin, điền 0 để tắt tính năng này. LƯU Ý: yêu cầu khởi động lại."
@@ -778,7 +772,6 @@ vi:
     clean_orphan_uploads_grace_period_hours: "Thời gian gia hạn (theo giờ) trước khi dòng mồ côi upload được loại bỏ."
     purge_deleted_uploads_grace_period_days: "Thời gian gia hạn (theo ngày) trước khi upload cần xóa được xóa."
     enable_s3_uploads: "Đặt thư mục upload trên Amazon S3. QUAN TRỌNG: yêu cầu chứng thực S3 (cả ID khóa truy cập & khóa bảo mật)."
-    s3_use_iam_profile: 'Sử dụng AWS EC2 IAM để lấy khóa. LƯU Ý: bật thiết lập này sẽ ghi đè thiết lập "s3 access key id" và "s3 secret access key".'
     s3_upload_bucket: "Tên Amazon S3 để lưu trữ các file sẽ được upload. CHÚ Ý: phải là chữ thường, không cách và không gạch dưới."
     s3_access_key_id: "Amazon S3 access key id này sẽ được sử dụng để tải lên ảnh."
     s3_secret_access_key: "Amazon S3 secret access key này sẽ được sử dụng để tải lên ảnh."
@@ -816,7 +809,6 @@ vi:
     min_trust_to_create_topic: "Bậc tin tưởng tối thiểu để tạo một chủ đề mới."
     min_trust_to_edit_wiki_post: "Bậc tin cậy tối thiểu cần thiết để có thể sửa bài viết được đánh dấu là wiki."
     min_trust_to_allow_self_wiki: "Bậc tin cậy tối thiểu cần thiết để người dùng có thể đánh dấu bài viết của họ là wiki."
-    min_trust_to_send_messages: "Bậc tin cậy tối thiểu cần thiết để có thể tạo hội thoại riêng."
     newuser_max_links: "Bao nhiêu liên kết tài khoản mới có thể thêm vào bài viết."
     newuser_max_images: "Bao nhiêu hình tài khoản mới có thể thêm vào bài viết."
     newuser_max_attachments: "Bao nhiêu đính kèm tài khoản mới có thể thêm vào bài viết"
@@ -825,7 +817,7 @@ vi:
     max_mentions_per_post: "Số tối đa thông báo @name mà tất cả mọi người có thể sử dụng trong bài viết."
     create_thumbnails: "Tạo ảnh nhỏ và ảnh lightbox nếu quá lớn để vừa trong một bài đăng."
     email_time_window_mins: "Chờ (n) phút trước khi gửi bất kỳ một email thông báo nào, để cung cấp cho người dùng cơ hội để chỉnh sửa và hoàn tất bài viết của họ."
-    private_email_time_window_seconds: "Đợi (n) giây trước khi gửi bất kỳ thông báo email nào, để cho thành viên cơ hội để chỉnh sửa và hoàn thiện các thông điệp của họ."
+    personal_email_time_window_seconds: "Đợi (n) giây trước khi gửi bất kỳ thông báo email nào, để cho thành viên cơ hội để chỉnh sửa và hoàn thiện các thông điệp của họ."
     email_posts_context: "Có bao nhiêu trả lời trước được kèm theo như là bối cảnh trong email thông báo."
     flush_timings_secs: "Tần suất tuôn dữ liệu thời gian tới server, theo giây."
     title_max_word_length: "Chiều dài tối đa chữ cho phép, tính theo ký tự, trong một tiêu đề chủ đề."
@@ -896,7 +888,6 @@ vi:
     relative_date_duration: "Số ngày sau khi đăng bài nơi ngày của bài viết sẽ được hiển thị tương đối (7d) thay vì tuyệt đối (20 Feb)."
     delete_user_max_post_age: "Không cho phép xóa thành viên khi bài viết đầu tiên của họ cũ hơn (x) ngày."
     delete_all_posts_max: "Số lượng tối đa bài viết có thể được xóa cùng một lúc khi sử dụng nút Xóa Tất Cả Bài Viết. Nếu thành viên có nhiều hơn số lượng bài viết này, các bài viết có thể không bị xóa cùng một lúc và cũng không thể xóa được thành viên đó."
-    username_change_period: "Số ngày thành viên có thể thay đổi tên đăng nhập sau khi đăng kí (0 để vô hiệu hóa chức năng thay đổi tên thành viên)"
     email_editable: "Cho phép thành viên thay đổi địa chỉ email sau khi đăng kí"
     allow_uploaded_avatars: "Cho phép người dùng tải lên hình hồ sơ."
     allow_animated_avatars: "Cho phép người dùng sử dụng ảnh gif động trong trang hồ sơ. CẢNH BÁO: cần chạy tác vụ avatars:refresh sau khi thay đổi thiết lập này."
@@ -943,8 +934,7 @@ vi:
     enforce_square_emoji: "Sử dụng kích thước vuông cho tất cả các emoji."
     approve_post_count: "Số lượng bài viết từ một thành viên mới hoặc thành viên cũ phải được duyệt"
     approve_unless_trust_level: "Bài viết của thành viên dưới cấp độ tin cậy này phải được duyệt"
-    notify_about_queued_posts_after: "Nếu những bài viết đang chờ duyệt có thời gian cũ hơn số giờ thiết lập ở đây, một email sẽ được gửi đến contact_email. Đặt là 0 để vô hiệu hóa email này."
-    default_email_private_messages: "Gửi email khi ai đó nhắn tin cho thành viên theo mặc định."
+    default_email_personal_messages: "Gửi email khi ai đó nhắn tin cho thành viên theo mặc định."
     default_email_direct: "Gửi email khi ai đó trích dẫn/trả lời/đề cập hoặc mời thành viên theo mặc định."
     default_email_mailing_list_mode: "Mặc định gửi email cho mỗi bài viết mới."
     disable_mailing_list_mode: "Không cho phép thành viên bật chế độ danh sách thư."
@@ -1054,14 +1044,12 @@ vi:
     email_too_long: "Email bạn cung cấp quá dài. Địa chỉ email phải không quá 254 ký tự, và tên miền phải không quá 253 ký tự."
     reserved_username: "Tên đăng nhập không được cho phép."
     missing_user_field: "Bạn không hoàn tất tất cả các trường người dùng"
-    close_window: "Chứng thực hoàn tất. Đóng của sổ này để tiếp tụ."
     already_logged_in: "Rất tiếc, có vẻ như bạn đang cố gắng để chấp nhận lời mời của một người dùng khác. Nếu bạn không phải là %{current_user}, xin vui lòng đăng xuất và thử lại."
   user:
     no_accounts_associated: "Không có tài khoản liên quan"
     username:
       short: "phải dài ít nhất %{min} ký tự"
       long: "không được dài hơn %{max} ký tự"
-      characters: "chỉ bao gồm số, ký tự và dấu gạch dưới"
       unique: "phải độc nhất"
       blank: "phải hiện hành"
       must_begin_with_alphanumeric_or_underscore: "phải bắt đầu bằng chữ, số hoặc dấu gạch dưới"
@@ -1079,10 +1067,6 @@ vi:
       other: "%{count} đánh dấu đang đợi xử lý"
   unsubscribe_mailer:
     subject_template: "Xác nhận bạn không còn muốn nhận email cập nhật từ %{site_title}"
-  invite_mailer:
-    subject_template: "%{invitee_name} mời bạn tham gia chủ đề '%{topic_title}' trên %{site_domain_name}"
-  invite_forum_mailer:
-    subject_template: "%{invitee_name} đã mời bạn gia nhập %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Đặt mật khẩu cho tài khoản của bạn ở %{site_name}"
   flag_reasons:
@@ -1290,9 +1274,6 @@ vi:
         Huy hiệu này được cấp khi bạn nhận được like đầu tiên. Xin chúc mừng, bạn đã đăng nội dung mà các thành viên của cộng đồng cảm thấy thú vị, hấp dẫn, hoặc có ích!
     autobiographer:
       name: Tự truyện
-      description: Điền thông tin vào <a href="/my/preferences">hồ sơ</a>
-      long_description: |
-        Huy hiệu này được cấp khi bạn điền thông tin vào <a href="/my/preferences">hồ sơ thành viên</a> và chọn một ảnh cá nhân. Cho cộng đồng biết thêm một chút về bạn và những gì bạn quan tâm, qua đó làm cho cộng đồng tốt hơn, kết nối hơn. Tham gia cùng chúng tôi!
     anniversary:
       name: Ngày kỷ niệm
       description: Thành viên hoạt động trong một năm, gửi bài ít nhất một lần
@@ -1381,9 +1362,6 @@ vi:
       description: Trích dẫn một bài viết
     read_guidelines:
       name: Xem hướng dẫn
-      description: Xem <a href="/guidelines">nguyên tắc cộng đồng</a>
-      long_description: |
-        Huy hiệu này được cấp khi bạn xem <a href="/guidelines">nguyên tắc cộng đồng</a>. Xem và làm theo những nguyên tắc này sẽ giúp bạn cùng chúng tôi xây dựng một cộng đồng an toàn, bền vững, và đem lại nhiều niềm vui cho tất cả mọi người!
     reader:
       name: Người xem
       description: Đọc từng trả lời trong một chủ đề có hơn 100 trả lời
@@ -1448,7 +1426,6 @@ vi:
       name: Đề cập đầu tiên
   admin_login:
     success: "Gửi mail lỗi"
-    error: "Lỗi!"
     email_input: "Email quản trị"
     submit_button: "Gửi email"
   performance_report:

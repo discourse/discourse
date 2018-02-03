@@ -38,13 +38,13 @@ source_file = plugins/discourse-narrative-bot/config/locales/server.en.yml
 source_lang = en
 type = YML
 
-[discourse-org.presenceclientenyml]
+[discourse-org.discourse-presenceclientenyml]
 file_filter = plugins/discourse-presence/config/locales/client.<lang>.yml
 source_file = plugins/discourse-presence/config/locales/client.en.yml
 source_lang = en
 type = YML
 
-[discourse-org.presenceserverenyml]
+[discourse-org.discourse-presenceserverenyml]
 file_filter = plugins/discourse-presence/config/locales/server.<lang>.yml
 source_file = plugins/discourse-presence/config/locales/server.en.yml
 source_lang = en

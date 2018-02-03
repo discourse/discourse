@@ -7,7 +7,7 @@ class SuggestedTopicSerializer < ListableTopicSerializer
     has_one :user, serializer: BasicUserSerializer, embed: :objects
   end
 
-  attributes :archetype, :like_count, :views, :category_id, :tags, :featured_link
+  attributes :archetype, :like_count, :views, :category_id, :tags, :featured_link, :featured_link_root_domain
   has_many :posters, serializer: SuggestedPosterSerializer, embed: :objects
 
   def posters
@@ -28,5 +28,9 @@ class SuggestedTopicSerializer < ListableTopicSerializer
 
   def featured_link
     object.featured_link
+  end
+
+  def include_featured_link_root_domain?
+    SiteSetting.topic_featured_link_enabled && object.featured_link
   end
 end

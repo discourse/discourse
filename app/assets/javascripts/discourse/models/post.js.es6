@@ -125,35 +125,33 @@ const Post = RestModel.extend({
 
   // Expands the first post's content, if embedded and shortened.
   expand() {
-    const self = this;
-    return ajax("/posts/" + this.get('id') + "/expand-embed").then(function(post) {
-      self.set('cooked', "<section class='expanded-embed'>" + post.cooked + "</section>" );
+    return ajax(`/posts/${this.get('id')}/expand-embed`).then(post => {
+      this.set('cooked', `<section class="expanded-embed">${post.cooked}</section>`);
     });
   },
 
   // Recover a deleted post
   recover() {
-    const post = this,
-          initProperties = post.getProperties('deleted_at', 'deleted_by', 'user_deleted', 'can_delete');
+    const initProperties = this.getProperties('deleted_at', 'deleted_by', 'user_deleted', 'can_delete');
 
-    post.setProperties({
+    this.setProperties({
       deleted_at: null,
       deleted_by: null,
       user_deleted: false,
       can_delete: false
     });
 
-    return ajax("/posts/" + (this.get('id')) + "/recover", { type: 'PUT', cache: false }).then(function(data){
-      post.setProperties({
+    return ajax(`/posts/${this.get('id')}/recover`, { type: 'PUT', cache: false }).then(data => {
+      this.setProperties({
         cooked: data.cooked,
         raw: data.raw,
         user_deleted: false,
         can_delete: true,
         version: data.version
       });
-    }).catch(function(error) {
+    }).catch(error => {
       popupAjaxError(error);
-      post.setProperties(initProperties);
+      this.setProperties(initProperties);
     });
   },
 
@@ -329,22 +327,17 @@ Post.reopenClass({
     });
   },
 
-  deleteMany(selectedPosts, selectedReplies) {
+  deleteMany(post_ids) {
     return ajax("/posts/destroy_many", {
       type: 'DELETE',
-      data: {
-        post_ids: selectedPosts.map(function(p) { return p.get('id'); }),
-        reply_post_ids: selectedReplies.map(function(p) { return p.get('id'); })
-      }
+      data: { post_ids }
     });
   },
 
-  mergePosts(selectedPosts) {
+  mergePosts(post_ids) {
     return ajax("/posts/merge_posts", {
       type: 'PUT',
-      data: { post_ids: selectedPosts.map(p => p.get('id')) }
-    }).catch(() => {
-      self.flash(I18n.t('topic.merge_posts.error'));
+      data: { post_ids }
     });
   },
 

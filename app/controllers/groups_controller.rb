@@ -1,6 +1,6 @@
 class GroupsController < ApplicationController
 
-  before_action :ensure_logged_in, only: [
+  requires_login only: [
     :set_notifications,
     :mentionable,
     :messageable,
@@ -98,6 +98,7 @@ class GroupsController < ApplicationController
   end
 
   def mentions
+    raise Discourse::NotFound unless SiteSetting.enable_mentions?
     group = find_group(:group_id)
     posts = group.mentioned_posts_for(
       guardian,
@@ -107,6 +108,7 @@ class GroupsController < ApplicationController
   end
 
   def mentions_feed
+    raise Discourse::NotFound unless SiteSetting.enable_mentions?
     group = find_group(:group_id)
     @posts = group.mentioned_posts_for(
       guardian,

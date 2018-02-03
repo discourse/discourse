@@ -122,7 +122,7 @@ de:
       split_topic: "Thema aufgeteilt, %{when}"
       invited_user: "%{who} eingeladen, %{when}"
       invited_group: "%{who} eingeladen, %{when}"
-      user_left: "%{who} hat diese Nachricht %{when} hinterlassen"
+      user_left: "%{who} hat sich selbst von dieser Nachricht entfernt %{when}"
       removed_user: "%{who} entfernt, %{when}"
       removed_group: "%{who} entfernt, %{when}"
       autoclosed:
@@ -265,6 +265,7 @@ de:
     uploading: "Wird hochgeladen…"
     uploading_filename: "{{filename}} wird hochgeladen…"
     uploaded: "Hochgeladen!"
+    pasting: "Einfügen..."
     enable: "Aktivieren"
     disable: "Deaktivieren"
     undo: "Rückgängig machen"
@@ -410,7 +411,7 @@ de:
         owners: "Gruppenbesitzer und Admins"
       alias_levels:
         mentionable: "Wer kann diese Gruppe @erwähnen?"
-        messageable: "Wer cann dieser Gruppe eine Nachricht schicken?"
+        messageable: "Wer kann dieser Gruppe eine Nachricht schicken?"
         nobody: "Niemand"
         only_admins: "Nur Administratoren"
         mods_and_admins: "Nur Moderatoren und Administratoren"
@@ -459,7 +460,6 @@ de:
       '14': "Ausstehend"
     categories:
       all: "Alle Kategorien"
-      all_subcategories: "alle"
       no_subcategory: "keine"
       category: "Kategorie"
       category_list: "Kategorieliste anzeigen"
@@ -532,14 +532,13 @@ de:
         disable: "Benachrichtigungen deaktivieren"
         enable: "Benachrichtigungen aktivieren"
         each_browser_note: "Hinweis: Du musst diese Einstellung in jedem von dir verwendeten Browser ändern."
-      dismiss: 'Als gelesen markieren'
-      dismiss_notifications: "Alles ausblenden"
+      dismiss: 'Alles gelesen'
+      dismiss_notifications: "Alles gelesen"
       dismiss_notifications_tooltip: "Alle ungelesenen Benachrichtigungen als gelesen markieren"
       first_notification: "Deine erste Benachrichtigung! Wähle sie aus um fortzufahren."
       disable_jump_reply: "Springe nicht zu meinem Beitrag, nachdem ich geantwortet habe"
       dynamic_favicon: "Zeige die Anzahl der neuen und geänderten Themen im Browser-Symbol an"
       theme_default_on_all_devices: "Übernehme dieses Theme für alle meine Geräte."
-      allow_private_messages: "Erlaube anderen Benutzern, mir Nachrichten zu schicken"
       external_links_in_new_tab: "Öffne alle externen Links in einem neuen Tab"
       enable_quoting: "Aktiviere Zitatantwort mit dem hervorgehobenen Text"
       change: "ändern"
@@ -763,7 +762,6 @@ de:
         title: "Einladungen"
         user: "Eingeladener Benutzer"
         sent: "Gesendet"
-        none: "Es gibt keine ausstehenden Einladungen."
         truncated:
           one: "Zeige die erste Einladung."
           other: "Zeige die ersten {{count}} Einladungen."
@@ -1093,6 +1091,7 @@ de:
       saved_local_draft_tip: "lokal gespeichert"
       similar_topics: "Dein Thema hat Ähnlichkeit mit…"
       drafts_offline: "Entwürfe offline"
+      group_mentioned_limit: "<b>Warnung!</b> Du erwähnst <a href='{{group_link}}'>{{group}}</a>, aber diese Gruppe hat mehr Mitglieder als der Administrator als die maximale Anzahl von {{max}} Benutzern eingestellt hat, die gleichzeitig erwähnt werden können. Keiner davon wird benachrichtigt."
       group_mentioned:
         one: "Indem du {{group}} erwähnst, bist du dabei, <a href='{{group_link}}'>eine Person</a> zu benachrichtigen – bist du dir sicher?"
         other: "Indem du {{group}} erwähnst, bist du dabei, <a href='{{group_link}}'>{{count}} Personen</a> zu benachrichtigen – bist du dir sicher?"
@@ -1207,8 +1206,6 @@ de:
         posted: "Beitrag von"
         edited: "Beitrag bearbeitet von"
         liked: "Gefällt dein Beitrag"
-        private_message: "Nachricht von"
-        invited_to_private_message: "Zu Unterhaltung eingeladen von"
         invited_to_topic: "Zu Thema eingeladen von"
         invitee_accepted: "Einladung angenommen von"
         moved_post: "Dein Beitrag wurde verschoben von"
@@ -1222,7 +1219,6 @@ de:
         quoted: '{{username}} hat dich in "{{topic}}" - {{site_title}} zitiert'
         replied: '{{username}} hat dir in "{{topic}}" - {{site_title}} geantwortet'
         posted: '{{username}} hat in "{{topic}}" - {{site_title}} einen Beitrag verfasst'
-        private_message: '{{username}} hat dir in "{{topic}}" - {{site_title}} eine Nachricht geschickt'
         linked: '{{username}} hat in "{{topic}}" - {{site_title}} einen Beitrag von dir verlinkt'
     upload_selector:
       title: "Ein Bild hinzufügen"
@@ -1251,7 +1247,7 @@ de:
       too_short: "Der Suchbegriff ist zu kurz."
       result_count:
         one: "1 Ergebnis für <span class='term'>{{term}}</span>"
-        other: "{{count}} Ergebnisse für <span class='term'>{{term}}</span>"
+        other: "{{count}}{{plus}} Ergebnisse für <span class='term'>{{term}}</span>"
       title: "suche nach Themen, Beiträgen, Benutzern oder Kategorien"
       no_results: "Keine Ergebnisse gefunden."
       no_more_results: "Es wurde keine weiteren Ergebnisse gefunden."
@@ -1434,14 +1430,14 @@ de:
       jump_reply_down: zur nachfolgenden Antwort springen
       deleted: "Das Thema wurde gelöscht"
       topic_status_update:
-        title: "Themen-Zeitschaltuhr"
-        save: "Stoppuhr setzen"
+        title: "Zeitschaltuhren"
+        save: "Zeitschaltuhr aktivieren"
         num_of_hours: "Stunden:"
-        remove: "Stoppuhr löschen"
+        remove: "Zeitschaltuhr deaktivieren"
         publish_to: "Veröffentlichen in:"
         when: "Wann:"
-        public_timer_types: Themen-Zeitschaltuhren
-        private_timer_types: Benutzer-Themen-Zeitschaltuhren
+        public_timer_types: Globale Zeitschaltuhren
+        private_timer_types: Zeitschaltuhren für Benutzer
       auto_update_input:
         none: "Wähle einen Zeitbereich aus"
         later_today: "Im Laufe des Tages"
@@ -1550,7 +1546,7 @@ de:
         open: "Thema öffnen"
         close: "Thema schließen"
         multi_select: "Beiträge auswählen..."
-        timed_update: "Themen-Timer setzen…"
+        timed_update: "Zeitschaltuhren…"
         pin: "Thema anheften..."
         unpin: "Thema loslösen..."
         unarchive: "Thema aus Archiv holen"
@@ -1559,7 +1555,6 @@ de:
         visible: "Sichtbar machen"
         reset_read: "„Gelesen“ zurücksetzen"
         make_public: "Umwandeln in öffentliches Thema"
-        make_private: "Umwandeln in Nachricht"
       feature:
         pin: "Thema anheften"
         unpin: "Thema loslösen"
@@ -1680,7 +1675,18 @@ de:
       multi_select:
         select: 'auswählen'
         selected: 'ausgewählt ({{count}})'
-        select_replies: 'samt Antworten auswählen'
+        select_post:
+          label: 'auswählen'
+          title: 'Beitrag zu Auswahl hinzufügen'
+        selected_post:
+          label: 'ausgewählt'
+          title: 'Klicke, um den Beitrag aus der Auswahl zu entfernen'
+        select_replies:
+          label: 'auswählen inkl. Antworten'
+          title: 'Beitrag und alle Antworten zu Auswahl hinzufügen'
+        select_below:
+          label: 'auswählen inkl. folgende'
+          title: 'Beitrag und alle folgende zu Auswahl hinzufügen'
         delete: ausgewählte löschen
         cancel: Auswahlvorgang abbrechen
         select_all: alle auswählen
@@ -1689,10 +1695,8 @@ de:
           one: Du hast <b>1</b> Beitrag ausgewählt.
           other: Du hast <b>{{count}}</b> Beiträge ausgewählt.
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Zitat"
-      edit: "Du bearbeitest {{link}} {{replyAvatar}} {{username}}"
+      edit: "<i class='fa fa-pencil'></i> {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Grund: "
       post_number: "Beitrag {{number}}"
       wiki_last_edited_on: "Wiki zuletzt bearbeitet am"
@@ -1761,11 +1765,14 @@ de:
         share: "Link zu diesem Beitrag teilen"
         more: "Mehr"
         delete_replies:
-          confirm:
-            one: "Willst du auch die direkte Antwort auf diesen Beitrag löschen?"
-            other: "Willst du auch die {{count}} direkten Antworten auf diesen Beitrag löschen?"
-          yes_value: "Ja, auch die Antworten löschen"
-          no_value: "Nein, nur diesen Beitrag"
+          confirm: "Möchtest du auch die Antworten auf diese Beiträge löschen?"
+          direct_replies:
+            one: "Ja, und eine direkte Antwort"
+            other: "Ja, und {{count}} direkte Antworten"
+          all_replies:
+            one: "Ja, und eine Antwort"
+            other: "Ja, und {{count}} Antworten"
+          just_the_post: "Nein, nur diesen Beitrag"
         admin: "Administrative Aktionen"
         wiki: "Wiki erstellen"
         unwiki: "Wiki entfernen"
@@ -1860,7 +1867,7 @@ de:
       delete:
         confirm:
           one: "Möchtest du wirklich diesen Beitrag löschen?"
-          other: "Möchtest du wirklich all diese Beiträge löschen?"
+          other: "Möchtest du wirklich diese {{count}} Beiträge löschen?"
       merge:
         confirm:
           one: "Möchtest du diese Beiträge wirklich zusammenführen?"
@@ -2251,7 +2258,7 @@ de:
         one: "1-mal verliehen"
         other: "%{count}-mal verliehen"
       select_badge_for_title: Wähle ein Abzeichen als deinen Titel aus
-      none: "<keines>"
+      none: "(keine)"
       badge_grouping:
         getting_started:
           name: Erste Schritte
@@ -2278,7 +2285,7 @@ de:
       selector_no_tags: "keine Schlagwörter"
       changed: "Geänderte Schlagwörter:"
       tags: "Schlagwörter"
-      choose_for_topic: "Optionale Schlagwörter für dieses Thema wählen"
+      choose_for_topic: "optionale Schlagwörter"
       delete_tag: "Schlagwört löschen"
       delete_confirm:
         one: "Bist du sicher, dass du dieses Schlagwort löschen und von einem zugeordneten Thema entfernen möchtest?"
@@ -2414,6 +2421,7 @@ de:
         active_posts: "Gemeldete Beiträge"
         old_posts: "Alte gemeldete Beiträge"
         topics: "Gemeldete Themen"
+        moderation_history: "Moderationshistorie"
         agree: "Zustimmen"
         agree_title: "Meldung bestätigen, weil diese gültig und richtig ist"
         agree_flag_hide_post: "Zustimmen und Beitrag verstecken"
@@ -2422,8 +2430,6 @@ de:
         agree_flag_restore_post_title: "Beitrag wiederherstellen, sodass alle Benutzer/-innen ihn sehen können."
         agree_flag: "Zustimmen und Beitrag behalten"
         agree_flag_title: "Meldung zustimmen und den Beitrag unbearbeitet lassen."
-        defer_flag: "Ignorieren"
-        defer_flag_title: "Entferne diese Meldung. Derzeit besteht kein Handlungsbedarf."
         delete: "Löschen"
         delete_title: "Lösche den Beitrag, auf den diese Meldung verweist."
         delete_post_defer_flag: "Beitrag löschen und Meldung ignorieren"
@@ -2558,7 +2564,7 @@ de:
           details: "Wenn auf einen Beitrag geantwortet wird oder der Beitrag geändert, gelöscht oder wiederhergestellt wird."
         user_event:
           name: "Benutzer Ereignis"
-          details: "Wenn ein Benutzer erstellt, genehmigt oder aktualisiert wird."
+          details: "Wenn sich ein Benutzer anmeldet, abmeldet, erstellt, genehmigt oder aktualisiert wird."
         delivery_status:
           title: "Versandstatus"
           inactive: "Inaktiv"
@@ -2623,7 +2629,6 @@ de:
           label: "Hochladen"
           title: "Eine Sicherung zu dieser Instanz hochladen"
           uploading: "Wird hochgeladen…"
-          success: "'{{filename}}' wurde erfolgreich hochgeladen."
           error: "Beim Hochladen der Datei '{{filename}}' ist ein Fehler aufgetreten: {{message}}"
         operations:
           is_running: "Ein Vorgang läuft gerade…"
@@ -2865,6 +2870,15 @@ de:
             type_placeholder: "zusammenfassen, registrieren…"
             reply_key_placeholder: "Antwort-Schlüssel"
             skipped_reason_placeholder: "Grund"
+      moderation_history:
+        performed_by: "Durchgeführt von"
+        no_results: "Es ist keine Moderationshistorie verfügbar."
+        actions:
+          delete_user: "Benutzer gelöscht"
+          suspend_user: "Benutzer gesperrt"
+          silence_user: "Benutzer stummgeschaltet"
+          delete_post: "Beitrag gelöscht"
+          delete_topic: "Thema gelöscht"
       logs:
         title: "Logs"
         action: "Aktion"
@@ -2970,13 +2984,17 @@ de:
             text: "Zusammenfassen"
             title: "Erzeugt neue Einträge zum Blockieren von Subnetzen, wenn mindestens 'min_ban_entries_for_roll_up' Einträge vorhanden sind."
         search_logs:
-          title: "Protokolle durchsuchen"
+          title: "Suchprotokolle"
           term: "Suchbegriff"
           searches: "Suchen"
           click_through: "Durchklicken"
-          most_viewed_topic: "Meist betrachtetes Thema"
           unique: "Eindeutig"
           unique_title: "einzelne Benutzer mit dieser Suche"
+          types:
+            all_search_types: "Alle Sucharten"
+            header: "Überschrift"
+            full_page: "Desktop-Seite"
+            click_through_only: "Alle (nur durcklicken)"
         logster:
           title: "Fehlerprotokolle"
       watched_words:
@@ -2995,7 +3013,7 @@ de:
         action_descriptions:
           block: 'Verhindert, dass Beiträge mit diesen Wörtern abgeschickt werden. Benutzer werden eine Fehlermeldung sehen, wenn sie ihren Beitrag abschicken.'
           censor: 'Erlaube Beiträge mit diesen Wörtern, aber ersetze sie mit Zeichen, die die zensierten Wörter verstecken.'
-          require_approval: 'Beitärge mit diesen Wörtern werden eine Genehmigung vom Team erfordern, bevor sie sichtbar sind.'
+          require_approval: 'Beiträge mit diesen Wörtern werden eine Genehmigung vom Team erfordern, bevor sie sichtbar sind.'
           flag: 'Erlaube Beiträge mit diesen Wörtern, aber markiere sie als unangemessen, damit Moderatoren sie überprüfen können.'
         form:
           label: 'Neues Wort:'

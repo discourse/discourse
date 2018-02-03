@@ -104,9 +104,8 @@ SQL
     end
   end
 
-  # Extract any urls in body
   def self.extract_from(post)
-    return unless post.present? && !post.whisper?
+    return if post.blank? || post.whisper?
 
     added_urls = []
     TopicLink.transaction do
@@ -285,16 +284,16 @@ end
 #  reflection    :boolean          default(FALSE)
 #  clicks        :integer          default(0), not null
 #  link_post_id  :integer
-#  title         :string
+#  title         :string(255)
 #  crawled_at    :datetime
 #  quote         :boolean          default(FALSE), not null
 #  extension     :string(10)
 #
 # Indexes
 #
-#  index_topic_links_on_extension                    (extension)
-#  index_topic_links_on_link_post_id_and_reflection  (link_post_id,reflection)
-#  index_topic_links_on_post_id                      (post_id)
-#  index_topic_links_on_topic_id                     (topic_id)
-#  unique_post_links                                 (topic_id,post_id,url) UNIQUE
+#  index_forum_thread_links_on_forum_thread_id                      (topic_id)
+#  index_forum_thread_links_on_forum_thread_id_and_post_id_and_url  (topic_id,post_id,url) UNIQUE
+#  index_topic_links_on_extension                                   (extension)
+#  index_topic_links_on_link_post_id_and_reflection                 (link_post_id,reflection)
+#  index_topic_links_on_post_id                                     (post_id)
 #

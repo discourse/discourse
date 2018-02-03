@@ -5,7 +5,7 @@ import Composer from 'discourse/models/composer';
 import { default as computed, observes, on } from 'ember-addons/ember-computed-decorators';
 import InputValidation from 'discourse/models/input-validation';
 import { getOwner } from 'discourse-common/lib/get-owner';
-import { escapeExpression } from 'discourse/lib/utilities';
+import { escapeExpression, authorizesOneOrMoreExtensions } from 'discourse/lib/utilities';
 import { emojiUnescape } from 'discourse/lib/text';
 import { shortDate } from 'discourse/lib/formatter';
 
@@ -40,13 +40,18 @@ function loadDraft(store, opts) {
       draft: true,
       composerState: Composer.DRAFT,
       composerTime: draft.composerTime,
-      typingTime: draft.typingTime
+      typingTime: draft.typingTime,
+      whisper: draft.whisper
     });
     return composer;
   }
 }
 
 const _popupMenuOptionsCallbacks = [];
+
+export function clearPopupMenuOptionsCallback() {
+  _popupMenuOptionsCallbacks.length = 0;
+}
 
 export function addPopupMenuOptionsCallback(callback) {
   _popupMenuOptionsCallbacks.push(callback);
@@ -63,9 +68,9 @@ export default Ember.Controller.extend({
   showEditReason: false,
   editReason: null,
   scopedCategoryId: null,
-  optionsVisible: false,
   lastValidatedAt: null,
   isUploading: false,
+  allowUpload: false,
   topic: null,
   linkLookup: null,
   showPreview: true,
@@ -160,11 +165,6 @@ export default Ember.Controller.extend({
     return isStaffUser && this.siteSettings.enable_whispers && action === Composer.REPLY;
   },
 
-  @computed("popupMenuOptions")
-  showPopupMenu(popupMenuOptions) {
-    return popupMenuOptions ? popupMenuOptions.some(option => option.condition) : false;
-  },
-
   _setupPopupMenuOption(callback) {
     let option = callback();
 
@@ -224,7 +224,23 @@ export default Ember.Controller.extend({
     return emojiUnescape(escapeExpression(topic.get('title')));
   },
 
+  @computed
+  allowUpload() {
+    return authorizesOneOrMoreExtensions();
+  },
+
   actions: {
+    cancelUpload() {
+      this.set('model.uploadCancelled', true);
+    },
+
+    onPopupMenuAction(action) {
+      this.send(action);
+    },
+
+    storeToolbarState(toolbarEvent) {
+      this.set('toolbarEvent', toolbarEvent);
+    },
 
     togglePreview() {
       this.toggleProperty('showPreview');
@@ -237,7 +253,6 @@ export default Ember.Controller.extend({
 
     cancelled() {
       this.send('hitEsc');
-      this.send('hideOptions');
     },
 
     addLinkLookup(linkLookup) {
@@ -288,16 +303,6 @@ export default Ember.Controller.extend({
 
     toggleToolbar() {
       this.toggleProperty('showToolbar');
-    },
-
-    showOptions(toolbarEvent, loc) {
-      this.set('toolbarEvent', toolbarEvent);
-      this.appEvents.trigger('popup-menu:open', loc);
-      this.set('optionsVisible', true);
-    },
-
-    hideOptions() {
-      this.set('optionsVisible', false);
     },
 
     // Toggle the reply view
@@ -387,11 +392,21 @@ export default Ember.Controller.extend({
     groupsMentioned(groups) {
       if (!this.get('model.creatingPrivateMessage') && !this.get('model.topic.isPrivateMessage')) {
         groups.forEach(group => {
-          const body = I18n.t('composer.group_mentioned', {
-            group: "@" + group.name,
-            count: group.user_count,
-            group_link: Discourse.getURL(`/groups/${group.name}/members`)
-          });
+          let body;
+
+          if (group.max_mentions < group.user_count) {
+            body = I18n.t('composer.group_mentioned_limit', {
+              group: "@" + group.name,
+              max: group.max_mentions,
+              group_link: Discourse.getURL(`/groups/${group.name}/members`)
+            });
+          } else {
+            body = I18n.t('composer.group_mentioned', {
+              group: "@" + group.name,
+              count: group.user_count,
+              group_link: Discourse.getURL(`/groups/${group.name}/members`)
+            });
+          }
 
           this.appEvents.trigger('composer-messages:create', {
             extraClass: 'custom-body',

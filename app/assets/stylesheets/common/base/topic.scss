@@ -9,8 +9,8 @@
 .progress-back-container {
   position: fixed;
   bottom: 40px;
-  z-index: 950;
-  margin-right: 0px;
+  z-index: z("dropdown");
+  margin-right: 0;
   animation-duration: 0.5s;
   animation-name: button-jump-up;
   width: 145px;
@@ -73,7 +73,45 @@
   }
 
   a.edit-topic i { font-size: 0.8em; }
+
+  .edit-topic-title {
+    display: flex;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+    max-width: 758px;
+    #edit-title {
+      flex: 1 1 auto;
+    }
+    .private-message-glyph {
+      margin: 5px 5px 0 0;
+    }
+    .category-chooser, .tag-chooser {
+      flex: 1 1 49%;
+      margin: 0 0 9px 0;
+      @media all and (max-width: 500px) {
+        flex: 1 1 100%;        
+      }
+        
+    }
+    .tag-chooser {
+      margin-left: 2%;
+      @media all and (max-width: 500px) {
+        margin-left: 0;
+      }
+    }
+  }
 }
+
+.private_message {
+  #topic-title {
+    .edit-topic-title {
+      #edit-title {
+        width: calc(100% - 50px);
+      }
+    }
+  }
+}
+
 
 .topic-title-outlet {
   clear: both;
@@ -82,9 +120,6 @@
 .extra-info-wrapper {
   .badge-wrapper {
     float: left;
-    &.bullet {
-      margin-top: 5px;
-    }
   }
 
 }
@@ -109,7 +144,7 @@
 #suggested-topics h3 .badge-wrapper.bullet span.badge-category {
   // Override vertical-align: text-top from `badges.css.scss`
   vertical-align: baseline;
-  line-height: 1.2;
+  line-height: $line-height-medium;
 }
 
 #suggested-topics h3 .badge-wrapper.bullet,
@@ -128,7 +163,7 @@
   .notifications-button {
     display: inline-block;
     float: none;
-    line-height: 2em;
+    line-height: $line-height-large;
     .dropdown-toggle {
       float: none;
     }
@@ -172,7 +207,7 @@
       }
       i {
         float: left;
-        font-size: 0.857em;
+        font-size: $font-down-2;
         margin: 0.3em 0.5em 0 0;
       }
     }

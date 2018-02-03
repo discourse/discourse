@@ -188,7 +188,6 @@ pt_BR:
     hot: "Tópicos quentes"
     top: "Principais tópicos"
     posts: "Últimos tópicos"
-    private_posts: "Últimas mensagens privadas"
     group_posts: "Últimos posts de %{group_name}"
     group_mentions: "Últimas citações de %{group_name}"
     user_posts: "Últimos posts por @%{username}"
@@ -269,12 +268,6 @@ pt_BR:
       Sentimos muito, mas novos usuários são temporariamente limitados a %{newuser_max_replies_per_topic} respostas no mesmo tópico.
 
       Em vez de adicionar outra resposta, por favor considere editar suas respostas anteriores, ou visite outros tópicos.
-    reviving_old_topic: |
-      ### Reviver este tópico?
-
-      A última resposta deste tópico foi feita há **%{days}** dias atrás. Sua resposta jogará o tópico para o topo da sua lista e notificará as pessoas que foram envolvidas na conversa.
-
-      Tem certeza que deseja continuar essa velha conversa?
   activerecord:
     attributes:
       category:
@@ -291,9 +284,7 @@ pt_BR:
         topic:
           attributes:
             base:
-              warning_requires_pm: "Você só pode anexar avisos em mensagens privadas."
               too_many_users: "Você só pode enviar avisos para um usuário de cada vez."
-              cant_send_pm: "Desculpe, você não pode enviar uma mensagem privada para este usuário."
               no_user_selected: "Você deve escolher um usuário válido."
             featured_link:
               invalid: "é inválida. A URL deve conter http:// ou https://."
@@ -595,7 +586,6 @@ pt_BR:
       email_title: 'O tópico "%{title}" requer atenção do moderador'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Sua mensagem foi marcada pela comunidade. Por favor <a href="/my/messages">veja suas mensagens</a>.</p>'
     user_must_edit: '<p>Conteúdo sinalizado escondido.</p>'
   archetypes:
     regular:
@@ -799,16 +789,15 @@ pt_BR:
     censored_words: "Palavras que serão substituídos automaticamente por &#9632;&#9632;&#9632;&#9632;"
     censored_pattern: "Padrão de expressão regular que será automaticamente substituído por &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-apagar todas as mensagens ocultas que ficar oculta por mais de 30 dias."
-    default_locale: "Idioma padrão para esta instância do Discourse (ISO 639-1 Code)"
     allow_user_locale: "Permitir que os usuários escolham suas próprias preferências de idioma de interface"
     set_locale_from_accept_language_header: "define a língua da interface para os usuários anônimos de acordo com os cabeçalhos de língua de seus navegadores. (EXPERIMENTAL, não funciona com cache anônimo)"
     min_post_length: "Comprimento mínimo permitido do post em caracteres"
     min_first_post_length: "Comprimento mínimo de caracteres permitido para primeira mensagem (corpo do tópico)"
-    min_private_message_post_length: "Comprimento mínimo de caracteres permitido para mensagens"
+    min_personal_message_post_length: "Comprimento mínimo de caracteres permitido para mensagens"
     max_post_length: "Comprimento máximo permitido para o post em caracteres"
     min_topic_title_length: "Comprimento mínimo permitido para o título do post em caracteres"
     max_topic_title_length: "Comprimento máximo permitido para o título do post em caracteres"
-    min_private_message_title_length: "Comprimento mínimo de caracteres permitido para o título de uma mensagem"
+    min_personal_message_title_length: "Comprimento mínimo de caracteres permitido para o título de uma mensagem"
     min_search_term_length: "Comprimento mínimo válido para o termo de pesquisa em caracteres"
     search_tokenize_chinese_japanese_korean: "Força a busca a tokenizar Mandarim/Japonês/Coreano até para sites que não são nesses idiomas"
     search_prefer_recent_posts: "Se buscar o seu fórum está lento, essa opção tenta indexar as publicações mais recentes primeiro"
@@ -844,7 +833,6 @@ pt_BR:
     digest_logo_url: "A imagem de logo alternativa usada no topo do email de resumo do seu site. Ela deve ter um formato retangular alongado e não deve ser uma imagem SVG. Se deixado em branco, `logo_url` será usado."
     logo_small_url: "A pequena imagem de logo no topo à esquerda do seu site, vista quando rolando a página abaixo. Se deixado em branco, um símbolo de casa será mostrado."
     favicon_url: "Um favicon para seu site, veja http://en.wikipedia.org/wiki/Favicon. Para funcionar corretamente por um CDN, ele deve ser um png"
-    mobile_logo_url: "A imagem de logo de posição fixa usada no topo esquerdo do seu site móvel, que deve ter um formato quadrado. Se deixado em branco, `logo_url` será usado. Por ex: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Ícone usado para dispositivos Apple. Tamanho recomendado é 144px por 144px."
     notification_email: "O endereço de email utilizado quando enviado emails do sistema. O domínio especificado deve ter registros SPF, DKIM e PTR, devidamente configurados para que os email funcionem corretamente."
     email_custom_headers: "A lista delimitada por barras verticais de cabeçalhos de e-mail personalizados"
@@ -855,7 +843,7 @@ pt_BR:
     summary_likes_required: "Curtidas mínimas em um tópico antes de 'Resumir este tópico, ficar habilitado"
     summary_percent_filter: "Quando um usuário clicar em 'Resumor este tópico', mostrar os melhores % mensagens"
     summary_max_results: "Máximo número de posts quando resumidos por Categoria "
-    enable_private_messages: "Permitir que usuários de nível de confiança 1 (configurável via o nível mínimo de confiança para enviar mensagens) criem e respondam a mensagens. Note que a equipe sempre pode enviar mensagens, independente do caso."
+    enable_personal_messages: "Permitir que usuários de nível de confiança 1 (configurável via o nível mínimo de confiança para enviar mensagens) criem e respondam a mensagens. Note que a equipe sempre pode enviar mensagens, independente do caso."
     enable_long_polling: "O sistema de mensagens das notificações pode fazer solicitações longas."
     long_polling_base_url: "URL Utilizada para \"long polling\" ( Quando um CDN for configurado, tenha certeza que essa configuração seja a padrão) ex: http://origin.site.com"
     long_polling_interval: "Tempo que o servidor deve aguardar antes de responder quando não existe nenhum dado para ser enviado. (apenas usuários logados)"
@@ -903,7 +891,6 @@ pt_BR:
     allow_index_in_robots_txt: "Especificar no robots.txt que este site é permitido de ser indexado por sistemas de busca na web."
     email_domains_blacklist: "Lista delimitada por barras (|) de domínios de email que não são permitidos registros de contas. Exemplo: mailinator.com|trashmail.net"
     email_domains_whitelist: "Lista separada por barra (|) de domínios de email que usuários DEVEM usar para registrar contas. CUIDADO: Usuário com domínio de email diferentes da lista não serão permitidos!"
-    hide_email_address_taken: "Não informar os usuários da existência de uma conta quando eles usam o diálogo de esquecimento de senha."
     log_out_strict: "Quando deslogando, deslogar TODAS as sessões do usuário em todos os dispositivos"
     version_checks: "Pingar Discourse Hub para atualizações de versão e exibir mensagens de versão no Painel em /admin"
     new_version_emails: "Enviar um email para o endereço contact_email quando uma nova versão do Discourse estiver disponível."
@@ -970,7 +957,7 @@ pt_BR:
     max_bookmarks_per_day: "Número máximo de novos favoritos por usuário por dia."
     max_edits_per_day: "Número máximo de edições que um usuário pode fazer por dia."
     max_topics_per_day: "Número máximo de postagens que um usuário pode criar por dia."
-    max_private_messages_per_day: "Máximo número de mensagens que usuários podem criar por dia."
+    max_personal_messages_per_day: "Máximo número de mensagens que usuários podem criar por dia."
     max_invites_per_day: "Número máximo de convites que um usuário pode enviar por dia."
     max_topic_invitations_per_day: "Número máximo de convites para tópicos que um usuário pode enviar por dia."
     alert_admins_if_errors_per_minute: "Número de erros por minutos para desencadear um alerta aos administradores. Um valor igual a 0 desabilita esse recurso. NOTA: requer reinicialização."
@@ -983,7 +970,6 @@ pt_BR:
     clean_orphan_uploads_grace_period_hours: "Carência (em horas) antes de um upload órfão ser removido."
     purge_deleted_uploads_grace_period_days: "Carência (em dias) antes que um upload excluído seja apagado."
     enable_s3_uploads: "Colocar uploads no armazenamento da Amazon S3. IMPORTANTE: exige credenciais válidas da S3 (ambos id da chave de acesso & segredo da chave de acesso)."
-    s3_use_iam_profile: 'Usar papel AWS EC2 IAM para recuperar chaves. OBS: habilitar irá substituir configurações "s3 access key id" e "s3 secret access key".'
     s3_upload_bucket: "Nome do bucket da Amazon S3 no qual os arquivos serão enviados. AVISO: precisa ser em minúsculas, sem pontos, sem underscores."
     s3_access_key_id: "A id da chave de acesso da Amazon S3 que será usada para fazer upload de imagens."
     s3_secret_access_key: "O segredo da chave de acesso da Amazon S3 que será usada para fazer upload de imagens."
@@ -1084,7 +1070,6 @@ pt_BR:
     relative_date_duration: "Número de dias após postar quando datas de postagem serão mostradas como relativas (7d) ao invés de absolutas (20 Fev)."
     delete_user_max_post_age: "Não permitir deletar usuários cujo primeiro post for mais antigo do que (x) dias."
     delete_all_posts_max: "Número máximo de postagens que podem ser apagadas de uma vez com o botão Remover Todos Postagens. Se um usuário tiver mais postagens do que este número, as postagens não poderão ser todas removidas de uma vez e o usuário não poderá ser removido."
-    username_change_period: "O número de dias após o registro para que as contas possam mudar o seu nome de usuário (0 para não permitir a mudança de nome de usuário)."
     email_editable: "Permitir que os usuários alterem o seu endereço de e-mail após o registro."
     allow_uploaded_avatars: "Permitir aos usuários carregar fotos em seu perfil personalizado."
     allow_animated_avatars: "Permitir que os usuários usem GIF animados na foto do perfil. ATENÇÃO: executar os avatares: atualizar tarefa rake após alterar essa configuração."
@@ -1235,13 +1220,11 @@ pt_BR:
     email_too_long: "O email fornecido é muito longo. Os endereços de email não devem ter mais de 254 caracteres e nomes de domínio devem ter no máximo 253 caracteres."
     reserved_username: "Este nome de usuário não é permitido."
     missing_user_field: "Você não completou todos campos de usuário"
-    close_window: "A autenticação está completa. Feche esta janela para continuar."
   user:
     no_accounts_associated: "Nenhuma conta associada"
     username:
       short: "deve ter no mínimo %{min} caracteres"
       long: "precisa ter não mais que ${max} caracteres"
-      characters: "deve incluir apenas números, letras e sublinhados"
       unique: "tem que ser único"
       blank: "tem que ser preenchido"
       must_begin_with_alphanumeric_or_underscore: "deve começar com uma letra, número ou um underline"
@@ -1258,10 +1241,6 @@ pt_BR:
     subject_template:
       one: "1 sinalização aguardando a ser controlada"
       other: "%{count} sinalizações aguardando a ser controladas"
-  invite_mailer:
-    subject_template: "%{invitee_name} convidou você para '%{topic_title}' em %{site_domain_name}"
-  invite_forum_mailer:
-    subject_template: "%{invitee_name} convidou você para participar de %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Defina uma senha para a sua %{site_name}  conta"
   flag_reasons:
@@ -1560,7 +1539,6 @@ pt_BR:
         Este emblema é concedido quando você recebe sua primeira curtida numa mensagem. Parabéns, você postou algo que sua comunidade achou interessante, legal ou divertido!
     autobiographer:
       name: Autobiógrafo
-      description: Preencheu as informações do <a href="/my/preferences">perfil</a>
     anniversary:
       name: Aniversário
       description: Membro ativo por um ano, postou ao menos uma vez
@@ -1617,7 +1595,6 @@ pt_BR:
       description: Citou uma mensagem
     read_guidelines:
       name: Leu as regras
-      description: Leu as <a href="/guidelines">regras da comunidade</a>
     reader:
       name: Leitor
       description: Leu todas as respostas em um tópico com mais de 100 respostas
@@ -1675,7 +1652,6 @@ pt_BR:
       name: Primeira Resposta por email
   admin_login:
     success: "Email Enviado"
-    error: "Erro!"
     email_input: "Email do Administrador"
     submit_button: "Enviar Email"
   performance_report:

@@ -6,31 +6,32 @@ require_dependency 'discourse_event'
 require_dependency 'rate_limiter'
 
 class TopicsController < ApplicationController
-  before_action :ensure_logged_in, only: [:timings,
-                                          :destroy_timings,
-                                          :update,
-                                          :star,
-                                          :destroy,
-                                          :recover,
-                                          :status,
-                                          :invite,
-                                          :mute,
-                                          :unmute,
-                                          :set_notifications,
-                                          :move_posts,
-                                          :merge_topic,
-                                          :clear_pin,
-                                          :re_pin,
-                                          :status_update,
-                                          :timer,
-                                          :bulk,
-                                          :reset_new,
-                                          :change_post_owners,
-                                          :change_timestamps,
-                                          :archive_message,
-                                          :move_to_inbox,
-                                          :convert_topic,
-                                          :bookmark]
+  requires_login only: [
+    :timings,
+    :destroy_timings,
+    :update,
+    :destroy,
+    :recover,
+    :status,
+    :invite,
+    :mute,
+    :unmute,
+    :set_notifications,
+    :move_posts,
+    :merge_topic,
+    :clear_pin,
+    :re_pin,
+    :status_update,
+    :timer,
+    :bulk,
+    :reset_new,
+    :change_post_owners,
+    :change_timestamps,
+    :archive_message,
+    :move_to_inbox,
+    :convert_topic,
+    :bookmark
+  ]
 
   before_action :consider_user_for_promotion, only: :show
 
@@ -75,7 +76,7 @@ class TopicsController < ApplicationController
       begin
         RateLimiter.new(current_user, "print-topic-per-hour", SiteSetting.max_prints_per_hour_per_user, 1.hour).performed! unless @guardian.is_admin?
       rescue RateLimiter::LimitExceeded
-        render_json_error(I18n.t("rate_limiter.slow_down"))
+        return render_json_error I18n.t("rate_limiter.slow_down")
       end
     end
 
@@ -287,7 +288,7 @@ class TopicsController < ApplicationController
   end
 
   def timer
-    params.permit(:time, :timezone_offset, :based_on_last_post, :category_id)
+    params.permit(:time, :based_on_last_post, :category_id)
     params.require(:status_type)
 
     status_type =
@@ -302,7 +303,6 @@ class TopicsController < ApplicationController
 
     options = {
       by_user: current_user,
-      timezone_offset: params[:timezone_offset]&.to_i,
       based_on_last_post: params[:based_on_last_post]
     }
 
@@ -468,7 +468,7 @@ class TopicsController < ApplicationController
     topic = Topic.find_by(id: params[:topic_id])
 
     if topic.private_message?
-      guardian.ensure_can_send_private_message!(group)
+      guardian.ensure_can_invite_group_to_private_message!(group, topic)
       topic.invite_group(current_user, group)
       render_json_dump BasicGroupSerializer.new(group, scope: guardian, root: 'group')
     else
@@ -522,12 +522,17 @@ class TopicsController < ApplicationController
   end
 
   def move_posts
-    params.require(:post_ids)
-    params.require(:topic_id)
+    post_ids = params.require(:post_ids)
+    topic_id = params.require(:topic_id)
     params.permit(:category_id)
 
-    topic = Topic.with_deleted.find_by(id: params[:topic_id])
+    topic = Topic.with_deleted.find_by(id: topic_id)
     guardian.ensure_can_move_posts!(topic)
+
+    # when creating a new topic, ensure the 1st post is a regular post
+    if params[:title].present? && Post.where(topic: topic, id: post_ids).order(:post_number).pluck(:post_type).first != Post.types[:regular]
+      return render_json_error("When moving posts to a new topic, the first post must be a regular post.")
+    end
 
     dest_topic = move_posts_to_destination(topic)
     render_topic_changes(dest_topic)
@@ -586,14 +591,22 @@ class TopicsController < ApplicationController
   end
 
   def timings
-    PostTiming.process_timings(
-      current_user,
-      topic_params[:topic_id].to_i,
-      topic_params[:topic_time].to_i,
-      (topic_params[:timings].to_h || {}).map { |post_number, t| [post_number.to_i, t.to_i] },
-      mobile: view_context.mobile_view?
-    )
-    render body: nil
+    allowed_params = topic_params
+
+    topic_id = allowed_params[:topic_id].to_i
+    topic_time = allowed_params[:topic_time].to_i
+    timings = allowed_params[:timings].to_h || {}
+
+    hijack do
+      PostTiming.process_timings(
+        current_user,
+        topic_id,
+        topic_time,
+        timings.map { |post_number, t| [post_number.to_i, t.to_i] },
+        mobile: view_context.mobile_view?
+      )
+      render body: nil
+    end
   end
 
   def feed
