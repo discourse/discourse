@@ -2,7 +2,7 @@ import { default as computed } from 'ember-addons/ember-computed-decorators';
 import { url } from 'discourse/lib/computed';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 import showModal from 'discourse/lib/show-modal';
-import ThemeSettings from 'admin/models/theme-settings'
+import ThemeSettings from 'admin/models/theme-settings';
 
 const THEME_UPLOAD_VAR = 2;
 

@@ -1,4 +1,3 @@
-import { propertyNotEqual } from 'discourse/lib/computed';
 import computed from 'ember-addons/ember-computed-decorators';
 import { categoryLinkHTML } from 'discourse/helpers/category-link';
 
@@ -70,7 +69,7 @@ export default Ember.Mixin.create({
 
   _save() {
     Em.warn("You should define a `_save` method", { id: "admin.mixins.setting-component" });
-    //return Ember.RSVP.resolve();
+    return Ember.RSVP.resolve();
   },
 
   actions: {

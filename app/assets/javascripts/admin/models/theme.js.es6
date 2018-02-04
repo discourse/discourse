@@ -151,9 +151,9 @@ const Theme = RestModel.extend({
   },
 
   saveSettings(name, value) {
-    const settings = {}
-    settings[name] = value
-    return this.save({ settings })
+    const settings = {};
+    settings[name] = value;
+    return this.save({ settings });
   }
 });
 
