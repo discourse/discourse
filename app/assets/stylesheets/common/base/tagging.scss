@@ -132,6 +132,7 @@ $tag-color: $primary-medium;
 
 .d-header .topic-header-extra {
   .discourse-tags { 
+    display: inline-block;
     font-size: $font-down-1;        
   }
   .topic-featured-link { margin-left: 8px; }
@@ -202,6 +203,7 @@ $tag-color: $primary-medium;
 header .discourse-tag {color: $tag-color }
 
 .list-tags {
+  display: inline-block;
   margin-right: 3px;
   font-size: $font-down-1;
 }
