@@ -278,8 +278,9 @@ header .discourse-tag {color: $tag-color }
   }
   .group-tags-list .tag-chooser {
     height: 250px !important;
-    .select2-choices {
+    ul.select2-choices {
       height: 250px !important; // to fight with select2.scss's important
+      max-height: none;
     }
   }
   .btn {margin-left: 10px;}
