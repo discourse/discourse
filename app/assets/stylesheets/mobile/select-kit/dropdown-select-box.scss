@@ -2,6 +2,7 @@
   &.dropdown-select-box {
     .select-kit-collection {
       max-height: 200px;
+      overflow-y: scroll;
     }
   }
 }
