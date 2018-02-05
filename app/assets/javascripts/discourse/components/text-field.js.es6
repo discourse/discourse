@@ -16,7 +16,9 @@ export default Ember.TextField.extend({
     }
   },
 
-  keyUp() {
+  keyUp(event) {
+    this._super(event);
+
     if (this.siteSettings.support_mixed_text_direction) {
       let val = this.value;
       if (isRTL(val)) {
