@@ -136,6 +136,10 @@ describe Middleware::RequestTracker do
         global_setting :max_reqs_per_ip_mode, 'block'
       end
 
+      after do
+        Middleware::RequestTracker.unregister_ip_skipper
+      end
+
       it "won't block if the ip is skipped" do
         env1 = env("REMOTE_ADDR" => "1.1.1.2")
         status, _ = middleware.call(env1)
