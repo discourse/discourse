@@ -45,7 +45,7 @@
 
 .topic-status-info {
   padding-left: 10px;
-  border-top: 1px solid $primary-low; 
+  border-top: 1px solid $primary-low;
   padding-top: 10px;
   h3 {
     margin: 0;
@@ -66,7 +66,7 @@
 }
 
 #topic-progress-expanded {
-  border: 1px solid $primary-low; 
+  border: 1px solid $primary-low;
   padding: 5px;
   background: $secondary;
 
@@ -199,7 +199,7 @@ sup sup, sub sup, sup sub, sub sub { top: 0; }
     margin: 6px 6px 0 0;
   }
 
-  .select-box-kit.combo-box.category-chooser {
+  .select-kit.combo-box.category-chooser {
     width: 100%;
     margin-top: 0;
   }
@@ -207,9 +207,9 @@ sup sup, sub sup, sup sub, sub sub { top: 0; }
 
 // make mobile timeline top and bottom dates easier to select
 .topic-timeline {
-  .start-date, .now-date { 
-    font-size: $font-up-1; 
-    padding: 5px; 
+  .start-date, .now-date {
+    font-size: $font-up-1;
+    padding: 5px;
   }
 }
 
