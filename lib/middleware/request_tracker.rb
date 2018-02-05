@@ -38,6 +38,11 @@ class Middleware::RequestTracker
     end
   end
 
+  # used for testing
+  def self.unregister_ip_skipper
+    @@ip_skipper = nil
+  end
+
   # Register a custom `ip_skipper`, a function that will skip rate limiting
   # for any IP that returns true.
   #
@@ -49,6 +54,7 @@ class Middleware::RequestTracker
   # end
   # ```
   def self.register_ip_skipper(&blk)
+    raise "IP skipper is already registered!" if @@ip_skipper
     @@ip_skipper = blk
   end
 
@@ -181,7 +187,7 @@ class Middleware::RequestTracker
         return false if is_private_ip?(ip)
       end
 
-      return false if @@ip_skipper.try(:call, ip)
+      return false if @@ip_skipper&.call(ip)
 
       limiter10 = RateLimiter.new(
         nil,
