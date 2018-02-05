@@ -127,6 +127,30 @@ describe Middleware::RequestTracker do
       expect(status).to eq(429)
     end
 
+    describe "register_ip_skipper" do
+      before do
+        Middleware::RequestTracker.register_ip_skipper do |ip|
+          ip == "1.1.1.2"
+        end
+        global_setting :max_reqs_per_ip_per_10_seconds, 1
+        global_setting :max_reqs_per_ip_mode, 'block'
+      end
+
+      it "won't block if the ip is skipped" do
+        env1 = env("REMOTE_ADDR" => "1.1.1.2")
+        status, _ = middleware.call(env1)
+        status, _ = middleware.call(env1)
+        expect(status).to eq(200)
+      end
+
+      it "blocks if the ip isn't skipped" do
+        env1 = env("REMOTE_ADDR" => "1.1.1.1")
+        status, _ = middleware.call(env1)
+        status, _ = middleware.call(env1)
+        expect(status).to eq(429)
+      end
+    end
+
     it "does nothing for private IPs if skipped" do
       global_setting :max_reqs_per_ip_per_10_seconds, 1
       global_setting :max_reqs_per_ip_mode, 'warn+block'
@@ -206,7 +230,7 @@ describe Middleware::RequestTracker do
     end
 
     after do
-      Middleware::RequestTracker.register_detailed_request_logger(logger)
+      Middleware::RequestTracker.unregister_detailed_request_logger(logger)
     end
 
     it "can correctly log detailed data" do
