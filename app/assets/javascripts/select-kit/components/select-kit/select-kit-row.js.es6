@@ -5,7 +5,7 @@ import UtilsMixin from "select-kit/mixins/utils";
 
 export default Ember.Component.extend(UtilsMixin, {
   layoutName: "select-kit/templates/components/select-kit/select-kit-row",
-  classNames: ["select-kit-row", "select-box-kit-row"],
+  classNames: ["select-kit-row"],
   tagName: "li",
   tabIndex: -1,
   attributeBindings: [
