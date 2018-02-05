@@ -6,6 +6,7 @@ require_dependency 'method_profiler'
 class Middleware::RequestTracker
 
   @@detailed_request_loggers = nil
+  @@ip_skipper = nil
 
   # register callbacks for detailed request loggers called on every request
   # example:
@@ -35,7 +36,20 @@ class Middleware::RequestTracker
     if @@detailed_request_loggers.length == 0
       @detailed_request_loggers = nil
     end
+  end
 
+  # Register a custom `ip_skipper`, a function that will skip rate limiting
+  # for any IP that returns true.
+  #
+  # For example, if you never wanted to rate limit 1.2.3.4
+  #
+  # ```
+  # Middleware::RequestTracker.register_ip_skipper do |ip|
+  #  ip == "1.2.3.4"
+  # end
+  # ```
+  def self.register_ip_skipper(&blk)
+    @@ip_skipper = blk
   end
 
   def initialize(app, settings = {})
@@ -166,6 +180,8 @@ class Middleware::RequestTracker
       if !GlobalSetting.max_reqs_rate_limit_on_private
         return false if is_private_ip?(ip)
       end
+
+      return false if @@ip_skipper.try(:call, ip)
 
       limiter10 = RateLimiter.new(
         nil,
