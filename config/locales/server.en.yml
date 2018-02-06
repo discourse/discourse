@@ -215,6 +215,7 @@ en:
     one: "Sorry, new users can only put one attachment in a post."
     other: "Sorry, new users can only put %{count} attachments in a post."
   no_links_allowed: "Sorry, new users can't put links in posts."
+  links_require_trust: "Sorry, you can't include links in your posts."
   too_many_links:
     one: "Sorry, new users can only put one link in a post."
     other: "Sorry, new users can only put %{count} links in a post."
@@ -1292,6 +1293,7 @@ en:
     min_trust_to_send_email_messages: "The minimum trust level required to send new personal messages via email (to staged users)."
 
     min_trust_to_flag_posts: "The minimum trust level required to flag posts"
+    min_trust_to_post_links: "The minimum trust level required to include links in posts"
 
     newuser_max_links: "How many links a new user can add to a post."
     newuser_max_images: "How many images a new user can add to a post."

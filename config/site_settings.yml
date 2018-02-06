@@ -897,6 +897,9 @@ trust:
   min_trust_to_flag_posts:
     default: 1
     enum: 'TrustLevelSetting'
+  min_trust_to_post_links:
+    default: 0
+    enum: 'TrustLevelSetting'
   tl1_requires_topics_entered: 5
   tl1_requires_read_posts:
     default: 30
