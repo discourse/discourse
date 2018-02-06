@@ -15,7 +15,8 @@ class Validators::PostValidator < ActiveModel::Validator
     max_mention_validator(record)
     max_images_validator(record)
     max_attachments_validator(record)
-    max_links_validator(record)
+    can_post_links_validator(record)
+    newuser_links_validator(record)
     unique_post_validator(record)
   end
 
@@ -91,8 +92,14 @@ class Validators::PostValidator < ActiveModel::Validator
     add_error_if_count_exceeded(post, :no_attachments_allowed, :too_many_attachments, post.attachment_count, SiteSetting.newuser_max_attachments)
   end
 
+  def can_post_links_validator(post)
+    return if acting_user_is_trusted?(post, SiteSetting.min_trust_to_post_links) || private_message?(post)
+
+    post.errors.add(:base, I18n.t(:links_require_trust))
+  end
+
   # Ensure new users can not put too many links in a post
-  def max_links_validator(post)
+  def newuser_links_validator(post)
     return if acting_user_is_trusted?(post) || private_message?(post)
     add_error_if_count_exceeded(post, :no_links_allowed, :too_many_links, post.link_count, SiteSetting.newuser_max_links)
   end
@@ -113,8 +120,8 @@ class Validators::PostValidator < ActiveModel::Validator
 
   private
 
-  def acting_user_is_trusted?(post)
-    post.acting_user.present? && post.acting_user.has_trust_level?(TrustLevel[1])
+  def acting_user_is_trusted?(post, level = 1)
+    post.acting_user.present? && post.acting_user.has_trust_level?(TrustLevel[level])
   end
 
   def private_message?(post)
