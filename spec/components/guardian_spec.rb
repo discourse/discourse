@@ -90,9 +90,15 @@ describe Guardian do
         expect(Guardian.new(user).post_can_act?(post, :like)).to be_truthy
       end
 
-      it "returns false for a new user flagging a standard post as spam" do
+      it "returns false for a new user flagging as spam" do
         user.trust_level = TrustLevel[0]
         expect(Guardian.new(user).post_can_act?(post, :spam)).to be_falsey
+      end
+
+      it "returns true for a new user flagging as spam if enabled" do
+        SiteSetting.min_trust_to_flag_posts = 0
+        user.trust_level = TrustLevel[0]
+        expect(Guardian.new(user).post_can_act?(post, :spam)).to be_truthy
       end
 
       it "returns true for a new user flagging a private message as spam" do

@@ -894,6 +894,9 @@ trust:
   min_trust_to_send_email_messages:
     default: 4
     enum: 'TrustLevelSetting'
+  min_trust_to_flag_posts:
+    default: 1
+    enum: 'TrustLevelSetting'
   tl1_requires_topics_entered: 5
   tl1_requires_read_posts:
     default: 30

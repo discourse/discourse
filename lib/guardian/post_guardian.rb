@@ -21,7 +21,7 @@ module PostGuardian
 
       # we allow flagging for trust level 1 and higher
       # always allowed for private messages
-      (is_flag && not(already_did_flagging) && (@user.has_trust_level?(TrustLevel[1]) || post.topic.private_message?)) ||
+      (is_flag && not(already_did_flagging) && (@user.has_trust_level?(TrustLevel[SiteSetting.min_trust_to_flag_posts]) || post.topic.private_message?)) ||
 
       # not a flagging action, and haven't done it already
       not(is_flag || already_taken_this_action) &&
