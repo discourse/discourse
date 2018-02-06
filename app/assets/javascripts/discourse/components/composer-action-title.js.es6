@@ -22,20 +22,20 @@ export default Ember.Component.extend({
           return this._formatReplyToTopic(opts.topicLink);
         }
       case EDIT:
-        if (opts.userAvatar && opts.userLink && opts.topicLink) {
+        if (opts.userAvatar && opts.userLink && opts.postLink) {
           return this._formatEditUserPost(
             opts.userAvatar,
             opts.userLink,
-            opts.topicLink,
+            opts.postLink,
             opts.originalUser
           );
         }
     };
   },
 
-  _formatEditUserPost(userAvatar, userLink, topicLink, originalUser) {
+  _formatEditUserPost(userAvatar, userLink, postLink, originalUser) {
     let editTitle = `
-      <a class="topic-link" href="${topicLink.href}">${topicLink.anchor}</a>
+      <a class="post-link" href="${postLink.href}">${postLink.anchor}</a>
       ${userAvatar}
       <span class="username">${userLink.anchor}</span>
       ${iconHTML("mail-forward", { class: "reply-to-glyph" })}
