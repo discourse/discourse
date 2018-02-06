@@ -7,8 +7,8 @@ export default Ember.Mixin.create({
     this.controllerFor('composer').open({
       categoryId: controller.get('category.id'),
       action: Composer.CREATE_TOPIC,
-      draftKey: controller.get('model.draft_key'),
-      draftSequence: controller.get('model.draft_sequence')
+      draftKey: controller.get('model.draft_key') || Composer.CREATE_TOPIC,
+      draftSequence: controller.get('model.draft_sequence') || 0
     });
   },
 
