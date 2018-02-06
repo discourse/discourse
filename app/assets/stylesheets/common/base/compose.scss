@@ -105,12 +105,12 @@
       align-items: center;
       width: auto;
       max-width: 100%;
-      
+
       .avatar {
         width: 20px;
       }
 
-      .topic-link, .user-link {
+      .topic-link, .user-link, .post-link {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
