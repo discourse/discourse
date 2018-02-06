@@ -17,4 +17,11 @@
     max-width: 95%;
     height: auto;
   }
+  .revision-content {
+    table {
+      table-layout: fixed;
+      width: 100%;
+      word-wrap: break-word;
+    }
+  }
 }

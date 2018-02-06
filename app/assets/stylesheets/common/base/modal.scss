@@ -75,12 +75,13 @@
 
 .modal-outer-container {
   display:table;
+  table-layout: fixed;
   width:100%;
   height:100%;
 }
 
 .modal-inner-container {
-  max-width: 710px;
+  max-width: 960px;
   margin: 0 auto;
   background-color: $secondary;
   background-clip: padding-box;
