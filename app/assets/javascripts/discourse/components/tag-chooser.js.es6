@@ -109,12 +109,15 @@ export default Ember.TextField.extend({
         url: Discourse.getURL("/tags/filter/search"),
         dataType: 'json',
         data: function (term) {
+          const selectedTags = self.get('tags');
           const d = {
             q: term,
             limit: self.siteSettings.max_tag_search_results,
-            categoryId: self.get('categoryId'),
-            selected_tags: self.get('tags')
+            categoryId: self.get('categoryId')
           };
+          if (selectedTags) {
+            d.selected_tags = selectedTags.slice(0,100);
+          }
           if (!self.get('everyTag')) {
             d.filterForInput = true;
           }
