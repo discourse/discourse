@@ -13,7 +13,7 @@ after_initialize do
 
   Email::Styles.register_plugin_style do |fragment|
     # remove all elided content
-    fragment.css("details.elided").each { |d| d.remove }
+    fragment.css("details.elided").each(&:remove)
 
     # replace all details with their summary in emails
     fragment.css("details").each do |details|
@@ -26,6 +26,10 @@ after_initialize do
         end
       end
     end
+  end
+
+  on(:reduce_cooked) do |fragment|
+    fragment.css("details.elided").each(&:remove)
   end
 
 end
