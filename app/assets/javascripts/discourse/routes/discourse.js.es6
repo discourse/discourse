@@ -1,10 +1,18 @@
 import Composer from 'discourse/models/composer';
 
 const DiscourseRoute = Ember.Route.extend({
+  showFooter: false,
 
   // Set to true to refresh a model without a transition if a query param
   // changes
   resfreshQueryWithoutTransition: false,
+
+  activate() {
+    this._super();
+    if (this.get('showFooter')) {
+      this.controllerFor('application').set('showFooter', true);
+    }
+  },
 
   refresh() {
     if (!this.refreshQueryWithoutTransition) { return this._super(); }
