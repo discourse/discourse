@@ -394,6 +394,7 @@ en:
               cant_send_pm: "Sorry, you cannot send a personal message to that user."
               no_user_selected: "You must select a valid user."
               reply_by_email_disabled: "Reply by email has been disabled."
+              target_user_not_found: "One of the users you are sending this message to could not be found."
             featured_link:
               invalid: "is invalid. URL should include http:// or https://."
               invalid_category: "can't be edited in this category."
