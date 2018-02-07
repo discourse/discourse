@@ -46,11 +46,12 @@ describe TranslationOverride do
   end
 
   it "stores js for a message format key" do
-    TranslationOverride.upsert!('en', 'some.key_MF', '{NUM_RESULTS, plural, one {1 result} other {many} }')
+    TranslationOverride.upsert!('ru', 'some.key_MF', '{NUM_RESULTS, plural, one {1 result} other {many} }')
 
-    ovr = TranslationOverride.where(locale: 'en', translation_key: 'some.key_MF').first
+    ovr = TranslationOverride.where(locale: 'ru', translation_key: 'some.key_MF').first
     expect(ovr).to be_present
-    expect(ovr.compiled_js).to match(/function/)
+    expect(ovr.compiled_js).to start_with('function')
+    expect(ovr.compiled_js).to_not match(/Invalid Format/i)
   end
 
 end
