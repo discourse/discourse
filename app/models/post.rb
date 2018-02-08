@@ -222,7 +222,13 @@ class Post < ActiveRecord::Base
     @post_analyzers[raw_hash] ||= PostAnalyzer.new(raw, topic_id)
   end
 
-  %w{raw_mentions linked_hosts image_count attachment_count link_count raw_links}.each do |attr|
+  %w{raw_mentions
+    linked_hosts
+    image_count
+    attachment_count
+    link_count
+    raw_links
+    has_oneboxes?}.each do |attr|
     define_method(attr) do
       post_analyzer.send(attr)
     end

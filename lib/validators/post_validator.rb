@@ -93,7 +93,7 @@ class Validators::PostValidator < ActiveModel::Validator
   end
 
   def can_post_links_validator(post)
-    return if post.link_count == 0 ||
+    return if (post.link_count == 0 && !post.has_oneboxes?) ||
       Guardian.new(post.acting_user).can_post_link? ||
       private_message?(post)
 
