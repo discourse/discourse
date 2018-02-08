@@ -98,7 +98,7 @@ export default DropdownSelectBoxComponent.extend({
     }
 
     // if answered post is a whisper, we can only answer with a whisper so no need for toggle
-    if (canWhisper && (_postSnapshot && _postSnapshot.post_type !== this.site.post_types.whisper)) {
+    if (canWhisper && (!_postSnapshot || _postSnapshot && _postSnapshot.post_type !== this.site.post_types.whisper)) {
       items.push({
         name: I18n.t("composer.composer_actions.toggle_whisper.label"),
         description: I18n.t("composer.composer_actions.toggle_whisper.desc"),
