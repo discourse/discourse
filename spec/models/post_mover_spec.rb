@@ -23,7 +23,7 @@ describe PostMover do
     let(:another_user) { Fabricate(:evil_trout) }
     let(:category) { Fabricate(:category, user: user) }
     let!(:topic) { Fabricate(:topic, user: user) }
-    let!(:p1) { Fabricate(:post, topic: topic, user: user) }
+    let!(:p1) { Fabricate(:post, topic: topic, user: user, created_at: 3.hours.ago) }
 
     let!(:p2) do
       Fabricate(:post,
@@ -401,6 +401,7 @@ describe PostMover do
           # New first post
           new_first = new_topic.posts.where(post_number: 1).first
           expect(new_first.reply_count).to eq(1)
+          expect(new_first.created_at).to be_within(1.second).of(p1.created_at)
 
           # Second post is in a new topic
           p2.reload
