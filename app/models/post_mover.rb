@@ -96,6 +96,7 @@ class PostMover
       via_email: post.via_email,
       raw_email: post.raw_email,
       skip_validations: true,
+      created_at: post.created_at,
       guardian: Guardian.new(user)
     )
 
