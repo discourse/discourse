@@ -355,6 +355,7 @@ describe Post do
   describe "maximums" do
     let(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
     let(:post_one_link) { post_with_body("[sherlock](http://www.bbc.co.uk/programmes/b018ttws)", newuser) }
+    let(:post_onebox) { post_with_body("http://www.google.com", newuser) }
     let(:post_two_links) { post_with_body("<a href='http://discourse.org'>discourse</a> <a href='http://twitter.com'>twitter</a>", newuser) }
     let(:post_with_mentions) { post_with_body("hello @#{newuser.username} how are you doing?", newuser) }
 
@@ -396,10 +397,18 @@ describe Post do
         expect(post_two_links).to be_valid
       end
 
-      it "doesn't allow allow links if `min_trust_to_post_links` is not met" do
-        SiteSetting.min_trust_to_post_links = 2
-        post_two_links.user.trust_level = TrustLevel[1]
-        expect(post_one_link).not_to be_valid
+      context "min_trust_to_post_links" do
+        it "considers oneboxes links" do
+          SiteSetting.min_trust_to_post_links = 3
+          post_onebox.user.trust_level = TrustLevel[2]
+          expect(post_onebox).not_to be_valid
+        end
+
+        it "doesn't allow allow links if `min_trust_to_post_links` is not met" do
+          SiteSetting.min_trust_to_post_links = 2
+          post_two_links.user.trust_level = TrustLevel[1]
+          expect(post_one_link).not_to be_valid
+        end
       end
 
     end
