@@ -1292,6 +1292,9 @@ en:
       admin_options_title: "Optional staff settings for this topic"
 
       composer_actions:
+        reply_to_post:
+          label: Reply to post %{postNumber} by %{postUsername}
+          desc: Reply to a specific post
         reply_as_new_topic:
           label: Reply as linked topic
           desc: Create a new topic
