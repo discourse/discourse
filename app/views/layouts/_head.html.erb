@@ -1,11 +1,11 @@
 <meta name="author" content="">
 <meta name="generator" content="Discourse <%= Discourse::VERSION::STRING %> - https://github.com/discourse/discourse version <%= Discourse.git_version %>">
 
-<%# damingo (Github ID), 2017-01-30, #theme %>
+<%# damingo (Github ID), 2018-01-30, #theme %>
 <%- if request.host.present? && Theme.exists?(name: request.host) %>
-    <link rel="icon" type="image/png" href="/images/favicon.<%= request.host %>.png">
-    <link rel="apple-touch-icon" type="image/png" href="/images/apple-touch-icon.<%= request.host %>.png">
-    <link rel="icon" sizes="144x144" href="/images/apple-touch-icon.<%= request.host %>.png">
+    <link rel="icon" type="image/png" href="/images/favicon.<%= request.host %>.png?v=<%= request.host %>">
+    <link rel="apple-touch-icon" type="image/png" href="/images/apple-touch-icon.<%= request.host %>.png?v=<%= request.host %>">
+    <link rel="icon" sizes="144x144" href="/images/apple-touch-icon.<%= request.host %>.png?v=<%= request.host %>">
 <%- else %>
     <%- if SiteSetting.favicon_url.present? %>
         <link rel="icon" type="image/png" href="<%= SiteSetting.favicon_url %>">
