@@ -45,7 +45,8 @@ const isInside = (text, regex) => {
 
 class Toolbar {
 
-  constructor(site) {
+  constructor(opts) {
+    const { site, siteSettings } = opts;
     this.shortcuts = {};
 
     this.groups = [
@@ -74,7 +75,14 @@ class Toolbar {
       perform: e => e.applySurround('_', '_', 'italic_text')
     });
 
-    this.addButton({id: 'link', group: 'insertions', shortcut: 'K', action: 'showLinkModal'});
+    if (opts.showLink) {
+      this.addButton({
+        id: 'link',
+        group: 'insertions',
+        shortcut: 'K',
+        action: 'showLinkModal'
+      });
+    }
 
     this.addButton({
       id: 'quote',
@@ -108,7 +116,7 @@ class Toolbar {
       perform: e => e.applyList(i => !i ? "1. " : `${parseInt(i) + 1}. `, 'list_item')
     });
 
-    if (Discourse.SiteSettings.support_mixed_text_direction) {
+    if (siteSettings.support_mixed_text_direction) {
       this.addButton({
         id: 'toggle-direction',
         group: 'extras',
@@ -200,6 +208,7 @@ export default Ember.Component.extend({
   lastSel: null,
   _mouseTrap: null,
   emojiPickerIsActive: false,
+  showLink: true,
 
   @computed('placeholder')
   placeholderTranslated(placeholder) {
@@ -279,7 +288,9 @@ export default Ember.Component.extend({
 
   @computed
   toolbar() {
-    const toolbar = new Toolbar(this.site);
+    const toolbar = new Toolbar(
+      this.getProperties('site', 'siteSettings', 'showLink')
+    );
     _createCallbacks.forEach(cb => cb(toolbar));
     this.sendAction('extraButtons', toolbar);
     return toolbar;
