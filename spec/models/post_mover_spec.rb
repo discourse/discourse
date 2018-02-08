@@ -499,6 +499,17 @@ describe PostMover do
         end
       end
 
+      it "skips validations when moving posts" do
+        p1.update_attribute(:raw, "foo")
+        p2.update_attribute(:raw, "bar")
+
+        new_topic = topic.move_posts(user, [p1.id, p2.id], title: "new testing topic name")
+
+        expect(new_topic).to be_present
+        expect(new_topic.posts.by_post_number.first.raw).to eq(p1.raw)
+        expect(new_topic.posts.by_post_number.last.raw).to eq(p2.raw)
+        expect(new_topic.posts_count).to eq(2)
+      end
     end
   end
 end
