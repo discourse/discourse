@@ -128,7 +128,8 @@ class PostMover
       update[:reply_to_user_id] = nil
     end
 
-    post.update(update)
+    post.attributes = update
+    post.save(validate: false)
 
     move_incoming_emails(post, post)
     move_email_logs(post, post)
