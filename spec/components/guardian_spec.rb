@@ -26,6 +26,24 @@ describe Guardian do
     expect { Guardian.new(user) }.not_to raise_error
   end
 
+  describe "can_post_link?" do
+    it "returns false for anonymous users" do
+      expect(Guardian.new.can_post_link?).to eq(false)
+    end
+
+    it "returns true for a regular user" do
+      expect(Guardian.new(user).can_post_link?).to eq(true)
+    end
+
+    it "supports customization by site setting" do
+      user.trust_level = 0
+      SiteSetting.min_trust_to_post_links = 0
+      expect(Guardian.new(user).can_post_link?).to eq(true)
+      SiteSetting.min_trust_to_post_links = 1
+      expect(Guardian.new(user).can_post_link?).to eq(false)
+    end
+  end
+
   describe 'post_can_act?' do
     let(:post) { build(:post) }
     let(:user) { build(:user) }

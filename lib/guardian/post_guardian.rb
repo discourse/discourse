@@ -1,6 +1,11 @@
 #mixin for all guardian methods dealing with post permissions
 module PostGuardian
 
+  def can_post_link?
+    authenticated? &&
+      @user.has_trust_level?(TrustLevel[SiteSetting.min_trust_to_post_links])
+  end
+
   # Can the user act on the post in a particular way.
   #  taken_actions = the list of actions the user has already taken
   def post_can_act?(post, action_key, opts: {}, can_see_post: nil)

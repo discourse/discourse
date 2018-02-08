@@ -93,7 +93,9 @@ class Validators::PostValidator < ActiveModel::Validator
   end
 
   def can_post_links_validator(post)
-    return if post.link_count == 0 || acting_user_is_trusted?(post, SiteSetting.min_trust_to_post_links) || private_message?(post)
+    return if post.link_count == 0 ||
+      Guardian.new(post.acting_user).can_post_link? ||
+      private_message?(post)
 
     post.errors.add(:base, I18n.t(:links_require_trust))
   end
