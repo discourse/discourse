@@ -54,14 +54,20 @@ class Topic < ActiveRecord::Base
   end
 
   def trash!(trashed_by = nil)
-    update_category_topic_count_by(-1) if deleted_at.nil?
+    if deleted_at.nil?
+      update_category_topic_count_by(-1)
+      CategoryTagStat.topic_deleted(self) if self.tags.present?
+    end
     super(trashed_by)
     update_flagged_posts_count
     self.topic_embed.trash! if has_topic_embed?
   end
 
   def recover!
-    update_category_topic_count_by(1) unless deleted_at.nil?
+    unless deleted_at.nil?
+      update_category_topic_count_by(1)
+      CategoryTagStat.topic_recovered(self) if self.tags.present?
+    end
     super
     update_flagged_posts_count
     unless (topic_embed = TopicEmbed.with_deleted.find_by_topic_id(id)).nil?
@@ -122,8 +128,8 @@ class Topic < ActiveRecord::Base
   has_many :allowed_users, through: :topic_allowed_users, source: :user
   has_many :queued_posts
 
-  has_many :topic_tags, dependent: :destroy
-  has_many :tags, through: :topic_tags
+  has_many :topic_tags
+  has_many :tags, through: :topic_tags, dependent: :destroy # dependent destroy applies to the topic_tags records
   has_many :tag_users, through: :tags
 
   has_one :top_topic
@@ -224,6 +230,12 @@ class Topic < ActiveRecord::Base
 
     SearchIndexer.index(self)
     UserActionCreator.log_topic(self)
+  end
+
+  after_update do
+    if saved_changes[:category_id] && self.tags.present?
+      CategoryTagStat.topic_moved(self, *saved_changes[:category_id])
+    end
   end
 
   def initialize_default_values
