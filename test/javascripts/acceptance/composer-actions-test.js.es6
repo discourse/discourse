@@ -20,6 +20,7 @@ QUnit.test('replying to post', assert => {
     assert.equal(composerActions.rowByIndex(1).value(), 'reply_as_private_message');
     assert.equal(composerActions.rowByIndex(2).value(), 'reply_to_topic');
     assert.equal(composerActions.rowByIndex(3).value(), 'toggle_whisper');
+    assert.equal(composerActions.rowByIndex(4).value(), undefined);
   });
 });
 
@@ -42,12 +43,13 @@ QUnit.test('replying to post - reply_to_topic', assert => {
 
   visit('/t/internationalization-localization/280');
   click('article#post_3 button.reply');
-  fillIn('.d-editor-input', 'test replying to topic when intially replied to post');
+  fillIn('.d-editor-input', 'test replying to topic when initially replied to post');
   composerActions.expand().selectRowByValue('reply_to_topic');
 
   andThen(() => {
-    assert.equal(find('.topic-post:last .cooked p').html().trim(), 'test replying to topic when intially replied to post');
-    assert.notOk(exists(find('.topic-post:last .reply-to-tab')));
+    assert.equal(find('.action-title .topic-link').text().trim(), 'Internationalization / localization');
+    assert.equal(find('.action-title .topic-link').attr("href"), '/t/internationalization-localization/280');
+    assert.equal(find('.d-editor-input').val(), 'test replying to topic when initially replied to post');
   });
 });
 
@@ -56,7 +58,7 @@ QUnit.test('replying to post - toggle_whisper', assert => {
 
   visit('/t/internationalization-localization/280');
   click('article#post_3 button.reply');
-  fillIn('.d-editor-input', 'test replying as whisper to topic when intially not a whisper');
+  fillIn('.d-editor-input', 'test replying as whisper to topic when initially not a whisper');
   composerActions.expand().selectRowByValue('toggle_whisper');
 
   andThen(() => {
@@ -78,10 +80,73 @@ QUnit.test('replying to post - reply_as_new_topic', assert => {
   click('#topic-title .submit-edit');
 
   click('article#post_3 button.reply');
+  fillIn('.d-editor-input', 'test replying as new topic when initially replied to post');
   composerActions.expand().selectRowByValue('reply_as_new_topic');
 
   andThen(() => {
     assert.equal(categoryChooserReplyArea.header().name(), 'faq');
-    assert.ok(find('.d-editor-input').val().indexOf('Continuing the discussion') >= 0);
+    assert.equal(find('.action-title').text().trim(), I18n.t("topic.create_long"));
+    assert.equal(find('.d-editor-input').val(), 'test replying as new topic when initially replied to post');
+  });
+});
+
+
+QUnit.test('interactions', assert => {
+  const composerActions = selectKit('.composer-actions');
+  const quote = 'Life is like riding a bicycle.';
+
+  visit('/t/internationalization-localization/280');
+  click('article#post_3 button.reply');
+  fillIn('.d-editor-input', quote);
+  composerActions.expand().selectRowByValue('reply_to_topic');
+
+  andThen(() => {
+    assert.equal(find('.action-title').text().trim(), "Internationalization / localization");
+    assert.equal(find('.d-editor-input').val(), quote);
+  });
+
+  composerActions.expand();
+
+  andThen(() => {
+    assert.equal(composerActions.rowByIndex(0).value(), 'reply_as_new_topic');
+    assert.equal(composerActions.rowByIndex(1).value(), 'reply_to_post');
+    assert.equal(composerActions.rowByIndex(2).value(), 'reply_as_private_message');
+    assert.equal(composerActions.rowByIndex(3).value(), 'toggle_whisper');
+    assert.equal(composerActions.rowByIndex(4).value(), undefined);
+  });
+
+  composerActions.selectRowByValue('reply_to_post').expand();
+
+  andThen(() => {
+    assert.ok(exists(find('.action-title img.avatar')));
+    assert.equal(find('.action-title .user-link').text().trim(), "codinghorror");
+    assert.equal(find('.d-editor-input').val(), quote);
+    assert.equal(composerActions.rowByIndex(0).value(), 'reply_as_new_topic');
+    assert.equal(composerActions.rowByIndex(1).value(), 'reply_as_private_message');
+    assert.equal(composerActions.rowByIndex(2).value(), 'reply_to_topic');
+    assert.equal(composerActions.rowByIndex(3).value(), 'toggle_whisper');
+    assert.equal(composerActions.rowByIndex(4).value(), undefined);
+  });
+
+  composerActions.selectRowByValue('reply_as_new_topic').expand();
+
+  andThen(() => {
+    assert.equal(find('.action-title').text().trim(), I18n.t("topic.create_long"));
+    assert.equal(find('.d-editor-input').val(), quote);
+    assert.equal(composerActions.rowByIndex(0).value(), 'reply_to_post');
+    assert.equal(composerActions.rowByIndex(1).value(), 'reply_as_private_message');
+    assert.equal(composerActions.rowByIndex(2).value(), 'reply_to_topic');
+    assert.equal(composerActions.rowByIndex(3).value(), undefined);
+  });
+
+  composerActions.selectRowByValue('reply_as_private_message').expand();
+
+  andThen(() => {
+    assert.equal(find('.action-title').text().trim(), I18n.t("topic.private_message"));
+    assert.ok(find('.d-editor-input').val().indexOf("Continuing the discussion") === 0);
+    assert.equal(composerActions.rowByIndex(0).value(), 'reply_as_new_topic');
+    assert.equal(composerActions.rowByIndex(1).value(), 'reply_to_post');
+    assert.equal(composerActions.rowByIndex(2).value(), 'reply_to_topic');
+    assert.equal(composerActions.rowByIndex(3).value(), undefined);
   });
 });
