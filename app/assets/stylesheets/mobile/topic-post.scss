@@ -3,6 +3,12 @@
   border-top: none;
 }
 
+.time-gap {
+  .topic-avatar {
+    display: none;
+  }
+}
+
 .topic-post article {
   border-top: 1px solid $primary-low;
   padding: 15px 0 8px 0;
@@ -429,6 +435,10 @@ blockquote {
   /* leave browser defaults for top and bottom here */
   margin-left: 0;
   margin-right: 0;
+}
+
+.gap {
+  padding: 0.25em 0;  
 }
 
 .gutter { display: none; }
