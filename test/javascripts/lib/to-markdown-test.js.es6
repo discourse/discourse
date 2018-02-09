@@ -239,3 +239,50 @@ QUnit.test("converts ol list tag", assert => {
   const markdown = `Testing\n\n1. Item 1\n2. Item 2\n  100. Sub Item 1\n  101. Sub Item 2\n3. Item 3`;
   assert.equal(toMarkdown(html), markdown);
 });
+
+QUnit.test("converts list tag from word", assert => {
+  const html = `Sample<!--StartFragment-->
+  <p class=MsoListParagraphCxSpFirst style='text-indent:-.25in;mso-list:l0 level1 lfo1'>
+    <![if !supportLists]>
+    <span style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:  Symbol;mso-bidi-font-weight:bold'>
+      <span style='mso-list:Ignore'>·
+        <span style='font:7.0pt "Times New Roman"'> </span>
+      </span>
+    </span>
+    <![endif]>
+    <b>Item 1
+      <o:p></o:p>
+    </b>
+  </p>
+  <p class=MsoListParagraphCxSpMiddle style='text-indent:-.25in;mso-list:l0 level2 lfo1'>
+    <![if !supportLists]>
+    <span style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:  Symbol;mso-bidi-font-style:italic'>
+      <span style='mso-list:Ignore'>·
+        <span style='font:7.0pt "Times New Roman"'> </span>
+      </span>
+    </span>
+    <![endif]>
+    <i>Item 2
+      <o:p></o:p>
+    </i>
+  </p>
+  <p class=MsoListParagraphCxSpMiddle style='text-indent:-.25in;mso-list:l0 level3 lfo1'>
+    <![if !supportLists]>
+    <span style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:  Symbol'>
+      <span style='mso-list:Ignore'>·
+        <span style='font:7.0pt "Times New Roman"'> </span>
+      </span>
+    </span>
+    <![endif]>Item 3 </p>
+  <p class=MsoListParagraphCxSpLast style='text-indent:-.25in;mso-list:l0 level1 lfo1'>
+    <![if !supportLists]>
+    <span style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:  Symbol'>
+      <span style='mso-list:Ignore'>·
+        <span style='font:7.0pt "Times New Roman"'> </span>
+      </span>
+    </span>
+    <![endif]>Item 4</p>
+  <!--EndFragment-->List`;
+  const markdown = `Sample\n\n* **Item 1**\n  * *Item 2*\n    * Item 3\n* Item 4\n\nList`;
+  assert.equal(toMarkdown(html), markdown);
+});
