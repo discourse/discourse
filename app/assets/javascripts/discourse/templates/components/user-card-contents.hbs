@@ -103,7 +103,7 @@
     {{#if hasLocationOrWebsite}}
       <div class="location-and-website">
         {{#if user.location}}
-          <span class='location'>{{d-icon "map-marker"}} {{user.location}}</span>
+          <span class='location'>{{d-icon "map-marker"}} <span>{{user.location}}</span></span>
         {{/if}}
 
         {{#if user.website_name}}

@@ -73,7 +73,7 @@
               <h3>{{model.title}}</h3>
             {{/if}}
             {{plugin-outlet name="user-post-names" args=(hash model=model)}}
-            <h3>
+            <h3 class="location-and-website">
             {{#if model.location}}{{d-icon "map-marker"}} {{model.location}}{{/if}}
             {{#if model.website_name}}
               {{d-icon "globe"}}
