@@ -1,5 +1,5 @@
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import computed from "ember-addons/ember-computed-decorators";
 import { default as Composer, PRIVATE_MESSAGE, CREATE_TOPIC, REPLY, EDIT } from "discourse/models/composer";
 
 // Component can get destroyed and lose state
@@ -79,7 +79,7 @@ export default DropdownSelectBoxComponent.extend({
       });
     }
 
-    if (action !== PRIVATE_MESSAGE) {
+    if (this.siteSettings.enable_personal_messages && action !== PRIVATE_MESSAGE) {
       items.push({
         name: I18n.t("composer.composer_actions.reply_as_private_message.label"),
         description: I18n.t("composer.composer_actions.reply_as_private_message.desc"),
@@ -107,6 +107,17 @@ export default DropdownSelectBoxComponent.extend({
       });
     }
 
+    // Edge case: If personal messages are disabled, it is possible to have
+    // no items which stil renders a button that pops up nothing. In this
+    // case, add an option for what you're currently doing.
+    if (action === CREATE_TOPIC && items.length === 0) {
+      items.push({
+        name: I18n.t("composer.composer_actions.create_topic.label"),
+        description: I18n.t("composer.composer_actions.reply_as_new_topic.desc"),
+        icon: "mail-forward",
+        id: "create_topic"
+      });
+    }
     return items;
   },
 

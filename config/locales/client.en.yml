@@ -1307,6 +1307,8 @@ en:
         toggle_whisper:
           label: Toggle whipser
           desc: Whispers will only be visible by staff members
+        create_topic:
+          label: "New Topic"
 
     notifications:
       tooltip:
