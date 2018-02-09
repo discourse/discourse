@@ -171,7 +171,7 @@ $user_card_background: $secondary;
     padding-top: 5px;
     .location, .website-name {
       display: flex;
-      flex: 1 1 50%;
+      flex: 0 1 50%;
       max-width: 50%;
       overflow: hidden;
       align-items: baseline;
@@ -182,6 +182,7 @@ $user_card_background: $secondary;
     .website-name a, .location span {
         overflow: hidden;
         text-overflow: ellipsis;
+        white-space: nowrap;
         color: $user_card_primary;        
     }
     .location {
