@@ -201,6 +201,9 @@ a.badge-category {
     margin-top: 1em;
     padding-top: 1em;
     border-top: 1px solid $primary-low; 
+    li:last-of-type {
+      margin-bottom: 1em;
+    }
   }
 
   .expand-links {
@@ -208,9 +211,13 @@ a.badge-category {
   }
 
   .track-link {
-    padding-left: 0;
-    display: inline-block;
-    overflow: hidden;
+    display: flex;
+    align-items: center;
+    span:not(.badge) {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
   }
 
   ul {
@@ -226,9 +233,8 @@ a.badge-category {
         margin-left: 0.5em;
       }
       i {
-        float: left;
         font-size: $font-down-2;
-        margin: 0.3em 0.5em 0 0;
+        margin: 0 0.5em 0 0;
       }
     }
   }
