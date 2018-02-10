@@ -159,6 +159,10 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Discourse::InvalidAccess do |e|
+
+    if e.opts[:delete_cookie].present?
+      cookies.delete(e.opts[:delete_cookie])
+    end
     rescue_discourse_actions(
       :invalid_access,
       403,
