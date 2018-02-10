@@ -362,6 +362,22 @@ describe PostAction do
       expect(post.spam_count).to eq(0)
     end
 
+    it "will not auto hide staff posts" do
+      mod = Fabricate(:moderator)
+      post = Fabricate(:post, user: mod)
+
+      SiteSetting.flags_required_to_hide_post = 2
+      Discourse.stubs(:site_contact_user).returns(admin)
+
+      PostAction.act(eviltrout, post, PostActionType.types[:spam])
+      PostAction.act(Fabricate(:walter_white), post, PostActionType.types[:spam])
+
+      post.reload
+
+      expect(post.hidden).to eq(false)
+      expect(post.hidden_at).to be_blank
+    end
+
     it 'should follow the rules for automatic hiding workflow' do
       post = create_post
       walterwhite = Fabricate(:walter_white)
