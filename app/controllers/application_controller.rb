@@ -36,6 +36,11 @@ class ApplicationController < ActionController::Base
     end
   end
 
+
+  # damingo (Github ID), 2018-02-09, #theme
+  before_filter { SiteSetting.host = request.host }
+
+
   before_filter :handle_theme
   before_filter :set_current_user_for_logs
   before_filter :clear_notifications

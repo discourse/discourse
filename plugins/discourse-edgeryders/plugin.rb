@@ -97,4 +97,43 @@ after_initialize do
   end
 
 
+  class ::SiteSetting
+
+    class << self
+      attr_accessor :host
+    end
+
+
+    def self.logo_url
+      path = "/images/logo.#{SiteSetting.host}.png"
+      File.exists?(Rails.root.join("public#{path}")) ? path : '/images/logo-small.png'
+    end
+
+    def self.logo_small_url
+      path = "/images/logo-small.#{SiteSetting.host}.png"
+      File.exists?(Rails.root.join("public#{path}")) ? path : '/images/logo-small.png'
+    end
+
+    def self.digest_logo_url
+      logo_url
+    end
+
+    def self.mobile_logo_url
+      logo_small_url
+    end
+
+    def self.favicon_url
+      path = "/images/favicon.#{SiteSetting.host}.png"
+      File.exists?(Rails.root.join("public#{path}")) ? path : '/images/favicon.png'
+    end
+
+    def self.apple_touch_icon_url
+      path = "/images/apple-touch-icon.#{SiteSetting.host}.png"
+      File.exists?(Rails.root.join("public#{path}")) ? path : '/images/apple-touch-icon.png'
+    end
+
+
+  end
+
+
 end
