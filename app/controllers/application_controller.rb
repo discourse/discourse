@@ -36,6 +36,11 @@ class ApplicationController < ActionController::Base
     end
   end
 
+
+  # damingo (Github ID), 2018-02-09, #theme
+  before_filter { SiteSetting.host = request.host }
+
+
   before_filter :handle_theme
   before_filter :set_current_user_for_logs
   before_filter :clear_notifications
@@ -268,11 +273,11 @@ class ApplicationController < ActionController::Base
     resolve_safe_mode
     return if request.env[NO_CUSTOM]
 
-    # # damingo (Github ID), 2018-01-29, #theme
-    # if request.host.present? && (theme = Theme.find_by(name: request.host))
-    #   @theme_key = request.env[:resolved_theme_key] = theme.key
-    #   return
-    # end
+    # damingo (Github ID), 2018-01-29, #theme
+    if request.host.present? && (theme = Theme.find_by(name: request.host))
+      @theme_key = request.env[:resolved_theme_key] = theme.key
+      return
+    end
 
     theme_key = flash[:preview_theme_key]
 
