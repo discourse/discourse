@@ -68,8 +68,7 @@ module ApplicationHelper
   end
 
   def html_classes
-    # damingo (Github ID), 2018-02-09, #theme, SiteSetting.host added.
-    "#{SiteSetting.host.gsub!('.', '-')} #{mobile_view? ? 'mobile-view' : 'desktop-view'} #{mobile_device? ? 'mobile-device' : 'not-mobile-device'} #{rtl_class} #{current_user ? '' : 'anon'}"
+    "#{mobile_view? ? 'mobile-view' : 'desktop-view'} #{mobile_device? ? 'mobile-device' : 'not-mobile-device'} #{rtl_class} #{current_user ? '' : 'anon'}"
   end
 
   def body_classes

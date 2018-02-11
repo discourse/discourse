@@ -100,18 +100,18 @@ after_initialize do
   class ::SiteSetting
 
     class << self
-      attr_accessor :host
+      attr_accessor :current_hostname
     end
 
 
     def self.logo_url
-      path = "/images/logo.#{SiteSetting.host}.png"
+      path = "/images/logo.#{SiteSetting.current_hostname}.png"
       File.exists?(Rails.root.join("public#{path}")) ? path : '/images/logo-small.png'
     end
 
     def self.logo_small_url
-      path = "/images/logo-small.#{SiteSetting.host}.png"
-      File.exists?(Rails.root.join("public#{path}")) ? path : '/images/logo-small.png'
+      path = "/images/logo-small.#{SiteSetting.current_hostname}.png"
+      File.exists?(Rails.root.join("public#{path}")) ? path :  '/images/logo-small.png'
     end
 
     def self.digest_logo_url
@@ -123,15 +123,14 @@ after_initialize do
     end
 
     def self.favicon_url
-      path = "/images/favicon.#{SiteSetting.host}.png"
+      path = "/images/favicon.#{SiteSetting.current_hostname}.png"
       File.exists?(Rails.root.join("public#{path}")) ? path : '/images/favicon.png'
     end
 
     def self.apple_touch_icon_url
-      path = "/images/apple-touch-icon.#{SiteSetting.host}.png"
+      path = "/images/apple-touch-icon.#{SiteSetting.current_hostname}.png"
       File.exists?(Rails.root.join("public#{path}")) ? path : '/images/apple-touch-icon.png'
     end
-
 
   end
 

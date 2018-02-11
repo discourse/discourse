@@ -38,7 +38,7 @@ class ApplicationController < ActionController::Base
 
 
   # damingo (Github ID), 2018-02-09, #theme
-  before_filter { SiteSetting.host = request.host }
+  before_filter { SiteSetting.current_hostname = request.host }
 
 
   before_filter :handle_theme
