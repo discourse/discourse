@@ -171,8 +171,7 @@ $user_card_background: $secondary;
     padding-top: 5px;
     .location, .website-name {
       display: flex;
-      flex: 0 1 50%;
-      max-width: 50%;
+      max-width: 90%;
       overflow: hidden;
       align-items: baseline;
       i {
