@@ -143,41 +143,16 @@ a.reply-to-tab {
 }
 
 .topic-map {
-
   margin: 10px 0;
-  background: blend-primary-secondary(5%);
-  border: 1px solid $primary-low;
-  border-top: none; // would cause double top border
-
-  section {
-    border-top: 1px solid $primary-low;
-  }
-
-  h3 {
-    margin-bottom: 4px;
-    margin-top: 0;
-    color: dark-light-choose($primary-medium, $secondary-medium);
-    line-height: $line-height-large;
-    font-weight: normal;
-    font-size: $font-0;
-  }
 
   h4 {
     margin: 0 0 3px 0;
-    color: dark-light-choose($primary-medium, $secondary-medium);
-    font-weight: normal;
-    font-size: $font-down-1;
     line-height: $line-height-medium;
   }
 
   .user {
     float: left;
     margin-right: 10px;
-  }
-
-  ul {
-    margin: 0;
-    list-style: none;
   }
 
   .map-collapsed {
@@ -195,7 +170,7 @@ a.reply-to-tab {
       }
     }
     a, .number {
-      line-height: $line-height-large;
+      line-height: $line-height-medium;
     }
     .number, i {
       color: dark-light-choose($primary-high, $secondary-low);
@@ -226,19 +201,10 @@ a.reply-to-tab {
     .user {float: left; margin: 0 10px 10px 0;}
   }
 
-  .domain {
-    color: dark-light-choose($primary-low-mid, $secondary-high);
-  }
-
   .topic-links {
     .badge-notification {
       margin: 1px 5px 2px 0;
     }
-  }
-
-  td {
-    vertical-align: top;
-    padding:1px;
   }
 
   .buttons {
