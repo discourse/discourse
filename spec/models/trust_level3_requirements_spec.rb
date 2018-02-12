@@ -357,7 +357,12 @@ describe TrustLevel3Requirements do
     end
 
     it "are not met if suspended" do
-      user.stubs(:suspended?).returns(true)
+      user.suspended_till = 3.weeks.from_now
+      expect(tl3_requirements.requirements_met?).to eq(false)
+    end
+
+    it "are not met if silenced" do
+      user.silenced_till = 3.weeks.from_now
       expect(tl3_requirements.requirements_met?).to eq(false)
     end
 
@@ -372,7 +377,12 @@ describe TrustLevel3Requirements do
     end
 
     it "are lost if suspended" do
-      user.stubs(:suspended?).returns(true)
+      user.suspended_till = 4.weeks.from_now
+      expect(tl3_requirements.requirements_lost?).to eq(true)
+    end
+
+    it "are lost if silenced" do
+      user.silenced_till = 4.weeks.from_now
       expect(tl3_requirements.requirements_lost?).to eq(true)
     end
   end
