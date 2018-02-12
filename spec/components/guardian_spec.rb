@@ -66,9 +66,21 @@ describe Guardian do
       expect(Guardian.new(user).post_can_act?(post, :like)).to be_falsey
     end
 
-    it "always allows flagging" do
+    it "allows flagging archived posts" do
       post.topic.archived = true
       expect(Guardian.new(user).post_can_act?(post, :spam)).to be_truthy
+    end
+
+    it "allows flagging of staff posts when allow_staff_flags is true" do
+      SiteSetting.allow_staff_flags = true
+      staff_post = Fabricate(:post, user: Fabricate(:moderator))
+      expect(Guardian.new(user).post_can_act?(staff_post, :spam)).to be_truthy
+    end
+
+    it "doesn't allow flagging of staff posts when allow_staff_flags is false" do
+      SiteSetting.allow_staff_flags = false
+      staff_post = Fabricate(:post, user: Fabricate(:moderator))
+      expect(Guardian.new(user).post_can_act?(staff_post, :spam)).to eq(false)
     end
 
     it "returns false when liking yourself" do

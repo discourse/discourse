@@ -1282,6 +1282,7 @@ en:
     tl3_links_no_follow: "Do not remove rel=nofollow from links posted by trust level 3 users."
 
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
+    allow_staff_flags: "If enabled, users can flag posts from staff accounts."
 
     min_trust_to_edit_wiki_post: "The minimum trust level required to edit post marked as wiki."
 
