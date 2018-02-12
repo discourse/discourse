@@ -59,13 +59,19 @@ class Tag < ActiveRecord::Base
       scope_category_ids &= ([category.id] + category.subcategories.pluck(:id))
     end
 
-    tags = DiscourseTagging.filter_allowed_tags(
-      tags_by_count_query(limit: limit).where("topics.category_id in (?)", scope_category_ids),
-      nil, # Don't pass guardian. You might not be able to use some tags, but should still be able to see where they've been used.
-      category: category
-    )
+    return [] if scope_category_ids.empty?
 
-    tags.count(COUNT_ARG).map { |name, _| name }
+    tag_names_with_counts = Tag.exec_sql <<~SQL
+      SELECT tags.name as tag_name, SUM(stats.topic_count) AS sum_topic_count
+        FROM category_tag_stats stats
+  INNER JOIN tags ON stats.tag_id = tags.id AND stats.topic_count > 0
+       WHERE stats.category_id in (#{scope_category_ids.join(',')})
+    GROUP BY tags.name
+    ORDER BY sum_topic_count DESC, tag_name ASC
+       LIMIT #{limit}
+    SQL
+
+    tag_names_with_counts.map { |row| row['tag_name'] }
   end
 
   def self.include_tags?

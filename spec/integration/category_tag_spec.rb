@@ -183,3 +183,92 @@ describe "category tag restrictions" do
     end
   end
 end
+
+describe "tag topic counts per category" do
+  let(:user)  { Fabricate(:user) }
+  let(:admin) { Fabricate(:admin) }
+  let(:category) { Fabricate(:category) }
+  let(:category2) { Fabricate(:category) }
+  let(:tag1) { Fabricate(:tag) }
+  let(:tag2) { Fabricate(:tag) }
+  let(:tag3) { Fabricate(:tag) }
+
+  before do
+    SiteSetting.tagging_enabled = true
+    SiteSetting.min_trust_to_create_tag = 0
+    SiteSetting.min_trust_level_to_tag_topics = 0
+  end
+
+  it "counts when a topic is created with tags" do
+    expect {
+      Fabricate(:topic, category: category, tags: [tag1, tag2])
+    }.to change { CategoryTagStat.count }.by(2)
+    expect(CategoryTagStat.where(category: category, tag: tag1).sum(:topic_count)).to eq(1)
+    expect(CategoryTagStat.where(category: category, tag: tag2).sum(:topic_count)).to eq(1)
+  end
+
+  it "counts when tag is added to an existing topic" do
+    topic = Fabricate(:topic, category: category)
+    post = Fabricate(:post, user: topic.user, topic: topic)
+    expect(CategoryTagStat.where(category: category).count).to eq(0)
+    expect {
+      PostRevisor.new(post).revise!(topic.user, raw: post.raw, tags: [tag1.name, tag2.name])
+    }.to change { CategoryTagStat.count }.by(2)
+    expect(CategoryTagStat.where(category: category, tag: tag1).sum(:topic_count)).to eq(1)
+    expect(CategoryTagStat.where(category: category, tag: tag2).sum(:topic_count)).to eq(1)
+  end
+
+  context "topic with 2 tags" do
+    let(:topic) { Fabricate(:topic, category: category, tags: [tag1, tag2]) }
+    let(:post)  { Fabricate(:post, user: topic.user, topic: topic) }
+
+    it "has correct counts after tag is removed from a topic" do
+      post
+      topic2 = Fabricate(:topic, category: category, tags: [tag2])
+      expect(CategoryTagStat.where(category: category, tag: tag2).sum(:topic_count)).to eq(2)
+      PostRevisor.new(post).revise!(topic.user, raw: post.raw, tags: [])
+      expect(CategoryTagStat.where(category: category, tag: tag2).sum(:topic_count)).to eq(1)
+      expect(CategoryTagStat.where(category: category, tag: tag1).sum(:topic_count)).to eq(0)
+    end
+
+    it "has correct counts after a topic's category changes" do
+      PostRevisor.new(post).revise!(topic.user, category_id: category2.id, raw: post.raw, tags: [tag1.name, tag2.name])
+      expect(CategoryTagStat.where(category: category, tag: tag1).sum(:topic_count)).to eq(0)
+      expect(CategoryTagStat.where(category: category, tag: tag2).sum(:topic_count)).to eq(0)
+      expect(CategoryTagStat.where(category: category2, tag: tag1).sum(:topic_count)).to eq(1)
+      expect(CategoryTagStat.where(category: category2, tag: tag2).sum(:topic_count)).to eq(1)
+    end
+
+    it "has correct counts after topic's category AND tags changed" do
+      PostRevisor.new(post).revise!(topic.user, raw: post.raw, tags: [tag2.name, tag3.name], category_id: category2.id)
+      expect(CategoryTagStat.where(category: category, tag: tag1).sum(:topic_count)).to eq(0)
+      expect(CategoryTagStat.where(category: category, tag: tag2).sum(:topic_count)).to eq(0)
+      expect(CategoryTagStat.where(category: category, tag: tag3).sum(:topic_count)).to eq(0)
+      expect(CategoryTagStat.where(category: category2, tag: tag1).sum(:topic_count)).to eq(0)
+      expect(CategoryTagStat.where(category: category2, tag: tag2).sum(:topic_count)).to eq(1)
+      expect(CategoryTagStat.where(category: category2, tag: tag3).sum(:topic_count)).to eq(1)
+    end
+  end
+
+  context "topic with one tag" do
+    let(:topic) { Fabricate(:topic, tags: [tag1], category: category) }
+    let(:post) { Fabricate(:post, user: topic.user, topic: topic) }
+
+    it "counts after topic becomes uncategorized" do
+      PostRevisor.new(post).revise!(topic.user, raw: post.raw, tags: [tag1.name], category_id: SiteSetting.uncategorized_category_id)
+      expect(CategoryTagStat.where(category: Category.find(SiteSetting.uncategorized_category_id), tag: tag1).sum(:topic_count)).to eq(1)
+      expect(CategoryTagStat.where(category: category, tag: tag1).sum(:topic_count)).to eq(0)
+    end
+
+    it "updates counts after topic is deleted" do
+      PostDestroyer.new(admin, post).destroy
+      expect(CategoryTagStat.where(category: category, tag: tag1).sum(:topic_count)).to eq(0)
+    end
+
+    it "updates counts after topic is recovered" do
+      PostDestroyer.new(admin, post).destroy
+      PostDestroyer.new(admin, post).recover
+      expect(CategoryTagStat.where(category: category, tag: tag1).sum(:topic_count)).to eq(1)
+    end
+  end
+end
