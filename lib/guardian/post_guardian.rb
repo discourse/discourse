@@ -22,7 +22,7 @@ module PostGuardian
     result = if authenticated? && post && !@user.anonymous?
 
       # post made by staff, but we don't allow staff flags
-      return false if !SiteSetting.allow_staff_flags? && post.user.staff?
+      return false if !SiteSetting.allow_flagging_staff? && post.user.staff?
 
       return false if [:notify_user, :notify_moderators].include?(action_key) &&
         !SiteSetting.enable_personal_messages?
