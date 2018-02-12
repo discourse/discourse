@@ -13,7 +13,7 @@ module GroupGuardian
   end
 
   def can_see_group_messages?(group)
-    SiteSetting.enable_private_messages? && (
+    SiteSetting.enable_personal_messages? && (
       is_admin? || group.users.include?(user)
     )
   end
