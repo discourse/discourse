@@ -230,7 +230,11 @@ export default createWidget('header', {
       if (state.searchVisible) {
         const contextType = this.searchContextType();
 
-        if (state.searchContextType !== contextType) {
+        if (!contextType) {
+          state.contextEnabled = undefined;
+        }
+
+        if (state.searchContextType && state.searchContextType !== contextType) {
           state.contextEnabled = undefined;
           state.searchContextType = contextType;
         }
