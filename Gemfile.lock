@@ -275,7 +275,7 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.0.3)
       loofah (~> 2.0)
-    rails_multisite (2.0.2)
+    rails_multisite (2.0.3)
       activerecord (> 4.2, < 6)
       railties (> 4.2, < 6)
     railties (5.1.4)
@@ -478,7 +478,7 @@ DEPENDENCIES
   r2 (~> 0.2.5)
   rack-mini-profiler
   rack-protection
-  rails_multisite
+  rails_multisite (= 2.0.3)
   railties (~> 5.1)
   rake
   rb-fsevent
