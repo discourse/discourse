@@ -199,7 +199,7 @@ module ImportScripts::Mbox
 
       # TODO: make the list name (or maybe multiple names) configurable
       # Strip mailing list name from subject
-      subject = subject.gsub(/\[#{Regexp.escape(list_name)}\]/, '').strip
+      subject = subject.gsub(/\[#{Regexp.escape(list_name)}\]/i, '').strip
 
       clean_subject(subject)
     end
