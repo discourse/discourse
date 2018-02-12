@@ -230,11 +230,7 @@ export default createWidget('header', {
       if (state.searchVisible) {
         const contextType = this.searchContextType();
 
-        if (!contextType) {
-          state.contextEnabled = undefined;
-        }
-
-        if (state.searchContextType && state.searchContextType !== contextType) {
+        if (state.searchContextType !== contextType) {
           state.contextEnabled = undefined;
           state.searchContextType = contextType;
         }
@@ -407,6 +403,10 @@ export default createWidget('header', {
         this.toggleHamburger();
         break;
       case 'page-search':
+        let contextType = this.searchContextType();
+        if (contextType === 'topic') {
+          this.state.searchContextType = contextType;
+        }
         if (!this.togglePageSearch()) {
           msg.event.preventDefault();
           msg.event.stopPropagation();
