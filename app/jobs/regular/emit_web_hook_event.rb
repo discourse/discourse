@@ -33,7 +33,7 @@ module Jobs
     end
 
     def setup_post(args)
-      post = Post.find_by(id: args[:post_id])
+      post = Post.with_deleted.find_by(id: args[:post_id])
       return if post.blank?
       args[:payload] = WebHookPostSerializer.new(post, scope: guardian, root: false).as_json
     end
