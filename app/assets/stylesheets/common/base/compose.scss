@@ -96,7 +96,7 @@
       color: $primary-high;
     }
     .reply-details {
-      max-width: calc(100% - 175px);
+      max-width: calc(100% - 60px);
       flex: 1 1 auto;
       white-space: nowrap;
     }
@@ -110,10 +110,13 @@
         width: 20px;
       }
 
-      .topic-link, .user-link, .post-link {
+      .action-title {
+        white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        white-space: nowrap;
+      }
+
+      .topic-link, .user-link, .post-link {
         margin-right: 5px;
       }
 
