@@ -199,7 +199,10 @@ aside.quote {
 }
 
 .topic-map {
-
+  background: blend-primary-secondary(5%);
+  border: 1px solid $primary-low;
+  border-top: none; // would cause double top border
+  
   .avatars {
     > div {
       float: left;
@@ -221,6 +224,41 @@ aside.quote {
   .avatar {
     float: left;
     margin-right: 4px;
+  }
+
+  section {
+    border-top: 1px solid $primary-low;
+  }
+
+  ul {
+    margin: 0;
+    list-style: none;
+  }
+
+  h3 {
+    margin-bottom: 4px;
+    color: dark-light-choose($primary-high, $secondary-low);
+    line-height: $line-height-large;
+    font-weight: normal;
+    font-size: $font-0;
+  }
+
+  h4 {
+    margin: 1px 0 2px 0;
+    color: dark-light-choose($primary-medium, $secondary-medium);
+    font-weight: normal;
+    font-size: $font-down-1;
+    line-height: $line-height-small;
+  }
+
+  span.domain {
+    font-size: $font-down-2;
+    color: dark-light-choose($primary-medium, $secondary-medium);
+  }
+
+  td {
+    vertical-align: top;
+    padding:1px;
   }
 
 }

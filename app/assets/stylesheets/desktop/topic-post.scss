@@ -307,39 +307,6 @@ nav.post-controls {
 
 .topic-map {
   margin: 20px 0;
-  background: blend-primary-secondary(5%);
-  border: 1px solid $primary-low;
-  border-top: none; // would cause double top border
-
-  section {
-    border-top: 1px solid $primary-low;
-  }
-
-  h3 {
-    margin-bottom: 4px;
-    color: dark-light-choose($primary-high, $secondary-low);
-    line-height: $line-height-large;
-    font-weight: normal;
-    font-size: $font-0;
-  }
-
-  h4 {
-    margin: 1px 0 2px 0;
-    color: dark-light-choose($primary-medium, $secondary-medium);
-    font-weight: normal;
-    font-size: $font-down-1;
-    line-height: $line-height-small;
-  }
-
-  ul {
-    margin: 0;
-    list-style: none;
-  }
-
-  span.domain {
-    font-size: $font-down-2;
-    color: dark-light-choose($primary-medium, $secondary-medium);
-  }
 
   .map {
     .secondary {text-align: center;}
@@ -389,11 +356,6 @@ nav.post-controls {
     .badge-notification {
       margin: 1px 5px 5px 0;
     }
-  }
-
-  td {
-    vertical-align: top;
-    padding:1px;
   }
 
   .buttons {
