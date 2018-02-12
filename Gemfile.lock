@@ -478,7 +478,7 @@ DEPENDENCIES
   r2 (~> 0.2.5)
   rack-mini-profiler
   rack-protection
-  rails_multisite (= 2.0.3)
+  rails_multisite
   railties (~> 5.1)
   rake
   rb-fsevent
