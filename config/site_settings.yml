@@ -900,7 +900,7 @@ trust:
   min_trust_to_post_links:
     default: 0
     enum: 'TrustLevelSetting'
-  allow_staff_flags: true
+  allow_flagging_staff: true
   tl1_requires_topics_entered: 5
   tl1_requires_read_posts:
     default: 30

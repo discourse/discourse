@@ -71,14 +71,14 @@ describe Guardian do
       expect(Guardian.new(user).post_can_act?(post, :spam)).to be_truthy
     end
 
-    it "allows flagging of staff posts when allow_staff_flags is true" do
-      SiteSetting.allow_staff_flags = true
+    it "allows flagging of staff posts when allow_flagging_staff is true" do
+      SiteSetting.allow_flagging_staff = true
       staff_post = Fabricate(:post, user: Fabricate(:moderator))
       expect(Guardian.new(user).post_can_act?(staff_post, :spam)).to be_truthy
     end
 
-    it "doesn't allow flagging of staff posts when allow_staff_flags is false" do
-      SiteSetting.allow_staff_flags = false
+    it "doesn't allow flagging of staff posts when allow_flagging_staff is false" do
+      SiteSetting.allow_flagging_staff = false
       staff_post = Fabricate(:post, user: Fabricate(:moderator))
       expect(Guardian.new(user).post_can_act?(staff_post, :spam)).to eq(false)
     end
