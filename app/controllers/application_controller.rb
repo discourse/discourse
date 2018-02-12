@@ -38,7 +38,36 @@ class ApplicationController < ActionController::Base
 
 
   # damingo (Github ID), 2018-02-09, #theme
-  before_filter { SiteSetting.current_hostname = request.host }
+  before_filter :overwrite_site_settings
+
+  def overwrite_site_settings
+    # Logo Url
+    path = "/images/logo.#{request.host}.png"
+    logo_url = File.exists?(Rails.root.join("public#{path}")) ? path : '/images/logo-small.png'
+    SiteSetting.set(:logo_url, logo_url)
+
+    # Logo Small Url
+    path = "/images/logo-small.#{request.host}.png"
+    logo_small_url = File.exists?(Rails.root.join("public#{path}")) ? path :  '/images/logo-small.png'
+    SiteSetting.set(:logo_small_url, logo_small_url)
+
+    # Digest Logo Url
+    SiteSetting.set(:logo_url, logo_url)
+
+    # Mobile Logo Url
+    SiteSetting.set(:logo_small_url, logo_small_url)
+
+    # Favicon Url
+    path = "/images/favicon.#{request.host}.png"
+    favicon_url = File.exists?(Rails.root.join("public#{path}")) ? path : '/images/favicon.png'
+    SiteSetting.set(:favicon_url, favicon_url)
+
+    # Apple Touch Icon Url
+    path = "/images/apple-touch-icon.#{request.host}.png"
+    apple_touch_icon_url = File.exists?(Rails.root.join("public#{path}")) ? path : '/images/apple-touch-icon.png'
+    SiteSetting.set(:apple_touch_icon_url, apple_touch_icon_url)
+  end
+
 
 
   before_filter :handle_theme
