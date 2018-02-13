@@ -3,7 +3,7 @@ require_dependency 'notification_serializer'
 class NotificationsController < ApplicationController
 
   requires_login
-  before_action :ensure_admin, only: [:create, :update, :destroy] # only admin can create/edit/delete notification
+  before_action :ensure_admin, only: [:create, :update, :destroy]
   before_action :set_notification, only: [:update, :destroy]
 
   def index
