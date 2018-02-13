@@ -6,6 +6,7 @@
   computedContent=headerComputedContent
   deselect=(action "deselect")
   toggle=(action "toggle")
+  isLoading=isLoading
   filterComputedContent=(action "filterComputedContent")
   clearSelection=(action "clearSelection")
   options=headerComponentOptions
@@ -14,6 +15,7 @@
 <div class="select-kit-body">
   {{component filterComponent
     filter=filter
+    isLoading=isLoading
     icon=filterIcon
     shouldDisplayFilter=shouldDisplayFilter
     placeholder=(i18n filterPlaceholder)
