@@ -83,6 +83,10 @@ export default ComboBox.extend({
     }
   },
 
+  backspaceFromFilter(event) {
+    this.didPressBackspace(event);
+  },
+
   didPressBackspace() {
     if (!this.get("isExpanded")) {
       this.expand();
