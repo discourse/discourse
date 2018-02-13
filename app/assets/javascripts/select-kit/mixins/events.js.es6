@@ -109,7 +109,7 @@ export default Ember.Mixin.create({
         const keyCode = event.keyCode || event.which;
 
         if (keyCode === this.keys.BACKSPACE && typeof this.backspaceFromFilter === "function") {
-          this.backspaceFromFilter(event)
+          this.backspaceFromFilter(event);
         };
         if (keyCode === this.keys.TAB) this.tabFromFilter(event);
         if (keyCode === this.keys.ESC) this.escapeFromFilter(event);
