@@ -221,9 +221,9 @@
     flex-basis: 50%;
   }
 
-  .tag-chooser {
+  .mini-tag-chooser {
     flex: 1 1 25%;
-    margin: 0 0 5px 10px;
+    margin: 0 0 5px 5px;
     background: $secondary;
     @media all and (max-width: 900px) {
       margin: 0;

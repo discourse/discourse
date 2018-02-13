@@ -252,10 +252,6 @@ export default SelectKitComponent.extend({
     this.autoHighlight();
   },
 
-  validateComputedContentItem(computedContentItem) {
-    return !this.get("computedValues").includes(computedContentItem.value);
-  },
-
   actions: {
     clearSelection() {
       this.send("deselect", this.get("selectedComputedContents"));
@@ -263,7 +259,8 @@ export default SelectKitComponent.extend({
     },
 
     create(computedContentItem) {
-      if (this.validateComputedContentItem(computedContentItem)) {
+      if (!this.get("computedValues").includes(computedContentItem.value) &&
+          this.validateCreate(computedContentItem.value)) {
         this.get("computedContent").pushObject(computedContentItem);
         this._boundaryActionHandler("onCreate");
         this.send("select", computedContentItem);
@@ -274,9 +271,14 @@ export default SelectKitComponent.extend({
 
     select(computedContentItem) {
       this.willSelect(computedContentItem);
-      this.get("computedValues").pushObject(computedContentItem.value);
-      Ember.run.next(() => this.mutateAttributes());
-      Ember.run.schedule("afterRender", () => this.didSelect(computedContentItem));
+
+      if (this.validateSelect(computedContentItem)) {
+        this.get("computedValues").pushObject(computedContentItem.value);
+        Ember.run.next(() => this.mutateAttributes());
+        Ember.run.schedule("afterRender", () => this.didSelect(computedContentItem));
+      } else {
+        this._boundaryActionHandler("onSelectFailure");
+      }
     },
 
     deselect(rowComputedContentItems) {
