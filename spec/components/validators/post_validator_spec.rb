@@ -184,7 +184,7 @@ describe Validators::PostValidator do
       validator.expects(:max_mention_validator).never
       validator.expects(:max_images_validator).never
       validator.expects(:max_attachments_validator).never
-      validator.expects(:max_links_validator).never
+      validator.expects(:newuser_links_validator).never
       validator.expects(:unique_post_validator).never
       validator.validate(post)
     end

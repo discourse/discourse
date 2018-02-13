@@ -483,6 +483,7 @@ class PostRevisor
   end
 
   def alert_users
+    return if @editor.id == Discourse::SYSTEM_USER_ID
     PostAlerter.new.after_save_post(@post)
   end
 

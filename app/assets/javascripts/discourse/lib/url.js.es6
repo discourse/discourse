@@ -5,6 +5,11 @@ import { defaultHomepage } from 'discourse/lib/utilities';
 const rewrites = [];
 const TOPIC_REGEXP = /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/;
 
+function redirectTo(url) {
+  document.location = url;
+  return true;
+}
+
 // We can add links here that have server side responses but not client side.
 const SERVER_SIDE_ONLY = [
   /^\/assets\//,
@@ -162,15 +167,23 @@ const DiscourseURL = Ember.Object.extend({
     if (Em.isEmpty(path)) { return; }
 
     if (Discourse.get('requiresRefresh')) {
-      document.location.href = Discourse.getURL(path);
-      return;
+      return redirectTo(Discourse.getURL(path));
     }
 
     const pathname = path.replace(/(https?\:)?\/\/[^\/]+/, '');
+    let baseUri = Discourse.BaseUri;
+
+    // If we have a baseUri and an absolute URL, make sure the baseUri
+    // is the same. Otherwise we could be switching forums.
+    if (baseUri &&
+      path.indexOf('http') === 0 &&
+      pathname.indexOf(baseUri) !== 0) {
+      return redirectTo(path);
+    }
+
     const serverSide = SERVER_SIDE_ONLY.some(r => {
       if (pathname.match(r)) {
-        document.location = path;
-        return true;
+        return redirectTo(path);
       }
     });
 
@@ -178,8 +191,7 @@ const DiscourseURL = Ember.Object.extend({
 
     // Protocol relative URLs
     if (path.indexOf('//') === 0) {
-      document.location = path;
-      return;
+      return redirectTo(path);
     }
 
     // Scroll to the same page, different anchor
@@ -193,19 +205,19 @@ const DiscourseURL = Ember.Object.extend({
     path = path.replace(/(https?\:)?\/\/[^\/]+/, '');
 
     // Rewrite /my/* urls
-    if (path.indexOf(Discourse.BaseUri + '/my/') === 0) {
+    let myPath = `${baseUri}/my/`;
+    if (path.indexOf(myPath) === 0) {
       const currentUser = Discourse.User.current();
       if (currentUser) {
-        path = path.replace(Discourse.BaseUri + '/my/', userPath(currentUser.get('username_lower') + "/"));
+        path = path.replace(myPath, userPath(currentUser.get('username_lower') + "/"));
       } else {
-        document.location.href = "/404";
-        return;
+        return redirectTo('/404');
       }
     }
 
     // handle prefixes
     if (path.match(/^\//)) {
-      let rootURL = (Discourse.BaseUri === undefined ? "/" : Discourse.BaseUri);
+      let rootURL = (baseUri === undefined ? "/" : baseUri);
       rootURL = rootURL.replace(/\/$/, '');
       path = path.replace(rootURL, '');
     }

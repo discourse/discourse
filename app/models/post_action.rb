@@ -538,7 +538,7 @@ SQL
   end
 
   def self.auto_hide_if_needed(acting_user, post, post_action_type)
-    return if post.hidden
+    return if post.hidden || post.user.staff?
 
     if post_action_type == :spam &&
        acting_user.has_trust_level?(TrustLevel[3]) &&

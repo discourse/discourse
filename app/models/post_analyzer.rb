@@ -13,6 +13,13 @@ class PostAnalyzer
     @found_oneboxes
   end
 
+  def has_oneboxes?
+    return false unless @raw.present?
+
+    cooked_stripped
+    found_oneboxes?
+  end
+
   # What we use to cook posts
   def cook(raw, opts = {})
     cook_method = opts[:cook_method]
@@ -104,7 +111,6 @@ class PostAnalyzer
     return @raw_links if @raw_links.present?
 
     @raw_links = []
-
     cooked_stripped.css("a[href]").each do |l|
       # Don't include @mentions in the link count
       next if l['href'].blank? || link_is_a_mention?(l)

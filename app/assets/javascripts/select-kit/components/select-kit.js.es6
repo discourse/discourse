@@ -14,7 +14,7 @@ import {
 export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixin, EventsMixin, {
   pluginApiIdentifiers: ["select-kit"],
   layoutName: "select-kit/templates/components/select-kit",
-  classNames: ["select-kit", "select-box-kit"],
+  classNames: ["select-kit"],
   classNameBindings: [
     "isFocused",
     "isExpanded",
@@ -54,7 +54,6 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   headerComputedContent: null,
   collectionHeaderComputedContent: null,
   collectionComponent: "select-kit/select-kit-collection",
-  collectionHeight: 200,
   verticalOffset: 0,
   horizontalOffset: 0,
   fullWidthOnMobile: false,

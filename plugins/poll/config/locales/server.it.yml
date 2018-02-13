@@ -7,8 +7,10 @@
 
 it:
   site_settings:
+    poll_enabled: "Permettere i sondaggi?"
     poll_maximum_options: "Numero massimo di opzioni permesse in un sondaggio."
     poll_edit_window_mins: "Numero di minuti dopo la creazione di un messaggio durante i quali i sondaggi possono ancora essere modificati."
+    poll_minimum_trust_level_to_create: "Definisce il minimo livello di esperienza necessario per poter creare sondaggi."
   poll:
     multiple_polls_without_name: "Ci sono più sondaggi privi di nome. Usa l'attributo '<code>name</code>' per identificare univocamente i tuoi sondaggi."
     multiple_polls_with_same_name: "Ci sono più sondaggi con lo stesso nome: <strong>%{name}</strong>. Usa l'attributo '<code>name</code>' per identificare univocamente i tuoi sondaggi."

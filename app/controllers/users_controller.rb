@@ -8,10 +8,18 @@ require_dependency 'admin_confirmation'
 class UsersController < ApplicationController
 
   skip_before_action :authorize_mini_profiler, only: [:avatar]
-  skip_before_action :check_xhr, only: [:show, :badges, :password_reset, :update, :account_created, :activate_account, :perform_account_activation, :user_preferences_redirect, :avatar, :my_redirect, :toggle_anon, :admin_login, :confirm_admin]
 
-  before_action :ensure_logged_in, only: [:username, :update, :user_preferences_redirect, :upload_user_image,
-                                          :pick_avatar, :destroy_user_image, :destroy, :check_emails, :topic_tracking_state]
+  requires_login only: [
+    :username, :update, :user_preferences_redirect, :upload_user_image,
+    :pick_avatar, :destroy_user_image, :destroy, :check_emails, :topic_tracking_state,
+    :preferences
+  ]
+
+  skip_before_action :check_xhr, only: [
+    :show, :badges, :password_reset, :update, :account_created,
+    :activate_account, :perform_account_activation, :user_preferences_redirect, :avatar,
+    :my_redirect, :toggle_anon, :admin_login, :confirm_admin
+  ]
 
   before_action :respond_to_suspicious_request, only: [:create]
 
@@ -743,6 +751,7 @@ class UsersController < ApplicationController
     if include_groups || groups
       groups = Group.search_groups(term, groups: groups)
       groups = groups.where(visibility_level: Group.visibility_levels[:public]) if include_groups
+      groups = groups.order('groups.name asc')
 
       to_render[:groups] = groups.map do |m|
         { name: m.name, full_name: m.full_name }

@@ -1,8 +1,8 @@
-.select-box-kit, .select-kit {
+.select-kit {
   &.combo-box {
     &.category-chooser {
       width: 300px;
-      .select-box-kit-row, .select-kit-row {
+      .select-kit-row {
         display: -webkit-box;
         display: -ms-flexbox;
         display: flex;

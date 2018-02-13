@@ -2,14 +2,27 @@
 
 require 'rails_helper'
 
-describe 'admin rate limit' do
+describe 'rate limiter integration' do
 
   before do
     RateLimiter.enable
+    RateLimiter.clear_all!
   end
 
   after do
     RateLimiter.disable
+  end
+
+  it "will clear the token cookie if invalid" do
+    name = Auth::DefaultCurrentUserProvider::TOKEN_COOKIE
+
+    # we try 11 times because the rate limit is 10
+    11.times {
+      cookies[name] = SecureRandom.hex
+      get '/categories.json'
+      expect(response.cookies.has_key?(name)).to eq(true)
+      expect(response.cookies[name]).to be_nil
+    }
   end
 
   it 'can cleanly limit requests' do

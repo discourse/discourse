@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # this class is used to mirror unread and new status back to end users
 # in JavaScript there is a mirror class that is kept in-sync using the mssage bus
 # the allows end users to always know which topics have unread posts in them
@@ -175,8 +177,7 @@ class TopicTrackingState
     sql << report_raw_sql(topic_id: topic_id, skip_new: true, skip_order: true, staff: user.staff?)
 
     SqlBuilder.new(sql)
-      .map_exec(TopicTrackingState, user_id: user.id, topic_id: topic_id)
-
+      .map_exec(TopicTrackingState, user_id: user.id, topic_id: topic_id, min_new_topic_date: Time.at(SiteSetting.min_new_topics_time).to_datetime)
   end
 
   def self.report_raw_sql(opts = nil)
@@ -196,7 +197,8 @@ class TopicTrackingState
       if opts && opts[:skip_new]
         "1=0"
       else
-        TopicQuery.new_filter(Topic, "xxx").where_clause.send(:predicates).join(" AND ").gsub!("'xxx'", treat_as_new_topic_clause)
+        TopicQuery.new_filter(Topic, "xxx").where_clause.send(:predicates).join(" AND ").gsub!("'xxx'", treat_as_new_topic_clause) +
+          " AND topics.created_at > :min_new_topic_date"
       end
 
     select = (opts && opts[:select]) || "
@@ -208,7 +210,7 @@ class TopicTrackingState
            c.id AS category_id,
            tu.notification_level"
 
-    sql = <<SQL
+    sql = +<<SQL
     SELECT #{select}
     FROM topics
     JOIN users u on u.id = :user_id

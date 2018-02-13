@@ -21,7 +21,7 @@ class TranslationOverride < ActiveRecord::Base
 
     data = { value: value }
     if key.end_with?('_MF')
-      _, filename = JsLocaleHelper.find_message_format_locale(['en'], false)
+      _, filename = JsLocaleHelper.find_message_format_locale([locale], false)
       data[:compiled_js] = JsLocaleHelper.compile_message_format(filename, locale, value)
     end
 

@@ -338,7 +338,7 @@ describe Group do
     user2 = Fabricate(:coding_horror)
     user2.change_trust_level!(TrustLevel[3])
 
-    expect(Group[:trust_level_2].user_ids.sort.reject { |id| id < -1 }).to eq [-1, user.id, user2.id].sort
+    expect(Group[:trust_level_2].user_ids).to include(user.id, user2.id)
   end
 
   it "Correctly updates all automatic groups upon request" do
@@ -346,7 +346,7 @@ describe Group do
     user = Fabricate(:user)
     user.change_trust_level!(TrustLevel[2])
 
-    Group.exec_sql("update groups set user_count=0 where id = #{Group::AUTO_GROUPS[:trust_level_2]}")
+    Group.exec_sql("UPDATE groups SET user_count = 0 WHERE id = #{Group::AUTO_GROUPS[:trust_level_2]}")
 
     Group.refresh_automatic_groups!
 
@@ -354,23 +354,20 @@ describe Group do
     expect(groups.count).to eq Group::AUTO_GROUPS.count
 
     g = groups.find { |grp| grp.id == Group::AUTO_GROUPS[:admins] }
-    expect(g.users.count).to eq(g.user_count)
-    expect(g.users.pluck(:id).sort.reject { |id| id < -1 }).to eq([-1, admin.id])
+    expect(g.users.count).to eq g.user_count
+    expect(g.users.pluck(:id)).to contain_exactly(admin.id)
 
     g = groups.find { |grp| grp.id == Group::AUTO_GROUPS[:staff] }
-    expect(g.users.count).to eq (g.user_count)
-    expect(g.users.pluck(:id).sort.reject { |id| id < -1 }).to eq([-1, admin.id])
+    expect(g.users.count).to eq g.user_count
+    expect(g.users.pluck(:id)).to contain_exactly(admin.id)
 
     g = groups.find { |grp| grp.id == Group::AUTO_GROUPS[:trust_level_1] }
-    # admin, system and user
     expect(g.users.count).to eq g.user_count
-    expect(g.users.where('users.id > -2').count).to eq 3
+    expect(g.users.pluck(:id)).to contain_exactly(admin.id, user.id)
 
     g = groups.find { |grp| grp.id == Group::AUTO_GROUPS[:trust_level_2] }
-    # system and user
     expect(g.users.count).to eq g.user_count
-    expect(g.users.where('users.id > -2').count).to eq 2
-
+    expect(g.users.pluck(:id)).to contain_exactly(user.id)
   end
 
   it "can set members via usernames helper" do

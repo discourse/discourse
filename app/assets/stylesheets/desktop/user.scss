@@ -176,6 +176,12 @@
           a[href] {
             text-decoration: underline;
           }
+          .location-and-website {
+            max-width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+          }
         }
 
         .bio {

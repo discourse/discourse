@@ -44,7 +44,9 @@
 }
 
 .topic-category {
-  margin-top: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
 
   .topic-header-extra {
     display: inline-block;
@@ -55,17 +57,14 @@
     margin-top: 0;
 
     &.bullet .badge-category {
-      vertical-align: middle;
     }
 
     &.box, &.bullet {
-      vertical-align: middle;
     }
     
     &.box + .topic-header-extra,
     &.bullet + .topic-header-extra,
     &.bar + .topic-header-extra {
-      vertical-align: middle;
     }
   }
 }
@@ -133,7 +132,7 @@ $tag-color: $primary-medium;
 
 .d-header .topic-header-extra {
   .discourse-tags { 
-    display: inline-block; 
+    display: inline-block;
     font-size: $font-down-1;        
   }
   .topic-featured-link { margin-left: 8px; }
@@ -176,9 +175,12 @@ $tag-color: $primary-medium;
 }
 
 .mobile-view .topic-list-item .discourse-tags {
-  display: inline-block;
+  display: inline-flex;
   font-size: $font-down-1;
   margin-top: 0;
+  .discourse-tag {
+    margin-right: .2em;
+  }
   .discourse-tag.box {
     position:relative;
     top: 0;
@@ -201,6 +203,7 @@ $tag-color: $primary-medium;
 header .discourse-tag {color: $tag-color }
 
 .list-tags {
+  display: inline-block;
   margin-right: 3px;
   font-size: $font-down-1;
 }
@@ -275,8 +278,9 @@ header .discourse-tag {color: $tag-color }
   }
   .group-tags-list .tag-chooser {
     height: 250px !important;
-    .select2-choices {
+    ul.select2-choices {
       height: 250px !important; // to fight with select2.scss's important
+      max-height: none;
     }
   }
   .btn {margin-left: 10px;}

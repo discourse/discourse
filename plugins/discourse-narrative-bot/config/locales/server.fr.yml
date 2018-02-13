@@ -293,12 +293,6 @@ fr:
         reply: |-
           Excellent ! Retenez que ceci fonctionne pour les catégories _et_ les tags, si les tags sont activés.
       change_topic_notification_level:
-        instructions: |-
-          Chaque sujet a un niveau de notification. Il démarre comme 'normal', c'est à dire que vous ne serez notifié que quand quelqu'un vous parle directement.
-
-          Par défaut, le niveau de notification pour un message privé est configuré au plus haut niveau de 'surveillance', c'est à dire que vous serez notifié et chaque nouvelle réponse. Mais vous pouvez changer le niveau de notification pour _n'importe quel_ sujet en 'Surveiller', 'Suivi', ou 'Silencieux'.
-
-          Essayons de changer le niveau de notification pour ce sujet. En bas de ce sujet, vous trouverez un bouton qui vous indique que vous **Surveillez** ce sujet. Pouvez-vous changer le niveau de notification pour **Suivi**' ?
         not_found: |-
           Il semble que vous êtes encore en train de Surveillez :eyes: ce sujet ! Si vous avez des difficultés à le trouver, le bouton du niveau de notification est situé sous le sujet.
         reply: |-

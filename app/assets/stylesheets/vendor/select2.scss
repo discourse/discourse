@@ -439,13 +439,13 @@ html[dir="rtl"] .select2-container-multi .select2-choices li
 }
 
 .select2-container-multi .select2-choices .select2-search-field input {
-    margin: 1px 0;
     padding-left: 0;
     font-family: sans-serif;
     font-size: 1em;
     color: #666;
     outline: 0;
     border: 0;
+    margin-bottom: 0;
     -webkit-box-shadow: none;
             box-shadow: none;
     background: transparent !important;

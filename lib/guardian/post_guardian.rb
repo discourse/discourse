@@ -1,6 +1,11 @@
 #mixin for all guardian methods dealing with post permissions
 module PostGuardian
 
+  def can_post_link?
+    authenticated? &&
+      @user.has_trust_level?(TrustLevel[SiteSetting.min_trust_to_post_links])
+  end
+
   # Can the user act on the post in a particular way.
   #  taken_actions = the list of actions the user has already taken
   def post_can_act?(post, action_key, opts: {}, can_see_post: nil)
@@ -16,12 +21,15 @@ module PostGuardian
 
     result = if authenticated? && post && !@user.anonymous?
 
+      # post made by staff, but we don't allow staff flags
+      return false if !SiteSetting.allow_flagging_staff? && post.user.staff?
+
       return false if [:notify_user, :notify_moderators].include?(action_key) &&
-        !SiteSetting.enable_private_messages?
+        !SiteSetting.enable_personal_messages?
 
       # we allow flagging for trust level 1 and higher
       # always allowed for private messages
-      (is_flag && not(already_did_flagging) && (@user.has_trust_level?(TrustLevel[1]) || post.topic.private_message?)) ||
+      (is_flag && not(already_did_flagging) && (@user.has_trust_level?(TrustLevel[SiteSetting.min_trust_to_flag_posts]) || post.topic.private_message?)) ||
 
       # not a flagging action, and haven't done it already
       not(is_flag || already_taken_this_action) &&

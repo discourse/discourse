@@ -62,8 +62,8 @@ describe TopicList do
       let!(:other_tag) { Fabricate(:tag, topics: [topic], name: "use-anywhere") }
       let(:topic_list) { TopicList.new('latest', topic.user, [topic], category: category.id, category_id: category.id) }
 
-      it 'should only return tags allowed in the category' do
-        expect(topic_list.top_tags).to eq([tag.name])
+      it 'should return tags used in the category' do
+        expect(topic_list.top_tags).to eq([tag.name, other_tag.name].sort)
       end
 
       it "with no category, should return all tags" do

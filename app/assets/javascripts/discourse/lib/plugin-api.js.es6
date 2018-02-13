@@ -23,9 +23,10 @@ import { addNavItem } from 'discourse/models/nav-item';
 import { replaceFormatter } from 'discourse/lib/utilities';
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
 import { addGTMPageChangedCallback } from 'discourse/lib/page-tracker';
+import { registerCustomAvatarHelper } from 'discourse/helpers/user-avatar';
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = '0.8.17';
+const PLUGIN_API_VERSION = '0.8.18';
 
 class PluginApi {
   constructor(version, container) {
@@ -368,6 +369,23 @@ class PluginApi {
     appEvents.on(name, fn);
   }
 
+  /**
+    Registers a function to generate custom avatar CSS classes
+    for a particular user.
+
+    Takes a function that will accept a user as a parameter
+    and return an array of CSS classes to apply.
+
+    ```javascript
+    api.customUserAvatarClasses(user => {
+      if (Ember.get(user, 'primary_group_name') === 'managers') {
+        return ['managers'];
+      }
+    });
+   **/
+  customUserAvatarClasses(fn) {
+    registerCustomAvatarHelper(fn);
+  }
 
   /**
    * Changes a setting associated with a widget. For example, if

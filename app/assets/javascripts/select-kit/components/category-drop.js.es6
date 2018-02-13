@@ -9,7 +9,6 @@ export default ComboBoxComponent.extend({
   classNameBindings: ["categoryStyle"],
   classNames: "category-drop",
   verticalOffset: 3,
-  collectionHeight: "200",
   content: Ember.computed.alias("categories"),
   rowComponent: "category-row",
   headerComponent: "category-drop/category-drop-header",
@@ -35,6 +34,11 @@ export default ComboBoxComponent.extend({
       allowUncategorized: true,
       displayCategoryDescription: true
     });
+  },
+
+  @computed("content")
+  filterable(content) {
+    return content && content.length >= 15;
   },
 
   @computed("allCategoriesUrl", "allCategoriesLabel", "noCategoriesUrl", "noCategoriesLabel")
@@ -70,9 +74,9 @@ export default ComboBoxComponent.extend({
       }).htmlSafe();
     } else {
       if (this.get("noSubcategories")) {
-        content.label = this.get("noCategoriesLabel");
+        content.label = `<span class="category-name">${this.get("noCategoriesLabel")}</span>`;
       } else {
-        content.label = this.get("allCategoriesLabel");
+        content.label = `<span class="category-name">${this.get("allCategoriesLabel")}</span>`;
       }
     }
 

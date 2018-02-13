@@ -69,10 +69,11 @@ function organizeResults(r, options) {
 
   if (r.groups) {
     r.groups.every(function(g) {
-      if (results.length > limit && options.term.toLowerCase() !== g.name.toLowerCase()) return false;
-      if (exclude.indexOf(g.name) === -1) {
-        groups.push(g);
-        results.push(g);
+      if (options.term.toLowerCase() === g.name.toLowerCase() || results.length < limit) {
+        if (exclude.indexOf(g.name) === -1) {
+          groups.push(g);
+          results.push(g);
+        }
       }
       return true;
     });

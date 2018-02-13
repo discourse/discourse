@@ -451,6 +451,24 @@ describe PostRevisor do
       end
     end
 
+    context "alerts" do
+
+      let(:mentioned_user) { Fabricate(:user) }
+
+      it "generates a notification for a mention" do
+        expect {
+          subject.revise!(Fabricate(:user), raw: "Random user is mentioning @#{mentioned_user.username_lower}")
+        }.to change { Notification.where(notification_type: Notification.types[:mentioned]).count }
+      end
+
+      it "never generates a notification for a mention when the System user revise a post" do
+        expect {
+          subject.revise!(Discourse.system_user, raw: "System user is mentioning @#{mentioned_user.username_lower}")
+        }.not_to change { Notification.where(notification_type: Notification.types[:mentioned]).count }
+      end
+
+    end
+
     context "tagging" do
       context "tagging disabled" do
         before do
