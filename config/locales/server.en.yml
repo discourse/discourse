@@ -648,6 +648,10 @@ en:
     success: "You successfully changed your password and are now logged in."
     success_unapproved: "You successfully changed your password."
 
+  email_login:
+    invalid_token: "Sorry, that email login link is too old. Select the Log In button and use 'I forgot my password' to get a new link."
+    title: "Email login"
+
   change_email:
     confirmed: "Your email has been updated."
     please_continue: "Continue to %{site_name}"
@@ -1149,6 +1153,7 @@ en:
     sso_allows_all_return_paths: "Do not restrict the domain for return_paths provided by SSO (by default return path must be on current site)"
 
     enable_local_logins: "Enable local username and password login based accounts. (Note: this must be enabled for invites to work)"
+    enable_local_logins_via_email: "Email user logins via email."
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     enable_signup_cta: "Show a notice to returning anonymous users prompting them to sign up for an account."
     enable_yahoo_logins: "Enable Yahoo authentication"
@@ -1640,6 +1645,7 @@ en:
       staged_users_disabled: "You must first enable 'staged users' before enabling this setting."
       reply_by_email_disabled: "You must first enable 'reply by email' before enabling this setting."
       sso_url_is_empty: "You must set a 'sso url' before enabling this setting."
+      enable_local_logins_disabled: "You must first enable 'enable local logins' before enabling this setting."
 
   search:
     within_post: "#%{post_number} by %{username}"
@@ -2771,6 +2777,17 @@ en:
 
         Click the following link to choose a new password:
         %{base_url}/u/password-reset/%{email_token}
+
+    email_login:
+      title: "Email login link"
+      subject_template: "[%{email_prefix}] Email login link"
+      text_body_template: |
+        Somebody asked to login your account on [%{site_name}](%{base_url}).
+
+        If it was not you, you can safely ignore this email.
+
+        Click the following link to login:
+        %{base_url}/session/email-login/%{email_token}
 
     set_password:
       title: "Set Password"
