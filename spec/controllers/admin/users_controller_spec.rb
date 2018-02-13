@@ -615,6 +615,31 @@ describe Admin::UsersController do
         expect(@reg_user).to be_silenced
       end
 
+      it "can have an associated post" do
+        silence_post = Fabricate(:post, user: @reg_user)
+
+        put :silence, params: {
+          user_id: @reg_user.id,
+          post_id: silence_post.id,
+          post_action: 'edit',
+          post_edit: "this is the new contents for the post"
+        }, format: :json
+        expect(response).to be_success
+
+        silence_post.reload
+        expect(silence_post.raw).to eq("this is the new contents for the post")
+
+        log = UserHistory.where(
+          target_user_id: @reg_user.id,
+          action: UserHistory.actions[:silence_user]
+        ).first
+        expect(log).to be_present
+        expect(log.post_id).to eq(silence_post.id)
+
+        @reg_user.reload
+        expect(@reg_user).to be_silenced
+      end
+
       it "will set a length of time if provided" do
         future_date = 1.month.from_now.to_date
         put(
