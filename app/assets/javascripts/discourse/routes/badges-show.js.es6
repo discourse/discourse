@@ -30,9 +30,20 @@ export default Discourse.Route.extend({
   afterModel(model, transition) {
     const username = transition.queryParams && transition.queryParams.username;
 
-    return UserBadge.findByBadgeId(model.get("id"), {username}).then(userBadges => {
+    const userBadgesGrant = UserBadge.findByBadgeId(model.get("id"), {username}).then(userBadges => {
       this.userBadgesGrant = userBadges;
     });
+
+    const userBadgesAll = UserBadge.findByUsername(username).then(userBadges => {
+      this.userBadgesAll = userBadges;
+    });
+
+    const promises = {
+      userBadgesGrant,
+      userBadgesAll,
+    };
+
+    return Ember.RSVP.hash(promises);
   },
 
   titleToken() {
