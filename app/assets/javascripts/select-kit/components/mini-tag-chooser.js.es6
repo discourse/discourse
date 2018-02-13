@@ -14,6 +14,17 @@ export default ComboBox.extend({
   filterable: true,
   noTags: Ember.computed.empty("computedTags"),
   allowAny: true,
+  caretUpIcon: Ember.computed.alias("caretIcon"),
+  caretDownIcon: Ember.computed.alias("caretIcon"),
+
+  @computed("computedTags", "siteSettings.max_tags_per_topic")
+  caretIcon(computedTags, maxTagsPerTopic) {
+    if (computedTags.length >= maxTagsPerTopic) {
+      return null;
+    }
+
+    return "plus";
+  },
 
   init() {
     this._super();
@@ -136,7 +147,7 @@ export default ComboBox.extend({
     if (isEmpty(this.get("computedTags"))) {
       content.label = I18n.t("tagging.choose_for_topic");
     } else {
-      content.label = this.get("computedTags").join(",");
+      content.label = this.get("computedTags").join(", ");
     }
 
     return content;
