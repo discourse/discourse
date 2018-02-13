@@ -1,7 +1,6 @@
 import { ajax } from 'discourse/lib/ajax';
 import AdminUser from 'admin/models/admin-user';
 import { escapeExpression } from 'discourse/lib/utilities';
-import getUrl from 'discourse-common/lib/get-url';
 
 const StaffActionLog = Discourse.Model.extend({
   showFullDetails: false,
