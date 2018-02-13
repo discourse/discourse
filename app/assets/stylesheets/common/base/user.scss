@@ -120,6 +120,15 @@
           }
         }
       }
+
+      .user-profile-avatar {
+        position: relative;
+        float: left;
+        .avatar-flair {
+          bottom: 8px;
+          right: 16px;
+        }
+      }
     }
 
     .controls {
@@ -174,6 +183,13 @@
           h3 {
             display: none;
           }
+        }
+      }
+
+      .user-profile-avatar {
+        .avatar-flair {
+          bottom: 8px;
+          right: 2px;
         }
       }
     }
