@@ -16,6 +16,11 @@ describe AnonymousShadowCreator do
       expect(AnonymousShadowCreator.get(Fabricate.build(:user, trust_level: 0))).to eq(nil)
     end
 
+    it "returns no shadow if must_approve_users is true and user is not approved" do
+      SiteSetting.must_approve_users = true
+      expect(AnonymousShadowCreator.get(Fabricate.build(:user, approved: false))).to eq(nil)
+    end
+
     it "returns a new shadow once time expires" do
       SiteSetting.anonymous_account_duration_minutes = 1
 

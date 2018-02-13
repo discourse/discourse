@@ -13,6 +13,7 @@ class AnonymousShadowCreator
     return unless user
     return unless SiteSetting.allow_anonymous_posting
     return if user.trust_level < SiteSetting.anonymous_posting_min_trust_level
+    return if SiteSetting.must_approve_users? && !user.approved?
 
     if (shadow_id = user.custom_fields["shadow_id"].to_i) > 0
       shadow = User.find_by(id: shadow_id)
@@ -40,6 +41,8 @@ class AnonymousShadowCreator
         active: true,
         trust_level: 1,
         manual_locked_trust_level: 1,
+        approved: true,
+        approved_at: 1.day.ago,
         created_at: 1.day.ago # bypass new user restrictions
       )
 
