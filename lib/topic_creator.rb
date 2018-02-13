@@ -29,6 +29,10 @@ class TopicCreator
       topic.errors[:base] << I18n.t("tags.staff_tag_disallowed", tag: staff_only.join(" "))
     end
 
+    unless @guardian.can_create_tag?
+      topic.errors[:base] << I18n.t("tags.creation_not_allowed")
+    end
+
     DiscourseEvent.trigger(:after_validate_topic, topic, self)
     valid &&= topic.errors.empty?
 
