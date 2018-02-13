@@ -108,6 +108,7 @@ export default Ember.Mixin.create({
       .on("keydown.select-kit", (event) => {
         const keyCode = event.keyCode || event.which;
 
+        if (keyCode === this.keys.BACKSPACE) this.backspaceFromFilter(event);
         if (keyCode === this.keys.TAB) this.tabFromFilter(event);
         if (keyCode === this.keys.ESC) this.escapeFromFilter(event);
         if (keyCode === this.keys.ENTER) this.enterFromFilter(event);
@@ -207,6 +208,7 @@ export default Ember.Mixin.create({
   upAndDownFromFilter(event) { this.didPressUpAndDownArrows(event); },
 
   backspaceFromHeader(event) { this.didPressBackspace(event); },
+  backspaceFromFilter(event) { this.didPressBackspace(event); },
 
   enterFromHeader(event) { this.didPressEnter(event); },
   enterFromFilter(event) { this.didPressEnter(event); },

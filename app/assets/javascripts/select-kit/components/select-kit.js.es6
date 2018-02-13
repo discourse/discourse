@@ -16,6 +16,7 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   layoutName: "select-kit/templates/components/select-kit",
   classNames: ["select-kit"],
   classNameBindings: [
+    "isLoading",
     "isFocused",
     "isExpanded",
     "isDisabled",
@@ -30,6 +31,7 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   isExpanded: false,
   isFocused: false,
   isHidden: false,
+  isLoading: false,
   renderedBodyOnce: false,
   renderedFilterOnce: false,
   tabindex: 0,
@@ -41,6 +43,7 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   autoFilterable: false,
   filterable: false,
   filter: "",
+  previousFilter: null,
   filterPlaceholder: "select_kit.filter_placeholder",
   filterIcon: "search",
   headerIcon: null,
@@ -118,6 +121,10 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     return this.baseComputedContentItem(contentItem, options);
   },
 
+  validateCreate() { return true; },
+
+  validateSelect() { return true; },
+
   baseComputedContentItem(contentItem, options) {
     let originalContent;
     options = options || {};
@@ -163,7 +170,7 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   @computed("filter", "computedContent")
   shouldDisplayCreateRow(filter, computedContent) {
     if (computedContent.map(c => c.value).includes(filter)) return false;
-    if (this.get("allowAny") && filter.length > 0) return true;
+    if (this.get("allowAny") && filter.length > 0 && this.validateCreate(filter)) return true;
     return false;
   },
 
@@ -184,7 +191,7 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   @computed("filter")
   templateForCreateRow() {
     return (rowComponent) => {
-      return I18n.t("select_box.create", {
+      return I18n.t("select_kit.create", {
         content: rowComponent.get("computedContent.name")
       });
     };
@@ -238,6 +245,16 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     this.setProperties({ filter: "" });
   },
 
+  startLoading() {
+    this.set("isLoading", true);
+    this._boundaryActionHandler("onStartLoading");
+  },
+
+  stopLoading() {
+    this.set("isLoading", false);
+    this._boundaryActionHandler("onStopLoading");
+  },
+
   _setCollectionHeaderComputedContent() {
     const collectionHeaderComputedContent = applyCollectionHeaderCallbacks(
       this.get("pluginApiIdentifiers"),
@@ -283,9 +300,12 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     },
 
     filterComputedContent(filter) {
+      if (filter === this.get("previousFilter")) return;
+
       this.setProperties({
         highlightedValue: null,
         renderedFilterOnce: true,
+        previousFilter: filter,
         filter
       });
       this.autoHighlight();

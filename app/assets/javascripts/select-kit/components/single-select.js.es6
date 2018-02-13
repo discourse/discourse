@@ -145,10 +145,6 @@ export default SelectKitComponent.extend({
     });
   },
 
-  validateComputedContentItem(computedContentItem) {
-    return this.get("computedValue") !== computedContentItem.value;
-  },
-
   actions: {
     clearSelection() {
       this.send("deselect", this.get("selectedComputedContent"));
@@ -156,7 +152,8 @@ export default SelectKitComponent.extend({
     },
 
     create(computedContentItem) {
-      if (this.validateComputedContentItem(computedContentItem)) {
+      if (this.get("computedValue") !== computedContentItem.value &&
+          this.validateCreate(computedContentItem.value)) {
         this.get("computedContent").pushObject(computedContentItem);
         this._boundaryActionHandler("onCreate");
         this.send("select", computedContentItem);
@@ -166,10 +163,14 @@ export default SelectKitComponent.extend({
     },
 
     select(rowComputedContentItem) {
-      this.willSelect(rowComputedContentItem);
-      this.set("computedValue", rowComputedContentItem.value);
-      this.mutateAttributes();
-      run.schedule("afterRender", () => this.didSelect(rowComputedContentItem));
+      if (this.validateSelect(rowComputedContentItem)) {
+        this.willSelect(rowComputedContentItem);
+        this.set("computedValue", rowComputedContentItem.value);
+        this.mutateAttributes();
+        run.schedule("afterRender", () => this.didSelect(rowComputedContentItem));
+      } else {
+        this._boundaryActionHandler("onSelectFailure");
+      }
     },
 
     deselect(rowComputedContentItem) {
