@@ -479,10 +479,11 @@ describe CookedPostProcessor do
 
     before do
       Oneboxer.expects(:onebox)
-        .with("http://www.youtube.com/watch?v=9bZkp7q19f0", post_id: 123, invalidate_oneboxes: true)
+        .with("http://www.youtube.com/watch?v=9bZkp7q19f0", invalidate_oneboxes: true, user_id: nil, category_id: post.topic.category_id)
         .returns("<div>GANGNAM STYLE</div>")
       cpp.post_process_oneboxes
     end
+
     it "inserts the onebox without wrapping p" do
       expect(cpp).to be_dirty
       expect(cpp.html).to match_html "<div>GANGNAM STYLE</div>"

@@ -236,15 +236,11 @@ module Discourse
   end
 
   def self.route_for(uri)
-
-    uri = URI(uri) rescue nil unless (uri.is_a?(URI))
+    uri = URI(uri) rescue nil unless uri.is_a?(URI)
     return unless uri
 
     path = uri.path || ""
-    if (uri.host == Discourse.current_hostname &&
-      path.start_with?(Discourse.base_uri)) ||
-      !uri.host
-
+    if !uri.host || (uri.host == Discourse.current_hostname && path.start_with?(Discourse.base_uri))
       path.slice!(Discourse.base_uri)
       return Rails.application.routes.recognize_path(path)
     end

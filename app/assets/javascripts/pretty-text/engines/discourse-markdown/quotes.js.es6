@@ -105,7 +105,6 @@ const rule = {
 
           let title = topicInfo.title;
 
-
           if (options.enableEmoji) {
             title = performEmojiUnescape(topicInfo.title, {
               getURL: options.getURL, emojiSet: options.emojiSet
