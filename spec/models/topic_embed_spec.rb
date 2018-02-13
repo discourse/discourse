@@ -72,6 +72,11 @@ describe TopicEmbed do
       expect(TopicEmbed.topic_id_for_embed('http://example.com/post/24')).to eq(nil)
       expect(TopicEmbed.topic_id_for_embed('http://example.com/post')).to eq(nil)
     end
+
+    it "finds the topic id when the embed_url contains a query string" do
+      topic_embed = Fabricate(:topic_embed, embed_url: "http://example.com/post/248?key=foo")
+      expect(TopicEmbed.topic_id_for_embed('http://example.com/post/248?key=foo')).to eq(topic_embed.topic_id)
+    end
   end
 
   describe '.find_remote' do
