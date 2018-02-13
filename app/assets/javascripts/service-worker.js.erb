@@ -11,7 +11,11 @@ const CURRENT_CACHES = {
 const OFFLINE_URL = 'offline.html';
 
 function createCacheBustedRequest(url) {
-  var request = new Request(url, {cache: 'reload'});
+  var headers = new Headers({
+    'Discourse-Track-View': '0'
+  });
+
+  var request = new Request(url, {cache: 'reload', headers: headers});
   // See https://fetch.spec.whatwg.org/#concept-request-mode
   // This is not yet supported in Chrome as of M48, so we need to explicitly check to see
   // if the cache: 'reload' option had any effect.
@@ -22,7 +26,7 @@ function createCacheBustedRequest(url) {
   // If {cache: 'reload'} didn't have any effect, append a cache-busting URL parameter instead.
   var bustedUrl = new URL(url, self.location.href);
   bustedUrl.search += (bustedUrl.search ? '&' : '') + 'cachebust=' + Date.now();
-  return new Request(bustedUrl);
+  return new Request(bustedUrl, {headers: headers});
 }
 
 self.addEventListener('install', function(event) {
