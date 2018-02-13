@@ -15,51 +15,6 @@ describe Tag do
     SiteSetting.min_trust_level_to_tag_topics = 0
   end
 
-  describe '#tags_by_count_query' do
-    it "returns empty hash if nothing is tagged" do
-      expect(described_class.tags_by_count_query.count(Tag::COUNT_ARG)).to eq({})
-    end
-
-    context "with some tagged topics" do
-      before do
-        @topics = []
-        3.times { @topics << Fabricate(:topic) }
-        make_some_tags(count: 2)
-        @topics[0].tags << @tags[0]
-        @topics[0].tags << @tags[1]
-        @topics[1].tags << @tags[0]
-      end
-
-      it "returns tag names with topic counts in a hash" do
-        counts = described_class.tags_by_count_query.count(Tag::COUNT_ARG)
-        expect(counts[@tags[0].name]).to eq(2)
-        expect(counts[@tags[1].name]).to eq(1)
-      end
-
-      it "can be used to filter before doing the count" do
-        counts = described_class.tags_by_count_query.where("topics.id = ?", @topics[1].id).count(Tag::COUNT_ARG)
-        expect(counts).to eq(@tags[0].name => 1)
-      end
-
-      it "returns unused tags too" do
-        unused = Fabricate(:tag)
-        counts = described_class.tags_by_count_query.count(Tag::COUNT_ARG)
-        expect(counts[unused.name]).to eq(0)
-      end
-
-      it "doesn't include deleted topics in counts" do
-        deleted_topic_tag = Fabricate(:tag)
-        delete_topic = Fabricate(:topic)
-        post = Fabricate(:post, topic: delete_topic, user: delete_topic.user)
-        delete_topic.tags << deleted_topic_tag
-        PostDestroyer.new(Fabricate(:admin), post).destroy
-
-        counts = described_class.tags_by_count_query.count(Tag::COUNT_ARG)
-        expect(counts[deleted_topic_tag.name]).to eq(0)
-      end
-    end
-  end
-
   describe '#top_tags' do
     it "returns nothing if nothing has been tagged" do
       make_some_tags(tag_a_topic: false)

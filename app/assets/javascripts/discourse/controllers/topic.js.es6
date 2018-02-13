@@ -104,7 +104,7 @@ export default Ember.Controller.extend(BufferedContent, {
 
   @computed('model.isPrivateMessage')
   canEditTags(isPrivateMessage) {
-    return !isPrivateMessage && this.site.get('can_tag_topics');
+    return this.site.get('can_tag_topics') && (!isPrivateMessage || this.site.get('can_tag_pms'));
   },
 
   actions: {

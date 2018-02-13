@@ -1,2 +1,7 @@
-// Injections don't occur without a class
-export default Ember.Component.extend();
+import computed from 'ember-addons/ember-computed-decorators';
+
+export default Ember.Component.extend({
+
+  @computed('topic.isPrivateMessage')
+
+});

@@ -164,7 +164,7 @@ class PostRevisionSerializer < ApplicationSerializer
   end
 
   def include_tags_changes?
-    SiteSetting.tagging_enabled && previous["tags"] != current["tags"]
+    SiteSetting.tagging_enabled && previous["tags"] != current["tags"] && (!topic.private_message? || scope.can_tag_pms?)
   end
 
   protected
@@ -206,7 +206,7 @@ class PostRevisionSerializer < ApplicationSerializer
         latest_modifications["featured_link"] = [post.topic.featured_link]
       end
 
-      if SiteSetting.tagging_enabled
+      if SiteSetting.tagging_enabled && (!topic.private_message? || scope.can_tag_pms?)
         latest_modifications["tags"] = [post.topic.tags.map(&:name)]
       end
 
