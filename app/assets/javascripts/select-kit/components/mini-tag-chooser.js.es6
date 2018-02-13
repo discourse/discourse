@@ -14,16 +14,33 @@ export default ComboBox.extend({
   filterable: true,
   noTags: Ember.computed.empty("computedTags"),
   allowAny: true,
+  maximumSelectionSize: Ember.computed.alias("siteSettings.max_tags_per_topic"),
   caretUpIcon: Ember.computed.alias("caretIcon"),
   caretDownIcon: Ember.computed.alias("caretIcon"),
 
-  @computed("computedTags", "siteSettings.max_tags_per_topic")
-  caretIcon(computedTags, maxTagsPerTopic) {
-    if (computedTags.length >= maxTagsPerTopic) {
-      return null;
+  @computed("limitReached", "maximumSelectionSize")
+  maxContentRow(limitReached, count) {
+    if (limitReached) {
+      return I18n.t("select_kit.max_content_reached", { count });
+    }
+  },
+
+  mutateAttributes() {
+    this.set("value", null);
+  },
+
+  @computed("limitReached")
+  caretIcon(limitReached) {
+    return limitReached ? null : "plus";
+  },
+
+  @computed("computedTags.[]", "maximumSelectionSize")
+  limitReached(computedTags, maximumSelectionSize) {
+    if (computedTags.length >= maximumSelectionSize) {
+      return true;
     }
 
-    return "plus";
+    return false;
   },
 
   init() {
@@ -46,6 +63,10 @@ export default ComboBox.extend({
   },
 
   validateCreate(term) {
+    if (this.get("limitReached")) {
+      return false;
+    }
+
     const filterRegexp = new RegExp(this.site.tags_filter_regexp, "g");
     term = term.replace(filterRegexp, "").trim().toLowerCase();
 
@@ -63,6 +84,10 @@ export default ComboBox.extend({
   validateSelect() {
     return this.get("computedTags").length < this.get("siteSettings.max_tags_per_topic") &&
            this.site.get("can_create_tag");
+  },
+
+  filterComputedContent(computedContent) {
+    return computedContent;
   },
 
   didRender() {
@@ -143,12 +168,15 @@ export default ComboBox.extend({
 
   computeHeaderContent() {
     let content = this.baseHeaderComputedContent();
+    const joinedTags = this.get("computedTags").join(", ");
 
     if (isEmpty(this.get("computedTags"))) {
       content.label = I18n.t("tagging.choose_for_topic");
     } else {
-      content.label = this.get("computedTags").join(", ");
+      content.label = joinedTags;
     }
+
+    content.title = content.name = content.value = joinedTags;
 
     return content;
   },
@@ -181,10 +209,6 @@ export default ComboBox.extend({
       this.set("content", []);
       this.set("searchDebounce", run.debounce(this, this._searchTags, 200));
     }
-  },
-
-  muateAttributes() {
-    this.set("value", null);
   },
 
   _searchTags(query) {
