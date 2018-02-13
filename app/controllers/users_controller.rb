@@ -751,6 +751,7 @@ class UsersController < ApplicationController
     if include_groups || groups
       groups = Group.search_groups(term, groups: groups)
       groups = groups.where(visibility_level: Group.visibility_levels[:public]) if include_groups
+      groups = groups.order('groups.name asc')
 
       to_render[:groups] = groups.map do |m|
         { name: m.name, full_name: m.full_name }

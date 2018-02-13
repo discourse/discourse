@@ -14,26 +14,16 @@
   {{else}}
     <label>{{inviteInstructions}}</label>
     {{#if allowExistingMembers}}
-      {{#if isPrivateTopic}}
-        {{user-selector single="true"
-                        allowAny=true
-                        excludeCurrentUser="true"
-                        usernames=emailOrUsername
-                        allowedUsers="true"
-                        topicId=topicId
-                        placeholderKey=placeholderKey
-                        autocomplete="off"}}
-      {{else}}
-        {{user-selector
-            single="true"
-            allowAny=true
-            excludeCurrentUser="true"
-            includeMentionableGroups="true"
-            hasGroups=hasGroups
-            usernames=emailOrUsername
-            placeholderKey=placeholderKey
-            autocomplete="off"}}
-      {{/if}}
+      {{user-selector
+          single=true
+          allowAny=true
+          excludeCurrentUser=true
+          includeMentionableGroups=includeMentionableGroups
+          includeMessageableGroups=isMessage
+          hasGroups=hasGroups
+          usernames=emailOrUsername
+          placeholderKey=placeholderKey
+          autocomplete="off"}}
     {{else}}
       {{text-field value=emailOrUsername placeholderKey="topic.invite_reply.email_placeholder"}}
     {{/if}}

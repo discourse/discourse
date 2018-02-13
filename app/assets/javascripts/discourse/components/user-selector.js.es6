@@ -16,20 +16,30 @@ export default TextField.extend({
 
   didInsertElement(opts) {
     this._super();
+
+    const bool = (n => {
+      const val = this.get(n);
+      return val === true || val === "true";
+    });
+
     var self = this,
         selected = [],
         groups = [],
         currentUser = this.currentUser,
-        includeMentionableGroups = this.get('includeMentionableGroups') === 'true',
-        includeMessageableGroups = this.get('includeMessageableGroups') === 'true',
-        includeGroups = this.get('includeGroups') === 'true',
-        allowedUsers = this.get('allowedUsers') === 'true';
+        includeMentionableGroups = bool('includeMentionableGroups'),
+        includeMessageableGroups = bool('includeMessageableGroups'),
+        includeGroups = bool('includeGroups'),
+        allowedUsers = bool('allowedUsers'),
+        excludeCurrentUser = bool('excludeCurrentUser'),
+        single = bool('single'),
+        allowAny = bool('allowAny'),
+        disabled = bool('disabled');
 
     function excludedUsernames() {
       // hack works around some issues with allowAny eventing
-      const usernames = self.get('single') ? [] : selected;
+      const usernames = single ? [] : selected;
 
-      if (currentUser && self.get('excludeCurrentUser')) {
+      if (currentUser && excludeCurrentUser) {
         return usernames.concat([currentUser.get('username')]);
       }
       return usernames;
@@ -37,9 +47,9 @@ export default TextField.extend({
 
     this.$().val(this.get('usernames')).autocomplete({
       template: findRawTemplate('user-selector-autocomplete'),
-      disabled: this.get('disabled'),
-      single: this.get('single'),
-      allowAny: this.get('allowAny'),
+      disabled: disabled,
+      single: single,
+      allowAny: allowAny,
       updateData: (opts && opts.updateData) ? opts.updateData : false,
 
       dataSource(term) {
