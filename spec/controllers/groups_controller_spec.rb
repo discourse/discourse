@@ -3,6 +3,15 @@ require 'rails_helper'
 describe GroupsController do
   let(:group) { Fabricate(:group) }
 
+  describe 'index' do
+    render_views
+    it "responds with HTML" do
+      get :index, format: :html
+      expect(response).to be_success
+      expect(response.body).to have_tag(:meta, with: { property: 'og:title', content: "Groups" })
+    end
+  end
+
   describe 'show' do
     it "ensures the group can be seen" do
       Guardian.any_instance.expects(:can_see?).with(group).returns(false)
@@ -17,10 +26,15 @@ describe GroupsController do
       expect(::JSON.parse(response.body)['basic_group']['id']).to eq(group.id)
     end
 
-    it "responds with HTML" do
-      Guardian.any_instance.expects(:can_see?).with(group).returns(true)
-      get :show, params: { id: group.name }, format: :html
-      expect(response).to be_success
+    describe "responds with HTML" do
+      render_views
+      let(:group) { Fabricate(:group, visibility_level: 0, bio_cooked:"<p>This is a description.</p>") }
+      it "includes og meta tags with group name and description" do
+        get :show, params: { id: group.name }, format: :html
+        expect(response).to be_success
+        expect(response.body).to have_tag(:meta, with: { property: 'og:title', content: group.name })
+        expect(response.body).to have_tag(:meta, with: { property: 'og:description', content: "This is a description." })
+      end
     end
 
     it "works even with an upper case group name" do
