@@ -289,7 +289,8 @@ class Admin::UsersController < Admin::AdminController
       silenced_till: params[:silenced_till],
       reason: params[:reason],
       message_body: message,
-      keep_posts: true
+      keep_posts: true,
+      post_id: params[:post_id]
     )
     if silencer.silence && message.present?
       Jobs.enqueue(
