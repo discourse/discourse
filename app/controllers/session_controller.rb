@@ -7,9 +7,10 @@ class SessionController < ApplicationController
     render body: nil, status: 500
   end
 
-  before_action :check_local_login_allowed, only: %i(create forgot_password)
+  before_action :check_local_login_allowed, only: %i(create forgot_password email_login email_login_page)
   skip_before_action :redirect_to_login_if_required
-  skip_before_action :preload_json, :check_xhr, only: ['sso', 'sso_login', 'become', 'sso_provider', 'destroy']
+  skip_before_action :preload_json, only: %i(sso sso_login sso_provider become destroy email_login)
+  skip_before_action :check_xhr, only: %i(sso sso_login sso_provider become destroy email_login_page)
 
   ACTIVATE_USER_KEY = "activate_user"
 
@@ -234,6 +235,44 @@ class SessionController < ApplicationController
     end
 
     (user.active && user.email_confirmed?) ? login(user) : not_activated(user)
+  end
+
+  def email_login_page
+    expires_now
+
+    token = params[:token]
+
+    if EmailToken.valid_token_format?(token)
+      @user = EmailToken.confirmable(token)&.user
+    end
+
+    @error = I18n.t('email_login.invalid_token') unless @user
+
+    if @error
+      render :email_login, layout: 'no_ember'
+    else
+      render :email_login
+    end
+  end
+
+  def email_login
+    if EmailToken.valid_token_format?(params[:token])
+      user = EmailToken.confirm(params[:token]) # also redeems the invite
+
+      return render json: { error: I18n.t('email_login.invalid_token') } unless user
+
+      return login_not_approved if login_not_approved_for?(user)
+
+      return failed_to_login(user) if user.suspended?
+
+      return not_allowed_from_ip_address(user) if ScreenedIpAddress.should_block?(request.remote_ip)
+
+      return admin_not_allowed_from_ip_address(user) if ScreenedIpAddress.block_admin_login?(user, request.remote_ip)
+
+      login(user)
+    else
+      render nothing: true, status: 500
+    end
   end
 
   def forgot_password

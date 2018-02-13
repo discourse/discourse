@@ -1,0 +1,28 @@
+<div id="simple-container">
+  <%if @error%>
+    <div class='alert alert-error'>
+      <%= @error %>
+    </div>
+  <%end%>
+  <% if @user.present? and @user.errors.any? %>
+    <div class='alert alert-error'>
+      <% @user.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<% content_for :title do %><%=t "email_login.title" %><% end %>
+
+<%- content_for(:no_ember_head) do %>
+  <meta name="referrer" content="never">
+  <%= preload_script "ember_jquery" %>
+  <%= render_google_universal_analytics_code %>
+<%- end %>
+
+<%- content_for(:head) do %>
+  <meta name="referrer" content="never">
+<%- end %>
+
+<%= render_google_analytics_code %>

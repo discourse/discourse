@@ -648,6 +648,10 @@ en:
     success: "You successfully changed your password and are now logged in."
     success_unapproved: "You successfully changed your password."
 
+  email_login:
+    invalid_token: "Sorry, that email login link is too old. Select the Log In button and use 'I forgot my password' to get a new link."
+    title: "Email login"
+
   change_email:
     confirmed: "Your email has been updated."
     please_continue: "Continue to %{site_name}"
@@ -2771,6 +2775,17 @@ en:
 
         Click the following link to choose a new password:
         %{base_url}/u/password-reset/%{email_token}
+
+    email_login:
+      title: "Email login link"
+      subject_template: "[%{email_prefix}] Email login link"
+      text_body_template: |
+        Somebody asked to login your account on [%{site_name}](%{base_url}).
+
+        If it was not you, you can safely ignore this email.
+
+        Click the following link to login:
+        %{base_url}/session/email-login/%{email_token}
 
     set_password:
       title: "Set Password"

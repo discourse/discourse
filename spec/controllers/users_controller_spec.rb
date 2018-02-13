@@ -457,6 +457,15 @@ describe UsersController do
     end
   end
 
+  describe '.email_login' do
+    let(:user) { Fabricate(:user) }
+
+    it "enqueues the email token" do
+      Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :email_login, user_id: user.id))
+      put :email_login, params: { login: user.email }, format: :json
+    end
+  end
+
   describe '.confirm_email_token' do
     let(:user) { Fabricate(:user) }
 

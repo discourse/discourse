@@ -37,14 +37,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
         if (data.user_found === true) {
           key += '_found';
           this.set('accountEmailOrUsername', '');
-          this.set('offerHelp', I18n.t(key, {email: escaped, username: escaped}));
+          this.set('offerHelp', I18n.t(key, { email: escaped, username: escaped }));
         } else {
           if (data.user_found === false) {
             key += '_not_found';
             extraClass = 'error';
           }
 
-          this.flash(I18n.t(key, {email: escaped, username: escaped}), extraClass);
+          this.flash(I18n.t(key, { email: escaped, username: escaped }), extraClass);
         }
       }).catch(e => {
         this.flash(extractError(e), 'error');
@@ -61,6 +61,42 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
     help() {
       this.setProperties({ offerHelp: I18n.t('forgot_password.help'), helpSeen: true });
+    },
+
+    emailLogin() {
+      if (this.get('submitDisabled')) return false;
+
+      this.set('disabled', true);
+
+      ajax('/u/email-login', {
+        data: { login: this.get('accountEmailOrUsername').trim() },
+        type: 'POST'
+      }).then(data => {
+        const escaped = escapeExpression(this.get('accountEmailOrUsername'));
+        const isEmail = this.get('accountEmailOrUsername').match(/@/);
+        let key = 'email_login.complete_' + (isEmail ? 'email' : 'username');
+        let extraClass;
+
+        if (data.user_found === true) {
+          key += '_found';
+          this.set('accountEmailOrUsername', '');
+          bootbox.alert(I18n.t(key, { email: escaped, username: escaped }));
+          this.send("closeModal");
+        } else {
+          if (data.user_found === false) {
+            key += '_not_found';
+            extraClass = 'error';
+          }
+
+          this.flash(I18n.t(key, { email: escaped, username: escaped }), extraClass);
+        }
+      }).catch(e => {
+        this.flash(extractError(e), 'error');
+      }).finally(() => {
+        setTimeout(() => this.set('disabled', false), 1000);
+      });
+
+      return false;
     }
   }
 
