@@ -1,6 +1,7 @@
 import { ajax } from 'discourse/lib/ajax';
 import AdminUser from 'admin/models/admin-user';
 import { escapeExpression } from 'discourse/lib/utilities';
+import getUrl from 'discourse-common/lib/get-url';
 
 const StaffActionLog = Discourse.Model.extend({
   showFullDetails: false,
@@ -10,7 +11,7 @@ const StaffActionLog = Discourse.Model.extend({
   }.property('action_name'),
 
   formattedDetails: function() {
-    var formatted = "";
+    let formatted = "";
     formatted += this.format('email', 'email');
     formatted += this.format('admin.logs.ip_address', 'ip_address');
     formatted += this.format('admin.logs.topic_id', 'topic_id');
@@ -26,9 +27,13 @@ const StaffActionLog = Discourse.Model.extend({
     return formatted;
   }.property('ip_address', 'email', 'topic_id', 'post_id', 'category_id'),
 
-  format: function(label, propertyName) {
+  format(label, propertyName) {
     if (this.get(propertyName)) {
-      return ('<b>' + I18n.t(label) + ':</b> ' + escapeExpression(this.get(propertyName)) + '<br/>');
+      let value = escapeExpression(this.get(propertyName));
+      if (propertyName === 'post_id') {
+        value = `<a href data-link-post-id="${value}">${value}</a>`;
+      }
+      return `<b>${I18n.t(label)}:</b> ${value}<br/>`;
     } else {
       return '';
     }
