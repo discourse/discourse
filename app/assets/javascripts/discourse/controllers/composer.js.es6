@@ -140,7 +140,8 @@ export default Ember.Controller.extend({
     return !this.site.mobileView &&
             this.site.get('can_tag_topics') &&
             canEditTitle &&
-            !creatingPrivateMessage;
+            !creatingPrivateMessage &&
+            (!this.get('model.topic.isPrivateMessage') || this.site.get('can_tag_pms'));
   },
 
   @computed('model.whisper', 'model.unlistTopic')

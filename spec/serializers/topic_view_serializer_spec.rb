@@ -1,6 +1,11 @@
 require 'rails_helper'
 
 describe TopicViewSerializer do
+  def serialize_topic(topic, user)
+    topic_view = TopicView.new(topic.id, user)
+    described_class.new(topic_view, scope: Guardian.new(user), root: false).as_json
+  end
+
   let(:topic) { Fabricate(:topic) }
   let(:user) { Fabricate(:user) }
 
@@ -12,8 +17,7 @@ describe TopicViewSerializer do
         topic.update!(featured_link: featured_link)
         SiteSetting.topic_featured_link_enabled = false
 
-        topic_view = TopicView.new(topic.id, user)
-        json = described_class.new(topic_view, scope: Guardian.new(user), root: false).as_json
+        json = serialize_topic(topic, user)
 
         expect(json[:featured_link]).to eq(nil)
         expect(json[:featured_link_root_domain]).to eq(nil)
@@ -24,8 +28,7 @@ describe TopicViewSerializer do
       it 'should return the right attributes' do
         topic.update!(featured_link: featured_link)
 
-        topic_view = TopicView.new(topic.id, user)
-        json = described_class.new(topic_view, scope: Guardian.new(user), root: false).as_json
+        json = serialize_topic(topic, user)
 
         expect(json[:featured_link]).to eq(featured_link)
         expect(json[:featured_link_root_domain]).to eq('discourse.org')
@@ -42,8 +45,7 @@ describe TopicViewSerializer do
 
     describe 'when loading last chunk' do
       it 'should include suggested topics' do
-        topic_view = TopicView.new(topic.id, user)
-        json = described_class.new(topic_view, scope: Guardian.new(user), root: false).as_json
+        json = serialize_topic(topic, user)
 
         expect(json[:suggested_topics].first.id).to eq(topic2.id)
       end
@@ -62,6 +64,35 @@ describe TopicViewSerializer do
 
         expect(json[:suggested_topics]).to eq(nil)
       end
+    end
+  end
+
+  let(:user) { Fabricate(:user) }
+  let(:moderator) { Fabricate(:moderator) }
+  let(:tag) { Fabricate(:tag) }
+  let(:pm) do
+    Fabricate(:private_message_topic, tags: [tag], topic_allowed_users: [
+      Fabricate.build(:topic_allowed_user, user: moderator),
+      Fabricate.build(:topic_allowed_user, user: user)
+    ])
+  end
+
+  describe 'when tags added to private message topics' do
+    before do
+      SiteSetting.tagging_enabled = true
+    end
+
+    it "should not include the tag for normal users" do
+      json = serialize_topic(pm, user)
+      expect(json[:tags]).to eq(nil)
+    end
+
+    it "should include the tag for staff users" do
+      json = serialize_topic(pm, moderator)
+      expect(json[:tags]).to eq([tag.name])
+
+      json = serialize_topic(pm, Fabricate(:admin))
+      expect(json[:tags]).to eq([tag.name])
     end
   end
 end

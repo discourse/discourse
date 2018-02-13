@@ -96,6 +96,7 @@ export default function() {
       this.route('archive');
       this.route('group', { path: 'group/:name'});
       this.route('groupArchive', { path: 'group/:name/archive'});
+      this.route('tag', { path: 'tag/:id'});
     });
 
     this.route('preferences', { resetNamespace: true }, function() {
