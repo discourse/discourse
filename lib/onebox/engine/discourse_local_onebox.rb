@@ -84,12 +84,12 @@ module Onebox
 
         def can_see_post?(post, source_topic)
           return false if post.nil? || post.hidden || post.trashed? || post.topic.nil?
-          Guardian.new.can_see_post?(post) || same_category?(post.topic.category, source_topic)
+          Guardian.new.can_see_post?(post)
         end
 
         def can_see_topic?(topic, source_topic)
           return false if topic.nil? || topic.trashed? || topic.private_message?
-          Guardian.new.can_see_topic?(topic) || same_category?(topic.category, source_topic)
+          Guardian.new.can_see_topic?(topic)
         end
 
         def same_category?(category, source_topic)
