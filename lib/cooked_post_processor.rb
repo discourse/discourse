@@ -368,15 +368,13 @@ class CookedPostProcessor
   end
 
   def post_process_oneboxes
-    args = {
-      post_id: @post.id,
-      invalidate_oneboxes: !!@opts[:invalidate_oneboxes],
-    }
-
-    # apply oneboxes
-    Oneboxer.apply(@doc, topic_id: @post.topic_id) do |url|
+    Oneboxer.apply(@doc) do |url|
       @has_oneboxes = true
-      Oneboxer.onebox(url, args)
+      Oneboxer.onebox(url,
+        invalidate_oneboxes: !!@opts[:invalidate_oneboxes],
+        user_id: @post&.user_id,
+        category_id: @post&.topic&.category_id
+      )
     end
 
     oneboxed_images.each do |img|

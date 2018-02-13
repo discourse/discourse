@@ -372,7 +372,7 @@ export default Ember.Component.extend({
       post.set('refreshedPost', true);
     }
 
-    $oneboxes.each((_, o) => load(o, refresh, ajax, this.currentUser.id));
+    $oneboxes.each((_, o) => load({ elem: o, refresh, ajax, categoryId: this.get('composer.category.id') }));
   },
 
   _warnMentionedGroups($preview) {
