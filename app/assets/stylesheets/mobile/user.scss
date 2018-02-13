@@ -127,6 +127,10 @@
           max-width: 700px;
         }
       }
+
+      .user-profile-avatar .avatar-flair {
+        right: 2px;
+      }
     }
 
     .controls {
@@ -176,6 +180,9 @@
             margin: 0 5px 10px 5px;
           }
         }
+      }
+      .user-profile-avatar .avatar-flair {
+        bottom: 12px;
       }
     }
   }
