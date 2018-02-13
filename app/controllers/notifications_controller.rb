@@ -3,6 +3,8 @@ require_dependency 'notification_serializer'
 class NotificationsController < ApplicationController
 
   requires_login
+  before_action :ensure_admin, only: [:create, :update, :destroy] # only admin can create/edit/delete notification
+  before_action :set_notification, only: [:update, :destroy]
 
   def index
     user =
@@ -63,5 +65,34 @@ class NotificationsController < ApplicationController
 
     render json: success_json
   end
+
+  def create
+    @notification = Notification.create!(notification_params)
+    render_notification
+  end
+
+  def update
+    @notification.update!(notification_params)
+    render_notification
+  end
+
+  def destroy
+    @notification.destroy!
+    render json: success_json
+  end
+
+  private
+
+    def set_notification
+      @notification = Notification.find(params[:id])
+    end
+
+    def notification_params
+      params.permit(:notification_type, :user_id, :data, :read, :topic_id, :post_number, :post_action_id)
+    end
+
+    def render_notification
+      render_json_dump(NotificationSerializer.new(@notification, scope: guardian, root: false))
+    end
 
 end
