@@ -77,7 +77,7 @@ class Theme < ActiveRecord::Base
     if keys = @cache["user_theme_keys"]
       return keys
     end
-    @cache["theme_keys"] = Set.new(
+    @cache["user_theme_keys"] = Set.new(
       Theme
       .where('user_selectable OR key = ?', SiteSetting.default_theme_key)
       .pluck(:key)
@@ -319,16 +319,22 @@ class Theme < ActiveRecord::Base
     Rails.cache.delete("settings_for_theme_#{self.key}")
   end
 
-  def self.settings_for_client(key)
-    settings = {}
-    theme = Theme.find_by(key: key)
-    return settings.to_json unless theme
+  def included_settings
+    hash = {}
 
-    theme.included_themes.each do |child|
-      settings.merge!(child.cached_settings)
+    self.included_themes.each do |theme|
+      hash.merge!(theme.cached_settings)
     end
-    settings.merge!(theme.cached_settings)
-    settings.to_json
+
+    hash.merge!(self.cached_settings)
+    hash
+  end
+
+  def self.settings_for_client(key)
+    theme = Theme.find_by(key: key)
+    return {}.to_json unless theme
+
+    theme.included_settings.to_json
   end
 
   def update_setting(setting_name, new_value)

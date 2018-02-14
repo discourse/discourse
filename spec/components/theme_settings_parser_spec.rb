@@ -2,11 +2,8 @@ require 'rails_helper'
 require 'theme_settings_parser'
 
 describe ThemeSettingsParser do
-
-  before do
+  after(:all) do
     ThemeField.destroy_all
-    yaml = File.read("#{Rails.root}/spec/fixtures/theme_settings/valid_settings.yaml")
-    ThemeField.create!(theme_id: 1, target_id: 3, name: "yaml", value: yaml)
   end
 
   def types
@@ -20,7 +17,9 @@ describe ThemeSettingsParser do
     end
 
     def load_settings
-      field = ThemeField.where(theme_id: 1, target_id: 3, name: "yaml").first
+      yaml = File.read("#{Rails.root}/spec/fixtures/theme_settings/valid_settings.yaml")
+      field = ThemeField.create!(theme_id: 1, target_id: 3, name: "yaml", value: yaml)
+
       ThemeSettingsParser.new(field).load do |name, default, type, opts|
         @settings << setting(name, default, type, opts)
       end

@@ -161,7 +161,7 @@ COMPILED
                                     )
         self.error = nil unless error.nil?
       rescue SassC::SyntaxError => e
-        self.error = e.message
+        self.error = e.message unless self.destroyed?
       end
 
       if will_save_change_to_error?

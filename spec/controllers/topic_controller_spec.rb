@@ -33,7 +33,8 @@ describe TopicsController do
       get :show, params: { id: 666 }
       expect(controller.theme_key).to eq(theme.key)
 
-      theme.update_columns(user_selectable: false)
+      theme.user_selectable = false
+      theme.save
 
       get :show, params: { id: 666 }
       expect(controller.theme_key).not_to eq(theme.key)

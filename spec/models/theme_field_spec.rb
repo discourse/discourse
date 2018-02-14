@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 describe ThemeField do
-  before do
+  after(:all) do
     ThemeField.destroy_all
   end
 
@@ -53,7 +53,7 @@ HTML
   end
 
   def create_yaml_field(value)
-    field = ThemeField.create!(theme_id: 1, target_id: 3, name: "yaml", value: value)
+    field = ThemeField.create!(theme_id: 1, target_id: Theme.targets[:settings], name: "yaml", value: value)
     field.reload
     field
   end
