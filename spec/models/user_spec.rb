@@ -1619,4 +1619,21 @@ describe User do
     end
   end
 
+  describe ".activate" do
+    let!(:inactive) { Fabricate(:user, active: false) }
+
+    it 'confirms email token and activates user' do
+      inactive.activate
+      inactive.reload
+      expect(inactive.email_confirmed?).to eq(true)
+      expect(inactive.active).to eq(true)
+    end
+
+    it 'activates user even if email token is already confirmed' do
+      token = inactive.email_tokens.find_by(email: inactive.email)
+      token.update_column(:confirmed, true)
+      inactive.activate
+      expect(inactive.active).to eq(true)
+    end
+  end
 end
