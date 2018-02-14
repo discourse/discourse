@@ -463,10 +463,22 @@ aside.onebox.stackexchange .onebox-body {
   .label2 {
     float: right;
   }
-  .site-icon {
-    width: 16px;
-    height: 16px;
-    margin-right: 3px;
+}
+
+.onebox {
+  &.whitelistedgeneric,
+  &.gfycat {
+    .site-icon {
+      width: 16px;
+      height: 16px;
+      margin-right: 3px;
+    }
+  }
+}
+
+.onebox.gfycat p {
+  span.label1 a {
+    white-space: nowrap;
   }
 }
 
