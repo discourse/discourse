@@ -59,8 +59,7 @@
           }
 
           .selected-tag {
-            background: $primary-low;
-            border-radius: 2px;
+            background: $primary-very-low;
             padding: 2px 4px;
             margin: 2px;
             border: 0;
@@ -69,9 +68,16 @@
               box-shadow: 0 0 2px $danger, 0 1px 0 rgba(0,0,0,0.05);
             }
 
-            &:before {
+            &:after {
               content: '\f00d';
+              color: $primary-low-mid;
               font-family: 'FontAwesome';
+            }
+
+            &:hover {
+              &:after {
+                color: $danger;
+              }
             }
           }
         }
