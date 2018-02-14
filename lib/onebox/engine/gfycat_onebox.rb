@@ -65,7 +65,7 @@ module Onebox
         def data
 
           total_tags = [raw['gfyItem']['tags'], raw['gfyItem']['userTags']].flatten.compact
-          tag_links = total_tags&.map{|t| "<a href='https://gfycat.com/gifs/search/#{t}'>##{t}</a>"}&.join(' ')
+          tag_links = total_tags.map { |t| "<a href='https://gfycat.com/gifs/search/#{t}'>##{t}</a>" }.join(' ') if total_tags
           autoplay = raw['gfyItem']['webmSize'].to_i < 10485760 ? 'autoplay' : ''
 
           {
