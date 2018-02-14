@@ -63,7 +63,7 @@ export default ComboBox.extend({
   },
 
   validateCreate(term) {
-    if (this.get("limitReached")) {
+    if (this.get("limitReached") || !this.site.get("can_create_tag")) {
       return false;
     }
 
@@ -82,8 +82,7 @@ export default ComboBox.extend({
   },
 
   validateSelect() {
-    return this.get("computedTags").length < this.get("siteSettings.max_tags_per_topic") &&
-           this.site.get("can_create_tag");
+    return this.get("computedTags").length < this.get("siteSettings.max_tags_per_topic");
   },
 
   filterComputedContent(computedContent) {
