@@ -1,4 +1,4 @@
-{{#d-section class="current-badge span13"}}
+{{#d-section class="current-badge content-body"}}
   <form class="form-horizontal">
     <div>
       <label for="name">{{i18n 'admin.badges.name'}}</label>
@@ -144,7 +144,7 @@
 {{/d-section}}
 
 {{#if grant_count}}
-  <div class="span13 current-badge-actions">
+  <div class="content-body current-badge-actions">
     <div>
       {{#link-to 'badges.show' this}}{{i18n 'badges.granted' count=grant_count}}{{/link-to}}
     </div>
