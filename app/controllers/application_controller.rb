@@ -107,7 +107,7 @@ class ApplicationController < ActionController::Base
   end
 
   def render_rate_limit_error(e)
-    render_json_error e.description, type: :rate_limit, status: 429
+    render_json_error e.description, type: :rate_limit, status: 429, extras: { wait_seconds: e&.available_in }
   end
 
   # If they hit the rate limiter
