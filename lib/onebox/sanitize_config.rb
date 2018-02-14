@@ -12,7 +12,7 @@ class Sanitize
         'embed'  => %w[height src type width],
         'iframe' => %w[allowfullscreen frameborder height scrolling src width],
         'source' => %w[src type],
-        'video'  => %w[controls height loop width],
+        'video'  => %w[controls height loop width autoplay],
         'div'    => [:data], # any data-* attributes
       },
 
