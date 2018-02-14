@@ -192,7 +192,9 @@ class ApplicationController < ActionController::Base
       render_json_error message, type: type, status: status_code
     else
       begin
+        # 404 pages won't have the session and theme_keys without these:
         current_user
+        handle_theme
       rescue Discourse::InvalidAccess
         return render plain: message, status: status_code
       end
