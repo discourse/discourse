@@ -769,9 +769,10 @@ SQL
       group.users.where(
         "group_users.notification_level > ?", NotificationLevels.all[:muted]
       ).find_each do |u|
+        notification_type = private_message? ? :invited_to_private_message : :invited_to_topic
 
         u.notifications.create!(
-          notification_type: Notification.types[:invited_to_private_message],
+          notification_type: Notification.types[notification_type],
           topic_id: self.id,
           post_number: 1,
           data: {

@@ -1240,13 +1240,14 @@ describe TopicsController do
       admins.save!
     end
 
-    it "disallows inviting a group to a topic" do
+    it "allows inviting a group to a topic" do
       topic = Fabricate(:topic)
       post :invite_group, params: {
         topic_id: topic.id, group: 'admins'
       }, format: :json
 
-      expect(response.status).to eq(422)
+      expect(response.status).to eq(200)
+      expect(topic.allowed_groups.first.id).to eq(admins.id)
     end
 
     it "allows inviting a group to a PM" do

@@ -199,9 +199,9 @@ RSpec.describe TopicsController do
     describe 'as an admin user' do
       let!(:admin) { sign_in(Fabricate(:admin)) }
 
-      it "disallows inviting a group to a topic" do
+      it "allows inviting a group to a topic" do
         topic = Fabricate(:topic)
-        invite_group(topic, 422)
+        invite_group(topic, 200)
       end
 
       it "allows inviting a group to a PM" do

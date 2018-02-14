@@ -286,7 +286,7 @@ class Guardian
     is_admin? || (authenticated? && @user.id == user_id)
   end
 
-  def can_invite_group_to_private_message?(group, topic)
+  def can_invite_group_to_private_message_or_topic?(group, topic)
     can_see_topic?(topic) &&
     can_send_private_message?(group)
   end
