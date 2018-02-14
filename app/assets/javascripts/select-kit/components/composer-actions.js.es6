@@ -180,8 +180,7 @@ export default DropdownSelectBoxComponent.extend({
           options.action = Composer.CREATE_TOPIC;
           options.categoryId = this.get("composerModel.topic.category.id");
 
-          this.get("composerController").close();
-          this.get("composerController").open(options);
+          this._replyFromExisting(options, _postSnapshot, _topicSnapshot);
           break;
 
         case "reply_as_private_message":
