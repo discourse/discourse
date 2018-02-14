@@ -261,7 +261,7 @@ class SessionController < ApplicationController
       Jobs.enqueue(:critical_user_email, type: :forgot_password, user_id: user.id, email_token: email_token.token)
     end
 
-    json = { result: "ok" }
+    json = success_json
     unless SiteSetting.hide_email_address_taken
       json[:user_found] = user_presence
     end
