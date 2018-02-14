@@ -28,7 +28,7 @@ describe GroupsController do
 
     describe "responds with HTML" do
       render_views
-      let(:group) { Fabricate(:group, visibility_level: 0, bio_cooked:"<p>This is a description.</p>") }
+      let(:group) { Fabricate(:group, visibility_level: 0, bio_cooked: "<p>This is a description.</p>") }
       it "includes og meta tags with group name and description" do
         get :show, params: { id: group.name }, format: :html
         expect(response).to be_success
