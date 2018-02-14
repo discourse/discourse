@@ -11,7 +11,7 @@ export default CategoryRowComponent.extend({
     return categoryBadgeHTML(category, {
       link: this.get("categoryLink"),
       allowUncategorized: true,
-      hideParent: this.get("hideParentCategory")
+      hideParent: true
     }).htmlSafe();
   },
 
