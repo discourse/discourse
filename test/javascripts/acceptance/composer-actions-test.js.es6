@@ -72,6 +72,7 @@ QUnit.test('replying to post - reply_as_new_topic', assert => {
   const composerActions = selectKit('.composer-actions');
   const categoryChooser = selectKit('.title-wrapper .category-chooser');
   const categoryChooserReplyArea = selectKit('.reply-area .category-chooser');
+  const quote = 'test replying as new topic when initially replied to post';
 
   visit('/t/internationalization-localization/280');
 
@@ -80,13 +81,13 @@ QUnit.test('replying to post - reply_as_new_topic', assert => {
   click('#topic-title .submit-edit');
 
   click('article#post_3 button.reply');
-  fillIn('.d-editor-input', 'test replying as new topic when initially replied to post');
+  fillIn('.d-editor-input', quote);
   composerActions.expand().selectRowByValue('reply_as_new_topic');
 
   andThen(() => {
     assert.equal(categoryChooserReplyArea.header().name(), 'faq');
     assert.equal(find('.action-title').text().trim(), I18n.t("topic.create_long"));
-    assert.equal(find('.d-editor-input').val(), 'test replying as new topic when initially replied to post');
+    assert.ok(find('.d-editor-input').val().includes(quote));
   });
 });
 
@@ -132,7 +133,7 @@ QUnit.test('interactions', assert => {
 
   andThen(() => {
     assert.equal(find('.action-title').text().trim(), I18n.t("topic.create_long"));
-    assert.equal(find('.d-editor-input').val(), quote);
+    assert.ok(find('.d-editor-input').val().includes(quote));
     assert.equal(composerActions.rowByIndex(0).value(), 'reply_to_post');
     assert.equal(composerActions.rowByIndex(1).value(), 'reply_as_private_message');
     assert.equal(composerActions.rowByIndex(2).value(), 'reply_to_topic');
