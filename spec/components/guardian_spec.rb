@@ -83,6 +83,12 @@ describe Guardian do
       expect(Guardian.new(user).post_can_act?(staff_post, :spam)).to eq(false)
     end
 
+    it "allows liking of staff when allow_flagging_staff is false" do
+      SiteSetting.allow_flagging_staff = false
+      staff_post = Fabricate(:post, user: Fabricate(:moderator))
+      expect(Guardian.new(user).post_can_act?(staff_post, :like)).to eq(true)
+    end
+
     it "returns false when liking yourself" do
       expect(Guardian.new(post.user).post_can_act?(post, :like)).to be_falsey
     end
