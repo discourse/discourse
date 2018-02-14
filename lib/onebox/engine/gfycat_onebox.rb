@@ -32,7 +32,7 @@ module Onebox
               </h4>
 
               <div class="video">
-                <video controls loop autoplay muted poster="#{data[:posterUrl]}" style="--aspect-ratio: #{data[:width]}/#{data[:height]}">
+                <video controls loop #{data[:autoplay]} muted poster="#{data[:posterUrl]}" style="--aspect-ratio: #{data[:width]}/#{data[:height]}">
                   <source id="webmSource" src="#{data[:webmUrl]}" type="video/webm">
                   <source id="mp4Source" src="#{data[:mp4Url]}" type="video/mp4">
                   <img title="Sorry, your browser doesn't support HTML5 video." src="#{data[:posterUrl]}">
@@ -66,6 +66,7 @@ module Onebox
 
           total_tags = [raw['gfyItem']['tags'], raw['gfyItem']['userTags']].flatten.compact
           tag_links = total_tags&.map{|t| "<a href='https://gfycat.com/gifs/search/#{t}'>##{t}</a>"}&.join(' ')
+          autoplay = raw['gfyItem']['webmSize'].to_i < 10485760 ? 'autoplay' : ''
 
           {
             name: raw['gfyItem']['gfyName'],
@@ -77,7 +78,8 @@ module Onebox
             webmUrl: raw['gfyItem']['webmUrl'],
             mp4Url: raw['gfyItem']['mp4Url'],
             width: raw['gfyItem']['width'],
-            height: raw['gfyItem']['height']
+            height: raw['gfyItem']['height'],
+            autoplay: autoplay
           }
         end
 
