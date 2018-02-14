@@ -538,7 +538,7 @@ en:
 
   rate_limiter:
     slow_down: "You have performed this action too many times, try again later."
-    too_many_requests: "We have a daily limit on how many times that action can be taken. Please wait %{time_left} before trying again."
+    too_many_requests: "You have performed this action too many times. Please wait %{time_left} before trying again."
     by_type:
       first_day_replies_per_day: "You've reached the maximum number of replies a new user can create on their first day. Please wait %{time_left} before trying again."
       first_day_topics_per_day: "You've reached the maximum number of topics a new user can create on their first day. Please wait %{time_left} before trying again."
