@@ -3,6 +3,7 @@ import { on } from "ember-addons/ember-computed-decorators";
 import computed from "ember-addons/ember-computed-decorators";
 import PermissionType from "discourse/models/permission-type";
 import Category from "discourse/models/category";
+import { categoryBadgeHTML } from "discourse/helpers/category-link";
 const { get, isNone, isEmpty } = Ember;
 
 export default ComboBoxComponent.extend({
@@ -55,6 +56,34 @@ export default ComboBoxComponent.extend({
     } else {
       return "category.choose";
     }
+  },
+
+  computeHeaderContent() {
+    let content = this.baseHeaderComputedContent();
+
+    if (this.get("hasSelection")) {
+      const category = Category.findById(content.value);
+      const parentCategoryId = category.get("parent_category_id");
+
+      let badge = "";
+
+      if (!Ember.isNone(parentCategoryId)) {
+        const parentCategory = Category.findById(parentCategoryId);
+        badge += categoryBadgeHTML(parentCategory, {
+          link: false,
+          allowUncategorized: true
+        }).htmlSafe();
+      }
+
+      badge += categoryBadgeHTML(category, {
+        link: false,
+        allowUncategorized: true
+      }).htmlSafe();
+
+      content.label = badge;
+    }
+
+    return content;
   },
 
   @on("didRender")
