@@ -43,7 +43,10 @@ export default SelectKitRowComponent.extend({
 
   @computed("parentCategory")
   badgeForParentCategory(parentCategory) {
-    return categoryBadgeHTML(parentCategory, {link: false}).htmlSafe();
+    return categoryBadgeHTML(parentCategory, {
+      link: this.get("categoryLink"),
+      allowUncategorized: this.get("allowUncategorized")
+    }).htmlSafe();
   },
 
   @computed("parentCategoryid")
