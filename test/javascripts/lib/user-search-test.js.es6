@@ -48,6 +48,10 @@ QUnit.module("lib:user-search", {
           ],
           groups: [
             {
+              "name": "bob",
+              "usernames": []
+            },
+            {
               "name": "team",
               "usernames": []
             }

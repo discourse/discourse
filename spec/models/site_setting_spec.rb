@@ -26,7 +26,7 @@ describe SiteSetting do
 
   describe 'private_message_title_length' do
     it 'returns a range of min/max pm topic title length' do
-      expect(SiteSetting.private_message_title_length).to eq(SiteSetting.defaults[:min_private_message_title_length]..SiteSetting.defaults[:max_topic_title_length])
+      expect(SiteSetting.private_message_title_length).to eq(SiteSetting.defaults[:min_personal_message_title_length]..SiteSetting.defaults[:max_topic_title_length])
     end
   end
 
@@ -123,11 +123,12 @@ describe SiteSetting do
   end
 
   context 'deprecated site settings' do
-    before do
-      SiteSetting.force_https = true
-    end
 
     describe '#use_https' do
+      before do
+        SiteSetting.force_https = true
+      end
+
       it 'should act as a proxy to the new methods' do
         expect(SiteSetting.use_https).to eq(true)
         expect(SiteSetting.use_https?).to eq(true)
@@ -136,6 +137,38 @@ describe SiteSetting do
 
         expect(SiteSetting.force_https).to eq(false)
         expect(SiteSetting.force_https?).to eq(false)
+      end
+    end
+
+    describe 'rename private message to personal message' do
+      before do
+        SiteSetting.min_personal_message_title_length = 15
+        SiteSetting.enable_personal_messages = true
+        SiteSetting.personal_email_time_window_seconds = 15
+        SiteSetting.max_personal_messages_per_day = 15
+        SiteSetting.default_email_personal_messages = true
+      end
+
+      it 'should act as a proxy to the new methods' do
+        expect(SiteSetting.min_private_message_title_length).to eq(15)
+        SiteSetting.min_private_message_title_length = 5
+        expect(SiteSetting.min_personal_message_title_length).to eq(5)
+
+        expect(SiteSetting.enable_private_messages).to eq(true)
+        SiteSetting.enable_private_messages = false
+        expect(SiteSetting.enable_personal_messages).to eq(false)
+
+        expect(SiteSetting.private_email_time_window_seconds).to eq(15)
+        SiteSetting.private_email_time_window_seconds = 5
+        expect(SiteSetting.personal_email_time_window_seconds).to eq(5)
+
+        expect(SiteSetting.max_private_messages_per_day).to eq(15)
+        SiteSetting.max_private_messages_per_day = 5
+        expect(SiteSetting.max_personal_messages_per_day).to eq(5)
+
+        expect(SiteSetting.default_email_private_messages).to eq(true)
+        SiteSetting.default_email_private_messages = false
+        expect(SiteSetting.default_email_personal_messages).to eq(false)
       end
     end
   end

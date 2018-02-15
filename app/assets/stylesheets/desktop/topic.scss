@@ -28,6 +28,7 @@
     font-size: $font-up-4;
     line-height: $line-height-medium;
     overflow: hidden;
+    width: 100%;    
     a {color: $primary;}
   }
   .topic-statuses {
@@ -177,15 +178,6 @@
     transition: width .75s;
   }
 }
-
-.heatmap-high {color: #fe7a15 !important;}
-.heatmap-med {color: #cf7721 !important;}
-.heatmap-low {color: #9b764f !important;}
-.heatmap-high a {color: #fe7a15 !important;}
-.heatmap-med a {color: #cf7721 !important;}
-.heatmap-low a {color: #9b764f !important;}
-
-
 
 #topic-filter {
   background-color: $highlight-medium;

@@ -48,8 +48,9 @@ class ApplicationController < ActionController::Base
   before_action :set_mobile_view
   before_action :block_if_readonly_mode
   before_action :authorize_mini_profiler
-  before_action :preload_json
   before_action :redirect_to_login_if_required
+  before_action :block_if_requires_login
+  before_action :preload_json
   before_action :check_xhr
   after_action  :add_readonly_header
   after_action  :perform_refresh_session
@@ -106,7 +107,7 @@ class ApplicationController < ActionController::Base
   end
 
   def render_rate_limit_error(e)
-    render_json_error e.description, type: :rate_limit, status: 429
+    render_json_error e.description, type: :rate_limit, status: 429, extras: { wait_seconds: e&.available_in }
   end
 
   # If they hit the rate limiter
@@ -158,6 +159,10 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Discourse::InvalidAccess do |e|
+
+    if e.opts[:delete_cookie].present?
+      cookies.delete(e.opts[:delete_cookie])
+    end
     rescue_discourse_actions(
       :invalid_access,
       403,
@@ -187,7 +192,9 @@ class ApplicationController < ActionController::Base
       render_json_error message, type: type, status: status_code
     else
       begin
+        # 404 pages won't have the session and theme_keys without these:
         current_user
+        handle_theme
       rescue Discourse::InvalidAccess
         return render plain: message, status: status_code
       end
@@ -568,6 +575,28 @@ class ApplicationController < ActionController::Base
       # bypass xhr check on PUT / POST / DELETE provided api key is there, otherwise calling api is annoying
       return if !request.get? && (is_api? || is_user_api?)
       raise RenderEmpty.new unless ((request.format && request.format.json?) || request.xhr?)
+    end
+
+    def self.requires_login(arg = {})
+      @requires_login_arg = arg
+    end
+
+    def self.requires_login_arg
+      @requires_login_arg
+    end
+
+    def block_if_requires_login
+      if arg = self.class.requires_login_arg
+        check =
+          if except = arg[:except]
+            !except.include?(action_name.to_sym)
+          elsif only = arg[:only]
+            only.include?(action_name.to_sym)
+          else
+            true
+          end
+        ensure_logged_in if check
+      end
     end
 
     def ensure_logged_in

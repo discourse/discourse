@@ -15,8 +15,12 @@
 }
 
 #keyboard-shortcuts-help {
-  .span6 {
-    width:32%;
+  div.row {
+    width: 100%;
+    div {
+      float: left;
+      width:32%;
+    }
   }
   ul {
     list-style: none;

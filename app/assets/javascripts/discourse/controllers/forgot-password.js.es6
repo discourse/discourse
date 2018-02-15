@@ -20,48 +20,54 @@ export default Ember.Controller.extend(ModalFunctionality, {
   },
 
   actions: {
-    submit() {
-      if (this.get('submitDisabled')) return false;
-
-      this.set('disabled', true);
-
-      ajax('/session/forgot_password', {
-        data: { login: this.get('accountEmailOrUsername').trim() },
-        type: 'POST'
-      }).then(data => {
-        const escaped = escapeExpression(this.get('accountEmailOrUsername'));
-        const isEmail = this.get('accountEmailOrUsername').match(/@/);
-        let key = 'forgot_password.complete_' + (isEmail ? 'email' : 'username');
-        let extraClass;
-
-        if (data.user_found === true) {
-          key += '_found';
-          this.set('accountEmailOrUsername', '');
-          this.set('offerHelp', I18n.t(key, {email: escaped, username: escaped}));
-        } else {
-          if (data.user_found === false) {
-            key += '_not_found';
-            extraClass = 'error';
-          }
-
-          this.flash(I18n.t(key, {email: escaped, username: escaped}), extraClass);
-        }
-      }).catch(e => {
-        this.flash(extractError(e), 'error');
-      }).finally(() => {
-        setTimeout(() => this.set('disabled', false), 1000);
-      });
-
-      return false;
-    },
-
     ok() {
       this.send('closeModal');
     },
 
     help() {
       this.setProperties({ offerHelp: I18n.t('forgot_password.help'), helpSeen: true });
-    }
-  }
+    },
 
+    resetPassword() {
+      return this._submit('/session/forgot_password', 'forgot_password.complete');
+    },
+
+    emailLogin() {
+      return this._submit('/u/email-login', 'email_login.complete');
+    }
+  },
+
+  _submit(route, translationKey) {
+    if (this.get('submitDisabled')) return false;
+    this.set('disabled', true);
+
+    ajax(route, {
+      data: { login: this.get('accountEmailOrUsername').trim() },
+      type: 'POST'
+    }).then(data => {
+      const escaped = escapeExpression(this.get('accountEmailOrUsername'));
+      const isEmail = this.get('accountEmailOrUsername').match(/@/);
+      let key = `${translationKey}_${isEmail ? 'email' : 'username'}`;
+      let extraClass;
+
+      if (data.user_found === true) {
+        key += '_found';
+        this.set('accountEmailOrUsername', '');
+        this.set('offerHelp', I18n.t(key, { email: escaped, username: escaped }));
+      } else {
+        if (data.user_found === false) {
+          key += '_not_found';
+          extraClass = 'error';
+        }
+
+        this.flash(I18n.t(key, { email: escaped, username: escaped }), extraClass);
+      }
+    }).catch(e => {
+      this.flash(extractError(e), 'error');
+    }).finally(() => {
+      this.set('disabled', false);
+    });
+
+    return false;
+  },
 });

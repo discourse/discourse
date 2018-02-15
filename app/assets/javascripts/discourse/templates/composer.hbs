@@ -16,7 +16,7 @@
             {{plugin-outlet name="composer-open" args=(hash model=model)}}
             <div class='reply-to'>
               <div class="reply-details">
-                {{{model.actionTitle}}}
+                {{composer-action-title model=model canWhisper=canWhisper}}
 
                 {{#unless site.mobileView}}
                   {{#if whisperOrUnlistTopicText}}
@@ -65,7 +65,7 @@
                   </div>
                 {{/if}}
                 {{#if canEditTags}}
-                  {{tag-chooser tags=model.tags tabIndex="4" categoryId=model.categoryId}}
+                  {{mini-tag-chooser tags=model.tags tabindex="4" categoryId=model.categoryId}}
                 {{/if}}
 
 

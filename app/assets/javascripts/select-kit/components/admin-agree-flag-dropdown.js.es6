@@ -55,6 +55,22 @@ export default DropdownSelectBox.extend({
       label:  I18n.t("admin.flags.agree_flag"),
     });
 
+    content.push({
+      icon: 'ban',
+      id: 'confirm-agree-suspend',
+      description: I18n.t('admin.flags.agree_flag_suspend_title'),
+      action: () => this.send("showSuspendModal"),
+      label:  I18n.t("admin.flags.agree_flag_suspend"),
+    });
+
+    content.push({
+      icon: 'microphone-slash',
+      id: 'confirm-agree-silence',
+      description: I18n.t('admin.flags.agree_flag_silence_title'),
+      action: () => this.send("showSilenceModal"),
+      label:  I18n.t("admin.flags.agree_flag_silence"),
+    });
+
     if (canDeleteSpammer) {
       content.push({
         title:  I18n.t("admin.flags.delete_spammer_title"),
@@ -77,6 +93,28 @@ export default DropdownSelectBox.extend({
     deleteSpammer() {
       let spammerDetails = this.get("spammerDetails");
       this.attrs.removeAfter(spammerDetails.deleteUser());
+    },
+
+    showSuspendModal() {
+      let post = this.get('post');
+      let user = post.get('user');
+      this.get('adminTools').showSuspendModal(user, {
+        post,
+        before: () => {
+          return this.attrs.removeAfter(post.agreeFlags('suspended'));
+        }
+      });
+    },
+
+    showSilenceModal() {
+      let post = this.get('post');
+      let user = post.get('user');
+      this.get('adminTools').showSilenceModal(user, {
+        post,
+        before: () => {
+          return this.attrs.removeAfter(post.agreeFlags('silenced'));
+        }
+      });
     },
 
     perform(action) {

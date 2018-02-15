@@ -26,6 +26,24 @@ describe Guardian do
     expect { Guardian.new(user) }.not_to raise_error
   end
 
+  describe "can_post_link?" do
+    it "returns false for anonymous users" do
+      expect(Guardian.new.can_post_link?).to eq(false)
+    end
+
+    it "returns true for a regular user" do
+      expect(Guardian.new(user).can_post_link?).to eq(true)
+    end
+
+    it "supports customization by site setting" do
+      user.trust_level = 0
+      SiteSetting.min_trust_to_post_links = 0
+      expect(Guardian.new(user).can_post_link?).to eq(true)
+      SiteSetting.min_trust_to_post_links = 1
+      expect(Guardian.new(user).can_post_link?).to eq(false)
+    end
+  end
+
   describe 'post_can_act?' do
     let(:post) { build(:post) }
     let(:user) { build(:user) }
@@ -48,9 +66,27 @@ describe Guardian do
       expect(Guardian.new(user).post_can_act?(post, :like)).to be_falsey
     end
 
-    it "always allows flagging" do
+    it "allows flagging archived posts" do
       post.topic.archived = true
       expect(Guardian.new(user).post_can_act?(post, :spam)).to be_truthy
+    end
+
+    it "allows flagging of staff posts when allow_flagging_staff is true" do
+      SiteSetting.allow_flagging_staff = true
+      staff_post = Fabricate(:post, user: Fabricate(:moderator))
+      expect(Guardian.new(user).post_can_act?(staff_post, :spam)).to be_truthy
+    end
+
+    it "doesn't allow flagging of staff posts when allow_flagging_staff is false" do
+      SiteSetting.allow_flagging_staff = false
+      staff_post = Fabricate(:post, user: Fabricate(:moderator))
+      expect(Guardian.new(user).post_can_act?(staff_post, :spam)).to eq(false)
+    end
+
+    it "allows liking of staff when allow_flagging_staff is false" do
+      SiteSetting.allow_flagging_staff = false
+      staff_post = Fabricate(:post, user: Fabricate(:moderator))
+      expect(Guardian.new(user).post_can_act?(staff_post, :like)).to eq(true)
     end
 
     it "returns false when liking yourself" do
@@ -70,14 +106,14 @@ describe Guardian do
     end
 
     it "returns false for notify_user if private messages are disabled" do
-      SiteSetting.enable_private_messages = false
+      SiteSetting.enable_personal_messages = false
       user.trust_level = TrustLevel[2]
       expect(Guardian.new(user).post_can_act?(post, :notify_user)).to be_falsey
       expect(Guardian.new(user).post_can_act?(post, :notify_moderators)).to be_falsey
     end
 
     it "returns false for notify_user and notify_moderators if private messages are enabled but threshold not met" do
-      SiteSetting.enable_private_messages = true
+      SiteSetting.enable_personal_messages = true
       SiteSetting.min_trust_to_send_messages = 2
       user.trust_level = TrustLevel[1]
       expect(Guardian.new(user).post_can_act?(post, :notify_user)).to be_falsey
@@ -90,9 +126,15 @@ describe Guardian do
         expect(Guardian.new(user).post_can_act?(post, :like)).to be_truthy
       end
 
-      it "returns false for a new user flagging a standard post as spam" do
+      it "returns false for a new user flagging as spam" do
         user.trust_level = TrustLevel[0]
         expect(Guardian.new(user).post_can_act?(post, :spam)).to be_falsey
+      end
+
+      it "returns true for a new user flagging as spam if enabled" do
+        SiteSetting.min_trust_to_flag_posts = 0
+        user.trust_level = TrustLevel[0]
+        expect(Guardian.new(user).post_can_act?(post, :spam)).to be_truthy
       end
 
       it "returns true for a new user flagging a private message as spam" do
@@ -170,8 +212,8 @@ describe Guardian do
       expect(Guardian.new(user).can_send_private_message?(another_user)).to be_falsey
     end
 
-    context "enable_private_messages is false" do
-      before { SiteSetting.enable_private_messages = false }
+    context "enable_personal_messages is false" do
+      before { SiteSetting.enable_personal_messages = false }
 
       it "returns false if user is not staff member" do
         expect(Guardian.new(trust_level_4).can_send_private_message?(another_user)).to be_falsey
@@ -451,7 +493,7 @@ describe Guardian do
 
       context "when private messages are disabled" do
         before do
-          SiteSetting.enable_private_messages = false
+          SiteSetting.enable_personal_messages = false
         end
 
         it "doesn't allow a regular user to invite" do

@@ -14,8 +14,9 @@ import {
 export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixin, EventsMixin, {
   pluginApiIdentifiers: ["select-kit"],
   layoutName: "select-kit/templates/components/select-kit",
-  classNames: ["select-kit", "select-box-kit"],
+  classNames: ["select-kit"],
   classNameBindings: [
+    "isLoading",
     "isFocused",
     "isExpanded",
     "isDisabled",
@@ -30,17 +31,18 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   isExpanded: false,
   isFocused: false,
   isHidden: false,
+  isLoading: false,
   renderedBodyOnce: false,
   renderedFilterOnce: false,
   tabindex: 0,
   none: null,
   highlightedValue: null,
-  noContentLabel: "select_kit.no_content",
   valueAttribute: "id",
   nameProperty: "name",
   autoFilterable: false,
   filterable: false,
   filter: "",
+  previousFilter: null,
   filterPlaceholder: "select_kit.filter_placeholder",
   filterIcon: "search",
   headerIcon: null,
@@ -54,7 +56,6 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   headerComputedContent: null,
   collectionHeaderComputedContent: null,
   collectionComponent: "select-kit/select-kit-collection",
-  collectionHeight: 200,
   verticalOffset: 0,
   horizontalOffset: 0,
   fullWidthOnMobile: false,
@@ -68,6 +69,8 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   allowContentReplacement: false,
   collectionHeader: null,
   allowAutoSelectFirst: true,
+  maximumSelectionSize: null,
+  maxContentRow: null,
 
   init() {
     this._super();
@@ -119,6 +122,10 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     return this.baseComputedContentItem(contentItem, options);
   },
 
+  validateCreate() { return true; },
+
+  validateSelect() { return true; },
+
   baseComputedContentItem(contentItem, options) {
     let originalContent;
     options = options || {};
@@ -149,8 +156,10 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   },
 
   @computed("filter", "filteredComputedContent.[]")
-  shouldDisplayNoContentRow(filter, filteredComputedContent) {
-    return filter.length > 0 && filteredComputedContent.length === 0;
+  noContentRow(filter, filteredComputedContent) {
+    if (filter.length > 0 && filteredComputedContent.length === 0) {
+      return I18n.t("select_kit.no_content");
+    }
   },
 
   @computed("filter", "filterable", "autoFilterable", "renderedFilterOnce")
@@ -164,7 +173,7 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   @computed("filter", "computedContent")
   shouldDisplayCreateRow(filter, computedContent) {
     if (computedContent.map(c => c.value).includes(filter)) return false;
-    if (this.get("allowAny") && filter.length > 0) return true;
+    if (this.get("allowAny") && filter.length > 0 && this.validateCreate(filter)) return true;
     return false;
   },
 
@@ -185,7 +194,7 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   @computed("filter")
   templateForCreateRow() {
     return (rowComponent) => {
-      return I18n.t("select_box.create", {
+      return I18n.t("select_kit.create", {
         content: rowComponent.get("computedContent.name")
       });
     };
@@ -239,6 +248,16 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     this.setProperties({ filter: "" });
   },
 
+  startLoading() {
+    this.set("isLoading", true);
+    this._boundaryActionHandler("onStartLoading");
+  },
+
+  stopLoading() {
+    this.set("isLoading", false);
+    this._boundaryActionHandler("onStopLoading");
+  },
+
   _setCollectionHeaderComputedContent() {
     const collectionHeaderComputedContent = applyCollectionHeaderCallbacks(
       this.get("pluginApiIdentifiers"),
@@ -284,9 +303,12 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     },
 
     filterComputedContent(filter) {
+      if (filter === this.get("previousFilter")) return;
+
       this.setProperties({
         highlightedValue: null,
         renderedFilterOnce: true,
+        previousFilter: filter,
         filter
       });
       this.autoHighlight();

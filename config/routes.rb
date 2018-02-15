@@ -301,6 +301,7 @@ Discourse::Application.routes.draw do
   get "session/sso_provider" => "session#sso_provider"
   get "session/current" => "session#current"
   get "session/csrf" => "session#csrf"
+  get "session/email-login/:token" => "session#email_login"
   get "composer_messages" => "composer_messages#index"
   post "composer/parse_html" => "composer#parse_html"
 
@@ -330,6 +331,7 @@ Discourse::Application.routes.draw do
 
     put "#{root_path}/update-activation-email" => "users#update_activation_email"
     get "#{root_path}/hp" => "users#get_honeypot_value"
+    post "#{root_path}/email-login" => "users#email_login"
     get "#{root_path}/admin-login" => "users#admin_login"
     put "#{root_path}/admin-login" => "users#admin_login"
     get "#{root_path}/admin-login/:token" => "users#admin_login"
@@ -489,11 +491,14 @@ Discourse::Application.routes.draw do
     end
   end
 
-  get 'notifications' => 'notifications#index'
-  put 'notifications/mark-read' => 'notifications#mark_read'
-  # creating an alias cause the api was extended to mark a single notification
-  # this allows us to cleanly target it
-  put 'notifications/read' => 'notifications#mark_read'
+  resources :notifications, except: :show do
+    collection do
+      put 'mark-read' => 'notifications#mark_read'
+      # creating an alias cause the api was extended to mark a single notification
+      # this allows us to cleanly target it
+      put 'read' => 'notifications#mark_read'
+    end
+  end
 
   match "/auth/:provider/callback", to: "users/omniauth_callbacks#complete", via: [:get, :post]
   match "/auth/failure", to: "users/omniauth_callbacks#failure", via: [:get, :post]
@@ -691,7 +696,9 @@ Discourse::Application.routes.draw do
   post "draft" => "draft#update"
   delete "draft" => "draft#destroy"
 
-  get "service-worker" => "static#service_worker_asset", format: :js
+  if service_worker_asset = Rails.application.assets_manifest.assets['service-worker.js']
+    get service_worker_asset => "static#service_worker_asset", format: :js
+  end
 
   get "cdn_asset/:site/*path" => "static#cdn_asset", format: false
   get "brotli_asset/*path" => "static#brotli_asset", format: false

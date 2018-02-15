@@ -1000,7 +1000,6 @@ ja:
       default_header_text: 選択...
       no_content: 一致する項目が見つかりませんでした
       filter_placeholder: 検索...
-      create: "{{content}} を作成"
     emoji_picker:
       filter_placeholder: 絵文字を探す
       people: ピープル
@@ -1567,8 +1566,6 @@ ja:
         description:
           other: <b>{{count}}</b>個の投稿を選択中。
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "引用"
       edit_reason: "理由: "
       post_number: "投稿{{number}}"

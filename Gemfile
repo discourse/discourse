@@ -36,7 +36,7 @@ gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox', '1.8.36'
+gem 'onebox', '1.8.38'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 
@@ -59,16 +59,13 @@ gem 'aws-sdk-s3', require: false
 gem 'excon', require: false
 gem 'unf', require: false
 
-gem 'email_reply_trimmer', '0.1.9'
+gem 'email_reply_trimmer', '0.1.10'
 
 # Forked until https://github.com/toy/image_optim/pull/149 is merged
 gem 'discourse_image_optim', require: 'image_optim'
 gem 'multi_json'
 gem 'mustache'
 gem 'nokogiri'
-
-# this may end up deprecating nokogiri
-gem 'oga', require: false
 
 gem 'omniauth'
 gem 'omniauth-openid'

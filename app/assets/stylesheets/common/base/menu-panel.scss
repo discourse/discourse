@@ -75,22 +75,45 @@
   li.category-link {
     float: left;
     background-color: transparent;
-    width: 45%;
-    margin: 5px 5px 0 8px;
-    .box {margin-top: 0;}
+    display: inline-flex;
+    margin: 0.25em 0.5em;
+    width: 44%;
     .badge-notification {
       color: dark-light-choose($primary-medium, $secondary-medium);
       background-color: transparent;
       display: inline;
       padding: 0;
+      font-size: $font-down-1;
+      line-height: $line-height-large;
+    }
+    .badge-wrapper {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: inline-block;
+      max-width: 80%;
+      &.bar, &.bullet {
+        color: $primary;
+      }
+      &.box {
+        color: $secondary;
+        + a.badge.badge-notification {
+          padding-top: 2px;
+        }
+        span {
+          z-index: z("base") * -1;        
+        }
+      }
     }
   }
-
+  
   // note these topic counts only appear for anons in the category hamburger drop down
   b.topics-count {
     color: dark-light-choose($primary-medium, $secondary-medium);
     font-weight: normal;
-    font-size: $font-down-2;
+    font-size: $font-down-1;
+  }
+  .box + b.topics-count {
+      padding-top: 2px;      
   }
 
   span.badge-category {

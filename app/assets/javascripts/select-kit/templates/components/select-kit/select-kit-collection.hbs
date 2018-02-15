@@ -30,22 +30,26 @@
   }}
 {{/if}}
 
-{{#each filteredComputedContent as |computedContent|}}
-  {{component rowComponent
-    computedContent=computedContent
-    highlightedValue=highlightedValue
-    computedValue=computedValue
-    templateForRow=templateForRow
-    select=select
-    highlight=highlight
-    options=rowComponentOptions
-  }}
-{{/each}}
-
-{{#if shouldDisplayNoContentRow}}
-  {{#if noContentLabel}}
+{{#if maxContentRow}}
+  <li class="select-kit-row max-content">
+    {{maxContentRow}}
+  </li>
+{{else}}
+  {{#if noContentRow}}
     <li class="select-kit-row no-content">
-      {{i18n noContentLabel}}
+      {{noContentRow}}
     </li>
+  {{else}}
+    {{#each filteredComputedContent as |computedContent|}}
+      {{component rowComponent
+        computedContent=computedContent
+        highlightedValue=highlightedValue
+        computedValue=computedValue
+        templateForRow=templateForRow
+        select=select
+        highlight=highlight
+        options=rowComponentOptions
+      }}
+    {{/each}}
   {{/if}}
 {{/if}}

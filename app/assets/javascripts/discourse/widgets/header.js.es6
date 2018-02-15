@@ -5,6 +5,7 @@ import DiscourseURL from 'discourse/lib/url';
 import { wantsNewWindow } from 'discourse/lib/intercept-click';
 import { applySearchAutocomplete } from "discourse/lib/search";
 import { ajax } from 'discourse/lib/ajax';
+import { addExtraUserClasses } from 'discourse/helpers/user-avatar';
 
 import { h } from 'virtual-dom';
 
@@ -30,10 +31,12 @@ createWidget('header-notifications', {
   html(attrs) {
     const { user } = attrs;
 
-    const contents = [ avatarImg(this.settings.avatarSize, {
-      template: user.get('avatar_template'),
-      username: user.get('username')
-    }) ];
+    const contents = [
+      avatarImg(this.settings.avatarSize, addExtraUserClasses(user, {
+        template: user.get('avatar_template'),
+        username: user.get('username')
+      }))
+    ];
 
     const unreadNotifications = user.get('unread_notifications');
     if (!!unreadNotifications) {
@@ -400,6 +403,10 @@ export default createWidget('header', {
         this.toggleHamburger();
         break;
       case 'page-search':
+        let contextType = this.searchContextType();
+        if (contextType === 'topic') {
+          this.state.searchContextType = contextType;
+        }
         if (!this.togglePageSearch()) {
           msg.event.preventDefault();
           msg.event.stopPropagation();

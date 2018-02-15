@@ -62,7 +62,11 @@ class Auth::DefaultCurrentUserProvider
         begin
           limiter.performed!
         rescue RateLimiter::LimitExceeded
-          raise Discourse::InvalidAccess
+          raise Discourse::InvalidAccess.new(
+            'Invalid Access',
+            nil,
+            delete_cookie: TOKEN_COOKIE
+          )
         end
       end
     end

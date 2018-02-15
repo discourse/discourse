@@ -1,7 +1,7 @@
 require_dependency 'oneboxer'
 
 class OneboxController < ApplicationController
-  before_action :ensure_logged_in
+  requires_login
 
   def show
     unless params[:refresh] == 'true'

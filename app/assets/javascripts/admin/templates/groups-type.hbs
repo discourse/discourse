@@ -1,6 +1,6 @@
 <div class='row groups'>
   {{#if sortedGroups}}
-    <div class='content-list span6'>
+    <div class='content-list'>
       <h3>{{i18n 'admin.groups.edit'}}</h3>
       <ul>
         {{#each sortedGroups as |group|}}
@@ -25,7 +25,7 @@
     </div>
   {{/if}}
 
-  <div class="span13">
+  <div class="content-body">
     {{outlet}}
   </div>
 </div>

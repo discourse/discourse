@@ -369,7 +369,7 @@ export function displayErrorForUpload(data) {
         if (data.jqXHR.responseJSON.message) {
           bootbox.alert(data.jqXHR.responseJSON.message);
         } else {
-          bootbox.alert(data.jqXHR.responseJSON.join("\n"));
+          bootbox.alert(data.jqXHR.responseJSON.errors.join("\n"));
         }
         return;
     }

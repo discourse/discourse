@@ -1,21 +1,21 @@
-.select-box-kit, .select-kit {
+.select-kit {
   &.multi-select {
     width: 300px;
     background: $secondary;
     border-radius: 0;
 
-    .select-box-kit-body, .select-kit-body {
+    .select-kit-body {
       width: 100%;
     }
 
-    .select-box-kit-row, .select-kit-row {
+    .select-kit-row {
       margin: 5px;
       min-height: 1px;
       padding: 5px;
       border-radius: 0;
     }
 
-    .select-box-kit-filter, .select-kit-filter {
+    .select-kit-filter {
       border: 0;
     }
 
@@ -45,7 +45,7 @@
     }
 
     &.is-expanded {
-      .select-box-kit-wrapper, .select-kit-wrapper {
+      .select-kit-wrapper {
         display: block;
         border: 1px solid $tertiary;
         box-shadow: $tertiary 0 0 6px 0px;
@@ -57,7 +57,7 @@
         box-shadow: none;
       }
 
-      .select-box-kit-body, .select-kit-body {
+      .select-kit-body {
         border-radius: 0;
       }
     }

@@ -744,7 +744,6 @@ id:
       password_label: "Atur Kata Sandi"
     select_kit:
       filter_placeholder: Cari...
-      create: "Buat {{konten}}"
     emoji_picker:
       filter_placeholder: Cari emoji
       people: Orang

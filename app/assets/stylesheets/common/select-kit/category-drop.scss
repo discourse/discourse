@@ -6,7 +6,6 @@
       .badge-wrapper {
         font-size: $font-0;
         font-weight: normal;
-        line-height: $line-height-large;
 
         &.box {
           margin: 0;
@@ -17,42 +16,23 @@
         }
       }
 
-      .category-drop-header {
-        padding: 6px 10px;
-      }
-
-      &.bar.has-selection .category-drop-header {
-        padding: 1.5px 10px;
+      &.bar.has-selection .category-drop-header,
+      &.box.has-selection .category-drop-header,
+      &.none.has-selection .category-drop-header {
+        padding: 5px 10px;
       }
 
       &.bullet.has-selection .category-drop-header {
-        padding: 3.5px 10px;
-        span.badge-category {
-          line-height: $line-height-large;
-        }
-      }
-
-      &.box.has-selection .category-drop-header {
-        padding: 4.5px 10px;
-      }
-
-      &.none.has-selection .category-drop-header {
-        padding: 4.5px 10px;
+        padding: 5px 10px;
       }
 
       .category-drop-header {
         background: $primary-low;
         color: $primary;
-        border: none;
-        padding: 6px 10px;
-        font-size: $font-up-1;
-        line-height: $line-height-medium;
+        border: 1px solid transparent;
+        padding: 5px 10px;
+        font-size: $font-0;
         transition: none;
-
-        .badge-category {
-          display: flex;
-          align-items: center;
-        }
 
         .badge-wrapper {
           margin-right: 0;
@@ -65,6 +45,12 @@
         .caret-icon {
           opacity: 1;
         }
+      }
+
+      &.is-expanded .category-drop-header {
+        border: 1px solid $tertiary;
+        -webkit-box-shadow: $tertiary 0 0 6px 0px;
+                box-shadow: $tertiary 0 0 6px 0px;
       }
 
       .select-kit-collection {
@@ -132,17 +118,7 @@
 
         .badge-wrapper {
           margin: 0;
-          display: flex;
-          flex: 1 1 auto;
         }
-      }
-
-      .select-kit-row .badge-wrapper.box {
-        padding: 2.5px 0;
-      }
-
-      .select-kit-row .badge-wrapper.bullet, .select-kit-row .badge-wrapper.none {
-        margin: 2.5px;
       }
 
       &.is-expanded .select-kit-wrapper, .select-kit-wrapper {

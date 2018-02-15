@@ -27,7 +27,8 @@ describe "CommonMark" do
         html.gsub!('<hr />', '<hr>')
         html.gsub!(/<img([^>]+) \/>/, "<img\\1>")
 
-        cooked = PrettyText.markdown(md, sanitize: false, linkify: false)
+        SiteSetting.enable_markdown_linkify = false
+        cooked = PrettyText.markdown(md, sanitize: false)
         cooked.strip!
         cooked.gsub!(" class=\"lang-auto\"", '')
         cooked.gsub!(/<span class="hashtag">(.*)<\/span>/, "\\1")

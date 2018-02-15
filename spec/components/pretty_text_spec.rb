@@ -1,6 +1,5 @@
 require 'rails_helper'
 require 'pretty_text'
-require 'html_normalize'
 
 describe PrettyText do
 
@@ -9,11 +8,11 @@ describe PrettyText do
   end
 
   def n(html)
-    HtmlNormalize.normalize(html)
+    html.strip
   end
 
   def cook(*args)
-    n(PrettyText.cook(*args))
+    PrettyText.cook(*args)
   end
 
   let(:wrapped_image) { "<div class=\"lightbox-wrapper\"><a href=\"//localhost:3000/uploads/default/4399/33691397e78b4d75.png\" class=\"lightbox\" title=\"Screen Shot 2014-04-14 at 9.47.10 PM.png\"><img src=\"//localhost:3000/uploads/default/_optimized/bd9/b20/bbbcd6a0c0_655x500.png\" width=\"655\" height=\"500\"><div class=\"meta\">\n<span class=\"filename\">Screen Shot 2014-04-14 at 9.47.10 PM.png</span><span class=\"informations\">966x737 1.47 MB</span><span class=\"expand\"></span>\n</div></a></div>" }
@@ -33,13 +32,13 @@ describe PrettyText do
 
         topic = Fabricate(:topic, title: "this is a test topic :slight_smile:")
         expected = <<~HTML
-          <aside class="quote" data-topic="#{topic.id}" data-post="2">
+          <aside class="quote" data-post="2" data-topic="#{topic.id}">
           <div class="title">
-            <div class="quote-controls"></div>
-            <a href="http://test.localhost/t/this-is-a-test-topic-slight-smile/#{topic.id}/2">This is a test topic <img src="/images/emoji/twitter/slight_smile.png?v=5" title="slight_smile" alt="slight_smile" class="emoji"></a>
+          <div class="quote-controls"></div>
+          <a href="http://test.localhost/t/this-is-a-test-topic-slight-smile/#{topic.id}/2">This is a test topic <img src="/images/emoji/twitter/slight_smile.png?v=5" title="slight_smile" alt="slight_smile" class="emoji"></a>
           </div>
           <blockquote>
-            <p>ddd</p>
+          <p>ddd</p>
           </blockquote>
           </aside>
         HTML
@@ -126,13 +125,13 @@ describe PrettyText do
 
         topic = Fabricate(:topic, title: "this is a test topic")
         expected = <<~HTML
-          <aside class="quote group-#{group.name}" data-topic="#{topic.id}" data-post="2">
+          <aside class="quote group-#{group.name}" data-post="2" data-topic="#{topic.id}">
           <div class="title">
-            <div class="quote-controls"></div>
-            <img alt class='avatar' height='20' src='//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png' width='20'><a href='http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2'>This is a test topic</a>
+          <div class="quote-controls"></div>
+          <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"><a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic</a>
           </div>
           <blockquote>
-            <p>ddd</p>
+          <p>ddd</p>
           </blockquote>
           </aside>
         HTML
@@ -1235,6 +1234,46 @@ HTML
 
     expect(cooked).to eq(html.strip)
 
+  end
+
+  it "You can disable linkify" do
+    md = "www.cnn.com test.it http://test.com https://test.ab https://a"
+    cooked = PrettyText.cook(md)
+
+    html = <<~HTML
+      <p><a href="http://www.cnn.com" rel="nofollow noopener">www.cnn.com</a> test.it <a href="http://test.com" rel="nofollow noopener">http://test.com</a> <a href="https://test.ab" rel="nofollow noopener">https://test.ab</a> <a href="https://a" rel="nofollow noopener">https://a</a></p>
+    HTML
+
+    expect(cooked).to eq(html.strip)
+
+    # notice how cnn.com is no longer linked but it is
+    SiteSetting.markdown_linkify_tlds = "not_com|it"
+
+    cooked = PrettyText.cook(md)
+    html = <<~HTML
+    <p>www.cnn.com <a href="http://test.it" rel="nofollow noopener">test.it</a> <a href="http://test.com" rel="nofollow noopener">http://test.com</a> <a href="https://test.ab" rel="nofollow noopener">https://test.ab</a> <a href="https://a" rel="nofollow noopener">https://a</a></p>
+    HTML
+
+    expect(cooked).to eq(html.strip)
+
+    # no tlds anymore
+    SiteSetting.markdown_linkify_tlds = ""
+
+    cooked = PrettyText.cook(md)
+    html = <<~HTML
+      <p>www.cnn.com test.it <a href="http://test.com" rel="nofollow noopener">http://test.com</a> <a href="https://test.ab" rel="nofollow noopener">https://test.ab</a> <a href="https://a" rel="nofollow noopener">https://a</a></p>
+    HTML
+
+    expect(cooked).to eq(html.strip)
+
+    # lastly ... what about no linkify
+    SiteSetting.enable_markdown_linkify = false
+
+    cooked = PrettyText.cook(md)
+
+    html = <<~HTML
+      <p>www.cnn.com test.it http://test.com https://test.ab https://a</p>
+    HTML
   end
 
 end

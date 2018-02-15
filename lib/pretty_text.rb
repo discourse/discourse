@@ -167,7 +167,6 @@ module PrettyText
         __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
         __optInput.lookupInlineOnebox = __lookupInlineOnebox;
         __optInput.lookupImageUrls = __lookupImageUrls;
-        #{opts[:linkify] == false ? "__optInput.linkify = false;" : ""}
         __optInput.censoredWords = #{WordWatcher.words_for_action(:censor).join('|').to_json};
       JS
 

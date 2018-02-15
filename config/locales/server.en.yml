@@ -215,6 +215,7 @@ en:
     one: "Sorry, new users can only put one attachment in a post."
     other: "Sorry, new users can only put %{count} attachments in a post."
   no_links_allowed: "Sorry, new users can't put links in posts."
+  links_require_trust: "Sorry, you can't include links in your posts."
   too_many_links:
     one: "Sorry, new users can only put one link in a post."
     other: "Sorry, new users can only put %{count} links in a post."
@@ -393,6 +394,7 @@ en:
               cant_send_pm: "Sorry, you cannot send a personal message to that user."
               no_user_selected: "You must select a valid user."
               reply_by_email_disabled: "Reply by email has been disabled."
+              target_user_not_found: "One of the users you are sending this message to could not be found."
             featured_link:
               invalid: "is invalid. URL should include http:// or https://."
               invalid_category: "can't be edited in this category."
@@ -536,7 +538,7 @@ en:
 
   rate_limiter:
     slow_down: "You have performed this action too many times, try again later."
-    too_many_requests: "We have a daily limit on how many times that action can be taken. Please wait %{time_left} before trying again."
+    too_many_requests: "You have performed this action too many times. Please wait %{time_left} before trying again."
     by_type:
       first_day_replies_per_day: "You've reached the maximum number of replies a new user can create on their first day. Please wait %{time_left} before trying again."
       first_day_topics_per_day: "You've reached the maximum number of topics a new user can create on their first day. Please wait %{time_left} before trying again."
@@ -645,6 +647,10 @@ en:
     title: 'Reset Password'
     success: "You successfully changed your password and are now logged in."
     success_unapproved: "You successfully changed your password."
+
+  email_login:
+    invalid_token: "Sorry, that email login link is too old. Select the Log In button and use 'I forgot my password' to get a new link."
+    title: "Email login"
 
   change_email:
     confirmed: "Your email has been updated."
@@ -955,7 +961,7 @@ en:
     email_polling_errored_recently:
       one: "Email polling has generated an error in the past 24 hours. Look at <a href='/logs' target='_blank'>the logs</a> for more details."
       other: "Email polling has generated %{count} errors in the past 24 hours. Look at <a href='/logs' target='_blank'>the logs</a> for more details."
-    missing_mailgun_api_key: "The server is configured to send emails via mailgun but you haven't provided an API key used the verify the webhook messages."
+    missing_mailgun_api_key: "The server is configured to send emails via mailgun but you haven't provided an API key used to verify the webhook messages."
     bad_favicon_url: "The favicon is failing to load. Check your favicon_url setting in <a href='/admin/site_settings'>Site Settings</a>."
     poll_pop3_timeout: "Connection to the POP3 server is timing out. Incoming email could not be retrieved. Please check your <a href='/admin/site_settings/category/email'>POP3 settings</a> and service provider."
     poll_pop3_auth_error: "Connection to the POP3 server is failing with an authentication error. Please check your <a href='/admin/site_settings/category/email'>POP3 settings</a>."
@@ -968,15 +974,16 @@ en:
     default_locale: "The default language of this Discourse instance"
     allow_user_locale: "Allow users to choose their own language interface preference"
     set_locale_from_accept_language_header: "set interface language for anonymous users from their web browser's language headers. (EXPERIMENTAL, does not work with anonymous cache)"
+    support_mixed_text_direction: "Support mixed left-to-right and right-to-left text directions."
     min_post_length: "Minimum allowed post length in characters"
     min_first_post_length: "Minimum allowed first post (topic body) length in characters"
-    min_private_message_post_length: "Minimum allowed post length in characters for messages"
+    min_personal_message_post_length: "Minimum allowed post length in characters for messages"
     max_post_length: "Maximum allowed post length in characters"
     topic_featured_link_enabled: "Enable posting a link with topics."
     show_topic_featured_link_in_digest: "Show the topic featured link in the digest email."
     min_topic_title_length: "Minimum allowed topic title length in characters"
     max_topic_title_length: "Maximum allowed topic title length in characters"
-    min_private_message_title_length: "Minimum allowed title length for a message in characters"
+    min_personal_message_title_length: "Minimum allowed title length for a message in characters"
     min_search_term_length: "Minimum valid search term length in characters"
     search_tokenize_chinese_japanese_korean: "Force search to tokenize Chinese/Japanese/Korean even on non CJK sites"
     search_prefer_recent_posts: "If searching your large forum is slow, this option tries an index of more recent posts first"
@@ -1036,9 +1043,9 @@ en:
     summary_percent_filter: "When a user clicks 'Summarize This Topic', show the top % of posts"
     summary_max_results: "Maximum posts returned by 'Summary This Topic'"
 
-    enable_private_messages: "Allow trust level 1 (configurable via min trust level to send messages) users to create messages and reply to messages. Note that staff can always send messages no matter what."
-    enable_system_message_replies: "Allows users to reply to system messages, even if private messages are disabled"
-    enable_private_email_messages: "Allow trust level 4 (configurable via min trust level to send messages) users to send private email messages. Note that staff can always send messages no matter what."
+    enable_personal_messages: "Allow trust level 1 (configurable via min trust level to send messages) users to create messages and reply to messages. Note that staff can always send messages no matter what."
+    enable_system_message_replies: "Allows users to reply to system messages, even if personal messages are disabled"
+    enable_personal_email_messages: "Allow trust level 4 (configurable via min trust level to send messages) users to send private email messages. Note that staff can always send messages no matter what."
 
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_base_url: "Base URL used for long polling (when a CDN is serving dynamic content, be sure to set this to origin pull) eg: http://origin.site.com"
@@ -1066,6 +1073,8 @@ en:
 
     traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak."
     enable_markdown_typographer: "Use basic typography rules to improve text readability of paragraphs of text, replaces (c) (tm) etc, with symbols, reduces number of question marks and so on"
+    enable_markdown_linkify: "Automatically treat text that looks like a link as a link: www.site.com and http://site.com will be automatically linked"
+    markdown_linkify_tlds: "List of top level domains that get automatically treated as links"
     post_undo_action_window_mins: "Number of minutes users are allowed to undo recent actions on a post (like, flag, etc)."
     must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site. WARNING: enabling this for a live site will revoke access for existing non-staff users!"
     pending_users_reminder_delay: "Notify moderators if new users have been waiting for approval for longer than this many hours. Set to -1 to disable notifications."
@@ -1144,6 +1153,7 @@ en:
     sso_allows_all_return_paths: "Do not restrict the domain for return_paths provided by SSO (by default return path must be on current site)"
 
     enable_local_logins: "Enable local username and password login based accounts. (Note: this must be enabled for invites to work)"
+    enable_local_logins_via_email: "Email user logins via email."
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     enable_signup_cta: "Show a notice to returning anonymous users prompting them to sign up for an account."
     enable_yahoo_logins: "Enable Yahoo authentication"
@@ -1201,7 +1211,7 @@ en:
     max_bookmarks_per_day: "Maximum number of bookmarks per user per day."
     max_edits_per_day: "Maximum number of edits per user per day."
     max_topics_per_day: "Maximum number of topics a user can create per day."
-    max_private_messages_per_day: "Maximum number of messages users can create per day."
+    max_personal_messages_per_day: "Maximum number of messages users can create per day."
     max_invites_per_day: "Maximum number of invites a user can send per day."
     max_topic_invitations_per_day: "Maximum number of topic invitations a user can send per day."
 
@@ -1277,6 +1287,7 @@ en:
     tl3_links_no_follow: "Do not remove rel=nofollow from links posted by trust level 3 users."
 
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
+    allow_flagging_staff: "If enabled, users can flag posts from staff accounts."
 
     min_trust_to_edit_wiki_post: "The minimum trust level required to edit post marked as wiki."
 
@@ -1287,6 +1298,9 @@ en:
     min_trust_to_send_messages: "The minimum trust level required to create new personal messages."
 
     min_trust_to_send_email_messages: "The minimum trust level required to send new personal messages via email (to staged users)."
+
+    min_trust_to_flag_posts: "The minimum trust level required to flag posts"
+    min_trust_to_post_links: "The minimum trust level required to include links in posts"
 
     newuser_max_links: "How many links a new user can add to a post."
     newuser_max_images: "How many images a new user can add to a post."
@@ -1300,7 +1314,7 @@ en:
     create_thumbnails: "Create thumbnails and lightbox images that are too large to fit in a post."
 
     email_time_window_mins: "Wait (n) minutes before sending any notification emails, to give users a chance to edit and finalize their posts."
-    private_email_time_window_seconds: "Wait (n) seconds before sending any private notification emails, to give users a chance to edit and finalize their messages."
+    personal_email_time_window_seconds: "Wait (n) seconds before sending any private notification emails, to give users a chance to edit and finalize their messages."
     email_posts_context: "How many prior replies to include as context in notification emails."
     flush_timings_secs: "How frequently we flush timing data to the server, in seconds."
     title_max_word_length: "The maximum allowed word length, in characters, in a topic title."
@@ -1548,7 +1562,7 @@ en:
 
     default_email_digest_frequency: "How often users receive summary emails by default."
     default_include_tl0_in_digests: "Include posts from new users in summary emails by default. Users can change this in their preferences."
-    default_email_private_messages: "Send an email when someone messages the user by default."
+    default_email_personal_messages: "Send an email when someone messages the user by default."
     default_email_direct: "Send an email when someone quotes/replies to/mentions or invites the user by default."
     default_email_mailing_list_mode: "Send an email for every new post by default."
     default_email_mailing_list_mode_frequency: "Users who enable mailing list mode will receive emails this often by default."
@@ -1631,6 +1645,7 @@ en:
       staged_users_disabled: "You must first enable 'staged users' before enabling this setting."
       reply_by_email_disabled: "You must first enable 'reply by email' before enabling this setting."
       sso_url_is_empty: "You must set a 'sso url' before enabling this setting."
+      enable_local_logins_disabled: "You must first enable 'enable local logins' before enabling this setting."
 
   search:
     within_post: "#%{post_number} by %{username}"
@@ -2763,6 +2778,17 @@ en:
         Click the following link to choose a new password:
         %{base_url}/u/password-reset/%{email_token}
 
+    email_login:
+      title: "Email login link"
+      subject_template: "[%{email_prefix}] Email login link"
+      text_body_template: |
+        Somebody asked to login your account on [%{site_name}](%{base_url}).
+
+        If it was not you, you can safely ignore this email.
+
+        Click the following link to login:
+        %{base_url}/session/email-login/%{email_token}
+
     set_password:
       title: "Set Password"
       subject_template: "[%{email_prefix}] Set Password"
@@ -2834,8 +2860,8 @@ en:
 
         A staff member approved your account on %{site_name}.
 
-        Click the following link to confirm and activate your new account:
-        %{base_url}/u/activate-account/%{email_token}
+        You can now access your new account by logging in at:
+        %{base_url}
 
         If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
 

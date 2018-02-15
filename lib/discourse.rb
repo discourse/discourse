@@ -64,12 +64,12 @@ module Discourse
 
   # When they don't have permission to do something
   class InvalidAccess < StandardError
-    attr_reader :obj, :custom_message
+    attr_reader :obj, :custom_message, :opts
     def initialize(msg = nil, obj = nil, opts = nil)
       super(msg)
 
-      opts ||= {}
-      @custom_message = opts[:custom_message] if opts[:custom_message]
+      @opts = opts || {}
+      @custom_message = opts[:custom_message] if @opts[:custom_message]
       @obj = obj
     end
   end

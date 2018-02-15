@@ -108,6 +108,9 @@ export default Ember.Mixin.create({
       .on("keydown.select-kit", (event) => {
         const keyCode = event.keyCode || event.which;
 
+        if (keyCode === this.keys.BACKSPACE && typeof this.backspaceFromFilter === "function") {
+          this.backspaceFromFilter(event);
+        };
         if (keyCode === this.keys.TAB) this.tabFromFilter(event);
         if (keyCode === this.keys.ESC) this.escapeFromFilter(event);
         if (keyCode === this.keys.ENTER) this.enterFromFilter(event);

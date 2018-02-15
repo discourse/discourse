@@ -42,7 +42,6 @@ export default Ember.Mixin.create({
 
   @on("didRender")
   _adjustPosition() {
-    this.$collection().css("max-height", this.get("collectionHeight"));
     this._applyFixedPosition();
     this._applyDirection();
     this._positionWrapper();

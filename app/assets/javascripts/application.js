@@ -25,6 +25,7 @@
 //= require ./discourse/lib/key-value-store
 //= require ./discourse/lib/computed
 //= require ./discourse/lib/formatter
+//= require ./discourse/lib/text-direction
 //= require ./discourse/lib/eyeline
 //= require ./discourse/lib/show-modal
 //= require ./discourse/mixins/scrolling

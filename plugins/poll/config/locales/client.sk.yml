@@ -60,6 +60,7 @@ sk:
         help:
           options_count: Zadajte aspoň 2 možnosti
           invalid_values: Minimálna hodnota musí byť menšia ako maximálna hodnota.
+          min_step_value: Minimálna hodnota pre krok je 1
         poll_type:
           label: Typ
           regular: Jedna možnosť

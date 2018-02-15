@@ -165,16 +165,31 @@ module Oneboxer
 
     def self.local_topic_html(url, route, opts)
       return unless current_user = User.find_by(id: opts[:user_id])
-      return unless current_category = Category.find_by(id: opts[:category_id])
-      return unless Guardian.new(current_user).can_see_category?(current_category)
+
+      if current_category = Category.find_by(id: opts[:category_id])
+        return unless Guardian.new(current_user).can_see_category?(current_category)
+      end
+
+      topic = Topic.find_by(id: route[:topic_id])
+
+      return unless topic
+      return if topic.private_message?
+
+      if current_category&.id != topic.category_id
+        return unless Guardian.new.can_see_topic?(topic)
+      end
+
+      post = nil
+      post_number = route[:post_number].to_i
+      if post_number > 1
+        post = topic.posts.where(post_number: route[:post_number].to_i).first
+      else
+        post = topic.ordered_posts.first
+      end
+
+      return if !post || post.hidden || post.post_type != Post.types[:regular]
 
       if route[:post_number].to_i > 1
-        post = Post.find_by(topic_id: route[:topic_id], post_number: route[:post_number])
-
-        return unless post.present? && !post.hidden
-        return unless current_category.id == post.topic.category_id || Guardian.new.can_see_post?(post)
-
-        topic = post.topic
         excerpt = post.excerpt(SiteSetting.post_onebox_maxlength)
         excerpt.gsub!(/[\r\n]+/, " ")
         excerpt.gsub!("[/quote]", "[quote]") # don't break my quote
@@ -183,18 +198,13 @@ module Oneboxer
 
         PrettyText.cook(quote)
       else
-        return unless topic = Topic.find_by(id: route[:topic_id])
-        return unless current_category.id == topic.category_id || Guardian.new.can_see_topic?(topic)
-
-        first_post = topic.ordered_posts.first
-
         args = {
           topic_id: topic.id,
           avatar: PrettyText.avatar_img(topic.user.avatar_template, "tiny"),
           original_url: url,
           title: PrettyText.unescape_emoji(CGI::escapeHTML(topic.title)),
           category_html: CategoryBadge.html_for(topic.category),
-          quote: first_post.excerpt(SiteSetting.post_onebox_maxlength),
+          quote: post.excerpt(SiteSetting.post_onebox_maxlength),
         }
 
         template = File.read("#{Rails.root}/lib/onebox/templates/discourse_topic_onebox.hbs")

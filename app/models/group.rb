@@ -281,13 +281,13 @@ class Group < ActiveRecord::Base
     remove_subquery =
       case name
       when :admins
-        "SELECT id FROM users WHERE NOT admin"
+        "SELECT id FROM users WHERE id <= 0 OR NOT admin"
       when :moderators
-        "SELECT id FROM users WHERE NOT moderator"
+        "SELECT id FROM users WHERE id <= 0 OR NOT moderator"
       when :staff
-        "SELECT id FROM users WHERE NOT admin AND NOT moderator"
+        "SELECT id FROM users WHERE id <= 0 OR (NOT admin AND NOT moderator)"
       when :trust_level_0, :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
-        "SELECT id FROM users WHERE trust_level < #{id - 10}"
+        "SELECT id FROM users WHERE id <= 0 OR trust_level < #{id - 10}"
       end
 
     exec_sql <<-SQL
@@ -301,15 +301,15 @@ class Group < ActiveRecord::Base
     insert_subquery =
       case name
       when :admins
-        "SELECT id FROM users WHERE admin"
+        "SELECT id FROM users WHERE id > 0 AND admin"
       when :moderators
-        "SELECT id FROM users WHERE moderator"
+        "SELECT id FROM users WHERE id > 0 AND moderator"
       when :staff
-        "SELECT id FROM users WHERE moderator OR admin"
+        "SELECT id FROM users WHERE id > 0 AND (moderator OR admin)"
       when :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
-        "SELECT id FROM users WHERE trust_level >= #{id - 10}"
+        "SELECT id FROM users WHERE id > 0 AND trust_level >= #{id - 10}"
       when :trust_level_0
-        "SELECT id FROM users"
+        "SELECT id FROM users WHERE id > 0"
       end
 
     exec_sql <<-SQL

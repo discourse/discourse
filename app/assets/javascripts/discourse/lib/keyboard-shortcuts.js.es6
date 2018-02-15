@@ -71,7 +71,7 @@ export default {
     let siteSettings = this.container.lookup('site-settings:main');
 
     // Disable the shortcut if private messages are disabled
-    if (!siteSettings.enable_private_messages) {
+    if (!siteSettings.enable_personal_messages) {
       delete bindings['g m'];
     }
 

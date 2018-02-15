@@ -7,8 +7,10 @@
 
 ro:
   site_settings:
+    poll_enabled: "Permiți sondaje?"
     poll_maximum_options: "Numărul maxim admis de opțiuni într-un sondaj"
     poll_edit_window_mins: "Număr de minute după crearea postării pe parcursul cărora sondajele pot fi editate."
+    poll_minimum_trust_level_to_create: "Definește nivelul minim de încredere pentru a crea sondaje."
   poll:
     multiple_polls_without_name: "Există mai multe sondaje fără nume. Folosește atributul '<code>name</code>' pentru a identifica sondajele proprii"
     multiple_polls_with_same_name: "Există mai multe sondaje cu același nume: <strong>%{name}</strong>. Folosește atributul '<code>name</code>' pentru a identifica sondajele."
@@ -40,5 +42,6 @@ ro:
     poll_must_be_open_to_vote: "Sondajul trebuie să fie deschis pentru votare."
     topic_must_be_open_to_toggle_status: "Subiectul trebuie să fie activ pentru a se schimba statutul."
     only_staff_or_op_can_toggle_status: "Doar un administrator sau autorul postării inițiale poate schimba starea unui sondaj."
+    insufficient_rights_to_create: "Nu ai permisiunea de a crea sondaje."
     email:
       link_to_poll: "Click pentru afișarea sondajului."
