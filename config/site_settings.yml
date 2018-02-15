@@ -969,7 +969,7 @@ security:
   allow_moderators_to_create_categories: false
   non_crawler_user_agents:
     hidden: true
-    default: 'trident|webkit|gecko|chrome|safari|msie|opera'
+    default: 'trident|webkit|gecko|chrome|safari|msie|opera|goanna'
     type: list
   crawler_user_agents:
     hidden: true
