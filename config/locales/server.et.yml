@@ -357,7 +357,6 @@ et:
     change_failed_explanation: "Üritasid alandada %{user_name} tasemele '%{new_trust_level}'. Samas on tal juba tase'%{current_trust_level}'. %{user_name} jääb tasemele '%{current_trust_level}' - kui soovid alandada kasutaja taset, siis lukusta kõigepealt usaldustase."
   rate_limiter:
     slow_down: "Oled antud seda toimingut liiga palju proovinud. Proovi hiljem uuesti."
-    too_many_requests: "Antud tegevuse jaoks on meil päevane kordade limiit. Palun oota %{time_left} enne kui uuesti proovid."
     by_type:
       first_day_replies_per_day: "Oled ületanud uuele kasutajale esimesel päeval lubatud vastuste limiidi. Palun oota %{time_left} enne kui uuesti proovid."
       first_day_topics_per_day: "Oled ületanud uuele kasutajale esimesel päeval lubatud teemade lisamise limiidi. Palun oota %{time_left} enne kui uuesti proovid."
@@ -679,7 +678,6 @@ et:
     max_post_length: "Maksimaalne lubatud postituse pikkus tähemärkides"
     min_topic_title_length: "Lühim lubatud teema pealkirja pikkus tähemärkides"
     max_topic_title_length: "Maksimaalne lubatud teema pealkirja pikkus tähemärkides"
-    min_personal_message_title_length: "Minimaalne lubatud teema pealkirja pikkus tähemärkides"
     enable_instagram_logins: "Luba autentimine Instagrami abil, nõuab instagram_consumer_key ja instagram_consumer_secret"
     instagram_consumer_key: "Teenusekasutaja avalik võti Instagrami abil autentimiseks"
     instagram_consumer_secret: "Teenusekasutaja salajane võti Instagrami abil autentimiseks"

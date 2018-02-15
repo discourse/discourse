@@ -219,7 +219,6 @@ id:
     leader:
       title: "pemimpin"
   rate_limiter:
-    too_many_requests: "Kami membatasi jumlah tindakan itu dapat dilakukan dalam satu hari. Mohon tunggu %{time_left} sebelum mencoba lagi."
     hours:
       other: "%{count} jam"
     minutes:

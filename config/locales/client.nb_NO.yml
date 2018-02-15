@@ -764,6 +764,7 @@ nb_NO:
         title: "invitasjoner"
         user: "Invitert bruker"
         sent: "Sendt"
+        none: "Ingen invitasjoner å vise."
         truncated:
           one: "Viser den første invitasjonen."
           other: "Viser de {{count}} første invitisajonene."
@@ -1059,7 +1060,6 @@ nb_NO:
       default_header_text: Velg…
       no_content: Ingen treff funnet
       filter_placeholder: Søk…
-      create: "Opprett {{content}}"
     emoji_picker:
       filter_placeholder: Søk etter emoji
       people: Folk
@@ -1927,7 +1927,7 @@ nb_NO:
       edit: 'rediger'
       edit_long: "Rediger"
       view: 'Se tråder i kategori'
-      general: 'Generellt'
+      general: 'Generelt'
       settings: 'Innstillinger'
       topic_template: "Mal for tråd"
       tags: "Stikkord"
@@ -2447,11 +2447,9 @@ nb_NO:
         moderation_history: "Moderatorhistorikk"
         agree: "Godta"
         agree_title: "Bekreft at denne rapporteringen er gyldig og korrekt"
-        agree_flag_hide_post: "Samtykk og skjul innlegg"
         agree_flag_hide_post_title: "Gjem dette innlegget og send en melding til brukeren automatisk med en forespørsel om gjøre endringer."
         agree_flag_restore_post: "Samtykk og gjenopprett innlegg"
         agree_flag_restore_post_title: "Gjenopprett innlegget slik at alle brukere kan se det."
-        agree_flag: "Samtykk og behold innlegg"
         agree_flag_title: "Samtykk med flagg og behold innlegget uendret."
         ignore_flag: "Ignorer"
         ignore_flag_title: "Fjern denne rapporteringen; den krever ingen handling på dette tidspunktet."
@@ -2483,7 +2481,6 @@ nb_NO:
         system: "System"
         error: "Noe gikk galt"
         reply_message: "Svar"
-        suspended_for_post: "Brukeren ble utestengt for dette innlegget."
         no_results: "Det finnes ingen rapporterte innlegg."
         topic_flagged: "Denne tråden er blitt rapportert."
         show_full: "vis hele innlegget"
@@ -2655,6 +2652,7 @@ nb_NO:
           label: "Last opp"
           title: "Last opp en sikkerhetskopi til denne instansen"
           uploading: "Laster opp…"
+          success: "Opplastingen av '{{filename}}' var vellykket. Filen blir nå bearbeidet og det vil ta opp til et minutt før den dukker opp i listen."
           error: "Det oppstod en feil ved opplastingen av '{{filename}}': {{message}}"
         operations:
           is_running: "En prosess pågår…"

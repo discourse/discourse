@@ -1000,7 +1000,6 @@ ja:
       default_header_text: 選択...
       no_content: 一致する項目が見つかりませんでした
       filter_placeholder: 検索...
-      create: "{{content}} を作成"
     emoji_picker:
       filter_placeholder: 絵文字を探す
       people: ピープル
