@@ -139,6 +139,17 @@ describe OneboxController do
       expect(response.body).not_to include('blockquote')
     end
 
+    it 'does not allow whisper onebox' do
+      log_in
+
+      post = create_post
+      whisper = create_post(topic_id: post.topic_id, post_type: Post.types[:whisper])
+      url = Discourse.base_url + whisper.url
+
+      get :show, params: { url: url }, format: :json
+      expect(response.body).not_to include('blockquote')
+    end
+
     it 'allows onebox to public topics/posts in PM' do
       log_in
 
