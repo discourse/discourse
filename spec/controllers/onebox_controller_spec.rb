@@ -129,6 +129,16 @@ describe OneboxController do
       expect(response.body).not_to include('blockquote')
     end
 
+    it 'does not allow onebox of PMs' do
+      user = log_in
+
+      post = create_post(archetype: 'private_message', target_usernames: [user.username])
+      url = Discourse.base_url + post.url
+
+      get :show, params: { url: url }, format: :json
+      expect(response.body).not_to include('blockquote')
+    end
+
     it 'allows onebox to public topics/posts in PM' do
       log_in
 
