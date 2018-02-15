@@ -165,14 +165,16 @@ module Oneboxer
 
     def self.local_topic_html(url, route, opts)
       return unless current_user = User.find_by(id: opts[:user_id])
-      return unless current_category = Category.find_by(id: opts[:category_id])
-      return unless Guardian.new(current_user).can_see_category?(current_category)
+
+      if current_category = Category.find_by(id: opts[:category_id])
+        return unless Guardian.new(current_user).can_see_category?(current_category)
+      end
 
       if route[:post_number].to_i > 1
         post = Post.find_by(topic_id: route[:topic_id], post_number: route[:post_number])
 
         return unless post.present? && !post.hidden
-        return unless current_category.id == post.topic.category_id || Guardian.new.can_see_post?(post)
+        return unless current_category&.id == post.topic.category_id || Guardian.new.can_see_post?(post)
 
         topic = post.topic
         excerpt = post.excerpt(SiteSetting.post_onebox_maxlength)
@@ -184,7 +186,7 @@ module Oneboxer
         PrettyText.cook(quote)
       else
         return unless topic = Topic.find_by(id: route[:topic_id])
-        return unless current_category.id == topic.category_id || Guardian.new.can_see_topic?(topic)
+        return unless current_category&.id == topic.category_id || Guardian.new.can_see_topic?(topic)
 
         first_post = topic.ordered_posts.first
 
