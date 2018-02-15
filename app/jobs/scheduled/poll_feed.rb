@@ -38,7 +38,7 @@ module Jobs
       require 'rss'
       require_dependency 'feed_item_accessor'
       require_dependency 'feed_element_installer'
-      @@rss_loaded
+      @@rss_loaded = true
     end
 
     def not_polled_recently?
