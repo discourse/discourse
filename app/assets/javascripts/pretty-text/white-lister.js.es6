@@ -138,6 +138,7 @@ const DEFAULT_LIST = [
   'div.title',
   'div[align]',
   'div[dir]',
+  'div[data-theme-*]',
   'dl',
   'dt',
   'em',
