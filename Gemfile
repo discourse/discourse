@@ -67,9 +67,6 @@ gem 'multi_json'
 gem 'mustache'
 gem 'nokogiri'
 
-# this may end up deprecating nokogiri
-gem 'oga', require: false
-
 gem 'omniauth'
 gem 'omniauth-openid'
 gem 'openid-redis-store'
