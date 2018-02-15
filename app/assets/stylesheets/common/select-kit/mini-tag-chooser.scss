@@ -28,7 +28,7 @@
         border-top: 0;
       }
 
-      .select-kit-wrapper {
+      &.is-expanded .select-kit-wrapper, .select-kit-wrapper {
         display: none;
       }
 

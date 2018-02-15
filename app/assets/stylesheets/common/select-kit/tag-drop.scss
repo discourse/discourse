@@ -6,15 +6,21 @@
       .tag-drop-header {
         background: $primary-low;
         color: $primary;
-        border: none;
-        padding: 4.5px 10px;
-        font-size: $font-up-1;
-        line-height: $line-height-large;
+        border: 1px solid transparent;
+        padding: 5px 10px;
+        font-size: $font-0;
+        transition: none;
 
         .d-icon {
           opacity: 1;
           font-size: $font-0;
         }
+      }
+
+      &.is-expanded .tag-drop-header {
+        border: 1px solid $tertiary;
+        -webkit-box-shadow: $tertiary 0 0 6px 0px;
+                box-shadow: $tertiary 0 0 6px 0px;
       }
 
       .select-kit-collection {
