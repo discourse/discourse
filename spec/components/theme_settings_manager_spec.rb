@@ -62,5 +62,32 @@ describe ThemeSettingsManager do
       int_setting.value = "text"
       expect(int_setting.value).to eq(0)
     end
+
+    it "can have min or max value" do
+      int_setting = find_by_name(:integer_setting_02)
+      expect { int_setting.value = 0 }.to raise_error(Discourse::InvalidParameters)
+      expect { int_setting.value = 61 }.to raise_error(Discourse::InvalidParameters)
+
+      int_setting.value = 60
+      expect(int_setting.value).to eq(60)
+
+      int_setting.value = 1
+      expect(int_setting.value).to eq(1)
+    end
+  end
+
+  context "String" do
+    it "can have min or max length" do
+      string_setting = find_by_name(:string_setting_02)
+      expect { string_setting.value = "a" }.to raise_error(Discourse::InvalidParameters)
+
+      string_setting.value = "ab"
+      expect(string_setting.value).to eq("ab")
+
+      string_setting.value = "ab" * 10
+      expect(string_setting.value).to eq("ab" * 10)
+
+      expect { string_setting.value = ("a" * 21) }.to raise_error(Discourse::InvalidParameters)
+    end
   end
 end

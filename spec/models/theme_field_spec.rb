@@ -87,6 +87,12 @@ HTML
     expect(field.error).to include(I18n.t("#{key}.data_type_not_a_number", name: "unsupported_setting"))
   end
 
+  it "generates errors when default value is not within allowed range" do
+    field = create_yaml_field(get_fixture("invalid"))
+    expect(field.error).to include(I18n.t("#{key}.default_out_range", name: "default_out_of_range"))
+    expect(field.error).to include(I18n.t("#{key}.default_out_range", name: "string_default_out_of_range"))
+  end
+
   it "works correctly when valid yaml is provided" do
     field = create_yaml_field(get_fixture("valid"))
     expect(field.error).to be_nil
