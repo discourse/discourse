@@ -32,6 +32,8 @@ module Jobs
 
     private
 
+    @@rss_loaded = false
+
     # rss lib is very expensive memory wise, no need to load it till it is needed
     def ensure_rss_loaded
       return if @@rss_loaded
