@@ -173,8 +173,11 @@ module Oneboxer
       if route[:post_number].to_i > 1
         post = Post.find_by(topic_id: route[:topic_id], post_number: route[:post_number])
 
-        return unless post.present? && !post.hidden
-        return unless current_category&.id == post.topic.category_id || Guardian.new.can_see_post?(post)
+        return if !post || post.hidden || post.topic.private_message?
+
+        if current_category&.id != post.topic.category_id
+          return if !Guardian.new.can_see_post?(post)
+        end
 
         topic = post.topic
         excerpt = post.excerpt(SiteSetting.post_onebox_maxlength)
@@ -185,8 +188,13 @@ module Oneboxer
 
         PrettyText.cook(quote)
       else
-        return unless topic = Topic.find_by(id: route[:topic_id])
-        return unless current_category&.id == topic.category_id || Guardian.new.can_see_topic?(topic)
+        topic = Topic.find_by(id: route[:topic_id])
+
+        return if !topic || topic.private_message?
+
+        if current_category&.id != topic.category_id
+          return if !Guardian.new.can_see_topic?(topic)
+        end
 
         first_post = topic.ordered_posts.first
 
