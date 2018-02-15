@@ -120,6 +120,12 @@
         margin-left: 5px;
       }
 
+      &:hover {
+        .d-icon {
+          color: $primary-low;
+        }
+      }
+
       &.is-focused {
         outline-style: auto;
         outline-color: $tertiary;
