@@ -176,6 +176,7 @@ $tag-color: $primary-medium;
 
 .mobile-view .topic-list-item .discourse-tags {
   display: inline-flex;
+  flex-wrap: wrap;
   font-size: $font-down-1;
   margin-top: 0;
   .discourse-tag {
