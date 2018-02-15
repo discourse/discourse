@@ -3,9 +3,6 @@
 #
 require 'digest/sha1'
 require 'excon'
-require 'rss'
-require_dependency 'feed_item_accessor'
-require_dependency 'feed_element_installer'
 require_dependency 'final_destination'
 require_dependency 'post_creator'
 require_dependency 'post_revisor'
@@ -27,11 +24,22 @@ module Jobs
     end
 
     def poll_feed
+      ensure_rss_loaded
+      # defer loading rss
       feed = Feed.new
       import_topics(feed.topics)
     end
 
     private
+
+    # rss lib is very expensive memory wise, no need to load it till it is needed
+    def ensure_rss_loaded
+      return if @@rss_loaded
+      require 'rss'
+      require_dependency 'feed_item_accessor'
+      require_dependency 'feed_element_installer'
+      @@rss_loaded
+    end
 
     def not_polled_recently?
       $redis.set(
