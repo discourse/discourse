@@ -26,7 +26,6 @@ else
 end
 
 gem 'mail'
-gem 'mime-types', require: 'mime/types/columnar'
 gem 'mini_mime'
 gem 'mini_suffix'
 
@@ -36,7 +35,7 @@ gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox', '1.8.36'
+gem 'onebox', '1.8.38'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 
@@ -66,9 +65,6 @@ gem 'discourse_image_optim', require: 'image_optim'
 gem 'multi_json'
 gem 'mustache'
 gem 'nokogiri'
-
-# this may end up deprecating nokogiri
-gem 'oga', require: false
 
 gem 'omniauth'
 gem 'omniauth-openid'

@@ -148,9 +148,9 @@ class StaticController < ApplicationController
   def service_worker_asset
     respond_to do |format|
       format.js do
-
-        # we take 1 hour to give a new service worker to all users
-        immutable_for 1.hour
+        # https://github.com/w3c/ServiceWorker/blob/master/explainer.md#updating-a-service-worker
+        # Maximum cache that the service worker will respect is 24 hours.
+        immutable_for 24.hours
 
         render(
           plain: Rails.application.assets_manifest.find_sources('service-worker.js').first,

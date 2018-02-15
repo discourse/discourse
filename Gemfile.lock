@@ -41,7 +41,6 @@ GEM
     annotate (2.7.2)
       activerecord (>= 3.2, < 6.0)
       rake (>= 10.4, < 13.0)
-    ansi (1.5.0)
     arel (8.0.0)
     ast (2.3.0)
     aws-partitions (1.24.0)
@@ -163,16 +162,13 @@ GEM
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     lru_redux (1.1.0)
-    mail (2.6.6)
-      mime-types (>= 1.16, < 4)
-    memory_profiler (0.9.8)
+    mail (2.7.0)
+      mini_mime (>= 0.1.1)
+    memory_profiler (0.9.10)
     message_bus (2.1.2)
       rack (>= 1.1.3)
     metaclass (0.0.4)
     method_source (0.8.2)
-    mime-types (3.1)
-      mime-types-data (~> 3.2015)
-    mime-types-data (3.2016.0521)
     mini_mime (0.1.3)
     mini_portile2 (2.3.0)
     mini_racer (0.1.15)
@@ -200,9 +196,6 @@ GEM
       multi_json (~> 1.3)
       multi_xml (~> 0.5)
       rack (>= 1.2, < 3)
-    oga (2.10)
-      ast
-      ruby-ll (~> 2.1)
     oj (3.1.0)
     omniauth (1.6.1)
       hashie (>= 3.4.6, < 3.6.0)
@@ -232,7 +225,7 @@ GEM
     omniauth-twitter (1.3.0)
       omniauth-oauth (~> 1.1)
       rack
-    onebox (1.8.36)
+    onebox (1.8.38)
       fast_blank (>= 1.0.0)
       htmlentities (~> 4.3)
       moneta (~> 1.0)
@@ -334,9 +327,6 @@ GEM
       rainbow (>= 2.2.2, < 3.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (~> 1.0, >= 1.0.1)
-    ruby-ll (2.1.2)
-      ansi
-      ast
     ruby-openid (2.7.0)
     ruby-prof (0.16.2)
     ruby-progressbar (1.9.0)
@@ -449,7 +439,6 @@ DEPENDENCIES
   mail
   memory_profiler
   message_bus
-  mime-types
   mini_mime
   mini_racer
   mini_suffix
@@ -459,7 +448,6 @@ DEPENDENCIES
   multi_json
   mustache
   nokogiri
-  oga
   oj
   omniauth
   omniauth-facebook
@@ -469,7 +457,7 @@ DEPENDENCIES
   omniauth-oauth2
   omniauth-openid
   omniauth-twitter
-  onebox (= 1.8.36)
+  onebox (= 1.8.38)
   openid-redis-store
   pg (~> 0.21.0)
   pry-nav

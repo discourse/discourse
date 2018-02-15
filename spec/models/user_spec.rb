@@ -1619,7 +1619,7 @@ describe User do
     end
   end
 
-  describe ".activate" do
+  describe "#activate" do
     let!(:inactive) { Fabricate(:user, active: false) }
 
     it 'confirms email token and activates user' do

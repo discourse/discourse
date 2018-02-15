@@ -351,46 +351,6 @@ input {
   @include clearfix;
 }
 
-.span {
-  &4 {
-    width: 196px;
-    margin-right: 12px;
-    float: left;
-  }
-
-  &6 {
-    width: 27.027%;
-    float: left;
-  }
-
-  &8 {
-    width: 404px;
-    float: left;
-  }
-
-  &10 {
-    width: 508px;
-    float: left;
-  }
-
-  &13 {
-    width: 59.8198%;
-    float: left;
-  }
-
-  &15 {
-    /* intentionally no width set here, do not add one */
-    margin-left: 12px;
-    float: left;
-  }
-
-  &24 {
-    width: 1236px;
-    float: left;
-    color: amarillo;
-  }
-}
-
 .offset {
   &2 {
     margin-left: 116px;
