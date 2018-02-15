@@ -31,7 +31,6 @@ task "site_settings:import" => :environment do
   puts "starting import..."
   puts ""
 
-
   h = SiteSettingsTask.export_to_hash
   counts = { updated: 0, not_found: 0, errors: 0 }
 
