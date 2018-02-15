@@ -4,11 +4,18 @@ import { iconNode } from 'discourse/helpers/fa-icon-node';
 import { wantsNewWindow } from 'discourse/lib/intercept-click';
 import DiscourseURL from 'discourse/lib/url';
 
+
+// damingo (Github ID), 2018-02-15, #multisite, Settings changed to:
+// settings: {
+//     href: Discourse.BaseUrl
+// },
+
+
 export default createWidget('home-logo', {
   tagName: 'div.title',
 
   settings: {
-    href: Discourse.getURL("/")
+    href: Discourse.BaseUrl
   },
 
   href() {

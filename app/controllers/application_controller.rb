@@ -41,6 +41,11 @@ class ApplicationController < ActionController::Base
   before_filter :overwrite_site_settings
 
   def overwrite_site_settings
+    # NOTE: It does not work to overwrite the methods on the model level, as this causes multithreading problems and
+    # changes the set values at random.
+
+    SiteSetting.set(:force_hostname, request.host)
+
     # Logo Url
     path = "/images/logo.#{request.host}.png"
     logo_url = File.exists?(Rails.root.join("public#{path}")) ? path : '/images/logo-small.png'
