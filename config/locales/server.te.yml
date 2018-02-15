@@ -185,7 +185,6 @@ te:
     basic:
       title: "ప్రాథమిక సభ్యుడు"
   rate_limiter:
-    too_many_requests: "ఈ చర్యకు రోజువారీపరిమితి ఉంది. దయచేసి %{time_left} సమయం తర్వాత ప్రయత్నించండి"
     hours:
       one: "ఒక గంట"
       other: "%{count} గంటలు"

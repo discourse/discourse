@@ -350,7 +350,6 @@ nb_NO:
     leader:
       title: "leder"
   rate_limiter:
-    too_many_requests: "Vi har en daglig begrensning for hvor mange ganger den handlingen kan utføres. Vent %{time_left} før du prøver igjen."
     by_type:
       first_day_replies_per_day: "Du har nådd det maksimale antall svar en ny bruker kan publisere på sin første dag. Vennligst vent %{time_left} før du prøver igjen."
       first_day_topics_per_day: "Du har nådd det maksimale antall tråder en ny bruker kan publisere på sin første dag. Vennligst vent %{time_left} før du prøver igjen."
@@ -693,11 +692,9 @@ nb_NO:
     allow_user_locale: "Tillat brukere å velge eget språk"
     min_post_length: "Minimum tillatt lengde for innlegg i tegn"
     min_first_post_length: "Minimum tillatt lengde på for teksten i første innlegg"
-    min_personal_message_post_length: "Minste tillatte innleggslengde for meldinger i antall tegn"
     max_post_length: "Maksimum tillatt lengde for innlegg i tegn"
     min_topic_title_length: "Minimum tillatt lengde for tittel i tegn"
     max_topic_title_length: "Maksimum tillatt lengde for innlegg i tegn"
-    min_personal_message_title_length: "Minste antall tegn tillatt til bruk for tittellengde i meldinger"
     min_search_term_length: "Minimum lengde på søkeord i tegn"
     allow_duplicate_topic_titles: "Tillat flere tråder med identisk tittel."
     unique_posts_mins: "Hvor mange minutter før en bruker kan lage et innlegg med det samme innholdet igjen"

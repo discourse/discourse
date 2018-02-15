@@ -122,6 +122,7 @@ ca:
       split_topic: "va dividir aquest tema %{when}"
       invited_user: "va invitar %{who} %{when}"
       invited_group: "va invitar %{who} %{when}"
+      user_left: "%{who} ha deixat aquest missatge %{when}"
       removed_user: "va eliminar %{who} %{when}"
       removed_group: "va eliminar %{who} %{when}"
       autoclosed:
@@ -178,7 +179,7 @@ ca:
     sign_up: "Registra't"
     log_in: "Inicia sessió"
     age: "Edat"
-    joined: "T'hi has afegit"
+    joined: "Es va registrar"
     admin_title: "Admin"
     flags_title: "Avisos"
     show_more: "mostrar més"
@@ -491,6 +492,7 @@ ca:
       mute: "Silenci"
       edit: "Editar preferències"
       download_archive:
+        button_text: "Descarrega tot"
         confirm: "Segur que vols descarregat les teves publicacions?"
         success: "Descàrrega inciada, quan el procés s'acabi t'ho notificarem amb un missatge."
         rate_limit_error: "Les publicacions es poden descarregar un cop al dia, si us plau torna a provar-ho demà."
@@ -1286,7 +1288,7 @@ ca:
         one: "hi ha 1 nova publicació a aquest tema des de la teva darrera lectura"
         other: "hi ha {{count}} noves publicacions a aquest tema des de la teva darrera lectura"
       likes:
-        one: "hi ha 1 <i>M'agrada</i> a aquest tema"
+        one: "hi ha 1 M'agrada a aquest tema"
         other: "hi ha {{count}} m'agrades en aquest tema"
       back_to_list: "Torna al llistat de temes"
       options: "Opcions de tema"
@@ -1336,6 +1338,10 @@ ca:
           '3_2': 'Rebràs alertes perquè estàs mirant aquest tema.'
           '3_1': 'Rebràs alertes perquè has creat aquest tema.'
           '3': 'Rebràs alertes perquè estàs mirant aquest tema.'
+          '2_8': 'Rebràs notificacions, perquè estàs seguint aquesta categoria.'
+          '2_4': 'Rebràs notificacions, perquè has escrit una resposta a aquest tema.'
+          '2_2': 'Rebràs notificacions, perquè estàs seguint aquest tema.'
+          '2': 'Rebràs notificacions, perquè has <a href="/users/{{username}}/preferences">llegit aquest tema</a>.'
           '1_2': 'Només se''t notificarà si algú menciona el teu @nom o contesta la teva entrada.'
           '1': 'Se''t notificarà si algú menciona el teu @nom o contesta la teva entrada.'
           '0_7': 'No estàs fent cas de les alertes d''aquesta categoria.'
@@ -1528,7 +1534,7 @@ ca:
         one: "{{count}} Resposta"
         other: "{{count}} Respostes"
       has_likes:
-        one: "{{count}}  <i>M'agrada</i>"
+        one: "{{count}}  M'agrada"
         other: "{{count}} M'agrades"
       has_likes_title:
         one: "La publicació agrada a 1 persona"

@@ -67,6 +67,10 @@ sk:
           one: "1d"
           few: "%{count}d"
           other: "%{count}d"
+        x_months:
+          one: "%{count} mesiac"
+          few: "%{count} mesiace"
+          other: "%{count} mesiace"
         about_x_years:
           one: "1r"
           few: "%{count}r"
@@ -379,11 +383,23 @@ sk:
         title: 'Upraviť skupinu'
         full_name: 'Celé meno'
         add_members: "Pridať používateľov"
+      public_admission: "Povoliť používateľom slobodne sa stať člen skupiny (kupina musí byť verejne viditeľná)"
+      public_exit: "Povoliť používateľom slobodne opustiť skupinu."
+      empty:
+        posts: "Nie sú tu žiadne príspevky od členov tejto skupiny"
+        members: "V tejto skupine niesú žiadny členovia"
+        messages: "Pre túto skupinu niesú žiadne správy"
       add: "Pridať"
       join: "Pridať sa do skupiny"
       leave: "Opustiť skupinu"
       request: "Požiadať o pridanie do skupiny"
+      message: "Správa"
+      automatic_group: Automatická skúpina
       closed_group: Uzavretá skupina
+      is_group_user: "Si členom tejto skupiny"
+      membership_request:
+        submit: "Odošli požiadavku"
+        title: "Požiadavka o členstvo v %{group_name}"
       membership: "Členstvo"
       name: "Meno"
       user_count: "Počet členov"
@@ -403,6 +419,9 @@ sk:
       posts: "Príspevky"
       mentions: "Zmienky"
       messages: "Správy"
+      visibility_levels:
+        title: "Kto môže vidieť túto skupinu?"
+        public: "Každý"
       alias_levels:
         nobody: "Nikto"
         only_admins: "Iba administrátori"
@@ -539,6 +558,7 @@ sk:
           Toto nastavenie nahradí Zhrnutie aktivíť.<br />
           Stíšené témy a kategórie nie sú v týchto emailoch zahrnuté.
         individual: "Pošli email pri každom novom príspevku"
+        individual_no_echo: "Pošli email pri každom novom príspevku okrem vlastných."
         many_per_day: "Pošli mi email pri každom novom príspevku (cca {{dailyEmailEstimate}} denne)"
         few_per_day: "Pošli mi email pri každom novom príspevku (cca 2 denne)"
       tag_settings: "Štítky"
@@ -569,10 +589,12 @@ sk:
       muted_users_instructions: "Pozastaviť všetky notifikácie od týchto používateľov."
       muted_topics_link: "Zobraziť stíšené témy"
       watched_topics_link: "Zobraziť sledované témy"
+      tracked_topics_link: "Zobraziť sledované témy"
       apps: "Appky"
       revoke_access: "Odvolať prístup"
       undo_revoke_access: "Zrušiť odvolanie prístupu"
       api_approved: "Schválený:"
+      theme: "Téma"
       staff_counters:
         flags_given: "nápomocné značky"
         flagged_posts: "označkované príspevky"
@@ -590,6 +612,13 @@ sk:
         move_to_archive: "Archív"
         failed_to_move: "Zlyhalo presunutie označených správ (možno je chyba vo vašom pripojení)"
         select_all: "Označ všetky"
+      preferences_nav:
+        account: "Účet"
+        profile: "Profil"
+        emails: "Emaily"
+        notifications: "Upozornenia"
+        categories: "Kategórie"
+        apps: "Aplikácie"
       change_password:
         success: "(email odoslaný)"
         in_progress: "(email sa odosiela)"
@@ -649,6 +678,7 @@ sk:
         short_instructions: "Ostatní vás môžu zmieniť ako @{{username}}"
         available: "Vaše používateľské meno je voľné"
         not_available: "Nie je k dispozícii. Skúste {{suggestion}}?"
+        not_available_no_suggestion: "Nedostupné"
         too_short: "Vaše používateľské meno je prikrátke"
         too_long: "Vaše používateľské meno je pridlhé"
         checking: "Kontrolujeme dostupnosť používateľského meno"
@@ -734,6 +764,8 @@ sk:
         expired: "Táto pozvánka vypršala."
         rescind: "Odstrániť"
         rescinded: "Pozvánka odstránená"
+        rescind_all: "Odstrániť všetky pozvánky"
+        rescinded_all: "Všetky pozvánky odstránené!"
         reinvite: "Poslať pozvánku znovu"
         reinvite_all: "Poslať všetky pozvánky znovu"
         reinvited: "Poslať pozvánku znovu"
@@ -901,6 +933,7 @@ sk:
       complete_email_found: "Našli sme účet priradený k <b>%{email}</b>, čoskoro dostanete e-mail s pokynmi, ako si obnoviť svoje heslo."
       complete_username_not_found: "Žiadny účet nemá priradené používateľské meno <b>%{username}</b>"
       complete_email_not_found: "Žiadny účet nie je s e-mailom  <b>%{email}</b>"
+      button_help: "Pomoc"
     login:
       title: "Prihlásenie"
       username: "Používateľ"
@@ -920,6 +953,8 @@ sk:
       not_allowed_from_ip_address: "Nie je možné prihlásenie z tejto IP adresy."
       admin_not_allowed_from_ip_address: "Nie je možné prihlásenie ako admin z tejto IP adresy."
       resend_activation_email: "Kliknite sem pre opätovné odoslanie aktivačného emailu."
+      change_email: "Zmeniť emailovú adresu"
+      submit_new_email: "Aktualizovať emailovú adresu"
       sent_activation_email_again: "Odoslali sme vám ďalší aktivačný email na <b>{{currentEmail}}</b>. Môže trvať niekoľko minút kým príde; pre istotu si skontrolujte spamový priečinok."
       to_continue: "Prosím, prihláste sa"
       preferences: "Na zmenu používateľských nastavení musíte byť prihlásený."
@@ -949,6 +984,8 @@ sk:
       accept_title: "Pozvánka"
       accept_invite: "Prijať pozvánku"
       success: "Váš účet bol vytvorený a ste prihlásený."
+      name_label: "Meno"
+      optional_description: "(nepovinné)"
     emoji_set:
       apple_international: "Apple/Medzinárodné"
       google: "Google"
@@ -962,6 +999,12 @@ sk:
       shift: 'Shift'
       ctrl: 'Ctrl'
       alt: 'Alt'
+    select_kit:
+      filter_placeholder: Hľadať
+    emoji_picker:
+      people: Ľudia
+      food: Jedlo
+      travel: Cestovanie
     composer:
       emoji: "Emoji :)"
       more_emoji: "viac ..."
@@ -1034,6 +1077,9 @@ sk:
       modal_cancel: "Zrušiť"
       cant_send_pm: "Ľutujeme, nemôžete poslať správu používateľovi %{username}."
       admin_options_title: "Nepovinné zamestnanecké nastavenia pre túto tému"
+      composer_actions:
+        reply_as_private_message:
+          label: Nová správa
     notifications:
       title: "oznámenia o zmienkach pomocou @meno, odpovede na Vaše príspevky a témy, správy, atď."
       none: "Notifikácie sa nepodarilo načítať"
@@ -1232,6 +1278,15 @@ sk:
       jump_reply_up: prejsť na predchádzajúcu odpoveď
       jump_reply_down: prejsť na nasledujúcu odpoveď
       deleted: "Téma bola vymazaná"
+      auto_update_input:
+        tomorrow: "Zajtra"
+        this_weekend: "Tento víkend"
+        next_week: "Budúci týždeň"
+        two_weeks: "Dva týždne"
+        next_month: "Budúci mesiac"
+        three_months: "Tri mesiace"
+        six_months: "Šesť mesiacov"
+        one_year: "Jeden rok"
       auto_close_title: 'Nastavenia automatického zatvárania'
       auto_close_immediate:
         one: "Posledný príspevok k téme je starý už 1 hodinu, takže téma bude okamžite uzavretá. "
@@ -1245,6 +1300,7 @@ sk:
         go_bottom: "na spodok"
         go: "Choď"
         jump_bottom: "choď na posledný príspevok"
+        jump_prompt: "choď na..."
         jump_bottom_with_number: "choď na príspevok číslo %{post_number}"
         total: Všetkých príspevkov
         current: tento príspevok
@@ -2087,6 +2143,18 @@ sk:
         visit_topic: "Navšťívte tému pre prijatie opatrení"
         was_edited: "Príspevok bol upravený po prvom označení"
         previous_flags_count: "Tento príspevok bol už označený {{count}} krát."
+        details: "detaily"
+        flagged_topics:
+          topic: "Téma"
+          type: "Typ"
+          users: "Používatelia"
+          last_flagged: "Naposledy označené"
+        short_names:
+          off_topic: "mimo tému"
+          inappropriate: "nevhodné"
+          spam: "spam"
+          notify_user: "vlastné"
+          notify_moderators: "vlastné"
       groups:
         primary: "Hlavná skupina"
         no_primary: "(bez hlavnej skupiny)"
@@ -2131,6 +2199,13 @@ sk:
         info_html: "Váš API kľúč Vám umožní vytváranie a aktualizovanie tém prostredníctvom volaní JSON."
         all_users: "Všetci používatelia"
         note_html: "Držte tento kľúč <strong>v tajnosti</strong>, všetci užívatelia ktorí ho vlastnia môžu vytvárať ľubovoľné príspevky pod ľubovoľným používateľským menom. "
+      web_hooks:
+        create: "Vytvoriť"
+        save: "Uložiť"
+        destroy: "Vymazať"
+        description: "Popis"
+        go_back: "Späť na zoznam"
+        payload_url_placeholder: "https://example.com/postreceive"
       plugins:
         title: "Pluginy"
         installed: "Nainštalované pluginy"

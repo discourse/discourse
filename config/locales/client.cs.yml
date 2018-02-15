@@ -112,15 +112,15 @@ cs:
         x_days:
           one: "za 1 den"
           few: "za %{count} dny"
-          other: "za %{count} dní"
+          other: "o %{count} dní později"
         x_months:
           one: "za 1 měsíc"
           few: "za %{count} měsíce"
-          other: "za %{count} měsíců"
+          other: "o %{count} měsíců později"
         x_years:
           one: "za 1 rok"
           few: "za %{count} roků"
-          other: "za %{count} let"
+          other: "o %{count} let později"
       previous_month: 'Předchozí měsíc'
       next_month: 'Další měsíc'
       placeholder: datum
@@ -135,7 +135,7 @@ cs:
     action_codes:
       public_topic: "Téma zveřejněno %{when}"
       private_topic: "Téma změněno na soukromé %{when}"
-      split_topic: "rozděl toto téma %{when}"
+      split_topic: "rozdělil toto téma %{when}"
       invited_user: "%{who} pozván %{when}"
       invited_group: "%{who} pozvána %{when}"
       removed_user: "%{who} smazán %{when}"
@@ -1062,7 +1062,7 @@ cs:
       title_or_link_placeholder: "Sem vložte název téma"
       edit_reason_placeholder: "proč byla nutná úprava?"
       show_edit_reason: "(přidat důvod úpravy)"
-      reply_placeholder: "Piš tady. Pro formátování používej Markdown, BBCode nebo HTML. Přetáhni nebo vlož obrázky."
+      reply_placeholder: "Pište sem. Můžete použít Markdown, BBCode nebo HTML. Obrázky nahrajte přetáhnutím nebo vložením ze schránky."
       view_new_post: "Zobrazit váš nový příspěvek."
       saving: "Ukládám"
       saved: "Uloženo!"
@@ -1168,7 +1168,7 @@ cs:
       advanced:
         title: Pokročilé hledání
         posted_by:
-          label: Zaslal
+          label: Od uživatele
         in_category:
           label: V kategorii
         in_group:
@@ -1178,15 +1178,19 @@ cs:
         with_tags:
           label: Se štítkem
         filters:
-          likes: líbí se mi
+          label: Pouze v tématech/příspěvcích, které
+          likes: se mi líbí
           posted: Přidal jsem příspěvek
           watching: Sleduji
           tracking: Sleduji.
+          private: v mých zprávách
           first: jsou první příspěvek v tématu
           pinned: jsou připnuty
           unpinned: nejsou připnuty
+          seen: která jsem četl
           unseen: jsem nečetl
           wiki: jsou wiki
+          all_tags: Všechny uvedené štítky
         statuses:
           label: Kde příspěvky
           open: jsou otevřeny
@@ -1207,7 +1211,7 @@ cs:
     not_logged_in_user: 'stránka uživatele s přehledem o aktuální činnosti a nastavení'
     current_user: 'jít na vaši uživatelskou stránku'
     topics:
-      new_messages_marker: "poslední navštívení"
+      new_messages_marker: "poslední návštěva"
       bulk:
         select_all: "Vybrat vše"
         clear_all: "Zrušit vše"
@@ -1321,13 +1325,16 @@ cs:
       toggle_information: "zobrazit/skrýt detaily tématu"
       read_more_in_category: "Chcete si toho přečíst víc? Projděte si témata v {{catLink}} nebo {{latestLink}}."
       read_more: "Chcete si přečíst další informace? {{catLink}} nebo {{latestLink}}."
-      read_more_MF: "{ UNREAD, plural, =0 {} one { Je tu <a href='/unread'>1 nepřečtené</a> } other { Je tu <a href='/unread'># nepřečtených</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1  nové</a> téma} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># nových</a> témat} } remaining, nebo {CATEGORY, select, true {si projděte ostatní témata v kategorii {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "{ UNREAD, plural, =0 {} one { Zbývá <a href='/unread'>1 nepřečtené</a> téma } other { Je tu <a href='/unread'># nepřečtených</a> témat } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1  nové</a> téma} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># nových</a> témat} }, nebo {CATEGORY, select, true {zobrazit další témata v kategorii {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Projděte všechny kategorie
       view_latest_topics: zobrazte si populární témata
       suggest_create_topic: Co takhle založit nové téma?
       jump_reply_up: přejít na předchozí odpověď
       jump_reply_down: přejít na následující odpověď
       deleted: "Téma bylo smazáno"
+      auto_update_input:
+        later_today: "Později během dnešního dne"
+        later_this_week: "Později během tohoto týdne"
       auto_close_title: 'Nastavení automatického zavření'
       auto_close_immediate:
         one: "Poslední příspěvek v témetu je již 1 hodinu starý, takže toto téma bude okamžitě uzavřeno."
@@ -1358,6 +1365,10 @@ cs:
           '3_2': 'Budete dostávat oznámení, protože hlídáte toto téma.'
           '3_1': 'Budete dostávat oznámení, protože jste autorem totoho tématu.'
           '3': 'Budete dostávat oznámení, protože hlídáte toto téma.'
+          '2_8': 'Uvidíte počet nových odpovědí, jelikož sledujete tuto kategorii.'
+          '2_4': 'Uvidíte počet nových odpovědí, jelikož jste přispěli do tohoto tématu.'
+          '2_2': 'Uvidíte počet nových odpovědí, jelikož sledujete toto téma.'
+          '2': 'Uvidíte počet nových odpovědí, protože <a href="/u/{{username}}/preferences">jste četl(a) toto téma</a>.'
           '1_2': 'Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek.'
           '1': 'Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek.'
           '0_7': 'Ignorujete všechna oznámení v této kategorii.'
@@ -1600,7 +1611,7 @@ cs:
         about: "toto je wiki příspěvek"
       archetypes:
         save: 'Uložit nastavení'
-      few_likes_left: "Díky za šíření lásky! Zbývá ti pro dnešek už jen několi \"líbí se\"."
+      few_likes_left: "Díky za šíření lásky! Zbývá ti pro dnešek už jen několik málo lajků."
       controls:
         reply: "otevře okno pro sepsání odpovědi na tento příspěvek"
         like: "to se mi líbí"
@@ -1913,9 +1924,9 @@ cs:
     posts_long: "v tomto tématu je {{number}} příspěvků"
     posts_likes_MF: |
       Toto téma má {count, plural, one {1 příspěvek} other {# příspěvků}} {ratio, select,
-      low {s velkým poměrem líbí se na příspěvek}
-      med {s velmi velkým poměrem líbí se na příspěvek}
-      high {s extrémně velkým poměrem líbí se na příspěvek}
+      low {s vysokým počtem lajků}
+      med {s velmi vysokým počtem lajků}
+      high {s extrémně vysokým počtem lajků}
       other {}}
     original_post: "Původní příspěvek"
     views: "Zobrazení"
@@ -1930,7 +1941,7 @@ cs:
       one: "líbí se"
       few: "líbí se"
       other: "líbí se"
-    likes_long: "v tomto tématu je {{number}} 'líbí se'"
+    likes_long: "v tomto tématu je {{number}} lajků"
     users: "Účastníci"
     users_lowercase:
       one: "uživatel"
@@ -1947,12 +1958,12 @@ cs:
       with_topics: "%{filter} témata"
       with_category: "%{filter} %{category} témata"
       latest:
-        title: "Nejaktuálnější"
+        title: "Aktuální"
         title_with_count:
           one: "Nedávné (1)"
           few: "Nedávná ({{count}})"
           other: "Nedávná ({{count}})"
-        help: "nejaktuálnější témata"
+        help: "aktuální témata"
       hot:
         title: "Populární"
         help: "populární témata z poslední doby"
@@ -2735,7 +2746,7 @@ cs:
         reputation: Reputace
         permissions: Oprávnění
         activity: Aktivita
-        like_count: Rozdaných / obdržených 'líbí se'
+        like_count: Rozdaných / obdržených lajků
         last_100_days: 'Za posledních 100 dní'
         private_topics_count: Počet soukromých témat
         posts_read_count: Přečteno příspěvků
@@ -2781,6 +2792,7 @@ cs:
         activate_failed: "Nasstal problém při aktivování tohoto uživatele."
         deactivate_account: "Deaktivovat účet"
         deactivate_failed: "Nastal problém při deaktivování tohoto uživatele."
+        silence_accept: 'Ano, umlčet tohoto uživatele'
         bounce_score: "Bounce skóre"
         reset_bounce_score:
           label: "obnovit výchozí"
@@ -2899,6 +2911,7 @@ cs:
           developer: 'Vývojáři'
           embedding: "Embedding"
           legal: "Právní záležitosti"
+          api: 'API'
           user_api: 'Uživatelské API'
           uncategorized: 'Ostatní'
           backups: "Zálohy"

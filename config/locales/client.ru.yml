@@ -54,6 +54,11 @@ ru:
           few: "%{count}с"
           many: "%{count}с"
           other: "%{count}с"
+        less_than_x_minutes:
+          one: "< 1мин"
+          few: "~ 1m"
+          many: "> 1m"
+          other: "< %{count}мин"
         x_minutes:
           one: "1мин"
           few: "%{count}мин"
@@ -1100,6 +1105,8 @@ ru:
       alt: 'Alt'
     select_kit:
       default_header_text: Выбрать...
+      no_content: Совпадений не найдено
+      filter_placeholder: Поиск...
     emoji_picker:
       filter_placeholder: Искать emoji
       people: People
@@ -1197,6 +1204,17 @@ ru:
         title: "Забыли указать получателей?"
         body: "В списке получателей сейчас только вы сами!"
       admin_options_title: "Дополнительные настройки темы для персонала"
+      composer_actions:
+        reply_as_new_topic:
+          label: Ответить в новой связанной теме
+          desc: Создать новую тему
+        reply_as_private_message:
+          label: Новое сообщение
+          desc: Написать личное сообщение
+        reply_to_topic:
+          label: Ответить на тему
+        create_topic:
+          label: "Новая тема"
     notifications:
       title: "уведомления об упоминании @псевдонима, ответах на ваши посты и темы, сообщения и т.д."
       none: "Уведомления не могут быть загружены."
@@ -1204,6 +1222,12 @@ ru:
       more: "посмотреть более ранние уведомления"
       total_flagged: "всего сообщений с жалобами"
       granted_badge: "Заслужил(а) '{{description}}'"
+      watching_first_post: "<span>Новая тема</span> {{description}}"
+      group_message_summary:
+        one: "{{count}} сообщение в вашей группе: {{group_name}} "
+        few: "{{count}} сообщений в вашей группе: {{group_name}} "
+        many: "{{count}} сообщений в вашей группе: {{group_name}} "
+        other: "{{count}} сообщений в вашей группе: {{group_name}} "
       alt:
         mentioned: "Упомянуто"
         quoted: "Процитировано пользователем"
@@ -1211,6 +1235,7 @@ ru:
         posted: "Опубликовано"
         edited: "Изменил ваше сообщение"
         liked: "Понравилось ваше сообщение"
+        private_message: "Личное сообщение от"
         invited_to_topic: "Приглашение в тему от"
         invitee_accepted: "Приглашение принято"
         moved_post: "Ваша тема перенесена участником "
@@ -1257,6 +1282,8 @@ ru:
       more_results: "Найдено множество результатов. Пожалуйста, уточните, критерии поиска."
       cant_find: "Не можете найти нужную информацию?"
       start_new_topic: "Создать новую тему?"
+      search_google_button: "Google"
+      search_google_title: "Искать на этом сайте"
       context:
         user: "Искать сообщения от @{{username}}"
         category: "Искать в разделе #{{category}}"
@@ -1266,6 +1293,8 @@ ru:
         title: Расширенный поиск
         posted_by:
           label: Автор
+        in_category:
+          label: Категоризированный
         in_group:
           label: Группа
         with_badge:
@@ -1275,6 +1304,7 @@ ru:
           posted: В которых я писал
           watching: За которыми я наблюдаю
           tracking: За которыми я слежу
+          private: В моих сообщениях
           first: Только первые сообщения в темах
           pinned: Закреплены
           unpinned: Не закреплены
@@ -1435,6 +1465,7 @@ ru:
         this_weekend: "В эти выходные"
         next_week: "На следующей неделе"
         next_month: "В следующем месяце"
+        forever: "Навсегда"
         pick_date_and_time: "Выбрать дату и время"
       temp_open:
         title: "Открыть на время"
@@ -1444,6 +1475,7 @@ ru:
         title: "Закрыть на время"
       auto_close:
         title: "Автоматическое закрытие темы"
+        label: "Закрыть тему через:"
         error: "Пожалуйста, введите корректное значение."
       auto_delete:
         title: "Автоматическое удаление темы"
@@ -1760,6 +1792,7 @@ ru:
         has_liked: "Вам понравилось это сообщение"
         undo_like: "больше не нравится"
         edit: "Изменить сообщение"
+        edit_action: "Изменить"
         edit_anonymous: "Войдите, чтобы отредактировать это сообщение."
         flag: "пожаловаться на сообщение"
         delete: "удалить сообщение"
@@ -2009,6 +2042,8 @@ ru:
       subcategory_list_styles:
         rows: "Строки"
         rows_with_featured_topics: "Строки с обсуждаемыми темами"
+        boxes: "Блоки"
+        boxes_with_featured_topics: "Блоки с обсуждаемыми темами"
     flagging:
       title: 'Спасибо за вашу помощь в поддержании порядка!'
       action: 'Пожаловаться на сообщение'
@@ -2249,10 +2284,14 @@ ru:
         hamburger_menu: '<b>=</b> Открыть меню гамбургер'
         user_profile_menu: '<b>p</b> Открыть меню профиля'
         show_incoming_updated_topics: '<b>.</b> Показать обновленные темы'
+        search: '<b>/</b> или <b>ctrl</b>+<b>alt</b>+<b>f</b> Поиск'
         help: '<b>?</b> Показать сочетания клавиш'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Отложить новые сообщения'
         dismiss_topics: '<b>x</b>, <b>t</b> Отложить темы'
         log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Выйти'
+      composing:
+        title: 'Редактирование'
+        return: '<b>shift</b>+<b>c</b> Вернуться в редактор'
       actions:
         title: 'Темы'
         bookmark_topic: ' <b>f</b> Добавить / удалить из заклодок'
@@ -2300,6 +2339,8 @@ ru:
         many: "выдано %{count}"
         other: "выдано %{count}"
       select_badge_for_title: Использовать награду в качестве Вашего титула
+      none: "(нет)"
+      successfully_granted: "Награда %{badge} успешно присвоена %{username}"
       badge_grouping:
         getting_started:
           name: Начало работы
@@ -2322,11 +2363,19 @@ ru:
       </p>
     tagging:
       all_tags: "Все теги"
+      other_tags: "Изменить тэги"
       selector_all_tags: "Все теги"
       selector_no_tags: "Нет тегов"
       changed: "Теги изменены:"
       tags: "Теги"
+      choose_for_topic: "Выберите теги для этой темы (опционально)"
       delete_tag: "Удалить тег"
+      delete_confirm:
+        one: "Вы действительно хотите удалить этот тэг и удалить его из 1 топика, которому он присвоен?"
+        few: "Вы действительно хотите удалить этот тэг и удалить его из {{count}} топиков, которым он присвоен?"
+        many: "Вы действительно хотите удалить этот тэг и удалить его из {{count}} топиков, которым он присвоен?"
+        other: "Вы действительно хотите удалить этот тэг и удалить его из {{count}} топиков, которым он присвоен?"
+      delete_confirm_no_topics: "Вы действительно хотите удалить этот тэг?"
       rename_tag: "Редактировать тег"
       rename_instructions: "Выберите новое название тега:"
       sort_by: "Сортировка:"
@@ -2421,6 +2470,7 @@ ru:
         no_problems: "Проблем не обнаружено."
         moderators: 'Модераторы:'
         admins: 'Администраторы:'
+        silenced: 'Отключенные:'
         suspended: 'Заморожен:'
         private_messages_short: "Сообщ."
         private_messages_title: "Сообщений"
@@ -2453,12 +2503,29 @@ ru:
         by: "от"
       flags:
         title: "Жалобы"
+        active_posts: "Сообщения с жалобами"
+        old_posts: "Старые сообщения с жалобами"
+        topics: "Темы с жалобами"
         moderation_history: "История модерации"
         agree: "Принять"
         agree_title: "Подтвердить корректность жалобы"
+        agree_flag_hide_post: "Скрыть запись"
+        agree_flag_hide_post_title: "Скрыть это сообщение и автоматически отправить пользователю личное сообщение с просьбой отредактировать его"
+        agree_flag_restore_post: "Согласиться (восстановить сообщение)"
+        agree_flag_restore_post_title: "Восстановить сообщение, чтобы все пользователи могли его видеть."
+        agree_flag_suspend: "Заморозить Пользователя"
+        agree_flag_suspend_title: "Согласиться с флагом и заблокировать пользователя."
+        agree_flag_silence: "Отключить пользователя"
+        agree_flag_silence_title: "Согласиться с флагом и отключить пользователя."
+        agree_flag: "Оставить сообщение нетронутым."
+        agree_flag_title: "Согласиться с флагом и оставить сообщение нетронутым."
+        ignore_flag: "Игнорировать"
+        ignore_flag_title: "Удалить этот флаг; в это время он не требует никаких действий."
         delete: "Удалить"
         delete_title: "Удалить обжалованное сообщение."
+        delete_post_defer_flag: "Удалить сообщение и отклонить флаг"
         delete_post_defer_flag_title: "Удалить сообщение; если это первое сообщение, удалить тему целиком"
+        delete_post_agree_flag: "Удалить сообщение и согласиться с флагом"
         delete_post_agree_flag_title: "Удалить сообщение; если это первое сообщение, удалить тему целиком"
         delete_flag_modal_title: "Удалить и..."
         delete_spammer: "Удалить спамера"
@@ -2470,19 +2537,37 @@ ru:
         clear_topic_flags: "Готово"
         clear_topic_flags_title: "Тема была просмотрена, и все проблемы были решены. Нажмите Готово, чтобы удалить все жалобы."
         more: "(ещё ответы...)"
+        suspend_user: "Заблокировать пользователя"
+        suspend_user_title: "Заблокировать пользователя за это сообщение"
         dispositions:
           agreed: "принято"
           disagreed: "отклонено"
+          deferred: "пропущено"
         flagged_by: "Отмечено"
         resolved_by: "Разрешено"
         took_action: "Принята мера"
         system: "Системные"
         error: "что-то пошло не так"
         reply_message: "Ответить"
+        no_results: "Сообщений с жалобами нет."
         topic_flagged: "Эта <strong>тема</strong> была помечена."
+        show_full: "показать сообщение полностью"
         visit_topic: "Посетите тему чтобы принять меры"
         was_edited: "Сообщение было отредактировано после первой жалобы"
         previous_flags_count: "На это сообщение уже пожаловались {{count}} раз(а)."
+        show_details: "Показать детали жалобы"
+        details: "детали"
+        flagged_topics:
+          topic: "Тема"
+          type: "Набирать текст"
+          users: "Пользователи"
+          last_flagged: "Последняя жалоба"
+        short_names:
+          off_topic: "Не по теме"
+          inappropriate: "неприемлемый"
+          spam: "спам"
+          notify_user: "персональный"
+          notify_moderators: "персональный"
       groups:
         primary: "Основная группа"
         no_primary: "(нет основной группы)"
@@ -2570,6 +2655,7 @@ ru:
           details: "Происходит, когда сообщение создается, редактируется, удаляется или восстанавливается."
         user_event:
           name: "Событие пользователя"
+          details: "Когда пользователь входит, выходит, создается, подтверждается или изменяется."
         delivery_status:
           title: "Статус передачи"
           inactive: "Неактивна"
@@ -2638,6 +2724,7 @@ ru:
           label: "Загрузить"
           title: "Загрузить копию на сервер"
           uploading: "Загрузка..."
+          success: "'{{filename}}' успешно загружен. Файл теперь обрабатывается и займет минуту, чтобы его строки отразились в списке."
           error: "При загрузке '{{filename}}' произошла ошибка: {{message}}"
         operations:
           is_running: "Операция в данный момент исполняется..."
@@ -2728,8 +2815,10 @@ ru:
           theme_components: "Компоненты стиля"
           uploads: "Загрузки"
           no_uploads: "Вы можете загружать различные ресурсы для вашего стиля, такие как шрифты и изображения"
+          add_upload: "Добавить вложение"
           upload_file_tip: "Выберите файл для загрузки (png, woff2 и т.д.)"
           variable_name: "Имя переменной SCSS:"
+          upload: "Загрузить"
           child_themes_check: "Стиль включает дочерние стили"
           css_html: "Настройка CSS/HTML"
           edit_css_html: "Редактировать CSS/HTML"
@@ -2745,6 +2834,11 @@ ru:
           updating: "Обновляю..."
           up_to_date: "Стиль текущей версии, последняя проверка:"
           add: "Добавить"
+          commits_behind:
+            one: "Тема находится на 1 коммит сзади!"
+            few: "Тема находится на {{count}} коммитов сзади!"
+            many: "Тема находится на {{count}} коммитов сзади!"
+            other: "Тема находится на {{count}} коммитов сзади!"
           scss:
             text: "CSS"
             title: "Введите CSS; допускаются все стили CSS и SCSS"
@@ -2874,6 +2968,15 @@ ru:
             type_placeholder: "дайджест, подписка..."
             reply_key_placeholder: "Ключ ответа"
             skipped_reason_placeholder: "Причина"
+      moderation_history:
+        performed_by: "Выполнено пользователем "
+        no_results: "История модерации недоступна."
+        actions:
+          delete_user: "Удалить Пользователя"
+          suspend_user: "Пользователь приостановлен"
+          silence_user: "Пользователь отключен"
+          delete_post: "Комментарий удален"
+          delete_topic: "Тема удалена"
       logs:
         title: "Логи"
         action: "Действие"
@@ -2929,6 +3032,8 @@ ru:
             change_category_settings: "изменена настройка раздела"
             delete_category: "удален раздел"
             create_category: "создан раздел"
+            silence_user: "заблокировать пользователя"
+            unsilence_user: "разблокировать пользователя"
             grant_admin: "выданы права администратора"
             revoke_admin: "отозваны права администратора"
             grant_moderation: "выданы права модератора"
@@ -2944,6 +3049,11 @@ ru:
             change_readonly_mode: "изменение режима \"только для чтения\""
             backup_download: "скачать резервную копию"
             backup_destroy: "удалить резервную копию"
+            reviewed_post: "просмотренное сообщение"
+            custom_staff: "действия в плагинах"
+            post_locked: "сообщение заблокировано"
+            post_unlocked: "сообщение разблокировано"
+            check_personal_message: "проверить личное сообщение"
         screened_emails:
           title: "Почтовые адреса"
           description: "Когда кто-то создаёт новую учётную запись, проверяется данный почтовый адрес и регистрация блокируется или производятся другие дополнительные действия."
@@ -2975,17 +3085,48 @@ ru:
             text: "Группировка"
             title: "Создание новой записи бана целой подсети если уже имеется хотя бы 'min_ban_entries_for_roll_up' записей отдельных IP адресов."
         search_logs:
+          title: "Логи поиска"
+          term: "Правило"
+          searches: "Поиски"
+          click_through: "Пролистать"
+          unique: "Уникальный"
+          unique_title: "уникальные пользователи, выполняющие поиск"
           types:
             all_search_types: "Все типы поиска"
             header: "Шапка"
+            full_page: "Полная страница"
+            click_through_only: "Все (только листинг)"
+          header_search_results: "Результаты поиска по заголовкам"
         logster:
           title: "Журнал ошибок"
       watched_words:
+        title: "Отслеживаемые слова"
+        search: "поиск"
+        clear_filter: "Очистить"
+        show_words: "показать слова"
+        word_count:
+          one: "1 слово"
+          few: "%{count}слова"
+          many: "%{count}слов"
+          other: "%{count}слов"
         actions:
+          block: 'Заблокировать'
+          censor: 'Цензура'
+          require_approval: 'Требующие одобрения'
           flag: 'Жалоба'
+        action_descriptions:
+          block: 'Запретить публикацию сообщений, содержащих эти слова. Пользователь увидит сообщение об ошибке при попытке отправить свое сообщение.'
+          censor: 'Разрешить сообщения, содержащие эти слова, но заменять их символами, которые скрывают цензурные выражения.'
+          require_approval: 'Комментарии, содержащие эти слова, будут требовать одобрения персонала, прежде чем их можно будет увидеть.'
+          flag: 'Разрешить сообщения, содержащие эти слова, но помечать их как неприемлемые, чтобы модераторы могли их оценивать.'
         form:
+          label: 'Новое слово:'
+          placeholder: 'слово целиком, звездочка (*) используется как знак подстановки '
           placeholder_regexp: "Регулярное выражение"
           add: 'Добавить'
+          success: 'Успех'
+          upload: "Загрузить"
+          upload_successful: "Загрузка прошла успешна. Слова добавлены."
       impersonate:
         title: "Войти от имени пользователя"
         help: "Используйте этот инструмент, чтобы войти от имени пользователя. Может быть полезно для отладки. После этого необходимо выйти и зайти под своей учетной записью снова."
@@ -3005,6 +3146,7 @@ ru:
           pending: "Ожидает одобрения"
           staff: 'Персонал'
           suspended: 'Замороженные'
+          silenced: 'Отключенный'
           suspect: 'Подозрительные'
         approved: "Подтвердить?"
         approved_selected:
@@ -3029,6 +3171,7 @@ ru:
           staff: "Персонал"
           admins: 'Администраторы'
           moderators: 'Модераторы'
+          silenced: 'Отключенные пользователи'
           suspended: 'Замороженные пользователи'
           suspect: 'Подозрительные пользователи'
         reject_successful:
@@ -3050,11 +3193,31 @@ ru:
         unsuspend_failed: "Ошибка разморозки пользователя {{error}}"
         suspend_duration: "На сколько времени заморозить пользователя?"
         suspend_reason_label: "Причина заморозки? Данный текст <b>будет виден всем</b> на странице профиля пользователя и будет отображаться, когда пользователь пытается войти. Введите краткое описание."
+        suspend_reason_hidden_label: "Почему вы приостанавливаете пользователя? Этот текст будет показан пользователю, когда он попытается войти в систему. Будьте краткими."
         suspend_reason: "Причина"
+        suspend_reason_placeholder: "Причина приостановки"
+        suspend_message: "Сообщение почты"
+        suspend_message_placeholder: "При желании, предоставьте дополнительную информацию о приостановке, и она будет отправлена пользователю по электронной почте."
         suspended_by: "Заморожен (кем)"
+        silence_reason: "Причина"
+        silenced_by: "Отключен пользователем "
+        silence_modal_title: "Отключенный пользователь"
+        silence_duration: "Как долго пользователь будет отключен?"
+        silence_reason_label: "Почему вы собираетесь отключить пользователя?"
+        silence_reason_placeholder: "Причина отключения"
+        silence_message: "Сообщение почты"
+        silence_message_placeholder: "(оставьте незаполненным, чтобы отправить дефолтное сообщение)"
+        suspended_until: "(пока не будет %{until})"
         cant_suspend: "Этого пользователя нельзя заморозить."
         delete_all_posts: "Удалить все сообщения"
+        penalty_post_actions: "Что нужно сделать со связанным сообщением?"
+        penalty_post_delete: "Удалить сообщение"
+        penalty_post_edit: "Редактировать сообщение"
+        penalty_post_none: "Ничего не делать"
         delete_all_posts_confirm_MF: "Вы собираетесь удалить {POSTS, plural, one {1 сообщение} other {# сообщений}} и {TOPICS, plural, one {1 тему} other {# тем}}. Вы уверены?"
+        silence: "Отключить"
+        unsilence: "Подключить"
+        silenced: "Отключен?"
         moderator: "Модератор?"
         admin: "Администратор?"
         suspended: "Заморожен?"
@@ -3075,6 +3238,9 @@ ru:
         grant_moderation: 'Выдать права Модератора'
         unsuspend: 'Разморозить'
         suspend: 'Заморозить'
+        show_flags_received: "Показать полученные флаги"
+        flags_received_by: "Флаги, полученные %{username}"
+        flags_received_none: "Этот пользователь не получил никаких флагов."
         reputation: Репутация
         permissions: Права
         activity: Активность
@@ -3127,12 +3293,18 @@ ru:
         activate_failed: "Во время активации пользователя произошла ошибка."
         deactivate_account: "Деактивировать"
         deactivate_failed: "Во время деактивации пользователя произошла ошибка."
+        unsilence_failed: 'При подключении этого пользователя произошла ошибка.'
+        silence_failed: 'При отключении этого пользователя произошла ошибка.'
+        silence_confirm: 'Вы уверены, что хотите отключить этого пользователя? Он не сможет создавать новые темы или сообщения.'
+        silence_accept: 'Да, отключить этого пользователя'
         bounce_score: "Возвратов Писем"
         reset_bounce_score:
           label: "Сбросить"
           title: "сбросить карму к 0"
+        visit_profile: "Посетите<a href='%{url}'>страницу настроек этого пользователя </a>, чтобы отредактировать его профиль"
         deactivate_explanation: "Дезактивированные пользователи должны заново подтвердить свой e-mail."
         suspended_explanation: "Замороженный пользователь не может войти (авторизоваться)."
+        silence_explanation: "Отключенный пользователь не может публиковать или отвечать на темы."
         staged_explanation: "Имитированный пользователь может отправлять сообщения только по эл.почте в определённые темы."
         bounce_score_explanation:
           none: "Нет возвратов полученных недавно от этой эл.почты."
@@ -3345,6 +3517,7 @@ ru:
         sample: "Используйте следующий HTML-код на своём сайте, для возможности создания связанных тем. Замените <b>REPLACE_ME</b> канонической ссылкой страницы, куда производится встраивание."
         title: "Встраивание"
         host: "Разрешённые Хосты"
+        class_name: "Имя класса"
         path_whitelist: "Разрешённый Путь"
         edit: "изменить"
         category: "Опубликовать в разделе"
@@ -3364,6 +3537,7 @@ ru:
         embed_classname_whitelist: "Разрешённые CSS-классы"
         feed_polling_enabled: "Импорт сообщений через RSS/ATOM"
         feed_polling_url: "Ссылка на RSS/ATOM"
+        feed_polling_frequency_mins: "Частота опроса ленты (в минутах)"
         save: "Сохранить настройки встраивания"
       permalink:
         title: "Постоянные ссылки"

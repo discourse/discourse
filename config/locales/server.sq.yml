@@ -214,7 +214,6 @@ sq:
       title: "udhëheqës"
   rate_limiter:
     slow_down: "E keni bërë këtë veprim shumë shpesh, prisni pak e provoni më vonë. "
-    too_many_requests: "Sistemi ka një limit për sa herë ai veprim mund të kryhet në një ditë. Prisni %{time_left} para se të provoni përsëri. "
     by_type:
       first_day_replies_per_day: "Keni arritur maksimumin e përgjigjeve që një përdorues i ri mund të postojë në ditën e parë. Prisni %{time_left} dhe provoni përsëri."
       first_day_topics_per_day: "Keni postuar maksimumin e temave që një anëtar i ri mund të krijojë në ditën e parë. Prisni %{time_left} para se të provoni përsëri. "
@@ -546,11 +545,9 @@ sq:
     allow_user_locale: "Allow users to choose their own language interface preference"
     min_post_length: "Minimum allowed post length in characters"
     min_first_post_length: "Minimum allowed first post (topic body) length in characters"
-    min_personal_message_post_length: "Minimum allowed post length in characters for messages"
     max_post_length: "Maximum allowed post length in characters"
     min_topic_title_length: "Minimum allowed topic title length in characters"
     max_topic_title_length: "Maximum allowed topic title length in characters"
-    min_personal_message_title_length: "Minimum allowed title length for a message in characters"
     min_search_term_length: "Minimum valid search term length in characters"
     allow_uncategorized_topics: "Allow topics to be created without a category. WARNING: If there are any uncategorized topics, you must recategorize them before turning this off."
     allow_duplicate_topic_titles: "Allow topics with identical, duplicate titles."
@@ -671,7 +668,6 @@ sq:
     max_bookmarks_per_day: "Maximum number of bookmarks per user per day."
     max_edits_per_day: "Maximum number of edits per user per day."
     max_topics_per_day: "Maximum number of topics a user can create per day."
-    max_personal_messages_per_day: "Maximum number of messages users can create per day."
     max_invites_per_day: "Maximum number of invites a user can send per day."
     max_topic_invitations_per_day: "Maximum number of topic invitations a user can send per day."
     suggested_topics: "Number of suggested topics shown at the bottom of a topic."

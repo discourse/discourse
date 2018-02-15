@@ -1123,7 +1123,6 @@ pl_PL:
       default_header_text: Wybierz...
       no_content: Nie znaleziono dopasowań
       filter_placeholder: Wyszukiwanie...
-      create: "Utwórz {{content}}"
     emoji_picker:
       filter_placeholder: Szukaj emoji
       people: Ludzie
@@ -2581,9 +2580,7 @@ pl_PL:
         moderation_history: "Historia moderacji"
         agree: "Potwierdź"
         agree_title: "Potwierdź to zgłoszenie jako uzasadnione i poprawne"
-        agree_flag_hide_post: "Potwierdź i ukryj post"
         agree_flag_restore_post: "Potwierdź i przywróć post"
-        agree_flag: "Potwierdź i zachowaj post"
         delete: "Usuń"
         delete_title: "Usuń wpis do którego odnosi się flaga."
         delete_post_defer_flag: "Usuń post i ignoruj flagę"

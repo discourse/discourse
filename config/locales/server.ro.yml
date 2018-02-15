@@ -367,7 +367,6 @@ ro:
     change_failed_explanation: "Ai încercat să retrogradezi utilizatorul %{user_name} la nivelul '%{new_trust_level}'. Însă nivelul este deja '%{current_trust_level}'. %{user_name} va rămâne la '%{current_trust_level}' - dacă dorești să retrogradezi utilizatorul, trebuie să îi blochezi întâi nivelul de încredere."
   rate_limiter:
     slow_down: "Ai executat această acțiune de prea multe ori. Încearcă mai târziu."
-    too_many_requests: "Există o limită zilnică de executare a acestei acțiuni. Te rugăm așteaptă %{time_left} până să încerci iar."
     by_type:
       first_day_replies_per_day: "Ai atins numărul maxim de răspunsuri pe care un nou utilizator le poate crea în prima sa zi. Te rugăm să aștepți %{time_left} înainte să încerci din nou."
       first_day_topics_per_day: "Ai atins numărul maxim de subiecte pe care un nou utilizator poate să le creeze în prima sa zi. Te rugăm să aștepți %{time_left} înainte să încerci din nou."
@@ -777,7 +776,6 @@ ro:
       one: "Email polling a generat o eroare în ultimele 24 de ore. Vizualizează <a href='/logs' target='_blank'>rapoartele</a> pentru mai multe detalii."
       few: "Email polling a generat %{count} erori în ultimele 24 de ore. Vizualizează <a href='/logs' target='_blank'>rapoartele</a> pentru mai multe detalii."
       other: "Retragerea de emailuri generat %{count} de erori în ultimele 24 de ore. Vizualizează <a href='/logs' target='_blank'>rapoartele</a> pentru mai multe detalii."
-    missing_mailgun_api_key: "Serverul este configurat să trimită emailuri printr-un mailgun dar nu ai furnizat nici o cheie API folosită pentru a verifica mesajele webhook."
     bad_favicon_url: "Eroare la încărcarea Favicon. Verifică setarea favicon_url în <a href='/admin/site_settings'>Setările site-ului</a>."
     poll_pop3_timeout: "Conexiunea la serverul POP3 a dat time-out. Mailurile primite nu au putut fi accesate. Te rugăm să verifici <a href='/admin/site_settings/category/email'>setările POP3</a> și furnizorul de servicii."
     poll_pop3_auth_error: "Conexiunea la serverul POP3 a eșuat cu o eroare de autentificare. Te rugăm să verifici <a href='/admin/site_settings/category/email'>setările POP3</a>."
@@ -789,13 +787,11 @@ ro:
     set_locale_from_accept_language_header: "setează limba interfeței pentru utilizatorii anonimi pe baza header-elor de limbă ale web browser-elor lor. (EXPERIMENTAL, nu funcționează cu cache anonim)"
     min_post_length: "Lungimea minimă a postării, în caractere"
     min_first_post_length: "Numărul minim de caractere permis pentru prima postare (în corpul mesajului)"
-    min_personal_message_post_length: "Numărul minim de caractere permis pentru mesaje, per postare"
     max_post_length: "Lungimea maximă permisă a postării, în caractere"
     topic_featured_link_enabled: "Activează postarea unui link cu subiecte."
     show_topic_featured_link_in_digest: "Arată link-ul promovat al subiectului în rezumatul pe email."
     min_topic_title_length: "Minimul de caractere permis în titlul unui subiect"
     max_topic_title_length: "Maximul de caractere permis în titlul unui subiect"
-    min_personal_message_title_length: "Numărul minim de caractere permis în titlul unui mesaj"
     min_search_term_length: "Lungimea minimă a unui termen de căutare valid, în caractere."
     search_tokenize_chinese_japanese_korean: "Forțează căutarea să utilizeze tokens chineză/japoneză/coreană chiar și pe site-uri care nu sunt CJK."
     search_prefer_recent_posts: "Dacă ai un forum mare și căutarea este prea lentă, această opțiune încearcă să indexeze mai multe postări recente întâi."
@@ -841,7 +837,6 @@ ro:
     summary_likes_required: "Minimul de aprecieri într-un subiect înainte de a se activa 'Rezumă acest subiect'."
     summary_percent_filter: "Când un utilizator face click pe 'Rezumatul acestui subiect', arată primele % de postări"
     summary_max_results: "Numărul maxim de postări returnate de \"Rezumatul acestui subiect\""
-    enable_personal_messages: "Acordă nivelul de încredere 1 (configurabil via nivel minim de încredere pentru trimiterea de mesaje) utilizatorilor, pentru a le permite să creeze și să răspundă la mesaje. Atenție: echipa poate oricând să trimită mesaje, indiferent de setări."
     enable_long_polling: "Bus-ul de mesaje folosit pentru notificări poate utiliza long polling."
     long_polling_base_url: "URL de bază folosit pentru long polling (atunci când un CDN servește conținut dinamic, asigură-te că setezi asta pe origin pull) ex: http://origin.site.com"
     long_polling_interval: "Durata cât serverul va trebui să aștepte înainte de a răspunde clienților atunci când nu există date de trimis (exclusiv utilizatori autentificați)"
@@ -958,7 +953,6 @@ ro:
     max_bookmarks_per_day: "Numărul maxim zilnic de semne de carte per utilizator."
     max_edits_per_day: "Numărul maxim zilnic de editări per utilizator."
     max_topics_per_day: "Numărul maxim de subiecte pe care un utilizator le poare crea zilnic."
-    max_personal_messages_per_day: "Număr maxim de mesaje pe care utilizatorii le pot crea pe zi."
     max_invites_per_day: "Număr maxim de invitații pe care un utilizator le poate trimite pe zi."
     max_topic_invitations_per_day: "Numărul maxim de invitații la subiect pe care un utilizator le poate trimite pe zi."
     alert_admins_if_errors_per_minute: "Numărul de erori pe minut la care să se declanșeze o alerta admin. Valoarea 0 dezactivează această funcționalitate. NOTĂ: necesită restart."
@@ -1022,7 +1016,6 @@ ro:
     max_users_notified_per_group_mention: "Numărul maxim de utilizatori care pot primi o notificare dacă un grup este menționat (dacă pragul este atins, nici o notificare nu va fi trimisă)"
     create_thumbnails: "Creează previzualizări de tipul thumbnail și lightbox ale imaginilor ce sunt prea mari să încapă într-o postare."
     email_time_window_mins: "Așteaptă (n) minute până să trimiți un email de notificare, pentru a da utilizatorilor șansa să-și editeze și să-și finalizeze postările."
-    personal_email_time_window_seconds: "Așteaptă (n) secunde înainte de a trimite emailuri de notificare privată, pentru a-i da utilizatorului șansa să își editeze sau finalizeze mesajele."
     email_posts_context: "Câte răspunsuri precedente să fie incluse drept context în email-urile de notificare."
     flush_timings_secs: "Cât de frecvent se resetează datele legate de timp de pe server, în secunde."
     title_max_word_length: "Numărul maxim de caractere din titlul unui subiect."
@@ -1178,7 +1171,6 @@ ro:
     code_formatting_style: "Butonul Cod din cadrul editorului va fi setat cu opțiunea implicită pe acest stil de formatare cod "
     default_email_digest_frequency: "Frecvența implicită cu care utilizatorii primesc emailuri-rezumat."
     default_include_tl0_in_digests: "Implicit, include postări de la utilizatori noi în emailurile-rezumat. Utilizatorii pot schimba această opțiune din preferințele lor."
-    default_email_personal_messages: "Implicit, trimite un email atunci când cineva trimite un mesaj unui utilizator."
     default_email_direct: "Implicit, trimite un mesaj când cineva citează/răspunde/menționează sau invită un utilizator."
     default_email_mailing_list_mode: "Implicit, trimite un email pentru fiecare nou mesaj."
     default_email_mailing_list_mode_frequency: "Implicit, utilizatorii care activează modul mailing list vor primi emailuri cu această frecvență."
@@ -1433,6 +1425,20 @@ ro:
   system_messages:
     post_hidden:
       subject_template: "Postare ascunsă din cauza marcajelor de avertizare ale comunității"
+      text_body_template: |
+        Salut,
+
+        Acesta este un mesaj automat de pe %{site_name} pentru a te informa că mesajul tău a fost ascuns.
+
+        %{base_url}%{url}
+
+        %{flag_reason}
+
+        Mai mulți membri ai comunității au marcat acestă postare cu marcaje de avertizare înainte ca ea să fie ascunsă, așa că te rugăm să îți revizuiești postarea pentru a ține cont de feedback-ul primit. **Îți poți edita postarea după %{edit_delay} minute, și ea va fi automat re-afișată**
+
+        Totuși, dacă postarea este ascunsă de comunitate pentru a doua oară, va rămâne așa până ce va fi gestionată de un membru al echipei -- și asta ar putea atrage și alte consecințe, inclusiv posibilitatea suspendării contului tău.
+
+        Pentru informații suplimentare, te rugăm să citești [ghidul comunității](%{base_url}/guidelines).
     welcome_user:
       subject_template: "Bine ai venit pe %{site_name}!"
     welcome_invite:
@@ -1533,8 +1539,41 @@ ro:
         Dacă există interfață utilizator web pentru contul tău POP, ar trebui să te autentifici pe ea și să îți verifici acolo setările.
     too_many_spam_flags:
       subject_template: "Cont nou suspendat"
+      text_body_template: |
+        Salut,
+
+        Acesta este un mesaj automat de pe %{site_name} pentru a te informa că postările tale au fost temporar ascunse pentru că au fost marcate cu marcaje de avertizare de către comunitate..
+
+        Ca măsura de precauție, noului tău cont i s-a blocat posibilitatea de a crea noi răspunsuri sau subiecte până ce un un membru al echipei nu îl va verifica. Ne cerem scuze pentru inconveniență.
+
+        Pentru informații suplimentare, te rugăm să citești [ghidul comunității](%{base_url}/guidelines).
     too_many_tl3_flags:
       subject_template: "Cont nou suspendat"
+      text_body_template: |
+        Salut,
+
+        Acesta este un mesaj automat de pe %{site_name} pentru a te informa că ți-a fost suspendat contul din cauza unui număr mare de marcaje de avertizare primite de la comunitate.
+
+        Ca măsura de precauție, noului tău cont i s-a blocat posibilitatea de a crea noi răspunsuri sau subiecte până ce un un membru al echipei nu îl va verifica. Ne cerem scuze pentru inconveniență.
+
+        Pentru informații suplimentare, te rugăm să citești [ghidul comunității](%{base_url}/guidelines).
+    silenced_by_staff:
+      text_body_template: |+
+        Salut,
+
+        Acesta este un mesaj automat de pe %{site_name} pentru a te informa că ți-a fost suspendat temporar contul, ca măsură de precauție.
+
+        Poți să continui să răsfoiești, dar nu vei mai putea să răspunzi sau să creezi subiecte până când un [membru al echipei](%{base_url}/about) nu îți verifică postările recente. Ne cerem scuze pentru inconveniență.
+
+        Pentru informații suplimentare, te rugăm să citești [ghidul comunității](%{base_url}/guidelines).
+
+    unsilenced:
+      text_body_template: |
+        Salut,
+
+        Acesta este un mesaj automat din partea %{site_name} pentru a vă informa cu privire la deblocarea contului dumneavoastră după o revizie a personalului.
+
+        Acum puteți crea discuții și răspunsuri noi.
     pending_users_reminder:
       subject_template:
         one: "un utilizator în așteptarea aprobării"

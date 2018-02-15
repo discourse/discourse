@@ -1055,7 +1055,6 @@ it:
       default_header_text: Selezione...
       no_content: Nessun risultato trovato
       filter_placeholder: Ricerca...
-      create: "Crea {{content}}"
     emoji_picker:
       filter_placeholder: Ricerca per emoji
       people: Persone
@@ -2402,11 +2401,9 @@ it:
         topics: "Argomenti Segnalati"
         agree: "Acconsento"
         agree_title: "Conferma che questa segnalazione è valida e corretta"
-        agree_flag_hide_post: "Accetta e Nascondi il Messaggio"
         agree_flag_hide_post_title: "Nascondi questo messaggio e invia automaticamente all'utente un messaggio privato che lo invita a modificarlo."
         agree_flag_restore_post: "Accetta e Ripristina il Messaggio"
         agree_flag_restore_post_title: "Ripristina il messaggio in modo che tutti gli utenti possano vederlo."
-        agree_flag: "Accetto e Mantieni il Messaggio"
         agree_flag_title: "Accetta la segnalazione e mantieni invariato il messaggio."
         delete: "Cancella"
         delete_title: "Cancella il messaggio a cui si riferisce la segnalazione."
