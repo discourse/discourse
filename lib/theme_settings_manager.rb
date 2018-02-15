@@ -49,7 +49,7 @@ class ThemeSettingsManager
   end
 
   def value=(new_value)
-    raise Discourse::InvalidParameters unless is_valid_value?(new_value)
+    ensure_is_valid_value!(new_value)
 
     record = has_record? ? db_record : create_record!
     record.value = new_value.to_s
@@ -61,8 +61,33 @@ class ThemeSettingsManager
     true
   end
 
-  class String  < self; end
+  def invalid_value_error_message
+    primary_key = "themes.settings_errors.#{self.type_name}_value_not_valid"
+    secondary_key = primary_key
+
+    min = @opts[:min]
+    max = @opts[:max]
+
+    secondary_key += "_min" if min.is_a?(::Integer)
+    secondary_key += "_max" if max.is_a?(::Integer)
+
+    translation = I18n.t(primary_key)
+    translation += " #{I18n.t(secondary_key, min: min, max: max)}" if secondary_key != primary_key
+    translation
+  end
+
+  def ensure_is_valid_value!(new_value)
+    unless is_valid_value?(new_value)
+      raise Discourse::InvalidParameters.new invalid_value_error_message
+    end
+  end
+
   class List    < self; end
+  class String  < self
+    def is_valid_value?(new_value)
+      (@opts[:min]..@opts[:max]).include? new_value.to_s.length
+    end
+  end
 
   class Bool < self
     def value
@@ -82,6 +107,10 @@ class ThemeSettingsManager
 
     def value=(new_value)
       super(new_value.to_i)
+    end
+
+    def is_valid_value?(new_value)
+      (@opts[:min]..@opts[:max]).include? new_value.to_i
     end
   end
 

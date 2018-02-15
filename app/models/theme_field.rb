@@ -101,7 +101,13 @@ COMPILED
           errors << I18n.t("#{translation_key}.default_value_missing", name: name)
         end
 
-        unless ThemeSetting.acceptable_value_for_type(default, type)
+        if (min = opts[:min]) && (max = opts[:max])
+          unless ThemeSetting.value_in_range?(default, (min..max), type)
+            errors << I18n.t("#{translation_key}.default_out_range", name: name)
+          end
+        end
+
+        unless ThemeSetting.acceptable_value_for_type?(default, type)
           errors << I18n.t("#{translation_key}.default_not_match_type", name: name)
         end
       end

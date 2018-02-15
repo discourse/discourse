@@ -3,6 +3,7 @@ class ThemeSettingsParser
 
   def initialize(setting_field)
     @setting_field = setting_field
+    @types = ThemeSetting.types
   end
 
   def extract_description(desc)
@@ -15,6 +16,24 @@ class ThemeSettingsParser
 
       locale if locale.is_a?(String)
     end
+  end
+
+  def create_opts(default, type, raw_opts = {})
+    opts = {}
+    opts[:description] = extract_description(raw_opts[:description])
+
+    if type == @types[:enum]
+      choices = raw_opts[:choices]
+      choices = [] unless choices.is_a?(Array)
+      choices << default unless choices.include?(default)
+      opts[:choices] = choices
+    end
+
+    if type == @types[:string] || type == @types[:integer]
+      opts[:max] = raw_opts[:max].is_a?(Integer) ? raw_opts[:max] : Float::INFINITY
+      opts[:min] = raw_opts[:min].is_a?(Integer) ? raw_opts[:min] : -Float::INFINITY
+    end
+    opts
   end
 
   def load
@@ -30,28 +49,20 @@ class ThemeSettingsParser
     parsed.deep_symbolize_keys!
 
     parsed.each_pair do |setting, value|
-      yield(setting, nil, nil, {}) if value.nil?
+      result = [setting, nil, nil, {}] if value.nil?
 
       if (type = ThemeSetting.guess_type(value)).present?
-        yield setting, value, type, {}
+        result = [setting, value, type, create_opts(value, type)]
       elsif (hash = value).is_a?(Hash)
         default = hash[:default]
-        type = hash.key?(:type) ? ThemeSetting.types[hash[:type]&.to_sym] : ThemeSetting.guess_type(default)
+        type = hash.key?(:type) ? @types[hash[:type]&.to_sym] : ThemeSetting.guess_type(default)
 
-        opts = {}
-        opts[:description] = extract_description(hash[:description])
-
-        if type == ThemeSetting.types[:enum]
-          choices = hash[:choices]
-          choices = [] unless choices.is_a?(Array)
-          choices << default unless choices.include?(default)
-          opts[:choices] = choices
-        end
-
-        yield setting, default, type, opts
+        result = [setting, default, type, create_opts(default, type, hash)]
       else
-        yield setting, value, nil, {}
+        result = [setting, value, nil, {}]
       end
+
+      yield(*result)
     end
   end
 end

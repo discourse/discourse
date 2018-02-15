@@ -13,7 +13,7 @@ class ThemeSetting < ActiveRecord::Base
     @types ||= Enum.new(integer: 0, string: 1, bool: 2, list: 3, enum: 4)
   end
 
-  def self.acceptable_value_for_type(value, type)
+  def self.acceptable_value_for_type?(value, type)
     case type
     when self.types[:integer]
       value.class == Integer
@@ -23,6 +23,14 @@ class ThemeSetting < ActiveRecord::Base
       value.class == String
     else
       true
+    end
+  end
+
+  def self.value_in_range?(value, range, type)
+    if type == self.types[:integer]
+      range.include? value
+    elsif type == self.types[:string]
+      range.include? value.to_s.length
     end
   end
 
