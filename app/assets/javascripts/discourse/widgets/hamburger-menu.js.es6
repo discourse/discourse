@@ -121,7 +121,8 @@ export default createWidget('hamburger-menu', {
     const isStaff = Discourse.User.currentProp('staff');
 
     const categories = Discourse.Category.list().reject((c) => {
-      if (c.get('parentCategory.show_subcategory_list')) { return true; }
+      // damingo (Github ID), 2018-02-15, #multisite, Include subcategories for which parentCategory.show_subcategory_list is true.
+      if (c.get('parentCategory.show_subcategory_list')) { return false; }
       if (hideUncategorized && c.get('isUncategorizedCategory') && !isStaff) { return true; }
       return false;
     });

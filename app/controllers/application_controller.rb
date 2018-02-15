@@ -46,31 +46,31 @@ class ApplicationController < ActionController::Base
 
     SiteSetting.set(:force_hostname, request.host)
 
-    # Logo Url
-    path = "/images/logo.#{request.host}.png"
-    logo_url = File.exists?(Rails.root.join("public#{path}")) ? path : '/images/logo-small.png'
-    SiteSetting.set(:logo_url, logo_url)
-
-    # Logo Small Url
-    path = "/images/logo-small.#{request.host}.png"
-    logo_small_url = File.exists?(Rails.root.join("public#{path}")) ? path :  '/images/logo-small.png'
-    SiteSetting.set(:logo_small_url, logo_small_url)
-
-    # Digest Logo Url
-    SiteSetting.set(:logo_url, logo_url)
-
-    # Mobile Logo Url
-    SiteSetting.set(:logo_small_url, logo_small_url)
-
-    # Favicon Url
-    path = "/images/favicon.#{request.host}.png"
-    favicon_url = File.exists?(Rails.root.join("public#{path}")) ? path : '/images/favicon.png'
-    SiteSetting.set(:favicon_url, favicon_url)
-
-    # Apple Touch Icon Url
-    path = "/images/apple-touch-icon.#{request.host}.png"
-    apple_touch_icon_url = File.exists?(Rails.root.join("public#{path}")) ? path : '/images/apple-touch-icon.png'
-    SiteSetting.set(:apple_touch_icon_url, apple_touch_icon_url)
+    # # Logo Url
+    # path = "/images/logo.#{request.host}.png"
+    # logo_url = File.exists?(Rails.root.join("public#{path}")) ? path : '/images/logo-small.png'
+    # SiteSetting.set(:logo_url, logo_url)
+    #
+    # # Logo Small Url
+    # path = "/images/logo-small.#{request.host}.png"
+    # logo_small_url = File.exists?(Rails.root.join("public#{path}")) ? path :  '/images/logo-small.png'
+    # SiteSetting.set(:logo_small_url, logo_small_url)
+    #
+    # # Digest Logo Url
+    # SiteSetting.set(:digest_logo_url, logo_url)
+    #
+    # # Mobile Logo Url
+    # SiteSetting.set(:mobile_small_url, logo_small_url)
+    #
+    # # Favicon Url
+    # path = "/images/favicon.#{request.host}.png"
+    # favicon_url = File.exists?(Rails.root.join("public#{path}")) ? path : '/images/favicon.png'
+    # SiteSetting.set(:favicon_url, favicon_url)
+    #
+    # # Apple Touch Icon Url
+    # path = "/images/apple-touch-icon.#{request.host}.png"
+    # apple_touch_icon_url = File.exists?(Rails.root.join("public#{path}")) ? path : '/images/apple-touch-icon.png'
+    # SiteSetting.set(:apple_touch_icon_url, apple_touch_icon_url)
   end
 
 
