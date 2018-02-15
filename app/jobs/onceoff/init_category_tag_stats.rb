@@ -10,6 +10,7 @@ module Jobs
      INNER JOIN topic_tags ON tags.id = topic_tags.tag_id
      INNER JOIN topics ON topics.id = topic_tags.topic_id
             AND topics.deleted_at IS NULL
+            AND topics.category_id IS NOT NULL
        GROUP BY tags.id, topics.category_id
       SQL
     end

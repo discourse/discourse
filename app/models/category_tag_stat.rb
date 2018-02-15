@@ -50,7 +50,9 @@ class CategoryTagStat < ActiveRecord::Base
                topics.category_id as category_id
         FROM tags
         INNER JOIN topic_tags ON tags.id = topic_tags.tag_id
-        INNER JOIN topics ON topics.id = topic_tags.topic_id AND topics.deleted_at IS NULL
+        INNER JOIN topics ON topics.id = topic_tags.topic_id
+               AND topics.deleted_at IS NULL
+               AND topics.category_id IS NOT NULL
         GROUP BY tags.id, topics.category_id
       ) x
       WHERE stats.tag_id = x.tag_id
