@@ -5,7 +5,8 @@ import { relativeAge } from 'discourse/lib/formatter';
 import { iconNode } from 'discourse-common/lib/icon-library';
 import RawHtml from 'discourse/widgets/raw-html';
 
-const SCROLLAREA_HEIGHT = 300;
+const windowHeight = $(window).height();
+const SCROLLAREA_HEIGHT = (windowHeight < 425)? 150 : 300;
 const SCROLLER_HEIGHT = 50;
 const SCROLLAREA_REMAINING = SCROLLAREA_HEIGHT - SCROLLER_HEIGHT;
 const LAST_READ_HEIGHT = 20;
