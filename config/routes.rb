@@ -696,7 +696,9 @@ Discourse::Application.routes.draw do
   post "draft" => "draft#update"
   delete "draft" => "draft#destroy"
 
-  get "service-worker" => "static#service_worker_asset", format: :js
+  if service_worker_asset = Rails.application.assets_manifest.assets['service-worker.js']
+    get service_worker_asset => "static#service_worker_asset", format: :js
+  end
 
   get "cdn_asset/:site/*path" => "static#cdn_asset", format: false
   get "brotli_asset/*path" => "static#brotli_asset", format: false
