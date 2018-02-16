@@ -179,17 +179,15 @@ module Oneboxer
         return unless Guardian.new.can_see_topic?(topic)
       end
 
-      post = nil
       post_number = route[:post_number].to_i
-      if post_number > 1
-        post = topic.posts.where(post_number: route[:post_number].to_i).first
-      else
-        post = topic.ordered_posts.first
-      end
+
+      post = post_number > 1 ?
+        topic.posts.where(post_number: post_number).first :
+        topic.ordered_posts.first
 
       return if !post || post.hidden || post.post_type != Post.types[:regular]
 
-      if route[:post_number].to_i > 1
+      if post_number > 1
         excerpt = post.excerpt(SiteSetting.post_onebox_maxlength)
         excerpt.gsub!(/[\r\n]+/, " ")
         excerpt.gsub!("[/quote]", "[quote]") # don't break my quote
