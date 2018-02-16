@@ -5,9 +5,9 @@
 .d-header {
   left: 0;
   padding-top: 3px;
-  height: 60px;
+  height: 4.2857em;
   .d-icon-home {
-    padding:8px;
+    padding: 8px;
     font-size: $font-up-5;
   }
 
@@ -17,9 +17,10 @@
   }
 }
 
-@media all
-and (max-width : 570px) {
-  .extra-info-wrapper {display: none;}
+@media all and (max-width: 570px) {
+  .extra-info-wrapper {
+    display: none;
+  }
 }
 
 #main {
