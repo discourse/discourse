@@ -43,13 +43,13 @@ class ApplicationController < ActionController::Base
   def overwrite_site_settings
     # NOTE: It does not work to overwrite the methods on the model level, as this causes multithreading problems and
     # changes the set values at random.
-    if request.host == 'biofabforum.org'
-      SiteSetting.set(:force_hostname, request.host)
-      SiteSetting.set(:title, 'Biofabrication Forum')
-      SiteSetting.set(:site_description, 'A forum for biohackers, DIYers and enthusiasts around all aspects of production with biomaterials, for example mycelium.')
-      SiteSetting.set(:company_short_name, 'Biofabforum')
-      SiteSetting.set(:company_full_name, 'Biofabforum')
-    end
+    # if request.host == 'biofabforum.org'
+    #   SiteSetting.set(:force_hostname, request.host)
+    #   SiteSetting.set(:title, 'Biofabrication Forum')
+    #   SiteSetting.set(:site_description, 'A forum for biohackers, DIYers and enthusiasts around all aspects of production with biomaterials, for example mycelium.')
+    #   SiteSetting.set(:company_short_name, 'Biofabforum')
+    #   SiteSetting.set(:company_full_name, 'Biofabforum')
+    # end
   end
 
 
