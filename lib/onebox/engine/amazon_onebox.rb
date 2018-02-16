@@ -49,33 +49,119 @@ module Onebox
         if (landing_image = raw.css("#landingImage")) && landing_image.any?
           landing_image.first["src"].to_s
         end
+
+        if (ebook_image = raw.css("#ebooksImgBlkFront")) && ebook_image.any?
+          ebook_image.first["src"].to_s
+        end
+      end
+
+      def price
+        # get item price (Amazon markup is inconsistent, deal with it)
+        if raw.css("#priceblock_ourprice .restOfPrice")[0] && raw.css("#priceblock_ourprice .restOfPrice")[0].inner_text
+          "#{raw.css("#priceblock_ourprice .restOfPrice")[0].inner_text}#{raw.css("#priceblock_ourprice .buyingPrice")[0].inner_text}.#{raw.css("#priceblock_ourprice .restOfPrice")[1].inner_text}"
+        elsif raw.css("#priceblock_dealprice") && (dealprice = raw.css("#priceblock_dealprice span")[0])
+          dealprice.inner_text
+        elsif !raw.css("#priceblock_ourprice").inner_text.empty?
+          raw.css("#priceblock_ourprice").inner_text
+        else
+          raw.css(".mediaMatrixListItem.a-active .a-color-price").inner_text
+        end
       end
 
       def data
         og = ::Onebox::Helpers.extract_opengraph(raw)
-        title = og[:title] || CGI.unescapeHTML(raw.css("title").inner_text)
 
-        result = {
-          link: link,
-          title: title,
-          image: og[:image] || image
-        }
+        if raw.at_css('#dp.book_mobile') #printed books
 
-        result[:by_info] = raw.at("#by-line")
-        result[:by_info] = Onebox::Helpers.clean(result[:by_info].inner_html) if result[:by_info]
+          author_list = raw.xpath("//div[@id='byline_secondary_view_div']//span[@class='a-text-bold']")
 
-        # get item price (Amazon markup is inconsistent, deal with it)
-        result[:price] =
-          if raw.css("#priceblock_ourprice .restOfPrice")[0] && raw.css("#priceblock_ourprice .restOfPrice")[0].inner_text
-            "#{raw.css("#priceblock_ourprice .restOfPrice")[0].inner_text}#{raw.css("#priceblock_ourprice .buyingPrice")[0].inner_text}.#{raw.css("#priceblock_ourprice .restOfPrice")[1].inner_text}"
-          elsif raw.css("#priceblock_dealprice") && (dealprice = raw.css("#priceblock_dealprice span")[0])
-            dealprice.inner_text
+          multiple_authors = []
+          author_list.each { |a| multiple_authors << a.inner_text }
+
+          authors = raw.at_css('#byline_secondary_view_div') ? multiple_authors.join(", ") : raw.at("#byline")&.inner_text
+
+          path = "//div[@id='productDetails_secondary_view_div']//table[@id='productDetails_techSpec_section_1']"
+          isbn = raw.xpath("#{path}//tr[8]//td").inner_text.strip
+
+          # if ISBN is misplaced or absent it's hard to find out which data is
+          # there and where to find it
+          if isbn.count('0123456789') == 13
+            publisher = raw.xpath("#{path}//tr[1]//td").inner_text.strip
+            published = raw.xpath("#{path}//tr[2]//td").inner_text.strip
+            book_length = raw.xpath("#{path}//tr[6]//td").inner_text.strip
           else
-            raw.css("#priceblock_ourprice").inner_text
+            isbn = publisher = published = book_length =nil
           end
 
-        summary = raw.at("#productDescription")
-        result[:description] = og[:description] || (summary && summary.inner_text)
+          title = raw.at("h1#title")&.inner_text
+
+          result = {
+            link: link,
+            title: title,
+            by_info: authors,
+            image: og[:image] || image,
+            description: raw.at("#productDescription")&.inner_text,
+            rating: raw.at("#averageCustomerReviews_feature_div .a-icon")&.inner_text,
+            price: price,
+            isbn_asin_text: "ISBN",
+            isbn_asin: isbn,
+            publisher: publisher,
+            published: published,
+            book_length: book_length
+          }
+
+        elsif raw.at_css('#dp.ebooks_mobile') # ebooks
+
+          author_list = raw.xpath("//div[@id='a-popover-mobile-udp-contributor-popover-id']//span[contains(@class,'a-text-bold')]")
+          multiple_authors = []
+          author_list.each { |a| multiple_authors << a.inner_text }
+
+          authors = raw.at_css('#a-popover-mobile-udp-contributor-popover-id') ? multiple_authors.join(", ") : raw.at("#byline")&.inner_text
+
+          path = "//div[@id='detailBullets_secondary_view_div']//ul"
+          asin = raw.xpath("#{path}//li[4]/span/span[2]").inner_text
+
+          # if ASIN is misplaced or absent it's hard to find out which data is
+          # there and where to find it
+          if /^[0-9A-Z]{10}$/.match(asin)
+            publisher = raw.xpath("#{path}//li[2]/span/span[2]").inner_text
+            published = raw.xpath("#{path}//li[1]/span/span[2]").inner_text
+          else
+            asin = publisher = published = nil
+          end
+
+          title = raw.at("#ebooksTitle")&.inner_text
+
+          result = {
+            link: link,
+            title: title,
+            by_info: authors,
+            image: og[:image] || image,
+            description: raw.at("#productDescription")&.inner_text,
+            rating: raw.at("#acrCustomerReviewLink .a-icon")&.inner_text,
+            price: price,
+            isbn_asin_text: "ASIN",
+            isbn_asin: asin,
+            publisher: publisher,
+            published: published
+          }
+
+        else
+          title = og[:title] || CGI.unescapeHTML(raw.css("title").inner_text)
+          result = {
+            link: link,
+            title: title,
+            image: og[:image] || image,
+            price: price
+          }
+
+          result[:by_info] = raw.at("#by-line")
+          result[:by_info] = Onebox::Helpers.clean(result[:by_info].inner_html) if result[:by_info]
+
+          summary = raw.at("#productDescription")
+          result[:description] = og[:description] || (summary && summary.inner_text)
+        end
+
         result
       end
     end
