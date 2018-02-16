@@ -2,8 +2,14 @@
 <html lang="<%= SiteSetting.default_locale %>" class="<%= html_classes %>">
   <head>
     <meta charset="utf-8">
-    <title><%= content_for?(:title) ? yield(:title) + ' - ' + SiteSetting.title : SiteSetting.title %></title>
-    <meta name="description" content="<%= @description_meta || SiteSetting.site_description %>">
+    <% if request.host == 'biofabforum.org' %>
+        <title><%= content_for?(:title) ? yield(:title) + ' - ' + 'Biofabrication Forum' : 'Biofabrication Forum' %></title>
+        <meta name="description" content="<%= @description_meta || 'A forum for biohackers, DIYers and enthusiasts around all aspects of production with biomaterials, for example mycelium.' %>">
+    <% else %>
+        <title><%= content_for?(:title) ? yield(:title) + ' - ' + SiteSetting.title : SiteSetting.title %></title>
+        <meta name="description" content="<%= @description_meta || SiteSetting.site_description %>">
+    <% end %>
+
     <meta name="discourse_theme_key" content="<%= theme_key %>">
     <%= render partial: "layouts/head" %>
     <%= discourse_csrf_tags %>

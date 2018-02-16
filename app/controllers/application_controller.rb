@@ -36,23 +36,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-
-  # damingo (Github ID), 2018-02-09, #theme
-  before_filter :overwrite_site_settings
-
-  def overwrite_site_settings
-    # NOTE: It does not work to overwrite the methods on the model level, as this causes multithreading problems and
-    # changes the set values at random.
-    # if request.host == 'biofabforum.org'
-    #   SiteSetting.set(:force_hostname, request.host)
-    #   SiteSetting.set(:title, 'Biofabrication Forum')
-    #   SiteSetting.set(:site_description, 'A forum for biohackers, DIYers and enthusiasts around all aspects of production with biomaterials, for example mycelium.')
-    #   SiteSetting.set(:company_short_name, 'Biofabforum')
-    #   SiteSetting.set(:company_full_name, 'Biofabforum')
-    # end
-  end
-
-
   before_filter :handle_theme
   before_filter :set_current_user_for_logs
   before_filter :clear_notifications
