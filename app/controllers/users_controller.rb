@@ -975,7 +975,12 @@ class UsersController < ApplicationController
         result.merge!(params.permit(:active, :staged, :approved))
       end
 
-      result
+      modify_user_params(result)
+    end
+
+    # Plugins can use this to modify user parameters
+    def modify_user_params(attrs)
+      attrs
     end
 
     def user_locale
