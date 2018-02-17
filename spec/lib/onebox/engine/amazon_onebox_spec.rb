@@ -151,7 +151,7 @@ describe Onebox::Engine::AmazonOnebox do
       end
 
       it "includes image" do
-        expect(html).to include("https://images-na.ssl-images-amazon.com/images/I/51LZT%2BtSrTL.jpg")
+        expect(html).to include("https://images-na.ssl-images-amazon.com/images/I/51LZT%2BtSrTL._SX133_.jpg")
       end
 
       it "includes ASIN" do

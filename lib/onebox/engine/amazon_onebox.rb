@@ -51,7 +51,7 @@ module Onebox
         end
 
         if (ebook_image = raw.css("#ebooksImgBlkFront")) && ebook_image.any?
-          ebook_image.first["src"].to_s
+          ::JSON.parse(ebook_image.first.attributes["data-a-dynamic-image"].value).keys.first
         end
       end
 
@@ -71,30 +71,30 @@ module Onebox
       def multiple_authors(authors_xpath)
         author_list = raw.xpath(authors_xpath)
         authors = []
-        author_list.each { |a| authors << a.inner_text }
-        authors = authors.join(", ")
+        author_list.each { |a| authors << a.inner_text.strip }
+        authors.join(", ")
       end
 
       def data
         og = ::Onebox::Helpers.extract_opengraph(raw)
 
         if raw.at_css('#dp.book_mobile') #printed books
+          title = raw.at("h1#title")&.inner_text
           authors = raw.at_css('#byline_secondary_view_div') ? multiple_authors("//div[@id='byline_secondary_view_div']//span[@class='a-text-bold']") : raw.at("#byline")&.inner_text
-          path = "//div[@id='productDetails_secondary_view_div']//table[@id='productDetails_techSpec_section_1']"
-          isbn = raw.xpath("#{path}//tr[8]//td").inner_text.strip
+          rating = raw.at("#averageCustomerReviews_feature_div .a-icon")&.inner_text || raw.at("#cmrsArcLink .a-icon")&.inner_text
+
+          table_xpath = "//div[@id='productDetails_secondary_view_div']//table[@id='productDetails_techSpec_section_1']"
+          isbn = raw.xpath("#{table_xpath}//tr[8]//td").inner_text.strip
 
           # if ISBN is misplaced or absent it's hard to find out which data is
-          # there and where to find it
+          # available and where to find it so just set it all to nil
           if /^\d(\-?\d){12}$/.match(isbn)
-            publisher = raw.xpath("#{path}//tr[1]//td").inner_text.strip
-            published = raw.xpath("#{path}//tr[2]//td").inner_text.strip
-            book_length = raw.xpath("#{path}//tr[6]//td").inner_text.strip
+            publisher = raw.xpath("#{table_xpath}//tr[1]//td").inner_text.strip
+            published = raw.xpath("#{table_xpath}//tr[2]//td").inner_text.strip
+            book_length = raw.xpath("#{table_xpath}//tr[6]//td").inner_text.strip
           else
             isbn = publisher = published = book_length = nil
           end
-
-          rating = raw.at("#averageCustomerReviews_feature_div .a-icon")&.inner_text || raw.at("#cmrsArcLink .a-icon")&.inner_text
-          title = raw.at("h1#title")&.inner_text
 
           result = {
             link: link,
@@ -107,26 +107,25 @@ module Onebox
             isbn_asin_text: "ISBN",
             isbn_asin: isbn,
             publisher: publisher,
-            published: published,
-            book_length: book_length
+            published: published
           }
 
         elsif raw.at_css('#dp.ebooks_mobile') # ebooks
-          authors = raw.at_css('#a-popover-mobile-udp-contributor-popover-id') ? multiple_authors("//div[@id='a-popover-mobile-udp-contributor-popover-id']//span[contains(@class,'a-text-bold')]") : raw.at("#byline")&.inner_text
+          title = raw.at("#ebooksTitle")&.inner_text
+          authors = raw.at_css('#a-popover-mobile-udp-contributor-popover-id') ? multiple_authors("//div[@id='a-popover-mobile-udp-contributor-popover-id']//span[contains(@class,'a-text-bold')]") : (raw.at("#byline")&.inner_text&.strip || raw.at("#bylineInfo")&.inner_text&.strip)
+          rating = raw.at("#averageCustomerReviews_feature_div .a-icon")&.inner_text || raw.at("#cmrsArcLink .a-icon")&.inner_text || raw.at("#acrCustomerReviewLink .a-icon")&.inner_text
 
-          path = "//div[@id='detailBullets_secondary_view_div']//ul"
-          asin = raw.xpath("#{path}//li[4]/span/span[2]").inner_text
+          table_xpath = "//div[@id='detailBullets_secondary_view_div']//ul"
+          asin = raw.xpath("#{table_xpath}//li[4]/span/span[2]").inner_text
 
           # if ASIN is misplaced or absent it's hard to find out which data is
-          # there and where to find it
+          # available and where to find it so just set it all to nil
           if /^[0-9A-Z]{10}$/.match(asin)
-            publisher = raw.xpath("#{path}//li[2]/span/span[2]").inner_text
-            published = raw.xpath("#{path}//li[1]/span/span[2]").inner_text
+            publisher = raw.xpath("#{table_xpath}//li[2]/span/span[2]").inner_text
+            published = raw.xpath("#{table_xpath}//li[1]/span/span[2]").inner_text
           else
             asin = publisher = published = nil
           end
-          rating = raw.at("#averageCustomerReviews_feature_div .a-icon")&.inner_text || raw.at("#cmrsArcLink .a-icon")&.inner_text
-          title = raw.at("#ebooksTitle")&.inner_text
 
           result = {
             link: link,
