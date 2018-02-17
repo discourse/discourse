@@ -68,31 +68,32 @@ module Onebox
         end
       end
 
+      def multiple_authors(authors_xpath)
+        author_list = raw.xpath(authors_xpath)
+        authors = []
+        author_list.each { |a| authors << a.inner_text }
+        authors = authors.join(", ")
+      end
+
       def data
         og = ::Onebox::Helpers.extract_opengraph(raw)
 
         if raw.at_css('#dp.book_mobile') #printed books
-
-          author_list = raw.xpath("//div[@id='byline_secondary_view_div']//span[@class='a-text-bold']")
-
-          multiple_authors = []
-          author_list.each { |a| multiple_authors << a.inner_text }
-
-          authors = raw.at_css('#byline_secondary_view_div') ? multiple_authors.join(", ") : raw.at("#byline")&.inner_text
-
+          authors = raw.at_css('#byline_secondary_view_div') ? multiple_authors("//div[@id='byline_secondary_view_div']//span[@class='a-text-bold']") : raw.at("#byline")&.inner_text
           path = "//div[@id='productDetails_secondary_view_div']//table[@id='productDetails_techSpec_section_1']"
           isbn = raw.xpath("#{path}//tr[8]//td").inner_text.strip
 
           # if ISBN is misplaced or absent it's hard to find out which data is
           # there and where to find it
-          if isbn.count('0123456789') == 13
+          if /^\d(\-?\d){12}$/.match(isbn)
             publisher = raw.xpath("#{path}//tr[1]//td").inner_text.strip
             published = raw.xpath("#{path}//tr[2]//td").inner_text.strip
             book_length = raw.xpath("#{path}//tr[6]//td").inner_text.strip
           else
-            isbn = publisher = published = book_length =nil
+            isbn = publisher = published = book_length = nil
           end
 
+          rating = raw.at("#averageCustomerReviews_feature_div .a-icon")&.inner_text || raw.at("#cmrsArcLink .a-icon")&.inner_text
           title = raw.at("h1#title")&.inner_text
 
           result = {
@@ -101,7 +102,7 @@ module Onebox
             by_info: authors,
             image: og[:image] || image,
             description: raw.at("#productDescription")&.inner_text,
-            rating: raw.at("#averageCustomerReviews_feature_div .a-icon")&.inner_text,
+            rating: rating,
             price: price,
             isbn_asin_text: "ISBN",
             isbn_asin: isbn,
@@ -111,12 +112,7 @@ module Onebox
           }
 
         elsif raw.at_css('#dp.ebooks_mobile') # ebooks
-
-          author_list = raw.xpath("//div[@id='a-popover-mobile-udp-contributor-popover-id']//span[contains(@class,'a-text-bold')]")
-          multiple_authors = []
-          author_list.each { |a| multiple_authors << a.inner_text }
-
-          authors = raw.at_css('#a-popover-mobile-udp-contributor-popover-id') ? multiple_authors.join(", ") : raw.at("#byline")&.inner_text
+          authors = raw.at_css('#a-popover-mobile-udp-contributor-popover-id') ? multiple_authors("//div[@id='a-popover-mobile-udp-contributor-popover-id']//span[contains(@class,'a-text-bold')]") : raw.at("#byline")&.inner_text
 
           path = "//div[@id='detailBullets_secondary_view_div']//ul"
           asin = raw.xpath("#{path}//li[4]/span/span[2]").inner_text
@@ -129,7 +125,7 @@ module Onebox
           else
             asin = publisher = published = nil
           end
-
+          rating = raw.at("#averageCustomerReviews_feature_div .a-icon")&.inner_text || raw.at("#cmrsArcLink .a-icon")&.inner_text
           title = raw.at("#ebooksTitle")&.inner_text
 
           result = {
@@ -138,7 +134,7 @@ module Onebox
             by_info: authors,
             image: og[:image] || image,
             description: raw.at("#productDescription")&.inner_text,
-            rating: raw.at("#acrCustomerReviewLink .a-icon")&.inner_text,
+            rating: rating,
             price: price,
             isbn_asin_text: "ASIN",
             isbn_asin: asin,
