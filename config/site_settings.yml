@@ -502,6 +502,7 @@ posting:
     client: true
     default: 2
     min: 1
+  max_emojis_in_title: 1
   allow_uncategorized_topics:
     client: true
     default: true
