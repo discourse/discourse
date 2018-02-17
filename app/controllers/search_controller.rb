@@ -92,6 +92,13 @@ class SearchController < ApplicationController
         type_filter = 'private_messages'
       end
 
+
+      # damingo (Github ID), 2018-02-16, #multisite, Limit search results to the #biofab category.
+      if request.host == 'biofabforum.org' && context_obj.blank?
+        context_obj = Category.find_by(id: 274)
+      end
+
+
       guardian.ensure_can_see!(context_obj)
 
       [context_obj, type_filter]
