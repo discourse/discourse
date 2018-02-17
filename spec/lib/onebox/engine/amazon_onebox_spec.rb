@@ -110,7 +110,62 @@ describe Onebox::Engine::AmazonOnebox do
         expect(html).to include("Watch Christine online - Amazon Video")
       end
     end
+  end
 
+  context "amazon book page" do
+    let(:link) { "https://www.amazon.com/dp/B00AYQNR46" }
+    let(:html) { described_class.new(link).to_html }
+
+    before do
+      fake("https://www.amazon.com/gp/aw/d/B00AYQNR46", response("amazon"))
+    end
+
+    describe "#to_html" do
+      it "includes title and author" do
+        expect(html).to include("Seven Languages in Seven Weeks: A Pragmatic Guide to Learning Programming Languages (Pragmatic Programmers)")
+        expect(html).to include("Bruce Tate")
+      end
+
+      it "includes ISBN" do
+        expect(html).to include("978-1934356593")
+      end
+
+      it "includes publisher" do
+        expect(html).to include("Pragmatic Bookshelf")
+      end
+    end
+  end
+
+  context "amazon ebook page" do
+    let(:link) { "https://www.amazon.com/dp/193435659X" }
+    let(:html) { described_class.new(link).to_html }
+
+    before do
+      fake("https://www.amazon.com/gp/aw/d/193435659X", response("amazon-ebook"))
+    end
+
+    describe "#to_html" do
+      it "includes title and author" do
+        expect(html).to include("Seven Languages in Seven Weeks: A Pragmatic Guide to Learning Programming Languages (Pragmatic Programmers)")
+        expect(html).to include("Bruce Tate")
+      end
+
+      it "includes image" do
+        expect(html).to include("https://images-na.ssl-images-amazon.com/images/I/51LZT%2BtSrTL.jpg")
+      end
+
+      it "includes ASIN" do
+        expect(html).to include("B00AYQNR46")
+      end
+
+      it "includes rating" do
+        expect(html).to include("4.2 out of 5 stars")
+      end
+
+      it "includes publisher" do
+        expect(html).to include("Pragmatic Bookshelf")
+      end
+    end
   end
 
 end
