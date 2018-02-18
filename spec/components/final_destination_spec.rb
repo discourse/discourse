@@ -204,6 +204,63 @@ describe FinalDestination do
           expect(final.cookie).to eq('evil=trout')
         end
       end
+
+      it "correctly extracts cookies during GET" do
+        stub_request(:head, "https://eviltrout.com").to_return(status: 405)
+
+        stub_request(:get, "https://eviltrout.com")
+          .to_return(status: 302, body: "" , headers: {
+            "Location" => "https://eviltrout.com",
+            "Set-Cookie" => ["foo=219ffwef9w0f; expires=Mon, 19-Feb-2018 10:44:24 GMT; path=/; domain=eviltrout.com",
+                             "bar=1",
+                             "baz=2; expires=Tue, 19-Feb-2019 10:14:24 GMT; path=/; domain=eviltrout.com"]
+          })
+
+        stub_request(:head, "https://eviltrout.com")
+          .with(headers: { "Cookie" => "bar=1; baz=2; foo=219ffwef9w0f" })
+          .to_return(status: 200, body: "")
+
+        final = FinalDestination.new("https://eviltrout.com", opts)
+        expect(final.resolve.to_s).to eq("https://eviltrout.com")
+        expect(final.status).to eq(:resolved)
+        expect(final.cookie).to eq("bar=1; baz=2; foo=219ffwef9w0f")
+      end
+    end
+
+    it "should use the correct format for cookies when there is only one cookie" do
+      stub_request(:head, "https://eviltrout.com")
+        .to_return(status: 302, body: "" , headers: {
+          "Location" => "https://eviltrout.com",
+          "Set-Cookie" => "foo=219ffwef9w0f; expires=Mon, 19-Feb-2018 10:44:24 GMT; path=/; domain=eviltrout.com"
+        })
+
+      stub_request(:head, "https://eviltrout.com")
+        .with(headers: { "Cookie" => "foo=219ffwef9w0f" })
+        .to_return(status: 200, body: "")
+
+      final = FinalDestination.new("https://eviltrout.com", opts)
+      expect(final.resolve.to_s).to eq("https://eviltrout.com")
+      expect(final.status).to eq(:resolved)
+      expect(final.cookie).to eq("foo=219ffwef9w0f")
+    end
+
+    it "should use the correct format for cookies when there are multiple cookies" do
+      stub_request(:head, "https://eviltrout.com")
+        .to_return(status: 302, body: "" , headers: {
+          "Location" => "https://eviltrout.com",
+          "Set-Cookie" => ["foo=219ffwef9w0f; expires=Mon, 19-Feb-2018 10:44:24 GMT; path=/; domain=eviltrout.com",
+                           "bar=1",
+                           "baz=2; expires=Tue, 19-Feb-2019 10:14:24 GMT; path=/; domain=eviltrout.com"]
+        })
+
+      stub_request(:head, "https://eviltrout.com")
+        .with(headers: { "Cookie" => "bar=1; baz=2; foo=219ffwef9w0f" })
+        .to_return(status: 200, body: "")
+
+      final = FinalDestination.new("https://eviltrout.com", opts)
+      expect(final.resolve.to_s).to eq("https://eviltrout.com")
+      expect(final.status).to eq(:resolved)
+      expect(final.cookie).to eq("bar=1; baz=2; foo=219ffwef9w0f")
     end
   end
 
