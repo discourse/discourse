@@ -146,8 +146,14 @@ module Jobs
       @extra[:end_date] = @extra[:end_date].to_date if @extra[:end_date].is_a?(String)
       @extra[:category_id] = @extra[:category_id].present? ? @extra[:category_id].to_i : nil
       @extra[:group_id] = @extra[:group_id].present? ? @extra[:group_id].to_i : nil
+
+      report_hash = {}
       Report.find(@extra[:name], @extra).data.each do |row|
-        yield [row[:x].to_s(:db), row[:y].to_s(:db)]
+        report_hash[row[:x].to_s(:db)] = row[:y].to_s(:db)
+      end
+
+      (@extra[:start_date]..@extra[:end_date]).each do |date|
+        yield [date.to_s(:db), report_hash.fetch(date.to_s(:db), 0)]
       end
     end
 
