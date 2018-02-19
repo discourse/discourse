@@ -1,5 +1,5 @@
 AllCops:
-  TargetRubyVersion: 2.2
+  TargetRubyVersion: 2.3
   DisabledByDefault: true
   Include:
     - '**/*.gemspec'
