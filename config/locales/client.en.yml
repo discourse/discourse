@@ -3605,11 +3605,12 @@ en:
         recommended: "We recommend customizing the following text to suit your needs:"
         show_overriden: 'Only show overridden'
 
-      site_settings:
+      settings: # used by theme and site settings
         show_overriden: 'Only show overridden'
-        title: 'Settings'
         reset: 'reset'
         none: 'none'
+      site_settings:
+        title: 'Settings'
         no_results: "No results found."
         clear_filter: "Clear"
         add_url: "add URL"

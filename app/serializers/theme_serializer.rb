@@ -24,7 +24,7 @@ class ThemeFieldSerializer < ApplicationSerializer
   end
 
   def target
-    Theme.targets.invert[object.target_id]&.to_s
+    Theme.lookup_target(object.target_id)&.to_s
   end
 
   def include_error?

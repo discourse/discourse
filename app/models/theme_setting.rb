@@ -5,7 +5,7 @@ class ThemeSetting < ActiveRecord::Base
   validates :data_type, numericality: { only_integer: true }
   validates :name, length: { maximum: 255 }
 
-  after_commit do
+  after_save do
     theme.clear_cached_settings!
   end
 
@@ -16,11 +16,11 @@ class ThemeSetting < ActiveRecord::Base
   def self.acceptable_value_for_type?(value, type)
     case type
     when self.types[:integer]
-      value.class == Integer
+      value.is_a?(Integer)
     when self.types[:bool]
-      [TrueClass, FalseClass].include?(value.class)
+      value.is_a?(TrueClass) || value.is_a?(FalseClass)
     when self.types[:list]
-      value.class == String
+      value.is_a?(String)
     else
       true
     end

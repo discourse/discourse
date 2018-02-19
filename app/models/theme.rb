@@ -130,6 +130,10 @@ class Theme < ActiveRecord::Base
     @targets ||= Enum.new(common: 0, desktop: 1, mobile: 2, settings: 3)
   end
 
+  def self.lookup_target(target_id)
+    self.targets.invert[target_id]
+  end
+
   def notify_scheme_change(clear_manager_cache = true)
     Stylesheet::Manager.cache.clear if clear_manager_cache
     message = refresh_message_for_targets(["desktop", "mobile", "admin"], self)
