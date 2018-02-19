@@ -172,7 +172,7 @@ class FinalDestination
     when 200
       @status = :resolved
       return @uri
-    when 405, 406, 409, 501
+    when 302, 405, 406, 409, 501
       get_response = small_get(request_headers)
 
       response_status = get_response.code.to_i
@@ -183,7 +183,7 @@ class FinalDestination
 
       headers = {}
       if cookie_val = get_response.get_fields('set-cookie')
-        headers['set-cookie'] = cookie_val.join
+        headers['set-cookie'] = cookie_val.join(";")
       end
 
       # TODO this is confusing why grab location for anything not
