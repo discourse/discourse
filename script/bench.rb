@@ -214,7 +214,7 @@ begin
       FileUtils.mkdir_p(File.join('tmp', 'pids'))
       spawn("bundle exec unicorn -c config/unicorn.conf.rb")
     else
-      spawn("bundle exec puma -p #{@port}")
+      spawn("bundle exec puma -p #{@port} -e production")
     end
 
   while port_available? @port
