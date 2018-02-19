@@ -10,12 +10,12 @@
   </div>
 
   {{#unless model.automatic}}
-    <div>
+    <div class="group-full-name-inputs">
       <label for='full_name'>{{i18n 'groups.edit.full_name'}}</label>
       {{input type='text' name='full_name' value=model.full_name class='group-edit-full-name'}}
     </div>
 
-    <div>
+    <div class="group-bio-inputs">
       <label for="bio">{{i18n 'groups.bio'}}</label>
       {{d-editor value=model.bio_raw}}
     </div>
@@ -35,7 +35,7 @@
       <label for="owner-selector">{{i18n 'admin.groups.add_owners'}}</label>
 
       {{user-selector usernames=model.ownerUsernames
-          placeholderKey="admin.groups.selector_placeholder"
+          placeholderKey="groups.username_selector_placeholder"
           id="owner-selector"}}
 
       {{#if model.id}}
@@ -62,51 +62,53 @@
   </div>
 
   {{#unless model.automatic}}
-    <div>
-      <label>
-        {{input type="checkbox"
-            checked=model.public_admission
-            disabled=disablePublicSetting}}
-
-        {{i18n 'groups.public_admission'}}
-      </label>
-    </div>
-
-    <div>
-      <label>
-        {{input type='checkbox'
-            checked=model.public_exit}}
-
-        {{i18n 'groups.public_exit'}}
-      </label>
-    </div>
-
-    <div>
-      <label>
-        {{input type="checkbox"
-            checked=model.allow_membership_requests
-            disabled=disableMembershipRequestSetting}}
-
-        {{i18n 'groups.allow_membership_requests'}}
-      </label>
-    </div>
-
-    {{#if model.allow_membership_requests}}
+    <div class="group-admission-inputs">
       <div>
-        <label for="membership-request-template">
-          {{i18n 'groups.membership_request_template'}}
+        <label>
+          {{input type="checkbox"
+              checked=model.public_admission
+              disabled=disablePublicSetting}}
+
+          {{i18n 'groups.public_admission'}}
         </label>
-
-        {{expanding-text-area name="membership-request-template"
-            value=model.membership_request_template}}
       </div>
-    {{/if}}
 
-    <div>
-      <label>
-        {{input type="checkbox" checked=model.primary_group}}
-        {{i18n 'admin.groups.primary_group'}}
-      </label>
+      <div>
+        <label>
+          {{input type='checkbox'
+              checked=model.public_exit}}
+
+          {{i18n 'groups.public_exit'}}
+        </label>
+      </div>
+
+      <div>
+        <label>
+          {{input type="checkbox"
+              checked=model.allow_membership_requests
+              disabled=disableMembershipRequestSetting}}
+
+          {{i18n 'groups.allow_membership_requests'}}
+        </label>
+      </div>
+
+      {{#if model.allow_membership_requests}}
+        <div>
+          <label for="membership-request-template">
+            {{i18n 'groups.membership_request_template'}}
+          </label>
+
+          {{expanding-text-area name="membership-request-template"
+              value=model.membership_request_template}}
+        </div>
+      {{/if}}
+
+      <div>
+        <label>
+          {{input type="checkbox" checked=model.primary_group}}
+          {{i18n 'admin.groups.primary_group'}}
+        </label>
+      </div>
     </div>
   {{/unless}}
 
