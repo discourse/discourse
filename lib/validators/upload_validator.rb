@@ -29,11 +29,11 @@ class Validators::UploadValidator < ActiveModel::Validator
   end
 
   def is_authorized?(upload, extension)
-    authorized_extensions(upload, extension, authorized_uploads(upload))
+    extension_authorized?(upload, extension, authorized_extensions(upload))
   end
 
   def authorized_image_extension(upload, extension)
-    authorized_extensions(upload, extension, authorized_images(upload))
+    extension_authorized?(upload, extension, authorized_images(upload))
   end
 
   def maximum_image_file_size(upload)
@@ -41,7 +41,7 @@ class Validators::UploadValidator < ActiveModel::Validator
   end
 
   def authorized_attachment_extension(upload, extension)
-    authorized_extensions(upload, extension, authorized_attachments(upload))
+    extension_authorized?(upload, extension, authorized_attachments(upload))
   end
 
   def maximum_attachment_file_size(upload)
@@ -50,38 +50,50 @@ class Validators::UploadValidator < ActiveModel::Validator
 
   private
 
-  def authorized_uploads(upload)
-    authorized_uploads = Set.new
+  def extensions_to_set(exts)
+    extensions = Set.new
 
-    extensions = upload.for_theme ? SiteSetting.theme_authorized_extensions : SiteSetting.authorized_extensions
-
-    extensions
+    exts
       .gsub(/[\s\.]+/, "")
       .downcase
       .split("|")
-      .each { |extension| authorized_uploads << extension unless extension.include?("*") }
+      .each { |extension| extensions << extension unless extension.include?("*") }
 
-    authorized_uploads
+    extensions
+  end
+
+  def authorized_extensions(upload)
+    extensions = upload.for_theme ? SiteSetting.theme_authorized_extensions : SiteSetting.authorized_extensions
+    extensions_to_set(extensions)
   end
 
   def authorized_images(upload)
-    authorized_uploads(upload) & FileHelper.images
+    authorized_extensions(upload) & FileHelper.images
   end
 
   def authorized_attachments(upload)
-    authorized_uploads(upload) - FileHelper.images
+    authorized_extensions(upload) - FileHelper.images
   end
 
   def authorizes_all_extensions?(upload)
+    if upload.user&.staff?
+      return true if SiteSetting.authorized_extensions_for_staff.include?("*")
+    end
     extensions = upload.for_theme ? SiteSetting.theme_authorized_extensions : SiteSetting.authorized_extensions
     extensions.include?("*")
   end
 
-  def authorized_extensions(upload, extension, extensions)
+  def extension_authorized?(upload, extension, extensions)
     return true if authorizes_all_extensions?(upload)
 
+    staff_extensions = Set.new
+    if upload.user&.staff?
+      staff_extensions = extensions_to_set(SiteSetting.authorized_extensions_for_staff)
+      return true if staff_extensions.include?(extension.downcase)
+    end
+
     unless authorized = extensions.include?(extension.downcase)
-      message = I18n.t("upload.unauthorized", authorized_extensions: extensions.to_a.join(", "))
+      message = I18n.t("upload.unauthorized", authorized_extensions: (extensions | staff_extensions).to_a.join(", "))
       upload.errors.add(:original_filename, message)
     end
 
