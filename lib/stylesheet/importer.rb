@@ -39,6 +39,7 @@ module Stylesheet
       colors.each do |n, hex|
         contents << "$#{n}: ##{hex} !default;\n"
       end
+
       theme&.all_theme_variables&.each do |field|
         if field.type_id == ThemeField.types[:theme_upload_var]
           if upload = field.upload
@@ -46,11 +47,14 @@ module Stylesheet
             contents << "$#{field.name}: unquote(\"#{url}\");\n"
           end
         else
-          escaped = field.value.gsub('"', "\\22")
-          escaped.gsub!("\n", "\\A")
-          contents << "$#{field.name}: unquote(\"#{escaped}\");\n"
+          contents << to_scss_variable(field.name, field.value)
         end
       end
+
+      theme&.included_settings&.each do |name, value|
+        contents << to_scss_variable(name, value)
+      end
+
       Import.new("theme_variable.scss", source: contents)
     end
 
@@ -130,6 +134,12 @@ COMMENT
 
     def category_css(category)
       "body.category-#{category.full_slug} { background-image: url(#{upload_cdn_path(category.uploaded_background.url)}) }\n"
+    end
+
+    def to_scss_variable(name, value)
+      escaped = value.to_s.gsub('"', "\\22")
+      escaped.gsub!("\n", "\\A")
+      "$#{name}: unquote(\"#{escaped}\");\n"
     end
 
     def imports(asset, parent_path)

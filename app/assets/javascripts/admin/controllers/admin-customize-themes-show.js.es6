@@ -2,6 +2,7 @@ import { default as computed } from 'ember-addons/ember-computed-decorators';
 import { url } from 'discourse/lib/computed';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 import showModal from 'discourse/lib/show-modal';
+import ThemeSettings from 'admin/models/theme-settings';
 
 const THEME_UPLOAD_VAR = 2;
 
@@ -30,7 +31,7 @@ export default Ember.Controller.extend({
         return text + ": " + localized.join(" , ");
       }
     };
-    ['common','desktop','mobile'].forEach(target=> {
+    ['common', 'desktop', 'mobile', 'settings'].forEach(target => {
       descriptions.push(description(target));
     });
     return descriptions.reject(d=>Em.isBlank(d));
@@ -75,6 +76,16 @@ export default Ember.Controller.extend({
     });
 
     return themes;
+  },
+
+  @computed("model.settings")
+  settings(settings) {
+    return settings.map(setting => ThemeSettings.create(setting));
+  },
+
+  @computed("settings")
+  hasSettings(settings) {
+    return settings.length > 0;
   },
 
   downloadUrl: url('model.id', '/admin/themes/%@'),

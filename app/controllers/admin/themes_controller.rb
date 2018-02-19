@@ -138,6 +138,7 @@ class Admin::ThemesController < Admin::AdminController
     end
 
     set_fields
+    update_settings
 
     save_remote = false
     if params[:theme][:remote_check]
@@ -158,7 +159,7 @@ class Admin::ThemesController < Admin::AdminController
         update_default_theme
 
         log_theme_change(original_json, @theme)
-        format.json { render json: @theme, status: :created }
+        format.json { render json: @theme, status: :ok }
       else
         format.json {
 
@@ -193,7 +194,7 @@ class Admin::ThemesController < Admin::AdminController
 
         response.headers['Content-Disposition'] = "attachment; filename=#{@theme.name.parameterize}.dcstyle.json"
         response.sending_file = true
-        render json: ThemeWithEmbeddedUploadsSerializer.new(@theme, root: 'theme')
+        render json: ::ThemeWithEmbeddedUploadsSerializer.new(@theme, root: 'theme')
       end
     end
 
@@ -223,6 +224,7 @@ class Admin::ThemesController < Admin::AdminController
             :color_scheme_id,
             :default,
             :user_selectable,
+            settings: {},
             theme_fields: [:name, :target, :value, :upload_id, :type_id],
             child_theme_ids: []
           )
@@ -240,6 +242,14 @@ class Admin::ThemesController < Admin::AdminController
           type_id: field[:type_id],
           upload_id: field[:upload_id]
         )
+      end
+    end
+
+    def update_settings
+      return unless target_settings = theme_params[:settings]
+
+      target_settings.each_pair do |setting_name, new_value|
+        @theme.update_setting(setting_name.to_sym, new_value)
       end
     end
 
