@@ -258,6 +258,7 @@ class UserNotifications < ActionMailer::Base
     opts[:use_site_subject] = true
     opts[:add_re_to_subject] = true
     opts[:show_category_in_subject] = false
+    opts[:show_group_in_subject] = true if SiteSetting.group_in_subject
 
     # We use the 'user_posted' event when you are emailed a post in a PM.
     opts[:notification_type] = 'posted'
@@ -372,6 +373,7 @@ class UserNotifications < ActionMailer::Base
       use_site_subject: opts[:use_site_subject],
       add_re_to_subject: opts[:add_re_to_subject],
       show_category_in_subject: opts[:show_category_in_subject],
+      show_group_in_subject: opts[:show_group_in_subject],
       notification_type: notification_type,
       use_invite_template: opts[:use_invite_template],
       user: user
@@ -420,6 +422,21 @@ class UserNotifications < ActionMailer::Base
       end
     else
       show_category_in_subject = nil
+    end
+
+    if post.topic.private_message?
+      subject_pm =
+        if opts[:show_group_in_subject]
+          if group = post.topic.allowed_groups&.first
+            if group.full_name
+              "[#{group.full_name}] "
+            else
+              "[#{group.name}] "
+            end
+          end
+        else
+          I18n.t('subject_pm')
+        end
     end
 
     if SiteSetting.private_email?
@@ -523,6 +540,7 @@ class UserNotifications < ActionMailer::Base
       add_re_to_subject: add_re_to_subject,
       show_category_in_subject: show_category_in_subject,
       private_reply: post.topic.private_message?,
+      subject_pm: subject_pm,
       include_respond_instructions: !(user.suspended? || user.staged?),
       template: template,
       site_description: SiteSetting.site_description,

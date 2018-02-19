@@ -437,6 +437,8 @@ groups:
   enable_group_directory:
     client: true
     default: true
+  group_in_subject:
+    default: false
 
 posting:
   min_post_length:
