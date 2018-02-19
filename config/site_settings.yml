@@ -796,6 +796,11 @@ files:
     default: 'jpg|jpeg|png|gif'
     refresh: true
     type: list
+  authorized_extensions_for_staff:
+    client: true
+    default: ''
+    refresh: true
+    type: list
   crawl_images:
     default: true
   max_image_width:
