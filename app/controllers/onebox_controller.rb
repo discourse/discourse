@@ -15,6 +15,7 @@ class OneboxController < ApplicationController
 
     user_id = current_user.id
     category_id = params[:category_id].to_i
+    topic_id = params[:topic_id].to_i
     invalidate = params[:refresh] == 'true'
     url = params[:url]
 
@@ -24,7 +25,8 @@ class OneboxController < ApplicationController
       preview = Oneboxer.preview(url,
         invalidate_oneboxes: invalidate,
         user_id: user_id,
-        category_id: category_id
+        category_id: category_id,
+        topic_id: topic_id
       )
 
       preview.strip! if preview.present?
