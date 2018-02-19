@@ -114,6 +114,7 @@ en:
       not_an_integer: must be an integer
       odd: must be odd
       record_invalid: ! 'Validation failed: %{errors}'
+      max_emojis: "can't have more than %{max_emojis_count} emoji"
       restrict_dependent_destroy:
         one: "Cannot delete record because a dependent %{record} exists"
         many: "Cannot delete record because dependent %{record} exist"
@@ -984,6 +985,7 @@ en:
     min_topic_title_length: "Minimum allowed topic title length in characters"
     max_topic_title_length: "Maximum allowed topic title length in characters"
     min_personal_message_title_length: "Minimum allowed title length for a message in characters"
+    max_emojis_in_title: "Maximum allowed emojis in topic title"
     min_search_term_length: "Minimum valid search term length in characters"
     search_tokenize_chinese_japanese_korean: "Force search to tokenize Chinese/Japanese/Korean even on non CJK sites"
     search_prefer_recent_posts: "If searching your large forum is slow, this option tries an index of more recent posts first"
