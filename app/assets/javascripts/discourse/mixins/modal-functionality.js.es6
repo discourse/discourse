@@ -5,6 +5,10 @@ export default Ember.Mixin.create({
     this.appEvents.trigger('modal-body:flash', { text, messageClass });
   },
 
+  clearFlash() {
+    this.appEvents.trigger('modal-body:clearFlash');
+  },
+
   showModal(...args) {
     return showModal(...args);
   },

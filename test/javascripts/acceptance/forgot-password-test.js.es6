@@ -3,9 +3,6 @@ import { acceptance } from "helpers/qunit-helpers";
 let userFound = false;
 
 acceptance("Forgot password", {
-  settings: {
-    enable_local_logins_via_email: true
-  },
   beforeEach() {
     const response = object => {
       return [
@@ -15,41 +12,44 @@ acceptance("Forgot password", {
       ];
     };
 
-    server.post('/u/email-login', () => { // eslint-disable-line no-undef
+    server.post('/session/forgot_password', () => { // eslint-disable-line no-undef
       return response({ "user_found": userFound });
     });
   }
 });
 
-QUnit.test("logging in via email", assert => {
+QUnit.test("requesting password reset", assert => {
   visit("/");
   click("header .login-button");
-
-  andThen(() => {
-    assert.ok(exists('.login-modal'), "it shows the login modal");
-  });
-
   click('#forgot-password-link');
-
-  fillIn("#username-or-email", 'someuser');
-  click('.email-login');
 
   andThen(() => {
     assert.equal(
-      find(".alert-error").html(),
-      I18n.t('email_login.complete_username_not_found', { username: 'someuser' }),
-      'it should display the right error message'
+      find('button[title="Reset Password"]').attr("disabled"),
+      "disabled",
+      'it should disable the button until the field is filled'
+    );
+  });
+
+  fillIn("#username-or-email", 'someuser');
+  click('button[title="Reset Password"]');
+
+  andThen(() => {
+    assert.equal(
+      find(".alert-error").html().trim(),
+      I18n.t('forgot_password.complete_username_not_found', { username: 'someuser' }),
+      'it should display an error for an invalid username'
     );
   });
 
   fillIn("#username-or-email", 'someuser@gmail.com');
-  click('.email-login');
+  click('button[title="Reset Password"]');
 
   andThen(() => {
     assert.equal(
-      find(".alert-error").html(),
-      I18n.t('email_login.complete_email_not_found', { email: 'someuser@gmail.com' }),
-      'it should display the right error message'
+      find(".alert-error").html().trim(),
+      I18n.t('forgot_password.complete_email_not_found', { email: 'someuser@gmail.com' }),
+      'it should display an error for an invalid email'
     );
   });
 
@@ -59,32 +59,29 @@ QUnit.test("logging in via email", assert => {
     userFound = true;
   });
 
-  click('.email-login');
+  click('button[title="Reset Password"]');
 
   andThen(() => {
+    assert.notOk(exists(find(".alert-error")), 'it should remove the flash error when succeeding');
+
     assert.equal(
       find(".modal-body").html().trim(),
-      I18n.t('email_login.complete_username_found', { username: 'someuser' }),
-      'it should display the right message'
+      I18n.t('forgot_password.complete_username_found', { username: 'someuser' }),
+      'it should display a success message for a valid username'
     );
   });
 
   visit("/");
   click("header .login-button");
-
-  andThen(() => {
-    assert.ok(exists('.login-modal'), "it shows the login modal");
-  });
-
   click('#forgot-password-link');
   fillIn("#username-or-email", 'someuser@gmail.com');
-  click('.email-login');
+  click('button[title="Reset Password"]');
 
   andThen(() => {
     assert.equal(
       find(".modal-body").html().trim(),
-      I18n.t('email_login.complete_email_found', { email: 'someuser@gmail.com' }),
-      'it should display the right message'
+      I18n.t('forgot_password.complete_email_found', { email: 'someuser@gmail.com' }),
+      'it should display a success message for a valid email'
     );
   });
 });

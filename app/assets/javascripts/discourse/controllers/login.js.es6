@@ -4,6 +4,8 @@ import showModal from 'discourse/lib/show-modal';
 import { setting } from 'discourse/lib/computed';
 import { findAll } from 'discourse/models/login-method';
 import { escape } from 'pretty-text/sanitizer';
+import { escapeExpression } from 'discourse/lib/utilities';
+import { extractError } from 'discourse/lib/ajax-error';
 import computed from 'ember-addons/ember-computed-decorators';
 
 // This is happening outside of the app via popup
@@ -24,8 +26,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
   authenticate: null,
   loggingIn: false,
   loggedIn: false,
+  processingEmailLink: false,
 
   canLoginLocal: setting('enable_local_logins'),
+  canLoginLocalWithEmail: setting('enable_local_logins_via_email'),
   loginRequired: Em.computed.alias('application.loginRequired'),
 
   resetForm: function() {
@@ -58,6 +62,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
   showSpinner: function() {
     return this.get('loggingIn') || this.get('authenticate');
   }.property('loggingIn', 'authenticate'),
+
+  @computed('canLoginLocalWithEmail', 'loginName', 'processingEmailLink')
+  showLoginWithEmailLink(canLoginLocalWithEmail, loginName, processingEmailLink) {
+    return canLoginLocalWithEmail && !Ember.isEmpty(loginName) && !processingEmailLink;
+  },
 
   actions: {
     login() {
@@ -198,6 +207,37 @@ export default Ember.Controller.extend(ModalFunctionality, {
       const forgotPasswordController = this.get('forgotPassword');
       if (forgotPasswordController) { forgotPasswordController.set("accountEmailOrUsername", this.get("loginName")); }
       this.send("showForgotPassword");
+    },
+
+    emailLogin() {
+      if (this.get('processingEmailLink')) {
+        return;
+      }
+
+      if (Ember.isEmpty(this.get('loginName'))){
+        this.flash(I18n.t('login.blank_username'), 'error');
+        return;
+      }
+
+      this.set('processingEmailLink', true);
+
+      ajax('/u/email-login', {
+        data: { login: this.get('loginName').trim() },
+        type: 'POST'
+      }).then(data => {
+        const loginName = escapeExpression(this.get('loginName'));
+        const isEmail = loginName.match(/@/);
+        let key = `email_login.complete_${isEmail ? 'email' : 'username'}`;
+        if (data.user_found) {
+          this.flash(I18n.t(`${key}_found`, { email: loginName, username: loginName }));
+        } else {
+          this.flash(I18n.t(`${key}_not_found`, { email: loginName, username: loginName }), 'error');
+        }
+      }).catch(e => {
+        this.flash(extractError(e), 'error');
+      }).finally(() => {
+        this.set('processingEmailLink', false);
+      });
     }
   },
 
