@@ -58,6 +58,7 @@
 .header-dropdown-toggle, .drop-down, .panel-body {
   .flagged-posts, .queued-posts {
     background: $danger;
+    min-width: 6px;
   }
 }
 
