@@ -1,7 +1,7 @@
 require_dependency 'search/grouped_search_results'
 
 class Search
-  INDEX_VERSION = 1.freeze
+  INDEX_VERSION = 2
 
   def self.per_facet
     5
@@ -535,6 +535,9 @@ class Search
         elsif word == 'in:private'
           @search_pms = true
           nil
+        elsif word == 'in:title'
+          @search_only_in_title = true
+          nil
         elsif word =~ /^private_messages:(.+)$/
           @search_pms = true
           nil
@@ -681,7 +684,7 @@ class Search
           posts = posts.joins('JOIN users u ON u.id = posts.user_id')
           posts = posts.where("posts.raw  || ' ' || u.username || ' ' || COALESCE(u.name, '') ilike ?", "%#{term_without_quote}%")
         else
-          posts = posts.where("post_search_data.search_data @@ #{ts_query}")
+          posts = posts.where("post_search_data.search_data @@ #{ts_query(weight_filter: weight_filter_for_post_query)}")
           exact_terms = @term.scan(/"([^"]+)"/).flatten
           exact_terms.each do |exact|
             posts = posts.where("posts.raw ilike ?", "%#{exact}%")
@@ -743,9 +746,8 @@ class Search
           posts = posts.order("posts.like_count DESC")
         end
       else
-        posts = posts.order("TS_RANK_CD(TO_TSVECTOR(#{default_ts_config}, topics.title), #{ts_query}) DESC")
-
-        data_ranking = "TS_RANK_CD(post_search_data.search_data, #{ts_query})"
+        # Making title's weight much bigger than body's for really bumping titles in results
+        data_ranking = "TS_RANK_CD('{0.025, 0.05, 0.1, 1.0}', post_search_data.search_data, #{ts_query})"
         if opts[:aggregate_search]
           posts = posts.order("SUM(#{data_ranking}) DESC")
         else
@@ -764,16 +766,20 @@ class Search
       posts.limit(limit)
     end
 
-    def self.default_ts_config
-      "'#{Search.ts_config}'"
+  def weight_filter_for_post_query
+    # 'A' because title is indexed first. @see SearchIndexer#update_posts_index
+    @search_only_in_title ? 'A' : nil
+  end
+
+  def self.default_ts_config
+    "'#{Search.ts_config}'"
     end
 
     def default_ts_config
       self.class.default_ts_config
     end
 
-    def self.ts_query(term, ts_config = nil, joiner = "&")
-
+    def self.ts_query(term, ts_config = nil, joiner = "&", weight_filter: nil)
       data = Post.exec_sql("SELECT TO_TSVECTOR(:config, :term)",
                            config: 'simple',
                            term: term).values[0][0]
@@ -786,16 +792,15 @@ class Search
 
       query = ActiveRecord::Base.connection.quote(
         all_terms
-          .map { |t| "'#{PG::Connection.escape_string(t)}':*" }
+          .map { |t| "'#{PG::Connection.escape_string(t)}':*#{weight_filter}" }
           .join(" #{joiner} ")
       )
-
       "TO_TSQUERY(#{ts_config || default_ts_config}, #{query})"
     end
 
-    def ts_query(ts_config = nil)
+    def ts_query(ts_config = nil, weight_filter: nil)
       @ts_query_cache ||= {}
-      @ts_query_cache["#{ts_config || default_ts_config} #{@term}"] ||= Search.ts_query(@term, ts_config)
+      @ts_query_cache["#{ts_config || default_ts_config} #{@term} #{weight_filter}"] ||= Search.ts_query(@term, ts_config, weight_filter: weight_filter)
     end
 
     def wrap_rows(query)

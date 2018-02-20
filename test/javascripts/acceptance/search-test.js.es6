@@ -109,6 +109,7 @@ QUnit.test("Right filters are shown to anonymous users", assert => {
     assert.notOk(exists('.search-advanced-options .in-likes'));
     assert.notOk(exists('.search-advanced-options .in-private'));
     assert.notOk(exists('.search-advanced-options .in-seen'));
+    assert.ok(exists('.search-advanced-options .in-title'));
   });
 });
 
@@ -137,5 +138,6 @@ QUnit.test("Right filters are shown to logged-in users", assert => {
     assert.ok(exists('.search-advanced-options .in-likes'));
     assert.ok(exists('.search-advanced-options .in-private'));
     assert.ok(exists('.search-advanced-options .in-seen'));
+    assert.ok(exists('.search-advanced-options .in-title'));
   });
 });

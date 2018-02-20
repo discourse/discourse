@@ -643,6 +643,15 @@ describe Search do
       expect(Search.execute("@#{_post.user.username}").posts.length).to eq(1)
     end
 
+    it 'supports in:title' do
+      topic = Fabricate(:topic, title: 'omg this is the title')
+      _post = Fabricate(:post, raw: 'this is the boring body much less exciting', topic: topic)
+
+      expect(Search.execute('exciting').posts.length).to eq(1)
+      expect(Search.execute('exciting in:title').posts.length).to eq(0)
+      expect(Search.execute('omg in:title').posts.length).to eq(1)
+    end
+
     it 'supports group' do
       topic = Fabricate(:topic, created_at: 3.months.ago)
       post = Fabricate(:post, raw: 'hi this is a test 123 123', topic: topic)
