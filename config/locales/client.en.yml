@@ -1308,16 +1308,16 @@ en:
           desc: Reply to a specific post
         reply_as_new_topic:
           label: Reply as linked topic
-          desc: Create a new topic
+          desc: Create a new topic linked to this topic
         reply_as_private_message:
           label: New message
-          desc: Create a private message
+          desc: Create a new personal message
         reply_to_topic:
           label: Reply to topic
-          desc: Reply to the original post without replying to a specific post
+          desc: Reply to the topic, not any specific post
         toggle_whisper:
           label: Toggle whipser
-          desc: Whispers will only be visible by staff members
+          desc: Whispers are only visible to staff members
         create_topic:
           label: "New Topic"
 
