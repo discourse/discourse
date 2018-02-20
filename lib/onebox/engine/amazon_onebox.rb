@@ -102,12 +102,12 @@ module Onebox
             by_info: authors,
             image: og[:image] || image,
             description: raw.at("#productDescription")&.inner_text,
-            rating: rating,
+            rating: "#{rating}%s" % (', ' if rating && (!isbn&.empty? || !price&.empty?)),
             price: price,
             isbn_asin_text: "ISBN",
             isbn_asin: isbn,
             publisher: publisher,
-            published: published
+            published: "#{published}%s" % (', ' if published && !price&.empty?)
           }
 
         elsif raw.at_css('#dp.ebooks_mobile') # ebooks
@@ -133,12 +133,12 @@ module Onebox
             by_info: authors,
             image: og[:image] || image,
             description: raw.at("#productDescription")&.inner_text,
-            rating: rating,
+            rating: "#{rating}%s" % (', ' if rating && (!asin&.empty? || !price&.empty?)),
             price: price,
             isbn_asin_text: "ASIN",
             isbn_asin: asin,
             publisher: publisher,
-            published: published
+            published: "#{published}%s" % (', ' if published && !price&.empty?)
           }
 
         else
