@@ -14,7 +14,6 @@
   {{/if}}
 </div>
 
-
 {{#if canEditName}}
   <div class="control-group pref-name">
     <label class="control-label">{{i18n 'user.name.title'}}</label>
@@ -69,17 +68,19 @@
 </div>
 <div class="control-group pref-second-factor">
   <label class="control-label">{{i18n 'user.second_factor.title'}}</label>
+
   <div class="controls">
-  {{#link-to "preferences.second-factor" class="btn"}}
-    {{#if model.second_factor_enabled}}
+    {{#link-to "preferences.second-factor" class="btn"}}
+      {{#if model.second_factor_enabled}}
         {{d-icon "unlock-alt"}}
-      {{i18n 'user.second_factor.disable'}}
-    {{else}}
+        {{i18n 'user.second_factor.disable'}}
+      {{else}}
         {{d-icon "lock"}}
-      {{i18n 'user.second_factor.enable'}}
-    {{/if}}
-  {{/link-to}}
+        {{i18n 'user.second_factor.enable'}}
+      {{/if}}
+    {{/link-to}}
   </div>
+
   <div class="instructions">
     <a href {{action "showTwoFactorModal"}}>{{i18n 'user.second_factor.info_prompt'}}</a>
   </div>

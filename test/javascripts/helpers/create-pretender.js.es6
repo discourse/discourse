@@ -229,8 +229,9 @@ export default function() {
 
       if (data.password === 'need-second-factor') {
         if (data.second_factor_token) {
-          return response({username: 'eviltrout'});
+          return response({ username: 'eviltrout' });
         }
+
         return response({ error: "Invalid Second Factor",
                           reason: "invalid_second_factor",
                           sent_to_email: 'eviltrout@example.com',

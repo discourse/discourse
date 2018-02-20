@@ -265,19 +265,6 @@ describe Admin::UsersController do
       end
     end
 
-    context '#disable_second_factor' do
-      before do
-        @another_user = Fabricate(:user)
-        SecondFactorHelper.create_totp(@another_user)
-      end
-
-      it 'disables the second factor' do
-        expect(User.find(@another_user.id).user_second_factor).not_to eq(nil)
-        put :disable_second_factor, params: { user_id: @another_user.id }, format: :json
-        expect(User.find(@another_user.id).user_second_factor).to eq(nil)
-      end
-    end
-
     context '#add_group' do
       let(:user) { Fabricate(:user) }
       let(:group) { Fabricate(:group) }

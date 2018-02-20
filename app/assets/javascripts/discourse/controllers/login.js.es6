@@ -4,6 +4,7 @@ import showModal from 'discourse/lib/show-modal';
 import { setting } from 'discourse/lib/computed';
 import { findAll } from 'discourse/models/login-method';
 import { escape } from 'pretty-text/sanitizer';
+import computed from 'ember-addons/ember-computed-decorators';
 
 // This is happening outside of the app via popup
 const AuthErrors = [
@@ -41,9 +42,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return findAll(this.siteSettings).length > 0;
   }.property(),
 
-  loginButtonText: function() {
-    return this.get('loggingIn') ? I18n.t('login.logging_in') : I18n.t('login.title');
-  }.property('loggingIn'),
+  @computed('loggingIn')
+  loginButtonLabel(loggingIn) {
+    return loggingIn ? 'login.logging_in' : 'login.title';
+  },
 
   loginDisabled: Em.computed.or('loggingIn', 'loggedIn'),
 
@@ -70,20 +72,24 @@ export default Ember.Controller.extend(ModalFunctionality, {
       this.set('loggingIn', true);
 
       ajax("/session", {
-        data: { login: this.get('loginName'), password: this.get('loginPassword'), second_factor_token: this.get('loginSecondFactor') },
-        type: 'POST'
+        type: 'POST',
+        data: {
+          login: this.get('loginName'),
+          password: this.get('loginPassword'),
+          second_factor_token: this.get('loginSecondFactor')
+        },
       }).then(function (result) {
         // Successful login
         if (result && result.error) {
           self.set('loggingIn', false);
-          if(result.reason === 'invalid_second_factor' && !self.get('secondFactorRequired')) {
+
+          if (result.reason === 'invalid_second_factor' && !self.get('secondFactorRequired')) {
             $('#modal-alert').hide();
             self.set('secondFactorRequired', true);
             $("#credentials").hide();
             $("#second-factor").show();
             return;
-          }
-          if (result.reason === 'not_activated') {
+          } else if (result.reason === 'not_activated') {
             self.send('showNotActivated', {
               username: self.get('loginName'),
               sentTo: escape(result.sent_to_email),

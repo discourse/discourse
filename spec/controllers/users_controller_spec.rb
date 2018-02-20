@@ -407,17 +407,11 @@ describe UsersController do
         expect(UserAuthToken.where(id: user_token.id).count).to eq(1)
       end
 
-      context '2-factor required' do
-
-        second_factor_data = "rcyryaqage3jexfj"
-        let(:user) { Fabricate(:user) }
-
-        before do
-          user.user_second_factor = UserSecondFactor.create(user_id: user.id, method: "totp", data: second_factor_data, enabled: true)
-        end
+      context '2 factor authentication required' do
+        let!(:second_factor) { Fabricate(:user_second_factor, user: user) }
 
         it 'does not change with an invalid token' do
-          token = user.email_tokens.create(email: user.email).token
+          token = user.email_tokens.create!(email: user.email).token
 
           get :password_reset, params: { token: token }
 
@@ -438,8 +432,11 @@ describe UsersController do
 
           get :password_reset, params: { token: token }
 
-          put :password_reset,
-              params: { token: token, password: 'hg9ow8yHG32O', second_factor_token: ROTP::TOTP.new(second_factor_data).now }
+          put :password_reset, params: {
+            token: token,
+            password: 'hg9ow8yHG32O',
+            second_factor_token: ROTP::TOTP.new(second_factor.data).now
+          }
 
           user.reload
           expect(user.confirm_password?('hg9ow8yHG32O')).to eq(true)
@@ -515,7 +512,7 @@ describe UsersController do
     end
   end
 
-  describe '.admin_login' do
+  describe '#admin_login' do
     let(:admin) { Fabricate(:admin) }
     let(:user) { Fabricate(:user) }
 
@@ -555,14 +552,12 @@ describe UsersController do
         end
       end
 
-      context 'needs 2-factor' do
+      describe 'when 2 factor authentication is enabled' do
+        let(:second_factor) { Fabricate(:user_second_factor, user: admin) }
         render_views
-        second_factor_data = "rcyryaqage3jexfj"
-        before do
-          admin.user_second_factor = UserSecondFactor.create(user_id: admin.id, method: "totp", data: second_factor_data, enabled: true)
-        end
 
         it 'does not log in when token required' do
+          second_factor
           token = admin.email_tokens.create(email: admin.email).token
           get :admin_login, params: { token: token }
           expect(response).not_to redirect_to('/')
@@ -572,7 +567,12 @@ describe UsersController do
 
         it 'logs in when a valid 2-factor token is given' do
           token = admin.email_tokens.create(email: admin.email).token
-          put :admin_login, params: { token: token, second_factor_token: ROTP::TOTP.new(second_factor_data).now }
+
+          put :admin_login, params: {
+            token: token,
+            second_factor_token: ROTP::TOTP.new(second_factor.data).now
+          }
+
           expect(response).to redirect_to('/')
           expect(session[:current_user_id]).to eq(admin.id)
         end

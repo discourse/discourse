@@ -49,6 +49,7 @@ en:
   loading: "Loading"
   powered_by_html: 'Powered by <a href="https://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
   log_in: "Log In"
+  submit: "Submit"
 
   purge_reason: "Automatically deleted as abandoned, deactivated account"
   disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."
@@ -1761,6 +1762,7 @@ en:
   login:
     not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
     incorrect_username_email_or_password: "Incorrect username, email or password"
+    incorrect_password: "Incorrect password"
     wait_approval: "Thanks for signing up. We will notify you when your account has been approved."
     active: "Your account is activated and ready to use."
     activate_email: "<p>You’re almost done! We sent an activation mail to <b>%{email}</b>. Please follow the instructions in the mail to activate your account.</p><p>If it doesn’t arrive, check your spam folder.</p>"
@@ -1783,10 +1785,9 @@ en:
     auth_complete: "Authentication is complete."
     click_to_continue: "Click here to continue."
     already_logged_in: "Oops, looks like you are attempting to accept an invitation for another user. If you are not %{current_user}, please log out and try again."
-    second_factor_title: "2-Step Verification Required"
-    second_factor_description: "Enter a generated verification code."
-    invalid_second_factor_code: "Invalid 2-Step Verification Code"
-    submit: "Submit"
+    second_factor_title: "Two Factor Authentication Required"
+    second_factor_description: "Enter a generated authentication code."
+    invalid_second_factor_code: "Invalid Two Factor Authentication Code"
 
   user:
     no_accounts_associated: "No accounts associated"
@@ -2735,10 +2736,10 @@ en:
 
 
     account_second_factor_disabled:
-      title: "2-Step Verification disabled"
-      subject_template: "[%{email_prefix}] 2-Step Verification disabled"
+      title: "Two Factor Authentication disabled"
+      subject_template: "[%{email_prefix}] Two Factor Authentication disabled"
       text_body_template: |
-        Your account’s 2-Step verification at %{site_name} has been disabled. The account no longer needs a 2-Step Verification code to sign in.
+        Your account’s Two Factor Authentication at %{site_name} has been disabled. The account no longer needs a Two Factor Authentication code to sign in.
 
         If you have any questions, [contact our friendly staff](%{base_url}/about).
 

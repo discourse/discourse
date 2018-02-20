@@ -33,27 +33,32 @@ class UsersEmailController < ApplicationController
 
   def confirm
     expires_now
-    token = EmailToken.confirmable params[:token]
-    change_req = token&.user&.email_change_requests
-      &.where('new_email_token_id = :token_id', token_id: token.id)
-      &.first
-    if change_req.try(:change_state) == EmailChangeRequest.states[:authorizing_new] &&
-       !EmailToken.second_factor_valid(params[:token], params[:second_factor_token])
+
+    token = EmailToken.confirmable(params[:token])
+    user = token&.user
+
+    change_request =
+      if user
+        user.email_change_requests.where(new_email_token_id: token.id).first
+      end
+
+    if change_request&.change_state == EmailChangeRequest.states[:authorizing_new] &&
+       user.totp_enabled? && !user.authenticate_totp(params[:second_factor_token])
+
       @update_result = :invalid_second_factor
+
       if params[:second_factor_token].present?
         RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
         @show_invalid_second_factor_error = true
       end
-      render layout: 'no_ember'
-      return
-    end
+    else
+      updater = EmailUpdater.new
+      @update_result = updater.confirm(params[:token])
 
-    updater = EmailUpdater.new
-    @update_result = updater.confirm(params[:token])
-
-    if @update_result == :complete
-      updater.user.user_stat.reset_bounce_score!
-      log_on_user(updater.user)
+      if @update_result == :complete
+        updater.user.user_stat.reset_bounce_score!
+        log_on_user(updater.user)
+      end
     end
 
     render layout: 'no_ember'

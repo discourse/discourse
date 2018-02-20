@@ -138,10 +138,7 @@ RSpec.describe SessionController do
       end
 
       context 'user has 2-factor logins' do
-        second_factor_data = "rcyryaqage3jexfj"
-        before do
-          user.user_second_factor = UserSecondFactor.create(user_id: user.id, method: "totp", data: second_factor_data, enabled: true)
-        end
+        let!(:user_second_factor) { Fabricate(:user_second_factor, user: user) }
 
         describe 'requires second factor' do
           it 'should return a second factor prompt' do
@@ -149,7 +146,9 @@ RSpec.describe SessionController do
 
             expect(response.status).to eq(200)
 
-            expect(CGI.unescapeHTML(response.body)).to include(I18n.t("login.second_factor_title"))
+            expect(CGI.unescapeHTML(response.body)).to include(I18n.t(
+              "login.second_factor_title"
+            ))
           end
         end
 
@@ -159,13 +158,17 @@ RSpec.describe SessionController do
 
             expect(response.status).to eq(200)
 
-            expect(CGI.unescapeHTML(response.body)).to include(I18n.t("login.invalid_second_factor_code"))
+            expect(CGI.unescapeHTML(response.body)).to include(I18n.t(
+              "login.invalid_second_factor_code"
+            ))
           end
         end
 
         describe 'allows successful 2-factor' do
           it 'logs in correctly' do
-            post "/session/email-login/#{email_token.token}", params: { second_factor_token: ROTP::TOTP.new(second_factor_data).now }
+            post "/session/email-login/#{email_token.token}", params: {
+              second_factor_token: ROTP::TOTP.new(user_second_factor.data).now
+            }
 
             expect(response).to redirect_to("/")
           end

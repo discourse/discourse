@@ -12,7 +12,7 @@ class UsersController < ApplicationController
   requires_login only: [
     :username, :update, :user_preferences_redirect, :upload_user_image,
     :pick_avatar, :destroy_user_image, :destroy, :check_emails, :topic_tracking_state,
-    :preferences
+    :preferences, :create_second_factor, :update_second_factor
   ]
 
   skip_before_action :check_xhr, only: [
@@ -470,19 +470,22 @@ class UsersController < ApplicationController
       end
     end
 
-    if @user && (!SecondFactorHelper.totp_enabled?(@user) || SecondFactorHelper.authenticate(@user, params[:second_factor_token]))
+    totp_enabled = @user&.totp_enabled?
+
+    if !totp_enabled || @user.authenticate_totp(params[:second_factor_token])
       secure_session["second-factor-#{token}"] = "true"
     end
-    @valid_second_factor = secure_session["second-factor-#{token}"] == "true"
+
+    valid_second_factor = secure_session["second-factor-#{token}"] == "true"
 
     if !@user
       @error = I18n.t('password_reset.no_token')
     elsif request.put?
       @invalid_password = params[:password].blank? || params[:password].length > User.max_password_length
 
-      if !@valid_second_factor
+      if !valid_second_factor
         RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
-        @user.errors.add(:second_factor, :invalid)
+        @user.errors.add(:user_second_factor, :invalid)
         @error = I18n.t('login.invalid_second_factor_code')
       elsif @invalid_password
         @user.errors.add(:password, :invalid)
@@ -506,9 +509,14 @@ class UsersController < ApplicationController
         else
           store_preloaded(
             "password_reset",
-            MultiJson.dump(is_developer: UsernameCheckerService.is_developer?(@user.email), admin: @user.admin?, second_factor_required: !@valid_second_factor)
+            MultiJson.dump(
+              is_developer: UsernameCheckerService.is_developer?(@user.email),
+              admin: @user.admin?,
+              second_factor_required: !valid_second_factor
+            )
           )
         end
+
         return redirect_to(wizard_path) if request.put? && Wizard.user_requires_completion?(@user)
       end
 
@@ -531,7 +539,11 @@ class UsersController < ApplicationController
             }
           end
         else
-          render json: { is_developer: UsernameCheckerService.is_developer?(@user.email), admin: @user.admin?, second_factor_required: !@valid_second_factor }
+          render json: {
+            is_developer: UsernameCheckerService.is_developer?(@user.email),
+            admin: @user.admin?,
+            second_factor_required: !valid_second_factor
+          }
         end
       end
     end
@@ -571,13 +583,20 @@ class UsersController < ApplicationController
       else
         @message = I18n.t("admin_login.errors.unknown_email_address")
       end
-    elsif params[:token].present?
-      if EmailToken.valid_token_format?(params[:token])
+    elsif (token = params[:token]).present?
+      valid_token = EmailToken.valid_token_format?(token)
+
+      if valid_token
         if params[:second_factor_token].present?
           RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
         end
-        if EmailToken.second_factor_valid(params[:token], params[:second_factor_token])
-          @user = EmailToken.confirm(params[:token])
+
+        email_token_user = EmailToken.confirmable(token)&.user
+        totp_enabled = email_token_user.totp_enabled?
+
+        if !totp_enabled || email_token_user.authenticate_totp(params[:second_factor_token])
+          @user = EmailToken.confirm(token)
+
           if @user && @user.admin?
             log_on_user(@user)
             return redirect_to path("/")
@@ -914,6 +933,60 @@ class UsersController < ApplicationController
     end
 
     render layout: 'no_ember'
+  end
+
+  def create_second_factor
+    RateLimiter.new(nil, "login-hr-#{request.remote_ip}", SiteSetting.max_logins_per_ip_per_hour, 1.hour).performed!
+    RateLimiter.new(nil, "login-min-#{request.remote_ip}", SiteSetting.max_logins_per_ip_per_minute, 1.minute).performed!
+
+    unless current_user.confirm_password?(params[:password])
+      return render json: failed_json.merge(
+        error: I18n.t("login.incorrect_password")
+      )
+    end
+
+    qrcode_svg = RQRCode::QRCode.new(current_user.totp_provisioning_uri).as_svg(
+      offset: 0,
+      color: '000',
+      shape_rendering: 'crispEdges',
+      module_size: 4
+    )
+
+    render json: success_json.merge(
+      key: current_user.user_second_factor.data,
+      qr: qrcode_svg
+    )
+  end
+
+  def update_second_factor
+    params.require(:second_factor_token)
+
+    [request.remote_ip, current_user.id].each do |key|
+      RateLimiter.new(nil, "second-factor-min-#{key}", 3, 1.minute).performed!
+    end
+
+    user_second_factor = current_user.user_second_factor
+    raise Discourse::InvalidParameters unless user_second_factor
+
+    unless current_user.authenticate_totp(params[:second_factor_token])
+      return render json: failed_json.merge(
+        error: I18n.t("login.invalid_second_factor_code")
+      )
+    end
+
+    if params[:enable] == "true"
+      user_second_factor.update!(enabled: true)
+    else
+      user_second_factor.destroy!
+
+      Jobs.enqueue(
+        :critical_user_email,
+        type: :account_second_factor_disabled,
+        user_id: current_user.id
+      )
+    end
+
+    render json: success_json
   end
 
   private

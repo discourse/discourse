@@ -169,7 +169,7 @@ const AdminUser = Discourse.User.extend({
   },
 
   disableSecondFactor() {
-    return ajax("/admin/users/" + this.get('id') + "/disable_second_factor", {
+    return ajax(`/admin/users/${this.get('id')}/disable_second_factor`, {
       type: 'PUT'
     }).then(() => {
       this.set('second_factor_enabled', false);

@@ -3,6 +3,7 @@
     <%= @error %>
   </div>
 <%end%>
+
 <%if @second_factor_required%>
   <div style="display: flex;">
     <div style="margin: auto;">
@@ -10,7 +11,7 @@
         <h2><%=t "login.second_factor_title" %></h2>
         <%= label_tag(:second_factor_token, t("login.second_factor_description")) %>
         <div><%= text_field_tag(:second_factor_token) %></div>
-        <%= submit_tag(t("login.submit"), class: "btn btn-large btn-primary") %>
+        <%= submit_tag(t("submit"), class: "btn btn-large btn-primary") %>
       <%end%>
     </div>
   </div>

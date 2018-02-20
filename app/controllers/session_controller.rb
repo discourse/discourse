@@ -225,12 +225,13 @@ class SessionController < ApplicationController
     if payload = login_error_check(user)
       render json: payload
     else
-
-      if SecondFactorHelper.totp_enabled?(user)
-        unless SecondFactorHelper.authenticate(user, params[:second_factor_token])
-          return render json: { error: I18n.t("login.invalid_second_factor_code"), reason: "invalid_second_factor" }
-        end
+      if user.totp_enabled? && !user.authenticate_totp(params[:second_factor_token])
+        return render json: failed_json.merge(
+          error: I18n.t("login.invalid_second_factor_code"),
+          reason: "invalid_second_factor"
+        )
       end
+
       (user.active && user.email_confirmed?) ? login(user) : not_activated(user)
     end
   end
@@ -242,25 +243,28 @@ class SessionController < ApplicationController
       @error = I18n.t("login.invalid_second_factor_code")
       RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
     end
-    unless EmailToken.second_factor_valid(params[:token], params[:second_factor_token])
+
+    token = params[:token]
+    valid_token = !!EmailToken.valid_token_format?(token)
+    user = EmailToken.confirmable(token)&.user
+
+    if valid_token && user&.totp_enabled? && !user.authenticate_totp(params[:second_factor_token])
       @second_factor_required = true
-      return render layout: 'no_ember'
-    end
-    if EmailToken.valid_token_format?(params[:token]) && (user = EmailToken.confirm(params[:token]))
+      @error = I18n.t('login.invalid_second_factor_code')
+    elsif user = EmailToken.confirm(token)
       if login_not_approved_for?(user)
         @error = login_not_approved[:error]
-        return render layout: 'no_ember'
       elsif payload = login_error_check(user)
         @error = payload[:error]
-        return render layout: 'no_ember'
       else
         log_on_user(user)
-        redirect_to path("/")
+        return redirect_to path("/")
       end
     else
       @error = I18n.t('email_login.invalid_token')
-      return render layout: 'no_ember'
     end
+
+    render layout: 'no_ember'
   end
 
   def forgot_password

@@ -304,7 +304,6 @@ Discourse::Application.routes.draw do
   get "session/csrf" => "session#csrf"
   get "session/email-login/:token" => "session#email_login"
   post "session/email-login/:token" => "session#email_login"
-  post "second_factor/create" => "second_factor#create"
   get "composer_messages" => "composer_messages#index"
   post "composer/parse_html" => "composer#parse_html"
 
@@ -331,6 +330,9 @@ Discourse::Application.routes.draw do
         get "is_local_username"
       end
     end
+
+    post "#{root_path}/second_factors" => "users#create_second_factor"
+    put "#{root_path}/second_factor" => "users#update_second_factor"
 
     put "#{root_path}/update-activation-email" => "users#update_activation_email"
     get "#{root_path}/hp" => "users#get_honeypot_value"
@@ -385,7 +387,6 @@ Discourse::Application.routes.draw do
     put "#{root_path}/:username/preferences/badge_title" => "users#badge_title", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/preferences/username" => "users#preferences", constraints: { username: RouteFormat.username }
     put "#{root_path}/:username/preferences/username" => "users#username", constraints: { username: RouteFormat.username }
-    post "#{root_path}/:username/preferences/second-factor" => "second_factor#update", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/preferences/second-factor" => "users#preferences", constraints: { username: RouteFormat.username }
     delete "#{root_path}/:username/preferences/user_image" => "users#destroy_user_image", constraints: { username: RouteFormat.username }
     put "#{root_path}/:username/preferences/avatar/pick" => "users#pick_avatar", constraints: { username: RouteFormat.username }
