@@ -602,7 +602,7 @@ class TopicQuery
       end
 
       if search = options[:search]
-        result = result.where("topics.id in (select pp.topic_id from post_search_data pd join posts pp on pp.id = pd.post_id where pd.search_data @@ #{Search.ts_query(search.to_s)})")
+        result = result.where("topics.id in (select pp.topic_id from post_search_data pd join posts pp on pp.id = pd.post_id where pd.search_data @@ #{Search.ts_query(term: search.to_s)})")
       end
 
       # NOTE protect against SYM attack can be removed with Ruby 2.2
