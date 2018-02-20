@@ -1,7 +1,7 @@
 require_dependency 'search/grouped_search_results'
 
 class Search
-  INDEX_VERSION = 1.freeze
+  INDEX_VERSION = 2.freeze
 
   def self.per_facet
     5
@@ -409,7 +409,7 @@ class Search
         if match.to_s.length >= SiteSetting.min_search_term_length
           posts.where("posts.id IN (
             SELECT post_id FROM post_search_data pd1
-            WHERE pd1.search_data @@ #{Search.ts_query("##{match}")})")
+            WHERE pd1.search_data @@ #{Search.ts_query(term: "##{match}")})")
         end
       end
     end
@@ -511,11 +511,16 @@ class Search
           end
         end
 
+        @in_title = false
+
         if word == 'order:latest' || word == 'l'
           @order = :latest
           nil
         elsif word == 'order:latest_topic'
           @order = :latest_topic
+          nil
+        elsif word == 'in:title'
+          @in_title = true
           nil
         elsif word =~ /topic:(\d+)/
           topic_id = $1.to_i
@@ -681,7 +686,12 @@ class Search
           posts = posts.joins('JOIN users u ON u.id = posts.user_id')
           posts = posts.where("posts.raw  || ' ' || u.username || ' ' || COALESCE(u.name, '') ilike ?", "%#{term_without_quote}%")
         else
-          posts = posts.where("post_search_data.search_data @@ #{ts_query}")
+          # A is for title
+          # B is for category
+          # C is for tags
+          # D is for cooked
+          weights = @in_title ? 'A' : (SiteSetting.tagging_enabled ? 'ABCD' : 'ABD')
+          posts = posts.where("post_search_data.search_data @@ #{ts_query(weight_filter: weights)}")
           exact_terms = @term.scan(/"([^"]+)"/).flatten
           exact_terms.each do |exact|
             posts = posts.where("posts.raw ilike ?", "%#{exact}%")
@@ -743,11 +753,9 @@ class Search
           posts = posts.order("posts.like_count DESC")
         end
       else
-        posts = posts.order("TS_RANK_CD(TO_TSVECTOR(#{default_ts_config}, topics.title), #{ts_query}) DESC")
-
         data_ranking = "TS_RANK_CD(post_search_data.search_data, #{ts_query})"
         if opts[:aggregate_search]
-          posts = posts.order("SUM(#{data_ranking}) DESC")
+          posts = posts.order("MAX(#{data_ranking}) DESC")
         else
           posts = posts.order("#{data_ranking} DESC")
         end
@@ -772,7 +780,7 @@ class Search
       self.class.default_ts_config
     end
 
-    def self.ts_query(term, ts_config = nil, joiner = "&")
+    def self.ts_query(term: , ts_config:  nil, joiner: "&", weight_filter: nil)
 
       data = Post.exec_sql("SELECT TO_TSVECTOR(:config, :term)",
                            config: 'simple',
@@ -786,16 +794,17 @@ class Search
 
       query = ActiveRecord::Base.connection.quote(
         all_terms
-          .map { |t| "'#{PG::Connection.escape_string(t)}':*" }
+          .map { |t| "'#{PG::Connection.escape_string(t)}':*#{weight_filter}" }
           .join(" #{joiner} ")
       )
 
       "TO_TSQUERY(#{ts_config || default_ts_config}, #{query})"
     end
 
-    def ts_query(ts_config = nil)
+    def ts_query(ts_config = nil, weight_filter: nil)
       @ts_query_cache ||= {}
-      @ts_query_cache["#{ts_config || default_ts_config} #{@term}"] ||= Search.ts_query(@term, ts_config)
+      @ts_query_cache["#{ts_config || default_ts_config} #{@term} #{weight_filter}"] ||=
+        Search.ts_query(term: @term, ts_config: ts_config, weight_filter: weight_filter)
     end
 
     def wrap_rows(query)

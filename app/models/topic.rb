@@ -223,10 +223,15 @@ class Topic < ActiveRecord::Base
       ApplicationController.banner_json_cache.clear
     end
 
-    if tags_changed
-      TagUser.auto_watch(topic_id: id)
-      TagUser.auto_track(topic_id: id)
-      self.tags_changed = false
+    if tags_changed || saved_change_to_attribute?(:category_id)
+
+      SearchIndexer.queue_post_reindex(self.id)
+
+      if tags_changed
+        TagUser.auto_watch(topic_id: id)
+        TagUser.auto_track(topic_id: id)
+        self.tags_changed = false
+      end
     end
 
     SearchIndexer.index(self)
@@ -474,7 +479,7 @@ class Topic < ActiveRecord::Base
 
     search_data = "#{title} #{raw[0...MAX_SIMILAR_BODY_LENGTH]}".strip
     filter_words = Search.prepare_data(search_data)
-    ts_query = Search.ts_query(filter_words, nil, "|")
+    ts_query = Search.ts_query(term: filter_words, joiner: "|")
 
     candidates = Topic
       .visible
