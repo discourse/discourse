@@ -33,9 +33,11 @@ describe Oneboxer do
       secured_category.permissions = { staff: :full }
       secured_category.save!
 
+      replier = Fabricate(:user)
+
       public_post   = Fabricate(:post)
       public_topic  = public_post.topic
-      public_reply  = Fabricate(:post, topic: public_topic, post_number: 2)
+      public_reply  = Fabricate(:post, topic: public_topic, post_number: 2, user: replier)
       public_hidden = Fabricate(:post, topic: public_topic, post_number: 3, hidden: true)
 
       user = public_post.user
@@ -47,8 +49,15 @@ describe Oneboxer do
 
       expect(preview(public_topic.relative_url, user, public_category)).to include(public_topic.title)
       expect(preview(public_post.url, user, public_category)).to include(public_topic.title)
-      expect(preview(public_reply.url, user, public_category)).to include(public_reply.excerpt)
-      expect(preview(public_reply.url, user, public_category, public_topic)).not_to include(public_topic.title)
+
+      onebox = preview(public_reply.url, user, public_category)
+      expect(onebox).to include(public_reply.excerpt)
+      expect(onebox).to include(PrettyText.avatar_img(replier.avatar_template, "tiny"))
+
+      onebox = preview(public_reply.url, user, public_category, public_topic)
+      expect(onebox).not_to include(public_topic.title)
+      expect(onebox).to include(replier.avatar_template.sub("{size}", "40"))
+
       expect(preview(public_hidden.url, user, public_category)).to match_html(link(public_hidden.url))
       expect(preview(secured_topic.relative_url, user, public_category)).to match_html(link(secured_topic.relative_url))
       expect(preview(secured_post.url, user, public_category)).to match_html(link(secured_post.url))

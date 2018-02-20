@@ -202,7 +202,7 @@ module Oneboxer
       else
         args = {
           topic_id: topic.id,
-          avatar: PrettyText.avatar_img(topic.user.avatar_template, "tiny"),
+          avatar: PrettyText.avatar_img(post.user.avatar_template, "tiny"),
           original_url: url,
           title: PrettyText.unescape_emoji(CGI::escapeHTML(topic.title)),
           category_html: CategoryBadge.html_for(topic.category),
