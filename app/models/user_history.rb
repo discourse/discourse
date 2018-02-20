@@ -182,23 +182,23 @@ end
 #  details        :text
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
-#  context        :string(255)
-#  ip_address     :string(255)
-#  email          :string(255)
+#  context        :string
+#  ip_address     :string
+#  email          :string
 #  subject        :text
 #  previous_value :text
 #  new_value      :text
 #  topic_id       :integer
 #  admin_only     :boolean          default(FALSE)
 #  post_id        :integer
-#  custom_type    :string(255)
+#  custom_type    :string
 #  category_id    :integer
 #
 # Indexes
 #
-#  index_staff_action_logs_on_action_and_id                  (action,id)
-#  index_staff_action_logs_on_subject_and_id                 (subject,id)
-#  index_staff_action_logs_on_target_user_id_and_id          (target_user_id,id)
 #  index_user_histories_on_acting_user_id_and_action_and_id  (acting_user_id,action,id)
+#  index_user_histories_on_action_and_id                     (action,id)
 #  index_user_histories_on_category_id                       (category_id)
+#  index_user_histories_on_subject_and_id                    (subject,id)
+#  index_user_histories_on_target_user_id_and_id             (target_user_id,id)
 #

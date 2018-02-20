@@ -1317,7 +1317,7 @@ end
 # Table name: topics
 #
 #  id                        :integer          not null, primary key
-#  title                     :string(255)      not null
+#  title                     :string           not null
 #  last_posted_at            :datetime
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
@@ -1332,7 +1332,7 @@ end
 #  avg_time                  :integer
 #  deleted_at                :datetime
 #  highest_post_number       :integer          default(0), not null
-#  image_url                 :string(255)
+#  image_url                 :string
 #  like_count                :integer          default(0), not null
 #  incoming_link_count       :integer          default(0), not null
 #  category_id               :integer
@@ -1343,15 +1343,15 @@ end
 #  bumped_at                 :datetime         not null
 #  has_summary               :boolean          default(FALSE), not null
 #  vote_count                :integer          default(0), not null
-#  archetype                 :string(255)      default("regular"), not null
+#  archetype                 :string           default("regular"), not null
 #  featured_user4_id         :integer
 #  notify_moderators_count   :integer          default(0), not null
 #  spam_count                :integer          default(0), not null
 #  pinned_at                 :datetime
 #  score                     :float
 #  percent_rank              :float            default(1.0), not null
-#  subtype                   :string(255)
-#  slug                      :string(255)
+#  subtype                   :string
+#  slug                      :string
 #  deleted_by_id             :integer
 #  participant_count         :integer          default(1)
 #  word_count                :integer
@@ -1367,7 +1367,7 @@ end
 #  idx_topics_front_page                   (deleted_at,visible,archetype,category_id,id)
 #  idx_topics_user_id_deleted_at           (user_id)
 #  idxtopicslug                            (slug)
-#  index_forum_threads_on_bumped_at        (bumped_at)
+#  index_topics_on_bumped_at               (bumped_at)
 #  index_topics_on_created_at_and_visible  (created_at,visible)
 #  index_topics_on_id_and_deleted_at       (id,deleted_at)
 #  index_topics_on_lower_title             (lower((title)::text))
