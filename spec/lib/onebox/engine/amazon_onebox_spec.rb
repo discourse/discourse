@@ -72,15 +72,15 @@ describe Onebox::Engine::AmazonOnebox do
 
     describe "#to_html" do
       it "includes image" do
-        expect(html).to include("http://ecx.images-amazon.com/images/I/51opYcR6kVL._SY400_.jpg")
+        expect(html).to include("https://images-na.ssl-images-amazon.com/images/I/51opYcR6kVL._SY400_.jpg")
       end
 
       it "includes description" do
-        expect(html).to include("I have been programming for 25 years in a variety of hardware and software languages.")
+        expect(html).to include("You should learn a programming language every year, as recommended by The Pragmatic Programmer.")
       end
 
       it "includes price" do
-        expect(html).to include("$25.34")
+        expect(html).to include("$21.11")
       end
 
       it "includes title" do
@@ -110,7 +110,62 @@ describe Onebox::Engine::AmazonOnebox do
         expect(html).to include("Watch Christine online - Amazon Video")
       end
     end
+  end
 
+  context "amazon book page" do
+    let(:link) { "https://www.amazon.com/dp/B00AYQNR46" }
+    let(:html) { described_class.new(link).to_html }
+
+    before do
+      fake("https://www.amazon.com/gp/aw/d/B00AYQNR46", response("amazon"))
+    end
+
+    describe "#to_html" do
+      it "includes title and author" do
+        expect(html).to include("Seven Languages in Seven Weeks: A Pragmatic Guide to Learning Programming Languages (Pragmatic Programmers)")
+        expect(html).to include("Bruce Tate")
+      end
+
+      it "includes ISBN" do
+        expect(html).to include("978-1934356593")
+      end
+
+      it "includes publisher" do
+        expect(html).to include("Pragmatic Bookshelf")
+      end
+    end
+  end
+
+  context "amazon ebook page" do
+    let(:link) { "https://www.amazon.com/dp/193435659X" }
+    let(:html) { described_class.new(link).to_html }
+
+    before do
+      fake("https://www.amazon.com/gp/aw/d/193435659X", response("amazon-ebook"))
+    end
+
+    describe "#to_html" do
+      it "includes title and author" do
+        expect(html).to include("Seven Languages in Seven Weeks: A Pragmatic Guide to Learning Programming Languages (Pragmatic Programmers)")
+        expect(html).to include("Bruce Tate")
+      end
+
+      it "includes image" do
+        expect(html).to include("https://images-na.ssl-images-amazon.com/images/I/51LZT%2BtSrTL._SX133_.jpg")
+      end
+
+      it "includes ASIN" do
+        expect(html).to include("B00AYQNR46")
+      end
+
+      it "includes rating" do
+        expect(html).to include("4.2 out of 5 stars")
+      end
+
+      it "includes publisher" do
+        expect(html).to include("Pragmatic Bookshelf")
+      end
+    end
   end
 
 end
