@@ -19,6 +19,11 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
   primaryGroupDirty: propertyNotEqual('originalPrimaryGroupId', 'model.primary_group_id'),
 
+  canDisableSecondFactor: Ember.computed.and(
+    'model.second_factor_enabled',
+    'model.can_disable_second_factor'
+  ),
+
   automaticGroups: function() {
     return this.get("model.automaticGroups").map((g) => g.name).join(", ");
   }.property("model.automaticGroups"),
@@ -39,11 +44,6 @@ export default Ember.Controller.extend(CanCheckEmails, {
   @computed('model.username_lower')
   preferencesPath(username) {
     return userPath(`${username}/preferences`);
-  },
-
-  @computed('model.second_factor_enabled','model.can_disable_second_factor')
-  canDisableSecondFactor(secondFactorEnabled, canDisableSecondFactor) {
-    return secondFactorEnabled && canDisableSecondFactor;
   },
 
   actions: {

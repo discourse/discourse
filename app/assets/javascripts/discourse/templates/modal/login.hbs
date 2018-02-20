@@ -33,9 +33,11 @@
 
   <div class="modal-footer">
     {{#if canLoginLocal}}
-      <button form="login-form" type="submit" class="btn btn-large btn-primary" disabled={{loginDisabled}} {{action "login"}}>
-        {{d-icon "unlock"}}&nbsp;{{loginButtonText}}
-      </button>
+      {{d-button action="login"
+          icon="unlock"
+          label=loginButtonLabel
+          disabled=loginDisabled
+          class='btn btn-large btn-primary'}}
 
       {{#if showSignupLink}}
         <button class="btn btn-large" id="new-account-link" {{action "createAccount"}}>

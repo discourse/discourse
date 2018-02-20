@@ -1,5 +1,3 @@
-require 'rqrcode'
-
 class UserSerializer < BasicUserSerializer
 
   attr_accessor :omit_stats,
@@ -149,12 +147,11 @@ class UserSerializer < BasicUserSerializer
   end
 
   def include_second_factor_enabled?
-    (object.id && object.id == scope.user.try(:id)) ||
-      scope.is_staff?
+    (object&.id == scope.user&.id) || scope.is_staff?
   end
 
   def second_factor_enabled
-    SecondFactorHelper.totp_enabled?(object)
+    object.totp_enabled?
   end
 
   def can_change_bio

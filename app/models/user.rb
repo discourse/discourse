@@ -18,6 +18,7 @@ class User < ActiveRecord::Base
   include Searchable
   include Roleable
   include HasCustomFields
+  include SecondFactorManager
 
   # TODO: Remove this after 7th Jan 2018
   self.ignored_columns = %w{email}
@@ -459,10 +460,6 @@ class User < ActiveRecord::Base
   end
 
   def password
-    '' # so that validator doesn't complain that a password attribute doesn't exist
-  end
-
-  def second_factor
     '' # so that validator doesn't complain that a password attribute doesn't exist
   end
 

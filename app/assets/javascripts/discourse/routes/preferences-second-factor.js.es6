@@ -9,13 +9,7 @@ export default RestrictedUserRoute.extend({
     return this.render({ into: 'user' });
   },
 
-  // A bit odd, but if we leave to /preferences we need to re-render that outlet
-  deactivate() {
-    this._super();
-    this.render('preferences', { into: 'user', controller: 'preferences' });
-  },
-
-  setupController(controller, user) {
-    controller.setProperties({ model: user, newUsername: user.get('username') });
+  setupController(controller, model) {
+    controller.setProperties({ model, newUsername: model.get('username') });
   }
 });

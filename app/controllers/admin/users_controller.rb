@@ -342,15 +342,20 @@ class Admin::UsersController < Admin::AdminController
   end
 
   def disable_second_factor
-    guardian.ensure_can_disable_second_factor! @user
-    if @user.user_second_factor.try(:delete)
-      StaffActionLogger.new(current_user).log_disable_second_factor_auth(@user)
-    end
+    guardian.ensure_can_disable_second_factor!(@user)
+    user_second_factor = @user.user_second_factor
+    raise Discourse::InvalidParameters unless user_second_factor
+
+    user_second_factor.destroy!
+    StaffActionLogger.new(current_user).log_disable_second_factor_auth(@user)
+
     Jobs.enqueue(
       :critical_user_email,
       type: :account_second_factor_disabled,
       user_id: @user.id
     )
+
+    render json: success_json
   end
 
   def destroy

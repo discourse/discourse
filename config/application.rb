@@ -129,13 +129,14 @@ module Discourse
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [
-        :password,
-        :pop3_polling_password,
-        :api_key,
-        :s3_secret_access_key,
-        :twitter_consumer_secret,
-        :facebook_app_secret,
-        :github_client_secret
+      :password,
+      :pop3_polling_password,
+      :api_key,
+      :s3_secret_access_key,
+      :twitter_consumer_secret,
+      :facebook_app_secret,
+      :github_client_secret,
+      :second_factor_token,
     ]
 
     # Enable the asset pipeline

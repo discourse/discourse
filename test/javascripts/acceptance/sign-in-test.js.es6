@@ -79,14 +79,15 @@ QUnit.test("sign in - not activated - edit email", assert => {
 QUnit.test("second factor", assert => {
   visit("/");
   click("header .login-button");
+
   andThen(() => {
     assert.ok(exists('.login-modal'), "it shows the login modal");
   });
 
-  // Login with username and password only
   fillIn('#login-account-name', 'eviltrout');
   fillIn('#login-account-password', 'need-second-factor');
   click('.modal-footer .btn-primary');
+
   andThen(() => {
     assert.not(exists('#modal-alert:visible'), 'it hides the login error');
     assert.not(exists('#credentials:visible'), 'it hides the username and password prompt');
@@ -94,9 +95,9 @@ QUnit.test("second factor", assert => {
     assert.not(exists('.modal-footer .btn-primary:disabled'), "enables the login button");
   });
 
-  // Login with username, password, and token
   fillIn('#login-second-factor', '123456');
   click('.modal-footer .btn-primary');
+
   andThen(() => {
     assert.ok(exists('.modal-footer .btn-primary:disabled'), "disables the login button");
   });

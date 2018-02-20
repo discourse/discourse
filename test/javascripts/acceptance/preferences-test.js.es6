@@ -10,8 +10,15 @@ acceptance("User Preferences", {
       ];
     };
 
-    server.post('/second_factor/create', () => { //eslint-disable-line
-      return response({key: "rcyryaqage3jexfj", qr: '<div id="test-qr">qr-code</div>'});
+    server.post('/u/second_factors.json', () => { //eslint-disable-line
+      return response({
+        key: "rcyryaqage3jexfj",
+        qr: '<div id="test-qr">qr-code</div>'
+      });
+    });
+
+    server.put('/u/second_factor.json', () => { //eslint-disable-line
+      return response({ error: 'invalid token' });
     });
   }
 });
@@ -91,13 +98,26 @@ QUnit.test("email", assert => {
 
 QUnit.test("second factor", assert => {
   visit("/u/eviltrout/preferences/second-factor");
+
   andThen(() => {
     assert.ok(exists("#password"), "it has a password input");
   });
+
   fillIn('#password', 'secrets');
   click(".user-content .btn-primary");
+
   andThen(() => {
     assert.ok(exists("#test-qr"), "shows qr code");
     assert.notOk(exists("#password"), "it hides the password input");
+  });
+
+  fillIn("#second-factor-token", '111111');
+  click('.btn-primary');
+
+  andThen(() => {
+    assert.ok(
+      find(".alert-error").html().indexOf("invalid token") > -1,
+      "shows server validation error message"
+    );
   });
 });

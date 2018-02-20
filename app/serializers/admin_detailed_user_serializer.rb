@@ -36,17 +36,12 @@ class AdminDetailedUserSerializer < AdminUserSerializer
   has_one :tl3_requirements, serializer: TrustLevel3RequirementsSerializer, embed: :objects
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
 
-  def include_second_factor_enabled?
-    scope.is_staff?
+  def second_factor_enabled
+    object.totp_enabled?
   end
 
   def can_disable_second_factor
-    (object.id && object.id != scope.user.try(:id)) &&
-      scope.is_staff?
-  end
-
-  def second_factor_enabled
-    SecondFactorHelper.totp_enabled?(object)
+    object&.id != scope.user.id
   end
 
   def can_revoke_admin
