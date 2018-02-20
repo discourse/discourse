@@ -10,14 +10,14 @@ Gem::Specification.new do |spec|
   spec.version       = Onebox::VERSION
   spec.authors       = ['Joanna Zeta', 'Vyki Englert', 'Robin Ward']
   spec.email         = ['holla@jzeta.com', 'vyki.englert@gmail.com', 'robin.ward@gmail.com']
-  spec.description   = %q{A gem for turning URLs into previews.}
+  spec.description   = %q{A gem for generating embeddable HTML previews from URLs.}
   spec.summary       = spec.description
   spec.homepage      = 'https://github.com/discourse/onebox'
   spec.license       = 'MIT'
 
-  spec.files         = `git ls-files`.split($/)
-  spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
-  spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
+  # specs are too heavy to include they have tons of big fixtures
+  # Git repo link exists so you can download from there
+  spec.files         = `git ls-files`.split($/).reject { |s| s =~ /^(spec|web)/ }
   spec.require_paths = ['lib']
 
   spec.add_runtime_dependency 'multi_json', '~> 1.11'
