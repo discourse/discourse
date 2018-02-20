@@ -205,7 +205,7 @@ $mobile-breakpoint: 700px;
     width: 460px;
     right: 0;
     z-index: z("dropdown");
-    box-shadow: 0 2px 6px rgba(0,0,0, .8);
+    box-shadow: shadow("card");
     margin-top: -2px;
     background-color: $secondary;
     padding: 12px 12px 5px;
@@ -519,7 +519,6 @@ $mobile-breakpoint: 700px;
       background-color: $secondary;
       border: 1px solid $primary-low;
       border-radius: 3px;
-      box-shadow: inset 0 1px 1px rgba(51, 51, 51, 0.3);
       transition: border linear 0.2s, box-shadow linear 0.2s;
 
       li.select2-search-choice {

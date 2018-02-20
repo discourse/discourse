@@ -398,7 +398,11 @@ kbd
   background-color: $secondary;
   border: 1px solid $primary-low;
   border-radius: 3px;
-  box-shadow: 0 1px 0 rgba(0,0,0, .8);
+  box-shadow: shadow("kbd");
+  background: dark-light-choose(#fafafa, #333);
+  border: 1px solid dark-light-choose(#ccc, #555);
+  border-bottom: medium none dark-light-choose(#fff, #000);
+  
   color: $primary;
   display: inline-block;
   font-size: $font-down-1;

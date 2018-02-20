@@ -345,7 +345,7 @@ tr.category-topic-link {
   background-color: $secondary;
   border: 1px solid dark-light-choose(rgba(0, 0, 0, 0.2), $primary);
   border-radius: 5px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: shadow("dropdown");
   background-clip: padding-box;
   margin: 1px 0 20px;
   .title {font-weight: bold; display: block;}
