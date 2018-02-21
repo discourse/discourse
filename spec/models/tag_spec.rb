@@ -15,6 +15,13 @@ describe Tag do
     SiteSetting.min_trust_level_to_tag_topics = 0
   end
 
+  it "can delete tags on deleted topics" do
+    tag = Fabricate(:tag)
+    topic = Fabricate(:topic, tags: [tag])
+    topic.trash!
+    expect { tag.destroy }.to change { Tag.count }.by(-1)
+  end
+
   describe '#tags_by_count_query' do
     it "returns empty hash if nothing is tagged" do
       expect(described_class.tags_by_count_query.count(Tag::COUNT_ARG)).to eq({})
