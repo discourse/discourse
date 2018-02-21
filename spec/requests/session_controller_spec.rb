@@ -146,8 +146,14 @@ RSpec.describe SessionController do
 
             expect(response.status).to eq(200)
 
-            expect(CGI.unescapeHTML(response.body)).to include(I18n.t(
+            response_body = CGI.unescapeHTML(response.body)
+
+            expect(response_body).to include(I18n.t(
               "login.second_factor_title"
+            ))
+
+            expect(response_body).to_not include(I18n.t(
+              "login.invalid_second_factor_code"
             ))
           end
         end
