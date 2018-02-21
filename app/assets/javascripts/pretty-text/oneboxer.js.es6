@@ -43,16 +43,20 @@ function loadNext(ajax) {
 
   let timeoutMs = 150;
   let removeLoading = true;
-  const { url, refresh, $elem, userId } = loadingQueue.shift();
+  const { url, refresh, $elem, categoryId, topicId } = loadingQueue.shift();
 
   // Retrieve the onebox
   return ajax("/onebox", {
     dataType: 'html',
-    data: { url, refresh },
+    data: {
+      url,
+      refresh,
+      category_id: categoryId,
+      topic_id: topicId
+    },
     cache: true
   }).then(html => {
     let $html = $(html);
-
     localCache[normalize(url)] = $html;
     $elem.replaceWith($html);
     applySquareGenericOnebox($html, normalize(url));
@@ -60,7 +64,7 @@ function loadNext(ajax) {
     if (result && result.jqXHR && result.jqXHR.status === 429) {
       timeoutMs = 2000;
       removeLoading = false;
-      loadingQueue.unshift({ url, refresh, $elem, userId });
+      loadingQueue.unshift({ url, refresh, $elem, categoryId, topicId });
     } else {
       failedCache[normalize(url)] = true;
     }
@@ -75,14 +79,14 @@ function loadNext(ajax) {
 
 // Perform a lookup of a onebox based an anchor $element.
 // It will insert a loading indicator and remove it when the loading is complete or fails.
-export function load(e, refresh, ajax, userId, synchronous) {
-  const $elem = $(e);
+export function load({ elem , refresh = true, ajax, synchronous = false, categoryId, topicId }) {
+  const $elem = $(elem);
 
   // If the onebox has loaded or is loading, return
   if ($elem.data('onebox-loaded')) return;
   if ($elem.hasClass('loading-onebox')) return;
 
-  const url = e.href;
+  const url = elem.href;
 
   // Unless we're forcing a refresh...
   if (!refresh) {
@@ -99,7 +103,7 @@ export function load(e, refresh, ajax, userId, synchronous) {
   $elem.addClass('loading-onebox');
 
   // Add to the loading queue
-  loadingQueue.push({ url, refresh, $elem, userId });
+  loadingQueue.push({ url, refresh, $elem, categoryId, topicId });
 
   // Load next url in queue
   if (synchronous) {

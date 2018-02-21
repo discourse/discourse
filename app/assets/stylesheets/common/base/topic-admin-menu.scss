@@ -12,8 +12,9 @@
   background-color: $secondary;
   width: 205px;
   padding: 10px;
-  border: 1px solid $primary-low; 
+  border: 1px solid $primary-low;
   z-index: z("dropdown");
+  box-shadow: shadow("card");
 
   ul {
     list-style: none;

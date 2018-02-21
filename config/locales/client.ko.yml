@@ -122,7 +122,7 @@ ko:
         enabled: '%{when} 목록에 게시'
         disabled: '%{when} 목록에서 감춤'
       banner:
-        enabled: 'made this a banner %{when}. It will appear at the top of every page until it is dismissed by the user.'
+        enabled: '%{when} 이 내용을 배너로 만드세요 . 사용자가 제거하지 않을 때 까지 배너는 모든 페이지 상단에 노출됩니다.'
         disabled: '이 배너를 제거했습니다 %{when}. 더 이상 모든 페이지의 상단에 표시되지 않습니다.'
     topic_admin_menu: "토픽 관리"
     wizard_required: "새로운 Discourse에 오신것을 환영합니다! <a href='%{url}' data-auto-route='true'>설치 마법사</a> 로 시작해봅시다✨"
@@ -2195,8 +2195,8 @@ ko:
         critical_available: "중요 업데이트를 사용할 수 있습니다."
         updates_available: "업데이트를 사용할 수 있습니다."
         please_upgrade: "업그레이드하세요."
-        no_check_performed: "A check for updates has not been performed. Ensure sidekiq is running."
-        stale_data: "A check for updates has not been performed lately. Ensure sidekiq is running."
+        no_check_performed: "업데이트 확인이 수행되지 않았습니다. sidekiq가 실행 중인지 확인하십시오."
+        stale_data: "최근 업데이트 확인이 수행되지 않았습니다. sidekiq가 실행 중인지 확인하십시오."
         version_check_pending: "최근에 업데이트 되었군요! 환상적입니다!!"
         installed_version: "설치됨"
         latest_version: "최근"
@@ -2312,7 +2312,7 @@ ko:
         automatic_membership_email_domains: "이 목록의 있는 항목과 사용자들이  등록한 이메일 도메인이 일치할때 이 그룹에 포함"
         automatic_membership_retroactive: "이미 등록된 사용자에게 같은 이메일 도메인 규칙 적용하기"
         default_title: "이 그룹의 모든 사용자를 위한 기본 제목"
-        primary_group: "Automatically set as primary group"
+        primary_group: "기본 그룹으로 자동적으로 설정"
         group_owners: 소유자
         add_owners: 소유자 추가하기
         incoming_email: "사용자 설정 수신 이메일 주소"

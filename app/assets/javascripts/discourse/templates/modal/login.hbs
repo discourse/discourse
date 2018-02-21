@@ -1,9 +1,9 @@
-{{#login-modal screenX=lastX screenY=lastY loginName=loginName loginPassword=loginPassword action="login"}}
+{{#login-modal screenX=lastX screenY=lastY loginName=loginName loginPassword=loginPassword loginSecondFactor=loginSecondFactor action="login"}}
   {{#d-modal-body title="login.title" class="login-modal"}}
     {{login-buttons action="externalLogin"}}
     {{#if canLoginLocal}}
       <form id='login-form' method='post'>
-        <div>
+        <div id="credentials">
           <table>
             <tr>
               <td><label for='login-account-name'>{{i18n 'login.username'}}</label></td>
@@ -22,6 +22,9 @@
             </tr>
           </table>
         </div>
+        {{#second-factor-form}}
+          {{text-field value=loginSecondFactor id="login-second-factor" autocorrect="off" autocapitalize="off" autofocus="autofocus"}}
+        {{/second-factor-form}}
       </form>
     {{/if}}
     {{authMessage}}
@@ -30,9 +33,11 @@
 
   <div class="modal-footer">
     {{#if canLoginLocal}}
-      <button form="login-form" type="submit" class="btn btn-large btn-primary" disabled={{loginDisabled}} {{action "login"}}>
-        {{d-icon "unlock"}}&nbsp;{{loginButtonText}}
-      </button>
+      {{d-button action="login"
+          icon="unlock"
+          label=loginButtonLabel
+          disabled=loginDisabled
+          class='btn btn-large btn-primary'}}
 
       {{#if showSignupLink}}
         <button class="btn btn-large" id="new-account-link" {{action "createAccount"}}>

@@ -10,8 +10,8 @@ end
 #  id            :integer          not null, primary key
 #  user_id       :integer          not null
 #  muted_user_id :integer          not null
-#  created_at    :datetime
-#  updated_at    :datetime
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
 #
 # Indexes
 #

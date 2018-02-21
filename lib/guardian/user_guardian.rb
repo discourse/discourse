@@ -72,4 +72,8 @@ module UserGuardian
     user == @user || is_staff?
   end
 
+  def can_disable_second_factor?(user)
+    user && can_administer_user?(user)
+  end
+
 end

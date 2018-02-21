@@ -249,7 +249,6 @@ ja:
       title: "ベーシックユーザー"
     change_failed_explanation: "%{user_name} を '%{new_trust_level}' に下げようとしましたが、既にトラストレベルが '%{current_trust_level}' です。%{user_name} は '%{current_trust_level}' のままになります - もしユーザーを降格させたい場合は、トラストレベルをロックしてください"
   rate_limiter:
-    too_many_requests: "このアクションを一日の間に実施可能な回数が決まっています。%{time_left}待ってから再度試してください。"
     by_type:
       public_group_membership: "グループへの参加/離脱が多すぎます。%{time_left}お待ち下さい。"
     hours:
@@ -392,6 +391,7 @@ ja:
   unsubscribe:
     title: "配信停止"
     unwatch_category: "%{category}内の全トピックのウォッチを解除"
+    all: "%{sitename}からのメールを私に送信しないでください。"
   user_api_key:
     title: "アプリケーションアクセスの認証"
     description: "\"%{application_name}\" があなたのアカウントへのアクセスを要求しています: "
@@ -552,11 +552,9 @@ ja:
     allow_user_locale: "ユーザーが言語を選択できるようにする"
     min_post_length: "投稿を許可する最少の文字数"
     min_first_post_length: "最初の投稿(投稿本文)を許可する最少の文字数"
-    min_personal_message_post_length: "メッセージに投稿可能な最少の文字数"
     max_post_length: "投稿を許可する最大の文字数"
     min_topic_title_length: "トピックタイトルとして許可する最小の文字数"
     max_topic_title_length: "トピックタイトルとして許可する最大の文字数"
-    min_personal_message_title_length: "プライベートメッセージのタイトルとして許容する最小の文字数"
     min_search_term_length: "検索ワードとして有効にする最小の文字数"
     allow_uncategorized_topics: "カテゴリなしのトピック作成を許可するか。警告：未分類のトピックがある場合は、これをオフにする前に、再分類する必要があります。"
     allow_duplicate_topic_titles: "トピックタイトルの重複を許可"
@@ -676,7 +674,6 @@ ja:
     max_bookmarks_per_day: "ユーザが一日にブックマークできる最大数"
     max_edits_per_day: "ユーザが一日に編集できる最大数"
     max_topics_per_day: "ユーザが一日に作成できるトピックの最大数"
-    max_personal_messages_per_day: "ユーザが一日に作成できるメッセージの最大数"
     max_invites_per_day: "ユーザが一日に招待できる最大数"
     max_topic_invitations_per_day: "ユーザが一日にトピックに招待できる最大数"
     suggested_topics: "トピック下部に表示されるおすすめトピックの数"

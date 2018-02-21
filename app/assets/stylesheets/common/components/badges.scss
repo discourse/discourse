@@ -211,11 +211,9 @@
 
 .badge-group {
   @extend %badge;
-  padding: 4px 5px 2px 5px;
+  padding: 2px 5px;
   color: $primary;
-  text-shadow: 0 1px 0 rgba($primary, 0.1);
   background-color: $primary-low;
   border-color: $primary-low;
   font-size: $font-down-1;
-  box-shadow: inset 0 1px 0 rgba(0,0,0, 0.22);
 }

@@ -451,7 +451,6 @@ fr:
       broken: "Cette image ne fonctionne pas"
   rate_limiter:
     slow_down: "Vous avez réalisé cette action un trop grand nombre de fois, essayez à nouveau plus tard."
-    too_many_requests: "Nous avons une limite journalière du nombre d'actions qui peuvent être effectuées. Veuillez patienter %{time_left} avant de recommencer."
     by_type:
       first_day_replies_per_day: "Vous avez atteint le nombre maximum de réponses qu'un nouvel utilisateur peut créer pour son premier jour. Patientez s'il vous plaît %{time_left} avant d'essayer à nouveau."
       first_day_topics_per_day: "Vous avez atteint le nombre maximum de sujets qu'un nouvel utilisateur peut créer pour son premier jour. Patientez s'il vous plaît %{time_left} avant d'essayer à nouveau."
@@ -855,7 +854,6 @@ fr:
     email_polling_errored_recently:
       one: "La vérification des courriels a généré une erreur au cours des 24 dernières heures. Vérifiez <a href='/logs' target='_blank'>le journal</a> pour plus de détails."
       other: "La vérification des courriels a généré %{count} erreurs au cours des 24 dernières heures. Vérifiez <a href='/logs' target='_blank'>le journal</a> pour plus de détails."
-    missing_mailgun_api_key: "Le serveur est configuré pour envoyer des courriels via Mailgun mais vous n'avez pas spécifié une clé API utilisée pour vérifier les messages du webhook."
     bad_favicon_url: "Impossible de charger la favicon. Vérifiez le paramètre favicon_url dans les <a href='/admin/site_settings'>paramètres du site</a>"
     poll_pop3_timeout: "La connexion vers le serveur POP3 a expiré. Les courriels entrants n'ont pas pu être téléchargés. Veuillez vérifier <a href='/admin/site_settings/category/email'>les paramètres POP3</a> et votre fournisseur de service courriel."
     poll_pop3_auth_error: "La connexion vers le serveur POP3 échoue avec une erreur d'authentification. Veuillez vérifier <a href='/admin/site_settings/category/email'>les paramètres POP3</a>."
@@ -867,13 +865,11 @@ fr:
     set_locale_from_accept_language_header: "configurer la langue de l'interface pour les visiteurs à partir des entêtes de langue de leur navigateur. (EXPÉRIMENTAL, ne fonctionne pas avec le cache anonyme)"
     min_post_length: "Longueur minimale autorisée des messages en nombre de caractères"
     min_first_post_length: "Longueur minimale d'un premier message (corps de sujet) en nombre de caractères"
-    min_personal_message_post_length: "Longueur minimale des messages en nombre de caractères"
     max_post_length: "Longueur maximale autorisée des messages en nombres de caractères"
     topic_featured_link_enabled: "Activer la création de sujets avec lien"
     show_topic_featured_link_in_digest: "Afficher les sujets avec lien dans le résumé par courriel."
     min_topic_title_length: "Longueur minimale autorisée des titres de sujet en nombre de caractères"
     max_topic_title_length: "Longueur maximale autorisée des titres de sujet en nombre de caractères"
-    min_personal_message_title_length: "Longueur minimale pour un titre de message en nombre de caractères"
     min_search_term_length: "Longueur minimale autorisée du texte saisie avant de lancer une recherche en nombre de caractères"
     search_tokenize_chinese_japanese_korean: "Forcer la tokenisation dans la recherche chinois/japonais/koréen, même sur des sites non-CJK."
     search_prefer_recent_posts: "Si la recherche dans votre forum est lente, cette option tente l'indéxation des messages les plus récents en premier"
@@ -925,7 +921,6 @@ fr:
     summary_likes_required: "Nombre de J'aime minimum dans un sujet avant que le 'Résumé du sujet' soit activé"
     summary_percent_filter: "Quand un utilisateur clique sur « Résumer ce sujet », montrer le top % des messages"
     summary_max_results: "Nombre maximum de messages retournés par « Résumer ce sujet »"
-    enable_personal_messages: "Autoriser les utilisateurs de niveau de confiance 1 à créer des messages et à répondre (configurable via le niveau de confiance minimum pour envoyer des messages). Notez que les responsables peuvent toujours envoyer des messages."
     enable_long_polling: "Utiliser les requêtes longues pour le flux de notifications."
     long_polling_base_url: "Racine de l'URL utilisée pour les requêtes longues (dans le cas de l'utilisation d'un CDN pour fournir du contenu dynamique, pensez à le configurer en mode \"origin pull\") par exemple : http://origin.site.com"
     long_polling_interval: "Délai d'attente du serveur avant de répondre aux clients lorsqu'il n'y a pas de données à envoyer\n(réservé aux utilisateurs connectés)"
@@ -1048,7 +1043,6 @@ fr:
     max_bookmarks_per_day: "Nombre maximum de signets par utilisateur et par jour."
     max_edits_per_day: "Nombre maximum de modifications par utilisateur chaque jour."
     max_topics_per_day: "Nombre maximum de sujet qu'utilisateur peut créer par jour."
-    max_personal_messages_per_day: "Nombre maximum de messages que les utilisateurs peuvent créer chaque jour."
     max_invites_per_day: "Nombre maximum d'invitations qu'un utilisateur peut envoyer par jour."
     max_topic_invitations_per_day: "Nombre maximum d'invitations à un sujet qu'un utilisateur peut envoyer par jour."
     max_logins_per_ip_per_hour: "Nombre maximum de connexions autorisées par adresse IP et par heure"
@@ -1117,7 +1111,6 @@ fr:
     max_users_notified_per_group_mention: "Nombre maximum d'utilisateurs qui peuvent recevoir une notification si un groupe est mentionné (si le seuil est atteint, aucune notification ne sera envoyée)"
     create_thumbnails: "Créer un aperçu pour les images imbriquées qui sont trop large pour le message."
     email_time_window_mins: "Attendre (n) minutes avant l'envoi des courriels de notification, afin de laisser une chance aux utilisateurs de modifier ou finaliser leurs messages."
-    personal_email_time_window_seconds: "Attendre (n) secondes avant d'envoyer des courriels de notification privés, afin de donner aux utilisateurs la chance d'éditer et de finaliser leurs messages."
     email_posts_context: "Combien de réponses précédentes doit-on inclure dans les courriels de notifications pour situer le contexte."
     flush_timings_secs: "À quelle fréquence les données de timing doivent être vider, en secondes."
     title_max_word_length: "Le nombre maximum de caractères dans le titre d'un sujet."
@@ -1288,7 +1281,6 @@ fr:
     watched_words_regular_expressions: "Les mots surveillés sont des expressions régulières."
     default_email_digest_frequency: "Par défaut, à quelle fréquence les utilisateurs reçoivent les résumés par courriel."
     default_include_tl0_in_digests: "Par défaut, inclure les messages des nouveaux utilisateurs dans les résumés par courriel. Les utilisateurs peuvent changer cela dans leurs préférences."
-    default_email_personal_messages: "Envoyer un courriel quand quelqu'un envoie un message à un utilisateur."
     default_email_direct: "Envoyer un courriel quand quelqu'un cite/répond à/mentionne ou invite un utilisateur."
     default_email_mailing_list_mode: "Envoyer un courriel pour chaque nouveau message."
     default_email_mailing_list_mode_frequency: "Par défaut, les utilisateurs ayant activé la liste de diffusion recevront des courriels à cette fréquence."
@@ -2236,22 +2228,6 @@ fr:
     signup_after_approval:
       title: "Inscription après approbation"
       subject_template: "Votre compte a été approuvé sur %{site_name} !"
-      text_body_template: |+
-        Bienvenue sur %{site_name} !
-
-        Un responsable a approuvé votre compte sur %{site_name}.
-
-        Cliquez sur le lien suivant pour confirmer et activer votre nouveau compte :
-        %{base_url}/u/activate-account/%{email_token}
-
-        Si le lien ci-dessus n'est pas cliquable, essayez de le copier/coller dans la barre d'adresse de votre navigateur internet.
-
-        %{new_user_tips}
-
-        Nous croyons constamment au [comportement communautaire civilisé](%{base_url}/guidelines).
-
-        Amusez-vous bien !
-
     signup:
       title: "Inscription"
       subject_template: "[%{email_prefix}] Activez votre nouveau compte"

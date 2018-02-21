@@ -130,14 +130,23 @@ $mobile-breakpoint: 700px;
   }
 }
 
-.content-list li a span.count {
-  font-size: $font-down-1;
-  float: right;
-  margin-right: 10px;
-  background-color: $primary-low;
-  padding: 2px 5px;
-  border-radius: 5px;
-  color: $primary;
+.content-list {
+  width: 27%;
+  float: left;
+  li a span.count {
+    font-size: $font-down-1;
+    float: right;
+    margin-right: 10px;
+    background-color: $primary-low;
+    padding: 2px 5px;
+    border-radius: 5px;
+    color: $primary;
+  }
+}
+
+.content-body {
+  float: left;
+  width: 60%;
 }
 
 .admin-content {
@@ -196,7 +205,7 @@ $mobile-breakpoint: 700px;
     width: 460px;
     right: 0;
     z-index: z("dropdown");
-    box-shadow: 0 2px 6px rgba(0,0,0, .8);
+    box-shadow: shadow("card");
     margin-top: -2px;
     background-color: $secondary;
     padding: 12px 12px 5px;
@@ -259,6 +268,10 @@ $mobile-breakpoint: 700px;
   background-color: $primary-low;
   padding: 10px 10px 3px 0;
   @include clearfix;
+  nav {
+    float: left;
+    margin-left: 12px;    
+  }
   .nav.nav-pills {
     li.active {
       a {
@@ -506,7 +519,6 @@ $mobile-breakpoint: 700px;
       background-color: $secondary;
       border: 1px solid $primary-low;
       border-radius: 3px;
-      box-shadow: inset 0 1px 1px rgba(51, 51, 51, 0.3);
       transition: border linear 0.2s, box-shadow linear 0.2s;
 
       li.select2-search-choice {

@@ -1059,7 +1059,6 @@ fi:
       default_header_text: Valitse...
       no_content: Ei osumia
       filter_placeholder: Hae...
-      create: "Luo {{content}}"
     emoji_picker:
       filter_placeholder: Etsi emojia
       people: Ihmiset
@@ -2438,11 +2437,9 @@ fi:
         moderation_history: "Valvontahistoria"
         agree: "Ole samaa mieltä"
         agree_title: "Vahvista, että lippu on annettu oikeasta syystä"
-        agree_flag_hide_post: "Ole samaa mieltä ja piilota viesti"
         agree_flag_hide_post_title: "Piilota viesti ja lähetä automaattinen yksityisviesti, joka kehottaa käyttäjää muokkaamaan viestiä."
         agree_flag_restore_post: "Ole samaa mieltä ja palauta viesti"
         agree_flag_restore_post_title: "Palauta viesti niin että kaikki käyttäjät näkevät sen."
-        agree_flag: "Ole samaa mieltä ja säilytä viesti"
         agree_flag_title: "Ole samaa mieltä lipun kanssa ja pidä viesti ennallaan"
         ignore_flag: "Sivuuta"
         ignore_flag_title: "Poista tämä lippu; toimenpiteitä ei tarvita juuri nyt."

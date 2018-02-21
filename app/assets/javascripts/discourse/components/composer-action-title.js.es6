@@ -38,11 +38,11 @@ export default Ember.Component.extend({
       <a class="post-link" href="${postLink.href}">${postLink.anchor}</a>
       ${userAvatar}
       <span class="username">${userLink.anchor}</span>
-      ${iconHTML("mail-forward", { class: "reply-to-glyph" })}
     `;
 
     if (originalUser) {
       editTitle += `
+        ${iconHTML("mail-forward", { class: "reply-to-glyph" })}
         ${originalUser.avatar}
         <span class="original-username">${originalUser.username}</span>
       `;

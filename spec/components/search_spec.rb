@@ -395,6 +395,27 @@ describe Search do
     let(:tag_group) { Fabricate(:tag_group) }
     let(:category) { Fabricate(:category) }
 
+    context 'post searching' do
+      it 'can find posts with tags' do
+        SiteSetting.tagging_enabled = true
+
+        post = Fabricate(:post, raw: 'I am special post')
+        DiscourseTagging.tag_topic_by_names(post.topic, Guardian.new(Fabricate.build(:admin)), [tag.name])
+        post.topic.save
+
+        # we got to make this index (it is deferred)
+        Jobs::ReindexSearch.new.rebuild_problem_posts
+
+        result = Search.execute(tag.name)
+        expect(result.posts.length).to eq(1)
+
+        SiteSetting.tagging_enabled = false
+
+        result = Search.execute(tag.name)
+        expect(result.posts.length).to eq(0)
+      end
+    end
+
     context 'tagging is disabled' do
       before { SiteSetting.tagging_enabled = false }
 
@@ -856,7 +877,7 @@ describe Search do
     str = " grigio:babel deprecated? "
     str << "page page on Atmosphere](https://atmospherejs.com/grigio/babel)xxx: aaa.js:222 aaa'\"bbb"
 
-    ts_query = Search.ts_query(str, "simple")
+    ts_query = Search.ts_query(term: str, ts_config: "simple")
     Post.exec_sql("SELECT to_tsvector('bbb') @@ " << ts_query)
   end
 
@@ -920,6 +941,19 @@ describe Search do
       s = Search.new('foo bar', ip_address: '127.0.0.1')
       results = s.execute
       expect(results.search_log_id).not_to be_present
+    end
+  end
+
+  context 'in:title' do
+    it 'allows for search in title' do
+      topic = Fabricate(:topic, title: 'I am testing a title search')
+      _post = Fabricate(:post, topic_id: topic.id, raw: 'this is the first post')
+
+      results = Search.execute('title in:title')
+      expect(results.posts.length).to eq(1)
+
+      results = Search.execute('first in:title')
+      expect(results.posts.length).to eq(0)
     end
   end
 

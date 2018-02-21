@@ -73,7 +73,7 @@ class FinalDestination
       "Host" => @uri.hostname
     }
 
-    result['cookie'] = @cookie if @cookie
+    result['Cookie'] = @cookie if @cookie
 
     result
   end
@@ -164,7 +164,7 @@ class FinalDestination
     )
 
     location = nil
-    headers = nil
+    response_headers = nil
 
     response_status = response.status.to_i
 
@@ -181,31 +181,29 @@ class FinalDestination
         return @uri
       end
 
-      headers = {}
+      response_headers = {}
       if cookie_val = get_response.get_fields('set-cookie')
-        headers['set-cookie'] = cookie_val.join
+        response_headers[:cookies] = cookie_val
       end
 
-      # TODO this is confusing why grab location for anything not
-      # between 300-400 ?
       if location_val = get_response.get_fields('location')
-        headers['location'] = location_val.join
+        response_headers[:location] = location_val.join
       end
     end
 
-    unless headers
-      headers = {}
-      response.headers.each do |k, v|
-        headers[k.to_s.downcase] = v
-      end
+    unless response_headers
+      response_headers = {
+        cookies: response.data[:cookies] || response.headers[:"set-cookie"],
+        location: response.headers[:location]
+      }
     end
 
     if (300..399).include?(response_status)
-      location = headers["location"]
+      location = response_headers[:location]
     end
 
-    if set_cookie = headers["set-cookie"]
-      @cookie = set_cookie
+    if cookies = response_headers[:cookies]
+      @cookie = Array.wrap(cookies).map { |c| c.split(';').first.strip }.join('; ')
     end
 
     if location

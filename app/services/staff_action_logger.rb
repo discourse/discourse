@@ -289,18 +289,25 @@ class StaffActionLogger
   def log_silence_user(user, opts = {})
     raise Discourse::InvalidParameters.new(:user) unless user
 
-    UserHistory.create(
-      params(opts).merge(
-        action: UserHistory.actions[:silence_user],
-        target_user_id: user.id,
-        details: opts[:details]
-      )
+    create_args = params(opts).merge(
+      action: UserHistory.actions[:silence_user],
+      target_user_id: user.id,
+      details: opts[:details]
     )
+    create_args[:post_id] = opts[:post_id] if opts[:post_id]
+
+    UserHistory.create(create_args)
   end
 
   def log_unsilence_user(user, opts = {})
     raise Discourse::InvalidParameters.new(:user) unless user
     UserHistory.create(params(opts).merge(action: UserHistory.actions[:unsilence_user],
+                                          target_user_id: user.id))
+  end
+
+  def log_disable_second_factor_auth(user, opts = {})
+    raise Discourse::InvalidParameters.new(:user) unless user
+    UserHistory.create(params(opts).merge(action: UserHistory.actions[:disabled_second_factor],
                                           target_user_id: user.id))
   end
 

@@ -24,6 +24,14 @@ class Middleware::RequestTracker
       MethodProfiler.patch(Redis::Client, [
         :call, :call_pipeline
       ], :redis)
+
+      MethodProfiler.patch(Net::HTTP, [
+        :request
+      ], :net)
+
+      MethodProfiler.patch(Excon::Connection, [
+        :request
+      ], :net)
       @patched_instrumentation = true
     end
 

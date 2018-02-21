@@ -24,7 +24,7 @@
       border: 1px solid $primary-medium;
 
       &.is-focused {
-        box-shadow: $tertiary 0 0 6px 0px;
+        box-shadow: shadow("focus");
         border-radius: 0;
       }
     }
@@ -40,7 +40,7 @@
       .multi-select-header {
         border-radius: 0;
         border-bottom: 1px solid transparent;
-        box-shadow: $tertiary 0 0 6px 0px;
+        box-shadow: shadow("focus");
       }
     }
 
@@ -48,7 +48,7 @@
       .select-kit-wrapper {
         display: block;
         border: 1px solid $tertiary;
-        box-shadow: $tertiary 0 0 6px 0px;
+        box-shadow: shadow("focus");
         border-radius: 0;
       }
 
@@ -101,7 +101,6 @@
           margin: 0;
           outline: 0;
           border: 0;
-          -webkit-box-shadow: none;
           box-shadow: none;
           border-radius: 0;
           height: 21px;

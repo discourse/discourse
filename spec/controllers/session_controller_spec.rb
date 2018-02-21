@@ -584,6 +584,55 @@ describe SessionController do
         end
       end
 
+      context 'when user has 2-factor logins' do
+        let!(:user_second_factor) { Fabricate(:user_second_factor, user: user) }
+
+        describe 'when second factor token is missing' do
+          it 'should return the right response' do
+            post :create, params: {
+              login: user.username,
+              password: 'myawesomepassword',
+            }, format: :json
+
+            expect(JSON.parse(response.body)['error']).to eq(I18n.t(
+              'login.invalid_second_factor_code'
+            ))
+          end
+        end
+
+        describe 'when second factor token is invalid' do
+          it 'should return the right response' do
+            post :create, params: {
+              login: user.username,
+              password: 'myawesomepassword',
+              second_factor_token: '00000000'
+            }, format: :json
+
+            expect(JSON.parse(response.body)['error']).to eq(I18n.t(
+              'login.invalid_second_factor_code'
+            ))
+          end
+        end
+
+        describe 'when second factor token is valid' do
+          it 'should log the user in' do
+            post :create, params: {
+              login: user.username,
+              password: 'myawesomepassword',
+              second_factor_token: ROTP::TOTP.new(user_second_factor.data).now
+            }, format: :json
+
+            user.reload
+
+            expect(session[:current_user_id]).to eq(user.id)
+            expect(user.user_auth_tokens.count).to eq(1)
+
+            expect(UserAuthToken.hash_token(cookies[:_t]))
+              .to eq(user.user_auth_tokens.first.auth_token)
+          end
+        end
+      end
+
       describe 'with a blocked IP' do
         before do
           screened_ip = Fabricate(:screened_ip_address)
@@ -777,7 +826,32 @@ describe SessionController do
           login: user.username, password: 'myawesomepassword'
         }, format: :json
 
-        expect(response).not_to be_success
+        expect(response.status).to eq(429)
+        json = JSON.parse(response.body)
+        expect(json["error_type"]).to eq("rate_limit")
+      end
+
+      it 'rate limits second factor attempts' do
+        RateLimiter.enable
+        RateLimiter.clear_all!
+
+        3.times do
+          post :create, params: {
+            login: user.username,
+            password: 'myawesomepassword',
+            second_factor_token: '000000'
+          }, format: :json
+
+          expect(response).to be_success
+        end
+
+        post :create, params: {
+          login: user.username,
+          password: 'myawesomepassword',
+          second_factor_token: '000000'
+        }, format: :json
+
+        expect(response.status).to eq(429)
         json = JSON.parse(response.body)
         expect(json["error_type"]).to eq("rate_limit")
       end

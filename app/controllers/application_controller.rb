@@ -107,7 +107,7 @@ class ApplicationController < ActionController::Base
   end
 
   def render_rate_limit_error(e)
-    render_json_error e.description, type: :rate_limit, status: 429
+    render_json_error e.description, type: :rate_limit, status: 429, extras: { wait_seconds: e&.available_in }
   end
 
   # If they hit the rate limiter
@@ -192,7 +192,9 @@ class ApplicationController < ActionController::Base
       render_json_error message, type: type, status: status_code
     else
       begin
+        # 404 pages won't have the session and theme_keys without these:
         current_user
+        handle_theme
       rescue Discourse::InvalidAccess
         return render plain: message, status: status_code
       end

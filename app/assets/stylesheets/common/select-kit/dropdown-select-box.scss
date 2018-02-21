@@ -16,8 +16,7 @@
     .select-kit-body {
       border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
       background-clip: padding-box;
-      -webkit-box-shadow: 0 2px 2px rgba(0,0,0,0.4);
-              box-shadow: 0 2px 2px rgba(0,0,0,0.4);
+      box-shadow: shadow("dropdown");
       max-width: 300px;
       width: 300px;
     }
@@ -118,6 +117,12 @@
 
       .d-icon + .d-icon {
         margin-left: 5px;
+      }
+
+      &:hover {
+        .d-icon {
+          color: $primary-low;
+        }
       }
 
       &.is-focused {

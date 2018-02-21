@@ -36,7 +36,7 @@ gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox', '1.8.36'
+gem 'onebox', '1.8.40'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 
@@ -66,9 +66,6 @@ gem 'discourse_image_optim', require: 'image_optim'
 gem 'multi_json'
 gem 'mustache'
 gem 'nokogiri'
-
-# this may end up deprecating nokogiri
-gem 'oga', require: false
 
 gem 'omniauth'
 gem 'omniauth-openid'
@@ -177,6 +174,9 @@ gem 'logstash-logger', require: false
 gem 'logster'
 
 gem 'sassc', require: false
+
+gem 'rotp'
+gem 'rqrcode'
 
 if ENV["IMPORT"] == "1"
   gem 'mysql2'

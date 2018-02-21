@@ -3,7 +3,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import renderTag from "discourse/lib/render-tag";
-const { get, isEmpty, isPresent, run } = Ember;
+const { get, isEmpty, isPresent, run, makeArray } = Ember;
 
 export default ComboBox.extend({
   allowContentReplacement: true,
@@ -14,6 +14,9 @@ export default ComboBox.extend({
   filterable: true,
   noTags: Ember.computed.empty("computedTags"),
   allowAny: true,
+  maximumSelectionSize: Ember.computed.alias("siteSettings.max_tags_per_topic"),
+  caretUpIcon: Ember.computed.alias("caretIcon"),
+  caretDownIcon: Ember.computed.alias("caretIcon"),
 
   init() {
     this._super();
@@ -29,12 +32,41 @@ export default ComboBox.extend({
     });
   },
 
+  @computed("limitReached", "maximumSelectionSize")
+  maxContentRow(limitReached, count) {
+    if (limitReached) {
+      return I18n.t("select_kit.max_content_reached", { count });
+    }
+  },
+
+  mutateAttributes() {
+    this.set("value", null);
+  },
+
+  @computed("limitReached")
+  caretIcon(limitReached) {
+    return limitReached ? null : "plus";
+  },
+
+  @computed("computedTags.[]", "maximumSelectionSize")
+  limitReached(computedTags, maximumSelectionSize) {
+    if (computedTags.length >= maximumSelectionSize) {
+      return true;
+    }
+
+    return false;
+  },
+
   @computed("tags")
   computedTags(tags) {
-    return Ember.makeArray(tags);
+    return makeArray(tags);
   },
 
   validateCreate(term) {
+    if (this.get("limitReached") || !this.site.get("can_create_tag")) {
+      return false;
+    }
+
     const filterRegexp = new RegExp(this.site.tags_filter_regexp, "g");
     term = term.replace(filterRegexp, "").trim().toLowerCase();
 
@@ -50,8 +82,11 @@ export default ComboBox.extend({
   },
 
   validateSelect() {
-    return this.get("computedTags").length < this.get("siteSettings.max_tags_per_topic") &&
-           this.site.get("can_create_tag");
+    return this.get("computedTags").length < this.get("siteSettings.max_tags_per_topic");
+  },
+
+  filterComputedContent(computedContent) {
+    return computedContent;
   },
 
   didRender() {
@@ -111,7 +146,7 @@ export default ComboBox.extend({
 
   @computed("tags.[]", "filter")
   collectionHeader(tags, filter) {
-    if (!Ember.isEmpty(tags)) {
+    if (!isEmpty(tags)) {
       let output = "";
 
       if (tags.length >= 20) {
@@ -132,12 +167,15 @@ export default ComboBox.extend({
 
   computeHeaderContent() {
     let content = this.baseHeaderComputedContent();
+    const joinedTags = this.get("computedTags").join(", ");
 
     if (isEmpty(this.get("computedTags"))) {
       content.label = I18n.t("tagging.choose_for_topic");
     } else {
-      content.label = this.get("computedTags").join(",");
+      content.label = joinedTags;
     }
+
+    content.title = content.name = content.value = joinedTags;
 
     return content;
   },
@@ -148,43 +186,38 @@ export default ComboBox.extend({
       delete tags[tags.indexOf(tag)];
       this.set("tags", tags.filter(t => t));
       this.set("content", []);
-      this.set("searchDebounce", run.debounce(this, this._searchTags, 200));
+      this.set("searchDebounce", run.debounce(this, this._searchTags, this.get("filter"), 250));
     },
 
     onExpand() {
-      this.set("searchDebounce", run.debounce(this, this._searchTags, 200));
+      if (isEmpty(this.get("content"))) {
+        this.set("searchDebounce", run.debounce(this, this._searchTags, this.get("filter"), 250));
+      }
     },
 
     onFilter(filter) {
       filter = isEmpty(filter) ? null : filter;
-      this.set("searchDebounce", run.debounce(this, this._searchTags, filter, 200));
+      this.set("searchDebounce", run.debounce(this, this._searchTags, filter, 250));
     },
 
     onSelect(tag) {
       if (isEmpty(this.get("computedTags"))) {
-        this.set("tags", Ember.makeArray(tag));
+        this.set("tags", makeArray(tag));
       } else {
         this.set("tags", this.get("computedTags").concat(tag));
       }
 
       this.set("content", []);
-      this.set("searchDebounce", run.debounce(this, this._searchTags, 200));
+      this.set("searchDebounce", run.debounce(this, this._searchTags, this.get("filter"), 250));
     }
-  },
-
-  muateAttributes() {
-    this.set("value", null);
   },
 
   _searchTags(query) {
     this.startLoading();
 
-    const selectedTags = Ember.makeArray(this.get("computedTags")).filter(t => t);
-
     const self = this;
-
+    const selectedTags = makeArray(this.get("computedTags")).filter(t => t);
     const sortTags = this.siteSettings.tags_sort_alphabetically;
-
     const data = {
       q: query,
       limit: this.siteSettings.max_tag_search_results,

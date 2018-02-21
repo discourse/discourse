@@ -49,6 +49,7 @@ en:
   loading: "Loading"
   powered_by_html: 'Powered by <a href="https://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
   log_in: "Log In"
+  submit: "Submit"
 
   purge_reason: "Automatically deleted as abandoned, deactivated account"
   disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."
@@ -114,6 +115,7 @@ en:
       not_an_integer: must be an integer
       odd: must be odd
       record_invalid: ! 'Validation failed: %{errors}'
+      max_emojis: "can't have more than %{max_emojis_count} emoji"
       restrict_dependent_destroy:
         one: "Cannot delete record because a dependent %{record} exists"
         many: "Cannot delete record because dependent %{record} exist"
@@ -206,6 +208,7 @@ en:
   too_many_mentions_newuser:
     one: "Sorry, new users can only mention one other user in a post."
     other: "Sorry, new users can only mention %{count} users in a post."
+  no_images_allowed_trust: "Sorry, you can't put images in a post"
   no_images_allowed: "Sorry, new users can't put images in posts."
   too_many_images:
     one: "Sorry, new users can only put one image in a post."
@@ -538,7 +541,7 @@ en:
 
   rate_limiter:
     slow_down: "You have performed this action too many times, try again later."
-    too_many_requests: "We have a daily limit on how many times that action can be taken. Please wait %{time_left} before trying again."
+    too_many_requests: "You have performed this action too many times. Please wait %{time_left} before trying again."
     by_type:
       first_day_replies_per_day: "You've reached the maximum number of replies a new user can create on their first day. Please wait %{time_left} before trying again."
       first_day_topics_per_day: "You've reached the maximum number of topics a new user can create on their first day. Please wait %{time_left} before trying again."
@@ -961,7 +964,7 @@ en:
     email_polling_errored_recently:
       one: "Email polling has generated an error in the past 24 hours. Look at <a href='/logs' target='_blank'>the logs</a> for more details."
       other: "Email polling has generated %{count} errors in the past 24 hours. Look at <a href='/logs' target='_blank'>the logs</a> for more details."
-    missing_mailgun_api_key: "The server is configured to send emails via mailgun but you haven't provided an API key used to verify the webhook messages."
+    missing_mailgun_api_key: "The server is configured to send emails via Mailgun but you haven't provided an API key used to verify the webhook messages."
     bad_favicon_url: "The favicon is failing to load. Check your favicon_url setting in <a href='/admin/site_settings'>Site Settings</a>."
     poll_pop3_timeout: "Connection to the POP3 server is timing out. Incoming email could not be retrieved. Please check your <a href='/admin/site_settings/category/email'>POP3 settings</a> and service provider."
     poll_pop3_auth_error: "Connection to the POP3 server is failing with an authentication error. Please check your <a href='/admin/site_settings/category/email'>POP3 settings</a>."
@@ -984,6 +987,7 @@ en:
     min_topic_title_length: "Minimum allowed topic title length in characters"
     max_topic_title_length: "Maximum allowed topic title length in characters"
     min_personal_message_title_length: "Minimum allowed title length for a message in characters"
+    max_emojis_in_title: "Maximum allowed emojis in topic title"
     min_search_term_length: "Minimum valid search term length in characters"
     search_tokenize_chinese_japanese_korean: "Force search to tokenize Chinese/Japanese/Korean even on non CJK sites"
     search_prefer_recent_posts: "If searching your large forum is slow, this option tries an index of more recent posts first"
@@ -1163,8 +1167,8 @@ en:
     google_oauth2_client_secret: "Client secret of your Google application."
 
     enable_twitter_logins: "Enable Twitter authentication, requires twitter_consumer_key and twitter_consumer_secret"
-    twitter_consumer_key: "Consumer key for Twitter authentication, registered at http://dev.twitter.com"
-    twitter_consumer_secret: "Consumer secret for Twitter authentication, registered at http://dev.twitter.com"
+    twitter_consumer_key: "Consumer key for Twitter authentication, registered at https://apps.twitter.com/"
+    twitter_consumer_secret: "Consumer secret for Twitter authentication, registered at https://apps.twitter.com/"
 
     enable_instagram_logins: "Enable Instagram authentication, requires instagram_consumer_key and instagram_consumer_secret"
     instagram_consumer_key: "Consumer key for Instagram authentication"
@@ -1301,6 +1305,7 @@ en:
 
     min_trust_to_flag_posts: "The minimum trust level required to flag posts"
     min_trust_to_post_links: "The minimum trust level required to include links in posts"
+    min_trust_to_post_images: "The minimum trust level required to include images in a post"
 
     newuser_max_links: "How many links a new user can add to a post."
     newuser_max_images: "How many images a new user can add to a post."
@@ -1334,6 +1339,7 @@ en:
     max_image_size_kb: "The maximum image upload size in kB. This must be configured in nginx (client_max_body_size) / apache or proxy as well."
     max_attachment_size_kb: "The maximum attachment files upload size in kB. This must be configured in nginx (client_max_body_size) / apache or proxy as well."
     authorized_extensions: "A list of file extensions allowed for upload (use '*' to enable all file types)"
+    authorized_extensions_for_staff: "A list of file extensions allowed for upload for staff users in addition to the list defined in the `authorized_extensions` site setting. (use '*' to enable all file types)"
     theme_authorized_extensions: "A list of file extensions allowed for theme uploads (use '*' to enable all file types)"
     max_similar_results: "How many similar topics to show above the editor when composing a new topic. Comparison is based on title and body."
 
@@ -1470,6 +1476,7 @@ en:
     staff_user_custom_fields: "A whitelist of custom fields for a user that can be shown to staff."
     enable_user_directory: "Provide a directory of users for browsing"
     enable_group_directory: "Provide a directory of groups for browsing"
+    group_in_subject: "Set %{optional_pm} in email subject to name of first group in PM, see: https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
     allow_anonymous_posting: "Allow users to switch to anonymous mode"
     anonymous_posting_min_trust_level: "Minimum trust level required to enable anonymous posting"
     anonymous_account_duration_minutes: "To protect anonymity create a new anonymous account every N minutes for each user. Example: if set to 600, as soon as 600 minutes elapse from last post AND user switches to anon, a new anonymous account is created."
@@ -1756,6 +1763,7 @@ en:
   login:
     not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
     incorrect_username_email_or_password: "Incorrect username, email or password"
+    incorrect_password: "Incorrect password"
     wait_approval: "Thanks for signing up. We will notify you when your account has been approved."
     active: "Your account is activated and ready to use."
     activate_email: "<p>You’re almost done! We sent an activation mail to <b>%{email}</b>. Please follow the instructions in the mail to activate your account.</p><p>If it doesn’t arrive, check your spam folder.</p>"
@@ -1778,6 +1786,9 @@ en:
     auth_complete: "Authentication is complete."
     click_to_continue: "Click here to continue."
     already_logged_in: "Oops, looks like you are attempting to accept an invitation for another user. If you are not %{current_user}, please log out and try again."
+    second_factor_title: "Two Factor Authentication Required"
+    second_factor_description: "Enter a generated authentication code."
+    invalid_second_factor_code: "Invalid Two Factor Authentication Code"
 
   user:
     no_accounts_associated: "No accounts associated"
@@ -2723,6 +2734,15 @@ en:
 
         If you have any questions, [contact our friendly staff](%{base_url}/about).
 
+
+
+    account_second_factor_disabled:
+      title: "Two Factor Authentication disabled"
+      subject_template: "[%{email_prefix}] Two Factor Authentication disabled"
+      text_body_template: |
+        Your account’s Two Factor Authentication at %{site_name} has been disabled. The account no longer needs a Two Factor Authentication code to sign in.
+
+        If you have any questions, [contact our friendly staff](%{base_url}/about).
 
 
     digest:

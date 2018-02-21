@@ -26,6 +26,7 @@ describe 'rate limiter integration' do
   end
 
   it 'can cleanly limit requests' do
+    freeze_time
     #request.set_header("action_dispatch.show_exceptions", true)
 
     admin = Fabricate(:admin)
@@ -46,5 +47,9 @@ describe 'rate limiter integration' do
     }
 
     expect(response.status).to eq(429)
+
+    data = JSON.parse(response.body)
+
+    expect(data["extras"]["wait_seconds"]).to eq(60)
   end
 end

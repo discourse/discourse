@@ -45,12 +45,16 @@ fa_IR:
           other: "< %{count} ثانیه"
         x_seconds:
           other: "%{count} ثانیه"
+        less_than_x_minutes:
+          other: "< %{count} دقیقه"
         x_minutes:
           other: "%{count} دقیقه"
         about_x_hours:
           other: "%{count} ساعت"
         x_days:
           other: "%{count} روز"
+        x_months:
+          other: "%{count} ماه"
         about_x_years:
           other: "%{count} سال"
         over_x_years:
@@ -83,6 +87,7 @@ fa_IR:
           other: "%{count} سال بعد"
       previous_month: 'ماه قبل'
       next_month: 'ماه بعد'
+      placeholder: تاریخ
     share:
       topic: 'پیوندی به این موضوع را به اشتراک بگذارید'
       post: 'ارسال #%{postNumber}'
@@ -97,6 +102,7 @@ fa_IR:
       split_topic: "این موضوع  %{when} جدا شد "
       invited_user: "%{who} در %{when} دعوت شده"
       invited_group: "%{who} در %{when} دعوت شده"
+      user_left: "%{who}%{when} خود را از این پیغام حذف کرد."
       removed_user: "%{who} در %{when} حذف شد"
       removed_group: "%{who} در %{when} حذف شد"
       autoclosed:
@@ -234,6 +240,7 @@ fa_IR:
     uploading: "در حال بارگذاری..."
     uploading_filename: "بارگذاری {{filename}}..."
     uploaded: "بارگذاری شد!"
+    pasting: "چسباندن..."
     enable: "فعال کردن"
     disable: "ازکاراندازی"
     undo: "بی‌اثر کردن"

@@ -398,7 +398,6 @@ pt_BR:
       broken: "Esta imagem está danificada"
   rate_limiter:
     slow_down: "Você fez essa ação demais, tente novamente mais tarde."
-    too_many_requests: "Nós possuímos um limite diário do número de vezes que uma ação pode ser tomada. Por favor aguarde %{time_left} antes de tentar novamente."
     by_type:
       first_day_replies_per_day: "Você atingiu o número máximo de respostas que um novo usuário pode criar em seu primeiro dia. Por favor aguarde %{time_left} antes de tentar novamente."
       first_day_topics_per_day: "Você atingiu o número máximo de tópicos que um novo usuário pode criar em seu primeiro dia. Por favor aguarde %{time_left} antes de tentar novamente."
@@ -781,7 +780,6 @@ pt_BR:
     email_polling_errored_recently:
       one: "A apuração de email gerou um erro nas últimas 24 horas. Veja <a href='/logs' target='_blank'>os logs</a> para mais detalhes."
       other: "A apuração de email gerou %{count} erros nas últimas 24 horas. Veja <a href='/logs' target='_blank'>os logs</a> para mais detalhes."
-    missing_mailgun_api_key: "O servidor está configurado para enviar email pelo mailgun, mas você não forneceu uma chave de API usada para verificar as mensagens de webhook."
     bad_favicon_url: "O carregamento do favicon está falhando. Verifique a sua configuração de favicon_url nas <a href='/admin/site_settings'>Configurações do Site</a>."
     poll_pop3_timeout: "A conexão com o servidor POP3 está atingindo o tempo limite. Por favor, verifique suas <a href='/admin/site_settings/category/email'>configurações de POP3</a> e selecione um servidor de serviço."
     poll_pop3_auth_error: "A conexão com o servidor POP3 está falhando com um erro de autenticação. Por favor, verifique suas <a href='/admin/site_settings/category/email'>configurações de POP3</a>."
@@ -793,11 +791,9 @@ pt_BR:
     set_locale_from_accept_language_header: "define a língua da interface para os usuários anônimos de acordo com os cabeçalhos de língua de seus navegadores. (EXPERIMENTAL, não funciona com cache anônimo)"
     min_post_length: "Comprimento mínimo permitido do post em caracteres"
     min_first_post_length: "Comprimento mínimo de caracteres permitido para primeira mensagem (corpo do tópico)"
-    min_personal_message_post_length: "Comprimento mínimo de caracteres permitido para mensagens"
     max_post_length: "Comprimento máximo permitido para o post em caracteres"
     min_topic_title_length: "Comprimento mínimo permitido para o título do post em caracteres"
     max_topic_title_length: "Comprimento máximo permitido para o título do post em caracteres"
-    min_personal_message_title_length: "Comprimento mínimo de caracteres permitido para o título de uma mensagem"
     min_search_term_length: "Comprimento mínimo válido para o termo de pesquisa em caracteres"
     search_tokenize_chinese_japanese_korean: "Força a busca a tokenizar Mandarim/Japonês/Coreano até para sites que não são nesses idiomas"
     search_prefer_recent_posts: "Se buscar o seu fórum está lento, essa opção tenta indexar as publicações mais recentes primeiro"
@@ -843,7 +839,6 @@ pt_BR:
     summary_likes_required: "Curtidas mínimas em um tópico antes de 'Resumir este tópico, ficar habilitado"
     summary_percent_filter: "Quando um usuário clicar em 'Resumor este tópico', mostrar os melhores % mensagens"
     summary_max_results: "Máximo número de posts quando resumidos por Categoria "
-    enable_personal_messages: "Permitir que usuários de nível de confiança 1 (configurável via o nível mínimo de confiança para enviar mensagens) criem e respondam a mensagens. Note que a equipe sempre pode enviar mensagens, independente do caso."
     enable_long_polling: "O sistema de mensagens das notificações pode fazer solicitações longas."
     long_polling_base_url: "URL Utilizada para \"long polling\" ( Quando um CDN for configurado, tenha certeza que essa configuração seja a padrão) ex: http://origin.site.com"
     long_polling_interval: "Tempo que o servidor deve aguardar antes de responder quando não existe nenhum dado para ser enviado. (apenas usuários logados)"
@@ -957,7 +952,6 @@ pt_BR:
     max_bookmarks_per_day: "Número máximo de novos favoritos por usuário por dia."
     max_edits_per_day: "Número máximo de edições que um usuário pode fazer por dia."
     max_topics_per_day: "Número máximo de postagens que um usuário pode criar por dia."
-    max_personal_messages_per_day: "Máximo número de mensagens que usuários podem criar por dia."
     max_invites_per_day: "Número máximo de convites que um usuário pode enviar por dia."
     max_topic_invitations_per_day: "Número máximo de convites para tópicos que um usuário pode enviar por dia."
     alert_admins_if_errors_per_minute: "Número de erros por minutos para desencadear um alerta aos administradores. Um valor igual a 0 desabilita esse recurso. NOTA: requer reinicialização."

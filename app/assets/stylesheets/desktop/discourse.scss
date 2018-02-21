@@ -244,7 +244,7 @@ input {
 
       &:focus {
         border-color: scale-color($danger, $lightness: -30%);
-        box-shadow: 0 0 6px $danger;
+        box-shadow: shadow("focus-danger");
       }
     }
 
@@ -287,7 +287,7 @@ input {
 
       &:focus {
         border-color: $success;
-        box-shadow: 0 0 6px $success;
+        box-shadow: shadow("focus");
       }
     }
 
@@ -349,46 +349,6 @@ input {
 /* bootstrap columns */
 .row {
   @include clearfix;
-}
-
-.span {
-  &4 {
-    width: 196px;
-    margin-right: 12px;
-    float: left;
-  }
-
-  &6 {
-    width: 27.027%;
-    float: left;
-  }
-
-  &8 {
-    width: 404px;
-    float: left;
-  }
-
-  &10 {
-    width: 508px;
-    float: left;
-  }
-
-  &13 {
-    width: 59.8198%;
-    float: left;
-  }
-
-  &15 {
-    /* intentionally no width set here, do not add one */
-    margin-left: 12px;
-    float: left;
-  }
-
-  &24 {
-    width: 1236px;
-    float: left;
-    color: amarillo;
-  }
 }
 
 .offset {
