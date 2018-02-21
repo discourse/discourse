@@ -1014,7 +1014,6 @@ zh_CN:
       default_header_text: 选择...
       no_content: 无符合的结果
       filter_placeholder: 搜索……
-      create: "创建{{content}}"
     emoji_picker:
       filter_placeholder: 查找表情符号
       people: 人物
@@ -2297,11 +2296,13 @@ zh_CN:
         moderation_history: "管理日志"
         agree: "确认标记"
         agree_title: "确认这个标记有效且正确"
-        agree_flag_hide_post: "确认并隐藏帖子"
         agree_flag_hide_post_title: "隐藏帖子并自动发送私信给作者使其修改"
         agree_flag_restore_post: "确认并恢复帖子"
         agree_flag_restore_post_title: "恢复帖子为所有用户可见。"
-        agree_flag: "确认并保持帖子"
+        agree_flag_suspend: "暂停用户"
+        agree_flag_suspend_title: "同意标记并暂停用户。"
+        agree_flag_silence: "禁言用户"
+        agree_flag_silence_title: "同意标记并禁言用户。"
         agree_flag_title: "确认标记并保持帖子不变。"
         delete: "删除"
         delete_title: "删除标记指向的帖子。"

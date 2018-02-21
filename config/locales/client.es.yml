@@ -1059,7 +1059,6 @@ es:
       default_header_text: Seleccionar...
       no_content: Ninguna coincidencia encontrada
       filter_placeholder: Buscar...
-      create: "Crear {{content}}"
     emoji_picker:
       filter_placeholder: Buscar emoji
       people: People
@@ -2445,11 +2444,9 @@ es:
         moderation_history: "Histórico de moderación"
         agree: "De acuerdo"
         agree_title: "Confirmar esta indicación como válido y correcto."
-        agree_flag_hide_post: "Coincidir y Ocultar Mensaje"
         agree_flag_hide_post_title: "Ocultar este post y enviar automáticamente un mensaje al usuario para que lo edite de forma urgente"
         agree_flag_restore_post: "Coincidir y Restaurar Mensaje"
         agree_flag_restore_post_title: "Restaurar el post para que todos los usuarios puedan verlo."
-        agree_flag: "Estar de acuerdo y mantener post"
         agree_flag_title: "Estar de acuerdo con el reporte y mantener la publicación intacta."
         ignore_flag: "Ignorar"
         ignore_flag_title: "Quitar este reporte; no requiere tomar medidas en este momento."

@@ -45,12 +45,16 @@ vi:
           other: "< %{count}s"
         x_seconds:
           other: "%{count}s"
+        less_than_x_minutes:
+          other: "< %{count} phút"
         x_minutes:
           other: "%{count}m"
         about_x_hours:
           other: "%{count}h"
         x_days:
           other: "%{count}d"
+        x_months:
+          other: "%{count} tháng"
         about_x_years:
           other: "%{count}y"
         over_x_years:
@@ -83,6 +87,7 @@ vi:
           other: "còn %{count} năm"
       previous_month: 'Tháng trước'
       next_month: 'Tháng sau'
+      placeholder: ngày
     share:
       topic: 'chia sẻ chủ đề này'
       post: 'đăng #%{postNumber}'
@@ -97,6 +102,7 @@ vi:
       split_topic: "tách chủ đề này lúc %{when}"
       invited_user: "đã mời %{who} lúc %{when}"
       invited_group: "đã mời %{who} lúc %{when}"
+      user_left: "%{who}tự xóa mình khỏi tin nhắn này %{when}"
       removed_user: "xoá %{who} lúc %{when}"
       removed_group: "xoá %{who} lúc %{when}"
       autoclosed:
@@ -234,6 +240,7 @@ vi:
     uploading: "Đang tải lên..."
     uploading_filename: "Đang tải lên {{filename}}..."
     uploaded: "Đã tải lên!"
+    pasting: "Đang gõ"
     enable: "Kích hoạt"
     disable: "Vô hiệu hóa"
     undo: "Hoàn tác"
@@ -326,6 +333,8 @@ vi:
         add_members: "Thêm thành viên"
         delete_member_confirm: "Xoá  '%{username}' khỏi nhóm '%{group}' ?"
       name_placeholder: "Tên nhóm, không có khoảng trắng, tương tự như luật đặt tên người dùng"
+      public_admission: "Cho phép Thành viên tham gia nhóm một cách tự do (nhóm hiển thị công khai)"
+      public_exit: "Cho phép Thành viên thoát khỏi nhóm một cách tự do"
       empty:
         posts: "Không có bài viết nào của các thành viên trong nhóm này"
         members: "Không có thành viên nào trong nhóm này"
@@ -342,8 +351,11 @@ vi:
       closed_group: Nhóm kín
       is_group_user: "Bạn là một thành viên của nhóm này"
       allow_membership_requests: "Cho phép người dùng gửi đơn xin gia nhập nhóm đến người quản lí nhóm."
+      membership_request_template: "đã tùy chỉnh để hiển thị cho người dùng khi gửi yêu cầu thành viên"
       membership_request:
         submit: "Gửi yêu c"
+        title: "Yêu cầu tham gia @%{group_name}"
+        reason: "Cho phép chủ sở hữu nhóm biết lý do bạn thuộc nhóm này"
       membership: "Thành viên"
       name: "Tên"
       user_count: "Số lượng thành viên"
@@ -413,6 +425,7 @@ vi:
       '14': "Đang chờ xử lý"
     categories:
       all: "tất cả chuyên mục"
+      all_subcategories: "tất cả trong %{categoryName}"
       no_subcategory: "không có gì"
       category: "Chuyên mục"
       category_list: "Hiễn thị danh sách chuyên mục"
@@ -482,6 +495,7 @@ vi:
         disable: "Khóa Notification"
         enable: "Cho phép Notification"
         each_browser_note: "Lưu ý: Bạn phải thay đổi trong cấu hình mỗi trình duyệt bạn sử dụng."
+      dismiss: 'Hủy bỏ'
       dismiss_notifications: "Bỏ qua tất cả"
       dismiss_notifications_tooltip: "Đánh dấu đã đọc cho tất cả các thông báo chưa đọc"
       first_notification: "Thông báo đầu tiên của bạn! Chọn để bắt đầu"
@@ -700,6 +714,7 @@ vi:
         title: "Lời mời"
         user: "User được mời"
         sent: "Đã gửi"
+        none: "Không tìm thấy lời mời nào."
         truncated:
           other: "Hiện {{count}} thư mời đầu tiên"
         redeemed: "Lời mời bù lại"
@@ -716,8 +731,10 @@ vi:
         rescinded: "Lời mời bị xóa"
         rescind_all: "Xóa tất cả lời m"
         rescinded_all: "Tất cả lời mời đã được xóa!"
+        rescind_all_confirm: "Bạn có muốn xóa bỏ tất cả các lời mời?"
         reinvite: "Mời lại"
         reinvite_all: "Gửi lại tất cả lời mời"
+        reinvite_all_confirm: "Bạn có chắc chắn gửi lại tất cả các lời mời?"
         reinvited: "Gửi lại lời mời"
         reinvited_all: "Tất cả lời mời đã được gửi lại"
         time_read: "Đọc thời gian"
@@ -743,12 +760,19 @@ vi:
         title: "Tóm tắt"
         stats: "Thống kê"
         time_read: "thời gian đọc"
+        recent_time_read: "đã đọc gần đây"
         topic_count:
           other: "Chủ đề đã được tạo"
         post_count:
           other: "Bài viết đã được tạo"
+        likes_given:
+          other: "nhận"
+        likes_received:
+          other: "Đã nhận"
         days_visited:
           other: "Ngày đã ghé thăm"
+        topics_entered:
+          other: "chủ đề đã xem"
         posts_read:
           other: "Bài viết đã đọc"
         bookmark_count:

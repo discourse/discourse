@@ -437,6 +437,8 @@ groups:
   enable_group_directory:
     client: true
     default: true
+  group_in_subject:
+    default: false
 
 posting:
   min_post_length:
@@ -500,6 +502,7 @@ posting:
     client: true
     default: 2
     min: 1
+  max_emojis_in_title: 1
   allow_uncategorized_topics:
     client: true
     default: true
@@ -715,7 +718,7 @@ email:
   pop3_polling_username: ''
   pop3_polling_password: ''
   log_mail_processing_failures: false
-  incoming_email_prefer_html: false
+  incoming_email_prefer_html: true
   email_in:
     default: false
     client: true
@@ -792,6 +795,11 @@ files:
   authorized_extensions:
     client: true
     default: 'jpg|jpeg|png|gif'
+    refresh: true
+    type: list
+  authorized_extensions_for_staff:
+    client: true
+    default: ''
     refresh: true
     type: list
   crawl_images:
@@ -903,6 +911,9 @@ trust:
   min_trust_to_post_links:
     default: 0
     enum: 'TrustLevelSetting'
+  min_trust_to_post_images:
+    default: 0
+    enum: 'TrustLevelSetting'
   allow_flagging_staff: true
   tl1_requires_topics_entered: 5
   tl1_requires_read_posts:
@@ -969,7 +980,7 @@ security:
   allow_moderators_to_create_categories: false
   non_crawler_user_agents:
     hidden: true
-    default: 'trident|webkit|gecko|chrome|safari|msie|opera'
+    default: 'trident|webkit|gecko|chrome|safari|msie|opera|goanna'
     type: list
   crawler_user_agents:
     hidden: true

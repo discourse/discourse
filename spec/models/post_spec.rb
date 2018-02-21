@@ -169,6 +169,7 @@ describe Post do
     let(:post_two_images) { post_with_body("<img src='http://discourse.org/logo.png'> <img src='http://bbc.co.uk/sherlock.jpg'>", newuser) }
     let(:post_with_avatars) { post_with_body('<img alt="smiley" title=":smiley:" src="/assets/emoji/smiley.png" class="avatar"> <img alt="wink" title=":wink:" src="/assets/emoji/wink.png" class="avatar">', newuser) }
     let(:post_with_favicon) { post_with_body('<img src="/assets/favicons/wikipedia.png" class="favicon">', newuser) }
+    let(:post_image_within_quote) { post_with_body('[quote]<img src="coolimage.png">[/quote]', newuser) }
     let(:post_with_thumbnail) { post_with_body('<img src="/assets/emoji/smiley.png" class="thumbnail">', newuser) }
     let(:post_with_two_classy_images) { post_with_body("<img src='http://discourse.org/logo.png' class='classy'> <img src='http://bbc.co.uk/sherlock.jpg' class='classy'>", newuser) }
 
@@ -186,6 +187,28 @@ describe Post do
 
     it "doesn't count avatars as images" do
       expect(post_with_avatars.image_count).to eq(0)
+    end
+
+    it "allows images by default" do
+      expect(post_one_image).to be_valid
+    end
+
+    it "doesn't allow more than `min_trust_to_post_images`" do
+      SiteSetting.min_trust_to_post_images = 4
+      post_one_image.user.trust_level = 3
+      expect(post_one_image).not_to be_valid
+    end
+
+    it "doesn't allow more than `min_trust_to_post_images`" do
+      SiteSetting.min_trust_to_post_images = 4
+      post_one_image.user.trust_level = 3
+      expect(post_image_within_quote).not_to be_valid
+    end
+
+    it "doesn't allow more than `min_trust_to_post_images`" do
+      SiteSetting.min_trust_to_post_images = 4
+      post_one_image.user.trust_level = 4
+      expect(post_one_image).to be_valid
     end
 
     it "doesn't count favicons as images" do

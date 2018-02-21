@@ -79,7 +79,7 @@
 }
 
 .select2-container-active {
-  box-shadow:  $tertiary 0 0 6px 0px;
+  box-shadow: shadow("focus");
 }
 
 .select2-results .select2-no-results, .select2-results .select2-searching, .select2-results .select2-selection-limit {

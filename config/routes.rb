@@ -129,6 +129,7 @@ Discourse::Application.routes.draw do
       get "tl3_requirements"
       put "anonymize"
       post "reset_bounce_score"
+      put "disable_second_factor"
     end
     get "users/:id.json" => 'users#show', defaults: { format: 'json' }
     get 'users/:id/:username' => 'users#show', constraints: { username: RouteFormat.username }
@@ -302,6 +303,7 @@ Discourse::Application.routes.draw do
   get "session/current" => "session#current"
   get "session/csrf" => "session#csrf"
   get "session/email-login/:token" => "session#email_login"
+  post "session/email-login/:token" => "session#email_login"
   get "composer_messages" => "composer_messages#index"
   post "composer/parse_html" => "composer#parse_html"
 
@@ -329,12 +331,16 @@ Discourse::Application.routes.draw do
       end
     end
 
+    post "#{root_path}/second_factors" => "users#create_second_factor"
+    put "#{root_path}/second_factor" => "users#update_second_factor"
+
     put "#{root_path}/update-activation-email" => "users#update_activation_email"
     get "#{root_path}/hp" => "users#get_honeypot_value"
     post "#{root_path}/email-login" => "users#email_login"
     get "#{root_path}/admin-login" => "users#admin_login"
     put "#{root_path}/admin-login" => "users#admin_login"
     get "#{root_path}/admin-login/:token" => "users#admin_login"
+    put "#{root_path}/admin-login/:token" => "users#admin_login"
     post "#{root_path}/toggle-anon" => "users#toggle_anon"
     post "#{root_path}/read-faq" => "users#read_faq"
     get "#{root_path}/search/users" => "users#search_users"
@@ -349,6 +355,7 @@ Discourse::Application.routes.draw do
     get "#{root_path}/activate-account/:token" => "users#activate_account"
     put({ "#{root_path}/activate-account/:token" => "users#perform_account_activation" }.merge(index == 1 ? { as: 'perform_activate_account' } : {}))
     get "#{root_path}/authorize-email/:token" => "users_email#confirm"
+    put "#{root_path}/authorize-email/:token" => "users_email#confirm"
     get({
       "#{root_path}/confirm-admin/:token" => "users#confirm_admin",
       constraints: { token: /[0-9a-f]+/ }
@@ -381,6 +388,7 @@ Discourse::Application.routes.draw do
     put "#{root_path}/:username/preferences/badge_title" => "users#badge_title", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/preferences/username" => "users#preferences", constraints: { username: RouteFormat.username }
     put "#{root_path}/:username/preferences/username" => "users#username", constraints: { username: RouteFormat.username }
+    get "#{root_path}/:username/preferences/second-factor" => "users#preferences", constraints: { username: RouteFormat.username }
     delete "#{root_path}/:username/preferences/user_image" => "users#destroy_user_image", constraints: { username: RouteFormat.username }
     put "#{root_path}/:username/preferences/avatar/pick" => "users#pick_avatar", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/preferences/card-badge" => "users#card_badge", constraints: { username: RouteFormat.username }
@@ -697,7 +705,15 @@ Discourse::Application.routes.draw do
   post "draft" => "draft#update"
   delete "draft" => "draft#destroy"
 
-  get "service-worker" => "static#service_worker_asset", format: :js
+  if service_worker_asset = Rails.application.assets_manifest.assets['service-worker.js']
+    # https://developers.google.com/web/fundamentals/codelabs/debugging-service-workers/
+    # Normally the browser will wait until a user closes all tabs that contain the
+    # current site before updating to a new Service Worker.
+    # Support the old Service Worker path to avoid routing error filling up the
+    # logs.
+    get "/service-worker.js" => redirect(service_worker_asset), format: :js
+    get service_worker_asset => "static#service_worker_asset", format: :js
+  end
 
   get "cdn_asset/:site/*path" => "static#cdn_asset", format: false
   get "brotli_asset/*path" => "static#brotli_asset", format: false

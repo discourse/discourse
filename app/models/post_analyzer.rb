@@ -31,7 +31,7 @@ class PostAnalyzer
       cooked = PrettyText.cook(raw, opts)
     end
 
-    result = Oneboxer.apply(cooked, topic_id: @topic_id) do |url, _|
+    result = Oneboxer.apply(cooked) do |url|
       @found_oneboxes = true
       Oneboxer.invalidate(url) if opts[:invalidate_oneboxes]
       Oneboxer.cached_onebox(url)
@@ -130,7 +130,7 @@ class PostAnalyzer
     def cooked_stripped
       @cooked_stripped ||= begin
         doc = Nokogiri::HTML.fragment(cook(@raw, topic_id: @topic_id))
-        doc.css("pre, code, aside.quote, .onebox, .elided").remove
+        doc.css("pre, code, aside.quote > .title, aside.quote .mention, .onebox, .elided").remove
         doc
       end
     end

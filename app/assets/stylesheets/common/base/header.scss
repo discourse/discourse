@@ -4,7 +4,7 @@
   top: 0;
   z-index: z("header");
   background-color: $header_background;
-  box-shadow: 0 2px 4px -1px rgba(0,0,0, .25);
+  box-shadow: shadow("header");
 
   .docked & {
     position: fixed;
@@ -33,11 +33,15 @@
   .panel {
     float: right;
     position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .header-buttons {
+    margin-top: .2em;
   }
 
   .login-button, button.sign-up-button {
-    float: left;
-    margin-top: 7px;
     padding: 6px 10px;
     .fa { margin-right: 3px; }
   }
@@ -54,6 +58,7 @@
 .header-dropdown-toggle, .drop-down, .panel-body {
   .flagged-posts, .queued-posts {
     background: $danger;
+    min-width: 6px;
   }
 }
 
@@ -62,14 +67,17 @@
   margin: 0 0 0 5px;
   list-style: none;
 
-
   > li {
     float: left;
   }
   .icon {
     position: relative;
-    display: block;
-    padding: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.2857em;
+    height: 2.2857em;
+    padding: .2143em;
     color: dark-light-choose(scale-color($header_primary, $lightness: 50%), $header_primary);
     text-decoration: none;
     cursor: pointer;
@@ -77,11 +85,13 @@
     border-left: 1px solid transparent;
     border-right: 1px solid transparent;
     transition: all linear .15s;
-
-
+    img.avatar {
+      width: 2.2857em;
+      height: 2.2857em;
+    }
     &:hover {
       color: $primary;
-      background-color:  $primary-low;
+      background-color: $primary-low;
       border-top: 1px solid transparent;
       border-left: 1px solid transparent;
       border-right: 1px solid transparent;
@@ -119,8 +129,7 @@
   }
 
   .d-icon {
-    width: 32px;
-    height: 32px;
+    width: 100%;
     font-size: $font-up-4;
     line-height: $line-height-large;
     display: inline-block;

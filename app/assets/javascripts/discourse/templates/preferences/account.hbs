@@ -66,6 +66,25 @@
     {{passwordProgress}}
   </div>
 </div>
+<div class="control-group pref-second-factor">
+  <label class="control-label">{{i18n 'user.second_factor.title'}}</label>
+
+  <div class="controls">
+    {{#link-to "preferences.second-factor" class="btn"}}
+      {{#if model.second_factor_enabled}}
+        {{d-icon "unlock-alt"}}
+        {{i18n 'user.second_factor.disable'}}
+      {{else}}
+        {{d-icon "lock"}}
+        {{i18n 'user.second_factor.enable'}}
+      {{/if}}
+    {{/link-to}}
+  </div>
+
+  <div class="instructions">
+    <a href {{action "showTwoFactorModal"}}>{{i18n 'user.second_factor.info_prompt'}}</a>
+  </div>
+</div>
 {{/if}}
 
 <div class="control-group pref-avatar">

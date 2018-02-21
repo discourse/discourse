@@ -1057,7 +1057,6 @@ fr:
       default_header_text: Sélectionner…
       no_content: Aucune correspondance trouvée
       filter_placeholder: Rechercher...
-      create: "Créer {{content}}"
     emoji_picker:
       filter_placeholder: Chercher un emoji
       people: Personnes
@@ -2427,11 +2426,9 @@ fr:
         moderation_history: "Historique de la modération"
         agree: "Accepter"
         agree_title: "Confirmer que le signalement est valide et correcte"
-        agree_flag_hide_post: "Accepter et cacher le message"
         agree_flag_hide_post_title: "Cacher le message et envoyer automatiquement un message à l'utilisateur l'incitant à le modifier."
         agree_flag_restore_post: "Accepter et rétablir le message"
         agree_flag_restore_post_title: "Rétablir le message afin que tous les utilisateurs puissent le voir."
-        agree_flag: "Accepter et conserver le message"
         agree_flag_title: "Accepter le signalement et conserver le message tel quel."
         delete: "Supprimer"
         delete_title: "Supprimer le message signalé."

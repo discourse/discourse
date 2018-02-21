@@ -9,10 +9,10 @@ end
 #
 #  id         :integer          not null, primary key
 #  user_id    :integer          not null
-#  uid        :string(255)      not null
-#  provider   :string(255)      not null
-#  email      :string(255)
-#  name       :string(255)
+#  uid        :string           not null
+#  provider   :string           not null
+#  email      :string
+#  name       :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #

@@ -238,10 +238,12 @@ module Email
         text_content_type = @mail.text_part&.content_type
       elsif @mail.content_type.to_s["text/html"]
         html = fix_charset(@mail)
-      else
+      elsif @mail.content_type.blank? || @mail.content_type["text/plain"]
         text = fix_charset(@mail)
         text_content_type = @mail.content_type
       end
+
+      return unless text.present? || html.present?
 
       if text.present?
         text = trim_discourse_markers(text)
@@ -690,11 +692,17 @@ module Email
       raise InvalidPostAction.new(e)
     end
 
+    def is_whitelisted_attachment?(attachment)
+      attachment.content_type !~ SiteSetting.attachment_content_type_blacklist_regex &&
+      attachment.filename !~ SiteSetting.attachment_filename_blacklist_regex
+    end
+
     def attachments
       # strip blacklisted attachments (mostly signatures)
-      @attachments ||= @mail.attachments.select do |attachment|
-        attachment.content_type !~ SiteSetting.attachment_content_type_blacklist_regex &&
-        attachment.filename !~ SiteSetting.attachment_filename_blacklist_regex
+      @attachments ||= begin
+        attachments =  @mail.attachments.select { |attachment| is_whitelisted_attachment?(attachment) }
+        attachments << @mail if @mail.attachment? && is_whitelisted_attachment?(@mail)
+        attachments
       end
     end
 

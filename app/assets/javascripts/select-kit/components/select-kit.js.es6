@@ -37,7 +37,6 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   tabindex: 0,
   none: null,
   highlightedValue: null,
-  noContentLabel: "select_kit.no_content",
   valueAttribute: "id",
   nameProperty: "name",
   autoFilterable: false,
@@ -70,6 +69,8 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   allowContentReplacement: false,
   collectionHeader: null,
   allowAutoSelectFirst: true,
+  maximumSelectionSize: null,
+  maxContentRow: null,
 
   init() {
     this._super();
@@ -155,8 +156,10 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   },
 
   @computed("filter", "filteredComputedContent.[]")
-  shouldDisplayNoContentRow(filter, filteredComputedContent) {
-    return filter.length > 0 && filteredComputedContent.length === 0;
+  noContentRow(filter, filteredComputedContent) {
+    if (filter.length > 0 && filteredComputedContent.length === 0) {
+      return I18n.t("select_kit.no_content");
+    }
   },
 
   @computed("filter", "filterable", "autoFilterable", "renderedFilterOnce")

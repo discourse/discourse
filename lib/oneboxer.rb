@@ -28,13 +28,13 @@ module Oneboxer
   def self.preview(url, options = nil)
     options ||= {}
     invalidate(url) if options[:invalidate_oneboxes]
-    onebox_raw(url)[:preview]
+    onebox_raw(url, options)[:preview]
   end
 
   def self.onebox(url, options = nil)
     options ||= {}
     invalidate(url) if options[:invalidate_oneboxes]
-    onebox_raw(url)[:onebox]
+    onebox_raw(url, options)[:onebox]
   end
 
   def self.cached_onebox(url)
@@ -76,41 +76,22 @@ module Oneboxer
     doc
   end
 
-  def self.append_source_topic_id(url, topic_id)
-    # hack urls to create proper expansions
-    if url =~ Regexp.new("^#{Discourse.base_url.gsub(".", "\\.")}.*$", true)
-      uri = URI.parse(url) rescue nil
-      if uri && uri.path
-        route = Rails.application.routes.recognize_path(uri.path) rescue nil
-        if route && route[:controller] == 'topics'
-          url += (url =~ /\?/ ? "&" : "?") + "source_topic_id=#{topic_id}"
-        end
-      end
-    end
-    url
-  end
-
   def self.apply(string_or_doc, args = nil)
     doc = string_or_doc
     doc = Nokogiri::HTML::fragment(doc) if doc.is_a?(String)
     changed = false
 
     each_onebox_link(doc) do |url, element|
-      if args && args[:topic_id]
-        url = append_source_topic_id(url, args[:topic_id])
-      end
-      onebox, _preview = yield(url, element)
+      onebox, _ = yield(url, element)
       if onebox
         parsed_onebox = Nokogiri::HTML::fragment(onebox)
         next unless parsed_onebox.children.count > 0
 
         # special logic to strip empty p elements
-        if  element.parent &&
-            element.parent.node_name &&
-            element.parent.node_name.downcase == "p" &&
-            element.parent.children.count == 1
+        if element&.parent&.node_name&.downcase == "p" && element&.parent&.children&.count == 1
           element = element.parent
         end
+
         changed = true
         element.swap parsed_onebox.to_html
       end
@@ -149,7 +130,116 @@ module Oneboxer
       "onebox__#{url}"
     end
 
-    def self.onebox_raw(url)
+    def self.onebox_raw(url, opts = {})
+      local_onebox(url, opts) || external_onebox(url)
+    rescue => e
+      # no point warning here, just cause we have an issue oneboxing a url
+      # we can later hunt for failed oneboxes by searching logs if needed
+      Rails.logger.info("Failed to onebox #{url} #{e} #{e.backtrace}")
+      # return a blank hash, so rest of the code works
+      blank_onebox
+    end
+
+    def self.local_onebox(url, opts = {})
+      return unless route = Discourse.route_for(url)
+
+      html =
+        case route[:controller]
+        when "uploads" then local_upload_html(url)
+        when "topics"  then local_topic_html(url, route, opts)
+        when "users"   then local_user_html(url, route)
+        end
+
+      html = html.presence || "<a href='#{url}'>#{url}</a>"
+      { onebox: html, preview: html }
+    end
+
+    def self.local_upload_html(url)
+      case File.extname(URI(url).path || "")
+      when /^\.(mov|mp4|webm|ogv)$/i
+        "<video width='100%' height='100%' controls><source src='#{url}'><a href='#{url}'>#{url}</a></video>"
+      when /^\.(mp3|ogg|wav|m4a)$/i
+        "<audio controls><source src='#{url}'><a href='#{url}'>#{url}</a></audio>"
+      end
+    end
+
+    def self.local_topic_html(url, route, opts)
+      return unless current_user = User.find_by(id: opts[:user_id])
+
+      if current_category = Category.find_by(id: opts[:category_id])
+        return unless Guardian.new(current_user).can_see_category?(current_category)
+      end
+
+      if current_topic = Topic.find_by(id: opts[:topic_id])
+        return unless Guardian.new(current_user).can_see_topic?(current_topic)
+      end
+
+      topic = Topic.find_by(id: route[:topic_id])
+
+      return unless topic
+      return if topic.private_message?
+
+      if current_category&.id != topic.category_id
+        return unless Guardian.new.can_see_topic?(topic)
+      end
+
+      post_number = route[:post_number].to_i
+
+      post = post_number > 1 ?
+        topic.posts.where(post_number: post_number).first :
+        topic.ordered_posts.first
+
+      return if !post || post.hidden || post.post_type != Post.types[:regular]
+
+      if post_number > 1 && current_topic&.id == topic.id
+        excerpt = post.excerpt(SiteSetting.post_onebox_maxlength)
+        excerpt.gsub!(/[\r\n]+/, " ")
+        excerpt.gsub!("[/quote]", "[quote]") # don't break my quote
+
+        quote = "[quote=\"#{post.user.username}, topic:#{topic.id}, post:#{post.post_number}\"]\n#{excerpt}\n[/quote]"
+
+        PrettyText.cook(quote)
+      else
+        args = {
+          topic_id: topic.id,
+          avatar: PrettyText.avatar_img(post.user.avatar_template, "tiny"),
+          original_url: url,
+          title: PrettyText.unescape_emoji(CGI::escapeHTML(topic.title)),
+          category_html: CategoryBadge.html_for(topic.category),
+          quote: post.excerpt(SiteSetting.post_onebox_maxlength),
+        }
+
+        template = File.read("#{Rails.root}/lib/onebox/templates/discourse_topic_onebox.hbs")
+        Mustache.render(template, args)
+      end
+    end
+
+    def self.local_user_html(url, route)
+      username = route[:username] || ""
+
+      if user = User.find_by(username_lower: username.downcase)
+        args = {
+          user_id: user.id,
+          username: user.username,
+          avatar: PrettyText.avatar_img(user.avatar_template, "extra_large"),
+          name: user.name,
+          bio: user.user_profile.bio_excerpt(230),
+          location: user.user_profile.location,
+          joined: I18n.t('joined'),
+          created_at: user.created_at.strftime(I18n.t('datetime_formats.formats.date_only')),
+          website: user.user_profile.website,
+          website_name: UserSerializer.new(user).website_name,
+          original_url: url
+        }
+
+        template = File.read("#{Rails.root}/lib/onebox/templates/discourse_user_onebox.hbs")
+        Mustache.render(template, args)
+      else
+        nil
+      end
+    end
+
+    def self.external_onebox(url)
       Rails.cache.fetch(onebox_cache_key(url), expires_in: 1.day) do
         fd = FinalDestination.new(url, ignore_redirects: ignore_redirects, force_get_hosts: force_get_hosts)
         uri = fd.resolve
@@ -169,14 +259,8 @@ module Oneboxer
 
         r = Onebox.preview(uri.to_s, options)
 
-        { onebox: r.to_s, preview: r.try(:placeholder_html).to_s }
+        { onebox: r.to_s, preview: r&.placeholder_html.to_s }
       end
-    rescue => e
-      # no point warning here, just cause we have an issue oneboxing a url
-      # we can later hunt for failed oneboxes by searching logs if needed
-      Rails.logger.info("Failed to onebox #{url} #{e} #{e.backtrace}")
-      # return a blank hash, so rest of the code works
-      blank_onebox
     end
 
 end

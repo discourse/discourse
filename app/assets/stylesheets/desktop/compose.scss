@@ -10,10 +10,14 @@
       align-items: center;
     }
   }
+
+  #private-message-users {
+    width: 404px;
+  }
 }
 
 .category-input {
-  margin-left: 10px;  
+  margin-left: 10px;
 }
 
 .edit-title {
@@ -27,7 +31,7 @@
       }
     }
   }
-  
+
   .with-tags {
     .d-editor-preview-wrapper {
       margin-top: -77px;
@@ -75,7 +79,7 @@
   overflow-y: auto;
   z-index: z("composer","popover");
   padding: 10px 10px 35px 10px;
-  box-shadow: 3px 3px 3px rgba(0,0,0, 0.34);
+  box-shadow: shadow("card");
   background: $highlight-medium;
 
   &.urgent {

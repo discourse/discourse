@@ -474,6 +474,6 @@ end
 #
 # Indexes
 #
-#  index_forum_thread_users_on_forum_thread_id_and_user_id  (topic_id,user_id) UNIQUE
-#  index_topic_users_on_user_id_and_topic_id                (user_id,topic_id) UNIQUE
+#  index_topic_users_on_topic_id_and_user_id  (topic_id,user_id) UNIQUE
+#  index_topic_users_on_user_id_and_topic_id  (user_id,topic_id) UNIQUE
 #

@@ -32,6 +32,9 @@
   &.timeline-fullscreen.show {
     max-height: 700px;
     transition: max-height 0.4s ease-out;
+    @media screen and (max-height: 425px) {
+      max-height: 75vh;
+    }      
     .topic-timeline {
       .timeline-footer-controls {
         display: inherit;
@@ -49,9 +52,12 @@
     left: 0;
     right: 0;
     border-top: 1px solid dark-light-choose($primary-low, $secondary-low);
-    box-shadow: 0px -2px 4px -1px rgba(0,0,0,.25);
+    box-shadow: shadow("composer");
     padding-top: 20px;
     z-index: z("fullscreen");
+    @media screen and (max-height: 425px) {
+      padding-top: 10px;
+    }
     .back-button {
       display: none;
     }
@@ -77,6 +83,9 @@
         display: block;
         display: -webkit-box;
         -webkit-line-clamp: 8;
+        @media screen and (max-height: 425px) {
+          -webkit-line-clamp: 5;          
+        }
         -webkit-box-orient: vertical;
       }
       .username {

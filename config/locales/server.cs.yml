@@ -103,6 +103,7 @@ cs:
     user_exists: "Netřeba posílat pozvánku na <b>%{email}</b>. Tento email <a href='/u/%{username}/summary'>je veden u tohoto účtu!</a>"
   bulk_invite:
     file_should_be_csv: "Nahraný soubor by měl být ve formátu csv."
+    error: "Nastala chyba při nahrávání souboru. Prosím opakujte akci později."
   backup:
     operation_already_running: "Právě probíhá operace %{operation}. V tuto chvíli nelze zahájit novou operaci %{operation}."
     backup_file_should_be_tar_gz: "Záloha by měla být archiv s příponou .tar.gz."
@@ -280,7 +281,7 @@ cs:
     image_placeholder:
       broken: "Tento obrázek je rozbitý"
   rate_limiter:
-    too_many_requests: "Děláte tuto akci příliš často. Prosím počkejte %{time_left} a zkuste to znovu."
+    slow_down: "Tuto akci provádíte příliš často, zkuste to prosím později."
     by_type:
       pms_per_day: "Odeslal jsi maximum povolených zpráv za den. Další můžeš odeslat za {time_left}."
     hours:
@@ -446,6 +447,7 @@ cs:
       long_form: 'hlasoval pro tento příspěvek'
   user_activity:
     no_bookmarks:
+      self: "Nemáte žádné příspěvky v záložkách. Přidání do záložek vám umožní téma v budoucnu snadněji nalézt."
       others: "Žádné záložky."
     no_likes_given:
       self: "Zatím se ti nelíbil žádný příspěvek."
@@ -686,13 +688,18 @@ cs:
     types:
       category: 'Kategorie'
       user: 'Uživatelé'
-  original_poster: "Původní zasilatel"
+  original_poster: "Autor tématu"
   most_posts: "Více příspěvků"
-  most_recent_poster: "Poslední zasilatel"
-  frequent_poster: "Častý zasilatel"
+  most_recent_poster: "Poslední přispěvatel"
+  frequent_poster: "Častý přispěvatel"
   redirected_to_top_reasons:
     new_user: "Vítejte v naší komunitě! Tohle jsou poslední populární témata."
     not_seen_in_a_month: "Vítejte zprátky! Chvíli jsme se neviděli. Tohle jsou nejpopulárnější témata od vaší poslední návštěvy."
+  move_posts:
+    new_topic_moderator_post:
+      one: "Příspěvek byl oddělen do nového tématu: %{topic_link}"
+      few: "%{count}příspěvky byly odděleny do nového tématu: %{topic_link}"
+      other: "%{count}příspěvky byly odděleny do nového tématu: %{topic_link}"
   topic_statuses:
     archived_enabled: "Toto téma je archivováno. Je zmraženo a již nemůže být nijak změněno."
     archived_disabled: "Toto téma je vráceno z archivu. Již není zmraženo a může být měněno."
@@ -788,7 +795,7 @@ cs:
     post_not_found: "Can't find a post with id %{post_id}"
     notification_already_read: "The notification this email is about has already been read"
     topic_nil: "post.topic is nil"
-    post_deleted: "post was deleted by the author"
+    post_deleted: "příspěvek byl odstraněn autorem"
     user_suspended: "user was suspended"
     already_read: "user has already read this post"
     message_blank: "message is blank"

@@ -18,6 +18,7 @@ class User < ActiveRecord::Base
   include Searchable
   include Roleable
   include HasCustomFields
+  include SecondFactorManager
 
   # TODO: Remove this after 7th Jan 2018
   self.ignored_columns = %w{email}
@@ -60,6 +61,7 @@ class User < ActiveRecord::Base
   has_one :github_user_info, dependent: :destroy
   has_one :google_user_info, dependent: :destroy
   has_one :oauth2_user_info, dependent: :destroy
+  has_one :user_second_factor, dependent: :destroy
   has_one :user_stat, dependent: :destroy
   has_one :user_profile, dependent: :destroy, inverse_of: :user
   has_one :single_sign_on_record, dependent: :destroy
@@ -743,7 +745,8 @@ class User < ActiveRecord::Base
 
   def activate
     if email_token = self.email_tokens.active.where(email: self.email).first
-      EmailToken.confirm(email_token.token)
+      user = EmailToken.confirm(email_token.token)
+      self.update!(active: true) if user.nil?
     else
       self.update!(active: true)
     end
@@ -1174,7 +1177,7 @@ end
 #  username                  :string(60)       not null
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
-#  name                      :string(255)
+#  name                      :string
 #  seen_notification_id      :integer          default(0), not null
 #  last_posted_at            :datetime
 #  password_hash             :string(64)
@@ -1196,10 +1199,10 @@ end
 #  flag_level                :integer          default(0), not null
 #  ip_address                :inet
 #  moderator                 :boolean          default(FALSE)
-#  title                     :string(255)
+#  title                     :string
 #  uploaded_avatar_id        :integer
-#  primary_group_id          :integer
 #  locale                    :string(10)
+#  primary_group_id          :integer
 #  registration_ip_address   :inet
 #  staged                    :boolean          default(FALSE), not null
 #  first_seen_at             :datetime

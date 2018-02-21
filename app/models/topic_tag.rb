@@ -3,7 +3,7 @@ class TopicTag < ActiveRecord::Base
   belongs_to :tag
 
   after_create do
-    if topic.archetype != Archetype.private_message
+    if topic && topic.archetype != Archetype.private_message
       tag.increment!(:topic_count)
 
       if topic.category_id
@@ -17,7 +17,7 @@ class TopicTag < ActiveRecord::Base
   end
 
   after_destroy do
-    if topic.archetype != Archetype.private_message
+    if topic && topic.archetype != Archetype.private_message
       if topic.category_id && stat = CategoryTagStat.where(tag_id: tag_id, category: topic.category_id).first
         stat.topic_count == 1 ? stat.destroy : stat.decrement!(:topic_count)
       end
@@ -34,8 +34,8 @@ end
 #  id         :integer          not null, primary key
 #  topic_id   :integer          not null
 #  tag_id     :integer          not null
-#  created_at :datetime
-#  updated_at :datetime
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
 #
 # Indexes
 #

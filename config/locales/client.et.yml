@@ -1021,7 +1021,6 @@ et:
       default_header_text: Vali...
       no_content: Midagi ei leitud
       filter_placeholder: Otsi...
-      create: "Loo {{content}}"
     emoji_picker:
       filter_placeholder: Otsi emojit
       people: Inimesed

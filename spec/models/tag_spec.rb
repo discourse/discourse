@@ -15,6 +15,13 @@ describe Tag do
     SiteSetting.min_trust_level_to_tag_topics = 0
   end
 
+  it "can delete tags on deleted topics" do
+    tag = Fabricate(:tag)
+    topic = Fabricate(:topic, tags: [tag])
+    topic.trash!
+    expect { tag.destroy }.to change { Tag.count }.by(-1)
+  end
+
   describe '#top_tags' do
     it "returns nothing if nothing has been tagged" do
       make_some_tags(tag_a_topic: false)

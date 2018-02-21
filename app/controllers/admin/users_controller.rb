@@ -25,7 +25,8 @@ class Admin::UsersController < Admin::AdminController
                                     :generate_api_key,
                                     :revoke_api_key,
                                     :anonymize,
-                                    :reset_bounce_score]
+                                    :reset_bounce_score,
+                                    :disable_second_factor]
 
   def index
     users = ::AdminUserIndexQuery.new(params).find_users
@@ -289,7 +290,8 @@ class Admin::UsersController < Admin::AdminController
       silenced_till: params[:silenced_till],
       reason: params[:reason],
       message_body: message,
-      keep_posts: true
+      keep_posts: true,
+      post_id: params[:post_id]
     )
     if silencer.silence && message.present?
       Jobs.enqueue(
@@ -337,6 +339,23 @@ class Admin::UsersController < Admin::AdminController
       success: success_count,
       failed: (params[:users].try(:size) || 0) - success_count
     }
+  end
+
+  def disable_second_factor
+    guardian.ensure_can_disable_second_factor!(@user)
+    user_second_factor = @user.user_second_factor
+    raise Discourse::InvalidParameters unless user_second_factor
+
+    user_second_factor.destroy!
+    StaffActionLogger.new(current_user).log_disable_second_factor_auth(@user)
+
+    Jobs.enqueue(
+      :critical_user_email,
+      type: :account_second_factor_disabled,
+      user_id: @user.id
+    )
+
+    render json: success_json
   end
 
   def destroy

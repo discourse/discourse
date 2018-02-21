@@ -34,7 +34,8 @@ class Stylesheet::Manager
       theme_key = SiteSetting.default_theme_key
     end
 
-    cache_key = "#{target}_#{theme_key}"
+    current_hostname = Discourse.current_hostname
+    cache_key = "#{target}_#{theme_key}_#{current_hostname}"
     tag = cache[cache_key]
 
     return tag.dup.html_safe if tag
@@ -45,7 +46,7 @@ class Stylesheet::Manager
         tag = ""
       else
         builder.compile unless File.exists?(builder.stylesheet_fullpath)
-        tag = %[<link href="#{builder.stylesheet_path}" media="#{media}" rel="stylesheet" data-target="#{target}"/>]
+        tag = %[<link href="#{builder.stylesheet_path(current_hostname)}" media="#{media}" rel="stylesheet" data-target="#{target}"/>]
       end
 
       cache[cache_key] = tag
@@ -181,12 +182,12 @@ class Stylesheet::Manager
     "#{cache_fullpath}/#{stylesheet_filename_no_digest}"
   end
 
-  def stylesheet_cdnpath
-    "#{GlobalSetting.cdn_url}#{stylesheet_relpath}?__ws=#{Discourse.current_hostname}"
+  def stylesheet_cdnpath(hostname)
+    "#{GlobalSetting.cdn_url}#{stylesheet_relpath}?__ws=#{hostname}"
   end
 
-  def stylesheet_path
-    stylesheet_cdnpath
+  def stylesheet_path(hostname)
+    stylesheet_cdnpath(hostname)
   end
 
   def root_path

@@ -137,6 +137,7 @@ const DEFAULT_LIST = [
   'div.quote-controls',
   'div.title',
   'div[align]',
+  'div[data-theme-*]',
   'div[dir]',
   'dl',
   'dt',

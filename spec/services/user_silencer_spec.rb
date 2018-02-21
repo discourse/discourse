@@ -60,7 +60,7 @@ describe UserSilencer do
     end
 
     it "logs it with context" do
-      SystemMessage.stubs(:create).returns(Fabricate.build(:post))
+      SystemMessage.stubs(:create)
       expect {
         UserSilencer.silence(user, Fabricate(:admin))
       }.to change { UserHistory.count }.by(1)

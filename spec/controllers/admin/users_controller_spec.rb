@@ -12,7 +12,7 @@ describe Admin::UsersController do
       @user = log_in(:admin)
     end
 
-    context '.index' do
+    context '#index' do
       it 'returns success' do
         get :index, format: :json
         expect(response).to be_success
@@ -44,7 +44,7 @@ describe Admin::UsersController do
       end
     end
 
-    describe '.show' do
+    describe '#show' do
       context 'an existing user' do
         it 'returns success' do
           get :show, params: { id: @user.id }, format: :json
@@ -60,7 +60,7 @@ describe Admin::UsersController do
       end
     end
 
-    context '.approve_bulk' do
+    context '#approve_bulk' do
 
       let(:evil_trout) { Fabricate(:evil_trout) }
 
@@ -83,7 +83,7 @@ describe Admin::UsersController do
 
     end
 
-    context '.generate_api_key' do
+    context '#generate_api_key' do
       let(:evil_trout) { Fabricate(:evil_trout) }
 
       it 'calls generate_api_key' do
@@ -92,7 +92,7 @@ describe Admin::UsersController do
       end
     end
 
-    context '.revoke_api_key' do
+    context '#revoke_api_key' do
 
       let(:evil_trout) { Fabricate(:evil_trout) }
 
@@ -103,7 +103,7 @@ describe Admin::UsersController do
 
     end
 
-    context '.approve' do
+    context '#approve' do
 
       let(:evil_trout) { Fabricate(:evil_trout) }
 
@@ -120,7 +120,7 @@ describe Admin::UsersController do
 
     end
 
-    context '.suspend' do
+    context '#suspend' do
       let(:user) { Fabricate(:evil_trout) }
 
       it "works properly" do
@@ -220,7 +220,7 @@ describe Admin::UsersController do
 
     end
 
-    context '.revoke_admin' do
+    context '#revoke_admin' do
       before do
         @another_admin = Fabricate(:admin)
       end
@@ -238,7 +238,7 @@ describe Admin::UsersController do
       end
     end
 
-    context '.grant_admin' do
+    context '#grant_admin' do
       before do
         @another_user = Fabricate(:coding_horror)
       end
@@ -265,7 +265,7 @@ describe Admin::UsersController do
       end
     end
 
-    context '.add_group' do
+    context '#add_group' do
       let(:user) { Fabricate(:user) }
       let(:group) { Fabricate(:group) }
 
@@ -292,7 +292,7 @@ describe Admin::UsersController do
       end
     end
 
-    context '.primary_group' do
+    context '#primary_group' do
       let(:group) { Fabricate(:group) }
 
       before do
@@ -347,7 +347,7 @@ describe Admin::UsersController do
       end
     end
 
-    context '.trust_level' do
+    context '#trust_level' do
       before do
         @another_user = Fabricate(:coding_horror, created_at: 1.month.ago)
       end
@@ -401,7 +401,7 @@ describe Admin::UsersController do
       end
     end
 
-    describe '.revoke_moderation' do
+    describe '#revoke_moderation' do
       before do
         @moderator = Fabricate(:moderator)
       end
@@ -425,7 +425,7 @@ describe Admin::UsersController do
       end
     end
 
-    context '.grant_moderation' do
+    context '#grant_moderation' do
       before do
         @another_user = Fabricate(:coding_horror)
       end
@@ -448,7 +448,7 @@ describe Admin::UsersController do
       end
     end
 
-    context '.reject_bulk' do
+    context '#reject_bulk' do
       let(:reject_me)     { Fabricate(:user) }
       let(:reject_me_too) { Fabricate(:user) }
 
@@ -514,7 +514,7 @@ describe Admin::UsersController do
       end
     end
 
-    context '.destroy' do
+    context '#destroy' do
       let(:delete_me) { Fabricate(:user) }
 
       it "returns a 403 if the user doesn't exist" do
@@ -611,6 +611,31 @@ describe Admin::UsersController do
       it "punishes the user for spamming" do
         put :silence, params: { user_id: @reg_user.id }, format: :json
         expect(response).to be_success
+        @reg_user.reload
+        expect(@reg_user).to be_silenced
+      end
+
+      it "can have an associated post" do
+        silence_post = Fabricate(:post, user: @reg_user)
+
+        put :silence, params: {
+          user_id: @reg_user.id,
+          post_id: silence_post.id,
+          post_action: 'edit',
+          post_edit: "this is the new contents for the post"
+        }, format: :json
+        expect(response).to be_success
+
+        silence_post.reload
+        expect(silence_post.raw).to eq("this is the new contents for the post")
+
+        log = UserHistory.where(
+          target_user_id: @reg_user.id,
+          action: UserHistory.actions[:silence_user]
+        ).first
+        expect(log).to be_present
+        expect(log.post_id).to eq(silence_post.id)
+
         @reg_user.reload
         expect(@reg_user).to be_silenced
       end

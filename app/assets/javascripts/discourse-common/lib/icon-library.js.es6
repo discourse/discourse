@@ -90,7 +90,7 @@ registerIconRenderer({
     if (params.label) { html += " aria-hidden='true'"; }
     html += `></${tagName}>`;
     if (params.label) {
-      html += "<span class='sr-only'>" + I18n.t(params.label) + "</span>";
+      html += `<span class='sr-only'>${params.label}</span>`;
     }
     return html;
   },
