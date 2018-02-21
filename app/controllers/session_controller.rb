@@ -188,6 +188,10 @@ class SessionController < ApplicationController
   end
 
   def create
+    unless params[:second_factor_token].blank?
+      RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
+    end
+
     params.require(:login)
     params.require(:password)
 
@@ -221,6 +225,12 @@ class SessionController < ApplicationController
     if payload = login_error_check(user)
       render json: payload
     else
+
+      if SecondFactorHelper.totp_enabled?(user)
+        unless SecondFactorHelper.authenticate(user, params[:second_factor_token])
+          return render json: { error: I18n.t("login.invalid_second_factor_code"), reason: "invalid_second_factor" }
+        end
+      end
       (user.active && user.email_confirmed?) ? login(user) : not_activated(user)
     end
   end
@@ -228,6 +238,14 @@ class SessionController < ApplicationController
   def email_login
     raise Discourse::NotFound if !SiteSetting.enable_local_logins_via_email
 
+    if params[:second_factor_token].present?
+      @error = I18n.t("login.invalid_second_factor_code")
+      RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
+    end
+    unless EmailToken.second_factor_valid(params[:token], params[:second_factor_token])
+      @second_factor_required = true
+      return render layout: 'no_ember'
+    end
     if EmailToken.valid_token_format?(params[:token]) && (user = EmailToken.confirm(params[:token]))
       if login_not_approved_for?(user)
         @error = login_not_approved[:error]

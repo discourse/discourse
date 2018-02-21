@@ -15,6 +15,9 @@ export default RestrictedUserRoute.extend({
   },
 
   actions: {
+    showTwoFactorModal() {
+      showModal('second-factor-intro');
+    },
     showAvatarSelector() {
       showModal('avatar-selector');
 

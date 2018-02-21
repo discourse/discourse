@@ -1,0 +1,69 @@
+<section class='user-content'>
+  <form class="form-vertical">
+
+    <div class="control-group">
+      <label class="control-label">{{i18n 'user.second_factor.title'}}</label>
+      <div class="controls">
+        {{#if model.second_factor_enabled}}
+          <p>{{i18n 'user.second_factor.disable_description'}}</p>
+          <label>{{i18n 'login.second_factor_label'}}</label>
+          {{text-field value=second_factor_token id="second_factor_token" classNames="input-large" autofocus="autofocus"}}
+          <p>
+            {{#if errorMessage}}
+              <span class="alert alert-error">{{errorMessage}}</span>
+            {{/if}}
+          </p>
+          <button {{action "disableSecondFactor"}} disabled={{loading}} class="btn btn-primary">{{submitButtonText}}</button>
+        {{else}}
+          {{#if loaded}}
+            <p>{{i18n 'user.second_factor.enable_description'}}</p>
+            <div class="control-group">
+              {{{ secondFactorImage }}}
+                <p>
+                {{#if showSecondFactorKey}}
+                    {{ secondFactorKey }}
+                {{else}}
+                    <a {{action "showSecondFactorKey"}}>{{i18n 'user.second_factor.show_key_description'}}</a>
+                {{/if}}
+                </p>
+            </div>
+            <div class="control-group">
+              <label class="input-prepend">{{i18n 'login.second_factor_label'}}</label>
+              {{text-field value=second_factor_token id="second_factor_token" classNames="input-large" autofocus="autofocus"}}
+            </div>
+            <p>
+              {{#if errorMessage}}
+                <span class="alert alert-error">{{errorMessage}}</span>
+              {{/if}}
+            </p>
+            <div class="control-group">
+              <button {{action "enableSecondFactor"}} disabled={{loading}} class="btn btn-primary">{{submitButtonText}}</button>
+            </div>
+          {{else}}
+            <div class="control-group">
+              <p>{{i18n 'user.second_factor.confirm_password_description'}}</p>
+              <label>{{i18n 'user.password.title'}}</label>
+              <div class="controls">
+                {{text-field value=password id="password" type="password" classNames="input-xxlarge" autofocus="autofocus"}}
+              </div>
+              <p>
+                {{#if errorMessage}}
+                  <span class="alert alert-error">{{errorMessage}}</span>
+                {{/if}}
+              </p>
+            </div>
+            
+            <div class="control-group">
+              <div class="controls">
+                <button {{action "confirmPassword"}} disabled={{loading}} class="btn btn-primary">{{submitButtonText}}</button>
+                {{#if saved}}{{i18n 'saved'}}{{/if}}
+              </div>
+            </div>
+          {{/if}}
+        {{/if}}
+      </div>
+    </div>
+
+
+  </form>
+</section>

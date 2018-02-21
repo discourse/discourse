@@ -1,5 +1,20 @@
 import { acceptance } from "helpers/qunit-helpers";
-acceptance("User Preferences", { loggedIn: true });
+acceptance("User Preferences", {
+  loggedIn: true,
+  beforeEach() {
+    const response = (object) => {
+      return [
+        200,
+        {"Content-Type": "application/json"},
+        object
+      ];
+    };
+
+    server.post('/second_factor/create', () => { //eslint-disable-line
+      return response({key: "rcyryaqage3jexfj", qr: '<div id="test-qr">qr-code</div>'});
+    });
+  }
+});
 
 QUnit.test("update some fields", assert => {
   visit("/u/eviltrout/preferences");
@@ -71,5 +86,18 @@ QUnit.test("email", assert => {
 
   andThen(() => {
     assert.equal(find('.tip.bad').text().trim(), I18n.t('user.email.invalid'), 'it should display invalid email tip');
+  });
+});
+
+QUnit.test("second factor", assert => {
+  visit("/u/eviltrout/preferences/second-factor");
+  andThen(() => {
+    assert.ok(exists("#password"), "it has a password input");
+  });
+  fillIn('#password', 'secrets');
+  click(".user-content .btn-primary");
+  andThen(() => {
+    assert.ok(exists("#test-qr"), "shows qr code");
+    assert.notOk(exists("#password"), "it hides the password input");
   });
 });
