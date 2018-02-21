@@ -4,7 +4,7 @@ module DiscourseTagging
   TAGS_FILTER_REGEXP = /[\/\?#\[\]@!\$&'\(\)\*\+,;=\.%\\`^\s|\{\}"<>]+/ # /?#[]@!$&'()*+,;=.%\`^|{}"<>
 
   def self.tag_topic_by_names(topic, guardian, tag_names_arg, append: false)
-    if can_tag?(topic)
+    if guardian.can_tag?(topic)
       tag_names = DiscourseTagging.tags_for_saving(tag_names_arg, guardian) || []
 
       old_tag_names = topic.tags.pluck(:name) || []
