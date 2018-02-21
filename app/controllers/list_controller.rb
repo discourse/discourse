@@ -293,10 +293,11 @@ class ListController < ApplicationController
   def page_params(opts = nil)
     opts ||= {}
     route_params = { format: 'json' }
-    route_params[:category]        = @category.slug_for_url                 if @category
-    route_params[:parent_category] = @category.parent_category.slug_for_url if @category && @category.parent_category
-    route_params[:order]           = opts[:order]                           if opts[:order].present?
-    route_params[:ascending]       = opts[:ascending]                       if opts[:ascending].present?
+    route_params[:category]        = @category.slug_for_url                  if @category
+    route_params[:parent_category] = @category.parent_category.slug_for_url  if @category && @category.parent_category
+    route_params[:order]           = opts[:order]                            if opts[:order].present?
+    route_params[:ascending]       = opts[:ascending]                        if opts[:ascending].present?
+    route_params[:username]        = UrlHelper.escape_uri(params[:username]) if params[:username].present?
     route_params
   end
 
