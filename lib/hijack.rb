@@ -97,7 +97,7 @@ module Hijack
           io = nil
         ensure
 
-          if Rails.configuration.lograge.enabled
+          if Rails.configuration.try(:lograge).try(:enabled)
             if timings
               db_runtime = 0
               if timings[:sql]
