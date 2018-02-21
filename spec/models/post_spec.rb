@@ -188,6 +188,22 @@ describe Post do
       expect(post_with_avatars.image_count).to eq(0)
     end
 
+    it "allows images by default" do
+      expect(post_one_image).to be_valid
+    end
+
+    it "doesn't allow more than `min_trust_to_post_images`" do
+      SiteSetting.min_trust_to_post_images = 4
+      post_one_image.user.trust_level = 3
+      expect(post_one_image).not_to be_valid
+    end
+
+    it "doesn't allow more than `min_trust_to_post_images`" do
+      SiteSetting.min_trust_to_post_images = 4
+      post_one_image.user.trust_level = 4
+      expect(post_one_image).to be_valid
+    end
+
     it "doesn't count favicons as images" do
       PrettyText.stubs(:cook).returns(post_with_favicon.raw)
       expect(post_with_favicon.image_count).to eq(0)

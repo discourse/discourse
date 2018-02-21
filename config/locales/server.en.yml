@@ -207,6 +207,7 @@ en:
   too_many_mentions_newuser:
     one: "Sorry, new users can only mention one other user in a post."
     other: "Sorry, new users can only mention %{count} users in a post."
+  no_images_allowed_trust: "Sorry, you can't put images in a post"
   no_images_allowed: "Sorry, new users can't put images in posts."
   too_many_images:
     one: "Sorry, new users can only put one image in a post."
@@ -1303,6 +1304,7 @@ en:
 
     min_trust_to_flag_posts: "The minimum trust level required to flag posts"
     min_trust_to_post_links: "The minimum trust level required to include links in posts"
+    min_trust_to_post_images: "The minimum trust level required to include images in a post"
 
     newuser_max_links: "How many links a new user can add to a post."
     newuser_max_images: "How many images a new user can add to a post."
