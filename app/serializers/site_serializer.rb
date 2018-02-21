@@ -16,7 +16,7 @@ class SiteSerializer < ApplicationSerializer
              :is_readonly,
              :disabled_plugins,
              :user_field_max_length,
-             :suppressed_from_homepage_category_ids,
+             :suppressed_from_latest_category_ids,
              :post_action_types,
              :topic_flag_types,
              :can_create_tag,

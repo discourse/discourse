@@ -15,6 +15,33 @@ RSpec.describe ListController do
     end
   end
 
+  describe 'suppress from latest' do
+
+    it 'supresses categories' do
+      topic
+
+      get "/latest.json"
+      data = JSON.parse(response.body)
+      expect(data["topic_list"]["topics"].length).to eq(1)
+
+      get "/categories_and_latest.json"
+      data = JSON.parse(response.body)
+      expect(data["topic_list"]["topics"].length).to eq(1)
+
+      topic.category.suppress_from_latest = true
+      topic.category.save
+
+      get "/latest.json"
+      data = JSON.parse(response.body)
+      expect(data["topic_list"]["topics"].length).to eq(0)
+
+      get "/categories_and_latest.json"
+      data = JSON.parse(response.body)
+      expect(data["topic_list"]["topics"].length).to eq(0)
+    end
+
+  end
+
   describe 'titles for crawler layout' do
     it 'has no title for the default URL' do
       topic

@@ -542,7 +542,7 @@ end
 #  name_lower                    :string(50)       not null
 #  auto_close_based_on_last_post :boolean          default(FALSE)
 #  topic_template                :text
-#  suppress_from_homepage        :boolean          default(FALSE)
+#  suppress_from_latest          :boolean          default(FALSE)
 #  contains_messages             :boolean
 #  sort_order                    :string
 #  sort_ascending                :boolean
