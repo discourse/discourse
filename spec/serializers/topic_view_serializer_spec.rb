@@ -80,6 +80,7 @@ describe TopicViewSerializer do
   describe 'when tags added to private message topics' do
     before do
       SiteSetting.tagging_enabled = true
+      SiteSetting.allow_staff_to_tag_in_pm = true
     end
 
     it "should not include the tag for normal users" do
@@ -93,6 +94,16 @@ describe TopicViewSerializer do
 
       json = serialize_topic(pm, Fabricate(:admin))
       expect(json[:tags]).to eq([tag.name])
+    end
+
+    it "should not include the tag if pm tags disabled" do
+      SiteSetting.allow_staff_to_tag_in_pm = false
+
+      json = serialize_topic(pm, moderator)
+      expect(json[:tags]).to eq(nil)
+
+      json = serialize_topic(pm, Fabricate(:admin))
+      expect(json[:tags]).to eq(nil)
     end
   end
 end
