@@ -18,6 +18,7 @@ class User < ActiveRecord::Base
   include Searchable
   include Roleable
   include HasCustomFields
+  include SecondFactorManager
 
   # TODO: Remove this after 7th Jan 2018
   self.ignored_columns = %w{email}
@@ -60,6 +61,7 @@ class User < ActiveRecord::Base
   has_one :github_user_info, dependent: :destroy
   has_one :google_user_info, dependent: :destroy
   has_one :oauth2_user_info, dependent: :destroy
+  has_one :user_second_factor, dependent: :destroy
   has_one :user_stat, dependent: :destroy
   has_one :user_profile, dependent: :destroy, inverse_of: :user
   has_one :single_sign_on_record, dependent: :destroy

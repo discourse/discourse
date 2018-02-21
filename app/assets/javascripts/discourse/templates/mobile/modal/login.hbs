@@ -1,9 +1,9 @@
-{{#login-modal screenX=lastX screenY=lastY loginName=loginName loginPassword=loginPassword action="login"}}
+{{#login-modal screenX=lastX screenY=lastY loginName=loginName loginPassword=loginPassword loginSecondFactor=loginSecondFactor action="login"}}
   {{#d-modal-body title="login.title" class="login-modal"}}
     {{login-buttons action="externalLogin"}}
     {{#if canLoginLocal}}
       <form id='login-form' method='post'>
-        <div>
+        <div id="credentials">
           <table>
             <tr>
               <td>
@@ -15,10 +15,10 @@
             </tr>
             <tr>
               <td>
-                  <label for='login-account-password'>{{i18n 'login.password'}}&nbsp;</label>
+                <label for='login-account-password'>{{i18n 'login.password'}}&nbsp;</label>
               </td>
               <td>
-                  {{text-field value=loginPassword type="password" id="login-account-password" maxlength="200"}} &nbsp;
+                {{text-field value=loginPassword type="password" id="login-account-password" maxlength="200"}} &nbsp;
               </td>
             </tr>
             <tr>
@@ -29,8 +29,13 @@
             </tr>
           </table>
         </div>
-
-
+        {{#second-factor-form}}
+          {{text-field value=loginSecondFactor
+              id="login-second-factor"
+              autocorrect="off"
+              autocapitalize="off"
+              autofocus="autofocus"}}
+        {{/second-factor-form}}
       </form>
     {{/if}}
     {{authMessage}}
@@ -43,11 +48,11 @@
     {{/if}}
 
     {{#if canLoginLocal}}
-      <button class='btn btn-large btn-primary'
-        disabled={{loginDisabled}}
-        {{action "login"}}>
-          {{d-icon "unlock"}}&nbsp;{{loginButtonText}}
-      </button>
+      {{d-button action="login"
+          icon="unlock"
+          label=loginButtonLabel
+          disabled=loginDisabled
+          class='btn btn-large btn-primary'}}
 
       {{#if showSignupLink}}
         <button class="btn btn-large" id="new-account-link" {{action "showCreateAccount"}}>

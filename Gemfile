@@ -175,6 +175,9 @@ gem 'logster'
 
 gem 'sassc', require: false
 
+gem 'rotp'
+gem 'rqrcode'
+
 if ENV["IMPORT"] == "1"
   gem 'mysql2'
   gem 'redcarpet'
