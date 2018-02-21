@@ -1167,8 +1167,8 @@ en:
     google_oauth2_client_secret: "Client secret of your Google application."
 
     enable_twitter_logins: "Enable Twitter authentication, requires twitter_consumer_key and twitter_consumer_secret"
-    twitter_consumer_key: "Consumer key for Twitter authentication, registered at http://dev.twitter.com"
-    twitter_consumer_secret: "Consumer secret for Twitter authentication, registered at http://dev.twitter.com"
+    twitter_consumer_key: "Consumer key for Twitter authentication, registered at https://apps.twitter.com/"
+    twitter_consumer_secret: "Consumer secret for Twitter authentication, registered at https://apps.twitter.com/"
 
     enable_instagram_logins: "Enable Instagram authentication, requires instagram_consumer_key and instagram_consumer_secret"
     instagram_consumer_key: "Consumer key for Instagram authentication"
