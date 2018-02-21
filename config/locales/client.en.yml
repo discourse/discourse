@@ -1097,7 +1097,8 @@ en:
       button_help: "Help"
 
     email_login:
-      label: "Login With Email"
+      link_label: "Email me a magic link"
+      button_label: "with email"
       complete_username: "If an account matches the username <b>%{username}</b>, you should receive an email with a magic login link shortly."
       complete_email: "If an account matches <b>%{email}</b>, you should receive an email with a magic login link shortly."
       complete_username_found: "We found an account that matches the username <b>%{username}</b>, you should receive an email with a magic login link shortly."
@@ -1116,6 +1117,7 @@ en:
       caps_lock_warning: "Caps Lock is on"
       error: "Unknown error"
       rate_limit: "Please wait before trying to log in again."
+      blank_username: "Please enter your email or username."
       blank_username_or_password: "Please enter your email or username, and password."
       reset_password: 'Reset Password'
       logging_in: "Signing In..."

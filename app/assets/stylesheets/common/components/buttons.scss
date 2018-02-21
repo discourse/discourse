@@ -128,7 +128,7 @@
   &:before {
     margin-right: 9px;
     font-family: FontAwesome;
-    font-size: 1.214em;
+    font-size: $font-0;
   }
   &.google, &.google_oauth2 {
     background: $google;

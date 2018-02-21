@@ -14,11 +14,13 @@ export default Ember.Component.extend({
 
     Ember.run.scheduleOnce('afterRender', this, this._afterFirstRender);
     this.appEvents.on('modal-body:flash', msg => this._flash(msg));
+    this.appEvents.on('modal-body:clearFlash', () => this._clearFlash());
   },
 
   willDestroyElement() {
     this._super();
     this.appEvents.off('modal-body:flash');
+    this.appEvents.off('modal-body:clearFlash');
   },
 
   _afterFirstRender() {
@@ -45,10 +47,16 @@ export default Ember.Component.extend({
     );
   },
 
+  _clearFlash() {
+    $('#modal-alert').hide().removeClass('alert-error', 'alert-success');
+  },
+
   _flash(msg) {
-    $('#modal-alert').hide()
-                     .removeClass('alert-error', 'alert-success')
-                     .addClass(`alert alert-${msg.messageClass || 'success'}`).html(msg.text || '')
-                     .fadeIn();
+    this._clearFlash();
+
+    $('#modal-alert')
+      .addClass(`alert alert-${msg.messageClass || 'success'}`)
+      .html(msg.text || '')
+      .fadeIn();
   },
 });
