@@ -16,7 +16,7 @@ describe MaxEmojisValidator do
       SiteSetting.max_emojis_in_title = 3
       record.title = '🧐 Lots of emojis here 🎃 :joy: :sunglasses:'
       validate
-      expect(record.errors[:title][0]).to eq("can't have more than 3 emoji")
+      expect(record.errors[:title][0]).to eq(I18n.t("errors.messages.max_emojis", max_emojis_count: 3))
     end
   end
 
