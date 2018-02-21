@@ -238,20 +238,24 @@ class SessionController < ApplicationController
 
   def email_login
     raise Discourse::NotFound if !SiteSetting.enable_local_logins_via_email
-
-    if params[:second_factor_token].present?
-      @error = I18n.t("login.invalid_second_factor_code")
-      RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
-    end
-
+    second_factor_token = params[:second_factor_token]
     token = params[:token]
     valid_token = !!EmailToken.valid_token_format?(token)
     user = EmailToken.confirmable(token)&.user
 
-    if valid_token && user&.totp_enabled? && !user.authenticate_totp(params[:second_factor_token])
-      @second_factor_required = true
-      @error = I18n.t('login.invalid_second_factor_code')
-    elsif user = EmailToken.confirm(token)
+    if valid_token && user&.totp_enabled?
+      RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
+
+      if !second_factor_token.present?
+        @second_factor_required = true
+        return render layout: 'no_ember'
+      elsif !user.authenticate_totp(second_factor_token)
+        @error = I18n.t('login.invalid_second_factor_code')
+        return render layout: 'no_ember'
+      end
+    end
+
+    if user = EmailToken.confirm(token)
       if login_not_approved_for?(user)
         @error = login_not_approved[:error]
       elsif payload = login_error_check(user)
