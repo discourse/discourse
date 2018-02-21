@@ -63,7 +63,7 @@ class ListController < ApplicationController
         if filter == :latest
           list_opts[:no_definitions] = true
         end
-        if filter.to_s == current_homepage
+        if [:latest, :categories].include?(filter)
           list_opts[:exclude_category_ids] = get_excluded_category_ids(list_opts[:category])
         end
       end
@@ -369,7 +369,7 @@ class ListController < ApplicationController
   end
 
   def get_excluded_category_ids(current_category = nil)
-    exclude_category_ids = Category.where(suppress_from_homepage: true)
+    exclude_category_ids = Category.where(suppress_from_latest: true)
     exclude_category_ids = exclude_category_ids.where.not(id: current_category) if current_category
     exclude_category_ids.pluck(:id)
   end
