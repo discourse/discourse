@@ -212,7 +212,8 @@ describe Email::Receiver do
       expect(topic.posts.last.raw).to eq("hab vergessen kritische zeichen einzufügen:\näöüÄÖÜß")
     end
 
-    it "prefers text over html" do
+    it "prefers text over html when site setting is disabled" do
+      SiteSetting.incoming_email_prefer_html = false
       expect { process(:text_and_html_reply) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq("This is the *text* part.")
     end
@@ -362,6 +363,7 @@ describe Email::Receiver do
     end
 
     it "supports attached images in TEXT part" do
+      SiteSetting.incoming_email_prefer_html = false
       SiteSetting.queue_jobs = true
 
       expect { process(:no_body_with_image) }.to change { topic.posts.count }
