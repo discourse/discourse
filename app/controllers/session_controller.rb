@@ -188,6 +188,10 @@ class SessionController < ApplicationController
   end
 
   def create
+    unless params[:second_factor_token].blank?
+      RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
+    end
+
     params.require(:login)
     params.require(:password)
 
@@ -221,6 +225,13 @@ class SessionController < ApplicationController
     if payload = login_error_check(user)
       render json: payload
     else
+      if user.totp_enabled? && !user.authenticate_totp(params[:second_factor_token])
+        return render json: failed_json.merge(
+          error: I18n.t("login.invalid_second_factor_code"),
+          reason: "invalid_second_factor"
+        )
+      end
+
       (user.active && user.email_confirmed?) ? login(user) : not_activated(user)
     end
   end
@@ -228,21 +239,32 @@ class SessionController < ApplicationController
   def email_login
     raise Discourse::NotFound if !SiteSetting.enable_local_logins_via_email
 
-    if EmailToken.valid_token_format?(params[:token]) && (user = EmailToken.confirm(params[:token]))
+    if params[:second_factor_token].present?
+      @error = I18n.t("login.invalid_second_factor_code")
+      RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
+    end
+
+    token = params[:token]
+    valid_token = !!EmailToken.valid_token_format?(token)
+    user = EmailToken.confirmable(token)&.user
+
+    if valid_token && user&.totp_enabled? && !user.authenticate_totp(params[:second_factor_token])
+      @second_factor_required = true
+      @error = I18n.t('login.invalid_second_factor_code')
+    elsif user = EmailToken.confirm(token)
       if login_not_approved_for?(user)
         @error = login_not_approved[:error]
-        return render layout: 'no_ember'
       elsif payload = login_error_check(user)
         @error = payload[:error]
-        return render layout: 'no_ember'
       else
         log_on_user(user)
-        redirect_to path("/")
+        return redirect_to path("/")
       end
     else
       @error = I18n.t('email_login.invalid_token')
-      return render layout: 'no_ember'
     end
+
+    render layout: 'no_ember'
   end
 
   def forgot_password
