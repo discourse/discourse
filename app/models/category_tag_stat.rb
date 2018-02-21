@@ -61,3 +61,20 @@ class CategoryTagStat < ActiveRecord::Base
     SQL
   end
 end
+
+# == Schema Information
+#
+# Table name: category_tag_stats
+#
+#  id          :integer          not null, primary key
+#  category_id :integer          not null
+#  tag_id      :integer          not null
+#  topic_count :integer          default(0), not null
+#
+# Indexes
+#
+#  index_category_tag_stats_on_category_id                  (category_id)
+#  index_category_tag_stats_on_category_id_and_tag_id       (category_id,tag_id) UNIQUE
+#  index_category_tag_stats_on_category_id_and_topic_count  (category_id,topic_count)
+#  index_category_tag_stats_on_tag_id                       (tag_id)
+#

@@ -379,7 +379,7 @@ describe UserNotifications do
       expect(mail[:from].display_names).to eql(['john'])
 
       # subject should include "[PM]"
-      expect(mail.subject).to match("[PM]")
+      expect(mail.subject).to include("[PM] ")
 
       # 1 "visit message" link
       expect(mail.html_part.to_s.scan(/Visit Message/).count).to eq(1)
@@ -408,6 +408,65 @@ describe UserNotifications do
       expect(mail.html_part.to_s).to_not include(topic.url)
       expect(mail.text_part.to_s).to_not include(response.raw)
       expect(mail.text_part.to_s).to_not include(topic.url)
+    end
+
+    it "doesn't include group name in subject" do
+      group = Fabricate(:group)
+      topic.allowed_groups = [ group ]
+      mail = UserNotifications.user_private_message(
+        response.user,
+        post: response,
+        notification_type: notification.notification_type,
+        notification_data_hash: notification.data_hash
+      )
+
+      expect(mail.subject).to include("[PM] ")
+    end
+
+    context "when SiteSetting.group_name_in_subject is true" do
+      before do
+        SiteSetting.group_in_subject = true
+      end
+
+      let(:group) { Fabricate(:group, name: "my_group") }
+      let(:mail) { UserNotifications.user_private_message(
+        response.user,
+        post: response,
+        notification_type: notification.notification_type,
+        notification_data_hash: notification.data_hash
+      ) }
+
+      shared_examples "includes first group name" do
+        it "includes first group name in subject" do
+          expect(mail.subject).to include("[my_group] ")
+        end
+
+        context "when first group has full name" do
+          it "includes full name in subject" do
+            group.full_name = "My Group"
+            group.save
+            expect(mail.subject).to include("[My Group] ")
+          end
+        end
+      end
+
+      context "one group in pm" do
+        before do
+          topic.allowed_groups = [ group ]
+        end
+
+        include_examples "includes first group name"
+      end
+
+      context "multiple groups in pm" do
+        let(:group2) { Fabricate(:group) }
+
+        before do
+          topic.allowed_groups = [ group, group2 ]
+        end
+
+        include_examples "includes first group name"
+      end
     end
   end
 

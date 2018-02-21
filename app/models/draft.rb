@@ -59,7 +59,7 @@ end
 #
 #  id         :integer          not null, primary key
 #  user_id    :integer          not null
-#  draft_key  :string(255)      not null
+#  draft_key  :string           not null
 #  data       :text             not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null

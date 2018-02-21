@@ -14,7 +14,7 @@ describe OneboxController do
     before { @user = log_in(:admin) }
 
     it 'invalidates the cache if refresh is passed' do
-      Oneboxer.expects(:preview).with(url, invalidate_oneboxes: true, user_id: @user.id, category_id: 0)
+      Oneboxer.expects(:preview).with(url, invalidate_oneboxes: true, user_id: @user.id, category_id: 0, topic_id: 0)
       get :show, params: { url: url, refresh: 'true' }, format: :json
     end
 

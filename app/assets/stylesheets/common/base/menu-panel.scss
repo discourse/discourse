@@ -1,6 +1,7 @@
 .menu-panel.slide-in {
   position: fixed;
   right: 0;
+  box-shadow: shadow("header");
 
   .panel-body {
     position: absolute;
@@ -19,7 +20,7 @@
 
 .menu-panel {
   border: 1px solid $primary-low;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, .25);
+  box-shadow: shadow("menu-panel");
   background-color: $secondary;
   z-index: z("header");
   padding: 0.5em;

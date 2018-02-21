@@ -51,12 +51,14 @@ module Hijack
             instance.response.headers[k] = v
           end
 
+          view_start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
           begin
             instance.instance_eval(&blk)
           rescue => e
             # TODO we need to reuse our exception handling in ApplicationController
             Discourse.warn_exception(e, message: "Failed to process hijacked response correctly", env: env)
           end
+          view_runtime = Process.clock_gettime(Process::CLOCK_MONOTONIC) - view_start
 
           unless instance.response_body || response.committed?
             instance.status = 500
@@ -94,6 +96,34 @@ module Hijack
           # happens if client terminated before we responded, ignore
           io = nil
         ensure
+
+          if Rails.configuration.try(:lograge).try(:enabled)
+            if timings
+              db_runtime = 0
+              if timings[:sql]
+                db_runtime = timings[:sql][:duration]
+              end
+
+              subscriber = Lograge::RequestLogSubscriber.new
+              payload = ActiveSupport::HashWithIndifferentAccess.new(
+                controller: self.class.name,
+                action: action_name,
+                params: request.filtered_parameters,
+                headers: request.headers,
+                format: request.format.ref,
+                method: request.request_method,
+                path: request.fullpath,
+                view_runtime: view_runtime * 1000.0,
+                db_runtime: db_runtime * 1000.0,
+                timings: timings,
+                status: response.status
+              )
+
+              event = ActiveSupport::Notifications::Event.new("hijack", Time.now, Time.now + timings[:total_duration], "", payload)
+              subscriber.process_action(event)
+            end
+          end
+
           MethodProfiler.clear
           Thread.current[Logster::Logger::LOGSTER_ENV] = nil
 

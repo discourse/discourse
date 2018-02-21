@@ -118,5 +118,5 @@ end
 #
 # Indexes
 #
-#  index_forum_thread_link_clicks_on_forum_thread_link_id  (topic_link_id)
+#  by_link  (topic_link_id)
 #

@@ -148,6 +148,36 @@ describe UploadsController do
         expect(id).to be
       end
 
+      it 'respects `authorized_extensions_for_staff` setting when staff upload file' do
+        SiteSetting.authorized_extensions = ""
+        SiteSetting.authorized_extensions_for_staff = "*"
+        @user.update_columns(moderator: true)
+
+        post :create, params: {
+          file: text_file,
+          type: "composer",
+          format: :json
+        }
+
+        expect(response).to be_success
+        data = JSON.parse(response.body)
+        expect(data["id"]).to be
+      end
+
+      it 'ignores `authorized_extensions_for_staff` setting when non-staff upload file' do
+        SiteSetting.authorized_extensions = ""
+        SiteSetting.authorized_extensions_for_staff = "*"
+
+        post :create, params: {
+          file: text_file,
+          type: "composer",
+          format: :json
+        }
+
+        data = JSON.parse(response.body)
+        expect(data["errors"].first).to eq(I18n.t("upload.unauthorized", authorized_extensions: ''))
+      end
+
       it 'returns an error when it could not determine the dimensions of an image' do
         Jobs.expects(:enqueue).with(:create_avatar_thumbnails, anything).never
 

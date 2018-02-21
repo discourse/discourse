@@ -19,7 +19,7 @@
   z-index: z("composer","content");
   transition: height 250ms ease, background 250ms ease, transform 250ms ease, max-width 250ms ease;
   background-color: $secondary;
-  box-shadow: 0 -1px 40px rgba(0,0,0, .12);
+  box-shadow: shadow("composer");
 
   .reply-area {
     display: flex;

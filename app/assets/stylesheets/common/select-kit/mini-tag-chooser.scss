@@ -7,8 +7,7 @@
       &.is-expanded {
         .select-kit-header {
           border: 1px solid $tertiary;
-          -webkit-box-shadow: $tertiary 0 0 6px 0px;
-                  box-shadow: $tertiary 0 0 6px 0px;
+          box-shadow: shadow("focus");
         }
       }
 
@@ -21,7 +20,8 @@
       .select-kit-body {
         max-width: 500px;
         width: 500px;
-        border: 1px solid $primary-low;
+        border: 1px solid $tertiary;
+        box-shadow: shadow("focus")
       }
 
       .select-kit-filter {
