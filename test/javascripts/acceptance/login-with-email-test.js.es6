@@ -80,11 +80,9 @@ QUnit.test("logging in via email (link)", assert => {
       'it should display a success message for a valid email'
     );
   });
-
-  andThen(() => {
-    userFound = false;
-  });
 });
+
+userFound = false;
 
 QUnit.test("logging in via email (button)", assert => {
   visit("/");
