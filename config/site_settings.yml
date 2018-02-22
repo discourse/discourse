@@ -255,14 +255,6 @@ login:
     default: false
   google_oauth2_client_id: ''
   google_oauth2_client_secret: ''
-  google_oauth2_prompt:
-    default: 'none'
-    type: enum
-    choices:
-      - 'none'
-      - 'consent'
-      - 'select_account'
-  google_oauth2_hd: ''
   enable_yahoo_logins:
     client: true
     default: false
