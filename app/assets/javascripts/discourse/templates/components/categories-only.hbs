@@ -24,6 +24,7 @@
               <div class='subcategories'>
                 {{#each c.subcategories as |s|}}
                   <span class='subcategory'>
+                    {{category-title-before category=s}}
                     {{category-link s hideParent="true"}}
                     {{category-unread category=s}}
                   </span>
