@@ -593,8 +593,27 @@ class UsersController < ApplicationController
 
         email_token_user = EmailToken.confirmable(token)&.user
         totp_enabled = email_token_user.totp_enabled?
+        second_factor_token = params[:second_factor_token]
+        confirm_email = false
 
-        if !totp_enabled || email_token_user.authenticate_totp(params[:second_factor_token])
+        confirm_email =
+          if totp_enabled
+            @second_factor_required = true
+            @message = I18n.t("login.second_factor_title")
+
+            if second_factor_token.present?
+              if email_token_user.authenticate_totp(second_factor_token)
+                true
+              else
+                @error = I18n.t("login.invalid_second_factor_code")
+                false
+              end
+            end
+          else
+            true
+          end
+
+        if confirm_email
           @user = EmailToken.confirm(token)
 
           if @user && @user.admin?
@@ -603,9 +622,6 @@ class UsersController < ApplicationController
           else
             @message = I18n.t("admin_login.errors.unknown_email_address")
           end
-        else
-          @second_factor_required = true
-          @message = I18n.t("login.second_factor_title")
         end
       else
         @message = I18n.t("admin_login.errors.invalid_token")
