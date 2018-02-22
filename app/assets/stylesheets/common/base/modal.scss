@@ -282,11 +282,13 @@
   }
 }
 
-.invite-modal {
+#invite-modal {
   overflow: visible;
-  .ember-text-field {
-    width: 550px;
+
+  label {
+    margin-top: 7px;
   }
+
   .optional {
     color: #9e9ea6;
   }
