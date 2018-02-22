@@ -30,9 +30,8 @@ export default Ember.Component.extend(bufferedRender({
   rerenderTriggers: ['bulkSelectEnabled', 'topic.pinned'],
   tagName: 'tr',
   classNameBindings: [':topic-list-item', 'unboundClassNames', 'topic.visited'],
-  attributeBindings: ['data-topic-id', 'tabindex'],
+  attributeBindings: ['data-topic-id'],
   'data-topic-id': Em.computed.alias('topic.id'),
-  'tabindex': 0,
 
   actions: {
     toggleBookmark() {
