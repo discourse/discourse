@@ -1571,7 +1571,7 @@ tags:
     type: list
     client: true
     default: ''
-  allow_staff_to_tag_in_pm:
+  allow_staff_to_tag_pms:
     default: false
   suppress_overlapping_tags_in_list:
     default: false

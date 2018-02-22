@@ -9,7 +9,7 @@ module TagGuardian
   end
 
   def can_tag_pms?
-    is_staff? && SiteSetting.tagging_enabled && SiteSetting.allow_staff_to_tag_in_pm
+    is_staff? && SiteSetting.tagging_enabled && SiteSetting.allow_staff_to_tag_pms
   end
 
   def can_admin_tags?
