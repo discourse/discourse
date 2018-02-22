@@ -126,7 +126,7 @@ nav.post-controls {
     border: none;
     margin-left: 3px;
 
-    &.d-hover {
+    &.d-hover, &:focus {
       background: $primary-low;
       color: $primary;
     }
@@ -142,12 +142,12 @@ nav.post-controls {
       position: relative;
     }
 
-    &.delete.d-hover {
+    &.delete.d-hover, &.delete:focus {
       background: $danger;
       color: $secondary;
     }
 
-    &.like.d-hover {
+    &.like.d-hover, &.like:focus {
       color: $love;
       background: $love-low;
     }
