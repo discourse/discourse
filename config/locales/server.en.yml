@@ -1616,7 +1616,7 @@ en:
     tags_listed_by_group: "List tags by tag group on the Tags page (/tags)."
     tag_style: "Visual style for tag badges."
     staff_tags: "A list of tags that can only be applied by staff members"
-    allow_staff_to_tag_in_pm: "Allow staff members to tag any personal message"
+    allow_staff_to_tag_pms: "Allow staff members to tag any personal message"
     min_trust_level_to_tag_topics: "Minimum trust level required to tag topics"
     suppress_overlapping_tags_in_list: "If tags match exact words in topic titles, don't show the tag"
     remove_muted_tags_from_latest: "Don't show topics tagged with muted tags in the latest topic list."
