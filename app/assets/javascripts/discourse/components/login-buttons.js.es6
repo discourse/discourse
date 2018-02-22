@@ -18,7 +18,7 @@ export default Ember.Component.extend({
     },
 
     externalLogin(provider) {
-      this.sendAction('externalLogin', provider);
+      this.sendAction('action', provider);
     }
   }
 });
