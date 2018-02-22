@@ -3471,6 +3471,7 @@ en:
         private_topics_count: Private Topics
         posts_read_count: Posts Read
         post_count: Posts Created
+        second_factor_enabled: Two Factor Authentication Enabled
         topics_entered: Topics Viewed
         flags_given_count: Flags Given
         flags_received_count: Flags Received
