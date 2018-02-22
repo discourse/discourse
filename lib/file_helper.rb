@@ -25,57 +25,54 @@ class FileHelper
                     follow_redirect: false,
                     read_timeout: 5,
                     skip_rate_limit: false,
-                    verbose: nil)
-
-    # verbose logging is default while debugging onebox
-    verbose = verbose.nil? ? true : verbose
+                    verbose: false)
 
     url = "https:" + url if url.start_with?("//")
     raise Discourse::InvalidParameters.new(:url) unless url =~ /^https?:\/\//
 
-    dest = FinalDestination.new(
+    tmp = nil
+
+    fd = FinalDestination.new(
       url,
       max_redirects: follow_redirect ? 5 : 1,
       skip_rate_limit: skip_rate_limit,
       verbose: verbose
     )
-    uri = dest.resolve
 
-    if !uri && dest.status_code.to_i >= 400
-      # attempt error API compatability
-      io = FakeIO.new
-      io.status = [dest.status_code.to_s, ""]
+    fd.get do |response, chunk, uri|
+      if tmp.nil?
+        # error handling
+        if uri.blank?
+          if response.code.to_i >= 400
+            # attempt error API compatibility
+            io = FakeIO.new
+            io.status = [response.code, ""]
+            raise OpenURI::HTTPError.new("#{response.code} Error", io)
+          else
+            log(:error, "FinalDestination did not work for: #{url}") if verbose
+            throw :done
+          end
+        end
 
-      # TODO perhaps translate and add Discourse::DownloadError
-      raise OpenURI::HTTPError.new("#{dest.status_code} Error", io)
-    end
+        # first run
+        tmp_file_ext = File.extname(uri.path)
 
-    unless uri
-      log(:error, "FinalDestination did not work for: #{url}") if verbose
-      return
-    end
+        if tmp_file_ext.blank? && response.content_type.present?
+          ext = MiniMime.lookup_by_content_type(response.content_type)&.extension
+          ext = "jpg" if ext == "jpe"
+          tmp_file_ext = "." + ext if ext.present?
+        end
 
-    downloaded = uri.open("rb", read_timeout: read_timeout)
-
-    extension = File.extname(uri.path)
-
-    if extension.blank? && downloaded.content_type.present?
-      ext = MiniMime.lookup_by_content_type(downloaded.content_type)&.extension
-      ext = "jpg" if ext == "jpe"
-      extension = "." + ext if ext.present?
-    end
-
-    tmp = Tempfile.new([tmp_file_name, extension])
-
-    File.open(tmp.path, "wb") do |f|
-      while f.size <= max_file_size && data = downloaded.read(512.kilobytes)
-        f.write(data)
+        tmp = Tempfile.new([tmp_file_name, tmp_file_ext])
+        tmp.binmode
       end
+
+      tmp.write(chunk)
+
+      throw :done if tmp.size > max_file_size
     end
 
     tmp
-  ensure
-    downloaded&.close
   end
 
   def self.optimize_image!(filename)
