@@ -3,7 +3,7 @@
   {{#unless complete}}
     {{#d-modal-body title="create_account.title"}}
       {{#unless hasAuthOptions}}
-        {{login-buttons action="externalLogin"}}
+        {{login-buttons externalLogin="externalLogin"}}
       {{/unless}}
 
       {{#if showCreateForm}}
