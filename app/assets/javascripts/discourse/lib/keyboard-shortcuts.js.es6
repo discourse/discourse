@@ -89,8 +89,6 @@ export default {
         this._bindToClick(binding.click, key);
       }
     });
-
-    this._bindFocus();
   },
 
   toggleBookmark() {
@@ -310,19 +308,6 @@ export default {
     }
   },
 
-  _bindFocus() {
-    const addSelected = function(e, addOrRemove) {
-      const row = '.topic-post, .topic-list-item, .topic-list tbody tr';
-      const $wrapper = $(e.target).closest(row);
-      const $srcWrapper = $(e.relatedTarget).closest(row);
-      if (!$wrapper.is($srcWrapper)) $wrapper.toggleClass('selected', addOrRemove);
-    };
-
-    const $document = $(document);
-    $document.on('focusin.topic-post', e => addSelected(e, true));
-    $document.on('focusout.topic-post', e => addSelected(e, false));
-  },
-
   _moveSelection(direction) {
     const $articles = this._findArticles();
 
@@ -330,15 +315,9 @@ export default {
       return;
     }
 
-    let $selected = $articles.filter(function(_, el) {
-      return el.contains(document.activeElement); // :focus
-    });
-    if ($selected.length === 0) {
-      $selected = $articles.filter('.selected');
-    }
-    if ($selected.length === 0) {
-      $selected = $articles.filter('[data-islastviewedtopic=true]');
-    }
+    const $selected = ($articles.filter('.selected').length !== 0)
+      ? $articles.filter('.selected')
+      : $articles.filter('[data-islastviewedtopic=true]');
     let index = $articles.index($selected);
 
     if ($selected.length !== 0) { //boundries check
@@ -375,11 +354,10 @@ export default {
       $article.addClass('selected');
 
       if ($article.is('.topic-post')) {
-        $('article', $article).focus();
+        $('a.tabLoc', $article).focus();
         this._scrollToPost($article);
 
       } else {
-        $article.focus();
         this._scrollList($article, direction);
       }
     }

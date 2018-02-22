@@ -6,18 +6,8 @@
   box-shadow: -3px 0 0 $danger;
 }
 
-.mobile-view {
-  .topic-list tr.selected td:first-child, .topic-list-item.selected td:first-child, .topic-post.selected {
-    box-shadow: none;
-  }
-}
-
 .topic-list-item.selected {
   background-color: inherit;
-}
-
-.topic-post article:focus, .topic-list tr:focus, .topic-list-item:focus {
-  outline: 0;
 }
 
 .keyboard-shortcuts-modal .modal-body {
