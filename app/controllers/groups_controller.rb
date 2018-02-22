@@ -12,6 +12,7 @@ class GroupsController < ApplicationController
   ]
 
   skip_before_action :preload_json, :check_xhr, only: [:posts_feed, :mentions_feed]
+  skip_before_action :check_xhr, only: [:show, :index]
 
   def index
     unless SiteSetting.enable_group_directory?
@@ -37,18 +38,39 @@ class GroupsController < ApplicationController
 
     group_user_ids = GroupUser.where(group: groups, user: current_user).pluck(:group_id)
 
-    render_json_dump(
-      groups: serialize_data(groups, BasicGroupSerializer),
-      extras: {
-        group_user_ids: group_user_ids
-      },
-      total_rows_groups: count,
-      load_more_groups: groups_path(page: page + 1)
-    )
+    respond_to do |format|
+      format.html do
+        @description_meta = I18n.t("groups.title")
+        @title = @description_meta
+        render :index
+      end
+
+      format.json do
+        render_json_dump(
+          groups: serialize_data(groups, BasicGroupSerializer),
+          extras: {
+            group_user_ids: group_user_ids
+          },
+          total_rows_groups: count,
+          load_more_groups: groups_path(page: page + 1)
+        )
+      end
+    end
   end
 
   def show
-    render_serialized(find_group(:id), GroupShowSerializer, root: 'basic_group')
+    respond_to do |format|
+      format.html do
+        group = find_group(:id)
+        @title = group.full_name.present? ? group.full_name.capitalize : group.name
+        @description_meta = group.bio_cooked.present? ? PrettyText.excerpt(group.bio_cooked, 300) : @title
+        render :show
+      end
+
+      format.json do
+        render_serialized(find_group(:id), GroupShowSerializer, root: 'basic_group')
+      end
+    end
   end
 
   def edit
