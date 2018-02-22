@@ -269,6 +269,13 @@ class TopicQuery
     create_list(:private_messages, {}, list)
   end
 
+  def list_private_messages_tag(user)
+    list = private_messages_for(user, :all)
+    list = list.joins("JOIN topic_tags tt ON tt.topic_id = topics.id
+                      JOIN tags t ON t.id = tt.tag_id AND t.name = '#{@options[:tags][0]}'")
+    create_list(:private_messages, {}, list)
+  end
+
   def list_category_topic_ids(category)
     query = default_results(category: category.id)
     pinned_ids = query.where('pinned_at IS NOT NULL AND category_id = ?', category.id).limit(nil).order('pinned_at DESC').pluck(:id)

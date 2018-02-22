@@ -4,6 +4,7 @@ require_dependency 'new_post_manager'
 class TopicViewSerializer < ApplicationSerializer
   include PostStreamSerializerMixin
   include SuggestedTopicsMixin
+  include TopicTagsMixin
   include ApplicationHelper
 
   def self.attributes_from_topic(*list)
@@ -60,7 +61,6 @@ class TopicViewSerializer < ApplicationSerializer
              :chunk_size,
              :bookmarked,
              :message_archived,
-             :tags,
              :topic_timer,
              :private_topic_timer,
              :unicode_title,
@@ -238,10 +238,6 @@ class TopicViewSerializer < ApplicationSerializer
     scope.is_staff? && NewPostManager.queue_enabled?
   end
 
-  def include_tags?
-    SiteSetting.tagging_enabled
-  end
-
   def topic_timer
     TopicTimerSerializer.new(object.topic.public_topic_timer, root: false)
   end
@@ -253,10 +249,6 @@ class TopicViewSerializer < ApplicationSerializer
   def private_topic_timer
     timer = object.topic.private_topic_timer(scope.user)
     TopicTimerSerializer.new(timer, root: false)
-  end
-
-  def tags
-    object.topic.tags.map(&:name)
   end
 
   def include_featured_link?

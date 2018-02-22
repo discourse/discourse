@@ -21,6 +21,7 @@ class SiteSerializer < ApplicationSerializer
              :topic_flag_types,
              :can_create_tag,
              :can_tag_topics,
+             :can_tag_pms,
              :tags_filter_regexp,
              :top_tags,
              :wizard_required,
@@ -106,11 +107,15 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def can_create_tag
-    SiteSetting.tagging_enabled && scope.can_create_tag?
+    scope.can_create_tag?
   end
 
   def can_tag_topics
-    SiteSetting.tagging_enabled && scope.can_tag_topics?
+    scope.can_tag_topics?
+  end
+
+  def can_tag_pms
+    scope.can_tag_pms?
   end
 
   def include_tags_filter_regexp?

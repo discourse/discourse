@@ -1,12 +1,5 @@
 class SearchTopicListItemSerializer < ListableTopicSerializer
-  attributes :tags,
-    :category_id
+  include TopicTagsMixin
 
-  def include_tags?
-    SiteSetting.tagging_enabled
-  end
-
-  def tags
-    object.tags.map(&:name)
-  end
+  attributes :category_id
 end

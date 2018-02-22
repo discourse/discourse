@@ -10,61 +10,17 @@ describe Tag do
     end
   end
 
+  let(:tag) { Fabricate(:tag) }
+  let(:topic) { Fabricate(:topic, tags: [tag]) }
+
   before do
     SiteSetting.tagging_enabled = true
     SiteSetting.min_trust_level_to_tag_topics = 0
   end
 
   it "can delete tags on deleted topics" do
-    tag = Fabricate(:tag)
-    topic = Fabricate(:topic, tags: [tag])
     topic.trash!
     expect { tag.destroy }.to change { Tag.count }.by(-1)
-  end
-
-  describe '#tags_by_count_query' do
-    it "returns empty hash if nothing is tagged" do
-      expect(described_class.tags_by_count_query.count(Tag::COUNT_ARG)).to eq({})
-    end
-
-    context "with some tagged topics" do
-      before do
-        @topics = []
-        3.times { @topics << Fabricate(:topic) }
-        make_some_tags(count: 2)
-        @topics[0].tags << @tags[0]
-        @topics[0].tags << @tags[1]
-        @topics[1].tags << @tags[0]
-      end
-
-      it "returns tag names with topic counts in a hash" do
-        counts = described_class.tags_by_count_query.count(Tag::COUNT_ARG)
-        expect(counts[@tags[0].name]).to eq(2)
-        expect(counts[@tags[1].name]).to eq(1)
-      end
-
-      it "can be used to filter before doing the count" do
-        counts = described_class.tags_by_count_query.where("topics.id = ?", @topics[1].id).count(Tag::COUNT_ARG)
-        expect(counts).to eq(@tags[0].name => 1)
-      end
-
-      it "returns unused tags too" do
-        unused = Fabricate(:tag)
-        counts = described_class.tags_by_count_query.count(Tag::COUNT_ARG)
-        expect(counts[unused.name]).to eq(0)
-      end
-
-      it "doesn't include deleted topics in counts" do
-        deleted_topic_tag = Fabricate(:tag)
-        delete_topic = Fabricate(:topic)
-        post = Fabricate(:post, topic: delete_topic, user: delete_topic.user)
-        delete_topic.tags << deleted_topic_tag
-        PostDestroyer.new(Fabricate(:admin), post).destroy
-
-        counts = described_class.tags_by_count_query.count(Tag::COUNT_ARG)
-        expect(counts[deleted_topic_tag.name]).to eq(0)
-      end
-    end
   end
 
   describe '#top_tags' do
@@ -137,6 +93,16 @@ describe Tag do
       it "for no category arg, lists all tags" do
         expect(described_class.top_tags.sort).to eq([@tags[0].name, @tags[1].name, @tags[2].name].sort)
       end
+    end
+  end
+
+  context "topic counts" do
+    it "should exclude private message topics" do
+      topic
+      Fabricate(:private_message_topic, tags: [tag])
+      described_class.ensure_consistency!
+      tag.reload
+      expect(tag.topic_count).to eq(1)
     end
   end
 end
