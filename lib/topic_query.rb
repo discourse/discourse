@@ -271,9 +271,8 @@ class TopicQuery
 
   def list_private_messages_tag(user)
     list = private_messages_for(user, :all)
-    tag_id = Tag.where('name ilike ?', @options[:tags][0]).pluck(:id).first
-    list = list.joins("JOIN topic_tags tt ON tt.topic_id = topics.id AND
-                      tt.tag_id = #{tag_id}")
+    list = list.joins("JOIN topic_tags tt ON tt.topic_id = topics.id
+                      JOIN tags t ON t.id = tt.tag_id AND t.name = '#{@options[:tags][0]}'")
     create_list(:private_messages, {}, list)
   end
 

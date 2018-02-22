@@ -10,14 +10,15 @@ describe Tag do
     end
   end
 
+  let(:tag) { Fabricate(:tag) }
+  let(:topic) { Fabricate(:topic, tags: [tag]) }
+
   before do
     SiteSetting.tagging_enabled = true
     SiteSetting.min_trust_level_to_tag_topics = 0
   end
 
   it "can delete tags on deleted topics" do
-    tag = Fabricate(:tag)
-    topic = Fabricate(:topic, tags: [tag])
     topic.trash!
     expect { tag.destroy }.to change { Tag.count }.by(-1)
   end
@@ -92,6 +93,16 @@ describe Tag do
       it "for no category arg, lists all tags" do
         expect(described_class.top_tags.sort).to eq([@tags[0].name, @tags[1].name, @tags[2].name].sort)
       end
+    end
+  end
+
+  context "topic counts" do
+    it "should exclude private message topics" do
+      topic
+      Fabricate(:private_message_topic, tags: [tag])
+      described_class.ensure_consistency!
+      tag.reload
+      expect(tag.topic_count).to eq(1)
     end
   end
 end

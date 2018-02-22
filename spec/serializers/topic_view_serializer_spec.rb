@@ -67,17 +67,17 @@ describe TopicViewSerializer do
     end
   end
 
-  let(:user) { Fabricate(:user) }
-  let(:moderator) { Fabricate(:moderator) }
-  let(:tag) { Fabricate(:tag) }
-  let(:pm) do
-    Fabricate(:private_message_topic, tags: [tag], topic_allowed_users: [
-      Fabricate.build(:topic_allowed_user, user: moderator),
-      Fabricate.build(:topic_allowed_user, user: user)
-    ])
-  end
-
   describe 'when tags added to private message topics' do
+    let(:moderator) { Fabricate(:moderator) }
+    let(:admin) { Fabricate(:admin) }
+    let(:tag) { Fabricate(:tag) }
+    let(:pm) do
+      Fabricate(:private_message_topic, tags: [tag], topic_allowed_users: [
+        Fabricate.build(:topic_allowed_user, user: moderator),
+        Fabricate.build(:topic_allowed_user, user: user)
+      ])
+    end
+
     before do
       SiteSetting.tagging_enabled = true
       SiteSetting.allow_staff_to_tag_pms = true
@@ -89,21 +89,19 @@ describe TopicViewSerializer do
     end
 
     it "should include the tag for staff users" do
-      json = serialize_topic(pm, moderator)
-      expect(json[:tags]).to eq([tag.name])
-
-      json = serialize_topic(pm, Fabricate(:admin))
-      expect(json[:tags]).to eq([tag.name])
+      [moderator, admin].each do |user|
+        json = serialize_topic(pm, user)
+        expect(json[:tags]).to eq([tag.name])
+      end
     end
 
     it "should not include the tag if pm tags disabled" do
       SiteSetting.allow_staff_to_tag_pms = false
 
-      json = serialize_topic(pm, moderator)
-      expect(json[:tags]).to eq(nil)
-
-      json = serialize_topic(pm, Fabricate(:admin))
-      expect(json[:tags]).to eq(nil)
+      [moderator, admin].each do |user|
+        json = serialize_topic(pm, user)
+        expect(json[:tags]).to eq(nil)
+      end
     end
   end
 end

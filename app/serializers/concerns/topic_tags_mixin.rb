@@ -4,10 +4,14 @@ module TopicTagsMixin
   end
 
   def include_tags?
-    SiteSetting.tagging_enabled && (!object.private_message? || scope.can_tag_pms?)
+    scope.can_see_tags?(topic)
   end
 
   def tags
-    object.tags.pluck(:name)
+    topic.tags.pluck(:name)
+  end
+
+  def topic
+    object.is_a?(Topic) ? object : object.topic
   end
 end
