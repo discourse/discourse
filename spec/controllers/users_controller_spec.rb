@@ -554,22 +554,35 @@ describe UsersController do
 
       describe 'when 2 factor authentication is enabled' do
         let(:second_factor) { Fabricate(:user_second_factor, user: admin) }
+        let(:email_token) { Fabricate(:email_token, user: admin) }
         render_views
 
         it 'does not log in when token required' do
           second_factor
-          token = admin.email_tokens.create(email: admin.email).token
-          get :admin_login, params: { token: token }
+          get :admin_login, params: { token: email_token.token }
           expect(response).not_to redirect_to('/')
           expect(session[:current_user_id]).not_to eq(admin.id)
           expect(response.body).to include(I18n.t('login.second_factor_description'));
         end
 
-        it 'logs in when a valid 2-factor token is given' do
-          token = admin.email_tokens.create(email: admin.email).token
+        describe 'invalid 2 factor token' do
+          it 'should display the right error' do
+            second_factor
 
+            put :admin_login, params: {
+              token: email_token.token,
+              second_factor_token: '13213'
+            }
+
+            expect(response.status).to eq(200)
+            expect(response.body).to include(I18n.t('login.second_factor_description'));
+            expect(response.body).to include(I18n.t('login.invalid_second_factor_code'));
+          end
+        end
+
+        it 'logs in when a valid 2-factor token is given' do
           put :admin_login, params: {
-            token: token,
+            token: email_token.token,
             second_factor_token: ROTP::TOTP.new(second_factor.data).now
           }
 
