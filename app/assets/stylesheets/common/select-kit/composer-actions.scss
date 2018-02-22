@@ -14,7 +14,7 @@
           margin: 0!important;
         }
 
-        &:hover {
+        &:hover, &:focus {
           background: $primary-low;
         }
       }
