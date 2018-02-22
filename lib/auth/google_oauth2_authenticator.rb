@@ -59,7 +59,9 @@ class Auth::GoogleOAuth2Authenticator < Auth::Authenticator
               strategy.options[:client_id] = SiteSetting.google_oauth2_client_id
               strategy.options[:client_secret] = SiteSetting.google_oauth2_client_secret
            },
-           skip_jwt: true
+           skip_jwt: true,
+           prompt: SiteSetting.google_oauth2_prompt,
+           hd: SiteSetting.google_oauth2_hd
   end
 
   protected
