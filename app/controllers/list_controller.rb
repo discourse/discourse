@@ -151,6 +151,7 @@ class ListController < ApplicationController
     private_messages_archive
     private_messages_group
     private_messages_group_archive
+    private_messages_tag
   }.each do |action|
     generate_message_route(action)
   end
@@ -333,6 +334,7 @@ class ListController < ApplicationController
   def build_topic_list_options
     options = {}
     params[:page] = params[:page].to_i rescue 1
+    params[:tags] = [params[:tag_id]] if params[:tag_id].present? && guardian.can_tag_pms?
 
     TopicQuery.public_valid_options.each do |key|
       options[key] = params[key]

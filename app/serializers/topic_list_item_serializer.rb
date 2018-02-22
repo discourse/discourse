@@ -1,4 +1,5 @@
 class TopicListItemSerializer < ListableTopicSerializer
+  include TopicTagsMixin
 
   attributes :views,
              :like_count,
@@ -10,7 +11,6 @@ class TopicListItemSerializer < ListableTopicSerializer
              :pinned_globally,
              :bookmarked_post_numbers,
              :liked_post_numbers,
-             :tags,
              :featured_link,
              :featured_link_root_domain
 
@@ -64,14 +64,6 @@ class TopicListItemSerializer < ListableTopicSerializer
     # this is rather odd code, but we need to have op_likes loaded somehow
     # simplest optimisation is adding a cache column on topic.
     object.association(:first_post).loaded?
-  end
-
-  def include_tags?
-    SiteSetting.tagging_enabled
-  end
-
-  def tags
-    object.tags.map(&:name)
   end
 
   def include_featured_link?
