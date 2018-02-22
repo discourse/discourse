@@ -38,4 +38,32 @@ RSpec.describe ListController do
       )
     end
   end
+
+  describe "filter private messages by tag" do
+    let(:user) { Fabricate(:user) }
+    let(:moderator) { Fabricate(:moderator) }
+    let(:admin) { Fabricate(:admin) }
+    let(:tag) { Fabricate(:tag) }
+    let(:private_message) { Fabricate(:private_message_topic) }
+
+    before do
+      SiteSetting.tagging_enabled = true
+      SiteSetting.allow_staff_to_tag_pms = true
+      Fabricate(:topic_tag, tag: tag, topic: private_message)
+    end
+
+    it 'should fail for non-staff users' do
+      sign_in(user)
+      get "/topics/private-messages-tag/#{user.username}/#{tag.name}.json"
+      expect(response.status).to eq(404)
+    end
+
+    it 'should be success for staff users' do
+      [moderator, admin].each do |user|
+        sign_in(user)
+        get "/topics/private-messages-tag/#{user.username}/#{tag.name}.json"
+        expect(response).to be_success
+      end
+    end
+  end
 end

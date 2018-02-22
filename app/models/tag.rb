@@ -28,7 +28,7 @@ class Tag < ActiveRecord::Base
         SELECT COUNT(topics.id) AS topic_count, tags.id AS tag_id
         FROM tags
         LEFT JOIN topic_tags ON tags.id = topic_tags.tag_id
-        LEFT JOIN topics ON topics.id = topic_tags.topic_id AND topics.deleted_at IS NULL AND topics.archetype != "private_message"
+        LEFT JOIN topics ON topics.id = topic_tags.topic_id AND topics.deleted_at IS NULL AND topics.archetype != 'private_message'
         GROUP BY tags.id
       ) x
       WHERE x.tag_id = t.id
