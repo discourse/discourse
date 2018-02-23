@@ -973,7 +973,6 @@ trust:
     client: true
   trusted_users_can_edit_others:
     default: true
-    client: false
 
 security:
   force_https:
