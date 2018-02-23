@@ -527,7 +527,7 @@ describe UsersController do
       render_views
 
       it 'should return the right response' do
-        get :admin_login, params: { email: 'random' }
+        put :admin_login, params: { email: 'random' }
 
         expect(response.status).to eq(200)
 
