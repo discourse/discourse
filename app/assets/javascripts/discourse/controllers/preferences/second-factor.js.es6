@@ -26,14 +26,17 @@ export default Ember.Controller.extend({
       .then(response => {
         if (response.error) {
           this.set('errorMessage', response.error);
+          this.set('loading', false);
           return;
         }
 
         this.set('errorMessage',null);
         DiscourseURL.redirectTo(userPath(`${this.get('content').username.toLowerCase()}/preferences`));
       })
-      .catch(popupAjaxError)
-      .finally(() => this.set('loading', false));
+      .catch(error => {
+        this.set('loading', false);
+        popupAjaxError(error);
+      });
   },
 
   actions: {
