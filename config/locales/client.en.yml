@@ -710,8 +710,8 @@ en:
 
       second_factor:
         title: "Two Factor Authentication"
-        enable: "Enable Two Factor Authentication"
-        disable: "Disable Two Factor Authentication"
+        enabled_status: "Status: On"
+        disabled_status: "Status: Off"
         confirm_password_description: "Confirm your password to continue enabling Two Factor Authentication."
         enable_description: |
           To complete Two Factor Authentication setup, scan the following QR code
