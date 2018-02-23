@@ -4,6 +4,8 @@ import { popupAjaxError } from 'discourse/lib/ajax-error';
 
 export default Ember.Controller.extend({
   loading: false,
+  resetPasswordLoading: false,
+  resetPasswordProgress: '',
   password: null,
   secondFactorImage: null,
   secondFactorKey: null,
@@ -59,6 +61,19 @@ export default Ember.Controller.extend({
         })
         .catch(popupAjaxError)
         .finally(() => this.set('loading', false));
+    },
+
+    resetPassword() {
+      this.setProperties({
+        resetPasswordLoading: true,
+        resetPasswordProgress: ''
+      });
+
+      return this.get('model').changePassword().then(() => {
+        this.set('resetPasswordProgress', I18n.t('user.change_password.success'));
+      })
+      .catch(popupAjaxError)
+      .finally(() => this.set('resetPasswordLoading', false));
     },
 
     showSecondFactorKey() {

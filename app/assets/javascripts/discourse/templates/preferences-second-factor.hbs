@@ -91,7 +91,7 @@
             {{text-field value=password
                 id="password"
                 type="password"
-                classNames="input-large"
+                classNames="input-xxlarge"
                 autofocus="autofocus"}}
           </div>
 
@@ -107,7 +107,12 @@
                 disabled=loading
                 label=submitButtonText}}
 
-            {{#if saved}}{{i18n 'saved'}}{{/if}}
+            {{d-button action="resetPassword"
+                class="btn"
+                disabled=resetPasswordLoading
+                label='user.change_password.action'}}
+
+            {{resetPasswordProgress}}
           </div>
         </div>
       {{/if}}

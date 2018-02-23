@@ -712,7 +712,7 @@ en:
         title: "Two Factor Authentication"
         enabled_status: "Status: On"
         disabled_status: "Status: Off"
-        confirm_password_description: "Confirm your password to continue enabling Two Factor Authentication."
+        confirm_password_description: "Confirm your password to continue enabling Two Factor Authentication"
         enable_description: |
           To complete Two Factor Authentication setup, scan the following QR code
           in one of the supported apps
