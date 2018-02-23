@@ -259,6 +259,7 @@ login:
     default: ''
     type: list
     choices:
+      - ''
       - 'none'
       - 'consent'
       - 'select_account'
