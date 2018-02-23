@@ -402,3 +402,27 @@
     margin-right: 0.5em;
   }
 }
+
+
+.change-timestamp {
+  
+    .date-picker {
+      width: 10em;
+    }
+  
+    #date-container {
+      .pika-single {
+        position: relative !important; // overriding another important
+        display: inline-block;
+      }
+    }
+  
+    input[type=time] {
+      width: 6em;
+    }
+  
+    form {
+      margin: 0;
+    }
+  }
+  
