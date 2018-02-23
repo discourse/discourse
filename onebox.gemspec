@@ -25,7 +25,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'nokogiri', '~> 1.7'
   spec.add_runtime_dependency 'moneta', '~> 1.0'
   spec.add_runtime_dependency 'htmlentities', '~> 4.3'
-  spec.add_runtime_dependency 'fast_blank', '>= 1.0.0'
   spec.add_runtime_dependency 'sanitize'
 
   spec.add_development_dependency 'bundler', '~> 1.7'
