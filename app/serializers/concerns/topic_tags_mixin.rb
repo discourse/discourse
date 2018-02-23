@@ -8,7 +8,8 @@ module TopicTagsMixin
   end
 
   def tags
-    topic.tags.pluck(:name)
+    # Calling method `pluck` along with `includes` causing N+1 queries
+    topic.tags.map(&:name)
   end
 
   def topic
