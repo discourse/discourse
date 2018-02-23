@@ -66,6 +66,7 @@
     {{passwordProgress}}
   </div>
 </div>
+
 <div class="control-group pref-second-factor">
   <label class="control-label">{{i18n 'user.second_factor.title'}}</label>
 
@@ -84,9 +85,11 @@
       {{/if}}
     </b>
 
-    {{#link-to "preferences.second-factor" class="btn btn-small btn-icon pad-left no-text"}}
-      {{d-icon "pencil"}}
-    {{/link-to}}
+    {{#if isCurrentUser}}
+      {{#link-to "preferences.second-factor" class="btn btn-small btn-icon pad-left no-text"}}
+        {{d-icon "pencil"}}
+      {{/link-to}}
+    {{/if}}
   </div>
 </div>
 {{/if}}
