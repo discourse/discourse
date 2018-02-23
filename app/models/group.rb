@@ -534,6 +534,16 @@ class Group < ActiveRecord::Base
       if user_attributes.present?
         User.where(id: user_ids).update_all(user_attributes)
       end
+
+      # update group user count
+      Group.exec_sql <<-SQL.squish
+        UPDATE groups g
+        SET user_count =
+          (SELECT COUNT(gu.user_id)
+           FROM group_users gu
+           WHERE gu.group_id = g.id)
+        WHERE g.id = #{self.id};
+      SQL
     end
 
     if self.grant_trust_level.present?
