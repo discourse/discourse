@@ -72,7 +72,7 @@ class Theme < ActiveRecord::Base
     if keys = @cache["user_theme_keys"]
       return keys
     end
-    @cache["theme_keys"] = Set.new(
+    @cache["user_theme_keys"] = Set.new(
       Theme
       .where('user_selectable OR key = ?', SiteSetting.default_theme_key)
       .pluck(:key)
