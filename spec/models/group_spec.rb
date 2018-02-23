@@ -619,6 +619,13 @@ describe Group do
 
       expect(group.group_users.map(&:user_id)).to contain_exactly(user.id, admin.id)
     end
+
+    it 'updates group user count' do
+      expect {
+          group.bulk_add([user.id, admin.id])
+          group.reload
+        }.to change { group.user_count }.by(2)
+    end
   end
 
   it "Correctly updates has_messages" do
