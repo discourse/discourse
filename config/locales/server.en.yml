@@ -1790,7 +1790,7 @@ en:
     click_to_continue: "Click here to continue."
     already_logged_in: "Oops, looks like you are attempting to accept an invitation for another user. If you are not %{current_user}, please log out and try again."
     second_factor_title: "Two Factor Authentication Required"
-    second_factor_description: "Enter a generated authentication code."
+    second_factor_description: "Enter the authentication code from your app."
     invalid_second_factor_code: "Invalid Two Factor Authentication Code"
 
   user:
