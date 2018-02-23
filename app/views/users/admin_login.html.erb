@@ -7,10 +7,12 @@
       <%= @message %>
       <% if @error %><p><%= @error %></p><% end %>
 
-      <%=form_tag({}, method: :put) do %>
-        <%= label_tag(:second_factor_token, t('login.second_factor_description')) %>
-        <%= text_field_tag(:second_factor_token, nil, autofocus: true) %><br><br>
-        <%= submit_tag t('submit')%>
+      <% if @second_factor_required %>
+        <%=form_tag({}, method: :put) do %>
+          <%= label_tag(:second_factor_token, t('login.second_factor_description')) %>
+          <%= text_field_tag(:second_factor_token, nil, autofocus: true) %><br><br>
+          <%= submit_tag t('submit')%>
+        <% end %>
       <% end %>
     <% else %>
       <%=form_tag({}, method: :put) do %>

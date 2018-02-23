@@ -523,6 +523,21 @@ describe UsersController do
       end
     end
 
+    context 'when email is incorrect' do
+      render_views
+
+      it 'should return the right response' do
+        get :admin_login, params: { email: 'random' }
+
+        expect(response.status).to eq(200)
+
+        response_body = response.body
+
+        expect(response_body).to match(I18n.t("admin_login.errors.unknown_email_address"))
+        expect(response_body).to_not match(I18n.t("login.second_factor_description"))
+      end
+    end
+
     context 'logs in admin' do
       it 'does not log in admin with invalid token' do
         SiteSetting.sso_url = "https://www.example.com/sso"
