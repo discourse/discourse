@@ -35,19 +35,12 @@
   margin-left: -1px;
 }
 
-.modal-close {
-  display: inline-block;
-  float: right;
-  margin: 7px;
-}
-
 .modal-header {
   h3 {
-    display: inline-block;;
     font-size: $font-up-3;
-    padding: 10px 15px 7px;
   }
 }
+
 .close {
   font-size: $font-up-3;
   text-decoration: none;

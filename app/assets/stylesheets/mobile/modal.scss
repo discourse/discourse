@@ -33,20 +33,13 @@
   padding: 15px 7px 10px 7px;
 }
 
-.modal-close {
-  display: inline-block;
-  float: right;
-}
-
 .modal-header {
-  padding: 10px 0 10px 10px;
-
+  padding: 10px;  
   h3 {
-    display: inline;
     font-size: $font-up-2;
-    margin: 0;
   }
 }
+
 .close {
   font-size: $font-up-4;
   padding: 10px 15px 5px 5px;
