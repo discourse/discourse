@@ -10,7 +10,7 @@
 
 .popup-menu {
   background-color: $secondary;
-  width: 205px;
+  width: 215px;
   padding: 10px;
   border: 1px solid $primary-low;
   z-index: z("dropdown");
@@ -26,7 +26,7 @@
   }
 
   button {
-    width: 200px;
+    width: 100%;
     margin-bottom: 5px;
     i {
       width: 14px;
