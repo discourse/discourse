@@ -307,7 +307,13 @@ class ApplicationController < ActionController::Base
     resolve_safe_mode
     return if request.env[NO_CUSTOM]
 
-    theme_key = flash[:preview_theme_key]
+    theme_key = nil
+    if (k = request[:preview_theme_key]) && current_user
+      # some extra security, only to use the magic param the key needs to be whitelisted
+      if k == $redis.get(::Admin::ThemesController.whitelist_theme_key(current_user))
+        theme_key = k
+      end
+    end
 
     user_option = current_user&.user_option
 
