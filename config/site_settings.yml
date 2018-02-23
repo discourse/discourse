@@ -971,6 +971,9 @@ trust:
   tl3_links_no_follow:
     default: false
     client: true
+  trusted_users_can_edit_others:
+    default: true
+    client: false
 
 security:
   force_https:
