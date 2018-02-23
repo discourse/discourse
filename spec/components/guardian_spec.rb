@@ -1225,6 +1225,11 @@ describe Guardian do
         expect(Guardian.new(trust_level_4).can_edit?(post)).to be_truthy
       end
 
+      it 'returns false as a TL4 user if trusted_users_can_edit_others is true' do
+        SiteSetting.trusted_users_can_edit_others = false
+        expect(Guardian.new(trust_level_4).can_edit?(post)).to eq(false)
+      end
+
       it 'returns false when trying to edit a post with no trust' do
         SiteSetting.min_trust_to_edit_post = 2
         post.user.trust_level = 1
@@ -1332,6 +1337,11 @@ describe Guardian do
           expect(Guardian.new(trust_level_3).can_edit?(topic)).to eq(true)
         end
 
+        it 'is false at TL3, if `trusted_users_can_edit_others` is false' do
+          SiteSetting.trusted_users_can_edit_others = false
+          expect(Guardian.new(trust_level_3).can_edit?(topic)).to eq(false)
+        end
+
         it "returns false when the category is read only" do
           topic.category.set_permissions(everyone: :readonly)
           topic.category.save
@@ -1379,6 +1389,11 @@ describe Guardian do
 
         it 'returns true at trust level 4' do
           expect(Guardian.new(trust_level_4).can_edit?(archived_topic)).to be_truthy
+        end
+
+        it 'is false at TL4, if `trusted_users_can_edit_others` is false' do
+          SiteSetting.trusted_users_can_edit_others = false
+          expect(Guardian.new(trust_level_4).can_edit?(archived_topic)).to eq(false)
         end
 
         it 'returns false at trust level 3' do
