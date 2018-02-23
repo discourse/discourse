@@ -5,14 +5,10 @@ class Admin::ThemesController < Admin::AdminController
 
   skip_before_action :check_xhr, only: [:show, :preview]
 
-  def self.whitelist_theme_key(user)
-    "whitelist_theme_key_#{user.id}"
-  end
-
   def preview
     @theme = Theme.find(params[:id])
-    $redis.setex(Admin::ThemesController.whitelist_theme_key(current_user), 60, @theme.key)
-    redirect_to path("/?preview_theme_key=#{@theme.key}")
+
+    redirect_to path("/"), flash: { preview_theme_key: @theme.key }
   end
 
   def upload_asset
