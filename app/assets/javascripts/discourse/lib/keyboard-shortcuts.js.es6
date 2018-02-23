@@ -89,6 +89,8 @@ export default {
         this._bindToClick(binding.click, key);
       }
     });
+
+    this._bindFocus();
   },
 
   toggleBookmark() {
@@ -308,6 +310,24 @@ export default {
     }
   },
 
+  _bindFocus() {
+    $(document).on('focusin.topic-post', e => {
+      const $wrapper = $(e.target).closest('.topic-post, .topic-list-item, .topic-list tbody tr');
+      const $srcWrapper = $(e.relatedTarget).closest('.topic-post, .topic-list-item, .topic-list tbody tr');
+      if (!$wrapper.is($srcWrapper)) {
+        $wrapper.addClass('selected');
+      }
+    });
+
+    $(document).on('focusout.topic-post', e => {
+      const $wrapper = $(e.target).closest('.topic-post, .topic-list-item, .topic-list tbody tr');
+      const $srcWrapper = $(e.relatedTarget).closest('.topic-post, .topic-list-item, .topic-list tbody tr');
+      if (!$wrapper.is($srcWrapper)) {
+        $wrapper.removeClass('selected');
+      }
+    });
+  },
+
   _moveSelection(direction) {
     const $articles = this._findArticles();
 
@@ -315,9 +335,15 @@ export default {
       return;
     }
 
-    const $selected = ($articles.filter('.selected').length !== 0)
-      ? $articles.filter('.selected')
-      : $articles.filter('[data-islastviewedtopic=true]');
+    let $selected = $articles.filter(function(_, el) {
+      return el.contains(document.activeElement); // :focus
+    });
+    if ($selected.length === 0) {
+      $selected = $articles.filter('.selected');
+    }
+    if ($selected.length === 0) {
+      $selected = $articles.filter('[data-islastviewedtopic=true]');
+    }
     let index = $articles.index($selected);
 
     if ($selected.length !== 0) { //boundries check
@@ -354,10 +380,11 @@ export default {
       $article.addClass('selected');
 
       if ($article.is('.topic-post')) {
-        $('a.tabLoc', $article).focus();
+        $('article', $article).focus();
         this._scrollToPost($article);
 
       } else {
+        $article.focus();
         this._scrollList($article, direction);
       }
     }
