@@ -720,7 +720,7 @@ en:
           <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>)
           and submit the generated Two Factor Authentication code.
         disable_description: "Enter the authentication code from your app"
-        show_key_description: "Or enter the key manually."
+        show_key_description: "Or enter the secret key manually."
         info_prompt: "What is Two Factor Authentication?"
         extended_description: |
           Two Factor Authentication adds an extra security step to logging in by
