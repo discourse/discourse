@@ -199,6 +199,7 @@ EMOJI_ALIASES ||= {
   "new_moon" => [ "moon" ],
   "oncoming_automobile" => [ "car", "automobile" ],
   "fleur_de_lis" => [ "fleur-de-lis" ],
+  "face_vomiting" => [ "puke" ]
 }
 
 EMOJI_GROUPS ||= [
