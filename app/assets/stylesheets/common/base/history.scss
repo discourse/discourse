@@ -24,6 +24,12 @@
     }
   }
 
+  #revision-details {
+    padding: 5px;
+    margin-top: 10px;
+    border-bottom: 3px solid $primary-low; 
+  }
+
   #revisions .row:first-of-type {
     margin-top: 10px;
   }

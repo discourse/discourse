@@ -7,9 +7,6 @@
     max-width: 960px;
   }
   #revision-controls {
-    float: left;
-    padding-right: 5px;
-
     .btn[disabled] {
       cursor: not-allowed;
       background-color: $primary-low; 
@@ -32,11 +29,7 @@
       font-weight: bold;
     }
   }
-  #revision-details {
-    padding: 5px;
-    margin-top: 10px;
-    border-bottom: 3px solid $primary-low; 
-  }
+
   #revisions {
     word-wrap: break-word;
     table {
