@@ -15,9 +15,7 @@
 }
 
 #login-form {
-  a {
-    color: dark-light-choose($primary-high, $secondary-low);
-  }
+ 
   label { float: left; display: block; }
   textarea, input, select {
     font-size: $font-up-1;
@@ -30,12 +28,6 @@
 a#new-account-link { white-space:nowrap; }
 
 // Create account
-
-#new-account-link {
-  cursor: pointer;
-}
-
-a#forgot-password-link {clear: left; float: left; }
 
 .login-modal, .create-account {
   .btn-primary {

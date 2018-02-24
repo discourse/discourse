@@ -111,6 +111,7 @@
   z-index: z("modal","content");
   overflow: auto;
 }
+
 .modal-form {
   margin-bottom: 0;
 }
@@ -156,6 +157,8 @@
   .modal-body {
     box-sizing: border-box;
     width: 100%;
+    overflow-y: auto;
+    max-height: 400px;
     &.full-height-modal {
       max-height: calc(100vh - 150px);
     }
@@ -413,7 +416,6 @@
   }
 }
 
-
 .change-timestamp {
   
     .date-picker {
@@ -434,5 +436,55 @@
     form {
       margin: 0;
     }
+}
+
+.flag-modal {
+  max-height: 450px;
+  .flag-action-type-details {
+    line-height: $line-height-large;
   }
+}
+
+.flag-message {
+  width: 95% !important;
+  margin: 0;
+}
+
+.custom-message-length {
+  color: dark-light-choose($primary-low-mid, $secondary-high);
+  font-size: $font-down-1;
+}
+
+.edit-category-modal {
+  .secure-category-options {
+    margin: 10px 0 0 16px;
+    .badge-list {
+      margin: 10px 0;
+      li {
+        margin: 0 4px 8px 0;
+        a {
+          color: dark-light-choose($primary-medium, $secondary-medium);
+          cursor: pointer;
+        }
+        a:hover {
+          color: dark-light-choose($primary-medium, $secondary-medium);
+        }
+      }
+    }
+  }
+}
+
+.tabbed-modal {
+  .modal-body {
+    position: relative;
+    height: 350px;
+  }
+}
+
+
+.modal-tab {
+  position: absolute;
+  width: 95%;
+}
+
   

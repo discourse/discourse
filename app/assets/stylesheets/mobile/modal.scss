@@ -22,8 +22,6 @@
   top: 50%;
 }
 .modal-body {
-  overflow-y: auto;
-  max-height: 400px;
   padding: 10px;
 }
 
@@ -70,25 +68,10 @@
   }
 }
 
-.flag-modal {
-  max-height: 450px;
-}
-
 @media only screen and (max-device-width: 568px) {
   .modal .flag-modal .flag-message {
-    height: 1.2em;
+    height: 3em;
   }
-}
-
-.custom-message-length {
-  margin: -4px 0 10px 20px;
-  color: dark-light-choose($primary-high, $secondary-low);
-  font-size: $font-down-1;
-}
-
-.flag-message {
-  margin-left: 20px;
-  width: 95% !important;
 }
 
 .edit-category-modal {
@@ -100,37 +83,12 @@
   &.small .modal-body {
     height: 310px;
   }
-  .secure-category-options {
-    margin: 10px 0 0 16px;
-    .badge-list {
-      margin: 10px 0;
-      li {
-        margin: 0 4px 8px 0;
-        a {
-          color: #888;
-          cursor: pointer;
-        }
-      }
-    }
-  }
 
   .disable_info_wrap .cannot_delete_reason {
     top: -114px;
     right: 8px;
     min-width: 200px;
   }
-}
-
-.tabbed-modal {
-  .modal-body {
-    position: relative;
-    height: 350px;
-  }
-}
-
-
-.modal-tab {
-  position: absolute;
 }
 
 /* fixes for the new account confirm dialog on mobile */

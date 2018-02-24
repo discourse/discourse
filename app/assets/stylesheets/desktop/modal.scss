@@ -22,8 +22,6 @@
 }
 
 .modal-body {
-  overflow-y: auto;
-  max-height: 400px;
   padding: 15px;
 }
 
@@ -69,45 +67,12 @@
   }
 }
 
-.flag-modal {
-  max-height: 450px;
-  .flag-action-type-details {
-    line-height: $line-height-large;
-  }
-}
-
-.custom-message-length {
-  color: dark-light-choose($primary-low-mid, $secondary-high);
-  font-size: $font-down-1;
-}
-
-.flag-message {
-  width: 95%;
-  margin: 0;
-}
-
 .edit-category-modal {
   .modal-body {
     position: relative;
     height: 420px;
     max-height: 420px;
     padding-bottom: 0;
-  }
-  .secure-category-options {
-    margin: 10px 0 0 16px;
-    .badge-list {
-      margin: 10px 0;
-      li {
-        margin: 0 4px 8px 0;
-        a {
-          color: dark-light-choose($primary-medium, $secondary-medium);
-          cursor: pointer;
-        }
-        a:hover {
-          color: dark-light-choose($primary-medium, $secondary-medium);
-        }
-      }
-    }
   }
 
   .disable_info_wrap {
@@ -147,18 +112,6 @@
       max-width: 23%;
     }
   }
-
-}
-.tabbed-modal {
-  .modal-body {
-    position: relative;
-    height: 350px;
-  }
-}
-
-.modal-tab {
-  position: absolute;
-  width: 95%;
 }
 
 .split-modal {
