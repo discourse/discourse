@@ -35,11 +35,8 @@ describe OneboxController do
 
         url = "http://noodle.com/"
 
-        stub_request(:head, url).
-          to_return(status: 200, body: "", headers: {}).then.to_raise
-
-        stub_request(:get, url)
-          .to_return(status: 200, headers: {}, body: onebox_html).then.to_raise
+        stub_request(:head, url)
+        stub_request(:get, url).to_return(body: onebox_html).then.to_raise
 
         get :show, params: { url: url, refresh: "true" }, format: :json
 

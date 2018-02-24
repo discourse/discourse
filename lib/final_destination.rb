@@ -96,9 +96,7 @@ class FinalDestination
       uri = URI(uri.to_s)
     end
 
-    unless validate_uri
-      return nil
-    end
+    return nil unless validate_uri
 
     result, (location, cookie) = safe_get(uri, &blk)
 
@@ -120,9 +118,7 @@ class FinalDestination
       return nil if !uri
 
       extra = nil
-      if cookie
-        extra = { 'Cookie' => cookie }
-      end
+      extra = { 'Cookie' => cookie } if cookie
 
       get(uri, redirects - 1, extra_headers: extra, &blk)
     elsif result == :ok
@@ -251,7 +247,6 @@ class FinalDestination
   end
 
   def is_dest_valid?
-
     return false unless @uri && @uri.host
 
     # Whitelisted hosts
@@ -260,9 +255,7 @@ class FinalDestination
       hostname_matches?(Discourse.base_url_no_prefix)
 
     if SiteSetting.whitelist_internal_hosts.present?
-      SiteSetting.whitelist_internal_hosts.split('|').each do |h|
-        return true if @uri.hostname.downcase == h.downcase
-      end
+      return true if SiteSetting.whitelist_internal_hosts.split("|").any? { |h| h.downcase == @uri.hostname.downcase }
     end
 
     address_s = @opts[:lookup_ip].call(@uri.hostname)
@@ -331,12 +324,10 @@ class FinalDestination
   protected
 
   def safe_get(uri)
-
     result = nil
     unsafe_close = false
 
     safe_session(uri) do |http|
-
       headers = request_headers.merge(
         'Accept-Encoding' => 'gzip',
         'Host' => uri.host
@@ -350,9 +341,8 @@ class FinalDestination
         end
 
         if Net::HTTPSuccess === resp
-
           resp.decode_content = true
-          resp.read_body { |chunk|
+          resp.read_body do |chunk|
             read_next = true
 
             catch(:done) do
@@ -370,19 +360,19 @@ class FinalDestination
               http.finish
               raise StandardError
             end
-          }
+          end
           result = :ok
+        else
+          catch(:done) do
+            yield resp, nil, nil
+          end
         end
       end
     end
 
     result
   rescue StandardError
-    if unsafe_close
-      :ok
-    else
-      raise
-    end
+    unsafe_close ? :ok : raise
   end
 
   def safe_session(uri)
