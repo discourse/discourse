@@ -99,9 +99,8 @@ describe Jobs::PollFeed do
         SiteSetting.feed_polling_url = 'https://blog.discourse.org/feed/'
         SiteSetting.embed_by_username = embed_by_username
 
-        stub_request(:head, SiteSetting.feed_polling_url).to_return(status: 200)
+        stub_request(:head, SiteSetting.feed_polling_url)
         stub_request(:get, SiteSetting.feed_polling_url).to_return(
-          status: 200,
           body: file_from_fixtures('feed.rss', 'feed').read,
           headers: { "Content-Type" => "application/rss+xml" }
         )
@@ -116,9 +115,8 @@ describe Jobs::PollFeed do
         SiteSetting.feed_polling_url = 'https://blog.discourse.org/feed/atom/'
         SiteSetting.embed_by_username = embed_by_username
 
-        stub_request(:head, SiteSetting.feed_polling_url).to_return(status: 200)
+        stub_request(:head, SiteSetting.feed_polling_url)
         stub_request(:get, SiteSetting.feed_polling_url).to_return(
-          status: 200,
           body: file_from_fixtures('feed.atom', 'feed').read,
           headers: { "Content-Type" => "application/atom+xml" }
         )

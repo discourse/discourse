@@ -59,21 +59,20 @@ describe UploadsController do
         expect(id).to be
       end
 
-      it 'is successful with synchronous api' do
+      it 'is successful with api' do
         SiteSetting.authorized_extensions = "*"
         controller.stubs(:is_api?).returns(true)
 
+        FinalDestination.stubs(:lookup_ip).returns("1.2.3.4")
+
         Jobs.expects(:enqueue).with(:create_avatar_thumbnails, anything)
 
-        stub_request(:head, 'http://example.com/image.png')
-        stub_request(:get, "http://example.com/image.png").to_return(body: File.read('spec/fixtures/images/logo.png'))
+        url = "http://example.com/image.png"
+        png = File.read(Rails.root + "spec/fixtures/images/logo.png")
 
-        post :create, params: {
-          url: 'http://example.com/image.png',
-          type: "avatar",
-          synchronous: true,
-          format: :json
-        }
+        stub_request(:get, url).to_return(status: 200, body: png)
+
+        post :create, params: { url: url, type: "avatar", format: :json }
 
         json = ::JSON.parse(response.body)
 

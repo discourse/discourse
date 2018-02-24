@@ -3,20 +3,14 @@ require 'rails_helper'
 describe StaticController do
 
   context '#favicon' do
-    before do
-      # this is a mess in test, will fix in a future commit
-      FinalDestination.stubs(:lookup_ip).returns('1.2.3.4')
-    end
-
     let(:png) { Base64.decode64("R0lGODlhAQABALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//wBiZCH5BAEAAA8ALAAAAAABAAEAAAQC8EUAOw==") }
 
+    before { FinalDestination.stubs(:lookup_ip).returns("1.2.3.4") }
+
     it 'returns the default favicon for a missing download' do
+      url = "https://fav.icon/#{SecureRandom.hex}.png"
 
-      url = "https://somewhere1.over.rainbow/#{SecureRandom.hex}.png"
-
-      stub_request(:head, url).
-        with(headers: { 'Host' => 'somewhere1.over.rainbow' }).
-        to_return(status: 404, body: "", headers: {})
+      stub_request(:get, url).to_return(status: 404)
 
       SiteSetting.favicon_url = url
 
@@ -30,14 +24,9 @@ describe StaticController do
     end
 
     it 'can proxy a favicon correctly' do
-      url = "https://somewhere.over.rainbow/#{SecureRandom.hex}.png"
+      url = "https://fav.icon/#{SecureRandom.hex}.png"
 
-      stub_request(:head, url).
-        with(headers: { 'Host' => 'somewhere.over.rainbow' }).
-        to_return(status: 200, body: "", headers: {})
-
-      stub_request(:get, url).
-        to_return(status: 200, body: png, headers: {})
+      stub_request(:get, url).to_return(status: 200, body: png)
 
       SiteSetting.favicon_url = url
 
@@ -51,7 +40,6 @@ describe StaticController do
 
   context '#brotli_asset' do
     it 'returns a non brotli encoded 404 if asset is missing' do
-
       get "/brotli_asset/missing.js"
 
       expect(response.status).to eq(404)
