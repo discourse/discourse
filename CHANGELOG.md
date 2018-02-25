@@ -1,3 +1,7 @@
+## 1.8.40
+
+  * remove explicit dependency on fast blank
+
 ## 1.8.33
 
   * add support for private vimeo links
