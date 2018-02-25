@@ -489,11 +489,15 @@ class TopicView
     raise Discourse::NotFound if @topic.blank?
     # Special case: If the topic is private and the user isn't logged in, ask them
     # to log in!
-    if @topic.present? && @topic.private_message?
-      raise Discourse::NotLoggedIn.new if @user.blank?
-      StaffActionLogger.new(@user).log_check_personal_message(@topic) if SiteSetting.log_personal_messages_views && @topic.all_allowed_users.where(id: @user.id).blank?
+    if @topic.present? && @topic.private_message? && @user.blank?
+      raise Discourse::NotLoggedIn.new
     end
+    # can user see this topic?
     raise Discourse::InvalidAccess.new("can't see #{@topic}", @topic) unless @guardian.can_see?(@topic)
+    # log personal message views
+    if SiteSetting.log_personal_messages_views && @topic.present? && @topic.private_message? && @topic.all_allowed_users.where(id: @user.id).blank?
+      StaffActionLogger.new(@user).log_check_personal_message(@topic)
+    end
   end
 
   def get_minmax_ids(post_number)
