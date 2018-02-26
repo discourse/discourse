@@ -17,6 +17,36 @@
   }
 }
 
+.categories-and-latest {
+  .latest-topic-list {
+    span.badge-category {
+      .category-name {
+        max-width: 25vw;
+        @media screen and (max-width: 630px) {
+          max-width: 65vw; //single-column
+        }
+      }
+    }
+  }
+}
+
+.category-list {
+  .category-name {
+    display: block;
+    max-width: 35vw; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    @media screen and (max-width: 630px) {
+      max-width: 75vw; //single-column
+    }
+  }
+  &.with-topics {
+    .category-name {
+      max-width: 40vw;
+    }
+  } 
+}
+
 .topic-list-item.visited,
 .latest-topic-list-item.visited,
 .category-topic-link.visited {
@@ -109,6 +139,12 @@
 
   .topic-featured-link {
     padding-left: 5px;
+  }
+
+  span.badge-category {
+    .category-name {
+      max-width: 150px;
+    }
   }
 
   .topic-excerpt {

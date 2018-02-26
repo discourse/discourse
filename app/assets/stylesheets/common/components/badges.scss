@@ -20,8 +20,15 @@
   font-weight: bold;
   white-space: nowrap;
   position: relative;
+  display: flex;
+  align-items: baseline;
   
   .badge-category {
+      display: inline-flex;
+      .category-name {
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
     .d-icon {
       margin-right: 3px;
     }
@@ -98,7 +105,7 @@
 
     span.badge-category {
       color: $primary;
-      padding: 3px;
+      padding: 1px 3px;
       overflow: hidden;
       text-overflow: ellipsis;
 
