@@ -47,6 +47,11 @@ after_initialize do
             raise StandardError.new I18n.t("poll.topic_must_be_open_to_vote")
           end
 
+          # user must be allowed to post in topic
+          unless Guardian.new(user).can_create_post?(post.topic)
+            raise StandardError.new I18n.t("poll.user_cant_post_in_topic")
+          end
+
           polls = post.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD]
 
           raise StandardError.new I18n.t("poll.no_polls_associated_with_this_post") if polls.blank?
