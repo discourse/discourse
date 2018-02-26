@@ -1795,7 +1795,7 @@ describe Topic do
       let(:randolph) { 'randolph@duke.ooo' }
 
       it "should attach group to the invite" do
-        expect(group_private_topic.invite(group_manager, randolph)).to eq(true)
+        group_private_topic.invite(group_manager, randolph)
         expect(Invite.last.groups).to eq([group])
       end
     end
