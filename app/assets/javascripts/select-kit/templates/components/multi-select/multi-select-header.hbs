@@ -5,11 +5,6 @@
       computedContent=selectedComputedContent}}
   {{/each}}
   <span class="filter choice" tabindex="-1">
-    {{component "select-kit/select-kit-filter"
-      filterComputedContent=filterComputedContent
-      shouldDisplayFilter=shouldDisplayFilter
-      isFocused=isFocused
-      filter=filter
-    }}
+    {{yield}}
   </span>
 </div>

@@ -229,10 +229,6 @@
       margin: 0;
       flex: 1 1 100%;
     }
-
-    &.select2-dropdown-open, &.select2-container-active {
-      border-color: $tertiary;
-    }
   }
 
   .wmd-controls {

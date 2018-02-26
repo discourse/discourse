@@ -1,22 +1,22 @@
 import ComboBox from "select-kit/components/combo-box";
-import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from 'discourse/lib/ajax-error';
+import Tags from "select-kit/mixins/tags";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import renderTag from "discourse/lib/render-tag";
-const { get, isEmpty, isPresent, run, makeArray } = Ember;
+const { get, isEmpty, run, makeArray } = Ember;
 
-export default ComboBox.extend({
+export default ComboBox.extend(Tags, {
   allowContentReplacement: true,
   pluginApiIdentifiers: ["mini-tag-chooser"],
+  attributeBindings: ["categoryId"],
   classNames: ["mini-tag-chooser"],
   classNameBindings: ["noTags"],
   verticalOffset: 3,
   filterable: true,
-  noTags: Ember.computed.empty("computedTags"),
+  noTags: Ember.computed.empty("selectedTags"),
   allowAny: true,
-  maximumSelectionSize: Ember.computed.alias("siteSettings.max_tags_per_topic"),
   caretUpIcon: Ember.computed.alias("caretIcon"),
   caretDownIcon: Ember.computed.alias("caretIcon"),
+  isAsync: true,
 
   init() {
     this._super();
@@ -30,17 +30,8 @@ export default ComboBox.extend({
         noHref: true
       });
     });
-  },
 
-  @computed("limitReached", "maximumSelectionSize")
-  maxContentRow(limitReached, count) {
-    if (limitReached) {
-      return I18n.t("select_kit.max_content_reached", { count });
-    }
-  },
-
-  mutateAttributes() {
-    this.set("value", null);
+    this.set("limit", parseInt(this.get("limit") || this.get("siteSettings.max_tags_per_topic")));
   },
 
   @computed("limitReached")
@@ -48,9 +39,9 @@ export default ComboBox.extend({
     return limitReached ? null : "plus";
   },
 
-  @computed("computedTags.[]", "maximumSelectionSize")
-  limitReached(computedTags, maximumSelectionSize) {
-    if (computedTags.length >= maximumSelectionSize) {
+  @computed("selectedTags.[]", "limit")
+  limitReached(selectedTags, limit) {
+    if (selectedTags.length >= limit) {
       return true;
     }
 
@@ -58,31 +49,8 @@ export default ComboBox.extend({
   },
 
   @computed("tags")
-  computedTags(tags) {
+  selectedTags(tags) {
     return makeArray(tags);
-  },
-
-  validateCreate(term) {
-    if (this.get("limitReached") || !this.site.get("can_create_tag")) {
-      return false;
-    }
-
-    const filterRegexp = new RegExp(this.site.tags_filter_regexp, "g");
-    term = term.replace(filterRegexp, "").trim().toLowerCase();
-
-    if (!term.length || this.get("termMatchesForbidden")) {
-      return false;
-    }
-
-    if (this.get("siteSettings.max_tag_length") < term.length) {
-      return false;
-    }
-
-    return true;
-  },
-
-  validateSelect() {
-    return this.get("computedTags").length < this.get("siteSettings.max_tags_per_topic");
   },
 
   filterComputedContent(computedContent) {
@@ -92,7 +60,7 @@ export default ComboBox.extend({
   didRender() {
     this._super();
 
-    this.$().on("click.mini-tag-chooser", ".selected-tag", (event) => {
+    $(".select-kit-body").on("click.mini-tag-chooser", ".selected-tag", (event) => {
       event.stopImmediatePropagation();
       this.send("removeTag", $(event.target).attr("data-value"));
     });
@@ -102,9 +70,6 @@ export default ComboBox.extend({
     this._super();
 
     $(".select-kit-body").off("click.mini-tag-chooser");
-
-    const searchDebounce = this.get("searchDebounce");
-    if (isPresent(searchDebounce)) { run.cancel(searchDebounce); }
   },
 
   didPressEscape(event) {
@@ -167,9 +132,9 @@ export default ComboBox.extend({
 
   computeHeaderContent() {
     let content = this.baseHeaderComputedContent();
-    const joinedTags = this.get("computedTags").join(", ");
+    const joinedTags = this.get("selectedTags").join(", ");
 
-    if (isEmpty(this.get("computedTags"))) {
+    if (isEmpty(this.get("selectedTags"))) {
       content.label = I18n.t("tagging.choose_for_topic");
     } else {
       content.label = joinedTags;
@@ -182,80 +147,61 @@ export default ComboBox.extend({
 
   actions: {
     removeTag(tag) {
-      let tags = this.get("computedTags");
+      let tags = this.get("selectedTags");
       delete tags[tags.indexOf(tag)];
       this.set("tags", tags.filter(t => t));
-      this.set("content", []);
-      this.set("searchDebounce", run.debounce(this, this._searchTags, this.get("filter"), 250));
+      this.set("searchDebounce", run.debounce(this, this.prepareSearch, this.get("filter"), 200));
     },
 
     onExpand() {
-      if (isEmpty(this.get("content"))) {
-        this.set("searchDebounce", run.debounce(this, this._searchTags, this.get("filter"), 250));
+      if (isEmpty(this.get("collectionComputedContent"))) {
+        this.set("searchDebounce", run.debounce(this, this.prepareSearch, this.get("filter"), 200));
       }
     },
 
     onFilter(filter) {
       filter = isEmpty(filter) ? null : filter;
-      this.set("searchDebounce", run.debounce(this, this._searchTags, filter, 250));
+      this.set("searchDebounce", run.debounce(this, this.prepareSearch, filter, 200));
     },
 
     onSelect(tag) {
-      if (isEmpty(this.get("computedTags"))) {
+      if (isEmpty(this.get("selectedTags"))) {
         this.set("tags", makeArray(tag));
       } else {
-        this.set("tags", this.get("computedTags").concat(tag));
+        this.set("tags", this.get("selectedTags").concat(tag));
       }
 
-      this.set("content", []);
-      this.set("searchDebounce", run.debounce(this, this._searchTags, this.get("filter"), 250));
+      this.set("searchDebounce", run.debounce(this, this.prepareSearch, this.get("filter"), 50));
+
+      this.autoHighlight();
     }
   },
 
-  _searchTags(query) {
-    this.startLoading();
-
-    const self = this;
-    const selectedTags = makeArray(this.get("computedTags")).filter(t => t);
-    const sortTags = this.siteSettings.tags_sort_alphabetically;
+  prepareSearch(query) {
     const data = {
       q: query,
-      limit: this.siteSettings.max_tag_search_results,
+      limit: this.get("siteSettings.max_tag_search_results"),
       categoryId: this.get("categoryId")
     };
+    if (this.get("selectedTags")) data.selected_tags = this.get("selectedTags").slice(0, 100);
+    if (!this.get("everyTag")) data.filterForInput = true;
 
-    if (selectedTags) {
-      data.selected_tags = selectedTags.slice(0, 100);
+    this.searchTags("/tags/filter/search", data, this._transformJson);
+  },
+
+  _transformJson(context, json) {
+    let results = json.results;
+
+    context.set("termMatchesForbidden", json.forbidden ? true : false);
+
+    if (context.get("siteSettings.tags_sort_alphabetically")) {
+      results = results.sort((a, b) => a.id > b.id);
     }
 
-    ajax(Discourse.getURL("/tags/filter/search"), {
-        quietMillis: 200,
-        cache: true,
-        dataType: "json",
-        data,
-      }).then(json => {
-        let results = json.results;
+    results = results.filter(r => !context.get("selectedTags").includes(r.id));
 
-        self.set("termMatchesForbidden", json.forbidden ? true : false);
-
-        if (sortTags) {
-          results = results.sort((a, b) => a.id > b.id);
-        }
-
-        const content = results.map((result) => {
-          return {
-            id: result.text,
-            name: result.text,
-            count: result.count
-          };
-        }).filter(c => !selectedTags.includes(c.id));
-
-        self.set("content", content);
-        self.stopLoading();
-        this.autoHighlight();
-      }).catch(error => {
-        self.stopLoading();
-        popupAjaxError(error);
-      });
+    return results.map(result => {
+      return { id: result.text, name: result.text, count: result.count };
+    });
   }
 });

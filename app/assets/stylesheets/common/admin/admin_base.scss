@@ -270,7 +270,7 @@ $mobile-breakpoint: 700px;
   @include clearfix;
   nav {
     float: left;
-    margin-left: 12px;    
+    margin-left: 12px;
   }
   .nav.nav-pills {
     li.active {
@@ -493,9 +493,6 @@ $mobile-breakpoint: 700px;
           width: 100% !important; // !important overrides hard-coded mobile width of 68px
         }
       }
-      .select2-container-multi .select2-choices {
-        border: none;
-      }
     }
     .setting-controls {
       float: left;
@@ -520,13 +517,6 @@ $mobile-breakpoint: 700px;
       border: 1px solid $primary-low;
       border-radius: 3px;
       transition: border linear 0.2s, box-shadow linear 0.2s;
-
-      li.select2-search-choice {
-        cursor: pointer;
-        .select2-search-choice-close {
-          content: "x"
-        }
-      }
 
       li.sortable-placeholder {
         padding: 3px 5px 3px 18px;
@@ -831,14 +821,6 @@ section.details {
   .controls {
     margin-top: 10px;
   }
-  .select2-container {
-    width: 100%;
-  }
-  .select2-choices {
-    width: 100%;
-    border-color: dark-light-choose($primary-low-mid, $secondary-high);
-  }
-
   .content-list {
     margin-right: 20px;
   }

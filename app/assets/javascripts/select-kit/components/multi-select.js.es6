@@ -8,14 +8,15 @@ import {
 
 export default SelectKitComponent.extend({
   pluginApiIdentifiers: ["multi-select"],
+  layoutName: "select-kit/templates/components/multi-select",
   classNames: "multi-select",
   headerComponent: "multi-select/multi-select-header",
-  filterComponent: null,
   headerText: "select_kit.default_header_text",
   allowAny: true,
   allowInitialValueMutation: false,
   autoFilterable: true,
   selectedNameComponent: "multi-select/selected-name",
+  filterIcon: null,
 
   init() {
     this._super();
@@ -38,16 +39,22 @@ export default SelectKitComponent.extend({
   _compute() {
     Ember.run.scheduleOnce("afterRender", () => {
       this.willComputeAttributes();
-      let content = this.willComputeContent(this.get("content") || []);
+      let content = this.get("content") || [];
+      let asyncContent = this.get("asyncContent") || [];
+      content = this.willComputeContent(content);
+      asyncContent = this.willComputeAsyncContent(asyncContent);
       let values = this._beforeWillComputeValues(this.get("values"));
       content = this.computeContent(content);
+      asyncContent = this.computeAsyncContent(asyncContent);
       content = this._beforeDidComputeContent(content);
+      asyncContent = this._beforeDidComputeAsyncContent(asyncContent);
       values = this.willComputeValues(values);
       values = this.computeValues(values);
       values = this._beforeDidComputeValues(values);
       this._setHeaderComputedContent();
       this._setCollectionHeaderComputedContent();
       this.didComputeContent(content);
+      this.didComputeAsyncContent(asyncContent);
       this.didComputeValues(values);
       this.didComputeAttributes();
     });
@@ -102,6 +109,19 @@ export default SelectKitComponent.extend({
     });
   },
 
+  @computed("computedAsyncContent.[]", "computedValues.[]")
+  filteredAsyncComputedContent(computedAsyncContent, computedValues) {
+    computedAsyncContent = computedAsyncContent.filter(c => {
+      return !computedValues.includes(get(c, "value"));
+    });
+
+    if (this.get("limitMatches")) {
+      return computedAsyncContent.slice(0, this.get("limitMatches"));
+    }
+
+    return computedAsyncContent;
+  },
+
   @computed("computedContent.[]", "computedValues.[]", "filter")
   filteredComputedContent(computedContent, computedValues, filter) {
     computedContent = computedContent.filter(c => {
@@ -131,6 +151,16 @@ export default SelectKitComponent.extend({
     return (rowComponent) => {
       return I18n.t("select_kit.create", { content: rowComponent.get("computedContent.name")});
     };
+  },
+
+  @computed("limit", "computedValues.[]")
+  limitReached(limit, computedValues) {
+    if (!limit) return false;
+    return computedValues.length >= limit;
+  },
+
+  validateSelect() {
+    return this._super() && !this.get("limitReached");
   },
 
   didPressBackspace(event) {
@@ -178,16 +208,16 @@ export default SelectKitComponent.extend({
       if ($lastSelectedValue.length === 0) { return; }
 
       if ($filterInput.not(":visible") && $lastSelectedValue.length > 0) {
-        $lastSelectedValue.click();
+        $lastSelectedValue.trigger("backspace");
         return false;
       }
 
       if ($filterInput.val() === "") {
         if ($filterInput.is(":focus")) {
-          if ($lastSelectedValue.length > 0) { $lastSelectedValue.click(); }
+          if ($lastSelectedValue.length > 0) { $lastSelectedValue.trigger("backspace"); }
         } else {
           if ($lastSelectedValue.length > 0) {
-            $lastSelectedValue.click();
+            $lastSelectedValue.trigger("backspace");
           } else {
             $filterInput.focus();
           }
@@ -217,14 +247,14 @@ export default SelectKitComponent.extend({
       if (!this.get("renderedBodyOnce")) return;
       if (!isNone(this.get("highlightedValue"))) return;
 
-      if (isEmpty(this.get("filteredComputedContent"))) {
+      if (isEmpty(this.get("collectionComputedContent"))) {
         if (this.get("createRowComputedContent")) {
           this.send("highlight", this.get("createRowComputedContent"));
         } else if (this.get("noneRowComputedContent") && this.get("hasSelection")) {
           this.send("highlight", this.get("noneRowComputedContent"));
         }
       } else {
-        this.send("highlight", this.get("filteredComputedContent.firstObject"));
+        this.send("highlight", this.get("collectionComputedContent.firstObject"));
       }
     });
   },
@@ -247,9 +277,10 @@ export default SelectKitComponent.extend({
     this.set("highlightedValue", null);
   },
 
-  didDeselect() {
+  didDeselect(rowComputedContentItems) {
     this.focusFilterOrHeader();
     this.autoHighlight();
+    this._boundaryActionHandler("onDeselect", rowComputedContentItems);
   },
 
   actions: {

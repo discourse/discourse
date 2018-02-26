@@ -7,7 +7,6 @@
       &.is-expanded {
         .select-kit-header {
           border: 1px solid $tertiary;
-          box-shadow: shadow("focus");
         }
       }
 
@@ -59,7 +58,7 @@
           }
 
           .selected-tag {
-            background: $primary-very-low;
+            background: $primary-low;
             padding: 2px 4px;
             margin: 2px;
             border: 0;
