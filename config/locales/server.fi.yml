@@ -82,7 +82,6 @@ fi:
       invalid: ei kelpaa
       is_invalid: "vaikuttaa epäselvältä, olihan se kokonainen virke?"
       contains_censored_words: "sisältää nämä sensuroidut sanat: %{censored_words}"
-      matches_censored_pattern: "sisältää nämä sivustolla sensuroidun säännöllisen lausekkeen täyttävät sanat: %{censored_words}"
       less_than: täytyy olla vähemmän kuin %{count}
       less_than_or_equal_to: täytyy olla yhtä suuri tai pienempi kuin %{count}
       not_a_number: ei ole numero
@@ -860,7 +859,6 @@ fi:
     poll_pop3_auth_error: "Yhteys POP3-palvelimelle epäonnistuu autentikaatiovirheen vuoksi. Tarkista <a href='/admin/site_settings/category/email'>POP3-asetukset</a>."
   site_settings:
     censored_words: "Sanat, jotka korvataan automaattisesti merkeillä &#9632;&#9632;&#9632;&#9632;"
-    censored_pattern: "Säännöllinen lauseke, joka korvataan automaattisesti &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Poista automaattisesti kaikki yli 30 päivää piilotettuna olleet viestit."
     allow_user_locale: "Salli käyttäjien vaihtaa käyttöliittymän kieli omista asetuksista"
     set_locale_from_accept_language_header: "Aseta sivuston kieli kirjautumattomille käyttäjille selaimen kielivalinnan perusteella. (KOKEELLINEN, ei toimi anonyymin välimuistin kanssa)"

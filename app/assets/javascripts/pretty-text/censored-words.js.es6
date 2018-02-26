@@ -2,7 +2,7 @@ function escapeRegexp(text) {
   return text.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&').replace(/\*/g, "\S*");
 }
 
-export function censorFn(censoredWords, censoredPattern, replacementLetter, watchedWordsRegularExpressions) {
+export function censorFn(censoredWords, replacementLetter, watchedWordsRegularExpressions) {
 
   let patterns = [];
 
@@ -13,10 +13,6 @@ export function censorFn(censoredWords, censoredPattern, replacementLetter, watc
     if (!watchedWordsRegularExpressions) {
       patterns = patterns.map(t => `(${escapeRegexp(t)})`);
     }
-  }
-
-  if (censoredPattern && censoredPattern.length > 0) {
-    patterns.push("(" + censoredPattern + ")");
   }
 
   if (patterns.length) {
@@ -64,6 +60,6 @@ export function censorFn(censoredWords, censoredPattern, replacementLetter, watc
   return function(t){ return t;};
 }
 
-export function censor(text, censoredWords, censoredPattern, replacementLetter) {
-  return censorFn(censoredWords, censoredPattern, replacementLetter)(text);
+export function censor(text, censoredWords, replacementLetter) {
+  return censorFn(censoredWords, replacementLetter)(text);
 }

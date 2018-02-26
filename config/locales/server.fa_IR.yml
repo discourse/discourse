@@ -77,7 +77,6 @@ fa_IR:
       invalid: نامعتبر است
       is_invalid: "به نظر واضح نیست، آیا این جمله کامل است؟"
       contains_censored_words: "شامل کلمات سانسور شده زیر است: %{censored_words}"
-      matches_censored_pattern: "شامل کلمات سانسور شده‌ی زیر است که با الگوی کلمات سانسور شده سایت هماهنگ است: %{censored_words}"
       less_than: باید کمتر از %{count} باشد
       less_than_or_equal_to: باید کمتر و یا مساوی %{count} باشد
       not_a_number: عدد نیست
@@ -801,7 +800,6 @@ fa_IR:
     poll_pop3_auth_error: "اتصال به سرور POP3 ناموفق بود، خطای اعتبار سنجی. لطفا <a href='/admin/site_settings/category/email'>تنظیمات POP3</a> را بررسی کنید."
   site_settings:
     censored_words: "کلماتی که به صورت خودکار جایگزین می شوند با  &#9632;&#9632;&#9632;&#9632;"
-    censored_pattern: "الگوی Regex به صورت خودکار با &#9632;&#9632;&#9632;&#9632; جا به جا می‌شود."
     delete_old_hidden_posts: "پاک کردن خودکار تمام نوشته‌هایی که بیش از 30 روز بصورت پنهان باقی می‌مانند. "
     allow_user_locale: "اجازه انتخاب زبان به کاربران داده شود."
     set_locale_from_accept_language_header: "تنظیم زبان برای رابط کاربری کاربران ناشناس که از هدر مرورگر دریافت می‌شود. (تجربی، با کش ناشناس کار نمی‌کند)"
