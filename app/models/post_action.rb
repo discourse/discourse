@@ -154,6 +154,7 @@ SQL
     end
 
     DiscourseEvent.trigger(:confirmed_spam_post, post) if trigger_spam
+    DiscourseEvent.trigger(:flag_reviewed, post)
 
     update_flagged_posts_count
   end
@@ -186,6 +187,7 @@ SQL
     end
 
     Post.with_deleted.where(id: post.id).update_all(cached)
+    DiscourseEvent.trigger(:flag_reviewed, post)
 
     update_flagged_posts_count
   end
@@ -203,6 +205,7 @@ SQL
       action.add_moderator_post_if_needed(moderator, :deferred, delete_post)
     end
 
+    DiscourseEvent.trigger(:flag_reviewed, post)
     update_flagged_posts_count
   end
 
