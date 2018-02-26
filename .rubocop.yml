@@ -4,8 +4,8 @@ AllCops:
   Include:
     - 'onebox.gemspec'
     - 'Rakefile'
-  Exclude: []
-
+  Exclude:
+    - 'vendor/**/*'
 
 # Prefer &&/|| over and/or.
 Style/AndOr:
