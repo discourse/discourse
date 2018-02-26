@@ -36,7 +36,7 @@ function renderAvatar(user, options) {
 
     if (!username || !avatarTemplate) { return ''; }
 
-    let formattedUsername = formatUsername(username);
+    let displayName = Ember.get(user, 'name') || formatUsername(username);
 
     let title = options.title;
     if (!title && !options.ignoreTitle) {
@@ -49,7 +49,7 @@ function renderAvatar(user, options) {
         // if a description has been provided
         if (description && description.length > 0) {
           // preprend the username before the description
-          title = formattedUsername + " - " + description;
+          title = displayName + " - " + description;
         }
       }
     }
@@ -57,7 +57,7 @@ function renderAvatar(user, options) {
     return avatarImg({
       size: options.imageSize,
       extraClasses: Em.get(user, 'extras') || options.extraClasses,
-      title: title || formattedUsername,
+      title: title || displayName,
       avatarTemplate: avatarTemplate
     });
   } else {

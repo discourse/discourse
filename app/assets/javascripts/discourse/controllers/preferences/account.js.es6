@@ -40,6 +40,11 @@ export default Ember.Controller.extend(CanCheckEmails, PreferencesTabController,
     return !this.siteSettings.enable_sso && this.siteSettings.enable_local_logins;
   },
 
+  @computed("model.second_factor_enabled")
+  secondFactorStatusClass(secondFactorEnabled) {
+    return secondFactorEnabled ? 'tip good' : 'tip bad';
+  },
+
   actions: {
     save() {
       this.set('saved', false);

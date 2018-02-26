@@ -4,6 +4,7 @@ const { get, isNone, isEmpty, isPresent, run } = Ember;
 
 export default SelectKitComponent.extend({
   pluginApiIdentifiers: ["single-select"],
+  layoutName: "select-kit/templates/components/single-select",
   classNames: "single-select",
   computedValue: null,
   value: null,
@@ -13,14 +14,20 @@ export default SelectKitComponent.extend({
   _compute() {
     run.scheduleOnce("afterRender", () => {
       this.willComputeAttributes();
-      let content = this.willComputeContent(this.get("content") || []);
+      let content = this.get("content") || [];
+      let asyncContent = this.get("asyncContent") || [];
+      content = this.willComputeContent(content);
+      asyncContent = this.willComputeAsyncContent(asyncContent);
       let value = this._beforeWillComputeValue(this.get("value"));
       content = this.computeContent(content);
+      asyncContent = this.computeAsyncContent(asyncContent);
       content = this._beforeDidComputeContent(content);
+      asyncContent = this._beforeDidComputeAsyncContent(asyncContent);
       value = this.willComputeValue(value);
       value = this.computeValue(value);
       value = this._beforeDidComputeValue(value);
       this.didComputeContent(content);
+      this.didComputeAsyncContent(asyncContent);
       this.didComputeValue(value);
       this.didComputeAttributes();
 
@@ -84,6 +91,19 @@ export default SelectKitComponent.extend({
       value: this.get("selectedComputedContent.value"),
       name: this.get("selectedComputedContent.name") || this.get("noneRowComputedContent.name")
     };
+  },
+
+  @computed("computedAsyncContent.[]", "computedValue")
+  filteredAsyncComputedContent(computedAsyncContent, computedValue) {
+    computedAsyncContent = computedAsyncContent.filter(c => {
+      return computedValue !== get(c, "value");
+    });
+
+    if (this.get("limitMatches")) {
+      return computedAsyncContent.slice(0, this.get("limitMatches"));
+    }
+
+    return computedAsyncContent;
   },
 
   @computed("computedContent.[]", "computedValue", "filter", "shouldFilter")

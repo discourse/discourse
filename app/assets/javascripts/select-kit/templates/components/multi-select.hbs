@@ -1,35 +1,33 @@
-{{component headerComponent
+{{#component headerComponent
   tabindex=tabindex
-  shouldDisplayFilter=shouldDisplayFilter
   isFocused=isFocused
   isExpanded=isExpanded
   computedContent=headerComputedContent
   deselect=(action "deselect")
   toggle=(action "toggle")
-  isLoading=isLoading
-  filterComputedContent=(action "filterComputedContent")
   clearSelection=(action "clearSelection")
   options=headerComponentOptions
 }}
-
-<div class="select-kit-body">
   {{component filterComponent
-    filter=filter
-    isLoading=isLoading
     icon=filterIcon
+    placeholder=filterPlaceholder
+    filter=filter
+    hasSelection=hasSelection
+    isLoading=isLoading
     shouldDisplayFilter=shouldDisplayFilter
-    placeholder=(i18n filterPlaceholder)
     isFocused=isFocused
     filterComputedContent=(action "filterComputedContent")
   }}
+{{/component}}
 
+<div class="select-kit-body">
   {{#if renderedBodyOnce}}
     {{component collectionComponent
       collectionHeaderComputedContent=collectionHeaderComputedContent
       hasSelection=hasSelection
       noneRowComputedContent=noneRowComputedContent
       createRowComputedContent=createRowComputedContent
-      filteredComputedContent=filteredComputedContent
+      collectionComputedContent=collectionComputedContent
       rowComponent=rowComponent
       noneRowComponent=noneRowComponent
       createRowComponent=createRowComponent

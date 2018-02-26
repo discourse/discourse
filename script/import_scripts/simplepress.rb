@@ -99,8 +99,6 @@ class ImportScripts::SimplePress < ImportScripts::Base
 
     total_count = mysql_query("SELECT COUNT(*) count FROM #{TABLE_PREFIX}posts WHERE post_index = 1").first["count"]
 
-    @topic_first_post_id = {}
-
     batches(BATCH_SIZE) do |offset|
       results = mysql_query("
         SELECT p.post_id id,
@@ -126,11 +124,10 @@ class ImportScripts::SimplePress < ImportScripts::Base
       next if all_records_exist? :posts, results.map { |m| m['id'].to_i }
 
       create_posts(results, total: total_count, offset: offset) do |m|
-        @topic_first_post_id[m['topic_id']] = m['id']
         created_at = Time.zone.at(m['post_time'])
         {
           id: m['id'],
-          user_id:  user_id_from_imported_user_id(m['user_id']) || -1,
+          user_id: user_id_from_imported_user_id(m['user_id']) || -1,
           raw: process_simplepress_post(m['raw'], m['id']),
           created_at: created_at,
           category: category_id_from_imported_category_id(m['category_id']),
@@ -144,6 +141,15 @@ class ImportScripts::SimplePress < ImportScripts::Base
 
   def import_posts
     puts "", "creating posts"
+
+    topic_first_post_id = {}
+
+    mysql_query("
+      SELECT t.topic_id, p.post_id
+        FROM #{TABLE_PREFIX}topics t
+        JOIN #{TABLE_PREFIX}posts p ON p.topic_id = t.topic_id
+       WHERE p.post_index = 1
+    ").each { |r| topic_first_post_id[r["topic_id"]] = r["post_id"] }
 
     total_count = mysql_query("SELECT count(*) count FROM #{TABLE_PREFIX}posts WHERE post_index <> 1").first["count"]
 
@@ -168,13 +174,13 @@ class ImportScripts::SimplePress < ImportScripts::Base
       next if all_records_exist? :posts, results.map { |m| m['id'].to_i }
 
       create_posts(results, total: total_count, offset: offset) do |m|
-        if parent = topic_lookup_from_imported_post_id(@topic_first_post_id[m['topic_id']])
+        if parent = topic_lookup_from_imported_post_id(topic_first_post_id[m['topic_id']])
           {
             id: m['id'],
             user_id: user_id_from_imported_user_id(m['user_id']) || -1,
             topic_id: parent[:topic_id],
-            raw:  process_simplepress_post(m['raw'], m['id']),
-            created_at:  Time.zone.at(m['post_time']),
+            raw: process_simplepress_post(m['raw'], m['id']),
+            created_at: Time.zone.at(m['post_time']),
           }
         else
           puts "Parent post #{m['topic_id']} doesn't exist. Skipping #{m["id"]}"

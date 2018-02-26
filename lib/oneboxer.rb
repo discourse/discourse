@@ -170,6 +170,10 @@ module Oneboxer
         return unless Guardian.new(current_user).can_see_category?(current_category)
       end
 
+      if current_topic = Topic.find_by(id: opts[:topic_id])
+        return unless Guardian.new(current_user).can_see_topic?(current_topic)
+      end
+
       topic = Topic.find_by(id: route[:topic_id])
 
       return unless topic
@@ -187,7 +191,7 @@ module Oneboxer
 
       return if !post || post.hidden || post.post_type != Post.types[:regular]
 
-      if post_number > 1
+      if post_number > 1 && current_topic&.id == topic.id
         excerpt = post.excerpt(SiteSetting.post_onebox_maxlength)
         excerpt.gsub!(/[\r\n]+/, " ")
         excerpt.gsub!("[/quote]", "[quote]") # don't break my quote
@@ -198,11 +202,11 @@ module Oneboxer
       else
         args = {
           topic_id: topic.id,
-          avatar: PrettyText.avatar_img(topic.user.avatar_template, "tiny"),
+          avatar: PrettyText.avatar_img(post.user.avatar_template, "tiny"),
           original_url: url,
           title: PrettyText.unescape_emoji(CGI::escapeHTML(topic.title)),
           category_html: CategoryBadge.html_for(topic.category),
-          quote: post.excerpt(SiteSetting.post_onebox_maxlength),
+          quote: PrettyText.unescape_emoji(post.excerpt(SiteSetting.post_onebox_maxlength)),
         }
 
         template = File.read("#{Rails.root}/lib/onebox/templates/discourse_topic_onebox.hbs")

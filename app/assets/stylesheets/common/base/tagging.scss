@@ -25,8 +25,8 @@
 
   .tag-count {
     font-size: $font-down-1;
-    vertical-align: middle;   
-    line-height: $line-height-small; 
+    vertical-align: middle;
+    line-height: $line-height-small;
   }
 }
 
@@ -61,16 +61,12 @@
 
     &.box, &.bullet {
     }
-    
+
     &.box + .topic-header-extra,
     &.bullet + .topic-header-extra,
     &.bar + .topic-header-extra {
     }
   }
-}
-
-.add-tags .select2 {
-  margin: 0;
 }
 
 $tag-color: $primary-medium;
@@ -79,15 +75,11 @@ $tag-color: $primary-medium;
   font-size: $font-down-1;
   color: $tag-color;
   line-height: $line-height-small;
-  vertical-align: middle;  
-}
-
-.select2-result-label .discourse-tag {
-  margin-right: 0;
+  vertical-align: middle;
 }
 
 .discourse-tag {
-  max-width: 14em; 
+  max-width: 14em;
   display: inline-block;
   white-space: nowrap;
   overflow: hidden;
@@ -131,28 +123,12 @@ $tag-color: $primary-medium;
 }
 
 .d-header .topic-header-extra {
-  .discourse-tags { 
+  .discourse-tags {
     display: inline-block;
-    font-size: $font-down-1;        
+    font-size: $font-down-1;
   }
   .topic-featured-link { margin-left: 8px; }
 }
-
-.select2-container-multi .select2-choices .select2-search-choice.discourse-tag-select2 {
-  -webkit-box-shadow: none;
-  box-shadow: none;
-  border: 0;
-  border-radius: 0;
-  background-color: transparent;
-  .discourse-tag {
-    padding: 4px;
-    &.box {
-      padding: 1px 8px;
-      margin: 3px 5px;
-    }
-  }
-}
-
 
 .fps-result .add-full-page-tags {
   display: inline-block;
@@ -213,11 +189,6 @@ header .discourse-tag {color: $tag-color }
   width: 100%;
   max-width: 100%;
   margin: 5px 0;
-  ul.select2-choices {
-    max-height: 30px;
-    padding-left: 10px;    
-    overflow-y: auto;
-  }
 }
 
 .title-wrapper .tag-chooser {
@@ -278,11 +249,7 @@ header .discourse-tag {color: $tag-color }
     }
   }
   .group-tags-list .tag-chooser {
-    height: 250px !important;
-    ul.select2-choices {
-      height: 250px !important; // to fight with select2.scss's important
-      max-height: none;
-    }
+    width: 100%;
   }
   .btn {margin-left: 10px;}
   .saving {

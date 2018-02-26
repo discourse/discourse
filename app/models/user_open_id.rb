@@ -11,8 +11,8 @@ end
 #
 #  id         :integer          not null, primary key
 #  user_id    :integer          not null
-#  email      :string(255)      not null
-#  url        :string(255)      not null
+#  email      :string           not null
+#  url        :string           not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  active     :boolean          not null

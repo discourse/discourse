@@ -255,6 +255,16 @@ login:
     default: false
   google_oauth2_client_id: ''
   google_oauth2_client_secret: ''
+  google_oauth2_prompt:
+    default: ''
+    type: list
+    choices:
+      - ''
+      - 'none'
+      - 'consent'
+      - 'select_account'
+  google_oauth2_hd:
+    default: ''
   enable_yahoo_logins:
     client: true
     default: false
@@ -502,6 +512,7 @@ posting:
     client: true
     default: 2
     min: 1
+  max_emojis_in_title: 1
   allow_uncategorized_topics:
     client: true
     default: true
@@ -717,7 +728,7 @@ email:
   pop3_polling_username: ''
   pop3_polling_password: ''
   log_mail_processing_failures: false
-  incoming_email_prefer_html: false
+  incoming_email_prefer_html: true
   email_in:
     default: false
     client: true
@@ -910,6 +921,9 @@ trust:
   min_trust_to_post_links:
     default: 0
     enum: 'TrustLevelSetting'
+  min_trust_to_post_images:
+    default: 0
+    enum: 'TrustLevelSetting'
   allow_flagging_staff: true
   tl1_requires_topics_entered: 5
   tl1_requires_read_posts:
@@ -958,6 +972,8 @@ trust:
   tl3_links_no_follow:
     default: false
     client: true
+  trusted_users_can_edit_others:
+    default: true
 
 security:
   force_https:
@@ -1567,6 +1583,8 @@ tags:
     type: list
     client: true
     default: ''
+  allow_staff_to_tag_pms:
+    default: false
   suppress_overlapping_tags_in_list:
     default: false
     client: true

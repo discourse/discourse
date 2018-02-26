@@ -57,7 +57,6 @@ Plus *lots* of Ruby Gems, a complete list of which is at [/master/Gemfile](https
 ## Contributing
 
 [![Build Status](https://api.travis-ci.org/discourse/discourse.svg?branch=master)](https://travis-ci.org/discourse/discourse)
-[![Code Climate](https://codeclimate.com/github/discourse/discourse.svg)](https://codeclimate.com/github/discourse/discourse)
 
 Discourse is **100% free** and **open source**. We encourage and support an active, healthy community that
 accepts contributions from the public &ndash; including you!

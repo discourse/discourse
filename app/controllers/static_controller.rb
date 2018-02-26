@@ -94,6 +94,8 @@ class StaticController < ApplicationController
     redirect_to destination
   end
 
+  FAVICON ||= -"favicon"
+
   # We need to be able to draw our favicon on a canvas
   # and pull it off the canvas into a data uri
   # This can work by ensuring people set all the right CORS
@@ -101,16 +103,16 @@ class StaticController < ApplicationController
   # instead we cache the favicon in redis and serve it out real quick with
   # a huge expiry, we also cache these assets in nginx so it bypassed if needed
   def favicon
-
     hijack do
-      data = DistributedMemoizer.memoize('favicon' + SiteSetting.favicon_url, 60 * 30) do
+      data = DistributedMemoizer.memoize(FAVICON + SiteSetting.favicon_url, 60 * 30) do
         begin
           file = FileHelper.download(
             SiteSetting.favicon_url,
             max_file_size: 50.kilobytes,
-            tmp_file_name: "favicon.png",
+            tmp_file_name: FAVICON,
             follow_redirect: true
           )
+          file ||= Tempfile.new([FAVICON, ".png"])
           data = file.read
           file.unlink
           data

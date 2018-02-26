@@ -86,6 +86,7 @@ export default Ember.Component.extend({
         ajax,
         synchronous: true,
         categoryId: this.get('composer.category.id'),
+        topicId: this.get('composer.topic.id')
       });
 
       if (loadOnebox && loadOnebox.then) {

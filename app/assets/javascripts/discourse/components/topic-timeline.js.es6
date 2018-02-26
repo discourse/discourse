@@ -47,6 +47,17 @@ export default MountWidget.extend(Docking, {
     this.queueRerender();
   },
 
+  fastDockCheck(){
+    // we need to dock super fast here, avoid any slow methods
+    // this is not debounced
+    const offset = window.pageYOffset;
+
+    if (offset && this.fastDockAt && offset > this.fastDockAt) {
+      this.fastDockAt = null;
+      $('.timeline-container').addClass('timeline-docked timeline-docked-bottom');
+    }
+  },
+
   dockCheck(info) {
     const mainOffset = $('#main').offset();
     const offsetTop = mainOffset ? mainOffset.top : 0;
@@ -62,13 +73,14 @@ export default MountWidget.extend(Docking, {
 
     this.dockBottom = false;
     if (posTop < topicTop) {
-      this.dockAt = topicTop;
+      this.dockAt = parseInt(topicTop, 10);
     } else if (pos > topicBottom + footerHeight) {
-      this.dockAt = (topicBottom - timelineHeight) + footerHeight;
+      this.dockAt = parseInt((topicBottom - timelineHeight) + footerHeight, 10);
       this.dockBottom = true;
       if (this.dockAt < 0) { this.dockAt = 0; }
     } else {
       this.dockAt = null;
+      this.fastDockAt = parseInt(topicBottom - timelineHeight + footerHeight - offsetTop, 10);
     }
 
     if (this.dockAt !== prev) {

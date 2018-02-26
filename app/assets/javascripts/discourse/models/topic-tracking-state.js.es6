@@ -117,8 +117,8 @@ const TopicTrackingState = Discourse.Model.extend({
     }
 
     if (filter === defaultHomepage()) {
-      const suppressed_from_homepage_category_ids = Discourse.Site.currentProp("suppressed_from_homepage_category_ids");
-      if (_.include(suppressed_from_homepage_category_ids, data.payload.category_id)) {
+      const suppressed_from_latest_category_ids = Discourse.Site.currentProp("suppressed_from_latest_category_ids");
+      if (_.include(suppressed_from_latest_category_ids, data.payload.category_id)) {
         return;
       }
     }

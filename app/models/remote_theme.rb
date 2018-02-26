@@ -160,6 +160,6 @@ end
 #  license_url       :string
 #  commits_behind    :integer
 #  remote_updated_at :datetime
-#  created_at        :datetime
-#  updated_at        :datetime
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
 #

@@ -28,14 +28,11 @@
     font-size: $font-up-4;
     line-height: $line-height-medium;
     overflow: hidden;
-    width: 100%;    
+    width: 100%;
     a {color: $primary;}
   }
   .topic-statuses {
     margin-top: -2px;
-  }
-  .select2-container {
-    vertical-align: middle;
   }
   .private-message-glyph { display: none; }
   .remove-featured-link {

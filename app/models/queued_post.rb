@@ -121,7 +121,7 @@ end
 # Table name: queued_posts
 #
 #  id             :integer          not null, primary key
-#  queue          :string(255)      not null
+#  queue          :string           not null
 #  state          :integer          not null
 #  user_id        :integer          not null
 #  raw            :text             not null
@@ -131,8 +131,8 @@ end
 #  approved_at    :datetime
 #  rejected_by_id :integer
 #  rejected_at    :datetime
-#  created_at     :datetime
-#  updated_at     :datetime
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
 #
 # Indexes
 #

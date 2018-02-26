@@ -98,6 +98,10 @@
               {{#if user.moderator}}
                 {{d-icon "shield" title="admin.moderator" }}
               {{/if}}
+
+              {{#if user.second_factor_enabled}}
+                {{d-icon "lock" title="admin.user.second_factor_enabled" }}
+              {{/if}}
             </td>
           </tr>
         {{/each}}

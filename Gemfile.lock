@@ -73,13 +73,14 @@ GEM
       uniform_notifier (~> 1.10.0)
     byebug (9.0.6)
     certified (1.0.0)
+    chunky_png (1.3.8)
     coderay (1.1.2)
     concurrent-ruby (1.0.5)
     connection_pool (2.2.1)
     cppjieba_rb (0.3.0)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
-    crass (1.0.2)
+    crass (1.0.3)
     debug_inspector (0.0.3)
     diff-lcs (1.3)
     discourse-qunit-rails (0.0.11)
@@ -184,13 +185,13 @@ GEM
     mock_redis (0.17.3)
     moneta (1.0.0)
     msgpack (1.1.0)
-    multi_json (1.12.1)
+    multi_json (1.13.1)
     multi_xml (0.6.0)
     multipart-post (2.0.0)
     mustache (1.0.5)
     nokogiri (1.8.2)
       mini_portile2 (~> 2.3.0)
-    nokogumbo (1.4.13)
+    nokogumbo (1.5.0)
       nokogiri
     oauth (0.5.1)
     oauth2 (1.3.1)
@@ -228,8 +229,7 @@ GEM
     omniauth-twitter (1.3.0)
       omniauth-oauth (~> 1.1)
       rack
-    onebox (1.8.39)
-      fast_blank (>= 1.0.0)
+    onebox (1.8.41)
       htmlentities (~> 4.3)
       moneta (~> 1.0)
       multi_json (~> 1.11)
@@ -298,6 +298,9 @@ GEM
       redis (~> 3.0, >= 3.0.4)
     request_store (1.3.2)
     rinku (2.0.2)
+    rotp (3.3.0)
+    rqrcode (0.10.1)
+      chunky_png (~> 1.0)
     rspec (3.6.0)
       rspec-core (~> 3.6.0)
       rspec-expectations (~> 3.6.0)
@@ -338,10 +341,10 @@ GEM
       nokogiri (>= 1.6.0)
     ruby_dep (1.5.0)
     safe_yaml (1.0.4)
-    sanitize (4.5.0)
+    sanitize (4.6.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.4.4)
-      nokogumbo (~> 1.4.1)
+      nokogumbo (~> 1.4)
     sass (3.4.24)
     sassc (1.11.2)
       bundler
@@ -461,7 +464,7 @@ DEPENDENCIES
   omniauth-oauth2
   omniauth-openid
   omniauth-twitter
-  onebox (= 1.8.39)
+  onebox (= 1.8.41)
   openid-redis-store
   pg (~> 0.21.0)
   pry-nav
@@ -479,6 +482,8 @@ DEPENDENCIES
   redis
   redis-namespace
   rinku
+  rotp
+  rqrcode
   rspec
   rspec-html-matchers
   rspec-rails

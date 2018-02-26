@@ -176,7 +176,7 @@ describe FinalDestination do
             'Set-Cookie' => 'evil=trout'
           }
         )
-        stub_request(:head, 'https://discourse.org').to_return(status: 200)
+        stub_request(:head, 'https://discourse.org')
       end
 
       context "when the status code is 405" do
@@ -218,7 +218,6 @@ describe FinalDestination do
 
         stub_request(:head, "https://eviltrout.com")
           .with(headers: { "Cookie" => "bar=1; baz=2; foo=219ffwef9w0f" })
-          .to_return(status: 200, body: "")
 
         final = FinalDestination.new("https://eviltrout.com", opts)
         expect(final.resolve.to_s).to eq("https://eviltrout.com")
@@ -229,14 +228,13 @@ describe FinalDestination do
 
     it "should use the correct format for cookies when there is only one cookie" do
       stub_request(:head, "https://eviltrout.com")
-        .to_return(status: 302, body: "" , headers: {
+        .to_return(status: 302, headers: {
           "Location" => "https://eviltrout.com",
           "Set-Cookie" => "foo=219ffwef9w0f; expires=Mon, 19-Feb-2018 10:44:24 GMT; path=/; domain=eviltrout.com"
         })
 
       stub_request(:head, "https://eviltrout.com")
         .with(headers: { "Cookie" => "foo=219ffwef9w0f" })
-        .to_return(status: 200, body: "")
 
       final = FinalDestination.new("https://eviltrout.com", opts)
       expect(final.resolve.to_s).to eq("https://eviltrout.com")
@@ -246,7 +244,7 @@ describe FinalDestination do
 
     it "should use the correct format for cookies when there are multiple cookies" do
       stub_request(:head, "https://eviltrout.com")
-        .to_return(status: 302, body: "" , headers: {
+        .to_return(status: 302, headers: {
           "Location" => "https://eviltrout.com",
           "Set-Cookie" => ["foo=219ffwef9w0f; expires=Mon, 19-Feb-2018 10:44:24 GMT; path=/; domain=eviltrout.com",
                            "bar=1",
@@ -255,7 +253,6 @@ describe FinalDestination do
 
       stub_request(:head, "https://eviltrout.com")
         .with(headers: { "Cookie" => "bar=1; baz=2; foo=219ffwef9w0f" })
-        .to_return(status: 200, body: "")
 
       final = FinalDestination.new("https://eviltrout.com", opts)
       expect(final.resolve.to_s).to eq("https://eviltrout.com")
@@ -267,7 +264,6 @@ describe FinalDestination do
   describe '.get' do
 
     it "can correctly stream with a redirect" do
-
       FinalDestination.clear_https_cache!("wikipedia.com")
 
       stub_request(:get, "http://wikipedia.com/").
@@ -399,13 +395,12 @@ describe FinalDestination do
 
       stub_request(:head, "http://wikipedia.com/image.png")
         .to_return(status: 302, body: "", headers: { location: 'https://wikipedia.com/image.png' })
+
       stub_request(:head, "https://wikipedia.com/image.png")
-        .to_return(status: 200, body: "", headers: [])
 
       fd('http://wikipedia.com/image.png').resolve
 
       stub_request(:head, "https://wikipedia.com/image2.png")
-        .to_return(status: 200, body: "", headers: [])
 
       fd('http://wikipedia.com/image2.png').resolve
     end

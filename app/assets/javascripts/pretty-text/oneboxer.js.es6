@@ -43,12 +43,17 @@ function loadNext(ajax) {
 
   let timeoutMs = 150;
   let removeLoading = true;
-  const { url, refresh, $elem, categoryId } = loadingQueue.shift();
+  const { url, refresh, $elem, categoryId, topicId } = loadingQueue.shift();
 
   // Retrieve the onebox
   return ajax("/onebox", {
     dataType: 'html',
-    data: { url, refresh, category_id: categoryId },
+    data: {
+      url,
+      refresh,
+      category_id: categoryId,
+      topic_id: topicId
+    },
     cache: true
   }).then(html => {
     let $html = $(html);
@@ -59,7 +64,7 @@ function loadNext(ajax) {
     if (result && result.jqXHR && result.jqXHR.status === 429) {
       timeoutMs = 2000;
       removeLoading = false;
-      loadingQueue.unshift({ url, refresh, $elem, categoryId });
+      loadingQueue.unshift({ url, refresh, $elem, categoryId, topicId });
     } else {
       failedCache[normalize(url)] = true;
     }
@@ -74,7 +79,7 @@ function loadNext(ajax) {
 
 // Perform a lookup of a onebox based an anchor $element.
 // It will insert a loading indicator and remove it when the loading is complete or fails.
-export function load({ elem , refresh = true, ajax, synchronous = false, categoryId }) {
+export function load({ elem , refresh = true, ajax, synchronous = false, categoryId, topicId }) {
   const $elem = $(elem);
 
   // If the onebox has loaded or is loading, return
@@ -98,7 +103,7 @@ export function load({ elem , refresh = true, ajax, synchronous = false, categor
   $elem.addClass('loading-onebox');
 
   // Add to the loading queue
-  loadingQueue.push({ url, refresh, $elem, categoryId });
+  loadingQueue.push({ url, refresh, $elem, categoryId, topicId });
 
   // Load next url in queue
   if (synchronous) {

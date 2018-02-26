@@ -57,6 +57,24 @@ describe GroupsController do
     end
   end
 
+  describe '#show' do
+    it 'should respond to HTML' do
+      group.update_attribute(:bio_cooked, 'testing group bio')
+
+      get "/groups/#{group.name}.html"
+
+      expect(response.status).to eq(200)
+
+      expect(response.body).to have_tag(:meta, with: {
+        property: 'og:title', content: group.name
+      })
+
+      expect(response.body).to have_tag(:meta, with: {
+        property: 'og:description', content: group.bio_cooked
+      })
+    end
+  end
+
   describe '#mentionable' do
     it "should return the right response" do
       sign_in(user)
@@ -226,7 +244,7 @@ describe GroupsController do
     end
   end
 
-  describe "edit" do
+  describe "#edit" do
     let(:group) { Fabricate(:group) }
 
     context 'when user is not signed in' do

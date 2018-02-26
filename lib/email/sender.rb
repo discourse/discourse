@@ -109,7 +109,7 @@ module Email
         else
           @message.header['Message-ID']  = post_message_id
           @message.header['In-Reply-To'] = referenced_post_message_ids[0] || topic_message_id
-          @message.header['References']  = [referenced_post_message_ids, topic_message_id].flatten.compact.uniq
+          @message.header['References']  = [topic_message_id, referenced_post_message_ids].flatten.compact.uniq
         end
 
         # https://www.ietf.org/rfc/rfc2919.txt

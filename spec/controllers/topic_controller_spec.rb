@@ -33,8 +33,7 @@ describe TopicsController do
       get :show, params: { id: 666 }
       expect(controller.theme_key).to eq(theme.key)
 
-      theme.user_selectable = false
-      theme.save
+      theme.update_attribute(:user_selectable, false)
 
       get :show, params: { id: 666 }
       expect(controller.theme_key).not_to eq(theme.key)

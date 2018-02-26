@@ -12,6 +12,12 @@ export default Ember.Mixin.create({
   init() {
     this._super();
     this.queueDockCheck = () => {
+
+      // we want to do a very fast non-debounced check first
+      if (this.fastDockCheck) {
+        this.fastDockCheck();
+      }
+
       Ember.run.debounce(this, this.safeDockCheck, 5);
     };
   },

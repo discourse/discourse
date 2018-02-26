@@ -156,6 +156,111 @@ RSpec.describe TopicsController do
     end
   end
 
+  describe '#invite' do
+    describe 'when not logged in' do
+      it "should return the right response" do
+        post "/t/#{topic.id}/invite.json", params: {
+          email: 'jake@adventuretime.ooo'
+        }
+
+        expect(response.status).to eq(403)
+      end
+    end
+
+    describe 'when logged in' do
+      before do
+        sign_in(user)
+      end
+
+      describe 'as a valid user' do
+        let(:topic) { Fabricate(:topic, user: user) }
+
+        it 'should return the right response' do
+          user.update!(trust_level: TrustLevel[2])
+
+          expect do
+            post "/t/#{topic.id}/invite.json", params: {
+              email: 'someguy@email.com'
+            }
+          end.to change { Invite.where(invited_by_id: user.id).count }.by(1)
+
+          expect(response.status).to eq(200)
+        end
+      end
+
+      describe 'when user is a group manager' do
+        let(:group) { Fabricate(:group).tap { |g| g.add_owner(user) } }
+        let(:private_category)  { Fabricate(:private_category, group: group) }
+
+        let(:group_private_topic) do
+          Fabricate(:topic, category: private_category, user: user)
+        end
+
+        let(:recipient) { 'jake@adventuretime.ooo' }
+
+        it "should attach group to the invite" do
+
+          post "/t/#{group_private_topic.id}/invite.json", params: {
+            user: recipient
+          }
+
+          expect(response.status).to eq(200)
+          expect(Invite.find_by(email: recipient).groups).to eq([group])
+        end
+      end
+
+      describe 'when topic id is invalid' do
+        it 'should return the right response' do
+          post "/t/999/invite.json", params: {
+            email: Fabricate(:user).email
+          }
+
+          expect(response.status).to eq(400)
+        end
+      end
+
+      it 'requires an email parameter' do
+        post "/t/#{topic.id}/invite.json"
+
+        expect(response.status).to eq(400)
+      end
+
+      describe 'when user does not have permission to invite to the topic' do
+        let(:topic) { Fabricate(:private_message_topic) }
+
+        it "should return the right response" do
+          post "/t/#{topic.id}/invite.json", params: {
+            user: user.username
+          }
+
+          expect(response.status).to eq(403)
+        end
+      end
+    end
+
+    describe "when inviting a group to a topic" do
+      let(:group) { Fabricate(:group) }
+
+      before do
+        sign_in(Fabricate(:admin))
+      end
+
+      it "should work correctly" do
+        email = 'hiro@from.heros'
+
+        post "/t/#{topic.id}/invite.json", params: {
+          email: email, group_ids: group.id
+        }
+
+        expect(response.status).to eq(200)
+
+        groups = Invite.find_by(email: email).groups
+        expect(groups.count).to eq(1)
+        expect(groups.first.id).to eq(group.id)
+      end
+    end
+  end
+
   describe 'invite_group' do
     let(:admins) { Group[:admins] }
     let(:pm) { Fabricate(:private_message_topic) }

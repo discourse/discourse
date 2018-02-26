@@ -165,7 +165,7 @@ textarea {
 
   &:focus:required:invalid:focus {
     border-color: $danger;
-    box-shadow: 0 0 6px $danger;
+    box-shadow: shadow("focus-danger");
   }
 }
 
@@ -196,7 +196,7 @@ input {
     border-radius: 0;
     &:focus {
       border-color: $tertiary;
-      box-shadow: $tertiary 0 0 6px 0px;
+      box-shadow: shadow("focus");
       outline: 0;
     }
   }
@@ -208,7 +208,7 @@ textarea {
   border: 1px solid $primary-medium;
   &:focus {
     border-color: $tertiary;
-    box-shadow: $tertiary 0 0 6px 0px;
+    box-shadow: shadow("focus");
     outline: 0;
   }
 }

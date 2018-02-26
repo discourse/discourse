@@ -952,10 +952,8 @@ HTML
     SiteSetting.enable_inline_onebox_on_all_domains = true
     InlineOneboxer.purge("http://cnn.com/a")
 
-    stub_request(:head, "http://cnn.com/a").to_return(status: 200)
-
     stub_request(:get, "http://cnn.com/a").
-      to_return(status: 200, body: "<html><head><title>news</title></head></html>", headers: {})
+      to_return(status: 200, body: "<html><head><title>news</title></head></html>")
 
     expect(PrettyText.cook("- http://cnn.com/a\n- a http://cnn.com/a").split("news").length).to eq(3)
     expect(PrettyText.cook("- http://cnn.com/a\n    - a http://cnn.com/a").split("news").length).to eq(3)
@@ -965,10 +963,8 @@ HTML
     SiteSetting.enable_inline_onebox_on_all_domains = true
     InlineOneboxer.purge("http://cnn.com?a")
 
-    stub_request(:head, "http://cnn.com?a").to_return(status: 200)
-
     stub_request(:get, "http://cnn.com?a").
-      to_return(status: 200, body: "<html><head><title>news</title></head></html>", headers: {})
+      to_return(status: 200, body: "<html><head><title>news</title></head></html>")
 
     expect(PrettyText.cook("- http://cnn.com?a\n- a http://cnn.com?a").split("news").length).to eq(3)
     expect(PrettyText.cook("- http://cnn.com?a\n    - a http://cnn.com?a").split("news").length).to eq(3)
@@ -981,9 +977,8 @@ HTML
     SiteSetting.enable_inline_onebox_on_all_domains = true
     InlineOneboxer.purge("http://cnn.com/")
 
-    stub_request(:head, "http://cnn.com/").to_return(status: 200)
     stub_request(:get, "http://cnn.com/").
-      to_return(status: 200, body: "<html><head><title>news</title></head></html>", headers: {})
+      to_return(status: 200, body: "<html><head><title>news</title></head></html>")
 
     expect(PrettyText.cook("- http://cnn.com/\n- a http://cnn.com/").split("news").length).to eq(1)
     expect(PrettyText.cook("- cnn.com\n    - a http://cnn.com/").split("news").length).to eq(1)

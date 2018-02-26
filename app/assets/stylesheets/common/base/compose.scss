@@ -19,7 +19,7 @@
   z-index: z("composer","content");
   transition: height 250ms ease, background 250ms ease, transform 250ms ease, max-width 250ms ease;
   background-color: $secondary;
-  box-shadow: 0 -1px 40px rgba(0,0,0, .12);
+  box-shadow: shadow("composer");
 
   .reply-area {
     display: flex;
@@ -189,7 +189,7 @@
   .category-input {
     display: flex;
     flex: 1 0 35%;
-    margin: 0 0 5px 10px;
+    margin: 0 5px 5px 10px;
     @media screen and (max-width: 955px) {
       flex: 1 0 100%;
       margin-left: 0;
@@ -223,15 +223,11 @@
 
   .mini-tag-chooser {
     flex: 1 1 25%;
-    margin: 0 0 5px 5px;
+    margin: 0 0 5px 0;
     background: $secondary;
     @media all and (max-width: 900px) {
       margin: 0;
       flex: 1 1 100%;
-    }
-
-    &.select2-dropdown-open, &.select2-container-active {
-      border-color: $tertiary;
     }
   }
 

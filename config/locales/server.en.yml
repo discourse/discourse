@@ -49,6 +49,7 @@ en:
   loading: "Loading"
   powered_by_html: 'Powered by <a href="https://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
   log_in: "Log In"
+  submit: "Submit"
 
   purge_reason: "Automatically deleted as abandoned, deactivated account"
   disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."
@@ -130,6 +131,7 @@ en:
       not_an_integer: must be an integer
       odd: must be odd
       record_invalid: ! 'Validation failed: %{errors}'
+      max_emojis: "can't have more than %{max_emojis_count} emoji"
       restrict_dependent_destroy:
         one: "Cannot delete record because a dependent %{record} exists"
         many: "Cannot delete record because dependent %{record} exist"
@@ -222,6 +224,7 @@ en:
   too_many_mentions_newuser:
     one: "Sorry, new users can only mention one other user in a post."
     other: "Sorry, new users can only mention %{count} users in a post."
+  no_images_allowed_trust: "Sorry, you can't put images in a post"
   no_images_allowed: "Sorry, new users can't put images in posts."
   too_many_images:
     one: "Sorry, new users can only put one image in a post."
@@ -713,8 +716,8 @@ en:
       long_form: 'flagged this as inappropriate'
     notify_user:
       title: 'Send @{{username}} a message'
-      description: 'I want to talk to this person directly and privately about their post.'
-      short_description: 'I want to talk to this person directly and privately about their post.'
+      description: 'I want to talk to this person directly and personally about their post.'
+      short_description: 'I want to talk to this person directly and personally about their post.'
       long_form: 'messaged user'
       email_title: 'Your post in "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -1000,6 +1003,7 @@ en:
     min_topic_title_length: "Minimum allowed topic title length in characters"
     max_topic_title_length: "Maximum allowed topic title length in characters"
     min_personal_message_title_length: "Minimum allowed title length for a message in characters"
+    max_emojis_in_title: "Maximum allowed emojis in topic title"
     min_search_term_length: "Minimum valid search term length in characters"
     search_tokenize_chinese_japanese_korean: "Force search to tokenize Chinese/Japanese/Korean even on non CJK sites"
     search_prefer_recent_posts: "If searching your large forum is slow, this option tries an index of more recent posts first"
@@ -1061,7 +1065,7 @@ en:
 
     enable_personal_messages: "Allow trust level 1 (configurable via min trust level to send messages) users to create messages and reply to messages. Note that staff can always send messages no matter what."
     enable_system_message_replies: "Allows users to reply to system messages, even if personal messages are disabled"
-    enable_personal_email_messages: "Allow trust level 4 (configurable via min trust level to send messages) users to send private email messages. Note that staff can always send messages no matter what."
+    enable_personal_email_messages: "Allow trust level 4 (configurable via min trust level to send messages) users to send personal email messages. Note that staff can always send messages no matter what."
 
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_base_url: "Base URL used for long polling (when a CDN is serving dynamic content, be sure to set this to origin pull) eg: http://origin.site.com"
@@ -1177,10 +1181,12 @@ en:
     enable_google_oauth2_logins: "Enable Google Oauth2 authentication. This is the method of authentication that Google currently supports. Requires key and secret."
     google_oauth2_client_id: "Client ID of your Google application."
     google_oauth2_client_secret: "Client secret of your Google application."
+    google_oauth2_prompt: "A space-delimited list of string values that specifies whether the authorization server prompts the user for reauthentication and consent. See https://developers.google.com/identity/protocols/OpenIDConnect#prompt for the possible values."
+    google_oauth2_hd: "Google Apps Hosted domain that the sign-in will be limited to. See https://developers.google.com/identity/protocols/OpenIDConnect#hd-param for more details."
 
     enable_twitter_logins: "Enable Twitter authentication, requires twitter_consumer_key and twitter_consumer_secret"
-    twitter_consumer_key: "Consumer key for Twitter authentication, registered at http://dev.twitter.com"
-    twitter_consumer_secret: "Consumer secret for Twitter authentication, registered at http://dev.twitter.com"
+    twitter_consumer_key: "Consumer key for Twitter authentication, registered at https://apps.twitter.com/"
+    twitter_consumer_secret: "Consumer secret for Twitter authentication, registered at https://apps.twitter.com/"
 
     enable_instagram_logins: "Enable Instagram authentication, requires instagram_consumer_key and instagram_consumer_secret"
     instagram_consumer_key: "Consumer key for Instagram authentication"
@@ -1301,6 +1307,7 @@ en:
     tl3_requires_likes_given: "The minimum number of likes that must be given in the last (tl3 time period) days to qualify for promotion to trust level 3."
     tl3_requires_likes_received: "The minimum number of likes that must be received in the last (tl3 time period) days to qualify for promotion to trust level 3."
     tl3_links_no_follow: "Do not remove rel=nofollow from links posted by trust level 3 users."
+    trusted_users_can_edit_others: "Allow users with high trust levels to edit content from other users"
 
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
     allow_flagging_staff: "If enabled, users can flag posts from staff accounts."
@@ -1317,6 +1324,7 @@ en:
 
     min_trust_to_flag_posts: "The minimum trust level required to flag posts"
     min_trust_to_post_links: "The minimum trust level required to include links in posts"
+    min_trust_to_post_images: "The minimum trust level required to include images in a post"
 
     newuser_max_links: "How many links a new user can add to a post."
     newuser_max_images: "How many images a new user can add to a post."
@@ -1330,7 +1338,7 @@ en:
     create_thumbnails: "Create thumbnails and lightbox images that are too large to fit in a post."
 
     email_time_window_mins: "Wait (n) minutes before sending any notification emails, to give users a chance to edit and finalize their posts."
-    personal_email_time_window_seconds: "Wait (n) seconds before sending any private notification emails, to give users a chance to edit and finalize their messages."
+    personal_email_time_window_seconds: "Wait (n) seconds before sending any personal message notification emails, to give users a chance to edit and finalize their messages."
     email_posts_context: "How many prior replies to include as context in notification emails."
     flush_timings_secs: "How frequently we flush timing data to the server, in seconds."
     title_max_word_length: "The maximum allowed word length, in characters, in a topic title."
@@ -1627,6 +1635,7 @@ en:
     tags_listed_by_group: "List tags by tag group on the Tags page (/tags)."
     tag_style: "Visual style for tag badges."
     staff_tags: "A list of tags that can only be applied by staff members"
+    allow_staff_to_tag_pms: "Allow staff members to tag any personal message"
     min_trust_level_to_tag_topics: "Minimum trust level required to tag topics"
     suppress_overlapping_tags_in_list: "If tags match exact words in topic titles, don't show the tag"
     remove_muted_tags_from_latest: "Don't show topics tagged with muted tags in the latest topic list."
@@ -1773,6 +1782,7 @@ en:
   login:
     not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
     incorrect_username_email_or_password: "Incorrect username, email or password"
+    incorrect_password: "Incorrect password"
     wait_approval: "Thanks for signing up. We will notify you when your account has been approved."
     active: "Your account is activated and ready to use."
     activate_email: "<p>You’re almost done! We sent an activation mail to <b>%{email}</b>. Please follow the instructions in the mail to activate your account.</p><p>If it doesn’t arrive, check your spam folder.</p>"
@@ -1795,6 +1805,9 @@ en:
     auth_complete: "Authentication is complete."
     click_to_continue: "Click here to continue."
     already_logged_in: "Oops, looks like you are attempting to accept an invitation for another user. If you are not %{current_user}, please log out and try again."
+    second_factor_title: "Two Factor Authentication Required"
+    second_factor_description: "Enter the authentication code from your app."
+    invalid_second_factor_code: "Invalid Two Factor Authentication Code"
 
   user:
     no_accounts_associated: "No accounts associated"
@@ -2740,6 +2753,15 @@ en:
 
         If you have any questions, [contact our friendly staff](%{base_url}/about).
 
+
+
+    account_second_factor_disabled:
+      title: "Two Factor Authentication disabled"
+      subject_template: "[%{email_prefix}] Two Factor Authentication disabled"
+      text_body_template: |
+        Your account’s Two Factor Authentication at %{site_name} has been disabled. The account no longer needs a Two Factor Authentication code to sign in.
+
+        If you have any questions, [contact our friendly staff](%{base_url}/about).
 
 
     digest:

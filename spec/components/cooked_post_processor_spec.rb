@@ -507,8 +507,8 @@ describe CookedPostProcessor do
       </html>
       HTML
 
-      stub_request(:head, url).to_return(status: 200)
-      stub_request(:get , url).to_return(status: 200, body: body)
+      stub_request(:head, url)
+      stub_request(:get , url).to_return(body: body)
       FinalDestination.stubs(:lookup_ip).returns('1.2.3.4')
 
       # not an ideal stub but shipping the whole image to fast image can add

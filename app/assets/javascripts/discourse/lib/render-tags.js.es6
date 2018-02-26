@@ -20,6 +20,7 @@ export function addTagsHtmlCallback(callback, options) {
 export default function(topic, params){
   let tags = topic.tags;
   let buffer = "";
+  const isPrivateMessage = topic.get('isPrivateMessage');
 
   if (params && params.mode === "list") {
     tags = topic.get("visibleListTags");
@@ -43,7 +44,7 @@ export default function(topic, params){
     buffer = "<div class='discourse-tags'>";
     if (tags) {
       for(let i=0; i<tags.length; i++){
-        buffer += renderTag(tags[i]) + ' ';
+        buffer += renderTag(tags[i], { isPrivateMessage }) + ' ';
       }
     }
 
