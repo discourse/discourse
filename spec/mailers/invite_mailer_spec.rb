@@ -78,7 +78,11 @@ describe InviteMailer do
       let(:topic) { Fabricate(:topic, excerpt: "Topic invite support is now available in Discourse!", user: trust_level_2) }
 
       context "default invite message" do
-        let(:invite) { topic.invite(topic.user, 'name@example.com') }
+        let(:invite) do
+          topic.invite(topic.user, 'name@example.com')
+          Invite.find_by(invited_by_id: topic.user.id)
+        end
+
         let(:invite_mail) { InviteMailer.send_invite(invite) }
 
         it 'renders the invitee email' do
@@ -123,7 +127,16 @@ describe InviteMailer do
       end
 
       context "custom invite message" do
-        let(:invite) { topic.invite(topic.user, 'name@example.com', nil, "Hey, I thought you might enjoy this topic!") }
+        let(:invite) do
+          topic.invite(
+            topic.user,
+            'name@example.com',
+            nil,
+            "Hey, I thought you might enjoy this topic!"
+          )
+
+          Invite.find_by(invited_by_id: topic.user.id)
+        end
         let(:custom_invite_mail) { InviteMailer.send_invite(invite) }
 
         it 'renders custom_message' do
