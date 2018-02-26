@@ -265,6 +265,23 @@ export default Ember.Controller.extend(BufferedContent, {
       }
     },
 
+    editFirstPost() {
+      const postStream = this.get('model.postStream');
+      let firstPost = postStream.get('posts.firstObject');
+
+      if (firstPost.get('post_number') !== 1) {
+        const postId = postStream.findPostIdForPostNumber(1);
+        // try loading from identity map first
+        firstPost = postStream.findLoadedPost(postId);
+        if (firstPost === undefined) {
+          return this.get('model.postStream').loadPost(postId).then(post => {
+            this.send("editPost", post);
+          });
+        }
+      }
+      this.send("editPost", firstPost);
+    },
+
     // Post related methods
     replyToPost(post) {
       const composerController = this.get('composer');
