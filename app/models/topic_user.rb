@@ -187,15 +187,30 @@ SQL
       end
 
       unless attrs[:notification_level]
-        auto_track_after = UserOption.where(user_id: user_id).pluck(:auto_track_topics_after_msecs).first
-        auto_track_after ||= SiteSetting.default_other_auto_track_topics_after_msecs
+        if Topic.private_messages.where(id: topic_id).exists? &&
+           Notification.where(
+             user_id: user_id,
+             topic_id: topic_id,
+             notification_type: Notification.types[:invited_to_private_message]
+           ).exists?
 
-        if auto_track_after >= 0 && auto_track_after <= (attrs[:total_msecs_viewed].to_i || 0)
-          attrs[:notification_level] ||= notification_levels[:tracking]
+          attrs[:notification_level] = notification_levels[:watching]
+        else
+          auto_track_after = UserOption.where(user_id: user_id).pluck(:auto_track_topics_after_msecs).first
+          auto_track_after ||= SiteSetting.default_other_auto_track_topics_after_msecs
+
+          if auto_track_after >= 0 && auto_track_after <= (attrs[:total_msecs_viewed].to_i || 0)
+            attrs[:notification_level] ||= notification_levels[:tracking]
+          end
         end
       end
 
-      TopicUser.create(attrs.merge!(user_id: user_id, topic_id: topic_id, first_visited_at: now , last_visited_at: now))
+      TopicUser.create!(attrs.merge!(
+        user_id: user_id,
+        topic_id: topic_id,
+        first_visited_at: now ,
+        last_visited_at: now
+      ))
     end
 
     def track_visit!(topic_id, user_id)
