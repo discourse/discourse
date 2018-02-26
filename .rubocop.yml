@@ -2,8 +2,8 @@ AllCops:
   TargetRubyVersion: 2.3
   DisabledByDefault: true
   Include:
-    - '**/*.gemspec'
-    - '**/Rakefile'
+    - 'onebox.gemspec'
+    - 'Rakefile'
   Exclude: []
 
 
