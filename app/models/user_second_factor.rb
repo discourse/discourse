@@ -14,8 +14,8 @@ end
 #
 #  id         :integer          not null, primary key
 #  user_id    :integer          not null
-#  method     :string
-#  data       :string
+#  method     :integer          not null
+#  data       :string           not null
 #  enabled    :boolean          default(FALSE), not null
 #  last_used  :datetime
 #  created_at :datetime         not null
