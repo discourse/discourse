@@ -793,26 +793,28 @@ SQL
   end
 
   def invite(invited_by, username_or_email, group_ids = nil, custom_message = nil)
-    user = User.find_by_username_or_email(username_or_email)
+    target_user = User.find_by_username_or_email(username_or_email)
 
-    if user && topic_allowed_users.where(user_id: user.id).exists?
+    if target_user && topic_allowed_users.where(user_id: target_user.id).exists?
       raise UserExists.new(I18n.t("topic_invite.user_exists"))
     end
 
-    if user && private_message? && topic_allowed_users.create!(user_id: user.id)
-      add_small_action(invited_by, "invited_user", user.username)
+    if target_user && private_message? && topic_allowed_users.create!(user_id: target_user.id)
+      add_small_action(invited_by, "invited_user", target_user.username)
 
       create_invite_notification!(
+        target_user,
         Notification.types[:invited_to_private_message],
         invited_by.username
       )
 
       true
     elsif username_or_email =~ /^.+@.+$/ && Guardian.new(invited_by).can_invite_via_email?(self)
-      if user
-        Invite.extend_permissions(self, user, invited_by)
+      if target_user
+        Invite.extend_permissions(self, target_user, invited_by)
 
         create_invite_notification!(
+          target_user,
           Notification.types[:invited_to_topic],
           invited_by.username
         )
@@ -821,8 +823,9 @@ SQL
       end
 
       true
-    elsif user && topic_allowed_users.create!(user_id: user.id)
+    elsif target_user && topic_allowed_users.create!(user_id: target_user.id)
       create_invite_notification!(
+        target_user,
         Notification.types[:invited_to_topic],
         invited_by.username
       )
@@ -1290,8 +1293,8 @@ SQL
     RateLimiter.new(user, "#{key}-per-day", SiteSetting.send(method_name), 1.day.to_i)
   end
 
-  def create_invite_notification!(notification_type, username)
-    user.notifications.create!(
+  def create_invite_notification!(target_user, notification_type, username)
+    target_user.notifications.create!(
       notification_type: notification_type,
       topic_id: self.id,
       post_number: 1,
