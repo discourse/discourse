@@ -32,6 +32,7 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   isFocused: false,
   isHidden: false,
   isLoading: false,
+  isAsync: false,
   renderedBodyOnce: false,
   renderedFilterOnce: false,
   tabindex: 0,
@@ -69,8 +70,6 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   allowContentReplacement: false,
   collectionHeader: null,
   allowAutoSelectFirst: true,
-  maximumSelectionSize: null,
-  maxContentRow: null,
 
   init() {
     this._super();
@@ -91,11 +90,16 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     if (this.get("allowContentReplacement")) {
       this.addObserver(`content.[]`, this, this._compute);
     }
+
+    if (this.get("isAsync")) {
+      this.addObserver(`asyncContent.[]`, this, this._compute);
+    }
   },
 
   willDestroyElement() {
     this.removeObserver(`content.@each.${this.get("nameProperty")}`, this, this._compute);
     this.removeObserver(`content.[]`, this, this._compute);
+    this.removeObserver(`asyncContent.[]`, this, this._compute);
   },
 
   willComputeAttributes() {},
@@ -114,12 +118,32 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   },
   didComputeContent() {},
 
+  willComputeAsyncContent(content) { return content; },
+  computeAsyncContent(content) { return content; },
+  _beforeDidComputeAsyncContent(content) {
+    content = applyContentPluginApiCallbacks(this.get("pluginApiIdentifiers"), content, this);
+    this.setProperties({
+      computedAsyncContent: content.map(c => this.computeAsyncContentItem(c))
+    });
+    return content;
+  },
+  didComputeAsyncContent() {},
+
   computeHeaderContent() {
     return this.baseHeaderComputedContent();
   },
 
   computeContentItem(contentItem, options) {
     return this.baseComputedContentItem(contentItem, options);
+  },
+
+  computeAsyncContentItem(contentItem, options) {
+    return this.computeContentItem(contentItem, options);
+  },
+
+  @computed("isAsync", "filteredAsyncComputedContent", "filteredComputedContent")
+  collectionComputedContent(isAsync, filteredAsyncComputedContent, filteredComputedContent) {
+    return isAsync ? filteredAsyncComputedContent : filteredComputedContent;
   },
 
   validateCreate() { return true; },
@@ -155,10 +179,17 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     return false;
   },
 
-  @computed("filter", "filteredComputedContent.[]")
-  noContentRow(filter, filteredComputedContent) {
-    if (filter.length > 0 && filteredComputedContent.length === 0) {
+  @computed("filter", "collectionComputedContent.[]")
+  noContentRow(filter, collectionComputedContent) {
+    if (filter.length > 0 && collectionComputedContent.length === 0) {
       return I18n.t("select_kit.no_content");
+    }
+  },
+
+  @computed("limitReached", "limit")
+  maxContentRow(limitReached, limit) {
+    if (limitReached) {
+      return I18n.t("select_kit.max_content_reached", { count: limit });
     }
   },
 
@@ -170,8 +201,9 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     return false;
   },
 
-  @computed("filter", "computedContent")
-  shouldDisplayCreateRow(filter, computedContent) {
+  @computed("filter", "computedContent", "limitReached")
+  shouldDisplayCreateRow(filter, computedContent, limitReached) {
+    if (limitReached) return false;
     if (computedContent.map(c => c.value).includes(filter)) return false;
     if (this.get("allowAny") && filter.length > 0 && this.validateCreate(filter)) return true;
     return false;

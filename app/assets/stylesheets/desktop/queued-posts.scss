@@ -24,6 +24,15 @@
       }
     }
 
+    .tag-chooser {
+      width: 100%;
+      margin-bottom: .5em;
+
+      .select-kit-collection {
+        padding: 0;
+      }
+    }
+
     .queue-controls {
       button {
         float: left;

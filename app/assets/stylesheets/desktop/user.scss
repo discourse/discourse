@@ -279,10 +279,12 @@
     width: 530px;
   }
 
+  .category-selector, .tag-chooser {
+    width: 530px;
+  }
+
   input {
-    &.category-selector,
-    &.user-selector,
-    &.tag-chooser {
+    &.user-selector {
       width: 530px;
     }
 

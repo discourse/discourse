@@ -92,7 +92,7 @@
   }
 
   .search-bar {
-    display: flex; 
+    display: flex;
     margin-bottom: 10px;
     max-width: 780px;
     input {
@@ -122,7 +122,7 @@
   position: relative;
   margin: 10px 0 15px;
   max-width: 780px;
-  border-bottom: 3px solid $primary-low; 
+  border-bottom: 3px solid $primary-low;
   width: 100%;
   .term {
     font-weight: bold;
@@ -130,7 +130,7 @@
 
   .result-count {
     float: left;
-    margin-bottom: 4px;    
+    margin-bottom: 4px;
     span {
       line-height: $line-height-large;
       height: 28px;
@@ -163,7 +163,7 @@
   max-width: 780px;
   .search-advanced-options {
     border: 1px solid $primary-low;
-    padding: 0 20px;    
+    padding: 0 20px;
     width: 100%;
     .date-picker-wrapper {
       vertical-align: top;
@@ -181,6 +181,10 @@
     width: 100%;
     text-align: left;
     font-weight: bold;
+  }
+
+  .tag-chooser {
+    width: 70%;
   }
 
   .container {
