@@ -481,6 +481,128 @@ describe Topic do
 
   end
 
+  describe '#invite' do
+    let(:topic) { Fabricate(:topic, user: user) }
+    let(:another_user) { Fabricate(:user) }
+
+    describe 'when username_or_email is not valid' do
+      it 'should return the right value' do
+        expect do
+          expect(topic.invite(user, 'somerandomstring')).to eq(nil)
+        end.to_not change { topic.allowed_users }
+      end
+    end
+
+    describe 'when user is already allowed' do
+      it 'should raise the right error' do
+        topic.allowed_users << another_user
+
+        expect { topic.invite(user, another_user.username) }
+          .to raise_error(Topic::UserExists)
+      end
+    end
+
+    describe 'private message' do
+      let(:user) { Fabricate(:user, trust_level: TrustLevel[2]) }
+      let(:topic) { Fabricate(:private_message_topic, user: user) }
+
+      describe 'by username' do
+        it 'should be able to invite a user' do
+          expect(topic.invite(user, another_user.username)).to eq(true)
+          expect(topic.allowed_users).to include(another_user)
+          expect(Post.last.action_code).to eq("invited_user")
+
+          notification = Notification.last
+
+          expect(notification.notification_type)
+            .to eq(Notification.types[:invited_to_private_message])
+
+          expect(topic.remove_allowed_user(user, another_user.username)).to eq(true)
+          expect(topic.reload.allowed_users).to_not include(another_user)
+          expect(Post.last.action_code).to eq("removed_user")
+        end
+      end
+
+      describe 'by email' do
+        it 'should be able to invite a user' do
+          expect(topic.invite(user, another_user.email)).to eq(true)
+          expect(topic.allowed_users).to include(another_user)
+
+          expect(Notification.last.notification_type)
+            .to eq(Notification.types[:invited_to_private_message])
+        end
+
+        describe 'when user is not found' do
+          it 'should create the right invite' do
+            expect(topic.invite(user, 'test@email.com')).to eq(true)
+
+            invite = Invite.last
+
+            expect(invite.email).to eq('test@email.com')
+            expect(invite.invited_by).to eq(user)
+          end
+
+          describe 'when user does not have sufficient trust level' do
+            before { user.update!(trust_level: TrustLevel[1]) }
+
+            it 'should not create an invite' do
+              expect do
+                expect(topic.invite(user, 'test@email.com')).to eq(nil)
+              end.to_not change { Invite.count }
+            end
+          end
+        end
+      end
+    end
+
+    describe 'public topic' do
+      def expect_the_right_notification_to_be_created
+        notification = Notification.last
+
+        expect(notification.notification_type)
+          .to eq(Notification.types[:invited_to_topic])
+
+        expect(notification.user).to eq(another_user)
+        expect(notification.topic).to eq(topic)
+
+        notification_data = JSON.parse(notification.data)
+
+        expect(notification_data["topic_title"]).to eq(topic.title)
+        expect(notification_data["display_username"]).to eq(user.username)
+      end
+
+      describe 'by username' do
+        it 'should invite user into a topic' do
+          topic.invite(user, another_user.username)
+
+          expect(topic.reload.allowed_users.last).to eq(another_user)
+          expect_the_right_notification_to_be_created
+        end
+      end
+
+      describe 'by email' do
+        it 'should be able to invite a user' do
+          expect(topic.invite(user, another_user.email)).to eq(true)
+          expect(topic.reload.allowed_users.last).to eq(another_user)
+          expect_the_right_notification_to_be_created
+        end
+
+        describe 'when user can invite via email' do
+          before { user.update!(trust_level: TrustLevel[2]) }
+
+          it 'should create an invite' do
+            expect(topic.invite(user, 'test@email.com')).to eq(true)
+
+            invite = Invite.last
+
+            expect(invite.email).to eq('test@email.com')
+            expect(invite.invited_by).to eq(user)
+          end
+        end
+      end
+    end
+  end
+
   context 'private message' do
     let(:coding_horror) { User.find_by(username: "CodingHorror") }
     let(:evil_trout) { Fabricate(:evil_trout) }
@@ -492,8 +614,6 @@ describe Topic do
       expect(Guardian.new(evil_trout).can_see?(topic)).to eq(false)
       expect(Guardian.new(coding_horror).can_see?(topic)).to eq(true)
       expect(TopicQuery.new(evil_trout).list_latest.topics).not_to include(topic)
-
-      expect(topic.invite(topic.user, 'duhhhhh')).to eq(nil)
     end
 
     context 'invite' do
@@ -537,50 +657,8 @@ describe Topic do
             expect(notification.notification_type)
               .to eq(Notification.types[:invited_to_private_message])
           end
-
-        end
-
-        context 'by username' do
-
-          it 'adds and removes walter to the allowed users' do
-            expect(topic.invite(topic.user, walter.username)).to eq(true)
-            expect(topic.allowed_users.include?(walter)).to eq(true)
-
-            notification = Notification.last
-
-            expect(notification.user).to eq(walter)
-
-            expect(notification.notification_type)
-              .to eq(Notification.types[:invited_to_private_message])
-
-            expect(topic.remove_allowed_user(topic.user, walter.username)).to eq(true)
-            topic.reload
-            expect(topic.allowed_users.include?(walter)).to eq(false)
-          end
-
-          it 'creates a notification' do
-            expect { topic.invite(topic.user, walter.username) }.to change(Notification, :count)
-          end
-
-          it 'creates a small action post' do
-            expect { topic.invite(topic.user, walter.username) }.to change(Post, :count)
-            expect { topic.remove_allowed_user(topic.user, walter.username) }.to change(Post, :count)
-          end
-        end
-
-        context 'by email' do
-
-          it 'adds user correctly' do
-            expect {
-              expect(topic.invite(topic.user, walter.email)).to eq(true)
-            }.to change(Notification, :count).by(1)
-
-            expect(topic.allowed_users.include?(walter)).to eq(true)
-          end
-
         end
       end
-
     end
 
     context "user actions" do
