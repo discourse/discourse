@@ -261,9 +261,16 @@ module Email
       end
 
       markdown, elided_markdown = if html.present?
-        markdown = HtmlToMarkdown.new(html, keep_img_tags: true, keep_cid_imgs: true).to_markdown
-        markdown = trim_discourse_markers(markdown)
-        trim_reply_and_extract_elided(markdown)
+        if html[%{<div class="gmail_quote">}]
+          html, elided_html = extract_gmail_quote(html)
+          markdown = HtmlToMarkdown.new(html, keep_img_tags: true, keep_cid_imgs: true).to_markdown
+          elided_markdown = HtmlToMarkdown.new(elided_html).to_markdown
+          [markdown, elided_markdown]
+        else
+          markdown = HtmlToMarkdown.new(html, keep_img_tags: true, keep_cid_imgs: true).to_markdown
+          markdown = trim_discourse_markers(markdown)
+          trim_reply_and_extract_elided(markdown)
+        end
       end
 
       if text.blank? || (SiteSetting.incoming_email_prefer_html && markdown.present?)
@@ -271,6 +278,12 @@ module Email
       else
         return [text, elided_text, Receiver::formats[:plaintext]]
       end
+    end
+
+    def extract_gmail_quote(html)
+      doc = Nokogiri::HTML.fragment(html)
+      elided = doc.css("div.gmail_quote")[0].remove
+      [doc.to_html, elided.to_html]
     end
 
     def trim_reply_and_extract_elided(text)

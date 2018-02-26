@@ -191,6 +191,12 @@ describe Email::Receiver do
       expect(topic.posts.last.raw).to eq("This is a **HTML** reply ;)")
     end
 
+    it "automatically elides gmail quotes" do
+      SiteSetting.always_show_trimmed_content = true
+      expect { process(:gmail_html_reply) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to eq("This is a **GMAIL** reply ;)\n\n<details class='elided'>\n<summary title='Show trimmed content'>&#183;&#183;&#183;</summary>\n\nThis is the *elided* part!\n\n</details>")
+    end
+
     it "doesn't process email with same message-id more than once" do
       expect do
         process(:text_reply)
