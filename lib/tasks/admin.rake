@@ -32,7 +32,7 @@ task "admin:create" => :environment do
   require 'highline/import'
 
   begin
-    email = ask("Email:  ")
+    email = ENV['DISCOURSE_DEVELOPER_EMAIL'] || ask("Email:  ")
     existing_user = User.find_by_email(email)
 
     # check if user account already exixts
@@ -53,8 +53,8 @@ task "admin:create" => :environment do
       admin.email = email
       admin.username = UserNameSuggester.suggest(admin.email)
       begin
-        password = ask("Password:  ") { |q| q.echo = false }
-        password_confirmation = ask("Repeat password:  ") { |q| q.echo = false }
+        password = ENV['DISCOURSE_DEVELOPER_PASSWORD'] || ask("Password:  ") { |q| q.echo = false }
+        password_confirmation = ENV['DISCOURSE_DEVELOPER_PASSWORD'] || ask("Repeat password:  ") { |q| q.echo = false }
       end while password != password_confirmation
       admin.password = password
     end
@@ -78,8 +78,8 @@ task "admin:create" => :environment do
   end
 
   # grant admin privileges
-  grant_admin = ask("Do you want to grant Admin privileges to this account? (Y/n)  ")
-  if (grant_admin == "" || grant_admin.downcase == 'y')
+  grant_admin = ENV['DISCOURSE_DEVELOPER_EMAIL'] || ask("Do you want to grant Admin privileges to this account? (Y/n)  ")
+  if (grant_admin == ENV['DISCOURSE_DEVELOPER_EMAIL'] || grant_admin == "" || grant_admin.downcase == 'y')
     admin.grant_admin!
     admin.change_trust_level!(4)
     admin.email_tokens.update_all confirmed: true
