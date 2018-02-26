@@ -72,7 +72,6 @@ ca:
       invalid: és invàlid
       is_invalid: "no sembla clar, és una frase sencera?"
       contains_censored_words: "hi conté els següents mots censurats: %{censored_words}"
-      matches_censored_pattern: "hi conté els següents mots que coincideixen amb les expressions regulars censurades del lloc: %{censored_words}"
       less_than: ha de ser menys de %{count}
       less_than_or_equal_to: ha de ser igual o menor a %{count}
       not_a_number: no és una xifra
@@ -775,7 +774,6 @@ ca:
     poll_pop3_auth_error: "La connexió al servidor POP3 està fallant amb un error d'autenticació. Si us plau, revisa la teva <a href='/admin/site_settings/category/email'>configuració de POP3</a>."
   site_settings:
     censored_words: "Paraules que es reemplaçaran automàticament amb  &#9632;&#9632;&#9632;&#9632;"
-    censored_pattern: "Patró d'expressió regular que serà reemplaçat automàticament amb  &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Esborra automàticament qualsevol publicació que resten oculta durant més de 30 dies."
     allow_user_locale: "Permet que les persones usuàries triïn la seva preferència de llengua d'interfície"
     set_locale_from_accept_language_header: "configura la llengua d'interfície per a persones anònimes des dels encapçalaments dels seus navegadors. (EXPERIMENTAL, no funciona amb memòria cau anònima)"

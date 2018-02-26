@@ -108,7 +108,6 @@ en:
       invalid: is invalid
       is_invalid: "seems unclear, is it a complete sentence?"
       contains_censored_words: "contains the following censored words: %{censored_words}"
-      matches_censored_pattern: "contains the following words that matches the site's censored regexp: %{censored_words}"
       less_than: must be less than %{count}
       less_than_or_equal_to: must be less than or equal to %{count}
       not_a_number: is not a number
@@ -972,7 +971,6 @@ en:
 
   site_settings:
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
-    censored_pattern: "Regex pattern that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-delete any hidden posts that stay hidden for more than 30 days."
     default_locale: "The default language of this Discourse instance"
     allow_user_locale: "Allow users to choose their own language interface preference"

@@ -30,22 +30,6 @@ describe Topic do
     context "#title" do
       it { is_expected.to validate_presence_of :title }
 
-      describe 'censored pattern' do
-        describe 'when title matches censored pattern' do
-          it 'should not be valid' do
-            SiteSetting.censored_pattern = 'orange.*'
-
-            topic.title = 'I have orangEjuice orange monkey orange stuff'
-
-            expect(topic).to_not be_valid
-
-            expect(topic.errors.full_messages.first).to include(I18n.t(
-              'errors.messages.matches_censored_pattern', censored_words: 'orangejuice orange monkey orange stuff'
-            ))
-          end
-        end
-      end
-
       describe 'censored words' do
         after do
           $redis.flushall

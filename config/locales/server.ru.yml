@@ -75,7 +75,6 @@ ru:
       invalid: неверный
       is_invalid: "Не совсем ясно, это предложение закончено?"
       contains_censored_words: "содержит следующие запрещенные слова  %{censored_words}"
-      matches_censored_pattern: "содержит запрещенные на сайте выражения, которые соответствуют шаблону  %{censored_words}"
       less_than: должен быть меньше %{count}
       less_than_or_equal_to: должен быть меньше или равен %{count}
       not_a_number: не число
