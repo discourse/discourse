@@ -20,7 +20,7 @@
   font-weight: bold;
   white-space: nowrap;
   position: relative;
-  display: flex;
+  display: inline-flex;
   align-items: baseline;
   
   .badge-category {
@@ -31,6 +31,7 @@
     }
     .d-icon {
       margin-right: 3px;
+      line-height: $line-height-large;
     }
   }
 
