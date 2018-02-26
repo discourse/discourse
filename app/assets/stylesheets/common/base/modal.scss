@@ -88,6 +88,10 @@
 
   .select-kit {
     width: 220px;
+
+    &.tag-chooser {
+      width: 100%;
+    }
   }
 }
 
