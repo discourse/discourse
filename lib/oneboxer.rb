@@ -206,7 +206,7 @@ module Oneboxer
           original_url: url,
           title: PrettyText.unescape_emoji(CGI::escapeHTML(topic.title)),
           category_html: CategoryBadge.html_for(topic.category),
-          quote: post.excerpt(SiteSetting.post_onebox_maxlength),
+          quote: PrettyText.unescape_emoji(post.excerpt(SiteSetting.post_onebox_maxlength)),
         }
 
         template = File.read("#{Rails.root}/lib/onebox/templates/discourse_topic_onebox.hbs")
