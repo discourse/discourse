@@ -816,11 +816,11 @@ SQL
           Notification.types[:invited_to_topic],
           invited_by.username
         )
+
+        true
       else
         invite_by_email(invited_by, username_or_email, group_ids, custom_message)
       end
-
-      true
     elsif user && topic_allowed_users.create!(user_id: user.id)
       create_invite_notification!(
         Notification.types[:invited_to_topic],
