@@ -28,6 +28,11 @@ export default Ember.Component.extend({
     return !this.site.mobileView && this.currentUser && this.currentUser.get('canManageTopic');
   },
 
+  showEditOnFooter: Ember.computed.and(
+    'topic.isPrivateMessage',
+    'site.can_tag_pms'
+  ),
+
   @computed('topic.message_archived')
   archiveIcon: archived => archived ? '' : 'folder',
 

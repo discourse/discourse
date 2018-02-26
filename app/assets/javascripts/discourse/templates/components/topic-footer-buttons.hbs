@@ -58,6 +58,14 @@
                action=toggleArchiveMessage}}
   {{/if}}
 
+  {{#if showEditOnFooter}}
+    {{d-button class="edit-message"
+               title="topic.edit_message.help"
+               label="topic.edit_message.title"
+               icon="pencil"
+               action=editFirstPost}}
+  {{/if}}
+
   {{plugin-outlet name="topic-footer-main-buttons-before-create"
                   args=(hash topic=topic)
                   tagName=""
