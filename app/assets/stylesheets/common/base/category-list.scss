@@ -1,3 +1,10 @@
+.category-list {
+  .category-title-link {
+    display: inline-flex;
+    align-items: baseline;
+  }
+}
+
 .category-boxes, .category-boxes-with-topics {
   display: flex;
   flex-wrap: wrap;

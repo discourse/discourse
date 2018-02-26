@@ -25,13 +25,13 @@
   
   .badge-category {
       display: inline-flex;
+      align-items: baseline;
       .category-name {
         text-overflow: ellipsis;
         overflow: hidden;
     }
     .d-icon {
       margin-right: 3px;
-      line-height: $line-height-large;
     }
   }
 
