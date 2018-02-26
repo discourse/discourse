@@ -792,62 +792,42 @@ SQL
     true
   end
 
-  # Invite a user to the topic by username or email. Returns success/failure
   def invite(invited_by, username_or_email, group_ids = nil, custom_message = nil)
     user = User.find_by_username_or_email(username_or_email)
 
-    if private_message?
-      # If the user exists, add them to the message.
-      raise UserExists.new I18n.t("topic_invite.user_exists") if user.present? && topic_allowed_users.where(user_id: user.id).exists?
-
-      if user && topic_allowed_users.create!(user_id: user.id)
-        # Create a small action message
-        add_small_action(invited_by, "invited_user", user.username)
-
-        # Notify the user they've been invited
-        user.notifications.create(notification_type: Notification.types[:invited_to_private_message],
-                                  topic_id: id,
-                                  post_number: 1,
-                                  data: { topic_title: title,
-                                          display_username: invited_by.username }.to_json)
-        return true
-      end
+    if user && topic_allowed_users.where(user_id: user.id).exists?
+      raise UserExists.new(I18n.t("topic_invite.user_exists"))
     end
 
-    if username_or_email =~ /^.+@.+$/ && Guardian.new(invited_by).can_invite_via_email?(self)
-      RateLimiter.new(invited_by, "topic-invitations-per-day", SiteSetting.max_topic_invitations_per_day, 1.day.to_i).performed!
+    if user && private_message? && topic_allowed_users.create!(user_id: user.id)
+      add_small_action(invited_by, "invited_user", user.username)
 
-      if user.present?
-        # add existing users
+      create_invite_notification!(
+        Notification.types[:invited_to_private_message],
+        invited_by.username
+      )
+
+      true
+    elsif username_or_email =~ /^.+@.+$/ && Guardian.new(invited_by).can_invite_via_email?(self)
+      if user
         Invite.extend_permissions(self, user, invited_by)
 
-        # Notify the user they've been invited
-        user.notifications.create(notification_type: Notification.types[:invited_to_topic],
-                                  topic_id: id,
-                                  post_number: 1,
-                                  data: { topic_title: title,
-                                          display_username: invited_by.username }.to_json)
-        return true
+        create_invite_notification!(
+          Notification.types[:invited_to_topic],
+          invited_by.username
+        )
       else
-        # NOTE callers expect an invite object if an invite was sent via email
         invite_by_email(invited_by, username_or_email, group_ids, custom_message)
       end
-    else
-      raise UserExists.new I18n.t("topic_invite.user_exists") if user.present? && topic_allowed_users.where(user_id: user.id).exists?
 
-      if user && topic_allowed_users.create!(user_id: user.id)
-        RateLimiter.new(invited_by, "topic-invitations-per-day", SiteSetting.max_topic_invitations_per_day, 1.day.to_i).performed!
+      true
+    elsif user && topic_allowed_users.create!(user_id: user.id)
+      create_invite_notification!(
+        Notification.types[:invited_to_topic],
+        invited_by.username
+      )
 
-        # Notify the user they've been invited
-        user.notifications.create(notification_type: Notification.types[:invited_to_topic],
-                                  topic_id: id,
-                                  post_number: 1,
-                                  data: { topic_title: title,
-                                          display_username: invited_by.username }.to_json)
-        return true
-      else
-        false
-      end
+      true
     end
   end
 
@@ -1310,6 +1290,17 @@ SQL
     RateLimiter.new(user, "#{key}-per-day", SiteSetting.send(method_name), 1.day.to_i)
   end
 
+  def create_invite_notification!(notification_type, username)
+    user.notifications.create!(
+      notification_type: notification_type,
+      topic_id: self.id,
+      post_number: 1,
+      data: {
+        topic_title: self.title,
+        display_username: username
+      }.to_json
+    )
+  end
 end
 
 # == Schema Information

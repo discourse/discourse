@@ -493,8 +493,7 @@ describe Topic do
       expect(Guardian.new(coding_horror).can_see?(topic)).to eq(true)
       expect(TopicQuery.new(evil_trout).list_latest.topics).not_to include(topic)
 
-      # invites
-      expect(topic.invite(topic.user, 'duhhhhh')).to eq(false)
+      expect(topic.invite(topic.user, 'duhhhhh')).to eq(nil)
     end
 
     context 'invite' do
@@ -567,7 +566,8 @@ describe Topic do
           it 'adds user correctly' do
             expect {
               expect(topic.invite(topic.user, walter.email)).to eq(true)
-            }.to change(Notification, :count)
+            }.to change(Notification, :count).by(1)
+
             expect(topic.allowed_users.include?(walter)).to eq(true)
           end
 
@@ -587,35 +587,6 @@ describe Topic do
         expect(coding_horror.user_actions.map { |a| a.action_type }).to include(UserAction::GOT_PRIVATE_MESSAGE)
       end
 
-    end
-
-  end
-
-  context 'rate limits' do
-
-    it "rate limits topic invitations" do
-      SiteSetting.max_topic_invitations_per_day = 2
-      RateLimiter.enable
-      RateLimiter.clear_all!
-
-      start = Time.now.tomorrow.beginning_of_day
-      freeze_time(start)
-
-      user = Fabricate(:user)
-      trust_level_2 = Fabricate(:user, trust_level: 2)
-      topic = Fabricate(:topic, user: trust_level_2)
-
-      freeze_time(start + 10.minutes)
-      topic.invite(topic.user, user.username)
-
-      freeze_time(start + 20.minutes)
-      topic.invite(topic.user, "walter@white.com")
-
-      freeze_time(start + 30.minutes)
-
-      expect {
-        topic.invite(topic.user, "user@example.com")
-      }.to raise_error(RateLimiter::LimitExceeded)
     end
 
   end
@@ -1824,8 +1795,8 @@ describe Topic do
       let(:randolph) { 'randolph@duke.ooo' }
 
       it "should attach group to the invite" do
-        invite = group_private_topic.invite(group_manager, randolph)
-        expect(invite.groups).to eq([group])
+        expect(group_private_topic.invite(group_manager, randolph)).to eq(true)
+        expect(Invite.last.groups).to eq([group])
       end
     end
 

@@ -477,9 +477,19 @@ class TopicsController < ApplicationController
   end
 
   def invite
-    username_or_email = params[:user] ? fetch_username : fetch_email
+    unless guardian.is_staff?
+      RateLimiter.new(
+        current_user,
+        "topic-invitations-per-day",
+        SiteSetting.max_topic_invitations_per_day,
+        1.day.to_i
+      ).performed!
+    end
 
     topic = Topic.find_by(id: params[:topic_id])
+    raise Discourse::InvalidParameters.new unless topic
+
+    username_or_email = params[:user] ? fetch_username : fetch_email
 
     groups = Group.lookup_groups(
       group_ids: params[:group_ids],
@@ -492,6 +502,7 @@ class TopicsController < ApplicationController
     begin
       if topic.invite(current_user, username_or_email, group_ids, params[:custom_message])
         user = User.find_by_username_or_email(username_or_email)
+
         if user
           render_json_dump BasicUserSerializer.new(user, scope: guardian, root: 'user')
         else
