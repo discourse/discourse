@@ -34,7 +34,13 @@
           </table>
         </div>
         {{#second-factor-form}}
-          {{text-field value=loginSecondFactor id="login-second-factor" autocorrect="off" autocapitalize="off" autofocus="autofocus"}}
+          {{text-field value=loginSecondFactor
+              pattern='[0-9]{6}'
+              maxlength='6'
+              id="login-second-factor"
+              autocorrect="off"
+              autocapitalize="off"
+              autofocus="autofocus"}}
         {{/second-factor-form}}
       </form>
     {{/if}}
