@@ -20,7 +20,9 @@
       <div class="control-group">
         <div class="controls">
           {{text-field value=second_factor_token
-              id="second_factor_token"
+              pattern='[0-9]{6}'
+              maxlength='6'
+              id="second-factor-token"
               classNames="input-large"
               autofocus="autofocus"}}
         </div>
@@ -69,6 +71,8 @@
 
           <div class="controls">
             {{text-field value=second_factor_token
+                pattern='[0-9]{6}'
+                maxlength='6'
                 id="second-factor-token"
                 classNames="input-large"
                 autofocus="autofocus"}}
