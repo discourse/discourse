@@ -157,9 +157,9 @@ class ImportScripts::XenForo < ImportScripts::Base
     #   [http://answers.yahoo.com/question/index ... 223AAkkPli](http://answers.yahoo.com/question/index?qid=20070920134223AAkkPli)
     #
     #
-    # Fix for the error: xenforo.rb:160:in `gsub!': invalid byte sequence in UTF-8 (ArgumentError)
-    if ! s.valid_encoding? 
-      s = s.encode("UTF-16be", :invalid=>:replace, :replace=>"?").encode('UTF-8') 
+    #Fix for the error: xenforo.rb: 160: in `gsub!': invalid byte sequence in UTF-8 (ArgumentError)
+    if ! s.valid_encoding?
+      s = s.encode("UTF-16be", :invalid => :replace, :replace => "?").encode('UTF-8')
     end
     #End Fix
     
