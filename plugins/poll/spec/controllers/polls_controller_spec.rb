@@ -55,6 +55,7 @@ describe ::DiscoursePoll::PollsController do
 
     it "works even if topic is closed" do
       topic.update_attribute(:closed, true)
+
       put :vote, params: {
         post_id: poll.id, poll_name: "poll", options: ["5c24fc1df56d764b550ceae1b9319125"]
       }, format: :json
@@ -64,6 +65,7 @@ describe ::DiscoursePoll::PollsController do
 
     it "ensures topic is not archived" do
       topic.update_attribute(:archived, true)
+
       put :vote, params: {
         post_id: poll.id, poll_name: "poll", options: ["A"]
       }, format: :json
@@ -75,6 +77,7 @@ describe ::DiscoursePoll::PollsController do
 
     it "ensures post is not trashed" do
       poll.trash!
+
       put :vote, params: {
         post_id: poll.id, poll_name: "poll", options: ["A"]
       }, format: :json
@@ -82,6 +85,18 @@ describe ::DiscoursePoll::PollsController do
       expect(response).not_to be_success
       json = ::JSON.parse(response.body)
       expect(json["errors"][0]).to eq(I18n.t("poll.post_is_deleted"))
+    end
+
+    it "ensures user can post in topic" do
+      Guardian.any_instance.expects(:can_create_post?).returns(false)
+
+      put :vote, params: {
+        post_id: poll.id, poll_name: "poll", options: ["A"]
+      }, format: :json
+
+      expect(response).not_to be_success
+      json = ::JSON.parse(response.body)
+      expect(json["errors"][0]).to eq(I18n.t("poll.user_cant_post_in_topic"))
     end
 
     it "ensures polls are associated with the post" do
