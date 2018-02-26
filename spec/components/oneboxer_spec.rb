@@ -35,7 +35,7 @@ describe Oneboxer do
 
       replier = Fabricate(:user)
 
-      public_post   = Fabricate(:post)
+      public_post   = Fabricate(:post, raw: "This post has an emoji :+1:")
       public_topic  = public_post.topic
       public_reply  = Fabricate(:post, topic: public_topic, post_number: 2, user: replier)
       public_hidden = Fabricate(:post, topic: public_topic, post_number: 3, hidden: true)
@@ -48,7 +48,9 @@ describe Oneboxer do
       secured_reply = Fabricate(:post, user: staff, topic: secured_topic, post_number: 2)
 
       expect(preview(public_topic.relative_url, user, public_category)).to include(public_topic.title)
-      expect(preview(public_post.url, user, public_category)).to include(public_topic.title)
+      onebox = preview(public_post.url, user, public_category)
+      expect(onebox).to include(public_topic.title)
+      expect(onebox).to include("/images/emoji/")
 
       onebox = preview(public_reply.url, user, public_category)
       expect(onebox).to include(public_reply.excerpt)
