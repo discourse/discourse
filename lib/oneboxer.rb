@@ -202,6 +202,7 @@ module Oneboxer
       else
         args = {
           topic_id: topic.id,
+          post_number: post.post_number,
           avatar: PrettyText.avatar_img(post.user.avatar_template, "tiny"),
           original_url: url,
           title: PrettyText.unescape_emoji(CGI::escapeHTML(topic.title)),

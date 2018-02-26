@@ -54,6 +54,7 @@ describe Oneboxer do
 
       onebox = preview(public_reply.url, user, public_category)
       expect(onebox).to include(public_reply.excerpt)
+      expect(onebox).to include(%{data-post="2"})
       expect(onebox).to include(PrettyText.avatar_img(replier.avatar_template, "tiny"))
 
       onebox = preview(public_reply.url, user, public_category, public_topic)
