@@ -10,3 +10,5 @@ notifications:
 script:
   - bundle exec rubocop
   - bundle exec rspec
+cache:
+  bundler: true
