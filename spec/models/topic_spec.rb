@@ -546,6 +546,13 @@ describe Topic do
             expect(topic.invite(topic.user, walter.username)).to eq(true)
             expect(topic.allowed_users.include?(walter)).to eq(true)
 
+            notification = Notification.last
+
+            expect(notification.user).to eq(walter)
+
+            expect(notification.notification_type)
+              .to eq(Notification.types[:invited_to_private_message])
+
             expect(topic.remove_allowed_user(topic.user, walter.username)).to eq(true)
             topic.reload
             expect(topic.allowed_users.include?(walter)).to eq(false)
