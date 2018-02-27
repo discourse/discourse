@@ -96,6 +96,28 @@ describe Tag do
     end
   end
 
+  describe '#pm_tags' do
+    before do
+      @private_tags = []
+      personal_message = Fabricate(:private_message_topic)
+      2.times { |i| @private_tags << Fabricate(:tag, topics: [personal_message]) }
+    end
+
+    it "returns nothing if user is not a staff" do
+      expect(described_class.pm_tags.sort).to be_empty
+    end
+
+    it "returns nothing if allow_staff_to_tag_pms setting is disabled" do
+      SiteSetting.allow_staff_to_tag_pms = false
+      expect(described_class.pm_tags(guardian: Guardian.new(Fabricate(:admin))).sort).to be_empty
+    end
+
+    it "returns all pm tags if user is a staff and pm tagging is enabled" do
+      SiteSetting.allow_staff_to_tag_pms = true
+      expect(described_class.pm_tags(guardian: Guardian.new(Fabricate(:admin)))).to match_array(@private_tags.map(&:name))
+    end
+  end
+
   context "topic counts" do
     it "should exclude private message topics" do
       topic

@@ -8,6 +8,7 @@ class TopicListSerializer < ApplicationSerializer
              :for_period,
              :per_page,
              :top_tags,
+             :pm_tags,
              :tags
 
   has_many :topics, serializer: TopicListItemSerializer, embed: :objects
@@ -27,6 +28,10 @@ class TopicListSerializer < ApplicationSerializer
 
   def include_top_tags?
     Tag.include_tags?
+  end
+
+  def include_pm_tags?
+    scope.can_tag_pms?
   end
 
   def include_tags?

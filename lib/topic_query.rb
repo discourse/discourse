@@ -32,7 +32,8 @@ class TopicQuery
          match_all_tags
          no_subcategories
          slow_platform
-         no_tags)
+         no_tags
+         show_pm_tags)
   end
 
   def self.valid_options
