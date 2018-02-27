@@ -1,3 +1,15 @@
+.category-list {
+  table-layout: fixed;
+  .category-name {
+    display: inline-block;
+    max-width: 100%; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: text-top;
+    line-height: $line-height-medium;
+  }
+}
+
 .category-boxes, .category-boxes-with-topics {
   display: flex;
   flex-wrap: wrap;
