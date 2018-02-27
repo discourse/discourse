@@ -536,7 +536,7 @@ class Post < ActiveRecord::Base
     revise(
       actor,
       { raw: self.raw, user_id: new_user.id, edit_reason: edit_reason },
-      bypass_bump: true, skip_revision: skip_revision
+      bypass_bump: true, skip_revision: skip_revision, skip_validations: true
     )
 
     if post_number == topic.highest_post_number

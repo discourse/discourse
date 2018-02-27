@@ -62,6 +62,14 @@ describe PostOwnerChanger do
       expect(p2.revisions.size).to eq(0)
     end
 
+    it "changes the user even when the post does not pass validation" do
+      p1.update_attribute(:raw, "foo")
+      PostOwnerChanger.new(post_ids: [p1.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
+      p1.reload
+
+      expect(p1.user).to eq(user_a)
+    end
+
     context "integration tests" do
       let(:p1user) { p1.user }
       let(:p2user) { p2.user }
