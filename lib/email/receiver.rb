@@ -261,7 +261,7 @@ module Email
       end
 
       markdown, elided_markdown = if html.present?
-        if html[/<div class="gmail_(quote|extra)"/]
+        if html[%{<div class="gmail_}]
           html, elided_html = extract_from_gmail(html)
           markdown = HtmlToMarkdown.new(html, keep_img_tags: true, keep_cid_imgs: true).to_markdown
           elided_markdown = HtmlToMarkdown.new(elided_html).to_markdown
@@ -286,9 +286,9 @@ module Email
     end
 
     def extract_from_gmail(html)
-      doc = Nokogiri::HTML.fragment(html)
-      elided = doc.css(".gmail_quote, .gmail_extra").remove
-      [doc.to_html, elided.to_html]
+      doc = Nokogiri::HTML.parse(html)
+      elided = doc.xpath("//*[contains(@class, 'gmail_')]").remove
+      [doc.root.to_html, elided.to_html]
     end
 
     def extract_from_outlook(html)
