@@ -25,7 +25,7 @@ class ColumnDropper
 
     if ActiveRecord::Base.exec_sql(sql, table: table,
                                         columns: columns,
-                                        delay: "#{delay.to_i || 0} seconds",
+                                        delay: "#{delay.to_i || 0} minutes",
                                         after_migration: after_migration).to_a.length > 0
       on_drop&.call
 
