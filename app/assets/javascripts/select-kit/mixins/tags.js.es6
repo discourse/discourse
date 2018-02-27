@@ -1,4 +1,4 @@
-const { run } = Ember;
+const { run, get } = Ember;
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
@@ -44,6 +44,10 @@ export default Ember.Mixin.create({
     }
 
     if (this.get("siteSettings.max_tag_length") < term.length) {
+      return false;
+    }
+
+    if (this.get("asyncContent").map(c => get(c, "id")).includes(term)) {
       return false;
     }
 
