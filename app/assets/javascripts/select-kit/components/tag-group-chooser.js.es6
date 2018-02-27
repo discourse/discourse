@@ -66,7 +66,7 @@ export default MultiSelectComponent.extend(Tags, {
       limit: this.get("siteSettings.max_tag_search_results")
     };
 
-    this.searchTags("/tags/filter/search", data, this._transformJson);
+    this.searchTags("/tag_groups/filter/search", data, this._transformJson);
   },
 
   _transformJson(context, json) {
