@@ -61,7 +61,7 @@ class CategoriesController < ApplicationController
     topic_options = {
       per_page: SiteSetting.categories_topics,
       no_definitions: true,
-      exclude_category_ids: Category.where(suppress_from_homepage: true).pluck(:id)
+      exclude_category_ids: Category.where(suppress_from_latest: true).pluck(:id)
     }
 
     result = CategoryAndTopicLists.new
@@ -235,7 +235,7 @@ class CategoriesController < ApplicationController
                         :email_in,
                         :email_in_allow_strangers,
                         :mailinglist_mirror,
-                        :suppress_from_homepage,
+                        :suppress_from_latest,
                         :all_topics_wiki,
                         :parent_category_id,
                         :auto_close_hours,

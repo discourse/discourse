@@ -82,7 +82,6 @@ fr:
       invalid: est invalide
       is_invalid: "ne semble pas clair, est-ce une phrase complète ?"
       contains_censored_words: "contient les mots censurés suivants : %{censored_words}"
-      matches_censored_pattern: "contient les mots censurés suivants qui correspondent à l'expression régulière : %{censored_words}"
       less_than: doit être inférieure à %{count}
       less_than_or_equal_to: doit être inférieur ou égal à %{count}
       not_a_number: n'est pas un nombre
@@ -859,7 +858,6 @@ fr:
     poll_pop3_auth_error: "La connexion vers le serveur POP3 échoue avec une erreur d'authentification. Veuillez vérifier <a href='/admin/site_settings/category/email'>les paramètres POP3</a>."
   site_settings:
     censored_words: "Mots qui seront automatiquement remplacés par &#9632;&#9632;&#9632;&#9632;"
-    censored_pattern: "Expressions régulières qui seront automatiquement remplacées par &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Supprimer automatiquement les messages cachés plus de 30 jours."
     allow_user_locale: "Autoriser les utilisateurs à choisir la langue de l'interface dans leurs préférences"
     set_locale_from_accept_language_header: "configurer la langue de l'interface pour les visiteurs à partir des entêtes de langue de leur navigateur. (EXPÉRIMENTAL, ne fonctionne pas avec le cache anonyme)"

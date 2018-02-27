@@ -129,6 +129,7 @@ Discourse::Application.routes.draw do
       get "tl3_requirements"
       put "anonymize"
       post "reset_bounce_score"
+      put "disable_second_factor"
     end
     get "users/:id.json" => 'users#show', defaults: { format: 'json' }
     get 'users/:id/:username' => 'users#show', constraints: { username: RouteFormat.username }
@@ -302,6 +303,7 @@ Discourse::Application.routes.draw do
   get "session/current" => "session#current"
   get "session/csrf" => "session#csrf"
   get "session/email-login/:token" => "session#email_login"
+  post "session/email-login/:token" => "session#email_login"
   get "composer_messages" => "composer_messages#index"
   post "composer/parse_html" => "composer#parse_html"
 
@@ -329,12 +331,16 @@ Discourse::Application.routes.draw do
       end
     end
 
+    post "#{root_path}/second_factors" => "users#create_second_factor"
+    put "#{root_path}/second_factor" => "users#update_second_factor"
+
     put "#{root_path}/update-activation-email" => "users#update_activation_email"
     get "#{root_path}/hp" => "users#get_honeypot_value"
     post "#{root_path}/email-login" => "users#email_login"
     get "#{root_path}/admin-login" => "users#admin_login"
     put "#{root_path}/admin-login" => "users#admin_login"
     get "#{root_path}/admin-login/:token" => "users#admin_login"
+    put "#{root_path}/admin-login/:token" => "users#admin_login"
     post "#{root_path}/toggle-anon" => "users#toggle_anon"
     post "#{root_path}/read-faq" => "users#read_faq"
     get "#{root_path}/search/users" => "users#search_users"
@@ -349,6 +355,7 @@ Discourse::Application.routes.draw do
     get "#{root_path}/activate-account/:token" => "users#activate_account"
     put({ "#{root_path}/activate-account/:token" => "users#perform_account_activation" }.merge(index == 1 ? { as: 'perform_activate_account' } : {}))
     get "#{root_path}/authorize-email/:token" => "users_email#confirm"
+    put "#{root_path}/authorize-email/:token" => "users_email#confirm"
     get({
       "#{root_path}/confirm-admin/:token" => "users#confirm_admin",
       constraints: { token: /[0-9a-f]+/ }
@@ -360,6 +367,7 @@ Discourse::Application.routes.draw do
     get "#{root_path}/:username/messages/:filter" => "user_actions#private_messages", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/messages/group/:group_name" => "user_actions#private_messages", constraints: { username: RouteFormat.username, group_name: RouteFormat.username }
     get "#{root_path}/:username/messages/group/:group_name/archive" => "user_actions#private_messages", constraints: { username: RouteFormat.username, group_name: RouteFormat.username }
+    get "#{root_path}/:username/messages/tag/:tag_id" => "user_actions#private_messages", constraints: StaffConstraint.new
     get "#{root_path}/:username.json" => "users#show", constraints: { username: RouteFormat.username }, defaults: { format: :json }
     get({ "#{root_path}/:username" => "users#show", constraints: { username: RouteFormat.username, format: /(json|html)/ } }.merge(index == 1 ? { as: 'user' } : {}))
     put "#{root_path}/:username" => "users#update", constraints: { username: RouteFormat.username }, defaults: { format: :json }
@@ -380,6 +388,7 @@ Discourse::Application.routes.draw do
     put "#{root_path}/:username/preferences/badge_title" => "users#badge_title", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/preferences/username" => "users#preferences", constraints: { username: RouteFormat.username }
     put "#{root_path}/:username/preferences/username" => "users#username", constraints: { username: RouteFormat.username }
+    get "#{root_path}/:username/preferences/second-factor" => "users#preferences", constraints: { username: RouteFormat.username }
     delete "#{root_path}/:username/preferences/user_image" => "users#destroy_user_image", constraints: { username: RouteFormat.username }
     put "#{root_path}/:username/preferences/avatar/pick" => "users#pick_avatar", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/preferences/card-badge" => "users#card_badge", constraints: { username: RouteFormat.username }
@@ -443,8 +452,6 @@ Discourse::Application.routes.draw do
     get "posts.rss" => "groups#posts_feed", format: :rss
     get "mentions.rss" => "groups#mentions_feed", format: :rss
 
-    get 'activity' => "groups#show"
-    get 'activity/:filter' => "groups#show"
     get 'members'
     get 'posts'
     get 'topics'
@@ -460,6 +467,8 @@ Discourse::Application.routes.draw do
     end
 
     member do
+      get 'activity' => "groups#show"
+      get 'activity/:filter' => "groups#show"
       put "members" => "groups#add_members"
       delete "members" => "groups#remove_member"
       post "request_membership" => "groups#request_membership"
@@ -589,20 +598,20 @@ Discourse::Application.routes.draw do
   resources :similar_topics
 
   get "topics/feature_stats"
-  get "topics/created-by/:username" => "list#topics_by", as: "topics_by", constraints: { username: RouteFormat.username }
-  get "topics/private-messages/:username" => "list#private_messages", as: "topics_private_messages", constraints: { username: RouteFormat.username }
-  get "topics/private-messages-sent/:username" => "list#private_messages_sent", as: "topics_private_messages_sent", constraints: { username: RouteFormat.username }
-  get "topics/private-messages-archive/:username" => "list#private_messages_archive", as: "topics_private_messages_archive", constraints: { username: RouteFormat.username }
-  get "topics/private-messages-unread/:username" => "list#private_messages_unread", as: "topics_private_messages_unread", constraints: { username: RouteFormat.username }
-  get "topics/private-messages-group/:username/:group_name.json" => "list#private_messages_group", as: "topics_private_messages_group", constraints: {
-    username: RouteFormat.username,
-    group_name: RouteFormat.username
-  }
 
-  get "topics/private-messages-group/:username/:group_name/archive.json" => "list#private_messages_group_archive", as: "topics_private_messages_group_archive", constraints: {
-    username: RouteFormat.username,
-    group_name: RouteFormat.username
-  }
+  scope "/topics", username: RouteFormat.username do
+    get "created-by/:username" => "list#topics_by", as: "topics_by"
+    get "private-messages/:username" => "list#private_messages", as: "topics_private_messages"
+    get "private-messages-sent/:username" => "list#private_messages_sent", as: "topics_private_messages_sent"
+    get "private-messages-archive/:username" => "list#private_messages_archive", as: "topics_private_messages_archive"
+    get "private-messages-unread/:username" => "list#private_messages_unread", as: "topics_private_messages_unread"
+    get "private-messages-tag/:username/:tag_id.json" => "list#private_messages_tag", as: "topics_private_messages_tag", constraints: StaffConstraint.new
+
+    scope "/private-messages-group/:username", group_name: RouteFormat.username do
+      get ":group_name.json" => "list#private_messages_group", as: "topics_private_messages_group"
+      get ":group_name/archive.json" => "list#private_messages_group_archive", as: "topics_private_messages_group_archive"
+    end
+  end
 
   get 'embed/comments' => 'embed#comments'
   get 'embed/count' => 'embed#count'

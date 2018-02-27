@@ -52,10 +52,6 @@
   }
 }
 
-.docked #topic-progress {
-  box-shadow: 0 0 3px rbga(0,0,0, .5);
-}
-
 #topic-progress-wrapper {
   position: fixed;
   width: 0;
@@ -184,11 +180,6 @@ sup sup, sub sup, sup sub, sub sub { top: 0; }
     box-sizing: border-box;
     width: 100%;
     height: 32px;
-  }
-
-  .select2-container {
-    box-sizing: border-box;
-    width: 100% !important;
   }
   .btn-small {
     padding: 6px 12px;

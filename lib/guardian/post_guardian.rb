@@ -115,9 +115,13 @@ module PostGuardian
     # Must be staff to edit a locked post
     return false if post.locked? && !is_staff?
 
-    if is_staff? || @user.has_trust_level?(TrustLevel[4])
-      return can_create_post?(post.topic)
-    end
+    return can_create_post?(post.topic) if (
+      is_staff? ||
+      (
+        SiteSetting.trusted_users_can_edit_others? &&
+        @user.has_trust_level?(TrustLevel[4])
+      )
+    )
 
     if post.topic.archived? || post.user_deleted || post.deleted_at
       return false

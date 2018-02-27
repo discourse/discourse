@@ -77,7 +77,6 @@ pl_PL:
       invalid: jest nieprawidłowy
       is_invalid: "wygląda niejasno, czy to cała wypowiedz ?"
       contains_censored_words: "zawiera następujące niedozwolone słowa: %{censored_words}"
-      matches_censored_pattern: "zawiera następujące niedozwolone słowa: %{censored_words}"
       less_than: musi być mniejszy niż %{count}
       less_than_or_equal_to: musi być mniejszy lub równy %{count}
       not_a_number: nie jest liczbą
@@ -927,7 +926,6 @@ pl_PL:
     poll_pop3_auth_error: "Połączenie z serwerem POP3 nie powiodło się przez błąd uwierzytelnienia. Proszę sprawdź swoje <a href='/admin/site_settings/category/email'>ustawienia POP3</a>."
   site_settings:
     censored_words: "Wskazane słowa będą automatycznie zamieniane na  &#9632;&#9632;&#9632;&#9632;"
-    censored_pattern: "Wzorzec Regex który będzie automatycznie zamieniany na  &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Automatycznie kasuj wpisy ukryte dłużej niż 30 dni."
     allow_user_locale: "Zezwól użytkownikom na zmianę języka interfejsu we własnych  ustawieniach"
     set_locale_from_accept_language_header: "ustaw język interfejsu dla niezalogowanych użytkowników na podstawie języka w nagłówku ich przeglądarki. (EKSPERYMENTALNE, nie działa z anonimowym cache)"

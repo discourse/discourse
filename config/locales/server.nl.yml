@@ -77,7 +77,6 @@ nl:
       invalid: is ongeldig
       is_invalid: "lijkt onduidelijk, is het een volledige zin?"
       contains_censored_words: "bevat de volgende gecensureerde woorden: %{censored_words}"
-      matches_censored_pattern: "bevat de volgende woorden die met de gecensureerde regexp van de website overeenkomen: %{censored_words}"
       less_than: moet minder zijn dan %{count}
       less_than_or_equal_to: moet minder zijn dan of gelijk zijn aan %{count}
       not_a_number: is niet een getal
@@ -838,7 +837,6 @@ nl:
     poll_pop3_auth_error: "Verbinding met de POP3-server is mislukt met een authenticatiefout. Controleer uw <a href='/admin/site_settings/category/email'>POP3-instellingen</a>."
   site_settings:
     censored_words: "Woorden die automatisch door &#9632;&#9632;&#9632;&#9632; zullen worden vervangen"
-    censored_pattern: "Regex-patroon dat automatisch door &#9632;&#9632;&#9632;&#9632; zal worden vervangen"
     delete_old_hidden_posts: "Verborgen berichten die meer dan 30 dagen verborgen blijven automatisch verwijderen"
     allow_user_locale: "Gebruikers toestaan om een eigen voorkeur voor de interfacetaal te kiezen"
     set_locale_from_accept_language_header: "Taal van interface voor anonieme gebruikers instellen op basis van de taalheaders van hun webbrowser. (EXPERIMENTEEL, werkt niet met anonieme cache)"

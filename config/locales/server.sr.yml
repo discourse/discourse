@@ -37,7 +37,6 @@ sr:
       exclusion: je rezervisano
       greater_than: mora biti veće od %{count}
       contains_censored_words: "sadrži sledeće cenzurisane reči: 1%{censored_words}"
-      matches_censored_pattern: "sadrži sledeće reči koje se poklapaju sa registrom cenzurisanih reči: 1%{censored_wrods}"
       less_than: mora biti manje od 1%{count}
       not_a_number: nije broj
       not_an_integer: mora biti ceo broj

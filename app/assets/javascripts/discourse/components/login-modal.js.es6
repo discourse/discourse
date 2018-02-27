@@ -11,7 +11,7 @@ export default Ember.Component.extend({
     }
 
     Ember.run.schedule('afterRender', () => {
-      $('#login-account-password, #login-account-name').keydown(e => {
+      $('#login-account-password, #login-account-name, #login-second-factor').keydown(e => {
         if (e.keyCode === 13) {
           this.sendAction();
         }

@@ -261,9 +261,21 @@ module Email
       end
 
       markdown, elided_markdown = if html.present?
-        markdown = HtmlToMarkdown.new(html, keep_img_tags: true, keep_cid_imgs: true).to_markdown
-        markdown = trim_discourse_markers(markdown)
-        trim_reply_and_extract_elided(markdown)
+        if html[%{<div class="gmail_}]
+          html, elided_html = extract_from_gmail(html)
+          markdown = HtmlToMarkdown.new(html, keep_img_tags: true, keep_cid_imgs: true).to_markdown
+          elided_markdown = HtmlToMarkdown.new(elided_html).to_markdown
+          [markdown, elided_markdown]
+        elsif html[%{<div id="divRplyFwdMsg"}]
+          html, elided_html = extract_from_outlook(html)
+          markdown = HtmlToMarkdown.new(html, keep_img_tags: true, keep_cid_imgs: true).to_markdown
+          elided_markdown = HtmlToMarkdown.new(elided_html).to_markdown
+          [markdown, elided_markdown]
+        else
+          markdown = HtmlToMarkdown.new(html, keep_img_tags: true, keep_cid_imgs: true).to_markdown
+          markdown = trim_discourse_markers(markdown)
+          trim_reply_and_extract_elided(markdown)
+        end
       end
 
       if text.blank? || (SiteSetting.incoming_email_prefer_html && markdown.present?)
@@ -271,6 +283,26 @@ module Email
       else
         return [text, elided_text, Receiver::formats[:plaintext]]
       end
+    end
+
+    def extract_from_gmail(html)
+      doc = Nokogiri::HTML.parse(html)
+      elided = doc.xpath("//*[contains(@class, 'gmail_')]").remove
+      [doc.root.to_html, elided.to_html]
+    end
+
+    def extract_from_outlook(html)
+      doc = Nokogiri::HTML.fragment(html)
+      # that div only holds the headers of the forwarded email
+      fwd = doc.css("#divRplyFwdMsg")[0]
+      elided = fwd.dup
+      # the forwarded email is in the next <div>
+      elided << fwd.next_element
+      # also elide any signatures
+      elided << doc.css("#Signature").remove
+      # remove the leading <hr>
+      [fwd.previous_element, fwd].each(&:remove)
+      [doc.to_html, elided.to_html]
     end
 
     def trim_reply_and_extract_elided(text)

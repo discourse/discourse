@@ -223,10 +223,15 @@ class Topic < ActiveRecord::Base
       ApplicationController.banner_json_cache.clear
     end
 
-    if tags_changed
-      TagUser.auto_watch(topic_id: id)
-      TagUser.auto_track(topic_id: id)
-      self.tags_changed = false
+    if tags_changed || saved_change_to_attribute?(:category_id)
+
+      SearchIndexer.queue_post_reindex(self.id)
+
+      if tags_changed
+        TagUser.auto_watch(topic_id: id)
+        TagUser.auto_track(topic_id: id)
+        self.tags_changed = false
+      end
     end
 
     SearchIndexer.index(self)
@@ -474,7 +479,7 @@ class Topic < ActiveRecord::Base
 
     search_data = "#{title} #{raw[0...MAX_SIMILAR_BODY_LENGTH]}".strip
     filter_words = Search.prepare_data(search_data)
-    ts_query = Search.ts_query(filter_words, nil, "|")
+    ts_query = Search.ts_query(term: filter_words, joiner: "|")
 
     candidates = Topic
       .visible
@@ -510,7 +515,7 @@ class Topic < ActiveRecord::Base
 
   def update_status(status, enabled, user, opts = {})
     TopicStatusUpdater.new(self, user).update!(status, enabled, opts)
-    DiscourseEvent.trigger(:topic_status_updated, self.id, status, enabled)
+    DiscourseEvent.trigger(:topic_status_updated, self, status, enabled)
   end
 
   # Atomically creates the next post number
@@ -787,62 +792,45 @@ SQL
     true
   end
 
-  # Invite a user to the topic by username or email. Returns success/failure
   def invite(invited_by, username_or_email, group_ids = nil, custom_message = nil)
-    user = User.find_by_username_or_email(username_or_email)
+    target_user = User.find_by_username_or_email(username_or_email)
 
-    if private_message?
-      # If the user exists, add them to the message.
-      raise UserExists.new I18n.t("topic_invite.user_exists") if user.present? && topic_allowed_users.where(user_id: user.id).exists?
-
-      if user && topic_allowed_users.create!(user_id: user.id)
-        # Create a small action message
-        add_small_action(invited_by, "invited_user", user.username)
-
-        # Notify the user they've been invited
-        user.notifications.create(notification_type: Notification.types[:invited_to_private_message],
-                                  topic_id: id,
-                                  post_number: 1,
-                                  data: { topic_title: title,
-                                          display_username: invited_by.username }.to_json)
-        return true
-      end
+    if target_user && topic_allowed_users.where(user_id: target_user.id).exists?
+      raise UserExists.new(I18n.t("topic_invite.user_exists"))
     end
 
-    if username_or_email =~ /^.+@.+$/ && Guardian.new(invited_by).can_invite_via_email?(self)
-      RateLimiter.new(invited_by, "topic-invitations-per-day", SiteSetting.max_topic_invitations_per_day, 1.day.to_i).performed!
+    if target_user && private_message? && topic_allowed_users.create!(user_id: target_user.id)
+      add_small_action(invited_by, "invited_user", target_user.username)
 
-      if user.present?
-        # add existing users
-        Invite.extend_permissions(self, user, invited_by)
+      create_invite_notification!(
+        target_user,
+        Notification.types[:invited_to_private_message],
+        invited_by.username
+      )
 
-        # Notify the user they've been invited
-        user.notifications.create(notification_type: Notification.types[:invited_to_topic],
-                                  topic_id: id,
-                                  post_number: 1,
-                                  data: { topic_title: title,
-                                          display_username: invited_by.username }.to_json)
-        return true
+      true
+    elsif username_or_email =~ /^.+@.+$/ && Guardian.new(invited_by).can_invite_via_email?(self)
+      if target_user
+        Invite.extend_permissions(self, target_user, invited_by)
+
+        create_invite_notification!(
+          target_user,
+          Notification.types[:invited_to_topic],
+          invited_by.username
+        )
       else
-        # NOTE callers expect an invite object if an invite was sent via email
         invite_by_email(invited_by, username_or_email, group_ids, custom_message)
       end
-    else
-      raise UserExists.new I18n.t("topic_invite.user_exists") if user.present? && topic_allowed_users.where(user_id: user.id).exists?
 
-      if user && topic_allowed_users.create!(user_id: user.id)
-        RateLimiter.new(invited_by, "topic-invitations-per-day", SiteSetting.max_topic_invitations_per_day, 1.day.to_i).performed!
+      true
+    elsif target_user && topic_allowed_users.create!(user_id: target_user.id)
+      create_invite_notification!(
+        target_user,
+        Notification.types[:invited_to_topic],
+        invited_by.username
+      )
 
-        # Notify the user they've been invited
-        user.notifications.create(notification_type: Notification.types[:invited_to_topic],
-                                  topic_id: id,
-                                  post_number: 1,
-                                  data: { topic_title: title,
-                                          display_username: invited_by.username }.to_json)
-        return true
-      else
-        false
-      end
+      true
     end
   end
 
@@ -1305,6 +1293,17 @@ SQL
     RateLimiter.new(user, "#{key}-per-day", SiteSetting.send(method_name), 1.day.to_i)
   end
 
+  def create_invite_notification!(target_user, notification_type, username)
+    target_user.notifications.create!(
+      notification_type: notification_type,
+      topic_id: self.id,
+      post_number: 1,
+      data: {
+        topic_title: self.title,
+        display_username: username
+      }.to_json
+    )
+  end
 end
 
 # == Schema Information
@@ -1312,7 +1311,7 @@ end
 # Table name: topics
 #
 #  id                        :integer          not null, primary key
-#  title                     :string(255)      not null
+#  title                     :string           not null
 #  last_posted_at            :datetime
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
@@ -1327,7 +1326,7 @@ end
 #  avg_time                  :integer
 #  deleted_at                :datetime
 #  highest_post_number       :integer          default(0), not null
-#  image_url                 :string(255)
+#  image_url                 :string
 #  like_count                :integer          default(0), not null
 #  incoming_link_count       :integer          default(0), not null
 #  category_id               :integer
@@ -1338,15 +1337,15 @@ end
 #  bumped_at                 :datetime         not null
 #  has_summary               :boolean          default(FALSE), not null
 #  vote_count                :integer          default(0), not null
-#  archetype                 :string(255)      default("regular"), not null
+#  archetype                 :string           default("regular"), not null
 #  featured_user4_id         :integer
 #  notify_moderators_count   :integer          default(0), not null
 #  spam_count                :integer          default(0), not null
 #  pinned_at                 :datetime
 #  score                     :float
 #  percent_rank              :float            default(1.0), not null
-#  subtype                   :string(255)
-#  slug                      :string(255)
+#  subtype                   :string
+#  slug                      :string
 #  deleted_by_id             :integer
 #  participant_count         :integer          default(1)
 #  word_count                :integer
@@ -1362,7 +1361,7 @@ end
 #  idx_topics_front_page                   (deleted_at,visible,archetype,category_id,id)
 #  idx_topics_user_id_deleted_at           (user_id)
 #  idxtopicslug                            (slug)
-#  index_forum_threads_on_bumped_at        (bumped_at)
+#  index_topics_on_bumped_at               (bumped_at)
 #  index_topics_on_created_at_and_visible  (created_at,visible)
 #  index_topics_on_id_and_deleted_at       (id,deleted_at)
 #  index_topics_on_lower_title             (lower((title)::text))

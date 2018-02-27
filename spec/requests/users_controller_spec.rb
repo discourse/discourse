@@ -401,4 +401,118 @@ RSpec.describe UsersController do
       end
     end
   end
+
+  describe '#create_second_factor' do
+    context 'when not logged in' do
+      it 'should return the right response' do
+        post "/users/second_factors.json", params: {
+          password: 'wrongpassword'
+        }
+
+        expect(response.status).to eq(403)
+      end
+    end
+
+    context 'when logged in' do
+      before do
+        sign_in(user)
+      end
+
+      describe 'create 2fa request' do
+        it 'fails on incorrect password' do
+          post "/users/second_factors.json", params: {
+            password: 'wrongpassword'
+          }
+
+          expect(response.status).to eq(200)
+
+          expect(JSON.parse(response.body)['error']).to eq(I18n.t(
+            "login.incorrect_password")
+          )
+        end
+
+        it 'succeeds on correct password' do
+          post "/users/second_factors.json", params: {
+            password: 'somecomplicatedpassword'
+          }
+
+          expect(response.status).to eq(200)
+
+          response_body = JSON.parse(response.body)
+
+          expect(response_body['key']).to eq(user.user_second_factor.data)
+          expect(response_body['qr']).to be_present
+        end
+      end
+    end
+  end
+
+  describe '#update_second_factor' do
+    let(:user_second_factor) { Fabricate(:user_second_factor, user: user) }
+
+    context 'when not logged in' do
+      it 'should return the right response' do
+        put "/users/second_factor.json", params: {
+          second_factor_token: ROTP::TOTP.new(user_second_factor.data).now
+        }
+
+        expect(response.status).to eq(403)
+      end
+    end
+
+    context 'when logged in' do
+      before do
+        sign_in(user)
+        user_second_factor
+      end
+
+      context 'when user has totp setup' do
+        context 'when token is missing' do
+          it 'returns the right response' do
+            put "/users/second_factor.json", params: {
+              enable: 'true',
+            }
+
+            expect(response.status).to eq(400)
+          end
+        end
+
+        context 'when token is invalid' do
+          it 'returns the right response' do
+            put "/users/second_factor.json", params: {
+              second_factor_token: '000000',
+              enable: 'true',
+            }
+
+            expect(response.status).to eq(200)
+
+            expect(JSON.parse(response.body)['error']).to eq(I18n.t(
+              "login.invalid_second_factor_code"
+            ))
+          end
+        end
+
+        context 'when token is valid' do
+          it 'should allow second factor for the user to be enabled' do
+            put "/users/second_factor.json", params: {
+              second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
+              enable: 'true',
+            }
+
+            expect(response.status).to eq(200)
+            expect(user.reload.user_second_factor.enabled).to be true
+          end
+
+          it 'should allow second factor for the user to be disabled' do
+            put "/users/second_factor.json", params: {
+              second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
+            }
+
+            expect(response.status).to eq(200)
+            expect(user.reload.user_second_factor).to eq(nil)
+          end
+        end
+      end
+    end
+  end
 end

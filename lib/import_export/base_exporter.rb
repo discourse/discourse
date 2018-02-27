@@ -5,7 +5,7 @@ module ImportExport
 
     CATEGORY_ATTRS = [:id, :name, :color, :created_at, :user_id, :slug, :description, :text_color,
                       :auto_close_hours, :parent_category_id, :auto_close_based_on_last_post,
-                      :topic_template, :suppress_from_homepage, :all_topics_wiki, :permissions_params]
+                      :topic_template, :suppress_from_latest, :all_topics_wiki, :permissions_params]
 
     GROUP_ATTRS = [ :id, :name, :created_at, :mentionable_level, :messageable_level, :visibility_level,
                     :automatic_membership_email_domains, :automatic_membership_retroactive,

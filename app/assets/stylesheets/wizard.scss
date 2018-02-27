@@ -1,6 +1,5 @@
 @import "vendor/normalize";
 @import "vendor/font_awesome/font-awesome";
-@import "vendor/select2";
 @import "vendor/sweetalert";
 @import "common/foundation/colors";
 @import "common/foundation/variables";
@@ -62,9 +61,6 @@ body.wizard {
 
 .select {
   width: 400px;
-}
-.select2-results .select2-highlighted {
-  background: #ff9;
 }
 
 .wizard-canvas {
@@ -484,7 +480,6 @@ body.wizard {
   .wizard-column { margin: auto !important; }
   .wizard-step-contents { min-height: auto !important; }
   .wizard-step-banner { width: 100% !important; margin-bottom: 1em !important; }
-  .select2-container { width: 100% !important; }
   .wizard-step-footer { display: block !important; }
   .wizard-progress { margin-bottom: 10px !important; }
   .wizard-buttons { text-align: right !important; }

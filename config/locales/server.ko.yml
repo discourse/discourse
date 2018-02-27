@@ -77,7 +77,6 @@ ko:
       invalid: 올바르지 않음
       is_invalid: "문장이 불분명합니다."
       contains_censored_words: "검열된 단어가 있습니다: %{censored_words}"
-      matches_censored_pattern: "해당 단어는 사이트에서 검열하는 정규식을 포함하고 있습니다: %{censored_words}"
       less_than: '%{count}보다 작아야 함'
       less_than_or_equal_to: '%{count}보다 작거나 같아야 함'
       not_a_number: 숫자가 아님
@@ -785,7 +784,6 @@ ko:
     poll_pop3_auth_error: "인증 실패로 POP3 연결이 실패했습니다. <a href='/admin/site_settings/category/email'>POP3 설정</a>을 확인하세요."
   site_settings:
     censored_words: "단어는 자동적으로 `&#9632;&#9632;&#9632;&#9632;` 로 대체 됩니다."
-    censored_pattern: "자동으로 `&#9632;&#9632;&#9632;&#9632;` 로 대체되는 정규표현식"
     delete_old_hidden_posts: "30일이 지난 숨겨진 글은 자동으로 삭제됩니다."
     allow_user_locale: "사용자에게 자신이 원하는 언어를 선택 허용"
     set_locale_from_accept_language_header: "익명 사용자의 인터페이스 언어를 웹브라우저 언어 헤더를 기준으로 변경하기(실험적인 기능입니다. 익명 cache와 동작하지 않습니다.)"

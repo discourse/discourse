@@ -1,14 +1,25 @@
-{{#login-modal screenX=lastX screenY=lastY loginName=loginName loginPassword=loginPassword action="login"}}
+{{#login-modal screenX=lastX screenY=lastY loginName=loginName loginPassword=loginPassword loginSecondFactor=loginSecondFactor action="login"}}
   {{#d-modal-body title="login.title" class="login-modal"}}
-    {{login-buttons action="externalLogin"}}
+    {{login-buttons
+      canLoginLocalWithEmail=canLoginLocalWithEmail
+      processingEmailLink=processingEmailLink
+      emailLogin='emailLogin'
+      externalLogin='externalLogin'}}
+
     {{#if canLoginLocal}}
       <form id='login-form' method='post'>
-        <div>
+        <div id="credentials">
           <table>
             <tr>
               <td><label for='login-account-name'>{{i18n 'login.username'}}</label></td>
               <td>{{text-field value=loginName placeholderKey="login.email_placeholder" id="login-account-name" autocorrect="off" autocapitalize="off" autofocus="autofocus"}}</td>
-              <td></td>
+              <td>
+                {{#if showLoginWithEmailLink}}
+                  <a class="login-with-email-link" {{action "emailLogin"}}>
+                    {{i18n 'email_login.link_label'}}
+                  </a>
+                {{/if}}
+              </td>
             </tr>
             <tr>
               <td><label for='login-account-password'>{{i18n 'login.password'}}</label></td>
@@ -22,6 +33,9 @@
             </tr>
           </table>
         </div>
+        {{#second-factor-form}}
+          {{second-factor-input value=loginSecondFactor inputId='login-second-factor'}}
+        {{/second-factor-form}}
       </form>
     {{/if}}
     {{authMessage}}
@@ -30,9 +44,11 @@
 
   <div class="modal-footer">
     {{#if canLoginLocal}}
-      <button form="login-form" type="submit" class="btn btn-large btn-primary" disabled={{loginDisabled}} {{action "login"}}>
-        {{d-icon "unlock"}}&nbsp;{{loginButtonText}}
-      </button>
+      {{d-button action="login"
+          icon="unlock"
+          label=loginButtonLabel
+          disabled=loginDisabled
+          class='btn btn-large btn-primary'}}
 
       {{#if showSignupLink}}
         <button class="btn btn-large" id="new-account-link" {{action "createAccount"}}>

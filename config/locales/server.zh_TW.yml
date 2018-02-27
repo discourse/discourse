@@ -73,7 +73,6 @@ zh_TW:
       invalid: 無效的
       is_invalid: "似乎不清楚，這是完整的句子嗎？"
       contains_censored_words: "包含下列過濾詞彙: %{censored_words}"
-      matches_censored_pattern: "包含下列過濾詞彙（依照站方設定的正規表達式 %{censored_words}）"
       less_than: 必須少於 %{count}
       less_than_or_equal_to: 必須少於或等於 %{count}
       not_a_number: 不是數字
@@ -758,7 +757,6 @@ zh_TW:
     poll_pop3_auth_error: "至 POP3 伺服器的連接驗證失敗。請檢查<a href='/admin/site_settings/category/email'>POP3 設置</a>。"
   site_settings:
     censored_words: "將被自動替換為 &#9632;&#9632;&#9632;&#9632;"
-    censored_pattern: "正則表達式將自動被替換為&#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "自動刪除被隱藏超過 30 天的帖子。"
     allow_user_locale: "允許用戶選擇自己的語言介面"
     set_locale_from_accept_language_header: "為未登錄用戶按照他們的瀏覽器發送的請求頭部設置界面語言。（實驗性，無法和匿名緩存共同使用）"

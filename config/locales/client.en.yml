@@ -207,6 +207,7 @@ en:
     not_implemented: "That feature hasn't been implemented yet, sorry!"
     no_value: "No"
     yes_value: "Yes"
+    submit: "Submit"
     generic_error: "Sorry, an error has occurred."
     generic_error_with_reason: "An error occurred: %{error}"
     sign_up: "Sign Up"
@@ -446,7 +447,7 @@ en:
       name: "Name"
       user_count: "Number of Members"
       bio: "About Group"
-      selector_placeholder: "Add members"
+      selector_placeholder: "enter username"
       owner: "owner"
       index:
         title: "Groups"
@@ -706,6 +707,27 @@ en:
         set_password: "Set Password"
         choose_new: "Choose a new password"
         choose: "Choose a password"
+
+      second_factor:
+        title: "Two Factor Authentication"
+        disable: "Disable Two Factor Authentication"
+        enabled_status: "Status: On"
+        disabled_status: "Status: Off"
+        confirm_password_description: "Confirm your password to continue enabling Two Factor Authentication"
+        enable_description: |
+          To complete Two Factor Authentication setup, scan the following QR code
+          in one of the supported apps
+          (<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Android and iOS</a>,
+          <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>)
+          and submit the generated Two Factor Authentication code.
+        disable_description: "Enter the authentication code from your app"
+        show_key_description: "Or enter the secret key manually."
+        info_prompt: "What is Two Factor Authentication?"
+        extended_description: |
+          Two Factor Authentication adds an extra security step to logging in by
+          requiring a one-time token in addition to your password. These tokens
+          can be generated on Android and iOS by <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Google Authenticator</a>
+          and on Windows Phone by <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Authenticator</a>.
 
       change_about:
         title: "Change About Me"
@@ -1085,7 +1107,8 @@ en:
       button_help: "Help"
 
     email_login:
-      label: "Login With Email"
+      link_label: "Email me a magic link"
+      button_label: "with email"
       complete_username: "If an account matches the username <b>%{username}</b>, you should receive an email with a magic login link shortly."
       complete_email: "If an account matches <b>%{email}</b>, you should receive an email with a magic login link shortly."
       complete_username_found: "We found an account that matches the username <b>%{username}</b>, you should receive an email with a magic login link shortly."
@@ -1097,10 +1120,14 @@ en:
       title: "Log In"
       username: "User"
       password: "Password"
+      second_factor_title: "Two Factor Authentication Required"
+      second_factor_description: "Enter the authentication code from your app."
+      second_factor_label: "Code"
       email_placeholder: "email or username"
       caps_lock_warning: "Caps Lock is on"
       error: "Unknown error"
       rate_limit: "Please wait before trying to log in again."
+      blank_username: "Please enter your email or username."
       blank_username_or_password: "Please enter your email or username, and password."
       reset_password: 'Reset Password'
       logging_in: "Signing In..."
@@ -1308,16 +1335,16 @@ en:
           desc: Reply to a specific post
         reply_as_new_topic:
           label: Reply as linked topic
-          desc: Create a new topic
+          desc: Create a new topic linked to this topic
         reply_as_private_message:
           label: New message
-          desc: Create a private message
+          desc: Create a new personal message
         reply_to_topic:
           label: Reply to topic
-          desc: Reply to the original post without replying to a specific post
+          desc: Reply to the topic, not any specific post
         toggle_whisper:
           label: Toggle whipser
-          desc: Whispers will only be visible by staff members
+          desc: Whispers are only visible to staff members
         create_topic:
           label: "New Topic"
 
@@ -1556,6 +1583,9 @@ en:
       move_to_inbox:
         title: 'Move to Inbox'
         help: 'Move message back to Inbox'
+      edit_message:
+        help: 'Edit first post of the message'
+        title: 'Edit Message'
       list: 'Topics'
       new: 'new topic'
       unread: 'unread'
@@ -2194,7 +2224,7 @@ en:
       email_in_disabled: "Posting new topics via email is disabled in the Site Settings. To enable posting new topics via email, "
       email_in_disabled_click: 'enable the "email in" setting.'
       mailinglist_mirror: "Category mirrors a mailing list"
-      suppress_from_homepage: "Suppress this category from the homepage."
+      suppress_from_latest: "Suppress category from latest topics."
       show_subcategory_list: "Show subcategory list above topics in this category."
       num_featured_topics: "Number of topics shown on the categories page:"
       subcategory_num_featured_topics: "Number of featured topics on parent category's page:"
@@ -2779,7 +2809,6 @@ en:
         edit: "Edit Groups"
         refresh: "Refresh"
         new: "New"
-        selector_placeholder: "enter username"
         about: "Edit your group membership and names here"
         group_members: "Group members"
         delete: "Delete"
@@ -3262,6 +3291,7 @@ en:
             post_locked: "post locked"
             post_unlocked: "post unlocked"
             check_personal_message: "check personal message"
+            disabled_second_factor: "disable Two Factor Authentication"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -3453,6 +3483,7 @@ en:
         private_topics_count: Private Topics
         posts_read_count: Posts Read
         post_count: Posts Created
+        second_factor_enabled: Two Factor Authentication Enabled
         topics_entered: Topics Viewed
         flags_given_count: Flags Given
         flags_received_count: Flags Received

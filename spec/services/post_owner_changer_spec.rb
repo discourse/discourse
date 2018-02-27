@@ -62,6 +62,14 @@ describe PostOwnerChanger do
       expect(p2.revisions.size).to eq(0)
     end
 
+    it "changes the user even when the post does not pass validation" do
+      p1.update_attribute(:raw, "foo")
+      PostOwnerChanger.new(post_ids: [p1.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
+      p1.reload
+
+      expect(p1.user).to eq(user_a)
+    end
+
     context "sets topic notification level for the new owner" do
       let(:p4) { Fabricate(:post, post_number: 2, topic_id: topic.id) }
 

@@ -276,6 +276,26 @@ describe PostAction do
       expect(post.like_count).to eq(0)
       expect(post.like_score).to eq(0)
     end
+
+    it "shouldn't change given_likes unless likes are given or removed" do
+      freeze_time(Time.zone.now)
+
+      PostAction.act(codinghorror, Fabricate(:post), PostActionType.types[:like])
+      expect(value_for(codinghorror.id, Date.today)).to eq(1)
+
+      PostActionType.types.each do |type_name, type_id|
+        post = Fabricate(:post)
+
+        PostAction.act(codinghorror, post, type_id)
+        actual_count = value_for(codinghorror.id, Date.today)
+        expected_count = type_name == :like ? 2 : 1
+        expect(actual_count).to eq(expected_count), "Expected likes_given to be #{expected_count} when adding '#{type_name}', but got #{actual_count}"
+
+        PostAction.remove_act(codinghorror, post, type_id)
+        actual_count = value_for(codinghorror.id, Date.today)
+        expect(actual_count).to eq(1), "Expected likes_given to be 1 when removing '#{type_name}', but got #{actual_count}"
+      end
+    end
   end
 
   describe "undo/redo repeatedly" do

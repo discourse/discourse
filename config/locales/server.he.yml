@@ -78,7 +78,6 @@ he:
       invalid: לא תקין
       is_invalid: "נראה לא ברור, האם זה משפט שלם?"
       contains_censored_words: "מכיל את המילים המצונזרות הבאות: %{censored_words}"
-      matches_censored_pattern: "מכיל את המילים הבאות שמתאימות לביטוי הרגולרי המצונזר הבא: %{censored_words}"
       less_than: חייב להיות פחות מ-%{count}
       less_than_or_equal_to: חייב להיות פחות או שווה ל-%{count}
       not_a_number: אינו מספר
@@ -841,7 +840,6 @@ he:
     poll_pop3_auth_error: "החיבור לשרת POP3 נכשל בשל שגיאת הזדהות. אנא בדקו את <a href='/admin/site_settings/category/email'> הגדרות ה-POP3 </a> שלכם."
   site_settings:
     censored_words: "מלים שיוחלפו באופן אוטומטי ב- &#9632;&#9632;&#9632;&#9632;"
-    censored_pattern: "ביטוי רגולרי שיוחלף אוטומטית עם &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "מחיקת אוטומטית של פרסומים מוסתרים שנותרים מוסתרים במשך יותר מ-30 יום."
     allow_user_locale: "אפשרו למשתמשים לבחור את הגדרות השפה שלהם בממשק המשתמש/ת"
     set_locale_from_accept_language_header: "קבעו את שפת הממשק עבור משתמשים אנונימיים לפי השפה בדפדפן. (נ-י-ס-י-ו-נ-י, לא עובד עם cache אנונימי)"
