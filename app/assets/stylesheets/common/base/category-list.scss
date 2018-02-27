@@ -103,6 +103,8 @@
     line-height: $line-height-medium;
     text-align: center;
     color: $primary;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 
@@ -116,6 +118,8 @@
   h3 {
     font-size: $font-up-2;
     text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .category-box-heading {
