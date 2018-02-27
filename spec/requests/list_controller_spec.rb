@@ -105,6 +105,8 @@ RSpec.describe ListController do
         sign_in(user)
         get "/topics/private-messages-tag/#{user.username}/#{tag.name}.json"
         expect(response).to be_success
+        data = JSON.parse(response.body)
+        expect(data["topic_list"]["pm_tags"].length).to eq(1)
       end
     end
   end

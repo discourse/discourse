@@ -59,6 +59,24 @@ class Tag < ActiveRecord::Base
     tag_names_with_counts.map { |row| row['tag_name'] }
   end
 
+  def self.pm_tags(limit_arg: nil, guardian: nil)
+    return [] unless (guardian || Guardian.new).can_tag_pms?
+    limit = limit_arg || SiteSetting.max_tags_in_filter_list
+
+    tag_names = Tag.exec_sql <<~SQL
+      SELECT tags.name AS tag_name
+      FROM tags
+      INNER JOIN topic_tags ON tags.id = topic_tags.tag_id
+      INNER JOIN topics ON topics.id = topic_tags.topic_id
+      AND topics.deleted_at IS NULL
+      AND topics.archetype = 'private_message'
+      GROUP BY tags.name
+      LIMIT #{limit}
+    SQL
+
+    tag_names.values.flatten
+  end
+
   def self.include_tags?
     SiteSetting.tagging_enabled && SiteSetting.show_filter_by_tag
   end

@@ -65,7 +65,6 @@
     </button>
     {{/if}}
 
-
     {{#if bulkSelectEnabled}}
     <button {{action "selectAll"}} class="btn btn-select-all">
       {{i18n "user.messages.select_all"}}
@@ -74,6 +73,10 @@
 
     {{#if isGroup}}
       {{group-notifications-button value=group.group_user.notification_level group=group user=model}}
+    {{/if}}
+
+    {{#if pmTaggingEnabled}}
+      {{pm-tag-drop pmTags=pmTags}}
     {{/if}}
 </div>
 
