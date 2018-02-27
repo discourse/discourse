@@ -32,12 +32,13 @@
 
 .category-list {
   .category-name {
-    display: block;
-    max-width: 35vw; 
+    display: inline-block;
+    max-width: 30vw; 
     overflow: hidden;
     text-overflow: ellipsis;
+    vertical-align: text-bottom;
     @media screen and (max-width: 630px) {
-      max-width: 75vw; //single-column
+      max-width: 65vw; //single-column
     }
   }
   &.with-topics {
