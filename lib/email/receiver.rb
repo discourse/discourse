@@ -261,8 +261,13 @@ module Email
       end
 
       markdown, elided_markdown = if html.present?
-        if html[%{<div class="gmail_quote">}]
-          html, elided_html = extract_gmail_quote(html)
+        if html[/<div class="gmail_(quote|extra)"/]
+          html, elided_html = extract_from_gmail(html)
+          markdown = HtmlToMarkdown.new(html, keep_img_tags: true, keep_cid_imgs: true).to_markdown
+          elided_markdown = HtmlToMarkdown.new(elided_html).to_markdown
+          [markdown, elided_markdown]
+        elsif html[%{<div id="divRplyFwdMsg"}]
+          html, elided_html = extract_from_outlook(html)
           markdown = HtmlToMarkdown.new(html, keep_img_tags: true, keep_cid_imgs: true).to_markdown
           elided_markdown = HtmlToMarkdown.new(elided_html).to_markdown
           [markdown, elided_markdown]
@@ -280,9 +285,23 @@ module Email
       end
     end
 
-    def extract_gmail_quote(html)
+    def extract_from_gmail(html)
       doc = Nokogiri::HTML.fragment(html)
-      elided = doc.css("div.gmail_quote")[0].remove
+      elided = doc.css(".gmail_quote, .gmail_extra").remove
+      [doc.to_html, elided.to_html]
+    end
+
+    def extract_from_outlook(html)
+      doc = Nokogiri::HTML.fragment(html)
+      # that div only holds the headers of the forwarded email
+      fwd = doc.css("#divRplyFwdMsg")[0]
+      elided = fwd.dup
+      # the forwarded email is in the next <div>
+      elided << fwd.next_element
+      # also elide any signatures
+      elided << doc.css("#Signature").remove
+      # remove the leading <hr>
+      [fwd.previous_element, fwd].each(&:remove)
       [doc.to_html, elided.to_html]
     end
 
