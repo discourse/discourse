@@ -184,7 +184,6 @@ export default ComboBox.extend(Tags, {
       categoryId: this.get("categoryId")
     };
     if (this.get("selectedTags")) data.selected_tags = this.get("selectedTags").slice(0, 100);
-    if (!this.get("everyTag")) data.filterForInput = true;
 
     this.searchTags("/tags/filter/search", data, this._transformJson);
   },
