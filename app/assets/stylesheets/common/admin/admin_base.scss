@@ -1746,6 +1746,10 @@ table#user-badges {
   label {
     font-size: $font-0;
   }
+
+  &.content-list {
+    width: 100%;
+  }
 }
 
 .web-hook-events-listing {
