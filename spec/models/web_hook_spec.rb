@@ -123,24 +123,30 @@ describe WebHook do
     it 'should enqueue the right hooks for topic events' do
       Fabricate(:topic_web_hook)
 
-      Sidekiq::Testing.fake! do
-        post = PostCreator.create(user, raw: 'post', title: 'topic', skip_validations: true)
-        topic_id = post.topic_id
+      post = PostCreator.create(user, raw: 'post', title: 'topic', skip_validations: true)
+      topic_id = post.topic_id
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+
+      expect(job_args["event_name"]).to eq("topic_created")
+      expect(job_args["topic_id"]).to eq(topic_id)
+
+      PostDestroyer.new(user, post).destroy
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+
+      expect(job_args["event_name"]).to eq("topic_destroyed")
+      expect(job_args["topic_id"]).to eq(topic_id)
+
+      PostDestroyer.new(user, post).recover
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+
+      expect(job_args["event_name"]).to eq("topic_recovered")
+      expect(job_args["topic_id"]).to eq(topic_id)
+
+      %w{archived closed visible}.each do |status|
+        post.topic.update_status(status, true, topic.user)
         job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
-        expect(job_args["event_name"]).to eq("topic_created")
-        expect(job_args["topic_id"]).to eq(topic_id)
-
-        PostDestroyer.new(user, post).destroy
-        job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
-
-        expect(job_args["event_name"]).to eq("topic_destroyed")
-        expect(job_args["topic_id"]).to eq(topic_id)
-
-        PostDestroyer.new(user, post).recover
-        job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
-
-        expect(job_args["event_name"]).to eq("topic_recovered")
+        expect(job_args["event_name"]).to eq("topic_#{status}_status_updated")
         expect(job_args["topic_id"]).to eq(topic_id)
       end
     end
@@ -166,85 +172,81 @@ describe WebHook do
     it 'should enqueue the right hooks for post events' do
       Fabricate(:web_hook)
 
-      Sidekiq::Testing.fake! do
-        user
-        topic
+      user
+      topic
 
-        post = PostCreator.create(user,
-          raw: 'post',
-          topic_id: topic.id,
-          reply_to_post_number: 1,
-          skip_validations: true
-        )
+      post = PostCreator.create(user,
+        raw: 'post',
+        topic_id: topic.id,
+        reply_to_post_number: 1,
+        skip_validations: true
+      )
 
-        job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
-        Sidekiq::Worker.clear_all
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+      Sidekiq::Worker.clear_all
 
-        expect(job_args["event_name"]).to eq("post_created")
-        expect(job_args["post_id"]).to eq(post.id)
+      expect(job_args["event_name"]).to eq("post_created")
+      expect(job_args["post_id"]).to eq(post.id)
 
-        # post destroy or recover triggers a moderator post
-        expect { PostDestroyer.new(user, post).destroy }
-          .to change { Jobs::EmitWebHookEvent.jobs.count }.by(2)
+      # post destroy or recover triggers a moderator post
+      expect { PostDestroyer.new(user, post).destroy }
+        .to change { Jobs::EmitWebHookEvent.jobs.count }.by(2)
 
-        job_args = Jobs::EmitWebHookEvent.jobs.first["args"].first
+      job_args = Jobs::EmitWebHookEvent.jobs.first["args"].first
 
-        expect(job_args["event_name"]).to eq("post_edited")
-        expect(job_args["post_id"]).to eq(post.id)
+      expect(job_args["event_name"]).to eq("post_edited")
+      expect(job_args["post_id"]).to eq(post.id)
 
-        job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
-        expect(job_args["event_name"]).to eq("post_destroyed")
-        expect(job_args["post_id"]).to eq(post.id)
+      expect(job_args["event_name"]).to eq("post_destroyed")
+      expect(job_args["post_id"]).to eq(post.id)
 
-        PostDestroyer.new(user, post).recover
-        job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+      PostDestroyer.new(user, post).recover
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
-        expect(job_args["event_name"]).to eq("post_recovered")
-        expect(job_args["post_id"]).to eq(post.id)
-      end
+      expect(job_args["event_name"]).to eq("post_recovered")
+      expect(job_args["post_id"]).to eq(post.id)
     end
 
     it 'should enqueue the right hooks for user events' do
       Fabricate(:user_web_hook, active: true)
 
-      Sidekiq::Testing.fake! do
-        user
-        job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+      user
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
-        expect(job_args["event_name"]).to eq("user_created")
-        expect(job_args["user_id"]).to eq(user.id)
+      expect(job_args["event_name"]).to eq("user_created")
+      expect(job_args["user_id"]).to eq(user.id)
 
-        admin
-        job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+      admin
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
-        expect(job_args["event_name"]).to eq("user_created")
-        expect(job_args["user_id"]).to eq(admin.id)
+      expect(job_args["event_name"]).to eq("user_created")
+      expect(job_args["user_id"]).to eq(admin.id)
 
-        user.approve(admin)
-        job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+      user.approve(admin)
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
-        expect(job_args["event_name"]).to eq("user_approved")
-        expect(job_args["user_id"]).to eq(user.id)
+      expect(job_args["event_name"]).to eq("user_approved")
+      expect(job_args["user_id"]).to eq(user.id)
 
-        UserUpdater.new(admin, user).update(username: 'testing123')
-        job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+      UserUpdater.new(admin, user).update(username: 'testing123')
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
-        expect(job_args["event_name"]).to eq("user_updated")
-        expect(job_args["user_id"]).to eq(user.id)
+      expect(job_args["event_name"]).to eq("user_updated")
+      expect(job_args["user_id"]).to eq(user.id)
 
-        user.logged_out
-        job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+      user.logged_out
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
-        expect(job_args["event_name"]).to eq("user_logged_out")
-        expect(job_args["user_id"]).to eq(user.id)
+      expect(job_args["event_name"]).to eq("user_logged_out")
+      expect(job_args["user_id"]).to eq(user.id)
 
-        user.logged_in
-        job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+      user.logged_in
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
-        expect(job_args["event_name"]).to eq("user_logged_in")
-        expect(job_args["user_id"]).to eq(user.id)
-      end
+      expect(job_args["event_name"]).to eq("user_logged_in")
+      expect(job_args["user_id"]).to eq(user.id)
     end
   end
 end

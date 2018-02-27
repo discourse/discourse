@@ -4,6 +4,10 @@
   end
 end
 
+DiscourseEvent.on(:topic_status_updated) do |topic, status|
+  WebHook.enqueue_topic_hooks("topic_#{status}_status_updated", topic)
+end
+
 DiscourseEvent.on(:topic_created) do |topic, _, user|
   WebHook.enqueue_topic_hooks(:topic_created, topic, user)
 end
