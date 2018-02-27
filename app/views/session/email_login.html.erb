@@ -10,7 +10,7 @@
       <%= form_tag(method: "post") do%>
         <h2><%=t "login.second_factor_title" %></h2>
         <%= label_tag(:second_factor_token, t("login.second_factor_description")) %>
-        <div><%= text_field_tag(:second_factor_token, pattern: '[0-9]{6}', maxlength: 6) %></div>
+        <div><%= render 'common/second_factor_text_field' %></div>
         <%= submit_tag(t("submit"), class: "btn btn-large btn-primary") %>
       <%end%>
     </div>

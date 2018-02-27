@@ -21,10 +21,10 @@ export default Ember.Controller.extend({
   },
 
   toggleSecondFactor(enable) {
-    if (!this.get('second_factor_token')) return;
+    if (!this.get('secondFactorToken')) return;
     this.set('loading', true);
 
-    this.get('content').toggleSecondFactor(this.get('second_factor_token'), enable)
+    this.get('content').toggleSecondFactor(this.get('secondFactorToken'), enable)
       .then(response => {
         if (response.error) {
           this.set('errorMessage', response.error);

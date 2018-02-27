@@ -19,12 +19,7 @@
 
       <div class="control-group">
         <div class="controls">
-          {{text-field value=second_factor_token
-              pattern='[0-9]{6}'
-              maxlength='6'
-              id="second-factor-token"
-              classNames="input-large"
-              autofocus="autofocus"}}
+          {{second-factor-input value=secondFactorToken}}
         </div>
 
         <div class='instructions'>
@@ -70,12 +65,7 @@
           <label class="control-label input-prepend">{{i18n 'login.second_factor_label'}}</label>
 
           <div class="controls">
-            {{text-field value=second_factor_token
-                pattern='[0-9]{6}'
-                maxlength='6'
-                id="second-factor-token"
-                classNames="input-large"
-                autofocus="autofocus"}}
+            {{second-factor-input value=secondFactorToken}}
           </div>
         </div>
 
