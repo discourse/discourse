@@ -73,6 +73,18 @@ describe GroupsController do
         property: 'og:description', content: group.bio_cooked
       })
     end
+
+    describe 'when viewing activity filters' do
+      it 'should return the right response' do
+        get "/groups/#{group.name}/activity/posts.json"
+
+        expect(response.status).to eq(200)
+
+        response_body = JSON.parse(response.body)['basic_group']
+
+        expect(response_body["id"]).to eq(group.id)
+      end
+    end
   end
 
   describe '#mentionable' do
