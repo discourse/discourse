@@ -23,9 +23,6 @@ class Category < ActiveRecord::Base
   has_many :category_featured_topics
   has_many :featured_topics, through: :category_featured_topics, source: :topic
 
-  has_many :category_featured_users
-  has_many :featured_users, through: :category_featured_users, source: :user
-
   has_many :category_groups, dependent: :destroy
   has_many :groups, through: :category_groups
 
@@ -405,8 +402,8 @@ SQL
   end
 
   def self.query_category(slug_or_id, parent_category_id)
-    self.where(slug: slug_or_id, parent_category_id: parent_category_id).includes(:featured_users).first ||
-    self.where(id: slug_or_id.to_i, parent_category_id: parent_category_id).includes(:featured_users).first
+    self.where(slug: slug_or_id, parent_category_id: parent_category_id).first ||
+    self.where(id: slug_or_id.to_i, parent_category_id: parent_category_id).first
   end
 
   def self.find_by_email(email)
