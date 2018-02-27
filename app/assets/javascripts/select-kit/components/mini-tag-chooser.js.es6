@@ -87,6 +87,10 @@ export default ComboBox.extend(Tags, {
     this.didPressBackspace(event);
   },
 
+  // we are relying on selectedTags and not on value
+  // to define the current selection
+  mutateValue() {},
+
   didPressBackspace() {
     if (!this.get("isExpanded")) {
       this.expand();
