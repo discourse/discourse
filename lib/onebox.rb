@@ -8,7 +8,6 @@ require "moneta"
 require "cgi"
 require "net/http"
 require "digest"
-require "fast_blank"
 require "sanitize"
 require_relative "onebox/sanitize_config"
 

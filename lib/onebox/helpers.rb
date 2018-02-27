@@ -128,7 +128,7 @@ module Onebox
 
         http.request_head([uri.path, uri.query].join("?")) do |response|
           code = response.code.to_i
-          unless code === 200 || response.header['content-length'].blank?
+          unless code === 200 || Onebox::Helpers.blank?(response.header['content-length'])
             return nil
           end
           return response.header['content-length']
@@ -159,8 +159,10 @@ module Onebox
     end
 
     def self.blank?(value)
-      if value.respond_to?(:blank?)
-        value.blank?
+      if value.nil?
+        true
+      elsif String === value
+        value.empty? || !(/[[:^space:]]/ === value)
       else
         value.respond_to?(:empty?) ? !!value.empty? : !value
       end
