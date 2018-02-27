@@ -1,5 +1,9 @@
 .category-list {
   table-layout: fixed;
+  .category-text-title {
+    display: flex;
+    align-items: baseline;
+  }
   .category-name {
     display: inline-block;
     max-width: 100%; 
