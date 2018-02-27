@@ -7,7 +7,7 @@ class ColumnDropper
     end
 
     # in production we need some extra delay to allow for slow migrations
-    delay ||= Rails.env.production? ? 360 : 0
+    delay ||= Rails.env.production? ? 3600 : 0
 
     sql = <<~SQL
     SELECT 1
