@@ -710,6 +710,7 @@ en:
 
       second_factor:
         title: "Two Factor Authentication"
+        disable: "Disable Two Factor Authentication"
         enabled_status: "Status: On"
         disabled_status: "Status: Off"
         confirm_password_description: "Confirm your password to continue enabling Two Factor Authentication"
