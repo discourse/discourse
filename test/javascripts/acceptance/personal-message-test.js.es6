@@ -24,5 +24,3 @@ QUnit.test("show footer edit button", assert => {
     assert.ok(exists('.edit-message'), 'shows edit first post button on footer when PM tagging is enabled');
   });
 });
-
-
