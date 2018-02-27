@@ -28,6 +28,7 @@ QUnit.test("logging in via email (link)", assert => {
 
   andThen(() => {
     assert.notOk(exists(".login-with-email-link"), 'it displays the link only when field is filled');
+    userFound = false;
   });
 
   fillIn("#login-account-name", "someuser");
