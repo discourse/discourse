@@ -173,14 +173,6 @@ QUnit.test("Updating the topic title with emojis", assert => {
   });
 });
 
-QUnit.test("does not show 'edit first post' button on topic/pm footer", assert => {
-  visit("/t/pm-for-testing/12");
-
-  andThen(() => {
-    assert.ok(!exists('.edit-message'), 'it does not show edit button');
-  });
-});
-
 acceptance("Topic featured links", {
   loggedIn: true,
   settings: {
@@ -206,20 +198,4 @@ QUnit.test("remove featured link", assert => {
   // andThen(() => {
   //   assert.ok(!exists('.title-wrapper .topic-featured-link'), 'link is gone');
   // });
-});
-
-acceptance("Personal message footer", {
-  loggedIn: true,
-  settings: {
-    allow_staff_to_tag_pms: true,
-    tagging_enabled: true
-  }
-});
-
-QUnit.test("shows edit 'first post button' on PM footer", assert => {
-  visit("/t/pm-for-testing/12");
-
-  andThen(() => {
-    assert.ok(exists('.edit-message'), 'it shows the edit button');
-  });
 });
