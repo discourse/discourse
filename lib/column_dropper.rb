@@ -6,7 +6,8 @@ class ColumnDropper
       raise ArgumentError.new("Invalid column name passed to drop #{column}") if column =~ /[^a-z0-9_]/i
     end
 
-    delay ||= Rails.env.production? ? 60 : 0
+    # in production we need some extra delay to allow for slow migrations
+    delay ||= Rails.env.production? ? 360 : 0
 
     sql = <<~SQL
     SELECT 1
@@ -25,7 +26,7 @@ class ColumnDropper
 
     if ActiveRecord::Base.exec_sql(sql, table: table,
                                         columns: columns,
-                                        delay: "#{delay.to_i || 0} minutes",
+                                        delay: "#{delay.to_i || 0} seconds",
                                         after_migration: after_migration).to_a.length > 0
       on_drop&.call
 
