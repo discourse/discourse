@@ -232,6 +232,10 @@ tr.category-topic-link {
     }
   }
 
+  .category-name {
+    max-width: 80vw;
+  }
+
   .category-topic-link .main-link, .subcategories-list td, .category-description td {
     padding-left: 10px;
   }

@@ -23,8 +23,15 @@
   }
   .main-link {
     @extend .topic-list-main-link;
-    flex: 15;
+    flex: 0 1 auto;
+    max-width: 65%;
     font-size: $font-0;
+    .badge-wrapper {
+      max-width: 100%;
+      .badge-category-bg {
+        flex-shrink: 0;
+      }
+    }
 
     .top-row {
       margin-bottom: 0.1em;

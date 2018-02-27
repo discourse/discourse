@@ -17,36 +17,7 @@
   }
 }
 
-.categories-and-latest {
-  .latest-topic-list {
-    span.badge-category {
-      .category-name {
-        max-width: 25vw;
-        @media screen and (max-width: 630px) {
-          max-width: 65vw; //single-column
-        }
-      }
-    }
-  }
-}
 
-.category-list {
-  .category-name {
-    display: inline-block;
-    max-width: 30vw; 
-    overflow: hidden;
-    text-overflow: ellipsis;
-    vertical-align: text-bottom;
-    @media screen and (max-width: 630px) {
-      max-width: 65vw; //single-column
-    }
-  }
-  &.with-topics {
-    .category-name {
-      max-width: 40vw;
-    }
-  } 
-}
 
 .topic-list-item.visited,
 .latest-topic-list-item.visited,
