@@ -11,19 +11,17 @@ class PostOwnerChanger
   end
 
   def change_owner!
-    ActiveRecord::Base.transaction do
-      @post_ids.each do |post_id|
-        post = Post.with_deleted.where(id: post_id, topic_id: @topic.id).first
-        next if post.blank?
-        @topic.user = @new_owner if post.is_first_post?
+    @post_ids.each do |post_id|
+      post = Post.with_deleted.where(id: post_id, topic_id: @topic.id).first
+      next if post.blank?
+      @topic.user = @new_owner if post.is_first_post?
 
-        if post.user == nil
-          @topic.recover! if post.is_first_post?
-        end
-        post.topic = @topic
-        post.set_owner(@new_owner, @acting_user, @skip_revision)
-        PostAction.remove_act(@new_owner, post, PostActionType.types[:like])
+      if post.user == nil
+        @topic.recover! if post.is_first_post?
       end
+      post.topic = @topic
+      post.set_owner(@new_owner, @acting_user, @skip_revision)
+      PostAction.remove_act(@new_owner, post, PostActionType.types[:like])
 
       @topic.update_statistics
 
