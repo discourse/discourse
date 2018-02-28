@@ -533,6 +533,17 @@ describe Topic do
           expect(topic.reload.allowed_users).to_not include(another_user)
           expect(Post.last.action_code).to eq("removed_user")
         end
+
+        context "from a muted user" do
+          before { MutedUser.create!(user: another_user, muted_user: user) }
+
+          it 'silently fails' do
+            expect(topic.invite(user, another_user.username)).to eq(true)
+            expect(topic.allowed_users).to_not include(another_user)
+            expect(Post.last).to be_blank
+            expect(Notification.last).to be_blank
+          end
+        end
       end
 
       describe 'by email' do
@@ -597,6 +608,17 @@ describe Topic do
           expect(topic.invite(user, another_user.email)).to eq(true)
           expect(topic.reload.allowed_users.last).to eq(another_user)
           expect_the_right_notification_to_be_created
+        end
+
+        context "for a muted topic" do
+          before { TopicUser.change(another_user.id, topic.id, notification_level: TopicUser.notification_levels[:muted]) }
+
+          it 'silently fails' do
+            expect(topic.invite(user, another_user.username)).to eq(true)
+            expect(topic.allowed_users).to_not include(another_user)
+            expect(Post.last).to be_blank
+            expect(Notification.last).to be_blank
+          end
         end
 
         describe 'when user can invite via email' do
