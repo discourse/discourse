@@ -4,20 +4,14 @@ task "users:change_post_ownership", [:old_username, :new_username, :archetype] =
   new_username = args[:new_username]
   archetype = args[:archetype]
   archetype = archetype.downcase if archetype
+
   if !old_username || !new_username
     puts "ERROR: Expecting rake posts:change_post_ownership[old_username,new_username,archetype]"
     exit 1
   end
-  old_user = User.find_by(username_lower: old_username.downcase)
-  if !old_user
-    puts "ERROR: User with username #{old_username} does not exist"
-    exit 1
-  end
-  new_user = User.find_by(username_lower: new_username.downcase)
-  if !new_user
-    puts "ERROR: User with username #{new_username} does not exist"
-    exit 1
-  end
+
+  old_user = find_user(old_username)
+  new_user = find_user(new_username)
 
   if archetype == "private"
     posts = Post.private_posts.where(user_id: old_user.id)
@@ -36,4 +30,31 @@ task "users:change_post_ownership", [:old_username, :new_username, :archetype] =
     i += 1
   end
   puts "", "#{i} posts ownership changed!", ""
+end
+
+task "users:merge", [:source_username, :target_username] => [:environment] do |_, args|
+  source_username = args[:source_username]
+  target_username = args[:target_username]
+
+  if !source_username || !target_username
+    puts "ERROR: Expecting rake posts:merge[source_username,target_username]"
+    exit 1
+  end
+
+  source_user = find_user(source_username)
+  target_user = find_user(target_username)
+
+  UserMerger.new(source_user, target_user).merge!
+  puts "", "Users merged!", ""
+end
+
+def find_user(username)
+  user = User.find_by_username(username)
+
+  if !user
+    puts "ERROR: User with username #{username} does not exist"
+    exit 1
+  end
+
+  user
 end
