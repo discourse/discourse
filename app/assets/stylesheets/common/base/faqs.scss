@@ -1,4 +1,5 @@
 .body-page {
+  font-size: $font-up-1;
 
   // Consistent vertical spacing
   blockquote,
@@ -12,7 +13,6 @@
   ol,
   table {
     margin: 0 0 20px;
-    font-size: $font-up-1;
     line-height: $line-height-large;
   }
 
