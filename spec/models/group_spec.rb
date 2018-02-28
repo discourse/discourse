@@ -5,6 +5,25 @@ describe Group do
   let(:user) { Fabricate(:user) }
   let(:group) { Fabricate(:group) }
 
+  describe "#posts_for" do
+    it "returns the post in the group" do
+      p = Fabricate(:post)
+      group.add(p.user)
+
+      posts = group.posts_for(Guardian.new)
+      expect(posts).to include(p)
+    end
+
+    it "doesn't include unlisted posts" do
+      p = Fabricate(:post)
+      p.topic.update_column(:visible, false)
+      group.add(p.user)
+
+      posts = group.posts_for(Guardian.new)
+      expect(posts).not_to include(p)
+    end
+  end
+
   describe '#builtin' do
     context "verify enum sequence" do
       before do
