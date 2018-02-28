@@ -44,7 +44,7 @@ describe Guardian do
     end
   end
 
-  describe 'post_can_act?' do
+  describe '#post_can_act?' do
     let(:post) { build(:post) }
     let(:user) { build(:user) }
 
@@ -100,9 +100,11 @@ describe Guardian do
     end
 
     it "returns false when you already flagged a post" do
-      expect(Guardian.new(user).post_can_act?(post, :off_topic, opts: {
-        taken_actions: { PostActionType.types[:spam] => 1 }
-      })).to be_falsey
+      PostActionType.notify_flag_types.each do |type, _id|
+        expect(Guardian.new(user).post_can_act?(post, :off_topic, opts: {
+          taken_actions: { PostActionType.types[type] => 1 }
+        })).to be_falsey
+      end
     end
 
     it "returns false for notify_user if private messages are disabled" do
