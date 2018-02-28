@@ -27,7 +27,7 @@ class Middleware::RequestTracker
 
       MethodProfiler.patch(Net::HTTP, [
         :request
-      ], :net)
+      ], :net, no_recurse: true)
 
       MethodProfiler.patch(Excon::Connection, [
         :request

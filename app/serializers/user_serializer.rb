@@ -73,7 +73,8 @@ class UserSerializer < BasicUserSerializer
              :primary_group_flair_bg_color,
              :primary_group_flair_color,
              :staged,
-             :second_factor_enabled
+             :second_factor_enabled,
+             :external_id
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
@@ -285,6 +286,14 @@ class UserSerializer < BasicUserSerializer
 
   def primary_group_flair_color
     object.try(:primary_group).try(:flair_color)
+  end
+
+  def external_id
+    object&.single_sign_on_record&.external_id
+  end
+
+  def include_external_id?
+    SiteSetting.enable_sso
   end
 
   ###

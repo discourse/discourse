@@ -15,19 +15,22 @@ module PostGuardian
     return false if (action_key == :notify_user && !is_staff? && opts[:is_warning].present? && opts[:is_warning] == 'true')
 
     taken = opts[:taken_actions].try(:keys).to_a
-    is_flag = PostActionType.flag_types_without_custom[action_key]
+    is_flag = PostActionType.notify_flag_types[action_key]
     already_taken_this_action = taken.any? && taken.include?(PostActionType.types[action_key])
-    already_did_flagging      = taken.any? && (taken & PostActionType.flag_types_without_custom.values).any?
+    already_did_flagging      = taken.any? && (taken & PostActionType.notify_flag_types.values).any?
 
     result = if authenticated? && post && !@user.anonymous?
-
       # post made by staff, but we don't allow staff flags
       return false if is_flag &&
         (!SiteSetting.allow_flagging_staff?) &&
         post.user.staff?
 
-      return false if [:notify_user, :notify_moderators].include?(action_key) &&
-        !SiteSetting.enable_personal_messages?
+      if [:notify_user, :notify_moderators].include?(action_key) &&
+         (!SiteSetting.enable_personal_messages? ||
+         !@user.has_trust_level?(SiteSetting.min_trust_to_send_messages))
+
+        return false
+      end
 
       # we allow flagging for trust level 1 and higher
       # always allowed for private messages
@@ -37,20 +40,13 @@ module PostGuardian
       not(is_flag || already_taken_this_action) &&
 
       # nothing except flagging on archived topics
-      not(post.topic.try(:archived?)) &&
+      not(post.topic&.archived?) &&
 
       # nothing except flagging on deleted posts
       not(post.trashed?) &&
 
       # don't like your own stuff
-      not(action_key == :like && is_my_own?(post)) &&
-
-      # new users can't notify_user or notify_moderators because they are not allowed to send private messages
-      not((action_key == :notify_user || action_key == :notify_moderators) &&
-        !@user.has_trust_level?(SiteSetting.min_trust_to_send_messages)) &&
-
-      # no voting more than once on single vote topics
-      not(action_key == :vote && opts[:voted_in_topic] && post.topic.has_meta_data_boolean?(:single_vote))
+      not(action_key == :like && is_my_own?(post))
     end
 
     !!result
@@ -75,11 +71,6 @@ module PostGuardian
     return false if type_symbol == :notify_user && !is_moderator?
 
     return can_see_flags?(topic) if PostActionType.is_flag?(type_symbol)
-
-    if type_symbol == :vote
-      # We can see votes if the topic allows for public voting
-      return false if topic.has_meta_data_boolean?(:private_poll)
-    end
 
     true
   end
@@ -206,10 +197,6 @@ module PostGuardian
     authenticated? &&
     (is_staff? || @user.has_trust_level?(TrustLevel[4]) || @user.id == post.user_id) &&
     can_see_post?(post)
-  end
-
-  def can_vote?(post, opts = {})
-    post_can_act?(post, :vote, opts: opts)
   end
 
   def can_change_post_owner?

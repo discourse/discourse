@@ -659,4 +659,30 @@ describe PostAction do
 
   end
 
+  describe '#is_flag?' do
+    describe 'when post action is a flag' do
+      it 'should return true' do
+        PostActionType.notify_flag_types.each do |_type, id|
+          post_action = PostAction.new(
+            user: codinghorror,
+            post_action_type_id: id
+          )
+
+          expect(post_action.is_flag?).to eq(true)
+        end
+      end
+    end
+
+    describe 'when post action is not a flag' do
+      it 'should return false' do
+        post_action = PostAction.new(
+          user: codinghorror,
+          post_action_type_id: 99
+        )
+
+        expect(post_action.is_flag?).to eq(false)
+      end
+    end
+  end
+
 end

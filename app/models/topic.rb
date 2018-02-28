@@ -453,14 +453,6 @@ class Topic < ActiveRecord::Base
     ((Time.zone.now - created_at) / 1.minute).round
   end
 
-  def has_meta_data_boolean?(key)
-    meta_data_string(key) == 'true'
-  end
-
-  def meta_data_string(key)
-    custom_fields[key.to_s]
-  end
-
   def self.listable_count_per_day(start_date, end_date, category_id = nil)
     result = listable_topics.where('created_at >= ? and created_at <= ?', start_date, end_date)
     result = result.where(category_id: category_id) if category_id
