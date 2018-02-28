@@ -46,10 +46,7 @@ module PostGuardian
       not(post.trashed?) &&
 
       # don't like your own stuff
-      not(action_key == :like && is_my_own?(post)) &&
-
-      # no voting more than once on single vote topics
-      not(action_key == :vote && opts[:voted_in_topic] && post.topic.has_meta_data_boolean?(:single_vote))
+      not(action_key == :like && is_my_own?(post))
     end
 
     !!result
@@ -74,11 +71,6 @@ module PostGuardian
     return false if type_symbol == :notify_user && !is_moderator?
 
     return can_see_flags?(topic) if PostActionType.is_flag?(type_symbol)
-
-    if type_symbol == :vote
-      # We can see votes if the topic allows for public voting
-      return false if topic.has_meta_data_boolean?(:private_poll)
-    end
 
     true
   end
@@ -205,10 +197,6 @@ module PostGuardian
     authenticated? &&
     (is_staff? || @user.has_trust_level?(TrustLevel[4]) || @user.id == post.user_id) &&
     can_see_post?(post)
-  end
-
-  def can_vote?(post, opts = {})
-    post_can_act?(post, :vote, opts: opts)
   end
 
   def can_change_post_owner?

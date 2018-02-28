@@ -346,11 +346,6 @@ describe Guardian do
       expect(Guardian.new(moderator).can_see_post_actors?(topic, PostActionType.types[:notify_user])).to be_truthy
     end
 
-    it 'returns false for private votes' do
-      topic.expects(:has_meta_data_boolean?).with(:private_poll).returns(true)
-      expect(Guardian.new(user).can_see_post_actors?(topic, PostActionType.types[:vote])).to be_falsey
-    end
-
   end
 
   describe 'can_impersonate?' do
@@ -986,19 +981,6 @@ describe Guardian do
         topic.archived = true
         expect(Guardian.new(user).post_can_act?(post, :like)).to be_falsey
       end
-
-      describe 'multiple voting' do
-
-        it "isn't allowed if the user voted and the topic doesn't allow multiple votes" do
-          Topic.any_instance.expects(:has_meta_data_boolean?).with(:single_vote).returns(true)
-          expect(Guardian.new(user).can_vote?(post, voted_in_topic: true)).to be_falsey
-        end
-
-        it "is allowed if the user voted and the topic doesn't allow multiple votes" do
-          expect(Guardian.new(user).can_vote?(post, voted_in_topic: false)).to be_truthy
-        end
-      end
-
     end
   end
 
