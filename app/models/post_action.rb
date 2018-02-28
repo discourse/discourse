@@ -364,7 +364,7 @@ SQL
   end
 
   def is_flag?
-    !!PostActionType.flag_types[post_action_type_id]
+    !!PostActionType.notify_flag_types[post_action_type_id]
   end
 
   def is_private_message?
@@ -396,7 +396,7 @@ SQL
   end
 
   before_create do
-    post_action_type_ids = is_flag? ? PostActionType.flag_types_without_custom.values : post_action_type_id
+    post_action_type_ids = is_flag? ? PostActionType.notify_flag_types.values : post_action_type_id
     raise AlreadyActed if PostAction.where(user_id: user_id)
         .where(post_id: post_id)
         .where(post_action_type_id: post_action_type_ids)
