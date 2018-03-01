@@ -5,8 +5,10 @@ describe UserMerger do
   let!(:source_user) { Fabricate(:user_single_email, username: 'alice1', email: 'alice@work.com') }
   let(:walter) { Fabricate(:walter_white) }
 
-  def merge_users!
-    UserMerger.new(source_user, target_user).merge!
+  def merge_users!(source = nil, target =  nil)
+    source ||= source_user
+    target ||= target_user
+    UserMerger.new(source, target).merge!
   end
 
   it "changes owner of topics and posts" do
@@ -830,6 +832,17 @@ describe UserMerger do
 
   it "merges email addresses" do
     merge_users!
+
+    emails = UserEmail.where(user_id: target_user.id).pluck(:email, :primary)
+    expect(emails).to contain_exactly(['alice@example.com', true], ['alice@work.com', false])
+    expect(UserEmail.where(user_id: source_user.id).count).to eq(0)
+  end
+
+  it "skips merging email adresses when a secondary email address exists" do
+    merge_users!(source_user, target_user)
+
+    alice2 = Fabricate(:user_single_email, username: 'alice2', email: 'alice@foo.com')
+    merge_users!(alice2, target_user)
 
     emails = UserEmail.where(user_id: target_user.id).pluck(:email, :primary)
     expect(emails).to contain_exactly(['alice@example.com', true], ['alice@work.com', false])
