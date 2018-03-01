@@ -2,8 +2,7 @@ import { on, observes } from "ember-addons/ember-computed-decorators";
 import { findRawTemplate } from "discourse/lib/raw-templates";
 import { emojiUrlFor } from "discourse/lib/text";
 import KeyValueStore from "discourse/lib/key-value-store";
-import { emojis } from "pretty-text/emoji/data";
-import { extendedEmojiList, isSkinTonableEmoji } from "pretty-text/emoji";
+import { extendedEmojiList, isSkinTonableEmoji, emojiSearch } from "pretty-text/emoji";
 const { run } = Ember;
 
 const keyValueStore = new KeyValueStore("discourse_emojis_");
@@ -205,10 +204,7 @@ export default Ember.Component.extend({
       this.$list.css("visibility", "visible");
     } else {
       const lowerCaseFilter = this.get("filter").toLowerCase();
-      const filterableEmojis = emojis.concat(_.keys(extendedEmojiList()));
-      const filteredCodes = _.filter(filterableEmojis, code => {
-        return code.indexOf(lowerCaseFilter) > -1;
-      }).slice(0, 30);
+      const filteredCodes = emojiSearch(lowerCaseFilter, { maxResults: 30});
       this.$results.empty().html(
         _.map(filteredCodes, (code) => {
           const hasDiversity = isSkinTonableEmoji(code);
