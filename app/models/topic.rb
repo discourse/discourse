@@ -802,6 +802,8 @@ SQL
 
       true
     elsif username_or_email =~ /^.+@.+$/ && Guardian.new(invited_by).can_invite_via_email?(self)
+      rate_limit_topic_invitation(invited_by)
+
       if target_user
         Invite.extend_permissions(self, target_user, invited_by)
 
@@ -815,7 +817,10 @@ SQL
       end
 
       true
-    elsif target_user && topic_allowed_users.create!(user_id: target_user.id)
+    elsif target_user &&
+          rate_limit_topic_invitation(invited_by) &&
+          topic_allowed_users.create!(user_id: target_user.id)
+
       create_invite_notification!(
         target_user,
         Notification.types[:invited_to_topic],
@@ -1295,6 +1300,17 @@ SQL
         display_username: username
       }.to_json
     )
+  end
+
+  def rate_limit_topic_invitation(invited_by)
+    RateLimiter.new(
+      invited_by,
+      "topic-invitations-per-day",
+      SiteSetting.max_topic_invitations_per_day,
+      1.day.to_i
+    ).performed!
+
+    true
   end
 end
 

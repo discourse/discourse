@@ -477,15 +477,6 @@ class TopicsController < ApplicationController
   end
 
   def invite
-    unless guardian.is_staff?
-      RateLimiter.new(
-        current_user,
-        "topic-invitations-per-day",
-        SiteSetting.max_topic_invitations_per_day,
-        1.day.to_i
-      ).performed!
-    end
-
     topic = Topic.find_by(id: params[:topic_id])
     raise Discourse::InvalidParameters.new unless topic
 
