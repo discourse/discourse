@@ -98,7 +98,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
           if (result.reason === 'invalid_second_factor' && !self.get('secondFactorRequired')) {
             $('#modal-alert').hide();
-            self.set('secondFactorRequired', true);
+            self.setProperties({
+              'secondFactorRequired': true,
+              'showLoginButtons': false,
+            });
+
             $("#credentials").hide();
             $("#second-factor").show();
             return;
