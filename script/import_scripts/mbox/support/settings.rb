@@ -13,6 +13,7 @@ module ImportScripts::Mbox
     attr_reader :trust_level
     attr_reader :prefer_html
     attr_reader :staged
+    attr_reader :active
     attr_reader :index_only
     attr_reader :group_messages_by_subject
 
@@ -23,6 +24,7 @@ module ImportScripts::Mbox
       @trust_level = yaml['default_trust_level']
       @prefer_html = yaml['prefer_html']
       @staged = yaml['staged']
+      @active = yaml['active']
       @index_only = yaml['index_only']
       @group_messages_by_subject = yaml['group_messages_by_subject']
     end
