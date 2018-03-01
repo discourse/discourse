@@ -83,7 +83,7 @@ class RateLimiter
   def performed!
     return if rate_unlimited?
     now = Time.now.to_i
-    if eval_lua(PERFORM_LUA, PERFORM_LUA_SHA, [prefixed_key], [now, @secs, @max]) == 0
+    if max <= 0 || (eval_lua(PERFORM_LUA, PERFORM_LUA_SHA, [prefixed_key], [now, @secs, @max]) == 0)
       raise RateLimiter::LimitExceeded.new(seconds_to_wait, @type)
     end
   rescue Redis::CommandError => e
