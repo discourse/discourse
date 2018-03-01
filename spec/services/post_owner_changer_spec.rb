@@ -65,9 +65,14 @@ describe PostOwnerChanger do
     it "changes the user even when the post does not pass validation" do
       p1.update_attribute(:raw, "foo")
       PostOwnerChanger.new(post_ids: [p1.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
-      p1.reload
+      expect(p1.reload.user).to eq(user_a)
+    end
 
-      expect(p1.user).to eq(user_a)
+    it "changes the user even when the topic does not pass validation" do
+      topic.update_column(:title, "short")
+
+      PostOwnerChanger.new(post_ids: [p1.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
+      expect(p1.reload.user).to eq(user_a)
     end
 
     context "integration tests" do
