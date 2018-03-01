@@ -27,16 +27,20 @@ export default Ember.Controller.extend(ModalFunctionality, {
   loggingIn: false,
   loggedIn: false,
   processingEmailLink: false,
+  showLoginButtons: true,
 
   canLoginLocal: setting('enable_local_logins'),
   canLoginLocalWithEmail: setting('enable_local_logins_via_email'),
   loginRequired: Em.computed.alias('application.loginRequired'),
 
   resetForm: function() {
-    this.set('authenticate', null);
-    this.set('loggingIn', false);
-    this.set('loggedIn', false);
-    this.set('secondFactorRequired', false);
+    this.setProperties({
+      'authenticate': null,
+      'loggingIn': false,
+      'loggedIn': false,
+      'secondFactorRequired': false,
+      'showLoginButtons': true,
+    });
     $("#credentials").show();
     $("#second-factor").hide();
   },
@@ -250,13 +254,25 @@ export default Ember.Controller.extend(ModalFunctionality, {
   }).property('authenticate'),
 
   authenticationComplete(options) {
-
     const self = this;
-    function loginError(errorMsg, className) {
+    function loginError(errorMsg, className, callback) {
       showModal('login');
-      Ember.run.next(function() {
+
+      Ember.run.next(() => {
+        callback();
         self.flash(errorMsg, className || 'success');
         self.set('authenticate', null);
+      });
+    }
+
+    if (options.omniauth_disallow_totp) {
+      return loginError(I18n.t('login.omniauth_disallow_totp'), 'error', () => {
+        this.setProperties({
+          'loginName': options.email,
+          'showLoginButtons': false,
+        });
+
+        $('#login-account-password').focus();
       });
     }
 

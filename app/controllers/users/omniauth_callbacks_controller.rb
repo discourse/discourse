@@ -114,6 +114,11 @@ class Users::OmniauthCallbacksController < ApplicationController
   end
 
   def user_found(user)
+    if user.totp_enabled?
+      @auth_result.omniauth_disallow_totp = true
+      return
+    end
+
     # automatically activate/unstage any account if a provider marked the email valid
     if @auth_result.email_valid && @auth_result.email == user.email
       user.update!(staged: false)

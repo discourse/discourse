@@ -1,10 +1,12 @@
 {{#login-modal screenX=lastX screenY=lastY loginName=loginName loginPassword=loginPassword loginSecondFactor=loginSecondFactor action="login"}}
   {{#d-modal-body title="login.title" class="login-modal"}}
-    {{login-buttons
-      canLoginLocalWithEmail=canLoginLocalWithEmail
-      processingEmailLink=processingEmailLink
-      emailLogin='emailLogin'
-      externalLogin='externalLogin'}}
+    {{#if showLoginButtons}}
+      {{login-buttons
+        canLoginLocalWithEmail=canLoginLocalWithEmail
+        processingEmailLink=processingEmailLink
+        emailLogin='emailLogin'
+        externalLogin='externalLogin'}}
+    {{/if}}
 
     {{#if canLoginLocal}}
       <form id='login-form' method='post'>
