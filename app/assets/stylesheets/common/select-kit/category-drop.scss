@@ -17,9 +17,12 @@
       }
 
       &.bar.has-selection .category-drop-header,
-      &.box.has-selection .category-drop-header,
       &.none.has-selection .category-drop-header {
         padding: 5px 10px;
+      }
+
+      &.box.has-selection .category-drop-header {
+        padding: 2.5px 10px;
       }
 
       &.bullet.has-selection .category-drop-header {
