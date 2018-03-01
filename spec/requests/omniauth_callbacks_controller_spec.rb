@@ -132,6 +132,23 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(user.registration_ip_address).to be_present
       end
 
+      context 'when user has second factor enabled' do
+        before do
+          user.create_totp(enabled: true)
+        end
+
+        it 'should return the right response' do
+          get "/auth/google_oauth2/callback.json"
+
+          expect(response).to be_success
+
+          response_body = JSON.parse(response.body)
+
+          expect(response_body["email"]).to eq(user.email)
+          expect(response_body["omniauth_disallow_totp"]).to eq(true)
+        end
+      end
+
       context 'when user has not verified his email' do
         before do
           GoogleUserInfo.create!(google_user_id: '12345', user: user)
