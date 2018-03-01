@@ -61,6 +61,7 @@ class User < ActiveRecord::Base
   has_one :github_user_info, dependent: :destroy
   has_one :google_user_info, dependent: :destroy
   has_one :oauth2_user_info, dependent: :destroy
+  has_one :instagram_user_info, dependent: :destroy
   has_one :user_second_factor, dependent: :destroy
   has_one :user_stat, dependent: :destroy
   has_one :user_profile, dependent: :destroy, inverse_of: :user
@@ -887,7 +888,8 @@ class User < ActiveRecord::Base
     result << "Twitter(#{twitter_user_info.screen_name})"               if twitter_user_info
     result << "Facebook(#{facebook_user_info.username})"                if facebook_user_info
     result << "Google(#{google_user_info.email})"                       if google_user_info
-    result << "Github(#{github_user_info.screen_name})"                 if github_user_info
+    result << "GitHub(#{github_user_info.screen_name})"                 if github_user_info
+    result << "Instagram(#{instagram_user_info.screen_name})"           if instagram_user_info
     result << "#{oauth2_user_info.provider}(#{oauth2_user_info.email})" if oauth2_user_info
 
     user_open_ids.each do |oid|
