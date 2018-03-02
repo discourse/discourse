@@ -69,8 +69,10 @@ class PostRevisor
   end
 
   track_topic_field(:category_id) do |tc, category_id|
-    tc.record_change('category_id', tc.topic.category_id, category_id)
-    tc.check_result(tc.topic.change_category_to_id(category_id))
+    if tc.guardian.can_create_topic_on_category?(category_id)
+      tc.record_change('category_id', tc.topic.category_id, category_id)
+      tc.check_result(tc.topic.change_category_to_id(category_id))
+    end
   end
 
   track_topic_field(:tags) do |tc, tags|
