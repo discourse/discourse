@@ -728,6 +728,7 @@ en:
           requiring a one-time token in addition to your password. These tokens
           can be generated on Android and iOS by <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Google Authenticator</a>
           and on Windows Phone by <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Authenticator</a>.
+        oauth_enabled_warning: "Note that logins via social methods will be disabled once Two Factor Authentication has been enabled on your account."
 
       change_about:
         title: "Change About Me"
