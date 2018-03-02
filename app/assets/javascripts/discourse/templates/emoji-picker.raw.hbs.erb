@@ -5,7 +5,7 @@
 
   <% JSON.parse(File.read("lib/emoji/groups.json")).each.with_index do |group, group_index| %>
     <div class='category-icon'>
-      <button type="button" class="emoji" tabindex="-1" data-tabicon="<%= group["tabicon"] %>" data-section="<%= group["name"] %>" title="<%= group["fullname"] %>"></button>
+    <button type="button" class="emoji" tabindex="-1" data-tabicon="<%= group["tabicon"] %>" data-section="<%= group["name"] %>" title="{{i18n '<%= "emoji_picker.#{group["name"]}" %>'}}"></button>
     </div>
   <% end %>
 
