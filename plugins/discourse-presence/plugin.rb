@@ -8,7 +8,7 @@ enabled_site_setting :presence_enabled
 
 register_asset 'stylesheets/presence.scss'
 
-PLUGIN_NAME ||= "discourse-presence".freeze
+PLUGIN_NAME ||= -"discourse-presence"
 
 after_initialize do
 
@@ -103,8 +103,7 @@ after_initialize do
     requires_plugin PLUGIN_NAME
     before_action :ensure_logged_in
 
-    ACTIONS   ||= %w{edit reply}.each(&:freeze)
-    MAX_USERS ||= 20
+    ACTIONS ||= [-"edit", -"reply"].freeze
 
     def publish
       data = params.permit(
@@ -158,7 +157,7 @@ after_initialize do
       {
         messagebus_channel: channel,
         messagebus_id: MessageBus.last_id(channel),
-        users: users.limit(MAX_USERS).map { |u| BasicUserSerializer.new(u, root: false) }
+        users: users.limit(SiteSetting.presence_max_users_shown).map { |u| BasicUserSerializer.new(u, root: false) }
       }
     end
 

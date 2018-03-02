@@ -133,9 +133,9 @@ class NewPostManager
   end
 
   def perform
-    if !self.class.exempt_user?(@user) && WordWatcher.new("#{@args[:title]} #{@args[:raw]}").should_block?
+    if !self.class.exempt_user?(@user) && matches = WordWatcher.new("#{@args[:title]} #{@args[:raw]}").should_block?
       result = NewPostResult.new(:created_post, false)
-      result.errors[:base] << I18n.t('contains_blocked_words')
+      result.errors[:base] << I18n.t('contains_blocked_words', word: matches[0])
       return result
     end
 

@@ -207,6 +207,7 @@ en:
     not_implemented: "That feature hasn't been implemented yet, sorry!"
     no_value: "No"
     yes_value: "Yes"
+    submit: "Submit"
     generic_error: "Sorry, an error has occurred."
     generic_error_with_reason: "An error occurred: %{error}"
     sign_up: "Sign Up"
@@ -446,7 +447,7 @@ en:
       name: "Name"
       user_count: "Number of Members"
       bio: "About Group"
-      selector_placeholder: "Add members"
+      selector_placeholder: "enter username"
       owner: "owner"
       index:
         title: "Groups"
@@ -520,7 +521,7 @@ en:
 
     categories:
       all: "all categories"
-      all_subcategories: "all"
+      all_subcategories: "all in %{categoryName}"
       no_subcategory: "none"
       category: "Category"
       category_list: "Display category list"
@@ -707,6 +708,28 @@ en:
         choose_new: "Choose a new password"
         choose: "Choose a password"
 
+      second_factor:
+        title: "Two Factor Authentication"
+        disable: "Disable Two Factor Authentication"
+        enabled_status: "Status: On"
+        disabled_status: "Status: Off"
+        confirm_password_description: "Confirm your password to continue enabling Two Factor Authentication"
+        enable_description: |
+          To complete Two Factor Authentication setup, scan the following QR code
+          in one of the supported apps
+          (<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Android and iOS</a>,
+          <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>)
+          and submit the generated Two Factor Authentication code.
+        disable_description: "Enter the authentication code from your app"
+        show_key_description: "Or enter the secret key manually."
+        info_prompt: "What is Two Factor Authentication?"
+        extended_description: |
+          Two Factor Authentication adds an extra security step to logging in by
+          requiring a one-time token in addition to your password. These tokens
+          can be generated on Android and iOS by <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Google Authenticator</a>
+          and on Windows Phone by <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Authenticator</a>.
+        oauth_enabled_warning: "Note that logins via social methods will be disabled once Two Factor Authentication has been enabled on your account."
+
       change_about:
         title: "Change About Me"
         error: "There was an error changing this value."
@@ -852,7 +875,7 @@ en:
         title: "Invites"
         user: "Invited User"
         sent: "Sent"
-        none: "There are no pending invites to display."
+        none: "No invites to display."
         truncated:
           one: "Showing the first invite."
           other: "Showing the first {{count}} invites."
@@ -1083,14 +1106,29 @@ en:
       help: "Email not arriving? Be sure to check your spam folder first.<p>Not sure which email address you used? Enter an email address and we’ll let you know if it exists here.</p><p>If you no longer have access to the email address on your account, please contact <a href='/about'>our helpful staff.</a></p>"
       button_ok: "OK"
       button_help: "Help"
+
+    email_login:
+      link_label: "Email me a magic link"
+      button_label: "with email"
+      complete_username: "If an account matches the username <b>%{username}</b>, you should receive an email with a magic login link shortly."
+      complete_email: "If an account matches <b>%{email}</b>, you should receive an email with a magic login link shortly."
+      complete_username_found: "We found an account that matches the username <b>%{username}</b>, you should receive an email with a magic login link shortly."
+      complete_email_found: "We found an account that matches <b>%{email}</b>, you should receive an email with a magic login link shortly."
+      complete_username_not_found: "No account matches the username <b>%{username}</b>"
+      complete_email_not_found: "No account matches <b>%{email}</b>"
+
     login:
       title: "Log In"
       username: "User"
       password: "Password"
+      second_factor_title: "Two Factor Authentication Required"
+      second_factor_description: "Enter the authentication code from your app."
+      second_factor_label: "Code"
       email_placeholder: "email or username"
       caps_lock_warning: "Caps Lock is on"
       error: "Unknown error"
       rate_limit: "Please wait before trying to log in again."
+      blank_username: "Please enter your email or username."
       blank_username_or_password: "Please enter your email or username, and password."
       reset_password: 'Reset Password'
       logging_in: "Signing In..."
@@ -1103,6 +1141,7 @@ en:
       not_allowed_from_ip_address: "You can't login from that IP address."
       admin_not_allowed_from_ip_address: "You can't log in as admin from that IP address."
       resend_activation_email: "Click here to send the activation email again."
+      omniauth_disallow_totp: "Your account has 2FA enabled. Please login with your password."
 
       resend_title: "Resend Activation Email"
       change_email: "Change Email Address"
@@ -1173,7 +1212,8 @@ en:
       default_header_text: Select...
       no_content: No matches found
       filter_placeholder: Search...
-      create: "Create {{content}}"
+      create: "Create: '{{content}}'"
+      max_content_reached: "You can only select {{count}} items."
 
     emoji_picker:
       filter_placeholder: Search for emoji
@@ -1247,6 +1287,7 @@ en:
       topic_featured_link_placeholder: "Enter link shown with title."
       remove_featured_link: "Remove link from topic."
       reply_placeholder: "Type here. Use Markdown, BBCode, or HTML to format. Drag or paste images."
+      reply_placeholder_no_images: "Type here. Use Markdown, BBCode, or HTML to format."
       view_new_post: "View your new post."
       saving: "Saving"
       saved: "Saved!"
@@ -1277,6 +1318,7 @@ en:
       olist_title: "Numbered List"
       ulist_title: "Bulleted List"
       list_item: "List item"
+      toggle_direction: "Toggle Direction"
       help: "Markdown Editing Help"
       collapse: "minimize the composer panel"
       abandon: "close composer and discard draft"
@@ -1288,6 +1330,25 @@ en:
         body: "Right now this message is only being sent to yourself!"
 
       admin_options_title: "Optional staff settings for this topic"
+
+      composer_actions:
+        reply_to_post:
+          label: Reply to post %{postNumber} by %{postUsername}
+          desc: Reply to a specific post
+        reply_as_new_topic:
+          label: Reply as linked topic
+          desc: Create a new topic linked to this topic
+        reply_as_private_message:
+          label: New message
+          desc: Create a new personal message
+        reply_to_topic:
+          label: Reply to topic
+          desc: Reply to the topic, not any specific post
+        toggle_whisper:
+          label: Toggle whipser
+          desc: Whispers are only visible to staff members
+        create_topic:
+          label: "New Topic"
 
     notifications:
       tooltip:
@@ -1524,6 +1585,9 @@ en:
       move_to_inbox:
         title: 'Move to Inbox'
         help: 'Move message back to Inbox'
+      edit_message:
+        help: 'Edit first post of the message'
+        title: 'Edit Message'
       list: 'Topics'
       new: 'new topic'
       unread: 'unread'
@@ -1880,8 +1944,6 @@ en:
           other: "You have selected <b>{{count}}</b> posts."
 
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "Quote"
       edit: "<i class='fa fa-pencil'></i> {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Reason: "
@@ -1897,7 +1959,9 @@ en:
       deleted_by_author:
         one: "(post withdrawn by author, will be automatically deleted in %{count} hour unless flagged)"
         other: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
+      collapse: "collapse"
       expand_collapse: "expand/collapse"
+      locked: "a staff member has locked this post from being edited"
       gap:
         one: "view 1 hidden reply"
         other: "view {{count}} hidden replies"
@@ -1978,6 +2042,11 @@ en:
         rebake: "Rebuild HTML"
         unhide: "Unhide"
         change_owner: "Change Ownership"
+        grant_badge: "Grant Badge"
+        lock_post: "Lock Post"
+        lock_post_description: "prevent the poster from editing this post"
+        unlock_post: "Unlock Post"
+        unlock_post_description: "allow the poster to edit this post"
 
       actions:
         flag: 'Flag'
@@ -2157,7 +2226,7 @@ en:
       email_in_disabled: "Posting new topics via email is disabled in the Site Settings. To enable posting new topics via email, "
       email_in_disabled_click: 'enable the "email in" setting.'
       mailinglist_mirror: "Category mirrors a mailing list"
-      suppress_from_homepage: "Suppress this category from the homepage."
+      suppress_from_latest: "Suppress category from latest topics."
       show_subcategory_list: "Show subcategory list above topics in this category."
       num_featured_topics: "Number of topics shown on the categories page:"
       subcategory_num_featured_topics: "Number of featured topics on parent category's page:"
@@ -2442,6 +2511,9 @@ en:
         dismiss_new_posts: '<b>x</b>, <b>r</b> Dismiss New/Posts'
         dismiss_topics: '<b>x</b>, <b>t</b> Dismiss Topics'
         log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Log Out'
+      composing:
+        title: 'Composing'
+        return: '<b>shift</b>+<b>c</b> Return to composer'
       actions:
         title: 'Actions'
         bookmark_topic: '<b>f</b> Toggle bookmark topic'
@@ -2483,6 +2555,7 @@ en:
         other: "%{count} granted"
       select_badge_for_title: Select a badge to use as your title
       none: "(none)"
+      successfully_granted: "Successfully granted %{badge} to %{username}"
       badge_grouping:
         getting_started:
           name: Getting Started
@@ -2666,14 +2739,19 @@ en:
 
         agree: "Agree"
         agree_title: "Confirm this flag as valid and correct"
-        agree_flag_hide_post: "Agree and Hide Post"
+        agree_flag_hide_post: "Hide Post"
         agree_flag_hide_post_title: "Hide this post and automatically send the user a message urging them to edit it."
         agree_flag_restore_post: "Agree and Restore Post"
         agree_flag_restore_post_title: "Restore the post so that all users can see it."
-        agree_flag: "Agree and Keep Post"
+        agree_flag_suspend: "Suspend User"
+        agree_flag_suspend_title: "Agree with flag and suspend the user."
+        agree_flag_silence: "Silence User"
+        agree_flag_silence_title: "Agree with flag and silence the user."
+
+        agree_flag: "Keep Post"
         agree_flag_title: "Agree with flag and keep the post unchanged."
-        defer_flag: "Ignore"
-        defer_flag_title: "Remove this flag; it requires no action at this time."
+        ignore_flag: "Ignore"
+        ignore_flag_title: "Remove this flag; it requires no action at this time."
         delete: "Delete"
         delete_title: "Delete the post this flag refers to."
         delete_post_defer_flag: "Delete Post and Ignore flag"
@@ -2733,7 +2811,6 @@ en:
         edit: "Edit Groups"
         refresh: "Refresh"
         new: "New"
-        selector_placeholder: "enter username"
         about: "Edit your group membership and names here"
         group_members: "Group members"
         delete: "Delete"
@@ -2881,7 +2958,7 @@ en:
           label: "Upload"
           title: "Upload a backup to this instance"
           uploading: "Uploading..."
-          success: "'{{filename}}' has successfully been uploaded."
+          success: "'{{filename}}' has successfully been uploaded. The file is now being processed and will take up to a minute to show up in the list."
           error: "There has been an error while uploading '{{filename}}': {{message}}"
         operations:
           is_running: "An operation is currently running..."
@@ -3213,6 +3290,10 @@ en:
             backup_destroy: "destroy backup"
             reviewed_post: "reviewed post"
             custom_staff: "plugin custom action"
+            post_locked: "post locked"
+            post_unlocked: "post unlocked"
+            check_personal_message: "check personal message"
+            disabled_second_factor: "disable Two Factor Authentication"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -3255,6 +3336,7 @@ en:
             header: "Header"
             full_page: "Full Page"
             click_through_only: "All (click through only)"
+          header_search_results: "Header Search Results"
         logster:
           title: "Error Logs"
 
@@ -3362,6 +3444,10 @@ en:
         suspended_until: "(until %{until})"
         cant_suspend: "This user cannot be suspended."
         delete_all_posts: "Delete all posts"
+        penalty_post_actions: "What would you like to do with the associated post?"
+        penalty_post_delete: "Delete the post"
+        penalty_post_edit: "Edit the post"
+        penalty_post_none: "Do nothing"
 
         # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
         delete_all_posts_confirm_MF: "You are about to delete {POSTS, plural, one {1 post} other {# posts}} and {TOPICS, plural, one {1 topic} other {# topics}}. Are you sure?"
@@ -3388,6 +3474,9 @@ en:
         grant_moderation: 'Grant Moderation'
         unsuspend: 'Unsuspend'
         suspend: 'Suspend'
+        show_flags_received: "Show Flags Received"
+        flags_received_by: "Flags Received by %{username}"
+        flags_received_none: "This user has not received any flags."
         reputation: Reputation
         permissions: Permissions
         activity: Activity
@@ -3396,6 +3485,7 @@ en:
         private_topics_count: Private Topics
         posts_read_count: Posts Read
         post_count: Posts Created
+        second_factor_enabled: Two Factor Authentication Enabled
         topics_entered: Topics Viewed
         flags_given_count: Flags Given
         flags_received_count: Flags Received

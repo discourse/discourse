@@ -8,6 +8,7 @@ export default CategoryChooserComponent.extend({
   rootNoneLabel: "category.all",
   allowUncategorized: true,
   clearable: true,
+  permissionType: null,
 
   init() {
     this._super();

@@ -28,7 +28,7 @@
   .nav-pills .drop {
     border: 1px solid $primary-low;
     position: absolute;
-    z-index: 1000;
+    z-index: z("dropdown");
     background-color: $secondary;
     padding: 0 10px 10px 10px;
     width: 150px;
@@ -232,6 +232,10 @@ tr.category-topic-link {
     }
   }
 
+  .category-name {
+    max-width: 80vw;
+  }
+
   .category-topic-link .main-link, .subcategories-list td, .category-description td {
     padding-left: 10px;
   }
@@ -309,12 +313,6 @@ tr.category-topic-link {
 
 // Misc. stuff
 // --------------------------------------------------
-.list-controls {
-  .category-dropdown-button {
-    padding: 4px 10px 4px 8px;
-  }
-}
-
 .btn-group .dropdown-toggle:active,
 .btn-group.open .dropdown-toggle {
   outline: 0;
@@ -342,7 +340,7 @@ tr.category-topic-link {
   position: relative;
   top: 100%;
   left: 0;
-  z-index: 1000;
+  z-index: z("dropdown");
   display: none;
   float: left;
   width: 280px;
@@ -351,7 +349,7 @@ tr.category-topic-link {
   background-color: $secondary;
   border: 1px solid dark-light-choose(rgba(0, 0, 0, 0.2), $primary);
   border-radius: 5px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: shadow("dropdown");
   background-clip: padding-box;
   margin: 1px 0 20px;
   .title {font-weight: bold; display: block;}
@@ -385,14 +383,6 @@ tr.category-topic-link {
 
 ol.category-breadcrumb {
   margin: 5px 10px 0 0;
-}
-
-.category-dropdown-menu {
-  height: 200px;
-
-  a.badge-category {
-    line-height: $line-height-large;
-  }
 }
 
 .top-lists {

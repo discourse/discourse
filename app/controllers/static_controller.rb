@@ -6,6 +6,7 @@ class StaticController < ApplicationController
   skip_before_action :check_xhr, :redirect_to_login_if_required
   skip_before_action :verify_authenticity_token, only: [:brotli_asset, :cdn_asset, :enter, :favicon, :service_worker_asset]
   skip_before_action :preload_json, only: [:brotli_asset, :cdn_asset, :enter, :favicon, :service_worker_asset]
+  skip_before_action :handle_theme, only: [:brotli_asset, :cdn_asset, :enter, :favicon, :service_worker_asset]
 
   PAGES_WITH_EMAIL_PARAM = ['login', 'password_reset', 'signup']
 
@@ -93,6 +94,8 @@ class StaticController < ApplicationController
     redirect_to destination
   end
 
+  FAVICON ||= -"favicon"
+
   # We need to be able to draw our favicon on a canvas
   # and pull it off the canvas into a data uri
   # This can work by ensuring people set all the right CORS
@@ -100,16 +103,16 @@ class StaticController < ApplicationController
   # instead we cache the favicon in redis and serve it out real quick with
   # a huge expiry, we also cache these assets in nginx so it bypassed if needed
   def favicon
-
     hijack do
-      data = DistributedMemoizer.memoize('favicon' + SiteSetting.favicon_url, 60 * 30) do
+      data = DistributedMemoizer.memoize(FAVICON + SiteSetting.favicon_url, 60 * 30) do
         begin
           file = FileHelper.download(
             SiteSetting.favicon_url,
             max_file_size: 50.kilobytes,
-            tmp_file_name: "favicon.png",
+            tmp_file_name: FAVICON,
             follow_redirect: true
           )
+          file ||= Tempfile.new([FAVICON, ".png"])
           data = file.read
           file.unlink
           data
@@ -147,9 +150,9 @@ class StaticController < ApplicationController
   def service_worker_asset
     respond_to do |format|
       format.js do
-
-        # we take 1 hour to give a new service worker to all users
-        immutable_for 1.hour
+        # https://github.com/w3c/ServiceWorker/blob/master/explainer.md#updating-a-service-worker
+        # Maximum cache that the service worker will respect is 24 hours.
+        immutable_for 24.hours
 
         render(
           plain: Rails.application.assets_manifest.find_sources('service-worker.js').first,

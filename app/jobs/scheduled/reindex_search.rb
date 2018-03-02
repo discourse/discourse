@@ -1,7 +1,7 @@
 module Jobs
   # if locale changes or search algorithm changes we may want to reindex stuff
   class ReindexSearch < Jobs::Scheduled
-    every 1.day
+    every 2.hours
 
     def execute(args)
       rebuild_problem_topics
@@ -38,13 +38,14 @@ module Jobs
       end
     end
 
-    def rebuild_problem_posts(limit = 10000)
+    def rebuild_problem_posts(limit = 20000)
       post_ids = load_problem_post_ids(limit)
 
       post_ids.each do |id|
-        post = Post.find_by(id: id)
         # could be deleted while iterating through batch
-        SearchIndexer.index(post, force: true) if post
+        if post = Post.find_by(id: id)
+          SearchIndexer.index(post, force: true)
+        end
       end
     end
 
@@ -67,6 +68,7 @@ module Jobs
                 WHERE pd.post_id IS NULL
                 )', SiteSetting.default_locale, Search::INDEX_VERSION)
         .limit(limit)
+        .order('posts.id DESC')
         .pluck(:id)
     end
 

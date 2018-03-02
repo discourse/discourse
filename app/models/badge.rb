@@ -219,6 +219,10 @@ class Badge < ActiveRecord::Base
     Slug.for(self.display_name, '-')
   end
 
+  def manually_grantable?
+    query.blank? && !system?
+  end
+
   protected
 
     def ensure_not_system
@@ -236,7 +240,7 @@ end
 # Table name: badges
 #
 #  id                :integer          not null, primary key
-#  name              :string(255)      not null
+#  name              :string           not null
 #  description       :text
 #  badge_type_id     :integer          not null
 #  grant_count       :integer          default(0), not null
@@ -244,7 +248,7 @@ end
 #  updated_at        :datetime         not null
 #  allow_title       :boolean          default(FALSE), not null
 #  multiple_grant    :boolean          default(FALSE), not null
-#  icon              :string(255)      default("fa-certificate")
+#  icon              :string           default("fa-certificate")
 #  listable          :boolean          default(TRUE)
 #  target_posts      :boolean          default(FALSE)
 #  query             :text
@@ -259,5 +263,6 @@ end
 #
 # Indexes
 #
-#  index_badges_on_name  (name) UNIQUE
+#  index_badges_on_badge_type_id  (badge_type_id)
+#  index_badges_on_name           (name) UNIQUE
 #

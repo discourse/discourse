@@ -131,7 +131,6 @@ ja:
     latest: "最新のトピック"
     hot: "ホットトピック"
     posts: "最近の投稿"
-    private_posts: "最新のプライベートメッセージ"
     group_posts: "%{group_name}からの最新投稿"
     group_mentions: "%{group_name}からの最新メンション"
     user_posts: "@%{username}からの最新投稿"
@@ -183,9 +182,7 @@ ja:
         topic:
           attributes:
             base:
-              warning_requires_pm: "プライベートメッセージでのみ警告を送ることができます"
               too_many_users: "一度に1ユーザーにしか警告を送る事はできません"
-              cant_send_pm: "申し訳ありません。このユーザーにはプライベートメッセージを送る事ができません"
               no_user_selected: "有効なユーザーを選択してください"
         user:
           attributes:
@@ -252,7 +249,6 @@ ja:
       title: "ベーシックユーザー"
     change_failed_explanation: "%{user_name} を '%{new_trust_level}' に下げようとしましたが、既にトラストレベルが '%{current_trust_level}' です。%{user_name} は '%{current_trust_level}' のままになります - もしユーザーを降格させたい場合は、トラストレベルをロックしてください"
   rate_limiter:
-    too_many_requests: "このアクションを一日の間に実施可能な回数が決まっています。%{time_left}待ってから再度試してください。"
     by_type:
       public_group_membership: "グループへの参加/離脱が多すぎます。%{time_left}お待ち下さい。"
     hours:
@@ -395,6 +391,7 @@ ja:
   unsubscribe:
     title: "配信停止"
     unwatch_category: "%{category}内の全トピックのウォッチを解除"
+    all: "%{sitename}からのメールを私に送信しないでください。"
   user_api_key:
     title: "アプリケーションアクセスの認証"
     description: "\"%{application_name}\" があなたのアカウントへのアクセスを要求しています: "
@@ -552,15 +549,12 @@ ja:
   site_settings:
     censored_words: "自動的に &#9632;&#9632;&#9632;&#9632; で置換されます"
     delete_old_hidden_posts: "30日以上非表示になっている投稿を自動で削除します"
-    default_locale: "この Discourse インスタンスのデフォルト言語 (ISO 639-1 Code)"
     allow_user_locale: "ユーザーが言語を選択できるようにする"
     min_post_length: "投稿を許可する最少の文字数"
     min_first_post_length: "最初の投稿(投稿本文)を許可する最少の文字数"
-    min_private_message_post_length: "メッセージに投稿可能な最少の文字数"
     max_post_length: "投稿を許可する最大の文字数"
     min_topic_title_length: "トピックタイトルとして許可する最小の文字数"
     max_topic_title_length: "トピックタイトルとして許可する最大の文字数"
-    min_private_message_title_length: "プライベートメッセージのタイトルとして許容する最小の文字数"
     min_search_term_length: "検索ワードとして有効にする最小の文字数"
     allow_uncategorized_topics: "カテゴリなしのトピック作成を許可するか。警告：未分類のトピックがある場合は、これをオフにする前に、再分類する必要があります。"
     allow_duplicate_topic_titles: "トピックタイトルの重複を許可"
@@ -680,7 +674,6 @@ ja:
     max_bookmarks_per_day: "ユーザが一日にブックマークできる最大数"
     max_edits_per_day: "ユーザが一日に編集できる最大数"
     max_topics_per_day: "ユーザが一日に作成できるトピックの最大数"
-    max_private_messages_per_day: "ユーザが一日に作成できるメッセージの最大数"
     max_invites_per_day: "ユーザが一日に招待できる最大数"
     max_topic_invitations_per_day: "ユーザが一日にトピックに招待できる最大数"
     suggested_topics: "トピック下部に表示されるおすすめトピックの数"
@@ -689,7 +682,6 @@ ja:
     clean_orphan_uploads_grace_period_hours: "どこからもリンクされていないアップロードファイルを削除するまでの猶予期間 (単位：時間)。"
     purge_deleted_uploads_grace_period_days: "削除されたアップロードファイルが完全削除されるまでの猶予期間 (単位：日)。"
     enable_s3_uploads: "Amazon S3にアップロードします。重要: 有効なS3 credentials(access key id & secret access key)が必要です"
-    s3_use_iam_profile: 'キーの取得にAWS EC2 IAM roleを使用する 注意: 有効にすると、s3 access key id" と "s3 secret access key"の設定を上書きします'
     s3_upload_bucket: "ファイルをアップロードする Amazon S3のバケット名。　警告: 小文字である必要があり、ピリオドとアンダースコアを含むことはできません"
     s3_access_key_id: "画像をアップロードするAmazonS3のaccess key id"
     s3_secret_access_key: "画像をアップロードする Amazon S3 の secret access key"
@@ -1191,7 +1183,6 @@ ja:
       name: はじめての絵文字
   admin_login:
     success: "メールを送信しました"
-    error: "エラー！"
     email_input: "アドミンメール"
     submit_button: "メールを送信する"
   performance_report:

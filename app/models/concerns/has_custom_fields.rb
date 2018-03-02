@@ -155,6 +155,20 @@ module HasCustomFields
     !@custom_fields || @custom_fields_orig == @custom_fields
   end
 
+  # `upsert_custom_fields` will only insert/update existing fields, and will not
+  # delete anything. It is safer under concurrency and is recommended when
+  # you just want to attach fields to things without maintaining a specific
+  # set of fields.
+  def upsert_custom_fields(fields)
+    fields.each do |k, v|
+      row_count = _custom_fields.where(name: k).update_all(value: v)
+      if row_count == 0
+        _custom_fields.create!(name: k, value: v)
+      end
+      custom_fields[k] = v
+    end
+  end
+
   def save_custom_fields(force = false)
     if force || !custom_fields_clean?
       dup = @custom_fields.dup

@@ -114,6 +114,16 @@ describe Hijack do
     expect(headers).to eq(expected)
   end
 
+  it "handles transfers headers" do
+    tester.response.headers["Hello-World"] = "sam"
+    tester.hijack_test do
+      expires_in 1.year
+      render body: "hello world", status: 402
+    end
+
+    expect(tester.io.string).to include("Hello-World: sam")
+  end
+
   it "handles expires_in" do
     tester.hijack_test do
       expires_in 1.year
@@ -141,36 +151,43 @@ describe Hijack do
   end
 
   it "renders a redirect correctly" do
+    Process.stubs(:clock_gettime).returns(1.0)
     tester.hijack_test do
+      Process.stubs(:clock_gettime).returns(2.0)
       redirect_to 'http://awesome.com'
     end
 
-    result = "HTTP/1.1 302 Found\r\nLocation: http://awesome.com\r\nContent-Type: text/html\r\nContent-Length: 84\r\nConnection: close\r\n\r\n<html><body>You are being <a href=\"http://awesome.com\">redirected</a>.</body></html>"
+    result = "HTTP/1.1 302 Found\r\nLocation: http://awesome.com\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: 84\r\nConnection: close\r\nX-Runtime: 1.000000\r\n\r\n<html><body>You are being <a href=\"http://awesome.com\">redirected</a>.</body></html>"
     expect(tester.io.string).to eq(result)
   end
 
   it "renders stuff correctly if is empty" do
+    Process.stubs(:clock_gettime).returns(1.0)
     tester.hijack_test do
+      Process.stubs(:clock_gettime).returns(2.0)
       render body: nil
     end
 
-    result = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 0\r\nConnection: close\r\n\r\n"
+    result = "HTTP/1.1 200 OK\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Length: 0\r\nConnection: close\r\nX-Runtime: 1.000000\r\n\r\n"
     expect(tester.io.string).to eq(result)
   end
 
   it "renders stuff correctly if it works" do
+    Process.stubs(:clock_gettime).returns(1.0)
     tester.hijack_test do
+      Process.stubs(:clock_gettime).returns(2.0)
       render plain: "hello world"
     end
 
-    result = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 11\r\nConnection: close\r\n\r\nhello world"
+    result = "HTTP/1.1 200 OK\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Length: 11\r\nConnection: close\r\nX-Runtime: 1.000000\r\n\r\nhello world"
     expect(tester.io.string).to eq(result)
   end
 
   it "returns 500 by default" do
+    Process.stubs(:clock_gettime).returns(1.0)
     tester.hijack_test
 
-    expected = "HTTP/1.1 500 Internal Server Error\r\nContent-Type: text/html\r\nContent-Length: 0\r\nConnection: close\r\n\r\n"
+    expected = "HTTP/1.1 500 Internal Server Error\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: 0\r\nConnection: close\r\nX-Runtime: 0.000000\r\n\r\n"
     expect(tester.io.string).to eq(expected)
   end
 

@@ -6,6 +6,7 @@ describe Middleware::RequestTracker do
   def env(opts = {})
     {
       "HTTP_HOST" => "http://test.com",
+      "HTTP_USER_AGENT" => "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36",
       "REQUEST_URI" => "/path?bla=1",
       "REQUEST_METHOD" => "GET",
       "rack.input" => ""
@@ -104,7 +105,7 @@ describe Middleware::RequestTracker do
     end
 
     it "does nothing by default" do
-      global_setting :max_requests_per_ip_per_10_seconds, 1
+      global_setting :max_reqs_per_ip_per_10_seconds, 1
 
       status, _ = middleware.call(env)
       status, _ = middleware.call(env)
@@ -113,9 +114,9 @@ describe Middleware::RequestTracker do
     end
 
     it "blocks private IPs if not skipped" do
-      global_setting :max_requests_per_ip_per_10_seconds, 1
-      global_setting :max_requests_per_ip_mode, 'warn+block'
-      global_setting :max_requests_rate_limit_on_private, true
+      global_setting :max_reqs_per_ip_per_10_seconds, 1
+      global_setting :max_reqs_per_ip_mode, 'warn+block'
+      global_setting :max_reqs_rate_limit_on_private, true
 
       env1 = env("REMOTE_ADDR" => "127.0.0.2")
 
@@ -126,10 +127,38 @@ describe Middleware::RequestTracker do
       expect(status).to eq(429)
     end
 
+    describe "register_ip_skipper" do
+      before do
+        Middleware::RequestTracker.register_ip_skipper do |ip|
+          ip == "1.1.1.2"
+        end
+        global_setting :max_reqs_per_ip_per_10_seconds, 1
+        global_setting :max_reqs_per_ip_mode, 'block'
+      end
+
+      after do
+        Middleware::RequestTracker.unregister_ip_skipper
+      end
+
+      it "won't block if the ip is skipped" do
+        env1 = env("REMOTE_ADDR" => "1.1.1.2")
+        status, _ = middleware.call(env1)
+        status, _ = middleware.call(env1)
+        expect(status).to eq(200)
+      end
+
+      it "blocks if the ip isn't skipped" do
+        env1 = env("REMOTE_ADDR" => "1.1.1.1")
+        status, _ = middleware.call(env1)
+        status, _ = middleware.call(env1)
+        expect(status).to eq(429)
+      end
+    end
+
     it "does nothing for private IPs if skipped" do
-      global_setting :max_requests_per_ip_per_10_seconds, 1
-      global_setting :max_requests_per_ip_mode, 'warn+block'
-      global_setting :max_requests_rate_limit_on_private, false
+      global_setting :max_reqs_per_ip_per_10_seconds, 1
+      global_setting :max_reqs_per_ip_mode, 'warn+block'
+      global_setting :max_reqs_rate_limit_on_private, false
 
       env1 = env("REMOTE_ADDR" => "127.0.3.1")
 
@@ -141,8 +170,8 @@ describe Middleware::RequestTracker do
     end
 
     it "does warn if rate limiter is enabled via warn+block" do
-      global_setting :max_requests_per_ip_per_10_seconds, 1
-      global_setting :max_requests_per_ip_mode, 'warn+block'
+      global_setting :max_reqs_per_ip_per_10_seconds, 1
+      global_setting :max_reqs_per_ip_mode, 'warn+block'
 
       status, _ = middleware.call(env)
       status, _ = middleware.call(env)
@@ -152,8 +181,8 @@ describe Middleware::RequestTracker do
     end
 
     it "does warn if rate limiter is enabled" do
-      global_setting :max_requests_per_ip_per_10_seconds, 1
-      global_setting :max_requests_per_ip_mode, 'warn'
+      global_setting :max_reqs_per_ip_per_10_seconds, 1
+      global_setting :max_reqs_per_ip_mode, 'warn'
 
       status, _ = middleware.call(env)
       status, _ = middleware.call(env)
@@ -163,8 +192,8 @@ describe Middleware::RequestTracker do
     end
 
     it "does block if rate limiter is enabled" do
-      global_setting :max_requests_per_ip_per_10_seconds, 1
-      global_setting :max_requests_per_ip_mode, 'block'
+      global_setting :max_reqs_per_ip_per_10_seconds, 1
+      global_setting :max_reqs_per_ip_mode, 'block'
 
       env1 = env("REMOTE_ADDR" => "1.1.1.1")
       env2 = env("REMOTE_ADDR" => "1.1.1.2")
@@ -205,7 +234,7 @@ describe Middleware::RequestTracker do
     end
 
     after do
-      Middleware::RequestTracker.register_detailed_request_logger(logger)
+      Middleware::RequestTracker.unregister_detailed_request_logger(logger)
     end
 
     it "can correctly log detailed data" do

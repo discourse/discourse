@@ -3,6 +3,12 @@
   border-top: none;
 }
 
+.time-gap {
+  .topic-avatar {
+    display: none;
+  }
+}
+
 .topic-post article {
   border-top: 1px solid $primary-low;
   padding: 15px 0 8px 0;
@@ -79,7 +85,7 @@ span.badge-posts {
   text-align: left;
   bottom: 0;
   left: 135px;
-  z-index: 1000;
+  z-index: z("dropdown");
 
   h3 {
     margin-top: 0;
@@ -125,7 +131,7 @@ span.badge-posts {
 }
 
 a.reply-to-tab {
-  z-index: 400;
+  z-index: z("base") + 1;
   right: 80px;
   color: dark-light-choose($primary-medium, $secondary-medium);
   margin: -3px 10px 0 0;
@@ -137,41 +143,16 @@ a.reply-to-tab {
 }
 
 .topic-map {
-
   margin: 10px 0;
-  background: blend-primary-secondary(5%);
-  border: 1px solid $primary-low;
-  border-top: none; // would cause double top border
-
-  section {
-    border-top: 1px solid $primary-low;
-  }
-
-  h3 {
-    margin-bottom: 4px;
-    margin-top: 0;
-    color: dark-light-choose($primary-medium, $secondary-medium);
-    line-height: $line-height-large;
-    font-weight: normal;
-    font-size: $font-0;
-  }
 
   h4 {
     margin: 0 0 3px 0;
-    color: dark-light-choose($primary-medium, $secondary-medium);
-    font-weight: normal;
-    font-size: $font-down-1;
     line-height: $line-height-medium;
   }
 
   .user {
     float: left;
     margin-right: 10px;
-  }
-
-  ul {
-    margin: 0;
-    list-style: none;
   }
 
   .map-collapsed {
@@ -189,7 +170,7 @@ a.reply-to-tab {
       }
     }
     a, .number {
-      line-height: $line-height-large;
+      line-height: $line-height-medium;
     }
     .number, i {
       color: dark-light-choose($primary-high, $secondary-low);
@@ -220,19 +201,10 @@ a.reply-to-tab {
     .user {float: left; margin: 0 10px 10px 0;}
   }
 
-  .domain {
-    color: dark-light-choose($primary-low-mid, $secondary-high);
-  }
-
   .topic-links {
     .badge-notification {
       margin: 1px 5px 2px 0;
     }
-  }
-
-  td {
-    vertical-align: top;
-    padding:1px;
   }
 
   .buttons {
@@ -306,12 +278,11 @@ span.post-count {
   .btn {
     margin-bottom: 5px;
     margin-right: 10px;
-    .d-icon-star {margin-right: 5px;}
   }
 }
 
 #topic-title {
-  z-index: 1000;
+  z-index: z("base") + 1;
   margin: 0 0 0 0 !important;
   padding: 15px 0;
 }
@@ -329,7 +300,7 @@ span.post-count {
 
 .quote-button.visible {
   display: block;
-  z-index: 936;
+  z-index: z("tooltip");
 }
 
 iframe {
@@ -397,7 +368,7 @@ iframe {
 button.select-post {
   display: inline-block;
   position: absolute;
-  z-index: 401; // 400 is the reply-to tab
+  z-index: z("base") + 1;
   left: 200px;
   background-color: srgb-scale($tertiary, $secondary, 60%);
   color: $secondary;
@@ -432,6 +403,10 @@ blockquote {
   margin-right: 0;
 }
 
+.gap {
+  padding: 0.25em 0;  
+}
+
 .gutter { display: none; }
 
 .posts-wrapper {  position: relative; }
@@ -443,7 +418,7 @@ span.highlighted {
 .topic-avatar {
   float: left;
   margin-right: 10px;
-  z-index:999; /* must render on top of topic-body + topic-meta-data, otherwise not tappable */
+  z-index: z("base") + 1; /* must render on top of topic-body + topic-meta-data, otherwise not tappable */
 }
 
 .topic-meta-data {

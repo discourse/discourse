@@ -38,22 +38,18 @@
 /* both blocks that appear under the standard post control buttons */
 .notification-options, .pinned-options {
   float: left;
-  margin-top: 0px;
+  margin-top: 0;
   padding-top: 1px;
   clear: both;
 }
 
 .topic-status-info {
   padding-left: 10px;
-  border-top: 1px solid $primary-low; 
+  border-top: 1px solid $primary-low;
   padding-top: 10px;
   h3 {
     margin: 0;
   }
-}
-
-.docked #topic-progress {
-  box-shadow: 0 0 3px rbga(0,0,0, .5);
 }
 
 #topic-progress-wrapper {
@@ -61,12 +57,12 @@
   width: 0;
   right: 0;
   bottom: 0;
-  z-index: 950;
+  z-index: z("timeline");
   margin-right: 148px;
 }
 
 #topic-progress-expanded {
-  border: 1px solid $primary-low; 
+  border: 1px solid $primary-low;
   padding: 5px;
   background: $secondary;
 
@@ -126,7 +122,7 @@
     top: 9px;
     width: 100%;
     text-align: center;
-    z-index: 1;
+    z-index: z("base");
   }
   h4 {
     display: inline;
@@ -137,7 +133,7 @@
     position: absolute;
     right: 8px;
     bottom: 9px;
-    z-index: 1;
+    z-index: z("base");
   }
   .bg {
     position: absolute;
@@ -172,10 +168,6 @@
 
 .topic-post:last-of-type {padding-bottom: 40px;}
 
-.heatmap-high {color: $danger !important;}
-.heatmap-med {color: $danger-medium !important;}
-.heatmap-low {color: $danger-low !important;}
-
 sup sup, sub sup, sup sub, sub sub { top: 0; }
 
 // inline editing of title on mobile
@@ -189,17 +181,12 @@ sup sup, sub sup, sup sub, sub sub { top: 0; }
     width: 100%;
     height: 32px;
   }
-
-  .select2-container {
-    box-sizing: border-box;
-    width: 100% !important;
-  }
   .btn-small {
     padding: 6px 12px;
     margin: 6px 6px 0 0;
   }
 
-  .select-box-kit.combo-box.category-chooser {
+  .select-kit.combo-box.category-chooser {
     width: 100%;
     margin-top: 0;
   }
@@ -207,9 +194,9 @@ sup sup, sub sup, sup sub, sub sub { top: 0; }
 
 // make mobile timeline top and bottom dates easier to select
 .topic-timeline {
-  .start-date, .now-date { 
-    font-size: $font-up-1; 
-    padding: 5px; 
+  .start-date, .now-date {
+    font-size: $font-up-1;
+    padding: 5px;
   }
 }
 

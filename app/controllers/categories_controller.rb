@@ -2,7 +2,8 @@ require_dependency 'category_serializer'
 
 class CategoriesController < ApplicationController
 
-  before_action :ensure_logged_in, except: [:index, :categories_and_latest, :show, :redirect, :find_by_slug]
+  requires_login except: [:index, :categories_and_latest, :show, :redirect, :find_by_slug]
+
   before_action :fetch_category, only: [:show, :update, :destroy]
   before_action :initialize_staff_action_logger, only: [:create, :update, :destroy]
   skip_before_action :check_xhr, only: [:index, :categories_and_latest, :redirect]
@@ -60,7 +61,7 @@ class CategoriesController < ApplicationController
     topic_options = {
       per_page: SiteSetting.categories_topics,
       no_definitions: true,
-      exclude_category_ids: Category.where(suppress_from_homepage: true).pluck(:id)
+      exclude_category_ids: Category.where(suppress_from_latest: true).pluck(:id)
     }
 
     result = CategoryAndTopicLists.new
@@ -234,7 +235,7 @@ class CategoriesController < ApplicationController
                         :email_in,
                         :email_in_allow_strangers,
                         :mailinglist_mirror,
-                        :suppress_from_homepage,
+                        :suppress_from_latest,
                         :all_topics_wiki,
                         :parent_category_id,
                         :auto_close_hours,

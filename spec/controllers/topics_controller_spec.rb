@@ -71,10 +71,10 @@ describe TopicsController do
 
     describe 'moving to a new topic' do
       let(:user) { log_in(:moderator) }
-      let(:p1) { Fabricate(:post, user: user) }
+      let(:p1) { Fabricate(:post, user: user, post_number: 1) }
       let(:topic) { p1.topic }
 
-      it "raises an error without postIds" do
+      it "raises an error without post_ids" do
         expect do
           post :move_posts, params: {
             topic_id: topic.id, title: 'blah'
@@ -90,6 +90,19 @@ describe TopicsController do
         }, format: :json
 
         expect(response).to be_forbidden
+      end
+
+      it "raises an error when the OP is not a regular post" do
+        p2 = Fabricate(:post, topic: topic, post_number: 2, post_type: Post.types[:whisper])
+        p3 = Fabricate(:post, topic: topic, post_number: 3)
+
+        post :move_posts, params: {
+          topic_id: topic.id, title: 'blah', post_ids: [p2.id, p3.id]
+        }, format: :json
+
+        result = ::JSON.parse(response.body)
+
+        expect(result['errors']).to_not be_empty
       end
 
       context 'success' do
@@ -142,7 +155,7 @@ describe TopicsController do
       end
 
       context 'failure' do
-        let(:p2) { Fabricate(:post, user: user) }
+        let(:p2) { Fabricate(:post, topic: topic, user: user) }
 
         before do
           Topic.any_instance.expects(:move_posts).with(user, [p2.id], title: 'blah').returns(nil)
@@ -1123,22 +1136,6 @@ describe TopicsController do
           expect(@topic.title).to eq('This is a new title for the topic')
         end
 
-        it 'triggers a change of category' do
-          Topic.any_instance.expects(:change_category_to_id).with(123).returns(true)
-          put :update, params: {
-            topic_id: @topic.id, slug: @topic.title, category_id: 123
-          }, format: :json
-
-        end
-
-        it 'allows to change category to "uncategorized"' do
-          Topic.any_instance.expects(:change_category_to_id).with(0).returns(true)
-          put :update, params: {
-            topic_id: @topic.id, slug: @topic.title, category_id: ""
-          }, format: :json
-
-        end
-
         it "returns errors with invalid titles" do
           put :update, params: {
             topic_id: @topic.id, slug: @topic.title, title: 'asdf'
@@ -1157,7 +1154,6 @@ describe TopicsController do
         end
 
         it "returns errors with invalid categories" do
-          Topic.any_instance.expects(:change_category_to_id).returns(false)
           put :update, params: {
             topic_id: @topic.id, slug: @topic.title, category_id: -1
           }, format: :json
@@ -1184,8 +1180,9 @@ describe TopicsController do
           context 'when there are no changes' do
             it 'does not call the PostRevisor' do
               PostRevisor.any_instance.expects(:revise!).never
+
               put :update, params: {
-                topic_id: @topic.id, slug: @topic.title, title: @topic.title, category_id: nil
+                topic_id: @topic.id, slug: @topic.title, title: @topic.title, category_id: @topic.category_id
               }, format: :json
 
               expect(response).to be_success
@@ -1199,10 +1196,10 @@ describe TopicsController do
           end
 
           it "can add a category to an uncategorized topic" do
-            Topic.any_instance.expects(:change_category_to_id).with(456).returns(true)
+            c = Fabricate(:category)
 
             put :update, params: {
-              topic_id: @topic.id, slug: @topic.title, category_id: 456
+              topic_id: @topic.id, slug: @topic.title, category_id: c.id
             }, format: :json
 
             expect(response).to be_success
@@ -1245,103 +1242,6 @@ describe TopicsController do
       expect(response.status).to eq(200)
       expect(topic.allowed_groups.first.id).to eq(admins.id)
     end
-  end
-
-  describe 'invite' do
-
-    describe "group invites" do
-      it "works correctly" do
-        group = Fabricate(:group)
-        topic = Fabricate(:topic)
-        _admin = log_in(:admin)
-
-        post :invite, params: {
-          topic_id: topic.id, email: 'hiro@from.heros', group_ids: "#{group.id}"
-        }, format: :json
-
-        expect(response).to be_success
-
-        invite = Invite.find_by(email: 'hiro@from.heros')
-        groups = invite.groups.to_a
-        expect(groups.count).to eq(1)
-        expect(groups[0].id).to eq(group.id)
-      end
-    end
-
-    it "won't allow us to invite toa topic when we're not logged in" do
-      post :invite, params: {
-        topic_id: 1, email: 'jake@adventuretime.ooo'
-      }, format: :json
-      expect(response.status).to eq(403)
-    end
-
-    describe 'when logged in as group manager' do
-      let(:group_manager) { log_in }
-      let(:group) { Fabricate(:group).tap { |g| g.add_owner(group_manager) } }
-      let(:private_category)  { Fabricate(:private_category, group: group) }
-      let(:group_private_topic) { Fabricate(:topic, category: private_category, user: group_manager) }
-      let(:recipient) { 'jake@adventuretime.ooo' }
-
-      it "should attach group to the invite" do
-        post :invite, params: {
-          topic_id: group_private_topic.id, user: recipient
-        }, format: :json
-
-        expect(response).to be_success
-        expect(Invite.find_by(email: recipient).groups).to eq([group])
-      end
-    end
-
-    describe 'when logged in' do
-      before do
-        @topic = Fabricate(:topic, user: log_in)
-      end
-
-      it 'requires an email parameter' do
-        expect do
-          post :invite, params: { topic_id: @topic.id }, format: :json
-        end.to raise_error(ActionController::ParameterMissing)
-      end
-
-      describe 'without permission' do
-        it "raises an exception when the user doesn't have permission to invite to the topic" do
-          post :invite, params: {
-            topic_id: @topic.id, user: 'jake@adventuretime.ooo'
-          }, format: :json
-
-          expect(response).to be_forbidden
-        end
-      end
-
-      describe 'with admin permission' do
-
-        let!(:admin) do
-          log_in :admin
-        end
-
-        it 'should work as expected' do
-          post :invite, params: {
-            topic_id: @topic.id, user: 'jake@adventuretime.ooo'
-          }, format: :json
-
-          expect(response).to be_success
-          expect(::JSON.parse(response.body)).to eq('success' => 'OK')
-          expect(Invite.where(invited_by_id: admin.id).count).to eq(1)
-        end
-
-        it 'should fail on shoddy email' do
-          post :invite, params: {
-            topic_id: @topic.id, user: 'i_am_not_an_email'
-          }, format: :json
-
-          expect(response).not_to be_success
-          expect(::JSON.parse(response.body)).to eq('failed' => 'FAILED')
-        end
-
-      end
-
-    end
-
   end
 
   describe 'make_banner' do

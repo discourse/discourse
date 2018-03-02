@@ -178,6 +178,16 @@ describe Invite do
 
   end
 
+  context 'a staged user' do
+    it 'creates an invite for a staged user' do
+      Fabricate(:staged, email: 'staged@account.com')
+      invite = Invite.invite_by_email('staged@account.com', Fabricate(:coding_horror))
+
+      expect(invite).to be_valid
+      expect(invite.email).to eq('staged@account.com')
+    end
+  end
+
   context '.redeem' do
 
     let(:invite) { Fabricate(:invite) }
@@ -319,9 +329,11 @@ describe Invite do
     context 'invited to topics' do
       let(:tl2_user) { Fabricate(:user, trust_level: 2) }
       let!(:topic) { Fabricate(:private_message_topic, user: tl2_user) }
-      let!(:invite) {
+
+      let!(:invite) do
         topic.invite(topic.user, 'jake@adventuretime.ooo')
-      }
+        Invite.find_by(invited_by_id: topic.user)
+      end
 
       context 'redeem topic invite' do
         it 'adds the user to the topic_users' do

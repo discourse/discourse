@@ -212,6 +212,16 @@ aside.onebox {
       }
     }
 
+    &.user-onebox {
+      .fa {
+        margin-right: 5px;
+      }
+      .full-name,
+      .location {
+        margin-right: 10px;
+      }
+    }
+
   }
 }
 
@@ -278,7 +288,7 @@ pre.onebox code ol.lines li:before {
 
 
 pre.onebox code ol{
-	margin-left:0px;
+	margin-left:0;
 	line-height: $line-height-large;
 }
 pre.onebox code {
@@ -296,7 +306,7 @@ pre.onebox code ol.lines{
 pre.onebox code ol.lines li {
 	list-style-type: none;
 	padding-left: 5px;
-	margin-left: 0px;
+	margin-left: 0;
 	border-left: 1px solid #CFCFCF;
 	min-height: 1.5em; //show empty li lines
   white-space: pre;
@@ -314,7 +324,7 @@ pre.onebox code {
 .onebox-body .github-commit-status {
   background: #F5F5F5;
   border-radius: 5px;
-  margin:0px 0px 5px 100px;
+  margin:0 0 5px 100px;
   padding: 10px;
 }
 
@@ -376,7 +386,7 @@ aside.onebox.twitterstatus .onebox-body {
 .onebox.imgur-album {
   .outer-box {
     position: absolute;
-    z-index: 935;
+    z-index: z("base");
     overflow: hidden;
     font-size: $font-down-1;
     color: #fff;
@@ -453,10 +463,22 @@ aside.onebox.stackexchange .onebox-body {
   .label2 {
     float: right;
   }
-  .site-icon {
-    width: 16px;
-    height: 16px;
-    margin-right: 3px;
+}
+
+.onebox {
+  &.whitelistedgeneric,
+  &.gfycat {
+    .site-icon {
+      width: 16px;
+      height: 16px;
+      margin-right: 3px;
+    }
+  }
+}
+
+.onebox.gfycat p {
+  span.label1 a {
+    white-space: nowrap;
   }
 }
 

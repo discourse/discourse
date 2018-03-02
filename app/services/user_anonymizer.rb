@@ -45,6 +45,7 @@ class UserAnonymizer
       @user.facebook_user_info.try(:destroy)
       @user.single_sign_on_record.try(:destroy)
       @user.oauth2_user_info.try(:destroy)
+      @user.instagram_user_info.try(:destroy)
       @user.user_open_ids.find_each { |x| x.destroy }
       @user.api_key.try(:destroy)
 

@@ -56,6 +56,8 @@ en:
 
     post_is_deleted: "Cannot act on a deleted post."
 
+    user_cant_post_in_topic: "You can't vote because you can't post in this topic."
+
     topic_must_be_open_to_vote: "The topic must be open to vote."
     poll_must_be_open_to_vote: "Poll must be open to vote."
 

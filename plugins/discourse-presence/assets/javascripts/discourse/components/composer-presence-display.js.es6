@@ -68,6 +68,10 @@ export default Ember.Component.extend({
 
     this.clear();
 
+    if (this.get('action') !== 'reply' || this.get('action') !== 'edit') {
+      return;
+    }
+
     this.publish({
       response_needed: true,
       previous: this.get('previousState'),

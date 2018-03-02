@@ -193,6 +193,8 @@ export function validateUploadedFiles(files, opts) {
 }
 
 export function validateUploadedFile(file, opts) {
+  if (!authorizesOneOrMoreExtensions()) return false;
+
   opts = opts || {};
 
   const name = file && file.name;
@@ -201,7 +203,7 @@ export function validateUploadedFile(file, opts) {
 
   // check that the uploaded file is authorized
   if (opts.allowStaffToUploadAnyFileInPm && opts.isPrivateMessage) {
-    if (Discourse.User.current("staff")) {
+    if (Discourse.User.currentProp('staff')) {
       return true;
     }
   }
@@ -237,16 +239,28 @@ export function validateUploadedFile(file, opts) {
 
 const IMAGES_EXTENSIONS_REGEX = /(png|jpe?g|gif|bmp|tiff?|svg|webp|ico)/i;
 
+function extensionsToArray(exts) {
+  return exts.toLowerCase()
+             .replace(/[\s\.]+/g, "")
+             .split("|")
+             .filter(ext => ext.indexOf("*") === -1);
+}
+
 function extensions() {
-  return Discourse.SiteSettings.authorized_extensions
-                               .toLowerCase()
-                               .replace(/[\s\.]+/g, "")
-                               .split("|")
-                               .filter(ext => ext.indexOf("*") === -1);
+  return extensionsToArray(Discourse.SiteSettings.authorized_extensions);
+}
+
+function staffExtensions() {
+  return extensionsToArray(Discourse.SiteSettings.authorized_extensions_for_staff);
 }
 
 function imagesExtensions() {
-  return extensions().filter(ext => IMAGES_EXTENSIONS_REGEX.test(ext));
+  let exts =  extensions().filter(ext => IMAGES_EXTENSIONS_REGEX.test(ext));
+  if (Discourse.User.currentProp('staff')) {
+    const staffExts = staffExtensions().filter(ext => IMAGES_EXTENSIONS_REGEX.test(ext));
+    exts = _.union(exts, staffExts);
+  }
+  return exts;
 }
 
 function extensionsRegex() {
@@ -257,7 +271,14 @@ function imagesExtensionsRegex() {
   return new RegExp("\\.(" + imagesExtensions().join("|") + ")$", "i");
 }
 
+function staffExtensionsRegex() {
+  return new RegExp("\\.(" + staffExtensions().join("|") + ")$", "i");
+}
+
 function isAuthorizedFile(fileName) {
+  if (Discourse.User.currentProp('staff') && staffExtensionsRegex().test(fileName)) {
+    return true;
+  }
   return extensionsRegex().test(fileName);
 }
 
@@ -266,7 +287,8 @@ function isAuthorizedImage(fileName){
 }
 
 export function authorizedExtensions() {
-  return authorizesAllExtensions() ? "*" : extensions().join(", ");
+  const exts = Discourse.User.currentProp('staff') ? [...extensions(), ...staffExtensions()] : extensions();
+  return exts.filter(ext => ext.length > 0).join(", ");
 }
 
 export function authorizedImagesExtensions() {
@@ -274,7 +296,24 @@ export function authorizedImagesExtensions() {
 }
 
 export function authorizesAllExtensions() {
-  return Discourse.SiteSettings.authorized_extensions.indexOf("*") >= 0;
+  return Discourse.SiteSettings.authorized_extensions.indexOf("*") >= 0 || (
+         Discourse.SiteSettings.authorized_extensions_for_staff.indexOf("*") >= 0 &&
+         Discourse.User.currentProp('staff'));
+}
+
+export function authorizesOneOrMoreExtensions() {
+  if (authorizesAllExtensions()) return true;
+
+  return Discourse.SiteSettings.authorized_extensions
+          .split("|")
+          .filter(ext => ext)
+          .length > 0;
+}
+
+export function authorizesOneOrMoreImageExtensions() {
+  if (authorizesAllExtensions()) return true;
+
+  return imagesExtensions().length > 0;
 }
 
 export function isAnImage(path) {
@@ -291,13 +330,13 @@ function isGUID(value) {
 
 function imageNameFromFileName(fileName) {
   const split = fileName.split('.');
-  const name = split[split.length-2];
+  let name = split[split.length - 2];
 
   if (exports.isAppleDevice() && isGUID(name)) {
-    return I18n.t('upload_selector.default_image_alt_text');
+    name = I18n.t('upload_selector.default_image_alt_text');
   }
 
-  return name;
+  return encodeURIComponent(name);
 }
 
 export function allowsImages() {
@@ -305,7 +344,7 @@ export function allowsImages() {
 }
 
 export function allowsAttachments() {
-  return authorizesAllExtensions() || extensions().length > imagesExtensions().length;
+  return authorizesAllExtensions() || authorizedExtensions().split(", ").length > imagesExtensions().length;
 }
 
 export function uploadLocation(url) {
@@ -352,7 +391,7 @@ export function displayErrorForUpload(data) {
         if (data.jqXHR.responseJSON.message) {
           bootbox.alert(data.jqXHR.responseJSON.message);
         } else {
-          bootbox.alert(data.jqXHR.responseJSON.join("\n"));
+          bootbox.alert(data.jqXHR.responseJSON.errors.join("\n"));
         }
         return;
     }

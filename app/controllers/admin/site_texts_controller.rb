@@ -71,7 +71,7 @@ class Admin::SiteTextsController < Admin::AdminController
 
     def record_for(k, value = nil)
       if k.ends_with?("_MF")
-        ovr = TranslationOverride.where(translation_key: k).pluck(:value)
+        ovr = TranslationOverride.where(translation_key: k, locale: I18n.locale).pluck(:value)
         value = ovr[0] if ovr.present?
       end
 

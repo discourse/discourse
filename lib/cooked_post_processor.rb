@@ -247,9 +247,9 @@ class CookedPostProcessor
   rescue URI::InvalidURIError
   end
 
-  # only crop when the image is taller than 16:9
-  # we only use 95% of that to allow for a small margin
-  MIN_RATIO_TO_CROP ||= (9.0 / 16.0) * 0.95
+  # only crop when the image is taller than 18:9
+  # we only use 90% of that to allow for a small margin
+  MIN_RATIO_TO_CROP ||= (9.0 / 18.0) * 0.9
 
   def convert_to_link!(img)
     src = img["src"]
@@ -268,11 +268,7 @@ class CookedPostProcessor
     return if original_width <= width && original_height <= height
     return if original_width <= SiteSetting.max_image_width && original_height <= SiteSetting.max_image_height
 
-    crop = original_width.to_f / original_height.to_f < MIN_RATIO_TO_CROP
-    # prevent iPhone X screenshots from being cropped
-    crop &= original_width != 1125 && original_height != 2436
-
-    if crop
+    if crop = (original_width.to_f / original_height.to_f < MIN_RATIO_TO_CROP)
       width, height = ImageSizer.crop(original_width, original_height)
       img["width"] = width
       img["height"] = height
@@ -372,15 +368,13 @@ class CookedPostProcessor
   end
 
   def post_process_oneboxes
-    args = {
-      post_id: @post.id,
-      invalidate_oneboxes: !!@opts[:invalidate_oneboxes],
-    }
-
-    # apply oneboxes
-    Oneboxer.apply(@doc, topic_id: @post.topic_id) do |url|
+    Oneboxer.apply(@doc) do |url|
       @has_oneboxes = true
-      Oneboxer.onebox(url, args)
+      Oneboxer.onebox(url,
+        invalidate_oneboxes: !!@opts[:invalidate_oneboxes],
+        user_id: @post&.user_id,
+        category_id: @post&.topic&.category_id
+      )
     end
 
     oneboxed_images.each do |img|

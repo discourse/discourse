@@ -191,6 +191,12 @@ describe Email::Receiver do
       expect(topic.posts.last.raw).to eq("This is a **HTML** reply ;)")
     end
 
+    it "automatically elides gmail quotes" do
+      SiteSetting.always_show_trimmed_content = true
+      expect { process(:gmail_html_reply) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to eq("This is a **GMAIL** reply ;)\n\n<details class='elided'>\n<summary title='Show trimmed content'>&#183;&#183;&#183;</summary>\n\nThis is the *elided* part!\n\n</details>")
+    end
+
     it "doesn't process email with same message-id more than once" do
       expect do
         process(:text_reply)
@@ -210,10 +216,10 @@ describe Email::Receiver do
 
       expect { process(:reply_with_8bit_encoding) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq("hab vergessen kritische zeichen einzufügen:\näöüÄÖÜß")
-
     end
 
-    it "prefers text over html" do
+    it "prefers text over html when site setting is disabled" do
+      SiteSetting.incoming_email_prefer_html = false
       expect { process(:text_and_html_reply) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq("This is the *text* part.")
     end
@@ -363,6 +369,7 @@ describe Email::Receiver do
     end
 
     it "supports attached images in TEXT part" do
+      SiteSetting.incoming_email_prefer_html = false
       SiteSetting.queue_jobs = true
 
       expect { process(:no_body_with_image) }.to change { topic.posts.count }
@@ -388,6 +395,12 @@ describe Email::Receiver do
       SiteSetting.authorized_extensions = "csv"
       expect { process(:attached_txt_file_2) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to_not match(/text\.txt/)
+    end
+
+    it "supports emails with just an attachment" do
+      SiteSetting.authorized_extensions = "pdf"
+      expect { process(:attached_pdf_file) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to match(/discourse\.pdf/)
     end
 
     it "supports liking via email" do

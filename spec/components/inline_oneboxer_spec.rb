@@ -71,11 +71,8 @@ describe InlineOneboxer do
     it "will crawl anything if allowed to" do
       SiteSetting.enable_inline_onebox_on_all_domains = true
 
-      # Final destination does a HEAD and a GET
-      stub_request(:head, "https://eviltrout.com/some-path").to_return(status: 200)
-
       stub_request(:get, "https://eviltrout.com/some-path").
-        to_return(status: 200, body: "<html><head><title>a blog</title></head></html>", headers: {})
+        to_return(status: 200, body: "<html><head><title>a blog</title></head></html>")
 
       onebox = InlineOneboxer.lookup(
         "https://eviltrout.com/some-path",
@@ -85,6 +82,22 @@ describe InlineOneboxer do
       expect(onebox).to be_present
       expect(onebox[:url]).to eq("https://eviltrout.com/some-path")
       expect(onebox[:title]).to eq("a blog")
+    end
+
+    it "will not return a onebox if it does not meet minimal length" do
+      SiteSetting.enable_inline_onebox_on_all_domains = true
+
+      stub_request(:get, "https://eviltrout.com/some-path").
+        to_return(status: 200, body: "<html><head><title>a</title></head></html>")
+
+      onebox = InlineOneboxer.lookup(
+        "https://eviltrout.com/some-path",
+        skip_cache: true
+      )
+
+      expect(onebox).to be_present
+      expect(onebox[:url]).to eq("https://eviltrout.com/some-path")
+      expect(onebox[:title]).to eq(nil)
     end
 
     it "will lookup whitelisted domains" do

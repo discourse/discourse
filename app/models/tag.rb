@@ -16,21 +16,6 @@ class Tag < ActiveRecord::Base
 
   after_save :index_search
 
-  COUNT_ARG = "topics.id"
-
-  # Apply more activerecord filters to the tags_by_count_query, and then
-  # fetch the result with .count(Tag::COUNT_ARG).
-  #
-  # e.g., Tag.tags_by_count_query.where("topics.category_id = ?", category.id).count(Tag::COUNT_ARG)
-  def self.tags_by_count_query(opts = {})
-    q = Tag.joins("LEFT JOIN topic_tags ON tags.id = topic_tags.tag_id")
-      .joins("LEFT JOIN topics ON topics.id = topic_tags.topic_id AND topics.deleted_at IS NULL")
-      .group("tags.id, tags.name")
-      .order('count_topics_id DESC')
-    q = q.limit(opts[:limit]) if opts[:limit]
-    q
-  end
-
   def self.ensure_consistency!
     update_topic_counts # topic_count counter cache can miscount
   end
@@ -43,7 +28,7 @@ class Tag < ActiveRecord::Base
         SELECT COUNT(topics.id) AS topic_count, tags.id AS tag_id
         FROM tags
         LEFT JOIN topic_tags ON tags.id = topic_tags.tag_id
-        LEFT JOIN topics ON topics.id = topic_tags.topic_id AND topics.deleted_at IS NULL
+        LEFT JOIN topics ON topics.id = topic_tags.topic_id AND topics.deleted_at IS NULL AND topics.archetype != 'private_message'
         GROUP BY tags.id
       ) x
       WHERE x.tag_id = t.id
@@ -59,13 +44,19 @@ class Tag < ActiveRecord::Base
       scope_category_ids &= ([category.id] + category.subcategories.pluck(:id))
     end
 
-    tags = DiscourseTagging.filter_allowed_tags(
-      tags_by_count_query(limit: limit).where("topics.category_id in (?)", scope_category_ids),
-      nil, # Don't pass guardian. You might not be able to use some tags, but should still be able to see where they've been used.
-      category: category
-    )
+    return [] if scope_category_ids.empty?
 
-    tags.count(COUNT_ARG).map { |name, _| name }
+    tag_names_with_counts = Tag.exec_sql <<~SQL
+      SELECT tags.name as tag_name, SUM(stats.topic_count) AS sum_topic_count
+        FROM category_tag_stats stats
+  INNER JOIN tags ON stats.tag_id = tags.id AND stats.topic_count > 0
+       WHERE stats.category_id in (#{scope_category_ids.join(',')})
+    GROUP BY tags.name
+    ORDER BY sum_topic_count DESC, tag_name ASC
+       LIMIT #{limit}
+    SQL
+
+    tag_names_with_counts.map { |row| row['tag_name'] }
   end
 
   def self.include_tags?
@@ -88,8 +79,8 @@ end
 #  id          :integer          not null, primary key
 #  name        :string           not null
 #  topic_count :integer          default(0), not null
-#  created_at  :datetime
-#  updated_at  :datetime
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
 #
 # Indexes
 #

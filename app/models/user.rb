@@ -18,6 +18,7 @@ class User < ActiveRecord::Base
   include Searchable
   include Roleable
   include HasCustomFields
+  include SecondFactorManager
 
   # TODO: Remove this after 7th Jan 2018
   self.ignored_columns = %w{email}
@@ -60,6 +61,8 @@ class User < ActiveRecord::Base
   has_one :github_user_info, dependent: :destroy
   has_one :google_user_info, dependent: :destroy
   has_one :oauth2_user_info, dependent: :destroy
+  has_one :instagram_user_info, dependent: :destroy
+  has_one :user_second_factor, dependent: :destroy
   has_one :user_stat, dependent: :destroy
   has_one :user_profile, dependent: :destroy, inverse_of: :user
   has_one :single_sign_on_record, dependent: :destroy
@@ -218,6 +221,7 @@ class User < ActiveRecord::Base
   end
 
   EMAIL = %r{([^@]+)@([^\.]+)}
+  FROM_STAGED = "from_staged".freeze
 
   def self.new_from_params(params)
     user = User.new
@@ -225,6 +229,19 @@ class User < ActiveRecord::Base
     user.email = params[:email]
     user.password = params[:password]
     user.username = params[:username]
+    user
+  end
+
+  def self.unstage(params)
+    if user = User.where(staged: true).with_email(params[:email].strip.downcase).first
+      params.each { |k, v| user.send("#{k}=", v) }
+      user.staged = false
+      user.active = false
+      user.custom_fields[FROM_STAGED] = true
+      user.notifications.destroy_all
+
+      DiscourseEvent.trigger(:user_unstaged, user)
+    end
     user
   end
 
@@ -372,7 +389,7 @@ class User < ActiveRecord::Base
 
   def read_first_notification?
     if (trust_level > TrustLevel[1] ||
-        created_at < TRACK_FIRST_NOTIFICATION_READ_DURATION.seconds.ago)
+        (first_seen_at.present? && first_seen_at < TRACK_FIRST_NOTIFICATION_READ_DURATION.seconds.ago))
 
       return true
     end
@@ -729,7 +746,8 @@ class User < ActiveRecord::Base
 
   def activate
     if email_token = self.email_tokens.active.where(email: self.email).first
-      EmailToken.confirm(email_token.token)
+      user = EmailToken.confirm(email_token.token)
+      self.update!(active: true) if user.nil?
     else
       self.update!(active: true)
     end
@@ -870,7 +888,8 @@ class User < ActiveRecord::Base
     result << "Twitter(#{twitter_user_info.screen_name})"               if twitter_user_info
     result << "Facebook(#{facebook_user_info.username})"                if facebook_user_info
     result << "Google(#{google_user_info.email})"                       if google_user_info
-    result << "Github(#{github_user_info.screen_name})"                 if github_user_info
+    result << "GitHub(#{github_user_info.screen_name})"                 if github_user_info
+    result << "Instagram(#{instagram_user_info.screen_name})"           if instagram_user_info
     result << "#{oauth2_user_info.provider}(#{oauth2_user_info.email})" if oauth2_user_info
 
     user_open_ids.each do |oid|
@@ -973,11 +992,11 @@ class User < ActiveRecord::Base
     primary_email.email
   end
 
-  def email=(email)
+  def email=(new_email)
     if primary_email
-      new_record? ? primary_email.email = email : primary_email.update(email: email)
+      new_record? ? primary_email.email = new_email : primary_email.update(email: new_email)
     else
-      build_primary_email(email: email)
+      build_primary_email(email: new_email)
     end
   end
 
@@ -985,6 +1004,10 @@ class User < ActiveRecord::Base
     self.created_at && self.created_at < 60.days.ago ?
       self.user_visits.where('visited_at >= ?', 60.days.ago).sum(:time_read) :
       self.user_stat&.time_read
+  end
+
+  def from_staged?
+    custom_fields[User::FROM_STAGED]
   end
 
   protected
@@ -1078,8 +1101,7 @@ class User < ActiveRecord::Base
     if SiteSetting.must_approve_users
       Jobs.enqueue(:critical_user_email,
         type: :signup_after_approval,
-        user_id: id,
-        email_token: email_tokens.first.token
+        user_id: id
       )
     end
   end
@@ -1157,7 +1179,7 @@ end
 #  username                  :string(60)       not null
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
-#  name                      :string(255)
+#  name                      :string
 #  seen_notification_id      :integer          default(0), not null
 #  last_posted_at            :datetime
 #  password_hash             :string(64)
@@ -1179,10 +1201,10 @@ end
 #  flag_level                :integer          default(0), not null
 #  ip_address                :inet
 #  moderator                 :boolean          default(FALSE)
-#  title                     :string(255)
+#  title                     :string
 #  uploaded_avatar_id        :integer
-#  primary_group_id          :integer
 #  locale                    :string(10)
+#  primary_group_id          :integer
 #  registration_ip_address   :inet
 #  staged                    :boolean          default(FALSE), not null
 #  first_seen_at             :datetime

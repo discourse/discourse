@@ -5,6 +5,15 @@
   <body>
     <% if @message %>
       <%= @message %>
+      <% if @error %><p><%= @error %></p><% end %>
+
+      <% if @second_factor_required %>
+        <%=form_tag({}, method: :put) do %>
+          <%= label_tag(:second_factor_token, t('login.second_factor_description')) %>
+          <%= render 'common/second_factor_text_field' %><br><br>
+          <%= submit_tag t('submit')%>
+        <% end %>
+      <% end %>
     <% else %>
       <%=form_tag({}, method: :put) do %>
         <%= label_tag(:email, t('admin_login.email_input')) %>

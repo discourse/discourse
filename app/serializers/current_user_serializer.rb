@@ -39,7 +39,12 @@ class CurrentUserSerializer < BasicUserSerializer
              :seen_notification_id,
              :primary_group_id,
              :primary_group_name,
-             :can_create_topic
+             :can_create_topic,
+             :can_post_link
+
+  def can_post_link
+    scope.can_post_link?
+  end
 
   def can_create_topic
     scope.can_create_topic?(nil)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'current_user'
 require_dependency 'canonical_url'
 require_dependency 'discourse'
@@ -46,8 +48,9 @@ class ApplicationController < ActionController::Base
   before_action :set_mobile_view
   before_action :block_if_readonly_mode
   before_action :authorize_mini_profiler
-  before_action :preload_json
   before_action :redirect_to_login_if_required
+  before_action :block_if_requires_login
+  before_action :preload_json
   before_action :check_xhr
   after_action  :add_readonly_header
   after_action  :perform_refresh_session
@@ -60,7 +63,11 @@ class ApplicationController < ActionController::Base
   end
 
   def use_crawler_layout?
-    @use_crawler_layout ||= (has_escaped_fragment? || CrawlerDetection.crawler?(request.user_agent) || params.key?("print"))
+    @use_crawler_layout ||=
+      request.user_agent &&
+      (request.content_type.blank? || request.content_type.include?('html')) &&
+      !['json', 'rss'].include?(params[:format]) &&
+      (has_escaped_fragment? || CrawlerDetection.crawler?(request.user_agent) || params.key?("print"))
   end
 
   def add_readonly_header
@@ -100,7 +107,7 @@ class ApplicationController < ActionController::Base
   end
 
   def render_rate_limit_error(e)
-    render_json_error e.description, type: :rate_limit, status: 429
+    render_json_error e.description, type: :rate_limit, status: 429, extras: { wait_seconds: e&.available_in }
   end
 
   # If they hit the rate limiter
@@ -147,11 +154,15 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  rescue_from Discourse::NotFound, PluginDisabled  do
+  rescue_from Discourse::NotFound, PluginDisabled, ActionController::RoutingError  do
     rescue_discourse_actions(:not_found, 404)
   end
 
   rescue_from Discourse::InvalidAccess do |e|
+
+    if e.opts[:delete_cookie].present?
+      cookies.delete(e.opts[:delete_cookie])
+    end
     rescue_discourse_actions(
       :invalid_access,
       403,
@@ -181,7 +192,9 @@ class ApplicationController < ActionController::Base
       render_json_error message, type: type, status: status_code
     else
       begin
+        # 404 pages won't have the session and theme_keys without these:
         current_user
+        handle_theme
       rescue Discourse::InvalidAccess
         return render plain: message, status: status_code
       end
@@ -209,12 +222,12 @@ class ApplicationController < ActionController::Base
   def clear_notifications
     if current_user && !@readonly_mode
 
-      cookie_notifications = cookies['cn'.freeze]
-      notifications = request.headers['Discourse-Clear-Notifications'.freeze]
+      cookie_notifications = cookies['cn']
+      notifications = request.headers['Discourse-Clear-Notifications']
 
       if cookie_notifications
         if notifications.present?
-          notifications += "," << cookie_notifications
+          notifications += ",#{cookie_notifications}"
         else
           notifications = cookie_notifications
         end
@@ -231,13 +244,15 @@ class ApplicationController < ActionController::Base
   def set_locale
     if !current_user
       if SiteSetting.set_locale_from_accept_language_header
-        I18n.locale = locale_from_header
+        locale = locale_from_header
       else
-        I18n.locale = SiteSetting.default_locale
+        locale = SiteSetting.default_locale
       end
     else
-      I18n.locale = current_user.effective_locale
+      locale = current_user.effective_locale
     end
+
+    I18n.locale = I18n.locale_available?(locale) ? locale : :en
     I18n.ensure_all_loaded!
   end
 
@@ -270,10 +285,10 @@ class ApplicationController < ActionController::Base
     session[:mobile_view] = params[:mobile_view] if params.has_key?(:mobile_view)
   end
 
-  NO_CUSTOM = "no_custom".freeze
-  NO_PLUGINS = "no_plugins".freeze
-  ONLY_OFFICIAL = "only_official".freeze
-  SAFE_MODE = "safe_mode".freeze
+  NO_CUSTOM = "no_custom"
+  NO_PLUGINS = "no_plugins"
+  ONLY_OFFICIAL = "only_official"
+  SAFE_MODE = "safe_mode"
 
   def resolve_safe_mode
     safe_mode = params[SAFE_MODE]
@@ -286,7 +301,7 @@ class ApplicationController < ActionController::Base
 
   def handle_theme
 
-    return if request.xhr? || request.format.json?
+    return if request.xhr? || request.format == "json" || request.format == "js"
     return if request.method != "GET"
 
     resolve_safe_mode
@@ -387,10 +402,8 @@ class ApplicationController < ActionController::Base
   end
 
   def post_ids_including_replies
-    post_ids = params[:post_ids].map { |p| p.to_i }
-    if params[:reply_post_ids]
-      post_ids |= PostReply.where(post_id: params[:reply_post_ids].map { |p| p.to_i }).pluck(:reply_id)
-    end
+    post_ids  = params[:post_ids].map(&:to_i)
+    post_ids |= PostReply.where(post_id: params[:reply_post_ids]).pluck(:reply_id) if params[:reply_post_ids]
     post_ids
   end
 
@@ -562,6 +575,28 @@ class ApplicationController < ActionController::Base
       # bypass xhr check on PUT / POST / DELETE provided api key is there, otherwise calling api is annoying
       return if !request.get? && (is_api? || is_user_api?)
       raise RenderEmpty.new unless ((request.format && request.format.json?) || request.xhr?)
+    end
+
+    def self.requires_login(arg = {})
+      @requires_login_arg = arg
+    end
+
+    def self.requires_login_arg
+      @requires_login_arg
+    end
+
+    def block_if_requires_login
+      if arg = self.class.requires_login_arg
+        check =
+          if except = arg[:except]
+            !except.include?(action_name.to_sym)
+          elsif only = arg[:only]
+            only.include?(action_name.to_sym)
+          else
+            true
+          end
+        ensure_logged_in if check
+      end
     end
 
     def ensure_logged_in

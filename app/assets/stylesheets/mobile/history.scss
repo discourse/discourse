@@ -8,13 +8,15 @@
   #revision-numbers {
     line-height: $line-height-large;
   }
-  #revision-details {
-    background-color: $primary-low; 
-    padding: 5px;
-    margin-top: 10px;
-  }
   img {
     max-width: 95%;
     height: auto;
+  }
+  .revision-content {
+    table {
+      table-layout: fixed;
+      width: 100%;
+      word-wrap: break-word;
+    }
   }
 }

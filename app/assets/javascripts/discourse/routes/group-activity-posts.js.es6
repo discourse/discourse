@@ -12,8 +12,13 @@ export function buildGroupPage(type) {
     },
 
     setupController(controller, model) {
-      this.controllerFor('group-activity-posts').setProperties({ model, type, canLoadMore: true });
-      this.controllerFor("group").set("showing", type);
+      let loadedAll = model.length < 20;
+      this.controllerFor('group-activity-posts').setProperties({
+        model,
+        type,
+        canLoadMore: !loadedAll,
+      });
+      this.controllerFor('application').set('showFooter', loadedAll);
     },
 
     renderTemplate() {

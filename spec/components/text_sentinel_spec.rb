@@ -143,7 +143,7 @@ describe TextSentinel do
 
     it "uses a sensible min entropy value when min pm body length is less than min entropy" do
       SiteSetting.min_post_length = 5
-      SiteSetting.min_private_message_post_length = 3
+      SiteSetting.min_personal_message_post_length = 3
       SiteSetting.body_min_entropy = 7
       expect(TextSentinel.body_sentinel('Lol', private_message: true)).to be_valid
     end

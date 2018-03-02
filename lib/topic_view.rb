@@ -492,7 +492,12 @@ class TopicView
     if @topic.present? && @topic.private_message? && @user.blank?
       raise Discourse::NotLoggedIn.new
     end
+    # can user see this topic?
     raise Discourse::InvalidAccess.new("can't see #{@topic}", @topic) unless @guardian.can_see?(@topic)
+    # log personal message views
+    if SiteSetting.log_personal_messages_views && @topic.present? && @topic.private_message? && @topic.all_allowed_users.where(id: @user.id).blank?
+      StaffActionLogger.new(@user).log_check_personal_message(@topic)
+    end
   end
 
   def get_minmax_ids(post_number)

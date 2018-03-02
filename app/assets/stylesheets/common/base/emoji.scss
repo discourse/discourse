@@ -5,14 +5,12 @@ img.emoji {
 }
 
 .emoji-picker {
-  box-shadow: 0 1px 5px rgba(0,0,0,0.4);
   background-clip: padding-box;
-  z-index: 10000;
+  z-index: z("modal","content"); 
   position: fixed;
   display: none;
   flex-direction: row;
   height: 300px;
-  border-radius: 3px;
   color: dark-light-choose(darken($primary, 40%), blend-primary-secondary(90%));
   background-color: $secondary;
   border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
@@ -54,7 +52,7 @@ img.emoji {
 .emoji-picker .list {
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
-  padding: 0px;
+  padding: 0;
   flex: 1;
   flex-direction: column;
 }
@@ -100,7 +98,6 @@ img.emoji {
 
 .emoji-picker .info {
   text-overflow: ellipsis;
-  max-width: 232px;
   padding-left: 8px;
   white-space: nowrap;
   overflow: hidden;
@@ -155,8 +152,6 @@ img.emoji {
   -moz-box-sizing: content-box;
   box-sizing: content-box;
   height: 20px;
-  margin: 0;
-  padding: 0;
   border: 0;
   vertical-align: top;
   width: 20px;
@@ -177,7 +172,7 @@ img.emoji {
 }
 
 .emoji-picker-modal.fadeIn {
-  z-index: 9999;
+  z-index: z("modal","overlay");
   position: fixed;
   left: 0;
   top: 0;

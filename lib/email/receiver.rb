@@ -39,6 +39,8 @@ module Email
     attr_reader :mail
     attr_reader :message_id
 
+    COMMON_ENCODINGS ||= [-"utf-8", -"windows-1252", -"iso-8859-1"]
+
     def self.formats
       @formats ||= Enum.new(plaintext: 1,
                             markdown: 2)
@@ -47,7 +49,11 @@ module Email
     def initialize(mail_string, opts = {})
       raise EmptyEmailError if mail_string.blank?
       @staged_users = []
-      @raw_email = try_to_encode(mail_string, "UTF-8") || try_to_encode(mail_string, "ISO-8859-1") || mail_string
+      @raw_email = mail_string
+      COMMON_ENCODINGS.each do |encoding|
+        fixed = try_to_encode(mail_string, encoding)
+        break @raw_email = fixed if fixed.present?
+      end
       @mail = Mail.new(@raw_email)
       @message_id = @mail.message_id.presence || Digest::MD5.hexdigest(mail_string)
       @opts = opts
@@ -232,14 +238,16 @@ module Email
         text_content_type = @mail.text_part&.content_type
       elsif @mail.content_type.to_s["text/html"]
         html = fix_charset(@mail)
-      else
+      elsif @mail.content_type.blank? || @mail.content_type["text/plain"]
         text = fix_charset(@mail)
         text_content_type = @mail.content_type
       end
 
+      return unless text.present? || html.present?
+
       if text.present?
         text = trim_discourse_markers(text)
-        text, elided_text = EmailReplyTrimmer.trim(text, true)
+        text, elided_text = trim_reply_and_extract_elided(text)
 
         if @opts[:convert_plaintext] || sent_to_mailinglist_mirror?
           text_content_type ||= ""
@@ -253,9 +261,14 @@ module Email
       end
 
       markdown, elided_markdown = if html.present?
-        markdown = HtmlToMarkdown.new(html, keep_img_tags: true, keep_cid_imgs: true).to_markdown
-        markdown = trim_discourse_markers(markdown)
-        EmailReplyTrimmer.trim(markdown, true)
+        # use the first html extracter that matches
+        if html_extracter = HTML_EXTRACTERS.select { |_, r| html[r] }.min_by { |_, r| html =~ r }
+          self.send(:"extract_from_#{html_extracter[0]}", html)
+        else
+          markdown = HtmlToMarkdown.new(html, keep_img_tags: true, keep_cid_imgs: true).to_markdown
+          markdown = trim_discourse_markers(markdown)
+          trim_reply_and_extract_elided(markdown)
+        end
       end
 
       if text.blank? || (SiteSetting.incoming_email_prefer_html && markdown.present?)
@@ -263,6 +276,73 @@ module Email
       else
         return [text, elided_text, Receiver::formats[:plaintext]]
       end
+    end
+
+    def to_markdown(html, elided_html)
+      markdown = HtmlToMarkdown.new(html, keep_img_tags: true, keep_cid_imgs: true).to_markdown
+      [EmailReplyTrimmer.trim(markdown), HtmlToMarkdown.new(elided_html).to_markdown]
+    end
+
+    HTML_EXTRACTERS ||= [
+      [:gmail, /class="gmail_/],
+      [:outlook, /id="(divRplyFwdMsg|Signature)"/],
+      [:word, /class="WordSection1"/],
+      [:exchange, /name="message(Body|Reply)Section"/],
+      [:apple_mail, /id="AppleMailSignature"/],
+      [:mozilla, /class="moz-/],
+    ]
+
+    def extract_from_gmail(html)
+      doc = Nokogiri::HTML.fragment(html)
+      # GMail adds a bunch of 'gmail_' prefixed classes like: gmail_signature, gmail_extra, gmail_quote
+      # Just elide them all
+      elided = doc.css("*[class^='gmail_']").remove
+      to_markdown(doc.to_html, elided.to_html)
+    end
+
+    def extract_from_outlook(html)
+      doc = Nokogiri::HTML.fragment(html)
+      # Outlook properly identifies the signature and any replied/forwarded email
+      # Use their id to remove them and anything that comes after
+      elided = doc.css("#Signature, #Signature ~ *, hr, #divRplyFwdMsg, #divRplyFwdMsg ~ *").remove
+      to_markdown(doc.to_html, elided.to_html)
+    end
+
+    def extract_from_word(html)
+      doc = Nokogiri::HTML.fragment(html)
+      # Word (?) keeps the content in the 'WordSection1' class and uses <p> tags
+      # When there's something else (<table>, <div>, etc..) there's high chance it's a signature or forwarded email
+      elided = doc.css(".WordSection1 > :not(p):not(ul):first-of-type, .WordSection1 > :not(p):not(ul):first-of-type ~ *").remove
+      to_markdown(doc.at(".WordSection1").to_html, elided.to_html)
+    end
+
+    def extract_from_exchange(html)
+      doc = Nokogiri::HTML.fragment(html)
+      # Exchange is using the 'messageReplySection' class for forwarded emails
+      # And 'messageBodySection' for the actual email
+      elided = doc.css("div[name='messageReplySection']").remove
+      to_markdown(doc.css("div[name='messageBodySection'").to_html, elided.to_html)
+    end
+
+    def extract_from_apple_mail(html)
+      doc = Nokogiri::HTML.fragment(html)
+      # AppleMail is the worst. It adds 'AppleMailSignature' ids (!) to several div/p with no deterministic rules
+      # Our best guess is to elide whatever comes after that.
+      elided = doc.css("#AppleMailSignature:last-of_type ~ *").remove
+      to_markdown(doc.to_html, elided.to_html)
+    end
+
+    def extract_from_mozilla(html)
+      doc = Nokogiri::HTML.fragment(html)
+      # Mozilla (Thunderbird ?) properly identifies signature and forwarded emails
+      # Remove them and anything that comes after
+      elided = doc.css("*[class^='moz-'], *[class^='moz-'] ~ *").remove
+      to_markdown(doc.to_html, elided.to_html)
+    end
+
+    def trim_reply_and_extract_elided(text)
+      return [text, ""] if @opts[:skip_trimming]
+      EmailReplyTrimmer.trim(text, true)
     end
 
     def fix_charset(mail_part)
@@ -273,7 +353,7 @@ module Email
       return nil if string.blank?
 
       # common encodings
-      encodings = ["UTF-8", "ISO-8859-1"]
+      encodings = COMMON_ENCODINGS.dup
       encodings.unshift(mail_part.charset) if mail_part.charset.present?
 
       # mail (>=2.5) decodes mails with 8bit transfer encoding to utf-8, so
@@ -679,11 +759,17 @@ module Email
       raise InvalidPostAction.new(e)
     end
 
+    def is_whitelisted_attachment?(attachment)
+      attachment.content_type !~ SiteSetting.attachment_content_type_blacklist_regex &&
+      attachment.filename !~ SiteSetting.attachment_filename_blacklist_regex
+    end
+
     def attachments
       # strip blacklisted attachments (mostly signatures)
-      @attachments ||= @mail.attachments.select do |attachment|
-        attachment.content_type !~ SiteSetting.attachment_content_type_blacklist_regex &&
-        attachment.filename !~ SiteSetting.attachment_filename_blacklist_regex
+      @attachments ||= begin
+        attachments =  @mail.attachments.select { |attachment| is_whitelisted_attachment?(attachment) }
+        attachments << @mail if @mail.attachment? && is_whitelisted_attachment?(@mail)
+        attachments
       end
     end
 

@@ -76,7 +76,6 @@ da:
       invalid: er ikke gyldig
       is_invalid: "virker upræcis, er det en hel sætning?"
       contains_censored_words: "indeholder følgende censurerede ord: %{censurerede ord}"
-      matches_censored_pattern: "indeholder følgende ord som matcher sitets censurerede regexp'er: %{censored_words}"
       less_than: skal være mindre end %{count}
       less_than_or_equal_to: skal være mindre end eller lig med %{count}
       not_a_number: er ikke et nummer
@@ -174,6 +173,7 @@ da:
   user_is_suspended: "Suspenderede brugere tilllades ikke at oprette indlæg."
   topic_not_found: "Der er gået noget galt. Måske er emnet blevet lukket eller slettet mens du kiggede på det?"
   not_accepting_pms: "Beklager, %{username} tager ikke imod beskeder i øjeblikket."
+  max_pm_recepients: "Du kan desværre kun sende til %{recipients_limit} modtagere."
   just_posted_that: "ligner et andet indlæg, som du har skrevet for nyligt, for meget"
   invalid_characters: "indeholder ugyldige tegn"
   is_invalid: "lader til at være uklart - er det en komplet sætning?"
@@ -200,7 +200,7 @@ da:
     top_weekly: "Top-emner per uge"
     top_daily: "Top-emner per dag"
     posts: "Seneste indlæg"
-    private_posts: "Seneste private beskeder"
+    private_posts: "Seneste personlige beskeder"
     group_posts: "Seneste indlæg fra %{group_name}"
     group_mentions: "Seneste nævnelser fra %{group_name}"
     user_posts: "Seneste indlæg af @%{username}"
@@ -292,12 +292,6 @@ da:
       Beklager, men nye brugere er begrænset til %{newuser_max_replies_per_topic} svar inden for samme emne.
 
       I stedet for at tilføje endnu et svar, bør du overveje at redigere et af dine eksisterende svar eller at besøge andre emner.
-    reviving_old_topic: |
-      ### Genopliv dette emne?
-
-      Det seneste svar på dette emne er nu over **%{days}** gammelt. Dit svar vil trække dette emne til toppen af listen og vil påminde alle der tidligere have været med i samtalen.
-
-      Er du sikker på du vil vække dette emne til live igen?
   activerecord:
     attributes:
       category:
@@ -314,10 +308,9 @@ da:
         topic:
           attributes:
             base:
-              warning_requires_pm: "Du kan kun vedhæfte advarsler til private beskeder."
               too_many_users: "Du kan kun sende advarsler til en bruger ad gangen."
-              cant_send_pm: "Beklager, du kan ikke sende en privat besked til den bruger."
               no_user_selected: "Du skal vælge en gyldig bruger."
+              reply_by_email_disabled: "Svar via email er slået fra"
             featured_link:
               invalid: "er ugyldig. URL'en skal indeholde http:// eller https://. "
               invalid_category: "kan ikke redigeres i denne kategori."
@@ -427,7 +420,6 @@ da:
     change_failed_explanation: "Du har forsøgt at degradere %{user_name} til '%{new_trust_level}'. Imidlertid er deres niveau af tillid allerede '%{current_trust_level}'. %{user_name} vil forblive'%{current_trust_level}' - hvis du ønsker at degradere brugeren, skal du først låse brugerens tillids niveau / Trust Level"
   rate_limiter:
     slow_down: "Du har udført denne handling for mange gange, prøv igen senere"
-    too_many_requests: "Vi har en daglig grænse for hvor mange gange den pågældende handling kan udføres. Vent venligst %{time_left} før du prøver igen."
     by_type:
       first_day_replies_per_day: "Du har nået det maksimalt antal tilladte svar, en ny bruger kan lave på deres første dag. Vent venligst %{time_left} før du fortsætter med at besvare tanker og indlæg."
       first_day_topics_per_day: "Du har nået det maksimalt antal af tilladte emner, en ny bruger kan lave på første dag.\nVent venligst %{time_left} før du prøver igen."
@@ -813,26 +805,21 @@ da:
     email_polling_errored_recently:
       one: "Email afstemning har afstedkommet en fejl i de seneste 24 timer. Venligst se <a href='/logs' target='_blank'>the logs</a> for detaljer."
       other: "Email afstemning har afstedkommet %{count} fejl i de seneste 24 timer. Se venligst <a href='/logs' target='_blank'>the logs</a> for detaljer."
-    missing_mailgun_api_key: "Serveren er konfigureret til at sende emails via Mailgun, men der er ikke indtastet en API nøgle som bruges til at verificere webhook beskederne."
     bad_favicon_url: "Favicon kan ikke loades. Tjek dine favicon_url indstilling i  <a href='/admin/site_settings'>Site Settings</a>"
     poll_pop3_timeout: "Forbindelsen til til POP3 serveren er udløbet. Indkomne mail kunne ikke hentes. Venligst tjek  <a href='/admin/site_settings/category/email'>POP3 settings</a> og udbyderen."
     poll_pop3_auth_error: "Forbindelsen til POP3 serveren melder fejl. Venligst tjek <a href='/admin/site_settings/category/email'>POP3 settings</a>."
   site_settings:
     censored_words: "Ord der automatisk vil blive erstattet med &#9632;&#9632;&#9632;&#9632;"
-    censored_pattern: "Regex-mønster som automatisk vil blive erstattet med &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Slet automatisk skjulte indlæg der forbliver skjulte i mere end 30 dage."
-    default_locale: "Standardsproget for denne Discourse-instans (ISO 639-1 kode)."
     allow_user_locale: "Tillad brugere at vælge egne sprog præferencer på site"
     set_locale_from_accept_language_header: "set interface language for anonymous users from their web browser's language headers. (EXPERIMENTAL, does not work with anonymous cache)"
     min_post_length: "Minimumlængde tilladt for indlæg i tegn"
     min_first_post_length: "Minimum tilladte antal tegn (i emne felt) i første indlæg"
-    min_private_message_post_length: "Minimumlængde tilladt for indlæg i tegn"
     max_post_length: "Maksimal længde af indlæg i tegn"
     topic_featured_link_enabled: "Tillad opslag af et link med emner."
     show_topic_featured_link_in_digest: "Vis link med det fremhævede emne i e-mail-sammendraget."
     min_topic_title_length: "Minimumslængde af emnetitel i tegn."
     max_topic_title_length: "Maksimumslængde af emnetitel i tegn."
-    min_private_message_title_length: "Minimumslængde af emnetitel i tegn."
     min_search_term_length: "Antal tegn i søgefeltet skal have et minimum"
     search_tokenize_chinese_japanese_korean: "Tving søg til at \"tokenize\" Chinese/Japanese/Korean selv på sites som ikke er CJK"
     search_prefer_recent_posts: "Såfremt søgning på forum er langsomt, kan denne option indeksere og vise nyeste indlæg først"
@@ -876,7 +863,6 @@ da:
     summary_likes_required: "Minimum antal likes på et emne før 'opsummer dette emne' er aktiveret"
     summary_percent_filter: "Når en bruger kllikker 'Opsummer dette Emne' vises top % af indlæg"
     summary_max_results: "Max antal indlæg indeholdt i 'Opsummer dette Emne'"
-    enable_private_messages: "Tillad Trust Level 1 (kan konfigureres minimum trust level til at sende beskeder), brugere til at sende og svare på beskeder. Bemærk at moderatorer beskeder, uanset hvad."
     enable_long_polling: "Message bus til underretninger kan bruge long polling"
     long_polling_base_url: "URL anvendt for afsteminger (når CDN leverer dynamisk indhold, så sæt dette til oprindelig / orginal) f.eks: http://origin.site.com"
     long_polling_interval: "Mængde tid før serveren bør vente før den svarer klienter når der ikke er ny data at sende (kun for brugere der er logget ind)"
@@ -998,7 +984,6 @@ da:
     emoji_set: "Hvordan kunne du tænke dig din emoji?"
     default_email_digest_frequency: "Hvor ofte brugere som standard modtager mails med sammendrag."
     default_include_tl0_in_digests: "Inkluder som standard indlæg fra nye brugre i mails med sammendrag. Brugere kan ændre dette i deres indstillinger."
-    default_email_private_messages: "Send som standard en email når nogen sender brugeren en besked."
     default_email_direct: "Send som standard en email når nogen citerer/svarer/nævner/inviterer brugeren."
     default_email_mailing_list_mode: "Send som standard en email for hvert nyt indlæg."
     default_email_always: "Send som standard en email-notifikation selv hvis brugeren er aktiv."
@@ -1609,7 +1594,6 @@ da:
         Dette emblem gives første gang du svarer til et indlæg via email  :e-mail:.
   admin_login:
     success: "Email sendt"
-    error: "Fejl!"
     email_input: "Admin email"
     submit_button: "Send email"
   performance_report:

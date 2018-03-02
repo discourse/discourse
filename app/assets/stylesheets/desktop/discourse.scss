@@ -60,7 +60,7 @@ h4,
 h5,
 h6 {
   + p {
-    margin-top:0px;
+    margin-top:0;
   }
 }
 
@@ -140,7 +140,7 @@ input {
       vertical-align: middle;
 
       &:focus {
-        z-index: 2;
+        z-index: z("base") + 1;
       }
     }
 
@@ -244,7 +244,7 @@ input {
 
       &:focus {
         border-color: scale-color($danger, $lightness: -30%);
-        box-shadow: 0 0 6px $danger;
+        box-shadow: shadow("focus-danger");
       }
     }
 
@@ -287,7 +287,7 @@ input {
 
       &:focus {
         border-color: $success;
-        box-shadow: 0 0 6px $success;
+        box-shadow: shadow("focus");
       }
     }
 
@@ -351,46 +351,6 @@ input {
   @include clearfix;
 }
 
-.span {
-  &4 {
-    width: 196px;
-    margin-right: 12px;
-    float: left;
-  }
-
-  &6 {
-    width: 27.027%;
-    float: left;
-  }
-
-  &8 {
-    width: 404px;
-    float: left;
-  }
-
-  &10 {
-    width: 508px;
-    float: left;
-  }
-
-  &13 {
-    width: 59.8198%;
-    float: left;
-  }
-
-  &15 {
-    /* intentionally no width set here, do not add one */
-    margin-left: 12px;
-    float: left;
-  }
-
-  &24 {
-    width: 1236px;
-    float: left;
-    color: amarillo;
-  }
-}
-
 .offset {
   &2 {
     margin-left: 116px;
@@ -401,25 +361,7 @@ input {
   }
 }
 
-// Special elements
-#main {
-  a.star {
-    color: $secondary-medium;
 
-    &:before {
-      font-family: "FontAwesome";
-      content: "\f005";
-    }
-
-    @include hover {
-      opacity: 0.6;
-    }
-
-    &:active {
-      opacity: 1;
-    }
-  }
-}
 
 // Media Queries
 @media all

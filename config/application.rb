@@ -129,13 +129,14 @@ module Discourse
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [
-        :password,
-        :pop3_polling_password,
-        :api_key,
-        :s3_secret_access_key,
-        :twitter_consumer_secret,
-        :facebook_app_secret,
-        :github_client_secret
+      :password,
+      :pop3_polling_password,
+      :api_key,
+      :s3_secret_access_key,
+      :twitter_consumer_secret,
+      :facebook_app_secret,
+      :github_client_secret,
+      :second_factor_token,
     ]
 
     # Enable the asset pipeline
@@ -154,6 +155,9 @@ module Discourse
     # rack lock is nothing but trouble, get rid of it
     # for some reason still seeing it in Rails 4
     config.middleware.delete Rack::Lock
+
+    # wrong place in middleware stack AND request tracker handles it
+    config.middleware.delete Rack::Runtime
 
     # ETags are pointless, we are dynamically compressing
     # so nginx strips etags, may revisit when mainline nginx

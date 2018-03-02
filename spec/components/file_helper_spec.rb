@@ -15,7 +15,6 @@ describe FileHelper do
 
     it "correctly raises an OpenURI HTTP error if it gets a 404 even with redirect" do
       url = "http://fourohfour.com/404"
-      stub_request(:head, url).to_return(status: 404, body: "404")
       stub_request(:get, url).to_return(status: 404, body: "404")
 
       expect do
@@ -36,7 +35,6 @@ describe FileHelper do
     it "correctly raises an OpenURI HTTP error if it gets a 404" do
       url = "http://fourohfour.com/404"
 
-      stub_request(:head, url).to_return(status: 404, body: "404")
       stub_request(:get, url).to_return(status: 404, body: "404")
 
       expect do

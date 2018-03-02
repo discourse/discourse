@@ -4,7 +4,6 @@ export default DropdownSelectBoxComponent.extend({
   classNames: ["period-chooser"],
   rowComponent: "period-chooser/period-chooser-row",
   headerComponent: "period-chooser/period-chooser-header",
-  collectionHeight: "auto",
   content: Ember.computed.alias("site.periods"),
   value: Ember.computed.alias("period"),
   isHidden: Ember.computed.alias("showPeriods"),

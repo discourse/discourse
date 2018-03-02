@@ -2,7 +2,8 @@ import parseHTML from 'discourse/helpers/parse-html';
 
 const trimLeft = text => text.replace(/^\s+/,"");
 const trimRight = text => text.replace(/\s+$/,"");
-const countPipes = text => text.replace(/\\\|/,"").match(/\|/g).length;
+const countPipes = text => (text.replace(/\\\|/,"").match(/\|/g) || []).length;
+const msoListClasses = ["MsoListParagraphCxSpFirst", "MsoListParagraphCxSpMiddle", "MsoListParagraphCxSpLast"];
 
 class Tag {
   constructor(name, prefix = "", suffix = "", inline = false) {
@@ -189,8 +190,14 @@ class Tag {
       toMarkdown() {
         const text = this.element.innerMarkdown().trim();
 
-        if (text.includes("\n")) {
-          throw "Unsupported format inside Markdown table cells";
+        if(text.includes("\n")) {  // Unsupported format inside Markdown table cells
+          let e = this.element;
+          while(e = e.parent) {
+            if (e.name === "table") {
+              e.tag().invalid();
+              break;
+            }
+          }
         }
 
         return this.decorate(text);
@@ -201,7 +208,22 @@ class Tag {
   static li() {
     return class extends Tag.slice("li", "\n") {
       decorate(text) {
-        const indent = this.element.filterParentNames(["ol", "ul"]).slice(1).map(() => "\t").join("");
+        let indent = this.element.filterParentNames(["ol", "ul"]).slice(1).map(() => "\t").join("");
+        const attrs = this.element.attributes;
+
+        if (msoListClasses.includes(attrs.class)) {
+          try {
+            const level = parseInt(attrs.style.match(/level./)[0].replace("level", ""));
+            indent = Array(level).join("\t") + indent;
+          } finally {
+            if (attrs.class === "MsoListParagraphCxSpFirst") {
+              indent = `\n\n${indent}`;
+            } else if (attrs.class === "MsoListParagraphCxSpLast") {
+              text = `${text}\n`;
+            }
+          }
+        }
+
         return super.decorate(`${indent}* ${trimLeft(text)}`);
       }
     };
@@ -242,20 +264,37 @@ class Tag {
 
   static table() {
     return class extends Tag.block("table") {
+      constructor() {
+        super();
+        this.isValid = true;
+      }
+
+      invalid() {
+        this.isValid = false;
+        if (this.element.parentNames.includes("table")) {
+          let e = this.element;
+          while(e = e.parent) {
+            if (e.name === "table") {
+              e.tag().invalid();
+              break;
+            }
+          }
+        }
+      }
+
       decorate(text) {
         text = super.decorate(text).replace(/\|\n{2,}\|/g, "|\n|");
         const rows = text.trim().split("\n");
         const pipeCount = countPipes(rows[0]);
-        const isValid = rows.length > 1 &&
-                        pipeCount > 2 &&
-                        rows.reduce((a, c) => a && countPipes(c) <= pipeCount);
+        this.isValid =  this.isValid && rows.length > 1 && pipeCount > 2 && rows.reduce((a, c) => a && countPipes(c) <= pipeCount);  // Unsupported table format for Markdown conversion
 
-        if (!isValid) {
-          throw "Unsupported table format for Markdown conversion";
+        if (this.isValid) {
+          const splitterRow = [...Array(pipeCount-1)].map(() => "| --- ").join("") + "|\n";
+          text = text.replace("|\n", "|\n" + splitterRow);
+        } else {
+          text = text.replace(/\|/g, " ");
+          this.invalid();
         }
-
-        const splitterRow = [...Array(pipeCount-1)].map(() => "| --- ").join("") + "|\n";
-        text = text.replace("|\n", "|\n" + splitterRow);
 
         return text;
       }
@@ -333,6 +372,13 @@ class Element {
     this.parentNames = this.parentNames || [];
     this.previous = previous;
     this.next = next;
+
+    if (this.name === "p") {
+      if (msoListClasses.includes(this.attributes.class)) {
+        this.name = "li";
+        this.parentNames.push("ul");
+      }
+    }
   }
 
   tag() {
@@ -410,7 +456,7 @@ class Element {
   }
 }
 
-function trimUnwantedSpaces(html) {
+function trimUnwanted(html) {
   const body = html.match(/<body[^>]*>([\s\S]*?)<\/body>/);
   html = body ? body[1] : html;
   html = html.replace(/\r|\n|&nbsp;/g, " ");
@@ -419,6 +465,8 @@ function trimUnwantedSpaces(html) {
   while (match = html.match(/<[^\s>]+[^>]*>\s{2,}<[^\s>]+[^>]*>/)) {
     html = html.replace(match[0], match[0].replace(/>\s{2,}</, "> <"));
   }
+
+  html = html.replace(/<!\[if !?\S*]>[^!]*<!\[endif]>/g, ""); // to support ms word list tags
 
   return html;
 }
@@ -438,7 +486,7 @@ function putPlaceholders(html) {
     match = codeRegEx.exec(origHtml);
   }
 
-  const elements = parseHTML(trimUnwantedSpaces(html));
+  const elements = parseHTML(trimUnwanted(html));
   return { elements, placeholders };
 }
 

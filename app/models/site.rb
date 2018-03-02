@@ -71,8 +71,8 @@ class Site
     end
   end
 
-  def suppressed_from_homepage_category_ids
-    categories.select { |c| c.suppress_from_homepage == true }.map(&:id)
+  def suppressed_from_latest_category_ids
+    categories.select { |c| c.suppress_from_latest == true }.map(&:id)
   end
 
   def archetypes

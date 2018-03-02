@@ -41,6 +41,7 @@ class Users::OmniauthCallbacksController < ApplicationController
     @auth_result = authenticator.after_authenticate(auth)
 
     origin = request.env['omniauth.origin']
+
     if cookies[:destination_url].present?
       origin = cookies[:destination_url]
       cookies.delete(:destination_url)
@@ -53,8 +54,10 @@ class Users::OmniauthCallbacksController < ApplicationController
       end
     end
 
-    unless @origin.present?
+    if @origin.blank?
       @origin = Discourse.base_uri("/")
+    else
+      @auth_result.destination_url = origin
     end
 
     if @auth_result.failed?
@@ -111,11 +114,22 @@ class Users::OmniauthCallbacksController < ApplicationController
   end
 
   def user_found(user)
+    if user.totp_enabled?
+      @auth_result.omniauth_disallow_totp = true
+      return
+    end
+
     # automatically activate/unstage any account if a provider marked the email valid
     if @auth_result.email_valid && @auth_result.email == user.email
       user.update!(staged: false)
+
       # ensure there is an active email token
-      user.email_tokens.create(email: user.email) unless EmailToken.where(email: user.email, confirmed: true).present? || user.email_tokens.active.where(email: user.email).exists?
+      unless EmailToken.where(email: user.email, confirmed: true).exists? ||
+        user.email_tokens.active.where(email: user.email).exists?
+
+        user.email_tokens.create!(email: user.email)
+      end
+
       user.activate
       user.update!(registration_ip_address: request.remote_ip) if user.registration_ip_address.blank?
     end

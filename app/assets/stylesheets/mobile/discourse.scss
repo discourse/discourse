@@ -79,7 +79,7 @@ blockquote {
   &.activity-nav,
   &.preferences-nav {
     position: absolute;
-    right: 0px;
+    right: 0;
     top: -57px;
   }
 
@@ -103,7 +103,7 @@ blockquote {
 
   .d-icon-caret-down {
     position: absolute;
-    right: 0px;
+    right: 0;
   }
 
   .drop {
@@ -112,7 +112,7 @@ blockquote {
       left: 0;
       display: block;
       position: absolute;
-      z-index: 10000000;
+      z-index: z("dropdown");
       background-color: $secondary;
       width: 100%;
       list-style: none;
@@ -154,6 +154,6 @@ blockquote {
 
 // somehow the image logo assumption inherits margins from earlier in the CSS
 // stack we must remove margins for text site titles
-h2#site-text-logo {
+h1#site-text-logo {
   margin: 0 0 0 10px;
 }

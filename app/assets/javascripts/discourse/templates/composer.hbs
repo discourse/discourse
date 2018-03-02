@@ -16,7 +16,7 @@
             {{plugin-outlet name="composer-open" args=(hash model=model)}}
             <div class='reply-to'>
               <div class="reply-details">
-                {{{model.actionTitle}}}
+                {{composer-action-title model=model canWhisper=canWhisper tabindex=8}}
 
                 {{#unless site.mobileView}}
                   {{#if whisperOrUnlistTopicText}}
@@ -65,7 +65,7 @@
                   </div>
                 {{/if}}
                 {{#if canEditTags}}
-                  {{tag-chooser tags=model.tags tabIndex="4" categoryId=model.categoryId}}
+                  {{mini-tag-chooser tags=model.tags tabindex="4" categoryId=model.categoryId}}
                 {{/if}}
 
 
@@ -85,6 +85,7 @@
                             popupMenuOptions=popupMenuOptions
                             draftStatus=model.draftStatus
                             isUploading=isUploading
+                            allowUpload=allowUpload
                             isCancellable=isCancellable
                             uploadProgress=uploadProgress
                             groupsMentioned="groupsMentioned"
@@ -131,7 +132,9 @@
 
             <div class="composer-bottom-right">
               {{#if site.mobileView}}
-                <a class="mobile-file-upload {{if isUploading 'hidden'}}">{{i18n 'upload'}}</a>
+                {{#if allowUpload}}
+                  <a class="mobile-file-upload {{if isUploading 'hidden'}}">{{i18n 'upload'}}</a>
+                {{/if}}
 
                 {{#if showPreview}}
                   {{d-button action='togglePreview' class='hide-preview' label='composer.hide_preview'}}

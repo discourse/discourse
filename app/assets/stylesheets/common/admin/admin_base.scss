@@ -130,14 +130,23 @@ $mobile-breakpoint: 700px;
   }
 }
 
-.content-list li a span.count {
-  font-size: $font-down-1;
-  float: right;
-  margin-right: 10px;
-  background-color: $primary-low;
-  padding: 2px 5px;
-  border-radius: 5px;
-  color: $primary;
+.content-list {
+  width: 27%;
+  float: left;
+  li a span.count {
+    font-size: $font-down-1;
+    float: right;
+    margin-right: 10px;
+    background-color: $primary-low;
+    padding: 2px 5px;
+    border-radius: 5px;
+    color: $primary;
+  }
+}
+
+.content-body {
+  float: left;
+  width: 60%;
 }
 
 .admin-content {
@@ -194,9 +203,9 @@ $mobile-breakpoint: 700px;
   .location-box {
     position: absolute;
     width: 460px;
-    right: 0px;
-    z-index: 990;
-    box-shadow: 0 2px 6px rgba(0,0,0, .8);
+    right: 0;
+    z-index: z("dropdown");
+    box-shadow: shadow("card");
     margin-top: -2px;
     background-color: $secondary;
     padding: 12px 12px 5px;
@@ -229,13 +238,17 @@ $mobile-breakpoint: 700px;
   .select-kit.multi-select {
     width: 500px;
   }
-  .select-box-kit.dropdown-select-box {
+  .select-kit.dropdown-select-box {
     width: auto;
   }
 
   .search-logs-filter {
     width: 200px;
     float: right;
+  }
+  .header-search-results {
+    clear: both;
+    padding: 4px;
   }
 }
 
@@ -255,6 +268,10 @@ $mobile-breakpoint: 700px;
   background-color: $primary-low;
   padding: 10px 10px 3px 0;
   @include clearfix;
+  nav {
+    float: left;
+    margin-left: 12px;
+  }
   .nav.nav-pills {
     li.active {
       a {
@@ -368,7 +385,7 @@ $mobile-breakpoint: 700px;
     }
 
     .d-editor-textarea-wrapper {
-      max-width: 60%; 
+      max-width: 60%;
       .d-editor-button-bar {
         overflow: hidden;
       }
@@ -403,7 +420,7 @@ $mobile-breakpoint: 700px;
   // The admin-nav becomes a slide-out menu at the mobile-nav breakpoint
   @media (max-width: $mobile-breakpoint) {
     position: absolute;
-    z-index: 0;
+    z-index: z("base") - 1;
     width: 50%;
   }
 }
@@ -411,7 +428,7 @@ $mobile-breakpoint: 700px;
 .admin-detail {
   width: 76.5765%;
   @media (max-width: $mobile-breakpoint) {
-    z-index: 10;
+    z-index: z("base");
     width: 100%;
   }
   background-color: $secondary;
@@ -476,9 +493,6 @@ $mobile-breakpoint: 700px;
           width: 100% !important; // !important overrides hard-coded mobile width of 68px
         }
       }
-      .select2-container-multi .select2-choices {
-        border: none;
-      }
     }
     .setting-controls {
       float: left;
@@ -502,19 +516,11 @@ $mobile-breakpoint: 700px;
       background-color: $secondary;
       border: 1px solid $primary-low;
       border-radius: 3px;
-      box-shadow: inset 0 1px 1px rgba(51, 51, 51, 0.3);
       transition: border linear 0.2s, box-shadow linear 0.2s;
-
-      li.select2-search-choice {
-        cursor: pointer;
-        .select2-search-choice-close {
-          content: "x"
-        }
-      }
 
       li.sortable-placeholder {
         padding: 3px 5px 3px 18px;
-        margin: 3px 0px 3px 5px;
+        margin: 3px 0 3px 5px;
         position: relative;
         line-height: $line-height-small;
         cursor: default;
@@ -815,14 +821,6 @@ section.details {
   .controls {
     margin-top: 10px;
   }
-  .select2-container {
-    width: 100%;
-  }
-  .select2-choices {
-    width: 100%;
-    border-color: dark-light-choose($primary-low-mid, $secondary-high);
-  }
-
   .content-list {
     margin-right: 20px;
   }
@@ -1748,6 +1746,10 @@ table#user-badges {
   label {
     font-size: $font-0;
   }
+
+  &.content-list {
+    width: 100%;
+  }
 }
 
 .web-hook-events-listing {
@@ -1780,7 +1782,7 @@ table#user-badges {
 }
 
 .watched-words-list {
-  margin-top: 40px;
+  margin-top: 20px;
 }
 .watched-word {
   display: inline-block;

@@ -8,11 +8,13 @@ QUnit.module("lib:pretty-text");
 const rawOpts = {
   siteSettings: {
     enable_emoji: true,
+    enable_emoji_shortcuts: true,
     enable_mentions: true,
     emoji_set: 'emoji_one',
     highlighted_languages: 'json|ruby|javascript',
     default_code_lang: 'auto',
-    censored_pattern: '\\d{3}-\\d{4}|tech\\w*'
+    enable_markdown_linkify: true,
+    markdown_linkify_tlds: 'com'
   },
   censoredWords: 'shucks|whiz|whizzer|a**le|badword*',
   getURL: url => url
@@ -598,7 +600,7 @@ QUnit.test("censoring", assert => {
          "it won't break links by censoring them.");
 
   assert.cooked("Call techapj the computer whiz at 555-555-1234 for free help.",
-         "<p>Call ■■■■■■■ the computer ■■■■ at 555-■■■■■■■■ for free help.</p>",
+         "<p>Call techapj the computer ■■■■ at 555-555-1234 for free help.</p>",
          "uses both censored words and patterns from site settings");
 
   assert.cooked("I have a pen, I have an a**le",
@@ -611,12 +613,21 @@ QUnit.test("censoring", assert => {
   assert.cookedOptions(
     "Pleased to meet you, but pleeeease call me later, xyz123",
     { siteSettings: {
-        watched_words_regular_expressions: true,
-        censored_pattern: null
+        watched_words_regular_expressions: true
       },
       censoredWords: 'xyz*|plee+ase'
     },
-    "<p>Pleased to meet you, but ■■■■■■■■■ call me later, ■■■123</p>",
+    "<p>Pleased to meet you, but ■■■■ call me later, ■■■■123</p>",
+    "supports words as regular expressions");
+
+  assert.cookedOptions(
+    "Meet downtown in your town at the townhouse on Main St.",
+    { siteSettings: {
+        watched_words_regular_expressions: true
+      },
+      censoredWords: '\\btown\\b'
+    },
+    "<p>Meet downtown in your ■■■■ at the townhouse on Main St.</p>",
     "supports words as regular expressions");
 });
 

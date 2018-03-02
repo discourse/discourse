@@ -7,4 +7,4 @@
 
 nb_NO:
   site_settings:
-    presence_enabled: 'Vis brukere som akkurat nå svarer på gjeldende emne, eller redigerer gjeldende innlegg?'
+    presence_enabled: 'Vis brukere som akkurat nå svarer på gjeldende tråd, eller redigerer gjeldende innlegg?'

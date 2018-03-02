@@ -104,7 +104,7 @@ export default Ember.Controller.extend(BufferedContent, {
 
   @computed('model.isPrivateMessage')
   canEditTags(isPrivateMessage) {
-    return !isPrivateMessage && this.site.get('can_tag_topics');
+    return this.site.get('can_tag_topics') && (!isPrivateMessage || this.site.get('can_tag_pms'));
   },
 
   actions: {
@@ -263,6 +263,23 @@ export default Ember.Controller.extend(BufferedContent, {
       } else {
         topic.archiveMessage().then(backToInbox);
       }
+    },
+
+    editFirstPost() {
+      const postStream = this.get('model.postStream');
+      let firstPost = postStream.get('posts.firstObject');
+
+      if (firstPost.get('post_number') !== 1) {
+        const postId = postStream.findPostIdForPostNumber(1);
+        // try loading from identity map first
+        firstPost = postStream.findLoadedPost(postId);
+        if (firstPost === undefined) {
+          return this.get('model.postStream').loadPost(postId).then(post => {
+            this.send("editPost", post);
+          });
+        }
+      }
+      this.send("editPost", firstPost);
     },
 
     // Post related methods
@@ -518,6 +535,19 @@ export default Ember.Controller.extend(BufferedContent, {
       this.send('changeOwner');
     },
 
+    lockPost(post) {
+      return post.updatePostField('locked', true);
+    },
+
+    unlockPost(post) {
+      return post.updatePostField('locked', false);
+    },
+
+    grantBadge(post) {
+      this.set("selectedPostIds", [post.id]);
+      this.send('showGrantBadgeModal');
+    },
+
     toggleParticipant(user) {
       this.get("model.postStream")
           .toggleParticipant(user.get("username"))
@@ -767,9 +797,12 @@ export default Ember.Controller.extend(BufferedContent, {
     return selectedPostsCount > 0 && (selectedAllPosts || selectedPosts.every(p => p.can_delete));
   },
 
-  @computed('canMergeTopic', 'selectedAllPosts')
-  canSplitTopic(canMergeTopic, selectedAllPosts) {
-    return canMergeTopic && !selectedAllPosts;
+  @computed('canMergeTopic', 'selectedAllPosts', 'selectedPosts', 'selectedPosts.[]')
+  canSplitTopic(canMergeTopic, selectedAllPosts, selectedPosts) {
+    return canMergeTopic &&
+           !selectedAllPosts &&
+           selectedPosts.length > 0 &&
+           selectedPosts.sort((a, b) => a.post_number - b.post_number)[0].post_type === 1;
   },
 
   @computed('model.details.can_move_posts', 'selectedPostsCount')

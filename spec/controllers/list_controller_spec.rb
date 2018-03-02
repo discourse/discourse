@@ -364,13 +364,13 @@ describe ListController do
 
   describe "categories suppression" do
     let(:category_one) { Fabricate(:category) }
-    let(:sub_category) { Fabricate(:category, parent_category: category_one, suppress_from_homepage: true) }
+    let(:sub_category) { Fabricate(:category, parent_category: category_one, suppress_from_latest: true) }
     let!(:topic_in_sub_category) { Fabricate(:topic, category: sub_category) }
 
-    let(:category_two) { Fabricate(:category, suppress_from_homepage: true) }
+    let(:category_two) { Fabricate(:category, suppress_from_latest: true) }
     let!(:topic_in_category_two) { Fabricate(:topic, category: category_two) }
 
-    it "suppresses categories from the homepage" do
+    it "suppresses categories from the latest list" do
       get SiteSetting.homepage, format: :json
       expect(response).to be_success
 

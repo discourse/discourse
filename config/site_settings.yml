@@ -79,6 +79,9 @@ basic:
   set_locale_from_accept_language_header:
     default: false
     validator: "AllowUserLocaleEnabledValidator"
+  support_mixed_text_direction:
+    client: true
+    default: false
   categories_topics:
     default: 20
     min: 5
@@ -117,6 +120,7 @@ basic:
     default: "latest|new|unread|top|categories"
     regex: "latest"
     regex_error: "site_settings.errors.must_include_latest"
+    validator: RegexPresenceValidator
     choices:
      - latest
      - new
@@ -236,6 +240,10 @@ login:
   enable_local_logins:
     client: true
     default: true
+  enable_local_logins_via_email:
+    client: true
+    default: false
+    validator: "EnableLocalLoginsViaEmailValidator"
   allow_new_registrations:
     client: true
     default: true
@@ -247,6 +255,16 @@ login:
     default: false
   google_oauth2_client_id: ''
   google_oauth2_client_secret: ''
+  google_oauth2_prompt:
+    default: ''
+    type: list
+    choices:
+      - ''
+      - 'none'
+      - 'consent'
+      - 'select_account'
+  google_oauth2_hd:
+    default: ''
   enable_yahoo_logins:
     client: true
     default: false
@@ -327,7 +345,6 @@ login:
     default: 1440
     min: 1
     max: 175200
-
 users:
   min_username_length:
     client: true
@@ -424,11 +441,14 @@ users:
   hide_suspension_reasons:
     default: false
     client: true
+  log_personal_messages_views: false
 
 groups:
   enable_group_directory:
     client: true
     default: true
+  group_in_subject:
+    default: false
 
 posting:
   min_post_length:
@@ -445,7 +465,7 @@ posting:
     locale_default:
       zh_CN: 8
       zh_TW: 8
-  min_private_message_post_length:
+  min_personal_message_post_length:
     client: true
     min: 1
     default: 10
@@ -488,10 +508,11 @@ posting:
       zh_CN: false
       zh_TW: false
   title_fancy_entities: true
-  min_private_message_title_length:
+  min_personal_message_title_length:
     client: true
     default: 2
     min: 1
+  max_emojis_in_title: 1
   allow_uncategorized_topics:
     client: true
     default: true
@@ -503,14 +524,17 @@ posting:
     locale_default:
       zh_CN: 4
       zh_TW: 4
-  enable_private_messages:
+  enable_personal_messages:
     default: true
     client: true
-  enable_private_email_messages:
+  enable_system_message_replies:
+    default: true
+  enable_personal_email_messages:
     default: false
     client: true
     validator: "EnablePrivateEmailMessagesValidator"
   editing_grace_period: 300
+  staff_edit_locks_post: false
   post_edit_time_limit:
     default: 86400
     max: 525600
@@ -526,6 +550,13 @@ posting:
   enable_markdown_typographer:
     client: true
     default: true
+  enable_markdown_linkify:
+    client: true
+    default: true
+  markdown_linkify_tlds:
+    client: true
+    type: list
+    default: 'com|net|org|io|co|tv|ru|cn|us|uk|me|de|fr|fi|gov'
   enable_rich_text_paste:
     client: true
     default: false
@@ -590,12 +621,10 @@ posting:
     type: list
     client: true
   delete_old_hidden_posts: true
-  censored_pattern:
-    client: true
-    default: ''
-    refresh: true
-    type: regex
   enable_emoji:
+    default: true
+    client: true
+  enable_emoji_shortcuts:
     default: true
     client: true
   emoji_set:
@@ -645,7 +674,7 @@ email:
   email_time_window_mins:
     default: 10
     client: true
-  private_email_time_window_seconds: 20
+  personal_email_time_window_seconds: 20
   email_posts_context: 5
   digest_min_excerpt_length:
     default: 100
@@ -676,6 +705,7 @@ email:
     validator: "ReplyByEmailEnabledValidator"
   reply_by_email_address:
     default: ''
+    validator: "ReplyByEmailAddressValidator"
   alternative_reply_by_email_addresses:
     default: ''
     validator: "AlternativeReplyByEmailAddressesValidator"
@@ -694,7 +724,7 @@ email:
   pop3_polling_username: ''
   pop3_polling_password: ''
   log_mail_processing_failures: false
-  incoming_email_prefer_html: false
+  incoming_email_prefer_html: true
   email_in:
     default: false
     client: true
@@ -771,6 +801,11 @@ files:
   authorized_extensions:
     client: true
     default: 'jpg|jpeg|png|gif'
+    refresh: true
+    type: list
+  authorized_extensions_for_staff:
+    client: true
+    default: ''
     refresh: true
     type: list
   crawl_images:
@@ -876,6 +911,16 @@ trust:
   min_trust_to_send_email_messages:
     default: 4
     enum: 'TrustLevelSetting'
+  min_trust_to_flag_posts:
+    default: 1
+    enum: 'TrustLevelSetting'
+  min_trust_to_post_links:
+    default: 0
+    enum: 'TrustLevelSetting'
+  min_trust_to_post_images:
+    default: 0
+    enum: 'TrustLevelSetting'
+  allow_flagging_staff: true
   tl1_requires_topics_entered: 5
   tl1_requires_read_posts:
     default: 30
@@ -923,6 +968,8 @@ trust:
   tl3_links_no_follow:
     default: false
     client: true
+  trusted_users_can_edit_others:
+    default: true
 
 security:
   force_https:
@@ -939,9 +986,13 @@ security:
   enable_escaped_fragments: true
   allow_index_in_robots_txt: true
   allow_moderators_to_create_categories: false
+  non_crawler_user_agents:
+    hidden: true
+    default: 'trident|webkit|gecko|chrome|safari|msie|opera|goanna'
+    type: list
   crawler_user_agents:
     hidden: true
-    default: 'Googlebot|Mediapartners|AdsBot|curl|HTTrack|Twitterbot|facebookexternalhit|bingbot|Baiduspider|ia_archiver|archive.org_bot|Wayback Save Page|360Spider|Swiftbot|YandexBot'
+    default: 'rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor'
     type: list
   cors_origins:
     default: ''
@@ -1022,7 +1073,7 @@ rate_limits:
   rate_limit_new_user_create_topic: 120
   rate_limit_new_user_create_post: 30
   max_topics_per_day: 20
-  max_private_messages_per_day: 20
+  max_personal_messages_per_day: 20
   max_likes_per_day: 50
   max_bookmarks_per_day: 20
   max_flags_per_day: 20
@@ -1402,7 +1453,7 @@ user_preferences:
     enum: 'DigestEmailSiteSetting'
     default: 10080
   default_include_tl0_in_digests: false
-  default_email_private_messages: true
+  default_email_personal_messages: true
   default_email_direct: true
   default_email_mailing_list_mode: false
   default_email_mailing_list_mode_frequency:
@@ -1528,6 +1579,8 @@ tags:
     type: list
     client: true
     default: ''
+  allow_staff_to_tag_pms:
+    default: false
   suppress_overlapping_tags_in_list:
     default: false
     client: true

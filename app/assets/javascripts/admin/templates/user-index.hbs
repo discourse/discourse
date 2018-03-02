@@ -6,6 +6,7 @@
         {{i18n 'admin.user.show_public_profile'}}
       {{/link-to}}
     {{/if}}
+
     {{#if model.can_view_action_logs}}
       {{d-button action="viewActionLogs" actionParam=model.username icon="list-alt" label="admin.user.action_logs"}}
     {{/if}}
@@ -123,7 +124,7 @@
     </div>
   </div>
 
-  <div class='display-row'>
+  <div class='display-row last-ip'>
     <div class='field'>{{i18n 'user.ip_address.title'}}</div>
     <div class='value'>{{model.ip_address}}</div>
     <div class='controls'>
@@ -134,7 +135,7 @@
     </div>
   </div>
 
-  <div class='display-row'>
+  <div class='display-row registration-ip'>
     <div class='field'>{{i18n 'user.registration_ip_address.title'}}</div>
     <div class='value'>{{model.registration_ip_address}}</div>
     <div class='controls'>
@@ -155,6 +156,22 @@
       </div>
     </div>
   {{/if}}
+
+  <div class='display-row'>
+    <div class='field'>{{i18n 'user.second_factor.title'}}</div>
+    <div class='value'>
+      {{#if model.second_factor_enabled}}
+        {{i18n "yes_value"}}
+      {{else}}
+        {{i18n "no_value"}}
+      {{/if}}
+    </div>
+    <div class='controls'>
+      {{#if canDisableSecondFactor}}
+        {{d-button action="disableSecondFactor" icon="unlock-alt" label="user.second_factor.disable"}}
+      {{/if}}
+    </div>
+  </div>
 </section>
 
 {{#if userFields}}
@@ -466,7 +483,18 @@
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n 'admin.user.flags_given_received_count'}}</div>
-    <div class='value'>{{model.flags_given_count}} / {{model.flags_received_count}}</div>
+    <div class='value'>
+      {{model.flags_given_count}} / {{model.flags_received_count}}
+    </div>
+    <div class='controls'>
+      {{#if model.flags_received_count}}
+        {{d-button
+          action=(action "showFlagsReceived")
+          label="admin.user.show_flags_received"
+          icon="flag"
+        }}
+      {{/if}}
+    </div>
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n 'admin.user.private_topics_count'}}</div>

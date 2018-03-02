@@ -2,6 +2,50 @@ require 'rails_helper'
 
 describe Report do
 
+  describe "counting" do
+    describe "requests" do
+      before do
+        freeze_time DateTime.parse('2017-03-01 12:00')
+
+        # today, an incomplete day:
+        ApplicationRequest.create(date: 0.days.ago.to_time, req_type: ApplicationRequest.req_types['http_total'], count: 1)
+
+        # 60 complete days:
+        30.times do |i|
+          ApplicationRequest.create(date: (i + 1).days.ago.to_time, req_type: ApplicationRequest.req_types['http_total'], count: 10)
+        end
+        30.times do |i|
+          ApplicationRequest.create(date: (31 + i).days.ago.to_time, req_type: ApplicationRequest.req_types['http_total'], count: 100)
+        end
+      end
+
+      subject(:json) { Report.find("http_total_reqs").as_json }
+
+      it "counts the correct records" do
+        expect(json[:data].size).to eq(31) # today and 30 full days
+        expect(json[:data][0..-2].sum { |d| d[:y] }).to eq(300)
+        expect(json[:prev30Days]).to eq(3000)
+      end
+    end
+
+    describe "topics" do
+      before do
+        freeze_time DateTime.parse('2017-03-01 12:00')
+
+        ((0..32).to_a + [60, 61, 62, 63]).each do |i|
+          Fabricate(:topic, created_at: i.days.ago)
+        end
+      end
+
+      subject(:json) { Report.find("topics").as_json }
+
+      it "counts the correct records" do
+        expect(json[:data].size).to eq(31)
+        expect(json[:prev30Days]).to eq(3)
+      end
+    end
+  end
+
   describe 'visits report' do
     let(:report) { Report.find('visits') }
 
@@ -58,18 +102,17 @@ describe Report do
           Fabricate(fabricator, created_at: 35.days.ago)
         end
 
-        context 'returns a report with data'
-          it "returns today's data" do
-            expect(report.data.select { |v| v[:x].today? }).to be_present
-          end
+        it "returns today's data" do
+          expect(report.data.select { |v| v[:x].today? }).to be_present
+        end
 
-          it 'returns total data' do
-            expect(report.total).to eq 7
-          end
+        it 'returns total data' do
+          expect(report.total).to eq 7
+        end
 
-          it "returns previous 30 day's data" do
-            expect(report.prev30Days).to be_present
-          end
+        it "returns previous 30 day's data" do
+          expect(report.prev30Days).to be_present
+        end
       end
     end
   end

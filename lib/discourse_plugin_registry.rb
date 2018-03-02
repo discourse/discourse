@@ -14,6 +14,7 @@ class DiscoursePluginRegistry
     attr_writer :handlebars
     attr_writer :serialized_current_user_fields
     attr_writer :seed_data
+    attr_writer :locales
     attr_accessor :custom_html
 
     def plugins
@@ -65,6 +66,10 @@ class DiscoursePluginRegistry
       @seed_data ||= HashWithIndifferentAccess.new({})
     end
 
+    def locales
+      @locales ||= HashWithIndifferentAccess.new({})
+    end
+
     def html_builders
       @html_builders ||= {}
     end
@@ -90,6 +95,10 @@ class DiscoursePluginRegistry
 
   def register_css(filename)
     self.class.stylesheets << filename
+  end
+
+  def self.register_locale(locale, options = {})
+    self.locales[locale] = options
   end
 
   def register_archetype(name, options = {})
@@ -171,6 +180,10 @@ class DiscoursePluginRegistry
     result.uniq
   end
 
+  def locales
+    self.class.locales
+  end
+
   def javascripts
     self.class.javascripts
   end
@@ -207,6 +220,7 @@ class DiscoursePluginRegistry
     self.desktop_stylesheets = nil
     self.sass_variables = nil
     self.handlebars = nil
+    self.locales = nil
   end
 
   def self.reset!
@@ -222,6 +236,7 @@ class DiscoursePluginRegistry
     html_builders.clear
     vendored_pretty_text.clear
     seed_path_builders.clear
+    locales.clear
   end
 
   def self.setup(plugin_class)

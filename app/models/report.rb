@@ -10,7 +10,7 @@ class Report
 
   def initialize(type)
     @type = type
-    @start_date ||= 1.month.ago.beginning_of_day
+    @start_date ||= Report.default_days.days.ago.beginning_of_day
     @end_date ||= Time.zone.now.end_of_day
   end
 
@@ -75,11 +75,12 @@ class Report
       report.data << { x: date, y: count }
     end
 
-    report.total      = data.sum(:count)
-    report.prev30Days = data.where('date >= ? AND date <= ?',
-                                               (report.start_date - 31.days).to_date,
-                                               (report.end_date - 31.days).to_date)
-      .sum(:count)
+    report.total = data.sum(:count)
+
+    report.prev30Days = data.where(
+        'date >= ? AND date < ?',
+        (report.start_date - 31.days).to_date, report.start_date.to_date
+      ).sum(:count)
   end
 
   def self.report_visits(report)

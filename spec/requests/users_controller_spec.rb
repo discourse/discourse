@@ -340,4 +340,204 @@ RSpec.describe UsersController do
       expect(response).to redirect_to("/u/#{user.username_lower}/preferences")
     end
   end
+
+  describe '#email_login' do
+    before do
+      SiteSetting.queue_jobs = true
+      SiteSetting.enable_local_logins_via_email = true
+    end
+
+    it "enqueues the right email" do
+      post "/u/email-login.json", params: { login: user.email }
+
+      expect(response).to be_success
+      expect(JSON.parse(response.body)['user_found']).to eq(true)
+
+      job_args = Jobs::CriticalUserEmail.jobs.last["args"].first
+
+      expect(job_args["user_id"]).to eq(user.id)
+      expect(job_args["type"]).to eq("email_login")
+      expect(job_args["email_token"]).to eq(user.email_tokens.last.token)
+    end
+
+    describe 'when enable_local_logins_via_email is disabled' do
+      before do
+        SiteSetting.enable_local_logins_via_email = false
+      end
+
+      it 'should return the right response' do
+        post "/u/email-login.json", params: { login: user.email }
+
+        expect(response.status).to eq(404)
+      end
+    end
+
+    describe 'when username or email is not valid' do
+      it 'should not enqueue the email to login' do
+        post "/u/email-login.json", params: { login: '@random' }
+
+        expect(response).to be_success
+        expect(JSON.parse(response.body)['user_found']).to eq(false)
+        expect(Jobs::CriticalUserEmail.jobs).to eq([])
+      end
+    end
+
+    describe 'when hide_email_address_taken is true' do
+      it 'should return the right response' do
+        SiteSetting.hide_email_address_taken = true
+        post "/u/email-login.json", params: { login: user.email }
+
+        expect(response).to be_success
+        expect(JSON.parse(response.body).has_key?('user_found')).to eq(false)
+      end
+    end
+
+    describe "when user is already logged in" do
+      it 'should redirect to the root path' do
+        sign_in(user)
+        post "/u/email-login.json", params: { login: user.email }
+
+        expect(response).to redirect_to("/")
+      end
+    end
+  end
+
+  describe '#create_second_factor' do
+    context 'when not logged in' do
+      it 'should return the right response' do
+        post "/users/second_factors.json", params: {
+          password: 'wrongpassword'
+        }
+
+        expect(response.status).to eq(403)
+      end
+    end
+
+    context 'when logged in' do
+      before do
+        sign_in(user)
+      end
+
+      describe 'create 2fa request' do
+        it 'fails on incorrect password' do
+          post "/users/second_factors.json", params: {
+            password: 'wrongpassword'
+          }
+
+          expect(response.status).to eq(200)
+
+          expect(JSON.parse(response.body)['error']).to eq(I18n.t(
+            "login.incorrect_password")
+          )
+        end
+
+        describe 'when local logins are disabled' do
+          it 'should return the right response' do
+            SiteSetting.enable_local_logins = false
+
+            post "/users/second_factors.json", params: {
+              password: 'somecomplicatedpassword'
+            }
+
+            expect(response.status).to eq(404)
+          end
+        end
+
+        describe 'when SSO is enabled' do
+          it 'should return the right response' do
+            SiteSetting.sso_url = 'http://someurl.com'
+            SiteSetting.enable_sso = true
+
+            post "/users/second_factors.json", params: {
+              password: 'somecomplicatedpassword'
+            }
+
+            expect(response.status).to eq(404)
+          end
+        end
+
+        it 'succeeds on correct password' do
+          post "/users/second_factors.json", params: {
+            password: 'somecomplicatedpassword'
+          }
+
+          expect(response.status).to eq(200)
+
+          response_body = JSON.parse(response.body)
+
+          expect(response_body['key']).to eq(user.user_second_factor.data)
+          expect(response_body['qr']).to be_present
+        end
+      end
+    end
+  end
+
+  describe '#update_second_factor' do
+    let(:user_second_factor) { Fabricate(:user_second_factor, user: user) }
+
+    context 'when not logged in' do
+      it 'should return the right response' do
+        put "/users/second_factor.json", params: {
+          second_factor_token: ROTP::TOTP.new(user_second_factor.data).now
+        }
+
+        expect(response.status).to eq(403)
+      end
+    end
+
+    context 'when logged in' do
+      before do
+        sign_in(user)
+        user_second_factor
+      end
+
+      context 'when user has totp setup' do
+        context 'when token is missing' do
+          it 'returns the right response' do
+            put "/users/second_factor.json", params: {
+              enable: 'true',
+            }
+
+            expect(response.status).to eq(400)
+          end
+        end
+
+        context 'when token is invalid' do
+          it 'returns the right response' do
+            put "/users/second_factor.json", params: {
+              second_factor_token: '000000',
+              enable: 'true',
+            }
+
+            expect(response.status).to eq(200)
+
+            expect(JSON.parse(response.body)['error']).to eq(I18n.t(
+              "login.invalid_second_factor_code"
+            ))
+          end
+        end
+
+        context 'when token is valid' do
+          it 'should allow second factor for the user to be enabled' do
+            put "/users/second_factor.json", params: {
+              second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
+              enable: 'true',
+            }
+
+            expect(response.status).to eq(200)
+            expect(user.reload.user_second_factor.enabled).to be true
+          end
+
+          it 'should allow second factor for the user to be disabled' do
+            put "/users/second_factor.json", params: {
+              second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
+            }
+
+            expect(response.status).to eq(200)
+            expect(user.reload.user_second_factor).to eq(nil)
+          end
+        end
+      end
+    end
+  end
 end

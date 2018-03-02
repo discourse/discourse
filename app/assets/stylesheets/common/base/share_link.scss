@@ -3,8 +3,8 @@
 #share-link {
   position: absolute;
   left: 20px;
-  z-index: 1200;
-  box-shadow: 0 1px 5px rgba(0,0,0, .4);
+  z-index: z("dropdown");
+  box-shadow: shadow("card");
   background-color: $secondary;
   padding: 6px 10px 10px 10px;
   width: 300px;

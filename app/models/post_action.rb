@@ -154,6 +154,7 @@ SQL
     end
 
     DiscourseEvent.trigger(:confirmed_spam_post, post) if trigger_spam
+    DiscourseEvent.trigger(:flag_reviewed, post)
 
     update_flagged_posts_count
   end
@@ -186,6 +187,7 @@ SQL
     end
 
     Post.with_deleted.where(id: post.id).update_all(cached)
+    DiscourseEvent.trigger(:flag_reviewed, post)
 
     update_flagged_posts_count
   end
@@ -203,6 +205,7 @@ SQL
       action.add_moderator_post_if_needed(moderator, :deferred, delete_post)
     end
 
+    DiscourseEvent.trigger(:flag_reviewed, post)
     update_flagged_posts_count
   end
 
@@ -302,7 +305,8 @@ SQL
         BadgeGranter.queue_badge_grant(Badge::Trigger::PostAction, post_action: post_action)
       end
     end
-    GivenDailyLike.increment_for(user.id)
+
+    GivenDailyLike.increment_for(user.id) if post_action_type_id == PostActionType.types[:like]
 
     # agree with other flags
     if staff_took_action
@@ -339,7 +343,7 @@ SQL
     if action = finder.first
       action.remove_act!(user)
       action.post.unhide! if action.staff_took_action
-      GivenDailyLike.decrement_for(user.id)
+      GivenDailyLike.decrement_for(user.id) if post_action_type_id == PostActionType.types[:like]
     end
   end
 
@@ -360,7 +364,7 @@ SQL
   end
 
   def is_flag?
-    !!PostActionType.flag_types[post_action_type_id]
+    !!PostActionType.notify_flag_types[post_action_type_id]
   end
 
   def is_private_message?
@@ -392,7 +396,7 @@ SQL
   end
 
   before_create do
-    post_action_type_ids = is_flag? ? PostActionType.flag_types_without_custom.values : post_action_type_id
+    post_action_type_ids = is_flag? ? PostActionType.notify_flag_types.values : post_action_type_id
     raise AlreadyActed if PostAction.where(user_id: user_id)
         .where(post_id: post_id)
         .where(post_action_type_id: post_action_type_ids)
@@ -538,7 +542,7 @@ SQL
   end
 
   def self.auto_hide_if_needed(acting_user, post, post_action_type)
-    return if post.hidden
+    return if post.hidden || post.user.staff?
 
     if post_action_type == :spam &&
        acting_user.has_trust_level?(TrustLevel[3]) &&

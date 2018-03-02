@@ -170,7 +170,7 @@ function getEmojiTokenByTranslation(content, pos, state) {
   }
 }
 
-function applyEmoji(content, state, emojiUnicodeReplacer) {
+function applyEmoji(content, state, emojiUnicodeReplacer, enableShortcuts) {
   let i;
   let result = null;
   let contentToken = null;
@@ -195,7 +195,7 @@ function applyEmoji(content, state, emojiUnicodeReplacer) {
       }
     }
 
-    if (!token) {
+    if (enableShortcuts && !token) {
       // handle aliases (note: we can't do this in inline cause ; is not a split point)
       //
       let info = getEmojiTokenByTranslation(content, i, state);
@@ -231,13 +231,19 @@ function applyEmoji(content, state, emojiUnicodeReplacer) {
 export function setup(helper) {
   helper.registerOptions((opts, siteSettings, state)=>{
     opts.features.emoji = !!siteSettings.enable_emoji;
+    opts.features.emojiShortcuts = !!siteSettings.enable_emoji_shortcuts;
     opts.emojiSet = siteSettings.emoji_set || "";
     opts.customEmoji = state.customEmoji;
   });
 
   helper.registerPlugin((md)=>{
     md.core.ruler.push('emoji', state => md.options.discourse.helpers.textReplace(
-      state, (c,s)=>applyEmoji(c,s,md.options.discourse.emojiUnicodeReplacer))
+      state, (c,s)=>applyEmoji(
+        c,
+        s,
+        md.options.discourse.emojiUnicodeReplacer,
+        md.options.discourse.features.emojiShortcuts
+      ))
     );
   });
 

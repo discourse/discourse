@@ -51,21 +51,24 @@ details .lazyYT-container {
 
   summary:before {
     content: '' !important;
+    display: none;
   }
 
   summary {
     @include unselectable;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
     box-sizing: border-box;
     margin: 0;
     padding: 0;
     color: #aaa;
     background: #f1f1f1;
     border: 1px solid #ddd;
-    width: 20px;
-    display: flex;
-    text-align: center;
-    vertical-align: middle;
+    width: 21px;
     line-height: 12px;
+
   }
 
   summary:hover {

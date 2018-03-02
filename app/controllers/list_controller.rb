@@ -63,7 +63,7 @@ class ListController < ApplicationController
         if filter == :latest
           list_opts[:no_definitions] = true
         end
-        if filter.to_s == current_homepage
+        if [:latest, :categories].include?(filter)
           list_opts[:exclude_category_ids] = get_excluded_category_ids(list_opts[:category])
         end
       end
@@ -151,6 +151,7 @@ class ListController < ApplicationController
     private_messages_archive
     private_messages_group
     private_messages_group_archive
+    private_messages_tag
   }.each do |action|
     generate_message_route(action)
   end
@@ -293,10 +294,11 @@ class ListController < ApplicationController
   def page_params(opts = nil)
     opts ||= {}
     route_params = { format: 'json' }
-    route_params[:category]        = @category.slug_for_url                 if @category
-    route_params[:parent_category] = @category.parent_category.slug_for_url if @category && @category.parent_category
-    route_params[:order]           = opts[:order]                           if opts[:order].present?
-    route_params[:ascending]       = opts[:ascending]                       if opts[:ascending].present?
+    route_params[:category]        = @category.slug_for_url                  if @category
+    route_params[:parent_category] = @category.parent_category.slug_for_url  if @category && @category.parent_category
+    route_params[:order]           = opts[:order]                            if opts[:order].present?
+    route_params[:ascending]       = opts[:ascending]                        if opts[:ascending].present?
+    route_params[:username]        = UrlHelper.escape_uri(params[:username]) if params[:username].present?
     route_params
   end
 
@@ -332,6 +334,7 @@ class ListController < ApplicationController
   def build_topic_list_options
     options = {}
     params[:page] = params[:page].to_i rescue 1
+    params[:tags] = [params[:tag_id]] if params[:tag_id].present? && guardian.can_tag_pms?
 
     TopicQuery.public_valid_options.each do |key|
       options[key] = params[key]
@@ -368,7 +371,7 @@ class ListController < ApplicationController
   end
 
   def get_excluded_category_ids(current_category = nil)
-    exclude_category_ids = Category.where(suppress_from_homepage: true)
+    exclude_category_ids = Category.where(suppress_from_latest: true)
     exclude_category_ids = exclude_category_ids.where.not(id: current_category) if current_category
     exclude_category_ids.pluck(:id)
   end

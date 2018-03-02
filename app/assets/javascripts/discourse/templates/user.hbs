@@ -23,7 +23,11 @@
             </div>
           {{/if}}
           {{#if model.number_of_suspensions}}
-            <div><span class="suspensions">{{model.number_of_suspensions}}</span>{{i18n 'user.staff_counters.suspensions'}}</div>
+            <div>
+              <a {{action "showSuspensions"}}>
+                <span class="suspensions">{{model.number_of_suspensions}}</span>{{i18n 'user.staff_counters.suspensions'}}
+              </a>
+            </div>
           {{/if}}
           {{#if model.warnings_received_count}}
             <div><span class="warnings-received">{{model.warnings_received_count}}</span>{{i18n 'user.staff_counters.warnings_received'}}</div>
@@ -35,12 +39,21 @@
       <div class='profile-image'></div>
       <div class='details'>
         <div class='primary'>
-          {{bound-avatar model "huge"}}
+          <div class='user-profile-avatar'>
+            {{bound-avatar model "huge"}}
+            {{#if model.primary_group_name}}
+              {{avatar-flair
+                flairURL=model.primary_group_flair_url
+                flairBgColor=model.primary_group_flair_bg_color
+                flairColor=model.primary_group_flair_color
+                groupName=model.primary_group_name}}
+            {{/if}}
+          </div>
           <section class='controls'>
             <ul>
               {{#if model.can_send_private_message_to_user}}
               <li>
-                <a class='btn btn-primary' {{action "composePrivateMessage" model}}>
+                <a class='btn btn-primary compose-pm' {{action "composePrivateMessage" model}}>
                   {{d-icon "envelope"}}
                   {{i18n 'user.private_message'}}
                 </a>
@@ -69,7 +82,7 @@
               <h3>{{model.title}}</h3>
             {{/if}}
             {{plugin-outlet name="user-post-names" args=(hash model=model)}}
-            <h3>
+            <h3 class="location-and-website">
             {{#if model.location}}{{d-icon "map-marker"}} {{model.location}}{{/if}}
             {{#if model.website_name}}
               {{d-icon "globe"}}

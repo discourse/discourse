@@ -100,7 +100,11 @@ class TopicQuery
 
   # Return a list of suggested topics for a topic
   def list_suggested_for(topic)
-    return if topic.private_message? && !@user
+
+    # Don't suggest messages unless we have a user, and private messages are
+    # enabled.
+    return if topic.private_message? &&
+      (@user.blank? || !SiteSetting.enable_personal_messages?)
 
     builder = SuggestedTopicsBuilder.new(topic)
 
@@ -262,6 +266,13 @@ class TopicQuery
     group_id = Group.where('name ilike ?', @options[:group_name]).pluck(:id).first
     list = list.joins("JOIN group_archived_messages gm ON gm.topic_id = topics.id AND
                       gm.group_id = #{group_id.to_i}")
+    create_list(:private_messages, {}, list)
+  end
+
+  def list_private_messages_tag(user)
+    list = private_messages_for(user, :all)
+    list = list.joins("JOIN topic_tags tt ON tt.topic_id = topics.id
+                      JOIN tags t ON t.id = tt.tag_id AND t.name = '#{@options[:tags][0]}'")
     create_list(:private_messages, {}, list)
   end
 
@@ -598,7 +609,7 @@ class TopicQuery
       end
 
       if search = options[:search]
-        result = result.where("topics.id in (select pp.topic_id from post_search_data pd join posts pp on pp.id = pd.post_id where pd.search_data @@ #{Search.ts_query(search.to_s)})")
+        result = result.where("topics.id in (select pp.topic_id from post_search_data pd join posts pp on pp.id = pd.post_id where pd.search_data @@ #{Search.ts_query(term: search.to_s)})")
       end
 
       # NOTE protect against SYM attack can be removed with Ruby 2.2

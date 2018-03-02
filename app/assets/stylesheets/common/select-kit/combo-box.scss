@@ -1,17 +1,17 @@
-.select-box-kit, .select-kit {
+.select-kit {
   &.combo-box {
 
-    .select-box-kit-body, .select-kit-body {
+    .select-kit-body {
       width: 100%;
     }
 
-    .select-box-kit-row, .select-kit-row {
+    .select-kit-row {
       margin: 5px;
       min-height: 1px;
       padding: 5px;
     }
 
-    .select-box-kit-filter, .select-kit-filter {
+    .select-kit-filter {
       line-height: $line-height-medium;
       padding: 6px 10px;
       border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
@@ -22,18 +22,17 @@
       }
     }
 
-    .select-box-kit-header, .select-kit-header {
+    .select-kit-header {
       background: $secondary;
       border: 1px solid $primary-medium;
-      padding: 6px 10px;
+      padding: 4px 10px;
       font-weight: 500;
       font-size: $font-0;
-      line-height: $line-height-medium;
+      line-height: $line-height-large;
 
       &.is-focused {
         border: 1px solid $tertiary;
-        -webkit-box-shadow: $tertiary 0px 0px 6px 0px;
-                box-shadow: $tertiary 0px 0px 6px 0px;
+        box-shadow: shadow("focus");
       }
     }
 
@@ -47,8 +46,7 @@
     &.is-highlighted {
       .select-kit-header {
         border: 1px solid $tertiary;
-        -webkit-box-shadow: $tertiary 0px 0px 6px 0px;
-                box-shadow: $tertiary 0px 0px 6px 0px;
+        box-shadow: shadow("focus");
       }
     }
 
@@ -56,14 +54,12 @@
       .select-kit-wrapper {
         display: block;
         border: 1px solid $tertiary;
-        -webkit-box-shadow: $tertiary 0px 0px 6px 0px;
-                box-shadow: $tertiary 0px 0px 6px 0px;
+        box-shadow: shadow("focus");
       }
 
       .select-kit-header {
         border-color: transparent;
-        -webkit-box-shadow: none;
-                box-shadow: none;
+        box-shadow: none;
       }
 
       .select-kit-body {

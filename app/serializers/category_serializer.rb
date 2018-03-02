@@ -9,7 +9,7 @@ class CategorySerializer < BasicCategorySerializer
              :email_in,
              :email_in_allow_strangers,
              :mailinglist_mirror,
-             :suppress_from_homepage,
+             :suppress_from_latest,
              :all_topics_wiki,
              :can_delete,
              :cannot_delete_reason,
@@ -72,7 +72,7 @@ class CategorySerializer < BasicCategorySerializer
     scope && scope.can_edit?(object)
   end
 
-  def include_suppress_from_homepage?
+  def include_suppress_from_latest?
     scope && scope.can_edit?(object)
   end
 

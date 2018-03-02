@@ -215,7 +215,7 @@ es:
           Seleccionando cualquier texto de mi mensaje, aparecerá la palabra <kbd>**Citar**</kbd>, como si fuese un botón. Y si decides presionar **Responder** habiendo seleccionado el texto, funcionará igual! ¿Puedes intentarlo de nuevo?
       bookmark:
         instructions: |-
-          Si quieres aprender más, selecciona <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> y <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **guarda como favorito este mensaje privado**.  Si lo haces, ¡podrá haber un  :gift: en tu futuro!
+          Si te gustaría saber más, selecciona <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> debajo y <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **añade a marcadores este mensaje personal**. Si lo haces, ¡puede que haya un :gift: en un futuro!
         reply: |-
           ¡Excelente! Ahora puedes encontrar fácilmente las conversaciones privadas en cualquier momento, desde la [sección de marcadores de tu perfil](%{profile_page_url}/activity/bookmarks). Sólo debes seleccionar la foto de tu perfil en la parte superior derecha de la pantalla &#8599;
         not_found: |-
@@ -347,10 +347,6 @@ es:
         reply: |-
           ¡Excelente! Recuerda que ésto funciona para ambos, categorías _y_ etiquetas, si las etiquetas están disponibles.
       change_topic_notification_level:
-        instructions: |-
-          Cada tema tiene un nivel de notificación. Comienza en 'normal', lo que significa que normalmente sólo se notificará cuando alguien está hablando directamente con usted.
-          De forma predeterminada, el nivel de notificación de un mensaje privado se establece en el nivel más alto de "observación", lo que significa que se le notificará cada nueva respuesta. Pero puede sobrescribir el nivel de notificación de _cualquier_ tema a 'vigilar', 'seguir' o 'silenciar'.
-          Intentemos cambiar el nivel de notificación de este tema. Al final del tema, encontrarás un botón que muestra que estás **vigilando** este tema. ¿Puedes cambiar el nivel de notificación a **seguir**?
         not_found: |-
           Parece que aún estás vigilando :eyes: este tema! Si tienes problemas para encontrar el botón del nivel de notificación, el mismo está debajo de todo el tema de debate.
         reply: |-
@@ -377,20 +373,6 @@ es:
           * :-1:
           [/poll]
       details:
-        instructions: |-
-          A veces, tú puedes decidir **ocultar detalles** en tus respuestas:
-
-          - Cuando estás discutiendo puntos de trama de una película o programa de televisión que sería considerado un spoiler.
-
-          - Cuando su post necesita un montón de detalles opcionales que pueden ser abrumador cuando se lee todo a la vez.
-
-          [details=¡Clic aquí para ver cómo funciona!]
-          1. Selecciona el botón de engranaje <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> en el editor.
-          2. Selecciona "Hide Details".
-          3. Edita los detalles, y agrega el contenido que desees ocultar.
-          [/details]
-
-          ¿Puedes usar el botón de engranaje <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> en el editor para agregar datos ocultos en tu próxima respuesta?
         not_found: |-
           ¿Tiene problemas para crear un widget de detalles? Trate de incluir lo siguiente en su siguiente respuesta:
 

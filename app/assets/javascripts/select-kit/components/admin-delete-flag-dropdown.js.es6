@@ -9,7 +9,7 @@ export default DropdownSelectBox.extend({
 
   computeHeaderContent() {
     let content = this.baseHeaderComputedContent();
-    content.name = I18n.t("admin.flags.delete");
+    content.name = `${I18n.t("admin.flags.delete")}...`;
     return content;
   },
 

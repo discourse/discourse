@@ -26,36 +26,40 @@ class TrustLevel3Requirements
 
   def requirements_met?
     return false if trust_level_locked
-    !@user.suspended? &&
-    days_visited >= min_days_visited &&
-    num_topics_replied_to >= min_topics_replied_to &&
-    topics_viewed >= min_topics_viewed &&
-    posts_read >= min_posts_read &&
-    num_flagged_posts <= max_flagged_posts &&
-    num_flagged_by_users <= max_flagged_by_users &&
-    topics_viewed_all_time >= min_topics_viewed_all_time &&
-    posts_read_all_time >= min_posts_read_all_time &&
-    num_likes_given >= min_likes_given &&
-    num_likes_received >= min_likes_received &&
-    num_likes_received_users >= min_likes_received_users &&
-    num_likes_received_days >= min_likes_received_days
+
+    (!@user.suspended?) &&
+      (!@user.silenced?) &&
+      days_visited >= min_days_visited &&
+      num_topics_replied_to >= min_topics_replied_to &&
+      topics_viewed >= min_topics_viewed &&
+      posts_read >= min_posts_read &&
+      num_flagged_posts <= max_flagged_posts &&
+      num_flagged_by_users <= max_flagged_by_users &&
+      topics_viewed_all_time >= min_topics_viewed_all_time &&
+      posts_read_all_time >= min_posts_read_all_time &&
+      num_likes_given >= min_likes_given &&
+      num_likes_received >= min_likes_received &&
+      num_likes_received_users >= min_likes_received_users &&
+      num_likes_received_days >= min_likes_received_days
   end
 
   def requirements_lost?
     return false if trust_level_locked
+
     @user.suspended? ||
-    days_visited < min_days_visited * LOW_WATER_MARK ||
-    num_topics_replied_to < min_topics_replied_to * LOW_WATER_MARK ||
-    topics_viewed < min_topics_viewed * LOW_WATER_MARK ||
-    posts_read < min_posts_read * LOW_WATER_MARK ||
-    num_flagged_posts > max_flagged_posts ||
-    num_flagged_by_users > max_flagged_by_users ||
-    topics_viewed_all_time < min_topics_viewed_all_time ||
-    posts_read_all_time < min_posts_read_all_time ||
-    num_likes_given < min_likes_given * LOW_WATER_MARK ||
-    num_likes_received < min_likes_received * LOW_WATER_MARK ||
-    num_likes_received_users < min_likes_received_users * LOW_WATER_MARK ||
-    num_likes_received_days < min_likes_received_days * LOW_WATER_MARK
+      @user.silenced? ||
+      days_visited < min_days_visited * LOW_WATER_MARK ||
+      num_topics_replied_to < min_topics_replied_to * LOW_WATER_MARK ||
+      topics_viewed < min_topics_viewed * LOW_WATER_MARK ||
+      posts_read < min_posts_read * LOW_WATER_MARK ||
+      num_flagged_posts > max_flagged_posts ||
+      num_flagged_by_users > max_flagged_by_users ||
+      topics_viewed_all_time < min_topics_viewed_all_time ||
+      posts_read_all_time < min_posts_read_all_time ||
+      num_likes_given < min_likes_given * LOW_WATER_MARK ||
+      num_likes_received < min_likes_received * LOW_WATER_MARK ||
+      num_likes_received_users < min_likes_received_users * LOW_WATER_MARK ||
+      num_likes_received_days < min_likes_received_days * LOW_WATER_MARK
   end
 
   def time_period

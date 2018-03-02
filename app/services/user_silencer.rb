@@ -1,3 +1,5 @@
+require_dependency 'staff_message_format'
+
 class UserSilencer
 
   attr_reader :user_history
@@ -21,17 +23,22 @@ class UserSilencer
       if @user.save
         message_type = @opts[:message] || :silenced_by_staff
 
-        details = (@opts[:reason] || '').dup
-        details << "\n\n#{@opts[:message_body]}" if @opts[:message_body].present?
+        details = StaffMessageFormat.new(
+          :silence,
+          @opts[:reason],
+          @opts[:message_body]
+        ).format
 
         context = "#{message_type}: '#{post.topic&.title rescue ''}' #{@opts[:reason]}"
         SystemMessage.create(@user, message_type)
 
         if @by_user
+          log_params = { context: context, details: details }
+          log_params[:post_id] = @opts[:post_id].to_i if @opts[:post_id]
+
           @user_history = StaffActionLogger.new(@by_user).log_silence_user(
             @user,
-            context: context,
-            details: details
+            log_params
           )
         end
 

@@ -64,12 +64,12 @@ module Discourse
 
   # When they don't have permission to do something
   class InvalidAccess < StandardError
-    attr_reader :obj, :custom_message
+    attr_reader :obj, :custom_message, :opts
     def initialize(msg = nil, obj = nil, opts = nil)
       super(msg)
 
-      opts ||= {}
-      @custom_message = opts[:custom_message] if opts[:custom_message]
+      @opts = opts || {}
+      @custom_message = opts[:custom_message] if @opts[:custom_message]
       @obj = obj
     end
   end
@@ -236,15 +236,11 @@ module Discourse
   end
 
   def self.route_for(uri)
-
-    uri = URI(uri) rescue nil unless (uri.is_a?(URI))
+    uri = URI(uri) rescue nil unless uri.is_a?(URI)
     return unless uri
 
     path = uri.path || ""
-    if (uri.host == Discourse.current_hostname &&
-      path.start_with?(Discourse.base_uri)) ||
-      !uri.host
-
+    if !uri.host || (uri.host == Discourse.current_hostname && path.start_with?(Discourse.base_uri))
       path.slice!(Discourse.base_uri)
       return Rails.application.routes.recognize_path(path)
     end
@@ -509,7 +505,7 @@ module Discourse
   def self.reset_active_record_cache_if_needed(e)
     last_cache_reset = Discourse.last_ar_cache_reset
     if e && e.message =~ /UndefinedColumn/ && (last_cache_reset.nil? || last_cache_reset < 30.seconds.ago)
-      Rails.logger.warn "Clear Active Record cache cause schema appears to have changed!"
+      Rails.logger.warn "Clearing Active Record cache, this can happen if schema changed while site is running or in a multisite various databases are running different schemas. Consider running rake multisite:migrate."
       Discourse.last_ar_cache_reset = Time.zone.now
       Discourse.reset_active_record_cache
     end

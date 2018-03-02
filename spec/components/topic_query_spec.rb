@@ -695,6 +695,10 @@ describe TopicQuery do
       expect(TopicQuery.new(user).list_suggested_for(pm_to_user).topics.map(&:id)).to(
         eq([new_pm.id, unread_pm.id, related_by_user_pm.id])
       )
+
+      SiteSetting.enable_personal_messages = false
+      expect(TopicQuery.new(user).list_suggested_for(pm_to_group)).to be_blank
+      expect(TopicQuery.new(user).list_suggested_for(pm_to_user)).to be_blank
     end
   end
 
@@ -818,6 +822,19 @@ describe TopicQuery do
           it 'should return the group topics' do
             expect(suggested_topics).to eq([private_group_topic.id, private_message.id])
           end
+        end
+
+        context "by tag filter" do
+          let(:tag) { Fabricate(:tag) }
+          let!(:user) { group_user }
+
+          it 'should return only tagged topics' do
+            Fabricate(:topic_tag, topic: private_message, tag: tag)
+            Fabricate(:topic_tag, topic: private_group_topic)
+
+            expect(TopicQuery.new(user, tags: [tag.name]).list_private_messages_tag(user).topics).to eq([private_message])
+          end
+
         end
       end
 

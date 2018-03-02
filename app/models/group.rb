@@ -192,6 +192,7 @@ class Group < ActiveRecord::Base
       .references(:posts, :topics, :category)
       .where(user_id: user_ids)
       .where('topics.archetype <> ?', Archetype.private_message)
+      .where('topics.visible')
       .where(post_type: Post.types[:regular])
 
     if opts[:category_id].present?
@@ -281,13 +282,13 @@ class Group < ActiveRecord::Base
     remove_subquery =
       case name
       when :admins
-        "SELECT id FROM users WHERE NOT admin"
+        "SELECT id FROM users WHERE id <= 0 OR NOT admin"
       when :moderators
-        "SELECT id FROM users WHERE NOT moderator"
+        "SELECT id FROM users WHERE id <= 0 OR NOT moderator"
       when :staff
-        "SELECT id FROM users WHERE NOT admin AND NOT moderator"
+        "SELECT id FROM users WHERE id <= 0 OR (NOT admin AND NOT moderator)"
       when :trust_level_0, :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
-        "SELECT id FROM users WHERE trust_level < #{id - 10}"
+        "SELECT id FROM users WHERE id <= 0 OR trust_level < #{id - 10}"
       end
 
     exec_sql <<-SQL
@@ -301,15 +302,15 @@ class Group < ActiveRecord::Base
     insert_subquery =
       case name
       when :admins
-        "SELECT id FROM users WHERE admin"
+        "SELECT id FROM users WHERE id > 0 AND admin"
       when :moderators
-        "SELECT id FROM users WHERE moderator"
+        "SELECT id FROM users WHERE id > 0 AND moderator"
       when :staff
-        "SELECT id FROM users WHERE moderator OR admin"
+        "SELECT id FROM users WHERE id > 0 AND (moderator OR admin)"
       when :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
-        "SELECT id FROM users WHERE trust_level >= #{id - 10}"
+        "SELECT id FROM users WHERE id > 0 AND trust_level >= #{id - 10}"
       when :trust_level_0
-        "SELECT id FROM users"
+        "SELECT id FROM users WHERE id > 0"
       end
 
     exec_sql <<-SQL
@@ -534,6 +535,16 @@ class Group < ActiveRecord::Base
       if user_attributes.present?
         User.where(id: user_ids).update_all(user_attributes)
       end
+
+      # update group user count
+      Group.exec_sql <<-SQL.squish
+        UPDATE groups g
+        SET user_count =
+          (SELECT COUNT(gu.user_id)
+           FROM group_users gu
+           WHERE gu.group_id = g.id)
+        WHERE g.id = #{self.id};
+      SQL
     end
 
     if self.grant_trust_level.present?
@@ -661,7 +672,7 @@ end
 # Table name: groups
 #
 #  id                                 :integer          not null, primary key
-#  name                               :string(255)      not null
+#  name                               :string           not null
 #  created_at                         :datetime         not null
 #  updated_at                         :datetime         not null
 #  automatic                          :boolean          default(FALSE), not null
@@ -669,7 +680,7 @@ end
 #  automatic_membership_email_domains :text
 #  automatic_membership_retroactive   :boolean          default(FALSE)
 #  primary_group                      :boolean          default(FALSE), not null
-#  title                              :string(255)
+#  title                              :string
 #  grant_trust_level                  :integer
 #  incoming_email                     :string
 #  has_messages                       :boolean          default(FALSE), not null

@@ -1,6 +1,6 @@
 .show-more {
   width: 100%;
-  z-index: 1;
+  z-index: z("base");
   &.has-topics {
     position: absolute;
     top: 7px;
@@ -16,6 +16,8 @@
     }
   }
 }
+
+
 
 .topic-list-item.visited,
 .latest-topic-list-item.visited,
@@ -68,14 +70,14 @@
     td {
       border-bottom: 1px solid $danger-low;
       line-height: 0.1em;
-      padding: 0px;
+      padding: 0;
       text-align: center;
     }
 
     td span {
       background-color: $secondary;
       color: $danger-low;
-      padding: 0px 8px;
+      padding: 0 8px;
       font-size: $font-down-1;
     }
   }
@@ -109,6 +111,12 @@
 
   .topic-featured-link {
     padding-left: 5px;
+  }
+
+  span.badge-category {
+    .category-name {
+      max-width: 150px;
+    }
   }
 
   .topic-excerpt {
@@ -155,6 +163,10 @@
 
 }
 
+.heatmap-high, .heatmap-high a {color: #fe7a15 !important;}
+.heatmap-med, .heatmap-med a {color: #cf7721 !important;}
+.heatmap-low, .heatmap-low a {color: #9b764f !important;}
+
 .topic-list.categories {
 
   .category .badge-notification {
@@ -199,11 +211,6 @@
 }
 
 .list-controls {
-  .category-dropdown-menu .home {
-    color: $primary;
-    margin-left: 8px;
-  }
-
   clear: both;
 }
 
@@ -250,29 +257,6 @@ ol.category-breadcrumb {
 
   .bread-crumbs-right-outlet {
     float: left;
-  }
-}
-
-.list-controls .category-dropdown-menu {
-  overflow-x: hidden;
-  overflow-y: auto;
-  position: absolute;
-  border: 1px solid $primary-low;
-  background-color: $secondary;
-  z-index: 100;
-
-  a.badge-category, a.badge-category-parent {
-    line-height: $line-height-large;
-    overflow:hidden;
-    margin-bottom: 0;
-  }
-  a.badge-category, .dropdown-header {
-    font-size: $font-down-1;
-    font-weight: bold;
-    float: none;
-    text-transform: none;
-    max-width:200px;
-    text-overflow:ellipsis;
   }
 }
 

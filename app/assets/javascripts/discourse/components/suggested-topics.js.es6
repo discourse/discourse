@@ -31,7 +31,7 @@ export default Ember.Component.extend({
     }
 
     const unreadTopics = this.topicTrackingState.countUnread();
-    const newTopics = this.topicTrackingState.countNew();
+    const newTopics = this.currentUser ? this.topicTrackingState.countNew() : 0;
 
     if (newTopics + unreadTopics > 0) {
       const hasBoth = unreadTopics > 0 && newTopics > 0;

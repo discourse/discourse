@@ -109,12 +109,6 @@
   }
 }
 
-.user-invite-controls {
-  background-color: $primary-low;
-  padding: 5px 10px 0px 0;
-  height: 35px;
-}
-
 .user-invite-search {
   clear: both;
   margin: 15px 0px -15px 0px;
@@ -134,7 +128,7 @@
 
     &.group {
       .details {
-        padding: 15px 0px;
+        padding: 15px 0;
         margin: 0;
         color: dark-light-choose(lighten($primary, 10%), $secondary);
       }
@@ -175,6 +169,12 @@
           padding: 3px;
           a[href] {
             text-decoration: underline;
+          }
+          .location-and-website {
+            max-width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
           }
         }
 
@@ -279,10 +279,12 @@
     width: 530px;
   }
 
+  .category-selector, .tag-chooser {
+    width: 530px;
+  }
+
   input {
-    &.category-selector,
-    &.user-selector,
-    &.tag-chooser {
+    &.user-selector {
       width: 530px;
     }
 

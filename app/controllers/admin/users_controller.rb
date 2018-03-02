@@ -25,7 +25,8 @@ class Admin::UsersController < Admin::AdminController
                                     :generate_api_key,
                                     :revoke_api_key,
                                     :anonymize,
-                                    :reset_bounce_score]
+                                    :reset_bounce_score,
+                                    :disable_second_factor]
 
   def index
     users = ::AdminUserIndexQuery.new(params).find_users
@@ -92,6 +93,8 @@ class Admin::UsersController < Admin::AdminController
       suspended_till: params[:suspend_until],
       suspended_at: DateTime.now
     )
+
+    perform_post_action
 
     render_json_dump(
       suspension: {
@@ -287,7 +290,8 @@ class Admin::UsersController < Admin::AdminController
       silenced_till: params[:silenced_till],
       reason: params[:reason],
       message_body: message,
-      keep_posts: true
+      keep_posts: true,
+      post_id: params[:post_id]
     )
     if silencer.silence && message.present?
       Jobs.enqueue(
@@ -297,6 +301,7 @@ class Admin::UsersController < Admin::AdminController
         user_history_id: silencer.user_history.id
       )
     end
+    perform_post_action
 
     render_json_dump(
       silence: {
@@ -334,6 +339,23 @@ class Admin::UsersController < Admin::AdminController
       success: success_count,
       failed: (params[:users].try(:size) || 0) - success_count
     }
+  end
+
+  def disable_second_factor
+    guardian.ensure_can_disable_second_factor!(@user)
+    user_second_factor = @user.user_second_factor
+    raise Discourse::InvalidParameters unless user_second_factor
+
+    user_second_factor.destroy!
+    StaffActionLogger.new(current_user).log_disable_second_factor_auth(@user)
+
+    Jobs.enqueue(
+      :critical_user_email,
+      type: :account_second_factor_disabled,
+      user_id: @user.id
+    )
+
+    render json: success_json
   end
 
   def destroy
@@ -466,6 +488,27 @@ class Admin::UsersController < Admin::AdminController
   end
 
   private
+
+    def perform_post_action
+      return unless params[:post_id].present? &&
+        params[:post_action].present?
+
+      if post = Post.where(id: params[:post_id]).first
+        case params[:post_action]
+        when 'delete'
+          PostDestroyer.new(current_user, post).destroy
+        when 'edit'
+          revisor = PostRevisor.new(post)
+
+          # Take what the moderator edited in as gospel
+          revisor.revise!(
+            current_user,
+            { raw:  params[:post_edit] },
+            skip_validations: true, skip_revision: true
+          )
+        end
+      end
+    end
 
     def fetch_user
       @user = User.find_by(id: params[:user_id])
