@@ -167,9 +167,12 @@ class PostRevisor
     end
 
     # Lock the post by default if the appropriate setting is true
-    if SiteSetting.staff_edit_locks_post? &&
-        @editor.staff? &&
-        !@post.user.staff?
+    if (
+      SiteSetting.staff_edit_locks_post? &&
+      @fields.has_key?('raw') &&
+      @editor.staff? &&
+      !@post.user.staff?
+    )
       PostLocker.new(@post, @editor).lock
     end
 
