@@ -463,7 +463,6 @@ describe PostRevisor do
           expect(post).not_to be_locked
         end
 
-
         it "doesn't lock the post when revised by a regular user" do
           result = subject.revise!(
             Fabricate(:user),
