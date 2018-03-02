@@ -27,7 +27,14 @@ export function findAll(siteSettings, capabilities, isMobileDevice) {
 
   methods = [];
 
-  [ "google_oauth2", "facebook", "cas", "twitter", "yahoo", "instagram", "github" ].forEach(name => {
+  [
+    "google_oauth2",
+    "facebook",
+    "twitter",
+    "yahoo",
+    "instagram",
+    "github"
+  ].forEach(name => {
     if (siteSettings["enable_" + name + "_logins"]) {
       const params = { name };
       if (name === "google_oauth2") {
