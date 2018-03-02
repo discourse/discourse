@@ -13,7 +13,9 @@
     float: left;
     width: 70%;
     padding-left: 5px;
-    font-size: $font-down-1;
+    @media screen and (max-width: 600px) {
+      font-size: $font-down-1;
+    }
 
     .name-line {
       white-space: nowrap;
@@ -57,6 +59,7 @@
 
     &.badge-info {
       min-height: 80px;
+      min-width: 250px;
 
       .granted-on {
         color: dark-light-choose($primary-medium, $secondary-medium);
