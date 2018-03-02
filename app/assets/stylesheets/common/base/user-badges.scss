@@ -285,6 +285,13 @@
     display: flex;
     align-items: center;
     width: 100%;
+    @media screen and (max-width: 500px) {
+      flex-wrap: wrap;
+    }
+    div:not(.grant-info-item) {
+      display: flex;
+    }
+
     &.hidden {
       display: none;
     }
@@ -292,6 +299,9 @@
   .grant-info-item {
     margin-bottom: 1em;
     color: dark-light-choose($primary-medium, $secondary-medium);
+    &:first-of-type {
+      margin-right: 10px;
+    }
   }
 
   .badge-title .form-horizontal .controls {
