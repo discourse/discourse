@@ -384,11 +384,16 @@
 .top-section,
 .top-sub-section {
   margin-bottom: 20px;
+  &.badges-section {
+    display: flex;
+    flex-wrap: wrap;
+  }
 }
 
 .stats-title {
   text-transform: uppercase;
   margin-bottom: 10px;
+  width: 100%;
 }
 
 .stats-section {

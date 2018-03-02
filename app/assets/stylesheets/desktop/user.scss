@@ -75,6 +75,11 @@
   margin-bottom: 10px;
   box-sizing: border-box;
 
+  &.user-badges-list {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
   .btn.right {
     float: right
   }
