@@ -452,6 +452,18 @@ describe PostRevisor do
           expect(post).to be_locked
         end
 
+        it "doesn't lock the post when the raw did not change" do
+          result = subject.revise!(
+            moderator,
+            title: "New topic title, cool!"
+          )
+          expect(result).to eq(true)
+          post.reload
+          expect(post.topic.title).to eq("New topic title, cool!")
+          expect(post).not_to be_locked
+        end
+
+
         it "doesn't lock the post when revised by a regular user" do
           result = subject.revise!(
             Fabricate(:user),
