@@ -22,7 +22,6 @@ RSpec.describe PostsController do
       category.set_permissions(staff: :full)
       category.save!
 
-      # strange API, why is topic id in here twice
       put "/posts/#{post.id}.json", params: {
         post: { category_id: category.id, raw: "this is a test edit to post" }
       }
