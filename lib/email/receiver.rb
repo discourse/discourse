@@ -261,16 +261,9 @@ module Email
       end
 
       markdown, elided_markdown = if html.present?
-        if html[%{<div class="gmail_}]
-          html, elided_html = extract_from_gmail(html)
-          markdown = HtmlToMarkdown.new(html, keep_img_tags: true, keep_cid_imgs: true).to_markdown
-          elided_markdown = HtmlToMarkdown.new(elided_html).to_markdown
-          [markdown, elided_markdown]
-        elsif html[%{<div id="divRplyFwdMsg"}]
-          html, elided_html = extract_from_outlook(html)
-          markdown = HtmlToMarkdown.new(html, keep_img_tags: true, keep_cid_imgs: true).to_markdown
-          elided_markdown = HtmlToMarkdown.new(elided_html).to_markdown
-          [markdown, elided_markdown]
+        # use the first html extracter that matches
+        if html_extracter = HTML_EXTRACTERS.select { |_, r| html[r] }.min_by { |_, r| html =~ r }
+          self.send(:"extract_from_#{html_extracter[0]}", html)
         else
           markdown = HtmlToMarkdown.new(html, keep_img_tags: true, keep_cid_imgs: true).to_markdown
           markdown = trim_discourse_markers(markdown)
@@ -285,24 +278,66 @@ module Email
       end
     end
 
+    def to_markdown(html, elided_html)
+      markdown = HtmlToMarkdown.new(html, keep_img_tags: true, keep_cid_imgs: true).to_markdown
+      [EmailReplyTrimmer.trim(markdown), HtmlToMarkdown.new(elided_html).to_markdown]
+    end
+
+    HTML_EXTRACTERS ||= [
+      [:gmail, /class="gmail_/],
+      [:outlook, /id="(divRplyFwdMsg|Signature)"/],
+      [:word, /class="WordSection1"/],
+      [:exchange, /name="message(Body|Reply)Section"/],
+      [:apple_mail, /id="AppleMailSignature"/],
+      [:mozilla, /class="moz-/],
+    ]
+
     def extract_from_gmail(html)
-      doc = Nokogiri::HTML.parse(html)
-      elided = doc.xpath("//*[contains(@class, 'gmail_')]").remove
-      [doc.root.to_html, elided.to_html]
+      doc = Nokogiri::HTML.fragment(html)
+      # GMail adds a bunch of 'gmail_' prefixed classes like: gmail_signature, gmail_extra, gmail_quote
+      # Just elide them all
+      elided = doc.css("*[class^='gmail_']").remove
+      to_markdown(doc.to_html, elided.to_html)
     end
 
     def extract_from_outlook(html)
       doc = Nokogiri::HTML.fragment(html)
-      # that div only holds the headers of the forwarded email
-      fwd = doc.css("#divRplyFwdMsg")[0]
-      elided = fwd.dup
-      # the forwarded email is in the next <div>
-      elided << fwd.next_element
-      # also elide any signatures
-      elided << doc.css("#Signature").remove
-      # remove the leading <hr>
-      [fwd.previous_element, fwd].each(&:remove)
-      [doc.to_html, elided.to_html]
+      # Outlook properly identifies the signature and any replied/forwarded email
+      # Use their id to remove them and anything that comes after
+      elided = doc.css("#Signature, #Signature ~ *, hr, #divRplyFwdMsg, #divRplyFwdMsg ~ *").remove
+      to_markdown(doc.to_html, elided.to_html)
+    end
+
+    def extract_from_word(html)
+      doc = Nokogiri::HTML.fragment(html)
+      # Word (?) keeps the content in the 'WordSection1' class and uses <p> tags
+      # When there's something else (<table>, <div>, etc..) there's high chance it's a signature or forwarded email
+      elided = doc.css(".WordSection1 > :not(p):not(ul):first-of-type, .WordSection1 > :not(p):not(ul):first-of-type ~ *").remove
+      to_markdown(doc.at(".WordSection1").to_html, elided.to_html)
+    end
+
+    def extract_from_exchange(html)
+      doc = Nokogiri::HTML.fragment(html)
+      # Exchange is using the 'messageReplySection' class for forwarded emails
+      # And 'messageBodySection' for the actual email
+      elided = doc.css("div[name='messageReplySection']").remove
+      to_markdown(doc.css("div[name='messageBodySection'").to_html, elided.to_html)
+    end
+
+    def extract_from_apple_mail(html)
+      doc = Nokogiri::HTML.fragment(html)
+      # AppleMail is the worst. It adds 'AppleMailSignature' ids (!) to several div/p with no deterministic rules
+      # Our best guess is to elide whatever comes after that.
+      elided = doc.css("#AppleMailSignature:last-of_type ~ *").remove
+      to_markdown(doc.to_html, elided.to_html)
+    end
+
+    def extract_from_mozilla(html)
+      doc = Nokogiri::HTML.fragment(html)
+      # Mozilla (Thunderbird ?) properly identifies signature and forwarded emails
+      # Remove them and anything that comes after
+      elided = doc.css("*[class^='moz-'], *[class^='moz-'] ~ *").remove
+      to_markdown(doc.to_html, elided.to_html)
     end
 
     def trim_reply_and_extract_elided(text)
