@@ -1,3 +1,5 @@
+import { emojiUnescape } from 'discourse/lib/text';
+
 export default function (filter) {
   return Discourse.Route.extend({
     actions: {
@@ -19,6 +21,12 @@ export default function (filter) {
     setupController(controller, model) {
       // initialize "canLoadMore"
       model.set("canLoadMore", model.get("itemsLoaded") === 60);
+
+      model.get('content').forEach((item) => {
+        if (item.get('title')) {
+          item.set('title', emojiUnescape(Handlebars.Utils.escapeExpression(item.title)));
+        }
+      });
 
       this.controllerFor("user-posts").set("model", model);
     },
