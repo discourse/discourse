@@ -40,6 +40,10 @@
         <div class="control-group">
           <div class="controls">
             {{{i18n 'user.second_factor.enable_description'}}}
+
+            {{#if displayOAuthWarning}}
+              {{i18n 'user.second_factor.oauth_enabled_warning'}}
+            {{/if}}
           </div>
         </div>
 

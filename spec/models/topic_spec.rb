@@ -469,6 +469,34 @@ describe Topic do
     let(:topic) { Fabricate(:topic, user: user) }
     let(:another_user) { Fabricate(:user) }
 
+    context 'rate limits' do
+      before do
+        SiteSetting.max_topic_invitations_per_day = 2
+        RateLimiter.enable
+      end
+
+      after do
+        RateLimiter.clear_all!
+        RateLimiter.disable
+      end
+
+      it "rate limits topic invitations" do
+
+        start = Time.now.tomorrow.beginning_of_day
+        freeze_time(start)
+
+        trust_level_2 = Fabricate(:user, trust_level: 2)
+        topic = Fabricate(:topic, user: trust_level_2)
+
+        topic.invite(topic.user, user.username)
+        topic.invite(topic.user, "walter@white.com")
+
+        expect {
+          topic.invite(topic.user, "user@example.com")
+        }.to raise_error(RateLimiter::LimitExceeded)
+      end
+    end
+
     describe 'when username_or_email is not valid' do
       it 'should return the right value' do
         expect do
@@ -504,6 +532,17 @@ describe Topic do
           expect(topic.remove_allowed_user(user, another_user.username)).to eq(true)
           expect(topic.reload.allowed_users).to_not include(another_user)
           expect(Post.last.action_code).to eq("removed_user")
+        end
+
+        context "from a muted user" do
+          before { MutedUser.create!(user: another_user, muted_user: user) }
+
+          it 'silently fails' do
+            expect(topic.invite(user, another_user.username)).to eq(true)
+            expect(topic.allowed_users).to_not include(another_user)
+            expect(Post.last).to be_blank
+            expect(Notification.last).to be_blank
+          end
         end
       end
 
@@ -569,6 +608,17 @@ describe Topic do
           expect(topic.invite(user, another_user.email)).to eq(true)
           expect(topic.reload.allowed_users.last).to eq(another_user)
           expect_the_right_notification_to_be_created
+        end
+
+        context "for a muted topic" do
+          before { TopicUser.change(another_user.id, topic.id, notification_level: TopicUser.notification_levels[:muted]) }
+
+          it 'silently fails' do
+            expect(topic.invite(user, another_user.username)).to eq(true)
+            expect(topic.allowed_users).to_not include(another_user)
+            expect(Post.last).to be_blank
+            expect(Notification.last).to be_blank
+          end
         end
 
         describe 'when user can invite via email' do

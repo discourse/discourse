@@ -791,6 +791,8 @@ SQL
       raise UserExists.new(I18n.t("topic_invite.user_exists"))
     end
 
+    return true if target_user && invite_existing_muted?(target_user, invited_by)
+
     if target_user && private_message? && topic_allowed_users.create!(user_id: target_user.id)
       add_small_action(invited_by, "invited_user", target_user.username)
 
@@ -802,6 +804,8 @@ SQL
 
       true
     elsif username_or_email =~ /^.+@.+$/ && Guardian.new(invited_by).can_invite_via_email?(self)
+      rate_limit_topic_invitation(invited_by)
+
       if target_user
         Invite.extend_permissions(self, target_user, invited_by)
 
@@ -815,7 +819,10 @@ SQL
       end
 
       true
-    elsif target_user && topic_allowed_users.create!(user_id: target_user.id)
+    elsif target_user &&
+          rate_limit_topic_invitation(invited_by) &&
+          topic_allowed_users.create!(user_id: target_user.id)
+
       create_invite_notification!(
         target_user,
         Notification.types[:invited_to_topic],
@@ -828,6 +835,26 @@ SQL
 
   def invite_by_email(invited_by, email, group_ids = nil, custom_message = nil)
     Invite.invite_by_email(email, invited_by, self, group_ids, custom_message)
+  end
+
+  def invite_existing_muted?(target_user, invited_by)
+    if invited_by.id &&
+       MutedUser.where(user_id: target_user.id, muted_user_id: invited_by.id)
+           .joins(:muted_user)
+           .where('NOT admin AND NOT moderator')
+           .exists?
+      return true
+    end
+
+    if TopicUser.where(
+         topic: self,
+         user: target_user,
+         notification_level: TopicUser.notification_levels[:muted]
+        ).exists?
+      return true
+    end
+
+    false
   end
 
   def email_already_exists_for?(invite)
@@ -1295,6 +1322,17 @@ SQL
         display_username: username
       }.to_json
     )
+  end
+
+  def rate_limit_topic_invitation(invited_by)
+    RateLimiter.new(
+      invited_by,
+      "topic-invitations-per-day",
+      SiteSetting.max_topic_invitations_per_day,
+      1.day.to_i
+    ).performed!
+
+    true
   end
 end
 

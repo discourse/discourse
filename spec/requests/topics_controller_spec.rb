@@ -4,6 +4,24 @@ RSpec.describe TopicsController do
   let(:topic) { Fabricate(:topic) }
   let(:user) { Fabricate(:user) }
 
+  describe '#update' do
+
+    it 'can not change category to a disallowed category' do
+      post = create_post
+      sign_in(post.user)
+
+      category = Fabricate(:category)
+      category.set_permissions(staff: :full)
+      category.save!
+
+      put "/t/#{post.topic_id}.json", params: { category_id: category.id }
+      expect(response.status).not_to eq(200)
+
+      expect(post.topic.category_id).not_to eq(category.id)
+    end
+
+  end
+
   describe '#show' do
     let(:private_topic) { Fabricate(:private_message_topic) }
 

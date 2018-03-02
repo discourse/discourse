@@ -192,6 +192,7 @@ class Group < ActiveRecord::Base
       .references(:posts, :topics, :category)
       .where(user_id: user_ids)
       .where('topics.archetype <> ?', Archetype.private_message)
+      .where('topics.visible')
       .where(post_type: Post.types[:regular])
 
     if opts[:category_id].present?

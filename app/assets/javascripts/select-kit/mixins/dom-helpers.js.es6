@@ -111,11 +111,10 @@ export default Ember.Mixin.create({
     const discourseHeader = $(".d-header")[0];
     const discourseHeaderHeight = discourseHeader ? (discourseHeader.getBoundingClientRect().top + this._computedStyle(discourseHeader, "height")) : 0;
     const bodyHeight = this._computedStyle(this.$body()[0], "height");
-    const windowWidth = $(window).width();
     const componentHeight = this._computedStyle(this.get("element"), "height");
-    const componentWidth = this._computedStyle(this.get("element"), "width");
     const offsetTop = this.get("element").getBoundingClientRect().top;
     const offsetBottom = this.get("element").getBoundingClientRect().bottom;
+    const windowWidth = $(window).width();
 
     if (this.get("fullWidthOnMobile") && (this.site && this.site.isMobileDevice)) {
       const margin = 10;
@@ -124,28 +123,25 @@ export default Ember.Mixin.create({
       options.width = windowWidth - margin * 2;
       options.maxWidth = options.minWidth = "unset";
     } else {
+      const parentWidth = this.$scrollableParent().length ? this.$scrollableParent().width() : windowWidth;
       const bodyWidth = this._computedStyle(this.$body()[0], "width");
 
-      if (this._isRTL()) {
-        const horizontalSpacing = this.get("element").getBoundingClientRect().right;
-        const hasHorizontalSpace = horizontalSpacing - (this.get("horizontalOffset") + bodyWidth) > 0;
-        if (hasHorizontalSpace) {
-          this.setProperties({ isLeftAligned: true, isRightAligned: false });
-          options.left = bodyWidth + this.get("horizontalOffset");
-        } else {
-          this.setProperties({ isLeftAligned: false, isRightAligned: true });
-          options.right = - (bodyWidth - componentWidth + this.get("horizontalOffset"));
-        }
+      let marginToEdge;
+      if (this.$scrollableParent().length) {
+        marginToEdge = this.$().offset().left - this.$scrollableParent().offset().left;
       } else {
-        const horizontalSpacing = this.get("element").getBoundingClientRect().left;
-        const hasHorizontalSpace = (windowWidth - (this.get("horizontalOffset") + horizontalSpacing + bodyWidth) > 0);
-        if (hasHorizontalSpace) {
-          this.setProperties({ isLeftAligned: true, isRightAligned: false });
-          options.left = this.get("horizontalOffset");
-        } else {
-          this.setProperties({ isLeftAligned: false, isRightAligned: true });
-          options.right = this.get("horizontalOffset");
-        }
+        marginToEdge = this.get("element").getBoundingClientRect().left;
+      }
+
+      const enoughMarginToOppositeEdge = (parentWidth - marginToEdge - bodyWidth + this.get("horizontalOffset")) > 0;
+      if (enoughMarginToOppositeEdge) {
+        this.setProperties({ isLeftAligned: true, isRightAligned: false });
+        options.left = this.get("horizontalOffset");
+        options.right = "unset";
+      } else {
+        this.setProperties({ isLeftAligned: false, isRightAligned: true });
+        options.left = "unset";
+        options.right = this.get("horizontalOffset");
       }
     }
 
@@ -166,8 +162,8 @@ export default Ember.Mixin.create({
 
   _applyFixedPosition() {
     if (this.get("isExpanded") !== true) return;
-    if (this.$fixedPlaceholder().length === 1) return;
-    if (this.$scrollableParent().length === 0) return;
+    if (this.$fixedPlaceholder().length) return;
+    if (!this.$scrollableParent().length) return;
 
     const width =  this._computedStyle(this.get("element"), "width");
     const height =  this._computedStyle(this.get("element"), "height");

@@ -112,6 +112,7 @@ describe UserAnonymizer do
       user.facebook_user_info = FacebookUserInfo.create(user_id: user.id, facebook_user_id: "example")
       user.single_sign_on_record = SingleSignOnRecord.create(user_id: user.id, external_id: "example", last_payload: "looks good")
       user.oauth2_user_info = Oauth2UserInfo.create(user_id: user.id, uid: "example", provider: "example")
+      user.instagram_user_info = InstagramUserInfo.create(user_id: user.id, screen_name: "example", instagram_user_id: "examplel123123")
       UserOpenId.create(user_id: user.id, email: user.email, url: "http://example.com/openid", active: true)
       make_anonymous
       user.reload
@@ -121,6 +122,7 @@ describe UserAnonymizer do
       expect(user.facebook_user_info).to eq(nil)
       expect(user.single_sign_on_record).to eq(nil)
       expect(user.oauth2_user_info).to eq(nil)
+      expect(user.instagram_user_info).to eq(nil)
       expect(user.user_open_ids.count).to eq(0)
     end
 

@@ -144,7 +144,7 @@ class DiscourseSingleSignOn < SingleSignOn
       user = User.create!(user_params)
 
       if SiteSetting.verbose_sso_logging
-        Rails.logger.warn("Verbose SSO log: New User (user_id: #{user.id}) Created with #{user_params} Email: #{user.primary_email.attributes}")
+        Rails.logger.warn("Verbose SSO log: New User (user_id: #{user.id}) Params: #{user_params} User Params: #{user.attributes} User Errors: #{user.errors.full_messages} Email: #{user.primary_email.attributes} Email Error: #{user.primary_email.errors.full_messages}")
       end
     end
 

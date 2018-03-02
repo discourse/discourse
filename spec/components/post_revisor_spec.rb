@@ -38,6 +38,32 @@ describe PostRevisor do
     end
   end
 
+  context 'editing category' do
+
+    it 'does not revise category when no permission to create a topic in category' do
+      category = Fabricate(:category)
+      category.set_permissions(staff: :full)
+      category.save!
+
+      post = create_post
+      old_id = post.topic.category_id
+
+      post.revise(post.user, category_id: category.id)
+
+      post.reload
+      expect(post.topic.category_id).to eq(old_id)
+
+      category.set_permissions(everyone: :full)
+      category.save!
+
+      post.revise(post.user, category_id: category.id)
+
+      post.reload
+      expect(post.topic.category_id).to eq(category.id)
+    end
+
+  end
+
   context 'revise wiki' do
 
     before do
@@ -424,6 +450,17 @@ describe PostRevisor do
           expect(result).to eq(true)
           post.reload
           expect(post).to be_locked
+        end
+
+        it "doesn't lock the post when the raw did not change" do
+          result = subject.revise!(
+            moderator,
+            title: "New topic title, cool!"
+          )
+          expect(result).to eq(true)
+          post.reload
+          expect(post.topic.title).to eq("New topic title, cool!")
+          expect(post).not_to be_locked
         end
 
         it "doesn't lock the post when revised by a regular user" do

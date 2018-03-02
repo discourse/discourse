@@ -89,5 +89,22 @@ RSpec.describe SecondFactorManager do
         expect(user.totp_enabled?).to eq(true)
       end
     end
+
+    describe 'when SSO is enabled' do
+      it 'should return false' do
+        SiteSetting.sso_url = 'http://someurl.com'
+        SiteSetting.enable_sso = true
+
+        expect(user.totp_enabled?).to eq(false)
+      end
+    end
+
+    describe 'when local login is disabled' do
+      it 'should return false' do
+        SiteSetting.enable_local_logins = false
+
+        expect(user.totp_enabled?).to eq(false)
+      end
+    end
   end
 end

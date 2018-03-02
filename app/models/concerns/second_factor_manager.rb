@@ -33,6 +33,8 @@ module SecondFactorManager
   end
 
   def totp_enabled?
-    !!(self&.user_second_factor&.enabled?)
+    !!(self&.user_second_factor&.enabled?) &&
+      !SiteSetting.enable_sso &&
+      SiteSetting.enable_local_logins
   end
 end

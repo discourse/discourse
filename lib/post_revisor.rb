@@ -69,8 +69,10 @@ class PostRevisor
   end
 
   track_topic_field(:category_id) do |tc, category_id|
-    tc.record_change('category_id', tc.topic.category_id, category_id)
-    tc.check_result(tc.topic.change_category_to_id(category_id))
+    if tc.guardian.can_create_topic_on_category?(category_id)
+      tc.record_change('category_id', tc.topic.category_id, category_id)
+      tc.check_result(tc.topic.change_category_to_id(category_id))
+    end
   end
 
   track_topic_field(:tags) do |tc, tags|
@@ -165,9 +167,12 @@ class PostRevisor
     end
 
     # Lock the post by default if the appropriate setting is true
-    if SiteSetting.staff_edit_locks_post? &&
-        @editor.staff? &&
-        !@post.user.staff?
+    if (
+      SiteSetting.staff_edit_locks_post? &&
+      @fields.has_key?('raw') &&
+      @editor.staff? &&
+      !@post.user.staff?
+    )
       PostLocker.new(@post, @editor).lock
     end
 
