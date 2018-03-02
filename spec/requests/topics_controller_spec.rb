@@ -14,8 +14,7 @@ RSpec.describe TopicsController do
       category.set_permissions(staff: :full)
       category.save!
 
-      # strange API, why is topic id in here twice
-      put "/t/#{post.topic_id}.json", params: { category_id: category.id, topic_id: post.topic_id }
+      put "/t/#{post.topic_id}.json", params: { category_id: category.id }
       expect(response.status).not_to eq(200)
 
       expect(post.topic.category_id).not_to eq(category.id)
