@@ -226,6 +226,15 @@ class TopicsController < ApplicationController
     topic = Topic.find_by(id: params[:topic_id])
     guardian.ensure_can_edit!(topic)
 
+    if params[:category_id] && (params[:category_id].to_i != topic.category_id.to_i)
+      category = Category.find_by(id: params[:category_id])
+      if category || (params[:category_id].to_i == 0)
+        guardian.ensure_can_create_topic_on_category!(category)
+      else
+        return render_json_error(I18n.t('category.errors.not_found'))
+      end
+    end
+
     changes = {}
     PostRevisor.tracked_topic_fields.each_key do |f|
       changes[f] = params[f] if params.has_key?(f)
