@@ -276,6 +276,7 @@
 
 .show-badge-details {
   display: flex;
+  flex-wrap: wrap;
   flex-direction: row;
   margin-bottom: 2em;
   margin-top: 1em;
@@ -283,6 +284,7 @@
   .badge-grant-info {
     display: flex;
     align-items: center;
+    width: 100%;
     &.hidden {
       display: none;
     }
