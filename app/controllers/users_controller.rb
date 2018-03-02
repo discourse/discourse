@@ -952,6 +952,7 @@ class UsersController < ApplicationController
   end
 
   def create_second_factor
+    raise Discourse::NotFound if SiteSetting.enable_sso || !SiteSetting.enable_local_logins
     RateLimiter.new(nil, "login-hr-#{request.remote_ip}", SiteSetting.max_logins_per_ip_per_hour, 1.hour).performed!
     RateLimiter.new(nil, "login-min-#{request.remote_ip}", SiteSetting.max_logins_per_ip_per_minute, 1.minute).performed!
 

@@ -431,6 +431,31 @@ RSpec.describe UsersController do
           )
         end
 
+        describe 'when local logins are disabled' do
+          it 'should return the right response' do
+            SiteSetting.enable_local_logins = false
+
+            post "/users/second_factors.json", params: {
+              password: 'somecomplicatedpassword'
+            }
+
+            expect(response.status).to eq(404)
+          end
+        end
+
+        describe 'when SSO is enabled' do
+          it 'should return the right response' do
+            SiteSetting.sso_url = 'http://someurl.com'
+            SiteSetting.enable_sso = true
+
+            post "/users/second_factors.json", params: {
+              password: 'somecomplicatedpassword'
+            }
+
+            expect(response.status).to eq(404)
+          end
+        end
+
         it 'succeeds on correct password' do
           post "/users/second_factors.json", params: {
             password: 'somecomplicatedpassword'
