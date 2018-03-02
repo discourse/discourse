@@ -37,6 +37,10 @@
     align-items: center;
   }
 
+  .hamburger-panel {
+    width: 0; // Flexbox fix for Safari ≤ iOS11
+  }
+
   .header-buttons {
     margin-top: .2em;
   }
