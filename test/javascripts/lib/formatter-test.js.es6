@@ -211,6 +211,8 @@ QUnit.test("number", assert => {
   assert.equal(number(NaN), "0", "it returns 0 for NaN");
   assert.equal(number(3333), "3.3k", "it abbreviates thousands");
   assert.equal(number(2499999), "2.5M", "it abbreviates millions");
+  assert.equal(number(1000000), "1.0M", "it abbreviates a million");
+  assert.equal(number(999999), "999k", "it abbreviates hundreds of thousands");
 });
 
 QUnit.test("durationTiny", assert => {
