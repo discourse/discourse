@@ -76,6 +76,30 @@ describe ThemeSettingsManager do
     end
   end
 
+  context "Float" do
+    it "is always a float" do
+      float_setting = find_by_name(:float_setting)
+      float_setting.value = 1.615
+      expect(float_setting.value).to eq(1.615)
+
+      float_setting.value = "3.1415"
+      expect(float_setting.value).to eq(3.1415)
+
+      float_setting.value = 10
+      expect(float_setting.value).to eq(10)
+    end
+
+    it "can have min or max value" do
+      float_setting = find_by_name(:float_setting)
+      expect { float_setting.value = 1.4 }.to raise_error(Discourse::InvalidParameters)
+      expect { float_setting.value = 10.01 }.to raise_error(Discourse::InvalidParameters)
+      expect { float_setting.value = "text" }.to raise_error(Discourse::InvalidParameters)
+
+      float_setting.value = 9.521
+      expect(float_setting.value).to eq(9.521)
+    end
+  end
+
   context "String" do
     it "can have min or max length" do
       string_setting = find_by_name(:string_setting_02)

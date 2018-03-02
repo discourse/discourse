@@ -90,9 +90,9 @@ COMPILED
         translation_key = "themes.settings_errors"
 
         if setting.invalid?
-          setting.errors.details.each_pair do |column_name, _errors|
+          setting.errors.details.each_pair do |attribute, _errors|
             _errors.each do |hash|
-              errors << I18n.t("#{translation_key}.#{column_name}_#{hash[:error]}", name: name)
+              errors << I18n.t("#{translation_key}.#{attribute}_#{hash[:error]}", name: name)
             end
           end
         end

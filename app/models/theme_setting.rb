@@ -10,13 +10,15 @@ class ThemeSetting < ActiveRecord::Base
   end
 
   def self.types
-    @types ||= Enum.new(integer: 0, string: 1, bool: 2, list: 3, enum: 4)
+    @types ||= Enum.new(integer: 0, float: 1, string: 2, bool: 3, list: 4, enum: 5)
   end
 
   def self.acceptable_value_for_type?(value, type)
     case type
     when self.types[:integer]
       value.is_a?(Integer)
+    when self.types[:float]
+      value.is_a?(Integer) || value.is_a?(Float)
     when self.types[:bool]
       value.is_a?(TrueClass) || value.is_a?(FalseClass)
     when self.types[:list]
@@ -27,7 +29,7 @@ class ThemeSetting < ActiveRecord::Base
   end
 
   def self.value_in_range?(value, range, type)
-    if type == self.types[:integer]
+    if type == self.types[:integer] || type == self.types[:float]
       range.include? value
     elsif type == self.types[:string]
       range.include? value.to_s.length
@@ -38,6 +40,8 @@ class ThemeSetting < ActiveRecord::Base
     case value
     when Integer
       types[:integer]
+    when Float
+      types[:float]
     when String
       types[:string]
     when TrueClass, FalseClass

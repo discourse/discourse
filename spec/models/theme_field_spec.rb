@@ -84,7 +84,6 @@ HTML
   it "generates errors when invalid type is passed" do
     field = create_yaml_field(get_fixture("invalid"))
     expect(field.error).to include(I18n.t("#{key}.data_type_not_a_number", name: "invalid_type_setting"))
-    expect(field.error).to include(I18n.t("#{key}.data_type_not_a_number", name: "unsupported_setting"))
   end
 
   it "generates errors when default value is not within allowed range" do

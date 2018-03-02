@@ -17,5 +17,3 @@ default_out_of_range:
 string_default_out_of_range:
   default: "abcdefg"
   min: 20
-
-unsupported_setting: 2.5

@@ -27,6 +27,11 @@ integer_setting_03:
   description:
     xyz: "invalid language"
 
+float_setting:
+  default: 2.5
+  min: 1.5
+  max: 10
+
 list_setting:
   type: list
   description: "help text"

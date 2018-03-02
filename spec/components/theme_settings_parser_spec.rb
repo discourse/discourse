@@ -42,6 +42,7 @@ describe ThemeSettingsParser do
     expect(loader.find_by_name(:string_setting)[:type]).to      eq(types[:string])
     expect(loader.find_by_name(:integer_setting)[:type]).to     eq(types[:integer])
     expect(loader.find_by_name(:integer_setting_03)[:type]).to  eq(types[:integer])
+    expect(loader.find_by_name(:float_setting)[:type]).to       eq(types[:float])
     expect(loader.find_by_name(:list_setting)[:type]).to        eq(types[:list])
     expect(loader.find_by_name(:enum_setting)[:type]).to        eq(types[:enum])
   end

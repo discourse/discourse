@@ -29,9 +29,9 @@ class ThemeSettingsParser
       opts[:choices] = choices
     end
 
-    if type == @types[:string] || type == @types[:integer]
-      opts[:max] = raw_opts[:max].is_a?(Integer) ? raw_opts[:max] : Float::INFINITY
-      opts[:min] = raw_opts[:min].is_a?(Integer) ? raw_opts[:min] : -Float::INFINITY
+    if [@types[:integer], @types[:string], @types[:float]].include?(type)
+      opts[:max] = raw_opts[:max].is_a?(Numeric) ? raw_opts[:max] : Float::INFINITY
+      opts[:min] = raw_opts[:min].is_a?(Numeric) ? raw_opts[:min] : -Float::INFINITY
     end
     opts
   end
@@ -49,8 +49,6 @@ class ThemeSettingsParser
     parsed.deep_symbolize_keys!
 
     parsed.each_pair do |setting, value|
-      result = [setting, nil, nil, {}] if value.nil?
-
       if (type = ThemeSetting.guess_type(value)).present?
         result = [setting, value, type, create_opts(value, type)]
       elsif (hash = value).is_a?(Hash)

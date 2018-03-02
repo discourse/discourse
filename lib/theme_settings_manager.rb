@@ -16,6 +16,7 @@ class ThemeSettingsManager
     @default = default
     @theme = theme
     @opts = opts
+    @types = self.class.types
   end
 
   def value
@@ -27,11 +28,20 @@ class ThemeSettingsManager
   end
 
   def type
-    ThemeSetting.types[type_name]
+    @types[type_name]
   end
 
   def description
     @opts[:description]
+  end
+
+  def value=(new_value)
+    ensure_is_valid_value!(new_value)
+
+    record = has_record? ? db_record : create_record!
+    record.value = new_value.to_s
+    record.save!
+    record.value
   end
 
   def db_record
@@ -48,31 +58,22 @@ class ThemeSettingsManager
     record
   end
 
-  def value=(new_value)
-    ensure_is_valid_value!(new_value)
-
-    record = has_record? ? db_record : create_record!
-    record.value = new_value.to_s
-    record.save!
-    record.value
-  end
-
   def is_valid_value?(new_value)
     true
   end
 
   def invalid_value_error_message
-    primary_key = "themes.settings_errors.#{self.type_name}_value_not_valid"
+    name = type == @types[:integer] || type == @types[:float] ? "number" : type_name
+    primary_key = "themes.settings_errors.#{name}_value_not_valid"
+
     secondary_key = primary_key
-
-    min = @opts[:min]
-    max = @opts[:max]
-
-    secondary_key += "_min" if min.is_a?(::Integer)
-    secondary_key += "_max" if max.is_a?(::Integer)
+    secondary_key += "_min" if has_min?
+    secondary_key += "_max" if has_max?
 
     translation = I18n.t(primary_key)
-    translation += " #{I18n.t(secondary_key, min: min, max: max)}" if secondary_key != primary_key
+    return translation if secondary_key == primary_key
+
+    translation += " #{I18n.t(secondary_key, min: @opts[:min], max: @opts[:max])}"
     translation
   end
 
@@ -80,6 +81,16 @@ class ThemeSettingsManager
     unless is_valid_value?(new_value)
       raise Discourse::InvalidParameters.new invalid_value_error_message
     end
+  end
+
+  def has_min?
+    min = @opts[:min]
+    (min.is_a?(::Integer) || min.is_a?(::Float)) && min != -::Float::INFINITY
+  end
+
+  def has_max?
+    max = @opts[:max]
+    (max.is_a?(::Integer) || max.is_a?(::Float)) && max != ::Float::INFINITY
   end
 
   class List    < self; end
@@ -111,6 +122,20 @@ class ThemeSettingsManager
 
     def is_valid_value?(new_value)
       (@opts[:min]..@opts[:max]).include? new_value.to_i
+    end
+  end
+
+  class Float < self
+    def value
+      super.to_f
+    end
+
+    def value=(new_value)
+      super(new_value.to_f)
+    end
+
+    def is_valid_value?(new_value)
+      (@opts[:min]..@opts[:max]).include? new_value.to_f
     end
   end
 
