@@ -992,11 +992,11 @@ class User < ActiveRecord::Base
     primary_email.email
   end
 
-  def email=(email)
+  def email=(new_email)
     if primary_email
-      new_record? ? primary_email.email = email : primary_email.update(email: email)
+      new_record? ? primary_email.email = new_email : primary_email.update(email: new_email)
     else
-      build_primary_email(email: email)
+      build_primary_email(email: new_email)
     end
   end
 
