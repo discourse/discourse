@@ -4,11 +4,14 @@ class ReplyByEmailAddressValidator
   end
 
   def valid_value?(val)
-    return true if val.blank?
+    return true  if val.blank?
+    return false if val["@"].nil?
 
-    !!val["@"] &&
-    !!val["%{reply_key}"] &&
-    val.gsub(/\+?%{reply_key}/, "") != SiteSetting.notification_email
+    if SiteSetting.find_related_post_with_key
+      !!val["%{reply_key}"] && val.sub(/\+?%{reply_key}/, "") != SiteSetting.notification_email
+    else
+      val != SiteSetting.notification_email
+    end
   end
 
   def error_message
