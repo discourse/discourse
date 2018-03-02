@@ -405,7 +405,6 @@ class UserMerger
 
   def update_user_id(table_name, opts = {})
     builder = update_user_id_sql_builder(table_name, opts)
-    puts builder.to_sql
     builder.exec(source_user_id: @source_user.id, target_user_id: @target_user.id)
   end
 
