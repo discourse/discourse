@@ -1140,22 +1140,6 @@ describe TopicsController do
           expect(@topic.title).to eq('This is a new title for the topic')
         end
 
-        it 'triggers a change of category' do
-          Topic.any_instance.expects(:change_category_to_id).with(123).returns(true)
-          put :update, params: {
-            topic_id: @topic.id, slug: @topic.title, category_id: 123
-          }, format: :json
-
-        end
-
-        it 'allows to change category to "uncategorized"' do
-          Topic.any_instance.expects(:change_category_to_id).with(0).returns(true)
-          put :update, params: {
-            topic_id: @topic.id, slug: @topic.title, category_id: ""
-          }, format: :json
-
-        end
-
         it "returns errors with invalid titles" do
           put :update, params: {
             topic_id: @topic.id, slug: @topic.title, title: 'asdf'
@@ -1174,7 +1158,6 @@ describe TopicsController do
         end
 
         it "returns errors with invalid categories" do
-          Topic.any_instance.expects(:change_category_to_id).returns(false)
           put :update, params: {
             topic_id: @topic.id, slug: @topic.title, category_id: -1
           }, format: :json
@@ -1201,8 +1184,9 @@ describe TopicsController do
           context 'when there are no changes' do
             it 'does not call the PostRevisor' do
               PostRevisor.any_instance.expects(:revise!).never
+
               put :update, params: {
-                topic_id: @topic.id, slug: @topic.title, title: @topic.title, category_id: nil
+                topic_id: @topic.id, slug: @topic.title, title: @topic.title, category_id: @topic.category_id
               }, format: :json
 
               expect(response).to be_success
@@ -1216,10 +1200,10 @@ describe TopicsController do
           end
 
           it "can add a category to an uncategorized topic" do
-            Topic.any_instance.expects(:change_category_to_id).with(456).returns(true)
+            c = Fabricate(:category)
 
             put :update, params: {
-              topic_id: @topic.id, slug: @topic.title, category_id: 456
+              topic_id: @topic.id, slug: @topic.title, category_id: c.id
             }, format: :json
 
             expect(response).to be_success

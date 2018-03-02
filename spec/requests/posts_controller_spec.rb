@@ -12,9 +12,45 @@ RSpec.describe PostsController do
 
   let(:private_post) { Fabricate(:post, user: user, topic: private_topic) }
 
+  describe '#update' do
+
+    it 'can not change category to a disallowed category' do
+      post = create_post
+      sign_in(post.user)
+
+      category = Fabricate(:category)
+      category.set_permissions(staff: :full)
+      category.save!
+
+      # strange API, why is topic id in here twice
+      put "/posts/#{post.id}.json", params: {
+        post: { category_id: category.id, raw: "this is a test edit to post" }
+      }
+
+      expect(response.status).not_to eq(200)
+      expect(post.topic.category_id).not_to eq(category.id)
+    end
+
+  end
+
   describe '#create' do
     before do
       sign_in(user)
+    end
+
+    it 'can not create a post in a disallowed category' do
+
+      category.set_permissions(staff: :full)
+      category.save!
+
+      post "/posts.json", params: {
+        raw: 'this is the test content',
+        title: 'this is the test title for the topic',
+        category: category.id,
+        meta_data: { xyz: 'abc' }
+      }
+
+      expect(response.status).to eq(403)
     end
 
     it 'creates the post' do
