@@ -47,17 +47,6 @@ export default MountWidget.extend(Docking, {
     this.queueRerender();
   },
 
-  fastDockCheck(){
-    // we need to dock super fast here, avoid any slow methods
-    // this is not debounced
-    const offset = window.pageYOffset;
-
-    if (offset && this.fastDockAt && offset > this.fastDockAt) {
-      this.fastDockAt = null;
-      $('.timeline-container').addClass('timeline-docked timeline-docked-bottom');
-    }
-  },
-
   dockCheck(info) {
     const mainOffset = $('#main').offset();
     const offsetTop = mainOffset ? mainOffset.top : 0;
