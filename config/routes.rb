@@ -542,6 +542,7 @@ Discourse::Application.routes.draw do
   put "category/:category_id/slug" => "categories#update_slug"
 
   get "categories_and_latest" => "categories#categories_and_latest"
+  get "categories_and_top" => "categories#categories_and_top"
 
   get "c/:id/show" => "categories#show"
   get "c/:category_slug/find_by_slug" => "categories#find_by_slug"

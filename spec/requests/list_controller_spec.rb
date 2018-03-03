@@ -15,6 +15,21 @@ RSpec.describe ListController do
     end
   end
 
+  describe "categories and X" do
+    it "returns top topics" do
+      Fabricate(:topic, like_count: 1000, posts_count: 100)
+      TopTopic.refresh!
+
+      get "/categories_and_top.json"
+      data = JSON.parse(response.body)
+      expect(data["topic_list"]["topics"].length).to eq(1)
+
+      get "/categories_and_latest.json"
+      data = JSON.parse(response.body)
+      expect(data["topic_list"]["topics"].length).to eq(1)
+    end
+  end
+
   describe 'suppress from latest' do
 
     it 'supresses categories' do
