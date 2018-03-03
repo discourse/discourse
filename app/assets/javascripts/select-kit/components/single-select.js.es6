@@ -130,8 +130,8 @@ export default SelectKitComponent.extend({
       !Ember.isNone(selectedComputedContent);
   },
 
-  @computed("filter", "computedValue")
-  shouldDisplayCreateRow(filter, computedValue) {
+  @computed("computedValue", "filter", "collectionComputedContent.[]", "limitReached")
+  shouldDisplayCreateRow(computedValue, filter) {
     return this._super() && computedValue !== filter;
   },
 
