@@ -237,7 +237,6 @@ class CategoriesController < ApplicationController
       render_serialized(result, CategoryAndTopicListsSerializer, root: false)
     end
 
-
     def required_param_keys
       [:name, :color, :text_color]
     end
