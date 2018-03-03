@@ -141,7 +141,7 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     return this.computeContentItem(contentItem, options);
   },
 
-  @computed("isAsync", "filteredAsyncComputedContent", "filteredComputedContent")
+  @computed("isAsync", "filteredAsyncComputedContent.[]", "filteredComputedContent.[]")
   collectionComputedContent(isAsync, filteredAsyncComputedContent, filteredComputedContent) {
     return isAsync ? filteredAsyncComputedContent : filteredComputedContent;
   },
@@ -201,10 +201,10 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     return false;
   },
 
-  @computed("filter", "computedContent", "limitReached")
-  shouldDisplayCreateRow(filter, computedContent, limitReached) {
+  @computed("computedValue", "filter", "collectionComputedContent.[]", "limitReached")
+  shouldDisplayCreateRow(computedValue, filter, collectionComputedContent, limitReached) {
     if (limitReached) return false;
-    if (computedContent.map(c => c.value).includes(filter)) return false;
+    if (collectionComputedContent.map(c => c.value).includes(filter)) return false;
     if (this.get("allowAny") && filter.length > 0 && this.validateCreate(filter)) return true;
     return false;
   },
