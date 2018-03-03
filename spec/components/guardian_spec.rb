@@ -1095,6 +1095,11 @@ describe Guardian do
     it 'returns true when an admin' do
       expect(Guardian.new(admin).can_convert_topic?(topic)).to be_truthy
     end
+
+    it 'returns false when personal messages are disabled' do
+      SiteSetting.enable_personal_messages = false
+      expect(Guardian.new(admin).can_convert_topic?(topic)).to be_falsey
+    end
   end
 
   describe 'can_edit?' do
