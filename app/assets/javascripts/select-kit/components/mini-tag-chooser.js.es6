@@ -17,6 +17,7 @@ export default ComboBox.extend(Tags, {
   caretUpIcon: Ember.computed.alias("caretIcon"),
   caretDownIcon: Ember.computed.alias("caretIcon"),
   isAsync: true,
+  fullWidthOnMobile: true,
 
   init() {
     this._super();

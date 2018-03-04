@@ -80,7 +80,10 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     this.set("computedContent", []);
 
     if (this.site && this.site.isMobileDevice) {
-      this.setProperties({ filterable: false, autoFilterable: false });
+      this.setProperties({
+        filterable: isNone(this.get("filterable")) ? false : this.get("filterable"),
+        autoFilterable: isNone(this.get("autoFilterable")) ? false : this.get("filterable")
+      });
     }
 
     if (this.get("nameChanges")) {

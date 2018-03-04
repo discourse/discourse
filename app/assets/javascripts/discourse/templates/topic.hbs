@@ -22,7 +22,7 @@
             {{/if}}
 
             {{#if canEditTags}}
-              {{mini-tag-chooser tags=buffered.tags categoryId=buffered.category_id}}
+              {{mini-tag-chooser filterable=true tags=buffered.tags categoryId=buffered.category_id}}
             {{/if}}
 
             {{plugin-outlet name="edit-topic" args=(hash model=model buffered=buffered)}}
