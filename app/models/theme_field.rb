@@ -24,10 +24,28 @@ class ThemeField < ActiveRecord::Base
 
   belongs_to :theme
 
+  def settings(source)
+
+    settings = {}
+
+    theme.cached_settings.each do |k, v|
+      if source.include?("settings.#{k}")
+        settings[k] = v
+      end
+    end
+
+    if settings.length > 0
+      "let settings = #{settings.to_json};"
+    else
+      ""
+    end
+  end
+
   def transpile(es6_source, version)
     template = Tilt::ES6ModuleTranspilerTemplate.new {}
     wrapped = <<PLUGIN_API_JS
 Discourse._registerPluginCode('#{version}', api => {
+  #{settings(es6_source)}
   #{es6_source}
 });
 PLUGIN_API_JS
