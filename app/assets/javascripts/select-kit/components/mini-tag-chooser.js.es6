@@ -6,6 +6,7 @@ const { get, isEmpty, run, makeArray } = Ember;
 
 export default ComboBox.extend(Tags, {
   allowContentReplacement: true,
+  headerComponent: "mini-tag-chooser/mini-tag-chooser-header",
   pluginApiIdentifiers: ["mini-tag-chooser"],
   attributeBindings: ["categoryId"],
   classNames: ["mini-tag-chooser"],
@@ -65,12 +66,18 @@ export default ComboBox.extend(Tags, {
       event.stopImmediatePropagation();
       this.send("removeTag", $(event.target).attr("data-value"));
     });
+
+    $(".select-kit-header").on("focus.mini-tag-chooser", ".selected-name", (event) => {
+      event.stopImmediatePropagation();
+      this.focus(event);
+    });
   },
 
   willDestroyElement() {
     this._super();
 
     $(".select-kit-body").off("click.mini-tag-chooser");
+    $(".select-kit-header").off("focus.mini-tag-chooser");
   },
 
   didPressEscape(event) {
