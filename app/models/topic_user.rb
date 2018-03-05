@@ -194,7 +194,18 @@ SQL
              notification_type: Notification.types[:invited_to_private_message]
            ).exists?
 
-          attrs[:notification_level] = notification_levels[:watching]
+          group_notification_level = Group
+            .joins("LEFT OUTER JOIN group_users gu ON gu.group_id = groups.id AND gu.user_id = #{user_id}")
+            .joins("LEFT OUTER JOIN topic_allowed_groups tag ON tag.topic_id = #{topic_id}")
+            .where("gu.id IS NOT NULL AND tag.id IS NOT NULL")
+            .pluck(:default_notification_level)
+            .first
+
+          if group_notification_level.present?
+            attrs[:notification_level] = group_notification_level
+          else
+            attrs[:notification_level] = notification_levels[:watching]
+          end
         else
           auto_track_after = UserOption.where(user_id: user_id).pluck(:auto_track_topics_after_msecs).first
           auto_track_after ||= SiteSetting.default_other_auto_track_topics_after_msecs
