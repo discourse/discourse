@@ -542,7 +542,6 @@ end
 #  name_lower                    :string(50)       not null
 #  auto_close_based_on_last_post :boolean          default(FALSE)
 #  topic_template                :text
-#  suppress_from_latest          :boolean          default(FALSE)
 #  contains_messages             :boolean
 #  sort_order                    :string
 #  sort_ascending                :boolean
@@ -556,10 +555,11 @@ end
 #  subcategory_list_style        :string(50)       default("rows_with_featured_topics")
 #  default_top_period            :string(20)       default("all")
 #  mailinglist_mirror            :boolean          default(FALSE), not null
+#  suppress_from_latest          :boolean          default(FALSE)
 #
 # Indexes
 #
 #  index_categories_on_email_in     (email_in) UNIQUE
 #  index_categories_on_topic_count  (topic_count)
-#  unique_index_categories_on_name  (COALESCE(parent_category_id, '-1'::integer), name) UNIQUE
+#  unique_index_categories_on_name  ((COALESCE(parent_category_id, '-1'::integer)), name) UNIQUE
 #

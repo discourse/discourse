@@ -57,12 +57,8 @@ end
 #  id         :integer          not null, primary key
 #  name       :string(255)      not null
 #  data_type  :integer          not null
-#  value      :string
+#  value      :text
 #  theme_id   :integer          not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#
-# Indexes
-#
-#  index_theme_settings_on_theme_id  (theme_id)
 #
