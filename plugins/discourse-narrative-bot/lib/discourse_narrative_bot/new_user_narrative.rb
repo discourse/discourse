@@ -190,7 +190,7 @@ module DiscourseNarrativeBot
       }
 
       if @post &&
-         @post.archetype == Archetype.private_message &&
+         @post.topic.private_message? &&
          @post.topic.topic_allowed_users.pluck(:user_id).include?(@user.id)
 
         opts = opts.merge(topic_id: @post.topic_id)

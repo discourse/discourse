@@ -164,7 +164,7 @@ class Post < ActiveRecord::Base
     }.merge(options)
 
     if Topic.visible_post_types.include?(post_type)
-      if topic.archetype == Archetype.private_message
+      if topic.private_message?
         user_ids = User.where('admin or moderator').pluck(:id)
         user_ids |= topic.allowed_users.pluck(:id)
         MessageBus.publish(channel, msg, user_ids: user_ids)
