@@ -214,7 +214,7 @@ HTML
   end
 
   context "theme settings" do
-    it "values can be used in scss" do
+    it "allows values to be used in scss" do
       theme = Theme.new(name: "awesome theme", user_id: -1)
       theme.set_field(target: :settings, name: :yaml, value: "background_color: red\nfont_size: 25px")
       theme.set_field(target: :common, name: :scss, value: 'body {background-color: $background_color; font-size: $font-size}')
@@ -223,7 +223,42 @@ HTML
       scss, _map = Stylesheet::Compiler.compile('@import "theme_variables"; @import "desktop_theme"; ', "theme.scss", theme_id: theme.id)
       expect(scss).to include("background-color:red")
       expect(scss).to include("font-size:25px")
+
+      setting = theme.settings.find { |s| s.name == :font_size }
+      setting.value = '30px'
+
+      scss, _map = Stylesheet::Compiler.compile('@import "theme_variables"; @import "desktop_theme"; ', "theme.scss", theme_id: theme.id)
+      expect(scss).to include("font-size:30px")
     end
+
+    it "allows values to be used in JS" do
+      theme = Theme.new(name: "awesome theme", user_id: -1)
+      theme.set_field(target: :settings, name: :yaml, value: "name: bob")
+      theme.set_field(target: :common, name: :after_header, value: '<script type="text/discourse-plugin" version="1.0">alert(settings.name); let a = ()=>{};</script>')
+      theme.save!
+
+      transpiled = <<~HTML
+      <script>Discourse._registerPluginCode('1.0', function (api) {
+        var settings = { "name": "bob" };
+        alert(settings.name);var a = function a() {};
+      });</script>
+      HTML
+
+      expect(Theme.lookup_field(theme.key, :desktop, :after_header)).to eq(transpiled.strip)
+
+      setting = theme.settings.find { |s| s.name == :name }
+      setting.value = 'bill'
+
+      transpiled = <<~HTML
+      <script>Discourse._registerPluginCode('1.0', function (api) {
+        var settings = { "name": "bill" };
+        alert(settings.name);var a = function a() {};
+      });</script>
+      HTML
+      expect(Theme.lookup_field(theme.key, :desktop, :after_header)).to eq(transpiled.strip)
+
+    end
+
   end
 
   it 'correctly caches theme keys' do

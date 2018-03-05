@@ -7,6 +7,8 @@ class ThemeSetting < ActiveRecord::Base
 
   after_save do
     theme.clear_cached_settings!
+    theme.remove_from_cache!
+    theme.theme_fields.update_all(value_baked: nil)
   end
 
   def self.types
