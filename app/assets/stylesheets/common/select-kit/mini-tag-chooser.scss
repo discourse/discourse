@@ -23,6 +23,16 @@
         box-shadow: shadow("focus")
       }
 
+      .select-kit-header {
+        .selected-name {
+          margin: 0;
+          border: 0;
+          padding: 0;
+          outline: none;
+          box-shadow: none;
+        }
+      }
+
       .select-kit-filter {
         border-top: 0;
       }

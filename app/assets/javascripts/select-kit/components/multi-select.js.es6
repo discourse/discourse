@@ -260,7 +260,7 @@ export default SelectKitComponent.extend({
   },
 
   didSelect() {
-    this.focusFilterOrHeader();
+    this.focus();
     this.autoHighlight();
 
     applyOnSelectPluginApiCallbacks(
@@ -278,7 +278,7 @@ export default SelectKitComponent.extend({
   },
 
   didDeselect(rowComputedContentItems) {
-    this.focusFilterOrHeader();
+    this.focus();
     this.autoHighlight();
     this._boundaryActionHandler("onDeselect", rowComputedContentItems);
   },
