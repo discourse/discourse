@@ -2014,6 +2014,7 @@ describe Guardian do
 
       it "is true if user is not an admin and first post is not too old" do
         user = Fabricate.build(:user, created_at: 100.days.ago)
+        user.stubs(:post_count).returns(10)
         user.stubs(:first_post_created_at).returns(9.days.ago)
         SiteSetting.delete_user_max_post_age = 10
         expect(Guardian.new(actor).can_delete_user?(user)).to be_truthy
@@ -2025,20 +2026,33 @@ describe Guardian do
 
       it "is false if user's first post is too old" do
         user = Fabricate.build(:user, created_at: 100.days.ago)
+        user.stubs(:post_count).returns(10)
         user.stubs(:first_post_created_at).returns(11.days.ago)
         SiteSetting.delete_user_max_post_age = 10
         expect(Guardian.new(actor).can_delete_user?(user)).to be_falsey
       end
     end
 
+    shared_examples "can_delete_user staff examples" do
+      it "is true if posts are less than or equal to 5" do
+        user = Fabricate.build(:user, created_at: 100.days.ago)
+        user.stubs(:post_count).returns(4)
+        user.stubs(:first_post_created_at).returns(11.days.ago)
+        SiteSetting.delete_user_max_post_age = 10
+        expect(Guardian.new(actor).can_delete_user?(user)).to be_truthy
+      end
+    end
+
     context "for moderators" do
       let(:actor) { moderator }
       include_examples "can_delete_user examples"
+      include_examples "can_delete_user staff examples"
     end
 
     context "for admins" do
       let(:actor) { admin }
       include_examples "can_delete_user examples"
+      include_examples "can_delete_user staff examples"
     end
   end
 
