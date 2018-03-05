@@ -6,10 +6,21 @@ export default Ember.Controller.extend({
   section: null,
 
   targets: [
-    {id: 0, name: I18n.t('admin.customize.theme.common')},
-    {id: 1, name: I18n.t('admin.customize.theme.desktop')},
-    {id: 2, name: I18n.t('admin.customize.theme.mobile')}
+    { id: 0, name: 'common'   },
+    { id: 1, name: 'desktop'  },
+    { id: 2, name: 'mobile'   },
+    { id: 3, name: 'settings' }
   ],
+
+  fieldsForTarget: function (target) {
+    const common = ["scss", "head_tag", "header", "after_header", "body_tag", "footer"];
+    switch(target) {
+      case "common": return [...common, "embedded_scss"];
+      case "desktop": return common;
+      case "mobile": return common;
+      case "settings": return ["yaml"];
+    }
+  },
 
   @computed('onlyOverridden')
   showCommon() {
@@ -24,6 +35,11 @@ export default Ember.Controller.extend({
   @computed('onlyOverridden')
   showMobile() {
     return this.shouldShow('mobile');
+  },
+
+  @computed('onlyOverridden')
+  showSettings() {
+    return this.shouldShow('settings');
   },
 
   @observes('onlyOverridden')
@@ -51,27 +67,19 @@ export default Ember.Controller.extend({
   currentTarget: 0,
 
   setTargetName: function(name) {
-    let target;
-    switch(name) {
-      case "common": target = 0; break;
-      case "desktop": target = 1; break;
-      case "mobile": target = 2; break;
-    }
-
-    this.set("currentTarget", target);
+    const target = this.get('targets').find(t => t.name === name);
+    this.set("currentTarget", target && target.id);
   },
 
   @computed("currentTarget")
-  currentTargetName(target) {
-    switch(parseInt(target)) {
-      case 0: return "common";
-      case 1: return "desktop";
-      case 2: return "mobile";
-    }
+  currentTargetName(id) {
+    const target = this.get('targets').find(t => t.id === parseInt(id, 10));
+    return target && target.name;
   },
 
   @computed("fieldName")
   activeSectionMode(fieldName) {
+    if (fieldName === "yaml") return "yaml";
     return fieldName && fieldName.indexOf("scss") > -1 ? "scss" : "html";
   },
 
@@ -96,15 +104,9 @@ export default Ember.Controller.extend({
     }
   },
 
-  @computed("currentTarget", "onlyOverridden")
+  @computed("currentTargetName", "onlyOverridden")
   fields(target, onlyOverridden) {
-    let fields = [
-      "scss", "head_tag", "header", "after_header", "body_tag", "footer"
-    ];
-
-    if (parseInt(target) === 0) {
-      fields.push("embedded_scss");
-    }
+    let fields = this.fieldsForTarget(target);
 
     if (onlyOverridden) {
       const model = this.get("model");
@@ -155,5 +157,4 @@ export default Ember.Controller.extend({
       });
     }
   }
-
 });

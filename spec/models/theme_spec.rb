@@ -123,7 +123,7 @@ HTML
 
   context "plugin api" do
     def transpile(html)
-      f = ThemeField.create!(target_id: Theme.targets[:mobile], theme_id: -1, name: "after_header", value: html)
+      f = ThemeField.create!(target_id: Theme.targets[:mobile], theme_id: 1, name: "after_header", value: html)
       f.value_baked
     end
 
@@ -213,6 +213,19 @@ HTML
     end
   end
 
+  context "theme settings" do
+    it "values can be used in scss" do
+      theme = Theme.new(name: "awesome theme", user_id: -1)
+      theme.set_field(target: :settings, name: :yaml, value: "background_color: red\nfont_size: 25px")
+      theme.set_field(target: :common, name: :scss, value: 'body {background-color: $background_color; font-size: $font-size}')
+      theme.save!
+
+      scss, _map = Stylesheet::Compiler.compile('@import "theme_variables"; @import "desktop_theme"; ', "theme.scss", theme_id: theme.id)
+      expect(scss).to include("background-color:red")
+      expect(scss).to include("font-size:25px")
+    end
+  end
+
   it 'correctly caches theme keys' do
     Theme.destroy_all
 
@@ -264,6 +277,43 @@ HTML
     json = Site.json_for(guardian)
     user_themes = JSON.parse(json)["user_themes"]
     expect(user_themes).to eq([])
+  end
+
+  def cached_settings(key)
+    Theme.settings_for_client(key) # returns json
+  end
+
+  it 'handles settings cache correctly' do
+    Theme.destroy_all
+    expect(cached_settings(nil)).to eq("{}")
+
+    theme = Theme.create!(name: "awesome theme", user_id: -1)
+    theme.save!
+    expect(cached_settings(theme.key)).to eq("{}")
+
+    theme.set_field(target: :settings, name: "yaml", value: "boolean_setting: true")
+    theme.save!
+    expect(cached_settings(theme.key)).to match(/\"boolean_setting\":true/)
+
+    theme.settings.first.value = "false"
+    expect(cached_settings(theme.key)).to match(/\"boolean_setting\":false/)
+
+    child = Theme.create!(name: "child theme", user_id: -1)
+    child.set_field(target: :settings, name: "yaml", value: "integer_setting: 54")
+
+    child.save!
+    theme.add_child_theme!(child)
+
+    json = cached_settings(theme.key)
+    expect(json).to match(/\"boolean_setting\":false/)
+    expect(json).to match(/\"integer_setting\":54/)
+
+    expect(cached_settings(child.key)).to eq("{\"integer_setting\":54}")
+
+    child.destroy!
+    json = cached_settings(theme.key)
+    expect(json).not_to match(/\"integer_setting\":54/)
+    expect(json).to match(/\"boolean_setting\":false/)
   end
 
 end

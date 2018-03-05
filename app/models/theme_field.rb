@@ -1,3 +1,5 @@
+require_dependency 'theme_settings_parser'
+
 class ThemeField < ActiveRecord::Base
 
   belongs_to :upload
@@ -7,7 +9,8 @@ class ThemeField < ActiveRecord::Base
                         scss: 1,
                         theme_upload_var: 2,
                         theme_color_var: 3,
-                        theme_var: 4)
+                        theme_var: 4,
+                        yaml: 5)
   end
 
   def self.theme_var_type_ids
@@ -77,11 +80,54 @@ COMPILED
     [doc.to_s, errors&.join("\n")]
   end
 
+  def validate_yaml!
+    return unless self.name == "yaml"
+
+    errors = []
+    begin
+      ThemeSettingsParser.new(self).load do |name, default, type, opts|
+        setting = ThemeSetting.new(name: name, data_type: type, theme: theme)
+        translation_key = "themes.settings_errors"
+
+        if setting.invalid?
+          setting.errors.details.each_pair do |attribute, _errors|
+            _errors.each do |hash|
+              errors << I18n.t("#{translation_key}.#{attribute}_#{hash[:error]}", name: name)
+            end
+          end
+        end
+
+        if default.nil?
+          errors << I18n.t("#{translation_key}.default_value_missing", name: name)
+        end
+
+        if (min = opts[:min]) && (max = opts[:max])
+          unless ThemeSetting.value_in_range?(default, (min..max), type)
+            errors << I18n.t("#{translation_key}.default_out_range", name: name)
+          end
+        end
+
+        unless ThemeSetting.acceptable_value_for_type?(default, type)
+          errors << I18n.t("#{translation_key}.default_not_match_type", name: name)
+        end
+      end
+    rescue ThemeSettingsParser::InvalidYaml => e
+      errors << e.message
+    end
+
+    self.error = errors.join("\n").presence unless self.destroyed?
+    if will_save_change_to_error?
+      update_columns(error: self.error)
+    end
+  end
+
   def self.guess_type(name)
     if html_fields.include?(name.to_s)
       types[:html]
     elsif scss_fields.include?(name.to_s)
       types[:scss]
+    elsif name.to_s === "yaml"
+      types[:yaml]
     end
   end
 
@@ -121,7 +167,7 @@ COMPILED
                                     )
         self.error = nil unless error.nil?
       rescue SassC::SyntaxError => e
-        self.error = e.message
+        self.error = e.message unless self.destroyed?
       end
 
       if will_save_change_to_error?
@@ -143,6 +189,8 @@ COMPILED
   after_commit do
     ensure_baked!
     ensure_scss_compiles!
+    validate_yaml!
+    theme.clear_cached_settings!
 
     Stylesheet::Manager.clear_theme_cache! if self.name.include?("scss")
 

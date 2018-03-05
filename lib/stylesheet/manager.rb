@@ -252,7 +252,11 @@ class Stylesheet::Manager
       raise "attempting to look up theme digest for invalid field"
     end
 
-    Digest::SHA1.hexdigest(scss.to_s + color_scheme_digest.to_s)
+    Digest::SHA1.hexdigest(scss.to_s + color_scheme_digest.to_s + settings_digest)
+  end
+
+  def settings_digest
+    Digest::SHA1.hexdigest((theme&.included_settings || {}).to_json)
   end
 
   def color_scheme_digest
