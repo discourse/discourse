@@ -43,7 +43,7 @@ module UserGuardian
     if is_me?(user)
       user.post_count <= 1
     else
-      is_staff? && (user.first_post_created_at.nil? || user.first_post_created_at > SiteSetting.delete_user_max_post_age.to_i.days.ago)
+      is_staff? && (user.first_post_created_at.nil? || user.post_count <= 5 || user.first_post_created_at > SiteSetting.delete_user_max_post_age.to_i.days.ago)
     end
   end
 
