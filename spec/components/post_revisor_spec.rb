@@ -452,6 +452,16 @@ describe PostRevisor do
           expect(post).to be_locked
         end
 
+        it "doesn't wiki posts" do
+          post.wiki = true
+          result = subject.revise!(
+            moderator,
+            raw: "some new raw content"
+          )
+          expect(result).to eq(true)
+          post.reload
+          expect(post).not_to be_locked
+        end
         it "doesn't lock the post when the raw did not change" do
           result = subject.revise!(
             moderator,
