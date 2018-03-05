@@ -10,9 +10,67 @@ describe TopicTrackingState do
     create_post
   end
 
-  it "can correctly publish unread" do
-    # TODO setup stuff and look at messages
-    TopicTrackingState.publish_unread(post)
+  let(:topic) { post.topic }
+
+  describe '#publish_latest' do
+    it 'can correctly publish latest' do
+      message = MessageBus.track_publish("/latest") do
+        described_class.publish_latest(topic)
+      end.first
+
+      data = message.data
+
+      expect(data["topic_id"]).to eq(topic.id)
+      expect(data["message_type"]).to eq(described_class::LATEST_MESSAGE_TYPE)
+      expect(data["payload"]["archetype"]).to eq(Archetype.default)
+    end
+
+    describe 'private message' do
+      let(:topic) { Fabricate(:private_message_topic) }
+
+      it 'should not publish any message' do
+        messages = MessageBus.track_publish do
+          described_class.publish_latest(topic)
+        end
+
+        expect(messages).to eq([])
+      end
+    end
+  end
+
+  describe '#publish_unread' do
+    it "can correctly publish unread" do
+      message = MessageBus.track_publish(described_class.unread_channel_key(post.user.id)) do
+        TopicTrackingState.publish_unread(post)
+      end.first
+
+      data = message.data
+
+      expect(data["topic_id"]).to eq(topic.id)
+      expect(data["message_type"]).to eq(described_class::UNREAD_MESSAGE_TYPE)
+      expect(data["payload"]["archetype"]).to eq(Archetype.default)
+    end
+
+    describe 'for a private message' do
+      let(:private_message_post) { Fabricate(:private_message_post) }
+      let(:topic) { private_message_post.topic }
+
+      before do
+        TopicUser.change(
+          topic.allowed_users.first.id,
+          topic.id,
+          notification_level: TopicUser.notification_levels[:tracking]
+        )
+      end
+
+      it 'should not publish any message' do
+        messages = MessageBus.track_publish do
+          TopicTrackingState.publish_unread(private_message_post)
+        end
+
+        expect(messages).to eq([])
+      end
+    end
   end
 
   it "correctly handles muted categories" do

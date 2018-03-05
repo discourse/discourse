@@ -10,6 +10,8 @@ class TopicTrackingState
   include ActiveModel::SerializerSupport
 
   CHANNEL = "/user-tracking"
+  UNREAD_MESSAGE_TYPE = "unread".freeze
+  LATEST_MESSAGE_TYPE = "latest".freeze
 
   attr_accessor :user_id,
                 :topic_id,
@@ -20,6 +22,7 @@ class TopicTrackingState
                 :notification_level
 
   def self.publish_new(topic)
+    return unless topic.regular?
 
     message = {
       topic_id: topic.id,
@@ -41,11 +44,11 @@ class TopicTrackingState
   end
 
   def self.publish_latest(topic, staff_only = false)
-    return unless topic.archetype == "regular"
+    return unless topic.regular?
 
     message = {
       topic_id: topic.id,
-      message_type: "latest",
+      message_type: LATEST_MESSAGE_TYPE,
       payload: {
         bumped_at: topic.bumped_at,
         topic_id: topic.id,
@@ -63,7 +66,12 @@ class TopicTrackingState
     MessageBus.publish("/latest", message.as_json, group_ids: group_ids)
   end
 
+  def self.unread_channel_key(user_id)
+    "/unread/#{user_id}"
+  end
+
   def self.publish_unread(post)
+    return unless post.topic.regular?
     # TODO at high scale we are going to have to defer this,
     #   perhaps cut down to users that are around in the last 7 days as well
 
@@ -81,7 +89,7 @@ class TopicTrackingState
 
       message = {
         topic_id: post.topic_id,
-        message_type: "unread",
+        message_type: UNREAD_MESSAGE_TYPE,
         payload: {
           last_read_post_number: tu.last_read_post_number,
           highest_post_number: post.post_number,
@@ -93,7 +101,7 @@ class TopicTrackingState
         }
       }
 
-      MessageBus.publish("/unread/#{tu.user_id}", message.as_json, group_ids: group_ids)
+      MessageBus.publish(self.unread_channel_key(tu.user_id), message.as_json, group_ids: group_ids)
     end
 
   end
@@ -128,7 +136,6 @@ class TopicTrackingState
   end
 
   def self.publish_read(topic_id, last_read_post_number, user_id, notification_level = nil)
-
     highest_post_number = Topic.where(id: topic_id).pluck(:highest_post_number).first
 
     message = {
@@ -142,8 +149,7 @@ class TopicTrackingState
       }
     }
 
-    MessageBus.publish("/unread/#{user_id}", message.as_json, user_ids: [user_id])
-
+    MessageBus.publish(self.unread_channel_key(user_id), message.as_json, user_ids: [user_id])
   end
 
   def self.treat_as_new_topic_clause
