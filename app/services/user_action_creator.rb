@@ -85,7 +85,7 @@ class UserActionCreator
     return unless model.user_id
 
     row = {
-      action_type: model.archetype == Archetype.private_message ? UserAction::NEW_PRIVATE_MESSAGE : UserAction::NEW_TOPIC,
+      action_type: model.private_message? ? UserAction::NEW_PRIVATE_MESSAGE : UserAction::NEW_TOPIC,
       user_id: model.user_id,
       acting_user_id: model.user_id,
       target_topic_id: model.id,
@@ -94,7 +94,7 @@ class UserActionCreator
     }
 
     UserAction.remove_action!(row.merge(
-      action_type: model.archetype == Archetype.private_message ? UserAction::NEW_TOPIC : UserAction::NEW_PRIVATE_MESSAGE
+      action_type: model.private_message? ? UserAction::NEW_TOPIC : UserAction::NEW_PRIVATE_MESSAGE
     ))
 
     rows = [row]

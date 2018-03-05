@@ -265,7 +265,7 @@ class Topic < ActiveRecord::Base
   end
 
   def advance_draft_sequence
-    if archetype == Archetype.private_message
+    if self.private_message?
       DraftSequence.next!(user, Draft::NEW_PRIVATE_MESSAGE)
     else
       DraftSequence.next!(user, Draft::NEW_TOPIC)
