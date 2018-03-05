@@ -58,15 +58,10 @@ export default Ember.Mixin.create({
     this.setProperties({ isFocused: false });
   },
 
-  // force the component in a known default state
-  focus() {
-    Ember.run.schedule("afterRender", () => this.$header().focus());
-  },
-
   // try to focus filter and fallback to header if not present
-  focusFilterOrHeader() {
+  focus() {
     Ember.run.schedule("afterRender", () => {
-      if ((this.site && this.site.isMobileDevice) || !this.$filterInput().is(":visible")) {
+      if ((!this.get("filterable")) || !this.$filterInput().is(":visible")) {
         this.$header().focus();
       } else {
         this.$filterInput().focus();
@@ -77,10 +72,10 @@ export default Ember.Mixin.create({
   expand() {
     if (this.get("isExpanded") === true) return;
     this.setProperties({ isExpanded: true, renderedBodyOnce: true, isFocused: true });
-    this.focusFilterOrHeader();
-    this.autoHighlight();
     this._setCollectionHeaderComputedContent();
     this._setHeaderComputedContent();
+    this.focus();
+    this.autoHighlight();
   },
 
   collapse() {
