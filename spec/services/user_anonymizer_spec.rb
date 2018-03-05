@@ -101,8 +101,30 @@ describe UserAnonymizer do
       expect(user.uploaded_avatar_id).to eq(nil)
     end
 
-    it "logs the action" do
-      expect { make_anonymous }.to change { UserHistory.count }.by(1)
+    it "logs the action with the original details" do
+      SiteSetting.log_anonymizer_details = true
+      helper = UserAnonymizer.new(user, admin)
+      orig_email = user.email
+      orig_username = user.username
+      helper.make_anonymous
+
+      history = helper.user_history
+      expect(history).to be_present
+      expect(history.email).to eq(orig_email)
+      expect(history.details).to match(orig_username)
+    end
+
+    it "logs the action without the original details" do
+      SiteSetting.log_anonymizer_details = false
+      helper = UserAnonymizer.new(user, admin)
+      orig_email = user.email
+      orig_username = user.username
+      helper.make_anonymous
+
+      history = helper.user_history
+      expect(history).to be_present
+      expect(history.email).not_to eq(orig_email)
+      expect(history.details).not_to match(orig_username)
     end
 
     it "removes external auth assocations" do

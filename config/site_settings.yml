@@ -1219,6 +1219,8 @@ legal:
   faq_url:
     client: true
     default: ''
+  log_anonymizer_details:
+    default: true
 
 backups:
   enable_backups:
