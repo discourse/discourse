@@ -37,7 +37,7 @@
     align-items: center;
   }
 
-  .hamburger-panel {
+  .hamburger-panel, .user-menu {
     width: 0; // Flexbox fix for Safari ≤ iOS11
   }
 
