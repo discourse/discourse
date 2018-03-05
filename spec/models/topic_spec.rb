@@ -675,6 +675,7 @@ describe Topic do
 
             group.add(user)
             group.add(user_2)
+            group.add(topic.user)
 
             group.group_users.find_by(user: user_2).update!(
               notification_level: NotificationLevels.all[:muted]
