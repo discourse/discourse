@@ -51,7 +51,6 @@ class TopicTrackingState
       message_type: LATEST_MESSAGE_TYPE,
       payload: {
         bumped_at: topic.bumped_at,
-        topic_id: topic.id,
         category_id: topic.category_id,
         archetype: topic.archetype
       }
@@ -94,7 +93,6 @@ class TopicTrackingState
           last_read_post_number: tu.last_read_post_number,
           highest_post_number: post.post_number,
           created_at: post.created_at,
-          topic_id: post.topic_id,
           category_id: post.topic.category_id,
           notification_level: tu.notification_level,
           archetype: post.topic.archetype
@@ -111,10 +109,7 @@ class TopicTrackingState
 
     message = {
       topic_id: topic.id,
-      message_type: "recover",
-      payload: {
-        topic_id: topic.id,
-      }
+      message_type: "recover"
     }
 
     MessageBus.publish("/recover", message.as_json, group_ids: group_ids)
@@ -126,10 +121,7 @@ class TopicTrackingState
 
     message = {
       topic_id: topic.id,
-      message_type: "delete",
-      payload: {
-        topic_id: topic.id,
-      }
+      message_type: "delete"
     }
 
     MessageBus.publish("/delete", message.as_json, group_ids: group_ids)
