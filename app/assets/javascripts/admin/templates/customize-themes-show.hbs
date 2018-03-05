@@ -105,16 +105,14 @@
     {{#d-button action="addUploadModal" icon="plus"}}{{i18n "admin.customize.theme.add"}}{{/d-button}}
   </p>
 
+  {{#if hasSettings}}
   <h3>{{i18n "admin.customize.theme.theme_settings"}}</h3>
   {{#d-section class="form-horizontal theme settings"}}
-    {{#if hasSettings}}
-      {{#each settings as |setting|}}
-        {{theme-setting setting=setting model=model class="theme-setting"}}
-      {{/each}}
-    {{else}}
-      {{i18n "admin.customize.theme.no_settings"}}
-    {{/if}}
+    {{#each settings as |setting|}}
+      {{theme-setting setting=setting model=model class="theme-setting"}}
+    {{/each}}
   {{/d-section}}
+  {{/if}}
 
   {{#if availableChildThemes}}
     <h3>{{i18n "admin.customize.theme.theme_components"}}</h3>
