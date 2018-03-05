@@ -1,6 +1,5 @@
 import { NotificationLevels } from 'discourse/lib/notification-levels';
-import computed from "ember-addons/ember-computed-decorators";
-import { on } from "ember-addons/ember-computed-decorators";
+import { default as computed, on } from "ember-addons/ember-computed-decorators";
 import { defaultHomepage } from 'discourse/lib/utilities';
 import PreloadStore from 'preload-store';
 
@@ -35,7 +34,7 @@ const TopicTrackingState = Discourse.Model.extend({
         tracker.incrementMessageCount();
       }
 
-      if (data.message_type === "new_topic" || data.message_type === "latest") {
+      if (["new_topic", "latest"].includes(data.message_type)) {
         const muted_category_ids = Discourse.User.currentProp("muted_category_ids");
         if (_.include(muted_category_ids, data.payload.category_id)) {
           return;
@@ -55,7 +54,7 @@ const TopicTrackingState = Discourse.Model.extend({
         tracker.notify(data);
       }
 
-      if (data.message_type === "new_topic" || data.message_type === "unread" || data.message_type === "read") {
+      if (["new_topic", "unread", "read"].includes(data.message_type)) {
         tracker.notify(data);
         const old = tracker.states["t" + data.topic_id];
 
@@ -123,11 +122,11 @@ const TopicTrackingState = Discourse.Model.extend({
       }
     }
 
-    if ((filter === "all" || filter === "latest" || filter === "new") && data.message_type === "new_topic") {
+    if (["all", "latest", "new"].includes(filter) && data.message_type === "new_topic") {
       this.addIncoming(data.topic_id);
     }
 
-    if ((filter === "all" || filter === "unread") && data.message_type === "unread") {
+    if (["all", "unread"].includes(filter) && data.message_type === "unread") {
       const old = this.states["t" + data.topic_id];
       if(!old || old.highest_post_number === old.last_read_post_number) {
         this.addIncoming(data.topic_id);
