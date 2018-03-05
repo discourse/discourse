@@ -765,7 +765,8 @@ SQL
       group_id = group.id
 
       group.users.where(
-        "group_users.notification_level > ?", NotificationLevels.all[:muted]
+        "group_users.notification_level > ? AND user_id != ?",
+        NotificationLevels.all[:muted], user.id
       ).find_each do |u|
 
         u.notifications.create!(
