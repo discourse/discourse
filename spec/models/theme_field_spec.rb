@@ -3,6 +3,10 @@
 require 'rails_helper'
 
 describe ThemeField do
+  after(:all) do
+    ThemeField.destroy_all
+  end
+
   it "correctly generates errors for transpiled js" do
     html = <<HTML
 <script type="text/discourse-plugin" version="0.8">
@@ -44,4 +48,52 @@ HTML
     expect { create_upload_theme_field!("a42") }.not_to raise_error
   end
 
+  def get_fixture(type)
+    File.read("#{Rails.root}/spec/fixtures/theme_settings/#{type}_settings.yaml")
+  end
+
+  def create_yaml_field(value)
+    field = ThemeField.create!(theme_id: 1, target_id: Theme.targets[:settings], name: "yaml", value: value)
+    field.reload
+    field
+  end
+
+  let(:key) { "themes.settings_errors" }
+
+  it "generates errors for bad YAML" do
+    yaml = "invalid_setting 5"
+    field = create_yaml_field(yaml)
+    expect(field.error).to eq(I18n.t("#{key}.invalid_yaml"))
+
+    field.value = "valid_setting: true"
+    field.save!
+    field.reload
+    expect(field.error).to eq(nil)
+  end
+
+  it "generates errors when default value's type doesn't match setting type" do
+    field = create_yaml_field(get_fixture("invalid"))
+    expect(field.error).to include(I18n.t("#{key}.default_not_match_type", name: "no_match_setting"))
+  end
+
+  it "generates errors when no default value is passed" do
+    field = create_yaml_field(get_fixture("invalid"))
+    expect(field.error).to include(I18n.t("#{key}.default_value_missing", name: "no_default_setting"))
+  end
+
+  it "generates errors when invalid type is passed" do
+    field = create_yaml_field(get_fixture("invalid"))
+    expect(field.error).to include(I18n.t("#{key}.data_type_not_a_number", name: "invalid_type_setting"))
+  end
+
+  it "generates errors when default value is not within allowed range" do
+    field = create_yaml_field(get_fixture("invalid"))
+    expect(field.error).to include(I18n.t("#{key}.default_out_range", name: "default_out_of_range"))
+    expect(field.error).to include(I18n.t("#{key}.default_out_range", name: "string_default_out_of_range"))
+  end
+
+  it "works correctly when valid yaml is provided" do
+    field = create_yaml_field(get_fixture("valid"))
+    expect(field.error).to be_nil
+  end
 end

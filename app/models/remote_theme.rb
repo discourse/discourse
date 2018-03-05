@@ -76,6 +76,8 @@ class RemoteTheme < ActiveRecord::Base
     end
 
     Theme.targets.keys.each do |target|
+      next if target == :settings
+
       ALLOWED_FIELDS.each do |field|
         lookup =
           if field == "scss"
@@ -90,6 +92,9 @@ class RemoteTheme < ActiveRecord::Base
         theme.set_field(target: target.to_sym, name: field, value: value)
       end
     end
+
+    settings_yaml = importer["settings.yaml"] || importer["settings.yml"]
+    theme.set_field(target: :settings, name: "yaml", value: settings_yaml)
 
     self.license_url ||= theme_info["license_url"]
     self.about_url ||= theme_info["about_url"]

@@ -3045,6 +3045,7 @@ en:
           common: "Common"
           desktop: "Desktop"
           mobile: "Mobile"
+          settings: "Settings"
           preview: "Preview"
           is_default: "Theme is enabled by default"
           user_selectable: "Theme can be selected by users"
@@ -3073,6 +3074,8 @@ en:
           updating: "Updating..."
           up_to_date: "Theme is up-to-date, last checked:"
           add: "Add"
+          theme_settings: "Theme Settings"
+          no_settings: "This theme has no settings."
           commits_behind:
             one: "Theme is 1 commit behind!"
             other: "Theme is {{count}} commits behind!"
@@ -3097,6 +3100,9 @@ en:
           body_tag:
             text: "</body>"
             title: "HTML that will be inserted before the </body> tag"
+          yaml:
+            text: "YAML"
+            title: "Define theme settings in YAML format"
         colors:
           select_base:
             title: "Select base color scheme"
@@ -3633,11 +3639,12 @@ en:
         recommended: "We recommend customizing the following text to suit your needs:"
         show_overriden: 'Only show overridden'
 
-      site_settings:
+      settings: # used by theme and site settings
         show_overriden: 'Only show overridden'
-        title: 'Settings'
         reset: 'reset'
         none: 'none'
+      site_settings:
+        title: 'Settings'
         no_results: "No results found."
         clear_filter: "Clear"
         add_url: "add URL"
