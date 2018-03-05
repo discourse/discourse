@@ -68,7 +68,7 @@ export default Ember.Component.extend({
 
     this.clear();
 
-    if (this.get('action') !== 'reply' || this.get('action') !== 'edit') {
+    if (!['reply', 'edit'].includes(this.get('action'))) {
       return;
     }
 
