@@ -31,7 +31,7 @@ export default Ember.Controller.extend({
         return text + ": " + localized.join(" , ");
       }
     };
-    ['common', 'desktop', 'mobile', 'settings'].forEach(target => {
+    ['common', 'desktop', 'mobile'].forEach(target => {
       descriptions.push(description(target));
     });
     return descriptions.reject(d=>Em.isBlank(d));
