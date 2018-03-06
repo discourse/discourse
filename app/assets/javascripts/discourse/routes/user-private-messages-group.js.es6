@@ -20,5 +20,6 @@ export default createPMRoute('groups', 'private-messages-groups').extend({
       const group = _.last(model.get("filter").split('/'));
       this.controllerFor("user-private-messages").set("groupFilter", group);
       this.controllerFor("user-private-messages").set("archive", false);
+      this.controllerFor("user-topics-list").subscribe(`/private-messages/group/${group}`);
     }
 });

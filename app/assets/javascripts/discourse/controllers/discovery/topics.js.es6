@@ -42,7 +42,7 @@ const controllerOpts = {
       const tracker = this.topicTrackingState;
 
       // Move inserted into topics
-      this.get('content').loadBefore(tracker.get('newIncoming'));
+      this.get('content').loadBefore(tracker.get('newIncoming'), true);
       tracker.resetTracking();
       return false;
     },

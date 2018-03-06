@@ -33,7 +33,6 @@ export default Ember.Controller.extend({
     return hasSelection && pmView !== "archive" && !archive;
   },
 
-
   bulkOperation(operation) {
     const selected = this.get('selected');
     var params = {type: operation};

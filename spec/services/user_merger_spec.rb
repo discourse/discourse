@@ -762,10 +762,10 @@ describe UserMerger do
       Fabricate.build(:topic_allowed_user, user: source_user)
     ])
 
-    UserArchivedMessage.archive!(source_user.id, pm_topic1.id)
-    UserArchivedMessage.archive!(target_user.id, pm_topic1.id)
-    UserArchivedMessage.archive!(source_user.id, pm_topic2.id)
-    UserArchivedMessage.archive!(walter.id, pm_topic2.id)
+    UserArchivedMessage.archive!(source_user.id, pm_topic1)
+    UserArchivedMessage.archive!(target_user.id, pm_topic1)
+    UserArchivedMessage.archive!(source_user.id, pm_topic2)
+    UserArchivedMessage.archive!(walter.id, pm_topic2)
 
     merge_users!
 
