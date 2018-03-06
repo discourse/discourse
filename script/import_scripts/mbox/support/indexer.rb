@@ -62,34 +62,45 @@ module ImportScripts::Mbox
 
     def index_emails(directory, category_name)
       all_messages(directory, category_name) do |receiver, filename, opts|
-        msg_id = receiver.message_id
-        parsed_email = receiver.mail
-        from_email, from_display_name = receiver.parse_from_field(parsed_email)
-        body, elided, format = receiver.select_body
-        reply_message_ids = extract_reply_message_ids(parsed_email)
+        begin
+          msg_id = receiver.message_id
+          parsed_email = receiver.mail
+          from_email, from_display_name = receiver.parse_from_field(parsed_email)
+          body, elided, format = receiver.select_body
+          reply_message_ids = extract_reply_message_ids(parsed_email)
 
-        email = {
-          msg_id: msg_id,
-          from_email: from_email,
-          from_name: from_display_name,
-          subject: extract_subject(receiver, category_name),
-          email_date: parsed_email.date&.to_s,
-          raw_message: receiver.raw_email,
-          body: body,
-          elided: elided,
-          format: format,
-          attachment_count: receiver.attachments.count,
-          charset: parsed_email.charset&.downcase,
-          category: category_name,
-          filename: File.basename(filename),
-          first_line_number: opts[:first_line_number],
-          last_line_number: opts[:last_line_number],
-          index_duration: (monotonic_time - opts[:start_time]).round(4)
-        }
+          email = {
+            msg_id: msg_id,
+            from_email: from_email,
+            from_name: from_display_name,
+            subject: extract_subject(receiver, category_name),
+            email_date: parsed_email.date&.to_s,
+            raw_message: receiver.raw_email,
+            body: body,
+            elided: elided,
+            format: format,
+            attachment_count: receiver.attachments.count,
+            charset: parsed_email.charset&.downcase,
+            category: category_name,
+            filename: File.basename(filename),
+            first_line_number: opts[:first_line_number],
+            last_line_number: opts[:last_line_number],
+            index_duration: (monotonic_time - opts[:start_time]).round(4)
+          }
 
-        @database.transaction do |db|
-          db.insert_email(email)
-          db.insert_replies(msg_id, reply_message_ids) unless reply_message_ids.empty?
+          @database.transaction do |db|
+            db.insert_email(email)
+            db.insert_replies(msg_id, reply_message_ids) unless reply_message_ids.empty?
+          end
+        rescue StandardError => e
+          if opts[:first_line_number] && opts[:last_line_number]
+            STDERR.puts "Failed to index message in #{filename} at lines #{opts[:first_line_number]}-#{opts[:last_line_number]}"
+          else
+            STDERR.puts "Failed to index message in #{filename}"
+          end
+
+          STDERR.puts e.message
+          STDERR.puts e.backtrace.inspect
         end
       end
     end
