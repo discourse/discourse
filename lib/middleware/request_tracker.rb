@@ -169,6 +169,11 @@ class Middleware::RequestTracker
     if info && (headers = result[1])
       headers["X-Runtime"] = "%0.6f" % info[:total_duration]
     end
+
+    if env[Auth::DefaultCurrentUserProvider::BAD_TOKEN] && (headers = result[1])
+      headers['Discourse-Logged-Out'] = '1'
+    end
+
     result
   ensure
     if (limiters = env['DISCOURSE_RATE_LIMITERS']) && env['DISCOURSE_IS_ASSET_PATH']

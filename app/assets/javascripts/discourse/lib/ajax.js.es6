@@ -1,7 +1,9 @@
 import pageVisible from 'discourse/lib/page-visible';
+import logout from 'discourse/lib/logout';
 
 let _trackView = false;
 let _transientHeader = null;
+let _showingLogout = false;
 
 export function setTransientHeader(key, value) {
   _transientHeader = {key, value};
@@ -39,6 +41,10 @@ export function ajax() {
 
     args.headers = args.headers || {};
 
+    if (Discourse.__container__.lookup('current-user:main')) {
+      args.headers['Discourse-Logged-In'] = "true";
+    }
+
     if (_transientHeader) {
       args.headers[_transientHeader.key] = _transientHeader.value;
       _transientHeader = null;
@@ -54,7 +60,22 @@ export function ajax() {
       args.headers['Discourse-Visible'] = "true";
     }
 
+    let handleLogoff = function(xhr) {
+      if (xhr.getResponseHeader('Discourse-Logged-Out') && !_showingLogout) {
+        _showingLogout = true;
+        bootbox.dialog(
+          I18n.t("logout"), {label: I18n.t("refresh"), callback: logout},
+          {
+            onEscape: () => logout(),
+            backdrop: 'static'
+          }
+        );
+      }
+    };
+
     args.success = (data, textStatus, xhr) => {
+      handleLogoff(xhr);
+
       if (xhr.getResponseHeader('Discourse-Readonly')) {
         Ember.run(() => Discourse.Site.currentProp('isReadOnly', true));
       }
@@ -67,6 +88,8 @@ export function ajax() {
     };
 
     args.error = (xhr, textStatus, errorThrown) => {
+      handleLogoff(xhr);
+
       // note: for bad CSRF we don't loop an extra request right away.
       //  this allows us to eliminate the possibility of having a loop.
       if (xhr.status === 403 && xhr.responseText === "[\"BAD CSRF\"]") {
