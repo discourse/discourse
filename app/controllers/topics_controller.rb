@@ -386,19 +386,19 @@ class TopicsController < ApplicationController
         .where('topic_allowed_groups.group_id IN (?)', group_ids).pluck(:id)
       allowed_groups.each do |id|
         if archive
-          GroupArchivedMessage.archive!(id, topic.id)
+          GroupArchivedMessage.archive!(id, topic)
           group_id = id
         else
-          GroupArchivedMessage.move_to_inbox!(id, topic.id)
+          GroupArchivedMessage.move_to_inbox!(id, topic)
         end
       end
     end
 
     if topic.allowed_users.include?(current_user)
       if archive
-        UserArchivedMessage.archive!(current_user.id, topic.id)
+        UserArchivedMessage.archive!(current_user.id, topic)
       else
-        UserArchivedMessage.move_to_inbox!(current_user.id, topic.id)
+        UserArchivedMessage.move_to_inbox!(current_user.id, topic)
       end
     end
 

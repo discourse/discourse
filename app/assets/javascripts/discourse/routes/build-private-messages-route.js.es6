@@ -1,7 +1,7 @@
 import UserTopicListRoute from "discourse/routes/user-topic-list";
 
 // A helper to build a user topic list route
-export default (viewName, path) => {
+export default (viewName, path, channel) => {
   return UserTopicListRoute.extend({
     userActionType: Discourse.UserAction.TYPES.messages_received,
 
@@ -19,6 +19,10 @@ export default (viewName, path) => {
     setupController() {
       this._super.apply(this, arguments);
 
+      if (channel) {
+        this.controllerFor("user-topics-list").subscribe(`/private-messages/${channel}`);
+      }
+
       this.controllerFor("user-topics-list").setProperties({
         hideCategory: true,
         showPosters: true,
@@ -32,6 +36,8 @@ export default (viewName, path) => {
     },
 
     deactivate() {
+      this.controllerFor('user-topics-list').unsubscribe();
+
       this.searchService.set(
         'searchContext',
         this.controllerFor("user").get("model.searchContext")
