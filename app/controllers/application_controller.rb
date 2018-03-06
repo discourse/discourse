@@ -659,6 +659,10 @@ class ApplicationController < ActionController::Base
       render_to_string status: status, layout: layout, formats: [:html], template: '/exceptions/not_found'
     end
 
+    def is_asset_path
+      request.env['DISCOURSE_IS_ASSET_PATH'] = 1
+    end
+
   protected
 
     def render_post_json(post, add_raw = true)

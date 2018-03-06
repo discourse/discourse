@@ -6,6 +6,8 @@ class StylesheetsController < ApplicationController
   end
 
   def show
+    is_asset_path
+
     show_resource
   end
 
