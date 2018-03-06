@@ -246,4 +246,42 @@ SQL
     sql
   end
 
+  def self.publish_private_message(topic, archived: false, post: nil, group_archived: false)
+    return unless topic.private_message?
+    channels = {}
+
+    allowed_user_ids = topic.allowed_users.pluck(:id)
+
+    if allowed_user_ids.include?(post&.user_id)
+      channels["/private-messages/sent"] = [post.user_id]
+    end
+
+    if archived
+      channels["/private-messages/archive"] = allowed_user_ids
+    else
+      topic.allowed_groups.each do |group|
+        channel = "/private-messages/group/#{group.name.downcase}"
+        channel = "#{channel}/archive" if group_archived
+        channels[channel] = group.users.pluck(:id)
+      end
+    end
+
+    if channels.except("/private-messages/sent").blank?
+      channels["/private-messages/inbox"] = allowed_user_ids
+    end
+
+    message = {
+      topic_id: topic.id
+    }
+
+    admin_ids = User.admins.human_users.pluck(:id)
+
+    channels.each do |channel, user_ids|
+      MessageBus.publish(
+        channel,
+        message.as_json,
+        user_ids: user_ids | admin_ids
+      )
+    end
+  end
 end
