@@ -328,7 +328,7 @@ module Email
       doc = Nokogiri::HTML.fragment(html)
       # AppleMail is the worst. It adds 'AppleMailSignature' ids (!) to several div/p with no deterministic rules
       # Our best guess is to elide whatever comes after that.
-      elided = doc.css("#AppleMailSignature:last-of_type ~ *").remove
+      elided = doc.css("#AppleMailSignature:last-of-type ~ *").remove
       to_markdown(doc.to_html, elided.to_html)
     end
 
