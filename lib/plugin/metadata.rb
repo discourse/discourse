@@ -32,7 +32,8 @@ class Plugin::Metadata
     "discourse-affiliate",
     "discourse-translator",
     "discourse-patreon",
-    "discourse-prometheus"
+    "discourse-prometheus",
+    "discourse-assign"
   ])
 
   FIELDS ||= [:name, :about, :version, :authors, :url, :required_version]
