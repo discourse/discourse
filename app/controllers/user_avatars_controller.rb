@@ -33,6 +33,8 @@ class UserAvatarsController < ApplicationController
   end
 
   def show_proxy_letter
+    is_asset_path
+
     if SiteSetting.external_system_avatars_url !~ /^\/letter_avatar_proxy/
       raise Discourse::NotFound
     end
@@ -56,6 +58,8 @@ class UserAvatarsController < ApplicationController
   end
 
   def show_letter
+    is_asset_path
+
     params.require(:username)
     params.require(:version)
     params.require(:size)
@@ -75,6 +79,8 @@ class UserAvatarsController < ApplicationController
   end
 
   def show
+    is_asset_path
+
     # we need multisite support to keep a single origin pull for CDNs
     RailsMultisite::ConnectionManagement.with_hostname(params[:hostname]) do
       hijack do

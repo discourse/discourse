@@ -191,6 +191,28 @@ describe Middleware::RequestTracker do
       expect(status).to eq(200)
     end
 
+    it "allows assets for more requests" do
+      global_setting :max_reqs_per_ip_per_10_seconds, 1
+      global_setting :max_reqs_per_ip_mode, 'block'
+      global_setting :max_asset_reqs_per_ip_per_10_seconds, 3
+
+      env1 = env("REMOTE_ADDR" => "1.1.1.1", "DISCOURSE_IS_ASSET_PATH" => 1)
+
+      status, _ = middleware.call(env1)
+      expect(status).to eq(200)
+      status, _ = middleware.call(env1)
+      expect(status).to eq(200)
+      status, _ = middleware.call(env1)
+      expect(status).to eq(200)
+      status, _ = middleware.call(env1)
+      expect(status).to eq(429)
+
+      env2 = env("REMOTE_ADDR" => "1.1.1.1")
+
+      status, _ = middleware.call(env2)
+      expect(status).to eq(429)
+    end
+
     it "does block if rate limiter is enabled" do
       global_setting :max_reqs_per_ip_per_10_seconds, 1
       global_setting :max_reqs_per_ip_mode, 'block'
@@ -199,13 +221,13 @@ describe Middleware::RequestTracker do
       env2 = env("REMOTE_ADDR" => "1.1.1.2")
 
       status, _ = middleware.call(env1)
-      status, _ = middleware.call(env1)
+      expect(status).to eq(200)
 
+      status, _ = middleware.call(env1)
       expect(status).to eq(429)
 
       status, _ = middleware.call(env2)
       expect(status).to eq(200)
-
     end
   end
 

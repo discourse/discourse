@@ -171,6 +171,16 @@ class Middleware::RequestTracker
     end
     result
   ensure
+    if (limiters = env['DISCOURSE_RATE_LIMITERS']) && env['DISCOURSE_IS_ASSET_PATH']
+      limiters.each(&:rollback!)
+      env['DISCOURSE_ASSET_RATE_LIMITERS'].each do |limiter|
+        begin
+          limiter.performed!
+        rescue RateLimiter::LimitExceeded
+          # skip
+        end
+      end
+    end
     log_request_info(env, result, info) unless env["discourse.request_tracker.skip"]
   end
 
@@ -213,16 +223,35 @@ class Middleware::RequestTracker
         global: true
       )
 
+      limiter_assets10 = RateLimiter.new(
+        nil,
+        "global_ip_limit_10_assets_#{ip}",
+        GlobalSetting.max_asset_reqs_per_ip_per_10_seconds,
+        10,
+        global: true
+      )
+
+      env['DISCOURSE_RATE_LIMITERS'] = [limiter10, limiter60]
+      env['DISCOURSE_ASSET_RATE_LIMITERS'] = [limiter_assets10]
+
+      warn = GlobalSetting.max_reqs_per_ip_mode == "warn" ||
+        GlobalSetting.max_reqs_per_ip_mode == "warn+block"
+
+      if !limiter_assets10.can_perform?
+        if warn
+          Rails.logger.warn("Global asset IP rate limit exceeded for #{ip}: 10 second rate limit, uri: #{env["REQUEST_URI"]}")
+        end
+
+        return !(GlobalSetting.max_reqs_per_ip_mode == "warn")
+      end
+
       type = 10
       begin
         limiter10.performed!
         type = 60
         limiter60.performed!
       rescue RateLimiter::LimitExceeded
-        if (
-          GlobalSetting.max_reqs_per_ip_mode == "warn" ||
-          GlobalSetting.max_reqs_per_ip_mode == "warn+block"
-        )
+        if warn
           Rails.logger.warn("Global IP rate limit exceeded for #{ip}: #{type} second rate limit, uri: #{env["REQUEST_URI"]}")
           !(GlobalSetting.max_reqs_per_ip_mode == "warn")
         else
