@@ -130,7 +130,7 @@ class PostAnalyzer
     def cooked_stripped
       @cooked_stripped ||= begin
         doc = Nokogiri::HTML.fragment(cook(@raw, topic_id: @topic_id))
-        doc.css("pre, code, aside.quote > .title, aside.quote .mention, .onebox, .elided").remove
+        doc.css("pre .mention, aside.quote > .title, aside.quote .mention, .onebox, .elided").remove
         doc
       end
     end
