@@ -33,13 +33,13 @@ export default Ember.Controller.extend({
   unsubscribe() {
     this.messageBus.unsubscribe(this.get('channel'));
     this._resetTracking();
+    this.set('channel', null);
   },
 
   _resetTracking() {
     this.setProperties({
       "newIncoming": [],
-      "incomingCount": 0,
-      "channel": null,
+      "incomingCount": 0
     });
   },
 
