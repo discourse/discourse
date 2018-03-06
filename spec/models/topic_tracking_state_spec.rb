@@ -10,9 +10,182 @@ describe TopicTrackingState do
     create_post
   end
 
-  it "can correctly publish unread" do
-    # TODO setup stuff and look at messages
-    TopicTrackingState.publish_unread(post)
+  let(:topic) { post.topic }
+  let(:private_message_post) { Fabricate(:private_message_post) }
+  let(:private_message_topic) { private_message_post.topic }
+
+  describe '#publish_latest' do
+    it 'can correctly publish latest' do
+      message = MessageBus.track_publish("/latest") do
+        described_class.publish_latest(topic)
+      end.first
+
+      data = message.data
+
+      expect(data["topic_id"]).to eq(topic.id)
+      expect(data["message_type"]).to eq(described_class::LATEST_MESSAGE_TYPE)
+      expect(data["payload"]["archetype"]).to eq(Archetype.default)
+    end
+
+    describe 'private message' do
+      it 'should not publish any message' do
+        messages = MessageBus.track_publish do
+          described_class.publish_latest(private_message_topic)
+        end
+
+        expect(messages).to eq([])
+      end
+    end
+  end
+
+  describe '#publish_unread' do
+    it "can correctly publish unread" do
+      message = MessageBus.track_publish(described_class.unread_channel_key(post.user.id)) do
+        TopicTrackingState.publish_unread(post)
+      end.first
+
+      data = message.data
+
+      expect(data["topic_id"]).to eq(topic.id)
+      expect(data["message_type"]).to eq(described_class::UNREAD_MESSAGE_TYPE)
+      expect(data["payload"]["archetype"]).to eq(Archetype.default)
+    end
+
+    describe 'for a private message' do
+      before do
+        TopicUser.change(
+          private_message_topic.allowed_users.first.id,
+          private_message_topic.id,
+          notification_level: TopicUser.notification_levels[:tracking]
+        )
+      end
+
+      it 'should not publish any message' do
+        messages = MessageBus.track_publish do
+          TopicTrackingState.publish_unread(private_message_post)
+        end
+
+        expect(messages).to eq([])
+      end
+    end
+  end
+
+  describe '#publish_private_message' do
+    let!(:admin) { Fabricate(:admin) }
+
+    describe 'normal topic' do
+      it 'should publish the right message' do
+        allowed_users = private_message_topic.allowed_users
+
+        messages = MessageBus.track_publish do
+          TopicTrackingState.publish_private_message(private_message_topic)
+        end
+
+        expect(messages.count).to eq(1)
+
+        message = messages.first
+
+        expect(message.channel).to eq('/private-messages/inbox')
+        expect(message.data["topic_id"]).to eq(private_message_topic.id)
+        expect(message.user_ids).to eq(allowed_users.map(&:id) << admin.id)
+      end
+    end
+
+    describe 'topic with groups' do
+      let(:group1) { Fabricate(:group, users: [Fabricate(:user)]) }
+      let(:group2) { Fabricate(:group, users: [Fabricate(:user), Fabricate(:user)]) }
+
+      before do
+        [group1, group2].each do |group|
+          private_message_topic.allowed_groups << group
+        end
+      end
+
+      it "should publish the right message" do
+        messages = MessageBus.track_publish do
+          TopicTrackingState.publish_private_message(
+            private_message_topic,
+          )
+        end
+
+        [group1, group2].each do |group|
+          message = messages.find do |message|
+            message.channel == "/private-messages/group/#{group.name}"
+          end
+
+          expect(message.data["topic_id"]).to eq(private_message_topic.id)
+          expect(message.user_ids).to eq(group.users.map(&:id) << admin.id)
+        end
+      end
+    end
+
+    describe 'topic with new post' do
+      let(:user) { private_message_topic.allowed_users.last }
+
+      let!(:post) do
+        Fabricate(:post,
+          topic: private_message_topic,
+          user: user
+        )
+      end
+
+      it 'should publish the right message' do
+        messages = MessageBus.track_publish do
+          TopicTrackingState.publish_private_message(
+            private_message_topic,
+            post: post
+          )
+        end
+
+        expect(messages.count).to eq(2)
+
+        [
+          ['/private-messages/inbox', private_message_topic.allowed_users.map(&:id)],
+          ['/private-messages/sent', [user.id]]
+        ].each do |channel, user_ids|
+          message = messages.find do |message|
+            message.channel == channel
+          end
+
+          expect(message.data["topic_id"]).to eq(private_message_topic.id)
+          expect(message.user_ids).to eq(user_ids << admin.id)
+        end
+      end
+    end
+
+    describe 'archived topic' do
+      it 'should publish the right message' do
+        messages = MessageBus.track_publish do
+          TopicTrackingState.publish_private_message(
+            private_message_topic,
+            archived: true
+          )
+        end
+
+        expect(messages.count).to eq(1)
+
+        message = messages.first
+
+        expect(message.channel).to eq('/private-messages/archive')
+        expect(message.data["topic_id"]).to eq(private_message_topic.id)
+
+        expect(message.user_ids).to eq(
+          private_message_topic.allowed_users.map(&:id) << admin.id
+        )
+      end
+    end
+
+    describe 'for a regular topic' do
+      it 'should not publish any message' do
+        topic.allowed_users << Fabricate(:user)
+
+        messages = MessageBus.track_publish do
+          TopicTrackingState.publish_private_message(topic)
+        end
+
+        expect(messages).to eq([])
+      end
+    end
   end
 
   it "correctly handles muted categories" do

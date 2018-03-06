@@ -99,7 +99,7 @@ class Topic < ActiveRecord::Base
             if: Proc.new { |t|
               (t.new_record? || t.category_id_changed?) &&
               !SiteSetting.allow_uncategorized_topics &&
-              (t.archetype.nil? || t.archetype == Archetype.default) &&
+              (t.archetype.nil? || t.regular?) &&
               (!t.user_id || !t.user.staff?)
             }
 
@@ -273,7 +273,7 @@ class Topic < ActiveRecord::Base
   end
 
   def ensure_topic_has_a_category
-    if category_id.nil? && (archetype.nil? || archetype == Archetype.default)
+    if category_id.nil? && (archetype.nil? || self.regular?)
       self.category_id = SiteSetting.uncategorized_category_id
     end
   end
@@ -461,6 +461,10 @@ class Topic < ActiveRecord::Base
 
   def private_message?
     archetype == Archetype.private_message
+  end
+
+  def regular?
+    self.archetype == Archetype.default
   end
 
   MAX_SIMILAR_BODY_LENGTH ||= 200
