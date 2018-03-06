@@ -13,6 +13,7 @@ split_regex: "^From .+"
 default_trust_level: 1
 prefer_html: false
 staged: true
+active: false
 index_only: false
 
 group_messages_by_subject: false
