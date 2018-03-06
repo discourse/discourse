@@ -1,0 +1,10 @@
+sl:
+  js:
+    presence:
+      replying: "odgovarja"
+      editing: "urejanje"
+      replying_to_topic:
+        one: "odgovarja"
+        two: "odgovarjata"
+        few: "odgovarjajo"
+        other: "odgovarjajo"
