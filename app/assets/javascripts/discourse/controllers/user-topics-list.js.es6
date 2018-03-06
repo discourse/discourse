@@ -31,7 +31,8 @@ export default Ember.Controller.extend({
   },
 
   unsubscribe() {
-    this.messageBus.unsubscribe(this.get('channel'));
+    const channel = this.get('channel');
+    if (channel) this.messageBus.unsubscribe(channel);
     this._resetTracking();
     this.set('channel', null);
   },
