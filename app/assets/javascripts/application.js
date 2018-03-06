@@ -11,6 +11,7 @@
 // Stuff we need to load first
 //= require ./discourse/lib/utilities
 //= require ./discourse/lib/page-visible
+//= require ./discourse/lib/logout
 //= require ./discourse/lib/ajax
 //= require ./discourse/lib/text
 //= require ./discourse/lib/hash
