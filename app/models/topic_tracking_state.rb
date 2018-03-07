@@ -246,7 +246,7 @@ SQL
     sql
   end
 
-  def self.publish_private_message(topic, user_id: user_id, user_archive: false, post: nil, group_archived: false)
+  def self.publish_private_message(topic, user_id: user_id, user_archive: false, post: nil, group_archive: false)
     return unless topic.private_message?
     channels = {}
 
@@ -266,9 +266,10 @@ SQL
       end
     else
       topic.allowed_groups.each do |group|
-        channel = "/private-messages/group/#{group.name.downcase}"
-        channel = "#{channel}/archive" if group_archived
-        channels[channel] = group.users.pluck(:id)
+        group_channels = []
+        group_channels << "/private-messages/group/#{group.name.downcase}"
+        group_channels << "#{group_channels.first}/archive" if group_archive
+        group_channels.each { |channel| channels[channel] = group.users.pluck(:id) }
       end
     end
 
