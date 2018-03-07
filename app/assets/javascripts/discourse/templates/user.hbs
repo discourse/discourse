@@ -48,6 +48,7 @@
                 flairColor=model.primary_group_flair_color
                 groupName=model.primary_group_name}}
             {{/if}}
+            {{plugin-outlet name="user-profile-avatar-flair" args=(hash model=model) tagName='div'}}
           </div>
           <section class='controls'>
             <ul>
