@@ -72,15 +72,19 @@ tr_TR:
         one: "Kayıt silinemiyor çünkü bir bağımlı %{record} var"
         many: "Kayıt silinemiyor çünkü bir bağımlı %{record} var"
       too_long:
+        one: çok uzun (en fazla %{count} karakter)
         other: çok uzun (en fazla %{count} karakter)
       too_short:
+        one: çok kısa (en az %{count} karakter olabilir)
         other: çok kısa (en az %{count} karakter olabilir)
       wrong_length:
+        one: yanlış uzunlukta (%{count} karakter olmalı)
         other: yanlış uzunlukta (%{count} karakter olmalı)
       other_than: "%{count} dışında bir rakam olmalı"
     template:
       body: 'Şu alanlarla ilgili problem yaşandı:'
       header:
+        one: '%{count} hata bu %{model} kaydının alınmasını engelledi'
         other: '%{count} hata bu %{model} kaydının alınmasını engelledi'
     embed:
       load_from_remote: "Gönderi yüklenirken bir hata oluştu."
@@ -105,33 +109,41 @@ tr_TR:
   reading_time: "Okuma Zamanı"
   likes: "Beğeniler"
   too_many_replies:
+    one: "Üzgünüz, yeni kullanıcılar geçici olarak aynı konu içinde sadece %{count} cevap ile sınırlılar. "
     other: "Üzgünüz, yeni kullanıcılar geçici olarak aynı konu içinde sadece %{count} cevap ile sınırlılar. "
   embed:
     start_discussion: "Tartışma Başlat"
     continue: "Tartışmaya Devam Et"
     referer: "Yönlendiren:"
     more_replies:
+      one: "%{count} cevap daha"
       other: "%{count} cevap daha"
     loading: "Tartışma Yükleniyor..."
     permalink: "Kalıcı Bağlantı"
     imported_from: "Bu ilave bir tartışmadır, asıl konu adresi %{link}"
     in_reply_to: "▶ %{username}"
     replies:
+      one: "%{count} cevap"
       other: "%{count} cevap"
   no_mentions_allowed: "Üzgünüz, diğer kullanıcılardan bahsedemezsiniz."
   too_many_mentions:
+    one: "Üzgünüz, bir gönderide sadece %{count} kullanıcıdan bahsedebilirsiniz."
     other: "Üzgünüz, bir gönderide sadece %{count} kullanıcıdan bahsedebilirsiniz."
   no_mentions_allowed_newuser: "Üzgünüz, yeni kullanıcılar diğer kullanıcılardan bahsedemezler."
   too_many_mentions_newuser:
+    one: "Üzgünüz, yeni kullanıcılar bir gönderide sadece %{count} kullanıcıdan bahsedebilirler."
     other: "Üzgünüz, yeni kullanıcılar bir gönderide sadece %{count} kullanıcıdan bahsedebilirler."
   no_images_allowed: "Üzgünüz, yeni kullanıcılar gönderilere resim koyamazlar."
   too_many_images:
+    one: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} resim koyabilirler. "
     other: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} resim koyabilirler. "
   no_attachments_allowed: "Üzgünüz, yeni kullanıcılar gönderilere bir şey ekleyemezler."
   too_many_attachments:
+    one: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} eklenti koyabilirler."
     other: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} eklenti koyabilirler."
   no_links_allowed: "Üzgünüz, yeni kullanıcılar gönderilere bağlantı ekleyemezler."
   too_many_links:
+    one: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} bağlantı ekleyebilirler."
     other: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} bağlantı ekleyebilirler."
   spamming_host: "Üzgünüz bu sunucuya bağlantı veremezsiniz."
   user_is_suspended: "Uzaklaştırılmış kullanıcılar gönderi yapamazlar."
@@ -191,6 +203,7 @@ tr_TR:
       trust_level_4: "güven_seviyesi_4"
   education:
     until_posts:
+      one: "%{count} gönderi"
       other: "%{count} gönderi"
     new-topic: |
       %{site_name} topluluğuna hoş geldiniz &mdash; **yeni bir sohbet başlattığınız için teşekkür ederiz! **
@@ -255,25 +268,25 @@ tr_TR:
     title: "Lobiye hoş geldiniz"
     body: |2
 
-      Tebrikler! :confetti_ball:
+        Tebrikler! :confetti_ball:
 
-      Bu konuyu görebiliyorsanız, yakın süre önce **müdavim** (güven seviyesi 3) seviyesine terfi etmişsiniz demektir.
+        Bu konuyu görebiliyorsanız, yakın süre önce **müdavim** (güven seviyesi 3) seviyesine terfi etmişsiniz demektir.
 
-      Artık &hellip;
+        Artık &hellip;
 
-      * Herhangi bir konunun başlık bilgisini düzenleyebilirsiniz
-      * Herhangi bir konunun kategorisini değiştirebilirsiniz
-      * Eklediğiniz linkler takip edilebilir durumunda olacaktır ([otomatik nofollow] (http://en.wikipedia.org/wiki/Nofollow) kaldırıldı)
-      * Sadece 3. güven seviyesi ve üzerindekilere gözüken özel lobi kategorisine erişebilirsiniz
-      * Tek bildirmeyle istenmeyen içerikli iletileri gizleyebilirsiniz
+        * Herhangi bir konunun başlık bilgisini düzenleyebilirsiniz
+        * Herhangi bir konunun kategorisini değiştirebilirsiniz
+        * Eklediğiniz linkler takip edilebilir durumunda olacaktır ([otomatik nofollow] (http://en.wikipedia.org/wiki/Nofollow) kaldırıldı)
+        * Sadece 3. güven seviyesi ve üzerindekilere gözüken özel lobi kategorisine erişebilirsiniz
+        * Tek bildirmeyle istenmeyen içerikli iletileri gizleyebilirsiniz
 
-      [Şu anki müdavim seviyedeki kişilerin listesi](/badges/3/regular). Merhaba demeyi unutmayın.
+        [Şu anki müdavim seviyedeki kişilerin listesi](/badges/3/regular). Merhaba demeyi unutmayın.
 
-      Bu topluluğun önemli bir parçası olduğunuz için teşekkür ederiz!
+        Bu topluluğun önemli bir parçası olduğunuz için teşekkür ederiz!
 
-      (Güven seviyeleriyle ilgili daha fazla bilgi için, [bu konuya bakın][trust]. Lütfen, sadece sürekli olarak kriterlere uyan üyelerin standart seviyede kalacağını unutmayın.)
+        (Güven seviyeleriyle ilgili daha fazla bilgi için, [bu konuya bakın][trust]. Lütfen, sadece sürekli olarak kriterlere uyan üyelerin standart seviyede kalacağını unutmayın.)
 
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "%{category} kategorisi hakkında "
     replace_paragraph: "(Bu paragrafın yerine yeni kategorinizin kısa bir açıklamasını girin. Buraya yazılanlar kategori seçim alanında görüneceği için, açıklamanızı 200 karakterin altında tutmaya çalışın.**Siz bu metni düzenleyene veya herhangi bir konu oluşturana kadar bu kategori, kategori sayfasında gözükmeyecek.**)"
@@ -289,6 +302,7 @@ tr_TR:
       uncategorized: "Kategorisiz silinemez"
       has_subcategories: "Alt kategorileri bulunduğu için bu kategori silinemez."
       topic_exists:
+        one: "Bu kategoriyi silemezsiniz çünkü %{count} konusu bulunuyor. En eski konu: %{topic_link}."
         other: "Bu kategoriyi silemezsiniz çünkü %{count} konusu bulunuyor. En eski konu: %{topic_link}."
       topic_exists_no_oldest: "Bu kategoriyi silemezsiniz çünkü %{count} konusu bulunuyor."
     uncategorized_description: "Kategoriye ihtiyacı olmayan, ya da diğer kategorilere uymayan konular."
@@ -319,59 +333,84 @@ tr_TR:
       live_post_counts: "Canlı gönderi sayımları için çok hızlı istek yapıyorsunuz. Lütfen tekrar denemeden önce %{time_left} bekleyin."
       unsubscribe_via_email: "Günlük e-posta ile abonelikten çıkma limitinizi aştınız. Lütfen tekrar denemeden önce %{time_left} bekleyin."
     hours:
+      one: "%{count} saat"
       other: "%{count} saat"
     minutes:
+      one: "%{count} dakika"
       other: "%{count} dakika"
     seconds:
+      one: "%{count} saniye"
       other: "%{count} saniye"
   datetime:
     distance_in_words:
       half_a_minute: "< 1dk"
       less_than_x_seconds:
+        one: "< %{count}sn"
         other: "< %{count}sn"
       x_seconds:
+        one: "%{count}sn"
         other: "%{count}sn"
       less_than_x_minutes:
+        one: "< %{count}dk"
         other: "< %{count}dk"
       x_minutes:
+        one: "%{count}dk"
         other: "%{count}dk"
       about_x_hours:
+        one: "%{count}sa"
         other: "%{count}sa"
       x_days:
+        one: "%{count}gün"
         other: "%{count}gün"
       about_x_months:
+        one: "%{count}ay"
         other: "%{count}ay"
       x_months:
+        one: "%{count}ay"
         other: "%{count}ay"
       about_x_years:
+        one: "%{count}yıl"
         other: "%{count}yıl"
       over_x_years:
+        one: "> %{count}yıl"
         other: "> %{count}yıl"
       almost_x_years:
+        one: "%{count}yıl"
         other: "%{count}yıl"
     distance_in_words_verbose:
       half_a_minute: "şu anda"
       less_than_x_seconds:
+        one: "hemen şimdi"
         other: "hemen şimdi"
       x_seconds:
+        one: "%{count} saniye önce"
         other: "%{count} saniye önce"
       less_than_x_minutes:
+        one: "son %{count} dakika içerisinde"
         other: "son %{count} dakika içerisinde"
       x_minutes:
+        one: "%{count} dakika önce"
         other: "%{count} dakika önce"
       about_x_hours:
+        one: "%{count} saat önce"
         other: "%{count} saat önce"
       x_days:
+        one: "%{count} gün önce"
         other: "%{count} gün önce"
       about_x_months:
+        one: "yaklaşık %{count} ay önce"
         other: "yaklaşık %{count} ay önce"
       x_months:
+        one: "%{count} ay önce"
         other: "%{count} ay önce"
       about_x_years:
+        one: "yaklaşık %{count} yıl önce"
         other: "yaklaşık %{count} yıl önce"
       over_x_years:
+        one: "%{count} yıldan daha fazla önce"
         other: "%{count} yıldan daha fazla önce"
       almost_x_years:
+        one: "neredeyse %{count} yıl önce"
         other: "neredeyse %{count} yıl önce"
   password_reset:
     no_token: "Üzgünüz, bu parola değiştirme bağlantısı çok eski. Yeni bir bağlantı almak için lütfen 'Giriş Yap' tuşuna basın ve 'Parolamı unuttum'u seçin."
@@ -413,7 +452,6 @@ tr_TR:
       long_form: 'bunu uygunsuz olarak bildirdi'
     notify_user:
       title: '@{{username}} adlı kullanıcıya ileti gönder'
-      description: 'Bu kişiyle gönderisi hakkında doğrudan ve gizli olarak konuşmak istiyorum.'
       long_form: 'ileti gönderilen kullanıcı'
       email_title: '"%{title}" başlıklı gönderiniz'
       email_body: "%{link}\n\n%{message}"
@@ -758,8 +796,6 @@ tr_TR:
     google_oauth2_client_id: "Google uygulamanıza ait Müşteri ID'si."
     google_oauth2_client_secret: "Google uygulamanıza ait client secret değeri."
     enable_twitter_logins: "Twitter doğrulamasını etkinleştir. twitter_consumer_key ve twitter_consumer_secret gereklidir"
-    twitter_consumer_key: "Twitter doğrulaması için gereken, http://dev.twitter.com adresinde kayıtlı consumer key"
-    twitter_consumer_secret: "Twitter doğrulaması için gereken, http://dev.twitter.com adresinde kayıtlı consumer secret"
     enable_instagram_logins: "Instagram doğrulamasını etkinleştir, instagram_consumer_key ve instagram_consumer_secret gereklidir"
     enable_facebook_logins: "Facebook doğrulamasını etkinleştir. facebook_app_id ve facebook_app_secret gerekir"
     facebook_app_id: "Facebook kimlik doğrulama için gerekli, https://developers.facebook.com/apps sayfasında bulunan app id"
@@ -771,7 +807,6 @@ tr_TR:
     allow_restore: "Geri almaya izin ver. Sitedeki TÜM verileri değiştirebilir! Bir yedeklemeyi geri yüklemeyi planlamıyorsanız devre dışı bırakın."
     maximum_backups: "Diskte tutulacak en fazla yedek sayısı. Eski yedekler otomatik olarak silinir."
     automatic_backups_enabled: "Yedek sıklığında tanımlandığı gibi otomatik yedek almayı çalıştır"
-    backup_frequency: "Hangi sıklıkta bir site yedeği oluştururuz, gün olarak."
     enable_s3_backups: "Tamamlanınca yedeklemeleri S3'e yükle. ÖNEMLİ: Dosyalar ayarında doğru S3 girilmesini gerektirir"
     s3_backup_bucket: "Yedeklemelerin yüklenmesi için uzak biriktirme yeri. UYARI: Özel bir biriktirme yeri olduğundan emin olun"
     s3_disable_cleanup: "Yerel olarak silinen yedeklerin S3 sunucularından silinmesini kapat"
@@ -1030,14 +1065,17 @@ tr_TR:
     not_seen_in_a_month: "Hoş geldiniz! Bir süredir yoktunuz. Bunlar sizin yokluğunuzda en gözde olan konular."
   merge_posts:
     edit_reason:
+      one: "%{count} gönderi %{username} tarafından birleştirildi"
       other: "%{count} gönderi %{username} tarafından birleştirildi"
     errors:
       different_topics: "Farklı konulara ait gönderiler birleştirilemez."
       different_users: "Farklı kullanıcılara ait gönderiler birleştirilemez."
   move_posts:
     new_topic_moderator_post:
+      one: "%{count} gönderi yeni bir konu için ayıklandı: %{topic_link}"
       other: "%{count} gönderi yeni bir konu için ayıklandı: %{topic_link}"
     existing_topic_moderator_post:
+      one: "%{count} gönderi var olan bir konu içinde birleştirildi: %{topic_link}"
       other: "%{count} gönderi var olan bir konu içinde birleştirildi: %{topic_link}"
   change_owner:
     post_revision_text: "Sahiplik %{old_user} hesabından %{new_user} hesabına aktarıldı"
@@ -1048,20 +1086,28 @@ tr_TR:
     closed_enabled: "Konu şimdi kapatıldı. Artık yeni cevap yazılmasına izin yok. "
     closed_disabled: "Konu şimdi açıldı. Yeni cevaplara izin var."
     autoclosed_message_max_posts:
+      one: "Bu ileti %{count} olan en fazla cevap limitini aştığı için otomatik olarak kapatıldı."
       other: "Bu ileti %{count} olan en fazla cevap limitini aştığı için otomatik olarak kapatıldı."
     autoclosed_topic_max_posts:
+      one: "Bu konu %{count} olan en fazla cevap limitini aştığı için otomatik olarak kapatıldı."
       other: "Bu konu %{count} olan en fazla cevap limitini aştığı için otomatik olarak kapatıldı."
     autoclosed_enabled_days:
+      one: "Bu konu %{count} gün sonunda konu otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor."
       other: "Bu konu %{count} gün sonunda konu otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor."
     autoclosed_enabled_hours:
+      one: "%{count} saat sonunda konu otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor."
       other: "%{count} saat sonunda konu otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor."
     autoclosed_enabled_minutes:
+      one: "%{count} dakika sonunda konu otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor."
       other: "%{count} dakika sonunda konu otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor."
     autoclosed_enabled_lastpost_days:
+      one: "Bu konu son cevaptan %{count} gün sonra otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor."
       other: "Bu konu son cevaptan %{count} gün sonra otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor."
     autoclosed_enabled_lastpost_hours:
+      one: "Bu konu son cevaptan %{count} saat sonra otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor."
       other: "Bu konu son cevaptan %{count} saat sonra otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor."
     autoclosed_enabled_lastpost_minutes:
+      one: "Bu konu son cevaptan %{count} dakika sonra otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor."
       other: "Bu konu son cevaptan %{count} dakika sonra otomatik olarak kapatıldı. Yeni cevap girilmesine izin verilmiyor."
     autoclosed_disabled: "Konu şimdi açıldı. Yeni cevaplara izin var."
     autoclosed_disabled_lastpost: "Konu şimdi açıldı. Yeni cevaplara izin var."
@@ -1110,6 +1156,7 @@ tr_TR:
       max_new_accounts_per_registration_ip: "Mevcut IP adresiniz üzerinden yeni kayıt işlemine izin verilmiyor. (Belirlenen sınır aşıldı.) Bir görevli ile iletişime geçin."
   flags_reminder:
     subject_template:
+      one: "İlgilenilmesi gereken %{count} bildirim var"
       other: "İlgilenilmesi gereken %{count} bildirim var"
   unsubscribe_mailer:
     subject_template: "%{site_title} üzerinden daha fazla e-posta güncellemesi almak istemediğinizi onaylayın"
@@ -1200,6 +1247,7 @@ tr_TR:
       subject_template: "Yeni hesap askıda"
     pending_users_reminder:
       subject_template:
+        one: "%{count} kullanıcı onay bekliyor"
         other: "%{count} kullanıcı onay bekliyor"
       text_body_template: |
         Bu foruma giriş yapabilmek için onayınızı (ya da reddinizi) bekleyen yeni kullanıcı kayıtları var.
@@ -1342,7 +1390,7 @@ tr_TR:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
-        %{message}
+          %{message}
     digest:
       why: "%{last_seen_at} tarihindeki son girişinizden beri %{site_link} sitesine olanların kısa bir özeti"
       since_last_visit: "Son ziyaretinizden bu yana"

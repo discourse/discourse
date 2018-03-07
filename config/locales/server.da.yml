@@ -98,7 +98,7 @@ da:
     template:
       body: 'Der var problemer med følgende felter:'
       header:
-        one: Een fejl forhindrede denne %{model} for at gemme.
+        one: 'Een fejl forhindrede denne %{model} for at gemme.'
         other: '%{count} fejl forhindrede denne %{model} i at gemme.'
     embed:
       load_from_remote: "Der opstod en fejl ved indlæsningen af dette indlæg."
@@ -353,40 +353,40 @@ da:
     title: "Velkommen til Discourse"
     body: |2
 
-      Det første afsnit af dette fastgjorte emne vil kunne ses som en velkomstbesked for alle nye besøgende på din hjemmeside. Dette er vigtigt!
+        Det første afsnit af dette fastgjorte emne vil kunne ses som en velkomstbesked for alle nye besøgende på din hjemmeside. Dette er vigtigt!
 
-      **Redigér dette** til en kortfattet beskrivelse af dit fællesskab:
+        **Redigér dette** til en kortfattet beskrivelse af dit fællesskab:
 
-      - Hvem er det rettet mod?
-      - Hvad kan de finde her?
-      - Hvorfor bør de komme her?
-      - Hvor finde de mere information (links, ressourcer, osv.)?
-      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+        - Hvem er det rettet mod?
+        - Hvad kan de finde her?
+        - Hvorfor bør de komme her?
+        - Hvor finde de mere information (links, ressourcer, osv.)?
+        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
-      Du bør eventuelt lukke dette emne via administratorfunktionen :wrench: (øverst til højre og i bunden), således at der ikke hober sig svar op til denne meddelelse.
+        Du bør eventuelt lukke dette emne via administratorfunktionen :wrench: (øverst til højre og i bunden), således at der ikke hober sig svar op til denne meddelelse.
   lounge_welcome:
     title: "Velkommen i loungen"
     body: |2
 
-      Tillykke! :confetti_ball:
+        Tillykke! :confetti_ball:
 
-      Hvis du kan se dette er du nu vlevet opgraderet som **regular** (trust level 3) bruger.
+        Hvis du kan se dette er du nu vlevet opgraderet som **regular** (trust level 3) bruger.
 
-      Nu kan du &hellip;
+        Nu kan du &hellip;
 
-      * Rediger enhver emne titel
-      * Ændre alle kategorier og emner
-      * Følge alle links ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) ier fjernet)
-      * Få adgang til en privat lounge kategori kun synlig for brugere med Trust LEvel 3, eller højere
-      * Gemme spam - med et enkelt flag
+        * Rediger enhver emne titel
+        * Ændre alle kategorier og emner
+        * Følge alle links ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) ier fjernet)
+        * Få adgang til en privat lounge kategori kun synlig for brugere med Trust LEvel 3, eller højere
+        * Gemme spam - med et enkelt flag
 
-      Her er  [current list of fellow regulars](/badges/3/regular). Sving forbi og hils på!
+        Her er  [current list of fellow regulars](/badges/3/regular). Sving forbi og hils på!
 
-      Tak fordi du er en vigtig del af dette fællesskab!
+        Tak fordi du er en vigtig del af dette fællesskab!
 
-      (Formere information om Trust Levels [see this topic][trust]. Bemærk venligst at kun brugere der vedbliver at leve op til Trust Level betingelserne, vil have fortsat adgang)
+        (Formere information om Trust Levels [see this topic][trust]. Bemærk venligst at kun brugere der vedbliver at leve op til Trust Level betingelserne, vil have fortsat adgang)
 
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Kategoridefinition for %{category}"
     replace_paragraph: "(Beskriv din nye kategori her. Beskriv ramme og formål med kategori således at det er tydeligt for andre. Forsøg at holde beskrivelsen på max 200 tegn. **Kategorien vil ikke fremgå på kategori listen, før du har redigeret beskrivelsen, eller oprettet emner)."
@@ -564,7 +564,6 @@ da:
       long_form: 'markerede dette som stødende'
     notify_user:
       title: 'Send @{{username}} en besked'
-      description: 'Jeg ønsker at tale med denne person direkte om vedkommendes indlæg'
       long_form: 'sendt besked til brugeren'
       email_title: 'Dit indlæg i "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -911,8 +910,6 @@ da:
     google_oauth2_client_id: "Client ID of your Google application."
     google_oauth2_client_secret: "Client secret of your Google application."
     enable_twitter_logins: "Aktivér Twitter-login, kræver twitter_consumer_key og twitter_consumer_secret"
-    twitter_consumer_key: "Consumer key til Twitter-login, oprettes på http://dev.twitter.com."
-    twitter_consumer_secret: "Consumer secret til Twitter-login, oprettes på http://dev.twitter.com."
     enable_instagram_logins: "Aktivér Instagram-login, kræver instagram_consumer_key og instagram_consumer_secret"
     enable_facebook_logins: "Aktivér Facebook-login, kræver facebook_app_id og facebook_app_secret"
     facebook_app_id: "App id til Facebook-login, oprettes på https://developers.facebook.com/apps"
@@ -1381,7 +1378,7 @@ da:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
-        %{message}
+          %{message}
     digest:
       why: "Et kort resumé af %{site_link} siden dit sidste besøg %{last_seen_at}"
       since_last_visit: "Siden dit sidste besøg"

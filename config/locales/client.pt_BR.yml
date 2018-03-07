@@ -378,7 +378,6 @@ pt_BR:
       name: "Nom"
       user_count: "Número de Membros"
       bio: "Sobre o Grupo"
-      selector_placeholder: "Adicionar membros"
       owner: "proprietário"
       index:
         title: "Grupos"
@@ -1578,8 +1577,8 @@ pt_BR:
         select_all: selecionar tudo
         deselect_all: deselecionar tudo
         description:
-          one: <b>1</b> resposta selecionada.
-          other: <b>{{count}}</b> respostas selecionadas.
+          one: "<b>1</b> resposta selecionada."
+          other: "<b>{{count}}</b> respostas selecionadas."
     post:
       quote_reply: "Citação"
       edit_reason: "Motivo:"
@@ -1813,7 +1812,6 @@ pt_BR:
       email_in_allow_strangers: "Aceitar emails de usuários anônimos sem cont"
       email_in_disabled: "Postar novos tópicos via email está desabilitado nas Configurações do Site. Para habilitar respostas em novos tópicos via email,"
       email_in_disabled_click: 'habilitar a configuração de "email em".'
-      suppress_from_homepage: "Suprimir esta categoria da página inicial."
       show_subcategory_list: "Exibir lista de subcategorias acima dos tópicos nesta categoria."
       num_featured_topics: "Número de tópicos exibidos na página de Categorias:"
       subcategory_num_featured_topics: "Número de tópicos em destaque na página da categoria pai:"
@@ -2316,7 +2314,6 @@ pt_BR:
         edit: "Editar Grupos"
         refresh: "Atualizar"
         new: "Novo"
-        selector_placeholder: "digite o nome de usuário"
         about: "Editar participação no grupo e nomes aqui"
         group_members: "Membros do grupo"
         delete: "Apagar"
@@ -2979,10 +2976,7 @@ pt_BR:
         recommended: "Recomendamos a personalização do seguinte texto para se adequar as suas necessidades:"
         show_overriden: 'Apenas mostrar valores alterados'
       site_settings:
-        show_overriden: 'Exibir apenas valores alterados'
         title: 'Configurações'
-        reset: 'apagar'
-        none: 'nenhum'
         no_results: "Nenhum resultado encontrado."
         clear_filter: "Limpar"
         add_url: "adicionar URL"

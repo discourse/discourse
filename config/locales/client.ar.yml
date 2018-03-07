@@ -239,6 +239,7 @@ ar:
     not_implemented: "لم تُنجز هذه الخاصية بعد، عذرا."
     no_value: "لا"
     yes_value: "نعم"
+    submit: "أرسل"
     generic_error: "نأسف، حدث عطل ما."
     generic_error_with_reason: "حدث عطل ما: %{error}"
     sign_up: "أنشأ حسابا"
@@ -350,6 +351,7 @@ ar:
     uploading: "يرفع..."
     uploading_filename: "يرفع {{filename}}..."
     uploaded: "رُفع!"
+    pasting: "جاري النسخ"
     enable: "فعّل"
     disable: "عطّل"
     undo: "تراجع"
@@ -484,7 +486,7 @@ ar:
       name: "الاسم"
       user_count: "عدد اﻷعضاء"
       bio: "عن المجموعة"
-      selector_placeholder: "أضف أعضاء"
+      selector_placeholder: "أدخل اسم المستخدم"
       owner: "المالك"
       index:
         title: "المجموعات"
@@ -739,6 +741,9 @@ ar:
         set_password: " إعادة تعين كلمة المرور"
         choose_new: "اختر كلمة المرور الجديدة"
         choose: "اختر كلمة المرور"
+      second_factor:
+        enabled_status: "الحالة : متاج"
+        disabled_status: "الحالة : غير متاج"
       change_about:
         title: "تعديل عني"
         error: "حدث عطل أثناء تغيير هذه القيمة."
@@ -1508,6 +1513,8 @@ ar:
       move_to_inbox:
         title: 'انقل إلى البريد الوارد'
         help: 'انقل الرسالة للبريد الوارد'
+      edit_message:
+        title: 'تحرير رسالة'
       list: 'الموضوعات'
       new: 'موضوع جديد'
       unread: 'غير مقروء'
@@ -1848,12 +1855,12 @@ ar:
         select_all: حدد الكل
         deselect_all: أزل تحديد الكل
         description:
-          zero: لم تحدّد أي منشورات.
-          one: لقد حدّدت منشور<b>واحد</b>.
-          two: لقد حدّدت <b>منشورين</b>.
-          few: لقد حدّدت <b>{{count}}</b> منشور.
-          many: لقد حدّدت <b>{{count}}</b> منشور.
-          other: لقد حدّدت <b>{{count}}</b> منشور.
+          zero: "لم تحدّد أي منشورات."
+          one: "لقد حدّدت منشور<b>واحد</b>."
+          two: "لقد حدّدت <b>منشورين</b>."
+          few: "لقد حدّدت <b>{{count}}</b> منشور."
+          many: "لقد حدّدت <b>{{count}}</b> منشور."
+          other: "لقد حدّدت <b>{{count}}</b> منشور."
     post:
       quote_reply: "اقتبس"
       edit_reason: "السبب:"
@@ -2185,7 +2192,6 @@ ar:
       email_in_allow_strangers: "قبول بريد إلكتروني من زوار لا يملكون حسابات"
       email_in_disabled: "عُطّل إرسال المشاركات عبر البريد الإلكترونيّ من إعدادات الموقع. لتفعيل نشر المشاركات الجديدة عبر البريد،"
       email_in_disabled_click: 'قم بتفعيل خيار "email in" في الإعدادات'
-      suppress_from_homepage: "امنع هذا القسم من الظهور في الصفحة الرئيسية."
       show_subcategory_list: "أظهر الأقسام الفرعية فوق الموضوعات من هذا القسم."
       num_featured_topics: "عدد الموضوعات المعروضة في صفحة الأقسام:"
       subcategory_num_featured_topics: "عدد الموضوعات المُميزة في صفحة القسم الرئيسي."
@@ -2785,7 +2791,6 @@ ar:
         edit: "تعديل المجموعة"
         refresh: "تحديث"
         new: "جديد"
-        selector_placeholder: "أدخل اسم المستخدم"
         about: "عدل عضوية المجموعة وأسماءها هنا"
         group_members: "أعضاء المجموعة"
         delete: "احذف"
@@ -3531,10 +3536,7 @@ ar:
         recommended: "نوصيك بتخصيص النص التالي ليلائم احتياجاتك:"
         show_overriden: 'اظهر التجاوزات فقط'
       site_settings:
-        show_overriden: 'اظهر فقط الاعدادات المعدلة'
         title: 'الإعدادات'
-        reset: 'إعادة تعيين'
-        none: 'لا شيء'
         no_results: "لا نتائج."
         clear_filter: "مسح"
         add_url: "اضافة رابط"
@@ -3556,6 +3558,7 @@ ar:
           developer: 'المطورون'
           embedding: "تضمين"
           legal: "الأمور القانونية"
+          api: 'API'
           user_api: 'API المستخدمين'
           uncategorized: 'أخرى'
           backups: "النُسخ الإحتياطية"

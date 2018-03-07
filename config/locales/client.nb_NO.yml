@@ -174,6 +174,7 @@ nb_NO:
     not_implemented: "Beklager, den funksjonen er ikke blitt implementert enda."
     no_value: "Nei"
     yes_value: "Ja"
+    submit: "Send inn"
     generic_error: "Beklager, det har oppstått en feil."
     generic_error_with_reason: "Det oppstod et problem: %{error}"
     sign_up: "Registrer deg"
@@ -388,7 +389,7 @@ nb_NO:
       name: "Navn"
       user_count: "Antall medlemmer"
       bio: "Om gruppe"
-      selector_placeholder: "Legg til medlemmer"
+      selector_placeholder: "oppgi brukernavn"
       owner: "eier"
       index:
         title: "Grupper"
@@ -636,6 +637,25 @@ nb_NO:
         set_password: "Sett passord"
         choose_new: "Velg et nytt passord"
         choose: "Velg et passord"
+      second_factor:
+        title: "Totrinnsverifisering"
+        enabled_status: "Status: På"
+        disabled_status: "Status: Av"
+        confirm_password_description: "Bekreft ditt passord for å aktivere totrinnsverifisering"
+        enable_description: |
+          For å fullføre oppsettetet av totrinnsverifisering, skann den følgende QR-koden
+          i en av de støttede appene
+          (<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Android and iOS</a>,
+          <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>)
+          og send inn den genererte totrinnsverifiserings-koden.
+        disable_description: "Skriv inn verifiseringskoden fra din app"
+        show_key_description: "Eller skriv inn din hemmelige nøkkel manuelt. "
+        info_prompt: "Hva er Totrinnsverifisering?"
+        extended_description: |
+          Totrinnsverifisering git et ekstra sikkerhteslag ved innlogginv ved å
+          kreve en engangskode i tillegg til et passord. Disse engangskodene
+          kan bligenerert i Android og iOS med <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Google Authenticator</a>
+          og på Windows Phone med <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Authenticator</a>.
       change_about:
         title: "Rediger om meg"
         error: "Det oppstod en feil ved endring av denne verdien."
@@ -977,14 +997,27 @@ nb_NO:
       help: "Fikk du ikke e-posten? Sjekk søppelposten din først.<p>Er du ikke sikker på hvilken e-postadresse du brukte. Skriv inn adressen her og vi vil fortelle deg om den finnes her.</p><p>Hvis du ikke lenger har tilgang til e-postadressen på kontoen din, kontakt <a href='/about'>vår hjelpfulle stab.</a></p>"
       button_ok: "OK"
       button_help: "Hjelp"
+    email_login:
+      link_label: "Sen meg en magisk lenke på e-post"
+      button_label: "med e-post"
+      complete_username: "Hvis en konto med brukernavn <b>%{username}</b> finnes, vil du snart motta en e-post med en magisk innlogginslenke. "
+      complete_email: "Hvis en konto med <b>%{email}</b> finnes, vil du snart motta en e-post med en magisk innlogginslenke. "
+      complete_username_found: "Vi fant en konto med brukernavnet <b>%{username}</b>, Du vil snart motta en e-post med en magisk innlogginslenke."
+      complete_email_found: "Vi fant en konto med e-postadressen <b>%{email}</b>. Du mottar om litt en e-post med en magisk innloggingslenke. "
+      complete_username_not_found: "Ingen konto har med brukernavnet <b>%{username}</b> er registrert"
+      complete_email_not_found: "Ingen konto med e-postadressen <b>%{email}</b> er registrert"
     login:
       title: "Logg Inn"
       username: "Bruker"
       password: "Passord"
+      second_factor_title: "Totrinnsverifisering er påkrevd"
+      second_factor_description: "Skriv inn verifiseringskoden fra din app."
+      second_factor_label: "Kode"
       email_placeholder: "e-postadresse eller brukernavn"
       caps_lock_warning: "Caps Lock er på"
       error: "Ukjent feil"
       rate_limit: "Vent litt før du logger inn igjen."
+      blank_username: "Vennligst oppgi din e-post eller brukernavn."
       blank_username_or_password: "Oppgi din e-postadresse eller brukernavn og ditt passord."
       reset_password: 'Nullstill passord'
       logging_in: "Logger inn…"
@@ -1060,6 +1093,8 @@ nb_NO:
       default_header_text: Velg…
       no_content: Ingen treff funnet
       filter_placeholder: Søk…
+      create: "Opprett: {{content}}"
+      max_content_reached: "Du kan kun velge {{count}} gjenstander."
     emoji_picker:
       filter_placeholder: Søk etter emoji
       people: Folk
@@ -1156,6 +1191,7 @@ nb_NO:
       olist_title: "Nummerert liste"
       ulist_title: "Kulepunktliste"
       list_item: "Listeelement"
+      toggle_direction: "Skift retning"
       help: "Hjelp for redigering i Markdown"
       collapse: "minimer redigeringspanelet"
       abandon: "lukk redigeringspanel og forkast utkast"
@@ -1166,6 +1202,24 @@ nb_NO:
         title: "Glemte du å legge til mottagere?"
         body: "Nå sender du denne meldingen bare til deg selv!"
       admin_options_title: "Valgfrie tråd-instillinger for stab"
+      composer_actions:
+        reply_to_post:
+          label: Svar på innlegg %{postNumber} av %{postUsername}
+          desc: Svar på et spesifikt innlegg
+        reply_as_new_topic:
+          label: Svar med lenket tråd
+          desc: Opprette ny tråd lenket til denne tråden
+        reply_as_private_message:
+          label: Ny melding
+          desc: Opprett en ny personlig melding
+        reply_to_topic:
+          label: Svar på tråd
+          desc: 'Svar på tråd, ikke et spesifikt innlegg '
+        toggle_whisper:
+          label: Slå på/av hvisking
+          desc: Hvisking er kun synlig for stab
+        create_topic:
+          label: "Nytt tråd"
     notifications:
       tooltip:
         regular:
@@ -1699,8 +1753,8 @@ nb_NO:
         select_all: velg alle
         deselect_all: fjern alle
         description:
-          one: Du har valgt <b>1</b> innlegg.
-          other: Du har valgt <b>{{count}}</b> innlegg.
+          one: "Du har valgt <b>1</b> innlegg."
+          other: "Du har valgt <b>{{count}}</b> innlegg."
     post:
       quote_reply: "Sitat"
       edit: "<i class='fa fa-pencil'></i> {{link}} {{replyAvatar}} {{username}}"
@@ -1968,7 +2022,7 @@ nb_NO:
       email_in_disabled: "Publisering av nye tråder via e-post er deaktivert i innstillingene for nettstedet. For å aktivere publisering av nye tråder via e-post,"
       email_in_disabled_click: 'aktiver innstillingen "e-post inn".'
       mailinglist_mirror: "Kategorien gjenspeiler en e-postliste"
-      suppress_from_homepage: "Utelat denne kategorien fra hjemmesiden."
+      suppress_from_latest: "Utelat denne kategorien fra siste tråder."
       show_subcategory_list: "Vis listen over underkategorier over tråder i denne kategorien."
       num_featured_topics: "Antall tråder vist på kategori-siden:"
       subcategory_num_featured_topics: "Antall fremhevede tråder på overkategoriens side:"
@@ -2447,9 +2501,15 @@ nb_NO:
         moderation_history: "Moderatorhistorikk"
         agree: "Godta"
         agree_title: "Bekreft at denne rapporteringen er gyldig og korrekt"
+        agree_flag_hide_post: "Skjul innlegg"
         agree_flag_hide_post_title: "Gjem dette innlegget og send en melding til brukeren automatisk med en forespørsel om gjøre endringer."
         agree_flag_restore_post: "Samtykk og gjenopprett innlegg"
         agree_flag_restore_post_title: "Gjenopprett innlegget slik at alle brukere kan se det."
+        agree_flag_suspend: "Steng ute bruker"
+        agree_flag_suspend_title: "Si deg enig med rapportering og steng ute bruker. "
+        agree_flag_silence: "Demp bruker"
+        agree_flag_silence_title: "Si deg enig med rapportering og demp bruker. "
+        agree_flag: "Behold innlegg"
         agree_flag_title: "Samtykk med flagg og behold innlegget uendret."
         ignore_flag: "Ignorer"
         ignore_flag_title: "Fjern denne rapporteringen; den krever ingen handling på dette tidspunktet."
@@ -2507,7 +2567,6 @@ nb_NO:
         edit: "Rediger grupper"
         refresh: "Last inn på nytt"
         new: "Ny"
-        selector_placeholder: "oppgi brukernavn"
         about: "Rediger gruppemedlemskap og navn her."
         group_members: "Gruppemedlemmer"
         delete: "Slett"
@@ -2980,6 +3039,7 @@ nb_NO:
             post_locked: "innlegg låst"
             post_unlocked: "innlegg opplåst"
             check_personal_message: "sjekk personlig melding"
+            disabled_second_factor: "deaktiver totrinnsverifisering"
         screened_emails:
           title: "Kontrollerte e-poster"
           description: "Når noen forsøker å lage en ny konto, vil de følgende e-postadressene bli sjekket, og registreringen vil bli blokkert, eller en annen handling vil bli utført."
@@ -3126,6 +3186,10 @@ nb_NO:
         suspended_until: "(til %{until})"
         cant_suspend: "Brukeren kan ikke utestenges."
         delete_all_posts: "Slett alle innlegg"
+        penalty_post_actions: "Hva ønsker du å gjøre med det assosierte innlegg"
+        penalty_post_delete: "Slett innlegget"
+        penalty_post_edit: "Rediger innlegget"
+        penalty_post_none: "ikke gjør noe"
         delete_all_posts_confirm_MF: "Du er i ferd med å slette {POSTS, plural, one {1 innlegg} other {# innlegg}} og {TOPICS, plural, one {1 tråd} other {# tråder}}. Er du sikker?"
         silence: "Demp"
         unsilence: "Opphev demping"
@@ -3161,6 +3225,7 @@ nb_NO:
         private_topics_count: Private tråder
         posts_read_count: Innlegg lest
         post_count: Innlegg skrevet
+        second_factor_enabled: totrinnsverifisering aktivert
         topics_entered: Tråder sett
         flags_given_count: Rapporteringer tildelt
         flags_received_count: Rapporteringer mottatt
@@ -3303,10 +3368,7 @@ nb_NO:
         recommended: "Skreddersøm av følgende tekst for å kle dine behov anbefales:"
         show_overriden: 'Bare vis overstyrte'
       site_settings:
-        show_overriden: 'Bare vis overstyrte'
         title: 'Innstillinger'
-        reset: 'tilbakestill'
-        none: 'intet'
         no_results: "Ingen treff funnet."
         clear_filter: "Tøm"
         add_url: "legg til URL"

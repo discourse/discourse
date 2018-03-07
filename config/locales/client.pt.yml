@@ -373,7 +373,6 @@ pt:
       name: "Nome"
       user_count: "Número de Membros"
       bio: "Sobre o Grupo"
-      selector_placeholder: "Adicionar membros"
       owner: "proprietário"
       index:
         title: "Grupos"
@@ -1511,8 +1510,8 @@ pt:
         select_all: 'selecionar tudo '
         deselect_all: desmarcar tudo
         description:
-          one: Selecionou <b>1</b> publicação.
-          other: Selecionou <b>{{count}}</b> publicações.
+          one: "Selecionou <b>1</b> publicação."
+          other: "Selecionou <b>{{count}}</b> publicações."
     post:
       quote_reply: "Citar"
       edit_reason: "Motivo:"
@@ -1728,7 +1727,6 @@ pt:
       email_in_allow_strangers: "Aceitar emails de utilizadores anónimos sem conta"
       email_in_disabled: "Publicar novos tópicos através do email está desactivado nas Configurações do Sítio. Para permitir a publicação de novos tópicos através do email,"
       email_in_disabled_click: 'ative a definição "email em".'
-      suppress_from_homepage: "Suprimir esta categoria da página principal."
       allow_badges_label: "Permitir a atribuição de distintivos nesta categoria"
       edit_permissions: "Editar Permissões"
       add_permission: "Adicionar Permissões"
@@ -2203,7 +2201,6 @@ pt:
         edit: "Editar Grupos"
         refresh: "Atualizar"
         new: "Novo"
-        selector_placeholder: "insira o nome de utilizador"
         about: "Editar aqui a sua participação e nomes no grupo"
         group_members: "Membros do grupo"
         delete: "Eliminar"
@@ -2824,10 +2821,7 @@ pt:
         recommended: "Recomendamos personalizar o seguinte texto para que se aplique às suas necessidades."
         show_overriden: 'Apenas mostrar valores alterados'
       site_settings:
-        show_overriden: 'Apenas mostrar valores alterados'
         title: 'Configurações'
-        reset: 'repor'
-        none: 'nenhum'
         no_results: "Não foi encontrado nenhum resultado."
         clear_filter: "Remover"
         add_url: "adicionar URL"

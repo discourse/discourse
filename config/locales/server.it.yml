@@ -104,7 +104,7 @@ it:
     template:
       body: 'Sono stati riscontrati problemi con i seguenti campi:'
       header:
-        one: 1 errore ha impedito il salvataggio di questo %{model}
+        one: '1 errore ha impedito il salvataggio di questo %{model}'
         other: '%{count} errori hanno impedito il salvataggio di questo %{model}'
     embed:
       load_from_remote: "Si è verificato un errore nel caricamento del messaggio."
@@ -176,7 +176,6 @@ it:
   too_many_links:
     one: "Spiacenti, i nuovi utenti possono inserire al massimo un collegamento in un messaggio."
     other: "Spiacenti, i nuovi utenti possono inserire al massimo %{count} collegamenti in un messaggio."
-  contains_blocked_words: "Il tuo messaggio contiene parole che non sono consentite."
   spamming_host: "Spiacenti, non puoi inserire un collegamento verso quel dominio."
   user_is_suspended: "Agli utenti sospesi non è permesso creare messaggi."
   topic_not_found: "Quancosa non ha funzionato. Forse questo argomento è stato chiuso o cancellato mentre lo leggevi."
@@ -375,41 +374,41 @@ it:
     title: "Benvenuto in Discourse"
     body: |2
 
-      Il primo paragrafo di questo argomento puntato sarà visibile come messaggio di benvenuto a tutti i nuovi visitatori sulla tua homepage. È importante!
+        Il primo paragrafo di questo argomento puntato sarà visibile come messaggio di benvenuto a tutti i nuovi visitatori sulla tua homepage. È importante!
 
-      **Modificalo** con una breve descrizione della tua comunità:
+        **Modificalo** con una breve descrizione della tua comunità:
 
-      - A chi è rivolto?
-      - Cosa possono trovare qui?
-      - Perchè dovrebbero venire qui?
-      - Dove possono leggere di più (collegamenti, risorse, ecc)?
+        - A chi è rivolto?
+        - Cosa possono trovare qui?
+        - Perchè dovrebbero venire qui?
+        - Dove possono leggere di più (collegamenti, risorse, ecc)?
 
-      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
-      Puoi chiudere questo argomento tramite la :wrench: per amministratori (in alto a destra e in basso), in modo che le risposte non si accumulino all'annuncio.
+        Puoi chiudere questo argomento tramite la :wrench: per amministratori (in alto a destra e in basso), in modo che le risposte non si accumulino all'annuncio.
   lounge_welcome:
     title: "Benvenuto nel Lounge"
     body: |2
 
-      Congratulazioni! :confetti_ball:
+        Congratulazioni! :confetti_ball:
 
-      Se vedi questo argomento, sei stato recentemente promosso a **esperto** (livello di esperienza 3).
+        Se vedi questo argomento, sei stato recentemente promosso a **esperto** (livello di esperienza 3).
 
-      Adesso puoi &hellip;
+        Adesso puoi &hellip;
 
-      * Modificare il titolo di qualunque argomento
-      * Cambiare la categoria di qualunque argomento
-      * Seguire tutti i tuoi collegamenti (è rimosso il [nofollow automatico](http://it.wikipedia.org/wiki/Nofollow) )
-      * Accedere alla categoria privata Lounge visibile solo agli utenti con livello di esperienza 3 o superiore
-      * Cancellare i messaggi spam con un singolo clic
+        * Modificare il titolo di qualunque argomento
+        * Cambiare la categoria di qualunque argomento
+        * Seguire tutti i tuoi collegamenti (è rimosso il [nofollow automatico](http://it.wikipedia.org/wiki/Nofollow) )
+        * Accedere alla categoria privata Lounge visibile solo agli utenti con livello di esperienza 3 o superiore
+        * Cancellare i messaggi spam con un singolo clic
 
-      Ecco l'elenco degli altri [utenti esperti](/badges/3/regular). Vai a salutarli.
+        Ecco l'elenco degli altri [utenti esperti](/badges/3/regular). Vai a salutarli.
 
-      Grazie per essere una parte importante di questa comunità!
+        Grazie per essere una parte importante di questa comunità!
 
-      (Per maggiori informazioni sui livelli di esperienza, [leggi questa discussione][trust]. Nota che possono rimanere utenti esperti solo quegli utenti che continuano a soddisfare i criteri di selezione)
+        (Per maggiori informazioni sui livelli di esperienza, [leggi questa discussione][trust]. Nota che possono rimanere utenti esperti solo quegli utenti che continuano a soddisfare i criteri di selezione)
 
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Definizione della categoria %{category}"
     replace_paragraph: "(Sostituisci questo primo paragrafo con una breve descrizione della nuova categoria. Questa guida apparirà nell'area di selezione della categoria, perciò cerca di stare sotto i 200 caratteri. **Finché non modifichi questo testo o non crei argomenti, questa categoria non apparirà sulla pagina delle categorie.**)"
@@ -595,8 +594,6 @@ it:
       long_form: 'segnalato come inappropriato'
     notify_user:
       title: 'Invia un messaggio a @{{username}}'
-      description: 'Vorrei discutere direttamente e privatamente con l''autore di questo messaggio.'
-      short_description: 'Voglio parlare con questa persona direttamente e privatamente a proposito del suo messaggio.'
       long_form: 'messaggio inviato'
       email_title: 'Il tuo messaggio su "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -1013,8 +1010,6 @@ it:
     google_oauth2_client_id: "Client ID della tua applicazione Google."
     google_oauth2_client_secret: "Client secret della tua applicazione Google."
     enable_twitter_logins: "Abilita l'autenticazione con Twitter, richiede twitter_consumer_key e twitter_consumer_secret"
-    twitter_consumer_key: "Consumer key per autenticazione via Twitter, come registrata su http://dev.twitter.com"
-    twitter_consumer_secret: "Consumer secret per autenticazione via Twitter, come registrata su  http://dev.twitter.com"
     enable_instagram_logins: "Abilita l'autenticazione con Instagram, richiede la instagram_consumer_key e la instagram_consumer_secret"
     instagram_consumer_key: "La consumer key per autenticazione Instagram"
     instagram_consumer_secret: "La consumer secret per l'autenticazione Instagram"
@@ -1029,7 +1024,6 @@ it:
     allow_restore: "Abilita il ripristino, che sostituisce TUTTI i dati del sito! Lascia a falso a meno che non hai intenzione di ripristinare un backup."
     maximum_backups: "Il numero massimo di backup da mantenere sul disco. I backup più vecchi vengono automaticamente cancellati."
     automatic_backups_enabled: "Esegui backup automatici come definito nella frequenza di backup"
-    backup_frequency: "Con che frequenza, in giorni, effettuiamo il backup del sito."
     enable_s3_backups: "Carica i backup su S3 quando completati. IMPORTANTE: richiede che siano inserite valide credenziali S3 nelle impostazioni File."
     s3_backup_bucket: "Il bucket remoto che contiene i backup. ATTENZIONE: assicurati che sia un bucket privato."
     s3_disable_cleanup: "Disabilita la rimozione dei backup da S3 quando rimossi localmente."
@@ -1573,47 +1567,6 @@ it:
   test_mailer:
     title: "Test Mailer"
     subject_template: "[%{email_prefix}] Test di Consegna Email"
-    text_body_template: |
-      Questa è una email di prova inviata da
-
-      [**%{base_url}**][0]
-
-      Il recapito di email è complesso. Ecco alcune cose importanti che dovresti controllare prima::
-
-      - Sii *certo* di aver impostato `notification email`  from: indirizzo correttamente nelle impostazioni del tuo sito. **Il dominio specificato nell'indirizzo "from" delle email inviate è il dominio in cui verranno convalidate le tue email**.
-
-      - Impara a visualizzare il contenuto originale delle email nel tuo client email, in questo modo potrai controllare la presenza di eventuali errori. In Gmail puoi usare il tasto "Mostra Originale" presente nel menù a tendina di ogni email.
-
-      - **IMPORTANTE:** Il tuo ISP ha un record DNS inverso per associare il nome del dominio e l'indirizzo ip dal quale invii le email? [Controlla il tuo record inverso PTR][2] qui. Se il tuo ISP non inserisce il record DNS inverso appropriato è molto improbabile che le tue email verranno recapitate.
-
-      - Il [record SPF][8] del tuo dominio è corretto? [Controlla il tuo record SPF][1] qui. Tieni presente che TXT è il tipo di record ufficiale corretto per SPF.
-
-      - Il [record DKIM][3] del tuo dominio è corretto? Questo migliorerà significativamente il recapito delle email. [Controlla il tuo record DKIM][7] qui.
-
-      - Se usi un tuo mail server, verifica che gli IP del tuo mail server [non siano in nessuna blacklist][4]. Verifica inoltre che il tuo mail server stia inviando un hostname pienamente qualificato che abbia una risoluzione nel DNS nel suo messaggio HELO. Se questo non avviene, è molto provabile che le tue email verranno scartate da molte caselle email.
-
-      - Ti raccomandiamo di **inviare una email di prova a [mail-tester.com][mt]** per verificare che tutte le operazioni sopra indicate funzionino correttamente.
-
-      (Il modo più *semplice* è quello di creare un account free su [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] o [Mailjet][mj], che hanno un generoso piano gratuito che andrà bene per i forum più piccoli. Attenzione che dovrai comunque impostare i tuoi record SPF e DKIM nel DNS!)
-
-      Speriamo tu abbia ricevuto questo test di recapito email!
-
-      Buona fortuna,
-
-      I tuoi amici di [Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: http://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing
-      [mt]: http://www.mail-tester.com/
   new_version_mailer:
     title: "Mailer Nuova Versione"
     subject_template: "[%{email_prefix}] Nuova versione di Discourse, aggiornamento disponibile"
@@ -2197,7 +2150,7 @@ it:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
-        %{message}
+          %{message}
     account_suspended:
       title: "Account Sospeso"
       subject_template: "[%{email_prefix}] Il tuo account è stato sospeso"

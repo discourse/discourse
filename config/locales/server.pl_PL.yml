@@ -105,7 +105,7 @@ pl_PL:
     template:
       body: 'Wystąpiły problemy z następującymi polami:'
       header:
-        one: 1 błąd uniemożliwił zapisanie %{model}
+        one: '1 błąd uniemożliwił zapisanie %{model}'
         few: '%{count} błędy uniemożliwiły zapisanie %{model}'
         many: '%{count} błędów uniemożliwiło zapisanie %{model}'
         other: '%{count} błędów uniemożliwiło zapisanie %{model}'
@@ -190,7 +190,6 @@ pl_PL:
     one: "Przepraszamy, nowi użytkownicy mogą dodać tylko jeden link we wpisie."
     few: "Przepraszamy, nowi użytkownicy mogą dodać tylko %{count} linki we wpisie."
     other: "Przepraszamy, nowi użytkownicy mogą dodać tylko %{count} linków we wpisie."
-  contains_blocked_words: "Twój wpis zawiera niedozwolone słowa"
   spamming_host: "Przepraszamy, nie możesz umieścić linka do tej strony."
   user_is_suspended: "Zawieszeni użytkownicy nie mogą wysyłać wiadomości."
   topic_not_found: "Coś poszło nie tak. Być może temat został zamknięty lub usunięty w międzyczasie?"
@@ -393,41 +392,41 @@ pl_PL:
     title: "Witaj w Discourse"
     body: |2
 
-      Pierwszy paragraf tego przypiętego tematu będzie widoczny jako wiadomość powitalna dla wszystkich odwiedzających stronę główną. Jest bardzo ważny!
+        Pierwszy paragraf tego przypiętego tematu będzie widoczny jako wiadomość powitalna dla wszystkich odwiedzających stronę główną. Jest bardzo ważny!
 
-      **Edytuj go** żeby zwięźle opisać swoje społeczeństwo.
+        **Edytuj go** żeby zwięźle opisać swoje społeczeństwo.
 
-      - Dla kogo jest?
-      - Co mogą tutaj znaleźć?
-      - Dlaczego powinni tutaj przychodzić?
-      - Gdzie mogą przeczytać więcej (link, zasoby, itp.)?
+        - Dla kogo jest?
+        - Co mogą tutaj znaleźć?
+        - Dlaczego powinni tutaj przychodzić?
+        - Gdzie mogą przeczytać więcej (link, zasoby, itp.)?
 
-      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
-      Rozważ zamknięcie tego tematu poprzez administracyjny :wrench: (w prawym górnym i dolnym rogu), aby zapobiec niepotrzebnym odpowiedziom do ogłoszenia.
+        Rozważ zamknięcie tego tematu poprzez administracyjny :wrench: (w prawym górnym i dolnym rogu), aby zapobiec niepotrzebnym odpowiedziom do ogłoszenia.
   lounge_welcome:
     title: "Witaj w Salonie"
     body: |2
 
-      Gratulacje! :confetti_ball:
+        Gratulacje! :confetti_ball:
 
-      Jeśli widzisz ten temat, twoje konto osiągnęło trzeci poziom zaufania.
+        Jeśli widzisz ten temat, twoje konto osiągnęło trzeci poziom zaufania.
 
-      Od teraz możesz &hellip;
+        Od teraz możesz &hellip;
 
-      * Edytować tytuł każdego tematu
-      * Przenieść temat do innej kategorii
-      * Twoje linki nie będą posiadać już atrybutu [nofollow](http://en.wikipedia.org/wiki/Nofollow)
-      * Korzystać z prywatnego Salonu, kategorii która jest widoczna jedynie dla użytkowników na 3 poziomie zaufania lub wyższym
-      * Przyznawać polubienia i flagi o większej wadze
+        * Edytować tytuł każdego tematu
+        * Przenieść temat do innej kategorii
+        * Twoje linki nie będą posiadać już atrybutu [nofollow](http://en.wikipedia.org/wiki/Nofollow)
+        * Korzystać z prywatnego Salonu, kategorii która jest widoczna jedynie dla użytkowników na 3 poziomie zaufania lub wyższym
+        * Przyznawać polubienia i flagi o większej wadze
 
-      Możesz zobaczyć [wszystkie osoby z tym poziomem zaufania](/badges/3/regular). Nie zapomnij się przywitać.
+        Możesz zobaczyć [wszystkie osoby z tym poziomem zaufania](/badges/3/regular). Nie zapomnij się przywitać.
 
-      Dziękujemy, że jesteś tak aktywną częścią naszej społeczności!
+        Dziękujemy, że jesteś tak aktywną częścią naszej społeczności!
 
-      (Więcej informacji o poziomach zaufania znajduje się [pod tym adresem][trust]. Pamiętaj, że trzeci poziom zaufania zależy od utrzymywania aktywności danego konta na określonym poziomie.)
+        (Więcej informacji o poziomach zaufania znajduje się [pod tym adresem][trust]. Pamiętaj, że trzeci poziom zaufania zależy od utrzymywania aktywności danego konta na określonym poziomie.)
 
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "O kategorii %{category}"
     replace_paragraph: "(Zamień ten pierwszy paragraf na krótki opis nowej kategorii. Opis ten będzie wyświetlany na karcie wyboru kategorii, więc postaraj się utrzymać go krótszego niż 200 znaków. **Dopóki nie zmienisz tego opisu, ani nie utworzysz tematu, kategoria nie będzie wyświetlana na liście kategorii.**)"
@@ -665,8 +664,6 @@ pl_PL:
       long_form: 'oflagowano jako niewłaściwe'
     notify_user:
       title: 'Wyślij @{{username}} wiadomość'
-      description: 'Chciałbym porozmawiać o tym poście z tą osobą prywatnie'
-      short_description: 'Chciałbym porozmawiać o tym poście bezpośrednio z tą osobą.'
       long_form: 'użytkownik został powiadomiony'
       email_title: 'Twój wpis w "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -1074,8 +1071,6 @@ pl_PL:
     google_oauth2_client_id: "Client ID twojej aplikacji w Google"
     google_oauth2_client_secret: "Client Secret twojej aplikacji w Google"
     enable_twitter_logins: "Włącz autoryzację Twitter, wymagane twitter_consumer_key oraz twitter_consumer_secret"
-    twitter_consumer_key: "Consumer key for Twitter authentication, registered at http://dev.twitter.com"
-    twitter_consumer_secret: "Consumer secret for Twitter authentication, registered at http://dev.twitter.com"
     enable_instagram_logins: "Włącz uwierzytelnienie za pomocą Instagramu, wymaga instagram_consumer_key i instagram_consumer_secret."
     instagram_consumer_key: "Klucz konsumenta dla uwierzytelnienia Instragram"
     instagram_consumer_secret: "Sekret konsumenta dla uwierzytelnienia Instragram"
@@ -1090,7 +1085,6 @@ pl_PL:
     allow_restore: "Dopuść przywracanie, które może zamienić WSZYSTKIE dane strony! Zostaw fałsz, chyba że planujesz przywrócić kopię zapasową"
     maximum_backups: "Maksymalna liczba kopii zapasowych do przechowywania na dysku. Starsze kopie zapasowe zostaną automatycznie usunięte."
     automatic_backups_enabled: "Uruchom automatyczne kopie zapasowe zgodnie z ustawioną częstotliwością kopii"
-    backup_frequency: "Jak często możemy utworzyć kopię zapasową strony, w dniach."
     enable_s3_backups: "Wysyłaj kopie zapasowe do S3 kiedy gotowe. WAŻNE: wymaga poprawnych poświadczeń S3 wprowadzonych w ustawieniach Plików."
     s3_backup_bucket: "Zdalne wiadro do przechowywania kopii zapasowych. UWAGA: Upewnij się, że jest to wiadro prywatne."
     s3_disable_cleanup: "Dezaktywuj usuwanie kopii zapasowych z S3 kiedy usunięte lokalnie."
@@ -1623,47 +1617,6 @@ pl_PL:
   test_mailer:
     title: "Test Powiadomień"
     subject_template: "[%{site_name}] Test dostarczania poczty"
-    text_body_template: |
-      To testowy mail z serwisu:
-
-      [**%{base_url}**][0]
-
-      Mail nie bez powodu jest tak długi! Powinieneś jeszcze sprawdzić kilka rzeczy:
-
-      - **Upewnij się**, że prawidłowo ustawiłeś pole "od" dla powiadomień mailowych w ustawieniach serwisu. **Względem tej domeny twoje maile będą weryfikowane!**
-
-      - Dowiedz się, jak wyświetlić surowy kod źródłowy wiadomości mailowej w twoim programie pocztowym, tak abyś mógł przeglądać nagłówki maili szukając istotnych wskazówek. W przypadku GMaila nad każdym mailem, po rozwinięciu menu, dostępna jest opcja "Pokaż oryginał".
-
-      - **WAŻNE:** Czy twój ISP skonfigurował odwrotny rekord DNS (reverse DNS record), by powiązać nazwy domenowe z adresami IP, spod których wysyłasz maile? [Sprawdź swój odwrotny rekord PTR][2] tutaj. Jeśli ISP nie skonfigurował tego prawidłowo, twoje maile mogą nie docierać do adresatów.
-
-      - Czy [rekord SPF][8] twojej domeny jest prawidłowy? [Sprawdź swój rekord SPF][1] tutaj. Pamiętaj, że oficjalnym prawidłowym typem rekordu SPF jest TXT.
-
-      - Czy [rekord DKIM][3] twojej domeny jest prawidłowy? To znacznie zwiększy prawdopodobieństwo docierania twoich maili do adresatów. [Sprawdź swój rekord DKIM][7] tutaj.
-
-      - Jeśli korzystasz z własnego serwera poczty, upewnij się, że adresy IP twojego serwera [nie znajdują się na czarnych listach][4]. Ponadto upewnij się, że serwer wysyła w pełni kwalifikowaną nazwę hosta, rozwiązywaną przez serwery DNS w wiadomościach HELO. W przeciwnym wypadku wielu usługodawców mailowych będzie odrzucać twoje maile.
-
-      - Mocno zalecamy, byś **wysłał testowego maila do [mail-tester.com][mt]**, aby potwierdzić, że wszystko o czym wspomnieliśmy działa prawidłowo.
-
-      (*Najłatwiej* założyć darmowe konto w jednym z serwisów: [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] lub [Mailjet][mj]. Mają one wiele bezpłatnych ofert mailingowych, w sam raz dla małej społeczności. Pamiętaj, że i tak musisz skonfigurować rekordy SPF i DKIM w twoim serwerze DNS!)
-
-      Mamy nadzieję, że bez problemu otrzymałeś tego maila potwierdzającego docieranie maili wysyłanych przez forum.
-
-      Powodzenia,
-
-      Koledzy z [Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: http://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing
-      [mt]: http://www.mail-tester.com/
   new_version_mailer:
     title: "Nowa wersja powiadomień"
     subject_template: "[%{site_name}] Aktualizacja do nowej wersji Discourse jest dostępna."
@@ -2160,7 +2113,7 @@ pl_PL:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
-        %{message}
+          %{message}
     digest:
       why: "Krótkie podsumowanie aktywności na %{site_link} od twojej ostatniej wizyty w dniu %{last_seen_at}."
       since_last_visit: "Od twojej ostatniej wizyty"

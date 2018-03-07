@@ -70,7 +70,7 @@ sv:
       has_already_been_used: "har redan använts"
       inclusion: är inte inkluderad i listan
       invalid: är ogiltig
-      is_invalid: "Verkar oklart, det ären komplett mening"
+      is_invalid: "Verkar oklart, är det en komplett mening?"
       contains_censored_words: "innehåller följande censurerade ord:%(censurerade_ord)"
       less_than: måste vara mindre än %{count}
       less_than_or_equal_to: måste vara mindre eller lika med %{count}
@@ -94,7 +94,7 @@ sv:
     template:
       body: 'Det uppstod problem med följande fält:'
       header:
-        one: Ett fel förhindrade %{model} från att sparas
+        one: 'Ett fel förhindrade %{model} från att sparas'
         other: '%{count} fel förhindrade %{model} från att sparas'
     embed:
       load_from_remote: "Det uppstod ett fel vid laddning av inlägget."
@@ -113,7 +113,7 @@ sv:
   topic_invite:
     user_exists: "Tyvärr, den användaren har redan bjudits in. Du kan endast bjuda in en användare till ett ämne en gång."
   backup:
-    operation_already_running: "En operation är redan igång. Kan inte starta ett nytt jobb just nu."
+    operation_already_running: "En operation är redan igång och därför kan inte ett nytt jobb snartas just nu."
     backup_file_should_be_tar_gz: "Backup-filen ska vara ett .tar.gz arkiv."
     not_enough_space_on_disk: "Det finns inte tillräckligt mycket utrymme på disken för att ladda upp denna backup."
     invalid_filename: "Backupfilnamnet innehåller ogiltiga tecken. Giltiga tecken är a-z 0-9 . - _."
@@ -297,25 +297,25 @@ sv:
     title: "Välkommen till loungen"
     body: |2
 
-      Grattis! :confetti_ball:
+        Grattis! :confetti_ball:
 
-      Om du kan se det här ämnet så har du nyligen blivit upphöjd till **regelbunden** användare (förtroendenivå 3).
+        Om du kan se det här ämnet så har du nyligen blivit upphöjd till **regelbunden** användare (förtroendenivå 3).
 
-      Du kan nu &hellip;
+        Du kan nu &hellip;
 
-      * Redigera rubriken för alla ämnen
-      * Ändra kategorin för alla ämnen
-      * Få alla dina länkar följda ([automatiskt nofollow](http://en.wikipedia.org/wiki/Nofollow) är borttagna)
-      * Få åtkomst till en privat Lounge-kategori som endast är synlig för användare som har förtroendenivå 3 eller högre
-      * Gömma spam med en enda flagga
+        * Redigera rubriken för alla ämnen
+        * Ändra kategorin för alla ämnen
+        * Få alla dina länkar följda ([automatiskt nofollow](http://en.wikipedia.org/wiki/Nofollow) är borttagna)
+        * Få åtkomst till en privat Lounge-kategori som endast är synlig för användare som har förtroendenivå 3 eller högre
+        * Gömma spam med en enda flagga
 
-      Här är den [aktuella listan över regelbundna användare](/badges/3/regular). Glöm inte att hälsa.
+        Här är den [aktuella listan över regelbundna användare](/badges/3/regular). Glöm inte att hälsa.
 
-      Tack för att du är en viktig del av det här forumet!
+        Tack för att du är en viktig del av det här forumet!
 
-      (För mer information om förtroendenivåer, [se det här ämnet][trust]. Notera att endast medlemmar som fortsätter att tillfredställa kraven över tid kommer att fortsätta vara regelbundna medlemmar.)
+        (För mer information om förtroendenivåer, [se det här ämnet][trust]. Notera att endast medlemmar som fortsätter att tillfredställa kraven över tid kommer att fortsätta vara regelbundna medlemmar.)
 
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Om kategorin %{category}"
     replace_paragraph: "(Byt ut den här första paragrafen med en sammanfattad beskrivning av din nya kategori. Den här vägledningen kommer att dyka upp i kategorins urvalsområde, så försök att hålla det kortare än 200 tecken. **Tills du har redigerat den här beskrivningen eller skapat nya ämnen så kommer den här kategorin inte att synas på kategorisidan.**)"
@@ -485,7 +485,6 @@ sv:
       long_form: 'flagga detta som olämpligt'
     notify_user:
       title: 'Skicka ett meddelande till @{{username}} '
-      description: 'Jag vill prata med den här personen direkt och privat om inlägget. '
       long_form: 'notifierad användare'
       email_title: 'Du skrev i "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -862,8 +861,6 @@ sv:
     google_oauth2_client_id: "Klient-ID för din Google-applikation."
     google_oauth2_client_secret: "Klienthemlighet för din Google-applikation."
     enable_twitter_logins: "Aktivera Twitter autentisering, kräver twitter_consumer_key och twitter_consumer_secret"
-    twitter_consumer_key: "Konsumentnyckel för Twitter autentisering, registrerad på http://dev.twitter.com"
-    twitter_consumer_secret: "Konsumenthemlighet för Twitter autentisering, registrerad på http://dev.twitter.com"
     enable_instagram_logins: "Tillåt Instagramautentisering, kräver instagram_consumer_key och instagram_consumer_secret"
     instagram_consumer_key: "Konsumentnyckel för Instagram-autentisering"
     instagram_consumer_secret: "Konsumenthemlighet för Instagram-autentisering"
@@ -877,7 +874,6 @@ sv:
     allow_restore: "Tillåt återställning, vilket kan ersätta ALL data på webbplatsen! Lämna avbockad om du inte planerar att återställa en säkerhetskopia"
     maximum_backups: "Högsta antal säkerhetskopior att spara på disken. Äldre säkerhetskopior raderas automatiskt"
     automatic_backups_enabled: "Kör automatiska säkerhetskopior som definierats i säkerhetskopieringsfrekvens"
-    backup_frequency: "Hur frekvent vi skapar en säkerhetskopia, i dagar."
     enable_s3_backups: "Ladda upp säkerhetskopior till S3 vid färdigställning. VIKTIGT: kräver giltiga S3-kreditiv inlagda i Webbplatsinställningar > Filer."
     s3_backup_bucket: "Den externa behållaren för säkerhetskopieringar. VARNING: Se till att det här en privat behållare."
     s3_disable_cleanup: "Inaktivera borttagande av säkerhetskopior från S3 när de tagits bort lokalt."
@@ -1582,7 +1578,7 @@ sv:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
-        %{message}
+          %{message}
     digest:
       why: "En kortfattad sammanfattning av %{site_link} sedan ditt senaste besök den %{last_seen_at}"
       since_last_visit: "Sedan ditt senaste besök"

@@ -29,6 +29,7 @@ fr:
   loading: "Chargement"
   powered_by_html: 'Propulsé par <a href="https://www.discourse.org">Discourse</a>, nécessite l''activation de JavaScript '
   log_in: "Se connecter"
+  submit: "Envoyer"
   purge_reason: "Supprimé automatiquement comme compte abandonné et non activé"
   disable_remote_images_download_reason: "Le téléchargement des images externes a été désactivé faute de place suffisante sur le disque."
   anonymous: "Anonyme"
@@ -41,6 +42,8 @@ fr:
       default_subject: "Ce sujet a besoin d'un titre"
       show_trimmed_content: "Montrer le contenu raccourci"
       maximum_staged_user_per_email_reached: "Vous avez atteint le nombre maximal d'utilisateurs qui peuvent être créés par courriel."
+      no_subject: "(aucun objet)"
+      no_body: "(aucun texte)"
       errors:
         empty_email_error: "Se produit quand le courriel reçu était vide."
         no_message_id_error: "Se produit quand le courriel n'a pas d'entête \"Message-Id\"."
@@ -88,6 +91,7 @@ fr:
       not_an_integer: doit être un entier
       odd: doit être impair
       record_invalid: 'Validation échouée : %{errors}'
+      max_emojis: "limité à %{max_emojis_count}emoji"
       restrict_dependent_destroy:
         one: "Impossible de supprimer l'enregistrement car certains %{record} existent et en dépendent"
         many: "Impossible de supprimer l'enregistrement car un %{record} existe et en dépend"
@@ -104,7 +108,7 @@ fr:
     template:
       body: 'Des problèmes ont été rencontrés sur les champs suivants : '
       header:
-        one: Une erreur empêche ce %{model} d'être sauvegardé
+        one: 'Une erreur empêche ce %{model} d''être sauvegardé'
         other: '%{count} erreurs empêchent ce %{model} d''être sauvegardé'
     embed:
       load_from_remote: "Il y a eu une erreur lors du chargement de ce message."
@@ -115,6 +119,7 @@ fr:
       max_username_length_range: "Il n'est pas possible de définir un maximum plus petit que le minimum."
       default_categories_already_selected: "Vous ne pouvez pas séléctionner une catégorie qui est utilisée dans une autre liste."
       s3_upload_bucket_is_required: "Vous ne pouvez pas activer l'upload sur S3 avant d'avoir renseigné le 's3_upload_bucket'."
+    conflicting_google_user_id: 'Le Google Account ID a changé pour ce compte ; un responsable doit intervenir pour des raisons de sécurité. Merci de contacter les responsables et les renvoyer vers <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   invite:
     not_found: "Votre jeton d'invitation est invalide. Veuillez contacter l'administrateur du site."
     user_exists: "Il n'y a pas besoin d'inviter <b>%{email}</b> qui <a href='/u/%{username}/summary'>a déjà un compte</a> !"
@@ -128,6 +133,7 @@ fr:
     backup_file_should_be_tar_gz: "Le fichier de sauvegarde doit être une archive .tar.gz."
     not_enough_space_on_disk: "Il n'y a pas assez d'espace sur le disque pour charger cette sauvegarde."
     invalid_filename: "Le nom du fichier de sauvegarde contient des caractères invalides. Sont autorisés : a-z 0-9 . - _."
+  invalid_params: "Vous avez fourni des paramètres invalides pour la requête: %{message}"
   not_logged_in: "Vous devez être connecté pour faire cela."
   not_found: "L'URL ou ressource demandée n'a pas été retrouvé."
   invalid_access: "Vous n'avez pas la permission de voir cette ressource."
@@ -164,6 +170,7 @@ fr:
   too_many_mentions_newuser:
     one: "Désolé, les nouveaux utilisateurs ne peuvent mentionner qu'un utilisateur dans un message."
     other: "Désolé, les nouveaux utilisateurs ne peuvent mentionner que %{count} utilisateurs dans un message."
+  no_images_allowed_trust: "Désole, il ne vous est pas possible d'inclure des images dans un message"
   no_images_allowed: "Désolé, les nouveaux utilisateurs ne peuvent pas ajouter d'image dans les messages."
   too_many_images:
     one: "Désolé, les nouveaux utilisateurs ne peuvent ajouter qu'une image dans un message."
@@ -173,10 +180,11 @@ fr:
     one: "Désolé, les nouveaux utilisateurs ne peuvent ajouter qu'un fichier dans leurs messages."
     other: "Désolé, les nouveaux utilisateurs ne peuvent ajouter que %{count} fichiers dans leurs messages."
   no_links_allowed: "Désolé, les nouveaux utilisateurs ne peuvent pas insérer de liens dans leurs messages."
+  links_require_trust: "Désolé, il ne vous est pas possible d'inclure des liens dans vos messages."
   too_many_links:
     one: "Désolé, les nouveaux utilisateurs ne peuvent insérer qu'un seul lien par message."
     other: "Désolé, les nouveaux utilisateurs ne peuvent insérer que %{count} liens par message."
-  contains_blocked_words: "Votre message contient des mots non autorisés."
+  contains_blocked_words: "Votre message contient un mot qui n'est pas permis : %{word}"
   spamming_host: "Désolé, vous ne pouvez pas insérer de lien vers ce domaine."
   user_is_suspended: "Les utilisateurs suspendus ne sont pas autorisés à poster de messages."
   topic_not_found: "Une erreur est survenue. Peut-être que ce sujet a été fermé ou supprimé pendant que vous le regardiez ?"
@@ -208,6 +216,7 @@ fr:
     top_weekly: "Meilleurs sujets de la semaine"
     top_daily: "Meilleurs sujets du jour"
     posts: "Messages récents"
+    private_posts: "Derniers messages personnels"
     group_posts: "Derniers messages de %{group_name}"
     group_mentions: "Dernières mentions de %{group_name}"
     user_posts: "Derniers messages par @%{username}"
@@ -303,6 +312,12 @@ fr:
       Nous sommes désolés, les nouveaux membres sont limités temporairement à %{newuser_max_replies_per_topic} réponses dans un même topic.
 
       Plutôt que d'ajouter une nouvelle réponse, vous pouvez éditer vos messages précédents ou visiter d'autres topics.
+    reviving_old_topic: |
+      ### Relancer ce sujet ?
+
+      La dernière réponse à ce sujet était **%{time_ago}**. Votre réponse remettre ce sujet en tête de liste et provoquera une notification à tous les intervenants qui y ont pris part auparavant.
+
+      Etes vous sûr de vouloir continuer cette vieille conversation ?
   activerecord:
     attributes:
       category:
@@ -319,9 +334,12 @@ fr:
         topic:
           attributes:
             base:
+              warning_requires_pm: "Vous ne pouvez associer des avertissements qu'à des messages personnels."
               too_many_users: "Vous ne pouvez envoyer des avertissements qu'à un utilisateur à la fois."
+              cant_send_pm: "Désolé, vous ne pouvez pas envoyer un message personnel à cet utilisateur."
               no_user_selected: "Vous devez choisir un utilisateur valide."
               reply_by_email_disabled: "Réponse par courriel désactivée."
+              target_user_not_found: "Un des utilisateurs à lequel vous envoyez ce message n'a pas été retrouvé."
             featured_link:
               invalid: "est invalide. L'URL doit inclure http:// ou https://."
               invalid_category: "ne peut pas être modifié dans cette catégorie."
@@ -335,6 +353,10 @@ fr:
               unique_characters: "a trop de caractères répétés. Veuillez utiliser un mot de passe plus sécurisé."
             ip_address:
               signup_not_allowed: "L'inscription n'est pas autorisée à partir de ce compte."
+        user_email:
+          attributes:
+            user_id:
+              reassigning_primary_email: "Il n'est pas permis de réassigner une adresse courriel à un autre utilisateur."
         color_scheme_color:
           attributes:
             hex:
@@ -378,46 +400,47 @@ fr:
     title: "Bienvenue sur Discourse"
     body: |2
 
-      Le premier paragraphe de ce sujet épinglé sera visible comme message de bienvenue à tous les nouveaux visiteurs de votre page d'accueil. Il est important !
+        Le premier paragraphe de ce sujet épinglé sera visible comme message de bienvenue à tous les nouveaux visiteurs de votre page d'accueil. Il est important !
 
-      **Modifier le** en une brève description de votre communauté :
+        **Modifier le** en une brève description de votre communauté :
 
-      - Pour qui est-elle destinée ?
-      - Que peuvent-ils y trouver ?
-      - Pourquoi doivent-ils venir ici ?
-      - Où peuvent-ils en lire plus (liens, ressources, etc.) ?
+        - Pour qui est-elle destinée ?
+        - Que peuvent-ils y trouver ?
+        - Pourquoi doivent-ils venir ici ?
+        - Où peuvent-ils en lire plus (liens, ressources, etc.) ?
 
-      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
-      Vous voulez peut-être fermer ce sujet via l'administration :wrench: (dans le coin supérieur droit et le bas) afin que des réponses ne s'accumulent pas après une annonce.
+        Vous voulez peut-être fermer ce sujet via l'administration :wrench: (dans le coin supérieur droit et le bas) afin que des réponses ne s'accumulent pas après une annonce.
   lounge_welcome:
     title: "Bienvenue dans le salon"
     body: |2
 
-      Félicitation ! :confetti_ball:
+        Félicitation ! :confetti_ball:
 
-      Si vous voyez ce sujet, c'est que vous avez récemment été promu au niveau de confiance **habitué** (niveau de confiance 3).
+        Si vous voyez ce sujet, c'est que vous avez récemment été promu au niveau de confiance **habitué** (niveau de confiance 3).
 
-      Vous pouvez désormais &hellip;
+        Vous pouvez désormais &hellip;
 
-      * Modifier le titre de tous les sujets
-      * Modifier la catégorie de tous les sujets
-      * Avoir vos liens suivis ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) est retiré)
-      * Accès à un salon privé visible uniquement pour les membres de niveau de confiance 3 ou plus.
-      * Masquer un message indésirable avec seulement un drapeau.
+        * Modifier le titre de tous les sujets
+        * Modifier la catégorie de tous les sujets
+        * Avoir vos liens suivis ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) est retiré)
+        * Accès à un salon privé visible uniquement pour les membres de niveau de confiance 3 ou plus.
+        * Masquer un message indésirable avec seulement un drapeau.
 
-      Voici la [liste courante des membres habitués](/badges/3/regular). N'hésitez pas à venir dire bonjour !
+        Voici la [liste courante des membres habitués](/badges/3/regular). N'hésitez pas à venir dire bonjour !
 
-      Merci d'être une part importante de cette communauté !
+        Merci d'être une part importante de cette communauté !
 
-      (Pour plus d'information sur les niveaux de confiance [voir ce sujet][trust]. Veuillez noter que seuls les membres qui continuerons de respecter les critères garderons ce niveau de confiance.)
+        (Pour plus d'information sur les niveaux de confiance [voir ce sujet][trust]. Veuillez noter que seuls les membres qui continuerons de respecter les critères garderons ce niveau de confiance.)
 
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "À propos de la catégorie %{category}"
     replace_paragraph: "(Remplacez ce premier paragraphe par une brève description de votre nouvelle catégorie. Ce guide apparaîtra dans la zone de sélection de la catégorie, alors essayez de rester en dessous de 200 caractères. **Cette catégorie n'apparaîtra pas sur la page des catégories jusqu'à ce que vous ayez modifié cette description ou créé des sujets.**"
     post_template: "%{replace_paragraph}\n\nUtilisez les paragraphes suivants pour une plus longue description ou pour établir des règles :\n\n- À quoi sert cette catégorie ? Pourquoi les utilisateurs choisiraient-ils cette catégorie pour leur discussion ?\n\n- En quoi est-elle différente des autres catégories existantes ?\n\n- Quels sujets devraient figurer dans cette catégorie ?\n\n- Avons-nous besoin de cette catégorie ? Devrions-nous fusionner celle-ci avec une autre catégorie ?\n"
     errors:
+      not_found: "Catégorie introuvée !"
       uncategorized_parent: "Sans catégorie ne peut pas avoir de parent"
       self_parent: "Le parent d'une sous-catégorie ne peut pas être elle-même"
       depth: "Vous ne pouvez pas imbriquer une sous-catégorie sous une autre"
@@ -450,6 +473,7 @@ fr:
       broken: "Cette image ne fonctionne pas"
   rate_limiter:
     slow_down: "Vous avez réalisé cette action un trop grand nombre de fois, essayez à nouveau plus tard."
+    too_many_requests: "Vous avez effectué cette action trop de fois. Veuillez attendre %{time_left}avant de ressayer."
     by_type:
       first_day_replies_per_day: "Vous avez atteint le nombre maximum de réponses qu'un nouvel utilisateur peut créer pour son premier jour. Patientez s'il vous plaît %{time_left} avant d'essayer à nouveau."
       first_day_topics_per_day: "Vous avez atteint le nombre maximum de sujets qu'un nouvel utilisateur peut créer pour son premier jour. Patientez s'il vous plaît %{time_left} avant d'essayer à nouveau."
@@ -554,6 +578,9 @@ fr:
     title: 'Réinitialiser le mot de passe'
     success: "Vous avez modifié votre mot de passe avec succès et vous êtes maintenant connecté."
     success_unapproved: "Vous avez modifié votre mot de passe avec succès."
+  email_login:
+    invalid_token: "Désolé, ce lien de connection courriel est trop vieux. Séléctionner le bouton 'Se connecter' et utiliser 'Mot de passe oublié' pour obtenir un nouveau lien."
+    title: "Connection courriel"
   change_email:
     confirmed: "Votre adresse de courriel a été mise à jour."
     please_continue: "Continuer vers %{site_name}"
@@ -598,8 +625,8 @@ fr:
       long_form: 'signalé comme inapproprié'
     notify_user:
       title: 'Envoyer un message à @{{username}} '
-      description: 'Je veux parler à cette personne directement et de manière privée à propos de son message.'
-      short_description: 'Je veux parler à cette personne directement et de manière privée au sujet de son message'
+      description: 'J''aimerais parler à cette personne directement et personnellement au sujet de leur message.'
+      short_description: 'J''aimerais parler à cette personne directement et personnellement au sujet de leur message.'
       long_form: 'utilisateur contacté'
       email_title: 'Votre message sur « %{title} »'
       email_body: "%{link}\n\n%{message}"
@@ -853,21 +880,28 @@ fr:
     email_polling_errored_recently:
       one: "La vérification des courriels a généré une erreur au cours des 24 dernières heures. Vérifiez <a href='/logs' target='_blank'>le journal</a> pour plus de détails."
       other: "La vérification des courriels a généré %{count} erreurs au cours des 24 dernières heures. Vérifiez <a href='/logs' target='_blank'>le journal</a> pour plus de détails."
+    missing_mailgun_api_key: "Le serveur est configuré pour envoyer des courriels via Mailgun mais vous n'avez pas fourni la clef API nécessaire pour vérifier les messages webhook."
     bad_favicon_url: "Impossible de charger la favicon. Vérifiez le paramètre favicon_url dans les <a href='/admin/site_settings'>paramètres du site</a>"
     poll_pop3_timeout: "La connexion vers le serveur POP3 a expiré. Les courriels entrants n'ont pas pu être téléchargés. Veuillez vérifier <a href='/admin/site_settings/category/email'>les paramètres POP3</a> et votre fournisseur de service courriel."
     poll_pop3_auth_error: "La connexion vers le serveur POP3 échoue avec une erreur d'authentification. Veuillez vérifier <a href='/admin/site_settings/category/email'>les paramètres POP3</a>."
+    force_https_warning: "Votre site web utiliser le SSL. Mais  `<a href='/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` n'est pas encore activé dans les paramètres du site."
   site_settings:
     censored_words: "Mots qui seront automatiquement remplacés par &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Supprimer automatiquement les messages cachés plus de 30 jours."
+    default_locale: "La langue par défaut de cette instance de Discourse"
     allow_user_locale: "Autoriser les utilisateurs à choisir la langue de l'interface dans leurs préférences"
     set_locale_from_accept_language_header: "configurer la langue de l'interface pour les visiteurs à partir des entêtes de langue de leur navigateur. (EXPÉRIMENTAL, ne fonctionne pas avec le cache anonyme)"
+    support_mixed_text_direction: "Permettre le mélange de textes gauche-droite et droite-gauche."
     min_post_length: "Longueur minimale autorisée des messages en nombre de caractères"
     min_first_post_length: "Longueur minimale d'un premier message (corps de sujet) en nombre de caractères"
+    min_personal_message_post_length: "Longueur minimale des messages en nombre de caractères"
     max_post_length: "Longueur maximale autorisée des messages en nombres de caractères"
     topic_featured_link_enabled: "Activer la création de sujets avec lien"
     show_topic_featured_link_in_digest: "Afficher les sujets avec lien dans le résumé par courriel."
     min_topic_title_length: "Longueur minimale autorisée des titres de sujet en nombre de caractères"
     max_topic_title_length: "Longueur maximale autorisée des titres de sujet en nombre de caractères"
+    min_personal_message_title_length: "Longueur minimale pour un titre de message en nombre de caractères"
+    max_emojis_in_title: "Nombre maximum d'emojis permis dans le titre d'un sujet"
     min_search_term_length: "Longueur minimale autorisée du texte saisie avant de lancer une recherche en nombre de caractères"
     search_tokenize_chinese_japanese_korean: "Forcer la tokenisation dans la recherche chinois/japonais/koréen, même sur des sites non-CJK."
     search_prefer_recent_posts: "Si la recherche dans votre forum est lente, cette option tente l'indéxation des messages les plus récents en premier"
@@ -888,6 +922,7 @@ fr:
     download_remote_images_max_days_old: "Ne pas télécharger les images distantes pour les messages plus anciens que n jours."
     disabled_image_download_domains: "Les images distantes de ces domaines ne seront jamais téléchargées. Liste délimitée par des pipes (|)."
     editing_grace_period: "Pendant (n) secondes après la publication d'un message, la modification de ce dernier ne provoquera pas d'historisation."
+    staff_edit_locks_post: "Les messages seront vérouillés à la modification si modifiés par des responsables"
     post_edit_time_limit: "L'auteur peut modifier ou supprimer ses messages pendant (n) minutes après leur publication. Mettre à 0 pour l'autoriser sans limite de temps."
     edit_history_visible_to_public: "Autoriser tout le monde à voir les versions précédentes d'un message modifié. Quand désactivé, seuls les responsables peuvent voir l'historique."
     delete_removed_posts_after: "Les messages retirés par leur auteur seront automatiquement supprimés après (n) heures. Pour une valeur renseignée à 0, les messages seront supprimés immédiatement."
@@ -903,22 +938,28 @@ fr:
     post_onebox_maxlength: "Longueur maximale d'un message emboîté en nombre de caractères."
     onebox_domains_blacklist: "Une liste de domaines que ne seront jamais transformés en Onebox."
     inline_onebox_domains_whitelist: "Une liste de domaines qui seront transformé en Onebox s'ils ont été liés sans titre"
+    enable_inline_onebox_on_all_domains: "Ignorer le paramètre inline_onebox_domain_whitelist et permettre des onebox 'inline' pour tous les domaines."
     max_oneboxes_per_post: "Nombre maximum de Onebox dans un message."
     logo_url: "L'image de votre logo situé en haut à gauche de votre site doit être de forme rectangulaire large. Si vous laissez ce champ vide, le nom de votre site apparaitra."
     digest_logo_url: "L'image alternative de votre logo utilisée en haut du résumé par courriel de votre site. Elle devrait idéalement être en forme de large rectangle et ne pas être une image SVG. Si vide, `logo_url` sera utilisé."
     logo_small_url: "Le petit logo situé en haut à gauche de votre site doit être de forme carré. Si vous laissez ce champ vide, un logo de maison apparaîtra."
     favicon_url: "Un favicon pour votre site, voir http://fr.wikipedia.org/wiki/Favicon, pour fonctionner correctement à travers un CDN il doit être PNG."
+    mobile_logo_url: "Logo personnalisé utilisé sur la version mobile de votre site. Si non renseigné, `logo_url` sera utilisé, par exemple : http://example.com/uploads/default/logo.png"
     large_icon_url: "Image utilisée comme logo sur Android. Taille recommandée : 512 px par 512 px."
     apple_touch_icon_url: "Icône utilisée pour les appareils d'Apple. Taille recommandée 144 px par 144 px."
     notification_email: "L'adresse de courriel dans le champs De qui sera utilisée pour envoyer les courriels systèmes essentiels. Le nom de domaine spécifié  doit avoir les informations SPF, DKIM et PTR inversé renseignés correctement pour que le courriel arrive à destination."
     email_custom_headers: "Une liste délimité par des (|) pipes d'entêtes de courriel"
     email_subject: "Format du sujet personnalisable pour les courriels standards. Voir https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
     force_https: "Forcer votre site en HTTPS uniquement. MISE EN GARDE : n'activez PAS cette fonction tant que vous n'avez pas vérifié que le HTTPS est complètement configuré et fonctionne absolument partout ! Avez-vous vérifié que vos CDN, vos connexions via réseaux sociaux ainsi que tous les logos / dépendances tiers sont tous compatibles HTTPS eux aussi ?"
+    same_site_cookies: "Utiliser des cookies de même site, qui éliminent tous les vecteurs de Cross Site Request Forgery sur les navigateurs supportés (Lax ou Strict). Avertissement: Strict ne fonctionnera que sur des sites qui imposent le login et utilisent le SSO."
     summary_score_threshold: "Le score minimum requis pour qu'un message soit inclus dans le 'Résumé de ce sujet'"
     summary_posts_required: "Nombre minimum de messages dans un sujet avant que le 'Résumé du sujet' soit activé"
     summary_likes_required: "Nombre de J'aime minimum dans un sujet avant que le 'Résumé du sujet' soit activé"
     summary_percent_filter: "Quand un utilisateur clique sur « Résumer ce sujet », montrer le top % des messages"
     summary_max_results: "Nombre maximum de messages retournés par « Résumer ce sujet »"
+    enable_personal_messages: "Autoriser les utilisateurs de niveau de confiance 1 à créer des messages et à répondre (configurable via le niveau de confiance minimum pour envoyer des messages). Notez que les responsables peuvent toujours envoyer des messages."
+    enable_system_message_replies: "Permettre aux utilisateurs de répondre aux messages système, même si les messages personnels sont désactivés."
+    enable_personal_email_messages: "Autoriser les utilisateurs de niveau de confiance 1 à envoyer des messages courriel personnels et à répondre (configurable via le niveau de confiance minimum pour envoyer des messages). Notez que les responsables peuvent toujours envoyer des messages."
     enable_long_polling: "Utiliser les requêtes longues pour le flux de notifications."
     long_polling_base_url: "Racine de l'URL utilisée pour les requêtes longues (dans le cas de l'utilisation d'un CDN pour fournir du contenu dynamique, pensez à le configurer en mode \"origin pull\") par exemple : http://origin.site.com"
     long_polling_interval: "Délai d'attente du serveur avant de répondre aux clients lorsqu'il n'y a pas de données à envoyer\n(réservé aux utilisateurs connectés)"
@@ -932,6 +973,10 @@ fr:
     tl2_additional_likes_per_day_multiplier: "Augmenter la limite de J'aime par jour pour les utilisateurs de niveau 2 (membres) en la multipliant par ce nombre"
     tl3_additional_likes_per_day_multiplier: "Augmenter la limite de J'aime par jour pour les utilisateurs de niveau 3 (réguliers) en la multipliant par ce nombre"
     tl4_additional_likes_per_day_multiplier: "Augmenter la limite de J'aime par jour pour les utilisateurs de niveau 4 (meneurs) en la multipliant par ce nombre"
+    num_spam_flags_to_silence_new_user: "Si le message d'un nouvel utilisateur obtient plusieurs signalements pour spam de la part de num_users_to_silence_new_user différents utilisateurs, masquer tous ses messages et l'empêcher de poster à l'avenir. 0 désactive cette fonctionnalité."
+    num_users_to_silence_new_user: "Si les messages d'un nouvel utilisateur obtiennent num_spam_flags_to_silence_new_user signalements d'autant d'utilisateurs différents, masquer tous ses messages et l'empêcher de poster à l'avenir. 0 désactive cette fonctionnalité."
+    num_tl3_flags_to_silence_new_user: "Si les messages d'un nouvel utilisateur obtiennent\nce nombre de signalements de la part de num_tl3_users_to_silence_new_user utilisateurs de niveau de confiance 3 différents, masquer tous ses messages et l'empêcher de poster à l'avenir. 0 désactive cette fonctionnalité."
+    num_tl3_users_to_silence_new_user: "Si les messages d'un nouvel utilisateur num_tl3_flags_to_silence_new_user signalements de la part de plusieurs utilisateurs de niveau de confiance 3 différents, masquer tous ses messages et l'empêcher de poster à l'avenir. 0 désactive cette fonctionnalité."
     notify_mods_when_user_silenced: "Si un utilisateur est automatiquement mis sous silence, envoyer un message à tous les modérateurs."
     flag_sockpuppets: "Si un nouvel utilisateur répond à un sujet avec la même adresse IP que le nouvel utilisateur qui a commencé le sujet, alors leurs messages seront automatiquement marqués comme spam."
     traditional_markdown_linebreaks: "Utiliser le retour à la ligne traditionnel dans Markdown, qui nécessite deux espaces pour un saut de ligne."
@@ -1003,8 +1048,6 @@ fr:
     google_oauth2_client_id: "Identifiante du client de votre application Google."
     google_oauth2_client_secret: "Clé secrète du client de votre application Google."
     enable_twitter_logins: "Activer l'authentification Twitter, nécessite twitter_consumer_key et  twitter_consumer_secret"
-    twitter_consumer_key: "Clé utilisateur pour l'authentification Twitter, enregistrée sur http://dev.twitter.com"
-    twitter_consumer_secret: "Secret utilisateur pour l'authentification Twitter, enregistré sur http://dev.twitter.com"
     enable_instagram_logins: "Activer l'authentification Instagram, nécessite instagram_consumer_key et  instagram_consumer_secret"
     instagram_consumer_key: "« Consumer key » pour l'identification Instagram"
     instagram_consumer_secret: "« Consumer secret » pour l'identification Instagram"
@@ -1019,7 +1062,6 @@ fr:
     allow_restore: "Autoriser la restauration, qui peut remplacer TOUTES les données du site ! Laissez à faux, sauf si vous envisagez de faire restaurer une sauvegarde"
     maximum_backups: "Nombre maximum de sauvegardes à conserver sur le disque. Les anciennes sauvegardes seront automatiquement supprimées"
     automatic_backups_enabled: "Activer les sauvegardes automatiques tels que définis dans les fréquences de sauvegarde"
-    backup_frequency: "Fréquence de création des sauvegardes du site, en jours."
     enable_s3_backups: "Envoyer vos sauvegardes à S3 lorsqu'elles sont terminées. IMPORTANT : Vous devez avoir renseigné vos identifiants S3 dans les paramètres de fichiers."
     s3_backup_bucket: "Bucket distant qui contiendra les sauvegardes. ATTENTION: Vérifiez que c'est un bucket privé"
     s3_disable_cleanup: "Désactiver la suppression des sauvegardes de S3 lors de leur suppression locale."
@@ -1549,47 +1591,6 @@ fr:
   test_mailer:
     title: "Envoyer un courriel de test"
     subject_template: "[%{email_prefix}] Test de délivrance d'email"
-    text_body_template: |
-      Ceci est un courriel de test de
-
-      [**%{base_url}**][0]
-
-      Assurer la distribution de courriel est compliqué. Voici un certain nombre de points importants que vous devez vérifier au préalable :
-
-      - Soyez *certain* de renseigner l'adresse `notification email` dans les paramètres. **Le nom de domaine renseigné dans l'addresse "from" des courriels que vous envoyez sera le nom de domaine utilisé pour la validation**.
-
-      - Sachez comment consulter le format brut d'un courriel dans votre client de courriel et vérifier les entêtes pour obtenir des indices importants. Dans Gmail, il s'agit de l'option "show original" dans le menu contextuel situé en haut à droite de chaque courriel.
-
-      - **IMPORTANT :** Votre FAI a-t-il un enregistrement DNS inverse renseigné pour associer les noms de domaine et les adresses IP depuis lesquelles vous envoyez des courriels ? [Testez votre enregistrement inverse PTR][2] ici. Si votre FAI n'a pas renseigné correctement votre enregistrement DNS inverse, il est très improbable que vos courriels soient délivrés.
-
-      - L'[enregistrement SPF][8] de votre nom de domaine est-il correct ? [Testez votre enregistrement SPF][1] ici. Veuillez noter que le type officiel d'enregistrement est TXT pour le SPF.
-
-      - L'[enregistrement DKIM][3] de votre nom de domaine est-il correct ? Ceci augmentera de manière significative la bonne distribution de vos courriels. [Testez votre enregistrement DKIM][7] ici.
-
-      - Si vous maintenez votre propre serveur de courriel, assurez-vous que les IPs de votre serveur ne sont sur [aucune liste noire de courriel][4]. Vérifiez également qu'il envoie un "fully qualified hostname" résolvable en DNS dans son message HELO. Si ce n'est pas le cas, vos courriels seront rejetés par de nombreux services de courriel.
-
-      - Nous vous recommandons d'**envoyer un courriel de test à [mail-tester.com][mt]** pour vérifier que tout ce qui est mentionné ci-dessus fonctionne bien.
-
-      (La manière *la plus facile* est de créer un compte gratuit sur [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] ou [Mailjet][mj], qui ont des options gratuites et qui seront suffisants pour de petites communautés. Vous devrez malgré tout configurer les entrées SPF et DKIM dans votre DNS !)
-
-      Nous espérons que vous avez bien reçu ce courriel de test de distribution !
-
-      Bonne chance,
-
-      vos amis de [Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: http://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing
-      [mt]: http://www.mail-tester.com/
   new_version_mailer:
     title: "Nouvelle version"
     subject_template: "[%{email_prefix}] Nouvelle version de Discourse, mise à jour disponible"
@@ -2108,7 +2109,7 @@ fr:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
-        %{message}
+          %{message}
     account_suspended:
       title: "Compte suspendu"
       subject_template: "[%{email_prefix}] Votre compte a été suspendu"

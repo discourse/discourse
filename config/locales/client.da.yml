@@ -379,7 +379,6 @@ da:
       name: "Navn"
       user_count: "Antal medlemmer"
       bio: "Om Grupper"
-      selector_placeholder: "Tilføj medlemmer"
       owner: "ejer"
       index:
         title: "Grupper"
@@ -1537,8 +1536,8 @@ da:
         select_all: marker alle
         deselect_all: marker ingen
         description:
-          one: Du har valgt <b>1</b> indlæg.
-          other: Du har valgt <b>{{count}}</b> indlæg.
+          one: "Du har valgt <b>1</b> indlæg."
+          other: "Du har valgt <b>{{count}}</b> indlæg."
     post:
       quote_reply: "Citér"
       edit_reason: "Reason: "
@@ -1771,7 +1770,6 @@ da:
       email_in_allow_strangers: "Accepter emails fra ikke oprettede brugere"
       email_in_disabled: "Nye emner via email er deaktiveret i Site opsætning. For at aktivere oprettelse af nye emner via email,"
       email_in_disabled_click: 'aktiver "email ind" indstilligen.'
-      suppress_from_homepage: "Undertryk denne kategori fra hjemmesiden"
       show_subcategory_list: "Vis oversigt med subkategorier ovenover emner i denne kategori."
       num_featured_topics: "Antal emner som skal vises på siden med kategorier:"
       subcategory_num_featured_topics: "Antal af fremhævede emner på siden for den overordnede kategori:"
@@ -2265,7 +2263,6 @@ da:
         edit: "Redigér grupper"
         refresh: "Genindlæs"
         new: "Nye"
-        selector_placeholder: "indtast brugernavn"
         about: "Redigér gruppemedlemsskaber og gruppenavne her"
         group_members: "Gruppe medlemmer"
         delete: "Slet"
@@ -2963,10 +2960,7 @@ da:
         recommended: "Vi anbefaler ændringer i følgende tekst:"
         show_overriden: 'Vis kun tilsidesatte'
       site_settings:
-        show_overriden: 'Vis kun tilsidesatte'
         title: 'Indstillinger'
-        reset: 'nulstil'
-        none: 'ingen'
         no_results: "Ingen resultater fundet."
         clear_filter: "Ryd"
         add_url: "tilføj URL"

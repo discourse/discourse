@@ -416,7 +416,6 @@ ro:
       name: "Nume"
       user_count: "Număr de membri"
       bio: "Despre grup"
-      selector_placeholder: "Adaugă membri"
       owner: "Proprietar"
       index:
         title: "Grupuri"
@@ -1202,13 +1201,10 @@ ro:
       composer_actions:
         reply_as_new_topic:
           label: Răspunde cu link către subiect
-          desc: Creează un nou subiect
         reply_as_private_message:
           label: Mesaj nou
-          desc: Creează mesaj privat
         reply_to_topic:
           label: Răspunde la subiect
-          desc: Răspunde la postarea originală fără a răspunde la vreo postare specifică
         toggle_whisper:
           label: Comută modul discret
     notifications:
@@ -1731,9 +1727,9 @@ ro:
         select_all: selectează tot
         deselect_all: deselectează  tot
         description:
-          one: Ai selectat <b>un</b> mesaj.
-          few: Ai selectat <b>{{count}}</b> mesaje.
-          other: Ai selectat <b>{{count}}</b> de mesaje.
+          one: "Ai selectat <b>un</b> mesaj."
+          few: "Ai selectat <b>{{count}}</b> mesaje."
+          other: "Ai selectat <b>{{count}}</b> de mesaje."
     post:
       quote_reply: "Citează"
       edit_reason: "Motivul edit[rii: "
@@ -2011,7 +2007,6 @@ ro:
       email_in_allow_strangers: "Acceptă emailuri de la utilizatori anonimi fără cont"
       email_in_disabled: "Postarea subiectelor noi prin email este dezactivată din setările siteului. Pentru a activa postarea subiectelor noi prin email,"
       email_in_disabled_click: 'activează opțiunea "primire email ".'
-      suppress_from_homepage: "Elimină această categorie de pe pagina principală."
       all_topics_wiki: "Transformă subiectele noi în wiki-uri, implicit."
       sort_order: "Sortează lista de subiecte după:"
       default_view: "Listă implicită de subiecte:"
@@ -2545,7 +2540,6 @@ ro:
         edit: "Editează grupuri"
         refresh: "Reîmprospătează"
         new: "Noi"
-        selector_placeholder: "introdu nume de utilizator"
         about: "Editează aici numele și apartenența la grupuri"
         group_members: "Membrii grupului"
         delete: "Șterge"
@@ -3287,10 +3281,7 @@ ro:
         recommended: "Îți recomandăm să personalizezi următorul text pentru a se adapta nevoilor tale:"
         show_overriden: 'Arată doar ignorate'
       site_settings:
-        show_overriden: 'Arată doar pe cele ignorate'
         title: 'Setări'
-        reset: 'Resetează'
-        none: 'Nimic'
         no_results: "Nu s-au găsit rezultate."
         clear_filter: "Șterge"
         add_url: "adaugă URL"

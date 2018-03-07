@@ -219,7 +219,7 @@ sv:
       stat:
         all_time: "Alla dagar"
         last_7_days: "Senaste 7 dagarna"
-        last_30_days: "Senaste 30 Dagarna"
+        last_30_days: "Senaste 30 dagarna"
       like_count: "Gillningar"
       topic_count: "Ämnen"
       post_count: "Inlägg"
@@ -374,7 +374,6 @@ sv:
       name: "Namn"
       user_count: "Antal medlemmar"
       bio: "Om grupp"
-      selector_placeholder: "Lägg till medlemmar"
       owner: "ägare"
       index:
         title: "Grupper"
@@ -1482,8 +1481,8 @@ sv:
         select_all: markera alla
         deselect_all: avmarkera alla
         description:
-          one: Du har markerat <b>1</b> inlägg.
-          other: Du har markerat <b>{{count}}</b> inlägg.
+          one: "Du har markerat <b>1</b> inlägg."
+          other: "Du har markerat <b>{{count}}</b> inlägg."
     post:
       quote_reply: "Citat"
       edit_reason: "Anledning:"
@@ -1713,7 +1712,6 @@ sv:
       email_in_allow_strangers: "Acceptera e-post från anonyma användare utan konton"
       email_in_disabled: "Att skapa nya ämnen via e-post är avaktiverat i webbplatsinställningarna. För att aktivera ämnen skapade via e-post,"
       email_in_disabled_click: 'aktivera "inkommande e-post" inställningen.'
-      suppress_from_homepage: "Undanta den här kategorin från hemsidan."
       show_subcategory_list: "Visa listan med underkategorier ovanför ämnen i denna kategori."
       num_featured_topics: "Antal ämnen som visas på sidan kategorier:"
       all_topics_wiki: "Gör nya inlägg till wikis som standard"
@@ -2203,7 +2201,6 @@ sv:
         edit: "Redigera Grupper"
         refresh: "Uppdatera"
         new: "Ny"
-        selector_placeholder: "ange användarnamn"
         about: "Redigera dina gruppmedlemskap och -namn här."
         group_members: "Gruppmedlemmar"
         delete: "Radera"
@@ -2834,10 +2831,7 @@ sv:
         recommended: "Vi rekommenderar att du anpassar följande texter:"
         show_overriden: 'Visa bara överskrivna'
       site_settings:
-        show_overriden: 'Visa bara överskrivna'
         title: 'Webbplatsinställningar'
-        reset: 'återställ'
-        none: 'inget'
         no_results: "Inga resultat hittades."
         clear_filter: "Rensa"
         add_url: "lägg till URL"
