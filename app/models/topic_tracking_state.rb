@@ -252,14 +252,18 @@ SQL
 
     allowed_user_ids = topic.allowed_users.pluck(:id)
 
-    if allowed_user_ids.include?(post&.user_id)
+    if post && allowed_user_ids.include?(post.user_id)
       channels["/private-messages/sent"] = [post.user_id]
-    end
-
-    if user_archive
+    elsif user_archive
       user_ids = [user_id]
-      channels["/private-messages/archive"] = user_ids
-      channels["/private-messages/inbox"] = user_ids
+
+      [
+        "/private-messages/archive",
+        "/private-messages/inbox",
+        "/private-messages/sent",
+      ].each do |channel|
+        channels[channel] = user_ids
+      end
     else
       topic.allowed_groups.each do |group|
         channel = "/private-messages/group/#{group.name.downcase}"

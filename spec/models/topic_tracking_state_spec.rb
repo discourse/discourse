@@ -163,7 +163,13 @@ describe TopicTrackingState do
           )
         end
 
-        ["/private-messages/archive", "/private-messages/inbox"].each do |channel|
+        expect(messages.count).to eq(3)
+
+        [
+          "/private-messages/archive",
+          "/private-messages/inbox",
+          "/private-messages/sent",
+        ].each do |channel|
           message = messages.find do |message|
             message.channel = channel
           end
