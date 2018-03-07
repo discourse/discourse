@@ -734,8 +734,8 @@ describe Topic do
 
       it "doesn't bump the topic on an edit to the last post that doesn't result in a new version" do
         expect {
-          SiteSetting.expects(:editing_grace_period).returns(5.minutes)
-          @last_post.revise(@last_post.user, { raw: 'updated contents' }, revised_at: @last_post.created_at + 10.seconds)
+          SiteSetting.editing_grace_period = 5.minutes
+          @last_post.revise(@last_post.user, { raw: @last_post.raw + "a" }, revised_at: @last_post.created_at + 10.seconds)
           @topic.reload
         }.not_to change(@topic, :bumped_at)
       end

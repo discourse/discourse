@@ -111,8 +111,30 @@ describe PostRevisor do
         expect(subject.category_changed).to be_blank
       end
 
+      it "does create a new version if a large diff happens" do
+        SiteSetting.editing_grace_period_max_diff = 10
+
+        post = Fabricate(:post, raw: 'hello world')
+        revisor = PostRevisor.new(post)
+        revisor.revise!(post.user, { raw: 'hello world123456789' }, revised_at: post.updated_at + 1.second)
+
+        post.reload
+
+        expect(post.version).to eq(1)
+
+        revisor = PostRevisor.new(post)
+        revisor.revise!(post.user, { raw: 'hello world12345678901' }, revised_at: post.updated_at + 1.second)
+
+        post.reload
+        expect(post.version).to eq(2)
+
+        expect(post.revisions.first.modifications["raw"][0]).to eq("hello world")
+        expect(post.revisions.first.modifications["cooked"][0]).to eq("<p>hello world</p>")
+      end
+
       it "doesn't create a new version" do
         SiteSetting.editing_grace_period = 1.minute
+        SiteSetting.editing_grace_period_max_diff = 100
 
         # making a revision
         subject.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds)
@@ -317,48 +339,34 @@ describe PostRevisor do
     end
 
     describe 'with a new body' do
+      before do
+        SiteSetting.editing_grace_period_max_diff = 1000
+      end
+
       let(:changed_by) { Fabricate(:coding_horror) }
       let!(:result) { subject.revise!(changed_by, raw: "lets update the body. Здравствуйте") }
 
-      it 'returns true' do
+      it 'correctly updates raw' do
         expect(result).to eq(true)
-      end
-
-      it 'updates the body' do
         expect(post.raw).to eq("lets update the body. Здравствуйте")
-      end
-
-      it 'sets the invalidate oneboxes attribute' do
         expect(post.invalidate_oneboxes).to eq(true)
-      end
-
-      it 'increased the versions' do
         expect(post.version).to eq(2)
         expect(post.public_version).to eq(2)
-      end
-
-      it 'has the new revision' do
         expect(post.revisions.size).to eq(1)
-      end
-
-      it "saved the user who made the change in the revisions" do
         expect(post.revisions.first.user_id).to eq(changed_by.id)
-      end
 
-      it "updates the word count" do
+        # updates word count
         expect(post.word_count).to eq(5)
         post.topic.reload
         expect(post.topic.word_count).to eq(5)
       end
 
       context 'second poster posts again quickly' do
-        before do
+
+        it 'is a ninja edit, because the second poster posted again quickly' do
           SiteSetting.editing_grace_period = 1.minute
           subject.revise!(changed_by, { raw: 'yet another updated body' }, revised_at: post.updated_at + 10.seconds)
           post.reload
-        end
-
-        it 'is a ninja edit, because the second poster posted again quickly' do
           expect(post.version).to eq(2)
           expect(post.public_version).to eq(2)
           expect(post.revisions.size).to eq(1)
