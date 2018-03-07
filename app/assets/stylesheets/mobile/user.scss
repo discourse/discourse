@@ -143,20 +143,20 @@
         display: flex;
         flex: 1 1 auto;
         flex-wrap: wrap;
-        
+
       }
 
       li {
         display: flex;
-        flex: 1 1 auto; 
-        margin: 0 5px;       
+        flex: 1 1 auto;
+        margin: 0 5px;
       }
 
       span {
         flex: 0 1 100%;
-        margin: 0 5px;               
+        margin: 0 5px;
       }
-      
+
       .user-profile-controls-outlet {
         margin: 0;
         li {
@@ -165,7 +165,7 @@
       }
 
       a {
-        flex: 1 1 auto;        
+        flex: 1 1 auto;
         min-width: 120px;
       }
     }
@@ -214,7 +214,7 @@
 }
 
 .stats-section {
-  li {    
+  li {
     margin: 0 15px 10px 0;
     padding: 0;
     &.linked-stat {
@@ -277,7 +277,7 @@
 
   .checkbox-label {
     display: flex;
-    overflow: auto;    
+    overflow: auto;
     width: 100%;
     padding: 5px 0;
     input {
