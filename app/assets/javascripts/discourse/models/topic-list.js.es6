@@ -80,7 +80,7 @@ const TopicList = RestModel.extend({
     const url = `${Discourse.getURL("/")}${this.get('filter')}.json?topic_ids=${topic_ids.join(",")}`;
     const store = this.store;
 
-    return ajax({ url }).then(result => {
+    return ajax({ url, data: this.get("params") }).then(result => {
       let i = 0;
       topicList.forEachNew(TopicList.topicsFrom(store, result), function(t) {
         // highlight the first of the new topics so we can get a visual feedback
