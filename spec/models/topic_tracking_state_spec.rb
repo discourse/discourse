@@ -87,7 +87,7 @@ describe TopicTrackingState do
 
         expect(message.channel).to eq('/private-messages/inbox')
         expect(message.data["topic_id"]).to eq(private_message_topic.id)
-        expect(message.user_ids).to eq(allowed_users.map(&:id) << admin.id)
+        expect(message.user_ids).to eq(allowed_users.map(&:id))
       end
     end
 
@@ -114,7 +114,7 @@ describe TopicTrackingState do
           end
 
           expect(message.data["topic_id"]).to eq(private_message_topic.id)
-          expect(message.user_ids).to eq(group.users.map(&:id) << admin.id)
+          expect(message.user_ids).to eq(group.users.map(&:id))
         end
       end
     end
@@ -148,7 +148,7 @@ describe TopicTrackingState do
           end
 
           expect(message.data["topic_id"]).to eq(private_message_topic.id)
-          expect(message.user_ids).to eq(user_ids << admin.id)
+          expect(message.user_ids).to eq(user_ids)
         end
       end
     end
@@ -158,20 +158,19 @@ describe TopicTrackingState do
         messages = MessageBus.track_publish do
           TopicTrackingState.publish_private_message(
             private_message_topic,
-            archived: true
+            user_id: private_message_post.user_id,
+            user_archive: true
           )
         end
 
-        expect(messages.count).to eq(1)
+        ["/private-messages/archive", "/private-messages/inbox"].each do |channel|
+          message = messages.find do |message|
+            message.channel = channel
+          end
 
-        message = messages.first
-
-        expect(message.channel).to eq('/private-messages/archive')
-        expect(message.data["topic_id"]).to eq(private_message_topic.id)
-
-        expect(message.user_ids).to eq(
-          private_message_topic.allowed_users.map(&:id) << admin.id
-        )
+          expect(message.data["topic_id"]).to eq(private_message_topic.id)
+          expect(message.user_ids).to eq([private_message_post.user_id])
+        end
       end
     end
 
