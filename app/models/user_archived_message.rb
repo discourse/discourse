@@ -14,7 +14,7 @@ class UserArchivedMessage < ActiveRecord::Base
     UserArchivedMessage.where(user_id: user_id, topic_id: topic_id).destroy_all
     trigger(:move_to_inbox, user_id, topic_id)
     MessageBus.publish("/topic/#{topic_id}", { type: "move_to_inbox" }, user_ids: [user_id])
-    publish_topic_tracking_state(topic, false)
+    publish_topic_tracking_state(topic, user_id)
   end
 
   def self.archive!(user_id, topic)
@@ -23,7 +23,7 @@ class UserArchivedMessage < ActiveRecord::Base
     UserArchivedMessage.create!(user_id: user_id, topic_id: topic_id)
     trigger(:archive_message, user_id, topic_id)
     MessageBus.publish("/topic/#{topic_id}", { type: "archived" }, user_ids: [user_id])
-    publish_topic_tracking_state(topic, true)
+    publish_topic_tracking_state(topic, user_id)
   end
 
   def self.trigger(event, user_id, topic_id)
@@ -36,9 +36,9 @@ class UserArchivedMessage < ActiveRecord::Base
 
   private
 
-    def self.publish_topic_tracking_state(topic, archived)
+    def self.publish_topic_tracking_state(topic, user_id)
       TopicTrackingState.publish_private_message(
-        topic, archived: archived
+        topic, user_id: user_id, user_archive: true
       )
     end
 end
