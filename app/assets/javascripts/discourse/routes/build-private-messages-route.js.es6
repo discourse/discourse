@@ -5,6 +5,11 @@ export default (viewName, path, channel) => {
   return UserTopicListRoute.extend({
     userActionType: Discourse.UserAction.TYPES.messages_received,
 
+    titleToken() {
+      const key = viewName === "index" ? "inbox" : viewName;
+      return [I18n.t(`user.messages.${key}`), I18n.t("user.private_messages")];
+    },
+
     actions: {
       didTransition() {
         this.controllerFor("user-topics-list")._showFooter();
