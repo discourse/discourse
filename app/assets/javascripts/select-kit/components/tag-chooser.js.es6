@@ -18,7 +18,7 @@ export default MultiSelectComponent.extend(Tags, {
     this._super();
 
     if (this.get("allowCreate") !== false) {
-      this.set("allowCreate", this.get("siteSettings.can_create_tag"));
+      this.set("allowCreate", this.site.get("can_create_tag"));
     }
 
     this.set("termMatchesForbidden", false);
