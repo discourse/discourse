@@ -474,6 +474,11 @@ describe Guardian do
       it 'returns true for a group owner' do
         expect(Guardian.new(group_owner).can_invite_to?(group_private_topic)).to be_truthy
       end
+
+      it 'returns true for normal user when inviting to topic and PM disabled' do
+        SiteSetting.enable_personal_messages = false
+        expect(Guardian.new(trust_level_2).can_invite_to?(topic)).to be_truthy
+      end
     end
 
     describe "private messages" do

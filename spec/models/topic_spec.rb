@@ -544,6 +544,17 @@ describe Topic do
             expect(Notification.last).to be_blank
           end
         end
+
+        context "when PMs are enabled for TL3 or higher only" do
+          before do
+            SiteSetting.min_trust_to_send_messages = 3
+          end
+
+          it 'should raise error' do
+            expect { topic.invite(user, another_user.username) }
+              .to raise_error(Topic::UserExists)
+          end
+        end
       end
 
       describe 'by email' do
