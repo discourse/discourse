@@ -91,7 +91,7 @@ export default function(filter, extras) {
       const topicOpts = {
         model,
         category: null,
-        period: model.get('for_period') || (filter.indexOf('/') > 0 ? filter.split('/')[1] : ''),
+        period: model.get('for_period') || (filter.indexOf('top/') >= 0 ? filter.split('/')[1] : ''),
         selected: [],
         expandGloballyPinned: true
       };

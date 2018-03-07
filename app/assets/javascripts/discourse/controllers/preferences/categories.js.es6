@@ -1,6 +1,6 @@
 import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
 import { popupAjaxError } from 'discourse/lib/ajax-error';
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend(PreferencesTabController, {
   saveAttrNames: [
@@ -12,7 +12,7 @@ export default Ember.Controller.extend(PreferencesTabController, {
 
   @computed("model.watchedCategories", "model.watchedFirstPostCategories", "model.trackedCategories", "model.mutedCategories")
   selectedCategories(watched, watchedFirst, tracked, muted) {
-    return [].concat(watched, watchedFirst, tracked, muted);
+    return [].concat(watched, watchedFirst, tracked, muted).filter(t => t);
   },
 
   canSave: function() {

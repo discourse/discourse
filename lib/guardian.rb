@@ -129,6 +129,16 @@ class Guardian
   alias :can_see_flags? :can_moderate?
   alias :can_close? :can_moderate?
 
+  def can_tag?(topic)
+    return false if topic.blank?
+
+    topic.private_message? ? can_tag_pms? : can_tag_topics?
+  end
+
+  def can_see_tags?(topic)
+    SiteSetting.tagging_enabled && topic.present? && (!topic.private_message? || can_tag_pms?)
+  end
+
   def can_send_activation_email?(user)
     user && is_staff? && !SiteSetting.must_approve_users?
   end

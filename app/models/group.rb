@@ -192,6 +192,7 @@ class Group < ActiveRecord::Base
       .references(:posts, :topics, :category)
       .where(user_id: user_ids)
       .where('topics.archetype <> ?', Archetype.private_message)
+      .where('topics.visible')
       .where(post_type: Post.types[:regular])
 
     if opts[:category_id].present?
@@ -534,6 +535,16 @@ class Group < ActiveRecord::Base
       if user_attributes.present?
         User.where(id: user_ids).update_all(user_attributes)
       end
+
+      # update group user count
+      Group.exec_sql <<-SQL.squish
+        UPDATE groups g
+        SET user_count =
+          (SELECT COUNT(gu.user_id)
+           FROM group_users gu
+           WHERE gu.group_id = g.id)
+        WHERE g.id = #{self.id};
+      SQL
     end
 
     if self.grant_trust_level.present?
@@ -661,7 +672,7 @@ end
 # Table name: groups
 #
 #  id                                 :integer          not null, primary key
-#  name                               :string(255)      not null
+#  name                               :string           not null
 #  created_at                         :datetime         not null
 #  updated_at                         :datetime         not null
 #  automatic                          :boolean          default(FALSE), not null
@@ -669,7 +680,7 @@ end
 #  automatic_membership_email_domains :text
 #  automatic_membership_retroactive   :boolean          default(FALSE)
 #  primary_group                      :boolean          default(FALSE), not null
-#  title                              :string(255)
+#  title                              :string
 #  grant_trust_level                  :integer
 #  incoming_email                     :string
 #  has_messages                       :boolean          default(FALSE), not null

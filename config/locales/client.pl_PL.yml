@@ -437,7 +437,6 @@ pl_PL:
       name: "Nazwa"
       user_count: "Ilość użytkowników"
       bio: "O grupie"
-      selector_placeholder: "Dodaj członków"
       owner: "właściciel"
       index:
         title: "Grupy"
@@ -594,6 +593,7 @@ pl_PL:
       disable_jump_reply: "Po odpowiedzi nie przechodź do nowego wpisu"
       dynamic_favicon: "Pokazuj licznik powiadomień na karcie jako dynamiczny favicon"
       theme_default_on_all_devices: "Ustaw ten motyw jako domyślny na wszystkich moich urządzeniach"
+      allow_private_messages: "Pozwól innym użytkownikom wysyłać do mnie prywatne wiadomości"
       external_links_in_new_tab: "Otwieraj wszystkie zewnętrzne odnośniki w nowej karcie"
       enable_quoting: "Włącz cytowanie zaznaczonego tekstu"
       change: "zmień"
@@ -687,6 +687,23 @@ pl_PL:
         set_password: "Ustaw hasło"
         choose_new: "Wyberz nowe hasło"
         choose: "Wybierz hasło"
+      second_factor:
+        title: "Dwuskładnikowe uwierzytelnianie"
+        enabled_status: "Status: Włączone"
+        disabled_status: "Status: Wyłączone"
+        confirm_password_description: "Aby kontynuować włączanie dwuskładnikowego uwierzytelniania, potwierdź swoje hasło"
+        enable_description: |
+          Aby zakończyć konfigurację dwuskładnikowego uwierzytelniania, zeskanuj następujący kod QR za pomocą jednej ze wspieranych aplikacji
+          (<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Android lub iOS</a>,
+          <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>)
+          a następnie wprowadź wygenerowany kod potwierdzający dla dwuskładnikowego uwierzytelniania.
+        disable_description: "Wprowadź kod potwierdzający ze swojej aplikacji"
+        show_key_description: "Lub wpisz tajny klucz ręcznie."
+        info_prompt: "Czym jest uwierzytelnianie dwuskładnikowe?"
+        extended_description: |
+          Dwuskładnikowe uwierzytelnianie zapewnia dodatkowy krok zabezpieczający logowanie hasłem, poprzez generowanie jednorazowego kodu potwierdzającego. Kody potwierdzające
+          mogą być generowane na Androidzie i iOSie za pomocą <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Google Authenticator</a>
+          a na Windows Phone za pomocą <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Authenticator</a>.
       change_about:
         title: "Zmień O mnie"
         error: "Wystąpił błąd podczas zmiany tej wartości."
@@ -1778,10 +1795,10 @@ pl_PL:
         select_all: zaznacz wszystkie
         deselect_all: odznacz wszystkie
         description:
-          one: Wybrano <b>1</b> wpis.
-          few: Wybrano <b>{{count}}</b> wpisy.
-          many: Wybrano <b>{{count}}</b> wpisów.
-          other: Wybrano <b>{{count}}</b> wpisów.
+          one: "Wybrano <b>1</b> wpis."
+          few: "Wybrano <b>{{count}}</b> wpisy."
+          many: "Wybrano <b>{{count}}</b> wpisów."
+          other: "Wybrano <b>{{count}}</b> wpisów."
     post:
       quote_reply: "Cytuj"
       edit_reason: "Powód"
@@ -2074,7 +2091,6 @@ pl_PL:
       email_in_allow_strangers: "Akceptuj wiadomości email od anonimowych, nieposiadających kont użytkowników "
       email_in_disabled: "Tworzenie nowych tematów emailem jest wyłączone w ustawieniach serwisu. "
       email_in_disabled_click: 'Kliknij tu, aby włączyć.'
-      suppress_from_homepage: "Nie wyświetlaj tej kategorii na stronie głównej."
       show_subcategory_list: "Pokaż listę subkategorii powyżej tematów w tej kategorii."
       num_featured_topics: "Liczba wątków do wyświetlenia na stronie kategorii:"
       subcategory_num_featured_topics: "Liczba wątków do wyświetlenia na stronie kategorii:"
@@ -2633,7 +2649,6 @@ pl_PL:
         edit: "Edytuj grupy"
         refresh: "Odśwież"
         new: "Nowa"
-        selector_placeholder: "nazwa użytkownika"
         about: "Tu możesz edytować przypisania do grup oraz ich nazwy"
         group_members: "Członkowie grupy"
         delete: "Usuń"
@@ -3438,10 +3453,7 @@ pl_PL:
         recommended: "Zalecamy zmianę poniższego tekstu, aby lepiej odpowiadał Twoim potrzebom:"
         show_overriden: 'Pokaż tylko nadpisane'
       site_settings:
-        show_overriden: 'Pokaż tylko nadpisane'
         title: 'Ustawienia'
-        reset: 'przywróć domyślne'
-        none: 'żadne'
         no_results: "Brak wyników wyszukiwania"
         clear_filter: "Wyczyść"
         add_url: "dodaj URL"

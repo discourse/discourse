@@ -337,7 +337,6 @@ zh_TW:
       name: "名字"
       user_count: "成員數量"
       bio: "關於群組"
-      selector_placeholder: "新增成員"
       owner: "擁有者"
       index:
         title: "群組"
@@ -1402,7 +1401,7 @@ zh_TW:
         select_all: 選擇全部
         deselect_all: 取消選取
         description:
-          other: 你已選擇了 <b>{{count}}</b> 篇文章。
+          other: "你已選擇了 <b>{{count}}</b> 篇文章。"
     post:
       quote_reply: "引用"
       edit_reason: "原因: "
@@ -1602,7 +1601,6 @@ zh_TW:
       email_in_allow_strangers: "接受非用戶的電郵"
       email_in_disabled: "\"用電子郵件張貼新的討論話題\"功能已被關閉。若要使用此功能，"
       email_in_disabled_click: '請啟用"email in"功能'
-      suppress_from_homepage: "不在首頁上顯示此分類。"
       show_subcategory_list: "在此分類中，將子分類顯示在主題上方。"
       all_topics_wiki: "新的主題預設為共筆。"
       allow_badges_label: "允許授予本分類的徽章"
@@ -2065,7 +2063,6 @@ zh_TW:
         edit: "編輯群組"
         refresh: "重新整理"
         new: "建立"
-        selector_placeholder: "輸入用戶名稱"
         about: "請在此編輯你的群組成員與名稱"
         group_members: "群組成員"
         delete: "刪除"
@@ -2682,10 +2679,7 @@ zh_TW:
         recommended: "我們建議自定義以下文本以符合你的需求："
         show_overriden: '只顯示修改過的項目'
       site_settings:
-        show_overriden: '只顯示修改過的項目'
         title: '設定'
-        reset: '重設'
-        none: '無'
         no_results: "未找到任何結果。"
         clear_filter: "清除"
         add_url: "加入網址"

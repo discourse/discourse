@@ -356,7 +356,6 @@ fa_IR:
       name: "نام"
       user_count: "تعداد اعضا"
       bio: "درباره گروه"
-      selector_placeholder: "افزودن عضو"
       owner: "مالک"
       index:
         title: "گروه‌ها"
@@ -1517,7 +1516,7 @@ fa_IR:
         select_all: انتخاب همه
         deselect_all: عدم انتخاب همه
         description:
-          other: شما <b>{{count}}</b> نوشته انتخاب کرده اید
+          other: "شما <b>{{count}}</b> نوشته انتخاب کرده اید"
     post:
       quote_reply: "نقل‌قول"
       edit_reason: "دلیل:"
@@ -1728,7 +1727,6 @@ fa_IR:
       email_in_allow_strangers: "تایید ایمیل ها از کاربران ناشناس  بدون حساب کاربری"
       email_in_disabled: "ارسال موضوعات جدید با ایمیل در تنظیمات سایت غیر فعال است. برای فعال سازی  موضوعات جدید را با ایمیل ارسال کنید،"
       email_in_disabled_click: 'فعال کردن تنظیمات "email in".'
-      suppress_from_homepage: "برداشتن این دسته‌بندی از صفحه اصلی."
       show_subcategory_list: "تعداد دسته‌بندی‌های فرزند که بالای موضوعات این دسته‌بندی نمایش داده می‌شوند."
       num_featured_topics: "تعداد موضوعاتی که در صفحه دسته‌بندی نمایش داده می‌شوند:"
       subcategory_num_featured_topics: "تعداد موضوعات برجسته که در دسته‌بندی مادر نمایش داده می‌شوند:"
@@ -2205,7 +2203,6 @@ fa_IR:
         edit: "ویرایش گروه‌ها"
         refresh: "تازه کردن"
         new: "جدید"
-        selector_placeholder: "نام کاربری را وارد نمایید ."
         about: "عضویت و نام‌های گروه را در اینجا ویرایش کنید"
         group_members: "اعضای گروه"
         delete: "حذف"
@@ -2902,10 +2899,7 @@ fa_IR:
         recommended: "ما پیشنهاد میکنیم این متن را بر اساس نیاز های خود ویرایش کنید:"
         show_overriden: 'تنها بازنویسی‌شده‌ها را نمایش بده'
       site_settings:
-        show_overriden: 'تنها بازنویسی‌شده‌ها را نمایش بده'
         title: 'تنظیمات'
-        reset: 'بازنشانی'
-        none: 'هیچ کدام'
         no_results: "چیزی یافت نشد."
         clear_filter: "واضح"
         add_url: "اضافه کردن URL"

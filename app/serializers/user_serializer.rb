@@ -72,7 +72,9 @@ class UserSerializer < BasicUserSerializer
              :primary_group_flair_url,
              :primary_group_flair_bg_color,
              :primary_group_flair_color,
-             :staged
+             :staged,
+             :second_factor_enabled,
+             :external_id
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
@@ -143,6 +145,14 @@ class UserSerializer < BasicUserSerializer
   def include_email?
     (object.id && object.id == scope.user.try(:id)) ||
       (scope.is_staff? && object.staged?)
+  end
+
+  def include_second_factor_enabled?
+    (object&.id == scope.user&.id) || scope.is_staff?
+  end
+
+  def second_factor_enabled
+    object.totp_enabled?
   end
 
   def can_change_bio
@@ -276,6 +286,14 @@ class UserSerializer < BasicUserSerializer
 
   def primary_group_flair_color
     object.try(:primary_group).try(:flair_color)
+  end
+
+  def external_id
+    object&.single_sign_on_record&.external_id
+  end
+
+  def include_external_id?
+    SiteSetting.enable_sso
   end
 
   ###

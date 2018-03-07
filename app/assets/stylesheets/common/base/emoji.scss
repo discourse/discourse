@@ -5,14 +5,12 @@ img.emoji {
 }
 
 .emoji-picker {
-  box-shadow: 0 1px 5px rgba(0,0,0,0.4);
   background-clip: padding-box;
   z-index: z("modal","content"); 
   position: fixed;
   display: none;
   flex-direction: row;
   height: 300px;
-  border-radius: 3px;
   color: dark-light-choose(darken($primary, 40%), blend-primary-secondary(90%));
   background-color: $secondary;
   border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);

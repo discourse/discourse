@@ -96,7 +96,7 @@ nb_NO:
     template:
       body: 'Dette er problemene med de følgene feltene:'
       header:
-        one: 1 feil forhindret lagring av %{model}
+        one: '1 feil forhindret lagring av %{model}'
         other: '%{count} feil forhindret lagring av %{model}'
     embed:
       load_from_remote: "Det oppstod et problem med innlastingen av innlegget."
@@ -303,25 +303,25 @@ nb_NO:
     title: "Velkommen til salongen"
     body: |2
 
-      Gratulerer! :confetti_ball:
+        Gratulerer! :confetti_ball:
 
-      Hvis du kan se denne tråden, er du nylig blitt forfremmet til **aktivt medlem** (tillitsnivå 3).
+        Hvis du kan se denne tråden, er du nylig blitt forfremmet til **aktivt medlem** (tillitsnivå 3).
 
-      Du kan nå &hellip;
+        Du kan nå &hellip;
 
-      * Endre tittelen til hvilken som helst tråd
-      * Endre kategorien til hvilken som helst tråd
-      * Få lenkene dine fulgt opp ([automatisk nofollow](http://en.wikipedia.org/wiki/Nofollow) er fjernet)
-      * Se og delta i diskusjonene i en privat salong-kategori som bare er synlig for brukere med tillitsnivå 3 eller høyere.
-      * Skjule søppelpost med ett flagg.
+        * Endre tittelen til hvilken som helst tråd
+        * Endre kategorien til hvilken som helst tråd
+        * Få lenkene dine fulgt opp ([automatisk nofollow](http://en.wikipedia.org/wiki/Nofollow) er fjernet)
+        * Se og delta i diskusjonene i en privat salong-kategori som bare er synlig for brukere med tillitsnivå 3 eller høyere.
+        * Skjule søppelpost med ett flagg.
 
-      Her er den [oppdaterte listen over andre trofaste](/badges/3/regular). Si gjerne hei!
+        Her er den [oppdaterte listen over andre trofaste](/badges/3/regular). Si gjerne hei!
 
-      Takk for at du er en viktig del av fellesskapet vårt.
+        Takk for at du er en viktig del av fellesskapet vårt.
 
-      (For mer informasjon om tillitsnivå [se denne tråden][tillit]. Merk deg at bare medlemmer som fortsetter å oppfylle kravene over tid, vil forbli *trofaste*.)
+        (For mer informasjon om tillitsnivå [se denne tråden][tillit]. Merk deg at bare medlemmer som fortsetter å oppfylle kravene over tid, vil forbli *trofaste*.)
 
-      [tillit]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [tillit]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Om kategorien %{category} "
     replace_paragraph: "(Erstatt dette første avsnittet med en kort beskrivelse av den nye kategorien din. Denne teksten vil vises i oversikten over kategorier, så prøv å holde lengden under 200 bokstaver. **Inntil du endrer denne beskrivelsen eller oppretter tråder, vil denne kategorien ikke vises på kategorier-siden.**)"
@@ -479,8 +479,6 @@ nb_NO:
       long_form: 'markerte dette som upassende'
     notify_user:
       title: 'Send en melding til @{{username}}'
-      description: 'Jeg vil snakke direkte og privat med denne personen om innlegget.'
-      short_description: 'Jeg vil snakke direkte og privat med denne personen om innlegget.'
       long_form: 'sendt melding til bruker'
       email_title: 'Ditt innlegg i "%{title}"'
       email_body: "%{link}\n\n%{message}"

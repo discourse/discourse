@@ -23,12 +23,14 @@ const User = RestModel.extend({
   hasPMs: Em.computed.gt("private_messages_stats.all", 0),
   hasStartedPMs: Em.computed.gt("private_messages_stats.mine", 0),
   hasUnreadPMs: Em.computed.gt("private_messages_stats.unread", 0),
-  hasPosted: Em.computed.gt("post_count", 0),
-  hasNotPosted: Em.computed.not("hasPosted"),
-  canBeDeleted: Em.computed.and("can_be_deleted", "hasNotPosted"),
 
   redirected_to_top: {
     reason: null,
+  },
+
+  @computed("can_be_deleted", "post_count")
+  canBeDeleted(canBeDeleted, postCount) {
+    return canBeDeleted && postCount <= 5;
   },
 
   @computed()
@@ -301,6 +303,20 @@ const User = RestModel.extend({
       dataType: 'json',
       data: { login: this.get('username') },
       type: 'POST'
+    });
+  },
+
+  loadSecondFactorCodes(password) {
+    return ajax("/u/second_factors.json", {
+      data: { password },
+      type: 'POST'
+    });
+  },
+
+  toggleSecondFactor(token, enable) {
+    return ajax("/u/second_factor.json", {
+      data: { second_factor_token: token, enable },
+      type: 'PUT'
     });
   },
 

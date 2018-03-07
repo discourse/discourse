@@ -27,4 +27,6 @@
   {{tag-list tags=tagGroup.tags sortProperties=sortProperties tagGroupName=tagGroup.name}}
 {{/each}}
 
-{{tag-list tags=model sortProperties=sortProperties titleKey=otherTagsTitleKey}}
+{{#if model}}
+  {{tag-list tags=model sortProperties=sortProperties titleKey=otherTagsTitleKey}}
+{{/if}}

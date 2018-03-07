@@ -157,7 +157,7 @@ end
 # Table name: site_settings
 #
 #  id         :integer          not null, primary key
-#  name       :string(255)      not null
+#  name       :string           not null
 #  data_type  :integer          not null
 #  value      :text
 #  created_at :datetime         not null

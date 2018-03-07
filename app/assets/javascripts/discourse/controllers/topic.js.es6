@@ -104,7 +104,7 @@ export default Ember.Controller.extend(BufferedContent, {
 
   @computed('model.isPrivateMessage')
   canEditTags(isPrivateMessage) {
-    return !isPrivateMessage && this.site.get('can_tag_topics');
+    return this.site.get('can_tag_topics') && (!isPrivateMessage || this.site.get('can_tag_pms'));
   },
 
   actions: {
@@ -263,6 +263,23 @@ export default Ember.Controller.extend(BufferedContent, {
       } else {
         topic.archiveMessage().then(backToInbox);
       }
+    },
+
+    editFirstPost() {
+      const postStream = this.get('model.postStream');
+      let firstPost = postStream.get('posts.firstObject');
+
+      if (firstPost.get('post_number') !== 1) {
+        const postId = postStream.findPostIdForPostNumber(1);
+        // try loading from identity map first
+        firstPost = postStream.findLoadedPost(postId);
+        if (firstPost === undefined) {
+          return this.get('model.postStream').loadPost(postId).then(post => {
+            this.send("editPost", post);
+          });
+        }
+      }
+      this.send("editPost", firstPost);
     },
 
     // Post related methods

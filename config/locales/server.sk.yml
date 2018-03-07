@@ -27,6 +27,7 @@ sk:
   posts: "príspevky"
   loading: "Načítava sa"
   log_in: "Prihlásenie"
+  submit: "odošli"
   purge_reason: "Automaticky zmazaný ako opustený, dezaktivovaný účet"
   disable_remote_images_download_reason: "Sťahovanie vzdialených obrázkov je vypnuté kvôli nedostatku diskového priestoru."
   anonymous: "Anonymný"
@@ -39,6 +40,8 @@ sk:
       default_subject: "Táto téma musí mať názov"
       show_trimmed_content: "Ukázať orezaný obsah"
       maximum_staged_user_per_email_reached: "Dosiahnutý maximálny počet dočasných používateľov vytvorených emailom."
+      no_subject: "(bez predmetu)"
+      no_body: "(bez tela)"
       errors:
         empty_email_error: "Nastane, keď prijmeme úplne prázdny mail."
         no_message_id_error: "Nastane, keď v maili chýba hlavička 'Message-Id'."
@@ -94,8 +97,8 @@ sk:
     template:
       body: 'Nastal problém s nasledujúcimi položkami:'
       header:
-        one: Uloženie  %{model} zlyhalo kôli chybe
-        few: Uloženie  %{model} zlyhalo kôli %{count} chybám
+        one: 'Uloženie  %{model} zlyhalo kôli chybe'
+        few: 'Uloženie  %{model} zlyhalo kôli %{count} chybám'
         other: 'Uloženie  %{model} zlyhalo kôli %{count} chybám '
     embed:
       load_from_remote: "Nastala chyba pri načítaní príspevku"
@@ -150,6 +153,7 @@ sk:
     one: "Ľutujeme, noví používatelia môžu zmieniť v príspevku maximálne jedného používateľa."
     few: "Ľutujeme, noví používatelia môžu zmieniť v príspevku maximálne %{count} používatelov."
     other: "Ľutujeme, noví používatelia môžu zmieniť v príspevku maximálne %{count} používatelov."
+  no_images_allowed_trust: "Ľutujeme, do príspevku nemôžete vložiť obrázok"
   no_images_allowed: "Ľutujeme, noví používatelia nemôžu vkladať obrázky do príspevkov."
   too_many_images:
     one: "Ľutujeme, noví používatelia môžu vložiť maximálne jeden obrázok do príspevku."
@@ -299,25 +303,25 @@ sk:
     title: "Vítajte v Salóne"
     body: |2
 
-      Gratulácia! :confetti_ball:
+        Gratulácia! :confetti_ball:
 
-      Ak vidíte túto tému, boli ste nedávno povýšený na **pravidelný** (úroveň dôvery 3).
+        Ak vidíte túto tému, boli ste nedávno povýšený na **pravidelný** (úroveň dôvery 3).
 
-      Teraz môžete &hellip;
+        Teraz môžete &hellip;
 
-      * Upravovať nadpis akejkoľvek témy
-      * Meniť kategóriu akejkoľvek témy
-      * Mať sledované všetky Vaše odkazy ([automatické nofollow](http://en.wikipedia.org/wiki/Nofollow) je odstránené)
-      * Prístup do privátnej katogógie Lounge prístupnej iba členom s úrovňou dôvery 3 a vyššou
-      * Skryť spam pomocou vlajky
+        * Upravovať nadpis akejkoľvek témy
+        * Meniť kategóriu akejkoľvek témy
+        * Mať sledované všetky Vaše odkazy ([automatické nofollow](http://en.wikipedia.org/wiki/Nofollow) je odstránené)
+        * Prístup do privátnej katogógie Lounge prístupnej iba členom s úrovňou dôvery 3 a vyššou
+        * Skryť spam pomocou vlajky
 
-      Tu je [aktuálny zoznam pravidelných členov](/badges/3/regular). Určite ich pozdravte.
+        Tu je [aktuálny zoznam pravidelných členov](/badges/3/regular). Určite ich pozdravte.
 
-      Ďakujeme, že ste dôležitou súčasťou našej komunity!
+        Ďakujeme, že ste dôležitou súčasťou našej komunity!
 
-      (Pre viac informácií o úrovniach dôvery, [pozrite túto tému][trust]. Prosím nezabudnite, že iba členovia, ktorý neustále spĺňajú požiadavky zostanú platnými členmy.)
+        (Pre viac informácií o úrovniach dôvery, [pozrite túto tému][trust]. Prosím nezabudnite, že iba členovia, ktorý neustále spĺňajú požiadavky zostanú platnými členmy.)
 
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "O kategórii: %{category} "
     replace_paragraph: "(Nahraďte tento prvý odstavec stručným popisom Vašej novej kategórie. Tento návod sa objaví v zozname kategórií, tak sa snažte ho udržať pod 200 znakov. **Kategória sa neobjaví v zozname kategórií pokým neupravíte tento popis alebo v nej nevytvoríte témy.**)"
@@ -509,7 +513,6 @@ sk:
       long_form: 'toto označ ako nevhodné'
     notify_user:
       title: 'Poslať @{{username}} správu'
-      description: 'Chcem sa s touto osobou rozprávať o jeho príspevku priamo a súkromne.'
       long_form: 'úživateľovi bola zaslaná správa'
       email_title: 'Váš príspevok v "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -835,8 +838,6 @@ sk:
     google_oauth2_client_id: "Client ID Vašej Google aplikácie."
     google_oauth2_client_secret: "Client secret Vašej Google aplikácie."
     enable_twitter_logins: "Povoliť autentifikáciu cez Twitter, vyžaduje twitter_consmer_key a twiiter_consumer_secret"
-    twitter_consumer_key: "Consumer key pre Twitter autentifikáciu, registrovaný na http://dev.twitter.com"
-    twitter_consumer_secret: "Consumer secret pre Twitter autentifikáciu, registrované na http://dev.twitter.com"
     enable_facebook_logins: "Povoliť autentifikáciu pomocou Facebook, vyžaduje facebook_app_id a facebook_app_secret."
     facebook_app_id: "App id pre Facebook autentifikáciu, registrované na https://developers.facebook.com/apps"
     facebook_app_secret: "App secret pre Facebook autentifikáciu, registrované na https://developers.facebook.com/apps"
@@ -847,7 +848,6 @@ sk:
     allow_restore: "Umožniť obnovu, ktorá nahradí VŠETKY data na stránkach! Ponechajte prázdne okrem prípadu ak chcete obnoviť zo zálohy."
     maximum_backups: "Maximálny počet záloh udržiavaných na disku. Staršie zálohy budu automaticky vymazané"
     automatic_backups_enabled: "Spustiť automatické zálohy podľa nastavenia intervalu záloh"
-    backup_frequency: "Ako často máme vytvárať zálohu stránok, v dňoch."
     enable_s3_backups: "Po dokončení nahrať zálohy na S3. DÔLEŽITÉ: požaduje správne nastavenie prístupových údajov na S3 v menu Súbory."
     s3_backup_bucket: "Vzdialený S3 bucket na uloženie záloh. VAROVANIE: Uistite sa, že ide o súkromný S3 bucket."
     backup_time_of_day: "Čas v UTC, kedy sa má spustiť záloha."

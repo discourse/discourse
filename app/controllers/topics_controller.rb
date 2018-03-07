@@ -386,19 +386,19 @@ class TopicsController < ApplicationController
         .where('topic_allowed_groups.group_id IN (?)', group_ids).pluck(:id)
       allowed_groups.each do |id|
         if archive
-          GroupArchivedMessage.archive!(id, topic.id)
+          GroupArchivedMessage.archive!(id, topic)
           group_id = id
         else
-          GroupArchivedMessage.move_to_inbox!(id, topic.id)
+          GroupArchivedMessage.move_to_inbox!(id, topic)
         end
       end
     end
 
     if topic.allowed_users.include?(current_user)
       if archive
-        UserArchivedMessage.archive!(current_user.id, topic.id)
+        UserArchivedMessage.archive!(current_user.id, topic)
       else
-        UserArchivedMessage.move_to_inbox!(current_user.id, topic.id)
+        UserArchivedMessage.move_to_inbox!(current_user.id, topic)
       end
     end
 
@@ -486,9 +486,10 @@ class TopicsController < ApplicationController
   end
 
   def invite
-    username_or_email = params[:user] ? fetch_username : fetch_email
-
     topic = Topic.find_by(id: params[:topic_id])
+    raise Discourse::InvalidParameters.new unless topic
+
+    username_or_email = params[:user] ? fetch_username : fetch_email
 
     groups = Group.lookup_groups(
       group_ids: params[:group_ids],
@@ -501,6 +502,7 @@ class TopicsController < ApplicationController
     begin
       if topic.invite(current_user, username_or_email, group_ids, params[:custom_message])
         user = User.find_by_username_or_email(username_or_email)
+
         if user
           render_json_dump BasicUserSerializer.new(user, scope: guardian, root: 'user')
         else

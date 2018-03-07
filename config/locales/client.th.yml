@@ -293,6 +293,7 @@ th:
         other: "%{count} ผู้ใช้"
     group_histories:
       actions:
+        change_group_setting: "แก้ไขการตั้งค่ากลุ่ม"
         add_user_to_group: "เพิ่มผู้ใช้"
         remove_user_from_group: "ลบผู้ใช้"
     groups:
@@ -308,10 +309,12 @@ th:
         full_name: 'ชื่อ-นามสกุล'
         add_members: "เพิ่มสมาชิก"
         delete_member_confirm: "ลบ '%{username}' ออกจาก '%{group}' กลุ่ม?"
+      public_exit: "อนุญาตให้ผู้ใช้ออกจากกลุ่มอย่างอิสระ"
       add: "เพิ่ม"
       join: "เข้าร่วมกลุ่ม"
       leave: "ออกจากกลุ่ม"
       request: "ส่งคำขอเข้าร่วมกลุ่ม"
+      message: "ข้อความ<br><div><br data-mce-bogus=\"1\"></div>"
       automatic_group: กลุ่มอัตโนมัติ
       closed_group: กลุ่มปิด
       is_group_user: "คุณเป็นสมาชิกของกลุ่มนี้"
@@ -319,7 +322,6 @@ th:
       name: "ชื่อ"
       user_count: "จำนวนสมาชิก"
       bio: "เกี่ยวกับกลุ่ม"
-      selector_placeholder: "เพิ่มสมาชิก"
       owner: "เจ้าของ"
       index:
         title: "กลุ่ม"
@@ -330,7 +332,10 @@ th:
       posts: "โพสต์"
       mentions: "พูดถึง"
       messages: "ข้อความ"
+      visibility_levels:
+        public: "ทุกคน"
       alias_levels:
+        messageable: "ใครสามารถส่งข้อความในกลุ่มนี้?"
         nobody: "ไม่มี"
         only_admins: "เฉพาะผู้ดูแลระบบ"
         mods_and_admins: "ผู้ดูแลระบบและผู้ตรวจสอบ"
@@ -491,12 +496,18 @@ th:
         move_to_archive: "เก็บ"
         failed_to_move: "เกิดความผิดพลาดในการย้ายหัวข้อที่เลือก (อาจเกิดจาดเครือข่ายของคุณล่ม)"
         select_all: "เลือกทั้งหมด"
+      preferences_nav:
+        profile: "ข้อมูลผู้ใช้<br><div><br data-mce-bogus=\"1\"></div>"
+        emails: "อีเมล"
+        tags: "ป้าย"
       change_password:
         success: "(อีเมลที่ส่งแล้ว)"
         in_progress: "(กำลังส่งอีเมล)"
         error: "(ผิดพลาด)"
         action: "ส่งอีเมลรีเซ็ทรหัสผ่าน"
         set_password: "ตั้งรหัสผ่าน"
+        choose_new: "เลือกรหัสผู้ใช้ใหม่"
+        choose: "เลือกรหัสผู้ใช้"
       change_about:
         title: "เปลี่ยนข้อมูลเกี่ยวกับฉัน"
         error: "เกิดความผิดพลาดในการแก้ไขค่านี้"
@@ -537,11 +548,13 @@ th:
           other: "เราจะอีเมลหาคุณเฉพาะสิ่งที่คุณไม่ได้เห็นในช่วง {{count}} นาที"
       name:
         title: "ชื่อ"
+        instructions: "ชื่อเต็มของคุณ (ไม่บังคับ)"
         instructions_required: "ชื่อเต็มของคุณ"
         too_short: "ชื่อของคุณสั้นไป"
         ok: "ชื่อของคุณมีลักษณะที่ดี"
       username:
         title: "ชื่อผู้ใช้"
+        instructions: "ไม่เหมือนใคร, ไม่มีช่องว่าง, สั้น"
         short_instructions: "ผู้คนสามารถพูดถึงคุณ @{{username}}"
         available: "ชื่อผู้ใช้ของคุณสามารถใช้ได้"
         not_available: "ใช้การไม่ได้ ลอง{{suggestion}}?"
@@ -1127,7 +1140,7 @@ th:
         select_all: เลือกทั้งหมด
         deselect_all: ไม่เลือกทั้งหมด
         description:
-          other: คุณได้เลือก <b>{{count}}</b> โพสต์.
+          other: "คุณได้เลือก <b>{{count}}</b> โพสต์."
     post:
       edit_reason: "เหตุผล:"
       post_number: "โพสต์ {{number}}"
@@ -1378,7 +1391,6 @@ th:
         edit: "แก้กลุ่ม"
         refresh: "รีโหลด"
         new: "ใหม่"
-        selector_placeholder: "ชื่อผู้ใช้ใหม่"
         about: "แก้ไขสมาชิกและชื่อกลุ่มของคุณได้ที่นี่"
         group_members: "ชื่อสมาชิก"
         delete: "ลบ"
@@ -1582,8 +1594,6 @@ th:
         recommended: "เราแนะนำให้คุณแก้ไขข้อความให้ตรงกับความต้องการของคุณ:"
       site_settings:
         title: 'การตั้งค่า'
-        reset: 'ล้าง'
-        none: 'ไม่มี'
         no_results: "ไม่มีผลการค้นหา"
         clear_filter: "ล้าง"
         add_url: "เพิ่ม URL"

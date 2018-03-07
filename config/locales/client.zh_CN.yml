@@ -360,7 +360,6 @@ zh_CN:
       name: "群组ID"
       user_count: "成员数目"
       bio: "关于群组"
-      selector_placeholder: "添加成员"
       owner: "所有者"
       index:
         title: "群组"
@@ -508,6 +507,7 @@ zh_CN:
       disable_jump_reply: "回复后不跳转至新帖子"
       dynamic_favicon: "在浏览器图标中显示主题更新数量"
       theme_default_on_all_devices: "将其设为我所有设备上的默认主题"
+      allow_private_messages: "允许其他用户发送私信给我"
       external_links_in_new_tab: "在新标签页打开外部链接"
       enable_quoting: "在选择文字时显示引用回复按钮"
       change: "修改"
@@ -603,6 +603,9 @@ zh_CN:
         set_password: "设置密码"
         choose_new: "输入新密码"
         choose: "输入密码"
+      second_factor:
+        title: "双重验证"
+        info_prompt: "什么是双重验证？"
       change_about:
         title: "更改个人信息"
         error: "提交修改时出错了"
@@ -1620,7 +1623,7 @@ zh_CN:
         select_all: 全选
         deselect_all: 全不选
         description:
-          other: 已选择 <b>{{count}}</b> 个帖子。
+          other: "已选择 <b>{{count}}</b> 个帖子。"
     post:
       quote_reply: "引用"
       edit: "<i class='fa fa-pencil'></i> {{link}} {{replyAvatar}} {{username}}"
@@ -1843,7 +1846,6 @@ zh_CN:
       email_in_disabled: "站点设置中已经禁用通过邮件发表新主题。欲启用通过邮件发表新主题，"
       email_in_disabled_click: '启用“邮件发表”设置。'
       mailinglist_mirror: "分类镜像了一个邮件列表"
-      suppress_from_homepage: "不在主页中显示这个分类。"
       show_subcategory_list: "在这个分类中把子分类列表显示在主题的上面"
       num_featured_topics: "分类页面上显示的主题数量："
       subcategory_num_featured_topics: "父分类页面上的推荐主题数量："
@@ -2358,7 +2360,6 @@ zh_CN:
         edit: "编辑群组"
         refresh: "刷新"
         new: "新群组"
-        selector_placeholder: "输入用户名"
         about: "在这里编辑群组的名字和成员"
         group_members: "群组成员"
         delete: "删除"
@@ -2994,6 +2995,7 @@ zh_CN:
         private_topics_count: 私有主题数量
         posts_read_count: 已阅帖子数量
         post_count: 发表的帖子数量
+        second_factor_enabled: 双重验证已启用
         topics_entered: 已查看的主题数量
         flags_given_count: 提交标记数量
         flags_received_count: 被他人标记数量
@@ -3132,10 +3134,7 @@ zh_CN:
         recommended: "我们建议自定义以下文本以符合你的需求："
         show_overriden: '只显示修改过的'
       site_settings:
-        show_overriden: '只显示修改过的'
         title: '设置'
-        reset: '重置为默认'
-        none: '无'
         no_results: "找不到结果。"
         clear_filter: "清除"
         add_url: "增加链接"

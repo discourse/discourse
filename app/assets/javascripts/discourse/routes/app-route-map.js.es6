@@ -96,6 +96,7 @@ export default function() {
       this.route('archive');
       this.route('group', { path: 'group/:name'});
       this.route('groupArchive', { path: 'group/:name/archive'});
+      this.route('tag', { path: 'tag/:id'});
     });
 
     this.route('preferences', { resetNamespace: true }, function() {
@@ -110,6 +111,7 @@ export default function() {
 
       this.route('username');
       this.route('email');
+      this.route('second-factor');
       this.route('about', { path: '/about-me' });
       this.route('badgeTitle', { path: '/badge_title' });
       this.route('card-badge', { path: '/card-badge' });

@@ -10,6 +10,12 @@
 {{watched-word-uploader uploading=uploading actionKey=actionNameKey done="uploadComplete"}}
 
 <div class='clearfix'></div>
+<div>
+  <label class="show-words-checkbox">
+    {{input type="checkbox" checked=adminWatchedWords.showWords disabled=adminWatchedWords.disableShowWords}}
+    {{i18n 'admin.watched_words.show_words'}}
+  </label>
+</div>
 <div class="watched-words-list">
   {{#if showWordsList}}
     {{#each filteredContent as |word| }}

@@ -305,6 +305,12 @@ class StaffActionLogger
                                           target_user_id: user.id))
   end
 
+  def log_disable_second_factor_auth(user, opts = {})
+    raise Discourse::InvalidParameters.new(:user) unless user
+    UserHistory.create(params(opts).merge(action: UserHistory.actions[:disabled_second_factor],
+                                          target_user_id: user.id))
+  end
+
   def log_grant_admin(user, opts = {})
     raise Discourse::InvalidParameters.new(:user) unless user
     UserHistory.create(params(opts).merge(action: UserHistory.actions[:grant_admin],

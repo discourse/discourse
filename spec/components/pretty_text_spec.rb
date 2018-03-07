@@ -776,15 +776,6 @@ describe PrettyText do
     end
   end
 
-  describe "censored_pattern site setting" do
-    it "can be cleared if it causes cooking to timeout" do
-      SiteSetting.censored_pattern = "evilregex"
-      described_class.stubs(:markdown).raises(MiniRacer::ScriptTerminatedError)
-      PrettyText.cook("Protect against it plz.") rescue nil
-      expect(SiteSetting.censored_pattern).to be_blank
-    end
-  end
-
   it "replaces skin toned emoji" do
     expect(PrettyText.cook("hello 👱🏿‍♀️")).to eq("<p>hello <img src=\"/images/emoji/twitter/blonde_woman/6.png?v=5\" title=\":blonde_woman:t6:\" class=\"emoji\" alt=\":blonde_woman:t6:\"></p>")
     expect(PrettyText.cook("hello 👩‍🎤")).to eq("<p>hello <img src=\"/images/emoji/twitter/woman_singer.png?v=5\" title=\":woman_singer:\" class=\"emoji\" alt=\":woman_singer:\"></p>")
@@ -952,10 +943,8 @@ HTML
     SiteSetting.enable_inline_onebox_on_all_domains = true
     InlineOneboxer.purge("http://cnn.com/a")
 
-    stub_request(:head, "http://cnn.com/a").to_return(status: 200)
-
     stub_request(:get, "http://cnn.com/a").
-      to_return(status: 200, body: "<html><head><title>news</title></head></html>", headers: {})
+      to_return(status: 200, body: "<html><head><title>news</title></head></html>")
 
     expect(PrettyText.cook("- http://cnn.com/a\n- a http://cnn.com/a").split("news").length).to eq(3)
     expect(PrettyText.cook("- http://cnn.com/a\n    - a http://cnn.com/a").split("news").length).to eq(3)
@@ -965,10 +954,8 @@ HTML
     SiteSetting.enable_inline_onebox_on_all_domains = true
     InlineOneboxer.purge("http://cnn.com?a")
 
-    stub_request(:head, "http://cnn.com?a").to_return(status: 200)
-
     stub_request(:get, "http://cnn.com?a").
-      to_return(status: 200, body: "<html><head><title>news</title></head></html>", headers: {})
+      to_return(status: 200, body: "<html><head><title>news</title></head></html>")
 
     expect(PrettyText.cook("- http://cnn.com?a\n- a http://cnn.com?a").split("news").length).to eq(3)
     expect(PrettyText.cook("- http://cnn.com?a\n    - a http://cnn.com?a").split("news").length).to eq(3)
@@ -981,9 +968,8 @@ HTML
     SiteSetting.enable_inline_onebox_on_all_domains = true
     InlineOneboxer.purge("http://cnn.com/")
 
-    stub_request(:head, "http://cnn.com/").to_return(status: 200)
     stub_request(:get, "http://cnn.com/").
-      to_return(status: 200, body: "<html><head><title>news</title></head></html>", headers: {})
+      to_return(status: 200, body: "<html><head><title>news</title></head></html>")
 
     expect(PrettyText.cook("- http://cnn.com/\n- a http://cnn.com/").split("news").length).to eq(1)
     expect(PrettyText.cook("- cnn.com\n    - a http://cnn.com/").split("news").length).to eq(1)
@@ -1274,6 +1260,11 @@ HTML
     html = <<~HTML
       <p>www.cnn.com test.it http://test.com https://test.ab https://a</p>
     HTML
+  end
+
+  it "has a proper data whitlist on div" do
+    cooked = PrettyText.cook("<div data-theme-a='a'>test</div>")
+    expect(cooked).to include("data-theme-a")
   end
 
 end

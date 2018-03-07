@@ -460,6 +460,7 @@ class ApplicationController < ActionController::Base
     def preload_anonymous_data
       store_preloaded("site", Site.json_for(guardian))
       store_preloaded("siteSettings", SiteSetting.client_settings_json)
+      store_preloaded("themeSettings", Theme.settings_for_client(@theme_key))
       store_preloaded("customHTML", custom_html_json)
       store_preloaded("banner", banner_json)
       store_preloaded("customEmoji", custom_emoji)
@@ -656,6 +657,10 @@ class ApplicationController < ActionController::Base
       @slug =  (params[:id].class == String ? params[:id] : '') if @slug.blank?
       @slug.tr!('-', ' ')
       render_to_string status: status, layout: layout, formats: [:html], template: '/exceptions/not_found'
+    end
+
+    def is_asset_path
+      request.env['DISCOURSE_IS_ASSET_PATH'] = 1
     end
 
   protected

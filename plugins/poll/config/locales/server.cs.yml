@@ -7,8 +7,10 @@
 
 cs:
   site_settings:
+    poll_enabled: "Povolit hlasování?"
     poll_maximum_options: "Maximální počet možností povolených v hlasování."
     poll_edit_window_mins: "Počet minut po vytvoření příspěvku, po kterých je ještě možné upravit hlasování."
+    poll_minimum_trust_level_to_create: "Nastav minimální důvěryhodnost pro vytvoření hlasování."
   poll:
     multiple_polls_without_name: "Je zde několik hlasování bez jména. Použijte atribut '<code>jméno</code>' pro jednoznačnou identifikaci Vašich hlasování."
     multiple_polls_with_same_name: "Více hlasování má stejné jméno: <strong>%{name}</strong>.  Použijte atribut '<code>name</code>' pro jednoznačnou identifikaci Vaše hlasování."
@@ -40,5 +42,6 @@ cs:
     poll_must_be_open_to_vote: "Hlasování musí být otevřené, aby bylo možné hlasovat."
     topic_must_be_open_to_toggle_status: "Téma musí být otevřené, aby bylo možné změnit status."
     only_staff_or_op_can_toggle_status: "Pouze moderátor nebo přispěvatel může změnit status hlasování."
+    insufficient_rights_to_create: "Nemáte oprávnění k vytvoření hlasování."
     email:
       link_to_poll: "Klikněte pro zobrazení hlasování."

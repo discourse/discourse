@@ -2,6 +2,7 @@ import RestModel from 'discourse/models/rest';
 import { default as computed } from 'ember-addons/ember-computed-decorators';
 
 const THEME_UPLOAD_VAR = 2;
+const FIELDS_IDS = [0, 1, 5];
 
 const Theme = RestModel.extend({
 
@@ -14,13 +15,11 @@ const Theme = RestModel.extend({
     }
 
     let hash = {};
-    if (fields) {
-      fields.forEach(field=>{
-        if (!field.type_id || field.type_id < THEME_UPLOAD_VAR) {
-          hash[this.getKey(field)] = field;
-        }
-      });
-    }
+    fields.forEach(field => {
+      if (!field.type_id || FIELDS_IDS.includes(field.type_id)) {
+        hash[this.getKey(field)] = field;
+      }
+    });
     return hash;
   },
 
@@ -29,11 +28,11 @@ const Theme = RestModel.extend({
     if (!fields) {
       return [];
     }
-    return fields.filter((f)=> f.target === 'common' && f.type_id === THEME_UPLOAD_VAR);
+    return fields.filter(f => f.target === 'common' && f.type_id === THEME_UPLOAD_VAR);
   },
 
   getKey(field){
-    return field.target + " " + field.name;
+    return `${field.target} ${field.name}`;
   },
 
   hasEdited(target, name){
@@ -151,6 +150,11 @@ const Theme = RestModel.extend({
       .then(() => this.set("changed", false));
   },
 
+  saveSettings(name, value) {
+    const settings = {};
+    settings[name] = value;
+    return this.save({ settings });
+  }
 });
 
 export default Theme;

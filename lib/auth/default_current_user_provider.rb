@@ -5,15 +5,16 @@ require_dependency "rate_limiter"
 
 class Auth::DefaultCurrentUserProvider
 
-  CURRENT_USER_KEY ||= "_DISCOURSE_CURRENT_USER".freeze
-  API_KEY ||= "api_key".freeze
-  USER_API_KEY ||= "HTTP_USER_API_KEY".freeze
-  USER_API_CLIENT_ID ||= "HTTP_USER_API_CLIENT_ID".freeze
-  API_KEY_ENV ||= "_DISCOURSE_API".freeze
-  USER_API_KEY_ENV ||= "_DISCOURSE_USER_API".freeze
-  TOKEN_COOKIE ||= "_t".freeze
-  PATH_INFO ||= "PATH_INFO".freeze
+  CURRENT_USER_KEY ||= "_DISCOURSE_CURRENT_USER"
+  API_KEY ||= "api_key"
+  USER_API_KEY ||= "HTTP_USER_API_KEY"
+  USER_API_CLIENT_ID ||= "HTTP_USER_API_CLIENT_ID"
+  API_KEY_ENV ||= "_DISCOURSE_API"
+  USER_API_KEY_ENV ||= "_DISCOURSE_USER_API"
+  TOKEN_COOKIE ||= "_t"
+  PATH_INFO ||= "PATH_INFO"
   COOKIE_ATTEMPTS_PER_MIN ||= 10
+  BAD_TOKEN ||= "_DISCOURSE_BAD_TOKEN"
 
   # do all current user initialization here
   def initialize(env)
@@ -58,7 +59,8 @@ class Auth::DefaultCurrentUserProvider
         current_user = @user_token.try(:user)
       end
 
-      unless current_user
+      if !current_user
+        @env[BAD_TOKEN] = true
         begin
           limiter.performed!
         rescue RateLimiter::LimitExceeded
@@ -69,6 +71,8 @@ class Auth::DefaultCurrentUserProvider
           )
         end
       end
+    elsif @env['HTTP_DISCOURSE_LOGGED_IN']
+      @env[BAD_TOKEN] = true
     end
 
     if current_user && should_update_last_seen?
@@ -86,8 +90,11 @@ class Auth::DefaultCurrentUserProvider
       raise Discourse::InvalidAccess if current_user.suspended? || !current_user.active
       @env[API_KEY_ENV] = true
 
-      limiter_min = RateLimiter.new(nil, "admin_api_min_#{api_key}", GlobalSetting.max_admin_api_reqs_per_key_per_minute, 60)
-      limiter_min.performed!
+      # we do not run this rate limiter while profiling
+      if Rails.env != "profile"
+        limiter_min = RateLimiter.new(nil, "admin_api_min_#{api_key}", GlobalSetting.max_admin_api_reqs_per_key_per_minute, 60)
+        limiter_min.performed!
+      end
     end
 
     # user api key handling

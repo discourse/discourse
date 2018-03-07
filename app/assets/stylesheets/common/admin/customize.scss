@@ -36,7 +36,7 @@
   .admin-footer {
     margin-top: 20px;
   }
-  .select2-chosen, .color-schemes li {
+  .color-schemes li {
     .fa {
       margin-right: 6px;
       color: dark-light-choose($primary-medium, $secondary-medium);
@@ -52,6 +52,21 @@
     h3 {
       margin-bottom: 10px;
       margin-top: 30px;
+    }
+  }
+
+  .theme.settings {
+    .theme-setting {
+      padding-bottom: 0;
+      padding-top: 18px;
+      min-height: 35px;
+    }
+    .setting-label {
+      width: 25%;
+      h3 {
+        margin-top: 0;
+        margin-bottom: .5rem;
+      }
     }
   }
 

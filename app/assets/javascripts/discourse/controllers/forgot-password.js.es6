@@ -29,45 +29,36 @@ export default Ember.Controller.extend(ModalFunctionality, {
     },
 
     resetPassword() {
-      return this._submit('/session/forgot_password', 'forgot_password.complete');
-    },
+      if (this.get('submitDisabled')) return false;
+      this.set('disabled', true);
 
-    emailLogin() {
-      return this._submit('/u/email-login', 'email_login.complete');
-    }
-  },
+      this.clearFlash();
 
-  _submit(route, translationKey) {
-    if (this.get('submitDisabled')) return false;
-    this.set('disabled', true);
-
-    ajax(route, {
-      data: { login: this.get('accountEmailOrUsername').trim() },
-      type: 'POST'
-    }).then(data => {
-      const escaped = escapeExpression(this.get('accountEmailOrUsername'));
-      const isEmail = this.get('accountEmailOrUsername').match(/@/);
-      let key = `${translationKey}_${isEmail ? 'email' : 'username'}`;
-      let extraClass;
-
-      if (data.user_found === true) {
-        key += '_found';
-        this.set('accountEmailOrUsername', '');
-        this.set('offerHelp', I18n.t(key, { email: escaped, username: escaped }));
-      } else {
-        if (data.user_found === false) {
-          key += '_not_found';
-          extraClass = 'error';
+      ajax('/session/forgot_password', {
+        data: { login: this.get('accountEmailOrUsername').trim() },
+        type: 'POST'
+      }).then(data => {
+        const accountEmailOrUsername = escapeExpression(this.get("accountEmailOrUsername"));
+        const isEmail = accountEmailOrUsername.match(/@/);
+        let key = `forgot_password.complete_${isEmail ? 'email' : 'username'}`;
+        if (data.user_found) {
+          this.set('offerHelp', I18n.t(`${key}_found`, {
+            email: accountEmailOrUsername,
+            username: accountEmailOrUsername
+          }));
+        } else {
+          this.flash(I18n.t(`${key}_not_found`, {
+            email: accountEmailOrUsername,
+            username: accountEmailOrUsername
+          }), 'error');
         }
+      }).catch(e => {
+        this.flash(extractError(e), 'error');
+      }).finally(() => {
+        this.set('disabled', false);
+      });
 
-        this.flash(I18n.t(key, { email: escaped, username: escaped }), extraClass);
-      }
-    }).catch(e => {
-      this.flash(extractError(e), 'error');
-    }).finally(() => {
-      this.set('disabled', false);
-    });
-
-    return false;
+      return false;
+    }
   },
 });

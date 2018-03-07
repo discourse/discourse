@@ -12,6 +12,18 @@
   display: none;
 }
 
+#login-form {
+  a {
+    color: dark-light-choose($primary-high, $secondary-low);
+  }
+  td {
+    padding-right: 5px;
+  }
+}
+
+#new-account-link {
+  cursor: pointer;
+}
 
 $label-width: 92px;
 $input-width: 220px;

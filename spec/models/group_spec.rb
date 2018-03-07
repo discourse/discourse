@@ -5,6 +5,25 @@ describe Group do
   let(:user) { Fabricate(:user) }
   let(:group) { Fabricate(:group) }
 
+  describe "#posts_for" do
+    it "returns the post in the group" do
+      p = Fabricate(:post)
+      group.add(p.user)
+
+      posts = group.posts_for(Guardian.new)
+      expect(posts).to include(p)
+    end
+
+    it "doesn't include unlisted posts" do
+      p = Fabricate(:post)
+      p.topic.update_column(:visible, false)
+      group.add(p.user)
+
+      posts = group.posts_for(Guardian.new)
+      expect(posts).not_to include(p)
+    end
+  end
+
   describe '#builtin' do
     context "verify enum sequence" do
       before do
@@ -618,6 +637,13 @@ describe Group do
       group.bulk_add([user.id, admin.id])
 
       expect(group.group_users.map(&:user_id)).to contain_exactly(user.id, admin.id)
+    end
+
+    it 'updates group user count' do
+      expect {
+        group.bulk_add([user.id, admin.id])
+        group.reload
+      }.to change { group.user_count }.by(2)
     end
   end
 

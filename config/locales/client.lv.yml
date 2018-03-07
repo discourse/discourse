@@ -400,7 +400,6 @@ lv:
       name: "Vārds"
       user_count: "Dalībnieku skaits"
       bio: "Par grupu"
-      selector_placeholder: "Pievienot dalībniekus"
       owner: "īpašnieks"
       index:
         title: "Grupas"
@@ -1619,9 +1618,9 @@ lv:
         select_all: izvēlēties visu
         deselect_all: visiem noņemt izvēli
         description:
-          zero: Jūs esat izvēlējies <b>0</b> ierakstu.
-          one: Jūs esat izvēlējies <b>1</b> ierakstu.
-          other: Jūs esat izvēlējies <b>{{count}}</b> ierakstus.
+          zero: "Jūs esat izvēlējies <b>0</b> ierakstu."
+          one: "Jūs esat izvēlējies <b>1</b> ierakstu."
+          other: "Jūs esat izvēlējies <b>{{count}}</b> ierakstus."
     post:
       quote_reply: "Citāts"
       edit_reason: "Iemesls:"
@@ -1873,7 +1872,6 @@ lv:
       images: "Attēli"
       email_in_allow_strangers: "Pieņemt e-pastus no anonīmiem lietotājiem bez profiliem"
       email_in_disabled: "Jaunu tēmu ievietošana, izmantojot e-pastu, ir atcelta foruma iestatījumos. Lai atļautu ievietot jaunas tēmas, izmantojot e-pastu,"
-      suppress_from_homepage: "Nerādīt šo sadaļu mājas lapā."
       show_subcategory_list: "Rādīt apakšsadaļu sarakstu virs tēmām šai sadaļā."
       num_featured_topics: "Sadaļu lapā parādīto tēmu skaits:"
       all_topics_wiki: "Pārveidot jaunās tēmas par wiki pēc noklusējuma."
@@ -2379,7 +2377,6 @@ lv:
         edit: "Labot grupas"
         refresh: "Pārlādēt"
         new: "Jauns"
-        selector_placeholder: "ievadi lietotājvārdu"
         about: "Labot jūsu piederīgu grupām un to nosaukumus"
         group_members: "Grupas biedri"
         delete: "Dzēst"
@@ -3033,10 +3030,7 @@ lv:
         recommended: "Iesakām pielāgot šo tekstu jūsu vajadzībām:"
         show_overriden: 'Rādīt tikai aizstātos'
       site_settings:
-        show_overriden: 'Rādīt tikai aizstātos'
         title: 'Iestatījumi'
-        reset: 'atiestatīt'
-        none: 'nekas'
         no_results: "Nekas nav atrasts."
         clear_filter: "Noņemt"
         add_url: "Pievienot URL"

@@ -31,7 +31,7 @@ class Pbkdf2
 
   # fallback xor in case we need it for jruby ... way slower
   def self.xor(x, y)
-    x.bytes.zip(y.bytes).map { |x, y| x ^ y }.pack('c*')
+    x.bytes.zip(y.bytes).map { |a, b| a ^ b }.pack('c*')
   end
 
   def self.prf(hash_function, password, data)

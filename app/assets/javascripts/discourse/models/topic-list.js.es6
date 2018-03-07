@@ -70,17 +70,17 @@ const TopicList = RestModel.extend({
 
 
   // loads topics with these ids "before" the current topics
-  loadBefore(topic_ids) {
+  loadBefore(topic_ids, storeInSession) {
     const topicList = this,
           topics = this.get('topics');
 
     // refresh dupes
     topics.removeObjects(topics.filter(topic => topic_ids.indexOf(topic.get('id')) >= 0));
 
-    const url = `${Discourse.getURL("/")}${this.get('filter')}?topic_ids=${topic_ids.join(",")}`;
+    const url = `${Discourse.getURL("/")}${this.get('filter')}.json?topic_ids=${topic_ids.join(",")}`;
     const store = this.store;
 
-    return ajax({ url }).then(result => {
+    return ajax({ url, data: this.get("params") }).then(result => {
       let i = 0;
       topicList.forEachNew(TopicList.topicsFrom(store, result), function(t) {
         // highlight the first of the new topics so we can get a visual feedback
@@ -88,7 +88,7 @@ const TopicList = RestModel.extend({
         topics.insertAt(i,t);
         i++;
       });
-      Discourse.Session.currentProp('topicList', topicList);
+      if (storeInSession) Discourse.Session.currentProp('topicList', topicList);
     });
   }
 });

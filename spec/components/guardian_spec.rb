@@ -44,7 +44,7 @@ describe Guardian do
     end
   end
 
-  describe 'post_can_act?' do
+  describe '#post_can_act?' do
     let(:post) { build(:post) }
     let(:user) { build(:user) }
 
@@ -100,9 +100,11 @@ describe Guardian do
     end
 
     it "returns false when you already flagged a post" do
-      expect(Guardian.new(user).post_can_act?(post, :off_topic, opts: {
-        taken_actions: { PostActionType.types[:spam] => 1 }
-      })).to be_falsey
+      PostActionType.notify_flag_types.each do |type, _id|
+        expect(Guardian.new(user).post_can_act?(post, :off_topic, opts: {
+          taken_actions: { PostActionType.types[type] => 1 }
+        })).to be_falsey
+      end
     end
 
     it "returns false for notify_user if private messages are disabled" do
@@ -342,11 +344,6 @@ describe Guardian do
       expect(guardian.can_see_post_actors?(topic, PostActionType.types[:notify_user])).to be_falsey
 
       expect(Guardian.new(moderator).can_see_post_actors?(topic, PostActionType.types[:notify_user])).to be_truthy
-    end
-
-    it 'returns false for private votes' do
-      topic.expects(:has_meta_data_boolean?).with(:private_poll).returns(true)
-      expect(Guardian.new(user).can_see_post_actors?(topic, PostActionType.types[:vote])).to be_falsey
     end
 
   end
@@ -984,19 +981,6 @@ describe Guardian do
         topic.archived = true
         expect(Guardian.new(user).post_can_act?(post, :like)).to be_falsey
       end
-
-      describe 'multiple voting' do
-
-        it "isn't allowed if the user voted and the topic doesn't allow multiple votes" do
-          Topic.any_instance.expects(:has_meta_data_boolean?).with(:single_vote).returns(true)
-          expect(Guardian.new(user).can_vote?(post, voted_in_topic: true)).to be_falsey
-        end
-
-        it "is allowed if the user voted and the topic doesn't allow multiple votes" do
-          expect(Guardian.new(user).can_vote?(post, voted_in_topic: false)).to be_truthy
-        end
-      end
-
     end
   end
 
@@ -1110,6 +1094,11 @@ describe Guardian do
 
     it 'returns true when an admin' do
       expect(Guardian.new(admin).can_convert_topic?(topic)).to be_truthy
+    end
+
+    it 'returns false when personal messages are disabled' do
+      SiteSetting.enable_personal_messages = false
+      expect(Guardian.new(admin).can_convert_topic?(topic)).to be_falsey
     end
   end
 
@@ -1225,6 +1214,11 @@ describe Guardian do
         expect(Guardian.new(trust_level_4).can_edit?(post)).to be_truthy
       end
 
+      it 'returns false as a TL4 user if trusted_users_can_edit_others is true' do
+        SiteSetting.trusted_users_can_edit_others = false
+        expect(Guardian.new(trust_level_4).can_edit?(post)).to eq(false)
+      end
+
       it 'returns false when trying to edit a post with no trust' do
         SiteSetting.min_trust_to_edit_post = 2
         post.user.trust_level = 1
@@ -1332,6 +1326,11 @@ describe Guardian do
           expect(Guardian.new(trust_level_3).can_edit?(topic)).to eq(true)
         end
 
+        it 'is false at TL3, if `trusted_users_can_edit_others` is false' do
+          SiteSetting.trusted_users_can_edit_others = false
+          expect(Guardian.new(trust_level_3).can_edit?(topic)).to eq(false)
+        end
+
         it "returns false when the category is read only" do
           topic.category.set_permissions(everyone: :readonly)
           topic.category.save
@@ -1379,6 +1378,11 @@ describe Guardian do
 
         it 'returns true at trust level 4' do
           expect(Guardian.new(trust_level_4).can_edit?(archived_topic)).to be_truthy
+        end
+
+        it 'is false at TL4, if `trusted_users_can_edit_others` is false' do
+          SiteSetting.trusted_users_can_edit_others = false
+          expect(Guardian.new(trust_level_4).can_edit?(archived_topic)).to eq(false)
         end
 
         it 'returns false at trust level 3' do
@@ -2010,6 +2014,7 @@ describe Guardian do
 
       it "is true if user is not an admin and first post is not too old" do
         user = Fabricate.build(:user, created_at: 100.days.ago)
+        user.stubs(:post_count).returns(10)
         user.stubs(:first_post_created_at).returns(9.days.ago)
         SiteSetting.delete_user_max_post_age = 10
         expect(Guardian.new(actor).can_delete_user?(user)).to be_truthy
@@ -2021,20 +2026,33 @@ describe Guardian do
 
       it "is false if user's first post is too old" do
         user = Fabricate.build(:user, created_at: 100.days.ago)
+        user.stubs(:post_count).returns(10)
         user.stubs(:first_post_created_at).returns(11.days.ago)
         SiteSetting.delete_user_max_post_age = 10
         expect(Guardian.new(actor).can_delete_user?(user)).to be_falsey
       end
     end
 
+    shared_examples "can_delete_user staff examples" do
+      it "is true if posts are less than or equal to 5" do
+        user = Fabricate.build(:user, created_at: 100.days.ago)
+        user.stubs(:post_count).returns(4)
+        user.stubs(:first_post_created_at).returns(11.days.ago)
+        SiteSetting.delete_user_max_post_age = 10
+        expect(Guardian.new(actor).can_delete_user?(user)).to be_truthy
+      end
+    end
+
     context "for moderators" do
       let(:actor) { moderator }
       include_examples "can_delete_user examples"
+      include_examples "can_delete_user staff examples"
     end
 
     context "for admins" do
       let(:actor) { admin }
       include_examples "can_delete_user examples"
+      include_examples "can_delete_user staff examples"
     end
   end
 

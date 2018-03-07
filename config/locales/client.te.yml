@@ -779,8 +779,8 @@ te:
         select_all: అన్నీ ఎంచుకో
         deselect_all: అన్నీ వియెంచుకో
         description:
-          one: మీరు <b>1</b> టపా ఎంచుకున్నారు
-          other: మీరు <b>{{count}}</b> టపాలు ఎంచుకున్నారు
+          one: "మీరు <b>1</b> టపా ఎంచుకున్నారు"
+          other: "మీరు <b>{{count}}</b> టపాలు ఎంచుకున్నారు"
     post:
       edit_reason: "కారణం:"
       post_number: "టపా {{number}}"
@@ -1140,7 +1140,6 @@ te:
         edit: "గుంపులు సవరించు"
         refresh: "తాజా పరుచు"
         new: "కొత్త"
-        selector_placeholder: "సభ్యనామం రాయండి"
         about: "మీ గుంపు మెంబర్షిప్పు మరియు పేర్లు ఇక్కడ సవరించండి"
         group_members: "గుంపు సభ్యులు"
         delete: "తొలగించు"
@@ -1550,10 +1549,7 @@ te:
       site_text:
         title: 'పాఠ్య కాంటెంటు'
       site_settings:
-        show_overriden: 'ప్రాబల్యం ఉన్న వాటిని మాత్రమే చూపించు'
         title: 'అమరికలు'
-        reset: 'రీసెట్'
-        none: 'ఏదీకాదు'
         no_results: "ఏ ఫలితాలూ కనిపించలేదు."
         clear_filter: "శుభ్రపరుచు"
         add_url: "URL కలుపు"

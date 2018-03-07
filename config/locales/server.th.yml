@@ -98,7 +98,7 @@ th:
     user_posted_pm_staged:
       text_body_template: |2
 
-        %{message}
+          %{message}
   page_not_found:
     see_more: "อื่น"
     search_google: "กูเกิ้ล"

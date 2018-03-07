@@ -138,10 +138,12 @@ export default function transformPost(currentUser, site, post, prevPost, nextPos
     postAtts.topicCreatedAt = topic.created_at;
     postAtts.createdByUsername = createdBy.username;
     postAtts.createdByAvatarTemplate = createdBy.avatar_template;
+    postAtts.createdByName = createdBy.name;
 
     postAtts.lastPostUrl = topic.get('lastPostUrl');
     postAtts.lastPostUsername = details.last_poster.username;
     postAtts.lastPostAvatarTemplate = details.last_poster.avatar_template;
+    postAtts.lastPostName = details.last_poster.name;
     postAtts.lastPostAt = topic.last_posted_at;
 
     postAtts.topicReplyCount = topic.get('replyCount');

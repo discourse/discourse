@@ -8,10 +8,11 @@
           <div class='title'>
             <h3>{{bg.badgeGrouping.displayName}}</h3>
           </div>
-
-          {{#each bg.badges as |b|}}
-            {{badge-card badge=b filterUser=b.has_badge username=currentUser.username}}
-          {{/each}}
+          <div class="badge-group-list">
+            {{#each bg.badges as |b|}}
+              {{badge-card badge=b filterUser=b.has_badge username=currentUser.username}}
+            {{/each}}
+          </div>
         </div>
       {{/each}}
     </div>

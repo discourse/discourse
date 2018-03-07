@@ -23,9 +23,6 @@ class Category < ActiveRecord::Base
   has_many :category_featured_topics
   has_many :featured_topics, through: :category_featured_topics, source: :topic
 
-  has_many :category_featured_users
-  has_many :featured_users, through: :category_featured_users, source: :user
-
   has_many :category_groups, dependent: :destroy
   has_many :groups, through: :category_groups
 
@@ -199,7 +196,7 @@ SQL
     t.delete_topic_timer(TopicTimer.types[:close])
     t.save!(validate: false)
     update_column(:topic_id, t.id)
-    t.posts.create(raw: post_template, user: user)
+    t.posts.create(raw: description || post_template, user: user)
   end
 
   def topic_url
@@ -405,8 +402,8 @@ SQL
   end
 
   def self.query_category(slug_or_id, parent_category_id)
-    self.where(slug: slug_or_id, parent_category_id: parent_category_id).includes(:featured_users).first ||
-    self.where(id: slug_or_id.to_i, parent_category_id: parent_category_id).includes(:featured_users).first
+    self.where(slug: slug_or_id, parent_category_id: parent_category_id).first ||
+    self.where(id: slug_or_id.to_i, parent_category_id: parent_category_id).first
   end
 
   def self.find_by_email(email)
@@ -521,7 +518,7 @@ end
 #  topics_year                   :integer          default(0)
 #  topics_month                  :integer          default(0)
 #  topics_week                   :integer          default(0)
-#  slug                          :string(255)      not null
+#  slug                          :string           not null
 #  description                   :text
 #  text_color                    :string(6)        default("FFFFFF"), not null
 #  read_restricted               :boolean          default(FALSE), not null
@@ -534,7 +531,7 @@ end
 #  posts_year                    :integer          default(0)
 #  posts_month                   :integer          default(0)
 #  posts_week                    :integer          default(0)
-#  email_in                      :string(255)
+#  email_in                      :string
 #  email_in_allow_strangers      :boolean          default(FALSE)
 #  topics_day                    :integer          default(0)
 #  posts_day                     :integer          default(0)
@@ -542,7 +539,6 @@ end
 #  name_lower                    :string(50)       not null
 #  auto_close_based_on_last_post :boolean          default(FALSE)
 #  topic_template                :text
-#  suppress_from_homepage        :boolean          default(FALSE)
 #  contains_messages             :boolean
 #  sort_order                    :string
 #  sort_ascending                :boolean
@@ -556,10 +552,11 @@ end
 #  subcategory_list_style        :string(50)       default("rows_with_featured_topics")
 #  default_top_period            :string(20)       default("all")
 #  mailinglist_mirror            :boolean          default(FALSE), not null
+#  suppress_from_latest          :boolean          default(FALSE)
 #
 # Indexes
 #
-#  index_categories_on_email_in            (email_in) UNIQUE
-#  index_categories_on_forum_thread_count  (topic_count)
-#  unique_index_categories_on_name         ((COALESCE(parent_category_id, '-1'::integer)), name) UNIQUE
+#  index_categories_on_email_in     (email_in) UNIQUE
+#  index_categories_on_topic_count  (topic_count)
+#  unique_index_categories_on_name  ((COALESCE(parent_category_id, '-1'::integer)), name) UNIQUE
 #

@@ -47,7 +47,7 @@ describe UserAvatar do
     describe 'when avatar url returns an invalid status code' do
       it 'should not do anything' do
         url = "http://thisfakesomething.something.com/"
-        stub_request(:head, url).to_return(status: 404)
+
         UserAvatar.import_url_for_user(url, user)
 
         user.reload

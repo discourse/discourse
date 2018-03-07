@@ -325,4 +325,3 @@ QUnit.test("selectBelow", function(assert) {
   assert.equal(selectedPostIds[1], 4, "also selected 1st post below post #3");
   assert.equal(selectedPostIds[2], 5, "also selected 2nd post below post #3");
 });
-

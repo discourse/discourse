@@ -386,7 +386,6 @@ it:
       name: "Nome"
       user_count: "Numero di Membri"
       bio: "Informazioni sul Gruppo"
-      selector_placeholder: "Aggiungi membri"
       owner: "proprietario"
       index:
         title: "Gruppi"
@@ -1687,8 +1686,8 @@ it:
         select_all: seleziona tutto
         deselect_all: deseleziona tutto
         description:
-          one: Hai selezionato <b>1</b> messaggio.
-          other: Hai selezionato <b>{{count}}</b> messaggi.
+          one: "Hai selezionato <b>1</b> messaggio."
+          other: "Hai selezionato <b>{{count}}</b> messaggi."
     post:
       quote_reply: "Cita"
       edit_reason: "Motivo:"
@@ -1934,7 +1933,6 @@ it:
       email_in_allow_strangers: "Accetta email da utenti anonimi senza alcun account"
       email_in_disabled: "Le Impostazioni Sito non permettono di creare nuovi argomenti via email. Per abilitare la creazione di argomenti via email,"
       email_in_disabled_click: 'abilita l''impostazione "email entrante".'
-      suppress_from_homepage: "Elimina questa categoria dalla homepage."
       show_subcategory_list: "Mostra la lista delle sottocategorie sopra agli argomenti in questa categoria."
       num_featured_topics: "Numero degli argomenti mostrati nella pagina categorie:"
       subcategory_num_featured_topics: "Numero degli argomenti in evidenza nella pagina della categoria superiore"
@@ -2459,7 +2457,6 @@ it:
         edit: "Modifica Gruppi"
         refresh: "Aggiorna"
         new: "Nuovo"
-        selector_placeholder: "inserisci nome utente"
         about: "Modifica qui la tua appartenenza ai gruppi e i loro nomi"
         group_members: "Membri del gruppo"
         delete: "Cancella"
@@ -3231,10 +3228,7 @@ it:
         recommended: "Consigliamo di personalizzare il seguente testo per tue adattarlo alle necessità:"
         show_overriden: 'Mostra solo le opzioni sovrascritte'
       site_settings:
-        show_overriden: 'Mostra solo le opzioni sovrascritte'
         title: 'Impostazioni'
-        reset: 'reimposta'
-        none: 'nessuno'
         no_results: "Nessun risultato trovato."
         clear_filter: "Pulisci"
         add_url: "aggiungi URL"

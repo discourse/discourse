@@ -58,8 +58,8 @@ class Validators::PostValidator < ActiveModel::Validator
   end
 
   def watched_words(post)
-    if !post.acting_user&.staff? && !post.acting_user&.staged && WordWatcher.new(post.raw).should_block?
-      post.errors[:base] << I18n.t('contains_blocked_words')
+    if !post.acting_user&.staff? && !post.acting_user&.staged && matches = WordWatcher.new(post.raw).should_block?
+      post.errors[:base] << I18n.t('contains_blocked_words', word: matches[0])
     end
   end
 
@@ -82,8 +82,25 @@ class Validators::PostValidator < ActiveModel::Validator
 
   # Ensure new users can not put too many images in a post
   def max_images_validator(post)
-    return if acting_user_is_trusted?(post) || private_message?(post)
-    add_error_if_count_exceeded(post, :no_images_allowed, :too_many_images, post.image_count, SiteSetting.newuser_max_images)
+    return if post.acting_user.blank?
+
+    if post.acting_user.trust_level < TrustLevel[SiteSetting.min_trust_to_post_images]
+      add_error_if_count_exceeded(
+        post,
+        :no_images_allowed_trust,
+        :no_images_allowed_trust,
+        post.image_count,
+        0
+      )
+    elsif post.acting_user.trust_level == TrustLevel[0]
+      add_error_if_count_exceeded(
+        post,
+        :no_images_allowed,
+        :too_many_images,
+        post.image_count,
+        SiteSetting.newuser_max_images
+      )
+    end
   end
 
   # Ensure new users can not put too many attachments in a post

@@ -388,7 +388,6 @@ es:
       name: "Nombre"
       user_count: "Número de miembros"
       bio: "Acerca del grupo"
-      selector_placeholder: "Añadir miembros"
       owner: "propietario"
       index:
         title: "Grupos"
@@ -1698,8 +1697,8 @@ es:
         select_all: seleccionar todo
         deselect_all: deshacer selección
         description:
-          one: Has seleccionado <b>1</b> post.
-          other: Has seleccionado <b>{{count}}</b> posts.
+          one: "Has seleccionado <b>1</b> post."
+          other: "Has seleccionado <b>{{count}}</b> posts."
     post:
       quote_reply: "Citar"
       edit: "<i class='fa fa-pencil'></i>{{link}} {{replyAvatar}} {{username}} "
@@ -1967,7 +1966,6 @@ es:
       email_in_disabled: "La posibilidad de publicar nuevos temas por email está deshabilitada en los ajustes del sitio. Para habilitar la publicación de nuevos temas por email,"
       email_in_disabled_click: 'activa la opción "email in".'
       mailinglist_mirror: "La categoría refleja una lista de correo"
-      suppress_from_homepage: "Ocultar categoría de la página de inicio."
       show_subcategory_list: "Mostrar la lista de subcategorías arriba de la lista de temas en esta categoría."
       num_featured_topics: "Número de temas a mostrar en la página de categorías:"
       subcategory_num_featured_topics: "Número de temas destacados a mostrar en la página superior de categorías:"
@@ -2504,7 +2502,6 @@ es:
         edit: "Editar grupos"
         refresh: "Actualizar"
         new: "Nuevo"
-        selector_placeholder: "introduce nombre de usuario"
         about: "Edita los aquí los nombres de los grupos y sus miembros"
         group_members: "Miembros del grupo"
         delete: "Borrar"
@@ -3298,10 +3295,7 @@ es:
         recommended: "Recomendamos personalizar los siguientes textos para que se ajusten a tus necesidades:"
         show_overriden: 'Sólo mostrar textos editados'
       site_settings:
-        show_overriden: 'Sólo mostrar lo personalizado'
         title: 'Ajustes del sitio'
-        reset: 'restablecer'
-        none: 'ninguno'
         no_results: "Ningún resultado encontrado"
         clear_filter: "Limpiar filtro"
         add_url: "añadir URL"

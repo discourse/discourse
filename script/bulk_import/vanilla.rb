@@ -285,6 +285,7 @@ class BulkImport::Vanilla < BulkImport::Base
 
     # Depth = 2
     create_categories(top_level_categories) do |category|
+      next if category_id_from_imported_id(category['CategoryID'])
       {
         imported_id: category['CategoryID'],
         name: CGI.unescapeHTML(category['Name']),
@@ -299,6 +300,7 @@ class BulkImport::Vanilla < BulkImport::Base
 
     # Depth = 3
     create_categories(subcategories) do |category|
+      next if category_id_from_imported_id(category['CategoryID'])
       {
         imported_id: category['CategoryID'],
         parent_category_id: category_id_from_imported_id(category['ParentCategoryID']),
@@ -456,6 +458,7 @@ class BulkImport::Vanilla < BulkImport::Base
       SELECT ConversationID, UserID
         FROM #{TABLE_PREFIX}UserConversation
        WHERE Deleted = 0
+         AND ConversationID > #{@last_imported_private_topic_id - PRIVATE_OFFSET}
     ORDER BY ConversationID ASC"
 
     added = 0

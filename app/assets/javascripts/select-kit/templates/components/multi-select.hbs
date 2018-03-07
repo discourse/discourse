@@ -1,0 +1,50 @@
+{{#component headerComponent
+  tabindex=tabindex
+  isFocused=isFocused
+  isExpanded=isExpanded
+  computedContent=headerComputedContent
+  deselect=(action "deselect")
+  toggle=(action "toggle")
+  clearSelection=(action "clearSelection")
+  options=headerComponentOptions
+}}
+  {{component filterComponent
+    icon=filterIcon
+    placeholder=filterPlaceholder
+    filter=filter
+    hasSelection=hasSelection
+    isLoading=isLoading
+    shouldDisplayFilter=shouldDisplayFilter
+    isFocused=isFocused
+    filterComputedContent=(action "filterComputedContent")
+  }}
+{{/component}}
+
+<div class="select-kit-body">
+  {{#if renderedBodyOnce}}
+    {{component collectionComponent
+      collectionHeaderComputedContent=collectionHeaderComputedContent
+      hasSelection=hasSelection
+      noneRowComputedContent=noneRowComputedContent
+      createRowComputedContent=createRowComputedContent
+      collectionComputedContent=collectionComputedContent
+      rowComponent=rowComponent
+      noneRowComponent=noneRowComponent
+      createRowComponent=createRowComponent
+      templateForRow=templateForRow
+      templateForNoneRow=templateForNoneRow
+      templateForCreateRow=templateForCreateRow
+      clearSelection=(action "clearSelection")
+      select=(action "select")
+      highlight=(action "highlight")
+      create=(action "create")
+      highlightedValue=highlightedValue
+      computedValue=computedValue
+      rowComponentOptions=rowComponentOptions
+      noContentRow=noContentRow
+      maxContentRow=maxContentRow
+    }}
+  {{/if}}
+</div>
+
+<div class="select-kit-wrapper"></div>

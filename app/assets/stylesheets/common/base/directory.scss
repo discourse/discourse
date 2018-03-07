@@ -1,10 +1,10 @@
 .directory {
   margin-bottom: 100px;
-
+  
   .user-info {
     margin-bottom: 0;
   }
-
+  
   .period-chooser {
     float: left;
   }
@@ -18,16 +18,16 @@
   .spinner {
     clear: both;
   }
-
+  
   table {
     width: 100%;
     margin-bottom: 1em;
-
+    
     td, th {
       padding: 0.5em;
       text-align: left;
       border-bottom: 1px solid $primary-low; 
-
+      
       .number, .time-read {
         font-size: $font-up-3;
         color: $primary-medium; 
@@ -36,21 +36,10 @@
         white-space: nowrap;
       }
     }
-
-    tr.me {
-      td {
-        background-color: dark-light-choose($highlight-low, $highlight-medium);
-
-        .username a, .name, .title, .number, .time-read {
-          color: $primary-medium;
-        }
-      }
-    }
-
+    
     th.sortable {
       cursor: pointer;
       white-space: nowrap;
-
       width: 13%;
       .d-icon-heart {
         color: $love;
@@ -59,10 +48,16 @@
       .d-icon-chevron-down, .d-icon-chevron-up {
         margin-left: 0.5em;
       }
-
+      
       &:hover {
         background-color: $primary-low; 
       }
+    }
+  }
+  .me {
+    background-color: dark-light-choose($highlight-low, $highlight-medium);
+    .username a, .name, .title, .number, .time-read {
+      color: $primary-medium;
     }
   }
 }

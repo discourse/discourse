@@ -169,6 +169,9 @@ describe Post do
     let(:post_two_images) { post_with_body("<img src='http://discourse.org/logo.png'> <img src='http://bbc.co.uk/sherlock.jpg'>", newuser) }
     let(:post_with_avatars) { post_with_body('<img alt="smiley" title=":smiley:" src="/assets/emoji/smiley.png" class="avatar"> <img alt="wink" title=":wink:" src="/assets/emoji/wink.png" class="avatar">', newuser) }
     let(:post_with_favicon) { post_with_body('<img src="/assets/favicons/wikipedia.png" class="favicon">', newuser) }
+    let(:post_image_within_quote) { post_with_body('[quote]<img src="coolimage.png">[/quote]', newuser) }
+    let(:post_image_within_code) { post_with_body('<code><img src="coolimage.png"></code>', newuser) }
+    let(:post_image_within_pre) { post_with_body('<pre><img src="coolimage.png"></pre>', newuser) }
     let(:post_with_thumbnail) { post_with_body('<img src="/assets/emoji/smiley.png" class="thumbnail">', newuser) }
     let(:post_with_two_classy_images) { post_with_body("<img src='http://discourse.org/logo.png' class='classy'> <img src='http://bbc.co.uk/sherlock.jpg' class='classy'>", newuser) }
 
@@ -186,6 +189,40 @@ describe Post do
 
     it "doesn't count avatars as images" do
       expect(post_with_avatars.image_count).to eq(0)
+    end
+
+    it "allows images by default" do
+      expect(post_one_image).to be_valid
+    end
+
+    it "doesn't allow more than `min_trust_to_post_images`" do
+      SiteSetting.min_trust_to_post_images = 4
+      post_one_image.user.trust_level = 3
+      expect(post_one_image).not_to be_valid
+    end
+
+    it "doesn't allow more than `min_trust_to_post_images` in a quote" do
+      SiteSetting.min_trust_to_post_images = 4
+      post_one_image.user.trust_level = 3
+      expect(post_image_within_quote).not_to be_valid
+    end
+
+    it "doesn't allow more than `min_trust_to_post_images` in code" do
+      SiteSetting.min_trust_to_post_images = 4
+      post_one_image.user.trust_level = 3
+      expect(post_image_within_code).not_to be_valid
+    end
+
+    it "doesn't allow more than `min_trust_to_post_images` in pre" do
+      SiteSetting.min_trust_to_post_images = 4
+      post_one_image.user.trust_level = 3
+      expect(post_image_within_pre).not_to be_valid
+    end
+
+    it "doesn't allow more than `min_trust_to_post_images`" do
+      SiteSetting.min_trust_to_post_images = 4
+      post_one_image.user.trust_level = 4
+      expect(post_one_image).to be_valid
     end
 
     it "doesn't count favicons as images" do
@@ -356,6 +393,7 @@ describe Post do
     let(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
     let(:post_one_link) { post_with_body("[sherlock](http://www.bbc.co.uk/programmes/b018ttws)", newuser) }
     let(:post_onebox) { post_with_body("http://www.google.com", newuser) }
+    let(:post_code_link) { post_with_body("<code>http://www.google.com</code>", newuser) }
     let(:post_two_links) { post_with_body("<a href='http://discourse.org'>discourse</a> <a href='http://twitter.com'>twitter</a>", newuser) }
     let(:post_with_mentions) { post_with_body("hello @#{newuser.username} how are you doing?", newuser) }
 
@@ -402,6 +440,12 @@ describe Post do
           SiteSetting.min_trust_to_post_links = 3
           post_onebox.user.trust_level = TrustLevel[2]
           expect(post_onebox).not_to be_valid
+        end
+
+        it "considers links within code" do
+          SiteSetting.min_trust_to_post_links = 3
+          post_onebox.user.trust_level = TrustLevel[2]
+          expect(post_code_link).not_to be_valid
         end
 
         it "doesn't allow allow links if `min_trust_to_post_links` is not met" do
@@ -630,7 +674,7 @@ describe Post do
       context 'second poster posts again quickly' do
 
         it 'is a ninja edit, because the second poster posted again quickly' do
-          SiteSetting.expects(:editing_grace_period).returns(1.minute.to_i)
+          SiteSetting.editing_grace_period = 1.minute.to_i
           post.revise(changed_by, { raw: 'yet another updated body' }, revised_at: post.updated_at + 10.seconds)
           post.reload
 

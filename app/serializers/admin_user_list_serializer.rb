@@ -25,7 +25,8 @@ class AdminUserListSerializer < BasicUserSerializer
              :silenced,
              :silenced_till,
              :time_read,
-             :staged
+             :staged,
+             :second_factor_enabled
 
   [:days_visited, :posts_read_count, :topics_entered, :post_count].each do |sym|
     attributes sym
@@ -113,6 +114,14 @@ class AdminUserListSerializer < BasicUserSerializer
 
   def include_approved?
     SiteSetting.must_approve_users
+  end
+
+  def include_second_factor_enabled?
+    object.totp_enabled?
+  end
+
+  def second_factor_enabled
+    true
   end
 
 end

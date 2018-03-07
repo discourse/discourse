@@ -823,6 +823,19 @@ describe TopicQuery do
             expect(suggested_topics).to eq([private_group_topic.id, private_message.id])
           end
         end
+
+        context "by tag filter" do
+          let(:tag) { Fabricate(:tag) }
+          let!(:user) { group_user }
+
+          it 'should return only tagged topics' do
+            Fabricate(:topic_tag, topic: private_message, tag: tag)
+            Fabricate(:topic_tag, topic: private_group_topic)
+
+            expect(TopicQuery.new(user, tags: [tag.name]).list_private_messages_tag(user).topics).to eq([private_message])
+          end
+
+        end
       end
 
       context 'with some existing topics' do

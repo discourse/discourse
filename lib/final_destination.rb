@@ -73,7 +73,7 @@ class FinalDestination
       "Host" => @uri.hostname
     }
 
-    result['cookie'] = @cookie if @cookie
+    result['Cookie'] = @cookie if @cookie
 
     result
   end
@@ -96,9 +96,7 @@ class FinalDestination
       uri = URI(uri.to_s)
     end
 
-    unless validate_uri
-      return nil
-    end
+    return nil unless validate_uri
 
     result, (location, cookie) = safe_get(uri, &blk)
 
@@ -120,9 +118,7 @@ class FinalDestination
       return nil if !uri
 
       extra = nil
-      if cookie
-        extra = { 'Cookie' => cookie }
-      end
+      extra = { 'Cookie' => cookie } if cookie
 
       get(uri, redirects - 1, extra_headers: extra, &blk)
     elsif result == :ok
@@ -164,7 +160,7 @@ class FinalDestination
     )
 
     location = nil
-    headers = nil
+    response_headers = nil
 
     response_status = response.status.to_i
 
@@ -172,7 +168,7 @@ class FinalDestination
     when 200
       @status = :resolved
       return @uri
-    when 405, 406, 409, 501
+    when 400, 405, 406, 409, 501
       get_response = small_get(request_headers)
 
       response_status = get_response.code.to_i
@@ -181,31 +177,29 @@ class FinalDestination
         return @uri
       end
 
-      headers = {}
+      response_headers = {}
       if cookie_val = get_response.get_fields('set-cookie')
-        headers['set-cookie'] = cookie_val.join
+        response_headers[:cookies] = cookie_val
       end
 
-      # TODO this is confusing why grab location for anything not
-      # between 300-400 ?
       if location_val = get_response.get_fields('location')
-        headers['location'] = location_val.join
+        response_headers[:location] = location_val.join
       end
     end
 
-    unless headers
-      headers = {}
-      response.headers.each do |k, v|
-        headers[k.to_s.downcase] = v
-      end
+    unless response_headers
+      response_headers = {
+        cookies: response.data[:cookies] || response.headers[:"set-cookie"],
+        location: response.headers[:location]
+      }
     end
 
     if (300..399).include?(response_status)
-      location = headers["location"]
+      location = response_headers[:location]
     end
 
-    if set_cookie = headers["set-cookie"]
-      @cookie = set_cookie
+    if cookies = response_headers[:cookies]
+      @cookie = Array.wrap(cookies).map { |c| c.split(';').first.strip }.join('; ')
     end
 
     if location
@@ -253,7 +247,6 @@ class FinalDestination
   end
 
   def is_dest_valid?
-
     return false unless @uri && @uri.host
 
     # Whitelisted hosts
@@ -262,9 +255,7 @@ class FinalDestination
       hostname_matches?(Discourse.base_url_no_prefix)
 
     if SiteSetting.whitelist_internal_hosts.present?
-      SiteSetting.whitelist_internal_hosts.split('|').each do |h|
-        return true if @uri.hostname.downcase == h.downcase
-      end
+      return true if SiteSetting.whitelist_internal_hosts.split("|").any? { |h| h.downcase == @uri.hostname.downcase }
     end
 
     # Whitelisted hosts
@@ -338,12 +329,10 @@ class FinalDestination
   protected
 
   def safe_get(uri)
-
     result = nil
     unsafe_close = false
 
     safe_session(uri) do |http|
-
       headers = request_headers.merge(
         'Accept-Encoding' => 'gzip',
         'Host' => uri.host
@@ -357,9 +346,8 @@ class FinalDestination
         end
 
         if Net::HTTPSuccess === resp
-
           resp.decode_content = true
-          resp.read_body { |chunk|
+          resp.read_body do |chunk|
             read_next = true
 
             catch(:done) do
@@ -377,19 +365,19 @@ class FinalDestination
               http.finish
               raise StandardError
             end
-          }
+          end
           result = :ok
+        else
+          catch(:done) do
+            yield resp, nil, nil
+          end
         end
       end
     end
 
     result
   rescue StandardError
-    if unsafe_close
-      :ok
-    else
-      raise
-    end
+    unsafe_close ? :ok : raise
   end
 
   def safe_session(uri)

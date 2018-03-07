@@ -255,6 +255,16 @@ login:
     default: false
   google_oauth2_client_id: ''
   google_oauth2_client_secret: ''
+  google_oauth2_prompt:
+    default: ''
+    type: list
+    choices:
+      - ''
+      - 'none'
+      - 'consent'
+      - 'select_account'
+  google_oauth2_hd:
+    default: ''
   enable_yahoo_logins:
     client: true
     default: false
@@ -437,6 +447,8 @@ groups:
   enable_group_directory:
     client: true
     default: true
+  group_in_subject:
+    default: false
 
 posting:
   min_post_length:
@@ -500,6 +512,7 @@ posting:
     client: true
     default: 2
     min: 1
+  max_emojis_in_title: 1
   allow_uncategorized_topics:
     client: true
     default: true
@@ -521,6 +534,7 @@ posting:
     client: true
     validator: "EnablePrivateEmailMessagesValidator"
   editing_grace_period: 300
+  editing_grace_period_max_diff: 100
   staff_edit_locks_post: false
   post_edit_time_limit:
     default: 86400
@@ -608,11 +622,6 @@ posting:
     type: list
     client: true
   delete_old_hidden_posts: true
-  censored_pattern:
-    client: true
-    default: ''
-    refresh: true
-    type: regex
   enable_emoji:
     default: true
     client: true
@@ -697,6 +706,7 @@ email:
     validator: "ReplyByEmailEnabledValidator"
   reply_by_email_address:
     default: ''
+    validator: "ReplyByEmailAddressValidator"
   alternative_reply_by_email_addresses:
     default: ''
     validator: "AlternativeReplyByEmailAddressesValidator"
@@ -715,7 +725,7 @@ email:
   pop3_polling_username: ''
   pop3_polling_password: ''
   log_mail_processing_failures: false
-  incoming_email_prefer_html: false
+  incoming_email_prefer_html: true
   email_in:
     default: false
     client: true
@@ -792,6 +802,11 @@ files:
   authorized_extensions:
     client: true
     default: 'jpg|jpeg|png|gif'
+    refresh: true
+    type: list
+  authorized_extensions_for_staff:
+    client: true
+    default: ''
     refresh: true
     type: list
   crawl_images:
@@ -903,6 +918,9 @@ trust:
   min_trust_to_post_links:
     default: 0
     enum: 'TrustLevelSetting'
+  min_trust_to_post_images:
+    default: 0
+    enum: 'TrustLevelSetting'
   allow_flagging_staff: true
   tl1_requires_topics_entered: 5
   tl1_requires_read_posts:
@@ -951,6 +969,8 @@ trust:
   tl3_links_no_follow:
     default: false
     client: true
+  trusted_users_can_edit_others:
+    default: true
 
 security:
   force_https:
@@ -1200,6 +1220,8 @@ legal:
   faq_url:
     client: true
     default: ''
+  log_anonymizer_details:
+    default: true
 
 backups:
   enable_backups:
@@ -1560,6 +1582,8 @@ tags:
     type: list
     client: true
     default: ''
+  allow_staff_to_tag_pms:
+    default: false
   suppress_overlapping_tags_in_list:
     default: false
     client: true

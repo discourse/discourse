@@ -18,10 +18,12 @@ after_initialize do
     DEFAULT_POLL_NAME ||= "poll".freeze
     POLLS_CUSTOM_FIELD ||= "polls".freeze
     VOTES_CUSTOM_FIELD ||= "polls-votes".freeze
+    MUTEX_PREFIX ||= PLUGIN_NAME
 
     autoload :PostValidator, "#{Rails.root}/plugins/poll/lib/post_validator"
     autoload :PollsValidator, "#{Rails.root}/plugins/poll/lib/polls_validator"
     autoload :PollsUpdater, "#{Rails.root}/plugins/poll/lib/polls_updater"
+    autoload :VotesUpdater, "#{Rails.root}/plugins/poll/lib/votes_updater"
 
     class Engine < ::Rails::Engine
       engine_name PLUGIN_NAME
@@ -45,6 +47,11 @@ after_initialize do
           # topic must not be archived
           if post.topic.try(:archived)
             raise StandardError.new I18n.t("poll.topic_must_be_open_to_vote")
+          end
+
+          # user must be allowed to post in topic
+          unless Guardian.new(user).can_create_post?(post.topic)
+            raise StandardError.new I18n.t("poll.user_cant_post_in_topic")
           end
 
           polls = post.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD]
@@ -378,6 +385,10 @@ after_initialize do
     next if post.is_first_post? || post.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD].blank?
     MessageBus.publish("/polls/#{post.topic_id}",                          post_id: post.id,
                                                                            polls: post.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD])
+  end
+
+  on(:merging_users) do |source_user, target_user|
+    DiscoursePoll::VotesUpdater.merge_users!(source_user, target_user)
   end
 
   add_to_serializer(:post, :polls, false) do

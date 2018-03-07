@@ -166,7 +166,7 @@ de:
         eu_west_2: "EU (London)"
         sa_east_1: "Südamerika (São Paulo)"
         us_east_1: "USA Ost (Nord-Virginia)"
-        us_east_2: "USA West (Ohio)"
+        us_east_2: "USA Ost (Ohio)"
         us_gov_west_1: "AWS GovCloud (USA)"
         us_west_1: "USA West (Nordkalifornien)"
         us_west_2: "USA West (Oregon)"
@@ -174,6 +174,7 @@ de:
     not_implemented: "Entschuldige, diese Funktion wurde noch nicht implementiert!"
     no_value: "Nein"
     yes_value: "Ja"
+    submit: "Absenden"
     generic_error: "Entschuldige, es ist ein Fehler aufgetreten."
     generic_error_with_reason: "Ein Fehler ist aufgetreten: %{error}"
     sign_up: "Registrieren"
@@ -346,7 +347,7 @@ de:
         remove_user_as_group_owner: "Eigentümerrechte entziehen"
     groups:
       logs:
-        title: "Protokolle"
+        title: "Logs"
         when: "Wann"
         action: "Aktion"
         acting_user: "Benutzer der Aktion"
@@ -388,7 +389,7 @@ de:
       name: "Name"
       user_count: "Anzahl der Mitglieder"
       bio: "Über die Gruppe"
-      selector_placeholder: "Mitglieder hinzufügen"
+      selector_placeholder: "Benutzernamen eingeben"
       owner: "Eigentümer"
       index:
         title: "Gruppen"
@@ -539,6 +540,7 @@ de:
       disable_jump_reply: "Springe nicht zu meinem Beitrag, nachdem ich geantwortet habe"
       dynamic_favicon: "Zeige die Anzahl der neuen und geänderten Themen im Browser-Symbol an"
       theme_default_on_all_devices: "Übernehme dieses Theme für alle meine Geräte."
+      allow_private_messages: "Anderen Benutzern erlauben, mir persönliche Nachrichten zu schicken"
       external_links_in_new_tab: "Öffne alle externen Links in einem neuen Tab"
       enable_quoting: "Aktiviere Zitatantwort mit dem hervorgehobenen Text"
       change: "ändern"
@@ -634,6 +636,15 @@ de:
         set_password: "Passwort ändern"
         choose_new: "Wähle ein neues Passwort"
         choose: "Wähle ein Passwort"
+      second_factor:
+        title: "Zwei-Faktor Authentifizierung"
+        disable: "Zwei-Faktor-Authentifizierung deaktivieren"
+        enabled_status: "Status: aktiv"
+        disabled_status: "Status: inaktiv"
+        confirm_password_description: "Bestätige dein Passwort, um mit der Aktivierung der Zwei-Faktor Authentifizierung fortzufahren"
+        disable_description: "Gib den Authentifizierungs-Schlüssel von deiner App ein"
+        show_key_description: "Oder gib den geheimen Schlüssel manuell ein."
+        info_prompt: "Was ist Zwei-Faktor Authentifizierung?"
       change_about:
         title: "„Über mich“ ändern"
         error: "Beim Ändern dieses Wertes ist ein Fehler aufgetreten."
@@ -1162,6 +1173,9 @@ de:
         title: "Hast du vergessen Empfänger hinzuzufügen?"
         body: "Im Augenblick wird diese Nachricht nur an dich selbst gesendet!"
       admin_options_title: "Optionale Team-Einstellungen für dieses Thema"
+      composer_actions:
+        reply_as_private_message:
+          label: Neue Nachricht
     notifications:
       tooltip:
         regular:
@@ -1192,7 +1206,7 @@ de:
       invitee_accepted: "<span>{{username}}</span> hat deine Einladung angenommen"
       moved_post: "<span>{{username}}</span> hat {{description}} verschoben"
       linked: "<span>{{username}}</span> {{description}}"
-      granted_badge: "Hat '{{description}}' verliehen bekommen"
+      granted_badge: "Du hast '{{description}}' verliehen bekommen"
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>New Topic</span> {{description}}"
       group_message_summary:
@@ -1554,6 +1568,7 @@ de:
         visible: "Sichtbar machen"
         reset_read: "„Gelesen“ zurücksetzen"
         make_public: "Umwandeln in öffentliches Thema"
+        make_private: "in Nachricht umwandeln"
       feature:
         pin: "Thema anheften"
         unpin: "Thema loslösen"
@@ -1691,8 +1706,8 @@ de:
         select_all: alle auswählen
         deselect_all: keine auswählen
         description:
-          one: Du hast <b>1</b> Beitrag ausgewählt.
-          other: Du hast <b>{{count}}</b> Beiträge ausgewählt.
+          one: "Du hast <b>1</b> Beitrag ausgewählt."
+          other: "Du hast <b>{{count}}</b> Beiträge ausgewählt."
     post:
       quote_reply: "Zitat"
       edit: "<i class='fa fa-pencil'></i> {{link}} {{replyAvatar}} {{username}}"
@@ -1953,7 +1968,6 @@ de:
       email_in_disabled: "Das Erstellen von neuen Themen per E-Mail ist in den Website-Einstellungen deaktiviert. Um das Erstellen von neuen Themen per E-Mail zu erlauben,"
       email_in_disabled_click: 'aktiviere die Einstellung „email in“.'
       mailinglist_mirror: "Kategorie spiegelt eine Mailingliste"
-      suppress_from_homepage: "Löse diese Kategorie von der Startseite."
       show_subcategory_list: "Zeige Liste von Unterkategorien oberhalb von Themen in dieser Kategorie"
       num_featured_topics: "Anzahl der Themen, die auf der Kategorien-Seite angezeigt werden"
       subcategory_num_featured_topics: "Anzahl beworbener Themen, die auf der Seite der übergeordneten Kategorie angezeigt werden:"
@@ -2481,7 +2495,6 @@ de:
         edit: "Gruppen bearbeiten"
         refresh: "Aktualisieren"
         new: "Neu"
-        selector_placeholder: "Benutzername eingeben"
         about: "Hier kannst du Gruppenzugehörigkeiten und Gruppennamen bearbeiten."
         group_members: "Gruppenmitglieder"
         delete: "Löschen"
@@ -3269,10 +3282,7 @@ de:
         recommended: "Wir empfehlen, dass du den folgenden Text an deine Bedürfnisse anpasst:"
         show_overriden: 'Nur geänderte Texte anzeigen'
       site_settings:
-        show_overriden: 'Nur geänderte Einstellungen anzeigen'
         title: 'Einstellungen'
-        reset: 'zurücksetzen'
-        none: 'keine'
         no_results: "Keine Ergebnisse gefunden."
         clear_filter: "Filter zurücksetzen"
         add_url: "URL hinzufügen"

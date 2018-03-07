@@ -15,7 +15,7 @@ export function avatarImg(wanted, attrs) {
 
   // We won't render an invalid url
   if (!url || url.length === 0) { return; }
-  const title = formatUsername(attrs.username);
+  const title = attrs.name || formatUsername(attrs.username);
 
   let className = 'avatar' + (
     attrs.extraClasses ? " " + attrs.extraClasses : ""
@@ -123,6 +123,7 @@ createWidget('post-avatar', {
       body = avatarFor.call(this, this.settings.size, {
         template: attrs.avatar_template,
         username: attrs.username,
+        name: attrs.name,
         url: attrs.usernameUrl,
         className: 'main-avatar'
       });

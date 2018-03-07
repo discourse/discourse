@@ -18,6 +18,7 @@ class User < ActiveRecord::Base
   include Searchable
   include Roleable
   include HasCustomFields
+  include SecondFactorManager
 
   # TODO: Remove this after 7th Jan 2018
   self.ignored_columns = %w{email}
@@ -60,6 +61,8 @@ class User < ActiveRecord::Base
   has_one :github_user_info, dependent: :destroy
   has_one :google_user_info, dependent: :destroy
   has_one :oauth2_user_info, dependent: :destroy
+  has_one :instagram_user_info, dependent: :destroy
+  has_one :user_second_factor, dependent: :destroy
   has_one :user_stat, dependent: :destroy
   has_one :user_profile, dependent: :destroy, inverse_of: :user
   has_one :single_sign_on_record, dependent: :destroy
@@ -885,7 +888,8 @@ class User < ActiveRecord::Base
     result << "Twitter(#{twitter_user_info.screen_name})"               if twitter_user_info
     result << "Facebook(#{facebook_user_info.username})"                if facebook_user_info
     result << "Google(#{google_user_info.email})"                       if google_user_info
-    result << "Github(#{github_user_info.screen_name})"                 if github_user_info
+    result << "GitHub(#{github_user_info.screen_name})"                 if github_user_info
+    result << "Instagram(#{instagram_user_info.screen_name})"           if instagram_user_info
     result << "#{oauth2_user_info.provider}(#{oauth2_user_info.email})" if oauth2_user_info
 
     user_open_ids.each do |oid|
@@ -988,11 +992,11 @@ class User < ActiveRecord::Base
     primary_email.email
   end
 
-  def email=(email)
+  def email=(new_email)
     if primary_email
-      new_record? ? primary_email.email = email : primary_email.update(email: email)
+      new_record? ? primary_email.email = new_email : primary_email.update(email: new_email)
     else
-      build_primary_email(email: email)
+      build_primary_email(email: new_email)
     end
   end
 
@@ -1175,7 +1179,7 @@ end
 #  username                  :string(60)       not null
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
-#  name                      :string(255)
+#  name                      :string
 #  seen_notification_id      :integer          default(0), not null
 #  last_posted_at            :datetime
 #  password_hash             :string(64)
@@ -1197,10 +1201,10 @@ end
 #  flag_level                :integer          default(0), not null
 #  ip_address                :inet
 #  moderator                 :boolean          default(FALSE)
-#  title                     :string(255)
+#  title                     :string
 #  uploaded_avatar_id        :integer
-#  primary_group_id          :integer
 #  locale                    :string(10)
+#  primary_group_id          :integer
 #  registration_ip_address   :inet
 #  staged                    :boolean          default(FALSE), not null
 #  first_seen_at             :datetime

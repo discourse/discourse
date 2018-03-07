@@ -40,7 +40,7 @@
       {{noContentRow}}
     </li>
   {{else}}
-    {{#each filteredComputedContent as |computedContent|}}
+    {{#each collectionComputedContent as |computedContent|}}
       {{component rowComponent
         computedContent=computedContent
         highlightedValue=highlightedValue
