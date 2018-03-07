@@ -644,7 +644,7 @@ class ApplicationController < ActionController::Base
         else
           # save original URL in a cookie (javascript redirects after login in this case)
           cookies[:destination_url] = destination_url
-          redirect_to "/login"
+          redirect_to path("/login")
         end
       end
     end
