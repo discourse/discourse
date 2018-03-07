@@ -7,7 +7,7 @@ class GroupArchivedMessage < ActiveRecord::Base
     GroupArchivedMessage.where(group_id: group_id, topic_id: topic_id).destroy_all
     trigger(:move_to_inbox, group_id, topic_id)
     MessageBus.publish("/topic/#{topic_id}", { type: "move_to_inbox" }, group_ids: [group_id])
-    publish_topic_tracking_state(topic, false)
+    publish_topic_tracking_state(topic)
   end
 
   def self.archive!(group_id, topic)
@@ -16,7 +16,7 @@ class GroupArchivedMessage < ActiveRecord::Base
     GroupArchivedMessage.create!(group_id: group_id, topic_id: topic_id)
     trigger(:archive_message, group_id, topic_id)
     MessageBus.publish("/topic/#{topic_id}", { type: "archived" }, group_ids: [group_id])
-    publish_topic_tracking_state(topic, true)
+    publish_topic_tracking_state(topic)
   end
 
   def self.trigger(event, group_id, topic_id)
@@ -29,9 +29,9 @@ class GroupArchivedMessage < ActiveRecord::Base
 
   private
 
-    def self.publish_topic_tracking_state(topic, archived)
+    def self.publish_topic_tracking_state(topic)
       TopicTrackingState.publish_private_message(
-        topic, group_archived: archived
+        topic, group_archive: true
       )
     end
 end

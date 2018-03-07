@@ -108,6 +108,8 @@ describe TopicTrackingState do
           )
         end
 
+        expect(messages.count).to eq(2)
+
         [group1, group2].each do |group|
           message = messages.find do |message|
             message.channel == "/private-messages/group/#{group.name}"
@@ -115,6 +117,35 @@ describe TopicTrackingState do
 
           expect(message.data["topic_id"]).to eq(private_message_topic.id)
           expect(message.user_ids).to eq(group.users.map(&:id))
+        end
+      end
+
+      describe "archiving topic" do
+        it "should publish the right message" do
+          messages = MessageBus.track_publish do
+            TopicTrackingState.publish_private_message(
+              private_message_topic,
+              group_archive: true
+            )
+          end
+
+          expect(messages.count).to eq(4)
+
+          [group1, group2].each do |group|
+            group_channel = "/private-messages/group/#{group.name}"
+
+            [
+              group_channel,
+              "#{group_channel}/archive"
+            ].each do |channel|
+              message = messages.find do |message|
+                message.channel == "/private-messages/group/#{group.name}"
+              end
+
+              expect(message.data["topic_id"]).to eq(private_message_topic.id)
+              expect(message.user_ids).to eq(group.users.map(&:id))
+            end
+          end
         end
       end
     end
