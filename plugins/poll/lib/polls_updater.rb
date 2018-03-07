@@ -28,7 +28,7 @@ module DiscoursePoll
           end
 
           # deal with option changes
-          if User.staff.pluck(:id).include?(post.last_editor_id)
+          if User.staff.where(id: post.last_editor_id).exists?
             # staff can only edit options
             polls.each_key do |poll_name|
               if polls[poll_name]["options"].size != previous_polls[poll_name]["options"].size && previous_polls[poll_name]["voters"].to_i > 0
