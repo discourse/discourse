@@ -196,7 +196,7 @@ SQL
     t.delete_topic_timer(TopicTimer.types[:close])
     t.save!(validate: false)
     update_column(:topic_id, t.id)
-    t.posts.create(raw: post_template, user: user)
+    t.posts.create(raw: description || post_template, user: user)
   end
 
   def topic_url
