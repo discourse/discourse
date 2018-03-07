@@ -534,6 +534,7 @@ posting:
     client: true
     validator: "EnablePrivateEmailMessagesValidator"
   editing_grace_period: 300
+  editing_grace_period_max_diff: 20
   staff_edit_locks_post: false
   post_edit_time_limit:
     default: 86400

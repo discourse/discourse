@@ -214,7 +214,15 @@ class PostRevisor
   end
 
   def revise_post
-    should_create_new_version? ? revise_and_create_new_version : revise
+    if should_create_new_version?
+      revise_and_create_new_version
+    else
+      unless cached_original_raw
+        self.original_raw = @post.raw
+        self.original_cooked = @post.cooked
+      end
+      revise
+    end
   end
 
   def should_create_new_version?
@@ -226,9 +234,57 @@ class PostRevisor
     @post.last_editor_id != @editor.id
   end
 
+  def original_raw_key
+    "original_raw_#{(@last_version_at.to_f * 1000).to_i}#{@post.id}"
+  end
+
+  def original_cooked_key
+    "original_cooked_#{(@last_version_at.to_f * 1000).to_i}#{@post.id}"
+  end
+
+  def cached_original_raw
+    @cached_original_raw ||= $redis.get(original_raw_key)
+  end
+
+  def cached_original_cooked
+    @cached_original_cooked ||= $redis.get(original_cooked_key)
+  end
+
+  def original_raw
+    cached_original_raw || @post.raw
+  end
+
+  def original_raw=(val)
+    @cached_original_raw = val
+    $redis.setex(original_raw_key, SiteSetting.editing_grace_period + 1, val)
+  end
+
+  def original_cooked=(val)
+    @cached_original_cooked = val
+    $redis.setex(original_cooked_key, SiteSetting.editing_grace_period + 1, val)
+  end
+
+  def diff_size(before, after)
+    changes = 0
+    ONPDiff.new(before, after).short_diff.each do |str, type|
+      next if type == :common
+      changes += str.length
+    end
+    changes
+  end
+
   def ninja_edit?
     return false if @post.has_active_flag?
-    @revised_at - @last_version_at <= SiteSetting.editing_grace_period.to_i
+    return false if (@revised_at - @last_version_at) > SiteSetting.editing_grace_period.to_i
+
+    if new_raw = @fields[:raw]
+      if (original_raw.length - new_raw.length).abs > SiteSetting.editing_grace_period_max_diff.to_i ||
+        diff_size(original_raw, new_raw) > SiteSetting.editing_grace_period_max_diff.to_i
+        return false
+      end
+    end
+
+    true
   end
 
   def owner_changed?
@@ -368,6 +424,15 @@ class PostRevisor
 
   def create_revision
     modifications = post_changes.merge(@topic_changes.diff)
+
+    if modifications["raw"]
+      modifications["raw"][0] = cached_original_raw || modifications["raw"][0]
+    end
+
+    if modifications["cooked"]
+      modifications["cooked"][0] = cached_original_cooked || modifications["cooked"][0]
+    end
+
     PostRevision.create!(
       user_id: @post.last_editor_id,
       post_id: @post.id,
@@ -380,6 +445,7 @@ class PostRevisor
     return unless revision = PostRevision.find_by(post_id: @post.id, number: @post.version)
     revision.user_id = @post.last_editor_id
     modifications = post_changes.merge(@topic_changes.diff)
+
     modifications.each_key do |field|
       if revision.modifications.has_key?(field)
         old_value = revision.modifications[field][0].to_s
