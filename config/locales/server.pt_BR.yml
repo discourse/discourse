@@ -97,7 +97,7 @@ pt_BR:
     template:
       body: 'Houve problemas com os seguintes campos:'
       header:
-        one: 1 erro impediu este %{model} de ser salvo
+        one: '1 erro impediu este %{model} de ser salvo'
         other: '%{count} erros impediram este %{model} de ser salvo'
     embed:
       load_from_remote: "Houve um erro ao carregar essa mensagem."
@@ -326,41 +326,41 @@ pt_BR:
     title: "Bem vindo ao Discourse"
     body: |2
 
-      O primeiro parágrafo deste tópico fixo será visto como uma mensagem de boas vindas a todos os novos visitantes em sua página inicial. É muito importante!
+        O primeiro parágrafo deste tópico fixo será visto como uma mensagem de boas vindas a todos os novos visitantes em sua página inicial. É muito importante!
 
-      **Edite isso** em uma breve descrição da sua comunidade:
+        **Edite isso** em uma breve descrição da sua comunidade:
 
-      - Para quem ela é?
-      - O que será encontrado aqui?
-      - Porque as pessoas deveria vir aqui?
-      - Onde é possível saber mais a respeito (links, fontes, etc)?
+        - Para quem ela é?
+        - O que será encontrado aqui?
+        - Porque as pessoas deveria vir aqui?
+        - Onde é possível saber mais a respeito (links, fontes, etc)?
 
-      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
-      Você pode querer fechar este tópico através do Administrador :wrench: (na parte superior direita e inferior), para que não se acumulem respostas num tópico de boas vindas.
+        Você pode querer fechar este tópico através do Administrador :wrench: (na parte superior direita e inferior), para que não se acumulem respostas num tópico de boas vindas.
   lounge_welcome:
     title: "Bem-vindo ao Salão"
     body: |2
 
-      Parabéns! :confetti_ball:
+        Parabéns! :confetti_ball:
 
-      Se você pode ver neste tópico, você foi recentemente promovido a  **regular** (nível de confiança 3).
+        Se você pode ver neste tópico, você foi recentemente promovido a  **regular** (nível de confiança 3).
 
-      Agora você pode &hellip;
+        Agora você pode &hellip;
 
-      * Editar o título de qualquer tópico
-      * Alterar a categoria de qualquer assunto
-      * Ter todos os seus links seguidos ([nofollow automática] (http://en.wikipedia.org/wiki/Nofollow) é removido)
-      * Acesso a categoria privada Sala visíveis apenas para os utilizadores a nível de confiança 3 e superior
-      * Esconder o spam com uma única sinalização
+        * Editar o título de qualquer tópico
+        * Alterar a categoria de qualquer assunto
+        * Ter todos os seus links seguidos ([nofollow automática] (http://en.wikipedia.org/wiki/Nofollow) é removido)
+        * Acesso a categoria privada Sala visíveis apenas para os utilizadores a nível de confiança 3 e superior
+        * Esconder o spam com uma única sinalização
 
-      Aqui está o [lista atual de companheiros regulares] (/badges/3/regular). Não se esqueça de dizer oi.
+        Aqui está o [lista atual de companheiros regulares] (/badges/3/regular). Não se esqueça de dizer oi.
 
-      Obrigado por ser uma parte importante dessa comunidade!
+        Obrigado por ser uma parte importante dessa comunidade!
 
-      (Para obter mais informações sobre os níveis de confiança, [veja este tópico][trust]. Por favor note que somente os membros que continuam a atender aos requisitos ao longo do tempo permanecerá regulares.)
+        (Para obter mais informações sobre os níveis de confiança, [veja este tópico][trust]. Por favor note que somente os membros que continuam a atender aos requisitos ao longo do tempo permanecerá regulares.)
 
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Sobre a categoria %{category} "
     replace_paragraph: "(Substitua este primeiro parágrafo por uma curta descrição da sua nova categoria. Este guia vai aparecer na área de seleção de categoria, então tente usar menos que 200 caracteres. **Até você editar essa descrição ou criar tópicos, esta categoria não aparece na página de categorias.**)"
@@ -536,7 +536,6 @@ pt_BR:
       long_form: 'sinalizado como inapropriado'
     notify_user:
       title: 'Envie ao(à) @ {{nome de usuário}} uma mensagem'
-      description: 'Eu quero falar com essa pessoa diretamente e em particular sobre o seu post.'
       long_form: 'mensagem privada'
       email_title: 'Sobre a sua postagem "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -912,8 +911,6 @@ pt_BR:
     google_oauth2_client_id: "Client ID da sua aplicação Google."
     google_oauth2_client_secret: "Client secret da sua aplicação Google."
     enable_twitter_logins: "Ativar autenticação pelo Twitter, requer twitter_consumer_key e twitter_consumer_secret"
-    twitter_consumer_key: "consumer key registrada em dev.twitter.com (usada para fazer autenticação via twitter)"
-    twitter_consumer_secret: "consumer secret registrada em dev.twitter.com (usada para fazer autenticação via twitter)"
     enable_instagram_logins: "Habilitar autenticação via Instagram. Requer instagram_consumer_key e instagram_consumer_secret"
     instagram_consumer_key: "Chave de consumidor para autenticação via Instagram"
     instagram_consumer_secret: "Segredo de consumidor para autenticação via Instagram"
@@ -928,7 +925,6 @@ pt_BR:
     allow_restore: "Permitir restauração, que pode substituir todos os dados do site! Deixe falsa, a menos que você pretenda restaurar um backup"
     maximum_backups: "A quantidade máxima de backups para manter no disco. Backups mais antigos são excluídos automaticamente"
     automatic_backups_enabled: "Realizar backups automáticos, como definido na frequência de backup"
-    backup_frequency: "A frequência com a qual criamos backups, em dias."
     enable_s3_backups: "Fazer upload dos backups para o S3 quando completado. IMPORTANTE: exige credenciais válidas do S3 configuradas nas Configurações de Arquivos."
     s3_backup_bucket: "O repositório remoto para realizar backups. AVISO: Certifique-se de que é um repositório privado."
     s3_disable_cleanup: "Desabilitar a remoção de backups na S3 quando removidos localmente."
@@ -1414,7 +1410,7 @@ pt_BR:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
-        %{message}
+          %{message}
     digest:
       why: "Um breve resumo de %{site_link} desde que viu pela última vez em %{last_seen_at}."
       since_last_visit: "Desde a sua última visita"

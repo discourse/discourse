@@ -62,7 +62,6 @@ sr:
     start_discussion: "Započnite diskusiju"
     continue: "Nastavite diskusiju"
   no_links_allowed: "Žao nam je, novi korisnici ne mogu postavljati linkove u svoje postove."
-  contains_blocked_words: "Vaš post, sadrži reči koje nisu dozvoljene."
   user_is_suspended: "Suspendovanim korisnicima nije dozvoljeno da objavljuju postove."
   topic_not_found: "Nešto se dogodilo. Možda je tema zatvorena ili izbrisana dok ste je gledali?"
   not_accepting_pms: "Žao nam je, %{username} trenutno ne prihvata privatne poruke."

@@ -104,7 +104,7 @@ de:
     template:
       body: 'Es gab Probleme mit diesen Feldern:'
       header:
-        one: 1 Fehler verhindert, dass %{model} gespeichert wird
+        one: '1 Fehler verhindert, dass %{model} gespeichert wird'
         other: '%{count} Fehler verhindern, dass %{model} gespeichert wird'
     embed:
       load_from_remote: "Beim Laden des Beitrags ist ein Fehler aufgetreten."
@@ -178,7 +178,6 @@ de:
   too_many_links:
     one: "Entschuldige, neue Benutzer können Beiträgen höchstens einen Link hinzufügen."
     other: "Entschuldige, neue Benutzer können Beiträgen höchstens %{count} Links hinzufügen."
-  contains_blocked_words: "Dein Beitrag enthält Wörter, die nicht erlaubt sind."
   spamming_host: "Entschuldigung, du kannst keine Links zu diesem Webserver posten."
   user_is_suspended: "Gesperrte Benutzer dürfen keine Beiträge schreiben."
   topic_not_found: "Etwas ist schief gelaufen. Wurde das Thema eventuell geschlossen oder gelöscht, während du es angeschaut hast?"
@@ -384,41 +383,41 @@ de:
     title: "Willkommen bei Discourse"
     body: |2
 
-      Der erste Absatz dieses angehefteten Themas wird allen neuen Besuchern deiner Webseite als Willkommensnachricht angezeigt. Er ist wichtig!
+        Der erste Absatz dieses angehefteten Themas wird allen neuen Besuchern deiner Webseite als Willkommensnachricht angezeigt. Er ist wichtig!
 
-      **Bearbeite dies** und erstelle eine kurze Beschreibung deiner Community:
+        **Bearbeite dies** und erstelle eine kurze Beschreibung deiner Community:
 
-      - Für wen ist sie?
-      - Was findet man hier?
-      - Warum sollte man hier vorbeischauen?
-      - Wo kann man mehr erfahren (Links, Dokumente, usw.)?
+        - Für wen ist sie?
+        - Was findet man hier?
+        - Warum sollte man hier vorbeischauen?
+        - Wo kann man mehr erfahren (Links, Dokumente, usw.)?
 
-      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
-      Du solltest dieses Thema eventuell schließen über die Administration :wrench: (oben rechts oder unten), damit sich an einer Ankündigung wie dieser nicht die Antworten aufstapeln.
+        Du solltest dieses Thema eventuell schließen über die Administration :wrench: (oben rechts oder unten), damit sich an einer Ankündigung wie dieser nicht die Antworten aufstapeln.
   lounge_welcome:
     title: "Willkommen in der Lounge"
     body: |2
 
-      Gratuliere! :confetti_ball:
+        Gratuliere! :confetti_ball:
 
-      Wenn du dieses Thema sehen kannst, wurdest du vor Kurzem zum **Stammgast** (Vertrauensstufe 3) befördert.
+        Wenn du dieses Thema sehen kannst, wurdest du vor Kurzem zum **Stammgast** (Vertrauensstufe 3) befördert.
 
-      Du kannst nun &hellip;
+        Du kannst nun &hellip;
 
-      * den Titel eines jeden Themas ändern
-      * Themen in andere Kategorien verschieben
-      * Links veröffentlichen, die von Suchmaschinen weiterverfolgt werden (das automatische [nofollow](http://de.wikipedia.org/wiki/Nofollow) wird entfernt)
-      * auf die private Lounge-Kategorie zugreifen, die für Benutzer mit Vertrauensstufe 3 oder höher sichtbar ist
-      * Spam durch eine einzige Meldung ausblenden
+        * den Titel eines jeden Themas ändern
+        * Themen in andere Kategorien verschieben
+        * Links veröffentlichen, die von Suchmaschinen weiterverfolgt werden (das automatische [nofollow](http://de.wikipedia.org/wiki/Nofollow) wird entfernt)
+        * auf die private Lounge-Kategorie zugreifen, die für Benutzer mit Vertrauensstufe 3 oder höher sichtbar ist
+        * Spam durch eine einzige Meldung ausblenden
 
-      Hier ist die [aktuelle Liste aller Stammgäste](/badges/3/regular). Vergiss nicht, hallo zu sagen!
+        Hier ist die [aktuelle Liste aller Stammgäste](/badges/3/regular). Vergiss nicht, hallo zu sagen!
 
-      Vielen Dank dafür, dass du ein wichtiger Teil dieser Community bist!
+        Vielen Dank dafür, dass du ein wichtiger Teil dieser Community bist!
 
-      (Wenn du mehr über Vertrauensstufen wissen möchtest, kannst du [dieses Thema lesen][trust]. Beachte bitte, dass nur jene Mitglieder Stammgäste bleiben, die auch im Laufe der Zeit die Anforderungen erfüllen.)
+        (Wenn du mehr über Vertrauensstufen wissen möchtest, kannst du [dieses Thema lesen][trust]. Beachte bitte, dass nur jene Mitglieder Stammgäste bleiben, die auch im Laufe der Zeit die Anforderungen erfüllen.)
 
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Über die Kategorie %{category}"
     replace_paragraph: "(Ersetze diesen ersten Absatz mit einer kurzen Beschreibung deiner neuen Kategorie. Diese Richtlinie wird in der Kategorienauswahl angezeigt, versuche also weniger als 200 Zeichen zu benutzen. **Bis du diese Beschreibung geändert oder Themen angelegt hast, wird diese Kategorie nicht auf der Kategorie-Seite angezeigt.**)"
@@ -604,8 +603,6 @@ de:
       long_form: 'dies als unangemessen gemeldet'
     notify_user:
       title: 'Schreibe @{{username}} eine Nachricht'
-      description: 'Ich möchte mit dieser Person direkt und persönlich über ihren Beitrag reden.'
-      short_description: 'Ich möchte mit dieser Person direkt und persönlich über ihren Beitrag reden.'
       long_form: 'angeschriebener Benutzer'
       email_title: 'Dein Beitrag in „%{title}“'
       email_body: "%{link}\n\n%{message}"
@@ -1023,8 +1020,6 @@ de:
     google_oauth2_client_id: "Client-ID deiner Google-Anwendung."
     google_oauth2_client_secret: "Client-Secret deiner Google-Anwendung."
     enable_twitter_logins: "Aktiviere Twitter-Authentifizierung (benötigt twitter_consumer_key und twitter_consumer_secret)."
-    twitter_consumer_key: "Consumer Key für Twitter-Authentifizierung, registriert auf http://dev.twitter.com"
-    twitter_consumer_secret: "Consumer Secret für Twitter-Authentifizierung, registriert auf http://dev.twitter.com"
     enable_instagram_logins: "Aktiviere Instagram-Authentifizierung (benötigt instagram_consumer_key und instagram_consumer_secret)."
     instagram_consumer_key: "Consumer Key für Instagram-Authentifizierung"
     instagram_consumer_secret: "Consumer Secret für Instagram-Authentifizierung"
@@ -1040,7 +1035,6 @@ de:
     allow_restore: "Wiederherstellung von Sicherungen zulassen, die ALLE vorhandenen Daten überschreiben! Auf 'false' lassen, sofern Sie nicht planen, eine Sicherung wiederherzustellen."
     maximum_backups: "Die maximale Anzahl an Sicherungen, die auf dem Server gespeichert werden. Ältere Sicherungen werden automatisch gelöscht."
     automatic_backups_enabled: "Automatische Backups aktivieren. Die Backups werden im eingestellten Zeitintervall erstellt."
-    backup_frequency: "Wie häufig sollen Backups erstellt werden (Angabe in Tagen)?"
     enable_s3_backups: "Lade fertige Backups zu S3 hoch. WICHTIG: In den Dateien-Einstellungen müssen gültige S3-Kontodaten eingegeben sein."
     s3_backup_bucket: "Der entfernte Speicherort für Ihre Sicherungen. WARNUNG: Stellen Sie sicher, dass es sich um einen privaten Speicherort handelt."
     s3_disable_cleanup: "Deaktiviere das Löschen von Backups aus S3 wenn sie lokal entfernt werden"
@@ -1649,47 +1643,6 @@ de:
   test_mailer:
     title: "Test-E-Mail"
     subject_template: "[%{email_prefix}] Test der E-Mail-Zustellbarkeit"
-    text_body_template: |
-      Dies ist eine Test-E-Mail von
-
-      [**%{base_url}**][0]
-
-      E-Mail-Zustellbarkeit ist eine komplizierte Sache. Hier sind ein paar wichtige Dinge aufgeführt, die du am Anfang prüfen solltest:
-
-      - Stelle *sicher*, dass du die `notification_email` (Absender von Benachrichtigungen) in den Einstellungen richtig gesetzt hast. **Die Domain in der "From"-Adresse der E-Mails, die du schickst, ist die Domain, gegen die deine E-Mail validiert wird**.
-
-      - Lerne, wie du den Quelltext der E-Mail in deinem E-Mail-Programm anzeigen lassen kannst, damit du die E-Mail-Kopfzeilen auf wichtige Anhaltspunkte hin überprüfen kannst. In Google Mail ist dies die "Zeige Original"-Option in der Auswahlliste oben rechts von jeder E-Mail.
-
-      - **WICHTIG:** Hat dein Internetdienstanbieter (ISP) einen Reverse-DNS-Eintrag eingegeben, der die Domainnamen und die IP-Adressen verknüpft, von denen du E-Mails verschickst? [Überprüfe deinen Reverse PTR-Eintrag][2] hier. Wenn dein ISP den Reverse-DNS-Eintrag nicht richtig eingibt, ist es sehr unwahrscheinlich, dass eine deiner E-Mails zugestellt wird.
-
-      - Ist der [SPF-Eintrag][8] deiner Domain richtig? [Überprüfe deinen SPF-Eintrag][1] hier. Beachte, dass TXT der richtige Eintragstyp für SPF ist.
-
-      - Ist der [DKIM-Eintrag][3] deiner Domain richtig? Dies wird die E-Mai-lZustellbarkeit signifikant verbessern. [Überprüfe deinen DKIM-Eintrag][7] hier.
-
-      - Wenn du deinen eigenen E-Mail-Server betreibst, stelle sicher, dass die IPs deiner E-Mail-Server [nicht auf irgendwelchen E-Mail-Blacklist][4] stehen. Überprüfe auch, dass es definitiv einen vollqualifizierten Hostnamen in der HELO-Nachricht schickt, der in DNS auflöst. Wenn nicht, wird dies dazu führen, dass deine E-Mail von vielen E-Mail-Diensten abgelehnt wird.
-
-      - Wir empfehlen dir sehr, **eine Test-E-Mail an [mail-tester.com][mt]** zu schicken, um zu überprüfen, dass alles erwähnte korrekt funktioniert.
-
-      (Der *einfache* Weg besteht darin, ein kostenloses Konto bei [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] oder [Mailjet][mj] anzulegen, die großzügige kostenlose E-Mail-Tarife haben und für kleine Communitys ausreichen werden. Du wirst allerdings dennoch die SPF- und DKIM-Einträge in deinen DNS-Einstellungen eintragen müssen!)
-
-      Wir hoffen, dass du diesen Test der E-Mail-Zustellbarkeit erfolgreich erhalten hast!
-
-      Viel Erfolg,
-
-      Deine Freunde von [Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: http://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing
-      [mt]: http://www.mail-tester.com/
   new_version_mailer:
     title: "Neue Version"
     subject_template: "[%{email_prefix}] Neue Discourse-Version, Update verfügbar"
@@ -2324,7 +2277,7 @@ de:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
-        %{message}
+          %{message}
     account_suspended:
       title: "Konto gesperrt"
       subject_template: "[%{email_prefix}] Dein Konto wurde gesperrt"

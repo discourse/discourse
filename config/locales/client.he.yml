@@ -374,7 +374,6 @@ he:
       name: "שם"
       user_count: "מספר חברים"
       bio: "אודות הקבוצה"
-      selector_placeholder: "הוספת חברים וחברות"
       owner: "מנהל"
       index:
         title: "קבוצות"
@@ -1558,8 +1557,8 @@ he:
         select_all: בחר הכל
         deselect_all: בחר כלום
         description:
-          one: בחרתם פוסט אחד.
-          other: בחרתם <b>{{count}}</b> פוסטים.
+          one: "בחרתם פוסט אחד."
+          other: "בחרתם <b>{{count}}</b> פוסטים."
     post:
       quote_reply: "ציטוט"
       edit_reason: "סיבה: "
@@ -1798,7 +1797,6 @@ he:
       email_in_allow_strangers: "קבלת דוא\"ל ממשתמשים אנונימיים ללא חשבונות במערכת הפורומים"
       email_in_disabled: "אפשרות הפרסום של נושאים חדשים דרך דוא\"ל נוטרלה בהגדרות האתר. כדי לאפשר פרסום באמצעות  משלוח דוא\"ל,"
       email_in_disabled_click: 'אפשרו את את ההגדרה "דוא"ל נכנס"'
-      suppress_from_homepage: "הרחיקו קטגוריה זו מהעמוד הראשי."
       show_subcategory_list: "הצגת רשימת קטגוריות משנה מעל נושאים בקטגוריה זו."
       num_featured_topics: "מספר הנושאים המוצגים בדף הקטגוריות:"
       subcategory_num_featured_topics: "מספר הנושאים המומלצים בדף קטגוריית ההורה:"
@@ -2294,7 +2292,6 @@ he:
         edit: "ערוך קבוצות"
         refresh: "רענן"
         new: "חדש"
-        selector_placeholder: "הזינו שם משתמש/ת"
         about: "ערוך את חברות הקבוצה שלך והשמות כאן"
         group_members: "חברי הקבוצה"
         delete: "מחק"
@@ -3029,10 +3026,7 @@ he:
         recommended: "אנחנו ממליצים להתאים את הטקסט הבא כדי להתאימו לצרכים שלכם:"
         show_overriden: 'הציגו רק דרוסים'
       site_settings:
-        show_overriden: 'הצג רק הגדרות ששונו'
         title: 'הגדרות'
-        reset: 'אתחול'
-        none: 'ללא'
         no_results: "לא נמצאו תוצאות."
         clear_filter: "נקה"
         add_url: "הוספת כתובת URL"

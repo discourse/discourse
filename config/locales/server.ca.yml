@@ -323,41 +323,41 @@ ca:
     title: "Benvinguda o benvingut a Discourse"
     body: |2
 
-      El primer paràgraf d'aquest tema fixat será visible com a missatge de benvinguda per a totes les noves visites a la teva pàgina principal. És important!
+        El primer paràgraf d'aquest tema fixat será visible com a missatge de benvinguda per a totes les noves visites a la teva pàgina principal. És important!
 
-      **Edita això** per a una breu descripció de la teva comunitat:
+        **Edita això** per a una breu descripció de la teva comunitat:
 
-      - Per a qui és?
-      - Què hi poden trobar?
-      - Per què haurien de venir aquí?
-      - On poden llegir-ne més (enllaços, recursos, etcètera)?
+        - Per a qui és?
+        - Què hi poden trobar?
+        - Per què haurien de venir aquí?
+        - On poden llegir-ne més (enllaços, recursos, etcètera)?
 
-      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
-      Potser desitges tancar aquest tema amb l'eina d'adminstració :wrench: (dalt a la dreta i abaix), perquè les respostes no s'amunteguin sobre un anunci.
+        Potser desitges tancar aquest tema amb l'eina d'adminstració :wrench: (dalt a la dreta i abaix), perquè les respostes no s'amunteguin sobre un anunci.
   lounge_welcome:
     title: "Et donem la benvinguda al saló"
     body: |2
 
-      Enhorabona! :confetti_ball:
+        Enhorabona! :confetti_ball:
 
-      Si pots veure aquest tema, se t'ha promogut recentment a **regular** (nivell 3 de confiança).
+        Si pots veure aquest tema, se t'ha promogut recentment a **regular** (nivell 3 de confiança).
 
-      Ara pots &hellip;
+        Ara pots &hellip;
 
-      * Editar el títol de qualsevol tema
-      * Canviar la categoria de qualsevol tema
-      * Tenir tots els teus enllaços seguits ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) és esborrat)
-      * Accedir a la categoria privada de Saló només visible per a persones usuàries a nivell 3 de confiança i superior
-      * Amagar correu brossa amb una única bandera
+        * Editar el títol de qualsevol tema
+        * Canviar la categoria de qualsevol tema
+        * Tenir tots els teus enllaços seguits ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) és esborrat)
+        * Accedir a la categoria privada de Saló només visible per a persones usuàries a nivell 3 de confiança i superior
+        * Amagar correu brossa amb una única bandera
 
-      Vet aquí la llista [current list of fellow regulars](/badges/3/regular). Assegura't d'enviar-hi una salutació.
+        Vet aquí la llista [current list of fellow regulars](/badges/3/regular). Assegura't d'enviar-hi una salutació.
 
-      Gràcies per formar part d'una part important d'aquesta comunitat!
+        Gràcies per formar part d'una part important d'aquesta comunitat!
 
-      (Per a més informació sobre nivell de confiança [see this topic][trust]. Si us plau, fixa't que només membres que continuen reunint els requisits seguiran essent ordinaris).
+        (Per a més informació sobre nivell de confiança [see this topic][trust]. Si us plau, fixa't que només membres que continuen reunint els requisits seguiran essent ordinaris).
 
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Sobre la categoria %{category} "
     replace_paragraph: "(Reemplaça aquest primer paràgraf amb una breu descripció de la teva nova categoria. Aquesta guia apareixerà a l'àrea de selecció de categoria, perquè s'hi pugui mantenir per sota de 200 caràcters. **Fins que no editis aquesta descripció o en creïs temes, aquesta categoria no apareixerà a la pàgina de categories.**)"
@@ -527,7 +527,6 @@ ca:
       long_form: 'marcar amb bandera d''inapropiat'
     notify_user:
       title: 'Envia un missatge a @{{username}}'
-      description: 'Vull parlar directament i privadament amb aquesta persona sobre la seva publicació.'
       long_form: 'persona contactada'
       email_title: 'La teva publicació a "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -910,8 +909,6 @@ ca:
     google_oauth2_client_id: "ID de client a la teva aplicació Google."
     google_oauth2_client_secret: "Client secret a la teva aplicació Google."
     enable_twitter_logins: "Activar l'autenticació de Twitter, necessita twitter_consumer_key i twitter_consumer_secret"
-    twitter_consumer_key: "Clau de consum per a l'autenticació amb Twitter, registrada a http://dev.twitter.com"
-    twitter_consumer_secret: "Secret de consum per a l'autenticació amb Twitter, registrat a http://dev.twitter.com"
     enable_instagram_logins: "Activa l'autenticació amb Instagram, necessita instagram_consumer_key i instagram_consumer_secret"
     instagram_consumer_key: "Clau de consum per a l'autenticació amb Instagram"
     instagram_consumer_secret: "Secret de consum per a l'autenticació amb Instagram"
@@ -926,7 +923,6 @@ ca:
     allow_restore: "Permet restablir, que pot reemplaçar TOTES les dades del lloc! Deixa-ho com a \"false\" si no pretens restablir una còpia de seguretat"
     maximum_backups: "Quantitat màxima de còpies de seguretat per mantenir al disc. Les còpies més antigues seran esborrades automàticament"
     automatic_backups_enabled: "Executa còpies de seguretat automàtiques tal com estan definides a la freqüències de la còpia de seguretat"
-    backup_frequency: "Amb quina freqüència podem crear una còpia de seguretat del lloc, en dies."
     enable_s3_backups: "Carrega còpies de seguretat a S3 quan es completi. IMPORTANT: necessita credencials vàlides de S3 introduïdes a la configuració de fitxer."
     s3_backup_bucket: "Sistema remot de càrrega de còpies de seguretat. ATENCIÓ: Assegura't que és una càrrega privada."
     s3_disable_cleanup: "Inhabilita l'eliminació de còpies de seguretat de S3 quan s'eliminin localment."
@@ -1372,47 +1368,6 @@ ca:
     subject_template: "Estableix contrasenya per al teu compte de %{site_name}"
   test_mailer:
     title: "Prova remitent"
-    text_body_template: |
-      Aquest és un correu de
-
-      [**%{base_url}**][0]
-
-      La subministrabilitat del correu és complicada. Aquí hi ha algunes coses importants que hauries de revisar primer:
-
-      - "Assegura't" de d'establir correctament el de: de `notification email` a la teva configuració del lloc. **El domini especificat a l'adreça "de" dels correus que enviïs és el domini que tornarà a validar-se**.
-
-      - Sàpigues com veure el codi font dels missatges al teu client de correu, per tal que puguis examinar els encapçalaments per a pistes importants. A Gmail, es mostra a l'opció  "mostra l'original" al menú desplegable de la part superior dreta de cada missatge.
-
-      - **IMPORTANT:** La teva ISP té un registre de DNS inversa per associar els noms de dominis i les adreces IP que envies des del correu? [Prova el teu registre Revers PTR][2] aquí. Si la teva ISP no introdueix el registre adequat de DNS inversa, no és gaire provable que rebis cap correu.
-
-      - És correcte el [registre SPF][8] de domini? [Prova el teu registre SPF][1] aquí. Fixa't que TXT és el registre correcte oficial per a SPF.
-
-      - És correcte el teu domini [DKIM record][3]? Això millorarà força la lliurabilitat del correu. [Test your DKIM record][7] here.
-
-      - Si executes el teu propi servidor de correu, revisa per assegurar-te que les IP del teu servidor de correu no són [a cap de les meves llistes negres][4]. Verifica també que segur que envia un nom d'amfitrió totalment qualifiicat que resol la DNS al seu missatge HELO. En cas contrari, això farà que el teu correu sigui rebutjat per molts serveis de correu.
-
-      - Et recomanem **envia un correu de prova a [mail-tester.com][mt]** per tal de verificar que tot l'esmentat funcioni correctament.
-
-      (La manera "fàcil* és crear un compte lliure a [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] o [Mailjet][mj], que són generosos amb plans de correu gratuïts i funcionarà per a la majoria de comunitats petites. Encara et caldrà configurar els registres SPF i DKIM a la teva DNS!)
-
-      Esperem que hagis rebut correctament aquesta prova de subministrabilitat de correu!
-
-      Bona sort,
-
-      La teva gent a [Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: http://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing
-      [mt]: http://www.mail-tester.com/
   new_version_mailer:
     title: "Nova versió remitent"
   new_version_mailer_with_notes:
@@ -1749,7 +1704,7 @@ ca:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
-        %{message}
+          %{message}
     digest:
       why: "Un breu resum de %{site_link} des de la teva darrera visita a %{last_seen_at}"
       since_last_visit: "Des de la teva darrera visita"

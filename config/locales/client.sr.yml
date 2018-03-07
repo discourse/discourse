@@ -1116,9 +1116,9 @@ sr:
         select_all: odaberi sve
         deselect_all: odustani od odabira
         description:
-          one: Odabrali ste <b>{{count}}</b> poruka.
-          few: Odabrali ste <b>{{count}}</b> poruka.
-          other: Odabrali ste <b>{{count}}</b> poruka.
+          one: "Odabrali ste <b>{{count}}</b> poruka."
+          few: "Odabrali ste <b>{{count}}</b> poruka."
+          other: "Odabrali ste <b>{{count}}</b> poruka."
     post:
       edit_reason: "Razlog:"
       post_number: "poruka {{number}}"
@@ -1534,7 +1534,6 @@ sr:
         edit: "Izmeni Grupe"
         refresh: "Osveži"
         new: "Novo"
-        selector_placeholder: "unesite korisničko ime"
         about: "Ovde izmenite svoje članstvo u grupama i imenima grupa"
         group_members: "Članovi grupe"
         delete: "Obriši"
@@ -1950,10 +1949,7 @@ sr:
       site_text:
         title: 'Sadžaj Teksta'
       site_settings:
-        show_overriden: 'Pokazuj samo promenjeno'
         title: 'Podešavanja'
-        reset: 'resetuj'
-        none: 'ništa'
         no_results: "Nema pronađenih rezultata."
         clear_filter: "Čisto"
         categories:

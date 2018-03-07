@@ -368,7 +368,6 @@ bs_BA:
       name: "Ime"
       user_count: "Broj članova"
       bio: "O grupi"
-      selector_placeholder: "Dodaj članove"
       owner: "vlasnik"
       index:
         title: "Grupe"
@@ -1705,7 +1704,6 @@ bs_BA:
         edit: "Edit Groups"
         refresh: "Refresh"
         new: "New"
-        selector_placeholder: "add users"
         about: "Edit your group membership and names here"
         group_members: "Group members"
         delete: "Delete"
@@ -2108,10 +2106,7 @@ bs_BA:
       site_text:
         title: 'Text Content'
       site_settings:
-        show_overriden: 'Only show overridden'
         title: 'Settings'
-        reset: 'reset'
-        none: 'none'
         no_results: "No results found."
         clear_filter: "Clear"
         categories:

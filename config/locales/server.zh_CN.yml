@@ -101,7 +101,7 @@ zh_CN:
     template:
       body: '有下列问题：'
       header:
-        other: 有 %{count} 个错误使得%{model}无法被保存
+        other: '有 %{count} 个错误使得%{model}无法被保存'
     embed:
       load_from_remote: "载入帖子时出错了。"
     site_settings:
@@ -164,7 +164,6 @@ zh_CN:
   no_links_allowed: "抱歉，访客无法贴链接。"
   too_many_links:
     other: "抱歉，访客一次仅能贴 %{count} 条链接。"
-  contains_blocked_words: "你的帖子包含违禁词。"
   spamming_host: "抱歉，你不能添加一个链接到那个地址的链接。"
   user_is_suspended: "被封禁的用户不允许发贴。"
   topic_not_found: "出现问题。或许这个主题在你看的时候已经被关闭或删除了。"
@@ -365,41 +364,41 @@ zh_CN:
     title: "欢迎来到 Discourse"
     body: |2
 
-      置顶主题的第一段是访客在主页看到的欢迎私信。这很重要！
+        置顶主题的第一段是访客在主页看到的欢迎私信。这很重要！
 
-      **编辑**它作为社区的简要介绍：
+        **编辑**它作为社区的简要介绍：
 
-      - 什么人想参与？
-      - 他们能在这找到什么？
-      - 为什么他们要来这？
-      - 他们能在哪里阅读更多的内容（链接、资源等）？
+        - 什么人想参与？
+        - 他们能在这找到什么？
+        - 为什么他们要来这？
+        - 他们能在哪里阅读更多的内容（链接、资源等）？
 
-      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
-      你可能想要在管理 :wrench: （右上角）中关闭这个主题，这样回复就不会积压在这个通告下。
+        你可能想要在管理 :wrench: （右上角）中关闭这个主题，这样回复就不会积压在这个通告下。
   lounge_welcome:
     title: "欢迎来到贵宾室"
     body: |2
 
-      恭喜！ :confetti_ball:
+        恭喜！ :confetti_ball:
 
-      如果你看到了这个主题，说明你已经被提升至**常规**（信任等级3）了。
+        如果你看到了这个主题，说明你已经被提升至**常规**（信任等级3）了。
 
-      你现在可以&hellip;
+        你现在可以&hellip;
 
-      * 编辑任何主题的标题
-      * 改变任何主题的分类
-      * 让你的链接设置为 follow 属性（[自动 nofollow](http://en.wikipedia.org/wiki/Nofollow)限制已经移除）
-      * 访问一个只有信任等级3及更高才能见到的贵宾室分类
-      * 一次标记即可隐藏垃圾信息
+        * 编辑任何主题的标题
+        * 改变任何主题的分类
+        * 让你的链接设置为 follow 属性（[自动 nofollow](http://en.wikipedia.org/wiki/Nofollow)限制已经移除）
+        * 访问一个只有信任等级3及更高才能见到的贵宾室分类
+        * 一次标记即可隐藏垃圾信息
 
-      这里是[目前达到常规的用户列表](/badges/3/regular)。一定要来问个好！
+        这里是[目前达到常规的用户列表](/badges/3/regular)。一定要来问个好！
 
-      感谢成为社区的重要一员！
+        感谢成为社区的重要一员！
 
-      （想了解关于信任等级的更多信息，[参见这个主题][trust]。请注意成员需要在将来也维持一定的选择条件的成员才能保持在常规。）
+        （想了解关于信任等级的更多信息，[参见这个主题][trust]。请注意成员需要在将来也维持一定的选择条件的成员才能保持在常规。）
 
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "关于“%{category}”分类"
     replace_paragraph: "（将第一段话修改成你的新分类的简述。这段文字将出现在用户选择分类的地方，所以尝试保持在 200 个字符内。 **除非你编辑了这段文字或者在这分类中创建了主题，这个分类不会出现在分类页面中。**）"
@@ -559,8 +558,6 @@ zh_CN:
       long_form: '标记为不当内容'
     notify_user:
       title: '给@{{username}}发送一条私信'
-      description: '我想与此人私下交流他们的帖子。'
-      short_description: '我想要直接地私下里和作者沟通他们的帖子。'
       long_form: '以发送私信给用户'
       email_title: '你在“%{title}”中的帖子'
       email_body: "%{link}\n\n%{message}"
@@ -976,8 +973,6 @@ zh_CN:
     google_oauth2_client_id: "Google 应用的 Client ID"
     google_oauth2_client_secret: "Google 应用的 Client secret"
     enable_twitter_logins: "启用 Twitter 帐号验证登录，需要 twitter_consumer_key 和 twitter_consumer_secret"
-    twitter_consumer_key: "Twitter 帐号验证的客户密匙（Consumer key），到 http://dev.twitter.com 来注册获取"
-    twitter_consumer_secret: "Twitter 帐号验证的客户密码（Consumer secret），到 http://dev.twitter.com 来注册获取"
     enable_instagram_logins: "启用 Instagram 验证，需要 instagram_consumer_key 和 instagram_consumer_secret"
     instagram_consumer_key: "Instagram 验证的 Consumer key"
     instagram_consumer_secret: "Instagram 验证的 Consumer secret"
@@ -992,7 +987,6 @@ zh_CN:
     allow_restore: "允许导入数据，这将能替换所有全站数据！除非你计划导入数据，否则请保持设置为 false"
     maximum_backups: "磁盘保存的最大备份数量。老的备份将自动删除"
     automatic_backups_enabled: "按照定义的备份频率运行自动备份计划"
-    backup_frequency: "自动创建站点备份的频率，以天为单位。"
     enable_s3_backups: "当完成备份后上传备份到 S3。重要：需要在文件设置中填写有效的 S3 验证资料。"
     s3_backup_bucket: "远端备份 bucket。警告：确认它使私有的 bucket。"
     s3_disable_cleanup: "当在本地删除备份时不删除 S3 上的备份。"
@@ -1581,47 +1575,6 @@ zh_CN:
   test_mailer:
     title: "测试发件人"
     subject_template: "[%{email_prefix}] 邮件可达性测试"
-    text_body_template: |
-      这是一封测试电子邮件，发自：
-
-      [**%{base_url}**][0]
-
-      电子邮件分发很复杂。以下是一些你应该检查的重点：
-
-      - 确定你在站点设置中为 `notification email` 设置了正确的地址。**这是系统发送邮件里的“发自”地址，并需要你的域名配置正确以供相关验证。**。
-
-      - 学习使用邮件客户端查看电子邮件源代码，这样你可以通过查看邮件头部来排查重要线索。在 Gmail 中，可以通过每一封邮件下拉菜单中的“显示原始私信”来查看。
-
-      - **重要：** 你的 ISP 是否对你发送邮件的域名和 IP 作了反向 DNS 解析？你可以在此[测试你的反向枚举指针（PTR）记录][2]。如果你的 ISP 没有设置正确的反向 DNS 记录，那么很可能你的任何电子邮件都不会被成功发送。
-
-      - 你的域名的[发件人策略框架（SPF）记录][8]是否正确？你可以在此[测试你的SPF记录][1]。注意 TXT 是一种正确的官方 SPF 记录。
-
-      - 你域名的[域名密钥身份识别邮件（DKIM）记录][3]设置是否正确？这将显著提高邮件分发的成功率。在此[测试你的 DKIM 记录][7]。
-
-      - 如果你自己运行邮件服务器，检查确认你发送电子邮件的服务器 IP [不在任何邮件黑名单中][4]。验证你的 DNS 记录的 HELO 私信中设置了符合要求的主机名。如果没有，那么会导致很多邮件服务商拒收你的邮件。
-
-      - 我们强烈建议你**发送测试邮件至 [mail-tester.com][mt]**，这样可以检查上述设置是否正确。
-
-      （最简单的方法是在 [SendGrid][sg]、[SparkPost][sp]、[Mailgun][mg] 和 [Mailjet][mj]注册免费账户，他们的免费账户对一个小社区是足够的。不过你仍然需要在 DNS 设置中设定 SPF 和 DKIM 记录！）
-
-      我们衷心希望你成功完成邮件发送测试！
-
-      祝好运！
-
-      你的朋友，[Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://sendgrid.com/
-      [sp]: https://www.sparkpost.com/
-      [mg]: http://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing
-      [mt]: http://www.mail-tester.com/
   new_version_mailer:
     title: "新版本发件人"
     subject_template: "[%{email_prefix}] 新 Discourse 版本可供升级"
@@ -2241,7 +2194,7 @@ zh_CN:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
-        %{message}
+          %{message}
     account_suspended:
       title: "账户被禁用"
       subject_template: "[%{email_prefix}] 你的账户已经被禁用"

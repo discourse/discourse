@@ -388,7 +388,6 @@ fi:
       name: "Nimi"
       user_count: "Jäsenmäärä"
       bio: "Tietoa ryhmästä"
-      selector_placeholder: "Lisää jäseniä"
       owner: "isäntä"
       index:
         title: "Ryhmät"
@@ -1695,8 +1694,8 @@ fi:
         select_all: valitse kaikki
         deselect_all: poista kaikkien valinta
         description:
-          one: Olet valinnut <b>yhden</b> viestin.
-          other: Olet valinnut <b>{{count}}</b> viestiä.
+          one: "Olet valinnut <b>yhden</b> viestin."
+          other: "Olet valinnut <b>{{count}}</b> viestiä."
     post:
       quote_reply: "Lainaa"
       edit: "<i class='fa fa-pencil'></i> {{link}} {{replyAvatar}} {{username}}"
@@ -1959,7 +1958,6 @@ fi:
       email_in_disabled: "Uusien ketjujen aloittaminen sähköpostitse on otettu pois käytöstä sivuston asetuksissa. Salliaksesi uusien ketjujen luomisen sähköpostilla, "
       email_in_disabled_click: 'ota käyttöön "email in" asetus.'
       mailinglist_mirror: "Alue jäljittelee postituslistaa"
-      suppress_from_homepage: "Vaimenna alue kotisivulta."
       show_subcategory_list: "Näytä lista tytäralueista ketjujen yläpuolella tällä alueella."
       num_featured_topics: "Kuinka monta ketjua näytetään Keskustelualueet-sivulla:"
       subcategory_num_featured_topics: "Kuinka monta ketjua näytetään emoalueen sivulla:"
@@ -2497,7 +2495,6 @@ fi:
         edit: "Muokkaa ryhmiä"
         refresh: "Lataa uudelleen"
         new: "Uusi"
-        selector_placeholder: "syötä käyttäjätunnus"
         about: "Muokkaa ryhmien jäsenyyksiä ja nimiä täällä"
         group_members: "Ryhmään kuuluvat"
         delete: "Poista"
@@ -3282,10 +3279,7 @@ fi:
         recommended: "On suositeltavaa muokata seuraavaa tekstiä tarpeidesi mukaan:"
         show_overriden: 'Näytä vain muokatut'
       site_settings:
-        show_overriden: 'Näytä vain muokatut'
         title: 'Asetukset'
-        reset: 'nollaa'
-        none: 'ei mitään'
         no_results: "Ei tuloksia."
         clear_filter: "Tyhjennä"
         add_url: "Lisää URL"

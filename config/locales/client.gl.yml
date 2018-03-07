@@ -101,6 +101,7 @@ gl:
           other: "%{count} anos despois"
       previous_month: 'Mes anterior'
       next_month: 'Mes seguinte'
+      placeholder: data
     share:
       topic: 'compartir unha ligazón a este tema'
       post: 'publicación %{postNumber}'
@@ -149,6 +150,7 @@ gl:
         cn_north_1: "China (Beijing)"
         eu_central_1: "EU (Frankfurt)"
         eu_west_1: "EU (Irlanda)"
+        eu_west_2: "EU (Londres)"
         sa_east_1: "América do Sur (São Paulo)"
         us_east_1: "EE.UU. Leste (N. Virxinia)"
         us_gov_west_1: "AWS GovCloud (EE.UU)"
@@ -158,6 +160,7 @@ gl:
     not_implemented: "Sentímolo pero esta funcionalidade non se implementou aínda."
     no_value: "Non"
     yes_value: "Si"
+    submit: "Enviar"
     generic_error: "Sentímolo pero produciuse un erro."
     generic_error_with_reason: "Produciuse un erro: %{error}"
     sign_up: "Crear unha conta"
@@ -249,6 +252,7 @@ gl:
     uploading: "Actualizando..."
     uploading_filename: "Actualizando {{filename}}..."
     uploaded: "Actualizado!"
+    pasting: "A pegar..."
     enable: "Activar"
     disable: "Desactivar"
     undo: "Desfacer"
@@ -318,7 +322,6 @@ gl:
         other: "%{count} usuarios"
     groups:
       add: "Engadir"
-      selector_placeholder: "Engadir membros"
       owner: "propietario"
       activity: "Actividade"
       members: "Membros"
@@ -1185,8 +1188,8 @@ gl:
         select_all: seleccionar todo
         deselect_all: deseleccionar todo
         description:
-          one: Seleccionaches <b>unha</b> publicación.
-          other: Seleccionaches <b>{{count}}</b> publicacións.
+          one: "Seleccionaches <b>unha</b> publicación."
+          other: "Seleccionaches <b>{{count}}</b> publicacións."
     post:
       edit_reason: "Razón:"
       post_number: "publicación {{number}}"
@@ -1389,7 +1392,6 @@ gl:
       email_in_allow_strangers: "Aceptar correos-e de usuarios anónimos sen contas"
       email_in_disabled: "A publicación de novos temas vía correo-e está desactivada nos axustes do sitio. Para activala,"
       email_in_disabled_click: 'activar o axuste «email in».'
-      suppress_from_homepage: "Retirar esta categoría da páxina de inicio."
       allow_badges_label: "Permitir adxudicar insignias nesta categoría"
       edit_permissions: "Editar permisos"
       add_permission: "Engadir permisos"
@@ -1661,7 +1663,6 @@ gl:
         edit: "Editar grupos"
         refresh: "Actualizar"
         new: "Novo"
-        selector_placeholder: "escribe o nome do usuario"
         about: "Edita aquí a túa pertenza a un grupo e nomes"
         group_members: "Membros do grupo"
         delete: "Eliminar"
@@ -2177,10 +2178,7 @@ gl:
         recommended: "Recomendamos personalizar o seguinte texto para axeitalo ás túas necesidades:"
         show_overriden: 'Amosar só os cambios'
       site_settings:
-        show_overriden: 'Amosar só os cambios'
         title: 'Axustes'
-        reset: 'restabelecer'
-        none: 'ningunha'
         no_results: "Non se atoparon resultados."
         clear_filter: "Borrar"
         add_url: "engadir URL"

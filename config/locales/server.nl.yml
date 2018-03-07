@@ -99,7 +99,7 @@ nl:
     template:
       body: 'Er waren problemen met de volgende velden:'
       header:
-        one: 1 fout heeft voorkomen dat %{model} kon worden opgeslagen
+        one: '1 fout heeft voorkomen dat %{model} kon worden opgeslagen'
         other: '%{count} fouten hebben voorkomen dat %{model} kon worden opgeslagen'
     embed:
       load_from_remote: "Er is een fout opgetreden bij het laden van dat bericht."
@@ -170,7 +170,6 @@ nl:
   too_many_links:
     one: "Sorry, nieuwe gebruikers kunnen maar één koppeling in een bericht plaatsen."
     other: "Sorry, nieuwe gebruikers kunnen maar %{count} koppelingen in een bericht plaatsen."
-  contains_blocked_words: "Je bericht bevat woorden die niet zijn toegestaan."
   spamming_host: "Sorry, u kunt geen koppeling naar die host plaatsen."
   user_is_suspended: "Geschorste gebruikers mogen geen berichten plaatsen."
   topic_not_found: "Er is iets fout gegaan. Misschien is het topic gesloten of verwijderd terwijl u het bekeek?"
@@ -365,41 +364,41 @@ nl:
     title: "Welkom bij Discourse"
     body: |2
 
-      De eerste alinea van dit vastgemaakte topic is op uw startpagina zichtbaar als een welkomstbericht voor alle nieuwe bezoekers. Dit is belangrijk!
+        De eerste alinea van dit vastgemaakte topic is op uw startpagina zichtbaar als een welkomstbericht voor alle nieuwe bezoekers. Dit is belangrijk!
 
-      **Bewerk dit** naar een korte beschrijving van uw gemeenschap:
+        **Bewerk dit** naar een korte beschrijving van uw gemeenschap:
 
-      - Voor wie is deze bestemd?
-      - Wat kunnen ze hier vinden?
-      - Waarom zouden ze hier moeten komen?
-      - Waar kunnen ze meer lezen (koppelingen, bronnen, etc.)?
+        - Voor wie is deze bestemd?
+        - Wat kunnen ze hier vinden?
+        - Waarom zouden ze hier moeten komen?
+        - Waar kunnen ze meer lezen (koppelingen, bronnen, etc.)?
 
-      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
-      Mogelijk wilt u dit topic sluiten via de :wrench: voor beheer (rechtsboven en -beneden), zodat er bij een aankondiging geen antwoorden opstapelen.
+        Mogelijk wilt u dit topic sluiten via de :wrench: voor beheer (rechtsboven en -beneden), zodat er bij een aankondiging geen antwoorden opstapelen.
   lounge_welcome:
     title: "Welkom in de Lounge"
     body: |2
 
-      Gefeliciteerd! :confetti_ball:
+        Gefeliciteerd! :confetti_ball:
 
-      Als u dit bericht kunt zien, bent u onlangs gepromoveerd naar **vaste gebruiker** (vertrouwensniveau 3).
+        Als u dit bericht kunt zien, bent u onlangs gepromoveerd naar **vaste gebruiker** (vertrouwensniveau 3).
 
-      U kunt nu &hellip;
+        U kunt nu &hellip;
 
-      * De titel van elk topic bewerken
-      * De categorie van elk topic wijzigen
-      * Al uw koppelingen laten volgen ([automatische nofollow](http://nl.wikipedia.org/wiki/Nofollow) is verwijderd)
-      * Een privécategorie Lounge benaderen, die alleen zichtbaar is voor gebruikers met vertrouwensniveau 3 en hoger
-      * Spam verbergen met één markering
+        * De titel van elk topic bewerken
+        * De categorie van elk topic wijzigen
+        * Al uw koppelingen laten volgen ([automatische nofollow](http://nl.wikipedia.org/wiki/Nofollow) is verwijderd)
+        * Een privécategorie Lounge benaderen, die alleen zichtbaar is voor gebruikers met vertrouwensniveau 3 en hoger
+        * Spam verbergen met één markering
 
-      Hier is de [huidige lijst van vaste gebruikers](/badges/3/regular). Zeg zeker even hallo.
+        Hier is de [huidige lijst van vaste gebruikers](/badges/3/regular). Zeg zeker even hallo.
 
-      Bedankt dat u een belangrijk onderdeel bent van deze gemeenschap!
+        Bedankt dat u een belangrijk onderdeel bent van deze gemeenschap!
 
-      ([Bekijk dit topic][trust] voor meer informatie over vertrouwensniveaus. Let erop dat alleen leden die na verloop van tijd aan de voorwaarden blijven voldoen vaste gebruikers blijven.)
+        ([Bekijk dit topic][trust] voor meer informatie over vertrouwensniveaus. Let erop dat alleen leden die na verloop van tijd aan de voorwaarden blijven voldoen vaste gebruikers blijven.)
 
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Over de categorie %{category}"
     replace_paragraph: "(Vervang deze eerste alinea door een korte beschrijving van uw nieuwe categorie. Deze leidraad verschijnt in het categorieselectiegebied, dus probeer deze onder de 200 tekens te houden. **Voordat u deze beschrijving bewerkt of topics aanmaakt, verschijnt deze categorie niet op de categoriepagina.**)"
@@ -582,8 +581,6 @@ nl:
       long_form: 'heeft dit als ongepast gemarkeerd'
     notify_user:
       title: '@{{username}} een bericht sturen'
-      description: 'I wil rechtstreeks en privé met deze persoon over zijn of haar bericht praten.'
-      short_description: 'I wil rechtstreeks en privé met deze persoon over zijn of haar bericht praten.'
       long_form: 'bericht verstuurd naar gebruiker'
       email_title: 'Uw bericht in ''%{title}'''
       email_body: "%{link}\n\n%{message}"
@@ -962,8 +959,6 @@ nl:
     google_oauth2_client_id: "Client-ID van uw Google-toepassing."
     google_oauth2_client_secret: "Client-geheim van uw Google-toepassing."
     enable_twitter_logins: "Twitter-authenticatie inschakelen; vereist twitter_consumer_key en twitter_consumer_secret."
-    twitter_consumer_key: "consumer_key (registreer op dev.twitter.com)"
-    twitter_consumer_secret: "consumer secret (registreer op dev.twitter.com)"
     enable_instagram_logins: "Instagram-authenticatie inschakelen; vereist instagram_consumer_key en instagram_consumer_secret."
     enable_facebook_logins: "Facebook-authenticatie inschakelen; vereist facebook_app_id en facebook_app_secret."
     facebook_app_id: "app_id (registreer op https://developers.facebook.com/apps)"
@@ -975,7 +970,6 @@ nl:
     allow_restore: "Herstellen van data toestaan, waarbij ALLE site-data wordt overschreven! Laat op 'false' staan, tenzij je een back-up terug wil zetten."
     maximum_backups: "Het maximale aantal back-ups om op schijf te bewaren. Oudere back-ups worden automatisch verwijderd."
     automatic_backups_enabled: "Automatische back-ups uitvoeren volgens de opgegeven back-up frequentie."
-    backup_frequency: "Hoe vaak we een back-up van de site maken, in dagen."
     enable_s3_backups: "Upload voltooide back-ups naar S3. LET OP: Zorg ervoor dat je je S3 inloggegevens hebt ingevuld in de Bestanden instellingen."
     s3_backup_bucket: "De S3 bucket voor de backups. WAARSCHUWING: zorg er voor dat dit een privébucket is."
     s3_disable_cleanup: "Backups van S3 niet verwijderen als het lokaal wordt verwijdert."

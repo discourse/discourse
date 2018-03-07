@@ -18,7 +18,7 @@ uk:
             byte:
               one: Байт
               few: Байтів
-              other: Байтів
+              other: Байт
             gb: ГБ
             kb: КБ
             mb: МБ
@@ -250,7 +250,6 @@ uk:
         delete_member_confirm: "Видалити '%{username}' з групи '%{group}'?"
       add: "Додати"
       closed_group: Закрита Група
-      selector_placeholder: "Додати учасників"
       members: "Учасники"
       topics: "Теми"
       posts: "Дописи"
@@ -856,9 +855,9 @@ uk:
         select_all: обрати усе
         deselect_all: скасувати вибір всього
         description:
-          one: Ви обрали <b>1</b> допис.
-          few: 'Ви обрали дописів: <b>{{count}}</b>.'
-          other: 'Ви обрали дописів: <b>{{count}}</b>.'
+          one: "Ви обрали <b>1</b> допис."
+          few: "Ви обрали дописів: <b>{{count}}</b>."
+          other: "Ви обрали дописів: <b>{{count}}</b>."
     post:
       edit_reason: "Причина: "
       post_number: "допис {{number}}"
@@ -1166,7 +1165,6 @@ uk:
         edit: "Редагувати групи"
         refresh: "Оновити"
         new: "Новий"
-        selector_placeholder: "введіть ім'я користувача"
         about: "Edit your group membership and names here"
         group_members: "Учасники групи"
         delete: "Видалити"
@@ -1595,10 +1593,7 @@ uk:
         go_back: "Повернутись до пошуку"
         show_overriden: 'Показувати тільки перевизначені'
       site_settings:
-        show_overriden: 'Показувати тільки перевизначені'
         title: 'Налаштування'
-        reset: 'скинути'
-        none: 'none'
         no_results: "Не знайдено результатів."
         clear_filter: "Очистити"
         add_url: "додати URL"

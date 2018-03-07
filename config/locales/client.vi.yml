@@ -360,7 +360,6 @@ vi:
       name: "Tên"
       user_count: "Số lượng thành viên"
       bio: "Thông tin về nhóm"
-      selector_placeholder: "Thêm thành viên"
       owner: "chủ"
       index:
         title: "Nhóm"
@@ -1436,7 +1435,7 @@ vi:
         select_all: chọn tất cả
         deselect_all: bỏ chọn tất cả
         description:
-          other: Bạn đã chọn <b>{{count}}</b> bài viết.
+          other: "Bạn đã chọn <b>{{count}}</b> bài viết."
     post:
       quote_reply: "Trích dẫn"
       edit_reason: "Lý do: "
@@ -1636,7 +1635,6 @@ vi:
       email_in_allow_strangers: "Nhận thư điện tử từ người gửi vô danh không tài khoản"
       email_in_disabled: "Tạo chủ đề mới thông qua email đã được tắt trong thiết lập. Để bật tính năng này, "
       email_in_disabled_click: 'kích hoạt thiết lập thư điện tử'
-      suppress_from_homepage: "Ngăn chặn chuyên mục này hiển thị trên trang chủ."
       allow_badges_label: "Cho phép thưởng huy hiệu trong chuyên mục này"
       edit_permissions: "Sửa quyền"
       add_permission: "Thêm quyền"
@@ -1981,7 +1979,6 @@ vi:
         edit: "Sửa nhóm"
         refresh: "Làm mới"
         new: "Mới"
-        selector_placeholder: "nhập tên tài khoản"
         about: "Chỉnh sửa nhóm thành viên và tên của bạn ở đây"
         group_members: "Nhóm thành viên"
         delete: "Xóa"
@@ -2503,10 +2500,7 @@ vi:
         recommended: "Bạn nên tùy biến các nội dung sau đây cho phù hợp với nhu cầu:"
         show_overriden: 'Chỉ hiển thị chỗ ghi đè'
       site_settings:
-        show_overriden: 'Chỉ hiện thị đã ghi đè'
         title: 'Xác lập'
-        reset: 'trạng thái đầu'
-        none: 'không có gì'
         no_results: "Không tìm thấy kết quả."
         clear_filter: "Xóa"
         add_url: "thêm URL"

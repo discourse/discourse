@@ -158,7 +158,6 @@ ko:
   no_links_allowed: "죄송합니다. 신규회원은 글에 링크를 넣을 수 없습니다."
   too_many_links:
     other: "죄송합니다. 신규회원은 글 하나에 링크를 %{count}개까지 넣을 수 있습니다."
-  contains_blocked_words: "포스트에 금지 단어가 포함되어 있습니다."
   spamming_host: "죄송합니다. 회원님은 링크를 첨부할 수 없습니다."
   user_is_suspended: "가입이 보류된 회원은 글을 쓸 수 없습니다."
   topic_not_found: "뭔가 잘못됐네요. 아마 읽려는 도중에  토픽이 닫혔거나 지워진 건 아닐까요?"
@@ -354,23 +353,23 @@ ko:
     title: "Discourse에 오신 것을 환영합니다"
     body: |2
 
-      고정된 토픽의 첫 문단은 홈페이지에 들어오는 사람들에게 환영 메시지로 보이게 됩니다. 그래서 매우 중요해요!
+        고정된 토픽의 첫 문단은 홈페이지에 들어오는 사람들에게 환영 메시지로 보이게 됩니다. 그래서 매우 중요해요!
 
-      커뮤니티를 알릴 수 있도록 **이 글을 편집하세요**
+        커뮤니티를 알릴 수 있도록 **이 글을 편집하세요**
 
-      - 누구를 위한 커뮤니티인가요?
-      - 여기에서 무엇을 얻을 수 있나요?
-      - 여기에 왜 와야하나요?
-      - 더 알고싶으면 뭘 봐야 하나요 (링크, 자료, 기타 등등)?
+        - 누구를 위한 커뮤니티인가요?
+        - 여기에서 무엇을 얻을 수 있나요?
+        - 여기에 왜 와야하나요?
+        - 더 알고싶으면 뭘 봐야 하나요 (링크, 자료, 기타 등등)?
 
-      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
-      이 토픽에 답글이 쌓이는 게 싫다면, 관리기능 :wrench:(우측 상단에 있어요)을 통해 이 토픽을 닫을 수 있습니다.
+        이 토픽에 답글이 쌓이는 게 싫다면, 관리기능 :wrench:(우측 상단에 있어요)을 통해 이 토픽을 닫을 수 있습니다.
   lounge_welcome:
     title: "라운지에 오신 것을 환영합니다."
     body: |2
 
-      축하합니다! :confetti_ball: 당신의 회원등급이 **지도자** (회원등급 3등급)로 올라갔기 때문에 이 토픽을 볼 수 있게 되었습니다. 이제부터 아래의 행동들을 할 수 있습니다 &hellip; * 토픽 제목을 수정할 수 있습니다 * 토픽의 카테고리를 수정할 수 있습니다 * 링크가 follow로 처리됩니다 ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) 가 제거됩니다) * 회원등급 3 이상인 사용자가 접근할 수 있는 비공개 카테고리인 라운지에 접근할 수 있습니다 * 좋아요와 신고의 가중치가 높아집니다 [정규 멤버 목록](&#x2F;badges/3/regular)을 확인할 수 있습니다. 인사하는 것을 잊지마세요. 이 커뮤니티의 중요한 역할을 해주신 것에 감사드립니다! (회원등급에 관한 더 자세한 정보를 보시려면, [이 토픽 확인하세요][trust]. 기준에 맞는 사람만 정규 회원으로 자격이 유지됩니다.) [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        축하합니다! :confetti_ball: 당신의 회원등급이 **지도자** (회원등급 3등급)로 올라갔기 때문에 이 토픽을 볼 수 있게 되었습니다. 이제부터 아래의 행동들을 할 수 있습니다 &hellip; * 토픽 제목을 수정할 수 있습니다 * 토픽의 카테고리를 수정할 수 있습니다 * 링크가 follow로 처리됩니다 ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) 가 제거됩니다) * 회원등급 3 이상인 사용자가 접근할 수 있는 비공개 카테고리인 라운지에 접근할 수 있습니다 * 좋아요와 신고의 가중치가 높아집니다 [정규 멤버 목록](&#x2F;badges/3/regular)을 확인할 수 있습니다. 인사하는 것을 잊지마세요. 이 커뮤니티의 중요한 역할을 해주신 것에 감사드립니다! (회원등급에 관한 더 자세한 정보를 보시려면, [이 토픽 확인하세요][trust]. 기준에 맞는 사람만 정규 회원으로 자격이 유지됩니다.) [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "'%{category}' 카테고리의 설명"
     replace_paragraph: "(이 문단을 새로운 카테고리를 간단히 설명하는 내용으로 대체하세요. 이 가이드는 카테고리 섹션 영역에 표시되므로, 200자 이하로 유지하는 게 좋습니다. **이 설명을 편집하거나 토픽을 생성하기 전까지는, 이 카테고리는 카테고리 페이지에 표시되지 않습니다.**)"
@@ -527,8 +526,6 @@ ko:
       long_form: '부적절함으로 신고하기'
     notify_user:
       title: '@{{username}} 님에게 메시지를 보냅니다'
-      description: '포스트에 대하여 작성자와 직접 개인적으로 이야기하고 싶습니다.'
-      short_description: '포스트에 대하여 작성자와 직접 개인적으로 이야기하고 싶습니다.'
       long_form: '메세지한 유저'
       email_title: '"%{title}" 내의 당신의 글'
       email_body: "%{link}\n\n%{message}"
@@ -928,8 +925,6 @@ ko:
     google_oauth2_client_id: "Google Application의 Client ID"
     google_oauth2_client_secret: "Google Application의 Client Secret"
     enable_twitter_logins: "Twitter 인증을 활성화합니다. twitter_consumer_key와 twitter_consumer_secret 필요."
-    twitter_consumer_key: "http://dev.twitter.com에 등록된 Twitter 인증을 위한 Consumer key"
-    twitter_consumer_secret: "http://dev.twitter.com에 등록된 Twitter 인증을 위한 Consumer secret"
     enable_instagram_logins: "인스타그램 인증 켜기, instagram_consumer_key 와 instagram_consumer_secret 필요"
     instagram_consumer_key: "인스타그램 인증을 위한 Consumer key "
     instagram_consumer_secret: "인스타그램 인증을 위한 Consumer secret"
@@ -944,7 +939,6 @@ ko:
     allow_restore: "데이터 복원을 허용합니다. 이 사이트의 모든 데이터가 변경될 수 있다. 백업이나 복원 계획이 없다면 비활성화로 놔둡니다."
     maximum_backups: "디스크에 유지할 최대 백업 개수. 오래된 백업순으로 자동으로 삭제된다."
     automatic_backups_enabled: "설정된 백업 주기로 자동 백업 실행"
-    backup_frequency: "하루에 몇 번 백업을 받을까요?"
     enable_s3_backups: "백업이 완료되면 Amazon S3로 업로드합니다. 중요: s3 credentials을 기입되어있는지 확인 필요"
     s3_backup_bucket: "백업본을 유지할 s3 버켓 이름. 주의 : 프라이빗 버켓인지 반드시 확인해야하세요."
     s3_disable_cleanup: "로컬에서 백업 삭제 시 S3에서 백업 제거하는 기능 해제"
@@ -1396,7 +1390,7 @@ ko:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
-        %{message}
+          %{message}
     digest:
       why: "%{last_seen_at}부터 지금까지 %{site_link} 사이트 근황"
       since_last_visit: "마지막 방문 후 경과시간"

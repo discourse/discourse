@@ -16,8 +16,10 @@ tr_TR:
     default_poll_must_have_at_least_2_options: "Ankette en az 2 seçenek olmalı."
     named_poll_must_have_at_least_2_options: "<strong>%{name}</strong> isimli ankette en az 2 seçenek olmalı."
     default_poll_must_have_less_options:
+      one: "Ankette en az %{count} seçenek olmalı."
       other: "Ankette en az %{count} seçenek olmalı."
     named_poll_must_have_less_options:
+      one: "<strong>%{name}</strong> isimli ankette en az %{count}  seçenek olmalı."
       other: "<strong>%{name}</strong> isimli ankette en az %{count}  seçenek olmalı."
     default_poll_must_have_different_options: "Anketin farklı seçenekleri olmalı."
     named_poll_must_have_different_options: "<strong>%{name}</strong> isimli anketin farklı seçenekleri olmalı."

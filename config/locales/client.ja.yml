@@ -359,7 +359,6 @@ ja:
       name: "名前"
       user_count: "メンバー数"
       bio: "グループについて"
-      selector_placeholder: "メンバーを追加"
       owner: "オーナー"
       index:
         title: "グループ"
@@ -774,6 +773,7 @@ ja:
         title: "サマリー"
         stats: "統計"
         time_read: "読んだ時間"
+        recent_time_read: "現在のリードタイム"
         topic_count:
           other: "つのトピックを作成"
         post_count:
@@ -1564,7 +1564,7 @@ ja:
         select_all: すべて選択する
         deselect_all: すべて選択を外す
         description:
-          other: <b>{{count}}</b>個の投稿を選択中。
+          other: "<b>{{count}}</b>個の投稿を選択中。"
     post:
       quote_reply: "引用"
       edit_reason: "理由: "
@@ -2172,7 +2172,6 @@ ja:
         edit: "グループの編集"
         refresh: "更新"
         new: "新規"
-        selector_placeholder: "ユーザ名を入力"
         about: "グループメンバーとグループ名を編集"
         group_members: "グループメンバー"
         delete: "削除"
@@ -2760,10 +2759,7 @@ ja:
         recommended: "それぞれにあわせて、文章を変えることをオススメします:"
         show_overriden: '上書き部分のみ表示'
       site_settings:
-        show_overriden: '上書き部分のみ表示'
         title: '設定'
-        reset: 'デフォルトに戻す'
-        none: 'なし'
         no_results: "何も見つかりませんでした。"
         clear_filter: "クリア"
         add_url: "URL追加"

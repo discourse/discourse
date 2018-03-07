@@ -388,7 +388,6 @@ fr:
       name: "Nom"
       user_count: "Nombre de membres"
       bio: "À propos du groupe"
-      selector_placeholder: "Ajouter des membres"
       owner: "propriétaire"
       index:
         title: "Groupes"
@@ -1691,8 +1690,8 @@ fr:
         select_all: tout sélectionner
         deselect_all: tout désélectionner
         description:
-          one: vous avez sélectionné <b>1</b> message.
-          other: Vous avez sélectionné <b>{{count}}</b> messages.
+          one: "vous avez sélectionné <b>1</b> message."
+          other: "Vous avez sélectionné <b>{{count}}</b> messages."
     post:
       quote_reply: "Citer"
       edit: "<i class='fa fa-pencil'></i> {{link}} {{replyAvatar}} {{username}}"
@@ -1953,7 +1952,6 @@ fr:
       email_in_disabled: "La possibilité de créer des nouveaux sujets via courriel est désactivé dans les Paramètres. Pour l'activer,"
       email_in_disabled_click: 'activer le paramètre « email in ».'
       mailinglist_mirror: "La catégorie reflète une liste de diffusion"
-      suppress_from_homepage: "Retirer cette catégorie de la page d'accueil"
       show_subcategory_list: "Afficher la liste des sous-catégories au dessus des sujets dans cette catégorie."
       num_featured_topics: "Nombre de sujets affichés sur la page des catégories :"
       subcategory_num_featured_topics: "Nombre de sujets sélectionnés sur la page des catégories parentes :"
@@ -2484,7 +2482,6 @@ fr:
         edit: "Modifier les groupes"
         refresh: "Actualiser"
         new: "Nouveau"
-        selector_placeholder: "entrer le pseudo"
         about: "Modifier votre adhésion et les noms ici"
         group_members: "Membres du groupe"
         delete: "Supprimer"
@@ -3272,10 +3269,7 @@ fr:
         recommended: "Nous vous recommandons de personnaliser le texte suivant selon vos besoins :"
         show_overriden: 'Ne montrer que ce qui a été personnalisé'
       site_settings:
-        show_overriden: 'Ne montrer que ce qui a été changé'
         title: 'Paramètres'
-        reset: 'rétablir'
-        none: 'rien'
         no_results: "Aucun résultat trouvé."
         clear_filter: "Effacer"
         add_url: "ajouter URL"

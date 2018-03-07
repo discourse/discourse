@@ -115,6 +115,7 @@ sq:
       split_topic: "ndaje këtë teme %{when}"
       invited_user: "ka ftuar %{who} %{when}"
       invited_group: "ka ftuar %{who} %{when}"
+      user_left: "u larguan nga ky mesazh"
       removed_user: "hequr %{who} %{when}"
       removed_group: "hequr %{who} %{when}"
       autoclosed:
@@ -139,6 +140,7 @@ sq:
     wizard_required: "Mirseerdhët tek faqja juaj e re Discourse! Le t'ia nisim me <a href='%{url}' data-auto-route='true'>\"setup wizard\"</a> ✨"
     emails_are_disabled: "Emailat janë çaktivizuar globalisht nga administratori i faqes. Asnjë njoftim me email nuk do të dërgohet. "
     bootstrap_mode_enabled: "Për të thjeshtuar nisjen e komunitetit, jeni në formatin \"bootstrap\". Të gjithë anëtarët e rinj do të kenë nivelin e besimit 1 dhe emailat e përditshëm të aktivizuar. Këto opsione do të çaktivizohen automatikisht kur numri total i anëtarëve të kalojë numrin %{min_users}."
+    bootstrap_mode_disabled: "Mënyra bootstrap do të çaktivizohet në 24 orët e ardhshme."
     themes:
       default_description: "Paracaktuar"
     s3:
@@ -347,6 +349,11 @@ sq:
         add_members: "Shto anëtarë"
         delete_member_confirm: "Do të heqësh '%{username}' nga grupi '%{group}'?"
       name_placeholder: "Emri i grupit, pa hapësira, si username-t"
+      public_admission: "Lejo që përdoruesit të bashkohen lirisht ne grupin (Kërkon grupin e dukshëm publik)"
+      public_exit: "Lejo përdoruesit të largohen nga grupi lirshëm"
+      empty:
+        posts: "Nuk ka postime nga anëtarët e këtij grupi."
+        members: "Nuk ka anëtarë në këtë grup."
       add: "Shto"
       join: "Bashkoju grupit"
       leave: "Ik nga grupi"
@@ -357,7 +364,6 @@ sq:
       name: "Emri"
       user_count: "Numri i anëtarëve"
       bio: "Mbi grupin"
-      selector_placeholder: "Shto anëtarë"
       owner: "autori"
       index:
         title: "Grupet"
@@ -629,6 +635,7 @@ sq:
         title: "Gjuha e faqes"
         instructions: "Gjuha e faqes për përdoruesin. Do të ndryshojë pasi të rifreskoni faqen. "
         default: "(paracaktuar)"
+        any: "ndonjë"
       password_confirmation:
         title: "Rishkruani fjalëkalimin"
       last_posted: "Postimi i fundit"
@@ -1388,8 +1395,8 @@ sq:
         select_all: përzgjidhi të gjitha
         deselect_all: pastro zgjedhjen
         description:
-          one: Keni përzgjedhur <b>1</b> postim.
-          other: Keni përzgjedhur <b>{{count}}</b> postime.
+          one: "Keni përzgjedhur <b>1</b> postim."
+          other: "Keni përzgjedhur <b>{{count}}</b> postime."
     post:
       edit_reason: "Arsyeja:"
       post_number: "postimi {{number}}"
@@ -1609,7 +1616,6 @@ sq:
       email_in_allow_strangers: "Prano emaila nga anëtarë anonimë pa llogari në faqe"
       email_in_disabled: "Postimi i temave të reja me email është çaktivizuar në Rregullimet e faqes. Për të aktivizuar postimet e temave të reja me email,"
       email_in_disabled_click: 'aktivizo rregullimin "email in".'
-      suppress_from_homepage: "Hiqe këtë kategori nga faqja e parë."
       allow_badges_label: "Lejo të jepen stemat në këtë kategori"
       edit_permissions: "Ndryshoni autorizimet"
       add_permission: "Shtoni autorizim"
@@ -2056,7 +2062,6 @@ sq:
         edit: "Redakto Grup"
         refresh: "Rifresko"
         new: "I Ri"
-        selector_placeholder: "vendos emrin e përdoruesit"
         about: "Modifiko anëtarët e grupit dhe emrin këtu"
         group_members: "Përdorues grupi"
         delete: "Fshij"
@@ -2523,10 +2528,7 @@ sq:
         recommended: "Ju rekomandojmë të ndryshoni tekstin më poshtë sipas nevojave tuaja: "
         show_overriden: 'Shfaq vetëm të ndryshuarat'
       site_settings:
-        show_overriden: 'Shfaq vetëm të ndryshuarat'
         title: 'Rregullimet'
-        reset: 'rivendos'
-        none: 'asnjë'
         no_results: "Nuk u gjet asnjë rezultat."
         clear_filter: "Pastro"
         add_url: "shto URL"

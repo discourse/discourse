@@ -320,7 +320,6 @@ id:
       name: "Nama"
       user_count: "Jumlah Anggota"
       bio: "Tentang Kelompok"
-      selector_placeholder: "Menambahkan anggota"
       owner: "pemilik"
       activity: "Aktifitas"
       members: "Anggota"

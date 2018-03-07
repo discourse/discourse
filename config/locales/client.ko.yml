@@ -357,7 +357,6 @@ ko:
       name: "이름"
       user_count: "멤버 수"
       bio: "이 그룹에 대하여"
-      selector_placeholder: "멤버 추가"
       owner: "소유자"
       index:
         title: "그룹"
@@ -1576,7 +1575,7 @@ ko:
         select_all: 전체 선택
         deselect_all: 전체 선택 해제
         description:
-          other: <b>{{count}}</b>개의 개시글을 선택하셨어요.
+          other: "<b>{{count}}</b>개의 개시글을 선택하셨어요."
     post:
       quote_reply: "인용하기"
       edit_reason: "Reason: "
@@ -1793,7 +1792,6 @@ ko:
       email_in_allow_strangers: "계정이 없는 익명 유저들에게 이메일을 받습니다."
       email_in_disabled: "이메일로 새 주제 작성하기 기능이 비활성화되어 있습니다. 사이트 설정에서 '이메일로 새 주제 작성하기'를 활성화 해주세요."
       email_in_disabled_click: '"email in" 활성화'
-      suppress_from_homepage: "홈페이지에서 이 카테고리를 감춥니다."
       show_subcategory_list: "하위 카테고리 목록을 토픽위에 표시하기."
       num_featured_topics: "이 카테고리 페이지에 표시되는 토픽의 수:"
       subcategory_num_featured_topics: "부모 카테고리 페이지에 표시되는 주요 토픽의 수:"
@@ -2293,7 +2291,6 @@ ko:
         edit: "그룹 수정"
         refresh: "새로고침"
         new: "새로운"
-        selector_placeholder: "아이디를 입력하세요"
         about: "회원과 이름을 변경"
         group_members: "그룹 멤버"
         delete: "삭제"
@@ -3027,10 +3024,7 @@ ko:
         recommended: "다음의 텍스트를 요구에 맞게 편집하는 것을 권장:"
         show_overriden: 'Override 된 설정만 보여주기'
       site_settings:
-        show_overriden: '수정된 것만 표시'
         title: '사이트 설정'
-        reset: '기본값으로 재설정'
-        none: '없음'
         no_results: "No results found."
         clear_filter: "Clear"
         add_url: "URL 추가"

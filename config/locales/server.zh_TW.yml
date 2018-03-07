@@ -154,7 +154,6 @@ zh_TW:
   no_links_allowed: "抱歉，新用戶不能在貼文中放置連結。"
   too_many_links:
     other: "抱歉，新使用者只能在文章中放置 %{count} 個連結。"
-  contains_blocked_words: "你的文章包含禁用的字詞"
   spamming_host: "抱歉，你不能張貼該網站之連結。"
   user_is_suspended: "被停權的用戶無法張貼文章。"
   topic_not_found: "出現問題。也許這個話題被關閉或刪除。"
@@ -327,41 +326,41 @@ zh_TW:
     title: "歡迎來到 Discourse"
     body: |2
 
-      置頂主題的第一段是訪客在主頁看到的歡迎消息。這很重要！
+        置頂主題的第一段是訪客在主頁看到的歡迎消息。這很重要！
 
-      **編輯**它作為社群的簡要介紹：
+        **編輯**它作為社群的簡要介紹：
 
-      - 什麼人想參與？
-      - 他們能在這找到什麼？
-      - 為什麼他們要來這？
-      - 他們能在哪裡閲讀更多的內容（連結、資源等）？
+        - 什麼人想參與？
+        - 他們能在這找到什麼？
+        - 為什麼他們要來這？
+        - 他們能在哪裡閲讀更多的內容（連結、資源等）？
 
-      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
-      你可能想要在管理 :wrench: （右上角）中關閉這個主題，這樣回覆就不會積壓在這個通告下。
+        你可能想要在管理 :wrench: （右上角）中關閉這個主題，這樣回覆就不會積壓在這個通告下。
   lounge_welcome:
     title: "歡迎來到貴賓室"
     body: |2
 
-      恭喜！ :confetti_ball:
+        恭喜！ :confetti_ball:
 
-      如果你看到了這個主題，說明你已經被提升至**常規**（信任等級3）了。
+        如果你看到了這個主題，說明你已經被提升至**常規**（信任等級3）了。
 
-      你現在可以&hellip;
+        你現在可以&hellip;
 
-      * 編輯任何主題的標題
-      * 改變任何主題的分類
-      * 讓你的連結設置為 follow 屬性（[自動 nofollow](http://en.wikipedia.org/wiki/Nofollow)限制已經移除）
-      * 訪問一個只有信任等級3及更高才能見到的貴賓室分類
-      * 一次標記即可隱藏垃圾信息
+        * 編輯任何主題的標題
+        * 改變任何主題的分類
+        * 讓你的連結設置為 follow 屬性（[自動 nofollow](http://en.wikipedia.org/wiki/Nofollow)限制已經移除）
+        * 訪問一個只有信任等級3及更高才能見到的貴賓室分類
+        * 一次標記即可隱藏垃圾信息
 
-      這裡是[目前達到常規的用戶列表](/badges/3/regular)。一定要來問個好！
+        這裡是[目前達到常規的用戶列表](/badges/3/regular)。一定要來問個好！
 
-      感謝成為社群的重要一員！
+        感謝成為社群的重要一員！
 
-      （想瞭解關於信任等級的更多信息，[參見這個主題][trust]。請注意成員需要在將來也維持一定的選擇條件的成員才能保持在常規。）
+        （想瞭解關於信任等級的更多信息，[參見這個主題][trust]。請注意成員需要在將來也維持一定的選擇條件的成員才能保持在常規。）
 
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "對於分類：%{category} 的定義"
     replace_paragraph: "（將第一段話修改成你的新分類的簡述。這段文字將出現在用戶選擇分類的地方，所以嘗試保持在 200 個字元內。 **除非你編輯了這段文字或者在這分類中創建了主題，這個分類不會出現在分類頁面中。**）"
@@ -510,7 +509,6 @@ zh_TW:
       long_form: '投訴為不當內容'
     notify_user:
       title: '給 @{{username}} 送出一則訊息'
-      description: '我想要直接且私下地和這位朋友討論其文章。'
       long_form: '傳訊給用戶'
       email_title: '你的文章在"%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -894,8 +892,6 @@ zh_TW:
     google_oauth2_client_id: "你的 Google 應用程式的客戶端 ID"
     google_oauth2_client_secret: "你的 Google 應用程式的客戶端 secret"
     enable_twitter_logins: "啟用推特（Twitter）帳號驗證登入，需要 twitter_consumer_key 和 twitter_consumer_secret"
-    twitter_consumer_key: "推特帳號驗證的客戶密匙（Consumer key），到 http://dev.twitter.com 來註冊獲取"
-    twitter_consumer_secret: "推特帳號驗證的客戶密碼（Consumer secret），到 http://dev.twitter.com 來註冊獲取"
     enable_instagram_logins: "啟用 Instagram 驗證，需要 instagram_consumer_key 和 instagram_consumer_secret"
     instagram_consumer_key: "Instagram 驗證的 Consumer key"
     instagram_consumer_secret: "Instagram 驗證的 Consumer secret"
@@ -910,7 +906,6 @@ zh_TW:
     allow_restore: "允許還原資料，注意此動作可能覆蓋「所有」網站資料！除非你計畫還原備份檔，否則請保持此設定為 false"
     maximum_backups: "磁碟備份的最大數量，舊的將會自動刪除"
     automatic_backups_enabled: "按照定義的備份頻率運行自動備份計劃"
-    backup_frequency: "自動創建站點備份的頻率，以天為單位。"
     enable_s3_backups: "當完成備份後上傳備份到 S3。重要：需要在文件設定中填寫有效的 S3 驗證資料。"
     s3_backup_bucket: "遠端備份 bucket ，注意：請確定是私有的 bucket"
     s3_disable_cleanup: "當在本地刪除備份時不刪除 S3 上的備份。"
@@ -1365,47 +1360,6 @@ zh_TW:
   test_mailer:
     title: "測試 Mailer"
     subject_template: "[%{email_prefix}] 電子郵件發送測試"
-    text_body_template: |
-      這是一封測試電子郵件，發自：
-
-      [**%{base_url}**][0]
-
-      電子郵件分發很複雜。以下是一些你應該檢查的重點：
-
-      - 確定你在站點設置中為 `notification email` 設置了正確的地址。**這是系統發送郵件裡的“發自”地址，並需要你的域名配置正確以供相關驗證。**。
-
-      - 學習使用郵件客戶端查看電子郵件原始碼，這樣你可以通過查看郵件頭部來排查重要線索。在 Gmail 中，可以通過每一封郵件下拉菜單中的“顯示原始消息”來查看。
-
-      - **重要：** 你的 ISP 是否對你發送郵件的域名和 IP 作了反向 DNS 解析？你可以在此[測試你的反向枚舉指針（PTR）記錄][2]。如果你的 ISP 沒有設置正確的反向 DNS 記錄，那麼很可能你的任何電子郵件都不會被成功發送。
-
-      - 你的域名的[發件人策略框架（SPF）記錄][8]是否正確？你可以在此[測試你的SPF記錄][1]。注意 TXT 是一種正確的官方 SPF 記錄。
-
-      - 你域名的[域名密鑰身份識別郵件（DKIM）記錄][3]設置是否正確？這將顯著提高郵件分發的成功率。在此[測試你的 DKIM 記錄][7]。
-
-      - 如果你自己運行郵件伺服器，檢查確認你發送電子郵件的伺服器 IP [不在任何郵件黑名單中][4]。驗證你的 DNS 記錄的 HELO 消息中設置了符合要求的主機名。如果沒有，那麼會導致很多郵件服務商拒收你的郵件。
-
-      - 我們強烈建議你**發送測試郵件至 [mail-tester.com][mt]**，這樣可以檢查上述設置是否正確。
-
-      （最簡單的方法是在 [SendGrid][sg]、[SparkPost][sp]、[Mailgun][mg] 和 [Mailjet][mj]註冊免費賬戶，他們的免費賬戶對一個小社群是足夠的。不過你仍然需要在 DNS 設置中設定 SPF 和 DKIM 記錄！）
-
-      我們衷心希望你成功完成郵件發送測試！
-
-      祝好運！
-
-      你的朋友，[Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://sendgrid.com/
-      [sp]: https://www.sparkpost.com/
-      [mg]: http://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing
-      [mt]: http://www.mail-tester.com/
   new_version_mailer:
     title: "新版本 Mailer"
     subject_template: "[%{email_prefix}] 有可用的 Discourse 更新"
@@ -1802,7 +1756,7 @@ zh_TW:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
-        %{message}
+          %{message}
     digest:
       why: "在你上一次於 %{last_seen_at} 訪問後，在 %{site_link} 上的摘要。"
       since_last_visit: "自你上次訪問至今"

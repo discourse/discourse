@@ -98,7 +98,7 @@ pt:
     template:
       body: 'Ocorreram problemas com os seguintes campos:'
       header:
-        one: 1 erro impediu este %{model} de ser gravado
+        one: '1 erro impediu este %{model} de ser gravado'
         other: '%{count} erros impediram este %{model} de ser gravado'
     embed:
       load_from_remote: "Ocorreu um erro no carregamento dessa mensagem."
@@ -166,7 +166,6 @@ pt:
   too_many_links:
     one: "Pedimos desculpa, novos utilizadores podem colocar apenas 1 hiperligação numa mensagem."
     other: "Pedimos desculpa, novos utilizadores podem colocar apenas %{count} hiperligações numa mensagem."
-  contains_blocked_words: "A sua publicação contém palavras que não são permitidas."
   spamming_host: "Pedimos desculpa, não pode colocar uma hiperligação para esse servidor."
   user_is_suspended: "Utilizadores suspensos não têm permissão para publicar."
   topic_not_found: "Algo de errado ocorreu. Talvez este tópico tenha sido fechado ou eliminado enquanto olhava para ele?"
@@ -325,25 +324,25 @@ pt:
     title: "Bem-vindo ao Salão"
     body: |2+
 
-      Parabéns! :confetti_ball:
+        Parabéns! :confetti_ball:
 
-      Se consegue ver este tópico, então é porque foi recentemente promovido a **habitual** (Nível de Confiança 3).
+        Se consegue ver este tópico, então é porque foi recentemente promovido a **habitual** (Nível de Confiança 3).
 
-      Pode agora &hellip;
+        Pode agora &hellip;
 
-      * Editar o título de qualquer tópico
-      * Modificar a categoria de qualquer tópico
-      * Ter todas as suas hiperligações a serem seguidas ([nãoseguimento automático](http://en.wikipedia.org/wiki/Nofollow) é removido)
-      * Aceder a um salão privado de categorias, apenas visível a utilizadores com Nível de Confiança 3 ou superior
-      * Esconder spam com uma única sinalização
+        * Editar o título de qualquer tópico
+        * Modificar a categoria de qualquer tópico
+        * Ter todas as suas hiperligações a serem seguidas ([nãoseguimento automático](http://en.wikipedia.org/wiki/Nofollow) é removido)
+        * Aceder a um salão privado de categorias, apenas visível a utilizadores com Nível de Confiança 3 ou superior
+        * Esconder spam com uma única sinalização
 
-      Aqui está a [lista actual de membros habituais](/badges/3/regular). Certifique-se que diz olá.
+        Aqui está a [lista actual de membros habituais](/badges/3/regular). Certifique-se que diz olá.
 
-      Obrigado por ser uma parte importante na nossa comunidade!
+        Obrigado por ser uma parte importante na nossa comunidade!
 
-      (Para mais informação acerca dos Níveis de Confiança, [veja este tópico][confiança]. Por favor tenha conhecimento que apenas membros que continuam a corresponder aos requisitos ao longo do tempo, irão manter-se habituais.)
+        (Para mais informação acerca dos Níveis de Confiança, [veja este tópico][confiança]. Por favor tenha conhecimento que apenas membros que continuam a corresponder aos requisitos ao longo do tempo, irão manter-se habituais.)
 
-      [confiança]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [confiança]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
 
   category:
     topic_prefix: "Acerca da categoria %{category}"
@@ -523,8 +522,6 @@ pt:
       long_form: 'sinalizou isto como inapropriado'
     notify_user:
       title: 'Enviar uma mensagem a @{{username}}'
-      description: 'Quero falar com esta pessoa diretamente e em privado acerca da sua mensagem.'
-      short_description: 'Eu quero falar com esta pessoa diretamente e em privado sobre a sua publicação.'
       long_form: 'utilizador com mensagens'
       email_title: 'A sua mensagem em "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -905,8 +902,6 @@ pt:
     google_oauth2_client_id: "ID do cliente da sua aplicação Google."
     google_oauth2_client_secret: "Chave do cliente da sua aplicação Google."
     enable_twitter_logins: "Ativar autenticação pelo Twitter, requer twitter_consumer_key e twitter_consumer_secret"
-    twitter_consumer_key: "Chave de consumidor para autenticação pelo Twitter, registada em http://dev.twitter.com"
-    twitter_consumer_secret: "Chave do Consumidor para a autenticação pelo Twitter, registada em http://dev.twitter.com"
     enable_instagram_logins: "Activar autenticação pelo Instagram, requer instagram_consumer_key e instagram_consumer_secret"
     instagram_consumer_key: "Chave de consumidor para a autenticação via Instagram"
     instagram_consumer_secret: "Segredo de consumidor para a autenticação via Instagram"
@@ -921,7 +916,6 @@ pt:
     allow_restore: "Permitir o restauro, que pode substituir TODOS os dados do sítio. Deixar a falso a menos que planeie restaurar uma cópia de segurança"
     maximum_backups: "Valor máximo de cópias de segurança a serem guardadas em disco. Cópias de Segurança antigas são automaticamente eliminadas."
     automatic_backups_enabled: "Executar cópias de segurança automáticas de acordo com as definições de frequência de cópia de segurança"
-    backup_frequency: "Com que frequência criamos cópias de segurança do sítio, em dias."
     enable_s3_backups: "Carregar cópias de segurança para S3 quando completo. IMPORTANTE: requer credenciais S3 válidas inseridas nas configurações dos ficheiros."
     s3_backup_bucket: "Balde remoto para guardar cópias de segurança. AVISO: Certifique-se que este é um balde privado."
     s3_disable_cleanup: "Desactive a remoção das cópias de segurança do S3 quando removidas localmente."
@@ -1355,48 +1349,6 @@ pt:
       Desculpe, esta hiperligação de transferência da cópia de segurança já foi utilizada ou expirou.
   admin_confirmation_mailer:
     subject_template: "[%{email_prefix}] Confirmar nova Conta de Administrador"
-  test_mailer:
-    text_body_template: |
-      Este é um email de teste de
-
-      [**%{base_url}**][0]
-
-      A entregabilidade de email é complicada. Aqui estão alguns pontos importantes a verificar primeiro:
-
-      - *Certifique-se* que configurou o endereço de: do `email de notificação` corretamente nas configurações do seu sítio. **O domínio especificado no endereço “de” nos emails que envia é o domínio que será validado**.
-
-      - Conhecer como observar o código fonte dos emails no seu email cliente, de modo a que possa examinar cabeçalhos de email à procura de pistas importantes. No Gmail, é a opção “mostrar original” no menu pendente no canto superior direito de cada email.
-
-      - **IMPORTANTE:** O seu ISP tem um registo de DNS inverso inserido para associar os nomes de domínio aos endereços IP de onde envia o seu email? [Teste o seu registo de PTR Inverso][2] aqui. Se o seu ISP não inserir o registo de DNS inverso apropriado, é muito improvável que qualquer um dos seus emails seja entregue.
-
-      - Estará o [registo SPF][8] do seu domínio correto? [Teste o seu registo SPF][1] aqui. Note que TXT é o tipo correcto de registo oficial para SPF.
-
-      - Estará o [registo DKIM][3] do seu domínio correto? Isto irá melhorar significativamente a entregabilidade de emails. [Teste o seu registo DKIM][7] aqui.
-
-      - Se correr o seu próprio servidor de email, certifique-se que os IPs do seu servidor de email não [estão em nenhuma lista negra de email] [4]. Verifique também que é enviado um nome de servidor qualificado que resolve o DNS na sua mensagem HELO. Se não for, isto irá fazer com que o seu email seja rejeitado por muitos serviços de email.
-
-      - Recomendamos vivamente que **envie um email de teste para [mail-tester.com][mt]** para verificar que tudo mencionado em cima está a funcionar correctamente.
-
-      (A maneira *fácil* é criar uma conta grátis em [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] ou [Mailjet][mj], que têm pacotes grátis generosos de envio de emails e serão suficientes para pequenas comunidades. Mesmo assim irá precisar de configurar os registos SPF e DKIM no seu DNS!)
-
-      Esperamos que tenha recebido este teste de entregabilidade de email sem problemas!
-
-      Boa sorte,
-
-      Dos seus amigos em [Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [7]: http://dkimcore.org/tools/dkimrecordcheck.html
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://sendgrid.com/
-      [sp]: https://www.sparkpost.com/
-      [mg]: http://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing
-      [mt]: http://www.mail-tester.com/
   new_version_mailer:
     subject_template: "[%{email_prefix}] Nova versão do Discourse, disponível atualização"
   new_version_mailer_with_notes:
@@ -1689,7 +1641,7 @@ pt:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
-        %{message}
+          %{message}
     digest:
       why: "Um breve sumário de %{site_link} desde a sua última visita em %{last_seen_at}"
       since_last_visit: "Desde a sua última visita"

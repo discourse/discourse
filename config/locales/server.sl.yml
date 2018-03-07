@@ -1,25 +1,33 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
 sl:
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "D MMMM, YYYY h:mma"
-  datetime_formats:
+  datetime_formats: &datetime_formats
     formats:
       short: "%d-%m-%Y"
       short_no_year: "%B %-d"
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
   date:
-    month_names: [null, Januar, Februar, Marec, April, Maj, Junij, Julij, Avgust,
-      September, Oktober, November, December]
+    month_names: [null, Januar, Februar, Marec, April, Maj, Junij, Julij, Avgust, September, Oktober, November, December]
+    <<: *datetime_formats
   time:
     am: "am"
     pm: "pm"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Teme"
   loading: "Nalagam"
   log_in: "Vpis"
-  errors:
+  errors: &errors
     messages:
       taken: "je že uporabljeno"
       exclusion: je rezervirano
@@ -64,3 +72,9 @@ sl:
       moderators: "moderatorji"
   site_settings:
     avatar_sizes: "Seznam avtomatsko generiranih velikosti avatarjev."
+  activemodel:
+    errors:
+      <<: *errors
+  activerecord:
+    errors:
+      <<: *errors

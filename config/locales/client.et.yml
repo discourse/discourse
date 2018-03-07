@@ -377,7 +377,6 @@ et:
       name: "Nimi"
       user_count: "Liikmete arv"
       bio: "Grupist"
-      selector_placeholder: "Lisa liikmeid"
       owner: "omanik"
       index:
         title: "Grupid"
@@ -1595,8 +1594,8 @@ et:
         select_all: vali kõik
         deselect_all: eemalda valik kõigilt
         description:
-          one: Oled valinud <b>1</b> postituse.
-          other: Oled valinud <b>{{count}}</b> postitust.
+          one: "Oled valinud <b>1</b> postituse."
+          other: "Oled valinud <b>{{count}}</b> postitust."
     post:
       quote_reply: "Tsitaat"
       edit_reason: "Põhjus:"
@@ -1827,7 +1826,6 @@ et:
       email_in_allow_strangers: "Aktsepteeri meile kontota anonüümsetelt kasutajatelt"
       email_in_disabled: "Uute teemade avamine meili teel on saidi sätetes välja lülitatud. Avamiseks"
       email_in_disabled_click: 'aktiveeri säte "sissetulev meil".'
-      suppress_from_homepage: "Eemalda see foorum avalehelt."
       show_subcategory_list: "Näita selles foorumis alamfoorumite nimekirja teemadest üleval pool."
       all_topics_wiki: "Tee uued teemad vaikimisi wikideks."
       allow_badges_label: "Luba selles foorumis autasustamist märgistega"
@@ -2328,7 +2326,6 @@ et:
         edit: "Muuda gruppe"
         refresh: "Värskenda"
         new: "Uus"
-        selector_placeholder: "sisesta kasutajanimi"
         about: "Siin saad muuta oma grupi liikmelisust ja nimesid"
         group_members: "Grupi liikmed"
         delete: "Kustuta"
@@ -3038,10 +3035,7 @@ et:
         recommended: "Soovitame järgnevat teksti oma vajadustele vastavalt kohandada:"
         show_overriden: 'Näita vaid käsitsi muudetuid'
       site_settings:
-        show_overriden: 'Näita vaid käsitsi muudetuid'
         title: 'Sätted'
-        reset: 'lähtesta'
-        none: 'mitte ükski'
         no_results: "Ei leidnud midagi."
         clear_filter: "Puhasta"
         add_url: "lisa URL"

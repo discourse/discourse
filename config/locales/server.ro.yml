@@ -96,7 +96,7 @@ ro:
     template:
       body: 'Au apărut probleme cu următoarele câmpuri:'
       header:
-        one: O eroare a împiedicat acest %{model} să fie salvat
+        one: 'O eroare a împiedicat acest %{model} să fie salvat'
         few: '%{count} erori au împiedicat acest %{model} să fie salvat'
         other: '%{count} de erori au împiedicat acest %{model} să fie salvat'
     embed:
@@ -314,25 +314,25 @@ ro:
     title: "Bine ai venit în sufragerie"
     body: |2
 
-      Felicitări! :confetti_ball:
+        Felicitări! :confetti_ball:
 
-      Dacă poți vedea acest subiect, ai fost promovat recent la **utilizator frecvent** (nivel de încredere 3).
+        Dacă poți vedea acest subiect, ai fost promovat recent la **utilizator frecvent** (nivel de încredere 3).
 
-      Acum poți să &hellip;
+        Acum poți să &hellip;
 
-      * Editezi titlul oricărui subiect
-      * Schimbi categoria oricărui subiect
-      * Setezi ca toate link-urile tale să fie urmărite ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) este dezactivat)
-      * Accesezi secțiunea privată din categoria Sufragerie unde au acces numai utilizatorii de nivel 3 sau mai mare
-      * Ascunzi spam-ul folosind un singur marcaj de avertizare
+        * Editezi titlul oricărui subiect
+        * Schimbi categoria oricărui subiect
+        * Setezi ca toate link-urile tale să fie urmărite ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) este dezactivat)
+        * Accesezi secțiunea privată din categoria Sufragerie unde au acces numai utilizatorii de nivel 3 sau mai mare
+        * Ascunzi spam-ul folosind un singur marcaj de avertizare
 
-      Aici este [lista colegilor utilizatori ce au ajuns la nivelul de încredere 3](/badges/3/regular). Salută-i!
+        Aici este [lista colegilor utilizatori ce au ajuns la nivelul de încredere 3](/badges/3/regular). Salută-i!
 
-      Îți mulțumim că ești o parte importantă a acestei comunități!
+        Îți mulțumim că ești o parte importantă a acestei comunități!
 
-      (Pentru mai multe informații cu privire la nivelurile de încredere, [vezi subiectul ăsta][încredere]. Ține aminte că doar membrii ce vor îndeplini constant criteriile cerute vor rămâne la nivelul de încredere 3.)
+        (Pentru mai multe informații cu privire la nivelurile de încredere, [vezi subiectul ăsta][încredere]. Ține aminte că doar membrii ce vor îndeplini constant criteriile cerute vor rămâne la nivelul de încredere 3.)
 
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Despre categoria %{category}"
     replace_paragraph: "(Înlocuiește acest prim paragraf cu o scurtă descriere a noii tale categorii. Acest îndreptar va apărea în zona de selecție a categoriei, așa că încearcă să îl limitezi la maxim 200 de caractere. **Această categorie nu va apărea în pagina categoriilor până ce nu editezi această descriere sau până ce nu creezi subiecte**)"
@@ -535,7 +535,6 @@ ro:
       long_form: 'marcat ca necorespunzător'
     notify_user:
       title: 'Trimite-i un mesaj lui @{{username}}'
-      description: 'Vreau să îi vorbesc direct și în mod privat acestei persoane cu privire la postarea sa.'
       long_form: 'utilizator căruia i-a fost trimis mesaj'
       email_title: 'Postarea ta din "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -914,8 +913,6 @@ ro:
     google_oauth2_client_id: "ID client al aplicației tale Google."
     google_oauth2_client_secret: "Secret client al aplicației tale Google."
     enable_twitter_logins: "Activează autentificarea cu Twitter, necesită twitter_consumer_key and twitter_consumer_secret"
-    twitter_consumer_key: "Cheie consumator pentru autentificarea cu Twitter, înregistrată la http://dev.twitter.com"
-    twitter_consumer_secret: "Secret consumator pentru autentificarea cu Twitter, înregistrat la http://dev.twitter.com"
     enable_instagram_logins: "Activează autentificarea prin Instagram, necesită instagram_consumer_key și instagram_consumer_secret"
     instagram_consumer_key: "Cheie consumator pentru autentificarea Instagram"
     instagram_consumer_secret: "Autentificare Instagram pe bază de secret consumator"
@@ -930,7 +927,6 @@ ro:
     allow_restore: "Bifează-l doar dacă dorești să restaurezi un fișier de backup. Atenție, restaurarea poate șterge/înlocui TOATE datele din site!"
     maximum_backups: "Maximul de fișiere backup păstrate. Fișierele backup vechi sunt șterse automat"
     automatic_backups_enabled: "Rulează automat operațiuni de backup după cum este definit la frecvența de backup"
-    backup_frequency: "Cât de frecvent facem backup la site, în zile."
     enable_s3_backups: "Încarcă fișierele backup pe s3 când sunt complete. IMPORTANT: sunt necesare date de autentificare valide pentru S3 în secțiunea FIșIERE."
     s3_backup_bucket: "Containerul (bucket) de la distanță care ține backupurile. ATENȚIE: Asgură-te că e un container privat."
     s3_disable_cleanup: "Dezactivează eliminarea backup-urilor de pe S3 când sunt șterse local."
@@ -1368,48 +1364,6 @@ ro:
     subject_template: "Confirmă că nu mai vrei să primești actualizări pe email de la %{site_title}"
   invite_password_instructions:
     subject_template: "Setează parolă pentru contul tău %{site_name}"
-  test_mailer:
-    text_body_template: |
-      Acesta este un email de test de la
-
-      [**%{base_url}**][0]
-
-      A te asigura că emailul se poate livra este o chestiune complicată. Aici sunt câteva lucruri pe care ar trebui să le verifici înainte de toate:
-
-      - Asigură-te *cu rigurozitate* că la setările site-ului, câmpul from: din `emailul de notificare` are adresa corectă. **Domeniul menționat în adresa din câmpul "from" al emailurilor pe care le trimiți este domeniul în raport cu care se va face validarea emailului tău**.
-
-      - ști cum să vizualizezi sursa brută a emailului în clientul tău de mail, astfel încât să poți extrage indicii prețioase din header. În Gmail, acest lucru se face cu opțiunea "arată originalul" din meniu drop-down aflat în partea din dreapta-sus a fiecărui mail.
-
-      - **IMPORTANT:** ISP-ul tău are introdusă înregistrarea pentru reverse DNS astfel încât sa asocieze numele domeniilor cu adresele IP de pe care trimiți mailuri? [Verifică-ți înregistrarea Reverse PTR][2] aici. Dacă ISP-ul tău nu a introdus corect înregistrarea reverse DNS, este foarte puțin probabil că emailul ți se va livra corect.
-
-      -  [Înregistrarea SPF][8] a domeniului tău este corectă? [Verifică-ți înregistrarea SPF][1] aici. Observă că TXT reprezintă tipul de înregistrare corect pentru SPF.
-
-      - [Înregistrarea DKIM][3] a domeniului tău este corectă? Aceasta îți poate crește semnificativ capacitatea emailului de a fi livrat. [Verifică-ți înregistrarea DKIM][7] aici.
-
-      - Dacă operezi propriul tău server de mail, asigură-te că IP-urile sale nu sunt listate pe [nicio listă neagră de emailuri][4]. Verifică, de asemenea, că trimite un hostname calificat în întregime, care se rezolvă în DNS prin mesajul său HELO. În caz contrar, multe servicii de mail îți vor respinge emailul.
-
-      - Îți recomandăm călduros să **trimiți un mail de probă [mail-tester.com][mt]** pentru a verifica dacă toate cele de mai sus funcționează corect.
-
-      (Modalitatea *ușoară* de a face asta este să îți faci un cont gratuit pe [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] sau pe [Mailjet][mj], care au planuri generoase de email gratuit și suficiente pentru comunități mici. Însă tot va trebui să îți setezi înregistrările SPF și DKIM în DNS!)
-
-      Sperăm că vei primi acest test de livrare a emailurilor cu calificativul OK!
-
-      Mult noroc,
-
-      Prietenii tăi de la [Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: http://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing
-      [mt]: http://www.mail-tester.com/
   flag_reasons:
     off_topic: "Postarea ta a fost marcată cu marcaj de avertizare **în afara subiectului**: comunitatea simte că nu se potrivește subiectului, așa cum e el momentan definit de titlu și de prima postare."
     inappropriate: "Postarea ta a fost marcată cu marcaj de avertizare **inadecvat**: comunitatea simte că este ofensatoare, abuzivă sau în contradicție cu [ghidul comunității noastre](/guidelines)."
@@ -1719,7 +1673,7 @@ ro:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
-        %{message}
+          %{message}
     digest:
       why: "Un rezumat scurt al %{site_link} de la ultima ta vizită din %{last_seen_at}."
       since_last_visit: "De la ultima ta vizită"

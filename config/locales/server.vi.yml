@@ -246,25 +246,25 @@ vi:
     title: "Chào mừng bạn đến với Phòng khách"
     body: |2
 
-      Chúc mừng! :confetti_ball:
+        Chúc mừng! :confetti_ball:
 
-      Nếu bạn có thể xem chủ đề này, bạn đã được thăng lên bậc **thường xuyên** (bậc tin tưởng 3).
+        Nếu bạn có thể xem chủ đề này, bạn đã được thăng lên bậc **thường xuyên** (bậc tin tưởng 3).
 
-      Bạn có thể &hellip;
+        Bạn có thể &hellip;
 
-      * Sửa tiêu đề của bất kì chủ đề nào
-      * Sửa chuyên mục của bất kì chủ đề nào
-      * Tất cả liên kết ở trạng thái follow ([những liên kết nofollow](http://en.wikipedia.org/wiki/Nofollow) sẽ được loại bỏ)
-      * Truy cập vào phòng khách dành riêng cho thành viên với bậc tin tưởng 3 hoặc cao hơn
-      * Ẩn bài viết spam với 1 lần đánh dấu.
+        * Sửa tiêu đề của bất kì chủ đề nào
+        * Sửa chuyên mục của bất kì chủ đề nào
+        * Tất cả liên kết ở trạng thái follow ([những liên kết nofollow](http://en.wikipedia.org/wiki/Nofollow) sẽ được loại bỏ)
+        * Truy cập vào phòng khách dành riêng cho thành viên với bậc tin tưởng 3 hoặc cao hơn
+        * Ẩn bài viết spam với 1 lần đánh dấu.
 
-      Đây là danh sách [của các thành viên thường xuyên](/badges/3/regular). Hãy chào họ đi nào.
+        Đây là danh sách [của các thành viên thường xuyên](/badges/3/regular). Hãy chào họ đi nào.
 
-      Cảm ơn vì đã trở thành một phần không thể thiếu đối với cộng đồng.
+        Cảm ơn vì đã trở thành một phần không thể thiếu đối với cộng đồng.
 
-      (Để biết thêm chi tiết về bậc tin tưởng, [xem chủ đề này][trust]. Hãy nhớ rằng bạn phải tiếp tục đạt được các yêu cầu để duy trì bậc tin tưởng của mình.)
+        (Để biết thêm chi tiết về bậc tin tưởng, [xem chủ đề này][trust]. Hãy nhớ rằng bạn phải tiếp tục đạt được các yêu cầu để duy trì bậc tin tưởng của mình.)
 
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Giới thiệu chuyên mục %{category}"
     replace_paragraph: "(Thay thế đoạn này với miêu tả về category mới. Bản hướng dẫn này sẽ được xuất hiện trong vùng chọn của category, vì thế nó chỉ giới hạn trong 200 kí tự. **Cho đến khi bạn chỉnh sửa phần miêu tả này hoặc tạo topic cho nó, category này sẽ không xuất hiện trên trang web.**)"
@@ -404,7 +404,6 @@ vi:
       long_form: 'đánh dấu cái này không thích hợp'
     notify_user:
       title: 'Gửi tin nhắn cho @{{username}}.'
-      description: 'Tôi muốn trao đổi riêng, trực tiếp với người này về bài viết của họ.'
       long_form: 'đã nhắn tin cho thành viên'
       email_title: 'Bài đăng của bạn trong "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -723,8 +722,6 @@ vi:
     google_oauth2_client_id: "Client ID ứng dụng Google của bạn."
     google_oauth2_client_secret: "Client secret ứng dụng Google của bạn."
     enable_twitter_logins: "Cho phép chứng thực qua Twitter, yêu cầu twitter_consumer_key và twitter_consumser_secret"
-    twitter_consumer_key: "Consumer key cho chứng thực Twitter, đăng ký tại http://dev.twitter.com"
-    twitter_consumer_secret: "Consumer secret cho chứng thực Twitter, đăng ký tại http://dev.twitter.com"
     enable_instagram_logins: "Bật chứng thực Instagram, yêu cầu instagram_consumer_key và instagram_consumer_secret"
     instagram_consumer_key: "Khóa người dùng để chứng thực Instagram"
     instagram_consumer_secret: "Khóa bảo mật để chứng thực Instagram"
@@ -737,7 +734,6 @@ vi:
     allow_restore: "Cho phép phục hồi, nó có thể thay thế TẤT CẢ dữ liệu trang web! Bỏ chọn, trừ khi bạn có kế hoạch phục hồi một bản sao lưu"
     maximum_backups: "Số bản sao lưu tối đa lưu trong đĩa cứng. Những bản sao lưu cũ sẽ được xóa tự động"
     automatic_backups_enabled: "Chạy sao lưu tự động như cấu hình trong tần số sao lưu"
-    backup_frequency: "Tần số sao lưu trang web, trong ngày."
     enable_s3_backups: "Tải bản sao lưu lên S3 khi hoàn tất. QUAN TRỌNG: yêu cầu chứng thực S3 đã được nhập trong cấu hình File."
     s3_backup_bucket: "Địa chỉ tách biệt lưu trữ backup. LƯU Ý: đây phải là địa chỉ được giành riêng."
     s3_disable_cleanup: "Vô hiệu hóa việc loại bỏ các bản sao lưu từ S3 khi lấy ra tại địa phương."

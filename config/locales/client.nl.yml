@@ -380,7 +380,6 @@ nl:
       name: "Naam"
       user_count: "Aantal leden"
       bio: "Over groep"
-      selector_placeholder: "Leden toevoegen"
       owner: "eigenaar"
       index:
         title: "Groepen"
@@ -1620,8 +1619,8 @@ nl:
         select_all: alles selecteren
         deselect_all: alles deselecteren
         description:
-          one: U hebt <b>1</b> bericht geselecteerd.
-          other: U hebt <b>{{count}}</b> berichten geselecteerd.
+          one: "U hebt <b>1</b> bericht geselecteerd."
+          other: "U hebt <b>{{count}}</b> berichten geselecteerd."
     post:
       quote_reply: "Citeren"
       edit_reason: "Reden: "
@@ -1861,7 +1860,6 @@ nl:
       email_in_allow_strangers: "E-mails van anonieme gebruikers zonder account accepteren"
       email_in_disabled: "Het plaatsen van nieuwe topics via e-mail is uitgeschakeld in de webite-instellingen. Om het plaatsen van nieuwe topics via e-mail mogelijk te maken, "
       email_in_disabled_click: 'schakelt u de instelling ''e-mail in'' in.'
-      suppress_from_homepage: "Deze categorie op de startpagina negeren"
       show_subcategory_list: "Subcategorielijsten boven topics tonen in deze categorie"
       num_featured_topics: "Aantal getoonde topics op de categoriepagina:"
       subcategory_num_featured_topics: "Aantal aanbevolen topics op pagina van bovenliggende categorie:"
@@ -2374,7 +2372,6 @@ nl:
         edit: "Groepen bewerken"
         refresh: "Vernieuwen"
         new: "Nieuw"
-        selector_placeholder: "voer gebruikersnaam in"
         about: "Bewerk hier uw groepslidmaatschap en namen"
         group_members: "Groepsleden"
         delete: "Verwijderen"
@@ -3119,10 +3116,7 @@ nl:
         recommended: "We raden aan de volgende tekst naar wens aan te passen:"
         show_overriden: 'Alleen overschreven tekst tonen'
       site_settings:
-        show_overriden: 'Alleen overschreven instellingen tonen'
         title: 'Instellingen'
-        reset: 'standaardinstellingen'
-        none: 'geen'
         no_results: "Geen resultaten gevonden."
         clear_filter: "Wis"
         add_url: "URL toevoegen"
