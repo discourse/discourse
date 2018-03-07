@@ -5,6 +5,11 @@
       <label>{{i18n 'admin.customize.theme.variable_name'}}
         {{input id="name" value=name}}<br>
       </label>
+      {{#if fileSelected}}
+        {{#unless nameValid}}
+          <span class="alert alert-error">{{i18n "admin.customize.theme.variable_name_invalid"}}</span>
+        {{/unless}}
+      {{/if}}
     </div>
 {{/d-modal-body}}
 
