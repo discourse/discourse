@@ -791,12 +791,17 @@ SQL
 
   def invite(invited_by, username_or_email, group_ids = nil, custom_message = nil)
     target_user = User.find_by_username_or_email(username_or_email)
+    guardian = Guardian.new(invited_by)
 
     if target_user && topic_allowed_users.where(user_id: target_user.id).exists?
       raise UserExists.new(I18n.t("topic_invite.user_exists"))
     end
 
     return true if target_user && invite_existing_muted?(target_user, invited_by)
+
+    if private_message? && target_user && !guardian.can_send_private_message?(target_user)
+      raise UserExists.new(I18n.t("activerecord.errors.models.topic.attributes.base.cant_send_pm"))
+    end
 
     if target_user && private_message? && topic_allowed_users.create!(user_id: target_user.id)
       add_small_action(invited_by, "invited_user", target_user.username)
@@ -808,7 +813,7 @@ SQL
       )
 
       true
-    elsif username_or_email =~ /^.+@.+$/ && Guardian.new(invited_by).can_invite_via_email?(self)
+    elsif username_or_email =~ /^.+@.+$/ && guardian.can_invite_via_email?(self)
       rate_limit_topic_invitation(invited_by)
 
       if target_user

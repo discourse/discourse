@@ -257,10 +257,13 @@ class Guardian
   def can_invite_to?(object, groups = nil)
     return false unless authenticated?
     return true if is_admin?
-    return false unless SiteSetting.enable_personal_messages?
     return false if (SiteSetting.max_invites_per_day.to_i == 0 && !is_staff?)
     return false unless can_see?(object)
     return false if groups.present?
+
+    if object.is_a?(Topic) && object.private_message?
+      return false unless SiteSetting.enable_personal_messages?
+    end
 
     if object.is_a?(Topic) && object.category
       if object.category.groups.any?
