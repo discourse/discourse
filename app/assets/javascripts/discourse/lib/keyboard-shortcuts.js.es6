@@ -323,7 +323,7 @@ export default {
     if ($selected.length !== 0) { //boundries check
       // loop is not allowed
       if (direction === -1 && index === 0) { return; }
-      if (direction === 1 && index === ($articles.size()-1) ) { return; }
+      if (direction === 1 && index === ($articles.length - 1) ) { return; }
     }
 
     // if nothing is selected go to the first post on screen
@@ -348,7 +348,7 @@ export default {
 
     const $article = $articles.eq(index + direction);
 
-    if ($article.size() > 0) {
+    if ($article.length > 0) {
 
       $articles.removeClass('selected');
       $article.addClass('selected');
@@ -396,10 +396,10 @@ export default {
     const $topicList = $('.topic-list'),
         $topicArea = $('.posts-wrapper');
 
-    if ($topicArea.size() > 0) {
+    if ($topicArea.length > 0) {
       return $('.posts-wrapper .topic-post, .topic-list tbody tr');
     }
-    else if ($topicList.size() > 0) {
+    else if ($topicList.length > 0) {
       return $topicList.find('.topic-list-item');
     }
   },
