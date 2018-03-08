@@ -49,7 +49,7 @@ class TopicConverter
       @topic.category_id = nil
       @topic.archetype = Archetype.private_message
       add_allowed_users
-      @topic.save
+      @topic.save!
       watch_topic(topic)
     end
     @topic
@@ -77,7 +77,7 @@ class TopicConverter
       user.user_stat.post_count -= 1
       user.user_stat.save!
     end
-    @topic.topic_allowed_users.build(user_id: @user.id)
+    @topic.topic_allowed_users.build(user_id: @user.id) unless @topic.topic_allowed_users.where(user_id: @user.id).exists?
     # update topics count
     @topic.user.user_stat.topic_count -= 1
     @topic.user.user_stat.save!
