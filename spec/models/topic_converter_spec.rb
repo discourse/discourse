@@ -131,5 +131,17 @@ describe TopicConverter do
         expect(topic.reload.user.user_stat.post_count).to eq(0)
       end
     end
+
+    context 'when user already exists in topic_allowed_users table' do
+      before do
+        topic.topic_allowed_users.create!(user_id: admin.id)
+      end
+
+      it "works" do
+        private_message = topic.convert_to_private_message(admin)
+        expect(private_message).to be_valid
+        expect(topic.archetype).to eq("private_message")
+      end
+    end
   end
 end
