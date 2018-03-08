@@ -39,7 +39,7 @@ module UserNotificationsHelper
     doc.css('body > p, aside.onebox').each do |node|
       if node.text.present?
         result << node.to_s
-        return result if result.size >= 100
+        return result if result.size >= SiteSetting.digest_min_excerpt_length
       end
     end
     return result unless result.blank?
@@ -48,9 +48,8 @@ module UserNotificationsHelper
     doc.css('div').first
   end
 
-  def email_excerpt(html_arg, posts_count = nil)
-    # only include 1st paragraph when more than 1 posts
-    html = (posts_count.nil? || posts_count > 1) ? (first_paragraph_from(html_arg) || html_arg).to_s : html_arg
+  def email_excerpt(html_arg)
+    html = (first_paragraph_from(html_arg) || html_arg).to_s
     PrettyText.format_for_email(html).html_safe
   end
 
