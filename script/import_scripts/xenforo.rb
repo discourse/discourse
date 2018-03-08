@@ -160,8 +160,7 @@ class ImportScripts::XenForo < ImportScripts::Base
     if ! s.valid_encoding?
       s = s.encode("UTF-16be", invalid: :replace, replace: "?").encode('UTF-8')
     end
-    #End Fix
-    
+
     # Work around it for now:
     s.gsub!(/\[http(s)?:\/\/(www\.)?/, '[')
 
