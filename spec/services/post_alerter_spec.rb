@@ -1,5 +1,26 @@
 require 'rails_helper'
 
+RSpec::Matchers.define :add_notification do |user, notification_type|
+  match(notify_expectation_failures: true) do |actual|
+    notifications = user.notifications
+    before = notifications.count
+
+    actual.call
+
+    expect(notifications.count).to eq(before + 1), "expected 1 new notification, got #{notifications.count - before}"
+
+    last_notification_type = notifications.last.notification_type
+    expect(last_notification_type).to eq(Notification.types[notification_type]),
+                                      "expected notification type to be '#{notification_type}', got '#{Notification.types.key(last_notification_type)}'"
+  end
+
+  match_when_negated do |actual|
+    expect { actual.call }.to_not change { user.notifications.where(notification_type: Notification.types[notification_type]).count }
+  end
+
+  supports_block_expectations
+end
+
 describe PostAlerter do
 
   let!(:evil_trout) { Fabricate(:evil_trout) }
@@ -337,15 +358,122 @@ describe PostAlerter do
       expect(events).to include(event_name: :before_create_notifications_for_users, params: [[evil_trout], mention_post])
     end
 
-  it "notification comes from editor is mention is added later" do
-    admin = Fabricate(:admin)
-      post = create_post_with_alerts(user: user, raw: 'No mention here.')
-      expect {
-        post.revise(admin, raw: "Mention @eviltrout in this edit.")
-      }.to change(evil_trout.notifications, :count)
-      n = evil_trout.notifications.last
-      expect(n.data_hash["original_username"]).to eq(admin.username)
-  end
+    it "notification comes from editor if mention is added later" do
+      admin = Fabricate(:admin)
+        post = create_post_with_alerts(user: user, raw: 'No mention here.')
+        expect {
+          post.revise(admin, raw: "Mention @eviltrout in this edit.")
+        }.to change(evil_trout.notifications, :count)
+        n = evil_trout.notifications.last
+        expect(n.data_hash["original_username"]).to eq(admin.username)
+    end
+
+    let(:alice) { Fabricate(:user, username: 'alice') }
+    let(:bob) { Fabricate(:user, username: 'bob') }
+
+    def create_post_with_alerts(args = {})
+      post = Fabricate(:post, args)
+      PostAlerter.post_created(post)
+    end
+
+    def set_topic_notification_level(user, topic, level_name)
+      TopicUser.change(user.id, topic.id, notification_level: TopicUser.notification_levels[level_name])
+    end
+
+    context "topic" do
+      let(:topic) { Fabricate(:topic, user: alice) }
+      let(:first_post) { Fabricate(:post, user: topic.user) }
+
+      [:watching, :tracking, :regular].each do |notification_level|
+        context "when notification level is '#{notification_level}'" do
+          before do
+            set_topic_notification_level(alice, topic, notification_level)
+          end
+
+          it "notifies about @username mention" do
+            args = { user: bob, topic: topic, raw: 'Hello @alice' }
+            expect { create_post_with_alerts(args) }.to add_notification(alice, :mentioned)
+          end
+        end
+      end
+
+      context "when notification level is 'muted'" do
+        before do
+          set_topic_notification_level(alice, topic, :muted)
+        end
+
+        it "does not notify about @username mention" do
+          args = { user: bob, topic: topic, raw: 'Hello @alice' }
+          expect { create_post_with_alerts(args) }.to_not add_notification(alice, :mentioned)
+        end
+      end
+    end
+
+    shared_context "message" do
+      context "when mentioned user is part of conversation" do
+        [:watching, :tracking, :regular].each do |notification_level|
+          context "when notification level is '#{notification_level}'" do
+            before do
+              set_topic_notification_level(alice, pm_topic, notification_level)
+            end
+
+            it "notifies about @username mention" do
+              args = { user: bob, topic: pm_topic, raw: 'Hello @alice' }
+              expect { create_post_with_alerts(args) }.to add_notification(alice, :mentioned)
+            end
+          end
+        end
+
+        context "when notification level is 'muted'" do
+          before do
+            set_topic_notification_level(alice, pm_topic, :muted)
+          end
+
+          it "does not notify about @username mention" do
+            args = { user: bob, topic: pm_topic, raw: 'Hello @alice' }
+            expect { create_post_with_alerts(args) }.to_not add_notification(alice, :mentioned)
+          end
+        end
+      end
+
+      context "when mentioned user is not part of conversation" do
+        it "notifies about @username mention when mentioned user is allowed to see message" do
+          carol = Fabricate(:admin, username: 'carol')
+          args = { user: bob, topic: pm_topic, raw: 'Hello @carol' }
+          expect { create_post_with_alerts(args) }.to add_notification(carol, :mentioned)
+        end
+
+        it "does not notify about @username mention when mentioned user is not allowed to see message" do
+          dave = Fabricate(:user, username: 'dave')
+          args = { user: bob, topic: pm_topic, raw: 'Hello @dave' }
+          expect { create_post_with_alerts(args) }.to_not add_notification(dave, :mentioned)
+        end
+      end
+    end
+
+    context "personal message" do
+      let(:pm_topic) do
+        Fabricate(:private_message_topic, user: alice, topic_allowed_users: [
+          Fabricate.build(:topic_allowed_user, user: alice),
+          Fabricate.build(:topic_allowed_user, user: bob)
+        ])
+      end
+      let(:first_post) { Fabricate(:post, topic: pm_topic, user: pm_topic.user) }
+
+      include_context "message"
+    end
+
+    context "group message" do
+      let(:group) { Fabricate(:group) }
+      let(:pm_topic) do
+        Fabricate(:private_message_topic, user: alice, topic_allowed_groups: [
+          Fabricate.build(:topic_allowed_group, group: group)
+        ])
+      end
+      let(:first_post) { Fabricate(:post, topic: pm_topic, user: pm_topic.user) }
+
+      include_context "message"
+    end
   end
 
   describe ".create_notification" do
