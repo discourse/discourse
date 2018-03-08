@@ -40,7 +40,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :primary_group_id,
              :primary_group_name,
              :can_create_topic,
-             :can_post_link
+             :can_post_link,
+             :external_id
 
   def can_post_link
     scope.can_post_link?
@@ -197,4 +198,11 @@ class CurrentUserSerializer < BasicUserSerializer
     object.primary_group&.name.present?
   end
 
+  def external_id
+    object&.single_sign_on_record&.external_id
+  end
+
+  def include_external_id?
+    SiteSetting.enable_sso
+  end
 end
