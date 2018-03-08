@@ -688,6 +688,7 @@ en:
         move_to_archive: "Archive"
         failed_to_move: "Failed to move selected messages (perhaps your network is down)"
         select_all: "Select All"
+        tags: "Tags"
 
       preferences_nav:
         account: "Account"
