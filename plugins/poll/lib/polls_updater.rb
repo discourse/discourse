@@ -18,8 +18,10 @@ module DiscoursePoll
         poll_edit_window_mins = SiteSetting.poll_edit_window_mins
 
         if post.created_at < poll_edit_window_mins.minutes.ago && has_votes
-          # cannot add/remove/rename polls
-          if polls.keys.sort != previous_polls.keys.sort
+          is_staff = User.staff.where(id: post.last_editor_id).exists?
+
+          # non staff users cannot add/remove/rename polls
+          if !is_staff && (polls.keys.sort != previous_polls.keys.sort)
             post.errors.add(:base, I18n.t(
               "poll.edit_window_expired.cannot_change_polls", minutes: poll_edit_window_mins
             ))
@@ -28,10 +30,10 @@ module DiscoursePoll
           end
 
           # deal with option changes
-          if User.staff.where(id: post.last_editor_id).exists?
-            # staff can only edit options
+          if is_staff
+            # staff can edit options
             polls.each_key do |poll_name|
-              if polls[poll_name]["options"].size != previous_polls[poll_name]["options"].size && previous_polls[poll_name]["voters"].to_i > 0
+              if polls.dig(poll_name, "options")&.size != previous_polls.dig(poll_name, "options")&.size && previous_polls.dig(poll_name, "voters").to_i > 0
                 post.errors.add(:base, I18n.t(
                   "poll.edit_window_expired.staff_cannot_add_or_remove_options",
                   minutes: poll_edit_window_mins
