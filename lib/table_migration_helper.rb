@@ -49,7 +49,6 @@ class TableMigrationHelper
       ActiveRecord::Base.exec_sql("DROP TABLE IF EXISTS #{old_name}")
 
       ActiveRecord::Base.exec_sql <<~SQL
-      DROP TRIGGER IF EXISTS #{readonly_trigger_name(old_name)} ON #{old_name};
       DROP FUNCTION IF EXISTS #{readonly_function_name(old_name)} CASCADE;
       SQL
     end
