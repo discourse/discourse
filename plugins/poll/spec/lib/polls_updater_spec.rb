@@ -297,6 +297,21 @@ describe DiscoursePoll::PollsUpdater do
       context "staff" do
         let(:another_user) { Fabricate(:user) }
 
+        before do
+          another_post.update_attributes!(last_editor_id: User.staff.first.id)
+        end
+
+        it "should allow staff to add polls" do
+          message = MessageBus.track_publish do
+            described_class.update(another_post, two_polls)
+          end.first
+
+          expect(another_post.errors.full_messages).to eq([])
+
+          expect(message.data[:post_id]).to eq(another_post.id)
+          expect(message.data[:polls]).to eq(two_polls)
+        end
+
         it "should not allow staff to add options if votes have been casted" do
           another_post.update_attributes!(last_editor_id: User.staff.first.id)
 
