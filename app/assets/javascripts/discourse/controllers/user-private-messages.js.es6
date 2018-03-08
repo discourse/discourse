@@ -14,6 +14,7 @@ export default Ember.Controller.extend({
   bulkSelectEnabled: Em.computed.alias('userTopicsList.bulkSelectEnabled'),
   pmTags: Em.computed.alias('userTopicsList.model.topic_list.pm_tags'),
   pmTaggingEnabled: Ember.computed.alias('site.can_tag_pms'),
+  tagId: null,
 
   showNewPM: function(){
     return this.get('user.viewingSelf') &&
