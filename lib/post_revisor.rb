@@ -278,8 +278,14 @@ class PostRevisor
     return false if (@revised_at - @last_version_at) > SiteSetting.editing_grace_period.to_i
 
     if new_raw = @fields[:raw]
-      if (original_raw.length - new_raw.length).abs > SiteSetting.editing_grace_period_max_diff.to_i ||
-        diff_size(original_raw, new_raw) > SiteSetting.editing_grace_period_max_diff.to_i
+
+      max_diff = SiteSetting.editing_grace_period_max_diff.to_i
+      if @editor.staff? || (@editor.trust_level > 1)
+        max_diff = SiteSetting.editing_grace_period_max_diff_high_trust.to_i
+      end
+
+      if (original_raw.length - new_raw.length).abs > max_diff ||
+        diff_size(original_raw, new_raw) > max_diff
         return false
       end
     end
