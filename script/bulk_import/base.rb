@@ -133,33 +133,38 @@ class BulkImport::Base
     @last_imported_private_post_id = imported_post_ids.select { |id| id > PRIVATE_OFFSET }.max || (PRIVATE_OFFSET - 1)
   end
 
+  def last_id(klass)
+    # the first record created will have id of this value + 1
+    [klass.unscoped.maximum(:id) || 0, 0].max
+  end
+
   def load_indexes
     puts "Loading groups indexes..."
     @last_group_id = Group.unscoped.maximum(:id)
     @group_names = Group.unscoped.pluck(:name).map(&:downcase).to_set
 
     puts "Loading users indexes..."
-    @last_user_id = User.unscoped.maximum(:id)
-    @last_user_email_id = UserEmail.unscoped.maximum(:id)
+    @last_user_id = last_id(User)
+    @last_user_email_id = last_id(UserEmail)
     @emails = User.unscoped.joins(:user_emails).pluck(:"user_emails.email").to_set
     @usernames_lower = User.unscoped.pluck(:username_lower).to_set
     @mapped_usernames = UserCustomField.joins(:user).where(name: "import_username").pluck("user_custom_fields.value", "users.username").to_h
 
     puts "Loading categories indexes..."
-    @last_category_id = Category.unscoped.maximum(:id)
+    @last_category_id = last_id(Category)
     @category_names = Category.unscoped.pluck(:parent_category_id, :name).map { |pci, name| "#{pci}-#{name}" }.to_set
 
     puts "Loading topics indexes..."
-    @last_topic_id = Topic.unscoped.maximum(:id)
+    @last_topic_id = last_id(Topic)
     @highest_post_number_by_topic_id = Topic.unscoped.pluck(:id, :highest_post_number).to_h
 
     puts "Loading posts indexes..."
-    @last_post_id = Post.unscoped.maximum(:id)
+    @last_post_id = last_id(Post)
     @post_number_by_post_id = Post.unscoped.pluck(:id, :post_number).to_h
     @topic_id_by_post_id = Post.unscoped.pluck(:id, :topic_id).to_h
 
     puts "Loading post actions indexes..."
-    @last_post_action_id = PostAction.unscoped.maximum(:id) || 0
+    @last_post_action_id = last_id(PostAction)
   end
 
   def execute
