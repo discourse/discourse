@@ -341,9 +341,6 @@ class BulkImport::Base
     user_email[:email] ||= random_email
     user_email[:email].downcase!
 
-    # unique email
-    user_email[:email] = random_email until user_email[:email] =~ EmailValidator.email_regex && @emails.add?(user_email[:email])
-
     user_email
   end
 
