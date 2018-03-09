@@ -11,6 +11,7 @@ html {
 
 body {
   background-color: $secondary;
+  overscroll-behavior-y: contain;
 }
 
 textarea {
