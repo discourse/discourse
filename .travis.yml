@@ -70,7 +70,7 @@ script:
 
         if [ '$QUNIT_RUN' == '1' ]; then
           bundle exec rake qunit:test['400000'] && \
-          bundle exec rake plugin:spec
+          bundle exec rake plugin:qunit
         else
           bundle exec rspec && bundle exec rake plugin:spec
         fi
