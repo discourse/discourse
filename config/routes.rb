@@ -201,6 +201,7 @@ Discourse::Application.routes.draw do
 
     post "themes/import" => "themes#import"
     post "themes/upload_asset" => "themes#upload_asset"
+    post "themes/generate_key_pair" => "themes#generate_key_pair"
     get "themes/:id/preview" => "themes#preview"
 
     scope "/customize", constraints: AdminConstraint.new do

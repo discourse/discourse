@@ -372,6 +372,7 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
+    sshkey (1.9.0)
     stackprof (0.2.10)
     thor (0.19.4)
     thread_safe (0.3.6)
@@ -497,6 +498,7 @@ DEPENDENCIES
   shoulda
   sidekiq
   sprockets-rails
+  sshkey
   stackprof
   thor
   tilt

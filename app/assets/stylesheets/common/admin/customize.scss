@@ -239,3 +239,23 @@
 #custom_emoji {
   width: 27%;
 }
+
+.modal-body .inputs .check-private {
+  margin-top: 10px;
+  label {
+    padding-left: 0;
+  }
+  label input {
+    width: auto;
+    margin: 3px 0;
+  }
+
+  .public-key {
+    margin-top: 10px;
+    textarea {
+      cursor: auto;
+      height: 150px;
+    }
+  }
+}
+
