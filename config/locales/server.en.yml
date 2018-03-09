@@ -151,6 +151,8 @@ en:
         other: ! '%{count} errors prohibited this %{model} from being saved'
     embed:
       load_from_remote: "There was an error loading that post."
+    theme:
+      other: "Error cloning git repository, access is denied or repository is not found"
     site_settings:
       min_username_length_exists: "You cannot set the minimum username length above the shortest username."
       min_username_length_range: "You cannot set the minimum above the maximum."

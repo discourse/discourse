@@ -7,8 +7,8 @@ class RemoteTheme < ActiveRecord::Base
 
   has_one :theme
 
-  def self.import_theme(url, user = Discourse.system_user)
-    importer = GitImporter.new(url)
+  def self.import_theme(url, user = Discourse.system_user, private_key: nil)
+    importer = GitImporter.new(url, private_key: private_key)
     importer.import!
 
     theme_info = JSON.parse(importer["about.json"])
@@ -17,6 +17,7 @@ class RemoteTheme < ActiveRecord::Base
     remote_theme = new
     theme.remote_theme = remote_theme
 
+    remote_theme.private_key = private_key
     remote_theme.remote_url = importer.url
     remote_theme.update_from_remote(importer)
 
@@ -31,7 +32,7 @@ class RemoteTheme < ActiveRecord::Base
   end
 
   def update_remote_version
-    importer = GitImporter.new(remote_url)
+    importer = GitImporter.new(remote_url, private_key: private_key)
     importer.import!
     self.updated_at = Time.zone.now
     self.remote_version, self.commits_behind = importer.commits_since(remote_version)
@@ -43,7 +44,7 @@ class RemoteTheme < ActiveRecord::Base
 
     unless importer
       cleanup = true
-      importer = GitImporter.new(remote_url)
+      importer = GitImporter.new(remote_url, private_key: private_key)
       importer.import!
     end
 
@@ -162,4 +163,5 @@ end
 #  remote_updated_at :datetime
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
+#  private_key       :text
 #

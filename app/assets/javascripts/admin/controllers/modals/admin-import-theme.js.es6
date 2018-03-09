@@ -1,6 +1,7 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import { ajax } from 'discourse/lib/ajax';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
+import { observes } from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend(ModalFunctionality, {
   local: Ember.computed.equal('selection', 'local'),
@@ -8,6 +9,25 @@ export default Ember.Controller.extend(ModalFunctionality, {
   selection: 'local',
   adminCustomizeThemes: Ember.inject.controller(),
   loading: false,
+
+  checkPrivate: Ember.computed.match('uploadUrl', /^git/),
+
+  @observes('privateChecked')
+  privateWasChecked() {
+    const checked = this.get('privateChecked');
+    if (checked && !this._keyLoading) {
+      this._keyLoading = true;
+      ajax('/admin/themes/generate_key_pair', {method: 'POST'})
+        .then(pair => {
+          this.set('privateKey', pair.private_key);
+          this.set('publicKey', pair.public_key);
+        })
+        .catch(popupAjaxError)
+        .finally(()=>{
+          this._keyLoading = false;
+        });
+    }
+  },
 
   actions: {
     importTheme() {
@@ -22,7 +42,13 @@ export default Ember.Controller.extend(ModalFunctionality, {
         options.data = new FormData();
         options.data.append('theme', $('#file-input')[0].files[0]);
       } else {
-        options.data = {remote: this.get('uploadUrl')};
+        options.data = {
+          remote: this.get('uploadUrl')
+        };
+
+        if (this.get('privateChecked')){
+          options.data.private_key = this.get('privateKey');
+        }
       }
 
       this.set('loading', true);
@@ -30,7 +56,13 @@ export default Ember.Controller.extend(ModalFunctionality, {
         const theme = this.store.createRecord('theme',result.theme);
         this.get('adminCustomizeThemes').send('addTheme', theme);
         this.send('closeModal');
-      }).catch(popupAjaxError).finally(() => this.set('loading', false));
+      })
+      .then(()=>{
+        this.set('privateKey', null);
+        this.set('publicKey', null);
+      })
+      .catch(popupAjaxError)
+      .finally(() => this.set('loading', false));
 
     }
   }

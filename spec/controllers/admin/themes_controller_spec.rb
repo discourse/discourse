@@ -12,6 +12,15 @@ describe Admin::ThemesController do
       @user = log_in(:admin)
     end
 
+    context '.generate_key_pair' do
+      it 'can generate key pairs' do
+        post :generate_key_pair, format: :json
+        json = JSON.parse(response.body)
+        expect(json["private_key"]).to include("RSA PRIVATE KEY")
+        expect(json["public_key"]).to include("ssh-rsa ")
+      end
+    end
+
     context '.upload_asset' do
       render_views
 

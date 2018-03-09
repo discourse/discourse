@@ -27,6 +27,16 @@ class Admin::ThemesController < Admin::AdminController
     end
   end
 
+  def generate_key_pair
+    require 'sshkey'
+    k = SSHKey.generate
+
+    render json: {
+      private_key: k.private_key,
+      public_key: k.ssh_public_key
+    }
+  end
+
   def import
     @theme = nil
     if params[:theme]
@@ -66,8 +76,12 @@ class Admin::ThemesController < Admin::AdminController
         render json: @theme.errors, status: :unprocessable_entity
       end
     elsif params[:remote]
-      @theme = RemoteTheme.import_theme(params[:remote])
-      render json: @theme, status: :created
+      begin
+        @theme = RemoteTheme.import_theme(params[:remote], current_user, private_key: params[:private_key])
+        render json: @theme, status: :created
+      rescue RuntimeError
+        render_json_error I18n.t('errors.theme.other')
+      end
     else
       render json: @theme.errors, status: :unprocessable_entity
     end

@@ -178,6 +178,8 @@ gem 'sassc', require: false
 gem 'rotp'
 gem 'rqrcode'
 
+gem 'sshkey', require: false
+
 if ENV["IMPORT"] == "1"
   gem 'mysql2'
   gem 'redcarpet'
