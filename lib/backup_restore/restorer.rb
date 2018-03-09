@@ -39,23 +39,41 @@ module BackupRestore
       validate_metadata
 
       extract_dump
-      restore_dump
+      dumped_by_version = Gem::Version.new(get_dumped_by_version)
 
-      ### READ-ONLY / START ###
-      enable_readonly_mode
+      if dumped_by_version >= Gem::Version.new("10.3") ||
+         dumped_by_version >= Gem::Version.new("9.5.12")
 
-      pause_sidekiq
-      wait_for_sidekiq
+        enable_readonly_mode
 
-      switch_schema!
+        pause_sidekiq
+        wait_for_sidekiq
 
-      migrate_database
-      reconnect_database
-      reload_site_settings
-      clear_emoji_cache
+        BackupRestore.move_tables_between_schemas("public", "backup")
+        restore_dump
+        migrate_database
+        reconnect_database
 
-      disable_readonly_mode
-      ### READ-ONLY / END ###
+        reload_site_settings
+        clear_emoji_cache
+
+        disable_readonly_mode
+      else
+        restore_dump
+        enable_readonly_mode
+
+        pause_sidekiq
+        wait_for_sidekiq
+
+        switch_schema!
+
+        migrate_database
+        reconnect_database
+        reload_site_settings
+        clear_emoji_cache
+
+        disable_readonly_mode
+      end
 
       extract_uploads
     rescue SystemExit
@@ -236,6 +254,16 @@ module BackupRestore
           failure_message: "Failed to extract dump file."
         )
       end
+    end
+
+    def get_dumped_by_version
+      output = Discourse::Utils.execute_command(
+        File.extname(@dump_filename) == '.gz' ? 'zgrep' : 'grep',
+        '-m1', @dump_filename, '-e', "pg_dump",
+        failure_message: "Failed to check version of pg_dump used to generate the dump file"
+      )
+
+      output.match(/version (\d+(\.\d+)?)/)[1]
     end
 
     def restore_dump_command
