@@ -256,7 +256,7 @@ module BackupRestore
     def get_dumped_by_version
       output = Discourse::Utils.execute_command(
         File.extname(@dump_filename) == '.gz' ? 'zgrep' : 'grep',
-        '-m1', @dump_filename, '-e', "pg_dump",
+        '-m1', @dump_filename, '-e', "-- Dumped by pg_dump version",
         failure_message: "Failed to check version of pg_dump used to generate the dump file"
       )
 
