@@ -59,6 +59,7 @@ en:
   themes:
     bad_color_scheme: "Can not update theme, invalid color scheme"
     other_error: "Something went wrong updating theme"
+    error_importing: "Error cloning git repository, access is denied or repository is not found"
     settings_errors:
       invalid_yaml: "Provided YAML is invalid."
       data_type_not_a_number: "Setting `%{name}` type is unsupported. Supported types are `integer`, `bool`, `list` and `enum`"
@@ -151,8 +152,6 @@ en:
         other: ! '%{count} errors prohibited this %{model} from being saved'
     embed:
       load_from_remote: "There was an error loading that post."
-    theme:
-      other: "Error cloning git repository, access is denied or repository is not found"
     site_settings:
       min_username_length_exists: "You cannot set the minimum username length above the shortest username."
       min_username_length_range: "You cannot set the minimum above the maximum."
