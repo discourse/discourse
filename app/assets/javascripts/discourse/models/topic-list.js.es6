@@ -34,8 +34,22 @@ const TopicList = RestModel.extend({
   loadMore() {
     if (this.get('loadingMore')) { return Ember.RSVP.resolve(); }
 
-    const moreUrl = this.get('more_topics_url');
+    let moreUrl = this.get('more_topics_url');
     if (moreUrl) {
+
+      let [url, params] = moreUrl.split("?");
+
+      // ensure we postfix with .json so username paths work
+      // correctly
+      if (!url.match(/\.json$/)) {
+        url += '.json';
+      }
+
+      moreUrl = url;
+      if (params) {
+        moreUrl += "?" + params;
+      }
+
       const self = this;
       this.set('loadingMore', true);
 
