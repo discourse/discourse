@@ -1178,7 +1178,7 @@ en:
       accept_title: "Invitation"
       welcome_to: "Welcome to %{site_name}!"
       invited_by: "You were invited by:"
-      social_login_available: "You'll also be able to sign in with any social login using that email."
+      social_login_available: "If you are using this email address in a social login service enabled in this site, you will be able to sign in with it as well."
       your_email: "Your account email address is <b>%{email}</b>."
       accept_invite: "Accept Invitation"
       success: "Your account has been created and you're now logged in."
