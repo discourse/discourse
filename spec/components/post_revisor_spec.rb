@@ -130,6 +130,18 @@ describe PostRevisor do
 
         expect(post.revisions.first.modifications["raw"][0]).to eq("hello world")
         expect(post.revisions.first.modifications["cooked"][0]).to eq("<p>hello world</p>")
+
+        SiteSetting.editing_grace_period_max_diff_high_trust = 100
+
+        post.user.update_columns(trust_level: 2)
+
+        revisor = PostRevisor.new(post)
+        revisor.revise!(post.user, { raw: 'hello world12345678901 123456789012' }, revised_at: post.updated_at + 1.second)
+
+        post.reload
+        expect(post.version).to eq(2)
+        expect(post.revisions.count).to eq(1)
+
       end
 
       it "doesn't create a new version" do
