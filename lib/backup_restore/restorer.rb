@@ -39,11 +39,8 @@ module BackupRestore
       validate_metadata
 
       extract_dump
-      dumped_by_version = Gem::Version.new(get_dumped_by_version)
 
-      if dumped_by_version >= Gem::Version.new("10.3") ||
-         dumped_by_version >= Gem::Version.new("9.5.12")
-
+      if !can_restore_into_different_schema?
         enable_readonly_mode
 
         pause_sidekiq
@@ -264,6 +261,23 @@ module BackupRestore
       )
 
       output.match(/version (\d+(\.\d+)?)/)[1]
+    end
+
+    def can_restore_into_different_schema?
+      dumped_by_version = Gem::Version.new(get_dumped_by_version)
+
+      return false if dumped_by_version >= Gem::Version.new("10.3")
+
+      %w{
+        9.6.8
+        9.5.12
+        9.4.17
+        9.3.22
+      }.each do |version|
+        return false if Gem::Dependency.new("", "~> #{version}").match?("", dumped_by_version)
+      end
+
+      true
     end
 
     def restore_dump_command
