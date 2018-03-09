@@ -166,6 +166,27 @@ describe DiscourseSingleSignOn do
     expect(add_group4.usernames).to eq(user.username)
   end
 
+  it 'can override username properly when only the case changes' do
+    SiteSetting.sso_overrides_username = true
+
+    sso = DiscourseSingleSignOn.new
+    sso.username = "testuser"
+    sso.name = "test user"
+    sso.email = "test@test.com"
+    sso.external_id = "100"
+    sso.bio = "This **is** the bio"
+    sso.suppress_welcome_message = true
+
+    # create the original user
+    user = sso.lookup_or_create_user(ip_address)
+    expect(user.username).to eq "testuser"
+
+    # change the username case
+    sso.username = "TestUser"
+    user = sso.lookup_or_create_user(ip_address)
+    expect(user.username).to eq "TestUser"
+  end
+
   it "can override name / email / username" do
     admin = Fabricate(:admin)
 
