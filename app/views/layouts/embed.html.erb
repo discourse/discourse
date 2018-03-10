@@ -37,15 +37,15 @@
           }
         }
 
-	window.onload = function() {
-	  // get state info from data attribute
-	  var header = document.querySelector('header');
-	  var state = 'unknown';
-	  if (header) {
-	    state = header.getAttribute('data-embed-state');
-	  }
+        window.onload = function() {
+          // get state info from data attribute
+          var header = document.querySelector('header');
+          var state = 'unknown';
+          if (header) {
+            state = header.getAttribute('data-embed-state');
+          }
 	  
-	  // Send a post message with our loaded height and state
+          // Send a post message with our loaded height and state
           postUp({type: 'discourse-resize', height: document['body'].offsetHeight, state: state});
 
           var postLinks = document.querySelectorAll("a[data-link-to-post]"),
