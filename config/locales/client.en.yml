@@ -1347,7 +1347,7 @@ en:
           label: Reply to topic
           desc: Reply to the topic, not any specific post
         toggle_whisper:
-          label: Toggle whipser
+          label: Toggle whisper
           desc: Whispers are only visible to staff members
         create_topic:
           label: "New Topic"
