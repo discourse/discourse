@@ -249,7 +249,7 @@
   .submit-panel {
     display: flex;
     flex-shrink: 0;
-    margin-top: 10px;
+    margin: 7px 0 3px 0;
   }
 
   .save-or-cancel {
@@ -260,7 +260,14 @@
       flex: 0 0 auto;
     }
     .cancel {
-      margin-left: 10px;
+      margin-left: .65em;
+      font-size: 1.75em;
+      line-height: normal;
+      color: $primary-medium;
+      transition: color 250ms;
+      &:hover {
+        color: $danger;
+      }
     }
     #draft-status,
     #file-uploading {
@@ -285,10 +292,6 @@
     .toggle-preview {
       order: 2;
     }
-  }
-
-  .create {
-    margin-right: 5px;
   }
 
   #draft-status, #file-uploading {
