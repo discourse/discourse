@@ -63,8 +63,8 @@ class Tag < ActiveRecord::Base
     return [] unless (guardian || Guardian.new).can_tag_pms?
     limit = limit_arg || SiteSetting.max_tags_in_filter_list
 
-    tag_names = Tag.exec_sql <<~SQL
-      SELECT tags.name AS tag_name
+    tag_names_with_counts = Tag.exec_sql <<~SQL
+      SELECT tags.name, COUNT(topics.id) AS topic_count
       FROM tags
       INNER JOIN topic_tags ON tags.id = topic_tags.tag_id
       INNER JOIN topics ON topics.id = topic_tags.topic_id
@@ -74,7 +74,7 @@ class Tag < ActiveRecord::Base
       LIMIT #{limit}
     SQL
 
-    tag_names.values.flatten
+    tag_names_with_counts.map { |t| { id: t['name'], text: t['name'], count: t['topic_count'] } }
   end
 
   def self.include_tags?
