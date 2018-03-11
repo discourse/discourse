@@ -467,6 +467,12 @@ describe UserNotifications do
 
         include_examples "includes first group name"
       end
+
+      context "no groups in pm" do
+        it "includes %{optional_pm} in subject" do
+          expect(mail.subject).to include("[PM] ")
+        end
+      end
     end
   end
 
