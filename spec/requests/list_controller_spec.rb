@@ -96,17 +96,15 @@ RSpec.describe ListController do
 
     it 'should fail for non-staff users' do
       sign_in(user)
-      get "/topics/private-messages-tag/#{user.username}/#{tag.name}.json"
+      get "/topics/private-messages-tags/#{user.username}/#{tag.name}.json"
       expect(response.status).to eq(404)
     end
 
     it 'should be success for staff users' do
       [moderator, admin].each do |user|
         sign_in(user)
-        get "/topics/private-messages-tag/#{user.username}/#{tag.name}.json"
+        get "/topics/private-messages-tags/#{user.username}/#{tag.name}.json"
         expect(response).to be_success
-        data = JSON.parse(response.body)
-        expect(data["topic_list"]["pm_tags"].length).to eq(1)
       end
     end
   end
