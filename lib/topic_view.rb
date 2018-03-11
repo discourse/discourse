@@ -496,7 +496,10 @@ class TopicView
     raise Discourse::InvalidAccess.new("can't see #{@topic}", @topic) unless @guardian.can_see?(@topic)
     # log personal message views
     if SiteSetting.log_personal_messages_views && @topic.present? && @topic.private_message? && @topic.all_allowed_users.where(id: @user.id).blank?
-      StaffActionLogger.new(@user).log_check_personal_message(@topic)
+      last_pm_log = UserHistory.where(acting_user_id: @user.id, action: UserHistory.actions[:check_personal_message], topic_id: @topic.id).last
+      unless last_pm_log.present? && last_pm_log.created_at > 1.hour.ago
+        StaffActionLogger.new(@user).log_check_personal_message(@topic)
+      end
     end
   end
 
