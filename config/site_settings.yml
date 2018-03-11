@@ -656,6 +656,8 @@ posting:
      - code-fences
   embed_truncate:
     default: true
+  embed_support_markdown:
+    default: false
   allowed_href_schemes:
     client: true
     default: ''

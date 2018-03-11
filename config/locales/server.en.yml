@@ -1558,6 +1558,7 @@ en:
     highlighted_languages: "Included syntax highlighting rules. (Warning: including too many languages may impact performance) see: https://highlightjs.org/static/demo/ for a demo"
 
     embed_truncate: "Truncate the embedded posts."
+    embed_support_markdown: "Support Markdown formatting for embedded posts."
     allowed_href_schemes: "Schemes allowed in links in addition to http and https."
     embed_post_limit: "Maximum number of posts to embed."
     embed_username_required: "The username for topic creation is required."
