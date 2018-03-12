@@ -1,11 +1,13 @@
 .flagged-post.hidden-post {
-  .flagged-post-excerpt, .flagged-post-avatar {
+  .flagged-post-excerpt,
+  .flagged-post-avatar {
     opacity: 0.5;
   }
 }
 
 .flagged-post.deleted {
-  .flagged-post-excerpt, .flagged-post-avatar {
+  .flagged-post-excerpt,
+  .flagged-post-avatar {
     background-color: $danger-low;
   }
 }

@@ -1,4 +1,5 @@
-.search button.btn-primary, .search button.btn {
+.search button.btn-primary,
+.search button.btn {
   float: none;
 }
 
@@ -7,7 +8,8 @@
     .control-group {
       margin-bottom: 10px;
       .controls {
-        input:not([type="checkbox"]),select {
+        input:not([type="checkbox"]),
+        select {
           width: 75%;
         }
       }

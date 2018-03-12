@@ -1,14 +1,15 @@
-
 .group-nav {
   li {
     float: left;
 
-    a, i {
+    a,
+    i {
       color: dark-light-choose($primary-medium, $secondary-high);
     }
 
     .active {
-      a, i {
+      a,
+      i {
         color: $secondary;
       }
     }
@@ -49,7 +50,7 @@
 }
 
 .group-edit {
-  border: 1px solid $primary-low; 
+  border: 1px solid $primary-low;
   padding: 10px;
 
   .form-horizontal {

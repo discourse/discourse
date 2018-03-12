@@ -2,7 +2,8 @@ a.hashtag {
   color: dark-light-choose($primary, $primary-low-mid);
   font-weight: bold;
 
-  &:visited, &:hover {
+  &:visited,
+  &:hover {
     color: dark-light-choose($primary, $primary-low-mid);
   }
 

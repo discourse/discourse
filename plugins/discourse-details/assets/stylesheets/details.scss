@@ -18,8 +18,8 @@ summary:first-of-type {
 }
 
 summary:before {
-  content: '\25BA';
-  margin-right: .25em;
+  content: "\25BA";
+  margin-right: 0.25em;
 }
 
 details[open] > * {
@@ -27,12 +27,12 @@ details[open] > * {
 }
 
 details[open] > summary:before,
-details.open  > summary:before {
-  content: '\25BC';
+details.open > summary:before {
+  content: "\25BC";
 }
 
 details[open] > summary:first-of-type ~ *,
-details.open  > summary:first-of-type ~ * {
+details.open > summary:first-of-type ~ * {
   display: block;
 }
 
@@ -46,11 +46,9 @@ details .lazyYT-container {
   display: none;
 }
 
-
 .elided {
-
   summary:before {
-    content: '' !important;
+    content: "" !important;
     display: none;
   }
 
@@ -68,7 +66,6 @@ details .lazyYT-container {
     border: 1px solid #ddd;
     width: 21px;
     line-height: 12px;
-
   }
 
   summary:hover {

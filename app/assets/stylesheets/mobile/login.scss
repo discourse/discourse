@@ -15,33 +15,43 @@
 }
 
 #login-form {
- 
-  label { float: left; display: block; }
-  textarea, input, select {
+  label {
+    float: left;
+    display: block;
+  }
+  textarea,
+  input,
+  select {
     font-size: $font-up-1;
     clear: left;
     margin-top: 0;
-    }
-  td { padding: 4px; }
+  }
+  td {
+    padding: 4px;
+  }
 }
 
-a#new-account-link { white-space:nowrap; }
+a#new-account-link {
+  white-space: nowrap;
+}
 
 // Create account
 
-.login-modal, .create-account {
+.login-modal,
+.create-account {
   .btn-primary {
     margin-bottom: 10px;
     float: left;
   }
 }
 
-
 $label-width: 85px;
 $input-width: 184px;
 
 .create-account .modal-body {
-  input[type=text], input[type=email], input[type=password] {
+  input[type="text"],
+  input[type="email"],
+  input[type="password"] {
     display: inline-block;
     margin-bottom: 5px;
     margin-top: 10px;
@@ -72,13 +82,13 @@ $input-width: 184px;
     margin-top: 10px;
     margin-bottom: 10px;
   }
-  
+
   .user-field {
     label {
       width: $label-width;
     }
 
-    input[type=text] {
+    input[type="text"] {
       margin-top: 0;
       width: $input-width;
     }
@@ -88,8 +98,8 @@ $input-width: 184px;
   }
 }
 
-
-.password-reset, .invites-show {
+.password-reset,
+.invites-show {
   margin-top: 30px;
   .col-image {
     padding-top: 12px;
@@ -119,7 +129,6 @@ $input-width: 184px;
     margin-bottom: 16px;
   }
 }
-
 
 .invites-show {
   .col-image {

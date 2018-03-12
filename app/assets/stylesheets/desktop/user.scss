@@ -18,7 +18,7 @@
   height: 420px;
   width: 100%;
   background-size: cover;
-  transition: height .15s linear;
+  transition: height 0.15s linear;
 }
 
 .no-background {
@@ -85,7 +85,7 @@
   }
 
   .btn.right {
-    float: right
+    float: right;
   }
 
   h2 {
@@ -143,10 +143,10 @@
       }
     }
 
-  .secondary {
-    background: $secondary;
-    border-top: 1px solid $primary-low;
-    border-bottom: 1px solid $primary-low;
+    .secondary {
+      background: $secondary;
+      border-top: 1px solid $primary-low;
+      border-bottom: 1px solid $primary-low;
 
       dl {
         padding: 8px 10px;
@@ -166,11 +166,11 @@
     .details {
       padding: 0 0 4px 0;
       margin-top: -200px;
-      transition: margin .15s linear;
+      transition: margin 0.15s linear;
 
       img.avatar {
         margin: 0 20px 10px 0;
-        transition: all .1s linear;
+        transition: all 0.1s linear;
       }
 
       .primary {
@@ -224,7 +224,6 @@
         width: auto;
 
         ul {
-
           li {
             display: inline;
           }
@@ -255,7 +254,7 @@
   }
 
   .user-field {
-    input[type=text] {
+    input[type="text"] {
       width: 530px;
     }
 
@@ -267,7 +266,8 @@
   }
 
   .viewing-self & .about.collapsed-info {
-    .secondary, .staff-counters {
+    .secondary,
+    .staff-counters {
       display: inherit;
     }
   }
@@ -288,7 +288,8 @@
     width: 530px;
   }
 
-  .category-selector, .tag-chooser {
+  .category-selector,
+  .tag-chooser {
     width: 530px;
   }
 
@@ -297,7 +298,7 @@
       width: 530px;
     }
 
-    &[type=text] {
+    &[type="text"] {
       @include small-width {
         width: 450px;
       }

@@ -19,10 +19,13 @@ article.post {
     border-left: 5px solid darken($primary-low, 10%);
     background-color: $primary-low;
     padding: 10px 10px 0 12px;
-    .avatar { margin-right: 7px; }
+    .avatar {
+      margin-right: 7px;
+    }
   }
 
-  ol, ul {
+  ol,
+  ul {
     clear: none;
   }
 
@@ -35,7 +38,7 @@ article.post {
       margin: 0 0 10px 0;
     }
     p:last-of-type {
-      margin-bottom:0;
+      margin-bottom: 0;
     }
   }
 
@@ -56,7 +59,6 @@ article.post {
     }
   }
 
-
   .cooked {
     padding: 10px 0;
     margin-left: 65px;
@@ -67,7 +69,7 @@ article.post {
       white-space: pre-wrap;
     }
     img {
-      max-width:100%;
+      max-width: 100%;
     }
     p {
       margin: 0 0 1em 0;
@@ -80,7 +82,7 @@ article.post {
   margin: 0 0 10px 0;
 
   a {
-    color: #5c5c5c
+    color: #5c5c5c;
   }
   a.staff {
     background-color: #ffffc2;
@@ -118,7 +120,6 @@ img.emoji {
 .clearfix {
   clear: both;
 }
-
 
 header.discourse {
   padding-left: 10px;

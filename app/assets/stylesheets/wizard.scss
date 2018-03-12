@@ -7,7 +7,7 @@
 
 body.wizard {
   background-color: #fff;
-  background-image: asset-url('/images/wizard/bubbles.png');
+  background-image: asset-url("/images/wizard/bubbles.png");
   background-repeat: repeat;
   background-position: left top;
 
@@ -32,7 +32,7 @@ body.wizard {
 }
 
 .discourse-logo {
-  background-image: asset-url('/images/wizard/discourse.png');
+  background-image: asset-url("/images/wizard/discourse.png");
   height: 30px;
   width: 110px;
   background-size: 110px 30px;
@@ -40,12 +40,9 @@ body.wizard {
 }
 
 .wizard-warning {
-  font-family: sans-serif,
-
-  p {
+  font-family: sans-serif, p {
     margin-top: 0;
   }
-
 
   fieldset {
     display: none;
@@ -75,7 +72,6 @@ body.wizard {
 }
 
 .wizard-step-emoji {
-
   .radio-area {
     display: flex;
     flex-direction: row;
@@ -108,7 +104,7 @@ body.wizard {
   position: relative;
   z-index: 11;
   background-color: white;
-  box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   box-sizing: border-box;
   margin: 1.5em auto;
   padding: 0;
@@ -144,7 +140,7 @@ body.wizard {
   }
 
   .wizard-progress {
-    border: 1px solid #A3C1FF;
+    border: 1px solid #a3c1ff;
     width: 200px;
     height: 1.4em;
 
@@ -161,7 +157,7 @@ body.wizard {
 
     .black {
       background: black;
-      transition: width .3s;
+      transition: width 0.3s;
       z-index: 12;
     }
 
@@ -175,7 +171,7 @@ body.wizard {
     }
 
     .screen {
-      background-color: #A3C1FF;
+      background-color: #a3c1ff;
       mix-blend-mode: screen;
       width: 200px;
       z-index: 14;
@@ -193,13 +189,13 @@ body.wizard {
     font-size: $font-0;
     border: 0;
     padding: 0.5em;
-    transition: background-color .3s;
+    transition: background-color 0.3s;
     margin-right: 0.5em;
     text-decoration: none;
 
     background-color: #fff;
     color: #333;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, .4);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 
     &.small {
       padding: 0.25em 0.5em;
@@ -235,14 +231,14 @@ body.wizard {
   .wizard-btn.primary {
     background-color: #6699ff;
     color: white;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, .6);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
 
     &:hover {
-      background-color: #80B3FF;
+      background-color: #80b3ff;
     }
 
     &:active {
-      background-color: #4D80E6;
+      background-color: #4d80e6;
     }
 
     &:disabled {
@@ -251,22 +247,21 @@ body.wizard {
   }
 
   .wizard-btn.danger {
-    background-color: #E60000;
+    background-color: #e60000;
     color: white;
 
     &:hover {
-      background-color: #CC0000;
+      background-color: #cc0000;
     }
 
     &:active {
-      background-color: #B30000;
+      background-color: #b30000;
     }
 
     &:disabled {
       background-color: #990000;
     }
   }
-
 
   .wizard-btn-upload {
     clear: both;
@@ -294,7 +289,7 @@ body.wizard {
     .wizard-btn.back {
       background-color: #fff;
       color: #333;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, .4);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 
       &:hover {
         background-color: #eee;
@@ -315,14 +310,14 @@ body.wizard {
 
     button.wizard-btn.done {
       color: #fff;
-      background-color: #33B333;
+      background-color: #33b333;
 
       &:hover {
-        background-color: #4DCD4D;
+        background-color: #4dcd4d;
       }
 
       &:active {
-        background-color: #66E666;
+        background-color: #66e666;
       }
 
       &:disabled {
@@ -378,7 +373,7 @@ body.wizard {
       margin-top: 0.5em;
 
       a {
-        color: #7B68EE;
+        color: #7b68ee;
       }
     }
 
@@ -406,7 +401,7 @@ body.wizard {
     font-size: $font-up-1;
     padding: 6px;
     border: 1px solid #ccc;
-    transition: border-color .5s;
+    transition: border-color 0.5s;
   }
 
   &.invalid {
@@ -476,27 +471,62 @@ body.wizard {
 
 /* fix wizard for mobile -- iPhone 5 default width */
 @media only screen and (max-device-width: 568px) {
-  h1 { font-size: $font-up-2 !important; }
-  .wizard-column { margin: auto !important; }
-  .wizard-step-contents { min-height: auto !important; }
-  .wizard-step-banner { width: 100% !important; margin-bottom: 1em !important; }
-  .wizard-step-footer { display: block !important; }
-  .wizard-progress { margin-bottom: 10px !important; }
-  .wizard-buttons { text-align: right !important; }
-  .wizard-footer { display: none !important; }
-  .wizard-field { margin-bottom: 1em !important; }
-  .wizard-step-description { margin-bottom: 1em !important; }
-  .wizard-column-contents { padding: 1em !important; }
-  .emoji-preview img { width: 16px !important; height: 16px !important; }
-  .invite-list .new-user { flex-direction: column !important; align-items: inherit !important; }
-  .invite-list .new-user .invite-email { width: 100% !important; margin-bottom: 5px !important; }
-  .invite-list .add-user { margin-top: 5px !important; }
+  h1 {
+    font-size: $font-up-2 !important;
+  }
+  .wizard-column {
+    margin: auto !important;
+  }
+  .wizard-step-contents {
+    min-height: auto !important;
+  }
+  .wizard-step-banner {
+    width: 100% !important;
+    margin-bottom: 1em !important;
+  }
+  .wizard-step-footer {
+    display: block !important;
+  }
+  .wizard-progress {
+    margin-bottom: 10px !important;
+  }
+  .wizard-buttons {
+    text-align: right !important;
+  }
+  .wizard-footer {
+    display: none !important;
+  }
+  .wizard-field {
+    margin-bottom: 1em !important;
+  }
+  .wizard-step-description {
+    margin-bottom: 1em !important;
+  }
+  .wizard-column-contents {
+    padding: 1em !important;
+  }
+  .emoji-preview img {
+    width: 16px !important;
+    height: 16px !important;
+  }
+  .invite-list .new-user {
+    flex-direction: column !important;
+    align-items: inherit !important;
+  }
+  .invite-list .new-user .invite-email {
+    width: 100% !important;
+    margin-bottom: 5px !important;
+  }
+  .invite-list .add-user {
+    margin-top: 5px !important;
+  }
 
   canvas {
     max-width: 365px;
   }
 
-  .wizard-step-logos, .wizard-step-icons {
+  .wizard-step-logos,
+  .wizard-step-icons {
     canvas {
       max-width: 225px;
     }

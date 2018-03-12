@@ -19,7 +19,8 @@
   }
 
   .edit-main-nav {
-    .nav-pills:after, .nav-pills:before {
+    .nav-pills:after,
+    .nav-pills:before {
       display: inline;
       content: "";
     }
@@ -65,7 +66,7 @@
       width: 25%;
       h3 {
         margin-top: 0;
-        margin-bottom: .5rem;
+        margin-bottom: 0.5rem;
       }
     }
   }
@@ -93,7 +94,8 @@
   .nav.nav-pills.fields {
     margin-left: 10px;
   }
-  .content-list, .current-style {
+  .content-list,
+  .current-style {
     float: left;
   }
   .content-list ul {
@@ -187,18 +189,33 @@
   }
   .color-scheme {
     .controls {
-      span, button, a {
+      span,
+      button,
+      a {
         margin-right: 10px;
       }
     }
   }
   .colors {
-    thead th       { border: none; }
-    td.hex         { width: 160px; }
-    td.actions     { width: 200px; }
-    .hex-input     { width: 80px; margin-bottom: 0; }
-    .hex           { text-align: center; }
-    .description   { color: dark-light-choose($primary-medium, $secondary-medium); }
+    thead th {
+      border: none;
+    }
+    td.hex {
+      width: 160px;
+    }
+    td.actions {
+      width: 200px;
+    }
+    .hex-input {
+      width: 80px;
+      margin-bottom: 0;
+    }
+    .hex {
+      text-align: center;
+    }
+    .description {
+      color: dark-light-choose($primary-medium, $secondary-medium);
+    }
 
     .invalid .hex input {
       background-color: white;
@@ -209,7 +226,7 @@
 
   .status-message {
     display: block;
-    font-size:  $font-down-1;
+    font-size: $font-down-1;
     margin-top: 8px;
   }
 
@@ -258,4 +275,3 @@
     }
   }
 }
-

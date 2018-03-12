@@ -27,7 +27,6 @@
     width: 100%;
 
     .secondary {
-
       .btn {
         padding: 3px 12px;
       }
@@ -44,10 +43,10 @@
 
         &.groups {
           span:after {
-            content: ','
+            content: ",";
           }
           span:last-of-type:after {
-            content:''
+            content: "";
           }
         }
       }
@@ -60,7 +59,7 @@
     }
 
     .details {
-      background: rgba($secondary, .8);
+      background: rgba($secondary, 0.8);
 
       blockquote {
         background-color: $secondary-low;
@@ -70,7 +69,9 @@
       h1 {
         font-size: $font-up-5;
         font-weight: normal;
-        i {font-size: .8em;}
+        i {
+          font-size: 0.8em;
+        }
       }
 
       h2 {
@@ -162,7 +163,7 @@
 
       .details {
         margin-top: 0;
-        background: rgba($secondary, .8);
+        background: rgba($secondary, 0.8);
 
         .bio {
           display: none;
@@ -209,7 +210,8 @@
     color: $secondary;
     display: flex;
     padding: 10px;
-    > div, > div a {
+    > div,
+    > div a {
       display: flex;
       align-items: baseline;
       flex: 0 1 auto;
@@ -245,15 +247,15 @@
   }
 
   .flagged-posts {
-    background-color: #E49735;
+    background-color: #e49735;
   }
 
   .warnings-received {
-    background-color: #EC441B;
+    background-color: #ec441b;
   }
 
   .deleted-posts {
-    background-color: #EC441B;
+    background-color: #ec441b;
   }
 
   .suspensions {
@@ -277,7 +279,7 @@
       }
 
       .instructions {
-      color: dark-light-choose($primary-medium, $secondary-medium);
+        color: dark-light-choose($primary-medium, $secondary-medium);
         margin-top: 5px;
         margin-bottom: 10px;
         font-size: $font-down-1;
@@ -414,7 +416,8 @@
     padding: 10px 14px;
     margin: 0 5px 10px 0;
 
-    &.linked-stat { // This makes the entire "box" (the li) clickable instead of a narrow area.
+    &.linked-stat {
+      // This makes the entire "box" (the li) clickable instead of a narrow area.
       padding: 0;
       a {
         padding: 10px 14px;
@@ -463,7 +466,7 @@
     color: dark-light-choose($primary-medium, $secondary-high);
   }
 
-  @media all and (max-width : 600px) {
+  @media all and (max-width: 600px) {
     float: none;
     width: 100%;
   }
@@ -558,7 +561,7 @@
     }
 
     // Can remove this once other languages have removed html from i18n values
-    div  {
+    div {
       .fa {
         display: none;
       }
@@ -570,9 +573,9 @@
 }
 
 .qr-code-container {
-    display: flex;
-    .qr-code {
-        padding: 5px 5px 0 5px;
-        background-color: white;
-    }
+  display: flex;
+  .qr-code {
+    padding: 5px 5px 0 5px;
+    background-color: white;
+  }
 }

@@ -3,7 +3,6 @@
 }
 
 .fps-result {
-
   .author {
     display: inline-block;
     vertical-align: top;
@@ -11,7 +10,10 @@
 
   .like-count {
     color: dark-light-choose($primary-medium, $secondary-medium);
-    .fa { color: $love; font-size: $font-down-1; }
+    .fa {
+      color: $love;
+      font-size: $font-down-1;
+    }
   }
 
   .badge-wrapper span.badge-category {
@@ -19,14 +21,14 @@
   }
 
   .search-category {
-    padding-top:3px;
+    padding-top: 3px;
   }
 
   margin-bottom: 28px;
   max-width: 780px;
   .topic {
-     padding-bottom: 2px;
-     max-width:700px;
+    padding-bottom: 2px;
+    max-width: 700px;
   }
   .avatar {
     margin-right: 14px;
@@ -35,7 +37,8 @@
     color: $tertiary-high;
   }
   .search-link {
-    .topic-statuses, .topic-title {
+    .topic-statuses,
+    .topic-title {
       font-size: $font-up-2;
       line-height: $line-height-large;
     }
@@ -103,7 +106,7 @@
   }
 
   .new-topic-btn {
-    float:right;
+    float: right;
   }
 }
 

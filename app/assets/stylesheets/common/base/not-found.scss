@@ -1,4 +1,4 @@
-// Page not found styles 
+// Page not found styles
 
 h1.page-not-found {
   font-size: $font-up-5;
@@ -19,17 +19,18 @@ h1.page-not-found {
   }
 }
 
-.popular-topics, .recent-topics {
+.popular-topics,
+.recent-topics {
   box-sizing: border-box;
   width: 50%;
   max-width: 400px;
-  margin-bottom: 40px;  
+  margin-bottom: 40px;
   padding-right: 20px;
   @media screen and (max-width: 600px) {
     width: 100%;
   }
   h2 {
-    margin-bottom: 10px;    
+    margin-bottom: 10px;
   }
 }
 
@@ -39,7 +40,7 @@ h1.page-not-found {
   align-items: baseline;
   margin-bottom: 15px;
   @media screen and (max-width: 600px) {
-    &:nth-of-type(n+6) {
+    &:nth-of-type(n + 6) {
       display: none;
     }
   }
@@ -47,4 +48,3 @@ h1.page-not-found {
     flex-basis: 100%;
   }
 }
-

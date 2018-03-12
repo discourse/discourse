@@ -8,13 +8,12 @@ html {
   font-size: 15px; // Increasing overall font-size on mobile by 1px
 }
 
-
 body {
   background-color: $secondary;
 }
 
 textarea {
-  background-color:$secondary;
+  background-color: $secondary;
 }
 
 blockquote {
@@ -25,10 +24,9 @@ blockquote {
     margin: 0 0 10px 0;
 
     &:last-of-type {
-      margin-bottom:0;
+      margin-bottom: 0;
     }
   }
-
 }
 
 // Common classes

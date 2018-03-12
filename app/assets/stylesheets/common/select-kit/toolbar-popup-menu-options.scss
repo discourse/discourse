@@ -1,4 +1,7 @@
-#reply-control .d-editor-button-bar .toolbar-popup-menu-options .btn.select-kit-header {
+#reply-control
+  .d-editor-button-bar
+  .toolbar-popup-menu-options
+  .btn.select-kit-header {
   padding: 7px 8px;
   height: auto;
 }
@@ -17,9 +20,10 @@
         margin-bottom: 5px;
         padding: 6px 3px;
         background: $primary-low;
-        transition: all .25s;
+        transition: all 0.25s;
 
-        .name, .d-icon {
+        .name,
+        .d-icon {
           font-size: $font-0;
           font-weight: normal;
           color: $primary;
@@ -32,7 +36,8 @@
         &.is-highlighted {
           background: $primary-medium;
 
-          .name, .d-icon {
+          .name,
+          .d-icon {
             color: $secondary;
           }
         }
