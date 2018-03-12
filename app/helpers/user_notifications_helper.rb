@@ -32,14 +32,16 @@ module UserNotificationsHelper
     "<a href='#{Discourse.base_url}' style='color: ##{color}'>#{@site_name}</a>"
   end
 
-  def first_paragraph_from(html)
+  def first_paragraphs_from(html)
     doc = Nokogiri::HTML(html)
 
     result = ""
+    length = 0
     doc.css('body > p, aside.onebox').each do |node|
       if node.text.present?
         result << node.to_s
-        return result if result.size >= SiteSetting.digest_min_excerpt_length
+        length += node.inner_text.length
+        return result if length >= SiteSetting.digest_min_excerpt_length
       end
     end
     return result unless result.blank?
@@ -49,7 +51,7 @@ module UserNotificationsHelper
   end
 
   def email_excerpt(html_arg)
-    html = (first_paragraph_from(html_arg) || html_arg).to_s
+    html = (first_paragraphs_from(html_arg) || html_arg).to_s
     PrettyText.format_for_email(html).html_safe
   end
 

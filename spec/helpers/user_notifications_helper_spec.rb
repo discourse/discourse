@@ -20,5 +20,19 @@ describe UserNotificationsHelper do
       SiteSetting.digest_min_excerpt_length = 100
       expect(helper.email_excerpt(cooked)).to eq(paragraphs.join)
     end
+
+    it "doesn't count emoji images" do
+      with_emoji = "<p>Hi <img src=\"/images/emoji/twitter/smile.png?v=5\" title=\":smile:\" class=\"emoji\" alt=\":smile:\"></p>"
+      arg = ([with_emoji] + paragraphs).join("\n")
+      SiteSetting.digest_min_excerpt_length = 50
+      expect(helper.email_excerpt(arg)).to eq([with_emoji, paragraphs[0]].join)
+    end
+
+    it "only counts link text" do
+      with_link = "<p>Hi <a href=\"https://really-long.essays.com/essay/number/9000/this-one-is-about-friends-and-got-a-C-minus-in-grade-9\">friends</a>!</p>"
+      arg = ([with_link] + paragraphs).join("\n")
+      SiteSetting.digest_min_excerpt_length = 50
+      expect(helper.email_excerpt(arg)).to eq([with_link, paragraphs[0]].join)
+    end
   end
 end
