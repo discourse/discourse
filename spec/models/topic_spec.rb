@@ -471,7 +471,7 @@ describe Topic do
 
     context 'rate limits' do
       before do
-        SiteSetting.max_topic_invitations_per_day = 2
+        SiteSetting.max_topic_invitations_per_day = 1
         RateLimiter.enable
       end
 
@@ -481,7 +481,6 @@ describe Topic do
       end
 
       it "rate limits topic invitations" do
-
         start = Time.now.tomorrow.beginning_of_day
         freeze_time(start)
 
@@ -489,10 +488,23 @@ describe Topic do
         topic = Fabricate(:topic, user: trust_level_2)
 
         topic.invite(topic.user, user.username)
-        topic.invite(topic.user, "walter@white.com")
 
         expect {
-          topic.invite(topic.user, "user@example.com")
+          topic.invite(topic.user, another_user.username)
+        }.to raise_error(RateLimiter::LimitExceeded)
+      end
+
+      it "rate limits PM invitations" do
+        start = Time.now.tomorrow.beginning_of_day
+        freeze_time(start)
+
+        trust_level_2 = Fabricate(:user, trust_level: 2)
+        topic = Fabricate(:private_message_topic, user: trust_level_2)
+
+        topic.invite(topic.user, user.username)
+
+        expect {
+          topic.invite(topic.user, another_user.username)
         }.to raise_error(RateLimiter::LimitExceeded)
       end
     end

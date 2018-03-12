@@ -804,6 +804,7 @@ SQL
     end
 
     if target_user && private_message? && topic_allowed_users.create!(user_id: target_user.id)
+      rate_limit_topic_invitation(invited_by)
       add_small_action(invited_by, "invited_user", target_user.username)
 
       create_invite_notification!(
@@ -814,9 +815,9 @@ SQL
 
       true
     elsif username_or_email =~ /^.+@.+$/ && guardian.can_invite_via_email?(self)
-      rate_limit_topic_invitation(invited_by)
 
       if target_user
+        rate_limit_topic_invitation(invited_by)
         Invite.extend_permissions(self, target_user, invited_by)
 
         create_invite_notification!(
