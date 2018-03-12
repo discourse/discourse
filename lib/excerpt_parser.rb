@@ -49,7 +49,8 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
   end
 
   def include_tag(name, attributes)
-    characters("<#{name} #{attributes.map { |k, v| "#{k}=\"#{escape_attribute(v)}\"" }.join(' ')}>", false, false, false)
+    characters("<#{name} #{attributes.map { |k, v| "#{k}=\"#{escape_attribute(v)}\"" }.join(' ')}>",
+               truncate: false, count_it: false, encode: false)
   end
 
   def start_element(name, attributes = [])
@@ -130,12 +131,12 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     case name
     when "a"
       unless @strip_links
-        characters("</a>", false, false, false)
+        characters("</a>", truncate: false, count_it: false, encode: false)
         @in_a = false
       end
     when "p", "br"
       if @keep_newlines
-        characters("<br>", false, false, false)
+        characters("<br>", truncate: false, count_it: false, encode: false)
       else
         characters(" ")
       end
@@ -144,18 +145,31 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     when "details"
       @in_details_depth -= 1
       if @in_details_depth == 0
-        full = "<details><summary>#{clean(@summary_contents)}</summary>#{clean(@detail_contents)}</details>"
-        if @current_length + full.length > @length
-          @excerpt << "<details class='disabled'><summary>#{@summary_contents[0..@length]}</summary></details>"
+        @summary_contents = clean(@summary_contents)
+        @detail_contents = clean(@detail_contents)
+
+        if @current_length + @summary_contents.length >= @length
+          characters(@summary_contents,
+                     encode: false,
+                     before_string: "<details class='disabled'><summary>",
+                     after_string: "</summary></details>")
         else
-          @excerpt << full
+          characters(@summary_contents,
+                     truncate: false,
+                     encode: false,
+                     before_string: "<details><summary>",
+                     after_string: "</summary>")
+
+          characters(@detail_contents,
+                     encode: false,
+                     after_string: "</details>")
         end
       end
     when "summary"
       @in_summary = false if @in_details_depth == 1
     when "div", "span"
       throw :done if @start_excerpt
-      characters("</span>", false, false, false) if @in_spoiler
+      characters("</span>", truncate: false, count_it: false, encode: false) if @in_spoiler
       @in_spoiler = false
     end
   end
@@ -164,7 +178,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     ERB::Util.html_escape(str.strip)
   end
 
-  def characters(string, truncate = true, count_it = true, encode = true)
+  def characters(string, truncate: true, count_it: true, encode: true, before_string: nil, after_string: nil)
     return if @in_quote
 
     # we call length on this so might as well ensure we have a string
@@ -178,15 +192,20 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
       return
     end
 
+    @excerpt << before_string if before_string
+
     encode = encode ? lambda { |s| ERB::Util.html_escape(s) } : lambda { |s| s }
     if count_it && @current_length + string.length > @length
       length = [0, @length - @current_length - 1].max
       @excerpt << encode.call(string[0..length]) if truncate
       @excerpt << (@text_entities ? "..." : "&hellip;")
       @excerpt << "</a>" if @in_a
+      @excerpt << after_string if after_string
       throw :done
     end
+
     @excerpt << encode.call(string)
+    @excerpt << after_string if after_string
     @current_length += string.length if count_it
   end
 end
