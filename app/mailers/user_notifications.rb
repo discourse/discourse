@@ -435,7 +435,7 @@ class UserNotifications < ActionMailer::Base
 
     if post.topic.private_message?
       subject_pm =
-        if opts[:show_group_in_subject] and group = post.topic.allowed_groups&.first
+        if opts[:show_group_in_subject] && group = post.topic.allowed_groups&.first
           if group.full_name
             "[#{group.full_name}] "
           else
