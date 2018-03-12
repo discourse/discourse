@@ -1,0 +1,85 @@
+#!/usr/bin/env ruby
+
+require 'fileutils'
+require 'pathname'
+require 'tempfile'
+require 'securerandom'
+require 'minitar'
+require 'zlib'
+require 'find'
+require 'net/http'
+require 'net/http/post/multipart'
+require 'uri'
+require 'listen'
+
+# Work in progress theme watcher for Discourse
+#
+# Monitor a theme directory locally and automatically keep it in sync with Discourse
+
+def usage
+  puts "Usage: theme-watcher DIR SITE"
+  exit 1
+end
+
+$api_key = ENV['DISCOURSE_API_KEY']
+$dir = ARGV[1]
+$site = ARGV[2]
+
+if !$api_key
+  puts "No API key found in DISCOURSE_API_KEY env var enter your API key: "
+  $api_key = gets
+end
+
+if !File.exist?("#{$dir}/about.json")
+  puts "No about.json file found in #{dir}!"
+  puts
+  usage
+end
+
+def compress_dir(gzip, dir)
+  sgz = Zlib::GzipWriter.new(File.open(gzip, 'wb'))
+  tar = Archive::Tar::Minitar::Output.new(sgz)
+
+  Dir.chdir(dir + "/../") do
+    Find.find(File.basename(dir)) do |x|
+      Find.prune if File.basename(x)[0] == ?.
+      next if File.directory?(x)
+
+      Minitar.pack_file(x, tar)
+    end
+  end
+ensure
+  tar.close
+  sgz.close
+end
+
+def upload_full_theme(dir, site)
+  filename = "#{Pathname.new(Dir.tmpdir).realpath}/bundle_#{SecureRandom.hex}.tar.gz"
+  compress_dir(filename, dir)
+
+  # new full upload endpoint
+  uri = URI.parse(site + "/admin/themes/import.json?api_key=#{$api_key}")
+  http = Net::HTTP.new(uri.host, uri.port)
+  File.open(filename) do |tgz|
+
+    request = Net::HTTP::Post::Multipart.new(
+      uri.request_uri,
+      "bundle" => UploadIO.new(tgz, "application/tar+gzip", "bundle.tar.gz"),
+    )
+    response = http.request(request)
+    p response.code
+  end
+
+ensure
+  FileUtils.rm_f filename
+end
+
+upload_full_theme($dir, $site)
+
+listener = Listen.to($dir) do |modified, added, removed|
+  puts "Change detected"
+  upload_full_theme($dir, $site)
+end
+
+listener.start
+sleep
