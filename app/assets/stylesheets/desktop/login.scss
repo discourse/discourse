@@ -25,7 +25,8 @@
     td {
       padding-top: 10px;
     }
-    input, label {
+    input,
+    label {
       margin-bottom: 0;
     }
     .tip {
@@ -53,7 +54,8 @@
   }
 }
 
-.password-reset, .invites-show {
+.password-reset,
+.invites-show {
   .col-form {
     padding-left: 20px;
   }
@@ -91,10 +93,12 @@
     }
   }
   form {
-    .controls, .input {
+    .controls,
+    .input {
       margin-left: 20px;
     }
-    input, label {
+    input,
+    label {
       margin-bottom: 0;
     }
     .user-field .control-label:not(.checkbox-label) {

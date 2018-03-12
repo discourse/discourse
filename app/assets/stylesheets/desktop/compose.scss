@@ -54,7 +54,7 @@
     padding: 4px 0;
     background: $tertiary;
     &:before {
-      content: '';
+      content: "";
       display: block;
       width: 27px;
       margin: auto;
@@ -77,7 +77,7 @@
   bottom: 10px;
   left: 51%;
   overflow-y: auto;
-  z-index: z("composer","popover");
+  z-index: z("composer", "popover");
   padding: 10px 10px 35px 10px;
   box-shadow: shadow("card");
   background: $highlight-medium;
@@ -106,16 +106,15 @@
     opacity: 0.5;
     font-size: $font-up-1;
     &:before {
-      content: 'esc';
+      content: "esc";
       font-size: $font-down-1;
       margin-right: 0.5em;
     }
   }
 
   a.close:hover {
-    opacity: 1.0;
+    opacity: 1;
   }
-
 
   ul.topics {
     list-style: none;
@@ -159,7 +158,8 @@
     padding: 0;
   }
   .search-link {
-    .fa, .blurb {
+    .fa,
+    .blurb {
       color: dark-light-choose($primary-high, $secondary-medium);
     }
     span.topic {

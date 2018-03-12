@@ -1,4 +1,5 @@
-.latest-topic-list, .top-topic-list {
+.latest-topic-list,
+.top-topic-list {
   @extend .topic-list-icons;
 
   .table-heading {
@@ -6,7 +7,8 @@
     color: dark-light-choose($primary-medium, $secondary-high);
   }
 
-  .no-topics, .more-topics {
+  .no-topics,
+  .more-topics {
     margin-top: 1em;
   }
 }

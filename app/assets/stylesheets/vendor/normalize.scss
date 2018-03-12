@@ -104,9 +104,10 @@ a:hover {
  * Address styling not present in IE 8/9/10/11 & Edge
  */
 
- abbr[title], acronym[title] {
+abbr[title],
+acronym[title] {
   text-decoration: underline;
-  text-decoration-style: dotted; 
+  text-decoration-style: dotted;
 }
 
 /**

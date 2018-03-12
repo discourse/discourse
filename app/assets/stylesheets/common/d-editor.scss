@@ -8,12 +8,12 @@
   position: absolute;
   background-color: black;
   opacity: 0.8;
-  z-index: z("modal","overlay");
+  z-index: z("modal", "overlay");
 }
 
 .d-editor-modals {
   position: absolute;
-  z-index: z("modal","content");
+  z-index: z("modal", "content");
 }
 
 .d-editor {
@@ -52,11 +52,10 @@
   background-color: $secondary;
   position: relative;
   border: 1px solid $primary-medium;
-  
+
   textarea {
     background: transparent;
   }
-
 }
 
 .d-editor-preview-wrapper {
@@ -73,7 +72,7 @@
   min-height: 30px;
   padding-left: 3px;
   border-bottom: 1px solid $primary-low;
-  
+
   button {
     background-color: transparent;
     color: $primary-high;
@@ -108,13 +107,13 @@
 .d-editor-input,
 .d-editor-preview {
   box-sizing: border-box;
-  flex: 1 1 100%;  
-  width: 100%;  
+  flex: 1 1 100%;
+  width: 100%;
   margin: 0;
   min-height: auto;
   word-wrap: break-word;
   -webkit-appearance: none;
-  border-radius: 0;  
+  border-radius: 0;
   &:focus {
     box-shadow: none;
     border: 0;
@@ -127,7 +126,7 @@
   padding: 10px;
   height: 100%;
   overflow-x: hidden;
-  resize: none; 
+  resize: none;
 }
 
 .d-editor-preview {

@@ -2,15 +2,14 @@
   /* intended only for /about /faq, /guidelines, /tos, and /privacy */
   width: 100%;
   max-width: 700px;
-  font-size: $font-up-1;  
+  font-size: $font-up-1;
   .mobile-view & {
     font-size: $font-0;
     margin-top: 20px;
   }
 
-
   li {
-     margin-bottom: 8px;
+    margin-bottom: 8px;
   }
 
   .nav-pills {
@@ -21,5 +20,4 @@
   ol:not(.nav-pills) {
     margin-left: 40px;
   }
-
 }

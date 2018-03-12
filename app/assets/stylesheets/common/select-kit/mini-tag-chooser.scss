@@ -20,7 +20,7 @@
         max-width: 500px;
         width: 500px;
         border: 1px solid $tertiary;
-        box-shadow: shadow("focus")
+        box-shadow: shadow("focus");
       }
 
       .select-kit-header {
@@ -38,7 +38,8 @@
         border-top: 0;
       }
 
-      &.is-expanded .select-kit-wrapper, .select-kit-wrapper {
+      &.is-expanded .select-kit-wrapper,
+      .select-kit-wrapper {
         display: none;
       }
 
@@ -75,13 +76,13 @@
             border: 0;
 
             &.is-highlighted {
-              box-shadow: 0 0 2px $danger, 0 1px 0 rgba(0,0,0,0.05);
+              box-shadow: 0 0 2px $danger, 0 1px 0 rgba(0, 0, 0, 0.05);
             }
 
             &:after {
-              content: '\f00d';
+              content: "\f00d";
               color: $primary-low-mid;
-              font-family: 'FontAwesome';
+              font-family: "FontAwesome";
             }
 
             &:hover {

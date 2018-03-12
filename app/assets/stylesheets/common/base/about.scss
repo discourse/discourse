@@ -12,7 +12,8 @@ section.about {
       text-align: left;
     }
 
-    td, th {
+    td,
+    th {
       padding: 10px;
       border-bottom: 1px solid $primary-low;
     }
@@ -20,6 +21,5 @@ section.about {
     td.title {
       width: 33%;
     }
-
   }
 }

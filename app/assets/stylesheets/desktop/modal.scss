@@ -1,7 +1,7 @@
 // base styles for every modal popup used in Discourse
 
 .modal-middle-container {
-  display:table-cell;
+  display: table-cell;
   vertical-align: middle;
 }
 
@@ -17,8 +17,8 @@
 }
 
 .modal.in {
-    -webkit-animation: fade .25s;
-    animation: fade .25s;
+  -webkit-animation: fade 0.25s;
+  animation: fade 0.25s;
 }
 
 .modal-body {
@@ -117,7 +117,7 @@
       margin-top: 0;
     }
 
-    input[type=radio] {
+    input[type="radio"] {
       margin-right: 10px;
     }
 
@@ -129,7 +129,8 @@
 
     form {
       margin-top: 20px;
-      #split-topic-name, #choose-topic-title {
+      #split-topic-name,
+      #choose-topic-title {
         width: 520px;
       }
     }

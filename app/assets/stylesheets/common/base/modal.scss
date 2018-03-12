@@ -1,19 +1,18 @@
 .modal-open {
   .dropdown-menu {
-     z-index: z("modal","dropdown");
+    z-index: z("modal", "dropdown");
   }
   .popover {
-    z-index: z("modal","popover");
+    z-index: z("modal", "popover");
   }
   .tooltip {
-    z-index: z("modal","tooltip");
+    z-index: z("modal", "tooltip");
   }
-
 }
 
 .bootbox.modal {
   position: fixed;
-  z-index: z("modal","content");
+  z-index: z("modal", "content");
   overflow: auto;
   height: auto;
   background-color: $secondary;
@@ -29,13 +28,13 @@
 .modal-header {
   display: flex;
   align-items: center;
-  padding: 10px 15px;  
+  padding: 10px 15px;
   border-bottom: 1px solid $primary-low;
   h3 {
     margin-bottom: 0;
   }
   .modal-close {
-    order: 2; 
+    order: 2;
     margin-left: auto;
   }
 }
@@ -46,7 +45,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: z("modal","overlay");
+  z-index: z("modal", "overlay");
   background-color: #111;
   &.fade {
     opacity: 0;
@@ -55,28 +54,36 @@
 
 .modal-backdrop,
 .modal-backdrop.fade.in {
-  animation: fade .3s;
-  opacity: .9;
+  animation: fade 0.3s;
+  opacity: 0.9;
   filter: alpha(opacity=90);
 }
 
 // fade in
 @keyframes fade {
-  from { opacity: 0 }
-    to { opacity: .9 }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.9;
+  }
 }
 
 // slide in
 @keyframes slidein {
-  from { transform: translateY(-20%); }
-    to { transform: translateY(0); }
+  from {
+    transform: translateY(-20%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
 
 .modal-outer-container {
-  display:table;
+  display: table;
   table-layout: fixed;
-  width:100%;
-  height:100%;
+  width: 100%;
+  height: 100%;
 }
 
 .modal-inner-container {
@@ -97,9 +104,8 @@
 
 .create-account.in .modal-inner-container,
 .login-modal.in .modal-inner-container {
-  animation: slidein .3s;
+  animation: slidein 0.3s;
 }
-
 
 .inline-modal {
   .modal-inner-container {
@@ -112,7 +118,7 @@
   top: 0;
   width: 100%;
   height: 100%;
-  z-index: z("modal","content");
+  z-index: z("modal", "content");
   overflow: auto;
 }
 
@@ -123,7 +129,7 @@
   padding: 14px 15px 10px;
   border-top: 1px solid $primary-low;
   .btn {
-  margin: 0 5px 5px 0;
+    margin: 0 5px 5px 0;
   }
 }
 .modal-footer:before,
@@ -151,7 +157,6 @@
       font-size: $font-0;
     }
     border-bottom: 1px solid $primary-low;
-
   }
 
   &.hidden {
@@ -199,7 +204,7 @@
         height: 100%;
         background-color: rgba(0, 0, 0, 0.5);
         .text {
-          color: rgb(255,255,255);
+          color: rgb(255, 255, 255);
           position: absolute;
           top: 40%;
           font-size: $font-up-6;
@@ -311,8 +316,8 @@
   }
 }
 
-.permission-list{
-  list-style:none;
+.permission-list {
+  list-style: none;
   margin: 0 0 30px;
   padding: 0;
   .name {
@@ -332,8 +337,10 @@
 }
 
 .edit-category-modal {
-  .future-date-input, .num-featured-topics-fields, .position-fields {
-    input[type=text] {
+  .future-date-input,
+  .num-featured-topics-fields,
+  .position-fields {
+    input[type="text"] {
       width: 50px;
     }
   }
@@ -379,7 +386,8 @@
     transition: none;
     background-color: transparent;
     margin-right: 5px;
-    &:hover, &.active {
+    &:hover,
+    &.active {
       color: $primary;
     }
     &.active {
@@ -394,7 +402,8 @@
   }
   .incoming-email-content {
     height: 300px;
-    textarea, .incoming-email-html-part {
+    textarea,
+    .incoming-email-html-part {
       height: 95%;
       border: none;
       border-top: 1px solid $primary-low;
@@ -421,25 +430,24 @@
 }
 
 .change-timestamp {
-  
-    .date-picker {
-      width: 10em;
+  .date-picker {
+    width: 10em;
+  }
+
+  #date-container {
+    .pika-single {
+      position: relative !important; // overriding another important
+      display: inline-block;
     }
-  
-    #date-container {
-      .pika-single {
-        position: relative !important; // overriding another important
-        display: inline-block;
-      }
-    }
-  
-    input[type=time] {
-      width: 6em;
-    }
-  
-    form {
-      margin: 0;
-    }
+  }
+
+  input[type="time"] {
+    width: 6em;
+  }
+
+  form {
+    margin: 0;
+  }
 }
 
 .flag-modal {
@@ -485,10 +493,7 @@
   }
 }
 
-
 .modal-tab {
   position: absolute;
   width: 95%;
 }
-
-  
