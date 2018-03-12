@@ -22,8 +22,8 @@ def usage
 end
 
 $api_key = ENV['DISCOURSE_API_KEY']
-$dir = ARGV[1]
-$site = ARGV[2]
+$dir = ARGV[0]
+$site = ARGV[1]
 
 if !$api_key
   puts "No API key found in DISCOURSE_API_KEY env var enter your API key: "
