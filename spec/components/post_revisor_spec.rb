@@ -437,21 +437,68 @@ describe PostRevisor do
       end
     end
 
+    context "logging staff edits" do
+      let(:moderator) { Fabricate(:moderator) }
+
+      it "doesn't log when a regular user revises a post" do
+        subject.revise!(
+          post.user,
+          raw: "lets totally update the body"
+        )
+        log = UserHistory.where(
+          acting_user_id: post.user.id,
+          action: UserHistory.actions[:post_edit]
+        )
+        expect(log).to be_blank
+      end
+
+      it "logs an edit when a staff member revises a post" do
+        subject.revise!(
+          moderator,
+          raw: "lets totally update the body"
+        )
+        log = UserHistory.where(
+          acting_user_id: moderator.id,
+          action: UserHistory.actions[:post_edit]
+        )
+        expect(log).to be_present
+      end
+
+      it "doesn't log an edit when a staff member edits their own post" do
+        revisor = PostRevisor.new(
+          Fabricate(:post, user: moderator)
+        )
+        revisor.revise!(
+          moderator,
+          raw: "my own edit to my own thing"
+        )
+
+        log = UserHistory.where(
+          acting_user_id: moderator.id,
+          action: UserHistory.actions[:post_edit]
+        )
+        expect(log).to be_blank
+      end
+    end
+
     context "staff_edit_locks_post" do
 
       context "disabled" do
+        let(:moderator) { Fabricate(:moderator) }
+
         before do
           SiteSetting.staff_edit_locks_post = false
         end
 
         it "does not lock the post when revised" do
           result = subject.revise!(
-            Fabricate(:moderator),
+            moderator,
             raw: "lets totally update the body"
           )
           expect(result).to eq(true)
           post.reload
           expect(post).not_to be_locked
+
         end
       end
 

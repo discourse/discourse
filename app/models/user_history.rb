@@ -67,7 +67,8 @@ class UserHistory < ActiveRecord::Base
                           post_locked: 49,
                           post_unlocked: 50,
                           check_personal_message: 51,
-                          disabled_second_factor: 52)
+                          disabled_second_factor: 52,
+                          post_edit: 53)
   end
 
   # Staff actions is a subset of all actions, used to audit actions taken by staff users.
@@ -112,7 +113,8 @@ class UserHistory < ActiveRecord::Base
                         :post_locked,
                         :post_unlocked,
                         :check_personal_message,
-                        :disabled_second_factor]
+                        :disabled_second_factor,
+                        :post_edit]
   end
 
   def self.staff_action_ids
