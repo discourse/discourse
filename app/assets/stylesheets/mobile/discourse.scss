@@ -6,6 +6,7 @@
 // Base Elements
 html {
   font-size: 15px; // Increasing overall font-size on mobile by 1px
+  overscroll-behavior-y: contain;
 }
 
 
