@@ -341,15 +341,15 @@ end
 # list all missing uploads and optimized images
 task "uploads:missing" => :environment do
   if ENV["RAILS_DB"]
-    list_missing_uploads
+    list_missing_uploads(skip_optimized: ENV['SKIP_OPTIMIZED'])
   else
     RailsMultisite::ConnectionManagement.each_connection do |db|
-      list_missing_uploads
+      list_missing_uploads(skip_optimized: ENV['SKIP_OPTIMIZED'])
     end
   end
 end
 
-def list_missing_uploads
+def list_missing_uploads(skip_optimized: false)
   if Discourse.store.external?
     puts "This task only works for internal storages."
     return
@@ -372,20 +372,21 @@ def list_missing_uploads
     puts path if bad
   end
 
-  OptimizedImage.find_each do |optimized_image|
+  unless skip_optimized
+    OptimizedImage.find_each do |optimized_image|
+      # remote?
+      next unless optimized_image.url =~ /^\/[^\/]/
 
-    # remote?
-    next unless optimized_image.url =~ /^\/[^\/]/
+      path = "#{public_directory}#{optimized_image.url}"
 
-    path = "#{public_directory}#{optimized_image.url}"
-
-    bad = true
-    begin
-      bad = false if File.size(path) != 0
-    rescue
-      # something is messed up
+      bad = true
+      begin
+        bad = false if File.size(path) != 0
+      rescue
+        # something is messed up
+      end
+      puts path if bad
     end
-    puts path if bad
   end
 end
 
