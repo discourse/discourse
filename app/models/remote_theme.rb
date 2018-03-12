@@ -1,4 +1,5 @@
-require_dependency 'git_importer'
+require_dependency 'theme_store/git_importer'
+require_dependency 'theme_store/tgz_importer'
 require_dependency 'upload_creator'
 
 class RemoteTheme < ActiveRecord::Base
@@ -7,8 +8,32 @@ class RemoteTheme < ActiveRecord::Base
 
   has_one :theme
 
+  def self.update_tgz_theme(filename, user: Discourse.system_user)
+    importer = ThemeStore::TgzImporter.new(filename)
+    importer.import!
+
+    theme_info = JSON.parse(importer["about.json"])
+
+    theme = Theme.find_by(name: theme_info["name"])
+    theme ||= Theme.new(user_id: user&.id || -1, name: theme_info["name"])
+
+    remote_theme = new
+    remote_theme.theme = theme
+    remote_theme.remote_url = ""
+    remote_theme.update_from_remote(importer, skip_update: true)
+
+    theme.save!
+    theme
+  ensure
+    begin
+      importer.cleanup!
+    rescue => e
+      Rails.logger.warn("Failed cleanup remote path #{e}")
+    end
+  end
+
   def self.import_theme(url, user = Discourse.system_user, private_key: nil)
-    importer = GitImporter.new(url, private_key: private_key)
+    importer = ThemeStore::GitImporter.new(url, private_key: private_key)
     importer.import!
 
     theme_info = JSON.parse(importer["about.json"])
@@ -32,19 +57,19 @@ class RemoteTheme < ActiveRecord::Base
   end
 
   def update_remote_version
-    importer = GitImporter.new(remote_url, private_key: private_key)
+    importer = ThemeStore::GitImporter.new(remote_url, private_key: private_key)
     importer.import!
     self.updated_at = Time.zone.now
     self.remote_version, self.commits_behind = importer.commits_since(remote_version)
   end
 
-  def update_from_remote(importer = nil)
+  def update_from_remote(importer = nil, skip_update: false)
     return unless remote_url
     cleanup = false
 
     unless importer
       cleanup = true
-      importer = GitImporter.new(remote_url, private_key: private_key)
+      importer = ThemeStore::GitImporter.new(remote_url, private_key: private_key)
       importer.import!
     end
 
@@ -99,10 +124,13 @@ class RemoteTheme < ActiveRecord::Base
 
     self.license_url ||= theme_info["license_url"]
     self.about_url ||= theme_info["about_url"]
-    self.remote_updated_at = Time.zone.now
-    self.remote_version = importer.version
-    self.local_version = importer.version
-    self.commits_behind = 0
+
+    if !skip_update
+      self.remote_updated_at = Time.zone.now
+      self.remote_version = importer.version
+      self.local_version = importer.version
+      self.commits_behind = 0
+    end
 
     update_theme_color_schemes(theme, theme_info["color_schemes"])
 

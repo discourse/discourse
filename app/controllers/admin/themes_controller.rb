@@ -82,6 +82,13 @@ class Admin::ThemesController < Admin::AdminController
       rescue RuntimeError
         render_json_error I18n.t('themes.error_importing')
       end
+    elsif params[:bundle]
+      begin
+        @theme = RemoteTheme.update_tgz_theme(params[:bundle].path, user: current_user)
+        render json: @theme, status: :created
+      rescue RuntimeError
+        render_json_error I18n.t('themes.error_importing')
+      end
     else
       render json: @theme.errors, status: :unprocessable_entity
     end

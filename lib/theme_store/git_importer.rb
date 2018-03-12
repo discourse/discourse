@@ -1,4 +1,6 @@
-class GitImporter
+module ThemeStore; end
+
+class ThemeStore::GitImporter
 
   attr_reader :url
 
