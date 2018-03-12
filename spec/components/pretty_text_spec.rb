@@ -389,7 +389,7 @@ describe PrettyText do
       end
 
       it "should keep details if too long" do
-        expect(PrettyText.excerpt("<details><summary>expand</summary><p>hello</p></details>", 30)).to match_html "<details class='disabled'><summary>expand</summary></details>"
+        expect(PrettyText.excerpt("<details><summary>expand</summary><p>hello</p></details>", 6)).to match_html "<details class='disabled'><summary>expand</summary></details>"
       end
 
       it "doesn't disable details if short enough" do
