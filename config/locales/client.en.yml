@@ -3302,6 +3302,7 @@ en:
             reviewed_post: "reviewed post"
             custom_staff: "plugin custom action"
             post_locked: "post locked"
+            post_edit: "post edit"
             post_unlocked: "post unlocked"
             check_personal_message: "check personal message"
             disabled_second_factor: "disable Two Factor Authentication"

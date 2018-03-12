@@ -103,6 +103,15 @@ class StaffActionLogger
     )
   end
 
+  def log_post_edit(post, opts = {})
+    raise Discourse::InvalidParameters.new(:post) unless post && post.is_a?(Post)
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:post_edit],
+      post_id: post.id,
+      details: "#{post.raw}\n\n---\n\n#{opts[:new_raw]}"
+    ))
+  end
+
   def log_site_setting_change(setting_name, previous_value, new_value, opts = {})
     raise Discourse::InvalidParameters.new(:setting_name) unless setting_name.present? && SiteSetting.respond_to?(setting_name)
     UserHistory.create(params(opts).merge(action: UserHistory.actions[:change_site_setting],

@@ -177,6 +177,14 @@ class PostRevisor
       PostLocker.new(@post, @editor).lock
     end
 
+    # We log staff edits to posts
+    if @editor.staff? && @editor.id != @post.user.id && @fields.has_key?('raw')
+      StaffActionLogger.new(@editor).log_post_edit(
+        @post,
+        new_raw: @fields['raw']
+      )
+    end
+
     # WARNING: do not pull this into the transaction
     # it can fire events in sidekiq before the post is done saving
     # leading to corrupt state
