@@ -458,9 +458,9 @@ class Search
     end
   end
 
-  advanced_filter(/tags?:([a-zA-Z0-9,\-_+~]+)/) do |posts, match|
-    if match.include?('~')
-      search_parts = match.split('~')
+  advanced_filter(/tags?:([a-zA-Z0-9,\-_+!]+)/) do |posts, match|
+    if match.include?('!')
+      search_parts = match.split('!')
       positive_part = search_parts[0]
       negative_part = search_parts[1]
 
