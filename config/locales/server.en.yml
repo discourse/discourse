@@ -3443,7 +3443,7 @@ en:
       name: Promoter
       description: Invited a user
       long_description: |
-        This badge is granted when you invite someone to join the community via the invite button on your user page, or at the bottom of a topic. Inviting friends who might be interested in specific discussions is an great way to introduce new people to our community, so thanks!
+        This badge is granted when you invite someone to join the community via the invite button on your user page, or at the bottom of a topic. Inviting friends who might be interested in specific discussions is a great way to introduce new people to our community, so thanks!
     campaigner:
       name: Campaigner
       description: Invited 3 basic users
@@ -3543,7 +3543,7 @@ en:
       name: First Emoji
       description: Used an Emoji in a Post
       long_description: |
-        This badge is granted the first time you add an Emoji to your post :thumbsup:. Emoji let you convey emotion in your posts, from happiness :smiley: to sadness :anguished: to anger :angry: and everything in between :sunglasses: . Just type a : (colon) or press the Emoji toolbar button in the editor to select from hundreds of choices :ok_hand:
+        This badge is granted the first time you add an Emoji to your post :thumbsup:. Emoji let you convey emotion in your posts, from happiness :smiley: to sadness :anguished: to anger :angry: and everything in between :sunglasses:. Just type a : (colon) or press the Emoji toolbar button in the editor to select from hundreds of choices :ok_hand:
     first_mention:
       name: First Mention
       description: Mentioned a user in a post
