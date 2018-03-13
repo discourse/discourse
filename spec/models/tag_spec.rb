@@ -98,9 +98,8 @@ describe Tag do
 
   describe '#pm_tags' do
     before do
-      @private_tags = []
       personal_message = Fabricate(:private_message_topic)
-      2.times { |i| @private_tags << Fabricate(:tag, topics: [personal_message]) }
+      2.times { |i| Fabricate(:tag, topics: [personal_message], name: "tag-#{i}") }
     end
 
     it "returns nothing if user is not a staff" do
@@ -114,7 +113,10 @@ describe Tag do
 
     it "returns all pm tags if user is a staff and pm tagging is enabled" do
       SiteSetting.allow_staff_to_tag_pms = true
-      expect(described_class.pm_tags(guardian: Guardian.new(Fabricate(:admin)))).to match_array(@private_tags.map(&:name))
+      tags = described_class.pm_tags(guardian: Guardian.new(Fabricate(:admin)))
+      expect(tags.length).to eq(2)
+      expect(tags[0][:id]).to eq("tag-0")
+      expect(tags[1][:text]).to eq("tag-1")
     end
   end
 

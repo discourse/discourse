@@ -368,7 +368,7 @@ Discourse::Application.routes.draw do
     get "#{root_path}/:username/messages/:filter" => "user_actions#private_messages", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/messages/group/:group_name" => "user_actions#private_messages", constraints: { username: RouteFormat.username, group_name: RouteFormat.username }
     get "#{root_path}/:username/messages/group/:group_name/archive" => "user_actions#private_messages", constraints: { username: RouteFormat.username, group_name: RouteFormat.username }
-    get "#{root_path}/:username/messages/tag/:tag_id" => "user_actions#private_messages", constraints: StaffConstraint.new
+    get "#{root_path}/:username/messages/tags/:tag_id" => "user_actions#private_messages", constraints: StaffConstraint.new
     get "#{root_path}/:username.json" => "users#show", constraints: { username: RouteFormat.username }, defaults: { format: :json }
     get({ "#{root_path}/:username" => "users#show", constraints: { username: RouteFormat.username, format: /(json|html)/ } }.merge(index == 1 ? { as: 'user' } : {}))
     put "#{root_path}/:username" => "users#update", constraints: { username: RouteFormat.username }, defaults: { format: :json }
@@ -607,7 +607,7 @@ Discourse::Application.routes.draw do
     get "private-messages-sent/:username" => "list#private_messages_sent", as: "topics_private_messages_sent"
     get "private-messages-archive/:username" => "list#private_messages_archive", as: "topics_private_messages_archive"
     get "private-messages-unread/:username" => "list#private_messages_unread", as: "topics_private_messages_unread"
-    get "private-messages-tag/:username/:tag_id.json" => "list#private_messages_tag", as: "topics_private_messages_tag", constraints: StaffConstraint.new
+    get "private-messages-tags/:username/:tag_id.json" => "list#private_messages_tag", as: "topics_private_messages_tag", constraints: StaffConstraint.new
 
     scope "/private-messages-group/:username", group_name: RouteFormat.username do
       get ":group_name.json" => "list#private_messages_group", as: "topics_private_messages_group"
@@ -732,6 +732,7 @@ Discourse::Application.routes.draw do
     get '/filter/list' => 'tags#index'
     get '/filter/search' => 'tags#search'
     get '/check' => 'tags#check_hashtag'
+    get '/personal_messages' => 'tags#personal_messages'
     constraints(tag_id: /[^\/]+?/, format: /json|rss/) do
       get '/:tag_id.rss' => 'tags#tag_feed'
       get '/:tag_id' => 'tags#show', as: 'tag_show'

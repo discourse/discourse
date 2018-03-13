@@ -35,7 +35,6 @@ class TopicList
                 :for_period,
                 :per_page,
                 :top_tags,
-                :pm_tags,
                 :current_user,
                 :tags
 
@@ -58,15 +57,6 @@ class TopicList
     opts = @category ? { category: @category } : {}
     opts[:guardian] = Guardian.new(@current_user)
     Tag.top_tags(opts)
-  end
-
-  def pm_tags
-    guardian = Guardian.new(@current_user)
-    if @opts[:show_pm_tags] && guardian.can_tag_pms?
-      Tag.pm_tags(guardian: guardian)
-    else
-      []
-    end
   end
 
   def preload_key

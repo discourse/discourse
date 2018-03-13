@@ -19,7 +19,7 @@ class TagsController < ::ApplicationController
   skip_before_action :check_xhr, only: [:tag_feed, :show, :index]
 
   before_action :set_category_from_params, except: [:index, :update, :destroy,
-    :tag_feed, :search, :notifications, :update_notifications]
+    :tag_feed, :search, :notifications, :update_notifications, :personal_messages]
 
   def index
     @description_meta = I18n.t("tags.title")
@@ -189,6 +189,13 @@ class TagsController < ::ApplicationController
     end.compact
 
     render json: { valid: valid_tags }
+  end
+
+  def personal_messages
+    guardian.ensure_can_tag_pms!
+    pm_tags = Tag.pm_tags(guardian: guardian)
+
+    render json: { tags: pm_tags }
   end
 
   private
