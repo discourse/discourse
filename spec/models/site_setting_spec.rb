@@ -119,7 +119,22 @@ describe SiteSetting do
     it "returns https when using ssl" do
       expect(SiteSetting.scheme).to eq("https")
     end
+  end
 
+  context "shared_drafts_enabled?" do
+    it "returns false by default" do
+      expect(SiteSetting.shared_drafts_enabled?).to eq(false)
+    end
+
+    it "returns false when the category is uncategorized" do
+      SiteSetting.shared_drafts_category = SiteSetting.uncategorized_category_id
+      expect(SiteSetting.shared_drafts_enabled?).to eq(false)
+    end
+
+    it "returns true when the category is valid" do
+      SiteSetting.shared_drafts_category = Fabricate(:category).id
+      expect(SiteSetting.shared_drafts_enabled?).to eq(true)
+    end
   end
 
   context 'deprecated site settings' do

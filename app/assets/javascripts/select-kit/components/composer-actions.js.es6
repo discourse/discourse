@@ -1,6 +1,13 @@
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import computed from "ember-addons/ember-computed-decorators";
-import { default as Composer, PRIVATE_MESSAGE, CREATE_TOPIC, REPLY, EDIT } from "discourse/models/composer";
+import {
+  PRIVATE_MESSAGE,
+  CREATE_TOPIC,
+  CREATE_SHARED_DRAFT,
+  REPLY,
+  EDIT,
+  NEW_PRIVATE_MESSAGE_KEY
+} from "discourse/models/composer";
 
 // Component can get destroyed and lose state
 let _topicSnapshot = null;
@@ -49,6 +56,9 @@ export default DropdownSelectBoxComponent.extend({
       case EDIT:
         content.icon = "pencil";
         break;
+      case CREATE_SHARED_DRAFT:
+        content.icon = 'clipboard';
+        break;
     };
 
     return content;
@@ -58,7 +68,7 @@ export default DropdownSelectBoxComponent.extend({
   content(options, canWhisper, action) {
     let items = [];
 
-    if (action !== CREATE_TOPIC) {
+    if (action !== CREATE_TOPIC && action !== CREATE_SHARED_DRAFT) {
       items.push({
         name: I18n.t("composer.composer_actions.reply_as_new_topic.label"),
         description: I18n.t("composer.composer_actions.reply_as_new_topic.desc"),
@@ -107,10 +117,31 @@ export default DropdownSelectBoxComponent.extend({
       });
     }
 
-    // Edge case: If personal messages are disabled, it is possible to have
-    // no items which stil renders a button that pops up nothing. In this
-    // case, add an option for what you're currently doing.
-    if (action === CREATE_TOPIC && items.length === 0) {
+    let showCreateTopic = false;
+    if (action === CREATE_SHARED_DRAFT) {
+      showCreateTopic = true;
+    }
+
+    if (action === CREATE_TOPIC) {
+      if (this.site.shared_drafts_category_id) {
+        // Shared Drafts Choice
+        items.push({
+          name: I18n.t("composer.composer_actions.shared_draft.label"),
+          description: I18n.t("composer.composer_actions.shared_draft.desc"),
+          icon: "clipboard",
+          id: "shared_draft"
+        });
+      }
+
+      // Edge case: If personal messages are disabled, it is possible to have
+      // no items which stil renders a button that pops up nothing. In this
+      // case, add an option for what you're currently doing.
+      if (items.length === 0) {
+        showCreateTopic = true;
+      }
+    }
+
+    if (showCreateTopic) {
       items.push({
         name: I18n.t("composer.composer_actions.create_topic.label"),
         description: I18n.t("composer.composer_actions.reply_as_new_topic.desc"),
@@ -118,6 +149,7 @@ export default DropdownSelectBoxComponent.extend({
         id: "create_topic"
       });
     }
+
     return items;
   },
 
@@ -147,59 +179,77 @@ export default DropdownSelectBoxComponent.extend({
     });
   },
 
+  _openComposer(options) {
+    this.get("composerController").close();
+    this.get("composerController").open(options);
+  },
+
+  toggleWhisperSelected(options, model) {
+    model.toggleProperty('whisper');
+  },
+
+  replyToTopicSelected(options) {
+    options.action = REPLY;
+    options.topic = _topicSnapshot;
+    this._openComposer(options);
+  },
+
+  replyToPostSelected(options) {
+    options.action = REPLY;
+    options.post = _postSnapshot;
+    this._openComposer(options);
+  },
+
+  replyAsNewTopicSelected(options) {
+    options.action = CREATE_TOPIC;
+    options.categoryId = this.get("composerModel.topic.category.id");
+    this._replyFromExisting(options, _postSnapshot, _topicSnapshot);
+  },
+
+  replyAsPrivateMessageSelected(options) {
+    let usernames;
+
+    if (_postSnapshot && !_postSnapshot.get("yours")) {
+      const postUsername = _postSnapshot.get("username");
+      if (postUsername) {
+        usernames = postUsername;
+      }
+    }
+
+    options.action = PRIVATE_MESSAGE;
+    options.usernames = usernames;
+    options.archetypeId = "private_message";
+    options.draftKey = NEW_PRIVATE_MESSAGE_KEY;
+
+    this._replyFromExisting(options, _postSnapshot, _topicSnapshot);
+  },
+
+  _switchCreate(options, action) {
+    options.action = action;
+    options.categoryId = this.get("composerModel.categoryId");
+    options.topicTitle = this.get('composerModel.title');
+    this._openComposer(options);
+  },
+
+  createTopicSelected(options) {
+    this._switchCreate(options, CREATE_TOPIC);
+  },
+
+  sharedDraftSelected(options) {
+    this._switchCreate(options, CREATE_SHARED_DRAFT);
+  },
+
   actions: {
     onSelect(value) {
-      let options = {
-        draftKey: this.get("composerModel.draftKey"),
-        draftSequence: this.get("composerModel.draftSequence"),
-        reply: this.get("composerModel.reply")
-      };
-
-      switch(value) {
-        case "toggle_whisper":
-          this.set("composerModel.whisper", !this.get("composerModel.whisper"));
-          break;
-
-        case "reply_to_post":
-          options.action = Composer.REPLY;
-          options.post = _postSnapshot;
-
-          this.get("composerController").close();
-          this.get("composerController").open(options);
-          break;
-
-        case "reply_to_topic":
-          options.action = Composer.REPLY;
-          options.topic = _topicSnapshot;
-
-          this.get("composerController").close();
-          this.get("composerController").open(options);
-          break;
-
-        case "reply_as_new_topic":
-          options.action = Composer.CREATE_TOPIC;
-          options.categoryId = this.get("composerModel.topic.category.id");
-
-          this._replyFromExisting(options, _postSnapshot, _topicSnapshot);
-          break;
-
-        case "reply_as_private_message":
-          let usernames;
-
-          if (_postSnapshot && !_postSnapshot.get("yours")) {
-            const postUsername = _postSnapshot.get("username");
-            if (postUsername) {
-              usernames = postUsername;
-            }
-          }
-
-          options.action = Composer.PRIVATE_MESSAGE;
-          options.usernames = usernames;
-          options.archetypeId = "private_message";
-          options.draftKey = Composer.NEW_PRIVATE_MESSAGE_KEY;
-
-          this._replyFromExisting(options, _postSnapshot, _topicSnapshot);
-          break;
+      let action = `${Ember.String.camelize(value)}Selected`;
+      if (this[action]) {
+        let model = this.get('composerModel');
+        this[action](
+          model.getProperties('draftKey', 'draftSequence', 'reply'),
+          model
+        );
+      } else {
+        Ember.Logger.error(`No method '${action}' found`);
       }
     }
   }

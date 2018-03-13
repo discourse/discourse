@@ -1,7 +1,16 @@
 import computed from 'ember-addons/ember-computed-decorators';
 import { categoryLinkHTML } from 'discourse/helpers/category-link';
 
-const CustomTypes = ['bool', 'enum', 'list', 'url_list', 'host_list', 'category_list', 'value_list'];
+const CUSTOM_TYPES = [
+  'bool',
+  'enum',
+  'list',
+  'url_list',
+  'host_list',
+  'category_list',
+  'value_list',
+  'category'
+];
 
 export default Ember.Mixin.create({
   classNameBindings: [':row', ':setting', 'setting.overridden', 'typeClass'],
@@ -46,7 +55,7 @@ export default Ember.Mixin.create({
 
   @computed("setting.type")
   componentType(type) {
-    return CustomTypes.indexOf(type) !== -1 ? type : 'string';
+    return CUSTOM_TYPES.indexOf(type) !== -1 ? type : 'string';
   },
 
   @computed("typeClass")

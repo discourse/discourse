@@ -9,6 +9,7 @@ import { escapeExpression, tinyAvatar } from 'discourse/lib/utilities';
 // The actions the composer can take
 export const
   CREATE_TOPIC = 'createTopic',
+  CREATE_SHARED_DRAFT = 'createSharedDraft',
   PRIVATE_MESSAGE = 'privateMessage',
   NEW_PRIVATE_MESSAGE_KEY = 'new_private_message',
   REPLY = 'reply',
@@ -35,7 +36,8 @@ const CLOSED = 'closed',
     typing_duration_msecs: 'typingTime',
     composer_open_duration_msecs: 'composerTime',
     tags: 'tags',
-    featured_link: 'featuredLink'
+    featured_link: 'featuredLink',
+    shared_draft: 'sharedDraft'
   },
 
   _edit_topic_serializer = {
@@ -45,11 +47,21 @@ const CLOSED = 'closed',
     featuredLink: 'topic.featured_link'
   };
 
-const _saveLabels = {};
-_saveLabels[EDIT] = 'composer.save_edit';
-_saveLabels[REPLY] = 'composer.reply';
-_saveLabels[CREATE_TOPIC] = 'composer.create_topic';
-_saveLabels[PRIVATE_MESSAGE] = 'composer.create_pm';
+const SAVE_LABELS = {
+  [EDIT]: 'composer.save_edit',
+  [REPLY]: 'composer.reply',
+  [CREATE_TOPIC]: 'composer.create_topic',
+  [PRIVATE_MESSAGE]: 'composer.create_pm',
+  [CREATE_SHARED_DRAFT]: 'composer.create_shared_draft'
+};
+
+const SAVE_ICONS = {
+  [EDIT]: 'pencil',
+  [REPLY]: 'reply',
+  [CREATE_TOPIC]: 'plus',
+  [PRIVATE_MESSAGE]: 'envelope',
+  [CREATE_SHARED_DRAFT]: 'clipboard'
+};
 
 const Composer = RestModel.extend({
   _categoryId: null,
@@ -59,6 +71,8 @@ const Composer = RestModel.extend({
     return this.site.get('archetypes');
   }.property(),
 
+  @computed('action')
+  sharedDraft: action => action === CREATE_SHARED_DRAFT,
 
   @computed
   categoryId: {
@@ -85,6 +99,7 @@ const Composer = RestModel.extend({
   },
 
   creatingTopic: Em.computed.equal('action', CREATE_TOPIC),
+  creatingSharedDraft: Em.computed.equal('action', CREATE_SHARED_DRAFT),
   creatingPrivateMessage: Em.computed.equal('action', PRIVATE_MESSAGE),
   notCreatingPrivateMessage: Em.computed.not('creatingPrivateMessage'),
 
@@ -148,7 +163,14 @@ const Composer = RestModel.extend({
   }, 100, {leading: false, trailing: true}),
 
   editingFirstPost: Em.computed.and('editingPost', 'post.firstPost'),
-  canEditTitle: Em.computed.or('creatingTopic', 'creatingPrivateMessage', 'editingFirstPost'),
+
+  canEditTitle: Em.computed.or(
+    'creatingTopic',
+    'creatingPrivateMessage',
+    'editingFirstPost',
+    'creatingSharedDraft'
+  ),
+
   canCategorize: Em.computed.and('canEditTitle', 'notCreatingPrivateMessage'),
 
   @computed('canEditTitle', 'creatingPrivateMessage', 'categoryId')
@@ -250,17 +272,12 @@ const Composer = RestModel.extend({
 
   @computed('action')
   saveIcon(action) {
-    switch (action) {
-      case EDIT: return 'pencil';
-      case REPLY: return 'reply';
-      case CREATE_TOPIC: 'plus';
-      case PRIVATE_MESSAGE: 'envelope';
-    }
+    return SAVE_ICONS[action];
   },
 
   @computed('action', 'whisper')
   saveLabel(action, whisper) {
-    return whisper ? 'composer.create_whisper' : _saveLabels[action];
+    return whisper ? 'composer.create_whisper' : SAVE_LABELS[action];
   },
 
   hasMetaData: function() {

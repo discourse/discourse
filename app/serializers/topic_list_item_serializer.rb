@@ -29,6 +29,15 @@ class TopicListItemSerializer < ListableTopicSerializer
     posters.find { |poster| poster.user.id == object.last_post_user_id }.try(:user).try(:username)
   end
 
+  def category_id
+    # If it's a shared draft, show the destination topic instead
+    if object.category_id == SiteSetting.shared_drafts_category.to_i && object.shared_draft
+      return object.shared_draft.category_id
+    end
+
+    object.category_id
+  end
+
   def participants
     object.participants_summary || []
   end

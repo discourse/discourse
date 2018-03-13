@@ -598,6 +598,7 @@ Discourse::Application.routes.draw do
   put "t/:id/archive-message" => "topics#archive_message"
   put "t/:id/move-to-inbox" => "topics#move_to_inbox"
   put "t/:id/convert-topic/:type" => "topics#convert_topic"
+  put "t/:id/publish" => "topics#publish"
   put "topics/bulk"
   put "topics/reset-new" => 'topics#reset_new'
   post "topics/timings"

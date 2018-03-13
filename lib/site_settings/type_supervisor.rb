@@ -13,21 +13,24 @@ class SiteSettings::TypeSupervisor
   SUPPORTED_TYPES = %i[email username list enum].freeze
 
   def self.types
-    @types ||= Enum.new(string: 1,
-                        time: 2,
-                        integer: 3,
-                        float: 4,
-                        bool: 5,
-                        null: 6,
-                        enum: 7,
-                        list: 8,
-                        url_list: 9,
-                        host_list: 10,
-                        category_list: 11,
-                        value_list: 12,
-                        regex: 13,
-                        email: 14,
-                        username: 15)
+    @types ||= Enum.new(
+      string: 1,
+      time: 2,
+      integer: 3,
+      float: 4,
+      bool: 5,
+      null: 6,
+      enum: 7,
+      list: 8,
+      url_list: 9,
+      host_list: 10,
+      category_list: 11,
+      value_list: 12,
+      regex: 13,
+      email: 14,
+      username: 15,
+      category: 16
+    )
   end
 
   def self.parse_value_type(val)

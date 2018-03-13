@@ -44,7 +44,8 @@ class TopicQuery
          per_page
          visible
          guardian
-         no_definitions)
+         no_definitions
+         destination_category_id)
   end
 
   # Maps `order` to a columns in `topics`
@@ -605,6 +606,11 @@ class TopicQuery
 
       result = apply_ordering(result, options)
       result = result.listable_topics.includes(:category)
+
+      if options[:destination_category_id]
+        destination_category_id = get_category_id(options[:destination_category_id])
+        result = result.includes(:shared_draft).where("shared_drafts.category_id" => destination_category_id)
+      end
 
       if options[:exclude_category_ids] && options[:exclude_category_ids].is_a?(Array) && options[:exclude_category_ids].size > 0
         result = result.where("categories.id NOT IN (?)", options[:exclude_category_ids]).references(:categories)

@@ -95,6 +95,14 @@ class StaffActionLogger
                                            target_user_id: user.id))
   end
 
+  def log_topic_published(topic, opts = {})
+    raise Discourse::InvalidParameters.new(:topic) unless topic && topic.is_a?(Topic)
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:topic_published],
+      topic_id: topic.id)
+    )
+  end
+
   def log_post_lock(post, opts = {})
     raise Discourse::InvalidParameters.new(:post) unless post && post.is_a?(Post)
     UserHistory.create!(params(opts).merge(

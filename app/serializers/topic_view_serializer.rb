@@ -65,7 +65,8 @@ class TopicViewSerializer < ApplicationSerializer
              :private_topic_timer,
              :unicode_title,
              :message_bus_last_id,
-             :participant_count
+             :participant_count,
+             :destination_category_id
 
   # TODO: Split off into proper object / serializer
   def details
@@ -273,6 +274,16 @@ class TopicViewSerializer < ApplicationSerializer
 
   def participant_count
     object.participant_count
+  end
+
+  def destination_category_id
+    object.topic.shared_draft.category_id
+  end
+
+  def include_destination_category_id?
+    scope.can_create_shared_draft? &&
+      object.topic.category_id == SiteSetting.shared_drafts_category.to_i &&
+      object.topic.shared_draft.present?
   end
 
   private

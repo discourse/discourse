@@ -134,6 +134,8 @@ class Topic < ActiveRecord::Base
   has_many :tag_users, through: :tags
 
   has_one :top_topic
+  has_one :shared_draft, dependent: :destroy
+
   belongs_to :user
   belongs_to :last_poster, class_name: 'User', foreign_key: :last_post_user_id
   belongs_to :featured_user1, class_name: 'User', foreign_key: :featured_user1_id

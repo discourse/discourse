@@ -2,6 +2,23 @@ import { ajax } from 'discourse/lib/ajax';
 import RestModel from 'discourse/models/rest';
 import Model from 'discourse/models/model';
 
+// Whether to show the category badge in topic lists
+function displayCategoryInList(site, category) {
+  if (category) {
+    if (category.get('has_children')) {
+      return true;
+    }
+    let draftCategoryId = site.get('shared_drafts_category_id');
+    if (draftCategoryId && category.get('id') === draftCategoryId) {
+      return true;
+    }
+
+    return false;
+  }
+
+  return true;
+}
+
 const TopicList = RestModel.extend({
   canLoadMore: Em.computed.notEmpty("more_topics_url"),
 
@@ -108,8 +125,11 @@ const TopicList = RestModel.extend({
 });
 
 TopicList.reopenClass({
-  topicsFrom(store, result) {
+  topicsFrom(store, result, opts) {
     if (!result) { return; }
+
+    opts = opts || {};
+    let listKey = opts.listKey || 'topics';
 
     // Stitch together our side loaded data
 
@@ -117,7 +137,7 @@ TopicList.reopenClass({
           users = Model.extractByKey(result.users, Discourse.User),
           groups = Model.extractByKey(result.primary_groups, Ember.Object);
 
-    return result.topic_list.topics.map(function (t) {
+    return result.topic_list[listKey].map(function (t) {
       t.category = categories.findBy('id', t.category_id);
       t.posters.forEach(function(p) {
         p.user = users[p.user_id];
@@ -150,6 +170,10 @@ TopicList.reopenClass({
     json.per_page = json.topic_list.per_page;
     json.topics = this.topicsFrom(store, json);
 
+    if (json.topic_list.shared_drafts) {
+      json.sharedDrafts = this.topicsFrom(store, json, { listKey: 'shared_drafts' });
+    }
+
     return json;
   },
 
@@ -160,7 +184,7 @@ TopicList.reopenClass({
 
   // hide the category when it has no children
   hideUniformCategory(list, category) {
-    list.set('hideCategory', category && !category.get("has_children"));
+    list.set('hideCategory', !displayCategoryInList(list.site, category));
   }
 
 });

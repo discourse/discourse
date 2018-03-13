@@ -537,6 +537,9 @@ posting:
   editing_grace_period_max_diff: 100
   editing_grace_period_max_diff_high_trust: 400
   staff_edit_locks_post: false
+  shared_drafts_category:
+    type: category
+    default: ''
   post_edit_time_limit:
     default: 86400
     max: 525600

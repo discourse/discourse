@@ -71,6 +71,18 @@ class ListController < ApplicationController
 
       list = TopicQuery.new(user, list_opts).public_send("list_#{filter}")
 
+      if @category.present? && guardian.can_create_shared_draft?
+        shared_drafts = TopicQuery.new(
+          user,
+          category: SiteSetting.shared_drafts_category,
+          destination_category_id: list_opts[:category]
+        ).list_latest
+
+        if shared_drafts.present? && shared_drafts.topics.present?
+          list.shared_drafts = shared_drafts.topics
+        end
+      end
+
       list.more_topics_url = construct_url_with(:next, list_opts)
       list.prev_topics_url = construct_url_with(:prev, list_opts)
       if Discourse.anonymous_filters.include?(filter)

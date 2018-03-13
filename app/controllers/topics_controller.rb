@@ -4,6 +4,7 @@ require_dependency 'url_helper'
 require_dependency 'topics_bulk_action'
 require_dependency 'discourse_event'
 require_dependency 'rate_limiter'
+require_dependency 'topic_publisher'
 
 class TopicsController < ApplicationController
   requires_login only: [
@@ -30,7 +31,8 @@ class TopicsController < ApplicationController
     :archive_message,
     :move_to_inbox,
     :convert_topic,
-    :bookmark
+    :bookmark,
+    :publish
   ]
 
   before_action :consider_user_for_promotion, only: :show
@@ -129,6 +131,18 @@ class TopicsController < ApplicationController
     end
 
     raise ex
+  end
+
+  def publish
+    params.permit(:id, :destination_category_id)
+
+    topic = Topic.find(params[:id])
+    category = Category.find(params[:destination_category_id])
+
+    guardian.ensure_can_publish_topic!(topic, category)
+    topic = TopicPublisher.new(topic, current_user, category.id).publish!
+
+    render_serialized(topic.reload, BasicTopicSerializer)
   end
 
   def unsubscribe

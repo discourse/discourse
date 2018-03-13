@@ -383,12 +383,14 @@ describe Category do
       @category = Fabricate(:category)
       @category_id = @category.id
       @topic_id = @category.topic_id
+      SiteSetting.shared_drafts_category = @category.id.to_s
       @category.destroy
     end
 
     it 'is deleted correctly' do
       expect(Category.exists?(id: @category_id)).to be false
       expect(Topic.exists?(id: @topic_id)).to be false
+      expect(SiteSetting.shared_drafts_category).to be_blank
     end
   end
 
