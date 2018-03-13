@@ -129,7 +129,7 @@ const rule = {
       token = state.push('quote_header_close', 'div', -1);
     }
 
-    token        = state.push('bbcode_open', 'blockquote', 1);
+    token = state.push('bbcode_open', 'blockquote', 1);
   },
 
   after: function(state) {
@@ -145,8 +145,8 @@ export function setup(helper) {
     opts.emojiSet = siteSettings.emoji_set;
   });
 
-  helper.registerPlugin(md=>{
-     md.block.bbcode.ruler.push('quotes', rule);
+  helper.registerPlugin(md => {
+    md.block.bbcode.ruler.push('quotes', rule);
   });
 
   helper.whiteList(['img[class=avatar]']);
