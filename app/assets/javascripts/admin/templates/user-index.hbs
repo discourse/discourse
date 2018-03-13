@@ -11,9 +11,6 @@
       {{d-button action="viewActionLogs" actionParam=model.username icon="list-alt" label="admin.user.action_logs"}}
     {{/if}}
     {{#if model.active}}
-      {{#if model.can_impersonate}}
-        {{d-button class="btn-danger" action="impersonate" icon="crosshairs" label="admin.impersonate.title" title="admin.impersonate.help"}}
-      {{/if}}
       {{#if currentUser.admin}}
         {{d-button action="logOut" icon="power-off" label="admin.user.log_out"}}
       {{/if}}
@@ -542,6 +539,12 @@
 <section>
   <hr>
   <div class="pull-right">
+    {{#if model.active}}
+      {{#if model.can_impersonate}}
+        {{d-button class="btn-danger" action="impersonate" icon="crosshairs" label="admin.impersonate.title" title="admin.impersonate.help"}}
+      {{/if}}
+    {{/if}}
+
     {{#unless model.anonymizeForbidden}}
       {{d-button label="admin.user.anonymize"
                  icon="exclamation-triangle"
