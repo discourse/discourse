@@ -27,6 +27,7 @@ WATCHER_SETTINGS_FILE = File.expand_path("~/.discourse-theme-watcher")
 $api_key = ENV['DISCOURSE_API_KEY']
 $dir = ARGV[0]
 $site = ARGV[1]
+$theme_id = nil
 
 if $site !~ /https?:\/\//i
   $site = "http://#{$site}"
@@ -72,9 +73,8 @@ ensure
   sgz.close
 end
 
-def diagnose_errors(text)
+def diagnose_errors(json)
   count = 0
-  json = JSON.parse(text)
   json["theme"]["theme_fields"].each do |row|
     if (error = row["error"]) && error.length > 0
       if count == 0
@@ -82,11 +82,42 @@ def diagnose_errors(text)
       end
       count += 1
       puts
-      puts "Error in #{row["target"]} #{row["name"]}} : #{row["error"]}"
+      puts "Error in #{row["target"]} #{row["name"]}: #{row["error"]}"
       puts
     end
   end
   count
+end
+
+def upload_theme_field(target: , name: , type_id: , value:)
+  args = {
+    theme: {
+      theme_fields: [{
+        name: name,
+        target: target,
+        type_id: type_id,
+        value: value
+      }]
+    }
+  }
+
+  uri = URI.parse($site + "/admin/themes/#{$theme_id}?api_key=#{$api_key}")
+
+  http = Net::HTTP.new(uri.host, uri.port)
+  request = Net::HTTP::Put.new(uri.request_uri, 'Content-Type' => 'application/json')
+  request.body = args.to_json
+
+  http.start do |h|
+    response = h.request(request)
+    if response.code.to_i == 200
+      json = JSON.parse(response.body)
+      if diagnose_errors(json) == 0
+        puts "(done)"
+      end
+    else
+      puts "Error importing field status: #{response.code}"
+    end
+  end
 end
 
 def upload_full_theme(dir, site)
@@ -104,9 +135,13 @@ def upload_full_theme(dir, site)
     )
     response = http.request(request)
     if response.code.to_i == 201
-      if diagnose_errors(response.body) == 0
+      json = JSON.parse(response.body)
+      $theme_id = json["theme"]["id"]
+      if diagnose_errors(json) == 0
         puts "(done)"
       end
+    else
+      puts "Error importing theme status: #{response.code}"
     end
   end
 
@@ -114,19 +149,34 @@ ensure
   FileUtils.rm_f filename
 end
 
+print "Uploading theme: "
 upload_full_theme($dir, $site)
 
 def resolve_file(path)
+  dir_len = File.expand_path($dir).length
+  name = File.expand_path(path)[dir_len + 1..-1]
+
+  target, file = name.split("/")
+
+  if ["common", "desktop", "mobile"].include?(target)
+    if file = "#{target}.scss"
+      # a CSS file
+      return [target, "scss", 1]
+    end
+  end
+
+  nil
 end
 
 listener = Listen.to($dir) do |modified, added, removed|
   if modified.length == 1 &&
       added.length == 0 &&
       removed.length == 0 &&
-      (target, name = resolve_file(modified[0]))
-    print "Updating #{target} #{name}"
+      (target, name, type_id = resolve_file(modified[0]))
+    print "Updating #{target} #{name}: "
+    upload_theme_field(target: target, name: name, value: File.read(modified[0]), type_id: type_id)
   else
-    print "Full re-sync is required, re-uploading theme"
+    print "Full re-sync is required, re-uploading theme: "
     upload_full_theme($dir, $site)
   end
 end
