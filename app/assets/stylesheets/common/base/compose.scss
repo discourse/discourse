@@ -260,10 +260,9 @@
       flex: 0 0 auto;
     }
     .cancel {
-      margin-left: .65em;
-      font-size: 1.75em;
+      margin-left: 1.25em;
       line-height: normal;
-      color: $primary-low-mid;
+      color: $primary-high;
       transition: color 250ms;
       &:hover {
         color: $danger;
