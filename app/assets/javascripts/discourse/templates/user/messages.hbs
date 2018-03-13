@@ -23,29 +23,39 @@
     </li>
     {{plugin-outlet name="user-messages-nav" connectorTagName='li' args=(hash model=model)}}
     {{#each model.groups as |group|}}
-    {{#if group.has_messages}}
-    <li>
-      {{#link-to 'userPrivateMessages.group' group.name}}
-        {{d-icon "group" class="glyph"}}
-        {{capitalize-string group.name}}
-      {{/link-to}}
-    </li>
-    <li class='archive'>
-      {{#link-to 'userPrivateMessages.groupArchive' group.name}}
-        {{i18n 'user.messages.archive'}}
+      {{#if group.has_messages}}
+        <li>
+          {{#link-to 'userPrivateMessages.group' group.name}}
+            {{d-icon "group" class="glyph"}}
+            {{capitalize-string group.name}}
+          {{/link-to}}
+        </li>
+        <li class='archive'>
+          {{#link-to 'userPrivateMessages.groupArchive' group.name}}
+            {{i18n 'user.messages.archive'}}
+          {{/link-to}}
+        </li>
+      {{/if}}
+    {{/each}}
+
+    {{#if pmTaggingEnabled}}
+      <li class="noGlyph">
+      {{#link-to 'userPrivateMessages.tags' model}}
+        {{i18n 'user.messages.tags'}}
       {{/link-to}}
     </li>
     {{/if}}
-    {{/each}}
   {{/mobile-nav}}
 {{/d-section}}
 
 <section class='user-right messages'>
 
 <div class="clearfix list-actions">
-    <button {{action "toggleBulkSelect"}} class="btn bulk-select" title="{{i18n "user.messages.bulk_select"}}">
-      {{d-icon "list"}}
-    </button>
+    {{#if showToggleBulkSelect}}
+      <button {{action "toggleBulkSelect"}} class="btn bulk-select" title="{{i18n "user.messages.bulk_select"}}">
+        {{d-icon "list"}}
+      </button>
+    {{/if}}
 
     {{#if site.mobileView}}
       {{#if showNewPM}}
@@ -73,10 +83,6 @@
 
     {{#if isGroup}}
       {{group-notifications-button value=group.group_user.notification_level group=group user=model}}
-    {{/if}}
-
-    {{#if pmTaggingEnabled}}
-      {{pm-tag-drop pmTags=pmTags tagId=tagId}}
     {{/if}}
 </div>
 

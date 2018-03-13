@@ -53,4 +53,36 @@ describe TagsController do
       expect(tag["value"]).to eq('test')
     end
   end
+
+  describe '#personal_messages' do
+    before do
+      SiteSetting.allow_staff_to_tag_pms = true
+      personal_message = Fabricate(:private_message_topic)
+      Fabricate(:tag, topics: [personal_message], name: 'test')
+    end
+
+    context "as a normal user" do
+      it "should return the right response" do
+        get "/tags/personal_messages.json"
+
+        expect(response).not_to be_success
+      end
+    end
+
+    context "as an admin" do
+      before do
+        admin = Fabricate(:admin)
+        sign_in(admin)
+      end
+
+      it "should return the right response" do
+        get "/tags/personal_messages.json"
+
+        expect(response).to be_success
+
+        tag = JSON.parse(response.body)['tags']
+        expect(tag[0]["id"]).to eq('test')
+      end
+    end
+  end
 end

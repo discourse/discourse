@@ -78,28 +78,4 @@ describe TopicList do
       end
     end
   end
-
-  describe '#pm_tags' do
-    let(:admin) { Fabricate(:admin) }
-    let(:personal_message) { Fabricate(:private_message_topic) }
-
-    before do
-      SiteSetting.tagging_enabled = true
-      SiteSetting.allow_staff_to_tag_pms = true
-      @private_tags = []
-      2.times { |i| @private_tags << Fabricate(:tag, topics: [personal_message]) }
-    end
-
-    context 'when viewed as normal user' do
-      it 'returns no tags' do
-        expect(TopicList.new('liked', personal_message.user, [personal_message], show_pm_tags: true).pm_tags).to be_empty
-      end
-    end
-
-    context 'when viewed as admin' do
-      it 'returns pm tags' do
-        expect(TopicList.new('liked', admin, [personal_message], show_pm_tags: true).pm_tags).to match_array(@private_tags.map(&:name))
-      end
-    end
-  end
 end

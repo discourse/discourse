@@ -6,7 +6,7 @@ export default function renderTag(tag, params) {
   let path;
   if (tagName === "a" && !params.noHref) {
     const current_user = Discourse.User.current();
-    path = params.isPrivateMessage ? `/u/${current_user.username}/messages/tag/${tag}` : `/tags/${tag}`;
+    path = params.isPrivateMessage ? `/u/${current_user.username}/messages/tags/${tag}` : `/tags/${tag}`;
   }
   const href = path ? ` href='${Discourse.getURL(path)}' ` : "";
 
