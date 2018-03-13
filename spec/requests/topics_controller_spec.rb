@@ -6,20 +6,144 @@ RSpec.describe TopicsController do
 
   describe '#update' do
 
-    it 'can not change category to a disallowed category' do
-      post = create_post
-      sign_in(post.user)
-
-      category = Fabricate(:category)
-      category.set_permissions(staff: :full)
-      category.save!
-
-      put "/t/#{post.topic_id}.json", params: { category_id: category.id }
-      expect(response.status).not_to eq(200)
-
-      expect(post.topic.category_id).not_to eq(category.id)
+    it "won't allow us to update a topic when we're not logged in" do
+      put "/t/1.json", params: { slug: 'xyz' }
+      expect(response.status).to eq(403)
     end
 
+    describe 'when logged in' do
+      let(:topic) { Fabricate(:topic, user: user) }
+
+      before do
+        Fabricate(:post, topic: topic)
+        sign_in(user)
+      end
+
+      it 'can not change category to a disallowed category' do
+        category = Fabricate(:category)
+        category.set_permissions(staff: :full)
+        category.save!
+
+        put "/t/#{topic.id}.json", params: { category_id: category.id }
+
+        expect(response.status).not_to eq(200)
+        expect(topic.category_id).not_to eq(category.id)
+      end
+
+      describe 'without permission' do
+        it "raises an exception when the user doesn't have permission to update the topic" do
+          topic.update!(archived: true)
+          put "/t/#{topic.slug}/#{topic.id}.json"
+
+          expect(response.status).to eq(403)
+        end
+      end
+
+      describe 'with permission' do
+        it 'succeeds' do
+          put "/t/#{topic.slug}/#{topic.id}.json"
+
+          expect(response.status).to eq(200)
+          expect(::JSON.parse(response.body)['basic_topic']).to be_present
+        end
+
+        it "can update a topic to an uncategorized topic" do
+          topic.update!(category: Fabricate(:category))
+
+          put "/t/#{topic.slug}/#{topic.id}.json", params: {
+            category_id: ""
+          }
+
+          expect(response.status).to eq(200)
+          expect(topic.reload.category_id).to eq(SiteSetting.uncategorized_category_id)
+        end
+
+        it 'allows a change of title' do
+          put "/t/#{topic.slug}/#{topic.id}.json", params: {
+            title: 'This is a new title for the topic'
+          }
+
+          topic.reload
+          expect(topic.title).to eq('This is a new title for the topic')
+        end
+
+        it "returns errors with invalid titles" do
+          put "/t/#{topic.slug}/#{topic.id}.json", params: {
+            title: 'asdf'
+          }
+
+          expect(response.status).to eq(422)
+          expect(JSON.parse(response.body)['errors']).to be_present
+        end
+
+        it "returns errors when the rate limit is exceeded" do
+          EditRateLimiter.any_instance.expects(:performed!).raises(RateLimiter::LimitExceeded.new(60))
+
+          put "/t/#{topic.slug}/#{topic.id}.json", params: {
+            title: 'This is a new title for the topic'
+          }
+
+          expect(response.status).to eq(429)
+        end
+
+        it "returns errors with invalid categories" do
+          put "/t/#{topic.slug}/#{topic.id}.json", params: {
+            category_id: -1
+          }
+
+          expect(response.status).to eq(422)
+        end
+
+        it "doesn't call the PostRevisor when there is no changes" do
+          PostRevisor.any_instance.expects(:revise!).never
+
+          put "/t/#{topic.slug}/#{topic.id}.json", params: {
+            category_id: topic.category_id
+          }
+
+          expect(response.status).to eq(200)
+        end
+
+        context 'when topic is private' do
+          before do
+            topic.update!(
+              archetype: Archetype.private_message,
+              category: nil,
+              allowed_users: [topic.user]
+            )
+          end
+
+          context 'when there are no changes' do
+            it 'does not call the PostRevisor' do
+              PostRevisor.any_instance.expects(:revise!).never
+
+              put "/t/#{topic.slug}/#{topic.id}.json", params: {
+                category_id: topic.category_id
+              }
+
+              expect(response.status).to eq(200)
+            end
+          end
+        end
+
+        context "allow_uncategorized_topics is false" do
+          before do
+            SiteSetting.allow_uncategorized_topics = false
+          end
+
+          it "can add a category to an uncategorized topic" do
+            category = Fabricate(:category)
+
+            put "/t/#{topic.slug}/#{topic.id}.json", params: {
+              category_id: category.id
+            }
+
+            expect(response.status).to eq(200)
+            expect(topic.reload.category).to eq(category)
+          end
+        end
+      end
+    end
   end
 
   describe '#show' do
