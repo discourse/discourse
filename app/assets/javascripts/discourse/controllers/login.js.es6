@@ -14,7 +14,7 @@ const AuthErrors = [
   'awaiting_approval',
   'awaiting_activation',
   'admin_not_allowed_from_ip_address',
-  'not_allowed_from_ip_address'
+  'not_allowed_from_ip_address',
 ];
 
 export default Ember.Controller.extend(ModalFunctionality, {
@@ -263,7 +263,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       showModal('login');
 
       Ember.run.next(() => {
-        callback();
+        if (callback) callback();
         self.flash(errorMsg, className || 'success');
         self.set('authenticate', null);
       });
