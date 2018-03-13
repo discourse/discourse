@@ -96,7 +96,14 @@ export default MountWidget.extend({
     const topCheck = Math.ceil(windowTop + offset);
 
     // uncomment to debug the eyeline
-    // $('.debug-eyeline').css({ height: '1px', width: '100%', backgroundColor: 'blue', position: 'absolute', top: `${topCheck}px` });
+    /*
+    let $eyeline = $('.debug-eyeline');
+    if ($eyeline.length === 0) {
+      $('body').prepend('<div class="debug-eyeline"></div>');
+      $eyeline = $('.debug-eyeline');
+    }
+    $eyeline.css({ height: '1px', width: '100%', backgroundColor: 'blue', position: 'absolute', top: `${topCheck}px` });
+    */
 
     let allAbove = true;
     let bottomView = topView;

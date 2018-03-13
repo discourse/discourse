@@ -365,7 +365,7 @@ export default {
 
   _scrollToPost($article) {
     const pos = $article.offset();
-    $(window).scrollTop(Math.ceil(pos.top - scrollTopFor(pos.top)));
+    $(window).scrollTop(scrollTopFor(pos.top));
   },
 
   _scrollList($article) {
