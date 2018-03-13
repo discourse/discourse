@@ -13,6 +13,17 @@
   </div>
 {{/if}}
 
+{{#if model.sharedDrafts}}
+  {{topic-list
+    class="shared-drafts"
+    listTitle="shared_drafts.title"
+    top=top
+    hideCategory="true"
+    category=category
+    topics=model.sharedDrafts
+    discoveryList=true}}
+{{/if}}
+
 {{bulk-select-button selected=selected action="refresh" category=category}}
 
 {{#discovery-topics-list model=model refresh="refresh" incomingCount=topicTrackingState.incomingCount}}

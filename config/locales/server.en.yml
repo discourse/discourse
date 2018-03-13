@@ -1649,6 +1649,8 @@ en:
     company_full_name: "Company Name (full)"
     company_domain: "Company Domain"
 
+    shared_drafts_category: "Enable the Shared Drafts feature by designating a category for topic drafts."
+
     errors:
       invalid_email: "Invalid email address."
       invalid_username: "There's no user with that username."

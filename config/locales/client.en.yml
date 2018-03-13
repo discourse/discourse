@@ -1243,6 +1243,14 @@ en:
       medium_dark_tone: Medium dark skin tone
       dark_tone: Dark skin tone
 
+    shared_drafts:
+      title: "Shared Drafts"
+      notice: "This topic is only visible to those who can see the <b>{{category}}</b> category."
+      destination_category: "Destination Category"
+      publish: "Publish Shared Draft"
+      confirm_publish: "Are you sure you want to publish this draft?"
+      publishing: "Publishing Topic..."
+
     composer:
       emoji: "Emoji :)"
       more_emoji: "more..."
@@ -1287,6 +1295,7 @@ en:
       create_topic: "Create Topic"
       create_pm: "Message"
       create_whisper: "Whisper"
+      create_shared_draft: "Create Shared Draft"
       title: "Or press Ctrl+Enter"
 
       users_placeholder: "Add a user"
@@ -1359,6 +1368,9 @@ en:
           desc: Whispers are only visible to staff members
         create_topic:
           label: "New Topic"
+        shared_draft: 
+          label: "Shared Draft"
+          desc: "Draft a topic that will only be visible to staff"
 
     notifications:
       tooltip:

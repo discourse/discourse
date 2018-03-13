@@ -151,6 +151,7 @@ export default function() {
 
     this.delete('/t/:id', success);
     this.put('/t/:id/recover', success);
+    this.put('/t/:id/publish', success);
 
     this.get("/404-body", () => {
       return [200, {"Content-Type": "text/html"}, "<div class='page-not-found'>not found</div>"];

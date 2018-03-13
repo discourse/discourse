@@ -476,6 +476,15 @@ const Topic = RestModel.extend({
     return promise;
   },
 
+  publish() {
+    return ajax(`/t/${this.get('id')}/publish`, {
+      type: 'PUT',
+      data: this.getProperties('destination_category_id')
+    }).then(() => {
+      this.set('destination_category_id', null);
+    }).catch(popupAjaxError);
+  },
+
   convertTopic(type) {
     return ajax(`/t/${this.get('id')}/convert-topic/${type}`, {type: 'PUT'}).then(() => {
       window.location.reload();

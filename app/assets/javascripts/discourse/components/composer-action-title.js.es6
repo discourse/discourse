@@ -1,6 +1,12 @@
 import { default as computed } from 'ember-addons/ember-computed-decorators';
-import { PRIVATE_MESSAGE, CREATE_TOPIC, REPLY, EDIT } from "discourse/models/composer";
+import { PRIVATE_MESSAGE, CREATE_TOPIC, CREATE_SHARED_DRAFT, REPLY, EDIT } from "discourse/models/composer";
 import { iconHTML } from 'discourse-common/lib/icon-library';
+
+const TITLES = {
+  [PRIVATE_MESSAGE]: 'topic.private_message',
+  [CREATE_TOPIC]: 'topic.create_long',
+  [CREATE_SHARED_DRAFT]: 'composer.create_shared_draft'
+}
 
 export default Ember.Component.extend({
   classNames: ["composer-action-title"],
@@ -10,11 +16,11 @@ export default Ember.Component.extend({
 
   @computed("options", "action")
   actionTitle(opts, action) {
+    if (TITLES[action]) {
+      return I18n.t(TITLES[action]);
+    }
+
     switch (action) {
-      case PRIVATE_MESSAGE:
-        return I18n.t("topic.private_message");
-      case CREATE_TOPIC:
-        return I18n.t("topic.create_long");
       case REPLY:
         if (opts.userAvatar && opts.userLink) {
           return this._formatReplyToUserPost(opts.userAvatar, opts.userLink);

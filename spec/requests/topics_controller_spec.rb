@@ -5,7 +5,6 @@ RSpec.describe TopicsController do
   let(:user) { Fabricate(:user) }
 
   describe '#update' do
-
     it "won't allow us to update a topic when we're not logged in" do
       put "/t/1.json", params: { slug: 'xyz' }
       expect(response.status).to eq(403)
@@ -457,4 +456,48 @@ RSpec.describe TopicsController do
       end
     end
   end
+
+  describe 'shared drafts' do
+    let(:shared_drafts_category) { Fabricate(:category) }
+    let(:category) { Fabricate(:category) }
+
+    before do
+      SiteSetting.shared_drafts_category = shared_drafts_category.id
+    end
+
+    describe "#publish" do
+      let(:category) { Fabricate(:category) }
+      let(:topic) { Fabricate(:topic, category: shared_drafts_category, visible: false) }
+      let(:shared_draft) { Fabricate(:shared_draft, topic: topic, category: category) }
+      let(:moderator) { Fabricate(:moderator) }
+
+      it "fails for anonymous users" do
+        put "/t/#{topic.id}/publish.json", params: { category_id: category.id }
+        expect(response).not_to be_success
+      end
+
+      it "fails as a regular user" do
+        sign_in(Fabricate(:user))
+        put "/t/#{topic.id}/publish.json", params: { category_id: category.id }
+        expect(response).not_to be_success
+      end
+
+      context "as staff" do
+        before do
+          sign_in(moderator)
+        end
+
+        it "will publish the topic" do
+          put "/t/#{topic.id}/publish.json", params: { destination_category_id: category.id }
+          expect(response).to be_success
+          json = ::JSON.parse(response.body)['basic_topic']
+
+          result = Topic.find(json['id'])
+          expect(result.category_id).to eq(category.id)
+          expect(result.visible).to eq(true)
+        end
+      end
+    end
+  end
+
 end
