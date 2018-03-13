@@ -11,7 +11,6 @@ export default function offsetCalculator(y) {
   const scrollTop = y || $(window).scrollTop();
 
   if (!containerOffset || scrollTop < containerOffset.top) {
-    console.log("ADD height");
     titleHeight = $('#topic-title').height() || 0;
   }
 
