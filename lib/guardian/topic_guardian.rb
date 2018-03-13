@@ -20,8 +20,7 @@ module TopicGuardian
 
   def can_create_topic_on_category?(category)
     # allow for category to be a number as well
-    category_id = category
-    category_id = category.id if Category === category
+    category_id = Category === category ? category.id : category
 
     can_create_topic?(nil) &&
     (!category || Category.topic_create_allowed(self).where(id: category_id).count == 1)
