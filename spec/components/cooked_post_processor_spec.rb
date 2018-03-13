@@ -778,4 +778,38 @@ describe CookedPostProcessor do
 
   end
 
+  context "quote processing" do
+    let(:cpp) { CookedPostProcessor.new(cp) }
+    let(:pp) { Fabricate(:post, raw: "This post is ripe for quoting!") }
+
+    context "with an unmodified quote" do
+      let(:cp) do
+        Fabricate(
+          :post,
+          raw: "[quote=\"#{pp.user.username}, post: #{pp.post_number}, topic:#{pp.topic_id}]\nripe for quoting\n[/quote]\ntest"
+        )
+      end
+
+      it "should not be marked as modified" do
+        cpp.post_process_quotes
+        expect(cpp.doc.css('aside.quote.quote-modified')).to be_blank
+      end
+    end
+
+    context "with a modified quote" do
+      let(:cp) do
+        Fabricate(
+          :post,
+          raw: "[quote=\"#{pp.user.username}, post: #{pp.post_number}, topic:#{pp.topic_id}]\nmodified\n[/quote]\ntest"
+        )
+      end
+
+      it "should be marked as modified" do
+        cpp.post_process_quotes
+        expect(cpp.doc.css('aside.quote.quote-modified')).to be_present
+      end
+    end
+
+  end
+
 end
