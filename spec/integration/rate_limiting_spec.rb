@@ -25,7 +25,7 @@ describe 'rate limiter integration' do
     }
   end
 
-  it 'can cleanly limit requests' do
+  it 'can cleanly limit requests and sets a Retry-After header' do
     freeze_time
     #request.set_header("action_dispatch.show_exceptions", true)
 
@@ -50,6 +50,7 @@ describe 'rate limiter integration' do
 
     data = JSON.parse(response.body)
 
+    expect(response.headers['Retry-After']).to eq(60)
     expect(data["extras"]["wait_seconds"]).to eq(60)
   end
 end
