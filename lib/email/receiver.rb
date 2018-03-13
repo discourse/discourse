@@ -198,11 +198,11 @@ module Email
         if user = User.find_by_email(email)
           user.user_stat.bounce_score += score
           user.user_stat.reset_bounce_score_after = SiteSetting.reset_bounce_score_after_days.days.from_now
-          user.user_stat.save
+          user.user_stat.save!
 
           bounce_score = user.user_stat.bounce_score
           if user.active && bounce_score >= SiteSetting.bounce_score_threshold_deactivate
-            user.update_columns(active: false)
+            user.update!(active: false)
             reason = I18n.t("user.deactivated", email: user.email)
             StaffActionLogger.new(Discourse.system_user).log_user_deactivate(user, reason)
           elsif bounce_score >= SiteSetting.bounce_score_threshold
