@@ -181,10 +181,10 @@ class DiscourseSingleSignOn < SingleSignOn
       user.active = false if require_activation
     end
 
-    if SiteSetting.sso_overrides_username?
+    if SiteSetting.sso_overrides_username? && username.present?
       if user.username.downcase == username.downcase
         user.username = username # there may be a change of case
-      elsif user.username != username && username.present?
+      elsif user.username != username
         user.username = UserNameSuggester.suggest(username || name || email, user.username)
       end
     end
