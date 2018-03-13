@@ -187,6 +187,32 @@ describe DiscourseSingleSignOn do
     expect(user.username).to eq "TestUser"
   end
 
+  it 'behaves properly when sso_overrides_username is set but username is missing or blank' do
+    SiteSetting.sso_overrides_username = true
+
+    sso = DiscourseSingleSignOn.new
+    sso.username = "testuser"
+    sso.name = "test user"
+    sso.email = "test@test.com"
+    sso.external_id = "100"
+    sso.bio = "This **is** the bio"
+    sso.suppress_welcome_message = true
+
+    # create the original user
+    user = sso.lookup_or_create_user(ip_address)
+    expect(user.username).to eq "testuser"
+
+    # remove username from payload
+    sso.username = nil
+    user = sso.lookup_or_create_user(ip_address)
+    expect(user.username).to eq "testuser"
+
+    # set username in payload to blank
+    sso.username = ''
+    user = sso.lookup_or_create_user(ip_address)
+    expect(user.username).to eq "testuser"
+  end
+
   it "can override name / email / username" do
     admin = Fabricate(:admin)
 
