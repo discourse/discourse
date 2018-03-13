@@ -67,7 +67,7 @@ module DiscourseTagging
 
     selected_tag_ids = opts[:selected_tags] ? Tag.where(name: opts[:selected_tags]).pluck(:id) : []
 
-    if opts[:for_input] && !selected_tag_ids.empty?
+    if !opts[:for_topic] && !selected_tag_ids.empty?
       query = query.where('tags.id NOT IN (?)', selected_tag_ids)
     end
 
