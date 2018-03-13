@@ -189,8 +189,7 @@ describe TopicTrackingState do
         messages = MessageBus.track_publish do
           TopicTrackingState.publish_private_message(
             private_message_topic,
-            user_id: private_message_post.user_id,
-            user_archive: true
+            archive_user_id: private_message_post.user_id,
           )
         end
 

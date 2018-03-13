@@ -246,7 +246,10 @@ SQL
     sql
   end
 
-  def self.publish_private_message(topic, user_id: user_id, user_archive: false, post: nil, group_archive: false)
+  def self.publish_private_message(topic, archive_user_id: archive_user_id,
+                                          post: nil,
+                                          group_archive: false)
+
     return unless topic.private_message?
     channels = {}
 
@@ -254,8 +257,8 @@ SQL
 
     if post && allowed_user_ids.include?(post.user_id)
       channels["/private-messages/sent"] = [post.user_id]
-    elsif user_archive
-      user_ids = [user_id]
+    elsif archive_user_id
+      user_ids = [archive_user_id]
 
       [
         "/private-messages/archive",
