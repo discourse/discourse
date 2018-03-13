@@ -1,29 +1,32 @@
-// TODO: This is quite ugly but seems reasonably fast? Maybe refactor
-// this out before we merge into stable.
 export function scrollTopFor(y) {
-  let off = 0;
-  for (let i=0; i<3; i++) {
-    off = offsetCalculator(y - off);
-  }
-  return off;
+  return y - offsetCalculator(y);
 }
 
 export default function offsetCalculator(y) {
   const $header = $('header');
-  const $title = $('#topic-title');
+  const $container = $('.posts-wrapper');
+  const containerOffset = $container.offset();
+
+  let titleHeight = 0;
+  const scrollTop = y || $(window).scrollTop();
+
+  if (!containerOffset || scrollTop < containerOffset.top) {
+    console.log("ADD height");
+    titleHeight = $('#topic-title').height() || 0;
+  }
+
   const rawWinHeight = $(window).height();
-  const windowHeight = rawWinHeight - $title.height();
+  const windowHeight = rawWinHeight - titleHeight;
+
   const eyeTarget = (windowHeight / 10);
   const headerHeight = $header.outerHeight(true);
-  const expectedOffset = $title.height() - $header.find('.contents').height() + (eyeTarget * 2);
+  const expectedOffset = titleHeight - ($header.find('.contents').height() || 0) + (eyeTarget * 2);
   const ideal = headerHeight + ((expectedOffset < 0) ? 0 : expectedOffset);
 
-  const $container = $('.posts-wrapper');
   if ($container.length === 0) { return expectedOffset; }
 
   const topPos = $container.offset().top;
 
-  const scrollTop = y || $(window).scrollTop();
   const docHeight = $(document).height();
   let scrollPercent = Math.min((scrollTop / (docHeight-rawWinHeight)), 1.0);
 
@@ -31,7 +34,6 @@ export default function offsetCalculator(y) {
   if (inter < headerHeight + eyeTarget) {
     inter = headerHeight + eyeTarget;
   }
-
 
   if (inter > ideal) {
     const bottom = $('#topic-bottom').offset().top;
