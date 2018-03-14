@@ -27,7 +27,6 @@ fa_IR:
     default_cannot_be_made_public: "نظر سنجی با رای را نمی توان عمومی کرد"
     named_cannot_be_made_public: "تعداد آرای نظر‌سنجی <strong>%{name}</strong> قابل نمایش عمومی نیست."
     edit_window_expired:
-      cannot_change_polls: "نمی‌توانید بعد از %{minutes} دقیقه نظرسنجی‌ها را اضافه و حذف کنید یا نام آن‌ها را تغییر دهید."
       op_cannot_edit_options: "بعد از %{minutes} دقیقه اول نمی‌توانید گزینه‌های نظر‌سنجی را حذف یا اضافه کنید. برای ویرایش نظرسنجی با مدیر‌ها ارتباط برقرار کنید."
       staff_cannot_add_or_remove_options: "بعد از %{minutes} دقیقه اول نمی‌توانید گزینه‌های نظر‌سنجی را حذف یا اضافه کنید. باید این موضوع را ببندید و یک موضوع جدید ایجاد کنید."
     no_polls_associated_with_this_post: "هیچ نظرسنجی‌ای با این نوشته در تماس نیستن. "

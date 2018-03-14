@@ -32,7 +32,6 @@ sk:
     default_cannot_be_made_public: "Hlasovanie s hlasmi nemôže byť zverejnené."
     named_cannot_be_made_public: "Hlasovanie s názvom <strong>%{name}</strong> má hlasy, preto nemôže byť zverejnené."
     edit_window_expired:
-      cannot_change_polls: "Po prvých %{minutes} minútach už nemôžete pridať, odstrániť alebo premenovať hlasovanie."
       op_cannot_edit_options: "Po prvých %{minutes}  minútach už nemôžete pridať alebo odstrániť možnosti hlasovania. Ak potrebujete upraviť možnosti hlasovania prosím kontaktujte moderátora."
       staff_cannot_add_or_remove_options: "Po prvých %{minutes}  minútach už nemôžete pridať alebo odstrániť možnosti hlasovania. Miesto toho by ste mali uzavrieť túto tému a miesto nej vytvoriť inú."
     no_polls_associated_with_this_post: "S týmto príspevkom nie sú spojené žiadne hlasovania."

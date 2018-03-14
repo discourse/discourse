@@ -29,7 +29,6 @@ tr_TR:
     default_cannot_be_made_public: "Oy içeren anketler herkese açık olamaz. "
     named_cannot_be_made_public: "<strong>%{name}</strong> isimli ankette oylamalar herkese açık yapılamaz."
     edit_window_expired:
-      cannot_change_polls: "İlk %{minutes} dakikadan sonra anket ekleyemez, silemez veya yeniden isimlendiremezsiniz."
       op_cannot_edit_options: "İlk %{minutes} dakikadan sonra anket ekleyemez veya silemezsiniz. Eğer anket seçeneklerini düzenlemeniz gerekiyorsa lütfen moderatör ile iletişime geçin."
       staff_cannot_add_or_remove_options: "İlk %{minutes} dakikadan sonra anket ekleyemez veya silemezsiniz. Bu konuyu kapatıp, yerine yeni bir konu oluşturmalısınız."
     no_polls_associated_with_this_post: "Bu gönderiyle alakalı bir anket yok."

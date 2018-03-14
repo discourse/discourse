@@ -30,7 +30,6 @@ de:
     default_cannot_be_made_public: "Umfragen mit abgegebenen Stimmen können nicht öffentlich gemacht werden."
     named_cannot_be_made_public: "Die Umfrage <strong>%{name}</strong> hat Stimmen und kann nicht öffentlich gemacht werden."
     edit_window_expired:
-      cannot_change_polls: "Du kannst Umfragen nur in den ersten %{minutes} Minuten hinzufügen, entfernen oder umbenennen."
       op_cannot_edit_options: "Du kannst Umfrageoptionen nur in den ersten %{minutes} Minuten hinzufügen oder entfernen. Kontaktiere bitte einen Moderator, wenn du Optionen ändern möchtest."
       staff_cannot_add_or_remove_options: "Du kannst Umfrageoptionen nur in den ersten %{minutes} Minuten hinzufügen oder entfernen. Du solltest dieses Thema schließen und stattdessen ein neues erstellen."
     no_polls_associated_with_this_post: "Diesem Beitrag sind keine Umfragen zugeordnet."
