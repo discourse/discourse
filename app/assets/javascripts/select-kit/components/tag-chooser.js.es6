@@ -11,6 +11,7 @@ export default MultiSelectComponent.extend(Tags, {
   filterable: true,
   filterPlaceholder: "tagging.choose_for_topic",
   limit: null,
+  blacklist: null,
   attributeBindings: ["categoryId"],
   allowAny: Ember.computed.alias("allowCreate"),
 
@@ -19,6 +20,10 @@ export default MultiSelectComponent.extend(Tags, {
 
     if (this.get("allowCreate") !== false) {
       this.set("allowCreate", this.site.get("can_create_tag"));
+    }
+
+    if (!this.get("blacklist")) {
+      this.set("blacklist", []);
     }
 
     this.set("termMatchesForbidden", false);
@@ -57,9 +62,7 @@ export default MultiSelectComponent.extend(Tags, {
     },
 
     onExpand() {
-      if (isEmpty(this.get("collectionComputedContent"))) {
-        this.set("searchDebounce", run.debounce(this, this.prepareSearch, this.get("filter"), 200));
-      }
+      this.set("searchDebounce", run.debounce(this, this.prepareSearch, this.get("filter"), 200));
     },
 
     onDeselect() {
@@ -79,7 +82,12 @@ export default MultiSelectComponent.extend(Tags, {
       limit: this.get("siteSettings.max_tag_search_results"),
       categoryId: this.get("categoryId")
     };
-    if (selectedTags) data.selected_tags = selectedTags.slice(0, 100);
+
+    if (selectedTags.length || this.get("blacklist").length) {
+      data.selected_tags = _.uniq(selectedTags.concat(this.get("blacklist")))
+                            .slice(0, 100);
+    }
+
     if (!this.get("everyTag")) data.filterForInput = true;
 
     this.searchTags("/tags/filter/search", data, this._transformJson);
