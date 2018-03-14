@@ -32,7 +32,6 @@ cs:
     default_cannot_be_made_public: "Hlasování s hlasy nemůže být zveřejněno."
     named_cannot_be_made_public: "Hlasování <strong>%{name}</strong> s hlasy nemůže být zveřejněno."
     edit_window_expired:
-      cannot_change_polls: "Nemůžete přidávat, odebírat nebo přejmenovávat hlasování po prvních %{minutes} minutách."
       op_cannot_edit_options: "Nemůžete přidávat, odebírat nebo přejmenovávat hlasování po prvních %{minutes} minutách. Kontaktujte prosím moderátora, pokud potřebujete upravit odpověď v hlasování."
       staff_cannot_add_or_remove_options: "Nemůžete přidávat, odebírat nebo přejmenovávat hlasování po prvních %{minutes} minutách. Měli byste zavřít toto téma a vytvořit místo něj nové."
     no_polls_associated_with_this_post: "Tento příspěvek nemá žádné hlasování. "

@@ -26,7 +26,6 @@ ko:
     default_cannot_be_made_public: "이미 투표가 진행되어서 공개로 전환할 수 없습니다."
     named_cannot_be_made_public: "<strong>%{name}</strong>는 공개 설정할 수 없는 표가 있습니다."
     edit_window_expired:
-      cannot_change_polls: "처음 %{minutes}분 동안은 투표를 추가, 제거하거나 이름을 변경할 수 없습니다."
       op_cannot_edit_options: "처음 %{minutes}분 동안은 투표를 추가하거나 삭제할 수 없습니다. 투표를 꼭 수정해야만 한다면 운영자에게 문의하시기 바랍니다."
       staff_cannot_add_or_remove_options: "처음 %{minutes}분 동안은 투표 항목을 추가하거나 삭제할 수 없습니다. 그렇지 않으면, 이 토픽을 닫고 새로운 토픽을 만들어야 합니다."
     no_polls_associated_with_this_post: "이 포스트와 관련한 투표가 없습니다."

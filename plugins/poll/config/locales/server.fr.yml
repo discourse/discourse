@@ -30,7 +30,6 @@ fr:
     default_cannot_be_made_public: "Un sondage avec des votes ne peut pas être rendu public."
     named_cannot_be_made_public: "Le sondage <strong>%{name}</strong> a des votes et ne peut être rendu public."
     edit_window_expired:
-      cannot_change_polls: "Vous ne pouvez pas ajouter, supprimer ou renommer les sondages après les %{minutes} premières minutes."
       op_cannot_edit_options: "Vous nous pouvez pas ajouter ou supprimer d'options de sondage après les %{minutes} premières minutes. Veuillez contacter un modérateur si vous avez besoin de le faire."
       staff_cannot_add_or_remove_options: "Vous nous pouvez pas ajouter ou supprimer d'options de sondage après les %{minutes} premières minutes. Vous devriez plutôt fermer ce sujet et en créer un nouveau."
     no_polls_associated_with_this_post: "Aucun sondage n'est associé à ce message."

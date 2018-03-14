@@ -20,15 +20,6 @@ module DiscoursePoll
         if post.created_at < poll_edit_window_mins.minutes.ago && has_votes
           is_staff = User.staff.where(id: post.last_editor_id).exists?
 
-          # non staff users cannot add/remove/rename polls
-          if !is_staff && (polls.keys.sort != previous_polls.keys.sort)
-            post.errors.add(:base, I18n.t(
-              "poll.edit_window_expired.cannot_change_polls", minutes: poll_edit_window_mins
-            ))
-
-            return
-          end
-
           # deal with option changes
           if is_staff
             # staff can edit options
