@@ -25,7 +25,6 @@ else
 end
 
 gem 'mail'
-gem 'mime-types', require: 'mime/types/columnar'
 gem 'mini_mime'
 gem 'mini_suffix'
 
