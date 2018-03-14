@@ -460,8 +460,9 @@ describe PostRevisor do
         log = UserHistory.where(
           acting_user_id: moderator.id,
           action: UserHistory.actions[:post_edit]
-        )
+        ).first
         expect(log).to be_present
+        expect(log.details).to eq("Hello world\n\n---\n\nlets totally update the body")
       end
 
       it "doesn't log an edit when a staff member edits their own post" do
