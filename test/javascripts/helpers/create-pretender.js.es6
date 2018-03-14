@@ -295,8 +295,8 @@ export default function() {
       return response(200, []);
     });
 
-    this.get("/groups/discourse/topics.json", () => {
-      return response(200, fixturesByUrl['/groups/discourse/posts.json']);
+    this.get("/topics/groups/discourse.json", () => {
+      return response(200, fixturesByUrl['/topics/groups/discourse.json']);
     });
 
     this.get("/groups/discourse/mentions.json", () => {

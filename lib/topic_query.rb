@@ -220,6 +220,16 @@ class TopicQuery
       .where('um.user_id IS NULL')
   end
 
+  def list_group_topics(group)
+    list = default_results.where("
+      topics.user_id IN (
+        SELECT user_id FROM group_users gu WHERE gu.group_id = #{group.id.to_i}
+      )
+    ")
+
+    create_list(:group_topics, {}, list)
+  end
+
   def list_private_messages(user)
     list = private_messages_for(user, :user)
 

@@ -455,7 +455,6 @@ Discourse::Application.routes.draw do
 
     get 'members'
     get 'posts'
-    get 'topics'
     get 'mentions'
     get 'messages'
     get 'counts'
@@ -608,6 +607,7 @@ Discourse::Application.routes.draw do
     get "private-messages-archive/:username" => "list#private_messages_archive", as: "topics_private_messages_archive"
     get "private-messages-unread/:username" => "list#private_messages_unread", as: "topics_private_messages_unread"
     get "private-messages-tags/:username/:tag_id.json" => "list#private_messages_tag", as: "topics_private_messages_tag", constraints: StaffConstraint.new
+    get "groups/:group_name.json" => "list#group_topics", as: "group_topics"
 
     scope "/private-messages-group/:username", group_name: RouteFormat.username do
       get ":group_name.json" => "list#private_messages_group", as: "topics_private_messages_group"

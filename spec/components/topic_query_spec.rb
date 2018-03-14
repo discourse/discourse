@@ -885,10 +885,49 @@ describe TopicQuery do
           expect(suggested_topics[1, 3]).to include(closed_topic.id)
           expect(suggested_topics[1, 3]).to include(archived_topic.id)
         end
-
       end
     end
-
   end
 
+  describe '#list_group_topics' do
+    let(:group) { Fabricate(:group) }
+
+    let(:user) do
+      user = Fabricate(:user)
+      group.add(user)
+      user
+    end
+
+    let(:user2) do
+      user = Fabricate(:user)
+      group.add(user)
+      user
+    end
+
+    let(:private_category) do
+      Fabricate(:private_category, group: group)
+    end
+
+    let!(:private_message_topic) { Fabricate(:private_message_post, user: user).topic }
+    let!(:topic1) { Fabricate(:topic, user: user) }
+    let!(:topic2) { Fabricate(:topic, user: user, category: Fabricate(:category)) }
+    let!(:topic3) { Fabricate(:topic, user: user, category: private_category) }
+    let!(:topic4) { Fabricate(:topic) }
+    let!(:topic5) { Fabricate(:topic, user: user, visible: false) }
+    let!(:topic6) { Fabricate(:topic, user: user2) }
+
+    it 'should return the right list' do
+      topics = TopicQuery.new.list_group_topics(group).topics
+
+      expect(topics).to contain_exactly(topic1, topic2, topic6)
+
+      topics = TopicQuery.new(user).list_group_topics(group).topics
+
+      expect(topics).to contain_exactly(topic1, topic2, topic3, topic6)
+
+      topics = TopicQuery.new(user2).list_group_topics(group).topics
+
+      expect(topics).to contain_exactly(topic1, topic2, topic3, topic6)
+    end
+  end
 end
