@@ -101,15 +101,6 @@ class GroupsController < ApplicationController
     render 'posts/latest', formats: [:rss]
   end
 
-  def topics
-    group = find_group(:group_id)
-    posts = group.posts_for(
-      guardian,
-      params.permit(:before_post_id, :category_id)
-    ).where(post_number: 1).limit(20)
-    render_serialized posts.to_a, GroupPostSerializer
-  end
-
   def mentions
     raise Discourse::NotFound unless SiteSetting.enable_mentions?
     group = find_group(:group_id)

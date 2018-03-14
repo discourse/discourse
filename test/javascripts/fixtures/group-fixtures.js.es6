@@ -16,6 +16,106 @@ export default {
       "messageable":true
     }
   },
+  "/topics/groups/discourse.json":{
+    "users":[
+      {
+        "id":2,
+        "username":"bruce1",
+        "avatar_template":"/letter_avatar_proxy/v2/letter/b/9de053/{size}.png"
+      },
+      {
+        "id":1,
+        "username":"bruce0",
+        "avatar_template":"/letter_avatar_proxy/v2/letter/b/90ced4/{size}.png"
+      }
+    ],
+    "primary_groups":[],
+    "topic_list":{
+      "can_create_topic":true,
+      "draft":null,
+      "draft_key":"new_topic",
+      "draft_sequence":1,
+      "per_page":30,
+      "topics":[
+        {
+          "id":12074,
+          "title":"This is a test topic 1",
+          "fancy_title":"This is a test topic 1",
+          "slug":"this-is-a-test-topic-1",
+          "posts_count":0,
+          "reply_count":0,
+          "highest_post_number":0,
+          "image_url":null,
+          "created_at":"2018-03-15T03:12:48.955Z",
+          "last_posted_at":null,
+          "bumped":true,
+          "bumped_at":"2018-03-15T03:12:48.955Z",
+          "unseen":true,
+          "pinned":false,
+          "unpinned":null,
+          "visible":true,
+          "closed":false,
+          "archived":false,
+          "bookmarked":null,
+          "liked":null,
+          "views":0,
+          "like_count":0,
+          "has_summary":false,
+          "archetype":"regular",
+          "last_poster_username":"bruce1",
+          "category_id":1,
+          "pinned_globally":false,
+          "featured_link":null,
+          "posters":[
+            {
+              "extras":"latest single",
+              "description":"Original Poster, Most Recent Poster",
+              "user_id":2,
+              "primary_group_id":null
+            }
+          ]
+        },
+        {
+          "id":12073,
+          "title":"This is a test topic 0",
+          "fancy_title":"This is a test topic 0",
+          "slug":"this-is-a-test-topic-0",
+          "posts_count":0,
+          "reply_count":0,
+          "highest_post_number":0,
+          "image_url":null,
+          "created_at":"2018-03-15T03:12:48.899Z",
+          "last_posted_at":null,
+          "bumped":true,
+          "bumped_at":"2018-03-15T03:12:48.900Z",
+          "unseen":true,
+          "pinned":false,
+          "unpinned":null,
+          "visible":true,
+          "closed":false,
+          "archived":false,
+          "bookmarked":null,
+          "liked":null,
+          "views":0,
+          "like_count":0,
+          "has_summary":false,
+          "archetype":"regular",
+          "last_poster_username":"bruce0",
+          "category_id":1,
+          "pinned_globally":false,
+          "featured_link":null,
+          "posters":[
+            {
+              "extras":"latest single",
+              "description":"Original Poster, Most Recent Poster",
+              "user_id":1,
+              "primary_group_id":null
+            }
+          ]
+        }
+      ]
+    }
+  },
   "/groups/discourse/counts.json":{
     "counts":{
       "posts":17829,
