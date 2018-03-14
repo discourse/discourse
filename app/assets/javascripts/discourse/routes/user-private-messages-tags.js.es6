@@ -17,6 +17,9 @@ export default Discourse.Route.extend({
       model,
       sortProperties: this.siteSettings.tags_sort_alphabetically ? ['id'] : ['count:desc', 'id']
     });
-    this.controllerFor("user-private-messages").set("showToggleBulkSelect", false);
+    this.controllerFor('user-private-messages').setProperties({
+      showToggleBulkSelect: false,
+      pmView: "tags"
+    });
   }
 });
