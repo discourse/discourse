@@ -2,7 +2,7 @@ import MultiSelectComponent from "select-kit/components/multi-select";
 import Tags from "select-kit/mixins/tags";
 import renderTag from "discourse/lib/render-tag";
 import computed from "ember-addons/ember-computed-decorators";
-const { get, isEmpty, run, makeArray } = Ember;
+const { get, run, makeArray } = Ember;
 
 export default MultiSelectComponent.extend(Tags, {
   pluginApiIdentifiers: ["tag-chooser"],
