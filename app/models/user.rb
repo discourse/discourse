@@ -50,6 +50,11 @@ class User < ActiveRecord::Base
   has_many :email_change_requests, dependent: :destroy
   has_many :directory_items, dependent: :delete_all
   has_many :user_auth_tokens, dependent: :destroy
+
+  has_many :group_users, dependent: :destroy
+  has_many :groups, through: :group_users
+  has_many :secure_categories, through: :groups, source: :categories
+
   has_many :user_emails, dependent: :destroy
 
   has_one :primary_email, -> { where(primary: true)  }, class_name: 'UserEmail', dependent: :destroy
@@ -68,10 +73,6 @@ class User < ActiveRecord::Base
   has_one :single_sign_on_record, dependent: :destroy
   belongs_to :approved_by, class_name: 'User'
   belongs_to :primary_group, class_name: 'Group'
-
-  has_many :group_users, dependent: :destroy
-  has_many :groups, through: :group_users
-  has_many :secure_categories, through: :groups, source: :categories
 
   has_many :muted_user_records, class_name: 'MutedUser'
   has_many :muted_users, through: :muted_user_records
