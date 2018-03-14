@@ -677,6 +677,10 @@ export default Ember.Controller.extend({
     composerModel.set('composeState', Composer.OPEN);
     composerModel.set('isWarning', false);
 
+    if (opts.usernames) {
+      this.set('model.targetUsernames', opts.usernames);
+    }
+
     if (opts.topicTitle && opts.topicTitle.length <= this.siteSettings.max_topic_title_length) {
       this.set('model.title', opts.topicTitle);
     }
