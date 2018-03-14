@@ -108,7 +108,7 @@ class StaffActionLogger
     UserHistory.create!(params(opts).merge(
       action: UserHistory.actions[:post_edit],
       post_id: post.id,
-      details: "#{post.raw}\n\n---\n\n#{opts[:new_raw]}"
+      details: "#{opts[:old_raw]}\n\n---\n\n#{post.raw}"
     ))
   end
 

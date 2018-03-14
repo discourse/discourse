@@ -150,6 +150,8 @@ class PostRevisor
     @skip_revision = false
     @skip_revision = @opts[:skip_revision] if @opts.has_key?(:skip_revision)
 
+    old_raw = @post.raw
+
     Post.transaction do
       revise_post
 
@@ -181,7 +183,7 @@ class PostRevisor
     if @editor.staff? && @editor.id != @post.user.id && @fields.has_key?('raw')
       StaffActionLogger.new(@editor).log_post_edit(
         @post,
-        new_raw: @fields['raw']
+        old_raw: old_raw
       )
     end
 
