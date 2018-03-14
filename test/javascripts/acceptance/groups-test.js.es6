@@ -60,7 +60,8 @@ QUnit.test("Anonymous Viewing Group", assert => {
   click(".group-activity-nav li a[href='/groups/discourse/activity/topics']");
 
   andThen(() => {
-    assert.ok(count('.group-post') > 0, "it lists stream items");
+    assert.ok(find('.topic-list'), "it shows the topic list");
+    assert.equal(count('.topic-list-item'), 2, "it lists stream items");
   });
 
   click(".group-activity-nav li a[href='/groups/discourse/activity/mentions']");

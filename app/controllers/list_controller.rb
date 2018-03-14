@@ -50,6 +50,7 @@ class ListController < ApplicationController
     TopTopic.periods.map { |p| :"category_top_#{p}" },
     TopTopic.periods.map { |p| :"category_none_top_#{p}" },
     TopTopic.periods.map { |p| :"parent_category_category_top_#{p}" },
+    :group_topics
   ].flatten
 
   # Create our filters
@@ -126,6 +127,18 @@ class ListController < ApplicationController
     list_opts = build_topic_list_options
     target_user = fetch_user_from_params({ include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts) }, [:user_stat, :user_option])
     list = generate_list_for("topics_by", target_user, list_opts)
+    list.more_topics_url = url_for(construct_url_with(:next, list_opts))
+    list.prev_topics_url = url_for(construct_url_with(:prev, list_opts))
+    respond_with_list(list)
+  end
+
+  def group_topics
+    group = Group.find_by(name: params[:group_name])
+    raise Discourse::NotFound unless group
+    guardian.ensure_can_see_group!(group)
+
+    list_opts = build_topic_list_options
+    list = generate_list_for("group_topics", group, list_opts)
     list.more_topics_url = url_for(construct_url_with(:next, list_opts))
     list.prev_topics_url = url_for(construct_url_with(:prev, list_opts))
     respond_with_list(list)
