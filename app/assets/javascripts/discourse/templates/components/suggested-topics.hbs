@@ -1,4 +1,5 @@
-<h3>{{{suggestedTitle}}}</h3>
+<h3 class="suggested-topics-title">{{{suggestedTitle}}}</h3>
+
 <div class="topics">
   {{#if topic.isPrivateMessage}}
     {{basic-topic-list
@@ -9,4 +10,5 @@
     {{basic-topic-list topics=topic.suggestedTopics}}
   {{/if}}
 </div>
-<h3 class='suggested-topics-message'>{{{browseMoreMessage}}}</h3>
+
+<h3 class="suggested-topics-message">{{{browseMoreMessage}}}</h3>
