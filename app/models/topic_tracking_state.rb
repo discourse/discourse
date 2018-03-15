@@ -246,7 +246,7 @@ SQL
     sql
   end
 
-  def self.publish_private_message(topic, archive_user_id: archive_user_id,
+  def self.publish_private_message(topic, archive_user_id: nil,
                                           post: nil,
                                           group_archive: false)
 
