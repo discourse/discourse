@@ -1,3 +1,4 @@
+require 'uri'
 require_dependency "onebox/discourse_onebox_sanitize_config"
 require_dependency 'final_destination'
 
@@ -131,6 +132,7 @@ module Oneboxer
     end
 
     def self.onebox_raw(url, opts = {})
+      url = URI(url).to_s
       local_onebox(url, opts) || external_onebox(url)
     rescue => e
       # no point warning here, just cause we have an issue oneboxing a url
