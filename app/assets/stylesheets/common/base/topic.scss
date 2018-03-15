@@ -145,7 +145,6 @@ a.badge-category {
   .badge-wrapper {
     float: left;
   }
-
 }
 
 .has-pending-posts {
@@ -181,6 +180,11 @@ a.badge-category {
 #suggested-topics .badge-wrapper.bullet span.badge-category,
 #suggested-topics .badge-wrapper.bar span.badge-category {
   max-width: 150px;
+}
+
+#suggested-topics .suggested-topics-title {
+  display: flex;
+  align-items: center;
 }
 
 .topic-unsubscribe {
