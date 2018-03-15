@@ -5,7 +5,6 @@ class GroupsController < ApplicationController
     :mentionable,
     :messageable,
     :update,
-    :messages,
     :histories,
     :request_membership,
     :search
@@ -122,19 +121,6 @@ class GroupsController < ApplicationController
     @link = Discourse.base_url
     @description = I18n.t("rss_description.group_mentions", group_name: group.name)
     render 'posts/latest', formats: [:rss]
-  end
-
-  def messages
-    group = find_group(:group_id)
-    posts = if guardian.can_see_group_messages?(group)
-      group.messages_for(
-        guardian,
-        params.permit(:before_post_id, :category_id)
-      ).where(post_number: 1).limit(20).to_a
-    else
-      []
-    end
-    render_serialized posts, GroupPostSerializer
   end
 
   def members

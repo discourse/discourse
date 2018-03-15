@@ -257,7 +257,9 @@ SQL
 
     if post && allowed_user_ids.include?(post.user_id)
       channels["/private-messages/sent"] = [post.user_id]
-    elsif archive_user_id
+    end
+
+    if archive_user_id
       user_ids = [archive_user_id]
 
       [
@@ -267,17 +269,19 @@ SQL
       ].each do |channel|
         channels[channel] = user_ids
       end
-    else
-      topic.allowed_groups.each do |group|
-        group_channels = []
-        group_channels << "/private-messages/group/#{group.name.downcase}"
-        group_channels << "#{group_channels.first}/archive" if group_archive
-        group_channels.each { |channel| channels[channel] = group.users.pluck(:id) }
-      end
     end
 
     if channels.except("/private-messages/sent").blank?
       channels["/private-messages/inbox"] = allowed_user_ids
+    end
+
+    topic.allowed_groups.each do |group|
+      group_user_ids = group.users.pluck(:id)
+      next if group_user_ids.blank?
+      group_channels = []
+      group_channels << "/private-messages/group/#{group.name.downcase}"
+      group_channels << "#{group_channels.first}/archive" if group_archive
+      group_channels.each { |channel| channels[channel] = group_user_ids }
     end
 
     message = {

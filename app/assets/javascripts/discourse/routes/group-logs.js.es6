@@ -1,6 +1,6 @@
-export default Ember.Route.extend({
+export default Discourse.Route.extend({
   titleToken() {
-    return I18n.t('groups.logs');
+    return I18n.t('groups.logs.title');
   },
 
   model() {

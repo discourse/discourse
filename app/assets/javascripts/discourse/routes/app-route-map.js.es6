@@ -56,11 +56,15 @@ export default function() {
       this.route('posts');
       this.route('topics');
       this.route('mentions');
-      this.route('messages');
     });
 
     this.route('logs');
     this.route('edit');
+
+    this.route('messages', function() {
+      this.route('inbox');
+      this.route('archive');
+    });
   });
 
   // User routes
