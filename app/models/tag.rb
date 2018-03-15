@@ -59,17 +59,27 @@ class Tag < ActiveRecord::Base
     tag_names_with_counts.map { |row| row['tag_name'] }
   end
 
-  def self.pm_tags(limit_arg: nil, guardian: nil)
-    return [] unless (guardian || Guardian.new).can_tag_pms?
+  def self.pm_tags(limit_arg: nil, guardian: nil, allowed_user: nil)
+    return [] if allowed_user.blank? || !(guardian || Guardian.new).can_tag_pms?
     limit = limit_arg || SiteSetting.max_tags_in_filter_list
+    user_id = allowed_user.id
 
     tag_names_with_counts = Tag.exec_sql <<~SQL
-      SELECT tags.name, COUNT(topics.id) AS topic_count
+      SELECT tags.name,
+          COUNT(topics.id) AS topic_count
       FROM tags
       INNER JOIN topic_tags ON tags.id = topic_tags.tag_id
       INNER JOIN topics ON topics.id = topic_tags.topic_id
       AND topics.deleted_at IS NULL
       AND topics.archetype = 'private_message'
+      WHERE topic_tags.topic_id IN
+      (SELECT topic_id
+        FROM topic_allowed_users
+        WHERE user_id = #{user_id}
+        UNION ALL SELECT tg.topic_id
+        FROM topic_allowed_groups tg
+        JOIN group_users gu ON gu.user_id = #{user_id}
+        AND gu.group_id = tg.group_id)
       GROUP BY tags.name
       LIMIT #{limit}
     SQL

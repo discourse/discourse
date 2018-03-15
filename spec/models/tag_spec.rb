@@ -97,23 +97,31 @@ describe Tag do
   end
 
   describe '#pm_tags' do
+    let(:regular_user) { Fabricate(:trust_level_4) }
+    let(:admin) { Fabricate(:admin) }
+    let(:personal_message) do
+      Fabricate(:private_message_topic, user: regular_user, topic_allowed_users: [
+        Fabricate.build(:topic_allowed_user, user: regular_user),
+        Fabricate.build(:topic_allowed_user, user: admin)
+      ])
+    end
+
     before do
-      personal_message = Fabricate(:private_message_topic)
       2.times { |i| Fabricate(:tag, topics: [personal_message], name: "tag-#{i}") }
     end
 
     it "returns nothing if user is not a staff" do
-      expect(described_class.pm_tags.sort).to be_empty
+      expect(described_class.pm_tags(guardian: Guardian.new(regular_user))).to be_empty
     end
 
     it "returns nothing if allow_staff_to_tag_pms setting is disabled" do
       SiteSetting.allow_staff_to_tag_pms = false
-      expect(described_class.pm_tags(guardian: Guardian.new(Fabricate(:admin))).sort).to be_empty
+      expect(described_class.pm_tags(guardian: Guardian.new(admin)).sort).to be_empty
     end
 
     it "returns all pm tags if user is a staff and pm tagging is enabled" do
       SiteSetting.allow_staff_to_tag_pms = true
-      tags = described_class.pm_tags(guardian: Guardian.new(Fabricate(:admin)))
+      tags = described_class.pm_tags(guardian: Guardian.new(admin), allowed_user: regular_user)
       expect(tags.length).to eq(2)
       expect(tags[0][:id]).to eq("tag-0")
       expect(tags[1][:text]).to eq("tag-1")

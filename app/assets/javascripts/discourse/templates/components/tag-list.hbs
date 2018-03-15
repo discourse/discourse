@@ -10,7 +10,7 @@
 {{#each sortedTags as |tag|}}
   <div class='tag-box'>
     {{#if tag.count}}
-      {{discourse-tag tag.id isPrivateMessage=isPrivateMessage}} <span class='tag-count'>x {{tag.count}}</span>
+      {{discourse-tag tag.id isPrivateMessage=isPrivateMessage tagsForUser=tagsForUser}} <span class='tag-count'>x {{tag.count}}</span>
     {{else}}
       {{discourse-tag tag.id}}
     {{/if}}

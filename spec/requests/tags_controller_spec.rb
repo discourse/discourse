@@ -55,28 +55,67 @@ describe TagsController do
   end
 
   describe '#personal_messages' do
+    let(:regular_user) { Fabricate(:trust_level_4) }
+    let(:moderator) { Fabricate(:moderator) }
+    let(:admin) { Fabricate(:admin) }
+    let(:personal_message) do
+      Fabricate(:private_message_topic, user: regular_user, topic_allowed_users: [
+        Fabricate.build(:topic_allowed_user, user: regular_user),
+        Fabricate.build(:topic_allowed_user, user: moderator),
+        Fabricate.build(:topic_allowed_user, user: admin)
+      ])
+    end
+
     before do
       SiteSetting.allow_staff_to_tag_pms = true
-      personal_message = Fabricate(:private_message_topic)
       Fabricate(:tag, topics: [personal_message], name: 'test')
     end
 
-    context "as a normal user" do
-      it "should return the right response" do
-        get "/tags/personal_messages.json"
+    context "as a regular user" do
+      it "can't see pm tags" do
+        get "/tags/personal_messages/#{regular_user.username}.json"
 
         expect(response).not_to be_success
       end
     end
 
+    context "as an moderator" do
+      before do
+        sign_in(moderator)
+      end
+
+      it "can't see pm tags for regular user" do
+        get "/tags/personal_messages/#{regular_user.username}.json"
+
+        expect(response).not_to be_success
+      end
+
+      it "can see their own pm tags" do
+        get "/tags/personal_messages/#{moderator.username}.json"
+
+        expect(response).to be_success
+
+        tag = JSON.parse(response.body)['tags']
+        expect(tag[0]["id"]).to eq('test')
+      end
+    end
+
     context "as an admin" do
       before do
-        admin = Fabricate(:admin)
         sign_in(admin)
       end
 
-      it "should return the right response" do
-        get "/tags/personal_messages.json"
+      it "can see pm tags for regular user" do
+        get "/tags/personal_messages/#{regular_user.username}.json"
+
+        expect(response).to be_success
+
+        tag = JSON.parse(response.body)['tags']
+        expect(tag[0]["id"]).to eq('test')
+      end
+
+      it "can see their own pm tags" do
+        get "/tags/personal_messages/#{admin.username}.json"
 
         expect(response).to be_success
 
