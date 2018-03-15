@@ -18,10 +18,8 @@ describe RemoteTheme do
       repo_dir
     end
 
-    def about_json(options = {})
-      options[:love] ||= "FAFAFA"
-
-<<JSON
+    def about_json(love_color: "FAFAFA", color_scheme_name: "Amazing")
+      <<~JSON
         {
           "name": "awesome theme",
           "about_url": "https://www.site.com/about",
@@ -38,12 +36,12 @@ describe RemoteTheme do
             "name": "sam"
           },
           "color_schemes": {
-            "Amazing": {
-              "love": "#{options[:love]}"
+            "#{color_scheme_name}": {
+              "love": "#{love_color}"
             }
           }
         }
-JSON
+      JSON
     end
 
     let :scss_data do
@@ -108,7 +106,7 @@ JSON
       expect(scheme.colors.find_by(name: 'love').hex).to eq('fafafa')
 
       File.write("#{initial_repo}/common/header.html", "I AM UPDATED")
-      File.write("#{initial_repo}/about.json", about_json(love: "EAEAEA"))
+      File.write("#{initial_repo}/about.json", about_json(love_color: "EAEAEA"))
 
       File.write("#{initial_repo}/settings.yml", "integer_setting: 32")
       `cd #{initial_repo} && git add settings.yml`
@@ -140,6 +138,17 @@ JSON
       expect(@theme.settings.first.value).to eq(32)
 
       expect(remote.remote_updated_at).to eq(time)
+
+      # It should be able to remove old colors as well
+      File.write("#{initial_repo}/about.json", about_json(love_color: "BABABA", color_scheme_name: "Amazing 2"))
+      `cd #{initial_repo} && git commit -am "update"`
+
+      remote.update_from_remote
+      @theme.save
+      @theme.reload
+
+      scheme_count = ColorScheme.where(theme_id: @theme.id).count
+      expect(scheme_count).to eq(1)
     end
   end
 end

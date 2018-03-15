@@ -154,9 +154,10 @@ class RemoteTheme < ActiveRecord::Base
   end
 
   def update_theme_color_schemes(theme, schemes)
-    return if schemes.blank?
+    missing_scheme_names = Hash[*theme.color_schemes.pluck(:name, :id).flatten]
 
     schemes.each do |name, colors|
+      missing_scheme_names.delete(name)
       existing = theme.color_schemes.find_by(name: name)
       if existing
         existing.colors.each do |c|
@@ -174,7 +175,13 @@ class RemoteTheme < ActiveRecord::Base
         end
       end
     end
+
+    if missing_scheme_names.length > 0
+      ColorScheme.where(id: missing_scheme_names.values).delete_all
+      # we may have stuff pointed at the incorrect scheme?
+    end
   end
+
 end
 
 # == Schema Information
