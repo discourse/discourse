@@ -43,12 +43,7 @@ class ColorScheme < ActiveRecord::Base
 
   alias_method :colors, :color_scheme_colors
 
-  before_save do
-    if self.id
-      self.version += 1
-    end
-  end
-
+  before_save :bump_version
   after_save :publish_discourse_stylesheet
   after_save :dump_hex_cache
   after_destroy :dump_hex_cache
@@ -178,6 +173,12 @@ class ColorScheme < ActiveRecord::Base
 
   def dump_hex_cache
     self.class.hex_cache.clear
+  end
+
+  def bump_version
+    if self.id
+      self.version += 1
+    end
   end
 
 end
