@@ -8,6 +8,22 @@ module BackupRestore
   class Restorer
     attr_reader :success
 
+    def self.pg_produces_portable_dump?(version)
+      version = Gem::Version.new(version)
+
+      %w{
+        10.3
+        9.6.8
+        9.5.12
+        9.4.17
+        9.3.22
+      }.each do |unportable_version|
+        return false if Gem::Dependency.new("", "~> #{unportable_version}").match?("", version)
+      end
+
+      true
+    end
+
     def initialize(user_id, opts = {})
       @user_id = user_id
       @client_id = opts[:client_id]
@@ -266,20 +282,7 @@ module BackupRestore
     end
 
     def can_restore_into_different_schema?
-      dumped_by_version = Gem::Version.new(get_dumped_by_version)
-
-      return false if dumped_by_version >= Gem::Version.new("10.3")
-
-      %w{
-        9.6.8
-        9.5.12
-        9.4.17
-        9.3.22
-      }.each do |version|
-        return false if Gem::Dependency.new("", "~> #{version}").match?("", dumped_by_version)
-      end
-
-      true
+      self.class.pg_produces_portable_dump?(get_dumped_by_version)
     end
 
     def restore_dump_command
