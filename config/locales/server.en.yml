@@ -962,6 +962,10 @@ en:
       title: "User Visits"
       xaxis: "Day"
       yaxis: "Number of visits"
+    web_crawlers:
+      title: "Web Crawler Requests"
+      xaxis: "User Agent"
+      yaxis: "Pageviews"
 
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
@@ -1113,6 +1117,8 @@ en:
     blacklist_ip_blocks: "A list of private IP blocks that should never be crawled by Discourse"
     whitelist_internal_hosts: "A list of internal hosts that discourse can safely crawl for oneboxing and other purposes"
     allowed_iframes: "A list of iframe src domain prefixes that discourse can safely allow in posts"
+    whitelisted_crawler_user_agents: 'User agents of web crawlers that should be allowed to access the site.'
+    blacklisted_crawler_user_agents: 'User agents of web crawlers that should not be allowed to access the site. Does not apply if whitelist is defined.'
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on."
