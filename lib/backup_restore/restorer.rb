@@ -41,6 +41,7 @@ module BackupRestore
       extract_dump
 
       if !can_restore_into_different_schema?
+        log "Cannot restore into different schema, restoring in-place"
         enable_readonly_mode
 
         pause_sidekiq
@@ -56,6 +57,7 @@ module BackupRestore
 
         disable_readonly_mode
       else
+        log "Restoring into 'backup' schema"
         restore_dump
         enable_readonly_mode
 
@@ -193,10 +195,9 @@ module BackupRestore
     end
 
     def extract_metadata
-      log "Extracting metadata file..."
-
       @metadata =
         if system('tar', '--list', '--file', @tar_filename, BackupRestore::METADATA_FILE)
+          log "Extracting metadata file..."
           FileUtils.cd(@tmp_directory) do
             Discourse::Utils.execute_command(
               'tar', '--extract', '--file', @tar_filename, BackupRestore::METADATA_FILE,
@@ -208,6 +209,7 @@ module BackupRestore
           raise "Failed to load metadata file." if !data
           data
         else
+          log "No metadata file to extract."
           if @filename =~ /-#{BackupRestore::VERSION_PREFIX}(\d{14})/
             { "version" => Regexp.last_match[1].to_i }
           else
