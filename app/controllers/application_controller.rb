@@ -315,7 +315,7 @@ class ApplicationController < ActionController::Base
     resolve_safe_mode
     return if request.env[NO_CUSTOM]
 
-    theme_key = flash[:preview_theme_key]
+    theme_key = request[:preview_theme_key]
 
     user_option = current_user&.user_option
 

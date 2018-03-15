@@ -7,8 +7,7 @@ class Admin::ThemesController < Admin::AdminController
 
   def preview
     @theme = Theme.find(params[:id])
-
-    redirect_to path("/"), flash: { preview_theme_key: @theme.key }
+    redirect_to path("/?preview_theme_key=#{@theme.key}")
   end
 
   def upload_asset
