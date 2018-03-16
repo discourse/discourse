@@ -104,11 +104,16 @@ describe TopicTrackingState do
       it "should publish the right message" do
         messages = MessageBus.track_publish do
           TopicTrackingState.publish_private_message(
-            private_message_topic,
+            private_message_topic
           )
         end
 
-        expect(messages.count).to eq(2)
+        expect(messages.count).to eq(3)
+
+        message = messages.first
+        expect(message.channel).to eq('/private-messages/inbox')
+        expect(message.data["topic_id"]).to eq(private_message_topic.id)
+        expect(message.user_ids).to eq(private_message_topic.allowed_users.map(&:id))
 
         [group1, group2].each do |group|
           message = messages.find do |message|
@@ -129,7 +134,12 @@ describe TopicTrackingState do
             )
           end
 
-          expect(messages.count).to eq(4)
+          expect(messages.count).to eq(5)
+
+          message = messages.first
+          expect(message.channel).to eq('/private-messages/inbox')
+          expect(message.data["topic_id"]).to eq(private_message_topic.id)
+          expect(message.user_ids).to eq(private_message_topic.allowed_users.map(&:id))
 
           [group1, group2].each do |group|
             group_channel = "/private-messages/group/#{group.name}"
@@ -160,6 +170,12 @@ describe TopicTrackingState do
         )
       end
 
+      let!(:group) do
+        group = Fabricate(:group, users: [Fabricate(:user)])
+        private_message_topic.allowed_groups << group
+        group
+      end
+
       it 'should publish the right message' do
         messages = MessageBus.track_publish do
           TopicTrackingState.publish_private_message(
@@ -168,11 +184,12 @@ describe TopicTrackingState do
           )
         end
 
-        expect(messages.count).to eq(2)
+        expect(messages.count).to eq(3)
 
         [
           ['/private-messages/inbox', private_message_topic.allowed_users.map(&:id)],
-          ['/private-messages/sent', [user.id]]
+          ['/private-messages/sent', [user.id]],
+          ["/private-messages/group/#{group.name}", [group.users.first.id]]
         ].each do |channel, user_ids|
           message = messages.find do |message|
             message.channel == channel

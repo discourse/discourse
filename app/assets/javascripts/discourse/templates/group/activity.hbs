@@ -5,9 +5,6 @@
     {{#if siteSettings.enable_mentions}}
       {{group-activity-filter filter="mentions" categoryId=category_id}}
     {{/if}}
-    {{#if showGroupMessages}}
-      {{group-activity-filter filter="messages"}}
-    {{/if}}
     {{plugin-outlet name="below-group-activity-nav" tagName='' connectorTagName='li'}}
   {{/mobile-nav}}
 

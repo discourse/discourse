@@ -1,4 +1,4 @@
-import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
+import { default as computed } from 'ember-addons/ember-computed-decorators';
 
 const Tab = Ember.Object.extend({
   init() {
@@ -14,16 +14,49 @@ export default Ember.Controller.extend({
   counts: null,
   showing: 'members',
 
-  tabs: [
-    Tab.create({ name: 'members', route: 'group.index', icon: 'users' }),
-    Tab.create({ name: 'activity' }),
-    Tab.create({
-      name: 'edit', i18nKey: 'edit.title', icon: 'pencil', admin: true
-    }),
-    Tab.create({
-      name: 'logs', i18nKey: 'logs.title', icon: 'list-alt', admin: true
-    })
-  ],
+  @computed('showMessages', 'model.user_count')
+  tabs(showMessages, userCount) {
+    const membersTab = Tab.create({
+      name: 'members',
+      route: 'group.index',
+      icon: 'users'
+    });
+
+    membersTab.set('count', userCount);
+
+    const defaultTabs = [
+      membersTab,
+      Tab.create({ name: 'activity' })
+    ];
+
+    if (showMessages) {
+      defaultTabs.push(Tab.create({
+        name: 'messages.inbox', i18nKey: 'messages'
+      }));
+    }
+
+    if (this.currentUser && this.currentUser.canManageGroup(this.model)) {
+      defaultTabs.push(...[
+        Tab.create({
+          name: 'edit', i18nKey: 'edit.title', icon: 'pencil'
+        }),
+        Tab.create({
+          name: 'logs', i18nKey: 'logs.title', icon: 'list-alt'
+        })
+      ]);
+    }
+
+    return defaultTabs;
+  },
+
+  @computed('model.is_group_user')
+  showMessages(isGroupUser) {
+    if (!this.siteSettings.enable_personal_messages) {
+      return false;
+    }
+
+    return isGroupUser || (this.currentUser && this.currentUser.admin);
+  },
 
   @computed('model.is_group_owner', 'model.automatic')
   canEditGroup(isGroupOwner, automatic) {
@@ -48,11 +81,6 @@ export default Ember.Controller.extend({
   @computed("model.messageable")
   displayGroupMessageButton(messageable) {
     return this.currentUser && messageable;
-  },
-
-  @observes('model.user_count')
-  _setMembersTabCount() {
-    this.get('tabs')[0].set('count', this.get('model.user_count'));
   },
 
   actions: {

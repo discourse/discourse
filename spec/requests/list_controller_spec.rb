@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe ListController do
   let(:topic) { Fabricate(:topic) }
+  let(:group) { Fabricate(:group) }
 
   describe '#index' do
     it "doesn't throw an error with a negative page" do
@@ -109,9 +110,33 @@ RSpec.describe ListController do
     end
   end
 
-  describe '#group_topics' do
-    let(:group) { Fabricate(:group) }
+  describe '#private_messages_group' do
+    let(:user) do
+      user = Fabricate(:user)
+      group.add(user)
+      sign_in(user)
+      user
+    end
 
+    let!(:topic) do
+      Fabricate(:private_message_topic,
+        allowed_groups: [group],
+      )
+    end
+
+    let(:private_post) { Fabricate(:post, topic: topic) }
+
+    it 'should return the right response' do
+      get "/topics/private-messages-group/#{user.username}/#{group.name}.json"
+
+      expect(response.status).to eq(200)
+
+      expect(JSON.parse(response.body)["topic_list"]["topics"].first["id"])
+        .to eq(topic.id)
+    end
+  end
+
+  describe '#group_topics' do
     %i{user user2}.each do |user|
       let(user) do
         user = Fabricate(:user)
