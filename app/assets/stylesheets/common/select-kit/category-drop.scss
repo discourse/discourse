@@ -16,24 +16,27 @@
         }
       }
 
-      &.bar.has-selection .category-drop-header,
       &.none.has-selection .category-drop-header {
-        padding: 5px 10px;
+        padding: 4.5px 5px 4.5px 10px;
+      }
+
+      &.bar.has-selection .category-drop-header {
+        padding: 3.5px 5px 3.5px 10px;
       }
 
       &.box.has-selection .category-drop-header {
-        padding: 2.5px 10px;
+        padding: 2.5px 5px 2.5px 10px;
       }
 
       &.bullet.has-selection .category-drop-header {
-        padding: 5px 10px;
+        padding: 4.5px 5px 4.5px 10px;
       }
 
       .category-drop-header {
         background: $primary-low;
         color: $primary;
         border: 1px solid transparent;
-        padding: 5px 10px;
+        padding: 4.5px 5px 4.5px 10px;
         font-size: $font-0;
         transition: none;
 
@@ -47,6 +50,7 @@
 
         .caret-icon {
           opacity: 1;
+          margin: 0;
         }
       }
 
