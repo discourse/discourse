@@ -156,7 +156,7 @@ class RemoteTheme < ActiveRecord::Base
   def update_theme_color_schemes(theme, schemes)
     missing_scheme_names = Hash[*theme.color_schemes.pluck(:name, :id).flatten]
 
-    schemes.each do |name, colors|
+    schemes&.each do |name, colors|
       missing_scheme_names.delete(name)
       existing = theme.color_schemes.find_by(name: name)
       if existing
