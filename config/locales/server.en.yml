@@ -50,11 +50,11 @@ en:
   powered_by_html: 'Powered by <a href="https://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
   log_in: "Log In"
   submit: "Submit"
-
   purge_reason: "Automatically deleted as abandoned, deactivated account"
   disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."
   anonymous: "Anonymous"
   remove_posts_deleted_by_author: "Deleted by author"
+  redirect_warning: "Click the link below to be redirected to an external site."
 
   themes:
     bad_color_scheme: "Can not update theme, invalid color scheme"
