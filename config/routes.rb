@@ -456,7 +456,6 @@ Discourse::Application.routes.draw do
     get 'members'
     get 'posts'
     get 'mentions'
-    get 'messages'
     get 'counts'
     get 'mentionable'
     get 'messageable'
@@ -467,8 +466,16 @@ Discourse::Application.routes.draw do
     end
 
     member do
-      get 'activity' => "groups#show"
-      get 'activity/:filter' => "groups#show"
+      %w{
+        activity
+        activity/:filter
+        messages
+        messages/inbox
+        messages/archive
+      }.each do |path|
+        get path => 'groups#show'
+      end
+
       put "members" => "groups#add_members"
       delete "members" => "groups#remove_member"
       post "request_membership" => "groups#request_membership"
