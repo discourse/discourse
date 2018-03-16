@@ -15,13 +15,15 @@ module ImportScripts::PhpBB3
       query(<<-SQL, :user_id)
         SELECT u.user_id, u.user_email, u.username, u.user_password, u.user_regdate, u.user_lastvisit, u.user_ip,
           u.user_type, u.user_inactive_reason, g.group_name, b.ban_start, b.ban_end, b.ban_reason,
-          u.user_posts, u.user_website, u.user_from, u.user_birthday, u.user_avatar_type, u.user_avatar
+          u.user_posts, u.user_website, u.user_from, u.user_birthday, u.user_avatar_type, u.user_avatar,
+          CONCAT_WS(' ', pfd.pf_firstname, pfd.pf_lastname) name
         FROM #{@table_prefix}users u
           LEFT OUTER JOIN #{@table_prefix}groups g ON (g.group_id = u.group_id)
           LEFT OUTER JOIN #{@table_prefix}banlist b ON (
             u.user_id = b.ban_userid AND b.ban_exclude = 0 AND
             (b.ban_end = 0 OR b.ban_end >= UNIX_TIMESTAMP())
           )
+          LEFT OUTER JOIN #{@table_prefix}profile_fields_data pfd ON (pfd.user_id = u.user_id)
         WHERE u.user_id > #{last_user_id} AND u.user_type != #{Constants::USER_TYPE_IGNORE}
         ORDER BY u.user_id
         LIMIT #{@batch_size}
@@ -77,7 +79,7 @@ module ImportScripts::PhpBB3
         SELECT p.post_id, p.topic_id, t.forum_id, t.topic_title, t.topic_first_post_id, p.poster_id,
           p.post_text, p.post_time, t.topic_status, t.topic_type, t.poll_title, t.topic_views,
           CASE WHEN t.poll_length > 0 THEN t.poll_start + t.poll_length ELSE NULL END AS poll_end,
-          t.poll_max_options, p.post_attachment,
+          t.poll_max_options, p.post_attachment, p.poster_ip,
           CASE WHEN u.user_type = #{Constants::USER_TYPE_IGNORE} THEN p.post_username ELSE NULL END post_username
         FROM #{@table_prefix}posts p
           JOIN #{@table_prefix}topics t ON (p.topic_id = t.topic_id)
