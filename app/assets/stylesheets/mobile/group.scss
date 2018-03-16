@@ -27,13 +27,15 @@
   position: relative;
 }
 
-.group-activity-nav.mobile-nav {
-  position: absolute;
-  right: 0;
-  top: -55px;
+.group-activity-nav, .group-messages-nav {
+  &.mobile-nav {
+    position: absolute;
+    right: 0;
+    top: -57px;
+  }
 }
 
-.group-activity-outlet {
+.group-activity-outlet, .group-messages-outlet {
   float: none;
 }
 

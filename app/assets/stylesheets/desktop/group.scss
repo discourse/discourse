@@ -21,7 +21,7 @@
   margin-bottom: 20px;
 }
 
-.group-activity-nav {
+.group-activity-nav, .group-messages-nav {
   width: 15%;
   background-color: transparent;
 
@@ -44,12 +44,12 @@
   }
 }
 
-.group-activity-outlet {
+.group-activity-outlet, .group-messages-outlet {
   width: 85%;
 }
 
 .group-edit {
-  border: 1px solid $primary-low; 
+  border: 1px solid $primary-low;
   padding: 10px;
 
   .form-horizontal {
