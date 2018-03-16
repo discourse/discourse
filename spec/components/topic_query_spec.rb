@@ -904,6 +904,8 @@ describe TopicQuery do
       user
     end
 
+    let(:user3) { Fabricate(:user) }
+
     let(:private_category) do
       Fabricate(:private_category, group: group)
     end
@@ -916,11 +918,13 @@ describe TopicQuery do
     let!(:topic5) { Fabricate(:topic, user: user, visible: false) }
     let!(:topic6) { Fabricate(:topic, user: user2) }
 
-    it 'should return the right list' do
+    it 'should return the right lists for anon user' do
       topics = TopicQuery.new.list_group_topics(group).topics
 
       expect(topics).to contain_exactly(topic1, topic2, topic6)
+    end
 
+    it 'should retun the right list for users in the same group' do
       topics = TopicQuery.new(user).list_group_topics(group).topics
 
       expect(topics).to contain_exactly(topic1, topic2, topic3, topic6)
@@ -928,6 +932,12 @@ describe TopicQuery do
       topics = TopicQuery.new(user2).list_group_topics(group).topics
 
       expect(topics).to contain_exactly(topic1, topic2, topic3, topic6)
+    end
+
+    it 'should return the right list for user no in the group' do
+      topics = TopicQuery.new(user3).list_group_topics(group).topics
+
+      expect(topics).to contain_exactly(topic1, topic2, topic6)
     end
   end
 end
