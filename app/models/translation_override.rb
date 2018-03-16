@@ -40,7 +40,7 @@ class TranslationOverride < ActiveRecord::Base
     I18n.reload!
     MessageBus.publish('/i18n-flush', refresh: true)
 
-    keys.each do |key|
+    keys.flatten.each do |key|
       return if expire_cache(key)
     end
   end
