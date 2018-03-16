@@ -31,7 +31,7 @@ export default Ember.Controller.extend({
 
     if (showMessages) {
       defaultTabs.push(Tab.create({
-        name: 'messages.inbox', i18nKey: 'messages'
+        name: 'messages', i18nKey: 'messages'
       }));
     }
 

@@ -1,22 +1,20 @@
-<div class="group-table">
-  <div class="wrapper">
-    {{#d-section class="user-navigation" pageClass="group-messages"}}
-      {{#mobile-nav class='messages-nav' desktopClass='nav-stacked action-list' currentPath=currentPath}}
-        <li>
-          {{#link-to 'group.messages.inbox' model.name}}
-            {{i18n 'user.messages.inbox'}}
-          {{/link-to}}
-        </li>
-        <li>
-          {{#link-to 'group.messages.archive' model.name}}
-            {{i18n 'user.messages.archive'}}
-          {{/link-to}}
-        </li>
-      {{/mobile-nav}}
-    {{/d-section}}
+<div class='group-activity container'>
+  {{#mobile-nav class='group-messages-nav' desktopClass='pull-left nav nav-stacked' currentPath=application.currentPath}}
+    <li>
+      {{#link-to 'group.messages.inbox' model.name}}
+        {{i18n 'user.messages.inbox'}}
+      {{/link-to}}
+    </li>
+    <li>
+      {{#link-to 'group.messages.archive' model.name}}
+        {{i18n 'user.messages.archive'}}
+      {{/link-to}}
+    </li>
+  {{/mobile-nav}}
 
-    <section class='messages'>
+  <div class="{{if site.mobileView "" "pull-left"}} group-messages-outlet">
+    <div class='user-main'>
       {{outlet}}
-    </section>
+    </div>
   </div>
 </div>
