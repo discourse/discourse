@@ -21,7 +21,7 @@ module ImportScripts::PhpBB3
 
     def map_post(row)
       imported_user_id = row[:post_username].blank? ? row[:poster_id] : row[:post_username]
-      user_id = @lookup.user_id_from_imported_user_id(imported_user_id) || Discourse.system_user.id
+      user_id = @lookup.user_id_from_imported_user_id(imported_user_id) || -1
       is_first_post = row[:post_id] == row[:topic_first_post_id]
 
       attachments = import_attachments(row, user_id)
@@ -58,6 +58,7 @@ module ImportScripts::PhpBB3
       mapped[:post_create_action] = proc do |post|
         @permalink_importer.create_for_topic(post.topic, row[:topic_id])
         @permalink_importer.create_for_post(post, row[:post_id])
+        TopicViewItem.add(post.topic_id, row[:poster_ip], post.user_id, post.created_at, true)
       end
 
       add_poll(row, mapped) if @settings.import_polls
@@ -75,6 +76,7 @@ module ImportScripts::PhpBB3
       mapped[:topic_id] = parent[:topic_id]
       mapped[:post_create_action] = proc do |post|
         @permalink_importer.create_for_post(post, row[:post_id])
+        TopicViewItem.add(post.topic_id, row[:poster_ip], post.user_id, post.created_at, true)
       end
 
       mapped
