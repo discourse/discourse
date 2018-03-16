@@ -262,7 +262,7 @@ module BackupRestore
         failure_message: "Failed to check version of pg_dump used to generate the dump file"
       )
 
-      output.match(/version (\d+(\.\d+)?)/)[1]
+      output.match(/version (\d+(\.\d+)+)/)[1]
     end
 
     def can_restore_into_different_schema?
