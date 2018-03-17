@@ -5,8 +5,12 @@ export default function renderTag(tag, params) {
   const tagName = params.tagName || "a";
   let path;
   if (tagName === "a" && !params.noHref) {
-    const current_user = Discourse.User.current();
-    path = params.isPrivateMessage ? `/u/${current_user.username}/messages/tags/${tag}` : `/tags/${tag}`;
+    if (params.isPrivateMessage && Discourse.User.current()) {
+      const username = params.tagsForUser ? params.tagsForUser : Discourse.User.current().username;
+      path = `/u/${username}/messages/tags/${tag}`;
+    } else {
+      path = `/tags/${tag}`;
+    }
   }
   const href = path ? ` href='${Discourse.getURL(path)}' ` : "";
 

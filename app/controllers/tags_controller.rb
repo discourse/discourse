@@ -193,7 +193,10 @@ class TagsController < ::ApplicationController
 
   def personal_messages
     guardian.ensure_can_tag_pms!
-    pm_tags = Tag.pm_tags(guardian: guardian)
+    allowed_user = fetch_user_from_params
+    raise Discourse::NotFound if allowed_user.blank?
+    raise Discourse::NotFound if current_user.id != allowed_user.id && !@guardian.is_admin?
+    pm_tags = Tag.pm_tags(guardian: guardian, allowed_user: allowed_user)
 
     render json: { tags: pm_tags }
   end
