@@ -32,6 +32,7 @@ export default (viewName, path, channel) => {
         hideCategory: true,
         showPosters: true,
         canBulkSelect: true,
+        tagsForUser: this.modelFor("user").get("username_lower"),
         selected: []
       });
 

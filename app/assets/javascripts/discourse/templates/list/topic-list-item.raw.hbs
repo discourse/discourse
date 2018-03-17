@@ -18,7 +18,7 @@
     {{/if}}
   </span>
 
-  {{discourse-tags topic mode="list"}}
+  {{discourse-tags topic mode="list" tagsForUser=tagsForUser}}
   {{#if expandPinned}}
     {{raw "list/topic-excerpt" topic=topic}}
   {{/if}}

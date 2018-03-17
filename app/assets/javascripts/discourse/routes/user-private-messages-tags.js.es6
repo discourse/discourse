@@ -3,7 +3,8 @@ import { popupAjaxError } from 'discourse/lib/ajax-error';
 
 export default Discourse.Route.extend({
   model() {
-    return ajax('/tags/personal_messages').then(result => {
+    const username = this.modelFor("user").get("username_lower");
+    return ajax(`/tags/personal_messages/${username}`).then(result => {
       return result.tags.map(tag => Ember.Object.create(tag));
     }).catch(popupAjaxError);
   },
@@ -15,7 +16,8 @@ export default Discourse.Route.extend({
   setupController(controller, model) {
     this.controllerFor('user-private-messages-tags').setProperties({
       model,
-      sortProperties: this.siteSettings.tags_sort_alphabetically ? ['id'] : ['count:desc', 'id']
+      sortProperties: this.siteSettings.tags_sort_alphabetically ? ['id'] : ['count:desc', 'id'],
+      tagsForUser: this.modelFor("user").get("username_lower")
     });
     this.controllerFor('user-private-messages').setProperties({
       showToggleBulkSelect: false,
