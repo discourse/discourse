@@ -111,6 +111,7 @@ aside.onebox {
   @include onebox-favicon('githubissue', 'github');
   @include onebox-favicon('githubgist', 'github');
   @include onebox-favicon('amazon', 'amazon');
+  @include onebox-favicon('instagram', 'instagram');
   @include onebox-favicon('googledocs', 'google_branding/logo_drive_48px');
 
 
@@ -222,6 +223,18 @@ aside.onebox {
       }
     }
 
+    // instagram fixes
+    .instagram-images {
+      display: block;
+      clear: both;
+
+      .instagram-image {
+        padding: 5px 5px 5px 5px;
+        max-width: 100%;
+        max-height: 100%;
+        float: none;
+      }
+    }
   }
 }
 
@@ -479,6 +492,12 @@ aside.onebox.stackexchange .onebox-body {
 .onebox.gfycat p {
   span.label1 a {
     white-space: nowrap;
+  }
+}
+
+.onebox.instagram p {
+  span.instagram-description {
+    color: dark-light-choose($primary-medium, $secondary-medium);
   }
 }
 
