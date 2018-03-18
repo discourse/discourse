@@ -71,8 +71,6 @@ module Onebox
           ikea.com
           imdb.com
           indiatimes.com
-          instagr.am
-          instagram.com
           itunes.apple.com
           khanacademy.org
           kickstarter.com
