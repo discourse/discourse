@@ -2,6 +2,7 @@ export default Discourse.Route.extend({
   queryParams: {
     order: { refreshModel: true, replace: true },
     asc: { refreshModel: true, replace: true },
+    filter: { refreshModel: true }
   },
 
   refreshQueryWithoutTransition: true,

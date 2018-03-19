@@ -1,7 +1,13 @@
 .groups-page {
   h1 {
-    margin: 20px 0;
+    margin-bottom: 20px;
+    display: inline-block;
   }
+}
+
+.group-filter-name {
+  display: inline-block;
+  float: right;
 }
 
 .groups-table {

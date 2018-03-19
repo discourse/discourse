@@ -24,6 +24,10 @@ class GroupsController < ApplicationController
     dir = params[:asc] ? 'ASC' : 'DESC'
     groups = Group.visible_groups(current_user, order ? "#{order} #{dir}" : nil)
 
+    if (filter = params[:filter]).present?
+      groups = Group.search_groups(filter, groups: groups)
+    end
+
     unless guardian.is_staff?
       # hide automatic groups from all non stuff to de-clutter page
       groups = groups.where(automatic: false)

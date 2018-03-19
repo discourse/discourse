@@ -18,6 +18,16 @@ describe GroupsController do
       end
     end
 
+    context 'searchable' do
+      it 'should return the right response' do
+        other_group = Fabricate(:group, name: 'testing')
+        get "/groups.json", params: { filter: 'test' }
+
+        expect(response.status).to eq(200)
+        expect(JSON.parse(response.body)["groups"].first["id"]).to eq(other_group.id)
+      end
+    end
+
     context 'sortable' do
       let!(:other_group) { Fabricate(:group, name: "zzzzzz", users: [user]) }
 

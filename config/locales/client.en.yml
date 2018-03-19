@@ -432,6 +432,7 @@ en:
       join: "Join Group"
       leave: "Leave Group"
       request: "Request to Join Group"
+      filter_name: "filter by group name"
       message: "Message"
       automatic_group: Automatic Group
       closed_group: Closed Group
