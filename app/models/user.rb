@@ -134,7 +134,9 @@ class User < ActiveRecord::Base
   # set to true to optimize creation and save for imports
   attr_accessor :import_mode
 
-  scope :with_email, ->(email) { joins(:user_emails).where(user_emails: { email: email }) }
+  scope :with_email, ->(email) do
+    joins(:user_emails).where("lower(user_emails.email) = ?", email)
+  end
 
   scope :human_users, -> { where('users.id > 0') }
 
