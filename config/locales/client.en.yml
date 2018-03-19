@@ -447,7 +447,7 @@ en:
 
       membership: "Membership"
       name: "Name"
-      user_count: "Number of Members"
+      user_count: "Members Count"
       bio: "About Group"
       selector_placeholder: "enter username"
       owner: "owner"
