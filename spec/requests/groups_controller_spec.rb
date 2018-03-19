@@ -77,7 +77,6 @@ describe GroupsController do
 
       group_ids = response_body["groups"].map { |g| g["id"] }
 
-      expect(response_body["extras"]["group_user_ids"]).to eq([])
       expect(group_ids).to include(group.id)
       expect(group_ids).to_not include(staff_group.id)
       expect(response_body["load_more_groups"]).to eq("/groups?page=1")
@@ -89,6 +88,7 @@ describe GroupsController do
         admin = Fabricate(:admin)
         sign_in(admin)
         group.add(admin)
+        group.add_owner(admin)
 
         get "/groups.json"
 
@@ -97,8 +97,10 @@ describe GroupsController do
         response_body = JSON.parse(response.body)
 
         group_ids = response_body["groups"].map { |g| g["id"] }
+        group_body = response_body["groups"].find { |g| g["id"] == group.id }
 
-        expect(response_body["extras"]["group_user_ids"]).to eq([group.id])
+        expect(group_body["is_group_user"]).to eq(true)
+        expect(group_body["is_group_owner"]).to eq(true)
         expect(group_ids).to include(group.id, staff_group.id)
         expect(response_body["load_more_groups"]).to eq("/groups?page=1")
         expect(response_body["total_rows_groups"]).to eq(10)
@@ -301,7 +303,8 @@ describe GroupsController do
 
       members = JSON.parse(response.body)["members"]
 
-      expect(members.map { |m| m["id"] }).to eq([user1.id, user2.id, user3.id])
+      expect(members.map { |m| m["id"] })
+        .to contain_exactly(user1.id, user2.id, user3.id)
     end
   end
 

@@ -437,6 +437,7 @@ en:
       automatic_group: Automatic Group
       closed_group: Closed Group
       is_group_user: "You are a member of this group"
+      is_group_owner: "You are an owner of this group"
       allow_membership_requests: "Allow users to send membership requests to group owners"
       membership_request_template: "Custom template to display to users when sending a membership request"
       membership_request:

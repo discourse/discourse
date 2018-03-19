@@ -40,13 +40,18 @@ class GroupsController < ApplicationController
       Group.preload_custom_fields(groups, Group.preloaded_custom_field_names)
     end
 
-    group_user_ids = GroupUser.where(group: groups, user: current_user).pluck(:group_id)
+    if current_user
+      group_users = GroupUser.where(group: groups, user: current_user)
+      user_group_ids = group_users.pluck(:group_id)
+      owner_group_ids = group_users.where(owner: true).pluck(:group_id)
+    end
 
     render_json_dump(
-      groups: serialize_data(groups, BasicGroupSerializer),
-      extras: {
-        group_user_ids: group_user_ids
-      },
+      groups: serialize_data(groups,
+        BasicGroupSerializer,
+        user_group_ids: user_group_ids || [],
+        owner_group_ids: owner_group_ids || []
+      ),
       total_rows_groups: count,
       load_more_groups: groups_path(page: page + 1)
     )

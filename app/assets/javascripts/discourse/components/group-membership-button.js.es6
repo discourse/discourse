@@ -13,12 +13,12 @@ export default Ember.Component.extend({
     return publicExit && userIsGroupUser;
   },
 
-  @computed("model.is_group_user", "model.id", "groupUserIds")
-  userIsGroupUser(isGroupUser, groupId, groupUserIds) {
+  @computed("model.is_group_user")
+  userIsGroupUser(isGroupUser) {
     if (isGroupUser !== undefined) {
       return isGroupUser;
     } else {
-      return !!groupUserIds && groupUserIds.includes(groupId);
+      return false;
     }
   },
 

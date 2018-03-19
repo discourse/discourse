@@ -34,6 +34,12 @@
       padding: 0.8em;
     }
 
+    td.group-user-status {
+      i {
+        color: $primary;
+      }
+    }
+
     td.groups-user-count {
       font-size: $font-up-2
     }

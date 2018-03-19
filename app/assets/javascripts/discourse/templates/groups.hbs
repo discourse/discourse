@@ -14,6 +14,7 @@
               <th></th>
               {{directory-toggle field="user_count" labelKey="groups.user_count" order=order asc=asc}}
               <th>{{i18n "groups.membership"}}</th>
+              <th></th>
             </thead>
 
             <tbody>
@@ -52,13 +53,22 @@
                   <td>
                     {{#group-membership-button model=group
                         showMembershipStatus=true
-                        groupUserIds=groups.extras.group_user_ids
                         showLogin='showLogin'}}
 
                       {{d-button icon="ban"
                           label=(if group.automatic 'groups.automatic_group' 'groups.closed_group')
                           disabled=true}}
                     {{/group-membership-button}}
+                  </td>
+
+                  <td class="group-user-status">
+                    {{#if group.is_group_user}}
+                      {{d-icon "user" title="groups.is_group_user"}}
+                    {{/if}}
+
+                    {{#if group.is_group_owner}}
+                      {{d-icon "shield" title="groups.is_group_owner"}}
+                    {{/if}}
                   </td>
                 </tr>
               {{/each}}
