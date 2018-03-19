@@ -54,7 +54,7 @@ en:
   disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."
   anonymous: "Anonymous"
   remove_posts_deleted_by_author: "Deleted by author"
-  redirect_warning: "Click the link below to be redirected to an external site."
+  redirect_warning: "We were unable to verify that the link you selected was actually posted to the forum. If you wish to proceed anyway, select the link below."
 
   themes:
     bad_color_scheme: "Can not update theme, invalid color scheme"
