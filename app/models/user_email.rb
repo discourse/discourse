@@ -14,7 +14,7 @@ class UserEmail < ActiveRecord::Base
 
   validate :user_id_not_changed, if: :primary
 
-  validates :primary, uniqueness: { scope: [:user_id] }
+  validates :primary, uniqueness: { scope: [:user_id] }, if: :primary
 
   private
 
