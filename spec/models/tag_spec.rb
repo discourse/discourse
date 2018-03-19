@@ -123,8 +123,7 @@ describe Tag do
       SiteSetting.allow_staff_to_tag_pms = true
       tags = described_class.pm_tags(guardian: Guardian.new(admin), allowed_user: regular_user)
       expect(tags.length).to eq(2)
-      expect(tags[0][:id]).to eq("tag-0")
-      expect(tags[1][:text]).to eq("tag-1")
+      expect(tags.map { |t| t[:id] }).to contain_exactly("tag-0", "tag-1")
     end
   end
 
