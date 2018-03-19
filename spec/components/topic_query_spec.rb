@@ -940,4 +940,45 @@ describe TopicQuery do
       expect(topics).to contain_exactly(topic1, topic2, topic6)
     end
   end
+
+  describe '#list_private_messages_group' do
+    let(:group) { Fabricate(:group) }
+
+    let!(:group_message) do
+      Fabricate(:private_message_topic,
+        allowed_groups: [group],
+        topic_allowed_users: [
+          Fabricate.build(:topic_allowed_user, user: Fabricate(:user)),
+        ]
+      )
+    end
+
+    before do
+      group.add(creator)
+    end
+
+    it 'should return the right list for a group user' do
+      topics = TopicQuery.new(nil, group_name: group.name)
+        .list_private_messages_group(creator)
+        .topics
+
+      expect(topics).to contain_exactly(group_message)
+    end
+
+    it 'should return the right list for an admin not part of the group' do
+      topics = TopicQuery.new(nil, group_name: group.name)
+        .list_private_messages_group(Fabricate(:admin))
+        .topics
+
+      expect(topics).to contain_exactly(group_message)
+    end
+
+    it 'should return the right list for a user not part of the group' do
+      topics = TopicQuery.new(nil, group_name: group.name)
+        .list_private_messages_group(Fabricate(:user))
+        .topics
+
+      expect(topics).to eq([])
+    end
+  end
 end
