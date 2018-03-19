@@ -1,4 +1,11 @@
 export default Discourse.Route.extend({
+  queryParams: {
+    order: { refreshModel: true, replace: true },
+    asc: { refreshModel: true, replace: true },
+  },
+
+  refreshQueryWithoutTransition: true,
+
   titleToken() {
     return I18n.t('groups.index.title');
   },
@@ -8,6 +15,6 @@ export default Discourse.Route.extend({
   },
 
   setupController(controller, model) {
-    controller.set('groups', model);
+    controller.set('model', model);
   }
 });

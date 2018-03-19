@@ -18,6 +18,45 @@ describe GroupsController do
       end
     end
 
+    context 'sortable' do
+      let!(:other_group) { Fabricate(:group, name: "zzzzzz", users: [user]) }
+
+      %w{
+        desc
+        asc
+      }.each do |order|
+        context "#{order} order" do
+          it 'should return the right response' do
+            is_asc = order == 'asc'
+            params = { order: 'name' }
+            params.merge!(asc: true) if is_asc
+            group
+            get "/groups.json", params: params
+
+            expect(response.status).to eq(200)
+
+            group_ids = [group.id, other_group.id]
+            group_ids.reverse! if !is_asc
+
+            expect(JSON.parse(response.body)["groups"].map { |group| group["id"] })
+              .to eq(group_ids)
+          end
+        end
+      end
+
+      context 'ascending order' do
+        it 'should return the right response' do
+          group
+          get "/groups.json", params: { order: 'name' }
+
+          expect(response.status).to eq(200)
+
+          expect(JSON.parse(response.body)["groups"].map { |group| group["id"] })
+            .to eq([other_group.id, group.id])
+        end
+      end
+    end
+
     it 'should return the right response' do
       group
       get "/groups.json"

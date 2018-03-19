@@ -1,17 +1,18 @@
 {{#d-section pageClass="groups"}}
   <h1>{{i18n "groups.index.title"}}</h1>
-  {{#if groups}}
+
+  {{#if model}}
     {{#load-more selector=".groups-table .groups-table-row" action="loadMore"}}
       <div class='container'>
         <table class="groups-table">
           <thead>
             <th></th>
-            <th>{{i18n "groups.user_count"}}</th>
+            {{directory-toggle field="user_count" labelKey="groups.user_count" order=order asc=asc}}
             <th>{{i18n "groups.membership"}}</th>
           </thead>
 
           <tbody>
-            {{#each groups as |group|}}
+            {{#each model as |group|}}
               <tr class="groups-table-row">
                 <td class="groups-info">
                   {{#link-to "group.members" group.name}}
@@ -61,7 +62,7 @@
       </div>
     {{/load-more}}
 
-    {{conditional-loading-spinner condition=groups.loadingMore}}
+    {{conditional-loading-spinner condition=model.loadingMore}}
   {{else}}
     <p>{{i18n "groups.index.empty"}}</p>
   {{/if}}

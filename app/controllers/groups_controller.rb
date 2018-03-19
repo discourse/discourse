@@ -20,8 +20,9 @@ class GroupsController < ApplicationController
 
     page_size = 30
     page = params[:page]&.to_i || 0
-
-    groups = Group.visible_groups(current_user)
+    order = %w{name user_count}.delete(params[:order])
+    dir = params[:asc] ? 'ASC' : 'DESC'
+    groups = Group.visible_groups(current_user, order ? "#{order} #{dir}" : nil)
 
     unless guardian.is_staff?
       # hide automatic groups from all non stuff to de-clutter page

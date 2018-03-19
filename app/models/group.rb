@@ -81,8 +81,8 @@ class Group < ActiveRecord::Base
   validates :mentionable_level, inclusion: { in: ALIAS_LEVELS.values }
   validates :messageable_level, inclusion: { in: ALIAS_LEVELS.values }
 
-  scope :visible_groups, ->(user) {
-    groups = Group.order(name: :asc).where("groups.id > 0")
+  scope :visible_groups, Proc.new { |user, order|
+    groups = Group.order(order || "name ASC").where("groups.id > 0")
 
     unless user&.admin
       sql = <<~SQL
