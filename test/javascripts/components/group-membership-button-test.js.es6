@@ -61,22 +61,7 @@ QUnit.test('userIsGroupUser', function(assert) {
 
   assert.equal(this.subject().get('userIsGroupUser'), false);
 
-  this.subject().setProperties({ model: { id: 1 }, groupUserIds: [1] });
-
-  assert.equal(this.subject().get('userIsGroupUser'), true);
-
-  this.subject().set('groupUserIds', [3]);
-
-  assert.equal(this.subject().get('userIsGroupUser'), false);
-
-  this.subject().set('groupUserIds', undefined);
-
-  assert.equal(this.subject().get('userIsGroupUser'), false);
-
-  this.subject().setProperties({
-    groupUserIds: [1, 3],
-    model: { id: 1, is_group_user: false }
-  });
+  this.subject().set('model.is_group_user', null);
 
   assert.equal(this.subject().get('userIsGroupUser'), false);
 });
