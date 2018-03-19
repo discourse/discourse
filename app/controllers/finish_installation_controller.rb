@@ -15,7 +15,7 @@ class FinishInstallationController < ApplicationController
       email = params[:email].strip
       raise Discourse::InvalidParameters.new unless @allowed_emails.include?(email)
 
-      return redirect_confirm(email) if UserEmail.exists?(email: email)
+      return redirect_confirm(email) if UserEmail.where("lower(email) = ?", email).exists?
 
       @user.email = email
       @user.username = params[:username]

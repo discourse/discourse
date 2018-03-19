@@ -104,7 +104,7 @@ class AdminUserIndexQuery
   def filter_by_user_with_bypass(filter)
     if filter =~ /.+@.+/
       # probably an email so try the bypass
-      user_id = UserEmail.where(email: filter.downcase).pluck(:user_id).first
+      user_id = UserEmail.where("lower(email) = ?", filter.downcase).pluck(:user_id).first
       if user_id
         return @query.where('users.id = ?', user_id)
       end
