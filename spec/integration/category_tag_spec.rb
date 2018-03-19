@@ -100,6 +100,13 @@ describe "category tag restrictions" do
       expect(filter_allowed_tags(for_input: true)).to contain_exactly(tag3)
       expect(filter_allowed_tags(for_input: true, category: other_category)).to contain_exactly(tag3)
     end
+
+    it "enforces restrictions when creating a topic" do
+      category.allowed_tag_groups = [tag_group1.name]
+      category.reload
+      post = create_post(category: category, tags: [tag1.name, "newtag"])
+      expect(post.topic.tags.map(&:name)).to eq([tag1.name])
+    end
   end
 
   context "tag groups with parent tag" do
