@@ -132,6 +132,7 @@ en:
       odd: must be odd
       record_invalid: ! 'Validation failed: %{errors}'
       max_emojis: "can't have more than %{max_emojis_count} emoji"
+      ip_address_already_screened: "is already included in an existing rule"
       restrict_dependent_destroy:
         one: "Cannot delete record because a dependent %{record} exists"
         many: "Cannot delete record because dependent %{record} exist"
