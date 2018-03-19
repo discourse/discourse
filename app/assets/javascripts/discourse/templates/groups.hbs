@@ -1,68 +1,74 @@
 {{#d-section pageClass="groups"}}
   <h1>{{i18n "groups.index.title"}}</h1>
 
+  {{text-field value=filterInput
+      placeholderKey="groups.filter_name"
+      class="group-filter-name no-blur"}}
+
   {{#if model}}
-    {{#load-more selector=".groups-table .groups-table-row" action="loadMore"}}
-      <div class='container'>
-        <table class="groups-table">
-          <thead>
-            <th></th>
-            {{directory-toggle field="user_count" labelKey="groups.user_count" order=order asc=asc}}
-            <th>{{i18n "groups.membership"}}</th>
-          </thead>
+    {{#conditional-loading-spinner condition=model.loading}}
+      {{#load-more selector=".groups-table .groups-table-row" action="loadMore"}}
+        <div class='container'>
+          <table class="groups-table">
+            <thead>
+              <th></th>
+              {{directory-toggle field="user_count" labelKey="groups.user_count" order=order asc=asc}}
+              <th>{{i18n "groups.membership"}}</th>
+            </thead>
 
-          <tbody>
-            {{#each model as |group|}}
-              <tr class="groups-table-row">
-                <td class="groups-info">
-                  {{#link-to "group.members" group.name}}
-                    {{#if group.flair_url}}
-                      <span class='group-avatar-flair'>
-                        {{avatar-flair
-                          flairURL=group.flair_url
-                          flairBgColor=group.flair_bg_color
-                          flairColor=group.flair_color
-                          groupName=group.name}}
+            <tbody>
+              {{#each model as |group|}}
+                <tr class="groups-table-row">
+                  <td class="groups-info">
+                    {{#link-to "group.members" group.name}}
+                      {{#if group.flair_url}}
+                        <span class='group-avatar-flair'>
+                          {{avatar-flair
+                            flairURL=group.flair_url
+                            flairBgColor=group.flair_bg_color
+                            flairColor=group.flair_color
+                            groupName=group.name}}
+                        </span>
+                      {{/if}}
+
+                      <span>
+                        <span class='groups-info-name'>{{group.displayName}}</span>
+
+                        {{#if group.full_name}}
+                          <span class='groups-info-full-name'>{{group.full_name}}</span>
+                        {{/if}}
+
+                        {{#if group.title}}
+                          <div>
+                            <span class='groups-info-title'>{{group.title}}</span>
+                          </div>
+                        {{/if}}
                       </span>
-                    {{/if}}
+                    {{/link-to}}
+                  </td>
 
-                    <span>
-                      <span class='groups-info-name'>{{group.displayName}}</span>
+                  <td class="groups-user-count">{{group.user_count}}</td>
 
-                      {{#if group.full_name}}
-                        <span class='groups-info-full-name'>{{group.full_name}}</span>
-                      {{/if}}
+                  <td>
+                    {{#group-membership-button model=group
+                        showMembershipStatus=true
+                        groupUserIds=groups.extras.group_user_ids
+                        showLogin='showLogin'}}
 
-                      {{#if group.title}}
-                        <div>
-                          <span class='groups-info-title'>{{group.title}}</span>
-                        </div>
-                      {{/if}}
-                    </span>
-                  {{/link-to}}
-                </td>
+                      {{d-button icon="ban"
+                          label=(if group.automatic 'groups.automatic_group' 'groups.closed_group')
+                          disabled=true}}
+                    {{/group-membership-button}}
+                  </td>
+                </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
+      {{/load-more}}
 
-                <td class="groups-user-count">{{group.user_count}}</td>
-
-                <td>
-                  {{#group-membership-button model=group
-                      showMembershipStatus=true
-                      groupUserIds=groups.extras.group_user_ids
-                      showLogin='showLogin'}}
-
-                    {{d-button icon="ban"
-                        label=(if group.automatic 'groups.automatic_group' 'groups.closed_group')
-                        disabled=true}}
-                  {{/group-membership-button}}
-                </td>
-              </tr>
-            {{/each}}
-          </tbody>
-        </table>
-      </div>
-    {{/load-more}}
-
-    {{conditional-loading-spinner condition=model.loadingMore}}
+      {{conditional-loading-spinner condition=model.loadingMore}}
+    {{/conditional-loading-spinner}}
   {{else}}
     <p>{{i18n "groups.index.empty"}}</p>
   {{/if}}
