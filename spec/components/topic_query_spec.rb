@@ -166,26 +166,26 @@ describe TopicQuery do
     end
 
     context "no category filter" do
-      # create some topics before each test:
       let!(:tagged_topic1) { Fabricate(:topic, tags: [tag]) }
       let!(:tagged_topic2) { Fabricate(:topic, tags: [other_tag]) }
       let!(:tagged_topic3) { Fabricate(:topic, tags: [tag, other_tag]) }
       let!(:no_tags_topic) { Fabricate(:topic) }
 
       it "returns topics with the tag when filtered to it" do
-        expect(TopicQuery.new(moderator, tags: [tag.name]).list_latest.topics.map(&:id).sort).to eq([tagged_topic1.id, tagged_topic3.id].sort)
-        expect(TopicQuery.new(moderator, tags: [tag.id]).list_latest.topics.map(&:id).sort).to eq([tagged_topic1.id, tagged_topic3.id].sort)
+        expect(TopicQuery.new(moderator, tags: [tag.name]).list_latest.topics)
+          .to contain_exactly(tagged_topic1, tagged_topic3)
 
-        two_tag_topic = TopicQuery.new(moderator, tags: [tag.name]).list_latest.topics.find { |t| t.id == tagged_topic3.id }
-        expect(two_tag_topic.tags.size).to eq(2)
+        expect(TopicQuery.new(moderator, tags: [tag.id]).list_latest.topics)
+          .to contain_exactly(tagged_topic1, tagged_topic3)
 
-        # topics with ANY of the given tags:
-        expect(TopicQuery.new(moderator, tags: [tag.name, other_tag.name]).list_latest.topics.map(&:id).sort).to eq([tagged_topic1.id, tagged_topic2.id, tagged_topic3.id].sort)
-        expect(TopicQuery.new(moderator, tags: [tag.id, other_tag.id]).list_latest.topics.map(&:id).sort).to eq([tagged_topic1.id, tagged_topic2.id, tagged_topic3.id].sort)
+        expect(TopicQuery.new(
+          moderator, tags: [tag.name, other_tag.name]
+        ).list_latest.topics).to contain_exactly(
+          tagged_topic1, tagged_topic2, tagged_topic3
+        )
 
-        # TODO: topics with ALL of the given tags:
-        # expect(TopicQuery.new(moderator, tags: [tag.name, other_tag.name]).list_latest.topics.map(&:id)).to eq([tagged_topic3.id].sort)
-        # expect(TopicQuery.new(moderator, tags: [tag.id, other_tag.id]).list_latest.topics.map(&:id)).to eq([tagged_topic3.id].sort)
+        expect(TopicQuery.new(moderator, tags: [tag.id, other_tag.id]).list_latest.topics)
+          .to contain_exactly(tagged_topic1, tagged_topic2, tagged_topic3)
       end
 
       it "can return topics with all specified tags" do
