@@ -28,6 +28,19 @@ describe User do
         end
       end
 
+      describe 'when record has an email that as already been taken' do
+        it 'should not be valid' do
+          user2 = Fabricate(:user)
+          user.email = user2.email.upcase
+
+          expect(user).to_not be_valid
+
+          expect(user.errors.messages[:primary_email]).to include(I18n.t(
+            'activerecord.errors.messages.taken'
+          ))
+        end
+      end
+
       describe 'when user is staged' do
         it 'should still validate presence of primary_email' do
           user.staged = true
