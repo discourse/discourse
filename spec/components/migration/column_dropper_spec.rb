@@ -1,7 +1,7 @@
 require 'rails_helper'
-require 'column_dropper'
+require_dependency 'migration/column_dropper'
 
-RSpec.describe ColumnDropper do
+RSpec.describe Migration::ColumnDropper do
 
   def has_column?(table, column)
     Topic.exec_sql("SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
@@ -25,7 +25,7 @@ RSpec.describe ColumnDropper do
 
     dropped_proc_called = false
 
-    ColumnDropper.drop(
+    Migration::ColumnDropper.drop(
       table: 'topics',
       after_migration: name,
       columns: ['junk'],
@@ -36,7 +36,7 @@ RSpec.describe ColumnDropper do
     expect(has_column?('topics', 'junk')).to eq(true)
     expect(dropped_proc_called).to eq(false)
 
-    ColumnDropper.drop(
+    Migration::ColumnDropper.drop(
       table: 'topics',
       after_migration: name,
       columns: ['junk'],
@@ -60,7 +60,7 @@ RSpec.describe ColumnDropper do
       VALUES (1, 'something@email.com');
       SQL
 
-      ColumnDropper.mark_readonly(table_name, 'email')
+      Migration::ColumnDropper.mark_readonly(table_name, 'email')
     end
 
     after do
@@ -78,7 +78,7 @@ RSpec.describe ColumnDropper do
         .getvalue(0, 0)
 
       dropped_proc_called = false
-      ColumnDropper.drop(
+      Migration::ColumnDropper.drop(
         table: table_name,
         after_migration: name,
         columns: ['email'],

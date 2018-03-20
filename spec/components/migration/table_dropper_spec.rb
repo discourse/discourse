@@ -1,7 +1,7 @@
 require 'rails_helper'
-require 'table_migration_helper'
+require_dependency 'migration/table_dropper'
 
-describe TableMigrationHelper do
+describe Migration::TableDropper do
 
   def table_exists?(table_name)
     sql = <<-SQL
