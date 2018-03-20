@@ -1,21 +1,26 @@
 export default Discourse.Route.extend({
-  queryParams: {
-    order: { refreshModel: true, replace: true },
-    asc: { refreshModel: true, replace: true },
-    filter: { refreshModel: true }
-  },
-
-  refreshQueryWithoutTransition: true,
-
   titleToken() {
     return I18n.t('groups.index.title');
   },
 
+  queryParams: {
+    order: { refreshModel: true, replace: true },
+    asc: { refreshModel: true, replace: true },
+    filter: { refreshModel: true },
+    type: { refreshModel: true, replace: true },
+  },
+
+  refreshQueryWithoutTransition: true,
+
   model(params) {
-    return this.store.findAll('group', params);
+    this._params = params;
+    return this.store.findAll("group", params);
   },
 
   setupController(controller, model) {
-    controller.set('model', model);
-  }
+    controller.setProperties({
+      model,
+      filterInput: this._params.filter
+    });
+  },
 });

@@ -5,8 +5,7 @@
   }
 }
 
-.group-filter-name {
-  display: inline-block;
+.groups-name-filter, .groups-type-filter {
   float: right;
 }
 
@@ -32,6 +31,10 @@
     td {
       color: blend-primary-secondary(50%);
       padding: 0.8em;
+    }
+
+    td.groups-info {
+      width: 50%;
     }
 
     td.group-user-status {
