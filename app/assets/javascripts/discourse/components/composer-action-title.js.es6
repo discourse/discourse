@@ -6,7 +6,7 @@ const TITLES = {
   [PRIVATE_MESSAGE]: 'topic.private_message',
   [CREATE_TOPIC]: 'topic.create_long',
   [CREATE_SHARED_DRAFT]: 'composer.create_shared_draft'
-}
+};
 
 export default Ember.Component.extend({
   classNames: ["composer-action-title"],
