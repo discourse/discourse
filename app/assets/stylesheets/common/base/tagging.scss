@@ -206,6 +206,9 @@ header .discourse-tag {color: $tag-color }
   a {
     text-decoration: underline;
   }
+  span.active a {
+    font-weight: bold;
+  }
 }
 
 .autocomplete {
