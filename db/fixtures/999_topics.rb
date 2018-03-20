@@ -64,7 +64,7 @@ end
 
 # run this later, cause we need to make sure new application controller resilience is in place first
 
-ColumnDropper.drop(
+Migration::ColumnDropper.drop(
   table: 'user_stats',
   after_migration: 'DropUnreadTrackingColumns',
   columns: %w{
@@ -76,7 +76,7 @@ ColumnDropper.drop(
   }
 )
 
-ColumnDropper.drop(
+Migration::ColumnDropper.drop(
   table: 'topics',
   after_migration: 'DropUnreadTrackingColumns',
   columns: %w{
@@ -92,7 +92,7 @@ ColumnDropper.drop(
   }
 )
 
-ColumnDropper.drop(
+Migration::ColumnDropper.drop(
   table: 'topics',
   after_migration: 'RemoveAutoCloseColumnsFromTopics',
   columns: %w{

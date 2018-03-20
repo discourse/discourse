@@ -1,8 +1,8 @@
 # Delayed migration steps
 
-require 'table_migration_helper'
+require 'migration/table_dropper'
 
-TableMigrationHelper.delayed_drop(
+Migration::TableDropper.delayed_drop(
   old_name: 'topic_status_updates',
   new_name: 'topic_timers',
   after_migration: 'RenameTopicStatusUpdatesToTopicTimers',
