@@ -13,9 +13,11 @@ export default Ember.Controller.extend({
   types(typeFilters) {
     const types = [];
 
-    typeFilters.forEach(type => {
-      types.push({ id: type, name: I18n.t(`groups.index.${type}_groups`) });
-    });
+    if (typeFilters) {
+      typeFilters.forEach(type => {
+        types.push({ id: type, name: I18n.t(`groups.index.${type}_groups`) });
+      });
+    }
 
     return types;
   },
