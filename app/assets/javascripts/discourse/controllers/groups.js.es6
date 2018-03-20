@@ -1,13 +1,24 @@
-import { observes } from 'ember-addons/ember-computed-decorators';
 import debounce from 'discourse/lib/debounce';
+import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend({
   application: Ember.inject.controller(),
-  queryParams: ["order", "asc", "filter"],
+  queryParams: ["order", "asc", "filter", "type"],
   order: null,
   asc: null,
   filter: "",
-  filterInput: "",
+  type: "",
+
+  @computed("model.extras.type_filters")
+  types(typeFilters) {
+    const types = [];
+
+    typeFilters.forEach(type => {
+      types.push({ id: type, name: I18n.t(`groups.index.${type}_groups`) });
+    });
+
+    return types;
+  },
 
   @observes("filterInput")
   _setFilter: debounce(function() {

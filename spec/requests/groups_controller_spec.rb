@@ -5,7 +5,7 @@ describe GroupsController do
   let(:group) { Fabricate(:group, users: [user]) }
 
   describe '#index' do
-    let!(:staff_group) do
+    let(:staff_group) do
       Fabricate(:group, name: '0000', visibility_level: Group.visibility_levels[:staff])
     end
 
@@ -69,6 +69,7 @@ describe GroupsController do
 
     it 'should return the right response' do
       group
+      staff_group
       get "/groups.json"
 
       expect(response).to be_success
@@ -81,15 +82,23 @@ describe GroupsController do
       expect(group_ids).to_not include(staff_group.id)
       expect(response_body["load_more_groups"]).to eq("/groups?page=1")
       expect(response_body["total_rows_groups"]).to eq(1)
+
+      expect(response_body["extras"]["type_filters"].map(&:to_sym)).to eq(
+        described_class::TYPE_FILTERS.keys - [:my, :owner, :automatic]
+      )
     end
 
     context 'viewing as an admin' do
-      it 'should display automatic groups' do
-        admin = Fabricate(:admin)
+      let(:admin) { Fabricate(:admin) }
+
+      before do
         sign_in(admin)
         group.add(admin)
         group.add_owner(admin)
+      end
 
+      it 'should return the right response' do
+        staff_group
         get "/groups.json"
 
         expect(response).to be_success
@@ -104,6 +113,65 @@ describe GroupsController do
         expect(group_ids).to include(group.id, staff_group.id)
         expect(response_body["load_more_groups"]).to eq("/groups?page=1")
         expect(response_body["total_rows_groups"]).to eq(10)
+
+        expect(response_body["extras"]["type_filters"].map(&:to_sym)).to eq(
+          described_class::TYPE_FILTERS.keys
+        )
+      end
+
+      context 'filterable by type' do
+        def expect_type_to_return_right_groups(type, expected_group_ids)
+          get "/groups.json", params: { type: type }
+
+          expect(response.status).to eq(200)
+
+          response_body = JSON.parse(response.body)
+          group_ids = response_body["groups"].map { |g| g["id"] }
+
+          expect(group_ids).to contain_exactly(*expected_group_ids)
+        end
+
+        describe 'my groups' do
+          it 'should return the right response' do
+            expect_type_to_return_right_groups('my', [group.id])
+          end
+        end
+
+        describe 'owner groups' do
+          it 'should return the right response' do
+            group2 = Fabricate(:group)
+            group3 = Fabricate(:group)
+            group2.add_owner(admin)
+
+            expect_type_to_return_right_groups('owner', [group.id, group2.id])
+          end
+        end
+
+        describe 'automatic groups' do
+          it 'should return the right response' do
+            expect_type_to_return_right_groups(
+              'automatic',
+              Group::AUTO_GROUP_IDS.keys - [0]
+            )
+          end
+        end
+
+        describe 'public groups' do
+          it 'should return the right response' do
+            group2 = Fabricate(:group, public_admission: true)
+
+            expect_type_to_return_right_groups('public', [group2.id])
+          end
+        end
+
+        describe 'close groups' do
+          it 'should return the right response' do
+            group2 = Fabricate(:group, public_admission: false)
+            group3 = Fabricate(:group, public_admission: true)
+
+            expect_type_to_return_right_groups('close', [group.id, group2.id])
+          end
+        end
       end
     end
   end

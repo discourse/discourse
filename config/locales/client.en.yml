@@ -435,7 +435,7 @@ en:
       filter_name: "filter by group name"
       message: "Message"
       automatic_group: Automatic Group
-      closed_group: Closed Group
+      close_group: Close Group
       is_group_user: "You are a member of this group"
       is_group_owner: "You are an owner of this group"
       allow_membership_requests: "Allow users to send membership requests to group owners"
@@ -454,6 +454,13 @@ en:
       index:
         title: "Groups"
         empty: "There are no visible groups."
+        all_groups: "All Groups"
+        owner_groups: "Groups I am an owner of"
+        close_groups: "Close Groups"
+        public_groups: "Public Groups"
+        automatic_groups: "Automatic Groups"
+        public_groups: "Public Groups"
+        my_groups: "My Groups"
       title:
         one: "Group"
         other: "Groups"

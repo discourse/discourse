@@ -3,7 +3,13 @@
 
   {{text-field value=filterInput
       placeholderKey="groups.filter_name"
-      class="group-filter-name no-blur"}}
+      class="groups-name-filter no-blur"}}
+
+  {{combo-box value=type
+              content=types
+              clearable=true
+              none="groups.index.all_groups"
+              class="groups-type-filter"}}
 
   {{#if model}}
     {{#conditional-loading-spinner condition=model.loading}}
@@ -56,7 +62,7 @@
                         showLogin='showLogin'}}
 
                       {{d-button icon="ban"
-                          label=(if group.automatic 'groups.automatic_group' 'groups.closed_group')
+                          label=(if group.automatic 'groups.automatic_group' 'groups.close_group')
                           disabled=true}}
                     {{/group-membership-button}}
                   </td>

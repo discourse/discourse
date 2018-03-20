@@ -13,6 +13,29 @@ class GroupsController < ApplicationController
   skip_before_action :preload_json, :check_xhr, only: [:posts_feed, :mentions_feed]
   skip_before_action :check_xhr, only: [:show]
 
+  TYPE_FILTERS = {
+    my: Proc.new { |groups, current_user|
+      raise Discourse::NotFound unless current_user
+      Group.member_of(groups, current_user)
+    },
+    owner: Proc.new { |groups, current_user|
+      raise Discourse::NotFound unless current_user
+      Group.owner_of(groups, current_user)
+    },
+    public: Proc.new { |groups|
+      groups.where(public_admission: true, automatic: false)
+    },
+    close: Proc.new { |groups|
+      groups.where(
+        public_admission: false,
+        automatic: false
+      )
+    },
+    automatic: Proc.new { |groups|
+      groups.where(automatic: true)
+    }
+  }
+
   def index
     unless SiteSetting.enable_group_directory?
       raise Discourse::InvalidAccess.new(:enable_group_directory)
@@ -28,9 +51,12 @@ class GroupsController < ApplicationController
       groups = Group.search_groups(filter, groups: groups)
     end
 
+    type_filters = TYPE_FILTERS.keys
+
     unless guardian.is_staff?
       # hide automatic groups from all non stuff to de-clutter page
       groups = groups.where(automatic: false)
+      type_filters.delete(:automatic)
     end
 
     count = groups.count
@@ -38,6 +64,10 @@ class GroupsController < ApplicationController
 
     if Group.preloaded_custom_field_names.present?
       Group.preload_custom_fields(groups, Group.preloaded_custom_field_names)
+    end
+
+    if type = params[:type]&.to_sym
+      groups = TYPE_FILTERS[type].call(groups, current_user)
     end
 
     if current_user
@@ -52,8 +82,11 @@ class GroupsController < ApplicationController
         user_group_ids: user_group_ids || [],
         owner_group_ids: owner_group_ids || []
       ),
+      extras: {
+        type_filters: current_user ? type_filters : type_filters - [:my, :owner]
+      },
       total_rows_groups: count,
-      load_more_groups: groups_path(page: page + 1)
+      load_more_groups: groups_path(page: page + 1, type: type),
     )
   end
 

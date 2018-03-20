@@ -561,6 +561,16 @@ class Group < ActiveRecord::Base
     STAFF_GROUPS.include?(self.name.to_sym)
   end
 
+  def self.member_of(groups, user)
+    groups.joins(
+      "LEFT JOIN group_users gu ON gu.group_id = groups.id
+    ").where("gu.user_id = ?", user.id)
+  end
+
+  def self.owner_of(groups, user)
+    self.member_of(groups, user).where("gu.owner")
+  end
+
   protected
 
     def name_format_validator
