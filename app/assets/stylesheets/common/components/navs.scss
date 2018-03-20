@@ -17,7 +17,7 @@
 // Pill nav
 // --------------------------------------------------
 
-.nav-pills {
+@mixin navPill {
   @extend %nav;
   @extend .clearfix;
 
@@ -54,6 +54,11 @@
       }
     }
   }
+}
+
+.nav-pills {
+  @include navPill;
+  > span { @include navPill; }
 }
 
 // Stacked nav
