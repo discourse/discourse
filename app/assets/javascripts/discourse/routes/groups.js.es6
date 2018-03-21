@@ -8,6 +8,7 @@ export default Discourse.Route.extend({
     asc: { refreshModel: true, replace: true },
     filter: { refreshModel: true },
     type: { refreshModel: true, replace: true },
+    username: { refreshModel: true },
   },
 
   refreshQueryWithoutTransition: true,

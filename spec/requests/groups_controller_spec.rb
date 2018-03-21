@@ -3,6 +3,7 @@ require 'rails_helper'
 describe GroupsController do
   let(:user) { Fabricate(:user) }
   let(:group) { Fabricate(:group, users: [user]) }
+  let(:moderator_group_id) { Group::AUTO_GROUPS[:moderators] }
 
   describe '#index' do
     let(:staff_group) do
@@ -45,7 +46,7 @@ describe GroupsController do
 
             expect(response.status).to eq(200)
 
-            group_ids = [group.id, other_group.id]
+            group_ids = [moderator_group_id, group.id, other_group.id]
             group_ids.reverse! if !is_asc
 
             expect(JSON.parse(response.body)["groups"].map { |group| group["id"] })
@@ -62,7 +63,7 @@ describe GroupsController do
           expect(response.status).to eq(200)
 
           expect(JSON.parse(response.body)["groups"].map { |group| group["id"] })
-            .to eq([other_group.id, group.id])
+            .to eq([other_group.id, group.id, moderator_group_id])
         end
       end
     end
@@ -72,7 +73,7 @@ describe GroupsController do
       staff_group
       get "/groups.json"
 
-      expect(response).to be_success
+      expect(response.status).to eq(200)
 
       response_body = JSON.parse(response.body)
 
@@ -81,11 +82,38 @@ describe GroupsController do
       expect(group_ids).to include(group.id)
       expect(group_ids).to_not include(staff_group.id)
       expect(response_body["load_more_groups"]).to eq("/groups?page=1")
-      expect(response_body["total_rows_groups"]).to eq(1)
+      expect(response_body["total_rows_groups"]).to eq(2)
 
       expect(response_body["extras"]["type_filters"].map(&:to_sym)).to eq(
         described_class::TYPE_FILTERS.keys - [:my, :owner, :automatic]
       )
+    end
+
+    context 'viewing groups of another user' do
+      describe 'when an invalid username is given' do
+        it 'should return the right response' do
+          group
+          get "/groups.json", params: { username: 'asdasd' }
+
+          expect(response.status).to eq(404)
+        end
+      end
+
+      it 'should return the right response' do
+        user2 = Fabricate(:user)
+        group
+        sign_in(user2)
+
+        get "/groups.json", params: { username: user.username }
+
+        expect(response.status).to eq(200)
+
+        response_body = JSON.parse(response.body)
+
+        group_ids = response_body["groups"].map { |g| g["id"] }
+
+        expect(group_ids).to contain_exactly(group.id)
+      end
     end
 
     context 'viewing as an admin' do

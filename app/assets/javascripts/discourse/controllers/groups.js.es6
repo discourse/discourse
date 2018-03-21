@@ -7,7 +7,7 @@ export default Ember.Controller.extend({
   order: null,
   asc: null,
   filter: "",
-  type: "",
+  type: null,
 
   @computed("model.extras.type_filters")
   types(typeFilters) {
