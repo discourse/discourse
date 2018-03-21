@@ -14,7 +14,10 @@ export default DropdownButton.extend({
       {
         id: 'removeMember',
         title: I18n.t('groups.members.remove_member'),
-        description: I18n.t('groups.members.remove_member_description'),
+        description: I18n.t(
+          'groups.members.remove_member_description',
+          { username: this.get('member.username') }
+        ),
         icon: 'user-times'
       }
     ];
