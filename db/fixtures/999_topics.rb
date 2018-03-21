@@ -78,7 +78,7 @@ ColumnDropper.drop(
 
 ColumnDropper.drop(
   table: 'topics',
-  after_migration: 'DropUnreadTrackingColumns',
+  after_migration: 'DropActionCountColumnsFromTopics',
   columns: %w{
     inappropriate_count
     bookmark_count
@@ -86,24 +86,16 @@ ColumnDropper.drop(
     illegal_count
     notify_user_count
     last_unread_at
-  },
-  on_drop: ->() {
-    STDERR.puts "Removing superflous topic columns!"
-  }
-)
-
-ColumnDropper.drop(
-  table: 'topics',
-  after_migration: 'RemoveAutoCloseColumnsFromTopics',
-  columns: %w{
     auto_close_at
     auto_close_user_id
     auto_close_started_at
     auto_close_based_on_last_post
     auto_close_hours
+    vote_count
+    notify_moderators_count
+    spam_count
   },
   on_drop: ->() {
     STDERR.puts "Removing superflous topic columns!"
-  },
-  delay: 3600
+  }
 )
