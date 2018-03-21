@@ -362,7 +362,6 @@ RSpec.describe TopicsController do
 
       it 'requires an email parameter' do
         post "/t/#{topic.id}/invite.json"
-
         expect(response.status).to eq(400)
       end
 
@@ -472,14 +471,14 @@ RSpec.describe TopicsController do
       let(:moderator) { Fabricate(:moderator) }
 
       it "fails for anonymous users" do
-        put "/t/#{topic.id}/publish.json", params: { category_id: category.id }
-        expect(response).not_to be_success
+        put "/t/#{topic.id}/publish.json", params: { destination_category_id: category.id }
+        expect(response.status).to eq(403)
       end
 
       it "fails as a regular user" do
         sign_in(Fabricate(:user))
-        put "/t/#{topic.id}/publish.json", params: { category_id: category.id }
-        expect(response).not_to be_success
+        put "/t/#{topic.id}/publish.json", params: { destination_category_id: category.id }
+        expect(response.status).to eq(403)
       end
 
       context "as staff" do
@@ -489,7 +488,7 @@ RSpec.describe TopicsController do
 
         it "will publish the topic" do
           put "/t/#{topic.id}/publish.json", params: { destination_category_id: category.id }
-          expect(response).to be_success
+          expect(response.status).to eq(200)
           json = ::JSON.parse(response.body)['basic_topic']
 
           result = Topic.find(json['id'])
