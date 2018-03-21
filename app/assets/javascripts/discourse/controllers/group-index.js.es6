@@ -27,6 +27,11 @@ export default Ember.Controller.extend({
     return members && members.length > 0;
   },
 
+  @computed
+  canManageGroup() {
+    return this.currentUser && this.currentUser.canManageGroup(this.get('model'));
+  },
+
   actions: {
     toggleActions() {
       this.toggleProperty("showActions");

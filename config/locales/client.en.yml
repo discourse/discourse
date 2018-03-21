@@ -464,7 +464,10 @@ en:
         one: "Group"
         other: "Groups"
       activity: "Activity"
-      members: "Members"
+      members:
+        title: "Members"
+        remove_member: "Remove member"
+        remove_member_description: "Remove a member from this group"
       topics: "Topics"
       posts: "Posts"
       mentions: "Mentions"
@@ -1368,7 +1371,7 @@ en:
           desc: Whispers are only visible to staff members
         create_topic:
           label: "New Topic"
-        shared_draft: 
+        shared_draft:
           label: "Shared Draft"
           desc: "Draft a topic that will only be visible to staff"
 

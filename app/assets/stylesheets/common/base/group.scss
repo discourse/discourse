@@ -124,6 +124,10 @@ table.group-members {
     text-align: left;
   }
 
+  th:last-child {
+    width: 5%;
+  }
+
   th.group-members-actions {
     width: 5%;
   }

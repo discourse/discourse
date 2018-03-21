@@ -19,7 +19,8 @@ export default Ember.Controller.extend({
     const membersTab = Tab.create({
       name: 'members',
       route: 'group.index',
-      icon: 'users'
+      icon: 'users',
+      i18nKey: "members.title"
     });
 
     membersTab.set('count', userCount);
