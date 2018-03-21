@@ -9,11 +9,11 @@
     {{component noneRowComponent
       computedContent=noneRowComputedContent
       templateForRow=templateForNoneRow
-      highlightedValue=highlightedValue
-      clearSelection=clearSelection
-      highlight=highlight
+      highlighted=highlighted
+      onMouseoverRow=onMouseoverRow
       computedValue=computedValue
       options=rowComponentOptions
+      onClickRow=onClickRow
     }}
   {{/if}}
 {{/if}}
@@ -21,11 +21,11 @@
 {{#if createRowComputedContent}}
   {{component createRowComponent
     computedContent=createRowComputedContent
-    highlightedValue=highlightedValue
+    highlighted=highlighted
     computedValue=computedValue
     templateForRow=templateForCreateRow
-    highlight=highlight
-    select=create
+    onMouseoverRow=onMouseoverRow
+    onClickRow=onClickRow
     options=rowComponentOptions
   }}
 {{/if}}
@@ -43,11 +43,11 @@
     {{#each collectionComputedContent as |computedContent|}}
       {{component rowComponent
         computedContent=computedContent
-        highlightedValue=highlightedValue
+        highlighted=highlighted
         computedValue=computedValue
         templateForRow=templateForRow
-        select=select
-        highlight=highlight
+        onClickRow=onClickRow
+        onMouseoverRow=onMouseoverRow
         options=rowComponentOptions
       }}
     {{/each}}

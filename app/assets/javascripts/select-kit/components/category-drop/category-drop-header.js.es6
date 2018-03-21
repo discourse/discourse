@@ -6,8 +6,8 @@ export default ComboBoxSelectBoxHeaderComponent.extend({
   layoutName: "select-kit/templates/components/category-drop/category-drop-header",
   classNames: "category-drop-header",
 
-  classNameBindings: ['categoryStyleClass'],
-  categoryStyleClass: Ember.computed.alias('site.category_style'),
+  classNameBindings: ["categoryStyleClass"],
+  categoryStyleClass: Ember.computed.alias("site.category_style"),
 
   @computed("computedContent.value", "computedContent.name")
   category(value, name) {

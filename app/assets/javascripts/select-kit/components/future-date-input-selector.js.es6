@@ -120,19 +120,19 @@ export default ComboBoxComponent.extend(DatetimeMixin, {
   headerComponent: "future-date-input-selector/future-date-input-selector-header",
 
   computeHeaderContent() {
-    let content = this.baseHeaderComputedContent();
+    let content = this._super();
     content.datetime = this._computeDatetimeForValue(this.get("computedValue"));
-    content.name = this.get("selectedComputedContent.name") || content.name;
+    content.name = this.get("selection.name") || content.name;
     content.hasSelection = this.get("hasSelection");
     content.icons = this._computeIconsForValue(this.get("computedValue"));
     return content;
   },
 
   computeContentItem(contentItem, name) {
-    let item = this.baseComputedContentItem(contentItem, name);
-    item.datetime = this._computeDatetimeForValue(contentItem.id);
-    item.icons = this._computeIconsForValue(contentItem.id);
-    return item;
+    let computedContentItem = this._super(contentItem, name);
+    computedContentItem.datetime = this._computeDatetimeForValue(contentItem.id);
+    computedContentItem.icons = this._computeIconsForValue(contentItem.id);
+    return computedContentItem;
   },
 
   computeContent() {

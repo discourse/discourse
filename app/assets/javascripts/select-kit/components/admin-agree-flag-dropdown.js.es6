@@ -10,7 +10,7 @@ export default DropdownSelectBox.extend({
   headerIcon: "thumbs-o-up",
 
   computeHeaderContent() {
-    let content = this.baseHeaderComputedContent();
+    let content = this._super();
     content.name = `${I18n.t("admin.flags.agree")}...`;
     return content;
   },

@@ -28,20 +28,6 @@ export default Ember.Component.extend({
     return null;
   },
 
-  didInsertElement() {
-    this._super();
-
-    $(this.element).on("backspace.selected-name", () => {
-      this._handleBackspace();
-    });
-  },
-
-  willDestroyElement() {
-    this._super();
-
-    $(this.element).off("backspace.selected-name");
-  },
-
   label: Ember.computed.or("computedContent.label", "title", "name"),
 
   name: Ember.computed.alias("computedContent.name"),
@@ -52,19 +38,14 @@ export default Ember.Component.extend({
     return this.getWithDefault("computedContent.locked", false);
   }),
 
-  click() {
-    if (this.get("isLocked") === true) return false;
-    this.sendAction("deselect", [this.get("computedContent")]);
-    return false;
+  @computed("computedContent", "highlightedSelection.[]")
+  isHighlighted(computedContent, highlightedSelection) {
+    return highlightedSelection.includes(this.get("computedContent"));
   },
 
-  _handleBackspace() {
-    if (this.get("isLocked") === true) return false;
-
-    if (this.get("isHighlighted")) {
-      this.sendAction("deselect", [this.get("computedContent")]);
-    } else {
-      this.set("isHighlighted", true);
-    }
+  click() {
+    if (this.get("isLocked")) return false;
+    this.sendAction("onClickSelectionItem", [this.get("computedContent")]);
+    return false;
   }
 });

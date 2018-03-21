@@ -34,12 +34,12 @@ export default SelectKitHeaderComponent.extend({
     $filter.width(availableSpace - parentRightPadding * 4);
   },
 
-  @computed("computedContent.selectedComputedContents.[]")
+  @computed("computedContent.selection.[]")
   names(selection) {
     return Ember.makeArray(selection).map(s => s.name).join(",");
   },
 
-  @computed("computedContent.selectedComputedContents.[]")
+  @computed("computedContent.selection.[]")
   values(selection) {
     return Ember.makeArray(selection).map(s => s.value).join(",");
   }

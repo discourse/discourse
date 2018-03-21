@@ -45,7 +45,7 @@ export default DropdownSelectBoxComponent.extend({
   },
 
   computeHeaderContent() {
-    let content = this.baseHeaderComputedContent();
+    let content = this._super();
 
     switch (this.get("action")) {
       case PRIVATE_MESSAGE:
