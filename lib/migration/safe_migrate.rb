@@ -84,26 +84,26 @@ class Migration::SafeMigrate
   end
 
   def self.protect!(sql)
-    if sql =~ /^\s*drop\s+table/i
+    if sql =~ /^\s*(?:drop\s+table|alter\s+table.*rename\s+to)\s+/i
       $stdout.puts("", <<~STR)
         WARNING
         -------------------------------------------------------------------------------------
-        An attempt was made to drop a table in a migration
+        An attempt was made to drop or rename a table in a migration
         SQL used was: '#{sql}'
-        Please use the deferred pattrn using Migration::TableDropper in db/seeds to drop
-        the table.
+        Please use the deferred pattern using Migration::TableDropper in db/seeds to drop
+        or rename the table.
 
         This protection is in place to protect us against dropping tables that are currently
         in use by live applications.
       STR
       raise Discourse::InvalidMigration, "Attempt was made to drop a table"
-    elsif sql =~ /^\s*alter\s+table.*(rename|drop)/i
+    elsif sql =~ /^\s*alter\s+table.*(?:rename|drop)\s+/i
       $stdout.puts("", <<~STR)
         WARNING
         -------------------------------------------------------------------------------------
         An attempt was made to drop or rename a column in a migration
         SQL used was: '#{sql}'
-        Please use the deferred pattrn using Migration::ColumnDropper in db/seeds to drop
+        Please use the deferred pattern using Migration::ColumnDropper in db/seeds to drop
         or rename columns.
 
         Note, to minimize disruption use self.ignored_columns = ["column name"] on your

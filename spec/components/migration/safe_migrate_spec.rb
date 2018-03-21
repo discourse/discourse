@@ -37,6 +37,22 @@ describe Migration::SafeMigrate do
     expect(User.first).not_to eq(nil)
   end
 
+  it "bans all table renames" do
+    Migration::SafeMigrate.enable!
+
+    path = File.expand_path "#{Rails.root}/spec/fixtures/migrate/rename_table"
+
+    output = capture_stdout do
+      expect(lambda do
+        ActiveRecord::Migrator.up([path])
+      end).to raise_error(StandardError)
+    end
+
+    expect(output).to include("TableDropper")
+
+    expect(User.first).not_to eq(nil)
+  end
+
   it "bans all column removal" do
     Migration::SafeMigrate.enable!
 
