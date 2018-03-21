@@ -467,7 +467,7 @@ en:
       members:
         title: "Members"
         remove_member: "Remove member"
-        remove_member_description: "Remove a member from this group"
+        remove_member_description: "Remove <b>%{username}</b> from this group"
       topics: "Topics"
       posts: "Posts"
       mentions: "Mentions"
