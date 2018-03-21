@@ -34,6 +34,7 @@ describe Migration::SafeMigrate do
 
     expect(output).to include("TableDropper")
 
+    expect { User.first }.not_to raise_error
     expect(User.first).not_to eq(nil)
   end
 
@@ -50,6 +51,7 @@ describe Migration::SafeMigrate do
 
     expect(output).to include("TableDropper")
 
+    expect { User.first }.not_to raise_error
     expect(User.first).not_to eq(nil)
   end
 
@@ -67,6 +69,7 @@ describe Migration::SafeMigrate do
     expect(output).to include("ColumnDropper")
 
     expect(User.first).not_to eq(nil)
+    expect { User.first.username }.not_to raise_error
   end
 
   it "bans all column renames" do
@@ -83,6 +86,7 @@ describe Migration::SafeMigrate do
     expect(output).to include("ColumnDropper")
 
     expect(User.first).not_to eq(nil)
+    expect { User.first.username }.not_to raise_error
   end
 
   it "supports being disabled" do
