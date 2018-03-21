@@ -142,6 +142,7 @@ const Report = Discourse.Model.extend({
 
   @computed('data')
   xaxisIsDate() {
+    if (!this.data[0]) return false;
     return this.data && moment(this.data[0].x, 'YYYY-MM-DD').isValid();
   }
 

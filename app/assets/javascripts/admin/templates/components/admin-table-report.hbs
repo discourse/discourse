@@ -1,15 +1,17 @@
-<table class='table report'>
-  <tr>
-    <th>{{model.xaxis}}</th>
-    <th>{{model.yaxis}}</th>
-  </tr>
-
-  {{#each model.sortedData as |row|}}
+{{#if model.sortedData}}
+  <table class='table report'>
     <tr>
-      <td>{{row.x}}</td>
-      <td>
-        {{row.y}}
-      </td>
+      <th>{{model.xaxis}}</th>
+      <th>{{model.yaxis}}</th>
     </tr>
-  {{/each}}
-</table>
+
+    {{#each model.sortedData as |row|}}
+      <tr>
+        <td>{{row.x}}</td>
+        <td>
+          {{row.y}}
+        </td>
+      </tr>
+    {{/each}}
+  </table>
+{{/if}}
