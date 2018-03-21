@@ -450,7 +450,7 @@ class TopicsController < ApplicationController
     guardian.ensure_can_recover_topic!(topic)
 
     first_post = topic.posts.with_deleted.order(:post_number).first
-    PostDestroyer.new(current_user, first_post).recover
+    PostDestroyer.new(current_user, first_post, context: params[:context]).recover
 
     render body: nil
   end
