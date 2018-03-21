@@ -3298,6 +3298,7 @@ en:
             revoke_badge: "revoke badge"
             check_email: "check email"
             delete_topic: "delete topic"
+            recover_topic: "un-delete topic"
             delete_post: "delete post"
             impersonate: "impersonate"
             anonymize_user: "anonymize user"

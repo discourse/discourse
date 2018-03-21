@@ -355,7 +355,7 @@ const Topic = RestModel.extend({
       'details.can_delete': false,
       'details.can_recover': true
     });
-    return ajax("/t/" + this.get('id'), {
+    return ajax(`/t/${this.get('id')}`, {
       data: { context: window.location.pathname },
       type: 'DELETE'
     });
@@ -369,7 +369,10 @@ const Topic = RestModel.extend({
       'details.can_delete': true,
       'details.can_recover': false
     });
-    return ajax("/t/" + this.get('id') + "/recover", { type: 'PUT' });
+    return ajax(`/t/${this.get('id')}/recover`, {
+      data: { context: window.location.pathname },
+      type: 'PUT'
+    });
   },
 
   // Update our attributes from a JSON result

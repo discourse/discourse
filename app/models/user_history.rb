@@ -70,7 +70,8 @@ class UserHistory < ActiveRecord::Base
       check_personal_message: 51,
       disabled_second_factor: 52,
       post_edit: 53,
-      topic_published: 54
+      topic_published: 54,
+      recover_topic: 55
     )
   end
 
@@ -119,7 +120,8 @@ class UserHistory < ActiveRecord::Base
       :check_personal_message,
       :disabled_second_factor,
       :post_edit,
-      :topic_published
+      :topic_published,
+      :recover_topic
     ]
   end
 
