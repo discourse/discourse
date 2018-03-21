@@ -169,14 +169,20 @@
               {{/if}}
             </dd>
           {{/if}}
+
           {{#if model.displayGroups}}
             <dt class="groups">{{i18n 'groups.title' count=model.displayGroups.length}}</dt>
             <dd class='groups'>
               {{#each model.displayGroups as |group|}}
                 <span>{{#link-to 'group' group.name class="group-link"}}{{group.name}}{{/link-to}}</span>
               {{/each}}
+
+              {{#link-to "groups" (query-params username=model.username)}}
+                ...
+              {{/link-to}}
             </dd>
           {{/if}}
+
           {{#if canDeleteUser}}
             {{d-button action="adminDelete" icon="exclamation-triangle" label="user.admin_delete" class="btn-danger"}}
           {{/if}}

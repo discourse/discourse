@@ -342,13 +342,26 @@ const User = RestModel.extend({
            ua.action_type === UserAction.TYPES.topics;
   },
 
+  numGroupsToDisplay: 2,
+
   @computed("groups.[]")
-  displayGroups() {
+  filteredGroups() {
     const groups = this.get('groups') || [];
-    const filtered = groups.filter(group => {
+
+    return groups.filter(group => {
       return !group.automatic || group.name === "moderators";
     });
-    return filtered.length === 0 ? null : filtered;
+  },
+
+  @computed("filteredGroups", "numGroupsToDisplay")
+  displayGroups(filteredGroups, numGroupsToDisplay) {
+    const groups = filteredGroups.slice(0, numGroupsToDisplay);
+    return groups.length === 0 ? null : groups;
+  },
+
+  @computed("filteredGroups", "numGroupsToDisplay")
+  showMoreGroupsLink(filteredGroups, numGroupsToDisplay) {
+    return filteredGroups.length > numGroupsToDisplay;
   },
 
   // The user's stat count, excluding PMs.

@@ -8,6 +8,11 @@
 .groups-filter {
   display: inline-block;
   float: right;
+
+  .groups-name-filter {
+    position: relative;
+    top: 1px;
+  }
 }
 
 .groups-table {

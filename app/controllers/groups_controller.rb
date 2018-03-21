@@ -14,13 +14,13 @@ class GroupsController < ApplicationController
   skip_before_action :check_xhr, only: [:show]
 
   TYPE_FILTERS = {
-    my: Proc.new { |groups, current_user|
-      raise Discourse::NotFound unless current_user
-      Group.member_of(groups, current_user)
+    my: Proc.new { |groups, user|
+      raise Discourse::NotFound unless user
+      Group.member_of(groups, user)
     },
-    owner: Proc.new { |groups, current_user|
-      raise Discourse::NotFound unless current_user
-      Group.owner_of(groups, current_user)
+    owner: Proc.new { |groups, user|
+      raise Discourse::NotFound unless user
+      Group.owner_of(groups, user)
     },
     public: Proc.new { |groups|
       groups.where(public_admission: true, automatic: false)
@@ -53,9 +53,14 @@ class GroupsController < ApplicationController
 
     type_filters = TYPE_FILTERS.keys
 
+    if username = params[:username]
+      groups = TYPE_FILTERS[:my].call(groups, User.find_by_username(username))
+      type_filters = type_filters - [:my, :owner]
+    end
+
     unless guardian.is_staff?
       # hide automatic groups from all non stuff to de-clutter page
-      groups = groups.where(automatic: false)
+      groups = groups.where("automatic IS FALSE OR groups.id = #{Group::AUTO_GROUPS[:moderators]}")
       type_filters.delete(:automatic)
     end
 
@@ -71,6 +76,8 @@ class GroupsController < ApplicationController
       group_users = GroupUser.where(group: groups, user: current_user)
       user_group_ids = group_users.pluck(:group_id)
       owner_group_ids = group_users.where(owner: true).pluck(:group_id)
+    else
+      type_filters = type_filters - [:my, :owner]
     end
 
     count = groups.count
@@ -83,7 +90,7 @@ class GroupsController < ApplicationController
         owner_group_ids: owner_group_ids || []
       ),
       extras: {
-        type_filters: current_user ? type_filters : type_filters - [:my, :owner]
+        type_filters: type_filters
       },
       total_rows_groups: count,
       load_more_groups: groups_path(page: page + 1, type: type),
