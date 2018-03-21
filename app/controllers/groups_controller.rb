@@ -59,9 +59,6 @@ class GroupsController < ApplicationController
       type_filters.delete(:automatic)
     end
 
-    count = groups.count
-    groups = groups.offset(page * page_size).limit(page_size)
-
     if Group.preloaded_custom_field_names.present?
       Group.preload_custom_fields(groups, Group.preloaded_custom_field_names)
     end
@@ -75,6 +72,9 @@ class GroupsController < ApplicationController
       user_group_ids = group_users.pluck(:group_id)
       owner_group_ids = group_users.where(owner: true).pluck(:group_id)
     end
+
+    count = groups.count
+    groups = groups.offset(page * page_size).limit(page_size)
 
     render_json_dump(
       groups: serialize_data(groups,

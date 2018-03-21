@@ -128,6 +128,7 @@ describe GroupsController do
           response_body = JSON.parse(response.body)
           group_ids = response_body["groups"].map { |g| g["id"] }
 
+          expect(response_body["total_rows_groups"]).to eq(expected_group_ids.count)
           expect(group_ids).to contain_exactly(*expected_group_ids)
         end
 
