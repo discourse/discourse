@@ -2,7 +2,7 @@
 
 require 'migration/table_dropper'
 
-Migration::TableDropper.delayed_drop(
+Migration::TableDropper.delayed_rename(
   old_name: 'topic_status_updates',
   new_name: 'topic_timers',
   after_migration: 'RenameTopicStatusUpdatesToTopicTimers',
