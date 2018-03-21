@@ -1,15 +1,17 @@
 {{#d-section pageClass="groups"}}
   <h1>{{i18n "groups.index.title"}}</h1>
 
-  {{text-field value=filterInput
-      placeholderKey="groups.filter_name"
-      class="groups-name-filter no-blur"}}
+  <div class="groups-filter">
+    {{combo-box value=type
+                content=types
+                clearable=true
+                none="groups.index.all_groups"
+                class="groups-type-filter"}}
 
-  {{combo-box value=type
-              content=types
-              clearable=true
-              none="groups.index.all_groups"
-              class="groups-type-filter"}}
+    {{text-field value=filterInput
+        placeholderKey="groups.filter_name"
+        class="groups-name-filter no-blur"}}
+  </div>
 
   {{#if model}}
     {{#conditional-loading-spinner condition=model.loading}}
