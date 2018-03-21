@@ -1,7 +1,6 @@
 class DropUnusedTables < ActiveRecord::Migration[5.1]
   def up
-    drop_table :category_featured_users
-    drop_table :versions
+    # Delayed drop of tables "category_featured_users" and "versions"
   end
 
   def down
