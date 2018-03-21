@@ -69,10 +69,6 @@ QUnit.test("Anonymous Viewing Group", assert => {
   visit("/groups/discourse");
 
   andThen(() => {
-    assert.ok(count('.avatar-flair .fa-adjust') === 1, "it displays the group's avatar flair");
-    assert.ok(count('.group-members tr') > 0, "it lists group members");
-    assert.ok(count('.group-message-button') === 0, 'it does not show group message button');
-
     assert.equal(
       count(".nav-pills li a[title='Messages']"),
       0,
