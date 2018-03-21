@@ -2,7 +2,13 @@ require_dependency 'migration/base_dropper'
 
 module Migration
   class Migration::TableDropper < BaseDropper
-    def self.delayed_drop(old_name:, new_name:, after_migration:, delay: nil, on_drop: nil)
+    def self.delayed_drop(table_name:, after_migration:, delay: nil, on_drop: nil)
+      validate_table_name(table_name)
+
+      TableDropper.new(table_name, nil, after_migration, delay, on_drop).delayed_drop
+    end
+
+    def self.delayed_rename(old_name:, new_name:, after_migration:, delay: nil, on_drop: nil)
       validate_table_name(old_name)
       validate_table_name(new_name)
 
@@ -38,9 +44,10 @@ module Migration
         LIMIT 1
       SQL
 
+      builder.where(new_table_exists) if @new_name.present?
+
       builder.where("table_schema = 'public'")
         .where(previous_migration_done)
-        .where(new_table_exists)
         .exec(old_name: @old_name,
               new_name: @new_name,
               delay: "#{@delay} seconds",
