@@ -27,7 +27,11 @@ class Report
      category_id: category_id,
      group_id: group_id,
      prev30Days: self.prev30Days
-    }
+    }.tap do |json|
+      if type == 'page_view_crawler_reqs'
+        json[:related_report] = Report.find('web_crawlers', start_date: start_date, end_date: end_date)&.as_json
+      end
+    end
   end
 
   def Report.add_report(name, &block)
@@ -224,5 +228,13 @@ class Report
 
   def self.report_notify_user_private_messages(report)
     private_messages_report report, TopicSubtype.notify_user
+  end
+
+  def self.report_web_crawlers(report)
+    report.data = WebCrawlerRequest.where('date >= ? and date <= ?', report.start_date, report.end_date)
+      .limit(200)
+      .order('sum_count DESC')
+      .group(:user_agent).sum(:count)
+      .map { |ua, count| { x: ua, y: count } }
   end
 end

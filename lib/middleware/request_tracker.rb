@@ -83,6 +83,7 @@ class Middleware::RequestTracker
     if track_view
       if data[:is_crawler]
         ApplicationRequest.increment!(:page_view_crawler)
+        WebCrawlerRequest.increment!(data[:user_agent])
       elsif data[:has_auth_cookie]
         ApplicationRequest.increment!(:page_view_logged_in)
         ApplicationRequest.increment!(:page_view_logged_in_mobile) if data[:is_mobile]
@@ -129,8 +130,9 @@ class Middleware::RequestTracker
       is_mobile: helper.is_mobile?,
       track_view: track_view,
       timing: timing
-    }
-
+    }.tap do |h|
+      h[:user_agent] = env['HTTP_USER_AGENT'] if h[:is_crawler]
+    end
   end
 
   def log_request_info(env, result, info)

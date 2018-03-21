@@ -961,6 +961,10 @@ en:
       title: "User Visits"
       xaxis: "Day"
       yaxis: "Number of visits"
+    web_crawlers:
+      title: "Web Crawler Requests"
+      xaxis: "User Agent"
+      yaxis: "Pageviews"
 
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
