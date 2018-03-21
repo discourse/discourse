@@ -1,9 +1,6 @@
 class WebCrawlerRequest < ActiveRecord::Base
   include CachedCounting
 
-  # auto flush if backlog is larger than this
-  self.autoflush = 3 # HACK 2000
-
   # auto flush if older than this
   self.autoflush_seconds = 1.hour
 
