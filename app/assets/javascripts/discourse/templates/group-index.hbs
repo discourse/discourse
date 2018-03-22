@@ -1,3 +1,7 @@
+{{text-field value=filterInput
+    placeholderKey=filterPlaceholder
+    class="group-username-filter no-blur"}}
+
 {{#if hasMembers}}
   {{#load-more selector=".group-members tr" action="loadMore"}}
     <table class='group-members'>

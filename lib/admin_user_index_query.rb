@@ -101,18 +101,6 @@ class AdminUserIndexQuery
     end
   end
 
-  def filter_by_user_with_bypass(filter)
-    if filter =~ /.+@.+/
-      # probably an email so try the bypass
-      user_id = UserEmail.where("lower(email) = ?", filter.downcase).pluck(:user_id).first
-      if user_id
-        return @query.where('users.id = ?', user_id)
-      end
-    end
-
-    @query.where('username_lower ILIKE :filter OR user_emails.email ILIKE :filter', filter: "%#{params[:filter]}%")
-  end
-
   def filter_by_search
     if params[:email].present?
       return @query.where('user_emails.email = ?', params[:email].downcase)
@@ -124,7 +112,7 @@ class AdminUserIndexQuery
       if ip = IPAddr.new(filter) rescue nil
         @query.where('ip_address <<= :ip OR registration_ip_address <<= :ip', ip: ip.to_cidr_s)
       else
-        filter_by_user_with_bypass(filter)
+        @query.filter_by_username_or_email(filter)
       end
     end
   end

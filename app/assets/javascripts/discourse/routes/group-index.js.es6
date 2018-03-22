@@ -3,13 +3,19 @@ export default Discourse.Route.extend({
     return I18n.t('groups.members.title');
   },
 
-  model() {
+  model(params) {
+    this._params = params;
     return this.modelFor("group");
   },
 
   setupController(controller, model) {
     this.controllerFor("group").set("showing", "members");
-    controller.set("model", model);
+
+    controller.setProperties({
+      model,
+      filterInput: this._params.filter
+    });
+
     controller.refreshMembers();
   }
 });
