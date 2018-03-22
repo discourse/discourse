@@ -171,7 +171,7 @@ export default Ember.Mixin.create({
   },
 
   didClickRow(computedContentItem) {
-    this.close(event);
+    this.close();
     this.focus();
     this.select(computedContentItem);
   },
