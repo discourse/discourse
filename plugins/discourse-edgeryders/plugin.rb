@@ -88,7 +88,7 @@ after_initialize do
       if topic = Topic.find_by(id: 6710)
         manager = NewPostManager.new(
           Discourse.system_user,
-          raw: "We're glad to welcome [#{username}](/u/#{username}) to our community.",
+          raw: "We're glad to welcome [#{username}](/u/#{username}) to our community. (#{UserCustomField.find_by(user_id: id, name: 'user_field_3').try(:value)})",
           topic_id: topic.id
         )
         manager.perform
