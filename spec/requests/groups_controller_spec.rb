@@ -403,6 +403,53 @@ describe GroupsController do
       expect(members.map { |m| m["id"] })
         .to contain_exactly(user1.id, user2.id, user3.id)
     end
+
+    describe 'filterable' do
+      describe 'as a normal user' do
+        it "should not allow members to be filterable by email" do
+          email = 'uniquetest@discourse.org'
+          user1.update!(email: email)
+
+          get "/groups/#{group.name}/members.json", params: { filter: email }
+
+          expect(response.status).to eq(200)
+          members = JSON.parse(response.body)["members"]
+          expect(members).to eq([])
+        end
+      end
+
+      describe 'as an admin' do
+        before do
+          sign_in(Fabricate(:admin))
+        end
+
+        it "should allow members to be filterable by username" do
+          email = 'uniquetest@discourse.org'
+          user1.update!(email: email)
+
+          [email.upcase, 'QUEtes'].each do |filter|
+            get "/groups/#{group.name}/members.json", params: { filter: filter }
+
+            expect(response.status).to eq(200)
+            members = JSON.parse(response.body)["members"]
+            expect(members.map { |m| m["id"] }).to contain_exactly(user1.id)
+          end
+        end
+
+        it "should allow members to be filterable by email" do
+          username = 'uniquetest'
+          user1.update!(username: username)
+
+          [username.upcase, 'QUEtes'].each do |filter|
+            get "/groups/#{group.name}/members.json", params: { filter: filter }
+
+            expect(response.status).to eq(200)
+            members = JSON.parse(response.body)["members"]
+            expect(members.map { |m| m["id"] }).to contain_exactly(user1.id)
+          end
+        end
+      end
+    end
   end
 
   describe "#edit" do

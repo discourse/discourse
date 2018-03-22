@@ -13,6 +13,12 @@ QUnit.test("Viewing Members as anon user", assert => {
       count('.group-member-dropdown') === 0,
       'it does not allow anon user to manage group members'
     );
+
+    assert.equal(
+      find('.group-username-filter').attr('placeholder'),
+      I18n.t('groups.members.filter_placeholder'),
+      'it should display the right filter placehodler'
+    );
   });
 });
 
@@ -26,6 +32,12 @@ QUnit.test("Viewing Members as an admin user", assert => {
     assert.ok(
       count('.group-member-dropdown') > 0,
       'it allows admin user to manage group members'
+    );
+
+    assert.equal(
+      find('.group-username-filter').attr('placeholder'),
+      I18n.t('groups.members.filter_placeholder_admin'),
+      'it should display the right filter placehodler'
     );
   });
 });

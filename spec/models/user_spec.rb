@@ -1650,4 +1650,41 @@ describe User do
       expect(inactive.active).to eq(true)
     end
   end
+
+  describe '#filter_by_username' do
+    it 'should be able to filter by username' do
+      username = 'someuniqueusername'
+      user.update!(username: username)
+
+      expect(User.filter_by_username(username))
+        .to eq([user])
+
+      expect(User.filter_by_username('UNiQuE'))
+        .to eq([user])
+    end
+  end
+
+  describe '#filter_by_username_or_email' do
+    it 'should be able to filter by email' do
+      email = 'veryspecialtest@discourse.org'
+      user.update!(email: email)
+
+      expect(User.filter_by_username_or_email(email))
+        .to eq([user])
+
+      expect(User.filter_by_username_or_email('veryspeCiaLtest'))
+        .to eq([user])
+    end
+
+    it 'should be able to filter by username' do
+      username = 'someuniqueusername'
+      user.update!(username: username)
+
+      expect(User.filter_by_username_or_email(username))
+        .to eq([user])
+
+      expect(User.filter_by_username_or_email('UNiQuE'))
+        .to eq([user])
+    end
+  end
 end

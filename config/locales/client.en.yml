@@ -466,6 +466,8 @@ en:
       activity: "Activity"
       members:
         title: "Members"
+        filter_placeholder_admin: "username or email"
+        filter_placeholder: "username"
         remove_member: "Remove Member"
         remove_member_description: "Remove <b>%{username}</b> from this group"
         make_owner: "Make Owner"

@@ -186,8 +186,8 @@ class GroupsController < ApplicationController
     end
 
     users = group.users.human_users
-
     total = users.count
+
     members = users
       .order('NOT group_users.owner')
       .order(order)
@@ -199,6 +199,16 @@ class GroupsController < ApplicationController
       .order(order)
       .order(username_lower: dir)
       .where('group_users.owner')
+
+    if (filter = params[:filter]).present?
+      if current_user&.admin
+        owners = owners.filter_by_username_or_email(filter)
+        members = members.filter_by_username_or_email(filter)
+      else
+        owners = owners.filter_by_username(filter)
+        members = members.filter_by_username(filter)
+      end
+    end
 
     render json: {
       members: serialize_data(members, GroupUserSerializer),

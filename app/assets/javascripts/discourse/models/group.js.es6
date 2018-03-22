@@ -33,13 +33,13 @@ const Group = RestModel.extend({
   findMembers(params) {
     if (Em.isEmpty(this.get('name'))) { return ; }
 
-    const self = this, offset = Math.min(this.get("user_count"), Math.max(this.get("offset"), 0));
+    const offset = Math.min(this.get("user_count"), Math.max(this.get("offset"), 0));
 
-    return Group.loadMembers(this.get("name"), offset, this.get("limit"), params).then(function (result) {
+    return Group.loadMembers(this.get("name"), offset, this.get("limit"), params).then(result => {
       var ownerIds = {};
       result.owners.forEach(owner => ownerIds[owner.id] = true);
 
-      self.setProperties({
+      this.setProperties({
         user_count: result.meta.total,
         limit: result.meta.limit,
         offset: result.meta.offset,

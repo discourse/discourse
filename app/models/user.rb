@@ -159,6 +159,25 @@ class User < ActiveRecord::Base
   scope :not_suspended, -> { where('suspended_till IS NULL OR suspended_till <= ?', Time.zone.now) }
   scope :activated, -> { where(active: true) }
 
+  scope :filter_by_username, ->(filter) do
+    where('username_lower ILIKE ?', filter)
+  end
+
+  scope :filter_by_username_or_email, ->(filter) do
+    if filter =~ /.+@.+/
+      # probably an email so try the bypass
+      if user_id = UserEmail.where("lower(email) = ?", filter.downcase).pluck(:user_id).first
+        return where('users.id = ?', user_id)
+      end
+    end
+
+    joins(:primary_email)
+      .where(
+        'username_lower ILIKE :filter OR lower(user_emails.email) ILIKE :filter',
+        filter: "%#{filter}%"
+      )
+  end
+
   module NewTopicDuration
     ALWAYS = -1
     LAST_VISIT = -2
