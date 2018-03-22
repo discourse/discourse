@@ -110,6 +110,5 @@ describe WebCrawlerRequest do
     expect(web_crawler_request('Googlebot').count).to eq(3)
     expect(web_crawler_request('Twitterbot').count).to eq(2)
     expect(web_crawler_request('Bingbot').count).to eq(4)
-
   end
 end
