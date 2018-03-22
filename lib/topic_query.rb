@@ -289,8 +289,8 @@ class TopicQuery
 
   def list_category_topic_ids(category)
     query = default_results(category: category.id)
-    pinned_ids = query.where('pinned_at IS NOT NULL AND category_id = ?', category.id).limit(nil).order('pinned_at DESC').pluck(:id)
-    non_pinned_ids = query.where('pinned_at IS NULL OR category_id <> ?', category.id).pluck(:id)
+    pinned_ids = query.where('topics.pinned_at IS NOT NULL AND topics.category_id = ?', category.id).limit(nil).order('pinned_at DESC').pluck(:id)
+    non_pinned_ids = query.where('topics.pinned_at IS NULL OR topics.category_id <> ?', category.id).pluck(:id)
     (pinned_ids + non_pinned_ids)
   end
 
