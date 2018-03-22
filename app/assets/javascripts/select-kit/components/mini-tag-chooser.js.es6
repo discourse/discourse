@@ -169,7 +169,7 @@ export default ComboBox.extend(Tags, {
   destroyTags(tags) {
     tags = Ember.makeArray(tags);
     this.get("tags").removeObjects(tags);
-    this._prepareSearch(this.get("filter"));
+    this.set("searchDebounce", run.debounce(this, this._prepareSearch, this.get("filter"), 350));
   },
 
   didDeselect(tags) {
