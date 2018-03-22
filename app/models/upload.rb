@@ -96,7 +96,7 @@ class Upload < ActiveRecord::Base
       local_store = FileStore::LocalStore.new
 
       scope = Upload.where("url NOT LIKE '%/original/_X/%'").order(id: :desc)
-      scope.limit(limit) if limit
+      scope = scope.limit(limit) if limit
 
       scope.each do |upload|
         begin
