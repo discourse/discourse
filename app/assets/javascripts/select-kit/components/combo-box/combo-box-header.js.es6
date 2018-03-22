@@ -1,5 +1,4 @@
 import SelectKitHeaderComponent from "select-kit/components/select-kit/select-kit-header";
-import { default as computed } from "ember-addons/ember-computed-decorators";
 
 export default SelectKitHeaderComponent.extend({
   layoutName: "select-kit/templates/components/combo-box/combo-box-header",
