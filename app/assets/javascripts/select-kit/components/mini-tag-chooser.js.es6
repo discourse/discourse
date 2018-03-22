@@ -39,7 +39,7 @@ export default ComboBox.extend(Tags, {
 
   @computed("hasReachedLimit")
   caretIcon(hasReachedLimit) {
-    return hasReachedLimit ? null : "plus";
+    return hasReachedLimit ? null : "plus fa-fw";
   },
 
   @computed("tags")
