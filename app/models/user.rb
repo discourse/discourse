@@ -160,7 +160,7 @@ class User < ActiveRecord::Base
   scope :activated, -> { where(active: true) }
 
   scope :filter_by_username, ->(filter) do
-    where('username_lower ILIKE ?', filter)
+    where('username_lower ILIKE ?', "%#{filter}%")
   end
 
   scope :filter_by_username_or_email, ->(filter) do
