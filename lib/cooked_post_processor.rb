@@ -418,8 +418,10 @@ class CookedPostProcessor
       next if img["class"]&.include?('onebox-avatar')
 
       parent_class = img.parent && img.parent["class"]
-      if parent_class&.include?("onebox-body") && (width = img["width"].to_i) > 0 && (height = img["height"].to_i) > 0
+      width = img["width"].to_i
+      height = img["height"].to_i
 
+      if parent_class&.include?("onebox-body") && width > 0 && height > 0
         # special instruction for width == height, assume we are dealing with an avatar
         if (img["width"].to_i == img["height"].to_i)
           found = false
@@ -446,6 +448,11 @@ class CookedPostProcessor
           new_parent.first.add_child(img)
         end
 
+      elsif parent_class&.include?("instagram-images") && width > 0 && height > 0
+        img.remove_attribute("width")
+        img.remove_attribute("height")
+        img.parent["class"] = "aspect-image-full-size"
+        img.parent["style"] = "--aspect-ratio:#{width}/#{height};"
       end
     end
   end

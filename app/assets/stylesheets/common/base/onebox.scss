@@ -179,6 +179,23 @@ aside.onebox {
           margin-right: none;
         }
       }
+
+      // full size images for instagram, twitter, etc.
+      .aspect-image-full-size {
+        max-height: 500px;
+        width: calc(500px * var(--aspect-ratio));
+        max-width: 100%;
+
+        img {
+          width: 100%;
+          height: inherit;
+          max-width: initial;
+          max-height: initial;
+          float: none;
+          padding: 5px 5px 5px 5px;
+        }
+      }
+
       [style*="--aspect-ratio"] {
         position: relative;
       }
@@ -497,6 +514,7 @@ aside.onebox.stackexchange .onebox-body {
 .onebox.instagram {
   div.instagram-description {
     color: dark-light-choose($primary-medium, $secondary-medium);
+    padding-top: 10px;
   }
 }
 
