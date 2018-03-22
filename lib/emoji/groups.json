@@ -317,10 +317,6 @@
         "diversity": false
       },
       {
-        "name": "clown_face",
-        "diversity": false
-      },
-      {
         "name": "lying_face",
         "diversity": false
       },
@@ -346,6 +342,10 @@
       },
       {
         "name": "imp",
+        "diversity": false
+      },
+      {
+        "name": "clown_face",
         "diversity": false
       },
       {
@@ -701,6 +701,10 @@
         "diversity": true
       },
       {
+        "name": "woman_mage",
+        "diversity": true
+      },
+      {
         "name": "fairy",
         "diversity": true
       },
@@ -709,7 +713,11 @@
         "diversity": true
       },
       {
-        "name": "merperson",
+        "name": "mermaid",
+        "diversity": true
+      },
+      {
+        "name": "merman",
         "diversity": true
       },
       {
@@ -721,7 +729,15 @@
         "diversity": false
       },
       {
+        "name": "woman_genie",
+        "diversity": false
+      },
+      {
         "name": "zombie",
+        "diversity": false
+      },
+      {
+        "name": "woman_zombie",
         "diversity": false
       },
       {
@@ -2417,11 +2433,23 @@
         "diversity": true
       },
       {
+        "name": "woman_in_steamy_room",
+        "diversity": true
+      },
+      {
         "name": "person_climbing",
         "diversity": true
       },
       {
+        "name": "woman_climbing",
+        "diversity": true
+      },
+      {
         "name": "person_in_lotus_position",
+        "diversity": true
+      },
+      {
+        "name": "woman_in_lotus_position",
         "diversity": true
       },
       {
@@ -2605,10 +2633,6 @@
         "diversity": false
       },
       {
-        "name": "8ball",
-        "diversity": false
-      },
-      {
         "name": "bowling",
         "diversity": false
       },
@@ -2645,10 +2669,6 @@
         "diversity": false
       },
       {
-        "name": "dart",
-        "diversity": false
-      },
-      {
         "name": "golf",
         "diversity": false
       },
@@ -2677,11 +2697,27 @@
         "diversity": false
       },
       {
+        "name": "dart",
+        "diversity": false
+      },
+      {
+        "name": "8ball",
+        "diversity": false
+      },
+      {
+        "name": "crystal_ball",
+        "diversity": false
+      },
+      {
         "name": "video_game",
         "diversity": false
       },
       {
         "name": "joystick",
+        "diversity": false
+      },
+      {
+        "name": "slot_machine",
         "diversity": false
       },
       {
@@ -2860,10 +2896,6 @@
         "diversity": false
       },
       {
-        "name": "cityscape",
-        "diversity": false
-      },
-      {
         "name": "derelict_house",
         "diversity": false
       },
@@ -2976,6 +3008,10 @@
         "diversity": false
       },
       {
+        "name": "cityscape",
+        "diversity": false
+      },
+      {
         "name": "sunrise_over_mountains",
         "diversity": false
       },
@@ -3021,22 +3057,6 @@
       },
       {
         "name": "circus_tent",
-        "diversity": false
-      },
-      {
-        "name": "performing_arts",
-        "diversity": false
-      },
-      {
-        "name": "framed_picture",
-        "diversity": false
-      },
-      {
-        "name": "art",
-        "diversity": false
-      },
-      {
-        "name": "slot_machine",
         "diversity": false
       },
       {
@@ -3176,6 +3196,10 @@
         "diversity": false
       },
       {
+        "name": "oil_drum",
+        "diversity": false
+      },
+      {
         "name": "fuelpump",
         "diversity": false
       },
@@ -3192,11 +3216,11 @@
         "diversity": false
       },
       {
-        "name": "construction",
+        "name": "stop_sign",
         "diversity": false
       },
       {
-        "name": "stop_sign",
+        "name": "construction",
         "diversity": false
       },
       {
@@ -3281,30 +3305,6 @@
       },
       {
         "name": "bellhop_bell",
-        "diversity": false
-      },
-      {
-        "name": "door",
-        "diversity": false
-      },
-      {
-        "name": "bed",
-        "diversity": false
-      },
-      {
-        "name": "couch_and_lamp",
-        "diversity": false
-      },
-      {
-        "name": "toilet",
-        "diversity": false
-      },
-      {
-        "name": "shower",
-        "diversity": false
-      },
-      {
-        "name": "bathtub",
         "diversity": false
       },
       {
@@ -4679,18 +4679,6 @@
         "diversity": false
       },
       {
-        "name": "microscope",
-        "diversity": false
-      },
-      {
-        "name": "telescope",
-        "diversity": false
-      },
-      {
-        "name": "satellite",
-        "diversity": false
-      },
-      {
         "name": "candle",
         "diversity": false
       },
@@ -5063,10 +5051,6 @@
         "diversity": false
       },
       {
-        "name": "alembic",
-        "diversity": false
-      },
-      {
         "name": "balance_scale",
         "diversity": false
       },
@@ -5100,18 +5084,6 @@
       },
       {
         "name": "moyai",
-        "diversity": false
-      },
-      {
-        "name": "oil_drum",
-        "diversity": false
-      },
-      {
-        "name": "crystal_ball",
-        "diversity": false
-      },
-      {
-        "name": "shopping_cart",
         "diversity": false
       },
       {
