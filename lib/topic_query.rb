@@ -607,6 +607,11 @@ class TopicQuery
       result = apply_ordering(result, options)
       result = result.listable_topics.includes(:category)
 
+      # Avoid N+1 for shared drafts
+      if category_id && category_id == SiteSetting.shared_drafts_category.to_i
+        result = result.includes(:shared_draft)
+      end
+
       if options[:destination_category_id]
         destination_category_id = get_category_id(options[:destination_category_id])
         result = result.includes(:shared_draft).where("shared_drafts.category_id" => destination_category_id)
