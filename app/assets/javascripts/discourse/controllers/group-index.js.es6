@@ -41,6 +41,14 @@ export default Ember.Controller.extend({
       this.get('model').removeMember(user);
     },
 
+    makeOwner(username) {
+      this.get('model').addOwners(username);
+    },
+
+    removeOwner(user) {
+      this.get('model').removeOwner(user);
+    },
+
     addMembers() {
       const usernames = this.get('usernames');
       if (usernames && usernames.length > 0) {

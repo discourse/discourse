@@ -87,12 +87,11 @@ const Group = RestModel.extend({
   },
 
   addOwners(usernames) {
-    var self = this;
     return ajax(`/admin/groups/${this.get('id')}/owners.json`, {
       type: "PUT",
       data: { group: { usernames: usernames } }
-    }).then(function() {
-      self.findMembers();
+    }).then(() => {
+      this.findMembers();
     });
   },
 

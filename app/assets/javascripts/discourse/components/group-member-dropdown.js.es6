@@ -8,8 +8,8 @@ export default DropdownButton.extend({
   text: iconHTML('ellipsis-h'),
   classNames: ['group-member-dropdown'],
 
-  @computed()
-  dropDownContent() {
+  @computed("member.owner")
+  dropDownContent(isOwner) {
     const items = [
       {
         id: 'removeMember',
@@ -22,6 +22,30 @@ export default DropdownButton.extend({
       }
     ];
 
+    if (this.currentUser && this.currentUser.admin) {
+      if (isOwner) {
+        items.push({
+          id: 'removeOwner',
+          title: I18n.t('groups.members.remove_owner'),
+          description: I18n.t(
+            'groups.members.remove_owner_description',
+            { username: this.get('member.username') }
+          ),
+          icon: 'shield'
+        });
+      } else {
+        items.push({
+          id: 'makeOwner',
+          title: I18n.t('groups.members.make_owner'),
+          description: I18n.t(
+            'groups.members.make_owner_description',
+            { username: this.get('member.username') }
+          ),
+          icon: 'shield'
+        });
+      }
+    }
+
     return items;
   },
 
@@ -29,6 +53,12 @@ export default DropdownButton.extend({
     switch (id) {
       case 'removeMember':
         this.sendAction('removeMember', this.get('member'));
+        break;
+      case 'makeOwner':
+        this.sendAction('makeOwner', this.get('member.username'));
+        break;
+      case 'removeOwner':
+        this.sendAction('removeOwner', this.get('member'));
         break;
     }
   }
