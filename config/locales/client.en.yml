@@ -466,8 +466,12 @@ en:
       activity: "Activity"
       members:
         title: "Members"
-        remove_member: "Remove member"
+        remove_member: "Remove Member"
         remove_member_description: "Remove <b>%{username}</b> from this group"
+        make_owner: "Make Owner"
+        make_owner_description: "Make <b>%{username}</b> an owner of this group"
+        remove_owner: "Remove as Owner"
+        remove_owner_description: "Remove <b>%{username}</b> as an owner of this group"
       topics: "Topics"
       posts: "Posts"
       mentions: "Mentions"
