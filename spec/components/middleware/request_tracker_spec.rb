@@ -9,6 +9,7 @@ describe Middleware::RequestTracker do
       "HTTP_USER_AGENT" => "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36",
       "REQUEST_URI" => "/path?bla=1",
       "REQUEST_METHOD" => "GET",
+      "HTTP_ACCEPT" => "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
       "rack.input" => ""
     }.merge(opts)
   end
@@ -316,6 +317,14 @@ describe Middleware::RequestTracker do
         middleware.call(env('HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)'))
         ApplicationRequest.write_cache!
       }.to_not change { ApplicationRequest.count }
+    end
+
+    it "allows json requests" do
+      SiteSetting.blacklisted_crawler_user_agents = 'Googlebot'
+      expect_success_response(*middleware.call(env(
+        'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)',
+        'HTTP_ACCEPT' => 'application/json'
+      )))
     end
   end
 
