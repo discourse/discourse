@@ -55,18 +55,28 @@ table.group-logs {
   width: 130%;
 }
 
-table.group-members {
-  th {
-    text-align: center;
-  }
+.group-members {
+  .group-member {
+    border-top: 1px solid $primary-low;
 
-  tr {
     .user-info {
-      width: auto;
+      margin: 0;
+      padding: 0.5em;
+      width: 98%;
     }
 
-    td {
-      padding-left: 0.5em;
+    .btn-group {
+      margin-top: 0;
+    }
+
+    .group-member-info {
+      color: dark-light-choose($primary-medium, $secondary-medium);
+
+      label {
+        margin-bottom: 0;
+        font-weight: bold;
+        display: inline-block;
+      }
     }
   }
 }
