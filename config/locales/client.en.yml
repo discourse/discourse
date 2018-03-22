@@ -2631,19 +2631,19 @@ en:
       notifications:
         watching:
           title: "Watching"
-          description: "You will automatically watch all topics in this tag. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic."
+          description: "You will automatically watch all topics with this tag. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic."
         watching_first_post:
           title: "Watching First Post"
-          description: "You will only be notified of the first post in each new topic in this tag."
+          description: "You will only be notified of the first post in each new topic with this tag."
         tracking:
           title: "Tracking"
-          description: "You will automatically track all topics in this tag. A count of unread and new posts will appear next to the topic."
+          description: "You will automatically track all topics with this tag. A count of unread and new posts will appear next to the topic."
         regular:
           title: "Regular"
           description: "You will be notified if someone mentions your @name or replies to your post."
         muted:
           title: "Muted"
-          description: "You will not be notified of anything about new topics in this tag, and they will not appear on your unread tab."
+          description: "You will not be notified of anything about new topics with this tag, and they will not appear on your unread tab."
 
       groups:
         title: "Tag Groups"
