@@ -9,7 +9,7 @@ class WebCrawlerRequest < ActiveRecord::Base
     $redis.sadd(ua_list_key, user_agent)
     $redis.expire(ua_list_key, 259200) # 3.days
 
-    perform_increment!(redis_key(user_agent))
+    perform_increment!(redis_key(user_agent), opts)
   end
 
   def self.write_cache!(date = nil)
