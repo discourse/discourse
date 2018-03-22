@@ -10,6 +10,6 @@ export default SelectKitHeaderComponent.extend({
 
   @computed("options.showFullTitle")
   btnClassName(showFullTitle) {
-    return `btn ${showFullTitle ? 'btn-icon-text' : 'no-text btn-icon'}`;
+    return `btn ${showFullTitle ? "btn-icon-text" : "no-text btn-icon"}`;
   }
 });

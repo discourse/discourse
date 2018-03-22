@@ -2,10 +2,10 @@
   tabindex=tabindex
   isFocused=isFocused
   isExpanded=isExpanded
+  highlightedSelection=highlightedSelection
+  onClickSelectionItem=(action "onClickSelectionItem")
   computedContent=headerComputedContent
-  deselect=(action "deselect")
-  toggle=(action "toggle")
-  clearSelection=(action "clearSelection")
+  onToggle=(action "onToggle")
   options=headerComponentOptions
 }}
   {{component filterComponent
@@ -16,12 +16,13 @@
     isLoading=isLoading
     shouldDisplayFilter=shouldDisplayFilter
     isFocused=isFocused
-    filterComputedContent=(action "filterComputedContent")
+    onFilterComputedContent=(action "onFilterComputedContent")
   }}
 {{/component}}
 
 <div class="select-kit-body">
   {{#if renderedBodyOnce}}
+  {{#unless isLoading}}
     {{component collectionComponent
       collectionHeaderComputedContent=collectionHeaderComputedContent
       hasSelection=hasSelection
@@ -34,16 +35,15 @@
       templateForRow=templateForRow
       templateForNoneRow=templateForNoneRow
       templateForCreateRow=templateForCreateRow
-      clearSelection=(action "clearSelection")
-      select=(action "select")
-      highlight=(action "highlight")
-      create=(action "create")
-      highlightedValue=highlightedValue
+      onClickRow=(action "onClickRow")
+      onMouseoverRow=(action "onMouseoverRow")
+      highlighted=highlighted
       computedValue=computedValue
       rowComponentOptions=rowComponentOptions
       noContentRow=noContentRow
       maxContentRow=maxContentRow
     }}
+  {{/unless}}
   {{/if}}
 </div>
 

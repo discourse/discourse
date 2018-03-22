@@ -6,6 +6,7 @@ export default Ember.Mixin.create({
 
     this._previousScrollParentOverflow = null;
     this._previousCSSContext = null;
+    this.selectionSelector = ".choice";
     this.filterInputSelector = ".filter-input";
     this.rowSelector = ".select-kit-row";
     this.collectionSelector = ".select-kit-collection";
@@ -58,36 +59,42 @@ export default Ember.Mixin.create({
     this.setProperties({ isFocused: false });
   },
 
-  // try to focus filter and fallback to header if not present
   focus() {
     Ember.run.schedule("afterRender", () => {
-      if ((!this.get("filterable")) || !this.$filterInput().is(":visible")) {
-        this.$header().focus();
-      } else {
-        this.$filterInput().focus();
-      }
+      this.$header().focus();
+    });
+  },
+
+  // try to focus filter and fallback to header if not present
+  focusFilterOrHeader() {
+    // next so we are sure it finised expand/collapse
+    Ember.run.next(() => {
+      Ember.run.schedule("afterRender", () => {
+        if (!this.$filterInput().is(":visible")) {
+          this.$header().focus();
+        } else {
+          this.$filterInput().focus();
+        }
+      });
     });
   },
 
   expand() {
-    if (this.get("isExpanded") === true) return;
+    if (this.get("isExpanded")) return;
     this.setProperties({ isExpanded: true, renderedBodyOnce: true, isFocused: true });
-    this._setCollectionHeaderComputedContent();
-    this._setHeaderComputedContent();
-    this.focus();
+    this.focusFilterOrHeader();
     this.autoHighlight();
   },
 
   collapse() {
     this.set("isExpanded", false);
     Ember.run.schedule("afterRender", () => this._removeFixedPosition() );
-    this._setHeaderComputedContent();
   },
 
   // lose focus of the component in two steps
   // first collapse and keep focus and then remove focus
   unfocus(event) {
-    if (this.get("isExpanded") === true) {
+    if (this.get("isExpanded")) {
       this.collapse(event);
       this.focus(event);
     } else {

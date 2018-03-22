@@ -39,7 +39,7 @@ export default ComboBoxComponent.extend({
   },
 
   computeHeaderContent() {
-    let content = this.baseHeaderComputedContent();
+    let content = this._super();
 
     if (!content.value) {
       if (this.get("noTagsSelected")) {

@@ -68,7 +68,7 @@ export default ComboBoxComponent.extend({
   },
 
   computeHeaderContent() {
-    let content = this.baseHeaderComputedContent();
+    let content = this._super();
 
     if (this.get("hasSelection")) {
       const category = Category.findById(content.value);
