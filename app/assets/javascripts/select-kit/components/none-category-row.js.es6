@@ -13,9 +13,5 @@ export default CategoryRowComponent.extend({
       allowUncategorized: true,
       hideParent: true
     }).htmlSafe();
-  },
-
-  click() {
-    this.sendAction("clearSelection");
   }
 });
