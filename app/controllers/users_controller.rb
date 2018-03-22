@@ -358,6 +358,20 @@ class UsersController < ApplicationController
       authentication.finish
       activation.finish
 
+
+      # Use to notify community managers about new sign-ups.
+      # Users can simply set the notification level of the posts thread accordingly ("Watching" to get immediate
+      # e-mail notifications, "Tracking" to only get in-site and desktop notifications).
+      if topic = Topic.find_by(id: 6710)
+        manager = NewPostManager.new(
+          Discourse.system_user,
+          raw: "We're glad to welcome [#{user.username}](/u/#{user.username}) to our community. (#{UserCustomField.find_by(user_id: user.id, name: 'user_field_3').try(:value)})",
+          topic_id: topic.id
+        )
+        manager.perform
+      end
+
+
       # save user email in session, to show on account-created page
       session["user_created_message"] = activation.message
       session[SessionController::ACTIVATE_USER_KEY] = user.id
