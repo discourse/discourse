@@ -230,7 +230,6 @@ vi:
       other: "{{count}} chủ đề chưa đọc."
     topic_count_new:
       other: "{{count}} chủ đề mới."
-    click_to_show: "Nhấp chuột để hiển thị."
     preview: "xem trước"
     cancel: "hủy"
     save: "Lưu thay đổi"

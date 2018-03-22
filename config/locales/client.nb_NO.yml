@@ -256,7 +256,6 @@ nb_NO:
     topic_count_new:
       one: "{{count}} ny tråd"
       other: "{{count}} nye tråder"
-    click_to_show: "Klikk for å vise"
     preview: "forhåndsvisning"
     cancel: "avbryt"
     save: "Lagre endringer"

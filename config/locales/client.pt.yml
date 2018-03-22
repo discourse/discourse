@@ -243,7 +243,6 @@ pt:
     topic_count_new:
       one: "{{count}} novo tópico."
       other: "{{count}} novos tópicos."
-    click_to_show: "Clique para mostrar."
     preview: "pré-visualizar"
     cancel: "cancelar"
     save: "Guardar alterações"

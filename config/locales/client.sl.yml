@@ -290,7 +290,6 @@ sl:
       two: "{{count}} novi temi."
       few: "{{count}} nove teme."
       other: "{{count}} novih tem."
-    click_to_show: "Klikni za prikaz."
     preview: "predogled"
     cancel: "prekliči"
     save: "Shrani Spremembe"

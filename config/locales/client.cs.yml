@@ -281,7 +281,6 @@ cs:
       one: "{{count}} nové téma."
       few: "{{count}} nová témata."
       other: "{{count}} nových témat."
-    click_to_show: "Klikněte pro zobrazení."
     preview: "ukázka"
     cancel: "zrušit"
     save: "Uložit změny"

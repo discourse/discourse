@@ -254,7 +254,6 @@ tr_TR:
     topic_count_new:
       one: "{{count}} yeni konu."
       other: "{{count}} yeni konu."
-    click_to_show: "Görüntülemek için tıklayın."
     preview: "önizleme"
     cancel: "iptal"
     save: "Değişiklikleri Kaydet"

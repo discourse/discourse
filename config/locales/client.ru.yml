@@ -296,7 +296,6 @@ ru:
       few: "{{count}} новые темы."
       many: "{{count}} новых тем."
       other: "{{count}} новых тем."
-    click_to_show: "Нажмите чтобы показать."
     preview: "предпросмотр"
     cancel: "отмена"
     save: "Сохранить"

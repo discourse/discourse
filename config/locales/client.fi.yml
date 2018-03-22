@@ -255,7 +255,6 @@ fi:
     topic_count_new:
       one: "{{count}} uusi ketju."
       other: "{{count}} uutta ketjua."
-    click_to_show: "Klikkaa niin näet."
     preview: "esikatselu"
     cancel: "peruuta"
     save: "Tallenna muutokset"

@@ -216,7 +216,6 @@ zh_TW:
       other: "{{count}} 個未讀討論話題"
     topic_count_new:
       other: "有 {{count}} 個新討論話題。"
-    click_to_show: "點擊顯示"
     preview: "預覽"
     cancel: "取消"
     save: "儲存變更"

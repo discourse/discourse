@@ -229,7 +229,6 @@ ja:
       other: "{{count}} 個の未読トピック。"
     topic_count_new:
       other: "{{count}} 件の新しいトピック"
-    click_to_show: "クリックして表示"
     preview: "プレビュー"
     cancel: "キャンセル"
     save: "変更を保存"

@@ -250,7 +250,6 @@ et:
     topic_count_new:
       one: "{{count}} uus teema."
       other: "{{count}} uut teemat."
-    click_to_show: "Kliki kuvamiseks."
     preview: "eelvaade"
     cancel: "tühista"
     save: "Salvesta muudatused"
