@@ -1018,6 +1018,12 @@ security:
     default: 'https://www.google.com/maps/embed?|https://www.openstreetmap.org/export/embed.html?|https://calendar.google.com/calendar/embed?'
     type: list
     client: true
+  whitelisted_crawler_user_agents:
+    type: list
+    default: ''
+  blacklisted_crawler_user_agents:
+    type: list
+    default: ''
 
 onebox:
   enable_flash_video_onebox: false
