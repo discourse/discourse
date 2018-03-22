@@ -270,7 +270,6 @@ lv:
       zero: "{{count}} jaunas tēmas."
       one: "{{count}} jauna tēma."
       other: "{{count}} jaunas tēmas."
-    click_to_show: "Noklikšķiniet, lai parādītu."
     preview: "priekšskatījums"
     cancel: "atcelt"
     save: "Saglabāt izmaiņas"

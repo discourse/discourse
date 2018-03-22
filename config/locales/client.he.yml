@@ -247,7 +247,6 @@ he:
     topic_count_new:
       one: "נושא חדש אחד."
       other: "{{count}} נושאים חדשים."
-    click_to_show: "הקליקו כדי להציג."
     preview: "תצוגה מקדימה"
     cancel: "ביטול"
     save: "שמירת שינויים"

@@ -228,7 +228,6 @@ ko:
       other: "{{count}}개의 읽지 않은 토픽"
     topic_count_new:
       other: "{{count}}개의 새로운 토픽"
-    click_to_show: "보려면 클릭하세요."
     preview: "미리보기"
     cancel: "취소"
     save: "변경사항 저장"

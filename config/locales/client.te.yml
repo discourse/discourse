@@ -167,7 +167,6 @@ te:
     topic_count_new:
       one: "{{count}} కొత్త విషయం."
       other: "{{count}} కొత్త విషయాలు."
-    click_to_show: "చూపుటకు ఇక్కడ నొక్కండి"
     preview: "మునుజూపు"
     cancel: "రద్దు"
     save: "మార్పులు భద్రపరచండి"

@@ -214,7 +214,6 @@ id:
       other: "{{count}} topik belum dibaca."
     topic_count_new:
       other: "{{count}} topik baru."
-    click_to_show: "Klik untuk menampilkan"
     preview: "pratinjau"
     cancel: "batal"
     save: "Simpan Perubahan"

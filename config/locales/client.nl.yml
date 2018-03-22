@@ -248,7 +248,6 @@ nl:
     topic_count_new:
       one: "{{count}} nieuw topic."
       other: "{{count}} nieuwe topics."
-    click_to_show: "Klik om te bekijken."
     preview: "voorbeeld"
     cancel: "annuleer"
     save: "Wijzigingen opslaan"

@@ -341,7 +341,6 @@ ar:
       few: "{{count}} مواضيع جديدة."
       many: "{{count}} موضوعا جديدا."
       other: "{{count}} موضوع جديد."
-    click_to_show: "انقر للعرض."
     preview: "معاينة"
     cancel: "ألغِ"
     save: "احفظ التعديلات"

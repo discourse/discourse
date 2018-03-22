@@ -255,7 +255,6 @@ es:
     topic_count_new:
       one: "Un nuevo tema."
       other: "{{count}} nuevos temas."
-    click_to_show: "Clic para mostrar."
     preview: "vista previa"
     cancel: "cancelar"
     save: "Guardar cambios"

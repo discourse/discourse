@@ -298,7 +298,6 @@ pl_PL:
       few: "{{count}} nowe tematy."
       many: "{{count}} nowych tematów."
       other: "{{count}} nowych tematów."
-    click_to_show: "Kliknij aby zobaczyć."
     preview: "podgląd"
     cancel: "anuluj"
     save: "Zapisz zmiany"

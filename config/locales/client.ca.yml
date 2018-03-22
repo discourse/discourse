@@ -255,7 +255,6 @@ ca:
     topic_count_new:
       one: "{{count}} nou tema."
       other: "{{count}} nous temes."
-    click_to_show: "Clica per mostrar-ho"
     preview: "previsualitza"
     cancel: "cancel·la"
     save: "Desa els canvis"

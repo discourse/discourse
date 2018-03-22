@@ -242,7 +242,6 @@ gl:
     topic_count_new:
       one: "{{count}} tópico novo"
       other: "{{count}} temas novos"
-    click_to_show: "Preme para amosar."
     preview: "previsualizar"
     cancel: "cancelar"
     save: "Gardar cambios"

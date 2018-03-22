@@ -247,7 +247,6 @@ da:
     topic_count_new:
       one: "{{count}} nyt indlæg"
       other: "{{count}} nye indlæg."
-    click_to_show: "Klik for at se."
     preview: "forhåndsvising"
     cancel: "annullér"
     save: "Gem ændringer"

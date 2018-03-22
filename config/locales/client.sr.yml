@@ -280,7 +280,6 @@ sr:
       one: "{{count}} nova tema."
       few: "{{count}} nove teme."
       other: "{{count}} novih tema."
-    click_to_show: "Klikni da pogledaš"
     preview: "prikaži"
     cancel: "otkaži"
     save: "Sačuvaj izmene"

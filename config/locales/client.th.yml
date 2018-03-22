@@ -213,7 +213,6 @@ th:
       other: "{{count}} กระทู้ยังไม่อ่าน"
     topic_count_new:
       other: "{{count}} กระทู้ใหม่"
-    click_to_show: "กดเพื่อเปิด"
     preview: "แสดงตัวอย่าง"
     cancel: "ยกเลิก"
     save: "บันทึกการเปลี่ยนแปลง"

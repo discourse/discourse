@@ -280,7 +280,6 @@ ro:
       one: "Un subiect nou."
       few: "{{count}} subiecte noi."
       other: "{{count}} de subiecte noi."
-    click_to_show: "Click pentru vizualizare."
     preview: "Previzualizează"
     cancel: "Anulează"
     save: "Salvează schimbările"

@@ -278,7 +278,6 @@ sk:
       one: "1 nová téma."
       few: "{{count}} nové témy."
       other: "{{count}} nových tém."
-    click_to_show: "Kliknite pre zobrazenie."
     preview: "náhľad"
     cancel: "zrušiť"
     save: "Uložiť zmeny"

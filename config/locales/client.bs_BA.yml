@@ -242,7 +242,6 @@ bs_BA:
       one: "{{count}} nova tema."
       few: "{{count}} novih tema."
       other: "{{count}} novih tema."
-    click_to_show: "Klikni da pokažeš."
     preview: "pregledaj"
     cancel: "otkaži"
     save: "Sačuvaj Promjene"

@@ -255,7 +255,6 @@ fr:
     topic_count_new:
       one: "{{count}} nouveau sujet."
       other: "{{count}} nouveaux sujets."
-    click_to_show: "Cliquez pour afficher."
     preview: "prévisualiser"
     cancel: "annuler"
     save: "Sauvegarder"

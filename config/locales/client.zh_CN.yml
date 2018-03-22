@@ -230,7 +230,6 @@ zh_CN:
       other: "{{count}} 未读主题。"
     topic_count_new:
       other: " {{count}} 个近期主题。"
-    click_to_show: "点击加载"
     preview: "预览"
     cancel: "取消"
     save: "保存更改"

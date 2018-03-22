@@ -230,7 +230,6 @@ fa_IR:
       other: "{{count}} موضوع خوانده نشده."
     topic_count_new:
       other: "{{count}} موضوع جدید."
-    click_to_show: "برای نمایش کلیک کنید."
     preview: "پیش‌نمایش"
     cancel: "لغو"
     save: "ذخیره سازی تغییرات"

@@ -249,7 +249,6 @@ sv:
     topic_count_new:
       one: "{{count}} nytt ämne."
       other: "{{count}} nya ämnen."
-    click_to_show: "Klicka för att visa."
     preview: "förhandsgranska"
     cancel: "avbryt"
     save: "Spara ändringar"

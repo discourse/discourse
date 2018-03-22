@@ -256,7 +256,6 @@ de:
     topic_count_new:
       one: "{{count}} neues Thema."
       other: "{{count}} neue Themen."
-    click_to_show: "Klicke zum Anzeigen."
     preview: "Vorschau"
     cancel: "Abbrechen"
     save: "Speichern"
