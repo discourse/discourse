@@ -359,10 +359,8 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
       this.clearHighlightSelection();
 
       if (this.get("isExpanded")) {
-        this._boundaryActionHandler("onCollapse", this);
         this.collapse();
       } else {
-        this._boundaryActionHandler("onExpand", this);
         this.expand();
       }
     },

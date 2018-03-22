@@ -193,9 +193,7 @@ export default Ember.Mixin.create({
 
     const keyCode = event.keyCode || event.which;
 
-    const $rows = this.$rows();
-
-    if (this.get("isExpanded") === false) {
+    if (!this.get("isExpanded")) {
       this.expand(event);
 
       if (this.$selectedRow().length === 1) {
@@ -205,6 +203,8 @@ export default Ember.Mixin.create({
 
       return;
     }
+
+    const $rows = this.$rows();
 
     if (!$rows.length) { return; }
 

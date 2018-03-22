@@ -84,11 +84,13 @@ export default Ember.Mixin.create({
     this.setProperties({ isExpanded: true, renderedBodyOnce: true, isFocused: true });
     this.focusFilterOrHeader();
     this.autoHighlight();
+    this._boundaryActionHandler("onExpand", this);
   },
 
   collapse() {
     this.set("isExpanded", false);
     Ember.run.schedule("afterRender", () => this._removeFixedPosition() );
+    this._boundaryActionHandler("onCollapse", this);
   },
 
   // lose focus of the component in two steps
