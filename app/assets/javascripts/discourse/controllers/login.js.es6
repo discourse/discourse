@@ -105,6 +105,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
             $("#credentials").hide();
             $("#second-factor").show();
+            $("#second-factor input").focus();
+
             return;
           } else if (result.reason === 'not_activated') {
             self.send('showNotActivated', {
