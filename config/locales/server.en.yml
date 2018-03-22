@@ -2828,14 +2828,14 @@ en:
         %{base_url}/u/password-reset/%{email_token}
 
     email_login:
-      title: "Email login link"
-      subject_template: "[%{email_prefix}] Email login link"
+      title: "Log in via link"
+      subject_template: "[%{email_prefix}] Log in via link"
       text_body_template: |
-        Somebody asked to login your account on [%{site_name}](%{base_url}).
+        Here's your link to log in at [%{site_name}](%{base_url}).
 
-        If it was not you, you can safely ignore this email.
+        If you did not request this link, you can safely ignore this email.
 
-        Click the following link to login:
+        Click the following link to log in:
         %{base_url}/session/email-login/%{email_token}
 
     set_password:
