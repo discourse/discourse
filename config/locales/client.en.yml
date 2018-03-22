@@ -286,18 +286,17 @@ en:
       confirm_clear: "Are you sure you want to clear all the bookmarks from this topic?"
 
     topic_count_latest:
-      one: "{{count}} new or updated topic."
-      other: "{{count}} new or updated topics."
+      one: "See {{count}} new or updated topic"
+      other: "See {{count}} new or updated topics"
 
     topic_count_unread:
-      one: "{{count}} unread topic."
-      other: "{{count}} unread topics."
+      one: "See {{count}} unread topic"
+      other: "See {{count}} unread topics"
 
     topic_count_new:
-      one: "{{count}} new topic."
-      other: "{{count}} new topics."
+      one: "See {{count}} new topic"
+      other: "See {{count}} new topics"
 
-    click_to_show: "Click to show."
     preview: "preview"
     cancel: "cancel"
 
