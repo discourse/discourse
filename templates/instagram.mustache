@@ -1,13 +1,13 @@
 <h3><a href="{{link}}" target="_blank">{{title}}</a></h3>
 
 {{#video_secure_url}}
-  <p><div class="instagram-images"><video class="instagram-image" width="{{video_width}}" height="{{video_height}}" controls loop>
+  <div class="instagram-images"><video class="instagram-image" width="{{video_width}}" height="{{video_height}}" controls loop>
     <source src="{{video_secure_url}}" type='video/mp4'>
-  </video></div></p>
+  </video></div>
 {{/video_secure_url}}
 
 {{^video_secure_url}}
-  {{#image}}<p><div class="instagram-images"><img class="instagram-image" src="{{image}}"/></div></p>{{/image}}
+  {{#image}}<div class="instagram-images"><img class="instagram-image" src="{{image}}"/></div>{{/image}}
 {{/video_secure_url}}
 
-<p><div class="instagram-description">{{description}}</div></p>
+<div class="instagram-description">{{description}}</div>
