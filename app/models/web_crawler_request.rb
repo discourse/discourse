@@ -52,7 +52,7 @@ class WebCrawlerRequest < ActiveRecord::Base
     $redis.del list_key
   end
 
-  # private
+  protected
 
   def self.user_agent_list_key(time = Time.now.utc)
     "crawl_ua_list:#{time.strftime('%Y%m%d')}"

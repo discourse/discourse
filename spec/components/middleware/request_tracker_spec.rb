@@ -298,6 +298,7 @@ describe Middleware::RequestTracker do
       expect_success_response(*middleware.call(env))
       expect_blocked_response(*middleware.call(env('HTTP_USER_AGENT' => 'Twitterbot')))
       expect_success_response(*middleware.call(env('HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)')))
+      expect_blocked_response(*middleware.call(env('HTTP_USER_AGENT' => 'DiscourseAPI Ruby Gem 0.19.0')))
     end
 
     it "applies blacklisted_crawler_user_agents correctly" do
@@ -305,6 +306,7 @@ describe Middleware::RequestTracker do
       expect_success_response(*middleware.call(env))
       expect_blocked_response(*middleware.call(env('HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)')))
       expect_success_response(*middleware.call(env('HTTP_USER_AGENT' => 'Twitterbot')))
+      expect_success_response(*middleware.call(env('HTTP_USER_AGENT' => 'DiscourseAPI Ruby Gem 0.19.0')))
     end
 
     it "blocked crawlers shouldn't log page views" do

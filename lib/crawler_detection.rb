@@ -39,10 +39,10 @@ module CrawlerDetection
 
     if SiteSetting.whitelisted_crawler_user_agents.present?
       whitelisted = @whitelisted_matchers[SiteSetting.whitelisted_crawler_user_agents] ||= to_matcher(SiteSetting.whitelisted_crawler_user_agents)
-      user_agent.match?(whitelisted)
+      !user_agent.nil? && user_agent.match?(whitelisted)
     else
       blacklisted = @blacklisted_matchers[SiteSetting.blacklisted_crawler_user_agents] ||= to_matcher(SiteSetting.blacklisted_crawler_user_agents)
-      !user_agent.match?(blacklisted)
+      user_agent.nil? || !user_agent.match?(blacklisted)
     end
   end
 
