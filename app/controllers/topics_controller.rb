@@ -240,10 +240,14 @@ class TopicsController < ApplicationController
   def update_shared_draft
     topic = Topic.find_by(id: params[:id])
     guardian.ensure_can_edit!(topic)
-    guardian.ensure_can_create_shared_draft!
-    raise Discourse::NotFound unless topic.shared_draft.present?
 
-    SharedDraft.where(topic_id: topic.id).update_all(category_id: params[:category_id].to_i)
+    category = Category.where(id: params[:category_id].to_i).first
+    guardian.ensure_can_publish_topic!(topic, category)
+
+    row_count = SharedDraft.where(topic_id: topic.id).update_all(category_id: category.id)
+    if row_count == 0
+      SharedDraft.create(topic_id: topic.id, category_id: category.id)
+    end
 
     render json: success_json
   end
