@@ -179,8 +179,8 @@ en:
     wizard_required: "Welcome to your new Discourse! Let’s get started with <a href='%{url}' data-auto-route='true'>the setup wizard</a> ✨"
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
 
-    bootstrap_mode_enabled: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email digest updates enabled. This will be automatically turned off when total user count exceeds %{min_users} users."
-    bootstrap_mode_disabled: "Bootstrap mode will be disabled in next 24 hours."
+    bootstrap_mode_enabled: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email digest updates enabled. This will be automatically turned off when %{min_users} users have joined."
+    bootstrap_mode_disabled: "Bootstrap mode will be disabled within 24 hours."
 
     themes:
       default_description: "Default"
@@ -1150,7 +1150,6 @@ en:
       not_allowed_from_ip_address: "You can't login from that IP address."
       admin_not_allowed_from_ip_address: "You can't log in as admin from that IP address."
       resend_activation_email: "Click here to send the activation email again."
-      omniauth_disallow_totp: "Your account has 2FA enabled. Please login with your password."
 
       resend_title: "Resend Activation Email"
       change_email: "Change Email Address"
