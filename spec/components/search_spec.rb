@@ -695,6 +695,13 @@ describe Search do
       expect(Search.execute('"3.0, eta is"').posts.length).to eq(0)
     end
 
+    it 'can match exact phrases when they are separated by other than spaces' do
+      topic = Fabricate(:topic, created_at: 3.months.ago)
+      Fabricate(:post, raw: 'this_is_a_test', topic: topic)
+
+      expect(Search.execute('"this is a test"').posts.length).to eq(1)
+    end
+
     it 'can find by status' do
       post = Fabricate(:post, raw: 'hi this is a test 123 123')
       topic = post.topic
