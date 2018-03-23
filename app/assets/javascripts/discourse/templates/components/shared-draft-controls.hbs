@@ -6,7 +6,9 @@
 
     <div class='publish-field'>
       <label>{{i18n "shared_drafts.destination_category"}}</label>
-      {{category-chooser value=topic.destination_category_id}}
+      {{category-chooser
+        value=topic.destination_category_id
+        onChooseCategory=(action "updateDestinationCategory")}}
     </div>
 
     <div class='publish-field'>

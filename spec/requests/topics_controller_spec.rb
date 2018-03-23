@@ -464,6 +464,36 @@ RSpec.describe TopicsController do
       SiteSetting.shared_drafts_category = shared_drafts_category.id
     end
 
+    describe "#update_shared_draft" do
+      let(:category) { Fabricate(:category) }
+      let(:other_cat) { Fabricate(:category) }
+      let(:topic) { Fabricate(:topic, category: shared_drafts_category, visible: false) }
+      let!(:shared_draft) { Fabricate(:shared_draft, topic: topic, category: category) }
+      let(:moderator) { Fabricate(:moderator) }
+
+      context "anonymous" do
+        it "doesn't allow staff to update the shared draft" do
+          put "/t/#{topic.id}/shared-draft.json", params: { category_id: other_cat.id }
+          expect(response.code.to_i).to eq(403)
+          topic.reload
+          expect(topic.shared_draft.category_id).to eq(category.id)
+        end
+      end
+
+      context "as a moderator" do
+        before do
+          sign_in(moderator)
+        end
+
+        it "allows staff to update the category id" do
+          put "/t/#{topic.id}/shared-draft.json", params: { category_id: other_cat.id }
+          expect(response).to be_success
+          topic.reload
+          expect(topic.shared_draft.category_id).to eq(other_cat.id)
+        end
+      end
+    end
+
     describe "#publish" do
       let(:category) { Fabricate(:category) }
       let(:topic) { Fabricate(:topic, category: shared_drafts_category, visible: false) }
