@@ -733,12 +733,12 @@ en:
         confirm_password_description: "Please confirm your password to continue"
         enable_description: |
           Scan this QR code in a supported app (<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">Android</a> – <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8" target="_blank">iOS</a> – <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>) and enter your authentication code.
-        disable_description: "Enter the authentication code from your app"
+        disable_description: "Please enter the authentication code from your app:"
         show_key_description: "Enter manually"
         info_prompt: "What is Two Factor Authentication?"
         extended_description: |
           Two factor authentication adds extra security to your account by requiring a one-time token in addition to your password. Tokens can be generated on <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Android</a>, <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a>, and <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a> devices.
-        oauth_enabled_warning: "Please note that social logins will be disabled once Two Factor Authentication has been enabled on your account."
+        oauth_enabled_warning: "Please note that social logins will be disabled once two factor authentication has been enabled on your account."
 
       change_about:
         title: "Change About Me"
@@ -1132,7 +1132,7 @@ en:
       username: "User"
       password: "Password"
       second_factor_title: "Two Factor Authentication Required"
-      second_factor_description: "Enter the authentication code from your app."
+      second_factor_description: "Please enter the authentication code from your app:"
       second_factor_label: "Code"
       email_placeholder: "email or username"
       caps_lock_warning: "Caps Lock is on"
