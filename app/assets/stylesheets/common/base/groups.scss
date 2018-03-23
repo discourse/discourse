@@ -10,7 +10,12 @@
   float: right;
 
   .groups-type-filter {
-    vertical-align: unset;
+    vertical-align: middle;
+  }
+
+  .groups-name-filter {
+    vertical-align: middle;
+    margin: 0;
   }
 }
 
