@@ -11,6 +11,7 @@ class TopicsController < ApplicationController
     :timings,
     :destroy_timings,
     :update,
+    :update_shared_draft,
     :destroy,
     :recover,
     :status,
@@ -234,6 +235,17 @@ class TopicsController < ApplicationController
   def destroy_timings
     PostTiming.destroy_for(current_user.id, [params[:topic_id].to_i])
     render body: nil
+  end
+
+  def update_shared_draft
+    topic = Topic.find_by(id: params[:id])
+    guardian.ensure_can_edit!(topic)
+    guardian.ensure_can_create_shared_draft!
+    raise Discourse::NotFound unless topic.shared_draft.present?
+
+    SharedDraft.where(topic_id: topic.id).update_all(category_id: params[:category_id].to_i)
+
+    render json: success_json
   end
 
   def update

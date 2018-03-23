@@ -98,6 +98,12 @@ export default ComboBoxComponent.extend({
     this.appEvents.off("composer:resized");
   },
 
+  didSelect(computedContentItem) {
+    if (this.attrs.onChooseCategory) {
+      this.attrs.onChooseCategory(computedContentItem.originalContent);
+    }
+  },
+
   computeContent() {
     const categories = Discourse.SiteSettings.fixed_category_positions_on_create ?
       Category.list() :
