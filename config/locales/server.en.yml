@@ -1813,7 +1813,7 @@ en:
     click_to_continue: "Click here to continue."
     already_logged_in: "Oops, looks like you are attempting to accept an invitation for another user. If you are not %{current_user}, please log out and try again."
     second_factor_title: "Two Factor Authentication"
-    second_factor_description: "Please enter the required authentication code from your app."
+    second_factor_description: "Please enter the required authentication code from your app:"
     invalid_second_factor_code: "Invalid authentication code"
 
   user:
@@ -2766,7 +2766,7 @@ en:
       title: "Two Factor Authentication disabled"
       subject_template: "[%{email_prefix}] Two Factor Authentication disabled"
       text_body_template: |
-        Two factor authentication has been disabled on your account at %{site_name}. You can now log in with your password alone; an authentication code is no longer required.
+        Two factor authentication has been disabled on your account at %{site_name}. You can now log in with only your password; an additional authentication code is no longer required.
 
         If you did not choose to disable two factor authentication, someone may have compromised your account.
 
