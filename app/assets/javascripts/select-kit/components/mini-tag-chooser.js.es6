@@ -168,7 +168,12 @@ export default ComboBox.extend(Tags, {
 
   destroyTags(tags) {
     tags = Ember.makeArray(tags);
+    // work around usage with buffered proxy
+    // it does not listen on array changes, similar hack already on select
+    // TODO: FIX buffered-proxy.js to support arrays
     this.get("tags").removeObjects(tags);
+    this.set("tags", this.get("tags").slice(0));
+
     this.set("searchDebounce", run.debounce(this, this._prepareSearch, this.get("filter"), 350));
   },
 
