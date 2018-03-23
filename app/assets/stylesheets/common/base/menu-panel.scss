@@ -223,6 +223,9 @@
 .user-menu {
 
   .notifications {
+    width: 100%;
+    display: table;
+
     h3 {
       padding: 0 0.4em;
       font-weight: bold;
