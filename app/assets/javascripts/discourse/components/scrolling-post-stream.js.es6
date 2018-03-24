@@ -93,7 +93,7 @@ export default MountWidget.extend({
     let percent = null;
 
     const offset = offsetCalculator();
-    const topCheck = Math.ceil(windowTop + offset + 5);
+    const topCheck = Math.ceil(windowTop + offset);
 
     // uncomment to debug the eyeline
     /*
