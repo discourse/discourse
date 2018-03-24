@@ -205,7 +205,7 @@ export default Ember.Controller.extend(BufferedContent, {
       });
     },
 
-    // Called the the topmost visible post on the page changes.
+    // Called when the topmost visible post on the page changes.
     topVisibleChanged(event) {
       const { post, refresh } = event;
       if (!post) { return; }
@@ -475,6 +475,10 @@ export default Ember.Controller.extend(BufferedContent, {
 
     jumpUnread() {
       this._jumpToPostId(this.get('model.last_read_post_id'));
+    },
+
+    jumpToPostId(postId) {
+      this._jumpToPostId(postId);
     },
 
     toggleMultiSelect() {

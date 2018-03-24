@@ -26,7 +26,7 @@ import { addGTMPageChangedCallback } from 'discourse/lib/page-tracker';
 import { registerCustomAvatarHelper } from 'discourse/helpers/user-avatar';
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = '0.8.18';
+const PLUGIN_API_VERSION = '0.8.19';
 
 class PluginApi {
   constructor(version, container) {
