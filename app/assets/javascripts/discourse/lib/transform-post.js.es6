@@ -121,6 +121,7 @@ export default function transformPost(currentUser, site, post, prevPost, nextPos
   postAtts.userCustomFields = post.user_custom_fields;
   postAtts.topicUrl = topic.get('url');
   postAtts.isSaving = post.isSaving;
+  postAtts.topicTags = topic.tags;
 
   const showPMMap = topic.archetype === 'private_message' && post.post_number === 1;
   if (showPMMap) {
