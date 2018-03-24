@@ -81,6 +81,7 @@ const DiscourseURL = Ember.Object.extend({
     const holderId = `#post_${postNumber}`;
 
     _transitioning = postNumber > 1;
+
     Ember.run.schedule('afterRender', () => {
       let elementId;
       let holder;
@@ -107,7 +108,7 @@ const DiscourseURL = Ember.Object.extend({
         }
       });
 
-      if (holder.length > 0 && opts && opts.skipIfOnScreen){
+      if (holder.length > 0 && opts && opts.skipIfOnScreen) {
         const elementTop = lockon.elementTop();
         const scrollTop = $(window).scrollTop();
         const windowHeight = $(window).height() - offsetCalculator();
@@ -172,7 +173,7 @@ const DiscourseURL = Ember.Object.extend({
     }
 
     const pathname = path.replace(/(https?\:)?\/\/[^\/]+/, '');
-    let baseUri = Discourse.BaseUri;
+    const baseUri = Discourse.BaseUri;
 
     // If we have a baseUri and an absolute URL, make sure the baseUri
     // is the same. Otherwise we could be switching forums.
@@ -217,18 +218,18 @@ const DiscourseURL = Ember.Object.extend({
     }
 
     // handle prefixes
-    if (path.match(/^\//)) {
-      let rootURL = (baseUri === undefined ? "/" : baseUri);
-      rootURL = rootURL.replace(/\/$/, '');
-      path = path.replace(rootURL, '');
+    if (path.indexOf("/") === 0) {
+      const rootURL = (baseUri === undefined ? "/" : baseUri).replace(/\/$/, "");
+      path = path.replace(rootURL, "");
     }
 
     path = rewritePath(path);
+
     if (this.navigatedToPost(oldPath, path, opts)) { return; }
 
     if (oldPath === path) {
-      // If navigating to the same path send an app event. Views can watch it
-      // and tell their controllers to refresh
+      // If navigating to the same path send an app event.
+      // Views can watch it and tell their controllers to refresh
       this.appEvents.trigger('url:refresh');
     }
 
