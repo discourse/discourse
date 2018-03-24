@@ -5,19 +5,34 @@ export function scrollTopFor(y) {
 export default function offsetCalculator(y) {
   const $header = $('header');
   const $container = $('.posts-wrapper');
+  const containerOffset = $container.offset();
+
+  let titleHeight = 0;
   const scrollTop = y || $(window).scrollTop();
-  const titleHeight = $('#topic-title').height() || 0;
+
+  if (!containerOffset || scrollTop < containerOffset.top) {
+    titleHeight = $('#topic-title').height() || 0;
+  }
+
   const rawWinHeight = $(window).height();
-  const expectedOffset = titleHeight - ($header.find('.contents').height() || 0);
+  const windowHeight = rawWinHeight - titleHeight;
+
+  const eyeTarget = (windowHeight / 10);
+  const headerHeight = $header.outerHeight(true);
+  const expectedOffset = titleHeight - ($header.find('.contents').height() || 0) + (eyeTarget * 2);
+  const ideal = headerHeight + ((expectedOffset < 0) ? 0 : expectedOffset);
 
   if ($container.length === 0) { return expectedOffset; }
 
-  const headerHeight = $header.outerHeight(true);
-  const ideal = headerHeight + Math.max(0, expectedOffset);
   const topPos = $container.offset().top;
+
   const docHeight = $(document).height();
-  const scrollPercent = Math.min(scrollTop / (docHeight - rawWinHeight), 1.0);
-  const inter = Math.min(headerHeight, topPos - scrollTop + ($container.height() * scrollPercent));
+  let scrollPercent = Math.min((scrollTop / (docHeight-rawWinHeight)), 1.0);
+
+  let inter = topPos - scrollTop + ($container.height() * scrollPercent);
+  if (inter < headerHeight + eyeTarget) {
+    inter = headerHeight + eyeTarget;
+  }
 
   if (inter > ideal) {
     const bottom = $('#topic-bottom').offset().top;
