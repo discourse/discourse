@@ -50,6 +50,7 @@ class TopicViewSerializer < ApplicationSerializer
              :unpinned,
              :pinned,
              :details,
+             :current_post_number,
              :highest_post_number,
              :last_read_post_number,
              :last_read_post_id,
@@ -170,6 +171,14 @@ class TopicViewSerializer < ApplicationSerializer
   # Topic user stuff
   def has_topic_user?
     object.topic_user.present?
+  end
+
+  def current_post_number
+    [object.post_number, object.highest_post_number].min
+  end
+
+  def include_current_post_number?
+    object.highest_post_number.present?
   end
 
   def highest_post_number

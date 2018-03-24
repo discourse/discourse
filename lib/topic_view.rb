@@ -6,7 +6,7 @@ require_dependency 'gaps'
 class TopicView
 
   attr_reader :topic, :posts, :guardian, :filtered_posts, :chunk_size, :print, :message_bus_last_id
-  attr_accessor :draft, :draft_key, :draft_sequence, :user_custom_fields, :post_custom_fields
+  attr_accessor :draft, :draft_key, :draft_sequence, :user_custom_fields, :post_custom_fields, :post_number
 
   def self.slow_chunk_size
     10
@@ -43,13 +43,16 @@ class TopicView
     @guardian = Guardian.new(@user)
     @topic = find_topic(topic_id)
     @print = options[:print].present?
+
     check_and_raise_exceptions
 
     options.each do |key, value|
       self.instance_variable_set("@#{key}".to_sym, value)
     end
 
-    @page = 1 if (!@page || @page.zero?)
+    @post_number = [@post_number.to_i, 1].max
+    @page = [@page.to_i, 1].max
+
     @chunk_size =
       case
       when options[:slow_platform] then TopicView.slow_chunk_size
@@ -82,13 +85,12 @@ class TopicView
 
   def canonical_path
     path = relative_url
-
     path <<
-      if @post_number
-        page = ((@post_number.to_i - 1) / @limit) + 1
-        (page > 1) ? "?page=#{page}" : ""
+      if @page > 1
+        "?page=#{@page}"
       else
-        (@page && @page.to_i > 1) ? "?page=#{@page}" : ""
+        page = ((@post_number - 1) / @limit) + 1
+        page > 1 ? "?page=#{page}" : ""
       end
 
     path
@@ -109,11 +111,7 @@ class TopicView
   end
 
   def prev_page
-    if @page && @page > 1 && posts.length > 0
-      @page - 1
-    else
-      nil
-    end
+    @page > 1 && posts.size > 0 ? @page - 1 : nil
   end
 
   def next_page
@@ -164,7 +162,7 @@ class TopicView
     return @desired_post if @desired_post.present?
     return nil if posts.blank?
 
-    @desired_post = posts.detect { |p| p.post_number == @post_number.to_i }
+    @desired_post = posts.detect { |p| p.post_number == @post_number }
     @desired_post ||= posts.first
     @desired_post
   end
@@ -177,17 +175,17 @@ class TopicView
   end
 
   def read_time
-    return nil if @post_number.present? && @post_number.to_i != 1 # only show for topic URLs
+    return nil if @post_number > 1 # only show for topic URLs
     (@topic.word_count / SiteSetting.read_time_word_count).floor if @topic.word_count
   end
 
   def like_count
-    return nil if @post_number.present? && @post_number.to_i != 1 # only show for topic URLs
+    return nil if @post_number > 1 # only show for topic URLs
     @topic.like_count
   end
 
   def image_url
-    if @post_number.present? && @post_number.to_i != 1 && @desired_post.present?
+    if @post_number > 1 && @desired_post.present?
       if @desired_post.image_url.present?
         @desired_post.image_url
       elsif @desired_post.user
