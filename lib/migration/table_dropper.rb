@@ -44,9 +44,10 @@ module Migration
         LIMIT 1
       SQL
 
-      builder.where(new_table_exists) if @new_name.present?
+      builder.where(table_exists(":new_name")) if @new_name.present?
 
       builder.where("table_schema = 'public'")
+        .where(table_exists(":old_name"))
         .where(previous_migration_done)
         .exec(old_name: @old_name,
               new_name: @new_name,
@@ -54,13 +55,13 @@ module Migration
               after_migration: @after_migration).to_a.length > 0
     end
 
-    def new_table_exists
+    def table_exists(table_name_placeholder)
       <<~SQL
         EXISTS(
             SELECT 1
             FROM INFORMATION_SCHEMA.TABLES
             WHERE table_schema = 'public' AND
-                  table_name = :new_name
+                  table_name = #{table_name_placeholder}
         )
       SQL
     end
