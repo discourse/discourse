@@ -24,22 +24,30 @@ describe TopicPublisher do
       end
 
       it "will publish the topic properly" do
-        TopicPublisher.new(topic, moderator, shared_draft.category_id).publish!
+        published_at = 1.hour.from_now.change(usec: 0)
+        freeze_time(published_at) do
+          TopicPublisher.new(topic, moderator, shared_draft.category_id).publish!
 
-        topic.reload
-        expect(topic.category).to eq(category)
-        expect(topic).to be_visible
-        expect(topic.shared_draft).to be_blank
-        expect(UserHistory.where(
-          acting_user_id: moderator.id,
-          action: UserHistory.actions[:topic_published]
-        )).to be_present
-        op.reload
+          topic.reload
+          expect(topic.category).to eq(category)
+          expect(topic).to be_visible
+          expect(topic.created_at).to eq(published_at)
+          expect(topic.updated_at).to eq(published_at)
+          expect(topic.shared_draft).to be_blank
+          expect(UserHistory.where(
+            acting_user_id: moderator.id,
+            action: UserHistory.actions[:topic_published]
+          )).to be_present
+          op.reload
 
-        # Should delete any edits on the OP
-        expect(op.revisions.size).to eq(0)
-        expect(op.version).to eq(1)
-        expect(op.public_version).to eq(1)
+          # Should delete any edits on the OP
+          expect(op.revisions.size).to eq(0)
+          expect(op.version).to eq(1)
+          expect(op.public_version).to eq(1)
+          expect(op.created_at).to eq(published_at)
+          expect(op.updated_at).to eq(published_at)
+          expect(op.last_version_at).to eq(published_at)
+        end
       end
     end
 

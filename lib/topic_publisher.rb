@@ -7,7 +7,8 @@ class TopicPublisher
   end
 
   def publish!
-    TopicTimestampChanger.new(timestamp: Time.zone.now, topic: @topic).change! do
+    published_at = Time.zone.now
+    TopicTimestampChanger.new(timestamp: published_at, topic: @topic).change! do
       if @topic.private_message?
         @topic = TopicConverter.new(@topic, @published_by)
           .convert_to_public_topic(@category_id)
@@ -29,8 +30,11 @@ class TopicPublisher
       op = @topic.first_post
       if op.present?
         op.revisions.delete_all
-        op.update_column(:version, 1)
-        op.update_column(:public_version, 1)
+        op.update_columns(
+          version: 1,
+          public_version: 1,
+          last_version_at: published_at
+        )
       end
     end
 
