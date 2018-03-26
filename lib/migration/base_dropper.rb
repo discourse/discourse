@@ -33,7 +33,12 @@ module Migration
             SELECT 1
             FROM schema_migration_details
             WHERE name = :after_migration AND
-                  created_at <= (current_timestamp AT TIME ZONE 'UTC' - INTERVAL :delay)
+                  (created_at <= (current_timestamp AT TIME ZONE 'UTC' - INTERVAL :delay) OR
+                   (SELECT created_at
+                    FROM schema_migration_details
+                    ORDER BY id ASC
+                    LIMIT 1) > (current_timestamp AT TIME ZONE 'UTC' - INTERVAL '10 minutes')
+                  )
         )
       SQL
     end

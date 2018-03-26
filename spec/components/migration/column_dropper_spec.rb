@@ -4,49 +4,97 @@ require_dependency 'migration/column_dropper'
 RSpec.describe Migration::ColumnDropper do
 
   def has_column?(table, column)
-    Topic.exec_sql("SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
-                    WHERE
-                      table_schema = 'public' AND
-                      table_name = :table AND
-                      column_name = :column
-                   ",
-                      table: table, column: column
-                  ).to_a.length == 1
+    ActiveRecord::Base.exec_sql(<<~SQL, table: table, column: column).to_a.length == 1
+      SELECT 1
+      FROM INFORMATION_SCHEMA.COLUMNS
+      WHERE
+        table_schema = 'public' AND
+        table_name = :table AND
+        column_name = :column
+    SQL
   end
 
-  it "can correctly drop columns after correct delay" do
-    Topic.exec_sql "ALTER TABLE topics ADD COLUMN junk int"
-    name = Topic
-      .exec_sql("SELECT name FROM schema_migration_details LIMIT 1")
-      .getvalue(0, 0)
+  def update_first_migration_date(created_at)
+    ActiveRecord::Base.exec_sql(<<~SQL, created_at: created_at)
+        UPDATE schema_migration_details
+        SET created_at = :created_at
+        WHERE id = (SELECT MIN(id)
+                    FROM schema_migration_details)
+    SQL
+  end
 
-    Topic.exec_sql("UPDATE schema_migration_details SET created_at = :created_at WHERE name = :name",
-                  name: name, created_at: 15.minutes.ago)
+  describe ".drop" do
+    let(:migration_name) do
+      ActiveRecord::Base
+        .exec_sql("SELECT name FROM schema_migration_details ORDER BY id DESC LIMIT 1")
+        .getvalue(0, 0)
+    end
 
-    dropped_proc_called = false
+    before do
+      Topic.exec_sql "ALTER TABLE topics ADD COLUMN junk int"
 
-    Migration::ColumnDropper.drop(
-      table: 'topics',
-      after_migration: name,
-      columns: ['junk'],
-      delay: 20.minutes,
-      on_drop: ->() { dropped_proc_called = true }
-    )
+      ActiveRecord::Base.exec_sql(<<~SQL, name: migration_name, created_at: 15.minutes.ago)
+        UPDATE schema_migration_details
+        SET created_at = :created_at
+        WHERE name = :name
+      SQL
+    end
 
-    expect(has_column?('topics', 'junk')).to eq(true)
-    expect(dropped_proc_called).to eq(false)
+    it "can correctly drop columns after correct delay" do
+      dropped_proc_called = false
+      update_first_migration_date(2.years.ago)
 
-    Migration::ColumnDropper.drop(
-      table: 'topics',
-      after_migration: name,
-      columns: ['junk'],
-      delay: 10.minutes,
-      on_drop: ->() { dropped_proc_called = true }
-    )
+      Migration::ColumnDropper.drop(
+        table: 'topics',
+        after_migration: migration_name,
+        columns: ['junk'],
+        delay: 20.minutes,
+        on_drop: ->() { dropped_proc_called = true }
+      )
 
-    expect(has_column?('topics', 'junk')).to eq(false)
-    expect(dropped_proc_called).to eq(true)
+      expect(has_column?('topics', 'junk')).to eq(true)
+      expect(dropped_proc_called).to eq(false)
 
+      Migration::ColumnDropper.drop(
+        table: 'topics',
+        after_migration: migration_name,
+        columns: ['junk'],
+        delay: 10.minutes,
+        on_drop: ->() { dropped_proc_called = true }
+      )
+
+      expect(has_column?('topics', 'junk')).to eq(false)
+      expect(dropped_proc_called).to eq(true)
+    end
+
+    it "drops the columns immediately if the first migration was less than 10 minutes ago" do
+      dropped_proc_called = false
+      update_first_migration_date(11.minutes.ago)
+
+      Migration::ColumnDropper.drop(
+        table: 'topics',
+        after_migration: migration_name,
+        columns: ['junk'],
+        delay: 30.minutes,
+        on_drop: ->() { dropped_proc_called = true }
+      )
+
+      expect(has_column?('topics', 'junk')).to eq(true)
+      expect(dropped_proc_called).to eq(false)
+
+      update_first_migration_date(9.minutes.ago)
+
+      Migration::ColumnDropper.drop(
+        table: 'topics',
+        after_migration: migration_name,
+        columns: ['junk'],
+        delay: 30.minutes,
+        on_drop: ->() { dropped_proc_called = true }
+      )
+
+      expect(has_column?('topics', 'junk')).to eq(false)
+      expect(dropped_proc_called).to eq(true)
+    end
   end
 
   describe '.mark_readonly' do
