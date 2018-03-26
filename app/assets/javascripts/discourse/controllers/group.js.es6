@@ -84,6 +84,11 @@ export default Ember.Controller.extend({
     return this.currentUser && messageable;
   },
 
+  @computed('model')
+  canManageGroup(model) {
+    return this.currentUser && this.currentUser.canManageGroup(model);
+  },
+
   actions: {
     messageGroup() {
       this.send('createNewMessageViaParams', this.get('model.name'));

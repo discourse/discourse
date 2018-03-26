@@ -65,24 +65,21 @@ const Group = RestModel.extend({
     });
   },
 
-  removeMember(member) {
-    var self = this;
+  removeMember(member, params) {
     return ajax('/groups/' + this.get('id') + '/members.json', {
       type: "DELETE",
       data: { user_id: member.get("id") }
-    }).then(function() {
-      // reload member list
-      self.findMembers();
+    }).then(() => {
+      this.findMembers(params);
     });
   },
 
   addMembers(usernames) {
-    var self = this;
     return ajax('/groups/' + this.get('id') + '/members.json', {
       type: "PUT",
       data: { usernames: usernames }
-    }).then(function() {
-      self.findMembers();
+    }).then(response => {
+      this.findMembers({ filter: response.usernames.join(',') });
     });
   },
 

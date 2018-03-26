@@ -1651,16 +1651,29 @@ describe User do
     end
   end
 
+  def filter_by(method)
+    username = 'someuniqueusername'
+    user.update!(username: username)
+
+    username2 = 'awesomeusername'
+    user2 = Fabricate(:user, username: username2)
+
+    expect(User.public_send(method, username))
+      .to eq([user])
+
+    expect(User.public_send(method, 'UNiQuE'))
+      .to eq([user])
+
+    expect(User.public_send(method, [username, username2]))
+      .to contain_exactly(user, user2)
+
+    expect(User.public_send(method, ['UNiQuE', 'sOME']))
+      .to contain_exactly(user, user2)
+  end
+
   describe '#filter_by_username' do
     it 'should be able to filter by username' do
-      username = 'someuniqueusername'
-      user.update!(username: username)
-
-      expect(User.filter_by_username(username))
-        .to eq([user])
-
-      expect(User.filter_by_username('UNiQuE'))
-        .to eq([user])
+      filter_by(:filter_by_username)
     end
   end
 
@@ -1677,14 +1690,7 @@ describe User do
     end
 
     it 'should be able to filter by username' do
-      username = 'someuniqueusername'
-      user.update!(username: username)
-
-      expect(User.filter_by_username_or_email(username))
-        .to eq([user])
-
-      expect(User.filter_by_username_or_email('UNiQuE'))
-        .to eq([user])
+      filter_by(:filter_by_username_or_email)
     end
   end
 end

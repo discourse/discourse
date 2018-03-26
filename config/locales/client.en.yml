@@ -464,6 +464,9 @@ en:
         one: "Group"
         other: "Groups"
       activity: "Activity"
+      add_members:
+        title: "Add Members"
+        description: "Manage the membership of this group"
       members:
         title: "Members"
         filter_placeholder_admin: "username or email"

@@ -42,6 +42,12 @@
     <div class="container">
       {{group-navigation group=model currentPath=application.currentPath tabs=tabs}}
 
+      {{#if canManageGroup}}
+        {{group-navigation-dropdown
+            model=model
+            manageMembership=(route-action "showGroupMembershipModal")}}
+      {{/if}}
+
       {{#if displayGroupMessageButton}}
         {{d-button
             action="messageGroup"

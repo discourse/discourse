@@ -296,7 +296,9 @@ en:
       bulk_add: "%{users_added} users have been added to the group."
     errors:
       can_not_modify_automatic: "You cannot modify an automatic group"
-      member_already_exist: "'%{username}' is already a member of this group."
+      member_already_exist:
+        one: "'%{username}' is already a member of this group."
+        other: "The following users are already members of this group: %{username}"
       invalid_domain: "'%{domain}' is not a valid domain."
       invalid_incoming_email: "'%{email}' is not a valid email address."
       email_already_used_in_group: "'%{email}' is already used by the group '%{group_name}'."

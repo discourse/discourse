@@ -160,7 +160,11 @@ class User < ActiveRecord::Base
   scope :activated, -> { where(active: true) }
 
   scope :filter_by_username, ->(filter) do
-    where('username_lower ILIKE ?', "%#{filter}%")
+    if filter.is_a?(Array)
+      where('username_lower ~* ?', "(#{filter.join('|')})")
+    else
+      where('username_lower ILIKE ?', "%#{filter}%")
+    end
   end
 
   scope :filter_by_username_or_email, ->(filter) do
@@ -171,11 +175,19 @@ class User < ActiveRecord::Base
       end
     end
 
-    joins(:primary_email)
-      .where(
+    users = joins(:primary_email)
+
+    if filter.is_a?(Array)
+      users.where(
+        'username_lower ~* :filter OR lower(user_emails.email) SIMILAR TO :filter',
+        filter: "(#{filter.join('|')})"
+      )
+    else
+      users.where(
         'username_lower ILIKE :filter OR lower(user_emails.email) ILIKE :filter',
         filter: "%#{filter}%"
       )
+    end
   end
 
   module NewTopicDuration
