@@ -24,7 +24,8 @@ const TagGroup = RestModel.extend({
         name: this.get('name'),
         tag_names: this.get('tag_names'),
         parent_tag_name: this.get('parent_tag_name') ? this.get('parent_tag_name') : undefined,
-        one_per_topic: this.get('one_per_topic')
+        one_per_topic: this.get('one_per_topic'),
+        permissions: this.get('visible_only_to_staff') ? {"staff": "1"} : {"everyone": "1"}
       },
       type: isNew ? 'POST' : 'PUT'
     }).then(function(result) {

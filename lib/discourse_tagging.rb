@@ -76,7 +76,6 @@ module DiscourseTagging
       term.gsub!("_", "\\_")
       term = clean_tag(term)
       query = query.where('tags.name like ?', "%#{term}%")
-      # query = query.where('tags.id NOT IN (?)', selected_tag_ids) unless selected_tag_ids.empty?
     end
 
     # Filters for category-specific tags:
@@ -152,7 +151,36 @@ module DiscourseTagging
       end
     end
 
-    query
+    if guardian.nil? || guardian.is_staff?
+      query
+    else
+      filter_visible(query, guardian)
+    end
+  end
+
+  def self.filter_visible(query, guardian = nil)
+    if !guardian&.is_staff? && TagGroupPermission.where(group_id: Group::AUTO_GROUPS[:staff]).exists?
+      query.where(filter_visible_sql)
+    else
+      query
+    end
+  end
+
+  def self.filter_visible_sql
+    @filter_visible_sql ||= <<~SQL
+      tags.id NOT IN (
+        SELECT tgm.tag_id
+          FROM tag_group_memberships tgm
+    INNER JOIN tag_group_permissions tgp
+            ON tgp.tag_group_id = tgm.tag_group_id
+           AND tgp.group_id = #{Group::AUTO_GROUPS[:staff]})
+    SQL
+  end
+
+  def self.hidden_tag_names(guardian = nil)
+    return [] if guardian&.is_staff? || !TagGroupPermission.where(group_id: Group::AUTO_GROUPS[:staff]).exists?
+    tag_group_ids = TagGroupPermission.where(group_id: Group::AUTO_GROUPS[:staff]).pluck(:tag_group_id)
+    Tag.includes(:tag_groups).where('tag_group_id in (?)', tag_group_ids).pluck(:name)
   end
 
   def self.clean_tag(tag)

@@ -321,6 +321,30 @@ SQL
     end
   end
 
+  def self.resolve_permissions(permissions)
+    read_restricted = true
+
+    everyone = Group::AUTO_GROUPS[:everyone]
+    full = CategoryGroup.permission_types[:full]
+
+    mapped = permissions.map do |group, permission|
+      group_id = Group.group_id_from_param(group)
+      permission = CategoryGroup.permission_types[permission] unless permission.is_a?(Integer)
+
+      [group_id, permission]
+    end
+
+    mapped.each do |group, permission|
+      if group == everyone && permission == full
+        return [false, []]
+      end
+
+      read_restricted = false if group == everyone
+    end
+
+    [read_restricted, mapped]
+  end
+
   def allowed_tags=(tag_names_arg)
     DiscourseTagging.add_or_create_tags_by_name(self, tag_names_arg, unlimited: true)
   end
@@ -377,33 +401,6 @@ SQL
       .first
 
     self.update_attributes(latest_topic_id: latest_topic_id, latest_post_id: latest_post_id)
-  end
-
-  def self.resolve_permissions(permissions)
-    read_restricted = true
-
-    everyone = Group::AUTO_GROUPS[:everyone]
-    full = CategoryGroup.permission_types[:full]
-
-    mapped = permissions.map do |group, permission|
-      group = group.id if group.is_a?(Group)
-
-      # subtle, using Group[] ensures the group exists in the DB
-      group = Group[group.to_sym].id unless group.is_a?(Integer)
-      permission = CategoryGroup.permission_types[permission] unless permission.is_a?(Integer)
-
-      [group, permission]
-    end
-
-    mapped.each do |group, permission|
-      if group == everyone && permission == full
-        return [false, []]
-      end
-
-      read_restricted = false if group == everyone
-    end
-
-    [read_restricted, mapped]
   end
 
   def self.query_parent_category(parent_slug)

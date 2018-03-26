@@ -94,6 +94,24 @@ describe Tag do
         expect(described_class.top_tags.sort).to eq([@tags[0].name, @tags[1].name, @tags[2].name].sort)
       end
     end
+
+    context "with hidden tags" do
+      let(:hidden_tag) { Fabricate(:tag, name: 'hidden') }
+      let!(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name]) }
+      let!(:topic2) { Fabricate(:topic, tags: [tag, hidden_tag]) }
+
+      it "returns all tags to staff" do
+        expect(Tag.top_tags(guardian: Guardian.new(Fabricate(:admin)))).to include(hidden_tag.name)
+      end
+
+      it "doesn't return hidden tags to anon" do
+        expect(Tag.top_tags).to_not include(hidden_tag.name)
+      end
+
+      it "doesn't return hidden tags to non-staff" do
+        expect(Tag.top_tags(guardian: Guardian.new(Fabricate(:user)))).to_not include(hidden_tag.name)
+      end
+    end
   end
 
   describe '#pm_tags' do
