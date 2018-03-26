@@ -1392,6 +1392,18 @@ describe Topic do
       expect(topic.topic_timers.first.errors[:execute_at]).to be_present
     end
 
+    it "sets a validation error when give a timestamp of an invalid format" do
+      freeze_time now
+
+      expect do
+        topic.set_or_create_timer(
+          TopicTimer.types[:close],
+          '۲۰۱۸-۰۳-۲۶ ۱۸:۰۰+۰۸:۰۰',
+          by_user: admin
+        )
+      end.to raise_error(Discourse::InvalidParameters)
+    end
+
     it "can take a timestamp with timezone" do
       freeze_time now
       topic.set_or_create_timer(TopicTimer.types[:close], '2013-11-25T01:35:00-08:00', by_user: admin)
