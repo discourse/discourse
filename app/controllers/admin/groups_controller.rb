@@ -166,7 +166,7 @@ class Admin::GroupsController < Admin::AdminController
 
     group.restore_user_count!
 
-    render json: success_json
+    render json: success_json.merge!(usernames: users.pluck(:username))
   end
 
   def remove_owner

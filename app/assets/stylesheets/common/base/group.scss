@@ -213,4 +213,19 @@ table.group-members {
   .ac-wrap {
     width: 100% !important;
   }
+
+  label {
+    font-weight: bold;
+  }
+
+  .group-membership-make-owner {
+    label {
+      display: inline;
+      vertical-align: middle;
+    }
+
+    input[type='checkbox'] {
+      vertical-align: middle;
+    }
+  }
 }

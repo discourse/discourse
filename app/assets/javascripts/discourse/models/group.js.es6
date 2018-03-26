@@ -74,22 +74,34 @@ const Group = RestModel.extend({
     });
   },
 
-  addMembers(usernames) {
+  addMembers(usernames, filter) {
     return ajax('/groups/' + this.get('id') + '/members.json', {
       type: "PUT",
       data: { usernames: usernames }
     }).then(response => {
-      this.findMembers({ filter: response.usernames.join(',') });
+      if (filter) {
+        this._filterMembers(response);
+      } else {
+        this.findMembers();
+      }
     });
   },
 
-  addOwners(usernames) {
+  addOwners(usernames, filter) {
     return ajax(`/admin/groups/${this.get('id')}/owners.json`, {
       type: "PUT",
       data: { group: { usernames: usernames } }
-    }).then(() => {
-      this.findMembers();
+    }).then(response => {
+      if (filter) {
+        this._filterMembers(response);
+      } else {
+        this.findMembers();
+      }
     });
+  },
+
+  _filterMembers(response) {
+    return this.findMembers({ filter: response.usernames.join(",") });
   },
 
   @computed("display_name", "name")
