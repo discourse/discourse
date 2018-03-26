@@ -98,7 +98,6 @@ zh_CN:
       email: '在电子邮件里发送该链接'
     action_codes:
       public_topic: "于%{when}设置为公共主题"
-      private_topic: "于%{when}设置为私密主题"
       split_topic: "于%{when}分割了该主题"
       invited_user: "于%{when}邀请了%{who}"
       invited_group: "于%{when}邀请了%{who}"
@@ -129,8 +128,6 @@ zh_CN:
     topic_admin_menu: "管理主题"
     wizard_required: "欢迎来到你新安装的 Discourse！让我们开始<a href='%{url}' data-auto-route='true'>设置向导</a>✨"
     emails_are_disabled: "出站邮件已经被管理员全局禁用。将不发送任何邮件提醒。"
-    bootstrap_mode_enabled: "为方便站点准备发布，其正处于初始化模式中。所有新用户将被授予信任等级1，并为他们设置接受每日邮件摘要。初始化模式会在用户数超过 %{min_users} 个时关闭。"
-    bootstrap_mode_disabled: "初始化模式将会在24小时后关闭。"
     themes:
       default_description: "默认"
     s3:
@@ -224,12 +221,6 @@ zh_CN:
       last_read: "这是你阅读过的最后一帖；点击收藏"
       remove: "取消收藏"
       confirm_clear: "你确定要清除该主题的所有收藏吗？"
-    topic_count_latest:
-      other: "{{count}} 新主题或更新的主题。"
-    topic_count_unread:
-      other: "{{count}} 未读主题。"
-    topic_count_new:
-      other: " {{count}} 个近期主题。"
     preview: "预览"
     cancel: "取消"
     save: "保存更改"
@@ -347,7 +338,6 @@ zh_CN:
       request: "请求加入群组"
       message: "私信"
       automatic_group: 自动群组
-      closed_group: 封闭群组
       is_group_user: "你是该群组的一个成员"
       allow_membership_requests: "允许用户向小组拥有者发送成员请求"
       membership_request_template: "用户发送会员请求时向其显示的自定义模板"
@@ -357,7 +347,6 @@ zh_CN:
         reason: "向小组拥有者说明你为何属于这个小组"
       membership: "成员资格"
       name: "群组ID"
-      user_count: "成员数目"
       bio: "关于群组"
       owner: "所有者"
       index:
@@ -366,7 +355,6 @@ zh_CN:
       title:
         other: "小组"
       activity: "活动"
-      members: "成员"
       topics: "主题"
       posts: "帖子"
       mentions: "提及"
@@ -604,7 +592,6 @@ zh_CN:
         choose: "输入密码"
       second_factor:
         title: "双重验证"
-        info_prompt: "什么是双重验证？"
       change_about:
         title: "更改个人信息"
         error: "提交修改时出错了"
@@ -2179,19 +2166,15 @@ zh_CN:
       notifications:
         watching:
           title: "监看"
-          description: "你将自动监看该标签中的所有主题。新帖子和新主题会通知你，再者未读和新帖的数量也将显示在主题旁边。"
         watching_first_post:
           title: "监看头一帖"
-          description: "在这个标签中，只是每一个新主题的第一帖，才会通知你。"
         tracking:
           title: "跟踪"
-          description: "你将自动跟踪这个标签里的所有主题。未读和新帖的数量将显示在主题旁边。"
         regular:
           title: "普通"
           description: "如果有人@你或回复你的帖子，将通知你。"
         muted:
           title: "静音"
-          description: "在这个标签中，你将不会收到新主题任何通知，它们也不会出现在你的未读列表上面。"
       groups:
         title: "标签组"
         about: "将标签分组以便管理。"

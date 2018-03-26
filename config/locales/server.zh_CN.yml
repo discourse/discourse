@@ -212,7 +212,6 @@ zh_CN:
       bulk_add: "%{users_added}用户已经被添加至小组。"
     errors:
       can_not_modify_automatic: "你不能修改自动组"
-      member_already_exist: "“%{username}”已经是群组成员了。"
       invalid_domain: "“%{domain}”不是有效域名。"
       invalid_incoming_email: "“%{email}”不是有效邮箱地址。"
       email_already_used_in_group: "“%{email}”已经被群组“%{group_name}”使用了。"
@@ -2679,8 +2678,6 @@ zh_CN:
     promoter:
       name: 推广者
       description: 已邀请了 1 个用户
-      long_description: |
-        该徽章授予给邀请他人加入社区的你。你曾使用了用户页面的邀请按钮或主题底部的邀请按钮。邀请对某个讨论感兴趣的朋友是引介新人的好办法，非常感谢！
     campaigner:
       name: 活动家
       description: 已邀请了 3 个初级用户
@@ -2780,8 +2777,6 @@ zh_CN:
     first_emoji:
       name: 首个表情
       description: 在帖子中使用表情符号
-      long_description: |
-        该徽章授予给第一次在帖子中使用 Emoji 的你 :thumbsup:。Emoji 让你在帖子中表达快乐 :smiley:、悲伤 :anguished:、愤怒 :angry: 以及任何东西 :sunglasses:。输入 :（冒号）或在编辑器中的 Emoji 工具栏中选择吧 :ok_hand:
     first_mention:
       name: 首次提及
       description: 帖子中提及用户

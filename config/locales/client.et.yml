@@ -118,7 +118,6 @@ et:
       email: 'Jaga viidet meiliga'
     action_codes:
       public_topic: "muutsin selle teema avalikuks %{when}"
-      private_topic: "muutsin selle teema privaatseks %{when}"
       split_topic: "poolita teema %{when} juurest"
       invited_user: "kutsutud %{who} %{when}"
       invited_group: "kutsusin %{who} %{when}"
@@ -144,8 +143,6 @@ et:
         disabled: 'eemaldatud %{when}'
     topic_admin_menu: "teema admintegevused"
     emails_are_disabled: "Kõik väljuvad meilid on administraatori poolt blokeeritud. Ühtegi teavitust meili teel ei saadeta."
-    bootstrap_mode_enabled: "Oma uue saidi lansseerimise hõlbustamiseks oled käivitusrežiimil. Kõik uued kasutajad saavad usaldustaseme 1 ja nende igapäevased kokkuvõtvad teavitused meili teel on aktiveeritud. See lülitub automaatselt välja kui kasutajate koguarv ületab %{min_users} piiri."
-    bootstrap_mode_disabled: "Käivitusrežiim lülitub välja järgmise 24 tunni jooksul."
     themes:
       default_description: "Vaikimisi"
     s3:
@@ -169,6 +166,7 @@ et:
     not_implemented: "Seda omadust pole veel rakendatud, vabandame!"
     no_value: "Ei"
     yes_value: "Jah"
+    submit: "Saada"
     generic_error: "Vabandust, tekkis viga."
     generic_error_with_reason: "Tekkis viga: %{error}"
     sign_up: "Liitu"
@@ -241,15 +239,6 @@ et:
       last_read: "see on viimane Sinu loetud postitus; kliki järjehoidja lisamiseks"
       remove: "Eemalda järjehoidja"
       confirm_clear: "Oled kindel, et soovid selle teema kõik järjehoidjad eemaldada?"
-    topic_count_latest:
-      one: "{{count}} uus või täiendatud teema."
-      other: "{{count}} uut või täiendatud teemat."
-    topic_count_unread:
-      one: "{{count}} lugemata teema."
-      other: "{{count}} lugemata teemat."
-    topic_count_new:
-      one: "{{count}} uus teema."
-      other: "{{count}} uut teemat."
     preview: "eelvaade"
     cancel: "tühista"
     save: "Salvesta muudatused"
@@ -355,6 +344,7 @@ et:
         add_members: "Lisa liikmed"
         delete_member_confirm: "Eemalda '%{username}' grupist '%{group}'?"
       name_placeholder: "Grupi nimi, tühikuteta, vastab kasutajanime reeglitele"
+      public_exit: "Luba kasutajatel vabalt grupist lahkuda"
       empty:
         posts: "Selle grupi liikmetelt ei ole postitusi."
         members: "Sellel grupil liikmed puuduvad."
@@ -368,14 +358,13 @@ et:
       request: "Taotle liitumist grupiga"
       message: "Sõnum"
       automatic_group: Automaatne grupp
-      closed_group: Suletud grupp
       is_group_user: "Oled selle grupi liige"
       membership_request:
         submit: "Saada päring"
       membership: "Liikmelisus"
       name: "Nimi"
-      user_count: "Liikmete arv"
       bio: "Grupist"
+      selector_placeholder: "sisesta kasutajanimi"
       owner: "omanik"
       index:
         title: "Grupid"
@@ -384,7 +373,6 @@ et:
         one: "Grupp"
         other: "Grupid"
       activity: "Tegevused"
-      members: "Liikmed"
       topics: "Teemat"
       posts: "Postitused"
       mentions: "Mainimisi"
@@ -600,6 +588,7 @@ et:
         move_to_archive: "Arhiiv"
         failed_to_move: "Valitud sõnumite teisaldamine ebaõnnestus (võrguühendus võib olla häiritud)"
         select_all: "Vali kõik"
+        tags: "Sildid"
       preferences_nav:
         account: "Konto"
         profile: "Profiil"
@@ -743,6 +732,7 @@ et:
         title: "kutsed"
         user: "Kutsutud kasutaja"
         sent: "Saadetud"
+        none: "Pole ühtegi kutset, mida näidata."
         truncated:
           one: "Näitan esimest kutset."
           other: "Näitan esimest {{count}} kutset."
@@ -796,6 +786,12 @@ et:
         post_count:
           one: "postitus loodud"
           other: "postitust loodud"
+        likes_given:
+          one: "antud"
+          other: "antud"
+        likes_received:
+          one: "saadud"
+          other: "saadud"
         days_visited:
           one: "päev külastatud"
           other: "päevi külastatud"
@@ -2163,19 +2159,15 @@ et:
       notifications:
         watching:
           title: "Vaatlen"
-          description: "Sa vaatled kõiki selle sildiga teemasid automaatselt. Sind teavitatakse kõigist uutest postitustest ja teemadest, koos lugemata ja uute postituste arvuga teema pealkirja kõrval."
         watching_first_post:
           title: "Vaatan esimest postitust"
-          description: "Sind teavitatakse vaid esimesest postitusest igas uues selle sildiga teemas."
         tracking:
           title: "Jälgin"
-          description: "Sa jälgid kõiki selle sildiga uusi teemasid. Lugemata ja uute postituste arv on näha teema pealkirja kõrval."
         regular:
           title: "Tavaline"
           description: "Sind teavitatakse, kui keegi Sinu @name mainib või vastab Sinu positusele."
         muted:
           title: "Vaigistatud"
-          description: "Sind ei teavitata ühestki uuest selle sildiga teemast, samuti ei ilmu nad lugemata postituste sakil."
       groups:
         title: "Siltide grupid"
         about: "Hõlpsamaks haldamiseks lisa sildid gruppidesse."

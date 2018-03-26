@@ -118,7 +118,7 @@ fr:
       email: 'envoyer ce lien dans un courriel'
     action_codes:
       public_topic: "a rendu ce sujet public %{when}"
-      private_topic: "a rendu ce sujet privé %{when}"
+      private_topic: "a rendu ce sujet message direct %{when}"
       split_topic: "a scindé ce sujet %{when}"
       invited_user: "a invité %{who} %{when}"
       invited_group: "a invité %{who} %{when}"
@@ -149,7 +149,7 @@ fr:
     topic_admin_menu: "actions d'administration sur le sujet"
     wizard_required: "Bienvenue sur votre nouveau Discourse ! Démarrons pas <a href='%{url}' data-auto-route='true'>l'assistant de configuration</a> ✨"
     emails_are_disabled: "Le courriel sortant a été désactivé par un administrateur. Aucune notification courriel ne sera envoyée."
-    bootstrap_mode_enabled: "Pour rendre le lancement de votre site plus facile, vous êtes en mode 'bootstrap'. Tout nouveau utilisateur sera accordé le niveau de confirance 1 et aura les résumés par courriel hebdomadaires activés. Ceci cessera d'être le cas lorsque le nombre d'utilisateurs dépassera %{min_users}."
+    bootstrap_mode_enabled: "Pour rendre le lancement de votre site plus facile, vous êtes en mode 'bootstrap'. Tout nouveau utilisateur sera accordé le niveau de confirance 1 et aura les résumés par courriel hebdomadaires activés. Ceci cessera d'être le cas lorsque %{min_users} utilisateurs auront rejoints le site."
     bootstrap_mode_disabled: "Le mode Bootstrap sera désactivé dans les prochaines 24 heures."
     themes:
       default_description: "Par défaut"
@@ -174,6 +174,7 @@ fr:
     not_implemented: "Cette fonctionnalité n'a pas encore été implémentée, désolé."
     no_value: "Non"
     yes_value: "Oui"
+    submit: "Envoyer"
     generic_error: "Désolé, une erreur est survenue."
     generic_error_with_reason: "Une erreur est survenue : %{error}"
     sign_up: "S'inscrire"
@@ -247,14 +248,14 @@ fr:
       remove: "Retirer le signet"
       confirm_clear: "Êtes-vous sûr de vouloir retirer tous les signets de ce sujet ?"
     topic_count_latest:
-      one: "{{count}} sujet récent."
-      other: "{{count}} sujets récents."
+      one: "Voir {{count}} sujet récent ou mis à jour."
+      other: "Voir {{count}} sujets récents ou mis à jour."
     topic_count_unread:
-      one: "{{count}} sujet non lu."
-      other: "{{count}} sujets non lus."
+      one: "Voir {{count}} sujet non lu"
+      other: "Voir {{count}} sujets non lus"
     topic_count_new:
-      one: "{{count}} nouveau sujet."
-      other: "{{count}} nouveaux sujets."
+      one: "Voir {{count}} nouveau sujet"
+      other: "Voir {{count}} nouveaux sujets"
     preview: "prévisualiser"
     cancel: "annuler"
     save: "Sauvegarder"
@@ -267,6 +268,7 @@ fr:
     pasting: "Coller..."
     enable: "Activer"
     disable: "Désactiver"
+    continue: "Poursuivre"
     undo: "Annuler"
     revert: "Rétablir"
     failed: "Échec"
@@ -373,10 +375,12 @@ fr:
       join: "Rejoindre le groupe"
       leave: "Quitter le groupe"
       request: "Demander à rejoindre le groupe"
+      filter_name: "filtrer par nom de groupe"
       message: "Message"
       automatic_group: Groupe automatique
-      closed_group: Groupe fermé
+      close_group: Fermer groupe
       is_group_user: "Vous êtes membre de ce groupe"
+      is_group_owner: "Vous êtes un propriétaire de ce groupe"
       allow_membership_requests: "Autoriser les utilisateurs à envoyer des demandes d'adhésion aux propriétaires de groupe"
       membership_request_template: "Modèle personnalisé à afficher aux utilisateurs lors de l'envoi d'une demande d'adhésion"
       membership_request:
@@ -387,15 +391,31 @@ fr:
       name: "Nom"
       user_count: "Nombre de membres"
       bio: "À propos du groupe"
+      selector_placeholder: "saisir pseudo"
       owner: "propriétaire"
       index:
         title: "Groupes"
         empty: "Il n'y a aucun groupe visible."
+        all_groups: "Tous les groupes"
+        owner_groups: "Groupes dont je suis propriétaire"
+        close_groups: "Fermer groupes"
+        automatic_groups: "Groupes automatiques"
+        public_groups: "Groupes publics"
+        my_groups: "Mes groupes"
       title:
         one: "Groupe"
         other: "Groupes"
       activity: "Activité"
-      members: "Membres"
+      members:
+        title: "Membres"
+        filter_placeholder_admin: "pseudo ou courriel"
+        filter_placeholder: "pseudo"
+        remove_member: "Enlever membre"
+        remove_member_description: "Enlever <b>%{username}</b> de ce groupe"
+        make_owner: "Rendre propriétaire"
+        make_owner_description: "Rendre<b>%{username}</b> propriétaire de ce groupe"
+        remove_owner: "Enlever comme propriétaire"
+        remove_owner_description: "Enlever <b>%{username}</b> comme propriétaire de ce groupe"
       topics: "Sujets"
       posts: "Messages"
       mentions: "Mentions"
@@ -458,6 +478,7 @@ fr:
       '14': "En attente"
     categories:
       all: "toutes les catégories"
+      all_subcategories: "tout dans %{categoryName}"
       no_subcategory: "aucune"
       category: "Catégorie"
       category_list: "Afficher la liste des catégories"
@@ -537,6 +558,7 @@ fr:
       disable_jump_reply: "Ne pas aller à mon nouveau message après avoir répondu"
       dynamic_favicon: "Faire apparaître le nombre de sujets récemment créés ou mis à jour sur l'icône navigateur"
       theme_default_on_all_devices: "En faire mon thème par défaut sur tous mes périphériques"
+      allow_private_messages: "Permettre les autres utilisateurs de m'envoyer des messages directs"
       external_links_in_new_tab: "Ouvrir tous les liens externes dans un nouvel onglet"
       enable_quoting: "Proposer de citer le texte sélectionné"
       change: "modifier"
@@ -615,6 +637,7 @@ fr:
         move_to_archive: "Archiver"
         failed_to_move: "Impossible de déplacer les messages sélectionnés (peut-être que votre connexion est coupée)"
         select_all: "Tout sélectionner"
+        tags: "Tags"
       preferences_nav:
         account: "Compte"
         profile: "Profil"
@@ -632,6 +655,20 @@ fr:
         set_password: "Définir le mot de passe"
         choose_new: "Choisissez un nouveau mot de passe"
         choose: "Choisissez un mot de passe"
+      second_factor:
+        title: "Authentification à deux facteurs"
+        disable: "Désactiver l'authentification à deux facteurs"
+        enable: "pour une sécurité accrue des comptes"
+        confirm_password_description: "Merci de confirmer votre mot de passe pour continuer"
+        label: "Code"
+        enable_description: |
+          Scanner ce code QR dans une app (<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">Android</a> – <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8" target="_blank">iOS</a> – <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>) et saisir votre code d'authentification.
+        disable_description: "Veuillez saisir le code d'authentification de votre app"
+        show_key_description: "Saisi manuel"
+        extended_description: |
+          L'authentification à deux facteurs ajoute une sécurité supplémentaire à votre compte en exigeant un jeton unique en
+          plus de votre mot de passe. Les jetons peuvent être générés sur les appareils <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Android</a>, <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a>, et <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>.
+        oauth_enabled_warning: "Veuillez noter que les connexions sociales seront désactivées une fois que l'authentification à deux facteurs aura été activée sur votre compte."
       change_about:
         title: "Modifier À propos de moi"
         error: "Il y a eu une erreur lors de la modification de cette valeur."
@@ -760,6 +797,7 @@ fr:
         title: "Invitations"
         user: "Utilisateurs"
         sent: "Envoyé"
+        none: "Il n'y a pas d'invitations en attente à afficher."
         truncated:
           one: "Afficher la première invitation."
           other: "Afficher les {{count}} premières invitations."
@@ -972,14 +1010,26 @@ fr:
       help: "Le courriel n'est pas arrivé ? Pensez bien à vérifier dans votre dossier de spam.<p>Vous n'êtes pas sûr de l'adresse électronique que vous avez utilisée ? Saisissez ici une adresse électronique, et nous vous dirons si elle existe ici.</p><p>Si vous n'avez plus accès à l'adresse électronique de votre compte, merci de contacter <a href='/about'>nos responsables serviables.</a></p>"
       button_ok: "OK"
       button_help: "Aide"
+    email_login:
+      link_label: "M'envoyer un lien login par courriel"
+      button_label: "par courriel"
+      complete_username: "Si un compte correspond au pseudo <b>%{username}</b>, vous devriez recevoir rapidement un courriel avec un lien pour vous connecter."
+      complete_email: "Si un compte correspond à l'adresse de courriel <b>%{email}</b>, vous devriez recevoir rapidement un courriel avec un lien pour vous connecter."
+      complete_username_found: "Nous avons trouvé un compte correspond au pseudo <b>%{username}</b>, vous devriez recevoir rapidement un courriel avec un lien pour vous connecter."
+      complete_email_found: "Nous avons trouvé un compte correspond au courriel <b>%{email}</b>, vous devriez recevoir rapidement un courriel avec un lien pour vous connecter."
+      complete_username_not_found: "Aucun compte ne correspond au pseudo <b>%{username}</b>"
+      complete_email_not_found: "Aucun compte ne correspond à <b>%{email}</b>"
     login:
       title: "Se connecter"
       username: "Utilisateur"
       password: "Mot de passe"
+      second_factor_title: "Authentification à deux facteurs"
+      second_factor_description: "Veuillez saisir le code d'authentification de votre app :"
       email_placeholder: "courriel ou pseudo"
       caps_lock_warning: "Majuscules vérrouillées"
       error: "Erreur inconnue"
       rate_limit: "Merci de patienter avant de vous reconnecter."
+      blank_username: "Merci de saisir votre courriel ou pseudo."
       blank_username_or_password: "Merci de saisir votre courriel ou pseudo, et mot de passe."
       reset_password: 'Réinitialiser le mot de passe'
       logging_in: "Connexion en cours…"
@@ -992,6 +1042,7 @@ fr:
       not_allowed_from_ip_address: "Vous ne pouvez pas vous connecter depuis cette adresse IP."
       admin_not_allowed_from_ip_address: "Vous ne pouvez pas vous connecter comme administrateur depuis cette adresse IP."
       resend_activation_email: "Cliquez ici pour envoyer à nouveau le courriel d'activation."
+      omniauth_disallow_totp: "L'authentification à deux facteurs est activée sur votre compte. Veuillez vous connecter avec votre mot de passe."
       resend_title: "Renvoyer le courriel d'activation"
       change_email: "Changer l'adresse de courriel"
       provide_new_email: "Donnez une nouvelle adresse et nous allons renvoyer votre courriel de confirmation."
@@ -1047,6 +1098,7 @@ fr:
       categories_only: "Catégories seules"
       categories_with_featured_topics: "Catégories et sujets sélectionnés"
       categories_and_latest_topics: "Catégories et sujets récents"
+      categories_and_top_topics: "Catégories et meilleurs sujets"
     shortcut_modifier_key:
       shift: 'Maj'
       ctrl: 'Ctrl'
@@ -1055,6 +1107,8 @@ fr:
       default_header_text: Sélectionner…
       no_content: Aucune correspondance trouvée
       filter_placeholder: Rechercher...
+      create: "Créer : '{{content}}'"
+      max_content_reached: "Vous ne pouvez séléctionner que {{count}} éléments."
     emoji_picker:
       filter_placeholder: Chercher un emoji
       people: Personnes
@@ -1072,6 +1126,13 @@ fr:
       medium_tone: Teint moyen
       medium_dark_tone: Teint légèrement foncé
       dark_tone: Teint foncé
+    shared_drafts:
+      title: "Ébauches partagées"
+      notice: "Ce sujet n'est visible que pour ceux qui peuvent voir la catégorie <b>{{category}}</b>."
+      destination_category: "Catégorie déstinataire"
+      publish: "Publier ébauche partagée"
+      confirm_publish: "Êtes-vous sûr de vouloir publier cette ébauche ?"
+      publishing: "Sujet en cours de publication..."
     composer:
       emoji: "Emoji :)"
       more_emoji: "plus…"
@@ -1094,7 +1155,7 @@ fr:
         other: "En mentionnant {{group}}, vous êtes sur le point de notifier <a href='{{group_link}}'>{{count}} personnes</a> – êtes-vous sûr ?"
       cannot_see_mention:
         category: "Vous avez mentionné {{username}} mais il ne sera pas notifié car il n'a pas accès à cette catégorie. Vous devez ajouter cet utilisateur à un groupe ayant accès à cette catégorie."
-        private: "Vous avez mentionné {{username}} mais il ne sera pas notifié car il ne peut pas voir ce message privé. Vous devez inviter cet utilisateur à la discussion."
+        private: "Vous avez mentionné {{username}} mais il ne sera pas notifié car il ne peut pas voir ce message direct. Vous devez inviter cet utilisateur à la discussion."
       duplicate_link: "Il semblerait que votre lien vers <b>{{domain}}</b> a déjà été publié dans le sujet par <b>@{{username}}</b> dans <a href='{{post_url}}'>une réponse de {{ago}}</a> – êtes vous sûr de vouloir le publier à nouveau ?"
       error:
         title_missing: "Le titre est obligatoire."
@@ -1112,6 +1173,7 @@ fr:
       create_topic: "Créer le sujet"
       create_pm: "Message privé"
       create_whisper: "Murmurer"
+      create_shared_draft: "Créer ébauche partagée"
       title: "ou appuyez sur Ctrl+Entrée"
       users_placeholder: "Ajouter un utilisateur"
       title_placeholder: "Quel est le sujet en une courte phrase ?"
@@ -1121,6 +1183,7 @@ fr:
       topic_featured_link_placeholder: "Entrez un lien affiché avec le titre."
       remove_featured_link: "Retirer le lien du sujet"
       reply_placeholder: "Écrivez ici. Utilisez Markdown, BBCode, ou HTML pour mettre en forme. Glissez ou collez des images."
+      reply_placeholder_no_images: "Écrivez ici. Utilisez Markdown, BBCode, ou HTML pour mettre en forme."
       view_new_post: "Voir votre nouveau message."
       saving: "Sauvegarde"
       saved: "Sauvegardé !"
@@ -1150,6 +1213,7 @@ fr:
       olist_title: "Liste numérotée"
       ulist_title: "Liste à puces"
       list_item: "Élément"
+      toggle_direction: "Basculer sens"
       help: "Aide Markdown"
       collapse: "réduire le panneau d'édition"
       abandon: "fermer le panneau d'édition et supprimer le brouillon"
@@ -1160,6 +1224,27 @@ fr:
         title: "Avez-vous oublié d'ajouter des destinataires ?"
         body: "Pour le moment, ce message est uniquement envoyé à vous-même !"
       admin_options_title: "Paramètres optionnels pour ce sujet"
+      composer_actions:
+        reply_to_post:
+          label: Réponse à message %{postNumber} par %{postUsername}
+          desc: Répondre à un message spécifique
+        reply_as_new_topic:
+          label: Répondre à un sujet lié
+          desc: Créer un nouveau sujet lié à ce sujet
+        reply_as_private_message:
+          label: Nouveau message
+          desc: Créer un nouveau message direct
+        reply_to_topic:
+          label: Répondre au sujet
+          desc: Répondre au sujet, pas à un message spécifique
+        toggle_whisper:
+          label: Basculer murmure
+          desc: Les mumures ne sont visibles qu'aux responsables
+        create_topic:
+          label: "Nouveau sujet"
+        shared_draft:
+          label: "Ebauche partagée"
+          desc: "Créer ébauche d'un sujet qui ne sera visible qu'aux responsables"
     notifications:
       tooltip:
         regular:
@@ -1203,6 +1288,8 @@ fr:
         posted: "Message par"
         edited: "Modifier votre message par"
         liked: "A aimé votre message"
+        private_message: "Message direct de"
+        invited_to_private_message: "Invité à un message direct par"
         invited_to_topic: "Invité à un sujet par"
         invitee_accepted: "Invitation acceptée par"
         moved_post: "Votre message a été déplacé par"
@@ -1216,6 +1303,7 @@ fr:
         quoted: '{{username}} vous a cité dans « {{topic}} » - {{site_title}}'
         replied: '{{username}} vous a répondu dans « {{topic}} » - {{site_title}}'
         posted: '{{username}} a posté dans « {{topic}} » - {{site_title}}'
+        private_message: '{{username}} vous a envoyé un message direct dans « {{topic}} » - {{site_title}}'
         linked: '{{username}} a créé un lien vers votre message posté dans « {{topic}} » - {{site_title}}'
     upload_selector:
       title: "Ajouter une image"
@@ -1381,6 +1469,9 @@ fr:
       move_to_inbox:
         title: 'Déplacer dans la boîte de réception'
         help: 'Redéplacer dans la boîte de réception'
+      edit_message:
+        help: 'Modifier premier message'
+        title: 'Modifier message'
       list: 'Sujets'
       new: 'nouveau sujet'
       unread: 'non lus'
@@ -1552,6 +1643,7 @@ fr:
         visible: "Rendre visible"
         reset_read: "Réinitialiser les données de lecture"
         make_public: "Rendre le sujet public"
+        make_private: "Transformer en message direct"
       feature:
         pin: "Épingler le sujet"
         unpin: "Désépingler le sujet"
@@ -1707,7 +1799,9 @@ fr:
       deleted_by_author:
         one: "(message supprimé par son auteur, sera supprimé automatiquement dans %{count} heure à moins qu'il ne soit signalé)"
         other: "(message supprimé par son auteur, sera supprimé automatiquement dans %{count} heures à moins qu'il ne soit signalé)"
+      collapse: "réduire"
       expand_collapse: "étendre/réduire"
+      locked: "un responsable a vérouillé ce message pour empêcher la modification"
       gap:
         one: "voir 1 réponse cachée"
         other: "voir {{count}} réponses cachées"
@@ -1778,6 +1872,9 @@ fr:
         rebake: "Reconstruire l'HTML"
         unhide: "Ré-afficher"
         change_owner: "Modifier l'auteur"
+        grant_badge: "Décerner le badge"
+        lock_post: "Vérouiller message"
+        lock_post_description: "empêcher l'utilisateur de modifier le message"
       actions:
         flag: 'Signaler'
         defer_flags:
@@ -2305,19 +2402,15 @@ fr:
       notifications:
         watching:
           title: "Surveiller"
-          description: "Vous surveillerez automatiquement tous les sujets avec ce tag. Vous serez notifié de tous les nouveaux messages et sujets, et le nombre de messages non lus et nouveaux apparaîtra à côté du sujet."
         watching_first_post:
           title: "Surveiller les nouveaux sujets"
-          description: "Vous serez uniquement notifié du premier message de chaque sujet avec ce tag."
         tracking:
           title: "Suivi"
-          description: "Vous allez suivre automatiquement tous les sujets avec ce tag. Le nombre de messages non lus et nouveaux apparaîtra à côté du sujet."
         regular:
           title: "Normal"
           description: "Vous serez notifié si un utilisateur mentionne votre @pseudo ou répond à votre message."
         muted:
           title: "Silencieux"
-          description: "Vous ne recevrez aucune notification sur des nouveaux sujets avec ce tag, et ils n’apparaîtront pas dans l'onglet non lus."
       groups:
         title: "Groupes de tags"
         about: "Ajouter des tags aux groupes pour les gérer plus facilement."
@@ -2949,6 +3042,7 @@ fr:
             backup_destroy: "détruire la sauvegarde"
             reviewed_post: "message vérifié"
             custom_staff: "action personnalisée de l'extension"
+            check_personal_message: "contrôler messages directs"
         screened_emails:
           title: "Courriels affichés"
           description: "Lorsque quelqu'un essaye de créer un nouveau compte, les adresses de courriel suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."

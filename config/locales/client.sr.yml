@@ -138,7 +138,6 @@ sr:
       email: 'podeli ovaj link preko e-pošte'
     action_codes:
       public_topic: "objavi ovu temu javno %{when}"
-      private_topic: "objavi ovu temu privatno %{when}"
       split_topic: "podeli ovu temu %{when}"
       invited_user: "pozvan %{who} %{when}"
       invited_group: "pozvan%{who}%{when}"
@@ -169,8 +168,6 @@ sr:
     topic_admin_menu: "tema admin akcije"
     wizard_required: "Dobrodošli na Vaš novi Discourse! Počnimo sa <a href='%{url}' data-auto-route='true'>instalacijom</a>"
     emails_are_disabled: "Sva odlazeća epošta je onemogućena globalno od strane administratora. Ni jedna notifikacija neće biti poslata."
-    bootstrap_mode_enabled: "Ne bi li olakšali lansiranje Vašeg novoj sajta, trenutno ste u bootstrap modu. Svim novim korisnicima će biti dodeljen nivo poverljivosti 1 i imaće omogućene dnevne e-mail preglede. Ovo će automatski biti isključeno kada ukupni broj korisnika pređe %{min_users}korisnika."
-    bootstrap_mode_disabled: "Bootstrap mod će biti isključen u naredna 24 časa."
     themes:
       default_description: "zadato"
     s3:
@@ -268,18 +265,6 @@ sr:
       last_read: "ovo je zadnja poruka koju si pročitao; klikni da bi je markirao"
       remove: "Obriši marker"
       confirm_clear: "Jeste li sigurni da želite izbrisati sve markere sa ove teme?"
-    topic_count_latest:
-      one: "{{count}} nova ili izmenjena tema."
-      few: "{{count}} nove ili izmenjene teme."
-      other: "{{count}} novih ili izmenjenih tema."
-    topic_count_unread:
-      one: "{{count}} nepročitana tema"
-      few: "{{count}} nepročitane teme"
-      other: "{{count}} nepročitanih tema"
-    topic_count_new:
-      one: "{{count}} nova tema."
-      few: "{{count}} nove teme."
-      other: "{{count}} novih tema."
     preview: "prikaži"
     cancel: "otkaži"
     save: "Sačuvaj izmene"
@@ -368,7 +353,6 @@ sr:
       owner: "vlasnik"
       index:
         title: "Grupe"
-      members: "Članovi"
       topics: "Teme"
       posts: "Poruka"
       mentions: "Spominjanja"

@@ -35,6 +35,7 @@ de:
     no_polls_associated_with_this_post: "Diesem Beitrag sind keine Umfragen zugeordnet."
     no_poll_with_this_name: "Diesem Beitrag ist keine Umfrage mit dem Namen <strong>%{name}</strong> zugeordnet."
     post_is_deleted: "Die Aktion kann nicht durchgeführt werden, da der Beitrag gelöscht wurde."
+    user_cant_post_in_topic: "Du kannst nicht abstimmen, weil du in diesem Thema nicht schreiben kannst."
     topic_must_be_open_to_vote: "Das Thema muss zum Abstimmen geöffnet sein."
     poll_must_be_open_to_vote: "Die Umfrage muss zum Abstimmen gestartet sein."
     topic_must_be_open_to_toggle_status: "Damit du den Status ändern kannst, muss das Thema geöffnet sein."

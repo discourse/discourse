@@ -192,7 +192,6 @@ zh_TW:
   groups:
     errors:
       can_not_modify_automatic: "你不能修改自動組"
-      member_already_exist: "'%{username}' 已經是群組成員了。"
       invalid_domain: "'%{domain}' 不是有效的域名."
       invalid_incoming_email: "「%{email}」不是有效的電子郵件位址。"
       email_already_used_in_group: "「%{email}」已經被「%{group_name}」群組使用。"
@@ -2198,8 +2197,6 @@ zh_TW:
     promoter:
       name: 推廣者
       description: 已邀請了 1 個用戶
-      long_description: |
-        該徽章授予給邀請他人加入社群的你。你曾使用了用戶頁面的邀請按鈕或主題底部的邀請按鈕。邀請對某個討論感興趣的朋友是引介新人的好辦法，非常感謝！
     campaigner:
       name: 活動家
       description: 已邀請了 3 個初級用戶
@@ -2296,8 +2293,6 @@ zh_TW:
     first_emoji:
       name: 首個表情
       description: 在文章中使用表情符號
-      long_description: |
-        該徽章授予給第一次在文章中使用表情符號的你 :thumbsup:。表情符號讓你在文章中表達快樂 :smiley:、悲傷 :anguished:、憤怒 :angry: 以及任何東西 :sunglasses:。輸入 : (冒號) 或在編輯器中的表情符號工具列中按鈕選擇吧 :ok_hand:
     first_mention:
       name: 首次提及
       long_description: 該徽章授予給第一次在帖子中@別人的你。每個提及都將通知對方，讓他們知道你發了貼。輸入 @ 提及任何用戶，如果可以的話，也可以提及群組——這是個獲得他們注意的好辦法。

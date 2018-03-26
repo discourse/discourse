@@ -119,6 +119,7 @@ lv:
           other: "pēc %{count} gadiem"
       previous_month: 'Iepriekšējais mēnesis'
       next_month: 'Nākamais mēnesis'
+      placeholder: datums
     share:
       topic: 'padalīties ar saiti uz šo tēmu'
       post: 'ieraksts #%{postNumber}'
@@ -129,7 +130,6 @@ lv:
       email: 'nosūtīt šo saiti e-pastā'
     action_codes:
       public_topic: "padarīja tēmu publisku %{when}"
-      private_topic: "padarīja šo tēmu privātu %{when}"
       split_topic: "sadalīja šo tēmu %{when}"
       invited_user: "uzaicināja %{who} %{when}"
       invited_group: "uzaicināja %{who} %{when}"
@@ -159,8 +159,6 @@ lv:
     topic_admin_menu: "tēmas pārvaldīšana"
     wizard_required: "Laipni lūgti jūsu jaunajā Discourse! Sāksim ar <a href='%{url}' data-auto-route='true'>uzstādīšanas palīgu</a> ✨"
     emails_are_disabled: "Administrators ir globāli izslēdzis visus izejošos e-pastus. Netiks nosūtīti nekāda veida paziņojumi."
-    bootstrap_mode_enabled: "Lai atvieglotu jūsu jaunās vietnes iedarbināšanu, esat sāknēšanas režīmā. Visiem jauniem lietotājiem būs piešķirts 1. uzticības līmenis un aktivizēts katras dienas kopsavilkums e-pastā. Tas automātiski izslēgsies, kad kopējais lietotāju skaits pārsniegs %{min_users} lietotājus."
-    bootstrap_mode_disabled: "Sāknēšanas režīms tiks izslēgts nākamo 24 stundu laikā."
     themes:
       default_description: "Noklusējums"
     s3:
@@ -184,6 +182,7 @@ lv:
     not_implemented: "Šī funkcionalitāte vēl nav ieviesta, atvainojiet!"
     no_value: "Nē"
     yes_value: "Jā"
+    submit: "Iesniegt"
     generic_error: "Atvainojiet, ir notikusi kļūda."
     generic_error_with_reason: "Notikusi kļūda: %{error}"
     sign_up: "Reģistrēties"
@@ -258,18 +257,6 @@ lv:
       last_read: "šis ir pēdējais ieraksts, ko lasīji; klikšķini, lai pievienotu grāmatzīmēm"
       remove: "Noņemt grāmatzīmi"
       confirm_clear: "Vai esi pārliecināts, ka vēlies noņemt visas grāmatzīmes šajā tēmā?"
-    topic_count_latest:
-      zero: "{{count}} jaunas vai papildinātas tēmas."
-      one: "{{count}} jauna vai papildināta tēma."
-      other: "{{count}} jaunas vai papildinātas tēmas."
-    topic_count_unread:
-      zero: "{{count}} nelasītas tēmas."
-      one: "{{count}} nelasīta tēma."
-      other: "{{count}} nelasītas tēmas."
-    topic_count_new:
-      zero: "{{count}} jaunas tēmas."
-      one: "{{count}} jauna tēma."
-      other: "{{count}} jaunas tēmas."
     preview: "priekšskatījums"
     cancel: "atcelt"
     save: "Saglabāt izmaiņas"
@@ -392,19 +379,16 @@ lv:
       request: "Pieprasīt pievienošanu grupai"
       message: "Ziņa"
       automatic_group: Automātiska grupa
-      closed_group: Slēgta grupa
       is_group_user: "Jūs esat šīs grupas dalībnieks"
       allow_membership_requests: "Ļauj lietotājiem sūtīt dalības pieprasījumus grupu īpašniekiem"
       membership: "Piederība"
       name: "Vārds"
-      user_count: "Dalībnieku skaits"
       bio: "Par grupu"
       owner: "īpašnieks"
       index:
         title: "Grupas"
         empty: "Nav redzamu grupu."
       activity: "Aktivitāte"
-      members: "Dalībnieki"
       topics: "Tēmas"
       posts: "Ieraksti"
       mentions: "Pieminēšanas"
@@ -2230,19 +2214,15 @@ lv:
       notifications:
         watching:
           title: "Novērošana"
-          description: "Jūs automātiski sekosiet visām tēmām ar šiem tagiem. Jums paziņos par visiem jauniem ierakstiem un tēmām, kā arī blakus tēmai parādīsies nelasīto un jauno ierakstu skaits."
         watching_first_post:
           title: "Pirmā ieraksta novērošana"
-          description: "Jums paziņos tikai par pirmo ierakstu katrā jaunā tēmā ar šo tagu."
         tracking:
           title: "Sekošana"
-          description: "Jūs automātiski sekosiet visām tēmām ar šiem tagiem. Blakus tēmai parādīsies nelasīto un jauno ierakstu skaits."
         regular:
           title: "Regulārs"
           description: "Jums paziņos, ja kāds pieminēs jūsu @lietotājvārdu vai atbildēs uz jūsu ierakstu."
         muted:
           title: "Klusināts"
-          description: "Jums neko neziņos par jaunām tēmā ar šo tagu, un tās neparādīsies jūsu cilnē ar neizlasīto."
       groups:
         title: "Tagu grupas"
         about: "Pievieno tagus grupām, lai vieglāk tos pārvaldītu."

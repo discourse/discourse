@@ -118,7 +118,6 @@ es:
       email: 'comparte este enlace por email'
     action_codes:
       public_topic: "hizo este tema público %{when}"
-      private_topic: "hizo este tema privado %{when}"
       split_topic: "separó este tema %{when}"
       invited_user: "invitó a %{who} %{when}"
       invited_group: "invitó a %{who} %{when}"
@@ -149,8 +148,6 @@ es:
     topic_admin_menu: "acciones de administrador para el tema"
     wizard_required: "¡Bienvenido a tu nuevo Discourse! Empezaremos con <a href='%{url}' data-auto-route='true'>el asistente de configuración</a>  ✨"
     emails_are_disabled: "Todos los emails salientes han sido desactivados por un administrador. No se enviará ninguna notificación por email."
-    bootstrap_mode_enabled: "Para lanzar tu nuevo sitio más fácilmente, estás en modo de arranque. A todos los nuevos usuarios se les concederá el nivel 1 de confianza y recibirán resúmenes diarios por email. Esto se desactivará automáticamente cuando el número total de usuarios exceda los %{min_users}."
-    bootstrap_mode_disabled: "El modo de arranque se desactivará en las próximas 24 horas."
     themes:
       default_description: "Por defecto"
     s3:
@@ -246,15 +243,6 @@ es:
       last_read: "este es el último post que has leído; haz clic para guardarlo en marcadores"
       remove: "Eliminar marcador"
       confirm_clear: "¿Seguro que deseas borrar todos los marcadores de este tema?"
-    topic_count_latest:
-      one: "Un tema nuevo o actualizado."
-      other: "{{count}} temas nuevos o actualizados."
-    topic_count_unread:
-      one: "Un tema sin leer."
-      other: "{{count}} temas sin leer."
-    topic_count_new:
-      one: "Un nuevo tema."
-      other: "{{count}} nuevos temas."
     preview: "vista previa"
     cancel: "cancelar"
     save: "Guardar cambios"
@@ -375,7 +363,6 @@ es:
       request: "Solicitar unirse al grupo"
       message: "Mensaje"
       automatic_group: Grupo automático
-      closed_group: Grupo cerrado
       is_group_user: "Eres miembro de este grupo"
       allow_membership_requests: "Permitir a los usuarios solicitudes para ser miembro a los dueños del grupo"
       membership_request_template: "Template personalizado para mostrar a los usuarios cuando envían una solicitud de membresía"
@@ -385,7 +372,6 @@ es:
         reason: "Permitir a los propietarios del grupo saber por qué perteneces a este grupo"
       membership: "Membresía"
       name: "Nombre"
-      user_count: "Número de miembros"
       bio: "Acerca del grupo"
       owner: "propietario"
       index:
@@ -395,7 +381,6 @@ es:
         one: "Grupo"
         other: "Grupos"
       activity: "Actividad"
-      members: "Miembros"
       topics: "Temas"
       posts: "Posts"
       mentions: "Menciones"
@@ -2323,19 +2308,15 @@ es:
       notifications:
         watching:
           title: "Vigilar"
-          description: "Vigilarás todos los temas en esta etiqueta. Se te notificará de todos los nuevos temas y posts, y además aparecerá el contador de posts sin leer y nuevos posts al lado del tema."
         watching_first_post:
           title: "Vigilar Primer Post"
-          description: "Se te notificará del primer post de cada nuevo tema en esta etiqueta."
         tracking:
           title: "Seguir"
-          description: "Seguirás automáticamente todos los temas en esta etiqueta. Aparecerá un contador de posts sin leer y nuevos posts al lado del tema."
         regular:
           title: "Normal"
           description: "Se te notificará solo si alguien te menciona con tu @usuario o responde a algún post tuyo."
         muted:
           title: "Silenciado"
-          description: "No se te notificará de nuevos temas con esta etiqueta, ni aparecerán en tu pestaña de temas no leídos."
       groups:
         title: "Grupos de etiquetas"
         about: "Agregar etiquetas en grupos para administrarlas más fácilmente."

@@ -29,6 +29,7 @@ pt:
   loading: "A carregar"
   powered_by_html: 'Desenvolvido por <a href="https://www.discourse.org">Discourse</a>, e melhor visualização com o JavaScript ativado'
   log_in: "Iniciar Sessão"
+  submit: "Submeter"
   purge_reason: "Eliminada automaticamente como abandonada, conta desativada"
   disable_remote_images_download_reason: "A transferência remota de imagens foi desativada porque não existe espaço disponível no disco."
   anonymous: "Anónimo"
@@ -36,6 +37,11 @@ pt:
   themes:
     bad_color_scheme: "Não é possível atualizar o tema, esquema de cor inválido"
     other_error: "Ocorreu algo de errado ao atualizar o tema"
+    error_importing: "Erro ao clonar o repositório de GIT, acesso foi negado ou o repositório não foi encontrado"
+    settings_errors:
+      invalid_yaml: "O YAML fornecido é inválido"
+      data_type_not_a_number: "Tipo de configuração `%{name}` não é suportado. Tipos suportados são `integer`, `bool`, `lista` e `enum`."
+      name_too_long: "Existe uma configuração com um nome demasiado longo. O tamanho máximo é 255"
   emails:
     incoming:
       default_subject: "Este tópico precisa de um título"
@@ -212,7 +218,6 @@ pt:
       bulk_add: "Foram adicionados %{users_added} utilizadores ao grupo."
     errors:
       can_not_modify_automatic: "Não pode modificar um grupo automático"
-      member_already_exist: "'%{username}' já é membro deste grupo."
       invalid_domain: "'%{domain}' não é um domínio válido."
       invalid_incoming_email: "'%{email}' não é um endereço de email válido."
       email_already_used_in_group: "'%{email}' já é utilizado pelo grupo '%{group_name}'."
@@ -1061,7 +1066,7 @@ pt:
     enable_staged_users: "Automaticamente criar utilizadores temporários ao processar emails recebidos."
     maximum_staged_users_per_email: "Número máximo de utilizadores temporários criados ao processar um email recebido."
     auto_generated_whitelist: "Lista de endereços de email que não serão verificados para conteúdo gerado automaticamente. Exemplo: foo@bar.com|discourse@bar.com"
-    block_auto_generated_emails: "Bloquear emails recebidos que sejam identificados como tendo sido gerados automaticamente."
+    block_auto_generated_emails: "Bloquear as mensagens a receber que sejam identificadas como tendo sido geradas automaticamente."
     ignore_by_title: "Ignorar emails recebidos com base no seu título."
     mailgun_api_key: "Chave de API secreta de Mailgun usada para verificar mensagens."
     soft_bounce_score: "Pontuação de redirecionamento adicionada ao utilizador quando um redirecionamento temporário acontece."
@@ -1132,9 +1137,9 @@ pt:
     display_name_on_posts: "Mostrar o nome completo de um utilizador nas suas mensagens em adição ao seu @nome-de-utilizador."
     show_time_gap_days: "Se duas mensagens são feitas com todos estes dias de diferença, exibir a diferença de tempo no tópico."
     short_progress_text_threshold: "Após o número de mensagens num tópico passar acima deste número, a barra de progresso irá apenas mostrar o número da mensagem atual. Se alterar a largura da barra de progresso, poderá ter que mudar este valor."
-    default_code_lang: "Linguagem de programação por defeito a aplicar no destaque da sintaxe em blocos de código GitHub (lang-auto, ruby, python, etc.)"
+    default_code_lang: "O destaque de sintaxe da linguagem de programação predefinida aplicada aos blocos de código do GitHub (lang-auto, ruby, python, etc.)"
     warn_reviving_old_topic_age: "Quando alguém começa a responder a um tópico em que a última resposta é mais antiga que estes dias, um aviso será exibido. Desativar ao configurar para 0."
-    autohighlight_all_code: "Forçar o destaque do código a todos os blocos de código pré-formatados mesmo quando não se especifica a linguagem."
+    autohighlight_all_code: "Forçar a aplicação do destaque de código para todos os blocos de código pré-formatados mesmo quando estes não especificam explicitamente a linguagem."
     highlighted_languages: "Incluídas regras de destaque da sintaxe (Aviso: incluir demasiadas linguagens pode impactar o desempenho) ver: https://highlightjs.org/static/demo/ para uma demonstração"
     embed_truncate: "Truncar mensagens incorporadas."
     allowed_href_schemes: "Esquemas permitidos nos links além de http e https."
@@ -1910,8 +1915,6 @@ pt:
     promoter:
       name: Promotor
       description: Convidou um utilizador
-      long_description: |
-        Este distintivo é concedido quando convida alguém para se juntar à comunidade através do botão de convidar na sua página de utilizador, ou no fim de um tópico. Convidar amigos que possam estar interessados em discussões específicas é uma boa maneira de apresentar a comunidade a novas pessoas, por isso, obrigado!
     campaigner:
       name: Ativista
       description: Convidou 3 utilizadores básicos
@@ -2007,8 +2010,6 @@ pt:
     first_emoji:
       name: Primeiro Emoji
       description: Usou um Emoji numa Publicação
-      long_description: |
-        Este distintivo é concedido quando pela primeira vez adiciona um Emoji à sua publicação :thumbsup:. Emoji deixam-no exprimir emoção  nas suas publicações, de felicidade :smiley: a tristeza :anguished: a raiva :angry: e tudo entre estes :sunglasses: . Escreva simplesmente : (dois pontos) ou prima o botão de Emoji na barra de ferramentas no editor para escolher um de entre centenas de escolhas :ok_hand:
     first_mention:
       name: Primeira Menção
       long_description: Este distintivo é concedido pela primeira vez que menciona o @nome-de-utilizador de alguém numa publicação sua. Cada menção gera uma notificação para o mencionado, de maneira a que saibam da sua publicação. Simplesmente comece por escrever @ (símbolo arroba) para mencionar qualquer utilizador, ou, se permitido, um grupo – é uma maneira conveniente de chamar a atenção de alguém.

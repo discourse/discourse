@@ -138,7 +138,6 @@ sk:
       email: 'pošli odkaz emailom'
     action_codes:
       public_topic: "téma je verejná%{when}"
-      private_topic: "téma je súkromná  %{when}"
       split_topic: "rozdeľ tému %{when}"
       invited_user: "pozvaný %{who} %{when}"
       invited_group: "pozvaný %{who} %{when}"
@@ -167,8 +166,6 @@ sk:
         enabled: 'Téma je odteraz baner %{when} Bude sa zobrazovať navrchu každej stránky, pokiaľ ju používateľ nezavrie.'
     topic_admin_menu: "akcie administrátora témy"
     emails_are_disabled: "Odosielanie emailov bolo globálne vypnuté administrátorom. Žiadne emailové notifikácie nebudú odoslané."
-    bootstrap_mode_enabled: "Pre zjednodušenie spustenia Vašej novej stránky sa nachádzate v zavádzacom režime. Všetci noví používatelia budú mať pridelený stupeň dôvery 1 a budú mať zapnutý denný emailový výber aktualít. Toto bude automaticky vypnuté keď celkový počet používateľov presiahne %{min_users}."
-    bootstrap_mode_disabled: "Zavádzací režim bude zrušený v priebehu nasledujúcich 24 hodín."
     themes:
       default_description: "Predvolené"
     s3:
@@ -266,18 +263,6 @@ sk:
       last_read: "toto je posledný prečítaný príspevok, kliknite pre pridanie záložky"
       remove: "Odstrániť záložku"
       confirm_clear: "Ste si istý že chcete odstrániť všetky záložky z tejto témy?"
-    topic_count_latest:
-      one: "1 nová alebo upravená téma."
-      few: "{{count}} nové alebo upravené témy."
-      other: "{{count}} nových alebo upravených tém."
-    topic_count_unread:
-      one: "1 neprečítaná téma."
-      few: "{{count}} neprečítané témy."
-      other: "{{count}} neprečítaných tém."
-    topic_count_new:
-      one: "1 nová téma."
-      few: "{{count}} nové témy."
-      other: "{{count}} nových tém."
     preview: "náhľad"
     cancel: "zrušiť"
     save: "Uložiť zmeny"
@@ -399,7 +384,6 @@ sk:
       request: "Požiadať o pridanie do skupiny"
       message: "Správa"
       automatic_group: Automatická skúpina
-      closed_group: Uzavretá skupina
       is_group_user: "Si členom tejto skupiny"
       allow_membership_requests: "Používatelia môžu posielať žiadosti o členstvo vlastníkom skupiny"
       membership_request:
@@ -408,7 +392,6 @@ sk:
         reason: "Dajte vedieť vlastníkom skupiny prečo do tejto skupiny patríte"
       membership: "Členstvo"
       name: "Meno"
-      user_count: "Počet členov"
       bio: "O skupine"
       owner: "vlastník"
       index:
@@ -419,7 +402,6 @@ sk:
         few: "Skupiny"
         other: "Skupiny"
       activity: "Aktivita"
-      members: "Členovia"
       topics: "Témy"
       posts: "Príspevky"
       mentions: "Zmienky"
@@ -642,10 +624,6 @@ sk:
         choose: "Vyberte si heslo"
       second_factor:
         title: "Dvojfaktorová autentifikácia"
-        enabled_status: "Stav: zapnutý"
-        disabled_status: "Stav: vypnutý"
-        disable_description: "Vložte autentifikačný kód z vašej aplikácie"
-        info_prompt: "Čo je dvojfaktorová atentifikácia?"
       change_about:
         title: "Upraviť O mne"
         error: "Nastala chyba pri zmene tejto hodnoty."
@@ -962,8 +940,6 @@ sk:
       title: "Prihlásenie"
       username: "Používateľ"
       password: "Heslo"
-      second_factor_title: "Je požadovaná dvojfaktorová autentifikácia"
-      second_factor_label: "Kód"
       email_placeholder: "e-mail alebo používateľské meno"
       caps_lock_warning: "Caps Lock je zapnutý"
       error: "Neznáma chyba"
@@ -2084,19 +2060,15 @@ sk:
       notifications:
         watching:
           title: "Sledovať"
-          description: "Budete automaticky sledovať všetky témy s týmto štítkom. Budete upozornený na všetky nové príspevky a témy, navyše počet neprečítaných a nových príspevok bude zobrazený pri téme."
         watching_first_post:
           title: "Sledovať prvý príspevok"
-          description: "Budete upozornený iba na prvý príspevok v každej téme s týmto štítkom."
         tracking:
           title: "Pozorovať"
-          description: "Budete automaticky pozorovať všetky témy s týmto štítkom. Počet neprečítaných a nových príspevkov sa bude zobrazovať vedľa témy."
         regular:
           title: "Bežné"
           description: "Budete upozornený ak niekto zmieni Vaše @meno alebo odpovie na Váš príspevok."
         muted:
           title: "Stíšené"
-          description: "Nebudete upozornený ohľadom nových tém s týmto štítkom a nebudú sa zobrazovať na vašej karte s neprečítanými."
       groups:
         title: "Skupiny štítkov"
         about: "Pridajte štítky do skupín, aby sa ľahšie spravovali."

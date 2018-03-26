@@ -153,18 +153,6 @@ uk:
       last_read: "це останній допис, що ви прочитали; натисніть, щоб додати його до закладок"
       remove: "Видалити закладку"
       confirm_clear: "Ви впевнені, що хочете видалити всі закладки з цієї теми?"
-    topic_count_latest:
-      one: "{{count}} нова чи оновлена тема."
-      few: "нових чи оновлених тем: {{count}}."
-      other: "непрочитаних тем: {{count}}."
-    topic_count_unread:
-      one: "{{count}} непрочитана тема."
-      few: "непрочитаних тем: {{count}}."
-      other: "непрочитаних тем: {{count}}."
-    topic_count_new:
-      one: "{{count}} нова тема."
-      few: "нових тем {{count}}."
-      other: "нових тем: {{count}}."
     preview: "попередній перегляд"
     cancel: "скасувати"
     save: "Зберегти зміни"
@@ -248,8 +236,6 @@ uk:
         add_members: "Добавити учасників"
         delete_member_confirm: "Видалити '%{username}' з групи '%{group}'?"
       add: "Додати"
-      closed_group: Закрита Група
-      members: "Учасники"
       topics: "Теми"
       posts: "Дописи"
       mentions: "Згадки"

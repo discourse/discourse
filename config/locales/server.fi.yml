@@ -224,7 +224,6 @@ fi:
       bulk_add: "%{users_added} käyttäjää lisättiin ryhmään."
     errors:
       can_not_modify_automatic: "Et voi muokata automaattista ryhmää"
-      member_already_exist: "'%{username}' on jo ryhmän jäsen."
       invalid_domain: "'%{domain}' ei ole käypä verkkotunnus."
       invalid_incoming_email: "'%{email}' ei ole käypä sähköpostiosoite."
       email_already_used_in_group: "'%{email}' on jo käytössä ryhmällä '%{group_name}'."
@@ -2756,8 +2755,6 @@ fi:
     promoter:
       name: Markkinoija
       description: Kutsui käyttäjän
-      long_description: |
-        Tämä ansiomerkki myönnetään, kun kutsut jonkun yhteisöön käyttäjäsivusi kutsutoiminnolla tai ketjun alla sijaitsevan painikkeen avulla. Keskustelusta mahdollisesti kiinnostuneen ystävän kutsuminen on hyvä tapa esitellä yhteisöä uusille ihmisille, joten kiitos!
     campaigner:
       name: Kampanjoija
       description: Kutsui kolme haastajaa (luottamustaso 1)
@@ -2856,8 +2853,6 @@ fi:
     first_emoji:
       name: Ensimmäinen Emoji
       description: Käytti Emojia viestissä
-      long_description: |
-        Tämä ansiomerkki myönnetään, kun ensimmäisen kerran lisäät emojin viestiisi :thumbsup:. Emojin avulla voit viestiä tunteita, ilosta :smiley: suruun :anguished: ja vihaan :angry: ja kaikkea siltä väliltä :sunglasses: . Kirjoita vain : (kaksoispiste) tai paina Emoji painiketta tekstieditorin valikossa valitaksesi sadoista vaihtoehdoista :ok_hand:
     first_mention:
       name: Ensimmäinen maininta
       description: Mainitsi käyttäjän viestissä

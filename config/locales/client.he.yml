@@ -111,7 +111,6 @@ he:
       email: 'שליחת קישור בדוא״ל'
     action_codes:
       public_topic: "הפכו נושא זה לפומבי %{when}"
-      private_topic: "הפכו נושא זה לפרטי %{when}"
       split_topic: "פצלו נושא זה %{when}"
       invited_user: "%{who} הוזמנו ב-%{when}"
       invited_group: "הזמינו %{who} %{when}"
@@ -141,8 +140,6 @@ he:
     topic_admin_menu: "פעולות ניהול לנושא"
     wizard_required: "ברוכים הבאים לדיסקורס החדש שלכם! בואו נתחיל עם <a href='%{url}' data-auto-route='true'>אשף ההתקנה</a> ✨"
     emails_are_disabled: "כל הדוא״ל היוצא נוטרל באופן גורף על ידי מנהל אתר. שום הודעת דוא״ל, מכל סוג שהוא, לא תשלח."
-    bootstrap_mode_enabled: "כדי להקל על הקמת האתר החדש שלכם, אתם במצב איתחול-ראשוני. כל המשתמשים החדשים יקבלו רמת אמון 1 ויקבלו תמצות יומי במייל. אפשרות זו תכובה אוטומטית כאשר יהיו יותר מ %{min_users} משתמשים."
-    bootstrap_mode_disabled: "מצב איתחול-ראשוני יכובה ב 24 השעות הקרובות."
     themes:
       default_description: "ברירת מחדל"
     s3:
@@ -238,15 +235,6 @@ he:
       last_read: "זה הפוסט האחרון שקראתם, לחצו לסמן עם סימנייה"
       remove: "הסר מהמועדפים"
       confirm_clear: "האם אתם בטוחים שאתם מעוניינים לנקות את כל הסימניות מנושא זה?"
-    topic_count_latest:
-      one: " {{count}} נושא חדש או עדכון."
-      other: "{{count}} נושאים חדשים או עדכונים."
-    topic_count_unread:
-      one: "נושא שלא נקרא."
-      other: "{{count}} נושאים שלא נקראו."
-    topic_count_new:
-      one: "נושא חדש אחד."
-      other: "{{count}} נושאים חדשים."
     preview: "תצוגה מקדימה"
     cancel: "ביטול"
     save: "שמירת שינויים"
@@ -366,19 +354,16 @@ he:
       request: "בקשה להצטרפות לקבוצה"
       message: "הודעה"
       automatic_group: קבוצה אוטומטית
-      closed_group: קבוצה סגורה
       is_group_user: "אתם חברים בקבוצה זו."
       allow_membership_requests: "אפשרו למשתמשים לשלוח בקשות חברות לבעלי קבוצה"
       membership: "חברות"
       name: "שם"
-      user_count: "מספר חברים"
       bio: "אודות הקבוצה"
       owner: "מנהל"
       index:
         title: "קבוצות"
         empty: "אין קבוצות נראות."
       activity: "פעילות"
-      members: "חברים"
       topics: "נושאים"
       posts: "פוסטים"
       mentions: "אזכורים"
@@ -2144,19 +2129,15 @@ he:
       notifications:
         watching:
           title: "צופים"
-          description: "אתם תצפו אוטומטית בכל הנושאים עם תג זה. אתם תיודעו לגבי כל הפוסטים החדשים והנושאים, בנוסף - הספירה של לא-נקראו ופוסטים חדשים גם תופיע ליד הנושא."
         watching_first_post:
           title: "צפייה בפוסט הראשון"
-          description: "תקבלו התראה רק על הפוסט הראשון בכל נושא חדש עם התגית הזו."
         tracking:
           title: "במעקב"
-          description: "אתם תעקבו אוטומטית אחרי כל הנושאים עם תגית זו. ספירה של לא-נקראו ופוסטים חדשים תופיע ליד הנושא."
         regular:
           title: "רגיל"
           description: "אתם תיודעו אם מישהו מזכיר את @שמכם או עונה לפוסט שלכם."
         muted:
           title: "מושתק"
-          description: "אתם תיודעו לגבי כל דבר בנוגע לנושאים חדשים עם תג זה, והם לא יופיעו בטאב ה״לא-נקראו״ שלכם."
       groups:
         title: "תייגו קבוצות"
         about: "הוסיפו תגיות לקבוצות כדי לנהל אותן ביתר קלות."

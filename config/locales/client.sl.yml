@@ -143,7 +143,6 @@ sl:
       email: 'pošlji povezavo preko e-pošte'
     action_codes:
       public_topic: "je naredil temo javno %{when}"
-      private_topic: "je naredil temo privatno %{when}"
       split_topic: "je razdelil temo %{when}"
       invited_user: "je povabil %{who} %{when}"
       invited_group: "je povabil %{who} %{when}"
@@ -174,8 +173,6 @@ sl:
     topic_admin_menu: "ukrepi administratorja teme"
     wizard_required: "Dobrodošli v vašem novem Discoursu! Začnimo z <a href='%{url}' data-auto-route='true'>čarovnikom za nastavitve</a> ✨"
     emails_are_disabled: "Vsa odhodna e-pošta je bila globalno onemogočena iz strani administratorja. E-poštne obvestila ne bodo poslana."
-    bootstrap_mode_enabled: "Zaradi olajšanja zagona vaše nove strani ste v \"bootstrap\" načinu. Vsi novi uporabniki bodo prejeli nivo zaupanja 1 ter imeli omogočene dnevne povzetke preko e-pošte. To bo samodejno izključeno ko skupno število uporabnikov preseže %{min_users}."
-    bootstrap_mode_disabled: "\"Bootstrap\" način bo onemogočen v naslednjih 24 urah."
     themes:
       default_description: "Privzeto"
     s3:
@@ -275,21 +272,6 @@ sl:
       last_read: "to je zadnja objava katero ste prebrali; kliknite, da ustvarite zaznamek"
       remove: "Odstrani Zaznamek"
       confirm_clear: "Ste prepričani, da želite počistiti vse zaznamke s te teme?"
-    topic_count_latest:
-      one: "{{count}} nova ali posodobljena tema."
-      two: "{{count}} novi ali posodobljeni temi."
-      few: "{{count}} nove ali posodobljene teme."
-      other: "{{count}} novih ali posodobljenih tem."
-    topic_count_unread:
-      one: "{{count}} neprebrana tema."
-      two: "{{count}} neprebrani temi."
-      few: "{{count}} neprebrane teme."
-      other: "{{count}} neprebranih tem."
-    topic_count_new:
-      one: "{{count}} nova tema."
-      two: "{{count}} novi temi."
-      few: "{{count}} nove teme."
-      other: "{{count}} novih tem."
     preview: "predogled"
     cancel: "prekliči"
     save: "Shrani Spremembe"
@@ -416,7 +398,6 @@ sl:
       request: "Zaprosi za članstvo v skupini"
       message: "Sporočilo"
       automatic_group: Avtomatska skupina
-      closed_group: Zaprta skupina
       is_group_user: "Si član te skupine"
       allow_membership_requests: "Dovoli uporabnikom, da zaprosijo za članstvo pri lastnikih skupine"
       membership_request_template: "Predloga za prikaz uporabnikom, ko zaprosijo za članstvo"
@@ -426,7 +407,6 @@ sl:
         reason: "Sporoči lastnikom skupine zakaj spadaš v to skupino"
       membership: "Članstvo"
       name: "Ime"
-      user_count: "Število članov"
       bio: "O skupini"
       selector_placeholder: "vnesi uporabniško ime"
       owner: "lastnik"
@@ -439,7 +419,6 @@ sl:
         few: "Skupin"
         other: "Skupin"
       activity: "Aktivnost"
-      members: "Člani"
       topics: "Teme"
       posts: "Objave"
       mentions: "Omembe"
@@ -645,9 +624,6 @@ sl:
         set_password: "Nastavi geslo"
         choose_new: "Izberite novo geslo"
         choose: "Izberite geslo"
-      second_factor:
-        enabled_status: "Status: vklopljeno"
-        disabled_status: "Status: izključeno"
       change_about:
         title: "Spremeni O meni"
       change_username:

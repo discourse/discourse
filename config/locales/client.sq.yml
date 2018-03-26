@@ -111,7 +111,6 @@ sq:
       email: 'dërgoje këtë lidhje me email'
     action_codes:
       public_topic: "e bëri këtë temë publike %{when}"
-      private_topic: "e bëri këtë temë private %{when}"
       split_topic: "ndaje këtë teme %{when}"
       invited_user: "ka ftuar %{who} %{when}"
       invited_group: "ka ftuar %{who} %{when}"
@@ -139,8 +138,6 @@ sq:
     topic_admin_menu: "veprimet administrative mbi temën"
     wizard_required: "Mirseerdhët tek faqja juaj e re Discourse! Le t'ia nisim me <a href='%{url}' data-auto-route='true'>\"setup wizard\"</a> ✨"
     emails_are_disabled: "Emailat janë çaktivizuar globalisht nga administratori i faqes. Asnjë njoftim me email nuk do të dërgohet. "
-    bootstrap_mode_enabled: "Për të thjeshtuar nisjen e komunitetit, jeni në formatin \"bootstrap\". Të gjithë anëtarët e rinj do të kenë nivelin e besimit 1 dhe emailat e përditshëm të aktivizuar. Këto opsione do të çaktivizohen automatikisht kur numri total i anëtarëve të kalojë numrin %{min_users}."
-    bootstrap_mode_disabled: "Mënyra bootstrap do të çaktivizohet në 24 orët e ardhshme."
     themes:
       default_description: "Paracaktuar"
     s3:
@@ -235,15 +232,6 @@ sq:
       last_read: "ky është postimi i fundit që keni lexuar; klikoni për t'a shtuar tek të preferuarat"
       remove: "Hiqeni nga të prefereruarat"
       confirm_clear: "Jeni të sigurtë se doni të fshini të gjitha të preferuarat nga kjo temë?"
-    topic_count_latest:
-      one: "{{count}} temë e re ose e përditësuar."
-      other: "{{count}} tema të reja ose të përditësuara."
-    topic_count_unread:
-      one: "{{count}} temë e palexuar."
-      other: "{{count}} tema të palexuara."
-    topic_count_new:
-      one: "{{count}} temë e re."
-      other: "{{count}} tema të reja."
     preview: "shiko"
     cancel: "anulo"
     save: "Ruaj ndryshimet"
@@ -358,16 +346,13 @@ sq:
       leave: "Ik nga grupi"
       request: "Kërko t'i bashkohesh grupit"
       automatic_group: Grup automatik
-      closed_group: Grup i mbyllur
       is_group_user: "Jeni anëtar i këtij grupi"
       name: "Emri"
-      user_count: "Numri i anëtarëve"
       bio: "Mbi grupin"
       owner: "autori"
       index:
         title: "Grupet"
       activity: "Aktiviteti"
-      members: "Anëtarë"
       topics: "Tema"
       posts: "Postime"
       mentions: "Përmendje"
@@ -1920,13 +1905,10 @@ sq:
       notifications:
         watching:
           title: "Në vëzhgim"
-          description: "Ju do të vëzhgoni automatikisht të gjitha temat nën këtë etiketë. Do të njoftoheni për çdo postim e temë të re, dhe numri i postimeve të reja të palexuara do të afishohet ngjitur me titullin e temës përgjatë listave të faqes. "
         watching_first_post:
           title: "Postimi i parë nën vëzhgim"
-          description: "Ju do të njoftoheni vetëm për postimin e parë të çdo teme nën këtë etiketë."
         tracking:
           title: "Në gjurmim"
-          description: "Ju do të gjurmoni automatikisht të gjitha temat nën këtë etiketë. Numri i përgjigjeve të palexuara do të afishohet ngjitur me titullin e temës në listat e faqes. "
         regular:
           title: "Normal"
           description: "Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose i përgjigjet postimeve tuaja. "

@@ -93,7 +93,6 @@ id:
       email: 'kirim link ini melalui email'
     action_codes:
       public_topic: "membuat topik ini umum %{when}"
-      private_topic: "membuat topik ini pribadi %{when}"
       split_topic: "pisahkan topik ini %{when}"
       invited_user: "mengundang %{who} %{when}"
       removed_user: "menghapus %{who} %{when}"
@@ -117,8 +116,6 @@ id:
         disabled: 'tidak terdaftar %{when}'
     topic_admin_menu: "topik aksi admin"
     emails_are_disabled: "Semua surel yang keluar telah dinonaktifkan oleh administrator. Tidak ada pemberitahuan email yang akan dikirimkan."
-    bootstrap_mode_enabled: "Untuk meluncurkan situs baru anda lebih mudah, anda masuk pada mode bootstrap. Semua pengguna baru akan diberikan kepercayaan di level 1 dan mempunyai email harian yang aktif diperbaharui secara singkat. Secara otomatis ini akan mati ketika jumlah pengguna melampaui %{min_users} hitungan pengguna."
-    bootstrap_mode_disabled: "Mode bootstrap akan di non aktifkan pada 24 jam berikutnya."
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
@@ -208,12 +205,6 @@ id:
       last_read: "Ini adalah post terakhir yang anda baca; klik untuk menandainya"
       remove: "Hilangkan penandaan"
       confirm_clear: "Apakah anda yakin ingin membersihkan semua penandaan dari topik ini?"
-    topic_count_latest:
-      other: "{{count}} topik baru atau diperbarui."
-    topic_count_unread:
-      other: "{{count}} topik belum dibaca."
-    topic_count_new:
-      other: "{{count}} topik baru."
     preview: "pratinjau"
     cancel: "batal"
     save: "Simpan Perubahan"
@@ -313,15 +304,12 @@ id:
       join: "Gabung dengan grup"
       message: "Pesan"
       automatic_group: Kelompok Otomatis
-      closed_group: Kelompok Tertutup
       is_group_user: "Anda adalah anggota dari kelompok ini."
       membership: "Keanggotaan"
       name: "Nama"
-      user_count: "Jumlah Anggota"
       bio: "Tentang Kelompok"
       owner: "pemilik"
       activity: "Aktifitas"
-      members: "Anggota"
       topics: "Topik-topik"
       mentions: "Balasan-balasan"
       messages: "Pesan-pesan"

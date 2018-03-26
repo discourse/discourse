@@ -79,6 +79,9 @@ te:
         x_days:
           one: "1 రోజు ముందు"
           other: "%{count} రోజుల ముందు"
+      previous_month: 'గత నెల'
+      next_month: 'తరువాత నెల'
+      placeholder: తేదీ
     share:
       topic: 'ఈ విషయానికి ఒక లంకెను పంచండి'
       post: '#%{postNumber} టపా'
@@ -89,6 +92,8 @@ te:
       email: 'ఈ లింక్ ను ఈమెయిల్ లో పంచుకొండి'
     topic_admin_menu: "విషయపు అధికార చర్యలు"
     emails_are_disabled: "బయటకు వెళ్లే అన్ని ఈమెయిల్లూ అధికారి నిశేధించాడు. ఇప్పుడు ఎటువంటి ఈమెయిల్ ప్రకటనలూ పంపవీలవదు."
+    themes:
+      default_description: "అప్రమేయ"
     edit: 'ఈ విషయపు శీర్షిక మరియు వర్గం సవరించు'
     not_implemented: "ఈ ఫీచరు ఇంకా ఇంప్లిమెటు చేయలేదు. క్షమాపణలు!"
     no_value: "లేదు"
@@ -102,6 +107,7 @@ te:
     admin_title: "అధికారి"
     flags_title: "కేతనాలు"
     show_more: "మరింత చూపు"
+    show_help: "ఐచ్చికాలు"
     links: "లంకెలు"
     links_lowercase:
       one: "లంకె"
@@ -120,11 +126,13 @@ te:
     more: "మరింత"
     less: "తక్కువ"
     never: "ఎప్పటికీ వద్దు"
+    every_hour: "ప్రతి గంట"
     daily: "ప్రతిరోజూ"
     weekly: "ప్రతీవారం"
     every_two_weeks: "రెండువారాలకోసారి"
     every_three_days: "ప్రతి మూడు రోజులకీ"
     max_of_count: "{{count}} గరిష్టం"
+    alternation: "లేదా"
     character_count:
       one: "{{count}} అక్షరం"
       other: "{{count}} అక్షరాలు"
@@ -158,15 +166,6 @@ te:
       not_bookmarked: "ఈ టపాను చదివారు; పేజీక ఉంచుటకు నొక్కండి"
       last_read: "మీరు చివరాఖరుగా చదివిన టపా ఇది; పేజీక ఉంచుటకు నొక్కండి"
       remove: "పేజీక తొలగించండి"
-    topic_count_latest:
-      one: "{{count}} కొత్త లేదా ఉన్నతీకరించిన విషయం"
-      other: "{{count}} కొత్త లేదా ఉన్నతీకరించిన విషయాలు"
-    topic_count_unread:
-      one: "{{count}} చదవని విషయం."
-      other: "{{count}} చదవని విషయాలు."
-    topic_count_new:
-      one: "{{count}} కొత్త విషయం."
-      other: "{{count}} కొత్త విషయాలు."
     preview: "మునుజూపు"
     cancel: "రద్దు"
     save: "మార్పులు భద్రపరచండి"
@@ -208,7 +207,6 @@ te:
     directory:
       title: "వాడుకరులు"
     groups:
-      members: "సభ్యులు"
       posts: "టపాలు"
       alias_levels:
         nobody: "ఎవరూకాదు"

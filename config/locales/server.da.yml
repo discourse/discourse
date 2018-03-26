@@ -216,7 +216,6 @@ da:
       bulk_add: "%{users_added} brugere er blevet tilføjet til gruppen."
     errors:
       can_not_modify_automatic: "Du kan ikke modificere en automatisk gruppe"
-      member_already_exist: "'%{username}' er allerede medlem af denne gruppe."
       invalid_domain: "'%{domain}' er ikke et gyldigt domæne."
       invalid_incoming_email: "'%{email}' er ikke en gyldig email adresse."
       email_already_used_in_group: "'%{email}' er allerede brugt af en bruger i gruppen '%{group_name}'."

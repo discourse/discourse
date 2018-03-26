@@ -98,7 +98,6 @@ vi:
       email: 'Gửi liên kết này qua email'
     action_codes:
       public_topic: "hiển thị chủ đề này công khai lúc %{when}"
-      private_topic: "Ẩn chủ đề này lúc %{when}"
       split_topic: "tách chủ đề này lúc %{when}"
       invited_user: "đã mời %{who} lúc %{when}"
       invited_group: "đã mời %{who} lúc %{when}"
@@ -129,8 +128,6 @@ vi:
     topic_admin_menu: "Lựa chọn quản lí chủ đề."
     wizard_required: "Chào mừng bạn đến với Discourse! Hãy bắt đầu với <a href='%{url}' data-auto-route='true'>hướng dẫn cài đặt</a> ✨"
     emails_are_disabled: "Ban quản trị đã tắt mọi email gửi đi. Sẽ không có bất kỳ thông báo nào qua email được gửi đi."
-    bootstrap_mode_enabled: "Để đơn giản hoá quá trình triển khai, bạn đang ở trong chế độ bootstrap. Mọi người dùng mới đều có trust level 1 và sẽ nhận được email cập nhật thông tin mỗi ngày. Chế độ này sẽ tự động tắt khi số người dùng vượt qua %{min_users}."
-    bootstrap_mode_disabled: "Chế độ bootstrap sẽ bị tắt trong 24 giờ tới."
     themes:
       default_description: "Mặc định"
     s3:
@@ -224,12 +221,6 @@ vi:
       last_read: "đây là bài viết cuối cùng bạn đã đọc; nhấp chuột để đánh dấu"
       remove: "Xóa dấu trang"
       confirm_clear: "Bạn có chắc muốn xóa tất cả dấu trang ở topic này?"
-    topic_count_latest:
-      other: "{{count}} chủ đề mới hoặc đã cập nhật."
-    topic_count_unread:
-      other: "{{count}} chủ đề chưa đọc."
-    topic_count_new:
-      other: "{{count}} chủ đề mới."
     preview: "xem trước"
     cancel: "hủy"
     save: "Lưu thay đổi"
@@ -347,7 +338,6 @@ vi:
       request: "Xin gia nhập nhóm"
       message: "Tin nh"
       automatic_group: Nhóm tự động
-      closed_group: Nhóm kín
       is_group_user: "Bạn là một thành viên của nhóm này"
       allow_membership_requests: "Cho phép người dùng gửi đơn xin gia nhập nhóm đến người quản lí nhóm."
       membership_request_template: "đã tùy chỉnh để hiển thị cho người dùng khi gửi yêu cầu thành viên"
@@ -357,7 +347,6 @@ vi:
         reason: "Cho phép chủ sở hữu nhóm biết lý do bạn thuộc nhóm này"
       membership: "Thành viên"
       name: "Tên"
-      user_count: "Số lượng thành viên"
       bio: "Thông tin về nhóm"
       owner: "chủ"
       index:
@@ -366,7 +355,6 @@ vi:
       title:
         other: "Nhóm"
       activity: "Hoạt động"
-      members: "Các thành viên"
       topics: "Chủ đề"
       posts: "Các bài viết"
       mentions: "Được nhắc đến"

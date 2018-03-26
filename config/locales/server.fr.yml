@@ -216,7 +216,7 @@ fr:
     top_weekly: "Meilleurs sujets de la semaine"
     top_daily: "Meilleurs sujets du jour"
     posts: "Messages récents"
-    private_posts: "Derniers messages personnels"
+    private_posts: "Derniers messages directs"
     group_posts: "Derniers messages de %{group_name}"
     group_mentions: "Dernières mentions de %{group_name}"
     user_posts: "Derniers messages par @%{username}"
@@ -234,7 +234,6 @@ fr:
       bulk_add: "%{users_added} utilisateurs ont bien été ajoutés au groupe."
     errors:
       can_not_modify_automatic: "Vous ne pouvez pas modifier un groupe automatique"
-      member_already_exist: "« %{username} » est déjà membre de ce groupe."
       invalid_domain: "'%{domain}' n'est pas un domaine valide."
       invalid_incoming_email: "« %{email} » n'est pas une adresse de courriel valide."
       email_already_used_in_group: "« %{email} » est déjà utilisé par le groupe « %{group_name} »."
@@ -305,7 +304,7 @@ fr:
 
       Avez-vous aussi pensé répondre à d'autres personnes dans cette discussion ? Une grande discussion implique plusieurs avis, perspectives.
 
-      Si vous aimeriez continuer la discussion avec ce membre en particulier, [send them a personal message](/u/%{reply_username}).
+      Si vous aimeriez continuer la discussion avec ce membre en particulier, [envoyez-leur un message direct](/u/%{reply_username}).
     too_many_replies: |
       ### Vous avez atteint le nombre de réponses maximum dans ce topic
 
@@ -334,9 +333,9 @@ fr:
         topic:
           attributes:
             base:
-              warning_requires_pm: "Vous ne pouvez associer des avertissements qu'à des messages personnels."
+              warning_requires_pm: "Vous ne pouvez associer des avertissements qu'à des messages directs."
               too_many_users: "Vous ne pouvez envoyer des avertissements qu'à un utilisateur à la fois."
-              cant_send_pm: "Désolé, vous ne pouvez pas envoyer un message personnel à cet utilisateur."
+              cant_send_pm: "Désolé, vous ne pouvez pas envoyer un message direct à cet utilisateur."
               no_user_selected: "Vous devez choisir un utilisateur valide."
               reply_by_email_disabled: "Réponse par courriel désactivée."
               target_user_not_found: "Un des utilisateurs à lequel vous envoyez ce message n'a pas été retrouvé."
@@ -958,7 +957,7 @@ fr:
     summary_percent_filter: "Quand un utilisateur clique sur « Résumer ce sujet », montrer le top % des messages"
     summary_max_results: "Nombre maximum de messages retournés par « Résumer ce sujet »"
     enable_personal_messages: "Autoriser les utilisateurs de niveau de confiance 1 à créer des messages et à répondre (configurable via le niveau de confiance minimum pour envoyer des messages). Notez que les responsables peuvent toujours envoyer des messages."
-    enable_system_message_replies: "Permettre aux utilisateurs de répondre aux messages système, même si les messages personnels sont désactivés."
+    enable_system_message_replies: "Permettre aux utilisateurs de répondre aux messages système, même si les messages directs sont désactivés."
     enable_personal_email_messages: "Autoriser les utilisateurs de niveau de confiance 1 à envoyer des messages courriel personnels et à répondre (configurable via le niveau de confiance minimum pour envoyer des messages). Notez que les responsables peuvent toujours envoyer des messages."
     enable_long_polling: "Utiliser les requêtes longues pour le flux de notifications."
     long_polling_base_url: "Racine de l'URL utilisée pour les requêtes longues (dans le cas de l'utilisation d'un CDN pour fournir du contenu dynamique, pensez à le configurer en mode \"origin pull\") par exemple : http://origin.site.com"
@@ -1142,6 +1141,8 @@ fr:
     min_trust_to_edit_wiki_post: "Le niveau de confiance minimum requis pour modifier les messages de type wiki."
     min_trust_to_edit_post: "Le niveau de confiance minimum requis pour modifier des messages."
     min_trust_to_allow_self_wiki: "Le niveau de confiance minimum requis pour transformer ses propres messages en type wiki."
+    min_trust_to_send_messages: "Le niveau de confiance minimum pour être autorisé à créer des nouveaux messages directs."
+    min_trust_to_send_email_messages: "Le niveau de confiance minimum requis pour envoyer de nouveaux messages directs par courriel (aux utilisateurs générés)."
     newuser_max_links: "Combien de liens un nouvel utilisateur peut-il ajouter à un message."
     newuser_max_images: "Combien d'images un nouvel utilisateur peut-il ajouter à un message."
     newuser_max_attachments: "Combien de fichiers un nouvel utilisateur peut-il ajouter à un message."
@@ -1151,6 +1152,7 @@ fr:
     max_users_notified_per_group_mention: "Nombre maximum d'utilisateurs qui peuvent recevoir une notification si un groupe est mentionné (si le seuil est atteint, aucune notification ne sera envoyée)"
     create_thumbnails: "Créer un aperçu pour les images imbriquées qui sont trop large pour le message."
     email_time_window_mins: "Attendre (n) minutes avant l'envoi des courriels de notification, afin de laisser une chance aux utilisateurs de modifier ou finaliser leurs messages."
+    personal_email_time_window_seconds: "Attendre (n) secondes avant d'envoyer des courriels de notification directs, afin de donner aux utilisateurs la chance d'éditer et de finaliser leurs messages."
     email_posts_context: "Combien de réponses précédentes doit-on inclure dans les courriels de notifications pour situer le contexte."
     flush_timings_secs: "À quelle fréquence les données de timing doivent être vider, en secondes."
     title_max_word_length: "Le nombre maximum de caractères dans le titre d'un sujet."
@@ -1273,6 +1275,7 @@ fr:
     anonymous_account_duration_minutes: "Pour protéger l'anonymat, créer un nouveau compte anonyme tous les N minutes pour chaque utilisateur. Exemple: si 600 est choisi, dès 600 minutes après le dernier message ET que l'utilisateur passe en mode anonyme, un nouveau compte anonyme lui sera crée."
     hide_user_profiles_from_public: "Cacher les cartes, les profils et le répertoire d'utilisateurs aux visiteurs."
     hide_suspension_reasons: "Ne pas afficher les raisons d'une suspension sur les profils utilisateurs."
+    log_personal_messages_views: "Logguer les vues de messages directs par Admin pour d'autres utilisateurs/groupes."
     user_website_domains_whitelist: "Les sites Web des utilisateurs vont être vérifiés contre ces domaines. Liste délimitée par des pipes (|)."
     allow_profile_backgrounds: "Autoriser les utilisateurs à envoyer des arrières-plans de profil."
     sequential_replies_threshold: "Nombre de messages successifs qu'un utilisateur peut poster dans un sujet avant d'être averti d'avoir posté un nombre excessif de réponses qui se suivent."
@@ -1303,6 +1306,7 @@ fr:
     allowed_href_schemes: "Préfixes autorisés dans les liens en plus de http et https."
     embed_post_limit: "Nombre maximum de messages à embarquer."
     embed_username_required: "Un pseudo d'utilisateur pour la création du sujet est nécessaire."
+    notify_about_flags_after: "S'il y a des signalements qui n'ont pas été traités après ce nombre d'heures, envoyer un message direct aux responsables. Mettre 0 pour désactiver."
     show_create_topics_notice: "Si le site contient moins de 5 sujets publics, afficher un message pour demander aux administrateurs de créer d'autres sujets."
     delete_drafts_older_than_n_days: Supprimer les brouillons plus vieux que (n) jours.
     bootstrap_mode_min_users: "Nombre minimum d'utilisateurs nécessaire pour désactiver le mode de démarrage (mettre à 0 pour désactiver)"
@@ -1358,6 +1362,7 @@ fr:
     tags_sort_alphabetically: "Afficher les tags par ordre alphabétique. Par défaut, ils sont affichés par ordre de popularité."
     tag_style: "Style visuel pour tag badges."
     staff_tags: "Une liste de tags qui ne peuvent être appliqués que par des responsables."
+    allow_staff_to_tag_pms: "Autoriser les responsables à singaler n'importe quel message direct"
     min_trust_level_to_tag_topics: "Niveau de confiance minimum requis pour taguer des sujets"
     suppress_overlapping_tags_in_list: "Si des tags correspondent exactement à des mots du titre d'un sujet, ne pas afficher ces tags"
     remove_muted_tags_from_latest: "Ne pas afficher les sujets avec des tags silencieux dans la liste des sujets récents."
@@ -2491,12 +2496,10 @@ fr:
       name: Premier signalement
       description: A signalé un message
       long_description: |
-        Ce badge est accordé la première fois que vous signalez un message. Les signalements sont essentiels à la santé de votre communauté. Si vous remarquez des messages nécessitant l'intervention d'un modérateur n'hésitez pas à les signaler. Vous pouvez aussi utiliser les boîtes de dialogue de signalement pour envoyer des <b>messages</b> à d'autres utilisateurs. Si vous voyez un problème, :flag_black: signalez-le !
+        Ce badge est accordé la première fois que vous signalez un message. Les signalements sont essentiels à la santé de votre communauté. Si vous remarquez des messages nécessitant l'intervention d'un modérateur n'hésitez pas à les signaler. Vous pouvez aussi utiliser les boîtes de dialogue de signalement pour envoyer des <b>messages directs</b> à d'autres utilisateurs. Si vous voyez un problème, :flag_black: signalez-le !
     promoter:
       name: Ambassadeur
       description: A invité un utilisateur
-      long_description: |
-        Ce badge est accordé quand vous invitez quelqu'un à rejoindre la communauté via le bouton d'invitation de la page utilisateur, ou à la fin d'un sujet. Inviter des amis qui peuvent être intéressé par des discussions spécifiques est un bonne manière d'introduire de nouvelles personnes dans la communauté, donc merci !
     campaigner:
       name: Militant
       description: A invité 3 utilisateurs basiques
@@ -2595,8 +2598,6 @@ fr:
     first_emoji:
       name: Premier Emoji
       description: A utilisé un emoji dans un message
-      long_description: |
-        Ce badge est accordé la première fois que vous ajoutez un Emoji à votre message :thumbsup:. Les Emoji vous permettent de transmettre de l'émotion dans vos messages, du bonheur :smiley: à la tristesse :anguished: en passant par la colère :angry: et tout le reste :sunglasses:. Il suffit de taper : (deux-points) ou d'appuyer sur le bouton de la barre d'outils Emoji dans l'éditeur et de choisir parmi des centaines de choix :ok_hand:
     first_mention:
       name: Première mention
       description: A mentionné un utilisateur dans un message
@@ -2710,7 +2711,7 @@ fr:
             description: "Page web pour vous contacter ou votre organisation. Sera affichée dans la page <a href='/about' target='_blank'>À propos</a>."
           site_contact:
             label: "Messages automatiques"
-            description: "Tous les messages privés de Discourse seront envoyés de cet utilisateur, tels que les signalements et les notifications de sauvegarde."
+            description: "Tous les messages directs de Discourse seront envoyés de cet utilisateur, tels que les signalements et les notifications de sauvegarde."
       corporate:
         title: "Organisation"
         description: "Ces noms seront renseignés dans les pages <a href='/privacy' target='blank'>Politique de confidentialité</a> et <a href='/tos' target='blank'>Conditions générales d'utilisation</a> que vous pouvez modifier à tout moment depuis la catégorie Staff. Si vous n'avez pas de société, vous pouvez ignorer cette étape pour le moment."

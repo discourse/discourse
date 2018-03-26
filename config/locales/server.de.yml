@@ -29,18 +29,39 @@ de:
   loading: "Wird geladen"
   powered_by_html: 'Powered by <a href="https://www.discourse.org">Discourse</a>, beste Erfahrung mti aktiviertem JavaScript'
   log_in: "Anmelden"
+  submit: "Absenden"
   purge_reason: "Verlassenes, deaktiviertes Konto automatisch gelöscht"
   disable_remote_images_download_reason: "Der Download von Bildern wurde deaktiviert, weil nicht mehr genug Plattenplatz vorhanden war."
   anonymous: "Anonym"
   remove_posts_deleted_by_author: "Gelöscht vom Verfasser"
+  redirect_warning: "Wir konnten nicht überprüfen, dass der ausgewählte Link tatsächlich im Forum geschrieben wurde. Wenn du trotzdem fortfahren möchtest, wähle den Link unten aus."
   themes:
     bad_color_scheme: "Kann Motiv nicht aktualisieren, ungültiges Farbschema"
     other_error: "Etwas ist schief gelaufen beim Aktualisieren des Theme"
+    error_importing: "Fehler beim Klonen des git-Repository, Zugriff verboten oder Repository nicht gefunden."
+    settings_errors:
+      invalid_yaml: "Der  YAML-Code ist ungültig."
+      data_type_not_a_number: "Der eingestellte Datentyp `%{name}` wird nicht unterstützt. Unterstützte Datentypen sind `integer`, `bool`, `list` und `enum`."
+      name_too_long: "Es gibt eine Einstellung mit einem zu langen Namen. Die maximale Länge beträgt 255 Zeichen."
+      default_value_missing: "Einstellung `%{name}` hat keinen Standardwert."
+      default_not_match_type: "Bei der Einstellung `%{name}` stimmt der Datentyp des Standardwerts nicht mit dem Datentyp der Einstellung überein."
+      default_out_range: "Bei der Einstellung `%{name}` liegt der Standardwert außerhalb des Wertebereichs."
+      enum_value_not_valid: "Der ausgewählte Wert gehört nicht zur Wertemenge des ENUM-Aufzählungstyps."
+      number_value_not_valid: "Der neue Wert liegt außerhalb des erlaubten Wertebereichs."
+      number_value_not_valid_min_max: "Er muss zwischen %{min} und %{max} liegen."
+      number_value_not_valid_min: "Er muss größer oder gleich %{min} sein."
+      number_value_not_valid_max: "Er muss kleiner oder gleich %{max} sein."
+      string_value_not_valid: "Die Länge des neuen Werts liegt außerhalb des erlaubten Bereichs."
+      string_value_not_valid_min_max: "Er muss zwischen %{min} und %{max} Zeichen lang sein."
+      string_value_not_valid_min: "Er muss mindestens %{min} Zeichen lang sein."
+      string_value_not_valid_max: "Er darf maximal %{max} Zeichen lang sein."
   emails:
     incoming:
       default_subject: "Dieses Thema benötigt einen Titel"
       show_trimmed_content: "Zeige gekürzten Inhalt"
       maximum_staged_user_per_email_reached: "Maximale Anzahl vorbereiteter Benutzer erreicht, die automatisch per E-Mail erstellt wurden."
+      no_subject: "(kein Betreff)"
+      no_body: "(kein Inhalt)"
       errors:
         empty_email_error: "Passiert wenn die empfangene E-Mail leer war."
         no_message_id_error: "Passiert wenn in der E-Mail die Kopfzeile 'Message-Id' fehlt."
@@ -88,6 +109,8 @@ de:
       not_an_integer: muss eine Ganzzahl sein
       odd: muss ungerade sein
       record_invalid: 'Validierung gescheitert: %{errors}'
+      max_emojis: "kann nicht mehr als %{max_emojis_count} Emojis beinhalten"
+      ip_address_already_screened: "wird bereits von einer bestehenden Regel abgedeckt"
       restrict_dependent_destroy:
         one: "Eintrag kann nicht gelöscht werden, da noch ein davon abhängiger %{record} existiert."
         many: "Eintrag kann nicht gelöscht werden, da noch davon abhängige %{record} existieren."
@@ -166,6 +189,7 @@ de:
   too_many_mentions_newuser:
     one: "Entschuldige, neue Benutzer können nur einen anderen Benutzer in einem Beitrag erwähnen."
     other: "Entschuldige, neue Benutzer können nur %{count} Benutzer in einem Beitrag erwähnen."
+  no_images_allowed_trust: "Entschuldige, du kannst keine Bilder in einen Beitrag einfügen."
   no_images_allowed: "Entschuldige, neue Benutzer können Beiträgen keine Bilder hinzufügen."
   too_many_images:
     one: "Entschuldige, neue Benutzer können Beiträgen höchstens ein Bild hinzufügen."
@@ -175,9 +199,11 @@ de:
     one: "Entschuldige, neue Benutzer können Beiträgen höchstens eine Datei hinzufügen."
     other: "Entschuldige, neue Benutzer können Beiträgen höchstens %{count} Dateien hinzufügen."
   no_links_allowed: "Entschuldige, neue Benutzer können Beiträgen keine Links hinzufügen."
+  links_require_trust: "Entschuldige, du kannst keine Links in einen Beitrag einfügen."
   too_many_links:
     one: "Entschuldige, neue Benutzer können Beiträgen höchstens einen Link hinzufügen."
     other: "Entschuldige, neue Benutzer können Beiträgen höchstens %{count} Links hinzufügen."
+  contains_blocked_words: "Dein Beitrag enthält ein nicht erlaubtes Wort: %{word}"
   spamming_host: "Entschuldigung, du kannst keine Links zu diesem Webserver posten."
   user_is_suspended: "Gesperrte Benutzer dürfen keine Beiträge schreiben."
   topic_not_found: "Etwas ist schief gelaufen. Wurde das Thema eventuell geschlossen oder gelöscht, während du es angeschaut hast?"
@@ -209,6 +235,7 @@ de:
     top_weekly: "Top-Themen der letzten Woche"
     top_daily: "Top-Themen der letzten 24 Stunden"
     posts: "Letzte Beiträge"
+    private_posts: "Neueste Nachrichten"
     group_posts: "Letzte Beiträge von %(Gruppen_name)"
     group_mentions: "Neueste Nennungen von %{group_name}"
     user_posts: "Neueste Beiträge von @%{username}"
@@ -226,7 +253,6 @@ de:
       bulk_add: "%{users_added} Benutzer wurden der Gruppe hinzugefügt."
     errors:
       can_not_modify_automatic: "Du kannst eine automatische Gruppe nicht bearbeiten"
-      member_already_exist: "'%{username}' ist bereits Mitglied dieser Gruppe."
       invalid_domain: "'%{domain}' ist keine gültige Domain."
       invalid_incoming_email: "'%{email}' ist keine gültige E-Mail-Adresse."
       email_already_used_in_group: "'%{email}' wird bereits von der Gruppe '%{group_name}' verwendet."
@@ -304,6 +330,12 @@ de:
       Entschuldige, aber neue Benutzer sind vorübergehend auf %{newuser_max_replies_per_topic} Antworten im gleichen Thema beschränkt.
 
       Anstatt eine weitere Antwort hinzuzufügen, denke darüber nach, deine vorherigen Antworten zu bearbeiten oder andere Themen zu besuchen.
+    reviving_old_topic: |
+      ### Thema neu beleben?
+
+      Die letzte Antwort in diesem Thema war **%{time_ago}**. Deine Antwort wird das Thema wieder an den Anfang der Liste schieben und jeden benachrichtigen, der sich zuvor an der Unterhaltung beteiligt hat.
+
+      Bist du sicher, dass du diese alte Unterhaltung fortsetzen möchtest?
   activerecord:
     attributes:
       category:
@@ -320,9 +352,12 @@ de:
         topic:
           attributes:
             base:
+              warning_requires_pm: "Du kannst Warnungen nur bei Nachrichten hinzufügen."
               too_many_users: "Du kannst eine Warnung nur an einen Benutzer zugleich anhängen."
+              cant_send_pm: "Entschuldige, du kannst keine Nachricht an diese Person verschicken."
               no_user_selected: "Du musst einen gültigen Benutzer auswählen."
               reply_by_email_disabled: "Antwort per E-Mail ist deaktiviert."
+              target_user_not_found: "Einer der Empfänger dieser Nachricht konnte nicht gefunden werden."
             featured_link:
               invalid: "ist ungültig. URL sollte http:// oder https:// enthalten."
               invalid_category: "kann in dieser Kategorie nicht bearbeitet werden."
@@ -423,6 +458,7 @@ de:
     replace_paragraph: "(Ersetze diesen ersten Absatz mit einer kurzen Beschreibung deiner neuen Kategorie. Diese Richtlinie wird in der Kategorienauswahl angezeigt, versuche also weniger als 200 Zeichen zu benutzen. **Bis du diese Beschreibung geändert oder Themen angelegt hast, wird diese Kategorie nicht auf der Kategorie-Seite angezeigt.**)"
     post_template: "%{replace_paragraph}\n\nBenutze die folgenden Abschnitte für eine ausführlichere Beschreibung oder um Richtlinien oder Regeln für diese Kategorie festzulegen:\n\n- Warum sollten Benutzer diese Kategorie nutzen? Wofür ist sie gedacht?\n\n- Wie genau unterscheidet sie sich von den Kategorien, die es bereits gibt?\n\n- Welche Themen sollte diese Kategorie im Allgemeinen beinhalten?\n\n- Brauchen wir diese Kategorie? Können wie sie mit einer anderen Kategorie oder Unter-Kategorie zusammenführen?\n"
     errors:
+      not_found: "Kategorie nicht gefunden!"
       uncategorized_parent: "Die \"unkategorisiert\" Kategorie kann keine Elternkategorie haben."
       self_parent: "Eine Kategorie kann nicht sich selbst untergeordnet werden."
       depth: "Unterkategorien können nicht ineinander verschachtelt werden."
@@ -455,6 +491,7 @@ de:
       broken: "Dieses Bild ist beschädigt"
   rate_limiter:
     slow_down: "Du hast diese Aktion zu oft durchgeführt. Versuche es später wieder."
+    too_many_requests: "Du hast diese Aktion zu häufig ausgeführt. Bitte warte %{time_left}, ehe du es erneut versuchst."
     by_type:
       first_day_replies_per_day: "Du hast die maximale Anzahl an Antworten erreicht, die ein neuer Benutzer am ersten Tag erstellen kann. Bitte warte %{time_left}, bis Du es wieder versuchst."
       first_day_topics_per_day: "Du hast die maximale Anzahl an Themen erreicht, die ein neuer Benutzer am ersten Tag erstellen kann. Bitte warte %{time_left}, bis Du es wieder versuchst."
@@ -559,6 +596,9 @@ de:
     title: 'Passwort zurücksetzen'
     success: "Dein Passwort wurde erfolgreich geändert, und du bist nun angemeldet."
     success_unapproved: "Dein Passwort wurde erfolgreich geändert."
+  email_login:
+    invalid_token: "Entschuldige, aber der Link zum Anmelden ist zu alt. Wähle die Anmelden-Schaltfläche und nutze „Ich habe mein Passwort vergessen“, um einen neuen Link zu erhalten."
+    title: "E-Mail-Anmeldung"
   change_email:
     confirmed: "Deine E-Mail-Adresse wurde aktualisiert."
     please_continue: "Weiter zu %{site_name}"
@@ -603,6 +643,8 @@ de:
       long_form: 'dies als unangemessen gemeldet'
     notify_user:
       title: 'Schreibe @{{username}} eine Nachricht'
+      description: 'Ich möchte mit dieser Person direkt und privat über ihren Beitrag reden.'
+      short_description: 'Ich möchte mit dieser Person direkt und privat über ihren Beitrag reden.'
       long_form: 'angeschriebener Benutzer'
       email_title: 'Dein Beitrag in „%{title}“'
       email_body: "%{link}\n\n%{message}"
@@ -856,21 +898,28 @@ de:
     email_polling_errored_recently:
       one: "Beim Abrufen von E-Mails ist in den letzten 24 Stunden ein Fehler aufgetreten. Weitere Informationen findest du <a href='/logs' target='_blank'>im Fehlerprotokoll</a>."
       other: "Beim Abrufen von E-Mails sind in den letzten 24 Stunden %{count} Fehler aufgetreten. Weitere Informationen findest du <a href='/logs' target='_blank'>im Fehlerprotokoll</a>."
+    missing_mailgun_api_key: "Der Server ist so eingestellt, dass E-Mails über Mailgun versendet werden, aber du hast keinen API-Schlüssel angegeben, um Webhook-Nachrichten zu überprüfen."
     bad_favicon_url: "Das Favicon lässt sich nicht laden. Prüfe die favicon_url-Einstellung in den <a href='/admin/site_settings'>Einstellungen</a>."
     poll_pop3_timeout: "Die Verbindung zum POP3-Server schlägt mit einer Zeitüberschreitung fehl. Eingehende E-Mails konnten nicht abgerufen werden. Überprüfe deine <a href='/admin/site_settings/category/email'>POP3-Einstellungen</a>."
     poll_pop3_auth_error: "Die Verbindung zum POP3-Server schlägt mit einem Authentisierungsfehler fehl. Überprüfe deine <a href='/admin/site_settings/category/email'>POP3-Einstellungen</a>."
+    force_https_warning: "Deine Webseite verwendet SSL, aber die `<a href='/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` ist in deinen Website-Einstellungen noch nicht aktiviert."
   site_settings:
     censored_words: "Wörter, die automatisch durch &#9632;&#9632;&#9632;&#9632; ersetzt werden"
     delete_old_hidden_posts: "Automatisch alle Beiträge löschen, die länger als 30 Tage versteckt bleiben."
+    default_locale: "Die Standard-Sprache dieser Discourse-Instanz"
     allow_user_locale: "Erlaube Benutzern, ihre eigene Oberflächensprache zu wählen"
     set_locale_from_accept_language_header: "Sprache der Benutzeroberfläche für anonyme Benutzer an Hand der Spracheinstellung ihres Browsers wählen (EXPERIMENTELL, funktioniert nicht mit Caches für anonyme Benutzer)"
+    support_mixed_text_direction: "Unterstütze die Vermischung von rechtsläufigem und linksläufigem Text"
     min_post_length: "Minimal zulässige Beitragslänge in Zeichen."
     min_first_post_length: "Minimal zulässige Länge des ersten Beitrags (eines Themas) in Zeichen"
+    min_personal_message_post_length: "Minimale zulässige Zeichenanzahl für Beiträge in Nachrichten."
     max_post_length: "Maximale zulässige Beitragslänge in Zeichen."
     topic_featured_link_enabled: "Beitrag mit Link zu hervorgehobenen Themen erlauben"
     show_topic_featured_link_in_digest: "Zeige den Hervorgehobene Themen Link in der E-Mail-Zusammenfassung."
     min_topic_title_length: "Minimale zulässige Titellänge von Themen in Zeichen."
     max_topic_title_length: "Maximale zulässige Titellänge von Themen in Zeichen."
+    min_personal_message_title_length: "Minimale zulässige Zeichenanzahl für den Titel von Nachrichten."
+    max_emojis_in_title: "Maximal erlaubte Emoji-Anzahl in Thementiteln"
     min_search_term_length: "Minimale zulässige Länge der Suche in Zeichen."
     search_tokenize_chinese_japanese_korean: "Zwinge die Suche Chinesisch, Japanisch und Koreanisch zu erkennen, auch wenn die Site keine dieser Sprachen nutzt"
     search_prefer_recent_posts: "Wenn das Durchsuchen deines großen Forums langsam ist, dann versucht diese Option zuerst einen Index der letzten Beiträge."
@@ -891,6 +940,9 @@ de:
     download_remote_images_max_days_old: "Externe Bilder nicht herunterladen für Beiträge, die älter als (n) Tage alt sind."
     disabled_image_download_domains: "Liste von Domänen, von denen verlinkte Bilder niemals heruntergeladen werden sollen."
     editing_grace_period: "Für (n) Sekunden wird nach dem Bearbeiten keine neue Revision im Beitragsverlauf angelegt."
+    editing_grace_period_max_diff: "Maximale Anzahl von Zeichenänderungen, die während der Bearbeitungsfrist erlaubt sind. Bei größeren Änderungen wird eine neue Beitragsversion gespeichert (Vertrauensstufe 0 und 1)"
+    editing_grace_period_max_diff_high_trust: "Maximale Anzahl von Zeichenänderungen, die während der Bearbeitungsfrist erlaubt sind. Bei größeren Änderungen wird eine neue Beitragsversion gespeichert (Vertrauensstufe 2 und höher)"
+    staff_edit_locks_post: "Beiträge werden für die Bearbeitung gesperrt, wenn sie von Team-Mitgliedern bearbeitet werden"
     post_edit_time_limit: "Der Verfasser eines Beitrags kann diesen nur für (n) Minuten nach Absenden des Beitrags bearbeiten. 0 deaktiviert diese Beschränkung."
     edit_history_visible_to_public: "Erlaube jedem, vorherige Versionen eines bearbeiteten Beitrags zu sehen. Wenn deaktiviert sind diese nur für Team-Mitglieder sichtbar."
     delete_removed_posts_after: "Beiträge, die deren Verfasser selbst entfernt hat, werden nach (n) Stunden automatisch gelöscht. Die Beiträge werden sofort gelöscht, wenn dieser Wert auf 0 gesetzt wird."
@@ -925,6 +977,9 @@ de:
     summary_likes_required: "Mindestanzahl an Likes in einem Thema, bevor die \"Thema zusammenfassen\" Funktion aktiviert wird."
     summary_percent_filter: "Zeige die besten (n)% der Beiträge eines Themas in der \"Thema zusammenfassen\"-Ansicht."
     summary_max_results: "Maximale Anzahl der sichtbaren Beiträge beim Zusammenfassen von Themen"
+    enable_personal_messages: "Erlaube Benutzern mit der Vertrauensstufe 1 (konfigurierbar über die minimale Vertrauensstufe zum Senden von Nachrichten), Nachrichten zu erstellen und auf Nachrichten zu antworten. Beachte, dass das Team immer Nachrichten und Antworten senden kann."
+    enable_system_message_replies: "Erlaube Benutzern, auf Systemnachrichten zu antworten, auch wenn Nachrichten deaktiviert sind"
+    enable_personal_email_messages: "Erlaube Benutzern mit Vertrauensstufe 4 (konfigurierbar über die Mindestvertrauensstufe, um Nachrichten zu senden), private E-Mail-Nachrichten zu senden. Bitte beachte, dass das Team immer Nachrichten senden kann."
     enable_long_polling: "Nachrichtenbus für Benachrichtigungen kann Long-Polling nutzen."
     long_polling_base_url: "Basis-URL für Long Polling (wenn zum Ausliefern von dynamischen Inhalten ein CDN verwendet wird, setze es auf Origin Pull), z. B. http://origin.site.com"
     long_polling_interval: "Wartezeit, bevor der Server auf Clients reagiert, wenn keine Daten gesendet werden müssen (nur für angemeldete Benutzer)"
@@ -946,6 +1001,8 @@ de:
     flag_sockpuppets: "Wenn ein neuer Benutzer auf ein Thema antwortet, das von einem anderen neuen Benutzer aber mit der gleichen IP-Adresse begonnen wurde, markiere beide Beiträge als potenziellen Spam."
     traditional_markdown_linebreaks: "Traditionelle Zeilenumbrüche in Markdown, die zwei nachfolgende Leerzeichen für einen Zeilenumbruch benötigen."
     enable_markdown_typographer: "Verwende grundlegende typografische Regeln, um die Lesbarkeit von Absätzen zu erhöhen, ersetzt (c) (tm) usw. durch Symbole, reduziert die Anzahl von Lesezeichen und so weiter"
+    enable_markdown_linkify: "Text, der nach einem Link aussieht, automatisch als Link behandeln: www.site.com und http://site.com werden automatisch verlinkt"
+    markdown_linkify_tlds: "Liste der Top-Level-Domains, die automatisch als Links behandelt werden"
     post_undo_action_window_mins: "Minuten, die ein Benutzer hat, um Aktionen auf einen Beitrag rückgängig zu machen (Gefällt mir, Meldung, usw.)."
     must_approve_users: "Team-Mitglieder müssen alle neuen Benutzerkonten freischalten, bevor diese Zugriff auf die Website erhalten. ACHTUNG: Das Aktivieren dieser Option für eine Live-Site entfernt den Zugriff auch für alle existierenden Benutzer außer für Team-Mitglieder!"
     pending_users_reminder_delay: "Benachrichtige die Moderatoren, falls neue Benutzer mehr als so viele Stunden auf ihre Genehmigung gewartet haben. Stelle -1 ein, um diese Benachrichtigungen zu deaktivieren."
@@ -1013,13 +1070,18 @@ de:
     sso_not_approved_url: "Nicht genehmigte SSO-Konten zu dieser URL weiterleiten"
     sso_allows_all_return_paths: "Alle Domain für SSO-Return-Paths zulassen (standardmäßig muss der Return Path auf der aktuellen Seite sein)"
     enable_local_logins: "Aktiviere Login mit lokal gespeicherten Benutzernamen und Passwörtern. (Anmerkung: muss aktiviert sein, damit Einladungen funktionieren)"
+    enable_local_logins_via_email: "Erlaube Benutzern, einen einmaligen Anmeldelink anzufordern, der ihnen als E-Mail geschickt wird."
     allow_new_registrations: "Erlaube das Registrieren neuer Benutzerkonten. Wird dies deaktiviert, so kann niemand mehr ein neues Konto erstellen."
     enable_signup_cta: "Zeige wiederkehrenden Gästen einen Hinweis, dass diese sich Anmelden oder Registrieren sollen."
     enable_yahoo_logins: "Aktiviere Yahoo Authentifizierung."
     enable_google_oauth2_logins: "Google OAuth2-Authentifizierung aktivieren. Dies ist der momentan von Google unterstützte Authentifizierungs-Mechanismus. Benötigt Client-ID und Secret."
     google_oauth2_client_id: "Client-ID deiner Google-Anwendung."
     google_oauth2_client_secret: "Client-Secret deiner Google-Anwendung."
+    google_oauth2_prompt: "Eine Leerzeichen-separierte Liste von String-Werten, die angeben, ob der autorisierende Server den Benutzer zur Reauthentifizierung und Zustimmung fragt. Siehe https://developers.google.com/identity/protocols/OpenIDConnect#prompt für die gültigen Werte."
+    google_oauth2_hd: "Domain, die von Google Apps gehostet wird und auf die Anmeldung eingeschränkt wird. Siehe https://developers.google.com/identity/protocols/OpenIDConnect#hd-param für weitere Details."
     enable_twitter_logins: "Aktiviere Twitter-Authentifizierung (benötigt twitter_consumer_key und twitter_consumer_secret)."
+    twitter_consumer_key: "Consumer Key für Twitter-Authentifizierung, registriert auf https://apps.twitter.com/"
+    twitter_consumer_secret: "Consumer Secret für Twitter-Authentifizierung, registriert auf https://apps.twitter.com"
     enable_instagram_logins: "Aktiviere Instagram-Authentifizierung (benötigt instagram_consumer_key und instagram_consumer_secret)."
     instagram_consumer_key: "Consumer Key für Instagram-Authentifizierung"
     instagram_consumer_secret: "Consumer Secret für Instagram-Authentifizierung"
@@ -1035,6 +1097,7 @@ de:
     allow_restore: "Wiederherstellung von Sicherungen zulassen, die ALLE vorhandenen Daten überschreiben! Auf 'false' lassen, sofern Sie nicht planen, eine Sicherung wiederherzustellen."
     maximum_backups: "Die maximale Anzahl an Sicherungen, die auf dem Server gespeichert werden. Ältere Sicherungen werden automatisch gelöscht."
     automatic_backups_enabled: "Automatische Backups aktivieren. Die Backups werden im eingestellten Zeitintervall erstellt."
+    backup_frequency: "Die Anzahl von Tagen zwischen Backups."
     enable_s3_backups: "Lade fertige Backups zu S3 hoch. WICHTIG: In den Dateien-Einstellungen müssen gültige S3-Kontodaten eingegeben sein."
     s3_backup_bucket: "Der entfernte Speicherort für Ihre Sicherungen. WARNUNG: Stellen Sie sicher, dass es sich um einen privaten Speicherort handelt."
     s3_disable_cleanup: "Deaktiviere das Löschen von Backups aus S3 wenn sie lokal entfernt werden"
@@ -1056,6 +1119,7 @@ de:
     max_bookmarks_per_day: "Maximale Anzahl der Lesezeichen pro Benutzer und Tag."
     max_edits_per_day: "Maximale Anzahl der Bearbeitungen pro Benutzer und Tag."
     max_topics_per_day: "Maximale Anzahl der Themen, die ein Benutzer pro Tag erstellen kann."
+    max_personal_messages_per_day: "Maximale Anzahl an Nachrichten, die Benutzer pro Tag erstellen können."
     max_invites_per_day: "Maximale Zahl an Einladungen, die ein Benutzer pro Tag verschicken kann."
     max_topic_invitations_per_day: "Maximale Zahl an Thema-Einladungen, die ein Benutzer pro Tag verschicken kann."
     max_logins_per_ip_per_hour: "Maximale Anzahl der erlaubten Anmeldungen pro IP-Adresse und Stunde"
@@ -1071,6 +1135,7 @@ de:
     purge_deleted_uploads_grace_period_days: "Schonfrist (in Tagen), bevor ein entfernter Upload endgültig gelöscht wird."
     purge_unactivated_users_grace_period_days: "Frist (in Tagen), bevor ein Benutzer gelöscht wird, der sein Konto nicht aktiviert hat. Setze sie auf 0, um nicht aktivierte Benutzer nie zu bereinigen."
     enable_s3_uploads: "Speichere hochgeladene Dateien auf Amazon S3. WICHTIG: benötigt gültige S3 Anmeldedaten (sowohl access_key_id als auch secret_access_key)."
+    s3_use_iam_profile: 'Verwende ein <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html">AWS EC2 Instanz-Profil</a>, um Zugriff auf den S3-Bucket zu gewähren. BEACHTE: Das Aktivieren setzt voraus, dass Discourse in einer entsprechend konfigurierten EC2-Instanz läuft, und überschreibt die Einstellungen „s3 access key id“ und „s3 secret access key”.'
     s3_upload_bucket: "Der Name des Amazon S3 Buckets, in dem hochgeladene Dateien gespeichert werden sollen. ACHTUNG: nur Kleinbuchstaben, keine Punkte, keine Unterstriche."
     s3_access_key_id: "The Amazon S3 access key id that will be used to upload images"
     s3_secret_access_key: "Der geheime Schlüssel von Amazon S3 welcher für das Hochladen verwendet wird"
@@ -1112,10 +1177,17 @@ de:
     tl3_requires_likes_given: "Mindestanzahl an Likes, die ein Benutzer innerhalb der letzten (tl3 time period) gegeben haben muss, um Vertrauensstufe 3 erreichen zu können."
     tl3_requires_likes_received: "Mindestanzahl an Likes die ein Benutzer innerhalb der letzten (tl3 time period) bekommen haben muss, um Vertrauensstufe 3 erreichen zu können."
     tl3_links_no_follow: "rel=nofollow nicht von Links entfernen, die von Benutzern mit Vertrauensstufe 3 erstellt wurden."
+    trusted_users_can_edit_others: "Erlaube Benutzern mit hohen Vertrauensstufen, Inhalte von anderen Benutzern zu bearbeiten."
     min_trust_to_create_topic: "Die minimale Vertrauensstufe wird benötigt um eine neues Thema zu erstellen."
+    allow_flagging_staff: "Wenn aktiviert, können Benutzer auch Beiträge von Team-Konten melden."
     min_trust_to_edit_wiki_post: "Die minimal benötigte Vertrauensstufe, um als Wiki markierte Beiträge bearbeiten zu können."
     min_trust_to_edit_post: "Die minimal benötigte Vertrauensstufe, um Beiträge bearbeiten zu können."
     min_trust_to_allow_self_wiki: "Die minimale Vertrauensstufe, die ein Benutzer haben muss, um einen eigenen Wiki Eintrag zu erstellen."
+    min_trust_to_send_messages: "Die minimale Vertrauensstufe zur Erstellung neuer Nachrichten."
+    min_trust_to_send_email_messages: "Die minimale Vertrauensstufe zum Versenden neuer Nachrichten als E-Mail (an vorbereitete Benutzer)."
+    min_trust_to_flag_posts: "Die minimale Vertrauensstufe zur Meldung von Beiträgen."
+    min_trust_to_post_links: "Die minimale Vertrauensstufe zum Einfügen von Links in Beiträgen."
+    min_trust_to_post_images: "Die minimale Vertrauensstufe zum Einfügen von Bildern in Beiträgen."
     newuser_max_links: "Maximale Anzahl der Links, die neue Benutzer Beiträgen hinzufügen dürfen."
     newuser_max_images: "Maximale Anzahl der Bilder, die neue Benutzer Beiträgen hinzufügen dürfen."
     newuser_max_attachments: "Maximale Anzahl der Dateien, die neue Benutzer Beiträgen hinzufügen dürfen."
@@ -1126,6 +1198,7 @@ de:
     enable_mentions: "Erlaube Benutzern, andere Benutzer zu erwähnen."
     create_thumbnails: "Erzeuge ein Vorschaubild und eine Lightbox für Bilder, die zu groß sind, um in einem Beitrag angezeigt zu werden."
     email_time_window_mins: "Warte (n) Minuten bevor eine E-Mail-Benachrichtigung geschickt wird, um Benutzern Gelegenheit zu geben, ihre Beiträge abschließend bearbeiten zu können."
+    personal_email_time_window_seconds: "Warte (n) Sekunden, bevor Benachrichtigungsmails zu Nachrichten verschickt werden, um Benutzern die Gelegenheit zu geben, ihre Nachrichten zu bearbeiten und abzuschließen."
     email_posts_context: "Anzahl der Antworten, welche als Kontext einer Benachrichtigungs-E-Mail hinzugefügt werden."
     flush_timings_secs: "Sekunden, nach denen Zeiteinstellungen auf den Server übertragen werden."
     title_max_word_length: "Maximal erlaubte Wortlänge in Thementiteln, in Zeichen."
@@ -1141,6 +1214,7 @@ de:
     max_image_size_kb: "Maximale Größe eines hochgeladenen Bilds in kB. Dieser Wert muss auch in Nginx (client_max_body_size), Apache oder anderen Proxies entsprechend konfiguriert werden."
     max_attachment_size_kb: "Maximale Größe hochgeladener Dateianhänge in kB. Dieser Wert muss auch in Nginx (client_max_body_size), Apache oder anderen Proxies entsprechend konfiguriert werden."
     authorized_extensions: "Liste von erlaubten Dateiendungen für hochgeladene Dateien ('*' um alle Dateiendungen zu erlauben)"
+    authorized_extensions_for_staff: "Eine Liste von erlaubten Dateiendungen für den Upload von Dateien durch Team-Benutzer, zusätzlich zu der in der Seiteninstellung `authorized_extensions` definierten Liste. (Der Wert „*“ erlaubt alle Dateitypen.)"
     theme_authorized_extensions: "Liste von erlaubten Dateiendungen für hochgeladene Themes (verwende '*', um alle Dateitypen zu erlauben)"
     max_similar_results: "Anzahl ähnlicher Themen, die beim Erstellen eines neuen Themas über dem Editor angezeigt werden. Ähnlichkeit wird an Hand des Titels und Inhalts bestimmt."
     max_image_megapixels: "Maximale erlaubte Auflösung für Bilder (in Megapixeln)."
@@ -1160,6 +1234,7 @@ de:
     faq_url: "Vollständige URL zu einer externen FAQ, welche du gerne verwenden möchtest."
     tos_url: "Die vollständige URL zu deinen extern gehosteten Nutzungsbedingungen, sofern vorhanden."
     privacy_policy_url: "Die vollständige URL zu deinen extern gehosteten Datenschutzrichtlinien, sofern vorhanden."
+    log_anonymizer_details: "Sollen die Details eines Benutzers nach der Anonymisierung im Protokoll aufbewahrt werden. Zur Einhaltung der DSGVO muss dies abgeschaltet werden."
     newuser_spam_host_threshold: "Wie häufig kann ein neuer Benutzer Links der gleichen Domain innerhalb ihrer `newuser_spam_host_threshold` Beiträge schreiben, ohne als Spam eingeordnet zu werden."
     white_listed_spam_host_domains: "Liste von Domänen, die keinem Spam-Host Test unterzogen werden. Neue Benutzer werden niemals daran gehindert, Beiträge mit Links zu diesen Domains zu erstellen."
     staff_like_weight: "Zusätzlicher Gewichtungsfaktor für Likes vom Team."
@@ -1182,6 +1257,7 @@ de:
     reply_by_email_enabled: "Aktviere das Antworten auf Themen via E-Mail."
     reply_by_email_address: "Vorlage für die Antwort einer per E-Mail eingehender E-Mail-Adresse, zum Beispiel: %{reply_key}@reply.example.com oder replies+%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Liste alternativer Vorlagen für eingehende E-Mail-Adressen für das Antworten per E-Mail. Beispiel: %{reply_key}@antwort.example.com|antworten+%{reply_key}@example.com"
+    incoming_email_prefer_html: "Verwende HTML statt Text für eingehende E-Mail."
     disable_emails: "Discourse daran hindern jegliche E-Mails zu verschicken"
     strip_images_from_short_emails: "Entferne Bilder aus E-Mails kleiner als 2800 Bytes."
     short_email_length: "Kurze E-Mail-Länge in Bytes"
@@ -1249,12 +1325,14 @@ de:
     staff_user_custom_fields: "Eine Liste von benutzerdefinierten Benutzerfeldern, die vom Team eingesehen werden können."
     enable_user_directory: "Aktiviert ein durchsuchbares Benutzerverzeichnis"
     enable_group_directory: "Aktiviert ein durchsuchbares Gruppenverzeichnis"
+    group_in_subject: "Setze %{optional_pm} im E-Mail-Betreff auf die erste Gruppe in der Nachricht, siehe: https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
     allow_anonymous_posting: "Benutzern erlauben, in den anonymen Modus zu wechseln"
     anonymous_posting_min_trust_level: "Vertrauensstufe, ab der das Schreiben anonymer Beiträge erlaubt ist"
     anonymous_account_duration_minutes: "Erzeuge alle (n) Minuten ein neues anonymes Konto je Benutzer, um die Anonymität der virtuellen anonymen Benutzer zu gewährleisten. Beispiel: Ein Wert von 600 sorgt dafür, dass ein neues anonymes Konto erzeugt wird, wenn ein Benutzer in den anonymen Modus wechselt UND mindestens 600 Minuten seit der letzten anonymen Nachricht dieses Benutzers vergangen sind."
     hide_user_profiles_from_public: "Deaktiviert Benutzerkarten, Benutzerprofile und das Benutzerverzeichnis für anonyme Benutzer."
     show_inactive_accounts: "Erlaube angemeldeten Benutzern, die Profile inaktiver Benutzer anzuschauen."
     hide_suspension_reasons: "Zeige Sperrgründe nicht öffentlich auf Benutzerprofilen an."
+    log_personal_messages_views: "Protokolliere Ansichten von Nachrichten anderer Benutzer/Gruppen durch Administratoren"
     user_website_domains_whitelist: "Benutzer-Webseiten werden mit diesen Domains abgeglichen. Mehrere Domains können mit einem Pipe-Symbol „|“ getrennt angegeben werden."
     allow_profile_backgrounds: "Erlaubt es Benutzern, Profilhintergründe hochzuladen."
     sequential_replies_threshold: "Anzahl an Beiträgen die ein Benutzer machen muss, um benachrichtigt zu werden, dass er zu viele aufeinanderfolgende Antworten schreibt."
@@ -1283,20 +1361,24 @@ de:
     autohighlight_all_code: "Erzwinge Syntaxhervorhebung für alle Quellcode-Blöcke, auch dann wenn keine Sprache angeben wurde."
     highlighted_languages: "Aktivierter Regeln für das Syntax-Hervorhebung. (Warnung: Das Aktivieren zu vieler Sprachen kann die Leistung beeinträchtigen) siehe: https://highlightjs.org/static/demo/ für eine Demonstration"
     embed_truncate: "Kürze die eingebetteten Beiträge"
+    embed_support_markdown: "Unterstütze Markdown-Formatierung für eingebettete Beiträge"
     allowed_href_schemes: "URI-Schemas, die in Links zusätzlich zu http und https erlaubt sind."
     embed_post_limit: "Maximale Anzahl der Beiträge die eingebettet werden."
     embed_username_required: "Der Benutzername ist für die Themenerstellung notwendig"
+    notify_about_flags_after: "Wenn es Meldungen gibt, die nicht innerhalb der angegebenen Anzahl von Stunden behandelt wurden, sende eine Nachricht an das Team. Ein Wert von 0 deaktiviert die Funktion."
     show_create_topics_notice: "Administratoren eine Warnmeldung anzeigen, wenn im Forum weniger als 5 öffentlich sichtbare Themen existieren."
     delete_drafts_older_than_n_days: Lösche Entwürfe, die mehr als (n) Tage alt sind.
     bootstrap_mode_min_users: "Erforderliche Benutzeranzahl, um den Starthilfe-Modus zu deaktivieren (0 = ausgeschaltet)"
     prevent_anons_from_downloading_files: "Nichtangemeldeten Benutzern das Herunterladen von Anhängen verbieten. WARNUNG: dies verhindert auch das Herunterladen jeglicher Ressourcen für Website-Anpassungen, die als Anhänge gespeichert wurden."
     slug_generation_method: "Gib eine Methode an, wie Kürzel in URLs generiert werden sollen. 'encoded' verwendet einen Prozent-Encodierten String, bei 'none' wird kein Kürzel verwendet."
     enable_emoji: "Aktiviere emoji"
+    enable_emoji_shortcuts: "Geläufige Text-Smileys wie :) :p :( werden in Emojis umgewandelt"
     emoji_set: "Welche Emoji sollen es sein?"
     enforce_square_emoji: "Emojis immer mit quadratischem Seitenverhältnis darstellen."
     approve_post_count: "Anzahl der Beiträge eines neuen Benutzer oder Anwärters, die genehmigt werden müssen"
     approve_unless_trust_level: "Beiträge von Benutzer unterhalb dieser Vertrauensstufe müssen genehmigt werden"
     approve_new_topics_unless_trust_level: "Beiträge von Benutzer unterhalb dieser Vertrauensstufe müssen genehmigt werden"
+    notify_about_queued_posts_after: "Wenn es Beiträge gibt, die länger als diese Anzahl an Stunden auf ihre Überprüfung warten, sende eine Benachrichtigung an alle Moderatoren. Setze die Einstellung auf 0, um diese Benachrichtigungen zu deaktivieren."
     auto_close_messages_post_count: "Maximale Anzahl von Beiträgen, die in einer Nachricht erlaubt sind, bevor sie automatisch geschlossen wird (0 = ausgeschaltet)"
     auto_close_topics_post_count: "Maximale Anzahl von Beiträgen, die in einem Thema erlaubt sind, bevor es automatisch geschlossen wird (0 = ausgeschaltet)"
     code_formatting_style: "Code-Schaltfläche im Editor wird standardmäßig diesen Formatierungsstil anwenden"
@@ -1304,6 +1386,7 @@ de:
     watched_words_regular_expressions: "Beobachtete Wörter sind reguläre Ausdrücke."
     default_email_digest_frequency: "Wie häufig sollen Benutzer standardmäßig E-Mail-Zusammenfassungen erhalten?"
     default_include_tl0_in_digests: "Beiträge von neuen Benutzern in E-Mail-Zusammenfassungen standardmäßig anzeigen. Benutzer können dies in ihren Einstelllungen ändern."
+    default_email_personal_messages: "Sende einem Benutzer standardmäßig eine E-Mail, wenn dieser eine Nachricht von einem anderen Benutzer erhält."
     default_email_direct: "Aktiviere standardmäßig, dass eine E-Mail gesendet wird, sobald ein Benutzer einen anderen Benutzer zitiert / einem anderen Benutzer antwortet / oder einen anderen Benutzer erwähnt bzw. einlädt."
     default_email_mailing_list_mode: "Sende standardmäßig eine E-Mail für jeden neuen Beitrag."
     default_email_mailing_list_mode_frequency: "Benutzer, die den Mailinglisten-Modus einschalten, werden standardmäßig so häufig eine E-Mail erhalten."
@@ -1339,14 +1422,17 @@ de:
     show_filter_by_tag: "Zeige eine Dropdown-Liste, um eine Themenliste nach Schlagwort zu filtern."
     max_tags_in_filter_list: "Maximale Anzahl von Schlagwörtern, die in einer Dropdown-Liste angezeigt werden. Es werden die am häufigsten verwendeten Schlagwörter angezeigt."
     tags_sort_alphabetically: "Zeige Schlagwörter in alphabetischer Reihenfolge. Standardmäßig werden sie nach Beliebtheit sortiert."
+    tags_listed_by_group: "Führe Schlagwörter auf der Schlagwort-Seite (/tags) geordnet nach Schlagwort-Gruppe auf."
     tag_style: "Visueller Stil für Schlagwort-Abzeichen."
     staff_tags: "Eine Liste von Schlagwörtern, die nur von Team-Mitgliedern angewendet werden können."
+    allow_staff_to_tag_pms: "Erlaube Team-Mitgliedern, jede Nachricht mit einem Schlagwort zu markieren."
     min_trust_level_to_tag_topics: "Minimale Vertrauensstufe, um Schlagwörter zu Themen hinzuzufügen."
     suppress_overlapping_tags_in_list: "Schlagwort nicht zeigen, wenn es genau so im Thementitel vorkommt"
     remove_muted_tags_from_latest: "Zeige in der Liste der neuesten Beiträge keine Themen mit stummgeschalteten Schlagwörtern."
     company_short_name: "Firmenname (kurz)"
     company_full_name: "Firmenname (komplett)"
     company_domain: "Firmendomain"
+    shared_drafts_category: "Aktiviere die Funktion „Gemeinsame Vorlagen“, indem du eine Kategorie für Themen-Vorlagen bestimmst."
     errors:
       invalid_email: "Ungültige E-Mail-Ad­res­se"
       invalid_username: "Es gibt keinen Benutzer mit diesem Benutzernamen."
@@ -1375,6 +1461,7 @@ de:
       staged_users_disabled: "Du musst erst 'vorbereitete Benutzer' aktivieren, bevor du diese Einstellung aktivierst."
       reply_by_email_disabled: "Du musst erst 'Antwort per E-Mail' aktivieren, bevor du diese Einstellung aktivierst."
       sso_url_is_empty: "Du musst erst eine 'sso url' angeben, bevor du diese Einstellung aktivierst."
+      enable_local_logins_disabled: "Du musst erst die Einstellung „enable local logins“ aktivieren, bevor du diese Einstellung aktivierst."
   search:
     within_post: "#%{post_number} von %{username}"
     types:
@@ -1473,6 +1560,7 @@ de:
   login:
     not_approved: "Dein Benutzerkonto wurde noch nicht genehmigt. Du wirst per E-Mail benachrichtigt, sobald dies geschehen ist."
     incorrect_username_email_or_password: "Benutzername, E-Mail-Adresse oder Passwort falsch"
+    incorrect_password: "Falsches Passwort"
     wait_approval: "Danke fürs Registrieren. Wir werden dich benachrichtigen, sobald dein Benutzerkonto genehmigt wurde."
     active: "Dein Konto ist nun freigeschaltet und einsatzbereit."
     activate_email: "<p>Du bist fast fertig! Wir haben eine Aktivierungsmail gesendet an <b>%{email}</b>. Bitte folge den Anweisungen in der E-Mail, um dein Konto zu aktivieren.</p><p>Wenn keine E-Mail ankommt, überprüfe bitte deinen Spam-Ordner.</p>"
@@ -1495,6 +1583,9 @@ de:
     auth_complete: "Authentifizierung ist abgeschlossen."
     click_to_continue: "Klicke hier um fortzufahren."
     already_logged_in: "Hoppla, es sieht so aus als ob du versuchst die Einladung für einen anderen Benutzer zu akzeptieren. Wenn du nicht %{current_user} bist, melde dich bitte ab und versuch es erneut."
+    second_factor_title: "Zwei-Faktor Authentifizierung"
+    second_factor_description: "Bitte gib den erforderlichen Authentifizierungscode aus deiner App ein:"
+    invalid_second_factor_code: "Ungültiger Authentifizierungscode"
   user:
     no_accounts_associated: "Es sind keine Konten zugeordnet"
     deactivated: "Deaktiviert wegen zu vielen unzustellbaren E-Mails an '%{email}'."
@@ -1529,7 +1620,7 @@ de:
   flags_reminder:
     flags_were_submitted:
       one: "Meldungen wurden vor über 1 Stunde eingereicht. [Bitte übeprüfe sie](/admin/flags)."
-      other: "Meldungen wurden vor über %{count} Stunden eingereicht. [Bitte übeprüfe sie](/admin/flags)."
+      other: "Es wurden Meldungen vor über %{count} Stunden eingereicht. [Bitte überprüfe sie](/admin/flags)."
     subject_template:
       one: "Eine Markierung wartet auf Bearbeitung"
       other: "%{count} Markierungen warten auf Bearbeitung"
@@ -1643,6 +1734,47 @@ de:
   test_mailer:
     title: "Test-E-Mail"
     subject_template: "[%{email_prefix}] Test der E-Mail-Zustellbarkeit"
+    text_body_template: |
+      Dies ist eine Test-E-Mail von
+
+      [**%{base_url}**][0]
+
+      E-Mail-Zustellbarkeit ist eine komplizierte Sache. Hier sind ein paar wichtige Dinge aufgeführt, die du am Anfang prüfen solltest:
+
+      - Stelle *sicher*, dass du die `notification_email` (Absender von Benachrichtigungen) in den Einstellungen richtig gesetzt hast. **Die Domain in der "From"-Adresse der E-Mails, die du schickst, ist die Domain, gegen die deine E-Mail validiert wird**.
+
+      - Lerne, wie du den Quelltext der E-Mail in deinem E-Mail-Programm anzeigen lassen kannst, damit du die E-Mail-Kopfzeilen auf wichtige Anhaltspunkte hin überprüfen kannst. In Google Mail ist dies die "Zeige Original"-Option in der Auswahlliste oben rechts von jeder E-Mail.
+
+      - **WICHTIG:** Hat dein Internetdienstanbieter (ISP) einen Reverse-DNS-Eintrag eingegeben, der die Domainnamen und die IP-Adressen verknüpft, von denen du E-Mails verschickst? [Überprüfe deinen Reverse PTR-Eintrag][2] hier. Wenn dein ISP den Reverse-DNS-Eintrag nicht richtig eingibt, ist es sehr unwahrscheinlich, dass eine deiner E-Mails zugestellt wird.
+
+      - Ist der [SPF-Eintrag][8] deiner Domain richtig? [Überprüfe deinen SPF-Eintrag][1] hier. Beachte, dass TXT der richtige Eintragstyp für SPF ist.
+
+      - Ist der [DKIM-Eintrag][3] deiner Domain richtig? Dies wird die E-Mai-lZustellbarkeit signifikant verbessern. [Überprüfe deinen DKIM-Eintrag][7] hier.
+
+      - Wenn du deinen eigenen E-Mail-Server betreibst, stelle sicher, dass die IPs deiner E-Mail-Server [nicht auf irgendwelchen E-Mail-Blacklist][4] stehen. Überprüfe auch, dass es definitiv einen vollqualifizierten Hostnamen in der HELO-Nachricht schickt, der in DNS auflöst. Wenn nicht, wird dies dazu führen, dass deine E-Mail von vielen E-Mail-Diensten abgelehnt wird.
+
+      - Wir empfehlen dir sehr, **eine Test-E-Mail an [mail-tester.com][mt]** zu schicken, um zu überprüfen, dass alles erwähnte korrekt funktioniert.
+
+      (Der *einfache* Weg besteht darin, ein kostenloses Konto bei [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] oder [Mailjet][mj] anzulegen, die großzügige kostenlose E-Mail-Tarife haben und für kleine Communitys ausreichen werden. Du wirst allerdings dennoch die SPF- und DKIM-Einträge in deinen DNS-Einstellungen eintragen müssen!)
+
+      Wir hoffen, dass du diesen Test der E-Mail-Zustellbarkeit erfolgreich erhalten hast!
+
+      Viel Erfolg,
+
+      Deine Freunde von [Discourse](http://www.discourse.org)
+
+      [0]: %{base_url}
+      [1]: http://www.kitterman.com/spf/validate.html
+      [2]: http://mxtoolbox.com/ReverseLookup.aspx
+      [3]: http://www.dkim.org/
+      [4]: http://whatismyipaddress.com/blacklist-check
+      [7]: https://www.mail-tester.com/spf-dkim-check
+      [8]: http://www.openspf.org/SPF_Record_Syntax
+      [sg]: https://goo.gl/r1WMF6
+      [sp]: https://www.sparkpost.com/
+      [mg]: http://www.mailgun.com/
+      [mj]: https://www.mailjet.com/pricing
+      [mt]: http://www.mail-tester.com/
   new_version_mailer:
     title: "Neue Version"
     subject_template: "[%{email_prefix}] Neue Discourse-Version, Update verfügbar"
@@ -2307,6 +2439,15 @@ de:
         Wenn du nicht versucht hast, ein Konto für %{email} zu erstellen oder deine E-Mail-Adresse zu ändern, mach’ dir keine Sorgen – du kannst diese Nachricht getrost ignorieren.
 
         Wenn du Fragen hast, [kontaktiere unser freundliches Team](%{base_url}/about).
+    account_second_factor_disabled:
+      title: "Zwei-Faktor-Authentifizierung deaktiviert"
+      subject_template: "[%{email_prefix}] Zwei-Faktor-Authentifizierung deaktiviert"
+      text_body_template: |
+        Zwei-Faktor-Authentifizierung wurde deaktiviert für dein Benutzerkonto bei %{site_name}. Du kannst dich nun allein mit deinem Passwort anmelden; ein zusätzlicher Authentifizierungscode ist nicht länger erforderlich.
+
+        Wenn du nicht selbst die Zwei-Faktor-Authentifzierung deaktiviert hat, hat jemand dein Benutzerkonto kompromittiert.
+
+        Wenn du Fragen hast, [kontatiere unser freundliches Team](%{base_url}/about).
     digest:
       why: "Eine kurze Zusammenfassung von %{site_link} seit deinem letzten Besuch am %{last_seen_at}"
       since_last_visit: "Seit deinem letzten Besuch"
@@ -2337,6 +2478,16 @@ de:
 
         Folge diesem Link, um ein neues Passwort zu wählen:
         %{base_url}/u/password-reset/%{email_token}
+    email_login:
+      title: "Anmeldung über Link"
+      subject_template: "[%{email_prefix}] Anmeldung über Link"
+      text_body_template: |
+        Hier ist dein Link, um dich anzumelden bei [%{site_name}](%{base_url}).
+
+        Wenn du diesen Link nicht angefordert hast, kannst du diese E-Mail einfach ignorieren.
+
+        Klicke auf den folgenden Link, um dich anzumelden:
+        %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "Passwort setzen"
       subject_template: "[%{email_prefix}] Passwort wählen"
@@ -2393,6 +2544,21 @@ de:
     signup_after_approval:
       title: "Konto bestätigen nach Genehmigung"
       subject_template: "You've been approved on %{site_name}!"
+      text_body_template: |
+        Willkommen bei%{site_name}!
+
+        Ein Team-Mitglied hat dein Benutzerkonto auf %{site_name} bestätigt.
+
+        Du kannst dein neues Konto nun verwenden, indem du dich hier anmeldest:
+        %{base_url}/u/activate-account/%{email_token}
+
+        Wenn sich der obenstehende Link nicht anklicken lässt, versuche ihn zu kopieren und in die Adresszeile deines Webbrowsers einzufügen.
+
+        %{new_user_tips}
+
+        Wir glauben an [zivilisiertes Community-Verhalten](%{base_url}/guidelines) zu jeder Zeit.
+
+        Genieße deinen Aufenthalt!
     signup:
       title: "Konto bestätigen nach Anmeldung"
       subject_template: "[%{email_prefix}] Bestätige dein neues Konto"
@@ -2580,6 +2746,151 @@ de:
       Ja, die rechtliche Seite ist langweilig, aber wir müssen uns selbst schützen &ndash; und im erweiterten Sinne auch dich und deine Daten &ndash; vor unfreundlichen Leuten. Wir haben [Nutzungsbedingungen](/tos), die deines (und unser) Verhalten und unsere Rechte bezüglich des Inhalts, der Privatsphäre und den Gesetzen beschreiben. Um diesen Dienst zu nutzen, musst du dich mit unseren [Nutzungsbedingungen](/tos) einverstanden erklären.
   tos_topic:
     title: "Nutzungsbedingungen"
+    body: |
+      SiteDie folgenden Geschäftsbedingungen sind maßgebend für die gesamte  Webseite und alle Inhalte, Dienstleistungen und Produkte, die auf oder über die Webseite zur Verfügung gestellt werden, einschließlich, aber nicht beschränkt auf die %{company_domain} Foren-Software, die %{company_domain} Support-Foren und den %{company_domain} Hosting-Dienst („Hosting”), (zusammengefasst: die „Webseite“). Die Webseite gehört und wird betrieben von  („“). Die Website wird angeboten vorbehaltlich der uneingeschränkten Zustimmung aller hierin enthaltenen Bedingungen und aller anderen sonstigen betrieblichen Regeln, Richtlinien (einschließlich, ohne Einschränkung, der [Datenschutzrichtlinien](/privacy) and [Community-Richtlinien](/faq)) von %{company_domain} und Verfahren, die von Zeit zu Zeit auf dieser Webseite von %{company_name} veröffentlicht werden können (zusammen die „Vereinbarung“).
+
+      Bitte lies diese Vereinbarung sorgfältig durch, bevor du die Webseite verwendest oder darauf zugreifst. Durch die Benutzung oder den Zugriff auf einen Teil der Webseite stimmst du den Geschäftsbedingungen dieser Vereinbarung zu. Wenn du nicht allen Geschäftsbedingungen in dieser Vereinbarung zustimmst, dann darfst du weder auf die Seite zugreifen noch irgendwelche Dienstleistungen in Anspruch nehmen. Wenn diese Geschäftsbedingungen als Angebot von %{company_name} erachtet werden, beschränkt sich die Zustimmung ausdrücklich auf diese Bedingungen. Die Website wird nur für Benutzer angeboten, die mindestens 13 Jahre alt sind.
+
+      <a name="1"></a>
+
+      ## [1. Dein %{company_domain}-Konto](#1)
+
+      Wenn du eine Konto auf der Webseite erstellst, bist du verantwortlich, die Sicherheit deines Kontos aufrecht zu erhalten und du bist verantwortlich für alle Aktivitäten, die mit deinem Konto durchgeführt werden. Du musst %{company_name} umgehend über eine unbefugte Benutzung deines Kontos oder über jeden anderen Sicherheitsverstoß informieren. %{company_name} haftet nicht für Handlungen oder Unterlassungen deinerseits, einschließlich Schäden jeglicher Art, die infolge solcher Handlungen oder Unterlassungen eingetreten sind.
+
+      <a name="2"></a>
+
+      ## [2. Pflichten der Mitwirkenden](#2)
+
+      Wenn du Material, oder Links auf der Webseite veröffentlichst, anderweitig Material über die Webseite zur Verfügung stellst (oder Dritte dazu berechtigst) (jegliches Material als „Inhalt“), bist du für dessen Inhalt und den aus diesem Inhalt resultierenden Schaden in vollem Umfang verantwortlich. Dies gilt unabhängig davon, in welcher Form der Inhalt präsentiert wird, einschließlich, aber nicht beschränkt auf Text, Foto, Video, Audio oder Computer-Software. Indem du Inhalt zur Verfügung stellst, versicherst und garantierst du, dass:
+
+      * das Herunterladen, Kopieren und die Benutzung des Inhalts keine proprietären Rechte verletzt, einschließlich, aber nicht beschränkt auf Urheberrecht, Patente, Schutzmarken oder Betriebsgeheimnissen irgendeines Dritten;
+      * sofern dein Arbeitgeber die Rechte an geistigem Eigentum hat, die du erstellst, entweder (i) du die Erlaubnis von deinem Arbeitgeber hast, den Inhalt zu einzustellen bzw. verfügbar zu machen, einschließlich, aber nicht beschränkt auf Software, oder (ii) deinem Arbeitgeber dir einen Verzicht auf alle Rechte an dem Inhalt versichert hat;
+      * du Fremdlizenzen im Zusammenhang mit dem Inhalt vollständig nachgekommen bist und dass du alle notwendigen Dinge unternommen hast, um erforderliche Bedingungen erfolgreich an die Endbenutzer weiterzureichen;
+      * der Inhalt keine Viren, Würmer, Malware, Trojaner oder anderen schädliche oder zerstörenden Inhalt enthält oder installiert;
+      * der Inhalt kein Spam und nicht von einer Maschine oder zufallsgeneriert ist und dass er keine sittenwidrigen oder unerwünschte kommerzielle Inhalte enthält, die darauf ausgerichtet sind, Zugriffe auf dritte Seiten zu lenken oder die Suchmaschinenplatzierung fördern, oder sonstige unerlaubte Handlungen (wie etwa Phishing) darstellen oder Empfänger hinsichtlich der Quelle des Materials täuschen (wie etwa Spoofing);
+      * der Inhalt nicht pornografisch ist, keine Bedrohungen enthält oder zu Gewalt auffordert, und dass er nicht gegen die Privatsprähe oder Persönlichkeitsrechte Dritter verstößt;
+      * dein Inhalt nicht über unerwünschte elektronische Nachrichten wie Spam-Links in Newsgroups, E-Mail-Verteilern, Blogs und Webseiten oder ähnliche unaufgeforderte Werbemaßnahmen beworben wird;
+      * dein Inhalt in keiner Weise bezeichnet ist, die die Leser täuschen zu glauben, dass du eine andree Person oder Firma bist; und
+      * dass du, im Falle von Inhalt, der Quelltext enthält, deren Art, Natur, Nutzen und Auswirkungen genau kategorisiert und/oder beschreibst, egal ob du dazu von %{company_name} aufgefordert wirst oder nicht.
+
+      <a name="3"></a>
+
+      ## [3. Lizenz von Benutzerinhalten](#3)
+
+      Benutzerbeiträge werden unter eine [Creative Commons Namensnennung – Nicht-kommerziell – Weitergabe unter gleichen Bedingungen 3.0 Unported-Lizenz](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.de) gestellt. Ohne Einschränkung dieser Darstellungen und Garantien, hat %{company_name} das Recht (jedoch nicht die Pflicht) dazu, nach dem Ermessen von %{company_name} (i) jeglichen Inhalt abzulehnen oder zu entfernen der, nach eigenem Ermessen von %{company_name}, gegen eine Richtlinie von %{company_name} verstößt oder in einer anderen Weise schädlich oder bedenklich ist, oder (ii) einer Person oder juristischen Person den Zugriff auf und die Benutzung der Seite zu beenden oder zu verweigern, gleich aus welchem Grund, nach eigenem Ermessen von %{company_name}. %{company_name} hat keine Verpflichtung, Beiträge zu erstatten, die vorher bezahlt wurden.
+
+
+      <a name="4"></a>
+
+      ## [4. Zahlung und Verlängerung](#4)
+
+      ### Allgemeine Bedingungen
+
+      Optionale, kostenpflichtige Dienstleistungen oder Upgrades können auf der Webseite zur Verfügung stehen. Durch die Wahl optionaler, kostenpflichtigen Dienstleistungen oder Upgrades stimmst du der monatlichen oder jährlichen Zahlung der ausgewiesenen Gebühren an %{company_name} zu. Die Zahlungen werden im Voraus am Tag der Anmeldung für die Dienstleistungen oder Upgrades fällig und decken die Benutzung dieser Dienstleistung wie angegeben für einen Monats- oder Jahreszeitraum ab. Diese Gebühren sind nicht erstattungsfähig.
+
+      ### Automatische Verlängerung
+
+      Sofern du %{company_name} nicht vor Ablauf des jeweiligen Abonnementzeitraums darüber informierst, dass du eine Dienstleistung oder ein Upgrade kündigen möchtest, wird dein Abonnement automatisch verlängert und du ermächtigst uns, die zu diesem Zeitpunkt geltenden Gebühren für ein Jahres- oder Monatsabonnement (einschließlich aller Steuern) für mittels einer Kreditkarte oder sonstiger Zahlungsmittel einzuziehen, die du bei der Anmeldung angegeben hast. Dienstleistungen und Upgrades können jederzeit gekündigt werden.
+
+      <a name="5"></a>
+
+      ## [5. Dienstleistungen](#5)
+
+      ### Hosting, Support-Dienstleistungen
+
+      Optionales Hosting und Support-Dienstleistungen können gemäß den Geschäftsbedingungen von %{company_name} für einen solchen Dienstleistung zur Verfügung gestellt werden. Durch die Registrierung eines Kontos für Hosting oder Support-Dienstleistungen, stimmst du diesen Geschäftsbedingungen zu.
+
+      ### HTTPS
+
+      Wir bieten HTTPS-Verschlüsselung als bezahltes Add-on an. Indem du dich anmeldest und eine benutzerdefinierte Domain auf %{company_domain} verwendest, autorisierst du uns, im Namen des Domaininhabers aufzutreten (zum Beispiel durch Anforderung benötigter Zertifikate) ausschließlich für den Zweck, HTTPS auf deiner Seite anzubieten.
+
+      ### Unternehmen
+
+      Hosting-Dienstleistungen für Unternehmen werden angeboten von%{company_name} nach den maßgeblichen Geschäftsbedingungen für jeden dieser Dienste, die in einem Kunden-spezifischen Vertrag festgelegt sind. Indem du dich für ein Unternehmen-Hosting-Konto registrierst, akzeptierst du, diese Geschäftsbedigungen zu befolgen.
+
+      <a name="6"></a>
+
+      ## [6. Pflichten der Website-Besucher](#6)
+
+      %{company_name} hat und kann nicht alle Materialien, einschließlich Computer-Software, die auf der Webseite veröffentlicht werden, überprüft/überprüfen, und kann deshalb nicht für die Inhalte, Verwendung oder Auswirkung dieses Materials haftbar gemacht werden. Durch den Betrieb der Webseite versichert oder impliziert %{company_name} nicht, dass das dort veröffentlichte Material gutgeheißen wird oder dass ein solches Material für zutreffend, nützlich oder ungefährlich gehalten wird. Du bist dafür verantwortlich, die notwendigen Sicherheitsvorkehrungen zu treffen, um dich und dein Computersystem vor Viren, Würmern, Trojanern und anderen schädlichen oder zerstörerischen Inhalten zu schützen. Die Webseite kann Inhalte enthalten, die beleidigend, unanständig oder anderweitig anstößig sind, sowie Inhalte, die technische Ungenauigkeiten, Schreibfehler und sonstige Fehler aufweisen. Diese Webseite kann auch Material enthalten, das gegen Eigentums- oder Veröffentlichungsrechte verstößt oder die Rechte an geistigem Eigentum oder sonstige Eigentumsrechte Dritter verletzt. Das Herunterladen, Kopieren oder Nutzen des Materials kann außerdem zusätzlichen genannten oder ungenannten Geschäftsbedingungen unterliegen. %{company_name} schließt jegliche Verantwortung für einen Schaden infolge der Benutzung durch Benutzer der Webseite oder infolge des Herunterladens der dort veröffentlichten Inhalte durch solche Benutzer aus.
+
+      <a name="7"></a>
+
+      ## [7. Inhalt, der auf anderen Websites veröffentlicht wird](#7)
+
+      Wir haben nicht alle Materialien, einschließlich Computer-Software, die auf den Webseiten und Seiten zur Verfügung gestellt, auf die %{company_domain} verlinkt oder die auf %{company_domain} verlinken, überprüft und können dies auch nicht tun. %{company_name} hat keine Kontrolle über diese Nicht-%{company_domain}-Webseiten und -Seiten und ist nicht verantwortlich für deren Inhalte oder Benutzung. DDu bist dafür verantwortlich, die notwendigen Sicherheitsvorkehrungen zu treffen, um dich und dein Computersystem vor Viren, Würmern, Trojanern und anderen schädlichen oder zerstörerischen Inhalten zu schützen. %{company_name} schließt jegliche Verantwortung für einen Schaden infolge der Benutzung von Nicht-%{company_domain}-Webseiten und -Seiten aus.
+
+      <a name="8"></a>
+
+      ## [8. Verstoß gegen das Urheberrecht und DMCA-Richtlinien](#8)
+
+      Genauso wie %{company_name} andere auffordert, Rechte an geistigem Eigentum zu respektieren, so respektiert auch %{company_name} die Rechte an geistigem Eigentum anderer. Wenn du der Ansicht bist, dass Material, das sich auf %{company_domain} befindet oder das von %{company_domain} verlinkt wird, gegen dein Urheberrecht verstößt, wirst du gebeten, %{company_name} gemäß der Richtlinie zum [Digital Millennium Copyright Act ("DMCA")]https://de.wikipedia.org/wiki/Digital_Millennium_Copyright_Act) von %{company_name} zu benachrichtigen. %{company_name} wird alle derartigen Mitteilungen beantworten und das verletztende Material wie erforderlich oder angemessen löschen oder alle Links auf das verletztende Material deaktivieren. %{company_name} wird den Zugang eines Besuchers auf und die Benutzung der Webseite kündigen, wenn unter entsprechenden Umständen der Benutzer nachweislich wiederholt gegen das Urheberrecht oder andere Rechte an geistigem Eigentum von %{company_name} oder anderen verstößt. Im Falle einer solchen Kündigung ist %{company_name} nicht verpflichtet, jegliche zuvor an %{company_name} bezahlten Beträge zu erstatten.
+
+      <a name="9"></a>
+
+      ## [9. Geistiges Eigentum](#9)
+
+      Durch diese Vereinbarung wird kein geistiges Eigentum von %{company_name} oder Dritten von %{company_name} auf dich übertragen, und alle Rechte, Titel und Rechtsansprüche an einem solchen Eigentum bleiben bei %{company_name} (wie zwischen den Parteien). %{company_name}, %{company_domain}, das %{company_domain}-Logo und alle anderen Marken, Dienstleistungsmarken, Grafiken und Logos, die in Verbindung mit %{company_domain} oder der Website verwendet werden, sind Marken oder eingetragene Marken von %{company_name} oder %{company_name}-Lizenznehmern. Andere Marken, Dienstleistungsmarken, Grafiken und Logos, die in Verbindung mit der Website verwendet werden, können die Marken anderer Dritter sein. Durch deine Benutzung der Website werden dir keine Rechte oder Lizenzen zur Vervielfältigung oder anderweitigen Benutzung jeglicher Marken von %{company_name} oder Dritten gewährt.
+
+      <a name="10"></a>
+
+      ## [10. Werbeanzeigen](#10)
+
+      %{company_name} behält sich das Recht vor, Werbeanzeigen auf deinem Inhalt anzuzeigen, sofern du kein „Keine Werbeanzeigen“-Upgrade erworben haben.
+
+      <a name="11"></a>
+
+      ## [11. Namensnennung](#11)
+
+      %{company_name} behält sich das Recht vor, Namensnennung-Links, wie z. B. „Powered by %{company_domain}“, Theme-Autor und Schriftartnennung in der Fußzeile oder der Werkzeugleiste anzuzeigen. Informationen in der Fußzeile und in der %{company_domain}-Werkzeugleiste dürfen ungeachtet der gekauften Upgrades nicht geändert oder gelöscht werden.
+
+      <a name="12"></a>
+
+      ## [12. Änderungen](#12)
+
+      %{company_name} behält sich das Recht vor, jeden Teil dieser Bestimmungen nach eigenem Ermessen zu verändern oder zu ersetzen. Du bist dafür verantwortlich, diese Bestimmungen regelmäßig auf Änderungen zu überprüfen. Deine weitere Benutzung or dein Zugang zur Webseite nach einer Änderung dieser Bestimmungen stellt eine Zustimmung dieser Änderungen dar. %{company_name} kann in der Zukunft auch neue Dienste und Funktionen über die Webseite (einschließlich der Veröffentlichung neuer Werkzeuge und Ressourcen) anbieten. Solche neuen Funktionen und Dienste unterliegen den Bedingungen dieser Geschäftsbedingungen.
+
+      <a name="13"></a>
+
+      ## [13. Kündigung](#13)
+
+      %{company_name} kann deinen Zugang zur gesamten Website oder einem Teil hiervon jederzeit und mit oder ohne Angabe eines Grundes, mit oder ohne Kündigungsfrist und mit sofortiger Wirkung kündigen. Wenn du diese Vereinbarung oder dein Konto auf %{company_domain} (falls du eines besitzt) kündigen möchtest, kannst du auch einfach die Benutzung der Webseite einstellen. Alle Bestimmungen dieser Vereinbarung, die gemäß ihrer Art die Kündigung überdauern sollten, überdauern die Kündigung, einschließlich, aber nicht beschränkt auf Eigentumsbestimmungen, Haftungsausschlüsse, Entschädigungen und Haftungsbeschränkungen.
+
+
+      <a name="14"></a>
+
+      ## [14. Haftungsausschluss](#14)
+
+      Die Webseite wird „so wie sie ist“ zur Verfügung gestellt. %{company_name}, Vertragspartner und Lizenznehmer schließen hiermit sämtliche Gewährleistungen, ausdrücklich oder implizit, aus, einschließlich, aber nicht beschränkt auf die Gewährleistungen der Marktgängigkeit, der Eignung für einen bestimmten Zweck oder der Nichtverletzung von Rechten. Weder %{company_name} noch Vertragspartner und Lizenznehmer übernehmen jedwede Gewährleistung, dass die Website fehlerfrei ist oder dass der Zugang fortlaufend oder unterbrechungsfrei erfolgt. Wenn du dies tatsächlich liest, findest du hier [eine Belohnung](http://www.newyorker.com/online/blogs/shouts/2012/12/the-hundred-best-lists-of-all-time.html). Du verstehst, dass du nach eigenem Ermessen und auf eigene Gefahr Inhalte oder Leistungen von der Website herunterlädst oder über die Webseite einholst.
+
+
+      <a name="15"></a>
+
+      ## [15. Haftungsbeschränkung](#15)
+
+      In keinem Fall haften %{company_name}, Vertragspartner oder Lizenznehmer in Bezug auf einen Gegenstand dieser Vereinbarung aufgrund eines Vertrages, aufgrund von Fahrlässigkeit, Gefährdungshaftung oder einer sonstigen Billigkeitstheorie für: (i) jegliche beiläufig entstandene Schäden, Folgeschäden oder sonstige Schäden; (ii) die Kosten für die Beschaffung von Ersatzprodukten oder Leistungen; (iii) die Benutzungsunterbrechung oder den Verlust oder die Beschädigung von Daten; oder (iv) für jegliche Beträge, die Gebühren übersteigen, die von dir an %{company_name} gemäß dieser Vereinbarung während eines Zeitraums von zwölf (12) Monaten vor dem Klageanspruch bezahlt wurden. %{company_name} übernimmt keine Haftung für einen Ausfall oder eine Verzögerung aufgrund von Tatsachen, die nach vernünftigem Ermessen über seine Kontrolle hinausgehen. Das Vorstehende gilt nicht, soweit nach anwendbarem Recht unzulässig.
+
+      <a name="16"></a>
+
+      ## [16. Allgemeine Zusicherung und Gewährleistung](#16)
+
+      Du versicherst und garantierst, dass (i) deine Benutzung der Webseite gemäß der [Datenschutzrichtlinie](/privacy) von %{company_name}, der [Community-Richtlinie](/guidelines), dieser Vereinbarung und allen geltenden Gesetzen und Bestimmungen erfolgt (einschließlich, aber nicht beschränkt auf jegliche lokale Gesetze oder Bestimmungen in Ihrem Land, Bundesland, Ihrer Stadt oder einem anderen Regierungsgebiet, hinsichtlich des Online-Verhaltens und zulässiger Inhalte, und einschließlich aller geltender Gesetze hinsichtlich der Übertragung technischer Daten, die aus den USA oder dieinem Wohnsitzland exportiert wurden) und (ii) deine Benutzung der Website nicht gegen die Rechte an geistigem Eigentum Dritter verstößt oder diese falsch anwendet.
+
+      <a name="17"></a>
+
+      ## [17. Schadloshaltung](#17)
+
+      Du stimmst zu, %{company_name}, Vertragspartnern und Lizenznehmern, und jeweiligen Vorstandsmitglieder, Amtsträger, Team-Mitglieder und Vertreter gegen jegliche Haftungsfälle, Ansprüche und Ausgaben schadlos zu halten, einschließlich angemessener Anwaltskosten, die den schadlos gehaltenen Parteien im Zusammenhang mit jeglichen Ansprüchen entstehen, die sich aus jeglicher Verletzung dieser Vereinbarung ergeben.
+
+      <a name="18"></a>
+
+      ## [18. Verschiedenes](#18)
+
+      Diese Vereinbarung stellt die gesamte Vereinbarung zwischen %{company_name} und dir bezüglich des Gegenstands dieser Geschäftsbedingungen dar, und sie kann nur durch eine schriftliche, durch einen befugten Vertreter von %{company_name} unterzeichnet oder durch die Veröffentlichung einer überarbeiteten Version durch %{company_name} geändert werden. Vorbehaltlich eventuell anwendbarer anders lautender gesetzlicher Bestimmungen, unterliegt diese Vereinbarung, der Zugang zu und die Benutzung der Website den Gesetzen des Staates Kalifornien, USA unter Ausschluss des Kollisionsrechts. Gerichtsstand für alle Streitigkeiten aus oder im Zusammenhang mit derselben ist der Staat und die Bundesgerichte in San Francisco County, Kalifornien. Mit Ausnahme der Ansprüche auf jede Unterlassung oder jeden Rechtsbehelf oder Ansprüche hinsichtlich der Rechte an geistigem Eigentum (die vor ein ordentliches Gericht ohne die Hinterlegung einer Einlage gebracht werden können) wird jeder Rechtsstreit, der gemäß dieser Vereinbarung entsteht, endgültig durch umfassende Schiedsregelungen des Judicial Arbitration and Mediation Service, Inc. („JAMS“) von drei Schlichtern, die gemäß solcher Regeln ernannt werden, beigelegt werden. Das Schiedsverfahren findet in San Francisco, Kalifornien in englischer Sprache statt, und die Schiedsentscheidung kann vor jedem Gericht durchgesetzt werden. Die obsiegende Partei im Rahmen einer Verhandlung oder eines Verfahrens zur Durchsetzung dieser Vereinbarung ist berechtigt, Unkosten und Anwaltsgebühren in Rechnung zu stellen. Wenn ein Teil dieser Vereinbarung für ungültig oder nicht einklagbar erachtet wird, wird dieser Teil so ausgelegt, dass die ursprüngliche Absicht der Parteien widergespiegelt wird, und die restlichen Abschnitte vollständig gültig bleiben. Eine Verzichtserklärung einer der Parteien hinsichtlich einer Bedingung oder Kondition dieser Vereinbarung oder ein Verstoß gegen eine solche Bedingung in einer anderen Instanz stellt keinen Verzicht auf eine solche Bestimmung oder eine nachfolgende Nichterfüllung einer solchen Bestimmung dar. Du kannst deine Rechte gemäß dieser Vereinbarung auf eine Partei übertragen, die sich mit folgenden Benutzungsbedingungen einverstanden erklärt und bestätigt, dass sie sich an die Geschäftsbedingungen halten wird; %{company_name} kann seine Rechte gemäß dieser Vereinbarung bedingungslos übertragen. Diese Vereinbarung ist bindend und wird zugunsten der Parteien und ihrer entsprechenden Erben und Rechtsnachfolger wirksam.
+
+      Dieses Dokument ist als CC-BY-SA lizensiert. Es wurde zuletzt aktualisiert am 1. Januar 2018.
+
+      Basiert ursprünglich auf den [WordPress-Geschäftsbedingungen](https://de.wordpress.com/tos/).
   privacy_topic:
     title: "Datenschutzrichtlinie"
     body: |
@@ -2864,7 +3175,7 @@ de:
       name: Erstes Emoji
       description: Hat ein Emoji in einem Beitrag verwendet
       long_description: |
-        Das Abzeichen wird verliehen, wenn du das erste Mal einen Emoji zu deinem Beitrag hinzufügst. :thumbsup: Emojis lassen dich Emotionen in deinen Beiträgen vermitteln, von Glück :smiley: zu Trauer :anguished: zu Wut :angry: und allem dazwischen :sunglasses:. Gib einfach einen : (Doppelpunkt) ein oder drücke die Emoji-Schaltfläche im Editor, um aus Hunderten Auswahlmöglichkeiten zu wählen :ok_hand:
+        Das Abzeichen wird verliehen, wenn du das erste Mal einen Emoji zu deinem Beitrag hinzufügst. :thumbsup: Emojis lassen dich Emotionen in deinen Beiträgen vermitteln, von Glück :smiley: zu Trauer :anguished: zu Wut :angry: und allem dazwischen :sunglasses: . Gib einfach einen : (Doppelpunkt) ein oder drücke die Emoji-Schaltfläche im Editor, um aus Hunderten Auswahlmöglichkeiten zu wählen :ok_hand:
     first_mention:
       name: Erste Erwähnung
       description: Hat einen Benutzer in einem Beitrag erwähnt
@@ -2898,6 +3209,9 @@ de:
     badge_title_metadata: "%{display_name} Abzeichen auf %{site_title}"
   admin_login:
     success: "E-Mail gesendet"
+    errors:
+      unknown_email_address: "Unbekannte E-Mail-Adresse."
+      invalid_token: "Ungültiges Token."
     email_input: "Administrator-E-Mail"
     submit_button: "E-Mail senden"
   performance_report:
@@ -3044,6 +3358,7 @@ de:
           <p>Viel Spaß, und viel Glück <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>beim Aufbauen deiner neuen Community!</a></p>
   search_logs:
     graph_title: "Anzahl Suchen"
+  joined: "Beigetreten"
   activemodel:
     errors:
       <<: *errors

@@ -93,7 +93,6 @@ zh_TW:
       email: '以電子郵件分享此連結'
     action_codes:
       public_topic: "%{when}時讓大家看到這個主題"
-      private_topic: "%{when}時讓其他人看不到這個主題"
       split_topic: "於 %{when} 分割此討論話題"
       invited_user: "邀請 %{who} 於 %{when} "
       invited_group: "邀請 %{who} %{when}"
@@ -119,8 +118,6 @@ zh_TW:
         disabled: '於 %{when} 除名'
     topic_admin_menu: "版區管理員操作"
     emails_are_disabled: "管理員已經停用了所有外寄郵件功能。通知信件都不會寄出。"
-    bootstrap_mode_enabled: "為了讓你的新網站更容易上軌道，現正處於初始化模式中。所有新用戶將被授予信任等級1，並為他們設定接受每日郵件摘要。初始化模式將於用戶數超過 %{min_users} 位後關閉。"
-    bootstrap_mode_disabled: "初始化模式將會在24小時後關閉。"
     s3:
       regions:
         ap_northeast_1: "亞太地區 (東京)"
@@ -210,12 +207,6 @@ zh_TW:
       last_read: "這是你最後閱讀的文章，按此加上書籤"
       remove: "移除書籤"
       confirm_clear: "你確定要刪除該主題的所有書籤嗎？"
-    topic_count_latest:
-      other: "有 {{count}} 個更新過或是新的討論話題。"
-    topic_count_unread:
-      other: "{{count}} 個未讀討論話題"
-    topic_count_new:
-      other: "有 {{count}} 個新討論話題。"
     preview: "預覽"
     cancel: "取消"
     save: "儲存變更"
@@ -330,18 +321,15 @@ zh_TW:
       request: "請求加入團隊"
       message: "訊息"
       automatic_group: 自動群組
-      closed_group: 關閉群組
       is_group_user: "你是團隊裡面的成員"
       membership: "會員資格"
       name: "名字"
-      user_count: "成員數量"
       bio: "關於群組"
       owner: "擁有者"
       index:
         title: "群組"
         empty: "沒有可看見的群組。"
       activity: "活動"
-      members: "成員"
       topics: "主題"
       posts: "文章"
       mentions: "提及"
@@ -1915,19 +1903,15 @@ zh_TW:
       notifications:
         watching:
           title: "監看"
-          description: "你將自動監看該標籤中的所有主題。新帖子和新主題會通知你，再者未讀和新帖的數量也將顯示在主題旁邊。"
         watching_first_post:
           title: "關注新的發文"
-          description: "在這個標籤中，只是每一個新主題的第一帖，才會通知你。"
         tracking:
           title: "跟蹤"
-          description: "你將自動跟蹤這個標籤裡的所有主題。未讀和新帖的數量將顯示在主題旁邊。"
         regular:
           title: "普通"
           description: "如果有人@你或回覆你的帖子，將通知你。"
         muted:
           title: "靜音"
-          description: "在這個標籤中，你將不會收到新主題任何通知，它們也不會出現在你的未讀列表上面。"
       groups:
         title: "標籤組"
         about: "將標籤分組以便管理。"

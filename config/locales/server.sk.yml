@@ -207,7 +207,6 @@ sk:
   groups:
     errors:
       can_not_modify_automatic: "Nemôžete upraviť automatickú skupinu"
-      member_already_exist: "'%{username}' už je členom tejto skupiny."
       invalid_domain: "'%{domain}' nie je platnou doménou."
       invalid_incoming_email: "'%{email}' nie je platná emailová adresa."
       email_already_used_in_group: "'%{email}' už je použité skupinou '%{group_name}'."

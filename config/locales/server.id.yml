@@ -145,7 +145,6 @@ id:
   groups:
     errors:
       can_not_modify_automatic: "Anda tidak bisa mengubah grup otomatis."
-      member_already_exist: "'%{username}' telah menjadi anggota grup ini."
       invalid_domain: "'%{domain}' bukan domain yang valid."
       invalid_incoming_email: "'%{email}' bukanlah alamat email yang valid."
       email_already_used_in_group: "'%{email}' telah digunakan oleh grup '%{group_name}'."

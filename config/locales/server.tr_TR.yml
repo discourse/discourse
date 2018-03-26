@@ -186,7 +186,6 @@ tr_TR:
   groups:
     errors:
       can_not_modify_automatic: "Otomatik bir grupta değişiklik yapamazsınız"
-      member_already_exist: "'%{username}' zaten grubun bir üyesi."
       invalid_domain: "'%{domain}' geçerli bir alan adı değil."
       invalid_incoming_email: "'%{email}' geçerli bir e-posta adresi değil."
       email_already_used_in_group: "'%{email}' zaten '%{group_name}' grubu tarafından kullanılıyor."
@@ -1570,8 +1569,6 @@ tr_TR:
     promoter:
       name: Destekçi
       description: Kullanıcı davet etme
-      long_description: |
-        Bu rozet kullanıcı sayfanızdan ya da konularının altındaki düğmeden başka birini forumu kullanmaya davet ettiğiniz için verilmiştir. Arkadaşlarınızı ilgilerini çekebilecek konulara davet etmek forumun büyümesi için mükemmel bir yoldur. Teşekkürler!
     campaigner:
       name: Mücadeleci
       description: 3 Acemi kullanıcı davet edildi
@@ -1665,8 +1662,6 @@ tr_TR:
     first_emoji:
       name: İlk Emoji
       description: 'Bir gönderide emoji kullanma '
-      long_description: |
-        Bu rozet gönderinize ilk defa bir emoji eklediğiniz için verilmiştir :thumbsup:.
     first_mention:
       name: İlk Bahsetme
       long_description: Bu rozet ilk defa gönderinizde başka bir kullanıcıdan bahsettiğiniz için verilmiştir. Her bahsetme bahsi geçen kullanıcıya bildirim gitmesini sağlar, böylece bu kullanıcı sizin gönderinizden haberdar olur. Sadece bahsi geçen kullanıcı adına @ gerekir.

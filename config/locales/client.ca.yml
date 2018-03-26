@@ -118,7 +118,6 @@ ca:
       email: 'envia aquest enllaç per correu electrònic'
     action_codes:
       public_topic: "va fer públic aquest tema %{when}"
-      private_topic: "va fer privat aquest tema %{when}"
       split_topic: "va dividir aquest tema %{when}"
       invited_user: "va invitar %{who} %{when}"
       invited_group: "va invitar %{who} %{when}"
@@ -149,8 +148,6 @@ ca:
     topic_admin_menu: "accions d'administració de tema"
     wizard_required: "Et donem la benvinguda al teu nou Discourse! Comencem amb <a href='%{url}' data-auto-route='true'>l'assistent de configuració</a> ✨"
     emails_are_disabled: "Tots els correus sortints han estat globalment inhabilitats per un administrador. No s'enviarà cap  notificació de cap tipus per correu electrònic."
-    bootstrap_mode_enabled: "Per llançar el teu nou lloc més fàcilment, ets en mode d'arrencada. Tots les noves persones usuàries obtindran el nivell 1 de confiança i tindran activats els avisos diaris via correu electrònic sobre actualitzacions. Es cancel·len automàticament quan el recompte total supera %{min_users} persones usuàries."
-    bootstrap_mode_disabled: "El mode <i>Bootstrap</i> es desactivarà durant les properes 24 hores."
     themes:
       default_description: "Per defecte"
     s3:
@@ -246,15 +243,6 @@ ca:
       last_read: "aquesta és la darrera publicació que has llegit; clica per marcar-la com a preferit"
       remove: "Elimina Preferit"
       confirm_clear: "Segur que vols eliminar tots els preferits d'aquest tema?"
-    topic_count_latest:
-      one: "{{count}} tema nou o actualitzat."
-      other: "{{count}} temes nous o actualitzats."
-    topic_count_unread:
-      one: "{{count}} tema sense llegir."
-      other: "{{count}} temes sense llegir."
-    topic_count_new:
-      one: "{{count}} nou tema."
-      other: "{{count}} nous temes."
     preview: "previsualitza"
     cancel: "cancel·la"
     save: "Desa els canvis"
@@ -373,11 +361,9 @@ ca:
       request: "Demana afegir-te al grup"
       message: "Missatge"
       automatic_group: Grup Automàtic
-      closed_group: Grup Tancat
       is_group_user: "Ets membre d'aquest grup"
       membership: "Afiliació"
       name: "Nom"
-      user_count: "Quantitat de membres"
       bio: "Sobre el Grup"
       owner: "propietari"
       index:
@@ -387,7 +373,6 @@ ca:
         one: "Grup"
         other: "Grups"
       activity: "Activitat"
-      members: "Membres"
       topics: "Temes"
       posts: "Publicacions"
       mentions: "Mencions"
@@ -2078,19 +2063,15 @@ ca:
       notifications:
         watching:
           title: "Mirant"
-          description: "Miraràs automàticament tots els temes amb aquesta etiqueta. Et notificarem totes les noves publicacions i els nous temes, així com un recompte de noves publicacions que apareixerà al costat del tema."
         watching_first_post:
           title: "Mirant la primera publicació"
-          description: "Només et notificarem la primera publicació per cada nou tema amb aquesta etiqueta."
         tracking:
           title: "Seguint"
-          description: "Seguiràs automàticament tots els temes amb aquesta etiqueta. Apareixerà al costat del tema un recompte de publicacions noves i no llegides."
         regular:
           title: "Ordinari"
           description: "Rebràs alertes si una persona menciona el teu @nom o respon la teva publicació."
         muted:
           title: "Silenciat"
-          description: "No et notificarem res sobre nous temes amb aquesta etiqueta i no apareixeran a la teva pestanya de no llegits."
       groups:
         title: "Grups d'etiquetes"
         about: "Afegeix etiquetes a grups per gestionar-ho més fàcilment."
