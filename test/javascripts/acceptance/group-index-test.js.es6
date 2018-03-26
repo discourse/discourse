@@ -50,4 +50,23 @@ QUnit.test("Viewing Members as an admin user", assert => {
       'it should display the right filter placehodler'
     );
   });
+
+  selectKit('.group-navigation-dropdown').expand().selectRowByValue('manageMembership');
+
+  andThen(() => {
+    assert.ok(
+      count('.group-membership') === 1,
+      'it should display the right modal'
+    );
+
+    assert.ok(
+      count('#group-membership-user-selector') === 1,
+      'it should display the user selector'
+    );
+
+    assert.ok(
+      count(".group-membership-make-owner input[type='checkbox']") === 1,
+      'it should display the input to set users as owners'
+    );
+  });
 });

@@ -467,6 +467,8 @@ en:
       add_members:
         title: "Add Members"
         description: "Manage the membership of this group"
+        usernames: "Usernames"
+        as_owner: "Set user(s) as owner(s) of this group"
       members:
         title: "Members"
         filter_placeholder_admin: "username or email"
