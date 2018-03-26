@@ -2662,6 +2662,7 @@ en:
         save: "Save"
         delete: "Delete"
         confirm_delete: "Are you sure you want to delete this tag group?"
+        visible_only_to_staff: "Tags are visible only to staff"
 
       topics:
         none:

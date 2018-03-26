@@ -44,7 +44,10 @@ class TagsController < ::ApplicationController
             extras: { tag_groups: grouped_tag_counts }
           }
         else
-          unrestricted_tags = Tag.where("tags.id NOT IN (select tag_id from category_tags) AND tags.topic_count > 0")
+          unrestricted_tags = DiscourseTagging.filter_visible(
+            Tag.where("tags.id NOT IN (select tag_id from category_tags) AND tags.topic_count > 0"),
+            guardian
+          )
 
           categories = Category.where("id in (select category_id from category_tags)")
             .where("id in (?)", guardian.allowed_category_ids)

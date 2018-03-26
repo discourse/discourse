@@ -434,6 +434,15 @@ class Group < ActiveRecord::Base
     end
   end
 
+  # given something that might be a group name, id, or record, return the group id
+  def self.group_id_from_param(group_param)
+    return group_param.id if group_param.is_a?(Group)
+    return group_param if group_param.is_a?(Integer)
+
+    # subtle, using Group[] ensures the group exists in the DB
+    Group[group_param.to_sym].id
+  end
+
   def self.builtin
     Enum.new(:moderators, :admins, :trust_level_1, :trust_level_2)
   end

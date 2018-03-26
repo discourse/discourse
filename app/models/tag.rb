@@ -46,11 +46,14 @@ class Tag < ActiveRecord::Base
 
     return [] if scope_category_ids.empty?
 
+    filter_sql = guardian&.is_staff? ? '' : (' AND ' + DiscourseTagging.filter_visible_sql)
+
     tag_names_with_counts = Tag.exec_sql <<~SQL
       SELECT tags.name as tag_name, SUM(stats.topic_count) AS sum_topic_count
         FROM category_tag_stats stats
   INNER JOIN tags ON stats.tag_id = tags.id AND stats.topic_count > 0
        WHERE stats.category_id in (#{scope_category_ids.join(',')})
+       #{filter_sql}
     GROUP BY tags.name
     ORDER BY sum_topic_count DESC, tag_name ASC
        LIMIT #{limit}
