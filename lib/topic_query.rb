@@ -481,6 +481,23 @@ class TopicQuery
       result
     end
 
+    def apply_shared_drafts(result, category_id, options)
+      viewing_shared = category_id && category_id == SiteSetting.shared_drafts_category.to_i
+
+      if guardian.can_create_shared_draft?
+        result = result.includes(:shared_draft).references(:shared_draft)
+
+        if options[:destination_category_id]
+          destination_category_id = get_category_id(options[:destination_category_id])
+          return result.where("shared_drafts.category_id" => destination_category_id)
+        end
+
+        return result.where("shared_drafts.id IS NULL") unless viewing_shared
+      end
+
+      result
+    end
+
     def apply_ordering(result, options)
       sort_column = SORTABLE_MAPPING[options[:order]] || 'default'
       sort_dir = (options[:ascending] == "true") ? "ASC" : "DESC"
@@ -606,16 +623,7 @@ class TopicQuery
 
       result = apply_ordering(result, options)
       result = result.listable_topics.includes(:category)
-
-      # Avoid N+1 for shared drafts
-      if category_id && category_id == SiteSetting.shared_drafts_category.to_i
-        result = result.includes(:shared_draft)
-      end
-
-      if options[:destination_category_id]
-        destination_category_id = get_category_id(options[:destination_category_id])
-        result = result.includes(:shared_draft).where("shared_drafts.category_id" => destination_category_id)
-      end
+      result = apply_shared_drafts(result, category_id, options)
 
       if options[:exclude_category_ids] && options[:exclude_category_ids].is_a?(Array) && options[:exclude_category_ids].size > 0
         result = result.where("categories.id NOT IN (?)", options[:exclude_category_ids]).references(:categories)
