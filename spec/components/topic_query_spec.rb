@@ -981,4 +981,39 @@ describe TopicQuery do
       expect(topics).to eq([])
     end
   end
+
+  context "shared drafts" do
+    let(:category) { Fabricate(:category) }
+    let(:shared_drafts_category) { Fabricate(:category) }
+    let!(:topic) { Fabricate(:topic, category: shared_drafts_category) }
+    let!(:shared_draft) { Fabricate(:shared_draft, topic: topic, category: category) }
+    let(:admin) { Fabricate(:admin) }
+    let(:user) { Fabricate(:user) }
+    let(:group) { Fabricate(:group) }
+
+    before do
+      shared_drafts_category.set_permissions(group => :full)
+      shared_drafts_category.save
+      SiteSetting.shared_drafts_category = shared_drafts_category.id
+    end
+
+    context "destination_category_id" do
+      it "doesn't allow regular users to query destination_category_id" do
+        list = TopicQuery.new(user, destination_category_id: category.id).list_latest
+        expect(list.topics).not_to include(topic)
+      end
+
+      it "allows staff users to query destination_category_id" do
+        list = TopicQuery.new(admin, destination_category_id: category.id).list_latest
+        expect(list.topics).to include(topic)
+      end
+    end
+
+    context "latest" do
+      it "doesn't include shared topics unless filtering by category" do
+        list = TopicQuery.new(moderator).list_latest
+        expect(list.topics).not_to include(topic)
+      end
+    end
+  end
 end
