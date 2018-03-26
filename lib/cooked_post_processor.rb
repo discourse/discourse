@@ -454,6 +454,10 @@ class CookedPostProcessor
         img.parent["style"] = "--aspect-ratio:#{width}/#{height};"
       end
     end
+
+    if @cooking_options[:omit_nofollow] || !SiteSetting.add_rel_nofollow_to_user_content
+      @doc.css(".onebox-body a, .onebox a").each { |a| a.remove_attribute("rel") }
+    end
   end
 
   def optimize_urls

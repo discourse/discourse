@@ -490,6 +490,24 @@ describe CookedPostProcessor do
     end
   end
 
+  context ".post_process_oneboxes removes nofollow if add_rel_nofollow_to_user_content is disabled" do
+    let(:post) { build(:post_with_youtube, id: 123) }
+    let(:cpp) { CookedPostProcessor.new(post, invalidate_oneboxes: true) }
+
+    before do
+      SiteSetting.add_rel_nofollow_to_user_content = false
+      Oneboxer.expects(:onebox)
+        .with("http://www.youtube.com/watch?v=9bZkp7q19f0", invalidate_oneboxes: true, user_id: nil, category_id: post.topic.category_id)
+        .returns('<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0" rel="nofollow noopener">GANGNAM STYLE</a></aside>')
+      cpp.post_process_oneboxes
+    end
+
+    it "removes nofollow noopener from links" do
+      expect(cpp).to be_dirty
+      expect(cpp.html).to match_html '<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0">GANGNAM STYLE</a></aside>'
+    end
+  end
+
   context ".post_process_oneboxes with square image" do
 
     it "generates a onebox-avatar class" do
