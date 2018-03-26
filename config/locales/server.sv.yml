@@ -201,7 +201,6 @@ sv:
   groups:
     errors:
       can_not_modify_automatic: "Du kan inte modifiera en automatisk grupp"
-      member_already_exist: "'%{username}' är redan medlem i denna grupp."
       invalid_domain: "'%{domain}' är inte ett giltigt domän."
       invalid_incoming_email: "'%{email}' är inte en giltig e-postadress."
       email_already_used_in_group: "'%{email}' är redan använd av gruppen '%{group_name}'."
@@ -1779,8 +1778,6 @@ sv:
     promoter:
       name: Främjare
       description: Bjöd in en användare
-      long_description: |
-        Den här utmärkelsen beviljas när du bjuder in någon att delta i forumet med hjälp av inbjudningsknappen på användarsidan eller i slutet av ett ämne. Att bjuda in vänner som kan vara intresserade av specifika diskussioner är ett bra sätt att introducera nya personer till vårt forum, tack!
     campaigner:
       name: Förespråkare
       description: Bjöd in 3 grundläggande användare
@@ -1876,8 +1873,6 @@ sv:
     first_emoji:
       name: Första emoji
       description: Använde en emoji i ett inlägg
-      long_description: |
-        Den här utmärkelsen beviljas när du för första gången använder en emoji i ditt inlägg :thumbsup:. Emojis låter dig förmedla dina känslor i dina inlägg, från glädje :smiley: till sorgsenhet :anguished: till ilska :angry: och allt däremellan :sunglasses:. Skriv bara ett : (kolon) eller klicka på emoji-knappen i redigeraren för att välja mellan hundratals emojis :ok_hand:
     first_mention:
       name: Första omnämningen
       long_description: 'Den här utmärkelsen beviljas när du nämner någons @användarnamn i ett inlägg. Varje omnämnande genererar en notifiering till den personen, så att det känner till ditt inlägg. Börja skriva @ (snabel-a) för att nämna en användare, eller, om det tillåts, en grupp - det är ett bekvämt sätt att uppmärksamma dem på något. '

@@ -138,7 +138,7 @@ cs:
       email: 'odeslat odkaz emailem'
     action_codes:
       public_topic: "Téma zveřejněno %{when}"
-      private_topic: "Téma změněno na soukromé %{when}"
+      private_topic: "Téma změněno na osobní zprávu %{when}"
       split_topic: "rozdělil toto téma %{when}"
       invited_user: "%{who} pozván %{when}"
       invited_group: "%{who} pozvána %{when}"
@@ -169,8 +169,6 @@ cs:
     topic_admin_menu: "akce administrátora tématu"
     wizard_required: "Vítejte ve vašem novém Discourse! Začněte s <a href='%{url}' data-auto-route='true'>nastavením pomocí průvodce</a> ✨"
     emails_are_disabled: "Všechny odchozí emaily byly administrátorem vypnuty. Žádné odchozí emaily nebudou odeslány."
-    bootstrap_mode_enabled: "Aby se váš web jednodušeji rozjel, nachází se v režimu bootstrap. Všichni noví uživatelé začínají s důveryhodností 1 a mají povolené denní odesílání souhrnných emailů. Tento režim se automaticky vypne, jakmile počet registrovaných uživatelů překročí %{min_users}."
-    bootstrap_mode_disabled: "Režim bootstrap bude deaktivován v následujících 24 hodinách."
     themes:
       default_description: "Výchozí"
     s3:
@@ -269,18 +267,6 @@ cs:
       last_read: "Toto je váš poslední přečtený příspěvek. Klikněte pro přidání záložky."
       remove: "Odstranit záložku"
       confirm_clear: "Opravdu chcete odstranit všechny záložky z tohoto tématu?"
-    topic_count_latest:
-      one: "{{count}} nové nebo upravené téma."
-      few: "{{count}} nová nebo upravená témata."
-      other: "{{count}} nových nebo upravených témat."
-    topic_count_unread:
-      one: "{{count}} nepřečtené téma."
-      few: "{{count}} nepřečtená témata."
-      other: "{{count}} nepřečtených témat."
-    topic_count_new:
-      one: "{{count}} nové téma."
-      few: "{{count}} nová témata."
-      other: "{{count}} nových témat."
     preview: "ukázka"
     cancel: "zrušit"
     save: "Uložit změny"
@@ -377,6 +363,7 @@ cs:
         title: "Logy"
         when: "Když"
         action: "Akce"
+        acting_user: "Vystupující uživatel"
         target_user: "Cílový uživatel"
         subject: "Předmět"
         details: "Detail"
@@ -401,10 +388,12 @@ cs:
       join: "Přidat se ke skupině"
       leave: "Opustit skupinu"
       request: "Požádat o členství ve skupině"
+      filter_name: "Filtrovat podle jména skupiny"
       message: "Zpráva"
       automatic_group: Automatická skupina
-      closed_group: Uzavřená skupina
+      close_group: Zavřít skupinu
       is_group_user: "Jste členem této skupiny"
+      is_group_owner: "Jsi majitelem této skupiny"
       allow_membership_requests: "Povolit uživatelům odeslat žádost o členství vlastníkům skupin"
       membership_request_template: "Šablona, která se uživatelům zobrazí při odesílání žádosti o členství"
       membership_request:
@@ -420,12 +409,20 @@ cs:
       index:
         title: "Skupiny"
         empty: "Žádné viditelné skupiny."
+        all_groups: "Všechny skupiny"
+        owner_groups: "Skupiny, jejichž jsem majitelem"
+        close_groups: "Zavřít skupiny"
+        automatic_groups: "Automatické skupiny"
+        public_groups: "Veřejné skupiny"
+        my_groups: "Moje skupiny"
       title:
         one: "Skupina"
         few: "Skupiny"
         other: "Skupin"
       activity: "Aktivita"
-      members: "Členové"
+      members:
+        title: "Členové"
+        remove_member_description: "Odstranit <b>%{username}</b> z této skupiny"
       topics: "Témata"
       posts: "Odpovědi"
       mentions: "Zmínění"
@@ -563,13 +560,13 @@ cs:
         disable: "Vypnout upozornění"
         enable: "Povolit upozornění"
         each_browser_note: "Poznámka: Musíš změnit tuto volbu v každém prohlížeči, který používáš."
-      dismiss: 'Odbýt'
-      dismiss_notifications: "Odbýt vše"
+      dismiss: 'Označit jako přečtené'
+      dismiss_notifications: "Označit vše jako přečtené"
       dismiss_notifications_tooltip: "Označit všechny nepřečtené notifikace jako přečtené"
       first_notification: "Vaše první notifikace! Klikněte zde a začněte."
       disable_jump_reply: "Po odpovědi nepřeskakovat na nový příspěvek"
       dynamic_favicon: "Zobrazit počet nových témat v ikoně prohlížeče"
-      theme_default_on_all_devices: "Nastavit toto téma jako výchozí na všech mých zařízeních"
+      theme_default_on_all_devices: "Nastavit tento motiv jako výchozí na všech mých zařízeních"
       allow_private_messages: "Povolit ostatním uživatelům, aby mi mohli zasílat osobní zprávy"
       external_links_in_new_tab: "Otevírat všechny externí odkazy do nové záložky"
       enable_quoting: "Povolit odpověď s citací z označeného textu"
@@ -629,8 +626,9 @@ cs:
       revoke_access: "Odebrat přístup"
       undo_revoke_access: "Zrušit odebrání přístupu"
       api_approved: "Schváleno:"
-      theme: "Téma"
+      theme: "Motiv"
       home: "Výchozí domovská stránka"
+      staged: "Staged"
       staff_counters:
         flags_given: "užitečná nahlášení"
         flagged_posts: "nahlášených příspěvků"
@@ -648,6 +646,7 @@ cs:
         move_to_archive: "Archivovat"
         failed_to_move: "Nepodařilo se přesunout vybrané zprávy (možná vám spadlo připojení)"
         select_all: "Vybrat vše"
+        tags: "Štítek"
       preferences_nav:
         account: "Účet"
         profile: "Profil"
@@ -667,11 +666,6 @@ cs:
         choose: "Vyber si heslo"
       second_factor:
         title: "Dvoufázové přihlašování"
-        disable: "Vypnout dvoufázové přihlašování"
-        enabled_status: "Stav: Zapnuto"
-        disabled_status: "Stav: Vypnuto"
-        confirm_password_description: "Potvrďte své heslo, abyste mohli pokračovat v aktivování dvoufázového přihlašování"
-        info_prompt: "Co je dvoufázové přihlašování?"
       change_about:
         title: "Změna o mně"
         error: "Došlo k chybě při pokusu změnit tuto hodnotu."
@@ -1026,20 +1020,13 @@ cs:
       button_ok: "OK"
       button_help: "Nápověda"
     email_login:
-      link_label: "Zašlete mi jednorázový odkaz"
       button_label: "přes email"
-      complete_username: "Pokud nějaký účet odpovídá uživatelskému jménu <b>%{username}</b>, obdržíte záhy email s přihlašovacím odkazem."
-      complete_email: "Pokud nějaký účet odpovídá emailu <b>%{email}</b>, obdržíte záhy email s přihlašovacím odkazem."
-      complete_username_found: "Byl nalezen účet s uživatelským jménem <b>%{username}</b>. Za chvilku obdržíte email s přihlašovacím odkazem."
-      complete_email_found: "Byl nalezen účet odpovídající emailu <b>%{email}</b>. Za chvilku obdržíte email s přihlašovacím odkazem."
       complete_username_not_found: "Nebyl nalezen účet s uživatelským jménem <b>%{username}</b>"
       complete_email_not_found: "Nebyl nalezen účet s emailem <b>%{email}</b>"
     login:
       title: "Přihlásit se"
       username: "Uživatel"
       password: "Heslo"
-      second_factor_title: "Vyžadováno dvoufázové přihlašování"
-      second_factor_label: "Kód"
       email_placeholder: "emailová adresa nebo uživatelské jméno"
       caps_lock_warning: "zapnutý Caps Lock"
       error: "Neznámá chyba"
@@ -1112,6 +1099,7 @@ cs:
       categories_only: "Pouze kategorie"
       categories_with_featured_topics: "Kategorie a vybrané příspěvky"
       categories_and_latest_topics: "Kategorie a nejnovější témata"
+      categories_and_top_topics: "Kategorie a populární témata"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -1139,6 +1127,13 @@ cs:
       medium_tone: Mírně hnědá pleť
       medium_dark_tone: Hnědá pleť
       dark_tone: Černá pleť
+    shared_drafts:
+      title: "Sdílené koncepty"
+      notice: "Toto téma uvidí pouze uživatelé, kteří mohou vidět kategorii <b>{{category}}</b>"
+      destination_category: "Cílová kategorie"
+      publish: "Zveřejnit sdílený koncept"
+      confirm_publish: "Určitě chceš zveřejnit tento koncept?"
+      publishing: "Zveřejňuji téma..."
     composer:
       emoji: "Smajlíky :)"
       more_emoji: "více..."
@@ -1180,12 +1175,15 @@ cs:
       create_topic: "Vytvořit téma"
       create_pm: "Zpráva"
       create_whisper: "Šeptat"
+      create_shared_draft: "Vytvořit sdílený koncept"
       title: "Nebo zmáčkněte Ctrl+Enter"
       users_placeholder: "Přidat uživatele"
       title_placeholder: "O čem je ve zkratce tato diskuze?"
       title_or_link_placeholder: "Sem vložte název téma"
       edit_reason_placeholder: "proč byla nutná úprava?"
       show_edit_reason: "(přidat důvod úpravy)"
+      topic_featured_link_placeholder: "Zadej odkaz ukázaný názvem"
+      remove_featured_link: "Odstranit odkaz z tématu."
       reply_placeholder: "Pište sem. Můžete použít Markdown, BBCode nebo HTML. Obrázky nahrajte přetáhnutím nebo vložením ze schránky."
       reply_placeholder_no_images: "Pište sem. Můžete použít Markdown, BBCode nebo HTML."
       view_new_post: "Zobrazit váš nový příspěvek."
@@ -1217,6 +1215,7 @@ cs:
       olist_title: "Číslovaný seznam"
       ulist_title: "Odrážkový seznam"
       list_item: "Položka seznam"
+      toggle_direction: "Přepnout směr"
       help: "Nápověda pro Markdown"
       collapse: "minimalizovat panel editoru"
       abandon: "zavřít editor a zahodit koncept"
@@ -1245,6 +1244,9 @@ cs:
           desc: Šeptání vidí pouze redaktoři
         create_topic:
           label: "Nové téma"
+        shared_draft:
+          label: "Sdílený koncept"
+          desc: "Navrhnout téma, které uvidí pouze redakce"
     notifications:
       tooltip:
         regular:
@@ -1412,12 +1414,12 @@ cs:
         relist_topics: "Znovunačíst seznam témat"
         reset_read: "reset přečteného"
         delete: "Smazat témata"
-        dismiss: "Odbýt"
-        dismiss_read: "Odbýt všechna nepřečtená"
-        dismiss_button: "Odbýt..."
-        dismiss_tooltip: "Odbýt jen nové příspěvky nebo přestat sledovat témata"
+        dismiss: "Označit jako přečtené"
+        dismiss_read: "Označit všechno nepřečtené jako přečtené"
+        dismiss_button: "Označit jako přečtené..."
+        dismiss_tooltip: "Označit jako přečtené jen nové příspěvky nebo přestat sledovat témata"
         also_dismiss_topics: "Přestat sledovat tyto témata, takže se mi znovu nezobrazí jako nepřečtená"
-        dismiss_new: "Odbýt nová"
+        dismiss_new: "Označit jako přečtené vše nové"
         toggle: "hromadný výběr témat"
         actions: "Hromadné akce"
         change_category: "Nastavit kategorii"
@@ -1476,6 +1478,9 @@ cs:
       move_to_inbox:
         title: 'Přesunout do Přijaté'
         help: 'Přesunout zprávu zpět do Přijaté'
+      edit_message:
+        help: 'Upravit první příspěvek zprávy'
+        title: 'upravit zprávu'
       list: 'Témata'
       new: 'nové téma'
       unread: 'nepřečtený'
@@ -1528,9 +1533,14 @@ cs:
       jump_reply_down: přejít na následující odpověď
       deleted: "Téma bylo smazáno"
       topic_status_update:
+        title: "Časovač tématu"
+        save: "Nastavit časovač "
         num_of_hours: "Počet hodin:"
+        remove: "Odstranit časovač"
         publish_to: "Publikovat v:"
         when: "Když:"
+        public_timer_types: 'Časovače tématu '
+        private_timer_types: uživatelské časovače témat
       auto_update_input:
         none: "Vyberte časové období"
         later_today: "Později během dnešního dne"
@@ -1558,6 +1568,18 @@ cs:
         title: "Automaticky zavřít téma"
         label: "Automaticky zavřít téma za:"
         error: "Prosím zadejte platnou hodnotu."
+        based_on_last_post: "Neuzavírejte téma dokud poslední příspěvek v tomto tématu není alespoň takto starý."
+      auto_delete:
+        title: "automaticky smazat téma"
+      reminder:
+        title: "Připomeň mi"
+      status_update_notice:
+        auto_open: "Toto téma se automaticky otevře %{timeLeft}."
+        auto_close: "Toto téma se automaticky zavře %{timeLeft}."
+        auto_publish_to_category: "Toto téma bude zveřejněno v <a href=%{categoryUrl}>%{categoryName}</a>%{timeLeft}# ."
+        auto_close_based_on_last_post: "Toto téma se zavře %{duration} po poslední odpovědi."
+        auto_delete: "Toto téma bude automaticky smazáno %{timeLeft}."
+        auto_reminder: "Toto téma ti připomeneme %{timeLeft}."
       auto_close_title: 'Nastavení automatického zavření'
       auto_close_immediate:
         one: "Poslední příspěvek v témetu je již 1 hodinu starý, takže toto téma bude okamžitě uzavřeno."
@@ -1582,6 +1604,7 @@ cs:
       notifications:
         title: změňte, jak často budete upozornění na toto téma
         reasons:
+          mailing_list_mode: "Máš povolený mailový seznam, takže budeš upozorňován na odpovědi k tomuto tématu přes e.mail."
           '3_10': 'Budete dostávat oznámení, protože hlídáte štítek na tomto tématu.'
           '3_6': 'Budete dostávat oznámení, protože hlídáte tuhle kategorii.'
           '3_5': 'Budete dostávat oznámení, protože jste tohle téma automaticky začali hlídat.'
@@ -1627,6 +1650,7 @@ cs:
         open: "Otevřít téma"
         close: "Zavřít téma"
         multi_select: "Zvolte příspěvky…"
+        timed_update: "Nastavit časovač tématu..."
         pin: "Připevnit téma"
         unpin: "Odstranit připevnění"
         unarchive: "Navrátit z archivu"
@@ -1635,6 +1659,7 @@ cs:
         visible: "Zviditelnit"
         reset_read: "Vynulovat počet čtení"
         make_public: "Vytvořit Veřejné Téma"
+        make_private: "Vytvořit soukromou zprávu "
       feature:
         pin: "Připevnit téma"
         unpin: "Odstranit připevnění"
@@ -1643,6 +1668,7 @@ cs:
         remove_banner: "Remove Banner Topic"
       reply:
         title: 'Odpovědět'
+        help: 'Začít psát odpověď na toto téma'
       clear_pin:
         title: "Odstranit připnutí"
         help: "Odebere připnutí tohoto tématu, takže se již nebude zobrazovat na vrcholu seznamu témat"
@@ -1711,6 +1737,7 @@ cs:
         success_email: "Zaslali jsme pozvánku na <b>{{emailOrUsername}}</b>. Upozorníme vás až bude pozvánka použita. Své pozvánky můžete sledovat v tabulce pozvánek na svém uživatelském profilu."
         success_username: "Pozvali jsme zadaného uživatele, aby se zúčastnil tématu."
         error: "Bohužel se nepodařilo pozvat tuto osobu. Možná už byla pozvána? (Počet opakovaných pozvánek je omezen)."
+        success_existing_email: "Uživatel s e-mailem<b>{{emailOrUsername}}</b> již existuje. Pozvali jsme ho, aby se zúčastnil tohoto tématu."
       login_reply: 'Přihlaste se, chcete-li odpovědět'
       filters:
         n_posts:
@@ -1751,6 +1778,7 @@ cs:
           other: "Vyberte prosím nového autora {{count}} příspěvků od <b>{{old_user}}</b>."
         instructions_warn: "Poznámka: Žádná upozornění na tento příspěvek nebudou zpětně přenesena na nového uživatele.<br>Varování: V současné chvíli, žádná data svázaná s příspěvkem nebudou přenesena na nového uživatele. Používejte opatrně."
       change_timestamp:
+        title: "Změnit časové razítko..."
         action: "změnit časovou značku"
         invalid_timestamp: "Časová značka nemůže být v budoucnosti."
         error: "Nastala chyba při změně časové značky tématu."
@@ -1767,6 +1795,9 @@ cs:
         select_replies:
           label: 'vybrat +odpovědi'
           title: 'Přidej příspěvek a všechny jeho odpovědi do výběru'
+        select_below:
+          label: 'vybrat +níže'
+          title: 'Přidat příspěvek a vše po něm do výběru'
         delete: smazat označené
         cancel: zrušit označování
         select_all: vybrat vše
@@ -1777,11 +1808,13 @@ cs:
           other: "Máte označeno <b>{{count}}</b> příspěvků."
     post:
       quote_reply: "Cituj"
+      edit: "<i class='fa fa-pencil'></i>{{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Důvod: "
       post_number: "příspěvek č. {{number}}"
       wiki_last_edited_on: "wiki naposledy upravena"
       last_edited_on: "příspěvek naposledy upraven"
       reply_as_new_topic: "Odpovědět v propojeném tématu"
+      reply_as_new_private_message: "Odpověď poslat jako zprávu stejným příjemcům. "
       continue_discussion: "Pokračující diskuze z {{postLink}}:"
       follow_quote: "přejít na citovaný příspěvek"
       show_full: "Zobrazit celý příspěvek"
@@ -1790,7 +1823,9 @@ cs:
         one: "(post withdrawn by author, will be automatically deleted in %{count} hour unless flagged)"
         few: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
         other: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
+      collapse: "kolaps"
       expand_collapse: "rozbalit/sbalit"
+      locked: "Personál znemožnil upravování na tomto příspěvku"
       gap:
         one: "zobrazit 1 skrytou odpověď"
         few: "zobrazit {{count}} skryté odpovědi"
@@ -1820,6 +1855,7 @@ cs:
         file_too_large: "Soubor, který se snažíte nahrát, je bohužel příliš velký (maximální velikost je {{max_size_kb}}kb). Co třeba jej nahrát na cloudovou službu a nasdílet sem odkaz?"
         too_many_uploads: "Bohužel, najednou smíte nahrát jen jeden soubor."
         too_many_dragged_and_dropped_files: "Bohužel, najednou smíte nahrát jen 10 souborů."
+        upload_not_authorized: "Bohužel, soubor, který se snažíš nahrát, není povolený (povolená rozšíření:  {{authorized_extensions}}). "
         image_upload_not_allowed_for_new_user: "Bohužel, noví uživatelé nemohou nahrávat obrázky."
         attachment_upload_not_allowed_for_new_user: "Bohužel, noví uživatelé nemohou nahrávat přílohy."
         attachment_download_requires_login: "Omlouváme se, ale pro stáhnutí přílohy musíte být přihlášen."
@@ -1848,6 +1884,17 @@ cs:
         undelete: "obnovit příspěvek"
         share: "sdílet odkaz na tento příspěvek"
         more: "Více"
+        delete_replies:
+          confirm: "Chceš také smazat odpovědi k tomuto příspěvku? "
+          direct_replies:
+            one: "Ano a 1 přímá odpověď"
+            few: "Ano a další přímé odpovědi"
+            other: "Ano a další {{count}} odpovědi"
+          all_replies:
+            one: "Ano a další 1 odpověď"
+            few: "Ano a dalších {{count}} odpovědí"
+            other: "Ano a dalších {{count}} odpovědí"
+          just_the_post: "Ne, pouze tento příspěvek"
         admin: "post admin actions"
         wiki: "Vytvořte Wiki"
         unwiki: "Odtraňte Wiki"
@@ -1856,8 +1903,17 @@ cs:
         rebake: "Obnovit HTML"
         unhide: "Odkrýt"
         change_owner: "Změna autora"
+        grant_badge: "Udělit odznak"
+        lock_post: "Uzamknout příspěvek "
+        lock_post_description: "Zabránit přispěvatelům v úpravách tohoto příspěvku"
+        unlock_post: "Odemknout příspěvek"
+        unlock_post_description: "Dovolit přispěvatelům úpravy tohoto příspěvku"
       actions:
         flag: 'Nahlásit'
+        defer_flags:
+          one: "Ignorovat nahlášení"
+          few: "Ignorovat nahlášení"
+          other: "Ignorovat nahlášení"
         undo:
           off_topic: "Zrušit nahlášení"
           spam: "Zrušit nahlášení"
@@ -1873,6 +1929,10 @@ cs:
           notify_user: "odeslal zprávu"
           bookmark: "záložka přidána"
           like: "se líbí"
+          like_capped:
+            one: "a jednomu dalšímu se to líbí"
+            few: "a {{count}} dalším se to líbí"
+            other: "a {{count}} dalším se to líbí"
           vote: "hlasoval pro tento příspěvek"
         by_you:
           off_topic: "Označili jste tento příspěvek jako off-topic"
@@ -1949,6 +2009,11 @@ cs:
             one: "1 člověk hlasoval pro tento příspěvek"
             few: "{{count}} lidé hlasovali pro tento příspěvek"
             other: "{{count}} lidí hlasovalo pro tento příspěvek"
+      delete:
+        confirm:
+          one: "Jsi si jistý, že chceš smazat tento příspěvek?"
+          few: "Jsi si jistý, že chceš smazat tyto všechny {{count}} příspěvky? "
+          other: "Jsi si jistý, že chceš smazat tyto všechny {{count}} příspěvky? "
       merge:
         confirm:
           one: "Opravdu chceš sloučit tyto příspěvky?"
@@ -1975,8 +2040,12 @@ cs:
             button: 'HTML'
           side_by_side_markdown:
             title: "Show the raw source diffs side-by-side"
+            button: 'původní'
       raw_email:
         displays:
+          raw:
+            title: "Ukázat původní email"
+            button: 'původní'
           text_part:
             title: "Ukázat textovou část emailu"
             button: 'Text'
@@ -1995,8 +2064,11 @@ cs:
       settings: 'Nastavení'
       topic_template: "Šablona tématu"
       tags: "Štítky"
+      tags_allowed_tags: "Povolit pouze tyto štítky k používání v této kategorii:"
+      tags_allowed_tag_groups: "Pouze povolené štítky z těchto skupin mohou být používané v této kategorii:"
       tags_placeholder: "(Volitelné) seznam dovolených štítků"
       tag_groups_placeholder: "(Volitelné) seznam dovolených skupin štítků"
+      topic_featured_link_allowed: "Povolit zobrazené odkazy v této kategorii"
       delete: 'Smazat kategorii'
       create: 'Nová kategorie'
       create_long: 'Vytvořit novou kategorii'
@@ -2028,6 +2100,16 @@ cs:
       email_in_allow_strangers: "Přijímat emaily i od neregistrovaných uživatelů"
       email_in_disabled: "Přidávání nových témat před email je zakázáno v Nastavení fóra. K povolení nových témat přes email,"
       email_in_disabled_click: 'povolit nastavení "email in"'
+      mailinglist_mirror: "Kategorie kopíruje mailing list"
+      suppress_from_latest: "Potlač tuto kategorii na nejnovějších tématech."
+      show_subcategory_list: "Ukázat seznam podkategorií nad tématy v této kategorii."
+      num_featured_topics: "Počet témat, která se zobrazují na stránce kategorie "
+      subcategory_num_featured_topics: "Počet zobrazených témat na stránce nadřazené kategorie:"
+      all_topics_wiki: "Vytvořit nové wiki témat ve výchozím nastavení."
+      subcategory_list_style: "Styl seznamu podkategorií: "
+      sort_order: "Seznam témat seřazený podle: "
+      default_view: "Výchozí seznam témat: "
+      default_top_period: "Výchozí hlavní doba:"
       allow_badges_label: "Povolit používání odznaků v této kategorii"
       edit_permissions: "Upravit oprávnění"
       add_permission: "Přidat oprávnění"
@@ -2067,6 +2149,9 @@ cs:
       sort_descending: 'Sestupně'
       subcategory_list_styles:
         rows: "Řady"
+        rows_with_featured_topics: "Řádky s vybranými tématy"
+        boxes: "Boxy "
+        boxes_with_featured_topics: "Boxy s vybranými tématy"
     flagging:
       title: 'Děkujeme, že pomáháte udržovat komunitu zdvořilou!'
       action: 'Nahlásit příspěvek'
@@ -2157,13 +2242,17 @@ cs:
       few: "zobrazení"
       other: "zobrazení"
     replies: "Odpovědi"
+    views_long:
+      one: "Toto téma bylo zobrazeno 1 krát"
+      few: "Toto téma bylo zobrazeno {{number}} krát"
+      other: "Toto téma bylo zobrazeno {{number}} krát"
     activity: "Aktivita"
     likes: "Líbí se"
     likes_lowercase:
       one: "líbí se"
       few: "líbí se"
       other: "líbí se"
-    likes_long: "v tomto tématu je {{number}} lajků"
+    likes_long: "v tomto tématu je {{number}} \"Líbí se\""
     users: "Účastníci"
     users_lowercase:
       one: "uživatel"
@@ -2291,10 +2380,14 @@ cs:
         hamburger_menu: '<b>=</b> Otevře hamburgerové menu'
         user_profile_menu: '<b>p</b> Otevře uživatelské menu'
         show_incoming_updated_topics: '<b>.</b> Ukáže aktualizovaná témata'
+        search: '<b>/</b> nebo <b>ctrl</b>+<b>alt</b>+<b>f</b>Vyhledávání'
         help: '<b>?</b> Otevře seznam klávesových zkratek'
-        dismiss_new_posts: '<b>x</b>, <b>r</b> Odbýt nové/příspěvky'
-        dismiss_topics: '<b>x</b>, <b>t</b> Odbýt témata'
+        dismiss_new_posts: '<b>x</b>, <b>r</b> Označit jako přečtené nové/příspěvky'
+        dismiss_topics: '<b>x</b>, <b>t</b> Označit témata jako přečtená'
         log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Odhlásit se'
+      composing:
+        title: 'Skládání'
+        return: '<b>shift</b>+<b>c</b>návrat ke skládání'
       actions:
         title: 'Akce'
         bookmark_topic: 'Přidat záložku na téma'
@@ -2311,13 +2404,20 @@ cs:
         edit: '<b>e</b> Upravit příspěvek'
         delete: '<b>d</b> Smazat příspěvek'
         mark_muted: '<b>m</b>, <b>m</b> Ztišit téma'
+        mark_regular: '<b>m</b>, <b>r</b>Obvyklé (výchozí) téma'
         mark_tracking: '<b>m</b>, <b>t</b> Sledovat téma'
         mark_watching: '<b>m</b>, <b>w</b> Hlídat téma'
         print: '<b>ctrl</b>+<b>p</b> Vytiskni téma'
     badges:
+      earned_n_times:
+        one: "Získal tento odznak krát"
+        few: "Získal tento odznak krát"
+        other: "Získal tento odznak %{count} krát"
       granted_on: "Získán %{date}"
       others_count: "Ostatní s tímto odznakem (%{count})"
       title: Odznaky
+      allow_title: "Tento odznak můžeš použít jako titul"
+      multiple_grant: "Toto si můžeš zasloužit několikrát"
       badge_count:
         one: "1 odznak"
         few: "%{count} odznaky"
@@ -2331,6 +2431,8 @@ cs:
         few: "%{count} přidělen"
         other: "%{count} přidělen"
       select_badge_for_title: Vyberte odznak, který chcete použít jako svůj titul
+      none: "(žádný)"
+      successfully_granted: "Úspěšně přidělený %{badge}uživateli%{username}"
       badge_grouping:
         getting_started:
           name: Jak začít?
@@ -2353,12 +2455,18 @@ cs:
       </p>
     tagging:
       all_tags: "Všechny štítky"
+      other_tags: "Ostatní štítky "
       selector_all_tags: "všechny štítky"
       selector_no_tags: "bez štítků"
       changed: "změněné štítky:"
       tags: "Štítky"
       choose_for_topic: "volitelné štítky"
       delete_tag: "Smaž štítek"
+      delete_confirm:
+        one: "Jsi si jist, že chceš smazat tento štítek a odstranit ho z tématu, kterému je přiřazen?"
+        few: "Jsi si jist, že chceš smazat tento štítek a odstranit ho z {{count}} témat, kterým je přiřazen?"
+        other: "Jsi si jist, že chceš smazat tento štítek a odstranit ho z {{count}} témat, kterým je přiřazen?"
+      delete_confirm_no_topics: "Opravdu chceš smazat tento štítek? "
       rename_tag: "Přejmenovat štítek"
       rename_instructions: "Vyber název nového štítku:"
       sort_by: "Seřadit dle:"
@@ -2374,18 +2482,15 @@ cs:
       notifications:
         watching:
           title: "Hlídání"
-          description: "Budete automaticky hlídat všechna nová témata s těmito štítky. Na všechny nové příspěvky a témata budete upozorněni. Počet nových příspěvků se zobrazí vedle tématu."
         watching_first_post:
           title: "Hlídané první příspěvky"
-          description: "Budete informováni pouze o prvním příspěvku v každém novém tématu s tímto štítkem."
         tracking:
           title: "Sledování"
-          description: "Všechna nová témata pro tento štítek budou automaticky sledovaná. Počet nepřečtených a nových příspěvků se zobrazí vedle tématu."
         regular:
+          title: "Běžný"
           description: "Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek."
         muted:
           title: "Ztišené"
-          description: "Nebudete upozorněni na žádná nová témata pro tento štítek a ani se nebudou zobrazovat jako nepřečtené."
       groups:
         title: "Skupiny štítků"
         about: "Přidej štítky do skupin pro přehlednost"
@@ -2394,6 +2499,7 @@ cs:
         parent_tag_label: "Nadřazený štítek:"
         parent_tag_placeholder: "Volitelné"
         parent_tag_description: "Štítky z této skupiny nemohou být použity pokud není přítomen nadřazený štítek."
+        one_per_topic_label: "Omezit na jeden štítek k tématu z této skupiny"
         new_name: "Nová skupina štítků"
         save: "Uložit"
         delete: "Smazat"
@@ -2424,6 +2530,9 @@ cs:
       custom_message_link: "vlastní zprávu"
       custom_message_placeholder: "Vložte vlastní zprávu"
       custom_message_template_forum: "Ahoj! Měl by se připojit na toto fórum!"
+      custom_message_template_topic: "Ahoj, myslím si, že by se ti mohlo tohle téma líbit!"
+    safe_mode:
+      enabled: "Bezpečný režim je povolený, k jeho zakázání zavři toto okno prohlížeče"
   admin_js:
     type_to_filter: "text pro filtrování..."
     admin:
@@ -2448,6 +2557,7 @@ cs:
         no_problems: "Nenalezeny žádné problémy."
         moderators: 'Moderátoři:'
         admins: 'Administrátoři:'
+        silenced: 'Ztišený:'
         suspended: 'Zakázáno:'
         private_messages_short: "Zpráv"
         private_messages_title: "Zprávy"
@@ -2457,6 +2567,8 @@ cs:
         backups: "zálohy"
         traffic_short: "Provoz"
         traffic: "Webové požadavky na aplikaci"
+        page_views: "Zobrazení stránky "
+        page_views_short: "Zobrazení stránky "
         show_traffic_report: "Zobrazit detailní zprávu o provozu"
         reports:
           today: "Dnes"
@@ -2478,11 +2590,29 @@ cs:
         by: "od"
       flags:
         title: "Nahlášení"
+        active_posts: "Nahlášené příspěvky "
+        old_posts: "Dříve nahlášené příspěvky"
+        topics: "Nahlášená témata"
+        moderation_history: "Historie moderování"
         agree: "Schválit"
         agree_title: "Potvrdit toto hlášení jako právoplatné a korektní"
+        agree_flag_hide_post: "Schovat příspěvek"
+        agree_flag_hide_post_title: "Schovat tento příspěvek a automaticky poslat uživateli zprávu, aby ho urychleně upravil."
+        agree_flag_restore_post: "Souhlasit a odstranit příspěvek"
+        agree_flag_restore_post_title: "Obnov příspěvek, aby ho mohli vidět všichni ostatní uživatelé."
+        agree_flag_suspend: "Pozastavit uživatele"
+        agree_flag_suspend_title: "Schválit nahlášení a pozastavit uživatele."
+        agree_flag_silence: "Ztišit uživatele"
+        agree_flag_silence_title: "Schválit nahlášení a ztišit uživatele."
+        agree_flag: "Uchovat příspěvek"
+        agree_flag_title: "Schválit nahlášení a zanechat příspěvek nepozměněný. "
+        ignore_flag: "ignorovat"
+        ignore_flag_title: "Odstranit nahlášení; Nyní nevyžaduje žádné opatření."
         delete: "Smazat"
         delete_title: "Smazat příspěvek, na který toto hlášení odkazuje."
+        delete_post_defer_flag: "Smazat příspěvek a ignorovat nahlášení"
         delete_post_defer_flag_title: "Smazat příspěvek; pokud je to první příspěvek, tak smazat téma"
+        delete_post_agree_flag: "Smazat příspěvek a Schválit nahlášení"
         delete_post_agree_flag_title: "Smazat příspěvek; pokud je to první příspěvek, tak smazat téma"
         delete_flag_modal_title: "Smazat a..."
         delete_spammer: "Odstranit spamera"
@@ -2495,25 +2625,36 @@ cs:
         clear_topic_flags_title: "The topic has been investigated and issues have been resolved. Click Done to remove the flags."
         more: "(více odpovědí...)"
         suspend_user: "Zakázat uživatele"
+        suspend_user_title: "Pozastavit uživatele za tento příspěvek"
         dispositions:
           agreed: "schváleno"
           disagreed: "neschváleno"
+          deferred: "ignorovaný "
         flagged_by: "Nahlásil"
         resolved_by: "Vyřešeno"
         took_action: "Zakročit"
         system: "Systémové soukromé zprávy"
         error: "Něco se pokazilo"
         reply_message: "Odpovědět"
+        no_results: "Nejsou zde žádné nahlášené příspěvky."
         topic_flagged: "Tohle <strong>téma</strong> bylo označeno."
         show_full: "Zobrazit celý příspěvek"
         visit_topic: "Zobrazit téma pro přijmutí opatření."
         was_edited: "Příspěvek byl upraven po prvním nahlášení"
         previous_flags_count: "Tento příspěvek byl již nahlášen {{count}} krát."
+        show_details: "Ukázat detail nahlášení"
         details: "podrobnosti"
         flagged_topics:
           topic: "Téma"
           type: "Typ"
           users: "Uživatelé"
+          last_flagged: "Naposledy nahlášený"
+        short_names:
+          off_topic: "mimo téma"
+          inappropriate: "nevhodný"
+          spam: "spam"
+          notify_user: "Přizpůsobené"
+          notify_moderators: "přizpůsobené"
       groups:
         primary: "Hlavní skupina"
         no_primary: "(žádná hlavní skupina)"
@@ -2531,6 +2672,7 @@ cs:
         add_members: "Přidat členy"
         custom: "Přizpůsobené"
         bulk_complete: "Uživatelé byli přidáni do skupiny."
+        bulk_complete_users_not_added: "Tito uživatelé nebyli přidáni (ujisti se, že mají účet):"
         bulk: "Hromadné přidání do skupiny"
         bulk_paste: "Vlož seznam uživatelských jmen a e-mailů, jeden záznam na řádek"
         bulk_select: "(vyber skupinu)"
@@ -2543,6 +2685,8 @@ cs:
         add_owners: Přidat vlastníky
         incoming_email: "Vlastní příchozí emailová adresa"
         incoming_email_placeholder: "zadej emailovou adresu"
+        none_selected: "Vyber si skupinu, abys mohl začít"
+        no_custom_groups: "Vytvořit novou vlastní skupinu"
       api:
         generate_master: "Vygenerovat Master API Key"
         none: "Nejsou tu žádné aktivní API klíče."
@@ -2559,19 +2703,53 @@ cs:
         note_html: "Uchovejte tento klíč <strong>v bezpečí</strong>, každý, kdo má tento klíč, může libovolně vytvářet příspěvky na fóru i za ostatní uživatele."
       web_hooks:
         title: "Webhooks"
+        none: "Právě tu nejsou žádné webhooks."
+        instruction: "Webhooks umožňuje Discoursu upozornit na externí služby pokud se na vaší stránce děje nějaká údálost. Pokud je wehook zaplý, bude žádost o příspěvek poslaná na uvedené URL adresy."
+        detailed_instruction: "Pokud nastane vybraná událost, žádost o příspěvek bude odeslána na uvedené URL."
         new: "Nový Webhook"
         create: "Vytvoř"
         save: "Uložit"
         destroy: "Smazat"
         description: "Popis"
+        controls: "Správa"
         go_back: "Zpět na seznam"
+        payload_url: "Payload URL"
         payload_url_placeholder: "https://example.com/postreceive"
+        warn_local_payload_url: "Zdá se, že se snažíš nastavit webhook k lokální url. Doručená událost na lokální adresu může způsobit vedlejší účinek nebo neočekávané chování. Chceš pokračovat? "
+        secret_invalid: "Heslo nesmí obsahovat žádné prázdné znaky."
+        secret_too_short: "Heslo by mělo mít alespoň 12 znaků."
+        secret_placeholder: "Volitelný řetězec využívaný k vytvoření podpisu"
+        event_type_missing: "Musíš nastavit minimálně jeden typ události."
         content_type: "Typ obsahu"
+        secret: "Heslo"
+        event_chooser: "Které události by měly spustit tento webhook?"
         wildcard_event: "Pošli mi vše."
+        individual_event: "Vyber individuální události."
+        verify_certificate: "Zkontroluj TLS certifikát payload URL "
         active: "Aktivní"
+        active_notice: "Pokud nastane událost, doručíme o ní data."
+        categories_filter_instructions: "Relevantní webhooky budou spuštěny pouze tehdy, pokud událost souvisí se stanovenými kategoriemi. Nechte prázdné místo pro spuštění webhooků pro všechny kategorie. "
+        categories_filter: "Spuštěné kategorie"
+        groups_filter_instructions: "Relevantní webhooky budou spuštěny pouze tehdy, pokud událost souvisí se specifikovanými skupinami. Nechte prázdné pro spuštění webhooků pro všechny skupiny."
+        groups_filter: "Spuštěné skupiny"
+        delete_confirm: "Smazat tento webhook? "
+        topic_event:
+          name: "Téma události "
+          details: "Pokud je zde nové téma, reviduj, změň nebo smaž. "
+        post_event:
+          name: "Zveřejnit událost"
+          details: "Pokud je zde nová odpověď, uprav, smaž nebo odeber."
+        user_event:
+          name: "Uživatelské události"
+          details: "Pokud se uživatel přihlásí, odhlásí, je vytvořený, schválen nebo aktualizovaný."
         delivery_status:
+          title: "Stav doručení"
           inactive: "Neaktivní"
+          failed: "Neúspěšný"
+          successful: "Úspěšný"
         events:
+          none: "Nejsou zde žádné související události."
+          redeliver: "Znovu dodat"
           incoming:
             one: "1 nová událost"
             few: "{{count}} nové události"
@@ -2582,11 +2760,18 @@ cs:
             other: "Dokončen za {{count}} sekund."
           request: "Požadavek"
           response: "Odezva"
+          redeliver_confirm: "Jsi si jistý, že chceš znovu doručit stejný payload?"
           headers: "Hlavičky"
+          payload: "Payload"
           body: "Tělo"
+          go_list: "Přejít na seznam"
           go_details: "Editovat webhook"
+          go_events: "Přejít na události"
           ping: "Ping"
+          status: "Stavový kód"
           event_id: "ID"
+          timestamp: "Vytvořený"
+          completion: "čas dokončení"
           actions: "Akce"
       plugins:
         title: "Pluginy"
@@ -2623,6 +2808,7 @@ cs:
           label: "Nahrát"
           title: "Nahrát zálohu do téhle instance"
           uploading: "Nahrávání..."
+          success: "'{{filename}}' byl úspěšně nahraný. Soubor je nyní zpracováván a do minuty bude ukázán v seznamu. "
           error: "There has been an error while uploading '{{filename}}': {{message}}"
         operations:
           is_running: "An operation is currently running..."
@@ -2638,6 +2824,8 @@ cs:
             without_uploads: "Ano (nepřikládej soubory)"
           download:
             label: "Stáhnout"
+            title: "Poslat e-mail s odkazem ke stažení"
+            alert: "Odkaz ke stažení tohoto zálohování ti byl poslaný e-mailem"
           destroy:
             title: "Odstranit zálohu"
             confirm: "Are you sure you want to destroy this backup?"
@@ -2649,6 +2837,7 @@ cs:
           rollback:
             label: "Rollback"
             title: "Rollback the database to previous working state"
+            confirm: "Jsi si jistý, že chceš vrátit databázi zpět do předchozího funkčního stavu?"
       export_csv:
         success: "Export byl spuštěn. O dokončení celého procesu budete informování pomocí zprávy."
         failed: "Exportování selhalo. Prosím zkontrolujte logy."
@@ -2668,17 +2857,20 @@ cs:
         title: "Přizpůsobení"
         long_title: "Přizpůsobení webu"
         preview: "náhled"
+        explain_preview: "Náhled stránky s povoleným motivem"
         save: "Uložit"
         new: "Nové"
         new_style: "Nový styl"
         import: "Import"
         delete: "Smazat"
+        delete_confirm: "Smazat tento motiv? "
         about: "Změn CSS styly a hlavičky HTML na stránkách. Přidej přizpůsobení na začátek."
         color: "Barva"
         opacity: "Neprůhlednost"
         copy: "Kopírovat"
         copy_to_clipboard: "Kopírovat do schránky"
         copied_to_clipboard: "Zkopírováno do schránky"
+        copy_to_clipboard_error: "Při kopírování dat do schránky došlo k chybě"
         theme_owner: "není editovatelné, vlastněno:"
         email_templates:
           title: "Šablona emailu"
@@ -2689,24 +2881,85 @@ cs:
           revert: "Vrátit změny"
           revert_confirm: "Opravdu chcete vrátit změny?"
         theme:
+          import_theme: "importovat motiv "
           customize_desc: "Přizpůsobit:"
+          title: "Motivy"
+          long_title: "Změnit barvy, CSS a HTML obsahy na vaší stránce"
           edit: "Upravit"
+          edit_confirm: "Toto je vzdálené téma, pokud upravíš CSS/HTML tvoje změny budou vymazány při dalším updatu motivu."
+          common: "společný"
+          desktop: "Desktop"
           mobile: "Mobilní verze"
+          settings: "Nastavení"
           preview: "Náhled"
+          is_default: "Motiv je ve výchozím nastavení povolený"
+          user_selectable: "Motiv může být zvolen uživatelem"
           color_scheme: "Barevné schéma"
+          color_scheme_select: "Vybrat barvy motivu"
+          custom_sections: "vlastí sekce:"
+          theme_components: "Komponenty motivu"
+          uploads: "nahrání"
+          no_uploads: "Můžeš nahrát položku spojenou s tvým motivem jako jsou fonty a obrázky."
+          add_upload: "Přidat nahrávání "
+          upload_file_tip: "Vybrat položku k nahrání (png, woff2, etc...)"
+          variable_name: "Název SCSS var:"
+          variable_name_invalid: "Neplatné variabilní jméno. Povoleny jsou pouze alfanumerické znaky. Musí začínat písmenem."
+          upload: "Nahrát"
+          child_themes_check: "Motiv zahrnuje jiné dětské motivy"
+          css_html: "Vlastí CSS/HTML"
+          edit_css_html: "Upravit CSS/HTML"
+          edit_css_html_help: "Neupravil jsi CSS nebo HTML"
+          delete_upload_confirm: "Smazat toto nahrávání?  (Motiv CSS by mohl přestat fungovat!)"
+          import_web_tip: "Úložiště obsahující motiv"
+          import_file_tip: ".dcstyle.json soubor obsahující motiv"
+          is_private: "Motiv je v soukromém git úložišti"
+          public_key: "Přidělit přístup k repo následujícím veřejným klíčem:"
+          about_theme: "O motivu "
+          license: "Licence"
+          component_of: "Motiv je součástí: "
+          update_to_latest: "Aktualizovat na nejnovější"
+          check_for_updates: "kontrola aktualizací"
+          updating: "Aktualizace..."
+          up_to_date: "Motiv je aktuální, naposledy zkontrolováno: "
           add: "Přidat"
+          theme_settings: "Nastavení motivu"
+          no_settings: "Tento motiv nemá nastavení"
+          commits_behind:
+            one: "Motiv je {{count}} zavázaný!"
+            few: "Motiv je {{count}} zavázaný!"
+            other: "Motivy jsou {{count}} zavázané!"
           scss:
             text: "CSS"
+            title: "Vložit vlastní CSS, akceptujeme všechny platné CSS a SCSS styly."
           header:
             text: "Hlavička"
+            title: "Vložit HTML k zobrazení v záhlaví stránky"
+          after_header:
+            text: "Za Hlavičkou"
+            title: "vlož HTML k zobrazení všech stránek po záhlaví"
           footer:
             text: "Patička"
+            title: "vložit HTML k zobrazení na zápatí stránky "
+          embedded_scss:
+            text: "Vloženo CSS"
+            title: "Zadat vlastní CSS k doručení s vloženou verzí kometářů"
+          head_tag:
+            text: "</head>"
+            title: "HTML které bude vloženo před</head> štítkem"
+          body_tag:
+            text: "</body>"
+            title: "HTML, který bude vložený před </body>štítek"
+          yaml:
+            text: "YAML"
+            title: "Definovat nastavení motivu ve formátu YAML"
         colors:
           select_base:
             title: "Vyberte základní barvu"
+            description: "Základní schéma: "
           title: "Barvy"
           edit: "Upravit barevná schémata"
           long_title: "Barevná schémata"
+          about: "Upravit barvy užívané tvým motivem. Vytvořit nové barevné schéma na začátek."
           new_name: "Nové barevné schéma"
           copy_name_prefix: "Kopie"
           delete_confirm: "Chcete smazat toto barevné schéma?"
@@ -2743,7 +2996,7 @@ cs:
             description: 'Používá se pro indikaci úspěšné akce.'
           love:
             name: 'láska'
-            description: "Barva tlačítka Like."
+            description: "Barva tlačítka \"Líbí se\"."
       email:
         title: "Emaily"
         settings: "Nastavení"
@@ -2754,6 +3007,7 @@ cs:
         test_error: "Nastal problém při odesílání testovacího emailu. Zkontroluj si, prosím, své mailové nastavení, ověř, že hosting neblokuje mailové spojení a zkus to znova."
         sent: "Odeslané"
         skipped: "Přeskočené"
+        bounced: "vrácený"
         received: "Obdržených"
         rejected: "Odmítnutých"
         sent_at: "Odesláno"
@@ -2767,12 +3021,14 @@ cs:
         delivery_method: "Způsob doručení"
         preview_digest_desc: "Zobraz náhled mailů se souhrnem posílaným neaktivním uživatelúm."
         refresh: "Aktualizovat"
+        send_digest_label: "Poslat tento výsledek k:"
         send_digest: "Poslat"
         sending_email: "Posílám email..."
         format: "Formát"
         html: "html"
         text: "text"
         last_seen_user: "Uživatel byl naposled přítomen:"
+        no_result: "Nenalezeny žádné výsledky souhrnu."
         reply_key: "Klíč pro odpověď"
         skipped_reason: "Důvod přeskočení"
         incoming_emails:
@@ -2805,6 +3061,7 @@ cs:
             reply_key_placeholder: "klíč pro odpověď"
             skipped_reason_placeholder: "důvod"
       moderation_history:
+        performed_by: "Provedeno uživatelem"
         no_results: "Není k dispozici žádná historie akcí moderátorů."
         actions:
           delete_user: "smazání uživatele"
@@ -2860,13 +3117,16 @@ cs:
             revoke_badge: "vzít odznak"
             check_email: "zkontrolujte email"
             delete_topic: "smazat téma"
+            recover_topic: "Obnovit smazané téma"
             delete_post: "smazat příspěvek"
             impersonate: "vydávat se za uživatele"
             anonymize_user: "anonymní uživatel"
+            roll_up: "rozbalit zablokované IP "
             change_category_settings: "změnit nastavení kategorie"
             delete_category: "smazat kategorii"
             create_category: "vytvořit kategorii"
             silence_user: "ztišení uživatele"
+            unsilence_user: "Odmlčet uživatele"
             grant_admin: "udělit administrátorská práva"
             revoke_admin: "odebrat administrátorská práva"
             grant_moderation: "udělit moderátorská práva"
@@ -2875,13 +3135,20 @@ cs:
             deleted_tag: "smazaný štítek"
             renamed_tag: "přejmenovaný štítek"
             revoke_email: "Odebrat email"
+            lock_trust_level: "Zamknout úroveň důvěryhodnosti"
+            unlock_trust_level: "Odemknout úroveň důvěryhodnosti"
             activate_user: "aktivovat uživatele"
             deactivate_user: "deaktivovat uživatele"
+            change_readonly_mode: "změnit režim jen pro čtení"
             backup_download: "stáhnout zálohu"
             backup_destroy: "smazat zálohu"
+            reviewed_post: "recenzovaný příspěvek"
+            custom_staff: "plugin vlastní akce"
             post_locked: "uzamčení příspěvku"
+            post_edit: "upravit příspěvek"
             post_unlocked: "odemčení příspěvku"
             check_personal_message: "zkontrolovat soukromou zprávu"
+            disabled_second_factor: "Vypnout dvoufázové přihlašování"
         screened_emails:
           title: "Filtrované emaily"
           description: "Při registraci nového účtu budou konzultovány následujíci adresy. Při shodě bude registrace zablokována, nebo bude provedena jiná akce."
@@ -2897,6 +3164,9 @@ cs:
           title: "Filtrované IP"
           description: 'Sledované IP adresy. Zvolte „Povolit“ pro přidání IP adresy do whitelistu.'
           delete_confirm: "Are you sure you want to remove the rule for %{ip_address}?"
+          roll_up_confirm: "Určitě chcete rolovat běžně screenované IP adresy do podsítí? "
+          rolled_up_some_subnets: "Úspěšně vyrolován IP ban k přístupu do těchto podsítí: %{subnets}."
+          rolled_up_no_subnet: "Není zde nic ke srolování."
           actions:
             block: "Zablokovat"
             do_nothing: "Povolit"
@@ -2906,12 +3176,22 @@ cs:
             ip_address: "IP adresa"
             add: "Přidat"
             filter: "Vyhledat"
+          roll_up:
+            text: "srolovat "
+            title: "Vytvoří ban k přístupu do podsítě, pokud existují alespoň: 'min_ban_entries_for_roll_up' vstupy."
         search_logs:
+          title: "Vyhledat přihlášení"
+          term: "Období"
+          searches: "Vyhledávání"
+          click_through: "kliknutí "
           unique: "Unikátní"
+          unique_title: "Unikátní uživatel provádějící vyhledávání"
           types:
             all_search_types: "Vyhledávat všechny typy"
             header: "Hlavička"
             full_page: "Celá stránka"
+            click_through_only: "Všechny (pouze kliknutí)"
+          header_search_results: "Výsledky hlavního vyhledávání "
         logster:
           title: "Chybové záznamy"
       watched_words:
@@ -2923,8 +3203,27 @@ cs:
           one: "1 slovo"
           few: "%{count} slova"
           other: "%{count} slov"
+        actions:
+          block: 'Zablokovat'
+          censor: 'Cenzurovat '
+          require_approval: 'Vyžádat schválení'
+          flag: 'Nahlášení'
+        action_descriptions:
+          block: 'Zabránit přidání příspěvků obsahující tato slova. Uživatel uvidí chybovou hlášku ve chvíli, kdy se pokusí odeslat svůj příspěvek.'
+          censor: 'Povolit příspěvky obsahující tato slova, ale nahradit je symboly, které skryjí cenzurovaná slova.'
+          require_approval: 'Příspěvky obsahující tato slova budou vyžadovat schválení zaměstnanců před schválením.'
+          flag: 'Povolit příspěvky obsahující tato slova, ale oflagovat je jako nevhodně, aby je mohli moderátoři kontrolovat.'
+        form:
+          label: 'Nové slovo:'
+          placeholder: 'celé slovo nebo* jako zástupný znak'
+          placeholder_regexp: "obvyklý výraz"
+          add: 'přidat'
+          success: 'Úspěch'
+          upload: "Nahrát"
+          upload_successful: "Nahráno úspěšně. Slova byla přidána "
       impersonate:
         title: "Přihlásit se jako"
+        help: "Použijte tento nástroj k přihlášení za jiného uživatele pro ladící a vývojové potřeby. Po dokončení se budete muset odhlásit."
         not_found: "Tento uživatel nebyl nalezen."
         invalid: "Bohužel, za tohoto uživatele se nemůžete vydávat."
       users:
@@ -2941,6 +3240,7 @@ cs:
           pending: "Čeká na schválení"
           staff: 'Redakce'
           suspended: 'Zakázaní'
+          silenced: 'Ztišený'
           suspect: 'Podezřelí'
         approved: "Schválen?"
         approved_selected:
@@ -2963,6 +3263,7 @@ cs:
           staff: "Redakce"
           admins: 'Administrátoři'
           moderators: 'Moderátoři'
+          silenced: 'Ztišený úživatel'
           suspended: 'Zakázaní uživatelé'
           suspect: 'Podezřelí uživatelé'
         reject_successful:
@@ -2982,35 +3283,63 @@ cs:
         unsuspend_failed: "Nastala chyba při povolování uživatele {{error}}"
         suspend_duration: "Jak dlouho má zákaz platit? (dny)"
         suspend_reason_label: "Why are you suspending? This text <b>will be visible to everyone</b> on this user's profile page, and will be shown to the user when they try to log in. Keep it short."
+        suspend_reason_hidden_label: "Důvod zablokování? Tento text se zobrazí uživateli ve chvíli, kdy se pokusí přihlásit. Udržuj ho krátký."
         suspend_reason: "Reason"
+        suspend_reason_placeholder: "Důvod vyloučení"
+        suspend_message: "e-mailová zpráva"
+        suspend_message_placeholder: "Případě poskytněte více informací o pozastavení, které budou poslány na uživatelův email."
         suspended_by: "Suspended by"
+        silence_reason: "Důvod"
+        silenced_by: "Ztišený uživatelem"
+        silence_modal_title: "ztišit uživatele"
+        silence_duration: "Na jak dlouhou dobu bude uživatel umlčený? "
+        silence_reason_label: "Proč umlčuješ tohoto uživatele?"
+        silence_reason_placeholder: "Důvod ztišení "
+        silence_message: "e-mailová zpráva"
+        silence_message_placeholder: "()"
+        suspended_until: "(až %{until})"
+        cant_suspend: "Tento uživatel nemůže být suspendován"
         delete_all_posts: "Smazat všechny příspěvky"
+        penalty_post_actions: "Co chceš dělat s připojeným příspěvkem? "
+        penalty_post_delete: "Smazat příspěvek"
+        penalty_post_edit: "Upravit příspěvek"
+        penalty_post_none: "Nic nedělat"
         delete_all_posts_confirm_MF: "Chystáte se smazat {POSTS, plural, one {1 příspěvek} other {# příspěvků}} and {TOPICS, plural, one {1 téma} other {# témat}}. Jste si jistí?"
+        silence: "Ztišit"
+        unsilence: "odmlčet "
+        silenced: "Ztišený? "
         moderator: "Moderátor?"
         admin: "Administrátor?"
         suspended: "Zakázán?"
+        staged: "Staged?"
         show_admin_profile: "Administrace"
         refresh_browsers: "Vynutit obnovení prohlížeče"
         refresh_browsers_message: "Zpráva odeslána všem klientům!"
         show_public_profile: "Zobrazit veřejný profil"
         impersonate: 'Vydávat se za uživatele'
+        action_logs: "Logy akcí"
         ip_lookup: "Vyhledávání IP adresy"
         log_out: "Odhlásit se"
         logged_out: "Uživatel byl odhlášen na všech zařízeních."
         revoke_admin: 'Odebrat administrátorská práva'
         grant_admin: 'Udělit administrátorská práva'
+        grant_admin_confirm: "Odeslali jsme ti e-mail, abychom ověřili nového správce. Prosím otevři ho a následuj instrukce."
         revoke_moderation: 'Odebrat moderátorská práva'
         grant_moderation: 'Udělit moderátorská práva'
         unsuspend: 'Povolit'
         suspend: 'Zakázat'
+        show_flags_received: "Ukázat obdržená nahlášení"
+        flags_received_by: "Nahlášení obdrženo od %{username}"
+        flags_received_none: "Tento uživatel neobdržel žádné nahlášení."
         reputation: Reputace
         permissions: Oprávnění
         activity: Aktivita
-        like_count: Rozdaných / obdržených lajků
+        like_count: Rozdaných / obdržených "Líbí se"
         last_100_days: 'Za posledních 100 dní'
         private_topics_count: Počet soukromých témat
         posts_read_count: Přečteno příspěvků
         post_count: Vytvořeno příspěvků
+        second_factor_enabled: Dvoufázové přihlašování povoleno
         topics_entered: Témat zobrazeno
         flags_given_count: Uděleno nahlášení
         flags_received_count: Přijato nahlášení
@@ -3052,13 +3381,23 @@ cs:
         activate_failed: "Nasstal problém při aktivování tohoto uživatele."
         deactivate_account: "Deaktivovat účet"
         deactivate_failed: "Nastal problém při deaktivování tohoto uživatele."
+        unsilence_failed: 'Nastal problém se zrušením ztišení uživatele.'
+        silence_failed: 'Nastal problém při ztišování uživatele. '
+        silence_confirm: 'Jste si jistí, že chcete ztišit tohoto uživatele? Nebude mít oprávnění vytvářet žádné příspěvky a témata.'
         silence_accept: 'Ano, umlčet tohoto uživatele'
         bounce_score: "Bounce skóre"
         reset_bounce_score:
           label: "obnovit výchozí"
           title: "Resetovat bounce skóre zpět na 0"
+        visit_profile: "Navštívit <a href='%{url}'>preferované stránky tohoto uživatel</a>k upravení jeho profilu"
         deactivate_explanation: "Uživatel bude muset znovu potvrdit emailovou adresu."
         suspended_explanation: "Zakázaný uživatel se nemůže přihlásit."
+        silence_explanation: "Ztišený uživatel nemůže přispívat nebo začínat témata."
+        staged_explanation: "Staged uživatel může přispívat pouze emailem ve specifikovaných tématech."
+        bounce_score_explanation:
+          none: "V poslední době se z tohoto e-mailu nevrátily žádné zprávy."
+          some: "Některé zprávy se v poslední době z tohoto emailu vrátily."
+          threshold_reached: "Obdrženo příliš mnoho vrácených emailů z tohoto účtu."
         trust_level_change_failed: "Nastal problém při změně důveryhodnosti uživatele."
         suspend_modal_title: "Suspend User"
         trust_level_2_users: "Uživatelé důvěryhodnosti 2"
@@ -3131,6 +3470,7 @@ cs:
         show_on_user_card:
           title: "Zobrazit na kartě uživatele?"
           enabled: "zobrazeno na kartě uživatele"
+          disabled: "Nezobrazeno na kartě uživatele"
         field_types:
           text: 'Text Field'
           confirm: 'Potvrzení'
@@ -3145,6 +3485,10 @@ cs:
         go_back: "Zpět na hledání"
         recommended: "Doporučujeme uzpůsobit následující text tak, aby vám vyhovoval:"
         show_overriden: 'Zobrazit pouze změněná nastavení'
+      settings:
+        show_overriden: 'Zobrazit pouze přepsané'
+        reset: 'resetovat'
+        none: 'žádný'
       site_settings:
         title: 'Nastavení'
         no_results: "Nenalezeny žádné výsledky."
@@ -3216,6 +3560,9 @@ cs:
         image: Obrázek
         icon_help: "Použijte buď Font Awesome nebo URL k obrázku."
         query: Dotaz na odznak (SQL)
+        target_posts: Zeptat se na cílový příspěvek
+        auto_revoke: Denně spouštět zrušení dotazu
+        show_posts: Ukázat příspěvek získávající odznak na stránce s odznaky.
         trigger: Spouštěč
         trigger_type:
           none: "Aktualizujte denně"
@@ -3223,6 +3570,7 @@ cs:
           post_revision: "Když uživatel upraví nebo vytvoří příspěvek"
           trust_level_change: "Když uživatel změní důvěryhodnost"
           user_change: "Když je uživatel upraven nebo vytvořen"
+          post_processed: "Po zpracování příspěvku"
         preview:
           link_text: "Náhled udělených odznaků"
           plan_text: "Náhled s plánem dotazu"
@@ -3231,6 +3579,7 @@ cs:
           error_help: "Prohlédněte si následující odkazy, které vám zodpoví dotazy o odznacích."
           bad_count_warning:
             header: "VAROVÁNÍ!"
+            text: "Chybí přidělení vzorků. To se stane pokud dotazový odznak vrátí ID uživatele nebo ID příspěvků, které neexistují. Může to později způsobit neočekávané výsledky - prosím zkontrolujte svůj dotaz."
           no_grant_count: "Žádné odznaky k udělení."
           grant_count:
             one: "<b>1</b> odznak k udělení."
@@ -3255,18 +3604,27 @@ cs:
         sample: "Abyste vytvořili a zabudovali témata z discourse, použijte následující HTML kód na vašem webu. Nahraď <b>REPLACE_ME</b> celkovým URL stránky, do které je zabudováváš."
         title: "Zabudování"
         host: "Povolené hosty"
+        class_name: "název třídy"
+        path_whitelist: "Path Whitelist "
         edit: "upravit"
         category: "Příspěvek do kategorie"
         add_host: "Přidat host"
         settings: "Nastavení zabudování"
         feed_settings: "Nastavení odebírání"
+        feed_description: "Poskytování RSS/ATOM zdroje pro vaše stránky pomůže zlepšit schopnost Discoursu importovat váš obsah."
         crawling_settings: "Nastavení procházení"
+        crawling_description: " Discourse vytvoří téma pro tvůj příspěvek, pokud není k dispozici žádný RSS/ATOM zdroj, pokusí se o rozbor vašeho obsahu mimo vaše HTML. Občas může být náročné vybírat obsah, takže jsme schopní upřesnit CSS pravidla, abychom usnadnili vytažení."
         embed_by_username: "Uživatelské jméno pro vytvářéní témat"
         embed_post_limit: "Maximální počet příspěvků k zabudování"
+        embed_username_key_from_feed: "Klíč pro smazání uživatelského jména z feedu"
+        embed_title_scrubber: "Běžný výraz užívaný k vyčištění názvů příspěvků"
         embed_truncate: "Useknout zabudované příspěvky"
+        embed_whitelist_selector: "Volba CSS pro prvky, které jsou povoleny ve vložení."
+        embed_blacklist_selector: "Volba CSS pro prvky, které jsou odstraněny z vložení."
         embed_classname_whitelist: "Povolená jména CSS tříd"
         feed_polling_enabled: "Importovat příspěvky pomocí RSS/ATOM"
         feed_polling_url: "URL adresa RSS/ATOM kanálu pro procházení"
+        feed_polling_frequency_mins: "Frekvece feed pollingu (v minutách)"
         save: "Uložit nastavení zabudování"
       permalink:
         title: "Trvalé odkazy"

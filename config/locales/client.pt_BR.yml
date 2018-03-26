@@ -111,7 +111,6 @@ pt_BR:
       email: 'enviar esse link para um email'
     action_codes:
       public_topic: "tornou este tópico público em %{when}"
-      private_topic: "tornou este tópico privado em %{when}"
       split_topic: "dividiu este tópico %{when}"
       invited_user: "convidou %{who} %{when}"
       invited_group: "convidou %{who} %{when}"
@@ -141,8 +140,6 @@ pt_BR:
     topic_admin_menu: "ações administrativas do tópico"
     wizard_required: "Bem vindo ao seu novo Discourse! Vamos começar com o <a href='%{url}' data-auto-route='true'>assistente de configuração</a> ✨"
     emails_are_disabled: "Todo o envio de email foi globalmente desabilitado por algum administrador. Nenhum email de notificações de qualquer tipo será enviado."
-    bootstrap_mode_enabled: "Para facilitar o lançamento do seu novo site, você esta no modo de inicialização. A todos os novos usuários, será concedido o nível de confiança 1 e eles terão o resumo diário de atualizações por email ativado. Isso será automaticamente desativado quando a contagem total de usuários exceder %{min_users} usuários."
-    bootstrap_mode_disabled: "O modo de inicialização será desativado nas próximas 24 horas."
     themes:
       default_description: "Padrão"
     s3:
@@ -238,15 +235,6 @@ pt_BR:
       last_read: "este é a última resposta que você leu; clique para favoritar."
       remove: "Remover favorito"
       confirm_clear: "Tem certeza que deseja apagar todos os atalhos deste tópico?"
-    topic_count_latest:
-      one: "{{count}} tópico novo ou atualizado."
-      other: "{{count}} tópicos novos ou atualizados."
-    topic_count_unread:
-      one: "{{count}} tópico não lido."
-      other: "{{count}} tópicos não lidos."
-    topic_count_new:
-      one: "{{count}} novo tópico."
-      other: "{{count}} novos tópicos."
     preview: "pré-visualização"
     cancel: "cancelar"
     save: "Salvar mudanças"
@@ -367,7 +355,6 @@ pt_BR:
       request: "Pedir para Entrar no Grupo"
       message: "Mensagem"
       automatic_group: Grupo Automático
-      closed_group: Grupo Fechado
       is_group_user: "Você é membro deste grupo"
       allow_membership_requests: "Permitir usuários enviar pedidos de adesão a proprietários de grupos"
       membership_request:
@@ -375,14 +362,12 @@ pt_BR:
         title: "Pedir para entrar no grupo @%{group_name}"
       membership: "Adesão"
       name: "Nom"
-      user_count: "Número de Membros"
       bio: "Sobre o Grupo"
       owner: "proprietário"
       index:
         title: "Grupos"
         empty: "Não há grupos visíveis."
       activity: "Atividade"
-      members: "Membros"
       topics: "Tópicos"
       posts: "Mensagens"
       mentions: "Menções"
@@ -2156,19 +2141,15 @@ pt_BR:
       notifications:
         watching:
           title: "Observando"
-          description: "Você vai observar automaticamente todos os tópicos com esta etriqueta. Você será notificado de todas as novas mensagens e tópicos.  Além disso, a contagem de mensagens não lidas e novas também aparecerá ao lado do tópico."
         watching_first_post:
           title: "Observando o primeiro post"
-          description: "Você somente será notificado sobre a primeira postagem em cada novo tópico com esta etiqueta."
         tracking:
           title: "Monitorando"
-          description: "Automaticamente monitora todos tópicos com essa etiqueta. Uma contagem de posts não lidos e novos aparecerá próximo ao tópico."
         regular:
           title: "Normal"
           description: "Você será notificado se alguém mencionar o seu @nome ou responder à sua mensagem."
         muted:
           title: "Silenciado"
-          description: "Você não será notificado sobre novos tópicos com essa etiqueta e eles não vão aparecer na guia de mensagens não lidas."
       groups:
         title: "Grupos de Etiquetas"
         about: "Adicione marcadores aos grupos para gerenciá-los mais facilmente"

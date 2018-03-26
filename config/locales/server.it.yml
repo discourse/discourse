@@ -223,7 +223,6 @@ it:
       bulk_add: "%{users_added}utentu sono stati aggiunti al gruppo. "
     errors:
       can_not_modify_automatic: "Non puoi modificare un gruppo automatico"
-      member_already_exist: "'%{username}' è già membro di questo gruppo."
       invalid_domain: "'%{domain}' non è un dominio valido."
       invalid_incoming_email: "'%{email}' non è un indirizzo email valido."
       email_already_used_in_group: "L'indirizzo '%{email}' è stato già usato dal gruppo '%{group_name}'."
@@ -2638,8 +2637,6 @@ it:
     promoter:
       name: Promotore
       description: Ha invitato un utente
-      long_description: |
-        Questo distintivo è assegnato quando si invita qualcuno ad unirsi alla comunità tramite il pulsante invita sulla tua pagina utente, o in fondo ad un argomento. Invitare amici che potrebbero essere interessati a discussioni specifiche è un ottimo modo per introdurre nuove persone alla nostra comunità, quindi grazie!
     campaigner:
       name: Attivista
       description: Ha invitato 3 utenti
@@ -2738,8 +2735,6 @@ it:
     first_emoji:
       name: Prima Emoji
       description: Ha usato una Emoji in un messaggio
-      long_description: |
-        Questo distintivo viene assegnato la prima volta che inserisci un Emoji in un messaggio :thumbsup:. Gli Emoji ti permettono di trasmettere emozioni nei messaggi, dalla felicità :smiley: alla tristezza :anguished: alla rabbia :angry: e tutto ciò che sta nel mezzo :sunglasses:. Digita semplicemente : (carattere due punti) oppure premi il bottone Emoji nella barra degli strumenti dell'editor, per selezionare tra centinaia di possibilità :ok_hand:
     first_mention:
       name: Prima Menzione
       description: Ha menzionato un utente in un messaggio

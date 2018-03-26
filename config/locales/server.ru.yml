@@ -237,7 +237,6 @@ ru:
       bulk_add: "%{users_added}пользователей было добавлено в группу."
     errors:
       can_not_modify_automatic: "Вы не можете изменить автоматическую группу."
-      member_already_exist: "'%{username}' уже является членом этой группы."
       invalid_domain: "'%{domain}' является некорректным доменом."
       invalid_incoming_email: "'%{email}' не является корректным адресом электронной почты"
       email_already_used_in_group: "'%{email}' уже используется группой '%{group_name}'."

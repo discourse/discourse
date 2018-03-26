@@ -142,8 +142,6 @@ ja:
   queue:
     delete_reason: "投稿の承認機能を用いて削除されました"
   groups:
-    errors:
-      member_already_exist: "'%{username}'はすでにこのグループのメンバーです。"
     default_names:
       everyone: "みなさん"
       admins: "管理者"

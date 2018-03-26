@@ -117,7 +117,6 @@ it:
       email: 'invia questo collegamento via email'
     action_codes:
       public_topic: "ha reso questo argomento pubblico %{when}"
-      private_topic: "ha reso questo argomento privato %{when}"
       split_topic: "ha separato questo argomento %{when}"
       invited_user: "Invitato %{who} %{when}"
       invited_group: "invitato %{who} %{when}"
@@ -148,8 +147,6 @@ it:
     topic_admin_menu: "azioni amministrative sull'argomento"
     wizard_required: "Benvenuto al tuo nuovo Discourse! Inizia la <a href='%{url}' data-auto-route='true'>procedura guidata di configurazione</a> ✨"
     emails_are_disabled: "Tutte le email in uscita sono state disabilitate a livello globale da un amministratore. Non sarà inviata nessun tipo di notifica via email."
-    bootstrap_mode_enabled: "Per aiutarti ad avviare il tuo nuovo sito, adesso sei in modalità bootstrap. Tutti i nuovi utenti saranno automaticamente promossi al livello 1 e riceveranno il riassunto quotidiano degli aggiornamenti via email. Questa modalità sarà disattivata automaticamente quando avrai più di %{min_users} utenti."
-    bootstrap_mode_disabled: "La modalità bootstrap sarà disattivata entro 24 ore."
     themes:
       default_description: "Default"
     s3:
@@ -245,15 +242,6 @@ it:
       last_read: "questo è l'ultimo messaggio che hai letto; clicca per inserirlo nei segnalibri"
       remove: "Rimuovi Segnalibro"
       confirm_clear: "Sei sicuro di voler cancellare tutti segnalibri da questo argomento?"
-    topic_count_latest:
-      one: "{{count}} discussione nuova o aggiornata"
-      other: "{{count}} argomenti nuovi o aggiornati."
-    topic_count_unread:
-      one: "{{count}} discussione non letta."
-      other: "{{count}} argomenti non letti."
-    topic_count_new:
-      one: "{{count}} nuovo argomento."
-      other: "{{count}} nuovi argomenti."
     preview: "Anteprima"
     cancel: "annulla"
     save: "Salva modifiche"
@@ -373,7 +361,6 @@ it:
       request: "Richiedi di partecipare al gruppo"
       message: "Messaggio"
       automatic_group: Gruppo Automatico
-      closed_group: Gruppo Chiuso
       is_group_user: "Sei un membro di questo gruppo"
       allow_membership_requests: "Permetti agli utenti di richiedere l'invito ai proprietari del gruppo"
       membership_request_template: "Template personalizzato da mostrare agli utenti quando inviano una richiesta di adesione"
@@ -383,7 +370,6 @@ it:
         reason: "Spiega ai proprietari del gruppo perché vuoi entrare a far parte di questo gruppo"
       membership: "Iscrizione"
       name: "Nome"
-      user_count: "Numero di Membri"
       bio: "Informazioni sul Gruppo"
       owner: "proprietario"
       index:
@@ -393,7 +379,6 @@ it:
         one: "Group"
         other: "Gruppi"
       activity: "Attività"
-      members: "Membri"
       topics: "Argomenti"
       posts: "Messaggi"
       mentions: "Menzioni"
@@ -2281,19 +2266,15 @@ it:
       notifications:
         watching:
           title: "In osservazione"
-          description: "Visualizzerai automaticamente tutti gli argomenti con questa etichetta. Riceverai una notifica per tutti i nuovi messaggi e argomenti. Inoltre, accanto all'argomento apparirà il conteggio dei messaggi non letti e di quelli nuovi."
         watching_first_post:
           title: "Osservando Primo Messaggio"
-          description: "Riceverai solo la notifica per il primo messaggio di ogni nuovo argomenti con questa etichetta."
         tracking:
           title: "Seguiti"
-          description: "Seguirai automaticamente tutti gli argomenti con questa etichetta. Accanto all'argomento apparirà un conteggio dei messaggi non letti e di quelli nuovi."
         regular:
           title: "Normale"
           description: "Riceverai una notifica se qualcuno menziona il tuo @nome o risponde al tuo messaggio."
         muted:
           title: "Silenziato"
-          description: "Non riceverai alcuna notifica per nuovi argomenti con questa etichetta, e non compariranno nella tab dei messaggi non letti."
       groups:
         title: "Gruppi Etichette"
         about: "Aggiungi etichette a gruppi per poterle gestire più facilmente."

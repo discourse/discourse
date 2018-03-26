@@ -226,7 +226,6 @@ es:
       bulk_add: "%{users_added} usuarios han sido agregados al grupo."
     errors:
       can_not_modify_automatic: "No se puede modificar un grupo automático"
-      member_already_exist: "'%{username}' ya es miembro de este grupo."
       invalid_domain: "'%{domain}' no es un dominio válido."
       invalid_incoming_email: "'%{email}' no es una dirección de email válida."
       email_already_used_in_group: "'%{email}' ya está siendo utilizado por el grupo '%{group_name}'."
@@ -2781,8 +2780,6 @@ es:
     promoter:
       name: Promotor
       description: Invitó a un usuario
-      long_description: |
-        Este distintivo se concede cuando invitas a alguien a unirse a la comunidad a través del botón de invitación en tu perfil o al final de un tema. Invitar a amigos que puedan estar interesados en debates específicos es la manera perfecta para introducirles a la comunidad, ¡gracias!
     campaigner:
       name: Paladín
       description: Invitó a 3 usuarios
@@ -2881,8 +2878,6 @@ es:
     first_emoji:
       name: Primer emoji
       description: Utilizó un emoji en un post
-      long_description: |
-        Este distintivo se concede la primera vez que añades un Emoji a tu post :thumbsup:. Los Emoji te permiten añadir emociones a tu publicación, desde felicidad :smiley: a tristeza :anguished: pasando por enfado :angry: o cualquier otra expresión :sunglasses: . Comienza escribiendo : (dos puntos) o haz clic en el botón Emoji de la barra del editor para seleccionar entre cientos de opciones :ok_hand:
     first_mention:
       name: Primera mención
       description: Mencionó a un usuario en un post

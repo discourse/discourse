@@ -97,7 +97,6 @@ ko:
       email: '이메일로 공유'
     action_codes:
       public_topic: "이 토픽을 %{when} 에 공개"
-      private_topic: "이 토픽을 %{when} 에 비공개"
       split_topic: "이 토픽을 %{when}에 분리"
       invited_user: "%{who}이(가) %{when}에 초대됨"
       invited_group: "%{who} 이(가) %{when} 에 초대됨"
@@ -127,8 +126,6 @@ ko:
     topic_admin_menu: "토픽 관리"
     wizard_required: "새로운 Discourse에 오신것을 환영합니다! <a href='%{url}' data-auto-route='true'>설치 마법사</a> 로 시작해봅시다✨"
     emails_are_disabled: "관리자가 이메일 송신을 전체 비활성화 했습니다. 어떤 종류의 이메일 알림도 보내지지 않습니다."
-    bootstrap_mode_enabled: "쉬운 시작을 위해 부트스트랩 모드로 구동 되었습니다. 모든 새로운 사용자에게 신뢰 수준 1이 부여되고 매일 이메일 다이제스트가 보내집니다. 이 기능은 총 사용자 수가 %{min_users}를 초과 할 때 자동으로 꺼집니다."
-    bootstrap_mode_disabled: "부트스트랩 모드는 24시간 뒤 비활성화 될 것입니다."
     themes:
       default_description: "기본값"
     s3:
@@ -222,12 +219,6 @@ ko:
       last_read: "마지막으로 읽으신 게시물입니다. 즐겨찾기에 추가하려면 클릭하세요."
       remove: "북마크 삭제"
       confirm_clear: "정말로 이 토픽의 모든 북마크를 제거할까요?"
-    topic_count_latest:
-      other: "{{count}}개의 새 토픽이나 업데이트된 토픽"
-    topic_count_unread:
-      other: "{{count}}개의 읽지 않은 토픽"
-    topic_count_new:
-      other: "{{count}}개의 새로운 토픽"
     preview: "미리보기"
     cancel: "취소"
     save: "변경사항 저장"
@@ -344,7 +335,6 @@ ko:
       request: "그룹 참여 요청하기"
       message: "메세지"
       automatic_group: 자동 그룹
-      closed_group: 닫힌 그룹
       is_group_user: "당신은 이 그룹의 구성원입니다."
       allow_membership_requests: "사용자가 그룹 소유자에게 가입신청을 할 수 있도록 허용합니다"
       membership_request_template: "가입 요청을 전송할 때 사용자에게 표시할 커스텀 템플릿"
@@ -354,7 +344,6 @@ ko:
         reason: "그룹 소유자에게 왜 이 그룹에 속해야하는지 알립니다."
       membership: "회원제"
       name: "이름"
-      user_count: "멤버 수"
       bio: "이 그룹에 대하여"
       owner: "소유자"
       index:
@@ -363,7 +352,6 @@ ko:
       title:
         other: "그룹"
       activity: "활동"
-      members: "멤버"
       topics: "토픽"
       posts: "게시글"
       mentions: "멘션"
@@ -2124,19 +2112,15 @@ ko:
       notifications:
         watching:
           title: "주시중"
-          description: "이 태그가 붙은 토픽들을 주시하도록 자동으로 설정됩니다. 새로운 게시글이나 토픽에 대하여 알림을 받게되며 토픽 옆에 새로운 게시글의 수가 표시됩니다."
         watching_first_post:
           title: "첫 게시글 주시중"
-          description: "이 태그가 달린 신규 토픽에 대해서만 알림을 받게 됩니다."
         tracking:
           title: "추적중"
-          description: "이 태그가 달려 있는 모든 토픽을 추적합니다. 읽지 않은 글과 새로운 게시글 수가 나타납니다."
         regular:
           title: "일반"
           description: "누군가 당신의 @아이디 로 언급했거나 당신의 글에 답글이 달릴 때 알림을 받게 됩니다."
         muted:
           title: "알림끔"
-          description: "이 태그를 달고 새로 작성되는 토픽에 대한 알림을 받지 않습니다. '읽지 않은'탭에서도 보이지 않게 됩니다."
       groups:
         title: "태그 그룹"
         about: "태그 관리를 쉽게하려면 그룹에 태그를 추가하세요."

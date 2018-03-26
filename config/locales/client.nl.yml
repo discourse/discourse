@@ -112,7 +112,6 @@ nl:
       email: 'deze koppeling delen via e-mail'
     action_codes:
       public_topic: "heeft dit topic openbaar gemaakt op %{when}"
-      private_topic: "heeft dit topic als privé gemarkeerd op %{when}"
       split_topic: "heeft dit topic gesplitst op %{when}"
       invited_user: "heeft %{who} uitgenodigd op %{when}"
       invited_group: "heeft %{who} uitgenodigd op %{when}"
@@ -142,8 +141,6 @@ nl:
     topic_admin_menu: "beheeracties voor topic"
     wizard_required: "Welkom bij je nieuwe Discourse! Laten we beginnen met <a href='%{url}' data-auto-route='true'>de configuratiewizard</a> ✨"
     emails_are_disabled: "Alle uitgaande e-mail is uitgeschakeld door een beheerder. Er zal geen enkele e-mailmelding worden verstuurd."
-    bootstrap_mode_enabled: "Om het lanceren van je website makkelijker te maken, bevind je je in bootstrapmodus. Aan alle nieuwe gebruikers wordt vertrouwensniveau 1 toegekend en dagelijkse e-mailsamenvattingen zijn voor hen ingeschakeld. Dit wordt automatisch uitgeschakeld wanneer het totale gebruikersaantal %{min_users} gebruikers overschrijdt."
-    bootstrap_mode_disabled: "De bootstrapmodus zal in de komende 24 uur worden uitgeschakeld."
     themes:
       default_description: "Standaard"
     s3:
@@ -239,15 +236,6 @@ nl:
       last_read: "dit is het laatste bericht dat je hebt gelezen; klik om er een bladwijzer voor te maken"
       remove: "Bladwijzer verwijderen"
       confirm_clear: "Weet je zeker dat je alle bladwijzers van dit topic wilt verwijderen?"
-    topic_count_latest:
-      one: "{{count}} nieuwe of aangepaste discussie."
-      other: "{{count}} nieuwe of bijgewerkte topics."
-    topic_count_unread:
-      one: "{{count}} ongelezen topic."
-      other: "{{count}} ongelezen topics."
-    topic_count_new:
-      one: "{{count}} nieuw topic."
-      other: "{{count}} nieuwe topics."
     preview: "voorbeeld"
     cancel: "annuleer"
     save: "Wijzigingen opslaan"
@@ -367,7 +355,6 @@ nl:
       request: "Verzoek voor deelname aan groep"
       message: "Bericht"
       automatic_group: Automatische groep
-      closed_group: Besloten groep
       is_group_user: "U bent een lid van deze groep"
       allow_membership_requests: "Gebruikers toestaan om lidmaatschapsverzoeken naar groepseigenaren te sturen"
       membership_request_template: "Aangepaste template om aan gebruikers te laten zien bij het sturen van een lidmaatschap verzoek"
@@ -377,7 +364,6 @@ nl:
         reason: "Laat de groepbeheerders weten waarom je in deze groep hoort"
       membership: "Lidmaatschap"
       name: "Naam"
-      user_count: "Aantal leden"
       bio: "Over groep"
       owner: "eigenaar"
       index:
@@ -387,7 +373,6 @@ nl:
         one: "Groep"
         other: "Groepen"
       activity: "Activiteit"
-      members: "Leden"
       topics: "Topics"
       posts: "Berichten"
       mentions: "Vermeldingen"
@@ -2211,19 +2196,15 @@ nl:
       notifications:
         watching:
           title: "In de gaten houden"
-          description: "U houdt automatisch alle nieuwe topics met deze tag in de gaten. U ontvangt meldingen bij alle nieuwe berichten en topics, en het aantal ongelezen en nieuwe berichten verschijnt ook naast het topic."
         watching_first_post:
           title: "Eerste bericht in de gaten houden."
-          description: "U ontvangt alleen een melding van het eerste bericht in elk nieuw topic met deze tag."
         tracking:
           title: "Volgen"
-          description: "U volgt automatisch alle topics met deze tag. Het aantal ongelezen en nieuwe berichten verschijnt naast het topic."
         regular:
           title: "Normaal"
           description: "U ontvangt een melding wanneer iemand uw @naam noemt of een bericht van uw beantwoordt."
         muted:
           title: "Genegeerd"
-          description: "U ontvangt geen meldingen over nieuwe topics met deze tag, en ze verschijnen niet in uw tabblad met ongelezen berichten."
       groups:
         title: "Tag-groepen"
         about: "Tags aan groepen toevoegen om deze makkelijker te beheren."

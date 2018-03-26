@@ -210,7 +210,6 @@ ro:
   groups:
     errors:
       can_not_modify_automatic: "Nu poți modifica un grup automat"
-      member_already_exist: "'%{username}' este deja membru al acestui grup"
       invalid_domain: "'%{domain}' nu este un domeniu valid."
       invalid_incoming_email: "'%{email}' nu este o adresa validă de email."
       email_already_used_in_group: "'%{email}' este deja folosit de grupul '%{group_name}'."
@@ -1939,8 +1938,6 @@ ro:
     promoter:
       name: Promotor
       description: Ai invitat un utilizator
-      long_description: |
-        Acest ecuson se acordă când ai invitat pe cineva să se alăture comunității noastre prin intermediul butonului Invită din pagina ta de utilizator, sau de la sfârșitul unui subiect. Invitarea prietenilor care pot fi interesați în discuții specifice reprezintă o metodă minunată de a introduce oameni noi în comunitatea noastră, asa că mulțumim!
     campaigner:
       name: șef de campanie
       description: Ai invitat 3 utilizatori simpli
@@ -2036,8 +2033,6 @@ ro:
     first_emoji:
       name: Primul emoji
       description: Ai folosit un emoji într-o postare.
-      long_description: |
-        Acest ecuson se acordă prima data când adaugi un emoji la postarea ta :thumbsup:. Emoji permit transmiterea de emoții prin postări, de la fericire :smiley: la tristețe :anguished: la furie :angry: și întreaga planetă :sunglasses: . Apasă un : (două puncte) sau apasă pe butonul Emoji toolbar din editor pentru a alege dintre sute de opțiuni :ok_hand:
     first_mention:
       name: Prima mențiune
       long_description: Acest ecuson se acordă când, pentru prima oară, ai menționat @numele de utilizator al cuiva într-o postare de-a ta. Fiecare menționare generează o notificare către acea persoană, astfel încât ea să știe despre postarea ta. Începi prin a apăsa tasta @ (simbolul at) ca să menționezi orice utilizator sau, dacă îți este permis, grup. E o metodă convenabilă să atragi atenția cuiva.

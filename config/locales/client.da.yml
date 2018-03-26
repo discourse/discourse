@@ -111,7 +111,6 @@ da:
       email: 'send dette link i en e-mail'
     action_codes:
       public_topic: "offentliggjorde dette emne %{when}"
-      private_topic: "gjorde dette emne privat %{when}"
       split_topic: "del dette emne op %{when}"
       invited_user: "Inviterede %{who} %{when}"
       invited_group: "inviterede %{who} %{when}"
@@ -141,8 +140,6 @@ da:
     topic_admin_menu: "administrationshandlinger på emne"
     wizard_required: "Velkommen til din nye Discourse! Lad os komme i gang med <a href='%{url}' data-auto-route='true'>konfigurationsguiden</a> ✨"
     emails_are_disabled: "Alle udgående emails er blevet deaktiveret globalt af en administrator. Ingen emailnotifikationer af nogen slags vil blive sendt."
-    bootstrap_mode_enabled: "For at gøre det nemmere at lancere dit nye website, er du i bootstrap tilstand. Alle nye brugere vil blive tildelt niveau 1 og daglige email updateringer vil være slået til. Dette vil blive automatisk slået fra når total antal brugere overskrider %{min_users} brugere."
-    bootstrap_mode_disabled: "Bootstrap tilstand vil blive deaktiveret indenfor de næste 24 timer."
     themes:
       default_description: "Standard"
     s3:
@@ -238,15 +235,6 @@ da:
       last_read: "Dette er det seneste indlæg, du har læst; klik for at bogmærke det"
       remove: "Fjern bogmærke"
       confirm_clear: "Er du sikker på du vil slette alle bogmærker fra dette emne?"
-    topic_count_latest:
-      one: "{{count}} nyt eller opdateret emne."
-      other: "{{count}} nye eller opdaterede emner."
-    topic_count_unread:
-      one: "{{count}} ulæst emne."
-      other: "{{count}} ulæste emner."
-    topic_count_new:
-      one: "{{count}} nyt indlæg"
-      other: "{{count}} nye indlæg."
     preview: "forhåndsvising"
     cancel: "annullér"
     save: "Gem ændringer"
@@ -366,7 +354,6 @@ da:
       request: "Anmod om indmeldelse i gruppen"
       message: "Besked"
       automatic_group: Automatisk gruppe
-      closed_group: Lukket gruppe
       is_group_user: "Du er medlem af denne gruppe"
       allow_membership_requests: "Tillad at brugere sender medlemsanmodninger til gruppeejere"
       membership_request_template: "Brugerdefineret skabelon, der skal vises til brugere, når der sendes en medlemskabsanmodning"
@@ -376,14 +363,12 @@ da:
         reason: "Fortæl gruppeejerne, hvorfor du tilhører denne gruppe"
       membership: "Medlemskab"
       name: "Navn"
-      user_count: "Antal medlemmer"
       bio: "Om Grupper"
       owner: "ejer"
       index:
         title: "Grupper"
         empty: "Der er ingen synlige grupper"
       activity: "Aktivitet"
-      members: "Medlemmer"
       topics: "Emner"
       posts: "Indlæg"
       mentions: "Omtaler"
@@ -2115,19 +2100,15 @@ da:
       notifications:
         watching:
           title: "Overvåger"
-          description: "Du vil automatisk overvåge alle emner med dette tag. Du vil blive notificeret om alle nye indlæg og emner. Samtidig vil antallet af ulæste indlæg også vises ved siden af emnet."
         watching_first_post:
           title: "Overvåger første indlæg"
-          description: "Du vil kun blive notificeret om det første indlæg under hvert nyt emne i dette tag."
         tracking:
           title: "Følger"
-          description: "Du vil automatisk følge alle emner i dette tag. Et antal af ulæste og nye indlæg vil vises ved siden af emnet."
         regular:
           title: "Almindeligt"
           description: "Du vil blive notificeret if nogen nævner dit You will be notified if someone mentions your @name or replies to your post."
         muted:
           title: "Lydløs"
-          description: "Du vil ikke modtage beskeder af nogen slags vedrørende nye emner i dette tag, og de vil ikke fremgå i din fane med ulæste."
       groups:
         title: "Tag grupper"
         about: "Tilføj tags til grupper for nemmere håndtering."

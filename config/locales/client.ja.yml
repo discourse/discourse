@@ -98,7 +98,6 @@ ja:
       email: 'メールでこのリンクを送る'
     action_codes:
       public_topic: "トピックを公開しました: %{when} "
-      private_topic: "トピックを非公開にしました: %{when}"
       split_topic: "%{when} このトピックは分割されました"
       invited_user: "%{who} から招待されました: %{when}"
       invited_group: "%{when} %{who}に招待されました"
@@ -128,8 +127,6 @@ ja:
     topic_admin_menu: "トピックの管理"
     wizard_required: "Discourseへようこそ！ さあ<a href='%{url}' data-auto-route='true'>セットアップウィザード</a>から始めましょう"
     emails_are_disabled: "メールアドレスの送信は管理者によって無効化されています。全てのメール通知は行われません"
-    bootstrap_mode_enabled: "かんたんにサイトを立ち上げられるようにするため、ブートストラップモードが有効になっています。新しいユーザーは全員、トラストレベル1を付与し、毎日更新がメールで届けられます。これらの機能は総ユーザー数が%{min_users}を超えた時にオフになります。"
-    bootstrap_mode_disabled: "ブートストラップモードは24時間後に無効化されます。"
     themes:
       default_description: "デフォルト"
     s3:
@@ -223,12 +220,6 @@ ja:
       last_read: "この投稿をブックマークする"
       remove: "ブックマークを削除"
       confirm_clear: "このトピックの全てのブックマークを削除してもよいですか？"
-    topic_count_latest:
-      other: "{{count}}件の新規/更新トピックがあります。"
-    topic_count_unread:
-      other: "{{count}} 個の未読トピック。"
-    topic_count_new:
-      other: "{{count}} 件の新しいトピック"
     preview: "プレビュー"
     cancel: "キャンセル"
     save: "変更を保存"
@@ -346,7 +337,6 @@ ja:
       request: "グループへの参加をリクエスト"
       message: "メッセージ"
       automatic_group: 自動作成グループ
-      closed_group: クローズドグループ
       is_group_user: "このグループのメンバーです"
       allow_membership_requests: "ユーザーがグループオーナーにメンバーシップリクエストを送信できるようにする"
       membership_request_template: "メンバーシップリクエスト送信時に表示するカスタムテンプレート"
@@ -356,7 +346,6 @@ ja:
         reason: "グループに参加したい旨をグループオーナーに伝える"
       membership: "メンバーシップ"
       name: "名前"
-      user_count: "メンバー数"
       bio: "グループについて"
       owner: "オーナー"
       index:
@@ -365,7 +354,6 @@ ja:
       title:
         other: "グループ"
       activity: "アクティビティ"
-      members: "メンバー"
       topics: "トピック"
       posts: "投稿"
       mentions: "メンション"
@@ -2047,7 +2035,6 @@ ja:
           title: "ウォッチ中"
         watching_first_post:
           title: "最初の投稿をウォッチする"
-          description: "このタグの新規トピックに対する最初の投稿のみ通知されます。"
       groups:
         parent_tag_label: "親タグ:"
         parent_tag_placeholder: "任意"

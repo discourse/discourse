@@ -197,7 +197,6 @@ et:
   groups:
     errors:
       can_not_modify_automatic: "Autommatset gruppi ei saa muuta"
-      member_already_exist: "'%{username}' on juba selle grupi liige."
       invalid_domain: "'%{domain}' ei ole nõuetele vastav domeen."
       invalid_incoming_email: "'%{email}' ei ole korrektne meiliaadress."
       email_already_used_in_group: "Grupp '%{group_name}' juba kasutab meiliaadressi '%{email}'."

@@ -112,7 +112,6 @@ sv:
       email: 'skicka denna länk i ett e-postmeddelande'
     action_codes:
       public_topic: "gjorde det här ämnet publikt %{when}"
-      private_topic: "gjorde det här ämnet privat %{when}"
       split_topic: "splitta det här ämnet %{when}"
       invited_user: "bjöd in %{who} %{when}"
       invited_group: "bjöd in %{who} %{when}"
@@ -143,8 +142,6 @@ sv:
     topic_admin_menu: "administratörsåtgärder för ämne"
     wizard_required: "Välkommen till din nya Discourse! Låt oss komma igång genom <a href='%{url}' data-auto-route='true'>uppsättnings guiden</a> ✨"
     emails_are_disabled: "All utgående e-post har blivit globalt inaktiverad av en administratör. Inga e-postnotifikationer av något slag kommer att skickas ut."
-    bootstrap_mode_enabled: "Du är i bootstrap-läge för att göra lanseringen av din nya webbplats enklare. Alla nya användare kommer att beviljas förtroendenivå 1 och få dagliga sammanfattningar skickade via e-post. Det här stängs automatiskt av när det totala antalet användare överstiger %{min_users}."
-    bootstrap_mode_disabled: "Bootstrap-läge otillgängliggörs i 24 timmar."
     themes:
       default_description: "Standard"
     s3:
@@ -240,15 +237,6 @@ sv:
       last_read: "detta är det senaste inlägg som du läst, klicka för att bokmärka"
       remove: "Ta bort bokmärke"
       confirm_clear: "Är du säker på att du vill radera alla bokmärken från ämnet?"
-    topic_count_latest:
-      one: "{{count}} nytt eller uppdaterat ämne."
-      other: "{{count}} nya eller uppdaterade ämnen."
-    topic_count_unread:
-      one: "{{count}} oläst ämne."
-      other: "{{count}} olästa ämnen."
-    topic_count_new:
-      one: "{{count}} nytt ämne."
-      other: "{{count}} nya ämnen."
     preview: "förhandsgranska"
     cancel: "avbryt"
     save: "Spara ändringar"
@@ -366,19 +354,16 @@ sv:
       leave: "Lämna grupp"
       request: "Förfrågan om att gå med i grupp"
       automatic_group: Automatisk grupp
-      closed_group: Stängd grupp
       is_group_user: "Du är en medlem av denna grupp"
       allow_membership_requests: "Tillåt användare att skicka medlemskapsförfrågan till gruppägare"
       membership: "Medlemskap"
       name: "Namn"
-      user_count: "Antal medlemmar"
       bio: "Om grupp"
       owner: "ägare"
       index:
         title: "Grupper"
         empty: "Det finns inga synliga grupper"
       activity: "Aktivitet"
-      members: "Medlemmar"
       topics: "Ämnen"
       posts: "Inlägg"
       mentions: "Omnämnaden"
@@ -2053,19 +2038,15 @@ sv:
       notifications:
         watching:
           title: "Bevakar"
-          description: "Du kommer automatiskt att bevaka alla ämnen i den här taggen. Du kommer att få notifieringar om alla nya inlägg och ämnen, och en räknare över olästa och nya inlägg kommer att visas brevid ämnen."
         watching_first_post:
           title: "Bevakar första inlägget"
-          description: "Du kommer endast att bli notifierad om första inlägget i varje nytt ämne i den här taggen."
         tracking:
           title: "Bevakade"
-          description: "Du kommer automatiskt följa alla nya ämnen i den här taggen. En räknare över olästa och nya inlägg kommer att visas bredvid ämnen."
         regular:
           title: "Vanlig"
           description: "Du kommer att få en notifiering om någon nämner ditt @namn eller svarar på ditt inlägg."
         muted:
           title: "Tystad"
-          description: "Du kommer inte att få notifieringar om nya ämnen inom den här taggen, och de kommer inte att visas under din \"oläst\"-flik."
       groups:
         title: "Grupptaggar"
         about: "Lägg till taggar i grupper för att lättare hantera dem."

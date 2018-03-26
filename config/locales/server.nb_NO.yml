@@ -199,7 +199,6 @@ nb_NO:
   groups:
     errors:
       can_not_modify_automatic: "Du kan ikke modifisere en automatisk gruppe"
-      member_already_exist: "'%{username}' er allerede medlem av denne gruppen."
       invalid_domain: "'%{domain}' er ikke et gyldig domene."
       invalid_incoming_email: "'%{email}' er ikke en gyldig e-postadresse."
       email_already_used_in_group: "'%{email}' er allerede i bruk av gruppa '%{group_name}'."

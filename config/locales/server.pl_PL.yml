@@ -238,7 +238,6 @@ pl_PL:
       bulk_add: "%{users_added} użytkowników zostało dodanych do grupy"
     errors:
       can_not_modify_automatic: "Nie można modyfikować automatyczną grupę"
-      member_already_exist: "'%{username}' należy już do tej grupy."
       invalid_domain: "'%{domain}' nie jest poprawną domeną."
       invalid_incoming_email: "'%{domain}' nie jest poprawną domeną."
       email_already_used_in_group: "'%{email}' jest już używany przez grupę '%{group_name}'."
@@ -2563,8 +2562,6 @@ pl_PL:
     promoter:
       name: Promotor
       description: Zaproszenie użytkownika
-      long_description: |
-        Ta odznaka jest przyznawana, gdy zaprosisz kogoś do społeczności poprzez przycisk zaproś na stronie użytkownika, lub na dole wątku. Zapraszanie przyjaciół, którzy mogą być zainteresowani dyskusjami to świetny sposób aby wprowadzić nowe osoby do naszej społeczności, dzięki!
     campaigner:
       name: Działacz
       description: 'Zaproszenie 3 użytkowników '
@@ -2661,8 +2658,6 @@ pl_PL:
     first_emoji:
       name: Pierwszy Emoji
       description: Użyto Emoji w Poście
-      long_description: |
-        Ta odznaka jest przyznawana, gdy po raz pierwszy dodasz emoji do twojego posta  :thumbsup:. Emoji pozwala ci przenosić emocje do twojego posta, od szczęścia  :smiley: do smutku  :anguished:, gniewu :angry: i wszystkie pomiędzy  :sunglasses:. Po prostu rozpocznij od: (dwukropka) lub naciśnij na przycisk paska Emoji w edytorze, aby wybrać z spośród setek emoji :ok_hand:.
     first_mention:
       name: Pierwsze Wspomnienie
       description: Wspomniano o użytkowniku w poście

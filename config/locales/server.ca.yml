@@ -203,7 +203,6 @@ ca:
   groups:
     errors:
       can_not_modify_automatic: "No pots modificar un grup automàtic"
-      member_already_exist: "'%{username}' ja és membre d'aquest grup."
       invalid_domain: "'%{domain}' no és un domini vàlid."
       invalid_incoming_email: "'%{email}' no és una adreça vàlida de correu electrònic."
       email_already_used_in_group: "'%{email}' ja és fa servir pel grup '%{group_name}'."
@@ -1911,8 +1910,6 @@ ca:
     promoter:
       name: Promoció
       description: Ha convidat una persona
-      long_description: |
-        Aquesta insígnia es concedeix quan invites algú a participar de la comunitat via el botó d'invitar en la teva pàgina d'usuari o al capdavall d'un tema. Invitar amics que puguin estar interessats en la conversa és una gran manera d'introduir nous membres a la comunitat, o sigui que gràcies!
     campaigner:
       name: Activista
       description: Ha convidat 3 persones usuàries bàsiques
@@ -2009,8 +2006,6 @@ ca:
     first_emoji:
       name: Primer emoji
       description: Ha fet servir un emoji a una publicació
-      long_description: |
-        Aquest distintiu es concedeix el primer cop que afegeixes un Emoji a la teva publicació :thumbsup:. L'Emoji et permet donar emoció a les teves publicacions, des de la felicitat :smiley: a la tristor :anguished: o l'empipament :angry: i qualsevol cosa amb :sunglasses: . Senzillament escriu : (dos punts) o clica la barra d'eines d'Emoji a l'editor per triar-ne entre centenars de possibilitats :ok_hand:
     first_mention:
       name: Primera menció
       long_description: Aquest distintiu es concedeix el primer cop que menciones  @username d'algú a la teva publicació. Cada menció genera una alerta a aquella persona, perquè sàpiga de la teva publicació. Senzillament comença a escriure @ (símbol arrova) per mencionar qualsevol persona o grup, si està permès – és una forma interessant de cridar la seva atenció.

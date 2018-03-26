@@ -118,7 +118,6 @@ tr_TR:
       email: 'bu bağlantıyı e-posta ile gönderin'
     action_codes:
       public_topic: "bu konuyu %{when} herkese açık yaptı"
-      private_topic: "bu konuyu %{when} özel yaptı"
       split_topic: "bu konuyu %{when} ayırdı"
       invited_user: "%{when} %{who} davet edildi"
       invited_group: "%{who} %{when} davet edildi"
@@ -148,8 +147,6 @@ tr_TR:
     topic_admin_menu: "konuyla alakalı yönetici eylemleri"
     wizard_required: "Yeni Discourse'unuza hoşgeldiniz!  Hadi kuruluma başlayalım! <a href='%{url}' data-auto-route='true'>Kurulum Sihirbazı</a> ✨"
     emails_are_disabled: "Tüm giden e-postalar yönetici tarafından genel olarak devre dışı bırakıldı. Herhangi bir e-posta bildirimi gönderilmeyecek."
-    bootstrap_mode_enabled: "Yeni sitenizi kolayca çalıştırmak için bootstrap modundasınız. Tüm yeni kullanıcılar güven seviyesi 1den başlar ve e-posta uyarıcıları açıksa günlük mail alırlar. Bu özellik kullanıcı sayısı %{min_users} rakamına ulaştığında otomatik kapatılacaktır."
-    bootstrap_mode_disabled: "Bootstrap modu önümüzdeki 24 saat içinde edilgen olacaktır."
     themes:
       default_description: "Varsayılan "
     s3:
@@ -245,15 +242,6 @@ tr_TR:
       last_read: "bu okuduğunuz son gönderi; imlerinize eklemek için tıklayın"
       remove: "İmi Kaldır"
       confirm_clear: "Bu konuya ait tüm imleri kaldırmak istediğinize emin misiniz?"
-    topic_count_latest:
-      one: "{{count}} yeni ya da güncellenmiş konu."
-      other: "{{count}} yeni ya da güncellenmiş konu."
-    topic_count_unread:
-      one: "{{count}} okunmamış konu."
-      other: "{{count}} okunmamış konu."
-    topic_count_new:
-      one: "{{count}} yeni konu."
-      other: "{{count}} yeni konu."
     preview: "önizleme"
     cancel: "iptal"
     save: "Değişiklikleri Kaydet"
@@ -374,7 +362,6 @@ tr_TR:
       request: "Gruba katılmak için istek yolla"
       message: "ileti"
       automatic_group: Otomatik Grup
-      closed_group: Kapanmış Grup
       is_group_user: "Bu grubun bir üyesisiniz."
       allow_membership_requests: "Kullanıcılar'ın grup sahiplerine üyelik talepleri göndermesine izin ver"
       membership_request:
@@ -383,7 +370,6 @@ tr_TR:
         reason: "Grup sahiplerine bu gruba neden üye olduğunuzu bildirin"
       membership: "Üyelik"
       name: "İsim"
-      user_count: "Üyeler"
       bio: "Grup Hakkında"
       owner: "sahip"
       index:
@@ -393,7 +379,6 @@ tr_TR:
         one: "Gruplar"
         other: "Gruplar"
       activity: "Etkinlik"
-      members: "Üyeler"
       topics: "Konular"
       posts: "Gönderiler"
       mentions: "Bahsetmeler"
@@ -2225,19 +2210,15 @@ tr_TR:
       notifications:
         watching:
           title: "Gözleniyor"
-          description: "Bu etiketteki tüm konuları gözleyeceksiniz. Tüm yeni gönderi ve konulardan haberdar olabilecek ve yeni gönderi sayısını da konunun yanında görebileceksiniz."
         watching_first_post:
           title: "İlk gönderi gözlemeniz"
-          description: "Bu etikette bulunan tüm konuların sadece ilk gönderilerinde bildirim alacaksınız."
         tracking:
           title: "Takip ediliyor"
-          description: "Bu etiketteki tüm konuları otomatik olarak takip ediyor olacaksınız. Okunmamış yeni gönderilerin bir kısmı konunun yanında görünecektir."
         regular:
           title: "Müdavim"
           description: "Birisi @isminizden bahsederse veya gönderinize cevap verirse bildirim alacaksınız."
         muted:
           title: "Susturuldu"
-          description: "Bu etikette beliren yeni konular hakkında bildirim almayacaksınız ve bunlar okunmamışlar sekmesinde belirmeyecek."
       groups:
         title: "Etiket Grupları"
         about: "Konuları kolayca yönetmek için onlara etiket ekleyiniz."

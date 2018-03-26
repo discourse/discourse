@@ -200,7 +200,6 @@ pt_BR:
   groups:
     errors:
       can_not_modify_automatic: "Você não pode modificar um grupo automático"
-      member_already_exist: "'%{username}' já é um membro deste grupo."
       invalid_domain: "'%{domain}' não é um domínio válido."
       invalid_incoming_email: "'%{email}' não é um endereço de e-mail válido."
       email_already_used_in_group: "'%{email}' já é utilizado pelo grupo '%{group_name}'."

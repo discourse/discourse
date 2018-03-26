@@ -112,7 +112,6 @@ gl:
       email: 'enviar esta ligazón nun correo electrónico'
     action_codes:
       public_topic: "fixo esta publicación pública no %{when}"
-      private_topic: "fixo esta publicación privada no %{when}"
       split_topic: "este tema dividiuse o %{when}"
       invited_user: "convidou a %{who} %{when}"
       invited_group: "invitou %{who} o %{when}"
@@ -233,15 +232,6 @@ gl:
       last_read: "esta é a última publicación lida por ti; preme para engadila aos marcadores"
       remove: "Eliminar marcador"
       confirm_clear: "Confirmas o borrado de todos os marcadores deste tema?"
-    topic_count_latest:
-      one: "{{count}} tema novo ou actualizado."
-      other: "{{count}} temas novos ou actualizados."
-    topic_count_unread:
-      one: "{{count}} tópico sen ler."
-      other: "{{count}} temas sen ler."
-    topic_count_new:
-      one: "{{count}} tópico novo"
-      other: "{{count}} temas novos"
     preview: "previsualizar"
     cancel: "cancelar"
     save: "Gardar cambios"
@@ -323,7 +313,6 @@ gl:
       add: "Engadir"
       owner: "propietario"
       activity: "Actividade"
-      members: "Membros"
       topics: "Temas"
       posts: "Publicacións"
       mentions: "Mencións"
