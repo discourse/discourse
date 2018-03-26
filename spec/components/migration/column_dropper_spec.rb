@@ -65,6 +65,19 @@ RSpec.describe Migration::ColumnDropper do
 
       expect(has_column?('topics', 'junk')).to eq(false)
       expect(dropped_proc_called).to eq(true)
+
+      dropped_proc_called = false
+
+      Migration::ColumnDropper.drop(
+        table: 'topics',
+        after_migration: migration_name,
+        columns: ['junk'],
+        delay: 10.minutes,
+        on_drop: ->() { dropped_proc_called = true }
+      )
+
+      # it should call "on_drop" only when there are columns to drop
+      expect(dropped_proc_called).to eq(false)
     end
 
     it "drops the columns immediately if the first migration was less than 10 minutes ago" do
