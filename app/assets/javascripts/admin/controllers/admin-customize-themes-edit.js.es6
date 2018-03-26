@@ -39,7 +39,7 @@ export default Ember.Controller.extend({
 
   @computed('onlyOverridden', 'model.remote_theme')
   showSettings() {
-    return this.shouldShow('settings') && !this.get('model.remote_theme');
+    return false;
   },
 
   @observes('onlyOverridden')

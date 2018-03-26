@@ -4,12 +4,14 @@ require_dependency 'url_helper'
 require_dependency 'topics_bulk_action'
 require_dependency 'discourse_event'
 require_dependency 'rate_limiter'
+require_dependency 'topic_publisher'
 
 class TopicsController < ApplicationController
   requires_login only: [
     :timings,
     :destroy_timings,
     :update,
+    :update_shared_draft,
     :destroy,
     :recover,
     :status,
@@ -30,7 +32,8 @@ class TopicsController < ApplicationController
     :archive_message,
     :move_to_inbox,
     :convert_topic,
-    :bookmark
+    :bookmark,
+    :publish
   ]
 
   before_action :consider_user_for_promotion, only: :show
@@ -131,6 +134,18 @@ class TopicsController < ApplicationController
     raise ex
   end
 
+  def publish
+    params.permit(:id, :destination_category_id)
+
+    topic = Topic.find(params[:id])
+    category = Category.find(params[:destination_category_id])
+
+    guardian.ensure_can_publish_topic!(topic, category)
+    topic = TopicPublisher.new(topic, current_user, category.id).publish!
+
+    render_serialized(topic.reload, BasicTopicSerializer)
+  end
+
   def unsubscribe
     if current_user.blank?
       cookies[:destination_url] = request.fullpath
@@ -220,6 +235,21 @@ class TopicsController < ApplicationController
   def destroy_timings
     PostTiming.destroy_for(current_user.id, [params[:topic_id].to_i])
     render body: nil
+  end
+
+  def update_shared_draft
+    topic = Topic.find_by(id: params[:id])
+    guardian.ensure_can_edit!(topic)
+
+    category = Category.where(id: params[:category_id].to_i).first
+    guardian.ensure_can_publish_topic!(topic, category)
+
+    row_count = SharedDraft.where(topic_id: topic.id).update_all(category_id: category.id)
+    if row_count == 0
+      SharedDraft.create(topic_id: topic.id, category_id: category.id)
+    end
+
+    render json: success_json
   end
 
   def update
@@ -436,7 +466,7 @@ class TopicsController < ApplicationController
     guardian.ensure_can_recover_topic!(topic)
 
     first_post = topic.posts.with_deleted.order(:post_number).first
-    PostDestroyer.new(current_user, first_post).recover
+    PostDestroyer.new(current_user, first_post, context: params[:context]).recover
 
     render body: nil
   end

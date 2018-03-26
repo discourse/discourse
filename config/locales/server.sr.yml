@@ -87,8 +87,6 @@ sr:
   groups:
     success:
       bulk_add: "%{users_added} korisnika je dodato grupi."
-    errors:
-      member_already_exist: "'%{username}' je postojeći član grupe."
     default_names:
       everyone: "svi"
       admins: "admini"

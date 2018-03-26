@@ -46,6 +46,12 @@ export default Ember.Controller.extend(BufferedContent, {
     }
   },
 
+  @computed('model.postStream.loaded', 'model.category_id')
+  showSharedDraftControls(loaded, categoryId) {
+    let draftCat = this.site.shared_drafts_category_id;
+    return loaded && draftCat && categoryId && draftCat === categoryId;
+  },
+
   @computed('site.mobileView', 'model.posts_count')
   showSelectedPostsAtBottom(mobileView, postsCount) {
     return mobileView && postsCount > 3;
@@ -199,7 +205,7 @@ export default Ember.Controller.extend(BufferedContent, {
       });
     },
 
-    // Called the the topmost visible post on the page changes.
+    // Called when the topmost visible post on the page changes.
     topVisibleChanged(event) {
       const { post, refresh } = event;
       if (!post) { return; }
@@ -469,6 +475,10 @@ export default Ember.Controller.extend(BufferedContent, {
 
     jumpUnread() {
       this._jumpToPostId(this.get('model.last_read_post_id'));
+    },
+
+    jumpToPostId(postId) {
+      this._jumpToPostId(postId);
     },
 
     toggleMultiSelect() {

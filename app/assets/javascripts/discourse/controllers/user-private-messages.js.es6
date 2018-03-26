@@ -12,6 +12,9 @@ export default Ember.Controller.extend({
   currentPath: Em.computed.alias('application.currentPath'),
   selected: Em.computed.alias('userTopicsList.selected'),
   bulkSelectEnabled: Em.computed.alias('userTopicsList.bulkSelectEnabled'),
+  showToggleBulkSelect: true,
+  pmTaggingEnabled: Ember.computed.alias('site.can_tag_pms'),
+  tagId: null,
 
   showNewPM: function(){
     return this.get('user.viewingSelf') &&

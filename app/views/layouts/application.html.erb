@@ -62,8 +62,6 @@
   <body class="<%= body_classes %>">
     <%= render_google_tag_manager_code %>
 
-    <div class='debug-eyeline'></div>
-
     <noscript data-path="<%= request.env['PATH_INFO'] %>">
       <%= render partial: 'header' %>
       <div id="main-outlet" class="wrap">

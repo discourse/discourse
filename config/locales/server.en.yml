@@ -50,15 +50,16 @@ en:
   powered_by_html: 'Powered by <a href="https://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
   log_in: "Log In"
   submit: "Submit"
-
   purge_reason: "Automatically deleted as abandoned, deactivated account"
   disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."
   anonymous: "Anonymous"
   remove_posts_deleted_by_author: "Deleted by author"
+  redirect_warning: "We were unable to verify that the link you selected was actually posted to the forum. If you wish to proceed anyway, select the link below."
 
   themes:
     bad_color_scheme: "Can not update theme, invalid color scheme"
     other_error: "Something went wrong updating theme"
+    error_importing: "Error cloning git repository, access is denied or repository is not found"
     settings_errors:
       invalid_yaml: "Provided YAML is invalid."
       data_type_not_a_number: "Setting `%{name}` type is unsupported. Supported types are `integer`, `bool`, `list` and `enum`"
@@ -131,6 +132,7 @@ en:
       odd: must be odd
       record_invalid: ! 'Validation failed: %{errors}'
       max_emojis: "can't have more than %{max_emojis_count} emoji"
+      ip_address_already_screened: "is already included in an existing rule"
       restrict_dependent_destroy:
         one: "Cannot delete record because a dependent %{record} exists"
         many: "Cannot delete record because dependent %{record} exist"
@@ -294,7 +296,9 @@ en:
       bulk_add: "%{users_added} users have been added to the group."
     errors:
       can_not_modify_automatic: "You cannot modify an automatic group"
-      member_already_exist: "'%{username}' is already a member of this group."
+      member_already_exist:
+        one: "'%{username}' is already a member of this group."
+        other: "The following users are already members of this group: %{username}"
       invalid_domain: "'%{domain}' is not a valid domain."
       invalid_incoming_email: "'%{email}' is not a valid email address."
       email_already_used_in_group: "'%{email}' is already used by the group '%{group_name}'."
@@ -1023,7 +1027,8 @@ en:
     download_remote_images_max_days_old: "Don't download remote images for posts that are more than n days old."
     disabled_image_download_domains: "Remote images will never be downloaded from these domains. Pipe-delimited list."
     editing_grace_period: "For (n) seconds after posting, editing will not create a new version in the post history."
-    editing_grace_period_max_diff: "Maximum number of character changes allowed in editing grace period, if more changed store another post revision"
+    editing_grace_period_max_diff: "Maximum number of character changes allowed in editing grace period, if more changed store another post revision (trust level 0 and 1)"
+    editing_grace_period_max_diff_high_trust: "Maximum number of character changes allowed in editing grace period, if more changed store another post revision (trust level 2 and up)"
     staff_edit_locks_post: "Posts will be locked from editing if they are edited by staff members"
     post_edit_time_limit: "The author can edit or delete their post for (n) minutes after posting. Set to 0 for forever."
     edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view."
@@ -1173,7 +1178,7 @@ en:
     sso_allows_all_return_paths: "Do not restrict the domain for return_paths provided by SSO (by default return path must be on current site)"
 
     enable_local_logins: "Enable local username and password login based accounts. (Note: this must be enabled for invites to work)"
-    enable_local_logins_via_email: "Email user logins via email."
+    enable_local_logins_via_email: "Allow users to request a one-click login link to be sent to them via email."
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     enable_signup_cta: "Show a notice to returning anonymous users prompting them to sign up for an account."
     enable_yahoo_logins: "Enable Yahoo authentication"
@@ -1556,6 +1561,7 @@ en:
     highlighted_languages: "Included syntax highlighting rules. (Warning: including too many languages may impact performance) see: https://highlightjs.org/static/demo/ for a demo"
 
     embed_truncate: "Truncate the embedded posts."
+    embed_support_markdown: "Support Markdown formatting for embedded posts."
     allowed_href_schemes: "Schemes allowed in links in addition to http and https."
     embed_post_limit: "Maximum number of posts to embed."
     embed_username_required: "The username for topic creation is required."
@@ -1644,6 +1650,8 @@ en:
     company_short_name: "Company Name (short)"
     company_full_name: "Company Name (full)"
     company_domain: "Company Domain"
+
+    shared_drafts_category: "Enable the Shared Drafts feature by designating a category for topic drafts."
 
     errors:
       invalid_email: "Invalid email address."
@@ -1806,9 +1814,9 @@ en:
     auth_complete: "Authentication is complete."
     click_to_continue: "Click here to continue."
     already_logged_in: "Oops, looks like you are attempting to accept an invitation for another user. If you are not %{current_user}, please log out and try again."
-    second_factor_title: "Two Factor Authentication Required"
-    second_factor_description: "Enter the authentication code from your app."
-    invalid_second_factor_code: "Invalid Two Factor Authentication Code"
+    second_factor_title: "Two Factor Authentication"
+    second_factor_description: "Please enter the required authentication code from your app:"
+    invalid_second_factor_code: "Invalid authentication code"
 
   user:
     no_accounts_associated: "No accounts associated"
@@ -2760,7 +2768,9 @@ en:
       title: "Two Factor Authentication disabled"
       subject_template: "[%{email_prefix}] Two Factor Authentication disabled"
       text_body_template: |
-        Your account’s Two Factor Authentication at %{site_name} has been disabled. The account no longer needs a Two Factor Authentication code to sign in.
+        Two factor authentication has been disabled on your account at %{site_name}. You can now log in with only your password; an additional authentication code is no longer required.
+
+        If you did not choose to disable two factor authentication, someone may have compromised your account.
 
         If you have any questions, [contact our friendly staff](%{base_url}/about).
 
@@ -2820,14 +2830,14 @@ en:
         %{base_url}/u/password-reset/%{email_token}
 
     email_login:
-      title: "Email login link"
-      subject_template: "[%{email_prefix}] Email login link"
+      title: "Log in via link"
+      subject_template: "[%{email_prefix}] Log in via link"
       text_body_template: |
-        Somebody asked to login your account on [%{site_name}](%{base_url}).
+        Here's your link to log in at [%{site_name}](%{base_url}).
 
-        If it was not you, you can safely ignore this email.
+        If you did not request this link, you can safely ignore this email.
 
-        Click the following link to login:
+        Click the following link to log in:
         %{base_url}/session/email-login/%{email_token}
 
     set_password:
@@ -3440,7 +3450,7 @@ en:
       name: Promoter
       description: Invited a user
       long_description: |
-        This badge is granted when you invite someone to join the community via the invite button on your user page, or at the bottom of a topic. Inviting friends who might be interested in specific discussions is an great way to introduce new people to our community, so thanks!
+        This badge is granted when you invite someone to join the community via the invite button on your user page, or at the bottom of a topic. Inviting friends who might be interested in specific discussions is a great way to introduce new people to our community, so thanks!
     campaigner:
       name: Campaigner
       description: Invited 3 basic users
@@ -3540,7 +3550,7 @@ en:
       name: First Emoji
       description: Used an Emoji in a Post
       long_description: |
-        This badge is granted the first time you add an Emoji to your post :thumbsup:. Emoji let you convey emotion in your posts, from happiness :smiley: to sadness :anguished: to anger :angry: and everything in between :sunglasses: . Just type a : (colon) or press the Emoji toolbar button in the editor to select from hundreds of choices :ok_hand:
+        This badge is granted the first time you add an Emoji to your post :thumbsup:. Emoji let you convey emotion in your posts, from happiness :smiley: to sadness :anguished: to anger :angry: and everything in between :sunglasses:. Just type a : (colon) or press the Emoji toolbar button in the editor to select from hundreds of choices :ok_hand:
     first_mention:
       name: First Mention
       description: Mentioned a user in a post

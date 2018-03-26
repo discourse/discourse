@@ -30,7 +30,6 @@ nb_NO:
     default_cannot_be_made_public: "Avstemninger med avgitte stemmer kan ikke gjøres offentlige."
     named_cannot_be_made_public: "Avstemningen <strong>%{name}</strong> har avgitte stemmer og kan ikke gjøres offentlig."
     edit_window_expired:
-      cannot_change_polls: "Du kan ikke legge til, fjerne eller navne om avstemninger etter de første %{minutes}  minuttene."
       op_cannot_edit_options: "Du kan ikke legge til eller fjerne svaralternativer etter de første %{minutes} minuttene. Kontakt en moderator hvis du har behov for å redigere et svaralternativ."
       staff_cannot_add_or_remove_options: "Du kan ikke lette til eller fjerne valgalternativer for avstemningen etter de første %{minutes} minuttene. Du bør stenge denne tråden og lage et nytt i stedet."
     no_polls_associated_with_this_post: "Ingen avstemning er assosiert med dette innlegget."

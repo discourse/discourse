@@ -32,11 +32,16 @@ export default (viewName, path, channel) => {
         hideCategory: true,
         showPosters: true,
         canBulkSelect: true,
+        tagsForUser: this.modelFor("user").get("username_lower"),
         selected: []
       });
 
-      this.controllerFor("user-private-messages").set("archive", false);
-      this.controllerFor("user-private-messages").set("pmView", viewName);
+      this.controllerFor("user-private-messages").setProperties({
+        archive: false,
+        pmView: viewName,
+        showToggleBulkSelect: true
+      });
+
       this.searchService.set('contextType', 'private_messages');
     },
 

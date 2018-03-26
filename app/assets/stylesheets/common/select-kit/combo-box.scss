@@ -6,14 +6,14 @@
     }
 
     .select-kit-row {
-      margin: 5px;
+      margin: 4px;
       min-height: 1px;
-      padding: 5px;
+      padding: 4px;
     }
 
     .select-kit-filter {
       line-height: $line-height-medium;
-      padding: 6px 10px;
+      padding: 5px 6px;
       border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
       border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
 
@@ -25,7 +25,7 @@
     .select-kit-header {
       background: $secondary;
       border: 1px solid $primary-medium;
-      padding: 4px 10px;
+      padding: 4px;
       font-weight: 500;
       font-size: $font-0;
       line-height: $line-height-large;

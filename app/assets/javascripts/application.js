@@ -36,6 +36,8 @@
 //= require ./discourse/models/result-set
 //= require ./discourse/models/store
 //= require ./discourse/models/action-summary
+//= require ./discourse/models/permission-type
+//= require ./discourse/models/category
 //= require ./discourse/models/topic
 //= require ./discourse/models/draft
 //= require ./discourse/models/composer
@@ -43,7 +45,6 @@
 //= require ./discourse/models/badge
 //= require ./discourse/models/permission-type
 //= require ./discourse/models/user-action-group
-//= require ./discourse/models/category
 //= require ./discourse/models/input-validation
 //= require ./discourse/lib/search
 //= require ./discourse/lib/user-search

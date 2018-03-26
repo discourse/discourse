@@ -133,7 +133,7 @@ export function ajax() {
   if(args.type && args.type.toUpperCase() !== 'GET' && !Discourse.Session.currentProp('csrfToken')){
     promise = new Ember.RSVP.Promise((resolve, reject) => {
       ajaxObj = $.ajax(Discourse.getURL('/session/csrf'), {cache: false})
-        .success(result => {
+        .done(result => {
           Discourse.Session.currentProp('csrfToken', result.csrf);
           performAjax(resolve, reject);
         });

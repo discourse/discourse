@@ -216,7 +216,6 @@ nl:
       bulk_add: "Er zijn %{users_added} gebruikers aan de groep toegevoegd."
     errors:
       can_not_modify_automatic: "U kunt een automatische groep niet wijzigen"
-      member_already_exist: "'%{username}' is al lid van deze groep."
       invalid_domain: "%{domain}' is geen geldig domein."
       invalid_incoming_email: "%{email}' is geen geldig e-mailadres."
       email_already_used_in_group: "'%{email}' wordt al gebruikt door de groep '%{group_name}'."

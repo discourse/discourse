@@ -166,7 +166,6 @@ vi:
   groups:
     errors:
       can_not_modify_automatic: "Bạn không thể sửa một nhóm tự động"
-      member_already_exist: "'%{username}' đã là thành viên của nhóm"
       invalid_domain: "'%{domain}' không phải là tên miền hợp lệ."
       invalid_incoming_email: "'%{email}' không phải là email hợp lệ."
       email_already_used_in_group: "'%{email}' đã được sử dụng trong nhóm '%{group_name}'."
@@ -1327,8 +1326,6 @@ vi:
     promoter:
       name: Người Khởi Xướng
       description: Đã mời 1 người dùng
-      long_description: |
-        Huy hiệu này được cấp khi bạn đã mời 1 người tham gia cộng đồng thông qua nút mời trên trang tài khoản của bạn, hoặc nút mời ở dưới cùng của chủ đề. Mời bạn bè tham gia thảo luận là một cách tuyệt vời để giới thiệu những người mới đến với cộng đồng, cám ơn bạn!
     campaigner:
       name: Người Vận Động
       description: Đã mời 3 người dùng

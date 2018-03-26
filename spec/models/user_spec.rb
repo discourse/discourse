@@ -28,6 +28,19 @@ describe User do
         end
       end
 
+      describe 'when record has an email that as already been taken' do
+        it 'should not be valid' do
+          user2 = Fabricate(:user)
+          user.email = user2.email.upcase
+
+          expect(user).to_not be_valid
+
+          expect(user.errors.messages[:primary_email]).to include(I18n.t(
+            'activerecord.errors.messages.taken'
+          ))
+        end
+      end
+
       describe 'when user is staged' do
         it 'should still validate presence of primary_email' do
           user.staged = true
@@ -1635,6 +1648,49 @@ describe User do
       token.update_column(:confirmed, true)
       inactive.activate
       expect(inactive.active).to eq(true)
+    end
+  end
+
+  def filter_by(method)
+    username = 'someuniqueusername'
+    user.update!(username: username)
+
+    username2 = 'awesomeusername'
+    user2 = Fabricate(:user, username: username2)
+
+    expect(User.public_send(method, username))
+      .to eq([user])
+
+    expect(User.public_send(method, 'UNiQuE'))
+      .to eq([user])
+
+    expect(User.public_send(method, [username, username2]))
+      .to contain_exactly(user, user2)
+
+    expect(User.public_send(method, ['UNiQuE', 'sOME']))
+      .to contain_exactly(user, user2)
+  end
+
+  describe '#filter_by_username' do
+    it 'should be able to filter by username' do
+      filter_by(:filter_by_username)
+    end
+  end
+
+  describe '#filter_by_username_or_email' do
+    it 'should be able to filter by email' do
+      email = 'veryspecialtest@discourse.org'
+      user.update!(email: email)
+
+      expect(User.filter_by_username_or_email(email))
+        .to eq([user])
+
+      expect(User.filter_by_username_or_email('veryspeCiaLtest'))
+        .to eq([user])
+    end
+
+    it 'should be able to filter by username' do
+      filter_by(:filter_by_username_or_email)
     end
   end
 end

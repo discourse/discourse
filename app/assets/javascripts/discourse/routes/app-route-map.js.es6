@@ -5,6 +5,8 @@ export default function() {
 
   this.route('about', { path: '/about', resetNamespace: true });
 
+  this.route('post', { path: '/p/:id' });
+
   // Topic routes
   this.route('topic', { path: '/t/:slug/:id', resetNamespace: true }, function() {
     this.route('fromParams', { path: '/' });
@@ -56,11 +58,15 @@ export default function() {
       this.route('posts');
       this.route('topics');
       this.route('mentions');
-      this.route('messages');
     });
 
     this.route('logs');
     this.route('edit');
+
+    this.route('messages', function() {
+      this.route('inbox');
+      this.route('archive');
+    });
   });
 
   // User routes
@@ -96,7 +102,8 @@ export default function() {
       this.route('archive');
       this.route('group', { path: 'group/:name'});
       this.route('groupArchive', { path: 'group/:name/archive'});
-      this.route('tag', { path: 'tag/:id'});
+      this.route('tags');
+      this.route('tagsShow', { path: 'tags/:id'});
     });
 
     this.route('preferences', { resetNamespace: true }, function() {

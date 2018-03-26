@@ -205,7 +205,6 @@ ko:
       bulk_add: "%{users_added}명의 사용자가 그룹에 추가되었습니다."
     errors:
       can_not_modify_automatic: "자동 설정 그룹은 수정할 수 없습니다."
-      member_already_exist: "'%{username}'은 이미 이 그룹의 멤버입니다."
       invalid_domain: "'%{domain}'은 유효한 도메인이 아닙니다."
       invalid_incoming_email: "'%{email}' 는 올바른 이메일 주소가 아닙니다."
       email_already_used_in_group: "'%{email}'는 '%{group_name}' 그룹에서 이미 사용중입니다."
@@ -1580,8 +1579,6 @@ ko:
     promoter:
       name: 후원자
       description: 사용자를 초청했습니다
-      long_description: |
-        이 배지는 사용자 페이지나 토픽의 하단에서 초대 버튼을 눌러 다른 사람을 우리 커뮤니티에 초대했을 때 수여됩니다. 특정 주제에 대해 흥미를 느낄 것 같은 친구를 초대하는 것은 우리 커뮤니티를 새로운 사람에게 알리는 훌륭한 방법입니다. 고마워요!
     campaigner:
       name: 사회운동가
       description: 기본 사용자 3명을 초청했습니다
@@ -1677,8 +1674,6 @@ ko:
     first_emoji:
       name: 첫 Emoji
       description: 게시글에 Emoji를 사용했습니다
-      long_description: |
-        이 배지는 포스트에 Emoji를 처음으로 추가했을 때 수여됩니다:thumbsup:. Emoji는 행복함부터 :smiley: 슬픔 :anguished:  그리고 분노 :angry: 에 이르기 까지 많은 감정을 포스트에 싣게 해줍니다:sunglasses: . 그냥 : (콜론) 을 입력하거나 툴바에서 Emoji버튼을 누르면 수많은 Emoji를 선택할 수 있어요 :ok_hand:
     first_mention:
       name: 첫 멘션
       description: 처음으로 포스트에서 다른 사용자를 멘션했습니다

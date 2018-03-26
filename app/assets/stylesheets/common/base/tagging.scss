@@ -188,7 +188,6 @@ header .discourse-tag {color: $tag-color }
 .tag-chooser {
   width: 100%;
   max-width: 100%;
-  margin: 5px 0;
 }
 
 .title-wrapper .tag-chooser {
@@ -205,6 +204,9 @@ header .discourse-tag {color: $tag-color }
   margin-bottom: 20px;
   a {
     text-decoration: underline;
+  }
+  span.active a {
+    font-weight: bold;
   }
 }
 

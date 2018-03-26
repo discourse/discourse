@@ -13,13 +13,9 @@ export default Ember.Component.extend({
     return publicExit && userIsGroupUser;
   },
 
-  @computed("model.is_group_user", "model.id", "groupUserIds")
-  userIsGroupUser(isGroupUser, groupId, groupUserIds) {
-    if (isGroupUser !== undefined) {
-      return isGroupUser;
-    } else {
-      return !!groupUserIds && groupUserIds.includes(groupId);
-    }
+  @computed("model.is_group_user")
+  userIsGroupUser(isGroupUser) {
+    return !!isGroupUser;
   },
 
   _showLoginModal() {

@@ -3,9 +3,10 @@ require 'rails_helper'
 describe GroupsController do
   let(:user) { Fabricate(:user) }
   let(:group) { Fabricate(:group, users: [user]) }
+  let(:moderator_group_id) { Group::AUTO_GROUPS[:moderators] }
 
   describe '#index' do
-    let!(:staff_group) do
+    let(:staff_group) do
       Fabricate(:group, name: '0000', visibility_level: Group.visibility_levels[:staff])
     end
 
@@ -18,29 +19,114 @@ describe GroupsController do
       end
     end
 
+    context 'searchable' do
+      it 'should return the right response' do
+        other_group = Fabricate(:group, name: 'testing')
+        get "/groups.json", params: { filter: 'test' }
+
+        expect(response.status).to eq(200)
+        expect(JSON.parse(response.body)["groups"].first["id"]).to eq(other_group.id)
+      end
+    end
+
+    context 'sortable' do
+      let!(:other_group) { Fabricate(:group, name: "zzzzzz", users: [user]) }
+
+      %w{
+        desc
+        asc
+      }.each do |order|
+        context "#{order} order" do
+          it 'should return the right response' do
+            is_asc = order == 'asc'
+            params = { order: 'name' }
+            params.merge!(asc: true) if is_asc
+            group
+            get "/groups.json", params: params
+
+            expect(response.status).to eq(200)
+
+            group_ids = [moderator_group_id, group.id, other_group.id]
+            group_ids.reverse! if !is_asc
+
+            expect(JSON.parse(response.body)["groups"].map { |group| group["id"] })
+              .to eq(group_ids)
+          end
+        end
+      end
+
+      context 'ascending order' do
+        it 'should return the right response' do
+          group
+          get "/groups.json", params: { order: 'name' }
+
+          expect(response.status).to eq(200)
+
+          expect(JSON.parse(response.body)["groups"].map { |group| group["id"] })
+            .to eq([other_group.id, group.id, moderator_group_id])
+        end
+      end
+    end
+
     it 'should return the right response' do
       group
+      staff_group
       get "/groups.json"
 
-      expect(response).to be_success
+      expect(response.status).to eq(200)
 
       response_body = JSON.parse(response.body)
 
       group_ids = response_body["groups"].map { |g| g["id"] }
 
-      expect(response_body["extras"]["group_user_ids"]).to eq([])
       expect(group_ids).to include(group.id)
       expect(group_ids).to_not include(staff_group.id)
       expect(response_body["load_more_groups"]).to eq("/groups?page=1")
-      expect(response_body["total_rows_groups"]).to eq(1)
+      expect(response_body["total_rows_groups"]).to eq(2)
+
+      expect(response_body["extras"]["type_filters"].map(&:to_sym)).to eq(
+        described_class::TYPE_FILTERS.keys - [:my, :owner, :automatic]
+      )
+    end
+
+    context 'viewing groups of another user' do
+      describe 'when an invalid username is given' do
+        it 'should return the right response' do
+          group
+          get "/groups.json", params: { username: 'asdasd' }
+
+          expect(response.status).to eq(404)
+        end
+      end
+
+      it 'should return the right response' do
+        user2 = Fabricate(:user)
+        group
+        sign_in(user2)
+
+        get "/groups.json", params: { username: user.username }
+
+        expect(response.status).to eq(200)
+
+        response_body = JSON.parse(response.body)
+
+        group_ids = response_body["groups"].map { |g| g["id"] }
+
+        expect(group_ids).to contain_exactly(group.id)
+      end
     end
 
     context 'viewing as an admin' do
-      it 'should display automatic groups' do
-        admin = Fabricate(:admin)
+      let(:admin) { Fabricate(:admin) }
+
+      before do
         sign_in(admin)
         group.add(admin)
+        group.add_owner(admin)
+      end
 
+      it 'should return the right response' do
+        staff_group
         get "/groups.json"
 
         expect(response).to be_success
@@ -48,11 +134,73 @@ describe GroupsController do
         response_body = JSON.parse(response.body)
 
         group_ids = response_body["groups"].map { |g| g["id"] }
+        group_body = response_body["groups"].find { |g| g["id"] == group.id }
 
-        expect(response_body["extras"]["group_user_ids"]).to eq([group.id])
+        expect(group_body["is_group_user"]).to eq(true)
+        expect(group_body["is_group_owner"]).to eq(true)
         expect(group_ids).to include(group.id, staff_group.id)
         expect(response_body["load_more_groups"]).to eq("/groups?page=1")
         expect(response_body["total_rows_groups"]).to eq(10)
+
+        expect(response_body["extras"]["type_filters"].map(&:to_sym)).to eq(
+          described_class::TYPE_FILTERS.keys
+        )
+      end
+
+      context 'filterable by type' do
+        def expect_type_to_return_right_groups(type, expected_group_ids)
+          get "/groups.json", params: { type: type }
+
+          expect(response.status).to eq(200)
+
+          response_body = JSON.parse(response.body)
+          group_ids = response_body["groups"].map { |g| g["id"] }
+
+          expect(response_body["total_rows_groups"]).to eq(expected_group_ids.count)
+          expect(group_ids).to contain_exactly(*expected_group_ids)
+        end
+
+        describe 'my groups' do
+          it 'should return the right response' do
+            expect_type_to_return_right_groups('my', [group.id])
+          end
+        end
+
+        describe 'owner groups' do
+          it 'should return the right response' do
+            group2 = Fabricate(:group)
+            group3 = Fabricate(:group)
+            group2.add_owner(admin)
+
+            expect_type_to_return_right_groups('owner', [group.id, group2.id])
+          end
+        end
+
+        describe 'automatic groups' do
+          it 'should return the right response' do
+            expect_type_to_return_right_groups(
+              'automatic',
+              Group::AUTO_GROUP_IDS.keys - [0]
+            )
+          end
+        end
+
+        describe 'public groups' do
+          it 'should return the right response' do
+            group2 = Fabricate(:group, public_admission: true)
+
+            expect_type_to_return_right_groups('public', [group2.id])
+          end
+        end
+
+        describe 'close groups' do
+          it 'should return the right response' do
+            group2 = Fabricate(:group, public_admission: false)
+            group3 = Fabricate(:group, public_admission: true)
+
+            expect_type_to_return_right_groups('close', [group.id, group2.id])
+          end
+        end
       end
     end
   end
@@ -252,7 +400,59 @@ describe GroupsController do
 
       members = JSON.parse(response.body)["members"]
 
-      expect(members.map { |m| m["id"] }).to eq([user1.id, user2.id, user3.id])
+      expect(members.map { |m| m["id"] })
+        .to contain_exactly(user1.id, user2.id, user3.id)
+    end
+
+    describe 'filterable' do
+      describe 'as a normal user' do
+        it "should not allow members to be filterable by email" do
+          email = 'uniquetest@discourse.org'
+          user1.update!(email: email)
+
+          get "/groups/#{group.name}/members.json", params: { filter: email }
+
+          expect(response.status).to eq(200)
+          members = JSON.parse(response.body)["members"]
+          expect(members).to eq([])
+        end
+      end
+
+      describe 'as an admin' do
+        before do
+          sign_in(Fabricate(:admin))
+        end
+
+        it "should allow members to be filterable by username" do
+          email = 'uniquetest@discourse.org'
+          user1.update!(email: email)
+
+          {
+            email.upcase => [user1.id],
+            'QUEtes' => [user1.id],
+            "#{user1.email},#{user2.email}" => [user1.id, user2.id]
+          }.each do |filter, ids|
+            get "/groups/#{group.name}/members.json", params: { filter: filter }
+
+            expect(response.status).to eq(200)
+            members = JSON.parse(response.body)["members"]
+            expect(members.map { |m| m["id"] }).to contain_exactly(*ids)
+          end
+        end
+
+        it "should allow members to be filterable by email" do
+          username = 'uniquetest'
+          user1.update!(username: username)
+
+          [username.upcase, 'QUEtes'].each do |filter|
+            get "/groups/#{group.name}/members.json", params: { filter: filter }
+
+            expect(response.status).to eq(200)
+            members = JSON.parse(response.body)["members"]
+            expect(members.map { |m| m["id"] }).to contain_exactly(user1.id)
+          end
+        end
+      end
     end
   end
 
@@ -323,7 +523,7 @@ describe GroupsController do
       sign_in(admin)
     end
 
-    context 'add_members' do
+    context '#add_members' do
       it "can make incremental adds" do
         user2 = Fabricate(:user)
 
@@ -377,12 +577,36 @@ describe GroupsController do
 
           expect(response).to be_success
         end
+
+        it 'fails when multiple member already exists' do
+          user3 = Fabricate(:user)
+          [user2, user3].each { |user| group.add(user) }
+
+          expect do
+            put "/groups/#{group.id}/members.json",
+              params: { user_emails: [user1.email, user2.email, user3.email].join(",") }
+          end.to change { group.users.count }.by(0)
+
+          expect(response.status).to eq(422)
+
+          expect(JSON.parse(response.body)["errors"]).to include(I18n.t(
+            "groups.errors.member_already_exist",
+            username: "#{user2.username}, #{user3.username}",
+            count: 2
+          ))
+        end
       end
 
       it "returns 422 if member already exists" do
         put "/groups/#{group.id}/members.json", params: { usernames: user.username }
 
         expect(response.status).to eq(422)
+
+        expect(JSON.parse(response.body)["errors"]).to include(I18n.t(
+          "groups.errors.member_already_exist",
+          username: user.username,
+          count: 1
+        ))
       end
 
       it "returns 404 if member is not found" do

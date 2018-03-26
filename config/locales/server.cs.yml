@@ -225,7 +225,6 @@ cs:
       bulk_add: "Uživatelé %{users_added} byli přidáni do skupiny."
     errors:
       can_not_modify_automatic: "Nelze měnit automatické skupiny"
-      member_already_exist: "'%{username}' je už členem této skupiny."
       invalid_domain: "'%{domain}' není platná doména."
       invalid_incoming_email: "'%{email}' není platná emailová adresa."
       email_already_used_in_group: "'%{email}' už je použit pro skupinu '%{group_name}'."

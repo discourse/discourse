@@ -81,8 +81,8 @@ class Group < ActiveRecord::Base
   validates :mentionable_level, inclusion: { in: ALIAS_LEVELS.values }
   validates :messageable_level, inclusion: { in: ALIAS_LEVELS.values }
 
-  scope :visible_groups, ->(user) {
-    groups = Group.order(name: :asc).where("groups.id > 0")
+  scope :visible_groups, Proc.new { |user, order|
+    groups = Group.order(order || "name ASC").where("groups.id > 0")
 
     unless user&.admin
       sql = <<~SQL
@@ -559,6 +559,16 @@ class Group < ActiveRecord::Base
 
   def staff?
     STAFF_GROUPS.include?(self.name.to_sym)
+  end
+
+  def self.member_of(groups, user)
+    groups.joins(
+      "LEFT JOIN group_users gu ON gu.group_id = groups.id
+    ").where("gu.user_id = ?", user.id)
+  end
+
+  def self.owner_of(groups, user)
+    self.member_of(groups, user).where("gu.owner")
   end
 
   protected

@@ -26,8 +26,16 @@ class Theme < ActiveRecord::Base
   end
 
   after_save do
-    changed_colors.each(&:save!)
+    color_schemes = {}
+    changed_colors.each do |color|
+      color.save!
+      color_schemes[color.color_scheme_id] ||= color.color_scheme
+    end
+
+    color_schemes.values.each(&:save!)
+
     changed_colors.clear
+
     changed_fields.each(&:save!)
     changed_fields.clear
 

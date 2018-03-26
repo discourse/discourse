@@ -19,7 +19,7 @@ class TagsController < ::ApplicationController
   skip_before_action :check_xhr, only: [:tag_feed, :show, :index]
 
   before_action :set_category_from_params, except: [:index, :update, :destroy,
-    :tag_feed, :search, :notifications, :update_notifications]
+    :tag_feed, :search, :notifications, :update_notifications, :personal_messages]
 
   def index
     @description_meta = I18n.t("tags.title")
@@ -37,14 +37,14 @@ class TagsController < ::ApplicationController
             { id: tag_group.id, name: tag_group.name, tags: self.class.tag_counts_json(tag_group.tags) }
           end
 
-          ungrouped_tags = Tag.where("tags.id NOT IN (select tag_id from tag_group_memberships)")
+          ungrouped_tags = Tag.where("tags.id NOT IN (select tag_id from tag_group_memberships) AND tags.topic_count > 0")
 
           render json: {
             tags: self.class.tag_counts_json(ungrouped_tags), # tags that don't belong to a group
             extras: { tag_groups: grouped_tag_counts }
           }
         else
-          unrestricted_tags = Tag.where("tags.id NOT IN (select tag_id from category_tags)")
+          unrestricted_tags = Tag.where("tags.id NOT IN (select tag_id from category_tags) AND tags.topic_count > 0")
 
           categories = Category.where("id in (select category_id from category_tags)")
             .where("id in (?)", guardian.allowed_category_ids)
@@ -189,6 +189,16 @@ class TagsController < ::ApplicationController
     end.compact
 
     render json: { valid: valid_tags }
+  end
+
+  def personal_messages
+    guardian.ensure_can_tag_pms!
+    allowed_user = fetch_user_from_params
+    raise Discourse::NotFound if allowed_user.blank?
+    raise Discourse::NotFound if current_user.id != allowed_user.id && !@guardian.is_admin?
+    pm_tags = Tag.pm_tags(guardian: guardian, allowed_user: allowed_user)
+
+    render json: { tags: pm_tags }
   end
 
   private

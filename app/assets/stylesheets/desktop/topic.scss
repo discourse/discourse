@@ -76,8 +76,7 @@
 
 #topic-progress-wrapper {
   position: fixed;
-  right: 50%;
-  width: 0;
+  right: 1em;
   bottom: 0;
   z-index: z("timeline");
   &.docked {

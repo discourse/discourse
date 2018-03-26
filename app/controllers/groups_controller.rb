@@ -5,7 +5,6 @@ class GroupsController < ApplicationController
     :mentionable,
     :messageable,
     :update,
-    :messages,
     :histories,
     :request_membership,
     :search
@@ -14,6 +13,29 @@ class GroupsController < ApplicationController
   skip_before_action :preload_json, :check_xhr, only: [:posts_feed, :mentions_feed]
   skip_before_action :check_xhr, only: [:show]
 
+  TYPE_FILTERS = {
+    my: Proc.new { |groups, user|
+      raise Discourse::NotFound unless user
+      Group.member_of(groups, user)
+    },
+    owner: Proc.new { |groups, user|
+      raise Discourse::NotFound unless user
+      Group.owner_of(groups, user)
+    },
+    public: Proc.new { |groups|
+      groups.where(public_admission: true, automatic: false)
+    },
+    close: Proc.new { |groups|
+      groups.where(
+        public_admission: false,
+        automatic: false
+      )
+    },
+    automatic: Proc.new { |groups|
+      groups.where(automatic: true)
+    }
+  }
+
   def index
     unless SiteSetting.enable_group_directory?
       raise Discourse::InvalidAccess.new(:enable_group_directory)
@@ -21,30 +43,57 @@ class GroupsController < ApplicationController
 
     page_size = 30
     page = params[:page]&.to_i || 0
+    order = %w{name user_count}.delete(params[:order])
+    dir = params[:asc] ? 'ASC' : 'DESC'
+    groups = Group.visible_groups(current_user, order ? "#{order} #{dir}" : nil)
 
-    groups = Group.visible_groups(current_user)
+    if (filter = params[:filter]).present?
+      groups = Group.search_groups(filter, groups: groups)
+    end
+
+    type_filters = TYPE_FILTERS.keys
+
+    if username = params[:username]
+      groups = TYPE_FILTERS[:my].call(groups, User.find_by_username(username))
+      type_filters = type_filters - [:my, :owner]
+    end
 
     unless guardian.is_staff?
       # hide automatic groups from all non stuff to de-clutter page
-      groups = groups.where(automatic: false)
+      groups = groups.where("automatic IS FALSE OR groups.id = #{Group::AUTO_GROUPS[:moderators]}")
+      type_filters.delete(:automatic)
     end
-
-    count = groups.count
-    groups = groups.offset(page * page_size).limit(page_size)
 
     if Group.preloaded_custom_field_names.present?
       Group.preload_custom_fields(groups, Group.preloaded_custom_field_names)
     end
 
-    group_user_ids = GroupUser.where(group: groups, user: current_user).pluck(:group_id)
+    if type = params[:type]&.to_sym
+      groups = TYPE_FILTERS[type].call(groups, current_user)
+    end
+
+    if current_user
+      group_users = GroupUser.where(group: groups, user: current_user)
+      user_group_ids = group_users.pluck(:group_id)
+      owner_group_ids = group_users.where(owner: true).pluck(:group_id)
+    else
+      type_filters = type_filters - [:my, :owner]
+    end
+
+    count = groups.count
+    groups = groups.offset(page * page_size).limit(page_size)
 
     render_json_dump(
-      groups: serialize_data(groups, BasicGroupSerializer),
+      groups: serialize_data(groups,
+        BasicGroupSerializer,
+        user_group_ids: user_group_ids || [],
+        owner_group_ids: owner_group_ids || []
+      ),
       extras: {
-        group_user_ids: group_user_ids
+        type_filters: type_filters
       },
       total_rows_groups: count,
-      load_more_groups: groups_path(page: page + 1)
+      load_more_groups: groups_path(page: page + 1, type: type),
     )
   end
 
@@ -101,15 +150,6 @@ class GroupsController < ApplicationController
     render 'posts/latest', formats: [:rss]
   end
 
-  def topics
-    group = find_group(:group_id)
-    posts = group.posts_for(
-      guardian,
-      params.permit(:before_post_id, :category_id)
-    ).where(post_number: 1).limit(20)
-    render_serialized posts.to_a, GroupPostSerializer
-  end
-
   def mentions
     raise Discourse::NotFound unless SiteSetting.enable_mentions?
     group = find_group(:group_id)
@@ -133,19 +173,6 @@ class GroupsController < ApplicationController
     render 'posts/latest', formats: [:rss]
   end
 
-  def messages
-    group = find_group(:group_id)
-    posts = if guardian.can_see_group_messages?(group)
-      group.messages_for(
-        guardian,
-        params.permit(:before_post_id, :category_id)
-      ).where(post_number: 1).limit(20).to_a
-    else
-      []
-    end
-    render_serialized posts, GroupPostSerializer
-  end
-
   def members
     group = find_group(:group_id)
 
@@ -159,8 +186,18 @@ class GroupsController < ApplicationController
     end
 
     users = group.users.human_users
-
     total = users.count
+
+    if (filter = params[:filter]).present?
+      filter = filter.split(',') if filter.include?(',')
+
+      if current_user&.admin
+        users = users.filter_by_username_or_email(filter)
+      else
+        users = users.filter_by_username(filter)
+      end
+    end
+
     members = users
       .order('NOT group_users.owner')
       .order(order)
@@ -213,19 +250,21 @@ class GroupsController < ApplicationController
       end
     end
 
-    users.each do |user|
-      if !group.users.include?(user)
+    if (usernames = group.users.where(id: users.pluck(:id)).pluck(:username)).present?
+      render_json_error(I18n.t(
+        "groups.errors.member_already_exist",
+        username: usernames.join(", "),
+        count: usernames.size
+      ))
+    else
+      users.each do |user|
         group.add(user)
         GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
-      else
-        return render_json_error I18n.t('groups.errors.member_already_exist', username: user.username)
       end
-    end
 
-    if group.save
-      render json: success_json
-    else
-      render_json_error(group)
+      render json: success_json.merge!(
+        usernames: users.map(&:username)
+      )
     end
   end
 

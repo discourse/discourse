@@ -69,7 +69,7 @@ class PostRevisor
   end
 
   track_topic_field(:category_id) do |tc, category_id|
-    if tc.guardian.can_create_topic_on_category?(category_id)
+    if category_id == 0 || tc.guardian.can_create_topic_on_category?(category_id)
       tc.record_change('category_id', tc.topic.category_id, category_id)
       tc.check_result(tc.topic.change_category_to_id(category_id))
     end
@@ -150,6 +150,8 @@ class PostRevisor
     @skip_revision = false
     @skip_revision = @opts[:skip_revision] if @opts.has_key?(:skip_revision)
 
+    old_raw = @post.raw
+
     Post.transaction do
       revise_post
 
@@ -175,6 +177,14 @@ class PostRevisor
       !@post.user.staff?
     )
       PostLocker.new(@post, @editor).lock
+    end
+
+    # We log staff edits to posts
+    if @editor.staff? && @editor.id != @post.user.id && @fields.has_key?('raw')
+      StaffActionLogger.new(@editor).log_post_edit(
+        @post,
+        old_raw: old_raw
+      )
     end
 
     # WARNING: do not pull this into the transaction
@@ -278,8 +288,14 @@ class PostRevisor
     return false if (@revised_at - @last_version_at) > SiteSetting.editing_grace_period.to_i
 
     if new_raw = @fields[:raw]
-      if (original_raw.length - new_raw.length).abs > SiteSetting.editing_grace_period_max_diff.to_i ||
-        diff_size(original_raw, new_raw) > SiteSetting.editing_grace_period_max_diff.to_i
+
+      max_diff = SiteSetting.editing_grace_period_max_diff.to_i
+      if @editor.staff? || (@editor.trust_level > 1)
+        max_diff = SiteSetting.editing_grace_period_max_diff_high_trust.to_i
+      end
+
+      if (original_raw.length - new_raw.length).abs > max_diff ||
+        diff_size(original_raw, new_raw) > max_diff
         return false
       end
     end

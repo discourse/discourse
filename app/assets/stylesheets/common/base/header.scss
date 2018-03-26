@@ -37,8 +37,8 @@
     align-items: center;
   }
 
-  .hamburger-panel, .user-menu {
-    width: 0; // Flexbox fix for Safari ≤ iOS11
+  .hamburger-panel, .user-menu, .search-menu {
+    width: 0; // Flexbox fix for Safari 
   }
 
   .header-buttons {

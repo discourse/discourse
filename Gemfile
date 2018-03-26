@@ -35,7 +35,7 @@ gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox', '1.8.42'
+gem 'onebox', '1.8.45'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 
@@ -177,6 +177,8 @@ gem 'sassc', require: false
 
 gem 'rotp'
 gem 'rqrcode'
+
+gem 'sshkey', require: false
 
 if ENV["IMPORT"] == "1"
   gem 'mysql2'

@@ -4,6 +4,7 @@ export default Ember.Component.extend({
   tagName: 'table',
   classNames: ['topic-list'],
   showTopicPostBadges: true,
+  listTitle: 'topic.title',
 
   // Overwrite this to perform client side filtering of topics, if desired
   filteredTopics: Ember.computed.alias('topics'),

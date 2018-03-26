@@ -40,7 +40,11 @@ RSpec.describe Admin::GroupsController do
         }
       }
 
-      expect(response).to be_success
+      expect(response.status).to eq(200)
+
+      response_body = JSON.parse(response.body)
+
+      expect(response_body["usernames"]).to contain_exactly(user.username, admin.username)
 
       expect(group.group_users.where(owner: true).map(&:user))
         .to contain_exactly(user, admin)

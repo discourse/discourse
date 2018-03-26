@@ -1,5 +1,12 @@
 {{plugin-outlet name="before-group-container" args=(hash group=model)}}
 
+{{#link-to "groups"}}
+  {{d-icon 'arrow-left'}}
+  {{i18n "groups.index.title"}}
+{{/link-to}}
+
+<hr>
+
 <div class="container group {{model.name}}">
   <div class='group-details-container'>
     <div class='group-info'>
@@ -34,6 +41,12 @@
   <div class="list-controls">
     <div class="container">
       {{group-navigation group=model currentPath=application.currentPath tabs=tabs}}
+
+      {{#if canManageGroup}}
+        {{group-navigation-dropdown
+            model=model
+            manageMembership=(route-action "showGroupMembershipModal")}}
+      {{/if}}
 
       {{#if displayGroupMessageButton}}
         {{d-button

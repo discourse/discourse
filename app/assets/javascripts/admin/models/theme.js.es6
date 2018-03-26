@@ -2,7 +2,7 @@ import RestModel from 'discourse/models/rest';
 import { default as computed } from 'ember-addons/ember-computed-decorators';
 
 const THEME_UPLOAD_VAR = 2;
-const FIELDS_IDS = [0, 1, 5];
+const FIELDS_IDS = [0, 1];
 
 const Theme = RestModel.extend({
 

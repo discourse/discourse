@@ -15,7 +15,7 @@
     {{/if}}
 
     {{#if model.second_factor_enabled}}
-      <label class='control-label'>{{i18n 'login.second_factor_label'}}</label>
+      <label class='control-label'>{{i18n 'user.second_factor.label'}}</label>
 
       <div class="control-group">
         <div class="controls">
@@ -32,7 +32,9 @@
           {{d-button action="disableSecondFactor"
               class="btn btn-primary"
               disabled=loading
-              label=submitButtonText}}
+              label=disableButtonText}}
+
+          {{cancel-link route="preferences.account" args= model.username}}
         </div>
       </div>
     {{else}}
@@ -66,7 +68,7 @@
         </div>
 
         <div class="control-group">
-          <label class="control-label input-prepend">{{i18n 'login.second_factor_label'}}</label>
+          <label class="control-label input-prepend">{{i18n 'user.second_factor.label'}}</label>
 
           <div class="controls">
             {{second-factor-input value=secondFactorToken inputId='second-factor-token'}}
@@ -78,7 +80,9 @@
             {{d-button action="enableSecondFactor"
                 class="btn btn-primary"
                 disabled=loading
-                label=submitButtonText}}
+                label=enableButtonText}}
+
+            {{cancel-link route="preferences.account" args= model.username}}
           </div>
         </div>
       {{else}}
@@ -108,9 +112,12 @@
             {{d-button action="resetPassword"
                 class="btn"
                 disabled=resetPasswordLoading
+                icon="envelope"
                 label='user.change_password.action'}}
 
             {{resetPasswordProgress}}
+
+            {{cancel-link route="preferences.account" args= model.username}}
           </div>
         </div>
       {{/if}}

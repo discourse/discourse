@@ -107,7 +107,15 @@ class ApplicationController < ActionController::Base
   end
 
   def render_rate_limit_error(e)
-    render_json_error e.description, type: :rate_limit, status: 429, extras: { wait_seconds: e&.available_in }
+    retry_time_in_seconds = e&.available_in
+
+    render_json_error(
+      e.description,
+      type: :rate_limit,
+      status: 429,
+      extras: { wait_seconds: retry_time_in_seconds },
+      headers: { 'Retry-After': retry_time_in_seconds },
+    )
   end
 
   # If they hit the rate limiter
@@ -307,7 +315,7 @@ class ApplicationController < ActionController::Base
     resolve_safe_mode
     return if request.env[NO_CUSTOM]
 
-    theme_key = flash[:preview_theme_key]
+    theme_key = request[:preview_theme_key]
 
     user_option = current_user&.user_option
 
@@ -523,12 +531,15 @@ class ApplicationController < ActionController::Base
 
     # Render action for a JSON error.
     #
-    # obj      - a translated string, an ActiveRecord model, or an array of translated strings
+    # obj       - a translated string, an ActiveRecord model, or an array of translated strings
     # opts:
-    #   type   - a machine-readable description of the error
-    #   status - HTTP status code to return
+    #   type    - a machine-readable description of the error
+    #   status  - HTTP status code to return
+    #   headers - extra headers for the response
     def render_json_error(obj, opts = {})
       opts = { status: opts } if opts.is_a?(Integer)
+      opts.fetch(:headers, {}).each { |name, value| headers[name.to_s] = value }
+
       render json: MultiJson.dump(create_errors_json(obj, opts)), status: opts[:status] || 422
     end
 
@@ -633,7 +644,7 @@ class ApplicationController < ActionController::Base
         else
           # save original URL in a cookie (javascript redirects after login in this case)
           cookies[:destination_url] = destination_url
-          redirect_to "/login"
+          redirect_to path("/login")
         end
       end
     end

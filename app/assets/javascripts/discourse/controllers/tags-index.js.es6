@@ -2,6 +2,8 @@ import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend({
   sortProperties: ['count:desc', 'id'],
+  sortedByCount: true,
+  sortedByName: false,
 
   canAdminTags: Ember.computed.alias("currentUser.staff"),
   groupedByCategory: Ember.computed.notEmpty('model.extras.categories'),
@@ -18,11 +20,19 @@ export default Ember.Controller.extend({
 
   actions: {
     sortByCount() {
-      this.set('sortProperties', ['count:desc', 'id']);
+      this.setProperties({
+        sortProperties: ['count:desc', 'id'],
+        sortedByCount: true,
+        sortedByName: false
+      });
     },
 
     sortById() {
-      this.set('sortProperties', ['id']);
+      this.setProperties({
+        sortProperties: ['id'],
+        sortedByCount: false,
+        sortedByName: true
+      });
     }
   }
 });

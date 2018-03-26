@@ -66,6 +66,7 @@ componentTest('interactions', {
     });
 
     this.get('subject').selectRowByValue(3);
+    this.get('subject').expand();
 
     andThen(() => {
       assert.equal(

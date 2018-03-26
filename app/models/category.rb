@@ -54,6 +54,7 @@ class Category < ActiveRecord::Base
 
   after_destroy :reset_topic_ids_cache
   after_destroy :publish_category_deletion
+  after_destroy :remove_site_settings
 
   after_create :delete_category_permalink
 
@@ -248,6 +249,15 @@ SQL
   def publish_category
     group_ids = self.groups.pluck(:id) if self.read_restricted
     MessageBus.publish('/categories', { categories: ActiveModel::ArraySerializer.new([self]).as_json }, group_ids: group_ids)
+  end
+
+  def remove_site_settings
+    SiteSetting.all_settings.each do |s|
+      if s[:type] == 'category' && s[:value].to_i == self.id
+        SiteSetting.send("#{s[:setting]}=", '')
+      end
+    end
+
   end
 
   def publish_category_deletion

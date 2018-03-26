@@ -218,7 +218,6 @@ he:
       bulk_add: "%{users_added} משתמשים נוספו לקבוצה."
     errors:
       can_not_modify_automatic: "אינכם יכולים לערוך קבוצה אוטומטית"
-      member_already_exist: "'%{username}' כבר חבר/ה בקבוצה זו."
       invalid_domain: "'%{domain}' אינו שם מתחם תקף."
       invalid_incoming_email: "'%{email}' אינה כתובת מייל תקפה."
       email_already_used_in_group: "'%{email}' כבר בשימוש על ידי הקבוצה '%{group_name}'."
@@ -2265,8 +2264,6 @@ he:
     promoter:
       name: מקדמים
       description: הזמינו משתמש
-      long_description: |
-        עיטור זה ניתן כאשר אתם מזמינים מישהו להצטרף לקהילה באמצעות כפתור ההזמנה בדף המשתמש שלכם, או בתחתיתו של נושא. הזמנת חברים שעלולים להתעניין בדיונים ספציפיים היא דרך מצויינת להכיר אנשים חדשים לקהילה שלנו, אז תודה!
     campaigner:
       name: קמפיינרים
       description: הזמינו 3 משתמשים בסיסיים
@@ -2362,8 +2359,6 @@ he:
     first_emoji:
       name: אמוג׳י ראשון
       description: השתמשו באמוג׳י בפוסט
-      long_description: |
-        עיטור זה מוענק בפעם הראשונה שאתם מוסיפים אימוג׳י לפוסט שלכם :thumbsup:. אמוג׳יז מאפשרים לכם להעביר רגשות בפוסטים שלכם, משמחה :smiley: לעצב :anguished: לכעס :angry:  וכל דבר שבינהם :sunglasses: . פשוט הקישו : (נקודותיים) או לחצו על כפתור האימוג׳י בארגז הכלים בעורך כדי לבחור מבין מאות אפשרויות :ok_hand:
     first_mention:
       name: אזכור ראשון
       description: הזכירו משתמש בפוסט

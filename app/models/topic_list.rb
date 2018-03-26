@@ -36,7 +36,8 @@ class TopicList
                 :per_page,
                 :top_tags,
                 :current_user,
-                :tags
+                :tags,
+                :shared_drafts
 
   def initialize(filter, current_user, topics, opts = nil)
     @filter = filter

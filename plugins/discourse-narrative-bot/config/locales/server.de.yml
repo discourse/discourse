@@ -359,6 +359,12 @@ de:
         reply: |-
           Hervorragend! Denk daran, dass dies sowohl für Kategorien _als auch_ für Schlagwörter funktioniert, sofern Schlagwörter aktiviert sind.
       change_topic_notification_level:
+        instructions: |-
+          Jedes Thema hat eine Benachrichtigungsstufe. Es beginnt bei „Normal“, was bedeutet, dass du normalerweise nur benachrichtigt wirst, wenn dich jemand direkt anspricht.
+
+          Standardmäßig ist die Benachrichtigungsstufe für Nachrichten auf die höchste Stufe „Beobachten“ gesetzt, was bedeutet, dass du über jede Antwort informiert wirst. Aber du kannst die Benachrichtigungsstufe für _jedes_ Thema auf „Beobachten“, „Verfolgen“ oder „Stummgeschaltet“ setzen.
+
+          Lass uns versuchen, die Benachrichtigungsstufe für dieses Thema zu ändern. Am Ende des Themas wirst du eine Schaltfläche finden, die „Beobachten“ anzeigt. Kannst du die Benachrichtigungsstufe auf **Verfolgen** ändern?
         not_found: |-
           Es sieht so aus, als würdest du dieses Thema noch beobachten! :eyes: Falls du Probleme hast es zu finden: Die Schaltfläche für die Benachrichtigungsstufe befindet sich am Ende des Themas.
         reply: |-
@@ -387,6 +393,20 @@ de:
           * :-1:
           [/poll]
       details:
+        instructions: |-
+          Manchmal möchtest du vielleicht in deinen Antworten bestimmte **Details ausblenden**:
+
+          - Wenn du Handlungen eines Films oder einer TV-Serie diskutierst und dies als Spoiler betrachtet werden könnte.
+
+          - Wenn dein Beitrag viele optionalen Details benötigt, die überwältigend sein könnten, wenn man sie alle auf einmal liest.
+
+          [details=Wähle dies aus, um zu sehen, wie es funktioniert!]
+          1. Wähle das <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> Zahnrad im Editor aus.
+          2. Wähle „Details ausblenden“ aus.
+          3. Bearbeite die Zusammenfassung der Details und füge deinen Inhalt hinzu.
+          [/details]
+
+          Kannst du das <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> Zahnrad im Editor verwenden und einen Details-Abschnitt in deine nächste Antwort einfügen?
         not_found: |-
           Hast du Schwierigkeiten, den Details-Abschnitt zu erstellen? Versuche Folgendes in deine nächste Antwort aufzunehmen:
 

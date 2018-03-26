@@ -104,8 +104,11 @@
                                      icon=model.saveIcon
                                      label=model.saveLabel
                                      disableSubmit=disableSubmit}}
-
-              <a href {{action "cancel"}} class='cancel' tabindex="6">{{i18n 'cancel'}}</a>
+            {{#if site.mobileView}}
+              <a href {{action "cancel"}} class='cancel' tabindex="6" title="{{i18n 'cancel'}}">{{d-icon "trash-o"}}</a>
+            {{else}}
+              <a href {{action "cancel"}} class='cancel' tabindex="6" >{{i18n 'cancel'}}</a>
+            {{/if}}
 
               {{#if site.mobileView}}
                 {{#if whisperOrUnlistTopic}}
@@ -118,8 +121,7 @@
 
               {{#if isUploading}}
                 <div id="file-uploading">
-                  {{loading-spinner size="small"}} {{i18n 'upload_selector.uploading'}}
-                  {{uploadProgress}}%
+                  {{loading-spinner size="small"}}<span>{{i18n 'upload_selector.uploading'}} {{uploadProgress}}%</span>
                   {{#if isCancellable}}
                     <a href id="cancel-file-upload" {{action "cancelUpload"}}>{{d-icon "times"}}</a>
                   {{/if}}
@@ -133,7 +135,7 @@
             <div class="composer-bottom-right">
               {{#if site.mobileView}}
                 {{#if allowUpload}}
-                  <a class="mobile-file-upload {{if isUploading 'hidden'}}">{{i18n 'upload'}}</a>
+                  <a class="btn btn-default no-text mobile-file-upload {{if isUploading 'hidden'}}">{{d-icon "upload"}}</a>
                 {{/if}}
 
                 {{#if showPreview}}

@@ -38,7 +38,7 @@ class UserArchivedMessage < ActiveRecord::Base
 
     def self.publish_topic_tracking_state(topic, user_id)
       TopicTrackingState.publish_private_message(
-        topic, user_id: user_id, user_archive: true
+        topic, archive_user_id: user_id
       )
     end
 end

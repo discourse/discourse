@@ -504,7 +504,8 @@ class Admin::UsersController < Admin::AdminController
           revisor.revise!(
             current_user,
             { raw:  params[:post_edit] },
-            skip_validations: true, skip_revision: true
+            skip_validations: true,
+            skip_revision: true
           )
         end
       end

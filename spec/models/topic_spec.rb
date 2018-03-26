@@ -471,7 +471,7 @@ describe Topic do
 
     context 'rate limits' do
       before do
-        SiteSetting.max_topic_invitations_per_day = 2
+        SiteSetting.max_topic_invitations_per_day = 1
         RateLimiter.enable
       end
 
@@ -481,7 +481,6 @@ describe Topic do
       end
 
       it "rate limits topic invitations" do
-
         start = Time.now.tomorrow.beginning_of_day
         freeze_time(start)
 
@@ -489,10 +488,23 @@ describe Topic do
         topic = Fabricate(:topic, user: trust_level_2)
 
         topic.invite(topic.user, user.username)
-        topic.invite(topic.user, "walter@white.com")
 
         expect {
-          topic.invite(topic.user, "user@example.com")
+          topic.invite(topic.user, another_user.username)
+        }.to raise_error(RateLimiter::LimitExceeded)
+      end
+
+      it "rate limits PM invitations" do
+        start = Time.now.tomorrow.beginning_of_day
+        freeze_time(start)
+
+        trust_level_2 = Fabricate(:user, trust_level: 2)
+        topic = Fabricate(:private_message_topic, user: trust_level_2)
+
+        topic.invite(topic.user, user.username)
+
+        expect {
+          topic.invite(topic.user, another_user.username)
         }.to raise_error(RateLimiter::LimitExceeded)
       end
     end
@@ -542,6 +554,17 @@ describe Topic do
             expect(topic.allowed_users).to_not include(another_user)
             expect(Post.last).to be_blank
             expect(Notification.last).to be_blank
+          end
+        end
+
+        context "when PMs are enabled for TL3 or higher only" do
+          before do
+            SiteSetting.min_trust_to_send_messages = 3
+          end
+
+          it 'should raise error' do
+            expect { topic.invite(user, another_user.username) }
+              .to raise_error(Topic::UserExists)
           end
         end
       end
@@ -1367,6 +1390,18 @@ describe Topic do
 
       expect(topic.topic_timers.first.execute_at).to eq(Time.zone.local(2013, 11, 19, 5, 0))
       expect(topic.topic_timers.first.errors[:execute_at]).to be_present
+    end
+
+    it "sets a validation error when give a timestamp of an invalid format" do
+      freeze_time now
+
+      expect do
+        topic.set_or_create_timer(
+          TopicTimer.types[:close],
+          '۲۰۱۸-۰۳-۲۶ ۱۸:۰۰+۰۸:۰۰',
+          by_user: admin
+        )
+      end.to raise_error(Discourse::InvalidParameters)
     end
 
     it "can take a timestamp with timezone" do

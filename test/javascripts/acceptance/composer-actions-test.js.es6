@@ -91,6 +91,22 @@ QUnit.test('replying to post - reply_as_new_topic', assert => {
   });
 });
 
+QUnit.test('shared draft', assert => {
+  let composerActions = selectKit('.composer-actions');
+
+  visit("/");
+  click('#create-topic');
+  andThen(() => {
+    composerActions.expand().selectRowByValue('shared_draft');
+  });
+  andThen(() => {
+    assert.equal(
+      find('#reply-control .btn-primary.create .d-button-label').text(),
+      I18n.t('composer.create_shared_draft')
+    );
+    assert.ok(find('#reply-control.composing-shared-draft').length === 1);
+  });
+});
 
 QUnit.test('interactions', assert => {
   const composerActions = selectKit('.composer-actions');
@@ -137,7 +153,7 @@ QUnit.test('interactions', assert => {
     assert.equal(composerActions.rowByIndex(0).value(), 'reply_to_post');
     assert.equal(composerActions.rowByIndex(1).value(), 'reply_as_private_message');
     assert.equal(composerActions.rowByIndex(2).value(), 'reply_to_topic');
-    assert.equal(composerActions.rowByIndex(3).value(), undefined);
+    assert.equal(composerActions.rowByIndex(3).value(), 'shared_draft');
   });
 
   composerActions.selectRowByValue('reply_as_private_message').expand();

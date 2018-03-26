@@ -135,7 +135,7 @@ class DiscourseSingleSignOn < SingleSignOn
       try_username = username.presence
 
       user_params = {
-        email: email,
+        primary_email: UserEmail.new(email: email, primary: true),
         name: try_name || User.suggest_name(try_username || email),
         username: UserNameSuggester.suggest(try_username || try_name || email),
         ip_address: ip_address
@@ -181,8 +181,12 @@ class DiscourseSingleSignOn < SingleSignOn
       user.active = false if require_activation
     end
 
-    if SiteSetting.sso_overrides_username && user.username != username && username.present?
-      user.username = UserNameSuggester.suggest(username || name || email, user.username)
+    if SiteSetting.sso_overrides_username? && username.present?
+      if user.username.downcase == username.downcase
+        user.username = username # there may be a change of case
+      elsif user.username != username
+        user.username = UserNameSuggester.suggest(username || name || email, user.username)
+      end
     end
 
     if SiteSetting.sso_overrides_name && user.name != name && name.present?

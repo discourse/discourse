@@ -33,13 +33,13 @@ const Group = RestModel.extend({
   findMembers(params) {
     if (Em.isEmpty(this.get('name'))) { return ; }
 
-    const self = this, offset = Math.min(this.get("user_count"), Math.max(this.get("offset"), 0));
+    const offset = Math.min(this.get("user_count"), Math.max(this.get("offset"), 0));
 
-    return Group.loadMembers(this.get("name"), offset, this.get("limit"), params).then(function (result) {
+    return Group.loadMembers(this.get("name"), offset, this.get("limit"), params).then(result => {
       var ownerIds = {};
       result.owners.forEach(owner => ownerIds[owner.id] = true);
 
-      self.setProperties({
+      this.setProperties({
         user_count: result.meta.total,
         limit: result.meta.limit,
         offset: result.meta.offset,
@@ -65,35 +65,43 @@ const Group = RestModel.extend({
     });
   },
 
-  removeMember(member) {
-    var self = this;
+  removeMember(member, params) {
     return ajax('/groups/' + this.get('id') + '/members.json', {
       type: "DELETE",
       data: { user_id: member.get("id") }
-    }).then(function() {
-      // reload member list
-      self.findMembers();
+    }).then(() => {
+      this.findMembers(params);
     });
   },
 
-  addMembers(usernames) {
-    var self = this;
+  addMembers(usernames, filter) {
     return ajax('/groups/' + this.get('id') + '/members.json', {
       type: "PUT",
       data: { usernames: usernames }
-    }).then(function() {
-      self.findMembers();
+    }).then(response => {
+      if (filter) {
+        this._filterMembers(response);
+      } else {
+        this.findMembers();
+      }
     });
   },
 
-  addOwners(usernames) {
-    var self = this;
+  addOwners(usernames, filter) {
     return ajax(`/admin/groups/${this.get('id')}/owners.json`, {
       type: "PUT",
       data: { group: { usernames: usernames } }
-    }).then(function() {
-      self.findMembers();
+    }).then(response => {
+      if (filter) {
+        this._filterMembers(response);
+      } else {
+        this.findMembers();
+      }
     });
+  },
+
+  _filterMembers(response) {
+    return this.findMembers({ filter: response.usernames.join(",") });
   },
 
   @computed("display_name", "name")

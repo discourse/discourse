@@ -124,6 +124,10 @@ table.group-members {
     text-align: left;
   }
 
+  th:last-child {
+    width: 5%;
+  }
+
   th.group-members-actions {
     width: 5%;
   }
@@ -201,6 +205,27 @@ table.group-members {
   .form-horizontal {
     label {
       font-weight: bold;
+    }
+  }
+}
+
+.group-membership {
+  .ac-wrap {
+    width: 100% !important;
+  }
+
+  label {
+    font-weight: bold;
+  }
+
+  .group-membership-make-owner {
+    label {
+      display: inline;
+      vertical-align: middle;
+    }
+
+    input[type='checkbox'] {
+      vertical-align: middle;
     }
   }
 }

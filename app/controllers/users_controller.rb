@@ -970,7 +970,7 @@ class UsersController < ApplicationController
     )
 
     render json: success_json.merge(
-      key: current_user.user_second_factor.data,
+      key: current_user.user_second_factor.data.scan(/.{4}/).join(" "),
       qr: qrcode_svg
     )
   end

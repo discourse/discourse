@@ -198,11 +198,11 @@ module Email
         if user = User.find_by_email(email)
           user.user_stat.bounce_score += score
           user.user_stat.reset_bounce_score_after = SiteSetting.reset_bounce_score_after_days.days.from_now
-          user.user_stat.save
+          user.user_stat.save!
 
           bounce_score = user.user_stat.bounce_score
           if user.active && bounce_score >= SiteSetting.bounce_score_threshold_deactivate
-            user.update_columns(active: false)
+            user.update!(active: false)
             reason = I18n.t("user.deactivated", email: user.email)
             StaffActionLogger.new(Discourse.system_user).log_user_deactivate(user, reason)
           elsif bounce_score >= SiteSetting.bounce_score_threshold
@@ -321,7 +321,7 @@ module Email
       # Exchange is using the 'messageReplySection' class for forwarded emails
       # And 'messageBodySection' for the actual email
       elided = doc.css("div[name='messageReplySection']").remove
-      to_markdown(doc.css("div[name='messageBodySection'").to_html, elided.to_html)
+      to_markdown(doc.css("div[name='messageReplySection']").to_html, elided.to_html)
     end
 
     def extract_from_apple_mail(html)

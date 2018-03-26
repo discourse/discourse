@@ -67,7 +67,7 @@ QUnit.test("basic cooking", assert => {
   assert.cooked("__bold__", "<p><strong>bold</strong></p>", "it bolds text.");
   assert.cooked("*trout*", "<p><em>trout</em></p>", "it italicizes text.");
   assert.cooked("_trout_", "<p><em>trout</em></p>", "it italicizes text.");
-  assert.cooked("***hello***", "<p><strong><em>hello</em></strong></p>", "it can do bold and italics at once.");
+  assert.cooked("***hello***", "<p><em><strong>hello</strong></em></p>", "it can do bold and italics at once.");
   assert.cooked("word_with_underscores", "<p>word_with_underscores</p>", "it doesn't do intraword italics");
   assert.cooked("common/_special_font_face.html.erb", "<p>common/_special_font_face.html.erb</p>", "it doesn't intraword with a slash");
   assert.cooked("hello \\*evil\\*", "<p>hello *evil*</p>", "it supports escaping of asterisks");

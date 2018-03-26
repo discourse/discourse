@@ -22,17 +22,18 @@ export default Ember.Mixin.create({
       data
     }).then(json => {
       self.set("asyncContent", callback(self, json));
+      self.autoHighlight();
     }).catch(error => {
       popupAjaxError(error);
     })
     .finally(() => {
       self.stopLoading();
-      self.autoHighlight();
+      self.focusFilterOrHeader();
     });
   },
 
   validateCreate(term) {
-    if (this.get("limitReached") || !this.site.get("can_create_tag")) {
+    if (this.get("hasReachedLimit") || !this.site.get("can_create_tag")) {
       return false;
     }
 
@@ -47,7 +48,9 @@ export default Ember.Mixin.create({
       return false;
     }
 
-    if (this.get("asyncContent").map(c => get(c, "id")).includes(term)) {
+    const inCollection = this.get("collectionComputedContent").map(c => get(c, "id")).includes(term);
+    const inSelection = this.get("selection").map(s => s.toLowerCase()).includes(term);
+    if (inCollection || inSelection) {
       return false;
     }
 

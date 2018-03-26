@@ -641,6 +641,12 @@ class PostsController < ApplicationController
       result[:is_warning] = false
     end
 
+    if params[:shared_draft] == 'true'
+      raise Discourse::InvalidParameters.new(:shared_draft) unless guardian.can_create_shared_draft?
+
+      result[:shared_draft] = true
+    end
+
     if current_user.staff? && SiteSetting.enable_whispers? && params[:whisper] == "true"
       result[:post_type] = Post.types[:whisper]
     end

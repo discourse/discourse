@@ -116,20 +116,29 @@ export default Ember.Component.extend({
   },
 
   _dock() {
-    const maximumOffset = $('#topic-bottom').offset(),
-          composerHeight = $('#reply-control').height() || 0,
-          $topicProgressWrapper = this.$(),
-          offset = window.pageYOffset || $('html').scrollTop();
+    let maximumOffset = $('#topic-bottom').offset();
+    let composerHeight = $('#reply-control').height() || 0;
+    let $topicProgressWrapper = this.$();
+    let offset = window.pageYOffset || $('html').scrollTop();
 
     if (!$topicProgressWrapper || $topicProgressWrapper.length === 0) {
       return;
     }
 
+    // Right position
+    let $replyArea = $('#reply-control .reply-area');
+    if ($replyArea && $replyArea.length) {
+      let rightPos = $replyArea.offset().left;
+      $topicProgressWrapper.css('right', `${rightPos}px`);
+    } else {
+      $topicProgressWrapper.css('right', `1em`);
+    }
+
     let isDocked = false;
     if (maximumOffset) {
-      const threshold = maximumOffset.top;
-      const windowHeight = $(window).height();
-      const headerHeight = $('header').outerHeight(true);
+      let threshold = maximumOffset.top;
+      let windowHeight = $(window).height();
+      let headerHeight = $('header').outerHeight(true);
 
       if (this.capabilities.isIOS) {
         isDocked = offset >= (threshold - windowHeight - headerHeight + composerHeight);
@@ -138,12 +147,12 @@ export default Ember.Component.extend({
       }
     }
 
-    const dockPos = $(document).height() - $('#topic-bottom').offset().top;
+    let dockPos = $(document).height() - $('#topic-bottom').offset().top;
     if (composerHeight > 0) {
       if (isDocked) {
         $topicProgressWrapper.css('bottom', dockPos);
       } else {
-        const height = composerHeight + "px";
+        let height = composerHeight + "px";
         if ($topicProgressWrapper.css('bottom') !== height) {
           $topicProgressWrapper.css('bottom', height);
         }
