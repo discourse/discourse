@@ -14,83 +14,168 @@ describe Migration::TableDropper do
     ActiveRecord::Base.exec_sql(sql).to_a.length > 0
   end
 
+  def update_first_migration_date(created_at)
+    ActiveRecord::Base.exec_sql(<<~SQL, created_at: created_at)
+        UPDATE schema_migration_details
+        SET created_at = :created_at
+        WHERE id = (SELECT MIN(id)
+                    FROM schema_migration_details)
+    SQL
+  end
+
+  def create_new_table
+    ActiveRecord::Base.exec_sql "CREATE TABLE table_with_new_name (topic_id INTEGER)"
+  end
+
   let(:migration_name) do
     ActiveRecord::Base
-      .exec_sql("SELECT name FROM schema_migration_details LIMIT 1")
+      .exec_sql("SELECT name FROM schema_migration_details ORDER BY id DESC LIMIT 1")
       .getvalue(0, 0)
   end
 
   before do
     ActiveRecord::Base.exec_sql "CREATE TABLE table_with_old_name (topic_id INTEGER)"
 
-    Topic.exec_sql("UPDATE schema_migration_details SET created_at = :created_at WHERE name = :name",
-                   name: migration_name, created_at: 15.minutes.ago)
+    ActiveRecord::Base.exec_sql(<<~SQL, name: migration_name, created_at: 15.minutes.ago)
+      UPDATE schema_migration_details
+      SET created_at = :created_at
+      WHERE name = :name
+    SQL
   end
 
-  describe "#delayed_rename" do
-    it "can drop a table after correct delay and when new table exists" do
-      dropped_proc_called = false
+  context "first migration was a long time ago" do
+    before do
+      update_first_migration_date(2.years.ago)
+    end
 
-      described_class.delayed_rename(
-        old_name: 'table_with_old_name',
-        new_name: 'table_with_new_name',
-        after_migration: migration_name,
-        delay: 20.minutes,
-        on_drop: ->() { dropped_proc_called = true }
-      )
+    describe ".delayed_rename" do
+      it "can drop a table after correct delay and when new table exists" do
+        dropped_proc_called = false
 
-      expect(table_exists?('table_with_old_name')).to eq(true)
-      expect(dropped_proc_called).to eq(false)
+        described_class.delayed_rename(
+          old_name: 'table_with_old_name',
+          new_name: 'table_with_new_name',
+          after_migration: migration_name,
+          delay: 20.minutes,
+          on_drop: ->() { dropped_proc_called = true }
+        )
 
-      described_class.delayed_rename(
-        old_name: 'table_with_old_name',
-        new_name: 'table_with_new_name',
-        after_migration: migration_name,
-        delay: 10.minutes,
-        on_drop: ->() { dropped_proc_called = true }
-      )
+        expect(table_exists?('table_with_old_name')).to eq(true)
+        expect(dropped_proc_called).to eq(false)
 
-      expect(table_exists?('table_with_old_name')).to eq(true)
-      expect(dropped_proc_called).to eq(false)
+        described_class.delayed_rename(
+          old_name: 'table_with_old_name',
+          new_name: 'table_with_new_name',
+          after_migration: migration_name,
+          delay: 10.minutes,
+          on_drop: ->() { dropped_proc_called = true }
+        )
 
-      ActiveRecord::Base.exec_sql "CREATE TABLE table_with_new_name (topic_id INTEGER)"
+        expect(table_exists?('table_with_old_name')).to eq(true)
+        expect(dropped_proc_called).to eq(false)
 
-      described_class.delayed_rename(
-        old_name: 'table_with_old_name',
-        new_name: 'table_with_new_name',
-        after_migration: migration_name,
-        delay: 10.minutes,
-        on_drop: ->() { dropped_proc_called = true }
-      )
+        create_new_table
 
-      expect(table_exists?('table_with_old_name')).to eq(false)
-      expect(dropped_proc_called).to eq(true)
+        described_class.delayed_rename(
+          old_name: 'table_with_old_name',
+          new_name: 'table_with_new_name',
+          after_migration: migration_name,
+          delay: 10.minutes,
+          on_drop: ->() { dropped_proc_called = true }
+        )
+
+        expect(table_exists?('table_with_old_name')).to eq(false)
+        expect(dropped_proc_called).to eq(true)
+      end
+    end
+
+    describe ".delayed_drop" do
+      it "can drop a table after correct delay" do
+        dropped_proc_called = false
+
+        described_class.delayed_drop(
+          table_name: 'table_with_old_name',
+          after_migration: migration_name,
+          delay: 20.minutes,
+          on_drop: ->() { dropped_proc_called = true }
+        )
+
+        expect(table_exists?('table_with_old_name')).to eq(true)
+        expect(dropped_proc_called).to eq(false)
+
+        described_class.delayed_drop(
+          table_name: 'table_with_old_name',
+          after_migration: migration_name,
+          delay: 10.minutes,
+          on_drop: ->() { dropped_proc_called = true }
+        )
+
+        expect(table_exists?('table_with_old_name')).to eq(false)
+        expect(dropped_proc_called).to eq(true)
+      end
     end
   end
 
-  describe "#delayed_drop" do
-    it "can drop a table after correct delay" do
-      dropped_proc_called = false
+  context "first migration was a less than 10 minutes ago" do
+    describe ".delayed_rename" do
+      it "can drop a table after correct delay and when new table exists" do
+        dropped_proc_called = false
+        update_first_migration_date(11.minutes.ago)
+        create_new_table
 
-      described_class.delayed_drop(
-        table_name: 'table_with_old_name',
-        after_migration: migration_name,
-        delay: 20.minutes,
-        on_drop: ->() { dropped_proc_called = true }
-      )
+        described_class.delayed_rename(
+          old_name: 'table_with_old_name',
+          new_name: 'table_with_new_name',
+          after_migration: migration_name,
+          delay: 30.minutes,
+          on_drop: ->() { dropped_proc_called = true }
+        )
 
-      expect(table_exists?('table_with_old_name')).to eq(true)
-      expect(dropped_proc_called).to eq(false)
+        expect(table_exists?('table_with_old_name')).to eq(true)
+        expect(dropped_proc_called).to eq(false)
 
-      described_class.delayed_drop(
-        table_name: 'table_with_old_name',
-        after_migration: migration_name,
-        delay: 10.minutes,
-        on_drop: ->() { dropped_proc_called = true }
-      )
+        update_first_migration_date(9.minutes.ago)
 
-      expect(table_exists?('table_with_old_name')).to eq(false)
-      expect(dropped_proc_called).to eq(true)
+        described_class.delayed_rename(
+          old_name: 'table_with_old_name',
+          new_name: 'table_with_new_name',
+          after_migration: migration_name,
+          delay: 30.minutes,
+          on_drop: ->() { dropped_proc_called = true }
+        )
+
+        expect(table_exists?('table_with_old_name')).to eq(false)
+        expect(dropped_proc_called).to eq(true)
+      end
+    end
+
+    describe ".delayed_drop" do
+      it "immediately drops the table" do
+        dropped_proc_called = false
+        update_first_migration_date(11.minutes.ago)
+
+        described_class.delayed_drop(
+          table_name: 'table_with_old_name',
+          after_migration: migration_name,
+          delay: 30.minutes,
+          on_drop: ->() { dropped_proc_called = true }
+        )
+
+        expect(table_exists?('table_with_old_name')).to eq(true)
+        expect(dropped_proc_called).to eq(false)
+
+        update_first_migration_date(9.minutes.ago)
+
+        described_class.delayed_drop(
+          table_name: 'table_with_old_name',
+          after_migration: migration_name,
+          delay: 30.minutes,
+          on_drop: ->() { dropped_proc_called = true }
+        )
+
+        expect(table_exists?('table_with_old_name')).to eq(false)
+        expect(dropped_proc_called).to eq(true)
+      end
     end
   end
 end
