@@ -48,6 +48,9 @@ end
 
 languages = get_languages.select { |x| x != 'en' }.sort
 
+# 'ur' translations still have invalid interpolation that breaks the build
+languages -= ['ur']
+
 # ensure that all locale files exists. tx doesn't create missing locale files during pull
 YML_DIRS.each do |dir|
   YML_FILE_PREFIXES.each do |prefix|
