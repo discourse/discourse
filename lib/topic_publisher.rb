@@ -30,6 +30,7 @@ class TopicPublisher
       if op.present?
         op.revisions.delete_all
         op.update_column(:version, 1)
+        op.update_column(:public_version, 1)
       end
     end
 

@@ -39,6 +39,7 @@ describe TopicPublisher do
         # Should delete any edits on the OP
         expect(op.revisions.size).to eq(0)
         expect(op.version).to eq(1)
+        expect(op.public_version).to eq(1)
       end
     end
 
