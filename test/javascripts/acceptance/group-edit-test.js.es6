@@ -24,9 +24,6 @@ QUnit.test("Editing group", assert => {
     );
 
     assert.ok(find('.group-edit-allow-membership-requests').length === 1, 'it should display group allow_membership_requets input');
-    assert.ok(find('.group-members-input .item').length === 7, 'it should display group members');
-    assert.ok(find('.group-members-input-selector').length === 1, 'it should display input to add group members');
-    assert.ok(find('.group-members-input-selector .add[disabled]').length === 1, 'add members button should be disabled');
 
     assert.ok(
       find('.group-edit-allow-membership-requests[disabled]').length === 1,
