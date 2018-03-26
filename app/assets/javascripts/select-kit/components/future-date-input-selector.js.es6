@@ -162,7 +162,7 @@ export default ComboBoxComponent.extend(DatetimeMixin, {
       const { time } = this._updateAt(value);
 
       if (time && !Ember.isEmpty(value)) {
-        input = time.format(FORMAT);
+        input = time.locale('en').format(FORMAT);
       }
 
       this.setProperties({ input, value });
