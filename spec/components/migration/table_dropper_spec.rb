@@ -86,6 +86,19 @@ describe Migration::TableDropper do
 
         expect(table_exists?('table_with_old_name')).to eq(false)
         expect(dropped_proc_called).to eq(true)
+
+        dropped_proc_called = false
+
+        described_class.delayed_rename(
+          old_name: 'table_with_old_name',
+          new_name: 'table_with_new_name',
+          after_migration: migration_name,
+          delay: 10.minutes,
+          on_drop: ->() { dropped_proc_called = true }
+        )
+
+        # it should call "on_drop" only when there is a table to drop
+        expect(dropped_proc_called).to eq(false)
       end
     end
 
@@ -112,6 +125,18 @@ describe Migration::TableDropper do
 
         expect(table_exists?('table_with_old_name')).to eq(false)
         expect(dropped_proc_called).to eq(true)
+
+        dropped_proc_called = false
+
+        described_class.delayed_drop(
+          table_name: 'table_with_old_name',
+          after_migration: migration_name,
+          delay: 10.minutes,
+          on_drop: ->() { dropped_proc_called = true }
+        )
+
+        # it should call "on_drop" only when there is a table to drop
+        expect(dropped_proc_called).to eq(false)
       end
     end
   end
