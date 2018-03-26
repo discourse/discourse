@@ -17,5 +17,12 @@ export default Discourse.Route.extend({
     });
 
     controller.refreshMembers();
+  },
+
+  actions: {
+    didTransition() {
+      this.controllerFor("group-index").set("filterInput", this._params.filter);
+      return true;
+    }
   }
 });

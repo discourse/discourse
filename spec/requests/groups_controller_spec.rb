@@ -427,12 +427,16 @@ describe GroupsController do
           email = 'uniquetest@discourse.org'
           user1.update!(email: email)
 
-          [email.upcase, 'QUEtes'].each do |filter|
+          {
+            email.upcase => [user1.id],
+            'QUEtes' => [user1.id],
+            "#{user1.email},#{user2.email}" => [user1.id, user2.id]
+          }.each do |filter, ids|
             get "/groups/#{group.name}/members.json", params: { filter: filter }
 
             expect(response.status).to eq(200)
             members = JSON.parse(response.body)["members"]
-            expect(members.map { |m| m["id"] }).to contain_exactly(user1.id)
+            expect(members.map { |m| m["id"] }).to contain_exactly(*ids)
           end
         end
 
@@ -519,7 +523,7 @@ describe GroupsController do
       sign_in(admin)
     end
 
-    context 'add_members' do
+    context '#add_members' do
       it "can make incremental adds" do
         user2 = Fabricate(:user)
 
@@ -573,12 +577,36 @@ describe GroupsController do
 
           expect(response).to be_success
         end
+
+        it 'fails when multiple member already exists' do
+          user3 = Fabricate(:user)
+          [user2, user3].each { |user| group.add(user) }
+
+          expect do
+            put "/groups/#{group.id}/members.json",
+              params: { user_emails: [user1.email, user2.email, user3.email].join(",") }
+          end.to change { group.users.count }.by(0)
+
+          expect(response.status).to eq(422)
+
+          expect(JSON.parse(response.body)["errors"]).to include(I18n.t(
+            "groups.errors.member_already_exist",
+            username: "#{user2.username}, #{user3.username}",
+            count: 2
+          ))
+        end
       end
 
       it "returns 422 if member already exists" do
         put "/groups/#{group.id}/members.json", params: { usernames: user.username }
 
         expect(response.status).to eq(422)
+
+        expect(JSON.parse(response.body)["errors"]).to include(I18n.t(
+          "groups.errors.member_already_exist",
+          username: user.username,
+          count: 1
+        ))
       end
 
       it "returns 404 if member is not found" do
