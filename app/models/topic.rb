@@ -1101,19 +1101,17 @@ SQL
       end
     else
       utc = Time.find_zone("UTC")
-      is_timestamp = time.is_a?(String)
-      now = utc.now
+      is_float = (Float(time) rescue nil)
 
-      if is_timestamp && time.include?("-") && timestamp = utc.parse(time)
+      if is_float
+        num_hours = time.to_f
+        topic_timer.execute_at = num_hours.hours.from_now if num_hours > 0
+      else
+        timestamp = utc.parse(time)
+        raise Discourse::InvalidParameters unless timestamp
         # a timestamp in client's time zone, like "2015-5-27 12:00"
         topic_timer.execute_at = timestamp
-        topic_timer.errors.add(:execute_at, :invalid) if timestamp < now
-      else
-        num_hours = time.to_f
-
-        if num_hours > 0
-          topic_timer.execute_at = num_hours.hours.from_now
-        end
+        topic_timer.errors.add(:execute_at, :invalid) if timestamp < utc.now
       end
     end
 
