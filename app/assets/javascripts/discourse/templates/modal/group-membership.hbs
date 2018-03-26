@@ -1,0 +1,13 @@
+{{#d-modal-body class='group-membership' title="groups.add_members.title"}}
+  {{user-selector usernames=model.usernames
+      placeholderKey="groups.selector_placeholder"
+      id="group-membership-user-selector"}}
+{{/d-modal-body}}
+
+<div class="modal-footer">
+  {{d-button action="addMembers"
+      class="add btn-primary"
+      icon="plus"
+      disabled=disableAddButton
+      label="groups.add"}}
+</div>

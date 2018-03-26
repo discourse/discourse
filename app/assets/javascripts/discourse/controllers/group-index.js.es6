@@ -26,12 +26,14 @@ export default Ember.Controller.extend({
     const model = this.get('model');
 
     if (model) {
-      model.findMembers({
-        order: this.get('order'),
-        desc: this.get('desc'),
-        filter: this.get('filter'),
-      }).finally(() => this.set('loading', false));
+      model.findMembers(this.get('memberParams'))
+        .finally(() => this.set('loading', false));
     }
+  },
+
+  @computed('order', 'desc', 'filter')
+  memberParams(order, desc, filter) {
+    return { order, desc, filter };
   },
 
   @computed('model.members')
@@ -59,7 +61,7 @@ export default Ember.Controller.extend({
     },
 
     removeMember(user) {
-      this.get('model').removeMember(user);
+      this.get('model').removeMember(user, this.get('memberParams'));
     },
 
     makeOwner(username) {

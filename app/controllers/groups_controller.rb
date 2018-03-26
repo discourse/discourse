@@ -188,6 +188,16 @@ class GroupsController < ApplicationController
     users = group.users.human_users
     total = users.count
 
+    if (filter = params[:filter]).present?
+      filter = filter.split(',') if filter.include?(',')
+
+      if current_user&.admin
+        users = users.filter_by_username_or_email(filter)
+      else
+        users = users.filter_by_username(filter)
+      end
+    end
+
     members = users
       .order('NOT group_users.owner')
       .order(order)
@@ -199,16 +209,6 @@ class GroupsController < ApplicationController
       .order(order)
       .order(username_lower: dir)
       .where('group_users.owner')
-
-    if (filter = params[:filter]).present?
-      if current_user&.admin
-        owners = owners.filter_by_username_or_email(filter)
-        members = members.filter_by_username_or_email(filter)
-      else
-        owners = owners.filter_by_username(filter)
-        members = members.filter_by_username(filter)
-      end
-    end
 
     render json: {
       members: serialize_data(members, GroupUserSerializer),
@@ -250,19 +250,21 @@ class GroupsController < ApplicationController
       end
     end
 
-    users.each do |user|
-      if !group.users.include?(user)
+    if (usernames = group.users.where(id: users.pluck(:id)).pluck(:username)).present?
+      render_json_error(I18n.t(
+        "groups.errors.member_already_exist",
+        username: usernames.join(", "),
+        count: usernames.size
+      ))
+    else
+      users.each do |user|
         group.add(user)
         GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
-      else
-        return render_json_error I18n.t('groups.errors.member_already_exist', username: user.username)
       end
-    end
 
-    if group.save
-      render json: success_json
-    else
-      render_json_error(group)
+      render json: success_json.merge!(
+        usernames: users.map(&:username)
+      )
     end
   end
 
