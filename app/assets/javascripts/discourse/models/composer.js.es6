@@ -10,12 +10,17 @@ import { escapeExpression, tinyAvatar } from 'discourse/lib/utilities';
 export const
   CREATE_TOPIC = 'createTopic',
   CREATE_SHARED_DRAFT = 'createSharedDraft',
+  EDIT_SHARED_DRAFT = 'editSharedDraft',
   PRIVATE_MESSAGE = 'privateMessage',
   NEW_PRIVATE_MESSAGE_KEY = 'new_private_message',
   REPLY = 'reply',
   EDIT = 'edit',
   REPLY_AS_NEW_TOPIC_KEY = "reply_as_new_topic",
   REPLY_AS_NEW_PRIVATE_MESSAGE_KEY = "reply_as_new_private_message";
+
+function isEdit(action) {
+  return action === EDIT || action === EDIT_SHARED_DRAFT;
+}
 
 const CLOSED = 'closed',
   SAVING = 'saving',
@@ -52,11 +57,13 @@ const SAVE_LABELS = {
   [REPLY]: 'composer.reply',
   [CREATE_TOPIC]: 'composer.create_topic',
   [PRIVATE_MESSAGE]: 'composer.create_pm',
-  [CREATE_SHARED_DRAFT]: 'composer.create_shared_draft'
+  [CREATE_SHARED_DRAFT]: 'composer.create_shared_draft',
+  [EDIT_SHARED_DRAFT]: 'composer.save_edit'
 };
 
 const SAVE_ICONS = {
   [EDIT]: 'pencil',
+  [EDIT_SHARED_DRAFT]: 'clipboard',
   [REPLY]: 'reply',
   [CREATE_TOPIC]: 'plus',
   [PRIVATE_MESSAGE]: 'envelope',
@@ -116,12 +123,13 @@ const Composer = RestModel.extend({
 
   topicFirstPost: Em.computed.or('creatingTopic', 'editingFirstPost'),
 
-  editingPost: Em.computed.equal('action', EDIT),
+  @computed('action')
+  editingPost: isEdit,
+
   replyingToTopic: Em.computed.equal('action', REPLY),
 
   viewOpen: Em.computed.equal('composeState', OPEN),
   viewDraft: Em.computed.equal('composeState', DRAFT),
-
 
   composeStateChanged: function() {
     var oldOpen = this.get('composerOpened');
@@ -212,7 +220,7 @@ const Composer = RestModel.extend({
       if (!this.site.mobileView) {
         const originalUserName = post.get('reply_to_user.username');
         const originalUserAvatar = post.get('reply_to_user.avatar_template');
-        if (originalUserName && originalUserAvatar && action === EDIT) {
+        if (originalUserName && originalUserAvatar && isEdit(action)) {
           options.originalUser = {
             username: originalUserName,
             avatar: tinyAvatar(originalUserAvatar)
@@ -471,11 +479,11 @@ const Composer = RestModel.extend({
 
     const composer = this;
     if (!replyBlank &&
-        ((opts.reply || opts.action === EDIT) && this.get('replyDirty'))) {
+        ((opts.reply || isEdit(opts.action)) && this.get('replyDirty'))) {
       return;
     }
 
-    if (opts.action === REPLY && this.get('action') === EDIT) this.set('reply', '');
+    if (opts.action === REPLY && isEdit(this.get('action'))) this.set('reply', '');
     if (!opts.draftKey) throw 'draft key is required';
     if (opts.draftSequence === null) throw 'draft sequence is required';
 
@@ -527,11 +535,15 @@ const Composer = RestModel.extend({
     }
 
     // If we are editing a post, load it.
-    if (opts.action === EDIT && opts.post) {
+    if (isEdit(opts.action) && opts.post) {
 
       const topicProps = this.serialize(_edit_topic_serializer);
       topicProps.loading = true;
 
+      // When editing a shared draft, use its category
+      if (opts.action === EDIT_SHARED_DRAFT && opts.destinationCategoryId) {
+        topicProps.categoryId = opts.destinationCategoryId;
+      }
       this.setProperties(topicProps);
 
       this.store.find('post', opts.post.get('id')).then(function(post) {
@@ -591,21 +603,25 @@ const Composer = RestModel.extend({
 
   // When you edit a post
   editPost(opts) {
-    const post = this.get('post'),
-          oldCooked = post.get('cooked'),
-          self = this;
+    let post = this.get('post');
+    let oldCooked = post.get('cooked');
+    let promise = Ember.RSVP.resolve();
 
-    let promise;
-
-    // Update the title if we've changed it, otherwise consider it a
-    // successful resolved promise
+    // Update the topic if we're editing the first post
     if (this.get('title') &&
         post.get('post_number') === 1 &&
         this.get('topic.details.can_edit')) {
       const topicProps = this.getProperties(Object.keys(_edit_topic_serializer));
-      promise = Topic.update(this.get('topic'), topicProps);
-    } else {
-      promise = Ember.RSVP.resolve();
+
+      let topic = this.get('topic');
+
+      // If we're editing a shared draft, keep the original category
+      if (this.get('action') === EDIT_SHARED_DRAFT) {
+        let destinationCategoryId = topicProps.categoryId;
+        promise = promise.then(() => topic.updateDestinationCategory(destinationCategoryId));
+        topicProps.categoryId = topic.get('category.id');
+      }
+      promise = promise.then(() => Topic.update(topic, topicProps));
     }
 
     const props = {
@@ -617,18 +633,18 @@ const Composer = RestModel.extend({
 
     this.set('composeState', SAVING);
 
-    var rollback = throwAjaxError(function(){
+    let rollback = throwAjaxError(() => {
       post.set('cooked', oldCooked);
-      self.set('composeState', OPEN);
+      this.set('composeState', OPEN);
     });
 
-    return promise.then(function() {
+    return promise.then(() => {
       // rest model only sets props after it is saved
       post.set("cooked", props.cooked);
-      return post.save(props).then(function(result) {
-        self.clearState();
+      return post.save(props).then(result => {
+        this.clearState();
         return result;
-      }).catch(function(error) {
+      }).catch(error => {
         throw error;
       });
     }).catch(rollback);
@@ -867,6 +883,8 @@ Composer.reopenClass({
 
   // The actions the composer can take
   CREATE_TOPIC,
+  CREATE_SHARED_DRAFT,
+  EDIT_SHARED_DRAFT,
   PRIVATE_MESSAGE,
   REPLY,
   EDIT,
