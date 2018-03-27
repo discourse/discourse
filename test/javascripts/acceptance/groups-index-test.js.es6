@@ -1,4 +1,4 @@
-import { acceptance, logIn } from "helpers/qunit-helpers";
+import { acceptance } from "helpers/qunit-helpers";
 
 acceptance("Groups");
 
