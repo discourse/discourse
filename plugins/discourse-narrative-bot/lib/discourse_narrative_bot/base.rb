@@ -120,10 +120,10 @@ module DiscourseNarrativeBot
         format: :svg
       }
       options.merge!(type: type) if type
-      
+
       src = Discourse.base_url + DiscourseNarrativeBot::Engine.routes.url_helpers.certificate_path(options)
       alt = CGI.escapeHTML(I18n.t("#{self.class::I18N_KEY}.certificate.alt"))
-      
+
       "<img class='discobot-certificate' src='#{src}' width='650' height='464' alt='#{alt}'>"
     end
 
