@@ -984,4 +984,34 @@ describe GroupsController do
       end
     end
   end
+
+  describe '#new' do
+    describe 'for an anon user' do
+      it 'should return 404' do
+        get '/groups/custom/new'
+
+        expect(response.status).to eq(404)
+      end
+    end
+
+    describe 'for a normal user' do
+      before { sign_in(user) }
+
+      it 'should return 404' do
+        get '/groups/custom/new'
+
+        expect(response.status).to eq(404)
+      end
+    end
+
+    describe 'for an admin user' do
+      before { sign_in(Fabricate(:admin)) }
+
+      it 'should return 404' do
+        get '/groups/custom/new'
+
+        expect(response.status).to eq(200)
+      end
+    end
+  end
 end
