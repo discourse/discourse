@@ -82,6 +82,8 @@ export default SelectKitRowComponent.extend({
 
   @computed("category.description")
   description(description) {
-    return `${description.substr(0, 200)}${description.length > 200 ? '&hellip;' : ''}`;
+    if (description) {
+      return `${description.substr(0, 200)}${description.length > 200 ? '&hellip;' : ''}`;
+    }
   }
 });
