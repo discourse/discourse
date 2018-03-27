@@ -143,7 +143,7 @@ const Report = Discourse.Model.extend({
   @computed('data')
   xAxisIsDate() {
     if (!this.data[0]) return false;
-    return this.data && moment(this.data[0].x, 'YYYY-MM-DD').isValid();
+    return this.data && this.data[0].x.match(/\d{4}-\d{1,2}-\d{1,2}/);
   }
 
 });
