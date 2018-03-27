@@ -167,6 +167,20 @@ $mobile-breakpoint: 700px;
       }
     }
 
+    &.web_crawlers {
+      tr {
+        th:nth-of-type(1) {
+          width: 60%;
+        }
+      }
+      td.x-value {
+        max-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+
     .bar-container {
       float: left;
       width: 300px;
