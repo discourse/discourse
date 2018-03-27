@@ -1,18 +1,19 @@
-import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import computed from 'ember-addons/ember-computed-decorators';
-import { extractError } from 'discourse/lib/ajax-error';
+import { popupAjaxError } from 'discourse/lib/ajax-error';
 
-export default Ember.Controller.extend(ModalFunctionality, {
+export default Ember.Controller.extend({
   loading: false,
   setAsOwner: false,
 
-  @computed('model.usernames')
-  disableAddButton(usernames) {
-    return !usernames || !(usernames.length > 0);
+  @computed('model.usernames', 'loading')
+  disableAddButton(usernames, loading) {
+    return loading || !usernames || !(usernames.length > 0);
   },
 
   actions: {
     addMembers() {
+      this.set('loading', true);
+
       const model = this.get('model');
       const usernames = model.get('usernames');
       if (Em.isEmpty(usernames)) { return; }
@@ -33,7 +34,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
         model.set("usernames", null);
         this.send('closeModal');
       })
-      .catch(error => this.flash(extractError(error), 'error'));
+      .catch(popupAjaxError)
+      .finally(() => this.set('loading', false));
     },
   },
 });

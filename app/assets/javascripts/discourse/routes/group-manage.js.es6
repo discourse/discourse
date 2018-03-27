@@ -1,6 +1,6 @@
 export default Discourse.Route.extend({
   titleToken() {
-    return I18n.t('groups.edit.title');
+    return I18n.t('groups.manage.title');
   },
 
   model() {
@@ -14,8 +14,7 @@ export default Discourse.Route.extend({
   },
 
   setupController(controller, model) {
-    this.controllerFor('group-edit').setProperties({ model });
-    this.controllerFor("group").set("showing", 'edit');
-    model.findMembers();
+    this.controllerFor('group-manage').setProperties({ model });
+    this.controllerFor("group").set("showing", 'manage');
   }
 });

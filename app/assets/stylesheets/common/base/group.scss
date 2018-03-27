@@ -78,7 +78,7 @@
   }
 }
 
-.group-logs-filter {
+.group-manage-logs-filter {
   margin-right: 10px;
 
   &:hover {
@@ -86,7 +86,7 @@
   }
 }
 
-table.group-logs {
+table.group-manage-logs {
   width: 100%;
 
   th, tr {
@@ -102,7 +102,7 @@ table.group-logs {
     padding: 10px 0;
   }
 
-  .group-logs-expand-details {
+  .group-manage-logs-expand-details {
     cursor: pointer;
 
     i {
@@ -201,7 +201,7 @@ table.group-members {
   }
 }
 
-.group-edit {
+.group-manage {
   .form-horizontal {
     label {
       font-weight: bold;
@@ -209,16 +209,8 @@ table.group-members {
   }
 }
 
-.group-membership {
-  .ac-wrap {
-    width: 100% !important;
-  }
-
-  label {
-    font-weight: bold;
-  }
-
-  .group-membership-make-owner {
+.group-manage-members {
+  .group-manage-members-make-owner {
     label {
       display: inline;
       vertical-align: middle;

@@ -1,0 +1,15 @@
+<div class='group-manage container'>
+  {{#mobile-nav class='group-manage-nav' desktopClass='pull-left nav nav-stacked' currentPath=application.currentPath}}
+    {{#each tabs as |tab|}}
+      <li>
+        {{#link-to tab.route model.name}}
+          {{i18n tab.title}}
+        {{/link-to}}
+      </li>
+    {{/each}}
+  {{/mobile-nav}}
+
+  <div class="{{if site.mobileView "" "pull-left"}} group-manage-outlet">
+    {{outlet}}
+  </div>
+</div>

@@ -13,11 +13,11 @@ export default Ember.Controller.extend({
     save() {
       this.set('saving', true);
 
-      this.get('model').save().catch(error => {
-        popupAjaxError(error);
-      }).finally(() => {
-        this.set('saving', false);
-      });
+      this.get('model').save()
+        .catch(popupAjaxError)
+        .finally(() => {
+          this.set('saving', false);
+        });
     }
   }
 });

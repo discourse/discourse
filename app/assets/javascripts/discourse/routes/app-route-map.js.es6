@@ -60,8 +60,11 @@ export default function() {
       this.route('mentions');
     });
 
-    this.route('logs');
-    this.route('edit');
+    this.route('manage', function() {
+      this.route('profile');
+      this.route('members');
+      this.route('logs');
+    });
 
     this.route('messages', function() {
       this.route('inbox');

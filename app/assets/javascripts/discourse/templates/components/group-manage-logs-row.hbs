@@ -1,4 +1,4 @@
-<tr class="group-logs-row">
+<tr class="group-manage-logs-row">
   <td>
     {{#d-button class="btn-small" action="filter" actionParam=(hash value=log.action key="action")}}
       {{log.actionTitle}}
@@ -33,7 +33,7 @@
 
   <td>{{bound-date log.created_at}}</td>
 
-  <td {{action "toggleDetails"}} class="group-logs-expand-details">
+  <td {{action "toggleDetails"}} class="group-manage-logs-expand-details">
     {{#if log.prev_value}}
       {{#if expandDetails}}
         {{d-icon 'ellipsis-v'}}
@@ -48,11 +48,11 @@
   <tr>
     <td colspan='6'>
       <p>
-        <strong>{{i18n 'groups.logs.from'}}</strong>: <code>{{log.prev_value}}</code>
+        <strong>{{i18n 'groups.manage.logs.from'}}</strong>: <code>{{log.prev_value}}</code>
       </p>
 
       <p>
-        <strong>{{i18n 'groups.logs.to'}}</strong>: <code>{{log.new_value}}</code>
+        <strong>{{i18n 'groups.manage.logs.to'}}</strong>: <code>{{log.new_value}}</code>
       </p>
     </td>
   </tr>
