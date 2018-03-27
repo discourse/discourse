@@ -20,6 +20,12 @@ export default SelectKitRowComponent.extend({
     return displayCategoryDescription;
   },
 
+  @computed("description", "category.name")
+  title(categoryDescription, categoryName) {
+    if (categoryDescription) return categoryDescription;
+    return categoryName;
+  },
+
   @computed("computedContent.value", "computedContent.name")
   category(value, name) {
     if (Ember.isEmpty(value)) {
