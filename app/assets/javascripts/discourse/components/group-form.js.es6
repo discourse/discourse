@@ -20,6 +20,11 @@ export default Ember.Component.extend({
     { name: I18n.t("groups.visibility_levels.owners"), value: 3 }
   ],
 
+  trustLevelOptions: [
+    { name: I18n.t("groups.trust_levels.none"), value: 0 },
+    { name: 1, value: 1 }, { name: 2, value: 2 }, { name: 3, value: 3 }, { name: 4, value: 4 }
+  ],
+
   @computed('model.visibility_level', 'model.public_admission')
   disableMembershipRequestSetting(visibility_level, publicAdmission) {
     visibility_level = parseInt(visibility_level);
