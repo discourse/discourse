@@ -137,11 +137,11 @@ const Report = Discourse.Model.extend({
 
   @computed('data')
   sortedData(data) {
-    return this.get('xaxisIsDate') ? data.toArray().reverse() : data.toArray();
+    return this.get('xAxisIsDate') ? data.toArray().reverse() : data.toArray();
   },
 
   @computed('data')
-  xaxisIsDate() {
+  xAxisIsDate() {
     if (!this.data[0]) return false;
     return this.data && moment(this.data[0].x, 'YYYY-MM-DD').isValid();
   }
