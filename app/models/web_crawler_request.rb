@@ -51,13 +51,13 @@ class WebCrawlerRequest < ActiveRecord::Base
       return
     end
 
-    list_key = user_agent_list_key(date)
+    ua_list_key = user_agent_list_key(date)
 
-    $redis.smembers(list_key).each do |user_agent, _|
+    while user_agent = $redis.spop(ua_list_key)
       $redis.del redis_key(user_agent, date)
     end
 
-    $redis.del(list_key)
+    $redis.del(ua_list_key)
   end
 
   protected
