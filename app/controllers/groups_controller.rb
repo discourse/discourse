@@ -7,7 +7,8 @@ class GroupsController < ApplicationController
     :update,
     :histories,
     :request_membership,
-    :search
+    :search,
+    :new
   ]
 
   skip_before_action :preload_json, :check_xhr, only: [:posts_feed, :mentions_feed]
@@ -111,6 +112,9 @@ class GroupsController < ApplicationController
         render_serialized(group, GroupShowSerializer, root: 'basic_group')
       end
     end
+  end
+
+  def new
   end
 
   def edit

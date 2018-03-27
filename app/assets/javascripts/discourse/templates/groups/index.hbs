@@ -1,6 +1,12 @@
 {{#d-section pageClass="groups"}}
   <h1>{{i18n "groups.index.title"}}</h1>
 
+  {{#if currentUser.admin}}
+    <div class="list-controls">
+      {{group-admin-dropdown new="new"}}
+    </div>
+  {{/if}}
+
   <div class="groups-filter">
     {{combo-box value=type
                 content=types

@@ -403,6 +403,17 @@ en:
         remove_user_as_group_owner: "Revoke owner"
 
     groups:
+      new:
+        title: "New Group"
+        description: "Create a new group"
+        create: "Create"
+        name:
+          too_short: "Group name is too short"
+          too_long: "Group name is too long"
+          checking: "Checking group name availability..."
+          available: "Group name is available"
+          not_available: "Group name is not available"
+          blank: "Group name cannot be blank"
       manage:
         title: 'Manage'
         name: 'Name'
@@ -452,7 +463,6 @@ en:
         submit: "Submit Request"
         title: "Request to join @%{group_name}"
         reason: "Let the group owners know why you belong in this group"
-
       membership: "Membership"
       name: "Name"
       user_count: "Members Count"
