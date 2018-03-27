@@ -1,5 +1,6 @@
 <div class='group-activity container'>
-  {{#mobile-nav class='group-messages-nav' desktopClass='pull-left nav nav-stacked' currentPath=application.currentPath}}
+  {{#mobile-nav class='group-navigation' desktopClass='pull-left nav nav-stacked' currentPath=application.currentPath}}
+
     <li>
       {{#link-to 'group.messages.inbox' model.name}}
         {{i18n 'user.messages.inbox'}}

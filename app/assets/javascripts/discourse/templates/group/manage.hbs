@@ -1,5 +1,5 @@
 <div class='group-manage container'>
-  {{#mobile-nav class='group-manage-nav' desktopClass='pull-left nav nav-stacked' currentPath=application.currentPath}}
+  {{#mobile-nav class='group-navigation' desktopClass='pull-left nav nav-stacked' currentPath=application.currentPath}}
     {{#each tabs as |tab|}}
       <li>
         {{#link-to tab.route model.name}}

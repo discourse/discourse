@@ -20,10 +20,7 @@
   margin-bottom: 20px;
 }
 
-.group-activity-nav,
-.group-messages-nav,
-.group-manage-nav
-{
+.group-navigation {
   width: 15%;
   background-color: transparent;
 
@@ -31,17 +28,18 @@
     border: none;
 
     a {
+      color: dark-light-choose($primary-medium, $secondary-high);
       padding: 8px 13px;
-    }
 
-    a.active {
-      background-color: transparent;
-      font-weight: bold;
-      color: $primary;
-    }
+      &.active {
+        background-color: transparent;
+        font-weight: bold;
+        color: $primary;
 
-    a.active:after {
-      display: none;
+        &:after {
+          display: none;
+        }
+      }
     }
   }
 }
