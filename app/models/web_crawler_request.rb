@@ -30,9 +30,9 @@ class WebCrawlerRequest < ActiveRecord::Base
     self.last_flush = Time.now.utc
 
     date = date.to_date
+    ua_list_key = user_agent_list_key(date)
 
-    $redis.smembers(user_agent_list_key(date)).each do |user_agent, _|
-
+    while user_agent = $redis.spop(ua_list_key)
       val = get_and_reset(redis_key(user_agent, date))
 
       next if val == 0
@@ -57,7 +57,7 @@ class WebCrawlerRequest < ActiveRecord::Base
       $redis.del redis_key(user_agent, date)
     end
 
-    $redis.del list_key
+    $redis.del(list_key)
   end
 
   protected

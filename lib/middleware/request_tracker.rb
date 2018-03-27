@@ -167,7 +167,7 @@ class Middleware::RequestTracker
 
     if block_crawler(request)
       log_request = false
-      result = [403, {}, []]
+      result = [403, { 'Content-Type' => 'text/plain' }, ['Crawler is not allowed']]
       return result
     end
 
