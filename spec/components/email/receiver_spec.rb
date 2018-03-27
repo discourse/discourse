@@ -886,4 +886,12 @@ describe Email::Receiver do
       end
     end
   end
+
+  it "tries to fix unparsable email addresses in To, CC and BBC headers" do
+    expect { process(:unparsable_email_addresses) }.to raise_error(Email::Receiver::BadDestinationAddress)
+
+    email = IncomingEmail.last
+    expect(email.to_addresses).to eq("foo@bar.com")
+    expect(email.cc_addresses).to eq("bob@example.com;carol@example.com")
+  end
 end

@@ -64,6 +64,7 @@ module Email
       DistributedMutex.synchronize(@message_id) do
         begin
           return if IncomingEmail.exists?(message_id: @message_id)
+          ensure_valid_address_lists
           @from_email, @from_display_name = parse_from_field(@mail)
           @incoming_email = create_incoming_email
           process_internal
@@ -73,6 +74,16 @@ module Email
           @incoming_email.update_columns(error: error) if @incoming_email
           delete_staged_users
           raise
+        end
+      end
+    end
+
+    def ensure_valid_address_lists
+      [:to, :cc, :bcc].each do |field|
+        addresses = @mail[field]
+
+        if addresses&.errors.present?
+          @mail[field] = addresses.to_s.scan(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i)
         end
       end
     end
