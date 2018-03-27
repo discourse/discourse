@@ -291,7 +291,7 @@ describe Middleware::RequestTracker do
 
     def expect_blocked_response(status, _, response)
       expect(status).to eq(403)
-      expect(response).to be_blank
+      expect(response).to eq(['Crawler is not allowed'])
     end
 
     it "applies whitelisted_crawler_user_agents correctly" do
