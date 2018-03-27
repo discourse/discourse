@@ -42,3 +42,23 @@ end
     WebHook.enqueue_hooks(:user, user_id: user.id, event_name: event.to_s)
   end
 end
+
+%i(
+  group_created
+  group_updated
+  group_destroyed
+).each do |event|
+  DiscourseEvent.on(event) do |group|
+    WebHook.enqueue_hooks(:group, group_id: group.id, event_name: event.to_s)
+  end
+end
+
+%i(
+  category_created
+  category_updated
+  category_destroyed
+).each do |event|
+  DiscourseEvent.on(event) do |category|
+    WebHook.enqueue_hooks(:category, category_id: category.id, event_name: event.to_s)
+  end
+end

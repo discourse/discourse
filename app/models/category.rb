@@ -61,6 +61,9 @@ class Category < ActiveRecord::Base
   after_update :rename_category_definition, if: :saved_change_to_name?
   after_update :create_category_permalink, if: :saved_change_to_slug?
 
+  after_commit :trigger_category_created_event, on: :create
+  after_commit :trigger_category_destroyed_event, on: :destroy
+
   belongs_to :parent_category, class_name: 'Category'
   has_many :subcategories, class_name: 'Category', foreign_key: 'parent_category_id'
 
@@ -510,6 +513,16 @@ SQL
 
   def subcategory_list_includes_topics?
     subcategory_list_style.end_with?("with_featured_topics")
+  end
+
+  def trigger_category_created_event
+    DiscourseEvent.trigger(:category_created, self)
+    true
+  end
+
+  def trigger_category_destroyed_event
+    DiscourseEvent.trigger(:category_destroyed, self)
+    true
   end
 end
 
