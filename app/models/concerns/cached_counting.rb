@@ -50,7 +50,9 @@ module CachedCounting
     # for concurrent calls without double counting
     def get_and_reset(key)
       namespaced_key = $redis.namespace_key(key)
-      $redis.without_namespace.eval(GET_AND_RESET, keys: [namespaced_key]).to_i
+      val = $redis.without_namespace.eval(GET_AND_RESET, keys: [namespaced_key]).to_i
+      $redis.expire(key, 259200) # SET removes expiry, so set it again
+      val
     end
 
     def request_id(query_params, retries = 0)
