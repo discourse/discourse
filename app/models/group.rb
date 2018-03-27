@@ -35,6 +35,9 @@ class Group < ActiveRecord::Base
   after_save :expire_cache
   after_destroy :expire_cache
 
+  after_commit :trigger_group_created_event, on: :create
+  after_commit :trigger_group_destroyed_event, on: :destroy
+
   def expire_cache
     ApplicationSerializer.expire_cache_fragment!("group_names")
   end
@@ -569,6 +572,16 @@ class Group < ActiveRecord::Base
 
   def self.owner_of(groups, user)
     self.member_of(groups, user).where("gu.owner")
+  end
+
+  def trigger_group_created_event
+    DiscourseEvent.trigger(:group_created, self)
+    true
+  end
+
+  def trigger_group_destroyed_event
+    DiscourseEvent.trigger(:group_destroyed, self)
+    true
   end
 
   protected

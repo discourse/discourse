@@ -55,7 +55,10 @@ class Admin::GroupsController < Admin::AdminController
 
     # group rename is ignored for automatic groups
     group.name = group_params[:name] if group_params[:name] && !group.automatic
-    save_group(group) { |g| GroupActionLogger.new(current_user, g).log_change_group_settings }
+    save_group(group) do |group|
+      GroupActionLogger.new(current_user, group).log_change_group_settings
+      DiscourseEvent.trigger(:group_updated, group)
+    end
   end
 
   def save_group(group)

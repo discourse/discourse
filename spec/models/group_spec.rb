@@ -411,17 +411,37 @@ describe Group do
     expect(g.usernames.split(",").sort).to eq usernames.split(",").sort
   end
 
-  it "correctly destroys groups" do
+  describe 'new' do
+    subject { Fabricate.build(:group) }
 
-    g = Fabricate(:group)
-    u1 = Fabricate(:user)
-    g.add(u1)
-    g.save!
+    it 'triggers a extensibility event' do
+      event = DiscourseEvent.track_events { subject.save! }.first
 
-    g.destroy
+      expect(event[:event_name]).to eq(:group_created)
+      expect(event[:params].first).to eq(subject)
+    end
+  end
 
-    expect(User.where(id: u1.id).count).to eq 1
-    expect(GroupUser.where(group_id: g.id).count).to eq 0
+  describe 'destroy' do
+    let(:user) { Fabricate(:user) }
+    let(:group) { Fabricate(:group, users: [user]) }
+
+    before do
+      group.add(user)
+    end
+
+    it "it deleted correctly" do
+      group.destroy!
+      expect(User.where(id: user.id).count).to eq 1
+      expect(GroupUser.where(group_id: group.id).count).to eq 0
+    end
+
+    it 'triggers a extensibility event' do
+      event = DiscourseEvent.track_events { group.destroy! }.first
+
+      expect(event[:event_name]).to eq(:group_destroyed)
+      expect(event[:params].first).to eq(group)
+    end
   end
 
   it "has custom fields" do
