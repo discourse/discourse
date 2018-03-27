@@ -13,10 +13,7 @@ export default Ember.Component.extend({
 
   actions: {
     updateDestinationCategory(category) {
-      ajax(`/t/${this.get('topic.id')}/shared-draft`, {
-        method: 'PUT',
-        data: { category_id: category.get('id') }
-      });
+      return this.get('topic').updateDestinationCategory(category.get('id'));
     },
 
     publish() {

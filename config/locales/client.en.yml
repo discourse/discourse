@@ -1314,6 +1314,7 @@ en:
       create_pm: "Message"
       create_whisper: "Whisper"
       create_shared_draft: "Create Shared Draft"
+      edit_shared_draft: "Edit Shared Draft"
       title: "Or press Ctrl+Enter"
 
       users_placeholder: "Add a user"

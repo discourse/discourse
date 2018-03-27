@@ -519,7 +519,7 @@ export default Ember.Controller.extend({
       if (result.responseJson.action === "create_post" || this.get('replyAsNewTopicDraft') || this.get('replyAsNewPrivateMessageDraft')) {
         this.destroyDraft();
       }
-      if (this.get('model.action') === 'edit') {
+      if (this.get('model.editingPost')) {
         this.appEvents.trigger('post-stream:refresh', { id: parseInt(result.responseJson.id) });
         if (result.responseJson.post.post_number === 1) {
           this.appEvents.trigger('header:update-topic', composer.get('topic'));
