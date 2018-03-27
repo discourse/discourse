@@ -1,5 +1,4 @@
 import computed from 'ember-addons/ember-computed-decorators';
-import { ajax } from 'discourse/lib/ajax';
 
 export default Ember.Component.extend({
   tagName: '',
