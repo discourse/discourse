@@ -235,7 +235,7 @@ describe Middleware::RequestTracker do
     def app(result, sql_calls: 0, redis_calls: 0)
       lambda do |env|
         sql_calls.times do
-          User.where(id: -100).first
+          User.where(id: -100).pluck(:id)
         end
         redis_calls.times do
           $redis.get("x")
@@ -260,6 +260,10 @@ describe Middleware::RequestTracker do
     end
 
     it "can correctly log detailed data" do
+
+      # ensure pg is warmed up with the select 1 query
+      User.where(id: -100).pluck(:id)
+
       tracker = Middleware::RequestTracker.new(app([200, {}, []], sql_calls: 2, redis_calls: 2))
       tracker.call(env)
 
