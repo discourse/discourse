@@ -9,6 +9,7 @@ describe Middleware::RequestTracker do
       "HTTP_USER_AGENT" => "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36",
       "REQUEST_URI" => "/path?bla=1",
       "REQUEST_METHOD" => "GET",
+      "HTTP_ACCEPT" => "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
       "rack.input" => ""
     }.merge(opts)
   end
@@ -277,4 +278,58 @@ describe Middleware::RequestTracker do
       expect(timing[:redis][:calls]).to eq 2
     end
   end
+
+  context "crawler blocking" do
+    let :middleware do
+      app = lambda do |env|
+        [200, {}, ['OK']]
+      end
+
+      Middleware::RequestTracker.new(app)
+    end
+
+    def expect_success_response(status, _, response)
+      expect(status).to eq(200)
+      expect(response).to eq(['OK'])
+    end
+
+    def expect_blocked_response(status, _, response)
+      expect(status).to eq(403)
+      expect(response).to eq(['Crawler is not allowed'])
+    end
+
+    it "applies whitelisted_crawler_user_agents correctly" do
+      SiteSetting.whitelisted_crawler_user_agents = 'Googlebot'
+      expect_success_response(*middleware.call(env))
+      expect_blocked_response(*middleware.call(env('HTTP_USER_AGENT' => 'Twitterbot')))
+      expect_success_response(*middleware.call(env('HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)')))
+      expect_blocked_response(*middleware.call(env('HTTP_USER_AGENT' => 'DiscourseAPI Ruby Gem 0.19.0')))
+    end
+
+    it "applies blacklisted_crawler_user_agents correctly" do
+      SiteSetting.blacklisted_crawler_user_agents = 'Googlebot'
+      expect_success_response(*middleware.call(env))
+      expect_blocked_response(*middleware.call(env('HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)')))
+      expect_success_response(*middleware.call(env('HTTP_USER_AGENT' => 'Twitterbot')))
+      expect_success_response(*middleware.call(env('HTTP_USER_AGENT' => 'DiscourseAPI Ruby Gem 0.19.0')))
+    end
+
+    it "blocked crawlers shouldn't log page views" do
+      ApplicationRequest.clear_cache!
+      SiteSetting.blacklisted_crawler_user_agents = 'Googlebot'
+      expect {
+        middleware.call(env('HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)'))
+        ApplicationRequest.write_cache!
+      }.to_not change { ApplicationRequest.count }
+    end
+
+    it "allows json requests" do
+      SiteSetting.blacklisted_crawler_user_agents = 'Googlebot'
+      expect_success_response(*middleware.call(env(
+        'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)',
+        'HTTP_ACCEPT' => 'application/json'
+      )))
+    end
+  end
+
 end
