@@ -37,14 +37,11 @@ export default Ember.Controller.extend({
     }
 
     if (this.currentUser && this.currentUser.canManageGroup(this.model)) {
-      defaultTabs.push(...[
+      defaultTabs.push(
         Tab.create({
-          name: 'edit', i18nKey: 'edit.title', icon: 'pencil'
-        }),
-        Tab.create({
-          name: 'logs', i18nKey: 'logs.title', icon: 'list-alt'
+          name: 'manage', i18nKey: 'manage.title', icon: 'wrench'
         })
-      ]);
+      );
     }
 
     return defaultTabs;

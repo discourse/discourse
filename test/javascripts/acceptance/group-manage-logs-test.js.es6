@@ -1,6 +1,6 @@
 import { acceptance } from "helpers/qunit-helpers";
 
-acceptance("Group Logs", {
+acceptance("Group logs", {
   loggedIn: true,
   beforeEach() {
     const response = object => {
@@ -27,14 +27,14 @@ acceptance("Group Logs", {
 });
 
 QUnit.test("Browsing group logs", assert => {
-  visit("/groups/snorlax/logs");
+  visit("/groups/snorlax/manage/logs");
 
   andThen(() => {
-    assert.ok(find('tr.group-logs-row').length === 2, 'it should display the right number of logs');
-    click(find(".group-logs-row button")[0]);
+    assert.ok(find('tr.group-manage-logs-row').length === 2, 'it should display the right number of logs');
+    click(find(".group-manage-logs-row button")[0]);
   });
 
   andThen(() => {
-    assert.ok(find('tr.group-logs-row').length === 1, 'it should display the right number of logs');
+    assert.ok(find('tr.group-manage-logs-row').length === 1, 'it should display the right number of logs');
   });
 });

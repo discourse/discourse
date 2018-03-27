@@ -5,7 +5,7 @@ export default Ember.Component.extend({
 
   @computed('type')
   label(type) {
-    return I18n.t(`groups.logs.${type}`);
+    return I18n.t(`groups.manage.logs.${type}`);
   },
 
   @computed('value', 'type')

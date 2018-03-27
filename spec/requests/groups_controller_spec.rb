@@ -279,6 +279,7 @@ describe GroupsController do
         expect do
           put "/groups/#{group.id}.json", params: {
             group: {
+              name: 'testing',
               flair_bg_color: 'FFF',
               flair_color: 'BBB',
               flair_url: 'fa-adjust',
@@ -292,7 +293,7 @@ describe GroupsController do
           }
         end.to change { GroupHistory.count }.by(9)
 
-        expect(response).to be_success
+        expect(response.status).to eq(200)
 
         group.reload
 
@@ -306,6 +307,7 @@ describe GroupsController do
         expect(group.allow_membership_requests).to eq(true)
         expect(group.membership_request_template).to eq('testing')
         expect(GroupHistory.last.subject).to eq('membership_request_template')
+        expect(group.name).to eq('test')
       end
     end
 
@@ -316,10 +318,18 @@ describe GroupsController do
       end
 
       it 'should be able to update the group' do
-        put "/groups/#{group.id}.json", params: { group: { flair_color: 'BBB' } }
+        put "/groups/#{group.id}.json", params: {
+          group: {
+            flair_color: 'BBB',
+            name: 'testing'
+          }
+        }
 
-        expect(response).to be_success
-        expect(group.reload.flair_color).to eq('BBB')
+        expect(response.status).to eq(200)
+
+        group.reload
+        expect(group.flair_color).to eq('BBB')
+        expect(group.name).to eq('testing')
       end
     end
 

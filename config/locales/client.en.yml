@@ -403,21 +403,29 @@ en:
         remove_user_as_group_owner: "Revoke owner"
 
     groups:
-      logs:
-        title: "Logs"
-        when: "When"
-        action: "Action"
-        acting_user: "Acting user"
-        target_user: "Target user"
-        subject: "Subject"
-        details: "Details"
-        from: "From"
-        to: "To"
-      edit:
-        title: 'Edit Group'
+      manage:
+        title: 'Manage'
+        name: 'Name'
         full_name: 'Full Name'
         add_members: "Add Members"
         delete_member_confirm: "Remove '%{username}' from the '%{group}' group?"
+        profile:
+          title: Profile
+        members:
+          title: "Members"
+          description: "Manage the membership of this group"
+          usernames: "Usernames"
+          as_owner: "Set user(s) as owner(s) of this group"
+        logs:
+          title: "Logs"
+          when: "When"
+          action: "Action"
+          acting_user: "Acting user"
+          target_user: "Target user"
+          subject: "Subject"
+          details: "Details"
+          from: "From"
+          to: "To"
       name_placeholder: "Group name, no spaces, same as username rule"
       public_admission: "Allow users to join the group freely (Requires publicly visible group)"
       public_exit: "Allow users to leave the group freely"
@@ -464,11 +472,6 @@ en:
         one: "Group"
         other: "Groups"
       activity: "Activity"
-      add_members:
-        title: "Add Members"
-        description: "Manage the membership of this group"
-        usernames: "Usernames"
-        as_owner: "Set user(s) as owner(s) of this group"
       members:
         title: "Members"
         filter_placeholder_admin: "username or email"

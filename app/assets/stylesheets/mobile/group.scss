@@ -23,11 +23,14 @@
   float: left;
 }
 
-.group-activity {
+.group-activity, .group-manage {
   position: relative;
 }
 
-.group-activity-nav, .group-messages-nav {
+.group-activity-nav,
+.group-messages-nav,
+.group-manage-nav
+{
   &.mobile-nav {
     position: absolute;
     right: 0;
@@ -51,7 +54,7 @@
   }
 }
 
-table.group-logs {
+table.group-manage-logs {
   width: 130%;
 }
 

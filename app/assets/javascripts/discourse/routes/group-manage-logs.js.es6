@@ -1,6 +1,6 @@
 export default Discourse.Route.extend({
   titleToken() {
-    return I18n.t('groups.logs.title');
+    return I18n.t('groups.manage.logs.title');
   },
 
   model() {
@@ -8,13 +8,12 @@ export default Discourse.Route.extend({
   },
 
   setupController(controller, model) {
-    this.controllerFor('group-logs').setProperties({ model });
-    this.controllerFor("group").set("showing", 'logs');
+    this.controllerFor('group-manage-logs').setProperties({ model });
   },
 
   actions: {
     willTransition() {
-      this.controllerFor('group-logs').reset();
+      this.controllerFor('group-manage-logs').reset();
     }
   }
 });

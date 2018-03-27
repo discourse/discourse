@@ -472,6 +472,10 @@ Discourse::Application.routes.draw do
         messages
         messages/inbox
         messages/archive
+        manage
+        manage/profile
+        manage/members
+        manage/logs
       }.each do |path|
         get path => 'groups#show'
       end

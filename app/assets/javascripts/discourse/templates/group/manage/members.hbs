@@ -1,0 +1,25 @@
+<form class="form-horizontal group-manage-members">
+  <div class="control-group">
+    <label>{{i18n "groups.manage.members.usernames"}}</label>
+
+    {{user-selector
+        usernames=model.usernames
+        placeholderKey="groups.selector_placeholder"
+        id="group-manage-members-user-selector"}}
+  </div>
+
+  {{#if this.currentUser.admin}}
+    <div class="control-group group-manage-members-make-owner">
+      <label>
+        {{input type="checkbox" class="inline" checked=setAsOwner}}
+        {{i18n "groups.manage.members.as_owner"}}
+      </label>
+    </div>
+  {{/if}}
+
+  {{d-button action="addMembers"
+      class="add btn-primary"
+      icon="plus"
+      disabled=disableAddButton
+      label="groups.add"}}
+</form>

@@ -20,7 +20,10 @@
   margin-bottom: 20px;
 }
 
-.group-activity-nav, .group-messages-nav {
+.group-activity-nav,
+.group-messages-nav,
+.group-manage-nav
+{
   width: 15%;
   background-color: transparent;
 
@@ -43,14 +46,14 @@
   }
 }
 
-.group-activity-outlet, .group-messages-outlet {
+.group-activity-outlet,
+.group-messages-outlet,
+.group-manage-outlet
+{
   width: 85%;
 }
 
-.group-edit {
-  border: 1px solid $primary-low;
-  padding: 10px;
-
+.group-manage {
   .form-horizontal {
     button {
       float: none;

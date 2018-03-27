@@ -411,7 +411,7 @@ class GroupsController < ApplicationController
   private
 
   def group_params
-    params.require(:group).permit(
+    permitted_params = [
       :flair_url,
       :flair_bg_color,
       :flair_color,
@@ -421,7 +421,13 @@ class GroupsController < ApplicationController
       :public_exit,
       :allow_membership_requests,
       :membership_request_template,
-    )
+    ]
+
+    if current_user.admin
+      permitted_params.push(:name)
+    end
+
+    params.require(:group).permit(*permitted_params)
   end
 
   def find_group(param_name)
