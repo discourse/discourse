@@ -61,7 +61,7 @@ QUnit.test("Creating a new group", assert => {
     );
   });
 
-  click(".groups-new-public-admission");
+  click(".group-form-public-admission");
 
   andThen(() => {
     assert.equal(

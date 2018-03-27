@@ -10,44 +10,47 @@ QUnit.test("Editing group", assert => {
 
   andThen(() => {
     assert.ok(find('.group-flair-inputs').length === 1, 'it should display avatar flair inputs');
-    assert.ok(find('.group-manage-bio').length === 1, 'it should display group bio input');
-    assert.ok(find('.group-manage-name').length === 1, 'it should display group name input');
-    assert.ok(find('.group-manage-full-name').length === 1, 'it should display group full name input');
+    assert.ok(find('.group-form-bio').length === 1, 'it should display group bio input');
+    assert.ok(find('.group-form-name').length === 1, 'it should display group name input');
+    assert.ok(find('.group-form-full-name').length === 1, 'it should display group full name input');
 
     assert.ok(
-      find('.group-manage-public-admission').length === 1,
+      find('.group-form-public-admission').length === 1,
       'it should display group public admission input'
     );
 
     assert.ok(
-      find('.group-manage-public-exit').length === 1,
+      find('.group-form-public-exit').length === 1,
       'it should display group public exit input'
     );
 
-    assert.ok(find('.group-manage-allow-membership-requests').length === 1, 'it should display group allow_membership_requets input');
+    assert.ok(
+      find('.group-form-allow-membership-requests').length === 1,
+      'it should display group allow_membership_request input'
+    );
 
     assert.ok(
-      find('.group-manage-allow-membership-requests[disabled]').length === 1,
+      find('.group-form-allow-membership-requests[disabled]').length === 1,
       'it should disable group allow_membership_request input'
     );
   });
 
-  click('.group-manage-public-admission');
-  click('.group-manage-allow-membership-requests');
+  click('.group-form-public-admission');
+  click('.group-form-allow-membership-requests');
 
   andThen(() => {
     assert.ok(
-      find('.group-manage-public-admission[disabled]').length === 1,
+      find('.group-form-public-admission[disabled]').length === 1,
       'it should disable group public admission input'
     );
 
     assert.ok(
-      find('.group-manage-public-exit[disabled]').length === 0,
+      find('.group-form-public-exit[disabled]').length === 0,
       'it should not disable group public exit input'
     );
 
     assert.equal(
-      find('.group-manage-membership-request-template').length, 1,
+      find('.group-form-membership-request-template').length, 1,
       'it should display the membership request template field'
     );
   });
