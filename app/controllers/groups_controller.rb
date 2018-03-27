@@ -253,7 +253,7 @@ class GroupsController < ApplicationController
     if (usernames = group.users.where(id: users.pluck(:id)).pluck(:username)).present?
       render_json_error(I18n.t(
         "groups.errors.member_already_exist",
-        username: usernames.join(", "),
+        username: usernames.sort.join(", "),
         count: usernames.size
       ))
     else
