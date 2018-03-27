@@ -27,10 +27,7 @@
   position: relative;
 }
 
-.group-activity-nav,
-.group-messages-nav,
-.group-manage-nav
-{
+.group-navigation {
   &.mobile-nav {
     position: absolute;
     right: 0;
