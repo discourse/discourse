@@ -589,7 +589,8 @@ describe GroupsController do
         end
 
         it 'fails when multiple member already exists' do
-          user3 = Fabricate(:user)
+          user2.update!(username: 'alice')
+          user3 = Fabricate(:user, username: 'bob')
           [user2, user3].each { |user| group.add(user) }
 
           expect do
@@ -601,7 +602,7 @@ describe GroupsController do
 
           expect(JSON.parse(response.body)["errors"]).to include(I18n.t(
             "groups.errors.member_already_exist",
-            username: "#{user2.username}, #{user3.username}",
+            username: "alice, bob",
             count: 2
           ))
         end
