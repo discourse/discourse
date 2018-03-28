@@ -1287,22 +1287,6 @@ cs:
         one: "{{count}} zpráva ve schránce skupiny {{group_name}}"
         few: "{{count}} zprávy ve schránce skupiny {{group_name}}"
         other: "{{count}} zpráv ve schránce skupiny {{group_name}}"
-      alt:
-        mentioned: "Zmíněno"
-        quoted: "Citováno"
-        replied: "Odpověděl"
-        posted: "Příspěvek od"
-        edited: "Editovat váš příspěvek od"
-        liked: "Líbil se tvůj příspěvek"
-        private_message: "Soukromá zpráva od"
-        invited_to_private_message: "Pozván k soukromé zprávě od"
-        invited_to_topic: "Pozván k tématu od"
-        invitee_accepted: "Pozvánka přijata od"
-        moved_post: "Tvůj příspěvek přesunul"
-        linked: "Odkaz na tvůj příspěvek"
-        granted_badge: "Odznak přidělen"
-        group_message_summary: "Zprávy ve skupinové schránce"
-        topic_reminder: "Připomenutí"
       popup:
         mentioned: '{{username}} vás zmínil v "{{topic}}" - {{site_title}}'
         group_mentioned: 'Uživatel {{username}} vás zmínil v "{{topic}}" - {{site_title}}'

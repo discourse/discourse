@@ -1114,19 +1114,6 @@ ja:
       watching_first_post: "<span>新しいトピック</span> {{description}}"
       group_message_summary:
         other: "{{group_name}} 宛のメッセージが {{count}} 通あります"
-      alt:
-        mentioned: "メンションされました: "
-        quoted: "引用されました: "
-        replied: "リプライ"
-        posted: "投稿者 "
-        edited: "投稿の編集者: "
-        liked: "あなたの投稿をいいねしました"
-        invited_to_topic: "トピックに招待されました: "
-        invitee_accepted: "招待が承認されました: "
-        moved_post: "投稿を移動しました: "
-        linked: "あなたの投稿にリンク"
-        granted_badge: "バッジを付与"
-        group_message_summary: "グループ宛のメッセージがあります"
       popup:
         mentioned: '"{{topic}}"で{{username}} にメンションされました - {{site_title}}'
         group_mentioned: '"{{topic}}"で{{username}} にメンションされました - {{site_title}}'

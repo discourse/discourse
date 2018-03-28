@@ -917,19 +917,6 @@ th:
       none: "ไม่สามารถโหลดการแจ้งเตือนในขณะนี้"
       more: "ดูการแจ้งเตือนก่อนหน้านี้"
       total_flagged: "โพสที่ปักธงทั้งหมด"
-      alt:
-        mentioned: "ถูกพูดถึงโดย"
-        quoted: "ถูกอ้างอิงโดย"
-        replied: "ตอบแล้ว"
-        posted: "โพสโดย"
-        edited: "แก้ไขโพสของคุณโดย"
-        liked: "ได้ถูกใจโพสของคุณ"
-        invited_to_topic: "เชิญไปยังกระทู้จาก"
-        invitee_accepted: "การเชิญได้ตอบรับโดย"
-        moved_post: "โพสของคุณได้ถูกย้ายโดย"
-        linked: "ลิงค์ไปยังโพสของคุณ"
-        granted_badge: "ได้รับป้าย"
-        group_message_summary: "ข้อความในกล่องข้อความกลุ่ม"
       popup:
         mentioned: '{{username}} พูดถึงคุณใน "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} พูดถึงคุณใน "{{topic}}" - {{site_title}}'

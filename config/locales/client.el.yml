@@ -1167,19 +1167,6 @@ el:
       group_message_summary:
         one: "{{count}} μήνυμα στα εισερχόμενα της ομάδας {{group_name}}"
         other: "{{count}} μηνύματα στα εισερχόμενα της ομάδας {{group_name}} "
-      alt:
-        mentioned: "Αναφέρθηκε από"
-        quoted: "Παράθεση από "
-        replied: "Απαντήθηκε"
-        posted: "Ανάρτηση από"
-        edited: "Επεξεργασία της ανάρτησής σου από"
-        liked: "Η ανάρτησή σου έχει \"μου αρέσει\""
-        invited_to_topic: "Προσκλήθηκε στο νήμα από"
-        invitee_accepted: "Η πρόσκληση έγινε δεκτή από"
-        moved_post: "Η ανάρτησή σου μετακινήθηκε από"
-        linked: "Σύνδεση στην ανάρτησή σου"
-        granted_badge: "Χορηγήθηκε παράσημο"
-        group_message_summary: "Μηνύματα στα εισερχόμενα ομάδας"
       popup:
         mentioned: '{{username}} σε ανέφερε στο "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} σε ανέφερε στο "{{topic}}" - {{site_title}}'

@@ -1082,19 +1082,6 @@ da:
       empty: "Ingen notifikationer fundet."
       more: "se ældre notifikationer"
       total_flagged: "total markerede indlæg"
-      alt:
-        mentioned: "Nævnt af"
-        quoted: "Citeret af"
-        replied: "Svaret"
-        posted: "Indlæg af"
-        edited: "Rediger dit indlæg af"
-        liked: "Likede dit indlæg"
-        invited_to_topic: "Inviteret til et indlæg fra"
-        invitee_accepted: "Invitation accepteret af"
-        moved_post: "Dit indlæg blev flyttet af"
-        linked: "Link til dit indlæg"
-        granted_badge: "Badge tildelt"
-        group_message_summary: "Besker i gruppens indbakke"
       popup:
         mentioned: '{{username}} nævnte dig i "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} nævnte dig i "{{topic}}" - {{site_title}}'

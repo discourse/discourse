@@ -1145,21 +1145,6 @@ et:
       linked: "<span>{{username}}</span> {{description}}"
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>New Topic</span> {{description}}"
-      alt:
-        mentioned: "Mainis"
-        quoted: "Tsiteeris"
-        replied: "Vastas"
-        posted: "Postitas"
-        edited: "Muuda oma postitust"
-        liked: "Sinu postitus meeldis"
-        private_message: "Privaatsõnum kasutajalt"
-        invited_to_topic: "Teemasse kutsus"
-        invitee_accepted: "Kutse võttis vastu"
-        moved_post: "Sinu postituse liigutas"
-        linked: "Viide sinu postitusele"
-        granted_badge: "Märgis antud"
-        group_message_summary: "Sõnumeid grupi postkastis"
-        topic_reminder: "Meelespea"
       popup:
         mentioned: '{{username}} mainis Sind teemas "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} mainis Sind teemas "{{topic}}" - {{site_title}}'

@@ -1175,22 +1175,6 @@ pt:
       linked: "<span>{{username}}</span> {{description}}"
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>Novo Tópico</span> {{description}}"
-      alt:
-        mentioned: "Mencionado por"
-        quoted: "Citado por"
-        replied: "Respondido"
-        posted: "Publicado por"
-        edited: "Edição da sua publicação por"
-        liked: "Gostou da sua publicação"
-        private_message: "Mensagem privada de"
-        invited_to_private_message: "Convidado para uma mensagem privada de"
-        invited_to_topic: "Convidado para um tópico de"
-        invitee_accepted: "Convite aceite por"
-        moved_post: "A sua publicação foi movida por"
-        linked: "Hiperligação para a sua publicação"
-        granted_badge: "Distintivo concedido"
-        group_message_summary: "Mensagens na caixa de entrada do seu grupo"
-        topic_reminder: "Um lembrete"
       popup:
         mentioned: '{{username}} mencionou-o em "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} mencionou-o em "{{topic}}" - {{site_title}}'

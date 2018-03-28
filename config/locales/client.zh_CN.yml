@@ -1138,20 +1138,6 @@ zh_CN:
       watching_first_post: "<span>新主题</span> {{description}}"
       group_message_summary:
         other: "{{count}} 条私信在{{group_name}}组的收件箱中"
-      alt:
-        mentioned: "被提及"
-        quoted: "被引用"
-        replied: "回复"
-        posted: "发自"
-        edited: "编辑你的帖子"
-        liked: "赞了你的帖子"
-        invited_to_topic: "主题邀请自"
-        invitee_accepted: "介绍邀请自"
-        moved_post: "你的帖子被移动自"
-        linked: "链接至你的帖子"
-        granted_badge: "勋章授予"
-        group_message_summary: "在群组收件箱中的私信"
-        topic_reminder: "一个提醒"
       popup:
         mentioned: '{{username}}在“{{topic}}”提到了你 - {{site_title}}'
         group_mentioned: '{{username}}在“{{topic}}”提到了你 - {{site_title}}'

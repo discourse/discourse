@@ -658,8 +658,6 @@ uk:
     notifications:
       more: "переглянути старіші сповіщення"
       total_flagged: "всього дописів, на які поскаржилися"
-      alt:
-        posted: "Опубліковано"
     upload_selector:
       title: "Додати зображення"
       title_with_attachments: "Додати зображення або файл"

@@ -1142,19 +1142,6 @@ nl:
       group_message_summary:
         one: "{{count}} bericht in je Postvak IN voor {{group_name}}"
         other: "{{count}} berichten in je Postvak IN voor {{group_name}}"
-      alt:
-        mentioned: "Genoemd door"
-        quoted: "Geciteerd door"
-        replied: "Beantwoord"
-        posted: "Geplaatst door"
-        edited: "Uw bericht bewerkt door"
-        liked: "Heeft uw bericht geliket"
-        invited_to_topic: "Uitgenodigd voor een topic door"
-        invitee_accepted: "Uitnodiging geaccepteerd door"
-        moved_post: "Uw bericht is verplaatst door"
-        linked: "Koppeling naar uw bericht"
-        granted_badge: "Badge toegekend"
-        group_message_summary: "Berichten in groepspostvak"
       popup:
         mentioned: '{{username}} heeft u genoemd in ''{{topic}}'' - {{site_title}}'
         group_mentioned: '{{username}} heeft u genoemd in ''{{topic}}'' - {{site_title}}'

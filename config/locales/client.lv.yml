@@ -1136,19 +1136,6 @@ lv:
       empty: "Nav atrasti paziņojumi."
       more: "skatīt senākus paziņojumus"
       total_flagged: "pavisam ieraksti ar sūdzībam"
-      alt:
-        mentioned: "Pieminēja"
-        quoted: "Citēja"
-        replied: "Atbildēja"
-        posted: "Ieraksts"
-        edited: "Korektētēja"
-        liked: "Pauda atzinību jūsu ierakstam"
-        invited_to_topic: "Ielūgums uz tēmu no"
-        invitee_accepted: "Ielūgumu pieņēma "
-        moved_post: "Jūsu ierakstu pārvietoja"
-        linked: "Saite uz jūsu ierakstu"
-        granted_badge: "Žetonu piešķīra"
-        group_message_summary: "Ziņas grupas iesūtnē"
       popup:
         mentioned: '{{username}} pieminēja jūs "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} pieminēja jūs "{{topic}}" - {{site_title}}'
