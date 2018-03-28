@@ -3347,6 +3347,7 @@ en:
             post_unlocked: "post unlocked"
             check_personal_message: "check personal message"
             disabled_second_factor: "disable Two Factor Authentication"
+            topic_published: "topic published"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
