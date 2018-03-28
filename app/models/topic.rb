@@ -31,7 +31,7 @@ class Topic < ActiveRecord::Base
   def_delegator :notifier, :mute!, :notify_muted!
   def_delegator :notifier, :toggle_mute, :toggle_mute
 
-  attr_accessor :allowed_user_ids, :tags_changed
+  attr_accessor :allowed_user_ids, :tags_changed, :includes_destination_category
 
   DiscourseEvent.on(:site_setting_saved) do |site_setting|
     if site_setting.name.to_s == "slug_generation_method" && site_setting.saved_change_to_value?

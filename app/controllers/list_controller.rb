@@ -71,15 +71,24 @@ class ListController < ApplicationController
 
       list = TopicQuery.new(user, list_opts).public_send("list_#{filter}")
 
-      if @category.present? && guardian.can_create_shared_draft?
-        shared_drafts = TopicQuery.new(
-          user,
-          category: SiteSetting.shared_drafts_category,
-          destination_category_id: list_opts[:category]
-        ).list_latest
+      if guardian.can_create_shared_draft? && @category.present?
+        if @category.id == SiteSetting.shared_drafts_category.to_i
+          # On shared drafts, show the destination category
+          list.topics.each do |t|
+            t.includes_destination_category = true
+          end
+        else
+          # When viewing a non-shared draft category, find topics whose
+          # destination are this category
+          shared_drafts = TopicQuery.new(
+            user,
+            category: SiteSetting.shared_drafts_category,
+            destination_category_id: list_opts[:category]
+          ).list_latest
 
-        if shared_drafts.present? && shared_drafts.topics.present?
-          list.shared_drafts = shared_drafts.topics
+          if shared_drafts.present? && shared_drafts.topics.present?
+            list.shared_drafts = shared_drafts.topics
+          end
         end
       end
 
