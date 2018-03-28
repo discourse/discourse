@@ -1,8 +1,6 @@
 class TopicListItemSerializer < ListableTopicSerializer
   include TopicTagsMixin
 
-  attr_accessor :include_destination_category
-
   attributes :views,
              :like_count,
              :has_summary,
@@ -32,9 +30,8 @@ class TopicListItemSerializer < ListableTopicSerializer
   end
 
   def category_id
-
     # If it's a shared draft, show the destination topic instead
-    if include_destination_category && object.shared_draft
+    if object.category_id == SiteSetting.shared_drafts_category.to_i && object.shared_draft
       return object.shared_draft.category_id
     end
 
