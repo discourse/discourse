@@ -292,7 +292,10 @@ Discourse::Application.routes.draw do
   get "extra-locales/:bundle" => "extra_locales#show"
 
   resources :session, id: RouteFormat.username, only: [:create, :destroy, :become] do
-    get 'become'
+    if Rails.env.development?
+      get 'become'
+    end
+
     collection do
       post "forgot_password"
     end
