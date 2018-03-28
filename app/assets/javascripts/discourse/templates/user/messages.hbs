@@ -40,10 +40,17 @@
 
     {{#if pmTaggingEnabled}}
       <li class="noGlyph">
-      {{#link-to 'userPrivateMessages.tags' model}}
-        {{i18n 'user.messages.tags'}}
-      {{/link-to}}
-    </li>
+        {{#link-to 'userPrivateMessages.tags' model}}
+          {{i18n 'user.messages.tags'}}
+        {{/link-to}}
+      </li>
+      {{#if tagId}}
+        <li class="archive">
+          {{#link-to 'userPrivateMessages.tagsShow' tagId}}
+            {{tagId}}
+          {{/link-to}}
+        </li>
+      {{/if}}
     {{/if}}
   {{/mobile-nav}}
 {{/d-section}}
