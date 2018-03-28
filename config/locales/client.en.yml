@@ -3099,7 +3099,7 @@ en:
           add_upload: "Add Upload"
           upload_file_tip: "Choose an asset to upload (png, woff2, etc...)"
           variable_name: "SCSS var name:"
-          variable_name_invalid: "Invalid variable name. Only alphanumeric allowed. Must start with a letter."
+          variable_name_invalid: "Invalid variable name. Only alphanumeric allowed. Must start with a letter. Must be unique."
           upload: "Upload"
           child_themes_check: "Theme includes other child themes"
           css_html: "Custom CSS/HTML"
