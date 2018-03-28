@@ -1088,19 +1088,6 @@ ca:
       total_flagged: "total publicacions amb bandera"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
-      alt:
-        mentioned: "Mencionat per"
-        quoted: "Citat per"
-        replied: "Respost"
-        posted: "Publicat per"
-        edited: "Edita la teva publicació per"
-        liked: "Els ha agradat la teva entrada"
-        invited_to_topic: "Ha convidat a un tema de"
-        invitee_accepted: "Invitació acceptada per"
-        moved_post: "La teva publicació ha estat moguda per"
-        linked: "Enllaç a la teva publicació"
-        granted_badge: "Distintiu atorgat"
-        group_message_summary: "Missatges a la bústia d'entrada del grup"
       popup:
         mentioned: '{{username}} t''ha mencionat a "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} t''ha mencionat a "{{topic}}" - {{site_title}}'

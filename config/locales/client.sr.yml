@@ -855,8 +855,6 @@ sr:
       empty: "Nisu pronađene notifikacije"
       more: "pogledaj starije notifikacije"
       total_flagged: "sve ukupno označenih poruka"
-      alt:
-        replied: "Odgovoreno"
     upload_selector:
       title: "Dodaj sliku"
       title_with_attachments: "Dodaj sliku ili datoteku"

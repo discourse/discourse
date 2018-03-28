@@ -1221,20 +1221,6 @@ ru:
         few: "{{count}} сообщений в вашей группе: {{group_name}} "
         many: "{{count}} сообщений в вашей группе: {{group_name}} "
         other: "{{count}} сообщений в вашей группе: {{group_name}} "
-      alt:
-        mentioned: "Упомянуто"
-        quoted: "Процитировано пользователем"
-        replied: "Ответил"
-        posted: "Опубликовано"
-        edited: "Изменил ваше сообщение"
-        liked: "Понравилось ваше сообщение"
-        private_message: "Личное сообщение от"
-        invited_to_topic: "Приглашение в тему от"
-        invitee_accepted: "Приглашение принято"
-        moved_post: "Ваша тема перенесена участником "
-        linked: "Ссылка на ваше сообщение"
-        granted_badge: "Награда получена от"
-        group_message_summary: "Входящие сообщения группы"
       popup:
         mentioned: '{{username}} упомянул вас в "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} упомянул вас в "{{topic}}" - {{site_title}}'

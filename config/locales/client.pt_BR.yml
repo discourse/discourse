@@ -1116,20 +1116,6 @@ pt_BR:
       granted_badge: "Adquiriu '{{description}}'"
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>Novo Tópico</span> {{description}}"
-      alt:
-        mentioned: "Mencionado por"
-        quoted: "Citado por"
-        replied: "Respondido"
-        posted: "Mensagem por"
-        edited: "Edição na sua mensagem por"
-        liked: "Curtiu sua mensagem"
-        invited_to_topic: "Convite para um tópico de"
-        invitee_accepted: "Convite aceito por"
-        moved_post: "Seu tópico foi movido por"
-        linked: "Link para sua mensagem"
-        granted_badge: "Emblema concedido"
-        group_message_summary: "Mensagens na caixa de entrada do grupo"
-        topic_reminder: "Um lembrete"
       popup:
         mentioned: '{{username}} mencionou você em "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} mencionou você em "{{topic}}" - {{site_title}}'

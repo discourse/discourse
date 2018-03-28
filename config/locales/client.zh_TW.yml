@@ -1005,19 +1005,6 @@ zh_TW:
       empty: "未找到任何通知。"
       more: "檢視較舊的通知"
       total_flagged: "所有被投訴的文章"
-      alt:
-        mentioned: "被提及"
-        quoted: "引用者"
-        replied: "回覆"
-        posted: "發自"
-        edited: "編輯你的帖子"
-        liked: "讚了你的帖子"
-        invited_to_topic: "主題邀請自"
-        invitee_accepted: "介紹邀請自"
-        moved_post: "你的帖子被移動自"
-        linked: "連結到你的討論"
-        granted_badge: "勛章授予"
-        group_message_summary: "在群組收件箱中的消息"
       popup:
         mentioned: '{{username}}在“{{topic}}”提到了你 - {{site_title}}'
         group_mentioned: '{{username}}在“{{topic}}”提到了你 - {{site_title}}'

@@ -1273,22 +1273,6 @@ ur:
       group_message_summary:
         one: "آپ کے {{group_name}} اِن باکس میں {{count}} پیغام"
         other: "آپ کے {{group_name}} اِن باکس میں {{count}} پیغامات"
-      alt:
-        mentioned: "کی طرف سے ذکر کیا گیا"
-        quoted: "کی طرف سے اقتباس کیا گیا"
-        replied: "جواب دیا"
-        posted: "کی طرف سے پوسٹ"
-        edited: "اِس وقت تک اپنی پوسٹ میں ترمیم کر لیں"
-        liked: "آپ کی پوسٹ کو لائیک کیا"
-        private_message: "کی طرف سے ذاتی پیغام"
-        invited_to_private_message: "کی طرف سے ذاتی پیغام کیلئے دعوت دی گئی"
-        invited_to_topic: "کی طرف سے ٹاپک کیلئے دعوت دی گئی"
-        invitee_accepted: "کی طرف سے دعوت قبول کر لی گئی"
-        moved_post: "کی طرف سے آپ کی پوسٹ منتقل کر دی گئی تھی"
-        linked: "آپ کی پوسٹ سے لنک کیا"
-        granted_badge: "بَیج عطا کیا"
-        group_message_summary: "گروپ اِن باکس میں پیغامات"
-        topic_reminder: "ایک یاد دہانی"
       popup:
         mentioned: '{{username}} نے آپ کا تذکرہ "{{topic}}" میں کیا - {{site_title}}'
         group_mentioned: '{{username}} نے آپ کا تذکرہ "{{topic}}" میں کیا - {{site_title}}'

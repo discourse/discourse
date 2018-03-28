@@ -1264,22 +1264,6 @@ nb_NO:
       group_message_summary:
         one: "{{count}} melding i din {{group_name}} innboks"
         other: "{{count}} meldinger i din innboks for {{group_name}}"
-      alt:
-        mentioned: "Nevnt av"
-        quoted: "Sitert av"
-        replied: "Svart"
-        posted: "Innlegg av"
-        edited: "Rediger ditt innlegg innen"
-        liked: "Likte innlegget ditt"
-        private_message: "Personlig melding fra"
-        invited_to_private_message: "Invitert til en personlig melding fra"
-        invited_to_topic: "Invitert til en tråd fra"
-        invitee_accepted: "Invitiasjon akseptert av"
-        moved_post: "Ditt innlegg ble flyttet av"
-        linked: "Link til innlegget ditt"
-        granted_badge: "Merke innvilget"
-        group_message_summary: "Meldinger i gruppeinnboks"
-        topic_reminder: "En påminnelse"
       popup:
         mentioned: '{{username}} nevnte deg i "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} nevnte deg i "{{topic}}" - {{site_title}}'

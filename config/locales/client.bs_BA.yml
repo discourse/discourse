@@ -996,19 +996,6 @@ bs_BA:
       empty: "Nema obavještenja."
       more: "pogledaj starija obaviještenja"
       total_flagged: "ukupno opomenutih postova"
-      alt:
-        mentioned: "Spomenut od"
-        quoted: "Citiran od"
-        replied: "Odgovoreno"
-        posted: "Post od"
-        edited: "Editujte vaš post"
-        liked: "Vole vaš post"
-        invited_to_topic: "Pozvani na temu od"
-        invitee_accepted: "Pozivnica prihvaćena od"
-        moved_post: "Vaša objava je premještena od strane "
-        linked: "Link ka vašoj objavi"
-        granted_badge: "Bedž odobren"
-        group_message_summary: "Poruke u grupnom sandučetu"
       popup:
         mentioned: '{{username}} vas je spomenuo/la u "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} vas je spomenuo/la u "{{topic}}" - {{site_title}}'
