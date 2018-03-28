@@ -32,11 +32,14 @@ export const ButtonClass = {
     let title;
     if (attrs.title) {
       title = I18n.t(attrs.title, attrs.titleOptions);
-    } else if (attrs.label) {
-      title = I18n.t(attrs.label, attrs.labelOptions);
     }
 
-    const attributes = { "aria-label": title, title };
+    let label;
+    if (attrs.label) {
+      label = I18n.t(attrs.label, attrs.labelOptions);
+    }
+
+    const attributes = { "aria-label": label, title };
     if (attrs.disabled) { attributes.disabled = "true"; }
 
     if (attrs.data) {
