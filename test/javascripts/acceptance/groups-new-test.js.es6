@@ -29,7 +29,7 @@ QUnit.test("Creating a new group", assert => {
     );
 
     assert.ok(
-      find("button[title='Create']:disabled").length === 1,
+      find(".group-form-save:disabled").length === 1,
       'it should disable the save button'
     );
   });
