@@ -50,6 +50,18 @@ module Jobs
       args[:payload] = WebHookUserSerializer.new(user, scope: guardian, root: false).as_json
     end
 
+    def setup_group(args)
+      group = Group.find(args[:group_id])
+      return if group.blank?
+      args[:payload] = WebHookGroupSerializer.new(group, scope: guardian, root: false).as_json
+    end
+
+    def setup_category(args)
+      category = Category.find(args[:category_id])
+      return if category.blank?
+      args[:payload] = WebHookCategorySerializer.new(category, scope: guardian, root: false).as_json
+    end
+
     def ping_event?(event_type)
       event_type.to_s == 'ping'.freeze
     end
