@@ -9,25 +9,11 @@ class TopicListSerializer < ApplicationSerializer
              :per_page,
              :top_tags,
              :tags,
-             :shared_drafts,
-             :topics
+             :shared_drafts
 
+  has_many :topics, serializer: TopicListItemSerializer, embed: :objects
   has_many :shared_drafts, serializer: TopicListItemSerializer, embed: :objects
   has_many :tags, serializer: TagSerializer, embed: :objects
-
-  def topics
-    object.topics.map do |t|
-      serializer = TopicListItemSerializer.new(t, scope: scope, root: false)
-
-      if scope.can_create_shared_draft? &&
-        object.category&.id == SiteSetting.shared_drafts_category.to_i
-
-        serializer.include_destination_category = true
-      end
-
-      serializer
-    end
-  end
 
   def can_create_topic
     scope.can_create?(Topic)

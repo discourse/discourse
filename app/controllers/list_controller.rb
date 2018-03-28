@@ -71,10 +71,7 @@ class ListController < ApplicationController
 
       list = TopicQuery.new(user, list_opts).public_send("list_#{filter}")
 
-      if @category.present? &&
-        guardian.can_create_shared_draft? &&
-        @category.id != SiteSetting.shared_drafts_category.to_i
-
+      if @category.present? && guardian.can_create_shared_draft?
         shared_drafts = TopicQuery.new(
           user,
           category: SiteSetting.shared_drafts_category,
