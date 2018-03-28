@@ -2267,6 +2267,7 @@ en:
       default_position: "Default Position"
       position_disabled: "Categories will be displayed in order of activity. To control the order of categories in lists, "
       position_disabled_click: 'enable the "fixed category positions" setting.'
+      minimum_required_tags: 'Minimum number of tags required in a topic:'
       parent: "Parent Category"
       notifications:
         watching:

@@ -3632,6 +3632,7 @@ en:
     title: "Tags"
     staff_tag_disallowed: "The tag \"%{tag}\" may only be applied by staff."
     staff_tag_remove_disallowed: "The tag \"%{tag}\" may only be removed by staff."
+    minimum_required_tags: "You must select at least %{count} tags."
   rss_by_tag: "Topics tagged %{tag}"
 
   finish_installation:

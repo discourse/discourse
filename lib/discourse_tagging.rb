@@ -26,10 +26,16 @@ module DiscourseTagging
         end
       end
 
-      if tag_names.present?
-        category = topic.category
-        tag_names = tag_names + old_tag_names if append
+      category = topic.category
+      tag_names = tag_names + old_tag_names if append
 
+      # validate minimum required tags for a category
+      if !guardian.is_staff? && category && category.minimum_required_tags > 0 && tag_names.length < category.minimum_required_tags
+        topic.errors[:base] << I18n.t("tags.minimum_required_tags", count: category.minimum_required_tags)
+        return false
+      end
+
+      if tag_names.present?
         # guardian is explicitly nil cause we don't want to strip all
         # staff tags that already passed validation
         tags = filter_allowed_tags(

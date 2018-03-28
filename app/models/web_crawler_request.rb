@@ -74,3 +74,17 @@ class WebCrawlerRequest < ActiveRecord::Base
     request_id(date: date, user_agent: user_agent)
   end
 end
+
+# == Schema Information
+#
+# Table name: web_crawler_requests
+#
+#  id         :integer          not null, primary key
+#  date       :date             not null
+#  user_agent :string           not null
+#  count      :integer          default(0), not null
+#
+# Indexes
+#
+#  index_web_crawler_requests_on_date_and_user_agent  (date,user_agent) UNIQUE
+#

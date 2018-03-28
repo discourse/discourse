@@ -75,4 +75,49 @@ describe DiscourseTagging do
       expect(tags).to contain_exactly(tag1, tag2, tag3)
     end
   end
+
+  describe 'tag_topic_by_names' do
+    context 'staff-only tags' do
+      let(:topic) { Fabricate(:topic) }
+
+      before do
+        SiteSetting.staff_tags = "alpha"
+      end
+
+      it "regular users can't add staff-only tags" do
+        valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), ['alpha'])
+        expect(valid).to eq(false)
+        expect(topic.errors[:base]&.first).to eq(I18n.t("tags.staff_tag_disallowed", tag: 'alpha'))
+      end
+
+      it 'staff can add staff-only tags' do
+        valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(admin), ['alpha'])
+        expect(valid).to eq(true)
+        expect(topic.errors[:base]).to be_empty
+      end
+    end
+
+    context 'respects category minimum_required_tags setting' do
+      let(:category) { Fabricate(:category, minimum_required_tags: 2) }
+      let(:topic) { Fabricate(:topic, category: category) }
+
+      it 'when tags are less than minimum_required_tags' do
+        valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag1.name])
+        expect(valid).to eq(false)
+        expect(topic.errors[:base]&.first).to eq(I18n.t("tags.minimum_required_tags", count: category.minimum_required_tags))
+      end
+
+      it 'when tags are equal to minimum_required_tags' do
+        valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag1.name, tag2.name])
+        expect(valid).to eq(true)
+        expect(topic.errors[:base]).to be_empty
+      end
+
+      it 'lets admin tag a topic regardless of minimum_required_tags' do
+        valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(admin), [tag1.name])
+        expect(valid).to eq(true)
+        expect(topic.errors[:base]).to be_empty
+      end
+    end
+  end
 end

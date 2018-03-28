@@ -152,4 +152,13 @@
   </section>
 {{/unless}}
 
+{{#if siteSettings.tagging_enabled}}
+  <section class='field minimum-required-tags'>
+    <label>
+      {{i18n 'category.minimum_required_tags'}}
+      {{text-field value=category.minimum_required_tags type="number"}}
+    </label>
+  </section>
+{{/if}}
+
 {{plugin-outlet name="category-custom-settings" args=(hash category=category)}}
