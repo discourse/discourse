@@ -248,7 +248,9 @@ describe Admin::BackupsController do
             expect(response.status).to eq(200)
             expect(response.body).to eq("")
           ensure
-            File.delete(File.join(Backup.base_directory, filename))
+            File.delete(
+              File.join(Backup.base_directory, 'tmp', 'test', "#{filename}.part1")
+            )
           end
         end
       end

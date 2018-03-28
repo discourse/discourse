@@ -47,9 +47,9 @@ module Jobs
 
       downloaded_urls = {}
 
-      large_images = JSON.parse(post.custom_fields[Post::LARGE_IMAGES].presence || "[]") rescue []
-      broken_images = JSON.parse(post.custom_fields[Post::BROKEN_IMAGES].presence || "[]") rescue []
-      downloaded_images = JSON.parse(post.custom_fields[Post::DOWNLOADED_IMAGES].presence || "{}") rescue {}
+      large_images = JSON.parse(post.custom_fields[Post::LARGE_IMAGES].presence || "[]")
+      broken_images = JSON.parse(post.custom_fields[Post::BROKEN_IMAGES].presence || "[]")
+      downloaded_images = JSON.parse(post.custom_fields[Post::DOWNLOADED_IMAGES].presence || "{}")
 
       has_new_large_image  = false
       has_new_broken_image = false

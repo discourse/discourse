@@ -823,7 +823,7 @@ module Email
             end
           end
         ensure
-          tmp.try(:close!) rescue nil
+          tmp&.close!
         end
       end
 

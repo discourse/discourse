@@ -12,7 +12,10 @@ class EmbeddableHost < ActiveRecord::Base
   def self.record_for_url(uri)
 
     if uri.is_a?(String)
-      uri = URI(UrlHelper.escape_uri(uri)) rescue nil
+      uri = begin
+        URI(UrlHelper.escape_uri(uri))
+      rescue URI::InvalidURIError
+      end
     end
     return false unless uri.present?
 
@@ -40,7 +43,11 @@ class EmbeddableHost < ActiveRecord::Base
     # Work around IFRAME reload on WebKit where the referer will be set to the Forum URL
     return true if url&.starts_with?(Discourse.base_url)
 
-    uri = URI(UrlHelper.escape_uri(url)) rescue nil
+    uri = begin
+      URI(UrlHelper.escape_uri(url))
+    rescue URI::InvalidURIError
+    end
+
     uri.present? && record_for_url(uri).present?
   end
 

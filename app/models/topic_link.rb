@@ -115,7 +115,14 @@ SQL
 
       PrettyText
         .extract_links(post.cooked)
-        .map { |u| [u, URI.parse(u.url)] rescue nil }
+        .map do |u|
+          uri = begin
+            URI.parse(u.url)
+          rescue URI::InvalidURIError
+          end
+
+          [u, uri]
+        end
         .reject { |_, p| p.nil? || "mailto".freeze == p.scheme }
         .uniq { |_, p| p }
         .each do |link, parsed|
