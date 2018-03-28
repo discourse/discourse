@@ -1021,11 +1021,16 @@ SQL
     TopicUser.change(user.id, id, cleared_pinned_at: nil)
   end
 
-  def update_pinned(status, global = false, pinned_until = nil)
-    pinned_until = Time.parse(pinned_until) rescue nil
+  def update_pinned(status, global = false, pinned_until = "")
+    pinned_until ||= ''
+
+    pinned_until = begin
+      Time.parse(pinned_until)
+    rescue ArgumentError
+    end
 
     update_columns(
-      pinned_at: status ? Time.now : nil,
+      pinned_at: status ? Time.zone.now : nil,
       pinned_globally: global,
       pinned_until: pinned_until
     )

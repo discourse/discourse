@@ -30,20 +30,12 @@ class FinalDestination
 
   def initialize(url, opts = nil)
     @url = url
-    @uri =
-      begin
-        URI(escape_url) if @url
-      rescue URI::InvalidURIError
-      end
+    @uri = uri(escape_url) if @url
 
     @opts = opts || {}
     @force_get_hosts = @opts[:force_get_hosts] || []
     @opts[:max_redirects] ||= 5
-    @opts[:lookup_ip] ||= lambda do |host|
-      begin
-        FinalDestination.lookup_ip(host)
-      end
-    end
+    @opts[:lookup_ip] ||= lambda { |host| FinalDestination.lookup_ip(host) }
     @ignored = [Discourse.base_url_no_prefix] + (@opts[:ignore_redirects] || [])
     @limit = @opts[:max_redirects]
     @status = :ready
@@ -106,9 +98,8 @@ class FinalDestination
 
     if result == :redirect
       old_port = uri.port
-
       location = "#{uri.scheme}://#{uri.host}#{location}" if location[0] == "/"
-      uri = URI(location) rescue nil
+      uri = uri(location)
 
       # https redirect, so just cache that whole new domain is https
       if old_port == 80 && uri&.port == 443 && (URI::HTTPS === uri)
@@ -204,9 +195,8 @@ class FinalDestination
 
     if location
       old_port = @uri.port
-
       location = "#{@uri.scheme}://#{@uri.host}#{location}" if location[0] == "/"
-      @uri = URI(location) rescue nil
+      @uri = uri(location)
       @limit -= 1
 
       # https redirect, so just cache that whole new domain is https
@@ -243,7 +233,8 @@ class FinalDestination
   end
 
   def hostname_matches?(url)
-    @uri && url.present? && @uri.hostname == (URI(url) rescue nil)&.hostname
+    url = uri(url)
+    @uri && url.present? && @uri.hostname == url&.hostname
   end
 
   def is_dest_valid?
@@ -380,6 +371,15 @@ class FinalDestination
       http.read_timeout = timeout
       http.open_timeout = timeout
       yield http
+    end
+  end
+
+  private
+
+  def uri(location)
+    begin
+      URI(location)
+    rescue URI::InvalidURIError, ArgumentError
     end
   end
 

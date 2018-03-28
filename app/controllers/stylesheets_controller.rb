@@ -38,7 +38,13 @@ class StylesheetsController < ApplicationController
     end
 
     cache_time = request.env["HTTP_IF_MODIFIED_SINCE"]
-    cache_time = Time.rfc2822(cache_time) rescue nil if cache_time
+
+    if cache_time
+      begin
+        cache_time = Time.rfc2822(cache_time)
+      rescue ArgumentError
+      end
+    end
 
     query = StylesheetCache.where(target: target)
     if digest
@@ -82,12 +88,21 @@ class StylesheetsController < ApplicationController
   def handle_missing_cache(location, name, digest)
     location = location.sub(".css.map", ".css")
     source_map_location = location + ".map"
+    existing = read_file(location)
 
-    existing = File.read(location) rescue nil
     if existing && digest
-      source_map = File.read(source_map_location) rescue nil
+      source_map = read_file(source_map_location)
       StylesheetCache.add(name, digest, existing, source_map)
     end
   end
+
+  private
+
+    def read_file(location)
+      begin
+        File.read(location)
+      rescue Errno::ENOENT
+      end
+    end
 
 end

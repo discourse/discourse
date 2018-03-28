@@ -339,10 +339,15 @@ module SiteSettingExtension
   end
 
   def get_hostname(url)
-    unless (URI.parse(url).scheme rescue nil).nil?
-      url = "http://#{url}" if URI.parse(url).scheme.nil?
-      url = URI.parse(url).host
+    uri = begin
+      URI.parse(url)
+    rescue URI::InvalidURIError
     end
+
+    unless uri.scheme.nil?
+      url = uri.host
+    end
+
     url
   end
 

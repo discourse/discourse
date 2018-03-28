@@ -405,8 +405,7 @@ class PostAlerter
     )
 
     if created.id && !existing_notification && NOTIFIABLE_TYPES.include?(type) && !user.suspended?
-      # we may have an invalid post somehow, dont blow up
-      post_url = original_post.url rescue nil
+      post_url = original_post.url
       if post_url
         payload = {
          notification_type: type,

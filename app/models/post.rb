@@ -527,9 +527,10 @@ class Post < ActiveRecord::Base
     return if user_id == new_user.id
 
     edit_reason = I18n.with_locale(SiteSetting.default_locale) do
-      I18n.t('change_owner.post_revision_text',
-             old_user: (self.user.username_lower rescue nil) || I18n.t('change_owner.deleted_user'),
-             new_user: new_user.username_lower
+      I18n.t(
+        'change_owner.post_revision_text',
+        old_user: self.user&.username_lower || I18n.t('change_owner.deleted_user'),
+        new_user: new_user.username_lower
       )
     end
 

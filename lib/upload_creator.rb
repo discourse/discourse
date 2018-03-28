@@ -105,7 +105,7 @@ class UploadCreator
       @upload
     end
   ensure
-    @file.close! rescue nil
+    @file&.close
   end
 
   def extract_image_info!
@@ -149,7 +149,7 @@ class UploadCreator
       @opts[:content_type] = "image/jpeg"
       extract_image_info!
     else
-      jpeg_tempfile.close! rescue nil
+      jpeg_tempfile&.close
     end
   end
 
