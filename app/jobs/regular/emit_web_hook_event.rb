@@ -39,7 +39,7 @@ module Jobs
     end
 
     def setup_topic(args)
-      topic_view = (TopicView.new(args[:topic_id], Discourse.system_user) rescue nil)
+      topic_view = TopicView.new(args[:topic_id], Discourse.system_user)
       return if topic_view.blank?
       args[:payload] = WebHookTopicViewSerializer.new(topic_view, scope: guardian, root: false).as_json
     end
