@@ -409,8 +409,14 @@ def recover_from_tombstone
   end
 
   begin
-    original_setting = SiteSetting.max_image_size_kb
-    SiteSetting.max_image_size_kb = 10240
+    previous_image_size      = SiteSetting.max_image_size_kb
+    previous_attachment_size = SiteSetting.max_attachment_size_kb
+    previous_extensions      = SiteSetting.authorized_extensions
+
+    SiteSetting.max_image_size_kb      = 10 * 1024
+    SiteSetting.max_attachment_size_kb = 10 * 1024
+    SiteSetting.authorized_extensions  = "*"
+
     current_db = RailsMultisite::ConnectionManagement.current_db
     public_path = Rails.root.join("public")
     paths = Dir.glob(File.join(public_path, 'uploads', 'tombstone', current_db, '**', '*.*'))
@@ -424,9 +430,10 @@ def recover_from_tombstone
         doc = Nokogiri::HTML::fragment(post.raw)
         updated = false
 
-        doc.css("img[src]").each do |img|
-          url = img["src"]
+        image_urls = doc.css("img[src]").map { |img| img["src"] }
+        attachment_urls = doc.css("a.attachment[href]").map { |a| a["href"] }
 
+        (image_urls + attachment_urls).each do |url|
           next if !url.start_with?("/uploads/")
           next if Upload.exists?(url: url)
 
@@ -473,7 +480,9 @@ def recover_from_tombstone
       end
     end
   ensure
-    SiteSetting.max_image_size_kb = original_setting
+    SiteSetting.max_image_size_kb      = previous_image_size
+    SiteSetting.max_attachment_size_kb = previous_attachment_size
+    SiteSetting.authorized_extensions  = previous_extensions
   end
 end
 
