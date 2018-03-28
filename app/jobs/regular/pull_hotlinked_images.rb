@@ -24,7 +24,7 @@ module Jobs
           follow_redirect: true
         )
       rescue
-        if (retries -= 1) > 0
+        if (retries -= 1) > 0 && !Rails.env.test?
           sleep 1
           retry
         end
