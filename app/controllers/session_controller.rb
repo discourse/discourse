@@ -75,7 +75,7 @@ class SessionController < ApplicationController
 
   # For use in development mode only when login options could be limited or disabled.
   # NEVER allow this to work in production.
-  if Rails.env.development?
+  if !Rails.env.production?
     skip_before_action :check_xhr, only: [:become]
 
     def become

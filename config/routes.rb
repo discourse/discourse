@@ -292,7 +292,7 @@ Discourse::Application.routes.draw do
   get "extra-locales/:bundle" => "extra_locales#show"
 
   resources :session, id: RouteFormat.username, only: [:create, :destroy, :become] do
-    if Rails.env.development?
+    if !Rails.env.production?
       get 'become'
     end
 

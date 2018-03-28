@@ -436,7 +436,7 @@ RSpec.describe UsersController do
             SiteSetting.enable_local_logins = false
 
             post "/users/second_factors.json", params: {
-              password: 'somecomplicatedpassword'
+              password: 'myawesomepassword'
             }
 
             expect(response.status).to eq(404)
@@ -449,7 +449,7 @@ RSpec.describe UsersController do
             SiteSetting.enable_sso = true
 
             post "/users/second_factors.json", params: {
-              password: 'somecomplicatedpassword'
+              password: 'myawesomepassword'
             }
 
             expect(response.status).to eq(404)
@@ -461,7 +461,7 @@ RSpec.describe UsersController do
           user.user_second_factor.update!(data: "abcdefghijklmnop")
 
           post "/users/second_factors.json", params: {
-            password: 'somecomplicatedpassword'
+            password: 'myawesomepassword'
           }
 
           expect(response.status).to eq(200)
