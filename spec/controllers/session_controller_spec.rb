@@ -11,10 +11,12 @@ describe SessionController do
   describe '#become' do
     let!(:user) { Fabricate(:user) }
 
-    it "does not work when not in development mode" do
-      Rails.env.stubs(:development?).returns(false)
+    it "does not work when in production mode" do
+      Rails.env.stubs(:production?).returns(true)
       get :become, params: { session_id: user.username }, format: :json
-      expect(response).not_to be_redirect
+
+      expect(response.status).to eq(403)
+      expect(JSON.parse(response.body)["error_type"]).to eq("invalid_access")
       expect(session[:current_user_id]).to be_blank
     end
 
