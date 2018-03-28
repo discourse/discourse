@@ -54,7 +54,7 @@ export default Ember.Component.extend(bufferedRender({
       }, options);
     }
 
-    buffer.push(I18n.t(this._noticeKey(), options));
+    buffer.push(`<span>${I18n.t(this._noticeKey(), options)}</span>`);
     buffer.push('</h3>');
 
     // TODO Sam: concerned this can cause a heavy rerender loop
