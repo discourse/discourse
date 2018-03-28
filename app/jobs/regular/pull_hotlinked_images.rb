@@ -78,11 +78,11 @@ module Jobs
                     log(:info, "Failed to pull hotlinked image for post: #{post_id}: #{src} - #{upload.errors.full_messages.join("\n")}")
                   end
                 else
-                  large_images << remove_scheme(src)
+                  large_images << remove_scheme(original_src)
                   has_new_large_image = true
                 end
               else
-                broken_images << remove_scheme(src)
+                broken_images << remove_scheme(original_src)
                 has_new_broken_image = true
               end
             end
