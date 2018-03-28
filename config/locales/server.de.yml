@@ -615,7 +615,7 @@ de:
     continue_button: "Weiter zu %{site_name}"
     welcome_to: "Willkommen bei %{site_name}!"
     approval_required: "Bevor du auf das Forum zugreifen kannst, muss dein neues Konto noch von einem Moderator genehmigt werden. Du erhältst eine E-Mail, sobald dies geschehen ist!"
-    missing_session: "We können nicht feststellen, ob dein Konto erstellt wurde, bitte stelle sichere, dass du Cookies aktiviert hast."
+    missing_session: "Wir können nicht feststellen, ob dein Konto erstellt wurde, bitte stelle sicher, dass du Cookies aktiviert hast."
     activated: "Bitte entschuldige, dieses Konto wurde bereits aktiviert."
     admin_confirm:
       title: "Admnistrator-Konto bestätigen"
