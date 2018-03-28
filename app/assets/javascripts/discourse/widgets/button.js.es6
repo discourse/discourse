@@ -28,18 +28,14 @@ export const ButtonClass = {
 
   buildAttributes() {
     const attrs = this.attrs;
+    const attributes = {};
 
-    let title;
     if (attrs.title) {
-      title = I18n.t(attrs.title, attrs.titleOptions);
+      const title = I18n.t(attrs.title, attrs.titleOptions);
+      attributes["aria-label"] = title;
+      attributes.title = title;
     }
 
-    let label;
-    if (attrs.label) {
-      label = I18n.t(attrs.label, attrs.labelOptions);
-    }
-
-    const attributes = { "aria-label": label, title };
     if (attrs.disabled) { attributes.disabled = "true"; }
 
     if (attrs.data) {
