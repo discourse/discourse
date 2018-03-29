@@ -69,7 +69,7 @@ registerButton('like-count', attrs => {
     const title = attrs.liked
       ? count === 1 ? 'post.has_likes_title_only_you' : 'post.has_likes_title_you'
       : 'post.has_likes_title';
-    const contents = (attrs.post_number == 1) ? I18n.t("post.has_likes", { count }) : count;
+    const contents = (attrs.post_number === 1) ? I18n.t("post.has_likes", { count }) : count;
 
     return { action: 'toggleWhoLiked',
       title,
