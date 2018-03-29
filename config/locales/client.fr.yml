@@ -1281,22 +1281,6 @@ fr:
       group_message_summary:
         one: "{{count}} message dans la boîte de réception de {{group_name}}"
         other: "{{count}} messages dans la boîte de réception de {{group_name}}"
-      alt:
-        mentioned: "Mentionné par"
-        quoted: "Cité par"
-        replied: "Répondu"
-        posted: "Message par"
-        edited: "Modifier votre message par"
-        liked: "A aimé votre message"
-        private_message: "Message direct de"
-        invited_to_private_message: "Invité à un message direct par"
-        invited_to_topic: "Invité à un sujet par"
-        invitee_accepted: "Invitation acceptée par"
-        moved_post: "Votre message a été déplacé par"
-        linked: "Lien vers votre message"
-        granted_badge: "Badge attribué"
-        group_message_summary: "Messages dans la boite de réception du groupe"
-        topic_reminder: "Un rappel"
       popup:
         mentioned: '{{username}} vous a mentionné dans « {{topic}} » - {{site_title}}'
         group_mentioned: '{{username}} vous a mentionné dans « {{topic}} » - {{site_title}}'

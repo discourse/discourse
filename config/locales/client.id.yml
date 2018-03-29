@@ -787,12 +787,6 @@ id:
     notifications:
       empty: "Tidak ada pemberitahuan."
       more: "lihat notifikasi sebelumnya"
-      alt:
-        mentioned: "Disebut oleh"
-        replied: "Telah dibalas"
-        posted: "Tulisan oleh"
-        linked: "Tautkan pada tulisan anda"
-        group_message_summary: "Pesan di kotak pesan grup"
     new_item: "baru"
     topics:
       bulk:

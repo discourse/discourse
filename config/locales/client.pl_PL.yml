@@ -1250,20 +1250,6 @@ pl_PL:
         few: "masz {{count}} wiadomości w skrzynce odbiorczej {{group_name}}"
         many: "masz {{count}} wiadomości w skrzynce odbiorczej {{group_name}}"
         other: "masz {{count}} wiadomości w skrzynce odbiorczej {{group_name}}"
-      alt:
-        mentioned: "Wywołanie przez"
-        quoted: "Cytowanie przez"
-        replied: "Odpowiedź"
-        posted: "Autor wpisu"
-        edited: "Edycja twojego wpisu"
-        liked: "Lajk twojego wpisu"
-        invited_to_topic: "Zaproszenie do tematu od"
-        invitee_accepted: "Zaproszenie zaakceptowane przez"
-        moved_post: "Twój wpis został przeniesiony przez"
-        linked: "Linkownie do twojego wpisu"
-        granted_badge: "Przyznanie odznaki"
-        group_message_summary: "Wiadomości w grupowej skrzynce odbiorczej"
-        topic_reminder: "Przypomnienie"
       popup:
         mentioned: '{{username}} wspomina o tobie w "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} wspomniał o Tobie w "{{topic}}" - {{site_title}}'

@@ -1438,23 +1438,6 @@ en:
           one: "{{count}} message in your {{group_name}} inbox"
           other: "{{count}} messages in your {{group_name}} inbox"
 
-      alt:
-        mentioned: "Mentioned by"
-        quoted: "Quoted by"
-        replied: "Replied"
-        posted: "Post by"
-        edited: "Edit your post by"
-        liked: "Liked your post"
-        private_message: "Personal message from"
-        invited_to_private_message: "Invited to a personal message from"
-        invited_to_topic: "Invited to a topic from"
-        invitee_accepted: "Invite accepted by"
-        moved_post: "Your post was moved by"
-        linked: "Link to your post"
-        granted_badge: "Badge granted"
-        group_message_summary: "Messages in group inbox"
-        topic_reminder: "A reminder"
-
       popup:
         mentioned: '{{username}} mentioned you in "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} mentioned you in "{{topic}}" - {{site_title}}'

@@ -1115,19 +1115,6 @@ ko:
       watching_first_post: "<span>새 토픽</span> {{description}}"
       group_message_summary:
         other: " {{group_name}} 사서함에 {{count}} 개의 메시지가 있습니다"
-      alt:
-        mentioned: "멘션 by"
-        quoted: "인용  by"
-        replied: "답글을 전송했습니다."
-        posted: "포스트 by"
-        edited: "당신 글이 다음 이용자에 의해 수정"
-        liked: "당신의 글을 좋아했음."
-        invited_to_topic: "다음 사람으로부터 한 주제로 초대됨"
-        invitee_accepted: "다음 사람에 의해 초대가 수락됨."
-        moved_post: "다음 사람에 의해서 당신의 글이 이동됨"
-        linked: "당신 글로 링크하기"
-        granted_badge: "배지가 수여됨."
-        group_message_summary: "그룹 메시지함의 메시지"
       popup:
         mentioned: '"{{topic}}" - {{site_title}}에서 {{username}} 님이 나를 멘션했습니다'
         group_mentioned: '"{{topic}}" - {{site_title}}에서 {{username}} 님이 당신을 언급했습니다'

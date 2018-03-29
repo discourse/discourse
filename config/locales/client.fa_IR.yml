@@ -1070,19 +1070,6 @@ fa_IR:
       empty: "اعلانی پیدا نشد."
       more: "نمایش اعلان‌های قدیمی‌تر"
       total_flagged: "همه‌ی نوشته‌های پرچم خورده"
-      alt:
-        mentioned: "اشاره شده توسط"
-        quoted: "نقل‌قول شده توسط"
-        replied: "پاسخ داده شد"
-        posted: "نوشته شده توسط"
-        edited: "نوشته‌تان را ویرایش کنید توسط"
-        liked: "ارسال شما را پسندید"
-        invited_to_topic: "دعوت شده به یک موضوع توسط"
-        invitee_accepted: "دعوت قبول شد توسط"
-        moved_post: "نوشته‌ی شما منتقل شد توسط"
-        linked: "پیوند به ارسال شما"
-        granted_badge: "نشان اعطا شد"
-        group_message_summary: "پیام‌های صندوق ورودی گروه"
       popup:
         mentioned: '{{username}} در "{{topic}}" - {{site_title}} به شما اشاره کرد'
         group_mentioned: '{{username}} به شما در "{{topic}}" - {{site_title}} اشاره نمود'

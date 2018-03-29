@@ -1179,20 +1179,6 @@ it:
       group_message_summary:
         one: "{{count}} messaggi in arrivo nella casella {{group_name}}"
         other: "{{count}} messaggi in arrivo nella casella {{group_name}}"
-      alt:
-        mentioned: "Menzionato da"
-        quoted: "Citato da"
-        replied: "Risposto"
-        posted: "Messaggio da"
-        edited: "Modifica il tuo messaggio da"
-        liked: "Ha assegnato un \"Mi piace\" al tuo messaggio"
-        invited_to_topic: "Invitato a un argomento da"
-        invitee_accepted: "Invito accettato da"
-        moved_post: "Il tuo messaggio è stato spostato da"
-        linked: "Collegamento al tuo messaggio"
-        granted_badge: "Distintivo assegnato"
-        group_message_summary: "Messaggi nel gruppo in arrivo"
-        topic_reminder: "Un promemoria"
       popup:
         mentioned: '{{username}} ti ha menzionato in "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} ti ha menzionato in "{{topic}}" - {{site_title}}'

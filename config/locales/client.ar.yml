@@ -1301,20 +1301,6 @@ ar:
         few: "{{count}} رسالة في صندوق رسائل {{group_name}} "
         many: "{{count}} رسالة في صندوق رسائل {{group_name}} "
         other: "{{count}} رسالة في صندوق رسائل {{group_name}} "
-      alt:
-        mentioned: "أُشير إليك من"
-        quoted: "أُقتبس كلامك من"
-        replied: "مجاب"
-        posted: "منشور من"
-        edited: "تم تعديل منشورك من"
-        liked: "أُعجب بمنشورك"
-        invited_to_topic: "تمت دعوتك لموضوع من "
-        invitee_accepted: "قبلت دعوتك من"
-        moved_post: "منشورك نقل بواسطة"
-        linked: "وضع رابطا لمنشورك"
-        granted_badge: "تم منح الوسام"
-        group_message_summary: "رسائل صندوق المجموعة"
-        topic_reminder: "تذكير"
       popup:
         mentioned: 'أشار {{username}} إليك في "{{topic}}" - {{site_title}}'
         group_mentioned: 'أشار {{username}} إليك في "{{topic}}" - {{site_title}}'

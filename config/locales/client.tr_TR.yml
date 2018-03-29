@@ -1177,20 +1177,6 @@ tr_TR:
       granted_badge: "'{{description}}' kazandı"
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>Yeni Konu</span> {{description}}"
-      alt:
-        mentioned: "Bahsedildi, şu kişi tarafından"
-        quoted: "Alıntılandı, şu kişi tarafından"
-        replied: "Cevaplandı"
-        posted: "Gönderildi, şu kişi tarafından"
-        edited: "Gönderiniz düzenlendi, şu kişi tarafından"
-        liked: "Gönderiniz beğenildi"
-        invited_to_topic: "Bir konuya davet edildiniz, şu kişi tarafından"
-        invitee_accepted: "Davet kabul edildi, şu kişi tarafından"
-        moved_post: "Gönderiniz taşındı, şu kişi tarafından"
-        linked: "Gönderinize bağlantı"
-        granted_badge: "Rozet alındı"
-        group_message_summary: "Grup gelen kutusundaki iletiler"
-        topic_reminder: "Bir hatırlatıcı"
       popup:
         mentioned: '{{username}}, "{{topic}}" başlıklı konuda sizden bahsetti - {{site_title}}'
         group_mentioned: '{{username}} sizden bahsetti "{{topic}}" - {{site_title}}'
