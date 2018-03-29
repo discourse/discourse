@@ -1541,12 +1541,14 @@ describe UsersController do
         it 'allows the update' do
           user2 = Fabricate(:user)
           user3 = Fabricate(:user)
+          tags = [Fabricate(:tag), Fabricate(:tag)]
 
           put :update, params: {
             username: user.username,
             name: 'Jim Tom',
             custom_fields: { test: :it },
-            muted_usernames: "#{user2.username},#{user3.username}"
+            muted_usernames: "#{user2.username},#{user3.username}",
+            watched_tags: "#{tags[0].name},#{tags[1].name}"
           }, format: :json
 
           expect(response).to be_success
@@ -1556,6 +1558,10 @@ describe UsersController do
           expect(user.name).to eq 'Jim Tom'
           expect(user.custom_fields['test']).to eq 'it'
           expect(user.muted_users.pluck(:username).sort).to eq [user2.username, user3.username].sort
+          expect(TagUser.where(
+            user: user,
+            notification_level: TagUser.notification_levels[:watching]
+          ).pluck(:tag_id)).to contain_exactly(tags[0].id, tags[1].id)
 
           theme = Theme.create(name: "test", user_selectable: true, user_id: -1)
 
