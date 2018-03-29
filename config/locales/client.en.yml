@@ -472,7 +472,7 @@ en:
         filter: "Filter by group type"
         all_groups: "All Groups"
         owner_groups: "Groups I am an owner of"
-        close_groups: "Close Groups"
+        close_groups: "Closed Groups"
         automatic_groups: "Automatic Groups"
         automatic: "Automatic"
         closed: "Closed"
