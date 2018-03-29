@@ -617,6 +617,7 @@ en:
       activity_stream: "Activity"
       preferences: "Preferences"
       expand_profile: "Expand"
+      collapse_profile: "Collapse"
       bookmarks: "Bookmarks"
       bio: "About me"
       invited_by: "Invited By"
