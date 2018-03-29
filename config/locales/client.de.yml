@@ -1280,22 +1280,6 @@ de:
       group_message_summary:
         one: "{{count}} Nachricht in deinem {{group_name}} Posteingang"
         other: "{{count}} Nachrichten in deinem {{group_name}} Posteingang"
-      alt:
-        mentioned: "Erwähnt von"
-        quoted: "Zitiert von"
-        replied: "Geantwortet"
-        posted: "Beitrag von"
-        edited: "Beitrag bearbeitet von"
-        liked: "Gefällt dein Beitrag"
-        private_message: "Absender der Nachricht"
-        invited_to_private_message: "Eingeladen zu einer Nachricht von"
-        invited_to_topic: "Zu Thema eingeladen von"
-        invitee_accepted: "Einladung angenommen von"
-        moved_post: "Dein Beitrag wurde verschoben von"
-        linked: "Link zu deinem Beitrag"
-        granted_badge: "Abzeichen erhalten"
-        group_message_summary: "Nachrichten im Gruppenpostfach"
-        topic_reminder: "Eine Erinnerung"
       popup:
         mentioned: '{{username}} hat dich in "{{topic}}" - {{site_title}} erwähnt'
         group_mentioned: '{{username}} hat dich in "{{topic}}" - {{site_title}} erwähnt'

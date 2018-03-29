@@ -1098,20 +1098,6 @@ sk:
       empty: "Žiadne upozornenia sa nenašli."
       more: "zobraziť staršie upozornenia"
       total_flagged: "označených príspevkov celkom"
-      alt:
-        mentioned: "Zmienený od"
-        quoted: "Citovaný používateľom"
-        replied: "Odpovedané"
-        posted: "Príspevok od"
-        edited: "Upravte Váš príspevok do"
-        liked: "Váš príspevok sa páčil"
-        private_message: "Privátna správa od"
-        invited_to_topic: "Pozvaný k téme od"
-        invitee_accepted: "Pozvánka akceptovaná "
-        moved_post: "Váš príspevok bol presunutý "
-        linked: "Odkaz na váš príspevok"
-        granted_badge: "Udelený odznak"
-        group_message_summary: "Správy v skupinovej schránke"
       popup:
         mentioned: '{{username}} Vás zmienil v "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} Vás zmienil v "{{topic}}" - {{site_title}}'

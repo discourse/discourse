@@ -1024,19 +1024,6 @@ sq:
       empty: "Nuk u gjet asnjë njoftim. "
       more: "shiko njoftimet e kaluara"
       total_flagged: "totali i postimeve të sinjalizuar"
-      alt:
-        mentioned: "Përmendur nga"
-        quoted: "Cituar nga"
-        replied: "Përgjigjur"
-        posted: "Postim nga"
-        edited: "Redakto postimin tuaj"
-        liked: "Pëlqeu postimin tuaj"
-        invited_to_topic: "I/e ftuar në temë nga"
-        invitee_accepted: "Ftesa u pranua nga"
-        moved_post: "Postimi juaj u transferua nga"
-        linked: "Lidhja drejt postimit tuaj"
-        granted_badge: "Stema u atribua"
-        group_message_summary: "Mesazhet në inboxin e grupit"
       popup:
         mentioned: '{{username}} ju përmendi në "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} ju përmendi në "{{topic}}" - {{site_title}}'

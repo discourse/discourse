@@ -1218,21 +1218,6 @@ ro:
       granted_badge: "Ai câștigat '{{description}}'"
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>Subiect nou</span> {{description}}"
-      alt:
-        mentioned: "Menționat de"
-        quoted: "Citat de"
-        replied: "Răspuns"
-        posted: "Postat de"
-        edited: "Editează postarea prin"
-        liked: "V-a apreciat postarea"
-        private_message: "Mesaj personal de la"
-        invited_to_private_message: "Invitat la un mesaj privat de către"
-        invited_to_topic: "Invitat la un subiect de către"
-        invitee_accepted: "Invitație acceptată de către"
-        moved_post: "Postarea ta a fost mutată de către"
-        linked: "Link spre postarea ta"
-        granted_badge: "Ecuson acordat"
-        group_message_summary: "Mesaje în căsuța poștală a grupului"
       popup:
         mentioned: '{{username}} te-a menţionat în "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} te-a menţionat în "{{topic}}" - {{site_title}}'

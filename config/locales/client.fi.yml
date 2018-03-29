@@ -1220,21 +1220,6 @@ fi:
       group_message_summary:
         one: "{{count}} viesti ryhmän {{group_name}} saapuneissa"
         other: "{{count}} viestiä ryhmän {{group_name}} saapuneissa"
-      alt:
-        mentioned: "Mainitsija"
-        quoted: "Lainaaja"
-        replied: "Vastasi"
-        posted: "Kirjoittaja"
-        edited: "Viestieäsi muokkasi"
-        liked: "Viestistäsi tykkäsi"
-        private_message: "Yksityisviesti käyttäjältä"
-        invited_to_topic: "Kutsu ketjuun käyttäjältä"
-        invitee_accepted: "Kutsun hyväksyi"
-        moved_post: "Viestisi siirsi"
-        linked: "Linkki viestiisi"
-        granted_badge: "Ansiomerkki myönnetty"
-        group_message_summary: "Viestejä ryhmän saapuneissa viesteissä."
-        topic_reminder: "Muistutus"
       popup:
         mentioned: '{{username}} mainitsi sinut ketjussa "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} mainitsi sinut ketjussa "{{topic}}" - {{site_title}}'

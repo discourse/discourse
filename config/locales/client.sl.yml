@@ -898,12 +898,6 @@ sl:
       invitee_accepted: "<span>{{username}}</span> je sprejel tvoje vabilo"
       linked: "<span>{{username}}</span> {{description}}"
       topic_reminder: "<span>{{username}}</span> {{description}}"
-      alt:
-        posted: "Objavil"
-        edited: "Urejeno s strani "
-        liked: "Všečkal tvojo objavo"
-        moved_post: "Tvojo objavo je premaknil "
-        linked: "Povezava do tvoje objave"
     search:
       sort_by: "Uredi po"
       relevance: "Relevanci"

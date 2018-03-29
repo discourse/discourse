@@ -1184,22 +1184,6 @@ es:
       group_message_summary:
         one: "{{count}} mensaje en tu bandeja de {{group_name}}"
         other: "{{count}} mensajes en tu bandeja de {{group_name}} "
-      alt:
-        mentioned: "Mencionado por"
-        quoted: "Citado por"
-        replied: "Respondido"
-        posted: "Publicado por"
-        edited: "Editado tu post por"
-        liked: "Gustado tu post"
-        private_message: "Mensaje personal de"
-        invited_to_private_message: "Invitado a un mensaje personal de"
-        invited_to_topic: "Invitado a un tema de"
-        invitee_accepted: "Invitación aceptada por"
-        moved_post: "Tu post fue eliminado por"
-        linked: "Enlace a tu post"
-        granted_badge: "Distintivo concedido"
-        group_message_summary: "Mensajes en la bandeja del grupo"
-        topic_reminder: "Un recordatorio"
       popup:
         mentioned: '{{username}} te mencionó en "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} te ha mencionado en "{{topic}}" - {{site_title}}'

@@ -848,19 +848,6 @@ gl:
       none: "Non é posíbel cargar as notificacións neste intre"
       more: "ver notificacións anteriores"
       total_flagged: "total de publicacións denunciadas"
-      alt:
-        mentioned: "Mencionado por"
-        quoted: "Citado por"
-        replied: "Respondido"
-        posted: "Publicado por"
-        edited: "A túa publicación ediotuna"
-        liked: "Gustoulles a túa publicación"
-        invited_to_topic: "Convidado a un tema de"
-        invitee_accepted: "Convite aceptado por"
-        moved_post: "A túa publicación foi movida por"
-        linked: "Ligazón á túa publicación"
-        granted_badge: "Insignias concedidas"
-        group_message_summary: "Mensaxes na caixa do grupo"
       popup:
         mentioned: '{{username}} mencionoute en "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} mencionoute en "{{topic}}" - {{site_title}}'

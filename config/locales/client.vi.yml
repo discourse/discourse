@@ -1040,19 +1040,6 @@ vi:
       empty: "Không có thông báo"
       more: "xem thông báo cũ hơn"
       total_flagged: "tổng số bài viết gắn cờ"
-      alt:
-        mentioned: "Được nhắc đến bởi"
-        quoted: "Trích dẫn bởi"
-        replied: "Đã trả lời"
-        posted: "Đăng bởi"
-        edited: "Bài viết của bạn được sửa bởi"
-        liked: "Bạn đã like bài viết"
-        invited_to_topic: "Lời mời tham gia chủ đề từ"
-        invitee_accepted: "Lời mời được chấp nhận bởi"
-        moved_post: "Bài viết của bạn đã được di chuyển bởi"
-        linked: "Liên kết đến bài viết của bạn"
-        granted_badge: "Cấp huy hiệu"
-        group_message_summary: "Tin nhắn trong hộp thư đến"
       popup:
         mentioned: '{{username}} nhắc đến bạn trong "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} nhắc đến bạn trong "{{topic}}" - {{site_title}}'

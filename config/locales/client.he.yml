@@ -1091,19 +1091,6 @@ he:
       empty: "לא נמצאו התראות."
       more: "הצגת התראות ישנות יותר"
       total_flagged: "סך הכל פוסטים מדוגלים"
-      alt:
-        mentioned: "הוזכר על ידי"
-        quoted: "צוטט על ידי"
-        replied: "השיב"
-        posted: "פורסם על ידי"
-        edited: "ערוך את הפוסט שלך על ידי"
-        liked: "אהב את הפוסט שלך"
-        invited_to_topic: "הוזמנת לנושא חדש מ"
-        invitee_accepted: "הזמנה התקבלה על ידי"
-        moved_post: "הפוסט שלך הוזז על ידי"
-        linked: "קישור לפוסט שלך"
-        granted_badge: "עיטור הוענק"
-        group_message_summary: "הודעות בדואר-נכנס קבוצתי"
       popup:
         mentioned: '{{username}} הזכיר/ה אותך ב{{topic}}" - {{site_title}}"'
         group_mentioned: '{{username}} הזכיר/ה אתכם ב "{{topic}}" - {{site_title}}'

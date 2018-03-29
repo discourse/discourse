@@ -1044,19 +1044,6 @@ sv:
       empty: "Inga notifieringar hittades."
       more: "visa äldre notifikationer"
       total_flagged: "totalt antal flaggade inlägg"
-      alt:
-        mentioned: "Omnämnd av"
-        quoted: "Citerad av"
-        replied: "Svarade"
-        posted: "Skrivet av"
-        edited: "Redigera ditt inlägg genom"
-        liked: "Gillade ditt inlägg"
-        invited_to_topic: "Inbjudan till ett ämne från"
-        invitee_accepted: "Inbjudan accepterades av"
-        moved_post: "Ditt inlägg blev flyttad av"
-        linked: "Länk till ditt inlägg"
-        granted_badge: "Utmärkelse beviljad"
-        group_message_summary: "Meddelanden i din grupps inkorg"
       popup:
         mentioned: '{{username}} nämnde dig i "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} nämnde dig i "{{topic}}" - {{site_title}}'
