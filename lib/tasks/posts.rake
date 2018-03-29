@@ -274,3 +274,94 @@ task 'posts:refresh_emails', [:topic_id] => [:environment] do |_, args|
 
   puts "", "Done. #{updated} posts updated.", ""
 end
+
+desc 'Reorders all posts based on their creation_date'
+task 'posts:reorder_posts' => :environment do
+  Post.transaction do
+    # update sort_order and flip post_number to prevent
+    # unique constraint violations when updating post_number
+    Post.exec_sql(<<~SQL)
+      WITH ordered_posts AS (
+          SELECT
+            id,
+            ROW_NUMBER()
+            OVER (
+              PARTITION BY topic_id
+              ORDER BY created_at, post_number ) AS new_post_number
+          FROM posts
+      )
+      UPDATE posts AS p
+      SET sort_order = o.new_post_number,
+        post_number  = p.post_number * -1
+      FROM ordered_posts AS o
+      WHERE p.id = o.id AND
+            p.post_number <> o.new_post_number
+    SQL
+
+    Notification.exec_sql(<<~SQL)
+      UPDATE notifications AS x
+      SET post_number = p.sort_order
+      FROM posts AS p
+      WHERE x.topic_id = p.topic_id AND
+            x.post_number = ABS(p.post_number) AND
+            p.post_number < 0
+    SQL
+
+    PostTiming.exec_sql(<<~SQL)
+      UPDATE post_timings AS x
+      SET post_number = x.post_number * -1
+      FROM posts AS p
+      WHERE x.topic_id = p.topic_id AND
+            x.post_number = ABS(p.post_number) AND
+            p.post_number < 0;
+
+      UPDATE post_timings AS t
+      SET post_number = p.sort_order
+      FROM posts AS p
+      WHERE t.topic_id = p.topic_id AND
+            t.post_number = p.post_number AND
+            p.post_number < 0;
+    SQL
+
+    Post.exec_sql(<<~SQL)
+      UPDATE posts AS x
+      SET reply_to_post_number = p.sort_order
+      FROM posts AS p
+      WHERE x.topic_id = p.topic_id AND
+            x.reply_to_post_number = ABS(p.post_number) AND
+            p.post_number < 0;
+    SQL
+
+    TopicUser.exec_sql(<<~SQL)
+      UPDATE topic_users AS x
+        SET last_read_post_number = p.sort_order
+      FROM posts AS p
+      WHERE x.topic_id = p.topic_id AND
+            x.last_read_post_number = ABS(p.post_number) AND
+            p.post_number < 0;
+
+      UPDATE topic_users AS x
+        SET highest_seen_post_number = p.sort_order
+      FROM posts AS p
+      WHERE x.topic_id = p.topic_id AND
+            x.highest_seen_post_number = ABS(p.post_number) AND
+            p.post_number < 0;
+
+      UPDATE topic_users AS x
+        SET last_emailed_post_number = p.sort_order
+      FROM posts AS p
+      WHERE x.topic_id = p.topic_id AND
+            x.last_emailed_post_number = ABS(p.post_number) AND
+            p.post_number < 0;
+    SQL
+
+    # finally update the post_number
+    Post.exec_sql(<<~SQL)
+      UPDATE posts
+      SET post_number = sort_order
+      WHERE post_number < 0
+    SQL
+  end
+
+  puts "", "Done.", ""
+end
