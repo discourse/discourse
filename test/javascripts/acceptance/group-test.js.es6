@@ -45,6 +45,15 @@ QUnit.test("Anonymous Viewing Group", assert => {
     assert.ok(find(".nav-pills li a[title='Logs']").length === 0, 'it should not show Logs tab if user is not admin');
     assert.ok(count('.group-post') > 0, "it lists stream items");
   });
+
+  selectKit('.group-dropdown').expand();
+
+  andThen(() => {
+    assert.equal(
+      find('.select-kit-row').text().trim(), 'discourse',
+      'it displays the right row'
+    );
+  });
 });
 
 QUnit.test("User Viewing Group", assert => {

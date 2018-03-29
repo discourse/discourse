@@ -19,7 +19,7 @@ QUnit.test("Creating a new group", assert => {
 
   visit("/groups");
 
-  selectKit('.groups-admin-dropdown').expand().selectRowByValue("new");
+  click(".groups-header-new");
   fillIn("input[name='name']", '1');
 
   andThen(() => {

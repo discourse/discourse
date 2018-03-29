@@ -1,4 +1,12 @@
 .group-nav {
+  .group-dropdown {
+    margin-right: 10px;
+
+    i {
+      color: $primary;
+    }
+  }
+
   li {
     float: left;
 

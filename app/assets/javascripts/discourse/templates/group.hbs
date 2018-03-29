@@ -1,12 +1,5 @@
 {{plugin-outlet name="before-group-container" args=(hash group=model)}}
 
-{{#link-to "groups"}}
-  {{d-icon 'arrow-left'}}
-  {{i18n "groups.index.title"}}
-{{/link-to}}
-
-<hr>
-
 <div class="container group {{model.name}}">
   <div class='group-details-container'>
     <div class='group-info'>
@@ -36,21 +29,26 @@
         <p>{{{model.bio_cooked}}}</p>
       </div>
     {{/if}}
+
+    <div class="group-details-button">
+      {{group-membership-button
+          class="inline"
+          model=model
+          showLogin='showLogin'}}
+
+      {{#if displayGroupMessageButton}}
+        {{d-button
+            action="messageGroup"
+            class="btn-primary group-message-button inline"
+            icon="envelope"
+            label="groups.message"}}
+      {{/if}}
+    </div>
   </div>
 
   <div class="list-controls">
     <div class="container">
       {{group-navigation group=model currentPath=application.currentPath tabs=tabs}}
-
-      {{#if displayGroupMessageButton}}
-        {{d-button
-            action="messageGroup"
-            class="btn-primary group-message-button"
-            icon="envelope"
-            label="groups.message"}}
-      {{/if}}
-
-      {{group-membership-button model=model showLogin='showLogin'}}
     </div>
   </div>
 

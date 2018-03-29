@@ -1,6 +1,6 @@
 export default {
-  "/groups/discourse.json":{
-    "basic_group":{
+  "/groups/discourse":{
+    "group":{
       "id":47,
       "automatic":false,
       "name":"discourse",
@@ -14,6 +14,9 @@ export default {
       "is_group_owner":true,
       "mentionable":true,
       "messageable":true
+    },
+    "extras": {
+      "visible_group_names": ["discourse"]
     }
   },
   "/topics/groups/discourse.json":{

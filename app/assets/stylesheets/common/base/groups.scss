@@ -5,15 +5,18 @@
   }
 }
 
-.groups-filter {
-  display: inline-block;
-  float: right;
+.groups-header {
+  margin-bottom: 30px;
+}
 
-  .groups-type-filter {
+.groups-header-filters {
+  display: inline-block;
+
+  .groups-header-filters-type {
     vertical-align: middle;
   }
 
-  .groups-name-filter {
+  .groups-header-filters-name {
     vertical-align: middle;
     margin: 0;
   }
@@ -39,8 +42,8 @@
     border-bottom: 1px solid $primary-low;
 
     td {
-      color: blend-primary-secondary(50%);
       padding: 0.8em;
+      color: $primary-medium;
     }
 
     td.groups-info {
@@ -54,9 +57,26 @@
     }
 
     td.groups-user-count {
-      font-size: $font-up-2
+      width: 17%;
+      font-size: $font-up-2;
     }
-  }
+
+    td.groups-table-type {
+      width: 17%;
+      font-size: $font-up-1;
+    }
+
+    td.groups-table-membership {
+      .group-membership-button {
+        display: inline-block;
+        margin-left: 5px;
+      }
+
+      > span {
+        font-size: $font-up-1;
+      }
+    }
+   }
 
   .groups-info {
     .groups-info-name {

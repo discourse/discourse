@@ -109,7 +109,18 @@ class GroupsController < ApplicationController
       end
 
       format.json do
-        render_serialized(group, GroupShowSerializer, root: 'basic_group')
+        groups = Group.visible_groups(current_user)
+
+        if !guardian.is_staff?
+          groups = groups.where(automatic: false)
+        end
+
+        render_json_dump(
+          group: serialize_data(group, GroupShowSerializer, root: nil),
+          extras: {
+            visible_group_names: groups.pluck(:name)
+          }
+        )
       end
     end
   end
@@ -436,7 +447,8 @@ class GroupsController < ApplicationController
 
   def find_group(param_name)
     name = params.require(param_name)
-    group = Group.find_by("lower(name) = ?", name.downcase)
+    group = Group
+    group = group.find_by("lower(name) = ?", name.downcase)
     guardian.ensure_can_see!(group)
     group
   end
