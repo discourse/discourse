@@ -7,5 +7,6 @@ export default SelectKitHeaderComponent.extend({
   clearable: Ember.computed.alias("options.clearable"),
   caretUpIcon: Ember.computed.alias("options.caretUpIcon"),
   caretDownIcon: Ember.computed.alias("options.caretDownIcon"),
-  shouldDisplayClearableButton: Ember.computed.and("clearable", "computedContent.hasSelection")
+  shouldDisplayClearableButton: Ember.computed.and("clearable", "computedContent.hasSelection"),
+  placeholder: Ember.computed.alias("options.placeholder"),
 });
