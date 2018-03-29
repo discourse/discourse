@@ -84,12 +84,18 @@ export default SelectKitComponent.extend({
   },
 
   computeHeaderContent() {
-    return {
+    let content = {
       title: this.get("title"),
       icons: makeArray(this.getWithDefault("headerIcon", [])),
       value: this.get("selection.value"),
       name: this.get("selection.name") || this.get("noneRowComputedContent.name")
     };
+
+    if (!this.get("hasSelection") && this.get("noneLabel")) {
+      content.title = content.name = I18n.t(this.get("noneLabel"));
+    }
+
+    return content;
   },
 
   @computed("computedAsyncContent.[]", "computedValue")

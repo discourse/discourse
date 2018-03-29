@@ -24,11 +24,8 @@ export default SingleSelectComponent.extend({
 
   @on("didReceiveAttrs")
   _setComboBoxOptions() {
-    const placeholder = this.get('placeholder');
-
     this.get("headerComponentOptions").setProperties({
-      clearable: this.get("clearable"),
-      placeholder: placeholder ? I18n.t(placeholder) : "",
+      clearable: this.get("clearable")
     });
   }
 });
