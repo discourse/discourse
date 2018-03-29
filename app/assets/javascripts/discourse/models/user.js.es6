@@ -283,6 +283,12 @@ const User = RestModel.extend({
       }
     });
 
+    ['muted_tags', 'tracked_tags', 'watched_tags', 'watching_first_post_tags'].forEach(prop => {
+      if (fields === undefined || fields.includes(prop)) {
+        data[prop] = this.get(prop) ? this.get(prop).join(',') : '';
+      }
+    });
+
     // TODO: We can remove this when migrated fully to rest model.
     this.set('isSaving', true);
     return ajax(userPath(`${this.get('username_lower')}.json`), {
