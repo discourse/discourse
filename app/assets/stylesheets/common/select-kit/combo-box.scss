@@ -1,5 +1,8 @@
 .select-kit {
   &.combo-box {
+    .combo-box-placeholder {
+      color: dark-light-choose($primary-high, $secondary-low);
+    }
 
     .select-kit-body {
       width: 100%;
