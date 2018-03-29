@@ -262,7 +262,8 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
 
   @computed("none")
   noneRowComputedContent(none) {
-    if (isNone(none)) { return null; }
+    if (isNone(none)) return null;
+
     let noneRowComputedContent;
 
     switch (typeof none) {

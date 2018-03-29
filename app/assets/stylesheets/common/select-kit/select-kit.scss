@@ -104,6 +104,12 @@
       color: inherit;
     }
 
+    &.is-none {
+      .selected-name {
+        color: dark-light-choose($primary-high, $secondary-low);
+      }
+    }
+
     .btn-clear {
       padding: 0 10px;
       border: 0;

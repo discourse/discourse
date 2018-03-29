@@ -1,14 +1,8 @@
 {{#each icons as |icon|}} {{d-icon icon}} {{/each}}
 
-{{#if label}}
-  <span class="selected-name">
-    {{{label}}}
-  </span>
-{{else}}
-  <span class="combo-box-placeholder">
-    {{placeholder}}
-  </span>
-{{/if}}
+<span class="selected-name">
+  {{{label}}}
+</span>
 
 {{#if shouldDisplayClearableButton}}
   <button class="btn-clear" {{action onClearSelection bubbles=false}}>
