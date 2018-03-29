@@ -1,22 +1,24 @@
 {{#d-section pageClass="groups"}}
-  <h1>{{i18n "groups.index.title"}}</h1>
+  <div class="groups-header">
+    {{#if currentUser.admin}}
+      {{d-button action="new"
+          class="groups-header-new pull-right"
+          icon="plus"
+          label="groups.new.title"}}
+    {{/if}}
 
-  {{#if currentUser.admin}}
-    <div class="list-controls">
-      {{group-admin-dropdown new="new"}}
+    <div class="groups-header-filters">
+      {{text-field value=filterInput
+          placeholderKey="groups.index.all_groups"
+          class="groups-header-filters-name no-blur"}}
+
+      {{combo-box value=type
+                  content=types
+                  clearable=true
+                  allowAutoSelectFirst=false
+                  placeholder="groups.index.filter"
+                  class="groups-header-filters-type"}}
     </div>
-  {{/if}}
-
-  <div class="groups-filter">
-    {{combo-box value=type
-                content=types
-                clearable=true
-                none="groups.index.all_groups"
-                class="groups-type-filter"}}
-
-    {{text-field value=filterInput
-        placeholderKey="groups.filter_name"
-        class="groups-name-filter no-blur"}}
   </div>
 
   {{#if model}}
@@ -25,10 +27,10 @@
         <div class='container'>
           <table class="groups-table">
             <thead>
-              <th></th>
+              {{directory-toggle field="name" labelKey="groups.group_name" order=order asc=asc}}
               {{directory-toggle field="user_count" labelKey="groups.user_count" order=order asc=asc}}
+              <th>{{i18n "groups.index.group_type"}}</th>
               <th>{{i18n "groups.membership"}}</th>
-              <th></th>
             </thead>
 
             <tbody>
@@ -64,25 +66,31 @@
 
                   <td class="groups-user-count">{{group.user_count}}</td>
 
-                  <td>
-                    {{#group-membership-button model=group
-                        showMembershipStatus=true
-                        showLogin='showLogin'}}
-
-                      {{d-button icon="ban"
-                          label=(if group.automatic 'groups.automatic_group' 'groups.close_group')
-                          disabled=true}}
-                    {{/group-membership-button}}
+                  <td class="groups-table-type">
+                    {{#if group.public_admission}}
+                      {{i18n 'groups.index.public'}}
+                    {{else if group.isPrivate}}
+                      {{d-icon "eye-slash"}}
+                      {{i18n 'groups.index.private'}}
+                    {{else}}
+                      {{#if group.automatic}}
+                        {{i18n 'groups.index.automatic'}}
+                      {{else}}
+                        {{i18n 'groups.index.closed'}}
+                      {{/if}}
+                    {{/if}}
                   </td>
 
-                  <td class="group-user-status">
-                    {{#if group.is_group_user}}
-                      {{d-icon "user" title="groups.is_group_user"}}
-                    {{/if}}
+                  <td class="groups-table-membership">
+                    <span>
+                      {{#if group.is_group_owner}}
+                        {{i18n "groups.index.is_group_owner"}}
+                      {{else if group.is_group_user}}
+                        {{i18n "groups.index.is_group_user"}}
+                      {{/if}}
+                    </span>
 
-                    {{#if group.is_group_owner}}
-                      {{d-icon "shield" title="groups.is_group_owner"}}
-                    {{/if}}
+                    {{group-membership-button model=group showLogin='showLogin'}}
                   </td>
                 </tr>
               {{/each}}

@@ -11,8 +11,8 @@ acceptance("Group logs", {
       ];
     };
 
-    server.get('/groups/snorlax.json', () => { // eslint-disable-line no-undef
-      return response({"basic_group":{"id":41,"automatic":false,"name":"snorlax","user_count":1,"alias_level":0,"visible":true,"automatic_membership_email_domains":"","automatic_membership_retroactive":false,"primary_group":true,"title":"Team Snorlax","grant_trust_level":null,"incoming_email":null,"has_messages":false,"flair_url":"","flair_bg_color":"","flair_color":"","bio_raw":"","bio_cooked":null,"public":true,"is_group_user":true,"is_group_owner":true}});
+    server.get('/groups/snorlax', () => { // eslint-disable-line no-undef
+      return response({"group":{"id":41,"automatic":false,"name":"snorlax","user_count":1,"alias_level":0,"visible":true,"automatic_membership_email_domains":"","automatic_membership_retroactive":false,"primary_group":true,"title":"Team Snorlax","grant_trust_level":null,"incoming_email":null,"has_messages":false,"flair_url":"","flair_bg_color":"","flair_color":"","bio_raw":"","bio_cooked":null,"public":true,"is_group_user":true,"is_group_owner":true}});
     });
 
     // Workaround while awaiting https://github.com/tildeio/route-recognizer/issues/53

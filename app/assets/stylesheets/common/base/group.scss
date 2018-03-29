@@ -2,6 +2,23 @@
   background: rgba(230, 230, 230, 0.3);
   padding: 20px;
   margin-bottom: 15px;
+  position: relative;
+
+  .group-details-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  }
+}
+
+.group-outlet {
+  position: relative;
+}
+
+.group-username-filter {
+  position: absolute;
+  right: 0;
+  top: -49px;
 }
 
 .group-post {
@@ -120,7 +137,7 @@ table.group-members {
   }
 
   th:first-child {
-    width: 60%;
+    width: 30%;
     text-align: left;
   }
 
@@ -201,13 +218,8 @@ table.group-members {
   }
 }
 
-.group-manage,
-.groups-new-page {
-  .form-horizontal {
-    label {
-      font-weight: bold;
-    }
-  }
+.group-form-save {
+  margin-right: 20px;
 }
 
 .group-manage-members {

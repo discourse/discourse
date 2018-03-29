@@ -3,12 +3,14 @@
     margin-top: 20px;
   }
 
-  .groups-filter {
+  .groups-header-filters {
     display: block;
     float: none;
   }
 
-  .groups-name-filter {
+  .groups-header-filters-name,
+  .groups-header-filters-type, 
+  .groups-header-new {
     margin-top: 10px;
   }
 }

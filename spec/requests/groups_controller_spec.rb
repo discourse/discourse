@@ -206,6 +206,47 @@ describe GroupsController do
   end
 
   describe '#show' do
+    it "ensures the group can be seen" do
+      sign_in(Fabricate(:user))
+      group.update!(visibility_level: Group.visibility_levels[:owners])
+
+      get "/groups/#{group.name}.json"
+
+      expect(response.status).to eq(403)
+    end
+
+    it "returns the right response" do
+      sign_in(user)
+      get "/groups/#{group.name}.json"
+
+      expect(response.status).to eq(200)
+
+      response_body = JSON.parse(response.body)
+
+      expect(response_body['group']['id']).to eq(group.id)
+      expect(response_body['extras']["visible_group_names"]).to eq([group.name])
+    end
+
+    context 'as an admin' do
+      it "returns the right response" do
+        sign_in(Fabricate(:admin))
+        get "/groups/#{group.name}.json"
+
+        expect(response.status).to eq(200)
+
+        response_body = JSON.parse(response.body)
+
+        expect(response_body['group']['id']).to eq(group.id)
+
+        groups = Group::AUTO_GROUPS.keys
+        groups.delete(:everyone)
+        groups.push(group.name)
+
+        expect(response_body['extras']["visible_group_names"])
+          .to contain_exactly(*groups.map(&:to_s))
+      end
+    end
+
     it 'should respond to HTML' do
       group.update_attribute(:bio_cooked, 'testing group bio')
 
@@ -228,10 +269,88 @@ describe GroupsController do
 
         expect(response.status).to eq(200)
 
-        response_body = JSON.parse(response.body)['basic_group']
+        response_body = JSON.parse(response.body)['group']
 
         expect(response_body["id"]).to eq(group.id)
       end
+    end
+  end
+
+  describe "#posts" do
+    it "ensures the group can be seen" do
+      sign_in(Fabricate(:user))
+      group.update!(visibility_level: Group.visibility_levels[:owners])
+
+      get "/groups/#{group.name}/posts.json"
+
+      expect(response.status).to eq(403)
+    end
+
+    it "calls `posts_for` and responds with JSON" do
+      sign_in(user)
+      post = Fabricate(:post, user: user)
+      get "/groups/#{group.name}/posts.json"
+
+      expect(response.status).to eq(200)
+      expect(JSON.parse(response.body).first["id"]).to eq(post.id)
+    end
+  end
+
+  describe "#members" do
+    it "ensures the group can be seen" do
+      sign_in(Fabricate(:user))
+      group.update!(visibility_level: Group.visibility_levels[:owners])
+
+      get "/groups/#{group.name}/members.json"
+
+      expect(response.status).to eq(403)
+    end
+
+    it "ensures that membership can be paginated" do
+      5.times { group.add(Fabricate(:user)) }
+      usernames = group.users.map { |m| m.username }.sort
+
+      get "/groups/#{group.name}/members.json", params: { limit: 3 }
+
+      expect(response.status).to eq(200)
+
+      members = JSON.parse(response.body)["members"]
+
+      expect(members.map { |m| m['username'] }).to eq(usernames[0..2])
+
+      get "/groups/#{group.name}/members.json", params: { limit: 3, offset: 3 }
+
+      expect(response.status).to eq(200)
+
+      members = JSON.parse(response.body)["members"]
+
+      expect(members.map { |m| m['username'] }).to eq(usernames[3..5])
+    end
+  end
+
+  describe '#posts_feed' do
+    it 'renders RSS' do
+      get "/groups/#{group.name}/posts.rss"
+
+      expect(response.status).to eq(200)
+      expect(response.content_type).to eq('application/rss+xml')
+    end
+  end
+
+  describe '#mentions_feed' do
+    it 'renders RSS' do
+      get "/groups/#{group.name}/mentions.rss"
+
+      expect(response.status).to eq(200)
+      expect(response.content_type).to eq('application/rss+xml')
+    end
+
+    it 'fails when disabled' do
+      SiteSetting.enable_mentions = false
+
+      get "/groups/#{group.name}/mentions.rss"
+
+      expect(response.status).to eq(404)
     end
   end
 

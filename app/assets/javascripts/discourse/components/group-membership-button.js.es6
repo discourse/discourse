@@ -3,6 +3,8 @@ import { popupAjaxError } from 'discourse/lib/ajax-error';
 import showModal from 'discourse/lib/show-modal';
 
 export default Ember.Component.extend({
+  classNames: ["group-membership-button"],
+
   @computed("model.public_admission", "userIsGroupUser")
   canJoinGroup(publicAdmission, userIsGroupUser) {
     return publicAdmission && !userIsGroupUser;

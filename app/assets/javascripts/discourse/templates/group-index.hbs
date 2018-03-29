@@ -7,6 +7,7 @@
     <table class='group-members'>
       <thead>
         {{group-index-toggle order=order desc=desc field='username_lower' i18nKey='username'}}
+        <th>{{i18n "groups.members.owner"}}</th>
         {{group-index-toggle order=order desc=desc field='last_posted_at' i18nKey='last_post'}}
         {{group-index-toggle order=order desc=desc field='last_seen_at'  i18nKey='last_seen'}}
         <th></th>
@@ -16,10 +17,17 @@
         {{#each model.members as |m|}}
           <tr>
             <td class='avatar'>
-              {{#user-info user=m skipName=skipName}}
-                {{#if m.owner}}<strong class="group-owner-label">{{i18n "groups.owner"}}</strong>{{/if}}
-              {{/user-info}}
+              {{user-info user=m skipName=skipName}}
             </td>
+
+            <td>
+              {{#if m.owner}}
+                <strong class="group-owner-label">
+                  {{d-icon "shield"}}
+                </strong>
+              {{/if}}
+            </td>
+
             <td>
               <span class="text">{{bound-date m.last_posted_at}}</span>
             </td>
