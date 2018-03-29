@@ -13,9 +13,10 @@ export default Ember.Component.extend(bufferedRender({
   rerenderTriggers: ['url', 'unread', 'newPosts', 'unseen'],
 
   buildBuffer(buffer) {
+    const newDotText = (this.currentUser && this.currentUser.trust_level > 0) ? " " : I18n.t('filters.new.lower_title');
     const url = this.get('url');
     link(buffer, this.get('unread'), url, 'unread', 'unread_posts');
     link(buffer, this.get('newPosts'), url, 'new-posts', 'new_posts');
-    link(buffer, this.get('unseen'), url, 'new-topic', 'new', I18n.t('filters.new.lower_title'));
+    link(buffer, this.get('unseen'), url, 'new-topic', 'new', newDotText);
   }
 }));
