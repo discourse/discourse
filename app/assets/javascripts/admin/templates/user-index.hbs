@@ -199,8 +199,8 @@
       <div class='value'>
         {{#if model.approved}}
           {{i18n 'admin.user.approved_by'}}
-          {{#link-to 'adminUser' approvedBy}}{{avatar model.approvedBy imageSize="small"}}{{/link-to}}
-          {{#link-to 'adminUser' approvedBy}}{{model.approvedBy.username}}{{/link-to}}
+          {{#link-to 'adminUser' model.approvedBy}}{{avatar model.approvedBy imageSize="small"}}{{/link-to}}
+          {{#link-to 'adminUser' model.approvedBy}}{{model.approvedBy.username}}{{/link-to}}
         {{else}}
           {{i18n 'no_value'}}
         {{/if}}
@@ -351,8 +351,8 @@
     <div class='display-row highlight-danger suspension-info'>
       <div class='field'>{{i18n 'admin.user.suspended_by'}}</div>
       <div class='value'>
-        {{#link-to 'adminUser' suspendedBy}}{{avatar model.suspendedBy imageSize="tiny"}}{{/link-to}}
-        {{#link-to 'adminUser' suspendedBy}}{{model.suspendedBy.username}}{{/link-to}}
+        {{#link-to 'adminUser' model.suspendedBy}}{{avatar model.suspendedBy imageSize="tiny"}}{{/link-to}}
+        {{#link-to 'adminUser' model.suspendedBy}}{{model.suspendedBy.username}}{{/link-to}}
       </div>
       <div class='controls'>
         <b>{{i18n 'admin.user.suspend_reason'}}</b>:
@@ -396,8 +396,8 @@
     <div class='display-row highlight-danger silence-info'>
       <div class='field'>{{i18n 'admin.user.silenced_by'}}</div>
       <div class='value'>
-        {{#link-to 'adminUser' silencedBy}}{{avatar model.silencedBy imageSize="tiny"}}{{/link-to}}
-        {{#link-to 'adminUser' silencedBy}}{{model.silencedBy.username}}{{/link-to}}
+        {{#link-to 'adminUser' model.silencedBy}}{{avatar model.silencedBy imageSize="tiny"}}{{/link-to}}
+        {{#link-to 'adminUser' model.silencedBy}}{{model.silencedBy.username}}{{/link-to}}
       </div>
       <div class='controls'>
         <b>{{i18n 'admin.user.silence_reason'}}</b>:
