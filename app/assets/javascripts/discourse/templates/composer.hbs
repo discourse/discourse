@@ -104,10 +104,17 @@
                                      label=model.saveLabel
                                      disableSubmit=disableSubmit}}
             {{#if site.mobileView}}
-              <a href {{action "cancel"}} class='cancel' tabindex="6" title="{{i18n 'cancel'}}">{{d-icon "trash-o"}}</a>
+              <a href {{action "cancel"}} class='cancel' tabindex="6" title="{{i18n 'cancel'}}">
+                {{#if canEdit}}
+                  {{d-icon "times"}}
+                {{else}}
+                  {{d-icon "trash-o"}}
+                {{/if}}
+              </a>
             {{else}}
               <a href {{action "cancel"}} class='cancel' tabindex="6" >{{i18n 'cancel'}}</a>
             {{/if}}
+
 
               {{#if site.mobileView}}
                 {{#if whisperOrUnlistTopic}}
