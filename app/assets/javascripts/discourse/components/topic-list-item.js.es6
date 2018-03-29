@@ -33,6 +33,11 @@ export default Ember.Component.extend(bufferedRender({
   attributeBindings: ['data-topic-id'],
   'data-topic-id': Em.computed.alias('topic.id'),
 
+  @computed
+  newDotText() {
+    return (this.currentUser && this.currentUser.trust_level > 0) ? "" : I18n.t('filters.new.lower_title');
+  },
+
   actions: {
     toggleBookmark() {
       this.get('topic').toggleBookmark().finally(() => this.rerenderBuffer());
