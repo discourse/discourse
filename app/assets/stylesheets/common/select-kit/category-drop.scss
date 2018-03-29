@@ -40,6 +40,10 @@
         font-size: $font-0;
         transition: none;
 
+        &.is-none .selected-name {
+          color: inherit;
+        }
+
         .badge-wrapper {
           margin-right: 0;
         }
