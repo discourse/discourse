@@ -82,13 +82,15 @@
                   </td>
 
                   <td class="groups-table-membership">
-                    <span>
-                      {{#if group.is_group_owner}}
+                    {{#if group.is_group_owner}}
+                      <span>
                         {{i18n "groups.index.is_group_owner"}}
-                      {{else if group.is_group_user}}
+                      </span>
+                    {{else if group.is_group_user}}
+                      <span>
                         {{i18n "groups.index.is_group_user"}}
-                      {{/if}}
-                    </span>
+                      </span>
+                    {{/if}}
 
                     {{group-membership-button model=group showLogin='showLogin'}}
                   </td>

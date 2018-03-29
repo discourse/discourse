@@ -69,10 +69,10 @@
     td.groups-table-membership {
       .group-membership-button {
         display: inline-block;
-        margin-left: 5px;
       }
 
       > span {
+        margin-right: 5px;
         font-size: $font-up-1;
       }
     }
