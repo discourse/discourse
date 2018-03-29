@@ -19,6 +19,7 @@ export default Ember.Controller.extend({
   versionCheck: null,
   dashboardFetchedAt: null,
   showVersionChecks: setting('version_checks'),
+  exceptionController: Ember.inject.controller('exception'),
 
   @computed('problems.length')
   foundProblems(problemsLength) {
@@ -39,10 +40,10 @@ export default Ember.Controller.extend({
 
   fetchDashboard() {
     if (!this.get('dashboardFetchedAt') || moment().subtract(30, 'minutes').toDate() > this.get('dashboardFetchedAt')) {
-      this.set('dashboardFetchedAt', new Date());
       this.set('loading', true);
       const versionChecks = this.siteSettings.version_checks;
       AdminDashboard.find().then(d => {
+        this.set('dashboardFetchedAt', new Date());
         if (versionChecks) {
           this.set('versionCheck', VersionCheck.create(d.version_check));
         }
@@ -56,6 +57,10 @@ export default Ember.Controller.extend({
         }
 
         ATTRIBUTES.forEach(a => this.set(a, d[a]));
+      }).catch(e => {
+        this.get('exceptionController').set('thrown', e.jqXHR);
+        this.replaceRoute('exception');
+      }).finally(() => {
         this.set('loading', false);
       });
     }
