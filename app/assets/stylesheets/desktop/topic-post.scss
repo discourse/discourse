@@ -55,8 +55,8 @@ nav.post-controls {
   padding: 0;
 
   .like-count {
-    font-size: inherit;
-    margin-right: -5px;
+    font-size: $font-up-1;
+    margin-right: -10px;
   }
 
   .highlight-action {
@@ -205,7 +205,7 @@ nav.post-controls {
 .embedded-posts {
   h1, h2, h3 { margin: 10px 0; }
   border:  1px solid $primary-low;
-  
+
   .topic-body {
     box-sizing: border-box;
     width: calc(100% - 70px); // [100% - .topic-avatar width]
@@ -628,7 +628,7 @@ $topic-avatar-width: 45px;
 
 .time-gap + .topic-post .embedded-posts.top {
   border-bottom: 1px solid $primary-low;
-} 
+}
 
 
 .posts-wrapper {
