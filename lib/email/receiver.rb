@@ -301,6 +301,7 @@ module Email
       [:exchange, /name="message(Body|Reply)Section"/],
       [:apple_mail, /id="AppleMailSignature"/],
       [:mozilla, /class="moz-/],
+      [:protonmail, /class="protonmail_/],
     ]
 
     def extract_from_gmail(html)
@@ -348,6 +349,13 @@ module Email
       # Mozilla (Thunderbird ?) properly identifies signature and forwarded emails
       # Remove them and anything that comes after
       elided = doc.css("*[class^='moz-'], *[class^='moz-'] ~ *").remove
+      to_markdown(doc.to_html, elided.to_html)
+    end
+
+    def extract_from_protonmail(html)
+      doc = Nokogiri::HTML.fragment(html)
+      # Removes anything that has a class starting with "protonmail_" and everything after that
+      elided = doc.css("*[class^='protonmail_'], *[class^='protonmail_'] ~ *").remove
       to_markdown(doc.to_html, elided.to_html)
     end
 
