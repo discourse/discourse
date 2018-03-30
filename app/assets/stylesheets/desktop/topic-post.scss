@@ -55,19 +55,29 @@ nav.post-controls {
   padding: 0;
 
   .like-button {
-    display: inline-block;
-
+    display: inline-flex;
+    
+    .like-count {
+      color: dark-light-choose($primary-low-mid, $secondary-high);   
+    }
+    
     .widget-button {
       background: none;
     }
 
     &:hover {
       background: $primary-low;
-
+      .like-count {
+        color: dark-light-choose($primary-medium, $secondary-high);                
+        &.d-hover {
+          color: dark-light-choose($primary, $secondary);        
+        }   
+      }
       .d-hover {
         background: none;
       }
     }
+
     &:active {
       box-shadow: inset 0 1px 3px rgba(0,0,0, .4);
 
