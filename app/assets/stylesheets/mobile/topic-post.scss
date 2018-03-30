@@ -66,7 +66,7 @@ span.badge-posts {
       padding: 8px 4px;
       i.fa-heart {
         padding-left: 5px;
-        color: $love;
+        color: dark-light-choose($primary-low-mid, $secondary-high);
       }
       &.my-likes {
         margin-right: 5px;
