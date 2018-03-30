@@ -62,11 +62,17 @@ span.badge-posts {
     }
 
     button.like-count {
-      font-size: $font-0;
+      font-size: $font-up-1;
       padding: 8px 4px;
       i.fa-heart {
         padding-left: 5px;
         color: $love;
+      }
+      &.my-likes {
+        margin-right: 5px;
+      }
+      &.regular-likes {
+        margin-right: -8px;
       }
     }
   }
