@@ -58,7 +58,7 @@ nav.post-controls {
     font-size: $font-up-1;
     i.fa-heart {
       padding-left: 5px;
-      color: $love;
+      color: dark-light-choose($primary-low-mid, $secondary-high);
     }
     &.my-likes {
       margin-right: -2px;
