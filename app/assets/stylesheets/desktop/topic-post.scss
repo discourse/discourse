@@ -54,17 +54,50 @@ nav.post-controls {
 
   padding: 0;
 
-  .like-count {
-    font-size: $font-up-1;
-    i.fa-heart {
-      padding-left: 5px;
-      color: dark-light-choose($primary-low-mid, $secondary-high);
+  .like-button {
+    display: inline-block;
+
+    .widget-button {
+      background: none;
     }
-    &.my-likes {
-      margin-right: -2px;
+
+    &:hover {
+      background: $primary-low;
+
+      .d-hover {
+        background: none;
+      }
     }
-    &.regular-likes {
-      margin-right: -15px;
+    &:active {
+      box-shadow: inset 0 1px 3px rgba(0,0,0, .4);
+
+      .widget-button {
+        box-shadow: none;
+      }
+    }
+
+    .like {
+      &:focus {
+        background: none;
+      }
+    }
+
+    .like-count {
+      font-size: $font-up-1;
+      i.fa-heart {
+        padding-left: 5px;
+        color: dark-light-choose($primary-low-mid, $secondary-high);
+      }
+      &.my-likes {
+        margin-right: -2px;
+      }
+      &.regular-likes {
+        margin-right: -12px;
+      }
+    }
+
+    .toggle-like {
+      padding: 8px 8px;
     }
   }
 
