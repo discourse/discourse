@@ -412,7 +412,7 @@ describe Email::Receiver do
       expect(topic.posts.last.created_at).to be_within(1.minute).of(DateTime.now)
     end
 
-    it "accepts emails with wrong reply key if the system knows about the forwareded email" do
+    it "accepts emails with wrong reply key if the system knows about the forwarded email" do
       Fabricate(:incoming_email,
                 raw: <<~RAW,
                   Return-Path: <discourse@bar.com>
@@ -549,6 +549,27 @@ describe Email::Receiver do
 
     end
 
+    context "when message sent to a group has no key and find_related_post_with_key is enabled" do
+      let!(:topic) do
+        SiteSetting.find_related_post_with_key = true
+        process(:email_reply_1)
+        Topic.last
+      end
+
+      it "creates a reply when the sender and referenced message id are known" do
+        expect { process(:email_reply_2) }.to change { topic.posts.count }.by(1).and change { Topic.count }.by(0)
+      end
+
+      it "creates a new topic when the sender is not known" do
+        IncomingEmail.where(message_id: '34@foo.bar.mail').update(cc_addresses: 'three@foo.com')
+        expect { process(:email_reply_2) }.to change { topic.posts.count }.by(0).and change { Topic.count }.by(1)
+      end
+
+      it "creates a new topic when the referenced message id is not known" do
+        IncomingEmail.where(message_id: '34@foo.bar.mail').update(message_id: '99@foo.bar.mail')
+        expect { process(:email_reply_2) }.to change { topic.posts.count }.by(0).and change { Topic.count }.by(1)
+      end
+    end
   end
 
   context "new topic in a category" do
@@ -887,7 +908,7 @@ describe Email::Receiver do
     end
   end
 
-  it "tries to fix unparsable email addresses in To, CC and BBC headers" do
+  it "tries to fix unparsable email addresses in To and CC headers" do
     expect { process(:unparsable_email_addresses) }.to raise_error(Email::Receiver::BadDestinationAddress)
 
     email = IncomingEmail.last
