@@ -27,6 +27,10 @@ export default Ember.Component.extend(bufferedRender({
       }
     }
 
+    if (!this.get('active') && this.currentUser && this.currentUser.trust_level > 1 && (content.get('name') === "new" || content.get('name') === "unread") && (content.get('count') < 1)) {
+      return;
+    }
+
     buffer.push(`<a href='${href}'>`);
     if (content.get('hasIcon')) {
       buffer.push("<span class='" + content.get('name') + "'></span>");
