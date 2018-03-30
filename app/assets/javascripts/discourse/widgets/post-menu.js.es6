@@ -69,11 +69,15 @@ registerButton('like-count', attrs => {
     const title = attrs.liked
       ? count === 1 ? 'post.has_likes_title_only_you' : 'post.has_likes_title_you'
       : 'post.has_likes_title';
+      const icon = attrs.yours ? 'heart' : '';
+
 
     return { action: 'toggleWhoLiked',
       title,
       className: 'like-count highlight-action',
       contents: count,
+      icon,
+      iconRight: true,
       titleOptions: {count: attrs.liked ? (count-1) : count }
     };
   }
