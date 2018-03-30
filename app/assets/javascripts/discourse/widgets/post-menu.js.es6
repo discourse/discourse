@@ -70,11 +70,11 @@ registerButton('like-count', attrs => {
       ? count === 1 ? 'post.has_likes_title_only_you' : 'post.has_likes_title_you'
       : 'post.has_likes_title';
       const icon = attrs.yours ? 'heart' : '';
-
+      const additionalClass = attrs.yours ? 'my-likes' : 'regular-likes';
 
     return { action: 'toggleWhoLiked',
       title,
-      className: 'like-count highlight-action',
+      className: `like-count highlight-action ${additionalClass}`,
       contents: count,
       icon,
       iconRight: true,

@@ -56,10 +56,15 @@ nav.post-controls {
 
   .like-count {
     font-size: $font-up-1;
-    margin-right: -15px;
     i.fa-heart {
       padding-left: 5px;
       color: $love;
+    }
+    &.my-likes {
+      margin-right: -2px;
+    }
+    &.regular-likes {
+      margin-right: -15px;
     }
   }
 
