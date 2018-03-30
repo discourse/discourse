@@ -285,15 +285,18 @@ export default createWidget('post-menu', {
       replaceButton(orderedButtons, 'reply', 'wiki-edit');
     }
 
-    orderedButtons.forEach(i => {
-      const button = this.attachButton(i, attrs);
-      if (button) {
-        allButtons.push(button);
+    orderedButtons
+      .filter(x => x !== "like-count" && x !== "like")
+      .forEach(i => {
+        const button = this.attachButton(i, attrs);
 
-        if ((attrs.yours && button.attrs.alwaysShowYours) || (hiddenButtons.indexOf(i) === -1)) {
-          visibleButtons.push(button);
+        if (button) {
+          allButtons.push(button);
+
+          if ((attrs.yours && button.attrs.alwaysShowYours) || (hiddenButtons.indexOf(i) === -1)) {
+            visibleButtons.push(button);
+          }
         }
-      }
     });
 
     if (!this.settings.collapseButtons) {
@@ -349,6 +352,11 @@ export default createWidget('post-menu', {
         }
       }
     });
+
+    visibleButtons.unshift(h('div.like-button', [
+      this.attachButton("like-count", attrs),
+      this.attachButton("like", attrs)
+    ]));
 
     const postControls = [];
 
