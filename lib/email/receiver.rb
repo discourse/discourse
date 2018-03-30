@@ -537,14 +537,7 @@ module Email
       case destination[:type]
       when :group
         group = destination[:obj]
-        create_topic(user: user,
-                     raw: body,
-                     elided: elided,
-                     title: subject,
-                     archetype: Archetype.private_message,
-                     target_group_names: [group.name],
-                     is_group_message: true,
-                     skip_validations: true)
+        create_group_post(group, user, body, elided)
 
       when :category
         category = destination[:obj]
@@ -562,7 +555,7 @@ module Email
       when :reply
         email_log = destination[:obj]
 
-        if email_log.user_id != user.id && !forwareded_reply_key?(email_log, user)
+        if email_log.user_id != user.id && !forwarded_reply_key?(email_log, user)
           raise ReplyUserNotMatchingError, "email_log.user_id => #{email_log.user_id.inspect}, user.id => #{user.id.inspect}"
         end
 
@@ -575,27 +568,63 @@ module Email
       end
     end
 
-    def forwareded_reply_key?(email_log, user)
+    def create_group_post(group, user, body, elided)
+      message_ids = Email::Receiver.extract_reply_message_ids(@mail, max_message_id_count: 5)
+      post_ids = []
+
+      incoming_emails = IncomingEmail
+        .where(message_id: message_ids)
+        .addressed_to_user(user)
+        .pluck(:post_id, :to_addresses, :cc_addresses)
+
+      incoming_emails.each do |post_id, to_addresses, cc_addresses|
+        post_ids << post_id if contains_email_address_of_user?(to_addresses, user) ||
+          contains_email_address_of_user?(cc_addresses, user)
+      end
+
+      if post_ids.any? && post = Post.where(id: post_ids).order(:created_at).last
+        create_reply(user: user,
+                     raw: body,
+                     elided: elided,
+                     post: post,
+                     topic: post.topic,
+                     skip_validations: true)
+      else
+        create_topic(user: user,
+                     raw: body,
+                     elided: elided,
+                     title: subject,
+                     archetype: Archetype.private_message,
+                     target_group_names: [group.name],
+                     is_group_message: true,
+                     skip_validations: true)
+      end
+    end
+
+    def forwarded_reply_key?(email_log, user)
       incoming_emails = IncomingEmail
         .joins(:post)
         .where('posts.topic_id = ?', email_log.topic_id)
         .addressed_to(email_log.reply_key)
-        .addressed_to(user.email)
+        .addressed_to_user(user)
+        .pluck(:to_addresses, :cc_addresses)
 
-      incoming_emails.each do |email|
-        next unless contains_email_address?(email.to_addresses, user.email) ||
-          contains_email_address?(email.cc_addresses, user.email)
+      incoming_emails.each do |to_addresses, cc_addresses|
+        next unless contains_email_address_of_user?(to_addresses, user) ||
+          contains_email_address_of_user?(cc_addresses, user)
 
-        return true if contains_reply_by_email_address(email.to_addresses, email_log.reply_key) ||
-          contains_reply_by_email_address(email.cc_addresses, email_log.reply_key)
+        return true if contains_reply_by_email_address(to_addresses, email_log.reply_key) ||
+          contains_reply_by_email_address(cc_addresses, email_log.reply_key)
       end
 
       false
     end
 
-    def contains_email_address?(addresses, email)
+    def contains_email_address_of_user?(addresses, user)
       return false if addresses.blank?
-      addresses.split(";").include?(email)
+
+      addresses = addresses.split(";")
+      user.user_emails.any? { |user_email| addresses.include?(user_email.email) }
     end
 
     def contains_reply_by_email_address(addresses, reply_key)
@@ -703,13 +732,8 @@ module Email
     def find_related_post
       return if SiteSetting.find_related_post_with_key && !sent_to_mailinglist_mirror?
 
-      message_ids = [@mail.in_reply_to, Email::Receiver.extract_references(@mail.references)]
-      message_ids.flatten!
-      message_ids.select!(&:present?)
-      message_ids.uniq!
+      message_ids = Email::Receiver.extract_reply_message_ids(@mail, max_message_id_count: 5)
       return if message_ids.empty?
-
-      message_ids = message_ids.first(5)
 
       host = Email::Sender.host_for(Discourse.base_url)
       post_id_regexp  = Regexp.new "topic/\\d+/(\\d+)@#{Regexp.escape(host)}"
@@ -727,6 +751,14 @@ module Email
       return if post_ids.empty?
 
       Post.where(id: post_ids).order(:created_at).last
+    end
+
+    def self.extract_reply_message_ids(mail, max_message_id_count:)
+      message_ids = [mail.in_reply_to, Email::Receiver.extract_references(mail.references)]
+      message_ids.flatten!
+      message_ids.select!(&:present?)
+      message_ids.uniq!
+      message_ids.first(max_message_id_count)
     end
 
     def self.extract_references(references)
