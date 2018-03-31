@@ -317,6 +317,11 @@ export default createWidget('post-menu', {
       visibleButtons.splice(visibleButtons.length - 1, 0, showMore);
     }
 
+    visibleButtons.unshift(h('div.like-button', [
+      this.attachButton("like-count", attrs),
+      this.attachButton("like", attrs)
+    ]));
+
     Object.keys(_extraButtons).forEach(k => {
       const builder = _extraButtons[k];
       if (builder) {
@@ -352,11 +357,6 @@ export default createWidget('post-menu', {
         }
       }
     });
-
-    visibleButtons.unshift(h('div.like-button', [
-      this.attachButton("like-count", attrs),
-      this.attachButton("like", attrs)
-    ]));
 
     const postControls = [];
 
