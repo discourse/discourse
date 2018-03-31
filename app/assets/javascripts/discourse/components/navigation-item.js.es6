@@ -27,7 +27,7 @@ export default Ember.Component.extend(bufferedRender({
       }
     }
 
-    if (!this.get('active') && this.currentUser && this.currentUser.trust_level > 1 && (content.get('name') === "new" || content.get('name') === "unread") && (content.get('count') < 1)) {
+    if (!this.get('active') && this.currentUser && this.currentUser.trust_level > 0 && (content.get('name') === "new" || content.get('name') === "unread") && (content.get('count') < 1)) {
       this.set('hidden', true);
     }
 
