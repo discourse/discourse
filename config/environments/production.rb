@@ -21,6 +21,11 @@ Discourse::Application.configure do
   config.assets.digest = true
 
   config.log_level = :info
+  
+  # log to stdout when configured
+  if ENV['LOG_STDOUT']
+    config.logger = Logger.new(STDOUT)
+  end
 
   if GlobalSetting.smtp_address
     settings = {
