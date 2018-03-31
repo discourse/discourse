@@ -115,8 +115,8 @@ class ImportScripts::Drupal < ImportScripts::Base
         FROM node n
         LEFT JOIN forum f ON f.vid=n.vid
         LEFT JOIN node_revisions nr ON nr.vid=n.vid
-        WHERE node.type = 'forum'
-          AND node.status = 1
+        WHERE n.type = 'forum'
+          AND n.status = 1
 	LIMIT #{batch_size}
           OFFSET #{offset};
       ", cache_rows: false)
@@ -152,9 +152,9 @@ class ImportScripts::Drupal < ImportScripts::Base
       SELECT COUNT(*) count
       FROM comments c
       LEFT JOIN node n ON n.nid=c.nid
-      WHERE node.type IN #{node_types}
-      AND node.status = 1
-      AND comments.status=0;
+      WHERE n.type IN #{node_types}
+      AND n.status = 1
+      AND c.status=0;
     ").first['count']
 
     batch_size = 1000
