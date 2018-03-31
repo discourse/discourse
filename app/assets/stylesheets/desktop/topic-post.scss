@@ -56,11 +56,11 @@ nav.post-controls {
 
   .like-button {
     display: inline-flex;
-    
+
     .like-count {
-      color: dark-light-choose($primary-low-mid, $secondary-high);   
+      color: dark-light-choose($primary-low-mid, $secondary-high);
     }
-    
+
     .widget-button {
       background: none;
     }
@@ -68,10 +68,10 @@ nav.post-controls {
     &:hover {
       background: $primary-low;
       .like-count {
-        color: dark-light-choose($primary-medium, $secondary-high);                
+        color: dark-light-choose($primary-medium, $secondary-high);
         &.d-hover {
-          color: dark-light-choose($primary, $secondary);        
-        }   
+          color: dark-light-choose($primary, $secondary);
+        }
       }
       .d-hover {
         background: none;
@@ -100,6 +100,9 @@ nav.post-controls {
       }
       &.my-likes {
         margin-right: -2px;
+        i.fa-heart {
+          padding-left: 10px;
+        }
       }
       &.regular-likes {
         margin-right: -12px;
