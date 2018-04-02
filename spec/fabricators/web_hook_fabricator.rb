@@ -21,6 +21,9 @@ Fabricator(:wildcard_web_hook, from: :web_hook) do
   wildcard_web_hook true
 end
 
+Fabricator(:post_web_hook, from: :web_hook) do
+end
+
 Fabricator(:topic_web_hook, from: :web_hook) do
   transient topic_hook: WebHookEventType.find_by(name: 'topic')
 
@@ -34,5 +37,21 @@ Fabricator(:user_web_hook, from: :web_hook) do
 
   after_build do |web_hook, transients|
     web_hook.web_hook_event_types = [transients[:user_hook]]
+  end
+end
+
+Fabricator(:group_web_hook, from: :web_hook) do
+  transient group_hook: WebHookEventType.find_by(name: 'group')
+
+  after_build do |web_hook, transients|
+    web_hook.web_hook_event_types = [transients[:group_hook]]
+  end
+end
+
+Fabricator(:category_web_hook, from: :web_hook) do
+  transient category_hook: WebHookEventType.find_by(name: 'category')
+
+  after_build do |web_hook, transients|
+    web_hook.web_hook_event_types = [transients[:category_hook]]
   end
 end

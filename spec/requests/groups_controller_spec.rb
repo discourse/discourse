@@ -450,6 +450,15 @@ describe GroupsController do
         expect(group.flair_color).to eq('BBB')
         expect(group.name).to eq('testing')
       end
+
+      it 'triggers a extensibility event' do
+        event = DiscourseEvent.track_events {
+          put "/groups/#{group.id}.json", params: { group: { flair_color: 'BBB' } }
+        }.last
+
+        expect(event[:event_name]).to eq(:group_updated)
+        expect(event[:params].first).to eq(group)
+      end
     end
 
     context "when user is not a group owner or admin" do
