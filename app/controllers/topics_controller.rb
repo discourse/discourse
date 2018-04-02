@@ -668,9 +668,10 @@ class TopicsController < ApplicationController
       raise ActionController::ParameterMissing.new(:topic_ids)
     end
 
-    operation = params.require(:operation)
-    operation.permit!
-    operation = operation.to_h.symbolize_keys
+    operation = params
+      .require(:operation)
+      .permit(:type, :group, :category_id, :notification_level_id, :tags)
+      .to_h.symbolize_keys
 
     raise ActionController::ParameterMissing.new(:operation_type) if operation[:type].blank?
     operator = TopicsBulkAction.new(current_user, topic_ids, operation, group: operation[:group])
