@@ -63,8 +63,15 @@ export default Ember.Component.extend(bufferedRender({
       classes.push('has-excerpt');
     }
 
+    if (topic.get('unseen')) {
+      classes.push("unseen-topic");
+    }
 
-    ['liked', 'archived', 'bookmarked', 'pinned'].forEach(name => {
+    if (topic.get('displayNewPosts')) {
+      classes.push("new-posts");
+    }
+
+    ['liked', 'archived', 'bookmarked', 'pinned', 'closed'].forEach(name => {
       if (topic.get(name)) {
         classes.push(name);
       }
