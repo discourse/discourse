@@ -7,7 +7,7 @@
     <table class='group-members'>
       <thead>
         {{group-index-toggle order=order desc=desc field='username_lower' i18nKey='username'}}
-        <th>{{i18n "groups.members.owner"}}</th>
+        <th class='group-owner'>{{i18n "groups.members.owner"}}</th>
         {{group-index-toggle order=order desc=desc field='last_posted_at' i18nKey='last_post'}}
         {{group-index-toggle order=order desc=desc field='last_seen_at'  i18nKey='last_seen'}}
         <th></th>
@@ -20,7 +20,7 @@
               {{user-info user=m skipName=skipName}}
             </td>
 
-            <td>
+            <td class='group-owner'>
               {{#if m.owner}}
                 <strong class="group-owner-label">
                   {{d-icon "shield"}}
