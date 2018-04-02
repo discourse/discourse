@@ -44,7 +44,7 @@ export default ComboBox.extend(Tags, {
 
   @computed("tags")
   selection(tags) {
-    return makeArray(tags);
+    return makeArray(tags).map(c => this.computeContentItem(c));
   },
 
   filterComputedContent(computedContent) {
@@ -125,7 +125,9 @@ export default ComboBox.extend(Tags, {
   computeHeaderContent() {
     let content = this._super();
 
-    const joinedTags = this.get("selection").join(", ");
+    const joinedTags = this.get("selection")
+                           .map(s => Ember.get(s, "value"))
+                           .join(", ");
 
     if (isEmpty(this.get("selection"))) {
       content.label = I18n.t("tagging.choose_for_topic");
@@ -144,7 +146,13 @@ export default ComboBox.extend(Tags, {
       limit: this.get("siteSettings.max_tag_search_results"),
       categoryId: this.get("categoryId")
     };
-    if (this.get("selection")) data.selected_tags = this.get("selection").slice(0, 100);
+
+    if (this.get("selection")) {
+      data.selected_tags = this.get("selection")
+                               .map(s => Ember.get(s, "value"))
+                               .slice(0, 100);
+    }
+
     if (!this.get("everyTag")) data.filterForInput = true;
 
     this.searchTags("/tags/filter/search", data, this._transformJson);
