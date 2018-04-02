@@ -67,13 +67,14 @@ export default Ember.Mixin.create({
 
   // try to focus filter and fallback to header if not present
   focusFilterOrHeader() {
+    const context = this;
     // next so we are sure it finised expand/collapse
     Ember.run.next(() => {
       Ember.run.schedule("afterRender", () => {
-        if (!this.$filterInput().is(":visible")) {
-          this.$header().focus();
+        if (!context.$filterInput() || !context.$filterInput().is(":visible")) {
+          context.$header().focus();
         } else {
-          this.$filterInput().focus();
+          context.$filterInput().focus();
         }
       });
     });
