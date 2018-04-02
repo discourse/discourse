@@ -82,7 +82,11 @@ class Upload < ActiveRecord::Base
     url = url.sub(SiteSetting.Upload.s3_cdn_url, Discourse.store.absolute_base_url) if SiteSetting.Upload.s3_cdn_url.present?
 
     # always try to get the path
-    uri = URI(url) rescue nil
+    uri = begin
+      URI(url)
+    rescue URI::InvalidURIError
+    end
+
     url = uri.path if uri.try(:scheme)
 
     Upload.find_by(url: url)
@@ -134,13 +138,13 @@ class Upload < ActiveRecord::Base
           DbHelper.remap(previous_url, upload.url)
           # remove the old file (when local)
           unless external
-            FileUtils.rm(path, force: true) rescue nil
+            FileUtils.rm(path, force: true)
           end
         rescue => e
           problems << { upload: upload, ex: e }
         ensure
-          file.try(:unlink) rescue nil
-          file.try(:close) rescue nil
+          file&.unlink
+          file&.close
         end
       end
     end

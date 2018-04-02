@@ -58,7 +58,11 @@ class UserBadgesController < ApplicationController
     post_id = nil
 
     if params[:reason].present?
-      path = URI.parse(params[:reason]).path rescue nil
+      path = begin
+        URI.parse(params[:reason]).path
+      rescue URI::InvalidURIError
+      end
+
       route = Rails.application.routes.recognize_path(path) if path
       if route
         topic_id = route[:topic_id].to_i

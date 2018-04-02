@@ -25,7 +25,7 @@ module Jobs
       notify_user
 
       # since emails have already been sent out, delete the uploaded csv file
-      FileUtils.rm_rf(csv_path) rescue nil
+      FileUtils.rm_rf(csv_path)
     end
 
     def read_csv_file(csv_path)

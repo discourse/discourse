@@ -188,7 +188,11 @@ class UserSerializer < BasicUserSerializer
   end
 
   def website_name
-    uri = URI(website.to_s) rescue nil
+    uri = begin
+      URI(website.to_s)
+    rescue URI::InvalidURIError
+    end
+
     return if uri.nil? || uri.host.nil?
     uri.host.sub(/^www\./, '') + uri.path
   end
