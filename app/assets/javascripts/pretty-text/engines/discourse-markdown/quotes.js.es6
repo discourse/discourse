@@ -153,7 +153,8 @@ export function setup(helper) {
   helper.whiteList({
     custom(tag, name, value) {
       if (tag === 'aside' && name === 'class') {
-        return !!/^quote group\-(.+)$/.exec(value);
+        return value === "quote no-group" ||
+          !!/^quote group\-(.+)$/.exec(value);
       }
     }
   });
