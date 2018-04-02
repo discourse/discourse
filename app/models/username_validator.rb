@@ -6,21 +6,23 @@ class UsernameValidator
   #
   # object - Object in which we're performing the validation
   # field_name - name of the field that we're validating
+  # user_id - skip id while validating username uniqueness
   #
   # Example: UsernameValidator.perform_validation(user, 'name')
-  def self.perform_validation(object, field_name)
-    validator = UsernameValidator.new(object.send(field_name))
+  def self.perform_validation(object, field_name, user_id = nil)
+    validator = UsernameValidator.new(object.send(field_name), user_id)
     unless validator.valid_format?
       validator.errors.each { |e| object.errors.add(field_name.to_sym, e) }
     end
   end
 
-  def initialize(username)
+  def initialize(username, user_id = nil)
     @username = username
+    @user_id = user_id
     @errors = []
   end
   attr_accessor :errors
-  attr_reader :username
+  attr_reader :username, :user_id
 
   def user
     @user ||= User.new(user)
@@ -35,6 +37,7 @@ class UsernameValidator
     username_last_char_valid?
     username_no_double_special?
     username_does_not_end_with_confusing_suffix?
+    username_unique?
     errors.empty?
   end
 
@@ -95,6 +98,23 @@ class UsernameValidator
     return unless errors.empty?
     if username =~ CONFUSING_EXTENSIONS
       self.errors << I18n.t(:'user.username.must_not_end_with_confusing_suffix')
+    end
+  end
+
+  def username_unique?
+    lower = username.downcase
+    sql = <<~SQL
+    (SELECT 1 FROM users
+    WHERE users.username_lower = :username#{" AND users.id != #{user_id}" if user_id.present?})
+
+    UNION ALL
+
+    (SELECT 1 FROM groups
+    WHERE lower(groups.name) = :username)
+    SQL
+
+    if User.exec_sql(sql, username: lower).values.present?
+      self.errors << user_id.present? ? I18n.t(:'user.username.unique') : I18n.t("activerecord.errors.messages.taken")
     end
   end
 end
