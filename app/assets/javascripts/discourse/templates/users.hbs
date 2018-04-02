@@ -5,6 +5,7 @@
 
         <div class='clearfix'>
           {{period-chooser period=period}}
+          {{plugin-outlet name="users-clearfix" connectorTagName='div' args=(hash model=model)}}
           {{text-field value=nameInput placeholderKey="directory.filter_name" class="filter-name no-blur"}}
         </div>
 
