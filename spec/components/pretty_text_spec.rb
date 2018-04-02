@@ -32,7 +32,7 @@ describe PrettyText do
 
         topic = Fabricate(:topic, title: "this is a test topic :slight_smile:")
         expected = <<~HTML
-          <aside class="quote" data-post="2" data-topic="#{topic.id}">
+          <aside class="quote no-group" data-post="2" data-topic="#{topic.id}">
           <div class="title">
           <div class="quote-controls"></div>
           <a href="http://test.localhost/t/this-is-a-test-topic-slight-smile/#{topic.id}/2">This is a test topic <img src="/images/emoji/twitter/slight_smile.png?v=5" title="slight_smile" alt="slight_smile" class="emoji"></a>
@@ -55,7 +55,7 @@ describe PrettyText do
           [/quote]
         MD
         html = <<~HTML
-          <aside class="quote" data-post="123" data-topic="456" data-full="true">
+          <aside class="quote no-group" data-post="123" data-topic="456" data-full="true">
           <div class="title">
           <div class="quote-controls"></div>
           <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
@@ -77,7 +77,7 @@ describe PrettyText do
           [/quote]
         MD
         html = <<~HTML
-          <aside class="quote" data-post="123" data-topic="456" data-full="true">
+          <aside class="quote no-group" data-post="123" data-topic="456" data-full="true">
           <div class="title">
           <div class="quote-controls"></div>
           <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
@@ -98,7 +98,7 @@ describe PrettyText do
         MD
 
         html = <<~HTML
-          <aside class="quote" data-post="555" data-topic="666">
+          <aside class="quote no-group" data-post="555" data-topic="666">
           <div class="title">
           <div class="quote-controls"></div>
           <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
@@ -144,7 +144,7 @@ describe PrettyText do
       cooked = PrettyText.cook("[quote]te **s** t[/quote]")
 
       html = <<~HTML
-        <aside class="quote">
+        <aside class="quote no-group">
         <blockquote>
         <p>te <strong>s</strong> t</p>
         </blockquote>
