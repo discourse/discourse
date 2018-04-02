@@ -2927,6 +2927,12 @@ en:
         user_event:
           name: "User Event"
           details: "When a user logs in, logs out, is created, approved or updated."
+        group_event:
+          name: "Group Event"
+          details: "When a group is created, updated or destroyed."
+        category_event:
+          name: "Category Event"
+          details: "When a category is created, updated or destroyed."
         delivery_status:
           title: "Delivery Status"
           inactive: "Inactive"

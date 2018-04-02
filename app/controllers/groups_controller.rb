@@ -137,6 +137,7 @@ class GroupsController < ApplicationController
 
     if group.update_attributes(group_params)
       GroupActionLogger.new(current_user, group).log_change_group_settings
+      DiscourseEvent.trigger(:group_updated, group)
 
       render json: success_json
     else

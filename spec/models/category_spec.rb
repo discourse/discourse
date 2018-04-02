@@ -368,6 +368,17 @@ describe Category do
     end
   end
 
+  describe 'new' do
+    subject { Fabricate.build(:category, user: Fabricate(:user)) }
+
+    it 'triggers a extensibility event' do
+      event = DiscourseEvent.track_events { subject.save! }.last
+
+      expect(event[:event_name]).to eq(:category_created)
+      expect(event[:params].first).to eq(subject)
+    end
+  end
+
   describe "update" do
     it "should enforce uniqueness of slug" do
       Fabricate(:category, slug: "the-slug")
@@ -384,13 +395,20 @@ describe Category do
       @category_id = @category.id
       @topic_id = @category.topic_id
       SiteSetting.shared_drafts_category = @category.id.to_s
-      @category.destroy
     end
 
     it 'is deleted correctly' do
+      @category.destroy
       expect(Category.exists?(id: @category_id)).to be false
       expect(Topic.exists?(id: @topic_id)).to be false
       expect(SiteSetting.shared_drafts_category).to be_blank
+    end
+
+    it 'triggers a extensibility event' do
+      event = DiscourseEvent.track_events { @category.destroy }.first
+
+      expect(event[:event_name]).to eq(:category_destroyed)
+      expect(event[:params].first).to eq(@category)
     end
   end
 
