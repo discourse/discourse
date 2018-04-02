@@ -62,7 +62,7 @@ const rule = {
     if (primaryGroupName && primaryGroupName.length !== 0) {
       token.attrs.push(['class', `quote group-${primaryGroupName}`]);
     } else {
-      token.attrs.push(['class', 'quote']);
+      token.attrs.push(['class', 'quote no-group']);
     }
 
     if (postNumber) {
