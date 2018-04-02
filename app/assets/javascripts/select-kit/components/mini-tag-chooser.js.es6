@@ -169,9 +169,17 @@ export default ComboBox.extend(Tags, {
 
     results = results.filter(r => !context.get("selection").includes(r.id));
 
-    return results.map(result => {
+    results = results.map(result => {
       return { id: result.text, name: result.text, count: result.count };
     });
+
+    // if forbidden we probably have an existing tag which is not in the list of
+    // returned tags, so we manually add it at the top
+    if (json.forbidden) {
+      results.unshift({ id: json.forbidden, name: json.forbidden, count: 0 });
+    }
+
+    return results;
   },
 
   destroyTags(tags) {
