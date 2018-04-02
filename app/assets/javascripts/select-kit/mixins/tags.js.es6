@@ -49,7 +49,8 @@ export default Ember.Mixin.create({
     }
 
     const inCollection = this.get("collectionComputedContent").map(c => get(c, "id")).includes(term);
-    const inSelection = this.get("selection").map(s => s.toLowerCase()).includes(term);
+
+    const inSelection = this.get("selection").map(s => get(s, "value").toLowerCase()).includes(term);
     if (inCollection || inSelection) {
       return false;
     }
