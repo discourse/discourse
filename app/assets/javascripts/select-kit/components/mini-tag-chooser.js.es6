@@ -110,7 +110,7 @@ export default ComboBox.extend(Tags, {
       }
 
       tags.map((tag) => {
-        const isHighlighted = highlightedSelection.includes(tag);
+        const isHighlighted = highlightedSelection.map(s => get(s, "value")).includes(tag);
         output += `
           <button aria-label="${tag}" title="${tag}" class="selected-tag ${isHighlighted ? 'is-highlighted' : ''}" data-value="${tag}">
             ${tag}
@@ -183,7 +183,7 @@ export default ComboBox.extend(Tags, {
   },
 
   destroyTags(tags) {
-    tags = Ember.makeArray(tags);
+    tags = Ember.makeArray(tags).map(c => get(c, "value"));
     // work around usage with buffered proxy
     // it does not listen on array changes, similar hack already on select
     // TODO: FIX buffered-proxy.js to support arrays
