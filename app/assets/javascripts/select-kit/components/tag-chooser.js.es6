@@ -62,7 +62,7 @@ export default MultiSelectComponent.extend(Tags, {
     },
 
     onExpand() {
-      this.set("searchDebounce", run.debounce(this, this.prepareSearch, this.get("filter"), 200));
+      this.set("searchDebounce", run.debounce(this, this._prepareSearch, this.get("filter"), 200));
     },
 
     onDeselect() {
