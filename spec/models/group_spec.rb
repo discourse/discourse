@@ -5,6 +5,32 @@ describe Group do
   let(:user) { Fabricate(:user) }
   let(:group) { Fabricate(:group) }
 
+  context 'validations' do
+    describe '#username' do
+      context 'when a user with a similar name exists' do
+        it 'should not be valid' do
+          new_group = Fabricate.build(:group, name: admin.username.upcase)
+
+          expect(new_group).to_not be_valid
+
+          expect(new_group.errors.full_messages.first)
+            .to include(I18n.t("activerecord.errors.messages.taken"))
+        end
+      end
+
+      context 'when a group with a similar name exists' do
+        it 'should not be valid' do
+          new_group = Fabricate.build(:group, name: group.name.upcase)
+
+          expect(new_group).to_not be_valid
+
+          expect(new_group.errors.full_messages.first)
+            .to include(I18n.t("activerecord.errors.messages.taken"))
+        end
+      end
+    end
+  end
+
   describe "#posts_for" do
     it "returns the post in the group" do
       p = Fabricate(:post)

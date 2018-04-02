@@ -43,7 +43,7 @@ class Group < ActiveRecord::Base
   end
 
   validate :name_format_validator
-  validates :name, presence: true, uniqueness: { case_sensitive: false }
+  validates :name, presence: true
   validate :automatic_membership_email_domains_format_validator
   validate :incoming_email_validator
   validate :can_allow_membership_requests, if: :allow_membership_requests
@@ -597,7 +597,19 @@ class Group < ActiveRecord::Base
 
     def name_format_validator
       self.name.strip!
-      UsernameValidator.perform_validation(self, 'name')
+      self.name.downcase!
+
+      UsernameValidator.perform_validation(self, 'name') || begin
+        if will_save_change_to_name?
+          existing = Group.exec_sql(
+            User::USERNAME_EXISTS_SQL, username: self.name
+          ).values.present?
+
+          if existing
+            errors.add(:name, I18n.t("activerecord.errors.messages.taken"))
+          end
+        end
+      end
     end
 
     def automatic_membership_email_domains_format_validator

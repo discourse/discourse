@@ -1121,12 +1121,28 @@ class User < ActiveRecord::Base
     self.username_lower = username.downcase
   end
 
+  USERNAME_EXISTS_SQL = <<~SQL
+  (SELECT 1 FROM users
+  WHERE users.username_lower = :username)
+
+  UNION ALL
+
+  (SELECT 1 FROM groups
+  WHERE lower(groups.name) = :username)
+  SQL
+
   def username_validator
     username_format_validator || begin
-      lower = username.downcase
-      existing = User.find_by(username_lower: lower)
-      if will_save_change_to_username? && existing && existing.id != self.id
-        errors.add(:username, I18n.t(:'user.username.unique'))
+      if will_save_change_to_username?
+        lower = username.downcase
+
+        existing = User.exec_sql(
+          USERNAME_EXISTS_SQL, username: lower
+        ).values.present?
+
+        if existing
+          errors.add(:username, I18n.t(:'user.username.unique'))
+        end
       end
     end
   end
