@@ -396,6 +396,9 @@ export default createWidget('post-menu', {
 
   showMoreActions() {
     this.state.collapsed = false;
+    if (!this.state.likedUsers.length) {
+      return this.getWhoLiked();
+    }
   },
 
   like() {
