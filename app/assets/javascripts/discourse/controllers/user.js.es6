@@ -91,8 +91,12 @@ export default Ember.Controller.extend(CanCheckEmails, {
   },
 
   actions: {
-    toggleExtendedProfile() {
-      this.toggleProperty('forceExpand');
+    collapseProfile() {
+      this.set('forceExpand', false);
+    },
+
+    expandProfile() {
+      this.set('forceExpand', true);
     },
 
     showSuspensions() {
