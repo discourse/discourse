@@ -56,7 +56,7 @@ export default ComboBox.extend(Tags, {
 
     this.$(".select-kit-body").on("click.mini-tag-chooser", ".selected-tag", (event) => {
       event.stopImmediatePropagation();
-      this.destroyTags($(event.target).attr("data-value"));
+      this.destroyTags(this.computeContentItem($(event.target).attr("data-value")));
     });
 
     this.$(".select-kit-header").on("focus.mini-tag-chooser", ".selected-name", (event) => {
@@ -184,6 +184,7 @@ export default ComboBox.extend(Tags, {
 
   destroyTags(tags) {
     tags = Ember.makeArray(tags).map(c => get(c, "value"));
+
     // work around usage with buffered proxy
     // it does not listen on array changes, similar hack already on select
     // TODO: FIX buffered-proxy.js to support arrays
