@@ -2,6 +2,13 @@
     placeholderKey=filterPlaceholder
     class="group-username-filter no-blur"}}
 
+{{#if canManageGroup}}
+  {{#link-to "group.manage.members" model.name class="btn btn-primary pull-right"}}
+    {{d-icon "plus"}}
+    {{i18n "groups.manage.add_members"}}
+  {{/link-to}}
+{{/if}}
+
 {{#if hasMembers}}
   {{#load-more selector=".group-members tr" action="loadMore"}}
     <table class='group-members'>
