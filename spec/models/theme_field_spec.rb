@@ -21,6 +21,22 @@ HTML
     expect(field.error).to eq(nil)
   end
 
+  it "allows us to use theme settings in handlebars templates" do
+    html = <<HTML
+<script type='text/x-handlebars' data-template-name='my-template'>
+    <div class="testing-div">{{themeSettings.string_setting}}</div>
+</script>
+HTML
+
+    ThemeField.create!(theme_id: 1, target_id: 3, name: "yaml", value: "string_setting: \"test text \\\" 123!\"")
+    baked_value = ThemeField.create!(theme_id: 1, target_id: 0, name: "head_tag", value: html).value_baked
+
+    expect(baked_value).to include("testing-div")
+    expect(baked_value).to include("theme-setting-injector")
+    expect(baked_value).to include("string_setting")
+    expect(baked_value).to include("test text \\\\\\\\u0022 123!")
+  end
+
   it "correctly generates errors for transpiled css" do
     css = "body {"
     field = ThemeField.create!(theme_id: 1, target_id: 0, name: "scss", value: css)
