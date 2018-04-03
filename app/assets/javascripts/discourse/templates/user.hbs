@@ -69,13 +69,15 @@
 
               {{#if viewingSelf}}
                 <li>
-                  <a {{action "toggleExtendedProfile"}} href class="btn">
-                    {{#if collapsedInfo}}
+                  {{#if collapsedInfo}}
+                    <a {{action "expandProfile"}} href class="btn">
                       {{d-icon "angle-double-down"}} {{i18n 'user.expand_profile'}}
-                    {{else}}
+                    </a>
+                  {{else}}
+                    <a {{action "collapseProfile"}} href class="btn">
                       {{d-icon "angle-double-up"}} {{i18n 'user.collapse_profile'}}
-                    {{/if}}
-                  </a>
+                    </a>
+                  {{/if}}
                 </li>
               {{/if}}
             </ul>
