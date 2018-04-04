@@ -14,8 +14,8 @@ export default Ember.Controller.extend({
   counts: null,
   showing: 'members',
 
-  @computed('showMessages', 'model.user_count')
-  tabs(showMessages, userCount) {
+  @computed('showMessages', 'model.user_count', 'canManageGroup')
+  tabs(showMessages, userCount, canManageGroup) {
     const membersTab = Tab.create({
       name: 'members',
       route: 'group.index',
@@ -36,7 +36,7 @@ export default Ember.Controller.extend({
       }));
     }
 
-    if (this.currentUser && this.currentUser.canManageGroup(this.model)) {
+    if (canManageGroup) {
       defaultTabs.push(
         Tab.create({
           name: 'manage', i18nKey: 'manage.title', icon: 'wrench'
@@ -81,9 +81,12 @@ export default Ember.Controller.extend({
     return this.currentUser && messageable;
   },
 
-  @computed('model')
-  canManageGroup(model) {
-    return this.currentUser && this.currentUser.canManageGroup(model);
+  @computed('model', 'model.automatic')
+  canManageGroup(model, automatic) {
+    return this.currentUser && (
+      this.currentUser.canManageGroup(model) ||
+      (this.currentUser.admin && automatic)
+    );
   },
 
   actions: {
