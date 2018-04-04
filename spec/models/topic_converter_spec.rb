@@ -98,7 +98,7 @@ describe TopicConverter do
         expect(private_message).to be_valid
         expect(topic.archetype).to eq("private_message")
         expect(topic.category_id).to eq(nil)
-        expect(category.topic_count).to eq(0)
+        expect(category.reload.topic_count).to eq(0)
       end
 
       it "updates user stats" do
