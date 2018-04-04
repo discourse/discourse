@@ -34,6 +34,7 @@ if (Rails.env.production? && SiteSetting.logging_provider == 'lograge') || ENV["
         {
           ip: ip,
           username: username,
+          hostname: `hostname`
         }
       rescue => e
         Rails.logger.warn("Failed to append custom payload: #{e.message}\n#{e.backtrace.join("\n")}")
