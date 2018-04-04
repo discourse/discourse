@@ -24,8 +24,7 @@ else
   gem 'seed-fu'
 end
 
-gem 'mail'
-gem 'mime-types', require: 'mime/types/columnar'
+gem 'mail', require: false
 gem 'mini_mime'
 gem 'mini_suffix'
 
