@@ -1,4 +1,4 @@
-# Developing under OS X Without Vagrant
+# Developing under OS X
 
 These instructions assume you have read and understood the **[Discourse Advanced Developer Install Guide](DEVELOPER-ADVANCED.md)**.
 
