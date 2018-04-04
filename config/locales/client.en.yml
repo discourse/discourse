@@ -2804,6 +2804,9 @@ en:
         more: "(more replies...)"
         suspend_user: "Suspend User"
         suspend_user_title: "Suspend user for this post"
+        replies:
+          one: "[1 reply]"
+          other: "[%{count} replies]"
 
         dispositions:
           agreed: "agreed"
