@@ -22,3 +22,8 @@ WebHookEventType.seed do |b|
   b.id = WebHookEventType::CATEGORY
   b.name = "category"
 end
+
+WebHookEventType.seed do |b|
+  b.id = WebHookEventType::TAG
+  b.name = "tag"
+end

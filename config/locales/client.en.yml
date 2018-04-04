@@ -2933,6 +2933,9 @@ en:
         category_event:
           name: "Category Event"
           details: "When a category is created, updated or destroyed."
+        tag_event:
+          name: "Tag Event"
+          details: "When a tag is created, updated or destroyed."
         delivery_status:
           title: "Delivery Status"
           inactive: "Inactive"

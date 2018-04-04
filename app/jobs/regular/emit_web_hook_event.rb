@@ -62,6 +62,12 @@ module Jobs
       args[:payload] = WebHookCategorySerializer.new(category, scope: guardian, root: false).as_json
     end
 
+    def setup_tag(args)
+      tag = Tag.find(args[:tag_id])
+      return if tag.blank?
+      args[:payload] = TagSerializer.new(tag, scope: guardian, root: false).as_json
+    end
+
     def ping_event?(event_type)
       event_type.to_s == 'ping'.freeze
     end

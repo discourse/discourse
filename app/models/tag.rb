@@ -16,6 +16,9 @@ class Tag < ActiveRecord::Base
 
   after_save :index_search
 
+  after_commit :trigger_tag_created_event, on: :create
+  after_commit :trigger_tag_destroyed_event, on: :destroy
+
   def self.ensure_consistency!
     update_topic_counts # topic_count counter cache can miscount
   end
@@ -100,6 +103,16 @@ class Tag < ActiveRecord::Base
 
   def index_search
     SearchIndexer.index(self)
+  end
+
+  def trigger_tag_created_event
+    DiscourseEvent.trigger(:tag_created, self)
+    true
+  end
+
+  def trigger_tag_destroyed_event
+    DiscourseEvent.trigger(:tag_destroyed, self)
+    true
   end
 end
 

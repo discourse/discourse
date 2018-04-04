@@ -54,6 +54,29 @@ describe TagsController do
     end
   end
 
+  describe "#update" do
+    let(:tag) { Fabricate(:tag) }
+    let(:admin) { Fabricate(:admin) }
+
+    before do
+      tag
+      sign_in(admin)
+    end
+
+    it "triggers a extensibility event" do
+      event = DiscourseEvent.track_events {
+        put "/tags/#{tag.name}.json", params: {
+          tag: {
+            id: 'hello'
+          }
+        }
+      }.last
+
+      expect(event[:event_name]).to eq(:tag_updated)
+      expect(event[:params].first).to eq(tag)
+    end
+  end
+
   describe '#personal_messages' do
     let(:regular_user) { Fabricate(:trust_level_4) }
     let(:moderator) { Fabricate(:moderator) }

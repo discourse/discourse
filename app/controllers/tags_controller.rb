@@ -110,6 +110,7 @@ class TagsController < ::ApplicationController
     tag.name = new_tag_name
     if tag.save
       StaffActionLogger.new(current_user).log_custom('renamed_tag', previous_value: params[:tag_id], new_value: new_tag_name)
+      DiscourseEvent.trigger(:tag_updated, tag)
       render json: { tag: { id: new_tag_name } }
     else
       render_json_error tag.errors.full_messages

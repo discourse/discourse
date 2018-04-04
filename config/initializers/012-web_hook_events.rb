@@ -62,3 +62,13 @@ end
     WebHook.enqueue_hooks(:category, category_id: category.id, event_name: event.to_s)
   end
 end
+
+%i(
+  tag_created
+  tag_updated
+  tag_destroyed
+).each do |event|
+  DiscourseEvent.on(event) do |tag|
+    WebHook.enqueue_hooks(:tag, tag_id: tag.id, event_name: event.to_s)
+  end
+end

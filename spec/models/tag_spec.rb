@@ -18,6 +18,28 @@ describe Tag do
     SiteSetting.min_trust_level_to_tag_topics = 0
   end
 
+  describe 'new' do
+    subject { Fabricate.build(:tag) }
+
+    it 'triggers a extensibility event' do
+      event = DiscourseEvent.track_events { subject.save! }.last
+
+      expect(event[:event_name]).to eq(:tag_created)
+      expect(event[:params].first).to eq(subject)
+    end
+  end
+
+  describe 'destroy' do
+    subject { Fabricate(:tag) }
+
+    it 'triggers a extensibility event' do
+      event = DiscourseEvent.track_events { subject.destroy! }.last
+
+      expect(event[:event_name]).to eq(:tag_destroyed)
+      expect(event[:params].first).to eq(subject)
+    end
+  end
+
   it "can delete tags on deleted topics" do
     topic.trash!
     expect { tag.destroy }.to change { Tag.count }.by(-1)
