@@ -421,6 +421,11 @@ describe PostAction do
       SiteSetting.flags_required_to_hide_post = 2
       Discourse.stubs(:site_contact_user).returns(admin)
 
+      Jobs.expects(:enqueue_in).with(5.seconds, :send_system_message,
+                                     has_entries(user_id: post.user.id, message_type: :post_hidden)).once
+      Jobs.expects(:enqueue_in).with(5.seconds, :send_system_message,
+                                     has_entries(user_id: post.user.id, message_type: :post_hidden_again)).once
+
       PostAction.act(eviltrout, post, PostActionType.types[:spam])
       PostAction.act(walterwhite, post, PostActionType.types[:spam])
 
