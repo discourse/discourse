@@ -45,7 +45,7 @@
     Discourse.ThemeSettings = ps.get('themeSettings');
     Discourse.LetterAvatarVersion = '<%= LetterAvatar.version %>';
     Discourse.MarkdownItURL = '<%= asset_url('markdown-it-bundle.js') %>';
-    Discourse.ServiceWorkerURL = '<%= Rails.application.assets_manifest.assets['service-worker.js'] %>'
+    Discourse.ServiceWorkerURL = Discourse.Environment != "development" ? '<%= Rails.application.assets_manifest.assets['service-worker.js'] %>' : 'service-worker.js';
     I18n.defaultLocale = '<%= SiteSetting.default_locale %>';
     Discourse.start();
     Discourse.set('assetVersion','<%= Discourse.assets_digest %>');
