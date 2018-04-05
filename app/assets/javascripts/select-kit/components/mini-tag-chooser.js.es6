@@ -34,12 +34,12 @@ export default ComboBox.extend(Tags, {
       });
     });
 
-    this.set("limit", parseInt(this.get("limit") || this.get("siteSettings.max_tags_per_topic")));
+    this.set("maximum", parseInt(this.get("limit") || this.get("maximum") || this.get("siteSettings.max_tags_per_topic")));
   },
 
-  @computed("hasReachedLimit")
-  caretIcon(hasReachedLimit) {
-    return hasReachedLimit ? null : "plus fa-fw";
+  @computed("hasReachedMaximum")
+  caretIcon(hasReachedMaximum) {
+    return hasReachedMaximum ? null : "plus fa-fw";
   },
 
   @computed("tags")
@@ -133,6 +133,12 @@ export default ComboBox.extend(Tags, {
       content.label = I18n.t("tagging.choose_for_topic");
     } else {
       content.label = joinedTags;
+    }
+
+    if (!this.get("hasReachedMinimum") && isEmpty(this.get("selection"))) {
+      const key = this.get("minimumLabel") || "select_kit.min_content_not_reached";
+      const label = I18n.t(key, { count: this.get("minimum") });
+      content.title = content.name = content.label = label;
     }
 
     content.title = content.name = content.value = joinedTags;

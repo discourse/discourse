@@ -33,7 +33,7 @@ export default Ember.Mixin.create({
   },
 
   validateCreate(term) {
-    if (this.get("hasReachedLimit") || !this.site.get("can_create_tag")) {
+    if (this.get("hasReachedMaximum") || !this.site.get("can_create_tag")) {
       return false;
     }
 
