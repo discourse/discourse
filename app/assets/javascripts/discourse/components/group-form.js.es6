@@ -28,7 +28,7 @@ export default Ember.Component.extend({
 
   init() {
     this._super();
-    this.set('nameInput', this.get('model.name'))
+    this.set('nameInput', this.get('model.name'));
   },
 
   @computed('model.visibility_level', 'model.public_admission')
