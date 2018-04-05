@@ -2101,6 +2101,22 @@ en:
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
+    post_hidden_again:
+      title: "Post Hidden again"
+      subject_template: "Post hidden by community flags"
+      text_body_template: |
+        Hello,
+
+        This is an automated message from %{site_name} to let you know that your post was hidden again.
+
+        <%{base_url}%{url}>
+
+        %{flag_reason}
+
+        Multiple community members flagged this post before it was hidden, so please consider how you might revise your post to reflect their feedback. **You can edit your post after %{edit_delay} minutes, but it will remain hidden until handled by staff.**
+
+        For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
+
     usage_tips:
       text_body_template: |
         For a few quick tips on getting started as a new user, [check out this blog post](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
