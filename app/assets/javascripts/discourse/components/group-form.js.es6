@@ -1,10 +1,11 @@
-import computed from 'ember-addons/ember-computed-decorators';
+import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 import User from "discourse/models/user";
 import InputValidation from 'discourse/models/input-validation';
 import debounce from 'discourse/lib/debounce';
 
 export default Ember.Component.extend({
   disableSave: null,
+  nameInput: '',
 
   aliasLevelOptions: [
     { name: I18n.t("groups.alias_levels.nobody"), value: 0 },
@@ -25,6 +26,11 @@ export default Ember.Component.extend({
     { name: 1, value: 1 }, { name: 2, value: 2 }, { name: 3, value: 3 }, { name: 4, value: 4 }
   ],
 
+  init() {
+    this._super();
+    this.set('nameInput', this.get('model.name'))
+  },
+
   @computed('model.visibility_level', 'model.public_admission')
   disableMembershipRequestSetting(visibility_level, publicAdmission) {
     visibility_level = parseInt(visibility_level);
@@ -42,8 +48,10 @@ export default Ember.Component.extend({
     return uniqueNameValidation ? uniqueNameValidation : basicNameValidation;
   },
 
-  @computed('model.name')
-  basicNameValidation(name) {
+  @observes("nameInput")
+  _validateName() {
+    name = this.get('nameInput');
+
     if (name === undefined) {
       return this._failedInputValidation();
     };
@@ -67,7 +75,10 @@ export default Ember.Component.extend({
   },
 
   checkGroupName: debounce(function() {
-    User.checkUsername(this.get('model.name')).then(response => {
+    name = this.get('nameInput');
+    if (Ember.isEmpty(name)) return;
+
+    User.checkUsername(name).then(response => {
       const validationName = 'uniqueNameValidation';
 
       if (response.available) {
@@ -77,6 +88,7 @@ export default Ember.Component.extend({
         }));
 
         this.set('disableSave', false);
+        this.set('model.name', this.get('nameInput'));
       } else {
         let reason;
 
@@ -96,7 +108,7 @@ export default Ember.Component.extend({
 
     const options = { failed: true };
     if (reason) options.reason = reason;
-    return InputValidation.create(options);
+    this.set('basicNameValidation', InputValidation.create(options));
   },
 
   actions: {
