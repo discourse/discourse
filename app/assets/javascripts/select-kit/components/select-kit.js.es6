@@ -25,7 +25,8 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     "isLeftAligned",
     "isRightAligned",
     "hasSelection",
-    "hasReachedLimit",
+    "hasReachedMaximum",
+    "hasReachedMinimum",
   ],
   isDisabled: false,
   isExpanded: false,
@@ -71,6 +72,10 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
   collectionHeader: null,
   allowAutoSelectFirst: true,
   highlightedSelection: null,
+  maximum: null,
+  minimum: null,
+  minimumLabel: null,
+  maximumLabel: null,
 
   init() {
     this._super();
@@ -188,14 +193,22 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     }
   },
 
-  validateCreate() { return !this.get("hasReachedLimit"); },
+  validateCreate() { return !this.get("hasReachedMaximum"); },
 
-  validateSelect() { return !this.get("hasReachedLimit"); },
+  validateSelect() { return !this.get("hasReachedMaximum"); },
 
-  @computed("limit", "selection.[]")
-  hasReachedLimit(limit, selection) {
-    if (!limit) return false;
-    return selection.length >= limit;
+  @computed("maximum", "selection.[]")
+  hasReachedMaximum(maximum, selection) {
+    if (!maximum) return false;
+    selection = makeArray(selection);
+    return selection.length >= maximum;
+  },
+
+  @computed("minimum", "selection.[]")
+  hasReachedMinimum(minimum, selection) {
+    if (!minimum) return true;
+    selection = makeArray(selection);
+    return selection.length >= minimum;
   },
 
   @computed("shouldFilter", "allowAny", "filter")
@@ -212,10 +225,16 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     }
   },
 
-  @computed("hasReachedLimit", "limit")
-  maxContentRow(hasReachedLimit, limit) {
-    if (hasReachedLimit) {
-      return I18n.t("select_kit.max_content_reached", { count: limit });
+  @computed("hasReachedMaximum", "hasReachedMinimum", "isExpanded")
+  validationMessage(hasReachedMaximum, hasReachedMinimum) {
+    if (hasReachedMaximum && this.get("maximum")) {
+      const key = this.get("maximumLabel") || "select_kit.max_content_reached";
+      return I18n.t(key, { count: this.get("maximum") });
+    }
+
+    if (!hasReachedMinimum && this.get("minimum")) {
+      const key = this.get("minimumLabel") || "select_kit.min_content_not_reached";
+      return I18n.t(key, { count: this.get("minimum") });
     }
   },
 
@@ -227,9 +246,9 @@ export default Ember.Component.extend(UtilsMixin, PluginApiMixin, DomHelpersMixi
     return false;
   },
 
-  @computed("computedValue", "filter", "collectionComputedContent.[]", "hasReachedLimit", "isLoading")
-  shouldDisplayCreateRow(computedValue, filter, collectionComputedContent, hasReachedLimit, isLoading) {
-    if (isLoading || hasReachedLimit) return false;
+  @computed("computedValue", "filter", "collectionComputedContent.[]", "hasReachedMaximum", "isLoading")
+  shouldDisplayCreateRow(computedValue, filter, collectionComputedContent, hasReachedMaximum, isLoading) {
+    if (isLoading || hasReachedMaximum) return false;
     if (collectionComputedContent.map(c => c.value).includes(filter)) return false;
     if (this.get("allowAny") && filter.length > 0 && this.validateCreate(filter)) return true;
     return false;

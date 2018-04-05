@@ -91,7 +91,7 @@ export default SelectKitComponent.extend({
       name: this.get("selection.name") || this.get("noneRowComputedContent.name")
     };
 
-    if (!this.get("hasSelection") && this.get("noneLabel")) {
+    if (this.get("noneLabel") && !this.get("hasSelection")) {
       content.title = content.name = I18n.t(this.get("noneLabel"));
     }
 
@@ -134,7 +134,7 @@ export default SelectKitComponent.extend({
     return selection !== this.get("noneRowComputedContent") && !isNone(selection);
   },
 
-  @computed("computedValue", "filter", "collectionComputedContent.[]", "hasReachedLimit")
+  @computed("computedValue", "filter", "collectionComputedContent.[]", "hasReachedMaximum", "hasReachedMinimum")
   shouldDisplayCreateRow(computedValue, filter) {
     return this._super() && computedValue !== filter;
   },
