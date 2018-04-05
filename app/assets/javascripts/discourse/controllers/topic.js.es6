@@ -452,17 +452,17 @@ export default Ember.Controller.extend(BufferedContent, {
     },
 
     jumpToIndex(index) {
-      this._jumpToPostId(this.get('model.postStream.stream')[index - 1]);
+      this._jumpToIndex(index);
     },
 
     jumpToPostPrompt() {
       const postText = prompt(I18n.t('topic.progress.jump_prompt_long'));
       if (postText === null) { return; }
 
-      const postNumber = parseInt(postText, 10);
-      if (postNumber === 0) { return; }
+      const postIndex = parseInt(postText, 10);
+      if (postIndex === 0) { return; }
 
-      this._jumpToPostId(this.get('model.postStream').findPostIdForPostNumber(postNumber));
+      this._jumpToIndex(postIndex);
     },
 
     jumpToPost(postNumber) {
@@ -753,6 +753,12 @@ export default Ember.Controller.extend(BufferedContent, {
     removeFeaturedLink() {
       this.set('buffered.featured_link', null);
     }
+  },
+
+  _jumpToIndex(index) {
+    const stream = this.get("model.postStream.stream");
+    index = Math.max(1, Math.min(stream.length, index));
+    this._jumpToPostId(stream[index - 1]);
   },
 
   _jumpToPostId(postId) {

@@ -6,10 +6,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   actions: {
     jump() {
-      let where = parseInt(this.get('postNumber'));
-      if (where < 1) { where = 1; }
-      const max = this.get('topic.postStream.filteredPostsCount');
-      if (where > max) { where = max; }
+      const max   = this.get("topic.postStream.filteredPostsCount");
+      const where = Math.min(max, Math.max(1, parseInt(this.get("postNumber"))));
 
       this.jumpToIndex(where);
       this.send('closeModal');
