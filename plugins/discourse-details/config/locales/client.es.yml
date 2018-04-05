@@ -1,0 +1,7 @@
+es:
+  js:
+    details:
+      title: Ocultar detalles
+    composer:
+      details_title: Resumen
+      details_text: "Este texto estará oculto"
