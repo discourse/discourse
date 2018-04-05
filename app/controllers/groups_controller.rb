@@ -133,9 +133,9 @@ class GroupsController < ApplicationController
 
   def update
     group = Group.find(params[:id])
-    guardian.ensure_can_edit!(group)
+    guardian.ensure_can_edit!(group) unless current_user.admin
 
-    if group.update_attributes(group_params)
+    if group.update(group_params(automatic: group.automatic))
       GroupActionLogger.new(current_user, group).log_change_group_settings
       DiscourseEvent.trigger(:group_updated, group)
 
@@ -426,22 +426,44 @@ class GroupsController < ApplicationController
 
   private
 
-  def group_params
-    permitted_params = [
-      :flair_url,
-      :flair_bg_color,
-      :flair_color,
-      :bio_raw,
-      :full_name,
-      :public_admission,
-      :public_exit,
-      :allow_membership_requests,
-      :membership_request_template,
-    ]
+  def group_params(automatic: false)
+    permitted_params =
+      if automatic
+        %i{
+          visibility_level
+          mentionable_level
+          messageable_level
+          default_notification_level
+        }
+      else
+        default_params = %i{
+          mentionable_level
+          messageable_level
+          visibility_level
+          automatic_membership_email_domains
+          automatic_membership_retroactive
+          title
+          primary_group
+          grant_trust_level
+          incoming_email
+          flair_url
+          flair_bg_color
+          flair_color
+          bio_raw
+          public_admission
+          public_exit
+          allow_membership_requests
+          full_name
+          default_notification_level
+          membership_request_template
+        }
 
-    if current_user.admin
-      permitted_params.push(:name)
-    end
+        if current_user.admin
+          default_params.push(:name)
+        end
+
+        default_params
+      end
 
     params.require(:group).permit(*permitted_params)
   end
