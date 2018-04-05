@@ -54,8 +54,7 @@ export default MountWidget.extend({
     const scrollTop = $body.scrollTop();
 
     // This hack is for when swapping out many cloaked views at once
-    // when using keyboard navigation. It could suddenly move the
-    // scroll
+    // when using keyboard navigation. It could suddenly move the scroll
     if (this.prevHeight === height && scrollTop !== this.prevScrollTop) {
       $body.scrollTop(this.prevScrollTop);
     }
@@ -80,7 +79,7 @@ export default MountWidget.extend({
     const postsWrapperTop = $('.posts-wrapper').offset().top;
     const $posts = this.$('.onscreen-post, .cloaked-post');
     const viewportTop = windowTop - slack;
-    const topView = findTopView($posts, viewportTop, postsWrapperTop, 0, $posts.length-1);
+    const topView = findTopView($posts, viewportTop, postsWrapperTop, 0, $posts.length - 1);
 
     let windowBottom = windowTop + windowHeight;
     let viewportBottom = windowBottom + slack;
@@ -93,7 +92,7 @@ export default MountWidget.extend({
     let percent = null;
 
     const offset = offsetCalculator();
-    const topCheck = Math.ceil(windowTop + offset);
+    const topCheck = Math.ceil(windowTop + offset + 5);
 
     // uncomment to debug the eyeline
     /*
@@ -102,7 +101,7 @@ export default MountWidget.extend({
       $('body').prepend('<div class="debug-eyeline"></div>');
       $eyeline = $('.debug-eyeline');
     }
-    $eyeline.css({ height: '1px', width: '100%', backgroundColor: 'blue', position: 'absolute', top: `${topCheck}px` });
+    $eyeline.css({ height: '5px', width: '100%', backgroundColor: 'blue', position: 'absolute', top: `${topCheck}px`, zIndex: 999999 });
     */
 
     let allAbove = true;
@@ -115,7 +114,7 @@ export default MountWidget.extend({
       if (!$post) { break; }
 
       const viewTop = $post.offset().top;
-      const postHeight = $post.height();
+      const postHeight = $post.outerHeight(true);
       const viewBottom = Math.ceil(viewTop + postHeight);
 
       allAbove = allAbove && (viewTop < topCheck);
@@ -170,7 +169,7 @@ export default MountWidget.extend({
         this.sendAction('topVisibleChanged', { post: first, refresh: topRefresh });
       }
 
-      const last = posts.objectAt(onscreen[onscreen.length-1]);
+      const last = posts.objectAt(onscreen[onscreen.length - 1]);
       if (this._bottomVisible !== last) {
         this._bottomVisible = last;
         this.sendAction('bottomVisibleChanged', { post: last, refresh });
@@ -184,7 +183,7 @@ export default MountWidget.extend({
       }
 
       if (percent !== null) {
-        if (percent > 1.0) { percent = 1.0; }
+        percent = Math.max(0.0, Math.min(1.0, percent));
 
         if (changedPost || (this._currentPercent !== percent)) {
           this._currentPercent = percent;
