@@ -16,7 +16,6 @@ class Validators::PostValidator < ActiveModel::Validator
     max_images_validator(record)
     max_attachments_validator(record)
     can_post_links_validator(record)
-    newuser_links_validator(record)
     unique_post_validator(record)
   end
 
@@ -110,9 +109,12 @@ class Validators::PostValidator < ActiveModel::Validator
   end
 
   def can_post_links_validator(post)
-    return if (post.link_count == 0 && !post.has_oneboxes?) ||
+    if (post.link_count == 0 && !post.has_oneboxes?) ||
       Guardian.new(post.acting_user).can_post_link? ||
       private_message?(post)
+
+      return newuser_links_validator(post)
+    end
 
     post.errors.add(:base, I18n.t(:links_require_trust))
   end
