@@ -19,7 +19,10 @@ task "admin:invite", [:email] => [:environment] do |_, args|
 
   puts "Granting admin!"
   user.grant_admin!
-  user.change_trust_level!(4)
+  if user.trust_level < 1
+    user.change_trust_level!(1)
+  end
+
   user.email_tokens.update_all confirmed: true
 
   puts "Sending email!"
@@ -81,7 +84,9 @@ task "admin:create" => :environment do
   grant_admin = ask("Do you want to grant Admin privileges to this account? (Y/n)  ")
   if (grant_admin == "" || grant_admin.downcase == 'y')
     admin.grant_admin!
-    admin.change_trust_level!(4)
+    if user.trust_level < 1
+      user.change_trust_level!(1)
+    end
     admin.email_tokens.update_all confirmed: true
     admin.activate
 
