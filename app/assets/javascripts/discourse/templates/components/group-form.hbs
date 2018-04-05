@@ -213,14 +213,14 @@
     </div>
 
     {{plugin-outlet name="group-edit" args=(hash group=model)}}
-
-    <div class='control-group buttons'>
-      {{d-button action="save"
-          disabled=disableSave
-          class='btn btn-primary group-form-save'
-          label=saveLabel}}
-
-      {{yield}}
-    </div>
   {{/if}}
+
+  <div class='control-group buttons'>
+    {{d-button action="save"
+        disabled=disableSave
+        class='btn btn-primary group-form-save'
+        label=saveLabel}}
+
+    {{yield}}
+  </div>
 </form>
