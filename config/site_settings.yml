@@ -1023,7 +1023,7 @@ security:
     default: ''
   blacklisted_crawler_user_agents:
     type: list
-    default: ''
+    default: 'bingbot'
 
 onebox:
   enable_flash_video_onebox: false
