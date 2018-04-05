@@ -56,6 +56,18 @@ QUnit.test("Anonymous Viewing Group", assert => {
   });
 });
 
+QUnit.test("Anonymous Viewing Automatic Group", assert => {
+  visit("/groups/moderators");
+
+  andThen(() => {
+    assert.equal(
+      count(".nav-pills li a[title='Manage']"),
+      0,
+      'it deos not show group messages navigation link'
+    );
+  });
+});
+
 QUnit.test("User Viewing Group", assert => {
   logIn();
   Discourse.reset();
@@ -128,7 +140,6 @@ QUnit.test("Admin viewing group messages", assert => {
   Discourse.reset();
 
   visit("/groups/discourse");
-
   click(".nav-pills li a[title='Messages']");
 
   andThen(() => {
@@ -154,5 +165,20 @@ QUnit.test("Admin Viewing Group", assert => {
 
     assert.equal(count('.group-message-button'), 1, 'it displays show group message button');
     assert.equal(find('.group-info-name').text(), 'Awesome Team', 'it should display the group name');
+  });
+});
+
+QUnit.test("Admin Viewing Automatic Group", assert => {
+  logIn();
+  Discourse.reset();
+
+  visit("/groups/moderators");
+  click(".nav-pills li a[title='Manage']");
+
+  andThen(() => {
+    assert.equal(
+      count('.groups-form .control-group'), 5,
+      'it should display the right fields'
+    );
   });
 });

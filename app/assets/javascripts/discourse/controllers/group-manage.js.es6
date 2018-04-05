@@ -7,15 +7,12 @@ export default Ember.Controller.extend({
   tabs(automatic) {
     const defaultTabs = [
       { route: 'group.manage.profile', title: 'groups.manage.profile.title' },
+      { route: 'group.manage.logs', title: 'groups.manage.logs.title' },
     ];
 
     if (!automatic) {
-      defaultTabs.push(
+      defaultTabs.splice(1, 0,
         { route: 'group.manage.members', title: 'groups.manage.members.title' }
-      );
-
-      defaultTabs.push(
-        { route: 'group.manage.logs', title: 'groups.manage.logs.title' },
       );
     }
 

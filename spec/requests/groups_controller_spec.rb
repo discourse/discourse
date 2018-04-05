@@ -454,6 +454,18 @@ describe GroupsController do
         expect(group.incoming_email).to eq("test@mail.org")
         expect(group.grant_trust_level).to eq(1)
       end
+
+      it 'should not be allowed to update automatic groups' do
+        group = Group.find(Group::AUTO_GROUPS[:admins])
+
+        put "/groups/#{group.id}.json", params: {
+          group: {
+            messageable_level: 1
+          }
+        }
+
+        expect(response.status).to eq(403)
+      end
     end
 
     context "when user is group admin" do
@@ -947,7 +959,7 @@ describe GroupsController do
     end
   end
 
-  describe "group histories" do
+  describe "#histories" do
     context 'when user is not signed in' do
       it 'should raise the right error' do
         get "/groups/#{group.name}/logs.json"
@@ -967,18 +979,20 @@ describe GroupsController do
       end
     end
 
-    describe 'viewing history' do
-      context 'public group' do
-        before do
-          group.add_owner(user)
+    describe 'when user is a group owner' do
+      before do
+        group.add_owner(user)
+        sign_in(user)
+      end
 
+      describe 'when viewing a public group' do
+        before do
           group.update_attributes!(
             public_admission: true,
             public_exit: true
           )
 
           GroupActionLogger.new(user, group).log_change_group_settings
-          sign_in(user)
         end
 
         it 'should allow group owner to view history' do
@@ -995,40 +1009,56 @@ describe GroupsController do
         end
       end
 
-      context 'admin' do
-        let(:admin) { Fabricate(:admin) }
+      it 'should not be allowed to view history of an automatic group' do
+        group = Group.find_by(id: Group::AUTO_GROUPS[:admins])
 
-        before do
-          sign_in(admin)
-        end
+        get "/groups/#{group.name}/logs.json"
 
-        it 'should be able to view history' do
-          GroupActionLogger.new(admin, group).log_remove_user_from_group(user)
+        expect(response.status).to eq(403)
+      end
+    end
 
-          get "/groups/#{group.name}/logs.json"
+    context 'when user is an admin' do
+      let(:admin) { Fabricate(:admin) }
 
-          expect(response).to be_success
+      before do
+        sign_in(admin)
+      end
 
-          result = JSON.parse(response.body)["logs"].first
+      it 'should be able to view history' do
+        GroupActionLogger.new(admin, group).log_remove_user_from_group(user)
 
-          expect(result["action"]).to eq(GroupHistory.actions[3].to_s)
-        end
+        get "/groups/#{group.name}/logs.json"
 
-        it 'should be able to filter through the history' do
-          GroupActionLogger.new(admin, group).log_add_user_to_group(user)
-          GroupActionLogger.new(admin, group).log_remove_user_from_group(user)
+        expect(response).to be_success
 
-          get "/groups/#{group.name}/logs.json", params: {
-            filters: { "action" => "add_user_to_group" }
-          }
+        result = JSON.parse(response.body)["logs"].first
 
-          expect(response).to be_success
+        expect(result["action"]).to eq(GroupHistory.actions[3].to_s)
+      end
 
-          logs = JSON.parse(response.body)["logs"]
+      it 'should be able to view history of automatic groups' do
+        group = Group.find_by(id: Group::AUTO_GROUPS[:admins])
 
-          expect(logs.count).to eq(1)
-          expect(logs.first["action"]).to eq(GroupHistory.actions[2].to_s)
-        end
+        get "/groups/#{group.name}/logs.json"
+
+        expect(response.status).to eq(200)
+      end
+
+      it 'should be able to filter through the history' do
+        GroupActionLogger.new(admin, group).log_add_user_to_group(user)
+        GroupActionLogger.new(admin, group).log_remove_user_from_group(user)
+
+        get "/groups/#{group.name}/logs.json", params: {
+          filters: { "action" => "add_user_to_group" }
+        }
+
+        expect(response).to be_success
+
+        logs = JSON.parse(response.body)["logs"]
+
+        expect(logs.count).to eq(1)
+        expect(logs.first["action"]).to eq(GroupHistory.actions[2].to_s)
       end
     end
   end

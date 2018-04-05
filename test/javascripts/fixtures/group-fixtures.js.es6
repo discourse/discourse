@@ -1,4 +1,37 @@
 export default {
+  "/groups/moderators":{
+    "group": {
+      "id": 50,
+      "automatic": true,
+      "name": "moderators",
+      "display_name": "moderators",
+      "mentionable_level": 0,
+      "messageable_level": 99,
+      "visibility_level": 0,
+      "automatic_membership_email_domains": null,
+      "automatic_membership_retroactive": false,
+      "primary_group": false,
+      "title": null,
+      "grant_trust_level": null,
+      "incoming_email": null,
+      "has_messages": true,
+      "flair_url": null,
+      "flair_bg_color": null,
+      "flair_color": null,
+      "bio_raw": null,
+      "bio_cooked": null,
+      "public_admission": false,
+      "public_exit": false,
+      "allow_membership_requests": false,
+      "full_name": null,
+      "default_notification_level": 2,
+      "membership_request_template": null,
+      "is_group_user": true,
+      "is_group_owner": true,
+      "mentionable": false,
+      "messageable": true
+    },
+  },
   "/groups/discourse":{
     "group":{
       "id":47,
