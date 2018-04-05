@@ -1168,19 +1168,31 @@ SQL
   def message_archived?(user)
     return false unless user && user.id
 
-    sql = <<SQL
-SELECT 1 FROM topic_allowed_groups tg
-JOIN group_archived_messages gm
-      ON gm.topic_id = tg.topic_id AND
-         gm.group_id = tg.group_id
-  WHERE tg.group_id IN (SELECT g.group_id FROM group_users g WHERE g.user_id = :user_id)
-    AND tg.topic_id = :topic_id
+    # tricky query but this checks to see if message is archived for ALL groups you belong to
+    # OR if you have it archived as a user explicitly
 
-UNION ALL
+    sql = <<~SQL
+    SELECT 1
+    WHERE
+      (
+      SELECT count(*) FROM topic_allowed_groups tg
+      JOIN group_archived_messages gm
+            ON gm.topic_id = tg.topic_id AND
+               gm.group_id = tg.group_id
+        WHERE tg.group_id IN (SELECT g.group_id FROM group_users g WHERE g.user_id = :user_id)
+          AND tg.topic_id = :topic_id
+      ) =
+      (
+        SELECT case when count(*) = 0 then -1 else count(*) end FROM topic_allowed_groups tg
+        WHERE tg.group_id IN (SELECT g.group_id FROM group_users g WHERE g.user_id = :user_id)
+          AND tg.topic_id = :topic_id
+      )
 
-SELECT 1 FROM topic_allowed_users tu
-JOIN user_archived_messages um ON um.user_id = tu.user_id AND um.topic_id = tu.topic_id
-WHERE tu.user_id = :user_id AND tu.topic_id = :topic_id
+      UNION ALL
+
+      SELECT 1 FROM topic_allowed_users tu
+      JOIN user_archived_messages um ON um.user_id = tu.user_id AND um.topic_id = tu.topic_id
+      WHERE tu.user_id = :user_id AND tu.topic_id = :topic_id
 SQL
 
     User.exec_sql(sql, user_id: user.id, topic_id: id).to_a.length > 0

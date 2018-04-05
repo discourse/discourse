@@ -1975,12 +1975,21 @@ describe Topic do
     expect(topic.message_archived?(user)).to eq(false)
 
     group = Fabricate(:group)
+    group2 = Fabricate(:group)
+
     group.add(user)
 
     TopicAllowedGroup.create!(topic_id: topic.id, group_id: group.id)
+    TopicAllowedGroup.create!(topic_id: topic.id, group_id: group2.id)
     GroupArchivedMessage.create!(topic_id: topic.id, group_id: group.id)
 
     expect(topic.message_archived?(user)).to eq(true)
+
+    # here is a pickle, we add another group, make the user a
+    # member of that new group... now this message is not properly archived
+    # for the user any more
+    group2.add(user)
+    expect(topic.message_archived?(user)).to eq(false)
   end
 
   it 'will trigger :topic_status_updated' do
