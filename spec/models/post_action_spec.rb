@@ -418,16 +418,16 @@ describe PostAction do
       post = create_post
       walterwhite = Fabricate(:walter_white)
 
+      SiteSetting.queue_jobs = true
       SiteSetting.flags_required_to_hide_post = 2
       Discourse.stubs(:site_contact_user).returns(admin)
 
-      Jobs.expects(:enqueue_in).with(5.seconds, :send_system_message,
-                                     has_entries(user_id: post.user.id, message_type: :post_hidden)).once
-      Jobs.expects(:enqueue_in).with(5.seconds, :send_system_message,
-                                     has_entries(user_id: post.user.id, message_type: :post_hidden_again)).once
-
       PostAction.act(eviltrout, post, PostActionType.types[:spam])
       PostAction.act(walterwhite, post, PostActionType.types[:spam])
+
+      job_args = Jobs::SendSystemMessage.jobs.last["args"].first
+      expect(job_args["user_id"]).to eq(post.user.id)
+      expect(job_args["message_type"]).to eq("post_hidden")
 
       post.reload
 
@@ -447,6 +447,10 @@ describe PostAction do
 
       PostAction.act(eviltrout, post, PostActionType.types[:spam])
       PostAction.act(walterwhite, post, PostActionType.types[:off_topic])
+
+      job_args = Jobs::SendSystemMessage.jobs.last["args"].first
+      expect(job_args["user_id"]).to eq(post.user.id)
+      expect(job_args["message_type"]).to eq("post_hidden_again")
 
       post.reload
 
