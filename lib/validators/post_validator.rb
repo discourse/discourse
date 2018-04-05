@@ -82,7 +82,7 @@ class Validators::PostValidator < ActiveModel::Validator
 
   # Ensure new users can not put too many images in a post
   def max_images_validator(post)
-    return if post.acting_user.blank?
+    return if post.acting_user.blank? || post.acting_user&.staff?
 
     if post.acting_user.trust_level < TrustLevel[SiteSetting.min_trust_to_post_images]
       add_error_if_count_exceeded(
