@@ -1,5 +1,4 @@
 class GroupsController < ApplicationController
-
   requires_login only: [
     :set_notifications,
     :mentionable,
@@ -389,7 +388,7 @@ class GroupsController < ApplicationController
 
   def histories
     group = find_group(:group_id)
-    guardian.ensure_can_edit!(group)
+    guardian.ensure_can_edit!(group) unless current_user.admin
 
     page_size = 25
     offset = (params[:offset] && params[:offset].to_i) || 0
