@@ -171,11 +171,6 @@
       white-space: nowrap;
     }
 
-    &.max-content {
-      white-space: nowrap;
-      color: $danger;
-    }
-
     .name {
       margin: 0;
       overflow: hidden;
@@ -210,6 +205,14 @@
     margin: 0;
     padding: 0;
     max-height: 200px;
+
+    .validation-message {
+      white-space: nowrap;
+      color: $danger;
+      flex: 1 0 auto;
+      margin: 5px;
+      padding: 0 2px;
+    }
 
     .select-kit-collection {
       padding: 0;

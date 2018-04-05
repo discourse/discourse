@@ -140,10 +140,23 @@ export default SelectKitComponent.extend({
   },
 
   computeHeaderContent() {
-    return {
+    let content = {
       title: this.get("title"),
       selection: this.get("selection")
     };
+
+    if (this.get("noneLabel")) {
+      if (!this.get("hasSelection")) {
+        content.title = content.name = content.label = I18n.t(this.get("noneLabel"));
+      }
+    } else {
+      if (!this.get("hasReachedMinimum")) {
+        const key = this.get("minimumLabel") || "select_kit.min_content_not_reached";
+        content.title = content.name = content.label = I18n.t(key, { count: this.get("minimum") });
+      }
+    }
+
+    return content;
   },
 
   @computed("filter")
@@ -154,7 +167,7 @@ export default SelectKitComponent.extend({
   },
 
   validateSelect() {
-    return this._super() && !this.get("hasReachedLimit");
+    return this._super() && !this.get("hasReachedMaximum");
   },
 
   @computed("computedValues.[]", "computedContent.[]")

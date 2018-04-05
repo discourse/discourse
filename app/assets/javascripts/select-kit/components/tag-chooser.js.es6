@@ -37,7 +37,7 @@ export default MultiSelectComponent.extend(Tags, {
     });
 
     if (!this.get("unlimitedTagCount")) {
-      this.set("limit", parseInt(this.get("limit") || this.get("siteSettings.max_tags_per_topic")));
+      this.set("maximum", parseInt(this.get("limit") || this.get("maximum") || this.get("siteSettings.max_tags_per_topic")));
     }
   },
 
