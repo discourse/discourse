@@ -14,6 +14,7 @@
   <table class="admin-plugins">
     <thead>
       <tr>
+        <th></th>
         <th>{{i18n "admin.plugins.name"}}</th>
         <th>{{i18n "admin.plugins.version"}}</th>
         <th>{{i18n "admin.plugins.enabled"}}</th>
@@ -24,16 +25,18 @@
       {{#each model as |plugin|}}
         <tr>
           <td>
-            {{#if plugin.url}}
-              <a href={{plugin.url}} target="_blank">{{plugin.name}}</a>
-            {{else}}
-              {{plugin.name}}
-            {{/if}}
-
             {{#if plugin.is_official}}
               {{d-icon "check-circle"
                   title="admin.plugins.official"
                   class="admin-plugins-official-badge"}}
+            {{/if}}
+          </td>
+
+          <td>
+            {{#if plugin.url}}
+              <a href={{plugin.url}} target="_blank">{{plugin.name}}</a>
+            {{else}}
+              {{plugin.name}}
             {{/if}}
           </td>
           <td>{{plugin.version}}</td>
