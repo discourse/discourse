@@ -405,10 +405,15 @@ class PostRevisor
 
   def remove_flags_and_unhide_post
     return unless editing_a_flagged_and_hidden_post?
+
+    flaggers = []
     @post.post_actions.where(post_action_type_id: PostActionType.flag_types_without_custom.values).each do |action|
+      flaggers << action.user if action.user
       action.remove_act!(Discourse.system_user)
     end
+
     @post.unhide!
+    PostActionNotifier.after_post_unhide(@post, flaggers)
   end
 
   def editing_a_flagged_and_hidden_post?

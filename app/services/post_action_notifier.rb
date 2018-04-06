@@ -109,4 +109,17 @@ class PostActionNotifier
     )
   end
 
+  def self.after_post_unhide(post, flaggers)
+    return if @disabled || post.last_editor.blank? || flaggers.blank?
+
+    flaggers.each do |flagger|
+      alerter.create_notification(
+        flagger,
+        Notification.types[:edited],
+        post,
+        display_username: post.last_editor.username,
+        acting_user_id: post.last_editor.id
+      )
+    end
+  end
 end
