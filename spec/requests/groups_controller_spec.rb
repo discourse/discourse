@@ -473,6 +473,7 @@ describe GroupsController do
       before do
         user.update_attributes!(admin: true)
         sign_in(user)
+        SiteSetting.queue_jobs = true
       end
 
       it 'should be able to update the group' do
@@ -506,6 +507,9 @@ describe GroupsController do
         expect(group.automatic_membership_email_domains).to eq('test.org')
         expect(group.automatic_membership_retroactive).to eq(true)
         expect(group.grant_trust_level).to eq(2)
+
+        expect(Jobs::AutomaticGroupMembership.jobs.first["args"].first["group_id"])
+          .to eq(group.id)
       end
 
       it "should be able to update an automatic group" do

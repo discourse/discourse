@@ -293,8 +293,11 @@ en:
 
   groups:
     success:
-      bulk_add: "%{users_added} users have been added to the group."
+      bulk_add:
+        one: "%{count} user have been added to the group."
+        other: "%{count} users have been added to the group."
     errors:
+      grant_trust_level_not_valid: "'%{trust_level}' is not a valid trust level."
       can_not_modify_automatic: "You cannot modify an automatic group"
       member_already_exist:
         one: "'%{username}' is already a member of this group."

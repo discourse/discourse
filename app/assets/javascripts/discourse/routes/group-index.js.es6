@@ -26,6 +26,10 @@ export default Discourse.Route.extend({
       showModal('group-add-members', { model: this.modelFor('group') });
     },
 
+    showBulkAddModal() {
+      showModal('group-bulk-add', { model: this.modelFor('group') });
+    },
+
     didTransition() {
       this.controllerFor("group-index").set("filterInput", this._params.filter);
       return true;

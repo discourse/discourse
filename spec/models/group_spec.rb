@@ -6,6 +6,21 @@ describe Group do
   let(:group) { Fabricate(:group) }
 
   context 'validations' do
+    describe '#grant_trust_level' do
+      describe 'when trust level is not valid' do
+        it 'should not be valid' do
+          group.grant_trust_level = 123456
+
+          expect(group.valid?).to eq(false)
+
+          expect(group.errors.full_messages.join(",")).to eq(I18n.t(
+            'groups.errors.grant_trust_level_not_valid',
+            trust_level: 123456
+          ))
+        end
+      end
+    end
+
     describe '#username' do
       context 'when a user with a similar name exists' do
         it 'should not be valid' do

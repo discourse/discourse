@@ -24,7 +24,7 @@ QUnit.test("Creating a new group", assert => {
 
   andThen(() => {
     assert.equal(
-      find('.tip.bad').text().trim(), I18n.t("groups.new.name.too_short"),
+      find('.tip.bad').text().trim(), I18n.t("admin.groups.new.name.too_short"),
       'it should show the right validation tooltip'
     );
 
@@ -38,7 +38,7 @@ QUnit.test("Creating a new group", assert => {
 
   andThen(() => {
     assert.equal(
-      find('.tip.bad').text().trim(), I18n.t("groups.new.name.too_long"),
+      find('.tip.bad').text().trim(), I18n.t("admin.groups.new.name.too_long"),
       'it should show the right validation tooltip'
     );
   });
@@ -47,7 +47,7 @@ QUnit.test("Creating a new group", assert => {
 
   andThen(() => {
     assert.equal(
-      find('.tip.bad').text().trim(), I18n.t("groups.new.name.blank"),
+      find('.tip.bad').text().trim(), I18n.t("admin.groups.new.name.blank"),
       'it should show the right validation tooltip'
     );
   });
@@ -56,7 +56,7 @@ QUnit.test("Creating a new group", assert => {
 
   andThen(() => {
     assert.equal(
-      find('.tip.good').text().trim(), I18n.t("groups.new.name.available"),
+      find('.tip.good').text().trim(), I18n.t("admin.groups.new.name.available"),
       'it should show the right validation tooltip'
     );
   });

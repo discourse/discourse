@@ -304,7 +304,8 @@ class GroupsController < ApplicationController
   end
 
   def remove_member
-    group = Group.find(params[:id])
+    group = Group.find_by(id: params[:id])
+    raise Discourse::NotFound unless group
     group.public_exit ? ensure_logged_in : guardian.ensure_can_edit!(group)
 
     user =

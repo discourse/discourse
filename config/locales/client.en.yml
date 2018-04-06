@@ -2842,6 +2842,10 @@ en:
             available: "Group name is available"
             not_available: "Group name is not available"
             blank: "Group name cannot be blank"
+        bulk_add:
+          title: "Bulk Add to Group"
+          complete_users_not_added: "These users were not added (make sure they have an account):"
+          paste: "Paste a list of usernames or emails, one per line:"
         add_members:
           as_owner: "Set user(s) as owner(s) of this group"
         manage:
@@ -2878,11 +2882,6 @@ en:
         delete_owner_confirm: "Remove owner privilege for '%{username}'?"
         add: "Add"
         custom: "Custom"
-        bulk_complete: "The users have been added to the group."
-        bulk_complete_users_not_added: "These users were not added (make sure they have an account):"
-        bulk: "Bulk Add to Group"
-        bulk_paste: "Paste a list of usernames or emails, one per line:"
-        bulk_select: "(select a group)"
         automatic: "Automatic"
         default_title: "Default title for all users in this group"
         group_owners: Owners
