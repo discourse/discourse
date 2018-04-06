@@ -43,11 +43,6 @@
   }
 }
 
-.private-message-glyph {
-  color: dark-light-choose($primary-low-mid, $secondary-high);
-  float: left;
-  margin-right: 5px;
-}
 .private_message #topic-title .private-message-glyph { display: inline; }
 
 .topic-error {

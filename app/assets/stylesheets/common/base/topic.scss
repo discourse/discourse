@@ -122,6 +122,11 @@ a.badge-category {
   }
 }
 
+.private-message-glyph {
+  color: dark-light-choose($primary-low-mid, $secondary-high);
+  margin-right: 5px;
+}
+
 .archetype-private_message #topic-title .edit-topic-title .tag-chooser {
   margin-left: 19px;
 }
