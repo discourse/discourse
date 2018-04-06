@@ -4,12 +4,14 @@ require_dependency 'url_helper'
 require_dependency 'topics_bulk_action'
 require_dependency 'discourse_event'
 require_dependency 'rate_limiter'
+require_dependency 'topic_publisher'
 
 class TopicsController < ApplicationController
   requires_login only: [
     :timings,
     :destroy_timings,
     :update,
+    :update_shared_draft,
     :destroy,
     :recover,
     :status,
@@ -30,7 +32,8 @@ class TopicsController < ApplicationController
     :archive_message,
     :move_to_inbox,
     :convert_topic,
-    :bookmark
+    :bookmark,
+    :publish
   ]
 
   before_action :consider_user_for_promotion, only: :show
@@ -131,6 +134,18 @@ class TopicsController < ApplicationController
     raise ex
   end
 
+  def publish
+    params.permit(:id, :destination_category_id)
+
+    topic = Topic.find(params[:id])
+    category = Category.find(params[:destination_category_id])
+
+    guardian.ensure_can_publish_topic!(topic, category)
+    topic = TopicPublisher.new(topic, current_user, category.id).publish!
+
+    render_serialized(topic.reload, BasicTopicSerializer)
+  end
+
   def unsubscribe
     if current_user.blank?
       cookies[:destination_url] = request.fullpath
@@ -222,9 +237,33 @@ class TopicsController < ApplicationController
     render body: nil
   end
 
+  def update_shared_draft
+    topic = Topic.find_by(id: params[:id])
+    guardian.ensure_can_edit!(topic)
+
+    category = Category.where(id: params[:category_id].to_i).first
+    guardian.ensure_can_publish_topic!(topic, category)
+
+    row_count = SharedDraft.where(topic_id: topic.id).update_all(category_id: category.id)
+    if row_count == 0
+      SharedDraft.create(topic_id: topic.id, category_id: category.id)
+    end
+
+    render json: success_json
+  end
+
   def update
     topic = Topic.find_by(id: params[:topic_id])
     guardian.ensure_can_edit!(topic)
+
+    if params[:category_id] && (params[:category_id].to_i != topic.category_id.to_i)
+      category = Category.find_by(id: params[:category_id])
+      if category || (params[:category_id].to_i == 0)
+        guardian.ensure_can_create_topic_on_category!(category)
+      else
+        return render_json_error(I18n.t('category.errors.not_found'))
+      end
+    end
 
     changes = {}
     PostRevisor.tracked_topic_fields.each_key do |f|
@@ -377,19 +416,19 @@ class TopicsController < ApplicationController
         .where('topic_allowed_groups.group_id IN (?)', group_ids).pluck(:id)
       allowed_groups.each do |id|
         if archive
-          GroupArchivedMessage.archive!(id, topic.id)
+          GroupArchivedMessage.archive!(id, topic)
           group_id = id
         else
-          GroupArchivedMessage.move_to_inbox!(id, topic.id)
+          GroupArchivedMessage.move_to_inbox!(id, topic)
         end
       end
     end
 
     if topic.allowed_users.include?(current_user)
       if archive
-        UserArchivedMessage.archive!(current_user.id, topic.id)
+        UserArchivedMessage.archive!(current_user.id, topic)
       else
-        UserArchivedMessage.move_to_inbox!(current_user.id, topic.id)
+        UserArchivedMessage.move_to_inbox!(current_user.id, topic)
       end
     end
 
@@ -427,7 +466,7 @@ class TopicsController < ApplicationController
     guardian.ensure_can_recover_topic!(topic)
 
     first_post = topic.posts.with_deleted.order(:post_number).first
-    PostDestroyer.new(current_user, first_post).recover
+    PostDestroyer.new(current_user, first_post, context: params[:context]).recover
 
     render body: nil
   end
@@ -477,9 +516,10 @@ class TopicsController < ApplicationController
   end
 
   def invite
-    username_or_email = params[:user] ? fetch_username : fetch_email
-
     topic = Topic.find_by(id: params[:topic_id])
+    raise Discourse::InvalidParameters.new unless topic
+
+    username_or_email = params[:user] ? fetch_username : fetch_email
 
     groups = Group.lookup_groups(
       group_ids: params[:group_ids],
@@ -492,6 +532,7 @@ class TopicsController < ApplicationController
     begin
       if topic.invite(current_user, username_or_email, group_ids, params[:custom_message])
         user = User.find_by_username_or_email(username_or_email)
+
         if user
           render_json_dump BasicUserSerializer.new(user, scope: guardian, root: 'user')
         else
@@ -627,9 +668,10 @@ class TopicsController < ApplicationController
       raise ActionController::ParameterMissing.new(:topic_ids)
     end
 
-    operation = params.require(:operation)
-    operation.permit!
-    operation = operation.to_h.symbolize_keys
+    operation = params
+      .require(:operation)
+      .permit(:type, :group, :category_id, :notification_level_id, :tags)
+      .to_h.symbolize_keys
 
     raise ActionController::ParameterMissing.new(:operation_type) if operation[:type].blank?
     operator = TopicsBulkAction.new(current_user, topic_ids, operation, group: operation[:group])

@@ -68,9 +68,12 @@ module Stylesheet
       Stylesheet::Manager.cache.clear
 
       message = ["desktop", "mobile", "admin"].map do |name|
-        { target: name, new_href: Stylesheet::Manager.stylesheet_href(name.to_sym) , theme_key: SiteSetting.default_theme_key }
+        {
+          target: name,
+          new_href: Stylesheet::Manager.stylesheet_href(name.to_sym),
+          theme_key: SiteSetting.default_theme_key
+        }
       end
-
       MessageBus.publish '/file-change', message
     end
 

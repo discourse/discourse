@@ -22,13 +22,18 @@ def setup_message_bus_env(env)
       user.groups.pluck('groups.id')
     end
 
+    extra_headers = {
+      "Access-Control-Allow-Origin" => Discourse.base_url_no_prefix,
+      "Access-Control-Allow-Methods" => "GET, POST",
+      "Access-Control-Allow-Headers" => "X-SILENCE-LOGGER, X-Shared-Session-Key, Dont-Chunk, Discourse-Visible"
+    }
+
+    if env[Auth::DefaultCurrentUserProvider::BAD_TOKEN]
+      extra_headers['Discourse-Logged-Out'] = '1'
+    end
+
     hash = {
-      extra_headers:
-        {
-          "Access-Control-Allow-Origin" => Discourse.base_url_no_prefix,
-          "Access-Control-Allow-Methods" => "GET, POST",
-          "Access-Control-Allow-Headers" => "X-SILENCE-LOGGER, X-Shared-Session-Key, Dont-Chunk, Discourse-Visible"
-        },
+      extra_headers: extra_headers,
       user_id: user_id,
       group_ids: group_ids,
       is_admin: is_admin,
@@ -65,7 +70,7 @@ MessageBus.on_middleware_error do |env, e|
   if Discourse::InvalidAccess === e
     [403, {}, ["Invalid Access"]]
   elsif RateLimiter::LimitExceeded === e
-    [429, {}, [e.description]]
+    [429, { 'Retry-After' => e.available_in }, [e.description]]
   end
 end
 

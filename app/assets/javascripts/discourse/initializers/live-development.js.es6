@@ -7,6 +7,28 @@ export default {
   initialize(container) {
     const messageBus = container.lookup('message-bus:main');
 
+    if (window.history && window.location.search.indexOf("?preview_theme_key=") === 0) {
+      // force preview theme key to always be carried along
+      const themeKey = window.location.search.slice(19).split('&')[0];
+      if (themeKey.match(/^[a-z0-9-]+$/i)) {
+        const patchState = function(f) {
+          const patched = window.history[f];
+
+          window.history[f] = function(stateObj, name, url) {
+            if (url.indexOf("preview_theme_key=") === -1) {
+              const joiner = url.indexOf("?") === -1 ? "?" : "&";
+              url = `${url}${joiner}preview_theme_key=${themeKey}`;
+            }
+
+            return patched.call(window.history, stateObj, name, url);
+          };
+        };
+        patchState("replaceState");
+        patchState("pushState");
+      }
+
+    }
+
     // Custom header changes
     $('header.custom').each(function() {
       const header = $(this);

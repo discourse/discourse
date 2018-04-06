@@ -357,7 +357,11 @@ export default Ember.Component.extend({
       },
 
       onKeyUp(text, cp) {
-        return text.substring(0, cp).match(/(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?) ?$/g);
+        const matches = /(?:^|[^a-z])(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?) ?$/gi.exec(text.substring(0, cp));
+
+        if (matches && matches[1]) {
+          return [ matches[1] ];
+        }
       },
 
       transformComplete(v) {

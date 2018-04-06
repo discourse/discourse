@@ -7,20 +7,24 @@
         background: $primary-low;
         color: $primary;
         border: 1px solid transparent;
-        padding: 5px 10px;
+        padding: 4.5px 5px 4.5px 10px;
         font-size: $font-0;
         transition: none;
+
+        &.is-none .selected-name {
+          color: inherit;
+        }
 
         .d-icon {
           opacity: 1;
           font-size: $font-0;
+          margin: 0;
         }
       }
 
       &.is-expanded .tag-drop-header {
         border: 1px solid $tertiary;
-        -webkit-box-shadow: $tertiary 0 0 6px 0px;
-                box-shadow: $tertiary 0 0 6px 0px;
+        box-shadow: shadow("focus");
       }
 
       .select-kit-collection {
@@ -46,12 +50,15 @@
         }
       }
 
+      .select-kit-filter .filter-input {
+        width: auto;
+      }
+
       .select-kit-body {
         width: auto;
         min-width: 150px;
         border-radius: 0;
-        -webkit-box-shadow: 0 2px 2px rgba(0,0,0,0.4);
-                box-shadow: 0 2px 2px rgba(0,0,0,0.4);
+        box-shadow: shadow("dropdown");
       }
 
       .select-kit-row {

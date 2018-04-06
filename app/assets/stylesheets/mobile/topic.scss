@@ -31,9 +31,7 @@
   .private-message-glyph { display: none; }
 }
 
-.private-message-glyph { color: dark-light-choose($primary-low-mid, $secondary-high); }
 .private_message #topic-title .private-message-glyph { display: inline; }
-
 
 /* both blocks that appear under the standard post control buttons */
 .notification-options, .pinned-options {
@@ -50,10 +48,6 @@
   h3 {
     margin: 0;
   }
-}
-
-.docked #topic-progress {
-  box-shadow: 0 0 3px rbga(0,0,0, .5);
 }
 
 #topic-progress-wrapper {
@@ -184,11 +178,6 @@ sup sup, sub sup, sup sub, sub sub { top: 0; }
     box-sizing: border-box;
     width: 100%;
     height: 32px;
-  }
-
-  .select2-container {
-    box-sizing: border-box;
-    width: 100% !important;
   }
   .btn-small {
     padding: 6px 12px;

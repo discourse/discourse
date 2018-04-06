@@ -31,11 +31,17 @@ createWidget('header-notifications', {
   html(attrs) {
     const { user } = attrs;
 
+    let avatarAttrs = {
+      template: user.get('avatar_template'),
+      username: user.get('username')
+    };
+
+    if (this.siteSettings.enable_names) {
+      avatarAttrs.name = user.get('name');
+    }
+
     const contents = [
-      avatarImg(this.settings.avatarSize, addExtraUserClasses(user, {
-        template: user.get('avatar_template'),
-        username: user.get('username')
-      }))
+      avatarImg(this.settings.avatarSize, addExtraUserClasses(user, avatarAttrs))
     ];
 
     const unreadNotifications = user.get('unread_notifications');

@@ -140,7 +140,8 @@ export default Ember.Controller.extend({
     return !this.site.mobileView &&
             this.site.get('can_tag_topics') &&
             canEditTitle &&
-            !creatingPrivateMessage;
+            !creatingPrivateMessage &&
+            (!this.get('model.topic.isPrivateMessage') || this.site.get('can_tag_pms'));
   },
 
   @computed('model.whisper', 'model.unlistTopic')
@@ -518,7 +519,7 @@ export default Ember.Controller.extend({
       if (result.responseJson.action === "create_post" || this.get('replyAsNewTopicDraft') || this.get('replyAsNewPrivateMessageDraft')) {
         this.destroyDraft();
       }
-      if (this.get('model.action') === 'edit') {
+      if (this.get('model.editingPost')) {
         this.appEvents.trigger('post-stream:refresh', { id: parseInt(result.responseJson.id) });
         if (result.responseJson.post.post_number === 1) {
           this.appEvents.trigger('header:update-topic', composer.get('topic'));
@@ -675,6 +676,10 @@ export default Ember.Controller.extend({
     this.set('model', composerModel);
     composerModel.set('composeState', Composer.OPEN);
     composerModel.set('isWarning', false);
+
+    if (opts.usernames) {
+      this.set('model.targetUsernames', opts.usernames);
+    }
 
     if (opts.topicTitle && opts.topicTitle.length <= this.siteSettings.max_topic_title_length) {
       this.set('model.title', opts.topicTitle);

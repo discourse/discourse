@@ -112,7 +112,6 @@ sv:
       email: 'skicka denna länk i ett e-postmeddelande'
     action_codes:
       public_topic: "gjorde det här ämnet publikt %{when}"
-      private_topic: "gjorde det här ämnet privat %{when}"
       split_topic: "splitta det här ämnet %{when}"
       invited_user: "bjöd in %{who} %{when}"
       invited_group: "bjöd in %{who} %{when}"
@@ -143,8 +142,6 @@ sv:
     topic_admin_menu: "administratörsåtgärder för ämne"
     wizard_required: "Välkommen till din nya Discourse! Låt oss komma igång genom <a href='%{url}' data-auto-route='true'>uppsättnings guiden</a> ✨"
     emails_are_disabled: "All utgående e-post har blivit globalt inaktiverad av en administratör. Inga e-postnotifikationer av något slag kommer att skickas ut."
-    bootstrap_mode_enabled: "Du är i bootstrap-läge för att göra lanseringen av din nya webbplats enklare. Alla nya användare kommer att beviljas förtroendenivå 1 och få dagliga sammanfattningar skickade via e-post. Det här stängs automatiskt av när det totala antalet användare överstiger %{min_users}."
-    bootstrap_mode_disabled: "Bootstrap-läge otillgängliggörs i 24 timmar."
     themes:
       default_description: "Standard"
     s3:
@@ -219,7 +216,7 @@ sv:
       stat:
         all_time: "Alla dagar"
         last_7_days: "Senaste 7 dagarna"
-        last_30_days: "Senaste 30 Dagarna"
+        last_30_days: "Senaste 30 dagarna"
       like_count: "Gillningar"
       topic_count: "Ämnen"
       post_count: "Inlägg"
@@ -240,16 +237,6 @@ sv:
       last_read: "detta är det senaste inlägg som du läst, klicka för att bokmärka"
       remove: "Ta bort bokmärke"
       confirm_clear: "Är du säker på att du vill radera alla bokmärken från ämnet?"
-    topic_count_latest:
-      one: "{{count}} nytt eller uppdaterat ämne."
-      other: "{{count}} nya eller uppdaterade ämnen."
-    topic_count_unread:
-      one: "{{count}} oläst ämne."
-      other: "{{count}} olästa ämnen."
-    topic_count_new:
-      one: "{{count}} nytt ämne."
-      other: "{{count}} nya ämnen."
-    click_to_show: "Klicka för att visa."
     preview: "förhandsgranska"
     cancel: "avbryt"
     save: "Spara ändringar"
@@ -367,20 +354,16 @@ sv:
       leave: "Lämna grupp"
       request: "Förfrågan om att gå med i grupp"
       automatic_group: Automatisk grupp
-      closed_group: Stängd grupp
       is_group_user: "Du är en medlem av denna grupp"
       allow_membership_requests: "Tillåt användare att skicka medlemskapsförfrågan till gruppägare"
       membership: "Medlemskap"
       name: "Namn"
-      user_count: "Antal medlemmar"
       bio: "Om grupp"
-      selector_placeholder: "Lägg till medlemmar"
       owner: "ägare"
       index:
         title: "Grupper"
         empty: "Det finns inga synliga grupper"
       activity: "Aktivitet"
-      members: "Medlemmar"
       topics: "Ämnen"
       posts: "Inlägg"
       mentions: "Omnämnaden"
@@ -1061,19 +1044,6 @@ sv:
       empty: "Inga notifieringar hittades."
       more: "visa äldre notifikationer"
       total_flagged: "totalt antal flaggade inlägg"
-      alt:
-        mentioned: "Omnämnd av"
-        quoted: "Citerad av"
-        replied: "Svarade"
-        posted: "Skrivet av"
-        edited: "Redigera ditt inlägg genom"
-        liked: "Gillade ditt inlägg"
-        invited_to_topic: "Inbjudan till ett ämne från"
-        invitee_accepted: "Inbjudan accepterades av"
-        moved_post: "Ditt inlägg blev flyttad av"
-        linked: "Länk till ditt inlägg"
-        granted_badge: "Utmärkelse beviljad"
-        group_message_summary: "Meddelanden i din grupps inkorg"
       popup:
         mentioned: '{{username}} nämnde dig i "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} nämnde dig i "{{topic}}" - {{site_title}}'
@@ -1482,8 +1452,8 @@ sv:
         select_all: markera alla
         deselect_all: avmarkera alla
         description:
-          one: Du har markerat <b>1</b> inlägg.
-          other: Du har markerat <b>{{count}}</b> inlägg.
+          one: "Du har markerat <b>1</b> inlägg."
+          other: "Du har markerat <b>{{count}}</b> inlägg."
     post:
       quote_reply: "Citat"
       edit_reason: "Anledning:"
@@ -1713,7 +1683,6 @@ sv:
       email_in_allow_strangers: "Acceptera e-post från anonyma användare utan konton"
       email_in_disabled: "Att skapa nya ämnen via e-post är avaktiverat i webbplatsinställningarna. För att aktivera ämnen skapade via e-post,"
       email_in_disabled_click: 'aktivera "inkommande e-post" inställningen.'
-      suppress_from_homepage: "Undanta den här kategorin från hemsidan."
       show_subcategory_list: "Visa listan med underkategorier ovanför ämnen i denna kategori."
       num_featured_topics: "Antal ämnen som visas på sidan kategorier:"
       all_topics_wiki: "Gör nya inlägg till wikis som standard"
@@ -2056,19 +2025,15 @@ sv:
       notifications:
         watching:
           title: "Bevakar"
-          description: "Du kommer automatiskt att bevaka alla ämnen i den här taggen. Du kommer att få notifieringar om alla nya inlägg och ämnen, och en räknare över olästa och nya inlägg kommer att visas brevid ämnen."
         watching_first_post:
           title: "Bevakar första inlägget"
-          description: "Du kommer endast att bli notifierad om första inlägget i varje nytt ämne i den här taggen."
         tracking:
           title: "Bevakade"
-          description: "Du kommer automatiskt följa alla nya ämnen i den här taggen. En räknare över olästa och nya inlägg kommer att visas bredvid ämnen."
         regular:
           title: "Vanlig"
           description: "Du kommer att få en notifiering om någon nämner ditt @namn eller svarar på ditt inlägg."
         muted:
           title: "Tystad"
-          description: "Du kommer inte att få notifieringar om nya ämnen inom den här taggen, och de kommer inte att visas under din \"oläst\"-flik."
       groups:
         title: "Grupptaggar"
         about: "Lägg till taggar i grupper för att lättare hantera dem."
@@ -2203,7 +2168,6 @@ sv:
         edit: "Redigera Grupper"
         refresh: "Uppdatera"
         new: "Ny"
-        selector_placeholder: "ange användarnamn"
         about: "Redigera dina gruppmedlemskap och -namn här."
         group_members: "Gruppmedlemmar"
         delete: "Radera"
@@ -2834,10 +2798,7 @@ sv:
         recommended: "Vi rekommenderar att du anpassar följande texter:"
         show_overriden: 'Visa bara överskrivna'
       site_settings:
-        show_overriden: 'Visa bara överskrivna'
         title: 'Webbplatsinställningar'
-        reset: 'återställ'
-        none: 'inget'
         no_results: "Inga resultat hittades."
         clear_filter: "Rensa"
         add_url: "lägg till URL"

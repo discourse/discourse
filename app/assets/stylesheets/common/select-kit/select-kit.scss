@@ -104,6 +104,12 @@
       color: inherit;
     }
 
+    &.is-none {
+      .selected-name {
+        color: dark-light-choose($primary-high, $secondary-low);
+      }
+    }
+
     .btn-clear {
       padding: 0 10px;
       border: 0;
@@ -165,11 +171,6 @@
       white-space: nowrap;
     }
 
-    &.max-content {
-      white-space: nowrap;
-      color: $danger;
-    }
-
     .name {
       margin: 0;
       overflow: hidden;
@@ -202,7 +203,16 @@
     border-radius: inherit;
     -webkit-overflow-scrolling: touch;
     margin: 0;
+    padding: 0;
     max-height: 200px;
+
+    .validation-message {
+      white-space: nowrap;
+      color: $danger;
+      flex: 1 0 auto;
+      margin: 5px;
+      padding: 0 2px;
+    }
 
     .select-kit-collection {
       padding: 0;

@@ -5,6 +5,51 @@ describe Group do
   let(:user) { Fabricate(:user) }
   let(:group) { Fabricate(:group) }
 
+  context 'validations' do
+    describe '#username' do
+      context 'when a user with a similar name exists' do
+        it 'should not be valid' do
+          new_group = Fabricate.build(:group, name: admin.username.upcase)
+
+          expect(new_group).to_not be_valid
+
+          expect(new_group.errors.full_messages.first)
+            .to include(I18n.t("activerecord.errors.messages.taken"))
+        end
+      end
+
+      context 'when a group with a similar name exists' do
+        it 'should not be valid' do
+          new_group = Fabricate.build(:group, name: group.name.upcase)
+
+          expect(new_group).to_not be_valid
+
+          expect(new_group.errors.full_messages.first)
+            .to include(I18n.t("activerecord.errors.messages.taken"))
+        end
+      end
+    end
+  end
+
+  describe "#posts_for" do
+    it "returns the post in the group" do
+      p = Fabricate(:post)
+      group.add(p.user)
+
+      posts = group.posts_for(Guardian.new)
+      expect(posts).to include(p)
+    end
+
+    it "doesn't include unlisted posts" do
+      p = Fabricate(:post)
+      p.topic.update_column(:visible, false)
+      group.add(p.user)
+
+      posts = group.posts_for(Guardian.new)
+      expect(posts).not_to include(p)
+    end
+  end
+
   describe '#builtin' do
     context "verify enum sequence" do
       before do
@@ -392,17 +437,37 @@ describe Group do
     expect(g.usernames.split(",").sort).to eq usernames.split(",").sort
   end
 
-  it "correctly destroys groups" do
+  describe 'new' do
+    subject { Fabricate.build(:group) }
 
-    g = Fabricate(:group)
-    u1 = Fabricate(:user)
-    g.add(u1)
-    g.save!
+    it 'triggers a extensibility event' do
+      event = DiscourseEvent.track_events { subject.save! }.first
 
-    g.destroy
+      expect(event[:event_name]).to eq(:group_created)
+      expect(event[:params].first).to eq(subject)
+    end
+  end
 
-    expect(User.where(id: u1.id).count).to eq 1
-    expect(GroupUser.where(group_id: g.id).count).to eq 0
+  describe 'destroy' do
+    let(:user) { Fabricate(:user) }
+    let(:group) { Fabricate(:group, users: [user]) }
+
+    before do
+      group.add(user)
+    end
+
+    it "it deleted correctly" do
+      group.destroy!
+      expect(User.where(id: user.id).count).to eq 1
+      expect(GroupUser.where(group_id: group.id).count).to eq 0
+    end
+
+    it 'triggers a extensibility event' do
+      event = DiscourseEvent.track_events { group.destroy! }.first
+
+      expect(event[:event_name]).to eq(:group_destroyed)
+      expect(event[:params].first).to eq(group)
+    end
   end
 
   it "has custom fields" do
@@ -618,6 +683,13 @@ describe Group do
       group.bulk_add([user.id, admin.id])
 
       expect(group.group_users.map(&:user_id)).to contain_exactly(user.id, admin.id)
+    end
+
+    it 'updates group user count' do
+      expect {
+        group.bulk_add([user.id, admin.id])
+        group.reload
+      }.to change { group.user_count }.by(2)
     end
   end
 

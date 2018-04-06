@@ -94,7 +94,7 @@ et:
     template:
       body: 'Järgmiste väljadega oli probleeme:'
       header:
-        one: 1 viga takistas mudeli %{model} salvestamist
+        one: '1 viga takistas mudeli %{model} salvestamist'
         other: '%{count} viga takistasid mudeli %{model} salvestamist'
     embed:
       load_from_remote: "Selle postituse laadimisel ilmnes üks viga"
@@ -197,7 +197,6 @@ et:
   groups:
     errors:
       can_not_modify_automatic: "Autommatset gruppi ei saa muuta"
-      member_already_exist: "'%{username}' on juba selle grupi liige."
       invalid_domain: "'%{domain}' ei ole nõuetele vastav domeen."
       invalid_incoming_email: "'%{email}' ei ole korrektne meiliaadress."
       email_already_used_in_group: "Grupp '%{group_name}' juba kasutab meiliaadressi '%{email}'."
@@ -289,41 +288,41 @@ et:
     title: "Teretulemast Discourse'i"
     body: |2
 
-      Selle märgistatud teema esimene lõik saab olema kõikidele uutele külastajatele nähtav kui tervitustekst sinu avalehel. See on oluline!
+        Selle märgistatud teema esimene lõik saab olema kõikidele uutele külastajatele nähtav kui tervitustekst sinu avalehel. See on oluline!
 
-      **Muuda see** enda kommuuni lühitutvustuseks:
+        **Muuda see** enda kommuuni lühitutvustuseks:
 
-      - Kellele see on?
-      - Mida siit leiab?
-      - Miks peaks keegi siia tulema?
-      - Kust saab rohkem infot (lingid, ressursid jne)?
+        - Kellele see on?
+        - Mida siit leiab?
+        - Miks peaks keegi siia tulema?
+        - Kust saab rohkem infot (lingid, ressursid jne)?
 
-      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
-      Ilmselt peaksid sa selle teema administreerimise alt sulgema :wrench: (üleval paremal ja allääres), et teadandele vastuseid ei kuhjuks.
+        Ilmselt peaksid sa selle teema administreerimise alt sulgema :wrench: (üleval paremal ja allääres), et teadandele vastuseid ei kuhjuks.
   lounge_welcome:
     title: "Teretulemast Lounge'i"
     body: |2
 
-      Õnnitlused! :confetti_ball:
+        Õnnitlused! :confetti_ball:
 
-      Kui Sa seda teemat näed, oled hiljuti edutatud **püsiliikmeks** (usaldustase 3).
+        Kui Sa seda teemat näed, oled hiljuti edutatud **püsiliikmeks** (usaldustase 3).
 
-      Nüüd võid &hellip;
+        Nüüd võid &hellip;
 
-      * Muuta suvalise teema pealkirja
-      * Muuta suvalise teema foorumit
-      * Lasta kõiki oma viiteid järgida ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) on eemaldatud)
-      * Siseneda vaid usaldustasemel 3 ja kõrgemal olevatele kasutajatele mõeldud privaatse Salongi foorumisse
-      * Peita spämmi vaid ühe tähisega
+        * Muuta suvalise teema pealkirja
+        * Muuta suvalise teema foorumit
+        * Lasta kõiki oma viiteid järgida ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) on eemaldatud)
+        * Siseneda vaid usaldustasemel 3 ja kõrgemal olevatele kasutajatele mõeldud privaatse Salongi foorumisse
+        * Peita spämmi vaid ühe tähisega
 
-      Siin on [hetke püsiliikmete nimekiri](/badges/3/regular). Tervita neid kindlasti.
+        Siin on [hetke püsiliikmete nimekiri](/badges/3/regular). Tervita neid kindlasti.
 
-      Täname, et oled meie kogukonna tähtis liige!
+        Täname, et oled meie kogukonna tähtis liige!
 
-      (Täiendava info saamiseks usaldustasemete kohta [vaata teemat][trust]. Pea meeles, et vaid need liikmed kes jätkuvalt seatud nõudmisi täidavad püsivad püsiliikmetena.)
+        (Täiendava info saamiseks usaldustasemete kohta [vaata teemat][trust]. Pea meeles, et vaid need liikmed kes jätkuvalt seatud nõudmisi täidavad püsivad püsiliikmetena.)
 
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Liigist %{category}"
     replace_paragraph: "(Asenda see paragrahv oma uues kategoorias kategooria lühitutvustusega. See juhis ilmub siis kategooriate vaates. Seega, katsu hoida kirjeldus alla 200 tähemärgi. **Kuniks sa pole muutnud seda kirjeldust või kuni sa pole loonud teemasid, ei ole seda kategooriat kategooriate lehel näha.**)"
@@ -357,7 +356,6 @@ et:
     change_failed_explanation: "Üritasid alandada %{user_name} tasemele '%{new_trust_level}'. Samas on tal juba tase'%{current_trust_level}'. %{user_name} jääb tasemele '%{current_trust_level}' - kui soovid alandada kasutaja taset, siis lukusta kõigepealt usaldustase."
   rate_limiter:
     slow_down: "Oled antud seda toimingut liiga palju proovinud. Proovi hiljem uuesti."
-    too_many_requests: "Antud tegevuse jaoks on meil päevane kordade limiit. Palun oota %{time_left} enne kui uuesti proovid."
     by_type:
       first_day_replies_per_day: "Oled ületanud uuele kasutajale esimesel päeval lubatud vastuste limiidi. Palun oota %{time_left} enne kui uuesti proovid."
       first_day_topics_per_day: "Oled ületanud uuele kasutajale esimesel päeval lubatud teemade lisamise limiidi. Palun oota %{time_left} enne kui uuesti proovid."
@@ -494,7 +492,6 @@ et:
       long_form: 'tähistasin selle kui sobimatu'
     notify_user:
       title: 'Saada kasutajale @{{username}} sõnum'
-      description: 'Soovin selle isikuga tema postituse osas otse ja privaatselt suhelda.'
       long_form: 'saatsin kasutajale sõnumi'
       email_title: 'Sinu postitus teemas "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -679,7 +676,6 @@ et:
     max_post_length: "Maksimaalne lubatud postituse pikkus tähemärkides"
     min_topic_title_length: "Lühim lubatud teema pealkirja pikkus tähemärkides"
     max_topic_title_length: "Maksimaalne lubatud teema pealkirja pikkus tähemärkides"
-    min_personal_message_title_length: "Minimaalne lubatud teema pealkirja pikkus tähemärkides"
     enable_instagram_logins: "Luba autentimine Instagrami abil, nõuab instagram_consumer_key ja instagram_consumer_secret"
     instagram_consumer_key: "Teenusekasutaja avalik võti Instagrami abil autentimiseks"
     instagram_consumer_secret: "Teenusekasutaja salajane võti Instagrami abil autentimiseks"
@@ -734,7 +730,7 @@ et:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
-        %{message}
+          %{message}
     signup_after_approval:
       subject_template: "Oled saidil %{site_name} heaks kiidetud!"
   page_not_found:

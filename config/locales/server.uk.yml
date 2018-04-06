@@ -143,7 +143,6 @@ uk:
     member:
       title: "учасник"
   rate_limiter:
-    too_many_requests: "У нас є обмеження щодо того, скільки разів за добу можна виконати цю дію. Будь ласка, зачекайте %{time_left} перед тим, як спробувати ще раз."
     hours:
       one: "1 година"
       few: "%{count} години"
@@ -316,8 +315,6 @@ uk:
     min_password_length: "Мінімальна довжина пароля."
     enable_yahoo_logins: "Увімкнути вхід через Yahoo"
     enable_twitter_logins: "Увімкнути вхід через Twitter; потребує twitter_consumer_key та twitter_consumer_secret"
-    twitter_consumer_key: "Consumer key для входу через Twitter, зареєстрований на http://dev.twitter.com"
-    twitter_consumer_secret: "Consumer secret для входу через Twitter, зареєстрований на http://dev.twitter.com"
     enable_facebook_logins: "Увімкнути вхід через Facebook; потребує facebook_app_id та facebook_app_secret"
     facebook_app_id: "App id для входу через Facebook, зареєстрований на https://developers.facebook.com/apps"
     facebook_app_secret: "App secret для входу через Facebook, зареєстрований на https://developers.facebook.com/apps"

@@ -37,7 +37,7 @@ class Permalink < ActiveRecord::Base
       end
 
       if regex.length > 1
-        [Regexp.new(regex[1..-1]), sub[1..-1] || ""] rescue nil
+        [Regexp.new(regex[1..-1]), sub[1..-1] || ""]
       end
 
     end
@@ -101,8 +101,8 @@ end
 #  topic_id     :integer
 #  post_id      :integer
 #  category_id  :integer
-#  created_at   :datetime
-#  updated_at   :datetime
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
 #  external_url :string(1000)
 #
 # Indexes

@@ -1,3 +1,7 @@
+.topic-list.shared-drafts {
+  margin-bottom: 1.5em;
+}
+
 .show-more {
   width: 100%;
   z-index: z("base");
@@ -16,6 +20,8 @@
     }
   }
 }
+
+
 
 .topic-list-item.visited,
 .latest-topic-list-item.visited,
@@ -80,7 +86,7 @@
     }
   }
 
-  > tbody > tr:first-of-type {
+  > tbody  {
     border-top: 3px solid $primary-low;
   }
 
@@ -109,6 +115,12 @@
 
   .topic-featured-link {
     padding-left: 5px;
+  }
+
+  span.badge-category {
+    .category-name {
+      max-width: 150px;
+    }
   }
 
   .topic-excerpt {

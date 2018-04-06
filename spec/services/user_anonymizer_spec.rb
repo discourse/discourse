@@ -101,8 +101,30 @@ describe UserAnonymizer do
       expect(user.uploaded_avatar_id).to eq(nil)
     end
 
-    it "logs the action" do
-      expect { make_anonymous }.to change { UserHistory.count }.by(1)
+    it "logs the action with the original details" do
+      SiteSetting.log_anonymizer_details = true
+      helper = UserAnonymizer.new(user, admin)
+      orig_email = user.email
+      orig_username = user.username
+      helper.make_anonymous
+
+      history = helper.user_history
+      expect(history).to be_present
+      expect(history.email).to eq(orig_email)
+      expect(history.details).to match(orig_username)
+    end
+
+    it "logs the action without the original details" do
+      SiteSetting.log_anonymizer_details = false
+      helper = UserAnonymizer.new(user, admin)
+      orig_email = user.email
+      orig_username = user.username
+      helper.make_anonymous
+
+      history = helper.user_history
+      expect(history).to be_present
+      expect(history.email).not_to eq(orig_email)
+      expect(history.details).not_to match(orig_username)
     end
 
     it "removes external auth assocations" do
@@ -112,6 +134,7 @@ describe UserAnonymizer do
       user.facebook_user_info = FacebookUserInfo.create(user_id: user.id, facebook_user_id: "example")
       user.single_sign_on_record = SingleSignOnRecord.create(user_id: user.id, external_id: "example", last_payload: "looks good")
       user.oauth2_user_info = Oauth2UserInfo.create(user_id: user.id, uid: "example", provider: "example")
+      user.instagram_user_info = InstagramUserInfo.create(user_id: user.id, screen_name: "example", instagram_user_id: "examplel123123")
       UserOpenId.create(user_id: user.id, email: user.email, url: "http://example.com/openid", active: true)
       make_anonymous
       user.reload
@@ -121,6 +144,7 @@ describe UserAnonymizer do
       expect(user.facebook_user_info).to eq(nil)
       expect(user.single_sign_on_record).to eq(nil)
       expect(user.oauth2_user_info).to eq(nil)
+      expect(user.instagram_user_info).to eq(nil)
       expect(user.user_open_ids.count).to eq(0)
     end
 

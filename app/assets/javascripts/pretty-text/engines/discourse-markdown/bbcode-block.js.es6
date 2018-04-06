@@ -51,6 +51,8 @@ export function parseBBCodeTag(src, start, max, multiline) {
         return;
       }
 
+      tag = tag.toLowerCase();
+
       return {tag, length: tag.length+3, closing: true};
     }
     return;

@@ -129,6 +129,16 @@ class Guardian
   alias :can_see_flags? :can_moderate?
   alias :can_close? :can_moderate?
 
+  def can_tag?(topic)
+    return false if topic.blank?
+
+    topic.private_message? ? can_tag_pms? : can_tag_topics?
+  end
+
+  def can_see_tags?(topic)
+    SiteSetting.tagging_enabled && topic.present? && (!topic.private_message? || can_tag_pms?)
+  end
+
   def can_send_activation_email?(user)
     user && is_staff? && !SiteSetting.must_approve_users?
   end
@@ -247,10 +257,13 @@ class Guardian
   def can_invite_to?(object, groups = nil)
     return false unless authenticated?
     return true if is_admin?
-    return false unless SiteSetting.enable_personal_messages?
     return false if (SiteSetting.max_invites_per_day.to_i == 0 && !is_staff?)
     return false unless can_see?(object)
     return false if groups.present?
+
+    if object.is_a?(Topic) && object.private_message?
+      return false unless SiteSetting.enable_personal_messages?
+    end
 
     if object.is_a?(Topic) && object.category
       if object.category.groups.any?

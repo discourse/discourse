@@ -37,7 +37,6 @@ sr:
       exclusion: je rezervisano
       greater_than: mora biti veće od %{count}
       contains_censored_words: "sadrži sledeće cenzurisane reči: 1%{censored_words}"
-      matches_censored_pattern: "sadrži sledeće reči koje se poklapaju sa registrom cenzurisanih reči: 1%{censored_wrods}"
       less_than: mora biti manje od 1%{count}
       not_a_number: nije broj
       not_an_integer: mora biti ceo broj
@@ -63,7 +62,6 @@ sr:
     start_discussion: "Započnite diskusiju"
     continue: "Nastavite diskusiju"
   no_links_allowed: "Žao nam je, novi korisnici ne mogu postavljati linkove u svoje postove."
-  contains_blocked_words: "Vaš post, sadrži reči koje nisu dozvoljene."
   user_is_suspended: "Suspendovanim korisnicima nije dozvoljeno da objavljuju postove."
   topic_not_found: "Nešto se dogodilo. Možda je tema zatvorena ili izbrisana dok ste je gledali?"
   not_accepting_pms: "Žao nam je, %{username} trenutno ne prihvata privatne poruke."
@@ -89,8 +87,6 @@ sr:
   groups:
     success:
       bulk_add: "%{users_added} korisnika je dodato grupi."
-    errors:
-      member_already_exist: "'%{username}' je postojeći član grupe."
     default_names:
       everyone: "svi"
       admins: "admini"
@@ -118,7 +114,6 @@ sr:
   site_settings:
     min_topic_title_length: "Minimalna dozvoljena dužina naslova teme u znakovima"
     max_topic_title_length: "Maksimalna dozvoljena dužina naslova teme u znakovima"
-    min_personal_message_title_length: "Minimalna dozvoljena dužina naslova poruke u znakovima"
     min_search_term_length: "Minimalna dozvoljena dužina termina za pretragu u znakovima"
     apple_touch_icon_url: "Ikonica koja se koristi za Apple touch uređaje. Preporučena veličina 144px sa 144px."
     max_replies_in_first_day: "Maksimalan broj odgovora koje korisnik može da kreira u prvih 24 sata nakon kreiranja svoje prve poruke."

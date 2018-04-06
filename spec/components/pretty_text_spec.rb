@@ -32,7 +32,7 @@ describe PrettyText do
 
         topic = Fabricate(:topic, title: "this is a test topic :slight_smile:")
         expected = <<~HTML
-          <aside class="quote" data-post="2" data-topic="#{topic.id}">
+          <aside class="quote no-group" data-post="2" data-topic="#{topic.id}">
           <div class="title">
           <div class="quote-controls"></div>
           <a href="http://test.localhost/t/this-is-a-test-topic-slight-smile/#{topic.id}/2">This is a test topic <img src="/images/emoji/twitter/slight_smile.png?v=5" title="slight_smile" alt="slight_smile" class="emoji"></a>
@@ -55,7 +55,7 @@ describe PrettyText do
           [/quote]
         MD
         html = <<~HTML
-          <aside class="quote" data-post="123" data-topic="456" data-full="true">
+          <aside class="quote no-group" data-post="123" data-topic="456" data-full="true">
           <div class="title">
           <div class="quote-controls"></div>
           <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
@@ -77,7 +77,7 @@ describe PrettyText do
           [/quote]
         MD
         html = <<~HTML
-          <aside class="quote" data-post="123" data-topic="456" data-full="true">
+          <aside class="quote no-group" data-post="123" data-topic="456" data-full="true">
           <div class="title">
           <div class="quote-controls"></div>
           <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
@@ -98,7 +98,7 @@ describe PrettyText do
         MD
 
         html = <<~HTML
-          <aside class="quote" data-post="555" data-topic="666">
+          <aside class="quote no-group" data-post="555" data-topic="666">
           <div class="title">
           <div class="quote-controls"></div>
           <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
@@ -144,7 +144,7 @@ describe PrettyText do
       cooked = PrettyText.cook("[quote]te **s** t[/quote]")
 
       html = <<~HTML
-        <aside class="quote">
+        <aside class="quote no-group">
         <blockquote>
         <p>te <strong>s</strong> t</p>
         </blockquote>
@@ -389,7 +389,7 @@ describe PrettyText do
       end
 
       it "should keep details if too long" do
-        expect(PrettyText.excerpt("<details><summary>expand</summary><p>hello</p></details>", 30)).to match_html "<details class='disabled'><summary>expand</summary></details>"
+        expect(PrettyText.excerpt("<details><summary>expand</summary><p>hello</p></details>", 6)).to match_html "<details class='disabled'><summary>expand</summary></details>"
       end
 
       it "doesn't disable details if short enough" do
@@ -776,15 +776,6 @@ describe PrettyText do
     end
   end
 
-  describe "censored_pattern site setting" do
-    it "can be cleared if it causes cooking to timeout" do
-      SiteSetting.censored_pattern = "evilregex"
-      described_class.stubs(:markdown).raises(MiniRacer::ScriptTerminatedError)
-      PrettyText.cook("Protect against it plz.") rescue nil
-      expect(SiteSetting.censored_pattern).to be_blank
-    end
-  end
-
   it "replaces skin toned emoji" do
     expect(PrettyText.cook("hello 👱🏿‍♀️")).to eq("<p>hello <img src=\"/images/emoji/twitter/blonde_woman/6.png?v=5\" title=\":blonde_woman:t6:\" class=\"emoji\" alt=\":blonde_woman:t6:\"></p>")
     expect(PrettyText.cook("hello 👩‍🎤")).to eq("<p>hello <img src=\"/images/emoji/twitter/woman_singer.png?v=5\" title=\":woman_singer:\" class=\"emoji\" alt=\":woman_singer:\"></p>")
@@ -952,10 +943,8 @@ HTML
     SiteSetting.enable_inline_onebox_on_all_domains = true
     InlineOneboxer.purge("http://cnn.com/a")
 
-    stub_request(:head, "http://cnn.com/a").to_return(status: 200)
-
     stub_request(:get, "http://cnn.com/a").
-      to_return(status: 200, body: "<html><head><title>news</title></head></html>", headers: {})
+      to_return(status: 200, body: "<html><head><title>news</title></head></html>")
 
     expect(PrettyText.cook("- http://cnn.com/a\n- a http://cnn.com/a").split("news").length).to eq(3)
     expect(PrettyText.cook("- http://cnn.com/a\n    - a http://cnn.com/a").split("news").length).to eq(3)
@@ -965,10 +954,8 @@ HTML
     SiteSetting.enable_inline_onebox_on_all_domains = true
     InlineOneboxer.purge("http://cnn.com?a")
 
-    stub_request(:head, "http://cnn.com?a").to_return(status: 200)
-
     stub_request(:get, "http://cnn.com?a").
-      to_return(status: 200, body: "<html><head><title>news</title></head></html>", headers: {})
+      to_return(status: 200, body: "<html><head><title>news</title></head></html>")
 
     expect(PrettyText.cook("- http://cnn.com?a\n- a http://cnn.com?a").split("news").length).to eq(3)
     expect(PrettyText.cook("- http://cnn.com?a\n    - a http://cnn.com?a").split("news").length).to eq(3)
@@ -981,9 +968,8 @@ HTML
     SiteSetting.enable_inline_onebox_on_all_domains = true
     InlineOneboxer.purge("http://cnn.com/")
 
-    stub_request(:head, "http://cnn.com/").to_return(status: 200)
     stub_request(:get, "http://cnn.com/").
-      to_return(status: 200, body: "<html><head><title>news</title></head></html>", headers: {})
+      to_return(status: 200, body: "<html><head><title>news</title></head></html>")
 
     expect(PrettyText.cook("- http://cnn.com/\n- a http://cnn.com/").split("news").length).to eq(1)
     expect(PrettyText.cook("- cnn.com\n    - a http://cnn.com/").split("news").length).to eq(1)
@@ -1274,6 +1260,11 @@ HTML
     html = <<~HTML
       <p>www.cnn.com test.it http://test.com https://test.ab https://a</p>
     HTML
+  end
+
+  it "has a proper data whitlist on div" do
+    cooked = PrettyText.cook("<div data-theme-a='a'>test</div>")
+    expect(cooked).to include("data-theme-a")
   end
 
 end

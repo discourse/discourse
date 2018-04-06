@@ -28,7 +28,6 @@ zh_CN:
     default_cannot_be_made_public: "投票调查不能公开。"
     named_cannot_be_made_public: "投票“<strong>%{name}</strong>”有投票不能公开。"
     edit_window_expired:
-      cannot_change_polls: "在创建话题%{minutes}分钟后，你不可以增加、删除或者重命名该投票。"
       op_cannot_edit_options: "在创建话题%{minutes}分钟后，你不可以增加、删除投票选项。如果你需要修改投票选项，请联系管理员。"
       staff_cannot_add_or_remove_options: "在创建话题%{minutes}分钟后，你不能增加或者删除投票选项。你可以选择删除该话题然后重新创建一个。"
     no_polls_associated_with_this_post: "这个帖子中没有投票。"

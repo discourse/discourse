@@ -63,7 +63,24 @@
         {{i18n 'user.change_password.action'}}
       {{/if}}
     </a>
+
     {{passwordProgress}}
+  </div>
+
+  <div class="controls pref-second-factor">
+    {{#if model.second_factor_enabled}}
+      {{i18n 'user.second_factor.disable'}}
+    {{else}}
+      {{i18n 'enable'}}
+      <a href {{action "showTwoFactorModal"}}>{{showTwoFactorModalText}}</a>
+      {{i18n 'user.second_factor.enable'}}
+    {{/if}}
+
+    {{#if isCurrentUser}}
+      {{#link-to "preferences.second-factor" class="btn btn-small btn-icon pad-left no-text"}}
+        {{d-icon "pencil"}}
+      {{/link-to}}
+    {{/if}}
   </div>
 </div>
 {{/if}}

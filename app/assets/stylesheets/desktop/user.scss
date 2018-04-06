@@ -8,6 +8,10 @@
       margin-top: 10px;
     }
   }
+
+  .show-mores {
+    position: absolute;
+  }
 }
 
 .profile-image {
@@ -75,6 +79,11 @@
   margin-bottom: 10px;
   box-sizing: border-box;
 
+  &.user-badges-list {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
   .btn.right {
     float: right
   }
@@ -89,6 +98,10 @@
     max-width: 45px;
     max-height: 45px;
   }
+}
+
+.pref-second-factor {
+  margin-top: 10px;
 }
 
 .user-invite-list {
@@ -279,10 +292,12 @@
     width: 530px;
   }
 
+  .category-selector, .tag-chooser {
+    width: 530px;
+  }
+
   input {
-    &.category-selector,
-    &.user-selector,
-    &.tag-chooser {
+    &.user-selector {
       width: 530px;
     }
 

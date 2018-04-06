@@ -6,7 +6,7 @@ export default Ember.Component.extend({
 
   tagName: 'button',
   classNameBindings: [':btn', 'noText', 'btnType'],
-  attributeBindings: ['disabled', 'translatedTitle:title', 'tabindex'],
+  attributeBindings: ['disabled', 'translatedTitle:title', 'translatedTitle:aria-label', 'tabindex'],
 
   btnIcon: Ember.computed.notEmpty('icon'),
 
@@ -23,7 +23,7 @@ export default Ember.Component.extend({
 
   @computed("title")
   translatedTitle(title) {
-    return title ? I18n.t(title) : this.get('translatedLabel');
+    if (title) return I18n.t(title);
   },
 
   @computed("label")

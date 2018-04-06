@@ -32,6 +32,21 @@ describe User do
         end
       end
 
+      context 'with title emoji disabled' do
+        before do
+          SiteSetting.disable_discourse_narrative_bot_welcome_post = false
+          SiteSetting.max_emojis_in_title = 0
+        end
+
+        it 'initiates the bot' do
+          expect { user }.to change { Topic.count }.by(1)
+
+          expect(Topic.last.title).to eq(I18n.t(
+            'discourse_narrative_bot.new_user_narrative.hello.title'
+          ).gsub(/:robot:/, '').strip)
+        end
+      end
+
       context 'enabled' do
         before do
           SiteSetting.disable_discourse_narrative_bot_welcome_post = false

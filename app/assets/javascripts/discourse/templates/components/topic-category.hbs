@@ -1,17 +1,18 @@
-{{#if topic.category.parentCategory}}
-  {{bound-category-link topic.category.parentCategory}}
-{{/if}}
-{{bound-category-link topic.category hideParent=true}}
+{{#unless topic.isPrivateMessage}}
+  {{#if topic.category.parentCategory}}
+    {{bound-category-link topic.category.parentCategory}}
+  {{/if}}
+  {{bound-category-link topic.category hideParent=true}}
+{{/unless}}
 <div class="topic-header-extra">
   {{#if siteSettings.tagging_enabled}}
     <div class="list-tags">
-      {{#each topic.tags as |t|}}
-        {{discourse-tag t}}
-      {{/each}}
+      {{discourse-tags topic mode="list"}}
     </div>
   {{/if}}
   {{#if siteSettings.topic_featured_link_enabled}}
     {{topic-featured-link topic}}
   {{/if}}
 </div>
+
 {{plugin-outlet name="topic-category" args=(hash topic=topic category=topic.category)}}

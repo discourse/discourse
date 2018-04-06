@@ -72,7 +72,6 @@ ca:
       invalid: és invàlid
       is_invalid: "no sembla clar, és una frase sencera?"
       contains_censored_words: "hi conté els següents mots censurats: %{censored_words}"
-      matches_censored_pattern: "hi conté els següents mots que coincideixen amb les expressions regulars censurades del lloc: %{censored_words}"
       less_than: ha de ser menys de %{count}
       less_than_or_equal_to: ha de ser igual o menor a %{count}
       not_a_number: no és una xifra
@@ -204,7 +203,6 @@ ca:
   groups:
     errors:
       can_not_modify_automatic: "No pots modificar un grup automàtic"
-      member_already_exist: "'%{username}' ja és membre d'aquest grup."
       invalid_domain: "'%{domain}' no és un domini vàlid."
       invalid_incoming_email: "'%{email}' no és una adreça vàlida de correu electrònic."
       email_already_used_in_group: "'%{email}' ja és fa servir pel grup '%{group_name}'."
@@ -324,41 +322,41 @@ ca:
     title: "Benvinguda o benvingut a Discourse"
     body: |2
 
-      El primer paràgraf d'aquest tema fixat será visible com a missatge de benvinguda per a totes les noves visites a la teva pàgina principal. És important!
+        El primer paràgraf d'aquest tema fixat será visible com a missatge de benvinguda per a totes les noves visites a la teva pàgina principal. És important!
 
-      **Edita això** per a una breu descripció de la teva comunitat:
+        **Edita això** per a una breu descripció de la teva comunitat:
 
-      - Per a qui és?
-      - Què hi poden trobar?
-      - Per què haurien de venir aquí?
-      - On poden llegir-ne més (enllaços, recursos, etcètera)?
+        - Per a qui és?
+        - Què hi poden trobar?
+        - Per què haurien de venir aquí?
+        - On poden llegir-ne més (enllaços, recursos, etcètera)?
 
-      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
-      Potser desitges tancar aquest tema amb l'eina d'adminstració :wrench: (dalt a la dreta i abaix), perquè les respostes no s'amunteguin sobre un anunci.
+        Potser desitges tancar aquest tema amb l'eina d'adminstració :wrench: (dalt a la dreta i abaix), perquè les respostes no s'amunteguin sobre un anunci.
   lounge_welcome:
     title: "Et donem la benvinguda al saló"
     body: |2
 
-      Enhorabona! :confetti_ball:
+        Enhorabona! :confetti_ball:
 
-      Si pots veure aquest tema, se t'ha promogut recentment a **regular** (nivell 3 de confiança).
+        Si pots veure aquest tema, se t'ha promogut recentment a **regular** (nivell 3 de confiança).
 
-      Ara pots &hellip;
+        Ara pots &hellip;
 
-      * Editar el títol de qualsevol tema
-      * Canviar la categoria de qualsevol tema
-      * Tenir tots els teus enllaços seguits ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) és esborrat)
-      * Accedir a la categoria privada de Saló només visible per a persones usuàries a nivell 3 de confiança i superior
-      * Amagar correu brossa amb una única bandera
+        * Editar el títol de qualsevol tema
+        * Canviar la categoria de qualsevol tema
+        * Tenir tots els teus enllaços seguits ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) és esborrat)
+        * Accedir a la categoria privada de Saló només visible per a persones usuàries a nivell 3 de confiança i superior
+        * Amagar correu brossa amb una única bandera
 
-      Vet aquí la llista [current list of fellow regulars](/badges/3/regular). Assegura't d'enviar-hi una salutació.
+        Vet aquí la llista [current list of fellow regulars](/badges/3/regular). Assegura't d'enviar-hi una salutació.
 
-      Gràcies per formar part d'una part important d'aquesta comunitat!
+        Gràcies per formar part d'una part important d'aquesta comunitat!
 
-      (Per a més informació sobre nivell de confiança [see this topic][trust]. Si us plau, fixa't que només membres que continuen reunint els requisits seguiran essent ordinaris).
+        (Per a més informació sobre nivell de confiança [see this topic][trust]. Si us plau, fixa't que només membres que continuen reunint els requisits seguiran essent ordinaris).
 
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Sobre la categoria %{category} "
     replace_paragraph: "(Reemplaça aquest primer paràgraf amb una breu descripció de la teva nova categoria. Aquesta guia apareixerà a l'àrea de selecció de categoria, perquè s'hi pugui mantenir per sota de 200 caràcters. **Fins que no editis aquesta descripció o en creïs temes, aquesta categoria no apareixerà a la pàgina de categories.**)"
@@ -392,7 +390,6 @@ ca:
     change_failed_explanation: "Has provat de degradar %{user_name} a '%{new_trust_level}'. En qualsevol cas, el seu nivell de confiança ja és '%{current_trust_level}'. %{user_name} restarà a '%{current_trust_level}' - Si vols degradar una persona usuària, bloca-li abans el nivell de confiança"
   rate_limiter:
     slow_down: "Has provat de fer el mateix moltes vegades, prova-ho més tard."
-    too_many_requests: "Tenim un límit diari sobre quants cops es pot realitzar aquesta acció. Si us plau, espera %{time_left} abans de tornar a provar-ho."
     by_type:
       first_day_replies_per_day: "Has arribat a la quantitat màxima de respostes que una nova persona usuària pot crear durant el seu primer dia. Si us plau, espera %{time_left} abans de tornar a provar-ho."
       first_day_topics_per_day: "Has arribat a la quantitat màxima de temes que una nova persona usuària pot crear durant el seu primer dia. Si us plau, espera %{time_left} abans de tornar a provar-ho."
@@ -529,7 +526,6 @@ ca:
       long_form: 'marcar amb bandera d''inapropiat'
     notify_user:
       title: 'Envia un missatge a @{{username}}'
-      description: 'Vull parlar directament i privadament amb aquesta persona sobre la seva publicació.'
       long_form: 'persona contactada'
       email_title: 'La teva publicació a "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -771,25 +767,21 @@ ca:
     email_polling_errored_recently:
       one: "L'enquesta per correu electrònic ha generat un error durant les darreres 24 hores. Fes un cop d'ull als <a href='/logs' target='_blank'>registres</a> per saber-ne més."
       other: "L'enquesta per correu electrònic ha generat %{count} errors durant les darreres 24 hores. Fes un cop d'ull als <a href='/logs' target='_blank'>registres</a> per saber-ne més."
-    missing_mailgun_api_key: "El servidor està configurat per enviar correus amb <i>mailgun</i> però no has facilitat una clau API emprada per verificar els missatges de ganxo de web."
     bad_favicon_url: "La càrrega de <i>favicon</i> està fallant. Revisa la configuració de favicon_url a la <a href='/admin/site_settings'>Configuració del lloc</a>."
     poll_pop3_timeout: "S'ha esgotat del temps de connexió al servidor POP3. No s'ha pogut lliurar el correu entrant. Si us plau, revisa la teva <a href='/admin/site_settings/category/email'>configuració de POP3</a> i el proveïdor de serveis."
     poll_pop3_auth_error: "La connexió al servidor POP3 està fallant amb un error d'autenticació. Si us plau, revisa la teva <a href='/admin/site_settings/category/email'>configuració de POP3</a>."
   site_settings:
     censored_words: "Paraules que es reemplaçaran automàticament amb  &#9632;&#9632;&#9632;&#9632;"
-    censored_pattern: "Patró d'expressió regular que serà reemplaçat automàticament amb  &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Esborra automàticament qualsevol publicació que resten oculta durant més de 30 dies."
     allow_user_locale: "Permet que les persones usuàries triïn la seva preferència de llengua d'interfície"
     set_locale_from_accept_language_header: "configura la llengua d'interfície per a persones anònimes des dels encapçalaments dels seus navegadors. (EXPERIMENTAL, no funciona amb memòria cau anònima)"
     min_post_length: "Mínim permès en caràcters per a l'extensió de publicacions "
     min_first_post_length: "Mínim permès en caràcters per a l'extensió de primera publicació (cos del tema)"
-    min_personal_message_post_length: "Mínim permès en caràcters per a l'extensió de publicacions a missatges"
     max_post_length: "Màxim permès en caràcters per a l'extensió de publicacions "
     topic_featured_link_enabled: "Activa la publicació d'enllaç amb temes."
     show_topic_featured_link_in_digest: "Mostra el tema de l'enllaç destacat al correu electrònic de resum automàtic."
     min_topic_title_length: "Mida mínima permesa del títol del tema en caràcters  "
     max_topic_title_length: "Mida màxima permesa del títol del tema en caràcters  "
-    min_personal_message_title_length: "Mida mínima permesa del títol d'un missatge en caràcters  "
     min_search_term_length: "Mida mínima permesa d'un camp de cerca en caràcters  "
     search_tokenize_chinese_japanese_korean: "Força la cerca per assegurar les dades en Xinès/Japonès/Coreà fins i tot en llocs que no siguin en aquestes llengües"
     search_prefer_recent_posts: "Si la cerca al teu fòrum va lenta, aquesta opció prova primer amb un índex de publicacions recents"
@@ -835,7 +827,6 @@ ca:
     summary_likes_required: "Mínim nombre de m'agrades a un tema abans d'activar 'Resumeix aquest tema'"
     summary_percent_filter: "Quan una persona clica 'Resumeix aquest tema', mostra el '% o' principal de publicacions"
     summary_max_results: "Màxim de publicacions resultat de 'Resumeix aquest tema'"
-    enable_personal_messages: "Permet que les persones amb nivell de confiança 1 puguin crear missatges i respondre'ls (configurable amb el mínim de nivell de confiança per enviar missatges). Fixa't que l'equip sempre pot enviar qualsevol mena de missatges."
     enable_long_polling: "El bus de missatges emprat per a la notificació pot fer servir el mostreig llarg"
     long_polling_base_url: "La URL bàsica emprada per a mostreig llarg (quan una xarxa de lliurament de continguts serveix contingut dinàmic, assegura't de configurar-ho per llençar l'origen). Per exemple, http://origin.site.com"
     long_polling_interval: "Quantitat de temps que el servidor hauria d'esperar abans de respondre clients quan no hi ha dades d'enviament (connectat només a persones usuàries)"
@@ -917,8 +908,6 @@ ca:
     google_oauth2_client_id: "ID de client a la teva aplicació Google."
     google_oauth2_client_secret: "Client secret a la teva aplicació Google."
     enable_twitter_logins: "Activar l'autenticació de Twitter, necessita twitter_consumer_key i twitter_consumer_secret"
-    twitter_consumer_key: "Clau de consum per a l'autenticació amb Twitter, registrada a http://dev.twitter.com"
-    twitter_consumer_secret: "Secret de consum per a l'autenticació amb Twitter, registrat a http://dev.twitter.com"
     enable_instagram_logins: "Activa l'autenticació amb Instagram, necessita instagram_consumer_key i instagram_consumer_secret"
     instagram_consumer_key: "Clau de consum per a l'autenticació amb Instagram"
     instagram_consumer_secret: "Secret de consum per a l'autenticació amb Instagram"
@@ -933,7 +922,6 @@ ca:
     allow_restore: "Permet restablir, que pot reemplaçar TOTES les dades del lloc! Deixa-ho com a \"false\" si no pretens restablir una còpia de seguretat"
     maximum_backups: "Quantitat màxima de còpies de seguretat per mantenir al disc. Les còpies més antigues seran esborrades automàticament"
     automatic_backups_enabled: "Executa còpies de seguretat automàtiques tal com estan definides a la freqüències de la còpia de seguretat"
-    backup_frequency: "Amb quina freqüència podem crear una còpia de seguretat del lloc, en dies."
     enable_s3_backups: "Carrega còpies de seguretat a S3 quan es completi. IMPORTANT: necessita credencials vàlides de S3 introduïdes a la configuració de fitxer."
     s3_backup_bucket: "Sistema remot de càrrega de còpies de seguretat. ATENCIÓ: Assegura't que és una càrrega privada."
     s3_disable_cleanup: "Inhabilita l'eliminació de còpies de seguretat de S3 quan s'eliminin localment."
@@ -955,7 +943,6 @@ ca:
     max_bookmarks_per_day: "Quantitat màxima de preferits per persona i dia."
     max_edits_per_day: "Quantitat màxima d'edicions per persona i dia."
     max_topics_per_day: "Quantitat màxima de temes que una persona pot crear cada dia."
-    max_personal_messages_per_day: "Quantitat màxima de missatges que una persona pot crear cada dia."
     max_invites_per_day: "Quantitat màxima d'invitacions que una persona pot enviar cada dia."
     max_topic_invitations_per_day: "Quantitat màxima d'invitacions a temes que una persona por enviar cada dia."
     alert_admins_if_errors_per_minute: "Quantitat d'errors per minut per desencadenar una alerta admin. Un valor 0 inhabilita aquesta característica. NOTA: cal reiniciar."
@@ -1019,7 +1006,6 @@ ca:
     max_users_notified_per_group_mention: "Quantitat màxima de persones que poden rebre alertes si un grup és mencionat (si el valor límit no troba alertes, serà augmentat)"
     create_thumbnails: "Crea miniatures i finestres d'imatge de massa amplada per cabre a una publicació."
     email_time_window_mins: "Espera (n) minuts abans d'enviar qualsevol alerta de correu, per tal de possibilitar l'edició i la finalització de les publicacions."
-    personal_email_time_window_seconds: "Espera (n) segons abans d'enviar qualsevol correu privat d'alerta, per tal de possibilitar l'edició i la finalització dels missatges."
     email_posts_context: "Quantes respostes prèvies per incloure com a context a correus d'alerta."
     flush_timings_secs: "Amb quanta freqüència descarreguem al servidor les dades de temporització, en segons."
     title_max_word_length: "La mida màxima permesa de la paraula, en caràcters al títol d'un tema."
@@ -1181,7 +1167,6 @@ ca:
     code_formatting_style: "El botó de codi al compositor serà per defecte d'aquest estil de format de codi"
     default_email_digest_frequency: "Amb quina freqüència les persones rebran els correus resumits per defecte."
     default_include_tl0_in_digests: "Inclou publicacions de noves persones a correus resumits per defecte. Les persones ho poden canviar a les seves preferències."
-    default_email_personal_messages: "Envia un correu s'enviïn missatges a la persona usuària per defecte."
     default_email_direct: "Envia un correu quan se citi/respongui/mencioni la persona usuària o persones convidades per defecte."
     default_email_mailing_list_mode: "Envia un correu per a cada nova publicació per defecte."
     default_email_mailing_list_mode_frequency: "Per defecte, les persones que activen el mode llista de correu rebran correus amb aquesta freqüència."
@@ -1382,47 +1367,6 @@ ca:
     subject_template: "Estableix contrasenya per al teu compte de %{site_name}"
   test_mailer:
     title: "Prova remitent"
-    text_body_template: |
-      Aquest és un correu de
-
-      [**%{base_url}**][0]
-
-      La subministrabilitat del correu és complicada. Aquí hi ha algunes coses importants que hauries de revisar primer:
-
-      - "Assegura't" de d'establir correctament el de: de `notification email` a la teva configuració del lloc. **El domini especificat a l'adreça "de" dels correus que enviïs és el domini que tornarà a validar-se**.
-
-      - Sàpigues com veure el codi font dels missatges al teu client de correu, per tal que puguis examinar els encapçalaments per a pistes importants. A Gmail, es mostra a l'opció  "mostra l'original" al menú desplegable de la part superior dreta de cada missatge.
-
-      - **IMPORTANT:** La teva ISP té un registre de DNS inversa per associar els noms de dominis i les adreces IP que envies des del correu? [Prova el teu registre Revers PTR][2] aquí. Si la teva ISP no introdueix el registre adequat de DNS inversa, no és gaire provable que rebis cap correu.
-
-      - És correcte el [registre SPF][8] de domini? [Prova el teu registre SPF][1] aquí. Fixa't que TXT és el registre correcte oficial per a SPF.
-
-      - És correcte el teu domini [DKIM record][3]? Això millorarà força la lliurabilitat del correu. [Test your DKIM record][7] here.
-
-      - Si executes el teu propi servidor de correu, revisa per assegurar-te que les IP del teu servidor de correu no són [a cap de les meves llistes negres][4]. Verifica també que segur que envia un nom d'amfitrió totalment qualifiicat que resol la DNS al seu missatge HELO. En cas contrari, això farà que el teu correu sigui rebutjat per molts serveis de correu.
-
-      - Et recomanem **envia un correu de prova a [mail-tester.com][mt]** per tal de verificar que tot l'esmentat funcioni correctament.
-
-      (La manera "fàcil* és crear un compte lliure a [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] o [Mailjet][mj], que són generosos amb plans de correu gratuïts i funcionarà per a la majoria de comunitats petites. Encara et caldrà configurar els registres SPF i DKIM a la teva DNS!)
-
-      Esperem que hagis rebut correctament aquesta prova de subministrabilitat de correu!
-
-      Bona sort,
-
-      La teva gent a [Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: http://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing
-      [mt]: http://www.mail-tester.com/
   new_version_mailer:
     title: "Nova versió remitent"
   new_version_mailer_with_notes:
@@ -1759,7 +1703,7 @@ ca:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
-        %{message}
+          %{message}
     digest:
       why: "Un breu resum de %{site_link} des de la teva darrera visita a %{last_seen_at}"
       since_last_visit: "Des de la teva darrera visita"
@@ -1966,8 +1910,6 @@ ca:
     promoter:
       name: Promoció
       description: Ha convidat una persona
-      long_description: |
-        Aquesta insígnia es concedeix quan invites algú a participar de la comunitat via el botó d'invitar en la teva pàgina d'usuari o al capdavall d'un tema. Invitar amics que puguin estar interessats en la conversa és una gran manera d'introduir nous membres a la comunitat, o sigui que gràcies!
     campaigner:
       name: Activista
       description: Ha convidat 3 persones usuàries bàsiques
@@ -2064,8 +2006,6 @@ ca:
     first_emoji:
       name: Primer emoji
       description: Ha fet servir un emoji a una publicació
-      long_description: |
-        Aquest distintiu es concedeix el primer cop que afegeixes un Emoji a la teva publicació :thumbsup:. L'Emoji et permet donar emoció a les teves publicacions, des de la felicitat :smiley: a la tristor :anguished: o l'empipament :angry: i qualsevol cosa amb :sunglasses: . Senzillament escriu : (dos punts) o clica la barra d'eines d'Emoji a l'editor per triar-ne entre centenars de possibilitats :ok_hand:
     first_mention:
       name: Primera menció
       long_description: Aquest distintiu es concedeix el primer cop que menciones  @username d'algú a la teva publicació. Cada menció genera una alerta a aquella persona, perquè sàpiga de la teva publicació. Senzillament comença a escriure @ (símbol arrova) per mencionar qualsevol persona o grup, si està permès – és una forma interessant de cridar la seva atenció.

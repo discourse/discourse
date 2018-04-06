@@ -1,5 +1,6 @@
 import DropdownSelectBox from "select-kit/components/dropdown-select-box";
 import computed from "ember-addons/ember-computed-decorators";
+const { get } = Ember;
 
 export default DropdownSelectBox.extend({
   classNames: ["delete-flag", "admin-delete-flag-dropdown"],
@@ -8,7 +9,7 @@ export default DropdownSelectBox.extend({
   headerIcon: "trash-o",
 
   computeHeaderContent() {
-    let content = this.baseHeaderComputedContent();
+    let content = this._super();
     content.name = `${I18n.t("admin.flags.delete")}...`;
     return content;
   },
@@ -55,7 +56,7 @@ export default DropdownSelectBox.extend({
 
   mutateValue(value) {
     const computedContentItem = this.get("computedContent").findBy("value", value);
-    Ember.get(computedContentItem, "originalContent.action")();
+    get(computedContentItem, "originalContent.action")();
   },
 
   actions: {

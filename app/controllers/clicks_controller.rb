@@ -1,4 +1,5 @@
 class ClicksController < ApplicationController
+  layout "no_ember"
 
   skip_before_action :check_xhr, :preload_json
 
@@ -19,10 +20,12 @@ class ClicksController < ApplicationController
 
     # Sometimes we want to record a link without a 302.
     # Since XHR has to load the redirected URL we want it to not return a 302 in those cases.
-    if params[:redirect] == "false" || @redirect_url.blank?
+    if params[:redirect] == "false"
       render body: nil
-    else
+    elsif @redirect_url.present?
       redirect_to(@redirect_url)
+    else
+      render
     end
   end
 

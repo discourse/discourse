@@ -28,7 +28,6 @@ nl:
     default_cannot_be_made_public: "De poll met stemmen kan niet openbaar worden gemaakt."
     named_cannot_be_made_public: "De poll met de naam <strong>%{name}</strong> heeft stemmen die niet openbaar kunnen worden gemaakt."
     edit_window_expired:
-      cannot_change_polls: "U kunt na %{minutes} minuten geen polls meer toevoegen, verwijderen of hernoemen."
       op_cannot_edit_options: "U kunt na %{minutes} minuten geen pollopties meer toevoegen of verwijderen. Neem contact op met een moderator als u een polloptie dient te bewerken."
       staff_cannot_add_or_remove_options: "U kunt na %{minutes} minuten geen pollopties meer toevoegen of verwijderen. U dient daarom dit topic te sluiten en een nieuw topic aan te maken."
     no_polls_associated_with_this_post: "Er zijn geen polls aan dit bericht gekoppeld."

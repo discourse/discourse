@@ -6,7 +6,7 @@ body.crawler {
     z-index: z("max");
     background-color: #fff;
     padding: 10px;
-    box-shadow: 0 2px 4px -1px rgba(0,0,0,0.25);
+    box-shadow: shadow("header");
   }
   div.topic-list div[itemprop='itemListElement'] {
     padding: 10px 0;

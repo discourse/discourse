@@ -26,7 +26,7 @@ export default {
     }
 
     // don't track links in quotes or in elided part
-    let tracking = $link.parents('aside.quote,.elided').length === 0;
+    let tracking = $link.parents('aside.quote, .elided').length === 0;
 
     let href = $link.attr('href') || $link.data('href');
 
@@ -113,8 +113,10 @@ export default {
       return false;
     }
 
+    const isInternal = DiscourseURL.isInternal(href);
+
     // If we're on the same site, use the router and track via AJAX
-    if (tracking && DiscourseURL.isInternal(href) && !$link.hasClass('attachment')) {
+    if (tracking && isInternal && !$link.hasClass('attachment')) {
       ajax("/clicks/track", {
         data: {
           url: href,
@@ -128,9 +130,11 @@ export default {
       return false;
     }
 
-    // Otherwise, use a custom URL with a redirect
-    // consider CTRL+mouse-left-click / CMD+mouse-left-click or mouse-middle-click as well
-    if (Discourse.User.currentProp('external_links_in_new_tab') || ((e.ctrlKey || e.metaKey) && (e.which === 1)) || (e.which === 2)) {
+    const modifierLeftClicked = (e.ctrlKey || e.metaKey) && e.which === 1;
+    const middleClicked = e.which === 2;
+    const openExternalInNewTab = Discourse.User.currentProp('external_links_in_new_tab');
+
+    if (modifierLeftClicked || middleClicked || (!isInternal && openExternalInNewTab)) {
       window.open(destUrl, '_blank').focus();
     } else {
       DiscourseURL.redirectTo(destUrl);

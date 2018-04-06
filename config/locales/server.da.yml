@@ -76,7 +76,6 @@ da:
       invalid: er ikke gyldig
       is_invalid: "virker upræcis, er det en hel sætning?"
       contains_censored_words: "indeholder følgende censurerede ord: %{censurerede ord}"
-      matches_censored_pattern: "indeholder følgende ord som matcher sitets censurerede regexp'er: %{censored_words}"
       less_than: skal være mindre end %{count}
       less_than_or_equal_to: skal være mindre end eller lig med %{count}
       not_a_number: er ikke et nummer
@@ -99,7 +98,7 @@ da:
     template:
       body: 'Der var problemer med følgende felter:'
       header:
-        one: Een fejl forhindrede denne %{model} for at gemme.
+        one: 'Een fejl forhindrede denne %{model} for at gemme.'
         other: '%{count} fejl forhindrede denne %{model} i at gemme.'
     embed:
       load_from_remote: "Der opstod en fejl ved indlæsningen af dette indlæg."
@@ -217,7 +216,6 @@ da:
       bulk_add: "%{users_added} brugere er blevet tilføjet til gruppen."
     errors:
       can_not_modify_automatic: "Du kan ikke modificere en automatisk gruppe"
-      member_already_exist: "'%{username}' er allerede medlem af denne gruppe."
       invalid_domain: "'%{domain}' er ikke et gyldigt domæne."
       invalid_incoming_email: "'%{email}' er ikke en gyldig email adresse."
       email_already_used_in_group: "'%{email}' er allerede brugt af en bruger i gruppen '%{group_name}'."
@@ -354,40 +352,40 @@ da:
     title: "Velkommen til Discourse"
     body: |2
 
-      Det første afsnit af dette fastgjorte emne vil kunne ses som en velkomstbesked for alle nye besøgende på din hjemmeside. Dette er vigtigt!
+        Det første afsnit af dette fastgjorte emne vil kunne ses som en velkomstbesked for alle nye besøgende på din hjemmeside. Dette er vigtigt!
 
-      **Redigér dette** til en kortfattet beskrivelse af dit fællesskab:
+        **Redigér dette** til en kortfattet beskrivelse af dit fællesskab:
 
-      - Hvem er det rettet mod?
-      - Hvad kan de finde her?
-      - Hvorfor bør de komme her?
-      - Hvor finde de mere information (links, ressourcer, osv.)?
-      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+        - Hvem er det rettet mod?
+        - Hvad kan de finde her?
+        - Hvorfor bør de komme her?
+        - Hvor finde de mere information (links, ressourcer, osv.)?
+        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
-      Du bør eventuelt lukke dette emne via administratorfunktionen :wrench: (øverst til højre og i bunden), således at der ikke hober sig svar op til denne meddelelse.
+        Du bør eventuelt lukke dette emne via administratorfunktionen :wrench: (øverst til højre og i bunden), således at der ikke hober sig svar op til denne meddelelse.
   lounge_welcome:
     title: "Velkommen i loungen"
     body: |2
 
-      Tillykke! :confetti_ball:
+        Tillykke! :confetti_ball:
 
-      Hvis du kan se dette er du nu vlevet opgraderet som **regular** (trust level 3) bruger.
+        Hvis du kan se dette er du nu vlevet opgraderet som **regular** (trust level 3) bruger.
 
-      Nu kan du &hellip;
+        Nu kan du &hellip;
 
-      * Rediger enhver emne titel
-      * Ændre alle kategorier og emner
-      * Følge alle links ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) ier fjernet)
-      * Få adgang til en privat lounge kategori kun synlig for brugere med Trust LEvel 3, eller højere
-      * Gemme spam - med et enkelt flag
+        * Rediger enhver emne titel
+        * Ændre alle kategorier og emner
+        * Følge alle links ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) ier fjernet)
+        * Få adgang til en privat lounge kategori kun synlig for brugere med Trust LEvel 3, eller højere
+        * Gemme spam - med et enkelt flag
 
-      Her er  [current list of fellow regulars](/badges/3/regular). Sving forbi og hils på!
+        Her er  [current list of fellow regulars](/badges/3/regular). Sving forbi og hils på!
 
-      Tak fordi du er en vigtig del af dette fællesskab!
+        Tak fordi du er en vigtig del af dette fællesskab!
 
-      (Formere information om Trust Levels [see this topic][trust]. Bemærk venligst at kun brugere der vedbliver at leve op til Trust Level betingelserne, vil have fortsat adgang)
+        (Formere information om Trust Levels [see this topic][trust]. Bemærk venligst at kun brugere der vedbliver at leve op til Trust Level betingelserne, vil have fortsat adgang)
 
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Kategoridefinition for %{category}"
     replace_paragraph: "(Beskriv din nye kategori her. Beskriv ramme og formål med kategori således at det er tydeligt for andre. Forsøg at holde beskrivelsen på max 200 tegn. **Kategorien vil ikke fremgå på kategori listen, før du har redigeret beskrivelsen, eller oprettet emner)."
@@ -421,7 +419,6 @@ da:
     change_failed_explanation: "Du har forsøgt at degradere %{user_name} til '%{new_trust_level}'. Imidlertid er deres niveau af tillid allerede '%{current_trust_level}'. %{user_name} vil forblive'%{current_trust_level}' - hvis du ønsker at degradere brugeren, skal du først låse brugerens tillids niveau / Trust Level"
   rate_limiter:
     slow_down: "Du har udført denne handling for mange gange, prøv igen senere"
-    too_many_requests: "Vi har en daglig grænse for hvor mange gange den pågældende handling kan udføres. Vent venligst %{time_left} før du prøver igen."
     by_type:
       first_day_replies_per_day: "Du har nået det maksimalt antal tilladte svar, en ny bruger kan lave på deres første dag. Vent venligst %{time_left} før du fortsætter med at besvare tanker og indlæg."
       first_day_topics_per_day: "Du har nået det maksimalt antal af tilladte emner, en ny bruger kan lave på første dag.\nVent venligst %{time_left} før du prøver igen."
@@ -566,7 +563,6 @@ da:
       long_form: 'markerede dette som stødende'
     notify_user:
       title: 'Send @{{username}} en besked'
-      description: 'Jeg ønsker at tale med denne person direkte om vedkommendes indlæg'
       long_form: 'sendt besked til brugeren'
       email_title: 'Dit indlæg i "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -807,25 +803,21 @@ da:
     email_polling_errored_recently:
       one: "Email afstemning har afstedkommet en fejl i de seneste 24 timer. Venligst se <a href='/logs' target='_blank'>the logs</a> for detaljer."
       other: "Email afstemning har afstedkommet %{count} fejl i de seneste 24 timer. Se venligst <a href='/logs' target='_blank'>the logs</a> for detaljer."
-    missing_mailgun_api_key: "Serveren er konfigureret til at sende emails via Mailgun, men der er ikke indtastet en API nøgle som bruges til at verificere webhook beskederne."
     bad_favicon_url: "Favicon kan ikke loades. Tjek dine favicon_url indstilling i  <a href='/admin/site_settings'>Site Settings</a>"
     poll_pop3_timeout: "Forbindelsen til til POP3 serveren er udløbet. Indkomne mail kunne ikke hentes. Venligst tjek  <a href='/admin/site_settings/category/email'>POP3 settings</a> og udbyderen."
     poll_pop3_auth_error: "Forbindelsen til POP3 serveren melder fejl. Venligst tjek <a href='/admin/site_settings/category/email'>POP3 settings</a>."
   site_settings:
     censored_words: "Ord der automatisk vil blive erstattet med &#9632;&#9632;&#9632;&#9632;"
-    censored_pattern: "Regex-mønster som automatisk vil blive erstattet med &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Slet automatisk skjulte indlæg der forbliver skjulte i mere end 30 dage."
     allow_user_locale: "Tillad brugere at vælge egne sprog præferencer på site"
     set_locale_from_accept_language_header: "set interface language for anonymous users from their web browser's language headers. (EXPERIMENTAL, does not work with anonymous cache)"
     min_post_length: "Minimumlængde tilladt for indlæg i tegn"
     min_first_post_length: "Minimum tilladte antal tegn (i emne felt) i første indlæg"
-    min_personal_message_post_length: "Minimumlængde tilladt for indlæg i tegn"
     max_post_length: "Maksimal længde af indlæg i tegn"
     topic_featured_link_enabled: "Tillad opslag af et link med emner."
     show_topic_featured_link_in_digest: "Vis link med det fremhævede emne i e-mail-sammendraget."
     min_topic_title_length: "Minimumslængde af emnetitel i tegn."
     max_topic_title_length: "Maksimumslængde af emnetitel i tegn."
-    min_personal_message_title_length: "Minimumslængde af emnetitel i tegn."
     min_search_term_length: "Antal tegn i søgefeltet skal have et minimum"
     search_tokenize_chinese_japanese_korean: "Tving søg til at \"tokenize\" Chinese/Japanese/Korean selv på sites som ikke er CJK"
     search_prefer_recent_posts: "Såfremt søgning på forum er langsomt, kan denne option indeksere og vise nyeste indlæg først"
@@ -869,7 +861,6 @@ da:
     summary_likes_required: "Minimum antal likes på et emne før 'opsummer dette emne' er aktiveret"
     summary_percent_filter: "Når en bruger kllikker 'Opsummer dette Emne' vises top % af indlæg"
     summary_max_results: "Max antal indlæg indeholdt i 'Opsummer dette Emne'"
-    enable_personal_messages: "Tillad Trust Level 1 (kan konfigureres minimum trust level til at sende beskeder), brugere til at sende og svare på beskeder. Bemærk at moderatorer beskeder, uanset hvad."
     enable_long_polling: "Message bus til underretninger kan bruge long polling"
     long_polling_base_url: "URL anvendt for afsteminger (når CDN leverer dynamisk indhold, så sæt dette til oprindelig / orginal) f.eks: http://origin.site.com"
     long_polling_interval: "Mængde tid før serveren bør vente før den svarer klienter når der ikke er ny data at sende (kun for brugere der er logget ind)"
@@ -918,8 +909,6 @@ da:
     google_oauth2_client_id: "Client ID of your Google application."
     google_oauth2_client_secret: "Client secret of your Google application."
     enable_twitter_logins: "Aktivér Twitter-login, kræver twitter_consumer_key og twitter_consumer_secret"
-    twitter_consumer_key: "Consumer key til Twitter-login, oprettes på http://dev.twitter.com."
-    twitter_consumer_secret: "Consumer secret til Twitter-login, oprettes på http://dev.twitter.com."
     enable_instagram_logins: "Aktivér Instagram-login, kræver instagram_consumer_key og instagram_consumer_secret"
     enable_facebook_logins: "Aktivér Facebook-login, kræver facebook_app_id og facebook_app_secret"
     facebook_app_id: "App id til Facebook-login, oprettes på https://developers.facebook.com/apps"
@@ -991,7 +980,6 @@ da:
     emoji_set: "Hvordan kunne du tænke dig din emoji?"
     default_email_digest_frequency: "Hvor ofte brugere som standard modtager mails med sammendrag."
     default_include_tl0_in_digests: "Inkluder som standard indlæg fra nye brugre i mails med sammendrag. Brugere kan ændre dette i deres indstillinger."
-    default_email_personal_messages: "Send som standard en email når nogen sender brugeren en besked."
     default_email_direct: "Send som standard en email når nogen citerer/svarer/nævner/inviterer brugeren."
     default_email_mailing_list_mode: "Send som standard en email for hvert nyt indlæg."
     default_email_always: "Send som standard en email-notifikation selv hvis brugeren er aktiv."
@@ -1389,7 +1377,7 @@ da:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
-        %{message}
+          %{message}
     digest:
       why: "Et kort resumé af %{site_link} siden dit sidste besøg %{last_seen_at}"
       since_last_visit: "Siden dit sidste besøg"

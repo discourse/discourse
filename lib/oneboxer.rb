@@ -1,3 +1,4 @@
+require 'uri'
 require_dependency "onebox/discourse_onebox_sanitize_config"
 require_dependency 'final_destination'
 
@@ -131,6 +132,7 @@ module Oneboxer
     end
 
     def self.onebox_raw(url, opts = {})
+      url = URI(url).to_s
       local_onebox(url, opts) || external_onebox(url)
     rescue => e
       # no point warning here, just cause we have an issue oneboxing a url
@@ -165,16 +167,33 @@ module Oneboxer
 
     def self.local_topic_html(url, route, opts)
       return unless current_user = User.find_by(id: opts[:user_id])
-      return unless current_category = Category.find_by(id: opts[:category_id])
-      return unless Guardian.new(current_user).can_see_category?(current_category)
 
-      if route[:post_number].to_i > 1
-        post = Post.find_by(topic_id: route[:topic_id], post_number: route[:post_number])
+      if current_category = Category.find_by(id: opts[:category_id])
+        return unless Guardian.new(current_user).can_see_category?(current_category)
+      end
 
-        return unless post.present? && !post.hidden
-        return unless current_category.id == post.topic.category_id || Guardian.new.can_see_post?(post)
+      if current_topic = Topic.find_by(id: opts[:topic_id])
+        return unless Guardian.new(current_user).can_see_topic?(current_topic)
+      end
 
-        topic = post.topic
+      topic = Topic.find_by(id: route[:topic_id])
+
+      return unless topic
+      return if topic.private_message?
+
+      if current_category&.id != topic.category_id
+        return unless Guardian.new.can_see_topic?(topic)
+      end
+
+      post_number = route[:post_number].to_i
+
+      post = post_number > 1 ?
+        topic.posts.where(post_number: post_number).first :
+        topic.ordered_posts.first
+
+      return if !post || post.hidden || post.post_type != Post.types[:regular]
+
+      if post_number > 1 && current_topic&.id == topic.id
         excerpt = post.excerpt(SiteSetting.post_onebox_maxlength)
         excerpt.gsub!(/[\r\n]+/, " ")
         excerpt.gsub!("[/quote]", "[quote]") # don't break my quote
@@ -183,18 +202,14 @@ module Oneboxer
 
         PrettyText.cook(quote)
       else
-        return unless topic = Topic.find_by(id: route[:topic_id])
-        return unless current_category.id == topic.category_id || Guardian.new.can_see_topic?(topic)
-
-        first_post = topic.ordered_posts.first
-
         args = {
           topic_id: topic.id,
-          avatar: PrettyText.avatar_img(topic.user.avatar_template, "tiny"),
+          post_number: post.post_number,
+          avatar: PrettyText.avatar_img(post.user.avatar_template, "tiny"),
           original_url: url,
           title: PrettyText.unescape_emoji(CGI::escapeHTML(topic.title)),
           category_html: CategoryBadge.html_for(topic.category),
-          quote: first_post.excerpt(SiteSetting.post_onebox_maxlength),
+          quote: PrettyText.unescape_emoji(post.excerpt(SiteSetting.post_onebox_maxlength)),
         }
 
         template = File.read("#{Rails.root}/lib/onebox/templates/discourse_topic_onebox.hbs")

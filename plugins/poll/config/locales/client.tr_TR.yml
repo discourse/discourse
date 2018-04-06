@@ -9,8 +9,10 @@ tr_TR:
   js:
     poll:
       voters:
+        one: "oylayan"
         other: "oylayan"
       total_votes:
+        one: "toplam oy"
         other: "toplam oy"
       average_rating: "Ortalama oran: <strong>%{average}</strong>."
       public:
@@ -18,10 +20,13 @@ tr_TR:
       multiple:
         help:
           at_least_min_options:
+            one: "En az <strong>%{count}</strong> seçecek seçiniz"
             other: "En az <strong>%{count}</strong> seçecek seçiniz"
           up_to_max_options:
+            one: "<strong>%{count}</strong> seçeneğe kadar seçebilirsiniz"
             other: "<strong>%{count}</strong> seçeneğe kadar seçebilirsiniz"
           x_options:
+            one: "<strong>%{count}</strong>  seçenek seçiniz"
             other: "<strong>%{count}</strong>  seçenek seçiniz"
           between_min_and_max_options: "<strong>%{min}</strong> ve <strong>%{max}</strong> arasında seçenek seçiniz"
       cast-votes:

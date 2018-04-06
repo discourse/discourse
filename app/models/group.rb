@@ -35,12 +35,15 @@ class Group < ActiveRecord::Base
   after_save :expire_cache
   after_destroy :expire_cache
 
+  after_commit :trigger_group_created_event, on: :create
+  after_commit :trigger_group_destroyed_event, on: :destroy
+
   def expire_cache
     ApplicationSerializer.expire_cache_fragment!("group_names")
   end
 
   validate :name_format_validator
-  validates :name, presence: true, uniqueness: { case_sensitive: false }
+  validates :name, presence: true
   validate :automatic_membership_email_domains_format_validator
   validate :incoming_email_validator
   validate :can_allow_membership_requests, if: :allow_membership_requests
@@ -81,8 +84,8 @@ class Group < ActiveRecord::Base
   validates :mentionable_level, inclusion: { in: ALIAS_LEVELS.values }
   validates :messageable_level, inclusion: { in: ALIAS_LEVELS.values }
 
-  scope :visible_groups, ->(user) {
-    groups = Group.order(name: :asc).where("groups.id > 0")
+  scope :visible_groups, Proc.new { |user, order|
+    groups = Group.order(order || "name ASC").where("groups.id > 0")
 
     unless user&.admin
       sql = <<~SQL
@@ -192,6 +195,7 @@ class Group < ActiveRecord::Base
       .references(:posts, :topics, :category)
       .where(user_id: user_ids)
       .where('topics.archetype <> ?', Archetype.private_message)
+      .where('topics.visible')
       .where(post_type: Post.types[:regular])
 
     if opts[:category_id].present?
@@ -433,6 +437,15 @@ class Group < ActiveRecord::Base
     end
   end
 
+  # given something that might be a group name, id, or record, return the group id
+  def self.group_id_from_param(group_param)
+    return group_param.id if group_param.is_a?(Group)
+    return group_param if group_param.is_a?(Integer)
+
+    # subtle, using Group[] ensures the group exists in the DB
+    Group[group_param.to_sym].id
+  end
+
   def self.builtin
     Enum.new(:moderators, :admins, :trust_level_1, :trust_level_2)
   end
@@ -534,6 +547,16 @@ class Group < ActiveRecord::Base
       if user_attributes.present?
         User.where(id: user_ids).update_all(user_attributes)
       end
+
+      # update group user count
+      Group.exec_sql <<-SQL.squish
+        UPDATE groups g
+        SET user_count =
+          (SELECT COUNT(gu.user_id)
+           FROM group_users gu
+           WHERE gu.group_id = g.id)
+        WHERE g.id = #{self.id};
+      SQL
     end
 
     if self.grant_trust_level.present?
@@ -550,11 +573,43 @@ class Group < ActiveRecord::Base
     STAFF_GROUPS.include?(self.name.to_sym)
   end
 
+  def self.member_of(groups, user)
+    groups.joins(
+      "LEFT JOIN group_users gu ON gu.group_id = groups.id
+    ").where("gu.user_id = ?", user.id)
+  end
+
+  def self.owner_of(groups, user)
+    self.member_of(groups, user).where("gu.owner")
+  end
+
+  def trigger_group_created_event
+    DiscourseEvent.trigger(:group_created, self)
+    true
+  end
+
+  def trigger_group_destroyed_event
+    DiscourseEvent.trigger(:group_destroyed, self)
+    true
+  end
+
   protected
 
     def name_format_validator
       self.name.strip!
-      UsernameValidator.perform_validation(self, 'name')
+      self.name.downcase!
+
+      UsernameValidator.perform_validation(self, 'name') || begin
+        if will_save_change_to_name?
+          existing = Group.exec_sql(
+            User::USERNAME_EXISTS_SQL, username: self.name
+          ).values.present?
+
+          if existing
+            errors.add(:name, I18n.t("activerecord.errors.messages.taken"))
+          end
+        end
+      end
     end
 
     def automatic_membership_email_domains_format_validator
@@ -661,7 +716,7 @@ end
 # Table name: groups
 #
 #  id                                 :integer          not null, primary key
-#  name                               :string(255)      not null
+#  name                               :string           not null
 #  created_at                         :datetime         not null
 #  updated_at                         :datetime         not null
 #  automatic                          :boolean          default(FALSE), not null
@@ -669,7 +724,7 @@ end
 #  automatic_membership_email_domains :text
 #  automatic_membership_retroactive   :boolean          default(FALSE)
 #  primary_group                      :boolean          default(FALSE), not null
-#  title                              :string(255)
+#  title                              :string
 #  grant_trust_level                  :integer
 #  incoming_email                     :string
 #  has_messages                       :boolean          default(FALSE), not null

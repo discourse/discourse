@@ -164,7 +164,7 @@ class Post < ActiveRecord::Base
     }.merge(options)
 
     if Topic.visible_post_types.include?(post_type)
-      if topic.archetype == Archetype.private_message
+      if topic.private_message?
         user_ids = User.where('admin or moderator').pluck(:id)
         user_ids |= topic.allowed_users.pluck(:id)
         MessageBus.publish(channel, msg, user_ids: user_ids)
@@ -527,16 +527,17 @@ class Post < ActiveRecord::Base
     return if user_id == new_user.id
 
     edit_reason = I18n.with_locale(SiteSetting.default_locale) do
-      I18n.t('change_owner.post_revision_text',
-             old_user: (self.user.username_lower rescue nil) || I18n.t('change_owner.deleted_user'),
-             new_user: new_user.username_lower
+      I18n.t(
+        'change_owner.post_revision_text',
+        old_user: self.user&.username_lower || I18n.t('change_owner.deleted_user'),
+        new_user: new_user.username_lower
       )
     end
 
     revise(
       actor,
       { raw: self.raw, user_id: new_user.id, edit_reason: edit_reason },
-      bypass_bump: true, skip_revision: skip_revision
+      bypass_bump: true, skip_revision: skip_revision, skip_validations: true
     )
 
     if post_number == topic.highest_post_number
@@ -814,7 +815,7 @@ end
 #  notify_user_count       :integer          default(0), not null
 #  like_score              :integer          default(0), not null
 #  deleted_by_id           :integer
-#  edit_reason             :string(255)
+#  edit_reason             :string
 #  word_count              :integer
 #  version                 :integer          default(1), not null
 #  cook_method             :integer          default(1), not null
@@ -827,8 +828,9 @@ end
 #  via_email               :boolean          default(FALSE), not null
 #  raw_email               :text
 #  public_version          :integer          default(1), not null
-#  action_code             :string(255)
+#  action_code             :string
 #  image_url               :string
+#  locked_by_id            :integer
 #
 # Indexes
 #

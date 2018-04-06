@@ -46,6 +46,12 @@ export default Ember.Controller.extend(BufferedContent, {
     }
   },
 
+  @computed('model.postStream.loaded', 'model.category_id')
+  showSharedDraftControls(loaded, categoryId) {
+    let draftCat = this.site.shared_drafts_category_id;
+    return loaded && draftCat && categoryId && draftCat === categoryId;
+  },
+
   @computed('site.mobileView', 'model.posts_count')
   showSelectedPostsAtBottom(mobileView, postsCount) {
     return mobileView && postsCount > 3;
@@ -104,7 +110,7 @@ export default Ember.Controller.extend(BufferedContent, {
 
   @computed('model.isPrivateMessage')
   canEditTags(isPrivateMessage) {
-    return !isPrivateMessage && this.site.get('can_tag_topics');
+    return this.site.get('can_tag_topics') && (!isPrivateMessage || this.site.get('can_tag_pms'));
   },
 
   actions: {
@@ -199,7 +205,7 @@ export default Ember.Controller.extend(BufferedContent, {
       });
     },
 
-    // Called the the topmost visible post on the page changes.
+    // Called when the topmost visible post on the page changes.
     topVisibleChanged(event) {
       const { post, refresh } = event;
       if (!post) { return; }
@@ -263,6 +269,23 @@ export default Ember.Controller.extend(BufferedContent, {
       } else {
         topic.archiveMessage().then(backToInbox);
       }
+    },
+
+    editFirstPost() {
+      const postStream = this.get('model.postStream');
+      let firstPost = postStream.get('posts.firstObject');
+
+      if (firstPost.get('post_number') !== 1) {
+        const postId = postStream.findPostIdForPostNumber(1);
+        // try loading from identity map first
+        firstPost = postStream.findLoadedPost(postId);
+        if (firstPost === undefined) {
+          return this.get('model.postStream').loadPost(postId).then(post => {
+            this.send("editPost", post);
+          });
+        }
+      }
+      this.send("editPost", firstPost);
     },
 
     // Post related methods
@@ -386,16 +409,29 @@ export default Ember.Controller.extend(BufferedContent, {
       }
 
       const composer = this.get("composer");
+      let topic = this.get('model');
       const composerModel = composer.get("model");
+      let editingFirst = composerModel && (post.get('firstPost') || composerModel.get('editingFirstPost'));
+
+      let editingSharedDraft = false;
+      let draftsCategoryId = this.get('site.shared_drafts_category_id');
+      if (draftsCategoryId && draftsCategoryId === topic.get('category.id')) {
+        editingSharedDraft = post.get('firstPost');
+      }
+
       const opts = {
         post,
-        action: Composer.EDIT,
+        action: editingSharedDraft ? Composer.EDIT_SHARED_DRAFT : Composer.EDIT,
         draftKey: post.get("topic.draft_key"),
         draftSequence: post.get("topic.draft_sequence")
       };
 
+      if (editingSharedDraft) {
+        opts.destinationCategoryId = topic.get('destination_category_id');
+      }
+
       // Cancel and reopen the composer for the first post
-      if (composerModel && (post.get('firstPost') || composerModel.get('editingFirstPost'))) {
+      if (editingFirst) {
         composer.cancelComposer().then(() => composer.open(opts));
       } else {
         composer.open(opts);
@@ -416,17 +452,17 @@ export default Ember.Controller.extend(BufferedContent, {
     },
 
     jumpToIndex(index) {
-      this._jumpToPostId(this.get('model.postStream.stream')[index - 1]);
+      this._jumpToIndex(index);
     },
 
     jumpToPostPrompt() {
       const postText = prompt(I18n.t('topic.progress.jump_prompt_long'));
       if (postText === null) { return; }
 
-      const postNumber = parseInt(postText, 10);
-      if (postNumber === 0) { return; }
+      const postIndex = parseInt(postText, 10);
+      if (postIndex === 0) { return; }
 
-      this._jumpToPostId(this.get('model.postStream').findPostIdForPostNumber(postNumber));
+      this._jumpToIndex(postIndex);
     },
 
     jumpToPost(postNumber) {
@@ -452,6 +488,10 @@ export default Ember.Controller.extend(BufferedContent, {
 
     jumpUnread() {
       this._jumpToPostId(this.get('model.last_read_post_id'));
+    },
+
+    jumpToPostId(postId) {
+      this._jumpToPostId(postId);
     },
 
     toggleMultiSelect() {
@@ -713,6 +753,12 @@ export default Ember.Controller.extend(BufferedContent, {
     removeFeaturedLink() {
       this.set('buffered.featured_link', null);
     }
+  },
+
+  _jumpToIndex(index) {
+    const stream = this.get("model.postStream.stream");
+    index = Math.max(1, Math.min(stream.length, index));
+    this._jumpToPostId(stream[index - 1]);
   },
 
   _jumpToPostId(postId) {

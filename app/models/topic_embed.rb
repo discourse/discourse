@@ -48,11 +48,17 @@ class TopicEmbed < ActiveRecord::Base
       Topic.transaction do
         eh = EmbeddableHost.record_for_url(url)
 
+        cook_method = if SiteSetting.embed_support_markdown
+          Post.cook_methods[:regular]
+        else
+          Post.cook_methods[:raw_html]
+        end
+
         creator = PostCreator.new(user,
                                   title: title,
                                   raw: absolutize_urls(url, contents),
                                   skip_validations: true,
-                                  cook_method: Post.cook_methods[:raw_html],
+                                  cook_method: cook_method,
                                   category: eh.try(:category_id))
         post = creator.create
         if post.present?

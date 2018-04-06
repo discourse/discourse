@@ -136,6 +136,63 @@ RSpec.describe SessionController do
           date: I18n.l(user.suspended_till, format: :date_only)
         ))
       end
+
+      context 'user has 2-factor logins' do
+        let!(:user_second_factor) { Fabricate(:user_second_factor, user: user) }
+
+        describe 'requires second factor' do
+          it 'should return a second factor prompt' do
+            get "/session/email-login/#{email_token.token}"
+
+            expect(response.status).to eq(200)
+
+            response_body = CGI.unescapeHTML(response.body)
+
+            expect(response_body).to include(I18n.t(
+              "login.second_factor_title"
+            ))
+
+            expect(response_body).to_not include(I18n.t(
+              "login.invalid_second_factor_code"
+            ))
+          end
+        end
+
+        describe 'errors on incorrect 2-factor' do
+          it 'does not log in with incorrect two factor' do
+            post "/session/email-login/#{email_token.token}", params: { second_factor_token: "0000" }
+
+            expect(response.status).to eq(200)
+
+            expect(CGI.unescapeHTML(response.body)).to include(I18n.t(
+              "login.invalid_second_factor_code"
+            ))
+          end
+        end
+
+        describe 'allows successful 2-factor' do
+          it 'logs in correctly' do
+            post "/session/email-login/#{email_token.token}", params: {
+              second_factor_token: ROTP::TOTP.new(user_second_factor.data).now
+            }
+
+            expect(response).to redirect_to("/")
+          end
+        end
+      end
+    end
+  end
+
+  context 'logoff support' do
+    it 'can log off users cleanly' do
+      user = Fabricate(:user)
+      sign_in(user)
+
+      UserAuthToken.destroy_all
+
+      # we need a route that will call current user
+      post '/draft.json', params: {}
+      expect(response.headers['Discourse-Logged-Out']).to eq("1")
     end
   end
 end

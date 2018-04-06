@@ -11,4 +11,5 @@ tr_TR:
       replying: "yanıtlama"
       editing: "düzenleme"
       replying_to_topic:
+        one: "yanıtlıyor"
         other: "yanıtlıyor"

@@ -10,7 +10,7 @@ class SessionController < ApplicationController
   before_action :check_local_login_allowed, only: %i(create forgot_password email_login)
   before_action :rate_limit_login, only: %i(create email_login)
   skip_before_action :redirect_to_login_if_required
-  skip_before_action :preload_json, :check_xhr, only: %i(sso sso_login become sso_provider destroy email_login)
+  skip_before_action :preload_json, :check_xhr, only: %i(sso sso_login sso_provider destroy email_login)
 
   ACTIVATE_USER_KEY = "activate_user"
 
@@ -75,13 +75,17 @@ class SessionController < ApplicationController
 
   # For use in development mode only when login options could be limited or disabled.
   # NEVER allow this to work in production.
-  def become
-    raise Discourse::InvalidAccess.new unless Rails.env.development?
-    user = User.find_by_username(params[:session_id])
-    raise "User #{params[:session_id]} not found" if user.blank?
+  if !Rails.env.production?
+    skip_before_action :check_xhr, only: [:become]
 
-    log_on_user(user)
-    redirect_to path("/")
+    def become
+      raise Discourse::InvalidAccess if Rails.env.production?
+      user = User.find_by_username(params[:session_id])
+      raise "User #{params[:session_id]} not found" if user.blank?
+
+      log_on_user(user)
+      redirect_to path("/")
+    end
   end
 
   def sso_login
@@ -188,6 +192,10 @@ class SessionController < ApplicationController
   end
 
   def create
+    unless params[:second_factor_token].blank?
+      RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
+    end
+
     params.require(:login)
     params.require(:password)
 
@@ -221,28 +229,50 @@ class SessionController < ApplicationController
     if payload = login_error_check(user)
       render json: payload
     else
+      if user.totp_enabled? && !user.authenticate_totp(params[:second_factor_token])
+        return render json: failed_json.merge(
+          error: I18n.t("login.invalid_second_factor_code"),
+          reason: "invalid_second_factor"
+        )
+      end
+
       (user.active && user.email_confirmed?) ? login(user) : not_activated(user)
     end
   end
 
   def email_login
     raise Discourse::NotFound if !SiteSetting.enable_local_logins_via_email
+    second_factor_token = params[:second_factor_token]
+    token = params[:token]
+    valid_token = !!EmailToken.valid_token_format?(token)
+    user = EmailToken.confirmable(token)&.user
 
-    if EmailToken.valid_token_format?(params[:token]) && (user = EmailToken.confirm(params[:token]))
+    if valid_token && user&.totp_enabled?
+      RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
+
+      if !second_factor_token.present?
+        @second_factor_required = true
+        return render layout: 'no_ember'
+      elsif !user.authenticate_totp(second_factor_token)
+        @error = I18n.t('login.invalid_second_factor_code')
+        return render layout: 'no_ember'
+      end
+    end
+
+    if user = EmailToken.confirm(token)
       if login_not_approved_for?(user)
         @error = login_not_approved[:error]
-        return render layout: 'no_ember'
       elsif payload = login_error_check(user)
         @error = payload[:error]
-        return render layout: 'no_ember'
       else
         log_on_user(user)
-        redirect_to path("/")
+        return redirect_to path("/")
       end
     else
       @error = I18n.t('email_login.invalid_token')
-      return render layout: 'no_ember'
     end
+
+    render layout: 'no_ember'
   end
 
   def forgot_password

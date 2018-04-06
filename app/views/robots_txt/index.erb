@@ -1,6 +1,8 @@
 # See http://www.robotstxt.org/wc/norobots.html for documentation on how to use the robots.txt file
 #
-User-agent: *
+<% @allowed_user_agents.each do |user_agent| %>
+User-agent: <%= user_agent %>
+<% end %>
 Disallow: /auth/cas
 Disallow: /auth/facebook/callback
 Disallow: /auth/twitter/callback
@@ -25,5 +27,20 @@ Disallow: /user-api-key
 Disallow: /user-api-key/
 Disallow: /*?api_key*
 Disallow: /*?*api_key*
+Disallow: /groups
+Disallow: /groups/
+
+<% if @disallowed_user_agents %>
+  <% @disallowed_user_agents.each do |user_agent| %>
+User-agent: <%= user_agent %>
+Disallow: /
+
+  <% end %>
+<% end %>
 
 <%= server_plugin_outlet "robots_txt_index" %>
+
+<% @crawler_delayed_agents.each do |agent, delay| %>
+User-agent: <%= agent %>
+Crawl-delay: <%= delay %>
+<% end %>

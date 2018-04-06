@@ -14,11 +14,11 @@
     {{/if}}
     {{raw-plugin-outlet name="topic-list-after-title"}}
     {{#if showTopicPostBadges}}
-      {{raw "topic-post-badges" unread=topic.unread newPosts=topic.displayNewPosts unseen=topic.unseen url=topic.lastUnreadUrl}}
+      {{raw "topic-post-badges" unread=topic.unread newPosts=topic.displayNewPosts unseen=topic.unseen url=topic.lastUnreadUrl newDotText=newDotText}}
     {{/if}}
   </span>
 
-  {{discourse-tags topic mode="list"}}
+  {{discourse-tags topic mode="list" tagsForUser=tagsForUser}}
   {{#if expandPinned}}
     {{raw "list/topic-excerpt" topic=topic}}
   {{/if}}

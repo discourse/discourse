@@ -232,6 +232,10 @@ tr.category-topic-link {
     }
   }
 
+  .category-name {
+    max-width: 80vw;
+  }
+
   .category-topic-link .main-link, .subcategories-list td, .category-description td {
     padding-left: 10px;
   }
@@ -345,7 +349,7 @@ tr.category-topic-link {
   background-color: $secondary;
   border: 1px solid dark-light-choose(rgba(0, 0, 0, 0.2), $primary);
   border-radius: 5px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: shadow("dropdown");
   background-clip: padding-box;
   margin: 1px 0 20px;
   .title {font-weight: bold; display: block;}
@@ -389,6 +393,10 @@ ol.category-breadcrumb {
 
 .tags-admin-menu {
   display: none;
+}
+
+.staff.tags-page #create-topic {
+  clear: right;
 }
 
 .topic-list-bottom h3 {

@@ -96,7 +96,7 @@ nb_NO:
     template:
       body: 'Dette er problemene med de følgene feltene:'
       header:
-        one: 1 feil forhindret lagring av %{model}
+        one: '1 feil forhindret lagring av %{model}'
         other: '%{count} feil forhindret lagring av %{model}'
     embed:
       load_from_remote: "Det oppstod et problem med innlastingen av innlegget."
@@ -199,7 +199,6 @@ nb_NO:
   groups:
     errors:
       can_not_modify_automatic: "Du kan ikke modifisere en automatisk gruppe"
-      member_already_exist: "'%{username}' er allerede medlem av denne gruppen."
       invalid_domain: "'%{domain}' er ikke et gyldig domene."
       invalid_incoming_email: "'%{email}' er ikke en gyldig e-postadresse."
       email_already_used_in_group: "'%{email}' er allerede i bruk av gruppa '%{group_name}'."
@@ -303,25 +302,25 @@ nb_NO:
     title: "Velkommen til salongen"
     body: |2
 
-      Gratulerer! :confetti_ball:
+        Gratulerer! :confetti_ball:
 
-      Hvis du kan se denne tråden, er du nylig blitt forfremmet til **aktivt medlem** (tillitsnivå 3).
+        Hvis du kan se denne tråden, er du nylig blitt forfremmet til **aktivt medlem** (tillitsnivå 3).
 
-      Du kan nå &hellip;
+        Du kan nå &hellip;
 
-      * Endre tittelen til hvilken som helst tråd
-      * Endre kategorien til hvilken som helst tråd
-      * Få lenkene dine fulgt opp ([automatisk nofollow](http://en.wikipedia.org/wiki/Nofollow) er fjernet)
-      * Se og delta i diskusjonene i en privat salong-kategori som bare er synlig for brukere med tillitsnivå 3 eller høyere.
-      * Skjule søppelpost med ett flagg.
+        * Endre tittelen til hvilken som helst tråd
+        * Endre kategorien til hvilken som helst tråd
+        * Få lenkene dine fulgt opp ([automatisk nofollow](http://en.wikipedia.org/wiki/Nofollow) er fjernet)
+        * Se og delta i diskusjonene i en privat salong-kategori som bare er synlig for brukere med tillitsnivå 3 eller høyere.
+        * Skjule søppelpost med ett flagg.
 
-      Her er den [oppdaterte listen over andre trofaste](/badges/3/regular). Si gjerne hei!
+        Her er den [oppdaterte listen over andre trofaste](/badges/3/regular). Si gjerne hei!
 
-      Takk for at du er en viktig del av fellesskapet vårt.
+        Takk for at du er en viktig del av fellesskapet vårt.
 
-      (For mer informasjon om tillitsnivå [se denne tråden][tillit]. Merk deg at bare medlemmer som fortsetter å oppfylle kravene over tid, vil forbli *trofaste*.)
+        (For mer informasjon om tillitsnivå [se denne tråden][tillit]. Merk deg at bare medlemmer som fortsetter å oppfylle kravene over tid, vil forbli *trofaste*.)
 
-      [tillit]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [tillit]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Om kategorien %{category} "
     replace_paragraph: "(Erstatt dette første avsnittet med en kort beskrivelse av den nye kategorien din. Denne teksten vil vises i oversikten over kategorier, så prøv å holde lengden under 200 bokstaver. **Inntil du endrer denne beskrivelsen eller oppretter tråder, vil denne kategorien ikke vises på kategorier-siden.**)"
@@ -350,7 +349,6 @@ nb_NO:
     leader:
       title: "leder"
   rate_limiter:
-    too_many_requests: "Vi har en daglig begrensning for hvor mange ganger den handlingen kan utføres. Vent %{time_left} før du prøver igjen."
     by_type:
       first_day_replies_per_day: "Du har nådd det maksimale antall svar en ny bruker kan publisere på sin første dag. Vennligst vent %{time_left} før du prøver igjen."
       first_day_topics_per_day: "Du har nådd det maksimale antall tråder en ny bruker kan publisere på sin første dag. Vennligst vent %{time_left} før du prøver igjen."
@@ -480,8 +478,6 @@ nb_NO:
       long_form: 'markerte dette som upassende'
     notify_user:
       title: 'Send en melding til @{{username}}'
-      description: 'Jeg vil snakke direkte og privat med denne personen om innlegget.'
-      short_description: 'Jeg vil snakke direkte og privat med denne personen om innlegget.'
       long_form: 'sendt melding til bruker'
       email_title: 'Ditt innlegg i "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -693,11 +689,9 @@ nb_NO:
     allow_user_locale: "Tillat brukere å velge eget språk"
     min_post_length: "Minimum tillatt lengde for innlegg i tegn"
     min_first_post_length: "Minimum tillatt lengde på for teksten i første innlegg"
-    min_personal_message_post_length: "Minste tillatte innleggslengde for meldinger i antall tegn"
     max_post_length: "Maksimum tillatt lengde for innlegg i tegn"
     min_topic_title_length: "Minimum tillatt lengde for tittel i tegn"
     max_topic_title_length: "Maksimum tillatt lengde for innlegg i tegn"
-    min_personal_message_title_length: "Minste antall tegn tillatt til bruk for tittellengde i meldinger"
     min_search_term_length: "Minimum lengde på søkeord i tegn"
     allow_duplicate_topic_titles: "Tillat flere tråder med identisk tittel."
     unique_posts_mins: "Hvor mange minutter før en bruker kan lage et innlegg med det samme innholdet igjen"

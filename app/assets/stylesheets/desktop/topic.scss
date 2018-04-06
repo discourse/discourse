@@ -28,14 +28,11 @@
     font-size: $font-up-4;
     line-height: $line-height-medium;
     overflow: hidden;
-    width: 100%;    
+    width: 100%;
     a {color: $primary;}
   }
   .topic-statuses {
     margin-top: -2px;
-  }
-  .select2-container {
-    vertical-align: middle;
   }
   .private-message-glyph { display: none; }
   .remove-featured-link {
@@ -47,10 +44,9 @@
 }
 
 .private-message-glyph {
-  color: dark-light-choose($primary-low-mid, $secondary-high);
   float: left;
-  margin-right: 5px;
 }
+
 .private_message #topic-title .private-message-glyph { display: inline; }
 
 .topic-error {
@@ -79,8 +75,7 @@
 
 #topic-progress-wrapper {
   position: fixed;
-  right: 50%;
-  width: 0;
+  right: 1em;
   bottom: 0;
   z-index: z("timeline");
   &.docked {

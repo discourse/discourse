@@ -40,6 +40,11 @@ export default Ember.Controller.extend(CanCheckEmails, PreferencesTabController,
     return !this.siteSettings.enable_sso && this.siteSettings.enable_local_logins;
   },
 
+  @computed
+  showTwoFactorModalText() {
+    return I18n.t('user.second_factor.title').toLowerCase();
+  },
+
   actions: {
     save() {
       this.set('saved', false);

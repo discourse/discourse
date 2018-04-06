@@ -72,7 +72,8 @@ class UserSerializer < BasicUserSerializer
              :primary_group_flair_url,
              :primary_group_flair_bg_color,
              :primary_group_flair_color,
-             :staged
+             :staged,
+             :second_factor_enabled
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
@@ -145,6 +146,14 @@ class UserSerializer < BasicUserSerializer
       (scope.is_staff? && object.staged?)
   end
 
+  def include_second_factor_enabled?
+    (object&.id == scope.user&.id) || scope.is_staff?
+  end
+
+  def second_factor_enabled
+    object.totp_enabled?
+  end
+
   def can_change_bio
     !(SiteSetting.enable_sso && SiteSetting.sso_overrides_bio)
   end
@@ -179,7 +188,11 @@ class UserSerializer < BasicUserSerializer
   end
 
   def website_name
-    uri = URI(website.to_s) rescue nil
+    uri = begin
+      URI(website.to_s)
+    rescue URI::InvalidURIError
+    end
+
     return if uri.nil? || uri.host.nil?
     uri.host.sub(/^www\./, '') + uri.path
   end

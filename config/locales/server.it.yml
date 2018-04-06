@@ -82,7 +82,6 @@ it:
       invalid: non è valido
       is_invalid: "sembra poco chiaro, è una frase completa?"
       contains_censored_words: "contiene le seguenti parole censurate: %{censored_words}"
-      matches_censored_pattern: "contiene le seguenti parole che coincidono con la regexp di censura del sito: %{censored_words}"
       less_than: deve essere minore di %{count}
       less_than_or_equal_to: deve essere minore o uguale a %{count}
       not_a_number: non è un numero
@@ -105,7 +104,7 @@ it:
     template:
       body: 'Sono stati riscontrati problemi con i seguenti campi:'
       header:
-        one: 1 errore ha impedito il salvataggio di questo %{model}
+        one: '1 errore ha impedito il salvataggio di questo %{model}'
         other: '%{count} errori hanno impedito il salvataggio di questo %{model}'
     embed:
       load_from_remote: "Si è verificato un errore nel caricamento del messaggio."
@@ -177,7 +176,6 @@ it:
   too_many_links:
     one: "Spiacenti, i nuovi utenti possono inserire al massimo un collegamento in un messaggio."
     other: "Spiacenti, i nuovi utenti possono inserire al massimo %{count} collegamenti in un messaggio."
-  contains_blocked_words: "Il tuo messaggio contiene parole che non sono consentite."
   spamming_host: "Spiacenti, non puoi inserire un collegamento verso quel dominio."
   user_is_suspended: "Agli utenti sospesi non è permesso creare messaggi."
   topic_not_found: "Quancosa non ha funzionato. Forse questo argomento è stato chiuso o cancellato mentre lo leggevi."
@@ -225,7 +223,6 @@ it:
       bulk_add: "%{users_added}utentu sono stati aggiunti al gruppo. "
     errors:
       can_not_modify_automatic: "Non puoi modificare un gruppo automatico"
-      member_already_exist: "'%{username}' è già membro di questo gruppo."
       invalid_domain: "'%{domain}' non è un dominio valido."
       invalid_incoming_email: "'%{email}' non è un indirizzo email valido."
       email_already_used_in_group: "L'indirizzo '%{email}' è stato già usato dal gruppo '%{group_name}'."
@@ -376,41 +373,41 @@ it:
     title: "Benvenuto in Discourse"
     body: |2
 
-      Il primo paragrafo di questo argomento puntato sarà visibile come messaggio di benvenuto a tutti i nuovi visitatori sulla tua homepage. È importante!
+        Il primo paragrafo di questo argomento puntato sarà visibile come messaggio di benvenuto a tutti i nuovi visitatori sulla tua homepage. È importante!
 
-      **Modificalo** con una breve descrizione della tua comunità:
+        **Modificalo** con una breve descrizione della tua comunità:
 
-      - A chi è rivolto?
-      - Cosa possono trovare qui?
-      - Perchè dovrebbero venire qui?
-      - Dove possono leggere di più (collegamenti, risorse, ecc)?
+        - A chi è rivolto?
+        - Cosa possono trovare qui?
+        - Perchè dovrebbero venire qui?
+        - Dove possono leggere di più (collegamenti, risorse, ecc)?
 
-      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
-      Puoi chiudere questo argomento tramite la :wrench: per amministratori (in alto a destra e in basso), in modo che le risposte non si accumulino all'annuncio.
+        Puoi chiudere questo argomento tramite la :wrench: per amministratori (in alto a destra e in basso), in modo che le risposte non si accumulino all'annuncio.
   lounge_welcome:
     title: "Benvenuto nel Lounge"
     body: |2
 
-      Congratulazioni! :confetti_ball:
+        Congratulazioni! :confetti_ball:
 
-      Se vedi questo argomento, sei stato recentemente promosso a **esperto** (livello di esperienza 3).
+        Se vedi questo argomento, sei stato recentemente promosso a **esperto** (livello di esperienza 3).
 
-      Adesso puoi &hellip;
+        Adesso puoi &hellip;
 
-      * Modificare il titolo di qualunque argomento
-      * Cambiare la categoria di qualunque argomento
-      * Seguire tutti i tuoi collegamenti (è rimosso il [nofollow automatico](http://it.wikipedia.org/wiki/Nofollow) )
-      * Accedere alla categoria privata Lounge visibile solo agli utenti con livello di esperienza 3 o superiore
-      * Cancellare i messaggi spam con un singolo clic
+        * Modificare il titolo di qualunque argomento
+        * Cambiare la categoria di qualunque argomento
+        * Seguire tutti i tuoi collegamenti (è rimosso il [nofollow automatico](http://it.wikipedia.org/wiki/Nofollow) )
+        * Accedere alla categoria privata Lounge visibile solo agli utenti con livello di esperienza 3 o superiore
+        * Cancellare i messaggi spam con un singolo clic
 
-      Ecco l'elenco degli altri [utenti esperti](/badges/3/regular). Vai a salutarli.
+        Ecco l'elenco degli altri [utenti esperti](/badges/3/regular). Vai a salutarli.
 
-      Grazie per essere una parte importante di questa comunità!
+        Grazie per essere una parte importante di questa comunità!
 
-      (Per maggiori informazioni sui livelli di esperienza, [leggi questa discussione][trust]. Nota che possono rimanere utenti esperti solo quegli utenti che continuano a soddisfare i criteri di selezione)
+        (Per maggiori informazioni sui livelli di esperienza, [leggi questa discussione][trust]. Nota che possono rimanere utenti esperti solo quegli utenti che continuano a soddisfare i criteri di selezione)
 
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Definizione della categoria %{category}"
     replace_paragraph: "(Sostituisci questo primo paragrafo con una breve descrizione della nuova categoria. Questa guida apparirà nell'area di selezione della categoria, perciò cerca di stare sotto i 200 caratteri. **Finché non modifichi questo testo o non crei argomenti, questa categoria non apparirà sulla pagina delle categorie.**)"
@@ -448,7 +445,6 @@ it:
       broken: "Questa immagine è assente"
   rate_limiter:
     slow_down: "Hai eseguito questa operazione troppe volte, riprova più tardi."
-    too_many_requests: "C'è un limite giornaliero su quante volte si può fare questa azione. Per favore attendi %{time_left} prima di riprovare."
     by_type:
       first_day_replies_per_day: "Hai raggiunto il massimo numero di risposte che può creare un nuovo utente il suo primo giorno. Per favore attendi %{time_left} prima di riprovare."
       first_day_topics_per_day: "Hai raggiunto il massimo numero di argomenti che può creare un nuovo utente il suo primo giorno. Per favore attendi %{time_left} prima di riprovare."
@@ -597,8 +593,6 @@ it:
       long_form: 'segnalato come inappropriato'
     notify_user:
       title: 'Invia un messaggio a @{{username}}'
-      description: 'Vorrei discutere direttamente e privatamente con l''autore di questo messaggio.'
-      short_description: 'Voglio parlare con questa persona direttamente e privatamente a proposito del suo messaggio.'
       long_form: 'messaggio inviato'
       email_title: 'Il tuo messaggio su "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -852,25 +846,21 @@ it:
     email_polling_errored_recently:
       one: "Il polling delle email ha generato un errore nelle ultime 24 ore. Controlla <a href='/logs' target='_blank'>i log</a> per maggiori dettagli."
       other: "Il polling delle email ha generato %{count}errori nelle ultime 24 ore. Controlla <a href='/logs' target='_blank'>i log</a> per maggiori dettagli. "
-    missing_mailgun_api_key: "Il server è configurato per inviare email via mailgun ma non sono state fornite le API key necessarie per verificare i messaggi webhook."
     bad_favicon_url: "La favicon non si carica. Verifica la configurazione della tua favicon_url in <a href='/admin/site_settings'>Impostazioni del sito</a>."
     poll_pop3_timeout: "La connessione al server POP3 sta scadendo. Le email in entrata non sono state scaricate. Per favore verifica il la tua  <a href='/admin/site_settings/category/email'>configurazione POP3</a> e il fornitore di servizi."
     poll_pop3_auth_error: "La connessione al server POP3 è fallita per un errore di autenticazione. Per favore verifica la tua <a href='/admin/site_settings/category/email'>configurazione POP3</a>."
   site_settings:
     censored_words: "Parole che saranno automaticamente sostituite con &#9632;&#9632;&#9632;&#9632;"
-    censored_pattern: "Pattern regex che sarà automaticamente sostituito con &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Cancella automaticamente tutti i messaggi nascosti che restano nascosti per più di 30 giorni."
     allow_user_locale: "Permetti agli utenti di personalizzare la lingua dell'interfaccia"
     set_locale_from_accept_language_header: "imposta la lingua di interfaccia per gli utenti anonimi in base ai language header del loro browser.\n(SPERIMENTALE, non funziona con cache anonima)"
     min_post_length: "Lunghezza minima dei messaggi in caratteri"
     min_first_post_length: "Lunghezza minima del primo messaggio (corpo del testo), in caratteri"
-    min_personal_message_post_length: "Lunghezza minima in caratteri per i messaggi"
     max_post_length: "Lunghezza massima dei messaggi in caratteri"
     topic_featured_link_enabled: "Abilita la pubblicazione di collegamenti con gli argomenti."
     show_topic_featured_link_in_digest: "Mostra i collegamenti in primo piano dell'argomento nella email riepilogativa."
     min_topic_title_length: "Numero minimo di caratteri per i titoli degli argomenti"
     max_topic_title_length: "Numero massimo di caratteri per i titoli degli argomenti"
-    min_personal_message_title_length: "Numero minimo di caratteri per un messaggio"
     min_search_term_length: "Numero minimo di caratteri per le parole cercate"
     search_tokenize_chinese_japanese_korean: "Attiva la tokenizzazione dei caratteri Cinesi/Giapponesi/Coreani nella ricerca anche sui siti non CJK"
     search_prefer_recent_posts: "Se il tuo forum è corposo e la ricerca è lenta, questa opzione tenta di indicizzare prima i messaggi più recenti"
@@ -925,8 +915,6 @@ it:
     summary_likes_required: "Minimo numero di \"Mi piace\" in un argomento affinché venga abilitato 'Riassumi Questo Argomento'"
     summary_percent_filter: "Quando un utente clicca su 'Riassumi Questo Argomento', mostra i primi % messaggi"
     summary_max_results: "Massimo numero di messaggi mostrati in 'Riassumi Argomento'"
-    enable_personal_messages: "Autorizza gli utenti con livello di esperienza 1  (configurabile attraverso \"min livello di esperienza per l'invio di messaggi\") a creare e rispondere ai messaggi. Nota che lo staff può inviare messaggi in ogni caso."
-    enable_personal_email_messages: "Consenti agli utenti a livello di esperienza 4 (configurabile attraverso \"min trust level to send messages\") di inviare messaggi privati via email . Nota che lo staff può inviare messaggi in ogni caso."
     enable_long_polling: "Il message bus per le notifiche può usare il long polling"
     long_polling_base_url: "URL di base usato per il long polling (quando una CDN serve contenuto dinamico, bisogna impostarlo come origin pull) es. http://origin.site.com"
     long_polling_interval: "Tempo di attesa prima che il server risponda ai client che non ci sono dati da trasmettere (solo per utenti autenticati)"
@@ -1021,8 +1009,6 @@ it:
     google_oauth2_client_id: "Client ID della tua applicazione Google."
     google_oauth2_client_secret: "Client secret della tua applicazione Google."
     enable_twitter_logins: "Abilita l'autenticazione con Twitter, richiede twitter_consumer_key e twitter_consumer_secret"
-    twitter_consumer_key: "Consumer key per autenticazione via Twitter, come registrata su http://dev.twitter.com"
-    twitter_consumer_secret: "Consumer secret per autenticazione via Twitter, come registrata su  http://dev.twitter.com"
     enable_instagram_logins: "Abilita l'autenticazione con Instagram, richiede la instagram_consumer_key e la instagram_consumer_secret"
     instagram_consumer_key: "La consumer key per autenticazione Instagram"
     instagram_consumer_secret: "La consumer secret per l'autenticazione Instagram"
@@ -1037,7 +1023,6 @@ it:
     allow_restore: "Abilita il ripristino, che sostituisce TUTTI i dati del sito! Lascia a falso a meno che non hai intenzione di ripristinare un backup."
     maximum_backups: "Il numero massimo di backup da mantenere sul disco. I backup più vecchi vengono automaticamente cancellati."
     automatic_backups_enabled: "Esegui backup automatici come definito nella frequenza di backup"
-    backup_frequency: "Con che frequenza, in giorni, effettuiamo il backup del sito."
     enable_s3_backups: "Carica i backup su S3 quando completati. IMPORTANTE: richiede che siano inserite valide credenziali S3 nelle impostazioni File."
     s3_backup_bucket: "Il bucket remoto che contiene i backup. ATTENZIONE: assicurati che sia un bucket privato."
     s3_disable_cleanup: "Disabilita la rimozione dei backup da S3 quando rimossi localmente."
@@ -1059,7 +1044,6 @@ it:
     max_bookmarks_per_day: "Massimo numero di segnalibri per utente al giorno."
     max_edits_per_day: "Massimo numero di modifiche per utente al giorno."
     max_topics_per_day: "Massimo numero di argomenti che un utente può creare al giorno."
-    max_personal_messages_per_day: "Numero massimo di messaggi che gli utenti possono creare al giorno."
     max_invites_per_day: "Numero massimo di inviti che un utente può inviare in un giorno."
     max_topic_invitations_per_day: "Numero massimo di inviti ad argomenti che un utente può inviare al giorno."
     max_logins_per_ip_per_hour: "Numero massimo di accessi consentiti per indirizzo Ip per ora"
@@ -1129,7 +1113,6 @@ it:
     max_users_notified_per_group_mention: "Massimo numero di utenti che possono ricevere una notifica se un gruppo è menzionato (se la soglia è raggiunta, nessuna notifica verrà inviata)"
     create_thumbnails: "Crea anteprime e lightbox delle immagini che sono troppo grandi per essere contenute in un messaggio."
     email_time_window_mins: "Aspetta (n) minuti prima di inviare email di notifica, per dare agli utenti la possibilità di modificare e completare i loro messaggi."
-    personal_email_time_window_seconds: "Attendi (n) secondi prima di inviare una notifica privata per email, per dare agli utenti la possibilità di modificare e finalizzare i loro messaggi."
     email_posts_context: "Quante risposte precedenti inserire come contesto nelle email di notifica."
     flush_timings_secs: "Frequenza di svuotamento dei dati temporali verso il server, in secondi."
     title_max_word_length: "La lunghezza massima di una parola, in caratteri, nel titolo di un argomento."
@@ -1306,7 +1289,6 @@ it:
     watched_words_regular_expressions: "Le parole osservate sono espressioni regolari."
     default_email_digest_frequency: "Con quale frequenza gli utenti ricevono email riepilogative di default."
     default_include_tl0_in_digests: "Per impostazione predefinita, includi i messaggi dei nuovi utenti nelle email riepilogative. Gli utenti possono modificare questa impostazione nelle loro preferenze"
-    default_email_personal_messages: " Invia una email quando qualcuno scrive un messaggio ad un utente di default."
     default_email_direct: "Invia una email quando qualcuno cita/risponde/menziona un utente di default."
     default_email_mailing_list_mode: "Invia una email per ogni nuovo messaggio di default."
     default_email_mailing_list_mode_frequency: "Con quale frequenza gli utenti che hanno attivato la modalità mailing list riceveranno email di default."
@@ -1584,47 +1566,6 @@ it:
   test_mailer:
     title: "Test Mailer"
     subject_template: "[%{email_prefix}] Test di Consegna Email"
-    text_body_template: |
-      Questa è una email di prova inviata da
-
-      [**%{base_url}**][0]
-
-      Il recapito di email è complesso. Ecco alcune cose importanti che dovresti controllare prima::
-
-      - Sii *certo* di aver impostato `notification email`  from: indirizzo correttamente nelle impostazioni del tuo sito. **Il dominio specificato nell'indirizzo "from" delle email inviate è il dominio in cui verranno convalidate le tue email**.
-
-      - Impara a visualizzare il contenuto originale delle email nel tuo client email, in questo modo potrai controllare la presenza di eventuali errori. In Gmail puoi usare il tasto "Mostra Originale" presente nel menù a tendina di ogni email.
-
-      - **IMPORTANTE:** Il tuo ISP ha un record DNS inverso per associare il nome del dominio e l'indirizzo ip dal quale invii le email? [Controlla il tuo record inverso PTR][2] qui. Se il tuo ISP non inserisce il record DNS inverso appropriato è molto improbabile che le tue email verranno recapitate.
-
-      - Il [record SPF][8] del tuo dominio è corretto? [Controlla il tuo record SPF][1] qui. Tieni presente che TXT è il tipo di record ufficiale corretto per SPF.
-
-      - Il [record DKIM][3] del tuo dominio è corretto? Questo migliorerà significativamente il recapito delle email. [Controlla il tuo record DKIM][7] qui.
-
-      - Se usi un tuo mail server, verifica che gli IP del tuo mail server [non siano in nessuna blacklist][4]. Verifica inoltre che il tuo mail server stia inviando un hostname pienamente qualificato che abbia una risoluzione nel DNS nel suo messaggio HELO. Se questo non avviene, è molto provabile che le tue email verranno scartate da molte caselle email.
-
-      - Ti raccomandiamo di **inviare una email di prova a [mail-tester.com][mt]** per verificare che tutte le operazioni sopra indicate funzionino correttamente.
-
-      (Il modo più *semplice* è quello di creare un account free su [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] o [Mailjet][mj], che hanno un generoso piano gratuito che andrà bene per i forum più piccoli. Attenzione che dovrai comunque impostare i tuoi record SPF e DKIM nel DNS!)
-
-      Speriamo tu abbia ricevuto questo test di recapito email!
-
-      Buona fortuna,
-
-      I tuoi amici di [Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [7]: https://www.mail-tester.com/spf-dkim-check
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [sg]: https://goo.gl/r1WMF6
-      [sp]: https://www.sparkpost.com/
-      [mg]: http://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing
-      [mt]: http://www.mail-tester.com/
   new_version_mailer:
     title: "Mailer Nuova Versione"
     subject_template: "[%{email_prefix}] Nuova versione di Discourse, aggiornamento disponibile"
@@ -2208,7 +2149,7 @@ it:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
-        %{message}
+          %{message}
     account_suspended:
       title: "Account Sospeso"
       subject_template: "[%{email_prefix}] Il tuo account è stato sospeso"
@@ -2327,21 +2268,6 @@ it:
     signup_after_approval:
       title: "Iscrizione Dopo Approvazione"
       subject_template: "Sei stato ammesso su %{site_name}!"
-      text_body_template: |
-        Benvenuto su %{site_name}!
-
-        Un membro dello staff ha approvato il tuo account su  %{site_name}.
-
-        Clicca sul seguente collegamento per confermare e attivare il tuo nuovo account:
-        %{base_url}/u/activate-account/%{email_token}
-
-        Se il collegamento qui sopra non è cliccabile, prova a copiarlo e incollarlo nella barra degli indirizzi del tuo browser.
-
-        %{new_user_tips}
-
-        Noi crediamo da sempre in un [comportamento comunitario civile](%{base_url}/guidelines).
-
-        Buona permanenza!
     signup:
       title: "Iscrizione"
       subject_template: "[%{email_prefix}] Conferma il tuo nuovo account"
@@ -2711,8 +2637,6 @@ it:
     promoter:
       name: Promotore
       description: Ha invitato un utente
-      long_description: |
-        Questo distintivo è assegnato quando si invita qualcuno ad unirsi alla comunità tramite il pulsante invita sulla tua pagina utente, o in fondo ad un argomento. Invitare amici che potrebbero essere interessati a discussioni specifiche è un ottimo modo per introdurre nuove persone alla nostra comunità, quindi grazie!
     campaigner:
       name: Attivista
       description: Ha invitato 3 utenti
@@ -2811,8 +2735,6 @@ it:
     first_emoji:
       name: Prima Emoji
       description: Ha usato una Emoji in un messaggio
-      long_description: |
-        Questo distintivo viene assegnato la prima volta che inserisci un Emoji in un messaggio :thumbsup:. Gli Emoji ti permettono di trasmettere emozioni nei messaggi, dalla felicità :smiley: alla tristezza :anguished: alla rabbia :angry: e tutto ciò che sta nel mezzo :sunglasses:. Digita semplicemente : (carattere due punti) oppure premi il bottone Emoji nella barra degli strumenti dell'editor, per selezionare tra centinaia di possibilità :ok_hand:
     first_mention:
       name: Prima Menzione
       description: Ha menzionato un utente in un messaggio

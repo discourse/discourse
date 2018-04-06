@@ -75,7 +75,6 @@ pt_BR:
       invalid: é inválido
       is_invalid: "parece pouco claro; é uma frase completa?"
       contains_censored_words: "contém as seguintes palavras censuradas: %{censored_words}"
-      matches_censored_pattern: "contém as seguintes palavras que se encaixam nos padrões de expressões regulares censuradas do site: %{censored_words}"
       less_than: precisa ser menor que %{count}
       less_than_or_equal_to: deve ser menor ou igual à %{count}
       not_a_number: não é um número
@@ -98,7 +97,7 @@ pt_BR:
     template:
       body: 'Houve problemas com os seguintes campos:'
       header:
-        one: 1 erro impediu este %{model} de ser salvo
+        one: '1 erro impediu este %{model} de ser salvo'
         other: '%{count} erros impediram este %{model} de ser salvo'
     embed:
       load_from_remote: "Houve um erro ao carregar essa mensagem."
@@ -201,7 +200,6 @@ pt_BR:
   groups:
     errors:
       can_not_modify_automatic: "Você não pode modificar um grupo automático"
-      member_already_exist: "'%{username}' já é um membro deste grupo."
       invalid_domain: "'%{domain}' não é um domínio válido."
       invalid_incoming_email: "'%{email}' não é um endereço de e-mail válido."
       email_already_used_in_group: "'%{email}' já é utilizado pelo grupo '%{group_name}'."
@@ -327,41 +325,41 @@ pt_BR:
     title: "Bem vindo ao Discourse"
     body: |2
 
-      O primeiro parágrafo deste tópico fixo será visto como uma mensagem de boas vindas a todos os novos visitantes em sua página inicial. É muito importante!
+        O primeiro parágrafo deste tópico fixo será visto como uma mensagem de boas vindas a todos os novos visitantes em sua página inicial. É muito importante!
 
-      **Edite isso** em uma breve descrição da sua comunidade:
+        **Edite isso** em uma breve descrição da sua comunidade:
 
-      - Para quem ela é?
-      - O que será encontrado aqui?
-      - Porque as pessoas deveria vir aqui?
-      - Onde é possível saber mais a respeito (links, fontes, etc)?
+        - Para quem ela é?
+        - O que será encontrado aqui?
+        - Porque as pessoas deveria vir aqui?
+        - Onde é possível saber mais a respeito (links, fontes, etc)?
 
-      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+        <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
-      Você pode querer fechar este tópico através do Administrador :wrench: (na parte superior direita e inferior), para que não se acumulem respostas num tópico de boas vindas.
+        Você pode querer fechar este tópico através do Administrador :wrench: (na parte superior direita e inferior), para que não se acumulem respostas num tópico de boas vindas.
   lounge_welcome:
     title: "Bem-vindo ao Salão"
     body: |2
 
-      Parabéns! :confetti_ball:
+        Parabéns! :confetti_ball:
 
-      Se você pode ver neste tópico, você foi recentemente promovido a  **regular** (nível de confiança 3).
+        Se você pode ver neste tópico, você foi recentemente promovido a  **regular** (nível de confiança 3).
 
-      Agora você pode &hellip;
+        Agora você pode &hellip;
 
-      * Editar o título de qualquer tópico
-      * Alterar a categoria de qualquer assunto
-      * Ter todos os seus links seguidos ([nofollow automática] (http://en.wikipedia.org/wiki/Nofollow) é removido)
-      * Acesso a categoria privada Sala visíveis apenas para os utilizadores a nível de confiança 3 e superior
-      * Esconder o spam com uma única sinalização
+        * Editar o título de qualquer tópico
+        * Alterar a categoria de qualquer assunto
+        * Ter todos os seus links seguidos ([nofollow automática] (http://en.wikipedia.org/wiki/Nofollow) é removido)
+        * Acesso a categoria privada Sala visíveis apenas para os utilizadores a nível de confiança 3 e superior
+        * Esconder o spam com uma única sinalização
 
-      Aqui está o [lista atual de companheiros regulares] (/badges/3/regular). Não se esqueça de dizer oi.
+        Aqui está o [lista atual de companheiros regulares] (/badges/3/regular). Não se esqueça de dizer oi.
 
-      Obrigado por ser uma parte importante dessa comunidade!
+        Obrigado por ser uma parte importante dessa comunidade!
 
-      (Para obter mais informações sobre os níveis de confiança, [veja este tópico][trust]. Por favor note que somente os membros que continuam a atender aos requisitos ao longo do tempo permanecerá regulares.)
+        (Para obter mais informações sobre os níveis de confiança, [veja este tópico][trust]. Por favor note que somente os membros que continuam a atender aos requisitos ao longo do tempo permanecerá regulares.)
 
-      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+        [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Sobre a categoria %{category} "
     replace_paragraph: "(Substitua este primeiro parágrafo por uma curta descrição da sua nova categoria. Este guia vai aparecer na área de seleção de categoria, então tente usar menos que 200 caracteres. **Até você editar essa descrição ou criar tópicos, esta categoria não aparece na página de categorias.**)"
@@ -398,7 +396,6 @@ pt_BR:
       broken: "Esta imagem está danificada"
   rate_limiter:
     slow_down: "Você fez essa ação demais, tente novamente mais tarde."
-    too_many_requests: "Nós possuímos um limite diário do número de vezes que uma ação pode ser tomada. Por favor aguarde %{time_left} antes de tentar novamente."
     by_type:
       first_day_replies_per_day: "Você atingiu o número máximo de respostas que um novo usuário pode criar em seu primeiro dia. Por favor aguarde %{time_left} antes de tentar novamente."
       first_day_topics_per_day: "Você atingiu o número máximo de tópicos que um novo usuário pode criar em seu primeiro dia. Por favor aguarde %{time_left} antes de tentar novamente."
@@ -538,7 +535,6 @@ pt_BR:
       long_form: 'sinalizado como inapropriado'
     notify_user:
       title: 'Envie ao(à) @ {{nome de usuário}} uma mensagem'
-      description: 'Eu quero falar com essa pessoa diretamente e em particular sobre o seu post.'
       long_form: 'mensagem privada'
       email_title: 'Sobre a sua postagem "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -781,23 +777,19 @@ pt_BR:
     email_polling_errored_recently:
       one: "A apuração de email gerou um erro nas últimas 24 horas. Veja <a href='/logs' target='_blank'>os logs</a> para mais detalhes."
       other: "A apuração de email gerou %{count} erros nas últimas 24 horas. Veja <a href='/logs' target='_blank'>os logs</a> para mais detalhes."
-    missing_mailgun_api_key: "O servidor está configurado para enviar email pelo mailgun, mas você não forneceu uma chave de API usada para verificar as mensagens de webhook."
     bad_favicon_url: "O carregamento do favicon está falhando. Verifique a sua configuração de favicon_url nas <a href='/admin/site_settings'>Configurações do Site</a>."
     poll_pop3_timeout: "A conexão com o servidor POP3 está atingindo o tempo limite. Por favor, verifique suas <a href='/admin/site_settings/category/email'>configurações de POP3</a> e selecione um servidor de serviço."
     poll_pop3_auth_error: "A conexão com o servidor POP3 está falhando com um erro de autenticação. Por favor, verifique suas <a href='/admin/site_settings/category/email'>configurações de POP3</a>."
   site_settings:
     censored_words: "Palavras que serão substituídos automaticamente por &#9632;&#9632;&#9632;&#9632;"
-    censored_pattern: "Padrão de expressão regular que será automaticamente substituído por &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-apagar todas as mensagens ocultas que ficar oculta por mais de 30 dias."
     allow_user_locale: "Permitir que os usuários escolham suas próprias preferências de idioma de interface"
     set_locale_from_accept_language_header: "define a língua da interface para os usuários anônimos de acordo com os cabeçalhos de língua de seus navegadores. (EXPERIMENTAL, não funciona com cache anônimo)"
     min_post_length: "Comprimento mínimo permitido do post em caracteres"
     min_first_post_length: "Comprimento mínimo de caracteres permitido para primeira mensagem (corpo do tópico)"
-    min_personal_message_post_length: "Comprimento mínimo de caracteres permitido para mensagens"
     max_post_length: "Comprimento máximo permitido para o post em caracteres"
     min_topic_title_length: "Comprimento mínimo permitido para o título do post em caracteres"
     max_topic_title_length: "Comprimento máximo permitido para o título do post em caracteres"
-    min_personal_message_title_length: "Comprimento mínimo de caracteres permitido para o título de uma mensagem"
     min_search_term_length: "Comprimento mínimo válido para o termo de pesquisa em caracteres"
     search_tokenize_chinese_japanese_korean: "Força a busca a tokenizar Mandarim/Japonês/Coreano até para sites que não são nesses idiomas"
     search_prefer_recent_posts: "Se buscar o seu fórum está lento, essa opção tenta indexar as publicações mais recentes primeiro"
@@ -843,7 +835,6 @@ pt_BR:
     summary_likes_required: "Curtidas mínimas em um tópico antes de 'Resumir este tópico, ficar habilitado"
     summary_percent_filter: "Quando um usuário clicar em 'Resumor este tópico', mostrar os melhores % mensagens"
     summary_max_results: "Máximo número de posts quando resumidos por Categoria "
-    enable_personal_messages: "Permitir que usuários de nível de confiança 1 (configurável via o nível mínimo de confiança para enviar mensagens) criem e respondam a mensagens. Note que a equipe sempre pode enviar mensagens, independente do caso."
     enable_long_polling: "O sistema de mensagens das notificações pode fazer solicitações longas."
     long_polling_base_url: "URL Utilizada para \"long polling\" ( Quando um CDN for configurado, tenha certeza que essa configuração seja a padrão) ex: http://origin.site.com"
     long_polling_interval: "Tempo que o servidor deve aguardar antes de responder quando não existe nenhum dado para ser enviado. (apenas usuários logados)"
@@ -919,8 +910,6 @@ pt_BR:
     google_oauth2_client_id: "Client ID da sua aplicação Google."
     google_oauth2_client_secret: "Client secret da sua aplicação Google."
     enable_twitter_logins: "Ativar autenticação pelo Twitter, requer twitter_consumer_key e twitter_consumer_secret"
-    twitter_consumer_key: "consumer key registrada em dev.twitter.com (usada para fazer autenticação via twitter)"
-    twitter_consumer_secret: "consumer secret registrada em dev.twitter.com (usada para fazer autenticação via twitter)"
     enable_instagram_logins: "Habilitar autenticação via Instagram. Requer instagram_consumer_key e instagram_consumer_secret"
     instagram_consumer_key: "Chave de consumidor para autenticação via Instagram"
     instagram_consumer_secret: "Segredo de consumidor para autenticação via Instagram"
@@ -935,7 +924,6 @@ pt_BR:
     allow_restore: "Permitir restauração, que pode substituir todos os dados do site! Deixe falsa, a menos que você pretenda restaurar um backup"
     maximum_backups: "A quantidade máxima de backups para manter no disco. Backups mais antigos são excluídos automaticamente"
     automatic_backups_enabled: "Realizar backups automáticos, como definido na frequência de backup"
-    backup_frequency: "A frequência com a qual criamos backups, em dias."
     enable_s3_backups: "Fazer upload dos backups para o S3 quando completado. IMPORTANTE: exige credenciais válidas do S3 configuradas nas Configurações de Arquivos."
     s3_backup_bucket: "O repositório remoto para realizar backups. AVISO: Certifique-se de que é um repositório privado."
     s3_disable_cleanup: "Desabilitar a remoção de backups na S3 quando removidos localmente."
@@ -957,7 +945,6 @@ pt_BR:
     max_bookmarks_per_day: "Número máximo de novos favoritos por usuário por dia."
     max_edits_per_day: "Número máximo de edições que um usuário pode fazer por dia."
     max_topics_per_day: "Número máximo de postagens que um usuário pode criar por dia."
-    max_personal_messages_per_day: "Máximo número de mensagens que usuários podem criar por dia."
     max_invites_per_day: "Número máximo de convites que um usuário pode enviar por dia."
     max_topic_invitations_per_day: "Número máximo de convites para tópicos que um usuário pode enviar por dia."
     alert_admins_if_errors_per_minute: "Número de erros por minutos para desencadear um alerta aos administradores. Um valor igual a 0 desabilita esse recurso. NOTA: requer reinicialização."
@@ -1422,7 +1409,7 @@ pt_BR:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
-        %{message}
+          %{message}
     digest:
       why: "Um breve resumo de %{site_link} desde que viu pela última vez em %{last_seen_at}."
       since_last_visit: "Desde a sua última visita"

@@ -118,10 +118,10 @@ ca:
       email: 'envia aquest enllaç per correu electrònic'
     action_codes:
       public_topic: "va fer públic aquest tema %{when}"
-      private_topic: "va fer privat aquest tema %{when}"
       split_topic: "va dividir aquest tema %{when}"
       invited_user: "va invitar %{who} %{when}"
       invited_group: "va invitar %{who} %{when}"
+      user_left: "%{who} ha deixat aquest missatge %{when}"
       removed_user: "va eliminar %{who} %{when}"
       removed_group: "va eliminar %{who} %{when}"
       autoclosed:
@@ -148,8 +148,6 @@ ca:
     topic_admin_menu: "accions d'administració de tema"
     wizard_required: "Et donem la benvinguda al teu nou Discourse! Comencem amb <a href='%{url}' data-auto-route='true'>l'assistent de configuració</a> ✨"
     emails_are_disabled: "Tots els correus sortints han estat globalment inhabilitats per un administrador. No s'enviarà cap  notificació de cap tipus per correu electrònic."
-    bootstrap_mode_enabled: "Per llançar el teu nou lloc més fàcilment, ets en mode d'arrencada. Tots les noves persones usuàries obtindran el nivell 1 de confiança i tindran activats els avisos diaris via correu electrònic sobre actualitzacions. Es cancel·len automàticament quan el recompte total supera %{min_users} persones usuàries."
-    bootstrap_mode_disabled: "El mode <i>Bootstrap</i> es desactivarà durant les properes 24 hores."
     themes:
       default_description: "Per defecte"
     s3:
@@ -178,7 +176,7 @@ ca:
     sign_up: "Registra't"
     log_in: "Inicia sessió"
     age: "Edat"
-    joined: "T'hi has afegit"
+    joined: "Es va registrar"
     admin_title: "Admin"
     flags_title: "Avisos"
     show_more: "mostrar més"
@@ -245,16 +243,6 @@ ca:
       last_read: "aquesta és la darrera publicació que has llegit; clica per marcar-la com a preferit"
       remove: "Elimina Preferit"
       confirm_clear: "Segur que vols eliminar tots els preferits d'aquest tema?"
-    topic_count_latest:
-      one: "{{count}} tema nou o actualitzat."
-      other: "{{count}} temes nous o actualitzats."
-    topic_count_unread:
-      one: "{{count}} tema sense llegir."
-      other: "{{count}} temes sense llegir."
-    topic_count_new:
-      one: "{{count}} nou tema."
-      other: "{{count}} nous temes."
-    click_to_show: "Clica per mostrar-ho"
     preview: "previsualitza"
     cancel: "cancel·la"
     save: "Desa els canvis"
@@ -373,13 +361,10 @@ ca:
       request: "Demana afegir-te al grup"
       message: "Missatge"
       automatic_group: Grup Automàtic
-      closed_group: Grup Tancat
       is_group_user: "Ets membre d'aquest grup"
       membership: "Afiliació"
       name: "Nom"
-      user_count: "Quantitat de membres"
       bio: "Sobre el Grup"
-      selector_placeholder: "Afegeix membres"
       owner: "propietari"
       index:
         title: "Grups"
@@ -388,7 +373,6 @@ ca:
         one: "Grup"
         other: "Grups"
       activity: "Activitat"
-      members: "Membres"
       topics: "Temes"
       posts: "Publicacions"
       mentions: "Mencions"
@@ -445,6 +429,7 @@ ca:
       '14': "Pendents"
     categories:
       all: "totes les categories"
+      all_subcategories: "Tot a %{categoryName}"
       no_subcategory: "cap"
       category: "Categoria"
       category_list: "Mostra la llista de categories"
@@ -491,6 +476,7 @@ ca:
       mute: "Silenci"
       edit: "Editar preferències"
       download_archive:
+        button_text: "Descarrega tot"
         confirm: "Segur que vols descarregat les teves publicacions?"
         success: "Descàrrega inciada, quan el procés s'acabi t'ho notificarem amb un missatge."
         rate_limit_error: "Les publicacions es poden descarregar un cop al dia, si us plau torna a provar-ho demà."
@@ -559,6 +545,7 @@ ca:
       watched_first_post_tags_instructions: "Et notificarem la primera publicació per cada nou tema a aquestes etqieuetes."
       muted_categories: "Silenciades"
       muted_categories_instructions: "No et notificarem res sobre nous temes amb aquestes categories i no apareixeran a les darreres.."
+      no_category_access: "Com a moderador/a tens accés limitat a la categoria. Desar està inhabilitat."
       delete_account: "Esborra el meu compte"
       delete_account_confirm: "Segur que vols esborrar el teu compte permanentment? Aquesta acció no es pot desfer!"
       deleted_yourself: "El teu compte ha estat esborrat amb èxit."
@@ -1090,6 +1077,10 @@ ca:
         body: "Ara mateix aquest missatge només s'està enviant a la teva bústia!"
       admin_options_title: "Configuracions opcionals de l'equip per a aquest tema"
     notifications:
+      tooltip:
+        regular:
+          one: "1 notificació no vista"
+          other: "{{count}} notificacions no vistes"
       title: "notificacions de mencions via @nom, respostes a les teves entrades, missatges, etc"
       none: "Impossible carregar ara mateix les notificacions"
       empty: "No s'hi han trobat notificacions."
@@ -1097,26 +1088,13 @@ ca:
       total_flagged: "total publicacions amb bandera"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
-      alt:
-        mentioned: "Mencionat per"
-        quoted: "Citat per"
-        replied: "Respost"
-        posted: "Publicat per"
-        edited: "Edita la teva publicació per"
-        liked: "Ha agradat la teva publicació"
-        invited_to_topic: "Ha convidat a un tema de"
-        invitee_accepted: "Invitació acceptada per"
-        moved_post: "La teva publicació ha estat moguda per"
-        linked: "Enllaç a la teva publicació"
-        granted_badge: "Distintiu atorgat"
-        group_message_summary: "Missatges a la bústia d'entrada del grup"
       popup:
         mentioned: '{{username}} t''ha mencionat a "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} t''ha mencionat a "{{topic}}" - {{site_title}}'
         quoted: '{{username}} t''ha citat a "{{topic}}" - {{site_title}}'
         replied: '{{username}} t''ha respost a "{{topic}}" - {{site_title}}'
         posted: '{{username}} publicat a "{{topic}}" - {{site_title}}'
-        linked: 'A {{username}} li ha agradat la teva publicació de "{{topic}}" - {{site_title}}'
+        linked: '{{username}} ha enllaçat la teva entrada en "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Afegeix una imatge"
       title_with_attachments: "Afegeix una imatge o arxiu"
@@ -1194,7 +1172,7 @@ ca:
         select_all: "Selecciona-ho tot"
         clear_all: "Neteja-ho tot"
         unlist_topics: "Desllista temes"
-        reset_read: "Reinicia la la lectura"
+        reset_read: "Restableix llegit"
         delete: "Esborra temes"
         dismiss: "Descarta-ho"
         dismiss_read: "Descarta tots els llegits"
@@ -1204,14 +1182,16 @@ ca:
         dismiss_new: "Descarta'n els nous"
         toggle: "canvia la selecció massiva de temes"
         actions: "Accions massives"
+        change_category: "Defineix la Categoria"
         close_topics: "Tanca temes"
         archive_topics: "Arxiva temes"
+        notification_level: "Notificacions"
         choose_new_category: "Tria la nova categoria per als temes:"
         selected:
           one: "Has triat <b>1</b> tema."
           other: "Has triat <b>{{count}}</b> temes."
-        change_tags: "Reemplaçar Etiquetes"
-        append_tags: "Annexar Etiquetes"
+        change_tags: "Reemplaça Etiquetes"
+        append_tags: "Annexa Etiquetes"
         choose_new_tags: "Tria noves etiquetes per a aquests temes:"
         choose_append_tags: "Escollir noves etiquetes per annexar a aquest topics:"
         changed_tags: "Les etiquetes d'aquests temes han estat canviades."
@@ -1286,7 +1266,7 @@ ca:
         one: "hi ha 1 nova publicació a aquest tema des de la teva darrera lectura"
         other: "hi ha {{count}} noves publicacions a aquest tema des de la teva darrera lectura"
       likes:
-        one: "hi ha 1 <i>M'agrada</i> a aquest tema"
+        one: "hi ha 1 M'agrada a aquest tema"
         other: "hi ha {{count}} m'agrades en aquest tema"
       back_to_list: "Torna al llistat de temes"
       options: "Opcions de tema"
@@ -1306,6 +1286,8 @@ ca:
         three_months: "Tres mesos"
         six_months: "Sis mesos"
         one_year: "Un any"
+      status_update_notice:
+        auto_publish_to_category: "Aquest tema serà publicat a la categoria <a href=%{categoryUrl}>#%{categoryName}</a>%{timeLeft}"
       auto_close_title: 'Configuració del tancament automàtic'
       auto_close_immediate:
         one: "La darrera publicació al tema ja té 1 hora, per això el tema es tancarà immediatament."
@@ -1336,6 +1318,10 @@ ca:
           '3_2': 'Rebràs alertes perquè estàs mirant aquest tema.'
           '3_1': 'Rebràs alertes perquè has creat aquest tema.'
           '3': 'Rebràs alertes perquè estàs mirant aquest tema.'
+          '2_8': 'Rebràs notificacions, perquè estàs seguint aquesta categoria.'
+          '2_4': 'Rebràs notificacions, perquè has escrit una resposta a aquest tema.'
+          '2_2': 'Rebràs notificacions, perquè estàs seguint aquest tema.'
+          '2': 'Rebràs notificacions, perquè has <a href="/users/{{username}}/preferences">llegit aquest tema</a>.'
           '1_2': 'Només se''t notificarà si algú menciona el teu @nom o contesta la teva entrada.'
           '1': 'Se''t notificarà si algú menciona el teu @nom o contesta la teva entrada.'
           '0_7': 'No estàs fent cas de les alertes d''aquesta categoria.'
@@ -1377,7 +1363,7 @@ ca:
         archive: "Arxiva tema"
         invisible: "Desllista"
         visible: "Fes llistats"
-        reset_read: "Reinicia la lectura de dades"
+        reset_read: "Restableix dades de lectura"
         make_public: "Fes públic el tema"
       feature:
         pin: "Clava tema"
@@ -1502,8 +1488,8 @@ ca:
         select_all: selecciona-ho tot
         deselect_all: desmarca-ho tot
         description:
-          one: Has seleccionat <b>1</b> publicació
-          other: Has seleccionat <b>{{count}}</b> publicacions.
+          one: "Has seleccionat <b>1</b> publicació"
+          other: "Has seleccionat <b>{{count}}</b> publicacions."
     post:
       quote_reply: "Cita"
       edit_reason: "Motiu:"
@@ -1528,7 +1514,7 @@ ca:
         one: "{{count}} Resposta"
         other: "{{count}} Respostes"
       has_likes:
-        one: "{{count}}  <i>M'agrada</i>"
+        one: "{{count}}  M'agrada"
         other: "{{count}} M'agrades"
       has_likes_title:
         one: "La publicació agrada a 1 persona"
@@ -1691,6 +1677,8 @@ ca:
       settings: 'Configuracions'
       topic_template: "Plantilla de tema"
       tags: "Etiquetes"
+      tags_allowed_tags: "Permet l'ús de només aquestes etiquetes en aquesta categoria:"
+      tags_allowed_tag_groups: "Permet només l'ús d'etiquetes d'aquests grups en aquesta categoria:"
       tags_placeholder: "Llista (opcional) d'etiquetes permeses"
       tag_groups_placeholder: "Llista (opcional) d'etiquetes de grup permeses"
       topic_featured_link_allowed: "Permet enllaços destacats dins aquesta categoria"
@@ -1725,9 +1713,11 @@ ca:
       email_in_allow_strangers: "Accepta correus des de persones usuàries anònimes sense compte"
       email_in_disabled: "Les publicacions des del correu electrònic estan desactivades a les preferències del lloc. Per activar les publicacions des del correu electrònic, "
       email_in_disabled_click: 'activa l''opció "email in".'
-      suppress_from_homepage: "Suprimeix aquesta categoria des de la pàgina principal."
+      mailinglist_mirror: "La categoria replica una llista de correu"
       show_subcategory_list: "Mostrar les publicacions de les subcategories llistades a continuació d'aquesta categoria."
+      subcategory_num_featured_topics: "Nombre de temes destacats en la pàgina mare de la categoria:"
       all_topics_wiki: "Fes nou temes de wiki per defecte."
+      subcategory_list_style: "Estil de llista de la subcategoria:"
       allow_badges_label: "Permet concedir distintius dins aquesta categoria"
       edit_permissions: "Edita permisos"
       add_permission: "Afegeix permisos"
@@ -2060,19 +2050,15 @@ ca:
       notifications:
         watching:
           title: "Mirant"
-          description: "Miraràs automàticament tots els temes amb aquesta etiqueta. Et notificarem totes les noves publicacions i els nous temes, així com un recompte de noves publicacions que apareixerà al costat del tema."
         watching_first_post:
           title: "Mirant la primera publicació"
-          description: "Només et notificarem la primera publicació per cada nou tema amb aquesta etiqueta."
         tracking:
           title: "Seguint"
-          description: "Seguiràs automàticament tots els temes amb aquesta etiqueta. Apareixerà al costat del tema un recompte de publicacions noves i no llegides."
         regular:
           title: "Ordinari"
           description: "Rebràs alertes si una persona menciona el teu @nom o respon la teva publicació."
         muted:
           title: "Silenciat"
-          description: "No et notificarem res sobre nous temes amb aquesta etiqueta i no apareixeran a la teva pestanya de no llegits."
       groups:
         title: "Grups d'etiquetes"
         about: "Afegeix etiquetes a grups per gestionar-ho més fàcilment."
@@ -2207,7 +2193,6 @@ ca:
         edit: "Edita grups"
         refresh: "Actualitza"
         new: "Nou"
-        selector_placeholder: "escriu nom de persona usuària"
         about: "Edita aquí la teva pertinença de grup i noms"
         group_members: "Membres de grup"
         delete: "Esborra"
@@ -2834,10 +2819,7 @@ ca:
         recommended: "Recomanem personalitzar el següent text segons les teves necessitats:"
         show_overriden: 'Només mostra anul·lat'
       site_settings:
-        show_overriden: 'Només mostra anul·lat'
         title: 'Configuració'
-        reset: 'restableix'
-        none: 'cap'
         no_results: "Sense resultats"
         clear_filter: "Neteja"
         add_url: "afegeix URL"

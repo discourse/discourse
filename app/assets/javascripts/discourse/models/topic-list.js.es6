@@ -2,6 +2,23 @@ import { ajax } from 'discourse/lib/ajax';
 import RestModel from 'discourse/models/rest';
 import Model from 'discourse/models/model';
 
+// Whether to show the category badge in topic lists
+function displayCategoryInList(site, category) {
+  if (category) {
+    if (category.get('has_children')) {
+      return true;
+    }
+    let draftCategoryId = site.get('shared_drafts_category_id');
+    if (draftCategoryId && category.get('id') === draftCategoryId) {
+      return true;
+    }
+
+    return false;
+  }
+
+  return true;
+}
+
 const TopicList = RestModel.extend({
   canLoadMore: Em.computed.notEmpty("more_topics_url"),
 
@@ -34,8 +51,22 @@ const TopicList = RestModel.extend({
   loadMore() {
     if (this.get('loadingMore')) { return Ember.RSVP.resolve(); }
 
-    const moreUrl = this.get('more_topics_url');
+    let moreUrl = this.get('more_topics_url');
     if (moreUrl) {
+
+      let [url, params] = moreUrl.split("?");
+
+      // ensure we postfix with .json so username paths work
+      // correctly
+      if (!url.match(/\.json$/)) {
+        url += '.json';
+      }
+
+      moreUrl = url;
+      if (params) {
+        moreUrl += "?" + params;
+      }
+
       const self = this;
       this.set('loadingMore', true);
 
@@ -70,17 +101,17 @@ const TopicList = RestModel.extend({
 
 
   // loads topics with these ids "before" the current topics
-  loadBefore(topic_ids) {
+  loadBefore(topic_ids, storeInSession) {
     const topicList = this,
           topics = this.get('topics');
 
     // refresh dupes
     topics.removeObjects(topics.filter(topic => topic_ids.indexOf(topic.get('id')) >= 0));
 
-    const url = `${Discourse.getURL("/")}${this.get('filter')}?topic_ids=${topic_ids.join(",")}`;
+    const url = `${Discourse.getURL("/")}${this.get('filter')}.json?topic_ids=${topic_ids.join(",")}`;
     const store = this.store;
 
-    return ajax({ url }).then(result => {
+    return ajax({ url, data: this.get("params") }).then(result => {
       let i = 0;
       topicList.forEachNew(TopicList.topicsFrom(store, result), function(t) {
         // highlight the first of the new topics so we can get a visual feedback
@@ -88,14 +119,17 @@ const TopicList = RestModel.extend({
         topics.insertAt(i,t);
         i++;
       });
-      Discourse.Session.currentProp('topicList', topicList);
+      if (storeInSession) Discourse.Session.currentProp('topicList', topicList);
     });
   }
 });
 
 TopicList.reopenClass({
-  topicsFrom(store, result) {
+  topicsFrom(store, result, opts) {
     if (!result) { return; }
+
+    opts = opts || {};
+    let listKey = opts.listKey || 'topics';
 
     // Stitch together our side loaded data
 
@@ -103,7 +137,7 @@ TopicList.reopenClass({
           users = Model.extractByKey(result.users, Discourse.User),
           groups = Model.extractByKey(result.primary_groups, Ember.Object);
 
-    return result.topic_list.topics.map(function (t) {
+    return result.topic_list[listKey].map(function (t) {
       t.category = categories.findBy('id', t.category_id);
       t.posters.forEach(function(p) {
         p.user = users[p.user_id];
@@ -136,6 +170,10 @@ TopicList.reopenClass({
     json.per_page = json.topic_list.per_page;
     json.topics = this.topicsFrom(store, json);
 
+    if (json.topic_list.shared_drafts) {
+      json.sharedDrafts = this.topicsFrom(store, json, { listKey: 'shared_drafts' });
+    }
+
     return json;
   },
 
@@ -146,7 +184,7 @@ TopicList.reopenClass({
 
   // hide the category when it has no children
   hideUniformCategory(list, category) {
-    list.set('hideCategory', category && !category.get("has_children"));
+    list.set('hideCategory', !displayCategoryInList(list.site, category));
   }
 
 });

@@ -62,13 +62,16 @@ Launch the setup tool at
 Answer the following questions when prompted:
 
     Hostname for your Discourse? [discourse.example.com]: 
-    Email address for admin account? [me@example.com]: 
+    Email address for admin account(s)? [me@example.com,you@example.com]: 
     SMTP server address? [smtp.example.com]: 
-    SMTP user name? [postmaster@discourse.example.com]: 
-    SMTP port [587]:
-    SMTP password? []: 
+    SMTP port? [587]: 
+    SMTP user name? [user@example.com]: 
+    SMTP password? [pa$$word]: 
+    Let's Encrypt account email? (ENTER to skip) [me@example.com]: 
 
 This will generate an `app.yml` configuration file on your behalf, and then kicks off bootstrap. Bootstrapping takes between **2-8 minutes** to set up your Discourse. If you need to change these settings after bootstrapping, you can run `./discourse-setup` again (it will read your old values from the file) or edit `/containers/app.yml` with `nano` and then `./launcher rebuild app`, otherwise your changes will not take effect.
+
+**NOTE:** You should not attempt to enable Let's Encrypt unless the DNS record for hostname resolves to your server. You can run `./discourse-setup` again later to make any changes.
 
 ### Start Discourse
 

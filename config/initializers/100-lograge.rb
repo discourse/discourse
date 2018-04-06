@@ -8,6 +8,13 @@ if (Rails.env.production? && SiteSetting.logging_provider == 'lograge') || ENV["
   Rails.application.configure do
     config.lograge.enabled = true
 
+    Lograge.ignore(lambda do |event|
+      # this is our hijack magic status,
+      # no point logging this cause we log again
+      # direct from hijack
+      event.payload[:status] == 418
+    end)
+
     config.lograge.custom_payload do |controller|
       begin
         username =
@@ -27,6 +34,8 @@ if (Rails.env.production? && SiteSetting.logging_provider == 'lograge') || ENV["
         {
           ip: ip,
           username: username,
+          hostname: `hostname`,
+          pid: Process.pid
         }
       rescue => e
         Rails.logger.warn("Failed to append custom payload: #{e.message}\n#{e.backtrace.join("\n")}")
@@ -46,7 +55,7 @@ if (Rails.env.production? && SiteSetting.logging_provider == 'lograge') || ENV["
           database: RailsMultisite::ConnectionManagement.current_db,
         }
 
-        if data = Thread.current[:_method_profiler]
+        if data = (Thread.current[:_method_profiler] || event.payload[:timings])
           sql = data[:sql]
 
           if sql
@@ -59,6 +68,13 @@ if (Rails.env.production? && SiteSetting.logging_provider == 'lograge') || ENV["
           if redis
             output[:redis] = redis[:duration] * 1000
             output[:redis_calls] = redis[:calls]
+          end
+
+          net = data[:net]
+
+          if net
+            output[:net] = net[:duration] * 1000
+            output[:net_calls] = net[:calls]
           end
         end
 

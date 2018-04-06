@@ -4,6 +4,147 @@ RSpec.describe TopicsController do
   let(:topic) { Fabricate(:topic) }
   let(:user) { Fabricate(:user) }
 
+  describe '#update' do
+    it "won't allow us to update a topic when we're not logged in" do
+      put "/t/1.json", params: { slug: 'xyz' }
+      expect(response.status).to eq(403)
+    end
+
+    describe 'when logged in' do
+      let(:topic) { Fabricate(:topic, user: user) }
+
+      before do
+        Fabricate(:post, topic: topic)
+        sign_in(user)
+      end
+
+      it 'can not change category to a disallowed category' do
+        category = Fabricate(:category)
+        category.set_permissions(staff: :full)
+        category.save!
+
+        put "/t/#{topic.id}.json", params: { category_id: category.id }
+
+        expect(response.status).not_to eq(200)
+        expect(topic.category_id).not_to eq(category.id)
+      end
+
+      describe 'without permission' do
+        it "raises an exception when the user doesn't have permission to update the topic" do
+          topic.update!(archived: true)
+          put "/t/#{topic.slug}/#{topic.id}.json"
+
+          expect(response.status).to eq(403)
+        end
+      end
+
+      describe 'with permission' do
+        it 'succeeds' do
+          put "/t/#{topic.slug}/#{topic.id}.json"
+
+          expect(response.status).to eq(200)
+          expect(::JSON.parse(response.body)['basic_topic']).to be_present
+        end
+
+        it "can update a topic to an uncategorized topic" do
+          topic.update!(category: Fabricate(:category))
+
+          put "/t/#{topic.slug}/#{topic.id}.json", params: {
+            category_id: ""
+          }
+
+          expect(response.status).to eq(200)
+          expect(topic.reload.category_id).to eq(SiteSetting.uncategorized_category_id)
+        end
+
+        it 'allows a change of title' do
+          put "/t/#{topic.slug}/#{topic.id}.json", params: {
+            title: 'This is a new title for the topic'
+          }
+
+          topic.reload
+          expect(topic.title).to eq('This is a new title for the topic')
+        end
+
+        it "returns errors with invalid titles" do
+          put "/t/#{topic.slug}/#{topic.id}.json", params: {
+            title: 'asdf'
+          }
+
+          expect(response.status).to eq(422)
+          expect(JSON.parse(response.body)['errors']).to be_present
+        end
+
+        it "returns errors when the rate limit is exceeded" do
+          EditRateLimiter.any_instance.expects(:performed!).raises(RateLimiter::LimitExceeded.new(60))
+
+          put "/t/#{topic.slug}/#{topic.id}.json", params: {
+            title: 'This is a new title for the topic'
+          }
+
+          expect(response.status).to eq(429)
+        end
+
+        it "returns errors with invalid categories" do
+          put "/t/#{topic.slug}/#{topic.id}.json", params: {
+            category_id: -1
+          }
+
+          expect(response.status).to eq(422)
+        end
+
+        it "doesn't call the PostRevisor when there is no changes" do
+          PostRevisor.any_instance.expects(:revise!).never
+
+          put "/t/#{topic.slug}/#{topic.id}.json", params: {
+            category_id: topic.category_id
+          }
+
+          expect(response.status).to eq(200)
+        end
+
+        context 'when topic is private' do
+          before do
+            topic.update!(
+              archetype: Archetype.private_message,
+              category: nil,
+              allowed_users: [topic.user]
+            )
+          end
+
+          context 'when there are no changes' do
+            it 'does not call the PostRevisor' do
+              PostRevisor.any_instance.expects(:revise!).never
+
+              put "/t/#{topic.slug}/#{topic.id}.json", params: {
+                category_id: topic.category_id
+              }
+
+              expect(response.status).to eq(200)
+            end
+          end
+        end
+
+        context "allow_uncategorized_topics is false" do
+          before do
+            SiteSetting.allow_uncategorized_topics = false
+          end
+
+          it "can add a category to an uncategorized topic" do
+            category = Fabricate(:category)
+
+            put "/t/#{topic.slug}/#{topic.id}.json", params: {
+              category_id: category.id
+            }
+
+            expect(response.status).to eq(200)
+            expect(topic.reload.category).to eq(category)
+          end
+        end
+      end
+    end
+  end
+
   describe '#show' do
     let(:private_topic) { Fabricate(:private_message_topic) }
 
@@ -156,6 +297,110 @@ RSpec.describe TopicsController do
     end
   end
 
+  describe '#invite' do
+    describe 'when not logged in' do
+      it "should return the right response" do
+        post "/t/#{topic.id}/invite.json", params: {
+          email: 'jake@adventuretime.ooo'
+        }
+
+        expect(response.status).to eq(403)
+      end
+    end
+
+    describe 'when logged in' do
+      before do
+        sign_in(user)
+      end
+
+      describe 'as a valid user' do
+        let(:topic) { Fabricate(:topic, user: user) }
+
+        it 'should return the right response' do
+          user.update!(trust_level: TrustLevel[2])
+
+          expect do
+            post "/t/#{topic.id}/invite.json", params: {
+              email: 'someguy@email.com'
+            }
+          end.to change { Invite.where(invited_by_id: user.id).count }.by(1)
+
+          expect(response.status).to eq(200)
+        end
+      end
+
+      describe 'when user is a group manager' do
+        let(:group) { Fabricate(:group).tap { |g| g.add_owner(user) } }
+        let(:private_category)  { Fabricate(:private_category, group: group) }
+
+        let(:group_private_topic) do
+          Fabricate(:topic, category: private_category, user: user)
+        end
+
+        let(:recipient) { 'jake@adventuretime.ooo' }
+
+        it "should attach group to the invite" do
+
+          post "/t/#{group_private_topic.id}/invite.json", params: {
+            user: recipient
+          }
+
+          expect(response.status).to eq(200)
+          expect(Invite.find_by(email: recipient).groups).to eq([group])
+        end
+      end
+
+      describe 'when topic id is invalid' do
+        it 'should return the right response' do
+          post "/t/999/invite.json", params: {
+            email: Fabricate(:user).email
+          }
+
+          expect(response.status).to eq(400)
+        end
+      end
+
+      it 'requires an email parameter' do
+        post "/t/#{topic.id}/invite.json"
+        expect(response.status).to eq(400)
+      end
+
+      describe 'when user does not have permission to invite to the topic' do
+        let(:topic) { Fabricate(:private_message_topic) }
+
+        it "should return the right response" do
+          post "/t/#{topic.id}/invite.json", params: {
+            user: user.username
+          }
+
+          expect(response.status).to eq(403)
+        end
+      end
+    end
+
+    describe "when inviting a group to a topic" do
+      let(:group) { Fabricate(:group) }
+
+      before do
+        sign_in(Fabricate(:admin))
+      end
+
+      it "should work correctly" do
+        email = 'hiro@from.heros'
+
+        post "/t/#{topic.id}/invite.json", params: {
+          email: email, group_ids: group.id
+        }
+
+        expect(response.status).to eq(200)
+
+        groups = Invite.find_by(email: email).groups
+        expect(groups.count).to eq(1)
+        expect(groups.first.id).to eq(group.id)
+      end
+    end
+  end
+
   describe 'invite_group' do
     let(:admins) { Group[:admins] }
     let(:pm) { Fabricate(:private_message_topic) }
@@ -210,4 +455,87 @@ RSpec.describe TopicsController do
       end
     end
   end
+
+  describe 'shared drafts' do
+    let(:shared_drafts_category) { Fabricate(:category) }
+    let(:category) { Fabricate(:category) }
+
+    before do
+      SiteSetting.shared_drafts_category = shared_drafts_category.id
+    end
+
+    describe "#update_shared_draft" do
+      let(:other_cat) { Fabricate(:category) }
+      let(:category) { Fabricate(:category) }
+      let(:topic) { Fabricate(:topic, category: shared_drafts_category, visible: false) }
+
+      context "anonymous" do
+        it "doesn't allow staff to update the shared draft" do
+          put "/t/#{topic.id}/shared-draft.json", params: { category_id: other_cat.id }
+          expect(response.code.to_i).to eq(403)
+        end
+      end
+
+      context "as a moderator" do
+        let(:moderator) { Fabricate(:moderator) }
+        before do
+          sign_in(moderator)
+        end
+
+        context "with a shared draft" do
+          let!(:shared_draft) { Fabricate(:shared_draft, topic: topic, category: category) }
+          it "allows staff to update the category id" do
+            put "/t/#{topic.id}/shared-draft.json", params: { category_id: other_cat.id }
+            expect(response).to be_success
+            topic.reload
+            expect(topic.shared_draft.category_id).to eq(other_cat.id)
+          end
+        end
+
+        context "without a shared draft" do
+          it "allows staff to update the category id" do
+            put "/t/#{topic.id}/shared-draft.json", params: { category_id: other_cat.id }
+            expect(response).to be_success
+            topic.reload
+            expect(topic.shared_draft.category_id).to eq(other_cat.id)
+          end
+        end
+      end
+    end
+
+    describe "#publish" do
+      let(:category) { Fabricate(:category) }
+      let(:topic) { Fabricate(:topic, category: shared_drafts_category, visible: false) }
+      let(:shared_draft) { Fabricate(:shared_draft, topic: topic, category: category) }
+      let(:moderator) { Fabricate(:moderator) }
+
+      it "fails for anonymous users" do
+        put "/t/#{topic.id}/publish.json", params: { destination_category_id: category.id }
+        expect(response.status).to eq(403)
+      end
+
+      it "fails as a regular user" do
+        sign_in(Fabricate(:user))
+        put "/t/#{topic.id}/publish.json", params: { destination_category_id: category.id }
+        expect(response.status).to eq(403)
+      end
+
+      context "as staff" do
+        before do
+          sign_in(moderator)
+        end
+
+        it "will publish the topic" do
+          put "/t/#{topic.id}/publish.json", params: { destination_category_id: category.id }
+          expect(response.status).to eq(200)
+          json = ::JSON.parse(response.body)['basic_topic']
+
+          result = Topic.find(json['id'])
+          expect(result.category_id).to eq(category.id)
+          expect(result.visible).to eq(true)
+        end
+      end
+    end
+  end
+
 end

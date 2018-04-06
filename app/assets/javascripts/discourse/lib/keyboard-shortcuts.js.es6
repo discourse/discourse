@@ -1,6 +1,6 @@
 import DiscourseURL from 'discourse/lib/url';
 import Composer from 'discourse/models/composer';
-import { scrollTopFor } from 'discourse/lib/offset-calculator';
+import { minimumOffset } from 'discourse/lib/offset-calculator';
 
 const bindings = {
   '!':               {postAction: 'showFlags'},
@@ -318,12 +318,12 @@ export default {
     const $selected = ($articles.filter('.selected').length !== 0)
       ? $articles.filter('.selected')
       : $articles.filter('[data-islastviewedtopic=true]');
+
     let index = $articles.index($selected);
 
-    if ($selected.length !== 0) { //boundries check
-      // loop is not allowed
+    if ($selected.length !== 0) {
       if (direction === -1 && index === 0) { return; }
-      if (direction === 1 && index === ($articles.size()-1) ) { return; }
+      if (direction === 1 && index === ($articles.length - 1) ) { return; }
     }
 
     // if nothing is selected go to the first post on screen
@@ -348,15 +348,13 @@ export default {
 
     const $article = $articles.eq(index + direction);
 
-    if ($article.size() > 0) {
-
+    if ($article.length > 0) {
       $articles.removeClass('selected');
       $article.addClass('selected');
 
       if ($article.is('.topic-post')) {
         $('a.tabLoc', $article).focus();
         this._scrollToPost($article);
-
       } else {
         this._scrollList($article, direction);
       }
@@ -364,8 +362,7 @@ export default {
   },
 
   _scrollToPost($article) {
-    const pos = $article.offset();
-    $(window).scrollTop(Math.ceil(pos.top - scrollTopFor(pos.top)));
+    $(window).scrollTop($article.offset().top - minimumOffset());
   },
 
   _scrollList($article) {
@@ -396,10 +393,10 @@ export default {
     const $topicList = $('.topic-list'),
         $topicArea = $('.posts-wrapper');
 
-    if ($topicArea.size() > 0) {
+    if ($topicArea.length > 0) {
       return $('.posts-wrapper .topic-post, .topic-list tbody tr');
     }
-    else if ($topicList.size() > 0) {
+    else if ($topicList.length > 0) {
       return $topicList.find('.topic-list-item');
     }
   },

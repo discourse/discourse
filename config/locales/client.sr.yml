@@ -138,7 +138,6 @@ sr:
       email: 'podeli ovaj link preko e-pošte'
     action_codes:
       public_topic: "objavi ovu temu javno %{when}"
-      private_topic: "objavi ovu temu privatno %{when}"
       split_topic: "podeli ovu temu %{when}"
       invited_user: "pozvan %{who} %{when}"
       invited_group: "pozvan%{who}%{when}"
@@ -169,8 +168,6 @@ sr:
     topic_admin_menu: "tema admin akcije"
     wizard_required: "Dobrodošli na Vaš novi Discourse! Počnimo sa <a href='%{url}' data-auto-route='true'>instalacijom</a>"
     emails_are_disabled: "Sva odlazeća epošta je onemogućena globalno od strane administratora. Ni jedna notifikacija neće biti poslata."
-    bootstrap_mode_enabled: "Ne bi li olakšali lansiranje Vašeg novoj sajta, trenutno ste u bootstrap modu. Svim novim korisnicima će biti dodeljen nivo poverljivosti 1 i imaće omogućene dnevne e-mail preglede. Ovo će automatski biti isključeno kada ukupni broj korisnika pređe %{min_users}korisnika."
-    bootstrap_mode_disabled: "Bootstrap mod će biti isključen u naredna 24 časa."
     themes:
       default_description: "zadato"
     s3:
@@ -268,19 +265,6 @@ sr:
       last_read: "ovo je zadnja poruka koju si pročitao; klikni da bi je markirao"
       remove: "Obriši marker"
       confirm_clear: "Jeste li sigurni da želite izbrisati sve markere sa ove teme?"
-    topic_count_latest:
-      one: "{{count}} nova ili izmenjena tema."
-      few: "{{count}} nove ili izmenjene teme."
-      other: "{{count}} novih ili izmenjenih tema."
-    topic_count_unread:
-      one: "{{count}} nepročitana tema"
-      few: "{{count}} nepročitane teme"
-      other: "{{count}} nepročitanih tema"
-    topic_count_new:
-      one: "{{count}} nova tema."
-      few: "{{count}} nove teme."
-      other: "{{count}} novih tema."
-    click_to_show: "Klikni da pogledaš"
     preview: "prikaži"
     cancel: "otkaži"
     save: "Sačuvaj izmene"
@@ -369,7 +353,6 @@ sr:
       owner: "vlasnik"
       index:
         title: "Grupe"
-      members: "Članovi"
       topics: "Teme"
       posts: "Poruka"
       mentions: "Spominjanja"
@@ -872,8 +855,6 @@ sr:
       empty: "Nisu pronađene notifikacije"
       more: "pogledaj starije notifikacije"
       total_flagged: "sve ukupno označenih poruka"
-      alt:
-        replied: "Odgovoreno"
     upload_selector:
       title: "Dodaj sliku"
       title_with_attachments: "Dodaj sliku ili datoteku"
@@ -1116,9 +1097,9 @@ sr:
         select_all: odaberi sve
         deselect_all: odustani od odabira
         description:
-          one: Odabrali ste <b>{{count}}</b> poruka.
-          few: Odabrali ste <b>{{count}}</b> poruka.
-          other: Odabrali ste <b>{{count}}</b> poruka.
+          one: "Odabrali ste <b>{{count}}</b> poruka."
+          few: "Odabrali ste <b>{{count}}</b> poruka."
+          other: "Odabrali ste <b>{{count}}</b> poruka."
     post:
       edit_reason: "Razlog:"
       post_number: "poruka {{number}}"
@@ -1534,7 +1515,6 @@ sr:
         edit: "Izmeni Grupe"
         refresh: "Osveži"
         new: "Novo"
-        selector_placeholder: "unesite korisničko ime"
         about: "Ovde izmenite svoje članstvo u grupama i imenima grupa"
         group_members: "Članovi grupe"
         delete: "Obriši"
@@ -1950,10 +1930,7 @@ sr:
       site_text:
         title: 'Sadžaj Teksta'
       site_settings:
-        show_overriden: 'Pokazuj samo promenjeno'
         title: 'Podešavanja'
-        reset: 'resetuj'
-        none: 'ništa'
         no_results: "Nema pronađenih rezultata."
         clear_filter: "Čisto"
         categories:

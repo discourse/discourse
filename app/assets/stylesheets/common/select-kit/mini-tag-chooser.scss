@@ -7,8 +7,6 @@
       &.is-expanded {
         .select-kit-header {
           border: 1px solid $tertiary;
-          -webkit-box-shadow: $tertiary 0 0 6px 0px;
-                  box-shadow: $tertiary 0 0 6px 0px;
         }
       }
 
@@ -21,7 +19,19 @@
       .select-kit-body {
         max-width: 500px;
         width: 500px;
-        border: 1px solid $primary-low;
+        border: 1px solid $tertiary;
+        box-shadow: shadow("focus")
+      }
+
+      .select-kit-header {
+        .selected-name {
+          margin: 0;
+          border: 0;
+          padding: 0;
+          outline: none;
+          box-shadow: none;
+          cursor: pointer;
+        }
       }
 
       .select-kit-filter {
@@ -59,7 +69,7 @@
           }
 
           .selected-tag {
-            background: $primary-very-low;
+            background: $primary-low;
             padding: 2px 4px;
             margin: 2px;
             border: 0;

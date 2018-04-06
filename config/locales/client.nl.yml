@@ -112,7 +112,6 @@ nl:
       email: 'deze koppeling delen via e-mail'
     action_codes:
       public_topic: "heeft dit topic openbaar gemaakt op %{when}"
-      private_topic: "heeft dit topic als privé gemarkeerd op %{when}"
       split_topic: "heeft dit topic gesplitst op %{when}"
       invited_user: "heeft %{who} uitgenodigd op %{when}"
       invited_group: "heeft %{who} uitgenodigd op %{when}"
@@ -142,8 +141,6 @@ nl:
     topic_admin_menu: "beheeracties voor topic"
     wizard_required: "Welkom bij je nieuwe Discourse! Laten we beginnen met <a href='%{url}' data-auto-route='true'>de configuratiewizard</a> ✨"
     emails_are_disabled: "Alle uitgaande e-mail is uitgeschakeld door een beheerder. Er zal geen enkele e-mailmelding worden verstuurd."
-    bootstrap_mode_enabled: "Om het lanceren van je website makkelijker te maken, bevind je je in bootstrapmodus. Aan alle nieuwe gebruikers wordt vertrouwensniveau 1 toegekend en dagelijkse e-mailsamenvattingen zijn voor hen ingeschakeld. Dit wordt automatisch uitgeschakeld wanneer het totale gebruikersaantal %{min_users} gebruikers overschrijdt."
-    bootstrap_mode_disabled: "De bootstrapmodus zal in de komende 24 uur worden uitgeschakeld."
     themes:
       default_description: "Standaard"
     s3:
@@ -239,16 +236,6 @@ nl:
       last_read: "dit is het laatste bericht dat je hebt gelezen; klik om er een bladwijzer voor te maken"
       remove: "Bladwijzer verwijderen"
       confirm_clear: "Weet je zeker dat je alle bladwijzers van dit topic wilt verwijderen?"
-    topic_count_latest:
-      one: "{{count}} nieuwe of aangepaste discussie."
-      other: "{{count}} nieuwe of bijgewerkte topics."
-    topic_count_unread:
-      one: "{{count}} ongelezen topic."
-      other: "{{count}} ongelezen topics."
-    topic_count_new:
-      one: "{{count}} nieuw topic."
-      other: "{{count}} nieuwe topics."
-    click_to_show: "Klik om te bekijken."
     preview: "voorbeeld"
     cancel: "annuleer"
     save: "Wijzigingen opslaan"
@@ -368,7 +355,6 @@ nl:
       request: "Verzoek voor deelname aan groep"
       message: "Bericht"
       automatic_group: Automatische groep
-      closed_group: Besloten groep
       is_group_user: "U bent een lid van deze groep"
       allow_membership_requests: "Gebruikers toestaan om lidmaatschapsverzoeken naar groepseigenaren te sturen"
       membership_request_template: "Aangepaste template om aan gebruikers te laten zien bij het sturen van een lidmaatschap verzoek"
@@ -378,9 +364,7 @@ nl:
         reason: "Laat de groepbeheerders weten waarom je in deze groep hoort"
       membership: "Lidmaatschap"
       name: "Naam"
-      user_count: "Aantal leden"
       bio: "Over groep"
-      selector_placeholder: "Leden toevoegen"
       owner: "eigenaar"
       index:
         title: "Groepen"
@@ -389,7 +373,6 @@ nl:
         one: "Groep"
         other: "Groepen"
       activity: "Activiteit"
-      members: "Leden"
       topics: "Topics"
       posts: "Berichten"
       mentions: "Vermeldingen"
@@ -1159,19 +1142,6 @@ nl:
       group_message_summary:
         one: "{{count}} bericht in je Postvak IN voor {{group_name}}"
         other: "{{count}} berichten in je Postvak IN voor {{group_name}}"
-      alt:
-        mentioned: "Genoemd door"
-        quoted: "Geciteerd door"
-        replied: "Beantwoord"
-        posted: "Geplaatst door"
-        edited: "Uw bericht bewerkt door"
-        liked: "Heeft uw bericht geliket"
-        invited_to_topic: "Uitgenodigd voor een topic door"
-        invitee_accepted: "Uitnodiging geaccepteerd door"
-        moved_post: "Uw bericht is verplaatst door"
-        linked: "Koppeling naar uw bericht"
-        granted_badge: "Badge toegekend"
-        group_message_summary: "Berichten in groepspostvak"
       popup:
         mentioned: '{{username}} heeft u genoemd in ''{{topic}}'' - {{site_title}}'
         group_mentioned: '{{username}} heeft u genoemd in ''{{topic}}'' - {{site_title}}'
@@ -1620,8 +1590,8 @@ nl:
         select_all: alles selecteren
         deselect_all: alles deselecteren
         description:
-          one: U hebt <b>1</b> bericht geselecteerd.
-          other: U hebt <b>{{count}}</b> berichten geselecteerd.
+          one: "U hebt <b>1</b> bericht geselecteerd."
+          other: "U hebt <b>{{count}}</b> berichten geselecteerd."
     post:
       quote_reply: "Citeren"
       edit_reason: "Reden: "
@@ -1861,7 +1831,6 @@ nl:
       email_in_allow_strangers: "E-mails van anonieme gebruikers zonder account accepteren"
       email_in_disabled: "Het plaatsen van nieuwe topics via e-mail is uitgeschakeld in de webite-instellingen. Om het plaatsen van nieuwe topics via e-mail mogelijk te maken, "
       email_in_disabled_click: 'schakelt u de instelling ''e-mail in'' in.'
-      suppress_from_homepage: "Deze categorie op de startpagina negeren"
       show_subcategory_list: "Subcategorielijsten boven topics tonen in deze categorie"
       num_featured_topics: "Aantal getoonde topics op de categoriepagina:"
       subcategory_num_featured_topics: "Aantal aanbevolen topics op pagina van bovenliggende categorie:"
@@ -2214,19 +2183,15 @@ nl:
       notifications:
         watching:
           title: "In de gaten houden"
-          description: "U houdt automatisch alle nieuwe topics met deze tag in de gaten. U ontvangt meldingen bij alle nieuwe berichten en topics, en het aantal ongelezen en nieuwe berichten verschijnt ook naast het topic."
         watching_first_post:
           title: "Eerste bericht in de gaten houden."
-          description: "U ontvangt alleen een melding van het eerste bericht in elk nieuw topic met deze tag."
         tracking:
           title: "Volgen"
-          description: "U volgt automatisch alle topics met deze tag. Het aantal ongelezen en nieuwe berichten verschijnt naast het topic."
         regular:
           title: "Normaal"
           description: "U ontvangt een melding wanneer iemand uw @naam noemt of een bericht van uw beantwoordt."
         muted:
           title: "Genegeerd"
-          description: "U ontvangt geen meldingen over nieuwe topics met deze tag, en ze verschijnen niet in uw tabblad met ongelezen berichten."
       groups:
         title: "Tag-groepen"
         about: "Tags aan groepen toevoegen om deze makkelijker te beheren."
@@ -2374,7 +2339,6 @@ nl:
         edit: "Groepen bewerken"
         refresh: "Vernieuwen"
         new: "Nieuw"
-        selector_placeholder: "voer gebruikersnaam in"
         about: "Bewerk hier uw groepslidmaatschap en namen"
         group_members: "Groepsleden"
         delete: "Verwijderen"
@@ -3119,10 +3083,7 @@ nl:
         recommended: "We raden aan de volgende tekst naar wens aan te passen:"
         show_overriden: 'Alleen overschreven tekst tonen'
       site_settings:
-        show_overriden: 'Alleen overschreven instellingen tonen'
         title: 'Instellingen'
-        reset: 'standaardinstellingen'
-        none: 'geen'
         no_results: "Geen resultaten gevonden."
         clear_filter: "Wis"
         add_url: "URL toevoegen"

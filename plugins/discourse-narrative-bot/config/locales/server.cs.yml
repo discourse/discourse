@@ -7,7 +7,7 @@
 
 cs:
   site_settings:
-    discourse_narrative_bot_enabled: 'Zapnonut Discourse robota průvodce'
+    discourse_narrative_bot_enabled: 'Zapnout Discourse robota průvodce'
     disable_discourse_narrative_bot_welcome_post: "Vypnout uvítací příspěvek od Discourse robota průvodce"
     discourse_narrative_bot_ignored_usernames: "Uživatelská jména, která by měl Discourse robot průvodce ignorovat"
     discourse_narrative_bot_disable_public_replies: "Vypnout veřejné odpovědi Discourse robota průvodce"
@@ -59,12 +59,16 @@ cs:
         quote: "Neplačte proto, že je po všem, radujte se, protože se to stalo."
         author: "Dr Seuss"
       '4':
+        quote: "Pokud chcete udělat nějakou správnou věc, tak ji udělejte sami."
         author: "Charles-Guillaume Étienne"
       '5':
+        quote: "Věř tomu, že na to máš, a budeš na půli cesty k úspěchu."
         author: "Theodore Roosevelt"
       '6':
+        quote: "Život je jako bonboniéra, nikdy nevíš, co ochutnáš."
         author: "Máma Forresta Gumpa"
       '7':
+        quote: "Je to malý krůček pro člověka, ale velký skok pro lidstvo."
         author: "Neil Armstrong"
       '8':
         author: "Eleanor Roosevelt"
@@ -87,7 +91,7 @@ cs:
         '9': "Ano"
         '10': "Dle znamení ano"
         '11': "Odpověď nejistá, zeptej se znovu"
-        '12': "Zeptej se jindy"
+        '12': "Zeptej se později"
         '13': "To ti teď raději neřeknu"
         '14': "To nyní nedokážu předpovědět"
         '15': "Soustřeď se a zeptej se znovu"

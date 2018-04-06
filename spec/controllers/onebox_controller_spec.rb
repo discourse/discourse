@@ -14,7 +14,7 @@ describe OneboxController do
     before { @user = log_in(:admin) }
 
     it 'invalidates the cache if refresh is passed' do
-      Oneboxer.expects(:preview).with(url, invalidate_oneboxes: true, user_id: @user.id, category_id: 0)
+      Oneboxer.expects(:preview).with(url, invalidate_oneboxes: true, user_id: @user.id, category_id: 0, topic_id: 0)
       get :show, params: { url: url, refresh: 'true' }, format: :json
     end
 
@@ -35,11 +35,8 @@ describe OneboxController do
 
         url = "http://noodle.com/"
 
-        stub_request(:head, url).
-          to_return(status: 200, body: "", headers: {}).then.to_raise
-
-        stub_request(:get, url)
-          .to_return(status: 200, headers: {}, body: onebox_html).then.to_raise
+        stub_request(:head, url)
+        stub_request(:get, url).to_return(body: onebox_html).then.to_raise
 
         get :show, params: { url: url, refresh: "true" }, format: :json
 
@@ -100,35 +97,66 @@ describe OneboxController do
     describe "local onebox" do
 
       it 'does not cache local oneboxes' do
-        post1 = create_post
-        url = Discourse.base_url + post1.url
+        post = create_post
+        url = Discourse.base_url + post.url
 
-        get :show, params: { url: url, category_id: post1.topic.category_id }, format: :json
+        get :show, params: { url: url, category_id: post.topic.category_id }, format: :json
         expect(response.body).to include('blockquote')
 
-        post1.trash!
+        post.trash!
 
-        get :show, params: { url: url, category_id: post1.topic.category_id }, format: :json
+        get :show, params: { url: url, category_id: post.topic.category_id }, format: :json
         expect(response.body).not_to include('blockquote')
       end
     end
 
-  end
+    it 'does not onebox when you have no permission on category' do
+      log_in
 
-  it 'does not onebox when you have no permission on category' do
-    log_in
+      post = create_post
+      url = Discourse.base_url + post.url
 
-    post1 = create_post
-    url = Discourse.base_url + post1.url
+      get :show, params: { url: url, category_id: post.topic.category_id }, format: :json
+      expect(response.body).to include('blockquote')
 
-    get :show, params: { url: url, category_id: post1.topic.category_id }, format: :json
-    expect(response.body).to include('blockquote')
+      post.topic.category.set_permissions(staff: :full)
+      post.topic.category.save
 
-    post1.topic.category.set_permissions(staff: :full)
-    post1.topic.category.save
+      get :show, params: { url: url, category_id: post.topic.category_id }, format: :json
+      expect(response.body).not_to include('blockquote')
+    end
 
-    get :show, params: { url: url, category_id: post1.topic.category_id }, format: :json
-    expect(response.body).not_to include('blockquote')
+    it 'does not allow onebox of PMs' do
+      user = log_in
+
+      post = create_post(archetype: 'private_message', target_usernames: [user.username])
+      url = Discourse.base_url + post.url
+
+      get :show, params: { url: url }, format: :json
+      expect(response.body).not_to include('blockquote')
+    end
+
+    it 'does not allow whisper onebox' do
+      log_in
+
+      post = create_post
+      whisper = create_post(topic_id: post.topic_id, post_type: Post.types[:whisper])
+      url = Discourse.base_url + whisper.url
+
+      get :show, params: { url: url }, format: :json
+      expect(response.body).not_to include('blockquote')
+    end
+
+    it 'allows onebox to public topics/posts in PM' do
+      log_in
+
+      post = create_post
+      url = Discourse.base_url + post.url
+
+      get :show, params: { url: url }, format: :json
+      expect(response.body).to include('blockquote')
+    end
+
   end
 
 end

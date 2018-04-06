@@ -2,6 +2,23 @@
   background: rgba(230, 230, 230, 0.3);
   padding: 20px;
   margin-bottom: 15px;
+  position: relative;
+
+  .group-details-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  }
+}
+
+.group-outlet {
+  position: relative;
+}
+
+.group-username-filter {
+  position: absolute;
+  right: 0;
+  top: -49px;
 }
 
 .group-post {
@@ -78,7 +95,7 @@
   }
 }
 
-.group-logs-filter {
+.group-manage-logs-filter {
   margin-right: 10px;
 
   &:hover {
@@ -86,7 +103,7 @@
   }
 }
 
-table.group-logs {
+table.group-manage-logs {
   width: 100%;
 
   th, tr {
@@ -102,7 +119,7 @@ table.group-logs {
     padding: 10px 0;
   }
 
-  .group-logs-expand-details {
+  .group-manage-logs-expand-details {
     cursor: pointer;
 
     i {
@@ -120,8 +137,12 @@ table.group-members {
   }
 
   th:first-child {
-    width: 60%;
+    width: 30%;
     text-align: left;
+  }
+
+  th:last-child {
+    width: 5%;
   }
 
   th.group-members-actions {
@@ -197,10 +218,19 @@ table.group-members {
   }
 }
 
-.group-edit {
-  .form-horizontal {
+.group-form-save {
+  margin-right: 20px;
+}
+
+.group-manage-members {
+  .group-manage-members-make-owner {
     label {
-      font-weight: bold;
+      display: inline;
+      vertical-align: middle;
+    }
+
+    input[type='checkbox'] {
+      vertical-align: middle;
     }
   }
 }

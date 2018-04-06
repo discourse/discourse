@@ -12,9 +12,43 @@ RSpec.describe PostsController do
 
   let(:private_post) { Fabricate(:post, user: user, topic: private_topic) }
 
+  describe '#update' do
+
+    it 'can not change category to a disallowed category' do
+      post = create_post
+      sign_in(post.user)
+
+      category = Fabricate(:category)
+      category.set_permissions(staff: :full)
+      category.save!
+
+      put "/posts/#{post.id}.json", params: {
+        post: { category_id: category.id, raw: "this is a test edit to post" }
+      }
+
+      expect(response.status).not_to eq(200)
+      expect(post.topic.category_id).not_to eq(category.id)
+    end
+
+  end
+
   describe '#create' do
     before do
       sign_in(user)
+    end
+
+    it 'can not create a post in a disallowed category' do
+      category.set_permissions(staff: :full)
+      category.save!
+
+      post "/posts.json", params: {
+        raw: 'this is the test content',
+        title: 'this is the test title for the topic',
+        category: category.id,
+        meta_data: { xyz: 'abc' }
+      }
+
+      expect(response.status).to eq(403)
     end
 
     it 'creates the post' do
@@ -83,6 +117,59 @@ RSpec.describe PostsController do
       expect(new_post.user).to eq(user)
       expect(new_topic.private_message?).to eq(true)
       expect(new_topic.allowed_users).to contain_exactly(user, user_2, user_3)
+    end
+
+    describe 'shared draft' do
+      let(:destination_category) { Fabricate(:category) }
+
+      it "will raise an error for regular users" do
+        post "/posts.json", params: {
+          raw: 'this is the shared draft content',
+          title: "this is the shared draft title",
+          category: destination_category.id,
+          shared_draft: 'true'
+        }
+        expect(response).not_to be_success
+      end
+
+      describe "as a staff user" do
+        before do
+          sign_in(Fabricate(:moderator))
+        end
+
+        it "will raise an error if there is no shared draft category" do
+          post "/posts.json", params: {
+            raw: 'this is the shared draft content',
+            title: "this is the shared draft title",
+            category: destination_category.id,
+            shared_draft: 'true'
+          }
+          expect(response).not_to be_success
+        end
+
+        context "with a shared category" do
+          let(:shared_category) { Fabricate(:category) }
+          before do
+            SiteSetting.shared_drafts_category = shared_category.id
+          end
+
+          it "will work if the shared draft category is present" do
+            post "/posts.json", params: {
+              raw: 'this is the shared draft content',
+              title: "this is the shared draft title",
+              category: destination_category.id,
+              shared_draft: 'true'
+            }
+            expect(response).to be_success
+            result = JSON.parse(response.body)
+            topic = Topic.find(result['topic_id'])
+            expect(topic.category_id).to eq(shared_category.id)
+            expect(topic.shared_draft.category_id).to eq(destination_category.id)
+          end
+        end
+
+      end
+
     end
 
     describe 'warnings' do

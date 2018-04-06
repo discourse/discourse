@@ -1,4 +1,4 @@
-<label>{{i18n 'groups.members'}} ({{model.user_count}})</label>
+<label>{{i18n 'groups.members.title'}} ({{model.user_count}})</label>
 
 {{#if model.members}}
   <div>
@@ -16,7 +16,7 @@
 {{#unless model.automatic}}
   <div class="group-members-input-selector">
     {{user-selector usernames=model.usernames
-          placeholderKey="admin.groups.selector_placeholder"
+          placeholderKey="groups.selector_placeholder"
           id="member-selector"}}
 
     {{#if addButton}}
@@ -24,7 +24,7 @@
           class="add"
           icon="plus"
           disabled=disableAddButton
-          label="groups.edit.add_members"}}
+          label="groups.manage.add_members"}}
     {{/if}}
   </div>
 {{/unless}}

@@ -75,11 +75,12 @@ class HtmlToMarkdown
     code = node.children.find { |c| c.name == "code" }
     code_class = code ? code["class"] : ""
     lang = code_class ? code_class[/lang-(\w+)/, 1] : ""
-    @stack << Block.new("pre")
-    @markdown << "```#{lang}\n"
+    pre = Block.new("pre")
+    pre.markdown = "```#{lang}\n"
+    @stack << pre
     traverse(node)
+    pre.markdown << "\n```\n"
     @markdown << format_block
-    @markdown << "```\n"
   end
 
   def visit_blockquote(node)

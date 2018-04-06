@@ -60,6 +60,7 @@ cs:
         help:
           options_count: Zadejte alespoň 2 možnosti
           invalid_values: Minimální hodnota musí být menší než maximální hodnota.
+          min_step_value: Minimální hodnota kroku je 1
         poll_type:
           label: Typ
           regular: Jedna možnost

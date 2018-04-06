@@ -118,7 +118,6 @@ es:
       email: 'comparte este enlace por email'
     action_codes:
       public_topic: "hizo este tema público %{when}"
-      private_topic: "hizo este tema privado %{when}"
       split_topic: "separó este tema %{when}"
       invited_user: "invitó a %{who} %{when}"
       invited_group: "invitó a %{who} %{when}"
@@ -149,8 +148,6 @@ es:
     topic_admin_menu: "acciones de administrador para el tema"
     wizard_required: "¡Bienvenido a tu nuevo Discourse! Empezaremos con <a href='%{url}' data-auto-route='true'>el asistente de configuración</a>  ✨"
     emails_are_disabled: "Todos los emails salientes han sido desactivados por un administrador. No se enviará ninguna notificación por email."
-    bootstrap_mode_enabled: "Para lanzar tu nuevo sitio más fácilmente, estás en modo de arranque. A todos los nuevos usuarios se les concederá el nivel 1 de confianza y recibirán resúmenes diarios por email. Esto se desactivará automáticamente cuando el número total de usuarios exceda los %{min_users}."
-    bootstrap_mode_disabled: "El modo de arranque se desactivará en las próximas 24 horas."
     themes:
       default_description: "Por defecto"
     s3:
@@ -246,16 +243,6 @@ es:
       last_read: "este es el último post que has leído; haz clic para guardarlo en marcadores"
       remove: "Eliminar marcador"
       confirm_clear: "¿Seguro que deseas borrar todos los marcadores de este tema?"
-    topic_count_latest:
-      one: "Un tema nuevo o actualizado."
-      other: "{{count}} temas nuevos o actualizados."
-    topic_count_unread:
-      one: "Un tema sin leer."
-      other: "{{count}} temas sin leer."
-    topic_count_new:
-      one: "Un nuevo tema."
-      other: "{{count}} nuevos temas."
-    click_to_show: "Clic para mostrar."
     preview: "vista previa"
     cancel: "cancelar"
     save: "Guardar cambios"
@@ -376,7 +363,6 @@ es:
       request: "Solicitar unirse al grupo"
       message: "Mensaje"
       automatic_group: Grupo automático
-      closed_group: Grupo cerrado
       is_group_user: "Eres miembro de este grupo"
       allow_membership_requests: "Permitir a los usuarios solicitudes para ser miembro a los dueños del grupo"
       membership_request_template: "Template personalizado para mostrar a los usuarios cuando envían una solicitud de membresía"
@@ -386,9 +372,7 @@ es:
         reason: "Permitir a los propietarios del grupo saber por qué perteneces a este grupo"
       membership: "Membresía"
       name: "Nombre"
-      user_count: "Número de miembros"
       bio: "Acerca del grupo"
-      selector_placeholder: "Añadir miembros"
       owner: "propietario"
       index:
         title: "Grupos"
@@ -397,7 +381,6 @@ es:
         one: "Grupo"
         other: "Grupos"
       activity: "Actividad"
-      members: "Miembros"
       topics: "Temas"
       posts: "Posts"
       mentions: "Menciones"
@@ -1059,7 +1042,6 @@ es:
       default_header_text: Seleccionar...
       no_content: Ninguna coincidencia encontrada
       filter_placeholder: Buscar...
-      create: "Crear {{content}}"
     emoji_picker:
       filter_placeholder: Buscar emoji
       people: People
@@ -1202,22 +1184,6 @@ es:
       group_message_summary:
         one: "{{count}} mensaje en tu bandeja de {{group_name}}"
         other: "{{count}} mensajes en tu bandeja de {{group_name}} "
-      alt:
-        mentioned: "Mencionado por"
-        quoted: "Citado por"
-        replied: "Respondido"
-        posted: "Publicado por"
-        edited: "Editado tu post por"
-        liked: "Gustado tu post"
-        private_message: "Mensaje personal de"
-        invited_to_private_message: "Invitado a un mensaje personal de"
-        invited_to_topic: "Invitado a un tema de"
-        invitee_accepted: "Invitación aceptada por"
-        moved_post: "Tu post fue eliminado por"
-        linked: "Enlace a tu post"
-        granted_badge: "Distintivo concedido"
-        group_message_summary: "Mensajes en la bandeja del grupo"
-        topic_reminder: "Un recordatorio"
       popup:
         mentioned: '{{username}} te mencionó en "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} te ha mencionado en "{{topic}}" - {{site_title}}'
@@ -1699,8 +1665,8 @@ es:
         select_all: seleccionar todo
         deselect_all: deshacer selección
         description:
-          one: Has seleccionado <b>1</b> post.
-          other: Has seleccionado <b>{{count}}</b> posts.
+          one: "Has seleccionado <b>1</b> post."
+          other: "Has seleccionado <b>{{count}}</b> posts."
     post:
       quote_reply: "Citar"
       edit: "<i class='fa fa-pencil'></i>{{link}} {{replyAvatar}} {{username}} "
@@ -1968,7 +1934,6 @@ es:
       email_in_disabled: "La posibilidad de publicar nuevos temas por email está deshabilitada en los ajustes del sitio. Para habilitar la publicación de nuevos temas por email,"
       email_in_disabled_click: 'activa la opción "email in".'
       mailinglist_mirror: "La categoría refleja una lista de correo"
-      suppress_from_homepage: "Ocultar categoría de la página de inicio."
       show_subcategory_list: "Mostrar la lista de subcategorías arriba de la lista de temas en esta categoría."
       num_featured_topics: "Número de temas a mostrar en la página de categorías:"
       subcategory_num_featured_topics: "Número de temas destacados a mostrar en la página superior de categorías:"
@@ -2327,19 +2292,15 @@ es:
       notifications:
         watching:
           title: "Vigilar"
-          description: "Vigilarás todos los temas en esta etiqueta. Se te notificará de todos los nuevos temas y posts, y además aparecerá el contador de posts sin leer y nuevos posts al lado del tema."
         watching_first_post:
           title: "Vigilar Primer Post"
-          description: "Se te notificará del primer post de cada nuevo tema en esta etiqueta."
         tracking:
           title: "Seguir"
-          description: "Seguirás automáticamente todos los temas en esta etiqueta. Aparecerá un contador de posts sin leer y nuevos posts al lado del tema."
         regular:
           title: "Normal"
           description: "Se te notificará solo si alguien te menciona con tu @usuario o responde a algún post tuyo."
         muted:
           title: "Silenciado"
-          description: "No se te notificará de nuevos temas con esta etiqueta, ni aparecerán en tu pestaña de temas no leídos."
       groups:
         title: "Grupos de etiquetas"
         about: "Agregar etiquetas en grupos para administrarlas más fácilmente."
@@ -2445,11 +2406,9 @@ es:
         moderation_history: "Histórico de moderación"
         agree: "De acuerdo"
         agree_title: "Confirmar esta indicación como válido y correcto."
-        agree_flag_hide_post: "Coincidir y Ocultar Mensaje"
         agree_flag_hide_post_title: "Ocultar este post y enviar automáticamente un mensaje al usuario para que lo edite de forma urgente"
         agree_flag_restore_post: "Coincidir y Restaurar Mensaje"
         agree_flag_restore_post_title: "Restaurar el post para que todos los usuarios puedan verlo."
-        agree_flag: "Estar de acuerdo y mantener post"
         agree_flag_title: "Estar de acuerdo con el reporte y mantener la publicación intacta."
         ignore_flag: "Ignorar"
         ignore_flag_title: "Quitar este reporte; no requiere tomar medidas en este momento."
@@ -2507,7 +2466,6 @@ es:
         edit: "Editar grupos"
         refresh: "Actualizar"
         new: "Nuevo"
-        selector_placeholder: "introduce nombre de usuario"
         about: "Edita los aquí los nombres de los grupos y sus miembros"
         group_members: "Miembros del grupo"
         delete: "Borrar"
@@ -3301,10 +3259,7 @@ es:
         recommended: "Recomendamos personalizar los siguientes textos para que se ajusten a tus necesidades:"
         show_overriden: 'Sólo mostrar textos editados'
       site_settings:
-        show_overriden: 'Sólo mostrar lo personalizado'
         title: 'Ajustes del sitio'
-        reset: 'restablecer'
-        none: 'ninguno'
         no_results: "Ningún resultado encontrado"
         clear_filter: "Limpiar filtro"
         add_url: "añadir URL"

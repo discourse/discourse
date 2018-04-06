@@ -117,7 +117,6 @@ it:
       email: 'invia questo collegamento via email'
     action_codes:
       public_topic: "ha reso questo argomento pubblico %{when}"
-      private_topic: "ha reso questo argomento privato %{when}"
       split_topic: "ha separato questo argomento %{when}"
       invited_user: "Invitato %{who} %{when}"
       invited_group: "invitato %{who} %{when}"
@@ -148,8 +147,6 @@ it:
     topic_admin_menu: "azioni amministrative sull'argomento"
     wizard_required: "Benvenuto al tuo nuovo Discourse! Inizia la <a href='%{url}' data-auto-route='true'>procedura guidata di configurazione</a> ✨"
     emails_are_disabled: "Tutte le email in uscita sono state disabilitate a livello globale da un amministratore. Non sarà inviata nessun tipo di notifica via email."
-    bootstrap_mode_enabled: "Per aiutarti ad avviare il tuo nuovo sito, adesso sei in modalità bootstrap. Tutti i nuovi utenti saranno automaticamente promossi al livello 1 e riceveranno il riassunto quotidiano degli aggiornamenti via email. Questa modalità sarà disattivata automaticamente quando avrai più di %{min_users} utenti."
-    bootstrap_mode_disabled: "La modalità bootstrap sarà disattivata entro 24 ore."
     themes:
       default_description: "Default"
     s3:
@@ -245,16 +242,6 @@ it:
       last_read: "questo è l'ultimo messaggio che hai letto; clicca per inserirlo nei segnalibri"
       remove: "Rimuovi Segnalibro"
       confirm_clear: "Sei sicuro di voler cancellare tutti segnalibri da questo argomento?"
-    topic_count_latest:
-      one: "{{count}} discussione nuova o aggiornata"
-      other: "{{count}} argomenti nuovi o aggiornati."
-    topic_count_unread:
-      one: "{{count}} discussione non letta."
-      other: "{{count}} argomenti non letti."
-    topic_count_new:
-      one: "{{count}} nuovo argomento."
-      other: "{{count}} nuovi argomenti."
-    click_to_show: "Clicca per visualizzare."
     preview: "Anteprima"
     cancel: "annulla"
     save: "Salva modifiche"
@@ -374,7 +361,6 @@ it:
       request: "Richiedi di partecipare al gruppo"
       message: "Messaggio"
       automatic_group: Gruppo Automatico
-      closed_group: Gruppo Chiuso
       is_group_user: "Sei un membro di questo gruppo"
       allow_membership_requests: "Permetti agli utenti di richiedere l'invito ai proprietari del gruppo"
       membership_request_template: "Template personalizzato da mostrare agli utenti quando inviano una richiesta di adesione"
@@ -384,9 +370,7 @@ it:
         reason: "Spiega ai proprietari del gruppo perché vuoi entrare a far parte di questo gruppo"
       membership: "Iscrizione"
       name: "Nome"
-      user_count: "Numero di Membri"
       bio: "Informazioni sul Gruppo"
-      selector_placeholder: "Aggiungi membri"
       owner: "proprietario"
       index:
         title: "Gruppi"
@@ -395,7 +379,6 @@ it:
         one: "Group"
         other: "Gruppi"
       activity: "Attività"
-      members: "Membri"
       topics: "Argomenti"
       posts: "Messaggi"
       mentions: "Menzioni"
@@ -1055,7 +1038,6 @@ it:
       default_header_text: Selezione...
       no_content: Nessun risultato trovato
       filter_placeholder: Ricerca...
-      create: "Crea {{content}}"
     emoji_picker:
       filter_placeholder: Ricerca per emoji
       people: Persone
@@ -1197,20 +1179,6 @@ it:
       group_message_summary:
         one: "{{count}} messaggi in arrivo nella casella {{group_name}}"
         other: "{{count}} messaggi in arrivo nella casella {{group_name}}"
-      alt:
-        mentioned: "Menzionato da"
-        quoted: "Citato da"
-        replied: "Risposto"
-        posted: "Messaggio da"
-        edited: "Modifica il tuo messaggio da"
-        liked: "Ha assegnato un \"Mi piace\" al tuo messaggio"
-        invited_to_topic: "Invitato a un argomento da"
-        invitee_accepted: "Invito accettato da"
-        moved_post: "Il tuo messaggio è stato spostato da"
-        linked: "Collegamento al tuo messaggio"
-        granted_badge: "Distintivo assegnato"
-        group_message_summary: "Messaggi nel gruppo in arrivo"
-        topic_reminder: "Un promemoria"
       popup:
         mentioned: '{{username}} ti ha menzionato in "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} ti ha menzionato in "{{topic}}" - {{site_title}}'
@@ -1688,8 +1656,8 @@ it:
         select_all: seleziona tutto
         deselect_all: deseleziona tutto
         description:
-          one: Hai selezionato <b>1</b> messaggio.
-          other: Hai selezionato <b>{{count}}</b> messaggi.
+          one: "Hai selezionato <b>1</b> messaggio."
+          other: "Hai selezionato <b>{{count}}</b> messaggi."
     post:
       quote_reply: "Cita"
       edit_reason: "Motivo:"
@@ -1935,7 +1903,6 @@ it:
       email_in_allow_strangers: "Accetta email da utenti anonimi senza alcun account"
       email_in_disabled: "Le Impostazioni Sito non permettono di creare nuovi argomenti via email. Per abilitare la creazione di argomenti via email,"
       email_in_disabled_click: 'abilita l''impostazione "email entrante".'
-      suppress_from_homepage: "Elimina questa categoria dalla homepage."
       show_subcategory_list: "Mostra la lista delle sottocategorie sopra agli argomenti in questa categoria."
       num_featured_topics: "Numero degli argomenti mostrati nella pagina categorie:"
       subcategory_num_featured_topics: "Numero degli argomenti in evidenza nella pagina della categoria superiore"
@@ -2285,19 +2252,15 @@ it:
       notifications:
         watching:
           title: "In osservazione"
-          description: "Visualizzerai automaticamente tutti gli argomenti con questa etichetta. Riceverai una notifica per tutti i nuovi messaggi e argomenti. Inoltre, accanto all'argomento apparirà il conteggio dei messaggi non letti e di quelli nuovi."
         watching_first_post:
           title: "Osservando Primo Messaggio"
-          description: "Riceverai solo la notifica per il primo messaggio di ogni nuovo argomenti con questa etichetta."
         tracking:
           title: "Seguiti"
-          description: "Seguirai automaticamente tutti gli argomenti con questa etichetta. Accanto all'argomento apparirà un conteggio dei messaggi non letti e di quelli nuovi."
         regular:
           title: "Normale"
           description: "Riceverai una notifica se qualcuno menziona il tuo @nome o risponde al tuo messaggio."
         muted:
           title: "Silenziato"
-          description: "Non riceverai alcuna notifica per nuovi argomenti con questa etichetta, e non compariranno nella tab dei messaggi non letti."
       groups:
         title: "Gruppi Etichette"
         about: "Aggiungi etichette a gruppi per poterle gestire più facilmente."
@@ -2402,11 +2365,9 @@ it:
         topics: "Argomenti Segnalati"
         agree: "Acconsento"
         agree_title: "Conferma che questa segnalazione è valida e corretta"
-        agree_flag_hide_post: "Accetta e Nascondi il Messaggio"
         agree_flag_hide_post_title: "Nascondi questo messaggio e invia automaticamente all'utente un messaggio privato che lo invita a modificarlo."
         agree_flag_restore_post: "Accetta e Ripristina il Messaggio"
         agree_flag_restore_post_title: "Ripristina il messaggio in modo che tutti gli utenti possano vederlo."
-        agree_flag: "Accetto e Mantieni il Messaggio"
         agree_flag_title: "Accetta la segnalazione e mantieni invariato il messaggio."
         delete: "Cancella"
         delete_title: "Cancella il messaggio a cui si riferisce la segnalazione."
@@ -2462,7 +2423,6 @@ it:
         edit: "Modifica Gruppi"
         refresh: "Aggiorna"
         new: "Nuovo"
-        selector_placeholder: "inserisci nome utente"
         about: "Modifica qui la tua appartenenza ai gruppi e i loro nomi"
         group_members: "Membri del gruppo"
         delete: "Cancella"
@@ -3234,10 +3194,7 @@ it:
         recommended: "Consigliamo di personalizzare il seguente testo per tue adattarlo alle necessità:"
         show_overriden: 'Mostra solo le opzioni sovrascritte'
       site_settings:
-        show_overriden: 'Mostra solo le opzioni sovrascritte'
         title: 'Impostazioni'
-        reset: 'reimposta'
-        none: 'nessuno'
         no_results: "Nessun risultato trovato."
         clear_filter: "Pulisci"
         add_url: "aggiungi URL"

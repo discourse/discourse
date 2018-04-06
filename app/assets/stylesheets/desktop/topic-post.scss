@@ -54,9 +54,66 @@ nav.post-controls {
 
   padding: 0;
 
-  .like-count {
-    font-size: inherit;
-    margin-right: -5px;
+  .like-button {
+    display: inline-flex;
+
+    .like-count {
+      color: dark-light-choose($primary-low-mid, $secondary-high);
+    }
+
+    .widget-button {
+      background: none;
+    }
+
+    &:hover {
+      background: $primary-low;
+      .like-count {
+        color: dark-light-choose($primary-medium, $secondary-high);
+        &.d-hover {
+          color: dark-light-choose($primary, $secondary);
+        }
+      }
+      .d-hover {
+        background: none;
+      }
+    }
+
+    &:active {
+      box-shadow: inset 0 1px 3px rgba(0,0,0, .4);
+
+      .widget-button {
+        box-shadow: none;
+      }
+    }
+
+    .like {
+      &:focus {
+        background: none;
+      }
+    }
+
+    .like-count {
+      font-size: $font-up-1;
+      margin-left: 0;      
+      i.fa-heart {
+        padding-left: 5px;
+        color: dark-light-choose($primary-low-mid, $secondary-high);
+      }
+      &.my-likes {
+        margin-right: -2px;
+        i.fa-heart {
+          padding-left: 10px;
+        }
+      }
+      &.regular-likes {
+        margin-right: -12px;
+      }
+    }
+
+    .toggle-like {
+      padding: 8px 8px;
+      margin-left: 2px;
+    }
   }
 
   .highlight-action {
@@ -126,7 +183,7 @@ nav.post-controls {
     border: none;
     margin-left: 3px;
 
-    &.d-hover {
+    &.d-hover, &:focus {
       background: $primary-low;
       color: $primary;
     }
@@ -142,12 +199,12 @@ nav.post-controls {
       position: relative;
     }
 
-    &.delete.d-hover {
+    &.delete.d-hover, &.delete:focus {
       background: $danger;
       color: $secondary;
     }
 
-    &.like.d-hover {
+    &.like.d-hover, &.like:focus {
       color: $love;
       background: $love-low;
     }
@@ -205,7 +262,7 @@ nav.post-controls {
 .embedded-posts {
   h1, h2, h3 { margin: 10px 0; }
   border:  1px solid $primary-low;
-  
+
   .topic-body {
     box-sizing: border-box;
     width: calc(100% - 70px); // [100% - .topic-avatar width]
@@ -423,7 +480,6 @@ nav.post-controls {
   clear: left;
   padding: 20px 0 15px 0;
   table {
-    table-layout: fixed;
     margin-top: 10px;
   }
 
@@ -629,7 +685,7 @@ $topic-avatar-width: 45px;
 
 .time-gap + .topic-post .embedded-posts.top {
   border-bottom: 1px solid $primary-low;
-} 
+}
 
 
 .posts-wrapper {
@@ -663,7 +719,7 @@ $topic-avatar-width: 45px;
   list-style: none;
   background-color: $secondary;
   border: 1px solid $primary-low;
-  box-shadow: 0 1px 5px rgba(0,0,0, .4);
+  box-shadow: shadow("dropdown");
   background-clip: padding-box;
   span {
     font-size: $font-down-1;
@@ -778,13 +834,12 @@ $topic-avatar-width: 45px;
     }
     &:active {
       @include linear-gradient(darken($tertiary, 18%), darken($tertiary, 12%));
-      box-shadow: inset 0 1px 3px rgba(0,0,0, 0.2);
       color: $secondary;
     }
     &[disabled] {
       text-shadow: 0 1px 0 rgba($primary, 0.2);
       @include linear-gradient($tertiary, darken($tertiary, 20%));
-      @include box-shadow((inset 0 1px 0 rgba(0,0,0, 0.33), inset 0 -1px 2px rgba($primary, 0.2)));
+      @include box-shadow(inset 0 1px 0 rgba(0,0,0, 0.33));
     }
   }
 }
