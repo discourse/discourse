@@ -400,6 +400,7 @@ describe GroupsController do
           messageable_level: 2,
           default_notification_level: 0,
           grant_trust_level: 0,
+          automatic_membership_retroactive: false
         )
 
         expect do
@@ -427,7 +428,7 @@ describe GroupsController do
               name: 'testing'
             }
           }
-        end.to change { GroupHistory.count }.by(19)
+        end.to change { GroupHistory.count }.by(13)
 
         expect(response.status).to eq(200)
 
@@ -443,16 +444,16 @@ describe GroupsController do
         expect(group.allow_membership_requests).to eq(true)
         expect(group.membership_request_template).to eq('testing')
         expect(group.name).to eq('test')
-        expect(group.visibility_level).to eq(1)
+        expect(group.visibility_level).to eq(2)
         expect(group.mentionable_level).to eq(1)
         expect(group.messageable_level).to eq(1)
         expect(group.default_notification_level).to eq(1)
-        expect(group.automatic_membership_email_domains).to eq('test.org')
-        expect(group.automatic_membership_retroactive).to eq(true)
+        expect(group.automatic_membership_email_domains).to eq(nil)
+        expect(group.automatic_membership_retroactive).to eq(false)
         expect(group.title).to eq('haha')
-        expect(group.primary_group).to eq(true)
-        expect(group.incoming_email).to eq("test@mail.org")
-        expect(group.grant_trust_level).to eq(1)
+        expect(group.primary_group).to eq(false)
+        expect(group.incoming_email).to eq(nil)
+        expect(group.grant_trust_level).to eq(0)
       end
 
       it 'should not be allowed to update automatic groups' do
@@ -475,10 +476,22 @@ describe GroupsController do
       end
 
       it 'should be able to update the group' do
+        group.update!(
+          visibility_level: 2,
+          automatic_membership_retroactive: false,
+          grant_trust_level: 0
+        )
+
         put "/groups/#{group.id}.json", params: {
           group: {
             flair_color: 'BBB',
-            name: 'testing'
+            name: 'testing',
+            incoming_email: 'test@mail.org',
+            primary_group: true,
+            automatic_membership_email_domains: 'test.org',
+            automatic_membership_retroactive: true,
+            grant_trust_level: 2,
+            visibility_level: 1
           }
         }
 
@@ -487,6 +500,12 @@ describe GroupsController do
         group.reload
         expect(group.flair_color).to eq('BBB')
         expect(group.name).to eq('testing')
+        expect(group.incoming_email).to eq("test@mail.org")
+        expect(group.primary_group).to eq(true)
+        expect(group.visibility_level).to eq(1)
+        expect(group.automatic_membership_email_domains).to eq('test.org')
+        expect(group.automatic_membership_retroactive).to eq(true)
+        expect(group.grant_trust_level).to eq(2)
       end
 
       it "should be able to update an automatic group" do

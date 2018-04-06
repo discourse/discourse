@@ -438,13 +438,7 @@ class GroupsController < ApplicationController
         default_params = %i{
           mentionable_level
           messageable_level
-          visibility_level
-          automatic_membership_email_domains
-          automatic_membership_retroactive
           title
-          primary_group
-          grant_trust_level
-          incoming_email
           flair_url
           flair_bg_color
           flair_color
@@ -458,7 +452,15 @@ class GroupsController < ApplicationController
         }
 
         if current_user.admin
-          default_params.push(:name)
+          default_params.push(*[
+            :incoming_email,
+            :primary_group,
+            :visibility_level,
+            :name,
+            :grant_trust_level,
+            :automatic_membership_email_domains,
+            :automatic_membership_retroactive
+          ])
         end
 
         default_params
