@@ -1023,10 +1023,10 @@ security:
     default: ''
   blacklisted_crawler_user_agents:
     type: list
-    default: ''
+    default: 'bingbot'
   slow_down_crawler_user_agents:
     type: list
-    default: 'bingbot'
+    default: ''
   slow_down_crawler_rate: 5
 
 onebox:
