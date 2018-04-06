@@ -3,12 +3,6 @@
   padding: 20px;
   margin-bottom: 15px;
   position: relative;
-
-  .group-details-button {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-  }
 }
 
 .group-outlet {
@@ -189,23 +183,9 @@ table.group-members {
   color: $primary;
 }
 
-.form-horizontal {
+.form-vertical {
   .group-flair-inputs {
     display: inline-block;
-
-    input[type="text"] {
-      width: 80% !important;
-      margin-bottom: 10px;
-    }
-
-    .group-flair-left {
-      float: left;
-    }
-
-    .group-flair-right {
-      float: left;
-      margin-left: 30px;
-    }
   }
 
   .avatar-flair-preview {
@@ -222,8 +202,8 @@ table.group-members {
   margin-right: 20px;
 }
 
-.group-manage-members {
-  .group-manage-members-make-owner {
+.group-add-members {
+  .group-add-members-make-owner {
     label {
       display: inline;
       vertical-align: middle;

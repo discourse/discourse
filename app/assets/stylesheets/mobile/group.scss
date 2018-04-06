@@ -19,7 +19,7 @@
 }
 
 .group-nav.mobile-nav {
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   float: left;
 }
 
@@ -31,7 +31,7 @@
   &.mobile-nav {
     position: absolute;
     right: 0;
-    top: -57px;
+    top: -51px;
   }
 }
 
@@ -82,6 +82,10 @@ table.group-manage-logs {
 }
 
 .group-username-filter {
-  top: -57px;
+  top: -52px;
   height: 27px;
+}
+
+.group-add-members-btn {
+  margin-bottom: 10px;
 }

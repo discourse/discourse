@@ -3,10 +3,10 @@
     class="group-username-filter no-blur"}}
 
 {{#if canManageGroup}}
-  {{#link-to "group.manage.members" model.name class="btn btn-primary pull-right"}}
-    {{d-icon "plus"}}
-    {{i18n "groups.manage.add_members"}}
-  {{/link-to}}
+  {{d-button action='showAddMembersModal'
+      icon="plus"
+      label="groups.add_members.title"
+      class="btn btn-primary pull-right"}}
 {{/if}}
 
 {{#if hasMembers}}

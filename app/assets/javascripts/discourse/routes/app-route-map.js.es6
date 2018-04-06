@@ -64,6 +64,8 @@ export default function() {
 
     this.route('manage', function() {
       this.route('profile');
+      this.route('membership');
+      this.route('interaction');
       this.route('members');
       this.route('logs');
     });

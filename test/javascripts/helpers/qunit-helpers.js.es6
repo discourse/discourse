@@ -15,6 +15,12 @@ export function currentUser() {
   return Discourse.User.create(sessionFixtures['/session/current.json'].current_user);
 }
 
+export function replaceCurrentUser(properties) {
+  const user = Discourse.User.current();
+  user.setProperties(properties);
+  Discourse.User.resetCurrent(user);
+}
+
 export function logIn() {
   Discourse.User.resetCurrent(currentUser());
 }
