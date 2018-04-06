@@ -600,7 +600,7 @@ class Group < ActiveRecord::Base
       self.name.downcase!
 
       UsernameValidator.perform_validation(self, 'name') || begin
-        if will_save_change_to_name?
+        if will_save_change_to_name? && name_was&.downcase != self.name
           existing = Group.exec_sql(
             User::USERNAME_EXISTS_SQL, username: self.name
           ).values.present?
