@@ -29,6 +29,12 @@
             {{else}}
               {{plugin.name}}
             {{/if}}
+
+            {{#if plugin.is_official}}
+              {{d-icon "check-circle"
+                  title="admin.plugins.official"
+                  class="admin-plugins-official-badge"}}
+            {{/if}}
           </td>
           <td>{{plugin.version}}</td>
           <td class="col-enabled">
@@ -58,4 +64,3 @@
 {{/if}}
 
 <p><a href="https://meta.discourse.org/t/install-a-plugin/19157">{{i18n "admin.plugins.howto"}}</a></p>
-

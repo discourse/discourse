@@ -5,7 +5,8 @@ class AdminPluginSerializer < ApplicationSerializer
              :url,
              :admin_route,
              :enabled,
-             :enabled_setting
+             :enabled_setting,
+             :is_official
 
   def id
     object.metadata.name
@@ -50,5 +51,9 @@ class AdminPluginSerializer < ApplicationSerializer
 
   def include_admin_route?
     admin_route.present?
+  end
+
+  def is_official
+    Plugin::Metadata::OFFICIAL_PLUGINS.include?(object.name)
   end
 end
