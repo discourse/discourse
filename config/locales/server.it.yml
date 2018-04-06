@@ -444,22 +444,6 @@ it:
     image_placeholder:
       broken: "Questa immagine è assente"
   rate_limiter:
-    slow_down: "Hai eseguito questa operazione troppe volte, riprova più tardi."
-    by_type:
-      first_day_replies_per_day: "Hai raggiunto il massimo numero di risposte che può creare un nuovo utente il suo primo giorno. Per favore attendi %{time_left} prima di riprovare."
-      first_day_topics_per_day: "Hai raggiunto il massimo numero di argomenti che può creare un nuovo utente il suo primo giorno. Per favore attendi %{time_left} prima di riprovare."
-      create_topic: "Stai creando argomenti troppo rapidamente. Attendi %{time_left} prima di riprovare."
-      create_post: "Stai rispondendo troppo rapidamente. Attendi %{time_left} prima di riprovare."
-      delete_post: "Stai cancellando i messaggi troppo velocemente. Per favore attendi %{time_left} prima di riprovare."
-      public_group_membership: "Stai entrando/uscendo dai gruppi troppo di frequente. Per favore aspetta %{time_left} prima di riprovare."
-      topics_per_day: "Hai raggiunto il massimo numero di nuovi argomenti per oggi. Per favore attendi %{time_left} prima di riprovare."
-      pms_per_day: "Hai raggiunto il massimo numero di messaggi per oggi. Per favore attendi %{time_left} prima di riprovare."
-      create_like: "Hai raggiunto il massimo numero di \"Mi piace\" per oggi. Per favore attendi %{time_left} prima di riprovare."
-      create_bookmark: "Hai raggiunto il massimo numero di segnalibri per oggi. Per favore attendi %{time_left} prima di riprovare."
-      edit_post: "Hai raggiunto il massimo numero di modifiche per oggi. Per favore attendi %{time_left} prima di riprovare."
-      live_post_counts: "Stai richiedendo troppo velocemente il conteggio dei messaggi attivi. Attendi %{time_left} prima di riprovare."
-      unsubscribe_via_email: "Hai raggiunto il massimo numero di cancellazioni via email per oggi. Per favore aspetta %{time_left}  prima di riprovare ancora."
-      topic_invitations_per_day: "Hai raggiunto il numero massimo di inviti ad argomenti per oggi. Per favore aspetta %{time_left} prima di riprovare."
     hours:
       one: "1 ora"
       other: "%{count} ore"

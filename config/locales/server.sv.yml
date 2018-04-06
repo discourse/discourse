@@ -347,21 +347,6 @@ sv:
       title: "ledare"
     change_failed_explanation: "Du försökte degradera %{user_name} till '%{new_trust_level}'. Användarens förtroendenivå är redan '%{current_trust_level}'. %{user_name} kommer behålla '%{current_trust_level}'. Om du vill degradera användaren, lås förtroendenivån först"
   rate_limiter:
-    slow_down: "Du har utfört den här handlingen för många gånger, försök igen senare."
-    by_type:
-      first_day_replies_per_day: "Du har uppnått maximalt antal inlägg en ny användare kan göra under första dagen. Var god vänta %{time_left} innan du försöker igen."
-      first_day_topics_per_day: "Du har uppnått maximalt antal nya ämnen som nya användare kan skapa under första dagen. Var god vänta %{time_left} innan du försöker igen."
-      create_topic: "Du skapar nya ämnen för snabbt. Var god vänta %{time_left} innan du försöker igen."
-      create_post: "Du svarar för snabbt. Var god vänta %{time_left} innan du försöker igen."
-      delete_post: "Du raderar inlägg för snabbt. Var god vänta %{time_left} innan du försöker igen."
-      public_group_membership: "Du deltar/lämnar grupper för frekvent. Vad god och vänta %[tid_kvar] innan du försöker igen."
-      topics_per_day: "Du har uppnått maximalt antal nya ämnen idag. Var god vänta %{time_left} innan du försöker igen."
-      pms_per_day: "Du har uppnått maximalt antal inlägg idag. Var god vänta %{time_left} innan du försöker igen."
-      create_like: "Du har uppnått maximalt antal gillningar idag. Var god vänta %{time_left} innan du försöker igen."
-      create_bookmark: "Du har uppnått maximalt antal bokmärken idag. Var god vänta %{time_left} innan du försöker igen."
-      live_post_counts: "Du ber om uppdateringar för ofta. Var god vänta %{time_left} innan du försöker igen."
-      unsubscribe_via_email: "Du har uppnått maximalt antal avregistreringar via e-post idag. Var god vänta %{time_left} innan du försöker igen."
-      topic_invitations_per_day: "Du har uppnått maximalt antal inbjudningar till ämnen idag. Var god vänta %{time_left} innan du försöker igen."
     hours:
       one: "1 timme"
       other: "%{count} timmar"

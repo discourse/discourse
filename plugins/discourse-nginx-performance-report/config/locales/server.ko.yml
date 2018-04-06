@@ -1,3 +1,10 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
 ko:
   site_settings:
     daily_performance_report: "NGINX 일별 로그를 분석하고 상세정보를 스태프들에게 글타래 게시"

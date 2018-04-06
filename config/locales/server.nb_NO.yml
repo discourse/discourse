@@ -349,12 +349,6 @@ nb_NO:
     leader:
       title: "leder"
   rate_limiter:
-    by_type:
-      first_day_replies_per_day: "Du har nådd det maksimale antall svar en ny bruker kan publisere på sin første dag. Vennligst vent %{time_left} før du prøver igjen."
-      first_day_topics_per_day: "Du har nådd det maksimale antall tråder en ny bruker kan publisere på sin første dag. Vennligst vent %{time_left} før du prøver igjen."
-      create_post: "Du svarer for raskt. Vent %{time_left} før du prøver igjen."
-      delete_post: "Du sletter innlegg for raskt. Vent %{time_left} før du prøver igjen."
-      topics_per_day: "Du har oppnådd høyest antall innlegg for i dag. Vær så snill og vent %{time_left} før du prøver igjen."
     hours:
       one: "1 time"
       other: "%{count} timer"

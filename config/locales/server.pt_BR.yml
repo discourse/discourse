@@ -8,7 +8,7 @@
 pt_BR:
   dates:
     short_date_no_year: "D MMM"
-    short_date: "D MMM, AAAA"
+    short_date: "D MMM, YYYY"
     long_date: "D de MMMM de YYYY h:mma"
   datetime_formats: &datetime_formats
     formats:
@@ -395,20 +395,6 @@ pt_BR:
     image_placeholder:
       broken: "Esta imagem está danificada"
   rate_limiter:
-    slow_down: "Você fez essa ação demais, tente novamente mais tarde."
-    by_type:
-      first_day_replies_per_day: "Você atingiu o número máximo de respostas que um novo usuário pode criar em seu primeiro dia. Por favor aguarde %{time_left} antes de tentar novamente."
-      first_day_topics_per_day: "Você atingiu o número máximo de tópicos que um novo usuário pode criar em seu primeiro dia. Por favor aguarde %{time_left} antes de tentar novamente."
-      create_topic: "Você está criando tópicos muito rápido. Por favor aguarde %{time_left} antes de tentar novamente."
-      create_post: "Você está respondendo muito rápido. Por favor aguarde %{time_left} antes de tentar novamente."
-      delete_post: "Você está removendo posts muito rapidamente. Por favor, aguarde %{time_left} antes de tentar novamente."
-      topics_per_day: "Você atingiu o número máximo de novos tópicos hoje. Por favor aguarde %{time_left} antes de tentar novamente."
-      pms_per_day: "Você alcançou o número máximo de mensagens por hoje. Por favor aguarde %{time_left} antes de tentar de novo."
-      create_like: "Você atingiu o número máximo de curtidas hoje. Por favor aguarde% {time_left} antes de tentar novamente."
-      create_bookmark: "Você atingiu o número máximo de marcadores hoje. Por favor aguarde% {time_left} antes de tentar novamente."
-      live_post_counts: "Você está pedindo contagens de publicações ao vivo rápido demais. Por favor, espere %{time_left} antes de tentar novamente."
-      unsubscribe_via_email: "Você atingiu o número máximo de cancelamentos de inscrição via email por hoje. Por favor, espere %{time_left} antes de tentar novamente."
-      topic_invitations_per_day: "Você atingiu o número máximo de convites para tópicos hoje. Por favor aguarde %{time_left} antes de tentar novamente."
     hours:
       one: "1 hora"
       other: "%{count} horas"

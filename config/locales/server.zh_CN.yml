@@ -433,22 +433,6 @@ zh_CN:
     image_placeholder:
       broken: "此图片已损坏"
   rate_limiter:
-    slow_down: "你执行这个操作太多次了，请稍后再试。"
-    by_type:
-      first_day_replies_per_day: "你回帖的数量已经超出身为新用户当天允许的上限，请等待%{time_left}之后再试。"
-      first_day_topics_per_day: "你创建新主题的数量已经超出身为新用户当天允许的上限，请等待%{time_left}之后再试。"
-      create_topic: "你创建新主题的速度太快了，请等待%{time_left}之后再试。"
-      create_post: "你回帖太快了，请等待%{time_left}之后再试。"
-      delete_post: "你正在快速地删除帖子。请等 %{time_left}之后再试。"
-      public_group_membership: "你加入/离开群组的速度太快了，请等待%{time_left}之后再试。"
-      topics_per_day: "你今天新主题的数量已经到达上限，请等待%{time_left}之后再试。"
-      pms_per_day: "你今天的私信数量已经到达上限，请等待%{time_left}之后再试。"
-      create_like: "你今天的“赞”数量已经到达上限，请等待%{time_left}之后再试。"
-      create_bookmark: "你今天的收藏已经到达上限，请等待%{time_left}之后再试。"
-      edit_post: "你今天编辑帖子的数量已经到达上限。请等待%{time_left}之后再试。"
-      live_post_counts: "你请求帖子数量的速度太快了，请等待%{time_left}之后再试。"
-      unsubscribe_via_email: "你已经达到了今日用邮件解除订阅的最大数量限制。请等待%{time_left}之后再试。"
-      topic_invitations_per_day: "你已经达到了今日主题邀请的最大数量限制。请等待%{time_left}之后再试。"
     hours:
       other: "%{count}小时"
     minutes:
