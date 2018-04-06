@@ -100,8 +100,10 @@
   <div class="control-group pref-title">
     <label class="control-label">{{i18n 'user.title.title'}}</label>
     <div class="controls">
-      <span class="static">{{model.title}}</span>
-      {{#link-to "preferences.badgeTitle" class="btn btn-small btn-icon pad-left no-text"}}{{d-icon "pencil"}}{{/link-to}}
+      {{combo-box
+        value=newTitleInput
+        content=model.availableTitles
+        none="user.title.none"}}
     </div>
   </div>
 {{/if}}
