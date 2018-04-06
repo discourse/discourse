@@ -39,3 +39,8 @@ Disallow: /
 <% end %>
 
 <%= server_plugin_outlet "robots_txt_index" %>
+
+<% @crawler_delayed_agents.each do |agent, delay| %>
+User-agent: <%= agent %>
+Crawl-delay: <%= delay %>
+<% end %>

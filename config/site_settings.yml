@@ -1023,7 +1023,11 @@ security:
     default: ''
   blacklisted_crawler_user_agents:
     type: list
+    default: ''
+  slow_down_crawler_user_agents:
+    type: list
     default: 'bingbot'
+  slow_down_crawler_rate: 5
 
 onebox:
   enable_flash_video_onebox: false
