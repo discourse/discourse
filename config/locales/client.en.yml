@@ -1303,6 +1303,7 @@ en:
         post_length: "Post must be at least {{min}} characters"
         try_like: 'Have you tried the <i class="fa fa-heart"></i> button?'
         category_missing: "You must choose a category"
+        tags_missing: "You must choose at least {{count}} tags"
 
       save_edit: "Save Edit"
       reply_original: "Reply on Original Topic"
