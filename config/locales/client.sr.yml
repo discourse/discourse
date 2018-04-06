@@ -346,10 +346,6 @@ sr:
         few: "%{count} korisnika"
         other: "%{count} korisnika"
     groups:
-      logs:
-        action: "Akcije"
-      edit:
-        full_name: 'Ime'
       owner: "vlasnik"
       index:
         title: "Grupe"

@@ -344,21 +344,34 @@ nb_NO:
         make_user_group_owner: "Gjør til eier"
         remove_user_as_group_owner: "Trekk tilbake eierstatus"
     groups:
-      logs:
-        title: "Logger"
-        when: "Når"
-        action: "Handling"
-        acting_user: "Utførende bruker"
-        target_user: "Målbruker"
-        subject: "Emne"
-        details: "Detaljer"
-        from: "Fra"
-        to: "Til"
-      edit:
-        title: 'Rediger gruppe'
+      new:
+        title: "Ny gruppe"
+        description: "Opprett ny gruppe"
+        create: "Opprett"
+        name:
+          too_short: "Gruppenavnet er for kort"
+          too_long: "Gruppenavnet er for langt"
+          checking: "Ser om gruppenavn er tilgjengelig…"
+          available: "Gruppenavnet er tilgjengelig"
+          not_available: "Gruppenavnet er ikke tilgjengelig"
+          blank: "Gruppenavnet kan ikke være tomt"
+      manage:
+        title: 'Behandle'
+        name: 'Navn'
         full_name: 'Fullt navn'
         add_members: "Legg til medlemmer"
-        delete_member_confirm: "Fjern '%{username}' fra gruppen '%{group}'?"
+        profile:
+          title: Profil
+        members:
+          title: "Medlemmer"
+          usernames: "Brukernavn"
+        logs:
+          title: "Logger"
+          when: "Når"
+          action: "Handling"
+          details: "Detaljer"
+          from: "Fra"
+          to: "Til"
       name_placeholder: "Gruppenavn, ingen mellomrom, samme regler som for brukernavn"
       public_admission: "Tillat brukere å ta del i gruppen fritt (krever offentlig synlig gruppe)"
       public_exit: "Tillat brukere å fritt forlate gruppen"
@@ -370,15 +383,7 @@ nb_NO:
         topics: "Det finnes ingen tråder opprettet av medlemmer av denne gruppen."
         logs: "Det finnes ingen logger for denne gruppen."
       add: "Legg til"
-      join: "Bli medlem av gruppe"
-      leave: "Forlat gruppe"
-      request: "Be om gruppemedlemskap"
-      filter_name: "filtrer etter gruppenavn"
       message: "Melding"
-      automatic_group: Automatisk gruppe
-      close_group: Lukk gruppe
-      is_group_user: "Du er medlem av denne gruppen"
-      is_group_owner: "Du er eieren av denne gruppen"
       allow_membership_requests: "Tillat brukere å sende forespørsler om medlemskap av gruppen til eiere"
       membership_request_template: "Egendefinert mal å vise brukere når du sender en medlemskapsforespørsel."
       membership_request:
@@ -387,19 +392,31 @@ nb_NO:
         reason: "La gruppeeierne vite hvorfor du ønsker å ta del i denne gruppen"
       membership: "Medlemskap"
       name: "Navn"
-      user_count: "Medlemsantall"
+      group_name: "Gruppenavn"
+      user_count: "Brukere"
       bio: "Om gruppe"
       selector_placeholder: "oppgi brukernavn"
       owner: "eier"
       index:
         title: "Grupper"
+        all: "Alle grupper"
         empty: "Det finnes ingen synlige grupper"
+        filter: "Filtrer etter gruppetype"
         all_groups: "Alle grupper"
         owner_groups: "Grupper jeg eier"
-        close_groups: "Lukk grupper"
+        close_groups: "Lukkede grupper"
         automatic_groups: "Automatiske grupper"
+        automatic: "Automatisk"
+        closed: "Lukket"
+        public: "Offentlig"
+        private: "Privat"
         public_groups: "Offentlige grupper"
+        automatic_group: Automatisk gruppe
+        close_group: Lukk gruppe
         my_groups: "Mine grupper"
+        group_type: "Gruppetype"
+        is_group_user: "Medlem"
+        is_group_owner: "Eier"
       title:
         one: "Gruppe"
         other: "Grupper"
@@ -414,6 +431,7 @@ nb_NO:
         make_owner_description: "Gjør <b>%{username}</b> til eier av denne gruppen"
         remove_owner: "Fjern som eier"
         remove_owner_description: "Fjern <b>%{username}</b> som eier av denne gruppen"
+        owner: "Eier"
       topics: "Tråder"
       posts: "Innlegg"
       mentions: "Omtalelser"
@@ -534,6 +552,7 @@ nb_NO:
       activity_stream: "Aktivitet"
       preferences: "Innstillinger"
       expand_profile: "Utvid"
+      collapse_profile: "Fold sammen"
       bookmarks: "Bokmerker"
       bio: "Om meg"
       invited_by: "Invitert av"
@@ -1091,7 +1110,6 @@ nb_NO:
       no_content: Ingen treff funnet
       filter_placeholder: Søk…
       create: "Opprett: {{content}}"
-      max_content_reached: "Du kan kun velge {{count}} gjenstander."
     emoji_picker:
       filter_placeholder: Søk etter emoji
       people: Folk

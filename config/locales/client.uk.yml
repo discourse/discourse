@@ -225,16 +225,6 @@ uk:
         add_user_to_group: "Добавити користувача"
         remove_user_from_group: "Видалити користувача"
     groups:
-      logs:
-        subject: "Тема"
-        details: "Деталі"
-        from: "Від"
-        to: "До"
-      edit:
-        title: 'Редагувати Групу'
-        full_name: 'Повне Ім''я'
-        add_members: "Добавити учасників"
-        delete_member_confirm: "Видалити '%{username}' з групи '%{group}'?"
       add: "Додати"
       topics: "Теми"
       posts: "Дописи"

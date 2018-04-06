@@ -326,21 +326,6 @@ sv:
         make_user_group_owner: "Gör till ägare"
         remove_user_as_group_owner: "Återkalla ägare"
     groups:
-      logs:
-        title: "Loggar"
-        when: "När"
-        action: "Handling"
-        acting_user: "Agerar användare"
-        target_user: "Specifik användare"
-        subject: "Ämne"
-        details: "Detaljer"
-        from: "Från"
-        to: "Till"
-      edit:
-        title: 'Redigera grupp'
-        full_name: 'Fullständigt namn'
-        add_members: "Lägg till medlemmar"
-        delete_member_confirm: "Ta bort '%{username}' från gruppen '%{group}'?"
       name_placeholder: "Gruppnamn, inga mellanslag, samma regler som för användarnamn"
       empty:
         posts: "Det är inga kommentarer från medlemmar i denna grupp"
@@ -350,11 +335,6 @@ sv:
         topics: "Det finns inga trådar från medlemmar av denna grupp"
         logs: "Det finns inga loggar för denna grupp"
       add: "Lägg till"
-      join: "Gå med i grupp"
-      leave: "Lämna grupp"
-      request: "Förfrågan om att gå med i grupp"
-      automatic_group: Automatisk grupp
-      is_group_user: "Du är en medlem av denna grupp"
       allow_membership_requests: "Tillåt användare att skicka medlemskapsförfrågan till gruppägare"
       membership: "Medlemskap"
       name: "Namn"

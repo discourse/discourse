@@ -346,21 +346,6 @@ de:
         make_user_group_owner: "Zum Eigentümer machen"
         remove_user_as_group_owner: "Eigentümerrechte entziehen"
     groups:
-      logs:
-        title: "Logs"
-        when: "Wann"
-        action: "Aktion"
-        acting_user: "Benutzer der Aktion"
-        target_user: "Betroffener Benutzer"
-        subject: "Gegenstand"
-        details: "Details"
-        from: "Von"
-        to: "An"
-      edit:
-        title: 'Gruppe bearbeiten'
-        full_name: 'Vollständiger Name'
-        add_members: "Mitglieder hinzufügen"
-        delete_member_confirm: "'%{username}' aus der Gruppe '%{group}' entfernen?"
       name_placeholder: "Gruppenname, keine Leerzeichen, gleiche Regel wie beim Benutzernamen"
       public_admission: "Erlaube Benutzern, die Gruppe eigenständig zu betreten (Erfordert, dass die Gruppe öffentlich sichtbar ist)"
       public_exit: "Erlaube Benutzern, die Gruppe eigenständig zu verlassen"
@@ -372,15 +357,7 @@ de:
         topics: "Es gibt keine Themen von Mitgliedern dieser Gruppe."
         logs: "Es gibt keine Protokolleinträge für diese Gruppe."
       add: "Hinzufügen"
-      join: "Gruppe beitreten"
-      leave: "Gruppe verlassen"
-      request: "Gruppenbeitritt beantragen"
-      filter_name: "filtern nach Gruppenname"
       message: "Nachricht"
-      automatic_group: Automatische Gruppe
-      close_group: Gruppe schließen
-      is_group_user: "Du bist ein Mitglied in dieser Gruppe."
-      is_group_owner: "Du bist ein Eigentümer dieser Gruppe"
       allow_membership_requests: "Erlaube Benutzern, eine Mitgliedschaftsanfrage an Gruppen-Eigentümer zu senden."
       membership_request_template: "Benutzerdefinierte Vorlage, das Benutzern angezeigt wird, die eine Mitgliedschaftsanfrage senden"
       membership_request:
@@ -389,7 +366,6 @@ de:
         reason: "Lass’ die Gruppenbesitzer wissen, warum du in diese Gruppe gehörst"
       membership: "Mitgliedschaft"
       name: "Name"
-      user_count: "Mitgliederzahl"
       bio: "Über die Gruppe"
       selector_placeholder: "Benutzernamen eingeben"
       owner: "Eigentümer"
@@ -398,7 +374,6 @@ de:
         empty: "Es gibt keine sichtbaren Gruppen."
         all_groups: "Alle Gruppen"
         owner_groups: "Gruppen, deren Eigentümer ich bin"
-        close_groups: "Gruppen schließen"
         automatic_groups: "Automatische Gruppen"
         public_groups: "Öffentliche Gruppen"
         my_groups: "Meine Gruppen"
@@ -1107,7 +1082,6 @@ de:
       no_content: Keine Treffer gefunden
       filter_placeholder: Suchen…
       create: "Erstelle: '{{content}}'"
-      max_content_reached: "Du kannst nur {{count}} Elemente auswählen."
     emoji_picker:
       filter_placeholder: Emoji suchen
       people: Personen
@@ -2813,7 +2787,6 @@ de:
           add_upload: "Upload hinzufügen"
           upload_file_tip: "Wähle einen hochzuladenen Medieninhalt aus (png, woff2, usw.)"
           variable_name: "SCSS Variablen-Name:"
-          variable_name_invalid: "Ungültiger Variablenname. Nur alphanumerische Zeichen erlaubt. Muss mit einem Buchstaben beginnen."
           upload: "Hochladen"
           child_themes_check: "Theme beinhaltet andere Kinder-Themes"
           css_html: "Benutzerdefiniertes CSS/HTML"
@@ -2930,7 +2903,7 @@ de:
         delivery_method: "Versandmethode"
         preview_digest_desc: "Vorschau der Neuigkeiten, die als E-Mail an inaktive Nutzer gesendet werden."
         refresh: "Aktualisieren"
-        send_digest_label: "Sende das Ergebnis nach:"
+        send_digest_label: "Sende das Ergebnis an:"
         send_digest: "Senden"
         sending_email: "Sende Email..."
         format: "Format"

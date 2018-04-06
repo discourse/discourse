@@ -318,21 +318,6 @@ bs_BA:
         make_user_group_owner: "Napravi vlasnika"
         remove_user_as_group_owner: "Ukloni vlasnika"
     groups:
-      logs:
-        title: "Logovi"
-        when: "Kad"
-        action: "Akcija"
-        acting_user: "Trenutni korisnik"
-        target_user: "Ciljani korisnik"
-        subject: "Subjekt"
-        details: "Detalji"
-        from: "Od"
-        to: "Za"
-      edit:
-        title: 'Preimenuj Grupu'
-        full_name: 'Puno ime'
-        add_members: "Dodaj Članove"
-        delete_member_confirm: "Ukloni '%{username}' iz '%{group}' grupe?"
       name_placeholder: "Ime grupe, bez razmaka, ista pravila kao za korisničko ime"
       empty:
         posts: "Ne postoje postovi člana ove grupe."
@@ -342,11 +327,6 @@ bs_BA:
         topics: "Nema novih tema od strane članova ove grupe."
         logs: "Nema novih logova za ovu grupu."
       add: "Dodaj"
-      join: "Pridruži se grupi"
-      leave: "Napusti grupu"
-      request: "Zahtjevaj pristup grupi"
-      automatic_group: Automatska grupa
-      is_group_user: "Vi ste član ove grupe"
       membership: "Članstvo"
       name: "Ime"
       bio: "O grupi"

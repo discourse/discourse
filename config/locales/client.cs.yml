@@ -169,6 +169,7 @@ cs:
     topic_admin_menu: "akce administrátora tématu"
     wizard_required: "Vítejte ve vašem novém Discourse! Začněte s <a href='%{url}' data-auto-route='true'>nastavením pomocí průvodce</a> ✨"
     emails_are_disabled: "Všechny odchozí emaily byly administrátorem vypnuty. Žádné odchozí emaily nebudou odeslány."
+    bootstrap_mode_disabled: "Režim bootstrap bude deaktivován v následujících 24 hodinách."
     themes:
       default_description: "Výchozí"
     s3:
@@ -359,21 +360,31 @@ cs:
         make_user_group_owner: "Udělej vlastníkem"
         remove_user_as_group_owner: "Odstraň vlastníka"
     groups:
-      logs:
-        title: "Logy"
-        when: "Když"
-        action: "Akce"
-        acting_user: "Vystupující uživatel"
-        target_user: "Cílový uživatel"
-        subject: "Předmět"
-        details: "Detail"
-        from: "Od"
-        to: "Komu"
-      edit:
-        title: 'Editovat skupinu'
-        full_name: 'Celé jméno'
+      new:
+        title: "Nová skupina"
+        description: "Vytvořit novou skupinu"
+        create: "Vytvořit"
+        name:
+          too_short: "Název skupiny je moc krátký"
+          too_long: "Název skupiny je moc dlouhý"
+          checking: "Zjišťuji, zda je jméno skupiny volné..."
+          available: "Název skupiny je k dispozici"
+          not_available: "Název skupiny není k dispozici"
+          blank: "Název skupiny nemůže být prázdný"
+      manage:
+        title: 'Spravovat'
+        name: 'Název'
+        full_name: 'Celé název'
         add_members: "Přidat členy"
-        delete_member_confirm: "Odstranit '%{username}' ze skupiny '%{group}'?"
+        delete_member_confirm: "Odstranit '%{username}' ze '%{group}' skupiny?"
+        profile:
+          title: Profil
+        members:
+          title: "Členové"
+        logs:
+          action: "Akce"
+          subject: "Předmět"
+          from: "Od"
       name_placeholder: "Název skupiny, bez mezer, stejná pravidla jako pro uživatelská jména"
       public_admission: "Povolit uživatelům volný přístup do skupiny (skupina musí být veřejně viditelná)"
       public_exit: "Povolit uživatelům volně opustit skupinu"
@@ -385,15 +396,7 @@ cs:
         topics: "V této skupině není od žádného člena ani jedno téma."
         logs: "Pro tuto skupinu neexistují žádné logy."
       add: "Přidat"
-      join: "Přidat se ke skupině"
-      leave: "Opustit skupinu"
-      request: "Požádat o členství ve skupině"
-      filter_name: "Filtrovat podle jména skupiny"
       message: "Zpráva"
-      automatic_group: Automatická skupina
-      close_group: Zavřít skupinu
-      is_group_user: "Jste členem této skupiny"
-      is_group_owner: "Jsi majitelem této skupiny"
       allow_membership_requests: "Povolit uživatelům odeslat žádost o členství vlastníkům skupin"
       membership_request_template: "Šablona, která se uživatelům zobrazí při odesílání žádosti o členství"
       membership_request:
@@ -402,16 +405,16 @@ cs:
         reason: "Informovat vlastníky skupiny proč patříte do této skupiny"
       membership: "Členství"
       name: "Název"
-      user_count: "Počet členů"
+      user_count: "Uživatelé"
       bio: "O skupině"
       selector_placeholder: "zadejte uživatelské jméno"
       owner: "Vlastník"
       index:
         title: "Skupiny"
+        all: "Všechny skupiny"
         empty: "Žádné viditelné skupiny."
         all_groups: "Všechny skupiny"
         owner_groups: "Skupiny, jejichž jsem majitelem"
-        close_groups: "Zavřít skupiny"
         automatic_groups: "Automatické skupiny"
         public_groups: "Veřejné skupiny"
         my_groups: "Moje skupiny"
@@ -666,6 +669,9 @@ cs:
         choose: "Vyber si heslo"
       second_factor:
         title: "Dvoufázové přihlašování"
+        label: "Kód"
+        disable_description: "Zadejte prosím ověřovací kód z vaší aplikace"
+        show_key_description: "Vložit ručně"
       change_about:
         title: "Změna o mně"
         error: "Došlo k chybě při pokusu změnit tuto hodnotu."
@@ -1027,6 +1033,7 @@ cs:
       title: "Přihlásit se"
       username: "Uživatel"
       password: "Heslo"
+      second_factor_title: "Dvoufázové přihlašování"
       email_placeholder: "emailová adresa nebo uživatelské jméno"
       caps_lock_warning: "zapnutý Caps Lock"
       error: "Neznámá chyba"
@@ -2887,7 +2894,6 @@ cs:
           add_upload: "Přidat nahrávání "
           upload_file_tip: "Vybrat položku k nahrání (png, woff2, etc...)"
           variable_name: "Název SCSS var:"
-          variable_name_invalid: "Neplatné variabilní jméno. Povoleny jsou pouze alfanumerické znaky. Musí začínat písmenem."
           upload: "Nahrát"
           child_themes_check: "Motiv zahrnuje jiné dětské motivy"
           css_html: "Vlastí CSS/HTML"

@@ -328,21 +328,6 @@ et:
         make_user_group_owner: "Määra omanikuks"
         remove_user_as_group_owner: "Eemalda omanik"
     groups:
-      logs:
-        title: "Logid"
-        when: "Millal"
-        action: "Tegevus"
-        acting_user: "Tegev kasutaja"
-        target_user: "Sihtkasutaja"
-        subject: "Teema"
-        details: "Detailid"
-        from: "Kellelt"
-        to: "Kellele"
-      edit:
-        title: 'Muuda gruppi'
-        full_name: 'Täisnimi'
-        add_members: "Lisa liikmed"
-        delete_member_confirm: "Eemalda '%{username}' grupist '%{group}'?"
       name_placeholder: "Grupi nimi, tühikuteta, vastab kasutajanime reeglitele"
       public_exit: "Luba kasutajatel vabalt grupist lahkuda"
       empty:
@@ -353,12 +338,7 @@ et:
         topics: "Selle grupi liikmetelt ei ole teemasid."
         logs: "Sellele grupile logid puuduvad."
       add: "Lisa"
-      join: "Liitu grupiga"
-      leave: "Lahku grupist"
-      request: "Taotle liitumist grupiga"
       message: "Sõnum"
-      automatic_group: Automaatne grupp
-      is_group_user: "Oled selle grupi liige"
       membership_request:
         submit: "Saada päring"
       membership: "Liikmelisus"

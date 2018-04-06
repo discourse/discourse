@@ -332,21 +332,6 @@ ca:
         make_user_group_owner: "Crea persona propietària"
         remove_user_as_group_owner: "Elimina persona propietària"
     groups:
-      logs:
-        title: "Registres"
-        when: "Quan"
-        action: "Acció"
-        acting_user: "Persona usuària activa"
-        target_user: "Persona usuària destinatària"
-        subject: "Tema"
-        details: "Detalls"
-        from: "De"
-        to: "A"
-      edit:
-        title: 'Edita grup'
-        full_name: 'Nom complet'
-        add_members: "Afegeix membres"
-        delete_member_confirm: "Elimina '%{username}' del '%{group}' grup?"
       name_placeholder: "Nom del grup, sense espais, igual que la regla del nom de la identitat"
       empty:
         posts: "No hi ha publicacions de membres d'aquest grup."
@@ -356,12 +341,7 @@ ca:
         topics: "No hi ha temes de membres d'aquest grup."
         logs: "No hi ha registres per a aquest grup."
       add: "Afegegix"
-      join: "Uneix-te al grup"
-      leave: "Abandona el grup"
-      request: "Demana afegir-te al grup"
       message: "Missatge"
-      automatic_group: Grup Automàtic
-      is_group_user: "Ets membre d'aquest grup"
       membership: "Afiliació"
       name: "Nom"
       bio: "Sobre el Grup"

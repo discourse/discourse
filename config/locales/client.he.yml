@@ -323,21 +323,6 @@ he:
         make_user_group_owner: "הפיכה לבעלים"
         remove_user_as_group_owner: "שלילת בעלות"
     groups:
-      logs:
-        title: "לוגים"
-        when: "מתי"
-        action: "פעולה"
-        acting_user: "משתמשים פועלים"
-        target_user: "משתמשי מטרה"
-        subject: "נושא"
-        details: "פרטים"
-        from: "מאת"
-        to: "אל"
-      edit:
-        title: 'עריכת קבוצה'
-        full_name: 'שם מלא'
-        add_members: "הוספת חברים"
-        delete_member_confirm: "הסרת '%{username}' מהקבוצה '%{group}'?"
       name_placeholder: "שם קבוצה, ללא רווחים, לפי הכללים של שמות משתמשים"
       public_admission: "אפשרו למשתמשים להצטרף לקבוצה בחופשיות (דורש קבוצה פומבית)"
       public_exit: "אפשרו למשתמשים לעזוב את הקבוצה בחופשיות"
@@ -349,12 +334,7 @@ he:
         topics: "אין נושאים שנוצרו על ידי חברים של קבוצה זו."
         logs: "אין לוגים עבור קבוצה זו."
       add: "הוספה"
-      join: "הצטרפות לקבוצה"
-      leave: "עזיבת קבוצה"
-      request: "בקשה להצטרפות לקבוצה"
       message: "הודעה"
-      automatic_group: קבוצה אוטומטית
-      is_group_user: "אתם חברים בקבוצה זו."
       allow_membership_requests: "אפשרו למשתמשים לשלוח בקשות חברות לבעלי קבוצה"
       membership: "חברות"
       name: "שם"

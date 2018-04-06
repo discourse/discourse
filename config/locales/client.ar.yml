@@ -420,21 +420,6 @@ ar:
         make_user_group_owner: "تعيين كمالك"
         remove_user_as_group_owner: "سحب صلاحية المالك"
     groups:
-      logs:
-        title: "السجلات"
-        when: "حين"
-        action: "إجراء"
-        acting_user: "العضو المسؤول"
-        target_user: "العضو المستهدف"
-        subject: "الموضوع"
-        details: "التفاصيل"
-        from: "من"
-        to: "إلى"
-      edit:
-        title: 'تعديل المجموعة'
-        full_name: 'الإسم الكامل'
-        add_members: "إضافة أعضاء"
-        delete_member_confirm: "إزالة '%{username}' من المجموعة '%{group}'؟"
       name_placeholder: "اسم المجموعة، بدون مسافات. يتبع قواعد اسم المستخدم"
       public_admission: "السماح للاعضاء بالانضمام إلى المجموعة بحرية (يتطلب أن تكون المجموعة مرئية للجميع )"
       public_exit: "السماح للأعضاء بمغادرة المجموعة بحرية"
@@ -446,12 +431,7 @@ ar:
         topics: "لا موضوعات من أعضاء هذه المجموعة."
         logs: "لا سجلّات لهذه المجموعة."
       add: "أضف"
-      join: "انضم للمجموعة"
-      leave: "غادر المجموعة"
-      request: "اطلب الانضمام للمجموعة"
       message: "رسالة"
-      automatic_group: مجموعة تلقائية
-      is_group_user: "أنت عضو في هذه المجموعة"
       allow_membership_requests: "السماح للأعضاء بأرسال طلب انضمام لمدراء المجموعة"
       membership_request_template: "لوحة مخصص تظهر للأعضاء عندما يرسلون طلب عضوية"
       membership_request:

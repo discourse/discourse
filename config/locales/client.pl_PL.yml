@@ -375,21 +375,6 @@ pl_PL:
         make_user_group_owner: "Nadaj prawa właściciela"
         remove_user_as_group_owner: "Usuń prawa właściciela"
     groups:
-      logs:
-        title: "Logi"
-        when: "Kiedy"
-        action: "Akcja"
-        acting_user: "Uczestniczący użytkownik "
-        target_user: "Wybrany użytkownik"
-        subject: "Temat"
-        details: "Szczegóły"
-        from: "Od"
-        to: "Do"
-      edit:
-        title: 'Edytuj grupę'
-        full_name: 'Pełna nazwa'
-        add_members: "Dodaj użytkowników"
-        delete_member_confirm: "Czy usunąć użytkownika '%{username}' z grupy '%{group}'?"
       name_placeholder: "Nazwa grupy, bez spacji, takie same zasady jak przy nazwie użytkownika"
       public_admission: "Zezwól wszystkim użytkownikom na dołączanie do tej grupy (widoczność grupy musi być ustawiona na publiczną)"
       public_exit: "Zezwól wszystkim użytkownikom na opuszczanie tej grupy"
@@ -401,12 +386,7 @@ pl_PL:
         topics: "Nie ma wątków stworzonych przez użytkowników tej grupy"
         logs: "Nie ma logów dla tej grupy"
       add: "Dodaj"
-      join: "Dołącz do grupy"
-      leave: "Opuść grupę"
-      request: "Żądanie dołączenia do grupy"
       message: "Wiadomość"
-      automatic_group: Automatyczna grupa
-      is_group_user: "Jesteś członkiem tej grupy"
       allow_membership_requests: "Zezwól użytkownikom na wysyłanie zaproszeń do właścicieli grupy."
       membership_request_template: "Wyświetl niestandardowy szablon użytkownikom, w momencie wysyłania wniosku o członkostwo."
       membership_request:

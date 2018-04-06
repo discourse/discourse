@@ -325,21 +325,6 @@ pt:
         make_user_group_owner: "Tornar dono"
         remove_user_as_group_owner: "Remover dono"
     groups:
-      logs:
-        title: "Registos"
-        when: "Quando"
-        action: "Ação"
-        acting_user: "Utlizador ator"
-        target_user: "Utilizador alvo"
-        subject: "Assunto"
-        details: "Detalhes"
-        from: "De"
-        to: "Para"
-      edit:
-        title: 'Editar Grupo'
-        full_name: 'Nome Completo'
-        add_members: "Adicionar membros"
-        delete_member_confirm: "Remover '%{username}' do grupo '%{group}'?"
       name_placeholder: "Nome do grupo, sem espaços, com as mesmas regras do nome de utilizador"
       public_exit: "Permitir que os utilizadores deixem o grupo livremente"
       empty:
@@ -350,12 +335,7 @@ pt:
         topics: "Não existem tópicos por membros deste grupo."
         logs: "Não existem registos para este grupo."
       add: "Adicionar"
-      join: "Aderir ao Grupo"
-      leave: "Deixar o Grupo"
-      request: "Pedir para Aderir ao Grupo"
       message: "Mensagem"
-      automatic_group: Grupo Automático
-      is_group_user: "É um membro deste grupo"
       allow_membership_requests: "Permitir que os utilizadores enviem pedidos de adesão aos donos do grupo"
       membership_request:
         submit: "Submeter Pedido"
@@ -1024,7 +1004,6 @@ pt:
       no_content: Não foram encontradas correspondências
       filter_placeholder: Pesquisar...
       create: "Criar: '{{content}}'"
-      max_content_reached: "Só pode selecionar {{count}} itens."
     emoji_picker:
       filter_placeholder: Pesquisar por emoji
       people: Pessoas

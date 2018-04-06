@@ -149,6 +149,8 @@ fi:
     topic_admin_menu: "ketjun ylläpitotoimet"
     wizard_required: "Tervetuloa uuteen Discourseesi! Aloitetaan <a href='%{url}' data-auto-route='true'>ohjattu asennus</a> ✨"
     emails_are_disabled: "Ylläpitäjä on estänyt kaiken lähtevän sähköpostiliikenteen. Mitään sähköposti-ilmoituksia ei lähetetä."
+    bootstrap_mode_enabled: "Jotta uuden palstan vauhtiin saaminen olisi helpompaa, sivusto on aloitustilassa. Kaikki uudet käyttäjät saavat luottamustason 1 ja heille lähetetään sähköpostitiivistelmät päivittäin. Tila poistetaan automaattisesti, kun %{min_users}käyttäjää on liittynyt."
+    bootstrap_mode_disabled: "Aloitustila poistetaan seuraavan 24 tunnin aikana."
     themes:
       default_description: "Oletus"
     s3:
@@ -248,6 +250,12 @@ fi:
     topic_count_latest:
       one: "Katso {{count}} uusi tai päivittynyt ketju"
       other: "Katso {{count}} uutta tai päivittynyttä ketjua"
+    topic_count_unread:
+      one: "Näytä {{count}} lukematon ketju"
+      other: "Näytä {{count}} lukematonta ketjua"
+    topic_count_new:
+      one: "Näytä {{count}} uusi ketju"
+      other: "Näytä {{count}} uutta ketjua"
     preview: "esikatselu"
     cancel: "peruuta"
     save: "Tallenna muutokset"
@@ -260,6 +268,7 @@ fi:
     pasting: "Liitetään..."
     enable: "Ota käyttöön"
     disable: "Poista käytöstä"
+    continue: "Jatka"
     undo: "Peru"
     revert: "Palauta"
     failed: "Epäonnistui"
@@ -337,21 +346,40 @@ fi:
         make_user_group_owner: "Myönnä isännyys"
         remove_user_as_group_owner: "Peru isännyys"
     groups:
-      logs:
-        title: "Lokit"
-        when: "Milloin"
-        action: "Toiminta"
-        acting_user: "Toimiva käyttäjä"
-        target_user: "Kohdekäyttäjä"
-        subject: "Aihe"
-        details: "Yksityiskohdat"
-        from: "Lähettäjä"
-        to: "Vastaanottaja"
-      edit:
-        title: 'Muuta ryhmää'
-        full_name: 'Täysimittainen nimi'
+      new:
+        title: "Uusi ryhmä"
+        description: "Luo uusi ryhmä"
+        create: "Luo"
+        name:
+          too_short: "Ryhmän nimi on liian lyhyt"
+          too_long: "Ryhmän nimi on liian pitkä"
+          checking: "Tarkistetaan onko ryhmän nimi vapaana..."
+          available: "Ryhmän nimi on vapaana"
+          not_available: "Ryhmän nimi on käytössä"
+          blank: "Ryhmän nimi ei voi olla tyhjä"
+      manage:
+        title: 'Hallinnoi'
+        name: 'Nimi'
+        full_name: 'Täysmittainen nimi'
         add_members: "Lisää jäseniä"
         delete_member_confirm: "Poista '%{username}' ryhmästä '%{group}'?"
+        profile:
+          title: Profiili
+        members:
+          title: "Jäsenet"
+          description: "Hallinnoi ryhmän jäsenyyksiä"
+          usernames: "Käyttäjänimet"
+          as_owner: "Tee ryhmän jäsenestä tai jäsenistä ryhmän isäntiä"
+        logs:
+          title: "Lokit"
+          when: "Milloin"
+          action: "Toimi"
+          acting_user: "Toimija"
+          target_user: "Kohdekäyttäjä"
+          subject: "Aihe"
+          details: "Yksityiskohdat"
+          from: "Mistä"
+          to: "Minne"
       name_placeholder: "Ryhmän nimi. Ei välilyöntejä, samat säännöt kuin käyttäjänimillä"
       public_admission: "Salli käyttäjien liittyä ryhmään vapaasti (Ryhmän täytyy olla julkinen)"
       public_exit: "Salli käyttäjien poistua ryhmästä vapaasti"
@@ -363,15 +391,10 @@ fi:
         topics: "Ryhmän jäsenet eivät ole aloittaneet ketjuja."
         logs: "Ryhmälle ei ole lokitietoja."
       add: "Lisää"
-      join: "Liity ryhmään"
-      leave: "Poistu ryhmästä"
-      request: "Hae ryhmään"
-      filter_name: "suodata ryhmän nimen perusteella"
+      join: "Liity"
+      leave: "Poistu"
+      request: "Pyyntö"
       message: "Viesti"
-      automatic_group: Automaattinen ryhmä
-      close_group: Sulje ryhmä
-      is_group_user: "Olet tämän ryhmän jäsen"
-      is_group_owner: "Olet ryhmän isäntä"
       allow_membership_requests: "Salli käyttäjän lähettää jäsenhakemuksia ryhmien isännille"
       membership_request_template: "Viestipohja, joka näytetään käyttäjälle, kun hän lähettää jäsenhakemusta ryhmään."
       membership_request:
@@ -380,23 +403,40 @@ fi:
         reason: "Kerro ryhmän isännille, miksi haluat kuulua tähän ryhmään"
       membership: "Jäsenyys"
       name: "Nimi"
-      user_count: "Jäsenmäärä"
+      group_name: "Ryhmän nimi"
+      user_count: "Käyttäjät"
       bio: "Tietoa ryhmästä"
       selector_placeholder: "syötä käyttäjänimi"
       owner: "isäntä"
       index:
         title: "Ryhmät"
+        all: "Kaikki ryhmät"
         empty: "Näkyvillä olevia ryhmiä ei ole."
+        filter: "Suodata ryhmän tyypin mukaan"
         all_groups: "Kaikki ryhmät"
         owner_groups: "Ryhmät joiden isäntä olen"
-        close_groups: "Sulje ryhmät"
+        close_groups: "Suljetut ryhmät"
         automatic_groups: "Automaattiset ryhmät"
+        automatic: "Automaattinen"
+        closed: "Suljettu"
+        public: "Julkinen"
+        private: "Yksityinen"
         public_groups: "Julkiset ryhmät"
+        automatic_group: Automaattinen ryhmä
+        close_group: Sulje ryhmä
         my_groups: "Minun ryhmäni"
+        group_type: "Ryhmän tyyppi"
+        is_group_user: "Jäsen"
+        is_group_owner: "Isäntä"
       title:
         one: "Ryhmä"
         other: "Ryhmät"
       activity: "Toiminta"
+      members:
+        title: "Jäsenet"
+        filter_placeholder_admin: "käyttäjänimi tai sähköposti"
+        filter_placeholder: "käyttäjänimi"
+        remove_member: "Poista jäsen"
       topics: "Ketjut"
       posts: "Viestit"
       mentions: "Maininnat"
@@ -1070,7 +1110,6 @@ fi:
       no_content: Ei osumia
       filter_placeholder: Hae...
       create: "Luo: '{{content}}'"
-      max_content_reached: "Voit valita enintään {{count}} ."
     emoji_picker:
       filter_placeholder: Etsi emojia
       people: Ihmiset

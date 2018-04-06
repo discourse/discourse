@@ -306,21 +306,6 @@ ja:
         make_user_group_owner: "オーナーにする"
         remove_user_as_group_owner: "オーナーから削除する"
     groups:
-      logs:
-        title: "ログ"
-        when: "日時"
-        action: "アクション"
-        acting_user: "アクションしたユーザー"
-        target_user: "対象ユーザー"
-        subject: "対象"
-        details: "詳細"
-        from: "差出人"
-        to: "宛先"
-      edit:
-        title: 'グループの編集'
-        full_name: 'フルネーム'
-        add_members: "メンバーを追加"
-        delete_member_confirm: "%{group}から%{username}を削除しますか?"
       name_placeholder: "グループネームはユーザー名と同様にスペース無し"
       public_admission: "ユーザーがグループへ自由に参加できるようにする (一般公開グループである必要があります)"
       public_exit: "ユーザーがグループから自由に離脱できるようにする"
@@ -332,12 +317,7 @@ ja:
         topics: "このグループのメンバーによるトピックはありません。"
         logs: "このグループに関するログはありません。"
       add: "追加"
-      join: "グループに参加"
-      leave: "グループから離脱"
-      request: "グループへの参加をリクエスト"
       message: "メッセージ"
-      automatic_group: 自動作成グループ
-      is_group_user: "このグループのメンバーです"
       allow_membership_requests: "ユーザーがグループオーナーにメンバーシップリクエストを送信できるようにする"
       membership_request_template: "メンバーシップリクエスト送信時に表示するカスタムテンプレート"
       membership_request:
