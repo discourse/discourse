@@ -2,6 +2,18 @@ require 'rails_helper'
 
 RSpec.describe RobotsTxtController do
   describe '#index' do
+
+    context 'crawl delay' do
+      it 'allows you to set crawl delay on particular bots' do
+        SiteSetting.allow_index_in_robots_txt = true
+        SiteSetting.slow_down_crawler_rate = 17
+        SiteSetting.slow_down_crawler_user_agents = 'bingbot|googlebot'
+        get '/robots.txt'
+        expect(response.body).to include("\nUser-agent: bingbot\nCrawl-delay: 17")
+        expect(response.body).to include("\nUser-agent: googlebot\nCrawl-delay: 17")
+      end
+    end
+
     context 'allow_index_in_robots_txt is true' do
 
       def expect_allowed_and_disallowed_sections(allow_index, disallow_index)

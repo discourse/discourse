@@ -5,6 +5,12 @@ class RobotsTxtController < ApplicationController
   def index
     if SiteSetting.allow_index_in_robots_txt
       path = :index
+      @crawler_delayed_agents = []
+
+      SiteSetting.slow_down_crawler_user_agents.split('|').each do |agent|
+        @crawler_delayed_agents << [agent, SiteSetting.slow_down_crawler_rate]
+      end
+
       if SiteSetting.whitelisted_crawler_user_agents.present?
         @allowed_user_agents = SiteSetting.whitelisted_crawler_user_agents.split('|')
         @disallowed_user_agents = ['*']
