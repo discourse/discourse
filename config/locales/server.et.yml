@@ -355,21 +355,6 @@ et:
       title: "juht"
     change_failed_explanation: "Üritasid alandada %{user_name} tasemele '%{new_trust_level}'. Samas on tal juba tase'%{current_trust_level}'. %{user_name} jääb tasemele '%{current_trust_level}' - kui soovid alandada kasutaja taset, siis lukusta kõigepealt usaldustase."
   rate_limiter:
-    slow_down: "Oled antud seda toimingut liiga palju proovinud. Proovi hiljem uuesti."
-    by_type:
-      first_day_replies_per_day: "Oled ületanud uuele kasutajale esimesel päeval lubatud vastuste limiidi. Palun oota %{time_left} enne kui uuesti proovid."
-      first_day_topics_per_day: "Oled ületanud uuele kasutajale esimesel päeval lubatud teemade lisamise limiidi. Palun oota %{time_left} enne kui uuesti proovid."
-      create_topic: "Lisad teemasid liiga kiiresti. Palun oota %{time_left} enne kui uuesti proovid."
-      create_post: "Vastad liiga kiiresti. Palun oota %{time_left} enne kui uuesti proovid."
-      delete_post: "Kustutad postitusi liiga kiiresti. Palun oota %{time_left} enne kui uuesti proovid."
-      public_group_membership: "Liitud gruppidega/lahkud neist liiga sageli. Palun oota %{time_left} enne kui uuesti proovid."
-      topics_per_day: "Oled ületanud tänaseks lubatud uute teemade lisamise limiidi. Palun oota %{time_left} enne kui uuesti proovid."
-      pms_per_day: "Oled ületanud tänaseks lubatud sõnumite limiidi. Palun oota %{time_left} enne kui uuesti proovid."
-      create_like: "Oled ületanud tänaseks lubatud meeldimiste lisamise limiidi. Palun oota %{time_left} enne kui uuesti proovid."
-      create_bookmark: "Oled ületanud tänaseks lubatud järjehoidjate lisamise limiidi. Palun oota %{time_left} enne kui uuesti proovid."
-      live_post_counts: "Küsid postituste reaalajas loendit liiga kiiresti. Palun oota %{time_left} enne kui uuesti proovid."
-      unsubscribe_via_email: "Oled ületanud tänaseks lubatud meilitsi tellimuste tühistamise limiidi. Palun oota %{time_left} enne kui uuesti proovid."
-      topic_invitations_per_day: "Oled ületanud tänaseks lubatud teemadesse kutsumise limiidi. Palun oota %{time_left} enne kui uuesti proovid."
     hours:
       one: "1 tund"
       other: "%{count} tundi"

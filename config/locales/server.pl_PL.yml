@@ -464,22 +464,6 @@ pl_PL:
     image_placeholder:
       broken: "Ten obraz jest uszkodzony"
   rate_limiter:
-    slow_down: "Powtórzyłeś to działanie zbyt wiele razy, spróbuj ponownie później."
-    by_type:
-      first_day_replies_per_day: "Osiągnąłeś maksymalną liczbę odpowiedzi, jakie może napisać nowy użytkownik pierwszego dnia. Musisz odczekać %{time_left} zanim znów spróbujesz."
-      first_day_topics_per_day: "Osiągnąłeś maksymalną liczbę tematów, jakie może napisać nowy użytkownik pierwszego dnia. Musisz odczekać %{time_left}, zanim znów spróbujesz."
-      create_topic: "Zbyt szybko tworzysz tematy. Musisz poczekać %{time_left}, zanim znów spróbujesz."
-      create_post: "Odpowiadasz zbyt szybko. Musisz poczekać %{time_left}, zanim znów spróbujesz."
-      delete_post: "Zbyt szybko usuwasz posty. Musisz poczekać %{time_left}, zanim znów spróbujesz."
-      public_group_membership: "Dołączasz/opuszczasz grupy zbyt często. Odczekaj %{time_left} przed kolejną próbą."
-      topics_per_day: "Osiągnąłeś maksymalną liczbę nowych tematów na dziś. Musisz poczekać %{time_left}, zanim znów spróbujesz."
-      pms_per_day: "Osiągnąłeś maksymalną liczbę wiadomości na dziś. Musisz poczekać %{time_left}, zanim znów spróbujesz."
-      create_like: "Osiągnąłeś maksymalną liczbę lajków na dziś. Musisz poczekać %{time_left}, zanim znów spróbujesz."
-      create_bookmark: "Wyczerpałeś na dziś możliwość dodawania zakładek. Musisz poczekać %{time_left}, zanim znów spróbujesz."
-      edit_post: "Wyczerpałeś na dziś możliwość edytowania. Musisz poczekać %{time_left}, zanim znów spróbujesz."
-      live_post_counts: "Zbyt szybko prosisz o bieżące zliczanie postów . Musisz poczekać %{time_left}, zanim znów spróbujesz."
-      unsubscribe_via_email: "Osiągnąłeś maksymalną liczbę wypisań przez maila na dziś. Musisz poczekać %{time_left}, zanim znów spróbujesz."
-      topic_invitations_per_day: "Osiągnąłeś maksymalną liczbę zaproszeń do tematów na dziś. Odczekaj %{time_left} przed kolejną próbą."
     hours:
       one: "1 godzina"
       few: "%{count} godziny"

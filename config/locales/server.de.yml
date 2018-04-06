@@ -490,23 +490,6 @@ de:
     image_placeholder:
       broken: "Dieses Bild ist beschädigt"
   rate_limiter:
-    slow_down: "Du hast diese Aktion zu oft durchgeführt. Versuche es später wieder."
-    too_many_requests: "Du hast diese Aktion zu häufig ausgeführt. Bitte warte %{time_left}, ehe du es erneut versuchst."
-    by_type:
-      first_day_replies_per_day: "Du hast die maximale Anzahl an Antworten erreicht, die ein neuer Benutzer am ersten Tag erstellen kann. Bitte warte %{time_left}, bis Du es wieder versuchst."
-      first_day_topics_per_day: "Du hast die maximale Anzahl an Themen erreicht, die ein neuer Benutzer am ersten Tag erstellen kann. Bitte warte %{time_left}, bis Du es wieder versuchst."
-      create_topic: "Du erstellst zu schnell zu viele Themen hintereinander. Bitte warte %{time_left}, bis Du es wieder versuchst."
-      create_post: "Du antwortest zu schnell. Bitte warte %{time_left}, bis Du es wieder versuchst."
-      delete_post: "Du löschst zu schnell Beiträge. Bitte warte %{time_left}, bis Du es wieder versuchst."
-      public_group_membership: "Du wechselst die Gruppenzugehörigkeit zu häufig. Bitte warte %{time_left}, bevor du es erneut versuchst."
-      topics_per_day: "Du hast die maximale Anzahl an neuen Themen für heute erreicht. Bitte warte %{time_left}, bis Du es wieder versuchst."
-      pms_per_day: "Du hast die maximale Anzahl an Nachrichten für heute erreicht. Bitte warte %{time_left}, bis Du es wieder versuchst."
-      create_like: "Du hast die maximale Anzahl an Likes für heute erreicht. Bitte warte %{time_left}, bevor du es wieder versuchst."
-      create_bookmark: "Du hast die maximale Anzahl an Lesezeichen für heute erreicht. Bitte warte %{time_left}, bis Du es wieder versuchst."
-      edit_post: "Du hast für heute die maximale Anzahl an Bearbeitungen erreicht. Bitte warte %{time_left}, bevor du es erneut versuchst."
-      live_post_counts: "Du forderst die Live-Anzahl der Antworten zu schnell neu an. Bitte warte %{time_left}, bis du es wieder versuchst."
-      unsubscribe_via_email: "Du hast die maximale Anzahl an Abbestell-E-Mails für heute erreicht. Bitte warte %{time_left}, vor einem neuen Versuch."
-      topic_invitations_per_day: "Du hast die maximale Zahl an neuen Thema-Einladungen für heute erreicht. Bitte warte %{time_left}, bis Du es wieder versuchst."
     hours:
       one: "1 Stunde"
       other: "%{count} Stunden"
@@ -615,7 +598,7 @@ de:
     continue_button: "Weiter zu %{site_name}"
     welcome_to: "Willkommen bei %{site_name}!"
     approval_required: "Bevor du auf das Forum zugreifen kannst, muss dein neues Konto noch von einem Moderator genehmigt werden. Du erhältst eine E-Mail, sobald dies geschehen ist!"
-    missing_session: "We können nicht feststellen, ob dein Konto erstellt wurde, bitte stelle sichere, dass du Cookies aktiviert hast."
+    missing_session: "Wir können nicht feststellen, ob dein Konto erstellt wurde. Bitte stelle sicher, dass du Cookies aktiviert hast."
     activated: "Bitte entschuldige, dieses Konto wurde bereits aktiviert."
     admin_confirm:
       title: "Admnistrator-Konto bestätigen"
@@ -2463,7 +2446,7 @@ de:
       popular_posts: "Beliebte Beiträge"
       more_new: "Neu für dich"
       subject_template: "[%{email_prefix}] Zusammenfassung"
-      unsubscribe: "Diese Zusammenfassung wird von %{site_link} versendet, wenn wir dich einige Zeit lang nicht gesehen haben. Ändere %{email_preferences_link} oder %{unsubscribe_link}zum Abbestellen."
+      unsubscribe: "Diese Zusammenfassung wird von %{site_link} versendet, wenn wir dich einige Zeit lang nicht gesehen haben. Ändere %{email_preferences_link} oder %{unsubscribe_link} zum Abbestellen."
       your_email_settings: "deine E-Mail-Einstellungen"
       click_here: "klicke hier"
       from: "Zusammenfassung für %{site_name}"

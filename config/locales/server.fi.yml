@@ -448,22 +448,6 @@ fi:
     image_placeholder:
       broken: "Tämä kuva ei toimi"
   rate_limiter:
-    slow_down: "Olet tehnyt tämän toiminnon liian monta kertaa, yritä uudelleen myöhemmin."
-    by_type:
-      first_day_replies_per_day: "Uusi käyttäjä ei voi ensimmäisenä päivänään kirjoittaa enempää viestejä. Odota %{time_left} ja yritä sitten uudelleen."
-      first_day_topics_per_day: "Uusi käyttäjä ei voi ensimmäisenä päivänään aloittaa enempää ketjuja. Odota %{time_left} ja yritä sitten uudelleen."
-      create_topic: "Yrität aloittaa ketjuja liian nopeasti. Odota %{time_left} ja yritä sitten uudelleen."
-      create_post: "Yrität vastata liian nopeasti. Odota %{time_left} ja yritä sitten uudelleen."
-      delete_post: "Poistat viestejä liian nopeasti. Odota %{time_left} ja yritä sitten uudelleen."
-      public_group_membership: "Liityt/eroat ryhmistä liian nopeasti. Odota %{time_left} ja yritä sitten uudelleen."
-      topics_per_day: "Olet aloittanut enimmäismäärän uusia ketjuja tälle päivälle. Odota %{time_left} ja yritä sitten uudelleen."
-      pms_per_day: "Olet lähettänyt enimmäismäärän viestejä tälle päivälle. Odota %{time_left} ja yritä sitten uudelleen."
-      create_like: "Olet tykännyt enimmäismäärän tälle päivälle. Odota %{time_left} ja yritä sitten uudelleen."
-      create_bookmark: "Olet lisännyt enimmäismäärän kirjanmerkkejä tälle päivälle. Odota %{time_left} ja yritä sitten uudelleen."
-      edit_post: "Olet saavuttanut muokkausten enimmäismäärän tälle päivälle. Odota %{time_left} ja yritä sitten uudelleen."
-      live_post_counts: "Kysyt viestimääriä liian nopealla tahdilla. Odota %{time_left} ja yritä sitten uudelleen."
-      unsubscribe_via_email: "Olet perunut enimmäismäärän sähköpostitse tänään. Odota %{time_left} ja yritä sitten uudelleen."
-      topic_invitations_per_day: "Olet kutsunut enimmäismäärän tälle päivälle. Odota %{time_left} ja yritä sitten uudelleen."
     hours:
       one: "1 tunti"
       other: "%{count} tuntia"

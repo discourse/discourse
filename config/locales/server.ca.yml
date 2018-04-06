@@ -389,21 +389,6 @@ ca:
       title: "líder"
     change_failed_explanation: "Has provat de degradar %{user_name} a '%{new_trust_level}'. En qualsevol cas, el seu nivell de confiança ja és '%{current_trust_level}'. %{user_name} restarà a '%{current_trust_level}' - Si vols degradar una persona usuària, bloca-li abans el nivell de confiança"
   rate_limiter:
-    slow_down: "Has provat de fer el mateix moltes vegades, prova-ho més tard."
-    by_type:
-      first_day_replies_per_day: "Has arribat a la quantitat màxima de respostes que una nova persona usuària pot crear durant el seu primer dia. Si us plau, espera %{time_left} abans de tornar a provar-ho."
-      first_day_topics_per_day: "Has arribat a la quantitat màxima de temes que una nova persona usuària pot crear durant el seu primer dia. Si us plau, espera %{time_left} abans de tornar a provar-ho."
-      create_topic: "Estàs generant temes massa ràpid. Si us plau, espera %{time_left} abans de tornar a provar-ho."
-      create_post: "Estàs responent massa ràpid. Si us plau, espera %{time_left} abans de tornar a provar-ho."
-      delete_post: "Estàs esborrant publicacions massa ràpid. Si us plau, espera %{time_left} abans de tornar a provar-ho."
-      public_group_membership: "T'estàs unint a grups o abandonant-los massa ràpid. Si us plau, espera %{time_left} abans de tornar a provar-ho."
-      topics_per_day: "Avui has arribat a la quantitat màxima de temes. Si us plau, espera %{time_left} abans de tornar a provar-ho."
-      pms_per_day: "Avui has arribat a la quantitat màxima de missatges. Si us plau, espera %{time_left} abans de tornar a provar-ho."
-      create_like: "Has arribat a la quantitat màxima de m'agrades avui. Si us plau, espera %{time_left} abans de tornar a provar-ho."
-      create_bookmark: "Avui has arribat a la quantitat màxima de preferits. Si us plau, espera %{time_left} abans de tornar a provar-ho."
-      live_post_counts: "Estàs demanant recomptes de publicacions massa ràpid. Si us plau, espera %{time_left} abans de tornar a provar-ho."
-      unsubscribe_via_email: "Avui has arribat a la quantitat màxima de cancel·lacions de subscripcions per correu electrònic. Si us plau, espera %{time_left} abans de tornar a provar-ho."
-      topic_invitations_per_day: "Avui has arribat a la quantitat màxima d'invitacions de temes. Si us plau, espera %{time_left} abans de tornar a provar-ho."
     hours:
       one: "1 hora"
       other: "%{count} hores"

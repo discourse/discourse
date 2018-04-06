@@ -318,19 +318,6 @@ tr_TR:
       title: "lider"
     change_failed_explanation: " %{user_name} adlı kullanıcıyı '%{new_trust_level}' seviyesine düşürmeye çalıştınız. Ancak, halihazırda kullanıcının güven seviyesi zaten '%{current_trust_level}'. %{user_name} '%{current_trust_level}' seviyesinde kalacak - eğer seviyesini düşürmek istiyorsanız öncelikle güven seviyesini kilitlemelisiniz"
   rate_limiter:
-    slow_down: "Bu eylemi birçok sefer gerçekleştirdiniz, daha sonra tekrar deneyin."
-    by_type:
-      first_day_replies_per_day: "Yeni bir kullanıcının ilk gününde verebileceği en fazla cevap sayısına ulaştınız. Lütfen tekrar denemek için %{time_left} bekleyin."
-      first_day_topics_per_day: "Yeni bir kullanıcının ilk gününde oluşturabileceği en fazla konu sayısına ulaştınız. Lütfen tekrar denemek için %{time_left} bekleyin."
-      create_topic: "Kısa sürede çok sayıda konu oluşturmaya çalıştınız. Lütfen tekrar denemeden önce %{time_left} bekleyin."
-      create_post: "Kısa sürede çok sayıda cevap yazmaya çalıştınız. Lütfen tekrar denemeden önce %{time_left} bekleyin."
-      delete_post: "Kısa sürede çok sayıda gönderi silmeye çalıştınız. Lütfen tekrar denemek için %{time_left} bekleyin."
-      topics_per_day: "Bugün oluşturabileceğiniz en fazla konu sayısına ulaştınız. Lütfen tekrar denemek için %{time_left} bekleyin."
-      pms_per_day: "Bugün oluşturabileceğiniz en fazla ileti sayısına ulaştınız. Lütfen tekrar denemek için %{time_left} bekleyin."
-      create_like: "Bugün yapabileceğiniz en fazla beğeni sayısına ulaştınız. Lütfen tekrar denemek için %{time_left} bekleyin."
-      create_bookmark: "Bugün yapabileceğiniz en fazla imleme sayısına ulaştınız. Lütfen tekrar denemek için %{time_left} bekleyin."
-      live_post_counts: "Canlı gönderi sayımları için çok hızlı istek yapıyorsunuz. Lütfen tekrar denemeden önce %{time_left} bekleyin."
-      unsubscribe_via_email: "Günlük e-posta ile abonelikten çıkma limitinizi aştınız. Lütfen tekrar denemeden önce %{time_left} bekleyin."
     hours:
       one: "%{count} saat"
       other: "%{count} saat"

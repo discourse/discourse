@@ -357,16 +357,6 @@ sk:
     image_placeholder:
       broken: "Tento obrázok je poškodený"
   rate_limiter:
-    slow_down: "Vykonali ste túto akciu príliš veľa krát, skúste neskôr"
-    by_type:
-      first_day_replies_per_day: "Dosiahli ste maximálny počet odpovedí stanovený pre nového používateľa v jeho prvý deň. Prosím čakajte %{time_left} , než skúsite znova"
-      first_day_topics_per_day: "Dosiahli ste maximálny počet tém stanovený pre nového používateľa v jeho prvý deň. Prosím čakajte %{time_left} , než skúsite znova"
-      create_topic: "Výtvárate témy príliš rýchlo. Prosím čakajte %{time_left} , než skúsite znova"
-      create_post: "Odpovedáte príliš rýchlo. Prosím čakajte %{time_left} , než skúsite znova"
-      topics_per_day: "Dosiahli ste maximálny počet nových tém na tento deň. Prosím čakajte %{time_left} , než skúsite znova"
-      pms_per_day: "Dosiahli ste maximálny počet správ na tento deň. Prosím čakajte %{time_left} , než skúsite znova"
-      create_like: "Dosiahli ste maximálny počet  \"Páči sa\" na tento deň. Prosím čakajte %{time_left} , než skúsite znova"
-      create_bookmark: "Dosiahli ste maximálny počet záložiek na tento deň. Prosím čakajte %{time_left} , než skúsite znova"
     hours:
       one: "1 hodina"
       few: "%{count} hodiny"

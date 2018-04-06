@@ -35,6 +35,7 @@ es:
     no_polls_associated_with_this_post: "No hay encuestas asociadas a este post."
     no_poll_with_this_name: "No hay ninguna encuesta llamada <strong>%{name}</strong> asociada con este post."
     post_is_deleted: "No se puede actuar en un post eliminado."
+    user_cant_post_in_topic: "No puedes votar porque no puedes publicar en este tema."
     topic_must_be_open_to_vote: "Este tema debe estar abierto para votar."
     poll_must_be_open_to_vote: "La encuesta debe estar abierta para votar."
     topic_must_be_open_to_toggle_status: "Este tema debe estar abierto para cambiar entre estados."

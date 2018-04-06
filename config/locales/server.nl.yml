@@ -431,22 +431,6 @@ nl:
       title: "leider"
     change_failed_explanation: "U probeerde %{user_name} naar '%{new_trust_level}' te degraderen. Zijn of haar vertrouwensniveau is echter al '%{current_trust_level}'. %{user_name} blijft op vertrouwensniveau '%{current_trust_level}'. Als u de gebruiker wil degraderen, vergrendel dan eerst het vertrouwensniveau."
   rate_limiter:
-    slow_down: "U hebt deze actie te vaak uitgevoerd; probeer het later opnieuw."
-    by_type:
-      first_day_replies_per_day: "U hebt het maximale aantal antwoorden dat een nieuwe gebruiker op de eerste dag kan plaatsen bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
-      first_day_topics_per_day: "U hebt het maximale aantal topics dat een nieuwe gebruiker op de eerste dag kan plaatsen bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
-      create_topic: "U maakt te snel topics aan. Wacht %{time_left} voordat u het opnieuw probeert."
-      create_post: "U antwoordt te snel. Wacht %{time_left} voordat u het opnieuw probeert."
-      delete_post: "U verwijdert berichten te snel. Wacht %{time_left} voor u het opnieuw probeert."
-      public_group_membership: "U neemt deel aan of verlaat groepen te regelmatig. Wacht %{time_left} voordat u het opnieuw probeert."
-      topics_per_day: "U hebt het maximale aantal nieuwe topics voor vandaag bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
-      pms_per_day: "U hebt het maximale aantal berichten voor vandaag bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
-      create_like: "U hebt het maximale aantal likes voor vandaag bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
-      create_bookmark: "U hebt het maximale aantal bladwijzers voor vandaag bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
-      edit_post: "U hebt het maximale aantal bewerkingen voor vandaag bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
-      live_post_counts: "U vraagt te snel om live berichtaantallen. Wacht %{time_left} voordat u het opnieuw probeert."
-      unsubscribe_via_email: "U hebt het maximale aantal uitschrijvingen via e-mail voor vandaag bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
-      topic_invitations_per_day: "U hebt het maximale aantal topicuitnodigingen voor vandaag bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
     hours:
       one: "1 uur"
       other: "%{count} uur"

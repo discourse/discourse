@@ -381,20 +381,6 @@ pt:
       title: "líder"
     change_failed_explanation: "Tentou despromover %{user_name} para '%{new_trust_level}'. Contudo o Nível de Confiança é atualmente '%{current_trust_level}'. %{user_name} irá permanecer em '%{current_trust_level}' - se deseja despromover o utilizador, bloqueie o Nível de Confiança primeiro"
   rate_limiter:
-    slow_down: "Realizou esta ação demasiadas vezes, tente novamente mais tarde."
-    by_type:
-      first_day_replies_per_day: "Atingiu o número máximo de respostas que um novo utilizador pode criar no seu primeiro dia. Por favor espere %{time_left} antes de tentar novamente."
-      first_day_topics_per_day: "Atingiu o número máximo de tópicos que um novo utilizador pode criar no seu primeiro dia. Por favor espere %{time_left} antes de tentar novamente."
-      create_topic: "Está a criar tópicos demasiado rápido. Por favor espere %{time_left} antes de tentar novamente."
-      create_post: "Está a responder demasiado rápido. Por favor espere %{time_left} antes de tentar novamente."
-      delete_post: "Está a apagar publicações a um ritmo demasiado rápido. Por favor espere %{time_left} antes de tentar novamente."
-      topics_per_day: "Atingiu o número máximo de novos tópicos de hoje. Por favor espere %{time_left} antes de tentar novamente."
-      pms_per_day: "Atingiu o número máximo de mensagens de hoje. Por favor espere %{time_left} antes de tentar novamente."
-      create_like: "Atingiu o número máximo de gostos de hoje. Por favor espere %{time_left} antes de tentar novamente."
-      create_bookmark: "Atingiu o número máximo de marcações de hoje. Por favor espere %{time_left} antes de tentar novamente."
-      live_post_counts: "Está a pedir por contagens de publicações em tempo real a um ritmo demasiado rápido. Por favor espere %{time_left} antes de tentar outra vez."
-      unsubscribe_via_email: "Atingiu o número máximo de cancelamentos de subscrições por email de hoje. Por favor espere %{time_left} antes de tentar novamente."
-      topic_invitations_per_day: "Atingiu o número máximo de convites para tópicos de hoje. Por favor espere %{time_left} antes de tentar novamente."
     hours:
       one: "1 hora"
       other: "%{count} horas"

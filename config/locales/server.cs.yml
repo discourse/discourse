@@ -425,10 +425,6 @@ cs:
     image_placeholder:
       broken: "Tento obrázek je rozbitý"
   rate_limiter:
-    slow_down: "Tuto akci provádíte příliš často, zkuste to prosím později."
-    too_many_requests: "Děláte tuto akci příliš často. Prosím počkejte %{time_left} a zkuste to znovu."
-    by_type:
-      pms_per_day: "Odeslal jsi maximum povolených zpráv za den. Další můžeš odeslat za {time_left}."
     hours:
       one: "1 hodina"
       few: "%{count} hodiny"

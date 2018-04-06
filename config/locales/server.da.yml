@@ -418,22 +418,6 @@ da:
       title: "Veteran"
     change_failed_explanation: "Du har forsøgt at degradere %{user_name} til '%{new_trust_level}'. Imidlertid er deres niveau af tillid allerede '%{current_trust_level}'. %{user_name} vil forblive'%{current_trust_level}' - hvis du ønsker at degradere brugeren, skal du først låse brugerens tillids niveau / Trust Level"
   rate_limiter:
-    slow_down: "Du har udført denne handling for mange gange, prøv igen senere"
-    by_type:
-      first_day_replies_per_day: "Du har nået det maksimalt antal tilladte svar, en ny bruger kan lave på deres første dag. Vent venligst %{time_left} før du fortsætter med at besvare tanker og indlæg."
-      first_day_topics_per_day: "Du har nået det maksimalt antal af tilladte emner, en ny bruger kan lave på første dag.\nVent venligst %{time_left} før du prøver igen."
-      create_topic: "Du opretter emner for hurtigt. Vent venligst %{time_left} før du prøver igen."
-      create_post: "Du svarer for hurtigt. Vent venligst %{time_left} før du prøver igen."
-      delete_post: "Du sletter emner for hurtigt. Vent venligst %{time_left}før du prøver igen."
-      public_group_membership: "Du tilslutter/forlader grupper for ofte. Vent venligst %{time_left} før du forsøger igen."
-      topics_per_day: "Du har nået det maksimalt antal tilladte nye emner i dag. Venligst vent %{time_left} før du prøver igen."
-      pms_per_day: "Du har nu nået det maksimalt antal tilladte beskeder. Vent venligst %{time_left} før du prøver igen."
-      create_like: "Du har nået grænsen for antal tilladte 'likes' for i dag. Vent venligst %{time_left} før du prøver igen."
-      create_bookmark: "Du har nået det maksimalt antal tilladte bogmærker i dag. Vent venligst %{time_left} før du prøver igen. "
-      edit_post: "Du har nået det maksimale antal redigeringer for i dag. Vent venligst  %{time_left} før du forsøger igen."
-      live_post_counts: "Du efterspørger udgivede emner for hurtigt. Vent venligst %{time_left} før du prøver igen."
-      unsubscribe_via_email: "Du har nået det maksimalt antal tilladte afmeldinger via email i dag.  Vent venligst%{time_left} før du prøver igen."
-      topic_invitations_per_day: "Du har nået det maksimalt antal tilladte emne invitationer i dag. Vent venligst %{time_left} før du prøver igen."
     hours:
       one: "1 time"
       other: "%{count} timer"
