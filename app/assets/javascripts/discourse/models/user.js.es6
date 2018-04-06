@@ -218,6 +218,7 @@ const User = RestModel.extend({
       'website',
       'location',
       'name',
+      'title',
       'locale',
       'custom_fields',
       'user_fields',
@@ -569,6 +570,25 @@ const User = RestModel.extend({
 
   canManageGroup(group) {
     return group.get('automatic') ? false : (this.get('admin') || group.get('is_group_owner'));
+  },
+
+  @computed('groups.@each.title', 'badges.@each')
+  availableTitles() {
+    let titles = [];
+
+    _.each(this.get('groups'), group => {
+      if (group.get('title')) {
+        titles.push(group.get('title'));
+      }
+    });
+
+    _.each(this.get('badges'), badge => {
+      if (badge.get('allow_title')) {
+        titles.push(badge.get('name'));
+      }
+    });
+
+    return titles;
   }
 });
 
