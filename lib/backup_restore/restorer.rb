@@ -64,6 +64,7 @@ module BackupRestore
         wait_for_sidekiq
 
         BackupRestore.move_tables_between_schemas("public", "backup")
+        @db_was_changed = true
         restore_dump
         migrate_database
         reconnect_database
