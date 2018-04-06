@@ -15,7 +15,10 @@
     {{#if currentUser.admin}}
       <div class="control-group group-add-members-make-owner">
         <label>
-          {{input type="checkbox" class="inline" checked=setAsOwner}}
+          {{input type="checkbox"
+              class="inline"
+              checked=setAsOwner
+              disabled=bulkAdd}}
           {{i18n "admin.groups.add_members.as_owner"}}
         </label>
       </div>

@@ -3,10 +3,9 @@
     class="group-username-filter no-blur"}}
 
 {{#if canManageGroup}}
-  {{d-button action='showAddMembersModal'
-      icon="plus"
-      label="groups.add_members.title"
-      class="btn btn-primary pull-right"}}
+  {{group-members-dropdown
+      showAddMembersModal="showAddMembersModal"
+      showBulkAddModal="showBulkAddModal"}}
 {{/if}}
 
 {{#if hasMembers}}
