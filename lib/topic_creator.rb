@@ -155,7 +155,7 @@ class TopicCreator
 
   def setup_tags(topic)
     if @opts[:tags].blank?
-      unless @guardian.is_staff?
+      unless @guardian.is_staff? || !guardian.can_tag?(topic)
         # Validate minimum required tags for a category
         category = find_category
         if category.present? && category.minimum_required_tags > 0
