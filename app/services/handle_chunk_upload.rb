@@ -42,8 +42,11 @@ class HandleChunkUpload
     tmp_directory   = @params[:tmp_directory]
 
     # delete destination files
-    File.delete(upload_path)
-    File.delete(tmp_upload_path)
+    begin
+      File.delete(upload_path)
+      File.delete(tmp_upload_path)
+    rescue Errno::ENOENT
+    end
 
     # merge all the chunks
     File.open(tmp_upload_path, "a") do |file|
@@ -59,7 +62,10 @@ class HandleChunkUpload
     FileUtils.mv(tmp_upload_path, upload_path, force: true)
 
     # remove tmp directory
-    FileUtils.rm_rf(tmp_directory)
+    begin
+      FileUtils.rm_rf(tmp_directory)
+    rescue Errno::ENOENT
+    end
   end
 
 end
