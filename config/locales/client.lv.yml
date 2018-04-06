@@ -348,21 +348,6 @@ lv:
         make_user_group_owner: "Padarīt par īpašnieku"
         remove_user_as_group_owner: "Noņemt īpašnieka tiesības"
     groups:
-      logs:
-        title: "Žurnāls"
-        when: "Kad"
-        action: "Darbība"
-        acting_user: "Lietotājs, kas veica darbību"
-        target_user: "Mērķa lietotājs"
-        subject: "Tēma"
-        details: "Papildus informācija"
-        from: "No"
-        to: "Kam"
-      edit:
-        title: 'Labot grupu'
-        full_name: 'Pilns vārds'
-        add_members: "Pievienot dalībniekus"
-        delete_member_confirm: "Izņemt '%{username}' no grupas '%{group}'?"
       name_placeholder: "Grupas nosaukums, bez atstarpēm, tādi paši noteikumi kā lietotāja vārdam"
       public_admission: "Atļaut lietotājiem brīvi pievienoties grupai (šai grupai jābūt publiski redzamai)"
       public_exit: "Ļaut lietotājiem brīvi pamest grupu"
@@ -374,12 +359,7 @@ lv:
         topics: "Grupas dalībnieki nav izveidojuši nevienu tēmu."
         logs: "Par šo grupu nav žurnāla ierakstu."
       add: "Pievienot"
-      join: "Pievienoties grupai"
-      leave: "Pamest grupu"
-      request: "Pieprasīt pievienošanu grupai"
       message: "Ziņa"
-      automatic_group: Automātiska grupa
-      is_group_user: "Jūs esat šīs grupas dalībnieks"
       allow_membership_requests: "Ļauj lietotājiem sūtīt dalības pieprasījumus grupu īpašniekiem"
       membership: "Piederība"
       name: "Vārds"

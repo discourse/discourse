@@ -331,21 +331,6 @@ tr_TR:
         make_user_group_owner: "Sahip yap"
         remove_user_as_group_owner: "Sahipliğini İptal Et"
     groups:
-      logs:
-        title: "Kayıtlar"
-        when: "Ne zaman"
-        action: "Eylem"
-        acting_user: "Temsili Kullanıcılar"
-        target_user: "Hedef Kullanıcı"
-        subject: "Konu"
-        details: "Ayrıntılar"
-        from: "Gönderen"
-        to: "Kime"
-      edit:
-        title: 'Grubu düzenle'
-        full_name: 'Tam İsim'
-        add_members: "Üyeleri ekle"
-        delete_member_confirm: "'%{username}' adlı kullanıcıyı '%{group}' grubundan çıkart?"
       name_placeholder: "Grup adı, kullanıcı adındaki gibi boşluksuz olmalı"
       public_admission: "Kullanıcıların gruba özgürce katılmalarına izin ver (grubun Herkese açık olması gerekir)"
       public_exit: "Kullanıcıların grubu özgürce terk etmesine izin ver"
@@ -357,12 +342,7 @@ tr_TR:
         topics: "Bu grubun üyeleri tarafından oluşturulmuştur başlık yoktur."
         logs: "Bu grup için log kaydı bulunmamaktadır."
       add: "Ekle"
-      join: "Gruba katıl"
-      leave: "Gruptan ayrıl"
-      request: "Gruba katılmak için istek yolla"
       message: "ileti"
-      automatic_group: Otomatik Grup
-      is_group_user: "Bu grubun bir üyesisiniz."
       allow_membership_requests: "Kullanıcılar'ın grup sahiplerine üyelik talepleri göndermesine izin ver"
       membership_request:
         submit: "İstek Gönderin"
@@ -1034,7 +1014,6 @@ tr_TR:
       default_header_text: Seç...
       no_content: Hiçbir sonuç bulunamadı
       filter_placeholder: Ara...
-      max_content_reached: "<b>{{count}}</b> konu seçtiniz."
     emoji_picker:
       filter_placeholder: Emoji ara
       people: İnsanlar

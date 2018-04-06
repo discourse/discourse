@@ -1391,6 +1391,7 @@ fr:
     approve_post_count: "Le nombre de messages d'un utilisateur nouveau ou basique devant être approuvés"
     approve_unless_trust_level: "Les messages des utilisateurs qui n'ont pas atteint ce niveau de confiance doivent être approuvés"
     approve_new_topics_unless_trust_level: "Les nouveaux sujets des utilisateurs en dessous de ce niveau de confiance doivent être approuvés"
+    approve_unless_staged: "Les nouveaux sujets et messages des utilisateurs distants doivent être approuvés"
     notify_about_queued_posts_after: "Si des messages sont en attente de modération depuis ce nombre d'heures, envoyer un courriel à tous les modérateurs. Désactiver ces courriels en indiquant 0."
     auto_close_messages_post_count: "Nombre maximum de messages dans un message privé avant qu'il ne soit automatiquement fermé (0 pour désactiver)"
     auto_close_topics_post_count: "Nombre maximum de messages dans un sujet avant qu'il ne soit automatiquement fermé (0 pour désactiver)"

@@ -346,21 +346,40 @@ ur:
         make_user_group_owner: "مالک بنائیں"
         remove_user_as_group_owner: "مالک منسوخ کریں"
     groups:
-      logs:
-        title: "لاگز"
-        when: "کب"
-        action: "عمل"
-        acting_user: "عمل کرنے والا صارف"
-        target_user: "ہدف صارف"
-        subject: "موضوع"
-        details: "تفصیلات"
-        from: "سے"
-        to: "کے لئے"
-      edit:
-        title: 'گروپ میں ترمیم کریں'
+      new:
+        title: "نیا گروپ"
+        description: "ایک نیا گروپ بنائیں"
+        create: "بنائیں"
+        name:
+          too_short: "گروپ کا نام بہت چھوٹا ہے"
+          too_long: "گروپ کا نام بہت طویل ہے"
+          checking: "گروپ کے نام کی دستیابی کی جانچ ہو رہی..."
+          available: "گروپ کا نام دستیاب ہے"
+          not_available: "گروپ کا نام دستیاب نہیں ہے"
+          blank: "گروپ کا نام خالی نہیں ہو سکتا"
+      manage:
+        title: 'مَینَیج'
+        name: 'نام'
         full_name: 'پورا نام'
-        add_members: "اراکین شامل کریں"
-        delete_member_confirm: "'%{username}' کو گروپ سے '%{group}' ہٹائیں؟"
+        add_members: "ممبران شامل کریں"
+        delete_member_confirm: "'%{username}' کو '%{group}' گروپ سے ہٹائیں؟"
+        profile:
+          title: پروفائل
+        members:
+          title: "ممبران"
+          description: "اِس گروپ کی رکنیت کو مَینَیج کریں"
+          usernames: "صارف نام"
+          as_owner: "صارف(ین) کو اِس گروپ کے مالک(ین) کے طور پر مقرر کریں"
+        logs:
+          title: "لاگز"
+          when: "کب"
+          action: "عمل"
+          acting_user: "عمل کرنے والا صارف"
+          target_user: "ہدف صارف"
+          subject: "موضوع"
+          details: "تفصیلات"
+          from: "سے"
+          to: "کیلئے"
       name_placeholder: "گروپ کا نام، کوئی خالی جگہ نہیں، نامِ صارفین کے اصولوں کے مطابق"
       public_admission: "صارفین کو آزادی سے گروپ میں شمولیت اختیار کرنے کی اجازت دیں (گروپ کا عوامی طور پر ظاہر ہونا لاذمی ہو)"
       public_exit: "صارفین کو آزادانہ طور پر گروپ چھوڑنے کی اجازت دیں"
@@ -372,15 +391,10 @@ ur:
         topics: "اِس گروپ کے ارکان کی طرف سے کوئی ٹاپک نہیں ہیں۔"
         logs: "اس گروپ کے لئے کوئی لاگز موجود نہیں ہیں۔"
       add: "شامل کریں"
-      join: "گروپ میں شامل ہوں"
-      leave: "گروپ چھوڑ دیں"
-      request: "گروپ میں شمولیت کیلئے درخواست کریں"
-      filter_name: "گروپ نام کے حساب سے فِلٹر کریں"
+      join: "شمولیت اختیار کریں"
+      leave: "چھوڑ دیں"
+      request: "درخواست"
       message: "پیغام"
-      automatic_group: خودکار گروپ
-      close_group: گروپ بند کریں
-      is_group_user: "آپ اس گروپ کے رکن ہیں"
-      is_group_owner: "آپ اِس گروپ کے ایک مالک ہیں"
       allow_membership_requests: "صارفین کو گروپ کے مالکان کو رکنیت کی درخواستیں بھیجنے کی اجازت دیں"
       membership_request_template: "رکنیت کی درخواست بھیجنے کے دوران صارفین کیلئے ظاہر کیے جانے والی پہلے سے تیار کردہ مثال"
       membership_request:
@@ -389,28 +403,35 @@ ur:
         reason: "گروپ مالکان کو بتائیے کہ آپ اس گروپ میں شامل ہونے کے کیوں مستحق ہیں"
       membership: "ممبرشپ "
       name: "نام"
-      user_count: "ممبران کی تعداد"
+      group_name: "گروپ نام"
+      user_count: "صارفین"
       bio: "گروپ کے بارے میں"
       selector_placeholder: "صارف نام درج کریں"
       owner: "مالِک"
       index:
         title: "گروپس"
+        all: "تمام گروپس"
         empty: "کوئی نظر آنے والے گروپ موجود نہیں ہیں۔"
+        filter: "گروپ قِسم کے حساب سے فِلٹر کریں"
         all_groups: "تمام گروپس"
         owner_groups: "گروپس جن کا میں مالک ہوں"
-        close_groups: "گروپس بند کریں"
+        close_groups: "بند گروپس"
         automatic_groups: "خودکار گروپس"
+        automatic: "خود کار طریقے سے"
+        closed: "بند"
+        public: "عوامی"
+        private: "ذاتی"
         public_groups: "عوامی گروپس"
+        automatic_group: خودکار گروپ
+        close_group: گروپ بند کریں
         my_groups: "میرے گروپس"
+        group_type: "گروپ قِسم"
+        is_group_user: "ممبر"
+        is_group_owner: "مالِک"
       title:
         one: "گروپ"
         other: "گروپس"
       activity: "سرگرمی"
-      add_members:
-        title: "ممبران شامل کریں"
-        description: "اِس گروپ کی رکنیت کو مینیج کریں"
-        usernames: "صارف نام"
-        as_owner: "صارف(ین) کو اِس گروپ کے مالک(ین) کے طور پر مقرر کریں"
       members:
         title: "ممبران"
         filter_placeholder_admin: "صارف نام یا ای میل"
@@ -421,6 +442,7 @@ ur:
         make_owner_description: "اِس گروپ پر <b>%{username}</b> کو مالک بنائیں"
         remove_owner: "مالک کے طور پر ہٹائیں"
         remove_owner_description: "اِس گروپ پر سے <b>%{username}</b> کو مالک کے طور پر ہٹائیں"
+        owner: "مالِک"
       topics: "ٹاپک"
       posts: "پوسٹ"
       mentions: "ذکر"
@@ -541,6 +563,7 @@ ur:
       activity_stream: "سرگرمی"
       preferences: "ترجیحات"
       expand_profile: "مزید کھولیں"
+      collapse_profile: "بند کریں"
       bookmarks: "بُکمارکس"
       bio: "سائٹ کے بارے میں"
       invited_by: "کی طرف سے مدعو کیا گیا:"
@@ -1112,7 +1135,8 @@ ur:
       no_content: کوئی میل نہیں ملے
       filter_placeholder: تلاش کریں...
       create: "'{{content}}' بنائیں"
-      max_content_reached: "آپ صرف {{count}} اشیاء منتخب کرسکتے ہیں."
+      max_content_reached: "آپ صرف {{count}} چیز(یں) منتخب کرسکتے ہیں."
+      min_content_not_reached: "کم از کم {{count}} چیز(یں) منتخب کریں"
     emoji_picker:
       filter_placeholder: اِیمَوجی تلاش کریں
       people: لوگ
@@ -1178,6 +1202,7 @@ ur:
       create_pm: "پیغام"
       create_whisper: "سرگوشی"
       create_shared_draft: "مشترکہ ڈرافٹ بنائیں"
+      edit_shared_draft: "مشترکہ ڈرافٹ ترمیم کریں"
       title: "یا Ctrl+Enter دبائیں"
       users_placeholder: "ایک صارف شامل کریں"
       title_placeholder: "ایک مختصر جملہ میں بتائیے کہ یہ بحث کس چیز کے بارے میں ہے؟"
@@ -1197,6 +1222,7 @@ ur:
       hide_preview: '&laquo; پیش نظارہ چھپائیں'
       quote_post_title: "پوری پوسٹ کا اقتباس کریں"
       bold_label: "B"
+      bold_title: "گہرا"
       bold_text: "گہرا ٹَیکسٹ"
       italic_label: "I"
       italic_title: "آئیٹیلک"
@@ -1263,12 +1289,23 @@ ur:
       total_flagged: "کُل فلَیگ کی گئی پوسٹس"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
+      quoted: "<span>{{username}}</span> {{description}}"
+      replied: "<span>{{username}}</span> {{description}}"
+      posted: "<span>{{username}}</span> {{description}}"
+      edited: "<span>{{username}}</span> {{description}}"
+      liked: "<span>{{username}}</span> {{description}}"
+      liked_2: "<span>{{username}}, {{username2}}</span> {{description}}"
       liked_many:
         one: "<span>{{username2}}، {{username}} اور 1 مزید</span> {{description}}"
         other: "<span>{{username2}}، {{username}} اور {{count}} مزید</span> {{description}}"
+      private_message: "<span>{{username}}</span> {{description}}"
+      invited_to_private_message: "<p><span>{{username}}</span> {{description}}"
+      invited_to_topic: "<span>{{username}}</span> {{description}}"
       invitee_accepted: "<span>{{username}}</span>نے آپ کی دعوت قبول کرلی "
       moved_post: "<span>{{username}}</span>نے {{description}} منتقل کر دیا"
+      linked: "<span>{{username}}</span> {{description}}"
       granted_badge: "'{{description}}' حاصل کیا"
+      topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>نیا ٹاپک</span> {{description}}"
       group_message_summary:
         one: "آپ کے {{group_name}} اِن باکس میں {{count}} پیغام"
@@ -1486,6 +1523,7 @@ ur:
       toggle_information: "ٹاپک تفصیلات ٹَوگل کریں"
       read_more_in_category: "مزید پڑھنا چاہتے ہیں؟ {{catLink}} اور {{latestLink}} میں دوسرے ٹاپک دیکھیں۔"
       read_more: "مزید پڑھنا چاہتے ہیں؟ {{catLink}} یا {{latestLink}}۔"
+      read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='/unread'>1 غیر پڑھا</a> } other { <a href='/unread'># غیر پڑھے</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{اور } false {} other{}} <a href='/new'>1 نیا</a> ٹاپک} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># نئے</a> ٹاپکس} } باقی، یا {CATEGORY, select, true {میں دیگر ٹاپکس براؤز کریں {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: تمام زمرہ جات براؤز کریں
       view_latest_topics: تازہ ترین ٹاپک دیکھیے
       suggest_create_topic: کیوں نہ ایک ٹاپک بنائیں؟
@@ -2083,7 +2121,7 @@ ur:
       notify_action: 'پیغام'
       official_warning: 'آفیشل انتباہ'
       delete_spammer: "سپیم کرنے والے کو حذف کریں"
-      delete_confirm_MF: "آپ اِس صارف سے {POSTS، جمع، ایک {<b>1</b> پوسٹ} دیگر {<b>#</b> پوسٹس}} اور {TOPICS، جمع، ایک {<b>1</b> ٹاپک} دیگر {<b>#</b> ٹاپکس}}  حذف کرنے، اُن کا اکائونٹ ختم کرنے، ان کے آئی پی ایڈریس <b>{ip_address}</b> سے سائن اَپ بلاک کرنے، اور اُن کے اِیمیل ایڈریس کو <b>{اِیمیل}</b> مستقل بلاک کی فہرست میں ڈالنے لگے ہیں۔ کیا آپ کو یقین ہے کہ یہ صارف واقعی ایک سپیمر ہے؟"
+      delete_confirm_MF: "آپ اِس صارف سے {POSTS, plural, one {<b>1</b> پوسٹ} other {<b>#</b> پوسٹس}} اور {TOPICS, plural, one {<b>1</b> ٹاپک} other {<b>#</b> ٹاپکس}} حذف کرنے، اُن کا اکائونٹ ختم کرنے، ان کے آئی پی ایڈریس <b>{ip_address}</b> سے سائن اَپ بلاک کرنے، اور اُن کے اِیمیل ایڈریس کو <b>{email}</b> مستقل بلاک کی فہرست میں ڈالنے لگے ہیں۔ کیا آپ کو یقین ہے کہ یہ صارف واقعی ایک سپیمر ہے؟"
       yes_delete_spammer: "جی ہاں، سپیم کرنے والے کو حذف کریں"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(مخفی)"
@@ -2149,11 +2187,11 @@ ur:
     posts: "پوسٹس"
     posts_long: "اِس ٹاپک میں {{number}} پوسٹس ہیں"
     posts_likes_MF: |
-      یہاِس ٹاپک کی کیا ہے {شمار، جمع، ایک {1 جواب} دیگر {# جوابات}} {تناسب، منتخب،
-      کم {لائیک پر پوسٹ کے اونچے تناسب کے ساتھ}
-      درمیانہ {لائیک پر پوسٹ کے بہت اونچے تناسب کے ساتھ}
-      اعلی {لائیک پر پوسٹ کے انتہائی اونچے تناسب کے ساتھ}
-      دیگر {}}
+      اِس ٹاپک {count, plural, one {کا 1 جواب} other {کے # جوابات ہیں}} {ratio, select,
+      low {لائیک پر پوسٹ کے اونچے تناسب کے ساتھ}
+      med {لائیک پر پوسٹ کے بہت اونچے تناسب کے ساتھ}
+      high {لائیک پر پوسٹ کے انتہائی اونچے تناسب کے ساتھ}
+      other {}}
     original_post: "اصل پوسٹ"
     views: "وِیوز"
     views_lowercase:
@@ -2412,6 +2450,7 @@ ur:
         save: "محفوظ کریں"
         delete: "حذف کریں"
         confirm_delete: "کیا آپ واقعی اِس ٹیگ گروپ کو حذف کرنا چاہتے ہیں؟"
+        visible_only_to_staff: "ٹیگز صرف سٹاف کو نظر آتے ہیں"
       topics:
         none:
           unread: "آپ کے پاس کوئی بغیر پڑھے ٹاپک موجود نہیں۔"
@@ -2534,6 +2573,9 @@ ur:
         more: "(مزید جوابات...)"
         suspend_user: "صارف معطل کریں"
         suspend_user_title: "اِس پوسٹ کی وجہ سے صارف معطل کریں"
+        replies:
+          one: "[1 جواب]"
+          other: "[%{count} جوابات]"
         dispositions:
           agreed: "اتفاق کیا"
           disagreed: "اختلاف کیا"
@@ -2650,6 +2692,15 @@ ur:
         user_event:
           name: "صارف واقعہ"
           details: "جب ایک صارف لاگ اِن، لاگ آؤٹ، بنایا، منظور یا اَپ ڈیٹ کیا جاتا ہے۔"
+        group_event:
+          name: "گروپ واقعہ"
+          details: "جب ایک گروپ بنایا، اَپ ڈیٹ یا ختم کیا جاتا ہے۔"
+        category_event:
+          name: "زُمرَہ واقعہ"
+          details: "جب ایک زُمرَہ بنایا، اَپ ڈیٹ یا ختم کیا جاتا ہے۔"
+        tag_event:
+          name: "ٹَیگ واقعہ"
+          details: "جب ایک ٹَیگ بنایا، اَپ ڈیٹ یا ختم کیا جاتا ہے۔"
         delivery_status:
           title: "موصول ہونے کی آگاہی"
           inactive: "غیر فعال"
@@ -2809,7 +2860,7 @@ ur:
           add_upload: "اَپ لوڈ شامل کریں"
           upload_file_tip: "اَپ لوڈ کرنے کے لئے اثاثہ منتخب کریں (png، woff2، وغیرہ...)"
           variable_name: "SCSS وار نام:"
-          variable_name_invalid: "غلط وَیری اَیبل نام۔ صرف حرف و نمبر کی اجازت ہے۔ ایک حرف کے ساتھ شروع ہونا لاذمی ہے۔"
+          variable_name_invalid: "غلط وَیری اَیبل نام۔ صرف حرف و نمبر کی اجازت ہے۔ ایک حرف کے ساتھ شروع ہونا لاذمی ہے۔ منفرد ہونا لاذمی ہے۔"
           upload: "اَپ لوڈ"
           child_themes_check: "تِھیم میں دوسری ماتحت تِھیمز شامل ہیں"
           css_html: "اپنی مرضی کے مطابق CSS/HTML"
@@ -3054,6 +3105,7 @@ ur:
             post_unlocked: "پوسٹ کھول دی گئی"
             check_personal_message: "ذاتی پیغام چیک کریں"
             disabled_second_factor: "دو فیکٹر توثیق غیر فعال کریں"
+            topic_published: "ٹاپک شائع کر دیا گیا"
         screened_emails:
           title: "سکرین کی گئی اِیمیلز"
           description: "جب کوئی نیا اکاؤنٹ بنانے کی کوشش کرے گا، تو مندرجہ ذیل اِیمیل ایڈریسوں کو چیک کیا جائے گا اور رجسٹریشن بلاک، یا کوئی اور کارروائی کی جائے گی۔"
@@ -3204,7 +3256,7 @@ ur:
         penalty_post_delete: "پوسٹ حذف کریں"
         penalty_post_edit: " پوسٹ ترمیم کریں"
         penalty_post_none: "کچھ نہ کریں"
-        delete_all_posts_confirm_MF: "آپ {POSTS، جمع، ایک {1 پوسٹ} دیگر {# posts}} اور {TOPICS، جمع، ایک {1 ٹاپک} دیگر {# topics}} حذف کرنے والے ہیں۔ کیا آپ کو یقین ہے؟"
+        delete_all_posts_confirm_MF: "آپ {POSTS, plural, one {1 پوسٹ} other {# پوسٹس}} and {TOPICS, plural, one {1 ٹاپک} other {# ٹاپکس}} حذف کرنے والے ہیں۔ کیا آپ کو یقین ہے؟"
         silence: "خاموش کریں"
         unsilence: "خاموشی ختم کریں"
         silenced: "خاموش کیا ہوا؟"

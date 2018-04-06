@@ -292,21 +292,6 @@ zh_TW:
         make_user_group_owner: "設為所有者"
         remove_user_as_group_owner: "撤銷管理員"
     groups:
-      logs:
-        title: "紀錄"
-        when: "什麼時候"
-        action: "動作"
-        acting_user: "啟用中的用戶"
-        target_user: "目的用戶"
-        subject: "主旨"
-        details: "詳情"
-        from: "從"
-        to: "至"
-      edit:
-        title: '編輯群組'
-        full_name: '全名'
-        add_members: "增加成員"
-        delete_member_confirm: "從「%{group}」群組移除「%{username}」？"
       name_placeholder: "群組名，沒有空格，和用戶名一樣的規則"
       empty:
         posts: "群組成員沒有發佈帖子。"
@@ -316,12 +301,7 @@ zh_TW:
         topics: "群組的成員從未發表主題。"
         logs: "這個團隊裡面沒有日誌"
       add: "新增"
-      join: "加入團隊"
-      leave: "離開團隊"
-      request: "請求加入團隊"
       message: "訊息"
-      automatic_group: 自動群組
-      is_group_user: "你是團隊裡面的成員"
       membership: "會員資格"
       name: "名字"
       bio: "關於群組"

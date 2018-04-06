@@ -323,21 +323,6 @@ da:
         make_user_group_owner: "Gør til ejer"
         remove_user_as_group_owner: "Fjern ejer"
     groups:
-      logs:
-        title: "Logs"
-        when: "Når"
-        action: "Handling"
-        acting_user: "Fungerende bruger"
-        target_user: "Målbruger"
-        subject: "Emne"
-        details: "Detaljer"
-        from: "Fra"
-        to: "Til"
-      edit:
-        title: 'Redigér Gruppe'
-        full_name: 'Fulde Navn'
-        add_members: "Tilføj Medlemmer"
-        delete_member_confirm: "Fjern '%{username}' fra '%{group}' gruppen?"
       name_placeholder: "Gruppenavn uden mellemrum, samme som reglen for brugernavn"
       public_admission: "Tillad brugere frit at tilmelde sig gruppen (Kræver at det er en offentlig synlig gruppe)"
       public_exit: "Tillad brugere frit at forlade gruppen"
@@ -349,12 +334,7 @@ da:
         topics: "Der er ingen emner skrevet af medlemmer i denne gruppe."
         logs: "Der er ingen logning for denne gruppe."
       add: "Tilføj"
-      join: "Bliv medlem af gruppen"
-      leave: "Forlad gruppen"
-      request: "Anmod om indmeldelse i gruppen"
       message: "Besked"
-      automatic_group: Automatisk gruppe
-      is_group_user: "Du er medlem af denne gruppe"
       allow_membership_requests: "Tillad at brugere sender medlemsanmodninger til gruppeejere"
       membership_request_template: "Brugerdefineret skabelon, der skal vises til brugere, når der sendes en medlemskabsanmodning"
       membership_request:

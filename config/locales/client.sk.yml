@@ -189,6 +189,7 @@ sk:
     not_implemented: "Ľutujeme, táto funkcia ešte nie je implementovaná."
     no_value: "Nie"
     yes_value: "Áno"
+    submit: "Odoslať"
     generic_error: "Ľutujeme, nastala chyba."
     generic_error_with_reason: "Nastala chyba: %{error}"
     sign_up: "Registrácia"
@@ -275,6 +276,7 @@ sk:
     pasting: "Vkladám..."
     enable: "Zapnúť"
     disable: "Vypnúť"
+    continue: "Pokračovať"
     undo: "Späť"
     revert: "Vrátiť zmeny"
     failed: "Nepodarilo sa"
@@ -355,19 +357,39 @@ sk:
         make_user_group_owner: "Nastaviť ako vlastníka"
         remove_user_as_group_owner: "Odobrať vlastníka"
     groups:
-      logs:
-        title: "Záznamy"
-        when: "Kedy"
-        action: "Akcia"
-        target_user: "Cieľový používateľ"
-        subject: "Predmet"
-        details: "Detaily"
-        from: "Od"
-        to: "Komu"
-      edit:
-        title: 'Upraviť skupinu'
+      new:
+        title: "Nová skupina"
+        description: "Vytvoriť novú skupinu"
+        create: "Vytvoriť"
+        name:
+          too_short: "Názov skupiny je príliš krátky"
+          too_long: "Názov skupiny je príliš dlhý"
+          checking: "Kontrolujeme dostupnosť názvu skupiny"
+          available: "Názov skupiny je k dispozícii"
+          not_available: "Názov skupiny nie je k dispozícii"
+          blank: "Názov skupiny nesmie byť prázdny"
+      manage:
+        title: 'Spravovať'
+        name: 'Názov'
         full_name: 'Celé meno'
         add_members: "Pridať používateľov"
+        delete_member_confirm: "Odstrániť '%{username}' zo skupiny '%{group}'?"
+        profile:
+          title: Profil
+        members:
+          title: "Členovia"
+          description: "Spravovať členstvo v tejto skupine"
+          usernames: "Používateľské mená"
+          as_owner: "Nastaviť používateľa/ov ako vlastníka/ov skupiny"
+        logs:
+          title: "Záznamy"
+          when: "Kedy"
+          action: "Akcia"
+          target_user: "Cieľový používateľ"
+          subject: "Predmet"
+          details: "Detaily"
+          from: "Od"
+          to: "Komu"
       name_placeholder: "Meno skupiny, bez medzier, také isté pravidlá ako pre používateľské meno"
       public_admission: "Povoliť používateľom slobodne sa stať člen skupiny (kupina musí byť verejne viditeľná)"
       public_exit: "Povoliť používateľom slobodne opustiť skupinu."
@@ -379,12 +401,10 @@ sk:
         topics: "Členovia tejto skupiny nezaložili žiadne témy."
         logs: "Pre túto skupinu neexistujú žiadne logy."
       add: "Pridať"
-      join: "Pridať sa do skupiny"
-      leave: "Opustiť skupinu"
-      request: "Požiadať o pridanie do skupiny"
+      join: "Pridať sa"
+      leave: "Opustiť"
+      request: "Požiadavka"
       message: "Správa"
-      automatic_group: Automatická skúpina
-      is_group_user: "Si členom tejto skupiny"
       allow_membership_requests: "Používatelia môžu posielať žiadosti o členstvo vlastníkom skupiny"
       membership_request:
         submit: "Odošli požiadavku"
@@ -392,16 +412,46 @@ sk:
         reason: "Dajte vedieť vlastníkom skupiny prečo do tejto skupiny patríte"
       membership: "Členstvo"
       name: "Meno"
+      group_name: "Názov skupiny"
+      user_count: "Používatelia"
       bio: "O skupine"
+      selector_placeholder: "zadať používateľské meno"
       owner: "vlastník"
       index:
         title: "Skupiny"
+        all: "Všetky skupiny"
         empty: "Nenašli sa viditeľné skupiny."
+        all_groups: "Všetky skupiny"
+        owner_groups: "Skupiny, ktorých som vlastníkom"
+        close_groups: "Uzavreté skupina"
+        automatic_groups: "Automatické skupiny"
+        automatic: "Automaticky"
+        closed: "Zatvorené"
+        public: "Verejné"
+        private: "Súkromné"
+        public_groups: "Verejné skupiny"
+        automatic_group: Automatická skúpina
+        close_group: Uzavrieť skupinu
+        my_groups: "Moje skupiny"
+        group_type: "Typ skupiny"
+        is_group_user: "Člen"
+        is_group_owner: "Vlastník"
       title:
         one: "Skupina"
         few: "Skupiny"
         other: "Skupiny"
       activity: "Aktivita"
+      members:
+        title: "Členovia"
+        filter_placeholder_admin: "používateľské meno alebo email"
+        filter_placeholder: "používateľské meno"
+        remove_member: "Odstrániť člena"
+        remove_member_description: "Odstrániť <b>%{username}</b> z tejto skupiny"
+        make_owner: "Nastaviť ako vlastníka"
+        make_owner_description: "Nastaviť <b>%{username}</b> ako vlastníka tejto skupiny"
+        remove_owner: "Odobrať ako vlastníka"
+        remove_owner_description: "Odobrať <b>%{username}</b> ako vlastníka tejto skupiny"
+        owner: "Vlastník"
       topics: "Témy"
       posts: "Príspevky"
       mentions: "Zmienky"
@@ -541,7 +591,9 @@ sk:
       admin: "{{user}} je administrátor"
       moderator_tooltip: "Tento používateľ je moderátor"
       admin_tooltip: "Tento používateľ je administrátor"
+      silenced_tooltip: "Tento používateľ je umlčaný"
       suspended_notice: "Tento  používateľ je suspendovaný do {{date}}"
+      suspended_permanently: "Tento používateľ je suspendovaný"
       suspended_reason: "Dôvod:"
       github_profile: "Github"
       email_activity_summary: "Zhrnutie aktivít"
@@ -589,6 +641,7 @@ sk:
       undo_revoke_access: "Zrušiť odvolanie prístupu"
       api_approved: "Schválený:"
       theme: "Téma"
+      staged: "Dočasný"
       staff_counters:
         flags_given: "nápomocné značky"
         flagged_posts: "označkované príspevky"
@@ -606,12 +659,14 @@ sk:
         move_to_archive: "Archív"
         failed_to_move: "Zlyhalo presunutie označených správ (možno je chyba vo vašom pripojení)"
         select_all: "Označ všetky"
+        tags: "Štítky"
       preferences_nav:
         account: "Účet"
         profile: "Profil"
         emails: "Emaily"
         notifications: "Upozornenia"
         categories: "Kategórie"
+        tags: "Štítky"
         interface: "Rozhranie"
         apps: "Aplikácie"
       change_password:
@@ -624,6 +679,9 @@ sk:
         choose: "Vyberte si heslo"
       second_factor:
         title: "Dvojfaktorová autentifikácia"
+        disable: "Vypnúť dvojfaktorovú autentifikáciu"
+        label: "Kód"
+        show_key_description: "Vložiť ručne"
       change_about:
         title: "Upraviť O mne"
         error: "Nastala chyba pri zmene tejto hodnoty."
@@ -686,6 +744,7 @@ sk:
         title: "Jazyk rozhrania"
         instructions: "Jazyk úžívateľského rozhrania. Zmení sa po obnovení stránky."
         default: "(predvolené)"
+        any: "hocijaký"
       password_confirmation:
         title: "Heslo znova"
       last_posted: "Posledný príspevok"
@@ -886,6 +945,7 @@ sk:
     first_post: Prvý príspevok
     mute: Ignorovať
     unmute: Prestať ignorovať
+    last_post: Odoslané
     last_reply_lowercase: posledná odpoveď
     replies_lowercase:
       one: odpoveď
@@ -940,6 +1000,7 @@ sk:
       title: "Prihlásenie"
       username: "Používateľ"
       password: "Heslo"
+      second_factor_title: "Dvojfaktorová autentifikácia"
       email_placeholder: "e-mail alebo používateľské meno"
       caps_lock_warning: "Caps Lock je zapnutý"
       error: "Neznáma chyba"

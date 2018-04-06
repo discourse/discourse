@@ -307,21 +307,6 @@ vi:
         make_user_group_owner: "Đặt làm người sở hữu"
         remove_user_as_group_owner: "Huỷ quyền sở hữu"
     groups:
-      logs:
-        title: "Bản ghi"
-        when: "Khi"
-        action: "Hành động"
-        acting_user: "Người dùng đang hoạt động"
-        target_user: "Người dùng mục tiêu"
-        subject: "Chủ đề"
-        details: "Chi tiết"
-        from: "Từ"
-        to: "Đến"
-      edit:
-        title: 'Sửa nhóm'
-        full_name: 'Tên đầy đủ'
-        add_members: "Thêm thành viên"
-        delete_member_confirm: "Xoá  '%{username}' khỏi nhóm '%{group}' ?"
       name_placeholder: "Tên nhóm, không có khoảng trắng, tương tự như luật đặt tên người dùng"
       public_admission: "Cho phép Thành viên tham gia nhóm một cách tự do (nhóm hiển thị công khai)"
       public_exit: "Cho phép Thành viên thoát khỏi nhóm một cách tự do"
@@ -333,12 +318,7 @@ vi:
         topics: "Không có chủ đề nào được gửi bởi thành viên của nhóm này."
         logs: "Không có bản ghi nào dành cho nhóm này"
       add: "Thêm"
-      join: "Tham gia nhóm"
-      leave: "Rời nhóm"
-      request: "Xin gia nhập nhóm"
       message: "Tin nh"
-      automatic_group: Nhóm tự động
-      is_group_user: "Bạn là một thành viên của nhóm này"
       allow_membership_requests: "Cho phép người dùng gửi đơn xin gia nhập nhóm đến người quản lí nhóm."
       membership_request_template: "đã tùy chỉnh để hiển thị cho người dùng khi gửi yêu cầu thành viên"
       membership_request:

@@ -221,6 +221,8 @@ fa_IR:
       last_read: "این آخرین نوشته ای است که خوانده‌اید؛ بفشارید تا روی آن نشانک بگذارید."
       remove: "پاک کردن نشانک"
       confirm_clear: "آیا مطمئنید که می‌خواهید همه نشانک ها را از این موضوع پاک کنید؟"
+    topic_count_latest:
+      other: "{{count}} موضوع تازه یا به‌ روز شده."
     preview: "پیش‌نمایش"
     cancel: "لغو"
     save: "ذخیره سازی تغییرات"
@@ -307,21 +309,6 @@ fa_IR:
         make_user_group_owner: "مدیر کردن"
         remove_user_as_group_owner: "لغو مالکیت"
     groups:
-      logs:
-        title: "گزارش‌ها"
-        when: "چه زمانی"
-        action: "عمل"
-        acting_user: "کاربر اجرایی"
-        target_user: "کاربر مقصد"
-        subject: "موضوع"
-        details: "جزئیات"
-        from: "از"
-        to: "به"
-      edit:
-        title: 'ویرایش گروه'
-        full_name: 'نام و نام خانوادگی'
-        add_members: "افزودن اعضا"
-        delete_member_confirm: "کاربر '%{username}' از گروه '%{group}' حذف شود؟"
       name_placeholder: "در نام گروه نمی توان از فاصله استفاده کرد، مانند قوانین نامگذاری نام کاربری"
       empty:
         posts: "در این گروه هیچ نوشته ای توسط کاربران ارسال نشده."
@@ -331,12 +318,7 @@ fa_IR:
         topics: "در این گروه هیچ موضوعی توسط اعضای آن ایجاد نشده."
         logs: "هیچ گزارشی برای این گروه موجود نیست."
       add: "افزودن"
-      join: "پیوستن به گروه"
-      leave: "ترک گروه"
-      request: "درخواست پیوستن به گروه"
       message: "پیام"
-      automatic_group: گروه خودکار
-      is_group_user: "شما عضو این گروه هستید"
       allow_membership_requests: "اجازه ارسال درخواست عضویت در گروه به کاربران"
       membership_request:
         submit: "ارسال درخواست"

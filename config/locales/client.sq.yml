@@ -320,21 +320,6 @@ sq:
         make_user_group_owner: "Bëje autor"
         remove_user_as_group_owner: "Hiq autorin"
     groups:
-      logs:
-        title: "Ditari"
-        when: "Kur"
-        action: "Veprimi"
-        acting_user: "Anëtari veprues"
-        target_user: "Anëtari i prekur"
-        subject: "Subjekti"
-        details: "Detaje"
-        from: "Nga"
-        to: "Për"
-      edit:
-        title: 'Redakto Grupin'
-        full_name: 'Emri i plotë'
-        add_members: "Shto anëtarë"
-        delete_member_confirm: "Do të heqësh '%{username}' nga grupi '%{group}'?"
       name_placeholder: "Emri i grupit, pa hapësira, si username-t"
       public_admission: "Lejo që përdoruesit të bashkohen lirisht ne grupin (Kërkon grupin e dukshëm publik)"
       public_exit: "Lejo përdoruesit të largohen nga grupi lirshëm"
@@ -342,11 +327,6 @@ sq:
         posts: "Nuk ka postime nga anëtarët e këtij grupi."
         members: "Nuk ka anëtarë në këtë grup."
       add: "Shto"
-      join: "Bashkoju grupit"
-      leave: "Ik nga grupi"
-      request: "Kërko t'i bashkohesh grupit"
-      automatic_group: Grup automatik
-      is_group_user: "Jeni anëtar i këtij grupi"
       name: "Emri"
       bio: "Mbi grupin"
       owner: "autori"

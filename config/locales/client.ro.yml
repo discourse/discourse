@@ -265,6 +265,10 @@ ro:
       last_read: "Acesta este ultimul mesaj citit de tine; fă click să adaugi semn de carte"
       remove: "Șterge semn de carte"
       confirm_clear: "Ești sigur că dorești să ștergi toate semnele de carte din acest subiect?"
+    topic_count_latest:
+      one: "Un subiect nou sau actualizat."
+      few: "{{count}} subiecte noi sau actualizate."
+      other: "{{count}} de subiecte noi sau actualizate."
     preview: "Previzualizează"
     cancel: "Anulează"
     save: "Salvează schimbările"
@@ -357,21 +361,6 @@ ro:
         make_user_group_owner: "Fă proprietar"
         remove_user_as_group_owner: "Revocă proprietar"
     groups:
-      logs:
-        title: "Jurnale"
-        when: "Când"
-        action: "Acțiune"
-        acting_user: "Utilizator temporar"
-        target_user: "Utilizator țintă"
-        subject: "Subiect"
-        details: "Detalii"
-        from: "De la"
-        to: "Către"
-      edit:
-        title: 'Editează grup'
-        full_name: 'Nume complet'
-        add_members: "Adaugă membri"
-        delete_member_confirm: "Șterge utilizatorul '%{username}' din grupul '%{group}'?"
       name_placeholder: "Numele grupului, fără spații, la fel ca regula pentru nume utilizator"
       public_admission: "Permite utilizatorilor să adere la grup fără restricții (Presupune ca grupul să fie vizibil)"
       public_exit: "Permite utilizatorilor să părăsească grupul în mod liber."
@@ -383,12 +372,7 @@ ro:
         topics: "Nu există nici un subiect creat de vreun membru al acestui grup."
         logs: "Nu există nici un jurnal pentru acest grup."
       add: "Adaugă"
-      join: "Alătură-te grupului"
-      leave: "Părăsește grupul"
-      request: "Cere să te alături grupului"
       message: "Mesaj"
-      automatic_group: Grup automat
-      is_group_user: "Ești membru al acestui grup"
       allow_membership_requests: "Permite utilizatorilor să trimită cereri de membru către proprietarul grupului."
       membership_request_template: "Șablonul personalizat pentru a fi afișat utilizatorilor atunci când trimiteți o solicitare de membru"
       membership_request:
@@ -2267,7 +2251,7 @@ ro:
         few: "A primit acest ecuson de %{count} ori"
         other: "A primit acest ecuson de %{count} de ori"
       granted_on: "Acordat acum %{date}"
-      others_count: "Numărul celorlalți care au acest ecuson (%{count})"
+      others_count: "Alții cu acest ecuson (%{count})"
       title: Ecusoane
       multiple_grant: "Poți primi asta de mai multe ori"
       badge_count:

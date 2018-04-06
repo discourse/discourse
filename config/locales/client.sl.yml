@@ -138,7 +138,7 @@ sl:
       post: 'objava #%{postNumber}'
       close: 'zapri'
       twitter: 'deli povezavo na Twitterju'
-      facebook: 'deli povezao na acebooku'
+      facebook: 'deli povezao na Facebooku'
       google+: 'deli povezavo na Google+'
       email: 'pošlji povezavo preko e-pošte'
     action_codes:
@@ -195,7 +195,7 @@ sl:
     edit: 'uredi naslov in kategorijo te teme'
     not_implemented: "Oprosti, ta funkcija še ni bila implementirana!"
     no_value: "Ne"
-    yes_value: "Ja"
+    yes_value: "Da"
     generic_error: "Ups, prišlo je do napake."
     generic_error_with_reason: "Napaka: %{error}"
     sign_up: "Prijava"
@@ -241,7 +241,7 @@ sl:
       other: "{{count}} znakov"
     suggested_topics:
       title: "Predlagane Teme"
-      pm_title: "Predlagana Sporočil"
+      pm_title: "Predlagana Sporočila"
     about:
       simple_title: "O"
       title: "O %{title}"
@@ -367,21 +367,6 @@ sl:
         make_user_group_owner: "Spremeni v lastnika"
         remove_user_as_group_owner: "Odstrani lastništvo"
     groups:
-      logs:
-        title: "Dnevnik"
-        when: "Kdaj"
-        action: "Aktivnost"
-        acting_user: "Nastopajoči uporabnik"
-        target_user: "Ciljni uporabnik"
-        subject: "Zadeva"
-        details: "Podrobnosti"
-        from: "Od"
-        to: "Za"
-      edit:
-        title: 'Uredi skupino'
-        full_name: 'Ime skupine'
-        add_members: "Dodaj člane"
-        delete_member_confirm: "Odstrani '%{username}' iz skupine '%{group}'?"
       name_placeholder: "Ime skupine, brez presledkov, enako kot pravilo pri uporabniškem imenu"
       public_admission: "Dovoli uporabnikom, da se sami pridružijo skupini (skupina mora biti javna)"
       public_exit: "Dovoli uporabnikom da sami zapustijo skupino"
@@ -393,12 +378,7 @@ sl:
         topics: "Člani te skupine nimajo nobene teme."
         logs: "Dnevnik za to skupino je prazen."
       add: "Dodaj"
-      join: "Pridruži se skupini"
-      leave: "Zapusti skupino"
-      request: "Zaprosi za članstvo v skupini"
       message: "Sporočilo"
-      automatic_group: Avtomatska skupina
-      is_group_user: "Si član te skupine"
       allow_membership_requests: "Dovoli uporabnikom, da zaprosijo za članstvo pri lastnikih skupine"
       membership_request_template: "Predloga za prikaz uporabnikom, ko zaprosijo za članstvo"
       membership_request:

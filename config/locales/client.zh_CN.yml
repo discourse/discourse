@@ -307,21 +307,6 @@ zh_CN:
         make_user_group_owner: "设为所有者"
         remove_user_as_group_owner: "撤销所有者"
     groups:
-      logs:
-        title: "日志"
-        when: "时间"
-        action: "操作"
-        acting_user: "操作用户"
-        target_user: "目标用户"
-        subject: "主题"
-        details: "详情"
-        from: "来自"
-        to: "发至"
-      edit:
-        title: '编辑群组'
-        full_name: '群组名'
-        add_members: "增加组员"
-        delete_member_confirm: "从“%{group}”群组中移除用户“%{username}'？"
       name_placeholder: "群组名，没有空格，和用户名一样的规则"
       public_admission: "允许用户自由加入小组（需要小组公开可见）"
       public_exit: "允许用户自由离开小组"
@@ -333,12 +318,7 @@ zh_CN:
         topics: "群组的成员从未发表主题。"
         logs: "没有关于群组的日志。"
       add: "添加"
-      join: "加入群组"
-      leave: "离开群组"
-      request: "请求加入群组"
       message: "私信"
-      automatic_group: 自动群组
-      is_group_user: "你是该群组的一个成员"
       allow_membership_requests: "允许用户向小组拥有者发送成员请求"
       membership_request_template: "用户发送会员请求时向其显示的自定义模板"
       membership_request:

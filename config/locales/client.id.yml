@@ -285,26 +285,13 @@ id:
         remove_user_from_group: "Hapus pengguna"
         make_user_group_owner: "Jadikan pemilik"
     groups:
-      logs:
-        action: "Aksi"
-        subject: "Subyek"
-        details: "Detil"
-        from: "Dari"
-        to: "Kepada"
-      edit:
-        full_name: 'Nama Lengkap'
-        add_members: "Tambah Anggota"
-        delete_member_confirm: "Hapus '%{username}' dari grup '%{group}'?"
       name_placeholder: "Nama grup, tidak boleh menggunakan spasi, sama seperti aturan username"
       empty:
         members: "Tidak ada anggota dalam kelompok ini."
         messages: "Tidak ada pesan untuk kelompok ini."
         topics: "Tidak ada topik oleh anggota kelompok ini."
       add: "Menambahkan"
-      join: "Gabung dengan grup"
       message: "Pesan"
-      automatic_group: Kelompok Otomatis
-      is_group_user: "Anda adalah anggota dari kelompok ini."
       membership: "Keanggotaan"
       name: "Nama"
       bio: "Tentang Kelompok"

@@ -324,21 +324,6 @@ nl:
         make_user_group_owner: "Eigenaar maken"
         remove_user_as_group_owner: "Eigenaar intrekken"
     groups:
-      logs:
-        title: "Logboeken"
-        when: "Wanneer"
-        action: "Actie"
-        acting_user: "Uitvoerende gebruiker"
-        target_user: "Doelgebruiker"
-        subject: "Onderwerp"
-        details: "Details"
-        from: "Van"
-        to: "Tot"
-      edit:
-        title: 'Groep bewerken'
-        full_name: 'Volledige naam'
-        add_members: "Leden toevoegen"
-        delete_member_confirm: "'%{username}' uit de groep '%{group}' verwijderen?"
       name_placeholder: "Groepsnaam, geen spaties, hetzelfde als gebruikersnaamregel"
       public_admission: "Gebruikers toestaan om vrij aan de groep deel te nemen (Groep moet hiervoor zichtbaar zijn)"
       public_exit: "Gebruikers toestaan om vrij de groep te verlaten"
@@ -350,12 +335,7 @@ nl:
         topics: "Er zijn geen topics van leden van deze groep."
         logs: "Er zijn geen logs voor deze groep."
       add: "Toevoegen"
-      join: "Deelnemen aan groep"
-      leave: "Groep verlaten"
-      request: "Verzoek voor deelname aan groep"
       message: "Bericht"
-      automatic_group: Automatische groep
-      is_group_user: "U bent een lid van deze groep"
       allow_membership_requests: "Gebruikers toestaan om lidmaatschapsverzoeken naar groepseigenaren te sturen"
       membership_request_template: "Aangepaste template om aan gebruikers te laten zien bij het sturen van een lidmaatschap verzoek"
       membership_request:

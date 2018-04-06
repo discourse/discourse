@@ -330,21 +330,6 @@ it:
         make_user_group_owner: "Assegna proprietà"
         remove_user_as_group_owner: "Revoca proprietà"
     groups:
-      logs:
-        title: "Log"
-        when: "Quando"
-        action: "Azione"
-        acting_user: "Utente attore"
-        target_user: "Utente destinatario"
-        subject: "Oggetto"
-        details: "Dettagli"
-        from: "Da"
-        to: "A"
-      edit:
-        title: 'Modifica Gruppo'
-        full_name: 'Nome Completo'
-        add_members: "Aggiungi Membri"
-        delete_member_confirm: "Rimuovere '%{username}' dal gruppo '%{group}'?"
       name_placeholder: "Nome del gruppo, senza spazi, stesse regole del nome utente"
       public_admission: "Consenti agli utenti di unirsi al gruppo liberamente (Richiede che il gruppo sia visibile a tutti)"
       public_exit: "Consenti agli utenti di lasciare il gruppo liberamente"
@@ -356,12 +341,7 @@ it:
         topics: "Non ci sono argomenti da membri di questo gruppo."
         logs: "Non ci sono log per questo gruppo."
       add: "Aggiungi"
-      join: "Partecipa al Gruppo"
-      leave: "Abbandona il Gruppo"
-      request: "Richiedi di partecipare al gruppo"
       message: "Messaggio"
-      automatic_group: Gruppo Automatico
-      is_group_user: "Sei un membro di questo gruppo"
       allow_membership_requests: "Permetti agli utenti di richiedere l'invito ai proprietari del gruppo"
       membership_request_template: "Template personalizzato da mostrare agli utenti quando inviano una richiesta di adesione"
       membership_request:

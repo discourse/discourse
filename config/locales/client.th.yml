@@ -94,6 +94,7 @@ th:
       email: 'ส่งลิงก์นี้ทางอีเมล'
     action_codes:
       public_topic: "ทำให้กระทู้นี้เป็นสาธารณะ %{when} "
+      private_topic: "ทำให้กระทู้นี้เป็นข้อความส่วนตัว"
       split_topic: "แบ่งกระทู้นี้เมื่อ %{when}"
       invited_user: "ได้เชิญ %{who} %{when}"
       invited_group: "ได้เชิญ %{who} %{when}"
@@ -117,6 +118,9 @@ th:
       visible:
         enabled: 'ถูกแสดงเมื่อ %{when}'
         disabled: 'ถูกซ่อนเมื่อ %{when}'
+      banner:
+        enabled: 'ทำให้เป็นแบนเนอร์%{when} มันจะปรากฎที่ด้านบนสุดของทุกหน้าจนกว่าจะผู้ใช้งานจะกดลบ'
+        disabled: 'ลบแบนเนอร์นี้%{when} มันจะไม่ปรากฎที่ด้านบนของหน้าใดๆ'
     topic_admin_menu: "จัดการกระทู้ "
     emails_are_disabled: "อีเมลขาออกทั้งหมดจะถูกปิดโดยผู้ดูแลระบบ ไม่มีอีเมลแจ้งเตือนใดๆจะถูกส่งออกไป"
     themes:
@@ -211,6 +215,8 @@ th:
       last_read: "นี่เป็นโพสสุดท้ายที่คุณอ่าน คลิกเพื่อทำบุ๊คม๊าค"
       remove: "ลบบุ๊คม๊าค"
       confirm_clear: "คุณแน่ใจไหม ที่จะลบบุ๊คมาร์กในกระทู้นี้ทั้งหมด"
+    topic_count_latest:
+      other: "เห็น {{count}} กระทู้ใหม่ หรือที่ถูกอัพเดต"
     preview: "แสดงตัวอย่าง"
     cancel: "ยกเลิก"
     save: "บันทึกการเปลี่ยนแปลง"
@@ -294,27 +300,9 @@ th:
         add_user_to_group: "เพิ่มผู้ใช้"
         remove_user_from_group: "ลบผู้ใช้"
     groups:
-      logs:
-        acting_user: "ผู้ใช้ชั่วคราว"
-        target_user: "ผู้ใช้เป้าหมาย"
-        subject: "หัวข้อ"
-        details: "รายละเอียด"
-        from: "จาก"
-        to: "ถึง"
-      edit:
-        title: 'แก้ไขกลุ่ม'
-        full_name: 'ชื่อ-นามสกุล'
-        add_members: "เพิ่มสมาชิก"
-        delete_member_confirm: "ลบ '%{username}' ออกจาก '%{group}' กลุ่ม?"
       public_exit: "อนุญาตให้ผู้ใช้ออกจากกลุ่มอย่างอิสระ"
       add: "เพิ่ม"
-      join: "เข้าร่วมกลุ่ม"
-      leave: "ออกจากกลุ่ม"
-      request: "ส่งคำขอเข้าร่วมกลุ่ม"
       message: "ข้อความ<br><div><br data-mce-bogus=\"1\"></div>"
-      automatic_group: กลุ่มอัตโนมัติ
-      close_group: กลุ่มปิด
-      is_group_user: "คุณเป็นสมาชิกของกลุ่มนี้"
       membership: "การเป็นสมาชิก"
       name: "ชื่อ"
       bio: "เกี่ยวกับกลุ่ม"
@@ -995,6 +983,8 @@ th:
         new: "ไม่มีกระทู้ใหม่"
         bookmarks: "ไม่มีบุ๊คมาร์คในหัวข้อใดอีกแล้ว"
     topic:
+      filter_to:
+        other: " {{count}} โพสในกระทู้"
       create: 'กระทู้ใหม่'
       create_long: 'สร้างกระทู้ใหม่'
       private_message: 'สร้างข้อความใหม่'
@@ -1034,6 +1024,8 @@ th:
       auto_close_title: 'ปิดการตั้งค่าอัตโนมัติ'
       timeline:
         back: "กลับ"
+      progress:
+        go_top: "บน"
       notifications:
         reasons:
           '3_2': 'คุณจะได้รับการแจ้งเตือนเพราะคุณดูกระทู้นี้'
