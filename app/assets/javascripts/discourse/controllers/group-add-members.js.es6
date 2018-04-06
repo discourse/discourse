@@ -1,7 +1,8 @@
 import computed from 'ember-addons/ember-computed-decorators';
-import { popupAjaxError } from 'discourse/lib/ajax-error';
+import { extractError } from 'discourse/lib/ajax-error';
+import ModalFunctionality from 'discourse/mixins/modal-functionality';
 
-export default Ember.Controller.extend({
+export default Ember.Controller.extend(ModalFunctionality, {
   loading: false,
   setAsOwner: false,
 
@@ -31,10 +32,13 @@ export default Ember.Controller.extend({
           this.get('model.name'),
           { queryParams: { filter: usernames } }
         );
+
         model.set("usernames", null);
         this.send('closeModal');
       })
-      .catch(popupAjaxError)
+      .catch(error => {
+        this.flash(extractError(error), 'error');
+      })
       .finally(() => this.set('loading', false));
     },
   },

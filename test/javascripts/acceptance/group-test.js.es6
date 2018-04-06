@@ -167,18 +167,3 @@ QUnit.test("Admin Viewing Group", assert => {
     assert.equal(find('.group-info-name').text(), 'Awesome Team', 'it should display the group name');
   });
 });
-
-QUnit.test("Admin Viewing Automatic Group", assert => {
-  logIn();
-  Discourse.reset();
-
-  visit("/groups/moderators");
-  click(".nav-pills li a[title='Manage']");
-
-  andThen(() => {
-    assert.equal(
-      count('.groups-form .control-group'), 5,
-      'it should display the right fields'
-    );
-  });
-});

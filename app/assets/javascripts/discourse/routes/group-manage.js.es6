@@ -19,5 +19,5 @@ export default Discourse.Route.extend({
   setupController(controller, model) {
     this.controllerFor('group-manage').setProperties({ model });
     this.controllerFor("group").set("showing", 'manage');
-  }
+  },
 });

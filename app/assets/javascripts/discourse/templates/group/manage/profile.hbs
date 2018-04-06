@@ -1,5 +1,4 @@
-{{group-form model=model
-    saveLabel="save"
-    save="save"
-    disableSave=saving
-    manageMembership=false}}
+<form class="groups-form form-vertical">
+  {{groups-form-profile-fields model=model saving=saving}}
+  {{group-manage-save-button model=model saving=saving}}
+</form>

@@ -2,7 +2,7 @@ import Group from 'discourse/models/group';
 
 export default Discourse.Route.extend({
   titleToken() {
-    return I18n.t('groups.new.title');
+    return I18n.t('admin.groups.new.title');
   },
 
   model() {
