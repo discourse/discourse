@@ -48,11 +48,18 @@ def yml_path(dir, prefix, language)
   File.expand_path(path, __FILE__)
 end
 
+def yml_path_if_exists(dir, prefix, language)
+  path = yml_path(dir, prefix, language)
+  File.exists?(path) ? path : nil
+end
+
 languages = get_languages.select { |x| x != 'en' }.sort
 
 # ensure that all locale files exists. tx doesn't create missing locale files during pull
 YML_DIRS.each do |dir|
   YML_FILE_PREFIXES.each do |prefix|
+    next unless yml_path_if_exists(dir, prefix, 'en')
+
     languages.each do |language|
       filename = yml_path(dir, prefix, language)
       FileUtils.touch(filename) unless File.exists?(filename)
@@ -85,11 +92,6 @@ YML_FILE_COMMENTS = <<END
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 END
-
-def yml_path_if_exists(dir, prefix, language)
-  path = yml_path(dir, prefix, language)
-  File.exists?(path) ? path : nil
-end
 
 # Add comments to the top of files and replace the language (first key in YAML file)
 def update_file_header(filename, language)
