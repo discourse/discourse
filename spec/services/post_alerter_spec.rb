@@ -21,6 +21,8 @@ RSpec::Matchers.define :add_notification do |user, notification_type|
   supports_block_expectations
 end
 
+RSpec::Matchers.define_negated_matcher :not_add_notification, :add_notification
+
 describe PostAlerter do
 
   let!(:evil_trout) { Fabricate(:evil_trout) }
@@ -114,6 +116,46 @@ describe PostAlerter do
       post.revise(admin, raw: 'I made another revision')
 
       expect(Notification.where(post_number: 1, topic_id: post.topic_id).count).to eq(3)
+    end
+
+    it 'notifies flaggers when flagged post gets unhidden by edit' do
+      post = create_post
+      walterwhite = Fabricate(:walter_white)
+      coding_horror = Fabricate(:coding_horror)
+
+      PostActionNotifier.enable
+      SiteSetting.flags_required_to_hide_post = 2
+
+      PostAction.act(evil_trout, post, PostActionType.types[:spam])
+      PostAction.act(walterwhite, post, PostActionType.types[:spam])
+
+      post.reload
+      expect(post.hidden).to eq(true)
+
+      expect {
+        post.revise(post.user, raw: post.raw + " ha I edited it ")
+      }.to add_notification(evil_trout, :edited)
+        .and add_notification(walterwhite, :edited)
+
+      post.reload
+      expect(post.hidden).to eq(false)
+
+      notification = walterwhite.notifications.last
+      expect(notification.topic_id).to eq(post.topic.id)
+      expect(notification.post_number).to eq(post.post_number)
+      expect(notification.data_hash["display_username"]).to eq(post.user.username)
+
+      PostAction.act(coding_horror, post, PostActionType.types[:spam])
+      PostAction.act(walterwhite, post, PostActionType.types[:off_topic])
+
+      post.reload
+      expect(post.hidden).to eq(true)
+
+      expect {
+        post.revise(post.user, raw: post.raw + " ha I edited it again ")
+      }.to not_add_notification(evil_trout, :edited)
+        .and not_add_notification(coding_horror, :edited)
+        .and not_add_notification(walterwhite, :edited)
     end
   end
 
