@@ -68,9 +68,9 @@ nav.post-controls {
     &:hover {
       background: $primary-low;
       .like-count {
-        color: dark-light-choose($primary-medium, $secondary-high);
+        color: $primary-medium;
         &.d-hover {
-          color: dark-light-choose($primary, $secondary);
+          color: $primary;
         }
       }
       .d-hover {
