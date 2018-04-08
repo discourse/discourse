@@ -12,8 +12,8 @@ export default Discourse.Route.extend({
       model: model,
       categoryId: (model.get('category_id') || 'all'),
       groupId: model.get('group_id'),
-      startDate: moment(model.get('start_date')).format('YYYY-MM-DD'),
-      endDate: moment(model.get('end_date')).format('YYYY-MM-DD')
+      startDate: moment(model.get('start_date')).utc().format('YYYY-MM-DD'),
+      endDate: moment(model.get('end_date')).utc().format('YYYY-MM-DD')
     });
   }
 });
