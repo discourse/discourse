@@ -5,7 +5,6 @@ RSpec.describe TopicsController do
   let(:user) { Fabricate(:user) }
 
   describe '#update' do
-
     it "won't allow us to update a topic when we're not logged in" do
       put "/t/1.json", params: { slug: 'xyz' }
       expect(response.status).to eq(403)
@@ -363,7 +362,6 @@ RSpec.describe TopicsController do
 
       it 'requires an email parameter' do
         post "/t/#{topic.id}/invite.json"
-
         expect(response.status).to eq(400)
       end
 
@@ -457,4 +455,87 @@ RSpec.describe TopicsController do
       end
     end
   end
+
+  describe 'shared drafts' do
+    let(:shared_drafts_category) { Fabricate(:category) }
+    let(:category) { Fabricate(:category) }
+
+    before do
+      SiteSetting.shared_drafts_category = shared_drafts_category.id
+    end
+
+    describe "#update_shared_draft" do
+      let(:other_cat) { Fabricate(:category) }
+      let(:category) { Fabricate(:category) }
+      let(:topic) { Fabricate(:topic, category: shared_drafts_category, visible: false) }
+
+      context "anonymous" do
+        it "doesn't allow staff to update the shared draft" do
+          put "/t/#{topic.id}/shared-draft.json", params: { category_id: other_cat.id }
+          expect(response.code.to_i).to eq(403)
+        end
+      end
+
+      context "as a moderator" do
+        let(:moderator) { Fabricate(:moderator) }
+        before do
+          sign_in(moderator)
+        end
+
+        context "with a shared draft" do
+          let!(:shared_draft) { Fabricate(:shared_draft, topic: topic, category: category) }
+          it "allows staff to update the category id" do
+            put "/t/#{topic.id}/shared-draft.json", params: { category_id: other_cat.id }
+            expect(response).to be_success
+            topic.reload
+            expect(topic.shared_draft.category_id).to eq(other_cat.id)
+          end
+        end
+
+        context "without a shared draft" do
+          it "allows staff to update the category id" do
+            put "/t/#{topic.id}/shared-draft.json", params: { category_id: other_cat.id }
+            expect(response).to be_success
+            topic.reload
+            expect(topic.shared_draft.category_id).to eq(other_cat.id)
+          end
+        end
+      end
+    end
+
+    describe "#publish" do
+      let(:category) { Fabricate(:category) }
+      let(:topic) { Fabricate(:topic, category: shared_drafts_category, visible: false) }
+      let(:shared_draft) { Fabricate(:shared_draft, topic: topic, category: category) }
+      let(:moderator) { Fabricate(:moderator) }
+
+      it "fails for anonymous users" do
+        put "/t/#{topic.id}/publish.json", params: { destination_category_id: category.id }
+        expect(response.status).to eq(403)
+      end
+
+      it "fails as a regular user" do
+        sign_in(Fabricate(:user))
+        put "/t/#{topic.id}/publish.json", params: { destination_category_id: category.id }
+        expect(response.status).to eq(403)
+      end
+
+      context "as staff" do
+        before do
+          sign_in(moderator)
+        end
+
+        it "will publish the topic" do
+          put "/t/#{topic.id}/publish.json", params: { destination_category_id: category.id }
+          expect(response.status).to eq(200)
+          json = ::JSON.parse(response.body)['basic_topic']
+
+          result = Topic.find(json['id'])
+          expect(result.category_id).to eq(category.id)
+          expect(result.visible).to eq(true)
+        end
+      end
+    end
+  end
+
 end

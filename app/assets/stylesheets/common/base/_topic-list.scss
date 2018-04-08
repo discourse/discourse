@@ -1,3 +1,7 @@
+.topic-list.shared-drafts {
+  margin-bottom: 1.5em;
+}
+
 .show-more {
   width: 100%;
   z-index: z("base");
@@ -82,7 +86,7 @@
     }
   }
 
-  > tbody > tr:first-of-type {
+  > tbody  {
     border-top: 3px solid $primary-low;
   }
 

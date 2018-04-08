@@ -235,7 +235,7 @@ QUnit.test("Quotes", assert => {
 
   assert.cookedOptions("[quote=\"eviltrout, post: 1\"]\na quote\n\nsecond line\n\nthird line\n[/quote]",
                 { topicId: 2 },
-    `<aside class=\"quote\" data-post=\"1\">
+    `<aside class=\"quote no-group\" data-post=\"1\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  eviltrout:</div>
@@ -249,7 +249,7 @@ QUnit.test("Quotes", assert => {
 
   assert.cookedOptions("[quote=\"bob, post:1\"]\nmy quote\n[/quote]",
                 { topicId: 2, lookupAvatar: function() { } },
-    `<aside class=\"quote\" data-post=\"1\">
+    `<aside class=\"quote no-group\" data-post=\"1\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  bob:</div>
@@ -260,10 +260,10 @@ QUnit.test("Quotes", assert => {
                 "includes no avatar if none is found");
 
   assert.cooked(`[quote]\na\n\n[quote]\nb\n[/quote]\n[/quote]`,
-    `<aside class=\"quote\">
+    `<aside class=\"quote no-group\">
 <blockquote>
 <p>a</p>
-<aside class=\"quote\">
+<aside class=\"quote no-group\">
 <blockquote>
 <p>b</p>
 </blockquote>
@@ -722,22 +722,22 @@ QUnit.test("quotes", assert => {
               "it escapes the contents of the quote");
 
   assert.cooked("[quote]\ntest\n[/quote]",
-         "<aside class=\"quote\">\n<blockquote>\n<p>test</p>\n</blockquote>\n</aside>",
+         "<aside class=\"quote no-group\">\n<blockquote>\n<p>test</p>\n</blockquote>\n</aside>",
          "it supports quotes without params");
 
   assert.cooked("[quote]\n*test*\n[/quote]",
-         "<aside class=\"quote\">\n<blockquote>\n<p><em>test</em></p>\n</blockquote>\n</aside>",
+         "<aside class=\"quote no-group\">\n<blockquote>\n<p><em>test</em></p>\n</blockquote>\n</aside>",
          "it doesn't insert a new line for italics");
 
   assert.cooked("[quote=,script='a'><script>alert('test');//':a]\n[/quote]",
-         "<aside class=\"quote\">\n<blockquote></blockquote>\n</aside>",
+         "<aside class=\"quote no-group\">\n<blockquote></blockquote>\n</aside>",
          "It will not create a script tag within an attribute");
 });
 
 QUnit.test("quote formatting", assert => {
 
   assert.cooked("[quote=\"EvilTrout, post:123, topic:456, full:true\"]\n[sam]\n[/quote]",
-`<aside class=\"quote\" data-post=\"123\" data-topic=\"456\" data-full=\"true\">
+`<aside class=\"quote no-group\" data-post=\"123\" data-topic=\"456\" data-full=\"true\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  EvilTrout:</div>
@@ -748,7 +748,7 @@ QUnit.test("quote formatting", assert => {
           "it allows quotes with [] inside");
 
   assert.cooked("[quote=\"eviltrout, post:1, topic:1\"]\nabc\n[/quote]",
-`<aside class=\"quote\" data-post=\"1\" data-topic=\"1\">
+`<aside class=\"quote no-group\" data-post=\"1\" data-topic=\"1\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  eviltrout:</div>
@@ -759,7 +759,7 @@ QUnit.test("quote formatting", assert => {
          "renders quotes properly");
 
   assert.cooked("[quote=\"eviltrout, post:1, topic:1\"]\nabc\n[/quote]\nhello",
-`<aside class=\"quote\" data-post=\"1\" data-topic=\"1\">
+`<aside class=\"quote no-group\" data-post=\"1\" data-topic=\"1\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  eviltrout:</div>
@@ -771,12 +771,12 @@ QUnit.test("quote formatting", assert => {
          "handles new lines properly");
 
   assert.cooked("[quote=\"Alice, post:1, topic:1\"]\n[quote=\"Bob, post:2, topic:1\"]\n[/quote]\n[/quote]",
-`<aside class=\"quote\" data-post=\"1\" data-topic=\"1\">
+`<aside class=\"quote no-group\" data-post=\"1\" data-topic=\"1\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  Alice:</div>
 <blockquote>
-<aside class=\"quote\" data-post=\"2\" data-topic=\"1\">
+<aside class=\"quote no-group\" data-post=\"2\" data-topic=\"1\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  Bob:</div>
@@ -788,7 +788,7 @@ QUnit.test("quote formatting", assert => {
 
   assert.cooked("[quote=\"Alice, post:1, topic:1\"]\n[quote=\"Bob, post:2, topic:1\"]\n[/quote]",
 `<p>[quote=&quot;Alice, post:1, topic:1&quot;]</p>
-<aside class=\"quote\" data-post=\"2\" data-topic=\"1\">
+<aside class=\"quote no-group\" data-post=\"2\" data-topic=\"1\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  Bob:</div>
@@ -798,7 +798,7 @@ QUnit.test("quote formatting", assert => {
          "handles mismatched nested quote tags (non greedy)");
 
   assert.cooked("[quote=\"Alice, post:1, topic:1\"]\n```javascript\nvar foo ='foo';\nvar bar = 'bar';\n```\n[/quote]",
-`<aside class=\"quote\" data-post=\"1\" data-topic=\"1\">
+`<aside class=\"quote no-group\" data-post=\"1\" data-topic=\"1\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  Alice:</div>
@@ -811,7 +811,7 @@ var bar = 'bar';
           "quotes can have code blocks without leading newline");
 
   assert.cooked("[quote=\"Alice, post:1, topic:1\"]\n\n```javascript\nvar foo ='foo';\nvar bar = 'bar';\n```\n[/quote]",
-`<aside class=\"quote\" data-post=\"1\" data-topic=\"1\">
+`<aside class=\"quote no-group\" data-post=\"1\" data-topic=\"1\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  Alice:</div>
@@ -827,7 +827,7 @@ var bar = 'bar';
 QUnit.test("quotes with trailing formatting", assert => {
   const result = new PrettyText(defaultOpts).cook("[quote=\"EvilTrout, post:123, topic:456, full:true\"]\nhello\n[/quote]\n*Test*");
   assert.equal(result,
-`<aside class=\"quote\" data-post=\"123\" data-topic=\"456\" data-full=\"true\">
+`<aside class=\"quote no-group\" data-post=\"123\" data-topic=\"456\" data-full=\"true\">
 <div class=\"title\">
 <div class=\"quote-controls\"></div>
  EvilTrout:</div>

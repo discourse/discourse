@@ -83,6 +83,7 @@ th:
           other: "%{count} ปีหลังจากนั้น"
       previous_month: 'เดือนที่แล้ว'
       next_month: 'เดือนถัดไป'
+      placeholder: วัน
     share:
       topic: 'แบ่งปันลิงก์ไปยังกระทู้นี้'
       post: 'โพส #%{postNumber}'
@@ -93,7 +94,7 @@ th:
       email: 'ส่งลิงก์นี้ทางอีเมล'
     action_codes:
       public_topic: "ทำให้กระทู้นี้เป็นสาธารณะ %{when} "
-      private_topic: "ทำให้กระทู้นี้ส่วนตัว %{when} "
+      private_topic: "ทำให้กระทู้นี้เป็นข้อความส่วนตัว"
       split_topic: "แบ่งกระทู้นี้เมื่อ %{when}"
       invited_user: "ได้เชิญ %{who} %{when}"
       invited_group: "ได้เชิญ %{who} %{when}"
@@ -117,20 +118,26 @@ th:
       visible:
         enabled: 'ถูกแสดงเมื่อ %{when}'
         disabled: 'ถูกซ่อนเมื่อ %{when}'
+      banner:
+        enabled: 'ทำให้เป็นแบนเนอร์%{when} มันจะปรากฎที่ด้านบนสุดของทุกหน้าจนกว่าจะผู้ใช้งานจะกดลบ'
+        disabled: 'ลบแบนเนอร์นี้%{when} มันจะไม่ปรากฎที่ด้านบนของหน้าใดๆ'
     topic_admin_menu: "จัดการกระทู้ "
     emails_are_disabled: "อีเมลขาออกทั้งหมดจะถูกปิดโดยผู้ดูแลระบบ ไม่มีอีเมลแจ้งเตือนใดๆจะถูกส่งออกไป"
-    bootstrap_mode_enabled: "ตอนนี้คุณอยู่ในการใช้งานแบบ Bootstrap เพื่อให้การเปิดเว็บไซต์ใหม่ง่ายขึ้น ผู้ใช้งานใหม่ทุกคนจะได้ระบบความเชื่อถือที่ 1 และจะได้รับอีเมลสรุปทุกวัน แล้วจะเลิกส่งต่อเมื่อจำนวนผู้ใช้งานทั้งหมดเกิน %{min_users} คน"
-    bootstrap_mode_disabled: "การใช้งานแบบ Bootstrap ในอีก 24 ชั่วโมง"
+    themes:
+      default_description: "ค่าเริ่มต้น"
     s3:
       regions:
         ap_northeast_1: "เอเชียแปซิฟิก (โตเกียว)"
         ap_northeast_2: "เอเชียแปซิฟิก (โซล)"
+        ap_south_1: "เอเชียแปซิฟิก (มุมไบ)"
         ap_southeast_1: "เอเชียแปซิฟิก (สิงคโปร)"
         ap_southeast_2: "เอเชียแปซิฟิก (ซิสนี่)"
+        cn_north_1: "จีน (ปักกิ่ง)"
         eu_central_1: "อียู (แฟรงก์เฟิร์ต)"
         eu_west_1: "อียู (ไอร์แลนด์)"
         sa_east_1: "อเมริกาใต้ (ซาวเปาโล)"
-        us_east_1: "อเมริกาตะวันออก (เวอร์จินเนียเหนือ)"
+        us_east_1: "สหรัฐอเมริกาซีกตะวันออก (เวอร์จิเนียเหนือ)"
+        us_east_2: "สหรัฐอเมริกาตะวันออก (โอไฮโอ)"
         us_gov_west_1: "AWS GovCloud (อเมริกา)"
         us_west_1: "อเมริกาตะวันตก (แคริฟอเนียเหนือ)"
         us_west_2: "อเมริกาตะวันตก (โอเลก้อน)"
@@ -138,6 +145,7 @@ th:
     not_implemented: "เสียใจด้วย!! คุณสมบัตินั้นยังไม่เสร็จสมบูรณ์ในตอนนี้"
     no_value: "ไม่ใช่"
     yes_value: "ใช่"
+    submit: "ตกลง"
     generic_error: "เสียใจด้วย, มีความผิดพลาดขึ้น"
     generic_error_with_reason: "มีข้อผิดพลาดเกิดขึ้น: %{error}"
     sign_up: "สมัครสมาชิก"
@@ -208,12 +216,7 @@ th:
       remove: "ลบบุ๊คม๊าค"
       confirm_clear: "คุณแน่ใจไหม ที่จะลบบุ๊คมาร์กในกระทู้นี้ทั้งหมด"
     topic_count_latest:
-      other: "{{count}} กระทู้ใหม่หรือกระทู้อัพเดต"
-    topic_count_unread:
-      other: "{{count}} กระทู้ยังไม่อ่าน"
-    topic_count_new:
-      other: "{{count}} กระทู้ใหม่"
-    click_to_show: "กดเพื่อเปิด"
+      other: "เห็น {{count}} กระทู้ใหม่ หรือที่ถูกอัพเดต"
     preview: "แสดงตัวอย่าง"
     cancel: "ยกเลิก"
     save: "บันทึกการเปลี่ยนแปลง"
@@ -297,44 +300,31 @@ th:
         add_user_to_group: "เพิ่มผู้ใช้"
         remove_user_from_group: "ลบผู้ใช้"
     groups:
-      logs:
-        acting_user: "ผู้ใช้ชั่วคราว"
-        target_user: "ผู้ใช้เป้าหมาย"
-        subject: "หัวข้อ"
-        details: "รายละเอียด"
-        from: "จาก"
-        to: "ถึง"
-      edit:
-        title: 'แก้ไขกลุ่ม'
-        full_name: 'ชื่อ-นามสกุล'
-        add_members: "เพิ่มสมาชิก"
-        delete_member_confirm: "ลบ '%{username}' ออกจาก '%{group}' กลุ่ม?"
       public_exit: "อนุญาตให้ผู้ใช้ออกจากกลุ่มอย่างอิสระ"
       add: "เพิ่ม"
-      join: "เข้าร่วมกลุ่ม"
-      leave: "ออกจากกลุ่ม"
-      request: "ส่งคำขอเข้าร่วมกลุ่ม"
       message: "ข้อความ<br><div><br data-mce-bogus=\"1\"></div>"
-      automatic_group: กลุ่มอัตโนมัติ
-      closed_group: กลุ่มปิด
-      is_group_user: "คุณเป็นสมาชิกของกลุ่มนี้"
       membership: "การเป็นสมาชิก"
       name: "ชื่อ"
-      user_count: "จำนวนสมาชิก"
       bio: "เกี่ยวกับกลุ่ม"
+      selector_placeholder: "กรอกชื่อผู้ใช้"
       owner: "เจ้าของ"
       index:
         title: "กลุ่ม"
         empty: "ไม่มีกลุ่มที่เห็นได้"
+        all_groups: "ทุกกลุ่ม"
       activity: "กิจกรรม"
-      members: "สมาชิก"
       topics: "กระทู้"
       posts: "โพสต์"
       mentions: "พูดถึง"
       messages: "ข้อความ"
       visibility_levels:
+        title: "ใครสามารถเห็นกลุ่มนี้?"
         public: "ทุกคน"
+        members: "เจ้าของกลุ่ม, สมาชิก และ ผู้ดูแลระบบ"
+        staff: "เจ้าของกลุ่ม และผู้ดูแล"
+        owners: "เจ้าของกลุ่ม และผู้ดูแลระบบ"
       alias_levels:
+        mentionable: "ใครสามารถ @กล่าวถึง กลุ่มนี้"
         messageable: "ใครสามารถส่งข้อความในกลุ่มนี้?"
         nobody: "ไม่มี"
         only_admins: "เฉพาะผู้ดูแลระบบ"
@@ -360,6 +350,8 @@ th:
         muted:
           title: "ปิด"
           description: "คุณจะไม่ได้รับการแจ้งเตือนเกี่ยวกับกระทู้ใหม่ๆในกลุ่มนี้"
+      flair_preview_icon: "ไอคอนตัวอย่าง"
+      flair_preview_image: "รูปภาพตัวอย่าง"
     user_action_groups:
       '1': "ให้ถูกใจ"
       '2': "ได้รับการถูกใจ"
@@ -913,19 +905,6 @@ th:
       none: "ไม่สามารถโหลดการแจ้งเตือนในขณะนี้"
       more: "ดูการแจ้งเตือนก่อนหน้านี้"
       total_flagged: "โพสที่ปักธงทั้งหมด"
-      alt:
-        mentioned: "ถูกพูดถึงโดย"
-        quoted: "ถูกอ้างอิงโดย"
-        replied: "ตอบแล้ว"
-        posted: "โพสโดย"
-        edited: "แก้ไขโพสของคุณโดย"
-        liked: "ได้ถูกใจโพสของคุณ"
-        invited_to_topic: "เชิญไปยังกระทู้จาก"
-        invitee_accepted: "การเชิญได้ตอบรับโดย"
-        moved_post: "โพสของคุณได้ถูกย้ายโดย"
-        linked: "ลิงค์ไปยังโพสของคุณ"
-        granted_badge: "ได้รับป้าย"
-        group_message_summary: "ข้อความในกล่องข้อความกลุ่ม"
       popup:
         mentioned: '{{username}} พูดถึงคุณใน "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} พูดถึงคุณใน "{{topic}}" - {{site_title}}'
@@ -1004,6 +983,8 @@ th:
         new: "ไม่มีกระทู้ใหม่"
         bookmarks: "ไม่มีบุ๊คมาร์คในหัวข้อใดอีกแล้ว"
     topic:
+      filter_to:
+        other: " {{count}} โพสในกระทู้"
       create: 'กระทู้ใหม่'
       create_long: 'สร้างกระทู้ใหม่'
       private_message: 'สร้างข้อความใหม่'
@@ -1043,6 +1024,8 @@ th:
       auto_close_title: 'ปิดการตั้งค่าอัตโนมัติ'
       timeline:
         back: "กลับ"
+      progress:
+        go_top: "บน"
       notifications:
         reasons:
           '3_2': 'คุณจะได้รับการแจ้งเตือนเพราะคุณดูกระทู้นี้'

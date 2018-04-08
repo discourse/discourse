@@ -98,7 +98,6 @@ ja:
       email: 'メールでこのリンクを送る'
     action_codes:
       public_topic: "トピックを公開しました: %{when} "
-      private_topic: "トピックを非公開にしました: %{when}"
       split_topic: "%{when} このトピックは分割されました"
       invited_user: "%{who} から招待されました: %{when}"
       invited_group: "%{when} %{who}に招待されました"
@@ -128,8 +127,6 @@ ja:
     topic_admin_menu: "トピックの管理"
     wizard_required: "Discourseへようこそ！ さあ<a href='%{url}' data-auto-route='true'>セットアップウィザード</a>から始めましょう"
     emails_are_disabled: "メールアドレスの送信は管理者によって無効化されています。全てのメール通知は行われません"
-    bootstrap_mode_enabled: "かんたんにサイトを立ち上げられるようにするため、ブートストラップモードが有効になっています。新しいユーザーは全員、トラストレベル1を付与し、毎日更新がメールで届けられます。これらの機能は総ユーザー数が%{min_users}を超えた時にオフになります。"
-    bootstrap_mode_disabled: "ブートストラップモードは24時間後に無効化されます。"
     themes:
       default_description: "デフォルト"
     s3:
@@ -223,13 +220,6 @@ ja:
       last_read: "この投稿をブックマークする"
       remove: "ブックマークを削除"
       confirm_clear: "このトピックの全てのブックマークを削除してもよいですか？"
-    topic_count_latest:
-      other: "{{count}}件の新規/更新トピックがあります。"
-    topic_count_unread:
-      other: "{{count}} 個の未読トピック。"
-    topic_count_new:
-      other: "{{count}} 件の新しいトピック"
-    click_to_show: "クリックして表示"
     preview: "プレビュー"
     cancel: "キャンセル"
     save: "変更を保存"
@@ -316,21 +306,6 @@ ja:
         make_user_group_owner: "オーナーにする"
         remove_user_as_group_owner: "オーナーから削除する"
     groups:
-      logs:
-        title: "ログ"
-        when: "日時"
-        action: "アクション"
-        acting_user: "アクションしたユーザー"
-        target_user: "対象ユーザー"
-        subject: "対象"
-        details: "詳細"
-        from: "差出人"
-        to: "宛先"
-      edit:
-        title: 'グループの編集'
-        full_name: 'フルネーム'
-        add_members: "メンバーを追加"
-        delete_member_confirm: "%{group}から%{username}を削除しますか?"
       name_placeholder: "グループネームはユーザー名と同様にスペース無し"
       public_admission: "ユーザーがグループへ自由に参加できるようにする (一般公開グループである必要があります)"
       public_exit: "ユーザーがグループから自由に離脱できるようにする"
@@ -342,13 +317,7 @@ ja:
         topics: "このグループのメンバーによるトピックはありません。"
         logs: "このグループに関するログはありません。"
       add: "追加"
-      join: "グループに参加"
-      leave: "グループから離脱"
-      request: "グループへの参加をリクエスト"
       message: "メッセージ"
-      automatic_group: 自動作成グループ
-      closed_group: クローズドグループ
-      is_group_user: "このグループのメンバーです"
       allow_membership_requests: "ユーザーがグループオーナーにメンバーシップリクエストを送信できるようにする"
       membership_request_template: "メンバーシップリクエスト送信時に表示するカスタムテンプレート"
       membership_request:
@@ -357,7 +326,6 @@ ja:
         reason: "グループに参加したい旨をグループオーナーに伝える"
       membership: "メンバーシップ"
       name: "名前"
-      user_count: "メンバー数"
       bio: "グループについて"
       owner: "オーナー"
       index:
@@ -366,7 +334,6 @@ ja:
       title:
         other: "グループ"
       activity: "アクティビティ"
-      members: "メンバー"
       topics: "トピック"
       posts: "投稿"
       mentions: "メンション"
@@ -1127,19 +1094,6 @@ ja:
       watching_first_post: "<span>新しいトピック</span> {{description}}"
       group_message_summary:
         other: "{{group_name}} 宛のメッセージが {{count}} 通あります"
-      alt:
-        mentioned: "メンションされました: "
-        quoted: "引用されました: "
-        replied: "リプライ"
-        posted: "投稿者 "
-        edited: "投稿の編集者: "
-        liked: "あなたの投稿をいいねしました"
-        invited_to_topic: "トピックに招待されました: "
-        invitee_accepted: "招待が承認されました: "
-        moved_post: "投稿を移動しました: "
-        linked: "あなたの投稿にリンク"
-        granted_badge: "バッジを付与"
-        group_message_summary: "グループ宛のメッセージがあります"
       popup:
         mentioned: '"{{topic}}"で{{username}} にメンションされました - {{site_title}}'
         group_mentioned: '"{{topic}}"で{{username}} にメンションされました - {{site_title}}'
@@ -2048,7 +2002,6 @@ ja:
           title: "ウォッチ中"
         watching_first_post:
           title: "最初の投稿をウォッチする"
-          description: "このタグの新規トピックに対する最初の投稿のみ通知されます。"
       groups:
         parent_tag_label: "親タグ:"
         parent_tag_placeholder: "任意"

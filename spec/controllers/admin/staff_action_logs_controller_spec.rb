@@ -12,7 +12,7 @@ describe Admin::StaffActionLogsController do
     it 'generates logs' do
 
       topic = Fabricate(:topic)
-      _record = StaffActionLogger.new(Discourse.system_user).log_topic_deletion(topic)
+      _record = StaffActionLogger.new(Discourse.system_user).log_topic_delete_recover(topic, "delete_topic")
 
       get :index, params: { action_id: UserHistory.actions[:delete_topic] }, format: :json
 

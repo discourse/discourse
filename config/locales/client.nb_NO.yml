@@ -118,7 +118,7 @@ nb_NO:
       email: 'del denne lenken i en e-post'
     action_codes:
       public_topic: "gjorde denne tråden offentlig %{when}"
-      private_topic: "gjorde denne tråden privat %{when}"
+      private_topic: "gjorde denne tråden til en personlig melding %{when}"
       split_topic: "del opp denne tråden %{when}"
       invited_user: "inviterte %{who} %{when}"
       invited_group: "inviterte %{who} %{when}"
@@ -149,8 +149,6 @@ nb_NO:
     topic_admin_menu: "administratorhandlinger for tråd"
     wizard_required: "Velkommen til ditt nye Discourse! Kom i gang med <a href='%{url}' data-auto-route='true'>oppstartsveiviseren</a> ✨"
     emails_are_disabled: "All utgående e-post har blitt deaktivert globalt av en administrator. Ingen e-postvarslinger vil bli sendt."
-    bootstrap_mode_enabled: "For å gjøre det enklere å lansere det nye nettstedet ditt er det i bootstrap-modus. Alle nye brukere vil få tillitsnivå 1 og ha daglige oppsummeringer på e-post aktivert. Dette vil bli slått av automatisk når antallet brukere overstiger %{min_users}."
-    bootstrap_mode_disabled: "Bootstrap modus vil bli deaktivert i løpet av de neste 24 timene."
     themes:
       default_description: "Forvalg"
     s3:
@@ -248,15 +246,14 @@ nb_NO:
       remove: "Fjern bokmerke"
       confirm_clear: "Er du sikker på at du vil fjerne alle bokmerkene fra denne tråden?"
     topic_count_latest:
-      one: "{{count}} nytt eller oppdatert tråd"
-      other: "{{count}} nye eller oppdaterte tråder"
+      one: "Se {{count}} nye eller oppdatert tråd"
+      other: "Se {{count}} nye eller oppdaterte tråder"
     topic_count_unread:
-      one: "{{count}} ulest tråd"
-      other: "{{count}} uleste tråder"
+      one: "Se {{count}} ulest tråd"
+      other: "Se {{count}} uleste tråder"
     topic_count_new:
-      one: "{{count}} ny tråd"
-      other: "{{count}} nye tråder"
-    click_to_show: "Klikk for å vise"
+      one: "Se {{count}} ny tråd"
+      other: "Se {{count}} nye tråder"
     preview: "forhåndsvisning"
     cancel: "avbryt"
     save: "Lagre endringer"
@@ -269,6 +266,7 @@ nb_NO:
     pasting: "Limer inn…"
     enable: "Aktiver"
     disable: "Deaktiver"
+    continue: "Fortsett"
     undo: "Angre"
     revert: "Reverser"
     failed: "Mislykket"
@@ -346,21 +344,34 @@ nb_NO:
         make_user_group_owner: "Gjør til eier"
         remove_user_as_group_owner: "Trekk tilbake eierstatus"
     groups:
-      logs:
-        title: "Logger"
-        when: "Når"
-        action: "Handling"
-        acting_user: "Utførende bruker"
-        target_user: "Målbruker"
-        subject: "Emne"
-        details: "Detaljer"
-        from: "Fra"
-        to: "Til"
-      edit:
-        title: 'Rediger gruppe'
+      new:
+        title: "Ny gruppe"
+        description: "Opprett ny gruppe"
+        create: "Opprett"
+        name:
+          too_short: "Gruppenavnet er for kort"
+          too_long: "Gruppenavnet er for langt"
+          checking: "Ser om gruppenavn er tilgjengelig…"
+          available: "Gruppenavnet er tilgjengelig"
+          not_available: "Gruppenavnet er ikke tilgjengelig"
+          blank: "Gruppenavnet kan ikke være tomt"
+      manage:
+        title: 'Behandle'
+        name: 'Navn'
         full_name: 'Fullt navn'
         add_members: "Legg til medlemmer"
-        delete_member_confirm: "Fjern '%{username}' fra gruppen '%{group}'?"
+        profile:
+          title: Profil
+        members:
+          title: "Medlemmer"
+          usernames: "Brukernavn"
+        logs:
+          title: "Logger"
+          when: "Når"
+          action: "Handling"
+          details: "Detaljer"
+          from: "Fra"
+          to: "Til"
       name_placeholder: "Gruppenavn, ingen mellomrom, samme regler som for brukernavn"
       public_admission: "Tillat brukere å ta del i gruppen fritt (krever offentlig synlig gruppe)"
       public_exit: "Tillat brukere å fritt forlate gruppen"
@@ -372,13 +383,7 @@ nb_NO:
         topics: "Det finnes ingen tråder opprettet av medlemmer av denne gruppen."
         logs: "Det finnes ingen logger for denne gruppen."
       add: "Legg til"
-      join: "Bli medlem av gruppe"
-      leave: "Forlat gruppe"
-      request: "Be om gruppemedlemskap"
       message: "Melding"
-      automatic_group: Automatisk gruppe
-      closed_group: Lukket gruppe
-      is_group_user: "Du er medlem av denne gruppen"
       allow_membership_requests: "Tillat brukere å sende forespørsler om medlemskap av gruppen til eiere"
       membership_request_template: "Egendefinert mal å vise brukere når du sender en medlemskapsforespørsel."
       membership_request:
@@ -387,18 +392,46 @@ nb_NO:
         reason: "La gruppeeierne vite hvorfor du ønsker å ta del i denne gruppen"
       membership: "Medlemskap"
       name: "Navn"
-      user_count: "Antall medlemmer"
+      group_name: "Gruppenavn"
+      user_count: "Brukere"
       bio: "Om gruppe"
       selector_placeholder: "oppgi brukernavn"
       owner: "eier"
       index:
         title: "Grupper"
+        all: "Alle grupper"
         empty: "Det finnes ingen synlige grupper"
+        filter: "Filtrer etter gruppetype"
+        all_groups: "Alle grupper"
+        owner_groups: "Grupper jeg eier"
+        close_groups: "Lukkede grupper"
+        automatic_groups: "Automatiske grupper"
+        automatic: "Automatisk"
+        closed: "Lukket"
+        public: "Offentlig"
+        private: "Privat"
+        public_groups: "Offentlige grupper"
+        automatic_group: Automatisk gruppe
+        close_group: Lukk gruppe
+        my_groups: "Mine grupper"
+        group_type: "Gruppetype"
+        is_group_user: "Medlem"
+        is_group_owner: "Eier"
       title:
         one: "Gruppe"
         other: "Grupper"
       activity: "Aktivitet"
-      members: "Medlemmer"
+      members:
+        title: "Medlemmer"
+        filter_placeholder_admin: "brukernavn eller e-post"
+        filter_placeholder: "brukernavn"
+        remove_member: "Fjern medlem"
+        remove_member_description: "Fjern <b>%{username}</b> fra denne gruppen"
+        make_owner: "Gjør til eier"
+        make_owner_description: "Gjør <b>%{username}</b> til eier av denne gruppen"
+        remove_owner: "Fjern som eier"
+        remove_owner_description: "Fjern <b>%{username}</b> som eier av denne gruppen"
+        owner: "Eier"
       topics: "Tråder"
       posts: "Innlegg"
       mentions: "Omtalelser"
@@ -519,6 +552,7 @@ nb_NO:
       activity_stream: "Aktivitet"
       preferences: "Innstillinger"
       expand_profile: "Utvid"
+      collapse_profile: "Fold sammen"
       bookmarks: "Bokmerker"
       bio: "Om meg"
       invited_by: "Invitert av"
@@ -620,6 +654,7 @@ nb_NO:
         move_to_archive: "Arkiver"
         failed_to_move: "Kunne ikke flytte valgte meldinger (kanskje nettforbindelsen din er nede)"
         select_all: "Velg alle"
+        tags: "Stikkord"
       preferences_nav:
         account: "Konto"
         profile: "Profil"
@@ -639,23 +674,11 @@ nb_NO:
         choose: "Velg et passord"
       second_factor:
         title: "Totrinnsverifisering"
-        enabled_status: "Status: På"
-        disabled_status: "Status: Av"
-        confirm_password_description: "Bekreft ditt passord for å aktivere totrinnsverifisering"
-        enable_description: |
-          For å fullføre oppsettetet av totrinnsverifisering, skann den følgende QR-koden
-          i en av de støttede appene
-          (<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Android and iOS</a>,
-          <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>)
-          og send inn den genererte totrinnsverifiserings-koden.
-        disable_description: "Skriv inn verifiseringskoden fra din app"
-        show_key_description: "Eller skriv inn din hemmelige nøkkel manuelt. "
-        info_prompt: "Hva er Totrinnsverifisering?"
-        extended_description: |
-          Totrinnsverifisering git et ekstra sikkerhteslag ved innlogginv ved å
-          kreve en engangskode i tillegg til et passord. Disse engangskodene
-          kan bligenerert i Android og iOS med <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Google Authenticator</a>
-          og på Windows Phone med <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Authenticator</a>.
+        disable: "Skru av totrinnsverifisering"
+        enable: "for bedret kontosikkerhet"
+        confirm_password_description: "Bekreft passordet ditt for å fortsette"
+        label: "Kode"
+        show_key_description: "Skriv inn manuelt"
       change_about:
         title: "Rediger om meg"
         error: "Det oppstod en feil ved endring av denne verdien."
@@ -998,21 +1021,13 @@ nb_NO:
       button_ok: "OK"
       button_help: "Hjelp"
     email_login:
-      link_label: "Sen meg en magisk lenke på e-post"
       button_label: "med e-post"
-      complete_username: "Hvis en konto med brukernavn <b>%{username}</b> finnes, vil du snart motta en e-post med en magisk innlogginslenke. "
-      complete_email: "Hvis en konto med <b>%{email}</b> finnes, vil du snart motta en e-post med en magisk innlogginslenke. "
-      complete_username_found: "Vi fant en konto med brukernavnet <b>%{username}</b>, Du vil snart motta en e-post med en magisk innlogginslenke."
-      complete_email_found: "Vi fant en konto med e-postadressen <b>%{email}</b>. Du mottar om litt en e-post med en magisk innloggingslenke. "
       complete_username_not_found: "Ingen konto har med brukernavnet <b>%{username}</b> er registrert"
       complete_email_not_found: "Ingen konto med e-postadressen <b>%{email}</b> er registrert"
     login:
       title: "Logg Inn"
       username: "Bruker"
       password: "Passord"
-      second_factor_title: "Totrinnsverifisering er påkrevd"
-      second_factor_description: "Skriv inn verifiseringskoden fra din app."
-      second_factor_label: "Kode"
       email_placeholder: "e-postadresse eller brukernavn"
       caps_lock_warning: "Caps Lock er på"
       error: "Ukjent feil"
@@ -1085,6 +1100,7 @@ nb_NO:
       categories_only: "Kun kategorier"
       categories_with_featured_topics: "Kategorier med fremhevede tråder"
       categories_and_latest_topics: "Kategorier og siste tråder"
+      categories_and_top_topics: "Kategorier og topptråder"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -1094,7 +1110,6 @@ nb_NO:
       no_content: Ingen treff funnet
       filter_placeholder: Søk…
       create: "Opprett: {{content}}"
-      max_content_reached: "Du kan kun velge {{count}} gjenstander."
     emoji_picker:
       filter_placeholder: Søk etter emoji
       people: Folk
@@ -1112,6 +1127,13 @@ nb_NO:
       medium_tone: Middels hudtone
       medium_dark_tone: Middels mørk hudtone
       dark_tone: Mørk hudtone
+    shared_drafts:
+      title: "Delte kladder"
+      notice: "Denne tråden er kun synlig for dem som kan se <b>{{category}}</b>-kategorien."
+      destination_category: "Målkategori"
+      publish: "Publiser delt kladd"
+      confirm_publish: "Er du sikker på at du vil publisere denne kladden?"
+      publishing: "Publiserer tråd…"
     composer:
       emoji: "Emoji :)"
       more_emoji: "mer…"
@@ -1152,6 +1174,7 @@ nb_NO:
       create_topic: "Opprett tråd"
       create_pm: "Melding"
       create_whisper: "Hvisk"
+      create_shared_draft: "Opprett delt kladd"
       title: "Eller trykk Ctrl+Enter"
       users_placeholder: "Legg til en bruker"
       title_placeholder: "Oppsummert i en setning, hva handler denne diskusjonen om?"
@@ -1216,10 +1239,13 @@ nb_NO:
           label: Svar på tråd
           desc: 'Svar på tråd, ikke et spesifikt innlegg '
         toggle_whisper:
-          label: Slå på/av hvisking
+          label: Veksle visking
           desc: Hvisking er kun synlig for stab
         create_topic:
           label: "Nytt tråd"
+        shared_draft:
+          label: "Delt kladd"
+          desc: "Lag en kladdetråd som kun er synlig for staben"
     notifications:
       tooltip:
         regular:
@@ -1256,22 +1282,6 @@ nb_NO:
       group_message_summary:
         one: "{{count}} melding i din {{group_name}} innboks"
         other: "{{count}} meldinger i din innboks for {{group_name}}"
-      alt:
-        mentioned: "Nevnt av"
-        quoted: "Sitert av"
-        replied: "Svart"
-        posted: "Innlegg av"
-        edited: "Rediger ditt innlegg innen"
-        liked: "Likte innlegget ditt"
-        private_message: "Personlig melding fra"
-        invited_to_private_message: "Invitert til en personlig melding fra"
-        invited_to_topic: "Invitert til en tråd fra"
-        invitee_accepted: "Invitiasjon akseptert av"
-        moved_post: "Ditt innlegg ble flyttet av"
-        linked: "Link til innlegget ditt"
-        granted_badge: "Merke innvilget"
-        group_message_summary: "Meldinger i gruppeinnboks"
-        topic_reminder: "En påminnelse"
       popup:
         mentioned: '{{username}} nevnte deg i "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} nevnte deg i "{{topic}}" - {{site_title}}'
@@ -1444,6 +1454,8 @@ nb_NO:
       move_to_inbox:
         title: 'Flytt til innboks'
         help: 'Flytt melding tilbake til innboks'
+      edit_message:
+        title: 'Rediger melding'
       list: 'Tråder'
       new: 'ny tråd'
       unread: 'ulest'
@@ -2395,7 +2407,7 @@ nb_NO:
           description: "Du vil bli varslet hvis noen nevner @navnet ditt eller svarer på innlegget ditt."
         muted:
           title: "Ignorert"
-          description: "Du vil ikke bli varslet om noe vedrørende nye tråder som bruker dette stikkordet, og de vil ikke vises i ulest-listen din."
+          description: "Du vil ikke bli varslet om noe vedrørende nye tråder med dette stikkordet, og de vil ikke vises i ulest-listen din."
       groups:
         title: "Stikkordgrupper"
         about: "Legg stikkord til grupper for å kunne organisere dem enklere."
@@ -2793,6 +2805,7 @@ nb_NO:
           common: "Vanlig"
           desktop: "Skrivebord"
           mobile: "Mobil"
+          settings: "Innstillinger"
           preview: "Forhåndsvis"
           is_default: "Drakt påskrudd som forvalg"
           user_selectable: "Drakten kan velges av brukerne"
@@ -2821,6 +2834,8 @@ nb_NO:
           updating: "Oppdaterer…"
           up_to_date: "Drakten er oppdatert, sist sjekket:"
           add: "Legg til"
+          theme_settings: "Draktinnstillinger"
+          no_settings: "Denne drakten har ingen innstillinger."
           commits_behind:
             one: "Drakten er én utgave foreldet!"
             other: "Drakten er {{count}} utgaver foreldet!"
@@ -2845,6 +2860,9 @@ nb_NO:
           body_tag:
             text: "</body>"
             title: "HTML som vil bli smettet inn før </body>-taggen"
+          yaml:
+            text: "YAML"
+            title: "Definer draktinnstillinger i YAML-format"
         colors:
           select_base:
             title: "Velg hovedpalett"
@@ -3010,6 +3028,7 @@ nb_NO:
             revoke_badge: "trekk tilbake merke"
             check_email: "sjekk e-post"
             delete_topic: "slett tråd"
+            recover_topic: "angre sletting av tråd"
             delete_post: "slett innlegg"
             impersonate: "overta brukerkonto"
             anonymize_user: "anonymiser bruker"
@@ -3367,6 +3386,8 @@ nb_NO:
         go_back: "Tilbake til søk"
         recommended: "Skreddersøm av følgende tekst for å kle dine behov anbefales:"
         show_overriden: 'Bare vis overstyrte'
+      settings:
+        reset: 'tilbakestill'
       site_settings:
         title: 'Innstillinger'
         no_results: "Ingen treff funnet."

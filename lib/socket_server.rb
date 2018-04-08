@@ -16,7 +16,7 @@ class SocketServer
   end
 
   def stop
-    @server&.close rescue nil
+    @server&.close
     FileUtils.rm_f(@socket_path)
     @server = nil
     @blk = nil
@@ -72,7 +72,7 @@ class SocketServer
   rescue => e
     Rails.logger.warn("Failed to handle connection in stats socket #{e}:\n#{e.backtrace.join("\n")}")
   ensure
-    socket&.close rescue nil
+    socket&.close
   end
 
   def get_response(command)

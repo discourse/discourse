@@ -205,7 +205,6 @@ ko:
       bulk_add: "%{users_added}명의 사용자가 그룹에 추가되었습니다."
     errors:
       can_not_modify_automatic: "자동 설정 그룹은 수정할 수 없습니다."
-      member_already_exist: "'%{username}'은 이미 이 그룹의 멤버입니다."
       invalid_domain: "'%{domain}'은 유효한 도메인이 아닙니다."
       invalid_incoming_email: "'%{email}' 는 올바른 이메일 주소가 아닙니다."
       email_already_used_in_group: "'%{email}'는 '%{group_name}' 그룹에서 이미 사용중입니다."
@@ -402,22 +401,6 @@ ko:
       title: "리더"
     change_failed_explanation: "당신은 %{user_name} 사용자를 '%{new_trust_level}'으로 강등시키려 하였습니다. 하지만 해당 사용자의 회원등급는 이미 '%{current_trust_level}'입니다. %{user_name} 사용자의 회원등급는 '%{current_trust_level}'으로 유지됩니다.  - if you wish to demote user lock trust level first"
   rate_limiter:
-    slow_down: "해당 작업을 너무 많이 수행했습니다. 잠시후 다시 시도해보세요. "
-    by_type:
-      first_day_replies_per_day: "새 유저가 가입한 첫 날에 작성할 수 있는 댓글의 최대 갯수에 도달했습니다. %{time_left}동안 기다리셨다가 다시 시도해보세요."
-      first_day_topics_per_day: "새 유저가 가입한 첫 날에 작성할 수 있는 토픽의 최대 갯수에 도달했습니다. %{time_left}동안 기다리셨다가 다시 시도해보세요."
-      create_topic: "너무 빨리 토픽을 작성했습니다. %{time_left}동안 기다리셨다가 다시 시도해보세요."
-      create_post: "너무 빨리 댓글을 작성했습니다. %{time_left}동안 기다리셨다가 다시 시도해보세요."
-      delete_post: "포스트 삭제속도가 너무 빠릅니다. %{time_left}후에 다시 시도해주세요."
-      public_group_membership: "그룹 가입/탈퇴가 너무 잦습니다. %{time_left} 후에 다시 시도해주세요."
-      topics_per_day: "생성할 수 있는 토픽의 일일최대값에 도달했습니다. %{time_left} 후에 다시 시도하세요."
-      pms_per_day: "보낼 수 있는 메시지의 일일최대값에 도달했습니다. %{time_left} 후에 다시 시도하세요."
-      create_like: "쓸 수 있는 좋아요의 일일최대값에 도달했습니다. %{time_left} 후에 다시 시도하세요."
-      create_bookmark: "북마크할 수 있는 일일최대값에 도달했습니다. %{time_left} 후에 다시 시도하세요."
-      edit_post: "일일 최대 편집 횟수에 도달했습니다. %{time_left} 후에 다시 시도하세요."
-      live_post_counts: "실시간 포스트 카운트를 너무 빨리 요청하셨습니다. %{time_left} 후에 다시 시도하세요."
-      unsubscribe_via_email: "이메일을 통한 구독취소 일일 최대값에 도달했습니다. %{time_left} 후에 다시 시도하세요."
-      topic_invitations_per_day: "토픽으로 초청하기의 일일최대값에 도달했습니다. %{time_left} 후에 다시 시도하세요."
     hours:
       other: "%{count}시간"
     minutes:
@@ -1580,8 +1563,6 @@ ko:
     promoter:
       name: 후원자
       description: 사용자를 초청했습니다
-      long_description: |
-        이 배지는 사용자 페이지나 토픽의 하단에서 초대 버튼을 눌러 다른 사람을 우리 커뮤니티에 초대했을 때 수여됩니다. 특정 주제에 대해 흥미를 느낄 것 같은 친구를 초대하는 것은 우리 커뮤니티를 새로운 사람에게 알리는 훌륭한 방법입니다. 고마워요!
     campaigner:
       name: 사회운동가
       description: 기본 사용자 3명을 초청했습니다
@@ -1677,8 +1658,6 @@ ko:
     first_emoji:
       name: 첫 Emoji
       description: 게시글에 Emoji를 사용했습니다
-      long_description: |
-        이 배지는 포스트에 Emoji를 처음으로 추가했을 때 수여됩니다:thumbsup:. Emoji는 행복함부터 :smiley: 슬픔 :anguished:  그리고 분노 :angry: 에 이르기 까지 많은 감정을 포스트에 싣게 해줍니다:sunglasses: . 그냥 : (콜론) 을 입력하거나 툴바에서 Emoji버튼을 누르면 수많은 Emoji를 선택할 수 있어요 :ok_hand:
     first_mention:
       name: 첫 멘션
       description: 처음으로 포스트에서 다른 사용자를 멘션했습니다

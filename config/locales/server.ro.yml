@@ -210,7 +210,6 @@ ro:
   groups:
     errors:
       can_not_modify_automatic: "Nu poți modifica un grup automat"
-      member_already_exist: "'%{username}' este deja membru al acestui grup"
       invalid_domain: "'%{domain}' nu este un domeniu valid."
       invalid_incoming_email: "'%{email}' nu este o adresa validă de email."
       email_already_used_in_group: "'%{email}' este deja folosit de grupul '%{group_name}'."
@@ -366,21 +365,6 @@ ro:
       title: "lider"
     change_failed_explanation: "Ai încercat să retrogradezi utilizatorul %{user_name} la nivelul '%{new_trust_level}'. Însă nivelul este deja '%{current_trust_level}'. %{user_name} va rămâne la '%{current_trust_level}' - dacă dorești să retrogradezi utilizatorul, trebuie să îi blochezi întâi nivelul de încredere."
   rate_limiter:
-    slow_down: "Ai executat această acțiune de prea multe ori. Încearcă mai târziu."
-    by_type:
-      first_day_replies_per_day: "Ai atins numărul maxim de răspunsuri pe care un nou utilizator le poate crea în prima sa zi. Te rugăm să aștepți %{time_left} înainte să încerci din nou."
-      first_day_topics_per_day: "Ai atins numărul maxim de subiecte pe care un nou utilizator poate să le creeze în prima sa zi. Te rugăm să aștepți %{time_left} înainte să încerci din nou."
-      create_topic: "Ai atins numărul maxim de subiecte. Te rugăm să aștepți %{time_left} înainte să încerci din nou."
-      create_post: "Răspunzi prea rapid. Te rugăm să aștepți %{time_left} înainte să încerci din nou."
-      delete_post: "ștergi postările prea rapid. Te rugăm să aștepți %{time_left} înainte să încerci din nou."
-      public_group_membership: "Ieși/intri din/în grupuri prea frecvent. Te rugăm așteaptă %{time_left} până să încerci din nou."
-      topics_per_day: "Ai atins numărul maxim de subiecte noi pe ziua de azi. Te rugăm să aștepți %{time_left} înainte să încerci din nou."
-      pms_per_day: "Ai atins numărul maxim de mesaje pe ziua de azi. Te rugăm să aștepți %{time_left} înainte să încerci din nou."
-      create_like: "Ai atins numărul maxim de aprecieri pe ziua de azi. Te rugăm să aștepți %{time_left} înainte să încerci din nou."
-      create_bookmark: "Ai atins numărul maxim de semne de carte pe ziua de azi. Te rugăm să aștepți %{time_left} înainte să încerci din nou."
-      live_post_counts: "Ceri prea rapid contorizarea live a numărului de postări. Te rugăm să aștepți %{time_left} înainte să încerci din nou."
-      unsubscribe_via_email: "Ai atins numărul maxim de dezabonări prin email pe ziua de azi. Te rugăm să aștepți %{time_left} înainte să încerci din nou."
-      topic_invitations_per_day: "Ai atins numărul maxim de invitații la subiecte pe ziua de azi. Te rugăm să aștepți %{time_left} înainte să încerci din nou."
     hours:
       one: "o oră"
       few: "%{count} ore"
@@ -1939,8 +1923,6 @@ ro:
     promoter:
       name: Promotor
       description: Ai invitat un utilizator
-      long_description: |
-        Acest ecuson se acordă când ai invitat pe cineva să se alăture comunității noastre prin intermediul butonului Invită din pagina ta de utilizator, sau de la sfârșitul unui subiect. Invitarea prietenilor care pot fi interesați în discuții specifice reprezintă o metodă minunată de a introduce oameni noi în comunitatea noastră, asa că mulțumim!
     campaigner:
       name: șef de campanie
       description: Ai invitat 3 utilizatori simpli
@@ -2036,8 +2018,6 @@ ro:
     first_emoji:
       name: Primul emoji
       description: Ai folosit un emoji într-o postare.
-      long_description: |
-        Acest ecuson se acordă prima data când adaugi un emoji la postarea ta :thumbsup:. Emoji permit transmiterea de emoții prin postări, de la fericire :smiley: la tristețe :anguished: la furie :angry: și întreaga planetă :sunglasses: . Apasă un : (două puncte) sau apasă pe butonul Emoji toolbar din editor pentru a alege dintre sute de opțiuni :ok_hand:
     first_mention:
       name: Prima mențiune
       long_description: Acest ecuson se acordă când, pentru prima oară, ai menționat @numele de utilizator al cuiva într-o postare de-a ta. Fiecare menționare generează o notificare către acea persoană, astfel încât ea să știe despre postarea ta. Începi prin a apăsa tasta @ (simbolul at) ca să menționezi orice utilizator sau, dacă îți este permis, grup. E o metodă convenabilă să atragi atenția cuiva.

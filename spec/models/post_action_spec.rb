@@ -382,7 +382,7 @@ describe PostAction do
       expect(post.spam_count).to eq(0)
     end
 
-    it "will not auto hide staff posts" do
+    it "will not allow regular users to auto hide staff posts" do
       mod = Fabricate(:moderator)
       post = Fabricate(:post, user: mod)
 
@@ -398,15 +398,36 @@ describe PostAction do
       expect(post.hidden_at).to be_blank
     end
 
-    it 'should follow the rules for automatic hiding workflow' do
-      post = create_post
-      walterwhite = Fabricate(:walter_white)
+    it "allows staff users to auto hide staff posts" do
+      mod = Fabricate(:moderator)
+      post = Fabricate(:post, user: mod)
 
       SiteSetting.flags_required_to_hide_post = 2
       Discourse.stubs(:site_contact_user).returns(admin)
 
       PostAction.act(eviltrout, post, PostActionType.types[:spam])
+      PostAction.act(Fabricate(:admin), post, PostActionType.types[:spam])
+
+      post.reload
+
+      expect(post.hidden).to eq(true)
+      expect(post.hidden_at).to be_present
+    end
+
+    it 'should follow the rules for automatic hiding workflow' do
+      post = create_post
+      walterwhite = Fabricate(:walter_white)
+
+      SiteSetting.queue_jobs = true
+      SiteSetting.flags_required_to_hide_post = 2
+      Discourse.stubs(:site_contact_user).returns(admin)
+
+      PostAction.act(eviltrout, post, PostActionType.types[:spam])
       PostAction.act(walterwhite, post, PostActionType.types[:spam])
+
+      job_args = Jobs::SendSystemMessage.jobs.last["args"].first
+      expect(job_args["user_id"]).to eq(post.user.id)
+      expect(job_args["message_type"]).to eq("post_hidden")
 
       post.reload
 
@@ -426,6 +447,10 @@ describe PostAction do
 
       PostAction.act(eviltrout, post, PostActionType.types[:spam])
       PostAction.act(walterwhite, post, PostActionType.types[:off_topic])
+
+      job_args = Jobs::SendSystemMessage.jobs.last["args"].first
+      expect(job_args["user_id"]).to eq(post.user.id)
+      expect(job_args["message_type"]).to eq("post_hidden_again")
 
       post.reload
 

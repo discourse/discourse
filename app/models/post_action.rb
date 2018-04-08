@@ -542,7 +542,8 @@ SQL
   end
 
   def self.auto_hide_if_needed(acting_user, post, post_action_type)
-    return if post.hidden || post.user.staff?
+    return if post.hidden?
+    return if (!acting_user.staff?) && post.user.staff?
 
     if post_action_type == :spam &&
        acting_user.has_trust_level?(TrustLevel[3]) &&
@@ -568,6 +569,8 @@ SQL
       reason = guess_hide_reason(post)
     end
 
+    hiding_again = post.hidden_at.present?
+
     post.hidden = true
     post.hidden_at = Time.zone.now
     post.hidden_reason_id = reason
@@ -583,7 +586,10 @@ SQL
         flag_reason: I18n.t("flag_reasons.#{post_action_type}"),
       }
 
-      Jobs.enqueue_in(5.seconds, :send_system_message, user_id: post.user.id, message_type: :post_hidden, message_options: options)
+      Jobs.enqueue_in(5.seconds, :send_system_message,
+                      user_id: post.user.id,
+                      message_type: hiding_again ? :post_hidden_again : :post_hidden,
+                      message_options: options)
     end
   end
 

@@ -48,11 +48,17 @@ class TopicCreator
     save_topic(topic)
     create_warning(topic)
     watch_topic(topic)
+    create_shared_draft(topic)
 
     topic
   end
 
   private
+
+  def create_shared_draft(topic)
+    return unless @opts[:shared_draft] && @opts[:category].present?
+    SharedDraft.create(topic_id: topic.id, category_id: @opts[:category])
+  end
 
   def create_warning(topic)
     return unless @opts[:is_warning]
@@ -137,6 +143,10 @@ class TopicCreator
   def find_category
     # PM can't have a category
     @opts.delete(:category) if @opts[:archetype].present? && @opts[:archetype] == Archetype.private_message
+
+    if @opts[:shared_draft]
+      return Category.find(SiteSetting.shared_drafts_category)
+    end
 
     # Temporary fix to allow older clients to create topics.
     # When all clients are updated the category variable should

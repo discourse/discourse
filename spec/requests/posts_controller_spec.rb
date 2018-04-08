@@ -38,7 +38,6 @@ RSpec.describe PostsController do
     end
 
     it 'can not create a post in a disallowed category' do
-
       category.set_permissions(staff: :full)
       category.save!
 
@@ -118,6 +117,59 @@ RSpec.describe PostsController do
       expect(new_post.user).to eq(user)
       expect(new_topic.private_message?).to eq(true)
       expect(new_topic.allowed_users).to contain_exactly(user, user_2, user_3)
+    end
+
+    describe 'shared draft' do
+      let(:destination_category) { Fabricate(:category) }
+
+      it "will raise an error for regular users" do
+        post "/posts.json", params: {
+          raw: 'this is the shared draft content',
+          title: "this is the shared draft title",
+          category: destination_category.id,
+          shared_draft: 'true'
+        }
+        expect(response).not_to be_success
+      end
+
+      describe "as a staff user" do
+        before do
+          sign_in(Fabricate(:moderator))
+        end
+
+        it "will raise an error if there is no shared draft category" do
+          post "/posts.json", params: {
+            raw: 'this is the shared draft content',
+            title: "this is the shared draft title",
+            category: destination_category.id,
+            shared_draft: 'true'
+          }
+          expect(response).not_to be_success
+        end
+
+        context "with a shared category" do
+          let(:shared_category) { Fabricate(:category) }
+          before do
+            SiteSetting.shared_drafts_category = shared_category.id
+          end
+
+          it "will work if the shared draft category is present" do
+            post "/posts.json", params: {
+              raw: 'this is the shared draft content',
+              title: "this is the shared draft title",
+              category: destination_category.id,
+              shared_draft: 'true'
+            }
+            expect(response).to be_success
+            result = JSON.parse(response.body)
+            topic = Topic.find(result['topic_id'])
+            expect(topic.category_id).to eq(shared_category.id)
+            expect(topic.shared_draft.category_id).to eq(destination_category.id)
+          end
+        end
+
+      end
+
     end
 
     describe 'warnings' do

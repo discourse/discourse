@@ -179,8 +179,8 @@ en:
     wizard_required: "Welcome to your new Discourse! Let’s get started with <a href='%{url}' data-auto-route='true'>the setup wizard</a> ✨"
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
 
-    bootstrap_mode_enabled: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email digest updates enabled. This will be automatically turned off when total user count exceeds %{min_users} users."
-    bootstrap_mode_disabled: "Bootstrap mode will be disabled in next 24 hours."
+    bootstrap_mode_enabled: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email digest updates enabled. This will be automatically turned off when %{min_users} users have joined."
+    bootstrap_mode_disabled: "Bootstrap mode will be disabled within 24 hours."
 
     themes:
       default_description: "Default"
@@ -286,18 +286,17 @@ en:
       confirm_clear: "Are you sure you want to clear all the bookmarks from this topic?"
 
     topic_count_latest:
-      one: "{{count}} new or updated topic."
-      other: "{{count}} new or updated topics."
+      one: "See {{count}} new or updated topic"
+      other: "See {{count}} new or updated topics"
 
     topic_count_unread:
-      one: "{{count}} unread topic."
-      other: "{{count}} unread topics."
+      one: "See {{count}} unread topic"
+      other: "See {{count}} unread topics"
 
     topic_count_new:
-      one: "{{count}} new topic."
-      other: "{{count}} new topics."
+      one: "See {{count}} new topic"
+      other: "See {{count}} new topics"
 
-    click_to_show: "Click to show."
     preview: "preview"
     cancel: "cancel"
 
@@ -314,6 +313,7 @@ en:
 
     enable: "Enable"
     disable: "Disable"
+    continue: "Continue"
     undo: "Undo"
     revert: "Revert"
     failed: "Failed"
@@ -403,21 +403,40 @@ en:
         remove_user_as_group_owner: "Revoke owner"
 
     groups:
-      logs:
-        title: "Logs"
-        when: "When"
-        action: "Action"
-        acting_user: "Acting user"
-        target_user: "Target user"
-        subject: "Subject"
-        details: "Details"
-        from: "From"
-        to: "To"
-      edit:
-        title: 'Edit Group'
+      new:
+        title: "New Group"
+        description: "Create a new group"
+        create: "Create"
+        name:
+          too_short: "Group name is too short"
+          too_long: "Group name is too long"
+          checking: "Checking group name availability..."
+          available: "Group name is available"
+          not_available: "Group name is not available"
+          blank: "Group name cannot be blank"
+      manage:
+        title: 'Manage'
+        name: 'Name'
         full_name: 'Full Name'
         add_members: "Add Members"
         delete_member_confirm: "Remove '%{username}' from the '%{group}' group?"
+        profile:
+          title: Profile
+        members:
+          title: "Members"
+          description: "Manage the membership of this group"
+          usernames: "Usernames"
+          as_owner: "Set user(s) as owner(s) of this group"
+        logs:
+          title: "Logs"
+          when: "When"
+          action: "Action"
+          acting_user: "Acting user"
+          target_user: "Target user"
+          subject: "Subject"
+          details: "Details"
+          from: "From"
+          to: "To"
       name_placeholder: "Group name, no spaces, same as username rule"
       public_admission: "Allow users to join the group freely (Requires publicly visible group)"
       public_exit: "Allow users to leave the group freely"
@@ -429,34 +448,58 @@ en:
         topics: "There are no topics by members of this group."
         logs: "There are no logs for this group."
       add: "Add"
-      join: "Join Group"
-      leave: "Leave Group"
-      request: "Request to Join Group"
+      join: "Join"
+      leave: "Leave"
+      request: "Request"
       message: "Message"
-      automatic_group: Automatic Group
-      closed_group: Closed Group
-      is_group_user: "You are a member of this group"
       allow_membership_requests: "Allow users to send membership requests to group owners"
       membership_request_template: "Custom template to display to users when sending a membership request"
       membership_request:
         submit: "Submit Request"
         title: "Request to join @%{group_name}"
         reason: "Let the group owners know why you belong in this group"
-
       membership: "Membership"
       name: "Name"
-      user_count: "Number of Members"
+      group_name: "Group name"
+      user_count: "Users"
       bio: "About Group"
       selector_placeholder: "enter username"
       owner: "owner"
       index:
         title: "Groups"
+        all: "All Groups"
         empty: "There are no visible groups."
+        filter: "Filter by group type"
+        all_groups: "All Groups"
+        owner_groups: "Groups I am an owner of"
+        close_groups: "Closed Groups"
+        automatic_groups: "Automatic Groups"
+        automatic: "Automatic"
+        closed: "Closed"
+        public: "Public"
+        private: "Private"
+        public_groups: "Public Groups"
+        automatic_group: Automatic Group
+        close_group: Close Group
+        my_groups: "My Groups"
+        group_type: "Group type"
+        is_group_user: "Member"
+        is_group_owner: "Owner"
       title:
         one: "Group"
         other: "Groups"
       activity: "Activity"
-      members: "Members"
+      members:
+        title: "Members"
+        filter_placeholder_admin: "username or email"
+        filter_placeholder: "username"
+        remove_member: "Remove Member"
+        remove_member_description: "Remove <b>%{username}</b> from this group"
+        make_owner: "Make Owner"
+        make_owner_description: "Make <b>%{username}</b> an owner of this group"
+        remove_owner: "Remove as Owner"
+        remove_owner_description: "Remove <b>%{username}</b> as an owner of this group"
+        owner: "Owner"
       topics: "Topics"
       posts: "Posts"
       mentions: "Mentions"
@@ -582,6 +625,7 @@ en:
       activity_stream: "Activity"
       preferences: "Preferences"
       expand_profile: "Expand"
+      collapse_profile: "Collapse"
       bookmarks: "Bookmarks"
       bio: "About me"
       invited_by: "Invited By"
@@ -711,25 +755,17 @@ en:
 
       second_factor:
         title: "Two Factor Authentication"
-        disable: "Disable Two Factor Authentication"
-        enabled_status: "Status: On"
-        disabled_status: "Status: Off"
-        confirm_password_description: "Confirm your password to continue enabling Two Factor Authentication"
+        disable: "Disable two factor authentication"
+        enable: "for enhanced account security"
+        confirm_password_description: "Please confirm your password to continue"
+        label: "Code"
         enable_description: |
-          To complete Two Factor Authentication setup, scan the following QR code
-          in one of the supported apps
-          (<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Android and iOS</a>,
-          <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>)
-          and submit the generated Two Factor Authentication code.
-        disable_description: "Enter the authentication code from your app"
-        show_key_description: "Or enter the secret key manually."
-        info_prompt: "What is Two Factor Authentication?"
+          Scan this QR code in a supported app (<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">Android</a> – <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8" target="_blank">iOS</a> – <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>) and enter your authentication code.
+        disable_description: "Please enter the authentication code from your app"
+        show_key_description: "Enter manually"
         extended_description: |
-          Two Factor Authentication adds an extra security step to logging in by
-          requiring a one-time token in addition to your password. These tokens
-          can be generated on Android and iOS by <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Google Authenticator</a>
-          and on Windows Phone by <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Authenticator</a>.
-        oauth_enabled_warning: "Note that logins via social methods will be disabled once Two Factor Authentication has been enabled on your account."
+          Two factor authentication adds extra security to your account by requiring a one-time token in addition to your password. Tokens can be generated on <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Android</a>, <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a>, and <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a> devices.
+        oauth_enabled_warning: "Please note that social logins will be disabled once two factor authentication has been enabled on your account."
 
       change_about:
         title: "Change About Me"
@@ -978,6 +1014,7 @@ en:
         header_title: "profile, messages, bookmarks and preferences"
       title:
         title: "Title"
+        none: "(none)"
 
       filters:
         all: "All"
@@ -1109,12 +1146,12 @@ en:
       button_help: "Help"
 
     email_login:
-      link_label: "Email me a magic link"
+      link_label: "Email me a login link"
       button_label: "with email"
-      complete_username: "If an account matches the username <b>%{username}</b>, you should receive an email with a magic login link shortly."
-      complete_email: "If an account matches <b>%{email}</b>, you should receive an email with a magic login link shortly."
-      complete_username_found: "We found an account that matches the username <b>%{username}</b>, you should receive an email with a magic login link shortly."
-      complete_email_found: "We found an account that matches <b>%{email}</b>, you should receive an email with a magic login link shortly."
+      complete_username: "If an account matches the username <b>%{username}</b>, you should receive an email with a login link shortly."
+      complete_email: "If an account matches <b>%{email}</b>, you should receive an email with a login link shortly."
+      complete_username_found: "We found an account that matches the username <b>%{username}</b>, you should receive an email with a login link shortly."
+      complete_email_found: "We found an account that matches <b>%{email}</b>, you should receive an email with a login link shortly."
       complete_username_not_found: "No account matches the username <b>%{username}</b>"
       complete_email_not_found: "No account matches <b>%{email}</b>"
 
@@ -1122,9 +1159,8 @@ en:
       title: "Log In"
       username: "User"
       password: "Password"
-      second_factor_title: "Two Factor Authentication Required"
-      second_factor_description: "Enter the authentication code from your app."
-      second_factor_label: "Code"
+      second_factor_title: "Two Factor Authentication"
+      second_factor_description: "Please enter the authentication code from your app:"
       email_placeholder: "email or username"
       caps_lock_warning: "Caps Lock is on"
       error: "Unknown error"
@@ -1142,7 +1178,7 @@ en:
       not_allowed_from_ip_address: "You can't login from that IP address."
       admin_not_allowed_from_ip_address: "You can't log in as admin from that IP address."
       resend_activation_email: "Click here to send the activation email again."
-      omniauth_disallow_totp: "Your account has 2FA enabled. Please login with your password."
+      omniauth_disallow_totp: "Your account has two factor authentication enabled. Please log in with your password."
 
       resend_title: "Resend Activation Email"
       change_email: "Change Email Address"
@@ -1215,7 +1251,8 @@ en:
       no_content: No matches found
       filter_placeholder: Search...
       create: "Create: '{{content}}'"
-      max_content_reached: "You can only select {{count}} items."
+      max_content_reached: "You can only select {{count}} item(s)."
+      min_content_not_reached: "Select at least {{count}} item(s)."
 
     emoji_picker:
       filter_placeholder: Search for emoji
@@ -1234,6 +1271,14 @@ en:
       medium_tone: Medium skin tone
       medium_dark_tone: Medium dark skin tone
       dark_tone: Dark skin tone
+
+    shared_drafts:
+      title: "Shared Drafts"
+      notice: "This topic is only visible to those who can see the <b>{{category}}</b> category."
+      destination_category: "Destination Category"
+      publish: "Publish Shared Draft"
+      confirm_publish: "Are you sure you want to publish this draft?"
+      publishing: "Publishing Topic..."
 
     composer:
       emoji: "Emoji :)"
@@ -1279,6 +1324,8 @@ en:
       create_topic: "Create Topic"
       create_pm: "Message"
       create_whisper: "Whisper"
+      create_shared_draft: "Create Shared Draft"
+      edit_shared_draft: "Edit Shared Draft"
       title: "Or press Ctrl+Enter"
 
       users_placeholder: "Add a user"
@@ -1351,6 +1398,9 @@ en:
           desc: Whispers are only visible to staff members
         create_topic:
           label: "New Topic"
+        shared_draft:
+          label: "Shared Draft"
+          desc: "Draft a topic that will only be visible to staff"
 
     notifications:
       tooltip:
@@ -1389,23 +1439,6 @@ en:
       group_message_summary:
           one: "{{count}} message in your {{group_name}} inbox"
           other: "{{count}} messages in your {{group_name}} inbox"
-
-      alt:
-        mentioned: "Mentioned by"
-        quoted: "Quoted by"
-        replied: "Replied"
-        posted: "Post by"
-        edited: "Edit your post by"
-        liked: "Liked your post"
-        private_message: "Personal message from"
-        invited_to_private_message: "Invited to a personal message from"
-        invited_to_topic: "Invited to a topic from"
-        invitee_accepted: "Invite accepted by"
-        moved_post: "Your post was moved by"
-        linked: "Link to your post"
-        granted_badge: "Badge granted"
-        group_message_summary: "Messages in group inbox"
-        topic_reminder: "A reminder"
 
       popup:
         mentioned: '{{username}} mentioned you in "{{topic}}" - {{site_title}}'
@@ -2610,19 +2643,19 @@ en:
       notifications:
         watching:
           title: "Watching"
-          description: "You will automatically watch all topics in this tag. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic."
+          description: "You will automatically watch all topics with this tag. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic."
         watching_first_post:
           title: "Watching First Post"
-          description: "You will only be notified of the first post in each new topic in this tag."
+          description: "You will only be notified of the first post in each new topic with this tag."
         tracking:
           title: "Tracking"
-          description: "You will automatically track all topics in this tag. A count of unread and new posts will appear next to the topic."
+          description: "You will automatically track all topics with this tag. A count of unread and new posts will appear next to the topic."
         regular:
           title: "Regular"
           description: "You will be notified if someone mentions your @name or replies to your post."
         muted:
           title: "Muted"
-          description: "You will not be notified of anything about new topics in this tag, and they will not appear on your unread tab."
+          description: "You will not be notified of anything about new topics with this tag, and they will not appear on your unread tab."
 
       groups:
         title: "Tag Groups"
@@ -2637,6 +2670,7 @@ en:
         save: "Save"
         delete: "Delete"
         confirm_delete: "Are you sure you want to delete this tag group?"
+        visible_only_to_staff: "Tags are visible only to staff"
 
       topics:
         none:
@@ -2772,6 +2806,9 @@ en:
         more: "(more replies...)"
         suspend_user: "Suspend User"
         suspend_user_title: "Suspend user for this post"
+        replies:
+          one: "[1 reply]"
+          other: "[%{count} replies]"
 
         dispositions:
           agreed: "agreed"
@@ -2895,6 +2932,15 @@ en:
         user_event:
           name: "User Event"
           details: "When a user logs in, logs out, is created, approved or updated."
+        group_event:
+          name: "Group Event"
+          details: "When a group is created, updated or destroyed."
+        category_event:
+          name: "Category Event"
+          details: "When a category is created, updated or destroyed."
+        tag_event:
+          name: "Tag Event"
+          details: "When a tag is created, updated or destroyed."
         delivery_status:
           title: "Delivery Status"
           inactive: "Inactive"
@@ -2936,6 +2982,7 @@ en:
         change_settings: "Change Settings"
         change_settings_short: "Settings"
         howto: "How do I install plugins?"
+        official: "Offical Plugin"
 
       backups:
         title: "Backups"
@@ -3059,7 +3106,7 @@ en:
           add_upload: "Add Upload"
           upload_file_tip: "Choose an asset to upload (png, woff2, etc...)"
           variable_name: "SCSS var name:"
-          variable_name_invalid: "Invalid variable name. Only alphanumeric allowed. Must start with a letter."
+          variable_name_invalid: "Invalid variable name. Only alphanumeric allowed. Must start with a letter. Must be unique."
           upload: "Upload"
           child_themes_check: "Theme includes other child themes"
           css_html: "Custom CSS/HTML"
@@ -3275,6 +3322,7 @@ en:
             revoke_badge: "revoke badge"
             check_email: "check email"
             delete_topic: "delete topic"
+            recover_topic: "un-delete topic"
             delete_post: "delete post"
             impersonate: "impersonate"
             anonymize_user: "anonymize user"
@@ -3306,6 +3354,7 @@ en:
             post_unlocked: "post unlocked"
             check_personal_message: "check personal message"
             disabled_second_factor: "disable Two Factor Authentication"
+            topic_published: "topic published"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."

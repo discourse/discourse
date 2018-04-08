@@ -1392,6 +1392,18 @@ describe Topic do
       expect(topic.topic_timers.first.errors[:execute_at]).to be_present
     end
 
+    it "sets a validation error when give a timestamp of an invalid format" do
+      freeze_time now
+
+      expect do
+        topic.set_or_create_timer(
+          TopicTimer.types[:close],
+          '۲۰۱۸-۰۳-۲۶ ۱۸:۰۰+۰۸:۰۰',
+          by_user: admin
+        )
+      end.to raise_error(Discourse::InvalidParameters)
+    end
+
     it "can take a timestamp with timezone" do
       freeze_time now
       topic.set_or_create_timer(TopicTimer.types[:close], '2013-11-25T01:35:00-08:00', by_user: admin)
@@ -1963,12 +1975,21 @@ describe Topic do
     expect(topic.message_archived?(user)).to eq(false)
 
     group = Fabricate(:group)
+    group2 = Fabricate(:group)
+
     group.add(user)
 
     TopicAllowedGroup.create!(topic_id: topic.id, group_id: group.id)
+    TopicAllowedGroup.create!(topic_id: topic.id, group_id: group2.id)
     GroupArchivedMessage.create!(topic_id: topic.id, group_id: group.id)
 
     expect(topic.message_archived?(user)).to eq(true)
+
+    # here is a pickle, we add another group, make the user a
+    # member of that new group... now this message is not properly archived
+    # for the user any more
+    group2.add(user)
+    expect(topic.message_archived?(user)).to eq(false)
   end
 
   it 'will trigger :topic_status_updated' do

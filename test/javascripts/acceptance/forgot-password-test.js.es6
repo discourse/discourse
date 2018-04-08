@@ -25,14 +25,14 @@ QUnit.test("requesting password reset", assert => {
 
   andThen(() => {
     assert.equal(
-      find('button[title="Reset Password"]').attr("disabled"),
+      find('.forgot-password-reset').attr("disabled"),
       "disabled",
       'it should disable the button until the field is filled'
     );
   });
 
   fillIn("#username-or-email", 'someuser');
-  click('button[title="Reset Password"]');
+  click('.forgot-password-reset');
 
   andThen(() => {
     assert.equal(
@@ -43,7 +43,7 @@ QUnit.test("requesting password reset", assert => {
   });
 
   fillIn("#username-or-email", 'someuser@gmail.com');
-  click('button[title="Reset Password"]');
+  click('.forgot-password-reset');
 
   andThen(() => {
     assert.equal(
@@ -59,7 +59,7 @@ QUnit.test("requesting password reset", assert => {
     userFound = true;
   });
 
-  click('button[title="Reset Password"]');
+  click('.forgot-password-reset');
 
   andThen(() => {
     assert.notOk(exists(find(".alert-error")), 'it should remove the flash error when succeeding');
@@ -75,7 +75,7 @@ QUnit.test("requesting password reset", assert => {
   click("header .login-button");
   click('#forgot-password-link');
   fillIn("#username-or-email", 'someuser@gmail.com');
-  click('button[title="Reset Password"]');
+  click('.forgot-password-reset');
 
   andThen(() => {
     assert.equal(

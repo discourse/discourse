@@ -109,7 +109,6 @@ bs_BA:
       email: 'pošalji ovaj link na email'
     action_codes:
       public_topic: "postavio ovu temu kao javno %{when}"
-      private_topic: "postavio ovu temu kao privatno %{when}"
       split_topic: "podjeli ovu temu %{when}"
       invited_user: "pozvan %{who} %{when}"
       invited_group: "pozvan %{who} %{when}"
@@ -135,8 +134,6 @@ bs_BA:
         disabled: 'sklonjen %{when}'
     topic_admin_menu: "topic admin actions"
     emails_are_disabled: "Sve odlazeće email poruke su globalno onemogućene od strane administratora. Niti jedna notifikacija bilo kakve vrste neće biti poslana."
-    bootstrap_mode_enabled: "Kako bi lakše lansirali svoj novi sajt, trenutno ste u bootstrap modu. Svi novi korisnici će dobiti razinu povjerenja 1 i imati uključen sistematizovani dnevni e-mail pregleda promjena. Naknadno će biti automatski isključeno nakon što ukupan broj korisnika pređe brojku od %{min_users}."
-    bootstrap_mode_disabled: "Bootstrap mod će biti ugašen u sljedećih 24 sata."
     s3:
       regions:
         ap_northeast_1: "Azija Pacifik (Tokio)"
@@ -230,19 +227,6 @@ bs_BA:
       last_read: "this is the last post you've read; click to bookmark it"
       remove: "Remove Bookmark"
       confirm_clear: "Jeste li sigurni da želite očistiti sve bookmarke iz ove kategorije?"
-    topic_count_latest:
-      one: "{{count}} nova ili tema sa editovanim postom."
-      few: "{{count}} novih ili tema sa editovanim postovima."
-      other: "{{count}} novih ili tema sa editovanim postovima."
-    topic_count_unread:
-      one: "{{count}} nepročitana tema."
-      few: "{{count}} nepročitanih tema."
-      other: "{{count}} nepročitanih tema."
-    topic_count_new:
-      one: "{{count}} nova tema."
-      few: "{{count}} novih tema."
-      other: "{{count}} novih tema."
-    click_to_show: "Klikni da pokažeš."
     preview: "pregledaj"
     cancel: "otkaži"
     save: "Sačuvaj Promjene"
@@ -334,21 +318,6 @@ bs_BA:
         make_user_group_owner: "Napravi vlasnika"
         remove_user_as_group_owner: "Ukloni vlasnika"
     groups:
-      logs:
-        title: "Logovi"
-        when: "Kad"
-        action: "Akcija"
-        acting_user: "Trenutni korisnik"
-        target_user: "Ciljani korisnik"
-        subject: "Subjekt"
-        details: "Detalji"
-        from: "Od"
-        to: "Za"
-      edit:
-        title: 'Preimenuj Grupu'
-        full_name: 'Puno ime'
-        add_members: "Dodaj Članove"
-        delete_member_confirm: "Ukloni '%{username}' iz '%{group}' grupe?"
       name_placeholder: "Ime grupe, bez razmaka, ista pravila kao za korisničko ime"
       empty:
         posts: "Ne postoje postovi člana ove grupe."
@@ -358,22 +327,14 @@ bs_BA:
         topics: "Nema novih tema od strane članova ove grupe."
         logs: "Nema novih logova za ovu grupu."
       add: "Dodaj"
-      join: "Pridruži se grupi"
-      leave: "Napusti grupu"
-      request: "Zahtjevaj pristup grupi"
-      automatic_group: Automatska grupa
-      closed_group: Zatvorena grupa
-      is_group_user: "Vi ste član ove grupe"
       membership: "Članstvo"
       name: "Ime"
-      user_count: "Broj članova"
       bio: "O grupi"
       owner: "vlasnik"
       index:
         title: "Grupe"
         empty: "Vidljive grupe još ne postoje."
       activity: "Aktivnost"
-      members: "Članovi"
       topics: "Teme"
       posts: "Postovi"
       mentions: "Spomenuto"
@@ -1015,19 +976,6 @@ bs_BA:
       empty: "Nema obavještenja."
       more: "pogledaj starija obaviještenja"
       total_flagged: "ukupno opomenutih postova"
-      alt:
-        mentioned: "Spomenut od"
-        quoted: "Citiran od"
-        replied: "Odgovoreno"
-        posted: "Post od"
-        edited: "Editujte vaš post"
-        liked: "Vole vaš post"
-        invited_to_topic: "Pozvani na temu od"
-        invitee_accepted: "Pozivnica prihvaćena od"
-        moved_post: "Vaša objava je premještena od strane "
-        linked: "Link ka vašoj objavi"
-        granted_badge: "Bedž odobren"
-        group_message_summary: "Poruke u grupnom sandučetu"
       popup:
         mentioned: '{{username}} vas je spomenuo/la u "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} vas je spomenuo/la u "{{topic}}" - {{site_title}}'

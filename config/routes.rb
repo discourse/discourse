@@ -292,7 +292,10 @@ Discourse::Application.routes.draw do
   get "extra-locales/:bundle" => "extra_locales#show"
 
   resources :session, id: RouteFormat.username, only: [:create, :destroy, :become] do
-    get 'become'
+    if !Rails.env.production?
+      get 'become'
+    end
+
     collection do
       post "forgot_password"
     end
@@ -455,21 +458,32 @@ Discourse::Application.routes.draw do
 
     get 'members'
     get 'posts'
-    get 'topics'
     get 'mentions'
-    get 'messages'
     get 'counts'
     get 'mentionable'
     get 'messageable'
     get 'logs' => 'groups#histories'
 
     collection do
+      get 'custom/new' => 'groups#new', constraints: AdminConstraint.new
       get "search" => "groups#search"
     end
 
     member do
-      get 'activity' => "groups#show"
-      get 'activity/:filter' => "groups#show"
+      %w{
+        activity
+        activity/:filter
+        messages
+        messages/inbox
+        messages/archive
+        manage
+        manage/profile
+        manage/members
+        manage/logs
+      }.each do |path|
+        get path => 'groups#show'
+      end
+
       put "members" => "groups#add_members"
       delete "members" => "groups#remove_member"
       post "request_membership" => "groups#request_membership"
@@ -592,6 +606,8 @@ Discourse::Application.routes.draw do
   put "t/:id/archive-message" => "topics#archive_message"
   put "t/:id/move-to-inbox" => "topics#move_to_inbox"
   put "t/:id/convert-topic/:type" => "topics#convert_topic"
+  put "t/:id/publish" => "topics#publish"
+  put "t/:id/shared-draft" => "topics#update_shared_draft"
   put "topics/bulk"
   put "topics/reset-new" => 'topics#reset_new'
   post "topics/timings"
@@ -608,6 +624,7 @@ Discourse::Application.routes.draw do
     get "private-messages-archive/:username" => "list#private_messages_archive", as: "topics_private_messages_archive"
     get "private-messages-unread/:username" => "list#private_messages_unread", as: "topics_private_messages_unread"
     get "private-messages-tags/:username/:tag_id.json" => "list#private_messages_tag", as: "topics_private_messages_tag", constraints: StaffConstraint.new
+    get "groups/:group_name.json" => "list#group_topics", as: "group_topics"
 
     scope "/private-messages-group/:username", group_name: RouteFormat.username do
       get ":group_name.json" => "list#private_messages_group", as: "topics_private_messages_group"
@@ -732,7 +749,7 @@ Discourse::Application.routes.draw do
     get '/filter/list' => 'tags#index'
     get '/filter/search' => 'tags#search'
     get '/check' => 'tags#check_hashtag'
-    get '/personal_messages' => 'tags#personal_messages'
+    get '/personal_messages/:username' => 'tags#personal_messages'
     constraints(tag_id: /[^\/]+?/, format: /json|rss/) do
       get '/:tag_id.rss' => 'tags#tag_feed'
       get '/:tag_id' => 'tags#show', as: 'tag_show'

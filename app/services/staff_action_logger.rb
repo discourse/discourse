@@ -59,24 +59,24 @@ class StaffActionLogger
                                           details: details.join("\n")))
   end
 
-  def log_topic_deletion(deleted_topic, opts = {})
-    raise Discourse::InvalidParameters.new(:deleted_topic) unless deleted_topic && deleted_topic.is_a?(Topic)
+  def log_topic_delete_recover(topic, action = "delete_topic", opts = {})
+    raise Discourse::InvalidParameters.new(:topic) unless topic && topic.is_a?(Topic)
 
-    user = deleted_topic.user ? "#{deleted_topic.user.username} (#{deleted_topic.user.name})" : "(deleted user)"
+    user = topic.user ? "#{topic.user.username} (#{topic.user.name})" : "(deleted user)"
 
     details = [
-      "id: #{deleted_topic.id}",
-      "created_at: #{deleted_topic.created_at}",
+      "id: #{topic.id}",
+      "created_at: #{topic.created_at}",
       "user: #{user}",
-      "title: #{deleted_topic.title}"
+      "title: #{topic.title}"
     ]
 
-    if first_post = deleted_topic.ordered_posts.first
+    if first_post = topic.ordered_posts.with_deleted.first
       details << "raw: #{first_post.raw}"
     end
 
-    UserHistory.create(params(opts).merge(action: UserHistory.actions[:delete_topic],
-                                          topic_id: deleted_topic.id,
+    UserHistory.create(params(opts).merge(action: UserHistory.actions[action.to_sym],
+                                          topic_id: topic.id,
                                           details: details.join("\n")))
   end
 
@@ -95,6 +95,14 @@ class StaffActionLogger
                                            target_user_id: user.id))
   end
 
+  def log_topic_published(topic, opts = {})
+    raise Discourse::InvalidParameters.new(:topic) unless topic && topic.is_a?(Topic)
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:topic_published],
+      topic_id: topic.id)
+    )
+  end
+
   def log_post_lock(post, opts = {})
     raise Discourse::InvalidParameters.new(:post) unless post && post.is_a?(Post)
     UserHistory.create!(params(opts).merge(
@@ -108,7 +116,7 @@ class StaffActionLogger
     UserHistory.create!(params(opts).merge(
       action: UserHistory.actions[:post_edit],
       post_id: post.id,
-      details: "#{post.raw}\n\n---\n\n#{opts[:new_raw]}"
+      details: "#{opts[:old_raw]}\n\n---\n\n#{post.raw}"
     ))
   end
 

@@ -315,7 +315,7 @@ class ApplicationController < ActionController::Base
     resolve_safe_mode
     return if request.env[NO_CUSTOM]
 
-    theme_key = flash[:preview_theme_key]
+    theme_key = request[:preview_theme_key]
 
     user_option = current_user&.user_option
 
@@ -641,10 +641,12 @@ class ApplicationController < ActionController::Base
           # save original URL in a session so we can redirect after login
           session[:destination_url] = destination_url
           redirect_to path('/session/sso')
+        elsif params[:authComplete].present?
+          redirect_to path("/login?authComplete=true")
         else
           # save original URL in a cookie (javascript redirects after login in this case)
           cookies[:destination_url] = destination_url
-          redirect_to "/login"
+          redirect_to path("/login")
         end
       end
     end

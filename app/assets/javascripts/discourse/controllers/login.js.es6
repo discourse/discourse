@@ -105,6 +105,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
             $("#credentials").hide();
             $("#second-factor").show();
+            $("#second-factor input").focus();
+
             return;
           } else if (result.reason === 'not_activated') {
             self.send('showNotActivated', {
@@ -236,10 +238,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
         const loginName = escapeExpression(this.get('loginName'));
         const isEmail = loginName.match(/@/);
         let key = `email_login.complete_${isEmail ? 'email' : 'username'}`;
-        if (data.user_found) {
-          this.flash(I18n.t(`${key}_found`, { email: loginName, username: loginName }));
-        } else {
+        if (data.user_found === false) {
           this.flash(I18n.t(`${key}_not_found`, { email: loginName, username: loginName }), 'error');
+        } else {
+          this.flash(I18n.t(`${key}_found`, { email: loginName, username: loginName }));
         }
       }).catch(e => {
         this.flash(extractError(e), 'error');

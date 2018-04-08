@@ -7,7 +7,6 @@
     {{#if topicTrackingState.hasIncoming}}
       <div class='alert alert-info clickable' {{action "showInserted"}}>
         {{count-i18n key="topic_count_" suffix=topicTrackingState.filter count=topicTrackingState.incomingCount}}
-        {{i18n 'click_to_show'}}
       </div>
     {{/if}}
   {{/if}}

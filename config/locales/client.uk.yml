@@ -153,19 +153,6 @@ uk:
       last_read: "це останній допис, що ви прочитали; натисніть, щоб додати його до закладок"
       remove: "Видалити закладку"
       confirm_clear: "Ви впевнені, що хочете видалити всі закладки з цієї теми?"
-    topic_count_latest:
-      one: "{{count}} нова чи оновлена тема."
-      few: "нових чи оновлених тем: {{count}}."
-      other: "непрочитаних тем: {{count}}."
-    topic_count_unread:
-      one: "{{count}} непрочитана тема."
-      few: "непрочитаних тем: {{count}}."
-      other: "непрочитаних тем: {{count}}."
-    topic_count_new:
-      one: "{{count}} нова тема."
-      few: "нових тем {{count}}."
-      other: "нових тем: {{count}}."
-    click_to_show: "Натисніть, щоб подивитися."
     preview: "попередній перегляд"
     cancel: "скасувати"
     save: "Зберегти зміни"
@@ -238,19 +225,7 @@ uk:
         add_user_to_group: "Добавити користувача"
         remove_user_from_group: "Видалити користувача"
     groups:
-      logs:
-        subject: "Тема"
-        details: "Деталі"
-        from: "Від"
-        to: "До"
-      edit:
-        title: 'Редагувати Групу'
-        full_name: 'Повне Ім''я'
-        add_members: "Добавити учасників"
-        delete_member_confirm: "Видалити '%{username}' з групи '%{group}'?"
       add: "Додати"
-      closed_group: Закрита Група
-      members: "Учасники"
       topics: "Теми"
       posts: "Дописи"
       mentions: "Згадки"
@@ -673,8 +648,6 @@ uk:
     notifications:
       more: "переглянути старіші сповіщення"
       total_flagged: "всього дописів, на які поскаржилися"
-      alt:
-        posted: "Опубліковано"
     upload_selector:
       title: "Додати зображення"
       title_with_attachments: "Додати зображення або файл"

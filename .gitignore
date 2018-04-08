@@ -19,8 +19,6 @@ public/tombstone/*
 
 # Ignore bundler config
 /.bundle
-/.vagrant
-/.vagrantfile
 /cache
 /coverage/*
 
@@ -94,9 +92,6 @@ config/fog_credentials.yml
 # Scripts used for downloading/refreshing db
 script/download_db
 script/refresh_db
-
-# temp directory for chef (used to configure vagrant VM)
-chef/tmp/*
 
 # .procfile
 .procfile

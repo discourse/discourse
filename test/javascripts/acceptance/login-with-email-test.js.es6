@@ -17,7 +17,7 @@ acceptance("Login with email", {
     };
 
     server.post('/u/email-login', () => { // eslint-disable-line no-undef
-      return response({ "user_found": userFound });
+      return response({ "success": "OK", "user_found": userFound });
     });
   }
 });
@@ -112,6 +112,42 @@ QUnit.test("logging in via email (button)", assert => {
       find(".alert-success").html().trim(),
       I18n.t('email_login.complete_username_found', { username: 'someuser' }),
       'it should display a success message for a valid username'
+    );
+  });
+});
+
+acceptance("Login with email", {
+  settings: {
+    enable_local_logins_via_email: true,
+    enable_facebook_logins: true,
+    hide_email_address_taken: true
+  },
+  beforeEach() {
+    const response = object => {
+      return [
+        200,
+        { "Content-Type": "application/json" },
+        object
+      ];
+    };
+
+    server.post('/u/email-login', () => { // eslint-disable-line no-undef
+      return response({ "success": "OK" });
+    });
+  }
+});
+
+QUnit.test("login via email with hide_email_address_taken enabled", assert => {
+  visit("/");
+  click("header .login-button");
+  fillIn("#login-account-name", 'someuser@example.com');
+  click('.login-with-email-button');
+
+  andThen(() => {
+    assert.equal(
+      find(".alert-success").html().trim(),
+      I18n.t('email_login.complete_email_found', { email: 'someuser@example.com' }),
+      'it should display the success message for any email address'
     );
   });
 });

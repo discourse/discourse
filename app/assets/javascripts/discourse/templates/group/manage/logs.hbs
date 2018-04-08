@@ -1,0 +1,33 @@
+{{#if model.logs}}
+  <div class="group-manage-logs-controls">
+    {{group-manage-logs-filter clearFilter="clearFilter" value=filters.action type="action"}}
+    {{group-manage-logs-filter clearFilter="clearFilter" value=filters.acting_user type="acting_user"}}
+    {{group-manage-logs-filter clearFilter="clearFilter" value=filters.target_user type="target_user"}}
+    {{group-manage-logs-filter clearFilter="clearFilter" value=filters.subject type="subject"}}
+  </div>
+
+  {{#load-more selector=".group-manage-logs .group-manage-logs-row" action="loadMore"}}
+    <table class="group-manage-logs">
+      <thead>
+        <th>{{i18n 'groups.manage.logs.action'}}</th>
+        <th>{{i18n 'groups.manage.logs.acting_user'}}</th>
+        <th>{{i18n 'groups.manage.logs.target_user'}}</th>
+        <th>{{i18n 'groups.manage.logs.subject'}}</th>
+        <th>{{i18n 'groups.manage.logs.when'}}</th>
+        <th></th>
+      </thead>
+
+      <tbody>
+        {{#each model.logs as |log|}}
+          {{group-manage-logs-row
+              log=log
+              filters=filters}}
+        {{/each}}
+      </tbody>
+    </table>
+  {{/load-more}}
+
+  {{conditional-loading-spinner condition=loading}}
+{{else}}
+  <div>{{i18n "groups.empty.logs"}}</div>
+{{/if}}

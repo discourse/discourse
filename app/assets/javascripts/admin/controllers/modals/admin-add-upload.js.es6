@@ -3,6 +3,8 @@ import { ajax } from 'discourse/lib/ajax';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 
+const THEME_FIELD_VARIABLE_TYPE_IDS = [2, 3, 4];
+
 export default Ember.Controller.extend(ModalFunctionality, {
   adminCustomizeThemesShow: Ember.inject.controller(),
 
@@ -14,9 +16,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
   enabled: Em.computed.and('nameValid', 'fileSelected'),
   disabled: Em.computed.not('enabled'),
 
-  @computed('name')
-  nameValid(name) {
-    return name && name.match(/^[a-z_][a-z0-9_-]*$/i);
+  @computed('name', 'adminCustomizeThemesShow.model.theme_fields')
+  nameValid(name, themeFields) {
+    return name &&
+           name.match(/^[a-z_][a-z0-9_-]*$/i) &&
+           !themeFields.some(tf => THEME_FIELD_VARIABLE_TYPE_IDS.includes(tf.type_id) && name === tf.name);
   },
 
   @observes('name')

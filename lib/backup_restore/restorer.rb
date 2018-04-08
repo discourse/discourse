@@ -8,6 +8,22 @@ module BackupRestore
   class Restorer
     attr_reader :success
 
+    def self.pg_produces_portable_dump?(version)
+      version = Gem::Version.new(version)
+
+      %w{
+        10.3
+        9.6.8
+        9.5.12
+        9.4.17
+        9.3.22
+      }.each do |unportable_version|
+        return false if Gem::Dependency.new("", "~> #{unportable_version}").match?("", version)
+      end
+
+      true
+    end
+
     def initialize(user_id, opts = {})
       @user_id = user_id
       @client_id = opts[:client_id]
@@ -41,12 +57,14 @@ module BackupRestore
       extract_dump
 
       if !can_restore_into_different_schema?
+        log "Cannot restore into different schema, restoring in-place"
         enable_readonly_mode
 
         pause_sidekiq
         wait_for_sidekiq
 
         BackupRestore.move_tables_between_schemas("public", "backup")
+        @db_was_changed = true
         restore_dump
         migrate_database
         reconnect_database
@@ -56,6 +74,7 @@ module BackupRestore
 
         disable_readonly_mode
       else
+        log "Restoring into 'backup' schema"
         restore_dump
         enable_readonly_mode
 
@@ -193,10 +212,9 @@ module BackupRestore
     end
 
     def extract_metadata
-      log "Extracting metadata file..."
-
       @metadata =
         if system('tar', '--list', '--file', @tar_filename, BackupRestore::METADATA_FILE)
+          log "Extracting metadata file..."
           FileUtils.cd(@tmp_directory) do
             Discourse::Utils.execute_command(
               'tar', '--extract', '--file', @tar_filename, BackupRestore::METADATA_FILE,
@@ -208,6 +226,7 @@ module BackupRestore
           raise "Failed to load metadata file." if !data
           data
         else
+          log "No metadata file to extract."
           if @filename =~ /-#{BackupRestore::VERSION_PREFIX}(\d{14})/
             { "version" => Regexp.last_match[1].to_i }
           else
@@ -260,24 +279,11 @@ module BackupRestore
         failure_message: "Failed to check version of pg_dump used to generate the dump file"
       )
 
-      output.match(/version (\d+(\.\d+)?)/)[1]
+      output.match(/version (\d+(\.\d+)+)/)[1]
     end
 
     def can_restore_into_different_schema?
-      dumped_by_version = Gem::Version.new(get_dumped_by_version)
-
-      return false if dumped_by_version >= Gem::Version.new("10.3")
-
-      %w{
-        9.6.8
-        9.5.12
-        9.4.17
-        9.3.22
-      }.each do |version|
-        return false if Gem::Dependency.new("", "~> #{version}").match?("", dumped_by_version)
-      end
-
-      true
+      self.class.pg_produces_portable_dump?(get_dumped_by_version)
     end
 
     def restore_dump_command
@@ -495,8 +501,8 @@ module BackupRestore
 
     def log(message)
       timestamp = Time.now.strftime("%Y-%m-%d %H:%M:%S")
-      puts(message) rescue nil
-      publish_log(message, timestamp) rescue nil
+      puts(message)
+      publish_log(message, timestamp)
       save_log(message, timestamp)
     end
 

@@ -273,6 +273,7 @@ module PrettyText
            uri.host.ends_with?("." << site_uri.host) ||
            whitelist.any? { |u| uri.host == u || uri.host.ends_with?("." << u) }
           # we are good no need for nofollow
+          l.remove_attribute("rel")
         else
           l["rel"] = "nofollow noopener"
         end

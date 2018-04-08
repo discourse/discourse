@@ -117,6 +117,8 @@ class GlobalSetting
     hostnames = [ hostname ]
     hostnames << backup_hostname if backup_hostname.present?
 
+    hostnames << URI.parse(cdn_url).host if cdn_url.present?
+
     hash["host_names"] = hostnames
     hash["database"] = db_name
 

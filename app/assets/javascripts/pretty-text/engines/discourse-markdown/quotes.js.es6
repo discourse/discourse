@@ -62,7 +62,7 @@ const rule = {
     if (primaryGroupName && primaryGroupName.length !== 0) {
       token.attrs.push(['class', `quote group-${primaryGroupName}`]);
     } else {
-      token.attrs.push(['class', 'quote']);
+      token.attrs.push(['class', 'quote no-group']);
     }
 
     if (postNumber) {
@@ -153,7 +153,8 @@ export function setup(helper) {
   helper.whiteList({
     custom(tag, name, value) {
       if (tag === 'aside' && name === 'class') {
-        return !!/^quote group\-(.+)$/.exec(value);
+        return value === "quote no-group" ||
+          !!/^quote group\-(.+)$/.exec(value);
       }
     }
   });

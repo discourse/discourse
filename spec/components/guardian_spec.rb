@@ -2186,6 +2186,35 @@ describe Guardian do
     it 'is false without a user to look at' do
       expect(Guardian.new(admin).can_grant_title?(nil)).to be_falsey
     end
+
+    context 'with title argument' do
+      let(:title_badge) { Fabricate(:badge, name: 'Helper', allow_title: true) }
+      let(:no_title_badge) { Fabricate(:badge, name: 'Writer', allow_title: false) }
+      let(:group) { Fabricate(:group, title: 'Groupie') }
+
+      it 'returns true if title belongs to a badge that user has' do
+        BadgeGranter.grant(title_badge, user)
+        expect(Guardian.new(user).can_grant_title?(user, title_badge.name)).to eq(true)
+      end
+
+      it "returns false if title belongs to a badge that user doesn't have" do
+        expect(Guardian.new(user).can_grant_title?(user, title_badge.name)).to eq(false)
+      end
+
+      it "returns false if title belongs to a badge that user has but can't be used as a title" do
+        BadgeGranter.grant(no_title_badge, user)
+        expect(Guardian.new(user).can_grant_title?(user, no_title_badge.name)).to eq(false)
+      end
+
+      it 'returns true if title is from a group the user belongs to' do
+        group.add(user)
+        expect(Guardian.new(user).can_grant_title?(user, group.title)).to eq(true)
+      end
+
+      it "returns false if title is from a group the user doesn't belong to" do
+        expect(Guardian.new(user).can_grant_title?(user, group.title)).to eq(false)
+      end
+    end
   end
 
   describe 'can_change_trust_level?' do

@@ -213,14 +213,6 @@ sq:
     leader:
       title: "udhëheqës"
   rate_limiter:
-    slow_down: "E keni bërë këtë veprim shumë shpesh, prisni pak e provoni më vonë. "
-    by_type:
-      first_day_replies_per_day: "Keni arritur maksimumin e përgjigjeve që një përdorues i ri mund të postojë në ditën e parë. Prisni %{time_left} dhe provoni përsëri."
-      first_day_topics_per_day: "Keni postuar maksimumin e temave që një anëtar i ri mund të krijojë në ditën e parë. Prisni %{time_left} para se të provoni përsëri. "
-      create_topic: "Po nxitoheni shumë për të krijuar tema të reja. Prisni %{time_left} dhe provoni përsëri."
-      create_post: "Po përgjigjeni shumë shpejt. Prisni %{time_left} dhe provoni përsëri."
-      delete_post: "Po fshini postimet shumë shpejt. Prisni %{time_left} dhe provoni përsëri."
-      topics_per_day: "Keni arritur maksimumin e temave të reja për sot. Prisni %{time_left} dhe provoni përsëri."
     hours:
       one: "1 orë"
       other: "%{count} orë"
@@ -1284,8 +1276,6 @@ sq:
     promoter:
       name: Promotor
       description: Ftoi një anëtar të ri në faqe
-      long_description: |
-        Kjo stemë jepet kur ftoni dikë për t'u bërë pjesë e komunitetit nëpërmjet butonit të ftesave në faqen e përdoruesit, ose në fund të faqes. Duke ftuar miq që mund të jenë të interesuar në biseda të veçanta është një mënyrë shumë e mirë të paraqesësh njerëz të rinj në komunitet, kështu që faleminderit!
     campaigner:
       name: Ambasador
       description: Ftoi 3 anëtarë të thjeshtë
@@ -1382,8 +1372,6 @@ sq:
     first_emoji:
       name: Emoji i parë
       description: Përdori Emoji në një postim
-      long_description: |
-        Kjo stemë jepet kur ju shtoni një Emoji në postimin tuaj për herë të parë :thumbsup:. Emoji ju lejon të përçoni emocionet në postimet tuaja, prej kënaqësisë :smiley: tek mërzitja :anguished: e deri tek inati :angry: dhe çdo gjë midis :sunglasses:. Thjesht filloni të shkruani : (dy pika) ose shtypni butonin Emoji në shiritin e veglave të fushës së shkrimit për të zgjedhur mes qindra llojesh :ok_hand:
     first_mention:
       name: Përmendja e parë
       long_description: Kjo stemë jepet herën e parë kur ju përmendni @username e dikujt në një postim. Secila përmendje krijon një njoftim për atë person, që të vihen në dijeni për postimin tuaj. Thjesht filloni të shtypni @ (simbolin te) për të përmendur çdo përdorues ose, nëse e mundur, çdo grup - është një mënyrë e volitshme për të patur vëmendjen e dikujt.

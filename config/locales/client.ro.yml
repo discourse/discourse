@@ -138,7 +138,6 @@ ro:
       email: 'Drimite pe email'
     action_codes:
       public_topic: "a făcut acest subiect public %{when}"
-      private_topic: "a făcut acest subiect privat %{when}"
       split_topic: "desparte această discuție %{when}"
       invited_user: "a invitat pe %{who}  %{when}"
       invited_group: "a invitat pe %{who}  %{when}"
@@ -169,8 +168,6 @@ ro:
     topic_admin_menu: "Opțiuni administrare subiect"
     wizard_required: "Bine ai venit la noul tău Discourse! Să începem cu <a href='%{url}' data-auto-route='true'>expertul de configurare</a> ✨"
     emails_are_disabled: "Trimiterea de emailuri a fost dezactivată global de către un administrator. Nu vor fi trimise notificări email de nici un fel."
-    bootstrap_mode_enabled: "Pentru a ușura lansarea site-ului tău ești în modul bootstrap. Toți noii utilizatori vor primi nivelul de încredere 1 și vor avea activată primirea zilnică a unui email-rezumat.  Această setare va fi dezactivată automat de îndată ce numărul total de utilizatori depășește %{min_users}."
-    bootstrap_mode_disabled: "Modul bootstrap va fi dezactivat în următoarele 24 de ore."
     themes:
       default_description: "Implicit"
     s3:
@@ -269,18 +266,9 @@ ro:
       remove: "Șterge semn de carte"
       confirm_clear: "Ești sigur că dorești să ștergi toate semnele de carte din acest subiect?"
     topic_count_latest:
-      one: "{{count}} subiect nou sau actualizat."
+      one: "Un subiect nou sau actualizat."
       few: "{{count}} subiecte noi sau actualizate."
       other: "{{count}} de subiecte noi sau actualizate."
-    topic_count_unread:
-      one: "Un subiect necitit."
-      few: "{{count}} subiecte necitite."
-      other: "{{count}} (de) subiecte necitite."
-    topic_count_new:
-      one: "Un subiect nou."
-      few: "{{count}} subiecte noi."
-      other: "{{count}} de subiecte noi."
-    click_to_show: "Click pentru vizualizare."
     preview: "Previzualizează"
     cancel: "Anulează"
     save: "Salvează schimbările"
@@ -373,21 +361,6 @@ ro:
         make_user_group_owner: "Fă proprietar"
         remove_user_as_group_owner: "Revocă proprietar"
     groups:
-      logs:
-        title: "Jurnale"
-        when: "Când"
-        action: "Acțiune"
-        acting_user: "Utilizator temporar"
-        target_user: "Utilizator țintă"
-        subject: "Subiect"
-        details: "Detalii"
-        from: "De la"
-        to: "Către"
-      edit:
-        title: 'Editează grup'
-        full_name: 'Nume complet'
-        add_members: "Adaugă membri"
-        delete_member_confirm: "Șterge utilizatorul '%{username}' din grupul '%{group}'?"
       name_placeholder: "Numele grupului, fără spații, la fel ca regula pentru nume utilizator"
       public_admission: "Permite utilizatorilor să adere la grup fără restricții (Presupune ca grupul să fie vizibil)"
       public_exit: "Permite utilizatorilor să părăsească grupul în mod liber."
@@ -399,13 +372,7 @@ ro:
         topics: "Nu există nici un subiect creat de vreun membru al acestui grup."
         logs: "Nu există nici un jurnal pentru acest grup."
       add: "Adaugă"
-      join: "Alătură-te grupului"
-      leave: "Părăsește grupul"
-      request: "Cere să te alături grupului"
       message: "Mesaj"
-      automatic_group: Grup automat
-      closed_group: Grup închis
-      is_group_user: "Ești membru al acestui grup"
       allow_membership_requests: "Permite utilizatorilor să trimită cereri de membru către proprietarul grupului."
       membership_request_template: "Șablonul personalizat pentru a fi afișat utilizatorilor atunci când trimiteți o solicitare de membru"
       membership_request:
@@ -414,7 +381,6 @@ ro:
         reason: "Aduceți la cunoștință proprietarilor grupului motivul pentru care dorești să aderi la acest grup"
       membership: "Apartenență"
       name: "Nume"
-      user_count: "Număr de membri"
       bio: "Despre grup"
       owner: "Proprietar"
       index:
@@ -425,7 +391,6 @@ ro:
         few: "Grupuri"
         other: "Grupuri"
       activity: "Activitate"
-      members: "Membri"
       topics: "Subiecte"
       posts: "Postări"
       mentions: "Mențiuni"
@@ -1205,8 +1170,6 @@ ro:
           label: Mesaj nou
         reply_to_topic:
           label: Răspunde la subiect
-        toggle_whisper:
-          label: Comută modul discret
     notifications:
       tooltip:
         message:
@@ -1236,24 +1199,9 @@ ro:
       invitee_accepted: "<span>{{username}}</span> ți-a acceptat invitația"
       moved_post: "<span>{{username}}</span> a mutat {{description}}"
       linked: "<span>{{username}}</span> {{description}}"
-      granted_badge: "A câștigat '{{description}}'"
+      granted_badge: "Ai câștigat '{{description}}'"
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>Subiect nou</span> {{description}}"
-      alt:
-        mentioned: "Menționat de"
-        quoted: "Citat de"
-        replied: "Răspuns"
-        posted: "Postat de"
-        edited: "Editează postarea prin"
-        liked: "V-a apreciat postarea"
-        private_message: "Mesaj personal de la"
-        invited_to_private_message: "Invitat la un mesaj privat de către"
-        invited_to_topic: "Invitat la un subiect de către"
-        invitee_accepted: "Invitație acceptată de către"
-        moved_post: "Postarea ta a fost mutată de către"
-        linked: "Link spre postarea ta"
-        granted_badge: "Ecuson acordat"
-        group_message_summary: "Mesaje în căsuța poștală a grupului"
       popup:
         mentioned: '{{username}} te-a menţionat în "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} te-a menţionat în "{{topic}}" - {{site_title}}'
@@ -2303,7 +2251,7 @@ ro:
         few: "A primit acest ecuson de %{count} ori"
         other: "A primit acest ecuson de %{count} de ori"
       granted_on: "Acordat acum %{date}"
-      others_count: "Numărul celorlalți care au acest ecuson (%{count})"
+      others_count: "Alții cu acest ecuson (%{count})"
       title: Ecusoane
       multiple_grant: "Poți primi asta de mai multe ori"
       badge_count:
@@ -2369,19 +2317,15 @@ ro:
       notifications:
         watching:
           title: "Urmărind activ"
-          description: "Vei urmări activ în mod automat toate subiectele cu această etichetă. Vei fi notificat cu privire la toate noile postări și subiecte, și în plus, un contor al postărilor noi și al celor necitite va apărea în dreptul subiectului."
         watching_first_post:
           title: "Urmărind activ prima postare"
-          description: "Vei fi notificat doar cu privire la prima postare din fiecare nou subiect cu această etichetă."
         tracking:
           title: "Urmărind"
-          description: "Vei urmări automat toate subiectele cu această etichetă. Un contor cu postările necitite și cu cele noi va apărea lingă subiect."
         regular:
           title: "Utilizator frecvent"
           description: "Vei fi notificat dacă cineva îți menționează @numele sau răspunde la postare."
         muted:
           title: "Silențios"
-          description: "Nu vei fi notificat cu privire la nimic legat de noile subiecte cu această etichetă și ele nu vor apărea în tab-ul cu subiecte necitite."
       groups:
         title: "Grupuri de etichete"
         about: "Adaugă etichete la grupuri pentru a le gestiona mai ușor."

@@ -67,12 +67,19 @@
                               connectorTagName="li"
                               args=(hash model=model)}}
 
-              {{#if collapsedInfo}}
-              {{#if viewingSelf}}
-              <li><a {{action "expandProfile"}} href class="btn">{{d-icon "angle-double-down"}}{{i18n 'user.expand_profile'}}</a></li>
+              {{#if canExpandProfile}}
+                <li>
+                  {{#if collapsedInfo}}
+                    <a {{action "expandProfile"}} href class="btn">
+                      {{d-icon "angle-double-down"}} {{i18n 'user.expand_profile'}}
+                    </a>
+                  {{else}}
+                    <a {{action "collapseProfile"}} href class="btn">
+                      {{d-icon "angle-double-up"}} {{i18n 'user.collapse_profile'}}
+                    </a>
+                  {{/if}}
+                </li>
               {{/if}}
-              {{/if}}
-
             </ul>
           </section>
 
@@ -169,14 +176,20 @@
               {{/if}}
             </dd>
           {{/if}}
+
           {{#if model.displayGroups}}
             <dt class="groups">{{i18n 'groups.title' count=model.displayGroups.length}}</dt>
             <dd class='groups'>
               {{#each model.displayGroups as |group|}}
                 <span>{{#link-to 'group' group.name class="group-link"}}{{group.name}}{{/link-to}}</span>
               {{/each}}
+
+              {{#link-to "groups" (query-params username=model.username)}}
+                ...
+              {{/link-to}}
             </dd>
           {{/if}}
+
           {{#if canDeleteUser}}
             {{d-button action="adminDelete" icon="exclamation-triangle" label="user.admin_delete" class="btn-danger"}}
           {{/if}}

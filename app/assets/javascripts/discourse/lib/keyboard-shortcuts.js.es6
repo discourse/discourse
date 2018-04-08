@@ -1,6 +1,6 @@
 import DiscourseURL from 'discourse/lib/url';
 import Composer from 'discourse/models/composer';
-import { scrollTopFor } from 'discourse/lib/offset-calculator';
+import { minimumOffset } from 'discourse/lib/offset-calculator';
 
 const bindings = {
   '!':               {postAction: 'showFlags'},
@@ -318,10 +318,10 @@ export default {
     const $selected = ($articles.filter('.selected').length !== 0)
       ? $articles.filter('.selected')
       : $articles.filter('[data-islastviewedtopic=true]');
+
     let index = $articles.index($selected);
 
-    if ($selected.length !== 0) { //boundries check
-      // loop is not allowed
+    if ($selected.length !== 0) {
       if (direction === -1 && index === 0) { return; }
       if (direction === 1 && index === ($articles.length - 1) ) { return; }
     }
@@ -349,14 +349,12 @@ export default {
     const $article = $articles.eq(index + direction);
 
     if ($article.length > 0) {
-
       $articles.removeClass('selected');
       $article.addClass('selected');
 
       if ($article.is('.topic-post')) {
         $('a.tabLoc', $article).focus();
         this._scrollToPost($article);
-
       } else {
         this._scrollList($article, direction);
       }
@@ -364,8 +362,7 @@ export default {
   },
 
   _scrollToPost($article) {
-    const pos = $article.offset();
-    $(window).scrollTop(scrollTopFor(pos.top));
+    $(window).scrollTop($article.offset().top - minimumOffset());
   },
 
   _scrollList($article) {

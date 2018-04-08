@@ -135,7 +135,7 @@ class DiscourseSingleSignOn < SingleSignOn
       try_username = username.presence
 
       user_params = {
-        email: email,
+        primary_email: UserEmail.new(email: email, primary: true),
         name: try_name || User.suggest_name(try_username || email),
         username: UserNameSuggester.suggest(try_username || try_name || email),
         ip_address: ip_address

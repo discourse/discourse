@@ -1,0 +1,13 @@
+{{#d-section pageClass="groups-new"}}
+  <h1>{{i18n "groups.new.title"}}</h1>
+
+  {{#group-form model=model
+      saveLabel="groups.new.create"
+      save="save"
+      disableSave=saving}}
+
+      {{#link-to "groups"}}
+        {{i18n 'cancel'}}
+      {{/link-to}}
+  {{/group-form}}
+{{/d-section}}

@@ -2,6 +2,7 @@ import { ajax } from 'discourse/lib/ajax';
 import round from "discourse/lib/round";
 import { fmt } from 'discourse/lib/computed';
 import { fillMissingDates } from 'discourse/lib/utilities';
+import computed from 'ember-addons/ember-computed-decorators';
 
 const Report = Discourse.Model.extend({
   reportUrl: fmt("type", "/admin/reports/%@"),
@@ -42,7 +43,8 @@ const Report = Discourse.Model.extend({
   lastSevenDaysCount:  function() { return this.valueFor(1, 7); }.property("data"),
   lastThirtyDaysCount: function() { return this.valueFor(1, 30); }.property("data"),
 
-  yesterdayTrend: function() {
+  @computed('data')
+  yesterdayTrend() {
     const yesterdayVal = this.valueAt(1);
     const twoDaysAgoVal = this.valueAt(2);
     if (yesterdayVal > twoDaysAgoVal) {
@@ -52,9 +54,10 @@ const Report = Discourse.Model.extend({
     } else {
       return "no-change";
     }
-  }.property("data"),
+  },
 
-  sevenDayTrend: function() {
+  @computed('data')
+  sevenDayTrend() {
     const currentPeriod = this.valueFor(1, 7);
     const prevPeriod = this.valueFor(8, 14);
     if (currentPeriod > prevPeriod) {
@@ -64,36 +67,39 @@ const Report = Discourse.Model.extend({
     } else {
       return "no-change";
     }
-  }.property("data"),
+  },
 
-  thirtyDayTrend: function() {
-    if (this.get("prev30Days")) {
+  @computed('prev30Days', 'data')
+  thirtyDayTrend(prev30Days) {
+    if (prev30Days) {
       const currentPeriod = this.valueFor(1, 30);
       if (currentPeriod > this.get("prev30Days")) {
         return "trending-up";
-      } else if (currentPeriod < this.get("prev30Days")) {
+      } else if (currentPeriod < prev30Days) {
         return "trending-down";
       }
     }
     return "no-change";
-  }.property("data", "prev30Days"),
+  },
 
-  icon: function() {
-    switch (this.get("type")) {
+  @computed('type')
+  icon(type) {
+    switch (type) {
       case "flags": return "flag";
       case "likes": return "heart";
       case "bookmarks": return "bookmark";
       default: return null;
     }
-  }.property("type"),
+  },
 
-  method: function() {
-    if (this.get("type") === "time_to_first_response") {
+  @computed('type')
+  method(type) {
+    if (type === "time_to_first_response") {
       return "average";
     } else {
       return "sum";
     }
-  }.property("type"),
+  },
 
   percentChangeString(val1, val2) {
     const val = ((val1 - val2) / val2) * 100;
@@ -114,21 +120,31 @@ const Report = Discourse.Model.extend({
     return title;
   },
 
-  yesterdayCountTitle: function() {
+  @computed('data')
+  yesterdayCountTitle() {
     return this.changeTitle(this.valueAt(1), this.valueAt(2), "two days ago");
-  }.property("data"),
+  },
 
-  sevenDayCountTitle: function() {
+  @computed('data')
+  sevenDayCountTitle() {
     return this.changeTitle(this.valueFor(1, 7), this.valueFor(8, 14), "two weeks ago");
-  }.property("data"),
+  },
 
-  thirtyDayCountTitle: function() {
-    return this.changeTitle(this.valueFor(1, 30), this.get("prev30Days"), "in the previous 30 day period");
-  }.property("data"),
+  @computed('prev30Days', 'data')
+  thirtyDayCountTitle(prev30Days) {
+    return this.changeTitle(this.valueFor(1, 30), prev30Days, "in the previous 30 day period");
+  },
 
-  dataReversed: function() {
-    return this.get("data").toArray().reverse();
-  }.property("data")
+  @computed('data')
+  sortedData(data) {
+    return this.get('xAxisIsDate') ? data.toArray().reverse() : data.toArray();
+  },
+
+  @computed('data')
+  xAxisIsDate() {
+    if (!this.data[0]) return false;
+    return this.data && this.data[0].x.match(/\d{4}-\d{1,2}-\d{1,2}/);
+  }
 
 });
 
@@ -152,6 +168,14 @@ Report.reopenClass({
 
       const model = Report.create({ type: type });
       model.setProperties(json.report);
+
+      if (json.report.related_report) {
+        // TODO: fillMissingDates if xaxis is date
+        const related = Report.create({ type: json.report.related_report.type });
+        related.setProperties(json.report.related_report);
+        model.set('relatedReport', related);
+      }
+
       return model;
     });
   }

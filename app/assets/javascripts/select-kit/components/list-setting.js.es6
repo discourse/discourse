@@ -1,4 +1,5 @@
 import MultiSelectComponent from "select-kit/components/multi-select";
+const { isNone, makeArray } = Ember;
 
 export default MultiSelectComponent.extend({
   pluginApiIdentifiers: ["list-setting"],
@@ -11,7 +12,7 @@ export default MultiSelectComponent.extend({
   init() {
     this._super();
 
-    if (!Ember.isNone(this.get("settingName"))) {
+    if (!isNone(this.get("settingName"))) {
       this.set("nameProperty", this.get("settingName"));
     }
 
@@ -24,13 +25,13 @@ export default MultiSelectComponent.extend({
 
   computeContent() {
     let content;
-    if (Ember.isNone(this.get("choices"))) {
+    if (isNone(this.get("choices"))) {
       content = this.get("settingValue").split(this.get("tokenSeparator"));;
     }  else {
       content = this.get("choices");
     }
 
-    return Ember.makeArray(content).filter(c => c);
+    return makeArray(content).filter(c => c);
   },
 
   mutateValues(values) {

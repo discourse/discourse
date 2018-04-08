@@ -152,7 +152,6 @@ pl_PL:
       email: 'wyślij ten odnośnik przez email'
     action_codes:
       public_topic: "Upublicznij ten temat %{when}"
-      private_topic: "Uprywatnij ten temat %{when}"
       split_topic: "podziel ten temat %{when}"
       invited_user: "%{who} został zaproszony %{when}"
       invited_group: "%{who} został zaproszony %{when}"
@@ -182,8 +181,6 @@ pl_PL:
     topic_admin_menu: "akcje administratora"
     wizard_required: "Witaj na Twoim na nowym forum opartym na Discourse! Rozpocznij konfigurację w <a href='%{url}' data-auto-route='true'>panelu konfiguracyjnym</a> ✨"
     emails_are_disabled: "Wysyłanie e-maili zostało globalnie wyłączone przez administrację. Powiadomienia e-mail nie będą dostarczane."
-    bootstrap_mode_enabled: "Aby ułatwić uruchomienie Twojego nowego serwisu, znajdujesz się w trybie bootstrap. Wszyscy nowi użytkownicy otrzymają 1. poziom zaufania i będą otrzymywać codzienne podsumowania drogą mailową. To się zmieni, gdy liczba użytkowników przekroczy liczbę %{min_users}."
-    bootstrap_mode_disabled: "Tryb Bootstrap zostanie wyłączony w ciągu najbliższych 24 godzin."
     themes:
       default_description: "Domyślny"
     s3:
@@ -283,22 +280,6 @@ pl_PL:
       last_read: "to ostatni przeczytany przez ciebie wpis: kliknij, aby dodać zakładkę"
       remove: "Usuń zakładkę"
       confirm_clear: "Czy na pewno chcesz usunąć wszystkie zakładki ustawione w tym temacie?"
-    topic_count_latest:
-      one: "{{count}} nowy lub zaktualizowany temat"
-      few: "{{count}} nowe lub zaktualizowane tematy"
-      many: "{{count}} nowych lub zaktualizowanych tematów"
-      other: "{{count}} nowych lub zaktualizowanych tematów"
-    topic_count_unread:
-      one: "{{count}} nieprzeczytany temat."
-      few: "{{count}} nieprzeczytane tematy."
-      many: "{{count}} nieprzeczytanych tematów."
-      other: "{{count}} nieprzeczytanych tematów."
-    topic_count_new:
-      one: "{{count}} nowy temat."
-      few: "{{count}} nowe tematy."
-      many: "{{count}} nowych tematów."
-      other: "{{count}} nowych tematów."
-    click_to_show: "Kliknij aby zobaczyć."
     preview: "podgląd"
     cancel: "anuluj"
     save: "Zapisz zmiany"
@@ -394,21 +375,6 @@ pl_PL:
         make_user_group_owner: "Nadaj prawa właściciela"
         remove_user_as_group_owner: "Usuń prawa właściciela"
     groups:
-      logs:
-        title: "Logi"
-        when: "Kiedy"
-        action: "Akcja"
-        acting_user: "Uczestniczący użytkownik "
-        target_user: "Wybrany użytkownik"
-        subject: "Temat"
-        details: "Szczegóły"
-        from: "Od"
-        to: "Do"
-      edit:
-        title: 'Edytuj grupę'
-        full_name: 'Pełna nazwa'
-        add_members: "Dodaj użytkowników"
-        delete_member_confirm: "Czy usunąć użytkownika '%{username}' z grupy '%{group}'?"
       name_placeholder: "Nazwa grupy, bez spacji, takie same zasady jak przy nazwie użytkownika"
       public_admission: "Zezwól wszystkim użytkownikom na dołączanie do tej grupy (widoczność grupy musi być ustawiona na publiczną)"
       public_exit: "Zezwól wszystkim użytkownikom na opuszczanie tej grupy"
@@ -420,13 +386,7 @@ pl_PL:
         topics: "Nie ma wątków stworzonych przez użytkowników tej grupy"
         logs: "Nie ma logów dla tej grupy"
       add: "Dodaj"
-      join: "Dołącz do grupy"
-      leave: "Opuść grupę"
-      request: "Żądanie dołączenia do grupy"
       message: "Wiadomość"
-      automatic_group: Automatyczna grupa
-      closed_group: Zamknięta grupa
-      is_group_user: "Jesteś członkiem tej grupy"
       allow_membership_requests: "Zezwól użytkownikom na wysyłanie zaproszeń do właścicieli grupy."
       membership_request_template: "Wyświetl niestandardowy szablon użytkownikom, w momencie wysyłania wniosku o członkostwo."
       membership_request:
@@ -435,7 +395,6 @@ pl_PL:
         reason: "Poinformuj właścicieli grupy dlaczego do niej należysz."
       membership: "Członkostwo"
       name: "Nazwa"
-      user_count: "Ilość użytkowników"
       bio: "O grupie"
       owner: "właściciel"
       index:
@@ -447,7 +406,6 @@ pl_PL:
         many: "Grup"
         other: "Grup"
       activity: "Aktywność"
-      members: "Członkowie"
       topics: "Tematy"
       posts: "Wpisów"
       mentions: "Wzmianki"
@@ -689,21 +647,6 @@ pl_PL:
         choose: "Wybierz hasło"
       second_factor:
         title: "Dwuskładnikowe uwierzytelnianie"
-        enabled_status: "Status: Włączone"
-        disabled_status: "Status: Wyłączone"
-        confirm_password_description: "Aby kontynuować włączanie dwuskładnikowego uwierzytelniania, potwierdź swoje hasło"
-        enable_description: |
-          Aby zakończyć konfigurację dwuskładnikowego uwierzytelniania, zeskanuj następujący kod QR za pomocą jednej ze wspieranych aplikacji
-          (<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Android lub iOS</a>,
-          <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>)
-          a następnie wprowadź wygenerowany kod potwierdzający dla dwuskładnikowego uwierzytelniania.
-        disable_description: "Wprowadź kod potwierdzający ze swojej aplikacji"
-        show_key_description: "Lub wpisz tajny klucz ręcznie."
-        info_prompt: "Czym jest uwierzytelnianie dwuskładnikowe?"
-        extended_description: |
-          Dwuskładnikowe uwierzytelnianie zapewnia dodatkowy krok zabezpieczający logowanie hasłem, poprzez generowanie jednorazowego kodu potwierdzającego. Kody potwierdzające
-          mogą być generowane na Androidzie i iOSie za pomocą <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='_blank'>Google Authenticator</a>
-          a na Windows Phone za pomocą <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Authenticator</a>.
       change_about:
         title: "Zmień O mnie"
         error: "Wystąpił błąd podczas zmiany tej wartości."
@@ -1287,20 +1230,6 @@ pl_PL:
         few: "masz {{count}} wiadomości w skrzynce odbiorczej {{group_name}}"
         many: "masz {{count}} wiadomości w skrzynce odbiorczej {{group_name}}"
         other: "masz {{count}} wiadomości w skrzynce odbiorczej {{group_name}}"
-      alt:
-        mentioned: "Wywołanie przez"
-        quoted: "Cytowanie przez"
-        replied: "Odpowiedź"
-        posted: "Autor wpisu"
-        edited: "Edycja twojego wpisu"
-        liked: "Lajk twojego wpisu"
-        invited_to_topic: "Zaproszenie do tematu od"
-        invitee_accepted: "Zaproszenie zaakceptowane przez"
-        moved_post: "Twój wpis został przeniesiony przez"
-        linked: "Linkownie do twojego wpisu"
-        granted_badge: "Przyznanie odznaki"
-        group_message_summary: "Wiadomości w grupowej skrzynce odbiorczej"
-        topic_reminder: "Przypomnienie"
       popup:
         mentioned: '{{username}} wspomina o tobie w "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} wspomniał o Tobie w "{{topic}}" - {{site_title}}'
@@ -2479,19 +2408,15 @@ pl_PL:
       notifications:
         watching:
           title: "Obserwowane"
-          description: "Będziesz automatycznie śledzić wszystkie tematy oznaczone tym tagiem, będziesz otrzymywać powiadomienia o każdym nowym wpisie i temacie, a liczba nieprzeczytanych i nowych wpisów będzie wyświetlana obok tytułów na liście tematów."
         watching_first_post:
           title: "Oglądasz pierwszy post"
-          description: "Zostaniesz powiadomiony tylko o pierwszym wpisie oznaczonym tym tagiem."
         tracking:
           title: "Śledzenie"
-          description: "Będziesz automatycznie śledzić wszystkie wpisy oznaczone tym tagiem. Liczba nieprzeczytanych i nowych wpisów będzie wyświetlana obok tytułów na liście tematów."
         regular:
           title: "Normalny"
           description: "Dostaniesz powiadomienie, gdy ktoś ci odpowie lub wspomni twoją @nazwę."
         muted:
           title: "Wyciszony"
-          description: "Nie otrzymasz powiadomień o nowych tematach oznaczonych tym tagiem i nie będą się one pojawiać na karcie Nieprzeczytane."
       groups:
         title: "Tagi grup"
         about: "Dodaj etykiety do grup aby zarządzać nimi łatwiej."

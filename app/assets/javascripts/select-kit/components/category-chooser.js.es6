@@ -59,7 +59,7 @@ export default ComboBoxComponent.extend({
   },
 
   computeHeaderContent() {
-    let content = this.baseHeaderComputedContent();
+    let content = this._super();
 
     if (this.get("hasSelection")) {
       const category = Category.findById(content.value);
@@ -96,6 +96,12 @@ export default ComboBoxComponent.extend({
   @on("willDestroyElement")
   _unbindComposerResizing() {
     this.appEvents.off("composer:resized");
+  },
+
+  didSelect(computedContentItem) {
+    if (this.attrs.onChooseCategory) {
+      this.attrs.onChooseCategory(computedContentItem.originalContent);
+    }
   },
 
   computeContent() {

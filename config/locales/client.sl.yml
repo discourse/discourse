@@ -138,12 +138,11 @@ sl:
       post: 'objava #%{postNumber}'
       close: 'zapri'
       twitter: 'deli povezavo na Twitterju'
-      facebook: 'deli povezao na acebooku'
+      facebook: 'deli povezao na Facebooku'
       google+: 'deli povezavo na Google+'
       email: 'pošlji povezavo preko e-pošte'
     action_codes:
       public_topic: "je naredil temo javno %{when}"
-      private_topic: "je naredil temo privatno %{when}"
       split_topic: "je razdelil temo %{when}"
       invited_user: "je povabil %{who} %{when}"
       invited_group: "je povabil %{who} %{when}"
@@ -174,8 +173,6 @@ sl:
     topic_admin_menu: "ukrepi administratorja teme"
     wizard_required: "Dobrodošli v vašem novem Discoursu! Začnimo z <a href='%{url}' data-auto-route='true'>čarovnikom za nastavitve</a> ✨"
     emails_are_disabled: "Vsa odhodna e-pošta je bila globalno onemogočena iz strani administratorja. E-poštne obvestila ne bodo poslana."
-    bootstrap_mode_enabled: "Zaradi olajšanja zagona vaše nove strani ste v \"bootstrap\" načinu. Vsi novi uporabniki bodo prejeli nivo zaupanja 1 ter imeli omogočene dnevne povzetke preko e-pošte. To bo samodejno izključeno ko skupno število uporabnikov preseže %{min_users}."
-    bootstrap_mode_disabled: "\"Bootstrap\" način bo onemogočen v naslednjih 24 urah."
     themes:
       default_description: "Privzeto"
     s3:
@@ -198,7 +195,7 @@ sl:
     edit: 'uredi naslov in kategorijo te teme'
     not_implemented: "Oprosti, ta funkcija še ni bila implementirana!"
     no_value: "Ne"
-    yes_value: "Ja"
+    yes_value: "Da"
     generic_error: "Ups, prišlo je do napake."
     generic_error_with_reason: "Napaka: %{error}"
     sign_up: "Prijava"
@@ -244,7 +241,7 @@ sl:
       other: "{{count}} znakov"
     suggested_topics:
       title: "Predlagane Teme"
-      pm_title: "Predlagana Sporočil"
+      pm_title: "Predlagana Sporočila"
     about:
       simple_title: "O"
       title: "O %{title}"
@@ -275,22 +272,6 @@ sl:
       last_read: "to je zadnja objava katero ste prebrali; kliknite, da ustvarite zaznamek"
       remove: "Odstrani Zaznamek"
       confirm_clear: "Ste prepričani, da želite počistiti vse zaznamke s te teme?"
-    topic_count_latest:
-      one: "{{count}} nova ali posodobljena tema."
-      two: "{{count}} novi ali posodobljeni temi."
-      few: "{{count}} nove ali posodobljene teme."
-      other: "{{count}} novih ali posodobljenih tem."
-    topic_count_unread:
-      one: "{{count}} neprebrana tema."
-      two: "{{count}} neprebrani temi."
-      few: "{{count}} neprebrane teme."
-      other: "{{count}} neprebranih tem."
-    topic_count_new:
-      one: "{{count}} nova tema."
-      two: "{{count}} novi temi."
-      few: "{{count}} nove teme."
-      other: "{{count}} novih tem."
-    click_to_show: "Klikni za prikaz."
     preview: "predogled"
     cancel: "prekliči"
     save: "Shrani Spremembe"
@@ -386,21 +367,6 @@ sl:
         make_user_group_owner: "Spremeni v lastnika"
         remove_user_as_group_owner: "Odstrani lastništvo"
     groups:
-      logs:
-        title: "Dnevnik"
-        when: "Kdaj"
-        action: "Aktivnost"
-        acting_user: "Nastopajoči uporabnik"
-        target_user: "Ciljni uporabnik"
-        subject: "Zadeva"
-        details: "Podrobnosti"
-        from: "Od"
-        to: "Za"
-      edit:
-        title: 'Uredi skupino'
-        full_name: 'Ime skupine'
-        add_members: "Dodaj člane"
-        delete_member_confirm: "Odstrani '%{username}' iz skupine '%{group}'?"
       name_placeholder: "Ime skupine, brez presledkov, enako kot pravilo pri uporabniškem imenu"
       public_admission: "Dovoli uporabnikom, da se sami pridružijo skupini (skupina mora biti javna)"
       public_exit: "Dovoli uporabnikom da sami zapustijo skupino"
@@ -412,13 +378,7 @@ sl:
         topics: "Člani te skupine nimajo nobene teme."
         logs: "Dnevnik za to skupino je prazen."
       add: "Dodaj"
-      join: "Pridruži se skupini"
-      leave: "Zapusti skupino"
-      request: "Zaprosi za članstvo v skupini"
       message: "Sporočilo"
-      automatic_group: Avtomatska skupina
-      closed_group: Zaprta skupina
-      is_group_user: "Si član te skupine"
       allow_membership_requests: "Dovoli uporabnikom, da zaprosijo za članstvo pri lastnikih skupine"
       membership_request_template: "Predloga za prikaz uporabnikom, ko zaprosijo za članstvo"
       membership_request:
@@ -427,7 +387,6 @@ sl:
         reason: "Sporoči lastnikom skupine zakaj spadaš v to skupino"
       membership: "Članstvo"
       name: "Ime"
-      user_count: "Število članov"
       bio: "O skupini"
       selector_placeholder: "vnesi uporabniško ime"
       owner: "lastnik"
@@ -440,7 +399,6 @@ sl:
         few: "Skupin"
         other: "Skupin"
       activity: "Aktivnost"
-      members: "Člani"
       topics: "Teme"
       posts: "Objave"
       mentions: "Omembe"
@@ -646,9 +604,6 @@ sl:
         set_password: "Nastavi geslo"
         choose_new: "Izberite novo geslo"
         choose: "Izberite geslo"
-      second_factor:
-        enabled_status: "Status: vklopljeno"
-        disabled_status: "Status: izključeno"
       change_about:
         title: "Spremeni O meni"
       change_username:
@@ -923,12 +878,6 @@ sl:
       invitee_accepted: "<span>{{username}}</span> je sprejel tvoje vabilo"
       linked: "<span>{{username}}</span> {{description}}"
       topic_reminder: "<span>{{username}}</span> {{description}}"
-      alt:
-        posted: "Objavil"
-        edited: "Urejeno s strani "
-        liked: "Všečkal tvojo objavo"
-        moved_post: "Tvojo objavo je premaknil "
-        linked: "Povezava do tvoje objave"
     search:
       sort_by: "Uredi po"
       relevance: "Relevanci"
