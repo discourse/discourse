@@ -592,7 +592,7 @@ class UsersController < ApplicationController
         end
 
         email_token_user = EmailToken.confirmable(token)&.user
-        totp_enabled = email_token_user.totp_enabled?
+        totp_enabled = email_token_user&.totp_enabled?
         second_factor_token = params[:second_factor_token]
         confirm_email = false
 
