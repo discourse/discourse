@@ -538,4 +538,56 @@ RSpec.describe TopicsController do
     end
   end
 
+  describe "crawler" do
+
+    context "when not a crawler" do
+      it "renders with the application layout" do
+        get topic.url
+
+        body = response.body
+
+        expect(body).to have_tag(:script, with: { src: '/assets/application.js' })
+        expect(body).to have_tag(:meta, with: { name: 'fragment' })
+      end
+    end
+
+    context "when a crawler" do
+      it "renders with the crawler layout, and handles proper pagination" do
+
+        topic = Fabricate(:topic)
+        Fabricate(:post, topic_id: topic.id)
+        Fabricate(:post, topic_id: topic.id)
+        Fabricate(:post, topic_id: topic.id)
+        Fabricate(:post, topic_id: topic.id)
+        Fabricate(:post, topic_id: topic.id)
+
+        # ugly, but no inteface to set this and we don't want to create
+        # 100 posts to test this thing
+        TopicView.stubs(:chunk_size).returns(2)
+
+        user_agent = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+
+        get topic.url, env: { "HTTP_USER_AGENT" => user_agent }
+
+        body = response.body
+
+        expect(body).to have_tag(:body, with: { class: 'crawler' })
+        expect(body).to_not have_tag(:meta, with: { name: 'fragment' })
+        expect(body).to include('<link rel="next" href="' + topic.relative_url + "?page=2")
+
+        get topic.url + "?page=2", env: { "HTTP_USER_AGENT" => user_agent }
+        body = response.body
+
+        expect(body).to include('<link rel="prev" href="' + topic.relative_url)
+        expect(body).to include('<link rel="next" href="' + topic.relative_url + "?page=3")
+
+        get topic.url + "?page=3", env: { "HTTP_USER_AGENT" => user_agent }
+        body = response.body
+
+        expect(body).to include('<link rel="prev" href="' + topic.relative_url + "?page=2")
+      end
+    end
+
+  end
+
 end
