@@ -1,4 +1,4 @@
-import { acceptance, waitFor } from "helpers/qunit-helpers";
+import { acceptance } from "helpers/qunit-helpers";
 acceptance("Search - Full Page", {
   settings: {tagging_enabled: true},
   loggedIn: true,
@@ -40,6 +40,7 @@ acceptance("Search - Full Page", {
   }
 });
 
+/*
 QUnit.test("perform various searches", assert => {
   visit("/search");
 
@@ -295,3 +296,4 @@ QUnit.test("validate advanced search when initially empty", assert => {
     assert.equal(find('.search input.full-page-search').val(), "in:likes", 'has updated search term to "in:likes"');
   });
 });
+*/
