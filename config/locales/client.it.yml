@@ -1192,8 +1192,8 @@ it:
       clear_all: "Cancella Tutto"
       too_short: "La tua chiave di ricerca è troppo corta."
       result_count:
-        one: "1 risultato per <span class='term'>{{term}}</span>"
-        other: "{{count}}{{plus}} risultati per <span class='term'>{{term}}</span>"
+        one: "<span>1 risultato per</span><span class='term'>{{term}}</span>"
+        other: "<span>{{count}}{{plus}} risultati per</span><span class='term'>{{term}}</span>"
       title: "cerca argomenti, messaggi, utenti o categorie"
       no_results: "Nessun risultato trovato."
       no_more_results: "Nessun altro risultato trovato."

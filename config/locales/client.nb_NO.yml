@@ -1316,8 +1316,8 @@ nb_NO:
       clear_all: "Fjern Alle"
       too_short: "Din søketekst er for kort."
       result_count:
-        one: "1 resultat for <span class='term'>{{term}}</span>"
-        other: "{{count}}{{plus}} resultater for <span class='term'>{{term}}</span>"
+        one: "<span>1 resultat for</span><span class='term'>{{term}}</span>"
+        other: "<span>{{count}}{{plus}} resultater for</span><span class='term'>{{term}}</span>"
       title: "søk etter tråder, innlegg, brukere eller kategorier"
       no_results: "Ingen resultater funnet."
       no_more_results: "Ingen flere resultater funnet."

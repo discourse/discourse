@@ -1345,8 +1345,8 @@ fr:
       clear_all: "Tout désélectionner"
       too_short: "Votre terme de recherche est trop court."
       result_count:
-        one: "1 résultat pour <span class='term'>{{term}}</span>"
-        other: "{{count}}{{plus}} résultats pour <span class='term'>{{term}}</span>"
+        one: "<span>1 résultat pour</span><span class='term'>{{term}}</span>"
+        other: "<span>{{count}}{{plus}} résultats pour</span><span class='term'>{{term}}</span>"
       title: "rechercher des sujets, messages, utilisateurs ou catégories"
       no_results: "Aucun résultat."
       no_more_results: "Aucun résultat supplémentaire."
