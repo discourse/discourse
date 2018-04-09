@@ -1251,8 +1251,12 @@ en:
       no_content: No matches found
       filter_placeholder: Search...
       create: "Create: '{{content}}'"
-      max_content_reached: "You can only select {{count}} item(s)."
-      min_content_not_reached: "Select at least {{count}} item(s)."
+      max_content_reached:
+        one: "You can only select {{count}} item."
+        other: "You can only select {{count}} item(s)."
+      min_content_not_reached:
+        one: "Select at least {{count}} item."
+        other: "Select at least {{count}} item(s)."
 
     emoji_picker:
       filter_placeholder: Search for emoji
