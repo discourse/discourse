@@ -34,6 +34,7 @@
 
     .search-info {
       display: flex;
+      flex-wrap: wrap;
       border-bottom: 3px solid $primary-low;
       padding-bottom: .5em;
       margin-bottom: 1em;
@@ -114,6 +115,9 @@
       box-sizing: border-box;
       width: 100%;
       min-width: 100%;
+      input, .item {
+        padding-left: 4px; // temporarily normalizing input padding for this section
+      }
     }
 
     .date-picker-wrapper {
@@ -122,12 +126,15 @@
 
     .date-picker {
       box-sizing: border-box;
+      text-align: left;
+      padding: 4px;
+      margin-bottom: 0;
     }
 
     .search-advanced-title {
       background: $primary-low;
-      padding: .5em 1em;
-      @include small-width  { padding: .5em; }
+      padding: .358em 1em;
+      @include small-width  { padding: .358em .5em; }
       font-weight: 700;
       text-align: left;
       font-weight: bold;
@@ -144,7 +151,21 @@
     .search-advanced-filters {
       background: $primary-very-low;
       padding: 1em;
-      @include small-width  { padding: .5em; }
+      .control-group {
+        margin-bottom: 15px;
+      }
+      section.field {
+        margin-top: 5px;
+      }
+      @include small-width  { 
+        padding: .75em .5em; 
+        .ac-wrap, .choices, .select-kit.multi-select { // overriding inline width from JS
+          width: 100% !important;
+        } 
+        .select-kit {
+          min-width: unset;
+        }
+      }
     }
   }
 }
@@ -155,6 +176,7 @@
 }
 
 .fps-result {
+  display: flex;
   .author {
     display: inline-block;
     vertical-align: top;
