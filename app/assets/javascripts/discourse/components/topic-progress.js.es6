@@ -116,43 +116,43 @@ export default Ember.Component.extend({
   },
 
   _dock() {
-    let maximumOffset = $('#topic-bottom').offset();
-    let composerHeight = $('#reply-control').height() || 0;
-    let $topicProgressWrapper = this.$();
-    let offset = window.pageYOffset || $('html').scrollTop();
+    const $topicProgressWrapper = this.$();
+    if (!$topicProgressWrapper || $topicProgressWrapper.length === 0) return;
 
-    if (!$topicProgressWrapper || $topicProgressWrapper.length === 0) {
-      return;
-    }
+    // on desktop, we want the topic-progress after the last post
+    // on mobile, we want it right before the end of the last post
+    const progressHeight = this.site.mobileView ? 0 : $("#topic-progress").outerHeight();
 
-    // Right position
-    let $replyArea = $('#reply-control .reply-area');
+    const maximumOffset = $('#topic-bottom').offset();
+    const composerHeight = $('#reply-control').height() || 0;
+    const offset = window.pageYOffset || $('html').scrollTop();
+
+    const $replyArea = $('#reply-control .reply-area');
     if ($replyArea && $replyArea.length) {
-      let rightPos = $replyArea.offset().left;
-      $topicProgressWrapper.css('right', `${rightPos}px`);
+      $topicProgressWrapper.css('right', `${$replyArea.offset().left}px`);
     } else {
       $topicProgressWrapper.css('right', `1em`);
     }
 
     let isDocked = false;
     if (maximumOffset) {
-      let threshold = maximumOffset.top;
-      let windowHeight = $(window).height();
-      let headerHeight = $('header').outerHeight(true);
+      const threshold = maximumOffset.top + progressHeight;
+      const windowHeight = $(window).height();
 
       if (this.capabilities.isIOS) {
+        const headerHeight = $('header').outerHeight(true);
         isDocked = offset >= (threshold - windowHeight - headerHeight + composerHeight);
       } else {
         isDocked = offset >= (threshold - windowHeight + composerHeight);
       }
     }
 
-    let dockPos = $(document).height() - $('#topic-bottom').offset().top;
+    const dockPos = $(document).height() - maximumOffset.top - progressHeight;
     if (composerHeight > 0) {
       if (isDocked) {
         $topicProgressWrapper.css('bottom', dockPos);
       } else {
-        let height = composerHeight + "px";
+        const height = composerHeight + "px";
         if ($topicProgressWrapper.css('bottom') !== height) {
           $topicProgressWrapper.css('bottom', height);
         }
