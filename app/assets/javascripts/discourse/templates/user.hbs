@@ -151,23 +151,23 @@
       <div class='secondary'>
         <dl>
           {{#if model.created_at}}
-            <dt>{{i18n 'user.created'}}</dt><dd>{{bound-date model.created_at}}</dd>
+            <div><dt>{{i18n 'user.created'}}</dt><dd>{{bound-date model.created_at}}</dd></div>
           {{/if}}
           {{#if model.last_posted_at}}
-            <dt>{{i18n 'user.last_posted'}}</dt><dd>{{bound-date model.last_posted_at}}</dd>
+            <div><dt>{{i18n 'user.last_posted'}}</dt><dd>{{bound-date model.last_posted_at}}</dd></div>
           {{/if}}
           {{#if model.last_seen_at}}
-            <dt>{{i18n 'user.last_seen'}}</dt><dd>{{bound-date model.last_seen_at}}</dd>
+            <div><dt>{{i18n 'user.last_seen'}}</dt><dd>{{bound-date model.last_seen_at}}</dd></div>
           {{/if}}
-          <dt>{{i18n 'views'}}</dt><dd>{{model.profile_view_count}}</dd>
+          <div><dt>{{i18n 'views'}}</dt><dd>{{model.profile_view_count}}</dd></div>
           {{#if model.invited_by}}
-            <dt class="invited-by">{{i18n 'user.invited_by'}}</dt><dd class="invited-by">{{#link-to 'user' model.invited_by}}{{model.invited_by.username}}{{/link-to}}</dd>
+            <div><dt class="invited-by">{{i18n 'user.invited_by'}}</dt><dd class="invited-by">{{#link-to 'user' model.invited_by}}{{model.invited_by.username}}{{/link-to}}</dd></div>
           {{/if}}
           {{#if model.trust_level}}
-            <dt class="trust-level">{{i18n 'user.trust_level'}}</dt><dd class="trust-level">{{model.trustLevel.name}}</dd>
+            <div><dt class="trust-level">{{i18n 'user.trust_level'}}</dt><dd class="trust-level">{{model.trustLevel.name}}</dd></div>
           {{/if}}
           {{#if canCheckEmails}}
-            <dt>{{i18n 'user.email.title'}}</dt>
+            <div><dt>{{i18n 'user.email.title'}}</dt>
             <dd title={{model.email}}>
               {{#if model.email}}
                 {{model.email}}
@@ -175,10 +175,11 @@
                 {{d-button action="checkEmail" actionParam=model icon="envelope-o" label="admin.users.check_email.text" class="btn-primary"}}
               {{/if}}
             </dd>
+            </div>
           {{/if}}
 
           {{#if model.displayGroups}}
-            <dt class="groups">{{i18n 'groups.title' count=model.displayGroups.length}}</dt>
+            <div><dt class="groups">{{i18n 'groups.title' count=model.displayGroups.length}}</dt>
             <dd class='groups'>
               {{#each model.displayGroups as |group|}}
                 <span>{{#link-to 'group' group.name class="group-link"}}{{group.name}}{{/link-to}}</span>
@@ -188,10 +189,11 @@
                 ...
               {{/link-to}}
             </dd>
+            </div>
           {{/if}}
-
+          
           {{#if canDeleteUser}}
-            {{d-button action="adminDelete" icon="exclamation-triangle" label="user.admin_delete" class="btn-danger"}}
+            <div>{{d-button action="adminDelete" icon="exclamation-triangle" label="user.admin_delete" class="btn-danger"}}</div>
           {{/if}}
         </dl>
         {{plugin-outlet name="user-profile-secondary" args=(hash model=model)}}

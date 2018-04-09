@@ -77,18 +77,9 @@ margin-top: 10px;
     }
 
     .secondary {
-      background: $primary-low;
-
       dl {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        padding: 10px;
-
-      }
-
-      dd {
-        margin: 0 15px 0 5px;
+        padding: 5px 0;
+        
       }
     }
 
