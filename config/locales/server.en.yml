@@ -1128,7 +1128,7 @@ en:
     allowed_iframes: "A list of iframe src domain prefixes that discourse can safely allow in posts"
     whitelisted_crawler_user_agents: 'User agents of web crawlers that should be allowed to access the site.'
     blacklisted_crawler_user_agents: 'User agents of web crawlers that should not be allowed to access the site. Does not apply if whitelist is defined.'
-    slow_down_crawler_user_agents: 'User agents of web crawlers that should be rate limited in robots.txt using the crawl-delay directive, respected by yandax, bing and yahoo'
+    slow_down_crawler_user_agents: 'User agents of web crawlers that should be rate limited in robots.txt using the Crawl-delay directive'
     slow_down_crawler_rate: 'If slow_down_crawler_user_agents is specified this rate will apply to all the crawlers (number of seconds delay between requests)'
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
