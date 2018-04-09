@@ -8,6 +8,8 @@ require_dependency 'guardian/group_guardian'
 require_dependency 'guardian/tag_guardian'
 
 # The guardian is responsible for confirming access to various site resources and operations
+# 根据上面的英文，Guardian 负责确认 access，包括各种 site resources 和  operations
+# 可以看到这里几乎所有操作都是 ? 结尾，返回 true | false
 class Guardian
   include EnsureMagic
   include CategoryGuardian
