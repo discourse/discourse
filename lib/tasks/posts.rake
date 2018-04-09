@@ -87,9 +87,12 @@ def rebake_posts(opts = {})
   total = Post.count
   rebaked = 0
 
-  Post.find_each do |post|
-    rebake_post(post, opts)
-    print_status(rebaked += 1, total)
+  # TODO: make this resumable because carrying around 20 million ids in memory is not a great idea long term
+  Post.order(id: :desc).pluck(:id).in_groups_of(1000, false).each do |batched_post_ids|
+    Post.order(created_at: :desc).where(id: batched_post_ids).each do |post|
+      rebake_post(post, opts)
+      print_status(rebaked += 1, total)
+    end
   end
 
   SiteSetting.disable_edit_notifications = disable_edit_notifications
