@@ -1,3 +1,4 @@
+# 标签
 class Tag < ActiveRecord::Base
   include Searchable
 

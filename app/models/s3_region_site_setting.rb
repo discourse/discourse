@@ -1,5 +1,5 @@
 require_dependency 'enum_site_setting'
-
+# 亚马逊 S3 的设置
 class S3RegionSiteSetting < EnumSiteSetting
 
   def self.valid_value?(val)

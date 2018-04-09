@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 require_dependency 'enum'
-
+# Group 的概念是权限群组
+# http://localhost:3000/groups
 class Group < ActiveRecord::Base
   include HasCustomFields
   include AnonCacheInvalidator

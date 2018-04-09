@@ -1,5 +1,5 @@
 require_dependency 'topic_subtype'
-
+# 报告？
 class Report
 
   attr_accessor :type, :data, :total, :prev30Days, :start_date, :end_date, :category_id, :group_id

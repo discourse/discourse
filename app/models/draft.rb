@@ -1,3 +1,4 @@
+# 草稿
 class Draft < ActiveRecord::Base
   NEW_TOPIC = 'new_topic'
   NEW_PRIVATE_MESSAGE = 'new_private_message'

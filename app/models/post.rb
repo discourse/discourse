@@ -9,6 +9,7 @@ require_dependency 'plugin/filter'
 require 'archetype'
 require 'digest/sha1'
 
+# 应该是帖子
 class Post < ActiveRecord::Base
   include RateLimiter::OnCreateRecord
   include Trashable

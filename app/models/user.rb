@@ -14,6 +14,7 @@ require_dependency 'promotion'
 require_dependency 'password_validator'
 require_dependency 'notification_serializer'
 
+# 用户
 class User < ActiveRecord::Base
   include Searchable
   include Roleable

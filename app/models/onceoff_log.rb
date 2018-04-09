@@ -1,3 +1,4 @@
+# 一次性日志？
 class OnceoffLog < ActiveRecord::Base
 end
 

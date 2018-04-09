@@ -1,5 +1,5 @@
 require_dependency 'rate_limiter'
-
+# 邀请？
 class Invite < ActiveRecord::Base
   class UserExists < StandardError; end
   include RateLimiter::OnCreateRecord

@@ -6,6 +6,7 @@ require_dependency "validators/upload_validator"
 require_dependency "file_store/local_store"
 require_dependency "base62"
 
+# 应该是处理图片上传
 class Upload < ActiveRecord::Base
   belongs_to :user
 

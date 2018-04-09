@@ -12,6 +12,7 @@ require_dependency 'list_controller'
 require_dependency 'topic_posters_summary'
 require_dependency 'topic_featured_users'
 
+# 话题？
 class Topic < ActiveRecord::Base
   class UserExists < StandardError; end
   include ActionView::Helpers::SanitizeHelper

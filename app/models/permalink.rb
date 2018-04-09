@@ -1,3 +1,4 @@
+# 应该是永久链接
 class Permalink < ActiveRecord::Base
   belongs_to :topic
   belongs_to :post

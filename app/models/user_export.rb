@@ -1,3 +1,4 @@
+# 用户导出？
 class UserExport < ActiveRecord::Base
 
   def self.get_download_path(filename)

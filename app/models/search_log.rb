@@ -1,5 +1,7 @@
 require_dependency 'enum'
 
+# 搜索记录，记录用户搜了啥，搜了几次
+# http://localhost:3000/admin/logs/search_logs
 class SearchLog < ActiveRecord::Base
   validates_presence_of :term, :ip_address
 

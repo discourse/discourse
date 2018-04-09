@@ -1,3 +1,4 @@
+# 勋章类型？金银铜？
 class BadgeType < ActiveRecord::Base
   Gold = 1
   Silver = 2

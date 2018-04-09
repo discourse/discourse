@@ -1,7 +1,7 @@
 require_dependency 'theme_store/git_importer'
 require_dependency 'theme_store/tgz_importer'
 require_dependency 'upload_creator'
-
+# 远端主题？
 class RemoteTheme < ActiveRecord::Base
 
   ALLOWED_FIELDS = %w{scss embedded_scss head_tag header after_header body_tag footer}

@@ -43,6 +43,7 @@ class About
     @admins ||= User.where(admin: true).human_users.order(:username_lower)
   end
 
+  # "关于"页面有给统计数据？
   def stats
     @stats ||= {
        topic_count: Topic.listable_topics.count,

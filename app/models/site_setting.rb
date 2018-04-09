@@ -1,6 +1,7 @@
 require 'site_setting_extension'
 require_dependency 'site_settings/yaml_loader'
 
+# Admin 里的 Settings 都是这个
 class SiteSetting < ActiveRecord::Base
   extend SiteSettingExtension
 

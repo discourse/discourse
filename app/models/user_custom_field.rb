@@ -1,3 +1,4 @@
+# 用户自定义字段？？
 class UserCustomField < ActiveRecord::Base
   belongs_to :user
 end

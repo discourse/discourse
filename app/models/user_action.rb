@@ -1,3 +1,4 @@
+# 用户动作，点赞，被点赞，发帖，回复，提起，编辑。
 class UserAction < ActiveRecord::Base
   belongs_to :user
   belongs_to :target_post, class_name: "Post"

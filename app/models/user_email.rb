@@ -1,5 +1,6 @@
 require_dependency 'email_validator'
 
+# 用户邮箱地址
 class UserEmail < ActiveRecord::Base
   belongs_to :user
 
