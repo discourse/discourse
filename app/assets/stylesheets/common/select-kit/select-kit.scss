@@ -194,6 +194,10 @@
     &.is-selected.is-highlighted {
       background: $tertiary-low;
     }
+
+    .discourse-tag, .discourse-tag-count {
+      color: $primary;
+    }
   }
 
   .select-kit-collection {

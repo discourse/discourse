@@ -1292,8 +1292,8 @@ fi:
       clear_all: "Tyhjennä kaikki"
       too_short: "Hakusana on liian lyhyt."
       result_count:
-        one: "Yksi tulos haulle <span class='term'>{{term}}</span>"
-        other: "{{count}}{{plus}} tulosta haulle <span class='term'>{{term}}</span>"
+        one: "<span>Yksi tulos haulle</span><span class='term'>{{term}}</span>"
+        other: "<span>{{count}}{{plus}} tulosta haulle</span><span class='term'>{{term}}</span>"
       title: "etsi ketjuja, viestejä, käyttäjiä tai alueita"
       no_results: "Ei tuloksia."
       no_more_results: "Enempää tuloksia ei löytynyt."

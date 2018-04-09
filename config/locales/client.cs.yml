@@ -1328,9 +1328,9 @@ cs:
       clear_all: "Vymazat vše"
       too_short: "Hledaný výraz je příliš krátký."
       result_count:
-        one: "1 výsledek pro <span class='term'>\"{{term}}\"</span>"
-        few: "{{count}}{{plus}} výsledky pro <span class='term'>\"{{term}}\"</span>"
-        other: "{{count}}{{plus}} výsledků pro <span class='term'>\"{{term}}\"</span>"
+        one: "<span>1 výsledek pro</span><span class='term'>\"{{term}}\"</span>"
+        few: "<span>{{count}}{{plus}} výsledky pro</span><span class='term'>\"{{term}}\"</span>"
+        other: "<span>{{count}}{{plus}} výsledků pro</span><span class='term'>\"{{term}}\"</span>"
       title: "vyhledávat témata, příspěvky, uživatele nebo kategorie"
       no_results: "Nenalezeny žádné výsledky."
       no_more_results: "Nenalezeny žádné další výsledky."

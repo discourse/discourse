@@ -1342,8 +1342,8 @@ es:
       clear_all: "Limpiar todo"
       too_short: "El término de búsqueda es demasiado corto."
       result_count:
-        one: "1 resultado para <span class='term'>{{term}}</span>"
-        other: "{{count}}{{plus}} resultados para <span class='term'>{{term}}</span>"
+        one: "<span>1 resultado para</span><span class='term'>{{term}}</span>"
+        other: "<span>{{count}}{{plus}} resultados para</span><span class='term'>{{term}}</span>"
       title: "buscar temas, posts, usuarios o categorías"
       no_results: "No se ha encontrado ningún resultado."
       no_more_results: "No se encontraron más resultados."

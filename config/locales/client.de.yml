@@ -1288,8 +1288,8 @@ de:
       clear_all: "Auswahl aufheben"
       too_short: "Der Suchbegriff ist zu kurz."
       result_count:
-        one: "1 Ergebnis für <span class='term'>{{term}}</span>"
-        other: "{{count}}{{plus}} Ergebnisse für <span class='term'>{{term}}</span>"
+        one: "<span>1 Ergebnis für</span><span class='term'>{{term}}</span>"
+        other: "<span>{{count}}{{plus}} Ergebnisse für</span><span class='term'>{{term}}</span>"
       title: "suche nach Themen, Beiträgen, Benutzern oder Kategorien"
       no_results: "Keine Ergebnisse gefunden."
       no_more_results: "Es wurde keine weiteren Ergebnisse gefunden."

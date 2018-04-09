@@ -1189,8 +1189,8 @@ tr_TR:
       clear_all: "Tümünü Temizle"
       too_short: "Aradığın terim çok kısa."
       result_count:
-        one: "<span class='term'>{{term}}</span> için {{count}}{{plus}} sonuç"
-        other: "<span class='term'>{{term}}</span> için {{count}}{{plus}} sonuç"
+        one: "<span class='term'>{{term}}</span><span>için {{count}}{{plus}} sonuç</span>"
+        other: "<span class='term'>{{term}}</span><span>için {{count}}{{plus}} sonuç</span>"
       title: "konu, gönderi, kullanıcı veya kategori ara"
       no_results: "Hiç bir sonuç bulunamadı."
       no_more_results: "Başka sonuç yok."
