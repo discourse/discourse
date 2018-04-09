@@ -147,26 +147,6 @@
       }
     }
 
-  .secondary {
-    background: $secondary;
-    border-top: 1px solid $primary-low;
-    border-bottom: 1px solid $primary-low;
-
-      dl {
-        padding: 8px 10px;
-      }
-
-      dd {
-        display: inline;
-        margin: 0 10px 0 0;
-      }
-
-      dt {
-        margin: 0 5px 0 0;
-        padding: 0;
-      }
-    }
-
     .details {
       padding: 0 0 4px 0;
       margin-top: -200px;
