@@ -265,12 +265,16 @@ const Composer = RestModel.extend({
       return this.get('targetUsernames') && (this.get('targetUsernames').trim() + ',').indexOf(',') === 0;
     } else {
       // has a category? (when needed)
-      return this.get('canCategorize') &&
-            !this.siteSettings.allow_uncategorized_topics &&
-            !this.get('categoryId') &&
-            !this.user.get('admin');
+      return this.get('requiredCategoryMissing');
     }
   }.property('loading', 'canEditTitle', 'titleLength', 'targetUsernames', 'replyLength', 'categoryId', 'missingReplyCharacters'),
+
+  @computed('canCategorize', 'categoryId')
+  requiredCategoryMissing(canCategorize, categoryId) {
+    return canCategorize && !categoryId &&
+      !this.siteSettings.allow_uncategorized_topics &&
+      !this.user.get('admin');
+  },
 
   titleLengthValid: function() {
     if (this.user.get('admin') && this.get('post.static_doc') && this.get('titleLength') > 0) return true;

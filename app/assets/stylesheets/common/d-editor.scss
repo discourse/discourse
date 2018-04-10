@@ -90,6 +90,11 @@
   .btn.italic {
     font-style: italic;
   }
+
+  &.disabled {
+    visibility: hidden;
+    cursor: not-allowed;
+  }
 }
 
 .d-editor-spacer {

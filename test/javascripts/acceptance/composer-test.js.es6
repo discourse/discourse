@@ -1,4 +1,4 @@
-import { acceptance } from "helpers/qunit-helpers";
+import { acceptance, replaceCurrentUser } from "helpers/qunit-helpers";
 
 acceptance("Composer", {
   loggedIn: true,
@@ -333,5 +333,44 @@ QUnit.test("Composer draft with dirty reply can toggle to edit", assert => {
   click('.modal-footer a:eq(0)');
   andThen(() => {
     assert.equal(find('.d-editor-input').val().indexOf('This is the first post.'), 0, 'it populates the input with the post text');
+  });
+});
+
+acceptance("Composer and uncategorized is not allowed", {
+  loggedIn: true,
+  settings: {
+    enable_whispers: true,
+    allow_uncategorized_topics: false
+  }
+});
+
+QUnit.test("Disable body until category is selected", assert => {
+  replaceCurrentUser({ admin: false, staff: false, trust_level: 1 });
+
+  visit("/");
+  click('#create-topic');
+  andThen(() => {
+    assert.ok(exists('.d-editor-input'), 'the composer input is visible');
+    assert.ok(exists('.title-input .popup-tip.bad.hide'), 'title errors are hidden by default');
+    assert.ok(exists('.d-editor-textarea-wrapper .popup-tip.bad.hide'), 'body errors are hidden by default');
+    assert.ok(exists('.d-editor-container .d-editor-button-bar.disabled'), 'toolbar is disabled');
+    assert.ok(find('.d-editor-container .d-editor-input:disabled').length, 'textarea is disabled');
+  });
+
+  const categoryChooser = selectKit('.category-chooser');
+
+  categoryChooser.expand().selectRowByValue(2);
+
+  andThen(() => {
+    assert.ok(!exists('.d-editor-container .d-editor-button-bar.disabled'), 'toolbar is enabled');
+    assert.ok(find('.d-editor-container .d-editor-input:disabled').length === 0, 'textarea is enabled');
+  });
+
+  fillIn('.d-editor-input', 'Now I can type stuff');
+  categoryChooser.expand().selectRowByValue('__none__');
+
+  andThen(() => {
+    assert.ok(!exists('.d-editor-container .d-editor-button-bar.disabled'), 'toolbar is still enabled');
+    assert.ok(find('.d-editor-container .d-editor-input:disabled').length === 0, 'textarea is still enabled');
   });
 });
