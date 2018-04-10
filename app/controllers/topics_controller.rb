@@ -670,7 +670,7 @@ class TopicsController < ApplicationController
 
     operation = params
       .require(:operation)
-      .permit(:type, :group, :category_id, :notification_level_id, :tags)
+      .permit(:type, :group, :category_id, :notification_level_id, tags: [])
       .to_h.symbolize_keys
 
     raise ActionController::ParameterMissing.new(:operation_type) if operation[:type].blank?
