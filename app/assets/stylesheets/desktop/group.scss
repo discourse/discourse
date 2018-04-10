@@ -37,7 +37,7 @@
 
     a {
       color: dark-light-choose($primary-medium, $secondary-high);
-      padding: 8px 13px;
+      padding: 8px 0;
 
       &.active {
         background-color: transparent;
