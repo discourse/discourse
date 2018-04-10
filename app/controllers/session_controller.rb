@@ -52,7 +52,7 @@ class SessionController < ApplicationController
         sso.external_id = current_user.id.to_s
         sso.admin = current_user.admin?
         sso.moderator = current_user.moderator?
-        sso.groups = current_user.groups.pluck(:name)
+        sso.groups = current_user.groups.pluck(:name).join(",")
 
         if sso.return_sso_url.blank?
           render plain: "return_sso_url is blank, it must be provided", status: 400
