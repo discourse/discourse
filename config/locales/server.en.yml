@@ -2110,7 +2110,7 @@ en:
 
     post_hidden_again:
       title: "Post Hidden again"
-      subject_template: "Post hidden by community flags"
+      subject_template: "Post hidden by community flags, staff notified"
       text_body_template: |
         Hello,
 
@@ -2120,7 +2120,7 @@ en:
 
         %{flag_reason}
 
-        Multiple community members flagged this post before it was hidden, so please consider how you might revise your post to reflect their feedback. **You can edit your post after %{edit_delay} minutes, but it will remain hidden until handled by staff.**
+        Multiple community members flagged this post before it was hidden. **Because this post has been hidden more than once, your post will now remain hidden until it is handled by a staff member.**
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
