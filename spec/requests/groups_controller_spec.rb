@@ -4,6 +4,8 @@ describe GroupsController do
   let(:user) { Fabricate(:user) }
   let(:group) { Fabricate(:group, users: [user]) }
   let(:moderator_group_id) { Group::AUTO_GROUPS[:moderators] }
+  let(:admin) { Fabricate(:admin) }
+  let(:moderator) { Fabricate(:moderator) }
 
   describe '#index' do
     let(:staff_group) do
@@ -11,11 +13,32 @@ describe GroupsController do
     end
 
     context 'when group directory is disabled' do
-      it 'should deny access' do
+      before do
         SiteSetting.enable_group_directory = false
+      end
 
+      it 'should deny access for an anon user' do
         get "/groups.json"
-        expect(response).to be_forbidden
+        expect(response.status).to eq(403)
+      end
+
+      it 'should deny access for a normal user' do
+        get "/groups.json"
+        expect(response.status).to eq(403)
+      end
+
+      it 'should not deny access for an admin' do
+        sign_in(admin)
+        get "/groups.json"
+
+        expect(response.status).to eq(200)
+      end
+
+      it 'should not deny access for a moderator' do
+        sign_in(moderator)
+        get "/groups.json"
+
+        expect(response.status).to eq(200)
       end
     end
 
