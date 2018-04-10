@@ -116,7 +116,7 @@ export default createWidget('hamburger-menu', {
       links.push({ route: 'users', className: 'user-directory-link', label: 'directory.title' });
     }
 
-    if (this.siteSettings.enable_group_directory) {
+    if (this.siteSettings.enable_group_directory ||  this.currentUser.staff) {
       links.push({ route: 'groups', className: 'groups-link', label: 'groups.index.title' });
     }
 

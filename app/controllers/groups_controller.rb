@@ -37,7 +37,7 @@ class GroupsController < ApplicationController
   }
 
   def index
-    unless SiteSetting.enable_group_directory?
+    unless SiteSetting.enable_group_directory? || current_user&.staff?
       raise Discourse::InvalidAccess.new(:enable_group_directory)
     end
 
