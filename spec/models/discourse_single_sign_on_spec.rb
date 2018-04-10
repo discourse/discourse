@@ -147,6 +147,11 @@ describe DiscourseSingleSignOn do
     sso.lookup_or_create_user(ip_address)
     expect(group1.usernames).to eq("")
     expect(group2.usernames).to eq(user.username)
+
+    sso.groups = "badname,trust_level_4"
+    sso.lookup_or_create_user(ip_address)
+    expect(group1.usernames).to eq("")
+    expect(group2.usernames).to eq("")
   end
 
   it "can specify groups" do
