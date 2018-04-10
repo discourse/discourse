@@ -279,11 +279,11 @@ task 'posts:refresh_emails', [:topic_id] => [:environment] do |_, args|
 end
 
 desc 'Reorders all posts based on their creation_date'
-task 'posts:reorder_posts' => :environment do
+task 'posts:reorder_posts', [:topic_id] => [:environment] do |_, args|
   Post.transaction do
     # update sort_order and flip post_number to prevent
     # unique constraint violations when updating post_number
-    Post.exec_sql(<<~SQL)
+    builder = SqlBuilder.new(<<~SQL)
       WITH ordered_posts AS (
           SELECT
             id,
@@ -292,6 +292,7 @@ task 'posts:reorder_posts' => :environment do
               PARTITION BY topic_id
               ORDER BY created_at, post_number ) AS new_post_number
           FROM posts
+          /*where*/
       )
       UPDATE posts AS p
       SET sort_order = o.new_post_number,
@@ -300,6 +301,8 @@ task 'posts:reorder_posts' => :environment do
       WHERE p.id = o.id AND
             p.post_number <> o.new_post_number
     SQL
+    builder.where("topic_id = :topic_id") if args[:topic_id]
+    builder.exec(topic_id: args[:topic_id])
 
     Notification.exec_sql(<<~SQL)
       UPDATE notifications AS x
