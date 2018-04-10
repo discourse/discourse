@@ -320,6 +320,7 @@ login:
     default: ''
     regex: '^https?:\/\/.+[^\/]$'
   sso_secret: ''
+  sso_overrides_groups: false
   sso_overrides_bio: false
   sso_overrides_email:
     default: false

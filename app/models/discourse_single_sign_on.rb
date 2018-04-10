@@ -106,7 +106,29 @@ class DiscourseSingleSignOn < SingleSignOn
 
   private
 
+  def synchronize_groups(user)
+    names = (groups || "").split(",").map(&:downcase)
+    ids = Group.where('LOWER(NAME) in (?) AND NOT automatic', names).pluck(:id)
+
+    group_users = GroupUser
+      .where('group_id IN (SELECT id FROM groups WHERE NOT automatic)')
+      .where(user_id: user.id)
+
+    group_users.where('group_id NOT IN (?)', ids).destroy_all
+
+    ids -= group_users.where('group_id IN (?)', ids).pluck(:group_id)
+
+    ids.each do |group_id|
+      GroupUser.create(group_id: group_id, user_id: user.id)
+    end
+  end
+
   def apply_group_rules(user)
+    if SiteSetting.sso_overrides_groups
+      synchronize_groups(user)
+      return
+    end
+
     if add_groups
       split = add_groups.split(",").map(&:downcase)
       if split.length > 0
