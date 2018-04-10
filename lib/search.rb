@@ -458,20 +458,13 @@ class Search
     end
   end
 
-  advanced_filter(/tags?:([a-zA-Z0-9,\-_+!]+)/) do |posts, match|
-    if match.include?('!')
-      search_parts = match.split('!')
-      positive_part = search_parts[0]
-      negative_part = search_parts[1]
+  advanced_filter(/^tags?:(.*)/) do |posts, match|
+    search_tags(posts, match)
+  end
 
-      positive_tags = search_tags(posts, positive_part)
-      negative_tags = search_tags(posts, negative_part)
-
-      positive_tags.where(["posts.id NOT IN (?)",
-                           negative_tags.pluck("id")]).order("id")
-    else
-      search_tags(posts, match)
-    end
+  advanced_filter(/\-tags?:(.*)/) do |posts, match|
+    negative_tags = search_tags(posts, match)
+    posts.where(["posts.id NOT IN (?)", negative_tags.pluck("id")]).order("id")
   end
 
   advanced_filter(/filetypes?:([a-zA-Z0-9,\-_]+)/) do |posts, match|

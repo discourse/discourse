@@ -836,10 +836,11 @@ describe Search do
         expect(Search.execute('tags:lunch+eggs+sandwiches').posts.map(&:id)).to eq([post4.id].sort)
         expect(Search.execute('tags:eggs+lunch+sandwiches').posts.map(&:id)).to eq([post4.id].sort)
       end
+
       it 'can find posts which contains provided tags and does not contain selected ones' do
-        expect(Search.execute('tags:eggs!lunch').posts.map(&:id)).to eq([post1.id, post2.id, post5.id].sort)
-        expect(Search.execute('tags:eggs!lunch+sandwiches').posts.map(&:id)).to eq([post1.id, post2.id, post3.id, post5.id].sort)
-        expect(Search.execute('tags:eggs!lunch,sandwiches').posts.map(&:id)).to eq([post1.id, post2.id].sort)
+        expect(Search.execute('tags:eggs -tags:lunch').posts.map(&:id)).to eq([post1.id, post2.id, post5.id].sort)
+        expect(Search.execute('tags:eggs -tags:lunch+sandwiches').posts.map(&:id)).to eq([post1.id, post2.id, post3.id, post5.id].sort)
+        expect(Search.execute('tags:eggs -tags:lunch,sandwiches').posts.map(&:id)).to eq([post1.id, post2.id].sort)
       end
     end
 
