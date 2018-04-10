@@ -114,7 +114,11 @@ class DiscourseSingleSignOn < SingleSignOn
       .where('group_id IN (SELECT id FROM groups WHERE NOT automatic)')
       .where(user_id: user.id)
 
-    group_users.where('group_id NOT IN (?)', ids).destroy_all
+    delete_group_users = group_users
+    if ids.length > 0
+      delete_group_users = group_users.where('group_id NOT IN (?)', ids)
+    end
+    delete_group_users.destroy_all
 
     ids -= group_users.where('group_id IN (?)', ids).pluck(:group_id)
 
