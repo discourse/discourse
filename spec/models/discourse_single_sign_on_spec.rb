@@ -121,6 +121,34 @@ describe DiscourseSingleSignOn do
     expect(admin_group.users.where('users.id = ?', user.id).exists?).to eq(true)
   end
 
+  it "can force a list of groups with the groups attribute" do
+    user = Fabricate(:user)
+    group1 = Fabricate(:group, name: 'group1')
+    group2 = Fabricate(:group, name: 'group2')
+
+    sso = DiscourseSingleSignOn.new
+    sso.username = "bobsky"
+    sso.name = "Bob"
+    sso.email = user.email
+    sso.external_id = "A"
+
+    sso.groups = "#{group2.name.capitalize},group4,badname,trust_level_4"
+    sso.lookup_or_create_user(ip_address)
+
+    SiteSetting.sso_overrides_groups = true
+
+    group1.reload
+    expect(group1.usernames).to eq("")
+    expect(group2.usernames).to eq("")
+
+    group1.add(user)
+    group1.save
+
+    sso.lookup_or_create_user(ip_address)
+    expect(group1.usernames).to eq("")
+    expect(group2.usernames).to eq(user.username)
+  end
+
   it "can specify groups" do
 
     user = Fabricate(:user)
