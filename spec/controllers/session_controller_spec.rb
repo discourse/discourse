@@ -333,7 +333,7 @@ describe SessionController do
         expect(sso2.external_id).to eq(@user.id.to_s)
         expect(sso2.admin).to eq(true)
         expect(sso2.moderator).to eq(false)
-        expect(sso2.groups).to eq(@user.groups.pluck(:name))
+        expect(sso2.groups).to eq(@user.groups.pluck(:name).join(","))
       end
 
       it "successfully redirects user to return_sso_url when the user is logged in" do
