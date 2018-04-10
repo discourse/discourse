@@ -43,6 +43,14 @@
             icon="envelope"
             label="groups.message"}}
       {{/if}}
+
+      {{#if currentUser.admin}}
+        {{d-button action="destroy"
+            disabled=destroying
+            icon="trash"
+            class='btn-danger'
+            label="admin.groups.delete"}}
+      {{/if}}
     </div>
   </div>
 
