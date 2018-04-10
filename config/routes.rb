@@ -10,6 +10,7 @@ USERNAME_ROUTE_FORMAT = /[\w.\-]+?/ unless defined? USERNAME_ROUTE_FORMAT
 BACKUP_ROUTE_FORMAT = /.+\.(sql\.gz|tar\.gz|tgz)/i unless defined? BACKUP_ROUTE_FORMAT
 
 Discourse::Application.routes.draw do
+  relative_url_root = (defined?(Rails.configuration.relative_url_root) && Rails.configuration.relative_url_root) ? Rails.configuration.relative_url_root : ''
 
   match "/404", to: "exceptions#not_found", via: [:get, :post]
   get "/404-body" => "exceptions#not_found_body"
@@ -549,7 +550,7 @@ Discourse::Application.routes.draw do
   get "/badges/:id(/:slug)" => "badges#show"
   resources :user_badges, only: [:index, :create, :destroy]
 
-  get '/c', to: redirect('/categories')
+  get '/c', to: redirect('/' + relative_url_root + 'categories')
 
   resources :categories, except: :show
   post "category/:category_id/move" => "categories#move"
@@ -731,7 +732,7 @@ Discourse::Application.routes.draw do
     # current site before updating to a new Service Worker.
     # Support the old Service Worker path to avoid routing error filling up the
     # logs.
-    get "/service-worker.js" => redirect(service_worker_asset), format: :js
+    get "/service-worker.js" => redirect('/' + relative_url_root + service_worker_asset), format: :js
     get service_worker_asset => "static#service_worker_asset", format: :js
   end
 
