@@ -338,7 +338,12 @@ class Plugin::Instance
   end
 
   def register_asset(file, opts = nil)
-    full_path = File.dirname(path) << "/assets/" << file
+    if opts && opts == :vendored_core_pretty_text
+      full_path = DiscoursePluginRegistry.core_asset_for_name(file)
+    else
+      full_path = File.dirname(path) << "/assets/" << file
+    end
+
     assets << [full_path, opts]
   end
 
@@ -506,6 +511,7 @@ JS
 
   def javascript_includes
     assets.map do |asset, opts|
+      next if opts == :vendored_core_pretty_text
       next if opts == :admin
       next unless asset =~ DiscoursePluginRegistry::JS_REGEX
       asset
