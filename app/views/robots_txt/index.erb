@@ -3,40 +3,14 @@
 <% @allowed_user_agents.each do |user_agent| %>
 User-agent: <%= user_agent %>
 <% end %>
-Disallow: /auth/cas
-Disallow: /auth/facebook/callback
-Disallow: /auth/twitter/callback
-Disallow: /auth/google/callback
-Disallow: /auth/yahoo/callback
-Disallow: /auth/github/callback
-Disallow: /auth/cas/callback
-Disallow: /assets/browser-update*.js
-Disallow: /users/
-Disallow: /u/
-Disallow: /badges/
-Disallow: /search
-Disallow: /search/
-Disallow: /tags
-Disallow: /tags/
-Disallow: /email/
-Disallow: /session
-Disallow: /session/
-Disallow: /admin
-Disallow: /admin/
-Disallow: /user-api-key
-Disallow: /user-api-key/
-Disallow: /*?api_key*
-Disallow: /*?*api_key*
-Disallow: /groups
-Disallow: /groups/
-Disallow: /t/*/*.rss
-Disallow: /tags/*.rss
-Disallow: /c/*.rss
+<% RobotsTxtController::DISALLOWED_PATHS.each do |path| %>
+Disallow: <%= Discourse.base_uri + path %>
+<% end %>
 
 <% if @disallowed_user_agents %>
   <% @disallowed_user_agents.each do |user_agent| %>
 User-agent: <%= user_agent %>
-Disallow: /
+Disallow: <%= Discourse.base_uri + "/" %>
 
   <% end %>
 <% end %>

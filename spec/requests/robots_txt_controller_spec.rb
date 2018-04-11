@@ -3,6 +3,14 @@ require 'rails_helper'
 RSpec.describe RobotsTxtController do
   describe '#index' do
 
+    context 'subfolder' do
+      it 'prefixes the rules with the directory' do
+        Discourse.stubs(:base_uri).returns('/forum')
+        get '/robots.txt'
+        expect(response.body).to include("\nDisallow: /forum/admin")
+      end
+    end
+
     context 'crawl delay' do
       it 'allows you to set crawl delay on particular bots' do
         SiteSetting.allow_index_in_robots_txt = true
