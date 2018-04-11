@@ -121,7 +121,7 @@ task 'docker:test' do
 
     if ENV['PAUSE_ON_TERMINATE']
       puts "Pausing prior to termination"
-      gets
+      sleep
     end
 
     Process.kill("TERM", @redis_pid) if @redis_pid
