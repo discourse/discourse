@@ -815,7 +815,7 @@ bs_BA:
     create_account:
       disclaimer: "Registracijom, vi se slažete sa <a href='{{privacy_link}}'>policom o privatnosti</a> i <a href='{{tos_link}}'>uslovima korištenja servisa</a>."
       title: "Kreiraj Nalog"
-      failed: "Something went wrong, perhaps this email is already registered, try the forgot password link"
+      failed: "Something went wrong. Perhaps this email is already registered? Try the forgot password link."
     forgot_password:
       title: "Zaboravili ste Šifru"
       action: "Zaboravio šifru"
