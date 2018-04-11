@@ -779,8 +779,16 @@ export default Ember.Controller.extend({
 
   @computed('model.categoryId', 'lastValidatedAt')
   categoryValidation(categoryId, lastValidatedAt) {
-    if( !this.siteSettings.allow_uncategorized_topics && !categoryId) {
+    if(!this.siteSettings.allow_uncategorized_topics && !categoryId) {
       return InputValidation.create({ failed: true, reason: I18n.t('composer.error.category_missing'), lastShownAt: lastValidatedAt });
+    }
+  },
+
+  @computed('model.category', 'model.tags', 'lastValidatedAt')
+  tagValidation(category, tags, lastValidatedAt) {
+    const tagsArray = tags || [];
+    if (this.site.get('can_tag_topics') && category && category.get('minimum_required_tags') > tagsArray.length) {
+      return InputValidation.create({ failed: true, reason: I18n.t('composer.error.tags_missing', {count: category.get('minimum_required_tags')}), lastShownAt: lastValidatedAt });
     }
   },
 

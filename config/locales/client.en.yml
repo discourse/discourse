@@ -1303,6 +1303,7 @@ en:
         post_length: "Post must be at least {{min}} characters"
         try_like: 'Have you tried the <i class="fa fa-heart"></i> button?'
         category_missing: "You must choose a category"
+        tags_missing: "You must choose at least {{count}} tags"
 
       save_edit: "Save Edit"
       reply_original: "Reply on Original Topic"
@@ -2267,6 +2268,7 @@ en:
       default_position: "Default Position"
       position_disabled: "Categories will be displayed in order of activity. To control the order of categories in lists, "
       position_disabled_click: 'enable the "fixed category positions" setting.'
+      minimum_required_tags: 'Minimum number of tags required in a topic:'
       parent: "Parent Category"
       notifications:
         watching:

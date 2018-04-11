@@ -29,13 +29,13 @@
 .modal-header {
   display: flex;
   align-items: center;
-  padding: 10px 15px;  
+  padding: 10px 15px;
   border-bottom: 1px solid $primary-low;
   h3 {
     margin-bottom: 0;
   }
   .modal-close {
-    order: 2; 
+    order: 2;
     margin-left: auto;
   }
 }
@@ -372,6 +372,12 @@
       }
     }
   }
+
+  section.minimum-required-tags {
+    input[type=number] {
+      width: 50px;
+    }
+  }
 }
 
 .incoming-email-modal {
@@ -421,22 +427,22 @@
 }
 
 .change-timestamp {
-  
+
     .date-picker {
       width: 10em;
     }
-  
+
     #date-container {
       .pika-single {
         position: relative !important; // overriding another important
         display: inline-block;
       }
     }
-  
+
     input[type=time] {
       width: 6em;
     }
-  
+
     form {
       margin: 0;
     }
@@ -491,4 +497,3 @@
   width: 95%;
 }
 
-  

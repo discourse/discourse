@@ -573,10 +573,11 @@ end
 #  default_top_period            :string(20)       default("all")
 #  mailinglist_mirror            :boolean          default(FALSE), not null
 #  suppress_from_latest          :boolean          default(FALSE)
+#  minimum_required_tags         :integer          default(0)
 #
 # Indexes
 #
 #  index_categories_on_email_in     (email_in) UNIQUE
 #  index_categories_on_topic_count  (topic_count)
-#  unique_index_categories_on_name  ((COALESCE(parent_category_id, '-1'::integer)), name) UNIQUE
+#  unique_index_categories_on_name  (COALESCE(parent_category_id, '-1'::integer), name) UNIQUE
 #

@@ -105,6 +105,11 @@ const Composer = RestModel.extend({
     return categoryId ? this.site.categories.findBy('id', categoryId) : null;
   },
 
+  @computed('category')
+  minimumRequiredTags(category) {
+    return (category && category.get('minimum_required_tags') > 0) ? category.get('minimum_required_tags') : null;
+  },
+
   creatingTopic: Em.computed.equal('action', CREATE_TOPIC),
   creatingSharedDraft: Em.computed.equal('action', CREATE_SHARED_DRAFT),
   creatingPrivateMessage: Em.computed.equal('action', PRIVATE_MESSAGE),
@@ -246,28 +251,41 @@ const Composer = RestModel.extend({
     return options;
   },
 
-  // whether to disable the post button
-  cantSubmitPost: function() {
+  @computed
+  isStaffUser() {
+    const currentUser = Discourse.User.current();
+    return currentUser && currentUser.get('staff');
+  },
+
+  @computed('loading', 'canEditTitle', 'titleLength', 'targetUsernames', 'replyLength', 'categoryId', 'missingReplyCharacters', 'tags', 'topicFirstPost', 'minimumRequiredTags', 'isStaffUser')
+  cantSubmitPost(loading, canEditTitle, titleLength, targetUsernames, replyLength, categoryId, missingReplyCharacters, tags, topicFirstPost, minimumRequiredTags, isStaffUser) {
 
     // can't submit while loading
-    if (this.get('loading')) return true;
+    if (loading) return true;
 
     // title is required when
     //  - creating a new topic/private message
     //  - editing the 1st post
-    if (this.get('canEditTitle') && !this.get('titleLengthValid')) return true;
+    if (canEditTitle && !this.get('titleLengthValid')) return true;
 
     // reply is always required
-    if (this.get('missingReplyCharacters') > 0) return true;
+    if (missingReplyCharacters > 0) return true;
+
+    if (this.site.get('can_tag_topics') && !isStaffUser && topicFirstPost && minimumRequiredTags) {
+      const tagsArray = tags || [];
+      if (tagsArray.length < minimumRequiredTags) {
+        return true;
+      }
+    }
 
     if (this.get("privateMessage")) {
       // need at least one user when sending a PM
-      return this.get('targetUsernames') && (this.get('targetUsernames').trim() + ',').indexOf(',') === 0;
+      return targetUsernames && (targetUsernames.trim() + ',').indexOf(',') === 0;
     } else {
       // has a category? (when needed)
       return this.get('requiredCategoryMissing');
     }
-  }.property('loading', 'canEditTitle', 'titleLength', 'targetUsernames', 'replyLength', 'categoryId', 'missingReplyCharacters'),
+  },
 
   @computed('canCategorize', 'categoryId')
   requiredCategoryMissing(canCategorize, categoryId) {
