@@ -37,7 +37,7 @@ module UserNotificationsHelper
 
     result = ""
     length = 0
-    doc.css('body > p, aside.onebox').each do |node|
+    doc.css('body > p, aside.onebox, body > ul').each do |node|
       if node.text.present?
         result << node.to_s
         length += node.inner_text.length
