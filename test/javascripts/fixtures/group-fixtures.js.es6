@@ -57,12 +57,12 @@ export default {
       {
         "id":2,
         "username":"bruce1",
-        "avatar_template":"/letter_avatar_proxy/v2/letter/b/9de053/{size}.png"
+        "avatar_template":"/user_avatar/meta.discourse.org/bruce1/{size}/5245.png"
       },
       {
         "id":1,
         "username":"bruce0",
-        "avatar_template":"/letter_avatar_proxy/v2/letter/b/90ced4/{size}.png"
+        "avatar_template":"/user_avatar/meta.discourse.org/bruce0/{size}/5245.png"
       }
     ],
     "primary_groups":[],
