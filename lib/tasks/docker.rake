@@ -12,6 +12,7 @@
 # => SINGLE_PLUGIN             set to plugin name to only run plugin-specific rspec tests (you'll probably want to SKIP_CORE as well)
 # => BISECT                    set to 1 to run rspec --bisect (applies to core rspec tests only)
 # => RSPEC_SEED                set to seed to use for rspec tests (applies to core rspec tests only)
+# => PAUSE_ON_TERMINATE        set to 1 to pause prior to terminating redis and pg
 #
 # Other useful environment variables (not specific to this rake task)
 # => COMMIT_HASH    used by the discourse_test docker image to load a specific commit of discourse
@@ -117,6 +118,11 @@ task 'docker:test' do
 
   ensure
     puts "Terminating"
+
+    if ENV['PAUSE_ON_TERMINATE']
+      puts "Pausing prior to termination"
+      gets
+    end
 
     Process.kill("TERM", @redis_pid) if @redis_pid
     Process.kill("TERM", @pg_pid) if @pg_pid
