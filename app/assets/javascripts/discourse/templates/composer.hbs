@@ -64,7 +64,8 @@
                   </div>
                 {{/if}}
                 {{#if canEditTags}}
-                  {{mini-tag-chooser tags=model.tags tabindex="4" categoryId=model.categoryId}}
+                  {{mini-tag-chooser tags=model.tags tabindex="4" categoryId=model.categoryId minimum=model.minimumRequiredTags}}
+                  {{popup-input-tip validation=tagValidation}}
                 {{/if}}
 
 
