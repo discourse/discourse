@@ -30,6 +30,8 @@ Disallow: /*?*api_key*
 Disallow: /groups
 Disallow: /groups/
 Disallow: /t/*/*.rss
+Disallow: /tags/*.rss
+Disallow: /c/*.rss
 
 <% if @disallowed_user_agents %>
   <% @disallowed_user_agents.each do |user_agent| %>
