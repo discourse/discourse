@@ -69,7 +69,7 @@ PLUGIN_API_JS
 
       is_raw = name =~ /\.raw$/
       if is_raw
-        template = "requirejs('discourse-common/lib/raw-handlebars').template(#{Barber::Precompiler.compile(hbs_template)})"
+        template = "requirejs('discourse-common/lib/raw-handlebars').template(#{Barber::Precompiler.compile(node.inner_html)})"
         node.replace <<COMPILED
           <script>
             (function() {

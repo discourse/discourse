@@ -18,7 +18,3 @@ function inject(context, key, value) {
 registerHelper('theme-setting-injector', function(arr, hash) {
   inject(hash.context, hash.key, hash.value);
 });
-
-Handlebars.registerHelper('theme-setting-injector', function(hash) {
-  inject(hash.data.root, hash.hash.key, hash.hash.value);
-});
