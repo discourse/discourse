@@ -17,6 +17,16 @@
       {{/if}}
     </div>
 
+    <div class="search-context">
+      {{#if context}}
+        <div class='fps-search-context'>
+          <label>
+            {{input type="checkbox" name="searchContext" checked=searchContextEnabled}} {{searchContextDescription}}
+          </label>
+        </div>
+      {{/if}}
+    </div>
+
     {{#if hasResults}}
       <div class='search-title'>
         {{#if hasResults}}
