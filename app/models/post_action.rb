@@ -155,6 +155,7 @@ SQL
 
     DiscourseEvent.trigger(:confirmed_spam_post, post) if trigger_spam
     DiscourseEvent.trigger(:flag_reviewed, post)
+    DiscourseEvent.trigger(:flag_agreed, actions.first) if actions.first.present?
 
     update_flagged_posts_count
   end
@@ -188,6 +189,7 @@ SQL
 
     Post.with_deleted.where(id: post.id).update_all(cached)
     DiscourseEvent.trigger(:flag_reviewed, post)
+    DiscourseEvent.trigger(:flag_disagreed, actions.first) if actions.first.present?
 
     update_flagged_posts_count
   end
@@ -206,6 +208,7 @@ SQL
     end
 
     DiscourseEvent.trigger(:flag_reviewed, post)
+    DiscourseEvent.trigger(:flag_deferred, actions.first) if actions.first.present?
     update_flagged_posts_count
   end
 
@@ -304,6 +307,10 @@ SQL
       if post_action && post_action.errors.count == 0
         BadgeGranter.queue_badge_grant(Badge::Trigger::PostAction, post_action: post_action)
       end
+    end
+
+    if post_action && PostActionType.notify_flag_type_ids.include?(post_action_type_id)
+      DiscourseEvent.trigger(:flag_created, post_action)
     end
 
     GivenDailyLike.increment_for(user.id) if post_action_type_id == PostActionType.types[:like]
