@@ -1,6 +1,6 @@
 .upload-selector {
   input[type="text"]{
-    width: 520px;
+    width: 90%;
   }
   input[type="file"] {
     font-size: $font-0;
@@ -9,6 +9,24 @@
   .description {
     color: dark-light-choose($primary-medium, $secondary-medium);
   }
+  .radios {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    &:first-of-type {
+      margin-bottom: 1em;
+    }
+    label {
+      vertical-align: middle;      
+    }
+    input {
+      line-height: $line-height-large;
+    }
+    .inputs {
+      width: 100%;
+    }
+  }
+
 }
 
 .uploaded-image-preview {
