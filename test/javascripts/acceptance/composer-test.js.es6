@@ -353,8 +353,7 @@ QUnit.test("Disable body until category is selected", assert => {
     assert.ok(exists('.d-editor-input'), 'the composer input is visible');
     assert.ok(exists('.title-input .popup-tip.bad.hide'), 'title errors are hidden by default');
     assert.ok(exists('.d-editor-textarea-wrapper .popup-tip.bad.hide'), 'body errors are hidden by default');
-    assert.ok(exists('.d-editor-container .d-editor-button-bar.disabled'), 'toolbar is disabled');
-    assert.ok(find('.d-editor-container .d-editor-input:disabled').length, 'textarea is disabled');
+    assert.ok(exists('.d-editor-textarea-wrapper.disabled'), 'textarea is disabled');
   });
 
   const categoryChooser = selectKit('.category-chooser');
@@ -362,15 +361,13 @@ QUnit.test("Disable body until category is selected", assert => {
   categoryChooser.expand().selectRowByValue(2);
 
   andThen(() => {
-    assert.ok(!exists('.d-editor-container .d-editor-button-bar.disabled'), 'toolbar is enabled');
-    assert.ok(find('.d-editor-container .d-editor-input:disabled').length === 0, 'textarea is enabled');
+    assert.ok(find('.d-editor-textarea-wrapper.disabled').length === 0, 'textarea is enabled');
   });
 
   fillIn('.d-editor-input', 'Now I can type stuff');
   categoryChooser.expand().selectRowByValue('__none__');
 
   andThen(() => {
-    assert.ok(!exists('.d-editor-container .d-editor-button-bar.disabled'), 'toolbar is still enabled');
-    assert.ok(find('.d-editor-container .d-editor-input:disabled').length === 0, 'textarea is still enabled');
+    assert.ok(find('.d-editor-textarea-wrapper.disabled').length === 0, 'textarea is still enabled');
   });
 });

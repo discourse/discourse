@@ -93,15 +93,13 @@ QUnit.test("Pasting a link enables the text input area", assert => {
   visit("/");
   click('#create-topic');
   andThen(() => {
-    assert.ok(exists('.d-editor-container .d-editor-button-bar.disabled'), 'toolbar is disabled');
-    assert.ok(find('.d-editor-container .d-editor-input:disabled').length, 'textarea is disabled');
+    assert.ok(find('.d-editor-textarea-wrapper.disabled').length, 'textarea is disabled');
   });
   fillIn('#reply-title', "http://www.example.com/has-title.html");
   andThen(() => {
     assert.ok(find('.d-editor-preview').html().trim().indexOf('onebox') > 0, "it pastes the link into the body and previews it");
     assert.ok(exists('.d-editor-textarea-wrapper .popup-tip.good'), 'the body is now good');
     assert.equal(find('.title-input input').val(), "An interesting article", "title is from the oneboxed article");
-    assert.ok(!exists('.d-editor-container .d-editor-button-bar.disabled'), 'toolbar is enabled');
-    assert.ok(find('.d-editor-container .d-editor-input:disabled').length === 0, 'textarea is enabled');
+    assert.ok(find('.d-editor-textarea-wrapper.disabled').length === 0, 'textarea is enabled');
   });
 });
