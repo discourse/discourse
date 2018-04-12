@@ -57,6 +57,12 @@
     background: transparent;
   }
 
+  &.disabled {
+    cursor: not-allowed;
+    .d-editor-button-bar {
+      visibility: hidden;
+    }
+  }
 }
 
 .d-editor-preview-wrapper {
@@ -89,11 +95,6 @@
 
   .btn.italic {
     font-style: italic;
-  }
-
-  &.disabled {
-    visibility: hidden;
-    cursor: not-allowed;
   }
 }
 

@@ -9,8 +9,8 @@
 </div>
 
 <div class='d-editor-container'>
-  <div class="d-editor-textarea-wrapper">
-    <div class='d-editor-button-bar {{if disabled "disabled"}}'>
+  <div class="d-editor-textarea-wrapper {{if disabled "disabled"}}">
+    <div class='d-editor-button-bar'>
       {{#each toolbar.groups as |group|}}
         {{#each group.buttons as |b|}}
           {{#if b.popupMenu}}
