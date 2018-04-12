@@ -7,8 +7,8 @@ export default SingleSelectComponent.extend({
   autoFilterable: true,
   headerComponent: "combo-box/combo-box-header",
 
-  caretUpIcon: "caret-up fa-fw",
-  caretDownIcon: "caret-down fa-fw",
+  caretUpIcon: "caret-up",
+  caretDownIcon: "caret-down",
   clearable: false,
 
   computeHeaderContent() {

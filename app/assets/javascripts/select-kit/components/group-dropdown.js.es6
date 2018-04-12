@@ -7,8 +7,8 @@ export default ComboBoxComponent.extend({
   classNames: "group-dropdown",
   content: Ember.computed.alias("groups"),
   tagName: "li",
-  caretDownIcon: "caret-right fa-fw",
-  caretUpIcon: "caret-down fa-fw",
+  caretDownIcon: "caret-right",
+  caretUpIcon: "caret-down",
   allowAutoSelectFirst: false,
   valueAttribute: 'name',
 
