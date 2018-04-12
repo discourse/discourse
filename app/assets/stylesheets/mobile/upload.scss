@@ -1,6 +1,6 @@
 .upload-selector {
   input[type="text"]{
-    width: 90%;
+    width: calc(100% - 20px);
   }
   input[type="file"] {
     font-size: $font-0;
@@ -16,13 +16,16 @@
     &:first-of-type {
       margin-bottom: 1em;
     }
-    label {
-      vertical-align: middle;      
+    input, label {
+      min-height: 20px;
+      line-height: $line-height-medium;
+      margin: 0;
     }
-    input {
-      line-height: $line-height-large;
+    .radio {
+      padding-left: 5px;
     }
     .inputs {
+      margin-top: 10px; 
       width: 100%;
     }
   }
