@@ -586,4 +586,15 @@ describe SiteSettingExtension do
     end
   end
 
+  describe "get_hostname" do
+
+    it "properly extracts the hostname" do
+      expect(settings.send(:get_hostname, "discourse.org")).to eq("discourse.org")
+      expect(settings.send(:get_hostname, " discourse.org ")).to eq("discourse.org")
+      expect(settings.send(:get_hostname, "@discourse.org")).to eq("discourse.org")
+      expect(settings.send(:get_hostname, "https://discourse.org")).to eq("discourse.org")
+    end
+
+  end
+
 end
