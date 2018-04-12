@@ -18,15 +18,19 @@ const CDP = require('chrome-remote-interface');
 (function() {
 
   function launchChrome() {
-    return chromeLauncher.launch({
-      // Uncomment this to enable `--remote-debugging-port`
-      // port: 9222,
+    const options = {
       chromeFlags: [
         '--disable-gpu',
        '--headless',
        '--no-sandbox'
       ]
-    });
+    }
+
+    if (process.env.REMOTE_DEBUG) {
+      options.port = 9222;
+    }
+
+    return chromeLauncher.launch(options);
   }
 
   launchChrome().then(chrome => {
