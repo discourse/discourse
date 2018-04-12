@@ -412,6 +412,14 @@ describe PostAlerter do
 
     let(:alice) { Fabricate(:user, username: 'alice') }
     let(:bob) { Fabricate(:user, username: 'bob') }
+    let(:carol) { Fabricate(:admin, username: 'carol') }
+    let(:dave) { Fabricate(:user, username: 'dave') }
+    let(:eve) { Fabricate(:user, username: 'eve') }
+    let(:group) { Fabricate(:group, name: 'group', mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
+
+    before do
+      group.bulk_add([alice.id, carol.id])
+    end
 
     def create_post_with_alerts(args = {})
       post = Fabricate(:post, args)
@@ -463,6 +471,21 @@ describe PostAlerter do
               args = { user: bob, topic: pm_topic, raw: 'Hello @alice' }
               expect { create_post_with_alerts(args) }.to add_notification(alice, :mentioned)
             end
+
+            it "notifies about @username mentions by non-human users" do
+              args = { user: Discourse.system_user, topic: pm_topic, raw: 'Hello @alice' }
+              expect { create_post_with_alerts(args) }.to add_notification(alice, :mentioned)
+            end
+
+            it "notifies about @group mention" do
+              args = { user: bob, topic: pm_topic, raw: 'Hello @group' }
+              expect { create_post_with_alerts(args) }.to add_notification(alice, :group_mentioned)
+            end
+
+            it "notifies about @group mentions by non-human users" do
+              args = { user: Discourse.system_user, topic: pm_topic, raw: 'Hello @group' }
+              expect { create_post_with_alerts(args) }.to add_notification(alice, :group_mentioned)
+            end
           end
         end
 
@@ -475,20 +498,43 @@ describe PostAlerter do
             args = { user: bob, topic: pm_topic, raw: 'Hello @alice' }
             expect { create_post_with_alerts(args) }.to_not add_notification(alice, :mentioned)
           end
+
+          it "does not notify about @group mention" do
+            args = { user: bob, topic: pm_topic, raw: 'Hello @group' }
+            expect { create_post_with_alerts(args) }.to_not add_notification(alice, :group_mentioned)
+          end
         end
       end
 
       context "when mentioned user is not part of conversation" do
         it "notifies about @username mention when mentioned user is allowed to see message" do
-          carol = Fabricate(:admin, username: 'carol')
           args = { user: bob, topic: pm_topic, raw: 'Hello @carol' }
           expect { create_post_with_alerts(args) }.to add_notification(carol, :mentioned)
         end
 
+        it "does not notify about @username mention by non-human user even though mentioned user is allowed to see message" do
+          args = { user: Discourse.system_user, topic: pm_topic, raw: 'Hello @carol' }
+          expect { create_post_with_alerts(args) }.to_not add_notification(carol, :mentioned)
+        end
+
         it "does not notify about @username mention when mentioned user is not allowed to see message" do
-          dave = Fabricate(:user, username: 'dave')
           args = { user: bob, topic: pm_topic, raw: 'Hello @dave' }
           expect { create_post_with_alerts(args) }.to_not add_notification(dave, :mentioned)
+        end
+
+        it "notifies about @group mention when mentioned user is allowed to see message" do
+          args = { user: bob, topic: pm_topic, raw: 'Hello @group' }
+          expect { create_post_with_alerts(args) }.to add_notification(carol, :group_mentioned)
+        end
+
+        it "does not notify about @group mention by non-human user even though mentioned user is allowed to see message" do
+          args = { user: Discourse.system_user, topic: pm_topic, raw: 'Hello @group' }
+          expect { create_post_with_alerts(args) }.to_not add_notification(carol, :group_mentioned)
+        end
+
+        it "does not notify about @group mention when mentioned user is not allowed to see message" do
+          args = { user: bob, topic: pm_topic, raw: 'Hello @group' }
+          expect { create_post_with_alerts(args) }.to_not add_notification(dave, :group_mentioned)
         end
       end
     end
@@ -497,7 +543,8 @@ describe PostAlerter do
       let(:pm_topic) do
         Fabricate(:private_message_topic, user: alice, topic_allowed_users: [
           Fabricate.build(:topic_allowed_user, user: alice),
-          Fabricate.build(:topic_allowed_user, user: bob)
+          Fabricate.build(:topic_allowed_user, user: bob),
+          Fabricate.build(:topic_allowed_user, user: eve)
         ])
       end
       let(:first_post) { Fabricate(:post, topic: pm_topic, user: pm_topic.user) }
@@ -506,13 +553,19 @@ describe PostAlerter do
     end
 
     context "group message" do
-      let(:group) { Fabricate(:group) }
+      let(:some_group) { Fabricate(:group, name: 'some_group') }
       let(:pm_topic) do
         Fabricate(:private_message_topic, user: alice, topic_allowed_groups: [
-          Fabricate.build(:topic_allowed_group, group: group)
+          Fabricate.build(:topic_allowed_group, group: some_group)
+        ], topic_allowed_users: [
+          Fabricate.build(:topic_allowed_user, user: eve)
         ])
       end
       let(:first_post) { Fabricate(:post, topic: pm_topic, user: pm_topic.user) }
+
+      before do
+        some_group.add(alice)
+      end
 
       include_context "message"
     end

@@ -38,6 +38,10 @@ class PostAlerter
     allowed_group_users(post)
   end
 
+  def only_allowed_users(users, post)
+    users.select { |u| allowed_users(post).include?(u) || allowed_group_users(post).include?(u) }
+  end
+
   def notify_about_reply?(post)
     post.post_type == Post.types[:regular] || post.post_type == Post.types[:whisper]
   end
@@ -50,17 +54,20 @@ class PostAlerter
 
     if mentioned_groups || mentioned_users
       mentioned_opts = {}
+      editor = post.last_editor
+
       if post.last_editor_id != post.user_id
         # Mention comes from an edit by someone else, so notification should say who added the mention.
-        editor = post.last_editor
         mentioned_opts = { user_id: editor.id, original_username: editor.username, display_username: editor.username }
       end
 
       expand_group_mentions(mentioned_groups, post) do |group, users|
+        users = only_allowed_users(users, post) if editor.id < 0
         notified += notify_users(users - notified, :group_mentioned, post, mentioned_opts.merge(group: group))
       end
 
       if mentioned_users
+        mentioned_users = only_allowed_users(mentioned_users, post) if editor.id < 0
         notified += notify_users(mentioned_users - notified, :mentioned, post, mentioned_opts)
       end
     end
