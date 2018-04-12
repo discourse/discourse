@@ -7,8 +7,8 @@ QUnit.test("As an anon user", assert => {
 
   andThen(() => {
     assert.equal(
-      find('.groups-admin-dropdown').length, 0,
-      'it should not display the admin dropdown'
+      find('.groups-header-new').length, 0,
+      'it should not display the button to create a group'
     );
   });
 });
@@ -20,6 +20,14 @@ QUnit.test("Creating a new group", assert => {
   visit("/groups");
 
   click(".groups-header-new");
+
+  andThen(() => {
+    assert.equal(
+      find('.group-form-save[disabled]').length, 1,
+      'save button should be disabled'
+    );
+  });
+
   fillIn("input[name='name']", '1');
 
   andThen(() => {

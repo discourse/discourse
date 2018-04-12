@@ -4,13 +4,18 @@ import InputValidation from 'discourse/models/input-validation';
 import debounce from 'discourse/lib/debounce';
 
 export default Ember.Component.extend({
-  saving: null,
+  disableSave: null,
   nameInput: null,
 
   didInsertElement() {
     this._super();
     const name = this.get('model.name');
-    if (name) this.set("nameInput", name);
+
+    if (name) {
+      this.set("nameInput", name);
+    } else {
+      this.set('disableSave', true);
+    }
   },
 
   @computed('basicNameValidation', 'uniqueNameValidation')
@@ -58,7 +63,7 @@ export default Ember.Component.extend({
           reason: I18n.t('admin.groups.new.name.available')
         }));
 
-        this.set('saving', false);
+        this.set('disableSave', false);
         this.set('model.name', this.get('nameInput'));
       } else {
         let reason;
@@ -75,7 +80,7 @@ export default Ember.Component.extend({
   }, 500),
 
   _failedInputValidation(reason) {
-    this.set('saving', true);
+    this.set('disableSave', true);
 
     const options = { failed: true };
     if (reason) options.reason = reason;
