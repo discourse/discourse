@@ -1,5 +1,5 @@
 export default {
-  "/groups/moderators":{
+  "/groups/moderators.json":{
     "group": {
       "id": 50,
       "automatic": true,
@@ -32,7 +32,7 @@ export default {
       "messageable": true
     },
   },
-  "/groups/discourse":{
+  "/groups/discourse.json":{
     "group":{
       "id":47,
       "automatic":false,
