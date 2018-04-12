@@ -111,7 +111,7 @@ export default Ember.Component.extend({
       const style = `border-right-width: ${borderSize}; width: ${progressWidth}px`;
       $topicProgress.append(`<div class='bg' style="${style}">&nbsp;</div>`);
     } else {
-      $bg.css("border-right-width", borderSize).width(progressWidth);
+      $bg.css("border-right-width", borderSize).width(progressWidth - 2);
     }
   },
 
